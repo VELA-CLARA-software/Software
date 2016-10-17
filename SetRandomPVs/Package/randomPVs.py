@@ -37,8 +37,15 @@ class setRandomPV():
 			while time.clock() < (self.start + 1/(self.repRate)):
 				time.sleep(0.001)
 			if pvType == "array":# and time.clock() < (self.start + 1/(self.repRate)):
-				epics.caput(str(self.pvName), [self.num])
-				print str(self.pvName),"   ",self.num
+				self.arrayNum = []
+				i = 0
+				while i < 10:
+					print i
+					self.arrayNum.append(random.uniform(rangeSta, rangeEnd))
+					i = i + 1
+					if i == 9:
+						break
+				epics.caput(str(self.pvName), self.arrayNum)
 				self.gotAValue = self.gotAValue + 1
 			elif pvType == "num":# and time.clock() < (self.start + 1/(self.repRate)):
 				epics.caput(str(self.pvName), self.num)
