@@ -3,7 +3,7 @@ import random
 import os,sys
 import time
 import numpy
-sys.path.append('D:\\VELA-CLARA-Controllers-master\\VELA-CLARA-Controllers\\Controllers\\VELA\\INJECTOR\\velaINJBeamPositionMonitors\\bin\\Release')
+sys.path.append('D:\\VELA-CLARA_software\\VELA-CLARA-Controllers\\Controllers\\VELA\\INJECTOR\\velaINJBeamPositionMonitors\\bin\\Release')
 #sys.path.append('D:\\VELA-CLARA-Controllers-master\\VELA-CLARA-Controllers\\Controllers\\VELA\\GENERIC\\velaChargeScope\\bin\\Release')
 
 import velaINJBeamPositionMonitorControl as vbpmc

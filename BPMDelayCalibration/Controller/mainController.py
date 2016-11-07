@@ -27,13 +27,13 @@ class Controller(QObject):
 		self.lowerList = []
 		self.upperList = []
 
-		self.view.pushButton_2.clicked.connect(lambda: self.appendToList())
-		self.view.pushButton.clicked.connect(lambda: self.runDLYCalibration())
+		self.view.addToListButton.clicked.connect(lambda: self.appendToList())
+		self.view.calibrateButton.clicked.connect(lambda: self.runDLYCalibration())
 
 	def runDLYCalibration(self):
-		self.numShots = int(self.view.plainTextEdit_4.toPlainText())
-		self.sliderMin = int(self.view.plainTextEdit_6.toPlainText())
-		self.sliderMax = int(self.view.plainTextEdit_7.toPlainText())
+		self.numShots = int(self.view.numShots.toPlainText())
+		self.sliderMin = int(self.view.lowerDLYBound.toPlainText())
+		self.sliderMax = int(self.view.lowerDLYBound.toPlainText())
 		self.dlyValues = [[]] * len(self.pvList)
 		self.meanDLY1Values = [[]] * len(self.pvList)
 		self.meanDLY2Values = [[]] * len(self.pvList)
@@ -67,7 +67,7 @@ class Controller(QObject):
 		#self.pool.waitForDone()
 
 	def getValues(self, sigList, pvName):
-		self.numShots = int(self.view.plainTextEdit_4.toPlainText())
+		self.numShots = int(self.view.numShots.toPlainText())
 		self.pvName = pvName
 		self.DLY1Vals = []
 		self.DLY2Vals = []
@@ -102,18 +102,12 @@ class Controller(QObject):
 				self.plotDLY2Distrib = self.plotDLY2.plot(pen=None,symbol='o')
 				self.plotDLY2Distrib.setData(self.RD2Vals[i][0:len(self.RD2Vals)], self.DLY2Vals)
 				self.makestr = self.makestr+("New BPM DLY1 for "+self.pvName+" = "+str(self.model.getBPMReadDLY(str(i))[0])+"\n\nNew BPM DLY2 for "+self.pvName+" = "+str(self.model.getBPMReadDLY(str(i))[1]))
-		self.view.label_4.setText(self.view.label_4.text()+"\n\n"+self.makestr)
+		self.view.newDLYVals.setText(self.view.label_4.text()+"\n\n"+self.makestr)
 		#return sigList
 
 	def appendToList(self):
-		#del self.pvList[:]
 		self.pvName = str(self.view.comboBox.currentText())
 		self.pvList.append(self.pvName)
-		self.view.plainTextEdit.insertPlainText(self.pvName+"\n")
-		#self.view.plainTextEdit.setPlainText(self.pvName)
+		self.view.bpmPVList.insertPlainText(self.pvName+"\n")
 		self.view.addPlotTab(self.view.TabWidget, self.pvName)
 		return self.pvList
-		#self.tab = QtGui.QWidget()
-		#self.tab.setObjectName(str(self.pvName))
-		#self.newTab = self.view.Ui_TabWidget.addPlotTab(self.tab, self.pvName)
-		#self.newTab.setObjectName(_fromUtf8(str(self.pvName)))
