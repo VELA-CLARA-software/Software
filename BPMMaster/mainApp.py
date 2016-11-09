@@ -5,7 +5,7 @@ os.environ["EPICS_CA_MAX_ARRAY_BYTES"] = "10000000"
 
 sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\Controller')
 sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\View')
-sys.path.append('D:\\VELA-CLARA_software\\VELA-CLARA-Controllers-New-Structure-With-Magnets\\bin\\Release')
+sys.path.append('\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Software\\CONTROLLERS\\VELA-CLARA-Controllers\\bin\\Release')
 from PyQt4 import QtGui, QtCore
 
 import mainController
