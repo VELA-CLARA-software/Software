@@ -24,7 +24,7 @@ class magnetAppController(object):
         self.startView.machineAreaSignal.connect( self.handle_machineAreaSignal )
         self.startView.machineModeSignal.connect( self.handle_machineModeSignal )
         # init choices for different modes
-        self.machineArea = 'UNKNOWN'
+        self.machineArea =  'UNKNOWN'
         self.machineMode = 'UNKNOWN'
         # init objects
         self.localMagnetController = None
@@ -55,9 +55,9 @@ class magnetAppController(object):
         self.dburtLoadView.close()
     def handle_fileLoadSelect(self):
 
-        if self.dburtLoad.dburtType  == self.dburtLoad.allMagnets:
+        if self.dburtLoad.dburtType == self.dburtLoad.allMagnets:
             self.localMagnetController.applyDBURT( self.dburtLoadView.dburtFile )
-        elif self.dburtLoad.dburtType  == self.dburtLoad.quadMagnets:
+        elif self.dburtLoad.dburtType == self.dburtLoad.quadMagnets:
             self.localMagnetController.applyDBURTQuadOnly( self.dburtLoadView.dburtFile )
         elif self.dburtLoad.dburtType == self.dburtLoad.corrMagnets:
             self.localMagnetController.applyDBURTCorOnly(self.dburtLoadView.dburtFile)
