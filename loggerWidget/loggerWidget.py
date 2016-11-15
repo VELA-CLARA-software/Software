@@ -2,6 +2,7 @@ import sys
 from PyQt4 import QtCore, QtGui
 import logging
 import os
+widgetLogger = logging.getLogger(__name__)
 
 class QPlainTextEditLogger(logging.Handler):
     def __init__(self, tableWidget):
@@ -16,7 +17,7 @@ class QPlainTextEditLogger(logging.Handler):
         self.tableWidget.horizontalHeader().setVisible(False)
         self.tableWidget.verticalHeader().setVisible(False)
         self.tableWidget.setColumnWidth(0,160)
-        self.tableWidget.setColumnWidth(1,80)
+        self.tableWidget.setColumnWidth(1,120)
         self.tableWidget.setColumnWidth(2,80)
         self.tableWidget.horizontalHeader().setStretchLastSection(True)
         self.tableWidget.setWordWrap(True)
@@ -42,7 +43,6 @@ class QPlainTextEditLogger(logging.Handler):
 class loggerWidget(QtGui.QWidget):
     def __init__(self, logger=None, parent=None):
         super(loggerWidget,self).__init__(parent)
-        self.logger = logger
         self.tablewidget = QtGui.QTableWidget()
         layout = QtGui.QGridLayout()
         saveButton = QtGui.QPushButton('Save Log')
@@ -60,6 +60,7 @@ class loggerWidget(QtGui.QWidget):
             else:
                 self.addLogger(logger)
         self.logTextBox.setFormatter(logging.Formatter(' %(asctime)s - %(name)s - %(levelname)s - %(message)s'))
+        self.addLogger(widgetLogger)
 
     def addLogger(self, logger):
         logger.addHandler(self.logTextBox)
@@ -73,14 +74,14 @@ class loggerWidget(QtGui.QWidget):
             for i in range(4):
                 widg = self.tablewidget.cellWidget(r, i)
                 row[i] = widg.toPlainText()
-                saveData[r] = row
+            saveData[r] = row
         # print saveData
         saveFileName = str(QtGui.QFileDialog.getSaveFileName(self, 'Save Log', filter="TXT files (*.txt);;", selectedFilter="TXT files (*.txt)"))
         filename, file_extension = os.path.splitext(saveFileName)
         if file_extension == '.txt':
         #     print "csv!"
-            fmt='%s, %s, %s, %s'
+            fmt='%s \t %s \t %s \t %s'
             target = open(saveFileName,'w')
             for row in saveData:
                 target.write((fmt % tuple(row))+'\n')
-        self.logger.info('Log Saved to '+saveFileName)
+        widgetLogger.info('Log Saved to '+saveFileName)

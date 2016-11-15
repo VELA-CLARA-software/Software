@@ -2,6 +2,7 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 import loggerWidget as lw
 import logging
+import logger_subclass as logsub
 import sys
 ''' simple logger that takes the name of the current module '''
 logger = logging.getLogger(__name__)
@@ -19,9 +20,11 @@ def test():
     logger2.critical('logger2 is also really foobar')
 
 def main():
-    global logger
     ''' Initiate PyQT application '''
     app = QApplication(sys.argv)
+
+    ''' Reference to the logger from the subclass '''
+    subclasslog = logsub.logger
 
     ''' initialise an instance of logging widget with a logger '''
     logwidget1 = lw.loggerWidget(logger)
@@ -30,9 +33,10 @@ def main():
     logwidget2 = lw.loggerWidget()
     logwidget2.addLogger(logger)
     logwidget2.addLogger(logger2)
+    logwidget2.addLogger(subclasslog)
 
     ''' or we can initialise with a list of loggers '''
-    logwidget3 = lw.loggerWidget([logger, logger2])
+    logwidget3 = lw.loggerWidget([logger, logger2, subclasslog])
 
     tab = QTabWidget()
     tab.resize(800,500)
@@ -47,6 +51,7 @@ def main():
 
     ''' Output some logging info! '''
     test()
+    logsub.test()
 
     ''' Default PyQT exit handler '''
     sys.exit(app.exec_())
