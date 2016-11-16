@@ -11,3 +11,5 @@ class Model():
 		#self.magnets =	vimc.velaINJMagnetController(False,False,False)
 		self.view = view
 		print("Model Made")
+	def hello(self):
+		print 'hello'

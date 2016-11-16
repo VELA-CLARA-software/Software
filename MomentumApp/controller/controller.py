@@ -14,7 +14,7 @@ class Controller():
 		self.model = model
 		#Set up grpahin areas
 		print 'controller made'
-
+		self.view.pushButton.clicked.connect(self.model.hello)
 		self.view.checkBox_all.stateChanged.connect(self.setChecks_mom)
 		self.view.checkBox_all_s.stateChanged.connect(self.setChecks_mom_s)
 
@@ -41,36 +41,7 @@ class Controller():
 		layout_s.nextRow()
 		self.profileGraph  = layout_s.addPlot(title="Fit to YAG Profile")
 		self.displayMom_S = layout_s.addLabel('Momentum Spread =  MeV/c')
-
 		self.view.horizontalLayout_5.addWidget(monitor_s)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 	def setChecks_mom(self):
 		if self.view.checkBox_all.isChecked()==True:

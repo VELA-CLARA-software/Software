@@ -532,7 +532,7 @@ class stripPlot(QWidget):
         self.pauseIcon  = QtGui.QIcon(str(os.path.dirname(os.path.abspath(__file__)))+'\pause.png')
         self.stripPlot = QtGui.QGridLayout()
         self.plotThread = QTimer()
-        self.plotWidget = generalPlot(self.parent())
+        self.plotWidget = generalPlot()#self.parent()
         self.plot = self.plotWidget.createPlot()
         self.stripPlot.addWidget(self.plotWidget.plotWidget,0, 0,5,8)
         ''' Sidebar for graph type selection '''
