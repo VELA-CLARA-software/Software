@@ -12,9 +12,65 @@ class Controller():
 	def __init__(self, view, model):
 		self.view = view
 		self.model = model
+		#Set up grpahin areas
 		print 'controller made'
+
 		self.view.checkBox_all.stateChanged.connect(self.setChecks_mom)
 		self.view.checkBox_all_s.stateChanged.connect(self.setChecks_mom_s)
+
+		monitor = pg.GraphicsView()
+		layout = pg.GraphicsLayout(border=(100,100,100))
+		monitor.setCentralItem(layout)
+		self.positionGraph_1 = layout.addPlot(title="Plot 1")
+		self.positionGraph_1 = layout.addPlot(title="Plot 2")
+		self.positionGraph_1 = layout.addPlot(title="Plot 3")
+		layout.nextRow()
+		yagImageBox = layout.addViewBox(lockAspect=True, colspan=2)
+		self.YAGImage = pg.ImageItem(np.random.normal(size=(1392,1040)))
+		yagImageBox.addItem(self.YAGImage)
+		self.displayMom = layout.addLabel('MOMENTUM = MeV/c')
+		yagImageBox.autoRange()
+		self.view.horizontalLayout_4.addWidget(monitor)
+
+
+		monitor_s = pg.GraphicsView()
+		layout_s = pg.GraphicsLayout(border=(100,100,100))
+		monitor_s.setCentralItem(layout_s)
+		self.dispersionGraph  = layout_s.addPlot(title="Dispersion")
+		self.displayDisp = layout_s.addLabel('DISPERSION = pixels per Ampere')
+		layout_s.nextRow()
+		self.profileGraph  = layout_s.addPlot(title="Fit to YAG Profile")
+		self.displayMom_S = layout_s.addLabel('Momentum Spread =  MeV/c')
+
+		self.view.horizontalLayout_5.addWidget(monitor_s)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	def setChecks_mom(self):
 		if self.view.checkBox_all.isChecked()==True:

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1175</width>
-    <height>564</height>
+    <width>969</width>
+    <height>616</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -584,7 +584,7 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
            <item row="2" column="1">
             <widget class="QLineEdit" name="lineEdit_predictMom"/>
            </item>
-           <item row="8" column="0" colspan="2">
+           <item row="9" column="0" colspan="2">
             <widget class="QTextEdit" name="textEdit"/>
            </item>
            <item row="6" column="0">
@@ -617,6 +617,13 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
              </property>
             </widget>
            </item>
+           <item row="7" column="0" colspan="2">
+            <widget class="QPushButton" name="pushButton_refreshImage">
+             <property name="text">
+              <string>Refresh Image</string>
+             </property>
+            </widget>
+           </item>
           </layout>
          </widget>
         </item>
@@ -631,6 +638,7 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
           <property name="title">
            <string>Monitor</string>
           </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_4"/>
          </widget>
         </item>
        </layout>
@@ -668,10 +676,10 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
              </property>
             </widget>
            </item>
-           <item row="4" column="0">
-            <widget class="QCheckBox" name="checkBox_2_s">
+           <item row="5" column="0">
+            <widget class="QCheckBox" name="checkBox_3_s">
              <property name="text">
-              <string>2. Set Dispersion</string>
+              <string>3. Calculate Dispersion</string>
              </property>
              <property name="checked">
               <bool>true</bool>
@@ -688,17 +696,17 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
              </property>
             </widget>
            </item>
-           <item row="5" column="0">
-            <widget class="QCheckBox" name="checkBox_3_s">
+           <item row="4" column="0">
+            <widget class="QCheckBox" name="checkBox_2_s">
              <property name="text">
-              <string>3. Calculate Dispersion</string>
+              <string>2. Set Dispersion</string>
              </property>
              <property name="checked">
               <bool>true</bool>
              </property>
             </widget>
            </item>
-           <item row="8" column="0" colspan="2">
+           <item row="9" column="0" colspan="2">
             <widget class="QTextEdit" name="textEdit_s"/>
            </item>
            <item row="3" column="0">
@@ -743,6 +751,13 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
              </property>
             </widget>
            </item>
+           <item row="8" column="0" colspan="2">
+            <widget class="QPushButton" name="pushButton_refreshProfile">
+             <property name="text">
+              <string>Refresh Profile</string>
+             </property>
+            </widget>
+           </item>
           </layout>
          </widget>
         </item>
@@ -757,6 +772,7 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
           <property name="title">
            <string>Monitor</string>
           </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_5"/>
          </widget>
         </item>
        </layout>
@@ -770,7 +786,7 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1175</width>
+     <width>969</width>
      <height>21</height>
     </rect>
    </property>

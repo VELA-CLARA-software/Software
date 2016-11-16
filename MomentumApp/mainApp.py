@@ -16,8 +16,6 @@ import view
 class App(QtGui.QApplication):
     def __init__(self, sys_argv):
 		super(App, self).__init__(sys_argv)
-
-
 		print'Well this is fun'
 		#self.model = mainModel.Model()#Function fot when stuff ist change and buttons are clicked
 		self.view = view.Ui_MainWindow()
