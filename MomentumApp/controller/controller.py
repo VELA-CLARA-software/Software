@@ -3,6 +3,7 @@ import sys
 import time
 import numpy as np
 import pyqtgraph as pg
+import pyqtgraph.console as con
 from epics import caget,caput
 sys.path.append('C:\\Users\\wln24624\\Documents\\SOFTWARE\\VELA-CLARA-Software\\Software\\Striptool\\')
 import striptool
@@ -42,6 +43,8 @@ class Controller():
 		self.profileGraph  = layout_s.addPlot(title="Fit to YAG Profile")
 		self.displayMom_S = layout_s.addLabel('Momentum Spread =  MeV/c')
 		self.view.horizontalLayout_5.addWidget(monitor_s)
+
+		self.view.gridLayout.addWidget(con.ConsoleWidget(namespace= {'pg': pg, 'np': np}, text='Hellow Llamas!!'),8,0,1,2 )
 
 	def setChecks_mom(self):
 		if self.view.checkBox_all.isChecked()==True:
