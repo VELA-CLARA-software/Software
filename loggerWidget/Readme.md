@@ -15,18 +15,18 @@ logger = logging.getLogger(__name__)
 ````
 3. Initialise the loggingWidget (this returns a PyQt widget)
   1. Initialise widget then add logger
-  ````python
-  logwidget = lw.loggerWidget()
-  logwidget.addLogger(logger)
-  ````
+````python
+logwidget = lw.loggerWidget()
+logwidget.addLogger(logger)
+````
   2. Initialise widget with logger
-  ````python
-  logwidget = lw.loggerWidget(logger)
-  ````
+````python
+logwidget = lw.loggerWidget(logger)
+````
   3. Initialise widget with multiple loggers
-  ````python
-  logwidget = lw.loggerWidget([logger, logger2])
-  ````
+````python
+logwidget = lw.loggerWidget([logger, logger2])
+````
 4. Use logging messages in your app
 ````python
 logger.debug('damn, a bug')
