@@ -10,6 +10,7 @@
         import logging
 
 - Define your logger (see [Python Logging](https://docs.python.org/2/library/logging.html))
+
         logger = logging.getLogger(__name__)
 
 - Initialise the loggingWidget (this returns a PyQt widget)
