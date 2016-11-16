@@ -66,6 +66,9 @@ class loggerWidget(QtGui.QWidget):
         logger.addHandler(self.logTextBox)
         logger.setLevel(logging.DEBUG)
 
+    def setLoggerLevel(self, logger, level):
+        logger.setLevel(level)
+
     def saveLog(self):
         rows = self.tablewidget.rowCount()
         saveData = range(rows);
