@@ -2,8 +2,7 @@ from PyQt4 import QtGui, QtCore
 import sys,os
 
 #sys.path.append('D:\\VELA\\GIT Projects\\VELA-CLARA-Controllers\\bin\\Release')
-sys.path.append('\\\\fed.cclrc.ac.uk\\org\\NLab\\ASTeC\\Projects\\VELA\\Software\\VM-Controllers\\VELA-CLARA'
-                '-Controllers\\bin\\Release\\')
+sys.path.append('\\\\fed.cclrc.ac.uk\\org\\NLab\\ASTeC\\Projects\\VELA\\Software\\VELA_CLARA_PYDs\\bin\\Release\\')
 import magnetAppController
 
 
