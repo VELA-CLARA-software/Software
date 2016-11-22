@@ -9,6 +9,9 @@ from threading import Thread, Event, Timer
 from PyQt4.QtCore import QObject, pyqtSignal, pyqtSlot
 import signal, datetime
 from bisect import bisect_left, bisect_right
+import peakutils
+import logging
+logger = logging.getLogger(__name__)
 
 signal.signal(signal.SIGINT, signal.SIG_DFL)
 
@@ -131,6 +134,7 @@ class createSignalTimer(QObject):
 class recordWorker(QtCore.QObject):
     def __init__(self, signal, name):
         super(recordWorker, self).__init__()
+        print "recordWorker = ", name
         self.signal = signal
         self.name = name
         self.signal.dataReady.connect(self.updateRecord)
@@ -151,14 +155,17 @@ class createSignalRecord(QObject):
         global records
         if not 'records' in globals():
             records = {}
-        records[name] = {'name': name, 'pen': 'r', 'timer': timer, 'function': function, 'ploton': True, 'data': []}
-        self.name = name
-        self.signal = createSignalTimer(name, function, *args)
-        self.thread = QtCore.QThread()
-        self.worker = recordWorker(self.signal, name)
-        self.worker.moveToThread(self.thread)
-        self.thread.start()
-        self.signal.startTimer(timer)
+        if name in records:
+            print "name,",name,", already exists!"
+        else:
+            records[name] = {'name': name, 'pen': 'r', 'timer': timer, 'function': function, 'ploton': True, 'data': []}
+            self.name = name
+            self.signal = createSignalTimer(name, function, *args)
+            self.thread = QtCore.QThread()
+            self.worker = recordWorker(self.signal, name)
+            self.worker.moveToThread(self.thread)
+            self.thread.start()
+            self.signal.startTimer(timer)
 
     def setInterval(self, newinterval):
         self.signal.timer.setInterval(newinterval)
@@ -207,6 +214,7 @@ class generalPlot(pg.PlotWidget):
         self.decimateScale = 5000
         self.legend = pg.LegendItem(size=(100,100))
         self.legend.setParentItem(None)
+        self.globalPlotRange = [-10,0]
 
     def createPlot(self):
         global dateTicksOn
@@ -239,6 +247,7 @@ class generalPlot(pg.PlotWidget):
             self.plotScale = None
             self.name = name
             self.plot = plot
+            # self.globalPlotRange = self.plot.globalPlotRange
             self.doingPlot = False
             self.curve = self.plot.plot.plot()
             self.addCurve()
@@ -257,12 +266,16 @@ class generalPlot(pg.PlotWidget):
                     self.curve.setData({'x': x, 'y': y}, pen=pen, stepMode=True, fillLevel=0)
                 elif self.plot.FFTPlot:
                     self.curve.setData({'x': x, 'y': y}, pen=pen, stepMode=False)
+                    # print self.curve._fourierTransform(self.curve.xData,self.curve.yData)
+                    # print self.curve.xDisp
+                    indexes = peakutils.indexes(self.curve.yDisp, thres=0.75, min_dist=1)
+                    print 'xdata = ', self.curve.xDisp[indexes]
                     self.plot.updateSpectrumMode(True)
                 else:
                     self.curve.setData({'x': x, 'y': y}, pen=pen, stepMode=False)
 
         def timeFilter(self, datain, timescale):
-            global plotRange
+            # global plotRange
             if self.plot.autoscroll:
                 currenttime = time.time()
             else:
@@ -270,13 +283,13 @@ class generalPlot(pg.PlotWidget):
             data = map(lambda x: [x[0]-currenttime, x[1]], datain)
             def func1(values):
                 for x in reversed(values):
-                    if x[0] > (plotRange[0]) :
+                    if x[0] > (self.plot.globalPlotRange[0]) :
                         yield x
                     else:
                         break
             newlist = list(func1(data))
             for x in reversed(newlist):
-                if x[0] < (plotRange[1]):
+                if x[0] < (self.plot.globalPlotRange[1]):
                     yield x
                 else:
                     break
@@ -288,12 +301,12 @@ class generalPlot(pg.PlotWidget):
             self.curve.clear()
 
         def update(self):
-            global records, plotRange
+            global records
             if not self.plot.paused and not self.doingPlot:
                 self.doingPlot = True
                 if records[self.name]['ploton']:
                     # start = time.clock()
-                    self.plotData = self.filterRecord(records[self.name]['data'],plotRange)
+                    self.plotData = self.filterRecord(records[self.name]['data'],self.plot.globalPlotRange)
                     if len(self.plotData) > 100*self.plot.decimateScale:
                         decimationfactor = int(np.floor(len(self.plotData)/self.plot.decimateScale))
                         self.plotData = self.plotData[0::decimationfactor]
@@ -312,19 +325,19 @@ class generalPlot(pg.PlotWidget):
                     self.clear()
                 self.doingPlot = False
     def setPlotScale(self, timescale, padding=0.0):
-        global plotRange
+        # global plotRange
         if self.linearPlot:
             self.plotRange = timescale
-            plotRange = list(timescale)
-            self.plot.vb.setRange(xRange=plotRange, padding=0)
+            self.globalPlotRange = list(timescale)
+            self.plot.vb.setRange(xRange=self.globalPlotRange, padding=0)
 
     def updatePlotScale(self, padding=0.0):
-        global plotRange
+        # global plotRange
         if self.linearPlot:
             vbPlotRange = self.plot.vb.viewRange()[0]
             if vbPlotRange != [0,1]:
-                plotRange = self.plot.vb.viewRange()[0]
-            self.plotRange = plotRange
+                self.globalPlotRange = self.plot.vb.viewRange()[0]
+            self.plotRange = self.globalPlotRange
 
     def show(self):
         self.plotWidget.show()
@@ -404,7 +417,7 @@ class stripLegend(pg.TreeWidget):
         self.layout.setColumnWidth(2,50)
         self.layout.header().setStretchLastSection(False)
         self.newRowNumber = 0
-        self.deleteIcon  = QtGui.QIcon(str(os.path.dirname(os.path.abspath(__file__)))+'\delete.png')
+        self.deleteIcon  = QtGui.QIcon(str(os.path.dirname(os.path.abspath(__file__)))+'\icons\delete.png')
 
     def addTreeWidget(self, parent, name, text, widget):
         child = QtGui.QTreeWidgetItem()
@@ -521,18 +534,19 @@ class stripPlot(QWidget):
 
     def __init__(self, parent = None):
         super(stripPlot, self).__init__(parent)
-        global plotRange, usePlotRange, autoscroll
+        global usePlotRange, autoscroll
         usePlotRange = True
-        plotRange = None
+        # plotRange = None
         autoscroll = True
+        self.pg = pg
         self.paused = True
         self.signalLength = 10
         self.plotrate = 1
         self.plotScaleConnection = True
-        self.pauseIcon  = QtGui.QIcon(str(os.path.dirname(os.path.abspath(__file__)))+'\pause.png')
+        self.pauseIcon  =  QtGui.QIcon(str(os.path.dirname(os.path.abspath(__file__)))+'\icons\pause.png')
         self.stripPlot = QtGui.QGridLayout()
         self.plotThread = QTimer()
-        self.plotWidget = generalPlot()#self.parent()
+        self.plotWidget = generalPlot(self.parent())
         self.plot = self.plotWidget.createPlot()
         self.stripPlot.addWidget(self.plotWidget.plotWidget,0, 0,5,8)
         ''' Sidebar for graph type selection '''
@@ -583,6 +597,7 @@ class stripPlot(QWidget):
         self.plotThread.timeout.connect(lambda: self.plotWidget.date_axis.linkedViewChanged(self.plotWidget.date_axis.linkedView()))
         self.plotWidget.plot.vb.sigXRangeChanged.connect(self.setPlotScaleLambda)
         # self.plotThread.timeout.connect(self.plotWidget.updateScatterPlot)
+        logger.debug('stripPlot initiated!')
 
 
     def setupPlotRateSlider(self):
@@ -615,6 +630,14 @@ class stripPlot(QWidget):
             self.plotWidget.histogramPlot = histogram
             self.plotWidget.FFTPlot = FFT
             self.plotWidget.scatterPlot = scatter
+            if linear:
+                logger.debug('LinearPlot enabled')
+            if histogram:
+                logger.debug('Histogram enabled')
+            if FFT:
+                logger.debug('FFTPlot enabled')
+            if scatter:
+                logger.debug('ScatterPlot enabled')
             if scatter:
                 dateTicksOn = False
                 self.plotWidget.updateScatterPlot()
@@ -651,12 +674,20 @@ class stripPlot(QWidget):
 
     def addSignal(self, name, pen, timer, function, *args):
         global records
-        signalrecord = createSignalRecord(name=name, timer=timer, function=function, *args)
-        records[name]['record'] = signalrecord
+        if not 'records' in globals() or not name in records:
+            signalrecord = createSignalRecord(name=name, timer=timer, function=function, *args)
+            records[name]['record'] = signalrecord
+        else:
+            logger.warning('Signal '+name+' already exists!')
+            nameorig = name
+            name = name + '_2'
+            signalrecord = createSignalRecord(name=name, timer=timer, function=function, *args)
+            records[name]['record'] = signalrecord
         curve = self.plotWidget.addCurve(self.plotWidget, name)
         records[name]['curve'] = curve
         records[name]['pen'] = pen
         self.legend.addLegendItem(name)
+        logger.info('Signal '+name+' added!')
 
     def plotUpdate(self):
         global records, currentPlotTime
@@ -669,6 +700,7 @@ class stripPlot(QWidget):
         global records
         self.plotThread.timeout.disconnect(records[name]['curve'].update)
         del records[name]
+        logger.info('Signal '+name+' removed!')
 
     def setPlotScale(self, timescale):
         self.plotWidget.setPlotScale([-1.05*timescale, 0.05*timescale])
@@ -681,9 +713,11 @@ class stripPlot(QWidget):
         if self.paused:
             self.paused = False
             self.pauseButton.setStyleSheet("border: 5px; background-color: white")
+            logger.debug('Plot un-paused!')
         else:
             self.paused = True
             self.pauseButton.setStyleSheet("border: 5px; background-color: red")
+            logger.debug('Plot Paused!')
         self.plotWidget.togglePause(self.paused)
 
     def toggleAutoScroll(self):
