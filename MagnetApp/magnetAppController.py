@@ -1,7 +1,6 @@
 import sys, os
 #get the magnet enums used to define magnet types and  PSU states
 #We should probably create magnet module to make importing stuff easier  
-#sys.path.append('D:\\VELA\\GIT Projects\\VELA-CLARA-Controllers\\bin\\Release')
 
 dburtLocation = "\\\\fed.cclrc.ac.uk\\org\\NLab\\ASTeC\\Projects\\VELA\\Snapshots\\DBURT\\"
 appIcon = 'magpic.jpg'

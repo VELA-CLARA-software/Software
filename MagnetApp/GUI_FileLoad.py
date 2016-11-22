@@ -40,9 +40,9 @@ class GUI_FileLoad(QWidget):
         self.corrMagnets.setText(  "Correctors" )
         self.groupBox.setTitle("Which Magnets To Apply File To?")
 
-        self.quadMagnets.toggled.connect(lambda:self.handle_magRadio(self.quadMagnets) )
-        self.corrMagnets.toggled.connect(lambda:self.handle_magRadio(self.corrMagnets) )
-        self.allMagnets.toggled.connect( lambda:self.handle_magRadio(self.allMagnets)  )
+        self.quadMagnets.toggled.connect( lambda:self.handle_magRadio(self.quadMagnets) )
+        self.corrMagnets.toggled.connect( lambda:self.handle_magRadio(self.corrMagnets) )
+        self.allMagnets.toggled.connect ( lambda:self.handle_magRadio(self.allMagnets ) )
 
 
         # choose file label
