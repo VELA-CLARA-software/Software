@@ -22,9 +22,19 @@ class Controller():
 		monitor = pg.GraphicsView()
 		layout = pg.GraphicsLayout(border=(100,100,100))
 		monitor.setCentralItem(layout)
-		self.positionGraph_1 = layout.addPlot(title="Plot 1")
-		self.positionGraph_1 = layout.addPlot(title="Plot 2")
-		self.positionGraph_1 = layout.addPlot(title="Plot 3")
+
+		xdict = {0:'X', 1:'Y'}
+		stringaxis = pg.AxisItem(orientation='bottom')
+		stringaxis.setTicks([xdict.items()])
+		self.positionGraph_1 = layout.addPlot(title="BPM XX")
+		self.positionGraph_2 = layout.addPlot(title="BPM XX")
+		self.positionGraph_3 = layout.addPlot(title="BPM XX")
+		self.positionGraph_1.axes['bottom']['item'].setTicks([xdict.items()])
+		self.positionGraph_2.axes['bottom']['item'].setTicks([xdict.items()])
+		self.positionGraph_3.axes['bottom']['item'].setTicks([xdict.items()])
+		self.positionGraph_1.addItem(pg.BarGraphItem(x=xdict.keys(), height=[-0.3,0.2], width=1))
+		self.positionGraph_2.addItem(pg.BarGraphItem(x=xdict.keys(), height=[0.1,-0.4], width=1))
+		self.positionGraph_3.addItem(pg.BarGraphItem(x=xdict.keys(), height=[0.1,-0.2], width=1))
 		layout.nextRow()
 		yagImageBox = layout.addViewBox(lockAspect=True, colspan=2)
 		self.YAGImage = pg.ImageItem(np.random.normal(size=(1392,1040)))
@@ -44,7 +54,7 @@ class Controller():
 		self.displayMom_S = layout_s.addLabel('Momentum Spread =  MeV/c')
 		self.view.horizontalLayout_5.addWidget(monitor_s)
 
-		self.view.gridLayout.addWidget(con.ConsoleWidget(namespace= {'pg': pg, 'np': np}, text='Hellow Llamas!!'),8,0,1,2 )
+		#self.view.gridLayout.addWidget(con.ConsoleWidget(namespace= {'pg': pg, 'np': np}, text='Hellow Llamas!!'),8,0,1,2 )
 
 	def setChecks_mom(self):
 		if self.view.checkBox_all.isChecked()==True:
