@@ -205,15 +205,9 @@ class QPlainTextEditLogger(logging.Handler):
         self.tableWidget.setColumnCount(4)
         self.tableWidget.horizontalHeader().setVisible(False)
         self.tableWidget.verticalHeader().setVisible(False)
-<<<<<<< HEAD
-        self.tableWidget.setColumnWidth(0,150)#TIM EDIT"""
-        self.tableWidget.setColumnWidth(1,40)#TIM EDIT"""
-        self.tableWidget.setColumnWidth(2,80)# TIM EDIT"""
-=======
         self.tableWidget.setColumnWidth(0,self.dateColumnWidth)
         self.tableWidget.setColumnWidth(1,self.levelColumnWidth)
         self.tableWidget.setColumnWidth(2,self.logColumnWidth)
->>>>>>> origin/master
         self.tableWidget.horizontalHeader().setStretchLastSection(True)
         self.tableWidget.setWordWrap(True)
         msg = self.format(record)
@@ -222,10 +216,6 @@ class QPlainTextEditLogger(logging.Handler):
             color = '<font style=\"color:'+getColour(self.debugColour)+'\">'
         elif(record.levelname == 'INFO'):
             color = '<font style=\"color:'+getColour(self.infoColour)+'\">'
-<<<<<<< HEAD
-
-=======
->>>>>>> origin/master
         elif(record.levelname == 'WARNING'):
             color = '<font style=\"color:'+getColour(self.warningColour)+'\">'
         elif(record.levelname == 'ERROR'):
