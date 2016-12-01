@@ -36,12 +36,15 @@ def main():
     logwidget2 = lw.loggerWidget()
     ''' set colours of different log levels '''
     logwidget2.setLogColours(debugcolour='blue',infocolour='green',warningcolour='black',errorcolour='orange',criticalcolour='brown')
+    logwidget2.setDateColumnWidth(160)
+    logwidget2.setLevelColumnWidth(100)
     logwidget2.addLogger(logger)
     logwidget2.addLogger(logger2)
     logwidget2.addLogger(subclasslog)
 
     ''' or we can initialise with a list of loggers '''
     logwidget3 = lw.loggerWidget([logger, logger2, subclasslog])
+    logwidget3.setColumnWidths(200,300,400)
 
     tab = QTabWidget()
     tab.resize(800,500)
