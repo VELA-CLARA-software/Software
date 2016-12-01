@@ -37,6 +37,8 @@ class Model():
 		#1. Preliminaries
 		if self.view.checkBox_1.isChecked()==True:
 			self.PL.info('1. Preliminaries')
+			self.predictedMomentum = self.view.lineEdit_predictMom.text()
+			self.predictedI = self.func.mom2I('DIP01',self.predictedMomentum)
 
 		#2. Align Beam through Dipole
 		if self.view.checkBox_2.isChecked()==True:
@@ -48,7 +50,7 @@ class Model():
 		#3. Centre in Spec. Line
 		if self.view.checkBox_3.isChecked()==True:
 			self.PL.info('3. Center Down Spec. Line')
-			self.func.bendBeam('DIP01','BPM03', self.predictedI, self.deets)
+			self.I = self.func.bendBeam('DIP01','BPM03','YAG04', self.predictedI, tol, self.deets)
 
 		#4. Convert Current to Momentum
 		if self.view.checkBox_4.isChecked()==True:
@@ -86,7 +88,3 @@ class Model():
 				self.func.calcMomSpread(self.deets)
 		else:
 			self.PSL.error('Not confirmed momentum measurement')
-
-		def setPredictedMom(self):
-			self.predictedMomentum = self.view.lineEdit_predictMom.text()
-			self.func.predictedMomentum = self.view.lineEdit_predictMom.text()
