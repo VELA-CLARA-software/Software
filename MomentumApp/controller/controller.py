@@ -6,7 +6,10 @@ import pyqtgraph as pg
 import pyqtgraph.console as con
 from epics import caget,caput
 sys.path.append('C:\\Users\\wln24624\\Documents\\SOFTWARE\\VELA-CLARA-Software\\Software\\Striptool\\')
-import striptool
+sys.path.append('C:\\Users\\wln24624\\Documents\\SOFTWARE\\VELA-CLARA-Software\\Software\\loggerWidget\\')
+#import striptool
+import loggerWidget as lw
+
 
 class Controller():
 
@@ -15,7 +18,7 @@ class Controller():
 		self.model = model
 		#Set up grpahin areas
 		print 'controller made'
-		self.view.pushButton.clicked.connect(self.model.hello)
+		self.view.pushButton.clicked.connect(self.model.measureMomentum)
 		self.view.checkBox_all.stateChanged.connect(self.setChecks_mom)
 		self.view.checkBox_all_s.stateChanged.connect(self.setChecks_mom_s)
 
@@ -53,8 +56,9 @@ class Controller():
 		self.profileGraph  = layout_s.addPlot(title="Fit to YAG Profile")
 		self.displayMom_S = layout_s.addLabel('Momentum Spread =  MeV/c')
 		self.view.horizontalLayout_5.addWidget(monitor_s)
-
-		#self.view.gridLayout.addWidget(con.ConsoleWidget(namespace= {'pg': pg, 'np': np}, text='Hellow Llamas!!'),8,0,1,2 )
+		self.view.gridLayout_3.addWidget(lw.loggerWidget([self.model.PL,self.model.PSL,self.model.deets]))
+		self.view.gridLayout_2.addWidget(lw.loggerWidget(self.model.PSL) , 9,0,1,2)
+		self.view.gridLayout.addWidget(lw.loggerWidget(self.model.PL) , 8,0,1,2)
 
 	def setChecks_mom(self):
 		if self.view.checkBox_all.isChecked()==True:
