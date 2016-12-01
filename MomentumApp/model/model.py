@@ -20,8 +20,12 @@ class Model():
 		self.view = view
 		print("Model Made")
 
-
-
+	def LogTest(self):
+		self.PSL.info('Llama')
+		self.PSL.debug('Llama')
+		self.PSL.warning('Llama')
+		self.PSL.error('Llama')
+		self.PSL.critical('Llama')
 	def measureMomentum(self):
 		"""1. Align Beam through Dipole"""
 		if self.view.checkBox_2.isChecked()==True:
@@ -36,6 +40,8 @@ class Model():
 			self.func.bendBeam('DIP01','BPM03', self.deets)
 
 		"""3. Convert Current to Momentum"""
+		if self.view.checkBox_4.isChecked()==True:
+			self.PL.info('4. Calculate Momentum')
 
 	def measureMomentumSpread(self):
 		"""1. Minimize Beta"""

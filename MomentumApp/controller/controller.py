@@ -19,6 +19,7 @@ class Controller():
 		#Set up grpahin areas
 		print 'controller made'
 		self.view.pushButton.clicked.connect(self.model.measureMomentum)
+		self.view.pushButton_s.clicked.connect(self.model.LogTest)
 		self.view.checkBox_all.stateChanged.connect(self.setChecks_mom)
 		self.view.checkBox_all_s.stateChanged.connect(self.setChecks_mom_s)
 
@@ -56,9 +57,16 @@ class Controller():
 		self.profileGraph  = layout_s.addPlot(title="Fit to YAG Profile")
 		self.displayMom_S = layout_s.addLabel('Momentum Spread =  MeV/c')
 		self.view.horizontalLayout_5.addWidget(monitor_s)
-		self.view.gridLayout_3.addWidget(lw.loggerWidget([self.model.PL,self.model.PSL,self.model.deets]))
-		self.view.gridLayout_2.addWidget(lw.loggerWidget(self.model.PSL) , 9,0,1,2)
-		self.view.gridLayout.addWidget(lw.loggerWidget(self.model.PL) , 8,0,1,2)
+
+		self.FullLog = lw.loggerWidget([self.model.PL,self.model.PSL,self.model.deets])
+		self.FullLog.setLogColours(debugcolour='blue',infocolour='green',warningcolour='orange',errorcolour='red',criticalcolour='purple')
+		self.pLog = lw.loggerWidget(self.model.PL)
+		self.pLog.setLogColours(debugcolour='blue',infocolour='green',warningcolour='orange',errorcolour='red',criticalcolour='purple')
+		self.psLog = lw.loggerWidget(self.model.PSL)
+		self.psLog.setLogColours(debugcolour='blue',infocolour='green',warningcolour='orange',errorcolour='red',criticalcolour='purple')
+		self.view.gridLayout_3.addWidget(self.FullLog)
+		self.view.gridLayout_2.addWidget(self.psLog , 9,0,1,2)
+		self.view.gridLayout.addWidget(self.pLog , 8,0,1,2)
 
 	def setChecks_mom(self):
 		if self.view.checkBox_all.isChecked()==True:
