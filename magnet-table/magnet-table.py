@@ -15,13 +15,14 @@ from os import system # clicking URLs on labels
 # Physical.png: http://www.flaticon.com/free-icon/car-compact_31126#term=car&page=1&position=19
 # undo.png: https://www.iconfinder.com/icons/49866/undo_icon
 # warning.png: http://www.iconsdb.com/orange-icons/warning-3-icon.html
+# error.png: http://www.iconsdb.com/soylent-red-icons/warning-3-icon.html
 # magnet.png: https://www.iconfinder.com/icons/15217/magnet_icon
 
 branch = 'Release'
 branch = 'stage'
 pyds_path = '\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Software\\VELA_CLARA_PYDs\\bin\\' + branch + '\\'
 sys.path.append(pyds_path)
-import VELA_CLARA_MagnetControl
+import VELA_CLARA_MagnetControl as MagCtrl
 
 # Define the speed of light. We need this to convert field integral to angle or K.
 # e.g. theta = field_int * c / p[eV/c]
@@ -29,6 +30,10 @@ import VELA_CLARA_MagnetControl
 SPEED_OF_LIGHT = 299.792458 # in megametres/second, use with p in MeV/c
 
 label_size_policy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
+
+online_text_format = u'''<b>Read current</b>: {magnet.riWithPol:.3f} A
+                         <br><b>Integrated {attributes.strength_name}</b>: {int_strength:.3f} {attributes.int_strength_units}
+                         <br><b>Central {attributes.strength_name}</b>: {strength:.3f} {attributes.strength_units}'''
 
 def format_when_present(format_string, obj, attr):
     """"Returns a formatted string with the object's given attribute,
@@ -50,7 +55,7 @@ class Window(QtGui.QMainWindow):
     
     def __init__(self, parent=None):
         QtGui.QMainWindow.__init__(self, parent)
-        self.magInit = VELA_CLARA_MagnetControl.init()
+        self.magInit = MagCtrl.init()
 
         self.settings = QtCore.QSettings('magnet-table.ini', QtCore.QSettings.IniFormat)
         main_frame = QtGui.QFrame()
@@ -92,36 +97,26 @@ class Window(QtGui.QMainWindow):
 
         magnet_list = {}
         section_names = ('VELA Injector',)
-        section_font = QtGui.QFont()
-        section_font.setPointSize(16)
-        section_font.setBold(True)
-        magnet_font = QtGui.QFont()
-        magnet_font.setPointSize(14)
-        magnet_font.setBold(True)
+        section_font = QtGui.QFont('', 16, QtGui.QFont.Bold)
+        magnet_font = QtGui.QFont('', 14, QtGui.QFont.Bold)
         for section in section_names:
             section_vbox = QtGui.QVBoxLayout()
             header_hbox = QtGui.QHBoxLayout()
             header_hbox.setAlignment(QtCore.Qt.AlignTop)
-            title = QtGui.QLabel(section)
-            title.setFont(section_font)
-            title.setCursor(QtCore.Qt.PointingHandCursor)
-            header_hbox.addWidget(title)
-            momentum = QtGui.QDoubleSpinBox()
-            momentum.setSuffix(' MeV')
-            momentum.setValue(6.5) #TODO: set some sensible value
-            momentum.setSingleStep(0.5)
-            #TODO: set event - what should happen if the momentum is changed?
-            header_hbox.addWidget(momentum)
-            section_vbox.addLayout(header_hbox)
             magnet_list_frame = QtGui.QFrame()
+            title = self.collapsing_header(header_hbox, magnet_list_frame, section)
+            title.setFont(section_font)
+            #TODO: set some sensible value
+            momentum = self.spinbox(header_hbox, 'MeV', step=0.5, value=6.5)
+            momentum
+            #TODO: set event - what should happen if the momentum is changed?
+            section_vbox.addLayout(header_hbox)
             magnet_list_vbox = QtGui.QVBoxLayout()
             magnet_list_frame.setLayout(magnet_list_vbox)
             magnet_list_vbox.momentum_spin = momentum # so we can reference it from a magnet
             magnet_list[section] = magnet_list_vbox
             section_vbox.addWidget(magnet_list_frame)
             section_list.addLayout(section_vbox)
-            title.toggle_frame = magnet_list_frame
-            title.installEventFilter(self)
             
         mag_names = self.controller.getMagnetNames() # but these don't come in the right order so...
 #        mag_names = 'BSOL SOL HCOR01 VCOR01 HCOR02 VCOR02 QUAD01 QUAD02 QUAD03 QUAD04 HCOR03 VCOR03 HCOR04 VCOR04 DIP01 HCOR05 VCOR05 QUAD05 QUAD06 HCOR06 VCOR06 QUAD07 QUAD08 HCOR07 VCOR07 QUAD09 HCOR08 VCOR08 QUAD10 QUAD11 HCOR09 VCOR09 DIP02 HCOR10 VCOR10 QUAD12 DIP03 HCOR11 VCOR11 QUAD13 QUAD14 QUAD15'.split(' ')
@@ -167,27 +162,16 @@ class Window(QtGui.QMainWindow):
 
             icon = self.collapsing_header(main_hbox, more_info)
             icon.setPixmap(pixmap(generic_name).scaled(32, 32))
-            title = self.collapsing_header(main_hbox, more_info,
-                                           magnet.name.replace(mag_type, attributes.friendly_name + ' '))
+            # The tab here aligns all the current spinboxes nicely
+            title_text = magnet.name.replace(mag_type, attributes.friendly_name + ' ') + '\t'
+            title = self.collapsing_header(main_hbox, more_info, title_text)
             title.setFont(magnet_font)
             self.collapsing_header(main_hbox, more_info, attributes.effect_name)
-            bipolar = not magnet.magRevType == VELA_CLARA_MagnetControl.MAG_REV_TYPE.POS
-            k_spin = QtGui.QDoubleSpinBox()
-            k_spin.setSuffix(' ' + attributes.effect_units)
-            k_spin.setRange(float('-inf') if bipolar else 0, float('inf'))
-            k_spin.setDecimals(3)
-            k_spin.keyboardTracking = False # don't emit valueChanged when typing
-            k_spin.installEventFilter(self)
+            bipolar = not magnet.magRevType == MagCtrl.MAG_REV_TYPE.POS
+            k_spin = self.spinbox(main_hbox, attributes.effect_units, step=0.1, decimals=3, bipolar=bipolar)
             magnet.k_spin = k_spin
-            main_hbox.addWidget(k_spin)
             self.collapsing_header(main_hbox, more_info, 'Current')
-            current_spin = QtGui.QDoubleSpinBox()
-            main_hbox.addWidget(current_spin)
-            current_spin.setRange(-999.999 if bipolar else 0, 999.999)
-            current_spin.setDecimals(3)
-            current_spin.setSuffix(' A')
-            current_spin.keyboardTracking = False # don't emit valueChanged when typing
-            current_spin.installEventFilter(self)
+            current_spin = self.spinbox(main_hbox, 'A', step=0.1, decimals=3, bipolar=bipolar)
             magnet.current_spin = current_spin
             current_spin.valueChanged.connect(self.currentValueChanged)
             current_spin.setValue(magnet.siWithPol)
@@ -198,11 +182,10 @@ class Window(QtGui.QMainWindow):
             magnet.restore_button = restore_button
             restore_button.hide()
             warning_icon = self.collapsing_header(main_hbox, more_info)
-            warning_icon.setPixmap(pixmap('warning').scaled(24, 24))
-            warning_icon.setToolTip('Read current and set current do not match')
             warning_icon.hide()
             magnet.warning_icon = warning_icon
-            #TODO: warn when set current != read current
+            #TODO: warn when magnet is switched off
+            #TODO: warn when magnet needs degaussing
             # connect this event after setting the current so we don't trigger it unnecessarily
             k_spin.valueChanged.connect(self.kValueChanged)
             
@@ -232,7 +215,6 @@ class Window(QtGui.QMainWindow):
         self.magnet_current_changed.connect(self.setMagnetCurrent) #TODO: this might not be necessary after all
         self.magnet_controls = magnet_list
         self.setWindowTitle('Magnet Table')
-        #TODO: window icon
         self.setGeometry(300, 300, 300, 450)
         self.update_period = 100 # milliseconds
         self.startMainViewUpdateTimer()
@@ -249,6 +231,19 @@ class Window(QtGui.QMainWindow):
         parent_widget.addWidget(label)
         return label
         
+    def spinbox(self, parent, units, step=None, value=0, decimals=2, bipolar=False):
+        "Make a double-valued spinbox."
+        spinbox = QtGui.QDoubleSpinBox()
+        spinbox.setSuffix(' ' + units)
+        spinbox.setValue(value)
+        spinbox.setDecimals(decimals)
+        spinbox.setRange(float('-inf') if bipolar else 0, float('inf'))
+        if step:
+            spinbox.setSingleStep(step)
+        parent.addWidget(spinbox)
+        spinbox.installEventFilter(self)
+        return spinbox
+    
     # these functions update the GUI and (re)start the timer
     def startMainViewUpdateTimer(self):
         self.widgetUpdateTimer = QtCore.QTimer()
@@ -263,15 +258,15 @@ class Window(QtGui.QMainWindow):
             
     def updateMagnetWidgets(self):
         for magnet in self.mag_refs:
-            magnet.warning_icon.setVisible(abs(magnet.siWithPol - magnet.riWithPol) > 0.01)
-            #TODO: maybe this if block not necessary...
-            if not round(magnet.siWithPol, 3) == round(magnet.current_spin.value(), 3):
-#                print(magnet.name)
-                magnet.current_spin.setValue(magnet.siWithPol)
-                #TODO: calc K from current (is it done automatically?)
-            online_text_format = u'''<b>Read current</b>: {magnet.riWithPol:.3f} A
-                                     <br><b>Integrated {attributes.strength_name}</b>: {int_strength:.3f} {attributes.int_strength_units}
-                                     <br><b>Central {attributes.strength_name}</b>: {strength:.3f} {attributes.strength_units}'''
+            if not magnet.psuState == MagCtrl.MAG_PSU_STATE.MAG_PSU_ON:
+                magnet.warning_icon.setPixmap(pixmap('error'))
+                magnet.warning_icon.setToolTip('Magnet PSU: ' + str(magnet.psuState)[8:])
+                magnet.warning_icon.show()
+            elif abs(magnet.siWithPol - magnet.riWithPol) > 0.01:
+                magnet.warning_icon.setPixmap(pixmap('warning'))
+                magnet.warning_icon.setToolTip('Read current and set current do not match')
+                magnet.warning_icon.show()
+            magnet.current_spin.setValue(magnet.siWithPol)
             mag_type = str(magnet.magType)
             attributes = self.mag_attributes[mag_type]
             int_strength = magnet.siWithPol * magnet.slope + magnet.intercept
@@ -299,9 +294,11 @@ class Window(QtGui.QMainWindow):
                     return True # do nothing
             elif evType == QtCore.QEvent.FocusOut:
                 # record the change to a magnet
-                magnet = source.parent().mag_ref
-                magnet.active = False
-#                print('lose focus', magnet.name, magnet.active, magnet.prev_values)
+                try:
+                    magnet = source.parent().mag_ref
+                    magnet.active = False
+                except AttributeError: # won't work for momentum spin boxes
+                    pass
         return False#QtGui.QMainWindow.eventFilter(self, source, event)
     
     def labelLinkClicked(self, url):
@@ -332,11 +329,12 @@ class Window(QtGui.QMainWindow):
         else:
             magnet.prev_values.append(value)
         try:
-            # This will fail on the first time, since a restore_button hasn't been built yet
-            # We want this behaviour though - no restore necessary yet
             magnet.restore_button.show()
+            magnet.restore_button.setToolTip('Restore previous value ({:.3f} A)'.format(magnet.prev_values[-2]))
             magnet.active = True
-        except AttributeError:
+        except (AttributeError, IndexError):
+            # fails on first time (no button yet)
+            # and when first value is restored (no -2 index)
             pass
 #        print('val changed', magnet.name, value, magnet.active, magnet.prev_values)
         
@@ -368,7 +366,6 @@ class Window(QtGui.QMainWindow):
         
     def kValueChanged(self, value):
         "Called when a K spin box is changed by the user."
-        #TODO: only change if Control held down
         spinbox = self.sender()
         magnet = spinbox.parent().mag_ref
         self.calcCurrentFromK(magnet, value)
@@ -416,10 +413,10 @@ class Window(QtGui.QMainWindow):
         
     def setMachineMode(self, checked=False, mode=None):
         radio_button = self.sender()
-        if not radio_button == None:
-            mode = str(radio_button.text()).lower()
-        controller_func = self.magInit.__getattribute__(mode + '_VELA_INJ_Magnet_Controller')
-        self.controller = controller_func()
+        # mode can be defined already, we call this function on initial setup
+        if not mode:
+            mode = str(radio_button.text())
+        self.controller = self.magInit.getMagnetController(MagCtrl.MACHINE_MODE.names[mode.upper()], MagCtrl.MACHINE_AREA.VELA_INJ)
         self.settings.setValue('machine_mode', mode)
         #TODO: check that it actually worked
         #TODO: apply magnet settings to GUI
