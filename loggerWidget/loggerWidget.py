@@ -194,6 +194,9 @@ class QPlainTextEditLogger(logging.Handler):
         self.warningColour = 'deeppink'
         self.errorColour = 'red'
         self.criticalColor = 'red'
+        self.dateColumnWidth = 160
+        self.levelColumnWidth = 120
+        self.logColumnWidth = 80
 
     def emit(self, record, *args, **kwargs):
         newRowNumber = self.tableWidget.rowCount()
@@ -202,9 +205,15 @@ class QPlainTextEditLogger(logging.Handler):
         self.tableWidget.setColumnCount(4)
         self.tableWidget.horizontalHeader().setVisible(False)
         self.tableWidget.verticalHeader().setVisible(False)
+<<<<<<< HEAD
         self.tableWidget.setColumnWidth(0,150)#TIM EDIT"""
         self.tableWidget.setColumnWidth(1,40)#TIM EDIT"""
         self.tableWidget.setColumnWidth(2,80)# TIM EDIT"""
+=======
+        self.tableWidget.setColumnWidth(0,self.dateColumnWidth)
+        self.tableWidget.setColumnWidth(1,self.levelColumnWidth)
+        self.tableWidget.setColumnWidth(2,self.logColumnWidth)
+>>>>>>> origin/master
         self.tableWidget.horizontalHeader().setStretchLastSection(True)
         self.tableWidget.setWordWrap(True)
         msg = self.format(record)
@@ -212,10 +221,11 @@ class QPlainTextEditLogger(logging.Handler):
         if(record.levelname == 'DEBUG'):
             color = '<font style=\"color:'+getColour(self.debugColour)+'\">'
         elif(record.levelname == 'INFO'):
-
-            color = '<font color=\"Green\">'
             color = '<font style=\"color:'+getColour(self.infoColour)+'\">'
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/master
         elif(record.levelname == 'WARNING'):
             color = '<font style=\"color:'+getColour(self.warningColour)+'\">'
         elif(record.levelname == 'ERROR'):
@@ -272,6 +282,17 @@ class loggerWidget(QtGui.QWidget):
                 self.addLogger(logger)
         self.logTextBox.setFormatter(logging.Formatter(' %(asctime)s - %(name)s - %(levelno)s - %(message)s'))
         self.addLogger(widgetLogger)
+
+    def setColumnWidths(self,dateWidth=160, levelWidth=120, logWidth=80):
+        self.logTextBox.dateColumnWidth = dateWidth
+        self.logTextBox.levelColumnWidth = levelWidth
+        self.logTextBox.logColumnWidth = logWidth
+
+    def setDateColumnWidth(self, dateWidth=160):
+        self.logTextBox.dateColumnWidth = dateWidth
+
+    def setLevelColumnWidth(self, levelWidth=120):
+        self.logTextBox.levelColumnWidth = levelWidth
 
     def setDebugColour(self, colour):
         try:
