@@ -5,8 +5,9 @@ import numpy as np
 import pyqtgraph as pg
 import pyqtgraph.console as con
 from epics import caget,caput
-sys.path.append('C:\\Users\\wln24624\\Documents\\SOFTWARE\\VELA-CLARA-Software\\Software\\Striptool\\')
-sys.path.append('C:\\Users\\wln24624\\Documents\\SOFTWARE\\VELA-CLARA-Software\\Software\\loggerWidget\\')
+print str(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'..\\..\\Striptool\\')
+sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'..\\..\\loggerWidget\\')
 #import striptool
 import loggerWidget as lw
 
