@@ -2,7 +2,7 @@ from epics import caget,caput
 import os,sys
 import time
 import generalMomentumFunctions as general
-sys.path.append('C:\\Users\\wln24624\\Documents\\VELA-CLARA-Controllers\\Controllers\\VELA\INJECTOR\\velaINJMagnets\\bin\\Release')
+
 import logging
 #import velaINJMagnetControl as vimc
 
@@ -37,9 +37,9 @@ class Model():
 		#1. Preliminaries
 		if self.view.checkBox_1.isChecked()==True:
 			self.PL.info('1. Preliminaries')
-			self.predictedMomentum = self.view.lineEdit_predictMom.text()
+			self.predictedMomentum = float(self.view.lineEdit_predictMom.text())
 			self.predictedI = self.func.mom2I('DIP01',self.predictedMomentum)
-
+			print self.predictedI
 		#2. Align Beam through Dipole
 		if self.view.checkBox_2.isChecked()==True:
 			self.PL.info('2. Aligning Beam through Dipole')

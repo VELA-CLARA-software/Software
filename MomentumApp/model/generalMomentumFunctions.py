@@ -1,18 +1,18 @@
 from epics import caget,caput
-import scipy.constants as phyics
+import scipy.constants as physics
 import os,sys
 import time
 import math as m
-sys.path.append('C:\\Users\\wln24624\\Documents\\VELA-CLARA-Controllers\\Controllers\\VELA\INJECTOR\\velaINJMagnets\\bin\\Release')
-
-#import velaINJMagnetControl as vimc
+sys.path.append('\\\\fed.cclrc.ac.uk\\Org\\NLab\ASTeC\\Projects\\VELA\\Software\\VELA_CLARA_PYDs\\bin\\Release')
+import VELA_CLARA_MagnetControl as mag
 
 
 class Functions():
 	def __init__(self):
 		print("Momentum Functions Initialized")
 		self.n = 0 #number of shots to average over for a given measuremnet
-		self.magnets =	vimc.velaINJMagnetController(False,False,False)
+		self.magInit = mag.init()
+		self.magnets = 	self.magInit.offline_VELA_INJ_Magnet_Controller()
 	def align(self, hcor, bpm, log):
 		log.info('Aligned beam using ' + hcor + ' and ' + bpm)
 
@@ -75,4 +75,9 @@ class Functions():
 		return dipole.L*physics.e*(dipole.m*I + dipole.c)/m.sin(0.5*physics.pi)
 
 	def mom2I(self, dipole, mom):
-		return ((mom*m.sin(0.5*physics.pi)/(dipole.L*physics.e) - dipole.c))/dipole.m
+		#log.info('Converting Momentim to Current for '+ dipole)
+		DIP = self.magnets.getMagObjConstRef( dipole )
+		print DIP.magneticLength
+		#print mom*m.sin(0.25*physics.pi)
+		return ((mom*m.sin(0.25*physics.pi)/(DIP.magneticLength*physics.e) - DIP.intercept))/DIP.slope
+		#return ((mom*m.sin(0.25*physics.pi)/(402.9*physics.e) - DIP.intercept))/DIP.slope
