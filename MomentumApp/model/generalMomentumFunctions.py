@@ -5,7 +5,7 @@ import time
 import math as m
 sys.path.append('C:\\Users\\wln24624\\Documents\\VELA-CLARA-Controllers\\Controllers\\VELA\INJECTOR\\velaINJMagnets\\bin\\Release')
 
-#import velaINJMagnetControl as vimc
+import velaINJMagnetControl as vimc
 
 
 class Functions():
