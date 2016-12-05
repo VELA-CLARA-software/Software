@@ -3,14 +3,10 @@ import scipy.constants as physics
 import os,sys
 import time
 import math as m
-<<<<<<< HEAD
+
 sys.path.append('\\\\fed.cclrc.ac.uk\\Org\\NLab\ASTeC\\Projects\\VELA\\Software\\VELA_CLARA_PYDs\\bin\\Release')
 import VELA_CLARA_MagnetControl as mag
-=======
-sys.path.append('C:\\Users\\wln24624\\Documents\\VELA-CLARA-Controllers\\Controllers\\VELA\INJECTOR\\velaINJMagnets\\bin\\Release')
 
-import velaINJMagnetControl as vimc
->>>>>>> origin/master
 
 
 class Functions():
