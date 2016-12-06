@@ -39,7 +39,10 @@ class Model():
 			self.PL.info('1. Preliminaries')
 			self.predictedMomentum = float(self.view.lineEdit_predictMom.text())
 			self.predictedI = self.func.mom2I('DIP01',self.predictedMomentum)
+			self.I = self.func.mom2I('DIP01',self.predictedMomentum)
 			print self.predictedI
+			self.p = self.func.calcMom('DIP01',self.I,self.deets)
+			print self.p
 		#2. Align Beam through Dipole
 		if self.view.checkBox_2.isChecked()==True:
 			self.PL.info('2. Aligning Beam through Dipole')
@@ -50,12 +53,13 @@ class Model():
 		#3. Centre in Spec. Line
 		if self.view.checkBox_3.isChecked()==True:
 			self.PL.info('3. Center Down Spec. Line')
-			self.I = self.func.bendBeam('DIP01','BPM03','YAG04', self.predictedI, tol, self.deets)
+			self.I = self.func.bendBeam('DIP01','BPM03','YAG04', self.predictedI, 1, self.deets) # tol=1 (pixel)
 
 		#4. Convert Current to Momentum
 		if self.view.checkBox_4.isChecked()==True:
 			self.PL.info('4. Calculate Momentum')
-			self.func.calcMom(self.deets)
+			self.p = self.func.calcMom('DIP01',self.I,self.deets)
+			print self.p
 
 
 	#Outline of Momentum Spread Measurement Procedure

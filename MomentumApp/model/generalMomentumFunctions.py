@@ -3,6 +3,7 @@ import scipy.constants as physics
 import os,sys
 import time
 import math as m
+import random as r
 
 sys.path.append('\\\\fed.cclrc.ac.uk\\Org\\NLab\ASTeC\\Projects\\VELA\\Software\\VELA_CLARA_PYDs\\bin\\Release')
 import VELA_CLARA_MagnetControl as mag
@@ -12,47 +13,58 @@ import VELA_CLARA_MagnetControl as mag
 class Functions():
 	def __init__(self):
 		print("Momentum Functions Initialized")
-		self.n = 0 #number of shots to average over for a given measuremnet
+		self.n = 10 #number of shots to average over for a given measuremnet
 		self.magInit = mag.init()
-		self.magnets = 	self.magInit.offline_VELA_INJ_Magnet_Controller()
+		self.magnets = 	self.magInit.virtual_VELA_INJ_Magnet_Controller()
 	def align(self, hcor, bpm, log):
 		log.info('Aligned beam using ' + hcor + ' and ' + bpm)
 
-	def stepCurrent(magnet,step):
+	def stepCurrent(self,magnet,step):
+		caput('VM-EBT-INJ-MAG-DIP-01:RIRAN', 0)#for virtual machine
+		self.magnets.switchONpsu(magnet)
+		DIP = self.magnets.getMagObjConstRef(magnet)
 		setI = self.magnets.getSI(magnet)+step
-		self.magnets.setSI(magnet,setI,tol,10)#seet the current and it can wait her untill it reaches to within tolerance
+		self.magnets.setSI(magnet,setI,DIP.riTolerance,100)#seet the current and it can wait her untill it reaches to within tolerance
 
 	def getXBPM(self,bpm):
 		x=[]
 		for i in range(self.n):
-			x.append(self.bpms.getX(bpm))
+			#x.append(self.bpms.getX(bpm))
+			x.append(r.gauss(0.5,0.1))# added to fake a step
 		return sum(x)/self.n
 
 	def getXScreen(self, screen):
 		x=[]
 		for i in range(self.n):
-			x.append(self.screens.getX(screen))
+			#x.append(self.screens.getX(screen))
+			x.append(r.gauss(0.5,0.1))# added to fake a step
 		return sum(x)/self.n
+
+	def isBeamOnScreen(self,screen):#this does nothing at the moment
+		return True
 
 	def bendBeam(self, dipole, bpm, screen, predictedI, tol, log):
 		#position of beam
 		step = predictedI/100
-		x=999
+		x=500 #fake start x position
+
 		#set dipole current to 90% of predicted
 		setI = 0.9*predictedI
 		self.magnets.setSI(dipole,setI)
 
-		while(isBeamOnScreen(screen)==False):
+		#keep itterration until beam is on screen
+		while(self.isBeamOnScreen(screen)==False):
 			stepCurrent(dipole,step)
 		#measure
 		x_old=x
-		x=getXBPM(bpm)
+		x=x*self.getXBPM(bpm)
 		#start iterative loop
 		while(x>tol):
-			stepCurrent(dipole,step)
+			self.stepCurrent(dipole,step)
 			#measure
 			x_old=x
-			x=getXBPM(bpm)
+			x=self.getXBPM(bpm)*x
+			print x
 			#shrink step size if step will be too big
 			if x<(x_old-x):
 				step = step*0.5
@@ -74,12 +86,13 @@ class Functions():
 
 	def calcMom(self, dipole, I, log):
 		log.info('Calculated Momentum')
-		return dipole.L*physics.e*(dipole.m*I + dipole.c)/m.sin(0.5*physics.pi)
+		DIP = self.magnets.getMagObjConstRef( dipole )
+		return (physics.c/1000000000)*DIP.magneticLength*(DIP.slope*I + DIP.intercept)/m.sin(0.25*physics.pi)
 
 	def mom2I(self, dipole, mom):
 		#log.info('Converting Momentim to Current for '+ dipole)
 		DIP = self.magnets.getMagObjConstRef( dipole )
-		print DIP.magneticLength
+		#print DIP.magneticLength
 		#print mom*m.sin(0.25*physics.pi)
-		return ((mom*m.sin(0.25*physics.pi)/(DIP.magneticLength*physics.e) - DIP.intercept))/DIP.slope
+		return (1000000000/physics.c)*((mom*m.sin(0.25*physics.pi)/(DIP.magneticLength) - DIP.intercept))/DIP.slope
 		#return ((mom*m.sin(0.25*physics.pi)/(402.9*physics.e) - DIP.intercept))/DIP.slope

@@ -1,13 +1,13 @@
 from PyQt4 import QtGui, QtCore
-import sys
+import sys,os
 import time
 import numpy as np
 import pyqtgraph as pg
 import pyqtgraph.console as con
 from epics import caget,caput
 print str(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'..\\..\\Striptool\\')
-sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'..\\..\\loggerWidget\\')
+sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\\..\\..\\Striptool\\')
+sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\\..\\..\\loggerWidget\\')
 #import striptool
 import loggerWidget as lw
 
@@ -70,6 +70,15 @@ class Controller():
 		self.view.gridLayout_3.addWidget(self.FullLog)
 		self.view.gridLayout_2.addWidget(self.psLog , 9,0,1,2)
 		self.view.gridLayout.addWidget(self.pLog , 8,0,1,2)
+
+
+		self.timer = QtCore.QTimer()
+		self.timer.timeout.connect(self.updateDisplays)
+		self.timer.start(10)
+
+	def updateDisplays(self):
+		self.displayMom.setText('MOMENTUM<br> Current: '+str(self.model.I)+' A<br>'+str(self.model.p)+' = MeV/c')
+
 
 	def setChecks_mom(self):
 		if self.view.checkBox_all.isChecked()==True:
