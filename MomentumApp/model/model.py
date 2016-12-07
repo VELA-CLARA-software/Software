@@ -2,9 +2,8 @@ from epics import caget,caput
 import os,sys
 import time
 import generalMomentumFunctions as general
-
 import logging
-#import velaINJMagnetControl as vimc
+
 
 
 class Model():
@@ -25,8 +24,6 @@ class Model():
 		#Generic momentum procedures
 		self.func = general.Functions()
 
-		#Magnet, BPM and screen controllers
-		#self.magnets =	vimc.velaINJMagnetController(False,False,False)
 		self.view = view
 		print("Model Initialized")
 
@@ -39,16 +36,13 @@ class Model():
 			self.PL.info('1. Preliminaries')
 			self.predictedMomentum = float(self.view.lineEdit_predictMom.text())
 			self.predictedI = self.func.mom2I('DIP01',self.predictedMomentum)
-			self.I = self.func.mom2I('DIP01',self.predictedMomentum)
-			print self.predictedI
-			self.p = self.func.calcMom('DIP01',self.I,self.deets)
-			print self.p
+
 		#2. Align Beam through Dipole
 		if self.view.checkBox_2.isChecked()==True:
 			self.PL.info('2. Aligning Beam through Dipole')
-			for i in range(3):
-				self.func.align('HCOR01','BPM01', self.deets)
-				self.func.align('HCOR02','BPM02', self.deets)
+		for i in range(3):
+				self.func.align('HCOR01','BPM01',1, self.deets)
+				self.func.align('HCOR02','BPM02',1, self.deets)
 
 		#3. Centre in Spec. Line
 		if self.view.checkBox_3.isChecked()==True:
@@ -78,7 +72,7 @@ class Model():
 				self.func.minimizeBeta('QUAD01','YAG05',self.deets)
 
 				"""2.2 Set Dispersion Size on Spec Line"""
-				self.PSL.info('2.2 Minimize Beta')
+				self.PSL.info('2.2 Set Dipersion size')
 				self.func.fixDispersion('QUAD06','YAG04',self.deets)
 
 			"""3. Calculate Dispersion """
