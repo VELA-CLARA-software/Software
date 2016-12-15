@@ -33,26 +33,27 @@ class Model():
 
 		#1. Preliminaries
 		if self.view.checkBox_1.isChecked()==True:
-			self.PL.info('1. Preliminaries')
+			#self.PL.info('1. Preliminaries')
 			self.predictedMomentum = float(self.view.lineEdit_predictMom.text())
 			self.predictedI = self.func.mom2I('DIP01',self.predictedMomentum)
 
+			print("hello"+str(self.predictedI))
 		#2. Align Beam through Dipole
 		if self.view.checkBox_2.isChecked()==True:
-			self.PL.info('2. Aligning Beam through Dipole')
-		for i in range(3):
-				self.func.align('HCOR01','BPM01',1, self.deets)
-				self.func.align('HCOR02','BPM02',1, self.deets)
+			#self.PL.info('2. Aligning Beam through Dipole')
+			for i in range(3):
+				self.func.align('HCOR01','BPM01',1)
+				self.func.align('HCOR02','BPM02',1)
 
 		#3. Centre in Spec. Line
 		if self.view.checkBox_3.isChecked()==True:
-			self.PL.info('3. Center Down Spec. Line')
-			self.I = self.func.bendBeam('DIP01','BPM03','YAG04', self.predictedI, 1, self.deets) # tol=1 (pixel)
+			#self.PL.info('3. Center Down Spec. Line')
+			self.I = self.func.bendBeam('DIP01','BPM03','YAG04', self.predictedI, 1) # tol=1 (pixel)
 
 		#4. Convert Current to Momentum
 		if self.view.checkBox_4.isChecked()==True:
-			self.PL.info('4. Calculate Momentum')
-			self.p = self.func.calcMom('DIP01',self.I,self.deets)
+			#self.PL.info('4. Calculate Momentum')
+			self.p = self.func.calcMom('DIP01',self.I)
 			print self.p
 
 
@@ -62,27 +63,28 @@ class Model():
 			"""2. Set Disperaion"""
 			if self.view.checkBox_1_s.isChecked()==True:
 				"""1. Checks"""
-				self.PSL.info('1. Run Checks')
-				self.func.minimizeBeta('QUAD01','YAG05',self.deets)
+				#self.PSL.info('1. Run Checks')
+				self.func.minimizeBeta('QUAD01','YAG05',0.5)
 
 			"""2. Set Disperaion"""
 			if self.view.checkBox_2_s.isChecked()==True:
 				"""2.1 Minimize Beta"""
-				self.PSL.info('2.1 Minimize Beta')
-				self.func.minimizeBeta('QUAD01','YAG05',self.deets)
+				#self.PSL.info('2.1 Minimize Beta')
+				self.func.minimizeBeta('QUAD01','YAG05')
 
 				"""2.2 Set Dispersion Size on Spec Line"""
-				self.PSL.info('2.2 Set Dipersion size')
-				self.func.fixDispersion('QUAD06','YAG04',self.deets)
+				#self.PSL.info('2.2 Set Dipersion size')
+				self.func.fixDispersion('QUAD06','YAG04')
 
 			"""3. Calculate Dispersion """
 			if self.view.checkBox_3_s.isChecked()==True:
-				self.PSL.info('3. Dertermine Dispersion')
-				self.func.findDispersion('DIP01','YAG04',self.deets)
+				#self.PSL.info('3. Dertermine Dispersion')
+				self.func.findDispersion('DIP01','YAG04')
 
 			"""4. Calculate Momenum Spread """
 			if self.view.checkBox_4_s.isChecked()==True:
-				self.PSL.info('4. Get Momentum Spread')
-				self.func.calcMomSpread(self.deets)
+				#self.PSL.info('4. Get Momentum Spread')
+				self.func.calcMomSpread()
 		else:
-			self.PSL.error('Not confirmed momentum measurement')
+			#self.PSL.error('Not confirmed momentum measurement')
+			print 'hi'
