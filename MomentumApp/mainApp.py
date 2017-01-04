@@ -12,7 +12,6 @@ from PyQt4 import QtGui, QtCore
 import model
 import controller
 import view
-import threads
 class App(QtGui.QApplication):
 	def __init__(self, sys_argv):
 		super(App, self).__init__(sys_argv)
@@ -22,7 +21,6 @@ class App(QtGui.QApplication):
 		self.MainWindow = QtGui.QMainWindow()
 		self.view.setupUi(self.MainWindow)
 		self.model = model.Model(self.view)#Function fot when stuff ist change and buttons are clicked
-		#self.thread = threads.momentumProcedure(self.view)
 		self.controller = controller.Controller(self.view, self.model)
 
 		self.MainWindow.show()

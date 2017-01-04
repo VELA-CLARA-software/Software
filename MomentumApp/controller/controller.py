@@ -6,6 +6,8 @@ import pyqtgraph as pg
 sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\\..\\..\\loggerWidget\\')
 import loggerWidget as lw
 import random as r
+import threads
+
 
 
 class Controller():
@@ -71,13 +73,21 @@ class Controller():
 		self.timer.timeout.connect(self.updateDisplays)
 		self.timer.start(1000)
 		#set up connections
-		self.view.pushButton.clicked.connect(self.model.measureMomentum)
-		self.view.pushButton_s.clicked.connect(self.model.measureMomentumSpread)
+		self.view.pushButton.clicked.connect(self.momThread)
+		self.view.pushButton_s.clicked.connect(self.momSThread)
 		self.view.checkBox_all.stateChanged.connect(self.setChecks_mom)
 		self.view.checkBox_all_s.stateChanged.connect(self.setChecks_mom_s)
 		self.view.pushButton_refreshImage.clicked.connect(self.refreshImage)
 
 
+
+
+	def momSThread(self):
+		self.genericThread = threads.GenericThread(self.model.measureMomentumSpread)
+		self.genericThread.start()
+	def momThread(self):
+		self.genericThread = threads.GenericThread(self.model.measureMomentum)
+		self.genericThread.start()
 	def updateDisplays(self):
 		self.displayMom.setText('MOMENTUM<br> Current: '+str(self.model.I)+' A<br>'+str(self.model.p)+' = MeV/c')
 		self.bg1.setOpts(x=self.xdict.keys(), height=[r.uniform(-1,1),r.uniform(-1,1)], width=1)# replace the random generators with  bpm x read offs
