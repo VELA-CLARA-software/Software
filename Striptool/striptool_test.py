@@ -57,8 +57,18 @@ def main():
 
     ''' Here we create a tab layout widget, and put the strip plot in one of the tabs, with an empty QWidget in the other '''
     tab = QTabWidget()
-    tab.addTab(sp,"Strip Plot")
-    tab.addTab(sp2,"Strip Plot 2")
+    print sp
+    plotLayout = QVBoxLayout()
+    plotSplitter = QSplitter()
+    plotSplitter.setOrientation(Qt.Vertical)
+    plotSplitter.addWidget(sp)
+    plotSplitter.addWidget(sp2)
+    plotLayout.addWidget(plotSplitter,0)
+    # plotLayout.addWidget(sp2,1)
+    plotWidget = QWidget()
+    plotWidget.setLayout(plotLayout)
+    tab.addTab(plotWidget,"Strip Plot")
+    # tab.addTab(sp2,"Strip Plot 2")
     ''' Add loggerWidget Tab (requires loggerWidget - comment out if not available)'''
     tab.addTab(logwidget1,"Log")
     layout = QWidget()
