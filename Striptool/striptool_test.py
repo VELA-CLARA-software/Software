@@ -1,9 +1,9 @@
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
+import pyqtgraph as pg
 import striptool as striptool
 import numpy as np
 import sys, time
-import pyqtgraph as pg
 ''' Load loggerWidget library (comment out if not available) '''
 import loggerWidget as lw
 import logging
@@ -25,14 +25,14 @@ def main():
     ''' Initiate logger (requires loggerWidget - comment out if not available)'''
     logwidget1 = lw.loggerWidget([logger,striptool.logger])
 
-    ''' initialise an instance of the stripPlot Widget '''
-    sp = striptool.stripPlot()
-    sp2 = striptool.stripPlot()
-
     ''' These are some options for pyqtgraph that make the graph black-on-white, and turn on antialiasing, which is nicer on the eye '''
     pg.setConfigOptions(antialias=True)
     pg.setConfigOption('background', 'w')
     pg.setConfigOption('foreground', 'k')
+
+    ''' initialise an instance of the stripPlot Widget '''
+    sp = striptool.stripPlot()
+    sp2 = striptool.stripPlot()
 
     ''' This sets the signal length at which the system starts decimating the data to speed up plotting.
         For a 2*DecimateLength signal, the decimation factor would be 2.
@@ -47,7 +47,7 @@ def main():
             - see <http://www.pyqtgraph.org/documentation/style.html>'''
     sp.addSignal(name='signal1',pen='r', timer=1.0/10.0, function=lambda: createRandomSignal(0.5))
     sp.addSignal(name='signal2',pen='g', timer=1.0/10.0, function=lambda: createRandomSignal(-0.5))
-    sp2.addSignal(name='signal1',pen='r', timer=1.0/50.0, function=lambda: createRandomSignal(0.5))
+    sp2.addSignal(name='signal1',pen='b', timer=1.0/50.0, function=lambda: createRandomSignal(0.5))
     # sp2.addSignal(name='signal2',pen='g', timer=1.0/50.0, function=lambda: createRandomSignal(-0.5))
 
 
@@ -71,7 +71,7 @@ def main():
 
     ''' modify the plot scale to 10 secs '''
     sp.setPlotScale(60)
-    # sp2.setPlotScale(60)
+    sp2.setPlotScale(60)
 
     ''' Default PyQT exit handler '''
     sys.exit(app.exec_())

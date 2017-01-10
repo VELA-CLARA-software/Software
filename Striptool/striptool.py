@@ -134,7 +134,7 @@ class createSignalTimer(QObject):
 class recordWorker(QtCore.QObject):
     def __init__(self, signal, name):
         super(recordWorker, self).__init__()
-        print "recordWorker = ", name
+        # print "recordWorker = ", name
         self.signal = signal
         self.name = name
         self.signal.dataReady.connect(self.updateRecord)
@@ -155,7 +155,7 @@ class createSignalRecord(QObject):
         global records
         if not 'records' in globals():
             records = {}
-        if name in records:
+        if name in records.itervalues():
             print "name,",name,", already exists!"
         else:
             records[name] = {'name': name, 'pen': 'r', 'timer': timer, 'function': function, 'ploton': True, 'data': []}
@@ -269,7 +269,7 @@ class generalPlot(pg.PlotWidget):
                     # print self.curve._fourierTransform(self.curve.xData,self.curve.yData)
                     # print self.curve.xDisp
                     indexes = peakutils.indexes(self.curve.yDisp, thres=0.75, min_dist=1)
-                    print 'xdata = ', self.curve.xDisp[indexes]
+                    # print 'xdata = ', self.curve.xDisp[indexes]
                     self.plot.updateSpectrumMode(True)
                 else:
                     self.curve.setData({'x': x, 'y': y}, pen=pen, stepMode=False)
@@ -561,9 +561,9 @@ class stripPlot(QWidget):
         self.FFTRadio = QRadioButton("FFT")
         self.FFTRadio.toggled.connect(lambda: self.setPlotType(FFT=True))
         self.buttonLayout.addWidget(self.FFTRadio,2)
-        self.ScatterRadio = QRadioButton("Scatter")
-        self.ScatterRadio.toggled.connect(lambda: self.setPlotType(scatter=True))
-        self.buttonLayout.addWidget(self.ScatterRadio,3)
+        # self.ScatterRadio = QRadioButton("Scatter")
+        # self.ScatterRadio.toggled.connect(lambda: self.setPlotType(scatter=True))
+        # self.buttonLayout.addWidget(self.ScatterRadio,3)
         ''' Create H Layout for scroll/pause '''
         self.autoscrollPauseLayout = QtGui.QHBoxLayout()
         ''' Add Autoscroll checkbox '''
@@ -651,10 +651,12 @@ class stripPlot(QWidget):
                 self.plot.clear()
                 for name in records:
                     # print records[name]['curve'].curve
-                    self.plot.addItem(records[name]['curve'].curve)
+                    if records[name]['parent'] == self:
+                        self.plot.addItem(records[name]['curve'].curve)
                 self.plot.updateSpectrumMode(False)
                 for name in records:
-                    records[name]['curve'].update()
+                    if records[name]['parent'] == self:
+                        records[name]['curve'].update()
                 if FFT:
                     self.plot.updateSpectrumMode(True)
                 else:
@@ -673,6 +675,7 @@ class stripPlot(QWidget):
         self.plotThread.timeout.connect(self.plotUpdate)
 
     def addSignal(self, name, pen, timer, function, *args):
+        # print 'self = ',self
         global records
         if not 'records' in globals() or not name in records:
             signalrecord = createSignalRecord(name=name, timer=timer, function=function, *args)
@@ -683,8 +686,10 @@ class stripPlot(QWidget):
             name = name + '_2'
             signalrecord = createSignalRecord(name=name, timer=timer, function=function, *args)
             records[name]['record'] = signalrecord
+        # print records.viewvalues()
         curve = self.plotWidget.addCurve(self.plotWidget, name)
         records[name]['curve'] = curve
+        records[name]['parent'] = self
         records[name]['pen'] = pen
         self.legend.addLegendItem(name)
         logger.info('Signal '+name+' added!')
