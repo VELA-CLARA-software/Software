@@ -3,11 +3,16 @@ from PyQt4.QtGui import *
 import pyqtgraph as pg
 import striptool as striptool
 import numpy as np
-import sys, time
+import sys, time, os
 ''' Load loggerWidget library (comment out if not available) '''
 import loggerWidget as lw
 import logging
 logger = logging.getLogger(__name__)
+os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
+os.environ["EPICS_CA_ADDR_LIST"] = "10.10.0.13" #BE SPECIFIC.... YOUR I.P. FOR YOUR VM
+os.environ["EPICS_CA_MAX_ARRAY_BYTES"] = "10000000"
+sys.path.append('\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Software\\VELA_CLARA_PYDs\\bin\\Release')
+import VELA_CLARA_MagnetControl as mag
 
 ''' This is a signal generator. It could easily read a magnet current using the hardware controllers
     The signal should have peaks at 5 Hz and 10 Hz, which should be seen on the FFT plot assuming the
@@ -42,11 +47,18 @@ def main():
              - you probably don't need to use this unless you are having trouble with slow plotting.'''
     sp.setDecimateLength(100000)
 
+    ''' Set-up the VELA Controllers '''
+    magInit = mag.init()
+    magnets = magInit.virtual_VELA_INJ_Magnet_Controller()
+    # magnets.switchOnPSU('DIP01')
+    dip = magnets.getMagObjConstRef('QUAD02')
+
+
     ''' Add some signals to the striptool - note they call our signal generator at a frequency of 1/timer (100 Hz and 10 Hz in these cases).
         The 'pen' argument sets the color of the curves, but can be changed in the GUI
             - see <http://www.pyqtgraph.org/documentation/style.html>'''
-    sp.addSignal(name='signal1',pen='r', timer=1.0/10.0, function=lambda: createRandomSignal(0.5))
-    sp.addSignal(name='signal2',pen='g', timer=1.0/10.0, function=lambda: createRandomSignal(-0.5))
+    sp.addSignal(name='signal1',pen='r', timer=1.0/10.0, function=lambda: magnets.getRI('QUAD01'))
+    sp.addSignal(name='signal2',pen='g', timer=1.0/10.0, function=lambda: dip.riWithPol)
     sp2.addSignal(name='signal1',pen='b', timer=1.0/50.0, function=lambda: createRandomSignal(0.5))
     # sp2.addSignal(name='signal2',pen='g', timer=1.0/50.0, function=lambda: createRandomSignal(-0.5))
 

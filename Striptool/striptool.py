@@ -548,7 +548,6 @@ class stripPlot(QWidget):
         self.plotThread = QTimer()
         self.plotWidget = generalPlot(self.parent())
         self.plot = self.plotWidget.createPlot()
-        self.stripPlot.addWidget(self.plotWidget.plotWidget,0, 0,5,8)
         ''' Sidebar for graph type selection '''
         self.buttonLayout = QtGui.QVBoxLayout()
         self.linearRadio = QRadioButton("Linear")
@@ -588,16 +587,51 @@ class stripPlot(QWidget):
         self.legend = stripLegend()
         self.buttonLayout.addWidget(self.legend.layout,4)
         ''' Add sidebar  to main layout'''
-        self.stripPlot.addLayout(self.buttonLayout,0, 8,5,2)
+        self.GUISplitter = QtGui.QSplitter()
+        self.GUISplitter.setHandleWidth(10)
+        self.GUISplitter.addWidget(self.plotWidget.plotWidget)
+        self.buttonFrame = QtGui.QFrame()
+        self.buttonFrame.setLayout(self.buttonLayout)
+        self.GUISplitter.addWidget(self.buttonFrame)
+
+        handle = self.GUISplitter.handle(1)
+        layout = QtGui.QVBoxLayout()
+        layout.setContentsMargins(0, 0, 0, 0)
+        self.splitterbutton = QtGui.QToolButton(handle)
+        self.splitterbutton.setArrowType(QtCore.Qt.LeftArrow)
+        self.splitterbutton.clicked.connect(
+            lambda: self.handleSplitterButton(False))
+        layout.addWidget(self.splitterbutton)
+        handle.setLayout(layout)
+        sizes = self.GUISplitter.sizes()
+        totalsize = sum(sizes)
+        self.GUISplitter.setSizes([1,0])
+        self.stripPlot.addWidget(self.GUISplitter,0,0,5,5)
         self.setupPlotRateSlider()
-        self.stripPlot.addWidget(self.plotRateLabel,5, 2,1,1)
-        self.stripPlot.addWidget(self.plotRateSlider,5, 3,1,1)
+        self.stripPlot.addWidget(self.plotRateLabel,5, 0,1,1)
+        self.stripPlot.addWidget(self.plotRateSlider,5, 1,1,1)
         self.setLayout(self.stripPlot)
         self.togglePause()
         self.plotThread.timeout.connect(lambda: self.plotWidget.date_axis.linkedViewChanged(self.plotWidget.date_axis.linkedView()))
         self.plotWidget.plot.vb.sigXRangeChanged.connect(self.setPlotScaleLambda)
         # self.plotThread.timeout.connect(self.plotWidget.updateScatterPlot)
         logger.debug('stripPlot initiated!')
+
+    def handleSplitterButton(self, left=True):
+        sizes = self.GUISplitter.sizes()
+        totalsize = sum(sizes)
+        if not all(self.GUISplitter.sizes()):
+            # logger.debug('splitter new sizes = '+str(totalsize))
+            self.GUISplitter.setSizes([200,200])
+            # self.GUISplitter.setSizes([1, 1000])
+            self.splitterbutton.setArrowType(QtCore.Qt.RightArrow)
+        elif left:
+            self.GUISplitter.setSizes([0, 1])
+            self.splitterbutton.setArrowType(QtCore.Qt.LeftArrow)
+        else:
+            self.GUISplitter.setSizes([1, 0])
+            self.splitterbutton.setArrowType(QtCore.Qt.LeftArrow)
+        # logger.debug('splitter sizes = '+str(self.GUISplitter.sizes()))
 
 
     def setupPlotRateSlider(self):
