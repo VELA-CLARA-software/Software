@@ -532,7 +532,7 @@ class stripLegend(pg.TreeWidget):
 
 class stripPlot(QWidget):
 
-    def __init__(self, parent = None):
+    def __init__(self, parent = None, plotRateBar=True):
         super(stripPlot, self).__init__(parent)
         global usePlotRange, autoscroll
         usePlotRange = True
@@ -593,7 +593,7 @@ class stripPlot(QWidget):
         self.buttonFrame = QtGui.QFrame()
         self.buttonFrame.setLayout(self.buttonLayout)
         self.GUISplitter.addWidget(self.buttonFrame)
-
+        self.GUISplitter.setStyleSheet("QSplitter::handle{background-color:transparent;}");
         handle = self.GUISplitter.handle(1)
         layout = QtGui.QVBoxLayout()
         layout.setContentsMargins(0, 0, 0, 0)
@@ -601,21 +601,36 @@ class stripPlot(QWidget):
         self.splitterbutton.setArrowType(QtCore.Qt.LeftArrow)
         self.splitterbutton.clicked.connect(
             lambda: self.handleSplitterButton(False))
+        self.GUISplitter.splitterMoved.connect(self.handleSplitterButtonArrow)
         layout.addWidget(self.splitterbutton)
         handle.setLayout(layout)
-        sizes = self.GUISplitter.sizes()
-        totalsize = sum(sizes)
         self.GUISplitter.setSizes([1,0])
-        self.stripPlot.addWidget(self.GUISplitter,0,0,5,5)
+        self.stripPlot.addWidget(self.GUISplitter,0,0,5,2)
         self.setupPlotRateSlider()
-        self.stripPlot.addWidget(self.plotRateLabel,5, 0,1,1)
-        self.stripPlot.addWidget(self.plotRateSlider,5, 1,1,1)
+        if plotRateBar:
+            self.stripPlot.addWidget(self.plotRateLabel,5, 0)
+            self.stripPlot.addWidget(self.plotRateSlider,5, 1)
         self.setLayout(self.stripPlot)
         self.togglePause()
         self.plotThread.timeout.connect(lambda: self.plotWidget.date_axis.linkedViewChanged(self.plotWidget.date_axis.linkedView()))
         self.plotWidget.plot.vb.sigXRangeChanged.connect(self.setPlotScaleLambda)
         # self.plotThread.timeout.connect(self.plotWidget.updateScatterPlot)
         logger.debug('stripPlot initiated!')
+        self.setSizePolicy(QSizePolicy.Ignored,QSizePolicy.Ignored)
+
+    def setWidth(self, width=16777215):
+        self.stripPlot.setMaximumWidth(width)
+
+    def setHeight(self, height=16777215):
+        self.stripPlot.setMaximumHeight(height)
+
+    def setWidthHeight(self, height, width):
+        self.setWidth(width)
+        self.setHeight(height)
+
+    def setQSize(self, heightwidth):
+        self.setWidth(0.95*heightwidth.width())
+        self.setHeight(0.95*heightwidth.height())
 
     def handleSplitterButton(self, left=True):
         sizes = self.GUISplitter.sizes()
@@ -624,15 +639,21 @@ class stripPlot(QWidget):
             # logger.debug('splitter new sizes = '+str(totalsize))
             self.GUISplitter.setSizes([200,200])
             # self.GUISplitter.setSizes([1, 1000])
-            self.splitterbutton.setArrowType(QtCore.Qt.RightArrow)
+            # self.splitterbutton.setArrowType(QtCore.Qt.RightArrow)
         elif left:
             self.GUISplitter.setSizes([0, 1])
-            self.splitterbutton.setArrowType(QtCore.Qt.LeftArrow)
+            # self.splitterbutton.setArrowType(QtCore.Qt.LeftArrow)
         else:
             self.GUISplitter.setSizes([1, 0])
-            self.splitterbutton.setArrowType(QtCore.Qt.LeftArrow)
-        # logger.debug('splitter sizes = '+str(self.GUISplitter.sizes()))
+            # self.splitterbutton.setArrowType(QtCore.Qt.LeftArrow)
+        self.handleSplitterButtonArrow()
 
+    def handleSplitterButtonArrow(self):
+        sizes = self.GUISplitter.sizes()
+        if self.GUISplitter.sizes()[1] > 0:
+            self.splitterbutton.setArrowType(QtCore.Qt.RightArrow)
+        else:
+            self.splitterbutton.setArrowType(QtCore.Qt.LeftArrow)
 
     def setupPlotRateSlider(self):
         self.plotRateLabel = QtGui.QLabel()
