@@ -5,6 +5,8 @@ import sys, os
 dburtLocation = "\\\\fed.cclrc.ac.uk\\org\\NLab\\ASTeC\\Projects\\VELA\\Snapshots\\DBURT\\"
 appIcon = 'magpic.jpg'
 
+sys.path.append('\\\\fed.cclrc.ac.uk\\org\\NLab\\ASTeC\\Projects\\VELA\\Software\\VELA_CLARA_PYDs\\bin\\stage\\')
+
 import VELA_CLARA_MagnetControl as mag
 
 from PyQt4 import QtGui, QtCore
