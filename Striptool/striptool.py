@@ -180,10 +180,11 @@ class CAxisTime(pg.AxisItem):
     # @param[in] spacing Not used.
     def __init__(self, orientation=None, pen=None, linkView=None, parent=None, maxTickLength=-5, showValues=True):
         super(CAxisTime, self).__init__(parent=parent, orientation=orientation, linkView=linkView)
+        self.dateTicksOn = True
 
     def tickStrings(self, values, scale, spacing):
-        global dateTicksOn, fixedtimepoint, autoscroll
-        if dateTicksOn:
+        global fixedtimepoint, autoscroll
+        if self.dateTicksOn:
             if autoscroll:
                 reftime = time.time()
             else:
@@ -217,8 +218,7 @@ class generalPlot(pg.PlotWidget):
         self.globalPlotRange = [-10,0]
 
     def createPlot(self):
-        global dateTicksOn
-        dateTicksOn = True
+        # global dateTicksOn
         self.plotWidget = pg.GraphicsLayoutWidget()
         self.date_axis = CAxisTime(orientation = 'bottom')
         self.plot = self.plotWidget.addPlot() #, axisItems = {'bottom': self.date_axis}
@@ -616,7 +616,7 @@ class stripPlot(QWidget):
         self.plotWidget.plot.vb.sigXRangeChanged.connect(self.setPlotScaleLambda)
         # self.plotThread.timeout.connect(self.plotWidget.updateScatterPlot)
         logger.debug('stripPlot initiated!')
-        self.setSizePolicy(QSizePolicy.Ignored,QSizePolicy.Ignored)
+        # self.setSizePolicy(QSizePolicy.Ignored,QSizePolicy.Ignored)
 
     def setWidth(self, width=16777215):
         self.stripPlot.setMaximumWidth(width)
@@ -678,7 +678,7 @@ class stripPlot(QWidget):
             self.plotWidget.setPlotScale(timescale)
 
     def setPlotType(self, linear=False, histogram=False, FFT=False, scatter=False):
-        global dateTicksOn
+        # global dateTicksOn
         self.plotScaleConnection = False
         if not(self.plotWidget.linearPlot == linear and self.plotWidget.histogramPlot == histogram and self.plotWidget.FFTPlot == FFT and self.plotWidget.scatterPlot == scatter):
             self.plotWidget.linearPlot = linear
@@ -694,7 +694,7 @@ class stripPlot(QWidget):
             if scatter:
                 logger.debug('ScatterPlot enabled')
             if scatter:
-                dateTicksOn = False
+                self.plotWidget.date_axis.dateTicksOn = False
                 self.plotWidget.updateScatterPlot()
                 self.plot.enableAutoRange()
                 # self.plotWidget.updateScatterPlot()
@@ -717,10 +717,10 @@ class stripPlot(QWidget):
                 else:
                     self.plot.updateSpectrumMode(False)
                 if not linear:
-                    dateTicksOn = False
+                    self.plotWidget.date_axis.dateTicksOn = False
                     self.plot.enableAutoRange()
                 else:
-                    dateTicksOn = True
+                    self.plotWidget.date_axis.dateTicksOn = True
                     self.plot.disableAutoRange()
                     self.plotWidget.setPlotScale([self.plotWidget.plotRange[0],self.plotWidget.plotRange[1]])
                     self.plotScaleConnection = True
