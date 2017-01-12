@@ -5,18 +5,33 @@ import sys
 import time
 
 class GenericThread(QtCore.QThread):
- def __init__(self, function, *args, **kwargs):
-  QtCore.QThread.__init__(self)
-  self.function = function
-  self.args = args
-  self.kwargs = kwargs
+    def __init__(self, function, *args, **kwargs):
+        QtCore.QThread.__init__(self)
+        self.function = function
+        self.args = args
+        self.kwargs = kwargs
 
- def __del__(self):
-  self.wait()
+    def __del__(self):
+        self.wait()
 
- def run(self):
-  self.function(*self.args,**self.kwargs)
-  print('JELLYFISH')
+    def run(self):
+        self.function(*self.args,**self.kwargs)
+
+class UpdateThread(QtCore.QThread):
+    def __init__(self, function, *args, **kwargs):
+        QtCore.QThread.__init__(self)
+        self.function = function
+        self.args = args
+        self.kwargs = kwargs
+
+    def __del__(self):
+        self.wait()
+
+    def run(self):
+        while (True):
+            self.function(*self.args,**self.kwargs)
+            time.sleep(1)
+
 
 class momentumProcedure(QtCore.QThread):
 	def __init__(self, view):
