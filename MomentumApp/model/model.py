@@ -1,4 +1,5 @@
 from epics import caget,caput
+from PyQt4 import QtGui, QtCore
 import os,sys
 import time
 import generalMomentumFunctions as general
