@@ -5,55 +5,51 @@ import generalMomentumFunctions as general
 import logging
 
 
-
 class Model():
-	def __init__(self, view):
-		#Loggers
+	def __init__(self,view):
+		'''Loggers of infomation'''
 		self.PL = logging.getLogger("P")
 		self.PSL = logging.getLogger("PS")
 		self.deets = logging.getLogger("P/PS")
 
-		#Important values to notes
-		self.p = 0
-		self.I = 0
-		self.ps = 0
-		self.Is = 0
-		self.predictedMomentum = 0
-		self.predictedI = 0
-
+		self.func = general.Functions()
 		self.view = view
+		'''vairiables to hold important values'''
+		self.p = 0																#momentum
+		self.I = 0																#current to bend momentum 45 degrees
+		self.ps = 0																# momentum spread
+		self.Is = 0																#current corrensponding to momentum spread
+		self.predictedMomentum = 0												# value determined by user in GUI
+		self.predictedI = 0														#current corresponding to predicted momentum
 		print("Model Initialized")
 
 	#Outline of Momentum Measurement Procedure
 	def measureMomentum(self):
-		#1. Preliminaries
-		self.func = general.Functions()
+		'''1. Preliminaries'''
 		if self.view.checkBox_1.isChecked()==True:
 			#self.PL.info('1. Preliminaries')
 			self.predictedMomentum = float(self.view.lineEdit_predictMom.text())
 			self.predictedI = self.func.mom2I('DIP01',self.predictedMomentum)
-		#2. Align Beam through Dipole
+			
+		'''2. Align Beam through Dipole'''
 		if self.view.checkBox_2.isChecked()==True:
 			#self.PL.info('2. Aligning Beam through Dipole')
 			for i in range(3):
 				self.func.align('HCOR01','BPM01',1)
 				self.func.align('HCOR02','BPM02',1)
 
-		#3. Centre in Spec. Line
+		'''3. Centre in Spec. Line'''
 		if self.view.checkBox_3.isChecked()==True:
 			#self.PL.info('3. Center Down Spec. Line')
 			self.I = self.func.bendBeam('DIP01','BPM03','YAG04', self.predictedI, 1) # tol=1 (pixel)
 
-		#4. Convert Current to Momentum
+		'''4. Convert Current to Momentum'''
 		if self.view.checkBox_4.isChecked()==True:
 			#self.PL.info('4. Calculate Momentum')
 			self.p = self.func.calcMom('DIP01',self.I)
 			print self.p
-
-
 	#Outline of Momentum Spread Measurement Procedure
 	def measureMomentumSpread(self):
-		self.func = general.Functions()
 		if self.view.checkBox_done_mom.isChecked()==True:
 			"""2. Set Disperaion"""
 			if self.view.checkBox_1_s.isChecked()==True:
@@ -79,7 +75,6 @@ class Model():
 				Dispersion,beamWidth = self.func.findDispersion('DIP01','YAG04',self.J,11,0.1)
 				self.Is = Dispersion*beamWidth
 				#Haven't done errors yet
-
 
 			"""4. Calculate Momenum Spread """
 			if self.view.checkBox_4_s.isChecked()==True:
