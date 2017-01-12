@@ -47,7 +47,7 @@ class attCalController(QObject):
 		self.thread = self.attCalthreads.attCalWorker(self.view, self.pvList, self.numShots, self.sliderMin, self.sliderMax, self.model)
 		self.attValue = self.thread.signals.result.connect(self.getValues)
 		self.pool.start(self.thread)
-		#self.pool.waitForDone()
+		self.pool.waitForDone()
 
 	def clearPVList(self):
 		self.view.bpmPVList.clear()
@@ -64,7 +64,7 @@ class attCalController(QObject):
 		self.RA1Vals = []
 		self.RA2Vals = []
 		self.sigList = sigList
-		self.makestr = ""
+		self.makestr = "Charge at WCM = "+str(self.model.getWCMQ())
 		for i in range(len(self.pvList)):
 			self.view.glayoutOutputs[i].clear()
 			self.view.glayoutOutputs_2[i].clear()
@@ -76,9 +76,8 @@ class attCalController(QObject):
 			self.plotatt2Distrib.setData(self.sigList[1].values()[i].keys(), self.sigList[1].values()[i].values())
 			self.makestr = self.makestr+("\nNew BPM ATT1 for "+self.pvList[i]+" = "+str(self.model.getBPMReadAttenuation(str(self.pvList[i]))[0]))
 			self.makestr = self.makestr+("\nNew BPM ATT2 for "+self.pvList[i]+" = "+str(self.model.getBPMReadAttenuation(str(self.pvList[i]))[1]))
-			print self.makestr
 		print self.makestr
-		self.view.newATTVals.setText(self.view.newATTVals.text()+"\n"+self.makestr)
+		self.view.newATTVals.setText(self.makestr)
 		#return sigList
 
 	def appendToList(self):

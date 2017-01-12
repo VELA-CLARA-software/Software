@@ -7,8 +7,8 @@ sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\Model')
 sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\Controller')
 sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\View')
 sys.path.append('D:\\VELA-CLARA_software\\VELA-CLARA-Controllers-New-Structure-With-Magnets\\bin\\Release')
-from PyQt4 import QtGui, QtCore
 
+from PyQt4 import QtGui, QtCore
 import VELA_CLARA_BPM_Control as vbpmc
 import dlymainModel
 import dlymainController

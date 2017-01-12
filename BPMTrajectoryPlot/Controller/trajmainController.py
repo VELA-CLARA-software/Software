@@ -63,8 +63,11 @@ class trajController(QObject):
 		self.bpmData = self.model.monitorBPMs(self.pvList, self.numShots)
 		self.bpmXData = self.bpmData[0]
 		self.bpmYData = self.bpmData[1]
-		self.view.xPlot.update_figure(self.bpmXData)
-		self.view.yPlot.update_figure(self.bpmYData)
+		self.bpmQData = self.bpmData[2]
+		self.autoScale = self.view.autoscaleCheckBox.checkState()
+		self.view.xPlot.update_figure(self.bpmXData, self.autoScale, "X")
+		self.view.yPlot.update_figure(self.bpmYData, self.autoScale, "Y")
+		self.view.qPlot.update_figure(self.bpmYData, self.autoScale, "Q")
 
 	def getData1(self):
 		self.data = [random.randint(-10, 10) for i in range(5)]

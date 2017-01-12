@@ -38,8 +38,6 @@ class dlyController(QObject):
 		self.attValues = [[]] * len(self.pvList)
 		self.pool = QtCore.QThreadPool()
 		self.pool.setMaxThreadCount(len(self.pvList))
-		for i in self.pvList:
-			print i
 		self.thread = self.threads.dlyWorker(self.view, self.pvList, self.numShots, self.sliderMin, self.sliderMax, self.model)
 		self.attValue = self.thread.signals.result.connect(self.getValues)
 		self.pool.start(self.thread)
@@ -52,7 +50,7 @@ class dlyController(QObject):
 		self.RA1Vals = []
 		self.RA2Vals = []
 		self.sigList = sigList
-		print self.sigList[0].values()
+		#print self.sigList[0].values()
 		self.makestr = ""
 		for i in range(len(self.pvList)):
 			self.view.glayoutOutputs[i].clear()
@@ -65,7 +63,7 @@ class dlyController(QObject):
 			self.plotDLY2Distrib.setData(self.sigList[2].values()[i].keys(), self.sigList[2].values()[i].values())
 			self.makestr = self.makestr+("\nNew BPM DLY1 for "+self.pvList[i]+" = "+str(self.model.getBPMReadDLY(str(self.pvList[i]))[0]))
 			self.makestr = self.makestr+("\nNew BPM DLY2 for "+self.pvList[i]+" = "+str(self.model.getBPMReadDLY(str(self.pvList[i]))[1]))
-		self.view.newDLYVals.setText(self.view.newDLYVals.text()+"\n\n"+self.makestr)
+		self.view.newDLYVals.setText(self.view.newDLYVals.toPlainText()+"\n\n"+self.makestr)
 		#return sigList
 
 	def appendToList(self):

@@ -45,6 +45,11 @@ class dlyModel():
 		for i in range(self.sliderMin, self.sliderMax):
 			for h in self.pvList:
 				self.bpmCont.setSD1(str(h), i)
+				print "Setting SD1=", i, " for BPM ", str(h)
+				if not self.bpmCont.getRD1(str(h)) == i:
+					print "ERROR!!!!!!", str(h), " SD1 not set correctly"
+				else:
+					pass
 			self.bpmData = self.monitorBPMs(self.pvList, self.numShots)
 			for h in self.pvList:
 				for j in range(self.numShots):
@@ -99,6 +104,11 @@ class dlyModel():
 					break
 				for h in self.pvList:
 					self.bpmCont.setSD2(str(h), i)
+					print "Setting SD2=", i, " for BPM ", str(h)
+					if not self.bpmCont.getRD2(str(h)) == i:
+						print "ERROR!!!!!!", str(h), " SD2 not set correctly"
+					else:
+						pass
 				self.bpmDataMon = self.monitorBPMs(self.pvList, self.numShots)
 				self.bpmData[i] = self.bpmDataMon
 				for h in self.pvList:

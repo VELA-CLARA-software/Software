@@ -38,6 +38,7 @@ class trajModel():
 		self.numShots = numShots
 		self.bpmXData = {name:[] for name in self.pvList}
 		self.bpmYData = {name:[] for name in self.pvList}
+		self.bpmQData = {name:[] for name in self.pvList}
 		if self.numShots > 1:
 			self.bpmCont.monitorMultipleDataForNShots(long(self.numShots), self.pvList)
 			for i in self.pvList:
@@ -47,14 +48,18 @@ class trajModel():
 			for i in self.pvList:
 				self.bpmXData[i] = numpy.mean(self.bpmCont.getBPMXVec(i))
 				self.bpmYData[i] = numpy.mean(self.bpmCont.getBPMYVec(i))
+				self.bpmQData[i] = numpy.mean(self.bpmCont.getBPMQVec(i))
 			self.orderedX = collections.OrderedDict((name, self.bpmXData[name]) for name in self.pvList)
 			self.orderedY = collections.OrderedDict((name, self.bpmYData[name]) for name in self.pvList)
+			self.orderedQ = collections.OrderedDict((name, self.bpmQData[name]) for name in self.pvList)
 		elif self.numShots == 1:
 			for i in self.pvList:
 				self.data = self.bpmCont.getAllBPMData(i)
 				self.bpmXData[i] = self.data.x[0]
 				self.bpmYData[i] = self.data.y[0]
+				self.bpmQData[i] = self.data.q[0]
 			self.orderedX = collections.OrderedDict((name, self.bpmXData[name]) for name in self.pvList)
 			self.orderedY = collections.OrderedDict((name, self.bpmYData[name]) for name in self.pvList)
+			self.orderedQ = collections.OrderedDict((name, self.bpmQData[name]) for name in self.pvList)
 			#time.sleep(0.1)
-		return self.orderedX, self.orderedY
+		return self.orderedX, self.orderedY, self.orderedQ

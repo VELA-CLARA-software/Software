@@ -3,6 +3,7 @@ import random
 import os,sys
 import time
 import numpy
+import collections
 #sys.path.append('D:\\VELA-CLARA_software\\VELA-CLARA-Controllers-New-Structure-With-Magnets\\bin\\Release')
 #sys.path.append('D:\\VELA-CLARA_software\\VELA-CLARA-Controllers\\Controllers\\VELA\\GENERIC\\velaChargeScope\\bin\\Release')
 
@@ -20,11 +21,15 @@ class attCalModel():
 		self.numShots = numShots
 		self.bpmData = {name:[[] for i in range(self.numShots)] for name in self.pvList}
 		self.bpmCont.monitorMultipleDataForNShots(long(self.numShots), self.pvList)
+		#for i in self.pvList:
+		#	self.bpmCont.monitorDataForNShots(long(self.numShots), i)
 		for i in self.pvList:
 			while self.bpmCont.isMonitoringBPMData(str(i)):
 				time.sleep(0.01)
+				#print str(i)
 			#for j in range(self.numShots):
 			self.bpmData[i] = self.bpmCont.getBPMRawData(i)
+		#time.sleep(1)
 		return self.bpmData
 
 	def scanAttenuation(self, pvList, numShots, sliderMin, sliderMax):
@@ -42,21 +47,31 @@ class attCalModel():
 		self.U22 = {name:[[[] for i in range(self.numShots)] for i in range(self.sliderMax)] for name in self.pvList}
 		self.U23 = {name:[[[] for i in range(self.numShots)] for i in range(self.sliderMax)] for name in self.pvList}
 		self.U24 = {name:[[[] for i in range(self.numShots)] for i in range(self.sliderMax)] for name in self.pvList}
-		self.rawDataMeanV11 = {name:{} for i in range(self.sliderMax) for name in self.pvList}
-		self.rawDataMeanV12 = {name:{} for i in range(self.sliderMax) for name in self.pvList}
-		self.rawDataMeanV21 = {name:{} for i in range(self.sliderMax) for name in self.pvList}
-		self.rawDataMeanV22 = {name:{} for i in range(self.sliderMax) for name in self.pvList}
-		self.V11V12sum = {name:{} for i in range(self.sliderMax) for name in self.pvList}
-		self.V21V22sum = {name:{} for i in range(self.sliderMax) for name in self.pvList}
-		self.dataSA1 = []
-		self.dataSA2 = []
+		#self.rawDataMeanV11 = {name:{} for i in range(self.sliderMax) for name in self.pvList}
+		#self.rawDataMeanV12 = {name:{} for i in range(self.sliderMax) for name in self.pvList}
+		#self.rawDataMeanV21 = {name:{} for i in range(self.sliderMax) for name in self.pvList}
+		#self.rawDataMeanV22 = {name:{} for i in range(self.sliderMax) for name in self.pvList}
+		#self.V11V12sum = {name:{} for i in range(self.sliderMax) for name in self.pvList}
+		#self.V21V22sum = {name:{} for i in range(self.sliderMax) for name in self.pvList}
+		self.rawDataMeanV11 = collections.defaultdict(dict)
+		self.rawDataMeanV12 = collections.defaultdict(dict)
+		self.rawDataMeanV21 = collections.defaultdict(dict)
+		self.rawDataMeanV22 = collections.defaultdict(dict)
+		self.V11V12sum = collections.defaultdict(dict)
+		self.V21V22sum = collections.defaultdict(dict)
+		#self.dataSA1 = []
+		#self.dataSA2 = []
 		for i in range(self.sliderMin, self.sliderMax):
 			for h in self.pvList:
 				self.bpmCont.setSA1(str(h), i)
 				self.bpmCont.setSA2(str(h), i)
-			#self.bpmCont.monitorDataForNShots(long(self.numShots), self.pvName)
-			#while self.bpmCont.isMonitoringBPMData(self.pvName):
-			#	time.sleep(0.5)
+				print "Setting SA1 = SA2 = ", i, " for ", str(h)
+				if not self.bpmCont.getRA1(str(h)) == i:
+					print "ERROR!!!!!!", str(h), " RA1 not set correctly"
+				elif not self.bpmCont.getRA2(str(h)) == i:
+					print "ERROR!!!!!!", str(h), " RA2 not set correctly"
+				else:
+					pass
 			self.bpmData = self.monitorBPMs(self.pvList, self.numShots)
 			for h in self.pvList:
 				for j in range(self.numShots):
@@ -74,7 +89,7 @@ class attCalModel():
 				self.V11V12sum[h][i] = ( ( self.rawDataMeanV11[h][i] + self.rawDataMeanV12[h][i] ) / 2 )
 				self.V21V22sum[h][i] = ( ( self.rawDataMeanV21[h][i] + self.rawDataMeanV22[h][i] ) / 2 )
 
-		return self.V11V12sum, self.V21V22sum, self.dataSA1, self.dataSA2
+		return self.V11V12sum, self.V21V22sum#, self.dataSA1, self.dataSA2
 
 	def findNearest(self, dict, value):
 		self.vals = numpy.array( dict.values() )
@@ -113,3 +128,7 @@ class attCalModel():
 		self.bpmRA1 = self.bpmCont.getRA1(self.pvName)
 		self.bpmRA2 = self.bpmCont.getRA2(self.pvName)
 		return self.bpmRA1, self.bpmRA2
+
+	def getWCMQ(self):
+		self.wcmQ = self.scopeCont.getWCMQ()
+		return self.wcmQ

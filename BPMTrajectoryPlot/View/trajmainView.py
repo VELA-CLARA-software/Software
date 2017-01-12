@@ -46,7 +46,7 @@ progversion = "0.1"
 class trajMyMplCanvas(FigureCanvas):
     """Ultimately, this is a QWidget (as well as a FigureCanvasAgg, etc.)."""
 
-    def __init__(self, parent=None, width=5, height=4, dpi=100, data = None):
+    def __init__(self, parent=None, width=5, height=4, dpi=100, data = None, title=None):
         fig = Figure(figsize=(width, height), dpi=dpi)
         self.axes = fig.add_subplot(111)
         # We want the axes cleared every time plot() is called
@@ -74,18 +74,54 @@ class trajMyDynamicMplCanvas(trajMyMplCanvas):
     def __init__(self, *args, **kwargs):
         trajMyMplCanvas.__init__(self, *args, **kwargs)
 
-    def update_figure(self, data):
+    def update_figure(self, data, autoscale, title):
+        self.xTicks = []
+        self.fakexTicks = []
+        self.roundData = []
         self.data = data
+        self.autoscale = autoscale
+        self.title = title
         self.width = 0.1
-        self.locs = numpy.arange(len(self.data))
-        self.bars = self.axes.bar(self.locs, self.data.values(), self.width)
+        #self.axes2 = self.axes.twiny()
+        self.locs = numpy.arange(len(self.data))+0.5
+        for d in self.data.values():
+            self.roundData.append(round(d,2))
+        self.bars = self.axes.bar(self.locs, self.roundData, self.width)
+        self.axes.set_title(str(self.title))
         self.axes.set_xticks(self.locs)
         self.axes.set_xticklabels(self.data.keys())
-        self.axes.set_ylabel("mm")
+        if self.title == "Q":
+            self.axes.set_ylabel("pC")
+        else:
+            self.axes.set_ylabel("mm")
         #self.axes.set_offset_position(0.5)
         self.axes.set_xlim(0, len(self.data))
-        self.axes.set_ylim(-10, 10,)
+        #self.autoscale = 2
+        if self.autoscale == 2:
+            self.axes.set_ylim(-abs(max(self.roundData))-5, abs(max(self.roundData))+5)
+        else:
+            if self.title == "Q":
+                self.axes.set_ylim(-5, 250)
+            else:
+                self.axes.set_ylim(-15, 15)
+        self.autolabel(self.bars)
+        #self.axes2.set_xlim(self.axes.get_xlim())
+        #self.axes2.set_xticks(self.locs)
+        #for d in self.data.values():
+        #    self.xTicks.append(str(round(d,2)))
+        #self.axes2.set_xticklabels([])
+        #self.axes2.set_xticklabels(self.xTicks)
+        #self.axes2.set_xlabel("BPM X")
         self.draw()
+
+    def autolabel(self, rects):
+    # attach some text labels
+        self.rects = rects
+        for rect in self.rects:
+            self.height = rect.get_height()
+            self.axes.text(rect.get_x() + rect.get_width()/2., 1.05*self.height,
+                    '%d' % int(self.height),
+                    ha='center', va='bottom')
 
 
 class trajUi_MainWindow(QtCore.QObject):
@@ -96,7 +132,7 @@ class trajUi_MainWindow(QtCore.QObject):
         self.TabWidget.setObjectName("TabWidget")
         self.tab = QtGui.QWidget()
         self.tab.setObjectName("tab")
-        self.TabWidget.resize(699, 602)
+        self.TabWidget.resize(699, 1002)
         self.pushButton = QtGui.QPushButton(self.tab)
         self.pushButton.setGeometry(QtCore.QRect(308, 270, 231, 161))
         self.pushButton.setObjectName(("pushButton"))
@@ -109,6 +145,12 @@ class trajUi_MainWindow(QtCore.QObject):
         self.plainTextEdit = QtGui.QPlainTextEdit(self.tab)
         self.plainTextEdit.setGeometry(QtCore.QRect(560, 80, 101, 171))
         self.plainTextEdit.setObjectName(_fromUtf8("plainTextEdit"))
+        self.autoscaleCheckBox = QtGui.QCheckBox(self.tab)
+        self.autoscaleCheckBox.setGeometry(QtCore.QRect(308, 200, 100, 30))
+        self.autoscaleCheckBox.setObjectName(_fromUtf8("autoscaleCheckBox"))
+        #self.autoscaleCheckBoxLabel = QtGui.QLabel(self.tab)
+        #self.autoscaleCheckBoxLabel.setGeometry(QtCore.QRect(308, 150, 30, 30))
+        #self.autoscaleCheckBoxLabel.setObjectName(_fromUtf8("autoscaleCheckBoxLabel"))
         self.groupButton = QtGui.QGroupBox(self.tab)
         self.groupButton.setGeometry(QtCore.QRect(308, 50, 231, 112))
         self.groupButton.setObjectName(_fromUtf8("groupButton"))
@@ -145,8 +187,10 @@ class trajUi_MainWindow(QtCore.QObject):
         self.vBoxLayout = QtGui.QVBoxLayout(self.tab1)
         self.xPlot = trajMyDynamicMplCanvas(self.tab1, width=5, height=4, dpi=100, data = self.data1)
         self.yPlot = trajMyDynamicMplCanvas(self.tab1, width=5, height=4, dpi=100, data = self.data1)
+        self.qPlot = trajMyDynamicMplCanvas(self.tab1, width=5, height=4, dpi=100, data = self.data1)
         self.vBoxLayout.addWidget(self.xPlot)
         self.vBoxLayout.addWidget(self.yPlot)
+        self.vBoxLayout.addWidget(self.qPlot)
         self.tab.setFocus()
         self.TabWidget.addTab(self.tab, (""))
         self.TabWidget.addTab(self.tab1, (""))
@@ -186,6 +230,8 @@ class trajUi_MainWindow(QtCore.QObject):
         self.pushButton.setText(_translate("TabWidget", "Go", None))
         self.pushButton_2.setText(_translate("TabWidget", "Append", None))
         self.pushButton_3.setText(_translate("TabWidget", "Clear PV List", None))
+        self.autoscaleCheckBox.setText(_translate("MainWindow", "Autoscale?", None))
+        #self.autoscaleCheckBoxLabel.setText(_translate("MainWindow", "Trajectory", None))
         self.setComboBox(TabWidget)
         self.groupButton.setTitle(_translate("MainWindow", "Choose Trajectory or Individual BPMs?", None))
         self.individualButton.setText(_translate("MainWindow", "BPMs", None))
