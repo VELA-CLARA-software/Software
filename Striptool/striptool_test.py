@@ -5,6 +5,7 @@ import striptool as striptool
 import numpy as np
 import sys, time, os
 ''' Load loggerWidget library (comment out if not available) '''
+sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\\..\\..\\loggerWidget\\')
 import loggerWidget as lw
 import logging
 logger = logging.getLogger(__name__)
@@ -82,7 +83,7 @@ def main():
     sp.setPlotScale(60)
     sp2.setPlotScale(60)
     sp3.setPlotScale(600)
-    
+
     ''' Default PyQT exit handler '''
     sys.exit(app.exec_())
 
