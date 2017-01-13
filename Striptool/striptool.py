@@ -132,40 +132,34 @@ class createSignalTimer(QObject):
         self.dataReady.emit([time.time(),value])
 
 class recordWorker(QtCore.QObject):
-    def __init__(self, signal, name):
+    def __init__(self, records, signal, name):
         super(recordWorker, self).__init__()
-        # print "recordWorker = ", name
+        self.records = records
         self.signal = signal
         self.name = name
         self.signal.dataReady.connect(self.updateRecord)
 
     @QtCore.pyqtSlot(list)
     def updateRecord(self, value):
-        global records
-        if len(records[self.name]['data']) > 1 and value[1] == records[self.name]['data'][-1][1]:
-            records[self.name]['data'][-1] = value
+        if len(self.records[self.name]['data']) > 1 and value[1] == self.records[self.name]['data'][-1][1]:
+            self.records[self.name]['data'][-1] = value
         else:
-            records[self.name]['data'].append(value)
+            self.records[self.name]['data'].append(value)
 
 class createSignalRecord(QObject):
 
-    def __init__(self, name, timer, function, *args):
+    def __init__(self, records, name, timer, function, *args):
         # Initialize the PunchingBag as a QObject
         QObject.__init__(self)
-        global records
-        if not 'records' in globals():
-            records = {}
-        if name in records.itervalues():
-            print "name,",name,", already exists!"
-        else:
-            records[name] = {'name': name, 'pen': 'r', 'timer': timer, 'function': function, 'ploton': True, 'data': []}
-            self.name = name
-            self.signal = createSignalTimer(name, function, *args)
-            self.thread = QtCore.QThread()
-            self.worker = recordWorker(self.signal, name)
-            self.worker.moveToThread(self.thread)
-            self.thread.start()
-            self.signal.startTimer(timer)
+        self.records = records
+        self.records[name] = {'name': name, 'pen': 'r', 'timer': timer, 'function': function, 'ploton': True, 'data': []}
+        self.name = name
+        self.signal = createSignalTimer(name, function, *args)
+        self.thread = QtCore.QThread()
+        self.worker = recordWorker(self.records, self.signal, name)
+        self.worker.moveToThread(self.thread)
+        self.thread.start()
+        self.signal.startTimer(timer)
 
     def setInterval(self, newinterval):
         self.signal.timer.setInterval(newinterval)
@@ -181,14 +175,15 @@ class CAxisTime(pg.AxisItem):
     def __init__(self, orientation=None, pen=None, linkView=None, parent=None, maxTickLength=-5, showValues=True):
         super(CAxisTime, self).__init__(parent=parent, orientation=orientation, linkView=linkView)
         self.dateTicksOn = True
+        self.autoscroll = True
+        self.fixedtimepoint = time.time()
 
     def tickStrings(self, values, scale, spacing):
-        global fixedtimepoint, autoscroll
         if self.dateTicksOn:
-            if autoscroll:
+            if self.autoscroll:
                 reftime = time.time()
             else:
-                reftime = fixedtimepoint
+                reftime = self.fixedtimepoint
             strns = []
             for x in values:
                 try:
@@ -202,9 +197,10 @@ class CAxisTime(pg.AxisItem):
 class generalPlot(pg.PlotWidget):
     changePlotScale = pyqtSignal('PyQt_PyObject')
 
-    def __init__(self, parent = None):
+    def __init__(self, record, parent = None):
         super(generalPlot, self).__init__(parent=parent)
         self.parent=parent
+        self.records = record
         self.linearPlot = True
         self.histogramPlot = False
         self.FFTPlot = False
@@ -218,7 +214,6 @@ class generalPlot(pg.PlotWidget):
         self.globalPlotRange = [-10,0]
 
     def createPlot(self):
-        # global dateTicksOn
         self.plotWidget = pg.GraphicsLayoutWidget()
         self.date_axis = CAxisTime(orientation = 'bottom')
         self.plot = self.plotWidget.addPlot() #, axisItems = {'bottom': self.date_axis}
@@ -237,16 +232,17 @@ class generalPlot(pg.PlotWidget):
         self.plot.showGrid(x=True, y=True)
         return self.plot
 
-    def addCurve(self, plot, name):
-        curve = self.curve(plot, name)
+    def addCurve(self, record, plot, name):
+        curve = self.curve(record, plot, name)
         return curve
 
     class curve(QObject):
-        def __init__(self, plot, name):
+        def __init__(self, record, plot, name):
             QObject.__init__(self)
             self.plotScale = None
             self.name = name
             self.plot = plot
+            self.records = record
             # self.globalPlotRange = self.plot.globalPlotRange
             self.doingPlot = False
             self.curve = self.plot.plot.plot()
@@ -266,16 +262,12 @@ class generalPlot(pg.PlotWidget):
                     self.curve.setData({'x': x, 'y': y}, pen=pen, stepMode=True, fillLevel=0)
                 elif self.plot.FFTPlot:
                     self.curve.setData({'x': x, 'y': y}, pen=pen, stepMode=False)
-                    # print self.curve._fourierTransform(self.curve.xData,self.curve.yData)
-                    # print self.curve.xDisp
                     indexes = peakutils.indexes(self.curve.yDisp, thres=0.75, min_dist=1)
-                    # print 'xdata = ', self.curve.xDisp[indexes]
                     self.plot.updateSpectrumMode(True)
                 else:
                     self.curve.setData({'x': x, 'y': y}, pen=pen, stepMode=False)
 
         def timeFilter(self, datain, timescale):
-            # global plotRange
             if self.plot.autoscroll:
                 currenttime = time.time()
             else:
@@ -301,38 +293,27 @@ class generalPlot(pg.PlotWidget):
             self.curve.clear()
 
         def update(self):
-            global records
             if not self.plot.paused and not self.doingPlot:
                 self.doingPlot = True
-                if records[self.name]['ploton']:
+                if self.records[self.name]['ploton']:
                     # start = time.clock()
-                    self.plotData = self.filterRecord(records[self.name]['data'],self.plot.globalPlotRange)
+                    self.plotData = self.filterRecord(self.records[self.name]['data'],self.plot.globalPlotRange)
                     if len(self.plotData) > 100*self.plot.decimateScale:
                         decimationfactor = int(np.floor(len(self.plotData)/self.plot.decimateScale))
                         self.plotData = self.plotData[0::decimationfactor]
-                        # x,y = zip(*self.plotData)
-                        # interp = scipy.interpolate.Akima1DInterpolator(x, y)
-                        # xx = np.linspace(x[0], x[-1], self.plot.decimateScale)
-                        # yy = interp(xx)
-                        # self.plotData = zip(*[xx,yy])
-                        # print self.plotData[0]
-                        # print "decimated[", len(self.plotData), "] = ", decimationfactor
-                        self.updateData(self.plotData, records[self.name]['pen'])
+                        self.updateData(self.plotData, self.records[self.name]['pen'])
                     else:
-                        self.updateData(self.plotData, records[self.name]['pen'])
-                    # print "curve update = ", time.clock()- start,"[",1.0/(time.clock()- start)," Hz]"
+                        self.updateData(self.plotData, self.records[self.name]['pen'])
                 else:
                     self.clear()
                 self.doingPlot = False
     def setPlotScale(self, timescale, padding=0.0):
-        # global plotRange
         if self.linearPlot:
             self.plotRange = timescale
             self.globalPlotRange = list(timescale)
             self.plot.vb.setRange(xRange=self.globalPlotRange, padding=0)
 
     def updatePlotScale(self, padding=0.0):
-        # global plotRange
         if self.linearPlot:
             vbPlotRange = self.plot.vb.viewRange()[0]
             if vbPlotRange != [0,1]:
@@ -346,11 +327,10 @@ class generalPlot(pg.PlotWidget):
         self.paused = value
 
     def toggleAutoScroll(self, value):
-        global fixedtimepoint
         self.autoscroll = value
         if not value:
-            self.currenttime = currentPlotTime
-            fixedtimepoint = currentPlotTime
+            self.currenttime = self.currentPlotTime
+            self.date_axis.fixedtimepoint = self.currentPlotTime
     #
     def updateScatterPlot(self):
         if self.scatterPlot and not self.doingPlot:
@@ -360,20 +340,17 @@ class generalPlot(pg.PlotWidget):
             scatteritemnames=[]
             scatteritems=[]
             color=0
-            global records
-            for name in records:
-                if records[name]['ploton']:
+            for name in self.records:
+                if self.records[name]['ploton']:
                     scatteritemnames.append(name)
             self.plot.clear()
             start = time.clock()
             for i in range(len(scatteritemnames)):
                 for j in range(i+1, len(scatteritemnames)):
-                    data1 = records[scatteritemnames[i]]['curve'].plotData
-                    # print len(data1)
-                    data2 = records[scatteritemnames[j]]['curve'].plotData
-                    # print len(data2)
-                    signalDelayTime1 = records[scatteritemnames[i]]['timer']
-                    signalDelayTime2 = records[scatteritemnames[j]]['timer']
+                    data1 = self.records[scatteritemnames[i]]['curve'].plotData
+                    data2 = self.records[scatteritemnames[j]]['curve'].plotData
+                    signalDelayTime1 = self.records[scatteritemnames[i]]['timer']
+                    signalDelayTime2 = self.records[scatteritemnames[j]]['timer']
                     if data1[0] < data2[0]:
                         ans = takeClosestPosition(zip(*data1)[0], data1, data2[0][0])
                         starttime = ans[1]
@@ -404,12 +381,12 @@ class generalPlot(pg.PlotWidget):
                     # self.legend.addItem(s1, plotname)
                     color += 1
                     self.plot.addItem(s1)
-            # print "histogram = ", time.clock()- start,"[",1.0/(time.clock()- start)," Hz]"
             self.doingPlot = False
 
 class stripLegend(pg.TreeWidget):
-    def __init__(self, parent = None):
+    def __init__(self, record, parent = None):
         super(stripLegend, self).__init__(parent)
+        self.records = record
         self.layout = pg.TreeWidget()
         self.layout.header().close()
         self.layout.setColumnCount(2)
@@ -427,7 +404,6 @@ class stripLegend(pg.TreeWidget):
         return child
 
     def addLegendItem(self, name):
-        global records
         parentTreeWidget = QtGui.QTreeWidgetItem([name])
         self.layout.addTopLevelItem(parentTreeWidget)
         plotOnOff = QCheckBox()
@@ -449,7 +425,7 @@ class stripLegend(pg.TreeWidget):
         selected = 0
         for rate in [0.1,1,5,10,25,50,100]:
             signalRate.addItem(str(rate)+' Hz')
-            if records[name]['timer'] == 1.0/rate:
+            if self.records[name]['timer'] == 1.0/rate:
                 selected = i
             i += 1
         signalRate.setCurrentIndex(selected)
@@ -458,7 +434,7 @@ class stripLegend(pg.TreeWidget):
         colorbox = pg.ColorButton()
         colorbox.setFixedSize(30,25)
         colorbox.setFlat(True)
-        colorbox.setColor(records[name]['pen'])
+        colorbox.setColor(self.records[name]['pen'])
         colorbox.sigColorChanged.connect(lambda x: self.changePenColor(name, x))
         colorbox.sigColorChanging.connect(lambda x: self.changePenColor(name, x))
         self.addTreeWidget(parentTreeWidget, name, "Plot Color", colorbox)
@@ -481,73 +457,69 @@ class stripLegend(pg.TreeWidget):
         self.newRowNumber += 1
 
     def formatCurveData(self, name):
-        return [(str(time.strftime('%Y/%m/%d', time.localtime(x[0]))),str(datetime.datetime.fromtimestamp(x[0]).strftime('%H:%M:%S.%f')),x[1]) for x in records[name]['data']]
+        return [(str(time.strftime('%Y/%m/%d', time.localtime(x[0]))),str(datetime.datetime.fromtimestamp(x[0]).strftime('%H:%M:%S.%f')),x[1]) for x in self.records[name]['data']]
 
-    def saveCurve(self, name):
-        global records
-        saveFileName = str(QtGui.QFileDialog.getSaveFileName(self, 'Save Array ['+name+']', name, filter="CSV files (*.csv);; Binary Files (*.bin)", selectedFilter="CSV files (*.csv)"))
+    def saveCurve(self, name, saveFileName=None):
+        if saveFileName == None:
+            saveFileName = str(QtGui.QFileDialog.getSaveFileName(self, 'Save Array ['+name+']', name, filter="CSV files (*.csv);; Binary Files (*.bin)", selectedFilter="CSV files (*.csv)"))
         filename, file_extension = os.path.splitext(saveFileName)
         saveData = self.formatCurveData(name)
         if file_extension == '.csv':
-        #     print "csv!"
-            fmt='%s, %s, %.18e'
+            fmt='%s,%s,%.18e'
             target = open(saveFileName,'w')
             for row in saveData:
                 target.write((fmt % tuple(row))+'\n')
             target.close()
         elif file_extension == '.bin':
-            # print "bin!"
-            np.array(records[name]['data']).tofile(saveFileName)
+            np.array(self.records[name]['data']).tofile(saveFileName)
         else:
-            # print "other..."
-            np.save(saveFileName,np.array(records[name]['data']))
+            np.save(saveFileName,np.array(self.records[name]['data']))
 
     def changePenColor(self, name, widget):
-        global records
-        records[name]['pen'] = widget._color
+        self.records[name]['pen'] = widget._color
 
     def togglePlotOnOff(self, name, value):
-        global records
-        records[name]['ploton'] = value
+        self.records[name]['ploton'] = value
 
     def changeSampleRate(self, name, widget):
-        global records
         string = str(widget.currentText())
         number = [int(s) for s in string.split() if s.isdigit()][0]
         value = 1.0/float(number)
-        records[name]['timer'] = value
-        records[name]['record'].setInterval(value)
+        self.records[name]['timer'] = value
+        self.records[name]['record'].setInterval(value)
 
     def clearCurve(self, name):
-        records[name]['data'] = []
-        records[name]['curve'].clear()
+        self.records[name]['data'] = []
+        self.records[name]['curve'].clear()
 
     def deleteRow(self, name, child):
-        global records
         row = self.layout.indexOfTopLevelItem(child.parent())
         self.layout.takeTopLevelItem(row)
-        records[name]['record'].stop()
+        self.records[name]['record'].stop()
         self.clearCurve(name)
-        del records[name]
+        del self.records[name]
 
 class stripPlot(QWidget):
 
     def __init__(self, parent = None, plotRateBar=True):
         super(stripPlot, self).__init__(parent)
-        global usePlotRange, autoscroll
-        usePlotRange = True
-        # plotRange = None
-        autoscroll = True
         self.pg = pg
         self.paused = True
         self.signalLength = 10
         self.plotrate = 1
         self.plotScaleConnection = True
         self.pauseIcon  =  QtGui.QIcon(str(os.path.dirname(os.path.abspath(__file__)))+'\icons\pause.png')
+
+        ''' create the stripPlot.stripPlot as a grid layout '''
         self.stripPlot = QtGui.QGridLayout()
         self.plotThread = QTimer()
+        ''' Create generalPlot object '''
         self.plotWidget = generalPlot(self.parent())
+        ''' Create the plot as part of the plotObject '''
         self.plot = self.plotWidget.createPlot()
+        ''' Create the signalRecord object '''
+        self.records = {}
+
         ''' Sidebar for graph type selection '''
         self.buttonLayout = QtGui.QVBoxLayout()
         self.linearRadio = QRadioButton("Linear")
@@ -584,7 +556,9 @@ class stripPlot(QWidget):
         self.autoscrollPauseLayout.addWidget(self.pauseButton,2)
         ''' Add scroll/pause to main layout '''
         self.buttonLayout.addLayout(self.autoscrollPauseLayout,3)
-        self.legend = stripLegend()
+
+        ''' Initialise stripLegend Object '''
+        self.legend = stripLegend(record=self.records)
         self.buttonLayout.addWidget(self.legend.layout,4)
         ''' Add sidebar  to main layout'''
         self.GUISplitter = QtGui.QSplitter()
@@ -617,6 +591,16 @@ class stripPlot(QWidget):
         # self.plotThread.timeout.connect(self.plotWidget.updateScatterPlot)
         logger.debug('stripPlot initiated!')
         # self.setSizePolicy(QSizePolicy.Ignored,QSizePolicy.Ignored)
+
+    def saveAllCurves(self, saveFileName=None):
+        for name in self.records:
+            if self.records[name]['parent'] == self:
+                filename, file_extension = os.path.splitext(saveFileName)
+                saveFileName2 = filename + '_' + self.records[name]['name'] + file_extension
+                self.legend.saveCurve(self.records[name]['name'],saveFileName2)
+
+    def saveCurve(self, name, saveFileName=None):
+        self.legend.saveCurve(name,saveFileName)
 
     def setWidth(self, width=16777215):
         self.stripPlot.setMaximumWidth(width)
@@ -678,7 +662,6 @@ class stripPlot(QWidget):
             self.plotWidget.setPlotScale(timescale)
 
     def setPlotType(self, linear=False, histogram=False, FFT=False, scatter=False):
-        # global dateTicksOn
         self.plotScaleConnection = False
         if not(self.plotWidget.linearPlot == linear and self.plotWidget.histogramPlot == histogram and self.plotWidget.FFTPlot == FFT and self.plotWidget.scatterPlot == scatter):
             self.plotWidget.linearPlot = linear
@@ -697,21 +680,19 @@ class stripPlot(QWidget):
                 self.plotWidget.date_axis.dateTicksOn = False
                 self.plotWidget.updateScatterPlot()
                 self.plot.enableAutoRange()
-                # self.plotWidget.updateScatterPlot()
             else:
                 try:
                     self.plotWidget.legend.scene().removeItem(self.plotWidget.legend)
                 except:
                     pass
                 self.plot.clear()
-                for name in records:
-                    # print records[name]['curve'].curve
-                    if records[name]['parent'] == self:
-                        self.plot.addItem(records[name]['curve'].curve)
+                for name in self.records:
+                    if self.records[name]['parent'] == self:
+                        self.plot.addItem(self.records[name]['curve'].curve)
                 self.plot.updateSpectrumMode(False)
-                for name in records:
-                    if records[name]['parent'] == self:
-                        records[name]['curve'].update()
+                for name in self.records:
+                    if self.records[name]['parent'] == self:
+                        self.records[name]['curve'].update()
                 if FFT:
                     self.plot.updateSpectrumMode(True)
                 else:
@@ -730,36 +711,31 @@ class stripPlot(QWidget):
         self.plotThread.timeout.connect(self.plotUpdate)
 
     def addSignal(self, name, pen, timer, function, *args):
-        # print 'self = ',self
-        global records
-        if not 'records' in globals() or not name in records:
-            signalrecord = createSignalRecord(name=name, timer=timer, function=function, *args)
-            records[name]['record'] = signalrecord
+        if not name in self.records:
+            signalrecord = createSignalRecord(records=self.records, name=name, timer=timer, function=function, *args)
+            self.records[name]['record'] = signalrecord
         else:
             logger.warning('Signal '+name+' already exists!')
             nameorig = name
             name = name + '_2'
-            signalrecord = createSignalRecord(name=name, timer=timer, function=function, *args)
-            records[name]['record'] = signalrecord
-        # print records.viewvalues()
-        curve = self.plotWidget.addCurve(self.plotWidget, name)
-        records[name]['curve'] = curve
-        records[name]['parent'] = self
-        records[name]['pen'] = pen
+            signalrecord = createSignalRecord(records=self.records, name=name, timer=timer, function=function, *args)
+            self.records[name]['record'] = signalrecord
+        curve = self.plotWidget.addCurve(self.records, self.plotWidget, name)
+        self.records[name]['curve'] = curve
+        self.records[name]['parent'] = self
+        self.records[name]['pen'] = pen
         self.legend.addLegendItem(name)
         logger.info('Signal '+name+' added!')
 
     def plotUpdate(self):
-        global records, currentPlotTime
-        currentPlotTime = time.time()
-        for name in records:
-            records[name]['curve'].update()
+        self.currentPlotTime = time.time()
+        for name in self.records:
+            self.records[name]['curve'].update()
         self.plotWidget.updateScatterPlot()
 
     def removeSignal(self,name):
-        global records
-        self.plotThread.timeout.disconnect(records[name]['curve'].update)
-        del records[name]
+        self.plotThread.timeout.disconnect(self.records[name]['curve'].update)
+        del self.records[name]
         logger.info('Signal '+name+' removed!')
 
     def setPlotScale(self, timescale):
@@ -781,8 +757,7 @@ class stripPlot(QWidget):
         self.plotWidget.togglePause(self.paused)
 
     def toggleAutoScroll(self):
-        global autoscroll
-        autoscroll = self.scrollButton.isChecked()
+        self.plotWidget.date_axis.autoscroll = self.scrollButton.isChecked()
         self.plotWidget.toggleAutoScroll(self.scrollButton.isChecked())
 
     def setDecimateLength(self, value=5000):
