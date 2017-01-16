@@ -6,13 +6,17 @@ os.chdir("..\BPMDelayCalibration")
 sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\Model')
 sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\Controller')
 sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\View')
-sys.path.append('D:\\VELA-CLARA_software\\VELA-CLARA-Controllers-New-Structure-With-Magnets\\bin\\Release')
+sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'..\..\loggerWidget')
+sys.path.append('\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Software\\CONTROLLERS\\VELA-CLARA-Controllers\\bin\\Release')
 
 from PyQt4 import QtGui, QtCore
 import VELA_CLARA_BPM_Control as vbpmc
 import dlymainModel
 import dlymainController
 import dlymainView
+import loggerWidget as lw
+import logging
+logger = logging.getLogger(__name__)
 
 class dlyApp(QtGui.QApplication):
     def __init__(self, sys_argv):
@@ -60,9 +64,11 @@ class dlyApp(QtGui.QApplication):
                 self.bpmCont = self.bpm.physical_C2V_BPM_Controller()
         self.view = dlymainView.dlyUi_TabWidget()
         self.MainWindow = QtGui.QTabWidget()
-        self.view.setupUi(self.MainWindow, self.bpmCont)
+        self.view.setupUi(self.MainWindow, self.bpmCont, sys_argv[1], sys_argv[2])
         self.model = dlymainModel.dlyModel(self.bpmCont)
         self.controller = dlymainController.dlyController(self.view, self.model, self.bpmCont)
+        self.logwidget1 = lw.loggerWidget([logger,dlymainController.logger])
+        self.MainWindow.addTab(self.logwidget1,"Log")
         self.MainWindow.show()
 
 if __name__ == '__main__':

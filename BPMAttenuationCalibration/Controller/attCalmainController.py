@@ -1,18 +1,12 @@
 from PyQt4 import QtGui, QtCore
 from PyQt4.QtCore import QObject
 import threading
-import Queue
 import sys
-import time
 import attCalthreads
-import numpy
-import pyqtgraph as pg
-import epics
-from epics import caget,caput
 sys.path.append('D:\\VELA-CLARA_software\\VELA-CLARA-Controllers-New-Structure-With-Magnets\\bin\\Release')
-
 import VELA_CLARA_BPM_Control as vbpmc
-
+import logging
+logger = logging.getLogger(__name__)
 
 class attCalController(QObject):
 
@@ -20,12 +14,9 @@ class attCalController(QObject):
 		super(attCalController, self).__init__()
 		self.view = view
 		self.model = model
+		self.logger = logger
 		self.attCalthreads = attCalthreads
-		#self.thread = QtCore.QThread()
-		#self.queue = Queue.Queue()
 		self.threading = threading
-		#self.MainWindow = QtGui.QTabWidget()
-		#self.pool = QtCore.QThreadPool()
 		self.pvList = vbpmc.std_vector_string()
 		self.lowerList = []
 		self.upperList = []
@@ -35,6 +26,14 @@ class attCalController(QObject):
 		self.view.calibrateButton.clicked.connect(lambda: self.runATTCalibration())
 
 	def runATTCalibration(self):
+		self.view.calibrateButton.setEnabled(False)
+		self.view.calibrateButton.setText("Calibrating......")
+		QtGui.QApplication.processEvents()
+		self.genPVList = []
+		for i in self.pvList:
+			self.genPVList.append(i)
+		print self.genPVList
+		self.logger.info('Attenuation calibration for '+str(self.genPVList)+' initiated!')
 		self.numShots = int(self.view.numShots.toPlainText())
 		self.sliderMin = int(self.view.lowerATTBound.toPlainText())
 		self.sliderMax = int(self.view.upperATTBound.toPlainText())
@@ -43,7 +42,6 @@ class attCalController(QObject):
 		self.pool.setMaxThreadCount(len(self.pvList))
 
 		print self.pvList
-
 		self.thread = self.attCalthreads.attCalWorker(self.view, self.pvList, self.numShots, self.sliderMin, self.sliderMax, self.model)
 		self.attValue = self.thread.signals.result.connect(self.getValues)
 		self.pool.start(self.thread)
@@ -51,7 +49,7 @@ class attCalController(QObject):
 
 	def clearPVList(self):
 		self.view.bpmPVList.clear()
-		self.i = 1
+		self.i = 2
 		while self.i <= len(self.pvList) + 1:
 			self.view.TabWidget.removeTab(self.i)
 			self.i = self.i + 1
@@ -78,6 +76,10 @@ class attCalController(QObject):
 			self.makestr = self.makestr+("\nNew BPM ATT2 for "+self.pvList[i]+" = "+str(self.model.getBPMReadAttenuation(str(self.pvList[i]))[1]))
 		print self.makestr
 		self.view.newATTVals.setText(self.makestr)
+		self.logger.info('Attenuation calibration for '+str(self.genPVList)+' complete!')
+		self.logger.info(self.makestr)
+		self.view.calibrateButton.setEnabled(True)
+		self.view.calibrateButton.setText("Calibrate Attenuations")
 		#return sigList
 
 	def appendToList(self):

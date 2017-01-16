@@ -1,15 +1,10 @@
 from PyQt4 import QtGui, QtCore
 from PyQt4.QtCore import QObject
 import threading
-import Queue
-import sys
-import time
 import dlythreads
-import numpy
-import pyqtgraph as pg
-import epics
-from epics import caget,caput
 import VELA_CLARA_BPM_Control as vbpmc
+import logging
+logger = logging.getLogger(__name__)
 
 class dlyController(QObject):
 
@@ -18,20 +13,27 @@ class dlyController(QObject):
 		self.view = view
 		self.bpmCont = bpmCont
 		self.model = model
+		self.logger = logger
 		self.threads = dlythreads
 		self.thread = QtCore.QThread()
-		self.queue = Queue.Queue()
 		self.threading = threading
-		#self.MainWindow = QtGui.QTabWidget()
-		#self.pool = QtCore.QThreadPool()
 		self.pvList = vbpmc.std_vector_string()
 		self.lowerList = []
 		self.upperList = []
 
 		self.view.addToListButton.clicked.connect(lambda: self.appendToList())
+		self.view.clearPVListButton.clicked.connect(lambda: self.clearPVList())
 		self.view.calibrateButton.clicked.connect(lambda: self.runDLYCalibration())
 
 	def runDLYCalibration(self):
+		self.view.calibrateButton.setEnabled(False)
+		self.view.calibrateButton.setText("Calibrating......")
+		QtGui.QApplication.processEvents()
+		self.genPVList = []
+		for i in self.pvList:
+			self.genPVList.append(i)
+		print self.genPVList
+		self.logger.info('Delay calibration for '+str(self.genPVList)+' initiated!')
 		self.numShots = int(self.view.numShots.toPlainText())
 		self.sliderMin = int(self.view.lowerDLYBound.toPlainText())
 		self.sliderMax = int(self.view.upperDLYBound.toPlainText())
@@ -64,6 +66,10 @@ class dlyController(QObject):
 			self.makestr = self.makestr+("\nNew BPM DLY1 for "+self.pvList[i]+" = "+str(self.model.getBPMReadDLY(str(self.pvList[i]))[0]))
 			self.makestr = self.makestr+("\nNew BPM DLY2 for "+self.pvList[i]+" = "+str(self.model.getBPMReadDLY(str(self.pvList[i]))[1]))
 		self.view.newDLYVals.setText(self.view.newDLYVals.toPlainText()+"\n\n"+self.makestr)
+		self.logger.info('Delay calibration for '+str(self.genPVList)+' complete!')
+		self.logger.info(self.makestr)
+		self.view.calibrateButton.setEnabled(True)
+		self.view.calibrateButton.setText("Calibrate Delays")
 		#return sigList
 
 	def appendToList(self):
@@ -73,3 +79,11 @@ class dlyController(QObject):
 		self.view.bpmPVList.insertPlainText(self.pvName+"\n")
 		self.view.addPlotTab(self.view.TabWidget, self.pvName)
 		return self.pvList
+
+	def clearPVList(self):
+		self.view.bpmPVList.clear()
+		self.i = 2
+		while self.i <= len(self.pvList) + 1:
+			self.view.TabWidget.removeTab(self.i)
+			self.i = self.i + 1
+		self.pvList = vbpmc.std_vector_string()

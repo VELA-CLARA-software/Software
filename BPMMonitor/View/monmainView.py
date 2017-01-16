@@ -206,7 +206,7 @@ class monUi_MainWindow(QtCore.QObject):
             self.comboBox.setItemText(0, _translate("TabWidget", "C2V", None))
 
     def retranslateUi(self, TabWidget):
-        self.TabWidget.setWindowTitle(_translate("TabWidget", "TabWidget", None))
+        self.TabWidget.setWindowTitle(_translate("TabWidget", "BPM Monitor GUI", None))
         self.TabWidget.setTabText(self.TabWidget.indexOf(self.tab), _translate("TabWidget", "Settings", None))
         self.pushButton.setText(_translate("TabWidget", "Go", None))
         self.pushButton_2.setText(_translate("TabWidget", "Append", None))

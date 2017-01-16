@@ -1,17 +1,6 @@
 from PyQt4 import QtGui, QtCore
 from PyQt4.QtCore import QObject
-import functools
-import random
 import threading
-import sys
-import time
-import numpy
-import epics
-from epics import caget,caput
-import collections
-#sys.path.append('D:\\VELA-CLARA_software\\VELA-CLARA-Controllers-New-Structure-With-Magnets\\bin\\Release')
-
-#import VELA_CLARA_BPM_Control as vbpmc
 
 class monController(QObject):
 

@@ -1,11 +1,7 @@
 from PyQt4 import QtGui, QtCore
 from PyQt4.QtCore import QThreadPool, QObject, QRunnable, pyqtSignal, QThread
-import pyqtgraph
 import threading
 import time
-#import mainModel
-#import mainController
-#import mainView
 
 class attCalWorker(QRunnable):
 	#self.signal = QtCore.Signal(list)#signal to broadcast name

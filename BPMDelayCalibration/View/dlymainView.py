@@ -7,7 +7,7 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt4 import QtCore, QtGui
-import pyqtgraph, qrangeslider
+import pyqtgraph
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -24,9 +24,11 @@ except AttributeError:
         return QtGui.QApplication.translate(context, text, disambig)
 
 class dlyUi_TabWidget(object):
-    def setupUi(self, TabWidget, bpmCont):
+    def setupUi(self, TabWidget, bpmCont, beamline, machine):
         self.TabWidget = TabWidget
         self.bpmCont = bpmCont
+        self.beamline = beamline
+        self.machine = machine
         self.TabWidget.setObjectName(_fromUtf8("TabWidget"))
         #self.TabWidget.resize(699, 602)
         self.tab = QtGui.QWidget()
@@ -142,11 +144,13 @@ class dlyUi_TabWidget(object):
         self.glayoutOutputs = []
         self.glayoutOutputs_2 = []
 
-        self.retranslateUi(self.TabWidget)
+        self.retranslateUi(self.TabWidget, self.beamline, self.machine)
         QtCore.QMetaObject.connectSlotsByName(self.TabWidget)
 
-    def retranslateUi(self, TabWidget):
-        self.TabWidget.setWindowTitle(_translate("TabWidget", "TabWidget", None))
+    def retranslateUi(self, TabWidget, beamline, machine):
+        self.beamline = beamline
+        self.machine = machine
+        self.TabWidget.setWindowTitle(_translate("TabWidget", "BPM Delay Calibrator", None))
         self.addToListButton.setText(_translate("TabWidget", "Add to List", None))
         self.calibrateButton.setText(_translate("TabWidget", "Calibrate Delays", None))
         self.clearPVListButton.setText(_translate("TabWidget", "Clear PV List", None))
@@ -167,8 +171,9 @@ class dlyUi_TabWidget(object):
         self.newFont = QtGui.QFont("Comic Sans", 20, QtGui.QFont.Bold)
         self.titleLabel.setFont(self.newFont)
         self.titleLabel.setText(_translate("TabWidget", "VELA/CLARA Beam \nPosition Monitor \nDelay Calibrator", None))
-        self.infoText = "Please select the BPMs to calibrate from the list using \nthe drop-down menu and the 'Calibrate BPM' button."
-        self.infoText2 = self.infoText+"\nThe number of shots for each delay setting,\n and the range to scan over (from 0 - 511),\n can also be set."
+        self.infoText = "Beamline = "+str(self.beamline)+"     Machine type = "+str(self.machine)+"\n\n"
+        self.infoText1 = self.infoText+"Please select the BPMs to calibrate from the list using \nthe drop-down menu and the 'Calibrate BPM' button."
+        self.infoText2 = self.infoText1+"\nThe number of shots for each delay setting,\n and the range to scan over (from 0 - 511),\n can also be set."
         self.infoText3 = self.infoText2+" Click 'Calibrate delays' when \nready. The tabs generated will show the results."
         self.infoLabel.setText(_translate("TabWidget", self.infoText3, None))
         self.TabWidget.setTabText(self.TabWidget.indexOf(self.tab), _translate("TabWidget", "Settings", None))

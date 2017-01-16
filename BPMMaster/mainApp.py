@@ -5,16 +5,15 @@ os.environ["EPICS_CA_MAX_ARRAY_BYTES"] = "10000000"
 
 sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\Controller')
 sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\View')
-sys.path.append('\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Software\\CONTROLLERS\\VELA-CLARA-Controllers\\bin\\Release')
 from PyQt4 import QtGui, QtCore
-
 import mainController
 import mainView
+import logging
+logger = logging.getLogger(__name__)
 
 class masterApp(QtGui.QApplication):
     def __init__(self, sys_argv):
         super(masterApp, self).__init__(sys_argv)
-        #os.chdir("D:\VELA-CLARA_software\Software\BPMMaster")
         self.view = mainView.Ui_TabWidget()
         self.MainWindow = QtGui.QTabWidget()
         self.view.setupUi(self.MainWindow)

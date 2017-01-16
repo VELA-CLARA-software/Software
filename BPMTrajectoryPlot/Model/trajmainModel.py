@@ -1,14 +1,6 @@
-import epics
-import random
-import os,sys
 import time
 import numpy
 import collections
-#sys.path.append('D:\\VELA-CLARA_software\\VELA-CLARA-Controllers-New-Structure-With-Magnets\\bin\\Release')
-#sys.path.append('D:\\VELA-CLARA_software\\VELA-CLARA-Controllers\\Controllers\\VELA\\GENERIC\\velaChargeScope\\bin\\Release')
-
-#import VELA_CLARA_BPM_Control as vbpmc
-#import VELA_CLARA_Scope_Control as vcsc
 
 class trajModel():
 	def __init__(self, bpmCont, scopeCont):

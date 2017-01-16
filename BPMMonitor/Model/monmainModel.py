@@ -1,5 +1,3 @@
-import epics
-import random
 import os,sys
 import time
 import numpy

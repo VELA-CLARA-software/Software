@@ -31,16 +31,17 @@ class setRandomPV():
 		#self.start = time.clock()
 		self.which = self.isAnArray(self.pvName)
 
-		while self.gotAValue != self.numShots:
+		while self.gotAValue <= self.numShots:
 			self.start = time.clock()
 			self.num = random.uniform(rangeSta, rangeEnd)
 			while time.clock() < (self.start + 1/(self.repRate)):
+				#print "sleep"
 				time.sleep(0.001)
 			if pvType == "array":# and time.clock() < (self.start + 1/(self.repRate)):
 				self.arrayNum = []
 				i = 0
 				while i < 10:
-					print i
+					#print i
 					self.arrayNum.append(random.uniform(rangeSta, rangeEnd))
 					i = i + 1
 					if i == 9:
@@ -49,10 +50,11 @@ class setRandomPV():
 				self.gotAValue = self.gotAValue + 1
 			elif pvType == "num":# and time.clock() < (self.start + 1/(self.repRate)):
 				epics.caput(str(self.pvName), self.num)
-				print str(self.pvName),"   ",self.num
+				#print str(self.pvName),"   ",self.num
 				self.gotAValue = self.gotAValue + 1
 			else:
 				print "not valid pvType"
+			#print self.gotAValue
 
 	def addToArrayList(self, pvName):
 		self.arrayList.append(pvName)

@@ -1,6 +1,7 @@
 from PyQt4 import QtGui, QtCore
 from PyQt4.QtCore import QObject
 import threading
+import mainThreads
 import sys, os
 
 class Controller(QObject):
@@ -9,13 +10,42 @@ class Controller(QObject):
 		super(Controller, self).__init__()
 		self.view = view
 		self.threading = threading
+		self.mainThreads = mainThreads
+		self.fullPVList = ["VM-EBT-INJ-DIA-BPMC-02:DATA:B2V.VALA",
+						  "VM-EBT-INJ-DIA-BPMC-04:DATA:B2V.VALA",
+						  "VM-EBT-INJ-DIA-BPMC-06:DATA:B2V.VALA",
+						  "VM-EBT-INJ-DIA-BPMC-10:DATA:B2V.VALA",
+						  "VM-EBT-INJ-DIA-BPMC-12:DATA:B2V.VALA",
+						  "VM-EBT-INJ-DIA-BPMC-14:DATA:B2V.VALA"]
 
+		self.view.randomVariableButton.clicked.connect(lambda: self.setRandomPVs())
 		self.view.launchATTButton.clicked.connect(lambda: self.attCalThread())
 		self.view.launchDLYButton.clicked.connect(lambda: self.dlyCalThread())
 		self.view.launchTrajButton.clicked.connect(lambda: self.trajPlotThread())
 		self.view.launchMonButton.clicked.connect(lambda: self.monPlotThread())
 
+	def setRandomPVs(self):
+		self.timer = QtCore.QTimer()
+		self.timer.timeout.connect(self.setPVTimer)
+		self.timer.start(1000)
+
+	def setPVTimer(self):
+		self.repRate = QtCore.QString.toFloat(self.view.repRateValue.toPlainText())[0]
+		if not self.view.randomVariableCheckBox.isChecked():
+			self.view.randomVariableButton.setEnabled(True)
+		else:
+			self.pool = QtCore.QThreadPool()
+			self.pool.setMaxThreadCount(len(self.fullPVList))
+			if self.view.randomVariableCheckBox.isChecked():
+				self.view.randomVariableButton.setEnabled(False)
+				for i in self.fullPVList:
+					QtGui.QApplication.processEvents()
+					self.th1 = self.mainThreads.ranPVs(i, -5, 5, 1, self.repRate, "array")
+					self.pool.start(self.th1)
+				self.pool.waitForDone()
+
 	def launchATTCal(self):
+		self.view.dialogBox.setText("Launching BPM attenuation calibration")
 		if self.view.velaINJButton.isChecked():
 			if self.view.virtualButton.isChecked():
 				os.system("python ..\BPMAttenuationCalibration\\attCalmainApp.py VELA_INJ Virtual")
@@ -58,6 +88,7 @@ class Controller(QObject):
 		self.attThread.start()
 
 	def launchDLYCal(self):
+		self.view.dialogBox.setText("Launching BPM delay calibration")
 		if self.view.velaINJButton.isChecked():
 			if self.view.virtualButton.isChecked():
 				os.system("python ..\BPMDelayCalibration\\dlymainApp.py VELA_INJ Virtual")
@@ -100,6 +131,7 @@ class Controller(QObject):
 		self.dlyThread.start()
 
 	def launchTrajPlot(self):
+		self.view.dialogBox.setText("Launching BPM trajectory plotter")
 		if self.view.velaINJButton.isChecked():
 			if self.view.virtualButton.isChecked():
 				os.system("python ..\BPMTrajectoryPlot\\trajmainApp.py VELA_INJ Virtual")
@@ -142,6 +174,7 @@ class Controller(QObject):
 		self.trajThread.start()
 
 	def launchMonPlot(self):
+		self.view.dialogBox.setText("Launching BPM monitor GUI")
 		if self.view.velaINJButton.isChecked():
 			if self.view.virtualButton.isChecked():
 				os.system("python ..\BPMMonitor\\monmainApp.py VELA_INJ Virtual")
