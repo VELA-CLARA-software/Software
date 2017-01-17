@@ -222,46 +222,16 @@ class magnetAppController(object):
         os.environ["EPICS_CA_ADDR_LIST"] = "10.10.0.12"
         os.environ["EPICS_CA_MAX_ARRAY_BYTES"] = "10000000"
 
-    # i hate the way the below few functions work, ... cancer
     def launchPythonMagnetController(self):
-        if self.machineMode == 'physicalMode':
-            self.launchPhysical()
-            self.activeEPICS = True
-        elif self.machineMode == 'virtualMode':
+        mode = self.machineMode.replace('Mode', '') # 'virtualMode' etc
+        area = self.machineArea.replace('_Magnets', '') # 'VELA_INJ' etc
+        func_name = '{}_{}_Magnet_Controller'.format(mode, area)
+        mag_ctrl_func = self.magInit.__getattribute__(func_name)
+        if mode == 'virtual':
             self.setVM()
-            self.launchVirtual()
-            self.activeEPICS = True
-        elif self.machineMode == 'offlineMode':
-            self.launchOffline()
-        else:
-            print 'magnetAppController launchPythonMagnetController ERROR'
-    def launchPhysical(self):
-        if self.machineArea == 'VELA_INJ_Magnets':
-            self.localMagnetController = self.magInit.physical_VELA_INJ_Magnet_Controller()
-        elif self.machineArea == 'VELA_BA1_Magnets':
-            self.localMagnetController = self.magInit.physical_VELA_BA1_Magnet_Controller()
-        elif self.machineArea == 'VELA_BA2_Magnets':
-            self.localMagnetController = self.magInit.physical_VELA_BA2_Magnet_Controller()
-        elif self.machineArea == 'CLARA_INJ_Magnets':
-            self.localMagnetController = self.magInit.physical_CLARA_INJ_Magnet_Controller()
-    def launchVirtual(self):
-        if self.machineArea == 'VELA_INJ_Magnets':
-            self.localMagnetController = self.magInit.virtual_VELA_INJ_Magnet_Controller()
-        elif self.machineArea == 'VELA_BA1_Magnets':
-            self.localMagnetController = self.magInit.virtual_VELA_BA1_Magnet_Controller()
-        elif self.machineArea == 'VELA_BA2_Magnets':
-            self.localMagnetController = self.magInit.virtual_VELA_BA2_Magnet_Controller()
-        elif self.machineArea == 'CLARA_INJ_Magnets':
-            self.localMagnetController = self.magInit.virtual_CLARA_INJ_Magnet_Controller()
-    def launchOffline(self):
-        if self.machineArea == 'VELA_INJ_Magnets':
-            self.localMagnetController = self.magInit.offline_VELA_INJ_Magnet_Controller()
-        elif self.machineArea == 'VELA_BA1_Magnets':
-            self.localMagnetController = self.magInit.offline_VELA_BA1_Magnet_Controller()
-        elif self.machineArea == 'VELA_BA2_Magnets':
-            self.localMagnetController = self.magInit.offline_VELA_BA2_Magnet_Controller()
-        elif self.machineArea == 'CLARA_INJ_Magnets':
-            self.localMagnetController = self.magInit.offline_CLARA_INJ_Magnet_Controller()
+        self.activeEPICS = (mode in ('physical', 'virtual'))
+        self.localMagnetController = mag_ctrl_func()
+
 
 
 
