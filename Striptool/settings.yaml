@@ -1,0 +1,21 @@
+Correctors:
+  Names: [HCOR01, HCOR02, HCOR03, HCOR04, HCOR05, HCOR06, HCOR07, HCOR08, HCOR09,
+    HCOR10, HCOR11, VCOR01, VCOR02, VCOR03, VCOR04, VCOR05, VCOR06, VCOR07, VCOR08,
+    VCOR09, VCOR10, VCOR11]
+  PVs:
+    RI: ['', getRI]
+    SI: ['', getSI]
+Dipoles:
+  Names: [DIP01, DIP02, DIP03]
+  PVs:
+    RI: ['', getRI]
+    SI: ['', getSI]
+'Off':
+  Names: []
+  PVs: {}
+Quads:
+  Names: [QUAD01, QUAD02, QUAD03, QUAD04, QUAD05, QUAD06, QUAD07, QUAD08, QUAD09,
+    QUAD10, QUAD11, QUAD12, QUAD13, QUAD14, QUAD15]
+  PVs:
+    RI: ['', getRI]
+    SI: ['', getSI]

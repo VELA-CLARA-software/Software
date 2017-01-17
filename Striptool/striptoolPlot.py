@@ -119,7 +119,7 @@ class generalPlot(pg.PlotWidget):
             return self.curve
 
         def updateData(self, data, pen):
-            if len(data) > 0 and not self.plot.scatterPlot:
+            if len(data) > 1 and not self.plot.scatterPlot:
                 if self.plot.histogramPlot:
                     x,y = np.transpose(data)
                     y,x = np.histogram(y, bins=50)
@@ -129,7 +129,8 @@ class generalPlot(pg.PlotWidget):
                     self.curve.setData({'x': x, 'y': y}, pen=pen, stepMode=True, fillLevel=0)
                 elif self.plot.FFTPlot:
                     self.curve.setData({'x': x, 'y': y}, pen=pen, stepMode=False)
-                    indexes = peakutils.indexes(self.curve.yDisp, thres=0.75, min_dist=1)
+                    if(len(self.curve.yDisp) > 0):
+                        indexes = peakutils.indexes(self.curve.yDisp, thres=0.75, min_dist=1)
                     self.plot.updateSpectrumMode(True)
                 else:
                     self.curve.setData({'x': x, 'y': y}, pen=pen, stepMode=False)
