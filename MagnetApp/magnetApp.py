@@ -1,19 +1,28 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 from PyQt4 import QtGui, QtCore
-import sys,os
+import sys,logging,socket
+import magnetAppGlobals
 
-#sys.path.append('D:\\VELA\\GIT Projects\\VELA-CLARA-Controllers\\bin\\Release')
-#sys.path.append('\\\\fed.cclrc.ac.uk\\org\\NLab\\ASTeC\\Projects\\VELA\\Software\\VELA_CLARA_PYDs\\bin\\Release\\')
-sys.path.append('\\\\fed.cclrc.ac.uk\\org\\NLab\\ASTeC\\Projects\\VELA\\Software\\VELA_CLARA_PYDs\\bin\\stage\\')
+
+
 import magnetAppController
 
+dburtLocation = "\\\\fed.cclrc.ac.uk\\org\\NLab\\ASTeC\\Projects\\VELA\\Snapshots\\DBURT\\"
+appIcon = 'magpic.jpg'
+sys.path.append('\\\\fed.cclrc.ac.uk\\org\\NLab\\ASTeC\\Projects\\VELA\\Software\\VELA_CLARA_PYDs\\bin\\stage\\')
 
 class magnetApp(QtGui.QApplication):
     def __init__(self,argv):
-        # seems you need this init line here to instantiate a QTApplication
+        # you need this init line here to instantiate a QTApplication
         QtGui.QWidget.__init__(self,argv)
-        # Everything else is handled by the controller
+        # Everything else is handled by the magnetAppController
         self.controller = magnetAppController.magnetAppController(argv)
 
 if __name__ == '__main__':
+    logging.basicConfig(filename='magnetTestLog.log', level=logging.INFO,format='%(asctime)s %(message)s')
+    logging.info('Started on ' + socket.gethostname() )
+    print "starting magnet app"
     app = magnetApp(sys.argv)
     sys.exit(app.exec_())
+    logging.info('Finished on ' + socket.gethostname() )

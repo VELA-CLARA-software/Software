@@ -1,8 +1,11 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 from PyQt4 import QtGui, QtCore
 from Ui_magnetAppMainView import Ui_magnetAppMainView
 from GUI_magnetWidget import GUI_magnetWidget
 
 class GUI_magnetAppMainView(QtGui.QMainWindow, Ui_magnetAppMainView):
+    closing = QtCore.pyqtSignal()# custom close signal to send to controller
     def __init__(self):
         QtGui.QWidget.__init__(self)
         # startup crap
@@ -40,6 +43,10 @@ class GUI_magnetAppMainView(QtGui.QMainWindow, Ui_magnetAppMainView):
         self.corSelectNone.clicked.connect(  lambda:self.activateMags(self.corWidgets,False ) )
         self.mainSelectAll.clicked.connect( self.activateAll )
         self.selectNone.clicked.connect( self.deActivateAll )
+        #self.closing.connect(self.close)
+
+    def closeEvent(self,event):
+        self.closing.emit()
 
     def updateMagnetWidgets(self):
         for mag in self.quadWidgets.values():

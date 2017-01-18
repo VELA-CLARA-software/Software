@@ -72,28 +72,28 @@
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_3">
      <item>
-      <widget class="QRadioButton" name="VELA_INJ_Magnets">
+      <widget class="QRadioButton" name="VELA_INJ">
        <property name="text">
         <string>VELA  INJ Magnets</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QRadioButton" name="VELA_BA1_Magnets">
+      <widget class="QRadioButton" name="VELA_BA1">
        <property name="text">
         <string>VELA  BA1 Magnets</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QRadioButton" name="VELA_BA2_Magnets">
+      <widget class="QRadioButton" name="VELA_BA2">
        <property name="text">
         <string>VELA  BA2 Magnets</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QRadioButton" name="CLAR_INJ_Magnets">
+      <widget class="QRadioButton" name="CLAR_INJ">
        <property name="text">
         <string>CLARA INJ Magnets</string>
        </property>
@@ -113,11 +113,10 @@
       </spacer>
      </item>
     </layout>
-    <zorder>CLAR_INJ_Magnets</zorder>
-    <zorder>VELA_BA2_Magnets</zorder>
-    <zorder>VELA_BA1_Magnets</zorder>
-    <zorder>VELA_INJ_Magnets</zorder>
-    <zorder>verticalSpacer_2</zorder>
+    <zorder>CLAR_INJ</zorder>
+    <zorder>VELA_BA2</zorder>
+    <zorder>VELA_BA1</zorder>
+    <zorder>VELA_INJ</zorder>
     <zorder>verticalSpacer_2</zorder>
    </widget>
    <widget class="QGroupBox" name="modeSelection">
@@ -244,15 +243,6 @@ Then Press START </string>
      <string>TextLabel</string>
     </property>
    </widget>
-   <zorder>startButton</zorder>
-   <zorder>cancelButton</zorder>
-   <zorder>machineAreaSelection</zorder>
-   <zorder>modeSelection</zorder>
-   <zorder>instructionLabel</zorder>
-   <zorder>iconLabel</zorder>
-   <zorder>verticalLayoutWidget</zorder>
-   <zorder>waitMessageLabel</zorder>
-   <zorder>logoLabel</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

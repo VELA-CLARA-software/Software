@@ -12,10 +12,10 @@ class GUI_magnetAppStartup(QtGui.QMainWindow, Ui_magnetAppStartup):
         self.setupUi(self)
         # I can't find a *good* way to get the toggled radio button, apart from emitting signals and
         # interpreting them later... meh
-        self.VELA_BA2_Magnets.toggled.connect(lambda:self.handle_areaRadio(self.VELA_BA2_Magnets))
-        self.VELA_BA1_Magnets.toggled.connect(lambda:self.handle_areaRadio(self.VELA_BA1_Magnets))
-        self.VELA_INJ_Magnets.toggled.connect(lambda:self.handle_areaRadio(self.VELA_INJ_Magnets))
-        self.CLAR_INJ_Magnets.toggled.connect(lambda:self.handle_areaRadio(self.CLAR_INJ_Magnets))
+        self.VELA_BA2.toggled.connect(lambda:self.handle_areaRadio(self.VELA_BA2))
+        self.VELA_BA1.toggled.connect(lambda:self.handle_areaRadio(self.VELA_BA1))
+        self.VELA_INJ.toggled.connect(lambda:self.handle_areaRadio(self.VELA_INJ))
+        self.CLAR_INJ.toggled.connect(lambda:self.handle_areaRadio(self.CLAR_INJ))
         self.virtualMode.toggled.connect(lambda:self.handle_modeRadio(self.virtualMode))
         self.physicalMode.toggled.connect(lambda:self.handle_modeRadio(self.physicalMode))
         self.offlineMode.toggled.connect(lambda:self.handle_modeRadio(self.offlineMode))
