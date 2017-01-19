@@ -202,7 +202,7 @@ class generalPlot(pg.PlotWidget):
         if not value:
             self.currenttime = self.currentPlotTime
             self.date_axis.fixedtimepoint = self.currentPlotTime
-    #
+
     def updateScatterPlot(self):
         if self.scatterPlot and not self.doingPlot:
             self.doingPlot = True

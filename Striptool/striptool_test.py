@@ -18,6 +18,15 @@ def createRandomSignal(offset=0):
     signalValue = np.sin(2*2*np.pi*time.time()+0.05)+np.sin(1.384*2*np.pi*time.time()-0.1)+0.5*np.random.normal()
     return signalValue+offset
 
+def pausePlots(parentwidget):
+    widgets = parentwidget.findChildren(striptool.stripPlot)
+    for widget in widgets:
+        if widget.isVisible():
+            widget.pausePlotting(False)
+            widget.plotUpdate()
+        else:
+            widget.pausePlotting(True)
+
 def main():
 
     ''' Initiate PyQT application '''
@@ -55,18 +64,21 @@ def main():
     # sp.removeSignal(name='signal1')
     # sp.removeSignal(name='signal2')
 
-    ''' Here we create a tab layout widget, and put the strip plot in one of the tabs, with an empty QWidget in the other '''
+    ''' Here we create a tab layout widget, and put the 3 stripplots into a grid layout in one of the tabs
+        In the second tab we put the first stripplot. NB: the stripplot "sp" can only exist in one place at a time!
+        Comment out line 83 to see the difference. '''
     tab = QTabWidget()
     plotLayout = QGridLayout()
-    # plotSplitter = QSplitter()
-    # plotSplitter.addWidget(sp)
-    # plotSplitter.addWidget(sp2)
     plotLayout.addWidget(sp,0,0,1,1)
     plotLayout.addWidget(sp2,0,1,1,1)
     plotLayout.addWidget(sp3,1,0,1,2)
     plotWidget = QFrame()
     plotWidget.setLayout(plotLayout)
     tab.addTab(plotWidget,"Strip Plot")
+    tab.addTab(sp,"Strip Plot 1")
+    ''' Here we connect the QTabWidget signal "currentChanged" to a function defined above. This will pause plots not currently visible
+        whenever the tabs are changed. This reduces the load as only visible plots are updated. '''
+    tab.currentChanged.connect(lambda x: pausePlots(tab))
 
     ''' Add loggerWidget Tab (requires loggerWidget - comment out if not available)'''
     tab.addTab(logwidget1,"Log")
