@@ -17,5 +17,10 @@ Quads:
   Names: [QUAD01, QUAD02, QUAD03, QUAD04, QUAD05, QUAD06, QUAD07, QUAD08, QUAD09,
     QUAD10, QUAD11, QUAD12, QUAD13, QUAD14, QUAD15]
   PVs:
-    RI: ['', getRI]
-    SI: ['', getSI]
+    RI: ['self.magnets', getRI]
+    SI: ['self.magnets', getSI]
+BPMs:
+  Names: [BPM01, BPM02, BPM03, BPM04, BPM05]
+  PVs:
+    X: ['self.bpms', getXFromPV]
+    Y: ['self.bpms', getYFromPV]

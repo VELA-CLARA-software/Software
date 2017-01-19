@@ -136,9 +136,9 @@ class recordWorker(QtCore.QObject):
 
     @QtCore.pyqtSlot(list)
     def updateRecord(self, value):
-        if len(self.records[self.name]['data']) > 1 and value[1] == self.records[self.name]['data'][-1][1] and value[1] == self.records[self.name]['data'][-2][1]:
-            self.records[self.name]['data'][-1] = value
-        else:
+        # if len(self.records[self.name]['data']) > 1 and value[1] == self.records[self.name]['data'][-1][1] and value[1] == self.records[self.name]['data'][-2][1]:
+        #     self.records[self.name]['data'][-1] = value
+        # else:
             self.records[self.name]['data'].append(value)
 
 class createSignalRecord(QObject):

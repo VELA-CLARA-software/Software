@@ -1,5 +1,6 @@
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
+from PyQt4 import QtCore, QtGui
 import pyqtgraph as pg
 import striptool as striptool
 import numpy as np
@@ -24,6 +25,7 @@ def main():
 
     ''' Initiate PyQT application '''
     app = QApplication(sys.argv)
+    MainWindow = QtGui.QMainWindow(parent=None)
 
     ''' Initiate logger (requires loggerWidget - comment out if not available)'''
     logwidget1 = lw.loggerWidget([logger,striptool.logger])
@@ -59,11 +61,12 @@ def main():
     # plotSplitter = QSplitter()
     # plotSplitter.addWidget(sp)
     # plotSplitter.addWidget(sp2)
-    plotLayout.addWidget(sp,0,0)
+    plotLayout.addWidget(stable.signalTable(sp),0,0)
+    plotLayout.addWidget(sp,1,0)
     plotWidget = QFrame()
     plotWidget.setLayout(plotLayout)
     tab.addTab(plotWidget,"Strip Plot")
-    tab.addTab(stable.signalTable(sp),"Parameters")
+    # tab.addTab(stable.signalTable(sp),"Parameters")
 
     ''' Add loggerWidget Tab (requires loggerWidget - comment out if not available)'''
     tab.addTab(logwidget1,"Log")
@@ -73,7 +76,9 @@ def main():
     sp.start()
 
     ''' Display the Qt App '''
-    tab.show()
+    # MainFrame = QtGui.QFrame(MainWindow)
+    MainWindow.setCentralWidget(tab)
+    MainWindow.show()
 
     ''' modify the plot scale to 10 secs '''
     sp.setPlotScale(60)

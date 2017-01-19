@@ -63,10 +63,10 @@ class CAxisTime(pg.AxisItem):
 class generalPlot(pg.PlotWidget):
     changePlotScale = pyqtSignal('PyQt_PyObject')
 
-    def __init__(self, record, parent = None):
+    def __init__(self, stripplot, parent = None):
         super(generalPlot, self).__init__(parent=parent)
         self.parent=parent
-        self.records = record
+        self.stripplot = stripplot
         self.linearPlot = True
         self.histogramPlot = False
         self.FFTPlot = False
@@ -126,7 +126,10 @@ class generalPlot(pg.PlotWidget):
                 else:
                     x,y = np.transpose(data)
                 if self.plot.histogramPlot:
-                    self.curve.setData({'x': x, 'y': y}, pen=pen, stepMode=True, fillLevel=0)
+                    if(self.plot.stripplot.histogramCheckbox.isChecked()):
+                        self.curve.setData({'x': x-np.mean(x), 'y': y}, pen=pen, stepMode=True, fillLevel=0)
+                    else:
+                        self.curve.setData({'x': x, 'y': y}, pen=pen, stepMode=True, fillLevel=0)
                 elif self.plot.FFTPlot:
                     self.curve.setData({'x': x, 'y': y}, pen=pen, stepMode=False)
                     if(len(self.curve.yDisp) > 0):
