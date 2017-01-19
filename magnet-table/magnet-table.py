@@ -326,7 +326,7 @@ class Window(QtGui.QMainWindow):
                 magnet.warning_icon.setPixmap(pixmap('error'))
                 magnet.warning_icon.setToolTip('Magnet PSU: ' + str(magnet.ref.psuState)[8:])
                 magnet.warning_icon.show()
-            elif abs(magnet.ref.siWithPol - magnet.ref.riWithPol) > magnet.riTolerance:
+            elif abs(magnet.ref.siWithPol - magnet.ref.riWithPol) > magnet.ref.riTolerance:
                 magnet.warning_icon.setPixmap(pixmap('warning'))
                 magnet.warning_icon.setToolTip('Read current and set current do not match')
                 magnet.warning_icon.show()
@@ -570,15 +570,15 @@ if __name__ == "__main__":
     app = QtGui.QApplication(sys.argv)
 
     # Create and display the splash screen
-#    splash_pix = QtGui.QPixmap('Icons\\hourglass_256.png')
-#    splash = QtGui.QSplashScreen(splash_pix, QtCore.Qt.WindowStaysOnTopHint)
-#    splash.setMask(splash_pix.mask())
-#    splash.show()
-#    app.processEvents()
+    splash_pix = pixmap('splash-screen')
+    splash = QtGui.QSplashScreen(splash_pix, QtCore.Qt.WindowStaysOnTopHint)
+    splash.setMask(splash_pix.mask())
+    splash.show()
+    app.processEvents()
 
     window = Window()
 #    app.installEventFilter(window)
     app.aboutToQuit.connect(window.close)
     window.show()
-#    splash.finish(window)
+    splash.finish(window)
     sys.exit(app.exec_())
