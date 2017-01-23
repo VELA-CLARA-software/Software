@@ -178,11 +178,13 @@ class generalPlot(pg.PlotWidget):
                 else:
                     self.clear()
                 self.doingPlot = False
+
     def setPlotScale(self, timescale, padding=0.0):
         if self.linearPlot:
             self.plotRange = timescale
             self.globalPlotRange = list(timescale)
             self.plot.vb.setRange(xRange=self.globalPlotRange, padding=0)
+        self.changePlotScale.emit(self.globalPlotRange)
 
     def updatePlotScale(self, padding=0.0):
         if self.linearPlot:
@@ -190,6 +192,7 @@ class generalPlot(pg.PlotWidget):
             if vbPlotRange != [0,1]:
                 self.globalPlotRange = self.plot.vb.viewRange()[0]
             self.plotRange = self.globalPlotRange
+        self.changePlotScale.emit(self.globalPlotRange)
 
     def show(self):
         self.plotWidget.show()

@@ -1,7 +1,8 @@
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 import pyqtgraph as pg
-import scatterPlot as striptool
+import striptool as striptool
+import scatterPlot as scatterplot
 import numpy as np
 import sys, time, os
 ''' Load loggerWidget library (comment out if not available) '''
@@ -15,16 +16,15 @@ logger = logging.getLogger(__name__)
     sample rate is high enough
 '''
 def createRandomSignal(offset=0):
-    signalValue = np.sin(2*2*np.pi*time.time()+0.05)+np.sin(1.384*2*np.pi*time.time()-0.1)+0.5*np.random.normal()
+    signalValue = np.sin(2*2*np.pi*time.time()+0.05)+np.sin(1.384*2*np.pi*time.time()-0.1)
     return signalValue+offset
 
 def createRandomSignal2(offset=0):
-    signalValue = -1*(np.sin(2*2*np.pi*time.time()+0.05)+np.sin(1.384*2*np.pi*time.time()-0.1)+0.5*np.random.normal())
+    signalValue = -1*(np.sin(2*12*np.pi*time.time()+0.05)+np.sin(0.2563*2*np.pi*time.time()-0.1))
     return signalValue+offset
 
-
 def pausePlots(parentwidget):
-    widgets = parentwidget.findChildren(striptool.scatterPlot)
+    widgets = parentwidget.findChildren((striptool.stripPlot,scatterplot.scatterPlot))
     for widget in widgets:
         if widget.isVisible():
             widget.pausePlotting(False)
@@ -46,7 +46,8 @@ def main():
     pg.setConfigOption('foreground', 'k')
 
     ''' initialise an instance of the stripPlot Widget '''
-    sp = striptool.scatterPlot(plotRateBar=False)
+    strip = striptool.stripPlot(plotRateBar=False)
+    scatter = scatterplot.scatterPlot(stripplot=strip, plotRateBar=False)
 
     ''' This sets the signal length at which the system starts decimating the data to speed up plotting.
         For a 2*DecimateLength signal, the decimation factor would be 2.
@@ -54,15 +55,16 @@ def main():
         Here I set it to 1000 as an example :
              - a 3600 length record would decimate at order 1/3 and would have a plotting record length of 1200
              - you probably don't need to use this unless you are having trouble with slow plotting.'''
-    sp.setDecimateLength(100000)
+    # strip.setDecimateLength(100000)
+    # scatter.setDecimateLength(100000)
 
     ''' Add some signals to the striptool - note they call our signal generator at a frequency of 1/timer (100 Hz and 10 Hz in these cases).
         The 'pen' argument sets the color of the curves, but can be changed in the GUI
             - see <http://www.pyqtgraph.org/documentation/style.html>'''
-    sp.addSignal(name='signal1',pen='r', timer=1.0/10.0, function=lambda: createRandomSignal(-0.5))
-    sp.addSignal(name='signal2',pen='g', timer=1.0/10.0, function=lambda: createRandomSignal(0.5))
-    sp.addSignal(name='signal3',pen='g', timer=1.0/10.0, function=lambda: createRandomSignal2(0.0))
-
+    strip.addSignal(name='signal1',pen='r', timer=1.0/10.0, function=lambda: createRandomSignal(-0.5))
+    strip.addSignal(name='signal2',pen='g', timer=1.0/10.0, function=lambda: createRandomSignal(0.5))
+    strip.addSignal(name='signal3',pen='g', timer=1.0/10.0, function=lambda: createRandomSignal(0.0))
+    strip.addSignal(name='signal4',pen='g', timer=1.0/10.0, function=lambda: createRandomSignal(0.0))
 
     ''' To remove a signal, reference it by name or use the in-built controls'''
     # sp.removeSignal(name='signal1')
@@ -72,11 +74,12 @@ def main():
         In the second tab we put the first stripplot. NB: the stripplot "sp" can only exist in one place at a time!
         Comment out line 83 to see the difference. '''
     tab = QTabWidget()
-    plotLayout = QGridLayout()
-    plotLayout.addWidget(sp,0,0,1,1)
-    plotWidget = QFrame()
-    plotWidget.setLayout(plotLayout)
-    tab.addTab(sp,"Scatter Plot")
+    # plotLayout = QGridLayout()
+    # plotLayout.addWidget(strip,0,0,1,1)
+    # plotWidget = QFrame()
+    # plotWidget.setLayout(plotLayout)
+    tab.addTab(strip,"Strip Plot")
+    tab.addTab(scatter,"Scatter Plot")
     ''' Here we connect the QTabWidget signal "currentChanged" to a function defined above. This will pause plots not currently visible
         whenever the tabs are changed. This reduces the load as only visible plots are updated. '''
     tab.currentChanged.connect(lambda x: pausePlots(tab))
@@ -86,13 +89,15 @@ def main():
     layout = QWidget()
 
     ''' This starts the plotting timer (by default at 1 Hz) '''
-    sp.start()
+    strip.start()
+    scatter.start()
+
+    ''' modify the plot scale to 10 secs '''
+    strip.setPlotScale(60)
 
     ''' Display the Qt App '''
     tab.show()
-
-    ''' modify the plot scale to 10 secs '''
-    # sp.setPlotScale(60)
+    pausePlots(tab)
 
     ''' Default PyQT exit handler '''
     sys.exit(app.exec_())

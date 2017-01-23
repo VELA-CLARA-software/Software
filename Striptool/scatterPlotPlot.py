@@ -36,24 +36,27 @@ def takeClosestPosition(xvalues, myList, myNumber):
 class scatterPlotPlot(pg.PlotWidget):
     changePlotScale = pyqtSignal('PyQt_PyObject')
 
-    def __init__(self, stripplot, parent = None):
+    def __init__(self, scatterplot, parent = None):
         super(scatterPlotPlot, self).__init__(parent=parent)
         self.parent=parent
-        self.stripplot = stripplot
-        self.records = self.stripplot.records
+        self.scatterplot = scatterplot
+        self.records = self.scatterplot.records
         self.doingPlot = False
         self.usePlotRange = True
-        self.globalPlotRange = [-1000,0]
         self.currentPlotTime = time.time()
         self.paused = False
-
-    def createPlot(self):
         self.plotWidget = pg.GraphicsLayoutWidget()
-        self.plot = self.plotWidget.addPlot() #, axisItems = {'bottom': self.date_axis}
-        self.plot.showGrid(x=True, y=True)
-        self.legend = self.plot.addLegend()
-        print self.legend
-        return self.plot
+        self.plots = {}
+        self.color = 0
+        self.decimateScale = 1000000
+        self.globalPlotRange = [-100000,0]
+        self.paused = False
+
+    def setPlotRange(self, plotrange):
+        self.globalPlotRange = plotrange
+
+    def togglePause(self, value):
+        self.paused = value
 
     def timeFilter(self, datain, timescale):
         currenttime = time.time()
@@ -75,7 +78,6 @@ class scatterPlotPlot(pg.PlotWidget):
         return list(list(self.timeFilter(data, timescale)))
 
     def getPlotData(self, record):
-        # if not self.paused and not self.doingPlot:
         self.doingPlot = True
         plotData = self.filterRecord(record['data'],self.globalPlotRange)
         if len(plotData) > 100*self.decimateScale:
@@ -88,29 +90,41 @@ class scatterPlotPlot(pg.PlotWidget):
     def show(self):
         self.plotWidget.show()
 
+    def createPlot(self, label1, label2, color):
+        name = label1+' vs '+label2
+        row = len(self.plots) / 3
+        col = len(self.plots) % 3
+        self.plot = self.plotWidget.addPlot(title=name, labels={'bottom': label1, 'left': label2}, row=row, col=col) #, axisItems = {'bottom': self.date_axis}
+        self.scatterPlot = pg.ScatterPlotItem(size=5, pen=pg.mkPen(None), brush=pg.mkBrush(Qtableau20[color]))
+        self.plot.addItem(self.scatterPlot)
+        self.plot.showGrid(x=True, y=True)
+        # self.legend = self.plot.addLegend()
+        # print self.legend
+        return [self.plot, self.scatterPlot]
+
     def update(self):
-        if self.scatterPlot and not self.doingPlot:
+        start = time.time()
+        if not self.paused and not self.doingPlot:
             self.doingPlot = True
             # self.legend.setParentItem(self.plot)
             # self.legend.items = []
             scatteritemnames=[]
             scatteritems=[]
-            color=0
             for name in self.records:
-                scatteritemnames.append(name)
-                scatteritems.append(self.getPlotData(self.records[name]))
-            # print scatteritemnames
-            self.plot.clear()
-            start = time.clock()
-            oldLegendLabels = []
-            for sample, label in self.legend.items:
-                oldLegendLabels.append(label.text)
-            for i in range(len(scatteritemnames)):
-                for j in range(i+1, len(scatteritemnames)):
-                    data1 = scatteritems[i]
-                    data2 = scatteritems[j]
-                    signalDelayTime1 = self.records[scatteritemnames[i]]['timer']
-                    signalDelayTime2 = self.records[scatteritemnames[j]]['timer']
+                if len(self.records[name]['data']) > 1:
+                    scatteritems.append([name, self.getPlotData(self.records[name])])
+            scatteritems = sorted(scatteritems)
+            for i in range(len(scatteritems)):
+                for j in range(i+1, len(scatteritems)):
+                    name = scatteritems[i][0]+' vs '+scatteritems[j][0]
+                    if not name in self.plots:
+                        self.color += 1
+                        self.plots[name] = self.createPlot(scatteritems[i][0], scatteritems[j][0], self.color)
+                        self.plots[name][0].vb.enableAutoRange(enable=1.5)
+                    data1 = scatteritems[i][1]
+                    data2 = scatteritems[j][1]
+                    signalDelayTime1 = self.records[scatteritems[i][0]]['timer']
+                    signalDelayTime2 = self.records[scatteritems[j][0]]['timer']
                     if data1[0] < data2[0]:
                         ans = takeClosestPosition(zip(*data1)[0], data1, data2[0][0])
                         starttime = ans[1]
@@ -136,11 +150,6 @@ class scatterPlotPlot(pg.PlotWidget):
                     #     data2 = [takeClosestPosition(tmpdata2, data2, timeval[0])[1] for timeval in data1]
                     x1,x = zip(*data1)
                     x2,y = zip(*data2)
-                    plotname = str(i+1)+" vs "+str(j+1)
-                    s1 = pg.ScatterPlotItem(x=x, y=y, size=5, pen=pg.mkPen(None), brush=pg.mkBrush(Qtableau20[color]))
-                    name = scatteritemnames[i]+'v'+scatteritemnames[j]
-                    if not name in oldLegendLabels:
-                        self.plot.legend.addItem(s1, name)
-                    color += 1
-                    self.plot.addItem(s1)
+                    self.plots[name][1].setData(x=x, y=y)
             self.doingPlot = False
+        print 'paused = ', self.paused

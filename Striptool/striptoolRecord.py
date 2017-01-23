@@ -36,7 +36,7 @@ class repeatedTimer:
         self.function = function
         self.args = args
         self.kwargs = kwargs
-        self.start = time.time()
+        self.start = 0 #time.time()
         self.event = Event()
         self.thread = threading.Thread(target=self._target)
         self.thread.daemon = True

@@ -26,7 +26,7 @@ class scatterPlot(QWidget):
     signalAdded = QtCore.pyqtSignal('QString')
 
 
-    def __init__(self, parent = None, plotRateBar=True):
+    def __init__(self, stripplot=None, parent=None, plotRateBar=True):
         super(scatterPlot, self).__init__(parent)
         self.pg = pg
         self.paused = True
@@ -34,23 +34,28 @@ class scatterPlot(QWidget):
         self.plotrate = 1
         self.plotScaleConnection = True
         self.pauseIcon  =  QtGui.QIcon(str(os.path.dirname(os.path.abspath(__file__)))+'\icons\pause.png')
-
-        ''' create the stripPlot.stripPlot as a grid layout '''
-        self.stripPlot = QtGui.QGridLayout()
+        ''' create the scatterPlot as a grid layout '''
+        self.scatterPlot = QtGui.QGridLayout()
         self.plotThread = QTimer()
+        if not stripplot == None:
+            self.stripPlot = stripplot
+            self.records = stripplot.records
+        else:
+            self.stripPlot = self
+            self.records = {}
+        self.globalPlotRange = [-1000,0]
         ''' Create generalPlot object '''
-        self.records = {}
         self.plotWidget = scatterPlotPlot(self)
-        ''' Create the plot as part of the plotObject '''
-        self.plot = self.plotWidget.createPlot()
-        ''' Create the signalRecord object '''
-
+        ''' If connected to stripplot - link plotranges '''
+        if not stripplot == None:
+            self.stripPlot.plotWidget.changePlotScale.connect(self.plotWidget.setPlotRange)
+        ''' set-up plot rate slider '''
         self.setupPlotRateSlider()
-        self.stripPlot.addWidget(self.plotWidget.plotWidget,0,0,5,1)
+        self.scatterPlot.addWidget(self.plotWidget.plotWidget,0,0,5,1)
         if plotRateBar:
-            self.stripPlot.addWidget(self.plotRateLabel,5, 0)
-            self.stripPlot.addWidget(self.plotRateSlider,5, 1)
-        self.setLayout(self.stripPlot)
+            self.scatterPlot.addWidget(self.plotRateLabel,5, 0)
+            self.scatterPlot.addWidget(self.plotRateSlider,5, 1)
+        self.setLayout(self.scatterPlot)
         # self.togglePause()
         logger.debug('scatterPlot initiated!')
         # self.setSizePolicy(QSizePolicy.Ignored,QSizePolicy.Ignored)
@@ -84,6 +89,7 @@ class scatterPlot(QWidget):
         self.plotThread.setInterval(1000*1/value)
 
     def start(self, timer=1000):
+        self.plotUpdate()
         self.plotThread.start(timer)
         self.plotThread.timeout.connect(self.plotUpdate)
 
@@ -106,9 +112,9 @@ class scatterPlot(QWidget):
         del self.records[name]
         logger.info('Signal '+name+' removed!')
 
-    # def pausePlotting(self, value=True):
-    #     self.paused = value
-    #     self.plotWidget.togglePause(self.paused)
+    def pausePlotting(self, value=True):
+        self.paused = value
+        self.plotWidget.togglePause(self.paused)
 
     # def togglePause(self):
     #     if self.paused:
