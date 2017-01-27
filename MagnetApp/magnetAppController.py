@@ -4,6 +4,10 @@ import sys, os
 #get the magnet enums used to define magnet types and  PSU states
 import magnetAppGlobals
 
+dburtLocation = "\\\\fed.cclrc.ac.uk\\org\\NLab\\ASTeC\\Projects\\VELA\\Snapshots\\DBURT\\"
+appIcon = 'magpic.jpg'
+sys.path.append('\\\\fed.cclrc.ac.uk\\org\\NLab\\ASTeC\\Projects\\VELA\\Software\\VELA_CLARA_PYDs\\bin\\stage\\')
+
 import VELA_CLARA_MagnetControl as mag
 
 from PyQt4 import QtGui, QtCore
@@ -12,18 +16,12 @@ from GUI_magnetAppMainView import GUI_magnetAppMainView
 from GUI_FileLoad import GUI_FileLoad
 from GUI_FileSave import GUI_FileSave
 
-
-dburtLocation = "\\\\fed.cclrc.ac.uk\\org\\NLab\\ASTeC\\Projects\\VELA\\Snapshots\\DBURT\\"
-appIcon = 'magpic.jpg'
-sys.path.append('\\\\fed.cclrc.ac.uk\\org\\NLab\\ASTeC\\Projects\\VELA\\Software\\VELA_CLARA_PYDs\\bin\\stage\\')
-
-
-
 # this class handles everything
 class magnetAppController(object):
     def __init__(self,argv):
         # initilaize the VELA_CLARA_MagnetControl, from this object we can get all flavours of magnet controller
         self.magInit = mag.init()
+        self.magInit.setVerbose()
         # startView and connections
         # the startView is where you select the machine mode and area
         self.startView = GUI_magnetAppStartup()
@@ -60,7 +58,7 @@ class magnetAppController(object):
 #  _______/  |______ ________/  |_     ___  _|__| ______  _  __
 # /  ___/\   __\__  \\_  __ \   __\    \  \/ /  |/ __ \ \/ \/ /
 # \___ \  |  |  / __ \|  | \/|  |       \   /|  \  ___/\     /
-# /____  > |__| (____  /__|   |__|        \_/ |__|\___  >\/\_/
+#/____  > |__| (____  /__|   |__|        \_/ |__|\___  >\/\_/
 #     \/            \/                               \/
     # these functions handle the start view signals
     # start view radio group
