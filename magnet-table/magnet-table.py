@@ -9,10 +9,22 @@ from collections import namedtuple # for easy description of strength and units
 import math # conversion between radians/degrees
 import os # clicking URLs on labels, setting env variables
 import numpy as np # handling polynomials
+import re # parsing lattice files
+
 #TODO: do these need to be reset for the physical machine?
 os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
 os.environ["EPICS_CA_ADDR_LIST"] = "10.10.0.12"
 os.environ["EPICS_CA_MAX_ARRAY_BYTES"] = "10000000"
+
+class Element:
+    "Used for parsing lattice files."
+    def __init__(self, el_type, **attribs):
+        self.el_type = el_type
+        self.attribs = attribs
+        
+    def __repr__(self):
+        return self.el_type + ' ' + str(self.attribs)
+
 
 image_credits = {
     'Offline.png': 'http://www.iconarchive.com/show/windows-8-icons-by-icons8/Network-Disconnected-icon.html',
@@ -21,10 +33,11 @@ image_credits = {
     'undo.png': 'https://www.iconfinder.com/icons/49866/undo_icon',
     'warning.png': 'http://www.iconsdb.com/orange-icons/warning-3-icon.html',
     'error.png': 'http://www.iconsdb.com/soylent-red-icons/warning-3-icon.html',
-    'magnet.png': 'https://www.iconfinder.com/icons/15217/magnet_icon'}
+    'magnet.png': 'https://www.iconfinder.com/icons/15217/magnet_icon',
+    'Open.png': 'https://www.iconfinder.com/icons/146495/data_document_documents_file_files_folder_open_open_file_open_folder_icon#size=24'}
     
 branch = 'Release'
-branch = 'stage'
+#branch = 'stage'
 pyds_path = '\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Software\\VELA_CLARA_PYDs\\bin\\' + branch + '\\'
 sys.path.append(pyds_path)
 import VELA_CLARA_MagnetControl as MagCtrl
@@ -121,6 +134,10 @@ class Window(QtGui.QMainWindow):
         mode_combo.setCurrentIndex(i)
         self.mom_mode_combo = mode_combo
 
+        load_button = QtGui.QPushButton(QtGui.QIcon(pixmap('Open')), 'Load...')
+        checkbox_grid.addWidget(load_button)
+        load_button.clicked.connect(self.loadButtonClicked)
+
         layout.addLayout(checkbox_grid)
             
         scroll_area = QtGui.QScrollArea(self)
@@ -165,9 +182,12 @@ class Window(QtGui.QMainWindow):
         self.magnets = [Magnet(name) for name in mag_names]
         mag_dict = {} # used to assign is_junction
         section = 'VELA Injector' #TODO: get this for each magnet
+        pv_root_re = re.compile('^VM-(.*):$')
         for magnet in self.magnets:
             mag_dict[magnet.name] = magnet
             magnet.ref = self.controller.getMagObjConstRef(magnet.name)
+            # Replace the PV root VM-XXX: --> XXX
+            magnet.pv_base = re.sub(pv_root_re, r'\1', magnet.ref.pvRoot)
             magnet.prev_values = []
             magnet.active = False # whether magnet is being changed
             magnet_list_vbox = magnet_list[section]
@@ -306,7 +326,7 @@ class Window(QtGui.QMainWindow):
                 magnet.warning_icon.setPixmap(pixmap('error'))
                 magnet.warning_icon.setToolTip('Magnet PSU: ' + str(magnet.ref.psuState)[8:])
                 magnet.warning_icon.show()
-            elif abs(magnet.ref.siWithPol - magnet.ref.riWithPol) > magnet.riTolerance:
+            elif abs(magnet.ref.siWithPol - magnet.ref.riWithPol) > magnet.ref.riTolerance:
                 magnet.warning_icon.setPixmap(pixmap('warning'))
                 magnet.warning_icon.setToolTip('Read current and set current do not match')
                 magnet.warning_icon.show()
@@ -458,7 +478,7 @@ class Window(QtGui.QMainWindow):
         coeffs = list(magnet.ref.fieldIntegralCoefficients)
         coeffs[-1] -= int_strength # Need to find roots of polynomial, i.e. a1*x + a0 - y = 0
         roots = np.roots(coeffs)
-        current = np.copysign(float(roots[-1]), k) # always x value (#TODO: can prove this?)
+        current = np.copysign(roots[-1].real, k) # last root is always x value (#TODO: can prove this?)
         magnet.current_spin.setValue(current)
 #        print('{magnet.name}: k {k:.3f} -> current {current:.3f}'.format(**locals()))
         
@@ -504,6 +524,43 @@ class Window(QtGui.QMainWindow):
         self.settings.setValue('machine_mode', mode)
         #TODO: check that it actually worked
 
+    def loadButtonClicked(self):
+        "Load a lattice file and apply it to magnets."
+        filename = QtGui.QFileDialog.getOpenFileName(self, 'Open lattice file', '', 'Lattice files (*.lte);;All files (*.*)')
+        if filename == '': # Cancel clicked
+            return
+        text = open(filename).read()
+        # Handle continuation character & at end of lines
+        text = text.replace('&\n', '')
+        
+        applied_list = ''
+        for mag in self.magnets:
+            mag_type = str(mag.ref.magType)
+            # What parameter name are we looking for in the LTE file?
+            if mag_type == 'QUAD':
+                param = 'K1'
+                conv_func = lambda k: k # use as-is
+            elif mag_type == 'DIP':
+                param = 'ANGLE'
+                conv_func = math.degrees # .lte files have angles in radians
+            else:
+                continue # nothing to do for other types
+            regexp = '"{mag.pv_base}.*?{param}=([^,]+)'.format(**locals())
+            l = re.findall(regexp, text)
+            if l:
+                val = conv_func(float(l[0]))
+                effect = mag_attributes[mag_type].effect_name
+                units = mag_attributes[mag_type].effect_units
+                applied_list += u'{mag.name}: {effect} = {val:.3f} {units}\n'.format(**locals())
+                mag.k_spin.setValue(val)
+            
+        if applied_list:
+            message = u'Applied the following settings from {filename}:\n\n{applied_list}'.format(**locals())
+        else:
+            message = 'No applicable magnet settings found in {filename}'.format(**locals())
+        QtGui.QMessageBox.about(self, 'Magnet table', message)
+            
+
     def closeEvent(self, event):
         print('closing')
         self.widgetUpdateTimer.stop()
@@ -513,15 +570,15 @@ if __name__ == "__main__":
     app = QtGui.QApplication(sys.argv)
 
     # Create and display the splash screen
-#    splash_pix = QtGui.QPixmap('Icons\\hourglass_256.png')
-#    splash = QtGui.QSplashScreen(splash_pix, QtCore.Qt.WindowStaysOnTopHint)
-#    splash.setMask(splash_pix.mask())
-#    splash.show()
-#    app.processEvents()
+    splash_pix = pixmap('splash-screen')
+    splash = QtGui.QSplashScreen(splash_pix, QtCore.Qt.WindowStaysOnTopHint)
+    splash.setMask(splash_pix.mask())
+    splash.show()
+    app.processEvents()
 
     window = Window()
 #    app.installEventFilter(window)
     app.aboutToQuit.connect(window.close)
     window.show()
-#    splash.finish(window)
+    splash.finish(window)
     sys.exit(app.exec_())

@@ -23,6 +23,9 @@ def logthread(caller):
 
 class stripPlot(QWidget):
 
+    signalAdded = QtCore.pyqtSignal('QString')
+    signalRemoved = QtCore.pyqtSignal('QString')
+
     def __init__(self, parent = None, plotRateBar=True):
         super(stripPlot, self).__init__(parent)
         self.pg = pg
@@ -36,52 +39,48 @@ class stripPlot(QWidget):
         self.stripPlot = QtGui.QGridLayout()
         self.plotThread = QTimer()
         ''' Create generalPlot object '''
-        self.plotWidget = generalPlot(self.parent())
+        self.plotWidget = generalPlot(self)
         ''' Create the plot as part of the plotObject '''
         self.plot = self.plotWidget.createPlot()
         ''' Create the signalRecord object '''
         self.records = {}
 
         ''' Sidebar for graph type selection '''
-        self.buttonLayout = QtGui.QVBoxLayout()
+        self.buttonLayout = QtGui.QGridLayout()
         self.linearRadio = QRadioButton("Linear")
         self.linearRadio.setChecked(True)
         self.linearRadio.toggled.connect(lambda: self.setPlotType(linear=True))
-        self.buttonLayout.addWidget(self.linearRadio,0)
+        ''' Histogram '''
         self.HistogramRadio = QRadioButton("Histogram")
         self.HistogramRadio.toggled.connect(lambda: self.setPlotType(histogram=True))
-        self.buttonLayout.addWidget(self.HistogramRadio,1)
+        self.histogramCheckbox = QCheckBox("Subtract Mean")
+        self.histogramCheckbox.stateChanged.connect(self.setSubtractMean)
+        self.histogramCheckbox.setChecked(False)
+        ''' FFT'''
         self.FFTRadio = QRadioButton("FFT")
         self.FFTRadio.toggled.connect(lambda: self.setPlotType(FFT=True))
-        self.buttonLayout.addWidget(self.FFTRadio,2)
-        # self.ScatterRadio = QRadioButton("Scatter")
-        # self.ScatterRadio.toggled.connect(lambda: self.setPlotType(scatter=True))
-        # self.buttonLayout.addWidget(self.ScatterRadio,3)
         ''' Create H Layout for scroll/pause '''
         self.autoscrollPauseLayout = QtGui.QHBoxLayout()
         ''' Add Autoscroll checkbox '''
-        self.scrollButton = QCheckBox()
+        self.scrollButton = QCheckBox("Autoscroll")
         self.scrollButton.setChecked(True)
-        self.scrollButtonLabel = QtGui.QLabel()
-        self.scrollButtonLabel.setText('Autoscroll')
-        self.scrollButtonLabel.setAlignment(Qt.AlignCenter)
         self.scrollButton.toggled.connect(self.toggleAutoScroll)
-        self.autoscrollPauseLayout.addWidget(self.scrollButtonLabel,0)
-        self.autoscrollPauseLayout.addWidget(self.scrollButton,1)
         ''' Add Pause Button '''
         self.pauseButton = QPushButton()
         self.pauseButton.setIcon(self.pauseIcon)
         self.pauseButton.setFixedSize(50,20)
         self.pauseButton.setStyleSheet("border: 5px; background-color: white")
-        # self.pauseButton.setFlat(False)
         self.pauseButton.clicked.connect(self.togglePause)
-        self.autoscrollPauseLayout.addWidget(self.pauseButton,2)
-        ''' Add scroll/pause to main layout '''
-        self.buttonLayout.addLayout(self.autoscrollPauseLayout,3)
-
         ''' Initialise stripLegend Object '''
-        self.legend = stripLegend(record=self.records)
-        self.buttonLayout.addWidget(self.legend.layout,4)
+        self.legend = stripLegend(stripTool=self)
+        ''' Set Layout '''
+        self.buttonLayout.addWidget(self.linearRadio,      0,0,1,4)
+        self.buttonLayout.addWidget(self.HistogramRadio,   1,0,1,1)
+        self.buttonLayout.addWidget(self.histogramCheckbox,1,1,1,1)
+        self.buttonLayout.addWidget(self.FFTRadio,         2,0,1,4)
+        self.buttonLayout.addWidget(self.scrollButton,     3,0,1,1)
+        self.buttonLayout.addWidget(self.pauseButton,      3,3,1,1)
+        self.buttonLayout.addWidget(self.legend.layout,4,0,3,4)
         ''' Add sidebar  to main layout'''
         self.GUISplitter = QtGui.QSplitter()
         self.GUISplitter.setHandleWidth(10)
@@ -114,6 +113,9 @@ class stripPlot(QWidget):
         logger.debug('stripPlot initiated!')
         # self.setSizePolicy(QSizePolicy.Ignored,QSizePolicy.Ignored)
 
+    def setSubtractMean(self):
+        self.subtractMean = self.histogramCheckbox.isChecked()
+
     def saveAllCurves(self, saveFileName=None):
         for name in self.records:
             if self.records[name]['parent'] == self:
@@ -143,7 +145,7 @@ class stripPlot(QWidget):
         totalsize = sum(sizes)
         if not all(self.GUISplitter.sizes()):
             # logger.debug('splitter new sizes = '+str(totalsize))
-            self.GUISplitter.setSizes([200,200])
+            self.GUISplitter.setSizes([200,1])
             # self.GUISplitter.setSizes([1, 1000])
             # self.splitterbutton.setArrowType(QtCore.Qt.RightArrow)
         elif left:
@@ -236,18 +238,19 @@ class stripPlot(QWidget):
         if not name in self.records:
             signalrecord = createSignalRecord(records=self.records, name=name, timer=timer, function=function, *args)
             self.records[name]['record'] = signalrecord
+            curve = self.plotWidget.addCurve(self.records, self.plotWidget, name)
+            self.records[name]['curve'] = curve
+            self.records[name]['parent'] = self
+            self.records[name]['pen'] = pen
+            self.legend.addLegendItem(name)
+            self.signalAdded.emit(name)
+            logger.info('Signal '+name+' added!')
         else:
             logger.warning('Signal '+name+' already exists!')
-            nameorig = name
-            name = name + '_2'
-            signalrecord = createSignalRecord(records=self.records, name=name, timer=timer, function=function, *args)
-            self.records[name]['record'] = signalrecord
-        curve = self.plotWidget.addCurve(self.records, self.plotWidget, name)
-        self.records[name]['curve'] = curve
-        self.records[name]['parent'] = self
-        self.records[name]['pen'] = pen
-        self.legend.addLegendItem(name)
-        logger.info('Signal '+name+' added!')
+            # nameorig = name
+            # name = name + '_2'
+            # signalrecord = createSignalRecord(records=self.records, name=name, timer=timer, function=function, *args)
+            # self.records[name]['record'] = signalrecord
 
     def plotUpdate(self):
         self.plotWidget.currentPlotTime = time.time()
@@ -256,8 +259,9 @@ class stripPlot(QWidget):
         self.plotWidget.updateScatterPlot()
 
     def removeSignal(self,name):
-        self.plotThread.timeout.disconnect(self.records[name]['curve'].update)
+        self.records[name]['record'].stop()
         del self.records[name]
+        self.signalRemoved.emit(name)
         logger.info('Signal '+name+' removed!')
 
     def setPlotScale(self, timescale):

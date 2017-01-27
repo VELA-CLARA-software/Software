@@ -63,10 +63,10 @@ class CAxisTime(pg.AxisItem):
 class generalPlot(pg.PlotWidget):
     changePlotScale = pyqtSignal('PyQt_PyObject')
 
-    def __init__(self, record, parent = None):
+    def __init__(self, stripplot, parent = None):
         super(generalPlot, self).__init__(parent=parent)
         self.parent=parent
-        self.records = record
+        self.stripplot = stripplot
         self.linearPlot = True
         self.histogramPlot = False
         self.FFTPlot = False
@@ -126,7 +126,10 @@ class generalPlot(pg.PlotWidget):
                 else:
                     x,y = np.transpose(data)
                 if self.plot.histogramPlot:
-                    self.curve.setData({'x': x, 'y': y}, pen=pen, stepMode=True, fillLevel=0)
+                    if(self.plot.stripplot.histogramCheckbox.isChecked()):
+                        self.curve.setData({'x': x-np.mean(x), 'y': y}, pen=pen, stepMode=True, fillLevel=0)
+                    else:
+                        self.curve.setData({'x': x, 'y': y}, pen=pen, stepMode=True, fillLevel=0)
                 elif self.plot.FFTPlot:
                     self.curve.setData({'x': x, 'y': y}, pen=pen, stepMode=False)
                     if(len(self.curve.yDisp) > 0):
@@ -175,11 +178,13 @@ class generalPlot(pg.PlotWidget):
                 else:
                     self.clear()
                 self.doingPlot = False
+
     def setPlotScale(self, timescale, padding=0.0):
         if self.linearPlot:
             self.plotRange = timescale
             self.globalPlotRange = list(timescale)
             self.plot.vb.setRange(xRange=self.globalPlotRange, padding=0)
+        self.changePlotScale.emit(self.globalPlotRange)
 
     def updatePlotScale(self, padding=0.0):
         if self.linearPlot:
@@ -187,6 +192,7 @@ class generalPlot(pg.PlotWidget):
             if vbPlotRange != [0,1]:
                 self.globalPlotRange = self.plot.vb.viewRange()[0]
             self.plotRange = self.globalPlotRange
+        self.changePlotScale.emit(self.globalPlotRange)
 
     def show(self):
         self.plotWidget.show()
@@ -199,7 +205,7 @@ class generalPlot(pg.PlotWidget):
         if not value:
             self.currenttime = self.currentPlotTime
             self.date_axis.fixedtimepoint = self.currentPlotTime
-    #
+
     def updateScatterPlot(self):
         if self.scatterPlot and not self.doingPlot:
             self.doingPlot = True
