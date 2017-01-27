@@ -5,9 +5,10 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
 class stripLegend(pg.TreeWidget):
-    def __init__(self, record, parent = None):
+    def __init__(self, stripTool, parent = None):
         super(stripLegend, self).__init__(parent)
-        self.records = record
+        self.stripTool = stripTool
+        self.records = stripTool.records
         self.layout = pg.TreeWidget()
         self.layout.header().close()
         self.layout.setColumnCount(2)
@@ -116,6 +117,5 @@ class stripLegend(pg.TreeWidget):
     def deleteRow(self, name, child):
         row = self.layout.indexOfTopLevelItem(child.parent())
         self.layout.takeTopLevelItem(row)
-        self.records[name]['record'].stop()
         self.clearCurve(name)
-        del self.records[name]
+        self.stripTool.removeSignal(name)

@@ -24,9 +24,10 @@ def logthread(caller):
 class scatterPlot(QWidget):
 
     signalAdded = QtCore.pyqtSignal('QString')
+    scatterSelectionChanged = QtCore.pyqtSignal('QString','QString')
 
 
-    def __init__(self, stripplot=None, parent=None, plotRateBar=True):
+    def __init__(self, stripplot=None, parent=None, plotRateBar=False, selectionBar=True, color=0):
         super(scatterPlot, self).__init__(parent)
         self.pg = pg
         self.paused = True
@@ -35,7 +36,7 @@ class scatterPlot(QWidget):
         self.plotScaleConnection = True
         self.pauseIcon  =  QtGui.QIcon(str(os.path.dirname(os.path.abspath(__file__)))+'\icons\pause.png')
         ''' create the scatterPlot as a grid layout '''
-        self.scatterPlot = QtGui.QGridLayout()
+        self.scatterPlot = QtGui.QVBoxLayout()
         self.plotThread = QTimer()
         if not stripplot == None:
             self.stripPlot = stripplot
@@ -45,20 +46,26 @@ class scatterPlot(QWidget):
             self.records = {}
         self.globalPlotRange = [-1000,0]
         ''' Create generalPlot object '''
-        self.plotWidget = scatterPlotPlot(self)
+        self.plotWidget = scatterPlotPlot(self, color=color)
         ''' If connected to stripplot - link plotranges '''
         if not stripplot == None:
             self.stripPlot.plotWidget.changePlotScale.connect(self.plotWidget.setPlotRange)
+        ''' set-up setupSelectionBar '''
+        self.selectionBar = self.setupSelectionBar()
         ''' set-up plot rate slider '''
         self.setupPlotRateSlider()
-        self.scatterPlot.addWidget(self.plotWidget.plotWidget,0,0,5,1)
+        selectionBarOffset = 0
+        if selectionBar:
+            self.scatterPlot.addLayout(self.selectionBarLayout,1)
+            self.stripPlot.signalAdded.connect(self.updateSelectionBar)
+            self.stripPlot.signalRemoved.connect(self.updateSelectionBar)
+            selectionBarOffset = 1
+        self.scatterPlot.addWidget(self.plotWidget.plotWidget,5)
         if plotRateBar:
-            self.scatterPlot.addWidget(self.plotRateLabel,5, 0)
-            self.scatterPlot.addWidget(self.plotRateSlider,5, 1)
+            self.scatterPlot.addWidget(self.plotRateLabel,selectionBarOffset+5, 0)
+            self.scatterPlot.addWidget(self.plotRateSlider,selectionBarOffset+5, 1)
         self.setLayout(self.scatterPlot)
-        # self.togglePause()
         logger.debug('scatterPlot initiated!')
-        # self.setSizePolicy(QSizePolicy.Ignored,QSizePolicy.Ignored)
 
     def saveAllCurves(self, saveFileName=None):
         for name in self.records:
@@ -69,6 +76,54 @@ class scatterPlot(QWidget):
 
     def saveCurve(self, name, saveFileName=None):
         self.legend.saveCurve(name,saveFileName)
+
+    def setupSelectionBar(self):
+        spacer = QtGui.QSpacerItem(100,20)
+        self.combobox1 = QtGui.QComboBox()
+        self.combobox1.setMaximumWidth(200)
+        self.combobox1.setMinimumWidth(100)
+        # self.combobox1.setMaximumHeight(20)
+        self.combobox1.currentIndexChanged.connect(self.selectionBarChanged)
+        self.combobox2 = QtGui.QComboBox()
+        self.combobox2.setMaximumWidth(200)
+        self.combobox2.setMinimumWidth(100)
+        # self.combobox2.setMaximumHeight(20)
+        self.combobox2.currentIndexChanged.connect(self.selectionBarChanged)
+        for name in sorted(self.records):
+            self.combobox1.addItem(name)
+            self.combobox2.addItem(name)
+        self.combobox1.setCurrentIndex(0)
+        self.combobox2.setCurrentIndex(1)
+        self.selectionBarLayout = QtGui.QHBoxLayout()
+        self.selectionBarLayout.addSpacerItem(spacer)
+        self.selectionBarLayout.addWidget(self.combobox1)
+        self.selectionBarLayout.addSpacerItem(spacer)
+        self.selectionBarLayout.addWidget(self.combobox2)
+        self.selectionBarLayout.addSpacerItem(spacer)
+
+    def selectionBarChanged(self, index):
+        # print 'index = ', index
+        self.scatterSelectionChanged.emit(self.combobox1.currentText(),self.combobox2.currentText())
+        self.plotWidget.update()
+
+    def updateSelectionBar(self):
+        combobox1text = self.combobox1.currentText()
+        combobox2text = self.combobox2.currentText()
+        allnames = []
+        for name in sorted(self.records):
+            allnames.append(name)
+            if self.combobox1.findText(name) == -1:
+                self.combobox1.addItem(name)
+                self.combobox2.addItem(name)
+        for index in range(self.combobox1.count()):
+            if not self.combobox1.itemText(index) in allnames:
+                self.combobox1.removeItem(index)
+                self.combobox2.removeItem(index)
+            else:
+                if self.combobox1.itemText(index) == combobox1text:
+                    self.combobox1.setCurrentIndex(index)
+                if self.combobox2.itemText(index) == combobox2text:
+                    self.combobox2.setCurrentIndex(index)
 
     def setupPlotRateSlider(self):
         self.plotRateLabel = QtGui.QLabel()
@@ -116,16 +171,8 @@ class scatterPlot(QWidget):
         self.paused = value
         self.plotWidget.togglePause(self.paused)
 
-    # def togglePause(self):
-    #     if self.paused:
-    #         self.paused = False
-    #         self.pauseButton.setStyleSheet("border: 5px; background-color: white")
-    #         logger.debug('Plot un-paused!')
-    #     else:
-    #         self.paused = True
-    #         self.pauseButton.setStyleSheet("border: 5px; background-color: red")
-    #         logger.debug('Plot Paused!')
-    #     self.plotWidget.togglePause(self.paused)
-
     def setDecimateLength(self, value=5000):
         self.plotWidget.decimateScale = value
+
+    def setPlotRange(self, plotrange):
+        self.plotWidget.setPlotRange(plotrange)

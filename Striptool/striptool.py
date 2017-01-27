@@ -24,7 +24,7 @@ def logthread(caller):
 class stripPlot(QWidget):
 
     signalAdded = QtCore.pyqtSignal('QString')
-
+    signalRemoved = QtCore.pyqtSignal('QString')
 
     def __init__(self, parent = None, plotRateBar=True):
         super(stripPlot, self).__init__(parent)
@@ -72,7 +72,7 @@ class stripPlot(QWidget):
         self.pauseButton.setStyleSheet("border: 5px; background-color: white")
         self.pauseButton.clicked.connect(self.togglePause)
         ''' Initialise stripLegend Object '''
-        self.legend = stripLegend(record=self.records)
+        self.legend = stripLegend(stripTool=self)
         ''' Set Layout '''
         self.buttonLayout.addWidget(self.linearRadio,      0,0,1,4)
         self.buttonLayout.addWidget(self.HistogramRadio,   1,0,1,1)
@@ -259,8 +259,9 @@ class stripPlot(QWidget):
         self.plotWidget.updateScatterPlot()
 
     def removeSignal(self,name):
-        self.plotThread.timeout.disconnect(self.records[name]['curve'].update)
+        self.records[name]['record'].stop()
         del self.records[name]
+        self.signalRemoved.emit(name)
         logger.info('Signal '+name+' removed!')
 
     def setPlotScale(self, timescale):

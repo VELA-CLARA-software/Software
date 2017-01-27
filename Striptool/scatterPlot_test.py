@@ -7,20 +7,20 @@ import numpy as np
 import sys, time, os
 ''' Load loggerWidget library (comment out if not available) '''
 sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\\..\\..\\loggerWidget\\')
-import loggerWidget as lw
-import logging
-logger = logging.getLogger(__name__)
+# import loggerWidget as lw
+# import logging
+# logger = logging.getLogger(__name__)
 
 ''' This is a signal generator. It could easily read a magnet current using the hardware controllers
     The signal should have peaks at 5 Hz and 10 Hz, which should be seen on the FFT plot assuming the
     sample rate is high enough
 '''
 def createRandomSignal(offset=0):
-    signalValue = np.sin(2*2*np.pi*time.time()+0.05)+np.sin(1.384*2*np.pi*time.time()-0.1)
+    signalValue = np.sin(2*2*np.pi*time.time()+0.05)+np.sin(1.384*2*np.pi*time.time()-0.1)+0.5*np.random.normal()
     return signalValue+offset
 
 def createRandomSignal2(offset=0):
-    signalValue = -1*(np.sin(2*12*np.pi*time.time()+0.05)+np.sin(0.2563*2*np.pi*time.time()-0.1))
+    signalValue = -1*(np.sin(2*12*np.pi*time.time()+0.05)+np.sin(0.2563*2*np.pi*time.time()-0.1))+0.5*np.random.normal()
     return signalValue+offset
 
 def pausePlots(parentwidget):
@@ -32,13 +32,25 @@ def pausePlots(parentwidget):
         else:
             widget.pausePlotting(True)
 
-def main():
+def addScatterPlot(strip):
+    ''' initialise scatter plot '''
+    global numberScatterPlots, scatterLayout
+    scatter = scatterplot.scatterPlot(stripplot=strip, plotRateBar=False, color=numberScatterPlots)
+    row = 1 + numberScatterPlots / 3
+    print 'row = ', row
+    col = (numberScatterPlots) % 3
+    print 'col = ', col
+    scatterLayout.addWidget(scatter,row,col)
+    numberScatterPlots += 1
+    scatter.start()
 
+def main():
+    global numberScatterPlots, scatterLayout
     ''' Initiate PyQT application '''
     app = QApplication(sys.argv)
 
     ''' Initiate logger (requires loggerWidget - comment out if not available)'''
-    logwidget1 = lw.loggerWidget([logger,striptool.logger])
+    # logwidget1 = lw.loggerWidget([logger,striptool.logger])
 
     ''' These are some options for pyqtgraph that make the graph black-on-white, and turn on antialiasing, which is nicer on the eye '''
     pg.setConfigOptions(antialias=True)
@@ -47,7 +59,6 @@ def main():
 
     ''' initialise an instance of the stripPlot Widget '''
     strip = striptool.stripPlot(plotRateBar=False)
-    scatter = scatterplot.scatterPlot(stripplot=strip, plotRateBar=False)
 
     ''' This sets the signal length at which the system starts decimating the data to speed up plotting.
         For a 2*DecimateLength signal, the decimation factor would be 2.
@@ -63,34 +74,39 @@ def main():
             - see <http://www.pyqtgraph.org/documentation/style.html>'''
     strip.addSignal(name='signal1',pen='r', timer=1.0/10.0, function=lambda: createRandomSignal(-0.5))
     strip.addSignal(name='signal2',pen='g', timer=1.0/10.0, function=lambda: createRandomSignal(0.5))
-    strip.addSignal(name='signal3',pen='g', timer=1.0/10.0, function=lambda: createRandomSignal(0.0))
-    strip.addSignal(name='signal4',pen='g', timer=1.0/10.0, function=lambda: createRandomSignal(0.0))
+    strip.addSignal(name='signal3',pen='b', timer=1.0/10.0, function=lambda: createRandomSignal(0.0))
+    strip.addSignal(name='signal4',pen='y', timer=1.0/10.0, function=lambda: createRandomSignal(0.0))
 
     ''' To remove a signal, reference it by name or use the in-built controls'''
     # sp.removeSignal(name='signal1')
     # sp.removeSignal(name='signal2')
 
+
     ''' Here we create a tab layout widget, and put the 3 stripplots into a grid layout in one of the tabs
         In the second tab we put the first stripplot. NB: the stripplot "sp" can only exist in one place at a time!
         Comment out line 83 to see the difference. '''
     tab = QTabWidget()
-    # plotLayout = QGridLayout()
-    # plotLayout.addWidget(strip,0,0,1,1)
-    # plotWidget = QFrame()
-    # plotWidget.setLayout(plotLayout)
+    numberScatterPlots = 0
+    scatterLayout = QGridLayout()
+    scatterWidget = QFrame()
+    scatterWidget.setLayout(scatterLayout)
+    addScatterPlotButton = QPushButton('Add Plot')
+    addScatterPlotButton.clicked.connect(lambda: addScatterPlot(strip))
+    scatterLayout.addWidget(addScatterPlotButton,0,0)
+    addScatterPlot(strip)
     tab.addTab(strip,"Strip Plot")
-    tab.addTab(scatter,"Scatter Plot")
+    tab.addTab(scatterWidget,"Scatter Plot")
     ''' Here we connect the QTabWidget signal "currentChanged" to a function defined above. This will pause plots not currently visible
         whenever the tabs are changed. This reduces the load as only visible plots are updated. '''
     tab.currentChanged.connect(lambda x: pausePlots(tab))
 
     ''' Add loggerWidget Tab (requires loggerWidget - comment out if not available)'''
-    tab.addTab(logwidget1,"Log")
-    layout = QWidget()
+    # tab.addTab(logwidget1,"Log")
+    # layout = QWidget()
 
     ''' This starts the plotting timer (by default at 1 Hz) '''
     strip.start()
-    scatter.start()
+    # scatter2.start()
 
     ''' modify the plot scale to 10 secs '''
     strip.setPlotScale(60)
