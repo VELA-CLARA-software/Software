@@ -176,3 +176,6 @@ class scatterPlot(QWidget):
 
     def setPlotRange(self, plotrange):
         self.plotWidget.setPlotRange(plotrange)
+
+    def setPlotScale(self, xRange=None, yRange=None):
+        self.plotWidget.setPlotScale(xRange=xRange, yRange=yRange)

@@ -103,6 +103,7 @@ class colourPickerButton(QtGui.QPushButton):
 class signalTable(QWidget):
     def __init__(self, parent = None):
         super(signalTable, self).__init__(parent)
+        self.setMaximumHeight(100)
         self.magInit = mag.init()
         self.magnets = self.magInit.virtual_VELA_INJ_Magnet_Controller()
         self.bpms = vbpmc.velaINJBeamPositionMonitorController(False, False)
@@ -192,6 +193,7 @@ class signalTable(QWidget):
         self.selectionBoxlayout.addWidget(self.colorbox,1)
         self.selectionBoxlayout.addWidget(self.addButton,1)
         widget.setLayout(self.selectionBoxlayout)
+        widget.setMaximumHeight(100)
         return widget
 
     def addTableRow(self):

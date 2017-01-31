@@ -99,19 +99,18 @@ class stripPlot(QWidget):
         self.GUISplitter.splitterMoved.connect(self.handleSplitterButtonArrow)
         layout.addWidget(self.splitterbutton)
         handle.setLayout(layout)
-        self.GUISplitter.setSizes([1,0])
+        self.GUISplitter.setStretchFactor(0,4)
+        self.GUISplitter.setStretchFactor(1,1)
+        self.handleSplitterButton(left=True)
         self.stripPlot.addWidget(self.GUISplitter,0,0,5,2)
         self.setupPlotRateSlider()
         if plotRateBar:
             self.stripPlot.addWidget(self.plotRateLabel,5, 0)
             self.stripPlot.addWidget(self.plotRateSlider,5, 1)
         self.setLayout(self.stripPlot)
-        self.togglePause()
         self.plotThread.timeout.connect(lambda: self.plotWidget.date_axis.linkedViewChanged(self.plotWidget.date_axis.linkedView()))
         self.plotWidget.plot.vb.sigXRangeChanged.connect(self.setPlotScaleLambda)
-        # self.plotThread.timeout.connect(self.plotWidget.updateScatterPlot)
         logger.debug('stripPlot initiated!')
-        # self.setSizePolicy(QSizePolicy.Ignored,QSizePolicy.Ignored)
 
     def setSubtractMean(self):
         self.subtractMean = self.histogramCheckbox.isChecked()
@@ -141,19 +140,19 @@ class stripPlot(QWidget):
         self.setHeight(0.95*heightwidth.height())
 
     def handleSplitterButton(self, left=True):
-        sizes = self.GUISplitter.sizes()
-        totalsize = sum(sizes)
-        if not all(self.GUISplitter.sizes()):
-            # logger.debug('splitter new sizes = '+str(totalsize))
-            self.GUISplitter.setSizes([200,1])
-            # self.GUISplitter.setSizes([1, 1000])
-            # self.splitterbutton.setArrowType(QtCore.Qt.RightArrow)
-        elif left:
-            self.GUISplitter.setSizes([0, 1])
-            # self.splitterbutton.setArrowType(QtCore.Qt.LeftArrow)
+        # width = self.GUISplitter.size().width()
+        if left:
+            self.GUISplitter.setStretchFactor(0,1)
+            self.GUISplitter.setStretchFactor(1,0)
+            self.GUISplitter.setSizes([1,0])
+        elif not all(self.GUISplitter.sizes()):
+            self.GUISplitter.setStretchFactor(0,4)
+            self.GUISplitter.setStretchFactor(1,1)
+            self.GUISplitter.setSizes([1000,1])
         else:
-            self.GUISplitter.setSizes([1, 0])
-            # self.splitterbutton.setArrowType(QtCore.Qt.LeftArrow)
+            self.GUISplitter.setStretchFactor(0,1)
+            self.GUISplitter.setStretchFactor(1,0)
+            self.GUISplitter.setSizes([1,0])
         self.handleSplitterButtonArrow()
 
     def handleSplitterButtonArrow(self):
@@ -209,7 +208,7 @@ class stripPlot(QWidget):
                     self.plotWidget.legend.scene().removeItem(self.plotWidget.legend)
                 except:
                     pass
-                self.plot.clear()
+                # self.plot.clear()
                 for name in self.records:
                     if self.records[name]['parent'] == self:
                         self.plot.addItem(self.records[name]['curve'].curve)
@@ -256,7 +255,9 @@ class stripPlot(QWidget):
         self.plotWidget.currentPlotTime = time.time()
         for name in self.records:
             self.records[name]['curve'].update()
-        self.plotWidget.updateScatterPlot()
+        if time.time() > self.plotWidget.currentPlotTime:
+            # print 'freq = ', 1.0/(time.time()-self.plotWidget.currentPlotTime)
+            pass
 
     def removeSignal(self,name):
         self.records[name]['record'].stop()
@@ -269,18 +270,24 @@ class stripPlot(QWidget):
 
     def pausePlotting(self, value=True):
         self.paused = value
+        self.setPauseButtonState()
         self.plotWidget.togglePause(self.paused)
 
     def togglePause(self):
         if self.paused:
             self.paused = False
-            self.pauseButton.setStyleSheet("border: 5px; background-color: white")
             logger.debug('Plot un-paused!')
         else:
             self.paused = True
-            self.pauseButton.setStyleSheet("border: 5px; background-color: red")
             logger.debug('Plot Paused!')
+        self.setPauseButtonState()
         self.plotWidget.togglePause(self.paused)
+
+    def setPauseButtonState(self):
+        if not self.paused:
+            self.pauseButton.setStyleSheet("border: 5px; background-color: white")
+        else:
+            self.pauseButton.setStyleSheet("border: 5px; background-color: red")
 
     def toggleAutoScroll(self):
         self.plotWidget.date_axis.autoscroll = self.scrollButton.isChecked()

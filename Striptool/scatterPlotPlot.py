@@ -36,6 +36,8 @@ def takeClosestPosition(xvalues, myList, myNumber):
 
 class scatterPlotPlot(pg.PlotWidget):
 
+    statusChanged = pyqtSignal(str)
+
     def __init__(self, scatterplot, color=0, parent = None):
         super(scatterPlotPlot, self).__init__(parent=parent)
         self.parent=parent
@@ -57,6 +59,12 @@ class scatterPlotPlot(pg.PlotWidget):
         self.plot = self.plotWidget.addPlot(row=0, col=0) #, axisItems = {'bottom': self.date_axis}
         self.scatterPlot = pg.ScatterPlotItem(size=5, pen=pg.mkPen(None), brush=pg.mkBrush(Qtableau20[color]))
         self.plot.addItem(self.scatterPlot)
+        self.scatterPlot.sigClicked.connect(self.printPoints)
+
+    def printPoints(self,scatterPlot, points):
+        point = points[0]
+        text =  "{%0.3f, %0.3f}" % (point.pos()[0], point.pos()[1])
+        self.statusChanged.emit(text)
 
     def setSelectionIndex(self, x, y):
         self.selectionNameX = str(x)
@@ -65,10 +73,27 @@ class scatterPlotPlot(pg.PlotWidget):
     def setPlotRange(self, plotrange):
         self.globalPlotRange = plotrange
 
+    def setPlotScale(self, xRange=None, yRange=None):
+        self.plot.vb.setRange(xRange=xRange, yRange=yRange)
+
     def togglePause(self, value):
         self.paused = value
 
     def timeFilter(self, datain, timescale):
+        tdata = np.array(list(map(lambda x: [x[0]-self.currenttime, round(x[1],5)], datain)))
+        times, data = zip(*tdata)
+        if (times[0] > self.globalPlotRange[0] and times[-1] < self.globalPlotRange[1]) or not len(times) > 0:
+            # print 'All Data!'
+            finaldata = zip(*(times,data))
+        else:
+            if len(times) > 0:
+                idx = (np.array(times) > self.globalPlotRange[0]) * (np.array(times) < self.globalPlotRange[1])
+                timescut = list(compress(times, idx))
+                datacut = list(compress(data, idx))
+                finaldata = zip(*(timescut,datacut))
+        return finaldata
+
+    def timeFilter2(self, datain, timescale):
         tdata = np.array(list(map(lambda x: [x[0]-self.currenttime, round(x[1],5)], datain)))
         times, data = zip(*tdata)
         if len(times) > 0:
@@ -77,7 +102,6 @@ class scatterPlotPlot(pg.PlotWidget):
             datacut = list(compress(data, idx))
         finaldata = zip(*(timescut,datacut))
         return finaldata
-
 
     def filterRecord(self, data, timescale):
         return list(list(self.timeFilter(data, timescale)))
