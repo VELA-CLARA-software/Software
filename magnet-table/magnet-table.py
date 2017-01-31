@@ -2,6 +2,8 @@
 # encoding=utf8
 """
 VELA/CLARA magnet table
+v1.0, January 2017
+Ben Shepherd
 """
 from PyQt4 import QtCore, QtGui #for GUI building
 import sys
@@ -10,6 +12,10 @@ import math # conversion between radians/degrees
 import os # clicking URLs on labels, setting env variables
 import numpy as np # handling polynomials
 import re # parsing lattice files
+import scipy.constants # speed of light
+import VELA_CLARA_MagnetControl as MagCtrl
+#Note: to be able to import the magnet controller, I used
+#pip install -e "\\fed.cclrc.ac.uk\Org\NLab\ASTeC\Projects\VELA\Software\VELA_CLARA_PYDs\bin\stage"
 
 #TODO: do these need to be reset for the physical machine?
 os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
@@ -36,16 +42,10 @@ image_credits = {
     'magnet.png': 'https://www.iconfinder.com/icons/15217/magnet_icon',
     'Open.png': 'https://www.iconfinder.com/icons/146495/data_document_documents_file_files_folder_open_open_file_open_folder_icon#size=24'}
     
-branch = 'Release'
-#branch = 'stage'
-pyds_path = '\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Software\\VELA_CLARA_PYDs\\bin\\' + branch + '\\'
-sys.path.append(pyds_path)
-import VELA_CLARA_MagnetControl as MagCtrl
-
 # Define the speed of light. We need this to convert field integral to angle or K.
 # e.g. theta = field_int * c / p[eV/c]
 # (derive using mv²/rho=BeV, field_int=B.s, theta=s/rho, p[kg.m/s]=p[eV/c].e.(1V)/c)
-SPEED_OF_LIGHT = 299.792458 # in megametres/second, use with p in MeV/c
+SPEED_OF_LIGHT = scipy.constants.c / 10**6 # in megametres/second, use with p in MeV/c
 
 label_size_policy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
 
@@ -86,6 +86,7 @@ class Magnet(object):
     def __init__(self, name):
         self.name = name
         self.is_junction = False
+        self.divert = False
 
 class Window(QtGui.QMainWindow):
     
@@ -165,7 +166,6 @@ class Window(QtGui.QMainWindow):
             #TODO: set some sensible value
             momentum = self.spinbox(header_hbox, 'MeV', step=0.5, value=6.5)
             momentum.valueChanged.connect(self.momentumChanged)
-            #TODO: set event - what should happen if the momentum is changed?
             section_vbox.addLayout(header_hbox)
             magnet_list_vbox = QtGui.QVBoxLayout()
             magnet_list_frame.setLayout(magnet_list_vbox)
@@ -197,7 +197,6 @@ class Window(QtGui.QMainWindow):
             magnet_frame.setStyleSheet('#branch {background-color: #ffffee;} #junction {background-color: qlineargradient( x1:0 y1:0, x2:0 y2:1, stop:0 #f0f0f0, stop:1 #ffffee);}')
         
             #different shading for magnets in branches, and smooth transition at junctions
-            #TODO: show/hide branches (maybe automatically)
             in_branch = magnet.ref.magnetBranch != 'UNKNOWN_MAGNET_BRANCH'
             if in_branch:
                 magnet_frame.setObjectName('branch')

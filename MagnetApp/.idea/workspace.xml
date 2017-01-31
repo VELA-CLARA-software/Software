@@ -27,8 +27,8 @@
       <file leaf-file-name="magnetApp.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/magnetApp.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-65">
-              <caret line="16" column="10" selection-start-line="16" selection-start-column="10" selection-end-line="16" selection-end-column="10" />
+            <state relative-caret-position="588">
+              <caret line="19" column="106" selection-start-line="19" selection-start-column="106" selection-end-line="20" selection-end-column="47" />
               <folding>
                 <element signature="e#46#77#0" expanded="true" />
               </folding>
@@ -36,24 +36,44 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="magnetAppController.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="GUI_FileLoad.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/GUI_FileLoad.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="112">
+              <caret line="6" column="18" selection-start-line="6" selection-start-column="6" selection-end-line="6" selection-end-column="18" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="GUI_FileSave" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/GUI_FileSave">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="224">
+              <caret line="9" column="26" selection-start-line="9" selection-start-column="26" selection-end-line="9" selection-end-column="26" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="magnetAppController.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/magnetAppController.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3435">
-              <caret line="192" column="28" selection-start-line="192" selection-start-column="8" selection-end-line="192" selection-end-column="28" />
+            <state relative-caret-position="264">
+              <caret line="120" column="102" selection-start-line="120" selection-start-column="102" selection-end-line="120" selection-end-column="102" />
               <folding>
                 <element signature="e#46#60#0" expanded="true" />
-                <marker date="1484751278764" expanded="true" signature="5910:6014" ph="..." />
+                <marker date="1485510238953" expanded="true" signature="5940:6044" ph="..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="GUI_magnetWidget.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="GUI_magnetWidget.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/GUI_magnetWidget.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="268">
-              <caret line="35" column="34" selection-start-line="35" selection-start-column="34" selection-end-line="35" selection-end-column="34" />
+            <state relative-caret-position="579">
+              <caret line="29" column="23" selection-start-line="29" selection-start-column="8" selection-end-line="29" selection-end-column="23" />
               <folding>
                 <marker date="1484751278759" expanded="true" signature="291:758" ph="..." />
                 <marker date="1484751278759" expanded="true" signature="874:923" ph="..." />
@@ -62,11 +82,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Ui_magnetWidget.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Ui_magnetWidget.py">
+      <file leaf-file-name="magnetAppGlobals.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/magnetAppGlobals.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1344">
-              <caret line="48" column="20" selection-start-line="48" selection-start-column="13" selection-end-line="48" selection-end-column="20" />
+            <state relative-caret-position="308">
+              <caret line="11" column="0" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -99,16 +119,16 @@
         <option value="$PROJECT_DIR$/GUI_magnetAppStartup.py" />
         <option value="$PROJECT_DIR$/magnetApp.py" />
         <option value="$PROJECT_DIR$/Ui_magnetAppMainView.py" />
-        <option value="$PROJECT_DIR$/magnetAppController.py" />
         <option value="$PROJECT_DIR$/GUI_magnetWidget.py" />
+        <option value="$PROJECT_DIR$/magnetAppController.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="5" />
-    <option name="y" value="154" />
-    <option name="width" value="1075" />
-    <option name="height" value="998" />
+    <option name="x" value="-85" />
+    <option name="y" value="70" />
+    <option name="width" value="1096" />
+    <option name="height" value="1459" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <OptionsSetting value="true" id="Add" />
@@ -142,6 +162,14 @@
             <PATH_ELEMENT>
               <option name="myItemId" value="MagnetApp" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="External Libraries" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="&lt; Python 2.7.9 (C:\Python27\python.exe) &gt;" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
@@ -402,12 +430,12 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="5" y="154" width="1075" height="998" extended-state="0" />
+    <frame x="-85" y="70" width="1096" height="1459" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.27293065" sideWeight="0.42430088" order="11" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22607385" sideWeight="0.40548205" order="11" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32941833" sideWeight="0.47733846" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.42840648" sideWeight="0.2767599" order="7" side_tool="true" content_ui="tabs" x="-1069" y="659" width="1058" height="602" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22607385" sideWeight="0.59451795" order="7" side_tool="true" content_ui="tabs" x="-1069" y="659" width="1058" height="602" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32941833" sideWeight="0.44648024" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24952741" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -417,11 +445,11 @@
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.22371365" sideWeight="0.8148505" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.22333333" sideWeight="0.7977316" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32997763" sideWeight="0.4966249" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.20749441" sideWeight="0.72324014" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2988889" sideWeight="0.7079395" order="3" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -468,6 +496,13 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/Ui_magnetWidget.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1344">
+          <caret line="48" column="20" selection-start-line="48" selection-start-column="13" selection-end-line="48" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/magnetApp.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="280">
@@ -484,7 +519,7 @@
           <caret line="192" column="28" selection-start-line="192" selection-start-column="8" selection-end-line="192" selection-end-column="28" />
           <folding>
             <element signature="e#46#60#0" expanded="true" />
-            <marker date="1484751278764" expanded="true" signature="5910:6014" ph="..." />
+            <marker date="1485510238953" expanded="true" signature="5940:6044" ph="..." />
           </folding>
         </state>
       </provider>
@@ -504,7 +539,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1344">
           <caret line="48" column="20" selection-start-line="48" selection-start-column="13" selection-end-line="48" selection-end-column="20" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -524,7 +558,7 @@
           <caret line="18" column="8" selection-start-line="18" selection-start-column="8" selection-end-line="18" selection-end-column="33" />
           <folding>
             <element signature="e#46#60#0" expanded="true" />
-            <marker date="1484751278764" expanded="true" signature="5910:6014" ph="..." />
+            <marker date="1485510238953" expanded="true" signature="5940:6044" ph="..." />
           </folding>
         </state>
       </provider>
@@ -554,9 +588,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1232">
           <caret line="45" column="0" selection-start-line="45" selection-start-column="0" selection-end-line="45" selection-end-column="0" />
-          <folding>
-            <element signature="e#46#56#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -576,7 +608,7 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#46#60#0" expanded="true" />
-            <marker date="1484751278764" expanded="true" signature="5910:6014" ph="..." />
+            <marker date="1485510238953" expanded="true" signature="5940:6044" ph="..." />
           </folding>
         </state>
       </provider>
@@ -592,9 +624,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1232">
           <caret line="45" column="0" selection-start-line="45" selection-start-column="0" selection-end-line="45" selection-end-column="0" />
-          <folding>
-            <element signature="e#46#56#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -614,7 +644,7 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#46#60#0" expanded="true" />
-            <marker date="1484751278764" expanded="true" signature="5910:6014" ph="..." />
+            <marker date="1485510238953" expanded="true" signature="5940:6044" ph="..." />
           </folding>
         </state>
       </provider>
@@ -623,9 +653,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1232">
           <caret line="45" column="0" selection-start-line="45" selection-start-column="0" selection-end-line="45" selection-end-column="0" />
-          <folding>
-            <element signature="e#46#56#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -645,7 +673,7 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#46#60#0" expanded="true" />
-            <marker date="1484751278764" expanded="true" signature="5910:6014" ph="..." />
+            <marker date="1485510238953" expanded="true" signature="5940:6044" ph="..." />
           </folding>
         </state>
       </provider>
@@ -654,9 +682,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1232">
           <caret line="45" column="0" selection-start-line="45" selection-start-column="0" selection-end-line="45" selection-end-column="0" />
-          <folding>
-            <element signature="e#46#56#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -676,7 +702,7 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#46#60#0" expanded="true" />
-            <marker date="1484751278764" expanded="true" signature="5910:6014" ph="..." />
+            <marker date="1485510238953" expanded="true" signature="5940:6044" ph="..." />
           </folding>
         </state>
       </provider>
@@ -685,9 +711,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1232">
           <caret line="45" column="0" selection-start-line="45" selection-start-column="0" selection-end-line="45" selection-end-column="0" />
-          <folding>
-            <element signature="e#46#56#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -714,7 +738,7 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#46#60#0" expanded="true" />
-            <marker date="1484751278764" expanded="true" signature="5910:6014" ph="..." />
+            <marker date="1485510238953" expanded="true" signature="5940:6044" ph="..." />
           </folding>
         </state>
       </provider>
@@ -723,9 +747,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1232">
           <caret line="45" column="0" selection-start-line="45" selection-start-column="0" selection-end-line="45" selection-end-column="0" />
-          <folding>
-            <element signature="e#46#56#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -745,7 +767,7 @@
           <caret line="262" column="0" selection-start-line="262" selection-start-column="0" selection-end-line="262" selection-end-column="0" />
           <folding>
             <element signature="e#46#60#0" expanded="true" />
-            <marker date="1484751278764" expanded="true" signature="5910:6014" ph="..." />
+            <marker date="1485510238953" expanded="true" signature="5940:6044" ph="..." />
           </folding>
         </state>
       </provider>
@@ -754,9 +776,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1232">
           <caret line="45" column="0" selection-start-line="45" selection-start-column="0" selection-end-line="45" selection-end-column="0" />
-          <folding>
-            <element signature="e#46#56#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -776,7 +796,7 @@
           <caret line="262" column="0" selection-start-line="262" selection-start-column="0" selection-end-line="262" selection-end-column="0" />
           <folding>
             <element signature="e#46#60#0" expanded="true" />
-            <marker date="1484751278764" expanded="true" signature="5910:6014" ph="..." />
+            <marker date="1485510238953" expanded="true" signature="5940:6044" ph="..." />
           </folding>
         </state>
       </provider>
@@ -785,9 +805,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#46#56#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -807,7 +825,7 @@
           <caret line="3" column="0" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
           <folding>
             <element signature="e#46#60#0" expanded="true" />
-            <marker date="1484751278764" expanded="true" signature="5910:6014" ph="..." />
+            <marker date="1485510238953" expanded="true" signature="5940:6044" ph="..." />
           </folding>
         </state>
       </provider>
@@ -819,35 +837,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/GUI_FileSave">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="140">
-          <caret line="5" column="18" selection-start-line="5" selection-start-column="6" selection-end-line="5" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Ui_magnetFileSave.py" />
     <entry file="file://$PROJECT_DIR$/Ui_FileSave.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="778">
           <caret line="49" column="22" selection-start-line="49" selection-start-column="13" selection-end-line="49" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/magnetAppGlobals.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="364">
-          <caret line="11" column="0" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/GUI_FileLoad.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="175">
-          <caret line="7" column="51" selection-start-line="7" selection-start-column="41" selection-end-line="7" selection-end-column="51" />
-          <folding>
-            <element signature="e#46#56#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -891,40 +885,63 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Ui_magnetWidget.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1344">
+        <state relative-caret-position="1226">
           <caret line="48" column="20" selection-start-line="48" selection-start-column="13" selection-end-line="48" selection-end-column="20" />
-          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/GUI_magnetWidget.py">
+    <entry file="file://$PROJECT_DIR$/magnetAppGlobals.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="268">
-          <caret line="35" column="34" selection-start-line="35" selection-start-column="34" selection-end-line="35" selection-end-column="34" />
-          <folding>
-            <marker date="1484751278759" expanded="true" signature="291:758" ph="..." />
-            <marker date="1484751278759" expanded="true" signature="874:923" ph="..." />
-          </folding>
+        <state relative-caret-position="308">
+          <caret line="11" column="0" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/magnetApp.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-65">
-          <caret line="16" column="10" selection-start-line="16" selection-start-column="10" selection-end-line="16" selection-end-column="10" />
+        <state relative-caret-position="588">
+          <caret line="19" column="106" selection-start-line="19" selection-start-column="106" selection-end-line="20" selection-end-column="47" />
           <folding>
             <element signature="e#46#77#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/GUI_FileLoad.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="112">
+          <caret line="6" column="18" selection-start-line="6" selection-start-column="6" selection-end-line="6" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/GUI_FileSave">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="224">
+          <caret line="9" column="26" selection-start-line="9" selection-start-column="26" selection-end-line="9" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/magnetAppController.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3435">
-          <caret line="192" column="28" selection-start-line="192" selection-start-column="8" selection-end-line="192" selection-end-column="28" />
+        <state relative-caret-position="264">
+          <caret line="120" column="102" selection-start-line="120" selection-start-column="102" selection-end-line="120" selection-end-column="102" />
           <folding>
             <element signature="e#46#60#0" expanded="true" />
-            <marker date="1484751278764" expanded="true" signature="5910:6014" ph="..." />
+            <marker date="1485510238953" expanded="true" signature="5940:6044" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/GUI_magnetWidget.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="579">
+          <caret line="29" column="23" selection-start-line="29" selection-start-column="8" selection-end-line="29" selection-end-column="23" />
+          <folding>
+            <marker date="1484751278759" expanded="true" signature="291:758" ph="..." />
+            <marker date="1484751278759" expanded="true" signature="874:923" ph="..." />
           </folding>
         </state>
       </provider>
