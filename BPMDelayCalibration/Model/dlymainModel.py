@@ -7,6 +7,7 @@ import collections
 
 class dlyModel():
 	def __init__(self, bpmCont):
+		#Receives BPM controller from dlymainApp.py
 		self.bpmCont = bpmCont
 		self.bpmList = []
 
@@ -14,21 +15,22 @@ class dlyModel():
 		self.pvList = pvList
 		self.numShots = numShots
 		self.bpmData = {name:[[] for i in range(self.numShots)] for name in self.pvList}
+		#Uses hardware controller functions to take BPM data and store in dictionaries based on PV name and DLY values
 		self.bpmCont.monitorMultipleDataForNShots(long(self.numShots), self.pvList)
 		for i in self.pvList:
 			while self.bpmCont.isMonitoringBPMData(str(i)):
 				time.sleep(0.01)
-			#for j in range(self.numShots):
 			self.bpmData[i] = self.bpmCont.getBPMRawData(i)
 		return self.bpmData
 
 	def scanDLY1(self, pvList, numShots, sliderMin, sliderMax):
-		#self.pvName = pvName
+		#These are set by the user in the GUI and piped through
 		self.pvList = pvList
 		self.numShots = int(numShots)
 		self.sliderMin = int(sliderMin)
 		self.sliderMax = int(sliderMax)
 
+		#Dictionaries to store the BPM raw voltages, keyed by shot, DLY value, and BPM name
 		self.U11 = {name:[[[] for i in range(self.numShots)] for i in range(self.sliderMax)] for name in self.pvList}
 		self.U12 = {name:[[[] for i in range(self.numShots)] for i in range(self.sliderMax)] for name in self.pvList}
 		self.U21 = {name:[[[] for i in range(self.numShots)] for i in range(self.sliderMax)] for name in self.pvList}
@@ -42,6 +44,7 @@ class dlyModel():
 		self.dv2MinVal = collections.defaultdict(dict)
 		self.newDLY1 = collections.defaultdict(dict)
 
+		#See BPM software documentation for this algorithm
 		for i in range(self.sliderMin, self.sliderMax):
 			for h in self.pvList:
 				self.bpmCont.setSD1(str(h), i)
@@ -79,6 +82,7 @@ class dlyModel():
 			print self.newDLY1[h]
 
 	def scanDLY2(self, pvList, numShots, rd1):
+		#Scan DLY2 based on measurement of DLY1
 		self.pvList = pvList
 		self.numShots = int(numShots)
 		self.U11 = {name:[[[] for i in range(self.numShots)] for i in range(-20,20)] for name in self.pvList}
@@ -95,8 +99,6 @@ class dlyModel():
 		self.newDLY2 = collections.defaultdict(dict)
 		self.bpmData = collections.defaultdict(dict)
 
-		#for h in self.pvList:
-		#	self.RD1[h] = self.bpmCont.getRD1(str(h))
 		for h in self.pvList:
 			print self.RD1[h]
 			for i in range(self.RD1[h] - 20, self.RD1[h] + 20):

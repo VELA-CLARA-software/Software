@@ -9,6 +9,7 @@ logger = logging.getLogger(__name__)
 class dlyController(QObject):
 
 	def __init__(self, view, model, bpmCont):
+		#Hardware controllers are piped in from the dlymainApp.py
 		super(dlyController, self).__init__()
 		self.view = view
 		self.bpmCont = bpmCont
@@ -17,6 +18,9 @@ class dlyController(QObject):
 		self.threads = dlythreads
 		self.thread = QtCore.QThread()
 		self.threading = threading
+		#This is a vector of strings - it is required for the monitorMultipleDataForNShots function in the dlymainModel.py
+		#It is a c++ type that I couldn't get to match to a Python array of strings, and so have to import it. Suggestions for
+		#doing this better?
 		self.pvList = vbpmc.std_vector_string()
 		self.lowerList = []
 		self.upperList = []
@@ -26,8 +30,10 @@ class dlyController(QObject):
 		self.view.calibrateButton.clicked.connect(lambda: self.runDLYCalibration())
 
 	def runDLYCalibration(self):
+		#Disable the button while calibration is running
 		self.view.calibrateButton.setEnabled(False)
 		self.view.calibrateButton.setText("Calibrating......")
+		#Update GUI
 		QtGui.QApplication.processEvents()
 		self.genPVList = []
 		for i in self.pvList:
@@ -38,9 +44,11 @@ class dlyController(QObject):
 		self.sliderMin = int(self.view.lowerDLYBound.toPlainText())
 		self.sliderMax = int(self.view.upperDLYBound.toPlainText())
 		self.attValues = [[]] * len(self.pvList)
+		#Add to QThreadPool
 		self.pool = QtCore.QThreadPool()
 		self.pool.setMaxThreadCount(len(self.pvList))
 		self.thread = self.threads.dlyWorker(self.view, self.pvList, self.numShots, self.sliderMin, self.sliderMax, self.model)
+		#Receives values from dlythreads.py with DLY calibration data and pipes into getValues function
 		self.attValue = self.thread.signals.result.connect(self.getValues)
 		self.pool.start(self.thread)
 		self.pool.waitForDone()
@@ -51,9 +59,10 @@ class dlyController(QObject):
 		self.att2Vals = []
 		self.RA1Vals = []
 		self.RA2Vals = []
+		#These are the values from dlymainModel.py
 		self.sigList = sigList
-		#print self.sigList[0].values()
 		self.makestr = ""
+		#Make plots for each measurement
 		for i in range(len(self.pvList)):
 			self.view.glayoutOutputs[i].clear()
 			self.view.glayoutOutputs_2[i].clear()

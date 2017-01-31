@@ -5,33 +5,31 @@ import collections
 
 class attCalModel():
 	def __init__(self, bpmCont, scopeCont):
+		#Hardware controllers are imported from attCalmainApp.py
 		self.bpmCont = bpmCont
 		self.scopeCont = scopeCont
 		self.bpmList = []
 
 	def monitorBPMs(self, pvList, numShots):
+		#Uses hardware controller functions to take BPM data and store in dictionaries based on PV name and ATT values
 		self.pvList = pvList
 		self.numShots = numShots
 		self.bpmData = {name:[[] for i in range(self.numShots)] for name in self.pvList}
 		self.bpmCont.monitorMultipleDataForNShots(long(self.numShots), self.pvList)
-		#for i in self.pvList:
-		#	self.bpmCont.monitorDataForNShots(long(self.numShots), i)
 		for i in self.pvList:
 			while self.bpmCont.isMonitoringBPMData(str(i)):
 				time.sleep(0.01)
-				#print str(i)
-			#for j in range(self.numShots):
 			self.bpmData[i] = self.bpmCont.getBPMRawData(i)
-		#time.sleep(1)
 		return self.bpmData
 
 	def scanAttenuation(self, pvList, numShots, sliderMin, sliderMax):
-		#self.pvName = pvName
+		#These are set by the user in the GUI and piped through
 		self.pvList = pvList
 		self.numShots = int(numShots)
 		self.sliderMin = int(sliderMin)
 		self.sliderMax = int(sliderMax)
 
+		#Dictionaries to store the BPM raw voltages, keyed by shot, ATT value, and BPM name
 		self.U11 = {name:[[[] for i in range(self.numShots)] for i in range(self.sliderMax)] for name in self.pvList}
 		self.U12 = {name:[[[] for i in range(self.numShots)] for i in range(self.sliderMax)] for name in self.pvList}
 		self.U13 = {name:[[[] for i in range(self.numShots)] for i in range(self.sliderMax)] for name in self.pvList}
@@ -40,20 +38,14 @@ class attCalModel():
 		self.U22 = {name:[[[] for i in range(self.numShots)] for i in range(self.sliderMax)] for name in self.pvList}
 		self.U23 = {name:[[[] for i in range(self.numShots)] for i in range(self.sliderMax)] for name in self.pvList}
 		self.U24 = {name:[[[] for i in range(self.numShots)] for i in range(self.sliderMax)] for name in self.pvList}
-		#self.rawDataMeanV11 = {name:{} for i in range(self.sliderMax) for name in self.pvList}
-		#self.rawDataMeanV12 = {name:{} for i in range(self.sliderMax) for name in self.pvList}
-		#self.rawDataMeanV21 = {name:{} for i in range(self.sliderMax) for name in self.pvList}
-		#self.rawDataMeanV22 = {name:{} for i in range(self.sliderMax) for name in self.pvList}
-		#self.V11V12sum = {name:{} for i in range(self.sliderMax) for name in self.pvList}
-		#self.V21V22sum = {name:{} for i in range(self.sliderMax) for name in self.pvList}
 		self.rawDataMeanV11 = collections.defaultdict(dict)
 		self.rawDataMeanV12 = collections.defaultdict(dict)
 		self.rawDataMeanV21 = collections.defaultdict(dict)
 		self.rawDataMeanV22 = collections.defaultdict(dict)
 		self.V11V12sum = collections.defaultdict(dict)
 		self.V21V22sum = collections.defaultdict(dict)
-		#self.dataSA1 = []
-		#self.dataSA2 = []
+
+		#See BPM software documentation for this algorithm
 		for i in range(self.sliderMin, self.sliderMax):
 			for h in self.pvList:
 				self.bpmCont.setSA1(str(h), i)
@@ -82,9 +74,10 @@ class attCalModel():
 				self.V11V12sum[h][i] = ( ( self.rawDataMeanV11[h][i] + self.rawDataMeanV12[h][i] ) / 2 )
 				self.V21V22sum[h][i] = ( ( self.rawDataMeanV21[h][i] + self.rawDataMeanV22[h][i] ) / 2 )
 
-		return self.V11V12sum, self.V21V22sum#, self.dataSA1, self.dataSA2
+		return self.V11V12sum, self.V21V22sum
 
 	def findNearest(self, dict, value):
+		#Finds the value for V1 - V2 = 0V for both horizontal and vertical planes
 		self.vals = numpy.array( dict.values() )
 		self.keys = numpy.array( dict.keys() )
 		self.idx = numpy.abs( self.vals - value).argmin()
@@ -96,20 +89,21 @@ class attCalModel():
 		self.v1cal = v1cal
 		self.v2cal = v2cal
 		for i in self.pvList:
-			#self.pvName = pvName
 			self.att1Cal[i] = self.findNearest( self.v1cal[i], 1.0 )
 			self.att2Cal[i] = self.findNearest( self.v2cal[i], 1.0 )
 
+			#Writes a text file with calibrated BPM attenuation values and V1,2 cal. After calibration, these values
+			#can be put into the BPM hardware controller config file: \\fed.cclrc.ac.uk\Org\NLab\ASTeC\Projects\VELA\Software\Config
 			with open( str( i ), "w" ) as text_file:
-				text_file.write( str( self.att1Cal[i][0] ) )
+				text_file.write( "ATT1 Cal = "+str( self.att1Cal[i][0] ) )
 				text_file.write( "\n" )
-				text_file.write( str( self.att2Cal[i][0] ) )
+				text_file.write( "ATT2 Cal = "+str( self.att2Cal[i][0] ) )
 				text_file.write( "\n" )
-				text_file.write( str( self.att1Cal[i][1] ) )
+				text_file.write( "V1 Cal = "+str( self.att1Cal[i][1] ) )
 				text_file.write( "\n" )
-				text_file.write( str( self.att2Cal[i][1] ) )
+				text_file.write( "V2 Cal = "str( self.att2Cal[i][1] ) )
 				text_file.write( "\n" )
-				text_file.write( str( self.scopeCont.getWCMQ() ) )
+				text_file.write( "Q Cal = "str( self.scopeCont.getWCMQ() ) )
 			self.bpmCont.setSA1( i, self.att1Cal[i][0] )
 			self.bpmCont.setSA2( i, self.att2Cal[i][0] )
 			print 'Setting SA1 for ', i, ' = ', self.att1Cal[i][0]
@@ -123,5 +117,6 @@ class attCalModel():
 		return self.bpmRA1, self.bpmRA2
 
 	def getWCMQ(self):
+		#Charge readings are currently based on WCM charge - this may not be the best option as we go further away from the gun
 		self.wcmQ = self.scopeCont.getWCMQ()
 		return self.wcmQ

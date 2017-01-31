@@ -6,8 +6,6 @@ os.chdir("..\BPMDelayCalibration")
 sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\Model')
 sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\Controller')
 sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\View')
-sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'..\..\loggerWidget')
-sys.path.append('\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Software\\CONTROLLERS\\VELA-CLARA-Controllers\\bin\\Release')
 
 from PyQt4 import QtGui, QtCore
 import VELA_CLARA_BPM_Control as vbpmc
@@ -20,6 +18,7 @@ logger = logging.getLogger(__name__)
 
 class dlyApp(QtGui.QApplication):
     def __init__(self, sys_argv):
+        #App is launched here based on inputs from the Master app. Cumbersome, I know...
         super(dlyApp, self).__init__(sys_argv)
         self.bpm = vbpmc.init()
         if sys_argv[1] == "VELA_INJ":
@@ -46,22 +45,22 @@ class dlyApp(QtGui.QApplication):
                 self.bpmCont = self.bpm.offline_VELA_BA2_BPM_Controller()
             elif sys_argv[2] == "Physical":
                 self.bpmCont = self.bpm.physical_VELA_BA2_BPM_Controller()
-        elif sys_argv[1] == "CLARA":
-            self.contType = "CLARA"
+        elif sys_argv[1] == "CLARA_INJ":
+            self.contType = "CLARA_INJ"
             if sys_argv[2] == "Virtual":
-                self.bpmCont = self.bpm.virtual_CLARA_BPM_Controller()
+                self.bpmCont = self.bpm.virtual_CLARA_INJ_BPM_Controller()
             elif sys_argv[2] == "Offline":
-                self.bpmCont = self.bpm.offline_CLARA_BPM_Controller()
+                self.bpmCont = self.bpm.offline_CLARA_INJ_BPM_Controller()
             elif sys_argv[2] == "Physical":
-                self.bpmCont = self.bpm.physical_CLARA_BPM_Controller()
-        elif sys_argv[1] == "C2V":
+                self.bpmCont = self.bpm.physical_CLARA_INJ_BPM_Controller()
+        elif sys_argv[1] == "CLARA_2_VELA":
             self.contType = "C2V"
             if sys_argv[2] == "Virtual":
-                self.bpmCont = self.bpm.virtual_C2V_BPM_Controller()
+                self.bpmCont = self.bpm.virtual_CLARA_2_VELA_BPM_Controller()
             elif sys_argv[2] == "Offline":
-                self.bpmCont = self.bpm.offline_C2V_BPM_Controller()
+                self.bpmCont = self.bpm.offline_CLARA_2_VELA_BPM_Controller()
             elif sys_argv[2] == "Physical":
-                self.bpmCont = self.bpm.physical_C2V_BPM_Controller()
+                self.bpmCont = self.bpm.physical_CLARA_2_VELA_BPM_Controller()
         self.view = dlymainView.dlyUi_TabWidget()
         self.MainWindow = QtGui.QTabWidget()
         self.view.setupUi(self.MainWindow, self.bpmCont, sys_argv[1], sys_argv[2])

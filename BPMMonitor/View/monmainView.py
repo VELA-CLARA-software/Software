@@ -93,7 +93,7 @@ class monMyDynamicMplCanvas(monMyMplCanvas):
         x,y = self.patch.center
         self.x = event1
         self.y = event2
-        print self.x, self.y
+        #print self.x, self.y
         self.patch.center = (self.x, self.y)
         self.fig.canvas.draw()
         return [self.patch]
@@ -200,13 +200,13 @@ class monUi_MainWindow(QtCore.QObject):
             self.comboBox.setItemText(0, _translate("TabWidget", "VELA BA1", None))
         elif self.trajectoryButton.isChecked() and self.contType == "VELA_BA2":
             self.comboBox.setItemText(0, _translate("TabWidget", "VELA BA2", None))
-        elif self.trajectoryButton.isChecked() and self.contType == "CLARA":
-            self.comboBox.setItemText(0, _translate("TabWidget", "CLARA BA2", None))
-        elif self.trajectoryButton.isChecked() and self.contType == "C2V":
-            self.comboBox.setItemText(0, _translate("TabWidget", "C2V", None))
+        elif self.trajectoryButton.isChecked() and self.contType == "CLARA_INJ":
+            self.comboBox.setItemText(0, _translate("TabWidget", "CLARA INJ", None))
+        elif self.trajectoryButton.isChecked() and self.contType == "CLARA_2_VELA":
+            self.comboBox.setItemText(0, _translate("TabWidget", "CLARA-To-VELA", None))
 
     def retranslateUi(self, TabWidget):
-        self.TabWidget.setWindowTitle(_translate("TabWidget", "BPM Monitor GUI", None))
+        self.TabWidget.setWindowTitle(_translate("TabWidget", "TabWidget", None))
         self.TabWidget.setTabText(self.TabWidget.indexOf(self.tab), _translate("TabWidget", "Settings", None))
         self.pushButton.setText(_translate("TabWidget", "Go", None))
         self.pushButton_2.setText(_translate("TabWidget", "Append", None))

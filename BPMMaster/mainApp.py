@@ -6,13 +6,13 @@ os.environ["EPICS_CA_MAX_ARRAY_BYTES"] = "10000000"
 sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\Controller')
 sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\View')
 from PyQt4 import QtGui, QtCore
+
 import mainController
 import mainView
-import logging
-logger = logging.getLogger(__name__)
 
 class masterApp(QtGui.QApplication):
     def __init__(self, sys_argv):
+        #This file simply loads up the GUI and links in the controller, which connects the buttons to the BPM apps
         super(masterApp, self).__init__(sys_argv)
         self.view = mainView.Ui_TabWidget()
         self.MainWindow = QtGui.QTabWidget()

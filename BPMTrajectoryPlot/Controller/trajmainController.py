@@ -6,11 +6,13 @@ import threading
 class trajController(QObject):
 
 	def __init__(self, view, model, bpmCont, scopeCont):
+		#Controllers are piped in here from trajmainApp.py
 		super(trajController, self).__init__()
 		self.view = view
 		self.model = model
 		self.threading = threading
 		self.pvList = []
+		#Users can choose whether to plot individual BPMs, or a trajectory. This can be changed on-the-fly
 		self.view.trajectoryButton.clicked.connect(lambda: self.view.setComboBox(self.view.tab))
 		self.view.individualButton.clicked.connect(lambda: self.view.setComboBox(self.view.tab))
 		self.view.pushButton_2.clicked.connect(lambda: self.appendToList())
@@ -48,18 +50,20 @@ class trajController(QObject):
 
 	def onTimer(self):
 		self.trajectory = str(self.view.comboBox.currentText())
-		#self.numShots = int(self.view.getNumShots.toPlainText())
+		#Default value of numshots is 1 - can be changed on request
 		self.numShots = 1
 		self.bpmData = self.model.monitorBPMs(self.pvList, self.numShots)
 		self.bpmXData = self.bpmData[0]
 		self.bpmYData = self.bpmData[1]
 		self.bpmQData = self.bpmData[2]
 		self.autoScale = self.view.autoscaleCheckBox.checkState()
+		#This sends the data through to trajmainView.py to create plots
 		self.view.xPlot.update_figure(self.bpmXData, self.autoScale, "X")
 		self.view.yPlot.update_figure(self.bpmYData, self.autoScale, "Y")
 		self.view.qPlot.update_figure(self.bpmYData, self.autoScale, "Q")
 
 	def getData1(self):
+		#Initialisation of random data just to get started
 		self.data = [random.randint(-10, 10) for i in range(5)]
 		print self.data
 		return self.data

@@ -18,6 +18,9 @@ class Controller(QObject):
 						  "VM-EBT-INJ-DIA-BPMC-12:DATA:B2V.VALA",
 						  "VM-EBT-INJ-DIA-BPMC-14:DATA:B2V.VALA"]
 
+		#Each time you click one of the buttons, a separate application is launched. This means that the individual apps
+		#are not owned by the Master app. This is a design choice, but it should mean that they are not talking to each
+		#other. If this proves problematic, then let ADB know.
 		self.view.randomVariableButton.clicked.connect(lambda: self.setRandomPVs())
 		self.view.launchATTButton.clicked.connect(lambda: self.attCalThread())
 		self.view.launchDLYButton.clicked.connect(lambda: self.dlyCalThread())
@@ -30,6 +33,7 @@ class Controller(QObject):
 		self.timer.start(1000)
 
 	def setPVTimer(self):
+		#This is where the random PVs for the virtual machine are set. See mainThreads.py
 		self.repRate = QtCore.QString.toFloat(self.view.repRateValue.toPlainText())[0]
 		if not self.view.randomVariableCheckBox.isChecked():
 			self.view.randomVariableButton.setEnabled(True)
@@ -45,6 +49,7 @@ class Controller(QObject):
 				self.pool.waitForDone()
 
 	def launchATTCal(self):
+		#The method of launching each app is a bit messy, and will probably be tidied up in the future.
 		self.view.dialogBox.setText("Launching BPM attenuation calibration")
 		if self.view.velaINJButton.isChecked():
 			if self.view.virtualButton.isChecked():

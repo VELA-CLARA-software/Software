@@ -10,6 +10,10 @@ class attCalWorkerSignals(QObject):
 
 class ranPVs(QRunnable):
 	def __init__(self, pvName, rangeSta, rangeEnd, numShots, repRate, pvType):
+		#This is only used for the virtual machine, and uses the SetRandomPVs package to send random values to the bpms
+		#to allow for software testing. The PV names are set automatically - they're simply the VELA injector BPMs because
+		#it doesn't really matter which ones you test on the virtual machine. Feel free to add more in mainController.py
+		#if that would be useful. 
 		super(ranPVs, self).__init__()
 		self.randomPVs = randomPVs
 		self.setRanPVs = self.randomPVs.setRandomPV()

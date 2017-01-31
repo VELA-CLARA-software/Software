@@ -3,7 +3,6 @@ from PyQt4.QtCore import QObject
 import threading
 import sys
 import attCalthreads
-sys.path.append('D:\\VELA-CLARA_software\\VELA-CLARA-Controllers-New-Structure-With-Magnets\\bin\\Release')
 import VELA_CLARA_BPM_Control as vbpmc
 import logging
 logger = logging.getLogger(__name__)
@@ -11,12 +10,16 @@ logger = logging.getLogger(__name__)
 class attCalController(QObject):
 
 	def __init__(self, view, model, bpmCont, scopeCont):
+		#Hardware controllers are piped in from the attCalmainApp.py
 		super(attCalController, self).__init__()
 		self.view = view
 		self.model = model
 		self.logger = logger
 		self.attCalthreads = attCalthreads
 		self.threading = threading
+		#This is a vector of strings - it is required for the monitorMultipleDataForNShots function in the attCalmainModel.py
+		#It is a c++ type that I couldn't get to match to a Python array of strings, and so have to import it. Suggestions for
+		#doing this better?
 		self.pvList = vbpmc.std_vector_string()
 		self.lowerList = []
 		self.upperList = []
@@ -26,23 +29,29 @@ class attCalController(QObject):
 		self.view.calibrateButton.clicked.connect(lambda: self.runATTCalibration())
 
 	def runATTCalibration(self):
+		#Disable the button while calibration is running
 		self.view.calibrateButton.setEnabled(False)
 		self.view.calibrateButton.setText("Calibrating......")
+		#Update GUI
 		QtGui.QApplication.processEvents()
 		self.genPVList = []
 		for i in self.pvList:
 			self.genPVList.append(i)
 		print self.genPVList
 		self.logger.info('Attenuation calibration for '+str(self.genPVList)+' initiated!')
+		#Get ranges and numshots from GUI
 		self.numShots = int(self.view.numShots.toPlainText())
 		self.sliderMin = int(self.view.lowerATTBound.toPlainText())
 		self.sliderMax = int(self.view.upperATTBound.toPlainText())
 		self.attValues = [[]] * len(self.pvList)
+		#Add to QThreadPool
 		self.pool = QtCore.QThreadPool()
 		self.pool.setMaxThreadCount(len(self.pvList))
 
 		print self.pvList
+		#Run threads for ATT calibration
 		self.thread = self.attCalthreads.attCalWorker(self.view, self.pvList, self.numShots, self.sliderMin, self.sliderMax, self.model)
+		#Receives values from attCalthreads.py with ATT calibration data and pipes into getValues function
 		self.attValue = self.thread.signals.result.connect(self.getValues)
 		self.pool.start(self.thread)
 		self.pool.waitForDone()
@@ -61,8 +70,10 @@ class attCalController(QObject):
 		self.att2Vals = []
 		self.RA1Vals = []
 		self.RA2Vals = []
+		#These are the values from attCalmainModel.py
 		self.sigList = sigList
 		self.makestr = "Charge at WCM = "+str(self.model.getWCMQ())
+		#Make plots for each measurement
 		for i in range(len(self.pvList)):
 			self.view.glayoutOutputs[i].clear()
 			self.view.glayoutOutputs_2[i].clear()
@@ -80,17 +91,10 @@ class attCalController(QObject):
 		self.logger.info(self.makestr)
 		self.view.calibrateButton.setEnabled(True)
 		self.view.calibrateButton.setText("Calibrate Attenuations")
-		#return sigList
 
 	def appendToList(self):
-		#del self.pvList[:]
 		self.pvName = str(self.view.comboBox.currentText())
 		self.pvList.append(self.pvName)
 		self.view.bpmPVList.insertPlainText(self.pvName+"\n")
-		#self.view.plainTextEdit.setPlainText(self.pvName)
 		self.view.addPlotTab(self.view.TabWidget, self.pvName)
 		return self.pvList
-		#self.tab = QtGui.QWidget()
-		#self.tab.setObjectName(str(self.pvName))
-		#self.newTab = self.view.Ui_TabWidget.addPlotTab(self.tab, self.pvName)
-		#self.newTab.setObjectName(_fromUtf8(str(self.pvName)))
