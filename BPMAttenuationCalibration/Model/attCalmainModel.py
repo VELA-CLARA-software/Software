@@ -101,9 +101,9 @@ class attCalModel():
 				text_file.write( "\n" )
 				text_file.write( "V1 Cal = "+str( self.att1Cal[i][1] ) )
 				text_file.write( "\n" )
-				text_file.write( "V2 Cal = "str( self.att2Cal[i][1] ) )
+				text_file.write( "V2 Cal = "+str( self.att2Cal[i][1] ) )
 				text_file.write( "\n" )
-				text_file.write( "Q Cal = "str( self.scopeCont.getWCMQ() ) )
+				text_file.write( "Q Cal = "+str( self.scopeCont.getWCMQ() ) )
 			self.bpmCont.setSA1( i, self.att1Cal[i][0] )
 			self.bpmCont.setSA2( i, self.att2Cal[i][0] )
 			print 'Setting SA1 for ', i, ' = ', self.att1Cal[i][0]
