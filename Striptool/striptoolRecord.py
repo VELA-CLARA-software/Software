@@ -124,7 +124,7 @@ class createSignalTimer(QObject):
     def update(self):
         ''' call signal generating Function '''
         value = self.function(*self.args)
-        self.dataReady.emit([time.time(),value])
+        self.dataReady.emit([round(time.time(),2),value])
 
 class recordWorker(QtCore.QObject):
     def __init__(self, records, signal, name):

@@ -56,6 +56,11 @@ class stripPlot(QWidget):
         self.histogramCheckbox = QCheckBox("Subtract Mean")
         self.histogramCheckbox.stateChanged.connect(self.setSubtractMean)
         self.histogramCheckbox.setChecked(False)
+        self.histogramBinsLabel = QLabel('NBins')
+        self.histogramBinsEdit = QLineEdit(str(self.plotWidget.numberBins))
+        self.histogramBinsEdit.setMaxLength(4)
+        self.histogramBinsEdit.setInputMask('0000')
+        self.histogramBinsEdit.editingFinished.connect(self.setHistogramBins)
         ''' FFT'''
         self.FFTRadio = QRadioButton("FFT")
         self.FFTRadio.toggled.connect(lambda: self.setPlotType(FFT=True))
@@ -77,6 +82,8 @@ class stripPlot(QWidget):
         self.buttonLayout.addWidget(self.linearRadio,      0,0,1,4)
         self.buttonLayout.addWidget(self.HistogramRadio,   1,0,1,1)
         self.buttonLayout.addWidget(self.histogramCheckbox,1,1,1,1)
+        self.buttonLayout.addWidget(self.histogramBinsLabel,1,3,1,1)
+        self.buttonLayout.addWidget(self.histogramBinsEdit,1,2,1,1)
         self.buttonLayout.addWidget(self.FFTRadio,         2,0,1,4)
         self.buttonLayout.addWidget(self.scrollButton,     3,0,1,1)
         self.buttonLayout.addWidget(self.pauseButton,      3,3,1,1)
@@ -111,6 +118,9 @@ class stripPlot(QWidget):
         self.plotThread.timeout.connect(lambda: self.plotWidget.date_axis.linkedViewChanged(self.plotWidget.date_axis.linkedView()))
         self.plotWidget.plot.vb.sigXRangeChanged.connect(self.setPlotScaleLambda)
         logger.debug('stripPlot initiated!')
+
+    def setHistogramBins(self):
+        self.plotWidget.numberBins = int(self.histogramBinsEdit.text())
 
     def setSubtractMean(self):
         self.subtractMean = self.histogramCheckbox.isChecked()
@@ -197,37 +207,26 @@ class stripPlot(QWidget):
                 logger.debug('Histogram enabled')
             if FFT:
                 logger.debug('FFTPlot enabled')
-            if scatter:
-                logger.debug('ScatterPlot enabled')
-            if scatter:
+            for name in self.records:
+                if self.records[name]['parent'] == self:
+                    self.plot.removeItem(self.records[name]['curve'].curve)
+                    self.plot.addItem(self.records[name]['curve'].curve)
+                    self.records[name]['curve'].update()
+            if FFT:
+                self.plot.updateSpectrumMode(True)
+            else:
+                self.plot.updateSpectrumMode(False)
+            if not linear:
                 self.plotWidget.date_axis.dateTicksOn = False
-                self.plotWidget.updateScatterPlot()
                 self.plot.enableAutoRange()
             else:
-                try:
-                    self.plotWidget.legend.scene().removeItem(self.plotWidget.legend)
-                except:
-                    pass
-                # self.plot.clear()
                 for name in self.records:
                     if self.records[name]['parent'] == self:
-                        self.plot.addItem(self.records[name]['curve'].curve)
-                self.plot.updateSpectrumMode(False)
-                for name in self.records:
-                    if self.records[name]['parent'] == self:
-                        self.records[name]['curve'].update()
-                if FFT:
-                    self.plot.updateSpectrumMode(True)
-                else:
-                    self.plot.updateSpectrumMode(False)
-                if not linear:
-                    self.plotWidget.date_axis.dateTicksOn = False
-                    self.plot.enableAutoRange()
-                else:
-                    self.plotWidget.date_axis.dateTicksOn = True
-                    self.plot.disableAutoRange()
-                    self.plotWidget.setPlotScale([self.plotWidget.plotRange[0],self.plotWidget.plotRange[1]])
-                    self.plotScaleConnection = True
+                        self.records[name]['curve'].curve.setData({'x': [0], 'y': [0]}, pen='w', stepMode=False)
+                self.plotWidget.date_axis.dateTicksOn = True
+                self.plot.disableAutoRange()
+                self.plotWidget.setPlotScale([self.plotWidget.plotRange[0],self.plotWidget.plotRange[1]])
+                self.plotScaleConnection = True
 
     def start(self, timer=1000):
         self.plotThread.start(timer)
@@ -252,12 +251,13 @@ class stripPlot(QWidget):
             # self.records[name]['record'] = signalrecord
 
     def plotUpdate(self):
+        autorangeX, autorangeY = self.plotWidget.vb.state['autoRange']
+        # self.plotWidget.plot.disableAutoRange()
+        # self.plotWidget.plot.clear()
         self.plotWidget.currentPlotTime = time.time()
         for name in self.records:
             self.records[name]['curve'].update()
-        if time.time() > self.plotWidget.currentPlotTime:
-            # print 'freq = ', 1.0/(time.time()-self.plotWidget.currentPlotTime)
-            pass
+        # self.plotWidget.vb.enableAutoRange(x=autorangeX, y=autorangeY)
 
     def removeSignal(self,name):
         self.records[name]['record'].stop()

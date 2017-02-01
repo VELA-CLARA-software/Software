@@ -8,6 +8,7 @@ from bisect import bisect_left, bisect_right
 import peakutils
 from itertools import compress
 import win32clipboard
+# sys.tracebacklimit = 0
 
 ''' Some nice colours for the plots '''
 tableau20 = [(31, 119, 180), (174, 199, 232), (255, 127, 14), (255, 187, 120),
@@ -31,12 +32,12 @@ class CAxisTime(pg.AxisItem):
         super(CAxisTime, self).__init__(parent=parent, orientation=orientation, linkView=linkView)
         self.dateTicksOn = True
         self.autoscroll = True
-        self.fixedtimepoint = time.time()
+        self.fixedtimepoint = round(time.time(),2)
 
     def tickStrings(self, values, scale, spacing):
         if self.dateTicksOn:
             if self.autoscroll:
-                reftime = time.time()
+                reftime = round(time.time(),2)
             else:
                 reftime = self.fixedtimepoint
             strns = []
@@ -71,10 +72,11 @@ class generalPlot(pg.PlotWidget):
         self.legend = pg.LegendItem(size=(100,100))
         self.legend.setParentItem(None)
         self.globalPlotRange = [-10,0]
-        self.currentPlotTime = time.time()
+        self.currentPlotTime = round(time.time(),2)
         self.plotWidget = pg.GraphicsLayoutWidget()
         self.label = pg.LabelItem(justify='right')
         self.plotWidget.addItem(self.label)
+        self.numberBins = 50
 
     ''' This creates a PyQtGraph plot object (self.plot) and instantiates the bottom axis to be a CAxisTime axis '''
     def createPlot(self):
@@ -82,6 +84,7 @@ class generalPlot(pg.PlotWidget):
         self.plot = self.plotWidget.addPlot(row=0,col=0)
         self.plot.mouseOver = False
         self.plot.scene().installEventFilter(self)
+
         nontimeaxisItems = {'bottom': self.plot.axes['bottom']['item'], 'top': self.plot.axes['top']['item'], 'left': self.plot.axes['left']['item'], 'right': self.plot.axes['right']['item']}
         axisItems = {'bottom': self.date_axis, 'top': self.plot.axes['top']['item'], 'left': self.plot.axes['left']['item'], 'right': self.plot.axes['right']['item']}
         self.plot.axes = {}
@@ -140,6 +143,8 @@ class generalPlot(pg.PlotWidget):
             self.hLine.setValue(self.mousePoint.y())
             self.hvLineText.setText(self.statusText)
             self.hvLineText.setPos(self.mousePoint.x(),self.mousePoint.y())
+            # self.plot.setLabel(axis='bottom',text='<span style="color: red;">'+self.statusTextX+'</span>')
+            # self.plot.setLabel(axis='left',text='<span style="color: red;">'+self.statusTextY+'</span>')
             vr = self.hLine.viewRect()
             if vr is not None:
                 if vr.center().y() > 0:
@@ -173,13 +178,17 @@ class generalPlot(pg.PlotWidget):
             self.mousePoint = self.vb.mapSceneToView(self.mousePos)
             if self.linearPlot:
                 if self.autoscroll:
-                    reftime = time.time()
+                    reftime = round(time.time(),2)
                 else:
                     reftime = self.fixedtimepoint
-                self.statusText = "{"+time.strftime("%H:%M:%S", time.localtime(reftime + self.mousePoint.x()))+", %0.3f}" % (self.mousePoint.y())
-                self.statusTextClipboard = "{\""+time.strftime("%H:%M:%S", time.localtime(reftime + self.mousePoint.x()))+"\", %0.3f}" % (self.mousePoint.y())
+                self.statusTextX = time.strftime("%H:%M:%S", time.localtime(reftime + self.mousePoint.x()))
+                self.statusTextY = "%0.3f" % (self.mousePoint.y())
+                self.statusText = "{"+self.statusTextX+", "+self.statusTextY+"}"
+                self.statusTextClipboard = "{\""+self.statusTextX+"\", "+self.statusTextY+"}"
             else:
-                self.statusTextClipboard = self.statusText = "{%0.3f, %0.3f}" % (self.mousePoint.x(), self.mousePoint.y())
+                self.statusTextX = "%0.3f" % (self.mousePoint.x())
+                self.statusTextY = "%0.3f" % (self.mousePoint.y())
+                self.statusTextClipboard = self.statusText = "{"+self.statusTextX+", "+self.statusTextY+"}"
         self.updateLines()
 
     ''' Helper function to add a curve to the plot '''
@@ -189,9 +198,9 @@ class generalPlot(pg.PlotWidget):
 
     ''' Sets the timescale of the plotting data '''
     def setPlotScale(self, timescale, padding=0.0):
+        self.plotRange = timescale
+        self.globalPlotRange = list(timescale)
         if self.linearPlot:
-            self.plotRange = timescale
-            self.globalPlotRange = list(timescale)
             self.plot.vb.setRange(xRange=self.globalPlotRange, padding=0)
         self.changePlotScale.emit(self.globalPlotRange)
 
@@ -231,46 +240,46 @@ class generalPlot(pg.PlotWidget):
             # self.globalPlotRange = self.plot.globalPlotRange
             self.doingPlot = False
             self.curve = self.plot.plot.plot()
+            self.lines = self.MultiLine(np.array([[0]]),np.array([[0]]),pen='w')
 
         def addCurve(self):
             return self.curve
 
         ''' This updates the curve points based on the plot type and using the data from the timefilter function '''
         def updateData(self, data, pen):
+            self.plot.plot.removeItem(self.lines)
             if len(data) > 1 and not self.plot.scatterPlot:
+                x,y = np.transpose(data)
                 if self.plot.histogramPlot:
-                    x,y = np.transpose(data)
-                    y,x = np.histogram(y, bins=50)
-                else:
-                    x,y = np.transpose(data)
-                if self.plot.histogramPlot:
+                    y2,x2 = np.histogram(y, bins=self.plot.numberBins)
                     if(self.plot.stripplot.histogramCheckbox.isChecked()):
-                        self.curve.setData({'x': x-np.mean(x), 'y': y}, pen=pen, stepMode=True, fillLevel=0)
+                        self.curve.setData({'x': x2-np.mean(x2), 'y': y2}, pen=pen, stepMode=True, fillLevel=0)
                     else:
-                        self.curve.setData({'x': x, 'y': y}, pen=pen, stepMode=True, fillLevel=0)
+                        self.curve.setData({'x': x2, 'y': y2}, pen=pen, stepMode=True, fillLevel=0, fillBrush=pen)
                 elif self.plot.FFTPlot:
-                    self.curve.setData({'x': x, 'y': y}, pen=pen, stepMode=False)
-                    if(len(self.curve.yDisp) > 0):
-                        indexes = peakutils.indexes(self.curve.yDisp, thres=0.75, min_dist=1)
-                        for index in indexes:
-                            pass# print self.curve.xDisp[index]
+                    self.curve.setData({'x': x, 'y': y}, pen=pen, stepMode=False, fillLevel=None)
                     self.plot.updateSpectrumMode(True)
                 else:
-                    self.curve.setData(x=x, y=y, pen=pen, stepMode=False)
+                    # self.curve.setData({'x': [0], 'y': [0]}, pen=pen, stepMode=False)
+                    x = np.array([x])
+                    y = np.array([y])
+                    self.lines = self.MultiLine(x,y,pen=pen)
+                    self.plot.plot.addItem(self.lines)
 
         ''' This filters the data based on the plotrange of the current viewbox. For small datasets this is ~pointless, but for moderately large datasets
         and bigger it makes a noticeable speed up, despite the functions built in to PyQtGraph'''
-        def timeFilter(self, datain, timescale):
+        def timeFilter(self, datain, timescale=None):
             if self.plot.autoscroll:
-                currenttime = time.time()
+                currenttime = round(time.time(),2)
             else:
                 currenttime =  self.plot.currenttime
-            tdata = np.array(list(map(lambda x: [x[0]-currenttime, x[1]], datain)))
-            if len(tdata) > 0:
-                times, data = zip(*tdata)
+            if len(datain) > 0:
+                times = np.array(datain)[:,0] - currenttime
+                data = np.array(datain)[:,1]
+                tdata = zip(times, data)
                 if times[0] > self.plot.globalPlotRange[0] and times[-1] < self.plot.globalPlotRange[1]:
                     # print 'All Data!'
-                    return tdata
+                    return list(list(tdata))
                 else:
                     if len(times) > 0:
                         idx = (np.array(times) > self.plot.globalPlotRange[0]) * (np.array(times) < self.plot.globalPlotRange[1])
@@ -278,11 +287,13 @@ class generalPlot(pg.PlotWidget):
                         datacut = list(compress(data, idx))
                     finaldata = zip(*(timescut,datacut))
                     return finaldata
+                return list(list(finaldata))
             else:
-                return tdata
+                return datain
+
 
         ''' simple helper function to run the timeFilter function'''
-        def filterRecord(self, data, timescale):
+        def filterRecord(self, data, timescale=None):
             return list(list(self.timeFilter(data, timescale)))
 
         ''' helper function to clear a curves points '''
@@ -295,14 +306,143 @@ class generalPlot(pg.PlotWidget):
                 self.doingPlot = True
                 if self.records[self.name]['ploton']:
                     # start = time.clock()
-                    self.plotData = self.filterRecord(self.records[self.name]['data'],self.plot.globalPlotRange)
-                    if len(self.plotData) > 100*self.plot.decimateScale:
-                        decimationfactor = int(np.floor(len(self.plotData)/self.plot.decimateScale))
-                        self.plotData = self.plotData[0::decimationfactor]
-                        self.updateData(self.plotData, self.records[self.name]['pen'])
-                    else:
-                        self.updateData(self.plotData, self.records[self.name]['pen'])
+                    self.plotData = self.timeFilter(self.records[self.name]['data'], self.plot.globalPlotRange)
+                    # if len(self.plotData) > 100*self.plot.decimateScale:
+                    #     decimationfactor = int(np.floor(len(self.plotData)/self.plot.decimateScale))
+                    #     self.plotData = self.plotData[0::decimationfactor]
+                    #     self.updateData(self.plotData, self.records[self.name]['pen'])
+                    # else:
+                    self.updateData(self.plotData, self.records[self.name]['pen'])
                 else:
                     self.clear()
                 self.doingPlot = False
             self.plot.plotUpdated.emit()
+
+        class MultiLine(pg.QtGui.QGraphicsPathItem):
+            def __init__(self, x, y, pen):
+                """x and y are 2D arrays of shape (Nplots, Nsamples)"""
+                connect = np.ones(x.shape, dtype=bool)
+                connect[:,-1] = 0 # don't draw the segment between each trace
+                self.path = pg.arrayToQPath(x.flatten(), y.flatten(), connect.flatten())
+                pg.QtGui.QGraphicsPathItem.__init__(self, self.path)
+                self.setPen(pg.mkPen(pen))
+            def shape(self): # override because QGraphicsPathItem.shape is too expensive.
+                return pg.QtGui.QGraphicsItem.shape(self)
+            def boundingRect(self):
+                return self.path.boundingRect()
+
+    # ''' This is the curve class which enables plotting on a plotting object. Making it a class eases control of the different options for multiple curves'''
+    # class curve(QObject):
+    #     def __init__(self, record, plot, name):
+    #         QObject.__init__(self)
+    #         self.plotScale = None
+    #         self.name = name
+    #         self.plot = plot
+    #         self.records = record
+    #         # self.globalPlotRange = self.plot.globalPlotRange
+    #         self.doingPlot = False
+    #         self.curve = self.plot.plot.plot()
+    #         self.lines = self.MultiLine(np.array([[0]]),np.array([[0]]),pen='w')
+    #
+    #     def addCurve(self):
+    #         return self.curve
+    #
+    #     ''' This updates the curve points based on the plot type and using the data from the timefilter function '''
+    #     def updateData(self, data, pen):
+    #         # self.plot.plot.removeItem(self.lines)
+    #         if len(data) > 1 and not self.plot.scatterPlot:
+    #             x,y = np.transpose(data)
+    #             if self.plot.histogramPlot:
+    #                 y2,x2 = np.histogram(y, bins=50)
+    #                 if(self.plot.stripplot.histogramCheckbox.isChecked()):
+    #                     print '1'
+    #                     self.curve.setData(x=x2-np.mean(x2), y=y2, pen=pen, stepMode=True, fillLevel=0)
+    #                     print '2'
+    #                 else:
+    #                     print '1'
+    #                     print 'x.shape = ', x2.shape
+    #                     print 'y.shape = ', y2.shape
+    #                     self.curve.clear()
+    #                     self.curve.setData(x=x2, y=y2, pen=pen, stepMode=True, fillLevel=0)
+    #                     print '2'
+    #             elif self.plot.FFTPlot:
+    #                 self.curve.setData({'x': x, 'y': y}, pen=pen, stepMode=False)
+    #                 # if(len(self.curve.yDisp) > 0):
+    #                 #     indexes = peakutils.indexes(self.curve.yDisp, thres=0.75, min_dist=1)
+    #                 #     for index in indexes:
+    #                 #         pass# print self.curve.xDisp[index]
+    #                 self.plot.updateSpectrumMode(True)
+    #             else:
+    #                 self.curve.setData(x=x, y=y, pen=pen, stepMode=False)
+    #                 # x = np.array([x])
+    #                 # y = np.array([y])
+    #                 # self.lines = self.MultiLine(x,y,pen=pen)
+    #                 # self.plot.plot.addItem(self.lines)
+    #
+    #     ''' This filters the data based on the plotrange of the current viewbox. For small datasets this is ~pointless, but for moderately large datasets
+    #     and bigger it makes a noticeable speed up, despite the functions built in to PyQtGraph'''
+    #     def timeFilter(self, datain, timescale=None):
+    #         if self.plot.autoscroll:
+    #             currenttime = time.time()
+    #         else:
+    #             currenttime =  self.plot.currenttime
+    #         # start = time.time()
+    #         times = np.array(datain)[:,0] - currenttime
+    #         # data = np.array(datain)[:,1]
+    #         tdata = zip(times, np.array(datain)[:,1])
+    #         # print 'timeFilter = ', time.time() - start
+    #         # if len(tdata) > 0:
+    #         #     times, data = zip(*tdata)
+    #         #     if times[0] > self.plot.globalPlotRange[0] and times[-1] < self.plot.globalPlotRange[1]:
+    #         #         # print 'All Data!'
+    #         #         return tdata
+    #         #     else:
+    #         #         if len(times) > 0:
+    #         #             idx = (np.array(times) > self.plot.globalPlotRange[0]) * (np.array(times) < self.plot.globalPlotRange[1])
+    #         #             timescut = list(compress(times, idx))
+    #         #             datacut = list(compress(data, idx))
+    #         #         finaldata = zip(*(timescut,datacut))
+    #         #         return finaldata
+    #         # else:
+    #         return tdata
+    #
+    #     ''' simple helper function to run the timeFilter function'''
+    #     def filterRecord(self, data, timescale=None):
+    #         return list(list(self.timeFilter(data, timescale)))
+    #         # return self.timeFilter(data, timescale)
+    #
+    #     ''' helper function to clear a curves points '''
+    #     def clear(self):
+    #         self.curve.clear()
+    #
+    #     ''' Wrapper function which calls timefilter and updateData'''
+    #     def update(self):
+    #         if not self.plot.paused and not self.doingPlot:
+    #             self.doingPlot = True
+    #             if self.records[self.name]['ploton']:
+    #                 # start = time.clock()
+    #                 self.plotData = self.filterRecord(self.records[self.name]['data'])
+    #                 # self.plotData = self.records[self.name]['data']
+    #                 # if len(self.plotData) > 100*self.plot.decimateScale:
+    #                 #     decimationfactor = int(np.floor(len(self.plotData)/self.plot.decimateScale))
+    #                 #     self.plotData = self.plotData[0::decimationfactor]
+    #                 #     self.updateData(self.plotData, self.records[self.name]['pen'])
+    #                 # else:
+    #                 self.updateData(self.plotData, self.records[self.name]['pen'])
+    #             else:
+    #                 self.clear()
+    #             self.doingPlot = False
+    #         self.plot.plotUpdated.emit()
+    #
+    #     class MultiLine(pg.QtGui.QGraphicsPathItem):
+    #         def __init__(self, x, y, pen):
+    #             """x and y are 2D arrays of shape (Nplots, Nsamples)"""
+    #             connect = np.ones(x.shape, dtype=bool)
+    #             connect[:,-1] = 0 # don't draw the segment between each trace
+    #             self.path = pg.arrayToQPath(x.flatten(), y.flatten(), connect.flatten())
+    #             pg.QtGui.QGraphicsPathItem.__init__(self, self.path)
+    #             self.setPen(pg.mkPen(pen))
+    #         def shape(self): # override because QGraphicsPathItem.shape is too expensive.
+    #             return pg.QtGui.QGraphicsItem.shape(self)
+    #         def boundingRect(self):
+    #             return self.path.boundingRect()

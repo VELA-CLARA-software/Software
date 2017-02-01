@@ -2,14 +2,15 @@ import sys, time, os
 sys.path.append("..")
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
+from PyQt4 import QtTest
 import pyqtgraph as pg
 import striptool as striptool
 import numpy as np
 ''' Load loggerWidget library (comment out if not available) '''
-sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\\..\\..\\loggerWidget\\')
-import loggerWidget as lw
-import logging
-logger = logging.getLogger(__name__)
+# sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\\..\\..\\loggerWidget\\')
+# import loggerWidget as lw
+# import logging
+# logger = logging.getLogger(__name__)
 
 seconds_per_unit = {"s": 1, "m": 60, "h": 3600, "d": 86400, "w": 604800}
 
@@ -35,17 +36,17 @@ class striptool_Demo(QMainWindow):
         self.setStatusBar(self.statusBar)
 
         ''' Initiate logger (requires loggerWidget - comment out if not available)'''
-        self.logwidget1 = lw.loggerWidget([logger,striptool.logger])
+        # self.logwidget1 = lw.loggerWidget([logger,striptool.logger])
 
         ''' These are some options for pyqtgraph that make the graph black-on-white, and turn on antialiasing, which is nicer on the eye '''
-        pg.setConfigOptions(antialias=True)
+        # pg.setConfigOptions(antialias=True)
         pg.setConfigOption('background', 'w')
         pg.setConfigOption('foreground', 'k')
 
         ''' initialise an instance of the stripPlot Widget '''
-        self.sp = striptool.stripPlot(plotRateBar=False)
+        self.sp = striptool.stripPlot(plotRateBar=True)
         self.sp2 = striptool.stripPlot(plotRateBar=False)
-        self.sp3 = striptool.stripPlot(plotRateBar=False)
+        self.sp3 = striptool.stripPlot(plotRateBar=True)
 
         ''' This sets the signal length at which the system starts decimating the data to speed up plotting.
             For a 2*DecimateLength signal, the decimation factor would be 2.
@@ -59,8 +60,10 @@ class striptool_Demo(QMainWindow):
             The 'pen' argument sets the color of the curves, but can be changed in the GUI
                 - see <http://www.pyqtgraph.org/documentation/style.html>'''
         self.sp.addSignal(name='signal1',pen='r', timer=1.0/10.0, function=lambda: self.createRandomSignal(-0.5))
-        self.sp2.addSignal(name='signal2',pen='g', timer=1.0/10.0, function=lambda: self.createRandomSignal(0.5))
-        self.sp3.addSignal(name='signal3',pen='b', timer=1.0/50.0, function=lambda: self.createRandomSignal(0.5))
+        self.sp2.addSignal(name='signal1',pen='r', timer=1.0/10.0, function=lambda: self.createRandomSignal(-3))
+        self.sp2.addSignal(name='signal2',pen='g', timer=1.0/10.0, function=lambda: self.createRandomSignal(0.))
+        self.sp2.addSignal(name='signal3',pen='b', timer=1.0/10.0, function=lambda: self.createRandomSignal(4))
+        self.sp3.addSignal(name='signal3',pen='b', timer=1.0/10.0, function=lambda: self.createRandomSignal(0.5))
 
         ''' To remove a signal, reference it by name or use the in-built controls'''
         # sp.removeSignal(name='signal1')
@@ -92,7 +95,7 @@ class striptool_Demo(QMainWindow):
         self.tab.currentChanged.connect(lambda x: self.pausePlots(self.tab))
 
         ''' Add loggerWidget Tab (requires loggerWidget - comment out if not available)'''
-        self.tab.addTab(self.logwidget1,"Log")
+        # self.tab.addTab(self.logwidget1,"Log")
 
         ''' This starts the plotting timer (by default at 1 Hz) '''
         self.sp.start()
@@ -102,7 +105,12 @@ class striptool_Demo(QMainWindow):
         ''' modify the plot scale to 10 secs '''
         self.sp.setPlotScale(60)
         self.sp2.setPlotScale(60)
-        self.sp3.setPlotScale(600)
+        self.sp3.setPlotScale(60)
+
+        # self.sp2.setPlotType(FFT=True)
+        # self.sp3.setPlotType(FFT=False)
+        self.sp2.setPlotRate(1)
+        self.sp3.setPlotRate(1)
 
         ''' Display the Qt App '''
         self.setCentralWidget(self.tab)
@@ -141,11 +149,17 @@ class striptool_Demo(QMainWindow):
         self.statusBar.clearMessage()
     	self.statusBar.showMessage(text,2000)
 
+    def testSleep(self):
+        import time
+        QtTest.QTest.qWait(1000*100)
+        exit()
+
 def main():
    app = QApplication(sys.argv)
    ex = striptool_Demo()
    ex.show()
    ex.pausePlots(ex.tab)
+   # ex.testSleep()
    sys.exit(app.exec_())
 
 if __name__ == '__main__':
