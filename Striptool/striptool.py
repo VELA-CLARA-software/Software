@@ -252,12 +252,12 @@ class stripPlot(QWidget):
 
     def plotUpdate(self):
         autorangeX, autorangeY = self.plotWidget.vb.state['autoRange']
-        # self.plotWidget.plot.disableAutoRange()
+        self.plotWidget.plot.disableAutoRange()
         # self.plotWidget.plot.clear()
         self.plotWidget.currentPlotTime = time.time()
         for name in self.records:
             self.records[name]['curve'].update()
-        # self.plotWidget.vb.enableAutoRange(x=autorangeX, y=autorangeY)
+        self.plotWidget.vb.enableAutoRange(x=autorangeX, y=autorangeY)
 
     def removeSignal(self,name):
         self.records[name]['record'].stop()
