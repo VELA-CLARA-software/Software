@@ -15,7 +15,7 @@ class attCalModel():
 		self.pvList = pvList
 		self.numShots = numShots
 		self.bpmData = {name:[[] for i in range(self.numShots)] for name in self.pvList}
-		self.bpmCont.monitorMultipleDataForNShots(long(self.numShots), self.pvList)
+		self.bpmCont.monitorDataForNShots(long(self.numShots), self.pvList)
 		for i in self.pvList:
 			while self.bpmCont.isMonitoringBPMData(str(i)):
 				time.sleep(0.01)
