@@ -182,5 +182,5 @@ class scatterPlotPlot(pg.PlotWidget):
                 x2,y = zip(*data2)
                 self.scatterPlot.setData(x=x, y=y)
             self.doingPlot = False
-            if not self.paused and time.time() > start:
-                print 'freq = ', 1.0/(time.time()-start)
+            # if not self.paused and time.time() > start:
+            #     print 'freq = ', 1.0/(time.time()-start)

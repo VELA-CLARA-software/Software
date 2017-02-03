@@ -20,6 +20,24 @@ tableau20 = [(31, 119, 180), (174, 199, 232), (255, 127, 14), (255, 187, 120),
 ''' This just turns the colours into QColor specifications '''
 Qtableau20 = [QColor(i,j,k) for (i,j,k) in tableau20]
 
+def takeClosestPosition(xvalues, myList, myNumber):
+    """
+    Assumes myList is sorted. Returns closest value to myNumber.
+
+    If two numbers are equally close, return the smallest number.
+    """
+    pos = bisect_left(xvalues, myNumber)
+    if pos == 0:
+        return [0,myList[0]]
+    if pos == len(myList):
+        return [-1,myList[-1]]
+    before = myList[pos-1]
+    after = myList[pos]
+    if abs(after[0] - myNumber) < abs(myNumber - before[0]):
+       return [pos,after]
+    else:
+       return [pos-1,before]
+
 ''' This class is a PyQtGraph axis which modifies the data points from "seconds before the current time" into Hours:Mins:Secs format.
 We only want to do this for linear plots, so it is turned off in the FFT and Histogram plots. Also, if we turn "autoscroll" off, the
 time is relative to the moment we switched it off.
@@ -277,7 +295,7 @@ class generalPlot(pg.PlotWidget):
     ''' This creates a PyQtGraph plot object (self.plot) and instantiates the bottom axis to be a CAxisTime axis '''
     def createPlot(self):
         self.date_axis = CAxisTime(orientation = 'bottom')
-        self.plot = self.plotWidget.addPlot(row=0,col=0)
+        self.plot = self.plotWidget.addPlot(row=0,col=0, autoDownsample=True, clipToView=True)
         self.plot.mouseOver = False
         self.plot.scene().installEventFilter(self)
 
@@ -447,11 +465,6 @@ class generalPlot(pg.PlotWidget):
 
         ''' This updates the curve points based on the plot type and using the data from the timefilter function '''
         def updateData(self, data, pen):
-            self.plot.plot.removeItem(self.lines)
-            for i in range(len(self.fftTextLabels)):
-                for j in range(len(self.fftTextLabels[i])):
-                    self.plot.plot.removeItem(self.fftTextLabels[i][j])
-            self.fftTextLabels = []
             if len(data) > 1 and not self.plot.scatterPlot:
                 x,y = np.transpose(data)
                 if self.plot.histogramPlot:
@@ -474,12 +487,27 @@ class generalPlot(pg.PlotWidget):
                                 self.plot.plot.addItem(fftTextArrow)
                     self.plot.updateSpectrumMode(True)
                 else:
-                    # self.curve.setData({'x': [0], 'y': [0]}, pen=pen, stepMode=False)
-                    # x = np.array([x])
-                    # y = np.array([y])
-                    self.lines = self.MultiLine(x,y,pen=pen)
+                    if len(x) > self.plot.decimateScale:
+                        print 'decimate = ', len(x)
+                        decimationfactor = int(np.floor(len(x)/self.plot.decimateScale))
+                        self.lines = self.MultiLine(x[::decimationfactor],y[::decimationfactor],pen=pen)
+                    else:
+                        self.lines = self.MultiLine(x, y, pen=pen)
                     self.plot.plot.addItem(self.lines)
 
+        def func1(self, list):
+            # bisect_left(xvalues, myNumber)
+            for x in list:
+                if x[0] > (self.currenttime+self.plot.globalPlotRange[0]) :
+                    yield x
+                else:
+                    break
+        def func2(self, list):
+            for x in list:
+                if x[0] < (self.currenttime+self.plot.globalPlotRange[1]):
+                    yield x
+                else:
+                    break
         ''' This filters the data based on the plotrange of the current viewbox. For small datasets this is ~pointless, but for moderately large datasets
         and bigger it makes a noticeable speed up, despite the functions built in to PyQtGraph'''
         def timeFilter(self, datain, timescale=None):
@@ -487,15 +515,19 @@ class generalPlot(pg.PlotWidget):
                 self.currenttime = round(time.time(),2)
             else:
                 self.currenttime =  self.plot.currenttime
+            datain = np.array(datain)
             if len(datain) > 0:
-                if True or (datain[0][0] > (self.currenttime+self.plot.globalPlotRange[0]) and datain[-1][0] <=  (self.currenttime+self.plot.globalPlotRange[1])):
-                    return np.array(datain)
+                if (datain[0][0] > (self.currenttime+self.plot.globalPlotRange[0]) and datain[-1][0] <=  (self.currenttime+self.plot.globalPlotRange[1])):
+                    return datain
                 else:
-                    if len(datain) > 0:
-                        datain = np.array(datain)
-                        idx = (datain[:,0] > (self.currenttime+self.plot.globalPlotRange[0])) * (datain[:,0] <= (self.currenttime+self.plot.globalPlotRange[1]))
-                        finaldata = np.array(list(compress(datain, idx)))
-                    return finaldata
+                    if datain[-1][0] <=  (self.currenttime+self.plot.globalPlotRange[1]):
+                        datain = datain[bisect_left(datain[:,0], self.currenttime+self.plot.globalPlotRange[0]):-1]
+                    else:
+                        if datain[0][0] >= (self.currenttime+self.plot.globalPlotRange[0]):
+                            datain = datain[0:bisect_left(datain[:,0], self.currenttime+self.plot.globalPlotRange[1])]
+                        else:
+                            datain = datain[bisect_left(datain[:,0], self.currenttime+self.plot.globalPlotRange[0]):bisect_left(datain[:,0], self.currenttime+self.plot.globalPlotRange[1])]
+                    return datain
             else:
                 return datain
 
@@ -505,16 +537,18 @@ class generalPlot(pg.PlotWidget):
 
         ''' Wrapper function which calls timefilter and updateData'''
         def update(self):
+            self.plot.plot.removeItem(self.lines)
+            for i in range(len(self.fftTextLabels)):
+                for j in range(len(self.fftTextLabels[i])):
+                    self.plot.plot.removeItem(self.fftTextLabels[i][j])
+            self.fftTextLabels = []
             if not self.plot.paused and not self.doingPlot:
                 self.doingPlot = True
                 if self.records[self.name]['ploton']:
-                    # start = time.clock()
                     self.plotData = self.timeFilter(self.records[self.name]['data'], self.plot.globalPlotRange)
-                    if len(self.plotData) > self.plot.decimateScale:
-                        decimationfactor = int(np.floor(len(self.plotData)/self.plot.decimateScale))
-                        self.plotData = self.plotData[0::decimationfactor]
-                    self.plotData[:,0] = self.plotData[:,0] - self.currenttime
-                    self.updateData(self.plotData, self.records[self.name]['pen'])
+                    if len(self.plotData) > 0:
+                        self.plotData[:,0] = self.plotData[:,0] - self.currenttime
+                        self.updateData(self.plotData, self.records[self.name]['pen'])
                 else:
                     self.clear()
                 self.doingPlot = False

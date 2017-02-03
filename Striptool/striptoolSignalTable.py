@@ -10,23 +10,6 @@ from PyQt4 import QtCore
 from PyQt4.QtCore import Qt
 import yaml
 
-sys.path.append('\\\\fed.cclrc.ac.uk\\Org\\NLab\ASTeC\\Projects\\VELA\\Software\\VELA_CLARA_PYDs\\bin\\Release')
-sys.path.append('\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Software\\VM-Controllers\\VELA-CLARA-Controllers\\Controllers\\VELA\INJECTOR\\velaINJBeamPositionMonitors\\bin\\Release')
-import VELA_CLARA_MagnetControl as mag
-import velaINJBeamPositionMonitorControl as vbpmc
-
-#
-# elements=np.array(magnetcontroller.getMagnetNames());
-# quads = filter(lambda name: magnetcontroller.isAQuad(name), elements)
-# dipoles = filter(lambda name: magnetcontroller.isADip(name), elements)
-# corrs =  filter(lambda name: magnetcontroller.isACor(name), elements)
-# bpms = bpmcontroller.getBPMNames()
-
-magnetcontroller = ''
-quads = ['QUAD01', 'QUAD02', 'QUAD03', 'QUAD04', 'QUAD05', 'QUAD06', 'QUAD07', 'QUAD08', 'QUAD09', 'QUAD10', 'QUAD11', 'QUAD12', 'QUAD13', 'QUAD14', 'QUAD15']
-dipoles = ['DIP01', 'DIP02', 'DIP03']
-corrs = ['HCOR01', 'HCOR02', 'HCOR03', 'HCOR04', 'HCOR05', 'HCOR06', 'HCOR07', 'HCOR08', 'HCOR09', 'HCOR10', 'HCOR11', 'VCOR01', 'VCOR02', 'VCOR03', 'VCOR04', 'VCOR05', 'VCOR06', 'VCOR07', 'VCOR08', 'VCOR09', 'VCOR10', 'VCOR11']
-
 stream = file('settings.yaml', 'r')
 magnets = yaml.load(stream)
 
@@ -101,12 +84,11 @@ class colourPickerButton(QtGui.QPushButton):
         self.__mainForm.emit(QtCore.SIGNAL("colourPickerButtonPushed(PyQt_PyObject)"), self.__comboID)
 
 class signalTable(QWidget):
-    def __init__(self, parent = None):
+    def __init__(self, parent = None, MagnetController=None, BPMController=None):
         super(signalTable, self).__init__(parent)
         self.setMaximumHeight(100)
-        self.magInit = mag.init()
-        self.magnets = self.magInit.virtual_VELA_INJ_Magnet_Controller()
-        self.bpms = vbpmc.velaINJBeamPositionMonitorController(False, False)
+        self.magnets = MagnetController
+        self.bpms = BPMController
         self.stripTool = parent
         self.rowNumber = 0
         self.penColors = {}

@@ -79,7 +79,8 @@ class stripLegend(pg.TreeWidget):
         self.newRowNumber += 1
 
     def formatCurveData(self, name):
-        return [(str(time.strftime('%Y/%m/%d', time.localtime(x[0]))),str(datetime.datetime.fromtimestamp(x[0]).strftime('%H:%M:%S.%f')),x[1]) for x in self.records[name]['data']]
+        # return [(str(time.strftime('%Y/%m/%d', time.localtime(x[0]))),str(datetime.datetime.fromtimestamp(x[0]).strftime('%H:%M:%S.%f')),x[1]) for x in self.records[name]['data']]
+        return self.records[name]['data']
 
     def saveCurve(self, name, saveFileName=None):
         if saveFileName == None:
@@ -87,7 +88,8 @@ class stripLegend(pg.TreeWidget):
         filename, file_extension = os.path.splitext(saveFileName)
         saveData = self.formatCurveData(name)
         if file_extension == '.csv':
-            fmt='%s,%s,%.18e'
+            # fmt='%s,%s,%.18e'
+            fmt='%.11e,%.6e'
             target = open(saveFileName,'w')
             for row in saveData:
                 target.write((fmt % tuple(row))+'\n')
