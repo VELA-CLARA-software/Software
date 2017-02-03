@@ -31,9 +31,22 @@ class striptool_Demo(QMainWindow):
     def __init__(self, parent = None):
         super(striptool_Demo, self).__init__(parent)
 
+        stdicon = self.style().standardIcon
+        style = QStyle
+        exitAction = QAction('&Exit', self)
+        exitAction.setShortcut('Ctrl+Q')
+        exitAction.setStatusTip('Exit application')
+        exitAction.triggered.connect(qApp.quit)
+
         self.setWindowTitle("striptool_Demo")
         self.statusBar = QStatusBar()
         self.setStatusBar(self.statusBar)
+        menubar = self.menuBar()
+        fileMenu = menubar.addMenu('&File')
+        fileMenu.addAction(exitAction)
+
+        # self.toolbar = self.addToolBar('Exit')
+        # self.toolbar.addAction(exitAction)
 
         ''' Initiate logger (requires loggerWidget - comment out if not available)'''
         # self.logwidget1 = lw.loggerWidget([logger,striptool.logger])
@@ -61,11 +74,11 @@ class striptool_Demo(QMainWindow):
         ''' Add some signals to the striptool - note they call our signal generator at a frequency of 1/timer (100 Hz and 10 Hz in these cases).
             The 'pen' argument sets the color of the curves, but can be changed in the GUI
                 - see <http://www.pyqtgraph.org/documentation/style.html>'''
-        self.sp.addSignal(name='signal1',pen='r', timer=1.0/100.0, function=lambda: self.createRandomSignal(-0.5))
-        self.sp2.addSignal(name='signal1',pen='r', timer=1.0/100.0, function=lambda: self.createRandomSignal(-3))
-        self.sp2.addSignal(name='signal2',pen='g', timer=1.0/100.0, function=lambda: self.createRandomSignal(0.))
-        self.sp2.addSignal(name='signal3',pen='b', timer=1.0/100.0, function=lambda: self.createRandomSignal(4))
-        self.sp3.addSignal(name='signal3',pen='b', timer=1.0/100.0, function=lambda: self.createRandomSignal(0.5))
+        self.sp.addSignal(name='signal1',pen='r', timer=1.0/10.0, function=lambda: self.createRandomSignal(-0.5))
+        self.sp2.addSignal(name='signal1',pen='r', timer=1.0/10.0, function=lambda: self.createRandomSignal(-3))
+        self.sp2.addSignal(name='signal2',pen='g', timer=1.0/10.0, function=lambda: self.createRandomSignal(0.))
+        self.sp2.addSignal(name='signal3',pen='b', timer=1.0/10.0, function=lambda: self.createRandomSignal(4))
+        self.sp3.addSignal(name='signal3',pen='b', timer=1.0/10.0, function=lambda: self.createRandomSignal(0.5))
 
         ''' To remove a signal, reference it by name or use the in-built controls'''
         # sp.removeSignal(name='signal1')
@@ -111,8 +124,8 @@ class striptool_Demo(QMainWindow):
 
         # self.sp2.setPlotType(FFT=True)
         # self.sp3.setPlotType(FFT=False)
-        self.sp2.setPlotRate(10)
-        self.sp3.setPlotRate(10)
+        self.sp2.setPlotRate(1)
+        self.sp3.setPlotRate(1)
 
         ''' Display the Qt App '''
         self.setCentralWidget(self.tab)
@@ -153,7 +166,7 @@ class striptool_Demo(QMainWindow):
 
     def testSleep(self):
         import time
-        for i in range(10):
+        for i in range(100):
             self.sp.setPlotScale((i+1)*60)
             self.sp2.setPlotScale((i+1)*60)
             self.sp3.setPlotScale((i+1)*60)
@@ -162,10 +175,11 @@ class striptool_Demo(QMainWindow):
 
 def main():
    app = QApplication(sys.argv)
+   # app.setStyle(QStyleFactory.create("plastique"))
    ex = striptool_Demo()
    ex.show()
    ex.pausePlots(ex.tab)
-   # ex.testSleep()
+   ex.testSleep()
    sys.exit(app.exec_())
 
 if __name__ == '__main__':
