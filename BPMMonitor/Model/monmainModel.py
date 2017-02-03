@@ -33,7 +33,7 @@ class monModel():
 		self.bpmResolution = {name:[] for name in self.pvList}
 		#This is an option for getting mean values - not currently implemented
 		if self.numShots > 1:
-			self.bpmCont.monitorMultipleDataForNShots(long(self.numShots), self.pvList)
+			self.bpmCont.monitorDataForNShots(long(self.numShots), self.pvList)
 			for i in self.pvList:
 				while self.bpmCont.isMonitoringBPMData(str(i)):
 					time.sleep(0.01)

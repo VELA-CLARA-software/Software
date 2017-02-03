@@ -1,3 +1,4 @@
+#!python2
 # -*- coding: utf-8 -*-
 # encoding=utf8
 """
@@ -13,6 +14,7 @@ import os # clicking URLs on labels, setting env variables
 import numpy as np # handling polynomials
 import re # parsing lattice files
 import scipy.constants # speed of light
+import webbrowser #to get help
 import VELA_CLARA_MagnetControl as MagCtrl
 #Note: to be able to import the magnet controller, I used
 #pip install -e "\\fed.cclrc.ac.uk\Org\NLab\ASTeC\Projects\VELA\Software\VELA_CLARA_PYDs\bin\stage"
@@ -40,7 +42,8 @@ image_credits = {
     'warning.png': 'http://www.iconsdb.com/orange-icons/warning-3-icon.html',
     'error.png': 'http://www.iconsdb.com/soylent-red-icons/warning-3-icon.html',
     'magnet.png': 'https://www.iconfinder.com/icons/15217/magnet_icon',
-    'Open.png': 'https://www.iconfinder.com/icons/146495/data_document_documents_file_files_folder_open_open_file_open_folder_icon#size=24'}
+    'Open.png': 'https://www.iconfinder.com/icons/146495/data_document_documents_file_files_folder_open_open_file_open_folder_icon#size=24',
+    'help.png': 'https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-help-circled-128.png'}
     
 # Define the speed of light. We need this to convert field integral to angle or K.
 # e.g. theta = field_int * c / p[eV/c]
@@ -138,6 +141,10 @@ class Window(QtGui.QMainWindow):
         load_button = QtGui.QPushButton(QtGui.QIcon(pixmap('Open')), 'Load...')
         checkbox_grid.addWidget(load_button)
         load_button.clicked.connect(self.loadButtonClicked)
+
+        help_button = QtGui.QPushButton(QtGui.QIcon(pixmap('help')), '')
+        checkbox_grid.addWidget(help_button)
+        help_button.clicked.connect(self.helpButtonClicked)
 
         layout.addLayout(checkbox_grid)
             
@@ -558,7 +565,10 @@ class Window(QtGui.QMainWindow):
         else:
             message = 'No applicable magnet settings found in {filename}'.format(**locals())
         QtGui.QMessageBox.about(self, 'Magnet table', message)
-            
+ 
+    def helpButtonClicked(self):
+        webbrowser.open('http://projects.astec.ac.uk/VELAManual2/index.php/Magnet_table')
+           
 
     def closeEvent(self, event):
         print('closing')

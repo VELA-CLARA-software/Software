@@ -16,7 +16,7 @@ class dlyModel():
 		self.numShots = numShots
 		self.bpmData = {name:[[] for i in range(self.numShots)] for name in self.pvList}
 		#Uses hardware controller functions to take BPM data and store in dictionaries based on PV name and DLY values
-		self.bpmCont.monitorMultipleDataForNShots(long(self.numShots), self.pvList)
+		self.bpmCont.monitorDataForNShots(long(self.numShots), self.pvList)
 		for i in self.pvList:
 			while self.bpmCont.isMonitoringBPMData(str(i)):
 				time.sleep(0.01)

@@ -33,7 +33,7 @@ class trajModel():
 		self.bpmQData = {name:[] for name in self.pvList}
 		#This is not currently implemented - it will allow averaging of data. This can be used instead if people want
 		if self.numShots > 1:
-			self.bpmCont.monitorMultipleDataForNShots(long(self.numShots), self.pvList)
+			self.bpmCont.monitorDataForNShots(long(self.numShots), self.pvList)
 			for i in self.pvList:
 				while self.bpmCont.isMonitoringBPMData(str(i)):
 					time.sleep(0.01)
