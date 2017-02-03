@@ -8,6 +8,7 @@ from bisect import bisect_left, bisect_right
 import peakutils
 from itertools import compress
 import win32clipboard
+import itertools
 # sys.tracebacklimit = 0
 
 ''' Some nice colours for the plots '''
@@ -56,7 +57,7 @@ class generalPlot(pg.PlotWidget):
     plotUpdated = pyqtSignal()
     statusChanged = pyqtSignal(str)
 
-    def __init__(self, stripplot, parent = None):
+    def __init__(self, stripplot, crosshairs=True, parent = None):
         super(generalPlot, self).__init__(parent=parent)
         self.parent=parent
         self.stripplot = stripplot
@@ -77,6 +78,7 @@ class generalPlot(pg.PlotWidget):
         self.label = pg.LabelItem(justify='right')
         self.plotWidget.addItem(self.label)
         self.numberBins = 50
+        self.crosshairs = crosshairs
 
     ''' This creates a PyQtGraph plot object (self.plot) and instantiates the bottom axis to be a CAxisTime axis '''
     def createPlot(self):
@@ -98,24 +100,25 @@ class generalPlot(pg.PlotWidget):
                 axis.setZValue(-1000)
                 axis.setFlag(axis.ItemNegativeZStacksBehindParent)
         self.plot.showGrid(x=True, y=True)
-        ''' Here we create the two lines that form the crosshairs '''
-        self.vLine = pg.InfiniteLine(angle=90, movable=False, pen=pg.mkPen('r'))
-        self.vLine.setZValue(1000)
-        self.hLine = pg.InfiniteLine(angle=0, movable=False, pen=pg.mkPen('r'))
-        self.hLine.setZValue(1000)
-        ''' this is a lina label for the vertical crosshair line. We modify the horizontal position in the signal functions '''
-        self.hvLineText = pg.InfLineLabel(self.vLine, color='r', fill=(200,200,200,130))
-        self.hvLineText.setZValue(1000)
-        self.plot.addItem(self.vLine, ignoreBounds=True)
-        self.plot.addItem(self.hLine, ignoreBounds=True)
-        self.plot.addItem(self.hvLineText, ignoreBounds=True)
-        ''' define some parameters and instantiate the crosshair signals. We change the crosshairs whenever the sigMouseMoved is triggered,
-        whilst we must update the vertical axis if the plot autoscales, and also we must also update the horizontal axis if the time changes under the crosshairs'''
         self.vb = self.plot.vb
-        self.mousePos = QtCore.QPointF(0.01, 0.01)
-        self.proxyMouseMoved = pg.SignalProxy(self.plot.scene().sigMouseMoved, rateLimit=20, slot=self.mouseMoved)
-        self.proxyAxisChanged = pg.SignalProxy(self.plot.vb.sigYRangeChanged, rateLimit=20, slot=self.axisChanged)
-        self.proxyTimeChanged = pg.SignalProxy(self.plotUpdated, rateLimit=20, slot=self.timeAxisChanged)
+        if self.crosshairs:
+            ''' Here we create the two lines that form the crosshairs '''
+            self.vLine = pg.InfiniteLine(angle=90, movable=False, pen=pg.mkPen('r'))
+            self.vLine.setZValue(1000)
+            self.hLine = pg.InfiniteLine(angle=0, movable=False, pen=pg.mkPen('r'))
+            self.hLine.setZValue(1000)
+            ''' this is a lina label for the vertical crosshair line. We modify the horizontal position in the signal functions '''
+            self.hvLineText = pg.TextItem() #pg.InfLineLabel(self.vLine, color='r', fill=(200,200,200,130))
+            self.hvLineText.setZValue(1000)
+            self.plot.addItem(self.vLine, ignoreBounds=True)
+            self.plot.addItem(self.hLine, ignoreBounds=True)
+            self.plot.addItem(self.hvLineText, ignoreBounds=True)
+            ''' define some parameters and instantiate the crosshair signals. We change the crosshairs whenever the sigMouseMoved is triggered,
+            whilst we must update the vertical axis if the plot autoscales, and also we must also update the horizontal axis if the time changes under the crosshairs'''
+            self.mousePos = QtCore.QPointF(0.01, 0.01)
+            self.proxyMouseMoved = pg.SignalProxy(self.plot.scene().sigMouseMoved, rateLimit=20, slot=self.mouseMoved)
+            self.proxyAxisChanged = pg.SignalProxy(self.plot.vb.sigYRangeChanged, rateLimit=20, slot=self.axisChanged)
+            self.proxyTimeChanged = pg.SignalProxy(self.plotUpdated, rateLimit=20, slot=self.timeAxisChanged)
         return self.plot
 
     ''' This defines a general eventFilter for the self.plot object that we use to update the crosshairs'''
@@ -141,17 +144,21 @@ class generalPlot(pg.PlotWidget):
         try:
             self.vLine.setValue(self.mousePoint.x())
             self.hLine.setValue(self.mousePoint.y())
-            self.hvLineText.setText(self.statusText)
-            self.hvLineText.setPos(self.mousePoint.x(),self.mousePoint.y())
-            # self.plot.setLabel(axis='bottom',text='<span style="color: red;">'+self.statusTextX+'</span>')
-            # self.plot.setLabel(axis='left',text='<span style="color: red;">'+self.statusTextY+'</span>')
-            vr = self.hLine.viewRect()
-            if vr is not None:
-                if vr.center().y() > 0:
-                    self.hvLineText.anchors = [(-0.1, 1.0), (1.0, 1.0)]
+            self.hvLineText.setHtml('<span style="color: black; background-color: rgba(255, 0, 0, 100); opacity: 0.1;">'+self.statusText+'</span>')
+            hvr = self.hLine.viewRect()
+            vvr = self.vLine.viewRect()
+            if hvr is not None:
+                if hvr.center().y() > 0:
+                    if vvr.center().y() > 0:
+                        self.hvLineText.setAnchor((1, 1.0))
+                    else:
+                        self.hvLineText.setAnchor((0, 1.0))
                 else:
-                    self.hvLineText.anchors = [(-0.1, -0.1), (1.0, -0.1)]
-            self.hvLineText.updateTextPos()
+                    if vvr.center().y() > 0:
+                        self.hvLineText.setAnchor((1, 0))
+                    else:
+                        self.hvLineText.setAnchor((-0.1, 0))
+            self.hvLineText.setPos(self.mousePoint.x(),self.mousePoint.y())
         except:
             pass
 
@@ -163,14 +170,15 @@ class generalPlot(pg.PlotWidget):
         self.timeAxisChanged()
         self.updateLines()
         if self.plot.mouseOver:
-            self.statusChanged.emit(self.statusText)
+            self.statusChanged.emit(self.statusTextClipboard)
 
     ''' This is the event handler for if the vertical axis autoscales '''
     def axisChanged(self, evt):
-        self.mousePoint = self.vb.mapSceneToView(self.mousePos)
-        index = int(self.mousePoint.x())
-        self.timeAxisChanged()
-        self.updateLines()
+        if self.plot.sceneBoundingRect().contains(self.mousePos):
+            self.mousePoint = self.vb.mapSceneToView(self.mousePos)
+            index = int(self.mousePoint.x())
+            self.timeAxisChanged()
+            self.updateLines()
 
     ''' This is the event handler for when the horizontal axis time changes during "autoscroll" '''
     def timeAxisChanged(self):
@@ -183,7 +191,7 @@ class generalPlot(pg.PlotWidget):
                     reftime = self.fixedtimepoint
                 self.statusTextX = time.strftime("%H:%M:%S", time.localtime(reftime + self.mousePoint.x()))
                 self.statusTextY = "%0.3f" % (self.mousePoint.y())
-                self.statusText = "{"+self.statusTextX+", "+self.statusTextY+"}"
+                self.statusText = "&nbsp;"+self.statusTextX+", "+self.statusTextY+"&nbsp;"
                 self.statusTextClipboard = "{\""+self.statusTextX+"\", "+self.statusTextY+"}"
             else:
                 self.statusTextX = "%0.3f" % (self.mousePoint.x())
@@ -241,6 +249,7 @@ class generalPlot(pg.PlotWidget):
             self.doingPlot = False
             self.curve = self.plot.plot.plot()
             self.lines = self.MultiLine(np.array([[0]]),np.array([[0]]),pen='w')
+            self.fftTextLabels = []
 
         def addCurve(self):
             return self.curve
@@ -248,6 +257,10 @@ class generalPlot(pg.PlotWidget):
         ''' This updates the curve points based on the plot type and using the data from the timefilter function '''
         def updateData(self, data, pen):
             self.plot.plot.removeItem(self.lines)
+            for i in range(len(self.fftTextLabels)):
+                for j in range(len(self.fftTextLabels[i])):
+                    self.plot.plot.removeItem(self.fftTextLabels[i][j])
+            self.fftTextLabels = []
             if len(data) > 1 and not self.plot.scatterPlot:
                 x,y = np.transpose(data)
                 if self.plot.histogramPlot:
@@ -258,11 +271,21 @@ class generalPlot(pg.PlotWidget):
                         self.curve.setData({'x': x2, 'y': y2}, pen=pen, stepMode=True, fillLevel=0, fillBrush=pen)
                 elif self.plot.FFTPlot:
                     self.curve.setData({'x': x, 'y': y}, pen=pen, stepMode=False, fillLevel=None)
+                    if(len(self.curve.yDisp) > 0):
+                        indexes = peakutils.indexes(self.curve.yDisp, thres=0.75, min_dist=20)
+                        if len(indexes) < 5:
+                            for index in indexes:
+                                fftTextlabel=pg.TextItem(html='<span style="color: '+pg.mkColor(pen).name()+';">'+str(round(self.curve.xDisp[index],2))+'</span>',anchor=(-0.7,1.2), angle=0)
+                                fftTextlabel.setPos(self.curve.xDisp[index],self.curve.yDisp[index])
+                                fftTextArrow=pg.ArrowItem(pos=(self.curve.xDisp[index],self.curve.yDisp[index]), angle=-45, pen=pen, brush=pg.mkBrush(pen))
+                                self.fftTextLabels.append([fftTextlabel, fftTextArrow])
+                                self.plot.plot.addItem(fftTextlabel)
+                                self.plot.plot.addItem(fftTextArrow)
                     self.plot.updateSpectrumMode(True)
                 else:
                     # self.curve.setData({'x': [0], 'y': [0]}, pen=pen, stepMode=False)
-                    x = np.array([x])
-                    y = np.array([y])
+                    # x = np.array([x])
+                    # y = np.array([y])
                     self.lines = self.MultiLine(x,y,pen=pen)
                     self.plot.plot.addItem(self.lines)
 
@@ -270,31 +293,20 @@ class generalPlot(pg.PlotWidget):
         and bigger it makes a noticeable speed up, despite the functions built in to PyQtGraph'''
         def timeFilter(self, datain, timescale=None):
             if self.plot.autoscroll:
-                currenttime = round(time.time(),2)
+                self.currenttime = round(time.time(),2)
             else:
-                currenttime =  self.plot.currenttime
+                self.currenttime =  self.plot.currenttime
             if len(datain) > 0:
-                times = np.array(datain)[:,0] - currenttime
-                data = np.array(datain)[:,1]
-                tdata = zip(times, data)
-                if times[0] > self.plot.globalPlotRange[0] and times[-1] < self.plot.globalPlotRange[1]:
-                    # print 'All Data!'
-                    return list(list(tdata))
+                if True or (datain[0][0] > (self.currenttime+self.plot.globalPlotRange[0]) and datain[-1][0] <=  (self.currenttime+self.plot.globalPlotRange[1])):
+                    return np.array(datain)
                 else:
-                    if len(times) > 0:
-                        idx = (np.array(times) > self.plot.globalPlotRange[0]) * (np.array(times) < self.plot.globalPlotRange[1])
-                        timescut = list(compress(times, idx))
-                        datacut = list(compress(data, idx))
-                    finaldata = zip(*(timescut,datacut))
+                    if len(datain) > 0:
+                        datain = np.array(datain)
+                        idx = (datain[:,0] > (self.currenttime+self.plot.globalPlotRange[0])) * (datain[:,0] <= (self.currenttime+self.plot.globalPlotRange[1]))
+                        finaldata = np.array(list(compress(datain, idx)))
                     return finaldata
-                return list(list(finaldata))
             else:
                 return datain
-
-
-        ''' simple helper function to run the timeFilter function'''
-        def filterRecord(self, data, timescale=None):
-            return list(list(self.timeFilter(data, timescale)))
 
         ''' helper function to clear a curves points '''
         def clear(self):
@@ -307,11 +319,10 @@ class generalPlot(pg.PlotWidget):
                 if self.records[self.name]['ploton']:
                     # start = time.clock()
                     self.plotData = self.timeFilter(self.records[self.name]['data'], self.plot.globalPlotRange)
-                    # if len(self.plotData) > 100*self.plot.decimateScale:
-                    #     decimationfactor = int(np.floor(len(self.plotData)/self.plot.decimateScale))
-                    #     self.plotData = self.plotData[0::decimationfactor]
-                    #     self.updateData(self.plotData, self.records[self.name]['pen'])
-                    # else:
+                    if len(self.plotData) > self.plot.decimateScale:
+                        decimationfactor = int(np.floor(len(self.plotData)/self.plot.decimateScale))
+                        self.plotData = self.plotData[0::decimationfactor]
+                    self.plotData[:,0] = self.plotData[:,0] - self.currenttime
                     self.updateData(self.plotData, self.records[self.name]['pen'])
                 else:
                     self.clear()
@@ -320,10 +331,10 @@ class generalPlot(pg.PlotWidget):
 
         class MultiLine(pg.QtGui.QGraphicsPathItem):
             def __init__(self, x, y, pen):
-                """x and y are 2D arrays of shape (Nplots, Nsamples)"""
-                connect = np.ones(x.shape, dtype=bool)
-                connect[:,-1] = 0 # don't draw the segment between each trace
-                self.path = pg.arrayToQPath(x.flatten(), y.flatten(), connect.flatten())
+                """x and y are 1D arrays of shape (Nplots, Nsamples)"""
+                # connect = np.ones(x.shape, dtype=bool)
+                # connect[:,-1] = 0 # don't draw the segment between each trace
+                self.path = pg.arrayToQPath(x, y)
                 pg.QtGui.QGraphicsPathItem.__init__(self, self.path)
                 self.setPen(pg.mkPen(pen))
             def shape(self): # override because QGraphicsPathItem.shape is too expensive.

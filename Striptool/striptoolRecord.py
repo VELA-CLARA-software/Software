@@ -86,7 +86,7 @@ class repeatedWorker(QtCore.QObject):
         self.function(*self.args, **self.kwargs)
         newinterval = self.interval - ((1000.0*time.clock()) % self.interval)
         while newinterval < 0.2*self.interval:
-            time.sleep(0.001)
+            time.sleep(0.01)
             newinterval = self.interval - ((1000.0*time.clock()) % self.interval)
         self.timer.singleShot(newinterval, self._target)
 
@@ -132,6 +132,7 @@ class recordWorker(QtCore.QObject):
         self.records = records
         self.signal = signal
         self.name = name
+        self.list = self.records[self.name]['data']
         self.signal.dataReady.connect(self.updateRecord)
 
     @QtCore.pyqtSlot(list)
@@ -139,7 +140,7 @@ class recordWorker(QtCore.QObject):
         # if len(self.records[self.name]['data']) > 1 and value[1] == self.records[self.name]['data'][-1][1] and value[1] == self.records[self.name]['data'][-2][1]:
         #     self.records[self.name]['data'][-1] = value
         # else:
-            self.records[self.name]['data'].append(value)
+        self.list.append(value)
 
 class createSignalRecord(QObject):
 

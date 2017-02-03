@@ -26,7 +26,7 @@ class stripPlot(QWidget):
     signalAdded = QtCore.pyqtSignal('QString')
     signalRemoved = QtCore.pyqtSignal('QString')
 
-    def __init__(self, parent = None, plotRateBar=True):
+    def __init__(self, parent = None, plotRateBar=True, **kwargs):
         super(stripPlot, self).__init__(parent)
         self.pg = pg
         self.paused = True
@@ -39,7 +39,7 @@ class stripPlot(QWidget):
         self.stripPlot = QtGui.QGridLayout()
         self.plotThread = QTimer()
         ''' Create generalPlot object '''
-        self.plotWidget = generalPlot(self)
+        self.plotWidget = generalPlot(self,**kwargs)
         ''' Create the plot as part of the plotObject '''
         self.plot = self.plotWidget.createPlot()
         ''' Create the signalRecord object '''
@@ -57,10 +57,12 @@ class stripPlot(QWidget):
         self.histogramCheckbox.stateChanged.connect(self.setSubtractMean)
         self.histogramCheckbox.setChecked(False)
         self.histogramBinsLabel = QLabel('NBins')
-        self.histogramBinsEdit = QLineEdit(str(self.plotWidget.numberBins))
-        self.histogramBinsEdit.setMaxLength(4)
-        self.histogramBinsEdit.setInputMask('0000')
-        self.histogramBinsEdit.editingFinished.connect(self.setHistogramBins)
+        self.histogramBinsEdit = QSpinBox()
+        self.histogramBinsEdit.setValue(self.plotWidget.numberBins)
+        self.histogramBinsEdit.setMinimum(1)
+        # self.histogramBinsEdit.setMaxLength(4)
+        # self.histogramBinsEdit.setInputMask('0000')
+        self.histogramBinsEdit.valueChanged.connect(self.setHistogramBins)
         ''' FFT'''
         self.FFTRadio = QRadioButton("FFT")
         self.FFTRadio.toggled.connect(lambda: self.setPlotType(FFT=True))
@@ -120,7 +122,7 @@ class stripPlot(QWidget):
         logger.debug('stripPlot initiated!')
 
     def setHistogramBins(self):
-        self.plotWidget.numberBins = int(self.histogramBinsEdit.text())
+        self.plotWidget.numberBins = self.histogramBinsEdit.value()
 
     def setSubtractMean(self):
         self.subtractMean = self.histogramCheckbox.isChecked()
@@ -187,6 +189,8 @@ class stripPlot(QWidget):
 
     def setPlotRate(self, value):
         self.plotrate = value
+        if not self.plotRateSlider.value() == value:
+            self.plotRateSlider.setValue(value)
         self.plotRateLabel.setText('Plot Update Rate ['+str(self.plotrate)+' Hz]:')
         self.plotThread.setInterval(1000*1/value)
 
@@ -209,6 +213,7 @@ class stripPlot(QWidget):
                 logger.debug('FFTPlot enabled')
             for name in self.records:
                 if self.records[name]['parent'] == self:
+                    self.records[name]['curve'].curve.setClipToView(False)
                     self.plot.removeItem(self.records[name]['curve'].curve)
                     self.plot.addItem(self.records[name]['curve'].curve)
                     self.records[name]['curve'].update()
@@ -223,6 +228,7 @@ class stripPlot(QWidget):
                 for name in self.records:
                     if self.records[name]['parent'] == self:
                         self.records[name]['curve'].curve.setData({'x': [0], 'y': [0]}, pen='w', stepMode=False)
+                        self.records[name]['curve'].curve.setClipToView(True)
                 self.plotWidget.date_axis.dateTicksOn = True
                 self.plot.disableAutoRange()
                 self.plotWidget.setPlotScale([self.plotWidget.plotRange[0],self.plotWidget.plotRange[1]])
@@ -245,19 +251,17 @@ class stripPlot(QWidget):
             logger.info('Signal '+name+' added!')
         else:
             logger.warning('Signal '+name+' already exists!')
-            # nameorig = name
-            # name = name + '_2'
-            # signalrecord = createSignalRecord(records=self.records, name=name, timer=timer, function=function, *args)
-            # self.records[name]['record'] = signalrecord
 
     def plotUpdate(self):
-        autorangeX, autorangeY = self.plotWidget.vb.state['autoRange']
-        self.plotWidget.plot.disableAutoRange()
-        # self.plotWidget.plot.clear()
-        self.plotWidget.currentPlotTime = time.time()
-        for name in self.records:
-            self.records[name]['curve'].update()
-        self.plotWidget.vb.enableAutoRange(x=autorangeX, y=autorangeY)
+        if not self.plotWidget.paused:
+            autorangeX, autorangeY = self.plotWidget.vb.state['autoRange']
+            self.plotWidget.plot.disableAutoRange()
+            # self.plotWidget.plot.clear()
+            self.plotWidget.currentPlotTime = time.time()
+            for name in self.records:
+                if not self.records[name]['curve'].doingPlot:
+                    self.records[name]['curve'].update()
+            self.plotWidget.vb.enableAutoRange(x=autorangeX, y=autorangeY)
 
     def removeSignal(self,name):
         self.records[name]['record'].stop()

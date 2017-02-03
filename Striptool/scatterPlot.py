@@ -17,15 +17,15 @@ logger = logging.getLogger(__name__)
 
 signal.signal(signal.SIGINT, signal.SIG_DFL)
 
+
 def logthread(caller):
     print('%-25s: %s, %s,' % (caller, threading.current_thread().name,
                               threading.current_thread().ident))
 
+
 class scatterPlot(QWidget):
-
     signalAdded = QtCore.pyqtSignal('QString')
-    scatterSelectionChanged = QtCore.pyqtSignal('QString','QString')
-
+    scatterSelectionChanged = QtCore.pyqtSignal('QString', 'QString')
 
     def __init__(self, stripplot=None, parent=None, plotRateBar=False, selectionBar=True, color=0):
         super(scatterPlot, self).__init__(parent)
@@ -34,7 +34,7 @@ class scatterPlot(QWidget):
         self.signalLength = 10
         self.plotrate = 1
         self.plotScaleConnection = True
-        self.pauseIcon  =  QtGui.QIcon(str(os.path.dirname(os.path.abspath(__file__)))+'\icons\pause.png')
+        self.pauseIcon = QtGui.QIcon(str(os.path.dirname(os.path.abspath(__file__))) + '\icons\pause.png')
         ''' create the scatterPlot as a grid layout '''
         self.scatterPlot = QtGui.QVBoxLayout()
         self.plotThread = QTimer()
@@ -44,7 +44,7 @@ class scatterPlot(QWidget):
         else:
             self.stripPlot = self
             self.records = {}
-        self.globalPlotRange = [-1000,0]
+        self.globalPlotRange = [-1000, 0]
         ''' Create generalPlot object '''
         self.plotWidget = scatterPlotPlot(self, color=color)
         ''' If connected to stripplot - link plotranges '''
@@ -56,14 +56,14 @@ class scatterPlot(QWidget):
         self.setupPlotRateSlider()
         selectionBarOffset = 0
         if selectionBar:
-            self.scatterPlot.addLayout(self.selectionBarLayout,1)
+            self.scatterPlot.addLayout(self.selectionBarLayout, 1)
             self.stripPlot.signalAdded.connect(self.updateSelectionBar)
             self.stripPlot.signalRemoved.connect(self.updateSelectionBar)
             selectionBarOffset = 1
-        self.scatterPlot.addWidget(self.plotWidget.plotWidget,5)
+        self.scatterPlot.addWidget(self.plotWidget.plotWidget, 5)
         if plotRateBar:
-            self.scatterPlot.addWidget(self.plotRateLabel,selectionBarOffset+5, 0)
-            self.scatterPlot.addWidget(self.plotRateSlider,selectionBarOffset+5, 1)
+            self.scatterPlot.addWidget(self.plotRateLabel, selectionBarOffset + 5, 0)
+            self.scatterPlot.addWidget(self.plotRateSlider, selectionBarOffset + 5, 1)
         self.setLayout(self.scatterPlot)
         logger.debug('scatterPlot initiated!')
 
@@ -72,13 +72,13 @@ class scatterPlot(QWidget):
             if self.records[name]['parent'] == self:
                 filename, file_extension = os.path.splitext(saveFileName)
                 saveFileName2 = filename + '_' + self.records[name]['name'] + file_extension
-                self.legend.saveCurve(self.records[name]['name'],saveFileName2)
+                self.legend.saveCurve(self.records[name]['name'], saveFileName2)
 
     def saveCurve(self, name, saveFileName=None):
-        self.legend.saveCurve(name,saveFileName)
+        self.legend.saveCurve(name, saveFileName)
 
     def setupSelectionBar(self):
-        spacer = QtGui.QSpacerItem(100,20)
+        spacer = QtGui.QSpacerItem(100, 20)
         self.combobox1 = QtGui.QComboBox()
         self.combobox1.setMaximumWidth(200)
         self.combobox1.setMinimumWidth(100)
@@ -103,7 +103,7 @@ class scatterPlot(QWidget):
 
     def selectionBarChanged(self, index):
         # print 'index = ', index
-        self.scatterSelectionChanged.emit(self.combobox1.currentText(),self.combobox2.currentText())
+        self.scatterSelectionChanged.emit(self.combobox1.currentText(), self.combobox2.currentText())
         self.plotWidget.update()
 
     def updateSelectionBar(self):
@@ -127,7 +127,7 @@ class scatterPlot(QWidget):
 
     def setupPlotRateSlider(self):
         self.plotRateLabel = QtGui.QLabel()
-        self.plotRateLabel.setText('Plot Update Rate ['+str(self.plotrate)+' Hz]:')
+        self.plotRateLabel.setText('Plot Update Rate [' + str(self.plotrate) + ' Hz]:')
         self.plotRateLabel.setAlignment(Qt.AlignCenter)
         self.plotRateSlider = QtGui.QSlider()
         self.plotRateSlider.setOrientation(QtCore.Qt.Horizontal)
@@ -140,8 +140,8 @@ class scatterPlot(QWidget):
 
     def setPlotRate(self, value):
         self.plotrate = value
-        self.plotRateLabel.setText('Plot Update Rate ['+str(self.plotrate)+' Hz]:')
-        self.plotThread.setInterval(1000*1/value)
+        self.plotRateLabel.setText('Plot Update Rate [' + str(self.plotrate) + ' Hz]:')
+        self.plotThread.setInterval(1000 * 1 / value)
 
     def start(self, timer=1000):
         self.plotUpdate()
@@ -155,17 +155,17 @@ class scatterPlot(QWidget):
             self.records[name]['parent'] = self
             self.records[name]['pen'] = pen
             self.signalAdded.emit(name)
-            logger.info('Signal '+name+' added!')
+            logger.info('Signal ' + name + ' added!')
         else:
-            logger.warning('Signal '+name+' already exists!')
+            logger.warning('Signal ' + name + ' already exists!')
 
     def plotUpdate(self):
         self.plotWidget.currentPlotTime = time.time()
         self.plotWidget.update()
 
-    def removeSignal(self,name):
+    def removeSignal(self, name):
         del self.records[name]
-        logger.info('Signal '+name+' removed!')
+        logger.info('Signal ' + name + ' removed!')
 
     def pausePlotting(self, value=True):
         self.paused = value

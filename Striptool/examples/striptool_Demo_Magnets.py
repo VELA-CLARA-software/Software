@@ -14,6 +14,22 @@ logger = logging.getLogger(__name__)
 
 import striptoolSignalTable as stable
 
+seconds_per_unit = {"s": 1, "m": 60, "h": 3600, "d": 86400, "w": 604800}
+
+def convert_to_seconds(s):
+    return int(s[:-1]) * seconds_per_unit[s[-1]]
+
+class timeButton(QPushButton):
+    def __init__(self, mainForm):
+        super(timeButton, self).__init__()
+        self.__mainForm = mainForm
+        self.connect(self, SIGNAL("clicked ()"), self.buttonPushed)
+
+    def buttonPushed(self):
+        # send signal to MainForm class, self.__comboID is actually row number, ind is what is selected
+        self.__mainForm.emit(SIGNAL("timeButtonPushed(int)"), convert_to_seconds(str(self.text())))
+
+
 class striptool_Demo_Magnets(QMainWindow):
     def __init__(self, parent = None):
         super(striptool_Demo_Magnets, self).__init__(parent)
@@ -42,20 +58,58 @@ class striptool_Demo_Magnets(QMainWindow):
         self.GUISplitter.setOrientation(Qt.Vertical)
         self.GUISplitter.setStyleSheet("QSplitter::handle{background-color:transparent;}");
         self.GUISplitter.addWidget(stable.signalTable(self.sp))
+        self.timeButton10 = self.createTimeButton('10s')
+        self.timeButton60 = self.createTimeButton('1m')
+        self.timeButton600 = self.createTimeButton('10m')
+        self.connect(self, SIGNAL("timeButtonPushed(int)"), self.changePlotScales)
+        self.timeButtonLayout = QHBoxLayout()
+        self.timeButtonWidget = QWidget()
+        self.timeButtonWidget.setMaximumHeight(100)
+        self.timeButtonLayout.addWidget(self.timeButton10)
+        self.timeButtonLayout.addWidget(self.timeButton60)
+        self.timeButtonLayout.addWidget(self.timeButton600)
+        self.timeButtonWidget.setLayout(self.timeButtonLayout)
+        self.spTimeButtonsLayout = QVBoxLayout()
+        self.spTimeButtonsWidget = QWidget()
+        self.spTimeButtonsLayout.addWidget(self.sp,10)
+        self.spTimeButtonsLayout.addWidget(self.timeButtonWidget,1)
+        self.spTimeButtonsWidget.setLayout(self.spTimeButtonsLayout)
         self.GUISplitter.addWidget(self.sp)
+        self.GUISplitter.addWidget(self.timeButtonWidget)
+
         handle = self.GUISplitter.handle(1)
         layout = QtGui.QHBoxLayout()
         layout.setContentsMargins(0, 0, 0, 0)
-        self.splitterbutton = QtGui.QToolButton(handle)
-        self.splitterbutton.setArrowType(QtCore.Qt.DownArrow)
-        self.splitterbutton.clicked.connect(
-            lambda: self.handleSplitterButton(False))
-        self.GUISplitter.splitterMoved.connect(self.handleSplitterButtonArrow)
-        layout.addWidget(self.splitterbutton)
+        self.splitterbutton = [1,2,3]
+        self.splitterbuttonArrows = [1,2,3]
+
+        self.splitterbutton[0] = QtGui.QToolButton(handle)
+        self.splitterbutton[0].setArrowType(QtCore.Qt.DownArrow)
+        self.splitterbuttonArrows[0] = [QtCore.Qt.UpArrow,QtCore.Qt.DownArrow]
+        self.splitterbutton[0].clicked.connect(
+            lambda: self.handleSplitterButton(no=0,closed=False))
+        self.GUISplitter.splitterMoved.connect(lambda x: self.handleSplitterButtonArrow(no=0, pos=x))
+        layout.addWidget(self.splitterbutton[0])
         handle.setLayout(layout)
+
+        handle = self.GUISplitter.handle(2)
+        layout = QtGui.QHBoxLayout()
+        layout.setContentsMargins(0, 0, 0, 0)
+        self.splitterbutton[2] = QtGui.QToolButton(handle)
+        self.splitterbutton[2].setArrowType(QtCore.Qt.DownArrow)
+        self.splitterbuttonArrows[2] = [QtCore.Qt.DownArrow, QtCore.Qt.UpArrow]
+        self.splitterbutton[2].clicked.connect(
+            lambda: self.handleSplitterButton(no=2,closed=False))
+        self.GUISplitter.splitterMoved.connect(lambda x: self.handleSplitterButtonArrow(no=2, pos=x))
+        layout.addWidget(self.splitterbutton[2])
+        handle.setLayout(layout)
+
         self.GUISplitter.setStretchFactor(0,1)
         self.GUISplitter.setStretchFactor(1,4)
-        self.handleSplitterButton(up=True)
+        self.GUISplitter.setStretchFactor(2,1)
+        self.GUIsizes = [100, 1000, 100]
+        self.handleSplitterButton(no=0,closed=True)
+        self.handleSplitterButton(no=2,closed=True)
 
 
         self.tab.addTab(self.GUISplitter,"Strip Plot")
@@ -77,28 +131,26 @@ class striptool_Demo_Magnets(QMainWindow):
 
         self.sp.plotWidget.statusChanged.connect(self.updateStatusBar)
 
-    def handleSplitterButton(self, up=True):
-        # width = self.GUISplitter.size().width()
-        if up:
-            self.GUISplitter.setStretchFactor(0,0)
-            self.GUISplitter.setStretchFactor(1,1)
-            self.GUISplitter.setSizes([0,1])
-        elif not all(self.GUISplitter.sizes()):
-            self.GUISplitter.setStretchFactor(0,1)
-            self.GUISplitter.setStretchFactor(1,4)
-            self.GUISplitter.setSizes([1,1000])
-        else:
-            self.GUISplitter.setStretchFactor(0,0)
-            self.GUISplitter.setStretchFactor(1,1)
-            self.GUISplitter.setSizes([0,1])
-        self.handleSplitterButtonArrow()
-
-    def handleSplitterButtonArrow(self):
+    def handleSplitterButton(self, no=0, closed=True):
         sizes = self.GUISplitter.sizes()
-        if self.GUISplitter.sizes()[0] > 0:
-            self.splitterbutton.setArrowType(QtCore.Qt.UpArrow)
+        if closed:
+            self.GUISplitter.setStretchFactor(no,0)
+            self.GUIsizes[no] = 0
+        elif sizes[no] == 0:
+            self.GUISplitter.setStretchFactor(no,1)
+            self.GUIsizes[no] = 100
         else:
-            self.splitterbutton.setArrowType(QtCore.Qt.DownArrow)
+            self.GUISplitter.setStretchFactor(no,0)
+            self.GUIsizes[no] = 0
+        self.GUISplitter.setSizes(self.GUIsizes)
+        self.handleSplitterButtonArrow(no=no)
+
+    def handleSplitterButtonArrow(self, no=0, pos=0):
+        sizes = self.GUISplitter.sizes()
+        if sizes[no] > 0:
+            self.splitterbutton[no].setArrowType(self.splitterbuttonArrows[no][0])
+        else:
+            self.splitterbutton[no].setArrowType(self.splitterbuttonArrows[no][1])
 
     def pausePlots(self, parentwidget):
         widgets = parentwidget.findChildren((striptool.stripPlot))
@@ -112,6 +164,16 @@ class striptool_Demo_Magnets(QMainWindow):
     def updateStatusBar(self,text):
         self.statusBar.clearMessage()
     	self.statusBar.showMessage(text,2000)
+
+    def createTimeButton(self,label):
+        button = timeButton(self)
+        button.setText(label)
+        return button
+
+    def changePlotScales(self, time):
+        print 'time = ', time
+        for plot in self.findChildren((striptool.stripPlot)):
+            plot.setPlotScale(time)
 
 def main():
    app = QApplication(sys.argv)
