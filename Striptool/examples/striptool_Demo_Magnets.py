@@ -124,7 +124,27 @@ class striptool_Demo_Magnets(QMainWindow):
             self.tab.insertTab(self.tab.currentIndex()+1,scatter,scatterplotlabel)
             self.pausePlots(self.tab)
 
+    class ScatterPlotTab(QWidget):
+        def __init__(self, parent=None, strip=None):
+            QWidget.__init__(self)
+            strips = self.tab.currentWidget().findChildren((striptool.stripPlot))
+            if len(strips) > 0:
+                strip = strips[0]
+                label = str(self.tab.tabText(self.tab.currentIndex()))
+                scatterplotnumber = [str(s) for s in label.split() if s.isdigit()]
+                scatterplotlabel = "Scatter Plot "+scatterplotnumber[0]
+                scatters = self.tab.findChildren((scatterplot.scatterPlot))
+                for scat in scatters:
+                    print scat.stripPlot
+                    if scat.stripPlot == strip:
+                        noscatters += 1
+                scatterplotlabel = "Scatter Plot "+str(noscatters+1)+" (Strip "+str(scatterplotnumber[0])+")"
+                scatter = scatterplot.scatterPlot(stripplot=strip, plotRateBar=False, color=noscatters)
+                scatter.start()
+                self.tab.insertTab(self.tab.currentIndex()+1,scatter,scatterplotlabel)
+                self.pausePlots(self.tab)
 
+                
     class LinearPlotTab(QWidget):
 
         def __init__(self, parent=None, plotRateBar=False, MagnetController=None, BPMController=None):
