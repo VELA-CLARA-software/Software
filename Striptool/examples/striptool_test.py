@@ -52,7 +52,7 @@ class striptool_Demo(QMainWindow):
         # self.logwidget1 = lw.loggerWidget([logger,striptool.logger])
 
         ''' These are some options for pyqtgraph that make the graph black-on-white, and turn on antialiasing, which is nicer on the eye '''
-        # pg.setConfigOptions(antialias=True)
+        pg.setConfigOptions(antialias=True)
         pg.setConfigOption('background', 'w')
         pg.setConfigOption('foreground', 'k')
 
@@ -67,9 +67,9 @@ class striptool_Demo(QMainWindow):
             Here I set it to 1000 as an example :
                  - a 3600 length record would decimate at order 1/3 and would have a plotting record length of 1200
                  - you probably don't need to use this unless you are having trouble with slow plotting.'''
-        self.sp.setDecimateLength(1000)
-        self.sp2.setDecimateLength(1000)
-        self.sp3.setDecimateLength(1000)
+        self.sp.setDecimateLength(100000)
+        self.sp2.setDecimateLength(100000)
+        self.sp3.setDecimateLength(100000)
 
         ''' Add some signals to the striptool - note they call our signal generator at a frequency of 1/timer (100 Hz and 10 Hz in these cases).
             The 'pen' argument sets the color of the curves, but can be changed in the GUI
@@ -124,8 +124,8 @@ class striptool_Demo(QMainWindow):
 
         # self.sp2.setPlotType(FFT=True)
         # self.sp3.setPlotType(FFT=False)
-        self.sp2.setPlotRate(1)
-        self.sp3.setPlotRate(1)
+        self.sp2.setPlotRate(10)
+        self.sp3.setPlotRate(10)
 
         ''' Display the Qt App '''
         self.setCentralWidget(self.tab)
@@ -179,7 +179,7 @@ def main():
    ex = striptool_Demo()
    ex.show()
    ex.pausePlots(ex.tab)
-   ex.testSleep()
+   # ex.testSleep()
    sys.exit(app.exec_())
 
 if __name__ == '__main__':

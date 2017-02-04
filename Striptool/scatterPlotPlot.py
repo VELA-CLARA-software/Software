@@ -148,39 +148,41 @@ class scatterPlotPlot(pg.PlotWidget):
                 self.createPlot(scatteritems[0][0], scatteritems[1][0], self.color)
                 data1 = scatteritems[0][1]
                 data2 = scatteritems[1][1]
-                signalDelayTime1 =  self.records[scatteritems[0][0]]['timer']
-                signalDelayTime2 =  self.records[scatteritems[1][0]]['timer']
-                if data1[0] < data2[0]:
-                    # print 'less than'
-                    ans = takeClosestPosition(zip(*data1)[0], data1, data2[0][0])
-                    starttime = ans[1]
-                    startpos1 = ans[0]
-                    startpos2 = 0
-                elif data1[0] > data2[0]:
-                    # print 'more than', data1[0],' > ', data2[0]
-                    ans = takeClosestPosition(zip(*data2)[0], data2, data1[0][0])
-                    starttime = ans[1]
-                    startpos1 = 0
-                    startpos2 = ans[0]
-                else:
-                    # print 'equal'
-                    startpos1 = startpos2 = 0
-                data1 = data1[startpos1:-1]
-                data2 = data2[startpos2:-1]
-                if len(data1) > len(data2):
-                    data1 = data1[0:len(data2)]
-                elif len(data2) > len(data1):
-                    data2 = data2[0:len(data1)]
-                # if signalDelayTime1 != signalDelayTime2:
-                # if signalDelayTime1 > signalDelayTime2:
-                #     tmpdata1 = zip(*data1)[0]
-                #     data1 = [takeClosestPosition(tmpdata1, data1, timeval[0])[1] for timeval in data2]
-                # else:
-                #     tmpdata2 = zip(*data2)[0]
-                #     data2 = [takeClosestPosition(tmpdata2, data2, timeval[0])[1] for timeval in data1]
-                x1,x = zip(*data1)
-                x2,y = zip(*data2)
-                self.scatterPlot.setData(x=x, y=y)
+                if len(data1) > 1 and len(data2) > 1:
+                    signalDelayTime1 =  self.records[scatteritems[0][0]]['timer']
+                    signalDelayTime2 =  self.records[scatteritems[1][0]]['timer']
+                    if data1[0] < data2[0]:
+                        # print 'less than'
+                        ans = takeClosestPosition(zip(*data1)[0], data1, data2[0][0])
+                        starttime = ans[1]
+                        startpos1 = ans[0]
+                        startpos2 = 0
+                    elif data1[0] > data2[0]:
+                        # print 'more than', data1[0],' > ', data2[0]
+                        ans = takeClosestPosition(zip(*data2)[0], data2, data1[0][0])
+                        starttime = ans[1]
+                        startpos1 = 0
+                        startpos2 = ans[0]
+                    else:
+                        # print 'equal'
+                        startpos1 = startpos2 = 0
+                    data1 = data1[startpos1:-1]
+                    data2 = data2[startpos2:-1]
+                    if len(data1) > len(data2):
+                        data1 = data1[0:len(data2)]
+                    elif len(data2) > len(data1):
+                        data2 = data2[0:len(data1)]
+                    # if signalDelayTime1 != signalDelayTime2:
+                    # if signalDelayTime1 > signalDelayTime2:
+                    #     tmpdata1 = zip(*data1)[0]
+                    #     data1 = [takeClosestPosition(tmpdata1, data1, timeval[0])[1] for timeval in data2]
+                    # else:
+                    #     tmpdata2 = zip(*data2)[0]
+                    #     data2 = [takeClosestPosition(tmpdata2, data2, timeval[0])[1] for timeval in data1]
+                    if len(data1) > 1 and len(data2) > 1:
+                        x1,x = zip(*data1)
+                        x2,y = zip(*data2)
+                        self.scatterPlot.setData(x=x, y=y)
             self.doingPlot = False
             # if not self.paused and time.time() > start:
             #     print 'freq = ', 1.0/(time.time()-start)

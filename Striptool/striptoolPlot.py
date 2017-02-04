@@ -391,21 +391,20 @@ class generalPlot(pg.PlotWidget):
 
     ''' This is the event handler for when the horizontal axis time changes during "autoscroll" '''
     def timeAxisChanged(self):
-        if not self.paused:
-            self.mousePoint = self.vb.mapSceneToView(self.mousePos)
-            if self.linearPlot:
-                if self.autoscroll:
-                    reftime = round(time.time(),2)
-                else:
-                    reftime = self.fixedtimepoint
-                self.statusTextX = time.strftime("%H:%M:%S", time.localtime(reftime + self.mousePoint.x()))
-                self.statusTextY = "%0.3f" % (self.mousePoint.y())
-                self.statusText = "&nbsp;"+self.statusTextX+", "+self.statusTextY+"&nbsp;"
-                self.statusTextClipboard = "{\""+self.statusTextX+"\", "+self.statusTextY+"}"
+        self.mousePoint = self.vb.mapSceneToView(self.mousePos)
+        if self.linearPlot:
+            if self.autoscroll:
+                reftime = round(time.time(),2)
             else:
-                self.statusTextX = "%0.3f" % (self.mousePoint.x())
-                self.statusTextY = "%0.3f" % (self.mousePoint.y())
-                self.statusTextClipboard = self.statusText = "{"+self.statusTextX+", "+self.statusTextY+"}"
+                reftime = self.fixedtimepoint
+            self.statusTextX = time.strftime("%H:%M:%S", time.localtime(reftime + self.mousePoint.x()))
+            self.statusTextY = "%0.3f" % (self.mousePoint.y())
+            self.statusText = "&nbsp;"+self.statusTextX+", "+self.statusTextY+"&nbsp;"
+            self.statusTextClipboard = "{\""+self.statusTextX+"\", "+self.statusTextY+"}"
+        else:
+            self.statusTextX = "%0.3f" % (self.mousePoint.x())
+            self.statusTextY = "%0.3f" % (self.mousePoint.y())
+            self.statusTextClipboard = self.statusText = "{"+self.statusTextX+", "+self.statusTextY+"}"
         self.updateLines()
 
     ''' Helper function to add a curve to the plot '''
@@ -488,7 +487,7 @@ class generalPlot(pg.PlotWidget):
                     self.plot.updateSpectrumMode(True)
                 else:
                     if len(x) > self.plot.decimateScale:
-                        print 'decimate = ', len(x)
+                        # print 'decimate = ', len(x)
                         decimationfactor = int(np.floor(len(x)/self.plot.decimateScale))
                         self.lines = self.MultiLine(x[::decimationfactor],y[::decimationfactor],pen=pen)
                     else:
