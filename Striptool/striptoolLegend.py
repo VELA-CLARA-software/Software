@@ -75,7 +75,7 @@ class stripLegend(pg.TreeWidget):
         deleteRowButton.setFlat(True)
         deleteRowButton.setIcon(self.deleteIcon)
         deleteRowChild = self.addTreeWidget(parentTreeWidget, name, "Delete Signal", deleteRowButton)
-        deleteRowButton.clicked.connect(lambda x: self.deleteRow(name, deleteRowChild))
+        deleteRowButton.clicked.connect(lambda x: self.deleteRow(name, parentTreeWidget))
         self.newRowNumber += 1
 
     def formatCurveData(self, name):
@@ -116,11 +116,10 @@ class stripLegend(pg.TreeWidget):
 
     def clearCurve(self, name):
         self.records[name]['data'] = []
-        self.records[name]['curve'].doingPlot = False
-        # self.records[name]['curve'].clear()
+        self.records[name]['curve'].clear()
 
     def deleteRow(self, name, child):
-        row = self.layout.indexOfTopLevelItem(child.parent())
+        row = self.layout.indexOfTopLevelItem(child)
         self.layout.takeTopLevelItem(row)
         self.clearCurve(name)
         self.stripTool.removeSignal(name)

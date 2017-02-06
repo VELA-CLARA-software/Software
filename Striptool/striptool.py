@@ -83,6 +83,12 @@ class stripPlot(QWidget):
         ''' add Save All Data Button '''
         self.saveAllButton = QPushButton('Save All Data')
         self.saveAllButton.clicked.connect(self.saveAllCurves)
+        ''' add Clear All Data Button '''
+        self.clearAllButton = QPushButton('Clear All Data')
+        self.clearAllButton.clicked.connect(self.clearAllCurves)
+        ''' add Delete All Data Button '''
+        self.deleteAllButton = QPushButton('Delete All Curves')
+        self.deleteAllButton.clicked.connect(self.deleteAllCurves)
         ''' Set Layout '''
         self.buttonLayout.addWidget(self.linearRadio,      0,0,1,4)
         self.buttonLayout.addWidget(self.HistogramRadio,   1,0,1,1)
@@ -94,6 +100,8 @@ class stripPlot(QWidget):
         self.buttonLayout.addWidget(self.pauseButton,      3,3,1,1)
         self.buttonLayout.addWidget(self.legend.layout,4,0,3,4)
         self.buttonLayout.addWidget(self.saveAllButton,7,0)
+        self.buttonLayout.addWidget(self.clearAllButton,7,1)
+        self.buttonLayout.addWidget(self.deleteAllButton,7,2)
         ''' Add sidebar  to main layout'''
         self.GUISplitter = QtGui.QSplitter()
         self.GUISplitter.setHandleWidth(10)
@@ -130,6 +138,23 @@ class stripPlot(QWidget):
 
     def setSubtractMean(self):
         self.subtractMean = self.histogramCheckbox.isChecked()
+
+    def deleteAllCurves(self):
+
+        delete_msg = "This will delete ALL records!"
+        reply = QtGui.QMessageBox.question(self, 'Message',
+                         delete_msg, QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
+
+        if reply == QtGui.QMessageBox.Yes:
+            noitems = self.legend.layout.topLevelItemCount()
+            for i in reversed(range(noitems)):
+                item = self.legend.layout.topLevelItem(i)
+                name =  item.text(0)
+                self.legend.deleteRow(str(name), item)
+
+    def clearAllCurves(self):
+        for name in self.records:
+            self.legend.clearCurve(name)
 
     def saveAllCurves(self, saveFileName=False):
         if not saveFileName:
@@ -272,6 +297,7 @@ class stripPlot(QWidget):
 
     def removeSignal(self,name):
         self.records[name]['record'].stop()
+        # self.records[name]['record'].quit()
         del self.records[name]
         self.signalRemoved.emit(name)
         logger.info('Signal '+name+' removed!')

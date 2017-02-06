@@ -519,6 +519,7 @@ class generalPlot(pg.PlotWidget):
 
         ''' helper function to clear a curves points '''
         def clear(self):
+            self.plot.plot.removeItem(self.lines)
             self.curve.clear()
 
         ''' Wrapper function which calls timefilter and updateData'''
