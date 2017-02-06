@@ -152,12 +152,13 @@ class DockSplitter(QtGui.QSplitter):
 
     def addLinearPlot(self):
         ''' initialise scatter plot '''
-        self.strip = striptool.stripPlot(plotRateBar=False)
+        self.strip = striptool.stripPlot(plotRateBar=True)
         self.connect(self, SIGNAL("timeButtonPushed(int)"), self.changePlotScales)
         self.strip.plotWidget.statusChanged.connect(self.updateStatusBar)
         dock = Dock('Linear', size=(500,200))
         dock.addWidget(self.strip)
         self.area.addDock(dock=dock, position='bottom')
+        self.strip.setPlotScale(60)
         self.strip.start()
         self.strip.pausePlotting(False)
 
@@ -168,6 +169,7 @@ class DockSplitter(QtGui.QSplitter):
 
     def addScatterPlot(self):
         self.scatterPlots = []
+        print self.findChildren(scatterplot.scatterPlot)
         docks = self.findChildren((Dock))
         for dock in docks:
             self.appendScatterPlots(dock)

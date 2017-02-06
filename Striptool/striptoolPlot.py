@@ -494,19 +494,6 @@ class generalPlot(pg.PlotWidget):
                         self.lines = self.MultiLine(x, y, pen=pen)
                     self.plot.plot.addItem(self.lines)
 
-        def func1(self, list):
-            # bisect_left(xvalues, myNumber)
-            for x in list:
-                if x[0] > (self.currenttime+self.plot.globalPlotRange[0]) :
-                    yield x
-                else:
-                    break
-        def func2(self, list):
-            for x in list:
-                if x[0] < (self.currenttime+self.plot.globalPlotRange[1]):
-                    yield x
-                else:
-                    break
         ''' This filters the data based on the plotrange of the current viewbox. For small datasets this is ~pointless, but for moderately large datasets
         and bigger it makes a noticeable speed up, despite the functions built in to PyQtGraph'''
         def timeFilter(self, datain, timescale=None):
@@ -549,7 +536,8 @@ class generalPlot(pg.PlotWidget):
                         self.plotData[:,0] = self.plotData[:,0] - self.currenttime
                         self.updateData(self.plotData, self.records[self.name]['pen'])
                 else:
-                    self.clear()
+                    # self.clear()
+                    pass
                 self.doingPlot = False
             self.plot.plotUpdated.emit()
 

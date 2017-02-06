@@ -107,14 +107,17 @@ class stripLegend(pg.TreeWidget):
 
     def changeSampleRate(self, name, widget):
         string = str(widget.currentText())
-        number = [int(s) for s in string.split() if s.isdigit()][0]
-        value = 1.0/float(number)
-        self.records[name]['timer'] = value
-        self.records[name]['record'].setInterval(value)
+        number = [int(s) for s in string.split() if s.isdigit()]
+        if len(number) > 0:
+            number = number[0]
+            value = 1.0/float(number)
+            self.records[name]['timer'] = value
+            self.records[name]['record'].setInterval(value)
 
     def clearCurve(self, name):
         self.records[name]['data'] = []
-        self.records[name]['curve'].clear()
+        self.records[name]['curve'].doingPlot = False
+        # self.records[name]['curve'].clear()
 
     def deleteRow(self, name, child):
         row = self.layout.indexOfTopLevelItem(child.parent())
