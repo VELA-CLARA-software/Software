@@ -140,7 +140,8 @@ class recordWorker(QtCore.QObject):
         # if len(self.records[self.name]['data']) > 1 and value[1] == self.records[self.name]['data'][-1][1] and value[1] == self.records[self.name]['data'][-2][1]:
         #     self.records[self.name]['data'][-1] = value
         # else:
-        self.list.append(value)
+        self.records[self.name]['data'].append(value)
+        # print len(self.records[self.name]['data'])
 
 class createSignalRecord(QObject):
 
