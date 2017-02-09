@@ -9,9 +9,8 @@ import VELA_CLARA_MagnetControl as mag
 
 from PyQt4 import QtGui, QtCore
 import sys, time
-from  design import GUI
+from  GUI import GUI
 class mainController():
-
     def __init__(self):
         #super(self.__class__, self).__init__()
         # instantiate the controller

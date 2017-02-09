@@ -62,10 +62,3 @@ class Ui_MainWindow(object):
         #self.label_submissions_list.setText(_translate("MainWindow", "Text:", None))
         self.btn_setSI.setText(_translate("MainWindow", "SET SI", None))
         self.btn_start.setText(_translate("MainWindow", "TEST", None))
-
-class GUI(QtGui.QMainWindow, Ui_MainWindow):
-    def __init__(self):
-        print 'create startup window'
-        super(self.__class__, self).__init__()
-        #QtGui.QWidget.__init__(self)
-        self.setupUi(self)
