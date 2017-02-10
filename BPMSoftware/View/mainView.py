@@ -178,4 +178,5 @@ class Ui_TabWidget(object):
         self.randomVariableLabel.setText(_translate("TabWidget", "Set random PVs?", None))
         self.randomVariableButton.setText(_translate("TabWidget", "Go", None))
         self.repRateLabel.setText(_translate("TabWidget", "Set repetition rate", None))
+        self.repRateValue.setPlainText(_translate("TabWidget", "1", None))
         self.TabWidget.setTabText(self.TabWidget.indexOf(self.tab), _translate("TabWidget", "BPM Master", None))

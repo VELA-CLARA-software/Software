@@ -34,6 +34,8 @@ class Controller(QObject):
 
 	def setPVTimer(self):
 		#This is where the random PVs for the virtual machine are set. See mainThreads.py
+		if len(str(self.view.repRateValue.toPlainText))==0:
+			self.view.randomVariableButton.setEnabled(False)
 		self.repRate = QtCore.QString.toFloat(self.view.repRateValue.toPlainText())[0]
 		if not self.view.randomVariableCheckBox.isChecked():
 			self.view.randomVariableButton.setEnabled(True)
@@ -68,7 +70,7 @@ class Controller(QObject):
 			self.machineMode = "Offline"
 		elif self.view.physicalButton.isChecked():
 			self.machineMode = "Physical"
-		os.system("python attCalmainApp.py "+self.machineMode+" "+self.machineArea)
+		os.system("python attCalmainApp.py "+self.machineArea+" "+self.machineMode)
 
 	def attCalThread(self):
 		self.attThread = threading.Thread(target = self.launchATTCal)
