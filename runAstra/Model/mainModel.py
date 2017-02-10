@@ -56,8 +56,8 @@ class Model():
 				quadsInUse.append('0')
 		for quad in quadsInUse:
 			setup.write(quad+' ')# Screens in Use
-		setup.write('\n')
-		setup.write(""+'\n')# BPMs in Use
+		setup.write('\n'+"-1.5"+'\n')
+		setup.write("-1.5"+'\n')# BPMs in Use
 		setup.write(""+'\n')
 		setup.close()
 
@@ -71,7 +71,9 @@ class Model():
 			' ' + str(self.view.lineEdit_C.text()) +
 			' ' + str(self.view.lineEdit_SC.text()) +
 			' ' + str(self.view.lineEdit_SAB.text()) +
-			' ' + str(self.view.lineEdit_EOL.text()))
+			' ' + str(self.view.lineEdit_EOL.text()) +
+			' ' + str(-1.5) +
+			' ' + str(-1.5))
 		print(			' ' + str(self.view.lineEdit_RN.text()) +
 					' ' + str(self.view.lineEdit_NOP.text()) +
 					' ' + str(self.view.lineEdit_PL.text()) +
