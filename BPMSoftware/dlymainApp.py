@@ -2,7 +2,7 @@ import sys,os
 os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
 os.environ["EPICS_CA_ADDR_LIST"] = "10.10.0.12"
 os.environ["EPICS_CA_MAX_ARRAY_BYTES"] = "10000000"
-os.chdir("..\BPMDelayCalibration")
+
 sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\Model')
 sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\Controller')
 sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\View')

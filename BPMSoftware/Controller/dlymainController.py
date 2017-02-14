@@ -22,6 +22,7 @@ class dlyController(QObject):
 		#It is a c++ type that I couldn't get to match to a Python array of strings, and so have to import it. Suggestions for
 		#doing this better?
 		self.pvList = vbpmc.std_vector_string()
+		self.plotTabs = []
 		self.lowerList = []
 		self.upperList = []
 
@@ -63,17 +64,17 @@ class dlyController(QObject):
 		self.sigList = sigList
 		self.makestr = ""
 		#Make plots for each measurement
-		for i in range(len(self.pvList)):
-			self.view.glayoutOutputs[i].clear()
-			self.view.glayoutOutputs_2[i].clear()
+		for i in self.pvList:
+			#self.view.glayoutOutputs[i].clear()
+			#self.view.glayoutOutputs_2[i].clear()
 			self.plotDLY1 = self.view.glayoutOutputs[i].addPlot(title="DLY1")
 			self.plotDLY1Distrib = self.plotDLY1.plot(pen=None,symbol='o')
-			self.plotDLY1Distrib.setData(self.sigList[0].values()[i].keys(), self.sigList[0].values()[i].values())
+			self.plotDLY1Distrib.setData(self.sigList[0][i].keys(), self.sigList[0][i].values())
 			self.plotDLY2 = self.view.glayoutOutputs_2[i].addPlot(title="DLY2")
 			self.plotDLY2Distrib = self.plotDLY2.plot(pen=None,symbol='o')
-			self.plotDLY2Distrib.setData(self.sigList[2].values()[i].keys(), self.sigList[2].values()[i].values())
-			self.makestr = self.makestr+("\nNew BPM DLY1 for "+self.pvList[i]+" = "+str(self.model.getBPMReadDLY(str(self.pvList[i]))[0]))
-			self.makestr = self.makestr+("\nNew BPM DLY2 for "+self.pvList[i]+" = "+str(self.model.getBPMReadDLY(str(self.pvList[i]))[1]))
+			self.plotDLY2Distrib.setData(self.sigList[1][i].keys(), self.sigList[1][i].values())
+			self.makestr = self.makestr+("\nNew BPM DLY1 for "+i+" = "+str(self.model.getBPMReadDLY(str(i))[0]))
+			self.makestr = self.makestr+("\nNew BPM DLY2 for "+i+" = "+str(self.model.getBPMReadDLY(str(i))[1]))
 		self.view.newDLYVals.setText(self.view.newDLYVals.toPlainText()+"\n\n"+self.makestr)
 		self.logger.info('Delay calibration for '+str(self.genPVList)+' complete!')
 		self.logger.info(self.makestr)
@@ -90,9 +91,11 @@ class dlyController(QObject):
 		return self.pvList
 
 	def clearPVList(self):
+		print len(self.pvList)
+		self.i = len(self.pvList) + 2
+		while self.i > 2:
+			self.view.TabWidget.removeTab(self.i - 1)
+			self.i = self.i - 1
+			print self.i
 		self.view.bpmPVList.clear()
-		self.i = 2
-		while self.i <= len(self.pvList) + 1:
-			self.view.TabWidget.removeTab(self.i)
-			self.i = self.i + 1
 		self.pvList = vbpmc.std_vector_string()

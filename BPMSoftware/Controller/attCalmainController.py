@@ -21,6 +21,7 @@ class attCalController(QObject):
 		#It is a c++ type that I couldn't get to match to a Python array of strings, and so have to import it. Suggestions for
 		#doing this better?
 		self.pvList = vbpmc.std_vector_string()
+		self.plotTabs = []
 		self.lowerList = []
 		self.upperList = []
 
@@ -57,11 +58,13 @@ class attCalController(QObject):
 		self.pool.waitForDone()
 
 	def clearPVList(self):
+		print len(self.pvList)
+		self.i = len(self.pvList) + 2
+		while self.i > 2:
+			self.view.TabWidget.removeTab(self.i - 1)
+			self.i = self.i - 1
+			print self.i
 		self.view.bpmPVList.clear()
-		self.i = 2
-		while self.i <= len(self.pvList) + 1:
-			self.view.TabWidget.removeTab(self.i)
-			self.i = self.i + 1
 		self.pvList = vbpmc.std_vector_string()
 
 	def getValues(self, sigList):
@@ -74,18 +77,17 @@ class attCalController(QObject):
 		self.sigList = sigList
 		self.makestr = "Charge at WCM = "+str(self.model.getWCMQ())
 		#Make plots for each measurement
-		for i in range(len(self.pvList)):
-			self.view.glayoutOutputs[i].clear()
-			self.view.glayoutOutputs_2[i].clear()
+		for i in self.pvList:
+			#self.view.glayoutOutputs[i].clear()
+			#self.view.glayoutOutputs_2[i].clear()
 			self.plotatt1 = self.view.glayoutOutputs[i].addPlot(title="ATT1")
 			self.plotatt1Distrib = self.plotatt1.plot(pen=None,symbol='o')
-			self.plotatt1Distrib.setData(self.sigList[0].values()[i].keys(), self.sigList[0].values()[i].values())
+			self.plotatt1Distrib.setData(self.sigList[0][i].keys(), self.sigList[0][i].values())
 			self.plotatt2 = self.view.glayoutOutputs_2[i].addPlot(title="ATT2")
 			self.plotatt2Distrib = self.plotatt2.plot(pen=None,symbol='o')
-			self.plotatt2Distrib.setData(self.sigList[1].values()[i].keys(), self.sigList[1].values()[i].values())
-			self.makestr = self.makestr+("\nNew BPM ATT1 for "+self.pvList[i]+" = "+str(self.model.getBPMReadAttenuation(str(self.pvList[i]))[0]))
-			self.makestr = self.makestr+("\nNew BPM ATT2 for "+self.pvList[i]+" = "+str(self.model.getBPMReadAttenuation(str(self.pvList[i]))[1]))
-		print self.makestr
+			self.plotatt2Distrib.setData(self.sigList[1][i].keys(), self.sigList[1][i].values())
+			self.makestr = self.makestr+("\nNew BPM ATT1 for "+i+" = "+str(self.model.getBPMReadAttenuation(str(i))[0]))
+			self.makestr = self.makestr+("\nNew BPM ATT2 for "+i+" = "+str(self.model.getBPMReadAttenuation(str(i))[1]))
 		self.view.newATTVals.setText(self.makestr)
 		self.logger.info('Attenuation calibration for '+str(self.genPVList)+' complete!')
 		self.logger.info(self.makestr)

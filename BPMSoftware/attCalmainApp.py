@@ -2,7 +2,6 @@ import sys,os
 os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
 os.environ["EPICS_CA_ADDR_LIST"] = "10.10.0.12"
 os.environ["EPICS_CA_MAX_ARRAY_BYTES"] = "10000000"
-os.chdir("..\BPMAttenuationCalibration")
 sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\Model')
 sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\Controller')
 sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\View')
@@ -23,59 +22,59 @@ class attCalApp(QtGui.QApplication):
         self.bpm = vbpmc.init()
         self.scope = vcsc.init()
         self.logger = logging.getLogger(__name__)
-        if sys_argv[1] == "VELA_INJ":
+        if sys_argv[2] == "VELA_INJ":
             self.contType = "VELA_INJ"
-            if sys_argv[2] == "Virtual":
+            if sys_argv[1] == "Virtual":
                 self.bpmCont = self.bpm.virtual_VELA_INJ_BPM_Controller()
                 self.scopeCont = self.scope.virtual_VELA_INJ_Scope_Controller()
-            elif sys_argv[2] == "Offline":
+            elif sys_argv[1] == "Offline":
                 self.bpmCont = self.bpm.offline_VELA_INJ_BPM_Controller()
                 self.scopeCont = self.scope.offline_VELA_INJ_Scope_Controller()
-            elif sys_argv[2] == "Physical":
+            elif sys_argv[1] == "Physical":
                 self.bpmCont = self.bpm.physical_VELA_INJ_BPM_Controller()
                 self.scopeCont = self.scope.physical_VELA_INJ_Scope_Controller()
-        elif sys_argv[1] == "VELA_BA1":
+        elif sys_argv[2] == "VELA_BA1":
             self.contType = "VELA_BA1"
-            if sys_argv[2] == "Virtual":
+            if sys_argv[1] == "Virtual":
                 self.bpmCont = self.bpm.virtual_VELA_BA1_BPM_Controller()
                 self.scopeCont = self.scope.virtual_VELA_BA1_Scope_Controller()
-            elif sys_argv[2] == "Offline":
+            elif sys_argv[1] == "Offline":
                 self.bpmCont = self.bpm.offline_VELA_BA1_BPM_Controller()
                 self.scopeCont = self.scope.offline_VELA_BA1_Scope_Controller()
-            elif sys_argv[2] == "Physical":
+            elif sys_argv[1] == "Physical":
                 self.bpmCont = self.bpm.physical_VELA_BA1_BPM_Controller()
                 self.scopeCont = self.scope.physical_VELA_BA1_Scope_Controller()
-        elif sys_argv[1] == "VELA_BA2":
+        elif sys_argv[2] == "VELA_BA2":
             self.contType = "VELA_BA2"
-            if sys_argv[2] == "Virtual":
+            if sys_argv[1] == "Virtual":
                 self.bpmCont = self.bpm.virtual_VELA_BA2_BPM_Controller()
                 self.scopeCont = self.scope.virtual_VELA_BA2_Scope_Controller()
-            elif sys_argv[2] == "Offline":
+            elif sys_argv[1] == "Offline":
                 self.bpmCont = self.bpm.offline_VELA_BA2_BPM_Controller()
                 self.scopeCont = self.scope.offline_VELA_BA2_Scope_Controller()
-            elif sys_argv[2] == "Physical":
+            elif sys_argv[1] == "Physical":
                 self.bpmCont = self.bpm.physical_VELA_BA2_BPM_Controller()
                 self.scopeCont = self.scope.physical_VELA_BA2_Scope_Controller()
-        elif sys_argv[1] == "CLARA_INJ":
+        elif sys_argv[2] == "CLARA_INJ":
             self.contType = "CLARA_INJ"
-            if sys_argv[2] == "Virtual":
+            if sys_argv[1] == "Virtual":
                 self.bpmCont = self.bpm.virtual_CLARA_INJ_BPM_Controller()
                 self.scopeCont = self.scope.virtual_CLARA_INJ_Scope_Controller()
-            elif sys_argv[2] == "Offline":
+            elif sys_argv[1] == "Offline":
                 self.bpmCont = self.bpm.offline_CLARA_INJ_BPM_Controller()
                 self.scopeCont = self.scope.offline_CLARA_INJ_Scope_Controller()
-            elif sys_argv[2] == "Physical":
+            elif sys_argv[1] == "Physical":
                 self.bpmCont = self.bpm.physical_CLARA_INJ_BPM_Controller()
                 self.scopeCont = self.scope.physical_CLARA_INJ_Scope_Controller()
-        elif sys_argv[1] == "CLARA_2_VELA":
+        elif sys_argv[2] == "CLARA_2_VELA":
             self.contType = "CLARA_2_VELA"
-            if sys_argv[2] == "Virtual":
+            if sys_argv[1] == "Virtual":
                 self.bpmCont = self.bpm.virtual_CLARA_2_VELA_BPM_Controller()
                 self.scopeCont = self.scope.virtual_C2V_Scope_Controller()
-            elif sys_argv[2] == "Offline":
+            elif sys_argv[1] == "Offline":
                 self.bpmCont = self.bpm.offline_CLARA_2_VELA_BPM_Controller()
                 self.scopeCont = self.scope.offline_C2V_Scope_Controller()
-            elif sys_argv[2] == "Physical":
+            elif sys_argv[1] == "Physical":
                 self.bpmCont = self.bpm.physical_CLARA_2_VELA_BPM_Controller()
                 self.scopeCont = self.scope.physical_C2V_Scope_Controller()
         self.view = attCalmainView.attCalUi_TabWidget()

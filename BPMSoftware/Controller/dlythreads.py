@@ -29,7 +29,8 @@ class dlyWorker(QRunnable):
 		self.dlyVals[2] = self.dly2Vals[6]
 		self.dlyVals[3] = self.dly2Vals[9]
 		#Emits signal when the scanDLY and setMinDLY functions are complete
-		self.signals.result.emit(self.dlyVals)
+		#self.signals.result.emit(self.dlyVals)
+		self.signals.result.emit([self.dly1Vals[6], self.dly2Vals[6]])
 
 class dlyWorkerSignals(QObject):
 	result = pyqtSignal(object)

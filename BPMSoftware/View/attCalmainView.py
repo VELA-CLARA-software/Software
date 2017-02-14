@@ -132,8 +132,8 @@ class attCalUi_TabWidget(object):
         self.tabList = []
         self.graphicsViews = []
         self.graphicsViews_2 = []
-        self.glayoutOutputs = []
-        self.glayoutOutputs_2 = []
+        self.glayoutOutputs = {}
+        self.glayoutOutputs_2 = {}
 
         self.retranslateUi(self.TabWidget, self.beamline, self.machine)
         QtCore.QMetaObject.connectSlotsByName(self.TabWidget)
@@ -190,7 +190,7 @@ class attCalUi_TabWidget(object):
         self.glayoutOutput_2 = pyqtgraph.GraphicsLayout(border = (400,400,400))
         self.graphicsView_2.setCentralItem(self.glayoutOutput_2)
         self.tabList.append(self.tab1)
-        self.glayoutOutputs.append(self.glayoutOutput)
-        self.glayoutOutputs_2.append(self.glayoutOutput_2)
+        self.glayoutOutputs[self.pvName] = self.glayoutOutput
+        self.glayoutOutputs_2[self.pvName] = self.glayoutOutput_2
         self.TabWidget.addTab(self.tab1, _fromUtf8(self.pvName))
         self.TabWidget.setObjectName(_fromUtf8(self.pvName))

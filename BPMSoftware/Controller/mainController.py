@@ -40,15 +40,18 @@ class Controller(QObject):
 		if not self.view.randomVariableCheckBox.isChecked():
 			self.view.randomVariableButton.setEnabled(True)
 		else:
-			self.pool = QtCore.QThreadPool()
-			self.pool.setMaxThreadCount(len(self.fullPVList))
-			if self.view.randomVariableCheckBox.isChecked():
+			if len(str(self.view.repRateValue.toPlainText))==0:
 				self.view.randomVariableButton.setEnabled(False)
-				for i in self.fullPVList:
-					QtGui.QApplication.processEvents()
-					self.th1 = self.mainThreads.ranPVs(i, -5, 5, 1, self.repRate, "array")
-					self.pool.start(self.th1)
-				self.pool.waitForDone()
+			else:
+				self.pool = QtCore.QThreadPool()
+				self.pool.setMaxThreadCount(len(self.fullPVList))
+				if self.view.randomVariableCheckBox.isChecked():
+					self.view.randomVariableButton.setEnabled(False)
+					for i in self.fullPVList:
+						QtGui.QApplication.processEvents()
+						self.th1 = self.mainThreads.ranPVs(i, -5, 5, 1, self.repRate, "array")
+						self.pool.start(self.th1)
+					self.pool.waitForDone()
 
 	def launchATTCal(self):
 		print os.getcwd()
@@ -70,7 +73,7 @@ class Controller(QObject):
 			self.machineMode = "Offline"
 		elif self.view.physicalButton.isChecked():
 			self.machineMode = "Physical"
-		os.system("python attCalmainApp.py "+self.machineArea+" "+self.machineMode)
+		os.system("python attCalmainApp.py "+self.machineMode+" "+self.machineArea)
 
 	def attCalThread(self):
 		self.attThread = threading.Thread(target = self.launchATTCal)
