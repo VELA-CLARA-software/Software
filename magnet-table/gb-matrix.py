@@ -84,10 +84,10 @@ elif gun[:3] == 'gb-':
     elif gun == 'gb-rf-gun':
         sheet_name = 'G-B Fig 5 RF gun + sol'
         omega = 2 * np.pi * 1.3 * 1e9
-        dz = 0.01e-3
+        dz = 0.1e-3
         z_end = 0.3
         gamma_start = np.sqrt(1 + abs(1 / epsilon_e)) # 1 eV
-        t_start = 5.8e-10
+        t_start = 6.42e-10
         
     fieldmap_filename = r'C:\Documents\CLARA\Gun and solenoid field maps.xlsx'
     book = xlrd.open_workbook(fieldmap_filename)
@@ -103,9 +103,9 @@ elif gun[:3] == 'gb-':
     # normalised field
     b = lambda z: B_gb_rf(z) * -e / (2 * m * c)
 
-print('''Frequency: {f:.3f} GHz
+print('''Frequency: {f:.4f} GHz
 Start time: {ts:.3f} ps ({ph:.1f}° phase)
-z step: {dz:.2f} mm'''.format(f=omega/(2*np.pi*1e9), ts=t_start*1e12, 
+z step: {dz:.3f} mm'''.format(f=omega/(2*np.pi*1e9), ts=t_start*1e12, 
                               ph=np.degrees(t_start*omega), dz=dz*1e3))
 
 # arrays to store results
@@ -116,9 +116,10 @@ beta_array = np.zeros_like(z_array)
 p_array = np.zeros_like(z_array)
 theta_L_array = np.zeros_like(z_array)
 u_array = []
-u = np.matrix([[0.001], [0]])
-#u = np.matrix([[0], [0.001]])
-print("Particle starts at x = {0:.3f} mm, x' = {1:.3f} mrad".format(*u.A1))
+u = np.matrix([[0.001], [0], [0.], [0.001]])
+#u = np.matrix([[0], [0.001], [0], [0]])
+print("""Particle starts at x = {0:.3f} mm, x' = {1:.3f} mrad
+y = {2:.3f} mm, y' = {3:.3f} mrad""".format(*u.A1*1e3))
 u_array.append(u)
 
 # start conditions
@@ -130,7 +131,8 @@ p_array[0] = gamma_start * beta_array[0]
 theta_L = 0
 
 # total matrix
-M_total = np.matrix([[1,0],[0,1]])
+M_total = np.identity(4)
+zero_matrix = np.matrix([[0,0],[0,0]])
 
 # calculation
 
@@ -147,19 +149,21 @@ for i, z_i in enumerate(z_array[:-1]):
     epsilon_z = E((z_i + z_f) / 2)
     gamma_tilde_dash = E(z_i) / -epsilon_e
     gamma_dash = phasor(gamma_tilde_dash)
-    gamma_z = gamma_i + gamma_dash * dz # is this dz correct?
+    gamma_z = gamma_i + gamma_dash * dz
     p_z = np.sqrt(gamma_z**2 - 1)
 #    if gamma_dash == 0:
 #        delta_theta_L = 0
 #    else:
 #        delta_theta_L = (b((z_i + z_f) / 2) / gamma_dash) * np.log((p_z + gamma_z) / (p_i + gamma_i))
-    delta_theta_L = b((z_i + z_f) / 2) * dz / ((p_z + p_i) / 2)
+    b_mid = b((z_i + z_f) / 2)
+    delta_theta_L = b_mid * dz / ((p_z + p_i) / 2)
     theta_L += delta_theta_L
     
 #    t_z = (p_z - p_i) / (c * gamma_dash)
     beta_z = p_z / gamma_z
     t_dash = 1 / (beta_z * c)
-    t_z = t_i + t_dash * dz
+    dt = t_dash * dz
+    t_z = t_i + dt
     
     # final values
     t_f = t_z
@@ -188,14 +192,11 @@ for i, z_i in enumerate(z_array[:-1]):
     C = np.cos(delta_theta_L)
     S = np.sin(delta_theta_L)
 #    print(p_i, S, z_i, b(z_i))
-    if S == 0:
-        M2 = np.matrix([[1,0],[0,1]])
-    else:
-        M2 = np.matrix([[C, p_i * S / b(z_i)], 
-                        [-b(z_i) * S / p_f, p_i * C / p_f]])
+    M2 = np.matrix([[C,                p_i * S / b_mid], 
+                    [-b_mid * S / p_f, p_i * C / p_f  ]])
     
     # focusing term due to RF magnetic focusing
-    M3 = np.matrix([[1, 0], 
+    M3 = np.matrix([[1,                                                                        0], 
                     [phasor(gamma_tilde_dash * (1 - np.exp(1j * omega * dt))) / (2 * gamma_f), 1]])
     
     # thin lens focusing due to falling edge of RF field
@@ -204,13 +205,20 @@ for i, z_i in enumerate(z_array[:-1]):
     else:
         M4 = np.matrix([[1,0],[0,1]])
     
-    M_total = M4 * M3 * M2 * M1 * M_total
-    if np.isnan(M_total).any():
-        break
-    u = M4 * M3 * M2 * M1 * u
+    M_i_2 = M4 * M3 * M2 * M1
+    M_i_4 = np.vstack([np.hstack([M_i_2, zero_matrix]), 
+                       np.hstack([zero_matrix, M_i_2])])
+    u = M_i_4 * u
     u_array.append(u)
+#    break
     
-print('Final gamma: {:.3f}'.format(gamma_f))
+print(u'''
+Final values:
+Momentum: {p_MeV:.3f} MeV
+Larmor angle: {th_deg:.3f}°
+Particle position: x = {0:.3f} mm, x' = {1:.3f} mrad
+y = {2:.3f} mm, y' = {3:.3f} mrad'''.format(*u.A1*1e3, p_MeV=p_f*-1e-6*epsilon_e, th_deg=np.degrees(theta_L)))
+
 def plotVsZ(ar, ylabel, title):
     plt.plot(z_array, ar)
     plt.xlabel('z [m]')
@@ -218,7 +226,9 @@ def plotVsZ(ar, ylabel, title):
     plt.title(title)
     plt.show()
 
-plotVsZ(theta_L_array, r'$\theta_L$ [rad]', 'Larmor angle')
-plotVsZ(gamma_array, r'$\gamma$', 'Gamma')
-plotVsZ([ui.item(0)*1000 for ui in u_array], 'x [mm]', 'Particle position')
-plotVsZ([ui.item(1)*1000 for ui in u_array], "x' [mm]", 'Particle angle')
+plotVsZ(np.degrees(theta_L_array), r'$\theta_L [\degree]$', 'Larmor angle')
+plotVsZ(p_array * -1e-6 * epsilon_e, 'p [MeV]', 'Momentum')
+#plotVsZ([ui.item(0) * 1e3 for ui in u_array], 'x [mm]', 'Particle position')
+#plotVsZ([ui.item(1) * 1e3 for ui in u_array], "x' [mrad]", 'Particle angle')
+plotVsZ([1e3 * np.sqrt(ui.item(0)**2 + ui.item(2)**2) for ui in u_array], 'r [mm]', 'Particle radius')
+plotVsZ([np.degrees(np.arctan2(ui.item(2), ui.item(0))) for ui in u_array], r"$\theta [\degree]$", 'Particle angle')
