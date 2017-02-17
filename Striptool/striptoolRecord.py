@@ -8,25 +8,6 @@ import threading
 from threading import Thread, Event, Timer
 from PyQt4.QtCore import QObject, pyqtSignal, pyqtSlot
 
-class repeatedTimera:
-
-    """Repeat `function` every `interval` seconds."""
-
-    def __init__(self, interval, function, *args, **kwargs):
-        self.interval = 1000*interval
-        self.function = function
-        self.args = args
-        self.kwargs = kwargs
-        self.thread = QtCore.QThread()
-        self.worker = repeatedWorker(interval, function, *args, **kwargs)
-        self.worker.moveToThread(self.thread)
-        self.thread.started.connect(self.worker.loop)
-        self.thread.start()
-        self.thread.setPriority(QThread.TimeCriticalPriority)
-
-    def setInterval(self, interval):
-        self.worker.setInterval(interval)
-
 class repeatedTimer:
 
     """Repeat `function` every `interval` seconds."""
@@ -60,62 +41,15 @@ class repeatedTimer:
     def setInterval(self, interval):
         self.interval = interval
 
-class repeatedWorker(QtCore.QObject):
-    def __init__(self, interval, function, *args, **kwargs):
-        super(repeatedWorker, self).__init__()
-        self.interval = 1000.0*interval
-        self.function = function
-        self.args = args
-        self.kwargs = kwargs
-        self.prev = 1000.0*time.clock();
-
-    def loop(self):
-        self.timer = QtCore.QTimer()
-        self.timer.setSingleShot(True)
-        newinterval = self.interval - ((1000.0*time.clock()) % self.interval)
-        self.prev = 1000.0*time.clock()
-        if newinterval < 0:
-            self.timer.singleShot(0, self._target)
-        else:
-            self.timer.singleShot(newinterval, self._target)
-
-    def stop(self):
-        self.timer.stop()
-
-    def _target(self):
-        self.function(*self.args, **self.kwargs)
-        newinterval = self.interval - ((1000.0*time.clock()) % self.interval)
-        while newinterval < 0.2*self.interval:
-            time.sleep(0.01)
-            newinterval = self.interval - ((1000.0*time.clock()) % self.interval)
-        self.timer.singleShot(newinterval, self._target)
-
-    def setInterval(self, interval):
-        self.interval = 1000*interval
-
-class threadedFunction:
-
-    """Repeat `function` every `interval` seconds."""
-
-    def __init__(self, worker):
-        self.interval = 1000*interval
-        self.function = function
-        self.args = args
-        self.kwargs = kwargs
-        self.thread = QtCore.QThread()
-        self.worker = worker
-        self.worker.moveToThread(self.thread)
-        self.thread.start()
-
 class createSignalTimer(QObject):
 
     dataReady = QtCore.pyqtSignal(list)
 
-    def __init__(self, name, function, *args):
+    def __init__(self, name, function, arg=[]):
         # Initialize the signal as a QObject
         QObject.__init__(self)
         self.function = function
-        self.args = args
+        self.args = arg
         self.name = name
 
     def startTimer(self, interval=1):
@@ -132,7 +66,6 @@ class recordWorker(QtCore.QObject):
         self.records = records
         self.signal = signal
         self.name = name
-        self.list = self.records[self.name]['data']
         self.signal.dataReady.connect(self.updateRecord)
 
     @QtCore.pyqtSlot(list)
@@ -140,18 +73,21 @@ class recordWorker(QtCore.QObject):
         # if len(self.records[self.name]['data']) > 1 and value[1] == self.records[self.name]['data'][-1][1] and value[1] == self.records[self.name]['data'][-2][1]:
         #     self.records[self.name]['data'][-1] = value
         # else:
+        if len(self.records[self.name]['data']) > self.records[self.name]['maxlength']:
+            cutlength = len(self.records[self.name]['data']) - self.records[self.name]['maxlength']
+            del self.records[self.name]['data'][0:cutlength]
         self.records[self.name]['data'].append(value)
         # print len(self.records[self.name]['data'])
 
 class createSignalRecord(QObject):
 
-    def __init__(self, records, name, timer, function, *args):
+    def __init__(self, records, name, pen, timer, maxlength, function, arg=[], functionForm=None, functionArgument=None):
         # Initialize the PunchingBag as a QObject
         QObject.__init__(self)
         self.records = records
-        self.records[name] = {'name': name, 'pen': 'r', 'timer': timer, 'function': function, 'ploton': True, 'data': []}
+        self.records[name] = {'name': name, 'pen': pen, 'timer': timer, 'maxlength': maxlength, 'function': function, 'arg': arg, 'ploton': True, 'data': [], 'functionForm': functionForm, 'functionArgument': functionArgument}
         self.name = name
-        self.signal = createSignalTimer(name, function, *args)
+        self.signal = createSignalTimer(name, function, arg=arg)
         self.thread = QtCore.QThread()
         self.worker = recordWorker(self.records, self.signal, name)
         self.worker.moveToThread(self.thread)
@@ -163,3 +99,8 @@ class createSignalRecord(QObject):
 
     def stop(self):
         self.signal.timer.stop()
+
+    def close(self):
+        self.stop()
+        self.thread.quit()
+        self.thread.wait()

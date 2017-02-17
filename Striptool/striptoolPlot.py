@@ -26,6 +26,8 @@ def takeClosestPosition(xvalues, myList, myNumber):
 
     If two numbers are equally close, return the smallest number.
     """
+    if len(myList) < 1 or myNumber < xvalues[0]:
+        return [0,(0,0)]
     pos = bisect_left(xvalues, myNumber)
     if pos == 0:
         return [0,myList[0]]
@@ -268,6 +270,9 @@ class generalPlot(pg.PlotWidget):
     changePlotScale = pyqtSignal('PyQt_PyObject')
     plotUpdated = pyqtSignal()
     statusChanged = pyqtSignal(str)
+    crosshairsChanged = pyqtSignal('PyQt_PyObject')
+    signalValuesUnderCrosshairs = pyqtSignal('PyQt_PyObject')
+
 
     def __init__(self, stripplot, crosshairs=True, parent = None):
         super(generalPlot, self).__init__(parent=parent)
@@ -355,6 +360,7 @@ class generalPlot(pg.PlotWidget):
     def updateLines(self):
             self.vLine.setValue(self.mousePoint.x())
             self.hLine.setValue(self.mousePoint.y())
+            self.crosshairsChanged.emit(self.mousePoint.x())
             self.hvLineText.setHtml('<span style="color: black; background-color: rgba(255, 0, 0, 100); opacity: 0.1;">'+self.statusText+'</span>')
             hvr = self.hLine.viewRect()
             vvr = self.vLine.viewRect()
@@ -458,6 +464,10 @@ class generalPlot(pg.PlotWidget):
             self.curve = self.plot.plot.plot()
             self.lines = self.MultiLine(np.array([[0]]),np.array([[0]]),pen='w')
             self.fftTextLabels = []
+            # self.plot.crosshairsChanged.connect(self.emitSignalValue)
+
+        def signalValueAtX(self, xvalue):
+            return (self.name,takeClosestPosition(self.plotData[:,0],self.plotData,xvalue)[1][1])
 
         def addCurve(self):
             return self.curve
@@ -497,22 +507,18 @@ class generalPlot(pg.PlotWidget):
         ''' This filters the data based on the plotrange of the current viewbox. For small datasets this is ~pointless, but for moderately large datasets
         and bigger it makes a noticeable speed up, despite the functions built in to PyQtGraph'''
         def timeFilter(self, datain, timescale=None):
-            if self.plot.autoscroll:
-                self.currenttime = round(time.time(),2)
-            else:
-                self.currenttime =  self.plot.currenttime
             datain = np.array(datain)
             if len(datain) > 0:
                 if (datain[0][0] > (self.currenttime+self.plot.globalPlotRange[0]) and datain[-1][0] <=  (self.currenttime+self.plot.globalPlotRange[1])):
                     return datain
                 else:
                     if datain[-1][0] <=  (self.currenttime+self.plot.globalPlotRange[1]):
-                        datain = datain[bisect_left(datain[:,0], self.currenttime+self.plot.globalPlotRange[0]):-1]
+                        datain = datain[bisect_left(datain[:,0], self.currenttime+self.plot.globalPlotRange[0])-1:-1]
                     else:
                         if datain[0][0] >= (self.currenttime+self.plot.globalPlotRange[0]):
-                            datain = datain[0:bisect_left(datain[:,0], self.currenttime+self.plot.globalPlotRange[1])]
+                            datain = datain[0:bisect_left(datain[:,0], self.currenttime+self.plot.globalPlotRange[1])+1]
                         else:
-                            datain = datain[bisect_left(datain[:,0], self.currenttime+self.plot.globalPlotRange[0]):bisect_left(datain[:,0], self.currenttime+self.plot.globalPlotRange[1])]
+                            datain = datain[bisect_left(datain[:,0], self.currenttime+self.plot.globalPlotRange[0])-1:bisect_left(datain[:,0], self.currenttime+self.plot.globalPlotRange[1])+1]
                     return datain
             else:
                 return datain
@@ -554,119 +560,3 @@ class generalPlot(pg.PlotWidget):
                 return pg.QtGui.QGraphicsItem.shape(self)
             def boundingRect(self):
                 return self.path.boundingRect()
-
-    # ''' This is the curve class which enables plotting on a plotting object. Making it a class eases control of the different options for multiple curves'''
-    # class curve(QObject):
-    #     def __init__(self, record, plot, name):
-    #         QObject.__init__(self)
-    #         self.plotScale = None
-    #         self.name = name
-    #         self.plot = plot
-    #         self.records = record
-    #         # self.globalPlotRange = self.plot.globalPlotRange
-    #         self.doingPlot = False
-    #         self.curve = self.plot.plot.plot()
-    #         self.lines = self.MultiLine(np.array([[0]]),np.array([[0]]),pen='w')
-    #
-    #     def addCurve(self):
-    #         return self.curve
-    #
-    #     ''' This updates the curve points based on the plot type and using the data from the timefilter function '''
-    #     def updateData(self, data, pen):
-    #         # self.plot.plot.removeItem(self.lines)
-    #         if len(data) > 1 and not self.plot.scatterPlot:
-    #             x,y = np.transpose(data)
-    #             if self.plot.histogramPlot:
-    #                 y2,x2 = np.histogram(y, bins=50)
-    #                 if(self.plot.stripplot.histogramCheckbox.isChecked()):
-    #                     print '1'
-    #                     self.curve.setData(x=x2-np.mean(x2), y=y2, pen=pen, stepMode=True, fillLevel=0)
-    #                     print '2'
-    #                 else:
-    #                     print '1'
-    #                     print 'x.shape = ', x2.shape
-    #                     print 'y.shape = ', y2.shape
-    #                     self.curve.clear()
-    #                     self.curve.setData(x=x2, y=y2, pen=pen, stepMode=True, fillLevel=0)
-    #                     print '2'
-    #             elif self.plot.FFTPlot:
-    #                 self.curve.setData({'x': x, 'y': y}, pen=pen, stepMode=False)
-    #                 # if(len(self.curve.yDisp) > 0):
-    #                 #     indexes = peakutils.indexes(self.curve.yDisp, thres=0.75, min_dist=1)
-    #                 #     for index in indexes:
-    #                 #         pass# print self.curve.xDisp[index]
-    #                 self.plot.updateSpectrumMode(True)
-    #             else:
-    #                 self.curve.setData(x=x, y=y, pen=pen, stepMode=False)
-    #                 # x = np.array([x])
-    #                 # y = np.array([y])
-    #                 # self.lines = self.MultiLine(x,y,pen=pen)
-    #                 # self.plot.plot.addItem(self.lines)
-    #
-    #     ''' This filters the data based on the plotrange of the current viewbox. For small datasets this is ~pointless, but for moderately large datasets
-    #     and bigger it makes a noticeable speed up, despite the functions built in to PyQtGraph'''
-    #     def timeFilter(self, datain, timescale=None):
-    #         if self.plot.autoscroll:
-    #             currenttime = time.time()
-    #         else:
-    #             currenttime =  self.plot.currenttime
-    #         # start = time.time()
-    #         times = np.array(datain)[:,0] - currenttime
-    #         # data = np.array(datain)[:,1]
-    #         tdata = zip(times, np.array(datain)[:,1])
-    #         # print 'timeFilter = ', time.time() - start
-    #         # if len(tdata) > 0:
-    #         #     times, data = zip(*tdata)
-    #         #     if times[0] > self.plot.globalPlotRange[0] and times[-1] < self.plot.globalPlotRange[1]:
-    #         #         # print 'All Data!'
-    #         #         return tdata
-    #         #     else:
-    #         #         if len(times) > 0:
-    #         #             idx = (np.array(times) > self.plot.globalPlotRange[0]) * (np.array(times) < self.plot.globalPlotRange[1])
-    #         #             timescut = list(compress(times, idx))
-    #         #             datacut = list(compress(data, idx))
-    #         #         finaldata = zip(*(timescut,datacut))
-    #         #         return finaldata
-    #         # else:
-    #         return tdata
-    #
-    #     ''' simple helper function to run the timeFilter function'''
-    #     def filterRecord(self, data, timescale=None):
-    #         return list(list(self.timeFilter(data, timescale)))
-    #         # return self.timeFilter(data, timescale)
-    #
-    #     ''' helper function to clear a curves points '''
-    #     def clear(self):
-    #         self.curve.clear()
-    #
-    #     ''' Wrapper function which calls timefilter and updateData'''
-    #     def update(self):
-    #         if not self.plot.paused and not self.doingPlot:
-    #             self.doingPlot = True
-    #             if self.records[self.name]['ploton']:
-    #                 # start = time.clock()
-    #                 self.plotData = self.filterRecord(self.records[self.name]['data'])
-    #                 # self.plotData = self.records[self.name]['data']
-    #                 # if len(self.plotData) > 100*self.plot.decimateScale:
-    #                 #     decimationfactor = int(np.floor(len(self.plotData)/self.plot.decimateScale))
-    #                 #     self.plotData = self.plotData[0::decimationfactor]
-    #                 #     self.updateData(self.plotData, self.records[self.name]['pen'])
-    #                 # else:
-    #                 self.updateData(self.plotData, self.records[self.name]['pen'])
-    #             else:
-    #                 self.clear()
-    #             self.doingPlot = False
-    #         self.plot.plotUpdated.emit()
-    #
-    #     class MultiLine(pg.QtGui.QGraphicsPathItem):
-    #         def __init__(self, x, y, pen):
-    #             """x and y are 2D arrays of shape (Nplots, Nsamples)"""
-    #             connect = np.ones(x.shape, dtype=bool)
-    #             connect[:,-1] = 0 # don't draw the segment between each trace
-    #             self.path = pg.arrayToQPath(x.flatten(), y.flatten(), connect.flatten())
-    #             pg.QtGui.QGraphicsPathItem.__init__(self, self.path)
-    #             self.setPen(pg.mkPen(pen))
-    #         def shape(self): # override because QGraphicsPathItem.shape is too expensive.
-    #             return pg.QtGui.QGraphicsItem.shape(self)
-    #         def boundingRect(self):
-    #             return self.path.boundingRect()

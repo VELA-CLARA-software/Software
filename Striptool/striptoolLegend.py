@@ -53,6 +53,12 @@ class stripLegend(pg.TreeWidget):
         signalRate.setCurrentIndex(selected)
         signalRate.currentIndexChanged.connect(lambda x: self.changeSampleRate(name, signalRate))
         self.addTreeWidget(parentTreeWidget, name, "Signal Rate", signalRate)
+        maxlength = QSpinBox()
+        maxlength.setMinimum(1)
+        maxlength.setMaximum(pow(2,24))
+        maxlength.setValue(self.records[name]['maxlength'])
+        maxlength.editingFinished.connect(lambda: self.changeMaxLength(name, maxlength))
+        self.addTreeWidget(parentTreeWidget, name, "Signal Length", maxlength)
         colorbox = pg.ColorButton()
         colorbox.setFixedSize(30,25)
         colorbox.setFlat(True)
@@ -77,6 +83,9 @@ class stripLegend(pg.TreeWidget):
         deleteRowChild = self.addTreeWidget(parentTreeWidget, name, "Delete Signal", deleteRowButton)
         deleteRowButton.clicked.connect(lambda x: self.deleteRow(name, parentTreeWidget))
         self.newRowNumber += 1
+
+    def changeMaxLength(self, name, maxlength):
+        self.records[name]['maxlength'] = maxlength.value()
 
     def formatCurveData(self, name):
         # return [(str(time.strftime('%Y/%m/%d', time.localtime(x[0]))),str(datetime.datetime.fromtimestamp(x[0]).strftime('%H:%M:%S.%f')),x[1]) for x in self.records[name]['data']]
