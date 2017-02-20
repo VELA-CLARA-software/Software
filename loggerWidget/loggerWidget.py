@@ -1,10 +1,11 @@
 import sys
+import PyQt4
 from PyQt4 import QtCore, QtGui
 import logging
 import os
-import zmq, time
-import threading
-from threading import Thread, Event, Timer
+# import zmq, time
+# import threading
+# from threading import Thread, Event, Timer
 
 widgetLogger = logging.getLogger(__name__)
 
@@ -186,7 +187,7 @@ class zmqPublishLogger(logging.Handler):
         self.socket.send_pyobj([self.publisher, record.levelno, record.message])
 
 class QPlainTextEditLogger(logging.Handler):
-    def __init__(self, tableWidget):
+    def __init__(self, tableWidget, model):
         super(QPlainTextEditLogger, self).__init__()
         self.tableWidget = tableWidget
         self.debugColour = 'gray'
@@ -197,13 +198,17 @@ class QPlainTextEditLogger(logging.Handler):
         self.dateColumnWidth = 160
         self.levelColumnWidth = 120
         self.logColumnWidth = 80
+        self.logLength = 50
+        self.model = model
 
     def emit(self, record, *args, **kwargs):
-        newRowNumber = self.tableWidget.rowCount()
-        self.tableWidget.insertRow(newRowNumber)
-        self.tableWidget.setShowGrid(False)
-        self.tableWidget.setColumnCount(4)
-        self.tableWidget.horizontalHeader().setVisible(False)
+        while self.model.rowCount() >= self.logLength:
+            self.model.removeRow(0)
+        newRowNumber = self.model.rowCount()
+        self.model.insertRow(newRowNumber)
+        self.tableWidget.setShowGrid(True)
+        self.model.setColumnCount(4)
+        # self.tableWidget.horizontalHeader().setVisible(False)
         self.tableWidget.verticalHeader().setVisible(False)
         self.tableWidget.setColumnWidth(0,self.dateColumnWidth)
         self.tableWidget.setColumnWidth(1,self.levelColumnWidth)
@@ -212,26 +217,36 @@ class QPlainTextEditLogger(logging.Handler):
         self.tableWidget.setWordWrap(True)
         msg = self.format(record)
         color = ''
+        bold = False
         if(record.levelname == 'DEBUG'):
-            color = '<font style=\"color:'+getColour(self.debugColour)+'\">'
+            color = getColour(self.debugColour)
         elif(record.levelname == 'INFO'):
-            color = '<font style=\"color:'+getColour(self.infoColour)+'\">'
+            color = getColour(self.infoColour)
         elif(record.levelname == 'WARNING'):
-            color = '<font style=\"color:'+getColour(self.warningColour)+'\">'
+            color = getColour(self.warningColour)
         elif(record.levelname == 'ERROR'):
-            color = '<font style=\"color:'+getColour(self.errorColour)+'\">'
+            color = getColour(self.errorColour)
         elif(record.levelname == 'CRITICAL'):
-            color = '<font style="color:'+getColour(self.criticalColor)+'; font-weight:bold">'
+            bold = True
+            color = getColour(self.criticalColor)
         try:
             record.sender
         except:
             record.sender = record.name
         logdata = [record.asctime, record.sender, record.levelname, record.message]
         for i in range(4):
-            self.textbox = QtGui.QPlainTextEdit()
-            self.textbox.setReadOnly(True)
-            self.textbox.appendHtml(color+str(logdata[i])+'</font>')
-            self.tableWidget.setCellWidget(newRowNumber, i, self.textbox)
+            # self.textbox = QtGui.QPlainTextEdit()
+            # self.textbox.setReadOnly(True)
+            # self.textbox.appendHtml(color+str(logdata[i])+'</font>')
+            # self.tableWidget.setIndexWidget(self.model.index(newRowNumber, i), self.textbox)
+            standarditem = QtGui.QStandardItem()
+            font = QtGui.QFont()
+            font.setBold(bold)
+            standarditem.setText(str(logdata[i]))
+            standarditem.setFont(font)
+            standarditem.setForeground(QtGui.QColor(color))
+            self.model.setItem(newRowNumber,i, standarditem)
+            # self.model.setData(self.model.index(newRowNumber,i), QtCore.Qt.blue, QtCore.Qt.BackgroundRole)
 
 class loggerNetwork(QtCore.QObject):
     def __init__(self, logger=None, **kwargs):
@@ -254,15 +269,32 @@ class loggerNetwork(QtCore.QObject):
 class loggerWidget(QtGui.QWidget):
     def __init__(self, logger=None, zmq=False, parent=None):
         super(loggerWidget,self).__init__(parent)
-        self.tablewidget = QtGui.QTableWidget()
+        self.tablewidget = QtGui.QTableView()
+
         layout = QtGui.QGridLayout()
+        self.model = QtGui.QStandardItemModel(0, 4)
+        self.model.setHorizontalHeaderLabels(['Date', 'Logger', 'Severity', 'VALUE'])
+
+        # filter proxy model
+        self.filter_proxy_model = QtGui.QSortFilterProxyModel()
+        self.filter_proxy_model.setSourceModel(self.model)
+        self.filter_proxy_model.setFilterKeyColumn(2) # third column
+
+        # # line edit for filtering
+        # layout = QtGui.QVBoxLayout()
+        filterbox = QtGui.QComboBox()
+        filterbox.addItems(['All', 'Info','Warning','Error','Critical'])
+        filterbox.setMinimumWidth(100)
+        filterbox.currentIndexChanged.connect(lambda x: self.filter_proxy_model.setFilterRegExp(self.filterLogs(x)))
+        layout.addWidget(filterbox,0,1,1,1)
+        self.tablewidget.setModel(self.filter_proxy_model)
         saveButton = QtGui.QPushButton('Save Log')
         saveButton.setFixedSize(74,20)
         saveButton.setFlat(True)
         saveButton.clicked.connect(self.saveLog)
-        layout.addWidget(self.tablewidget,0,0,10,3)
-        layout.addWidget(saveButton,10,1,1,1)
-        self.logTextBox = QPlainTextEditLogger(self.tablewidget)
+        layout.addWidget(self.tablewidget,1,0,10,3)
+        layout.addWidget(saveButton,11,1,1,1)
+        self.logTextBox = QPlainTextEditLogger(self.tablewidget, self.model)
         self.setLayout(layout)
         if(logger != None):
             if(isinstance(logger, list)):
@@ -272,6 +304,19 @@ class loggerWidget(QtGui.QWidget):
                 self.addLogger(logger)
         self.logTextBox.setFormatter(logging.Formatter(' %(asctime)s - %(name)s - %(levelno)s - %(message)s'))
         self.addLogger(widgetLogger)
+
+    def filterLogs(self, level):
+        if level == 0:
+            return ''
+        elif level == 1:
+            return r'INFO|WARNING|ERROR|CRITICAL'
+        elif level == 2:
+            return r'WARNING|ERROR|CRITICAL'
+        elif level == 3:
+            return r'ERROR|CRITICAL'
+        elif level == 4:
+            return r'CRITICAL'
+        #lambda x: self.filter_proxy_model.setFilterRegExp(filterbox.itemText(x))
 
     def setColumnWidths(self,dateWidth=160, levelWidth=120, logWidth=80):
         self.logTextBox.dateColumnWidth = dateWidth
@@ -358,6 +403,9 @@ class loggerWidget(QtGui.QWidget):
                 target.write((fmt % tuple(row))+'\n')
         widgetLogger.info('Log Saved to '+saveFileName)
 
+    def setLogLength(self, length):
+        self.logTextBox.logLength = length
+
 
 class redirectLogger(object):
     """File-like object to log text using the `logging` module."""
@@ -373,3 +421,6 @@ class redirectLogger(object):
     def flush(self):
         for handler in self.logger.handlers:
             handler.flush()
+
+    def __getattr__(self, attr):
+        return getattr(self.logger, attr)
