@@ -1,9 +1,10 @@
+import sys, time, os
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
+sys.path.append("..")
 import loggerWidget as lw
 import logging
 import logger_subclass as logsub
-import sys, time, os
 import VELA_CLARA_MagnetControl as mag
 # import velaINJBeamPositionMonitorControl as vbpmc
 

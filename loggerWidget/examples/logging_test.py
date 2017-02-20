@@ -1,9 +1,10 @@
+import sys, time, os
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
+sys.path.append("..")
 import loggerWidget as lw
 import logging
 import logger_subclass as logsub
-import sys
 ''' simple logger that takes the name of the current module '''
 logger = logging.getLogger(__name__)
 ''' a second logger with a specified name '''
