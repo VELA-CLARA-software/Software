@@ -234,14 +234,14 @@ class QPlainTextEditLogger(logging.Handler):
         except:
             record.sender = record.name
         logdata = [record.asctime, record.sender, record.levelname, record.message]
+        font = QtGui.QFont()
+        font.setBold(bold)
         for i in range(4):
             # self.textbox = QtGui.QPlainTextEdit()
             # self.textbox.setReadOnly(True)
             # self.textbox.appendHtml(color+str(logdata[i])+'</font>')
             # self.tableWidget.setIndexWidget(self.model.index(newRowNumber, i), self.textbox)
             standarditem = QtGui.QStandardItem()
-            font = QtGui.QFont()
-            font.setBold(bold)
             standarditem.setText(str(logdata[i]))
             standarditem.setFont(font)
             standarditem.setForeground(QtGui.QColor(color))
