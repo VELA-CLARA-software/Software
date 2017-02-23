@@ -6,7 +6,7 @@ import pyqtgraph as pg
 sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\\..\\..\\loggerWidget\\')
 import loggerWidget as lw
 import random as r
-
+from epics import caget,caput
 class Controller():
 
 	def __init__(self, view, model):
@@ -19,7 +19,7 @@ class Controller():
 		monitor.setCentralItem(layout)
 		'''1.1 create graph for BPM Y and Y position monitoring'''
 		self.xdict = {0:'X', 1:'Y'}
-		self.positionGraph_1 = layout.addPlot(title="BPM XX")
+		self.positionGraph_1 = layout.addPlot(title="BPM 01")
 		self.positionGraph_2 = layout.addPlot(title="BPM XX")
 		self.positionGraph_3 = layout.addPlot(title="BPM XX")
 		self.positionGraph_1.axes['bottom']['item'].setTicks([self.xdict.items()])
@@ -28,9 +28,9 @@ class Controller():
 		self.bg1 = pg.BarGraphItem(x=self.xdict.keys(), height=[-0.3,0.2], width=1)
 		self.bg2 = pg.BarGraphItem(x=self.xdict.keys(), height=[-0.3,0.2], width=1)
 		self.bg3 = pg.BarGraphItem(x=self.xdict.keys(), height=[-0.3,0.2], width=1)
-		self.positionGraph_1.setYRange(-1,1)
-		self.positionGraph_2.setYRange(-1,1)
-		self.positionGraph_3.setYRange(-1,1)
+		#self.positionGraph_1.setYRange(-1,1)
+		#self.positionGraph_2.setYRange(-1,1)
+		#self.positionGraph_3.setYRange(-1,1)
 		self.positionGraph_1.addItem(self.bg1)
 		self.positionGraph_2.addItem(self.bg2)
 		self.positionGraph_3.addItem(self.bg3)
@@ -82,12 +82,16 @@ class Controller():
 
 	def updateDisplays(self):
 		self.displayMom.setText('MOMENTUM<br> Current: '+str(self.model.I)+' A<br>'+str(self.model.p)+' = MeV/c')
-		self.bg1.setOpts(x=self.xdict.keys(), height=[r.uniform(-1,1),r.uniform(-1,1)], width=1)# replace the random generators with  bpm x read offs
-		self.bg2.setOpts(x=self.xdict.keys(), height=[r.uniform(-1,1),r.uniform(-1,1)], width=1)
-		self.bg3.setOpts(x=self.xdict.keys(), height=[r.uniform(-1,1),r.uniform(-1,1)], width=1)
+		self.bg1.setOpts(x=self.xdict.keys(), height=[self.model.func.bpms.getXFromPV('BPM01'),self.model.func.bpms.getYFromPV('BPM01')], width=1)# replace the random generators with  bpm x read offs
+		self.bg2.setOpts(x=self.xdict.keys(), height=[self.model.func.bpms.getXFromPV('BPM02'),self.model.func.bpms.getYFromPV('BPM02')], width=1)
+		self.bg3.setOpts(x=self.xdict.keys(), height=[self.model.func.bpms.getXFromPV('BPM04'),self.model.func.bpms.getYFromPV('BPM04')], width=1)
 
 	def refreshImage(self):
-		self.YAGImage.setImage(np.random.normal(size=(1392,1040)))
+		image = np.array(caget('VM-EBT-INJ-DIA-CAM-02:CAM:ArrayData'))
+		print(image.shape)
+		image = image/100000
+		image.shape = (1392,1040)
+		self.YAGImage.setImage(image)
 
 	def setChecks_mom(self):
 		if self.view.checkBox_all.isChecked()==True:
