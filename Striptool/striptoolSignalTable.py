@@ -117,9 +117,9 @@ class signalTable(QWidget):
         # functionName = 'createRandomSignal'
         # testFunction = lambda: globals()[functionName](-0.5)
 
-        self.stripTool.addSignal(name=name,pen=colourpickercolour, function=testFunction, timer=1.0/freq)
-        self.stripTool.handleSplitterButton(False)
-        self.stripTool.handleSplitterButton(False)
+        self.stripTool.addSignal(name=name,pen=colourpickercolour, function=testFunction, timer=1.0/freq, functionForm=functionForm, functionArgument=functionArgument)
+        # self.stripTool.handleLegendSplitterButton(False)
+        # self.stripTool.handleLegendSplitterButton(False)
 
     def updateColourBox(self):
         self.rowNumber = self.rowNumber + 1

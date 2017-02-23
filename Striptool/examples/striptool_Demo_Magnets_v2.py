@@ -10,12 +10,13 @@ import scatterPlot as scatterplot
 import numpy as np
 ''' Load loggerWidget library (comment out if not available) '''
 sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\\..\\..\\loggerWidget\\')
+from ConfigParser import SafeConfigParser
 import loggerWidget as lw
 import logging
 logger = logging.getLogger(__name__)
 
-sys.path.append('\\\\fed.cclrc.ac.uk\\Org\\NLab\ASTeC\\Projects\\VELA\\Software\\VELA_CLARA_PYDs\\bin\\Release')
-sys.path.append('\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Software\\VM-Controllers\\VELA-CLARA-Controllers\\Controllers\\VELA\INJECTOR\\velaINJBeamPositionMonitors\\bin\\Release')
+# sys.path.append('\\\\fed.cclrc.ac.uk\\Org\\NLab\ASTeC\\Projects\\VELA\\Software\\VELA_CLARA_PYDs\\bin\\Release')
+# sys.path.append('\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Software\\VM-Controllers\\VELA-CLARA-Controllers\\Controllers\\VELA\INJECTOR\\velaINJBeamPositionMonitors\\bin\\Release')
 import VELA_CLARA_MagnetControl as mag
 import velaINJBeamPositionMonitorControl as vbpmc
 
@@ -62,6 +63,21 @@ class mainApp(QApplication):
             ''' Display the Qt App '''
             self.setCentralWidget(self.tab)
 
+            loadAction = QAction('&Load and add signals', self)
+            loadAction.setShortcut('Ctrl+L')
+            loadAction.setStatusTip('Load signals from file, appending new signals')
+            loadAction.triggered.connect(lambda: self.tab.loadSettings(False))
+
+            overwriteAction = QAction('&Load and overwrite signals', self)
+            overwriteAction.setShortcut('Ctrl+Shift+L')
+            overwriteAction.setStatusTip('Load signals from file, overwriting previous signals')
+            overwriteAction.triggered.connect(lambda: self.tab.loadSettings(overwrite=True))
+
+            saveAction = QAction('&Save signals', self)
+            saveAction.setShortcut('Ctrl+S')
+            saveAction.setStatusTip('Save signals to a file')
+            saveAction.triggered.connect(self.tab.saveSettings)
+
             exitAction = QAction('&Exit', self)
             exitAction.setShortcut('Ctrl+Q')
             exitAction.setStatusTip('Exit application')
@@ -78,9 +94,19 @@ class mainApp(QApplication):
             menubar = self.menuBar()
             fileMenu = menubar.addMenu('&File')
             fileMenu.addAction(addWindowAction)
+            fileMenu.addSeparator()
+            fileMenu.addAction(loadAction)
+            fileMenu.addAction(overwriteAction)
+            fileMenu.addAction(saveAction)
+            fileMenu.addSeparator()
             fileMenu.addAction(exitAction)
             fileMenu = menubar.addMenu('&Edit')
             fileMenu.addAction(addScatterAction)
+
+            # self.config = SafeConfigParser()
+
+        def closeEvent(self, event):
+            self.tab.strip.close()
 
 class DockSplitter(QtGui.QSplitter):
 
@@ -94,17 +120,23 @@ class DockSplitter(QtGui.QSplitter):
         self.setStyleSheet("QSplitter::handle{background-color:transparent;}");
 
         self.addLinearPlot()
-        self.addWidget(stable.signalTable(self.strip,MagnetController=magnets,BPMController=bpms))
+        self.signaltable=stable.signalTable(self.strip,MagnetController=magnets,BPMController=bpms)
+        self.addWidget(self.signaltable)
 
-        self.timeButton10 = self.createTimeButton('10s')
-        self.timeButton60 = self.createTimeButton('1m')
-        self.timeButton600 = self.createTimeButton('10m')
+        self.timeButton10s = self.createTimeButton('10s')
+        self.timeButton1m = self.createTimeButton('1m')
+        self.timeButton10m = self.createTimeButton('10m')
+        self.timeButton1h = self.createTimeButton('1h')
+        self.timeButton8h = self.createTimeButton('8h')
         self.timeButtonLayout = QHBoxLayout()
         self.timeButtonWidget = QWidget()
         self.timeButtonWidget.setMaximumHeight(100)
-        self.timeButtonLayout.addWidget(self.timeButton10)
-        self.timeButtonLayout.addWidget(self.timeButton60)
-        self.timeButtonLayout.addWidget(self.timeButton600)
+        self.timeButtonLayout.addWidget(self.timeButton10s)
+        self.timeButtonLayout.addWidget(self.timeButton1m)
+        self.timeButtonLayout.addWidget(self.timeButton10m)
+        self.timeButtonLayout.addWidget(self.timeButton1h)
+        self.timeButtonLayout.addWidget(self.timeButton8h)
+
         self.timeButtonWidget.setLayout(self.timeButtonLayout)
         self.spTimeButtonsLayout = QVBoxLayout()
         self.spTimeButtonsWidget = QWidget()
@@ -149,6 +181,34 @@ class DockSplitter(QtGui.QSplitter):
 
         self.numberScatterPlots = 0
         self.scatterPlots = []
+
+    def loadSettings(self, overwrite=False):
+        loadFileNames = QtGui.QFileDialog.getOpenFileNames(self, caption='Load Settings', directory='', filter="Settings files (*.cfg);;", selectedFilter="Settings files (*.cfg)")
+        if overwrite:
+            self.strip.deleteAllCurves(reply=True)
+        for loadFile in loadFileNames:
+            config = SafeConfigParser()
+            config.read(str(loadFile))
+            for section in config.sections():
+                if not section == 'Plotting':
+                    functionform = eval(config.get(section,'functionform'))
+                    self.signaltable.addRow(name=config.get(section,'name'), functionForm=functionform , functionArgument=config.get(section,'functionargument'), freq=config.getfloat(section,'freq'), colourpickercolour=config.get(section,'pen'))
+
+    def saveSettings(self):
+        saveFileName = str(QtGui.QFileDialog.getSaveFileName(self, 'Save Settings', '', filter="Settings files (*.cfg);;", selectedFilter="Settings files (*.cfg)"))
+        filename, file_extension = os.path.splitext(saveFileName)
+        config = SafeConfigParser()
+        for name in self.strip.records:
+            section = str(name)
+            config.add_section(section)
+            config.set(section, 'name', str(self.strip.records[name]['name']))
+            config.set(section, 'pen', str(self.strip.records[name]['pen'].name()))
+            config.set(section, 'freq', str(1.0/self.strip.records[name]['timer']))
+            config.set(section, 'maxlength', str(self.strip.records[name]['maxlength']))
+            config.set(section, 'functionForm', str(self.strip.records[name]['functionForm']))
+            config.set(section, 'functionArgument', str(self.strip.records[name]['functionArgument']))
+        with open(saveFileName, 'wb') as configfile:
+            config.write(configfile)
 
     def addLinearPlot(self):
         ''' initialise scatter plot '''
