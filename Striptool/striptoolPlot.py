@@ -292,8 +292,6 @@ class generalPlot(pg.PlotWidget):
         self.globalPlotRange = [-10,0]
         self.currentPlotTime = round(time.time(),2)
         self.plotWidget = pg.GraphicsLayoutWidget()
-        self.label = pg.LabelItem(justify='right')
-        self.plotWidget.addItem(self.label)
         self.numberBins = 50
         self.crosshairs = crosshairs
 
@@ -325,7 +323,7 @@ class generalPlot(pg.PlotWidget):
             self.hLine = pg.InfiniteLine(angle=0, movable=False, pen=pg.mkPen('r'))
             self.hLine.setZValue(1000)
             ''' this is a lina label for the vertical crosshair line. We modify the horizontal position in the signal functions '''
-            self.hvLineText = TextItem() #pg.InfLineLabel(self.vLine, color='r', fill=(200,200,200,130))
+            self.hvLineText = TextItem()
             self.hvLineText.setZValue(1000)
             self.plot.addItem(self.vLine, ignoreBounds=True)
             self.plot.addItem(self.hLine, ignoreBounds=True)
@@ -455,7 +453,9 @@ class generalPlot(pg.PlotWidget):
     class curve(QObject):
         def __init__(self, record, plot, name):
             QObject.__init__(self)
-            self.plotScale = None
+            self.VerticalScale = 1
+            self.VerticalOffset = 0
+            self.verticalMeanSubtraction = False
             self.name = name
             self.plot = plot
             self.records = record
@@ -476,6 +476,9 @@ class generalPlot(pg.PlotWidget):
         def updateData(self, data, pen):
             if len(data) > 1 and not self.plot.scatterPlot:
                 x,y = np.transpose(data)
+                meany = np.mean(y)
+                if self.verticalMeanSubtraction:
+                    y = y - meany
                 if self.plot.histogramPlot:
                     y2,x2 = np.histogram(y, bins=self.plot.numberBins)
                     if(self.plot.stripplot.histogramCheckbox.isChecked()):
@@ -496,8 +499,10 @@ class generalPlot(pg.PlotWidget):
                                 self.plot.plot.addItem(fftTextArrow)
                     self.plot.updateSpectrumMode(True)
                 else:
+                    if not self.VerticalScale == 1 or not self.VerticalOffset == 0:
+                        y = y - meany
+                        y = (self.VerticalScale * y) + self.VerticalOffset + meany
                     if len(x) > self.plot.decimateScale:
-                        # print 'decimate = ', len(x)
                         decimationfactor = int(np.floor(len(x)/self.plot.decimateScale))
                         self.lines = self.MultiLine(x[::decimationfactor],y[::decimationfactor],pen=pen)
                     else:
