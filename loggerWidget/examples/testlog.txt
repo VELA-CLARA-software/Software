@@ -1,6 +1,6 @@
-2016-11-15 15:18:28,642, __main__, DEBUG, damn, a bug
-2016-11-15 15:18:28,681, __main__, INFO, something to remember
-2016-11-15 15:18:28,696, __main__, WARNING, that's not right
-2016-11-15 15:18:28,707, __main__, ERROR, foobar
-2016-11-15 15:18:28,719, __main__, CRITICAL, really foobar
-2016-11-15 15:18:32,813, __main__, INFO, Log Saved to C:/anaconda32/Work/Logging/testlog.txt
+2017-02-24 10:07:08,194 	 __main__ 	 DEBUG 	 damn, a bug
+2017-02-24 10:07:08,198 	 __main__ 	 INFO 	 something to remember
+2017-02-24 10:07:08,200 	 __main__ 	 WARNING 	 that's not right
+2017-02-24 10:07:08,200 	 __main__ 	 ERROR 	 foobar
+2017-02-24 10:07:08,200 	 __main__ 	 CRITICAL 	 really foobar
+2017-02-24 10:07:13,959 	 loggerWidget 	 INFO 	 Log Saved to C:/anaconda32/Work/Software/loggerWidget/examples/testlog.txt

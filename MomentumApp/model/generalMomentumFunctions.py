@@ -9,14 +9,15 @@ from numpy.polynomial import polynomial as P
 
 sys.path.append('\\\\fed.cclrc.ac.uk\\Org\\NLab\ASTeC\\Projects\\VELA\\Software\\VELA_CLARA_PYDs\\bin\\stagetim')
 import VELA_CLARA_MagnetControl as mag
-
+import VELA_CLARA_BPM_Control as bpm
 '''This Class contain function to use in a momentum procdure independant '''
 class Functions():
 	def __init__(self):
 		self.n = 10 															#number of shots to average over for a given measuremnet
-		self.magInit = mag.init()												#initilize magnet controllers
+		self.magInit = mag.init()
+		self.bpmInit = bpm.init()												#initilize magnet controllers
 		self.magnets = self.magInit.virtual_VELA_INJ_Magnet_Controller()
-
+		self.bpms = 	self.bpmInit.virtual_VELA_INJ_BPM_Controller()
 		caput('VM-EBT-INJ-MAG-DIP-01:RIRAN', 5)									#This is a fudge: Turning on removing the noise of the magnets being used on the virtual machine
 		caput('VM-EBT-INJ-MAG-QUAD-01:RIRAN', 0)
 		caput('VM-EBT-INJ-MAG-HCOR-01:RIRAN', 0)

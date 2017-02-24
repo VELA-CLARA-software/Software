@@ -1,0 +1,5 @@
+pyqtgraph>=0.9.8
+numpy
+peakutils>=1.0.3
+pywin32>=220
+PyYAML>=3.11
