@@ -384,13 +384,13 @@ class loggerWidget(QtGui.QWidget):
         logger.setLevel(level)
 
     def saveLog(self):
-        rows = self.tablewidget.rowCount()
+        rows = self.model.rowCount()
         saveData = range(rows);
         for r in range(rows):
             row = range(4)
             for i in range(4):
-                widg = self.tablewidget.cellWidget(r, i)
-                row[i] = widg.toPlainText()
+                widg = self.model.item(r, i)
+                row[i] = widg.text()
             saveData[r] = row
         # print saveData
         saveFileName = str(QtGui.QFileDialog.getSaveFileName(self, 'Save Log', filter="TXT files (*.txt);;", selectedFilter="TXT files (*.txt)"))
