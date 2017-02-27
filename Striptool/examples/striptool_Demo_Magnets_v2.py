@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 # sys.path.append('\\\\fed.cclrc.ac.uk\\Org\\NLab\ASTeC\\Projects\\VELA\\Software\\VELA_CLARA_PYDs\\bin\\Release')
 # sys.path.append('\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Software\\VM-Controllers\\VELA-CLARA-Controllers\\Controllers\\VELA\INJECTOR\\velaINJBeamPositionMonitors\\bin\\Release')
 import VELA_CLARA_MagnetControl as mag
-import velaINJBeamPositionMonitorControl as vbpmc
+import VELA_CLARA_BPM_Control as vbpmc
 
 
 import striptoolSignalTable as stable
@@ -288,7 +288,8 @@ def main():
    global magInit, magnets, bpms
    magInit = mag.init()
    magnets = magInit.virtual_VELA_INJ_Magnet_Controller()
-   bpms = vbpmc.velaINJBeamPositionMonitorController(False, False)
+   bpmInit = vbpmc.init()
+   bpms = bpmInit.virtual_VELA_INJ_BPM_Controller()
 
    ''' These are some options for pyqtgraph that make the graph black-on-white, and turn on antialiasing, which is nicer on the eye '''
    pg.setConfigOptions(antialias=True)
