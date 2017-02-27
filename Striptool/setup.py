@@ -9,6 +9,6 @@ setup(
     author='jkj62',
     author_email='james.jones@stfc.ac.uk',
     description='Strip tool widget for PyQt4',
-    install_requires=['pyqtgraph>=0.9.8','numpy','peakutils>=1.0.3','pypiwin32>=219','PyYAML>=3.11'],
+    install_requires=['pyqtgraph>=0.9.8','numpy','peakutils>=1.0.3','PyYAML>=3.11'],
 
 )

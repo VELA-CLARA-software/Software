@@ -7,7 +7,7 @@ import numpy as np
 from bisect import bisect_left, bisect_right
 import peakutils
 from itertools import compress
-import win32clipboard
+# import win32clipboard
 import itertools
 # sys.tracebacklimit = 0
 
@@ -344,14 +344,14 @@ class generalPlot(pg.PlotWidget):
         else:
             self.plot.mouseOver = False
         ''' this will copy the crosshairs location to the clipboard '''
-        if event.type() == QtCore.QEvent.GraphicsSceneMousePress:
-            try:
-                win32clipboard.OpenClipboard()
-                win32clipboard.EmptyClipboard()
-                win32clipboard.SetClipboardText(self.statusTextClipboard)
-                win32clipboard.CloseClipboard()
-            except:
-                pass
+        # if event.type() == QtCore.QEvent.GraphicsSceneMousePress:
+        #     try:
+        #         win32clipboard.OpenClipboard()
+        #         win32clipboard.EmptyClipboard()
+        #         win32clipboard.SetClipboardText(self.statusTextClipboard)
+        #         win32clipboard.CloseClipboard()
+        #     except:
+        #         pass
         return False
 
     ''' This is used to update the location of the crosshair lines as well as the accompanyng text'''
