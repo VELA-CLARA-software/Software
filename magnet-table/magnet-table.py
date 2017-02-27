@@ -16,6 +16,7 @@ import re # parsing lattice files
 import scipy.constants # speed of light
 import webbrowser #to get help
 import VELA_CLARA_MagnetControl as MagCtrl
+from pkg_resources import resource_filename
 #Note: to be able to import the magnet controller, I used
 #pip install -e "\\fed.cclrc.ac.uk\Org\NLab\ASTeC\Projects\VELA\Software\VELA_CLARA_PYDs\bin\stage"
 
@@ -82,7 +83,7 @@ def format_when_present(format_string, obj, attr):
         return ''
 
 def pixmap(icon_name):
-    return QtGui.QPixmap('Icons\\' + icon_name + '.png')
+    return QtGui.QPixmap(resource_filename('magnet-table', 'Icons/' + icon_name + '.png'))
 
 class Magnet(object):
     "Currently doesn't do anything in particular - just a container for magnet properties."
@@ -97,7 +98,8 @@ class Window(QtGui.QMainWindow):
         QtGui.QMainWindow.__init__(self, parent)
         self.magInit = MagCtrl.init()
 
-        self.settings = QtCore.QSettings('magnet-table.ini', QtCore.QSettings.IniFormat)
+        ini_filename = resource_filename('magnet-table', 'magnet-table.ini')
+        self.settings = QtCore.QSettings(ini_filename, QtCore.QSettings.IniFormat)
         main_frame = QtGui.QFrame()
         layout = QtGui.QVBoxLayout(self)
         main_frame.setLayout(layout)
