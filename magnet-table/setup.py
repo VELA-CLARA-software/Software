@@ -9,6 +9,7 @@ setup(
     author='Ben Shepherd',
     author_email='ben.shepherd@stfc.ac.uk',
     description='Magnet Table app for VELA/CLARA',
+    include_package_data=True,
     install_requires=[
         'numpy',
         'scipy']
