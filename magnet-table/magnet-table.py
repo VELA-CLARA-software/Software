@@ -83,7 +83,9 @@ def format_when_present(format_string, obj, attr):
         return ''
 
 def pixmap(icon_name):
-    return QtGui.QPixmap(resource_filename('magnet-table', 'Icons/' + icon_name + '.png'))
+    icon_filename = resource_filename('magnet-table', 'Icons/' + icon_name + '.png')
+    print(icon_filename)
+    return QtGui.QPixmap(icon_filename)
 
 class Magnet(object):
     "Currently doesn't do anything in particular - just a container for magnet properties."
