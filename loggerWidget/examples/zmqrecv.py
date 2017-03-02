@@ -37,7 +37,7 @@ def main():
 
     ''' initialise an instance of logging widget with a logger '''
     logwidget1 = lw.loggerWidget(logger)
-    zmqreceiver = lw.zmqReceiverLogger(port=5556, ipaddress='148.79.112.153')
+    zmqreceiver = lw.zmqReceiverLogger(port=5556)
     logwidget1.setDebugColour('red')
 
     tab = QTabWidget()

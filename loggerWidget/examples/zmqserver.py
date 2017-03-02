@@ -25,7 +25,9 @@ def main():
 
     ''' initialise an instance of logging widget with a logger '''
     logwidget1 = lw.loggerWidget(logger)
-    zmqlog1 = lw.zmqPublishLogger(logger, port=5556, ipaddress='148.79.112.153', logName='network')
+    zmqlog1 = lw.zmqPublishLogger(logger, port=5556, ipaddress='148.79.112.154', logName='network')
+    zmqlog1.setLogName('differentName')
+    zmqlog1.setIPAddress(ipaddress='148.79.112.153')
 
     tab = QTabWidget()
     tab.resize(800,500)
