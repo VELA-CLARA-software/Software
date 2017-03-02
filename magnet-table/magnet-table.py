@@ -84,7 +84,6 @@ def format_when_present(format_string, obj, attr):
 
 def pixmap(icon_name):
     icon_filename = resource_filename('magnet-table', 'Icons/' + icon_name + '.png')
-    print(icon_filename)
     return QtGui.QPixmap(icon_filename)
 
 class Magnet(object):
@@ -249,9 +248,11 @@ class Window(QtGui.QMainWindow):
             restore_button.clicked.connect(self.restoreMagnet)
             main_hbox.addWidget(restore_button)
             magnet.restore_button = restore_button
-            restore_button.hide()
+            restore_button.setEnabled(False)
+            self.empty_icon = QtGui.QPixmap(24, 24)
+            self.empty_icon.fill(QtCore.Qt.transparent)
             warning_icon = self.collapsing_header(main_hbox, more_info)
-            warning_icon.hide()
+            warning_icon.setPixmap(self.empty_icon)
             magnet.warning_icon = warning_icon
             #TODO: warn when magnet needs degaussing
             
@@ -283,7 +284,7 @@ class Window(QtGui.QMainWindow):
             magnet.current_spin.valueChanged.connect(self.currentValueChanged)
             magnet.current_spin.setValue(magnet.ref.siWithPol)
             magnet.k_spin.valueChanged.connect(self.kValueChanged)
-            magnet.restore_button.hide() # will be automatically shown when event triggered
+            magnet.restore_button.setEnabled(False) # will be automatically shown when event triggered
             magnet.active = False
         
         self.magnet_controls = magnet_list
@@ -335,13 +336,11 @@ class Window(QtGui.QMainWindow):
             if not magnet.ref.psuState == MagCtrl.MAG_PSU_STATE.MAG_PSU_ON:
                 magnet.warning_icon.setPixmap(pixmap('error'))
                 magnet.warning_icon.setToolTip('Magnet PSU: ' + str(magnet.ref.psuState)[8:])
-                magnet.warning_icon.show()
             elif abs(magnet.ref.siWithPol - magnet.ref.riWithPol) > magnet.ref.riTolerance:
                 magnet.warning_icon.setPixmap(pixmap('warning'))
                 magnet.warning_icon.setToolTip('Read current and set current do not match')
-                magnet.warning_icon.show()
             else:
-                magnet.warning_icon.hide()
+                magnet.warning_icon.setPixmap(self.empty_icon)
             if not magnet.current_spin.hasFocus():
                 magnet.current_spin.setValue(magnet.ref.siWithPol)
             mag_type = str(magnet.ref.magType)
@@ -406,7 +405,7 @@ class Window(QtGui.QMainWindow):
         else:
             magnet.prev_values.append(value)
         try:
-            magnet.restore_button.show()
+            magnet.restore_button.setEnabled(True)
             magnet.restore_button.setToolTip('Restore previous value ({:.3f} A)'.format(magnet.prev_values[-2]))
             magnet.active = True
         except (AttributeError, IndexError):
@@ -504,10 +503,12 @@ class Window(QtGui.QMainWindow):
             magnet.current_spin.setValue(undo_val)
             magnet.active = False
             if len(magnet.prev_values) == 1: # we're at the initial state
-                magnet.restore_button.hide()
+                magnet.restore_button.setEnabled(False)
+                magnet.restore_button.setToolTip('')
 #            print('undo', magnet.name, undo_val, magnet.active, magnet.prev_values)
         except IndexError: # pop from empty list - shouldn't happen!
-            magnet.restore_button.hide()
+            magnet.restore_button.setEnabled(False)
+            magnet.restore_button.setToolTip('')
     
     def machineModeRadioClicked(self, index):
         combo = self.sender()
@@ -515,13 +516,15 @@ class Window(QtGui.QMainWindow):
         self.setMachineMode(mode)
         # Change all the magnet references
         for magnet in self.magnets:
-            magnet.ref = self.controller.getMagObjConstRef(magnet.name)
-            # Set the current_spin value
-            magnet.current_spin.setValue(magnet.ref.siWithPol)
-            # Reset the undo state
-            magnet.prev_values = [magnet.ref.siWithPol]
-            magnet.active = False
-            magnet.restore_button.hide()
+            if not magnet.ref.magType == 'GUN':
+                magnet.ref = self.controller.getMagObjConstRef(magnet.name)
+                # Set the current_spin value
+                magnet.current_spin.setValue(magnet.ref.siWithPol)
+                # Reset the undo state
+                magnet.prev_values = [magnet.ref.siWithPol]
+                magnet.active = False
+                magnet.restore_button.setEnabled(False)
+                magnet.restore_button.setToolTip('')
 
     def momentumModeRadioClicked(self, index):
         combo = self.sender()
