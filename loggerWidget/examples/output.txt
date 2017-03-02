@@ -1,3 +1,0 @@
-it is redirected now
-this is also redirected
-redirected to a file
