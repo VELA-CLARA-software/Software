@@ -3,17 +3,14 @@
 from PyQt4 import QtGui, QtCore
 from Ui_FileSave import Ui_FileSave
 import datetime
-
-dburtLocation = "\\\\fed.cclrc.ac.uk\\org\\NLab\\ASTeC\\Projects\\VELA\\Snapshots\\DBURT\\"
-appIcon = 'magpic.jpg'
-
+import magnetAppGlobals as globals
 class GUI_FileSave(QtGui.QMainWindow, Ui_FileSave ):
     def __init__(self  ):
         QtGui.QMainWindow.__init__(self)
         # startup crap
         self.setupUi(self)
-        self.setWindowIcon(QtGui.QIcon('magpic.jpg'))
-        self.appPixMap = QtGui.QPixmap('magpic.jpg')
+        self.setWindowIcon(QtGui.QIcon(globals.appIcon))
+        self.appPixMap = QtGui.QPixmap(globals.appIcon)
 
         self.addComboKeywords()
         self.commentsSection.appendPlainText("Some Interesting Comments...")
@@ -29,7 +26,7 @@ class GUI_FileSave(QtGui.QMainWindow, Ui_FileSave ):
         self.canWindowClose = False
 
     def setFileName(self):
-        self.filename = dburtLocation + \
+        self.filename = globals.dburtLocation + \
                         self.controller_type + "_" + \
                         str(self.now.year)  + '-' + \
                         '{:02d}'.format(self.now.month) + '-' + \
@@ -48,7 +45,7 @@ class GUI_FileSave(QtGui.QMainWindow, Ui_FileSave ):
 
     # this event is inherited
     def closeEvent(self, evnt):
-        print 'GUI_FileSave close event called'
+        #print 'GUI_FileSave close event called'
         if self.canWindowClose:
             super(GUI_FileSave, self).closeEvent(evnt)
         else:
@@ -67,8 +64,7 @@ class GUI_FileSave(QtGui.QMainWindow, Ui_FileSave ):
             self.tr('VELA  BA1'),
             self.tr('VELA  BA2'),
             self.tr('AREA   51'),
-            self.tr('Cheyenne ')
-        ]
+            self.tr('Cheyenne ')]
         self.areaCombo.addItems(self.list1)
 
 

@@ -11,17 +11,19 @@ class GUI_magnetAppMainView(QtGui.QMainWindow, Ui_magnetAppMainView):
         # startup crap
         self.setupUi(self)
         self.setWindowTitle("VELA - CLARA Magnet App")
-        self.logo  = QtGui.QPixmap('CLARA5.bmp')
+        self.logo  = QtGui.QPixmap(globals.claraIcon)
         self.scaledLogo =  self.logo.scaled(self.logoLabel.size(), QtCore.Qt.KeepAspectRatio)
         self.logoLabel.setPixmap(self.scaledLogo)
-        self.setWindowIcon(QtGui.QIcon('magpic.jpg'))
-        self.appPixMap = QtGui.QPixmap('magpic.jpg')
+        self.setWindowIcon(QtGui.QIcon(globals.appIcon))
+        self.appPixMap = QtGui.QPixmap(globals.appIcon)
         self.scaledAppPixMapo = self.appPixMap.scaled(self.logoLabel.size(), QtCore.Qt.KeepAspectRatio)
         self.iconLabel.setPixmap(self.scaledAppPixMapo)
         self.quadWidgets = {}
         self.solWidgets = {}
         self.dipWidgets = {}
         self.corWidgets = {}
+        # ok so i set these like this... meh, just fixes the dimensions of the window
+        # when we start with different machien areas this may neeed to be revisted
         self.maxNumQuadPerRow = 5
         self.maxNumCorPerRow  = 7
         self.quadCount = 0

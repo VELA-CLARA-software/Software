@@ -2,13 +2,9 @@
 # -*- coding: utf-8 -*-
 import sys, os
 #get the magnet enums used to define magnet types and  PSU states
-import magnetAppGlobals
-
-dburtLocation = "\\\\fed.cclrc.ac.uk\\org\\NLab\\ASTeC\\Projects\\VELA\\Snapshots\\DBURT\\"
-appIcon = 'magpic.jpg'
-sys.path.append('\\\\fed.cclrc.ac.uk\\org\\NLab\\ASTeC\\Projects\\VELA\\Software\\VELA_CLARA_PYDs\\bin\\stage\\')
 
 import VELA_CLARA_MagnetControl as mag
+import magnetAppGlobals as globals
 
 from PyQt4 import QtGui, QtCore
 from GUI_magnetAppStartup import GUI_magnetAppStartup
@@ -31,28 +27,28 @@ class magnetAppController(object):
         self.startView.machineAreaSignal.connect( self.handle_machineAreaSignal )
         self.startView.machineModeSignal.connect( self.handle_machineModeSignal )
         self.startView.destroyed.connect(self.startView.close) # needed ??
-        # initial choices for area and mode
-        self.machineArea = 'UNKNOWN'
-        self.machineMode = 'UNKNOWN'
+        # initial choices for area and mode are None
+        self.machineArea = None
+        self.machineMode = None
         # init objects to none, these get changed depending on the flavour chosen in startView
         self.localMagnetController = None
         self.mainView = None
-        # hash table of all mag object references, filled when mainView is created
+        # hash table (python dict) of all magobject refs, filled when mainView created
         self.allMagnetObjReferences = {}
         # flag to say if we are connected to any epics
         self.activeEPICS = False
         # timer for mainView GUI update call
         self.widgetUpdateTimer = QtCore.QTimer()
-        # The dburtLoadView and dburtSaveView always exist, we 'show' and 'hide' them where necessary,
+        # The dburtLoadView and dburtSaveView always exist, we 'show' and 'hide' them where necessary
         # even calling close on them just hides them, until the mainView is closed
         # DBURT File Load Window
-        global dburtLocation
-        self.dburtLoadView = GUI_FileLoad("Load DBURT", dburtLocation )
-        self.dburtLoadView.setWindowIcon(QtGui.QIcon( appIcon ) )
+
+        self.dburtLoadView = GUI_FileLoad("Load DBURT", globals.dburtLocation )
+        self.dburtLoadView.setWindowIcon(QtGui.QIcon( globals.appIcon ) )
         self.dburtLoadView.selectButton.clicked.connect(self.handle_fileLoadSelect)
         # DBURT File Save Window
         self.dburtSaveView = GUI_FileSave()
-        self.dburtSaveView.setWindowIcon(QtGui.QIcon(appIcon))
+        self.dburtSaveView.setWindowIcon(QtGui.QIcon( globals.appIcon ))
         self.dburtSaveView.saveNowButton_2.clicked.connect(self.handle_fileSaveNow)
 #          __                 __             .__
 #  _______/  |______ ________/  |_     ___  _|__| ______  _  __
@@ -66,14 +62,12 @@ class magnetAppController(object):
          self.machineArea = r
     # start view radio group
     def handle_machineModeSignal(self,r):
-         self.machineMode = r
+        self.machineMode = r
     # check to see if the a choice of area and mode has been made
     def areaAndModeSet(self):
-        ret = True
-        if self.machineArea == 'UNKNOWN':
-            ret = False
-        if self.machineMode == 'UNKNOWN':
-            ret = False
+        ret = False
+        if self.machineArea is not None and self.machineMode is not None:
+            ret = True
         return ret
     def handle_startviewstartbutton(self):
         if  self.areaAndModeSet():
@@ -120,16 +114,16 @@ class magnetAppController(object):
         # connect the timer to mainViewUpdate, no threading in this app
         QtCore.QTimer.connect(self.widgetUpdateTimer, QtCore.SIGNAL("timeout()"), self.mainViewUpdate)
         # start timer for 200 ms
-        self.widgetUpdateTimer.start(200)
+        self.widgetUpdateTimer.start(200)#MAGIUC_NUMBER
     # update the  mainViewUpdate
     def mainViewUpdate(self):
         # conceivably the timer could restart this function before it completes so guard against that
         try:
             self.mainView.updateMagnetWidgets()
         finally:
-            self.widgetUpdateTimer.start(200)
+            self.widgetUpdateTimer.start(200)#MAGIUC_NUMBER
     # mainView buttons
-    # some buttons are connected in the GUI_magnetAppMainView, ones tha trequire a magnet controller are handled here
+    # some buttons are connected in the GUI_magnetAppMainView, ones that require a magnet controller are handled here
     def handle_selectedOn(self):
         print 'handle_selectedOn'
         if self.activeEPICS:
@@ -172,6 +166,8 @@ class magnetAppController(object):
     # set mainview text depending on mode and area chosen in startview
     def setMainViewHeaderText(self):
         self.title = 'Magnet Control for '
+        self.area_to_title ={}
+
         if self.machineArea == 'VELA_INJ':
             self.title += 'VELA Injector Magnets'
         elif self.machineArea == 'VELA_BA1':
