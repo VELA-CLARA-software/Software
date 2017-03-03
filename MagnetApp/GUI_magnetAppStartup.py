@@ -1,6 +1,6 @@
 from PyQt4 import QtGui, QtCore
 from Ui_magnetAppStartup import Ui_magnetAppStartup
-
+import magnetAppGlobals as globals
 
 class GUI_magnetAppStartup(QtGui.QMainWindow, Ui_magnetAppStartup):
     # static signals to emit when radioButtons are pressed
@@ -19,15 +19,14 @@ class GUI_magnetAppStartup(QtGui.QMainWindow, Ui_magnetAppStartup):
         self.virtualMode.toggled.connect(lambda:self.handle_modeRadio(self.virtualMode))
         self.physicalMode.toggled.connect(lambda:self.handle_modeRadio(self.physicalMode))
         self.offlineMode.toggled.connect(lambda:self.handle_modeRadio(self.offlineMode))
-        self.appPixMap = QtGui.QPixmap('magpic.jpg')
+        self.appPixMap = QtGui.QPixmap(globals.appIcon)
         self.iconLabel.setPixmap(self.appPixMap)
         self.setWindowTitle("VELA - CLARA Magnet App")
-        self.logo  = QtGui.QPixmap('CLARA5.bmp')
+        self.logo  = QtGui.QPixmap(globals.claraIcon)
         self.scaledLogo =  self.logo.scaled(self.logoLabel.size(), QtCore.Qt.KeepAspectRatio)
         self.logoLabel.setPixmap(self.scaledLogo)
-        self.setWindowIcon(QtGui.QIcon('magpic.jpg'))
+        self.setWindowIcon(QtGui.QIcon(globals.appIcon))
         self.waitMessageLabel.setText("")
-
 
     def handle_areaRadio(self,r):
         if r.isChecked() == True:

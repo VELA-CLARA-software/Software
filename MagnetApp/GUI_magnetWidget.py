@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 from PyQt4 import QtGui, QtCore
 from Ui_magnetWidget import Ui_magnetWidget
 import sys
@@ -15,13 +17,27 @@ class GUI_magnetWidget(QtGui.QMainWindow, Ui_magnetWidget):
         self.SIValue.setButtonSymbols(QtGui.QAbstractSpinBox.NoButtons)
         self.isActive = False       # active magnets have their check button checked
         self.mag_Active.stateChanged.connect( self.setActiveState ) # check button connection
-        self.riMeterScalefactor = 1000;#MAGIC_NUMBER
+        self.riMeterScalefactor = 1000 #MAGIC_NUMBER
+        self.psuStateColors = {MAG_PSU_STATE.MAG_PSU_OFF : "background-color: red",
+                               MAG_PSU_STATE.MAG_PSU_ON : "background-color: green",
+                               MAG_PSU_STATE.MAG_PSU_TIMING : "background-color: yellow",
+                               MAG_PSU_STATE.MAG_PSU_ERROR : "background-color: magenta",
+                               MAG_PSU_STATE.MAG_PSU_NONE : "background-color: black"}
+
+    def updatePSUButton(self, psuState, button):
+        if psuState in self.psuStateColors:
+            button.setStyleSheet(self.psuStateColors[psuState])
+        else:
+            button.setStyleSheet("background-color: black")
+
     # called after the magnet
     def setDefaultOptions(self):
         self.name.setText( self.magRef[0].name )
         self.rimin =  min(self.magRef[0].degValues) * self.riMeterScalefactor
         self.rimax =  max(self.magRef[0].degValues) * self.riMeterScalefactor
-        self.RIMeter.setRange(  self.rimin, self.rimax  )
+        self.RIMeter.setRange(  self.rimin-0.1*self.rimin, self.rimax + 0.1 *self.rimin  )
+        print 'RI meter range = ' + str(self.rimin) + " , "  + str(self.rimax)
+
     #active magnets are those with the check box checked
     def setActiveState(self):
         self.isActive = self.mag_Active.checkState()
@@ -36,8 +52,11 @@ class GUI_magnetWidget(QtGui.QMainWindow, Ui_magnetWidget):
             self.updatePSUButton(self.magRef[0].rPSU.psuState, self.PSU_R_State_Button)
         self.RIMeter.setValue( self.magRef[0].riWithPol * self.riMeterScalefactor )
         self.Mag_PSU_State_Button.setText( "{:.3f}".format(self.magRef[0].riWithPol)  )
+
     # set the PSU button colors based on their state
-    def updatePSUButton(self, psuState, button):
+    # cancer, but it's been refactored outr and i'm leaving this here to remind
+    # myself how NOT to do things...
+    def updatePSUButton_OLD(self, psuState, button):
         if psuState == MAG_PSU_STATE.MAG_PSU_OFF:
             button.setStyleSheet("background-color: red")
         elif psuState == MAG_PSU_STATE.MAG_PSU_ON:
