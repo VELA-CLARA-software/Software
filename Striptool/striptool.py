@@ -34,6 +34,7 @@ class stripPlot(QWidget):
         self.plotrate = 1
         self.plotScaleConnection = True
         self.crosshairs = crosshairs
+        print 'self.crosshairs = ', self.crosshairs
         self.pauseIcon  =  QtGui.QIcon(str(os.path.dirname(os.path.abspath(__file__)))+'\icons\pause.png')
 
         ''' create the stripPlot.stripPlot as a grid layout '''
@@ -60,7 +61,6 @@ class stripPlot(QWidget):
         self.histogramBinsLabel = QLabel('NBins')
         self.histogramBinsEdit = QSpinBox()
         self.histogramBinsEdit.setValue(self.plotWidget.numberBins)
-        self.histogramBinsEdit.setKeyboardTracking(False)
         self.histogramBinsEdit.setMinimum(1)
         # self.histogramBinsEdit.setMaxLength(4)
         # self.histogramBinsEdit.setInputMask('0000')
