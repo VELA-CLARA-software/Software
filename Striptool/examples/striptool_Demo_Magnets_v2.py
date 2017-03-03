@@ -17,9 +17,15 @@ logger = logging.getLogger(__name__)
 
 # sys.path.append('\\\\fed.cclrc.ac.uk\\Org\\NLab\ASTeC\\Projects\\VELA\\Software\\VELA_CLARA_PYDs\\bin\\Release')
 # sys.path.append('\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Software\\VM-Controllers\\VELA-CLARA-Controllers\\Controllers\\VELA\INJECTOR\\velaINJBeamPositionMonitors\\bin\\Release')
+<<<<<<< HEAD
 import VELA_CLARA_MagnetControl as vmag
 import VELA_CLARA_BPM_Control as vbpmc
 import  VELA_CLARA_General_Monitor as vgen
+=======
+import VELA_CLARA_MagnetControl as mag
+import velaINJBeamPositionMonitorControl as vbpmc
+
+>>>>>>> 4ca5038f8fd7937332dc468ca9c3c4c7ddb4ecc4
 
 import striptoolSignalTable as stable
 
@@ -288,10 +294,14 @@ def main():
    global magInit, magnets, bpms, general
    magInit = vmag.init()
    magnets = magInit.virtual_VELA_INJ_Magnet_Controller()
+<<<<<<< HEAD
    bpmInit = vbpmc.init()
    bpms = bpmInit.virtual_VELA_INJ_BPM_Controller()
    general = vgen.init()
 
+=======
+   bpms = vbpmc.velaINJBeamPositionMonitorController(False, False)
+>>>>>>> 4ca5038f8fd7937332dc468ca9c3c4c7ddb4ecc4
 
    ''' These are some options for pyqtgraph that make the graph black-on-white, and turn on antialiasing, which is nicer on the eye '''
    pg.setConfigOptions(antialias=True)
