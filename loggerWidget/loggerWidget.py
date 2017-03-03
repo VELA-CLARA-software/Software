@@ -3,7 +3,8 @@ import PyQt4
 from PyQt4 import QtCore, QtGui
 import logging
 import os
-# import zmq, time
+# import rpyc
+import zmq, time
 # import threading
 # from threading import Thread, Event, Timer
 
@@ -170,22 +171,6 @@ class colourNameError(Error):
 def getColour(label):
     return colournames[label.lower()]
 
-class zmqPublishLogger(logging.Handler):
-    def __init__(self, ipaddress='127.0.0.1', port=5556, publishname=__name__):
-        super(zmqPublishLogger, self).__init__()
-        self.context = zmq.Context()
-        self.socket = self.context.socket(zmq.PUB)
-        self.ipaddress = str(ipaddress)
-        self.port = str(port)
-        print self.port
-        print "tcp://%s:%s" % (self.ipaddress,self.port)
-        self.socket.bind("tcp://%s:%s" % (self.ipaddress,self.port))
-        self.publisher = publishname
-        time.sleep(0.2)
-
-    def emit(self, record, *args, **kwargs):
-        self.socket.send_pyobj([self.publisher, record.levelno, record.message])
-
 class QPlainTextEditLogger(logging.Handler):
     def __init__(self, tableWidget, model):
         super(QPlainTextEditLogger, self).__init__()
@@ -230,10 +215,12 @@ class QPlainTextEditLogger(logging.Handler):
             bold = True
             color = getColour(self.criticalColor)
         try:
-            record.sender
+            record.publisher
         except:
-            record.sender = record.name
-        logdata = [record.asctime, record.sender, record.levelname, record.message]
+            record.publisher = ''
+        if hasattr(record, 'networkname'):
+            record.name = record.networkname
+        logdata = [record.asctime, record.publisher+'('+record.name+')', record.levelname, record.message]
         font = QtGui.QFont()
         font.setBold(bold)
         for i in range(4):
@@ -248,26 +235,73 @@ class QPlainTextEditLogger(logging.Handler):
             self.model.setItem(newRowNumber,i, standarditem)
             # self.model.setData(self.model.index(newRowNumber,i), QtCore.Qt.blue, QtCore.Qt.BackgroundRole)
 
-class loggerNetwork(QtCore.QObject):
-    def __init__(self, logger=None, **kwargs):
-        super(loggerNetwork,self).__init__()
-        self.networkLogger = zmqPublishLogger(**kwargs)
+class zmqPublishLogger(QtCore.QObject):
+    def __init__(self, logger=None, *args, **kwargs):
+        super(zmqPublishLogger,self).__init__()
+        self.networkLogger = zmqPublishLoggerHandler(*args, **kwargs)
         if(logger != None):
             if(isinstance(logger, list)):
                 for log in logger:
                     self.addLogger(log)
             else:
                 self.addLogger(logger)
-        self.networkLogger.setFormatter(logging.Formatter(' %(asctime)s - %(name)s - %(levelno)s - %(message)s'))
+        self.networkLogger.setFormatter(logging.Formatter(' %(asctime)s - %(name)s - %(publisher)s - %(levelno)s - %(message)s'))
         self.addLogger(widgetLogger)
 
     def addLogger(self, logger):
         logger.addHandler(self.networkLogger)
         logger.setLevel(logging.DEBUG)
 
+    def setLogName(self, name):
+        self.networkLogger.publisher = name
+
+    def setIPAddress(self, ipaddress):
+        self.networkLogger.setIPAddress(ipaddress=ipaddress)
+
+class zmqPublishLoggerHandler(logging.Handler):
+    def __init__(self, logName=__name__, *args, **kwargs):
+        super(zmqPublishLoggerHandler, self).__init__()
+        self.context = zmq.Context()
+        self.connect(*args, **kwargs)
+        self.publisher = logName
+        time.sleep(0.2)
+
+    def connect(self, ipaddress='127.0.0.1', port=5556):
+        self.socket = self.context.socket(zmq.PUSH)
+        self.ipaddress = str(ipaddress)
+        self.port = str(port)
+        self.socket.connect("tcp://%s:%s" % (self.ipaddress, self.port))
+
+    def setIPAddress(self, ipaddress):
+        self.connect(ipaddress=ipaddress, port=self.port)
+
+    def emit(self, record, *args, **kwargs):
+        self.socket.send_pyobj([self.publisher, record.name, record.levelno, record.message])
+
+class zmqReceiverLogger(QtCore.QObject):
+    def __init__(self, *args, **kwargs):
+        super(zmqReceiverLogger,self).__init__()
+        self.thread = zmqReceiverLoggerThread(*args, **kwargs)
+        self.thread.start()
+
+class zmqReceiverLoggerThread(QtCore.QThread):
+
+    def __init__(self, port=5556):
+        super(zmqReceiverLoggerThread, self).__init__()
+        self.context = zmq.Context()
+        self.socket = self.context.socket(zmq.PULL)
+        self.port = port
+
+    def run(self):
+        self.socket.bind("tcp://*:%s" % (self.port))
+
+        while True:
+            string = self.socket.recv_pyobj()
+            publisher, name, level, message = string
+            widgetLogger.log(level, message, extra={'networkname': name, 'publisher': publisher})
 
 class loggerWidget(QtGui.QWidget):
-    def __init__(self, logger=None, zmq=False, parent=None):
+    def __init__(self, logger=None, networkLogger=False, parent=None):
         super(loggerWidget,self).__init__(parent)
         self.tablewidget = QtGui.QTableView()
 
@@ -287,13 +321,18 @@ class loggerWidget(QtGui.QWidget):
         filterbox.setMinimumWidth(100)
         filterbox.currentIndexChanged.connect(lambda x: self.filter_proxy_model.setFilterRegExp(self.filterLogs(x)))
         layout.addWidget(filterbox,0,1,1,1)
+        clearButton = QtGui.QPushButton('Clear Log')
+        clearButton.setFixedSize(74,20)
+        clearButton.setFlat(True)
+        clearButton.clicked.connect(self.clearLog)
+        layout.addWidget(clearButton,0,2,1,1)
         self.tablewidget.setModel(self.filter_proxy_model)
         saveButton = QtGui.QPushButton('Save Log')
         saveButton.setFixedSize(74,20)
         saveButton.setFlat(True)
         saveButton.clicked.connect(self.saveLog)
-        layout.addWidget(self.tablewidget,1,0,10,3)
-        layout.addWidget(saveButton,11,1,1,1)
+        layout.addWidget(self.tablewidget,1,0,10,5)
+        layout.addWidget(saveButton,0,3,1,1)
         self.logTextBox = QPlainTextEditLogger(self.tablewidget, self.model)
         self.setLayout(layout)
         if(logger != None):
@@ -304,6 +343,10 @@ class loggerWidget(QtGui.QWidget):
                 self.addLogger(logger)
         self.logTextBox.setFormatter(logging.Formatter(' %(asctime)s - %(name)s - %(levelno)s - %(message)s'))
         self.addLogger(widgetLogger)
+        if networkLogger:
+            self.networkLogThread = networkLogThread()
+            global logWidget
+            logWidget = self
 
     def filterLogs(self, level):
         if level == 0:
@@ -376,9 +419,9 @@ class loggerWidget(QtGui.QWidget):
         self.setErrorColour(errorcolour)
         self.setCriticalColour(criticalcolour)
 
-    def addLogger(self, logger):
+    def addLogger(self, logger, level=logging.DEBUG):
         logger.addHandler(self.logTextBox)
-        logger.setLevel(logging.DEBUG)
+        logger.setLevel(level)
 
     def setLoggerLevel(self, logger, level=logging.DEBUG):
         logger.setLevel(level)
@@ -406,6 +449,10 @@ class loggerWidget(QtGui.QWidget):
     def setLogLength(self, length):
         self.logTextBox.logLength = length
 
+    def clearLog(self):
+        numrows = self.model.rowCount()
+        for i in reversed(range(numrows)):
+            self.model.removeRow(i)
 
 class redirectLogger(object):
     """File-like object to log text using the `logging` module."""
