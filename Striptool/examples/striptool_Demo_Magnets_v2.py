@@ -286,14 +286,9 @@ def main():
    global magInit, magnets, bpms, general
    magInit = vmag.init()
    magnets = magInit.virtual_VELA_INJ_Magnet_Controller()
-<<<<<<< HEAD
    bpmInit = vbpmc.init()
    bpms = bpmInit.virtual_VELA_INJ_BPM_Controller()
    general = vgen.init()
-
-=======
-   bpms = vbpmc.velaINJBeamPositionMonitorController(False, False)
->>>>>>> 4ca5038f8fd7937332dc468ca9c3c4c7ddb4ecc4
 
    ''' These are some options for pyqtgraph that make the graph black-on-white, and turn on antialiasing, which is nicer on the eye '''
    pg.setConfigOptions(antialias=True)
