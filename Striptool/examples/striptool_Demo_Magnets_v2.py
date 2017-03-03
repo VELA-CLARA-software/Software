@@ -15,17 +15,9 @@ import loggerWidget as lw
 import logging
 logger = logging.getLogger(__name__)
 
-# sys.path.append('\\\\fed.cclrc.ac.uk\\Org\\NLab\ASTeC\\Projects\\VELA\\Software\\VELA_CLARA_PYDs\\bin\\Release')
-# sys.path.append('\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Software\\VM-Controllers\\VELA-CLARA-Controllers\\Controllers\\VELA\INJECTOR\\velaINJBeamPositionMonitors\\bin\\Release')
-<<<<<<< HEAD
 import VELA_CLARA_MagnetControl as vmag
 import VELA_CLARA_BPM_Control as vbpmc
 import  VELA_CLARA_General_Monitor as vgen
-=======
-import VELA_CLARA_MagnetControl as mag
-import velaINJBeamPositionMonitorControl as vbpmc
-
->>>>>>> 4ca5038f8fd7937332dc468ca9c3c4c7ddb4ecc4
 
 import striptoolSignalTable as stable
 
