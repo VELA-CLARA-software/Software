@@ -111,12 +111,14 @@ class signalTable(QWidget):
         self.connect(self, QtCore.SIGNAL("firstColumnComboBoxChanged(PyQt_PyObject, PyQt_PyObject)"), self.changeThirdComboFromFirst)
         self.connect(self, QtCore.SIGNAL("colourPickerButtonPushed(PyQt_PyObject)"), self.colorPicker)
         self.stripTool.signalAdded.connect(self.updateColourBox)
+        self.pvids = []
 
     def addRow(self, name, functionForm, functionArgument, freq, colourpickercolour):
         if functionForm == 'custom':
             pvtype="DBR_DOUBLE"
-            id = self.general.connectPV(str(functionArgument),pvtype)
-            testFunction = lambda: self.general.getValue(id)
+            pvid = self.general.connectPV(str(functionArgument),pvtype)
+            self.pvids.append(pvid)
+            testFunction = lambda: self.general.getValue(pvid)
         elif functionForm[0] == '':
             functionName = functionForm[1]
             testFunction = lambda: getattr(self.magnets,functionName)(functionArgument)
