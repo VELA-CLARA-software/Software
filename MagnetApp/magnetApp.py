@@ -3,6 +3,7 @@
 from PyQt4 import QtGui, QtCore
 import sys,logging,socket
 
+import magnetAppGlobals as globals
 import magnetAppController
 
 class magnetApp(QtGui.QApplication):
@@ -13,7 +14,7 @@ class magnetApp(QtGui.QApplication):
         self.controller = magnetAppController.magnetAppController(argv)
 
 if __name__ == '__main__':
-    logging.basicConfig(filename='magnetTestLog.log', level=logging.INFO,format='%(asctime)s %(message)s')
+    logging.basicConfig(filename=globals.logfile, level=logging.INFO,format='%(asctime)s %(message)s')
     logging.info('Started on ' + socket.gethostname() )
     print "starting magnet app"
     app = magnetApp(sys.argv)

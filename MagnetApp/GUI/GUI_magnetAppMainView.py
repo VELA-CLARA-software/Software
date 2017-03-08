@@ -3,6 +3,7 @@
 from PyQt4 import QtGui, QtCore
 from Ui_magnetAppMainView import Ui_magnetAppMainView
 from GUI_magnetWidget import GUI_magnetWidget
+import magnetAppGlobals as globals
 
 class GUI_magnetAppMainView(QtGui.QMainWindow, Ui_magnetAppMainView):
     closing = QtCore.pyqtSignal()# custom close signal to send to controller
@@ -18,6 +19,7 @@ class GUI_magnetAppMainView(QtGui.QMainWindow, Ui_magnetAppMainView):
         self.appPixMap = QtGui.QPixmap(globals.appIcon)
         self.scaledAppPixMapo = self.appPixMap.scaled(self.logoLabel.size(), QtCore.Qt.KeepAspectRatio)
         self.iconLabel.setPixmap(self.scaledAppPixMapo)
+        # magnet widgets held in
         self.quadWidgets = {}
         self.solWidgets = {}
         self.dipWidgets = {}
@@ -34,18 +36,17 @@ class GUI_magnetAppMainView(QtGui.QMainWindow, Ui_magnetAppMainView):
         self.currentCorRow  = -1
         self.currentQuadCol = 0
         self.currentCorCol  = 0
-        # simple signals don't need to go back to the controller
-        self.dipSelectAll.clicked.connect(   lambda:self.activateMags(self.dipWidgets,True  ) )
-        self.dipSelectNone.clicked.connect(  lambda:self.activateMags(self.dipWidgets,False ) )
-        self.solSelectAll.clicked.connect(   lambda:self.activateMags(self.solWidgets,True  ) )
-        self.solSelectNone.clicked.connect(  lambda:self.activateMags(self.solWidgets,False ) )
-        self.quadSelectAll.clicked.connect(  lambda:self.activateMags(self.quadWidgets,True ) )
-        self.quadSelectNone.clicked.connect( lambda:self.activateMags(self.quadWidgets,False) )
-        self.corSelectAll.clicked.connect(   lambda:self.activateMags(self.corWidgets,True  ) )
-        self.corSelectNone.clicked.connect(  lambda:self.activateMags(self.corWidgets,False ) )
+        # simple signals don't need to go back to the master controller
+        self.dipSelectAll.clicked.connect ( lambda:self.activateMags(self.dipWidgets,True  ))
+        self.solSelectNone.clicked.connect( lambda:self.activateMags(self.solWidgets,False ))
+        self.dipSelectNone.clicked.connect( lambda:self.activateMags(self.dipWidgets,False ))
+        self.quadSelectAll.clicked.connect( lambda:self.activateMags(self.quadWidgets,True ))
+        self.quadSelectNone.clicked.connect(lambda:self.activateMags(self.quadWidgets,False))
+        self.corSelectAll.clicked.connect ( lambda:self.activateMags(self.corWidgets,True  ))
+        self.corSelectNone.clicked.connect( lambda:self.activateMags(self.corWidgets,False ))
+        self.solSelectAll.clicked.connect ( lambda:self.activateMags(self.solWidgets,True  ))
         self.mainSelectAll.clicked.connect( self.activateAll )
         self.selectNone.clicked.connect( self.deActivateAll )
-        #self.closing.connect(self.close)
 
     def closeEvent(self,event):
         self.closing.emit()
@@ -76,7 +77,8 @@ class GUI_magnetAppMainView(QtGui.QMainWindow, Ui_magnetAppMainView):
         if self.r == 0:
             self.currentQuadRow += 1
             self.currentQuadCol = 0
-        self.quad_Grid_Box.addWidget(self.quadWidgets[magnetObj.name], self.currentQuadRow, self.currentQuadCol)
+        self.quad_Grid_Box.addWidget(self.quadWidgets[magnetObj.name],
+                                     self.currentQuadRow, self.currentQuadCol)
         self.currentQuadCol += 1
         self.quadCount += 1
     def addCor(self, magnetObj ):
@@ -85,15 +87,20 @@ class GUI_magnetAppMainView(QtGui.QMainWindow, Ui_magnetAppMainView):
         if self.r == 0:
             self.currentCorRow += 1
             self.currentCorCol = 0
-        self.cor_Grid_Box.addWidget(self.corWidgets[magnetObj.name], self.currentCorRow, self.currentCorCol)
+        self.cor_Grid_Box.addWidget(self.corWidgets[magnetObj.name],
+                                    self.currentCorRow, self.currentCorCol)
         self.currentCorCol += 1
         self.corCount += 1
     # after adding magnet widgets add in a spacer to make things look a bit neater
     def mainResize(self):
-        self.solFrameLayout.addItem(QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding))
-        self.dipFrameLayout.addItem(QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding))
-        self.quadFrameLayout.addItem(QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding))
-        self.corFrameLayout.addItem(QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding))
+        self.solFrameLayout.addItem(QtGui.QSpacerItem(20,40,QtGui.QSizePolicy.Minimum,
+                                    QtGui.QSizePolicy.Expanding))
+        self.dipFrameLayout.addItem(QtGui.QSpacerItem(20,40,QtGui.QSizePolicy.Minimum,
+                                    QtGui.QSizePolicy.Expanding))
+        self.quadFrameLayout.addItem(QtGui.QSpacerItem(20,40,QtGui.QSizePolicy.Minimum,
+                                     QtGui.QSizePolicy.Expanding))
+        self.corFrameLayout.addItem(QtGui.QSpacerItem(20,40,QtGui.QSizePolicy.Minimum,
+                                    QtGui.QSizePolicy.Expanding))
     # set check boxes true or false
     def activateMags(self,magnets,value):
         for mag  in magnets.values():
@@ -109,25 +116,22 @@ class GUI_magnetAppMainView(QtGui.QMainWindow, Ui_magnetAppMainView):
         self.activateMags(self.corWidgets,False)
         self.activateMags(self.quadWidgets,False)
     # get names from active check boxes
+    def getActiveMags(self,maglist):
+        self.returnMagNames=[]
+        for mag in maglist:
+            if maglist[mag].isActive:
+                self.returnMagNames.append(mag)
+        return self.returnMagNames
     def getActiveQuads(self):
-        self.returnmagnames= []
-        for mag in self.quadWidgets:
-            if self.quadWidgets[mag].isActive:
-                self.returnmagnames.append(mag)
-        return self.returnmagnames
+        return self.getActiveMags(self.quadWidgets)
     def getActiveDips(self):
-        self.returnmagnames= []
-        for mag in self.dipWidgets:
-            if self.dipWidgets[mag].isActive:
-                self.returnmagnames.append(mag)
-        return self.returnmagnames
+        return self.getActiveMags(self.dipWidgets)
     def getActiveSols(self):
-        self.returnmagnames= []
-        for mag in self.solWidgets:
-            if self.solWidgets[mag].isActive:
-                self.returnmagnames.append(mag)
-        return self.returnmagnames
+        return self.getActiveMags(self.solWidgets)
+    def getActiveCors(self):
+        return self.getActiveMags(self.corWidgets)
     def getActiveNames(self):
-        self.returnmagnames = self.getActiveQuads() + self.getActiveDips() + self.getActiveSols()
+        self.returnmagnames = self.getActiveQuads()+self.getActiveDips() + \
+                              self.getActiveSols() +self.getActiveCors()
         return self.returnmagnames
 
