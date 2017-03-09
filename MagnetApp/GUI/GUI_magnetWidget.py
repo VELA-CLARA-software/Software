@@ -24,6 +24,8 @@ class GUI_magnetWidget(QtGui.QMainWindow, Ui_magnetWidget):
         self.setupUi(self)
         # holds the reference to the c++ Magnet Object Data,
         # this ***MUST*** be in a list otherwise the reference won't update
+        # maybe it could be a dict, or set,
+        # in fact i think it **MUST** be in a mutable container
         # set in  addMagnetsToMainView in the magnetAppController
         self.magRef = []
         self.SIValue.setButtonSymbols(QtGui.QAbstractSpinBox.NoButtons)
@@ -48,13 +50,13 @@ class GUI_magnetWidget(QtGui.QMainWindow, Ui_magnetWidget):
     # latest magnet object values to update the gui with
     def updateMagWidget(self):
         #print 'update ' + self.localName
-        self.SIValue.setValue( self.magRef[0].siWithPol )
-        self.updatePSUButton(  self.magRef[0].psuState, self.Mag_PSU_State_Button)
+        self.SIValue.setValue(self.magRef[0].siWithPol)
+        self.updatePSUButton(self.magRef[0].psuState, self.Mag_PSU_State_Button)
         if self.magRef[0].magRevType == MAG_REV_TYPE.NR:
             self.updatePSUButton(self.magRef[0].nPSU.psuState, self.PSU_N_State_Button)
             self.updatePSUButton(self.magRef[0].rPSU.psuState, self.PSU_R_State_Button)
-        self.RIMeter.setValue( self.magRef[0].riWithPol * self.riMeterScalefactor )
-        self.Mag_PSU_State_Button.setText( "{:.3f}".format(self.magRef[0].riWithPol)  )
+        self.RIMeter.setValue(self.magRef[0].riWithPol * self.riMeterScalefactor)
+        self.Mag_PSU_State_Button.setText("{:.3f}".format(self.magRef[0].riWithPol))
 
     # set the PSU button colors based on their state
     # CANCER, but it's been refactored out and i'm leaving this here to remind

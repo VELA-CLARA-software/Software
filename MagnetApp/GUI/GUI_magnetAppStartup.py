@@ -40,33 +40,13 @@ class GUI_magnetAppStartup(QtGui.QMainWindow, Ui_magnetAppStartup):
         # self.CLARA_PHASE_1.objectName(): MACHINE_AREA.CLARA_PHASE_1,
         # self.CLARA_2_VELA.objectName(): MACHINE_AREA.CLARA_2_VELA
         }
+    # the radio buttones emit a MACHINE_MODE or MACHINE_AREA enum
+    # this is then set as a variable in the  magnetAppController
     def handle_areaRadio(self,r):
         if r.isChecked() == True:
             self.machineAreaSignal.emit(self.radioAreaTo_ENUM[r.objectName()])
     def handle_modeRadio(self,r):
         if r.isChecked() == True:
             self.machineModeSignal.emit(self.radioModeTo_ENUM[r.objectName()])
-
-
-
-        #
-        # self.radioAreaTo_ENUM ={ self.VELA_BA2.objectName(): MACHINE_AREA.VELA_BA2,
-        # self.VELA_BA1.objectName(): MACHINE_AREA.VELA_BA1,
-        # self.VELA_INJ.objectName(): MACHINE_AREA.VELA_INJ
-        # #self.CLARA_PHASE_1.objectName(): MACHINE_AREA.CLARA_PHASE_1,
-        # #self.CLARA_2_VELA.objectName(): MACHINE_AREA.CLARA_2_VELA
-        # }
-        # self.radioModeTo_ENUM = {self.virtualMode.objectName(): MACHINE_MODE.VIRTUAL,
-        # self.physicalMode.objectName(): MACHINE_MODE.PHYSICAL,
-        # self.offlineMode.objectName(): MACHINE_MODE.OFFLINE
-        # # self.CLARA_PHASE_1.objectName(): MACHINE_AREA.CLARA_PHASE_1,
-        # # self.CLARA_2_VELA.objectName(): MACHINE_AREA.CLARA_2_VELA
-        # }
-        # def handle_areaRadio(self,r):
-        #     if r.isChecked() == True:
-        #         machineAreaSignal.emit(self.radioAreaTo_ENUM[r.objectName()])
-        # def handle_modeRadio(self,r):
-        #     if r.isChecked() == True:
-        #         machineModeSignal.emit(self.radioModeTo_ENUM[r.objectName()])
 
 

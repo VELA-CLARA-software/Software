@@ -41,6 +41,7 @@ class magnetAppController(object):
         self.activeEPICS = False
         # timer for mainView GUI update call
         self.widgetUpdateTimer = QtCore.QTimer()
+        self.widgetTimerUpdateTime_ms = 200  # MAGIC_NUMBER
         # The dburtLoadView and dburtSaveView always exist,
         # we 'show' and 'hide' them where necessary
         # even calling close on them just hides them, until the mainView is closed
@@ -79,11 +80,12 @@ class magnetAppController(object):
         if self.machineArea is not None and self.machineMode is not None:
             ret = True
         return ret
-
+    # pressing start, tries to lanuch a magcontroller and build the main view
     def handle_startviewstartbutton(self):
         if  self.areaAndModeSet():
             # forced update to the startup window showing choices
-            self.startView.waitMessageLabel.setText("Building Main Window...Patience is a virtue")
+            self.startView.waitMessageLabel.setText(
+                "Building Main Window...Patience is a virtue")
             self.startView.update()
             QtGui.QApplication.processEvents();
             # launch requested magnet controller
@@ -125,32 +127,31 @@ class magnetAppController(object):
         # connect the timer to mainViewUpdate, no threading in this app
         QtCore.QTimer.connect(self.widgetUpdateTimer, QtCore.SIGNAL("timeout()"), self.mainViewUpdate)
         # start timer for 200 ms
-        self.widgetUpdateTimer.start(200)#MAGIUC_NUMBER
+        self.widgetUpdateTimer.start(self.widgetTimerUpdateTime_ms)
     # update the  mainViewUpdate
     def mainViewUpdate(self):
-        # conceivably the timer could restart this function before it completes so guard against that
+        # conceivably the timer could restart this function before it completes
+        # so guard against that
         try:
             self.mainView.updateMagnetWidgets()
         finally:
-            self.widgetUpdateTimer.start(200)#MAGIUC_NUMBER
+            self.widgetUpdateTimer.start(self.widgetTimerUpdateTime_ms)
     # mainView buttons
-    # some buttons are connected in the GUI_magnetAppMainView, ones that require a magnet controller are handled here
+    # 'simple' buttons are connected in the GUI_magnetAppMainView
+    # ones that require a magnet controller are handled here
     def handle_selectedOn(self):
-        #print 'handle_selectedOn'
         if self.activeEPICS:
             self.activeMags = mag.std_vector_string()
             self.activeMags.extend(self.mainView.getActiveNames())
             self.localMagnetController.switchONpsu(self.activeMags)
 
     def handle_selectedOff(self):
-        #print 'handle_selectedOn'
         if self.activeEPICS:
             self.activeMags = mag.std_vector_string()
             self.activeMags.extend(self.mainView.getActiveNames())
             self.localMagnetController.switchOFFpsu(self.activeMags)
 
     def handle_allOff(self):
-        #print 'handle_allOff'
         if self.activeEPICS:
             self.localMagnetController.switchOFFpsu(self.allMagNames)
 
@@ -159,17 +160,13 @@ class magnetAppController(object):
             self.localMagnetController.setSIZero(self.allMagNames)
 
     def handle_allOn(self):
-        #print 'handle_allOn'
         if self.activeEPICS:
             self.localMagnetController.switchONpsu(self.allMagNames)
 
     def handle_selectedDegauss(self):
-        #print 'handle_selectedDegauss'
         if self.activeEPICS:
             self.activeMags = mag.std_vector_string()
             self.activeMags.extend(self.mainView.getActiveNames())
-            #print 'active magnet widgets'
-            #print self.activeMags
             self.localMagnetController.degauss(self.activeMags, True)
 
     def handle_saveSettings(self):
@@ -191,13 +188,14 @@ class magnetAppController(object):
         self.title = 'Magnet Control for '
         self.title +=  self.Area_ENUM_to_Text[self.machineArea]
         self.title +=  ' Magnets '
-        self.title +=  self.Area_Text[self.machineMode]
+        self.title +=  self.Mode_Text[self.machineMode]
         self.mainView.titleLabel.setText(self.title)
     # more cancer below, but i think i have to live with this...
     def addMagnetsToMainView(self):
         # get all magnet names
         self.allMagNames = self.localMagnetController.getMagnetNames()
-        #iterate over all magnets, and add them to respective lists depending on their magnet type
+        # iterate over all magnets, and add them to respective lists depending
+        # on their magnet type
         for i in self.allMagNames:
             self.allMagnetObjReferences[i] = self.localMagnetController.getMagObjConstRef(i)
             if self.localMagnetController.isAQuad(i):
@@ -224,7 +222,7 @@ class magnetAppController(object):
         # now we have the mainView, we connect it's close function, this
         # ensures that when the main view is closed all the other views are closed too
         self.mainView.closing.connect(self.connectCloseEvents)
-    # the load and save dburt windows can't be closed until this function is called,
+    # the load and save dburt windows can't be closed until this function is called
     def connectCloseEvents(self):
         self.widgetUpdateTimer.stop()
         self.dburtLoadView.canWindowClose = True
