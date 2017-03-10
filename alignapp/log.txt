@@ -1,0 +1,947 @@
+Instantiated a VCmagnets 
+creating virtual_VELA_INJ_Magnet_Controller object
+
+**** Attempting to Read \\fed.cclrc.ac.uk\Org\NLab\ASTeC\Projects\VELA\Software\VM-Controllers\VELA-CLARA-Controllers\Config\VM\velaINJMagnetsNRpsu.config ****
+File Opened from \\fed.cclrc.ac.uk\Org\NLab\ASTeC\Projects\VELA\Software\VM-Controllers\VELA-CLARA-Controllers\Config\VM\velaINJMagnetsNRpsu.config
+Found START_OF_DATA
+Found PV_COMMANDS_START
+Added On suffix for On
+Added Off suffix for Off
+Found PV_MONITORS_START
+Added Sta suffix for Sta
+Found OBJECTS_START
+Added SOL N PSU
+Added SOL R PSU
+Added QUAD01 N PSU
+Added QUAD01 R PSU
+Added QUAD02 N PSU
+Added QUAD02 R PSU
+Added QUAD03 N PSU
+Added QUAD03 R PSU
+Added QUAD04 N PSU
+Added QUAD04 R PSU
+Added QUAD05 N PSU
+Added QUAD05 R PSU
+Added QUAD05 NR-PSU Gang Member DIP02
+Added QUAD05 NR-PSU Gang Member DIP03
+Added QUAD05 NR-PSU Gang Member QUAD06
+Added QUAD06 N PSU
+Added QUAD06 R PSU
+Added QUAD06 NR-PSU Gang Member DIP02
+Added QUAD06 NR-PSU Gang Member DIP03
+Added QUAD06 NR-PSU Gang Member QUAD05
+Added QUAD07 N PSU
+Added QUAD07 R PSU
+Added QUAD08 N PSU
+Added QUAD08 R PSU
+Added QUAD09 N PSU
+Added QUAD09 R PSU
+Added QUAD10 N PSU
+Added QUAD10 R PSU
+Added QUAD11 N PSU
+Added QUAD11 R PSU
+Added QUAD12 N PSU
+Added QUAD12 R PSU
+Added QUAD13 N PSU
+Added QUAD13 R PSU
+Added QUAD14 N PSU
+Added QUAD14 R PSU
+Added QUAD15 N PSU
+Added QUAD15 R PSU
+Added DIP01 N PSU
+Added DIP01 R PSU
+Added DIP02 N PSU
+Added DIP02 R PSU
+Added DIP02 NR-PSU Gang Member DIP03
+Added DIP02 NR-PSU Gang Member QUAD05
+Added DIP02 NR-PSU Gang Member QUAD06
+Added DIP03 N PSU
+Added DIP03 R PSU
+Added DIP03 NR-PSU Gang Member DIP02
+Added DIP03 NR-PSU Gang Member QUAD05
+Added DIP03 NR-PSU Gang Member QUAD06
+Found END_OF_DATA
+File Closed
+*** Created 19 NR-PSU Objects, As Expected ***
+
+
+**** Attempting to Read \\fed.cclrc.ac.uk\Org\NLab\ASTeC\Projects\VELA\Software\VM-Controllers\VELA-CLARA-Controllers\Config\VM\velaINJMagnets.config ****
+File Opened from \\fed.cclrc.ac.uk\Org\NLab\ASTeC\Projects\VELA\Software\VM-Controllers\VELA-CLARA-Controllers\Config\VM\velaINJMagnets.config
+Found START_OF_DATA
+Found PV_COMMANDS_START
+Added On suffix for On
+Added Off suffix for Off
+Found PV_MONITORS_START
+Added Sta suffix for Sta
+Added SI suffix for SI
+Added RI suffix for RI
+Found OBJECTS_START
+Added BSOL
+Added SOL
+Added HCOR01
+Added HCOR02
+Added HCOR03
+Added HCOR04
+Added HCOR05
+Added HCOR06
+Added HCOR07
+Added HCOR08
+Added HCOR09
+Added HCOR10
+Added HCOR11
+Added VCOR01
+Added VCOR02
+Added VCOR03
+Added VCOR04
+Added VCOR05
+Added VCOR06
+Added VCOR07
+Added VCOR08
+Added VCOR09
+Added VCOR10
+Added VCOR11
+Added QUAD01
+Added QUAD02
+Added QUAD03
+Added QUAD04
+Added QUAD05
+Added QUAD06
+Added QUAD07
+Added QUAD08
+Added QUAD09
+Added QUAD10
+Added QUAD11
+Added QUAD12
+Added QUAD13
+Added QUAD14
+Added QUAD15
+Added DIP01
+Added DIP02
+Added DIP03
+Found END_OF_DATA
+File Closed
+*** Created 42 Magnet Objects, As Expected ***
+WE ARE HERE
+
+Searching for Magnet chids...
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:On
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Off
+Create channel to VM-EBT-INJ-MAG-BSOL-01:SI
+Create channel to VM-EBT-INJ-MAG-BSOL-01:RI
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Sta
+Create channel to VM-EBT-INJ-MAG-DIP-01:Ilk1
+Create channel to VM-EBT-INJ-MAG-DIP-01:Ilk2
+Create channel to VM-EBT-INJ-MAG-DIP-01:Ilk3
+Create channel to VM-EBT-INJ-MAG-DIP-01:Ilk4
+Create channel to VM-EBT-INJ-MAG-DIP-01:Ilk5
+Create channel to VM-EBT-INJ-MAG-DIP-01:Ilk6
+Create channel to VM-EBT-INJ-MAG-DIP-01:On
+Create channel to VM-EBT-INJ-MAG-DIP-01:Off
+Create channel to VM-EBT-INJ-MAG-DIP-01:SI
+Create channel to VM-EBT-INJ-MAG-DIP-01:RI
+Create channel to VM-EBT-INJ-MAG-DIP-01:Sta
+Create channel to VM-EBT-INJ-MAG-PRAN-04:Ilk1
+Create channel to VM-EBT-INJ-MAG-PRAN-04:Ilk2
+Create channel to VM-EBT-INJ-MAG-PRAN-04:Ilk3
+Create channel to VM-EBT-INJ-MAG-PRAN-04:Ilk4
+Create channel to VM-EBT-INJ-MAG-PRAR-04:Ilk1
+Create channel to VM-EBT-INJ-MAG-PRAR-04:Ilk2
+Create channel to VM-EBT-INJ-MAG-PRAR-04:Ilk3
+Create channel to VM-EBT-INJ-MAG-PRAR-04:Ilk4
+Create channel to VM-EBT-INJ-MAG-PRAN-04:On
+Create channel to VM-EBT-INJ-MAG-PRAN-04:Off
+Create channel to VM-EBT-INJ-MAG-PRAN-04:Sta
+Create channel to VM-EBT-INJ-MAG-PRAR-04:On
+Create channel to VM-EBT-INJ-MAG-PRAR-04:Off
+Create channel to VM-EBT-INJ-MAG-PRAR-04:Sta
+Create channel to VM-EBT-INJ-MAG-DIP-02:Ilk1
+Create channel to VM-EBT-INJ-MAG-DIP-02:Ilk2
+Create channel to VM-EBT-INJ-MAG-DIP-02:Ilk3
+Create channel to VM-EBT-INJ-MAG-DIP-02:Ilk4
+Create channel to VM-EBT-INJ-MAG-DIP-02:Ilk5
+Create channel to VM-EBT-INJ-MAG-DIP-02:Ilk6
+Create channel to VM-EBT-INJ-MAG-DIP-02:Ilk7
+Create channel to VM-EBT-INJ-MAG-DIP-02:Ilk8
+Create channel to VM-EBT-INJ-MAG-DIP-02:On
+Create channel to VM-EBT-INJ-MAG-DIP-02:Off
+Create channel to VM-EBT-INJ-MAG-DIP-02:SI
+Create channel to VM-EBT-INJ-MAG-DIP-02:RI
+Create channel to VM-EBT-INJ-MAG-DIP-02:Sta
+Create channel to VM-EBT-INJ-MAG-PRN-05:Ilk1
+Create channel to VM-EBT-INJ-MAG-PRN-05:Ilk2
+Create channel to VM-EBT-INJ-MAG-PRN-05:Ilk3
+Create channel to VM-EBT-INJ-MAG-PRN-05:Ilk4
+Create channel to VM-EBT-INJ-MAG-PRN-05:Ilk5
+Create channel to VM-EBT-INJ-MAG-PRN-05:Ilk6
+Create channel to VM-EBT-INJ-MAG-PRN-05:Ilk7
+Create channel to VM-EBT-INJ-MAG-PRN-05:Ilk8
+Create channel to VM-EBT-INJ-MAG-PRN-05:Ilk9
+Create channel to VM-EBT-INJ-MAG-PRN-05:Ilk10
+Create channel to VM-EBT-INJ-MAG-PRR-05:Ilk1
+Create channel to VM-EBT-INJ-MAG-PRR-05:Ilk2
+Create channel to VM-EBT-INJ-MAG-PRR-05:Ilk3
+Create channel to VM-EBT-INJ-MAG-PRR-05:Ilk4
+Create channel to VM-EBT-INJ-MAG-PRR-05:Ilk5
+Create channel to VM-EBT-INJ-MAG-PRR-05:Ilk6
+Create channel to VM-EBT-INJ-MAG-PRR-05:Ilk7
+Create channel to VM-EBT-INJ-MAG-PRR-05:Ilk8
+Create channel to VM-EBT-INJ-MAG-PRR-05:Ilk9
+Create channel to VM-EBT-INJ-MAG-PRR-05:Ilk10
+Create channel to VM-EBT-INJ-MAG-PRN-05:On
+Create channel to VM-EBT-INJ-MAG-PRN-05:Off
+Create channel to VM-EBT-INJ-MAG-PRN-05:Sta
+Create channel to VM-EBT-INJ-MAG-PRR-05:On
+Create channel to VM-EBT-INJ-MAG-PRR-05:Off
+Create channel to VM-EBT-INJ-MAG-PRR-05:Sta
+Create channel to VM-EBT-INJ-MAG-DIP-03:Ilk1
+Create channel to VM-EBT-INJ-MAG-DIP-03:Ilk2
+Create channel to VM-EBT-INJ-MAG-DIP-03:Ilk3
+Create channel to VM-EBT-INJ-MAG-DIP-03:Ilk4
+Create channel to VM-EBT-INJ-MAG-DIP-03:Ilk5
+Create channel to VM-EBT-INJ-MAG-DIP-03:Ilk6
+Create channel to VM-EBT-INJ-MAG-DIP-03:On
+Create channel to VM-EBT-INJ-MAG-DIP-03:Off
+Create channel to VM-EBT-INJ-MAG-DIP-03:SI
+Create channel to VM-EBT-INJ-MAG-DIP-03:RI
+Create channel to VM-EBT-INJ-MAG-DIP-03:Sta
+Create channel to VM-EBT-INJ-MAG-PRN-05:Ilk1
+Create channel to VM-EBT-INJ-MAG-PRN-05:Ilk2
+Create channel to VM-EBT-INJ-MAG-PRN-05:Ilk3
+Create channel to VM-EBT-INJ-MAG-PRN-05:Ilk4
+Create channel to VM-EBT-INJ-MAG-PRN-05:Ilk5
+Create channel to VM-EBT-INJ-MAG-PRN-05:Ilk6
+Create channel to VM-EBT-INJ-MAG-PRN-05:Ilk7
+Create channel to VM-EBT-INJ-MAG-PRN-05:Ilk8
+Create channel to VM-EBT-INJ-MAG-PRN-05:Ilk9
+Create channel to VM-EBT-INJ-MAG-PRN-05:Ilk10
+Create channel to VM-EBT-INJ-MAG-PRR-05:Ilk1
+Create channel to VM-EBT-INJ-MAG-PRR-05:Ilk2
+Create channel to VM-EBT-INJ-MAG-PRR-05:Ilk3
+Create channel to VM-EBT-INJ-MAG-PRR-05:Ilk4
+Create channel to VM-EBT-INJ-MAG-PRR-05:Ilk5
+Create channel to VM-EBT-INJ-MAG-PRR-05:Ilk6
+Create channel to VM-EBT-INJ-MAG-PRR-05:Ilk7
+Create channel to VM-EBT-INJ-MAG-PRR-05:Ilk8
+Create channel to VM-EBT-INJ-MAG-PRR-05:Ilk9
+Create channel to VM-EBT-INJ-MAG-PRR-05:Ilk10
+Create channel to VM-EBT-INJ-MAG-PRN-05:On
+Create channel to VM-EBT-INJ-MAG-PRN-05:Off
+Create channel to VM-EBT-INJ-MAG-PRN-05:Sta
+Create channel to VM-EBT-INJ-MAG-PRR-05:On
+Create channel to VM-EBT-INJ-MAG-PRR-05:Off
+Create channel to VM-EBT-INJ-MAG-PRR-05:Sta
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk1
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk2
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk3
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk4
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk5
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk6
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk7
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk8
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:On
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Off
+Create channel to VM-EBT-INJ-MAG-HCOR-01:SI
+Create channel to VM-EBT-INJ-MAG-HCOR-01:RI
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Sta
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk1
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk2
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk3
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk4
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk5
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk6
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk7
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk8
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:On
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Off
+Create channel to VM-EBT-INJ-MAG-HCOR-02:SI
+Create channel to VM-EBT-INJ-MAG-HCOR-02:RI
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Sta
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk1
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk2
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk3
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk4
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk5
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk6
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk7
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk8
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:On
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Off
+Create channel to VM-EBT-INJ-MAG-HCOR-03:SI
+Create channel to VM-EBT-INJ-MAG-HCOR-03:RI
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Sta
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk1
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk2
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk3
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk4
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk5
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk6
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk7
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk8
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:On
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Off
+Create channel to VM-EBT-INJ-MAG-HCOR-04:SI
+Create channel to VM-EBT-INJ-MAG-HCOR-04:RI
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Sta
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk1
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk2
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk3
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk4
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk5
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk6
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk7
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk8
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:On
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Off
+Create channel to VM-EBT-INJ-MAG-HCOR-05:SI
+Create channel to VM-EBT-INJ-MAG-HCOR-05:RI
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Sta
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk1
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk2
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk3
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk4
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk5
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk6
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk7
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk8
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:On
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Off
+Create channel to VM-EBT-INJ-MAG-HCOR-06:SI
+Create channel to VM-EBT-INJ-MAG-HCOR-06:RI
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Sta
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk1
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk2
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk3
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk4
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk5
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk6
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk7
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk8
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:On
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Off
+Create channel to VM-EBT-INJ-MAG-HCOR-07:SI
+Create channel to VM-EBT-INJ-MAG-HCOR-07:RI
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Sta
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk1
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk2
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk3
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk4
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk5
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk6
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk7
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk8
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:On
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Off
+Create channel to VM-EBT-INJ-MAG-HCOR-08:SI
+Create channel to VM-EBT-INJ-MAG-HCOR-08:RI
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Sta
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk1
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk2
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk3
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk4
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk5
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk6
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk7
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk8
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:On
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Off
+Create channel to VM-EBT-INJ-MAG-HCOR-09:SI
+Create channel to VM-EBT-INJ-MAG-HCOR-09:RI
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Sta
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk1
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk2
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk3
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk4
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk5
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk6
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk7
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk8
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:On
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Off
+Create channel to VM-EBT-INJ-MAG-HCOR-10:SI
+Create channel to VM-EBT-INJ-MAG-HCOR-10:RI
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Sta
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk1
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk2
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk3
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk4
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk5
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk6
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk7
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk8
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:On
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Off
+Create channel to VM-EBT-INJ-MAG-HCOR-11:SI
+Create channel to VM-EBT-INJ-MAG-HCOR-11:RI
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Sta
+Create channel to VM-EBT-INJ-MAG-QUAD-01:Ilk1
+Create channel to VM-EBT-INJ-MAG-QUAD-01:Ilk2
+Create channel to VM-EBT-INJ-MAG-QUAD-01:Ilk3
+Create channel to VM-EBT-INJ-MAG-QUAD-01:Ilk4
+Create channel to VM-EBT-INJ-MAG-QUAD-01:Ilk5
+Create channel to VM-EBT-INJ-MAG-QUAD-01:Ilk6
+Create channel to VM-EBT-INJ-MAG-QUAD-01:On
+Create channel to VM-EBT-INJ-MAG-QUAD-01:Off
+Create channel to VM-EBT-INJ-MAG-QUAD-01:SI
+Create channel to VM-EBT-INJ-MAG-QUAD-01:RI
+Create channel to VM-EBT-INJ-MAG-QUAD-01:Sta
+Create channel to VM-EBT-INJ-MAG-PRAN-01:Ilk1
+Create channel to VM-EBT-INJ-MAG-PRAN-01:Ilk2
+Create channel to VM-EBT-INJ-MAG-PRAN-01:Ilk3
+Create channel to VM-EBT-INJ-MAG-PRAN-01:Ilk4
+Create channel to VM-EBT-INJ-MAG-PRAR-01:Ilk1
+Create channel to VM-EBT-INJ-MAG-PRAR-01:Ilk2
+Create channel to VM-EBT-INJ-MAG-PRAR-01:Ilk3
+Create channel to VM-EBT-INJ-MAG-PRAR-01:Ilk4
+Create channel to VM-EBT-INJ-MAG-PRAN-01:On
+Create channel to VM-EBT-INJ-MAG-PRAN-01:Off
+Create channel to VM-EBT-INJ-MAG-PRAN-01:Sta
+Create channel to VM-EBT-INJ-MAG-PRAR-01:On
+Create channel to VM-EBT-INJ-MAG-PRAR-01:Off
+Create channel to VM-EBT-INJ-MAG-PRAR-01:Sta
+Create channel to VM-EBT-INJ-MAG-QUAD-02:Ilk1
+Create channel to VM-EBT-INJ-MAG-QUAD-02:Ilk2
+Create channel to VM-EBT-INJ-MAG-QUAD-02:Ilk3
+Create channel to VM-EBT-INJ-MAG-QUAD-02:Ilk4
+Create channel to VM-EBT-INJ-MAG-QUAD-02:Ilk5
+Create channel to VM-EBT-INJ-MAG-QUAD-02:Ilk6
+Create channel to VM-EBT-INJ-MAG-QUAD-02:On
+Create channel to VM-EBT-INJ-MAG-QUAD-02:Off
+Create channel to VM-EBT-INJ-MAG-QUAD-02:SI
+Create channel to VM-EBT-INJ-MAG-QUAD-02:RI
+Create channel to VM-EBT-INJ-MAG-QUAD-02:Sta
+Create channel to VM-EBT-INJ-MAG-PRBN-01:Ilk1
+Create channel to VM-EBT-INJ-MAG-PRBN-01:Ilk2
+Create channel to VM-EBT-INJ-MAG-PRBN-01:Ilk3
+Create channel to VM-EBT-INJ-MAG-PRBN-01:Ilk4
+Create channel to VM-EBT-INJ-MAG-PRBR-01:Ilk1
+Create channel to VM-EBT-INJ-MAG-PRBR-01:Ilk2
+Create channel to VM-EBT-INJ-MAG-PRBR-01:Ilk3
+Create channel to VM-EBT-INJ-MAG-PRBR-01:Ilk4
+Create channel to VM-EBT-INJ-MAG-PRBN-01:On
+Create channel to VM-EBT-INJ-MAG-PRBN-01:Off
+Create channel to VM-EBT-INJ-MAG-PRBN-01:Sta
+Create channel to VM-EBT-INJ-MAG-PRBR-01:On
+Create channel to VM-EBT-INJ-MAG-PRBR-01:Off
+Create channel to VM-EBT-INJ-MAG-PRBR-01:Sta
+Create channel to VM-EBT-INJ-MAG-QUAD-03:Ilk1
+Create channel to VM-EBT-INJ-MAG-QUAD-03:Ilk2
+Create channel to VM-EBT-INJ-MAG-QUAD-03:Ilk3
+Create channel to VM-EBT-INJ-MAG-QUAD-03:Ilk4
+Create channel to VM-EBT-INJ-MAG-QUAD-03:Ilk5
+Create channel to VM-EBT-INJ-MAG-QUAD-03:Ilk6
+Create channel to VM-EBT-INJ-MAG-QUAD-03:On
+Create channel to VM-EBT-INJ-MAG-QUAD-03:Off
+Create channel to VM-EBT-INJ-MAG-QUAD-03:SI
+Create channel to VM-EBT-INJ-MAG-QUAD-03:RI
+Create channel to VM-EBT-INJ-MAG-QUAD-03:Sta
+Create channel to VM-EBT-INJ-MAG-PRAN-02:Ilk1
+Create channel to VM-EBT-INJ-MAG-PRAN-02:Ilk2
+Create channel to VM-EBT-INJ-MAG-PRAN-02:Ilk3
+Create channel to VM-EBT-INJ-MAG-PRAN-02:Ilk4
+Create channel to VM-EBT-INJ-MAG-PRAR-02:Ilk1
+Create channel to VM-EBT-INJ-MAG-PRAR-02:Ilk2
+Create channel to VM-EBT-INJ-MAG-PRAR-02:Ilk3
+Create channel to VM-EBT-INJ-MAG-PRAR-02:Ilk4
+Create channel to VM-EBT-INJ-MAG-PRAN-02:On
+Create channel to VM-EBT-INJ-MAG-PRAN-02:Off
+Create channel to VM-EBT-INJ-MAG-PRAN-02:Sta
+Create channel to VM-EBT-INJ-MAG-PRAR-02:On
+Create channel to VM-EBT-INJ-MAG-PRAR-02:Off
+Create channel to VM-EBT-INJ-MAG-PRAR-02:Sta
+Create channel to VM-EBT-INJ-MAG-QUAD-04:Ilk1
+Create channel to VM-EBT-INJ-MAG-QUAD-04:Ilk2
+Create channel to VM-EBT-INJ-MAG-QUAD-04:Ilk3
+Create channel to VM-EBT-INJ-MAG-QUAD-04:Ilk4
+Create channel to VM-EBT-INJ-MAG-QUAD-04:Ilk5
+Create channel to VM-EBT-INJ-MAG-QUAD-04:Ilk6
+Create channel to VM-EBT-INJ-MAG-QUAD-04:On
+Create channel to VM-EBT-INJ-MAG-QUAD-04:Off
+Create channel to VM-EBT-INJ-MAG-QUAD-04:SI
+Create channel to VM-EBT-INJ-MAG-QUAD-04:RI
+Create channel to VM-EBT-INJ-MAG-QUAD-04:Sta
+Create channel to VM-EBT-INJ-MAG-PRBN-02:Ilk1
+Create channel to VM-EBT-INJ-MAG-PRBN-02:Ilk2
+Create channel to VM-EBT-INJ-MAG-PRBN-02:Ilk3
+Create channel to VM-EBT-INJ-MAG-PRBN-02:Ilk4
+Create channel to VM-EBT-INJ-MAG-PRBR-02:Ilk1
+Create channel to VM-EBT-INJ-MAG-PRBR-02:Ilk2
+Create channel to VM-EBT-INJ-MAG-PRBR-02:Ilk3
+Create channel to VM-EBT-INJ-MAG-PRBR-02:Ilk4
+Create channel to VM-EBT-INJ-MAG-PRBN-02:On
+Create channel to VM-EBT-INJ-MAG-PRBN-02:Off
+Create channel to VM-EBT-INJ-MAG-PRBN-02:Sta
+Create channel to VM-EBT-INJ-MAG-PRBR-02:On
+Create channel to VM-EBT-INJ-MAG-PRBR-02:Off
+Create channel to VM-EBT-INJ-MAG-PRBR-02:Sta
+Create channel to VM-EBT-INJ-MAG-QUAD-05:Ilk1
+Create channel to VM-EBT-INJ-MAG-QUAD-05:Ilk2
+Create channel to VM-EBT-INJ-MAG-QUAD-05:Ilk3
+Create channel to VM-EBT-INJ-MAG-QUAD-05:Ilk4
+Create channel to VM-EBT-INJ-MAG-QUAD-05:Ilk5
+Create channel to VM-EBT-INJ-MAG-QUAD-05:Ilk6
+Create channel to VM-EBT-INJ-MAG-QUAD-05:On
+Create channel to VM-EBT-INJ-MAG-QUAD-05:Off
+Create channel to VM-EBT-INJ-MAG-QUAD-05:SI
+Create channel to VM-EBT-INJ-MAG-QUAD-05:RI
+Create channel to VM-EBT-INJ-MAG-QUAD-05:Sta
+Create channel to VM-EBT-INJ-MAG-PRN-05:Ilk1
+Create channel to VM-EBT-INJ-MAG-PRN-05:Ilk2
+Create channel to VM-EBT-INJ-MAG-PRN-05:Ilk3
+Create channel to VM-EBT-INJ-MAG-PRN-05:Ilk4
+Create channel to VM-EBT-INJ-MAG-PRN-05:Ilk5
+Create channel to VM-EBT-INJ-MAG-PRN-05:Ilk6
+Create channel to VM-EBT-INJ-MAG-PRN-05:Ilk7
+Create channel to VM-EBT-INJ-MAG-PRN-05:Ilk8
+Create channel to VM-EBT-INJ-MAG-PRN-05:Ilk9
+Create channel to VM-EBT-INJ-MAG-PRN-05:Ilk10
+Create channel to VM-EBT-INJ-MAG-PRR-05:Ilk1
+Create channel to VM-EBT-INJ-MAG-PRR-05:Ilk2
+Create channel to VM-EBT-INJ-MAG-PRR-05:Ilk3
+Create channel to VM-EBT-INJ-MAG-PRR-05:Ilk4
+Create channel to VM-EBT-INJ-MAG-PRR-05:Ilk5
+Create channel to VM-EBT-INJ-MAG-PRR-05:Ilk6
+Create channel to VM-EBT-INJ-MAG-PRR-05:Ilk7
+Create channel to VM-EBT-INJ-MAG-PRR-05:Ilk8
+Create channel to VM-EBT-INJ-MAG-PRR-05:Ilk9
+Create channel to VM-EBT-INJ-MAG-PRR-05:Ilk10
+Create channel to VM-EBT-INJ-MAG-PRN-05:On
+Create channel to VM-EBT-INJ-MAG-PRN-05:Off
+Create channel to VM-EBT-INJ-MAG-PRN-05:Sta
+Create channel to VM-EBT-INJ-MAG-PRR-05:On
+Create channel to VM-EBT-INJ-MAG-PRR-05:Off
+Create channel to VM-EBT-INJ-MAG-PRR-05:Sta
+Create channel to VM-EBT-INJ-MAG-QUAD-06:Ilk1
+Create channel to VM-EBT-INJ-MAG-QUAD-06:Ilk2
+Create channel to VM-EBT-INJ-MAG-QUAD-06:Ilk3
+Create channel to VM-EBT-INJ-MAG-QUAD-06:Ilk4
+Create channel to VM-EBT-INJ-MAG-QUAD-06:Ilk5
+Create channel to VM-EBT-INJ-MAG-QUAD-06:Ilk6
+Create channel to VM-EBT-INJ-MAG-QUAD-06:On
+Create channel to VM-EBT-INJ-MAG-QUAD-06:Off
+Create channel to VM-EBT-INJ-MAG-QUAD-06:SI
+Create channel to VM-EBT-INJ-MAG-QUAD-06:RI
+Create channel to VM-EBT-INJ-MAG-QUAD-06:Sta
+Create channel to VM-EBT-INJ-MAG-PRN-05:Ilk1
+Create channel to VM-EBT-INJ-MAG-PRN-05:Ilk2
+Create channel to VM-EBT-INJ-MAG-PRN-05:Ilk3
+Create channel to VM-EBT-INJ-MAG-PRN-05:Ilk4
+Create channel to VM-EBT-INJ-MAG-PRN-05:Ilk5
+Create channel to VM-EBT-INJ-MAG-PRN-05:Ilk6
+Create channel to VM-EBT-INJ-MAG-PRN-05:Ilk7
+Create channel to VM-EBT-INJ-MAG-PRN-05:Ilk8
+Create channel to VM-EBT-INJ-MAG-PRN-05:Ilk9
+Create channel to VM-EBT-INJ-MAG-PRN-05:Ilk10
+Create channel to VM-EBT-INJ-MAG-PRR-05:Ilk1
+Create channel to VM-EBT-INJ-MAG-PRR-05:Ilk2
+Create channel to VM-EBT-INJ-MAG-PRR-05:Ilk3
+Create channel to VM-EBT-INJ-MAG-PRR-05:Ilk4
+Create channel to VM-EBT-INJ-MAG-PRR-05:Ilk5
+Create channel to VM-EBT-INJ-MAG-PRR-05:Ilk6
+Create channel to VM-EBT-INJ-MAG-PRR-05:Ilk7
+Create channel to VM-EBT-INJ-MAG-PRR-05:Ilk8
+Create channel to VM-EBT-INJ-MAG-PRR-05:Ilk9
+Create channel to VM-EBT-INJ-MAG-PRR-05:Ilk10
+Create channel to VM-EBT-INJ-MAG-PRN-05:On
+Create channel to VM-EBT-INJ-MAG-PRN-05:Off
+Create channel to VM-EBT-INJ-MAG-PRN-05:Sta
+Create channel to VM-EBT-INJ-MAG-PRR-05:On
+Create channel to VM-EBT-INJ-MAG-PRR-05:Off
+Create channel to VM-EBT-INJ-MAG-PRR-05:Sta
+Create channel to VM-EBT-INJ-MAG-QUAD-07:Ilk1
+Create channel to VM-EBT-INJ-MAG-QUAD-07:Ilk2
+Create channel to VM-EBT-INJ-MAG-QUAD-07:Ilk3
+Create channel to VM-EBT-INJ-MAG-QUAD-07:Ilk4
+Create channel to VM-EBT-INJ-MAG-QUAD-07:Ilk5
+Create channel to VM-EBT-INJ-MAG-QUAD-07:Ilk6
+Create channel to VM-EBT-INJ-MAG-QUAD-07:On
+Create channel to VM-EBT-INJ-MAG-QUAD-07:Off
+Create channel to VM-EBT-INJ-MAG-QUAD-07:SI
+Create channel to VM-EBT-INJ-MAG-QUAD-07:RI
+Create channel to VM-EBT-INJ-MAG-QUAD-07:Sta
+Create channel to VM-EBT-INJ-MAG-PRAN-03:Ilk1
+Create channel to VM-EBT-INJ-MAG-PRAN-03:Ilk2
+Create channel to VM-EBT-INJ-MAG-PRAN-03:Ilk3
+Create channel to VM-EBT-INJ-MAG-PRAN-03:Ilk4
+Create channel to VM-EBT-INJ-MAG-PRAR-03:Ilk1
+Create channel to VM-EBT-INJ-MAG-PRAR-03:Ilk2
+Create channel to VM-EBT-INJ-MAG-PRAR-03:Ilk3
+Create channel to VM-EBT-INJ-MAG-PRAR-03:Ilk4
+Create channel to VM-EBT-INJ-MAG-PRAN-03:On
+Create channel to VM-EBT-INJ-MAG-PRAN-03:Off
+Create channel to VM-EBT-INJ-MAG-PRAN-03:Sta
+Create channel to VM-EBT-INJ-MAG-PRAR-03:On
+Create channel to VM-EBT-INJ-MAG-PRAR-03:Off
+Create channel to VM-EBT-INJ-MAG-PRAR-03:Sta
+Create channel to VM-EBT-INJ-MAG-QUAD-08:Ilk1
+Create channel to VM-EBT-INJ-MAG-QUAD-08:Ilk2
+Create channel to VM-EBT-INJ-MAG-QUAD-08:Ilk3
+Create channel to VM-EBT-INJ-MAG-QUAD-08:Ilk4
+Create channel to VM-EBT-INJ-MAG-QUAD-08:Ilk5
+Create channel to VM-EBT-INJ-MAG-QUAD-08:Ilk6
+Create channel to VM-EBT-INJ-MAG-QUAD-08:On
+Create channel to VM-EBT-INJ-MAG-QUAD-08:Off
+Create channel to VM-EBT-INJ-MAG-QUAD-08:SI
+Create channel to VM-EBT-INJ-MAG-QUAD-08:RI
+Create channel to VM-EBT-INJ-MAG-QUAD-08:Sta
+Create channel to VM-EBT-INJ-MAG-PRBN-03:Ilk1
+Create channel to VM-EBT-INJ-MAG-PRBN-03:Ilk2
+Create channel to VM-EBT-INJ-MAG-PRBN-03:Ilk3
+Create channel to VM-EBT-INJ-MAG-PRBN-03:Ilk4
+Create channel to VM-EBT-INJ-MAG-PRBR-03:Ilk1
+Create channel to VM-EBT-INJ-MAG-PRBR-03:Ilk2
+Create channel to VM-EBT-INJ-MAG-PRBR-03:Ilk3
+Create channel to VM-EBT-INJ-MAG-PRBR-03:Ilk4
+Create channel to VM-EBT-INJ-MAG-PRBN-03:On
+Create channel to VM-EBT-INJ-MAG-PRBN-03:Off
+Create channel to VM-EBT-INJ-MAG-PRBN-03:Sta
+Create channel to VM-EBT-INJ-MAG-PRBR-03:On
+Create channel to VM-EBT-INJ-MAG-PRBR-03:Off
+Create channel to VM-EBT-INJ-MAG-PRBR-03:Sta
+Create channel to VM-EBT-INJ-MAG-QUAD-09:Ilk1
+Create channel to VM-EBT-INJ-MAG-QUAD-09:Ilk2
+Create channel to VM-EBT-INJ-MAG-QUAD-09:Ilk3
+Create channel to VM-EBT-INJ-MAG-QUAD-09:Ilk4
+Create channel to VM-EBT-INJ-MAG-QUAD-09:Ilk5
+Create channel to VM-EBT-INJ-MAG-QUAD-09:Ilk6
+Create channel to VM-EBT-INJ-MAG-QUAD-09:On
+Create channel to VM-EBT-INJ-MAG-QUAD-09:Off
+Create channel to VM-EBT-INJ-MAG-QUAD-09:SI
+Create channel to VM-EBT-INJ-MAG-QUAD-09:RI
+Create channel to VM-EBT-INJ-MAG-QUAD-09:Sta
+Create channel to VM-EBT-INJ-MAG-PRAN-08:Ilk1
+Create channel to VM-EBT-INJ-MAG-PRAN-08:Ilk2
+Create channel to VM-EBT-INJ-MAG-PRAN-08:Ilk3
+Create channel to VM-EBT-INJ-MAG-PRAN-08:Ilk4
+Create channel to VM-EBT-INJ-MAG-PRAR-08:Ilk1
+Create channel to VM-EBT-INJ-MAG-PRAR-08:Ilk2
+Create channel to VM-EBT-INJ-MAG-PRAR-08:Ilk3
+Create channel to VM-EBT-INJ-MAG-PRAR-08:Ilk4
+Create channel to VM-EBT-INJ-MAG-PRAN-08:On
+Create channel to VM-EBT-INJ-MAG-PRAN-08:Off
+Create channel to VM-EBT-INJ-MAG-PRAN-08:Sta
+Create channel to VM-EBT-INJ-MAG-PRAR-08:On
+Create channel to VM-EBT-INJ-MAG-PRAR-08:Off
+Create channel to VM-EBT-INJ-MAG-PRAR-08:Sta
+Create channel to VM-EBT-INJ-MAG-QUAD-10:Ilk1
+Create channel to VM-EBT-INJ-MAG-QUAD-10:Ilk2
+Create channel to VM-EBT-INJ-MAG-QUAD-10:Ilk3
+Create channel to VM-EBT-INJ-MAG-QUAD-10:Ilk4
+Create channel to VM-EBT-INJ-MAG-QUAD-10:Ilk5
+Create channel to VM-EBT-INJ-MAG-QUAD-10:Ilk6
+Create channel to VM-EBT-INJ-MAG-QUAD-10:On
+Create channel to VM-EBT-INJ-MAG-QUAD-10:Off
+Create channel to VM-EBT-INJ-MAG-QUAD-10:SI
+Create channel to VM-EBT-INJ-MAG-QUAD-10:RI
+Create channel to VM-EBT-INJ-MAG-QUAD-10:Sta
+Create channel to VM-EBT-INJ-MAG-PRBN-08:Ilk1
+Create channel to VM-EBT-INJ-MAG-PRBN-08:Ilk2
+Create channel to VM-EBT-INJ-MAG-PRBN-08:Ilk3
+Create channel to VM-EBT-INJ-MAG-PRBN-08:Ilk4
+Create channel to VM-EBT-INJ-MAG-PRBR-08:Ilk1
+Create channel to VM-EBT-INJ-MAG-PRBR-08:Ilk2
+Create channel to VM-EBT-INJ-MAG-PRBR-08:Ilk3
+Create channel to VM-EBT-INJ-MAG-PRBR-08:Ilk4
+Create channel to VM-EBT-INJ-MAG-PRBN-08:On
+Create channel to VM-EBT-INJ-MAG-PRBN-08:Off
+Create channel to VM-EBT-INJ-MAG-PRBN-08:Sta
+Create channel to VM-EBT-INJ-MAG-PRBR-08:On
+Create channel to VM-EBT-INJ-MAG-PRBR-08:Off
+Create channel to VM-EBT-INJ-MAG-PRBR-08:Sta
+Create channel to VM-EBT-INJ-MAG-QUAD-11:Ilk1
+Create channel to VM-EBT-INJ-MAG-QUAD-11:Ilk2
+Create channel to VM-EBT-INJ-MAG-QUAD-11:Ilk3
+Create channel to VM-EBT-INJ-MAG-QUAD-11:Ilk4
+Create channel to VM-EBT-INJ-MAG-QUAD-11:Ilk5
+Create channel to VM-EBT-INJ-MAG-QUAD-11:Ilk6
+Create channel to VM-EBT-INJ-MAG-QUAD-11:On
+Create channel to VM-EBT-INJ-MAG-QUAD-11:Off
+Create channel to VM-EBT-INJ-MAG-QUAD-11:SI
+Create channel to VM-EBT-INJ-MAG-QUAD-11:RI
+Create channel to VM-EBT-INJ-MAG-QUAD-11:Sta
+Create channel to VM-EBT-INJ-MAG-PRAN-09:Ilk1
+Create channel to VM-EBT-INJ-MAG-PRAN-09:Ilk2
+Create channel to VM-EBT-INJ-MAG-PRAN-09:Ilk3
+Create channel to VM-EBT-INJ-MAG-PRAN-09:Ilk4
+Create channel to VM-EBT-INJ-MAG-PRAR-09:Ilk1
+Create channel to VM-EBT-INJ-MAG-PRAR-09:Ilk2
+Create channel to VM-EBT-INJ-MAG-PRAR-09:Ilk3
+Create channel to VM-EBT-INJ-MAG-PRAR-09:Ilk4
+Create channel to VM-EBT-INJ-MAG-PRAN-09:On
+Create channel to VM-EBT-INJ-MAG-PRAN-09:Off
+Create channel to VM-EBT-INJ-MAG-PRAN-09:Sta
+Create channel to VM-EBT-INJ-MAG-PRAR-09:On
+Create channel to VM-EBT-INJ-MAG-PRAR-09:Off
+Create channel to VM-EBT-INJ-MAG-PRAR-09:Sta
+Create channel to VM-EBT-INJ-MAG-QUAD-12:Ilk1
+Create channel to VM-EBT-INJ-MAG-QUAD-12:Ilk2
+Create channel to VM-EBT-INJ-MAG-QUAD-12:Ilk3
+Create channel to VM-EBT-INJ-MAG-QUAD-12:Ilk4
+Create channel to VM-EBT-INJ-MAG-QUAD-12:Ilk5
+Create channel to VM-EBT-INJ-MAG-QUAD-12:Ilk6
+Create channel to VM-EBT-INJ-MAG-QUAD-12:On
+Create channel to VM-EBT-INJ-MAG-QUAD-12:Off
+Create channel to VM-EBT-INJ-MAG-QUAD-12:SI
+Create channel to VM-EBT-INJ-MAG-QUAD-12:RI
+Create channel to VM-EBT-INJ-MAG-QUAD-12:Sta
+Create channel to VM-EBT-INJ-MAG-PRAN-10:Ilk1
+Create channel to VM-EBT-INJ-MAG-PRAN-10:Ilk2
+Create channel to VM-EBT-INJ-MAG-PRAN-10:Ilk3
+Create channel to VM-EBT-INJ-MAG-PRAN-10:Ilk4
+Create channel to VM-EBT-INJ-MAG-PRAR-10:Ilk1
+Create channel to VM-EBT-INJ-MAG-PRAR-10:Ilk2
+Create channel to VM-EBT-INJ-MAG-PRAR-10:Ilk3
+Create channel to VM-EBT-INJ-MAG-PRAR-10:Ilk4
+Create channel to VM-EBT-INJ-MAG-PRAN-10:On
+Create channel to VM-EBT-INJ-MAG-PRAN-10:Off
+Create channel to VM-EBT-INJ-MAG-PRAN-10:Sta
+Create channel to VM-EBT-INJ-MAG-PRAR-10:On
+Create channel to VM-EBT-INJ-MAG-PRAR-10:Off
+Create channel to VM-EBT-INJ-MAG-PRAR-10:Sta
+Create channel to VM-EBT-INJ-MAG-QUAD-13:Ilk1
+Create channel to VM-EBT-INJ-MAG-QUAD-13:Ilk2
+Create channel to VM-EBT-INJ-MAG-QUAD-13:Ilk3
+Create channel to VM-EBT-INJ-MAG-QUAD-13:Ilk4
+Create channel to VM-EBT-INJ-MAG-QUAD-13:Ilk5
+Create channel to VM-EBT-INJ-MAG-QUAD-13:Ilk6
+Create channel to VM-EBT-INJ-MAG-QUAD-13:On
+Create channel to VM-EBT-INJ-MAG-QUAD-13:Off
+Create channel to VM-EBT-INJ-MAG-QUAD-13:SI
+Create channel to VM-EBT-INJ-MAG-QUAD-13:RI
+Create channel to VM-EBT-INJ-MAG-QUAD-13:Sta
+Create channel to VM-EBT-INJ-MAG-PRBN-04:Ilk1
+Create channel to VM-EBT-INJ-MAG-PRBN-04:Ilk2
+Create channel to VM-EBT-INJ-MAG-PRBN-04:Ilk3
+Create channel to VM-EBT-INJ-MAG-PRBN-04:Ilk4
+Create channel to VM-EBT-INJ-MAG-PRBR-04:Ilk1
+Create channel to VM-EBT-INJ-MAG-PRBR-04:Ilk2
+Create channel to VM-EBT-INJ-MAG-PRBR-04:Ilk3
+Create channel to VM-EBT-INJ-MAG-PRBR-04:Ilk4
+Create channel to VM-EBT-INJ-MAG-PRBN-04:On
+Create channel to VM-EBT-INJ-MAG-PRBN-04:Off
+Create channel to VM-EBT-INJ-MAG-PRBN-04:Sta
+Create channel to VM-EBT-INJ-MAG-PRBR-04:On
+Create channel to VM-EBT-INJ-MAG-PRBR-04:Off
+Create channel to VM-EBT-INJ-MAG-PRBR-04:Sta
+Create channel to VM-EBT-INJ-MAG-QUAD-14:Ilk1
+Create channel to VM-EBT-INJ-MAG-QUAD-14:Ilk2
+Create channel to VM-EBT-INJ-MAG-QUAD-14:Ilk3
+Create channel to VM-EBT-INJ-MAG-QUAD-14:Ilk4
+Create channel to VM-EBT-INJ-MAG-QUAD-14:Ilk5
+Create channel to VM-EBT-INJ-MAG-QUAD-14:Ilk6
+Create channel to VM-EBT-INJ-MAG-QUAD-14:On
+Create channel to VM-EBT-INJ-MAG-QUAD-14:Off
+Create channel to VM-EBT-INJ-MAG-QUAD-14:SI
+Create channel to VM-EBT-INJ-MAG-QUAD-14:RI
+Create channel to VM-EBT-INJ-MAG-QUAD-14:Sta
+Create channel to VM-EBT-INJ-MAG-PRBN-10:Ilk1
+Create channel to VM-EBT-INJ-MAG-PRBN-10:Ilk2
+Create channel to VM-EBT-INJ-MAG-PRBN-10:Ilk3
+Create channel to VM-EBT-INJ-MAG-PRBN-10:Ilk4
+Create channel to VM-EBT-INJ-MAG-PRBR-10:Ilk1
+Create channel to VM-EBT-INJ-MAG-PRBR-10:Ilk2
+Create channel to VM-EBT-INJ-MAG-PRBR-10:Ilk3
+Create channel to VM-EBT-INJ-MAG-PRBR-10:Ilk4
+Create channel to VM-EBT-INJ-MAG-PRBN-10:On
+Create channel to VM-EBT-INJ-MAG-PRBN-10:Off
+Create channel to VM-EBT-INJ-MAG-PRBN-10:Sta
+Create channel to VM-EBT-INJ-MAG-PRBR-10:On
+Create channel to VM-EBT-INJ-MAG-PRBR-10:Off
+Create channel to VM-EBT-INJ-MAG-PRBR-10:Sta
+Create channel to VM-EBT-INJ-MAG-QUAD-15:Ilk1
+Create channel to VM-EBT-INJ-MAG-QUAD-15:Ilk2
+Create channel to VM-EBT-INJ-MAG-QUAD-15:Ilk3
+Create channel to VM-EBT-INJ-MAG-QUAD-15:Ilk4
+Create channel to VM-EBT-INJ-MAG-QUAD-15:Ilk5
+Create channel to VM-EBT-INJ-MAG-QUAD-15:Ilk6
+Create channel to VM-EBT-INJ-MAG-QUAD-15:On
+Create channel to VM-EBT-INJ-MAG-QUAD-15:Off
+Create channel to VM-EBT-INJ-MAG-QUAD-15:SI
+Create channel to VM-EBT-INJ-MAG-QUAD-15:RI
+Create channel to VM-EBT-INJ-MAG-QUAD-15:Sta
+Create channel to VM-EBT-INJ-MAG-PRBN-09:Ilk1
+Create channel to VM-EBT-INJ-MAG-PRBN-09:Ilk2
+Create channel to VM-EBT-INJ-MAG-PRBN-09:Ilk3
+Create channel to VM-EBT-INJ-MAG-PRBN-09:Ilk4
+Create channel to VM-EBT-INJ-MAG-PRBR-09:Ilk1
+Create channel to VM-EBT-INJ-MAG-PRBR-09:Ilk2
+Create channel to VM-EBT-INJ-MAG-PRBR-09:Ilk3
+Create channel to VM-EBT-INJ-MAG-PRBR-09:Ilk4
+Create channel to VM-EBT-INJ-MAG-PRBN-09:On
+Create channel to VM-EBT-INJ-MAG-PRBN-09:Off
+Create channel to VM-EBT-INJ-MAG-PRBN-09:Sta
+Create channel to VM-EBT-INJ-MAG-PRBR-09:On
+Create channel to VM-EBT-INJ-MAG-PRBR-09:Off
+Create channel to VM-EBT-INJ-MAG-PRBR-09:Sta
+Create channel to VM-EBT-INJ-MAG-SOL-01:Ilk1
+Create channel to VM-EBT-INJ-MAG-SOL-01:Ilk2
+Create channel to VM-EBT-INJ-MAG-SOL-01:Ilk3
+Create channel to VM-EBT-INJ-MAG-SOL-01:Ilk4
+Create channel to VM-EBT-INJ-MAG-SOL-01:Ilk5
+Create channel to VM-EBT-INJ-MAG-SOL-01:Ilk6
+Create channel to VM-EBT-INJ-MAG-SOL-01:On
+Create channel to VM-EBT-INJ-MAG-SOL-01:Off
+Create channel to VM-EBT-INJ-MAG-SOL-01:SI
+Create channel to VM-EBT-INJ-MAG-SOL-01:RI
+Create channel to VM-EBT-INJ-MAG-SOL-01:Sta
+Create channel to VM-EBT-INJ-MAG-PRN-07:Ilk1
+Create channel to VM-EBT-INJ-MAG-PRN-07:Ilk2
+Create channel to VM-EBT-INJ-MAG-PRN-07:Ilk3
+Create channel to VM-EBT-INJ-MAG-PRN-07:Ilk4
+Create channel to VM-EBT-INJ-MAG-PRR-07:Ilk1
+Create channel to VM-EBT-INJ-MAG-PRR-07:Ilk2
+Create channel to VM-EBT-INJ-MAG-PRR-07:Ilk3
+Create channel to VM-EBT-INJ-MAG-PRR-07:Ilk4
+Create channel to VM-EBT-INJ-MAG-PRN-07:On
+Create channel to VM-EBT-INJ-MAG-PRN-07:Off
+Create channel to VM-EBT-INJ-MAG-PRN-07:Sta
+Create channel to VM-EBT-INJ-MAG-PRR-07:On
+Create channel to VM-EBT-INJ-MAG-PRR-07:Off
+Create channel to VM-EBT-INJ-MAG-PRR-07:Sta
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk1
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk2
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk3
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk4
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk5
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk6
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk7
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk8
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:On
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Off
+Create channel to VM-EBT-INJ-MAG-VCOR-01:SI
+Create channel to VM-EBT-INJ-MAG-VCOR-01:RI
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Sta
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk1
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk2
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk3
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk4
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk5
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk6
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk7
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk8
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:On
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Off
+Create channel to VM-EBT-INJ-MAG-VCOR-02:SI
+Create channel to VM-EBT-INJ-MAG-VCOR-02:RI
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Sta
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk1
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk2
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk3
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk4
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk5
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk6
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk7
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk8
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:On
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Off
+Create channel to VM-EBT-INJ-MAG-VCOR-03:SI
+Create channel to VM-EBT-INJ-MAG-VCOR-03:RI
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Sta
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk1
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk2
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk3
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk4
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk5
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk6
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk7
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk8
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:On
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Off
+Create channel to VM-EBT-INJ-MAG-VCOR-04:SI
+Create channel to VM-EBT-INJ-MAG-VCOR-04:RI
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Sta
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk1
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk2
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk3
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk4
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk5
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk6
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk7
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk8
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:On
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Off
+Create channel to VM-EBT-INJ-MAG-VCOR-05:SI
+Create channel to VM-EBT-INJ-MAG-VCOR-05:RI
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Sta
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk1
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk2
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk3
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk4
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk5
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk6
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk7
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk8
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:On
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Off
+Create channel to VM-EBT-INJ-MAG-VCOR-06:SI
+Create channel to VM-EBT-INJ-MAG-VCOR-06:RI
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Sta
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk1
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk2
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk3
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk4
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk5
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk6
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk7
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk8
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:On
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Off
+Create channel to VM-EBT-INJ-MAG-VCOR-07:SI
+Create channel to VM-EBT-INJ-MAG-VCOR-07:RI
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Sta
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk1
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk2
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk3
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk4
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk5
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk6
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk7
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk8
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:On
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Off
+Create channel to VM-EBT-INJ-MAG-VCOR-08:SI
+Create channel to VM-EBT-INJ-MAG-VCOR-08:RI
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Sta
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk1
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk2
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk3
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk4
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk5
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk6
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk7
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk8
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:On
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Off
+Create channel to VM-EBT-INJ-MAG-VCOR-09:SI
+Create channel to VM-EBT-INJ-MAG-VCOR-09:RI
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Sta
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk1
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk2
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk3
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk4
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk5
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk6
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk7
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk8
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:On
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Off
+Create channel to VM-EBT-INJ-MAG-VCOR-10:SI
+Create channel to VM-EBT-INJ-MAG-VCOR-10:RI
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Sta
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk1
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk2
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk3
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk4
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk5
+Create channel to VM-EBT-INJ-MAG-HVCOR-01:Ilk6
+Create channel Using Faux Laser Controller...
+Model initialised.
+controller made
+updating displays
+updating displays
+updating displays
+updating displays
+updating displays
+updating displays
+updating displays
+updating displays
+updating displays
