@@ -85,7 +85,7 @@ class createSignalRecord(QObject):
         # Initialize the PunchingBag as a QObject
         QObject.__init__(self)
         self.records = records
-        self.records[name] = {'name': name, 'pen': pen, 'timer': timer, 'maxlength': maxlength, 'function': function, 'arg': arg, 'ploton': True, 'data': [], 'functionForm': functionForm, 'functionArgument': functionArgument}
+        self.records[name] = {'name': name, 'pen': pen, 'timer': timer, 'logscale': False, 'maxlength': maxlength, 'function': function, 'arg': arg, 'ploton': True, 'data': [], 'functionForm': functionForm, 'functionArgument': functionArgument}
         self.name = name
         self.signal = createSignalTimer(name, function, arg=arg)
         self.thread = QtCore.QThread()

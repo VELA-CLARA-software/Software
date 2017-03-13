@@ -59,8 +59,13 @@ class stripLegend(pg.TreeWidget):
         maxlength.setValue(self.records[name]['maxlength'])
         maxlength.editingFinished.connect(lambda: self.changeMaxLength(name, maxlength))
         self.addTreeWidget(parentTreeWidget, name, "Signal Length", maxlength)
+        ''' Vertical LOG Scale'''
+        verticallogscale = QCheckBox()
+        verticallogscale.setChecked(False)
+        verticallogscale.toggled.connect(lambda x: self.toggleLogScale(name, x))
+        self.addTreeWidget(parentTreeWidget, name, "Log Scale", verticallogscale)
         ''' Vertical Scale'''
-        verticalscale = QDoubleSpinBox ()
+        verticalscale = QDoubleSpinBox()
         verticalscale.setMinimum(0.0)
         verticalscale.setMaximum(100.0)
         verticalscale.setSingleStep(0.1)
@@ -146,6 +151,9 @@ class stripLegend(pg.TreeWidget):
 
     def togglePlotOnOff(self, name, value):
         self.records[name]['ploton'] = value
+
+    def toggleLogScale(self, name, value):
+        self.records[name]['logscale'] = value
 
     def changeSampleRate(self, name, widget):
         string = str(widget.currentText())

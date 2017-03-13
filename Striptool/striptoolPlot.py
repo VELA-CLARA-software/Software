@@ -292,8 +292,8 @@ class generalPlot(pg.PlotWidget):
         self.globalPlotRange = [-10,0]
         self.currentPlotTime = round(time.time(),2)
         self.plotWidget = pg.GraphicsLayoutWidget()
-        self.label = pg.LabelItem(justify='right')
-        self.plotWidget.addItem(self.label)
+        # self.label = pg.LabelItem(justify='right')
+        # self.plotWidget.addItem(self.label)
         self.numberBins = 50
         self.crosshairs = crosshairs
 
@@ -480,14 +480,13 @@ class generalPlot(pg.PlotWidget):
             if len(data) > 1 and not self.plot.scatterPlot:
                 x,y = np.transpose(data)
                 meany = np.mean(y)
-                if self.verticalMeanSubtraction:
+                if self.verticalMeanSubtraction or self.plot.stripplot.subtractMean:
                     y = y - meany
+                if self.records[self.name]['logscale']:
+                    y = np.log10(y)
                 if self.plot.histogramPlot:
                     y2,x2 = np.histogram(y, bins=self.plot.numberBins)
-                    if(self.plot.stripplot.subtractMean):
-                        self.curve.setData({'x': x2-np.mean(x2), 'y': y2}, pen=pen, stepMode=True, fillLevel=0)
-                    else:
-                        self.curve.setData({'x': x2, 'y': y2}, pen=pen, stepMode=True, fillLevel=0, fillBrush=pen)
+                    self.curve.setData({'x': x2, 'y': y2}, pen=pen, stepMode=True, fillLevel=0, fillBrush=pen)
                 elif self.plot.FFTPlot:
                     self.curve.setData({'x': x, 'y': y}, pen=pen, stepMode=False, fillLevel=None)
                     if(len(self.curve.yDisp) > 0):
