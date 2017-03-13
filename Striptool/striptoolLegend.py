@@ -59,6 +59,30 @@ class stripLegend(pg.TreeWidget):
         maxlength.setValue(self.records[name]['maxlength'])
         maxlength.editingFinished.connect(lambda: self.changeMaxLength(name, maxlength))
         self.addTreeWidget(parentTreeWidget, name, "Signal Length", maxlength)
+        ''' Vertical Scale'''
+        verticalscale = QDoubleSpinBox ()
+        verticalscale.setMinimum(0.0)
+        verticalscale.setMaximum(100.0)
+        verticalscale.setSingleStep(0.1)
+        verticalscale.setValue(self.records[name]['curve'].VerticalScale)
+        verticalscale.setKeyboardTracking(False)
+        verticalscale.valueChanged.connect(lambda: self.changeVerticalScale(name, verticalscale))
+        self.addTreeWidget(parentTreeWidget, name, "Signal Scale", verticalscale)
+        ''' Vertical Offset'''
+        verticaloffset = QDoubleSpinBox ()
+        verticaloffset.setMinimum(-1000)
+        verticaloffset.setMaximum(1000)
+        verticaloffset.setSingleStep(0.01)
+        verticaloffset.setValue(self.records[name]['curve'].VerticalOffset)
+        verticaloffset.setKeyboardTracking(False)
+        verticaloffset.valueChanged.connect(lambda: self.changeVerticalOffset(name, verticaloffset))
+        self.addTreeWidget(parentTreeWidget, name, "Signal Offset", verticaloffset)
+        ''' Signal Centered'''
+        verticalMeanSubtraction = QCheckBox()
+        verticalMeanSubtraction.setChecked(False)
+        verticalMeanSubtraction.toggled.connect(lambda x: self.toggleVerticalMeanSubtraction(name, x))
+        self.addTreeWidget(parentTreeWidget, name, "SubtractMean", verticalMeanSubtraction)
+        ''' Signal Plot Color'''
         colorbox = pg.ColorButton()
         colorbox.setFixedSize(30,25)
         colorbox.setFlat(True)
@@ -84,8 +108,17 @@ class stripLegend(pg.TreeWidget):
         deleteRowButton.clicked.connect(lambda x: self.deleteRow(name, parentTreeWidget))
         self.newRowNumber += 1
 
+    def changeVerticalScale(self, name, verticalscale):
+        self.records[name]['curve'].VerticalScale = verticalscale.value()
+
+    def changeVerticalOffset(self, name, verticaloffset):
+        self.records[name]['curve'].VerticalOffset = verticaloffset.value()
+
     def changeMaxLength(self, name, maxlength):
         self.records[name]['maxlength'] = maxlength.value()
+
+    def toggleVerticalMeanSubtraction(self, name, value):
+        self.records[name]['curve'].verticalMeanSubtraction = value
 
     def formatCurveData(self, name):
         # return [(str(time.strftime('%Y/%m/%d', time.localtime(x[0]))),str(datetime.datetime.fromtimestamp(x[0]).strftime('%H:%M:%S.%f')),x[1]) for x in self.records[name]['data']]
