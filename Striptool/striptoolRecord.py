@@ -81,11 +81,11 @@ class recordWorker(QtCore.QObject):
 
 class createSignalRecord(QObject):
 
-    def __init__(self, records, name, pen, timer, maxlength, function, arg=[], functionForm=None, functionArgument=None):
+    def __init__(self, records, name, pen, timer, maxlength, function, arg=[], functionForm=None, functionArgument=None, logscale=False, VerticalScale=1, VerticalOffset=0, verticalMeanSubtraction=False):
         # Initialize the PunchingBag as a QObject
         QObject.__init__(self)
         self.records = records
-        self.records[name] = {'name': name, 'pen': pen, 'timer': timer, 'logscale': False, 'maxlength': maxlength, 'function': function, 'arg': arg, 'ploton': True, 'data': [], 'functionForm': functionForm, 'functionArgument': functionArgument}
+        self.records[name] = {'name': name, 'pen': pen, 'timer': timer, 'maxlength': maxlength, 'function': function, 'arg': arg, 'ploton': True, 'data': [], 'functionForm': functionForm, 'functionArgument': functionArgument, 'logscale': logscale, 'VerticalScale': VerticalScale, 'VerticalOffset': VerticalOffset, 'verticalMeanSubtraction': verticalMeanSubtraction}
         self.name = name
         self.signal = createSignalTimer(name, function, arg=arg)
         self.thread = QtCore.QThread()

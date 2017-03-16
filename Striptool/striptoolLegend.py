@@ -61,15 +61,16 @@ class stripLegend(pg.TreeWidget):
         self.addTreeWidget(parentTreeWidget, name, "Signal Length", maxlength)
         ''' Vertical LOG Scale'''
         verticallogscale = QCheckBox()
-        verticallogscale.setChecked(False)
+        verticallogscale.setChecked(self.records[name]['logscale'])
         verticallogscale.toggled.connect(lambda x: self.toggleLogScale(name, x))
         self.addTreeWidget(parentTreeWidget, name, "Log Scale", verticallogscale)
         ''' Vertical Scale'''
         verticalscale = QDoubleSpinBox()
-        verticalscale.setMinimum(0.0)
-        verticalscale.setMaximum(100.0)
+        verticalscale.setDecimals(12)
+        verticalscale.setMinimum(0.000000000001)
+        verticalscale.setMaximum(10000000000000)
         verticalscale.setSingleStep(0.1)
-        verticalscale.setValue(self.records[name]['curve'].VerticalScale)
+        verticalscale.setValue(self.records[name]['VerticalScale'])
         verticalscale.setKeyboardTracking(False)
         verticalscale.valueChanged.connect(lambda: self.changeVerticalScale(name, verticalscale))
         self.addTreeWidget(parentTreeWidget, name, "Signal Scale", verticalscale)
@@ -78,13 +79,13 @@ class stripLegend(pg.TreeWidget):
         verticaloffset.setMinimum(-1000)
         verticaloffset.setMaximum(1000)
         verticaloffset.setSingleStep(0.01)
-        verticaloffset.setValue(self.records[name]['curve'].VerticalOffset)
+        verticaloffset.setValue(self.records[name]['VerticalOffset'])
         verticaloffset.setKeyboardTracking(False)
         verticaloffset.valueChanged.connect(lambda: self.changeVerticalOffset(name, verticaloffset))
         self.addTreeWidget(parentTreeWidget, name, "Signal Offset", verticaloffset)
         ''' Signal Centered'''
         verticalMeanSubtraction = QCheckBox()
-        verticalMeanSubtraction.setChecked(False)
+        verticalMeanSubtraction.setChecked(self.records[name]['verticalMeanSubtraction'])
         verticalMeanSubtraction.toggled.connect(lambda x: self.toggleVerticalMeanSubtraction(name, x))
         self.addTreeWidget(parentTreeWidget, name, "SubtractMean", verticalMeanSubtraction)
         ''' Signal Plot Color'''
@@ -109,21 +110,27 @@ class stripLegend(pg.TreeWidget):
         deleteRowButton.setFixedSize(50,20)
         deleteRowButton.setFlat(True)
         deleteRowButton.setIcon(self.deleteIcon)
-        deleteRowChild = self.addTreeWidget(parentTreeWidget, name, "Delete Signal", deleteRowButton)
+        self.addTreeWidget(parentTreeWidget, name, "Delete Signal", deleteRowButton)
         deleteRowButton.clicked.connect(lambda x: self.deleteRow(name, parentTreeWidget))
         self.newRowNumber += 1
 
     def changeVerticalScale(self, name, verticalscale):
-        self.records[name]['curve'].VerticalScale = verticalscale.value()
+        self.records[name]['VerticalScale'] = verticalscale.value()
+        if verticalscale.value() < 1:
+            verticalscale.setSingleStep(0.01)
+        if verticalscale.value() < 0.1:
+            verticalscale.setSingleStep(0.001)
+        if verticalscale.value() < 0.01:
+            verticalscale.setSingleStep(0.0001)
 
     def changeVerticalOffset(self, name, verticaloffset):
-        self.records[name]['curve'].VerticalOffset = verticaloffset.value()
+        self.records[name]['VerticalOffset'] = verticaloffset.value()
 
     def changeMaxLength(self, name, maxlength):
         self.records[name]['maxlength'] = maxlength.value()
 
     def toggleVerticalMeanSubtraction(self, name, value):
-        self.records[name]['curve'].verticalMeanSubtraction = value
+        self.records[name]['verticalMeanSubtraction'] = value
 
     def formatCurveData(self, name):
         # return [(str(time.strftime('%Y/%m/%d', time.localtime(x[0]))),str(datetime.datetime.fromtimestamp(x[0]).strftime('%H:%M:%S.%f')),x[1]) for x in self.records[name]['data']]

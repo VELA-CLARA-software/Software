@@ -183,7 +183,7 @@ class stripPlot(QWidget):
             self.stripPlot.addWidget(self.plotRateLabel,5, 0)
             self.stripPlot.addWidget(self.plotRateSlider,5, 1)
         self.setLayout(self.stripPlot)
-        self.plotThread.timeout.connect(lambda: self.plotWidget.date_axis.linkedViewChanged(self.plotWidget.date_axis.linkedView()))
+        # self.plotThread.timeout.connect(lambda: self.plotWidget.date_axis.linkedViewChanged(self.plotWidget.date_axis.linkedView()))
         self.plotWidget.plot.vb.sigXRangeChanged.connect(self.setPlotScaleLambda)
         logger.debug('stripPlot initiated!')
 
@@ -205,9 +205,8 @@ class stripPlot(QWidget):
         self.linearCheckbox.setChecked(ischecked)
         self.subtractMean = ischecked
 
-
-    def deleteAllCurves(self, reply=None):
-        if reply == None:
+    def deleteAllCurves(self, reply=False):
+        if reply == False:
             delete_msg = "This will delete ALL records!"
             reply = QtGui.QMessageBox.question(self, 'Message',
                              delete_msg, QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
