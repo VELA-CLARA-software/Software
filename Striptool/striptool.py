@@ -396,6 +396,8 @@ class stripPlot(QWidget):
                     self.records[name]['curve'].currenttime =  self.plotWidget.currenttime
                 if not self.records[name]['curve'].doingPlot:
                     self.records[name]['curve'].update()
+            ''' this forces the date_axis to redraw '''
+            self.plotWidget.date_axis.linkedViewChanged(self.plotWidget.date_axis.linkedView())
             self.plotWidget.vb.enableAutoRange(x=autorangeX, y=autorangeY)
 
     def removeSignal(self,name):

@@ -57,9 +57,9 @@ class striptool_Demo(QMainWindow):
         pg.setConfigOption('foreground', 'k')
 
         ''' initialise an instance of the stripPlot Widget '''
-        self.sp = striptool.stripPlot(plotRateBar=True,crosshairs=False)
+        self.sp = striptool.stripPlot(plotRateBar=True,crosshairs=True)
         self.sp2 = striptool.stripPlot(plotRateBar=False)
-        self.sp3 = striptool.stripPlot(plotRateBar=True,crosshairs=False)
+        self.sp3 = striptool.stripPlot(plotRateBar=True,crosshairs=True)
 
         ''' This sets the signal length at which the system starts decimating the data to speed up plotting.
             For a 2*DecimateLength signal, the decimation factor would be 2.
@@ -75,10 +75,10 @@ class striptool_Demo(QMainWindow):
             The 'pen' argument sets the color of the curves, but can be changed in the GUI
                 - see <http://www.pyqtgraph.org/documentation/style.html>'''
         self.sp.addSignal(name='signal1',pen='r', timer=1.0/10.0, function=self.createRandomSignal, arg=[0.5])
-        self.sp2.addSignal(name='signal1',pen='r', timer=1.0/10.0, maxlength=100, function=self.createRandomSignal, arg=[-3])
-        self.sp2.addSignal(name='signal2',pen='g', timer=1.0/10.0, function=self.createRandomSignal, arg=[0])
-        self.sp2.addSignal(name='signal3',pen='b', timer=1.0/10.0, function=self.createRandomSignal, arg=[4])
-        self.sp3.addSignal(name='signal3',pen='b', timer=1.0/10.0, function=self.createRandomSignal, arg=[0.5])
+        # self.sp2.addSignal(name='signal1',pen='r', timer=1.0/10.0, maxlength=100, function=self.createRandomSignal, arg=[-3])
+        # self.sp2.addSignal(name='signal2',pen='g', timer=1.0/10.0, function=self.createRandomSignal, arg=[0])
+        # self.sp2.addSignal(name='signal3',pen='b', timer=1.0/10.0, function=self.createRandomSignal, arg=[4])
+        # self.sp3.addSignal(name='signal3',pen='b', timer=1.0/10.0, function=self.createRandomSignal, arg=[0.5])
 
         ''' To remove a signal, reference it by name or use the in-built controls'''
         # sp.removeSignal(name='signal1')
