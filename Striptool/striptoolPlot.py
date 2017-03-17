@@ -500,8 +500,7 @@ class generalPlot(pg.PlotWidget):
                 if not self.VerticalScale == 1 or not self.VerticalOffset == 0:
                     y = (self.VerticalScale * y) + self.VerticalOffset
                 if self.verticalMeanSubtraction or self.plot.stripplot.subtractMean:
-                    meany = np.mean(y)
-                    y = y - meany
+                    y = y - np.mean(y)
                 if self.logscale:
                     y = np.log10(np.abs(y))
                 if self.plot.histogramPlot:
@@ -521,32 +520,30 @@ class generalPlot(pg.PlotWidget):
                                 self.plot.plot.addItem(fftTextArrow)
                     self.plot.updateSpectrumMode(True)
                 else:
-                    # if len(x) > self.plot.decimateScale:
-                    #     decimationfactor = int(np.floor(len(x)/self.plot.decimateScale))
-                    #     self.lines = self.MultiLine(x[::decimationfactor],y[::decimationfactor],pen=pen, log=self.logscale)
-                    # else:
-                    self.lines = self.MultiLine(x, y, pen=pen, log=self.logscale)
+                    if len(x) > self.plot.decimateScale:
+                        decimationfactor = int(np.floor(len(x)/self.plot.decimateScale))
+                        self.lines = self.MultiLine(x[::decimationfactor],y[::decimationfactor],pen=pen, log=self.logscale)
+                    else:
+                        self.lines = self.MultiLine(x, y, pen=pen, log=self.logscale)
                     self.plot.plot.addItem(self.lines)
 
         ''' This filters the data based on the plotrange of the current viewbox. For small datasets this is ~pointless, but for moderately large datasets
         and bigger it makes a noticeable speed up, despite the functions built in to PyQtGraph'''
         def timeFilter(self, datain, timescale=None):
-            # datain = np.array(datain)
-            # if len(datain) > 0:
-            #     if (datain[0][0] > (self.currenttime+self.plot.globalPlotRange[0]) and datain[-1][0] <=  (self.currenttime+self.plot.globalPlotRange[1])):
-            #         return datain
-            #     else:
-            #         if datain[-1][0] <=  (self.currenttime+self.plot.globalPlotRange[1]):
-            #             datain = datain[bisect_left(datain[:,0], self.currenttime+self.plot.globalPlotRange[0])-1:-1]
-            #         else:
-            #             if datain[0][0] >= (self.currenttime+self.plot.globalPlotRange[0]):
-            #                 datain = datain[0:bisect_left(datain[:,0], self.currenttime+self.plot.globalPlotRange[1])+1]
-            #             else:
-            #                 datain = datain[bisect_left(datain[:,0], self.currenttime+self.plot.globalPlotRange[0])-1:bisect_left(datain[:,0], self.currenttime+self.plot.globalPlotRange[1])+1]
-            #         return datain
-            # else:
-            # print datain
-            return datain
+            if len(datain) > 0:
+                if (datain[0][0] > (self.currenttime+self.plot.globalPlotRange[0]) and datain[-1][0] <=  (self.currenttime+self.plot.globalPlotRange[1])):
+                    return datain
+                else:
+                    if datain[-1][0] <=  (self.currenttime+self.plot.globalPlotRange[1]):
+                        datain = datain[bisect_left(datain[:,0], self.currenttime+self.plot.globalPlotRange[0])-1:-1]
+                    else:
+                        if datain[0][0] >= (self.currenttime+self.plot.globalPlotRange[0]):
+                            datain = datain[0:bisect_left(datain[:,0], self.currenttime+self.plot.globalPlotRange[1])+1]
+                        else:
+                            datain = datain[bisect_left(datain[:,0], self.currenttime+self.plot.globalPlotRange[0])-1:bisect_left(datain[:,0], self.currenttime+self.plot.globalPlotRange[1])+1]
+                    return datain
+            else:
+                return datain
 
         ''' helper function to clear a curves points '''
         def clear(self):
@@ -569,7 +566,6 @@ class generalPlot(pg.PlotWidget):
                         x,y = np.transpose(self.plotData)
                         x = x - self.currenttime
                         self.plotData = np.transpose((x,y))
-                        # self.plotData = [[x[0] - self.currenttime, x[1]] for x in self.plotData]
                         self.updateData(self.plotData, self.records[self.name]['pen'])
                 self.doingPlot = False
             self.plot.plotUpdated.emit()
@@ -577,15 +573,12 @@ class generalPlot(pg.PlotWidget):
         class MultiLine(pg.QtGui.QGraphicsPathItem):
             def __init__(self, x, y, pen, log=False):
                 """x and y are 1D arrays of shape (Nplots, Nsamples)"""
-                # connect = np.ones(x.shape, dtype=bool)
-                # connect[:,-1] = 0 # don't draw the segment between each trace
                 self.path = pg.arrayToQPath(x, y)
                 pg.QtGui.QGraphicsPathItem.__init__(self, self.path)
-                # if log:
-                #     self.setPen(pg.mkPen(pen,width=3))
-                # else:
-                #     self.setPen(pg.mkPen(pen,width=1))
-                self.setPen(pg.mkPen(pen))
+                if log:
+                    self.setPen(pg.mkPen(pen,width=3))
+                else:
+                    self.setPen(pg.mkPen(pen,width=1))
             def shape(self): # override because QGraphicsPathItem.shape is too expensive.
                 return pg.QtGui.QGraphicsItem.shape(self)
             def boundingRect(self):
