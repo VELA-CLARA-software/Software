@@ -3,7 +3,7 @@ import sys, time, os, datetime
 from pyqtgraph.Qt import QtGui, QtCore
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-# import numpy as np
+import numpy as np
 import threading
 from threading import Thread, Event, Timer
 from PyQt4.QtCore import QObject, pyqtSignal, pyqtSlot
@@ -75,17 +75,19 @@ class recordWorker(QtCore.QObject):
         # else:
         if len(self.records[self.name]['data']) > self.records[self.name]['maxlength']:
             cutlength = len(self.records[self.name]['data']) - self.records[self.name]['maxlength']
-            del self.records[self.name]['data'][0:cutlength]
-        self.records[self.name]['data'].append(value)
-        # print len(self.records[self.name]['data'])
+            self.records[self.name]['data'] = np.delete(self.records[self.name]['data'],range(cutlength),axis=0)
+        if len(self.records[self.name]['data']) < 1:
+            self.records[self.name]['data'] = np.array([value])
+        else:
+            self.records[self.name]['data'] = np.concatenate((self.records[self.name]['data'],[value]), axis=0)
 
 class createSignalRecord(QObject):
 
-    def __init__(self, records, name, pen, timer, maxlength, function, arg=[], functionForm=None, functionArgument=None):
+    def __init__(self, records, name, pen, timer, maxlength, function, arg=[], functionForm=None, functionArgument=None, logscale=False, VerticalScale=1, VerticalOffset=0, verticalMeanSubtraction=False):
         # Initialize the PunchingBag as a QObject
         QObject.__init__(self)
         self.records = records
-        self.records[name] = {'name': name, 'pen': pen, 'timer': timer, 'maxlength': maxlength, 'function': function, 'arg': arg, 'ploton': True, 'data': [], 'functionForm': functionForm, 'functionArgument': functionArgument}
+        self.records[name] = {'name': name, 'pen': pen, 'timer': timer, 'maxlength': maxlength, 'function': function, 'arg': arg, 'ploton': True, 'data': [], 'functionForm': functionForm, 'functionArgument': functionArgument, 'logscale': logscale, 'VerticalScale': VerticalScale, 'VerticalOffset': VerticalOffset, 'verticalMeanSubtraction': verticalMeanSubtraction}
         self.name = name
         self.signal = createSignalTimer(name, function, arg=arg)
         self.thread = QtCore.QThread()

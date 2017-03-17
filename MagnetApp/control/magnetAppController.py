@@ -7,15 +7,16 @@ import VELA_CLARA_MagnetControl as mag
 import magnetAppGlobals as globals
 
 from PyQt4 import QtGui, QtCore
-from GUI_magnetAppStartup import GUI_magnetAppStartup
-from GUI_magnetAppMainView import GUI_magnetAppMainView
-from GUI_FileLoad import GUI_FileLoad
-from GUI_FileSave import GUI_FileSave
+from GUI.GUI_magnetAppStartup import GUI_magnetAppStartup
+from GUI.GUI_magnetAppMainView import GUI_magnetAppMainView
+from GUI.GUI_FileLoad import GUI_FileLoad
+from GUI.GUI_FileSave import GUI_FileSave
 
 # this class handles everything
 class magnetAppController(object):
     def __init__(self,argv):
-        # initilaize the VELA_CLARA_MagnetControl, from this object we can get all flavours of magnet controller
+        # initilaize the VELA_CLARA_MagnetControl,
+        # from this object we can get all flavours of magnet controller
         self.magInit = mag.init()
         self.magInit.setVerbose()
         # startView and connections
@@ -35,14 +36,16 @@ class magnetAppController(object):
         self.mainView = None
         # hash table (python dict) of all magobject refs, filled when mainView created
         self.allMagnetObjReferences = {}
-        # flag to say if we are connected to any epics
+        # flag to say if we are connected to any epics, so we know how to handle
+        # button presses with NO EPICS connection
         self.activeEPICS = False
         # timer for mainView GUI update call
         self.widgetUpdateTimer = QtCore.QTimer()
-        # The dburtLoadView and dburtSaveView always exist, we 'show' and 'hide' them where necessary
+        self.widgetTimerUpdateTime_ms = 200  # MAGIC_NUMBER
+        # The dburtLoadView and dburtSaveView always exist,
+        # we 'show' and 'hide' them where necessary
         # even calling close on them just hides them, until the mainView is closed
         # DBURT File Load Window
-
         self.dburtLoadView = GUI_FileLoad("Load DBURT", globals.dburtLocation )
         self.dburtLoadView.setWindowIcon(QtGui.QIcon( globals.appIcon ) )
         self.dburtLoadView.selectButton.clicked.connect(self.handle_fileLoadSelect)
@@ -50,6 +53,14 @@ class magnetAppController(object):
         self.dburtSaveView = GUI_FileSave()
         self.dburtSaveView.setWindowIcon(QtGui.QIcon( globals.appIcon ))
         self.dburtSaveView.saveNowButton_2.clicked.connect(self.handle_fileSaveNow)
+        # this map is used a few places, sodefined here
+        # I think there is a c++ method to get this, but the documentation is... meh...
+        self.Area_ENUM_to_Text ={mag.MACHINE_AREA.VELA_BA1     :'VELA_BA1',
+                                 mag.MACHINE_AREA.VELA_BA2     :'VELA_BA2',
+                                 mag.MACHINE_AREA.VELA_INJ     :'VELA_Injector'
+            # mag.MACHINE_AREA.CLARA_2_VELA :'CLARA 2 VELA Magnets',
+            # mag.MACHINE_AREA.CLARA_PHASE_1:'CLARA PHASE 1 Magnets',
+            }
 #          __                 __             .__
 #  _______/  |______ ________/  |_     ___  _|__| ______  _  __
 # /  ___/\   __\__  \\_  __ \   __\    \  \/ /  |/ __ \ \/ \/ /
@@ -57,10 +68,10 @@ class magnetAppController(object):
 #/____  > |__| (____  /__|   |__|        \_/ |__|\___  >\/\_/
 #     \/            \/                               \/
     # these functions handle the start view signals
-    # start view radio group
+    # start view radio group 1
     def handle_machineAreaSignal(self,r):
          self.machineArea = r
-    # start view radio group
+    # start view radio group 2
     def handle_machineModeSignal(self,r):
         self.machineMode = r
     # check to see if the a choice of area and mode has been made
@@ -69,10 +80,12 @@ class magnetAppController(object):
         if self.machineArea is not None and self.machineMode is not None:
             ret = True
         return ret
+    # pressing start, tries to lanuch a magcontroller and build the main view
     def handle_startviewstartbutton(self):
         if  self.areaAndModeSet():
             # forced update to the startup window showing choices
-            self.startView.waitMessageLabel.setText("Building Main Window...Patience is a virtue")
+            self.startView.waitMessageLabel.setText(
+                "Building Main Window...Patience is a virtue")
             self.startView.update()
             QtGui.QApplication.processEvents();
             # launch requested magnet controller
@@ -84,8 +97,8 @@ class magnetAppController(object):
             self.addMagnetsToMainView()
         else:
             # forced update to the startup window showing error
-            self.startView.waitMessageLabel.setText("<font color='red'>ERROR: You must select a Machine Area and Mode "
-                                                    "first</font>")
+            self.startView.waitMessageLabel.setText(
+                "<font color='red'>ERROR: You must select a Machine Area and Mode first</font>")
             self.startView.waitMessageLabel.update()
 #                .__                  .__
 #  _____ _____  |__| ____      ___  _|__| ______  _  __
@@ -110,87 +123,82 @@ class magnetAppController(object):
         self.mainView.loadSettings.clicked.connect( self.handle_loadSettings )
         self.mainView.saveSettings.clicked.connect( self.handle_saveSettings )
         # the dburtSaveView needs to know what controller type we are using to write it to the save file
-        self.dburtSaveView.controller_type = self.machineArea
+        self.dburtSaveView.controller_type = self.Area_ENUM_to_Text[self.machineArea]
         # connect the timer to mainViewUpdate, no threading in this app
         QtCore.QTimer.connect(self.widgetUpdateTimer, QtCore.SIGNAL("timeout()"), self.mainViewUpdate)
         # start timer for 200 ms
-        self.widgetUpdateTimer.start(200)#MAGIUC_NUMBER
+        self.widgetUpdateTimer.start(self.widgetTimerUpdateTime_ms)
     # update the  mainViewUpdate
     def mainViewUpdate(self):
-        # conceivably the timer could restart this function before it completes so guard against that
+        # conceivably the timer could restart this function before it completes
+        # so guard against that
         try:
             self.mainView.updateMagnetWidgets()
         finally:
-            self.widgetUpdateTimer.start(200)#MAGIUC_NUMBER
+            self.widgetUpdateTimer.start(self.widgetTimerUpdateTime_ms)
     # mainView buttons
-    # some buttons are connected in the GUI_magnetAppMainView, ones that require a magnet controller are handled here
+    # 'simple' buttons are connected in the GUI_magnetAppMainView
+    # ones that require a magnet controller are handled here
     def handle_selectedOn(self):
-        print 'handle_selectedOn'
         if self.activeEPICS:
             self.activeMags = mag.std_vector_string()
             self.activeMags.extend(self.mainView.getActiveNames())
             self.localMagnetController.switchONpsu(self.activeMags)
+
     def handle_selectedOff(self):
-        print 'handle_selectedOn'
         if self.activeEPICS:
             self.activeMags = mag.std_vector_string()
             self.activeMags.extend(self.mainView.getActiveNames())
             self.localMagnetController.switchOFFpsu(self.activeMags)
+
     def handle_allOff(self):
-        print 'handle_allOff'
         if self.activeEPICS:
             self.localMagnetController.switchOFFpsu(self.allMagNames)
+
     def handle_allZero(self):
         if self.activeEPICS:
             self.localMagnetController.setSIZero(self.allMagNames)
+
     def handle_allOn(self):
-        print 'handle_allOn'
         if self.activeEPICS:
             self.localMagnetController.switchONpsu(self.allMagNames)
+
     def handle_selectedDegauss(self):
-        print 'handle_selectedDegauss'
         if self.activeEPICS:
             self.activeMags = mag.std_vector_string()
             self.activeMags.extend(self.mainView.getActiveNames())
-            print 'active magnet widgets'
-            print self.activeMags
             self.localMagnetController.degauss(self.activeMags, True)
+
     def handle_saveSettings(self):
         # dburtSaveView filename is set by current time and date
         self.dburtSaveView.setFileName()
         self.dburtSaveView.show()
         self.dburtSaveView.activateWindow()
+
     def handle_loadSettings(self):
         self.dburtLoadView.show()
         self.dburtLoadView.activateWindow()
     # set mainview text depending on mode and area chosen in startview
     def setMainViewHeaderText(self):
+        self.Mode_Text = {
+            mag.MACHINE_MODE.OFFLINE :' No EPICS Connection ',
+            mag.MACHINE_MODE.PHYSICAL:' Connected to the Physical Machine',
+            mag.MACHINE_MODE.VIRTUAL :' Connected to the Virtual Machine'
+            }
         self.title = 'Magnet Control for '
-        self.area_to_title ={}
-
-        if self.machineArea == 'VELA_INJ':
-            self.title += 'VELA Injector Magnets'
-        elif self.machineArea == 'VELA_BA1':
-            self.title += 'VELA BA1 Magnets'
-        elif self.machineArea == 'VELA_BA2':
-            self.title += 'VELA BA2 Magnets'
-        elif self.machineArea == 'CLARA_INJ':
-            self.title += 'CLARA Injector Magnets'
-        if self.machineMode == 'physicalMode':
-            self.title += ' Connected to the Physical Machine'
-        elif self.machineMode == 'virtualMode':
-            self.title += ' Connected to the Virtual Machine '
-        elif self.machineMode == 'offlineMode':
-            self.title += ' No EPICS Connection '
-        self.mainView.titleLabel.setText( self.title )
-    # more cancer below
+        self.title +=  self.Area_ENUM_to_Text[self.machineArea]
+        self.title +=  ' Magnets '
+        self.title +=  self.Mode_Text[self.machineMode]
+        self.mainView.titleLabel.setText(self.title)
+    # more cancer below, but i think i have to live with this...
     def addMagnetsToMainView(self):
         # get all magnet names
         self.allMagNames = self.localMagnetController.getMagnetNames()
-        #iterate over all magnets, and add them to respective lists depending on their magnet type
+        # iterate over all magnets, and add them to respective lists depending
+        # on their magnet type
         for i in self.allMagNames:
-            self.allMagnetObjReferences[ i ] = self.localMagnetController.getMagObjConstRef( i )
-            if self.localMagnetController.isAQuad( i ):
+            self.allMagnetObjReferences[i] = self.localMagnetController.getMagObjConstRef(i)
+            if self.localMagnetController.isAQuad(i):
                 self.mainView.addQuad( self.allMagnetObjReferences.get(i) )
                 self.mainView.quadWidgets[i].magRef.append(self.allMagnetObjReferences[i])
                 self.mainView.quadWidgets[i].setDefaultOptions()
@@ -214,7 +222,7 @@ class magnetAppController(object):
         # now we have the mainView, we connect it's close function, this
         # ensures that when the main view is closed all the other views are closed too
         self.mainView.closing.connect(self.connectCloseEvents)
-    # the 2 dburt windows can't be closed until this function is called,
+    # the load and save dburt windows can't be closed until this function is called
     def connectCloseEvents(self):
         self.widgetUpdateTimer.stop()
         self.dburtLoadView.canWindowClose = True
@@ -222,58 +230,7 @@ class magnetAppController(object):
         self.dburtSaveView.canWindowClose = True
         self.dburtSaveView.close()
         self.mainView.close()
-        print 'Fin - magnetApp closed down'
-
-
-
-
-    def setVM(self):
-        os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
-        os.environ["EPICS_CA_ADDR_LIST"] = "10.10.0.12"
-        os.environ["EPICS_CA_MAX_ARRAY_BYTES"] = "10000000"
-
-    # i hate the way the below few functions work, ... cancer
-    def launchPythonMagnetController(self):
-        if self.machineMode == 'physicalMode':
-            self.launchPhysical()
-            self.activeEPICS = True
-        elif self.machineMode == 'virtualMode':
-            self.setVM()
-            self.launchVirtual()
-            self.activeEPICS = True
-        elif self.machineMode == 'offlineMode':
-            self.launchOffline()
-        else:
-            print 'magnetAppController launchPythonMagnetController ERROR'
-    def launchPhysical(self):
-        if self.machineArea == 'VELA_INJ':
-            self.localMagnetController = self.magInit.physical_VELA_INJ_Magnet_Controller()
-        elif self.machineArea == 'VELA_BA1':
-            self.localMagnetController = self.magInit.physical_VELA_BA1_Magnet_Controller()
-        elif self.machineArea == 'VELA_BA2':
-            self.localMagnetController = self.magInit.physical_VELA_BA2_Magnet_Controller()
-        elif self.machineArea == 'CLARA_INJ':
-            self.localMagnetController = self.magInit.physical_CLARA_INJ_Magnet_Controller()
-    def launchVirtual(self):
-        if self.machineArea == 'VELA_INJ':
-            self.localMagnetController = self.magInit.virtual_VELA_INJ_Magnet_Controller()
-        elif self.machineArea == 'VELA_BA1':
-            self.localMagnetController = self.magInit.virtual_VELA_BA1_Magnet_Controller()
-        elif self.machineArea == 'VELA_BA2':
-            self.localMagnetController = self.magInit.virtual_VELA_BA2_Magnet_Controller()
-        elif self.machineArea == 'CLARA_INJ':
-            self.localMagnetController = self.magInit.virtual_CLARA_INJ_Magnet_Controller()
-    def launchOffline(self):
-        if self.machineArea == 'VELA_INJ':
-            self.localMagnetController = self.magInit.offline_VELA_INJ_Magnet_Controller()
-        elif self.machineArea == 'VELA_BA1':
-            self.localMagnetController = self.magInit.offline_VELA_BA1_Magnet_Controller()
-        elif self.machineArea == 'VELA_BA2':
-            self.localMagnetController = self.magInit.offline_VELA_BA2_Magnet_Controller()
-        elif self.machineArea == 'CLARA_INJ':
-            self.localMagnetController = self.magInit.offline_CLARA_INJ_Magnet_Controller()
-
-
+        print 'Fin - magnetApp closed down, goodbye.'
 
     def handle_fileSaveNow(self):
         self.fn = str(self.dburtSaveView.file_name_entry.text())
@@ -281,9 +238,6 @@ class magnetAppController(object):
         self.keywords = self.dburtSaveView.getComboBoxEntries()
         self.localMagnetController.writeDBURT(self.fn, self.comments, self.keywords)
         self.dburtSaveView.hide()
-
-
-
 
     def handle_fileLoadSelect(self):
         if self.haveDBurtAndNotInOfflineMode():
@@ -298,7 +252,6 @@ class magnetAppController(object):
         # reset the loadfile
         self.dburtLoadView.dburtFile = ""
 
-
     def haveDBurtAndNotInOfflineMode(self):
         self.ret = True
         if self.machineMode == 'offlineMode':
@@ -307,3 +260,92 @@ class magnetAppController(object):
             self.ret = False
         return self.ret
 
+    def launchPythonMagnetController(self):
+        self.localMagnetController = \
+            self.magInit.getMagnetController( self.machineMode, self.machineArea)
+        if  self.machineMode is not mag.MACHINE_MODE.OFFLINE:
+            self.activeEPICS = True
+
+
+
+#    _____    __________               .__            .___
+#   /  _  \   \______   \ ____   _____ |__| ____    __| _/___________
+#  /  /_\  \   |       _// __ \ /     \|  |/    \  / __ |/ __ \_  __ \
+# /    |    \  |    |   \  ___/|  Y Y  \  |   |  \/ /_/ \  ___/|  | \/
+# \____|__  /  |____|_  /\___  >__|_|  /__|___|  /\____ |\___  >__|
+#         \/          \/     \/      \/        \/      \/    \/
+#
+# A REMINDER OF WHAT PYTHON CANCER CAN LOOK LIKE
+    #def launchPythonMagnetController(self):
+        #self.localMagnetController
+        # if self.machineMode == 'physicalMode':
+        #     self.launchPhysical()
+        #     self.activeEPICS = True
+        # elif self.machineMode == 'virtualMode':
+        #     #self.setVM()
+        #     self.launchVirtual()
+        #     self.activeEPICS = True
+        # elif self.machineMode == 'offlineMode':
+        #     self.launchOffline()
+        # else:
+        #     print 'magnetAppController launchPythonMagnetController ERROR'
+    # def launchPhysical(self):
+    #     if self.machineArea == 'VELA_INJ':
+    #         self.localMagnetController = self.magInit.physical_VELA_INJ_Magnet_Controller()
+    #     elif self.machineArea == 'VELA_BA1':
+    #         self.localMagnetController = self.magInit.physical_VELA_BA1_Magnet_Controller()
+    #     elif self.machineArea == 'VELA_BA2':
+    #         self.localMagnetController = self.magInit.physical_VELA_BA2_Magnet_Controller()
+    #     elif self.machineArea == 'CLARA_INJ':
+    #         self.localMagnetController = self.magInit.physical_CLARA_INJ_Magnet_Controller()
+    # def launchVirtual(self):
+    #     if self.machineArea == 'VELA_INJ':
+    #         self.localMagnetController = self.magInit.virtual_VELA_INJ_Magnet_Controller()
+    #     elif self.machineArea == 'VELA_BA1':
+    #         self.localMagnetController = self.magInit.virtual_VELA_BA1_Magnet_Controller()
+    #     elif self.machineArea == 'VELA_BA2':
+    #         self.localMagnetController = self.magInit.virtual_VELA_BA2_Magnet_Controller()
+    #     elif self.machineArea == 'CLARA_INJ':
+    #         self.localMagnetController = self.magInit.virtual_CLARA_INJ_Magnet_Controller()
+    # def launchOffline(self):
+    #     if self.machineArea == 'VELA_INJ':
+    #         self.localMagnetController = self.magInit.offline_VELA_INJ_Magnet_Controller()
+    #     elif self.machineArea == 'VELA_BA1':
+    #         self.localMagnetController = self.magInit.offline_VELA_BA1_Magnet_Controller()
+    #     elif self.machineArea == 'VELA_BA2':
+    #         self.localMagnetController = self.magInit.offline_VELA_BA2_Magnet_Controller()
+    #     elif self.machineArea == 'CLARA_INJ':
+    #         self.localMagnetController = self.magInit.offline_CLARA_INJ_Magnet_Controller()
+        # def setMainViewHeaderText(self):
+            # self.VELA_BA2.objectName(): MACHINE_AREA.VELA_BA2,
+            # self.VELA_BA1.objectName(): MACHINE_AREA.VELA_BA1,
+            # self.VELA_INJ.objectName(): MACHINE_AREA.VELA_INJ
+            # #self.CLARA_PHASE_1.objectName(): MACHINE_AREA.CLARA_PHASE_1,
+            # #self.CLARA_2_VELA.objectName(): MACHINE_AREA.CLARA_2_VELA
+            # }
+            # self.radioModeTo_ENUM = {self.virtualMode.objectName(): MACHINE_MODE.VIRTUAL,
+            # self.physicalMode.objectName(): MACHINE_MODE.PHYSICAL,
+            # self.offlineMode.objectName(): MACHINE_MODE.OFFLINE
+            # # self.CLARA_PHASE_1.objectName(): MACHINE_AREA.CLARA_PHASE_1,
+            # # self.CLARA_2_VELA.objectName(): MACHINE_AREA.CLARA_2_VELA
+            # }
+            #
+            #
+            # self.title = 'Magnet Control for '
+            # self.area_to_title ={}
+            #
+            # if self.machineArea == 'VELA_INJ':
+            #     self.title += 'VELA Injector Magnets'
+            # elif self.machineArea == 'VELA_BA1':
+            #     self.title += 'VELA BA1 Magnets'
+            # elif self.machineArea == 'VELA_BA2':
+            #     self.title += 'VELA BA2 Magnets'
+            # elif self.machineArea == 'CLARA_INJ':
+            #     self.title += 'CLARA Injector Magnets'
+            # if self.machineMode == 'physicalMode':
+            #     self.title += ' Connected to the Physical Machine'
+            # elif self.machineMode == 'virtualMode':
+            #     self.title += ' Connected to the Virtual Machine '
+            # elif self.machineMode == 'offlineMode':
+            #     self.title += ' No EPICS Connection '
+            # self.mainView.titleLabel.setText( self.title )

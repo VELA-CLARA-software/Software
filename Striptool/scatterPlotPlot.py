@@ -7,14 +7,7 @@ import numpy as np
 from bisect import bisect_left, bisect_right
 import peakutils
 from itertools import compress
-
-tableau20 = [(31, 119, 180), (174, 199, 232), (255, 127, 14), (255, 187, 120),
-             (44, 160, 44), (152, 223, 138), (214, 39, 40), (255, 152, 150),
-             (148, 103, 189), (197, 176, 213), (140, 86, 75), (196, 156, 148),
-             (227, 119, 194), (247, 182, 210), (127, 127, 127), (199, 199, 199),
-             (188, 189, 34), (219, 219, 141), (23, 190, 207), (158, 218, 229)]
-
-Qtableau20 = [QColor(i,j,k) for (i,j,k) in tableau20]
+import colours as colours
 
 def takeClosestPosition(xvalues, myList, myNumber):
     """
@@ -57,7 +50,7 @@ class scatterPlotPlot(pg.PlotWidget):
         self.selectionNameY = 0
         self.scatterplot.scatterSelectionChanged.connect(self.setSelectionIndex)
         self.plot = self.plotWidget.addPlot(row=0, col=0) #, axisItems = {'bottom': self.date_axis}
-        self.scatterPlot = pg.ScatterPlotItem(size=5, pen=pg.mkPen(None), brush=pg.mkBrush(Qtableau20[color]))
+        self.scatterPlot = pg.ScatterPlotItem(size=5, pen=pg.mkPen(None), brush=pg.mkBrush(colours.Qtableau20[color]))
         self.plot.addItem(self.scatterPlot)
         self.scatterPlot.sigClicked.connect(self.printPoints)
 
@@ -80,7 +73,7 @@ class scatterPlotPlot(pg.PlotWidget):
         self.paused = value
 
     def timeFilter(self, datain, timescale):
-        tdata = np.array(list(map(lambda x: [x[0]-self.currenttime, round(x[1],5)], datain)))
+        tdata = np.array(list(map(lambda x: [x[0]-self.currenttime, x[1]], datain)))
         times, data = zip(*tdata)
         if (times[0] > self.globalPlotRange[0] and times[-1] < self.globalPlotRange[1]) or not len(times) > 0:
             # print 'All Data!'
@@ -94,7 +87,7 @@ class scatterPlotPlot(pg.PlotWidget):
         return finaldata
 
     def timeFilter2(self, datain, timescale):
-        tdata = np.array(list(map(lambda x: [x[0]-self.currenttime, round(x[1],5)], datain)))
+        tdata = np.array(list(map(lambda x: [x[0]-self.currenttime, x[1]], datain)))
         times, data = zip(*tdata)
         if len(times) > 0:
             idx = (np.array(times) > self.globalPlotRange[0]) * (np.array(times) < self.globalPlotRange[1])
@@ -107,14 +100,23 @@ class scatterPlotPlot(pg.PlotWidget):
         return list(list(self.timeFilter(data, timescale)))
 
     def getPlotData(self, record):
-        self.doingPlot = True
-        plotData = self.filterRecord(record['data'],self.globalPlotRange)
-        if len(plotData) > 100*self.decimateScale:
-            decimationfactor = int(np.floor(len(plotData)/self.decimateScale))
-            plotData = plotData[0::decimationfactor]
-            return plotData
+        if self.scatterplot.stripPlotConnected:
+            return record['curve'].plotData
         else:
-            return plotData
+            plotData = self.filterRecord(record['data'],self.globalPlotRange)
+            x,y = np.transpose(plotData)
+            if record['logscale']:
+                y = np.log10(np.abs(y))
+            meany = np.mean(y)
+            if record['verticalMeanSubtraction']:
+                y = y - meany
+            plotData = zip(*[x,y])
+            if len(plotData) > 100*self.decimateScale:
+                decimationfactor = int(np.floor(len(plotData)/self.decimateScale))
+                plotData = plotData[0::decimationfactor]
+                return plotData
+            else:
+                return plotData
 
     def show(self):
         self.plotWidget.show()
@@ -141,7 +143,7 @@ class scatterPlotPlot(pg.PlotWidget):
             scatteritems = []
             for name in [self.selectionNameX,self.selectionNameY]:
                 if name in self.records and len(self.records[name]['data']) > 1:
-                    scatteritems.append([name, self.getPlotData( self.records[name])])
+                    scatteritems.append([name, self.getPlotData(self.records[name])])
             # print 'freq 1 = ', 1.0/(time.time()-start)
             if (len(scatteritems) > 1):
                 name = scatteritems[0][0]+' vs '+scatteritems[1][0]
@@ -151,13 +153,13 @@ class scatterPlotPlot(pg.PlotWidget):
                 if len(data1) > 1 and len(data2) > 1:
                     signalDelayTime1 =  self.records[scatteritems[0][0]]['timer']
                     signalDelayTime2 =  self.records[scatteritems[1][0]]['timer']
-                    if data1[0] < data2[0]:
+                    if list(data1[0])[0] < list(data2[0])[0]:
                         # print 'less than'
                         ans = takeClosestPosition(zip(*data1)[0], data1, data2[0][0])
                         starttime = ans[1]
                         startpos1 = ans[0]
                         startpos2 = 0
-                    elif data1[0] > data2[0]:
+                    elif list(data1[0])[0] > list(data2[0])[0]:
                         # print 'more than', data1[0],' > ', data2[0]
                         ans = takeClosestPosition(zip(*data2)[0], data2, data1[0][0])
                         starttime = ans[1]

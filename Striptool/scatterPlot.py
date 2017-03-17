@@ -41,9 +41,11 @@ class scatterPlot(QWidget):
         if not stripplot == None:
             self.stripPlot = stripplot
             self.records = stripplot.records
+            self.stripPlotConnected = True
         else:
             self.stripPlot = self
             self.records = {}
+            self.stripPlotConnected = False
         self.globalPlotRange = [-1000, 0]
         ''' Create generalPlot object '''
         self.plotWidget = scatterPlotPlot(self, color=color)

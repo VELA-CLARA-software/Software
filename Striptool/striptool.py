@@ -34,7 +34,7 @@ class stripPlot(QWidget):
         self.plotrate = 1
         self.plotScaleConnection = True
         self.crosshairs = crosshairs
-        print 'self.crosshairs = ', self.crosshairs
+        self.subtractMean = False
         self.pauseIcon  =  QtGui.QIcon(str(os.path.dirname(os.path.abspath(__file__)))+'\icons\pause.png')
 
         ''' create the stripPlot.stripPlot as a grid layout '''
@@ -52,16 +52,18 @@ class stripPlot(QWidget):
         self.linearRadio = QRadioButton("Linear")
         self.linearRadio.setChecked(True)
         self.linearRadio.toggled.connect(lambda: self.setPlotType(linear=True))
+        self.linearCheckbox = QCheckBox("Subtract Mean")
+        self.linearCheckbox.stateChanged.connect(self.setSubtractMean)
+        self.linearCheckbox.setChecked(False)
         ''' Histogram '''
         self.HistogramRadio = QRadioButton("Histogram")
         self.HistogramRadio.toggled.connect(lambda: self.setPlotType(histogram=True))
-        self.histogramCheckbox = QCheckBox("Subtract Mean")
-        self.histogramCheckbox.stateChanged.connect(self.setSubtractMean)
-        self.histogramCheckbox.setChecked(False)
         self.histogramBinsLabel = QLabel('NBins')
+        self.histogramBinsLabel.hide()
         self.histogramBinsEdit = QSpinBox()
         self.histogramBinsEdit.setValue(self.plotWidget.numberBins)
         self.histogramBinsEdit.setMinimum(1)
+        self.histogramBinsEdit.hide()
         # self.histogramBinsEdit.setMaxLength(4)
         # self.histogramBinsEdit.setInputMask('0000')
         self.histogramBinsEdit.valueChanged.connect(self.setHistogramBins)
@@ -92,18 +94,18 @@ class stripPlot(QWidget):
         self.deleteAllButton = QPushButton('Delete All Curves')
         self.deleteAllButton.clicked.connect(self.deleteAllCurves)
         ''' Set Layout '''
-        self.buttonLayout.addWidget(self.linearRadio,      0,0,1,4)
+        self.buttonLayout.addWidget(self.linearRadio,      0,0,1,1)
+        self.buttonLayout.addWidget(self.linearCheckbox,   0,2,1,1)
         self.buttonLayout.addWidget(self.HistogramRadio,   1,0,1,1)
-        self.buttonLayout.addWidget(self.histogramCheckbox,1,1,1,1)
-        self.buttonLayout.addWidget(self.histogramBinsLabel,1,3,1,1)
         self.buttonLayout.addWidget(self.histogramBinsEdit,1,2,1,1)
+        self.buttonLayout.addWidget(self.histogramBinsLabel,1,3,1,1)
         self.buttonLayout.addWidget(self.FFTRadio,         2,0,1,4)
         self.buttonLayout.addWidget(self.scrollButton,     3,0,1,1)
         self.buttonLayout.addWidget(self.pauseButton,      3,3,1,1)
-        self.buttonLayout.addWidget(self.legend.layout,4,0,3,4)
-        self.buttonLayout.addWidget(self.saveAllButton,7,0)
-        self.buttonLayout.addWidget(self.clearAllButton,7,1)
-        self.buttonLayout.addWidget(self.deleteAllButton,7,2)
+        self.buttonLayout.addWidget(self.legend.layout,    4,0,3,4)
+        self.buttonLayout.addWidget(self.saveAllButton,    7,0)
+        self.buttonLayout.addWidget(self.clearAllButton,   7,1)
+        self.buttonLayout.addWidget(self.deleteAllButton,  7,2)
 
         if self.crosshairs:
             ''' create signalValueTable '''
@@ -181,7 +183,7 @@ class stripPlot(QWidget):
             self.stripPlot.addWidget(self.plotRateLabel,5, 0)
             self.stripPlot.addWidget(self.plotRateSlider,5, 1)
         self.setLayout(self.stripPlot)
-        self.plotThread.timeout.connect(lambda: self.plotWidget.date_axis.linkedViewChanged(self.plotWidget.date_axis.linkedView()))
+        # self.plotThread.timeout.connect(lambda: self.plotWidget.date_axis.linkedViewChanged(self.plotWidget.date_axis.linkedView()))
         self.plotWidget.plot.vb.sigXRangeChanged.connect(self.setPlotScaleLambda)
         logger.debug('stripPlot initiated!')
 
@@ -195,11 +197,16 @@ class stripPlot(QWidget):
     def setHistogramBins(self):
         self.plotWidget.numberBins = self.histogramBinsEdit.value()
 
-    def setSubtractMean(self):
-        self.subtractMean = self.histogramCheckbox.isChecked()
+    def setSubtractMean(self, value):
+        if value ==2:
+            ischecked = True
+        else:
+            ischecked = False
+        self.linearCheckbox.setChecked(ischecked)
+        self.subtractMean = ischecked
 
-    def deleteAllCurves(self, reply=None):
-        if reply == None:
+    def deleteAllCurves(self, reply=False):
+        if reply == False:
             delete_msg = "This will delete ALL records!"
             reply = QtGui.QMessageBox.question(self, 'Message',
                              delete_msg, QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
@@ -323,6 +330,11 @@ class stripPlot(QWidget):
                 logger.debug('LinearPlot enabled')
             if histogram:
                 logger.debug('Histogram enabled')
+                self.histogramBinsEdit.show()
+                self.histogramBinsLabel.show()
+            else:
+                self.histogramBinsEdit.hide()
+                self.histogramBinsLabel.hide()
             if FFT:
                 logger.debug('FFTPlot enabled')
             for name in self.records:
@@ -384,6 +396,8 @@ class stripPlot(QWidget):
                     self.records[name]['curve'].currenttime =  self.plotWidget.currenttime
                 if not self.records[name]['curve'].doingPlot:
                     self.records[name]['curve'].update()
+            ''' this forces the date_axis to redraw '''
+            self.plotWidget.date_axis.linkedViewChanged(self.plotWidget.date_axis.linkedView())
             self.plotWidget.vb.enableAutoRange(x=autorangeX, y=autorangeY)
 
     def removeSignal(self,name):

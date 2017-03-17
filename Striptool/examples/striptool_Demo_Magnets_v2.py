@@ -37,26 +37,26 @@ class timeButton(QPushButton):
         self.__mainForm.emit(SIGNAL("timeButtonPushed(int)"), convert_to_seconds(str(self.text())))
 
 class mainApp(QApplication):
-    def __init__(self):
+    def __init__(self, inputfile = None):
         super(mainApp, self).__init__(sys.argv)
         self.windows = []
-        self.addWindow()
+        self.addWindow(inputfile=inputfile)
         sys.exit(self.exec_())
 
-    def addWindow(self):
-        ex = self.striptool_Demo_Magnets(app=self)
+    def addWindow(self, inputfile = None):
+        ex = self.striptool_Demo_Magnets(app=self,inputfile=inputfile)
         self.windows.append(ex)
         ex.show()
 
     class striptool_Demo_Magnets(QMainWindow):
-        def __init__(self, app = None, parent = None):
+        def __init__(self, app = None, parent = None, inputfile = None):
             # super(self.striptool_Demo_Magnets, self).__init__(parent)
             QMainWindow.__init__(self)
             self.setWindowTitle("striptool_Demo_Magnets")
             self.statusBar = QStatusBar()
             self.setStatusBar(self.statusBar)
 
-            self.tab = DockSplitter(statusBar=self.statusBar)
+            self.tab = DockSplitter(statusBar=self.statusBar, inputfile = inputfile)
 
             ''' Display the Qt App '''
             self.setCentralWidget(self.tab)
@@ -108,7 +108,7 @@ class mainApp(QApplication):
 
 class DockSplitter(QtGui.QSplitter):
 
-    def __init__(self, parent=None, statusBar=None):
+    def __init__(self, parent=None, statusBar=None, inputfile = None):
         QtGui.QSplitter.__init__(self)
         # global MagnetController, BPMController
         self.statusBar = statusBar
@@ -179,9 +179,13 @@ class DockSplitter(QtGui.QSplitter):
 
         self.numberScatterPlots = 0
         self.scatterPlots = []
+        self.loadSettings(filename=inputfile)
 
-    def loadSettings(self, overwrite=False):
-        loadFileNames = QtGui.QFileDialog.getOpenFileNames(self, caption='Load Settings', directory='', filter="Settings files (*.cfg);;", selectedFilter="Settings files (*.cfg)")
+    def loadSettings(self, overwrite=False, filename=None):
+        if filename == None:
+            loadFileNames = QtGui.QFileDialog.getOpenFileNames(self, caption='Load Settings', directory='', filter="Settings files (*.cfg);;", selectedFilter="Settings files (*.cfg)")
+        else:
+            loadFileNames = [filename]
         if overwrite:
             self.strip.deleteAllCurves(reply=True)
         for loadFile in loadFileNames:
@@ -189,22 +193,36 @@ class DockSplitter(QtGui.QSplitter):
             config.read(str(loadFile))
             for section in config.sections():
                 if not section == 'Plotting':
-                    functionform = eval(config.get(section,'functionform'))
-                    self.signaltable.addRow(name=config.get(section,'name'), functionForm=functionform , functionArgument=config.get(section,'functionargument'), freq=config.getfloat(section,'freq'), colourpickercolour=config.get(section,'pen'))
+                    if config.get(section,'functionform') == 'custom':
+                        functionform = 'custom'
+                    else:
+                        functionform = eval(config.get(section,'functionform'))
+                    try:
+                        logscale = eval(config.get(section,'logscale'))
+                    except:
+                        logscale = False
+                    self.signaltable.addRow(name=config.get(section,'name'), functionForm=functionform , functionArgument=config.get(section,'functionargument'), freq=config.getfloat(section,'freq'), colourpickercolour=config.get(section,'pen'), logscale=logscale)
 
     def saveSettings(self):
         saveFileName = str(QtGui.QFileDialog.getSaveFileName(self, 'Save Settings', '', filter="Settings files (*.cfg);;", selectedFilter="Settings files (*.cfg)"))
         filename, file_extension = os.path.splitext(saveFileName)
         config = SafeConfigParser()
         for name in self.strip.records:
+            # print name,' record = ', self.strip.records[name]
             section = str(name)
             config.add_section(section)
             config.set(section, 'name', str(self.strip.records[name]['name']))
-            config.set(section, 'pen', str(self.strip.records[name]['pen'].name()))
+            print 'name = ', self.strip.records[name]['name']
+            print 'pen = ', self.strip.records[name]['pen']
+            try:
+                config.set(section, 'pen', str(self.strip.records[name]['pen'].name()))
+            except:
+                config.set(section, 'pen', str(self.strip.records[name]['pen']))
             config.set(section, 'freq', str(1.0/self.strip.records[name]['timer']))
             config.set(section, 'maxlength', str(self.strip.records[name]['maxlength']))
             config.set(section, 'functionForm', str(self.strip.records[name]['functionForm']))
             config.set(section, 'functionArgument', str(self.strip.records[name]['functionArgument']))
+            config.set(section, 'logscale', str(self.strip.records[name]['logscale']))
         with open(saveFileName, 'wb') as configfile:
             config.write(configfile)
 
@@ -294,7 +312,10 @@ def main():
    pg.setConfigOptions(antialias=True)
    pg.setConfigOption('background', 'w')
    pg.setConfigOption('foreground', 'k')
-   mainApp()
+   if len(sys.argv) > 1:
+       mainApp(inputfile=sys.argv[1])
+   else:
+       mainApp()
 
 if __name__ == '__main__':
    main()

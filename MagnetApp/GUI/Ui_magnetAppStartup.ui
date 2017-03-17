@@ -53,9 +53,9 @@
    <widget class="QGroupBox" name="machineAreaSelection">
     <property name="geometry">
      <rect>
-      <x>360</x>
+      <x>322</x>
       <y>140</y>
-      <width>193</width>
+      <width>231</width>
       <height>211</height>
      </rect>
     </property>
@@ -93,9 +93,16 @@
       </widget>
      </item>
      <item>
-      <widget class="QRadioButton" name="CLAR_INJ">
+      <widget class="QRadioButton" name="CLARA_PHASE_1">
        <property name="text">
-        <string>CLARA INJ Magnets</string>
+        <string>CLARA PHASE 1 Magnets</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="CLARA_2_VELA">
+       <property name="text">
+        <string>CLARA 2 VELA</string>
        </property>
       </widget>
      </item>
@@ -113,11 +120,12 @@
       </spacer>
      </item>
     </layout>
-    <zorder>CLAR_INJ</zorder>
+    <zorder>CLARA_PHASE_1</zorder>
     <zorder>VELA_BA2</zorder>
     <zorder>VELA_BA1</zorder>
     <zorder>VELA_INJ</zorder>
     <zorder>verticalSpacer_2</zorder>
+    <zorder>CLARA_2_VELA</zorder>
    </widget>
    <widget class="QGroupBox" name="modeSelection">
     <property name="geometry">
