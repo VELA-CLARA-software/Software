@@ -31,200 +31,6 @@ def takeClosestPosition(xvalues, myList, myNumber):
     else:
        return [pos-1,before]
 
-class TextItem(pg.GraphicsObject):
-    """
-    GraphicsItem displaying unscaled text (the text will always appear normal even inside a scaled ViewBox).
-    """
-    def __init__(self, text='', color=(200,200,200), html=None, anchor=(0,0),
-                 border=None, fill=None, angle=0, rotateAxis=None):
-        """
-        ==============  =================================================================================
-        **Arguments:**
-        *text*          The text to display
-        *color*         The color of the text (any format accepted by pg.mkColor)
-        *html*          If specified, this overrides both *text* and *color*
-        *anchor*        A QPointF or (x,y) sequence indicating what region of the text box will
-                        be anchored to the item's position. A value of (0,0) sets the upper-left corner
-                        of the text box to be at the position specified by setPos(), while a value of (1,1)
-                        sets the lower-right corner.
-        *border*        A pen to use when drawing the border
-        *fill*          A brush to use when filling within the border
-        *angle*         Angle in degrees to rotate text. Default is 0; text will be displayed upright.
-        *rotateAxis*    If None, then a text angle of 0 always points along the +x axis of the scene.
-                        If a QPointF or (x,y) sequence is given, then it represents a vector direction
-                        in the parent's coordinate system that the 0-degree line will be aligned to. This
-                        Allows text to follow both the position and orientation of its parent while still
-                        discarding any scale and shear factors.
-        ==============  =================================================================================
-        The effects of the `rotateAxis` and `angle` arguments are added independently. So for example:
-        * rotateAxis=None, angle=0 -> normal horizontal text
-        * rotateAxis=None, angle=90 -> normal vertical text
-        * rotateAxis=(1, 0), angle=0 -> text aligned with x axis of its parent
-        * rotateAxis=(0, 1), angle=0 -> text aligned with y axis of its parent
-        * rotateAxis=(1, 0), angle=90 -> text orthogonal to x axis of its parent
-        """
-
-        self.anchor = pg.Point(anchor)
-        self.rotateAxis = None if rotateAxis is None else pg.Point(rotateAxis)
-        #self.angle = 0
-        pg.GraphicsObject.__init__(self)
-        self.textItem = QtGui.QGraphicsTextItem()
-        self.textItem.setParentItem(self)
-        self._lastTransform = None
-        self._lastScene = None
-        self._bounds = QtCore.QRectF()
-        if html is None:
-            self.setColor(color)
-            self.setText(text)
-        else:
-            self.setHtml(html)
-        self.fill = pg.functions.mkBrush(fill)
-        self.border = pg.functions.mkPen(border)
-        self.setAngle(angle)
-
-    def setText(self, text, color=None):
-        """
-        Set the text of this item.
-
-        This method sets the plain text of the item; see also setHtml().
-        """
-        if color is not None:
-            self.setColor(color)
-        self.textItem.setPlainText(text)
-        self.updateTextPos()
-
-    def setPlainText(self, *args):
-        """
-        Set the plain text to be rendered by this item.
-
-        See QtGui.QGraphicsTextItem.setPlainText().
-        """
-        self.textItem.setPlainText(*args)
-        self.updateTextPos()
-
-    def setHtml(self, *args):
-        """
-        Set the HTML code to be rendered by this item.
-
-        See QtGui.QGraphicsTextItem.setHtml().
-        """
-        self.textItem.setHtml(*args)
-        self.updateTextPos()
-
-    def setTextWidth(self, *args):
-        """
-        Set the width of the text.
-
-        If the text requires more space than the width limit, then it will be
-        wrapped into multiple lines.
-
-        See QtGui.QGraphicsTextItem.setTextWidth().
-        """
-        self.textItem.setTextWidth(*args)
-        self.updateTextPos()
-
-    def setFont(self, *args):
-        """
-        Set the font for this text.
-
-        See QtGui.QGraphicsTextItem.setFont().
-        """
-        self.textItem.setFont(*args)
-        self.updateTextPos()
-
-    def setAngle(self, angle):
-        self.angle = angle
-        self.updateTransform()
-
-    def setAnchor(self, anchor):
-        self.anchor = pg.Point(anchor)
-        self.updateTextPos()
-
-    def setColor(self, color):
-        """
-        Set the color for this text.
-
-        See QtGui.QGraphicsItem.setDefaultTextColor().
-        """
-        self.color = pg.functions.mkColor(color)
-        self.textItem.setDefaultTextColor(self.color)
-
-    def updateTextPos(self):
-        # update text position to obey anchor
-        r = self.textItem.boundingRect()
-        tl = self.textItem.mapToParent(r.topLeft())
-        br = self.textItem.mapToParent(r.bottomRight())
-        offset = (br - tl) * self.anchor
-        self.textItem.setPos(-offset)
-
-        ### Needed to maintain font size when rendering to image with increased resolution
-        #self.textItem.resetTransform()
-        ##self.textItem.rotate(self.angle)
-        #if self._exportOpts is not False and 'resolutionScale' in self._exportOpts:
-            #s = self._exportOpts['resolutionScale']
-            #self.textItem.scale(s, s)
-
-    def boundingRect(self):
-        return self.textItem.mapToParent(self.textItem.boundingRect()).boundingRect()
-
-    def viewTransformChanged(self):
-        # called whenever view transform has changed.
-        # Do this here to avoid double-updates when view changes.
-        self.updateTransform()
-
-    def paint(self, p, *args):
-        # this is not ideal because it requires the transform to be updated at every draw.
-        # ideally, we would have a sceneTransformChanged event to react to..
-        s = self.scene()
-        ls = self._lastScene
-        if s is not ls:
-            if ls is not None:
-                ls.sigPrepareForPaint.disconnect(self.updateTransform)
-            self._lastScene = s
-            if s is not None:
-                s.sigPrepareForPaint.connect(self.updateTransform)
-            self.updateTransform()
-            p.setTransform(self.sceneTransform())
-
-        if self.border.style() != QtCore.Qt.NoPen or self.fill.style() != QtCore.Qt.NoBrush:
-            p.setPen(self.border)
-            p.setBrush(self.fill)
-            p.setRenderHint(p.Antialiasing, True)
-            p.drawPolygon(self.textItem.mapToParent(self.textItem.boundingRect()))
-
-    def updateTransform(self):
-        # update transform such that this item has the correct orientation
-        # and scaling relative to the scene, but inherits its position from its
-        # parent.
-        # This is similar to setting ItemIgnoresTransformations = True, but
-        # does not break mouse interaction and collision detection.
-        p = self.parentItem()
-        if p is None:
-            pt = QtGui.QTransform()
-        else:
-            pt = p.sceneTransform()
-
-        if pt == self._lastTransform:
-            return
-
-        t = pt.inverted()[0]
-        # reset translation
-        t.setMatrix(t.m11(), t.m12(), t.m13(), t.m21(), t.m22(), t.m23(), 0, 0, t.m33())
-
-        # apply rotation
-        angle = -self.angle
-        if self.rotateAxis is not None:
-            d = pt.map(self.rotateAxis) - pt.map(pg.Point(0, 0))
-            a = np.arctan2(d.y(), d.x()) * 180 / np.pi
-            angle += a
-        t.rotate(angle)
-
-        self.setTransform(t)
-
-        self._lastTransform = pt
-
-        self.updateTextPos()
-
 ''' This class is a PyQtGraph axis which modifies the data points from "seconds before the current time" into Hours:Mins:Secs format.
 We only want to do this for linear plots, so it is turned off in the FFT and Histogram plots. Also, if we turn "autoscroll" off, the
 time is relative to the moment we switched it off.
@@ -254,7 +60,6 @@ class CAxisTime(pg.AxisItem):
                     vstr = ("%%0.%df" % places) % vs
                 strings.append(vstr)
             return strings
-
 
 ''' Basic plotting class, providing Linear, Histogram and FFT plots in a PyQtGraph PlotWidget '''
 class generalPlot(pg.PlotWidget):
@@ -288,6 +93,8 @@ class generalPlot(pg.PlotWidget):
         self.numberBins = 50
         self.crosshairs = crosshairs
         self.crosshairsadded = False
+        self.threads = {}
+        self.workers = {}
 
     ''' This creates a PyQtGraph plot object (self.plot) and instantiates the bottom axis to be a CAxisTime axis '''
     def createPlot(self):
@@ -321,10 +128,8 @@ class generalPlot(pg.PlotWidget):
             self.hLine = pg.InfiniteLine(angle=0, movable=False, pen=pg.mkPen('r'))
             self.hLine.setZValue(1000)
             ''' this is a line label for the vertical crosshair line. We modify the horizontal position in the signal functions '''
-            self.hvLineText = TextItem() #pg.InfLineLabel(self.vLine, color='r', fill=(200,200,200,130))
+            self.hvLineText = pg.TextItem() #pg.InfLineLabel(self.vLine, color='r', fill=(200,200,200,130))
             self.hvLineText.setZValue(1000)
-            self.hvr = self.hLine.viewRect()
-            self.vvr = self.vLine.viewRect()
             # self.plot.addItem(self.vLine, ignoreBounds=True)
             # self.plot.addItem(self.hLine, ignoreBounds=True)
             # self.plot.addItem(self.hvLineText, ignoreBounds=True)
@@ -332,30 +137,11 @@ class generalPlot(pg.PlotWidget):
             ''' define some parameters and instantiate the crosshair signals. We change the crosshairs whenever the sigMouseMoved is triggered,
             whilst we must update the vertical axis if the plot autoscales, and also we must also update the horizontal axis if the time changes under the crosshairs'''
             self.mousePos = QtCore.QPointF(0.01, 0.01)
-            self.proxyMouseMoved = pg.SignalProxy(self.plot.scene().sigMouseMoved, rateLimit=10, slot=self.mouseMoved)
-            self.proxyAxisChanged = pg.SignalProxy(self.plot.vb.sigYRangeChanged, rateLimit=1, slot=self.axisChanged)
-            self.proxyTimeChanged = pg.SignalProxy(self.plotUpdated, rateLimit=1, slot=self.timeAxisChanged)
+            self.proxyMouseMoved = pg.SignalProxy(self.plot.scene().sigMouseClicked, rateLimit=1, slot=self.mouseClicked)
+            self.proxyAxisChanged = pg.SignalProxy(self.plot.vb.sigYRangeChanged, rateLimit=5, slot=self.axisChanged)
+            self.proxyAxisChanged = pg.SignalProxy(self.plot.vb.sigXRangeChanged, rateLimit=5, slot=self.axisChanged)
+            self.proxyTimeChanged = pg.SignalProxy(self.plotUpdated, rateLimit=5, slot=self.timeAxisChanged)
         return self.plot
-
-    ''' This defines a general eventFilter for the self.plot object that we use to update the crosshairs'''
-    def eventFilter(self, object, event):
-        ''' This just allows me to confirm which plot we are in, in case there are many '''
-        if event.type() == QtCore.QEvent.GraphicsSceneMouseMove and self.plot.scene() == object:
-            self.mouseMoved(event)
-            # print 'mouse over'
-        # else:
-            # self.plot.mouseOver = False
-        ''' this will copy the crosshairs location to the clipboard '''
-        if event.type() == QtCore.QEvent.GraphicsSceneMousePress:
-            try:
-                win32clipboard.OpenClipboard()
-                win32clipboard.EmptyClipboard()
-                win32clipboard.SetClipboardText(self.statusTextClipboard)
-                win32clipboard.CloseClipboard()
-            except:
-                pass
-        # self.showCrosshairs()
-        return False
 
     def showCrosshairs(self):
         try:
@@ -379,7 +165,8 @@ class generalPlot(pg.PlotWidget):
             self.vLine.setValue(self.mousePoint.x())
             self.hLine.setValue(self.mousePoint.y())
             self.crosshairsChanged.emit(self.mousePoint.x())
-            self.hvLineText.setHtml('<span style="color: black; background-color: rgba(255, 0, 0, 100); opacity: 0.1;">'+self.statusText+'</span>')
+            self.hvr = self.hLine.viewRect()
+            self.vvr = self.vLine.viewRect()
             if self.hvr is not None:
                 if self.hvr.center().y() > 0:
                     if self.vvr.center().y() > 0:
@@ -394,8 +181,11 @@ class generalPlot(pg.PlotWidget):
             self.hvLineText.setPos(self.mousePoint.x(),self.mousePoint.y())
 
     ''' This is the event handler for a sigMouseMoved event for the viewbox '''
-    def mouseMoved(self, evt):
-        self.mousePos = evt[0]
+    def mouseClicked(self, evt):
+        mouseClick = evt[0]
+        mouseClick.accept()
+        # print 'evt[0] = ', evt[0,0]
+        self.mousePos = mouseClick.scenePos()
         self.mousePoint = self.vb.mapSceneToView(self.mousePos)
         self.timeAxisChanged()
         self.updateLines()
@@ -413,7 +203,7 @@ class generalPlot(pg.PlotWidget):
     ''' This is the event handler for when the horizontal axis time changes during "autoscroll" '''
     def timeAxisChanged(self):
         if self.crosshairsadded:
-            self.mousePoint = self.vb.mapSceneToView(self.mousePos)
+            # self.mousePoint = self.vb.mapSceneToView(self.mousePos)
             if self.linearPlot:
                 if self.autoscroll:
                     reftime = round(time.time(),2)
@@ -428,12 +218,8 @@ class generalPlot(pg.PlotWidget):
                 self.statusTextX = "%0.3f" % (self.mousePoint.x())
                 self.statusTextY = "%0.3f" % (self.mousePoint.y())
                 self.statusTextClipboard = self.statusText = "{"+self.statusTextX+", "+self.statusTextY+"}"
-            self.updateLines()
-
-    ''' Helper function to add a curve to the plot '''
-    def addCurve(self, record, plot, name):
-        curve = self.curve(record, plot, name)
-        return curve
+            self.hvLineText.setHtml('<span style="color: black; background-color: rgba(255, 0, 0, 100); opacity: 0.1;">'+self.statusText+'</span>')
+            self.crosshairsChanged.emit(self.mousePoint.x())
 
     ''' Sets the timescale of the plotting data '''
     def setPlotScale(self, timescale, padding=0.0):
@@ -468,6 +254,25 @@ class generalPlot(pg.PlotWidget):
             self.date_axis.fixedtimepoint = self.currentPlotTime
             self.fixedtimepoint = self.currentPlotTime
 
+    class curveRecordWorker(QtCore.QObject):
+        def __init__(self, record, plot, name):
+            QtCore.QObject.__init__(self)
+            self.curve = plot.curve(record, plot, name)
+            plot.stripplot.doCurveUpdate.connect(self.updateCurve)
+
+        # @QtCore.pyqtSlot()
+        def updateCurve(self):
+            self.curve.update()
+
+    ''' Helper function to add a curve to the plot '''
+    def addCurve(self, record, plot, name):
+        self.threads[name] = QtCore.QThread()
+        self.workers[name] = self.curveRecordWorker(record, plot, name)
+        self.workers[name].moveToThread(self.threads[name])
+        self.threads[name].start()
+        # print self.worker.curve
+        return self.workers[name].curve
+
     ''' This is the curve class which enables plotting on a plotting object. Making it a class eases control of the different options for multiple curves'''
     class curve(QObject):
         def __init__(self, record, plot, name):
@@ -476,12 +281,10 @@ class generalPlot(pg.PlotWidget):
             self.name = name
             self.plotScale = None
             self.plot = plot
-            # self.globalPlotRange = self.plot.globalPlotRange
             self.doingPlot = False
             self.curve = self.plot.plot.plot()
             self.lines = self.MultiLine(np.array([[0]]),np.array([[0]]),pen='w')
             self.fftTextLabels = []
-            # self.plot.crosshairsChanged.connect(self.emitSignalValue)
 
         def signalValueAtX(self, xvalue):
             return (self.name,takeClosestPosition(self.plotData[:,0],self.plotData,xvalue)[1][1])
@@ -530,6 +333,10 @@ class generalPlot(pg.PlotWidget):
         ''' This filters the data based on the plotrange of the current viewbox. For small datasets this is ~pointless, but for moderately large datasets
         and bigger it makes a noticeable speed up, despite the functions built in to PyQtGraph'''
         def timeFilter(self, datain, timescale=None):
+            if self.plot.autoscroll:
+                self.currenttime = round(time.time(),2)
+            else:
+                self.currenttime = self.plot.fixedtimepoint
             if len(datain) > 0:
                 if (datain[0][0] > (self.currenttime+self.plot.globalPlotRange[0]) and datain[-1][0] <=  (self.currenttime+self.plot.globalPlotRange[1])):
                     return datain
@@ -578,7 +385,7 @@ class generalPlot(pg.PlotWidget):
                 if log:
                     self.setPen(pg.mkPen(pen,width=3))
                 else:
-                    self.setPen(pg.mkPen(pen,width=1))
+                    self.setPen(pg.mkPen(pen,width=3))
             def shape(self): # override because QGraphicsPathItem.shape is too expensive.
                 return pg.QtGui.QGraphicsItem.shape(self)
             def boundingRect(self):

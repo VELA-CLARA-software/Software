@@ -25,6 +25,7 @@ class stripPlot(QWidget):
 
     signalAdded = QtCore.pyqtSignal('QString')
     signalRemoved = QtCore.pyqtSignal('QString')
+    doCurveUpdate = QtCore.pyqtSignal()
 
     def __init__(self, parent = None, plotRateBar=True, crosshairs=True, **kwargs):
         super(stripPlot, self).__init__(parent)
@@ -379,7 +380,6 @@ class stripPlot(QWidget):
                 rownumber = self.signalValueTable.rowCount()
                 self.signalValueTable.insertRow(rownumber)
                 self.signalValueTable.setItem(rownumber,0,QtGui.QTableWidgetItem(name))
-
         else:
             logger.warning('Signal '+name+' already exists!')
 
@@ -389,13 +389,14 @@ class stripPlot(QWidget):
             self.plotWidget.plot.disableAutoRange()
             # self.plotWidget.plot.clear()
             self.plotWidget.currentPlotTime = round(time.time(),2)
-            for name in self.records:
-                if self.plotWidget.autoscroll:
-                    self.records[name]['curve'].currenttime = self.plotWidget.currentPlotTime
-                else:
-                    self.records[name]['curve'].currenttime =  self.plotWidget.currenttime
-                if not self.records[name]['curve'].doingPlot:
-                    self.records[name]['curve'].update()
+            self.doCurveUpdate.emit()
+            # for name in self.records:
+            #     if self.plotWidget.autoscroll:
+            #         self.records[name]['curve'].currenttime = self.plotWidget.currentPlotTime
+            #     else:
+            #         self.records[name]['curve'].currenttime =  self.plotWidget.currenttime
+            #     if not self.records[name]['curve'].doingPlot:
+            #         self.records[name]['curve'].update()
             ''' this forces the date_axis to redraw '''
             self.plotWidget.date_axis.linkedViewChanged(self.plotWidget.date_axis.linkedView())
             self.plotWidget.vb.enableAutoRange(x=autorangeX, y=autorangeY)

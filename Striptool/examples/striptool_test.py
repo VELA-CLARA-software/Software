@@ -74,11 +74,11 @@ class striptool_Demo(QMainWindow):
         ''' Add some signals to the striptool - note they call our signal generator at a frequency of 1/timer (100 Hz and 10 Hz in these cases).
             The 'pen' argument sets the color of the curves, but can be changed in the GUI
                 - see <http://www.pyqtgraph.org/documentation/style.html>'''
-        # self.sp.addSignal(name='signal1',pen='r', timer=1.0/10.0, function=self.createRandomSignal, arg=[0.5])
+        self.sp.addSignal(name='signal1',pen='r', timer=1.0/10.0, function=self.createRandomSignal, arg=[0.5])
         self.sp2.addSignal(name='signal1',pen='r', timer=1.0/10.0, maxlength=100, function=self.createRandomSignal, arg=[-3])
-        # self.sp2.addSignal(name='signal2',pen='g', timer=1.0/10.0, function=self.createRandomSignal, arg=[0])
-        # self.sp2.addSignal(name='signal3',pen='b', timer=1.0/10.0, function=self.createRandomSignal, arg=[4])
-        # self.sp3.addSignal(name='signal3',pen='b', timer=1.0/10.0, function=self.createRandomSignal, arg=[0.5])
+        self.sp2.addSignal(name='signal2',pen='g', timer=1.0/10.0, function=self.createRandomSignal, arg=[0])
+        self.sp2.addSignal(name='signal3',pen='b', timer=1.0/10.0, function=self.createRandomSignal, arg=[4])
+        self.sp3.addSignal(name='signal3',pen='b', timer=1.0/10.0, function=self.createRandomSignal, arg=[0.5])
 
         ''' To remove a signal, reference it by name or use the in-built controls'''
         # sp.removeSignal(name='signal1')
