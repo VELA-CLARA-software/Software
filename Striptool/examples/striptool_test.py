@@ -173,6 +173,12 @@ class striptool_Demo(QMainWindow):
             QtTest.QTest.qWait(1000*60)
         exit()
 
+    def keyPressEvent(self, e):
+        if e.key() == QtCore.Qt.Key_F11:
+            print "Maximise!"
+            self.sp.handleSignalValueTableSplitterButton(left=True)
+            self.sp.strip.handleLegendSplitterButton(left=True)
+
     def closeEvent(self, event):
         for plot in self.findChildren((striptool.stripPlot)):
             plot.close()

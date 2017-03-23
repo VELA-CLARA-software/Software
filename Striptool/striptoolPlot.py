@@ -83,13 +83,11 @@ class generalPlot(pg.PlotWidget):
         self.usePlotRange = True
         self.autoscroll = True
         self.decimateScale = 5000
-        self.legend = pg.LegendItem(size=(100,100))
-        self.legend.setParentItem(None)
         self.globalPlotRange = [-10,0]
         self.currentPlotTime = round(time.time(),2)
         self.plotWidget = pg.GraphicsLayoutWidget()
-        self.label = pg.LabelItem(justify='right')
-        self.plotWidget.addItem(self.label)
+        # self.label = pg.LabelItem(justify='right')
+        # self.plotWidget.addItem(self.label)
         self.numberBins = 50
         self.crosshairs = crosshairs
         self.crosshairsadded = False
@@ -104,7 +102,6 @@ class generalPlot(pg.PlotWidget):
         self.log_axis = pg.AxisItem('right', parent=self.plot)
         self.log_axis.setLogMode(True)
         self.plot.mouseOver = False
-        # self.plot.scene().installEventFilter(self)
 
         nontimeaxisItems = {'bottom': self.plot.axes['bottom']['item'], 'top': self.plot.axes['top']['item'], 'left': self.plot.axes['left']['item'], 'right': self.plot.axes['right']['item']}
         axisItems = {'bottom': self.date_axis, 'top': self.plot.axes['top']['item'], 'left': self.plot.axes['left']['item'], 'right': self.log_axis}
@@ -196,7 +193,7 @@ class generalPlot(pg.PlotWidget):
     ''' This is the event handler for if the vertical axis autoscales '''
     def axisChanged(self, evt):
         if self.crosshairsadded and self.plot.sceneBoundingRect().contains(self.mousePos):
-            self.mousePoint = self.vb.mapSceneToView(self.mousePos)
+            # self.mousePoint = self.vb.mapSceneToView(self.mousePos)
             self.timeAxisChanged()
             self.updateLines()
 
@@ -254,139 +251,149 @@ class generalPlot(pg.PlotWidget):
             self.date_axis.fixedtimepoint = self.currentPlotTime
             self.fixedtimepoint = self.currentPlotTime
 
-    class curveRecordWorker(QtCore.QObject):
-        def __init__(self, record, plot, name):
-            QtCore.QObject.__init__(self)
-            self.curve = plot.curve(record, plot, name)
-            plot.stripplot.doCurveUpdate.connect(self.updateCurve)
-
-        # @QtCore.pyqtSlot()
-        def updateCurve(self):
-            self.curve.update()
-
     ''' Helper function to add a curve to the plot '''
     def addCurve(self, record, plot, name):
-        self.threads[name] = QtCore.QThread()
-        self.workers[name] = self.curveRecordWorker(record, plot, name)
+        self.threads[name] = QtCore.QThread(plot.stripplot)
+        self.workers[name] = curveRecordWorker(record, plot, name)
         self.workers[name].moveToThread(self.threads[name])
         self.threads[name].start()
-        # print self.worker.curve
         return self.workers[name].curve
 
-    ''' This is the curve class which enables plotting on a plotting object. Making it a class eases control of the different options for multiple curves'''
-    class curve(QObject):
-        def __init__(self, record, plot, name):
-            QObject.__init__(self)
-            self.records = record
-            self.name = name
-            self.plotScale = None
-            self.plot = plot
-            self.doingPlot = False
-            self.curve = self.plot.plot.plot()
-            self.lines = self.MultiLine(np.array([[0]]),np.array([[0]]),pen='w')
-            self.fftTextLabels = []
+    def toggleLegend(self, showLegend):
+        if showLegend:
+            self.legend = self.plot.addLegend()
+            for name in self.workers:
+                self.legend.addItem(self.workers[name].curve.curve, name)
+        else:
+            self.plot.vb.removeItem(self.legend)
+            self.legend.items = []
 
-        def signalValueAtX(self, xvalue):
-            return (self.name,takeClosestPosition(self.plotData[:,0],self.plotData,xvalue)[1][1])
+class curveRecordWorker(QtCore.QObject):
+    def __init__(self, record, plot, name):
+        QtCore.QObject.__init__(self)
+        self.curve = curve(record, plot, name)
+        plot.stripplot.doCurveUpdate.connect(self.updateCurve)
 
-        def addCurve(self):
-            return self.curve
+    # @QtCore.pyqtSlot()
+    def updateCurve(self):
+        self.curve.update()
 
-        ''' This updates the curve points based on the plot type and using the data from the timefilter function '''
-        def updateData(self, data, pen):
-            self.VerticalScale = self.records[self.name]['VerticalScale']
-            self.VerticalOffset = self.records[self.name]['VerticalOffset']
-            self.verticalMeanSubtraction = self.records[self.name]['verticalMeanSubtraction']
-            self.logscale = self.records[self.name]['logscale']
-            if len(data) > 1 and not self.plot.scatterPlot:
-                x,y = np.transpose(data)
-                if not self.VerticalScale == 1 or not self.VerticalOffset == 0:
-                    y = (self.VerticalScale * y) + self.VerticalOffset
-                if self.verticalMeanSubtraction or self.plot.stripplot.subtractMean:
-                    y = y - np.mean(y)
-                if self.logscale:
-                    y = np.log10(np.abs(y))
-                if self.plot.histogramPlot:
-                    y2,x2 = np.histogram(y, bins=self.plot.numberBins)
-                    self.curve.setData({'x': x2, 'y': y2}, pen=pen, stepMode=True, fillLevel=0, fillBrush=pen)
-                elif self.plot.FFTPlot:
-                    self.curve.setData({'x': x, 'y': y}, pen=pen, stepMode=False, fillLevel=None)
-                    if(len(self.curve.yDisp) > 0):
-                        indexes = peakutils.indexes(self.curve.yDisp, thres=0.75, min_dist=20)
-                        if len(indexes) < 5:
-                            for index in indexes:
-                                fftTextlabel=pg.TextItem(html='<span style="color: '+pg.mkColor(pen).name()+';">'+str(round(self.curve.xDisp[index],2))+'</span>',anchor=(-0.7,1.2), angle=0)
-                                fftTextlabel.setPos(self.curve.xDisp[index],self.curve.yDisp[index])
-                                fftTextArrow=pg.ArrowItem(pos=(self.curve.xDisp[index],self.curve.yDisp[index]), angle=-45, pen=pen, brush=pg.mkBrush(pen))
-                                self.fftTextLabels.append([fftTextlabel, fftTextArrow])
-                                self.plot.plot.addItem(fftTextlabel)
-                                self.plot.plot.addItem(fftTextArrow)
-                    self.plot.updateSpectrumMode(True)
-                else:
-                    if len(x) > self.plot.decimateScale:
-                        decimationfactor = int(np.floor(len(x)/self.plot.decimateScale))
-                        self.lines = self.MultiLine(x[::decimationfactor],y[::decimationfactor],pen=pen, log=self.logscale)
-                    else:
-                        self.lines = self.MultiLine(x, y, pen=pen, log=self.logscale)
-                    self.plot.plot.addItem(self.lines)
+''' This is the curve class which enables plotting on a plotting object. Making it a class eases control of the different options for multiple curves'''
+class curve(QObject):
+    def __init__(self, record, plot, name):
+        QObject.__init__(self)
+        self.records = record
+        self.name = name
+        self.plotScale = None
+        self.plot = plot
+        self.doingPlot = False
+        self.curve = self.plot.plot.plot()
+        self.curve.setData({'x': [], 'y': []}, pen=self.records[self.name]['pen'])
+        self.lines = self.MultiLine(np.array([[0]]),np.array([[0]]),pen='w')
+        self.fftTextLabels = []
 
-        ''' This filters the data based on the plotrange of the current viewbox. For small datasets this is ~pointless, but for moderately large datasets
-        and bigger it makes a noticeable speed up, despite the functions built in to PyQtGraph'''
-        def timeFilter(self, datain, timescale=None):
-            if self.plot.autoscroll:
-                self.currenttime = round(time.time(),2)
+    def signalValueAtX(self, xvalue):
+        return (self.name,takeClosestPosition(self.plotData[:,0],self.plotData,xvalue)[1][1])
+
+    def addCurve(self):
+        return self.curve
+
+    ''' This updates the curve points based on the plot type and using the data from the timefilter function '''
+    def updateData(self, data, pen):
+        self.VerticalScale = self.records[self.name]['VerticalScale']
+        self.VerticalOffset = self.records[self.name]['VerticalOffset']
+        self.verticalMeanSubtraction = self.records[self.name]['verticalMeanSubtraction']
+        self.logscale = self.records[self.name]['logscale']
+        if len(data) > 1 and not self.plot.scatterPlot:
+            x,y = np.transpose(data)
+            if not self.VerticalScale == 1 or not self.VerticalOffset == 0:
+                y = (self.VerticalScale * y) + self.VerticalOffset
+            if self.verticalMeanSubtraction or self.plot.stripplot.subtractMean:
+                y = y - np.mean(y)
+            if self.logscale:
+                y = np.log10(np.abs(y))
+            if self.plot.histogramPlot:
+                y2,x2 = np.histogram(y, bins=self.plot.numberBins)
+                self.curve.setData({'x': x2, 'y': y2}, pen=pen, stepMode=True, fillLevel=0, fillBrush=pen)
+            elif self.plot.FFTPlot:
+                self.curve.setData({'x': x, 'y': y}, pen=pen, stepMode=False, fillLevel=None)
+                if(len(self.curve.yDisp) > 0):
+                    indexes = peakutils.indexes(self.curve.yDisp, thres=0.75, min_dist=20)
+                    if len(indexes) < 5:
+                        for index in indexes:
+                            fftTextlabel=pg.TextItem(html='<span style="color: '+pg.mkColor(pen).name()+';">'+str(round(self.curve.xDisp[index],2))+'</span>',anchor=(-0.7,1.2), angle=0)
+                            fftTextlabel.setPos(self.curve.xDisp[index],self.curve.yDisp[index])
+                            fftTextArrow=pg.ArrowItem(pos=(self.curve.xDisp[index],self.curve.yDisp[index]), angle=-45, pen=pen, brush=pg.mkBrush(pen))
+                            self.fftTextLabels.append([fftTextlabel, fftTextArrow])
+                            self.plot.plot.addItem(fftTextlabel)
+                            self.plot.plot.addItem(fftTextArrow)
+                self.plot.updateSpectrumMode(True)
             else:
-                self.currenttime = self.plot.fixedtimepoint
-            if len(datain) > 0:
-                if (datain[0][0] > (self.currenttime+self.plot.globalPlotRange[0]) and datain[-1][0] <=  (self.currenttime+self.plot.globalPlotRange[1])):
-                    return datain
+                self.curve.setData({'x': [], 'y': []}, stepMode=False, fillLevel=None, pen=self.records[self.name]['pen'])
+                if len(x) > self.plot.decimateScale:
+                    decimationfactor = int(np.floor(len(x)/self.plot.decimateScale))
+                    self.lines = self.MultiLine(x[::decimationfactor],y[::decimationfactor],pen=pen, log=self.logscale)
                 else:
-                    if datain[-1][0] <=  (self.currenttime+self.plot.globalPlotRange[1]):
-                        datain = datain[bisect_left(datain[:,0], self.currenttime+self.plot.globalPlotRange[0])-1:-1]
-                    else:
-                        if datain[0][0] >= (self.currenttime+self.plot.globalPlotRange[0]):
-                            datain = datain[0:bisect_left(datain[:,0], self.currenttime+self.plot.globalPlotRange[1])+1]
-                        else:
-                            datain = datain[bisect_left(datain[:,0], self.currenttime+self.plot.globalPlotRange[0])-1:bisect_left(datain[:,0], self.currenttime+self.plot.globalPlotRange[1])+1]
-                    return datain
-            else:
+                    self.lines = self.MultiLine(x, y, pen=pen, log=self.logscale)
+                self.plot.plot.addItem(self.lines)
+
+    ''' This filters the data based on the plotrange of the current viewbox. For small datasets this is ~pointless, but for moderately large datasets
+    and bigger it makes a noticeable speed up, despite the functions built in to PyQtGraph'''
+    def timeFilter(self, datain, timescale=None):
+        if self.plot.autoscroll:
+            self.currenttime = round(time.time(),2)
+        else:
+            self.currenttime = self.plot.fixedtimepoint
+        if len(datain) > 0:
+            if (datain[0][0] > (self.currenttime+self.plot.globalPlotRange[0]) and datain[-1][0] <=  (self.currenttime+self.plot.globalPlotRange[1])):
                 return datain
-
-        ''' helper function to clear a curves points '''
-        def clear(self):
-            self.plot.plot.removeItem(self.lines)
-            self.curve.clear()
-
-        ''' Wrapper function which calls timefilter and updateData'''
-        def update(self):
-            self.plot.plot.removeItem(self.lines)
-            if len(self.fftTextLabels) > 0:
-                for i in range(len(self.fftTextLabels)):
-                    for j in range(len(self.fftTextLabels[i])):
-                        self.plot.plot.removeItem(self.fftTextLabels[i][j])
-                self.fftTextLabels = []
-            if not self.plot.paused and not self.doingPlot:
-                self.doingPlot = True
-                if self.records[self.name]['ploton']:
-                    self.plotData = self.timeFilter(self.records[self.name]['data'], self.plot.globalPlotRange)
-                    if len(self.plotData) > 0:
-                        x,y = np.transpose(self.plotData)
-                        x = x - self.currenttime
-                        self.plotData = np.transpose((x,y))
-                        self.updateData(self.plotData, self.records[self.name]['pen'])
-                self.doingPlot = False
-            self.plot.plotUpdated.emit()
-
-        class MultiLine(pg.QtGui.QGraphicsPathItem):
-            def __init__(self, x, y, pen, log=False):
-                """x and y are 1D arrays of shape (Nplots, Nsamples)"""
-                self.path = pg.arrayToQPath(x, y)
-                pg.QtGui.QGraphicsPathItem.__init__(self, self.path)
-                if log:
-                    self.setPen(pg.mkPen(pen,width=3))
+            else:
+                if datain[-1][0] <=  (self.currenttime+self.plot.globalPlotRange[1]):
+                    datain = datain[bisect_left(datain[:,0], self.currenttime+self.plot.globalPlotRange[0])-1:-1]
                 else:
-                    self.setPen(pg.mkPen(pen,width=3))
-            def shape(self): # override because QGraphicsPathItem.shape is too expensive.
-                return pg.QtGui.QGraphicsItem.shape(self)
-            def boundingRect(self):
-                return self.path.boundingRect()
+                    if datain[0][0] >= (self.currenttime+self.plot.globalPlotRange[0]):
+                        datain = datain[0:bisect_left(datain[:,0], self.currenttime+self.plot.globalPlotRange[1])+1]
+                    else:
+                        datain = datain[bisect_left(datain[:,0], self.currenttime+self.plot.globalPlotRange[0])-1:bisect_left(datain[:,0], self.currenttime+self.plot.globalPlotRange[1])+1]
+                return datain
+        else:
+            return datain
+
+    ''' helper function to clear a curves points '''
+    def clear(self):
+        self.plot.plot.removeItem(self.lines)
+        self.curve.clear()
+
+    ''' Wrapper function which calls timefilter and updateData'''
+    def update(self):
+        self.plot.plot.removeItem(self.lines)
+        if len(self.fftTextLabels) > 0:
+            for i in range(len(self.fftTextLabels)):
+                for j in range(len(self.fftTextLabels[i])):
+                    self.plot.plot.removeItem(self.fftTextLabels[i][j])
+            self.fftTextLabels = []
+        if not self.plot.paused and not self.doingPlot:
+            self.doingPlot = True
+            if self.name in self.records and self.records[self.name]['ploton']:
+                self.plotData = self.timeFilter(self.records[self.name]['data'], self.plot.globalPlotRange)
+                if len(self.plotData) > 0:
+                    x,y = np.transpose(self.plotData)
+                    x = x - self.currenttime
+                    self.plotData = np.transpose((x,y))
+                    self.updateData(self.plotData, self.records[self.name]['pen'])
+            self.doingPlot = False
+        self.plot.plotUpdated.emit()
+
+    class MultiLine(pg.QtGui.QGraphicsPathItem):
+        def __init__(self, x, y, pen, log=False):
+            """x and y are 1D arrays of shape (Nplots, Nsamples)"""
+            self.path = pg.arrayToQPath(x, y)
+            pg.QtGui.QGraphicsPathItem.__init__(self, self.path)
+            if log:
+                self.setPen(pg.mkPen(pen,width=3))
+            else:
+                self.setPen(pg.mkPen(pen,width=2))
+        def shape(self): # override because QGraphicsPathItem.shape is too expensive.
+            return pg.QtGui.QGraphicsItem.shape(self)
+        def boundingRect(self):
+            return self.path.boundingRect()

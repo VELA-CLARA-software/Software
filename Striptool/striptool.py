@@ -17,6 +17,9 @@ logger = logging.getLogger(__name__)
 
 signal.signal(signal.SIGINT, signal.SIG_DFL)
 
+def curveUpdate(self, curve):
+    curve.update()
+
 def logthread(caller):
     print('%-25s: %s, %s,' % (caller, threading.current_thread().name,
                               threading.current_thread().ident))
@@ -94,13 +97,18 @@ class stripPlot(QWidget):
         ''' add Delete All Data Button '''
         self.deleteAllButton = QPushButton('Delete All Curves')
         self.deleteAllButton.clicked.connect(self.deleteAllCurves)
+        ''' Add legend checkbox '''
+        self.legendCheckBox = QCheckBox("Show Legend")
+        self.legendCheckBox.setChecked(False)
+        self.legendCheckBox.toggled.connect(self.plotWidget.toggleLegend)
         ''' Set Layout '''
         self.buttonLayout.addWidget(self.linearRadio,      0,0,1,1)
         self.buttonLayout.addWidget(self.linearCheckbox,   0,2,1,1)
-        self.buttonLayout.addWidget(self.HistogramRadio,   1,0,1,1)
-        self.buttonLayout.addWidget(self.histogramBinsEdit,1,2,1,1)
-        self.buttonLayout.addWidget(self.histogramBinsLabel,1,3,1,1)
-        self.buttonLayout.addWidget(self.FFTRadio,         2,0,1,4)
+        self.buttonLayout.addWidget(self.FFTRadio,         1,0,1,2)
+        self.buttonLayout.addWidget(self.legendCheckBox,   1,2,1,2)
+        self.buttonLayout.addWidget(self.HistogramRadio,   2,0,1,1)
+        self.buttonLayout.addWidget(self.histogramBinsEdit,2,2,1,1)
+        self.buttonLayout.addWidget(self.histogramBinsLabel,2,3,1,1)
         self.buttonLayout.addWidget(self.scrollButton,     3,0,1,1)
         self.buttonLayout.addWidget(self.pauseButton,      3,3,1,1)
         self.buttonLayout.addWidget(self.legend.layout,    4,0,3,4)
@@ -187,6 +195,12 @@ class stripPlot(QWidget):
         # self.plotThread.timeout.connect(lambda: self.plotWidget.date_axis.linkedViewChanged(self.plotWidget.date_axis.linkedView()))
         self.plotWidget.plot.vb.sigXRangeChanged.connect(self.setPlotScaleLambda)
         logger.debug('stripPlot initiated!')
+
+    def keyPressEvent(self, e):
+            if e.key() == QtCore.Qt.Key_F11:
+                print "Maximise!"
+                self.handleSignalValueTableSplitterButton(left=True)
+                self.handleLegendSplitterButton(left=True)
 
     def updateSignalValueTable(self, xvalue):
         if self.signalValueTableOpen:
@@ -387,22 +401,15 @@ class stripPlot(QWidget):
         if not self.plotWidget.paused:
             autorangeX, autorangeY = self.plotWidget.vb.state['autoRange']
             self.plotWidget.plot.disableAutoRange()
-            # self.plotWidget.plot.clear()
             self.plotWidget.currentPlotTime = round(time.time(),2)
             self.doCurveUpdate.emit()
-            # for name in self.records:
-            #     if self.plotWidget.autoscroll:
-            #         self.records[name]['curve'].currenttime = self.plotWidget.currentPlotTime
-            #     else:
-            #         self.records[name]['curve'].currenttime =  self.plotWidget.currenttime
-            #     if not self.records[name]['curve'].doingPlot:
-            #         self.records[name]['curve'].update()
             ''' this forces the date_axis to redraw '''
             self.plotWidget.date_axis.linkedViewChanged(self.plotWidget.date_axis.linkedView())
             self.plotWidget.vb.enableAutoRange(x=autorangeX, y=autorangeY)
 
     def removeSignal(self,name):
         self.records[name]['record'].close()
+        self.plotWidget.legend.removeItem(name)
         del self.records[name]
         self.signalRemoved.emit(name)
         if self.crosshairs:
