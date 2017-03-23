@@ -63,10 +63,7 @@ class CAxisTime(pg.AxisItem):
 
 ''' Basic plotting class, providing Linear, Histogram and FFT plots in a PyQtGraph PlotWidget '''
 class generalPlot(pg.PlotWidget):
-    changePlotScale = pyqtSignal('PyQt_PyObject')
     plotUpdated = pyqtSignal()
-    statusChanged = pyqtSignal(str)
-    crosshairsChanged = pyqtSignal('PyQt_PyObject')
     signalValuesUnderCrosshairs = pyqtSignal('PyQt_PyObject')
 
 
@@ -90,7 +87,6 @@ class generalPlot(pg.PlotWidget):
         # self.plotWidget.addItem(self.label)
         self.numberBins = 50
         self.crosshairs = crosshairs
-        self.crosshairsadded = False
         self.threads = {}
         self.workers = {}
 
@@ -120,103 +116,76 @@ class generalPlot(pg.PlotWidget):
 
         if self.crosshairs:
             ''' Here we create the two lines that form the crosshairs '''
-            self.vLine = pg.InfiniteLine(angle=90, movable=False, pen=pg.mkPen('r'))
+            self.vLine = pg.InfiniteLine(angle=90, movable=True, pen=pg.mkPen('r'))
             self.vLine.setZValue(1000)
-            self.hLine = pg.InfiniteLine(angle=0, movable=False, pen=pg.mkPen('r'))
+            self.hLine = pg.InfiniteLine(angle=0, movable=True, pen=pg.mkPen('r'))
             self.hLine.setZValue(1000)
             ''' this is a line label for the vertical crosshair line. We modify the horizontal position in the signal functions '''
             self.hvLineText = pg.TextItem() #pg.InfLineLabel(self.vLine, color='r', fill=(200,200,200,130))
             self.hvLineText.setZValue(1000)
-            # self.plot.addItem(self.vLine, ignoreBounds=True)
-            # self.plot.addItem(self.hLine, ignoreBounds=True)
-            # self.plot.addItem(self.hvLineText, ignoreBounds=True)
-            self.crosshairsadded = False
+            self.crosshairsadded = True
+            self.vLine.setValue(0)
+            self.hLine.setValue(0)
+            self.plot.addItem(self.vLine, ignoreBounds=True)
+            self.plot.addItem(self.hLine, ignoreBounds=True)
+            self.plot.addItem(self.hvLineText, ignoreBounds=True)
+            self.mousePoint =  QtCore.QPointF(0.0, 0.0)
+            self.updateAnchor()
             ''' define some parameters and instantiate the crosshair signals. We change the crosshairs whenever the sigMouseMoved is triggered,
             whilst we must update the vertical axis if the plot autoscales, and also we must also update the horizontal axis if the time changes under the crosshairs'''
-            self.mousePos = QtCore.QPointF(0.01, 0.01)
-            self.proxyMouseMoved = pg.SignalProxy(self.plot.scene().sigMouseClicked, rateLimit=1, slot=self.mouseClicked)
-            self.proxyAxisChanged = pg.SignalProxy(self.plot.vb.sigYRangeChanged, rateLimit=5, slot=self.axisChanged)
-            self.proxyAxisChanged = pg.SignalProxy(self.plot.vb.sigXRangeChanged, rateLimit=5, slot=self.axisChanged)
+            self.proxyVLineMoved = pg.SignalProxy(self.vLine.sigPositionChanged, rateLimit=10, slot=self.updateAnchor)
+            self.proxyHLineMoved = pg.SignalProxy(self.hLine.sigPositionChanged, rateLimit=10, slot=self.updateAnchor)
+            self.proxyMouseClicked = pg.SignalProxy(self.plot.scene().sigMouseClicked, rateLimit=1, slot=self.mouseClicked)
             self.proxyTimeChanged = pg.SignalProxy(self.plotUpdated, rateLimit=5, slot=self.timeAxisChanged)
         return self.plot
 
-    def showCrosshairs(self):
-        try:
-            if self.plot.sceneBoundingRect().contains(self.mousePos):
-                if not self.crosshairsadded:
-                    self.plot.addItem(self.vLine, ignoreBounds=True)
-                    self.plot.addItem(self.hLine, ignoreBounds=True)
-                    self.plot.addItem(self.hvLineText, ignoreBounds=True)
-                    self.crosshairsadded = True
-            elif self.crosshairsadded:
-                self.plot.removeItem(self.vLine)
-                self.plot.removeItem(self.hLine)
-                self.plot.removeItem(self.hvLineText)
-                self.crosshairsadded = False
-        except:
-            pass
-
     ''' This is used to update the location of the crosshair lines as well as the accompanyng text'''
-    def updateLines(self):
-        if self.crosshairsadded:
-            self.vLine.setValue(self.mousePoint.x())
-            self.hLine.setValue(self.mousePoint.y())
-            self.crosshairsChanged.emit(self.mousePoint.x())
-            self.hvr = self.hLine.viewRect()
-            self.vvr = self.vLine.viewRect()
-            if self.hvr is not None:
-                if self.hvr.center().y() > 0:
-                    if self.vvr.center().y() > 0:
-                        self.hvLineText.setAnchor((1, 1.0))
-                    else:
-                        self.hvLineText.setAnchor((0, 1.0))
+    def updateAnchor(self, mousepoint=True, *args, **kwargs):
+        if mousepoint:
+            self.mousePoint = QtCore.QPointF(self.vLine.value(),self.hLine.value())
+        self.timeAxisChanged()
+        self.hvLineText.setPos(self.vLine.value(),self.hLine.value())
+        self.hvr = self.hLine.viewRect()
+        self.vvr = self.vLine.viewRect()
+        if self.hvr is not None:
+            if self.hvr.center().y() > 0:
+                if self.vvr.center().y() > 0:
+                    self.hvLineText.setAnchor((1, 1.0))
                 else:
-                    if self.vvr.center().y() > 0:
-                        self.hvLineText.setAnchor((1, 0))
-                    else:
-                        self.hvLineText.setAnchor((-0.1, 0))
-            self.hvLineText.setPos(self.mousePoint.x(),self.mousePoint.y())
+                    self.hvLineText.setAnchor((0, 1.0))
+            else:
+                if self.vvr.center().y() > 0:
+                    self.hvLineText.setAnchor((1, 0))
+                else:
+                    self.hvLineText.setAnchor((-0.1, 0))
 
     ''' This is the event handler for a sigMouseMoved event for the viewbox '''
     def mouseClicked(self, evt):
         mouseClick = evt[0]
         mouseClick.accept()
-        # print 'evt[0] = ', evt[0,0]
         self.mousePos = mouseClick.scenePos()
         self.mousePoint = self.vb.mapSceneToView(self.mousePos)
-        self.timeAxisChanged()
-        self.updateLines()
-        if self.plot.mouseOver:
-            self.statusChanged.emit(self.statusTextClipboard)
-        self.showCrosshairs()
-
-    ''' This is the event handler for if the vertical axis autoscales '''
-    def axisChanged(self, evt):
-        if self.crosshairsadded and self.plot.sceneBoundingRect().contains(self.mousePos):
-            # self.mousePoint = self.vb.mapSceneToView(self.mousePos)
-            self.timeAxisChanged()
-            self.updateLines()
+        self.vLine.setValue(self.mousePoint.x())
+        self.hLine.setValue(self.mousePoint.y())
+        self.updateAnchor(mousepoint=False)
 
     ''' This is the event handler for when the horizontal axis time changes during "autoscroll" '''
     def timeAxisChanged(self):
-        if self.crosshairsadded:
-            # self.mousePoint = self.vb.mapSceneToView(self.mousePos)
-            if self.linearPlot:
-                if self.autoscroll:
-                    reftime = round(time.time(),2)
-                else:
-                    reftime = self.fixedtimepoint
-                self.statusTextX = time.strftime("%H:%M:%S", time.localtime(reftime + self.mousePoint.x()))
-                self.statusTextY = "%0.3f" % (self.mousePoint.y())
-                self.statusTextLogY = "%04.03e" % (np.power(10,self.mousePoint.y()))
-                self.statusText = "&nbsp;"+self.statusTextX+", "+self.statusTextY+"("+self.statusTextLogY+")&nbsp;"
-                self.statusTextClipboard = "{\""+self.statusTextX+"\", "+self.statusTextY+"}"
+        if self.linearPlot:
+            if self.autoscroll:
+                reftime = round(time.time(),2)
             else:
-                self.statusTextX = "%0.3f" % (self.mousePoint.x())
-                self.statusTextY = "%0.3f" % (self.mousePoint.y())
-                self.statusTextClipboard = self.statusText = "{"+self.statusTextX+", "+self.statusTextY+"}"
-            self.hvLineText.setHtml('<span style="color: black; background-color: rgba(255, 0, 0, 100); opacity: 0.1;">'+self.statusText+'</span>')
-            self.crosshairsChanged.emit(self.mousePoint.x())
+                reftime = self.fixedtimepoint
+            self.statusTextX = time.strftime("%H:%M:%S", time.localtime(reftime + self.mousePoint.x()))
+            self.statusTextY = "%0.3f" % (self.mousePoint.y())
+            self.statusTextLogY = "%04.03e" % (np.power(10,self.mousePoint.y()))
+            self.statusText = "&nbsp;"+self.statusTextX+", "+self.statusTextY+"("+self.statusTextLogY+")&nbsp;"
+            self.statusTextClipboard = "{\""+self.statusTextX+"\", "+self.statusTextY+"}"
+        else:
+            self.statusTextX = "%0.3f" % (self.mousePoint.x())
+            self.statusTextY = "%0.3f" % (self.mousePoint.y())
+            self.statusTextClipboard = self.statusText = "{"+self.statusTextX+", "+self.statusTextY+"}"
+        self.hvLineText.setHtml('<span style="color: black; background-color: rgba(255, 0, 0, 100); opacity: 0.1;">'+self.statusText+'</span>')
 
     ''' Sets the timescale of the plotting data '''
     def setPlotScale(self, timescale, padding=0.0):
@@ -224,7 +193,6 @@ class generalPlot(pg.PlotWidget):
         self.globalPlotRange = list(timescale)
         if self.linearPlot:
             self.plot.vb.setRange(xRange=self.globalPlotRange, padding=0)
-        self.changePlotScale.emit(self.globalPlotRange)
 
     ''' Function to update timescale if the viewbox range changes - i.e. via mouse interaction or autoscale'''
     def updatePlotScale(self, padding=0.0):
@@ -252,9 +220,9 @@ class generalPlot(pg.PlotWidget):
             self.fixedtimepoint = self.currentPlotTime
 
     ''' Helper function to add a curve to the plot '''
-    def addCurve(self, record, plot, name):
-        self.threads[name] = QtCore.QThread(plot.stripplot)
-        self.workers[name] = curveRecordWorker(record, plot, name)
+    def addCurve(self, record, name):
+        self.threads[name] = QtCore.QThread(self.stripplot)
+        self.workers[name] = curveRecordWorker(record, self, name)
         self.workers[name].moveToThread(self.threads[name])
         self.threads[name].start()
         return self.workers[name].curve
@@ -293,7 +261,7 @@ class curve(QObject):
         self.fftTextLabels = []
 
     def signalValueAtX(self, xvalue):
-        return (self.name,takeClosestPosition(self.plotData[:,0],self.plotData,xvalue)[1][1])
+        return takeClosestPosition(self.plotData[:,0],self.plotData,xvalue)[1][1]
 
     def addCurve(self):
         return self.curve
@@ -381,6 +349,8 @@ class curve(QObject):
                     x = x - self.currenttime
                     self.plotData = np.transpose((x,y))
                     self.updateData(self.plotData, self.records[self.name]['pen'])
+                    if self.plot.crosshairs:
+                        self.plot.signalValuesUnderCrosshairs.emit((self.name, self.signalValueAtX(self.plot.vLine.value()), np.mean(y), np.std(y)))
             self.doingPlot = False
         self.plot.plotUpdated.emit()
 

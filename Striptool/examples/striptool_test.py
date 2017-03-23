@@ -59,7 +59,7 @@ class striptool_Demo(QMainWindow):
         ''' initialise an instance of the stripPlot Widget '''
         self.sp = striptool.stripPlot(plotRateBar=True,crosshairs=True)
         self.sp2 = striptool.stripPlot(plotRateBar=False)
-        self.sp3 = striptool.stripPlot(plotRateBar=True,crosshairs=True)
+        self.sp3 = striptool.stripPlot(plotRateBar=True,crosshairs=False)
 
         ''' This sets the signal length at which the system starts decimating the data to speed up plotting.
             For a 2*DecimateLength signal, the decimation factor would be 2.
@@ -130,9 +130,9 @@ class striptool_Demo(QMainWindow):
         ''' Display the Qt App '''
         self.setCentralWidget(self.tab)
 
-        self.sp.plotWidget.statusChanged.connect(self.updateStatusBar)
-        self.sp2.plotWidget.statusChanged.connect(self.updateStatusBar)
-        self.sp3.plotWidget.statusChanged.connect(self.updateStatusBar)
+        # self.sp.plotWidget.statusChanged.connect(self.updateStatusBar)
+        # self.sp2.plotWidget.statusChanged.connect(self.updateStatusBar)
+        # self.sp3.plotWidget.statusChanged.connect(self.updateStatusBar)
     ''' This is a signal generator. It could easily read a magnet current using the hardware controllers
         The signal should have peaks at 5 Hz and 10 Hz, which should be seen on the FFT plot assuming the
         sample rate is high enough

@@ -118,9 +118,32 @@ class stripPlot(QWidget):
 
         if self.crosshairs:
             ''' create signalValueTable '''
+            self.signalValueTableOpen = False
+
+            self.signalValueWidget = QWidget()
+            self.signalValueLayout = QVBoxLayout()
             self.signalValueTable = QTableWidget(0,2)
             self.signalValueTable.setHorizontalHeaderLabels(('Signal', 'Value'))
-            self.signalValueTableOpen = False
+            self.signalValueWidget.setLayout(self.signalValueLayout)
+
+            self.signalValueTableSelectorWidget = QWidget()
+            self.signalValueTableSelector = QButtonGroup()
+            signalValueTableSelectorValueButton = QRadioButton('Value')
+            signalValueTableSelectorValueButton.setChecked(True)
+            signalValueTableSelectorMeanButton = QRadioButton('Mean')
+            signalValueTableSelectorRMSButton = QRadioButton('RMS')
+            self.signalValueTableSelector.addButton(signalValueTableSelectorValueButton)
+            self.signalValueTableSelector.addButton(signalValueTableSelectorMeanButton)
+            self.signalValueTableSelector.addButton(signalValueTableSelectorRMSButton)
+            self.signalValueTableSelectorLayout = QHBoxLayout()
+            self.signalValueTableSelectorLayout.addWidget(signalValueTableSelectorValueButton)
+            self.signalValueTableSelectorLayout.addWidget(signalValueTableSelectorMeanButton)
+            self.signalValueTableSelectorLayout.addWidget(signalValueTableSelectorRMSButton)
+            self.signalValueTableSelectorWidget.setLayout(self.signalValueTableSelectorLayout)
+
+            self.signalValueLayout.addWidget(self.signalValueTable)
+            self.signalValueLayout.addWidget(self.signalValueTableSelectorWidget)
+
 
         ''' Add sidebar  to main layout'''
         self.GUISplitter = QtGui.QSplitter()
@@ -128,7 +151,7 @@ class stripPlot(QWidget):
 
         if self.crosshairs:
             ''' Add signalValueTable to GUISplitter '''
-            self.GUISplitter.addWidget(self.signalValueTable)
+            self.GUISplitter.addWidget(self.signalValueWidget)
 
         ''' Add main plot widget to GUISplitter'''
         self.GUISplitter.addWidget(self.plotWidget.plotWidget)
@@ -155,7 +178,7 @@ class stripPlot(QWidget):
             self.GUISplitter.splitterMoved.connect(self.handleSignalValueTableSplitterButtonArrow)
             layout.addWidget(self.signalValueTableSplitterbutton)
             handle.setLayout(layout)
-            self.plotWidget.crosshairsChanged.connect(self.updateSignalValueTable)
+            self.plotWidget.signalValuesUnderCrosshairs.connect(self.updateSignalValueTable)
 
         ''' Legend Handle '''
         if self.crosshairs:
@@ -202,12 +225,18 @@ class stripPlot(QWidget):
                 self.handleSignalValueTableSplitterButton(left=True)
                 self.handleLegendSplitterButton(left=True)
 
-    def updateSignalValueTable(self, xvalue):
+    def updateSignalValueTable(self, signallist):
+        name, value, mean, rms = signallist
         if self.signalValueTableOpen:
-            for name in self.records:
-                row = self.signalValueTable.findItems(name, QtCore.Qt.MatchExactly)[0].row()
-                value = str(self.records[name]['curve'].signalValueAtX(xvalue)[1])
-                self.signalValueTable.setItem(row,1,QtGui.QTableWidgetItem(value))
+            radiobuton = self.signalValueTableSelector.checkedButton().text()
+            row = self.signalValueTable.findItems(name, QtCore.Qt.MatchExactly)[0].row()
+            if radiobuton == 'Value':
+                value = str(value)
+            elif radiobuton == 'Mean':
+                value = str(mean)
+            elif radiobuton == 'RMS':
+                value = str(rms)
+            self.signalValueTable.setItem(row,1,QtGui.QTableWidgetItem(value))
 
     def setHistogramBins(self):
         self.plotWidget.numberBins = self.histogramBinsEdit.value()
@@ -383,7 +412,7 @@ class stripPlot(QWidget):
         if not name in self.records:
             signalrecord = createSignalRecord(records=self.records, name=name, pen=pen, timer=timer, maxlength=maxlength, function=function, arg=arg, **kwargs)
             self.records[name]['record'] = signalrecord
-            curve = self.plotWidget.addCurve(self.records, self.plotWidget, name)
+            curve = self.plotWidget.addCurve(self.records, name)
             self.records[name]['curve'] = curve
             self.records[name]['parent'] = self
             self.records[name]['pen'] = pen
