@@ -17,6 +17,9 @@ logger = logging.getLogger(__name__)
 
 signal.signal(signal.SIGINT, signal.SIG_DFL)
 
+def curveUpdate(self, curve):
+    curve.update()
+
 def logthread(caller):
     print('%-25s: %s, %s,' % (caller, threading.current_thread().name,
                               threading.current_thread().ident))
@@ -25,6 +28,7 @@ class stripPlot(QWidget):
 
     signalAdded = QtCore.pyqtSignal('QString')
     signalRemoved = QtCore.pyqtSignal('QString')
+    doCurveUpdate = QtCore.pyqtSignal()
 
     def __init__(self, parent = None, plotRateBar=True, crosshairs=True, **kwargs):
         super(stripPlot, self).__init__(parent)
@@ -93,13 +97,18 @@ class stripPlot(QWidget):
         ''' add Delete All Data Button '''
         self.deleteAllButton = QPushButton('Delete All Curves')
         self.deleteAllButton.clicked.connect(self.deleteAllCurves)
+        ''' Add legend checkbox '''
+        self.legendCheckBox = QCheckBox("Show Legend")
+        self.legendCheckBox.setChecked(False)
+        self.legendCheckBox.toggled.connect(self.plotWidget.toggleLegend)
         ''' Set Layout '''
         self.buttonLayout.addWidget(self.linearRadio,      0,0,1,1)
         self.buttonLayout.addWidget(self.linearCheckbox,   0,2,1,1)
-        self.buttonLayout.addWidget(self.HistogramRadio,   1,0,1,1)
-        self.buttonLayout.addWidget(self.histogramBinsEdit,1,2,1,1)
-        self.buttonLayout.addWidget(self.histogramBinsLabel,1,3,1,1)
-        self.buttonLayout.addWidget(self.FFTRadio,         2,0,1,4)
+        self.buttonLayout.addWidget(self.FFTRadio,         1,0,1,2)
+        self.buttonLayout.addWidget(self.legendCheckBox,   1,2,1,2)
+        self.buttonLayout.addWidget(self.HistogramRadio,   2,0,1,1)
+        self.buttonLayout.addWidget(self.histogramBinsEdit,2,2,1,1)
+        self.buttonLayout.addWidget(self.histogramBinsLabel,2,3,1,1)
         self.buttonLayout.addWidget(self.scrollButton,     3,0,1,1)
         self.buttonLayout.addWidget(self.pauseButton,      3,3,1,1)
         self.buttonLayout.addWidget(self.legend.layout,    4,0,3,4)
@@ -109,9 +118,32 @@ class stripPlot(QWidget):
 
         if self.crosshairs:
             ''' create signalValueTable '''
+            self.signalValueTableOpen = False
+
+            self.signalValueWidget = QWidget()
+            self.signalValueLayout = QVBoxLayout()
             self.signalValueTable = QTableWidget(0,2)
             self.signalValueTable.setHorizontalHeaderLabels(('Signal', 'Value'))
-            self.signalValueTableOpen = False
+            self.signalValueWidget.setLayout(self.signalValueLayout)
+
+            self.signalValueTableSelectorWidget = QWidget()
+            self.signalValueTableSelector = QButtonGroup()
+            signalValueTableSelectorValueButton = QRadioButton('Value')
+            signalValueTableSelectorValueButton.setChecked(True)
+            signalValueTableSelectorMeanButton = QRadioButton('Mean')
+            signalValueTableSelectorRMSButton = QRadioButton('RMS')
+            self.signalValueTableSelector.addButton(signalValueTableSelectorValueButton)
+            self.signalValueTableSelector.addButton(signalValueTableSelectorMeanButton)
+            self.signalValueTableSelector.addButton(signalValueTableSelectorRMSButton)
+            self.signalValueTableSelectorLayout = QHBoxLayout()
+            self.signalValueTableSelectorLayout.addWidget(signalValueTableSelectorValueButton)
+            self.signalValueTableSelectorLayout.addWidget(signalValueTableSelectorMeanButton)
+            self.signalValueTableSelectorLayout.addWidget(signalValueTableSelectorRMSButton)
+            self.signalValueTableSelectorWidget.setLayout(self.signalValueTableSelectorLayout)
+
+            self.signalValueLayout.addWidget(self.signalValueTable)
+            self.signalValueLayout.addWidget(self.signalValueTableSelectorWidget)
+
 
         ''' Add sidebar  to main layout'''
         self.GUISplitter = QtGui.QSplitter()
@@ -119,7 +151,7 @@ class stripPlot(QWidget):
 
         if self.crosshairs:
             ''' Add signalValueTable to GUISplitter '''
-            self.GUISplitter.addWidget(self.signalValueTable)
+            self.GUISplitter.addWidget(self.signalValueWidget)
 
         ''' Add main plot widget to GUISplitter'''
         self.GUISplitter.addWidget(self.plotWidget.plotWidget)
@@ -146,7 +178,7 @@ class stripPlot(QWidget):
             self.GUISplitter.splitterMoved.connect(self.handleSignalValueTableSplitterButtonArrow)
             layout.addWidget(self.signalValueTableSplitterbutton)
             handle.setLayout(layout)
-            self.plotWidget.crosshairsChanged.connect(self.updateSignalValueTable)
+            self.plotWidget.signalValuesUnderCrosshairs.connect(self.updateSignalValueTable)
 
         ''' Legend Handle '''
         if self.crosshairs:
@@ -187,12 +219,24 @@ class stripPlot(QWidget):
         self.plotWidget.plot.vb.sigXRangeChanged.connect(self.setPlotScaleLambda)
         logger.debug('stripPlot initiated!')
 
-    def updateSignalValueTable(self, xvalue):
+    def keyPressEvent(self, e):
+            if e.key() == QtCore.Qt.Key_F11:
+                print "Maximise!"
+                self.handleSignalValueTableSplitterButton(left=True)
+                self.handleLegendSplitterButton(left=True)
+
+    def updateSignalValueTable(self, signallist):
+        name, value, mean, rms = signallist
         if self.signalValueTableOpen:
-            for name in self.records:
-                row = self.signalValueTable.findItems(name, QtCore.Qt.MatchExactly)[0].row()
-                value = str(self.records[name]['curve'].signalValueAtX(xvalue)[1])
-                self.signalValueTable.setItem(row,1,QtGui.QTableWidgetItem(value))
+            radiobuton = self.signalValueTableSelector.checkedButton().text()
+            row = self.signalValueTable.findItems(name, QtCore.Qt.MatchExactly)[0].row()
+            if radiobuton == 'Value':
+                value = str(value)
+            elif radiobuton == 'Mean':
+                value = str(mean)
+            elif radiobuton == 'RMS':
+                value = str(rms)
+            self.signalValueTable.setItem(row,1,QtGui.QTableWidgetItem(value))
 
     def setHistogramBins(self):
         self.plotWidget.numberBins = self.histogramBinsEdit.value()
@@ -368,7 +412,7 @@ class stripPlot(QWidget):
         if not name in self.records:
             signalrecord = createSignalRecord(records=self.records, name=name, pen=pen, timer=timer, maxlength=maxlength, function=function, arg=arg, **kwargs)
             self.records[name]['record'] = signalrecord
-            curve = self.plotWidget.addCurve(self.records, self.plotWidget, name)
+            curve = self.plotWidget.addCurve(self.records, name)
             self.records[name]['curve'] = curve
             self.records[name]['parent'] = self
             self.records[name]['pen'] = pen
@@ -379,7 +423,6 @@ class stripPlot(QWidget):
                 rownumber = self.signalValueTable.rowCount()
                 self.signalValueTable.insertRow(rownumber)
                 self.signalValueTable.setItem(rownumber,0,QtGui.QTableWidgetItem(name))
-
         else:
             logger.warning('Signal '+name+' already exists!')
 
@@ -387,21 +430,15 @@ class stripPlot(QWidget):
         if not self.plotWidget.paused:
             autorangeX, autorangeY = self.plotWidget.vb.state['autoRange']
             self.plotWidget.plot.disableAutoRange()
-            # self.plotWidget.plot.clear()
             self.plotWidget.currentPlotTime = round(time.time(),2)
-            for name in self.records:
-                if self.plotWidget.autoscroll:
-                    self.records[name]['curve'].currenttime = self.plotWidget.currentPlotTime
-                else:
-                    self.records[name]['curve'].currenttime =  self.plotWidget.currenttime
-                if not self.records[name]['curve'].doingPlot:
-                    self.records[name]['curve'].update()
+            self.doCurveUpdate.emit()
             ''' this forces the date_axis to redraw '''
             self.plotWidget.date_axis.linkedViewChanged(self.plotWidget.date_axis.linkedView())
             self.plotWidget.vb.enableAutoRange(x=autorangeX, y=autorangeY)
 
     def removeSignal(self,name):
         self.records[name]['record'].close()
+        self.plotWidget.legend.removeItem(name)
         del self.records[name]
         self.signalRemoved.emit(name)
         if self.crosshairs:

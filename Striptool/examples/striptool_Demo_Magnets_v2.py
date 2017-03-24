@@ -56,6 +56,9 @@ class mainApp(QApplication):
             self.statusBar = QStatusBar()
             self.setStatusBar(self.statusBar)
 
+            ''' for maximization '''
+            self.maximised = False
+
             self.tab = DockSplitter(statusBar=self.statusBar, inputfile = inputfile)
 
             ''' Display the Qt App '''
@@ -105,6 +108,19 @@ class mainApp(QApplication):
 
         def closeEvent(self, event):
             self.tab.strip.close()
+
+        def keyPressEvent(self, e):
+                if e.key() == QtCore.Qt.Key_F11:
+                    if not self.maximised:
+                        self.maximised = True
+                        self.tab.strip.handleSignalValueTableSplitterButton(left=True)
+                        self.tab.strip.handleLegendSplitterButton(left=True)
+                        self.tab.handleSplitterButton(no=0,closed=True)
+                        self.tab.handleSplitterButton(no=2,closed=True)
+                        self.showMaximized()
+                    else:
+                        self.showNormal()
+                        self.maximised = False
 
 class DockSplitter(QtGui.QSplitter):
 
