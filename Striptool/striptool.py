@@ -395,14 +395,14 @@ class stripPlot(QWidget):
                 self.plotWidget.date_axis.dateTicksOn = False
                 self.plot.enableAutoRange()
             else:
-                for name in self.records:
-                    if self.records[name]['parent'] == self:
-                        self.records[name]['curve'].curve.setData({'x': [0], 'y': [0]}, pen='w', stepMode=False)
-                        self.records[name]['curve'].curve.setClipToView(True)
+                # for name in self.records:
+                #     if self.records[name]['parent'] == self:
+                #         self.records[name]['curve'].curve.setData({'x': [0], 'y': [0]}, pen='w', stepMode=False)
+                #         self.records[name]['curve'].curve.setClipToView(True)
                 self.plotWidget.date_axis.dateTicksOn = True
                 self.plot.disableAutoRange()
                 self.plotWidget.setPlotScale([self.plotWidget.plotRange[0],self.plotWidget.plotRange[1]])
-                self.plotScaleConnection = True
+                # self.plotScaleConnection = True
 
     def start(self, timer=1000):
         self.plotThread.start(timer)
@@ -414,8 +414,7 @@ class stripPlot(QWidget):
             self.records[name]['record'] = signalrecord
             curve = self.plotWidget.addCurve(self.records, name)
             self.records[name]['curve'] = curve
-            self.records[name]['parent'] = self
-            self.records[name]['pen'] = pen
+            # self.records[name]['parent'] = self
             self.legend.addLegendItem(name)
             self.signalAdded.emit(name)
             logger.info('Signal '+name+' added!')
@@ -438,7 +437,10 @@ class stripPlot(QWidget):
 
     def removeSignal(self,name):
         self.records[name]['record'].close()
-        self.plotWidget.legend.removeItem(name)
+        try:
+            self.plotWidget.legend.removeItem(name)
+        except:
+            pass
         del self.records[name]
         self.signalRemoved.emit(name)
         if self.crosshairs:
@@ -456,13 +458,11 @@ class stripPlot(QWidget):
 
     def togglePause(self):
         if self.paused:
-            self.paused = False
-            logger.debug('Plot un-paused!')
+            self.pausePlotting(value=False)
+            logger.debug('Plot Resumed!')
         else:
-            self.paused = True
+            self.pausePlotting(value=True)
             logger.debug('Plot Paused!')
-        self.setPauseButtonState()
-        self.plotWidget.togglePause(self.paused)
 
     def setPauseButtonState(self):
         if not self.paused:
