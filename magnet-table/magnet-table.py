@@ -33,7 +33,6 @@ except ImportError:
 
 #TODO: do these need to be reset for the physical machine?
 os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
-os.environ["EPICS_CA_ADDR_LIST"] = "10.10.0.12"
 os.environ["EPICS_CA_MAX_ARRAY_BYTES"] = "10000000"
 
 class Element:
@@ -593,6 +592,7 @@ class Window(QtGui.QMainWindow):
         
     def setMachineMode(self, mode=None):
         print('Setting machine mode:', mode)
+        os.environ["EPICS_CA_ADDR_LIST"] = "192.168.83.255" if mode == 'Physical' else "10.10.0.12"
         self.controller = self.magInit.getMagnetController(MagCtrl.MACHINE_MODE.names[mode.upper()], MagCtrl.MACHINE_AREA.VELA_INJ)
         self.settings.setValue('machine_mode', mode)
         #TODO: check that it actually worked
