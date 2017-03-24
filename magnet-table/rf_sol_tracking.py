@@ -21,6 +21,7 @@ import matplotlib.pyplot as plt
 import xlrd
 from itertools import chain
 import calcMomentum
+import re
 
 # http://stackoverflow.com/questions/31607458/how-to-add-clipboard-support-to-matplotlib-figures
 import io
