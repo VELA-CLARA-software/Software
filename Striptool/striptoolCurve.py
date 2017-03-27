@@ -19,31 +19,48 @@ class curve(QObject):
         self.curve.setData({'x': [], 'y': []}, pen=self.records[self.name]['pen'])
         self.lines = MultiLine(np.array([[0]]),np.array([[0]]),pen='w')
         self.fftTextLabels = []
+        self.setVerticalScale()
+        self.setVerticalOffset()
+        self.setVerticalMeanSubtraction()
+        self.setLogScale()
+        self.setHistogramBins()
+        self.setDecimateScale()
 
     def signalValueAtX(self, xvalue):
         return stfunctions.takeClosestPosition(self.plotData[:,0],self.plotData,xvalue)[1][1]
 
-    def addCurve(self):
-        return self.curve
+    def setVerticalScale(self,scale=1):
+        self.VerticalScale = scale
+
+    def setVerticalOffset(self,offset=0):
+        self.VerticalOffset = offset
+
+    def setVerticalMeanSubtraction(self, subtractmean=False):
+        self.verticalMeanSubtraction = subtractmean
+
+    def setLogScale(self,logscale=False):
+        self.logscale = logscale
+
+    def setHistogramBins(self,bins=10):
+        self.numberBins = bins
+
+    def setDecimateScale(self,scale=10000):
+        self.decimateScale = scale
 
     ''' This updates the curve points based on the plot type and using the data from the timefilter function '''
     def updateData(self, data, pen):
-        self.VerticalScale = self.records[self.name]['VerticalScale']
-        self.VerticalOffset = self.records[self.name]['VerticalOffset']
-        self.verticalMeanSubtraction = self.records[self.name]['verticalMeanSubtraction']
-        self.logscale = self.records[self.name]['logscale']
-        if len(data) > 1 and not self.plot.scatterPlot:
+        if len(data) > 1:
             x,y = np.transpose(data)
             if not self.VerticalScale == 1 or not self.VerticalOffset == 0:
                 y = (self.VerticalScale * y) + self.VerticalOffset
-            if self.verticalMeanSubtraction or self.plot.stripplot.subtractMean:
+            if self.verticalMeanSubtraction:
                 y = y - np.mean(y)
             if self.logscale:
                 y = np.log10(np.abs(y))
-            if self.plot.histogramPlot:
-                y2,x2 = np.histogram(y, bins=self.plot.numberBins)
+            if self.plot.stripplot.histogramPlot:
+                y2,x2 = np.histogram(y, bins=self.numberBins)
                 self.curve.setData({'x': x2, 'y': y2}, pen=pen, stepMode=True, fillLevel=0, fillBrush=pen)
-            elif self.plot.FFTPlot:
+            elif self.plot.stripplot.FFTPlot:
                 self.curve.setData({'x': x, 'y': y}, pen=pen, stepMode=False, fillLevel=None)
                 if(len(self.curve.yDisp) > 0):
                     indexes = peakutils.indexes(self.curve.yDisp, thres=0.75, min_dist=20)
@@ -58,8 +75,8 @@ class curve(QObject):
                 self.plot.updateSpectrumMode(True)
             else:
                 self.curve.setData({'x': [], 'y': []}, stepMode=False, fillLevel=None, pen=self.records[self.name]['pen'])
-                if len(x) > self.plot.decimateScale:
-                    decimationfactor = int(np.floor(len(x)/self.plot.decimateScale))
+                if len(x) > self.decimateScale:
+                    decimationfactor = int(np.floor(len(x)/self.decimateScale))
                     self.lines = self.MultiLine(x[::decimationfactor],y[::decimationfactor],pen=pen, log=self.logscale)
                 else:
                     self.lines = MultiLine(x, y, pen=pen, log=self.logscale)
