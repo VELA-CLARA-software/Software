@@ -1,0 +1,185 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 10.2' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[      6064,        176]
+NotebookOptionsPosition[      5458,        150]
+NotebookOutlinePosition[      5800,        165]
+CellTagsIndexPosition[      5757,        162]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Get Command URLs", "Section",
+ CellChangeTimes->{{3.699627579777912*^9, 3.69962758572888*^9}}],
+
+Cell["This is sort of hard coded at the moment!", "Text",
+ CellChangeTimes->{{3.6996277169368424`*^9, 3.699627723737136*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"index", "=", 
+   RowBox[{"Import", "[", 
+    RowBox[{
+    "\"\<http://www.aps.anl.gov/Accelerator_Systems_Division/Accelerator_\
+Operations_Physics/manuals/elegant_latest/elegantse7.html#elegantsu57.html\>\"\
+", ",", 
+     RowBox[{"{", 
+      RowBox[{"\"\<HTML\>\"", ",", "\"\<Hyperlinks\>\""}], "}"}]}], "]"}]}], 
+  ";"}]], "Input",
+ CellChangeTimes->{{3.6996275979015365`*^9, 3.6996276307625513`*^9}, 
+   3.6996276650253787`*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"commandURLs", "=", 
+   RowBox[{"index", "[", 
+    RowBox[{"[", 
+     RowBox[{"5", ";;", 
+      RowBox[{"-", "6"}]}], "]"}], "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.6996276677428265`*^9, 3.6996277278898363`*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["interpretElegantCommands", "Section",
+ CellChangeTimes->{{3.699627545856367*^9, 3.6996275520645247`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"interpretElegantCommands", "[", "url_String", "]"}], ":=", 
+  RowBox[{"Block", "[", 
+   RowBox[{
+    RowBox[{"{", "}"}], ",", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"string", "=", 
+      RowBox[{
+      "Import", "[", 
+       "\"\<http://www.aps.anl.gov/Accelerator_Systems_Division/Accelerator_\
+Operations_Physics/manuals/elegant_latest/elegantsu57.html#x65-640007.48\>\"",
+        "]"}]}], ";", "\n", 
+     RowBox[{"name", "=", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"StringTake", "[", 
+         RowBox[{"#", ",", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"StringPosition", "[", 
+             RowBox[{"#", ",", "\"\<\\n\>\""}], "]"}], "[", 
+            RowBox[{"[", 
+             RowBox[{"1", ",", "1"}], "]"}], "]"}], "-", "1"}]}], "]"}], 
+        "&"}], "[", 
+       RowBox[{"StringDrop", "[", 
+        RowBox[{"string", ",", 
+         RowBox[{
+          RowBox[{"StringPosition", "[", 
+           RowBox[{"string", ",", "\"\<&\>\""}], "]"}], "[", 
+          RowBox[{"[", 
+           RowBox[{"1", ",", "1"}], "]"}], "]"}]}], "]"}], "]"}]}], ";", "\n", 
+     RowBox[{"commands", "=", 
+      RowBox[{"ToLowerCase", "[", 
+       RowBox[{
+        RowBox[{"Map", "[", 
+         RowBox[{"StringSplit", ",", 
+          RowBox[{"Most", "[", 
+           RowBox[{"Rest", "[", 
+            RowBox[{"StringSplit", "[", 
+             RowBox[{
+              RowBox[{"StringTake", "[", 
+               RowBox[{"string", ",", 
+                RowBox[{
+                 RowBox[{"StringPosition", "[", 
+                  RowBox[{"string", ",", "\"\<&\>\""}], "]"}], "[", 
+                 RowBox[{"[", 
+                  RowBox[{
+                   RowBox[{"{", 
+                    RowBox[{"1", ",", "2"}], "}"}], ",", "1"}], "]"}], 
+                 "]"}]}], "]"}], ",", "\"\<\\n\>\""}], "]"}], "]"}], "]"}]}], 
+         "]"}], "[", 
+        RowBox[{"[", 
+         RowBox[{"All", ",", 
+          RowBox[{"{", 
+           RowBox[{"2", ",", "1"}], "}"}]}], "]"}], "]"}], "]"}]}], ";", "\n", 
+     RowBox[{"name", "<>", "\"\<:\\n\>\"", "<>", 
+      RowBox[{"Map", "[", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"\"\<  \>\"", "<>", 
+          RowBox[{"#", "[", 
+           RowBox[{"[", "1", "]"}], "]"}], "<>", "\"\<: \>\"", "<>", 
+          RowBox[{"#", "[", 
+           RowBox[{"[", "2", "]"}], "]"}], "<>", "\"\<\\n\>\""}], "&"}], ",", 
+        "commands"}], "]"}]}]}]}], "\[IndentingNewLine]", "]"}]}]], "Input",
+ CellChangeTimes->{{3.6996275079634466`*^9, 3.6996275247701225`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"interpretElegantCommands", "[", 
+  "\"\<http://www.aps.anl.gov/Accelerator_Systems_Division/Accelerator_\
+Operations_Physics/manuals/elegant_latest/elegantsu57.html#x65-640007.48\>\"",
+   "]"}]], "Input",
+ CellChangeTimes->{{3.699627533481824*^9, 3.6996275339693565`*^9}}],
+
+Cell[BoxData["\<\"run_setup :\\n  lattice: string\\n  use_beamline: string\\n \
+ rootname: string\\n  output: string\\n  centroid: string\\n  sigma: \
+string\\n  final: string\\n  acceptance: string\\n  losses: string\\n  \
+magnets: string\\n  semaphore_file: string\\n  parameters: string\\n  \
+combine_bunch_statistics: long\\n  wrap_around: long\\n  final_pass: long\\n  \
+default_order: long\\n  concat_order: long\\n  print_statistics: long\\n  \
+show_element_timing: long\\n  monitor_memory_usage: long\\n  \
+random_number_seed: long\\n  correction_iterations: long\\n  p_central: \
+double\\n  p_central_mev: double\\n  always_change_p0: long\\n  expand_for: \
+string\\n  tracking_updates: long\\n  echo_lattice: long\\n  search_path: \
+string\\n  element_divisions: long\\n  load_balancing_on: long\\n\"\>"], \
+"Output",
+ CellChangeTimes->{3.699627535505872*^9}]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{759, 793},
+WindowMargins->{{Automatic, 380}, {24, Automatic}},
+FrontEndVersion->"10.2 for Microsoft Windows (64-bit) (July 7, 2015)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 100, 1, 63, "Section"],
+Cell[683, 25, 125, 1, 30, "Text"],
+Cell[811, 28, 466, 12, 112, "Input"],
+Cell[1280, 42, 254, 7, 31, "Input"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[1571, 54, 111, 1, 63, "Section"],
+Cell[1685, 57, 2552, 66, 312, "Input"],
+Cell[CellGroupData[{
+Cell[4262, 127, 296, 5, 72, "Input"],
+Cell[4561, 134, 869, 12, 672, "Output"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)
