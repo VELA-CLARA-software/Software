@@ -20,6 +20,8 @@ from collections import namedtuple
 import matplotlib.pyplot as plt
 import xlrd
 from itertools import chain
+import calcMomentum
+import re
 
 # http://stackoverflow.com/questions/31607458/how-to-add-clipboard-support-to-matplotlib-figures
 import io
@@ -106,9 +108,9 @@ def timeit(method):
     def timed(*args, **kw):
         ts = millis()
         result = method(*args, **kw)
-        te = millis()
-        print '%r (%r, %r) %2.3f ms' % \
-              (method.__name__, args, kw, te - ts)
+        dt = millis() - ts
+        if not args[0].quiet:  # args[0] is always self
+            print '{method.__name__} ({args}, {kw}) {dt:.3f} ms'.format(**locals())
         return result
     return timed
 
@@ -117,21 +119,18 @@ def timeit(method):
 # A calculation will be performed again when necessary.
 CALC_NONE, INIT_ARRAYS, CALC_MOM, CALC_B_MAP, CALC_LA, CALC_MATRICES = range(6)
 
-
 def requires_calc_level(level):
     """A decorator that requires a certain level of calculation to be done
     before the function is executed."""
-
     def wrapper(f):
         @wraps(f)
         def wrapped(self, *f_args, **f_kwargs):
             if self.calc_level < level:
-                print('Calculating up to level {}.'.format(level))
+                if not self.quiet:
+                    print('Calculating up to level {}.'.format(level))
                 self.calculate(level)
             return f(self, *f_args, **f_kwargs)
-
         return wrapped
-
     return wrapper
 
 
@@ -161,8 +160,6 @@ MODEL_LIST = ('gb-rf-gun', 'gb-dc-gun', 'Gun-10')
 field_map_attr = namedtuple('field_map_attr', 'coeffs z_map bc_area bc_turns sol_area sol_turns')
 
 format_codes = re.compile('({[^}]+})')
-
-
 def styleOutput(string):
     return string
     """Style the formatting of output text.
@@ -174,8 +171,14 @@ def styleOutput(string):
     return '\n'.join(lines)
 
 
-class RFSolTracker:
+class RFSolTracker(object):
     """Simulation of superimposed RF and solenoid fields."""
+
+    # Link the RI and SI properties
+    def __getattribute__(self, name):
+        if name == 'riWithPol':
+            name = 'siWithPol'
+        return super(RFSolTracker, self).__getattribute__(name)
 
     def __init__(self, name, quiet=True):
         """Initialise the class, setting parameters relevant to the named setup."""
@@ -202,13 +205,13 @@ class RFSolTracker:
             gun10_cav_fieldmap_file = gun10_folder + 'bas_gun.txt'
             gun10_cav_fieldmap = np.loadtxt(gun10_cav_fieldmap_file, delimiter='\t')
 
-            self.rf_peak_field = np.max(gun10_cav_fieldmap[:, 1]) / 1e6
+            self.rf_peak_field = float(np.max(gun10_cav_fieldmap[:, 1]) / 1e6)
             # Normalise
             gun10_cav_fieldmap[:, 1] /= (self.rf_peak_field * 1e6)
             self.norm_E = interpolate(*gun10_cav_fieldmap.T)
             #            self.E = lambda z: E_gun10(z) * self.rf_peak_field * 1e6
             self.freq = 2998.5 * 1e6  # in Hz
-            self.phase = 330  # to get optimal acceleration
+            self.phase = 330.0  # to get optimal acceleration
 
             # Set parameters
             self.dz = 0.5e-3  # in metres - OK to get within 0.5% of final momentum
@@ -250,7 +253,7 @@ class RFSolTracker:
             sheet = book.sheet_by_name(sheet_name)
             z_list = numbersInColumn(sheet, 0)
             E_list = numbersInColumn(sheet, 1)  # in MV/m
-            self.rf_peak_field = np.max(E_list)
+            self.rf_peak_field = float(np.max(E_list))
             # Normalise
             E_list /= self.rf_peak_field
             self.norm_E = interpolate(z_list, E_list)
@@ -264,6 +267,7 @@ class RFSolTracker:
             # Define this in a simpler way - then we can just multiply by sol_current to get B-field value
             self.b_field = np.array([z_list, B_list / self.sol_current])
 
+        self.siWithPol = self.phase
         self.calc_level = CALC_NONE
         # cached results (longitudinal and transverse)
         self.long_cache = self.trans_cache = {}
@@ -283,7 +287,8 @@ class RFSolTracker:
             self.calcLarmorAngle()
         if self.calc_level == CALC_LA and level > CALC_LA:
             self.calcMatrices()
-        print('New calculation level: {self.calc_level}'.format(**locals()))
+        if not self.quiet:
+            print('New calculation level: {self.calc_level}'.format(**locals()))
 
     @timeit
     def initialiseArrays(self):
@@ -318,7 +323,6 @@ class RFSolTracker:
 
     @timeit
     @requires_calc_level(INIT_ARRAYS)
-    #    @profile
     def calcMomentum(self):
         """Calculate the momentum gain for a given E-field distribution."""
         # start conditions
@@ -328,8 +332,12 @@ Peak field: {self.rf_peak_field:.3f} MV/m
 Phase: {self.phase:.1f}°'''
             print(fs.format(**locals()))
 
-        result = np.fromiter(chain.from_iterable(self.momentumGenerator()), 'float64', count=len(self.gamma_tilde_dash) * 5).reshape(-1, 5)
-        self.t_array, self.gamma_dash_array, self.gamma_array, self.beta_array, self.p_array = np.array(result).T
+        # Python generator method (11 ms to run)
+        # result = np.fromiter(chain.from_iterable(self.momentumGenerator()), 'float64', count=len(self.gamma_tilde_dash) * 5).reshape(-1, 5)
+        # self.t_array, self.gamma_dash_array, self.gamma_array, self.beta_array, self.p_array = np.array(result).T
+        # Fortran method (0.8 ms to run)
+        self.t_array, self.gamma_dash_array, self.gamma_array, self.beta_array, self.p_array = calcMomentum.calcmomentum(self.freq, self.phase, self.gamma_start, self.dz, self.gamma_tilde_dash)
+
         self.final_p_MeV = self.p_array[-1] * -1e-6 * epsilon_e
 
         if not self.quiet:
@@ -380,9 +388,10 @@ Bucking coil current: {self.bc_current:.3f} A'''
         gamma_i = self.gamma_array[:-1]
         gamma_f = self.gamma_array[1:]
         delta_theta_L = np.zeros_like(self.z_array[:-1])
-        mask = self.gamma_dash_array[:-1] == 0
+        gamma_dash = self.gamma_dash_array[:-1]
+        mask = gamma_dash == 0
         delta_theta_L[mask] = b_mid[mask] * self.dz / p_f[mask]
-        delta_theta_L[~mask] = (b_mid[~mask] / self.gamma_dash_array[~mask]) * np.log(
+        delta_theta_L[~mask] = (b_mid[~mask] / gamma_dash[~mask]) * np.log(
             (p_f[~mask] + gamma_f[~mask]) / (p_i[~mask] + gamma_i[~mask]))
         self.theta_L_array = np.cumsum(np.insert(delta_theta_L, 0, 0))
 
@@ -423,10 +432,11 @@ Bucking coil current: {self.bc_current:.3f} A''')
         # gamma_dash = self.gamma_tilde_dash * np.cos(omega * t_i)
 
         # thin lens focusing due to rising edge of RF field
-        mask = self.gamma_tilde_dash == 0  # i.e. where E-field starts from zero
+        mask = self.gamma_tilde_dash[:-1] == 0  # i.e. where E-field starts from zero
         M1 = np.zeros((len(self.z_array) - 1, 4, 4))
         M1[:] = np.identity(4)
-        off_diag = -self.gamma_dash_array[mask] / (2 * gamma_i[mask] * beta_i[mask] ** 2)
+        gamma_dash = self.gamma_dash_array[:-1]
+        off_diag = -gamma_dash[mask] / (2 * gamma_i[mask] * beta_i[mask] ** 2)
         M1[mask, 1, 0] = off_diag
         M1[mask, 3, 2] = off_diag
 
@@ -449,7 +459,8 @@ Bucking coil current: {self.bc_current:.3f} A''')
         M4 = np.zeros((len(self.z_array) - 1, 4, 4))
         M4[:] = np.identity(4)
         mask = self.gamma_tilde_dash[1:] == 0  # i.e. where E-field goes to zero
-        off_diag = self.gamma_tilde_dash[mask] * np.cos(omega * t_f[mask]) / (2 * gamma_f[mask] * beta_f[mask] ** 2)
+        gtd = self.gamma_tilde_dash[:-1]
+        off_diag = gtd[mask] * np.cos(omega * t_f[mask]) / (2 * gamma_f[mask] * beta_f[mask] ** 2)
         M4[mask, 1, 0] = off_diag
         M4[mask, 3, 2] = off_diag
 
@@ -466,7 +477,7 @@ Bucking coil current: {self.bc_current:.3f} A''')
     def resetValue(self, attr_name, value, calc_level):
         """General function for setting attribute value and resetting calculation level."""
         if not getattr(self, attr_name) == value:
-            setattr(self, attr_name, value)
+            setattr(self, attr_name, float(value))
             # Reset calculation level
             self.calc_level = min(self.calc_level, calc_level)
 
@@ -559,27 +570,12 @@ y = {2:.3f} mm, y' = {3:.3f} mrad""").format(*u.A1 * 1e3, **globals()))
         for i, M in enumerate(self.M_array):
             self.u_array[i] = u.T
             u = M * u
+        self.u_array[-1] = u.T
         if not self.quiet:
             print(styleOutput(u'''Particle final position:
 x = {0:.3f} mm, x' = {1:.3f} mrad
 y = {2:.3f} mm, y' = {3:.3f} mrad''').format(*u.A1 * 1e3, **globals()))
         return u
-
-    def peakFieldToMomentum(self, peak_field):
-        """Set an RF peak field value and return the momentum."""
-        self.setRFPeakField(peak_field)
-        return self.getFinalMomentum()
-
-    def setFinalMomentum(self, momentum):
-        """Set the final momentum by changing the peak electric field, and 
-        return the value of this field."""
-        delta_p = lambda pf: self.peakFieldToMomentum(pf) - momentum
-        return scipy.optimize.brentq(delta_p, 0.0, 2 * self.rf_peak_field, xtol=1e-3)
-
-    def phaseToMomentum(self, phase):
-        """Set a phase and return the momentum."""
-        self.setRFPhase(float(phase))
-        return self.getFinalMomentum()
 
     def optimiseParam(self, opt_func, operation, x_name, x_units, target=None, target_units=None, tol=1e-6):
         """General function for optimising a parameter by varying another."""
@@ -587,35 +583,82 @@ y = {2:.3f} mm, y' = {3:.3f} mrad''').format(*u.A1 * 1e3, **globals()))
         x_init = getattr(self, x_name)
         if not self.quiet:
             target_text = '' if target == None else ', target {target:.3f} {target_units}'.format(**locals())
-            print('{operation}{target_text}, by varying {x_name} starting at {x_init} {x_units}.'.format(**locals()))
-        res = scipy.optimize.minimize(opt_func, x_init, tol=tol)
+            print('{operation}{target_text}, by varying {x_name} starting at {x_init:.3f} {x_units}.'.format(**locals()))
+        xopt = scipy.optimize.fmin(opt_func, x_init, xtol=1e-3, disp=False)
+        # if res.success:
+        if not self.quiet:
+            print('Optimised with {x_name} setting of {0:.3f} {x_units}'.format(float(xopt), **locals()))
+        return float(xopt)
+        # else:
+        #     target_text = '' if target == None else ' to find target value of {target:.3f} {target_units}'.format(**locals())
+        #     fs = '{operation}: failed{target_text} around {x_name} of {x_init:.3f} {x_units}.'
+        #     raise RuntimeError(fs.format(**locals()))
+
+    def peakFieldToMomentum(self, peak_field):
+        """Set an RF peak field value and return the momentum."""
+        self.setRFPeakField(peak_field)
+        return self.getFinalMomentum()
+
+    def setFinalMomentum(self, momentum):
+        """Set the final momentum by changing the peak electric field, and
+        return the value of this field."""
+        delta_p_sq = lambda pf: (self.peakFieldToMomentum(pf) - momentum) ** 2
+        return self.optimiseParam(delta_p_sq, 'Set final momentum', 'rf_peak_field', 'MV/m', momentum, 'MeV/c')
+
+    def rfParamsToMomAndGrad(self, peak_field, phase):
+        """Set RF peak field and phase and return the momentum and momentum gradient."""
+        self.setRFPeakField(peak_field)
+        self.setRFPhase(phase)
+        return np.array([self.getFinalMomentum(), self.getMomentumGradient()])
+
+    def setFinalMomentumOnCrest(self, momentum):
+        """Set the final momentum by changing the peak electric field, and
+        return the value of this field."""
+        delta_p_sq = lambda x: x[0] * np.sum((self.rfParamsToMomAndGrad(*x) - [momentum, 0]) ** 2)
+        x_init = np.array([self.rf_peak_field, self.phase])
+        if not self.quiet:
+            fs = u'Set final momentum on-crest, target {momentum:.3f} MeV/c, by varying peak field starting at {0:.3f} MV/m and phase starting at {1:.3f}°.'
+            print(fs.format(*x_init, **locals()))
+        res = scipy.optimize.minimize(delta_p_sq, x_init)
         if res.success:
             if not self.quiet:
-                print('Optimised with {x_name} setting of {0:.3f} {x_units}'.format(float(res.x), **locals()))
-            return float(res.x)
+                print(u'Optimised with peak field setting of {0:.3f} MV/m and phase of {1:.3f}°'.format(*res.x))
+            return res.x
         else:
-            target_text = '' if target == None else 'to find target value of {target:.3f} {target_units}'
-            fs = '{operation}: failed {target_text} around {x_name} of {x_init:.3f} {x_units}.'
-            raise RuntimeError(fs.format(**locals()))
+            fs = u'Failed to find target value of {momentum:.3f} MeV/c around peak field of {0:.3f} MV/m and phase of {1:.3f}°.'
+            raise RuntimeError(fs.format(*x_init, **locals()))
 
+    def phaseToMomentum(self, phase):
+        """Set a phase and return the momentum."""
+        self.setRFPhase(phase)
+        return self.getFinalMomentum()
 
     def crestCavity(self):
         """Maximise the output momentum by changing the RF phase, and return 
         the value of this phase."""
-        self.optimiseParam(lambda ph: -self.phaseToMomentum(ph), 'Crest cavity', 'phase', 'degrees', tol=1e-3)
+        return self.optimiseParam(lambda ph: -self.phaseToMomentum(ph), 'Crest cavity', 'phase', 'degrees', tol=1e-4)
+
+    def getMomentumGradient(self):
+        """Make a slight change to the phase and measure the gradient dp/dphi."""
+        dphi = 0.5
+        orig_phase = self.phase
+        p0 = self.phaseToMomentum(orig_phase - dphi / 2)
+        p1 = self.phaseToMomentum(orig_phase + dphi / 2)
+        self.setRFPhase(orig_phase)
+        return (p1 - p0) / dphi
 
     def bcCurrentToCathodeField(self, bci):
-        self.setBuckingCoilCurrent(float(bci))
-        return self.getMagneticField(0)
+        self.setBuckingCoilCurrent(bci)
+        return self.getMagneticField(0.0)
 
-    def setCathodeField(self, field=0):
+    def setCathodeField(self, field=0.0):
         """Set the cathode field to a given level by changing the bucking coil 
         current, and return the value of this current."""
         delta_B_sq = lambda bci: (self.bcCurrentToCathodeField(bci) - field) ** 2
         return self.optimiseParam(delta_B_sq, 'Set field at cathode', 'bc_current', 'A', field, 'T')
 
     def solCurrentToPeakField(self, sol_current):
-        self.setSolenoidCurrent(float(sol_current))
+        self.setSolenoidCurrent(sol_current)
         return self.getPeakMagneticField()
 
     def setPeakMagneticField(self, field):
@@ -625,7 +668,7 @@ y = {2:.3f} mm, y' = {3:.3f} mrad''').format(*u.A1 * 1e3, **globals()))
         return self.optimiseParam(delta_B_sq, 'Set solenoid peak field', 'sol_current', 'A', field, 'T')
 
     def solCurrentToLarmorAngle(self, sol_current):
-        self.setSolenoidCurrent(float(sol_current))
+        self.setSolenoidCurrent(sol_current)
         return self.getFinalLarmorAngle()
 
     def setLarmorAngle(self, angle):
@@ -649,34 +692,32 @@ y = {2:.3f} mm, y' = {3:.3f} mrad''').format(*u.A1 * 1e3, **globals()))
         if show:
             plt.show()
 
-    def plotLAM(self):
-        "Plot Larmor angle and momentum versus z."
+    def plotTwo(self, arrays1, xlabel1, title1, arrays2, xlabel2, title2, labels1=('',), labels2=('',)):
+        """Show two plots, one above the other."""
         plt.subplot(2, 1, 1)
-        self.plotVsZ(self.getLarmorAngleMap(), r'$\theta_L [\degree]$', 'Larmor angle', show=False)
+        self.plotVsZ(arrays1, xlabel1, title1, labels=labels1, show=False)
         plt.subplot(2, 1, 2)
-        self.plotVsZ(self.getMomentumMap(), 'p [MeV/c]', 'Momentum', show=False)
+        self.plotVsZ(arrays2, xlabel2, title2, labels=labels2, show=False)
         plt.show()
+
+    def plotLAM(self):
+        """"Plot Larmor angle and momentum versus z."""
+        self.plotTwo(self.getLarmorAngleMap(), r'$\theta_L [\degree]$', 'Larmor angle',
+                     self.getMomentumMap(), 'p [MeV/c]', 'Momentum')
 
     def plotXY(self):
-        "Plot x, x', y, y' versus z."
-        plt.subplot(2, 1, 1)
-        self.plotVsZ(np.transpose([[ui.item(0) * 1e3, ui.item(2) * 1e3] for ui in self.u_array]),
-                     'x, y [mm]', 'Particle position', labels=('x', 'y'), show=False)
-        plt.subplot(2, 1, 2)
-        self.plotVsZ(np.transpose([[ui.item(1) * 1e3, ui.item(3) * 1e3] for ui in self.u_array]),
-                     "x', y' [mrad]", 'Particle angle', labels=("x'", "y'"), show=False)
-        plt.show()
+        """"Plot x, x', y, y' versus z."""
+        self.plotTwo(1e3 * self.u_array[:, :3:2].T, 'x, y [mm]', 'Particle position',
+                     1e3 * self.u_array[:, 1::2].T, "x', y' [mrad]", 'Particle angle', labels1=('x', 'y'), labels2=("x'", "y'"))
 
     def plotRTheta(self):
-        u"Plot r and θ versus z."
-        self.plotVsZ(([1e3 * np.sqrt(ui.item(0) ** 2 + ui.item(2) ** 2) for ui in self.u_array],), 'r [mm]',
-                     'Particle radius')
-        self.plotVsZ(([np.degrees(np.arctan2(ui.item(2), ui.item(0))) for ui in self.u_array],), r"$\theta [\degree]$",
-                     'Particle angle')
+        u"""Plot r and θ versus z."""
+        self.plotTwo(1e3 * np.sqrt(np.sum(self.u_array[:, :3:2] ** 2, 1)), 'r [mm]', 'Particle radius',
+                     np.degrees(np.arctan2(*self.u_array[:, :3:2].T)), r"$\theta [\degree]$", 'Particle angle')
 
 
 if __name__ == '__main__':
-    gun10_new = RFSolTracker('Gun-10', quiet=False)
+    gun10_new = RFSolTracker('Gun-10', quiet=True)
     gun10_new.setRFPhase(330)
     # gun10_new = RFSolTracker('gb-rf-gun', quiet=False)
     # gun10_new.setRFPhase(300)
