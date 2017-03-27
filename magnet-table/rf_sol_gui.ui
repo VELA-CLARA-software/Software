@@ -18,6 +18,43 @@
     <item>
      <layout class="QHBoxLayout" name="gun_hbox">
       <item>
+       <widget class="QComboBox" name="machine_mode_dropdown">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <item>
+         <property name="text">
+          <string>Offline</string>
+         </property>
+         <property name="icon">
+          <iconset>
+           <normaloff>Icons/Offline.png</normaloff>Icons/Offline.png</iconset>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Virtual</string>
+         </property>
+         <property name="icon">
+          <iconset>
+           <normaloff>Icons/Virtual.png</normaloff>Icons/Virtual.png</iconset>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Physical</string>
+         </property>
+         <property name="icon">
+          <iconset>
+           <normaloff>Icons/Physical.png</normaloff>Icons/Physical.png</iconset>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item>
        <widget class="QLabel" name="gun_label">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
@@ -51,6 +88,9 @@
       </item>
       <item>
        <widget class="QDoubleSpinBox" name="peak_field_spin">
+        <property name="keyboardTracking">
+         <bool>false</bool>
+        </property>
         <property name="suffix">
          <string> MV/m</string>
         </property>
@@ -80,6 +120,12 @@
       </item>
       <item>
        <widget class="QDoubleSpinBox" name="phase_spin">
+        <property name="buttonSymbols">
+         <enum>QAbstractSpinBox::UpDownArrows</enum>
+        </property>
+        <property name="keyboardTracking">
+         <bool>false</bool>
+        </property>
         <property name="suffix">
          <string> °</string>
         </property>
@@ -111,6 +157,10 @@
         <property name="text">
          <string>Crest</string>
         </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>Icons/mountain-summit.png</normaloff>Icons/mountain-summit.png</iconset>
+        </property>
        </widget>
       </item>
      </layout>
@@ -135,6 +185,12 @@
       </item>
       <item>
        <widget class="QDoubleSpinBox" name="bc_spin">
+        <property name="buttonSymbols">
+         <enum>QAbstractSpinBox::UpDownArrows</enum>
+        </property>
+        <property name="keyboardTracking">
+         <bool>false</bool>
+        </property>
         <property name="suffix">
          <string> A</string>
         </property>
@@ -164,6 +220,12 @@
       </item>
       <item>
        <widget class="QDoubleSpinBox" name="sol_spin">
+        <property name="buttonSymbols">
+         <enum>QAbstractSpinBox::UpDownArrows</enum>
+        </property>
+        <property name="keyboardTracking">
+         <bool>false</bool>
+        </property>
         <property name="suffix">
          <string> A</string>
         </property>
@@ -200,6 +262,12 @@
       </item>
       <item>
        <widget class="QDoubleSpinBox" name="cathode_field_spin">
+        <property name="buttonSymbols">
+         <enum>QAbstractSpinBox::UpDownArrows</enum>
+        </property>
+        <property name="keyboardTracking">
+         <bool>false</bool>
+        </property>
         <property name="suffix">
          <string> T</string>
         </property>
@@ -208,6 +276,9 @@
         </property>
         <property name="minimum">
          <double>-99.989999999999995</double>
+        </property>
+        <property name="singleStep">
+         <double>0.010000000000000</double>
         </property>
        </widget>
       </item>
@@ -226,6 +297,12 @@
       </item>
       <item>
        <widget class="QDoubleSpinBox" name="sol_field_spin">
+        <property name="buttonSymbols">
+         <enum>QAbstractSpinBox::UpDownArrows</enum>
+        </property>
+        <property name="keyboardTracking">
+         <bool>false</bool>
+        </property>
         <property name="suffix">
          <string> T</string>
         </property>
@@ -234,6 +311,9 @@
         </property>
         <property name="maximum">
          <double>500.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.010000000000000</double>
         </property>
         <property name="value">
          <double>0.432000000000000</double>
@@ -277,6 +357,12 @@
         </item>
         <item>
          <widget class="QDoubleSpinBox" name="momentum_spin">
+          <property name="buttonSymbols">
+           <enum>QAbstractSpinBox::UpDownArrows</enum>
+          </property>
+          <property name="keyboardTracking">
+           <bool>false</bool>
+          </property>
           <property name="suffix">
            <string> MeV/c</string>
           </property>
@@ -285,6 +371,9 @@
           </property>
           <property name="maximum">
            <double>1000.000000000000000</double>
+          </property>
+          <property name="singleStep">
+           <double>0.100000000000000</double>
           </property>
           <property name="value">
            <double>6.888000000000000</double>
@@ -310,6 +399,12 @@
         </item>
         <item>
          <widget class="QDoubleSpinBox" name="larmor_angle_spin">
+          <property name="buttonSymbols">
+           <enum>QAbstractSpinBox::UpDownArrows</enum>
+          </property>
+          <property name="keyboardTracking">
+           <bool>false</bool>
+          </property>
           <property name="suffix">
            <string> °</string>
           </property>
@@ -364,6 +459,12 @@
       </item>
       <item>
        <widget class="QDoubleSpinBox" name="x_spin">
+        <property name="buttonSymbols">
+         <enum>QAbstractSpinBox::UpDownArrows</enum>
+        </property>
+        <property name="keyboardTracking">
+         <bool>false</bool>
+        </property>
         <property name="suffix">
          <string> mm</string>
         </property>
@@ -375,6 +476,9 @@
         </property>
         <property name="maximum">
          <double>200.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.100000000000000</double>
         </property>
         <property name="value">
          <double>1.000000000000000</double>
@@ -396,6 +500,12 @@
       </item>
       <item>
        <widget class="QDoubleSpinBox" name="xdash_spin">
+        <property name="buttonSymbols">
+         <enum>QAbstractSpinBox::UpDownArrows</enum>
+        </property>
+        <property name="keyboardTracking">
+         <bool>false</bool>
+        </property>
         <property name="suffix">
          <string> mrad</string>
         </property>
@@ -431,6 +541,12 @@
       </item>
       <item>
        <widget class="QDoubleSpinBox" name="y_spin">
+        <property name="buttonSymbols">
+         <enum>QAbstractSpinBox::UpDownArrows</enum>
+        </property>
+        <property name="keyboardTracking">
+         <bool>false</bool>
+        </property>
         <property name="suffix">
          <string> mm</string>
         </property>
@@ -442,6 +558,9 @@
         </property>
         <property name="maximum">
          <double>200.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.100000000000000</double>
         </property>
         <property name="value">
          <double>1.000000000000000</double>
@@ -463,6 +582,12 @@
       </item>
       <item>
        <widget class="QDoubleSpinBox" name="ydash_spin">
+        <property name="buttonSymbols">
+         <enum>QAbstractSpinBox::UpDownArrows</enum>
+        </property>
+        <property name="keyboardTracking">
+         <bool>false</bool>
+        </property>
         <property name="suffix">
          <string> mrad</string>
         </property>

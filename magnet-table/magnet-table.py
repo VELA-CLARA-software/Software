@@ -31,7 +31,6 @@ except ImportError:
 # Note: to be able to import the magnet controller, I used
 # pip install -e "\\fed.cclrc.ac.uk\Org\NLab\ASTeC\Projects\VELA\Software\VELA_CLARA_PYDs\bin\stage"
 
-#TODO: do these need to be reset for the physical machine?
 os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
 os.environ["EPICS_CA_MAX_ARRAY_BYTES"] = "10000000"
 
