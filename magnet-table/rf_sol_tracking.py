@@ -440,10 +440,12 @@ Bucking coil current: {self.bc_current:.3f} A''')
         M1[mask, 1, 0] = off_diag
         M1[mask, 3, 2] = off_diag
 
-        # rotation matrix due to solenoid field (identity matrix where field == 0)
+        # rotation matrix due to solenoid field (drift matrix where field == 0)
         mask = b_mid == 0
         M2 = np.zeros((len(self.z_array) - 1, 4, 4))
         M2[mask] = np.identity(4)
+        M2[mask, 0, 1] = self.dz
+        M2[mask, 2, 3] = self.dz
         M2_nonzero = np.array([[C[~mask], p_i[~mask] * S[~mask] / b_mid[~mask]],
                               [-b_mid[~mask] * S[~mask] / p_f[~mask], p_i[~mask] * C[~mask] / p_f[~mask]]])
         off_diag = np.array([[S[~mask], np.zeros_like(S[~mask])], [np.zeros_like(S[~mask]), S[~mask]]])
