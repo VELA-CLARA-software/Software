@@ -5,6 +5,9 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
 class stripLegend(pg.TreeWidget):
+
+    logScaleChanged = pyqtSignal('PyQt_PyObject','PyQt_PyObject')
+
     def __init__(self, stripTool, parent = None):
         super(stripLegend, self).__init__(parent)
         self.stripTool = stripTool
@@ -161,6 +164,7 @@ class stripLegend(pg.TreeWidget):
 
     def toggleLogScale(self, name, value):
         self.records[name]['logscale'] = value
+        self.logScaleChanged.emit(name,value)
 
     def changeSampleRate(self, name, widget):
         string = str(widget.currentText())

@@ -48,17 +48,10 @@ class generalPlot(pg.PlotWidget):
         self.stripplot = stripplot
         self.paused = True
         self.linearPlot = True
-        self.histogramPlot = False
-        self.FFTPlot = False
-        self.scatterPlot = False
-        self.doingPlot = False
-        self.usePlotRange = True
         self.autoscroll = True
-        self.decimateScale = 5000
         self.globalPlotRange = [-10,0]
         self.currentPlotTime = round(time.time(),2)
         self.plotWidget = pg.GraphicsLayoutWidget()
-        self.numberBins = 50
         self.crosshairs = crosshairs
         self.threads = {}
         self.workers = {}
