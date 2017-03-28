@@ -17,7 +17,7 @@ import scipy.optimize
 import scipy.linalg
 from functools import wraps  # for class method decorators
 from collections import namedtuple
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt  # TODO: use pyqtgraph instead
 import xlrd
 from itertools import chain
 import calcMomentum
@@ -440,12 +440,16 @@ Bucking coil current: {self.bc_current:.3f} A''')
         M1[mask, 1, 0] = off_diag
         M1[mask, 3, 2] = off_diag
 
-        # rotation matrix due to solenoid field
-        M2 = np.array([[C, p_i * S / b_mid],
-                       [-b_mid * S / p_f, p_i * C / p_f]])
-        off_diag = np.array([[S, np.zeros_like(S)], [np.zeros_like(S), S]])
+        # rotation matrix due to solenoid field (identity matrix where field == 0)
+        mask = b_mid == 0
+        M2 = np.zeros((len(self.z_array) - 1, 4, 4))
+        M2[mask] = np.identity(4)
+        M2_nonzero = np.array([[C[~mask], p_i[~mask] * S[~mask] / b_mid[~mask]],
+                              [-b_mid[~mask] * S[~mask] / p_f[~mask], p_i[~mask] * C[~mask] / p_f[~mask]]])
+        off_diag = np.array([[S[~mask], np.zeros_like(S[~mask])], [np.zeros_like(S[~mask]), S[~mask]]])
         # A bit of funky transposing is required here so the axes are correct
-        M2 = np.vstack((np.hstack((M2, off_diag)), np.hstack((-off_diag, M2)))).transpose((2, 0, 1))
+        M2_nonzero = np.vstack((np.hstack((M2_nonzero, off_diag)), np.hstack((-off_diag, M2_nonzero)))).transpose((2, 0, 1))
+        M2[~mask] = M2_nonzero
 
         # focusing term due to RF magnetic focusing
         M3 = np.zeros((len(self.z_array) - 1, 4, 4))

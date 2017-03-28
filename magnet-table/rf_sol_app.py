@@ -105,10 +105,11 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         """The bucking coil or solenoid parameters have been modified - rerun the simulation and update the GUI."""
         self.gun.setBuckingCoilCurrent(self.bc_spin.value())
         self.gun.setSolenoidCurrent(self.sol_spin.value())
-        if not self.machine_mode == 'Offline':
+        if self.machine_mode != 'Offline':
             self.controller.setSI('BSOL', self.bc_spin.value())
             self.controller.setSI('SOL', self.sol_spin.value())
         self.cathode_field_spin.setValue(self.gun.getMagneticField(0))
+        self.sol_field_spin.setValue(self.gun.getPeakMagneticField())
         self.B_field_plot.plot(self.gun.getZRange(), self.gun.getMagneticFieldMap(), pen='r', clear=True)
         self.larmor_angle_plot.plot(self.gun.getZRange(), self.gun.getLarmorAngleMap(), pen='r', clear=True)
         self.larmor_angle_spin.setValue(self.gun.getFinalLarmorAngle())
