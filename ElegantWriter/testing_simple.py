@@ -1,4 +1,4 @@
-from elegantWriter import *
+from elegantWriter_simple import *
 
 testlattice = elegantLattice()
 
