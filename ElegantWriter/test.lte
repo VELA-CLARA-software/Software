@@ -1,0 +1,6 @@
+D1: drift, l = 0.5;
+BEND1: ksbend, angle = 0.36, l = 0.5, e1 = 0.01, e2 = 0.022;
+Q1: kquad, k1 = 2.3, l = 0.5;
+latt2: Line=(2*latt1, latt3, D1);
+latt3: Line=(2*latt1, -BEND1, latt1, D1);
+latt1: Line=(2*D1, Q1*2);
