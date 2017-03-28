@@ -82,7 +82,10 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>Peak field</string>
+         <string>Pea&amp;k field</string>
+        </property>
+        <property name="buddy">
+         <cstring>peak_field_spin</cstring>
         </property>
        </widget>
       </item>
@@ -114,7 +117,10 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>Phase</string>
+         <string>&amp;Phase</string>
+        </property>
+        <property name="buddy">
+         <cstring>phase_spin</cstring>
         </property>
        </widget>
       </item>
@@ -155,7 +161,7 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>Crest</string>
+         <string>&amp;Crest</string>
         </property>
         <property name="icon">
          <iconset>
@@ -179,7 +185,10 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>Bucking coil current</string>
+         <string>&amp;Bucking coil current</string>
+        </property>
+        <property name="buddy">
+         <cstring>bc_spin</cstring>
         </property>
        </widget>
       </item>
@@ -214,7 +223,10 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>Solenoid current</string>
+         <string>&amp;Solenoid current</string>
+        </property>
+        <property name="buddy">
+         <cstring>sol_spin</cstring>
         </property>
        </widget>
       </item>
@@ -256,7 +268,10 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>Field at cathode</string>
+         <string>&amp;Field at cathode</string>
+        </property>
+        <property name="buddy">
+         <cstring>cathode_field_spin</cstring>
         </property>
        </widget>
       </item>
@@ -291,7 +306,10 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>Solenoid maximum field</string>
+         <string>Solenoid &amp;maximum field</string>
+        </property>
+        <property name="buddy">
+         <cstring>sol_field_spin</cstring>
         </property>
        </widget>
       </item>
@@ -351,7 +369,10 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>Final momentum</string>
+           <string>Fi&amp;nal momentum</string>
+          </property>
+          <property name="buddy">
+           <cstring>momentum_spin</cstring>
           </property>
          </widget>
         </item>
@@ -393,7 +414,10 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>Final Larmor angle</string>
+           <string>Final &amp;Larmor angle</string>
+          </property>
+          <property name="buddy">
+           <cstring>larmor_angle_spin</cstring>
           </property>
          </widget>
         </item>
@@ -453,7 +477,10 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>x</string>
+         <string>&amp;x</string>
+        </property>
+        <property name="buddy">
+         <cstring>x_spin</cstring>
         </property>
        </widget>
       </item>
@@ -496,6 +523,9 @@
         <property name="text">
          <string>x'</string>
         </property>
+        <property name="buddy">
+         <cstring>xdash_spin</cstring>
+        </property>
        </widget>
       </item>
       <item>
@@ -535,7 +565,10 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>y</string>
+         <string>&amp;y</string>
+        </property>
+        <property name="buddy">
+         <cstring>y_spin</cstring>
         </property>
        </widget>
       </item>
@@ -577,6 +610,9 @@
         </property>
         <property name="text">
          <string>y'</string>
+        </property>
+        <property name="buddy">
+         <cstring>ydash_spin</cstring>
         </property>
        </widget>
       </item>
