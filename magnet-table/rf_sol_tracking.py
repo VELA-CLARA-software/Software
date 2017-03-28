@@ -446,7 +446,6 @@ Bucking coil current: {self.bc_current:.3f} A''')
         M2[mask] = np.identity(4)
         M2[mask, 0, 1] = self.dz
         M2[mask, 2, 3] = self.dz
-        print(M2[:10])
         M2_nonzero = np.array([[C[~mask], p_i[~mask] * S[~mask] / b_mid[~mask]],
                               [-b_mid[~mask] * S[~mask] / p_f[~mask], p_i[~mask] * C[~mask] / p_f[~mask]]])
         off_diag = np.array([[S[~mask], np.zeros_like(S[~mask])], [np.zeros_like(S[~mask]), S[~mask]]])
