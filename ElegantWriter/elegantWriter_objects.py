@@ -13,12 +13,16 @@ stream.close()
 
 class elegantLattice(object):
 
-    def __init__(self, parent=None):
+    def __init__(self):
         super(elegantLattice, self).__init__()
-        self.parent = parent
+        # self.parent = parent
         self.elementObjects = {}
         self.lineObjects = {}
         self.commandObjects = {}
+
+
+    def __getitem__(self,key):
+        return getattr(self,key.lower())
 
     @property
     def elements(self):
@@ -34,10 +38,13 @@ class elegantLattice(object):
 
     def addElement(self, name=None, **kwargs):
         if name == None:
-            raise NameError('Element does not have a name')
-        element = elegentElement(name, **kwargs)
+            if not 'name' in kwargs:
+                raise NameError('Element does not have a name')
+            else:
+                name = kwargs['name']
+        element = elegantElement(name, **kwargs)
         setattr(self,name,element)
-        setattr(self.parent,name,element)
+        # setattr(self.parent,name,element)
         self.elementObjects[name] = element.properties
         return element
 
@@ -46,16 +53,22 @@ class elegantLattice(object):
             raise NameError('Line does not have a name')
         line = elegantLine(name, line)
         setattr(self,name,line)
-        setattr(self.parent,name,line)
+        # setattr(self.parent,name,line)
         self.lineObjects[name] = line.line
         return line
 
     def addCommand(self, name=None, **kwargs):
         if name == None:
-            raise NameError('Element does not have a name')
+            if not 'name' in kwargs:
+                if not 'type' in kwargs:
+                    raise NameError('Command does not have a name')
+                else:
+                    name = kwargs['type']
+            else:
+                name = kwargs['name']
         command = elegantCommand(name, **kwargs)
         setattr(self,name,command)
-        setattr(self.parent,name,command)
+        # setattr(self.parent,name,command)
         self.commandObjects[name] = command.properties
         return command
 
@@ -71,33 +84,39 @@ class elegantLattice(object):
         self.writeLines(file, lattice)
         file.close()
 
+    def getLinelements(self, lattice):
+        for element in getattr(self,lattice).line:
+            element = getattr(self,element)
+            if isinstance(element,(elegantLine)):
+                [element.name]+self.lineDefinitions
+                self.getLinelements(element.name)
+            elif isinstance(element,(elegantElement)):
+                self.elementDefinitions.append(element.name)
+            else:
+               print type(element)
+        self.lineDefinitions.append(lattice)
+
     def writeElements(self, file, lattice):
-        lineelements = []
-        for line in getattr(self,lattice).line:
-            for lineelem in line:
-                for elem in self.elements:
-                    if '*'+elem.lower() in lineelem.lower() or elem.lower()+'*' in lineelem.lower():
-                        lineelem = lineelem.replace(elem,'self.'+elem)
-                        for sublineelem in eval(lineelem):
-                            lineelements.append(getattr(self,sublineelem).name)
-                    elif elem.lower() == lineelem.lower():
-                        lineelements.append(getattr(self,lineelem).name)
-                    elif '-'+elem.lower() == lineelem.lower():
-                        lineelements.append(eval('self.'+lineelem.replace('-','')).name)
-        lineelements = reduce(lambda l, x: l if x in l else l+[x], lineelements, [])
-        for element in lineelements:
+        self.lineDefinitions = []
+        self.elementDefinitions = []
+        self.getLinelements(lattice)
+        self.elementDefinitions = reduce(lambda l, x: l if x in l else l+[x], self.elementDefinitions, [])
+        for element in self.elementDefinitions:
             file.write(getattr(self,element).write())
 
     def writeLines(self, file, lattice):
-        for line in self.lineObjects:
+        self.lineDefinitions = []
+        self.elementDefinitions = []
+        self.getLinelements(lattice)
+        # print self.lineDefinitions
+        self.lineDefinitions = reduce(lambda l, x: l if x in l else l+[x], self.lineDefinitions, [])
+        for line in self.lineDefinitions:
             file.write(getattr(self,line).write())
 
-class elegantCommand(object):
+class elegantObject(object):
 
     def __init__(self, name=None, type=None, **kwargs):
-        super(elegantCommand, self).__init__()
-        if not type in commandkeywords:
-            raise NameError('Command \'%s\' does not exist' % commandname)
+        super(elegantObject, self).__init__()
         if name == None:
             raise NameError('Command does not have a name')
         if type == None:
@@ -106,15 +125,27 @@ class elegantCommand(object):
         self.type = type
         self.commandtype = 'command'
         self.properties = {}
-        self.allowedKeyWords = commandkeywords[self.type]
+        if type in commandkeywords:
+            self.allowedKeyWords = commandkeywords[self.type]
+        elif type in elementkeywords:
+            self.allowedKeyWords = elementkeywords[self.type]
         for key, value in kwargs.iteritems():
             if key.lower() in self.allowedKeyWords:
                 try:
-                    value = getattr(self,self.allowedKeyWords[key.lower()])(value)
-                    setattr(self,key.lower(),value)
                     self.properties[key.lower()] = value
                 except:
                     pass
+
+    @property
+    def parameters(self):
+        return self.properties
+
+    def __getitem__(self,key):
+        return self.properties.__getitem__(key.lower())
+
+    def __setitem__(self,key,value):
+        self.properties.__setitem__(key.lower(),value)
+        setattr(self,key.lower(),value)
 
     def long(self, value):
         return int(value)
@@ -125,6 +156,13 @@ class elegantCommand(object):
     def string(self, value):
         return '"'+value+'"'
 
+class elegantCommand(elegantObject):
+
+    def __init__(self, name=None, type=None, **kwargs):
+        super(elegantCommand, self).__init__(name, type, **kwargs)
+        if not type in commandkeywords:
+            raise NameError('Command \'%s\' does not exist' % commandname)
+
     def write(self):
         wholestring=''
         string = '&'+self.type+'\n'
@@ -133,29 +171,12 @@ class elegantCommand(object):
         string+='&end\n\n'
         return string
 
-class elegentElement(object):
+class elegantElement(elegantObject):
 
     def __init__(self, name=None, type=None, **kwargs):
-        super(elegentElement, self).__init__()
+        super(elegantElement, self).__init__(name, type, **kwargs)
         if not type in elementkeywords:
             raise NameError('Element \'%s\' does not exist' % commandname)
-        if name == None:
-            raise NameError('Element does not have a name')
-        if type == None:
-            raise NameError('Element does not have a type')
-        self.name = name
-        self.type = type
-        self.commandType = 'element'
-        self.properties = {}
-        self.allowedKeyWords = elementkeywords[self.type]
-        for key, value in kwargs.iteritems():
-            if key.lower() in self.allowedKeyWords:
-                try:
-                    value = getattr(self,self.allowedKeyWords[key.lower()])(value)
-                    setattr(self,key.lower(),value)
-                    self.properties[key.lower()] = value
-                except:
-                    pass
 
     def __mul__(self, other):
         return [self for x in range(other)]
@@ -166,19 +187,20 @@ class elegentElement(object):
     def __neg__(self):
         if 'bend' in self.type:
             newself = copy.deepcopy(self)
+            # print newself.properties
             if 'e1' in newself.properties and 'e2' in newself.properties:
-                e1 = newself.e1
-                e2 = newself.e2
-                newself.e1 = newself.properties['e1'] = e2
-                newself.e2 = newself.properties['e2'] = e1
+                e1 = newself['e1']
+                e2 = newself['e2']
+                newself.properties['e1'] = e2
+                newself.properties['e2'] = e1
             elif 'e1' in newself.properties:
-                newself.e2 = newself.properties['e2'] = newself.properties['e1']
+                newself.properties['e2'] = newself.properties['e1']
                 del newself.properties['e1']
-                del newself.e1
+                del newself['e1']
             elif 'e2' in newself.properties:
-                newself.e1 = newself.properties['e1'] = newself.properties['e2']
+                newself.properties['e1'] = newself.properties['e2']
                 del newself.properties['e2']
-                del newself.e2
+                del newself['e2']
             if 'edge1_effects' in newself.properties and 'edge2_effects' in newself.properties:
                 e1 = newself.properties['edge1_effects']
                 e2 = newself.properties['edge2_effects']
@@ -196,15 +218,6 @@ class elegentElement(object):
             return newself
         else:
             return self
-
-    def long(self, value):
-        return int(value)
-
-    def double(self, value):
-        return float(value)
-
-    def string(self, value):
-        return '"'+value+'"'
 
     def write(self):
         wholestring=''
@@ -239,18 +252,17 @@ class elegantLine(object):
         unique = reduce(lambda l, x: l if x in l else l+[x], self.line, [])
         return [element.write() for element in unique]
 
-    def expandLine(self, line):
-        for e in line:
-            if isinstance(e, (list, tuple)):
-                self.expandLine(e)
-            else:
-                self.line.append(e)
-
     def getElements(self):
         unique = reduce(lambda l, x: l if x in l else l+[x], self.line, [])
         return unique
 
-    def expandLine(self, line):
+    def expandLine(self, line=None):
+        if line == None:
+            line = self.line
+        try:
+            self.lineNames
+        except AttributeError:
+            self.lineNames = []
         if isinstance(line,(list, tuple)):
             for element in line:
                 self.expandLine(element)
@@ -258,7 +270,7 @@ class elegantLine(object):
             if isinstance(line,str):
                 self.lineNames.append(line)
             else:
-                self.lineNames.append(line.name)
+                self.lineNames.append(line)
         return self.lineNames
 
     def write(self):
@@ -268,9 +280,15 @@ class elegantLine(object):
         self.expandLine(self.line)
         for element in self.lineNames:
             if string[-1] == '(':
-                tmpstring = element
+                if isinstance(element,str):
+                    tmpstring = element
+                else:
+                    tmpstring = getattr(element,'name')
             else:
-                tmpstring = ', '+element
+                if isinstance(element,str):
+                    tmpstring = ', '+element
+                else:
+                    tmpstring = ', '+getattr(element,'name')
             if len(string+tmpstring) > 78:
                 wholestring+=string+', &\n'
                 string=''
@@ -283,7 +301,7 @@ class elegantLine(object):
 class elegantInterpret(object):
 
     def __init__(self, parent=None):
-        self.lattice = elegantLattice(self)
+        self.lattice = elegantLattice()
 
     def readElegantFile(self,file):
         self.f = open(file,'r')

@@ -1,0 +1,108 @@
+beginj2: marker;
+st1dip01high: sbend, hgap = gapchi, angle = 0.083110916, l = 0.215, &
+, fint = fringe, k1 = 1.8, e1 = 0., e2 = -0.265954933;
+st1drift03: drift, l = 0.457;
+st1dip02: sbend, hgap = gapchi, angle = -0.166221832, l = 0.43, fint = fringe, &
+, k1 = 0, e1 = -0.146275212, e2 = -0.146275212;
+st1drift04: drift, l = 0.457;
+st1dip03: sbend, hgap = gapchi, angle = 0.083110916, l = 0.215, fint = fringe, &
+, k1 = 0, e1 = -0.265954933, e2 = 0.0;
+st1drift05: drift, l = 0.296;
+st1quad01: quadrupole, k1 = -3.093908529481, l = 0.1524;
+st1drift06: drift, l = 0.8776;
+st1quad02: quadrupole, k1 = 4.564698676916, l = 0.1524;
+st1drift07: drift, l = 1.4821;
+st1quad03: quadrupole, k1 = -4.006264339543, l = 0.1524;
+st1drift08: drift, l = 0.3976;
+st1quad04: quadrupole, k1 = 1.20737790394, l = 0.1524;
+st1drift09: drift, l = 0.8088;
+endinj2: marker;
+begarc1: marker;
+ar1dip01: sbend, hgap = gaparc, angle = 1.0471976, l = 0.5, fint = fringe, &
+, k1 = 0., e1 = 0.0, e2 = 0.0;
+ar1drift01: drift, l = 0.35;
+ar1sext01: sextupole, k2 = 0, l = 0.18;
+ar1drift02: drift, l = 0.385;
+ar1quad01: quadrupole, k1 = KQ1, l = 0.15;
+ar1drift03: drift, l = 0.205;
+sextdrift1: drift, l = 0.18;
+ar1drift04: drift, l = 0.335;
+ar1quad02: quadrupole, k1 = KQ2, l = 0.15;
+ar1drift05: drift, l = 0.475;
+ar1dip02: sbend, hgap = gaparc, angle = 1.0471976, l = 0.5, fint = fringe, &
+, k1 = 0., e1 = 0.0, e2 = 0.0;
+ar1drift06: drift, l = 0.475;
+ar1quad03: quadrupole, k1 = KQ2, l = 0.15;
+ar1drift07: drift, l = 0.335;
+sextdrift2: drift, l = 0.18;
+ar1drift08: drift, l = 0.205;
+ar1quad04: quadrupole, k1 = KQ1, l = 0.15;
+ar1drift09: drift, l = 0.385;
+ar1sext02: sextupole, k2 = 0, l = 0.18;
+ar1drift10: drift, l = 0.35;
+ar1dip03: sbend, hgap = gaparc, angle = 1.0471976, l = 0.5, fint = fringe, &
+, k1 = 0., e1 = 0.0, e2 = 0.0;
+st2drift01: drift, l = 0.8088;
+st2quad01: quadrupole, k1 = -8, l = 0.1524;
+st2drift02: drift, l = 0.3176;
+st2quad02: quadrupole, k1 = 8, l = 0.1524;
+endarc1: marker;
+begstr1: marker;
+st2drift03: drift, l = 4.496;
+st2quad03: quadrupole, k1 = -2, l = 0.1524;
+st2drift04: drift, l = 0.3176;
+st2quad04: quadrupole, k1 = 4, l = 0.1524;
+st2drift05: drift, l = 2.347;
+st2dip01: sbend, hgap = gapchi, angle = 0.375245789, l = 0.41025, &
+, fint = fringe, k1 = 0, e1 = 0.187622895, e2 = 0.187622895;
+st2drift06: drift, l = 0.697;
+st2dip02: sbend, hgap = gapchi, angle = -0.375245789, l = 0.41025, &
+, fint = fringe, k1 = 0, e1 = -0.187622895, e2 = -0.187622895;
+st2drift07: drift, l = 0.649;
+st2dip03: sbend, hgap = gapchi, angle = -0.375245789, l = 0.41025, &
+, fint = fringe, k1 = 0, e1 = -0.187622895, e2 = -0.187622895;
+st2drift08: drift, l = 0.697;
+st2dip04: sbend, hgap = gapchi, angle = 0.375245789, l = 0.41025, &
+, fint = fringe, k1 = 0, e1 = 0.187622895, e2 = 0.187622895;
+st2drift09: drift, l = 0.269;
+st2quad05: quadrupole, k1 = -7, l = 0.1524;
+st2drift10: drift, l = 1.071;
+st2quad06: quadrupole, k1 = 2, l = 0.1524;
+st2drift11: drift, l = 0.4667;
+st2quad07: quadrupole, k1 = 2, l = 0.1524;
+st2drift12: drift, l = 0.2726;
+begwig: marker;
+dipb1: sbend, angle = phi, tilt = pi/2, l = diplen/2, k1 = 0, e1 = 0.0, &
+, e2 = phi;
+dr: drift, l = driftlen;
+dipa2: sbend, angle = -phi, tilt = pi/2, l = diplen/2, k1 = 0, e1 = -phi, &
+, e2 = 0.0;
+dipb2: sbend, angle = -phi, tilt = pi/2, l = diplen/2, k1 = 0, e1 = 0.0, &
+, e2 = -phi;
+dipa1: sbend, angle = phi, tilt = pi/2, l = diplen/2, k1 = 0, e1 = phi, &
+, e2 = 0.0;
+halfwig: marker;
+injector2: Line=(beginj2, st1dip01high, st1drift03, st1dip02, st1drift04, &
+st1dip03, st1drift05, st1quad01, st1drift06, st1quad02, st1drift07, st1quad03, &
+st1drift08, st1quad04, st1drift09, endinj2);
+arc1: Line=(begarc1, ar1dip01, ar1drift01, ar1sext01, ar1drift02, ar1quad01, &
+ar1drift03, sextdrift1, ar1drift04, ar1quad02, ar1drift05, ar1dip02, &
+ar1drift06, ar1quad03, ar1drift07, sextdrift2, ar1drift08, ar1quad04, &
+ar1drift09, ar1sext02, ar1drift10, ar1dip03, st2drift01, st2quad01, st2drift02, &
+st2quad02, endarc1);
+hwiggler1: Line=(dipb1, dr, dipa2, dipb2, dr, dipa1, dipb1, dr, dipa2, dipb2, &
+dr, dipa1, dipb1, dr, dipa2, dipb2, dr, dipa1, dipb1, dr, dipa2, dipb2, dr, &
+dipa1, dipb1, dr, dipa2, dipb2, dr, dipa1, dipb1, dr, dipa2, dipb2, dr, dipa1, &
+dipb1, dr, dipa2, dipb2, dr, dipa1, dipb1, dr, dipa2, dipb2, dr, dipa1, dipb1, &
+dr, dipa2, dipb2, dr, dipa1, dipb1, dr, dipa2, dipb2, dr, dipa1, dipb1, dr, &
+dipa2, dipb2, dr, dipa1, dipb1, dr, dipa2, dipb2, dr, dipa1, dipb1, dr, dipa2, &
+dipb2, dr, dipa1, dipb1, dr, dipa2, dipb2, dr, dipa1, dipb1, dr, dipa2, dipb2, &
+dr, dipa1, dipb1, dr, dipa2, dipb2, dr, dipa1, dipb1, dr, dipa2, dipb2, dr, &
+dipa1, dipb1, dr, dipa2, dipb2, dr, dipa1, dipb1, dr, dipa2, dipb2, dr, dipa1, &
+dipb1, dr, dipa2, dipb2, dr, dipa1);
+str1wig: Line=(begstr1, st2drift01, st2quad01, st2drift02, st2quad02, &
+st2drift03, st2quad03, st2drift04, st2quad04, st2drift05, st2dip01, st2drift06, &
+st2dip02, st2drift07, st2dip03, st2drift08, st2dip04, st2drift09, st2quad05, &
+st2drift10, st2quad06, st2drift11, st2quad07, st2drift12, begwig, hwiggler1, &
+halfwig);
+lin2wig: Line=(injector2, arc1, str1wig);
