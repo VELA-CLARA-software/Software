@@ -72,6 +72,15 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.startMainViewUpdateTimer()
         self.gunParamsChanged()
 
+    def resizeEvent(self, resizeEvent):
+        # Remove plots one row at a time as the window shrinks
+        self.xy_plot_hbox.setVisible(self.geometry().height() >= 512)
+        self.xdash_ydash_plot.setVisible(self.geometry().height() >= 512)
+        self.E_field_plot.setVisible(self.geometry().height() >= 420)
+        self.B_field_plot.setVisible(self.geometry().height() >= 420)
+        self.momentum_plot.setVisible(self.geometry().height() >= 250)
+        self.larmor_angle_plot.setVisible(self.geometry().height() >= 250)
+
     # these functions update the GUI and (re)start the timer
     def startMainViewUpdateTimer(self):
         self.widgetUpdateTimer = QtCore.QTimer()
