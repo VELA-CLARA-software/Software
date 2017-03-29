@@ -18,33 +18,24 @@ class elegantLattice(dict):
         self['lines'] = {}
         self['commands'] = {}
 
-    def addElement(self, **kwargs):
-        if not 'name' in kwargs:
-            (filename,line_number,function_name,text)=traceback.extract_stack()[-2]
-            name = text[:text.find('=')].strip()
-        else:
-            name = kwargs['name']
-        commandname = kwargs['type']
-        del kwargs['type']
-        del kwargs['name']
-        # print 'kwargs = ',kwargs
-        self['elements'][name] = elegentElement(name=name, commandname=commandname, **kwargs)
+    def addElement(self, name=None, **kwargs):
+        if name == None:
+            raise NameError('Element does not have a name')
+        self['elements'][name] = elegentElement(name, **kwargs)
         setattr(self,name,self['elements'][name])
-        # print self['elements'][name]
         return self['elements'][name]
 
-    def addLine(self, line=[]):
-        (filename,line_number,function_name,text)=traceback.extract_stack()[-2]
-        name = text[:text.find('=')].strip()
-        print 'line name = ', name
+    def addLine(self, name=None, line=[]):
+        if name == None:
+            raise NameError('Line does not have a name')
         self['lines'][name] = elegantLine(name, line)
         setattr(self,name,self['lines'][name])
         return self['lines'][name]
 
-    def addCommand(self, command=None, **kwargs):
-        (filename,line_number,function_name,text)=traceback.extract_stack()[-2]
-        name = text[:text.find('=')].strip()
-        self['commands'][name] = elegantCommand(name, command, **kwargs)
+    def addCommand(self, name=None, **kwargs):
+        if name == None:
+            raise NameError('Element does not have a name')
+        self['commands'][name] = elegantCommand(name, **kwargs)
         setattr(self,name,self['commands'][name])
         return self['commands'][name]
 
@@ -63,32 +54,39 @@ class elegantLattice(dict):
     def writeElements(self,file):
         elements = []
         for line in self['lines'].iteritems():
-            elements+=getattr(self,line[0]).getElements()
-        elements = [x for x in elements if x['commandtype'] is 'element']
-        unique = reduce(lambda l, x: l if x in l else l+[x], elements, [])
-        for element in unique:
+            line = getattr(self,line[0])['line']
+            for lineelem in line:
+                for elem in self['elements']:
+                    if '*'+elem in lineelem or elem+'*' in lineelem:
+                        lineelem = lineelem.replace(elem,'self.'+elem)
+                        elements += eval(lineelem)
+                    elif elem == lineelem:
+                        elements += [eval('self.'+lineelem)]
+                    elif '-'+elem == lineelem:
+                        elements += [eval('self.'+lineelem.replace('-',''))]
+        elements = reduce(lambda l, x: l if x in l else l+[x], elements, [])
+        # print elements
+        for element in elements:
             file.write(getattr(self,element['name']).write())
 
     def writeLines(self,file):
-        elements = []
         for line in self['lines'].iteritems():
-            elements+=getattr(self,line[0]).getElements()
-        elements = [x for x in elements if x['commandtype'] is 'line']
-        for line in self['lines'].iteritems():
-            elements+=[line[1]]
-        unique = reduce(lambda l, x: l if x in l else l+[x], elements, [])
-        for element in unique:
-            if not '-' in element['name']:
-                file.write(getattr(self,element['name']).write())
+            file.write(getattr(self,line[0],'name').write())
 
 class elegantCommand(dict):
 
-    def __init__(self, name=None, commandname=None, **kwargs):
+    def __init__(self, name=None, type=None, **kwargs):
         super(elegantCommand, self).__init__()
+        if not type in commandkeywords:
+            raise NameError('Command \'%s\' does not exist' % commandname)
+        if name == None:
+            raise NameError('Command does not have a name')
+        if type == None:
+            raise NameError('Command does not have a type')
         self['name'] = name
-        self['commandname'] = commandname
+        self['type'] = type
         self['commandtype'] = 'command'
-        self.allowedKeyWords = commandkeywords[self['commandname']]
+        self.allowedKeyWords = commandkeywords[self['type']]
         for key, value in kwargs.iteritems():
             if key.lower() in self.allowedKeyWords:
                 try:
@@ -107,7 +105,7 @@ class elegantCommand(dict):
 
     def write(self):
         wholestring=''
-        string = '&'+self['commandname']+'\n'
+        string = '&'+self['type']+'\n'
         for key, value in self.iteritems():
             string+='\t'+key+' = '+str(value)+'\n'
         string+='&end\n\n'
@@ -115,17 +113,18 @@ class elegantCommand(dict):
 
 class elegentElement(dict):
 
-    def __init__(self, name, commandname=None, **kwargs):
+    def __init__(self, name=None, type=None, **kwargs):
         super(elegentElement, self).__init__()
-        if not commandname in elementkeywords:
+        if not type in elementkeywords:
             raise NameError('Element \'%s\' does not exist' % commandname)
-        # (filename,line_number,function_name,text)=traceback.extract_stack()[-2]
-        # self.name = text[:text.find('=')].strip()
-        # print 'elegentElement name = ', name
+        if name == None:
+            raise NameError('Element does not have a name')
+        if type == None:
+            raise NameError('Element does not have a type')
         self['name'] = name
-        self['commandname'] = commandname
+        self['type'] = type
         self['commandtype'] = 'element'
-        self.allowedKeyWords = elementkeywords[self['commandname']]
+        self.allowedKeyWords = elementkeywords[self['type']]
         for key, value in kwargs.iteritems():
             if key.lower() in self.allowedKeyWords:
                 try:
@@ -140,7 +139,7 @@ class elegentElement(dict):
         return [self for x in range(other)]
 
     def __neg__(self):
-        if 'bend' in self['commandname']:
+        if 'bend' in self['type']:
             newself = self.copy()
             if 'e1' in newself and 'e2' in newself:
                 e1 = newself['e1']
@@ -180,9 +179,9 @@ class elegentElement(dict):
 
     def write(self):
         wholestring=''
-        string = self['name']+': '+self['commandname']
+        string = self['name']+': '+self['type']
         for key, value in self.iteritems():
-            if not key is 'name' and not key is 'commandname' and not key is 'commandtype':
+            if not key is 'name' and not key is 'type' and not key is 'commandtype':
                 tmpstring = ', '+key+' = '+str(value)
                 if len(string+tmpstring) > 78:
                     wholestring+=string+', &\n'
@@ -193,26 +192,19 @@ class elegentElement(dict):
 
 class elegantLine(dict):
 
-    def __init__(self, name="line", line=[]):
+    def __init__(self, name=None, line=[]):
         super(elegantLine, self).__init__()
-        self.line = []
-        print 'name = ', name
+        if name == None:
+            raise NameError('Line does not have a name')
         self['name'] = name
         self['commandtype'] = 'line'
-        self.expandLine(line)
-        self['line'] = [x['name'] for x in self.line]
+        self['line'] = line
 
     def __mul__(self, other):
         return [self for x in range(other)]
 
     def __rmul__(self, other):
         return [self for x in range(other)]
-
-    def __neg__(self):
-        newself = self.copy()
-        newself['line'] = newself['line'][::-1]
-        newself['name'] = '-'+newself['name']
-        return newself
 
     def expandLine(self, line):
         for e in line:
@@ -233,11 +225,11 @@ class elegantLine(dict):
     def write(self):
         wholestring=''
         string = self['name']+': Line=('
-        for element in self.line:
+        for element in self['line']:
             if string[-1] == '(':
-                tmpstring = element['name']
+                tmpstring = element
             else:
-                tmpstring = ', '+element['name']
+                tmpstring = ', '+element
             if len(string+tmpstring) > 78:
                 wholestring+=string+', &\n'
                 string=''

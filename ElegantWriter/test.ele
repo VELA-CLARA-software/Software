@@ -1,0 +1,18 @@
+&run_setup
+	name = runsetup
+	p_central_mev = 700.0
+	commandtype = command
+	lattice = "doublering.lte"
+	centroid = "%s.cen"
+	type = run_setup
+	use_beamline = "doublering"
+&end
+
+&global_settings
+	commandtype = command
+	error_log_file = "elegant.err"
+	log_file = "elegant.log"
+	type = global_settings
+	name = global
+&end
+
