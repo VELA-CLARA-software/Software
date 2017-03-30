@@ -188,7 +188,7 @@ class elegantCommand(elegantObject):
         for key, value in self.properties.iteritems():
             if not key =='name' and not key == 'type':
                 string+='\t'+key+' = '+str(value)+'\n'
-        string+='&end\n\n'
+        string+='&end\n'
         return string
 
 class elegantElement(elegantObject):
@@ -367,7 +367,8 @@ class elegantInterpret(object):
                 pos2 = string.index(')')
                 lines = [x.strip().lower() for x in string[(pos1+1):pos2].split(',')]
                 # print 'lines = ', lines
-                self.lattice.addLine(name=name,line=lines)
+                self.lattice.addLine(name=name.lower(),line=lines)
+                print 'added line ', name.lower()
             except:
                 pass
         return element

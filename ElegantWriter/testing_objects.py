@@ -4,6 +4,7 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 import pyqtgraph as pg
 import subprocess
+import sdds
 
 class elegantGUI(QMainWindow):
     def __init__(self, parent = None):
@@ -11,28 +12,64 @@ class elegantGUI(QMainWindow):
         ''' Here we create an elegant environment '''
         ele = elegantInterpret()
         ''' now we read in a lattice file (can also be MAD format, but not all commands are equivalent (cavities are a problem!)) '''
-        lattice = ele.readElegantFile('lattice8.5.mff')
-        ''' lets modify the 'k1' parameter of the element 'st1dip01high' '''
-        lattice.st1dip01high['k1'] = 1.2
-        ''' print the output '''
-        print 'st1dip01high k1 = ', lattice['st1dip01high']['k1']
-        ''' or we could do this! '''
-        lattice['st1dip01high']['k1'] = 1.8
-        ''' print the output using a different mechanism - isn't python great! '''
-        print 'st1dip01high k1 = ', lattice.st1dip01high.k1
-        ''' let's write out the lattice to a .lte file - we have to give the line name '''
-        lattice.writeLatticeFile('test.lte','lin2wig')
+        lattice = ele.readElegantFile('diamond.lte')
+        lattice.writeLatticeFile('test.lte','diamond')
 
         lattice.addCommand(type='global_settings',log_file="elegant.log",error_log_file="elegant.err")
-        print lattice.global_settings.write()
+        lattice.addCommand(type='run_setup',lattice="test.lte",use_beamline="diamond",p_central_mev=3000,centroid='%s.cen')
+        lattice.addCommand(type='twiss_output',matched = 1,output_at_each_step=0,radiation_integrals=1,statistics=1,filename="%s.twi")
+        # print lattice.global_settings.write()+lattice.run_setup.write()
         proc = subprocess.Popen(['elegant','-pipe=in'],
                         stdin=subprocess.PIPE,
                         stdout=subprocess.PIPE,
                         stderr=subprocess.PIPE,
+                        shell=True
                         )
-        stdout_value, stderr_value = proc.communicate(lattice.global_settings.write())
-        print 'stdout = ', repr(stdout_value)
-        print 'stderr = ', repr(stderr_value)
+        proc.stdin.write(lattice.global_settings.write())
+        proc.stdin.write(lattice.run_setup.write())
+        proc.stdin.write(lattice.twiss_output.write())
+        self.twi = sdds.SDDS(0)
+        self.twi.load('stdin.twi')
+        for col in range(len(self.twi.columnName)):
+            if len(self.twi.columnData[col]) == 1:
+                setattr(self.twi,self.twi.columnName[col],self.twi.columnData[col][0])
+            else:
+                setattr(self.twi,self.twi.columnName[col],self.twi.columnData[col])
+        self.plotWidget = pg.PlotWidget()
+        self.plot = self.plotWidget.plot()
+        self.centralWidget = QWidget()
+        self.layout = QVBoxLayout()
+        self.centralWidget.setLayout(self.layout)
+        self.layout.addWidget(self.plotWidget)
+        self.xAxisCombo = QComboBox()
+        self.yAxisCombo = QComboBox()
+        for param in self.twi.columnName:
+            if isinstance(getattr(self.twi,param)[0], (float, long)):
+                self.xAxisCombo.addItem(param)
+                self.yAxisCombo.addItem(param)
+        self.yAxisCombo.setCurrentIndex(1)
+        self.updatePlot()
+        self.comboWidget = QWidget()
+        self.comboLayout = QHBoxLayout()
+        self.xAxisCombo.currentIndexChanged.connect(self.updatePlot)
+        self.yAxisCombo.currentIndexChanged.connect(self.updatePlot)
+        self.comboWidget.setLayout(self.comboLayout)
+        self.comboLayout.addWidget(self.xAxisCombo)
+        self.comboLayout.addWidget(self.yAxisCombo)
+
+        self.layout.addWidget(self.plotWidget)
+        self.layout.addWidget(self.comboWidget)
+        self.setCentralWidget(self.centralWidget)
+        # self.plotData(self.twi.s,self.twi.betax)
+
+    def updatePlot(self):
+        self.plotData(getattr(self.twi,str(self.xAxisCombo.currentText())),getattr(self.twi,str(self.yAxisCombo.currentText())))
+
+    def plotData(self, x, y,pen='r'):
+        self.plot.clear()
+        self.plot.setData(x,y,pen='r')
+        # exit()
+        # proc.kill()
         # self.table = latticeTable(lattice)
         # self.table.updateTable('lin2wig')
         # self.setCentralWidget(self.table)
