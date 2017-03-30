@@ -2,6 +2,7 @@ import yaml
 import traceback
 import itertools
 import copy
+import collections
 
 stream = file('commands.yaml', 'r')
 commandkeywords = yaml.load(stream)
@@ -84,31 +85,47 @@ class elegantLattice(object):
         self.writeLines(file, lattice)
         file.close()
 
-    def getLinelements(self, lattice):
+    def _getLinelements(self, lattice):
         for element in getattr(self,lattice).line:
             element = getattr(self,element)
             if isinstance(element,(elegantLine)):
                 [element.name]+self.lineDefinitions
-                self.getLinelements(element.name)
+                self._getLinelements(element.name)
             elif isinstance(element,(elegantElement)):
                 self.elementDefinitions.append(element.name)
             else:
                print type(element)
         self.lineDefinitions.append(lattice)
 
-    def writeElements(self, file, lattice):
+    def _doLineExpansion(self,lattice):
         self.lineDefinitions = []
         self.elementDefinitions = []
-        self.getLinelements(lattice)
+        self._getLinelements(lattice)
+
+    def expandLattice(self,lattice):
+        self._doLineExpansion(lattice)
+        return self.elementDefinitions
+
+    def getLatticeDefinitions(self,lattice,headings):
+        self._doLineExpansion(lattice)
+        properties = collections.OrderedDict()
+        for elem in self.elementDefinitions:
+            properties[elem] = {}
+            for heading in headings:
+                if heading in getattr(self,elem).properties:
+                    properties[elem][heading] = getattr(self,elem)[heading]
+                else:
+                    properties[elem][heading] = None
+        return properties
+
+    def writeElements(self, file, lattice):
+        self._doLineExpansion(lattice)
         self.elementDefinitions = reduce(lambda l, x: l if x in l else l+[x], self.elementDefinitions, [])
         for element in self.elementDefinitions:
             file.write(getattr(self,element).write())
 
     def writeLines(self, file, lattice):
-        self.lineDefinitions = []
-        self.elementDefinitions = []
-        self.getLinelements(lattice)
-        # print self.lineDefinitions
+        self._doLineExpansion(lattice)
         self.lineDefinitions = reduce(lambda l, x: l if x in l else l+[x], self.lineDefinitions, [])
         for line in self.lineDefinitions:
             file.write(getattr(self,line).write())
@@ -125,6 +142,8 @@ class elegantObject(object):
         self.type = type
         self.commandtype = 'command'
         self.properties = {}
+        self.properties['name'] = self.name
+        self.properties['type'] = self.type
         if type in commandkeywords:
             self.allowedKeyWords = commandkeywords[self.type]
         elif type in elementkeywords:
@@ -132,7 +151,7 @@ class elegantObject(object):
         for key, value in kwargs.iteritems():
             if key.lower() in self.allowedKeyWords:
                 try:
-                    self.properties[key.lower()] = value
+                    self.properties[key.lower()] = getattr(self,self.allowedKeyWords[key.lower()])(value)
                 except:
                     pass
 
@@ -167,7 +186,8 @@ class elegantCommand(elegantObject):
         wholestring=''
         string = '&'+self.type+'\n'
         for key, value in self.properties.iteritems():
-            string+='\t'+key+' = '+str(value)+'\n'
+            if not key =='name' and not key == 'type':
+                string+='\t'+key+' = '+str(value)+'\n'
         string+='&end\n\n'
         return string
 
