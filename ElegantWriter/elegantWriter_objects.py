@@ -73,11 +73,17 @@ class elegantLattice(object):
         self.commandObjects[name] = command.properties
         return command
 
-    def writeCommandFile(self, filename):
-        file = open(filename,'w')
-        for command in self['commands'].iteritems():
-            file.write(getattr(self,command[0]).write())
-        file.close()
+    def writeCommandFile(self, filename=None):
+        if filename == None:
+            commandstr = ''
+            for command in self['commands']:
+                commandstr+=getattr(self,command).write()
+            return commandstr
+        else:
+            file = open(filename,'w')
+            for command in self['commands']:
+                file.write(getattr(self,command).write())
+            file.close()
 
     def writeLatticeFile(self, filename, lattice):
         file = open(filename,'w')
@@ -245,10 +251,12 @@ class elegantElement(elegantObject):
         for key, value in self.properties.iteritems():
             if not key is 'name' and not key is 'type' and not key is 'commandtype':
                 tmpstring = ', '+key+' = '+str(value)
-                if len(string+tmpstring) > 78:
-                    wholestring+=string+', &\n'
+                if len(string+tmpstring) > 76:
+                    wholestring+=string+',&\n'
                     string=''
-                string+= tmpstring
+                    string+=tmpstring[2::]
+                else:
+                    string+= tmpstring
         wholestring+=string+';\n'
         return wholestring
 
@@ -315,7 +323,7 @@ class elegantLine(object):
                 string+=tmpstring[2::]
             else:
                 string+= tmpstring
-        wholestring+=string+');\n'
+        wholestring+=string+')\n'
         return wholestring
 
 class elegantInterpret(object):

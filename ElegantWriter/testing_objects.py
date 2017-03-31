@@ -1,4 +1,4 @@
-import sys
+import sys, os, time
 from elegantWriter_objects import *
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
@@ -12,22 +12,84 @@ class elegantGUI(QMainWindow):
         ''' Here we create an elegant environment '''
         ele = elegantInterpret()
         ''' now we read in a lattice file (can also be MAD format, but not all commands are equivalent (cavities are a problem!)) '''
-        lattice = ele.readElegantFile('diamond.lte')
-        lattice.writeLatticeFile('test.lte','diamond')
+        self.lattice = ele.readElegantFile('diamond.lte')
+        self.lattice.writeLatticeFile('test.lte','diamond')
 
-        lattice.addCommand(type='global_settings',log_file="elegant.log",error_log_file="elegant.err")
-        lattice.addCommand(type='run_setup',lattice="test.lte",use_beamline="diamond",p_central_mev=3000,centroid='%s.cen')
-        lattice.addCommand(type='twiss_output',matched = 1,output_at_each_step=0,radiation_integrals=1,statistics=1,filename="%s.twi")
+        # self.lattice.addCommand(type='global_settings',log_file="elegant.log",error_log_file="elegant.err")
+        self.lattice.addCommand(type='run_setup',lattice="test.lte",use_beamline="diamond",p_central_mev=3000,centroid='%s.cen')
+        self.lattice.addCommand(type='twiss_output',matched = 1,output_at_each_step=0,radiation_integrals=1,statistics=1,filename="%s.twi")
         # print lattice.global_settings.write()+lattice.run_setup.write()
-        proc = subprocess.Popen(['elegant','-pipe=in'],
+
+        self.openElegantPipe()
+
+        self.centralWidget = QWidget()
+        self.layout = QHBoxLayout()
+        self.centralWidget.setLayout(self.layout)
+
+        self.table = latticeTable(self.lattice)
+        self.table.elementChanged.connect(self.runAndUpdate)
+        self.table.updateTable('diamond')
+        self.layout.addWidget(self.table)
+
+        self.sddsPlot = SDDSPlotWidget()
+        self.layout.addWidget(self.sddsPlot)
+
+        self.setCentralWidget(self.centralWidget)
+        self.runAndUpdate()
+
+    def runAndUpdate(self):
+        self.lattice.writeLatticeFile('test.lte','diamond')
+        self.runElegant(self.lattice)
+        self.sddsPlot.loadTwi()
+
+    def openElegantPipe(self):
+        self.proc = subprocess.Popen(['elegant','-pipe=in'],
                         stdin=subprocess.PIPE,
                         stdout=subprocess.PIPE,
                         stderr=subprocess.PIPE,
-                        shell=True
+                        shell=False
                         )
-        proc.stdin.write(lattice.global_settings.write())
-        proc.stdin.write(lattice.run_setup.write())
-        proc.stdin.write(lattice.twiss_output.write())
+
+    def runElegant(self, lattice):
+        # try:
+        #     modtimestart = os.stat('stdin.twi').st_mtime
+        # except:
+        #     modtimestart = 0
+        # print modtimestart
+        self.openElegantPipe()
+        # self.proc.stdin.write(lattice.global_settings.write())
+        # self.proc.stdin.write(lattice.run_setup.write())
+        # self.proc.stdin.write(lattice.twiss_output.write())
+        stdout, stderr = self.proc.communicate(lattice.writeCommandFile())
+        # self.proc.communicate(lattice.twiss_output.write())
+        # time.sleep(1)
+        # while os.stat('stdin.twi').st_mtime == modtimestart:
+        #     print 'waiting'
+        #     time.sleep(1)
+        # self.lattice.writeCommandFile('test.ele')
+
+class SDDSPlotWidget(QWidget):
+
+    def __init__(self, **kwargs):
+        super(SDDSPlotWidget, self).__init__(**kwargs)
+        self.plotWidget = pg.PlotWidget()
+        self.plot = self.plotWidget.plot()
+        self.layout = QVBoxLayout()
+        self.setLayout(self.layout)
+        self.layout.addWidget(self.plotWidget)
+        self.xAxisCombo = QComboBox()
+        self.yAxisCombo = QComboBox()
+        self.xAxisCombo.currentIndexChanged.connect(self.updatePlot)
+        self.yAxisCombo.currentIndexChanged.connect(self.updatePlot)
+        self.comboWidget = QWidget()
+        self.comboLayout = QHBoxLayout()
+        self.comboWidget.setLayout(self.comboLayout)
+        self.comboLayout.addWidget(self.xAxisCombo)
+        self.comboLayout.addWidget(self.yAxisCombo)
+        self.layout.addWidget(self.comboWidget)
+        self.layout.addWidget(self.plotWidget)
+
+    def loadTwi(self):
         self.twi = sdds.SDDS(0)
         self.twi.load('stdin.twi')
         for col in range(len(self.twi.columnName)):
@@ -35,32 +97,39 @@ class elegantGUI(QMainWindow):
                 setattr(self.twi,self.twi.columnName[col],self.twi.columnData[col][0])
             else:
                 setattr(self.twi,self.twi.columnName[col],self.twi.columnData[col])
-        self.plotWidget = pg.PlotWidget()
-        self.plot = self.plotWidget.plot()
-        self.centralWidget = QWidget()
-        self.layout = QVBoxLayout()
-        self.centralWidget.setLayout(self.layout)
-        self.layout.addWidget(self.plotWidget)
-        self.xAxisCombo = QComboBox()
-        self.yAxisCombo = QComboBox()
+        self.SDDSparameterNames = list()
         for param in self.twi.columnName:
             if isinstance(getattr(self.twi,param)[0], (float, long)):
-                self.xAxisCombo.addItem(param)
-                self.yAxisCombo.addItem(param)
-        self.yAxisCombo.setCurrentIndex(1)
+                self.SDDSparameterNames.append(param)
+        self.updateSelectionBar()
         self.updatePlot()
-        self.comboWidget = QWidget()
-        self.comboLayout = QHBoxLayout()
+
+    def updateSelectionBar(self):
+        xAxisCombotext = self.xAxisCombo.currentText()
+        yAxisCombotext = self.yAxisCombo.currentText()
+        self.xAxisCombo.currentIndexChanged.disconnect(self.updatePlot)
+        self.yAxisCombo.currentIndexChanged.disconnect(self.updatePlot)
+        allnames = []
+        for name in self.SDDSparameterNames:
+            allnames.append(name)
+            if self.xAxisCombo.findText(name) == -1:
+                self.xAxisCombo.addItem(name)
+                self.yAxisCombo.addItem(name)
+        for index in range(self.xAxisCombo.count()):
+            if not self.xAxisCombo.itemText(index) in allnames:
+                self.xAxisCombo.removeItem(index)
+                self.yAxisCombo.removeItem(index)
+            else:
+                if self.xAxisCombo.itemText(index) == xAxisCombotext:
+                    self.xAxisCombo.setCurrentIndex(index)
+                if self.yAxisCombo.itemText(index) == yAxisCombotext:
+                    self.yAxisCombo.setCurrentIndex(index)
+        if xAxisCombotext == '':
+            self.xAxisCombo.setCurrentIndex(0)
+        if yAxisCombotext == '':
+            self.yAxisCombo.setCurrentIndex(1)
         self.xAxisCombo.currentIndexChanged.connect(self.updatePlot)
         self.yAxisCombo.currentIndexChanged.connect(self.updatePlot)
-        self.comboWidget.setLayout(self.comboLayout)
-        self.comboLayout.addWidget(self.xAxisCombo)
-        self.comboLayout.addWidget(self.yAxisCombo)
-
-        self.layout.addWidget(self.plotWidget)
-        self.layout.addWidget(self.comboWidget)
-        self.setCentralWidget(self.centralWidget)
-        # self.plotData(self.twi.s,self.twi.betax)
 
     def updatePlot(self):
         self.plotData(getattr(self.twi,str(self.xAxisCombo.currentText())),getattr(self.twi,str(self.yAxisCombo.currentText())))
@@ -74,7 +143,9 @@ class elegantGUI(QMainWindow):
         # self.table.updateTable('lin2wig')
         # self.setCentralWidget(self.table)
 
-class latticeTable(QTableWidget):
+class latticeTable(pg.TableWidget):
+
+    elementChanged = pyqtSignal()
 
     def __init__(self, lattice, headings=None):
         super(latticeTable, self).__init__()
@@ -83,10 +154,10 @@ class latticeTable(QTableWidget):
         else:
             self.headings = headings
         self.lattice = lattice
-        self.itemChanged.connect(self.someFunc)
+        # self.itemChanged.connect(self.propertyChanged)
 
     def updateTable(self,line):
-        self.itemChanged.disconnect(self.someFunc)
+        # self.itemChanged.disconnect(self.propertyChanged)
         self.lattprops = self.lattice.getLatticeDefinitions(line, self.headings)
         self.elementNames = self.lattprops.keys()
         self.setRowCount(len(self.lattprops))
@@ -97,7 +168,7 @@ class latticeTable(QTableWidget):
         self.setVerticalHeaderLabels(self.elementNames)
         self.setHorizontalHeaderLabels(shortenedHeadings)
         self.tableSetData()
-        self.itemChanged.connect(self.someFunc)
+        # self.itemChanged.connect(self.propertyChanged)
 
     def tableSetData(self):
         row = 0
@@ -116,27 +187,82 @@ class latticeTable(QTableWidget):
                         widget.currentIndexChanged.connect(self.typeChanged)
                         self.setCellWidget(row,col,widget)
                     else:
-
-                        if val[h] == None:
-                            item = QTableWidgetItem('')
-                            item.setFlags(Qt.ItemIsEnabled)
+                        if isinstance(val[h],(float)):
+                            widget = QDoubleSpinBox()
+                            widget.setContextMenuPolicy(Qt.CustomContextMenu)
+                            widget.customContextMenuRequested.connect(self.spinBoxMenu)
+                            widget.setDecimals(5)
+                            widget.setSingleStep(0.001)
+                            widget.setMinimum(-20)
+                            widget.setMaximum(20)
+                            widget.setValue(val[h])
+                            widget.editingFinished.connect(self.spinboxChanged)
+                            self.setCellWidget(row,col,widget)
+                        elif isinstance(val[h],(long, int)):
+                            widget = QSpinBox()
+                            widget.setSingleStep(1)
+                            widget.editingFinished.connect(self.spinboxChanged)
+                            widget.setValue(val[h])
+                            self.setCellWidget(row,col,widget)
+                        elif val[h] == None:
+                            item = QLabel('')
+                            # item.setFlags(Qt.ItemIsEnabled)
+                            self.setCellWidget(row,col,item)
                         else:
-                            item = QTableWidgetItem(str(val[h]))
-                        self.setItem(row,col,item)
+                            item = QLabel(str(val[h]))
+                            self.setCellWidget(row,col,item)
                     col += 1
             row += 1
 
-    def someFunc(self, widget):
-        self.lattice[str(self.verticalHeaderItem(widget.row()).text())][str(self.horizontalHeaderItem(widget.column()).text())] = widget.text()
-        # widget.setText(str(self.lattice[str(self.verticalHeaderItem(widget.row()).text())][str(self.horizontalHeaderItem(widget.column()).text())]))
+    def spinBoxMenu(self, position):
+        spinbox = self.sender()
+        menu = QMenu()
+        w = QWidget()
+        wl = QGridLayout()
+        w.setLayout(wl)
+        minlabel = QLabel('Step:')
+        minbox = QSpinBox()
+        minbox.setValue(spinbox.singleStep())
+        minbox.setRange(-100,100)
+        minbox.editingFinished.connect(spinbox.setMinimum)
+        # maxlabel = QLabel('Max:')
+        # maxbox = QSpinBox()
+        # maxbox.setValue(spinbox.maximum())
+        # maxbox.setRange(-100,100)
+        # maxbox.editingFinished.connect(spinbox.setMaximum)
+        wl.addWidget(minlabel,0,0)
+        wl.addWidget(minbox,0,1)
+        wl.addWidget(maxlabel,1,0)
+        wl.addWidget(maxbox,1,1)
+        a = QWidgetAction(self)
+        a.setDefaultWidget(w)
+        menu.addAction(a)
+        # quitAction = menu.addAction("Quit")
+        action = menu.exec_(spinbox.mapToGlobal(position))
+        # if action == quitAction:
+        #     qApp.quit()
 
-    def typeChanged(self, index):
+    def propertyChanged(self, widget):
+        self.lattice[str(self.verticalHeaderItem(widget.row()).text())][str(self.horizontalHeaderItem(widget.column()).text())] = widget.text()
+        self.elementChanged.emit()
+
+    def typeChanged(self):
         combobox = self.sender()
         widget = self.indexAt(combobox.pos())
         self.lattice[str(self.verticalHeaderItem(widget.row()).text())][str(self.horizontalHeaderItem(widget.column()).text())] = combobox.currentText()
+        self.elementChanged.emit()
+
+    def spinboxChanged(self):
+        spinbox = self.sender()
+        widget = self.indexAt(spinbox.pos())
+        self.lattice[str(self.verticalHeaderItem(widget.row()).text())][str(self.horizontalHeaderItem(widget.column()).text())] = spinbox.value()
+        self.elementChanged.emit()
 
 def main():
    app = QApplication(sys.argv)
+   pg.setConfigOptions(antialias=True)
+   pg.setConfigOption('background', 'w')
+   pg.setConfigOption('foreground', 'k')
    # app.setStyle(QStyleFactory.create("plastique"))
    ex = elegantGUI()
    ex.show()

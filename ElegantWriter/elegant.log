@@ -1,4 +1,4 @@
-statistics:    ET:     00:00:00 CP:    0.00 BIO:0 DIO:0 PF:0 MEM:0
+statistics:    ET:     00:00:00 CP:    0.07 BIO:0 DIO:0 PF:0 MEM:0
 &run_setup
     lattice = test.lte,
     use_beamline = diamond,
