@@ -19,10 +19,10 @@ class curve(QObject):
         self.curve.setData({'x': [], 'y': []}, pen=self.records[self.name]['pen'])
         self.lines = MultiLine(np.array([[0]]),np.array([[0]]),pen='w')
         self.fftTextLabels = []
-        self.setVerticalScale()
-        self.setVerticalOffset()
-        self.setVerticalMeanSubtraction()
-        self.setLogScale()
+        self.setVerticalScale(self.records[self.name]['VerticalScale'])
+        self.setVerticalOffset(self.records[self.name]['VerticalOffset'])
+        self.setVerticalMeanSubtraction(self.records[self.name]['verticalMeanSubtraction'])
+        self.setLogScale(self.records[self.name]['logscale'])
         self.setHistogramBins()
         self.setDecimateScale()
 
@@ -36,7 +36,7 @@ class curve(QObject):
         self.VerticalOffset = offset
 
     def setVerticalMeanSubtraction(self, subtractmean=False):
-        self.verticalMeanSubtraction = subtractmean
+        self.verticalMeanSubtraction =  subtractmean
 
     def setLogScale(self,logscale=False):
         self.logscale = logscale
@@ -51,12 +51,12 @@ class curve(QObject):
     def updateData(self, data, pen):
         if len(data) > 1:
             x,y = np.transpose(data)
+            if self.logscale:
+                y = np.log10(np.abs(y))
             if not self.VerticalScale == 1 or not self.VerticalOffset == 0:
                 y = (self.VerticalScale * y) + self.VerticalOffset
             if self.verticalMeanSubtraction:
                 y = y - np.mean(y)
-            if self.logscale:
-                y = np.log10(np.abs(y))
             if self.plot.stripplot.histogramPlot:
                 y2,x2 = np.histogram(y, bins=self.numberBins)
                 self.curve.setData({'x': x2, 'y': y2}, pen=pen, stepMode=True, fillLevel=0, fillBrush=pen)
