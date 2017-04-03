@@ -93,7 +93,7 @@ class gun_condition(QObject):
 	# Some utility functions
 	def appendMessageToLog(self, message, log_file):
 		# print message
-		with open(log_file,"a") as logfile:
+		with open(log_file,"a") as self.logfile:
 			self.logfile.write(str(message)+ '\n')
 
 	def getCurrentValues(self, pv_dictionary ):
@@ -193,14 +193,14 @@ class gun_condition(QObject):
 			# self.pv_to_monitor[ self.rf_pulse_width_signal ].put( value )
 
 	def log(self, lrf_index_start, llrf_index_stop, log_file):
-		kly_power_data = pv_to_use[ 'LLRF_KLY_FWD_PWR' ].get()
-		cav_power_data = pv_to_use[ 'LLRF_CAV_FWD_PWR' ].get()
-		kly_power_cut   = self.kly_power_data[self.llrf_index_start:self.llrf_index_stop]
-		cav_power_data = self.cav_power_data[self.llrf_index_start:self.llrf_index_stop]
+		kly_power_data = self.pv_to_use[ 'LLRF_KLY_FWD_PWR' ].get()
+		cav_power_data = self.pv_to_use[ 'LLRF_CAV_FWD_PWR' ].get()
+		kly_power_cut   =kly_power_data[self.llrf_index_start:self.llrf_index_stop]
+		cav_power_data = cav_power_data[self.llrf_index_start:self.llrf_index_stop]
 		kly_power = numpy.mean( kly_power_cut )
 		cav_power = numpy.mean( cav_power_data )
-		message =  currentTimeStr() +  ' RF to ' + str( self.pv_to_monitor['RF_AMPLITUDE'].get( ) )	+ ' kly_fwd_power =  ' + str(kly_power) + ' cav_fwd_power =  ' + str(cav_power)
-		appendMessageToLog( message, log_file)
+		message =  self.currentTimeStr() +  ' RF to ' + str( self.pv_to_monitor['RF_AMPLITUDE'].get( ) )	+ ' kly_fwd_power =  ' + str(kly_power) + ' cav_fwd_power =  ' + str(cav_power)
+		self.appendMessageToLog( message, self.log_file)
 		logger.info(message)
 
 	# return the index (number of points) less than t form the LLRF time
@@ -240,14 +240,14 @@ class gun_condition(QObject):
 				self.change_RF_pulse_width('RF_PULSE_LENGTH', increase)
 				self.time_of_last_increase_pulse_width = time.time()
 				logger.info('No Events for ' + str( time.time() - self.time_of_last_increase ) + '  RF Amp = ' + str( increase ))
-				log( self.llrf_index_start, self.llrf_index_stop, log_file)
+				self.log( self.llrf_index_start, self.llrf_index_stop, self.log_file)
 		elif self.can_increase_rf():
 			logger.info('can increase RF amplitude')
 			increase = self.latest_values['RF_AMPLITUDE'] + self.normal_RF_increase
 			self.change_RF_amp( 'RF_AMPLITUDE',  increase  )
 			self.time_of_last_increase = time.time()
 			logger.info('No Events for ' + str( time.time() - self.time_of_last_increase ) + '  RF Amp = ' + str( increase ))
-			log( self.llrf_index_start, self.llrf_index_stop, log_file)
+			self.log( self.llrf_index_start, self.llrf_index_stop, self.log_file)
 		# else:
 			# print 'cannot increase RF '
 
@@ -282,9 +282,9 @@ class gun_condition_window(QMainWindow):
 	def __init__(self, parent = None):
 		super(gun_condition_window, self).__init__()
 		self.gc = gun_condition()
-		timer = QTimer()
-		timer.timeout.connect(self.gc.main_loop)
-		# timer.start(100)
+		self.timer = QTimer()
+		self.timer.timeout.connect(self.gc.main_loop)
+		# self.timer.start(100)
 		self.centralWidget = QWidget()
 		self.setCentralWidget(self.centralWidget)
 		self.centralLayout = QHBoxLayout()
@@ -314,7 +314,13 @@ class gun_condition_window(QMainWindow):
 		'permit_RF_drop': ['Power Drop on Trip','Step reduction in RF power after RF trip'],
 		}
 
-		self.plotParameters = {'CLA-GUNS-LRF-CTRL-01:vm:dsp:ff_amp:amplitude':{'pen':'r', 'name':'KLY FWD PWR', 'freq': 10.0, 'logscale': True},
+		self.plotParameters = {
+		'CLA-GUNS-LRF-CTRL-01:vm:dsp:ff_amp:amplitude':{'pen':'r', 'name':'KLY FWD PWR', 'freq': 10.0, 'logscale': True, 'VerticalOffset': -9, 'verticalScale': 1},
+		'CLA-LRG1-VAC-IONP-01:P':{'pen':'b', 'name':'IONP-01', 'freq': 10.0, 'logscale': True, 'VerticalOffset': 0, 'verticalScale': 1},
+		'CLA-LRG1-VAC-IONP-02:P':{'pen':'g', 'name':'IONP-02', 'freq': 10.0, 'logscale': True, 'VerticalOffset': 0, 'verticalScale': 1},
+		'CLA-LRG1-VAC-IMG-01:P':{'pen':'y', 'name':'IMG-01', 'freq': 10.0, 'logscale': True, 'VerticalOffset': 0, 'verticalScale': 1},
+		'CLA-GUNS-LRF-CTRL-01:vm:feed_fwd:duration':{'pen':'m', 'name':'RF Pulse Length', 'freq': 10.0, 'logscale': False, 'VerticalOffset': -5, 'verticalScale': 1},
+		'CLA-GUN-RF-LRRG-04:RT':{'pen':'k', 'name':'RF Pulse LengthGun Temp', 'freq': 10.0, 'logscale': False, 'VerticalOffset': -8, 'verticalScale': 0.1},
 		}
 
 		row = 0
@@ -347,7 +353,8 @@ class gun_condition_window(QMainWindow):
 		self.pvids.append(pv)
 		testFunction = lambda: pv.get()
 		logger.debug('pv value = '+str(testFunction()))
-		self.sp.addSignal(name=pvproperties['name'],pen=pvproperties['pen'], function=testFunction, timer=1.0/pvproperties['freq'], logscale=pvproperties['logscale'])
+		self.sp.addSignal(name=pvproperties['name'],pen=pvproperties['pen'], function=testFunction, timer=1.0/pvproperties['freq'], logscale=pvproperties['logscale'],
+		VerticalOffset=pvproperties['VerticalOffset'], VerticalScale=pvproperties['verticalScale'])
 
 	def applySettings(self):
 		self.applySettingsSignal.emit()
