@@ -33,7 +33,7 @@ class stripPlot(QWidget):
     def __init__(self, parent = None, plotRateBar=True, crosshairs=True, **kwargs):
         super(stripPlot, self).__init__(parent)
         self.pg = pg
-        self.paused = True
+        self.paused = False
         self.signalLength = 10
         self.plotrate = 1
         self.plotScaleConnection = True
