@@ -20,14 +20,14 @@ class Controller():
 		'''1.1 create graph for BPM Y and Y position monitoring'''
 		self.xdict = {0:'X', 1:'Y'}
 		self.positionGraph_1 = layout.addPlot(title="BPM 01")
-		self.positionGraph_2 = layout.addPlot(title="BPM XX")
-		self.positionGraph_3 = layout.addPlot(title="BPM XX")
+		self.positionGraph_2 = layout.addPlot(title="BPM 02")
+		self.positionGraph_3 = layout.addPlot(title="BPM 04")
 		self.positionGraph_1.axes['bottom']['item'].setTicks([self.xdict.items()])
 		self.positionGraph_2.axes['bottom']['item'].setTicks([self.xdict.items()])
 		self.positionGraph_3.axes['bottom']['item'].setTicks([self.xdict.items()])
-		self.bg1 = pg.BarGraphItem(x=self.xdict.keys(), height=[-0.3,0.2], width=1)
-		self.bg2 = pg.BarGraphItem(x=self.xdict.keys(), height=[-0.3,0.2], width=1)
-		self.bg3 = pg.BarGraphItem(x=self.xdict.keys(), height=[-0.3,0.2], width=1)
+		self.bg1 = pg.BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=1)
+		self.bg2 = pg.BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=1)
+		self.bg3 = pg.BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=1)
 		#self.positionGraph_1.setYRange(-1,1)
 		#self.positionGraph_2.setYRange(-1,1)
 		#self.positionGraph_3.setYRange(-1,1)
@@ -47,6 +47,8 @@ class Controller():
 		layout_s = pg.GraphicsLayout(border=(100,100,100))
 		monitor_s.setCentralItem(layout_s)
 		self.dispersionGraph  = layout_s.addPlot(title="Dispersion")
+		self.dCurve = self.dispersionGraph.plot(pen = 'y')
+		self.fCurve = self.dispersionGraph.plot(pen = 'r')
 		self.displayDisp = layout_s.addLabel('DISPERSION = pixels per Ampere')
 		layout_s.nextRow()
 		self.profileGraph  = layout_s.addPlot(title="Fit to YAG Profile")
@@ -54,7 +56,7 @@ class Controller():
 		self.view.horizontalLayout_5.addWidget(monitor_s)
 
 		'''Create logs for each procedure (and combined on log Tab)'''
-		self.FullLog = lw.loggerWidget([self.model.PL,self.model.PSL,self.model.deets])
+		'''self.FullLog = lw.loggerWidget([self.model.PL,self.model.PSL,self.model.deets])
 		self.FullLog.setLogColours(debugcolour='blue',infocolour='green',warningcolour='orange',errorcolour='red',criticalcolour='purple')
 		self.pLog = lw.loggerWidget(self.model.PL)
 		self.pLog.setColumnWidths(155,40,80)
@@ -64,7 +66,7 @@ class Controller():
 		self.psLog.setLogColours(debugcolour='blue',infocolour='green',warningcolour='orange',errorcolour='red',criticalcolour='purple')
 		self.view.gridLayout_3.addWidget(self.FullLog)
 		self.view.gridLayout_2.addWidget(self.psLog , 9,0,1,2)
-		self.view.gridLayout.addWidget(self.pLog , 8,0,1,2)
+		self.view.gridLayout.addWidget(self.pLog , 8,0,1,2)'''
 
 
 		'''Threads for updating graphs and labels'''
@@ -82,10 +84,13 @@ class Controller():
 
 	def updateDisplays(self):
 		self.displayMom.setText('MOMENTUM<br> Current: '+str(self.model.I)+' A<br>'+str(self.model.p)+' = MeV/c')
-		self.bg1.setOpts(x=self.xdict.keys(), height=[self.model.func.bpms.getXFromPV('BPM01'),self.model.func.bpms.getYFromPV('BPM01')], width=1)# replace the random generators with  bpm x read offs
-		self.bg2.setOpts(x=self.xdict.keys(), height=[self.model.func.bpms.getXFromPV('BPM02'),self.model.func.bpms.getYFromPV('BPM02')], width=1)
-		self.bg3.setOpts(x=self.xdict.keys(), height=[self.model.func.bpms.getXFromPV('BPM04'),self.model.func.bpms.getYFromPV('BPM04')], width=1)
-
+		self.bg1.setOpts(x=self.xdict.keys(), height=[1000*self.model.bpms.getXFromPV('BPM01'),1000*self.model.bpms.getYFromPV('BPM01')], width=1)# replace the random generators with  bpm x read offs
+		self.bg2.setOpts(x=self.xdict.keys(), height=[1000*self.model.bpms.getXFromPV('BPM02'),1000*self.model.bpms.getYFromPV('BPM02')], width=1)
+		self.bg3.setOpts(x=self.xdict.keys(), height=[1000*self.model.bpms.getXFromPV('BPM04'),1000*self.model.bpms.getYFromPV('BPM04')], width=1)
+		self.dCurve.setData(x=self.model.dCurrents,y=self.model.dPositions)
+		self.fCurve.setData(x=self.model.fCurrents,y=self.model.fPositions)
+		self.displayDisp.setText('DISPERSION:<br>'+str(self.model.Dispersion)+' m/A')
+		self.displayMom_S.setText('MOMENTUM SPREAD:<br>'+str(self.model.pSpread)+' MeV/c')
 	def refreshImage(self):
 		image = np.array(caget('VM-EBT-INJ-DIA-CAM-02:CAM:ArrayData'))
 		print(image.shape)

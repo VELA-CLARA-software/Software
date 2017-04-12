@@ -1,0 +1,13 @@
+&run_setup
+	p_central_mev = 3000.0
+	lattice = "test.lte"
+	centroid = "%s.cen"
+	use_beamline = "diamond"
+&end
+&twiss_output
+	statistics = 1
+	output_at_each_step = 0
+	filename = "%s.twi"
+	radiation_integrals = 1
+	matched = 1
+&end

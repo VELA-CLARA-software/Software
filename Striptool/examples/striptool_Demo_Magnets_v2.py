@@ -246,7 +246,7 @@ class DockSplitter(QtGui.QSplitter):
         ''' initialise scatter plot '''
         self.strip = striptool.stripPlot(plotRateBar=True)
         self.connect(self, SIGNAL("timeButtonPushed(int)"), self.changePlotScales)
-        self.strip.plotWidget.statusChanged.connect(self.updateStatusBar)
+        # self.strip.plotWidget.statusChanged.connect(self.updateStatusBar)
         dock = Dock('Linear', size=(500,200))
         dock.addWidget(self.strip)
         self.area.addDock(dock=dock, position='bottom')

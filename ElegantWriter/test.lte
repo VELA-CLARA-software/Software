@@ -1,0 +1,85 @@
+d1d2: drift, l = 4.9405;
+mbd2: moni, l = 0.0;
+k2: kicker, l = 0.19;
+kd3: drift, l = 0.14;
+kd4: drift, l = 0.211;
+q1d: kquad, n_kicks = 24, k1 = -0.712625, l = 0.4;
+qe1d: drift, l = 0.0;
+d2b: drift, l = 0.15;
+s1d: ksext, k2 = 12.3788, n_kicks = 24, l = 0.3;
+se2d: drift, l = 0.0;
+d3b: drift, l = 0.235;
+q2d: kquad, n_kicks = 24, k1 = 1.2728, l = 0.6;
+qe2d: drift, l = 0.0;
+d4b: drift, l = 0.465;
+q3d: kquad, n_kicks = 24, k1 = -1.00714, l = 0.3;
+qe3d: drift, l = 0.0;
+mbc: moni, l = 0.0;
+d5b: drift, l = 0.2;
+s2d: ksext, k2 = -26.0258, n_kicks = 24, l = 0.3;
+se1d: drift, l = 0.0;
+d6b: drift, l = 0.6675;
+bb: csbend, integration_order = 4, angle = 0.1309, tilt = 0.0, l = 0.936,&
+k1 = 0.0, n_kicks = 24, edge_order = 2, e2 = 0.0654498, e1 = 0.0654498;
+de1: drift, l = 0.0;
+d4a: drift, l = 0.5875;
+mbe: moni, l = 0.0;
+q2ad: kquad, n_kicks = 24, k1 = -0.98963, l = 0.4;
+qe2a: drift, l = 0.0;
+d3a: drift, l = 0.425;
+s2a: ksext, k2 = -33.1721, n_kicks = 24, l = 0.2;
+se2a: drift, l = 0.0;
+d2a: drift, l = 0.199;
+q1ad: kquad, n_kicks = 24, k1 = 1.26356, l = 0.4;
+qe1a: drift, l = 0.0;
+d1a: drift, l = 0.2385;
+halfs1a: ksext, k2 = 35.7507, n_kicks = 24, l = 0.15;
+se1a: drift, l = 0.0;
+mba: moni, l = 0.0;
+q1ab: kquad, n_kicks = 24, k1 = 1.28619, l = 0.4;
+mbb: moni, l = 0.0;
+q2ab: kquad, n_kicks = 24, k1 = -1.04495, l = 0.4;
+d6c: drift, l = 0.6675;
+se1b: drift, l = 0.0;
+s2c: ksext, k2 = -22.6987, n_kicks = 24, l = 0.3;
+d5c: drift, l = 0.2;
+qe3b: drift, l = 0.0;
+q3b: kquad, n_kicks = 24, k1 = -0.88437, l = 0.3;
+qe2b: drift, l = 0.0;
+q2b: kquad, n_kicks = 24, k1 = 1.47533, l = 0.6;
+d3c: drift, l = 0.235;
+se2b: drift, l = 0.0;
+s1c: ksext, k2 = 18.3962, n_kicks = 24, l = 0.3;
+d2c: drift, l = 0.15;
+qe1b: drift, l = 0.0;
+q1b: kquad, n_kicks = 24, k1 = -1.24621, l = 0.4;
+kd2: drift, l = 0.211;
+k1: kicker, l = 0.19;
+kd1: drift, l = 0.14;
+mbd: moni, l = 0.0;
+d1bend2: drift, l = 2.4405;
+d1bcentre: drift, l = 1.0;
+s1b: ksext, k2 = 20.0434, n_kicks = 24, l = 0.3;
+s2b: ksext, k2 = -30.8316, n_kicks = 24, l = 0.3;
+diamond: Line=(d1d2, mbd2, k2, kd3, k2, kd4, q1d, qe1d, d2b, s1d, se2d, d3b, &
+q2d, qe2d, d4b, q3d, qe3d, mbc, d5b, s2d, se1d, d6b, bb, de1, d4a, mbe, q2ad, &
+qe2a, d3a, s2a, se2a, d2a, q1ad, qe1a, d1a, halfs1a, se1a, halfs1a, mba, d1a, &
+qe1a, q1ab, d2a, mbb, se2a, s2a, d3a, qe2a, q2ab, d4a, de1, bb, d6c, se1b, mbc, &
+s2c, d5c, qe3b, q3b, d4b, qe2b, q2b, d3c, se2b, s1c, d2c, qe1b, q1b, kd2, k1, &
+kd1, k1, mbd, d1bend2, d1bcentre, d1bcentre, d1bend2, mbd, k1, kd1, k1, kd2, &
+q1b, qe1b, d2b, s1b, se2b, d3b, q2b, qe2b, d4b, q3b, qe3b, mbc, d5b, s2b, se1b, &
+d6b, bb, de1, d4a, mbe, q2ab, qe2a, d3a, s2a, se2a, d2a, q1ab, qe1a, d1a, &
+halfs1a, se1a, halfs1a, mba, d1a, qe1a, q1ab, d2a, mbb, se2a, s2a, d3a, qe2a, &
+q2ab, d4a, de1, bb, d6b, se1b, mbc, s2b, d5b, qe3b, q3b, d4b, qe2b, q2b, d3b, &
+se2b, s1b, d2b, qe1b, q1b, kd2, k1, kd1, k1, mbd, d1bend2, d1bcentre, &
+d1bcentre, d1bend2, mbd, k1, kd1, k1, kd2, q1b, qe1b, d2b, s1b, se2b, d3b, q2b, &
+qe2b, d4b, q3b, qe3b, mbc, d5b, s2b, se1b, d6b, bb, de1, d4a, mbe, q2ab, qe2a, &
+d3a, s2a, se2a, d2a, q1ab, qe1a, d1a, halfs1a, se1a, halfs1a, mba, d1a, qe1a, &
+q1ab, d2a, mbb, se2a, s2a, d3a, qe2a, q2ab, d4a, de1, bb, d6b, se1b, mbc, s2b, &
+d5b, qe3b, q3b, d4b, qe2b, q2b, d3b, se2b, s1b, d2b, qe1b, q1b, kd2, k1, kd1, &
+k1, mbd, d1bend2, d1bcentre, d1bcentre, d1bend2, mbd, k1, kd1, k1, kd2, q1b, &
+qe1b, d2c, s1c, se2b, d3c, q2b, qe2b, d4b, q3b, qe3b, mbc, d5c, s2c, se1b, d6c, &
+bb, de1, d4a, mbe, q2ab, qe2a, d3a, s2a, se2a, d2a, q1ab, qe1a, d1a, halfs1a, &
+se1a, halfs1a, mba, d1a, qe1a, q1ad, d2a, mbb, se2a, s2a, d3a, qe2a, q2ad, d4a, &
+de1, bb, d6b, se1d, mbc, s2d, d5b, qe3d, q3d, d4b, qe2d, q2d, d3b, se2d, s1d, &
+d2b, qe1d, q1d, kd4, k2, kd3, k2, mbd2, d1d2)

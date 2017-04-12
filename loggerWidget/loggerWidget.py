@@ -188,8 +188,8 @@ class QPlainTextEditLogger(logging.Handler):
 
     def emit(self, record, *args, **kwargs):
         while self.model.rowCount() >= self.logLength:
-            self.model.removeRow(0)
-        newRowNumber = self.model.rowCount()
+            self.model.removeRow(-1)
+        newRowNumber = 0#self.model.rowCount()
         self.model.insertRow(newRowNumber)
         self.tableWidget.setShowGrid(True)
         self.model.setColumnCount(4)
