@@ -1,7 +1,4 @@
 import sys,os
-#os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
-#os.environ["EPICS_CA_ADDR_LIST"] = "10.10.0.12"
-#os.environ["EPICS_CA_MAX_ARRAY_BYTES"] = "10000000"
 from PyQt4 import QtGui, QtCore
 import VELA_CLARA_Scope_Control as vcsc
 import scope_writer_model
@@ -16,46 +13,17 @@ class scopeWriterApp(QtGui.QApplication):
         #App is launched here based on inputs from the Master app. Cumbersome, I know...
         super(scopeWriterApp, self).__init__(sys_argv)
         self.scope = vcsc.init()
-        if sys_argv[1] == "VELA_INJ":
-            self.contType = "VELA_INJ"
-            if sys_argv[2] == "Virtual":
-                self.scopeCont = self.scope.virtual_VELA_INJ_Scope_Controller()
-            elif sys_argv[2] == "Offline":
-                self.scopeCont = self.scope.offline_VELA_INJ_Scope_Controller()
-            elif sys_argv[2] == "Physical":
-                self.scopeCont = self.scope.physical_VELA_INJ_Scope_Controller()
-        elif sys_argv[1] == "VELA_BA1":
-            self.contType = "VELA_BA1"
-            if sys_argv[2] == "Virtual":
-                self.scopeCont = self.scope.virtual_VELA_BA1_Scope_Controller()
-            elif sys_argv[2] == "Offline":
-                self.scopeCont = self.scope.offline_VELA_BA1_Scope_Controller()
-            elif sys_argv[2] == "Physical":
-                self.scopeCont = self.scope.physical_VELA_BA1_Scope_Controller()
-        elif sys_argv[1] == "VELA_BA2":
-            self.contType = "VELA_BA2"
-            if sys_argv[2] == "Virtual":
-                self.scopeCont = self.scope.virtual_VELA_BA2_Scope_Controller()
-            elif sys_argv[2] == "Offline":
-                self.scopeCont = self.scope.offline_VELA_BA2_Scope_Controller()
-            elif sys_argv[2] == "Physical":
-                self.scopeCont = self.scope.physical_VELA_BA2_Scope_Controller()
-        elif sys_argv[1] == "CLARA_S01":
-            self.contType = "CLARA_S01"
-            if sys_argv[2] == "Virtual":
-                self.scopeCont = self.scope.virtual_CLARA_S01_Scope_Controller()
-            elif sys_argv[2] == "Offline":
-                self.scopeCont = self.scope.offline_CLARA_S01_Scope_Controller()
-            elif sys_argv[2] == "Physical":
-                self.scopeCont = self.scope.physical_VELA_INJ_Scope_Controller()
-        elif sys_argv[1] == "CLARA_2_VELA":
-            self.contType = "C2V"
-            if sys_argv[2] == "Virtual":
-                self.scopeCont = self.scope.virtual_CLARA_2_VELA_Scope_Controller()
-            elif sys_argv[2] == "Offline":
-                self.scopeCont = self.scope.offline_CLARA_2_VELA_Scope_Controller()
-            elif sys_argv[2] == "Physical":
-                self.scopeCont = self.scope.physical_CLARA_2_VELA_Scope_Controller()
+        self.beamlines = {"VELA_INJ":  vcsc.MACHINE_AREA.VELA_INJ,
+                          "VELA_BA1":  vcsc.MACHINE_AREA.VELA_BA1,
+                          "VELA_BA1":  vcsc.MACHINE_AREA.VELA_BA2,
+                          "CLARA_S01": vcsc.MACHINE_AREA.CLARA_S01,
+                          "CLARA_S02": vcsc.MACHINE_AREA.CLARA_S02}
+        self.modes = {"Physical": vcsc.MACHINE_MODE.PHYSICAL,
+                      "Virtual":  vcsc.MACHINE_MODE.VIRTUAL,
+                      "Offline":  vcsc.MACHINE_MODE.OFFLINE}
+        self.controllerType = self.searchInDict(self.modes, sys_argv[1])
+        self.beamline = self.searchInDict(self.beamlines, sys_argv[2])
+        self.scopeCont = self.scope.getScopeController( self.controllerType, self.beamline )
         self.view = scope_writer_view.scopeWriterUi_TabWidget()
         self.MainWindow = QtGui.QTabWidget()
         self.view.setupUi(self.MainWindow, self.scopeCont)
@@ -64,6 +32,14 @@ class scopeWriterApp(QtGui.QApplication):
         #self.logwidget1 = lw.loggerWidget([logger,scopeWriterController.logger])
         #self.MainWindow.addTab(self.logwidget1,"Log")
         self.MainWindow.show()
+
+    def searchInDict(self, myDict, lookup):
+        self.myDict = myDict
+        self.lookup = lookup
+        for key, value in self.myDict.items():
+            if self.lookup == key:
+                print type(value)
+                return value
 
 if __name__ == '__main__':
     app = scopeWriterApp(sys.argv)

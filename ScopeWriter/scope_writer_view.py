@@ -44,7 +44,7 @@ class scopeWriterUi_TabWidget(object):
         self.logTable.setItem(0, 1, QtGui.QTableWidgetItem("Q"))
         self.logTable.setMinimumSize(QtCore.QSize(300,100))
         self.logVBox.addWidget( self.addToListButton )
-        self.logVBox.addWidget( self.logTable )
+        #self.logVBox.addWidget( self.logTable )
         self.logVBox.addWidget( self.startButton )
         self.logVBox.addWidget( self.stopButton )
         self.titleLabel = QtGui.QLabel()
@@ -65,14 +65,16 @@ class scopeWriterUi_TabWidget(object):
 
     def retranslateUi(self, TabWidget):
         self.TabWidget.setWindowTitle(_translate("TabWidget", "Scope charge writer", None))
-        self.addToListButton.setText(_translate("TabWidget", "Add channel to list", None))
-        self.startButton.setText(_translate("TabWidget", "Start logging to EPICS", None))
+        self.addToListButton.setText(_translate("TabWidget", "Add channel\n to list", None))
+        self.startButton.setText(_translate("TabWidget", "Start logging\n to EPICS", None))
         self.stopButton.setText(_translate("TabWidget", "Abort", None))
         self.newFont = QtGui.QFont("Comic Sans", 20, QtGui.QFont.Bold)
         self.titleLabel.setFont(self.newFont)
-        self.titleLabel.setText(_translate("TabWidget", "VELA/CLARA \nScope Logger", None))
-        self.infoText = "Please select the BPMs to calibrate from the list using \nthe drop-down menu and the 'Calibrate BPM' button."
-        self.infoLabel.setText(_translate("TabWidget", self.infoText, None))
+        self.titleLabel.setText(_translate("TabWidget", "CLARA \nScope Logger", None))
+        self.infoText = "Choose the scope channel to read from EPICS, the PV \nto write the measurement to, the type of measurement\n"
+        self.infoText1 = self.infoText+"required, and the regions of interest.\n"
+        self.infoText2 = self.infoText1+"CHECK THAT THE CORRECT TRACES ARE BEING\n RECORDED ON THE SCOPE!!!!"
+        self.infoLabel.setText(_translate("TabWidget", self.infoText2, None))
 
     def addChannel(self, TabWidget, Layout, scopeCont):
         self.TabWidget = TabWidget
