@@ -24,7 +24,11 @@ class CAxisTime(pg.AxisItem):
                 reftime = round(time.time(),2)
             else:
                 reftime = self.fixedtimepoint
-            return [time.strftime("%H:%M:%S", time.localtime(reftime+x)) for x in values]
+            try:
+                ticks = [time.strftime("%H:%M:%S", time.localtime(x)) for x in values]
+            except:
+                ticks = []
+            return ticks
         else:
             places = max(0, np.ceil(-np.log10(spacing*scale)))
             strings = []
@@ -49,7 +53,7 @@ class generalPlot(pg.PlotWidget):
         self.paused = True
         self.linearPlot = True
         self.autoscroll = True
-        self.globalPlotRange = [-10,0]
+        self.globalPlotRange = [time.time()-10,time.time()]
         self.currentPlotTime = round(time.time(),2)
         self.plotWidget = pg.GraphicsLayoutWidget()
         self.crosshairs = crosshairs
@@ -58,7 +62,7 @@ class generalPlot(pg.PlotWidget):
 
     ''' This creates a PyQtGraph plot object (self.plot) and instantiates the bottom axis to be a CAxisTime axis '''
     def createPlot(self):
-        self.plot = self.plotWidget.addPlot(row=0,col=0, autoDownsample=True, clipToView=True)
+        self.plot = self.plotWidget.addPlot(row=0,col=0, autoDownsample=False, clipToView=True)
         self.date_axis = CAxisTime(orientation = 'bottom', parent=self.plot)
         self.plotUpdated.connect(self.date_axis.update)
         self.log_axis = pg.AxisItem('right', parent=self.plot)
@@ -95,7 +99,7 @@ class generalPlot(pg.PlotWidget):
             self.plot.addItem(self.vLine, ignoreBounds=True)
             self.plot.addItem(self.hLine, ignoreBounds=True)
             self.plot.addItem(self.hvLineText, ignoreBounds=True)
-            self.mousePoint =  QtCore.QPointF(0.0, 0.0)
+            self.mousePoint =  QtCore.QPointF(time.time(), 0.0)
             self.updateAnchor()
             ''' define some parameters and instantiate the crosshair signals. We change the crosshairs whenever the sigMouseMoved is triggered,
             whilst we must update the vertical axis if the plot autoscales, and also we must also update the horizontal axis if the time changes under the crosshairs'''
