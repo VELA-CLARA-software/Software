@@ -85,6 +85,7 @@ class curve(QObject):
                     path = pg.arrayToQPath(x, y)
                     self.lines.setPath(path)
                     self.lines.setPen(pg.mkPen(pen))
+                    print self.lines.path().addPath
                 # self.plot.plot.addItem(self.lines)
 
     ''' helper function to clear a curves points '''
