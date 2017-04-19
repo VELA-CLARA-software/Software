@@ -119,7 +119,7 @@ class striptool_Demo(QMainWindow):
 
         ''' modify the plot scale to 10 secs '''
         self.sp.setPlotScale(60)
-        self.sp2.setPlotScale(2)
+        self.sp2.setPlotScale(10)
         self.sp3.setPlotScale(60)
 
         # self.sp2.setPlotType(FFT=True)

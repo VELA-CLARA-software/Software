@@ -1,18 +1,13 @@
 &run_setup
-	name = runsetup
-	p_central_mev = 700.0
-	commandtype = command
-	lattice = "doublering.lte"
+	p_central_mev = 3000.0
+	lattice = "test.lte"
 	centroid = "%s.cen"
-	type = run_setup
-	use_beamline = "doublering"
+	use_beamline = "diamond"
 &end
-
-&global_settings
-	commandtype = command
-	error_log_file = "elegant.err"
-	log_file = "elegant.log"
-	type = global_settings
-	name = global
+&twiss_output
+	statistics = 1
+	output_at_each_step = 0
+	filename = "%s.twi"
+	radiation_integrals = 1
+	matched = 1
 &end
-

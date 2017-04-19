@@ -33,7 +33,7 @@ class stripPlot(QWidget):
     def __init__(self, parent = None, plotRateBar=True, crosshairs=True, **kwargs):
         super(stripPlot, self).__init__(parent)
         self.pg = pg
-        self.paused = True
+        self.paused = False
         self.signalLength = 10
         self.plotrate = 1
         self.plotScaleConnection = True
@@ -432,15 +432,27 @@ class stripPlot(QWidget):
         else:
             logger.warning('Signal '+name+' already exists!')
 
+    def getLastPlotTime():
+        lastpoints = []
+        for names in self.records:
+            self.records[name]['data'][-1]
+
     def plotUpdate(self):
+        if not hasattr(self,'lastplottime'):
+            self.lastplottime = round(time.time(),2)
         if not self.plotWidget.paused:
             autorangeX, autorangeY = self.plotWidget.vb.state['autoRange']
             self.plotWidget.plot.disableAutoRange()
             self.plotWidget.currentPlotTime = round(time.time(),2)
             self.doCurveUpdate.emit()
             ''' this forces the date_axis to redraw '''
+            # print 'viewrange = ', self.plotWidget.vb.mapFromView()
             self.plotWidget.date_axis.linkedViewChanged(self.plotWidget.date_axis.linkedView())
             self.plotWidget.vb.enableAutoRange(x=autorangeX, y=autorangeY)
+            if self.plotWidget.autoscroll:
+                lastplottime = round(time.time(),2)
+                self.plotWidget.vb.translateBy(x=(lastplottime-self.lastplottime))
+                self.lastplottime = lastplottime
 
     def removeSignal(self,name):
         self.records[name]['record'].close()
@@ -456,7 +468,7 @@ class stripPlot(QWidget):
         logger.info('Signal '+name+' removed!')
 
     def setPlotScale(self, timescale):
-        self.plotWidget.setPlotScale([-1.05*timescale, 0.05*timescale])
+        self.plotWidget.setPlotScale([time.time()+(-1.05*timescale), time.time()+(0.05*timescale)])
 
     def pausePlotting(self, value=True):
         self.paused = value

@@ -1147,6 +1147,12 @@ mark:
   fitpoint: long
   group: string
 
+marker:
+  dx: double
+  dy: double
+  fitpoint: long
+  group: string
+  
 matr:
   l: double
   filename: string
@@ -1388,6 +1394,39 @@ quad:
   radial: long
   group: string
 
+quadrupole:
+  l: double
+  k1: double
+  tilt: double
+  dx: double
+  dy: double
+  dz: double
+  fse: double
+  hkick: double
+  vkick: double
+  hcalibration: double
+  vcalibration: double
+  hsteering: long
+  vsteering: long
+  order: long
+  edge1_effects: long
+  edge2_effects: long
+  fringe_type: string
+  ffringe: double
+  leffective: double
+  i0p: double
+  i1p: double
+  i2p: double
+  i3p: double
+  lambda2p: double
+  i0m: double
+  i1m: double
+  i2m: double
+  i3m: double
+  lambda2m: double
+  radial: long
+  group: string
+  
 qufringe:
   l: double
   k1: double
@@ -1701,6 +1740,33 @@ sample:
   interval: long
   group: string
 
+sbend:
+  l: double
+  angle: double
+  k1: double
+  e1: double
+  e2: double
+  tilt: double
+  k2: double
+  h1: double
+  h2: double
+  hgap: double
+  fint: double
+  dx: double
+  dy: double
+  dz: double
+  fse: double
+  etilt: double
+  edge1_effects: long
+  edge2_effects: long
+  order: long
+  edge_order: long
+  transport: long
+  use_bn: long
+  b1: double
+  b2: double
+  group: string
+  
 sben:
   l: double
   angle: double
@@ -1812,6 +1878,18 @@ sext:
   order: long
   group: string
 
+sextupole:
+  l: double
+  k2: double
+  tilt: double
+  dx: double
+  dy: double
+  dz: double
+  fse: double
+  ffringe: double
+  order: long
+  group: string
+  
 sole:
   l: double
   ks: double

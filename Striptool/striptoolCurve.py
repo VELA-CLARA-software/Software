@@ -17,12 +17,13 @@ class curve(QObject):
         self.doingPlot = False
         self.curve = self.plot.plot.plot()
         self.curve.setData({'x': [], 'y': []}, pen=self.records[self.name]['pen'])
-        self.lines = MultiLine(np.array([[0]]),np.array([[0]]),pen='w')
+        self.lines = QGraphicsPathItem()
+        self.plot.plot.addItem(self.lines)
         self.fftTextLabels = []
-        self.setVerticalScale()
-        self.setVerticalOffset()
-        self.setVerticalMeanSubtraction()
-        self.setLogScale()
+        self.setVerticalScale(self.records[self.name]['VerticalScale'])
+        self.setVerticalOffset(self.records[self.name]['VerticalOffset'])
+        self.setVerticalMeanSubtraction(self.records[self.name]['verticalMeanSubtraction'])
+        self.setLogScale(self.records[self.name]['logscale'])
         self.setHistogramBins()
         self.setDecimateScale()
 
@@ -36,7 +37,7 @@ class curve(QObject):
         self.VerticalOffset = offset
 
     def setVerticalMeanSubtraction(self, subtractmean=False):
-        self.verticalMeanSubtraction = subtractmean
+        self.verticalMeanSubtraction =  subtractmean
 
     def setLogScale(self,logscale=False):
         self.logscale = logscale
@@ -51,12 +52,12 @@ class curve(QObject):
     def updateData(self, data, pen):
         if len(data) > 1:
             x,y = np.transpose(data)
+            if self.logscale:
+                y = np.log10(np.abs(y))
             if not self.VerticalScale == 1 or not self.VerticalOffset == 0:
                 y = (self.VerticalScale * y) + self.VerticalOffset
             if self.verticalMeanSubtraction:
                 y = y - np.mean(y)
-            if self.logscale:
-                y = np.log10(np.abs(y))
             if self.plot.stripplot.histogramPlot:
                 y2,x2 = np.histogram(y, bins=self.numberBins)
                 self.curve.setData({'x': x2, 'y': y2}, pen=pen, stepMode=True, fillLevel=0, fillBrush=pen)
@@ -77,10 +78,14 @@ class curve(QObject):
                 self.curve.setData({'x': [], 'y': []}, stepMode=False, fillLevel=None, pen=self.records[self.name]['pen'])
                 if len(x) > self.decimateScale:
                     decimationfactor = int(np.floor(len(x)/self.decimateScale))
-                    self.lines = self.MultiLine(x[::decimationfactor],y[::decimationfactor],pen=pen, log=self.logscale)
+                    path = pg.arrayToQPath(x[::decimationfactor],y[::decimationfactor])
+                    self.lines.setPath(path)
+                    self.lines.setPen(pg.mkPen(pen))
                 else:
-                    self.lines = MultiLine(x, y, pen=pen, log=self.logscale)
-                self.plot.plot.addItem(self.lines)
+                    path = pg.arrayToQPath(x, y)
+                    self.lines.setPath(path)
+                    self.lines.setPen(pg.mkPen(pen))
+                # self.plot.plot.addItem(self.lines)
 
     ''' helper function to clear a curves points '''
     def clear(self):
@@ -89,7 +94,7 @@ class curve(QObject):
 
     ''' Wrapper function which calls timefilter and updateData'''
     def update(self):
-        self.plot.plot.removeItem(self.lines)
+        # self.plot.plot.removeItem(self.lines)
         if len(self.fftTextLabels) > 0:
             for i in range(len(self.fftTextLabels)):
                 for j in range(len(self.fftTextLabels[i])):
@@ -102,27 +107,28 @@ class curve(QObject):
                     self.currenttime = round(time.time(),2)
                 else:
                     self.currenttime = self.plot.fixedtimepoint
-                self.plotData = stfunctions.timeFilter(self.records[self.name]['data'], timescale=self.plot.globalPlotRange, currenttime=self.currenttime)
+                # self.plotData = stfunctions.timeFilter(self.records[self.name]['data'], timescale=self.plot.globalPlotRange, currenttime=self.currenttime)
+                self.plotData = self.records[self.name]['data']
                 if len(self.plotData) > 0:
-                    x,y = np.transpose(self.plotData)
-                    x = x - self.currenttime
-                    self.plotData = np.transpose((x,y))
+                    # x,y = np.transpose(self.plotData)
+                    # x = x - self.currenttime
+                    # self.plotData = np.transpose((x,y))
                     self.updateData(self.plotData, self.records[self.name]['pen'])
-                    if self.plot.crosshairs:
-                        self.plot.signalValuesUnderCrosshairs.emit((self.name, self.signalValueAtX(self.plot.vLine.value()), np.mean(y), np.std(y)))
+                    # if self.plot.crosshairs:
+                    #     self.plot.signalValuesUnderCrosshairs.emit((self.name, self.signalValueAtX(self.plot.vLine.value()), np.mean(y), np.std(y)))
             self.doingPlot = False
         self.plot.plotUpdated.emit()
 
-class MultiLine(pg.QtGui.QGraphicsPathItem):
-    def __init__(self, x, y, pen, log=False):
-        """x and y are 1D arrays of shape (Nplots, Nsamples)"""
-        self.path = pg.arrayToQPath(x, y)
-        pg.QtGui.QGraphicsPathItem.__init__(self, self.path)
-        if log:
-            self.setPen(pg.mkPen(pen,width=3))
-        else:
-            self.setPen(pg.mkPen(pen,width=2))
-    def shape(self): # override because QGraphicsPathItem.shape is too expensive.
-        return pg.QtGui.QGraphicsItem.shape(self)
-    def boundingRect(self):
-        return self.path.boundingRect()
+# class MultiLine(pg.QtGui.QGraphicsPathItem):
+#     def __init__(self, x, y, pen, log=False):
+#         """x and y are 1D arrays of shape (Nplots, Nsamples)"""
+#         self.path = pg.arrayToQPath(x, y)
+#         self.setPath(self.path)
+#         if log:
+#             self.setPen(pg.mkPen(pen,width=3))
+#         else:
+#             self.setPen(pg.mkPen(pen,width=2))
+#     def shape(self): # override because QGraphicsPathItem.shape is too expensive.
+#         return pg.QtGui.QGraphicsItem.shape(self)
+#     def boundingRect(self):
+#         return self.path.boundingRect()
