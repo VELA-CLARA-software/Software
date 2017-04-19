@@ -258,6 +258,7 @@ class Window(QtGui.QMainWindow):
 
             icon = self.collapsing_header(main_hbox, more_info)
             icon.setPixmap(pixmap(generic_name).scaled(32, 32))
+            magnet.icon = icon
             # The tab here aligns all the current spinboxes nicely
             title_text = magnet.name.replace(mag_type, attributes.friendly_name + ' ') + '\t'
             title = self.collapsing_header(main_hbox, more_info, title_text)
@@ -360,19 +361,22 @@ class Window(QtGui.QMainWindow):
             
     def updateMagnetWidgets(self):
         for magnet in self.magnets.values():
+            set_current = magnet.ref.siWithPol
             if not magnet.ref.psuState == MagCtrl.MAG_PSU_STATE.MAG_PSU_ON:
                 magnet.warning_icon.setPixmap(pixmap('error'))
                 magnet.warning_icon.setToolTip('Magnet PSU: ' + str(magnet.ref.psuState)[8:])
-            elif abs(magnet.ref.siWithPol - magnet.ref.riWithPol) > magnet.ref.riTolerance:
+            elif abs(set_current - magnet.ref.riWithPol) > magnet.ref.riTolerance:
                 magnet.warning_icon.setPixmap(pixmap('warning'))
                 magnet.warning_icon.setToolTip('Read current and set current do not match')
             else:
                 magnet.warning_icon.setPixmap(self.empty_icon)
-            if not magnet.current_spin.hasFocus():
-                magnet.current_spin.setValue(magnet.ref.siWithPol)
             mag_type = str(magnet.ref.magType)
+            if mag_type == 'QUAD':
+                magnet.icon.setPixmap(pixmap('Quadrupole_' + ('F' if set_current >= 0 else 'D')).scaled(32, 32))
+            if not magnet.current_spin.hasFocus():
+                magnet.current_spin.setValue(set_current)
             attributes = mag_attributes[mag_type]
-            int_strength = np.copysign(np.polyval(magnet.ref.fieldIntegralCoefficients, abs(magnet.ref.siWithPol)), magnet.ref.siWithPol)
+            int_strength = np.copysign(np.polyval(magnet.ref.fieldIntegralCoefficients, abs(set_current)), set_current)
             strength = int_strength / magnet.ref.magneticLength if magnet.ref.magneticLength else 0
             if mag_type == 'QUAD' or mag_type[1:] == 'COR':
                 strength *= 1000  # convert to mT for correctors, T/m for quads
