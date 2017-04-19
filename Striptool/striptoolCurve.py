@@ -86,7 +86,7 @@ class curve(QObject):
                 # self.curve.setFftMode(True)
             else:
                 data = np.transpose([x,y])
-                self.curve.setData({'x': x, 'y': y}, stepMode=False, fillLevel=None)
+                self.curve.setData({'x': x, 'y': y}, stepMode=False, fillLevel=None, pen=pen)
             if self.plot.crosshairs:
                 self.plot.signalValuesUnderCrosshairs.emit((self.name, self.signalValueAtX(self.plot.vLine.value()), np.mean(y), np.std(y)))
     #
