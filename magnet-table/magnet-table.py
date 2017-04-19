@@ -225,6 +225,16 @@ class Window(QtGui.QMainWindow):
             magnet.pv_base = re.sub(pv_root_re, r'\1', magnet.ref.pvRoot)
 
             mag_type = str(magnet.ref.magType)
+            if mag_type[-3:] == 'SOL':
+                # The coefficients work a little differently - use a different attribute to calculate the
+                # K value (Larmor angle or field at cathode)
+                # and replace the original so that it really represents the coeffs for integrated strength
+                magnet.k_coeffs = np.array(magnet.ref.fieldIntegralCoefficients[:-4])
+                magnet.fieldIntegralCoefficients = np.array(magnet.ref.fieldIntegralCoefficients[-4:])
+            else:
+                # In any case, make the FICs an attribute of the magnet object rather than the ref
+                # so that it persists even when we switch between machine modes
+                magnet.fieldIntegralCoefficients = magnet.ref.fieldIntegralCoefficients
             rev_type = magnet.ref.magRevType
             
             magnet.prev_values = []
@@ -376,7 +386,7 @@ class Window(QtGui.QMainWindow):
             if not magnet.current_spin.hasFocus():
                 magnet.current_spin.setValue(set_current)
             attributes = mag_attributes[mag_type]
-            int_strength = np.copysign(np.polyval(magnet.ref.fieldIntegralCoefficients, abs(set_current)), set_current)
+            int_strength = np.copysign(np.polyval(magnet.fieldIntegralCoefficients, abs(set_current)), set_current)
             strength = int_strength / magnet.ref.magneticLength if magnet.ref.magneticLength else 0
             if mag_type == 'QUAD' or mag_type[1:] == 'COR':
                 strength *= 1000  # convert to mT for correctors, T/m for quads
@@ -462,7 +472,7 @@ class Window(QtGui.QMainWindow):
         # This is in T.mm for dipoles, T for quads, T/m for sextupoles
         # Note that excitation curves are defined with positive current,
         # so we have to take the absolute value and then later reapply the sign
-        int_strength = np.polyval(magnet.ref.fieldIntegralCoefficients, abs(current))
+        int_strength = np.polyval(magnet.fieldIntegralCoefficients, abs(current))
         # Calculate the normalised effect on the beam
         # This is in radians for dipoles, m⁻¹ for quads, m⁻² for sextupoles
         effect = np.copysign(SPEED_OF_LIGHT * int_strength / momentum, current)
@@ -491,14 +501,14 @@ class Window(QtGui.QMainWindow):
             # x is BC current, y is solenoid current
             x = current
             y = self.magnets['SOL'].ref.siWithPol
-            k = np.dot(magnet.ref.fieldIntegralCoefficients,
+            k = np.dot(magnet.k_coeffs,
                        [y, y**2, y**3, x, x*y, x*y**2, x**2, x**2*y, x**2*y**2, x**2*y**3, x**3, x**3*y])
         elif mag_type == 'SOL': # solenoids
             # For the solenoid, coefficients also refer to the momentum
             # The 'K' value is the Larmor angle
             I = current
             p = momentum
-            k = np.dot(magnet.ref.fieldIntegralCoefficients, [1.0, p, I, p*I, p**2])
+            k = np.dot(magnet.k_coeffs, [1.0, p, I, p*I, p**2])
             # We should also recalculate the field at the cathode
             self.calcKFromCurrent(self.magnets['BSOL'])
         magnet.k_spin.setValue(k)
@@ -531,7 +541,7 @@ class Window(QtGui.QMainWindow):
             int_strength = abs_k
         if int_strength is None:
             int_strength = effect * momentum / SPEED_OF_LIGHT
-        coeffs = np.array(magnet.ref.fieldIntegralCoefficients)
+        coeffs = np.array(magnet.fieldIntegralCoefficients)
         if mag_type == 'BSOL':
             # These coefficients depend on solenoid current too - need to group together like terms
             y = self.magnets['SOL'].ref.siWithPol
