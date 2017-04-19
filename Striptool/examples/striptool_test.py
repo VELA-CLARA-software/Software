@@ -1,4 +1,5 @@
 import sys, time, os
+sys.path.append(".")
 sys.path.append("..")
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
@@ -67,14 +68,14 @@ class striptool_Demo(QMainWindow):
             Here I set it to 1000 as an example :
                  - a 3600 length record would decimate at order 1/3 and would have a plotting record length of 1200
                  - you probably don't need to use this unless you are having trouble with slow plotting.'''
-        self.sp.setDecimateLength(100000)
-        self.sp2.setDecimateLength(100000)
-        self.sp3.setDecimateLength(100000)
+        self.sp.setDecimateLength(1000000000)
+        self.sp2.setDecimateLength(1000000000)
+        self.sp3.setDecimateLength(1000000000)
 
         ''' Add some signals to the striptool - note they call our signal generator at a frequency of 1/timer (100 Hz and 10 Hz in these cases).
             The 'pen' argument sets the color of the curves, but can be changed in the GUI
                 - see <http://www.pyqtgraph.org/documentation/style.html>'''
-        self.sp.addSignal(name='signal1',pen='r', timer=1.0/10.0, function=self.createRandomSignal, arg=[0.5])
+        self.sp.addSignal(name='signal1',pen='r', timer=1.0/100.0, function=self.createRandomSignal, arg=[0.5])
         self.sp2.addSignal(name='signal1',pen='r', timer=1.0/10.0, maxlength=100, function=self.createRandomSignal, arg=[-3])
         self.sp2.addSignal(name='signal2',pen='g', timer=1.0/10.0, function=self.createRandomSignal, arg=[0])
         self.sp2.addSignal(name='signal3',pen='b', timer=1.0/10.0, function=self.createRandomSignal, arg=[4])
@@ -118,12 +119,13 @@ class striptool_Demo(QMainWindow):
         self.sp3.start()
 
         ''' modify the plot scale to 10 secs '''
-        self.sp.setPlotScale(60)
-        self.sp2.setPlotScale(10)
-        self.sp3.setPlotScale(60)
+        self.sp.setPlotScale(600)
+        self.sp2.setPlotScale(100)
+        self.sp3.setPlotScale(600)
 
         # self.sp2.setPlotType(FFT=True)
         # self.sp3.setPlotType(FFT=False)
+        self.sp.setPlotRate(10)
         self.sp2.setPlotRate(10)
         self.sp3.setPlotRate(10)
 

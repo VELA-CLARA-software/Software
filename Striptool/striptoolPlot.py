@@ -62,26 +62,29 @@ class generalPlot(pg.PlotWidget):
 
     ''' This creates a PyQtGraph plot object (self.plot) and instantiates the bottom axis to be a CAxisTime axis '''
     def createPlot(self):
-        self.plot = self.plotWidget.addPlot(row=0,col=0, autoDownsample=False, clipToView=True)
-        self.date_axis = CAxisTime(orientation = 'bottom', parent=self.plot)
+        self.date_axis = CAxisTime(orientation = 'bottom')
         self.plotUpdated.connect(self.date_axis.update)
-        self.log_axis = pg.AxisItem('right', parent=self.plot)
+        self.log_axis = pg.AxisItem('right')
         self.log_axis.setLogMode(True)
+        self.plot = self.plotWidget.addPlot(row=0,col=0, autoDownsample=True, clipToView=True, antialias=False, downsampleMethod='peak',
+        axisItems={'bottom':self.date_axis,'right': self.log_axis})
+        self.plot.showAxis('right', True)
         self.plot.mouseOver = False
+        self.proxyAxisChanged = pg.SignalProxy(self.plot.vb.sigXRangeChanged, rateLimit=20, slot=self.updatePlotScale)
 
-        nontimeaxisItems = {'bottom': self.plot.axes['bottom']['item'], 'top': self.plot.axes['top']['item'], 'left': self.plot.axes['left']['item'], 'right': self.plot.axes['right']['item']}
-        axisItems = {'bottom': self.date_axis, 'top': self.plot.axes['top']['item'], 'left': self.plot.axes['left']['item'], 'right': self.log_axis}
-        self.plot.axes = {}
+        # nontimeaxisItems = {'bottom': self.plot.axes['bottom']['item'], 'top': self.plot.axes['top']['item'], 'left': self.plot.axes['left']['item'], 'right': self.plot.axes['right']['item']}
+        # axisItems = {'bottom': self.date_axis, 'top': self.plot.axes['top']['item'], 'left': self.plot.axes['left']['item'], 'right': self.log_axis}
+        # self.plot.axes = {}
         self.vb = self.plot.vb
-        for k, pos in (('top', (1,1)), ('bottom', (3,1)), ('left', (2,0)), ('right', (2,2))):
-            if k in axisItems:
-                axis = axisItems[k]
-                axis.linkToView(self.vb)
-                self.plot.axes[k] = {'item': axis, 'pos': pos}
-                self.plot.layout.removeItem(self.plot.layout.itemAt(*pos))
-                self.plot.layout.addItem(axis, *pos)
-                axis.setZValue(-1000)
-                axis.setFlag(axis.ItemNegativeZStacksBehindParent)
+        # for k, pos in (('top', (1,1)), ('bottom', (3,1)), ('left', (2,0)), ('right', (2,2))):
+        #     if k in axisItems:
+        #         axis = axisItems[k]
+        #         axis.linkToView(self.vb)
+        #         self.plot.axes[k] = {'item': axis, 'pos': pos}
+        #         self.plot.layout.removeItem(self.plot.layout.itemAt(*pos))
+        #         self.plot.layout.addItem(axis, *pos)
+        #         axis.setZValue(-1000)
+        #         axis.setFlag(axis.ItemNegativeZStacksBehindParent)
         self.plot.showGrid(x=True, y=True)
 
         if self.crosshairs:
@@ -94,7 +97,7 @@ class generalPlot(pg.PlotWidget):
             self.hvLineText = pg.TextItem() #pg.InfLineLabel(self.vLine, color='r', fill=(200,200,200,130))
             self.hvLineText.setZValue(1000)
             self.crosshairsadded = True
-            self.vLine.setValue(0)
+            self.vLine.setValue(time.time())
             self.hLine.setValue(0)
             self.plot.addItem(self.vLine, ignoreBounds=True)
             self.plot.addItem(self.hLine, ignoreBounds=True)
@@ -103,11 +106,17 @@ class generalPlot(pg.PlotWidget):
             self.updateAnchor()
             ''' define some parameters and instantiate the crosshair signals. We change the crosshairs whenever the sigMouseMoved is triggered,
             whilst we must update the vertical axis if the plot autoscales, and also we must also update the horizontal axis if the time changes under the crosshairs'''
-            self.proxyVLineMoved = pg.SignalProxy(self.vLine.sigPositionChanged, rateLimit=10, slot=self.updateAnchor)
-            self.proxyHLineMoved = pg.SignalProxy(self.hLine.sigPositionChanged, rateLimit=10, slot=self.updateAnchor)
+            # self.proxyVLineMoved = pg.SignalProxy(self.vLine.sigPositionChanged, rateLimit=1, slot=self.updateAnchor)
+            # self.proxyHLineMoved = pg.SignalProxy(self.hLine.sigPositionChanged, rateLimit=1, slot=self.updateAnchor)
             self.proxyMouseClicked = pg.SignalProxy(self.plot.scene().sigMouseClicked, rateLimit=1, slot=self.mouseClicked)
-            self.proxyTimeChanged = pg.SignalProxy(self.plotUpdated, rateLimit=5, slot=self.timeAxisChanged)
+            # self.proxyTimeChanged = pg.SignalProxy(self.plotUpdated, rateLimit=5, slot=self.timeAxisChanged)
         return self.plot
+
+    def moveCrosshairsWithViewBox(self,deltax):
+        if self.crosshairs and deltax > 0.01:
+            self.vLine.setValue(self.vLine.value()+deltax)
+            self.hvLineText.setPos(self.vLine.value(),self.hLine.value())
+            self.timeAxisChanged()
 
     ''' This is used to update the location of the crosshair lines as well as the accompanyng text'''
     def updateAnchor(self, mousepoint=True, *args, **kwargs):
@@ -142,18 +151,14 @@ class generalPlot(pg.PlotWidget):
     ''' This is the event handler for when the horizontal axis time changes during "autoscroll" '''
     def timeAxisChanged(self):
         if self.linearPlot:
-            if self.autoscroll:
-                reftime = round(time.time(),2)
-            else:
-                reftime = self.fixedtimepoint
-            self.statusTextX = time.strftime("%H:%M:%S", time.localtime(reftime + self.mousePoint.x()))
-            self.statusTextY = "%0.3f" % (self.mousePoint.y())
-            self.statusTextLogY = "%04.03e" % (np.power(10,self.mousePoint.y()))
+            self.statusTextX = time.strftime("%H:%M:%S", time.localtime(self.vLine.value()))
+            self.statusTextY = "%0.3f" % (self.hLine.value())
+            self.statusTextLogY = "%04.03e" % (np.power(10,self.hLine.value()))
             self.statusText = "&nbsp;"+self.statusTextX+", "+self.statusTextY+"("+self.statusTextLogY+")&nbsp;"
             self.statusTextClipboard = "{\""+self.statusTextX+"\", "+self.statusTextY+"}"
         else:
-            self.statusTextX = "%0.3f" % (self.mousePoint.x())
-            self.statusTextY = "%0.3f" % (self.mousePoint.y())
+            self.statusTextX = "%0.3f" % (self.vLine.value())
+            self.statusTextY = "%0.3f" % (self.hLine.value())
             self.statusTextClipboard = self.statusText = "{"+self.statusTextX+", "+self.statusTextY+"}"
         self.hvLineText.setHtml('<span style="color: black; background-color: rgba(255, 0, 0, 100); opacity: 0.1;">'+self.statusText+'</span>')
 
@@ -167,11 +172,9 @@ class generalPlot(pg.PlotWidget):
     ''' Function to update timescale if the viewbox range changes - i.e. via mouse interaction or autoscale'''
     def updatePlotScale(self, padding=0.0):
         if self.linearPlot:
-            vbPlotRange = self.plot.vb.viewRange()[0]
-            if vbPlotRange != [0,1]:
-                self.globalPlotRange = self.plot.vb.viewRange()[0]
+            vbPlotRange = self.vb.viewRange()[0]
+            self.globalPlotRange = self.vb.viewRange()[0]
             self.plotRange = self.globalPlotRange
-        self.changePlotScale.emit(self.globalPlotRange)
 
     ''' Wrapper '''
     def show(self):

@@ -382,6 +382,7 @@ class stripPlot(QWidget):
             self.histogramPlot = histogram
             self.FFTPlot = FFT
             self.scatterPlot = scatter
+            # self.plot.disableAutoRange()
             if linear:
                 logger.debug('LinearPlot enabled')
             if histogram:
@@ -393,23 +394,16 @@ class stripPlot(QWidget):
                 self.histogramBinsLabel.hide()
             if FFT:
                 logger.debug('FFTPlot enabled')
-            for name in self.records:
-                if self.records[name]['parent'] == self:
-                    self.records[name]['curve'].curve.setClipToView(False)
-                    self.plot.removeItem(self.records[name]['curve'].curve)
-                    self.plot.addItem(self.records[name]['curve'].curve)
-                    self.records[name]['curve'].update()
-            if FFT:
-                self.plot.updateSpectrumMode(True)
-            else:
-                self.plot.updateSpectrumMode(False)
             if not linear:
                 self.plotWidget.date_axis.dateTicksOn = False
-                self.plot.enableAutoRange()
-            else:
-                self.plotWidget.date_axis.dateTicksOn = True
+                self.plot.enableAutoRange('xy', True)
+            if linear:
                 self.plot.disableAutoRange()
+                # self.setPlotScale(self.timescale)
+                self.plotWidget.date_axis.dateTicksOn = True
+                print 'self.plotWidget.plotRange = ', self.plotWidget.plotRange
                 self.plotWidget.setPlotScale([self.plotWidget.plotRange[0],self.plotWidget.plotRange[1]])
+                self.plot.enableAutoRange('y', True)
 
     def start(self, timer=1000):
         self.plotThread.start(timer)
@@ -441,17 +435,17 @@ class stripPlot(QWidget):
         if not hasattr(self,'lastplottime'):
             self.lastplottime = round(time.time(),2)
         if not self.plotWidget.paused:
-            autorangeX, autorangeY = self.plotWidget.vb.state['autoRange']
-            self.plotWidget.plot.disableAutoRange()
-            self.plotWidget.currentPlotTime = round(time.time(),2)
+            # self.plotWidget.currentPlotTime = round(time.time(),2)
             self.doCurveUpdate.emit()
-            ''' this forces the date_axis to redraw '''
-            # print 'viewrange = ', self.plotWidget.vb.mapFromView()
-            self.plotWidget.date_axis.linkedViewChanged(self.plotWidget.date_axis.linkedView())
-            self.plotWidget.vb.enableAutoRange(x=autorangeX, y=autorangeY)
             if self.plotWidget.autoscroll:
                 lastplottime = round(time.time(),2)
-                self.plotWidget.vb.translateBy(x=(lastplottime-self.lastplottime))
+                self.plotWidget.globalPlotRange[0]+=(time.time()-self.lastplottime)
+                self.plotWidget.globalPlotRange[1]+=(time.time()-self.lastplottime)
+                if self.linearPlot:
+                    # self.plotWidget.setPlotScale([self.plotWidget.plotRange[0],self.plotWidget.plotRange[1]])
+                    self.plotWidget.vb.translateBy(x=(lastplottime-self.lastplottime))
+                    self.plotWidget.moveCrosshairsWithViewBox((lastplottime-self.lastplottime))
+                    # print 'self.plotWidget.plotRange = ', self.plotWidget.plotRange
                 self.lastplottime = lastplottime
 
     def removeSignal(self,name):
@@ -468,6 +462,7 @@ class stripPlot(QWidget):
         logger.info('Signal '+name+' removed!')
 
     def setPlotScale(self, timescale):
+        self.timescale = timescale
         self.plotWidget.setPlotScale([time.time()+(-1.05*timescale), time.time()+(0.05*timescale)])
 
     def pausePlotting(self, value=True):
