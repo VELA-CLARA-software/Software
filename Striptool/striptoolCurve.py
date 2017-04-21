@@ -26,6 +26,8 @@ class curve(QObject):
         self.setLogScale(self.records[self.name]['logscale'])
         self.setHistogramBins()
         self.setDecimateScale()
+        # self.lineOn = False
+        # self.records[self.name]['signal'].dataReady.connect(self.addToPath)
 
     def signalValueAtX(self, xvalue):
         return stfunctions.takeClosestPosition(self.plotData[:,0],self.plotData,xvalue)[1][1]
@@ -59,33 +61,46 @@ class curve(QObject):
             if self.verticalMeanSubtraction:
                 y = y - np.mean(y)
             if self.plot.stripplot.histogramPlot:
+                # if self.lineOn:
+                #     self.plot.plot.removeItem(self.lines)
+                # self.curve.setFftMode(False)
                 y2,x2 = np.histogram(y, bins=self.numberBins)
                 self.curve.setData({'x': x2, 'y': y2}, pen=pen, stepMode=True, fillLevel=0, fillBrush=pen)
             elif self.plot.stripplot.FFTPlot:
+                # if self.lineOn:
+                #     self.plot.plot.removeItem(self.lines)
+                x, y = self.curve._fourierTransform(x,y)
+                # self.curve.setData({'x': [0,1], 'y': [0,1]}, pen=pen, stepMode=False, fillLevel=None)
+                # self.curve.setFftMode(True)
                 self.curve.setData({'x': x, 'y': y}, pen=pen, stepMode=False, fillLevel=None)
-                if(len(self.curve.yDisp) > 0):
-                    indexes = peakutils.indexes(self.curve.yDisp, thres=0.75, min_dist=20)
+                if len(self.curve.yDisp) > 0:
+                    indexes = peakutils.indexes(y, thres=0.5, min_dist=10)
                     if len(indexes) < 5:
                         for index in indexes:
-                            fftTextlabel=pg.TextItem(html='<span style="color: '+pg.mkColor(pen).name()+';">'+str(round(self.curve.xDisp[index],2))+'</span>',anchor=(-0.7,1.2), angle=0)
-                            fftTextlabel.setPos(self.curve.xDisp[index],self.curve.yDisp[index])
-                            fftTextArrow=pg.ArrowItem(pos=(self.curve.xDisp[index],self.curve.yDisp[index]), angle=-45, pen=pen, brush=pg.mkBrush(pen))
+                            fftTextlabel=pg.TextItem(html='<span style="color: '+pg.mkColor(pen).name()+';">'+str(round(x[index],2))+'</span>',anchor=(-0.7,1.2), angle=0)
+                            fftTextlabel.setPos(x[index],y[index])
+                            fftTextArrow=pg.ArrowItem(pos=(x[index],y[index]), angle=-45, pen=pen, brush=pg.mkBrush(pen))
                             self.fftTextLabels.append([fftTextlabel, fftTextArrow])
                             self.plot.plot.addItem(fftTextlabel)
                             self.plot.plot.addItem(fftTextArrow)
-                self.plot.updateSpectrumMode(True)
+                # self.curve.setFftMode(True)
             else:
-                self.curve.setData({'x': [], 'y': []}, stepMode=False, fillLevel=None, pen=self.records[self.name]['pen'])
-                if len(x) > self.decimateScale:
-                    decimationfactor = int(np.floor(len(x)/self.decimateScale))
-                    path = pg.arrayToQPath(x[::decimationfactor],y[::decimationfactor])
-                    self.lines.setPath(path)
-                    self.lines.setPen(pg.mkPen(pen))
-                else:
-                    path = pg.arrayToQPath(x, y)
-                    self.lines.setPath(path)
-                    self.lines.setPen(pg.mkPen(pen))
-                # self.plot.plot.addItem(self.lines)
+                data = np.transpose([x,y])
+                self.curve.setData({'x': x, 'y': y}, stepMode=False, fillLevel=None)
+            if self.plot.crosshairs:
+                self.plot.signalValuesUnderCrosshairs.emit((self.name, self.signalValueAtX(self.plot.vLine.value()), np.mean(y), np.std(y)))
+    #
+    # def createPath(self, data):
+    #     path = QPainterPath(QPointF(data[0][0],data[0][1]))
+    #     for x,y in data:
+    #         path.lineTo(x,y)
+    #     return path
+    #
+    # def addToPath(self, data):
+    #     if hasattr(self,'path'):
+    #         self.path.lineTo(data[0],data[1])
+    #     else:
+    #         self.path = QPainterPath(QPoint(data[0],data[1]))
 
     ''' helper function to clear a curves points '''
     def clear(self):
@@ -107,15 +122,15 @@ class curve(QObject):
                     self.currenttime = round(time.time(),2)
                 else:
                     self.currenttime = self.plot.fixedtimepoint
-                # self.plotData = stfunctions.timeFilter(self.records[self.name]['data'], timescale=self.plot.globalPlotRange, currenttime=self.currenttime)
-                self.plotData = self.records[self.name]['data']
+                self.plotData = stfunctions.timeFilter(self.records[self.name]['data'], timescale=self.plot.globalPlotRange, offset=1)
+                # self.plotData = self.records[self.name]['data']
+                # if hasattr(self,'lasttime'):
+                    # print 'updaterate = ', 1.0/(time.time()-self.lasttime), '  [', len(self.plotData), ']'
+                self.lasttime = time.time()
                 if len(self.plotData) > 0:
-                    # x,y = np.transpose(self.plotData)
-                    # x = x - self.currenttime
-                    # self.plotData = np.transpose((x,y))
                     self.updateData(self.plotData, self.records[self.name]['pen'])
                     # if self.plot.crosshairs:
-                    #     self.plot.signalValuesUnderCrosshairs.emit((self.name, self.signalValueAtX(self.plot.vLine.value()), np.mean(y), np.std(y)))
+                        # self.plot.signalValuesUnderCrosshairs.emit((self.name, self.signalValueAtX(self.plot.vLine.value()), np.mean(y), np.std(y)))
             self.doingPlot = False
         self.plot.plotUpdated.emit()
 

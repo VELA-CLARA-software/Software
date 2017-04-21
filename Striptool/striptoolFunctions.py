@@ -17,29 +17,25 @@ def takeClosestPosition(xvalues, myList, myNumber):
     before = myList[pos-1]
     after = myList[pos]
     if abs(after[0] - myNumber) < abs(myNumber - before[0]):
-       return [pos,after]
+       return [pos,after+1]
     else:
        return [pos-1,before]
 
 ''' This filters the data based on the plotrange of the current viewbox. For small datasets this is ~pointless, but for moderately large datasets
 and bigger it makes a noticeable speed up, despite the functions built in to PyQtGraph'''
-def timeFilter(datain, timescale=None, currenttime=False):
-    if not currenttime:
-        currenttime = round(time.time(),2)
-    else:
-        currenttime = currenttime
+def timeFilter(datain, timescale=None, offset=0):
     timescale = timescale
     if len(datain) > 0:
-        if (datain[0][0] > (currenttime+timescale[0]) and datain[-1][0] <=  (currenttime+timescale[1])):
+        if (datain[0][0] > (timescale[0]-offset) and datain[-1][0] <=  (timescale[1]+offset)):
             return datain
         else:
-            if datain[-1][0] <=  (currenttime+timescale[1]):
-                datain = datain[bisect_left(datain[:,0], currenttime+timescale[0])-1:-1]
+            if datain[-1][0] <=  (timescale[1]+offset):
+                datain = datain[bisect_left(datain[:,0], timescale[0]-offset)-1:]
             else:
-                if datain[0][0] >= (currenttime+timescale[0]):
-                    datain = datain[0:bisect_left(datain[:,0], currenttime+timescale[1])+1]
+                if datain[0][0] >= (timescale[0]-offset):
+                    datain = datain[0:bisect_left(datain[:,0], timescale[1]+offset)]
                 else:
-                    datain = datain[bisect_left(datain[:,0], currenttime+timescale[0])-1:bisect_left(datain[:,0], currenttime+timescale[1])+1]
+                    datain = datain[bisect_left(datain[:,0], timescale[0]-offset):bisect_left(datain[:,0], timescale[1]+offset)]
             return datain
     else:
         return datain
