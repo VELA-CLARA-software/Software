@@ -1,7 +1,8 @@
 from PyQt4 import QtCore, QtGui
 from PyQt4.QtCore import QObject
-import sys, os
-os.chdir(os.getcwd())
+import sys, os, threading
+print os.getcwd()
+#os.chdir(os.getcwd())
 import scope_writer_main
 import VELA_CLARA_Scope_Control as vcsc
 
@@ -75,12 +76,11 @@ class scopeWriterLauncherController(QObject):
     def __init__(self, view):
         super(scopeWriterLauncherController, self).__init__()
         self.view = view
-        self.view.launcherButton.clicked.connect(lambda: self.launchScopeWriter())
+        self.view.launcherButton.clicked.connect(lambda: self.launchScopeWriterThread())
         self.beamlines = {"VELA_INJ":  vcsc.MACHINE_AREA.VELA_INJ,
                           "VELA_BA1":  vcsc.MACHINE_AREA.VELA_BA1,
                           "VELA_BA1":  vcsc.MACHINE_AREA.VELA_BA2,
-                          "CLARA_S01": vcsc.MACHINE_AREA.CLARA_S01,
-                          "CLARA_S02": vcsc.MACHINE_AREA.CLARA_S02}
+                          "CLARA_S01": vcsc.MACHINE_AREA.CLARA_S01}
         self.modes = {"Physical": vcsc.MACHINE_MODE.PHYSICAL,
                       "Virtual":  vcsc.MACHINE_MODE.VIRTUAL,
                       "Offline":  vcsc.MACHINE_MODE.OFFLINE}
@@ -98,6 +98,11 @@ class scopeWriterLauncherController(QObject):
         #self.contTypeName = self.searchInDict(self.modes, str(self.view.controllerTypesComboBox.currentText()))
         #scope_writer_main.scopeWriterApp( self.contTypeName, self.blineName )
 		os.system("python scope_writer_main.py "+str(self.view.controllerTypesComboBox.currentText())+" "+str(self.view.beamlineTypesComboBox.currentText()))
+
+    def launchScopeWriterThread(self):
+        self.scopeWriterThread = threading.Thread(target = self.launchScopeWriter)
+        self.scopeWriterThread.daemon = True
+        self.scopeWriterThread.start()
 
 class scopeWriterLauncherApp(QtGui.QApplication):
     def __init__(self, sys_argv):
