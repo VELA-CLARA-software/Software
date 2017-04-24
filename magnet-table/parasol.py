@@ -17,12 +17,13 @@ pg.setConfigOption('background', 0.2)
 pg.setConfigOption('foreground', 'w')
 
 image_credits = {
+    'parasol.png': 'https://www.shareicon.net/parasol-sun-umbrella-travel-tools-and-utensils-summer-sunshade-summertime-794079',
     'Offline.png': 'http://www.iconarchive.com/show/windows-8-icons-by-icons8/Network-Disconnected-icon.html',
     'Virtual.png': 'https://thenounproject.com/search/?q=simulator&i=237636',
     'Physical.png': 'http://www.flaticon.com/free-icon/car-compact_31126#term=car&page=1&position=19',
     'mountain-summit.png': 'http://www.flaticon.com/free-icon/mountain-summit_27798#term=peak&page=1&position=6'}
-qtCreatorFile = "rf_sol_gui.ui"
-Ui_MainWindow, QtBaseClass = uic.loadUiType(qtCreatorFile)
+
+Ui_MainWindow, QtBaseClass = uic.loadUiType("rf_sol_gui.ui")
 
 def noFeedback(method):
     """Wrapper to prevent feedback loops - don't keep cycling through (e.g.) current <-> field calculations."""
@@ -32,7 +33,7 @@ def noFeedback(method):
     return feedbackless
 
 
-class MyApp(QtGui.QMainWindow, Ui_MainWindow):
+class ParasolApp(QtGui.QMainWindow, Ui_MainWindow):
     def __init__(self):
         #TODO: get initial parameters from INI file, and save them as we go
         self.gun = RFSolTracker('Gun-10')
@@ -74,7 +75,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
 
     def resizeEvent(self, resizeEvent):
         # Remove plots one row at a time as the window shrinks
-        self.xy_plot_hbox.setVisible(self.geometry().height() >= 512)
+        self.xy_plot.setVisible(self.geometry().height() >= 512)
         self.xdash_ydash_plot.setVisible(self.geometry().height() >= 512)
         self.E_field_plot.setVisible(self.geometry().height() >= 420)
         self.B_field_plot.setVisible(self.geometry().height() >= 420)
@@ -170,6 +171,6 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
 
 if __name__ == "__main__":
     app = QtGui.QApplication(sys.argv)
-    window = MyApp()
+    window = ParasolApp()
     window.show()
     sys.exit(app.exec_())
