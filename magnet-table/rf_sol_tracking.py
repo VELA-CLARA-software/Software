@@ -16,52 +16,8 @@ import scipy.optimize
 import scipy.linalg
 from functools import wraps  # for class method decorators
 from collections import namedtuple
-import matplotlib.pyplot as plt  # TODO: use pyqtgraph instead
 import calcMomentum  # Fortran code to do the momentum calculation
-import re
 import solenoid_field_map
-
-# http://stackoverflow.com/questions/31607458/how-to-add-clipboard-support-to-matplotlib-figures
-import io
-from PyQt4.QtGui import QApplication, QImage
-def add_clipboard_to_figures():
-    # use monkey-patching to replace the original plt.figure() function with
-    # our own, which supports clipboard-copying
-    oldfig = plt.figure
-
-    def newfig(*args, **kwargs):
-        fig = oldfig(*args, **kwargs)
-        def clipboard_handler(event):
-            if event.key == 'ctrl+c':
-                # store the image in a buffer using savefig(), this has the
-                # advantage of applying all the default savefig parameters
-                # such as background color; those would be ignored if you simply
-                # grab the canvas using Qt
-                buf = io.BytesIO()
-                fig.savefig(buf)
-                QApplication.clipboard().setImage(QImage.fromData(buf.getvalue()))
-                buf.close()
-
-        fig.canvas.mpl_connect('key_press_event', clipboard_handler)
-        return fig
-
-    plt.figure = newfig
-
-add_clipboard_to_figures()
-
-
-class ReturnsBlank():
-    def __getattr__(self, attr):
-        return ''
-
-
-try:
-    from colorama import init, Fore, Back, Style  # for coloured text in the terminal!
-
-    init(autoreset=True)
-    import re
-except ImportError:
-    Fore = Back = Style = ReturnsBlank()
 
 # notation
 Re = lambda x: x.real
@@ -71,22 +27,6 @@ m = scipy.constants.electron_mass
 c = scipy.constants.speed_of_light
 e = -scipy.constants.elementary_charge
 epsilon_e = m * c ** 2 / e
-
-
-# https://wiki.python.org/moin/PythonDecoratorLibrary#Easy_Dump_of_Function_Arguments
-def dump_args(func):
-    "This decorator dumps out the arguments passed to a function before calling it"
-    argnames = func.func_code.co_varnames[:func.func_code.co_argcount]
-    fname = func.func_name
-
-    def echo_func(*args, **kwargs):
-        print fname, ":", ', '.join(
-            '%s=%r' % entry
-            for entry in zip(argnames, args) + kwargs.items())
-        return func(*args, **kwargs)
-
-    return echo_func
-
 
 import ctypes
 # http://stackoverflow.com/questions/38319606/how-to-get-millisecond-and-microsecond-resolution-timestamps-in-python
@@ -131,29 +71,11 @@ def requires_calc_level(level):
         return wrapped
     return wrapper
 
-
-def numbersInColumn(sheet, col):
-    "Return the numeric values from a zero-indexed column in a worksheet from xlrd."
-    column = [sheet.cell(r, col) for r in range(sheet.nrows)]
-    return np.array([cell.value for cell in column if cell.ctype == xlrd.XL_CELL_NUMBER])
-
-
 # Devices (guns/linacs) that we know about.
 # The ones prefixed 'gb-' are referenced in the Gulliford/Bazarov paper.
 MODEL_LIST = ('gb-rf-gun', 'gb-dc-gun', 'Gun-10')
 
 field_map_attr = namedtuple('field_map_attr', 'coeffs z_map bc_area bc_turns sol_area sol_turns')
-
-format_codes = re.compile('({[^}]+})')
-def styleOutput(string):
-    return string
-    """Style the formatting of output text.
-    Set the first line to be cyan, and all the {}-formatted numbers to be bright."""
-    string = format_codes.sub(Style.BRIGHT + r'\1' + Style.NORMAL, string)
-    lines = string.split('\n')
-    if len(lines) > 0:
-        lines[0] = Fore.CYAN + lines[0] + Fore.WHITE
-    return '\n'.join(lines)
 
 
 class RFSolTracker(object):
@@ -164,7 +86,7 @@ class RFSolTracker(object):
         self.quiet = quiet
         if not name in MODEL_LIST:
             raise NotImplementedError(
-                Fore.RED + 'Unknown model "{name}". Valid models are {MODEL_LIST}.'.format(**locals()))
+                'Unknown model "{name}". Valid models are {MODEL_LIST}.'.format(**locals()))
         self.name = name
 
         # Set up the simulation
@@ -257,7 +179,7 @@ Phase: {self.phase:.1f}°'''
         self.final_p_MeV = self.p_array[-1] * -1e-6 * epsilon_e
 
         if not self.quiet:
-            print(styleOutput(u'Final momentum: {self.final_p_MeV:.3f} MeV/c').format(**locals()))
+            print(u'Final momentum: {:.3f} MeV/c'.format(self.final_p_MeV))
         self.calc_level = CALC_MOM
 
     @timeit
@@ -299,19 +221,18 @@ Bucking coil current: {self.solenoid.bc_current:.3f} A'''
 
         self.calc_level = CALC_LA
         if not self.quiet:
-            fs = u'Final Larmor angle: {:.3f}°'
-            print(styleOutput(fs).format(self.getFinalLarmorAngle()))
+            print(u'Final Larmor angle: {:.3f}°'.format(self.getFinalLarmorAngle()))
 
     @timeit
     @requires_calc_level(CALC_LA)
     def calcMatrices(self):
         if not self.quiet:
-            fs = styleOutput(u'''Calculating matrices.
+            fs = u'''Calculating matrices.
 Peak field: {self.rf_peak_field:.3f} MV/m
 Phase: {self.phase:.1f}°
 Solenoid current: {self.solenoid.sol_current:.3f} A
 Solenoid maximum field: {Bmax_sol:.3f} T
-Bucking coil current: {self.solenoid.bc_current:.3f} A''')
+Bucking coil current: {self.solenoid.bc_current:.3f} A'''
             print(fs.format(Bmax_sol=self.getPeakMagneticField(), **locals()))
 
         # calculation
@@ -466,17 +387,17 @@ Bucking coil current: {self.solenoid.bc_current:.3f} A''')
         """Track a particle (represented by a four-vector (x, x', y, y')) 
         through the field maps and return the final phase space coordinates."""
         if not self.quiet:
-            print(styleOutput("""Particle start position:
+            print("""Particle start position:
 x = {0:.3f} mm, x' = {1:.3f} mrad
-y = {2:.3f} mm, y' = {3:.3f} mrad""").format(*u.A1 * 1e3, **globals()))
+y = {2:.3f} mm, y' = {3:.3f} mrad""".format(*u.A1 * 1e3, **globals()))
         for i, M in enumerate(self.M_array):
             self.u_array[i] = u.T
             u = M * u
         self.u_array[-1] = u.T
         if not self.quiet:
-            print(styleOutput(u'''Particle final position:
+            print(u'''Particle final position:
 x = {0:.3f} mm, x' = {1:.3f} mrad
-y = {2:.3f} mm, y' = {3:.3f} mrad''').format(*u.A1 * 1e3, **globals()))
+y = {2:.3f} mm, y' = {3:.3f} mrad'''.format(*u.A1 * 1e3, **globals()))
         return u
 
     def optimiseParam(self, opt_func, operation, x_name, x_units, target=None, target_units=None, tol=1e-6):
@@ -555,54 +476,14 @@ y = {2:.3f} mm, y' = {3:.3f} mrad''').format(*u.A1 * 1e3, **globals()))
         delta_thl_sq = lambda soli: (self.solCurrentToLarmorAngle(soli) - angle) ** 2
         return self.optimiseParam(delta_thl_sq, 'Set Larmor angle', 'solenoid.sol_current', 'A', angle, 'degrees')
 
-    def plotVsZ(self, arrays, ylabel, title, labels=('',), show=True):
-        arrays = np.array(arrays)
-        if len(arrays.shape) == 1:
-            arrays = np.array([arrays])
-        for array, label in zip(arrays, labels):
-            plt.plot(self.z_array, array, label=label)
-        plt.xlabel('z [m]')
-        plt.ylabel(ylabel)
-        plt.grid()
-        plt.title(title)
-        if not labels == ('',):
-            plt.legend(loc='best')
-        if show:
-            plt.show()
-
-    def plotTwo(self, arrays1, xlabel1, title1, arrays2, xlabel2, title2, labels1=('',), labels2=('',)):
-        """Show two plots, one above the other."""
-        plt.subplot(2, 1, 1)
-        self.plotVsZ(arrays1, xlabel1, title1, labels=labels1, show=False)
-        plt.subplot(2, 1, 2)
-        self.plotVsZ(arrays2, xlabel2, title2, labels=labels2, show=False)
-        plt.show()
-
-    def plotLAM(self):
-        """"Plot Larmor angle and momentum versus z."""
-        self.plotTwo(self.getLarmorAngleMap(), r'$\theta_L [\degree]$', 'Larmor angle',
-                     self.getMomentumMap(), 'p [MeV/c]', 'Momentum')
-
-    def plotXY(self):
-        """"Plot x, x', y, y' versus z."""
-        self.plotTwo(1e3 * self.u_array[:, :3:2].T, 'x, y [mm]', 'Particle position',
-                     1e3 * self.u_array[:, 1::2].T, "x', y' [mrad]", 'Particle angle', labels1=('x', 'y'), labels2=("x'", "y'"))
-
-    def plotRTheta(self):
-        u"""Plot r and θ versus z."""
-        self.plotTwo(1e3 * np.sqrt(np.sum(self.u_array[:, :3:2] ** 2, 1)), 'r [mm]', 'Particle radius',
-                     np.degrees(np.arctan2(*self.u_array[:, :3:2].T)), r"$\theta [\degree]$", 'Particle angle')
-
 
 if __name__ == '__main__':
-    gun10_new = RFSolTracker('Gun-10', quiet=True)
-    gun10_new.setRFPhase(330)
-    # gun10_new = RFSolTracker('gb-rf-gun', quiet=False)
-    # gun10_new.setRFPhase(300)
-    gun10_new.getFinalMomentum()
-    gun10_new.getMagneticFieldMap()
-    gun10_new.getFinalLarmorAngle()
-    # print(gun10_new.getOverallMatrix())
-    gun10_new.trackBeam(np.matrix([0.001, 0, 0, 0]).T)
-    gun10_new.plotLAM()
-    gun10_new.plotXY()
+    gun10 = RFSolTracker('Gun-10', quiet=False)
+    gun10.setRFPhase(330)
+    # gun10 = RFSolTracker('gb-rf-gun', quiet=False)
+    # gun10.setRFPhase(300)
+    gun10.getFinalMomentum()
+    gun10.getMagneticFieldMap()
+    gun10.getFinalLarmorAngle()
+    # print(gun10.getOverallMatrix())
+    gun10.trackBeam(np.matrix([0.001, 0, 0, 0]).T)
