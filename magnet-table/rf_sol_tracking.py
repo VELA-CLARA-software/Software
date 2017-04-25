@@ -1,7 +1,7 @@
 #!python2
 # -*- coding: utf-8 -*-
 """
-RF and Solenoid Tracker v1.1 - Ben Shepherd - March 2017
+Parasol RF and Solenoid Tracker v1.1 - Ben Shepherd - March 2017
 
 Sets up a simulation of a combination of RF and solenoid fields,
 and calculates the final momentum and Larmor angle of a beam.
@@ -12,16 +12,14 @@ See Gulliford and Bazarov (2012): http://journals.aps.org/prab/abstract/10.1103/
 
 import numpy as np
 import scipy.constants
-import scipy.interpolate
 import scipy.optimize
 import scipy.linalg
 from functools import wraps  # for class method decorators
 from collections import namedtuple
 import matplotlib.pyplot as plt  # TODO: use pyqtgraph instead
-import xlrd
-from itertools import chain
-import calcMomentum
+import calcMomentum  # Fortran code to do the momentum calculation
 import re
+import solenoid_field_map
 
 # http://stackoverflow.com/questions/31607458/how-to-add-clipboard-support-to-matplotlib-figures
 import io
@@ -134,19 +132,6 @@ def requires_calc_level(level):
     return wrapper
 
 
-def interpolate(x, y):
-    "Return an interpolation object with some default parameters."
-    if scipy.version.full_version >= '0.17.0':
-        interp = scipy.interpolate.interp1d(x, y, fill_value='extrapolate', bounds_error=False)
-    else:
-        # numpy <0.17.0 doesn't allow extrapolation - so use the values at the start and end
-        x = np.insert(x, 0, -1e99)
-        y = np.insert(y, 0, y[0])
-        x = np.append(x, 1e99)
-        y = np.append(y, y[-1])
-        interp = scipy.interpolate.interp1d(x, y, bounds_error=False)
-    return interp
-
 def numbersInColumn(sheet, col):
     "Return the numeric values from a zero-indexed column in a worksheet from xlrd."
     column = [sheet.cell(r, col) for r in range(sheet.nrows)]
@@ -174,12 +159,6 @@ def styleOutput(string):
 class RFSolTracker(object):
     """Simulation of superimposed RF and solenoid fields."""
 
-    # Link the RI and SI properties
-    def __getattribute__(self, name):
-        if name == 'riWithPol':
-            name = 'siWithPol'
-        return super(RFSolTracker, self).__getattribute__(name)
-
     def __init__(self, name, quiet=True):
         """Initialise the class, setting parameters relevant to the named setup."""
         self.quiet = quiet
@@ -188,18 +167,10 @@ class RFSolTracker(object):
                 Fore.RED + 'Unknown model "{name}". Valid models are {MODEL_LIST}.'.format(**locals()))
         self.name = name
 
-        # These properties are useful when accessing this class from the magnet table.
-        self.magnetBranch = 'UNKNOWN_MAGNET_BRANCH'
-        self.magType = 'GUN'
-        self.riTolerance = 0.001  # fairly arbitrary
-        self.fieldIntegralCoefficients = np.array([1, 0])
-        self.magneticLength = None
-        self.pvRoot = 'INJ-RF-GUN-01:'  # totally made up!
-
         # Set up the simulation
+        self.solenoid = solenoid_field_map.Solenoid(name, quiet=self.quiet)
         if name == 'Gun-10':
             gun10_folder = r'\\fed.cclrc.ac.uk\Org\NLab\ASTeC-TDL\Projects\tdl-1168 CLARA\CLARA-ASTeC Folder\Accelerator Physics\ASTRA\Archive from Delta + CDR\\'
-            self.measurementDataLocation = gun10_folder
 
             # Read in RF field map and normalise so peak = 1
             gun10_cav_fieldmap_file = gun10_folder + 'bas_gun.txt'
@@ -208,7 +179,7 @@ class RFSolTracker(object):
             self.rf_peak_field = float(np.max(gun10_cav_fieldmap[:, 1]) / 1e6)
             # Normalise
             gun10_cav_fieldmap[:, 1] /= (self.rf_peak_field * 1e6)
-            self.norm_E = interpolate(*gun10_cav_fieldmap.T)
+            self.norm_E = solenoid_field_map.interpolate(*gun10_cav_fieldmap.T)
             #            self.E = lambda z: E_gun10(z) * self.rf_peak_field * 1e6
             self.freq = 2998.5 * 1e6  # in Hz
             self.phase = 330.0  # to get optimal acceleration
@@ -217,60 +188,28 @@ class RFSolTracker(object):
             self.dz = 0.5e-3  # in metres - OK to get within 0.5% of final momentum
             self.gamma_start = np.sqrt(1 + abs(1 / epsilon_e))  # 1 eV
 
-            # magnetic field map built up from coefficients for x**n and y**n
-            # where x = BC current density
-            # and y = solenoid current density
-            # and n <= 3
-            # See BJAS' spreadsheet: coeffs-vs-z.xlsx
-            # This takes care of interaction between the BC and solenoid
-            self.b_field = field_map_attr(np.loadtxt('gun10-coeffs-vs-z.csv', delimiter=','),
-                                          np.arange(-12, 467, dtype='float64') * 1e-3,
-                                          856.0, 720.0, 8281.0, 144.0)
-            self.z_end = max(gun10_cav_fieldmap[-1, 1], self.b_field.z_map[-1])
-
-            self.bc_current = 5.0  # reasonable default value
-            self.sol_current = 300.0  # reasonable default value
+            self.z_end = max(gun10_cav_fieldmap[-1, 1], self.solenoid.getZMap()[-1])
 
         elif name[:3] == 'gb-':
+            self.gamma_start = np.sqrt(1 + abs(1 / epsilon_e))  # 1 eV
             if name == 'gb-dc-gun':
-                sheet_name = 'G-B Fig 1 DC gun + sol'
                 self.freq = 0
                 self.dz = 1e-3
                 self.z_end = 0.6
-                self.gamma_start = np.sqrt(1 + abs(1 / epsilon_e))  # 1 eV
             elif name == 'gb-rf-gun':
-                sheet_name = 'G-B Fig 5 RF gun + sol'
                 self.freq = 1.3e9
-                self.dz = 0.1e-3
+                self.dz = 1e-4
                 self.z_end = 0.3
-                self.gamma_start = np.sqrt(1 + abs(1 / epsilon_e))  # 1 eV
 
-            # TODO: should be on the server!
-            fieldmap_folder = r'C:\Documents\CLARA'
-            fieldmap_filename = fieldmap_folder + r'\Gun and solenoid field maps.xlsx'
-            self.measurementDataLocation = fieldmap_folder
-            book = xlrd.open_workbook(fieldmap_filename)
-            sheet = book.sheet_by_name(sheet_name)
-            z_list = numbersInColumn(sheet, 0)
-            E_list = numbersInColumn(sheet, 1)  # in MV/m
+            fieldmap_folder = r'gb-field-maps'
+            z_list, E_list = np.loadtxt('gb-field-maps/{}_e-field.csv'.format(name), delimiter=',').T
             self.rf_peak_field = float(np.max(E_list))
             # Normalise
             E_list /= self.rf_peak_field
-            self.norm_E = interpolate(z_list, E_list)
+            self.norm_E = solenoid_field_map.interpolate(z_list, E_list)
             self.phase = 295  # to get optimal acceleration
 
-            z_list = numbersInColumn(sheet, 2)
-            B_list = numbersInColumn(sheet, 4)
-            self.bc_current = 0.0
-            self.sol_current = 300.0  # just a made-up number
-
-            # Define this in a simpler way - then we can just multiply by sol_current to get B-field value
-            self.b_field = np.array([z_list, B_list / self.sol_current])
-
-        self.siWithPol = self.phase
         self.calc_level = CALC_NONE
-        # cached results (longitudinal and transverse)
-        self.long_cache = self.trans_cache = {}
 
     def __repr__(self):
         return '<RFSolTracker {}>'.format(self.name)
@@ -302,25 +241,6 @@ class RFSolTracker(object):
         self.M_array = np.zeros((len(self.z_array), 4, 4))
         self.calc_level = INIT_ARRAYS
 
-    def momentumGenerator(self):
-        omega = 2 * np.pi * self.freq
-        gamma = self.gamma_start
-        beta = np.sqrt(1 - 1 / gamma ** 2)
-        p = gamma * beta
-        t = self.phase / (360 * self.freq)
-        for gamma_tilde_dash in self.gamma_tilde_dash:
-            gamma_dash = gamma_tilde_dash * np.cos(omega * t)
-            yield t, gamma_dash, gamma, beta, p
-            gamma += gamma_dash * self.dz
-            p_new = np.sqrt(gamma ** 2 - 1)
-            beta = p / gamma
-            if gamma_dash == 0:
-                dt = 1 / (beta * c)
-            else:
-                dt = (p_new - p) / (gamma_dash * c)
-            p = p_new
-            t += dt
-
     @timeit
     @requires_calc_level(INIT_ARRAYS)
     def calcMomentum(self):
@@ -332,12 +252,8 @@ Peak field: {self.rf_peak_field:.3f} MV/m
 Phase: {self.phase:.1f}°'''
             print(fs.format(**locals()))
 
-        # Python generator method (11 ms to run)
-        # result = np.fromiter(chain.from_iterable(self.momentumGenerator()), 'float64', count=len(self.gamma_tilde_dash) * 5).reshape(-1, 5)
-        # self.t_array, self.gamma_dash_array, self.gamma_array, self.beta_array, self.p_array = np.array(result).T
-        # Fortran method (0.8 ms to run)
+        # Fortran method (0.8 ms to run cf 11 ms for Python code)
         self.t_array, self.gamma_dash_array, self.gamma_array, self.beta_array, self.p_array = calcMomentum.calcmomentum(self.freq, self.phase, self.gamma_start, self.dz, self.gamma_tilde_dash)
-
         self.final_p_MeV = self.p_array[-1] * -1e-6 * epsilon_e
 
         if not self.quiet:
@@ -348,23 +264,9 @@ Phase: {self.phase:.1f}°'''
     @requires_calc_level(INIT_ARRAYS)
     def calcMagneticFieldMap(self):
         """Calculate the magnetic field map for given solenoid and BC currents."""
-        # Is b_field a tuple? Then it has coefficients describing how the B-field depends on the sol/BC currents.
-        if isinstance(self.b_field, tuple):
-            X = self.bc_current * self.b_field.bc_turns / self.b_field.bc_area
-            Y = self.sol_current * self.b_field.sol_turns / self.b_field.sol_area
-            # Use a subset of coefficients
-            A = np.array(
-                [Y, Y ** 2, Y ** 3, X, X * Y, X * Y ** 2, X ** 2, X ** 2 * Y,
-                 X ** 2 * Y ** 2, X ** 2 * Y ** 3, X ** 3, X ** 3 * Y]).T
-            field_map = np.dot(self.b_field.coeffs, A)
-            self.B = interpolate(self.b_field.z_map, field_map)
-
-        else:  # we've defined it as just an array, multiply by sol current to get field
-            z_map, B_map = self.b_field
-            self.B = interpolate(z_map, B_map * self.sol_current)
-
         # Normalised b-field (note lower case)
-        self.b = lambda z: self.B(z) * -e / (2 * m * c)
+        self.solenoid.calcMagneticFieldMap()
+        self.b = lambda z: self.solenoid.B_interp(z) * -e / (2 * m * c)
         self.calc_level = CALC_B_MAP
 
     @timeit
@@ -375,9 +277,9 @@ Phase: {self.phase:.1f}°'''
             fs = u'''Calculating Larmor angle.
 Peak field: {self.rf_peak_field:.3f} MV/m
 Phase: {self.phase:.1f}°
-Solenoid current: {self.sol_current:.3f} A
+Solenoid current: {self.solenoid.sol_current:.3f} A
 Solenoid maximum field: {Bmax_sol:.3f} T
-Bucking coil current: {self.bc_current:.3f} A'''
+Bucking coil current: {self.solenoid.bc_current:.3f} A'''
             print(fs.format(Bmax_sol=self.getPeakMagneticField(), **locals()))
         theta_L = 0
 
@@ -407,9 +309,9 @@ Bucking coil current: {self.bc_current:.3f} A'''
             fs = styleOutput(u'''Calculating matrices.
 Peak field: {self.rf_peak_field:.3f} MV/m
 Phase: {self.phase:.1f}°
-Solenoid current: {self.sol_current:.3f} A
+Solenoid current: {self.solenoid.sol_current:.3f} A
 Solenoid maximum field: {Bmax_sol:.3f} T
-Bucking coil current: {self.bc_current:.3f} A''')
+Bucking coil current: {self.solenoid.bc_current:.3f} A''')
             print(fs.format(Bmax_sol=self.getPeakMagneticField(), **locals()))
 
         # calculation
@@ -468,12 +370,6 @@ Bucking coil current: {self.bc_current:.3f} A''')
         M4[mask, 1, 0] = off_diag
         M4[mask, 3, 2] = off_diag
 
-        # output CSV files
-        # np.savetxt('m1-rst.csv', M1.reshape(-1, 16), delimiter=',')
-        # np.savetxt('m2-rst.csv', M2.reshape(-1, 16), delimiter=',')
-        # np.savetxt('m3-rst.csv', M3.reshape(-1, 16), delimiter=',')
-        # np.savetxt('m4-rst.csv', M4.reshape(-1, 16), delimiter=',')
-
         self.M_array = np.matmul(np.matmul(np.matmul(M1, M2), M3), M4)
         self.M_total = reduce(np.dot, self.M_array)
         self.calc_level = CALC_MATRICES
@@ -495,11 +391,13 @@ Bucking coil current: {self.bc_current:.3f} A''')
 
     def setSolenoidCurrent(self, current):
         """Set the solenoid current in A."""
-        self.resetValue('sol_current', current, CALC_B_MAP - 1)
+        self.calc_level = min(self.calc_level, CALC_B_MAP - 1)
+        self.solenoid.setSolenoidCurrent(current)  # to reset solenoid calc
 
     def setBuckingCoilCurrent(self, current):
         """Set the bucking coil current in A."""
-        self.resetValue('bc_current', current, CALC_B_MAP - 1)
+        self.calc_level = min(self.calc_level, CALC_B_MAP - 1)
+        self.solenoid.setBuckingCoilCurrent(current)  # to reset solenoid calc
 
     def setDZ(self, dz):
         """Set the z step size in metres."""
@@ -518,17 +416,17 @@ Bucking coil current: {self.bc_current:.3f} A''')
     @requires_calc_level(CALC_B_MAP)
     def getMagneticFieldMap(self):
         """Return the magnetic field map produced by the solenoid and bucking coil."""
-        return self.B(self.z_array)
+        return self.solenoid.B_interp(self.z_array)
 
     @requires_calc_level(CALC_B_MAP)
     def getMagneticField(self, z):
         """Return the magnetic field at a given z coordinate."""
-        return float(self.B(z))
+        return float(self.solenoid.B_interp(z))
 
     @requires_calc_level(CALC_B_MAP)
     def getPeakMagneticField(self):
         """Return the peak solenoid field in T."""
-        return np.max(self.B(self.z_array))
+        return self.solenoid.getPeakMagneticField()
 
     @requires_calc_level(CALC_MOM)
     def getMomentumMap(self):
@@ -584,19 +482,15 @@ y = {2:.3f} mm, y' = {3:.3f} mrad''').format(*u.A1 * 1e3, **globals()))
     def optimiseParam(self, opt_func, operation, x_name, x_units, target=None, target_units=None, tol=1e-6):
         """General function for optimising a parameter by varying another."""
         # operation should be of form "Set peak field" etc.
-        x_init = getattr(self, x_name)
+        x_init = reduce(getattr, [self] + x_name.split('.'))
         if not self.quiet:
             target_text = '' if target == None else ', target {target:.3f} {target_units}'.format(**locals())
+            print(x_name, x_init)
             print('{operation}{target_text}, by varying {x_name} starting at {x_init:.3f} {x_units}.'.format(**locals()))
         xopt = scipy.optimize.fmin(opt_func, x_init, xtol=1e-3, disp=False)
-        # if res.success:
         if not self.quiet:
             print('Optimised with {x_name} setting of {0:.3f} {x_units}'.format(float(xopt), **locals()))
         return float(xopt)
-        # else:
-        #     target_text = '' if target == None else ' to find target value of {target:.3f} {target_units}'.format(**locals())
-        #     fs = '{operation}: failed{target_text} around {x_name} of {x_init:.3f} {x_units}.'
-        #     raise RuntimeError(fs.format(**locals()))
 
     def peakFieldToMomentum(self, peak_field):
         """Set an RF peak field value and return the momentum."""
@@ -651,26 +545,6 @@ y = {2:.3f} mm, y' = {3:.3f} mrad''').format(*u.A1 * 1e3, **globals()))
         self.setRFPhase(orig_phase)
         return (p1 - p0) / dphi
 
-    def bcCurrentToCathodeField(self, bci):
-        self.setBuckingCoilCurrent(bci)
-        return self.getMagneticField(0.0)
-
-    def setCathodeField(self, field=0.0):
-        """Set the cathode field to a given level by changing the bucking coil 
-        current, and return the value of this current."""
-        delta_B_sq = lambda bci: (self.bcCurrentToCathodeField(bci) - field) ** 2
-        return self.optimiseParam(delta_B_sq, 'Set field at cathode', 'bc_current', 'A', field, 'T')
-
-    def solCurrentToPeakField(self, sol_current):
-        self.setSolenoidCurrent(sol_current)
-        return self.getPeakMagneticField()
-
-    def setPeakMagneticField(self, field):
-        """Set the peak magnetic field to a given level (in T) by changing the 
-        solenoid current, and return the value of this current."""
-        delta_B_sq = lambda soli: (self.solCurrentToPeakField(soli) - field) ** 2
-        return self.optimiseParam(delta_B_sq, 'Set solenoid peak field', 'sol_current', 'A', field, 'T')
-
     def solCurrentToLarmorAngle(self, sol_current):
         self.setSolenoidCurrent(sol_current)
         return self.getFinalLarmorAngle()
@@ -679,7 +553,7 @@ y = {2:.3f} mm, y' = {3:.3f} mrad''').format(*u.A1 * 1e3, **globals()))
         """Set the Larmor angle to a given value (in degrees) by changing the 
         solenoid current, and return the value of this current."""
         delta_thl_sq = lambda soli: (self.solCurrentToLarmorAngle(soli) - angle) ** 2
-        return self.optimiseParam(delta_thl_sq, 'Set Larmor angle', 'sol_current', 'A', angle, 'degrees')
+        return self.optimiseParam(delta_thl_sq, 'Set Larmor angle', 'solenoid.sol_current', 'A', angle, 'degrees')
 
     def plotVsZ(self, arrays, ylabel, title, labels=('',), show=True):
         arrays = np.array(arrays)

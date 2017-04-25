@@ -11,7 +11,11 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>RF/Solenoid Tracker</string>
+   <string>Parasol - Combined RF &amp; Solenoid Tracking</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>Icons/parasol.png</normaloff>Icons/parasol.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">

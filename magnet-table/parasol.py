@@ -36,7 +36,7 @@ def noFeedback(method):
 class ParasolApp(QtGui.QMainWindow, Ui_MainWindow):
     def __init__(self):
         #TODO: get initial parameters from INI file, and save them as we go
-        self.gun = RFSolTracker('Gun-10')
+        self.gun = RFSolTracker('Gun-10', quiet=True)
         QtGui.QMainWindow.__init__(self)
         Ui_MainWindow.__init__(self)
         self.setupUi(self)
@@ -128,12 +128,12 @@ class ParasolApp(QtGui.QMainWindow, Ui_MainWindow):
     @noFeedback
     def cathodeFieldChanged(self, value=None):
         """The cathode field has been modified - find the bucking coil current that gives this field."""
-        self.bc_spin.setValue(self.gun.setCathodeField(value))
+        self.bc_spin.setValue(self.gun.solenoid.setCathodeField(value))
 
     @noFeedback
     def solPeakFieldChanged(self, value=None):
         """The solenoid peak field has been modified - find the solenoid current that gives this field."""
-        self.sol_spin.setValue(self.gun.setPeakMagneticField(value))
+        self.sol_spin.setValue(self.gun.solenoid.setPeakMagneticField(value))
 
     @noFeedback
     def momentumChanged(self, value=None):
