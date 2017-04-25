@@ -148,13 +148,6 @@
           </property>
          </widget>
         </item>
-        <item row="0" column="0">
-         <widget class="QLabel" name="label_6">
-          <property name="text">
-           <string>Mode</string>
-          </property>
-         </widget>
-        </item>
         <item row="7" column="0">
          <widget class="QLabel" name="label_7">
           <property name="text">
@@ -190,32 +183,11 @@
           </property>
          </widget>
         </item>
-        <item row="0" column="3">
-         <widget class="QComboBox" name="comboBox_mode">
-          <item>
-           <property name="text">
-            <string>Virtual</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Physical</string>
-           </property>
-          </item>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QComboBox" name="comboBox_line">
-          <item>
-           <property name="text">
-            <string>VELA</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>CLARA</string>
-           </property>
-          </item>
+        <item row="0" column="0" colspan="4">
+         <widget class="QLabel" name="label_MODE">
+          <property name="text">
+           <string>Mode</string>
+          </property>
          </widget>
         </item>
        </layout>

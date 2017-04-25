@@ -6,6 +6,15 @@ class scopeWriterModel():
 	def __init__(self, scopeCont):
 		#Hardware controllers are imported from scope_writer_main.py
 		self.scopeController = scopeCont
+		#self.scope=win32com.client.Dispatch("LeCroy.XStreamDSO")
+
+		#self.scope.Measure.MeasureMode = "StdVertical"
+		print 'This script is logging charge measurements to EPICS - do not close!'
+
+		self.n = 0;
+		self.totaltime = 0;
+		self.traceNames = self.scopeController.getScopeTracePVs()
+		self.numNames = self.scopeController.getScopeNumPVs()
 
 	def readTracesAndWriteAreaToEPICS( self, scope_name, channel_name, baseline_start, baseline_end, area_start, area_end, epics_channel ):
 		self.scope_name = scope_name
@@ -117,3 +126,48 @@ class scopeWriterModel():
 		else:
 			self.pvType = vcsc.SCOPE_PV_TYPE.UNKNOWN
 		return self.pvType
+
+	def writeToEPICS( self, trN ):
+		epics.caput( self.traceNames[ trN - 1 ], self.recordChannel( trN, wfType ) )
+
+	def writeDiagType( self, chanName, type ):
+		self.descName = "."
+		self.both = ( chanName, "DESC" )
+		epics.caput( self.descName.join( self.both ), type )
+
+	def recordChannel( self, trNum ):
+		self.chan = 0
+		if trNum == 1:
+			self.chan = self.scope.Zoom.Z1.Out.Result.DataArray
+		elif trNum == 2:
+			self.chan = self.scope.Zoom.Z2.Out.Result.DataArray
+		elif trNum == 3:
+			self.chan = self.scope.Zoom.Z3.Out.Result.DataArray
+		elif trNum == 4:
+			self.chan = self.scope.Zoom.Z4.Out.Result.DataArray
+		return self.chan
+
+	def getAndResetScale( self, trNum ):
+		self.scales = [ self.scope.Zoom.Z1.Zoom.Verscale,
+						self.scope.Zoom.Z2.Zoom.Verscale,
+						self.scope.Zoom.Z3.Zoom.Verscale,
+						self.scope.Zoom.Z4.Zoom.Verscale ]
+		# self.max = abs( max( self.recordChannel( trNum, "trace" ) ) )
+		print max(self.recordChannel( 1, "trace" ))
+		self.max = max(self.recordChannel( 1, "trace" ))
+		for i in range( 0, len( self.scales ) ):
+			# self.scale = float( self.scales[ i ] )
+			if self.max > ( 0.9 * float(str(self.scales[ i ] ))):
+				self.newscale = 5
+				self.scales[ i ] = self.newscale
+
+	def resetScale( self, trNum ):
+		if trNum == 1:
+			self.scale = self.scope.Acquisition.C1.Verscale
+		elif trNum == 2:
+			self.scale = self.scope.Acquisition.C1.Verscale
+		elif trNum == 3:
+			self.scale = self.scope.Acquisition.C1.Verscale
+		elif trNum == 4:
+			self.scale = self.scope.Acquisition.C1.Verscale
+		return self.scale

@@ -4,9 +4,6 @@ import VELA_CLARA_Scope_Control as vcsc
 import scope_writer_model
 import scope_writer_controller
 import scope_writer_view
-import loggerWidget as lw
-import logging
-logger = logging.getLogger(__name__)
 
 class scopeWriterApp(QtGui.QApplication):
     def __init__(self, sys_argv):
@@ -16,8 +13,7 @@ class scopeWriterApp(QtGui.QApplication):
         self.beamlines = {"VELA_INJ":  vcsc.MACHINE_AREA.VELA_INJ,
                           "VELA_BA1":  vcsc.MACHINE_AREA.VELA_BA1,
                           "VELA_BA1":  vcsc.MACHINE_AREA.VELA_BA2,
-                          "CLARA_S01": vcsc.MACHINE_AREA.CLARA_S01,
-                          "CLARA_S02": vcsc.MACHINE_AREA.CLARA_S02}
+                          "CLARA_S01": vcsc.MACHINE_AREA.CLARA_S01}
         self.modes = {"Physical": vcsc.MACHINE_MODE.PHYSICAL,
                       "Virtual":  vcsc.MACHINE_MODE.VIRTUAL,
                       "Offline":  vcsc.MACHINE_MODE.OFFLINE}
