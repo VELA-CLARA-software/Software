@@ -50,19 +50,21 @@ class scopeWriterController(QObject):
 				self.traceName = str(self.scopeCont.getScopeTraceDataStruct(self.scopeName).pvRoot)
 				epics.caput( str( self.traceChannelString ) , self.recordChannel( self.channelString ) )
 				self.measurementType = str( channel.itemAt(2).itemAt(1).widget().currentText() )
+				self.filterType = str( channel.itemAt(3).itemAt(1).widget().currentText() )
+				self.filterInterval = str( channel.itemAt(4).itemAt(1).widget().currentText() )
 				if self.measurementType == "Area":
-					self.signal = channel.itemAt(3)
+					self.signal = channel.itemAt(5)
 					self.signalStart = int( self.signal.itemAt(1).itemAt(0).widget().toPlainText() )
 					self.signalEnd = int( self.signal.itemAt(1).itemAt(2).widget().toPlainText() )				#Run threads for ATT calibration
 					#self.thread = threading.Thread(target = self.readTracesAndWriteAreaToEPICS, args=(self.scopeName, self.channel, self.baselineStart, self.baselineEnd, self.signalStart, self.signalEnd, self.epicsPVName))
 					#self.threads.append( self.thread )
-					self.readTracesAndWriteAreaToEPICS(self.scopeName, self.traceChannelPV, self.signalStart, self.signalEnd, self.epicsPVName)
+					self.readTracesAndWriteAreaToEPICS(self.scopeName, self.traceChannelPV, self.signalStart, self.signalEnd, self.epicsPVName, self.filterType, self.filterInterval)
 				elif self.measurementType == "Max":
-					self.readTracesAndWriteMaxToEPICS(self.scopeName, self.traceChannelPV, self.epicsPVName)
+					self.readTracesAndWriteMaxToEPICS(self.scopeName, self.traceChannelPV, self.epicsPVName, self.filterType, self.filterInterval)
 				elif self.measurementType == "Min":
-					self.readTracesAndWriteMinToEPICS(self.scopeName, self.traceChannelPV, self.epicsPVName)
+					self.readTracesAndWriteMinToEPICS(self.scopeName, self.traceChannelPV, self.epicsPVName, self.filterType, self.filterInterval)
 				elif self.measurementType == "Peak-to-Peak":
-					self.readTracesAndWriteP2PToEPICS(self.scopeName, self.traceChannelPV, self.epicsPVName)
+					self.readTracesAndWriteP2PToEPICS(self.scopeName, self.traceChannelPV, self.epicsPVName, self.filterType, self.filterInterval)
 				else:
 					print "ERROR!!!! Invalid measurement type"
 
@@ -94,7 +96,7 @@ class scopeWriterController(QObject):
 			print "this channel isn't valid"
 			self.epicsChan = vcsc.SCOPE_PV_TYPE.UNKNOWN
 		return self.epicsChan, self.traceChan
-		
+
 	def getChannelStrings(self, channel):
 		self.channel = channel
 		if self.channel == vcsc.SCOPE_PV_TYPE.P1:
@@ -139,16 +141,17 @@ class scopeWriterController(QObject):
 		self.interval = interval
 		self.window = numpy.ones(int(self.window_size))/float(self.window_size)
 		return numpy.convolve(self.interval, self.window, 'same')
-		
-	def readTracesAndWriteAreaToEPICS( self, scope_name, channel_name, area_start, area_end, epics_channel ):
+
+	def readTracesAndWriteAreaToEPICS( self, scope_name, channel_name, area_start, area_end, epics_channel, filter_type, filter_interval ):
 		self.scope_name = scope_name
 		self.channel_name = channel_name
 		self.area_start = area_start
 		self.area_end = area_end
 		self.epics_channel = epics_channel
+		self.filter_type = filter_type
+		self.filter_interval = filter_interval
+
 		self.numShots = 1
-		#print type(self.scope_name)
-		#print type(self.channel_name)
 		self.scopeCont.monitorATraceForNShots( self.scope_name, self.channel_name, self.numShots ) # We only take 1 trace - this should allow us to capture "interesting" conditioning events
 		while self.scopeCont.isMonitoringScopeTrace( self.scope_name, self.channel_name ):
 			time.sleep(0.001)
@@ -158,22 +161,26 @@ class scopeWriterController(QObject):
 		self.baseline_data = []
 		self.data = []
 		self.part_trace_data = []
-		self.movingAverageInterval = 5
 		self.partTrace = self.scopeCont.getPartOfTrace( self.scope_name, self.channel_name, self.area_start, self.area_end ) # This is a function in the .pyd library which allows the user to get a section of the trace.
 		#self.noise = self.scopeCont.getAvgNoise( self.scope_name, self.channel_name, self.baseline_start, self.baseline_end) # This takes the mean value of a region with no signal on it.
 		for i in range(self.numShots):
 			self.part_trace_data.append( numpy.sum( self.partTrace[i] )*self.allTraceDataStruct.timebase ) # This is the "raw" trace section.
-			self.data.append( numpy.sum( self.movingaverage( self.partTrace[i], self.movingAverageInterval ) )*self.allTraceDataStruct.timebase )
+			if self.filter_type == "None":
+				self.data.append( numpy.sum( self.partTrace[i] )*self.allTraceDataStruct.timebase )
+			elif self.filter_type == "Moving Average":
+				self.data.append( numpy.sum( self.movingaverage( self.partTrace[i], self.filter_interval ) )*self.allTraceDataStruct.timebase )
 		self.mean_area = numpy.mean( self.data )*math.pow(10,9)
 		print self.mean_area
 
 		epics.caput( self.epics_channel, self.mean_area )
 		time.sleep(0.1)
 
-	def readTracesAndWriteMaxToEPICS( self, scope_name, channel_name, epics_channel ):
+	def readTracesAndWriteMaxToEPICS( self, scope_name, channel_name, epics_channel, filter_type, filter_interval ):
 		self.scope_name = scope_name
 		self.channel_name = channel_name
 		self.epics_channel = epics_channel
+		self.filter_type = filter_type
+		self.filter_interval = filter_interval
 
 		self.numShots = 1
 		self.scopeCont.monitorATraceForNShots( self.scope_name, self.channel_name, self.numShots ) # We only take 1 trace - this should allow us to capture "interesting" conditioning events
@@ -189,10 +196,12 @@ class scopeWriterController(QObject):
 		epics.caput( self.epics_channel, self.mean_max )
 		time.sleep(0.1)
 
-	def readTracesAndWriteMinToEPICS( self, scope_name, channel_name, epics_channel ):
+	def readTracesAndWriteMinToEPICS( self, scope_name, channel_name, epics_channel, filter_type, filter_interval ):
 		self.scope_name = scope_name
 		self.channel_name = channel_name
 		self.epics_channel = epics_channel
+		self.filter_type = filter_type
+		self.filter_interval = filter_interval
 
 		self.numShots = 1
 		self.scopeCont.monitorATraceForNShots( self.scope_name, self.channel_name, self.numShots ) # We only take 1 trace - this should allow us to capture "interesting" conditioning events
@@ -208,10 +217,12 @@ class scopeWriterController(QObject):
 		epics.caput( self.epics_channel, self.mean_min )
 		time.sleep(0.1)
 
-	def readTracesAndWriteP2PToEPICS( self, scope_name, channel_name, epics_channel ):
+	def readTracesAndWriteP2PToEPICS( self, scope_name, channel_name, epics_channel, filter_type, filter_interval ):
 		self.scope_name = scope_name
 		self.channel_name = channel_name
 		self.epics_channel = epics_channel
+		self.filter_type = filter_type
+		self.filter_interval = filter_interval
 
 		self.numShots = 1
 		self.scopeCont.monitorATraceForNShots( self.scope_name, self.channel_name, self.numShots ) # We only take 1 trace - this should allow us to capture "interesting" conditioning events
