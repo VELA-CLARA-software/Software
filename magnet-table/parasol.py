@@ -77,13 +77,13 @@ class ParasolApp(QtGui.QMainWindow, Ui_MainWindow):
         for spin in (self.x_spin, self.xdash_spin, self.y_spin, self.ydash_spin):
             spin.valueChanged.connect(self.ustartChanged)
 
+        self.gun_dropdown.activated.connect(self.gunChanged)
         self.magInit = MagCtrl.init()
         self.machine_mode_dropdown.activated.connect(self.machineModeChanged)
         self.machineModeChanged()
         self.update_period = 100  # milliseconds
         self.startMainViewUpdateTimer()
-        self.rfPeakFieldChanged(update=False)
-        self.phaseChanged(self.gun.phase)
+        self.gunChanged() # initial update
 
     def resizeEvent(self, resizeEvent):
         # Remove plots one row at a time as the window shrinks
@@ -109,6 +109,12 @@ class ParasolApp(QtGui.QMainWindow, Ui_MainWindow):
                     self.sol_spin.setValue(self.sol_ref.siWithPol)
         finally:
             self.widgetUpdateTimer.start(self.update_period)
+
+    def gunChanged(self, index=None):
+        """The model has been changed. Refresh the display."""
+        self.gun = RFSolTracker(self.gun_dropdown.currentText())
+        self.rfPeakFieldChanged(update=False)
+        self.phaseChanged(self.gun.phase)
 
     def rfPeakFieldChanged(self, value=None, update=True):
         """The RF peak field has been changed."""

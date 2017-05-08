@@ -22,6 +22,34 @@
     <item>
      <layout class="QHBoxLayout" name="gun_hbox">
       <item>
+       <widget class="QComboBox" name="gun_dropdown">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select the RF/solenoid model to use.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Gun-10&lt;/span&gt;: VELA/CLARA 10 Hz gun&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;gb-rf-gun&lt;/span&gt;: Gulliford-Bazarov RF gun example&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;gb-dc-gun&lt;/span&gt;: Gulliford-Bazarov DC gun example&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <item>
+         <property name="text">
+          <string>Gun-10</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>gb-rf-gun</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>gb-dc-gun</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item>
        <widget class="QComboBox" name="machine_mode_dropdown">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
@@ -361,6 +389,9 @@
         </property>
         <property name="minimum">
          <double>0.000000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>8.000000000000000</double>
         </property>
         <property name="value">
          <double>5.000000000000000</double>
