@@ -24,11 +24,12 @@ class App(QtGui.QApplication):
 		self.view= view.Ui_MainWindow()
 		self.MainWindow = QtGui.QMainWindow()
 		self.view.setupUi(self.MainWindow)
-		self.model = model.Model(self.view)
+		self.model = model.Model(self.view,sys_argv[1],sys_argv[2],sys_argv[3])
 		self.controller = controller.Controller(self.view,self.model)
 		self.MainWindow.show()
 
 
 if __name__ == '__main__':
+
 	app = App(sys.argv)
 	sys.exit(app.exec_())

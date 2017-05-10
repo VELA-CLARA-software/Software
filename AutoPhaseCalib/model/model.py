@@ -1,5 +1,6 @@
 
 import sys,os
+import time
 os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
 os.environ["EPICS_CA_ADDR_LIST"] = "10.10.0.12" #BE SPECIFIC.... YOUR I.P. FOR YOUR VM
 os.environ["EPICS_CA_MAX_ARRAY_BYTES"] = "10000000"
@@ -16,13 +17,17 @@ import VELA_CLARA_LLRFControl as llrf
 import VELA_CLARA_Scope_Control as scope
 
 class Model():
-	def __init__(self,view):
+	def __init__(self,view,machineType,lineType,gunType):
 		self.view = view
 		self.magInit = mag.init()
 		self.bpmInit = bpm.init()
 		self.llrfInit = llrf.init()
 		self.scopeInit = scope.init()
-
+		self.machineType = machineType
+		self.lineType = lineType
+		self.gunType = gunType
+		self.view.label_MODE.setText('MODE: '+self.machineType+' '+self.lineType+' with '+self.gunType+' Hz gun')
+		self.setUpCtrls()
 		#self.beamlines = {"VELA":  mag.MACHINE_AREA.VELA_INJ, "CLARA": [mag.MACHINE_AREA.CLARA_INJ,mag.MACHINE_AREA.CLARA_S01,mag.MACHINE_AREA.CLARA_S02,mag.MACHINE_AREA.CLARA_2_VELA]}
 		#self.modes = {"Physical": mag.MACHINE_MODE.PHYSICAL, "Virtual": mag.MACHINE_MODE.VIRTUAL}
 
@@ -37,30 +42,32 @@ class Model():
 		print("Model Initialized")
 
 	def run(self):
-		if self.view.comboBox_line.currentText()=='VELA'and self.view.comboBox_mode.currentText()=='Physical':
+		if self.lineType=='VELA':
+			self.velaMethod()
+		elif self.lineType=='CLARA':
+			self.claraMethod()
+	def setUpCtrls(self):
+		if self.lineType=='VELA'and self.machineType=='Physical':
 			self.magnets = self.magInit.physical_VELA_INJ_Magnet_Controller()
 			self.scope = self.scopeInit.physical_VELA_INJ_Scope_Controller()
 			self.bpms = self.bpmInit.physical_VELA_INJ_BPM_Controller()
 			self.gun = self.llrfInit.physical_VELA_LRRG_LLRF_Controller()
-			self.velaMethod()
-		elif self.view.comboBox_line.currentText()=='CLARA'and self.view.comboBox_mode.currentText()=='Physical':
+		elif self.lineType=='CLARA'and self.machineType=='Physical':
 			self.magnets = self.magInit.physical_CLARA_INJ_Magnet_Controller()
 			self.scope = self.scopeInit.physical_CLARA_INJ_Scope_Controller()
 			self.bpms = self.bpmInit.physical_CLARA_INJ_BPM_Controller()
 			self.gun = self.llrfInit.physical_CLARA_LRRG_LLRF_Controller()
-			self.claraMethod()
-		elif self.view.comboBox_line.currentText()=='VELA'and self.view.comboBox_mode.currentText()=='Virtual':
+		elif self.lineType=='VELA'and self.machineType=='Virtual':
 			self.magnets = self.magInit.virtual_VELA_INJ_Magnet_Controller()
 			self.scope = self.scopeInit.virtual_VELA_INJ_Scope_Controller()
 			self.bpms = self.bpmInit.virtual_VELA_INJ_BPM_Controller()
 			self.gun = self.llrfInit.virtual_VELA_LRRG_LLRF_Controller()
-			self.velaMethod()
-		elif self.view.comboBox_line.currentText()=='CLARA'and self.view.comboBox_mode.currentText()=='Virtual':
+		elif self.lineType=='CLARA'and self.machineType=='Virtual':
 			self.magnets = self.magInit.virtual_CLARA_INJ_Magnet_Controller()
 			self.scope = self.scopeInit.virtual_CLARA_INJ_Scope_Controller()
 			self.bpms = self.bpmInit.virtual_CLARA_INJ_BPM_Controller()
 			self.gun = self.llrfInit.virtual_CLARA_LRRG_LLRF_Controller()
-			self.claraMethod()
+
 
 	def claraMethod(self):
 		print('clara Method')
@@ -93,7 +100,7 @@ class Model():
 
 	def setUpMagnets(self,magnets):
 		print('1. Setting up Magnets')
-		deguassingList=[]
+		deguassingList=mag.std_vector_string()
 		print('Deguassing magnets...')
 		for magnet in magnets:
 			if self.view.checkBox_deguassQ.isChecked() and self.magnets.isAQuad(magnet):
@@ -105,12 +112,18 @@ class Model():
 			elif self.view.checkBox_deguassD.isChecked() and self.magnets.isADip(magnet):
 				deguassingList.append(magnet)
 			else:
-				print('No magnets to be deguassed.')
+				print('Magnet '+magnet+' is off or not selected to be deguassed.')
 		print('Magnet to be Deguassed: '+str(deguassingList))
-		self.magnets.degauss(deguassingList)
+		self.activeMags = mag.std_vector_string()
+		self.activeMags.append('QUAD01')
+		#(self.activeMags, True)
+		self.magnets.degauss(self.activeMags, resetToZero = True)
+		while self.magnets.isDegaussing('QUAD01')==True:
+			print('hi')
+			time.sleep(5)
 
 		print('Switching off magnets...')
-		switchOfFList=[]
+		switchOfFList=mag.std_vector_string()
 		for magnet in magnets:
 			if self.view.checkBox_quadOff and self.magnets.isAQuad(magnet):
 				switchOfFList.append(magnets)

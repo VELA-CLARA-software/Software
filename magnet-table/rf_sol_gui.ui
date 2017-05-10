@@ -11,12 +11,44 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>RF/Solenoid Tracker</string>
+   <string>Parasol - Combined RF &amp; Solenoid Tracking</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>Icons/parasol.png</normaloff>Icons/parasol.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
      <layout class="QHBoxLayout" name="gun_hbox">
+      <item>
+       <widget class="QComboBox" name="gun_dropdown">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select the RF/solenoid model to use.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Gun-10&lt;/span&gt;: VELA/CLARA 10 Hz gun&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;gb-rf-gun&lt;/span&gt;: Gulliford-Bazarov RF gun example&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;gb-dc-gun&lt;/span&gt;: Gulliford-Bazarov DC gun example&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <item>
+         <property name="text">
+          <string>Gun-10</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>gb-rf-gun</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>gb-dc-gun</string>
+         </property>
+        </item>
+       </widget>
+      </item>
       <item>
        <widget class="QComboBox" name="machine_mode_dropdown">
         <property name="sizePolicy">
@@ -24,6 +56,9 @@
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
+        </property>
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Switch between machine modes:&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Offline&lt;/span&gt;: no interaction with machine&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Virtual&lt;/span&gt;: connect to local virtual machine&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Physical&lt;/span&gt;: connect to real machine via EPICS&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <item>
          <property name="text">
@@ -91,6 +126,9 @@
       </item>
       <item>
        <widget class="QDoubleSpinBox" name="peak_field_spin">
+        <property name="toolTip">
+         <string>Peak accelerating field produced inside the RF cavity</string>
+        </property>
         <property name="keyboardTracking">
          <bool>false</bool>
         </property>
@@ -109,6 +147,54 @@
        </widget>
       </item>
       <item>
+       <widget class="QLabel" name="momentum_label">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Fi&amp;nal momentum</string>
+        </property>
+        <property name="buddy">
+         <cstring>momentum_spin</cstring>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QDoubleSpinBox" name="momentum_spin">
+        <property name="toolTip">
+         <string>Final momentum of a particle after traversing the RF cavity</string>
+        </property>
+        <property name="buttonSymbols">
+         <enum>QAbstractSpinBox::UpDownArrows</enum>
+        </property>
+        <property name="keyboardTracking">
+         <bool>false</bool>
+        </property>
+        <property name="suffix">
+         <string> MeV/c</string>
+        </property>
+        <property name="decimals">
+         <number>3</number>
+        </property>
+        <property name="maximum">
+         <double>1000.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.100000000000000</double>
+        </property>
+        <property name="value">
+         <double>6.888000000000000</double>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="phase_hbox">
+      <item>
        <widget class="QLabel" name="phase_label">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
@@ -126,6 +212,12 @@
       </item>
       <item>
        <widget class="QDoubleSpinBox" name="phase_spin">
+        <property name="toolTip">
+         <string>Phase between injected electron and the RF cavity</string>
+        </property>
+        <property name="statusTip">
+         <string/>
+        </property>
         <property name="buttonSymbols">
          <enum>QAbstractSpinBox::UpDownArrows</enum>
         </property>
@@ -139,7 +231,7 @@
          <number>3</number>
         </property>
         <property name="minimum">
-         <double>-360.000000000000000</double>
+         <double>-720.000000000000000</double>
         </property>
         <property name="maximum">
          <double>720.000000000000000</double>
@@ -153,6 +245,59 @@
        </widget>
       </item>
       <item>
+       <widget class="QLabel" name="off_crest_label">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>&amp;Off-crest</string>
+        </property>
+        <property name="buddy">
+         <cstring>off_crest_spin</cstring>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QDoubleSpinBox" name="off_crest_spin">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Phase relative to off-crest value, or (unknown) when the crest phase is unknown.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="buttonSymbols">
+         <enum>QAbstractSpinBox::UpDownArrows</enum>
+        </property>
+        <property name="specialValueText">
+         <string>(unknown)</string>
+        </property>
+        <property name="keyboardTracking">
+         <bool>false</bool>
+        </property>
+        <property name="prefix">
+         <string>+</string>
+        </property>
+        <property name="suffix">
+         <string> °</string>
+        </property>
+        <property name="decimals">
+         <number>3</number>
+        </property>
+        <property name="minimum">
+         <double>-360.000000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>360.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.100000000000000</double>
+        </property>
+        <property name="value">
+         <double>-360.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="crest_button">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -160,12 +305,48 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
+        <property name="toolTip">
+         <string>Adjust the phase to produce the maximum momentum</string>
+        </property>
         <property name="text">
          <string>&amp;Crest</string>
         </property>
         <property name="icon">
          <iconset>
           <normaloff>Icons/mountain-summit.png</normaloff>Icons/mountain-summit.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="lock_button">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="toolTip">
+         <string>Re-crest and keep the off-crest value when the RF peak field changes</string>
+        </property>
+        <property name="text">
+         <string>Lo&amp;ck</string>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>Icons/padlock-open.png</normaloff>
+          <normalon>Icons/padlock-closed.png</normalon>Icons/padlock-open.png</iconset>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="checked">
+         <bool>false</bool>
+        </property>
+        <property name="default">
+         <bool>false</bool>
+        </property>
+        <property name="flat">
+         <bool>false</bool>
         </property>
        </widget>
       </item>
@@ -208,6 +389,9 @@
         </property>
         <property name="minimum">
          <double>0.000000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>8.000000000000000</double>
         </property>
         <property name="value">
          <double>5.000000000000000</double>
@@ -277,6 +461,9 @@
       </item>
       <item>
        <widget class="QDoubleSpinBox" name="cathode_field_spin">
+        <property name="toolTip">
+         <string>Use the combined BC and solenoid field map to calculate the field at the cathode</string>
+        </property>
         <property name="buttonSymbols">
          <enum>QAbstractSpinBox::UpDownArrows</enum>
         </property>
@@ -315,6 +502,9 @@
       </item>
       <item>
        <widget class="QDoubleSpinBox" name="sol_field_spin">
+        <property name="toolTip">
+         <string>Peak field in the solenoid</string>
+        </property>
         <property name="buttonSymbols">
          <enum>QAbstractSpinBox::UpDownArrows</enum>
         </property>
@@ -338,6 +528,47 @@
         </property>
        </widget>
       </item>
+      <item>
+       <widget class="QLabel" name="larmor_angle_label">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Final &amp;Larmor angle</string>
+        </property>
+        <property name="buddy">
+         <cstring>larmor_angle_spin</cstring>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QDoubleSpinBox" name="larmor_angle_spin">
+        <property name="toolTip">
+         <string>Final Larmor angle of the particle after traversing the RF cavity and solenoid</string>
+        </property>
+        <property name="buttonSymbols">
+         <enum>QAbstractSpinBox::UpDownArrows</enum>
+        </property>
+        <property name="keyboardTracking">
+         <bool>false</bool>
+        </property>
+        <property name="suffix">
+         <string> °</string>
+        </property>
+        <property name="decimals">
+         <number>3</number>
+        </property>
+        <property name="maximum">
+         <double>1000.000000000000000</double>
+        </property>
+        <property name="value">
+         <double>100.000000000000000</double>
+        </property>
+       </widget>
+      </item>
      </layout>
     </item>
     <item>
@@ -357,93 +588,6 @@
       </item>
       <item row="0" column="2">
        <widget class="PlotWidget" name="larmor_angle_plot"/>
-      </item>
-      <item row="1" column="0">
-       <layout class="QHBoxLayout" name="momentum_hbox">
-        <item>
-         <widget class="QLabel" name="momentum_label">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text">
-           <string>Fi&amp;nal momentum</string>
-          </property>
-          <property name="buddy">
-           <cstring>momentum_spin</cstring>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QDoubleSpinBox" name="momentum_spin">
-          <property name="buttonSymbols">
-           <enum>QAbstractSpinBox::UpDownArrows</enum>
-          </property>
-          <property name="keyboardTracking">
-           <bool>false</bool>
-          </property>
-          <property name="suffix">
-           <string> MeV/c</string>
-          </property>
-          <property name="decimals">
-           <number>3</number>
-          </property>
-          <property name="maximum">
-           <double>1000.000000000000000</double>
-          </property>
-          <property name="singleStep">
-           <double>0.100000000000000</double>
-          </property>
-          <property name="value">
-           <double>6.888000000000000</double>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item row="1" column="2">
-       <layout class="QHBoxLayout" name="larmor_angle_hbox">
-        <item>
-         <widget class="QLabel" name="larmor_angle_label">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text">
-           <string>Final &amp;Larmor angle</string>
-          </property>
-          <property name="buddy">
-           <cstring>larmor_angle_spin</cstring>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QDoubleSpinBox" name="larmor_angle_spin">
-          <property name="buttonSymbols">
-           <enum>QAbstractSpinBox::UpDownArrows</enum>
-          </property>
-          <property name="keyboardTracking">
-           <bool>false</bool>
-          </property>
-          <property name="suffix">
-           <string> °</string>
-          </property>
-          <property name="decimals">
-           <number>3</number>
-          </property>
-          <property name="maximum">
-           <double>1000.000000000000000</double>
-          </property>
-          <property name="value">
-           <double>100.000000000000000</double>
-          </property>
-         </widget>
-        </item>
-       </layout>
       </item>
      </layout>
     </item>
@@ -486,6 +630,9 @@
       </item>
       <item>
        <widget class="QDoubleSpinBox" name="x_spin">
+        <property name="toolTip">
+         <string>Initial horizontal position of the particle</string>
+        </property>
         <property name="buttonSymbols">
          <enum>QAbstractSpinBox::UpDownArrows</enum>
         </property>
@@ -530,6 +677,9 @@
       </item>
       <item>
        <widget class="QDoubleSpinBox" name="xdash_spin">
+        <property name="toolTip">
+         <string>Initial horizontal angle of the particle</string>
+        </property>
         <property name="buttonSymbols">
          <enum>QAbstractSpinBox::UpDownArrows</enum>
         </property>
@@ -574,6 +724,9 @@
       </item>
       <item>
        <widget class="QDoubleSpinBox" name="y_spin">
+        <property name="toolTip">
+         <string>Initial vertical position of the particle</string>
+        </property>
         <property name="buttonSymbols">
          <enum>QAbstractSpinBox::UpDownArrows</enum>
         </property>
@@ -618,6 +771,9 @@
       </item>
       <item>
        <widget class="QDoubleSpinBox" name="ydash_spin">
+        <property name="toolTip">
+         <string>Initial vertical angle of the particle</string>
+        </property>
         <property name="buttonSymbols">
          <enum>QAbstractSpinBox::UpDownArrows</enum>
         </property>

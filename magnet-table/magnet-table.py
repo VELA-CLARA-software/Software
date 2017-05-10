@@ -18,15 +18,9 @@ import scipy.constants  # speed of light
 import webbrowser  # to get help
 import VELA_CLARA_MagnetControl as MagCtrl
 from pkg_resources import resource_filename
-
-class ReturnsBlank:
-    def __getattr__(self, attr):
-        return ''
-try:
-    from colorama import init, Fore, Back, Style  # for coloured text in the terminal!
-    init(autoreset=True)
-except ImportError:
-    Fore = Back = Style = ReturnsBlank()
+sys.path.append('../loggerWidget')
+import loggerWidget as lw
+import logging
 
 # Note: to be able to import the magnet controller, I used
 # pip install -e "\\fed.cclrc.ac.uk\Org\NLab\ASTeC\Projects\VELA\Software\VELA_CLARA_PYDs\bin\stage"
@@ -53,7 +47,8 @@ image_credits = {
     'error.png': 'http://www.iconsdb.com/soylent-red-icons/warning-3-icon.html',
     'magnet.png': 'https://www.iconfinder.com/icons/15217/magnet_icon',
     'Open.png': 'https://www.iconfinder.com/icons/146495/data_document_documents_file_files_folder_open_open_file_open_folder_icon#size=24',
-    'help.png': 'https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-help-circled-128.png'}
+    'help.png': 'https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-help-circled-128.png',
+    'log.png': 'http://www.charitysciencehealth.com/'}
     
 # Define the speed of light. We need this to convert field integral to angle or K.
 # e.g. theta = field_int * c / p[eV/c]
@@ -115,6 +110,7 @@ class Magnet(object):
     def __repr__(self):
         return '<Magnet {}>'.format(self.name)
 
+logger = logging.getLogger('Magnet Table')
 class Window(QtGui.QMainWindow):
     
     def __init__(self, parent=None):
@@ -164,19 +160,32 @@ class Window(QtGui.QMainWindow):
         self.mom_mode_combo = mode_combo
 
         load_button = QtGui.QPushButton(QtGui.QIcon(pixmap('Open')), 'Load...')
+        load_button.setToolTip('Read in a lattice file')
         checkbox_grid.addWidget(load_button)
         load_button.clicked.connect(self.loadButtonClicked)
 
         help_button = QtGui.QPushButton(QtGui.QIcon(pixmap('help')), '')
-        checkbox_grid.addWidget(help_button)
+        help_button.setToolTip('Get help on this program')
+        help_button.setMaximumWidth(32)
+        checkbox_grid.addWidget(help_button, 0)
         help_button.clicked.connect(lambda: webbrowser.open('http://projects.astec.ac.uk/VELAManual2/index.php/Magnet_table'))
 
+        log_button = QtGui.QPushButton(QtGui.QIcon(pixmap('log')), '')
+        log_button.setCheckable(True)
+        log_button.setToolTip('Show the log')
+        log_button.setMaximumWidth(32)
+        checkbox_grid.addWidget(log_button, 0)
+        log_button.clicked.connect(self.logButtonClicked)
+
         layout.addLayout(checkbox_grid)
-            
+
+        hbox = QtGui.QHBoxLayout()
+        layout.addLayout(hbox)
+
         scroll_area = QtGui.QScrollArea(self)
         scroll_area.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
         scroll_area.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-        layout.addWidget(scroll_area)
+        hbox.addWidget(scroll_area, 3)
         
         section_container = QtGui.QWidget()
         section_list = QtGui.QVBoxLayout(section_container)
@@ -317,6 +326,10 @@ class Window(QtGui.QMainWindow):
             title.installEventFilter(self)
             magnet_list_vbox.addWidget(magnet_frame)
             
+        self.log_widget = lw.loggerWidget(logger)
+        self.log_widget.hide()
+        hbox.addWidget(self.log_widget, 2)
+
         # set up events (need to do setup first)
         for magnet in self.magnets.values():
             magnet.current_spin.valueChanged.connect(self.currentValueChanged)
@@ -422,8 +435,8 @@ class Window(QtGui.QMainWindow):
         """Called when a magnet type checkbox is clicked. Hide or show all the magnets of that type."""
         #which checkbox was clicked? remove 's' from end, last 6 letters, lower case
         mag_type = str(self.sender().text())
-        mag_type = mag_type[-7:-1].lower() 
-#        print(mag_type, toggled)
+        logger.info(('Show ' if toggled else 'Hide ') + mag_type)
+        mag_type = mag_type[-7:-1].lower()
         for mag_list in self.magnet_controls.values():
             for i in range(mag_list.count()):
                 magnet_vbox = mag_list.itemAt(i).widget()
@@ -578,7 +591,7 @@ class Window(QtGui.QMainWindow):
             if len(magnet.prev_values) == 1: # we're at the initial state
                 magnet.restore_button.setEnabled(False)
                 magnet.restore_button.setToolTip('')
-#            print('undo', magnet.name, undo_val, magnet.active, magnet.prev_values)
+            logger.info('Undo {magnet.name} to {undo_val:.3f} A'.format(**locals()))
         except IndexError: # pop from empty list - shouldn't happen!
             magnet.restore_button.setEnabled(False)
             magnet.restore_button.setToolTip('')
@@ -601,10 +614,11 @@ class Window(QtGui.QMainWindow):
     def momentumModeRadioClicked(self, index):
         combo = self.sender()
         mode = combo.currentText()
+        logger.info('Set momentum mode: ' + mode)
         self.settings.setValue('momentum_mode', mode)
         
     def setMachineMode(self, mode=None):
-        print('Setting machine mode:', mode)
+        logger.info('Set machine mode: ' + mode)
         os.environ["EPICS_CA_ADDR_LIST"] = "192.168.83.255" if mode == 'Physical' else "10.10.0.12"
         self.controller = self.magInit.getMagnetController(MagCtrl.MACHINE_MODE.names[mode.upper()], MagCtrl.MACHINE_AREA.VELA_INJ)
         self.settings.setValue('machine_mode', mode)
@@ -642,12 +656,19 @@ class Window(QtGui.QMainWindow):
             
         if applied_list:
             message = u'Applied the following settings from {filename}:\n\n{applied_list}'.format(**locals())
+            for line in message.split('\n'):
+                logger.info(message)
         else:
             message = 'No applicable magnet settings found in {filename}'.format(**locals())
+            logger.warning(message)
         QtGui.QMessageBox.about(self, 'Magnet table', message)
- 
+
+    def logButtonClicked(self):
+        """Show or hide the log."""
+        self.log_widget.setVisible(not self.log_widget.isVisible())
+
     def closeEvent(self, event):
-        print('closing')
+        logger.info('Close app')
         self.widgetUpdateTimer.stop()
         exit()
         

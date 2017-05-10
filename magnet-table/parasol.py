@@ -17,12 +17,15 @@ pg.setConfigOption('background', 0.2)
 pg.setConfigOption('foreground', 'w')
 
 image_credits = {
+    'parasol.png': 'https://www.shareicon.net/parasol-sun-umbrella-travel-tools-and-utensils-summer-sunshade-summertime-794079',
     'Offline.png': 'http://www.iconarchive.com/show/windows-8-icons-by-icons8/Network-Disconnected-icon.html',
     'Virtual.png': 'https://thenounproject.com/search/?q=simulator&i=237636',
     'Physical.png': 'http://www.flaticon.com/free-icon/car-compact_31126#term=car&page=1&position=19',
-    'mountain-summit.png': 'http://www.flaticon.com/free-icon/mountain-summit_27798#term=peak&page=1&position=6'}
-qtCreatorFile = "rf_sol_gui.ui"
-Ui_MainWindow, QtBaseClass = uic.loadUiType(qtCreatorFile)
+    'mountain-summit.png': 'http://www.flaticon.com/free-icon/mountain-summit_27798#term=peak&page=1&position=6',
+    'padlock-closed.png': 'https://www.iconfinder.com/icons/49855/closed_padlock_icon#size=32',
+    'padlock-open.png': 'https://www.iconfinder.com/icons/49856/open_padlock_unlocked_unsecure_icon#size=32'}
+
+Ui_MainWindow, QtBaseClass = uic.loadUiType("rf_sol_gui.ui")
 
 def noFeedback(method):
     """Wrapper to prevent feedback loops - don't keep cycling through (e.g.) current <-> field calculations."""
@@ -32,14 +35,20 @@ def noFeedback(method):
     return feedbackless
 
 
-class MyApp(QtGui.QMainWindow, Ui_MainWindow):
+class ParasolApp(QtGui.QMainWindow, Ui_MainWindow):
     def __init__(self):
         #TODO: get initial parameters from INI file, and save them as we go
-        self.gun = RFSolTracker('Gun-10')
+        self.gun = RFSolTracker('Gun-10', quiet=True)
         QtGui.QMainWindow.__init__(self)
         Ui_MainWindow.__init__(self)
         self.setupUi(self)
 
+        self.peak_field_spin.setValue(self.gun.rf_peak_field)
+        self.phase_spin.setValue(self.gun.phase)
+        self.bc_spin.setValue(self.gun.solenoid.bc_current)
+        self.sol_spin.setValue(self.gun.solenoid.sol_current)
+        self.crest_phase = float('nan')
+        self.phase_lock = self.lock_button.isChecked()
         self.E_field_plot.setLabels(title='Electric field', left='E [MV/m]', bottom='z [m]')
         self.B_field_plot.setLabels(title='Magnetic field', left='B [T]', bottom='z [m]')
         self.momentum_plot.setLabels(title='Momentum', left='p [MeV/c]', bottom='z [m]')
@@ -53,9 +62,12 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
                      self.larmor_angle_plot, self.E_field_plot, self.xy_plot, self.xdash_ydash_plot):
             plot.showGrid(True, True)
 
-        self.peak_field_spin.valueChanged.connect(self.gunParamsChanged)
-        self.phase_spin.valueChanged.connect(self.gunParamsChanged)
+        self.peak_field_spin.valueChanged.connect(self.rfPeakFieldChanged)
+        self.phase_spin.valueChanged.connect(self.phaseChanged)
+        self.off_crest_spin.valueChanged.connect(self.offCrestSpinChanged)
         self.crest_button.clicked.connect(self.crestButtonClicked)
+        self.lock_button.clicked.connect(self.lockButtonClicked)
+        self.lock_button.setEnabled(False)
         self.bc_spin.valueChanged.connect(self.solCurrentsChanged)
         self.sol_spin.valueChanged.connect(self.solCurrentsChanged)
         self.cathode_field_spin.valueChanged.connect(self.cathodeFieldChanged)
@@ -65,16 +77,17 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         for spin in (self.x_spin, self.xdash_spin, self.y_spin, self.ydash_spin):
             spin.valueChanged.connect(self.ustartChanged)
 
+        self.gun_dropdown.activated.connect(self.gunChanged)
         self.magInit = MagCtrl.init()
         self.machine_mode_dropdown.activated.connect(self.machineModeChanged)
         self.machineModeChanged()
         self.update_period = 100  # milliseconds
         self.startMainViewUpdateTimer()
-        self.gunParamsChanged()
+        self.gunChanged() # initial update
 
     def resizeEvent(self, resizeEvent):
         # Remove plots one row at a time as the window shrinks
-        self.xy_plot_hbox.setVisible(self.geometry().height() >= 512)
+        self.xy_plot.setVisible(self.geometry().height() >= 512)
         self.xdash_ydash_plot.setVisible(self.geometry().height() >= 512)
         self.E_field_plot.setVisible(self.geometry().height() >= 420)
         self.B_field_plot.setVisible(self.geometry().height() >= 420)
@@ -97,18 +110,72 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         finally:
             self.widgetUpdateTimer.start(self.update_period)
 
-    def gunParamsChanged(self, value=None):
-        """The gun parameters have been modified - rerun the simulation and update the GUI."""
+    def gunChanged(self, index=None):
+        """The model has been changed. Refresh the display."""
+        self.gun = RFSolTracker(self.gun_dropdown.currentText())
+        self.rfPeakFieldChanged(update=False)
+        self.phaseChanged(self.gun.phase)
+
+    def rfPeakFieldChanged(self, value=None, update=True):
+        """The RF peak field has been changed."""
         self.gun.setRFPeakField(self.peak_field_spin.value())
+        if self.phase_lock:
+            self.crest_phase = self.gun.crestCavity()
+            self.phase_spin.setValue(self.crest_phase + self.off_crest_spin.value())
+        else:
+            self.crest_phase = float('nan')
+            self.off_crest_spin.setValue(self.off_crest_spin.minimum())  # show special value (unknown)
+            # self.crest_button.show()
+            self.lock_button.setEnabled(False)
+        if update:
+            self.gunParamsChanged()
+
+    def phaseChanged(self, value=None):
+        """The RF phase has been changed."""
+        if value <= -360:
+            self.phase_spin.setValue(value + 360)
+            return
+        elif value >= 360:
+            self.phase_spin.setValue(value - 360)
+            return
+        if not np.isnan(self.crest_phase):
+            self.off_crest_spin.setValue(value - self.crest_phase)
         self.gun.setRFPhase(self.phase_spin.value())
+        self.gunParamsChanged()
+
+    def gunParamsChanged(self):
+        """The gun parameters have been modified - rerun the simulation and update the GUI."""
         self.E_field_plot.plot(self.gun.getZRange(), self.gun.getRFFieldMap() / 1e6, pen='r', clear=True)
         self.momentum_plot.plot(self.gun.getZRange(), self.gun.getMomentumMap(), pen='r', clear=True)
         self.momentum_spin.setValue(self.gun.getFinalMomentum())
         self.solCurrentsChanged()
 
+    def offCrestSpinChanged(self, value):
+        """The off-crest value has been changed - change the phase accordingly."""
+        if value == self.off_crest_spin.minimum():
+            # it's set to 'unknown' due to RF peak field being changed (and lock not set)
+            return
+        self.off_crest_spin.setPrefix('+' if value > 0 else '')
+        if np.isnan(self.crest_phase):
+            # Just come off special value (unknown)
+            self.off_crest_spin.setValue(0)
+            self.crestButtonClicked()
+        else:
+            self.phase_spin.setValue(self.crest_phase + value)
+
     def crestButtonClicked(self):
         """Find the crest of the RF cavity."""
-        self.phase_spin.setValue(self.gun.crestCavity())
+        self.crest_phase = self.gun.crestCavity()
+        self.phase_spin.setValue(self.crest_phase)
+        self.off_crest_spin.setValue(0)
+        self.lock_button.setEnabled(True)
+        self.phase_lock = True
+        self.lock_button.setChecked(self.phase_lock)
+        # self.crest_button.hide()
+
+    def lockButtonClicked(self):
+        """Set the phase lock state - does the off-crest value persist even when the RF peak field is changed?"""
+        self.phase_lock = self.lock_button.isChecked()
 
     def solCurrentsChanged(self, value=None):
         """The bucking coil or solenoid parameters have been modified - rerun the simulation and update the GUI."""
@@ -127,12 +194,12 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
     @noFeedback
     def cathodeFieldChanged(self, value=None):
         """The cathode field has been modified - find the bucking coil current that gives this field."""
-        self.bc_spin.setValue(self.gun.setCathodeField(value))
+        self.bc_spin.setValue(self.gun.solenoid.setCathodeField(value))
 
     @noFeedback
     def solPeakFieldChanged(self, value=None):
         """The solenoid peak field has been modified - find the solenoid current that gives this field."""
-        self.sol_spin.setValue(self.gun.setPeakMagneticField(value))
+        self.sol_spin.setValue(self.gun.solenoid.setPeakMagneticField(value))
 
     @noFeedback
     def momentumChanged(self, value=None):
@@ -170,6 +237,6 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
 
 if __name__ == "__main__":
     app = QtGui.QApplication(sys.argv)
-    window = MyApp()
+    window = ParasolApp()
     window.show()
     sys.exit(app.exec_())
