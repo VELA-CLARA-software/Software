@@ -2,3 +2,12 @@ magnet-table/magnet-table.ini
 *.pyc
 *.pyc
 MagnetApp/GUI_FileLoad.pyc
+*.csv
+Striptool/striptool.pyc
+*.txt
+*.cprof
+*.profile
+*.xml
+Striptool/.idea/Striptool.iml
+*.prof
+Striptool/examples/test.profile

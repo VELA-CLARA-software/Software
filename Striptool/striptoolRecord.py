@@ -21,6 +21,7 @@ class repeatedTimer:
         self.event = Event()
         self.thread = threading.Thread(target=self._target)
         self.thread.daemon = True
+        self.intervalChanged = False
         self.thread.start()
 
     def _target(self):
@@ -60,6 +61,10 @@ class createSignalTimer(QObject):
         value = self.function(*self.args)
         self.dataReady.emit([round(time.time(),2),value])
 
+    def setInterval(self, interval):
+        self.timer.stop()
+        self.startTimer(interval)
+
 class recordWorker(QtCore.QObject):
     def __init__(self, records, signal, name):
         super(recordWorker, self).__init__()
@@ -88,7 +93,8 @@ class createSignalRecord(QObject):
         self.records = records
         self.name = name
         self.signal = createSignalTimer(name, function, arg=arg)
-        self.records[name] = {'name': name, 'record': self, 'pen': pen, 'timer': timer, 'maxlength': maxlength, 'function': function, 'arg': arg, 'ploton': True, 'data': [], 'functionForm': functionForm, 'functionArgument': functionArgument,
+        self.records[name] = {'name': name, 'record': self, 'pen': pen, 'timer': timer, 'maxlength': maxlength, 'function': function, 'arg': arg, 'ploton': True, 'data': [],
+        'functionForm': functionForm, 'functionArgument': functionArgument,
         'logscale': logscale, 'VerticalScale': VerticalScale, 'VerticalOffset': VerticalOffset, 'verticalMeanSubtraction': verticalMeanSubtraction, 'signal': self.signal}
         self.thread = QtCore.QThread()
         self.worker = recordWorker(self.records, self.signal, name)
@@ -97,7 +103,7 @@ class createSignalRecord(QObject):
         self.signal.startTimer(timer)
 
     def setInterval(self, newinterval):
-        self.signal.timer.setInterval(newinterval)
+        self.signal.setInterval(newinterval)
 
     def stop(self):
         self.signal.timer.stop()

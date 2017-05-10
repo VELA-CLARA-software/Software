@@ -169,8 +169,10 @@ class stripLegend(pg.TreeWidget):
     def changeSampleRate(self, name, widget):
         string = str(widget.currentText())
         number = [int(s) for s in string.split() if s.isdigit()]
+        number = string[0:-3]
+        print 'number = ', number
         if len(number) > 0:
-            number = number[0]
+            number = float(number)
             value = 1.0/float(number)
             self.records[name]['timer'] = value
             self.records[name]['record'].setInterval(value)

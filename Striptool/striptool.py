@@ -258,7 +258,7 @@ class stripPlot(QWidget):
         self.linearCheckbox.setChecked(ischecked)
         self.subtractMean = ischecked
         for name in self.records:
-            self.records[name]['curve'].setVerticalMeanSubtraction(self.subtractMean)
+            self.records[name]['verticalMeanSubtraction'] = self.subtractMean
 
     def deleteAllCurves(self, reply=False):
         if reply == False:

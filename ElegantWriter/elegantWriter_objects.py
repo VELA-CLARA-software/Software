@@ -1,16 +1,61 @@
+import time
 import yaml
 import traceback
 import itertools
 import copy
 import collections
+import sqlite3
+conn = sqlite3.connect('elegant.db')
+c = conn.cursor()
 
-stream = file('commands.yaml', 'r')
-commandkeywords = yaml.load(stream)
-stream.close()
+def save_Elements_to_SQLite():
+    stream = file('elements.yaml', 'r')
+    elementkeywords = yaml.load(stream)
+    stream.close()
+    try:
+        c.execute('''CREATE TABLE elements
+                 (element, parameter, type)''')
+    except:
+        pass
+    for element in elementkeywords.iteritems():
+        elem = element[0]
+        data = element[1]
+        # print command[1]
+        for dat in data.iteritems():
+            c.execute('INSERT INTO elements VALUES (?,?,?)', (elem, dat[0],dat[1]))
+    conn.commit()
+def save_Commands_to_SQLite():
+    stream = file('commands.yaml', 'r')
+    commandkeywords = yaml.load(stream)
+    stream.close()
+    try:
+        c.execute('''CREATE TABLE commands
+                 (command, parameter, type)''')
+    except:
+        pass
+    for command in commandkeywords.iteritems():
+        comm = command[0]
+        data = command[1]
+        # print command[1]
+        for dat in data.iteritems():
+            c.execute('INSERT INTO commands VALUES (?,?,?)', (comm, dat[0],dat[1]))
+    conn.commit()
 
-stream = file('elements.yaml', 'r')
-elementkeywords = yaml.load(stream)
-stream.close()
+start = time.time()
+commandkeywords = {}
+for commandname, parameter, value in c.execute('SELECT * FROM commands ORDER BY command'):
+    if not commandname in commandkeywords:
+        commandkeywords[commandname] = {}
+    commandkeywords[commandname][parameter] = value
+print 'time to load commands = ', time.time() - start
+
+start = time.time()
+elementkeywords = {}
+for elementname, parameter, value in c.execute('SELECT * FROM elements ORDER BY element'):
+    if not elementname in elementkeywords:
+        elementkeywords[elementname] = {}
+    elementkeywords[elementname][parameter] = value
+print 'time to load elements = ', time.time() - start
 
 class elegantLattice(object):
 
@@ -19,7 +64,7 @@ class elegantLattice(object):
         # self.parent = parent
         self.elementObjects = {}
         self.lineObjects = {}
-        self.commandObjects = {}
+        self.commandObjects = collections.OrderedDict()
 
 
     def __getitem__(self,key):
@@ -136,6 +181,13 @@ class elegantLattice(object):
         for line in self.lineDefinitions:
             file.write(getattr(self,line).write())
 
+    def screensToWatch(self):
+        self._doLineExpansion('cla-ebt')
+        self.elementDefinitions = reduce(lambda l, x: l if x in l else l+[x], self.elementDefinitions, [])
+        for element in self.elementDefinitions:
+            if 'scr' in element.lower():
+                print getattr(self,element).properties
+
 class elegantObject(object):
 
     def __init__(self, name=None, type=None, **kwargs):
@@ -179,7 +231,7 @@ class elegantObject(object):
         return float(value)
 
     def string(self, value):
-        return '"'+value+'"'
+        return ''+value+''
 
 class elegantCommand(elegantObject):
 

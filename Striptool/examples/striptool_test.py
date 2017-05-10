@@ -19,14 +19,16 @@ def convert_to_seconds(s):
     return int(s[:-1]) * seconds_per_unit[s[-1]]
 
 class timeButton(QPushButton):
-    def __init__(self, mainForm):
+
+    timeButtonPushed = pyqtSignal('int')
+
+    def __init__(self, label):
         super(timeButton, self).__init__()
-        self.__mainForm = mainForm
-        self.connect(self, SIGNAL("clicked ()"), self.buttonPushed)
+        self.setText(label)
+        self.clicked.connect(self.buttonPushed)
 
     def buttonPushed(self):
-        # send signal to MainForm class, self.__comboID is actually row number, ind is what is selected
-        self.__mainForm.emit(SIGNAL("timeButtonPushed(int)"), convert_to_seconds(str(self.text())))
+        self.timeButtonPushed.emit(convert_to_seconds(str(self.text())))
 
 class striptool_Demo(QMainWindow):
     def __init__(self, parent = None):
@@ -68,18 +70,30 @@ class striptool_Demo(QMainWindow):
             Here I set it to 1000 as an example :
                  - a 3600 length record would decimate at order 1/3 and would have a plotting record length of 1200
                  - you probably don't need to use this unless you are having trouble with slow plotting.'''
-        self.sp.setDecimateLength(1000000000)
-        self.sp2.setDecimateLength(1000000000)
-        self.sp3.setDecimateLength(1000000000)
+        # self.sp.setDecimateLength(1000)
+        self.sp2.setDecimateLength(100000)
+        # self.sp3.setDecimateLength(1000)
 
         ''' Add some signals to the striptool - note they call our signal generator at a frequency of 1/timer (100 Hz and 10 Hz in these cases).
             The 'pen' argument sets the color of the curves, but can be changed in the GUI
                 - see <http://www.pyqtgraph.org/documentation/style.html>'''
         self.sp.addSignal(name='signal1',pen='r', timer=1.0/100.0, function=self.createRandomSignal, arg=[0.5])
-        self.sp2.addSignal(name='signal1',pen='r', timer=1.0/10.0, maxlength=100, function=self.createRandomSignal, arg=[-3])
-        self.sp2.addSignal(name='signal2',pen='g', timer=1.0/10.0, function=self.createRandomSignal, arg=[0])
-        self.sp2.addSignal(name='signal3',pen='b', timer=1.0/10.0, function=self.createRandomSignal, arg=[4])
-        self.sp3.addSignal(name='signal3',pen='b', timer=1.0/10.0, function=self.createRandomSignal, arg=[0.5])
+        self.sp2.addSignal(name='signal2',pen='r', timer=1.0/10.0, function=self.createRandomSignal, arg=[-5])
+        self.sp2.addSignal(name='signal3',pen='g', timer=1.0/10.0, function=self.createRandomSignal, arg=[-3])
+        self.sp2.addSignal(name='signal4',pen='b', timer=1.0/10.0, function=self.createRandomSignal, arg=[-1])
+        self.sp2.addSignal(name='signal5',pen='c', timer=1.0/10.0, function=self.createRandomSignal, arg=[1])
+        self.sp2.addSignal(name='signal6',pen='m', timer=1.0/10.0, function=self.createRandomSignal, arg=[3])
+        self.sp2.addSignal(name='signal7',pen='y', timer=1.0/10.0, function=self.createRandomSignal, arg=[5])
+        # self.sp3.addSignal(name='signal8',pen='b', timer=1.0/10.0, function=self.createRandomSignal, arg=[0.5])
+
+        ''' this adds pre-data to the signal '''
+        for name, offset in {'signal2':-5,'signal3':-3,'signal4':-1,'signal5':1,'signal6':3,'signal7':5}.items():
+            testdata = []
+            t = time.time()
+            n = 100
+            for i in range(n):
+                testdata.append([t-(n/10)+i/10.0,self.createRandomSignal(offset,t-(n/10)+i/10.0)])
+            self.sp2.records[name]['data'] = np.array(testdata)
 
         ''' To remove a signal, reference it by name or use the in-built controls'''
         # sp.removeSignal(name='signal1')
@@ -87,7 +101,7 @@ class striptool_Demo(QMainWindow):
 
         ''' Here we create a tab layout widget, and put the 3 stripplots into a grid layout in one of the tabs
             In the second tab we put the first stripplot. NB: the stripplot "sp" can only exist in one place at a time!
-            Comment out line 83 to see the difference. '''
+        '''
         self.tab = QTabWidget()
         self.plotLayout = QGridLayout()
         self.plotLayout.addWidget(self.sp2,0,0)
@@ -96,11 +110,14 @@ class striptool_Demo(QMainWindow):
         self.timeButton10 = self.createTimeButton('10s')
         self.timeButton60 = self.createTimeButton('1m')
         self.timeButton600 = self.createTimeButton('10m')
-        self.connect(self, SIGNAL("timeButtonPushed(int)"), self.changePlotScales)
+        self.timeButton6000 = self.createTimeButton('100m')
+        self.timeButton60000 = self.createTimeButton('1000m')
         self.timeButtonLayout = QHBoxLayout()
         self.timeButtonLayout.addWidget(self.timeButton10)
         self.timeButtonLayout.addWidget(self.timeButton60)
         self.timeButtonLayout.addWidget(self.timeButton600)
+        self.timeButtonLayout.addWidget(self.timeButton6000)
+        self.timeButtonLayout.addWidget(self.timeButton60000)
         self.plotLayout.addLayout(self.timeButtonLayout,3,0,1,1)
         self.plotWidget = QFrame()
         self.plotWidget.setLayout(self.plotLayout)
@@ -114,19 +131,19 @@ class striptool_Demo(QMainWindow):
         # self.tab.addTab(self.logwidget1,"Log")
 
         ''' This starts the plotting timer (by default at 1 Hz) '''
-        self.sp.start()
+        # self.sp.start()
         self.sp2.start()
-        self.sp3.start()
+        # self.sp3.start()
 
         ''' modify the plot scale to 10 secs '''
         self.sp.setPlotScale(600)
-        self.sp2.setPlotScale(100)
+        self.sp2.setPlotScale(600*1)
         self.sp3.setPlotScale(600)
 
         # self.sp2.setPlotType(FFT=True)
         # self.sp3.setPlotType(FFT=False)
         self.sp.setPlotRate(10)
-        self.sp2.setPlotRate(10)
+        self.sp2.setPlotRate(1)
         self.sp3.setPlotRate(10)
 
         ''' Display the Qt App '''
@@ -139,17 +156,19 @@ class striptool_Demo(QMainWindow):
         The signal should have peaks at 5 Hz and 10 Hz, which should be seen on the FFT plot assuming the
         sample rate is high enough
     '''
-    def createRandomSignal(self, offset=0):
-        signalValue = np.sin(2*2*np.pi*time.time()+0.05)+np.sin(1.384*2*np.pi*time.time()-0.1)+0.5*np.random.normal()
+    def createRandomSignal(self, offset=0, t=None):
+        if t == None:
+            t = time.time()
+        signalValue = np.sin(2*2*np.pi*t+0.05)+np.sin(1.384*2*np.pi*t-0.1)+0.5*np.random.normal()
         return signalValue+offset
 
     def createTimeButton(self,label):
-        button = timeButton(self)
-        button.setText(label)
+        button = timeButton(label)
+        button.timeButtonPushed.connect(self.changePlotScales)
         return button
 
     def changePlotScales(self, time):
-        print 'time = ', time
+        print( 'time = ', time)
         for plot in self.findChildren((striptool.stripPlot)):
             plot.setPlotScale(time)
 
@@ -164,7 +183,7 @@ class striptool_Demo(QMainWindow):
 
     def updateStatusBar(self,text):
         self.statusBar.clearMessage()
-    	self.statusBar.showMessage(text,2000)
+        self.statusBar.showMessage(text,2000)
 
     def testSleep(self):
         import time
@@ -177,7 +196,7 @@ class striptool_Demo(QMainWindow):
 
     def keyPressEvent(self, e):
         if e.key() == QtCore.Qt.Key_F11:
-            print "Maximise!"
+            print( "Maximise!")
             self.sp.handleSignalValueTableSplitterButton(left=True)
             self.sp.strip.handleLegendSplitterButton(left=True)
 
