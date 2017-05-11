@@ -1,10 +1,11 @@
-import sys, os, time
+import sys, os, time, math
 from elegantWriter_objects import *
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 import pyqtgraph as pg
 import subprocess
 import sdds
+import glob
 
 class elegantGUI(QMainWindow):
     def __init__(self, parent = None):
@@ -12,12 +13,18 @@ class elegantGUI(QMainWindow):
         ''' Here we create an elegant environment '''
         ele = elegantInterpret()
         ''' now we read in a lattice file (can also be MAD format, but not all commands are equivalent (cavities are a problem!)) '''
-        self.lattice = ele.readElegantFile('diamond.lte')
-        self.lattice.writeLatticeFile('test.lte','diamond')
+        self.lattice = ele.readElegantFile('c2v.lte')
+        self.lattice.writeLatticeFile('test.lte','cla-ebt')
 
-        # self.lattice.addCommand(type='global_settings',log_file="elegant.log",error_log_file="elegant.err")
-        self.lattice.addCommand(type='run_setup',lattice="test.lte",use_beamline="diamond",p_central_mev=3000,centroid='%s.cen')
-        self.lattice.addCommand(type='twiss_output',matched = 1,output_at_each_step=0,radiation_integrals=1,statistics=1,filename="%s.twi")
+        self.lattice.addCommand(type='global_settings',log_file="elegant.log",error_log_file="elegant.err")
+        self.lattice.addCommand(type='run_setup',lattice="test.lte",use_beamline="CLA-EBT",p_central=70.31,centroid='%s.cen',always_change_p0 = 1)
+        self.lattice.addCommand(type='run_control',n_steps=1, n_passes=1)
+        self.lattice.addCommand(type='twiss_output',matched = 0,output_at_each_step=0,radiation_integrals=1,statistics=1,filename="%s.twi",beta_x  =  0.961326,
+	alpha_x = -1.03701,
+	beta_y  =  1.11184,
+	alpha_y = -1.18067)
+        self.lattice.addCommand(type='bunched_beam',n_particles_per_bunch=100,use_twiss_command_values=1,emit_nx=0.3e-6,emit_ny=0.3e-6)
+        self.lattice.addCommand(type='track')
         # print lattice.global_settings.write()+lattice.run_setup.write()
 
         self.openElegantPipe()
@@ -28,17 +35,35 @@ class elegantGUI(QMainWindow):
 
         self.table = latticeTable(self.lattice)
         self.table.elementChanged.connect(self.runAndUpdate)
-        self.table.updateTable('diamond')
+        self.table.updateTable('cla-ebt')
         self.layout.addWidget(self.table)
 
-        self.sddsPlot = SDDSPlotWidget()
-        self.layout.addWidget(self.sddsPlot)
+        self.tab = QTabWidget()
+        self.sddsPlot = SDDSTwissPlotWidget()
+        self.tab.addTab(self.sddsPlot,"Twiss Parameters")
+
+        self.beamPlots = pg.GraphicsLayoutWidget()
+        noplots = 0
+        plotsperrow = int(math.sqrt(len(glob.glob('*SCR*.SDDS'))))
+        for name in glob.glob('*SCR*.SDDS'):
+            self.plot = SDDSBeamPlotWidget(name,xaxis='x',yaxis='y',pen='r').plot
+            print self.plot
+            self.beamPlots.addItem(self.plot)
+            if noplots >= plotsperrow:
+                self.beamPlots.nextRow()
+            else:
+                self.beamPlots.nextColumn()
+        self.tab.addTab(self.beamPlots,"Beam Plots")
+
+        self.layout.addWidget(self.tab)
+
+
 
         self.setCentralWidget(self.centralWidget)
         self.runAndUpdate()
 
     def runAndUpdate(self):
-        self.lattice.writeLatticeFile('test.lte','diamond')
+        self.lattice.writeLatticeFile('test.lte','cla-ebt')
         self.runElegant(self.lattice)
         self.sddsPlot.loadTwi()
 
@@ -60,6 +85,7 @@ class elegantGUI(QMainWindow):
         # self.proc.stdin.write(lattice.global_settings.write())
         # self.proc.stdin.write(lattice.run_setup.write())
         # self.proc.stdin.write(lattice.twiss_output.write())
+        print lattice.writeCommandFile()
         stdout, stderr = self.proc.communicate(lattice.writeCommandFile())
         # self.proc.communicate(lattice.twiss_output.write())
         # time.sleep(1)
@@ -68,10 +94,10 @@ class elegantGUI(QMainWindow):
         #     time.sleep(1)
         # self.lattice.writeCommandFile('test.ele')
 
-class SDDSPlotWidget(QWidget):
+class SDDSTwissPlotWidget(QWidget):
 
     def __init__(self, **kwargs):
-        super(SDDSPlotWidget, self).__init__(**kwargs)
+        super(SDDSTwissPlotWidget, self).__init__(**kwargs)
         self.plotWidget = pg.PlotWidget()
         self.plot = self.plotWidget.plot()
         self.layout = QVBoxLayout()
@@ -142,6 +168,24 @@ class SDDSPlotWidget(QWidget):
         # self.table = latticeTable(lattice)
         # self.table.updateTable('lin2wig')
         # self.setCentralWidget(self.table)
+
+class SDDSBeamPlotWidget(pg.PlotWidget):
+
+    def __init__(self, filename, xaxis='x', yaxis='y', **kwargs):
+        super(SDDSBeamPlotWidget, self).__init__(**kwargs)
+        self.setLabels(left=yaxis, bottom=xaxis)
+        self.sddsdata = sdds.SDDS(0)
+        self.sddsdata.load(filename)
+        for col in range(len(self.sddsdata.columnName)):
+            if len(self.sddsdata.columnData[col]) == 1:
+                setattr(self.sddsdata,self.sddsdata.columnName[col],self.sddsdata.columnData[col][0])
+            else:
+                setattr(self.sddsdata,self.sddsdata.columnName[col],self.sddsdata.columnData[col])
+        self.SDDSparameterNames = list()
+        for param in self.sddsdata.columnName:
+            if isinstance(getattr(self.sddsdata,param)[0], (float, long)):
+                self.SDDSparameterNames.append(param)
+        self.plot = self.plot(x=getattr(self.sddsdata,xaxis), y=getattr(self.sddsdata,yaxis),pen=None,symbol='o')
 
 class latticeTable(pg.TableWidget):
 
@@ -266,7 +310,7 @@ def main():
    # app.setStyle(QStyleFactory.create("plastique"))
    ex = elegantGUI()
    ex.show()
-   # ex.pausePlots(ex.tab)
+   ex.lattice.screensToWatch()
    # ex.testSleep()
    sys.exit(app.exec_())
 

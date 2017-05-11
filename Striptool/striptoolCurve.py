@@ -18,7 +18,7 @@ class curve(QObject):
         self.curve = self.plot.plot.plot()
         self.curve.setData({'x': [], 'y': []}, pen=self.records[self.name]['pen'])
         self.lines = QGraphicsPathItem()
-        self.plot.plot.addItem(self.lines)
+        # self.plot.plot.addItem(self.lines)
         self.fftTextLabels = []
         self.setVerticalScale(self.records[self.name]['VerticalScale'])
         self.setVerticalOffset(self.records[self.name]['VerticalOffset'])
@@ -26,8 +26,7 @@ class curve(QObject):
         self.setLogScale(self.records[self.name]['logscale'])
         self.setHistogramBins()
         self.setDecimateScale()
-        # self.lineOn = False
-        # self.records[self.name]['signal'].dataReady.connect(self.addToPath)
+        self.lineOn = False
 
     def signalValueAtX(self, xvalue):
         return stfunctions.takeClosestPosition(self.plotData[:,0],self.plotData,xvalue)[1][1]
@@ -39,7 +38,7 @@ class curve(QObject):
         self.VerticalOffset = offset
 
     def setVerticalMeanSubtraction(self, subtractmean=False):
-        self.verticalMeanSubtraction =  subtractmean
+        self.verticalMeanSubtraction = subtractmean
 
     def setLogScale(self,logscale=False):
         self.logscale = logscale
@@ -53,22 +52,27 @@ class curve(QObject):
     ''' This updates the curve points based on the plot type and using the data from the timefilter function '''
     def updateData(self, data, pen):
         if len(data) > 1:
+            if len(data) > self.decimateScale:
+                decimationfactor = int(np.floor(len(data)/self.decimateScale))
+                data = data[::decimationfactor].copy()
             x,y = np.transpose(data)
-            if self.logscale:
+            if self.records[self.name]['logscale']:
                 y = np.log10(np.abs(y))
-            if not self.VerticalScale == 1 or not self.VerticalOffset == 0:
+            if not self.records[self.name]['VerticalScale'] == 1 or not self.records[self.name]['VerticalOffset'] == 0:
                 y = (self.VerticalScale * y) + self.VerticalOffset
-            if self.verticalMeanSubtraction:
+            if self.records[self.name]['verticalMeanSubtraction']:
                 y = y - np.mean(y)
             if self.plot.stripplot.histogramPlot:
-                # if self.lineOn:
-                #     self.plot.plot.removeItem(self.lines)
+                if self.lineOn:
+                    self.plot.plot.removeItem(self.lines)
+                    self.lineOn = False
                 # self.curve.setFftMode(False)
                 y2,x2 = np.histogram(y, bins=self.numberBins)
                 self.curve.setData({'x': x2, 'y': y2}, pen=pen, stepMode=True, fillLevel=0, fillBrush=pen)
             elif self.plot.stripplot.FFTPlot:
-                # if self.lineOn:
-                #     self.plot.plot.removeItem(self.lines)
+                if self.lineOn:
+                    self.plot.plot.removeItem(self.lines)
+                    self.lineOn = False
                 x, y = self.curve._fourierTransform(x,y)
                 # self.curve.setData({'x': [0,1], 'y': [0,1]}, pen=pen, stepMode=False, fillLevel=None)
                 # self.curve.setFftMode(True)
@@ -85,10 +89,17 @@ class curve(QObject):
                             self.plot.plot.addItem(fftTextArrow)
                 # self.curve.setFftMode(True)
             else:
-                data = np.transpose([x,y])
-                self.curve.setData({'x': x, 'y': y}, stepMode=False, fillLevel=None)
+                # data = np.transpose([x,y])
+                if not self.lineOn:
+                    self.curve.setData({'x': [], 'y': []}, stepMode=False, fillLevel=None, pen=pen)
+                path = pg.arrayToQPath(x, y)
+                self.lines.setPath(path)
+                if not self.lineOn:
+                    self.lines.setPen(pg.mkPen(pen))
+                    self.plot.plot.addItem(self.lines)
+                    self.lineOn = True
             if self.plot.crosshairs:
-                self.plot.signalValuesUnderCrosshairs.emit((self.name, self.signalValueAtX(self.plot.vLine.value()), np.mean(y), np.std(y)))
+                self.plot.signalValuesUnderCrosshairs.emit(self.name, self.signalValueAtX(self.plot.vLine.value()), np.mean(y), np.std(y))
     #
     # def createPath(self, data):
     #     path = QPainterPath(QPointF(data[0][0],data[0][1]))
@@ -134,16 +145,17 @@ class curve(QObject):
             self.doingPlot = False
         self.plot.plotUpdated.emit()
 
-# class MultiLine(pg.QtGui.QGraphicsPathItem):
-#     def __init__(self, x, y, pen, log=False):
-#         """x and y are 1D arrays of shape (Nplots, Nsamples)"""
-#         self.path = pg.arrayToQPath(x, y)
-#         self.setPath(self.path)
-#         if log:
-#             self.setPen(pg.mkPen(pen,width=3))
-#         else:
-#             self.setPen(pg.mkPen(pen,width=2))
-#     def shape(self): # override because QGraphicsPathItem.shape is too expensive.
-#         return pg.QtGui.QGraphicsItem.shape(self)
-#     def boundingRect(self):
-#         return self.path.boundingRect()
+class MultiLine(pg.QtGui.QGraphicsPathItem):
+    def __init__(self, x, y, pen, log=False):
+        """x and y are 1D arrays of shape (Nplots, Nsamples)"""
+        self.path = pg.arrayToQPath(x, y)
+        pg.QtGui.QGraphicsPathItem.__init__(self, self.path)
+        # self.setPath(self.path)
+        if log:
+            self.setPen(pg.mkPen(pen,width=3))
+        else:
+            self.setPen(pg.mkPen(pen,width=2))
+    def shape(self): # override because QGraphicsPathItem.shape is too expensive.
+        return pg.QtGui.QGraphicsItem.shape(self)
+    def boundingRect(self):
+        return self.path.boundingRect()
