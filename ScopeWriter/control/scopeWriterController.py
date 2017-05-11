@@ -16,8 +16,8 @@ class scopeWriterController(QObject):
 		self.scopeName = self.scopeCont.getScopeNames()[0]
 		self.pvRoot = self.scopeCont.getScopeTraceDataStruct(self.scopeName).pvRoot
 		self.started = False
-		#self.scope=win32com.client.Dispatch("LeCroy.XStreamDSO")
-		#self.scope.Measure.MeasureMode = "StdVertical"
+		self.scope=win32com.client.Dispatch("LeCroy.XStreamDSO")
+		self.scope.Measure.MeasureMode = "StdVertical"
 		self.traceNames = self.scopeCont.getScopeTracePVs()
 		self.numNames = self.scopeCont.getScopeNumPVs()
 		self.appendToList()
