@@ -14,28 +14,31 @@ except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
 
-class scopeWriterUi_TabWidget(object):
-    def setupUi(self, TabWidget, scopeCont):
-        self.TabWidget = TabWidget
-        #self.TabWidget.resize(1000, 402)
-        self.scopeCont = scopeCont
-        self.TabWidget.setObjectName(_fromUtf8("Scope EPICS Writer"))
-        self.tab = QtGui.QWidget()
-        self.tab.setObjectName(_fromUtf8("tab"))
-        self.mainBox = QtGui.QHBoxLayout(self.tab)
+class scopeWriterUi(object):
+    def setupUi(self, mainWindow):
+        mainWindow.resize(1010, 410)
+        #self.scopeCont = scopeCont
+        mainWindow.setObjectName(_fromUtf8("Scope writer"))
+        self.mainWidget = QtGui.QWidget(mainWindow)
+        self.mainWidget.resize(1000,400)
+        self.mainWidget.setObjectName(_fromUtf8("mainWidget"))
+        self.mainBox = QtGui.QHBoxLayout(self.mainWidget)
         self.channelsVBox = QtGui.QVBoxLayout()
-        self.addChannel( self.TabWidget, self.channelsVBox, self.scopeCont )
+        #self.addChannel( self.TabWidget, self.channelsVBox, self.scopeCont )
         self.logVBox = QtGui.QVBoxLayout()
         self.labelBox = QtGui.QVBoxLayout()
         self.addToListButton = QtGui.QPushButton()
         self.addToListButton.setObjectName(_fromUtf8("addToListButton"))
         self.addToListButton.setMinimumSize(QtCore.QSize(100,100))
+        self.addToListButton.setMaximumSize(QtCore.QSize(100,100))
         self.startButton = QtGui.QPushButton()
         self.startButton.setObjectName(_fromUtf8("startButton"))
+        self.startButton.setMaximumSize(QtCore.QSize(100,100))
         self.startButton.setMinimumSize(QtCore.QSize(100,100))
         self.stopButton = QtGui.QPushButton()
         self.stopButton.setObjectName(_fromUtf8("stopButton"))
         self.stopButton.setMinimumSize(QtCore.QSize(100,100))
+        self.stopButton.setMaximumSize(QtCore.QSize(100,100))
         self.tableRows = 1
         self.tableColumns = 2
         self.logTable = QtGui.QTableWidget( self.tableRows, self.tableColumns )
@@ -53,38 +56,59 @@ class scopeWriterUi_TabWidget(object):
         self.infoLabel = QtGui.QLabel()
         self.infoLabel.setObjectName(_fromUtf8("infoLabel"))
         self.infoLabel.setMaximumSize(QtCore.QSize(300,200))
+        self.loadButton = QtGui.QPushButton()
+        self.loadButton.setObjectName(_fromUtf8("loadButton"))
+        self.loadButton.setMinimumSize(QtCore.QSize(100,100))
+        self.loadButton.setMaximumSize(QtCore.QSize(100,100))
+        self.saveButton = QtGui.QPushButton()
+        self.saveButton.setObjectName(_fromUtf8("saveButton"))
+        self.saveButton.setMinimumSize(QtCore.QSize(100,100))
+        self.saveButton.setMaximumSize(QtCore.QSize(100,100))
+        self.saveLoadHBox = QtGui.QHBoxLayout()
+        self.saveLoadHBox.addWidget(self.loadButton)
+        self.saveLoadHBox.addWidget(self.saveButton)
+        self.ui_lay = QtGui.QHBoxLayout()
+        self.ui_line = QtGui.QLineEdit()
+        self.ui_lay.addWidget(self.ui_line)
+        self.ui_btn = QtGui.QPushButton('...')
+        self.ui_line.setMinimumSize(QtCore.QSize(250,20))
+        self.ui_line.setMaximumSize(QtCore.QSize(250,20))
+        self.ui_btn.setMinimumSize(QtCore.QSize(20,20))
+        self.ui_btn.setMaximumSize(QtCore.QSize(20,20))
+        self.ui_lay.addWidget(self.ui_btn)
         self.labelBox.addWidget(self.titleLabel)
         self.labelBox.addWidget(self.infoLabel)
+        self.labelBox.addLayout(self.ui_lay)
+        self.labelBox.addLayout(self.saveLoadHBox)
         self.mainBox.addLayout(self.labelBox)
         self.mainBox.addLayout(self.logVBox)
         self.mainBox.addLayout(self.channelsVBox)
-        self.TabWidget.addTab(self.tab, _fromUtf8(""))
+        self.retranslateUi(mainWindow)
+        QtCore.QMetaObject.connectSlotsByName(mainWindow)
 
-        self.retranslateUi(self.TabWidget)
-        QtCore.QMetaObject.connectSlotsByName(self.TabWidget)
-
-    def retranslateUi(self, TabWidget):
-        self.TabWidget.setWindowTitle(_translate("TabWidget", "Scope charge writer", None))
-        self.addToListButton.setText(_translate("TabWidget", "Add channel\n to list", None))
-        self.startButton.setText(_translate("TabWidget", "Start logging\n to EPICS", None))
-        self.stopButton.setText(_translate("TabWidget", "Abort", None))
+    def retranslateUi(self, mainWindow):
+        mainWindow.setWindowTitle(_translate("mainWindow", "Scope charge writer", None))
+        self.addToListButton.setText(_translate("mainWindow", "Add channel\n to list", None))
+        self.startButton.setText(_translate("mainWindow", "Start logging\n to EPICS", None))
+        self.stopButton.setText(_translate("mainWindow", "Stop logging", None))
+        self.loadButton.setText(_translate("mainWindow", "Load setup", None))
+        self.saveButton.setText(_translate("mainWindow", "Save setup", None))
         self.newFont = QtGui.QFont("Comic Sans", 20, QtGui.QFont.Bold)
         self.titleLabel.setFont(self.newFont)
-        self.titleLabel.setText(_translate("TabWidget", "CLARA \nScope Logger", None))
-        self.infoText = "Choose the scope channel to read from EPICS, the PV \nto write the measurement to, the type of measurement\n"
-        self.infoText1 = self.infoText+"required, and the regions of interest.\n"
-        self.infoText2 = self.infoText1+"CHECK THAT THE CORRECT TRACES ARE BEING\n RECORDED ON THE SCOPE!!!!"
-        self.infoLabel.setText(_translate("TabWidget", self.infoText2, None))
+        self.titleLabel.setText(_translate("mainWindow", "CLARA \nScope Logger", None))
+        self.infoText = "Choose the scope channel to read from EPICS,\n the PV to write the measurement to, the type\n of measurement "
+        self.infoText1 = self.infoText+"required, and \nthe regions of interest.\n"
+        self.infoText2 = self.infoText1+"CHECK THAT THE CORRECT TRACES\n ARE BEING RECORDED ON THE SCOPE!!!!"
+        self.infoLabel.setText(_translate("mainWindow", self.infoText2, None))
 
-    def addChannel(self, TabWidget, Layout, scopeCont):
-        self.TabWidget = TabWidget
+    def addChannel(self, Layout, scopeCont):
         self.Layout = Layout
         self.scopeCont = scopeCont
         self.hBox = QtGui.QHBoxLayout()
         self.chanVBox = QtGui.QVBoxLayout()
         self.channelNameLabel = QtGui.QLabel()
         self.channelNameLabel.setObjectName(_fromUtf8("channelNameLabel"))
-        self.channelNameLabel.setText(_translate("TabWidget", "Scope channel", None))
+        self.channelNameLabel.setText(_translate("mainWindow", "Scope channel", None))
         self.channels = ["C1", "C2", "C3", "C4"]
         self.chanComboBox = QtGui.QComboBox()
         self.chanComboBox.setObjectName(_fromUtf8("chanComboBox"))
@@ -96,10 +120,11 @@ class scopeWriterUi_TabWidget(object):
         self.epicsVBox = QtGui.QVBoxLayout()
         self.epicsNameLabel = QtGui.QLabel()
         self.epicsNameLabel.setObjectName(_fromUtf8("epicsNameLabel"))
-        self.epicsNameLabel.setText(_translate("TabWidget", "EPICS PV Name", None))
+        self.epicsNameLabel.setText(_translate("mainWindow", "EPICS PV Name", None))
         self.epicsPVs = ["P1", "P2", "P3", "P4"]
         self.epicsComboBox = QtGui.QComboBox()
         self.epicsComboBox.setObjectName(_fromUtf8("epicsComboBox"))
+        self.epicsComboBox.setMinimumSize(QtCore.QSize(130,20))
         self.scopeName = self.scopeCont.getScopeNames()[0]
         self.traceDataStruct = self.scopeCont.getScopeTraceDataStruct( self.scopeName )
         for i in self.epicsPVs:
@@ -111,7 +136,7 @@ class scopeWriterUi_TabWidget(object):
         self.measurementVBox = QtGui.QVBoxLayout()
         self.measurementNameLabel = QtGui.QLabel()
         self.measurementNameLabel.setObjectName(_fromUtf8("measurementNameLabel"))
-        self.measurementNameLabel.setText(_translate("TabWidget", "Measurement Type?", None))
+        self.measurementNameLabel.setText(_translate("mainWindow", "Measurement Type?", None))
         self.types = ["Area", "Max", "Min", "Peak-to-Peak"]
         self.measurementComboBox = QtGui.QComboBox()
         self.measurementComboBox.setObjectName(_fromUtf8("measurementComboBox"))
@@ -123,7 +148,7 @@ class scopeWriterUi_TabWidget(object):
         self.filterVBox = QtGui.QVBoxLayout()
         self.filterNameLabel = QtGui.QLabel()
         self.filterNameLabel.setObjectName(_fromUtf8("filterNameLabel"))
-        self.filterNameLabel.setText(_translate("TabWidget", "Filter Type?", None))
+        self.filterNameLabel.setText(_translate("mainWindow", "Filter Type?", None))
         self.filterTypes = ["None", "Moving Average", "Gaussian filter", "FFT"]
         self.filterComboBox = QtGui.QComboBox()
         self.filterComboBox.setObjectName(_fromUtf8("filterComboBox"))
@@ -135,26 +160,28 @@ class scopeWriterUi_TabWidget(object):
         self.filterIntervalVBox = QtGui.QVBoxLayout()
         self.filterIntervalNameLabel = QtGui.QLabel()
         self.filterIntervalNameLabel.setObjectName(_fromUtf8("filterIntervalNameLabel"))
-        self.filterIntervalNameLabel.setText(_translate("TabWidget", "Filtering interval", None))
+        self.filterIntervalNameLabel.setText(_translate("mainWindow", "Filtering interval", None))
         self.filterInterval = QtGui.QPlainTextEdit()
         self.filterInterval.setObjectName(_fromUtf8("filterInterval"))
-        self.filterInterval.setPlainText(_translate("TabWidget", "5", None))
+        self.filterInterval.setPlainText(_translate("mainWindow", "5", None))
+        self.filterInterval.setMaximumSize(QtCore.QSize(100,30))
         self.filterIntervalVBox.addWidget( self.filterIntervalNameLabel )
-        self.filterIntervalVBox.addWidget( self.filterInterval)
+        self.filterIntervalVBox.addWidget( self.filterInterval )
+        self.filterIntervalVBox.addStretch()
         self.toLabel = QtGui.QLabel()
         self.toLabel.setObjectName(_fromUtf8("toLabel"))
-        self.toLabel.setText(_translate("TabWidget", " to ", None))
+        self.toLabel.setText(_translate("mainWindow", " to ", None))
         self.signalVBox = QtGui.QVBoxLayout()
         self.signalHBox = QtGui.QHBoxLayout()
         self.signalNameLabel = QtGui.QLabel()
         self.signalNameLabel.setObjectName(_fromUtf8("signalNameLabel"))
-        self.signalNameLabel.setText(_translate("TabWidget", "Signal region", None))
+        self.signalNameLabel.setText(_translate("mainWindow", "Signal region", None))
         self.lowerSignalBound = QtGui.QPlainTextEdit()
         self.lowerSignalBound.setObjectName(_fromUtf8("lowerSignalBound"))
-        self.lowerSignalBound.setPlainText(_translate("TabWidget", "600", None))
+        self.lowerSignalBound.setPlainText(_translate("mainWindow", "600", None))
         self.upperSignalBound = QtGui.QPlainTextEdit()
         self.upperSignalBound.setObjectName(_fromUtf8("upperSignalBound"))
-        self.upperSignalBound.setPlainText(_translate("TabWidget", "1000", None))
+        self.upperSignalBound.setPlainText(_translate("mainWindow", "1000", None))
         self.lowerSignalBound.setMaximumSize(QtCore.QSize(100,30))
         self.upperSignalBound.setMaximumSize(QtCore.QSize(100,30))
         self.signalHBox.addWidget( self.lowerSignalBound )
@@ -167,5 +194,6 @@ class scopeWriterUi_TabWidget(object):
         self.hBox.addLayout( self.epicsVBox )
         self.hBox.addLayout( self.measurementVBox )
         self.hBox.addLayout( self.filterVBox )
+        self.hBox.addLayout( self.filterIntervalVBox )
         self.hBox.addLayout( self.signalVBox )
         self.Layout.addLayout( self.hBox )

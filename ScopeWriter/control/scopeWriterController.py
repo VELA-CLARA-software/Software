@@ -1,35 +1,33 @@
 from PyQt4 import QtGui, QtCore
 from PyQt4.QtCore import QObject
-import threading
 import sys
-import scope_writer_threads
 import VELA_CLARA_Scope_Control as vcsc
 import time, numpy, epics, math, threading
 import win32com.client
 
 class scopeWriterController(QObject):
-
-	def __init__(self, view, model, scopeCont):
+	def __init__(self, view, scopeCont):
 		#Hardware controllers are piped in from the attCalmainApp.py
 		super(scopeWriterController, self).__init__()
 		self.started = False
 		self.view = view
-		self.model = model
-		#self.logger = logger
-		self.scope_writer_threads = scope_writer_threads
 		self.threading = threading
 		self.scopeCont = scopeCont
 		self.scopeName = self.scopeCont.getScopeNames()[0]
 		self.pvRoot = self.scopeCont.getScopeTraceDataStruct(self.scopeName).pvRoot
 		self.started = False
-		self.scope=win32com.client.Dispatch("LeCroy.XStreamDSO")
-		self.scope.Measure.MeasureMode = "StdVertical"
+		#self.scope=win32com.client.Dispatch("LeCroy.XStreamDSO")
+		#self.scope.Measure.MeasureMode = "StdVertical"
 		self.traceNames = self.scopeCont.getScopeTracePVs()
 		self.numNames = self.scopeCont.getScopeNumPVs()
+		self.appendToList()
 
 		self.view.addToListButton.clicked.connect(lambda: self.appendToList())
 		self.view.startButton.clicked.connect(lambda: self.startLogging())
 		self.view.stopButton.clicked.connect(lambda: self.stopLogging())
+		self.view.ui_btn.clicked.connect(self.browse)
+		self.view.saveButton.clicked.connect(self.saveSetup)
+		self.view.loadButton.clicked.connect(self.loadSetup)
 
 	def startLogging(self):
 		self.started = True
@@ -51,11 +49,11 @@ class scopeWriterController(QObject):
 				epics.caput( str( self.traceChannelString ) , self.recordChannel( self.channelString ) )
 				self.measurementType = str( channel.itemAt(2).itemAt(1).widget().currentText() )
 				self.filterType = str( channel.itemAt(3).itemAt(1).widget().currentText() )
-				self.filterInterval = str( channel.itemAt(4).itemAt(1).widget().currentText() )
+				self.filterInterval = str( channel.itemAt(4).itemAt(1).widget().toPlainText() )
 				if self.measurementType == "Area":
 					self.signal = channel.itemAt(5)
 					self.signalStart = int( self.signal.itemAt(1).itemAt(0).widget().toPlainText() )
-					self.signalEnd = int( self.signal.itemAt(1).itemAt(2).widget().toPlainText() )				#Run threads for ATT calibration
+					self.signalEnd = int( self.signal.itemAt(1).itemAt(2).widget().toPlainText() )
 					#self.thread = threading.Thread(target = self.readTracesAndWriteAreaToEPICS, args=(self.scopeName, self.channel, self.baselineStart, self.baselineEnd, self.signalStart, self.signalEnd, self.epicsPVName))
 					#self.threads.append( self.thread )
 					self.readTracesAndWriteAreaToEPICS(self.scopeName, self.traceChannelPV, self.signalStart, self.signalEnd, self.epicsPVName, self.filterType, self.filterInterval)
@@ -117,7 +115,7 @@ class scopeWriterController(QObject):
 		return self.pvSuffix, self.epicsPV
 
 	def appendToList(self):
-		self.view.addChannel( self.view.TabWidget, self.view.channelsVBox, self.scopeCont )
+		self.view.addChannel( self.view.channelsVBox, self.scopeCont )
 
 	def recordChannel( self, channelName ):
 		self.chan = []
@@ -241,3 +239,27 @@ class scopeWriterController(QObject):
 
 		epics.caput( self.epics_channel, self.mean_p2p )
 		time.sleep(0.1)
+
+	@QtCore.pyqtSlot()  # for pyqt, QtCore.pyqtSlot()
+	def browse(self):
+		self.path = str(QtGui.QFileDialog.getOpenFileName(None, 'Select a folder:', 'D:\\Setups', "Scope files (*.lss)"))
+		if self.path:
+			print self.path
+			self.lastSlash = self.path.rfind('/')
+			self.path = self.path[(self.lastSlash+1):]
+			#if self.path.startswith(self.folder):
+				#return self.path[len(self.folder):]
+			self.view.ui_line.setText(self.path)
+
+	@QtCore.pyqtSlot()  # for pyqt, QtCore.pyqtSlot()
+	def saveSetup(self):
+		#self.scope.SaveRecall.Utilities.Directory = self.view.ui_line
+		print self.view.ui_line.text()
+		self.scope.SaveRecall.Setup.PanelFilename = str(self.view.ui_line.text())
+		self.scope.SaveRecall.Setup.DoSavePanel
+
+	@QtCore.pyqtSlot()  # for pyqt, QtCore.pyqtSlot()
+	def loadSetup(self):
+		print self.view.ui_line.text()
+		self.scope.SaveRecall.Setup.PanelFilename = str(self.view.ui_line.text())
+		self.scope.SaveRecall.Setup.DoRecallPanel
