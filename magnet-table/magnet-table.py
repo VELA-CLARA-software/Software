@@ -19,7 +19,10 @@ import webbrowser  # to get help
 import VELA_CLARA_MagnetControl as MagCtrl
 from pkg_resources import resource_filename
 sys.path.append('../loggerWidget')
-import loggerWidget as lw
+try:
+    import loggerWidget as lw
+except ImportError:
+    lw = None
 import logging
 
 # Note: to be able to import the magnet controller, I used
@@ -176,6 +179,7 @@ class Window(QtGui.QMainWindow):
         log_button.setMaximumWidth(32)
         checkbox_grid.addWidget(log_button, 0)
         log_button.clicked.connect(self.logButtonClicked)
+        log_button.setEnabled(lw is not None)
 
         layout.addLayout(checkbox_grid)
 
@@ -326,9 +330,10 @@ class Window(QtGui.QMainWindow):
             title.installEventFilter(self)
             magnet_list_vbox.addWidget(magnet_frame)
             
-        self.log_widget = lw.loggerWidget(logger)
-        self.log_widget.hide()
-        hbox.addWidget(self.log_widget, 2)
+        if lw is not None:
+            self.log_widget = lw.loggerWidget(logger)
+            self.log_widget.hide()
+            hbox.addWidget(self.log_widget, 2)
 
         # set up events (need to do setup first)
         for magnet in self.magnets.values():
