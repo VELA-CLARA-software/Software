@@ -87,12 +87,13 @@ class ParasolApp(QtGui.QMainWindow, Ui_MainWindow):
 
     def resizeEvent(self, resizeEvent):
         # Remove plots one row at a time as the window shrinks
-        self.xy_plot.setVisible(self.geometry().height() >= 512)
-        self.xdash_ydash_plot.setVisible(self.geometry().height() >= 512)
-        self.E_field_plot.setVisible(self.geometry().height() >= 420)
-        self.B_field_plot.setVisible(self.geometry().height() >= 420)
-        self.momentum_plot.setVisible(self.geometry().height() >= 250)
-        self.larmor_angle_plot.setVisible(self.geometry().height() >= 250)
+        height = self.geometry().height()
+        self.xy_plot.setVisible(height >= 512)
+        self.xdash_ydash_plot.setVisible(height >= 512)
+        self.E_field_plot.setVisible(height >= 420)
+        self.B_field_plot.setVisible(height >= 420)
+        self.momentum_plot.setVisible(height >= 250)
+        self.larmor_angle_plot.setVisible(height >= 250)
 
     # these functions update the GUI and (re)start the timer
     def startMainViewUpdateTimer(self):
