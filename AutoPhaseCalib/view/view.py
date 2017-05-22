@@ -191,7 +191,7 @@ class Ui_MainWindow(object):
         self.label_5.setText(_translate("MainWindow", "Number of Scanning Points", None))
         self.label_3.setText(_translate("MainWindow", "Number of Shots (per point)", None))
         self.lineEdit_2.setText(_translate("MainWindow", "4.5", None))
-        self.label.setText(_translate("MainWindow", "Desitred Momentum", None))
+        self.label.setText(_translate("MainWindow", "Desired Momentum", None))
         self.label_2.setText(_translate("MainWindow", "Desirsed off-crest Phase", None))
         self.lineEdit_3.setText(_translate("MainWindow", "10", None))
         self.label_4.setText(_translate("MainWindow", "Range (Degrees)", None))
@@ -228,4 +228,3 @@ if __name__ == "__main__":
     ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())
-

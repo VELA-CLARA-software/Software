@@ -4,6 +4,7 @@ import sys,os
 import time
 import numpy as np
 import pyqtgraph as pg
+import threads
 from epics import caget,caput
 
 sys.path.append('C:\\Users\\wln24624\\Documents\\SOFTWARE\\VELA-CLARA-Software\\Software\\loggerWidget')
@@ -42,10 +43,10 @@ class Controller():
 		'''Threads for updating graphs and labels'''
 		self.timer = QTimer()
 		self.timer.timeout.connect(self.updateDisplays)
-		self.timer.start(500)
+		self.timer.start(10)
 
 		self.view.checkBox_all.stateChanged.connect(self.allMethod)
-		self.view.pushButton_run.clicked.connect(self.model.run)
+		self.view.pushButton_run.clicked.connect(self.model.start)
 
 	def updateDisplays(self):
 		self.approxData.setData(x=self.model.approxPhaseData,y=self.model.approxChargeData)
