@@ -26,6 +26,17 @@ class matlabFileRead:
         self.maindict[self.directory] = self.allfiles
         return self.maindict
 
+    def findAllFilesInDirectory(self, directory):
+        self.directory = directory
+        self.allfiles = []
+        for root, dirs, files in os.walk(self.directory):
+            for file in files:
+                if file.endswith('.mat'):
+                    print file
+                    self.allfiles.append(file)
+                    QtGui.QApplication.processEvents()
+        return self.allfiles
+
     def getMatlabData(self, filename):
         self.filename = filename
         self.matlabData = self.loadmat(self.filename)
