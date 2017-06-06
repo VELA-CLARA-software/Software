@@ -31,10 +31,19 @@ class matlabFileRead:
         self.allfiles = []
         for root, dirs, files in os.walk(self.directory):
             for file in files:
-                if file.endswith('.mat'):
+                if file.endswith('.mat') or file.endswith('.dat'):
                     print file
                     self.allfiles.append(file)
                     QtGui.QApplication.processEvents()
+        return self.allfiles
+
+    def findAFile(self, file):
+        self.file = file
+        self.allfiles = []
+        if self.file.endswith('.mat') or self.file.endswith('.dat'):
+            print self.file
+            self.allfiles.append(self.file)
+            QtGui.QApplication.processEvents()
         return self.allfiles
 
     def getMatlabData(self, filename):
@@ -77,13 +86,14 @@ class matlabFileRead:
             elif isinstance(self.elem, numpy.ndarray):
                 self.parameter_list = []
                 self.dict[strg] = self._tolist(self.elem, self.parameter_list)
-                if isinstance(self.elem[0], numpy.ndarray):
-                    if strg == 'immagini':
-                        self.dict['arrayx'] = len(self.elem[0])
-                        self.dict['arrayy'] = len(self.elem)
-                if self.parameter_list:
-                    if strg == 'immagini':
-                        self.dict['numshots'] = len(self.parameter_list) / (len(self.elem[0]) * len(self.elem))
+                if len(self.elem)>0:
+                    if isinstance(self.elem[0], numpy.ndarray):
+                        if strg == 'immagini':
+                            self.dict['arrayx'] = len(self.elem[0])
+                            self.dict['arrayy'] = len(self.elem)
+                    if self.parameter_list:
+                        if strg == 'immagini':
+                            self.dict['numshots'] = len(self.parameter_list) / (len(self.elem[0]) * len(self.elem))
             else:
                 self.dict[strg] = self.elem
 

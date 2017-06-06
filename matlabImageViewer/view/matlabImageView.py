@@ -8,6 +8,8 @@ import matlabImageViewUI
 
 class matlabImageView(QtGui.QMainWindow, matlabImageViewUI.matlabImageViewUI):
     filekeychanged = QtCore.pyqtSignal(str)
+    subfilekeychanged = QtCore.pyqtSignal(str)
+    subsubfilekeychanged = QtCore.pyqtSignal(str)
     isfilechanged = QtCore.pyqtSignal(bool)
 
     def __init__(self):
@@ -16,8 +18,15 @@ class matlabImageView(QtGui.QMainWindow, matlabImageViewUI.matlabImageViewUI):
         self.setupUi(self)
         self.isfilechanged = False
         self.keysComboBox.currentIndexChanged['QString'].connect(self.fileKeyChangedEvent)
+        self.subKeysComboBox.currentIndexChanged['QString'].connect(self.subFileKeyChangedEvent)
+        self.subSubKeysComboBox.currentIndexChanged['QString'].connect(self.subSubFileKeyChangedEvent)
         self.allFilesComboBox.currentIndexChanged['QString'].connect(self.fileKeyChangedEvent)
 
     def fileKeyChangedEvent(self):
-        self.isfilechanged = False
         self.filekeychanged.emit(str(self.keysComboBox.currentText()))
+
+    def subFileKeyChangedEvent(self):
+        self.subfilekeychanged.emit(str(self.subKeysComboBox.currentText()))
+
+    def subSubFileKeyChangedEvent(self):
+        self.subsubfilekeychanged.emit(str(self.subSubKeysComboBox.currentText()))
