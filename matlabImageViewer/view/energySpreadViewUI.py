@@ -1,4 +1,4 @@
-from PyQt4 import QtCore, QtGui, Qt
+from PyQt4 import QtCore, QtGui
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg
 from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as NavigationToolbar
 import matplotlib.pyplot as plt
@@ -24,13 +24,13 @@ except AttributeError:
         return QtGui.QApplication.translate(context, text, disambig)
 
 
-class matlabImageViewUI(object):
+class energySpreadViewUI(object):
 
     def setupUi(self, mainWindow):
-        mainWindow.resize(1310, 1010)
-        mainWindow.setObjectName(_fromUtf8('Matlab Image Viewer'))
+        mainWindow.resize(1010, 1010)
+        mainWindow.setObjectName(_fromUtf8('Matlab energy spread viewer'))
         self.mainWidget = QtGui.QWidget(mainWindow)
-        self.mainWidget.resize(1300, 1000)
+        self.mainWidget.resize(1000, 1000)
         self.mainWidget.setObjectName(_fromUtf8('mainWidget'))
         self.mainBox = QtGui.QHBoxLayout(self.mainWidget)
 
@@ -62,23 +62,6 @@ class matlabImageViewUI(object):
         # self.loadFilesButton = QtGui.QPushButton('Load files', self)
         # self.loadFilesButton.setObjectName(_fromUtf8('loadFilesButton'))
         # self.loadFilesButton.setMaximumSize(QtCore.QSize(100, 40))
-        self.fileTypeHBox = QtGui.QHBoxLayout()
-        self.fileTypeGroupBox = QtGui.QGroupBox()
-        self.fileTypeGroupBox.setAlignment(QtCore.Qt.AlignCenter)
-        self.fileTypeGroupBox.setMinimumSize(QtCore.QSize(300, 80))
-        self.fileTypeGroupBox.setMaximumSize(QtCore.QSize(300, 80))
-        self.emitMeas = QtGui.QRadioButton()
-        self.emitMeas.setObjectName(_fromUtf8('emitMeas'))
-        self.emitMeas.setMinimumSize(QtCore.QSize(100, 20))
-        self.emitMeas.setMaximumSize(QtCore.QSize(100, 20))
-        self.energySpreadMeas = QtGui.QRadioButton()
-        self.energySpreadMeas.setObjectName(_fromUtf8('energySpreadMeas'))
-        self.energySpreadMeas.setMinimumSize(QtCore.QSize(100, 20))
-        self.energySpreadMeas.setMaximumSize(QtCore.QSize(100, 20))
-        self.fileTypeHBox.addWidget(self.emitMeas)
-        self.fileTypeHBox.addWidget(self.energySpreadMeas)
-        self.fileTypeGroupBox.setLayout(self.fileTypeHBox)
-        self.fileTypeGroupBox.setTitle(_fromUtf8('File type?? (*.dat for emit, or *.mat for e-spread)'))
         self.readFilesButton = QtGui.QPushButton('Read files', self)
         self.readFilesButton.setObjectName(_fromUtf8('readFilesButton'))
         self.readFilesButton.setMaximumSize(QtCore.QSize(100, 40))
@@ -107,26 +90,12 @@ class matlabImageViewUI(object):
         self.viewKeysText = QtGui.QPlainTextEdit()
         self.viewKeysText.setObjectName(_fromUtf8('viewKeysText'))
 
-        self.sigmaXPlotVBox = QtGui.QVBoxLayout()
-        self.sigmaXPlotWidget = self.addSigmaXPlotPanel()
-        self.clearSigmaPlotsButton = QtGui.QPushButton('Clear sigma plots', self)
-        self.sigmaXPlotVBox.addLayout(self.sigmaxlayoutVertical)
-        self.sigmaXPlotVBox.addWidget(self.clearSigmaPlotsButton)
-        self.sigmaXPlotVBox.addStretch()
-        self.sigmaYPlotVBox = QtGui.QVBoxLayout()
-        self.sigmaYPlotWidget = self.addSigmaYPlotPanel()
-        self.sigmaYPlotVBox.addLayout(self.sigmaylayoutVertical)
-        self.sigmaYPlotVBox.addStretch()
-        self.sigmaPlotsVBox.addLayout(self.sigmaXPlotVBox)
-        self.sigmaPlotsVBox.addLayout(self.sigmaYPlotVBox)
-
         self.configVBox.addWidget(self.setDirOrFile)
         self.configVBox.addLayout(self.getDirectoryLayout)
         self.configVBox.addWidget(self.readFilesButton)
         self.configVBox.addWidget(self.convertFilesButton)
         self.configVBox.addWidget(self.allFilesLabel)
         self.configVBox.addWidget(self.allFilesComboBox)
-        self.configVBox.addWidget(self.fileTypeGroupBox)
         self.configVBox.addWidget(self.loadFileButton)
         self.configVBox.addWidget(self.keysLabel)
         self.configVBox.addWidget(self.keysComboBox)
@@ -135,7 +104,7 @@ class matlabImageViewUI(object):
         self.configVBox.addWidget(self.subSubKeysLabel)
         self.configVBox.addWidget(self.subSubKeysComboBox)
         self.configVBox.addWidget(self.viewKeysText)
-        self.configVBox.addStretch()
+        # self.configVBox.addStretch()
 
         # make all plots
         self.makePlotsButton = QtGui.QPushButton('Make plots', self)
@@ -198,7 +167,6 @@ class matlabImageViewUI(object):
         # add all layouts and make main panel
         self.mainBox.addLayout(self.configVBox)
         self.mainBox.addLayout(self.plotsVBox)
-        self.mainBox.addLayout(self.sigmaPlotsVBox)
         self.retranslateUi(mainWindow)
         QtCore.QMetaObject.connectSlotsByName(mainWindow)
 
@@ -208,8 +176,6 @@ class matlabImageViewUI(object):
         self.setFile.setText(_translate('mainWindow', 'Set File', None))
         self.readFilesButton.setText(_translate('mainWindow', 'Read .mat files', None))
         self.allFilesLabel.setText(_translate('mainWindow', 'Files in folder', None))
-        self.emitMeas.setText(_translate('mainWindow', 'Emittance', None))
-        self.energySpreadMeas.setText(_translate('mainWindow', 'Energy spread', None))
         self.loadFileButton.setText(_translate('mainWindow', 'Load .mat file', None))
         self.keysLabel.setText(_translate('mainWindow', 'Keys in file', None))
         self.subKeysLabel.setText(_translate('mainWindow', 'Subkeys in file[key]', None))
@@ -244,28 +210,6 @@ class matlabImageViewUI(object):
         self.analysiscanvas.setFocusPolicy(QtCore.Qt.ClickFocus)
         self.analysiscanvas.setFocus()
         return self.analysisfigure
-
-    def addSigmaXPlotPanel(self):
-        self.sigmaxfigure = plt.figure()
-        self.sigmaxcanvas = FigureCanvasQTAgg(self.sigmaxfigure)
-        self.sigmaxaxis = self.sigmaxfigure.add_subplot(111)
-        self.sigmaxlayoutVertical = QtGui.QVBoxLayout(self)
-        self.sigmaxlayoutVertical.addWidget(self.sigmaxcanvas)
-        self.sigmaxcanvas.setParent(self.mainWidget)
-        self.sigmaxcanvas.setFocusPolicy(QtCore.Qt.ClickFocus)
-        self.sigmaxcanvas.setFocus()
-        return self.sigmaxfigure
-
-    def addSigmaYPlotPanel(self):
-        self.sigmayfigure = plt.figure()
-        self.sigmaycanvas = FigureCanvasQTAgg(self.sigmayfigure)
-        self.sigmayaxis = self.sigmayfigure.add_subplot(111)
-        self.sigmaylayoutVertical = QtGui.QVBoxLayout(self)
-        self.sigmaylayoutVertical.addWidget(self.sigmaycanvas)
-        self.sigmaycanvas.setParent(self.mainWidget)
-        self.sigmaycanvas.setFocusPolicy(QtCore.Qt.ClickFocus)
-        self.sigmaycanvas.setFocus()
-        return self.sigmayfigure
 
     def makePlots(self, datafile, datastruct, imagedata, arrayshape, shotnum, plotfigure):
         self.datafile = datafile
