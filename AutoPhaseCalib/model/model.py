@@ -53,6 +53,7 @@ class Model(QThread):
 			self.velaMethod()
 		elif self.lineType=='CLARA':
 			self.claraMethod()
+
 	def setUpCtrls(self):
 		if self.lineType=='VELA'and self.machineType=='Physical':
 			self.magnets = self.magInit.physical_VELA_INJ_Magnet_Controller()
