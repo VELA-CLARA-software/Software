@@ -11,6 +11,8 @@ setup(
     description='Magnet Table app for VELA/CLARA',
     include_package_data=True,
     install_requires=[
-        'numpy',
-        'scipy']
+        'numpy>=1.10',
+        'scipy',
+        'pyqtgraph',
+        'xlrd']
 )

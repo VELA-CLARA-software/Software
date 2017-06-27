@@ -1,22 +1,16 @@
 from PyQt4 import QtGui, QtCore
 from PyQt4.QtCore import QObject
-import threading
 import sys
-import scope_writer_threads
 import VELA_CLARA_Scope_Control as vcsc
 import time, numpy, epics, math, threading
 import win32com.client
 
 class scopeWriterController(QObject):
-
-	def __init__(self, view, model, scopeCont):
+	def __init__(self, view, scopeCont):
 		#Hardware controllers are piped in from the attCalmainApp.py
 		super(scopeWriterController, self).__init__()
 		self.started = False
 		self.view = view
-		self.model = model
-		#self.logger = logger
-		self.scope_writer_threads = scope_writer_threads
 		self.threading = threading
 		self.scopeCont = scopeCont
 		self.scopeName = self.scopeCont.getScopeNames()[0]
@@ -26,11 +20,18 @@ class scopeWriterController(QObject):
 		self.scope.Measure.MeasureMode = "StdVertical"
 		self.traceNames = self.scopeCont.getScopeTracePVs()
 		self.numNames = self.scopeCont.getScopeNumPVs()
+		self.appendToList()
+		self.scopeSetupLoadView = scopeWriterLoadView("Load Setup", globals.scopeSetupLocation)
+		self.scopeSetupLoadView.selectButton.clicked.connect(self.handle_fileLoadSelect)
 
-		self.view.addToListButton.clicked.connect(lambda: self.appendToList())
-		self.view.startButton.clicked.connect(lambda: self.startLogging())
-		self.view.stopButton.clicked.connect(lambda: self.stopLogging())
+		self.view.addToListButton.clicked.connect(self.appendToList)
+		self.view.startButton.clicked.connect(self.startLogging)
+		self.view.stopButton.clicked.connect(self.stopLogging)
+		self.view.ui_btn.clicked.connect(self.browse)
+		self.view.saveButton.clicked.connect(self.saveSetup)
+		self.view.loadButton.clicked.connect(self.loadSetup)
 
+	@QtCore.pyqtSlot()
 	def startLogging(self):
 		self.started = True
 		self.view.startButton.setEnabled(False)
@@ -51,11 +52,11 @@ class scopeWriterController(QObject):
 				epics.caput( str( self.traceChannelString ) , self.recordChannel( self.channelString ) )
 				self.measurementType = str( channel.itemAt(2).itemAt(1).widget().currentText() )
 				self.filterType = str( channel.itemAt(3).itemAt(1).widget().currentText() )
-				self.filterInterval = str( channel.itemAt(4).itemAt(1).widget().currentText() )
+				self.filterInterval = str( channel.itemAt(4).itemAt(1).widget().toPlainText() )
 				if self.measurementType == "Area":
 					self.signal = channel.itemAt(5)
 					self.signalStart = int( self.signal.itemAt(1).itemAt(0).widget().toPlainText() )
-					self.signalEnd = int( self.signal.itemAt(1).itemAt(2).widget().toPlainText() )				#Run threads for ATT calibration
+					self.signalEnd = int( self.signal.itemAt(1).itemAt(2).widget().toPlainText() )
 					#self.thread = threading.Thread(target = self.readTracesAndWriteAreaToEPICS, args=(self.scopeName, self.channel, self.baselineStart, self.baselineEnd, self.signalStart, self.signalEnd, self.epicsPVName))
 					#self.threads.append( self.thread )
 					self.readTracesAndWriteAreaToEPICS(self.scopeName, self.traceChannelPV, self.signalStart, self.signalEnd, self.epicsPVName, self.filterType, self.filterInterval)
@@ -68,6 +69,7 @@ class scopeWriterController(QObject):
 				else:
 					print "ERROR!!!! Invalid measurement type"
 
+	@QtCore.pyqtSlot()
 	def stopLogging(self):
 		self.started = False
 		self.view.startButton.setText("Start logging to EPICS")
@@ -116,8 +118,9 @@ class scopeWriterController(QObject):
 			self.epicsChan = vcsc.SCOPE_PV_TYPE.UNKNOWN
 		return self.pvSuffix, self.epicsPV
 
+	@QtCore.pyqtSlot()
 	def appendToList(self):
-		self.view.addChannel( self.view.TabWidget, self.view.channelsVBox, self.scopeCont )
+		self.view.addChannel( self.view.channelsVBox, self.scopeCont )
 
 	def recordChannel( self, channelName ):
 		self.chan = []
@@ -152,16 +155,19 @@ class scopeWriterController(QObject):
 		self.filter_interval = filter_interval
 
 		self.numShots = 1
-		self.scopeCont.monitorATraceForNShots( self.scope_name, self.channel_name, self.numShots ) # We only take 1 trace - this should allow us to capture "interesting" conditioning events
+		# We only take 1 trace - this should allow us to capture "interesting" events
+		self.scopeCont.monitorATraceForNShots( self.scope_name, self.channel_name, self.numShots )
 		while self.scopeCont.isMonitoringScopeTrace( self.scope_name, self.channel_name ):
 			time.sleep(0.001)
-
-		self.allTraceDataStruct = self.scopeCont.getScopeTraceDataStruct( self.scope_name ) # This is a c++ struct containing all scope trace data - see help("vcsc.scopeTraceData") in python for more info.
-		self.scopeTraceData = self.allTraceDataStruct.traceData # This is a map containing a vector of vectors for each channel: 2000 points for n shots....
+		# This is a c++ struct containing all scope trace data - see help("vcsc.scopeTraceData") in python for more info.
+		self.allTraceDataStruct = self.scopeCont.getScopeTraceDataStruct( self.scope_name )
+		# This is a map containing a vector of vectors for each channel: 2000 points for n shots....
+		self.scopeTraceData = self.allTraceDataStruct.traceData
 		self.baseline_data = []
 		self.data = []
 		self.part_trace_data = []
-		self.partTrace = self.scopeCont.getPartOfTrace( self.scope_name, self.channel_name, self.area_start, self.area_end ) # This is a function in the .pyd library which allows the user to get a section of the trace.
+		# This is a function in the .pyd library which allows the user to get a section of the trace.
+		self.partTrace = self.scopeCont.getPartOfTrace( self.scope_name, self.channel_name, self.area_start, self.area_end )
 		#self.noise = self.scopeCont.getAvgNoise( self.scope_name, self.channel_name, self.baseline_start, self.baseline_end) # This takes the mean value of a region with no signal on it.
 		for i in range(self.numShots):
 			self.part_trace_data.append( numpy.sum( self.partTrace[i] )*self.allTraceDataStruct.timebase ) # This is the "raw" trace section.
@@ -183,7 +189,7 @@ class scopeWriterController(QObject):
 		self.filter_interval = filter_interval
 
 		self.numShots = 1
-		self.scopeCont.monitorATraceForNShots( self.scope_name, self.channel_name, self.numShots ) # We only take 1 trace - this should allow us to capture "interesting" conditioning events
+		self.scopeCont.monitorATraceForNShots( self.scope_name, self.channel_name, self.numShots )
 		while self.scopeCont.isMonitoringScopeTrace( self.scope_name, self.channel_name ):
 			time.sleep(0.01)
 
@@ -204,7 +210,7 @@ class scopeWriterController(QObject):
 		self.filter_interval = filter_interval
 
 		self.numShots = 1
-		self.scopeCont.monitorATraceForNShots( self.scope_name, self.channel_name, self.numShots ) # We only take 1 trace - this should allow us to capture "interesting" conditioning events
+		self.scopeCont.monitorATraceForNShots( self.scope_name, self.channel_name, self.numShots )
 		while self.scopeCont.isMonitoringScopeTrace( self.scope_name, self.channel_name ):
 			time.sleep(0.01)
 
@@ -212,7 +218,7 @@ class scopeWriterController(QObject):
 		self.scopeTraceData = self.allTraceDataStruct.traceData
 		self.min = self.scopeCont.getMinOfTraces( self.scope_name, self.channel_name )
 
-		self.mean_max = numpy.mean( self.min ) # We need to include some calibration factors based on diagnostic type here.... more to be added
+		self.mean_max = numpy.mean( self.min )
 
 		epics.caput( self.epics_channel, self.mean_min )
 		time.sleep(0.1)
@@ -225,7 +231,7 @@ class scopeWriterController(QObject):
 		self.filter_interval = filter_interval
 
 		self.numShots = 1
-		self.scopeCont.monitorATraceForNShots( self.scope_name, self.channel_name, self.numShots ) # We only take 1 trace - this should allow us to capture "interesting" conditioning events
+		self.scopeCont.monitorATraceForNShots( self.scope_name, self.channel_name, self.numShots )
 		while self.scopeCont.isMonitoringScopeTrace( self.scope_name, self.channel_name ):
 			time.sleep(0.01)
 
@@ -237,7 +243,38 @@ class scopeWriterController(QObject):
 		for i in range(len(self.min)):
 			self.p2p.append( ( self.max[ i ] - self.min[ i ] ) )
 
-		self.mean_p2p = numpy.mean( self.p2p ) # We need to include some calibration factors based on diagnostic type here.... more to be added
+		self.mean_p2p = numpy.mean( self.p2p )
 
 		epics.caput( self.epics_channel, self.mean_p2p )
 		time.sleep(0.1)
+
+	@QtCore.pyqtSlot()
+	def browse(self):
+		self.path = str(QtGui.QFileDialog.getOpenFileName(None, 'Select a folder:', 'D:\\Setups', "Scope files (*.lss)"))
+		if self.path:
+			print self.path
+			self.lastSlash = self.path.rfind('/')
+			self.path = self.path[(self.lastSlash+1):]
+			self.view.ui_line.setText(self.path)
+
+	@QtCore.pyqtSlot()
+	def saveSetup(self):
+		print self.view.ui_line.text()
+		self.scope.SaveRecall.Setup.PanelFilename = str(self.view.ui_line.text())
+		self.scope.SaveRecall.Setup.DoSavePanel
+
+	@QtCore.pyqtSlot()
+	def loadSetup(self):
+		print self.view.ui_line.text()
+		self.scope.SaveRecall.Setup.PanelFilename = str(self.view.ui_line.text())
+		self.scope.SaveRecall.Setup.DoRecallPanel
+
+	@QtCore.pyqtSlot()
+	def handle_fileLoadSelect(self):
+		self.scope.SaveRecall.Setup.PanelFilename = str(self.view.ui_line.text())
+		self.scopeSetupLoadView.hide()
+
+	@QtCore.pyqtSlot()
+	def handle_fileLoadSelect(self):
+		self.scope.SaveRecall.Setup.PanelFilename = str(self.view.ui_line.text())
+		self.scopeSetupLoadView.hide()
