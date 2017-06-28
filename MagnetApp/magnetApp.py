@@ -5,6 +5,15 @@ import sys,logging,socket
 
 import magnetAppGlobals as globals
 import magnetAppController
+import os
+
+#BE SPECIFIC.... YOUR I.P. FOR YOUR VM
+os.environ["EPICS_CA_ADDR_LIST"] = "10.10.0.12"
+os.environ["EPICS_CA_MAX_ARRAY_BYTES"] = "10000000"
+os.environ["EPICS_CA_SERVER_PORT"]="6000"
+
+
+
 
 class magnetApp(QtGui.QApplication):
     def __init__(self,argv):

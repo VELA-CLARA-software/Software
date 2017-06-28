@@ -37,7 +37,7 @@ class GUI_FileSave(QtGui.QMainWindow, Ui_FileSave):
                         str(self.comboBox2.currentText()) + '\t' +\
                         str(self.comboBox3.currentText()) + '\t'
         return self.keywords
-    # this event is inherited and we overlaod it so the GUI_FileSave
+    # this event is inherited and we overload it so the GUI_FileSave
     # is never deleted, (until we call close on the entire program)
     def closeEvent(self, evnt):
         if self.canWindowClose:

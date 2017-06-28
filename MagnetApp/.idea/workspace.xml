@@ -1,7 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d96cd6a7-b221-4d31-9352-2a816e989ac0" name="Default" comment="" />
+    <list default="true" id="d96cd6a7-b221-4d31-9352-2a816e989ac0" name="Default" comment="">
+      <change type="DELETED" beforePath="$PROJECT_DIR$/README/Magnet Controller App Overview 2.docx" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/README/Magnet Controller App Overview 3.docx" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/README/Magnet Controller App Overview.docx" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/GUI/GUI_FileLoad.py" afterPath="$PROJECT_DIR$/GUI/GUI_FileLoad.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/GUI/GUI_FileSave.py" afterPath="$PROJECT_DIR$/GUI/GUI_FileSave.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/GUI/GUI_magnetAppStartup.py" afterPath="$PROJECT_DIR$/GUI/GUI_magnetAppStartup.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/GUI/GUI_magnetWidget.py" afterPath="$PROJECT_DIR$/GUI/GUI_magnetWidget.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/control/magnetAppController.py" afterPath="$PROJECT_DIR$/control/magnetAppController.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/magnetApp.py" afterPath="$PROJECT_DIR$/magnetApp.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/magnetAppGlobals.py" afterPath="$PROJECT_DIR$/magnetAppGlobals.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/magnetAppLog.log" afterPath="$PROJECT_DIR$/magnetAppLog.log" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../magnetMultithreadDemo/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../magnetMultithreadDemo/.idea/workspace.xml" />
+    </list>
     <ignored path="MagnetApp.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -23,11 +38,53 @@
       <file leaf-file-name="magnetApp.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/magnetApp.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="621">
-              <caret line="22" column="0" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
+            <state relative-caret-position="288">
+              <caret line="12" column="41" lean-forward="false" selection-start-line="12" selection-start-column="41" selection-end-line="12" selection-end-column="41" />
               <folding>
                 <element signature="e#46#77#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="GUI_magnetAppStartup.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/GUI/GUI_magnetAppStartup.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="864">
+              <caret line="36" column="58" lean-forward="false" selection-start-line="36" selection-start-column="58" selection-end-line="36" selection-end-column="58" />
+              <folding>
+                <element signature="e#0#31#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Ui_magnetAppStartup.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/GUI/Ui_magnetAppStartup.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="448">
+              <caret line="60" column="13" lean-forward="true" selection-start-line="60" selection-start-column="13" selection-end-line="60" selection-end-column="13" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="magnetAppGlobals.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/magnetAppGlobals.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="240">
+              <caret line="12" column="1" lean-forward="false" selection-start-line="12" selection-start-column="1" selection-end-line="12" selection-end-column="1" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="magnetAppLog.log" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/magnetAppLog.log">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -35,66 +92,20 @@
       <file leaf-file-name="magnetAppController.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/control/magnetAppController.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-7290">
-              <caret line="15" column="25" selection-start-line="15" selection-start-column="6" selection-end-line="15" selection-end-column="25" />
+            <state relative-caret-position="3222">
+              <caret line="179" column="6" lean-forward="false" selection-start-line="179" selection-start-column="6" selection-end-line="179" selection-end-column="6" />
               <folding>
                 <element signature="e#46#60#0" expanded="true" />
-                <marker date="1489057109618" expanded="true" signature="7421:7639" ph="..." />
-                <marker date="1489057109618" expanded="true" signature="7674:7893" ph="..." />
-                <marker date="1489057109618" expanded="true" signature="7923:8022" ph="..." />
-                <marker date="1489057109618" expanded="true" signature="8178:8276" ph="..." />
-                <marker date="1489057109618" expanded="true" signature="8315:8535" ph="..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="GUI_FileSave.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/GUI/GUI_FileSave.py">
+      <file leaf-file-name="GUI_magnetAppMainView.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/GUI/GUI_magnetAppMainView.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="224">
-              <caret line="8" column="25" selection-start-line="8" selection-start-column="25" selection-end-line="8" selection-end-column="25" />
-              <folding>
-                <element signature="e#46#77#0" expanded="true" />
-                <marker date="1489057109279" expanded="true" signature="1798:1949" ph="..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="GUI_magnetAppStartup.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/GUI/GUI_magnetAppStartup.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1316">
-              <caret line="43" column="44" selection-start-line="43" selection-start-column="44" selection-end-line="43" selection-end-column="44" />
-              <folding>
-                <element signature="e#0#31#0" expanded="true" />
-                <marker date="1489057109648" expanded="true" signature="251:2891" ph="..." />
-                <marker date="1489057109648" expanded="true" signature="2776:2891" ph="..." />
-                <marker date="1489057109648" expanded="true" signature="2810:2891" ph="..." />
-                <marker date="1489057109648" expanded="true" signature="2889:2891" ph="..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="GUI_magnetWidget.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/GUI/GUI_magnetWidget.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="973">
-              <caret line="48" column="92" selection-start-line="48" selection-start-column="92" selection-end-line="48" selection-end-column="92" />
-              <folding>
-                <element signature="e#46#77#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="magnetAppGlobals.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/magnetAppGlobals.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="476">
-              <caret line="15" column="0" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
+            <state relative-caret-position="576">
+              <caret line="35" column="18" lean-forward="false" selection-start-line="35" selection-start-column="18" selection-end-line="35" selection-end-column="18" />
               <folding />
             </state>
           </provider>
@@ -108,6 +119,12 @@
         <option value="Python Script" />
       </list>
     </option>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>addMagnetsToMainView</find>
+      <find>CLARA</find>
+    </findStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -128,12 +145,15 @@
         <option value="$PROJECT_DIR$/GUI_magnetAppMainView.py" />
         <option value="$PROJECT_DIR$/GUI_magnetAppStartup.py" />
         <option value="$PROJECT_DIR$/magnetAppController.py" />
-        <option value="$PROJECT_DIR$/magnetAppGlobals.py" />
-        <option value="$PROJECT_DIR$/magnetApp.py" />
-        <option value="$PROJECT_DIR$/control/magnetAppController.py" />
-        <option value="$PROJECT_DIR$/GUI/GUI_FileSave.py" />
-        <option value="$PROJECT_DIR$/GUI/GUI_magnetAppStartup.py" />
         <option value="$PROJECT_DIR$/GUI/GUI_magnetWidget.py" />
+        <option value="$PROJECT_DIR$/GUI/GUI_FileSave.py" />
+        <option value="$PROJECT_DIR$/GUI/GUI_FileLoad.py" />
+        <option value="$PROJECT_DIR$/GUI/GUI_magnetAppMainView.py" />
+        <option value="$PROJECT_DIR$/control/magnetAppController.py" />
+        <option value="$PROJECT_DIR$/magnetApp.py" />
+        <option value="$PROJECT_DIR$/magnetAppGlobals.py" />
+        <option value="$PROJECT_DIR$/magnetAppLog.log" />
+        <option value="$PROJECT_DIR$/GUI/GUI_magnetAppStartup.py" />
       </list>
     </option>
   </component>
@@ -143,16 +163,7 @@
     <option name="width" value="1096" />
     <option name="height" value="1936" />
   </component>
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
-    <OptionsSetting value="true" id="Add" />
-    <OptionsSetting value="true" id="Remove" />
-    <OptionsSetting value="true" id="Checkout" />
-    <OptionsSetting value="true" id="Update" />
-    <OptionsSetting value="true" id="Status" />
-    <OptionsSetting value="true" id="Edit" />
-    <ConfirmationsSetting value="0" id="Add" />
-    <ConfirmationsSetting value="0" id="Remove" />
-  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1">
       <flattenPackages />
@@ -168,13 +179,21 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
             <PATH_ELEMENT>
               <option name="myItemId" value="MagnetApp" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="External Libraries" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="&lt; Python 2.7.9 (C:\Python27\python.exe) &gt;" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
@@ -203,12 +222,38 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
+      <pane id="Scope">
+        <subPane subId="Project Files">
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="MagnetApp">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="MagnetApp">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="GUI">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
-    <property name="settings.editor.splitter.proportion" value="0.2" />
+    <property name="settings.editor.selected.configurable" value="vcs.Git" />
     <property name="full.screen.before.presentation.mode" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
@@ -227,6 +272,290 @@
       <recent name="D:\VELA\GIT Projects\Software\MagnetApp" />
     </key>
   </component>
+  <component name="RestoreUpdateTree" date="Moments ago" ActionInfo="_Update">
+    <UpdatedFiles>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Updated from server" />
+        <option name="myStatusName" value="Changed on server" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="CHANGED_ON_SERVER" />
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Updated" />
+          <option name="myStatusName" value="Changed" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="UPDATED" />
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../.gitignore</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../BYScIT/imageAnalysisSourceCode/imageAnalyser_py.layout</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../MomentumApp/controller/controller.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../MomentumApp/controller/controller.pyc</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../MomentumApp/mainApp.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../MomentumApp/model/generalMomentumFunctions.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../MomentumApp/model/generalMomentumFunctions.pyc</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../MomentumApp/model/model.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../MomentumApp/model/model.pyc</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../README.md</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../Striptool/examples/striptool_Demo_Magnets_v2.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../Striptool/examples/striptool_TP_Monitor.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../Striptool/examples/striptool_test.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../Striptool/striptool.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../Striptool/striptool.pyc</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../Striptool/striptoolCurve.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../Striptool/striptoolFunctions.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../Striptool/striptoolLegend.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../Striptool/striptoolPlot.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../Striptool/striptoolRecord.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../loggerWidget/loggerWidget.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../magnet-table/Icons/Offline.png</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../magnet-table/magnet-table.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../magnet-table/rf_sol_gui.ui</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../magnet-table/rf_sol_tracking.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../magnet-table/setup.py</PATH>
+        </FILE-GROUP>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Created" />
+          <option name="myStatusName" value="Created" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="CREATED" />
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../.idea/Software.iml</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../.idea/misc.xml</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../.idea/modules.xml</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../.idea/vcs.xml</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../.idea/workspace.xml</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../AutoGunConditioner/auto_condition_really_simple_DC.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../AutoGunConditioner/auto_condition_really_simple_GUI.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../AutoGunConditioner/auto_condition_really_simple_jkj.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../AutoGunConditioner/clara_10_auto_condition.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../AutoGunConditioner/llrf_amp_kly_fwd_pwr_log.txt</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../AutoPhaseCalib/OverallSimMessages.txt</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../AutoPhaseCalib/controller/controller.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../AutoPhaseCalib/controller/threads.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../AutoPhaseCalib/launcher.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../AutoPhaseCalib/launcher.ui</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../AutoPhaseCalib/mainApp.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../AutoPhaseCalib/model/model.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../AutoPhaseCalib/model/test_deguass.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../AutoPhaseCalib/model/test_setphase.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../AutoPhaseCalib/model/threads.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../AutoPhaseCalib/temp-SP.in</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../AutoPhaseCalib/temp-V1.in</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../AutoPhaseCalib/temp-start.ini</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../AutoPhaseCalib/view/Icons/Correctors.png</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../AutoPhaseCalib/view/Icons/Dipoles.png</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../AutoPhaseCalib/view/Icons/Quadrupoles.png</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../AutoPhaseCalib/view/Icons/Solenoids.png</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../AutoPhaseCalib/view/launcher.ui</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../AutoPhaseCalib/view/view.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../AutoPhaseCalib/view/view.ui</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../ElegantWriter/ALICE.lte</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../ElegantWriter/C2V-DIA-SCR-01.SDDS</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../ElegantWriter/C2V-MAG-DIP-01-D.CSR</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../ElegantWriter/C2V.lte</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../ElegantWriter/CLA-C2V-MAG-DIP-02-D.CSR</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../ElegantWriter/CLA-S01-DIA-SCR-01.SDDS</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../ElegantWriter/CLA-S02-DIA-SCR-01.SDDS</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../ElegantWriter/CLA-S02-DIA-SCR-02.SDDS</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../ElegantWriter/DIAMOND.lte</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../ElegantWriter/EBT-INJ-DIA-FCUP-02.SDDS</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../ElegantWriter/EBT-INJ-DIA-SCR-06.SDDS</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../ElegantWriter/EBT-INJ-DIA-SCR-07.SDDS</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../ElegantWriter/EBT-INJ-DIA-SCR-08.SDDS</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../ElegantWriter/EBT-INJ-DIA-SCR-BA1.SDDS</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../ElegantWriter/SDDSPython2.7.msi</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../ElegantWriter/Sx50um10mmxband.dat</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../ElegantWriter/Sx5um10mm.dat</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../ElegantWriter/Sz20um25mmxband.dat</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../ElegantWriter/Sz5um10mm.dat</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../ElegantWriter/commands.db</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../ElegantWriter/commands.yaml</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../ElegantWriter/createYAMLFiles.nb</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../ElegantWriter/elegant.db</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../ElegantWriter/elegant.err</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../ElegantWriter/elegant.log</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../ElegantWriter/elegantWriter.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../ElegantWriter/elegantWriter_objects.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../ElegantWriter/elegantWriter_simple.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../ElegantWriter/elements.yaml</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../ElegantWriter/lattice8.5.mff</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../ElegantWriter/stdin.cen</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../ElegantWriter/stdin.flr</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../ElegantWriter/stdin.twi</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../ElegantWriter/test.ele</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../ElegantWriter/test.lte</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../ElegantWriter/test.twi</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../ElegantWriter/testing_objects.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../ElegantWriter/testing_simple.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../LinacConditioner/Linac_1_conditioner_v0.1.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../MomentumApp/OverallSimMessages.txt</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../MomentumApp/model/model_1_2.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../MomentumApp/model/momentumProcedures.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../MomentumApp/temp-SP.in</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../MomentumApp/temp-V1.in</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../RFApps/eSlider.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../RFApps/rfdial.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../ScopeWriter/control/scopeWriterController.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../ScopeWriter/control/scopeWriterMasterController.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../ScopeWriter/readme.pdf</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../ScopeWriter/scopeWriterGlobals.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../ScopeWriter/scopeWriterLauncher.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../ScopeWriter/view/scopeWriterLauncherUI.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../ScopeWriter/view/scopeWriterLauncherView.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../ScopeWriter/view/scopeWriterLoadView.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../ScopeWriter/view/scopeWriterSaveUI.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../ScopeWriter/view/scopeWriterSaveView.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../ScopeWriter/view/scopeWriterUI.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../ScopeWriter/view/scopeWriterView.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../auto_condition_really_simple_GUI.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../magnet-table/Icons/Quadrupole_D.png</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../magnet-table/Icons/Quadrupole_F.png</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../magnet-table/Icons/log.png</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../magnet-table/Icons/padlock-closed.png</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../magnet-table/Icons/padlock-open.png</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../magnet-table/Icons/parasol.png</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../magnet-table/gb-field-maps/gb-dc-gun_b-field.csv</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../magnet-table/gb-field-maps/gb-dc-gun_e-field.csv</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../magnet-table/gb-field-maps/gb-rf-gun_b-field.csv</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../magnet-table/gb-field-maps/gb-rf-gun_e-field.csv</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../magnet-table/parasol.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../magnet-table/solenoid_field_map.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../matlabImageViewer/.idea/matlabImageViewer.iml</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../matlabImageViewer/.idea/misc.xml</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../matlabImageViewer/.idea/modules.xml</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../matlabImageViewer/.idea/workspace.xml</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../matlabImageViewer/README</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../matlabImageViewer/control/__init__.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../matlabImageViewer/control/matlabImageViewerController.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../matlabImageViewer/control/matlabImageViewerMasterController.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../matlabImageViewer/data_processing/__init__.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../matlabImageViewer/data_processing/emittanceMeasurement.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../matlabImageViewer/data_processing/energySpreadMeasurement.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../matlabImageViewer/file_manager/__init__.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../matlabImageViewer/file_manager/matlabFileRead.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../matlabImageViewer/file_manager/matlabFileWriter.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../matlabImageViewer/matlabImageViewerLauncher.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../matlabImageViewer/view/__init__.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../matlabImageViewer/view/emittanceMeasurementView.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../matlabImageViewer/view/emittanceMeasurementViewUI.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../matlabImageViewer/view/energySpreadView.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../matlabImageViewer/view/energySpreadViewUI.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../matlabImageViewer/view/matlabImageLauncherView.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../matlabImageViewer/view/matlabImageLauncherViewUI.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../matlabImageViewer/view/matlabImageView.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../matlabImageViewer/view/matlabImageViewUI.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../testAPP/controller/controller.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../testAPP/mainApp.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../testAPP/model/model.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../testAPP/view/view.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../testAPP/view/view.ui</PATH>
+        </FILE-GROUP>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Deleted" />
+          <option name="myStatusName" value="Deleted" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="true" />
+          <option name="myId" value="REMOVED_FROM_REPOSITORY" />
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../Striptool/Striptool.egg-info/PKG-INFO</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../Striptool/Striptool.egg-info/SOURCES.txt</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../Striptool/Striptool.egg-info/dependency_links.txt</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../Striptool/Striptool.egg-info/top_level.txt</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../Striptool/examples/profile.txt</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../magnet-table/gb-matrix.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/../magnet-table/rf_sol_app.py</PATH>
+        </FILE-GROUP>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Restored" />
+          <option name="myStatusName" value="Will be restored" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="RESTORED" />
+        </FILE-GROUP>
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Modified" />
+        <option name="myStatusName" value="Modified" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="MODIFIED" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Skipped" />
+        <option name="myStatusName" value="Skipped" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="SKIPPED" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Merged with conflicts" />
+        <option name="myStatusName" value="Will be merged with conflicts" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="MERGED_WITH_CONFLICTS" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Merged with tree conflicts" />
+        <option name="myStatusName" value="Merged with tree conflicts" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="MERGED_WITH_TREE_CONFLICT" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Merged with property conflicts" />
+        <option name="myStatusName" value="Will be merged with property conflicts" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="MERGED_WITH_PROPERTY_CONFLICT" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Merged" />
+        <option name="myStatusName" value="Will be merged" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="MERGED" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Not in repository" />
+        <option name="myStatusName" value="Not in repository" />
+        <option name="mySupportsDeletion" value="true" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="UNKNOWN" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Locally added" />
+        <option name="myStatusName" value="Locally added" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="LOCALLY_ADDED" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Locally removed" />
+        <option name="myStatusName" value="Locally removed" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="LOCALLY_REMOVED" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Switched" />
+        <option name="myStatusName" value="Switched" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="SWITCHED" />
+      </FILE-GROUP>
+    </UpdatedFiles>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
   <component name="RunManager" selected="Python.magnetApp">
     <configuration default="false" name="magnetApp" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -243,6 +572,7 @@
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/magnetApp.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
       <method />
     </configuration>
     <configuration default="false" name="magnetAppController" type="PythonConfigurationType" factoryName="Python" temporary="true">
@@ -260,6 +590,7 @@
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/magnetAppController.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
       <method />
     </configuration>
     <configuration default="false" name="GUI_FileLoad" type="PythonConfigurationType" factoryName="Python" temporary="true">
@@ -277,6 +608,7 @@
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/GUI_FileLoad.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
       <method />
     </configuration>
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
@@ -294,6 +626,7 @@
       <option name="SCRIPT_NAME" value="" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
       <method />
     </configuration>
     <configuration default="true" type="Tox" factoryName="Tox">
@@ -306,25 +639,6 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="MagnetApp" />
-      <method />
-    </configuration>
-    <configuration default="true" type="tests" factoryName="Attests">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="MagnetApp" />
-      <option name="SCRIPT_NAME" value="" />
-      <option name="CLASS_NAME" value="" />
-      <option name="METHOD_NAME" value="" />
-      <option name="FOLDER_NAME" value="" />
-      <option name="TEST_TYPE" value="TEST_SCRIPT" />
-      <option name="PATTERN" value="" />
-      <option name="USE_PATTERN" value="false" />
       <method />
     </configuration>
     <configuration default="true" type="tests" factoryName="Doctests">
@@ -356,15 +670,10 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="MagnetApp" />
-      <option name="SCRIPT_NAME" value="" />
-      <option name="CLASS_NAME" value="" />
-      <option name="METHOD_NAME" value="" />
-      <option name="FOLDER_NAME" value="" />
-      <option name="TEST_TYPE" value="TEST_SCRIPT" />
-      <option name="PATTERN" value="" />
-      <option name="USE_PATTERN" value="false" />
-      <option name="PARAMS" value="" />
-      <option name="USE_PARAM" value="false" />
+      <option name="_new_regexPattern" value="&quot;&quot;" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;.&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
       <method />
     </configuration>
     <configuration default="true" type="tests" factoryName="Unittests">
@@ -377,16 +686,9 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="MagnetApp" />
-      <option name="SCRIPT_NAME" value="" />
-      <option name="CLASS_NAME" value="" />
-      <option name="METHOD_NAME" value="" />
-      <option name="FOLDER_NAME" value="" />
-      <option name="TEST_TYPE" value="TEST_SCRIPT" />
-      <option name="PATTERN" value="" />
-      <option name="USE_PATTERN" value="false" />
-      <option name="PUREUNITTEST" value="true" />
-      <option name="PARAMS" value="" />
-      <option name="USE_PARAM" value="false" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;.&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
       <method />
     </configuration>
     <configuration default="true" type="tests" factoryName="py.test">
@@ -399,18 +701,10 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="MagnetApp" />
-      <option name="SCRIPT_NAME" value="" />
-      <option name="CLASS_NAME" value="" />
-      <option name="METHOD_NAME" value="" />
-      <option name="FOLDER_NAME" value="" />
-      <option name="TEST_TYPE" value="TEST_SCRIPT" />
-      <option name="PATTERN" value="" />
-      <option name="USE_PATTERN" value="false" />
-      <option name="testToRun" value="" />
-      <option name="keywords" value="" />
-      <option name="params" value="" />
-      <option name="USE_PARAM" value="false" />
-      <option name="USE_KEYWORD" value="false" />
+      <option name="_new_keywords" value="&quot;&quot;" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;.&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
       <method />
     </configuration>
     <list size="3">
@@ -425,6 +719,25 @@
         <item index="2" class="java.lang.String" itemvalue="Python.GUI_FileLoad" />
       </list>
     </recent_temporary>
+    <configuration default="true" type="tests" factoryName="Attests">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="MagnetApp" />
+      <option name="SCRIPT_NAME" value="" />
+      <option name="CLASS_NAME" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="FOLDER_NAME" value="" />
+      <option name="TEST_TYPE" value="TEST_SCRIPT" />
+      <option name="PATTERN" value="" />
+      <option name="USE_PATTERN" value="false" />
+      <method />
+    </configuration>
   </component>
   <component name="ShelveChangesManager" show_recycled="false">
     <option name="remove_strategy" value="false" />
@@ -453,44 +766,44 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-1088" y="-8" width="1096" height="1936" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.212306" sideWeight="0.34877127" order="11" side_tool="false" content_ui="combo" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32941833" sideWeight="0.47733846" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.36308205" sideWeight="0.2920605" order="7" side_tool="true" content_ui="tabs" x="-1069" y="659" width="1058" height="602" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3292683" sideWeight="0.44328922" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.36308205" sideWeight="0.7079395" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20656371" sideWeight="0.40798226" order="2" side_tool="false" content_ui="combo" x="-1501" y="409" width="524" height="571" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3292683" sideWeight="0.47733846" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="false" show_stripe_button="true" weight="0.2676519" sideWeight="0.31085354" order="6" side_tool="true" content_ui="tabs" x="-1856" y="1122" width="1058" height="602" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32982263" sideWeight="0.48109642" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.21064301" sideWeight="0.68914646" order="7" side_tool="false" content_ui="tabs" x="-896" y="1436" width="790" height="660" />
+      <window_info id="Version Control" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32982263" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.11585366" sideWeight="0.44328922" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24952741" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3292683" sideWeight="0.45085067" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32986766" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25831485" sideWeight="0.6568998" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25831485" sideWeight="0.6568998" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.265444" sideWeight="0.5920177" order="1" side_tool="true" content_ui="tabs" />
+      <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32982263" sideWeight="0.48109642" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32941833" sideWeight="0.47733846" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.361678" sideWeight="0.31085354" order="7" side_tool="true" content_ui="tabs" x="-1069" y="659" width="1058" height="602" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2245008" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.12685186" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3292683" sideWeight="0.44328922" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.361678" sideWeight="0.68914646" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3292683" sideWeight="0.45085067" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.21201815" sideWeight="0.34720758" order="11" side_tool="false" content_ui="combo" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32982263" sideWeight="0.48109642" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24952741" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32986766" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25831485" sideWeight="0.6568998" order="3" side_tool="false" content_ui="tabs" />
     </layout-to-restore>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -506,6 +819,13 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/control/magnetAppController.py</url>
+          <line>240</line>
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
+      </breakpoints>
       <default-breakpoints>
         <breakpoint type="python-exception">
           <properties notifyOnTerminate="true" exception="BaseException">
@@ -513,30 +833,15 @@
           </properties>
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="6" />
+      <option name="time" value="7" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/magnetApp.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="140">
-          <caret line="6" column="0" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="26" />
-          <folding>
-            <element signature="e#46#77#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/magnetAppController.py" />
-    <entry file="file://$PROJECT_DIR$/velaClaraControllers.py" />
-    <entry file="file://$PROJECT_DIR$/GUI_magnetAppStartup.py" />
-    <entry file="file://$PROJECT_DIR$/Ui_magnetAppStartup.py" />
-    <entry file="file://$PROJECT_DIR$/GUI_FileLoad.py" />
-    <entry file="file://$PROJECT_DIR$/magnetApp.py">
-      <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="420">
-          <caret line="16" column="26" selection-start-line="16" selection-start-column="26" selection-end-line="16" selection-end-column="26" />
+          <caret line="16" column="26" lean-forward="false" selection-start-line="16" selection-start-column="26" selection-end-line="16" selection-end-column="26" />
           <folding>
             <element signature="e#46#77#0" expanded="true" />
           </folding>
@@ -549,7 +854,7 @@
     <entry file="file://$PROJECT_DIR$/magnetApp.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="252">
-          <caret line="10" column="28" selection-start-line="10" selection-start-column="28" selection-end-line="10" selection-end-column="28" />
+          <caret line="10" column="28" lean-forward="false" selection-start-line="10" selection-start-column="28" selection-end-line="10" selection-end-column="28" />
           <folding>
             <element signature="e#46#77#0" expanded="true" />
           </folding>
@@ -561,7 +866,7 @@
     <entry file="file://$PROJECT_DIR$/magnetApp.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="252">
-          <caret line="10" column="28" selection-start-line="10" selection-start-column="28" selection-end-line="10" selection-end-column="28" />
+          <caret line="10" column="28" lean-forward="false" selection-start-line="10" selection-start-column="28" selection-end-line="10" selection-end-column="28" />
           <folding>
             <element signature="e#46#77#0" expanded="true" />
           </folding>
@@ -573,7 +878,7 @@
     <entry file="file://$PROJECT_DIR$/magnetApp.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="252">
-          <caret line="10" column="28" selection-start-line="10" selection-start-column="28" selection-end-line="10" selection-end-column="28" />
+          <caret line="10" column="28" lean-forward="false" selection-start-line="10" selection-start-column="28" selection-end-line="10" selection-end-column="28" />
           <folding>
             <element signature="e#46#77#0" expanded="true" />
           </folding>
@@ -585,7 +890,7 @@
     <entry file="file://$PROJECT_DIR$/magnetApp.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="280">
-          <caret line="10" column="28" selection-start-line="10" selection-start-column="28" selection-end-line="10" selection-end-column="28" />
+          <caret line="10" column="28" lean-forward="false" selection-start-line="10" selection-start-column="28" selection-end-line="10" selection-end-column="28" />
           <folding>
             <element signature="e#46#77#0" expanded="true" />
           </folding>
@@ -598,7 +903,7 @@
     <entry file="file://$PROJECT_DIR$/magnetApp.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#46#77#0" expanded="true" />
           </folding>
@@ -610,7 +915,7 @@
     <entry file="file://$PROJECT_DIR$/magnetApp.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="280">
-          <caret line="11" column="75" selection-start-line="11" selection-start-column="75" selection-end-line="11" selection-end-column="75" />
+          <caret line="11" column="75" lean-forward="false" selection-start-line="11" selection-start-column="75" selection-end-line="11" selection-end-column="75" />
           <folding>
             <element signature="e#46#77#0" expanded="true" />
           </folding>
@@ -622,7 +927,7 @@
     <entry file="file://$PROJECT_DIR$/magnetApp.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#46#77#0" expanded="true" />
           </folding>
@@ -638,7 +943,7 @@
     <entry file="file://$PROJECT_DIR$/../magnetMultithreadDemo/threadDemo">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="896">
-          <caret line="30" column="53" selection-start-line="30" selection-start-column="53" selection-end-line="30" selection-end-column="53" />
+          <caret line="30" column="53" lean-forward="false" selection-start-line="30" selection-start-column="53" selection-end-line="30" selection-end-column="53" />
         </state>
       </provider>
     </entry>
@@ -650,71 +955,100 @@
     <entry file="file://$PROJECT_DIR$/GUI_magnetWidget.py" />
     <entry file="file://$PROJECT_DIR$/GUI_magnetAppMainView.py" />
     <entry file="file://$PROJECT_DIR$/magnetAppController.py" />
-    <entry file="file://$PROJECT_DIR$/magnetApp.py">
+    <entry file="file://$PROJECT_DIR$/GUI/Ui_magnetWidget.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="621">
-          <caret line="22" column="0" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
-          <folding>
-            <element signature="e#46#77#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/control/magnetAppController.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-7290">
-          <caret line="15" column="25" selection-start-line="15" selection-start-column="6" selection-end-line="15" selection-end-column="25" />
-          <folding>
-            <element signature="e#46#60#0" expanded="true" />
-            <marker date="1489057109618" expanded="true" signature="7421:7639" ph="..." />
-            <marker date="1489057109618" expanded="true" signature="7674:7893" ph="..." />
-            <marker date="1489057109618" expanded="true" signature="7923:8022" ph="..." />
-            <marker date="1489057109618" expanded="true" signature="8178:8276" ph="..." />
-            <marker date="1489057109618" expanded="true" signature="8315:8535" ph="..." />
-          </folding>
+        <state relative-caret-position="-420">
+          <caret line="12" column="22" lean-forward="false" selection-start-line="12" selection-start-column="22" selection-end-line="12" selection-end-column="22" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/GUI/GUI_FileSave.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="224">
-          <caret line="8" column="25" selection-start-line="8" selection-start-column="25" selection-end-line="8" selection-end-column="25" />
-          <folding>
-            <element signature="e#46#77#0" expanded="true" />
-            <marker date="1489057109279" expanded="true" signature="1798:1949" ph="..." />
-          </folding>
+        <state relative-caret-position="624">
+          <caret line="33" column="25" lean-forward="false" selection-start-line="33" selection-start-column="25" selection-end-line="33" selection-end-column="25" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/GUI/GUI_magnetAppStartup.py">
+    <entry file="file://$PROJECT_DIR$/GUI/Ui_magnetAppMainView.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1316">
-          <caret line="43" column="44" selection-start-line="43" selection-start-column="44" selection-end-line="43" selection-end-column="44" />
-          <folding>
-            <element signature="e#0#31#0" expanded="true" />
-            <marker date="1489057109648" expanded="true" signature="251:2891" ph="..." />
-            <marker date="1489057109648" expanded="true" signature="2776:2891" ph="..." />
-            <marker date="1489057109648" expanded="true" signature="2810:2891" ph="..." />
-            <marker date="1489057109648" expanded="true" signature="2889:2891" ph="..." />
-          </folding>
+        <state relative-caret-position="301">
+          <caret line="154" column="27" lean-forward="false" selection-start-line="154" selection-start-column="13" selection-end-line="154" selection-end-column="27" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/GUI/GUI_magnetWidget.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="973">
-          <caret line="48" column="92" selection-start-line="48" selection-start-column="92" selection-end-line="48" selection-end-column="92" />
+        <state relative-caret-position="1092">
+          <caret line="54" column="23" lean-forward="false" selection-start-line="54" selection-start-column="23" selection-end-line="54" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/GUI/GUI_FileLoad.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1428">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/GUI/GUI_magnetAppMainView.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="576">
+          <caret line="35" column="18" lean-forward="false" selection-start-line="35" selection-start-column="18" selection-end-line="35" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/control/magnetAppController.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3222">
+          <caret line="179" column="6" lean-forward="false" selection-start-line="179" selection-start-column="6" selection-end-line="179" selection-end-column="6" />
+          <folding>
+            <element signature="e#46#60#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/magnetApp.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="288">
+          <caret line="12" column="41" lean-forward="false" selection-start-line="12" selection-start-column="41" selection-end-line="12" selection-end-column="41" />
           <folding>
             <element signature="e#46#77#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/magnetAppLog.log">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/magnetAppGlobals.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="476">
-          <caret line="15" column="0" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
+        <state relative-caret-position="240">
+          <caret line="12" column="1" lean-forward="false" selection-start-line="12" selection-start-column="1" selection-end-line="12" selection-end-column="1" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/GUI/Ui_magnetAppStartup.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="448">
+          <caret line="60" column="13" lean-forward="true" selection-start-line="60" selection-start-column="13" selection-end-line="60" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/GUI/GUI_magnetAppStartup.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="864">
+          <caret line="36" column="58" lean-forward="false" selection-start-line="36" selection-start-column="58" selection-end-line="36" selection-end-column="58" />
+          <folding>
+            <element signature="e#0#31#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
