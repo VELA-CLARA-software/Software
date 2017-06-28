@@ -161,6 +161,8 @@ def can_increase_rf():
             # print 'can_increase_rf thinks we should increase pusle width'
     return False
 
+loop_start_time = time.time
+
 while True:
     # global time_of_last_increase, vac_spike_RF_pulse_width_increase, normal_RF_increase, llrf_check_width, llrf_end_offest, llrf_pulse_offset, last_pulse_length
 
@@ -190,7 +192,7 @@ while True:
 
     time.sleep(0.1)
 
-while True:
-	time.sleep(180000)
-	print 'Breakdown rate is ' + breakdown_count/180000
-	breakdown_count = 0
+    if time.time = loop_start_time + 1800:
+        print 'Breakdown rate is ' + breakdown_count / 180000
+        breakdown_count = 0
+        loop_start_time = time.time
