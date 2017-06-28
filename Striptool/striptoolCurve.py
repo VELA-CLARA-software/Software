@@ -99,7 +99,8 @@ class curve(QObject):
                     self.plot.plot.addItem(self.lines)
                     self.lineOn = True
             if self.plot.crosshairs:
-                self.plot.signalValuesUnderCrosshairs.emit(self.name, self.signalValueAtX(self.plot.vLine.value()), np.mean(y), np.std(y))
+                params = self.name, self.signalValueAtX(self.plot.vLine.value()), np.mean(y), np.std(y)
+                self.plot.signalValuesUnderCrosshairs.emit(params)
     #
     # def createPath(self, data):
     #     path = QPainterPath(QPointF(data[0][0],data[0][1]))
