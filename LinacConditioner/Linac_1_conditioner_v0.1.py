@@ -119,7 +119,7 @@ def check_IMG_change_is_small(img_signal, rf_amp_signal, rf_pulse_width_signal, 
             pv_time_of_last_alarm[img_signal] = time.time()
             print 'Vac Spike, Dropping RF power to zero '
             # Changing RF Pulse Width
-			breakdown_count = breakdown_count + 1
+            breakdown_count = breakdown_count + 1
             reset_rf_value = latest_values['RF_AMPLITUDE']
             change_RF_amp(rf_amp_signal, 0)
             time.sleep(3)
@@ -139,7 +139,7 @@ def check_LLRF_rev_power_is_low(ref_signal,rf_amp_signal, rf_pulse_width_signal,
             if is_not_in_cool_down( ref_signal ):
                 pv_time_of_last_alarm[ ref_signal ] =  time.time()
                 print 'Reflected power spike, Dropping RF power to 0 for 2s'
-				breakdown_count = breakdown_count + 1
+                breakdown_count = breakdown_count + 1
                 reset_rf_value = latest_values['RF_AMPLITUDE']
                 change_RF_amp(rf_amp_signal, 0)
                 time.sleep(3)
@@ -161,7 +161,7 @@ def can_increase_rf():
             # print 'can_increase_rf thinks we should increase pusle width'
     return False
 
-loop_start_time = time.time
+loop_start_time = time.time()
 
 while True:
     # global time_of_last_increase, vac_spike_RF_pulse_width_increase, normal_RF_increase, llrf_check_width, llrf_end_offest, llrf_pulse_offset, last_pulse_length
@@ -184,15 +184,14 @@ while True:
         change_RF_amp('RF_AMPLITUDE', increase)
         time_of_last_increase = time.time()
         print 'No Events for ' + str(time.time() - time_of_last_increase) + '  RF Amp = ' + str(increase)
-        log(llrf_index_start, llrf_index_stop, log_file)
     # else:
     # print 'cannot increase RF '
 
     last_pulse_length = latest_values['RF_PULSE_LENGTH']
 
-    time.sleep(0.1)
-
-    if time.time = loop_start_time + 1800:
-        print 'Breakdown rate is ' + breakdown_count / 180000
+    if time.time() - 1800 > loop_start_time:
+        print 'Breakdown rate is ' + str(breakdown_count/3) + ' every 10 minutes'
         breakdown_count = 0
         loop_start_time = time.time
+
+    time.sleep(0.1)
