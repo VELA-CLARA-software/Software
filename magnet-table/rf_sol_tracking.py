@@ -77,6 +77,7 @@ MODEL_LIST = ('gb-rf-gun', 'gb-dc-gun', 'Gun-10')
 
 field_map_attr = namedtuple('field_map_attr', 'coeffs z_map bc_area bc_turns sol_area sol_turns')
 
+__all__ = ['RFSolTracker', ]
 
 class RFSolTracker(object):
     """Simulation of superimposed RF and solenoid fields."""
