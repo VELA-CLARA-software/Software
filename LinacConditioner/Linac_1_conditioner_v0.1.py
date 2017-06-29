@@ -80,11 +80,13 @@ def currentTimeStr():
 def is_not_in_cool_down(signal):
     return True
 
+rf_dropped = False
+rf_permit_lost = False
+rf_trig_lost = False
+
 def check_RF_permit_is_good(rf_permit_signal, rf_trig_signal, rf_amp_signal, latest_values):
     global permit_RF_drop, is_not_in_cool_down, pv_time_of_last_alarm
-    rf_dropped = False
-    rf_permit_lost = False
-    rf_trig_lost = False
+
     if (latest_values[rf_permit_signal] != pv_monitor_not_alarm_values[rf_permit_signal]):
         rf_dropped = True
         rf_permit_lost = True
@@ -172,11 +174,13 @@ while True:
         sys.exit()
 
 
+
     check_RF_permit_is_good('RF_PERMIT', 'RF_TRIG', 'RF_AMPLITUDE', latest_values)
 
     check_IMG_change_is_small('IMG_1', 'RF_AMPLITUDE', 'RF_PULSE_LENGTH', latest_values)
 
-
+    if rf_dropped == True or rf_permit_lost == True or rf_trig_lost == True:
+        time.sleep(2)
 
     if can_increase_rf():
         # print 'can increase RF amplitude'
