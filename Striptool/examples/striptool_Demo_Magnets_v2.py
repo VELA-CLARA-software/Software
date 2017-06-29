@@ -8,6 +8,8 @@ from pyqtgraph.dockarea import *
 import striptool as striptool
 import scatterPlot as scatterplot
 import numpy as np
+
+
 ''' Load loggerWidget library (comment out if not available) '''
 sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\\..\\..\\loggerWidget\\')
 from ConfigParser import SafeConfigParser

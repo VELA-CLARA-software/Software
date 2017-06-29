@@ -8,7 +8,7 @@ import sys
 from VELA_CLARA_MagnetControl import MAG_PSU_STATE, MAG_TYPE, MAG_REV_TYPE
 
 class GUI_magnetWidget(QtGui.QMainWindow, Ui_magnetWidget):
-    # we know tehre will be many instances of this class,
+    # we know thwre will be many instances of this class,
     # so lets try and be more efficent with our memory
     # class variables(sort of static),
     # we only need one copy for each instance of this class

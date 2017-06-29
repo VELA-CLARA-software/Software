@@ -111,4 +111,3 @@ class GUI_FileLoad(QWidget):
         self.dburtPathAndFile = self.fileSystemModel.filePath(self.indexItem)
         print  self.dburtFile
         print  self.dburtPathAndFile
-

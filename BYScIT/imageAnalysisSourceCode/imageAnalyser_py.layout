@@ -1,10 +1,62 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
 	<FileVersion major="1" minor="0" />
-	<ActiveTarget name="Release" />
-	<File name="fitter.cpp" open="1" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<ActiveTarget name="Debug" />
+	<File name="Utilities\baseObject.cpp" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="8719" topLine="24" />
+			<Cursor1 position="831" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="Utilities\baseObject.h" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="3592" topLine="61" />
+		</Cursor>
+	</File>
+	<File name="Utilities\configDefinitions.h" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1514" topLine="6" />
+		</Cursor>
+	</File>
+	<File name="Utilities\configReader.cpp" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="257" topLine="2" />
+		</Cursor>
+		<Folding>
+			<Collapse line="32" />
+		</Folding>
+	</File>
+	<File name="Utilities\configReader.h" open="0" top="0" tabpos="11" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="313" topLine="8" />
+		</Cursor>
+	</File>
+	<File name="Utilities\configReader_YAG_masks.cpp" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="842" topLine="63" />
+		</Cursor>
+	</File>
+	<File name="editor.cpp" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="7699" topLine="6" />
+		</Cursor>
+		<Folding>
+			<Collapse line="19" />
+			<Collapse line="21" />
+			<Collapse line="27" />
+			<Collapse line="32" />
+			<Collapse line="40" />
+			<Collapse line="41" />
+			<Collapse line="62" />
+		</Folding>
+	</File>
+	<File name="editor.h" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="336" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="fitter.cpp" open="1" top="1" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="6474" topLine="119" />
 		</Cursor>
 		<Folding>
 			<Collapse line="36" />
@@ -19,137 +71,12 @@
 			<Collapse line="83" />
 			<Collapse line="89" />
 			<Collapse line="95" />
-			<Collapse line="106" />
-			<Collapse line="110" />
-			<Collapse line="112" />
-			<Collapse line="113" />
-			<Collapse line="117" />
-			<Collapse line="126" />
-			<Collapse line="129" />
-			<Collapse line="139" />
-			<Collapse line="152" />
-			<Collapse line="180" />
-			<Collapse line="187" />
-			<Collapse line="195" />
-			<Collapse line="206" />
-			<Collapse line="226" />
-			<Collapse line="231" />
-			<Collapse line="233" />
-			<Collapse line="239" />
-			<Collapse line="241" />
-			<Collapse line="249" />
-			<Collapse line="251" />
-			<Collapse line="252" />
-			<Collapse line="256" />
-			<Collapse line="265" />
-			<Collapse line="273" />
 		</Folding>
 	</File>
-	<File name="fitter.h" open="1" top="1" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="fitter.h" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="776" topLine="12" />
+			<Cursor1 position="776" topLine="0" />
 		</Cursor>
-	</File>
-	<File name="Utilities\baseObject.cpp" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="831" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="editor.h" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="336" topLine="13" />
-		</Cursor>
-	</File>
-	<File name="editor.cpp" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="7699" topLine="6" />
-		</Cursor>
-		<Folding>
-			<Collapse line="19" />
-			<Collapse line="21" />
-			<Collapse line="27" />
-			<Collapse line="32" />
-			<Collapse line="40" />
-			<Collapse line="41" />
-			<Collapse line="62" />
-			<Collapse line="76" />
-			<Collapse line="82" />
-			<Collapse line="86" />
-			<Collapse line="88" />
-			<Collapse line="94" />
-			<Collapse line="113" />
-			<Collapse line="136" />
-			<Collapse line="142" />
-			<Collapse line="166" />
-			<Collapse line="168" />
-			<Collapse line="170" />
-			<Collapse line="175" />
-			<Collapse line="182" />
-			<Collapse line="185" />
-			<Collapse line="187" />
-			<Collapse line="196" />
-			<Collapse line="204" />
-		</Folding>
-	</File>
-	<File name="Utilities\baseObject.h" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="3592" topLine="61" />
-		</Cursor>
-	</File>
-	<File name="readAndWrite.cpp" open="0" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="696" topLine="20" />
-		</Cursor>
-		<Folding>
-			<Collapse line="25" />
-			<Collapse line="30" />
-			<Collapse line="33" />
-			<Collapse line="50" />
-			<Collapse line="51" />
-		</Folding>
-	</File>
-	<File name="readAndWrite.h" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1659" topLine="18" />
-		</Cursor>
-	</File>
-	<File name="imagestructs.h" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="745" topLine="15" />
-		</Cursor>
-	</File>
-	<File name="Utilities\configReader.h" open="0" top="0" tabpos="11" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="313" topLine="8" />
-		</Cursor>
-	</File>
-	<File name="main.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="19" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="Utilities\configDefinitions.h" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1514" topLine="6" />
-		</Cursor>
-	</File>
-	<File name="Utilities\configReader_YAG_masks.cpp" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="842" topLine="63" />
-		</Cursor>
-	</File>
-	<File name="imageAnalyser.h" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1075" topLine="18" />
-		</Cursor>
-	</File>
-	<File name="Utilities\configReader.cpp" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="257" topLine="2" />
-		</Cursor>
-		<Folding>
-			<Collapse line="32" />
-		</Folding>
 	</File>
 	<File name="imageAnalyser.cpp" open="0" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
@@ -171,5 +98,38 @@
 			<Collapse line="178" />
 			<Collapse line="181" />
 		</Folding>
+	</File>
+	<File name="imageAnalyser.h" open="0" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1075" topLine="18" />
+		</Cursor>
+	</File>
+	<File name="imagestructs.h" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="745" topLine="15" />
+		</Cursor>
+	</File>
+	<File name="main.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="19" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="readAndWrite.cpp" open="0" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="3130" topLine="32" />
+		</Cursor>
+		<Folding>
+			<Collapse line="25" />
+			<Collapse line="30" />
+			<Collapse line="33" />
+			<Collapse line="50" />
+			<Collapse line="51" />
+			<Collapse line="78" />
+		</Folding>
+	</File>
+	<File name="readAndWrite.h" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1659" topLine="17" />
+		</Cursor>
 	</File>
 </CodeBlocks_layout_file>

@@ -16,19 +16,22 @@ class scopeWriterController(QObject):
 		self.scopeName = self.scopeCont.getScopeNames()[0]
 		self.pvRoot = self.scopeCont.getScopeTraceDataStruct(self.scopeName).pvRoot
 		self.started = False
-		#self.scope=win32com.client.Dispatch("LeCroy.XStreamDSO")
-		#self.scope.Measure.MeasureMode = "StdVertical"
+		self.scope=win32com.client.Dispatch("LeCroy.XStreamDSO")
+		self.scope.Measure.MeasureMode = "StdVertical"
 		self.traceNames = self.scopeCont.getScopeTracePVs()
 		self.numNames = self.scopeCont.getScopeNumPVs()
 		self.appendToList()
+		self.scopeSetupLoadView = scopeWriterLoadView("Load Setup", globals.scopeSetupLocation)
+		self.scopeSetupLoadView.selectButton.clicked.connect(self.handle_fileLoadSelect)
 
-		self.view.addToListButton.clicked.connect(lambda: self.appendToList())
-		self.view.startButton.clicked.connect(lambda: self.startLogging())
-		self.view.stopButton.clicked.connect(lambda: self.stopLogging())
+		self.view.addToListButton.clicked.connect(self.appendToList)
+		self.view.startButton.clicked.connect(self.startLogging)
+		self.view.stopButton.clicked.connect(self.stopLogging)
 		self.view.ui_btn.clicked.connect(self.browse)
 		self.view.saveButton.clicked.connect(self.saveSetup)
 		self.view.loadButton.clicked.connect(self.loadSetup)
 
+	@QtCore.pyqtSlot()
 	def startLogging(self):
 		self.started = True
 		self.view.startButton.setEnabled(False)
@@ -66,6 +69,7 @@ class scopeWriterController(QObject):
 				else:
 					print "ERROR!!!! Invalid measurement type"
 
+	@QtCore.pyqtSlot()
 	def stopLogging(self):
 		self.started = False
 		self.view.startButton.setText("Start logging to EPICS")
@@ -114,6 +118,7 @@ class scopeWriterController(QObject):
 			self.epicsChan = vcsc.SCOPE_PV_TYPE.UNKNOWN
 		return self.pvSuffix, self.epicsPV
 
+	@QtCore.pyqtSlot()
 	def appendToList(self):
 		self.view.addChannel( self.view.channelsVBox, self.scopeCont )
 
@@ -150,16 +155,19 @@ class scopeWriterController(QObject):
 		self.filter_interval = filter_interval
 
 		self.numShots = 1
-		self.scopeCont.monitorATraceForNShots( self.scope_name, self.channel_name, self.numShots ) # We only take 1 trace - this should allow us to capture "interesting" conditioning events
+		# We only take 1 trace - this should allow us to capture "interesting" events
+		self.scopeCont.monitorATraceForNShots( self.scope_name, self.channel_name, self.numShots )
 		while self.scopeCont.isMonitoringScopeTrace( self.scope_name, self.channel_name ):
 			time.sleep(0.001)
-
-		self.allTraceDataStruct = self.scopeCont.getScopeTraceDataStruct( self.scope_name ) # This is a c++ struct containing all scope trace data - see help("vcsc.scopeTraceData") in python for more info.
-		self.scopeTraceData = self.allTraceDataStruct.traceData # This is a map containing a vector of vectors for each channel: 2000 points for n shots....
+		# This is a c++ struct containing all scope trace data - see help("vcsc.scopeTraceData") in python for more info.
+		self.allTraceDataStruct = self.scopeCont.getScopeTraceDataStruct( self.scope_name )
+		# This is a map containing a vector of vectors for each channel: 2000 points for n shots....
+		self.scopeTraceData = self.allTraceDataStruct.traceData
 		self.baseline_data = []
 		self.data = []
 		self.part_trace_data = []
-		self.partTrace = self.scopeCont.getPartOfTrace( self.scope_name, self.channel_name, self.area_start, self.area_end ) # This is a function in the .pyd library which allows the user to get a section of the trace.
+		# This is a function in the .pyd library which allows the user to get a section of the trace.
+		self.partTrace = self.scopeCont.getPartOfTrace( self.scope_name, self.channel_name, self.area_start, self.area_end )
 		#self.noise = self.scopeCont.getAvgNoise( self.scope_name, self.channel_name, self.baseline_start, self.baseline_end) # This takes the mean value of a region with no signal on it.
 		for i in range(self.numShots):
 			self.part_trace_data.append( numpy.sum( self.partTrace[i] )*self.allTraceDataStruct.timebase ) # This is the "raw" trace section.
@@ -181,7 +189,7 @@ class scopeWriterController(QObject):
 		self.filter_interval = filter_interval
 
 		self.numShots = 1
-		self.scopeCont.monitorATraceForNShots( self.scope_name, self.channel_name, self.numShots ) # We only take 1 trace - this should allow us to capture "interesting" conditioning events
+		self.scopeCont.monitorATraceForNShots( self.scope_name, self.channel_name, self.numShots )
 		while self.scopeCont.isMonitoringScopeTrace( self.scope_name, self.channel_name ):
 			time.sleep(0.01)
 
@@ -202,7 +210,7 @@ class scopeWriterController(QObject):
 		self.filter_interval = filter_interval
 
 		self.numShots = 1
-		self.scopeCont.monitorATraceForNShots( self.scope_name, self.channel_name, self.numShots ) # We only take 1 trace - this should allow us to capture "interesting" conditioning events
+		self.scopeCont.monitorATraceForNShots( self.scope_name, self.channel_name, self.numShots )
 		while self.scopeCont.isMonitoringScopeTrace( self.scope_name, self.channel_name ):
 			time.sleep(0.01)
 
@@ -210,7 +218,7 @@ class scopeWriterController(QObject):
 		self.scopeTraceData = self.allTraceDataStruct.traceData
 		self.min = self.scopeCont.getMinOfTraces( self.scope_name, self.channel_name )
 
-		self.mean_max = numpy.mean( self.min ) # We need to include some calibration factors based on diagnostic type here.... more to be added
+		self.mean_max = numpy.mean( self.min )
 
 		epics.caput( self.epics_channel, self.mean_min )
 		time.sleep(0.1)
@@ -223,7 +231,7 @@ class scopeWriterController(QObject):
 		self.filter_interval = filter_interval
 
 		self.numShots = 1
-		self.scopeCont.monitorATraceForNShots( self.scope_name, self.channel_name, self.numShots ) # We only take 1 trace - this should allow us to capture "interesting" conditioning events
+		self.scopeCont.monitorATraceForNShots( self.scope_name, self.channel_name, self.numShots )
 		while self.scopeCont.isMonitoringScopeTrace( self.scope_name, self.channel_name ):
 			time.sleep(0.01)
 
@@ -235,31 +243,38 @@ class scopeWriterController(QObject):
 		for i in range(len(self.min)):
 			self.p2p.append( ( self.max[ i ] - self.min[ i ] ) )
 
-		self.mean_p2p = numpy.mean( self.p2p ) # We need to include some calibration factors based on diagnostic type here.... more to be added
+		self.mean_p2p = numpy.mean( self.p2p )
 
 		epics.caput( self.epics_channel, self.mean_p2p )
 		time.sleep(0.1)
 
-	@QtCore.pyqtSlot()  # for pyqt, QtCore.pyqtSlot()
+	@QtCore.pyqtSlot()
 	def browse(self):
 		self.path = str(QtGui.QFileDialog.getOpenFileName(None, 'Select a folder:', 'D:\\Setups', "Scope files (*.lss)"))
 		if self.path:
 			print self.path
 			self.lastSlash = self.path.rfind('/')
 			self.path = self.path[(self.lastSlash+1):]
-			#if self.path.startswith(self.folder):
-				#return self.path[len(self.folder):]
 			self.view.ui_line.setText(self.path)
 
-	@QtCore.pyqtSlot()  # for pyqt, QtCore.pyqtSlot()
+	@QtCore.pyqtSlot()
 	def saveSetup(self):
-		#self.scope.SaveRecall.Utilities.Directory = self.view.ui_line
 		print self.view.ui_line.text()
 		self.scope.SaveRecall.Setup.PanelFilename = str(self.view.ui_line.text())
 		self.scope.SaveRecall.Setup.DoSavePanel
 
-	@QtCore.pyqtSlot()  # for pyqt, QtCore.pyqtSlot()
+	@QtCore.pyqtSlot()
 	def loadSetup(self):
 		print self.view.ui_line.text()
 		self.scope.SaveRecall.Setup.PanelFilename = str(self.view.ui_line.text())
 		self.scope.SaveRecall.Setup.DoRecallPanel
+
+	@QtCore.pyqtSlot()
+	def handle_fileLoadSelect(self):
+		self.scope.SaveRecall.Setup.PanelFilename = str(self.view.ui_line.text())
+		self.scopeSetupLoadView.hide()
+
+	@QtCore.pyqtSlot()
+	def handle_fileLoadSelect(self):
+		self.scope.SaveRecall.Setup.PanelFilename = str(self.view.ui_line.text())
+		self.scopeSetupLoadView.hide()
