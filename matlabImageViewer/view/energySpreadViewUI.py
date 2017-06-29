@@ -118,10 +118,12 @@ class energySpreadViewUI(object):
         self.fileSlider.setSingleStep(1)
         self.fileSlider.setTickPosition(QtGui.QSlider.TicksBelow)
         self.clearPlotsButton = QtGui.QPushButton('Clear plots', self)
+        self.clearCropButton = QtGui.QPushButton('Clear crop region', self)
         self.plotVBox.addWidget(self.makePlotsButton)
         self.plotVBox.addLayout(self.layoutVertical)
         self.plotVBox.addWidget(self.fileSlider)
         self.plotVBox.addWidget(self.clearPlotsButton)
+        self.plotVBox.addWidget(self.clearCropButton)
         self.plotVBox.addStretch()
         self.plotsVBox.addLayout(self.plotVBox)
 

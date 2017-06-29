@@ -194,14 +194,23 @@ class magnetAppController(object):
     def addMagnetsToMainView(self):
         # get all magnet names
         self.allMagNames = self.localMagnetController.getMagnetNames()
+        for name in self.allMagNames:
+            print name
         # iterate over all magnets, and add them to respective lists depending
         # on their magnet type
         for i in self.allMagNames:
+            # get a reference to the HWC magnet object with name i and put it in the list
+            # self.allMagnetObjReferences
             self.allMagnetObjReferences[i] = self.localMagnetController.getMagObjConstRef(i)
             if self.localMagnetController.isAQuad(i):
+                # if i is a quad, then add to the main view quads list,
                 self.mainView.addQuad( self.allMagnetObjReferences.get(i) )
+                # pass to mainView the reference,
+                # (which then gets passed to the GUI_magnetWidget from mainView)
                 self.mainView.quadWidgets[i].magRef.append(self.allMagnetObjReferences[i])
+                # set the default options in GUI_magnetWidget (i.e. the name, max.min RI etc)
                 self.mainView.quadWidgets[i].setDefaultOptions()
+            # do the same for dipoles, correctors and sols
             elif self.localMagnetController.isADip( i ):
                 self.mainView.addDip( self.allMagnetObjReferences.get(i) )
                 self.mainView.dipWidgets[i].magRef.append(self.allMagnetObjReferences[i])
@@ -218,9 +227,10 @@ class magnetAppController(object):
                 self.mainView.addCor(self.allMagnetObjReferences.get(i))
                 self.mainView.corWidgets[i].magRef.append(self.allMagnetObjReferences[i])
                 self.mainView.corWidgets[i].setDefaultOptions()
+        # resize the main view
         self.mainView.mainResize()
-        # now we have the mainView, we connect it's close function, this
-        # ensures that when the main view is closed all the other views are closed too
+        # now we have built the mainView, we connect it's close function, this
+        # ensures that when the main view is closed all the other views (saveview nad loadView) are closed too
         self.mainView.closing.connect(self.connectCloseEvents)
     # the load and save dburt windows can't be closed until this function is called
     def connectCloseEvents(self):
@@ -254,7 +264,7 @@ class magnetAppController(object):
 
     def haveDBurtAndNotInOfflineMode(self):
         self.ret = True
-        if self.machineMode == 'offlineMode':
+        if self.machineMode == mag.MACHINE_MODE.OFFLINE:
             self.ret = False
         if self.dburtLoadView.dburtFile == "":
             self.ret = False

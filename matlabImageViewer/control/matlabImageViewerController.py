@@ -34,6 +34,7 @@ class matlabImageViewerController(object):
         self.startView.subsubfilekeychanged.connect(self.subSubKeyIndexChanged)
         self.startView.makePlotsButton.clicked.connect(self.loadPlots)
         self.startView.clearPlotsButton.clicked.connect(self.clearPlots)
+        self.startView.clearCropButton.clicked.connect(self.clearCropRegion)
         if self.startView.measuretype == "energyspread":
             self.startView.makeAnalysisPlotButton.clicked.connect(self.analyseData)
         elif self.startView.measuretype == "emittance":
@@ -83,6 +84,12 @@ class matlabImageViewerController(object):
                 self.isFileSet = True
         return
 
+    def clearCropRegion(self):
+        if self.currentFile[self.datastruct]:
+            self.arrayshape = [self.currentFile[self.datastruct]['arrayy'], self.currentFile[self.datastruct]['arrayx'], self.currentFile[self.datastruct]['numshots']]
+            self.croppedArrayShape = [0, self.currentFile[self.datastruct]['arrayx'], 0, self.currentFile[self.datastruct]['arrayy']]
+        print self.croppedArrayShape
+
     # set flags for averaging of energy spread images
     def enableAveraging(self):
         if self.startView.noAvg.isChecked():
@@ -123,10 +130,10 @@ class matlabImageViewerController(object):
         self.clearPlots()
         self.directory = str(self.startView.getDirectoryLineEdit.text() + '\\')
         if self.isDirectorySet:
-            if self.startView.emitMeas.isChecked():
+            if self.startView.measuretype == "emittance":
                 self.currentFile = self.fileRead.getMatlabData(self.directory+str(self.startView.allFilesComboBox.currentText()), ".dat")
                 self.isFilesLoaded = True
-            elif self.startView.energySpreadMeas.isChecked():
+            elif self.startView.measuretype == "energyspread":
                 self.currentFile = self.fileRead.getMatlabData(self.directory+str(self.startView.allFilesComboBox.currentText()), ".mat")
                 self.isFilesLoaded = True
             else:
@@ -271,7 +278,17 @@ class matlabImageViewerController(object):
             self.numshots = self.loadEmitData[0]
             self.croppedArrayShape = self.loadEmitData[1]
             self.arrayshape = self.loadEmitData[2]
+            self.imagedata = self.loadEmitData[3]
             self.index = self.numshots - 1
+            self.allplots = []
+            for i in range(0, self.numshots - 1):
+                self.plotfig = self.startView.plotWidget
+                self.allplots.append(
+                    self.startView.makePlots(self.currentFile, self.datastruct,
+                                             self.imagedata, self.arrayshape, i, self.plotfig))
+            self.allplots[-1][0].canvas.draw()
+            self.startView.fileSlider.setMaximum(self.numshots - 1)
+            self.startView.fileSlider.setValue(self.numshots - 1)
             self.startView.fileSlider.valueChanged[int].connect(self.scrollPlots)
         #self.croppedArrayShape = [0, self.arrayshape[1], 0, self.arrayshape[0]]
         return self.allplots
@@ -279,8 +296,24 @@ class matlabImageViewerController(object):
     # this tells the data_processing classes to get and plot the measured values
     def analyseData(self):
         if self.startView.measuretype == "emittance":
-            self.emittanceMeasurement.getEmittance(self.startView, self.currentFile, self.datastruct, self.arrayshape, self.croppedArrayShape, self.numshots)
+            # 19.6 micron per pixel for emittance scans
+            self.currentFile[self.datastruct]['pixelwidth'] = 19.6 * ( 1 * ( 10 ** -6 ) )
+            self.sigSquaredVals = self.emittanceMeasurement.getSigmaSquared(self.startView, self.currentFile, self.datastruct, self.arrayshape, self.croppedArrayShape, self.numshots)
+            self.quadK = self.sigSquaredVals[0]
+            self.sigmaXSquared = self.sigSquaredVals[1]
+            self.xSigmas = self.sigSquaredVals[2]
+            self.sigmaYSquared = self.sigSquaredVals[3]
+            self.ySigmas = self.sigSquaredVals[4]
+            self.plotandfit = self.emittanceMeasurement.plotSigmaSquared(self.startView, self.quadK, self.sigmaXSquared, self.xSigmas, self.sigmaYSquared, self.ySigmas)
+            self.driftlength = self.currentFile[self.datastruct]['drift']
+            self.energy = self.currentFile[self.datastruct]['energy']
+            self.twiss = self.getEmittanceAndTwiss = self.emittanceMeasurement.getEmittance(self.plotandfit[0], self.plotandfit[1], self.driftlength, self.energy)
+            for i in self.twiss[0]:
+                print i
+            for i in self.twiss[1]:
+                print i
         elif self.startView.measuretype == "energyspread":
+            self.currentFile[self.datastruct]['pixelwidth'] = 31.2 * ( 1 * ( 10 ** -6 ) )
             self.energySpreadMeasurement.getEnergySpread(self.startView, self.currentFile, self.datastruct, self.imagedata, self.arrayshape, self.croppedArrayShape, self.index)
         self.isDataAnalysed = True
 

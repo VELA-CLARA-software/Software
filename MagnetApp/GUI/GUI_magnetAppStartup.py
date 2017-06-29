@@ -1,7 +1,8 @@
 from PyQt4 import QtGui, QtCore
 from Ui_magnetAppStartup import Ui_magnetAppStartup
 import magnetAppGlobals as globals
-from VELA_CLARA_MagnetControl import MACHINE_MODE, MACHINE_AREA
+from VELA_CLARA_MagnetControl import *
+from VELA_CLARA_MagnetControl import *
 
 class GUI_magnetAppStartup(QtGui.QMainWindow, Ui_magnetAppStartup):
     # static signals to emit when radioButtons are pressed
@@ -28,17 +29,19 @@ class GUI_magnetAppStartup(QtGui.QMainWindow, Ui_magnetAppStartup):
         self.logoLabel.setPixmap(self.scaledLogo)
         self.setWindowIcon(QtGui.QIcon(globals.appIcon))
         self.waitMessageLabel.setText("")
-        self.radioAreaTo_ENUM ={ self.VELA_BA2.objectName(): MACHINE_AREA.VELA_BA2,
-        self.VELA_BA1.objectName(): MACHINE_AREA.VELA_BA1,
-        self.VELA_INJ.objectName(): MACHINE_AREA.VELA_INJ
-        #self.CLARA_PHASE_1.objectName(): MACHINE_AREA.CLARA_PHASE_1,
+        # This dict needs updating when you add in different machine areas
+        self.radioAreaTo_ENUM ={
+            self.VELA_BA2.objectName(): MACHINE_AREA.VELA_BA2,
+            self.VELA_BA1.objectName(): MACHINE_AREA.VELA_BA1,
+            self.VELA_INJ.objectName(): MACHINE_AREA.VELA_INJ,
+            self.CLARA_PHASE_1.objectName(): MACHINE_AREA.CLARA_S02
         #self.CLARA_2_VELA.objectName(): MACHINE_AREA.CLARA_2_VELA
         }
-        self.radioModeTo_ENUM = {self.virtualMode.objectName(): MACHINE_MODE.VIRTUAL,
-        self.physicalMode.objectName(): MACHINE_MODE.PHYSICAL,
-        self.offlineMode.objectName(): MACHINE_MODE.OFFLINE
-        # self.CLARA_PHASE_1.objectName(): MACHINE_AREA.CLARA_PHASE_1,
-        # self.CLARA_2_VELA.objectName(): MACHINE_AREA.CLARA_2_VELA
+
+        self.radioModeTo_ENUM = {
+            self.virtualMode.objectName(): MACHINE_MODE.VIRTUAL,
+            self.physicalMode.objectName(): MACHINE_MODE.PHYSICAL,
+            self.offlineMode.objectName(): MACHINE_MODE.OFFLINE
         }
     # the radio buttones emit a MACHINE_MODE or MACHINE_AREA enum
     # this is then set as a variable in the  magnetAppController
