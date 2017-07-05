@@ -1,0 +1,2892 @@
+/home/vmsim/Desktop/V2/ASTRA
+V1.VM-EBT-INJ-DIA-CAM-02:CAM
+V1.VM-EBT-INJ-DIA-CAM-01:CAM
+SP.VM-EBT-INJ-DIA-BPMC-06
+SP.VM-EBT-INJ-DIA-CAM-05:CAM
+V1.VM-EBT-INJ-DIA-CAM-04:CAM
+V1.VM-EBT-INJ-DIA-BPMC-02
+V1.VM-EBT-INJ-DIA-BPMC-04
+V1.VM-EBT-INJ-DIA-CAM-03:CAM
+C1.in
+Running ASTRA for section C1...
+     finished simulation  30. 6.2017      9:52
+     execution time:  2.29 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-CLA-S01-DIA-WCM-01
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+Reference Z mom : 34416768.6779
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation  30. 6.2017      9:52
+     execution time:  0.37 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0141.003 > CV.VM-CLA-C2V-DIA-CAM-01
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+	Setting Camera: VM-CLA-C2V-DIA-CAM-01
+Offset in next sim will be = -0.64
+SP.in
+Running ASTRA for section SP...
+     finished simulation  30. 6.2017      9:52
+     execution time:  0.49 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-SP.0083.005 > SP.VM-EBT-INJ-DIA-BPMC-06
+	Moving: temp-SP.0252.005 > SP.VM-EBT-INJ-DIA-CAM-05:CAM
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-EBT-INJ-DIA-BPMC-06
+	Setting Camera: VM-EBT-INJ-DIA-CAM-05:CAM
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-CAM-01
+C1.VM-CLA-S02-DIA-BPM-01
+SP.VM-EBT-INJ-DIA-BPMC-06
+C1.VM-CLA-S02-DIA-CAM-01
+C1.VM-CLA-S01-DIA-CAM-01
+SP.VM-EBT-INJ-DIA-CAM-05:CAM
+C1.VM-CLA-S02-DIA-CAM-02
+C1.in
+Running ASTRA for section C1...
+     finished simulation  30. 6.2017      9:54
+     execution time:  2.29 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-CLA-S01-DIA-WCM-01
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+Reference Z mom : 34416768.6779
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation  30. 6.2017      9:54
+     execution time:  0.38 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0141.003 > CV.VM-CLA-C2V-DIA-CAM-01
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+	Setting Camera: VM-CLA-C2V-DIA-CAM-01
+Offset in next sim will be = -0.64
+SP.in
+Running ASTRA for section SP...
+     finished simulation  30. 6.2017      9:54
+     execution time:  0.49 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-SP.0083.005 > SP.VM-EBT-INJ-DIA-BPMC-06
+	Moving: temp-SP.0252.005 > SP.VM-EBT-INJ-DIA-CAM-05:CAM
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-EBT-INJ-DIA-BPMC-06
+	Setting Camera: VM-EBT-INJ-DIA-CAM-05:CAM
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-CAM-01
+C1.VM-CLA-S02-DIA-BPM-01
+SP.VM-EBT-INJ-DIA-BPMC-06
+C1.VM-CLA-S02-DIA-CAM-01
+C1.VM-CLA-S01-DIA-CAM-01
+SP.VM-EBT-INJ-DIA-CAM-05:CAM
+C1.VM-CLA-S02-DIA-CAM-02
+C1.in
+Running ASTRA for section C1...
+     finished simulation  30. 6.2017      9:54
+     execution time:  2.29 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-CLA-S01-DIA-WCM-01
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+Reference Z mom : 34416768.6779
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation  30. 6.2017      9:54
+     execution time:  0.38 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0141.003 > CV.VM-CLA-C2V-DIA-CAM-01
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+	Setting Camera: VM-CLA-C2V-DIA-CAM-01
+Offset in next sim will be = -0.64
+SP.in
+Running ASTRA for section SP...
+     finished simulation  30. 6.2017      9:54
+     execution time:  0.50 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-SP.0083.005 > SP.VM-EBT-INJ-DIA-BPMC-06
+	Moving: temp-SP.0252.005 > SP.VM-EBT-INJ-DIA-CAM-05:CAM
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-EBT-INJ-DIA-BPMC-06
+	Setting Camera: VM-EBT-INJ-DIA-CAM-05:CAM
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-CAM-01
+C1.VM-CLA-S02-DIA-BPM-01
+SP.VM-EBT-INJ-DIA-BPMC-06
+C1.VM-CLA-S02-DIA-CAM-01
+C1.VM-CLA-S01-DIA-CAM-01
+SP.VM-EBT-INJ-DIA-CAM-05:CAM
+C1.VM-CLA-S02-DIA-CAM-02
+C1.in
+Running ASTRA for section C1...
+     finished simulation  30. 6.2017      9:55
+     execution time:  2.31 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-CLA-S01-DIA-WCM-01
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+Reference Z mom : 34416768.6779
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation  30. 6.2017      9:55
+     execution time:  0.38 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0141.003 > CV.VM-CLA-C2V-DIA-CAM-01
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+	Setting Camera: VM-CLA-C2V-DIA-CAM-01
+Offset in next sim will be = -0.64
+SP.in
+Running ASTRA for section SP...
+     finished simulation  30. 6.2017      9:55
+     execution time:  0.48 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-SP.0083.005 > SP.VM-EBT-INJ-DIA-BPMC-06
+	Moving: temp-SP.0252.005 > SP.VM-EBT-INJ-DIA-CAM-05:CAM
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-EBT-INJ-DIA-BPMC-06
+	Setting Camera: VM-EBT-INJ-DIA-CAM-05:CAM
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-CAM-01
+C1.VM-CLA-S02-DIA-BPM-01
+SP.VM-EBT-INJ-DIA-BPMC-06
+C1.VM-CLA-S02-DIA-CAM-01
+C1.VM-CLA-S01-DIA-CAM-01
+SP.VM-EBT-INJ-DIA-CAM-05:CAM
+C1.VM-CLA-S02-DIA-CAM-02
+C1.in
+Running ASTRA for section C1...
+     finished simulation  30. 6.2017      9:56
+     execution time:  2.26 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-CLA-S01-DIA-WCM-01
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+Reference Z mom : 34416768.6779
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation  30. 6.2017      9:56
+     execution time:  0.37 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0141.003 > CV.VM-CLA-C2V-DIA-CAM-01
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+	Setting Camera: VM-CLA-C2V-DIA-CAM-01
+Offset in next sim will be = -0.64
+SP.in
+Running ASTRA for section SP...
+     finished simulation  30. 6.2017      9:56
+     execution time:  0.48 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-SP.0083.005 > SP.VM-EBT-INJ-DIA-BPMC-06
+	Moving: temp-SP.0252.005 > SP.VM-EBT-INJ-DIA-CAM-05:CAM
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-EBT-INJ-DIA-BPMC-06
+	Setting Camera: VM-EBT-INJ-DIA-CAM-05:CAM
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-CAM-01
+C1.VM-CLA-S02-DIA-BPM-01
+SP.VM-EBT-INJ-DIA-BPMC-06
+C1.VM-CLA-S02-DIA-CAM-01
+C1.VM-CLA-S01-DIA-CAM-01
+SP.VM-EBT-INJ-DIA-CAM-05:CAM
+C1.VM-CLA-S02-DIA-CAM-02
+C1.in
+Running ASTRA for section C1...
+     finished simulation  30. 6.2017      9:56
+     execution time:  2.32 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-CLA-S01-DIA-WCM-01
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+Reference Z mom : 34416768.6779
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation  30. 6.2017      9:56
+     execution time:  0.37 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0141.003 > CV.VM-CLA-C2V-DIA-CAM-01
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+	Setting Camera: VM-CLA-C2V-DIA-CAM-01
+Offset in next sim will be = -0.64
+SP.in
+Running ASTRA for section SP...
+     finished simulation  30. 6.2017      9:56
+     execution time:  0.48 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-SP.0083.005 > SP.VM-EBT-INJ-DIA-BPMC-06
+	Moving: temp-SP.0252.005 > SP.VM-EBT-INJ-DIA-CAM-05:CAM
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-EBT-INJ-DIA-BPMC-06
+	Setting Camera: VM-EBT-INJ-DIA-CAM-05:CAM
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-CAM-01
+C1.VM-CLA-S02-DIA-BPM-01
+SP.VM-EBT-INJ-DIA-BPMC-06
+C1.VM-CLA-S02-DIA-CAM-01
+C1.VM-CLA-S01-DIA-CAM-01
+SP.VM-EBT-INJ-DIA-CAM-05:CAM
+C1.VM-CLA-S02-DIA-CAM-02
+C1.in
+Running ASTRA for section C1...
+     finished simulation  30. 6.2017      9:57
+     execution time:  2.30 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-CLA-S01-DIA-WCM-01
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+Reference Z mom : 4710992.24845
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation  30. 6.2017      9:57
+     execution time:  1.24 sec                         
+     Goodbye.
+Renaming files...
+Setting EPICS values with ASTRA output...
+Offset in next sim will be = -0.64
+Offset in next sim will be = -0.64
+Offset in next sim will be = -0.64
+SP.in
+Running ASTRA for section SP...
+     finished simulation  30. 6.2017      9:57
+     execution time:  0.15 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-SP.0252.005 > SP.VM-EBT-INJ-DIA-CAM-05:CAM
+Setting EPICS values with ASTRA output...
+	Setting Camera: VM-EBT-INJ-DIA-CAM-05:CAM
+Junction doesn't exsit or this is the last file
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+C1.VM-CLA-S02-DIA-BPM-01
+C1.VM-CLA-S02-DIA-CAM-01
+C1.VM-CLA-S01-DIA-CAM-01
+SP.VM-EBT-INJ-DIA-CAM-05:CAM
+C1.VM-CLA-S02-DIA-CAM-02
+C1.in
+Running ASTRA for section C1...
+     finished simulation  30. 6.2017      9:57
+     execution time:  2.28 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-CLA-S01-DIA-WCM-01
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+Reference Z mom : 4710992.24845
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation  30. 6.2017      9:58
+     execution time:  1.22 sec                         
+     Goodbye.
+Renaming files...
+Setting EPICS values with ASTRA output...
+Offset in next sim will be = -0.64
+Offset in next sim will be = -0.64
+Offset in next sim will be = -0.64
+SP.in
+Running ASTRA for section SP...
+     finished simulation  30. 6.2017      9:58
+     execution time:  0.15 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-SP.0252.005 > SP.VM-EBT-INJ-DIA-CAM-05:CAM
+Setting EPICS values with ASTRA output...
+	Setting Camera: VM-EBT-INJ-DIA-CAM-05:CAM
+Junction doesn't exsit or this is the last file
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+C1.VM-CLA-S02-DIA-BPM-01
+C1.VM-CLA-S02-DIA-CAM-01
+C1.VM-CLA-S01-DIA-CAM-01
+SP.VM-EBT-INJ-DIA-CAM-05:CAM
+C1.VM-CLA-S02-DIA-CAM-02
+C1.in
+Running ASTRA for section C1...
+     finished simulation  30. 6.2017     12:09
+     execution time:  2.27 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-CLA-S01-DIA-WCM-01
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+Reference Z mom : 4710992.24845
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation  30. 6.2017     12:09
+     execution time:  1.24 sec                         
+     Goodbye.
+Renaming files...
+Setting EPICS values with ASTRA output...
+Offset in next sim will be = -0.64
+Offset in next sim will be = -0.64
+Offset in next sim will be = -0.64
+SP.in
+Running ASTRA for section SP...
+     finished simulation  30. 6.2017     12:09
+     execution time:  0.15 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-SP.0252.005 > SP.VM-EBT-INJ-DIA-CAM-05:CAM
+Setting EPICS values with ASTRA output...
+	Setting Camera: VM-EBT-INJ-DIA-CAM-05:CAM
+Junction doesn't exsit or this is the last file
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+C1.VM-CLA-S02-DIA-BPM-01
+C1.VM-CLA-S02-DIA-CAM-01
+C1.VM-CLA-S01-DIA-CAM-01
+SP.VM-EBT-INJ-DIA-CAM-05:CAM
+C1.VM-CLA-S02-DIA-CAM-02
+C1.in
+Running ASTRA for section C1...
+     finished simulation  30. 6.2017     12:10
+     execution time:  2.27 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-CLA-S01-DIA-WCM-01
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+Reference Z mom : 4710992.24845
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation  30. 6.2017     12:10
+     execution time:  0.38 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0141.003 > CV.VM-CLA-C2V-DIA-CAM-01
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+	Setting Camera: VM-CLA-C2V-DIA-CAM-01
+Offset in next sim will be = -0.64
+SP.in
+Running ASTRA for section SP...
+     finished simulation  30. 6.2017     12:10
+     execution time:  0.51 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-SP.0083.005 > SP.VM-EBT-INJ-DIA-BPMC-06
+	Moving: temp-SP.0252.005 > SP.VM-EBT-INJ-DIA-CAM-05:CAM
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-EBT-INJ-DIA-BPMC-06
+	Setting Camera: VM-EBT-INJ-DIA-CAM-05:CAM
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-CAM-01
+C1.VM-CLA-S02-DIA-BPM-01
+SP.VM-EBT-INJ-DIA-BPMC-06
+C1.VM-CLA-S02-DIA-CAM-01
+C1.VM-CLA-S01-DIA-CAM-01
+SP.VM-EBT-INJ-DIA-CAM-05:CAM
+C1.VM-CLA-S02-DIA-CAM-02
+C1.in
+Running ASTRA for section C1...
+     finished simulation  30. 6.2017     12:10
+     execution time:  2.26 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-CLA-S01-DIA-WCM-01
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+Reference Z mom : 4710992.24845
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation  30. 6.2017     12:10
+     execution time:  0.38 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+Offset in next sim will be = -0.64
+Offset in next sim will be = -0.64
+SP.in
+Running ASTRA for section SP...
+     finished simulation  30. 6.2017     12:11
+     execution time:  0.51 sec                         
+     Goodbye.
+Renaming files...
+Setting EPICS values with ASTRA output...
+Junction doesn't exsit or this is the last file
+Junction doesn't exsit or this is the last file
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+C1.VM-CLA-S02-DIA-BPM-01
+C1.VM-CLA-S02-DIA-CAM-01
+C1.VM-CLA-S01-DIA-CAM-01
+C1.VM-CLA-S02-DIA-CAM-02
+C1.in
+Running ASTRA for section C1...
+     finished simulation  30. 6.2017     12:11
+     execution time:  2.30 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-CLA-S01-DIA-WCM-01
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+Reference Z mom : 4710992.24845
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation  30. 6.2017     12:11
+     execution time:  0.38 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+Offset in next sim will be = -0.64
+Offset in next sim will be = -0.64
+SP.in
+Running ASTRA for section SP...
+     finished simulation  30. 6.2017     12:11
+     execution time:  0.52 sec                         
+     Goodbye.
+Renaming files...
+Setting EPICS values with ASTRA output...
+Junction doesn't exsit or this is the last file
+Junction doesn't exsit or this is the last file
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+C1.VM-CLA-S02-DIA-BPM-01
+C1.VM-CLA-S02-DIA-CAM-01
+C1.VM-CLA-S01-DIA-CAM-01
+C1.VM-CLA-S02-DIA-CAM-02
+C1.in
+Running ASTRA for section C1...
+     finished simulation  30. 6.2017     12:12
+     execution time:  2.27 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-CLA-S01-DIA-WCM-01
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+Reference Z mom : 4710992.24845
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation  30. 6.2017     12:12
+     execution time:  0.38 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+Offset in next sim will be = -0.64
+Offset in next sim will be = -0.64
+SP.in
+Running ASTRA for section SP...
+     finished simulation  30. 6.2017     12:12
+     execution time:  0.51 sec                         
+     Goodbye.
+Renaming files...
+Setting EPICS values with ASTRA output...
+Junction doesn't exsit or this is the last file
+Junction doesn't exsit or this is the last file
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+C1.VM-CLA-S02-DIA-BPM-01
+C1.VM-CLA-S02-DIA-CAM-01
+C1.VM-CLA-S01-DIA-CAM-01
+C1.VM-CLA-S02-DIA-CAM-02
+C1.in
+Running ASTRA for section C1...
+     finished simulation  30. 6.2017     12:14
+     execution time:  2.29 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-CLA-S01-DIA-WCM-01
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+Reference Z mom : 4710992.24845
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation  30. 6.2017     12:14
+     execution time:  0.38 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+Offset in next sim will be = -0.64
+Offset in next sim will be = -0.64
+SP.in
+Running ASTRA for section SP...
+     finished simulation  30. 6.2017     12:14
+     execution time:  0.51 sec                         
+     Goodbye.
+Renaming files...
+Setting EPICS values with ASTRA output...
+Junction doesn't exsit or this is the last file
+Junction doesn't exsit or this is the last file
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+C1.VM-CLA-S02-DIA-BPM-01
+C1.VM-CLA-S02-DIA-CAM-01
+C1.VM-CLA-S01-DIA-CAM-01
+C1.VM-CLA-S02-DIA-CAM-02
+C1.in
+Running ASTRA for section C1...
+     finished simulation  30. 6.2017     12:15
+     execution time:  2.26 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-CLA-S01-DIA-WCM-01
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+Reference Z mom : 4710992.24845
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation  30. 6.2017     12:15
+     execution time:  0.38 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+Offset in next sim will be = -0.64
+Offset in next sim will be = -0.64
+SP.in
+Running ASTRA for section SP...
+     finished simulation  30. 6.2017     12:15
+     execution time:  0.50 sec                         
+     Goodbye.
+Renaming files...
+Setting EPICS values with ASTRA output...
+Junction doesn't exsit or this is the last file
+Junction doesn't exsit or this is the last file
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+C1.VM-CLA-S02-DIA-BPM-01
+C1.VM-CLA-S02-DIA-CAM-01
+C1.VM-CLA-S01-DIA-CAM-01
+C1.VM-CLA-S02-DIA-CAM-02
+C1.in
+Running ASTRA for section C1...
+     finished simulation  30. 6.2017     12:18
+     execution time:  2.26 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-CLA-S01-DIA-WCM-01
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+Reference Z mom : 4710992.24845
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation  30. 6.2017     12:18
+     execution time:  0.38 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+Offset in next sim will be = -0.64
+Offset in next sim will be = -0.64
+SP.in
+Running ASTRA for section SP...
+     finished simulation  30. 6.2017     12:18
+     execution time:  0.50 sec                         
+     Goodbye.
+Renaming files...
+Setting EPICS values with ASTRA output...
+Junction doesn't exsit or this is the last file
+Junction doesn't exsit or this is the last file
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+C1.VM-CLA-S02-DIA-BPM-01
+C1.VM-CLA-S02-DIA-CAM-01
+C1.VM-CLA-S01-DIA-CAM-01
+C1.VM-CLA-S02-DIA-CAM-02
+C1.in
+Running ASTRA for section C1...
+     finished simulation  30. 6.2017     12:19
+     execution time:  2.27 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-CLA-S01-DIA-WCM-01
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+Reference Z mom : 4710992.24845
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation  30. 6.2017     12:19
+     execution time:  0.37 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+Offset in next sim will be = -0.64
+Offset in next sim will be = -0.64
+SP.in
+Running ASTRA for section SP...
+     finished simulation  30. 6.2017     12:19
+     execution time:  0.52 sec                         
+     Goodbye.
+Renaming files...
+Setting EPICS values with ASTRA output...
+Junction doesn't exsit or this is the last file
+Junction doesn't exsit or this is the last file
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+C1.VM-CLA-S02-DIA-BPM-01
+C1.VM-CLA-S02-DIA-CAM-01
+C1.VM-CLA-S01-DIA-CAM-01
+C1.VM-CLA-S02-DIA-CAM-02
+C1.in
+Running ASTRA for section C1...
+     finished simulation  30. 6.2017     12:20
+     execution time:  2.28 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-CLA-S01-DIA-WCM-01
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+Reference Z mom : 4710992.24845
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation  30. 6.2017     12:20
+     execution time:  0.38 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+Offset in next sim will be = -0.64
+Offset in next sim will be = -0.64
+SP.in
+Running ASTRA for section SP...
+     finished simulation  30. 6.2017     12:20
+     execution time:  0.51 sec                         
+     Goodbye.
+Renaming files...
+Setting EPICS values with ASTRA output...
+Junction doesn't exsit or this is the last file
+Junction doesn't exsit or this is the last file
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+C1.VM-CLA-S02-DIA-BPM-01
+C1.VM-CLA-S02-DIA-CAM-01
+C1.VM-CLA-S01-DIA-CAM-01
+C1.VM-CLA-S02-DIA-CAM-02
+C1.in
+Running ASTRA for section C1...
+     finished simulation  30. 6.2017     12:24
+     execution time:  2.29 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-CLA-S01-DIA-WCM-01
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+Reference Z mom : 4710992.24845
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation  30. 6.2017     12:24
+     execution time:  0.39 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+Offset in next sim will be = -0.64
+Offset in next sim will be = -0.64
+SP.in
+Running ASTRA for section SP...
+     finished simulation  30. 6.2017     12:24
+     execution time:  0.53 sec                         
+     Goodbye.
+Renaming files...
+Setting EPICS values with ASTRA output...
+Junction doesn't exsit or this is the last file
+Junction doesn't exsit or this is the last file
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+C1.VM-CLA-S02-DIA-BPM-01
+C1.VM-CLA-S02-DIA-CAM-01
+C1.VM-CLA-S01-DIA-CAM-01
+C1.VM-CLA-S02-DIA-CAM-02
+C1.in
+Running ASTRA for section C1...
+     finished simulation  30. 6.2017     12:25
+     execution time:  2.27 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-CLA-S01-DIA-WCM-01
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+Reference Z mom : 4710992.24845
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation  30. 6.2017     12:25
+     execution time:  0.38 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+Offset in next sim will be = -0.64
+Offset in next sim will be = -0.64
+SP.in
+Running ASTRA for section SP...
+     finished simulation  30. 6.2017     12:25
+     execution time:  0.50 sec                         
+     Goodbye.
+Renaming files...
+Setting EPICS values with ASTRA output...
+Junction doesn't exsit or this is the last file
+Junction doesn't exsit or this is the last file
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+C1.VM-CLA-S02-DIA-BPM-01
+C1.VM-CLA-S02-DIA-CAM-01
+C1.VM-CLA-S01-DIA-CAM-01
+C1.VM-CLA-S02-DIA-CAM-02
+C1.in
+Running ASTRA for section C1...
+     finished simulation  30. 6.2017     12:29
+     execution time:  2.32 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-CLA-S01-DIA-WCM-01
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+Reference Z mom : 4710992.24845
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation  30. 6.2017     12:29
+     execution time:  0.39 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+Offset in next sim will be = -0.64
+Offset in next sim will be = -0.64
+SP.in
+Running ASTRA for section SP...
+     finished simulation  30. 6.2017     12:29
+     execution time:  0.54 sec                         
+     Goodbye.
+Renaming files...
+Setting EPICS values with ASTRA output...
+Junction doesn't exsit or this is the last file
+Junction doesn't exsit or this is the last file
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+C1.VM-CLA-S02-DIA-BPM-01
+C1.VM-CLA-S02-DIA-CAM-01
+C1.VM-CLA-S01-DIA-CAM-01
+C1.VM-CLA-S02-DIA-CAM-02
+C1.in
+Running ASTRA for section C1...
+     finished simulation  30. 6.2017     13:34
+     execution time:  2.34 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-CLA-S01-DIA-WCM-01
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+Reference Z mom : 4710992.24845
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation  30. 6.2017     13:34
+     execution time:  0.39 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+Offset in next sim will be = -0.64
+Offset in next sim will be = -0.64
+SP.in
+Running ASTRA for section SP...
+     finished simulation  30. 6.2017     13:34
+     execution time:  0.53 sec                         
+     Goodbye.
+Renaming files...
+Setting EPICS values with ASTRA output...
+Junction doesn't exsit or this is the last file
+Junction doesn't exsit or this is the last file
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+C1.VM-CLA-S02-DIA-BPM-01
+C1.VM-CLA-S02-DIA-CAM-01
+C1.VM-CLA-S01-DIA-CAM-01
+C1.VM-CLA-S02-DIA-CAM-02
+C1.in
+Running ASTRA for section C1...
+     finished simulation  30. 6.2017     13:34
+     execution time:  2.34 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-CLA-S01-DIA-WCM-01
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+Reference Z mom : 34416765.3792
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation  30. 6.2017     13:34
+     execution time:  0.46 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0141.003 > CV.VM-CLA-C2V-DIA-CAM-01
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+	Setting Camera: VM-CLA-C2V-DIA-CAM-01
+Offset in next sim will be = -0.64
+SP.in
+Running ASTRA for section SP...
+     finished simulation  30. 6.2017     13:34
+     execution time:  0.56 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-SP.0083.005 > SP.VM-EBT-INJ-DIA-BPMC-06
+	Moving: temp-SP.0252.005 > SP.VM-EBT-INJ-DIA-CAM-05:CAM
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-EBT-INJ-DIA-BPMC-06
+	Setting Camera: VM-EBT-INJ-DIA-CAM-05:CAM
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-CAM-01
+C1.VM-CLA-S02-DIA-BPM-01
+SP.VM-EBT-INJ-DIA-BPMC-06
+C1.VM-CLA-S02-DIA-CAM-01
+C1.VM-CLA-S01-DIA-CAM-01
+SP.VM-EBT-INJ-DIA-CAM-05:CAM
+C1.VM-CLA-S02-DIA-CAM-02
+C1.in
+Running ASTRA for section C1...
+     finished simulation  30. 6.2017     13:50
+     execution time:  1.80 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-CLA-S01-DIA-WCM-01
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+Reference Z mom : 34416768.6779
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation  30. 6.2017     13:50
+     execution time:  0.35 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0141.003 > CV.VM-CLA-C2V-DIA-CAM-01
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+	Setting Camera: VM-CLA-C2V-DIA-CAM-01
+Offset in next sim will be = -0.64
+SP.in
+Running ASTRA for section SP...
+     finished simulation  30. 6.2017     13:50
+     execution time:  0.46 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-SP.0083.005 > SP.VM-EBT-INJ-DIA-BPMC-06
+	Moving: temp-SP.0252.005 > SP.VM-EBT-INJ-DIA-CAM-05:CAM
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-EBT-INJ-DIA-BPMC-06
+	Setting Camera: VM-EBT-INJ-DIA-CAM-05:CAM
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-CAM-01
+C1.VM-CLA-S02-DIA-BPM-01
+SP.VM-EBT-INJ-DIA-BPMC-06
+C1.VM-CLA-S02-DIA-CAM-01
+C1.VM-CLA-S01-DIA-CAM-01
+SP.VM-EBT-INJ-DIA-CAM-05:CAM
+C1.VM-CLA-S02-DIA-CAM-02
+C1.in
+Running ASTRA for section C1...
+     finished simulation  30. 6.2017     13:50
+     execution time:  3.30 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0073.003 > C1.VM-CLA-S01-DIA-WCM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+Reference Z mom : 13468008.4627
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation  30. 6.2017     13:50
+     execution time:  0.01 sec                         
+     Goodbye.
+Renaming files...
+Setting EPICS values with ASTRA output...
+SP.in
+Running ASTRA for section SP...
+     finished simulation  30. 6.2017     13:50
+     execution time:  0.01 sec                         
+     Goodbye.
+Renaming files...
+Setting EPICS values with ASTRA output...
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+C1.VM-CLA-S01-DIA-CAM-01
+C1.in
+Running ASTRA for section C1...
+     finished simulation  30. 6.2017     13:51
+     execution time:  1.80 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-CLA-S01-DIA-WCM-01
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+Reference Z mom : 34358614.3472
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation  30. 6.2017     13:51
+     execution time:  0.44 sec                         
+     Goodbye.
+Renaming files...
+Setting EPICS values with ASTRA output...
+Offset in next sim will be = -0.64
+Offset in next sim will be = -0.64
+Offset in next sim will be = -0.64
+SP.in
+Running ASTRA for section SP...
+     finished simulation  30. 6.2017     13:51
+     execution time:  0.69 sec                         
+     Goodbye.
+Renaming files...
+Setting EPICS values with ASTRA output...
+Junction doesn't exsit or this is the last file
+Junction doesn't exsit or this is the last file
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+C1.VM-CLA-S02-DIA-BPM-01
+C1.VM-CLA-S02-DIA-CAM-01
+C1.VM-CLA-S01-DIA-CAM-01
+C1.VM-CLA-S02-DIA-CAM-02
+C1.in
+Running ASTRA for section C1...
+     finished simulation  30. 6.2017     13:52
+     execution time:  1.81 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-CLA-S01-DIA-WCM-01
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+Reference Z mom : 34358614.3472
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation  30. 6.2017     13:52
+     execution time:  0.44 sec                         
+     Goodbye.
+Renaming files...
+Setting EPICS values with ASTRA output...
+Offset in next sim will be = -0.64
+Offset in next sim will be = -0.64
+Offset in next sim will be = -0.64
+SP.in
+Running ASTRA for section SP...
+     finished simulation  30. 6.2017     13:52
+     execution time:  0.67 sec                         
+     Goodbye.
+Renaming files...
+Setting EPICS values with ASTRA output...
+Junction doesn't exsit or this is the last file
+Junction doesn't exsit or this is the last file
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+C1.VM-CLA-S02-DIA-BPM-01
+C1.VM-CLA-S02-DIA-CAM-01
+C1.VM-CLA-S01-DIA-CAM-01
+C1.VM-CLA-S02-DIA-CAM-02
+C1.in
+Running ASTRA for section C1...
+     finished simulation  30. 6.2017     13:52
+     execution time:  1.80 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-CLA-S01-DIA-WCM-01
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+Reference Z mom : 34416768.6779
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation  30. 6.2017     13:52
+     execution time:  0.35 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0141.003 > CV.VM-CLA-C2V-DIA-CAM-01
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+	Setting Camera: VM-CLA-C2V-DIA-CAM-01
+Offset in next sim will be = -0.64
+SP.in
+Running ASTRA for section SP...
+     finished simulation  30. 6.2017     13:52
+     execution time:  0.48 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-SP.0083.005 > SP.VM-EBT-INJ-DIA-BPMC-06
+	Moving: temp-SP.0252.005 > SP.VM-EBT-INJ-DIA-CAM-05:CAM
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-EBT-INJ-DIA-BPMC-06
+	Setting Camera: VM-EBT-INJ-DIA-CAM-05:CAM
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-CAM-01
+C1.VM-CLA-S02-DIA-BPM-01
+SP.VM-EBT-INJ-DIA-BPMC-06
+C1.VM-CLA-S02-DIA-CAM-01
+C1.VM-CLA-S01-DIA-CAM-01
+SP.VM-EBT-INJ-DIA-CAM-05:CAM
+C1.VM-CLA-S02-DIA-CAM-02
+C1.in
+Running ASTRA for section C1...
+     finished simulation  30. 6.2017     13:53
+     execution time:  1.80 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-CLA-S01-DIA-WCM-01
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+Reference Z mom : 34416768.6779
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation  30. 6.2017     13:53
+     execution time:  0.35 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0141.003 > CV.VM-CLA-C2V-DIA-CAM-01
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+	Setting Camera: VM-CLA-C2V-DIA-CAM-01
+Offset in next sim will be = -0.64
+SP.in
+Running ASTRA for section SP...
+     finished simulation  30. 6.2017     13:53
+     execution time:  0.46 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-SP.0083.005 > SP.VM-EBT-INJ-DIA-BPMC-06
+	Moving: temp-SP.0252.005 > SP.VM-EBT-INJ-DIA-CAM-05:CAM
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-EBT-INJ-DIA-BPMC-06
+	Setting Camera: VM-EBT-INJ-DIA-CAM-05:CAM
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-CAM-01
+C1.VM-CLA-S02-DIA-BPM-01
+SP.VM-EBT-INJ-DIA-BPMC-06
+C1.VM-CLA-S02-DIA-CAM-01
+C1.VM-CLA-S01-DIA-CAM-01
+SP.VM-EBT-INJ-DIA-CAM-05:CAM
+C1.VM-CLA-S02-DIA-CAM-02
+C1.in
+Running ASTRA for section C1...
+     finished simulation  30. 6.2017     13:54
+     execution time:  1.84 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-CLA-S01-DIA-WCM-01
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+Reference Z mom : 34358614.3472
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation  30. 6.2017     13:54
+     execution time:  0.45 sec                         
+     Goodbye.
+Renaming files...
+Setting EPICS values with ASTRA output...
+Offset in next sim will be = -0.64
+Offset in next sim will be = -0.64
+Offset in next sim will be = -0.64
+SP.in
+Running ASTRA for section SP...
+     finished simulation  30. 6.2017     13:54
+     execution time:  0.68 sec                         
+     Goodbye.
+Renaming files...
+Setting EPICS values with ASTRA output...
+Junction doesn't exsit or this is the last file
+Junction doesn't exsit or this is the last file
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+C1.VM-CLA-S02-DIA-BPM-01
+C1.VM-CLA-S02-DIA-CAM-01
+C1.VM-CLA-S01-DIA-CAM-01
+C1.VM-CLA-S02-DIA-CAM-02
+C1.in
+Running ASTRA for section C1...
+     finished simulation  30. 6.2017     13:57
+     execution time:  1.78 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-CLA-S01-DIA-WCM-01
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+Reference Z mom : 34416768.6779
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation  30. 6.2017     13:57
+     execution time:  0.36 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0141.003 > CV.VM-CLA-C2V-DIA-CAM-01
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+	Setting Camera: VM-CLA-C2V-DIA-CAM-01
+Offset in next sim will be = -0.64
+SP.in
+Running ASTRA for section SP...
+     finished simulation  30. 6.2017     13:57
+     execution time:  0.46 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-SP.0083.005 > SP.VM-EBT-INJ-DIA-BPMC-06
+	Moving: temp-SP.0252.005 > SP.VM-EBT-INJ-DIA-CAM-05:CAM
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-EBT-INJ-DIA-BPMC-06
+	Setting Camera: VM-EBT-INJ-DIA-CAM-05:CAM
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-CAM-01
+C1.VM-CLA-S02-DIA-BPM-01
+SP.VM-EBT-INJ-DIA-BPMC-06
+C1.VM-CLA-S02-DIA-CAM-01
+C1.VM-CLA-S01-DIA-CAM-01
+SP.VM-EBT-INJ-DIA-CAM-05:CAM
+C1.VM-CLA-S02-DIA-CAM-02
+C1.in
+Running ASTRA for section C1...
+     finished simulation  30. 6.2017     13:57
+     execution time:  1.78 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-CLA-S01-DIA-WCM-01
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+Reference Z mom : 34416768.6779
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation  30. 6.2017     13:57
+     execution time:  0.35 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0141.003 > CV.VM-CLA-C2V-DIA-CAM-01
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+	Setting Camera: VM-CLA-C2V-DIA-CAM-01
+Offset in next sim will be = -0.64
+SP.in
+Running ASTRA for section SP...
+     finished simulation  30. 6.2017     13:57
+     execution time:  0.46 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-SP.0083.005 > SP.VM-EBT-INJ-DIA-BPMC-06
+	Moving: temp-SP.0252.005 > SP.VM-EBT-INJ-DIA-CAM-05:CAM
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-EBT-INJ-DIA-BPMC-06
+	Setting Camera: VM-EBT-INJ-DIA-CAM-05:CAM
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-CAM-01
+C1.VM-CLA-S02-DIA-BPM-01
+SP.VM-EBT-INJ-DIA-BPMC-06
+C1.VM-CLA-S02-DIA-CAM-01
+C1.VM-CLA-S01-DIA-CAM-01
+SP.VM-EBT-INJ-DIA-CAM-05:CAM
+C1.VM-CLA-S02-DIA-CAM-02
+C1.in
+Running ASTRA for section C1...
+     finished simulation  30. 6.2017     14:06
+     execution time:  1.78 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-CLA-S01-DIA-WCM-01
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+Reference Z mom : 34416768.6779
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation  30. 6.2017     14:06
+     execution time:  0.36 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0141.003 > CV.VM-CLA-C2V-DIA-CAM-01
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+	Setting Camera: VM-CLA-C2V-DIA-CAM-01
+Offset in next sim will be = -0.64
+SP.in
+Running ASTRA for section SP...
+     finished simulation  30. 6.2017     14:06
+     execution time:  0.45 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-SP.0083.005 > SP.VM-EBT-INJ-DIA-BPMC-06
+	Moving: temp-SP.0252.005 > SP.VM-EBT-INJ-DIA-CAM-05:CAM
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-EBT-INJ-DIA-BPMC-06
+	Setting Camera: VM-EBT-INJ-DIA-CAM-05:CAM
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-CAM-01
+C1.VM-CLA-S02-DIA-BPM-01
+SP.VM-EBT-INJ-DIA-BPMC-06
+C1.VM-CLA-S02-DIA-CAM-01
+C1.VM-CLA-S01-DIA-CAM-01
+SP.VM-EBT-INJ-DIA-CAM-05:CAM
+C1.VM-CLA-S02-DIA-CAM-02
+C1.in
+Running ASTRA for section C1...
+     finished simulation  30. 6.2017     14:06
+     execution time:  1.80 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-CLA-S01-DIA-WCM-01
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+Reference Z mom : 34416768.6779
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation  30. 6.2017     14:07
+     execution time:  0.35 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0141.003 > CV.VM-CLA-C2V-DIA-CAM-01
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+	Setting Camera: VM-CLA-C2V-DIA-CAM-01
+Offset in next sim will be = -0.64
+SP.in
+Running ASTRA for section SP...
+     finished simulation  30. 6.2017     14:07
+     execution time:  0.46 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-SP.0083.005 > SP.VM-EBT-INJ-DIA-BPMC-06
+	Moving: temp-SP.0252.005 > SP.VM-EBT-INJ-DIA-CAM-05:CAM
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-EBT-INJ-DIA-BPMC-06
+	Setting Camera: VM-EBT-INJ-DIA-CAM-05:CAM
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-CAM-01
+C1.VM-CLA-S02-DIA-BPM-01
+SP.VM-EBT-INJ-DIA-BPMC-06
+C1.VM-CLA-S02-DIA-CAM-01
+C1.VM-CLA-S01-DIA-CAM-01
+SP.VM-EBT-INJ-DIA-CAM-05:CAM
+C1.VM-CLA-S02-DIA-CAM-02
+C1.in
+Running ASTRA for section C1...
+     finished simulation  30. 6.2017     14:07
+     execution time:  1.81 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-CLA-S01-DIA-WCM-01
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+Reference Z mom : 34358614.3472
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation  30. 6.2017     14:07
+     execution time:  0.44 sec                         
+     Goodbye.
+Renaming files...
+Setting EPICS values with ASTRA output...
+Offset in next sim will be = -0.64
+Offset in next sim will be = -0.64
+Offset in next sim will be = -0.64
+SP.in
+Running ASTRA for section SP...
+     finished simulation  30. 6.2017     14:07
+     execution time:  0.68 sec                         
+     Goodbye.
+Renaming files...
+Setting EPICS values with ASTRA output...
+Junction doesn't exsit or this is the last file
+Junction doesn't exsit or this is the last file
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+C1.VM-CLA-S02-DIA-BPM-01
+C1.VM-CLA-S02-DIA-CAM-01
+C1.VM-CLA-S01-DIA-CAM-01
+C1.VM-CLA-S02-DIA-CAM-02
+C1.in
+Running ASTRA for section C1...
+     horizontal dipole no.:   1
+     horizontal dipole no.:   2
+  Error: Edge lines not defined
+Renaming files...
+Setting EPICS values with ASTRA output...
+CV.in
+Running ASTRA for section CV...
+     finished simulation  30. 6.2017     14:16
+     execution time:  0.48 sec                         
+     Goodbye.
+Renaming files...
+Setting EPICS values with ASTRA output...
+Offset in next sim will be = -0.64
+SP.in
+Running ASTRA for section SP...
+     finished simulation  30. 6.2017     14:16
+     execution time:  0.01 sec                         
+     Goodbye.
+Renaming files...
+Setting EPICS values with ASTRA output...
+/home/vmsim/Desktop/V2/ASTRA
+C1.in
+Running ASTRA for section C1...
+     horizontal dipole no.:   1
+     horizontal dipole no.:   2
+  Error: Edge lines not defined
+Renaming files...
+Setting EPICS values with ASTRA output...
+CV.in
+Running ASTRA for section CV...
+     finished simulation  30. 6.2017     14:18
+     execution time:  0.48 sec                         
+     Goodbye.
+Renaming files...
+Setting EPICS values with ASTRA output...
+Offset in next sim will be = -0.64
+SP.in
+Running ASTRA for section SP...
+     finished simulation  30. 6.2017     14:18
+     execution time:  0.01 sec                         
+     Goodbye.
+Renaming files...
+Setting EPICS values with ASTRA output...
+/home/vmsim/Desktop/V2/ASTRA
+C1.in
+Running ASTRA for section C1...
+     finished simulation  30. 6.2017     14:21
+     execution time:  1.86 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-CLA-S01-DIA-WCM-01
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+Reference Z mom : 30051586.8248
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation  30. 6.2017     14:21
+     execution time:  0.51 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0141.003 > CV.VM-CLA-C2V-DIA-CAM-01
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+	Setting Camera: VM-CLA-C2V-DIA-CAM-01
+Offset in next sim will be = -0.64
+SP.in
+Running ASTRA for section SP...
+     finished simulation  30. 6.2017     14:21
+     execution time:  0.62 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-SP.0083.005 > SP.VM-EBT-INJ-DIA-BPMC-06
+	Moving: temp-SP.0252.005 > SP.VM-EBT-INJ-DIA-CAM-05:CAM
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-EBT-INJ-DIA-BPMC-06
+	Setting Camera: VM-EBT-INJ-DIA-CAM-05:CAM
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-CAM-01
+C1.VM-CLA-S02-DIA-BPM-01
+SP.VM-EBT-INJ-DIA-BPMC-06
+C1.VM-CLA-S02-DIA-CAM-01
+C1.VM-CLA-S01-DIA-CAM-01
+SP.VM-EBT-INJ-DIA-CAM-05:CAM
+C1.VM-CLA-S02-DIA-CAM-02
+C1.in
+Running ASTRA for section C1...
+     finished simulation  30. 6.2017     14:22
+     execution time:  1.94 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-CLA-S01-DIA-WCM-01
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+Reference Z mom : 29990416.3932
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation  30. 6.2017     14:22
+     execution time:  0.52 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0141.003 > CV.VM-CLA-C2V-DIA-CAM-01
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+	Setting Camera: VM-CLA-C2V-DIA-CAM-01
+Offset in next sim will be = -0.64
+SP.in
+Running ASTRA for section SP...
+     finished simulation  30. 6.2017     14:22
+     execution time:  0.62 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-SP.0083.005 > SP.VM-EBT-INJ-DIA-BPMC-06
+	Moving: temp-SP.0252.005 > SP.VM-EBT-INJ-DIA-CAM-05:CAM
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-EBT-INJ-DIA-BPMC-06
+	Setting Camera: VM-EBT-INJ-DIA-CAM-05:CAM
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-CAM-01
+C1.VM-CLA-S02-DIA-BPM-01
+SP.VM-EBT-INJ-DIA-BPMC-06
+C1.VM-CLA-S02-DIA-CAM-01
+C1.VM-CLA-S01-DIA-CAM-01
+SP.VM-EBT-INJ-DIA-CAM-05:CAM
+C1.VM-CLA-S02-DIA-CAM-02
+C1.in
+Running ASTRA for section C1...
+     finished simulation  30. 6.2017     14:23
+     execution time:  1.80 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-CLA-S01-DIA-WCM-01
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+Reference Z mom : 34416768.6779
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation  30. 6.2017     14:23
+     execution time:  0.36 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0141.003 > CV.VM-CLA-C2V-DIA-CAM-01
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+	Setting Camera: VM-CLA-C2V-DIA-CAM-01
+Offset in next sim will be = -0.64
+SP.in
+Running ASTRA for section SP...
+     finished simulation  30. 6.2017     14:23
+     execution time:  0.46 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-SP.0083.005 > SP.VM-EBT-INJ-DIA-BPMC-06
+	Moving: temp-SP.0252.005 > SP.VM-EBT-INJ-DIA-CAM-05:CAM
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-EBT-INJ-DIA-BPMC-06
+	Setting Camera: VM-EBT-INJ-DIA-CAM-05:CAM
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-CAM-01
+C1.VM-CLA-S02-DIA-BPM-01
+SP.VM-EBT-INJ-DIA-BPMC-06
+C1.VM-CLA-S02-DIA-CAM-01
+C1.VM-CLA-S01-DIA-CAM-01
+SP.VM-EBT-INJ-DIA-CAM-05:CAM
+C1.VM-CLA-S02-DIA-CAM-02
+C1.in
+Running ASTRA for section C1...
+     finished simulation  30. 6.2017     14:23
+     execution time:  1.78 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-CLA-S01-DIA-WCM-01
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+Reference Z mom : 34416768.6492
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation  30. 6.2017     14:23
+     execution time:  0.35 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0141.003 > CV.VM-CLA-C2V-DIA-CAM-01
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+	Setting Camera: VM-CLA-C2V-DIA-CAM-01
+Offset in next sim will be = -0.64
+SP.in
+Running ASTRA for section SP...
+     finished simulation  30. 6.2017     14:23
+     execution time:  0.46 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-SP.0083.005 > SP.VM-EBT-INJ-DIA-BPMC-06
+	Moving: temp-SP.0252.005 > SP.VM-EBT-INJ-DIA-CAM-05:CAM
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-EBT-INJ-DIA-BPMC-06
+	Setting Camera: VM-EBT-INJ-DIA-CAM-05:CAM
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-CAM-01
+C1.VM-CLA-S02-DIA-BPM-01
+SP.VM-EBT-INJ-DIA-BPMC-06
+C1.VM-CLA-S02-DIA-CAM-01
+C1.VM-CLA-S01-DIA-CAM-01
+SP.VM-EBT-INJ-DIA-CAM-05:CAM
+C1.VM-CLA-S02-DIA-CAM-02
+C1.in
+Running ASTRA for section C1...
+     finished simulation  30. 6.2017     14:24
+     execution time:  1.80 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-CLA-S01-DIA-WCM-01
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+Reference Z mom : 34416768.6271
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation  30. 6.2017     14:24
+     execution time:  0.35 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0141.003 > CV.VM-CLA-C2V-DIA-CAM-01
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+	Setting Camera: VM-CLA-C2V-DIA-CAM-01
+Offset in next sim will be = -0.64
+SP.in
+Running ASTRA for section SP...
+     finished simulation  30. 6.2017     14:24
+     execution time:  0.45 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-SP.0083.005 > SP.VM-EBT-INJ-DIA-BPMC-06
+	Moving: temp-SP.0252.005 > SP.VM-EBT-INJ-DIA-CAM-05:CAM
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-EBT-INJ-DIA-BPMC-06
+	Setting Camera: VM-EBT-INJ-DIA-CAM-05:CAM
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-CAM-01
+C1.VM-CLA-S02-DIA-BPM-01
+SP.VM-EBT-INJ-DIA-BPMC-06
+C1.VM-CLA-S02-DIA-CAM-01
+C1.VM-CLA-S01-DIA-CAM-01
+SP.VM-EBT-INJ-DIA-CAM-05:CAM
+C1.VM-CLA-S02-DIA-CAM-02
+C1.in
+Running ASTRA for section C1...
+     finished simulation  30. 6.2017     14:28
+     execution time:  1.77 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-CLA-S01-DIA-WCM-01
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+Reference Z mom : 34416768.6779
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation  30. 6.2017     14:28
+     execution time:  0.35 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0141.003 > CV.VM-CLA-C2V-DIA-CAM-01
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+	Setting Camera: VM-CLA-C2V-DIA-CAM-01
+Reference Z mom : 34417000.0
+Offset in next sim will be = -0.38845
+V2.in
+Running ASTRA for section V2...
+     finished simulation  30. 6.2017     14:28
+     execution time:  2.43 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-V2.0488.002 > V2.VM-EBT-INJ-DIA-CAM-08:CAM
+	Moving: temp-V2.0233.002 > V2.VM-EBT-INJ-DIA-CAM-07:CAM
+	Moving: temp-V2.0838.002 > V2.VM-EBT-INJ-DIA-CAM-10:CAM
+	Moving: temp-V2.0062.002 > V2.VM-EBT-INJ-DIA-CAM-06:CAM
+	Moving: temp-V2.0345.002 > V2.VM-EBT-INJ-DIA-BPMC-10
+Setting EPICS values with ASTRA output...
+	Setting Camera: VM-EBT-INJ-DIA-CAM-10:CAM
+	Setting BPM: VM-EBT-INJ-DIA-BPMC-10
+	Setting Camera: VM-EBT-INJ-DIA-CAM-06:CAM
+	Setting Camera: VM-EBT-INJ-DIA-CAM-07:CAM
+	Setting Camera: VM-EBT-INJ-DIA-CAM-08:CAM
+Junction doesn't exsit or this is the last file
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-CAM-01
+C1.VM-CLA-S02-DIA-BPM-01
+V2.VM-EBT-INJ-DIA-CAM-10:CAM
+C1.VM-CLA-S02-DIA-CAM-01
+C1.VM-CLA-S01-DIA-CAM-01
+V2.VM-EBT-INJ-DIA-BPMC-10
+V2.VM-EBT-INJ-DIA-CAM-06:CAM
+V2.VM-EBT-INJ-DIA-CAM-07:CAM
+C1.VM-CLA-S02-DIA-CAM-02
+V2.VM-EBT-INJ-DIA-CAM-08:CAM
+C1.in
+Running ASTRA for section C1...
+     finished simulation   3. 7.2017     10:33
+     execution time:  1.75 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-CLA-S01-DIA-WCM-01
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+Reference Z mom : 34416768.6779
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation   3. 7.2017     10:33
+     execution time:  0.34 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0141.003 > CV.VM-CLA-C2V-DIA-CAM-01
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+	Setting Camera: VM-CLA-C2V-DIA-CAM-01
+Offset in next sim will be = -0.64
+SP.in
+Running ASTRA for section SP...
+     finished simulation   3. 7.2017     10:33
+     execution time:  0.46 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-SP.0083.005 > SP.VM-EBT-INJ-DIA-BPMC-06
+	Moving: temp-SP.0252.005 > SP.VM-EBT-INJ-DIA-CAM-05:CAM
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-EBT-INJ-DIA-BPMC-06
+	Setting Camera: VM-EBT-INJ-DIA-CAM-05:CAM
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-CAM-01
+C1.VM-CLA-S02-DIA-BPM-01
+SP.VM-EBT-INJ-DIA-BPMC-06
+C1.VM-CLA-S02-DIA-CAM-01
+C1.VM-CLA-S01-DIA-CAM-01
+SP.VM-EBT-INJ-DIA-CAM-05:CAM
+C1.VM-CLA-S02-DIA-CAM-02
+V1.in
+Running ASTRA for section V1...
+     finished simulation   3. 7.2017     10:35
+     execution time:  7.38 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-V1.0091.001 > V1.VM-EBT-INJ-DIA-BPMC-02
+	Moving: temp-V1.0105.001 > V1.VM-EBT-INJ-DIA-CAM-02:CAM
+	Moving: temp-V1.0329.001 > V1.VM-EBT-INJ-DIA-CAM-04:CAM
+	Moving: temp-V1.0214.001 > V1.VM-EBT-INJ-DIA-CAM-03:CAM
+	Moving: temp-V1.0015.001 > V1.VM-EBT-INJ-DIA-CAM-01:CAM
+	Moving: temp-V1.0350.001 > V1.VM-EBT-INJ-DIA-BPMC-04
+Setting EPICS values with ASTRA output...
+	Setting Camera: VM-EBT-INJ-DIA-CAM-02:CAM
+	Setting Camera: VM-EBT-INJ-DIA-CAM-01:CAM
+	Setting Camera: VM-EBT-INJ-DIA-CAM-04:CAM
+	Setting BPM: VM-EBT-INJ-DIA-BPMC-02
+	Setting BPM: VM-EBT-INJ-DIA-BPMC-04
+	Setting Camera: VM-EBT-INJ-DIA-CAM-03:CAM
+Reference Z mom : 4711000.0
+Offset in next sim will be = -0.38845
+SP.in
+Running ASTRA for section SP...
+     finished simulation   3. 7.2017     10:35
+     execution time:  4.45 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-SP.0057.005 > SP.VM-EBT-INJ-DIA-BPMC-06
+	Moving: temp-SP.0227.005 > SP.VM-EBT-INJ-DIA-CAM-05:CAM
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-EBT-INJ-DIA-BPMC-06
+	Setting Camera: VM-EBT-INJ-DIA-CAM-05:CAM
+/home/vmsim/Desktop/V2/ASTRA
+V1.VM-EBT-INJ-DIA-CAM-02:CAM
+V1.VM-EBT-INJ-DIA-CAM-01:CAM
+SP.VM-EBT-INJ-DIA-BPMC-06
+SP.VM-EBT-INJ-DIA-CAM-05:CAM
+V1.VM-EBT-INJ-DIA-CAM-04:CAM
+V1.VM-EBT-INJ-DIA-BPMC-02
+V1.VM-EBT-INJ-DIA-BPMC-04
+V1.VM-EBT-INJ-DIA-CAM-03:CAM
+C1.in
+Running ASTRA for section C1...
+     finished simulation   3. 7.2017     10:36
+     execution time:  1.77 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-CLA-S01-DIA-WCM-01
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+Reference Z mom : 34416768.6779
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation   3. 7.2017     10:36
+     execution time:  0.36 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0141.003 > CV.VM-CLA-C2V-DIA-CAM-01
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+	Setting Camera: VM-CLA-C2V-DIA-CAM-01
+Offset in next sim will be = -0.64
+SP.in
+Running ASTRA for section SP...
+     finished simulation   3. 7.2017     10:36
+     execution time:  0.46 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-SP.0083.005 > SP.VM-EBT-INJ-DIA-BPMC-06
+	Moving: temp-SP.0252.005 > SP.VM-EBT-INJ-DIA-CAM-05:CAM
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-EBT-INJ-DIA-BPMC-06
+	Setting Camera: VM-EBT-INJ-DIA-CAM-05:CAM
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-CAM-01
+C1.VM-CLA-S02-DIA-BPM-01
+SP.VM-EBT-INJ-DIA-BPMC-06
+C1.VM-CLA-S02-DIA-CAM-01
+C1.VM-CLA-S01-DIA-CAM-01
+SP.VM-EBT-INJ-DIA-CAM-05:CAM
+C1.VM-CLA-S02-DIA-CAM-02
+C1.in
+Running ASTRA for section C1...
+     finished simulation   3. 7.2017     10:36
+     execution time:  1.76 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-CLA-S01-DIA-WCM-01
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+Reference Z mom : 34416768.6779
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation   3. 7.2017     10:36
+     execution time:  0.34 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0141.003 > CV.VM-CLA-C2V-DIA-CAM-01
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+	Setting Camera: VM-CLA-C2V-DIA-CAM-01
+Offset in next sim will be = -0.64
+SP.in
+Running ASTRA for section SP...
+     finished simulation   3. 7.2017     10:36
+     execution time:  0.44 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-SP.0083.005 > SP.VM-EBT-INJ-DIA-BPMC-06
+	Moving: temp-SP.0252.005 > SP.VM-EBT-INJ-DIA-CAM-05:CAM
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-EBT-INJ-DIA-BPMC-06
+	Setting Camera: VM-EBT-INJ-DIA-CAM-05:CAM
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-CAM-01
+C1.VM-CLA-S02-DIA-BPM-01
+SP.VM-EBT-INJ-DIA-BPMC-06
+C1.VM-CLA-S02-DIA-CAM-01
+C1.VM-CLA-S01-DIA-CAM-01
+SP.VM-EBT-INJ-DIA-CAM-05:CAM
+C1.VM-CLA-S02-DIA-CAM-02
+C1.in
+Running ASTRA for section C1...
+     finished simulation   3. 7.2017     10:37
+     execution time:  1.86 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-CLA-S01-DIA-WCM-01
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+Reference Z mom : 29997223.0131
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation   3. 7.2017     10:37
+     execution time:  0.50 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0141.003 > CV.VM-CLA-C2V-DIA-CAM-01
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+	Setting Camera: VM-CLA-C2V-DIA-CAM-01
+Offset in next sim will be = -0.64
+SP.in
+Running ASTRA for section SP...
+     finished simulation   3. 7.2017     10:37
+     execution time:  0.60 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-SP.0083.005 > SP.VM-EBT-INJ-DIA-BPMC-06
+	Moving: temp-SP.0252.005 > SP.VM-EBT-INJ-DIA-CAM-05:CAM
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-EBT-INJ-DIA-BPMC-06
+	Setting Camera: VM-EBT-INJ-DIA-CAM-05:CAM
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-CAM-01
+C1.VM-CLA-S02-DIA-BPM-01
+SP.VM-EBT-INJ-DIA-BPMC-06
+C1.VM-CLA-S02-DIA-CAM-01
+C1.VM-CLA-S01-DIA-CAM-01
+SP.VM-EBT-INJ-DIA-CAM-05:CAM
+C1.VM-CLA-S02-DIA-CAM-02
+C1.in
+Running ASTRA for section C1...
+     finished simulation   3. 7.2017     10:37
+     execution time:  1.81 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-CLA-S01-DIA-WCM-01
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+Reference Z mom : 34362041.3594
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation   3. 7.2017     10:37
+     execution time:  0.44 sec                         
+     Goodbye.
+Renaming files...
+Setting EPICS values with ASTRA output...
+Offset in next sim will be = -0.64
+Offset in next sim will be = -0.64
+Offset in next sim will be = -0.64
+SP.in
+Running ASTRA for section SP...
+     finished simulation   3. 7.2017     10:37
+     execution time:  0.66 sec                         
+     Goodbye.
+Renaming files...
+Setting EPICS values with ASTRA output...
+Junction doesn't exsit or this is the last file
+Junction doesn't exsit or this is the last file
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+C1.VM-CLA-S02-DIA-BPM-01
+C1.VM-CLA-S02-DIA-CAM-01
+C1.VM-CLA-S01-DIA-CAM-01
+C1.VM-CLA-S02-DIA-CAM-02
+C1.in
+Running ASTRA for section C1...
+     finished simulation   3. 7.2017     10:38
+     execution time:  1.82 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-CLA-S01-DIA-WCM-01
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+Reference Z mom : 34362089.0857
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation   3. 7.2017     10:38
+     execution time:  0.43 sec                         
+     Goodbye.
+Renaming files...
+Setting EPICS values with ASTRA output...
+Offset in next sim will be = -0.64
+Offset in next sim will be = -0.64
+Offset in next sim will be = -0.64
+SP.in
+Running ASTRA for section SP...
+     finished simulation   3. 7.2017     10:38
+     execution time:  0.66 sec                         
+     Goodbye.
+Renaming files...
+Setting EPICS values with ASTRA output...
+Junction doesn't exsit or this is the last file
+Junction doesn't exsit or this is the last file
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+C1.VM-CLA-S02-DIA-BPM-01
+C1.VM-CLA-S02-DIA-CAM-01
+C1.VM-CLA-S01-DIA-CAM-01
+C1.VM-CLA-S02-DIA-CAM-02
+C1.in
+Running ASTRA for section C1...
+     finished simulation   3. 7.2017     10:39
+     execution time:  1.78 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-CLA-S01-DIA-WCM-01
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+Reference Z mom : 34364014.3932
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation   3. 7.2017     10:39
+     execution time:  0.45 sec                         
+     Goodbye.
+Renaming files...
+Setting EPICS values with ASTRA output...
+Offset in next sim will be = -0.64
+Offset in next sim will be = -0.64
+Offset in next sim will be = -0.64
+SP.in
+Running ASTRA for section SP...
+     finished simulation   3. 7.2017     10:39
+     execution time:  0.65 sec                         
+     Goodbye.
+Renaming files...
+Setting EPICS values with ASTRA output...
+Junction doesn't exsit or this is the last file
+Junction doesn't exsit or this is the last file
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+C1.VM-CLA-S02-DIA-BPM-01
+C1.VM-CLA-S02-DIA-CAM-01
+C1.VM-CLA-S01-DIA-CAM-01
+C1.VM-CLA-S02-DIA-CAM-02
+C1.in
+Running ASTRA for section C1...
+     finished simulation   3. 7.2017     10:39
+     execution time:  1.78 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-CLA-S01-DIA-WCM-01
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+Reference Z mom : 34416768.6779
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation   3. 7.2017     10:39
+     execution time:  0.34 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0141.003 > CV.VM-CLA-C2V-DIA-CAM-01
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+	Setting Camera: VM-CLA-C2V-DIA-CAM-01
+Offset in next sim will be = -0.64
+SP.in
+Running ASTRA for section SP...
+     finished simulation   3. 7.2017     10:39
+     execution time:  0.45 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-SP.0083.005 > SP.VM-EBT-INJ-DIA-BPMC-06
+	Moving: temp-SP.0252.005 > SP.VM-EBT-INJ-DIA-CAM-05:CAM
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-EBT-INJ-DIA-BPMC-06
+	Setting Camera: VM-EBT-INJ-DIA-CAM-05:CAM
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-CAM-01
+C1.VM-CLA-S02-DIA-BPM-01
+SP.VM-EBT-INJ-DIA-BPMC-06
+C1.VM-CLA-S02-DIA-CAM-01
+C1.VM-CLA-S01-DIA-CAM-01
+SP.VM-EBT-INJ-DIA-CAM-05:CAM
+C1.VM-CLA-S02-DIA-CAM-02
+C1.in
+Running ASTRA for section C1...
+     finished simulation   3. 7.2017     10:47
+     execution time:  1.79 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-CLA-S01-DIA-WCM-01
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+Reference Z mom : 34416768.6779
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation   3. 7.2017     10:47
+     execution time:  0.34 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0141.003 > CV.VM-CLA-C2V-DIA-CAM-01
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+	Setting Camera: VM-CLA-C2V-DIA-CAM-01
+Reference Z mom : 34417000.0
+Offset in next sim will be = -0.38845
+V2.in
+Running ASTRA for section V2...
+     finished simulation   3. 7.2017     10:47
+     execution time:  1.28 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-V2.0488.002 > V2.VM-EBT-INJ-DIA-CAM-08:CAM
+	Moving: temp-V2.0233.002 > V2.VM-EBT-INJ-DIA-CAM-07:CAM
+	Moving: temp-V2.0838.002 > V2.VM-EBT-INJ-DIA-CAM-10:CAM
+	Moving: temp-V2.0062.002 > V2.VM-EBT-INJ-DIA-CAM-06:CAM
+	Moving: temp-V2.0345.002 > V2.VM-EBT-INJ-DIA-BPMC-10
+	Moving: temp-V2.0680.002 > V2.VM-EBT-INJ-DIA-BPMC-12
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-EBT-INJ-DIA-BPMC-12
+	Setting Camera: VM-EBT-INJ-DIA-CAM-10:CAM
+	Setting BPM: VM-EBT-INJ-DIA-BPMC-10
+	Setting Camera: VM-EBT-INJ-DIA-CAM-06:CAM
+	Setting Camera: VM-EBT-INJ-DIA-CAM-07:CAM
+	Setting Camera: VM-EBT-INJ-DIA-CAM-08:CAM
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-CAM-01
+C1.VM-CLA-S02-DIA-BPM-01
+V2.VM-EBT-INJ-DIA-BPMC-12
+V2.VM-EBT-INJ-DIA-CAM-10:CAM
+C1.VM-CLA-S02-DIA-CAM-01
+C1.VM-CLA-S01-DIA-CAM-01
+V2.VM-EBT-INJ-DIA-BPMC-10
+V2.VM-EBT-INJ-DIA-CAM-06:CAM
+V2.VM-EBT-INJ-DIA-CAM-07:CAM
+C1.VM-CLA-S02-DIA-CAM-02
+V2.VM-EBT-INJ-DIA-CAM-08:CAM
+C1.in
+Running ASTRA for section C1...
+     finished simulation   3. 7.2017     10:49
+     execution time:  1.78 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-CLA-S01-DIA-WCM-01
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+Reference Z mom : 34416768.6779
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation   3. 7.2017     10:49
+     execution time:  0.35 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0141.003 > CV.VM-CLA-C2V-DIA-CAM-01
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+	Setting Camera: VM-CLA-C2V-DIA-CAM-01
+Reference Z mom : 34417000.0
+Offset in next sim will be = -0.38845
+V2.in
+Running ASTRA for section V2...
+     finished simulation   3. 7.2017     10:49
+     execution time:  1.27 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-V2.0488.002 > V2.VM-EBT-INJ-DIA-CAM-08:CAM
+	Moving: temp-V2.0233.002 > V2.VM-EBT-INJ-DIA-CAM-07:CAM
+	Moving: temp-V2.0838.002 > V2.VM-EBT-INJ-DIA-CAM-10:CAM
+	Moving: temp-V2.0062.002 > V2.VM-EBT-INJ-DIA-CAM-06:CAM
+	Moving: temp-V2.0345.002 > V2.VM-EBT-INJ-DIA-BPMC-10
+	Moving: temp-V2.0680.002 > V2.VM-EBT-INJ-DIA-BPMC-12
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-EBT-INJ-DIA-BPMC-12
+	Setting Camera: VM-EBT-INJ-DIA-CAM-10:CAM
+	Setting BPM: VM-EBT-INJ-DIA-BPMC-10
+	Setting Camera: VM-EBT-INJ-DIA-CAM-06:CAM
+	Setting Camera: VM-EBT-INJ-DIA-CAM-07:CAM
+	Setting Camera: VM-EBT-INJ-DIA-CAM-08:CAM
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-CAM-01
+C1.VM-CLA-S02-DIA-BPM-01
+V2.VM-EBT-INJ-DIA-BPMC-12
+V2.VM-EBT-INJ-DIA-CAM-10:CAM
+C1.VM-CLA-S02-DIA-CAM-01
+C1.VM-CLA-S01-DIA-CAM-01
+V2.VM-EBT-INJ-DIA-BPMC-10
+V2.VM-EBT-INJ-DIA-CAM-06:CAM
+V2.VM-EBT-INJ-DIA-CAM-07:CAM
+C1.VM-CLA-S02-DIA-CAM-02
+V2.VM-EBT-INJ-DIA-CAM-08:CAM
+C1.in
+Running ASTRA for section C1...
+     finished simulation   3. 7.2017     10:49
+     execution time:  1.78 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-CLA-S01-DIA-WCM-01
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+Reference Z mom : 34416768.6779
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation   3. 7.2017     10:49
+     execution time:  0.34 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0141.003 > CV.VM-CLA-C2V-DIA-CAM-01
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+	Setting Camera: VM-CLA-C2V-DIA-CAM-01
+Reference Z mom : 34417000.0
+Offset in next sim will be = -0.38845
+V2.in
+Running ASTRA for section V2...
+     finished simulation   3. 7.2017     10:49
+     execution time:  1.27 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-V2.0488.002 > V2.VM-EBT-INJ-DIA-CAM-08:CAM
+	Moving: temp-V2.0233.002 > V2.VM-EBT-INJ-DIA-CAM-07:CAM
+	Moving: temp-V2.0838.002 > V2.VM-EBT-INJ-DIA-CAM-10:CAM
+	Moving: temp-V2.0062.002 > V2.VM-EBT-INJ-DIA-CAM-06:CAM
+	Moving: temp-V2.0345.002 > V2.VM-EBT-INJ-DIA-BPMC-10
+	Moving: temp-V2.0680.002 > V2.VM-EBT-INJ-DIA-BPMC-12
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-EBT-INJ-DIA-BPMC-12
+	Setting Camera: VM-EBT-INJ-DIA-CAM-10:CAM
+	Setting BPM: VM-EBT-INJ-DIA-BPMC-10
+	Setting Camera: VM-EBT-INJ-DIA-CAM-06:CAM
+	Setting Camera: VM-EBT-INJ-DIA-CAM-07:CAM
+	Setting Camera: VM-EBT-INJ-DIA-CAM-08:CAM
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-CAM-01
+C1.VM-CLA-S02-DIA-BPM-01
+V2.VM-EBT-INJ-DIA-BPMC-12
+V2.VM-EBT-INJ-DIA-CAM-10:CAM
+C1.VM-CLA-S02-DIA-CAM-01
+C1.VM-CLA-S01-DIA-CAM-01
+V2.VM-EBT-INJ-DIA-BPMC-10
+V2.VM-EBT-INJ-DIA-CAM-06:CAM
+V2.VM-EBT-INJ-DIA-CAM-07:CAM
+C1.VM-CLA-S02-DIA-CAM-02
+V2.VM-EBT-INJ-DIA-CAM-08:CAM
+C1.in
+Running ASTRA for section C1...
+     finished simulation   3. 7.2017     10:51
+     execution time:  1.80 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-CLA-S01-DIA-WCM-01
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+Reference Z mom : 34416768.6779
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation   3. 7.2017     10:51
+     execution time:  0.34 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0141.003 > CV.VM-CLA-C2V-DIA-CAM-01
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+	Setting Camera: VM-CLA-C2V-DIA-CAM-01
+Reference Z mom : 34417000.0
+Offset in next sim will be = -0.38845
+V2.in
+Running ASTRA for section V2...
+     finished simulation   3. 7.2017     10:51
+     execution time:  1.28 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-V2.0488.002 > V2.VM-EBT-INJ-DIA-CAM-08:CAM
+	Moving: temp-V2.0233.002 > V2.VM-EBT-INJ-DIA-CAM-07:CAM
+	Moving: temp-V2.0838.002 > V2.VM-EBT-INJ-DIA-CAM-10:CAM
+	Moving: temp-V2.0062.002 > V2.VM-EBT-INJ-DIA-CAM-06:CAM
+	Moving: temp-V2.0345.002 > V2.VM-EBT-INJ-DIA-BPMC-10
+	Moving: temp-V2.0680.002 > V2.VM-EBT-INJ-DIA-BPMC-12
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-EBT-INJ-DIA-BPMC-12
+	Setting Camera: VM-EBT-INJ-DIA-CAM-10:CAM
+	Setting BPM: VM-EBT-INJ-DIA-BPMC-10
+	Setting Camera: VM-EBT-INJ-DIA-CAM-06:CAM
+	Setting Camera: VM-EBT-INJ-DIA-CAM-07:CAM
+	Setting Camera: VM-EBT-INJ-DIA-CAM-08:CAM
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-CAM-01
+C1.VM-CLA-S02-DIA-BPM-01
+SP.VM-EBT-INJ-DIA-BPMC-06
+C1.VM-CLA-S02-DIA-CAM-01
+C1.VM-CLA-S01-DIA-CAM-01
+SP.VM-EBT-INJ-DIA-CAM-05:CAM
+C1.VM-CLA-S02-DIA-CAM-02
+C1.in
+Running ASTRA for section C1...
+     finished simulation   4. 7.2017      9:36
+     execution time:  1.74 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-CLA-S01-DIA-WCM-01
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+Reference Z mom : 34416768.6779
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation   4. 7.2017      9:36
+     execution time:  0.34 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0141.003 > CV.VM-CLA-C2V-DIA-CAM-01
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+	Setting Camera: VM-CLA-C2V-DIA-CAM-01
+Offset in next sim will be = -0.64
+SP.in
+Running ASTRA for section SP...
+     finished simulation   4. 7.2017      9:36
+     execution time:  0.44 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-SP.0083.005 > SP.VM-EBT-INJ-DIA-BPMC-06
+	Moving: temp-SP.0252.005 > SP.VM-EBT-INJ-DIA-CAM-05:CAM
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-EBT-INJ-DIA-BPMC-06
+	Setting Camera: VM-EBT-INJ-DIA-CAM-05:CAM
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-CAM-01
+C1.VM-CLA-S02-DIA-BPM-01
+SP.VM-EBT-INJ-DIA-BPMC-06
+C1.VM-CLA-S02-DIA-CAM-01
+C1.VM-CLA-S01-DIA-CAM-01
+SP.VM-EBT-INJ-DIA-CAM-05:CAM
+C1.VM-CLA-S02-DIA-CAM-02
+C1.in
+Running ASTRA for section C1...
+     finished simulation   4. 7.2017      9:36
+     execution time:  1.74 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-CLA-S01-DIA-WCM-01
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+Reference Z mom : 34416768.6779
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation   4. 7.2017      9:36
+     execution time:  0.34 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0141.003 > CV.VM-CLA-C2V-DIA-CAM-01
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+	Setting Camera: VM-CLA-C2V-DIA-CAM-01
+Offset in next sim will be = -0.64
+SP.in
+Running ASTRA for section SP...
+     finished simulation   4. 7.2017      9:36
+     execution time:  0.44 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-SP.0083.005 > SP.VM-EBT-INJ-DIA-BPMC-06
+	Moving: temp-SP.0252.005 > SP.VM-EBT-INJ-DIA-CAM-05:CAM
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-EBT-INJ-DIA-BPMC-06
+	Setting Camera: VM-EBT-INJ-DIA-CAM-05:CAM

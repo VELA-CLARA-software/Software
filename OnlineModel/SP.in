@@ -1,0 +1,70 @@
+&NEWRUN
+  Head='trial'
+  RUN=005
+  Loop=F,
+  Lprompt=F
+  Distribution = XXXXX
+  Xoff= 0.0
+  Yoff= 0.0
+  Lmagnetized=.F
+  EmitS=.T
+  TR_emitS=F
+  PhaseS=.T
+  TrackS=.F
+  RefS=.F
+  TcheckS=.F
+  CathodeS=.F
+  TRACK_ALL=.T
+  PHASE_SCAN=.F
+  AUTO_PHASE=.T
+  check_ref_part=.F
+  ZSTART=XXXX
+  ZSTOP= XXXX
+  Zphase=1
+  Zemit=1050
+
+  !VM-EBT-INJ-DIA-BPMC-06
+  !SP-BPM03 from rotation point to centre of bpm
+  Screen(1)=0.1863
+
+  !VM-EBT-INJ-DIA-CAM-05:CAM
+  !SP-YAG04
+  Screen(2)=1.8783
+
+  H_max=0.0007
+  H_min=0.0007
+  Qbunch= XXXX
+ /
+
+ &SCAN
+  LScan=.F.
+ /
+
+ &CHARGE
+  Loop=F
+  Nrad=30, Nlong_in=45
+  Cell_var=2.0
+  min_grid=3.424657D-13
+  Max_scale=0.1
+  Max_count=100
+  Lmirror=.T
+
+ /
+
+ &Aperture
+ /
+
+ &FEM
+ /
+
+ &CAVITY
+ /
+
+ &SOLENOID
+ /
+
+ &QUADRUPOLE
+/
+
+ &DIPOLE
+/
