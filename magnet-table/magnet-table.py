@@ -62,7 +62,7 @@ SPEED_OF_LIGHT = scipy.constants.c / 1e6  # in megametres/second, use with p in 
 
 label_size_policy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
 
-online_text_format = u'''<b>Read current</b>: {magnet.ref.riWithPol:.3f} A
+online_text_format = u'''<b>Read current</b>: {read_current:.3f} A
                          <br><b>Integrated {attributes.strength_name}</b>: {int_strength:.3f} {attributes.int_strength_units}
                          <br><b>Central {attributes.strength_name}</b>: {strength:.3f} {attributes.strength_units}'''
 
@@ -118,10 +118,12 @@ class Magnet(object):
 logger = logging.getLogger('Magnet Table')
 mag_init_VC = VC_MagCtrl.init()
 # mag_init_CLARA = CLARA_MagCtrl.init()
+section_attr = namedtuple('section_attr', 'title machine_area default_momentum min_pos max_pos')
+section_attr.__new__.__defaults__ = (float('-inf'), float('inf'))
 sections = OrderedDict([
-                        ('VELA_INJ', 'VELA Injector'),
-                        ('CLARA_PH1', 'CLARA Phase 1'),
-                        # ('CLARA_S02', 'CLARA Straight 2'),
+                        ('VELA_INJ', section_attr('VELA Injector', 'VELA_INJ',  4.0)),
+                        ('S01', section_attr('CLARA Straight 1',   'CLARA_PH1', 4.0, -1, 1)),
+                        ('S02', section_attr('CLARA Straight 2',   'CLARA_PH1', 50.0, 1)),
                         ])
 
 class Window(QtGui.QMainWindow):
@@ -210,8 +212,9 @@ class Window(QtGui.QMainWindow):
         section_font = QtGui.QFont('', 16, QtGui.QFont.Bold)
         magnet_font = QtGui.QFont('', 14, QtGui.QFont.Bold)
         self.magnets = OrderedDict()
-        for section in sections.keys():
-            section_name = sections[section]
+        pv_root_re = re.compile('^VM-(.*):$')
+        for key, section in sections.items():
+            section_name = section.title
             section_vbox = QtGui.QVBoxLayout()
             header_hbox = QtGui.QHBoxLayout()
             header_hbox.setAlignment(QtCore.Qt.AlignTop)
@@ -219,27 +222,29 @@ class Window(QtGui.QMainWindow):
             title = self.collapsing_header(header_hbox, magnet_list_frame, section_name + '\t')
             title.setFont(section_font)
             min_momentum = 1.0
-            #TODO: set some sensible value
-            momentum = self.spinbox(header_hbox, 'MeV', step=0.1, value=6.5, decimals=3, min_value=min_momentum)
+            momentum = self.spinbox(header_hbox, 'MeV', step=0.1, value=section.default_momentum,
+                                    decimals=3, min_value=min_momentum)
             momentum.valueChanged.connect(self.momentumChanged)
             section_vbox.addLayout(header_hbox)
             magnet_list_vbox = QtGui.QVBoxLayout()
             magnet_list_frame.setLayout(magnet_list_vbox)
             magnet_list_vbox.momentum_spin = momentum  # so we can reference it from a magnet
-            magnet_list_vbox.id = section
+            magnet_list_vbox.id = key
             momentum.magnet_list_vbox = magnet_list_vbox
-            magnet_list[section] = magnet_list_vbox
+            magnet_list[key] = magnet_list_vbox
             section_vbox.addWidget(magnet_list_frame)
             section_list.addLayout(section_vbox)
 
-            controller = self.controllers[section]
-            mag_names = list(controller.getMagnetNames()) # but these don't come in the right order so...
+            controller = self.controllers[key]
+            mag_names = list(controller.getMagnetNames())
+            # Filter to make sure we only get the ones for this section
+            mag_names = [name for name in mag_names if section.min_pos <= controller.getPosition(name) <= section.max_pos]
+            # These don't come in the right order so need to sort them too
             mag_names.sort(key=lambda name: controller.getPosition(name))
-            pv_root_re = re.compile('^VM-(.*):$')
             for name in mag_names:
                 # need a more specific dict key, since self.magnets contains magnets from several sections
                 magnet = Magnet(name)
-                self.magnets[section + '_' + name] = magnet
+                self.magnets[key + '_' + name] = magnet
             # section = 'VELA Injector' #TODO: get this for each magnet
             # for magnet in self.magnets.values():
                 magnet.section = magnet_list_vbox
@@ -273,7 +278,7 @@ class Window(QtGui.QMainWindow):
                 in_branch = branch_name != 'UNKNOWN_MAGNET_BRANCH'
                 if in_branch:
                     magnet_frame.setObjectName('branch')
-                    junc_magnet = self.magnets[section + "_" + branch_name]
+                    junc_magnet = self.magnets[key + "_" + branch_name]
                     junc_magnet.is_junction = True
                     junc_magnet.magnet_frame.setObjectName('junction')
                 end_of_branch = False#magnet.name in ('QUAD06', 'QUAD14')
@@ -337,7 +342,8 @@ class Window(QtGui.QMainWindow):
                 static_info.extend([format_when_present('<br><b>Manufactured by</b> {}', magnet.ref, 'manufacturer'),
                                format_when_present('<br><b>Serial number</b> {}', magnet.ref, 'serialNumber'),
                                format_when_present('<br><b>Magnetic length</b>: {:.1f} mm', magnet.ref, 'magneticLength'),
-                               format_when_present('<br><a href="{}">Measurement data</a>', magnet.ref, 'measurementDataLocation')])
+                               format_when_present('<br><a href="{}">Measurement data</a>', magnet.ref, 'measurementDataLocation'),
+                               format_when_present('<br><b>Position</b>: {:.3f} m', magnet.ref, 'position')])
 
                 more_info_layout = QtGui.QHBoxLayout()
                 more_info.setLayout(more_info_layout)
@@ -414,12 +420,16 @@ class Window(QtGui.QMainWindow):
             self.widgetUpdateTimer.start(self.update_period)
             
     def updateMagnetWidgets(self):
+        """Update the GUI with values from the control system."""
+        # For 'offline', the readbacks are useless, so just don't bother
+        offline = self.settings.value('machine_mode') == 'Offline'
         for magnet in self.magnets.values():
-            set_current = magnet.ref.siWithPol
+            set_current = magnet.current_spin.value() if offline else magnet.ref.siWithPol
+            read_current = magnet.current_spin.value() if offline else magnet.ref.riWithPol
             if not magnet.ref.psuState == VC_MagCtrl.MAG_PSU_STATE.MAG_PSU_ON:
                 magnet.warning_icon.setPixmap(pixmap('error'))
                 magnet.warning_icon.setToolTip('Magnet PSU: ' + str(magnet.ref.psuState)[8:])
-            elif abs(set_current - magnet.ref.riWithPol) > magnet.ref.riTolerance:
+            elif abs(set_current - read_current) > magnet.ref.riTolerance:
                 magnet.warning_icon.setPixmap(pixmap('warning'))
                 magnet.warning_icon.setToolTip('Read current and set current do not match')
             else:
@@ -668,12 +678,14 @@ class Window(QtGui.QMainWindow):
         os.environ["EPICS_CA_ADDR_LIST"] = "192.168.83.255" if mode == 'Physical' else "10.10.0.12"
         self.controllers = {}
         mode_name = VC_MagCtrl.MACHINE_MODE.names[mode.upper()]
-        for section in sections.keys():
+        for key, section in sections.items():
             # if section == 'CLARA_PH1':
             #     get_controller_func = getattr(mag_init_CLARA, '_'.join((mode.lower(), section, 'Magnet_Controller')))
             #     self.controllers[section] = get_controller_func()
             # else:
-            self.controllers[section] = mag_init_VC.getMagnetController(mode_name, VC_MagCtrl.MACHINE_AREA.names[section])
+            area = VC_MagCtrl.MACHINE_AREA.names[section.machine_area]
+            controller = mag_init_VC.getMagnetController(mode_name, area)
+            self.controllers[key] = controller
         self.settings.setValue('machine_mode', mode)
         #TODO: check that it actually worked
 
