@@ -18,6 +18,9 @@ from functools import wraps  # for class method decorators
 from collections import namedtuple
 import calcMomentum  # Fortran code to do the momentum calculation
 import solenoid_field_map
+from fractions import Fraction
+
+# import clipboard  # for temporary debugging, can copy matrices into Excel
 
 # notation
 Re = lambda x: x.real
@@ -73,7 +76,7 @@ def requires_calc_level(level):
 
 # Devices (guns/linacs) that we know about.
 # The ones prefixed 'gb-' are referenced in the Gulliford/Bazarov paper.
-MODEL_LIST = ('gb-rf-gun', 'gb-dc-gun', 'Gun-10')
+MODEL_LIST = ('gb-rf-gun', 'gb-dc-gun', 'Gun-10', 'Linac1')
 
 field_map_attr = namedtuple('field_map_attr', 'coeffs z_map bc_area bc_turns sol_area sol_turns')
 
@@ -92,8 +95,9 @@ class RFSolTracker(object):
 
         # Set up the simulation
         self.solenoid = solenoid_field_map.Solenoid(name, quiet=self.quiet)
+        astra_folder = r'\\fed.cclrc.ac.uk\Org\NLab\ASTeC-TDL\Projects\tdl-1168 CLARA\CLARA-ASTeC Folder\Accelerator Physics\ASTRA'
         if name == 'Gun-10':
-            gun10_folder = r'\\fed.cclrc.ac.uk\Org\NLab\ASTeC-TDL\Projects\tdl-1168 CLARA\CLARA-ASTeC Folder\Accelerator Physics\ASTRA\Archive from Delta + CDR\\'
+            gun10_folder = astra_folder + r'\Archive from Delta + CDR' + '\\'
 
             # Read in RF field map and normalise so peak = 1
             gun10_cav_fieldmap_file = gun10_folder + 'bas_gun.txt'
@@ -102,7 +106,8 @@ class RFSolTracker(object):
             self.rf_peak_field = float(np.max(gun10_cav_fieldmap[:, 1]) / 1e6)
             # Normalise
             gun10_cav_fieldmap[:, 1] /= (self.rf_peak_field * 1e6)
-            self.norm_E = solenoid_field_map.interpolate(*gun10_cav_fieldmap.T)
+            self.norm_E = [solenoid_field_map.interpolate(*gun10_cav_fieldmap.T),]
+            self.phase_offset = np.zeros(1, dtype='float')
             #            self.E = lambda z: E_gun10(z) * self.rf_peak_field * 1e6
             self.freq = 2998.5 * 1e6  # in Hz
             self.phase = 330.0  # to get optimal acceleration
@@ -111,26 +116,70 @@ class RFSolTracker(object):
             self.dz = 0.5e-3  # in metres - OK to get within 0.5% of final momentum
             self.gamma_start = np.sqrt(1 + abs(1 / epsilon_e))  # 1 eV
 
+            self.z_start = 0
             self.z_end = max(gun10_cav_fieldmap[-1, 1], self.solenoid.getZMap()[-1])
+
+        elif name == 'Linac1':
+            linac1_folder = astra_folder + r'\Injector\fieldmaps' + '\\'
+            # Some of this (Mathematica-exported) data is in fraction form (e.g. 2/25), so we need to convert it
+            fetch_dat = lambda name: np.loadtxt(linac1_folder + 'L1' + name + 'cell.dat', converters={0: Fraction})
+            entrance_data = fetch_dat('entrance')
+            single_cell_data = fetch_dat('single')
+            exit_data = fetch_dat('exit')
+            grad_phase_data = np.loadtxt(linac1_folder + 'RI_linac_grad_phase_error.txt')
+            # convert from percentage of first to fraction of max
+            rel_grads = grad_phase_data[:, 0] / np.max(grad_phase_data[:, 0])
+            self.phase_offset = np.cumsum(np.radians(-grad_phase_data[:, 1]))
+            n_cells = len(grad_phase_data)
+
+            sol_data = np.loadtxt(linac1_folder + 'SwissFEL_linac_sols.dat')
+
+            self.freq = 2998.5 * 1e6  # in Hz
+            self.phase = 330.0  # to get optimal acceleration - TODO: not tested
+            self.rf_peak_field = 50  # MV/m, just a made-up figure at the moment (TODO)
+
+            data_z_length = entrance_data[-1, 0] - entrance_data[0, 0]
+
+            interpolate = lambda xy: scipy.interpolate.interp1d(*xy.T, fill_value=0, bounds_error=False)
+            ent_interp = interpolate(entrance_data)
+            sgl_interp = interpolate(single_cell_data)
+            exit_interp = interpolate(exit_data)
+
+            cell_length = 0.033327  # from document: file:///\\fed.cclrc.ac.uk\Org\NLab\ASTeC-TDL\Projects\tdl-1168%20CLARA\CLARA-ASTeC%20Folder\Accelerator%20Physics\ASTRA\Injector\CLARA%20v10%20Injector%20Simulations%20v0.3.docx
+            self.dz = 0.001
+            z_length = n_cells * cell_length + data_z_length  # include a bit extra at the ends
+            self.z_start = -z_length / 2
+            self.z_end = z_length / 2
+            z_map = np.arange(self.z_start, self.z_end, self.dz)
+            self.norm_E = []
+            self.gamma_start = np.sqrt(1 + abs(4e6 / epsilon_e) ** 2)  # 4 MeV
+
+            n_offset = (n_cells - 1) / 2
+            for i in range(n_cells):
+                interp = ent_interp if i == 0 else exit_interp if i == n_cells - 1 else sgl_interp
+                self.norm_E.append(scipy.interpolate.interp1d(z_map, rel_grads[i] * interp(z_map + (n_offset - i) * cell_length),
+                                                              fill_value=0, bounds_error=False))
 
         elif name[:3] == 'gb-':
             self.gamma_start = np.sqrt(1 + abs(1 / epsilon_e))  # 1 eV
+            self.z_start = 0
             if name == 'gb-dc-gun':
                 self.freq = 0
                 self.dz = 1e-3
                 self.z_end = 0.6
+                self.phase = 0
             elif name == 'gb-rf-gun':
                 self.freq = 1.3e9
                 self.dz = 1e-4
                 self.z_end = 0.3
+                self.phase = 295  # to get optimal acceleration
 
-            fieldmap_folder = r'gb-field-maps'
             z_list, E_list = np.loadtxt('gb-field-maps/{}_e-field.csv'.format(name), delimiter=',').T
             self.rf_peak_field = float(np.max(E_list))
             # Normalise
             E_list /= self.rf_peak_field
-            self.norm_E = solenoid_field_map.interpolate(z_list, E_list)
-            self.phase = 295  # to get optimal acceleration
+            self.norm_E = [solenoid_field_map.interpolate(z_list, E_list),]
+            self.phase_offset = [0,]
 
         self.calc_level = CALC_NONE
 
@@ -155,9 +204,9 @@ class RFSolTracker(object):
     @timeit
     def initialiseArrays(self):
         """Initialise arrays to store results."""
-        self.z_array = np.arange(0, self.z_end, self.dz)
+        self.z_array = np.arange(self.z_start, self.z_end, self.dz)
         #        self.gamma_tilde_dash = [self.E(z) / -epsilon_e for z in self.z_array]
-        self.gamma_tilde_dash = self.norm_E(self.z_array) * self.rf_peak_field * 1e6 / -epsilon_e
+        self.gamma_tilde_dash = np.array([norm_E(self.z_array) * self.rf_peak_field * 1e6 / -epsilon_e for norm_E in self.norm_E])
         self.theta_L_array = np.zeros_like(self.z_array)
         self.gamma_dash_array = np.zeros_like(self.z_array)
         self.u_array = np.zeros((len(self.z_array), 4))
@@ -176,7 +225,8 @@ Phase: {self.phase:.1f}°'''
             print(fs.format(**locals()))
 
         # Fortran method (0.8 ms to run cf 11 ms for Python code)
-        self.t_array, self.gamma_dash_array, self.gamma_array, self.beta_array, self.p_array = calcMomentum.calcmomentum(self.freq, self.phase, self.gamma_start, self.dz, self.gamma_tilde_dash)
+        self.t_array, self.gamma_dash_array, self.gamma_array, self.beta_array, self.p_array = calcMomentum.calcmomentum(self.freq, self.phase, self.gamma_start, self.dz, self.gamma_tilde_dash, self.phase_offset)
+        # print(self.gamma_dash_array)
         self.final_p_MeV = self.p_array[-1] * -1e-6 * epsilon_e
 
         if not self.quiet:
@@ -253,7 +303,7 @@ Bucking coil current: {self.solenoid.bc_current:.3f} A'''
         # gamma_dash = self.gamma_tilde_dash * np.cos(omega * t_i)
 
         # thin lens focusing due to rising edge of RF field
-        mask = self.gamma_tilde_dash[:-1] == 0  # i.e. where E-field starts from zero
+        mask = self.gamma_dash_array[:-1] == 0  # i.e. where E-field starts from zero
         M1 = np.zeros((len(self.z_array) - 1, 4, 4))
         M1[:] = np.identity(4)
         gamma_dash = self.gamma_dash_array[:-1]
@@ -278,17 +328,20 @@ Bucking coil current: {self.solenoid.bc_current:.3f} A'''
         # focusing term due to RF magnetic focusing
         M3 = np.zeros((len(self.z_array) - 1, 4, 4))
         M3[:] = np.identity(4)
-        # off_diag = np.cos(omega * t_i) * self.gamma_tilde_dash[:-1] * (1 - np.cos(omega * (t_f - t_i))) / (2 * gamma_f)
-        off_diag = Re(self.gamma_tilde_dash[:-1] * (1 - np.exp(1j * omega * (t_f - t_i))) * np.exp(1j * omega * t_i)) / (2 * gamma_f)
+        # off_diag = self.gamma_tilde_dash[0, :-1] * (1 - np.cos(omega * (t_f - t_i))) * np.cos(omega * t_i) / (2 * gamma_f)
+        off_diag = np.sum([gtd[:-1] * (1 - np.cos(omega * (t_f - t_i))) * np.cos(omega * t_i + pho)
+                           for gtd, pho in zip(self.gamma_tilde_dash, self.phase_offset)], axis=0) / (2 * gamma_f)
         M3[:, 1, 0] = off_diag
         M3[:, 3, 2] = off_diag
 
         # thin lens focusing due to falling edge of RF field
         M4 = np.zeros((len(self.z_array) - 1, 4, 4))
         M4[:] = np.identity(4)
-        mask = self.gamma_tilde_dash[1:] == 0  # i.e. where E-field goes to zero
-        gtd = self.gamma_tilde_dash[:-1]
-        off_diag = gtd[mask] * np.cos(omega * t_f[mask]) / (2 * gamma_f[mask] * beta_f[mask] ** 2)
+        mask = self.gamma_dash_array[1:] == 0  # i.e. where E-field goes to zero
+        gtd = self.gamma_tilde_dash[:, :-1]
+        # off_diag = gtd[mask] * np.cos(omega * t_f[mask]) / (2 * gamma_f[mask] * beta_f[mask] ** 2)
+        off_diag = np.sum([gtdj[mask] * np.cos(omega * t_f[mask] + pho)
+                           for gtdj, pho in zip(gtd, self.phase_offset)]) / (2 * gamma_f[mask] * beta_f[mask] ** 2)
         M4[mask, 1, 0] = off_diag
         M4[mask, 3, 2] = off_diag
 
@@ -331,9 +384,11 @@ Bucking coil current: {self.solenoid.bc_current:.3f} A'''
         return self.z_array
 
     @requires_calc_level(INIT_ARRAYS)
-    def getRFFieldMap(self):
+    def getRFFieldMap(self, phase=0):
         """Return the electric field map produced by the RF cavity."""
-        return self.norm_E(self.z_array) * self.rf_peak_field * 1e6
+        # TODO: we might want to see something else for a multi-cell cavity
+        return np.sum([norm_E(self.z_array) * self.rf_peak_field * 1e6 * np.cos(pho + phase)
+                       for norm_E, pho in zip(self.norm_E, self.phase_offset)], 0)
 
     @requires_calc_level(CALC_B_MAP)
     def getMagneticFieldMap(self):

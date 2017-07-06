@@ -7,7 +7,8 @@ from rf_sol_tracking import RFSolTracker
 import pyqtgraph as pg
 import numpy as np
 import os
-import VELA_CLARA_MagnetControl as MagCtrl
+sys.path.insert(0, r'\\fed.cclrc.ac.uk\Org\NLab\ASTeC\Projects\VELA\Software\VELA_CLARA_PYDs\bin\Release')
+import VELA_CLARA_Magnet_Control as MagCtrl
 
 os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
 os.environ["EPICS_CA_MAX_ARRAY_BYTES"] = "10000000"
@@ -23,7 +24,9 @@ image_credits = {
     'Physical.png': 'http://www.flaticon.com/free-icon/car-compact_31126#term=car&page=1&position=19',
     'mountain-summit.png': 'http://www.flaticon.com/free-icon/mountain-summit_27798#term=peak&page=1&position=6',
     'padlock-closed.png': 'https://www.iconfinder.com/icons/49855/closed_padlock_icon#size=32',
-    'padlock-open.png': 'https://www.iconfinder.com/icons/49856/open_padlock_unlocked_unsecure_icon#size=32'}
+    'padlock-open.png': 'https://www.iconfinder.com/icons/49856/open_padlock_unlocked_unsecure_icon#size=32',
+    'play-button.png': 'http://www.flaticon.com/free-icon/play-button_149657#term=play&page=1&position=11',
+    'pause-symbol.png': 'http://www.flaticon.com/free-icon/pause-symbol_25696#term=pause&page=1&position=7'}
 
 Ui_MainWindow, QtBaseClass = uic.loadUiType("rf_sol_gui.ui")
 
@@ -74,6 +77,7 @@ class ParasolApp(QtGui.QMainWindow, Ui_MainWindow):
         self.sol_field_spin.valueChanged.connect(self.solPeakFieldChanged)
         self.momentum_spin.valueChanged.connect(self.momentumChanged)
         self.larmor_angle_spin.valueChanged.connect(self.larmorAngleChanged)
+        self.phase_slider.valueChanged.connect(self.phaseSliderChanged)
         for spin in (self.x_spin, self.xdash_spin, self.y_spin, self.ydash_spin):
             spin.valueChanged.connect(self.ustartChanged)
 
@@ -101,6 +105,9 @@ class ParasolApp(QtGui.QMainWindow, Ui_MainWindow):
         self.widgetUpdateTimer.timeout.connect(self.mainViewUpdate)
         self.widgetUpdateTimer.start(self.update_period)
     def mainViewUpdate(self):
+        # Increment the phase slider if it's running
+        if self.phase_play_button.isChecked():
+            self.phase_slider.setValue((self.phase_slider.value() + 5) % 360)
         # conceivably the timer could restart this function before it complete - so guard against that
         try:
             if not self.machine_mode == 'Offline':
@@ -114,6 +121,11 @@ class ParasolApp(QtGui.QMainWindow, Ui_MainWindow):
     def gunChanged(self, index=None):
         """The model has been changed. Refresh the display."""
         self.gun = RFSolTracker(self.gun_dropdown.currentText())
+        self.gun_label.setText('Linac' if 'Linac' in self.gun.name else 'Gun')
+        self.bc_spin.setEnabled(self.gun.solenoid.bc_current is not None)
+        widgets = (self.phase_spin, self.off_crest_spin, self.crest_button, self.lock_button,
+                   self.phase_play_button, self.phase_slider)
+        [widget.setEnabled(self.gun.freq > 0) for widget in widgets]
         self.rfPeakFieldChanged(update=False)
         self.phaseChanged(self.gun.phase)
 
@@ -144,9 +156,17 @@ class ParasolApp(QtGui.QMainWindow, Ui_MainWindow):
         self.gun.setRFPhase(self.phase_spin.value())
         self.gunParamsChanged()
 
+    def phaseSliderChanged(self):
+        """The phase slider has been altered. Update the RF field plot. (No extra calculation needed.)"""
+        self.E_field_plot.plot(self.gun.getZRange(), self.gun.getRFFieldMap(phase=np.radians(self.phase_slider.value())) / 1e6, pen='r', clear=True)
+        title = 'Electric field' + (u', phase {:.0f}°'.format(self.phase_slider.value()) if self.phase_slider.isEnabled() else '')
+        self.E_field_plot.setTitle(title)
+        # self.phase_play_button.setChecked(False)
+
     def gunParamsChanged(self):
         """The gun parameters have been modified - rerun the simulation and update the GUI."""
-        self.E_field_plot.plot(self.gun.getZRange(), self.gun.getRFFieldMap() / 1e6, pen='r', clear=True)
+        self.E_field_plot.setYRange(-self.gun.rf_peak_field, self.gun.rf_peak_field)
+        self.phaseSliderChanged()  # update the RF field plot
         self.momentum_plot.plot(self.gun.getZRange(), self.gun.getMomentumMap(), pen='r', clear=True)
         self.momentum_spin.setValue(self.gun.getFinalMomentum())
         self.solCurrentsChanged()
@@ -221,7 +241,7 @@ class ParasolApp(QtGui.QMainWindow, Ui_MainWindow):
         self.xdash_ydash_plot.plotItem.legend.items = []
         self.xdash_ydash_plot.plot(self.gun.getZRange(), 1e3 * self.gun.u_array[:, 1], pen='r', name="x'", clear=True)
         self.xdash_ydash_plot.plot(self.gun.getZRange(), 1e3 * self.gun.u_array[:, 3], pen='g', name="y'")
-        self.uend_label.setText("<b>Final particle position</b> x {0:.3f} mm, x' {1:.3f} mrad; y {2:.3f} mm, y' {3:.3f} mrad".format(*uend.flat))
+        self.uend_label.setText("<b>Final particle position</b> x {0:.3g} mm, x' {1:.3g} mrad; y {2:.3g} mm, y' {3:.3g} mrad".format(*uend.flat))
 
     def machineModeChanged(self, index=None):
         mode = str(self.machine_mode_dropdown.currentText())
