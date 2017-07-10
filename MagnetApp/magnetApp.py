@@ -1,18 +1,16 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from PyQt4 import QtGui, QtCore
-import sys,logging,socket
-
+# DJS 2017
+# Run this and everything follows
+from PyQt4 import QtGui
+import sys
+import os
+import logging
+import socket
 import magnetAppGlobals as globals
 import magnetAppController
-import os
 
-#BE SPECIFIC.... YOUR I.P. FOR YOUR VM
-os.environ["EPICS_CA_ADDR_LIST"] = "10.10.0.12"
-os.environ["EPICS_CA_MAX_ARRAY_BYTES"] = "10000000"
 os.environ["EPICS_CA_SERVER_PORT"]="6000"
-
-
 
 
 class magnetApp(QtGui.QApplication):
@@ -23,7 +21,10 @@ class magnetApp(QtGui.QApplication):
         self.controller = magnetAppController.magnetAppController(argv)
 
 if __name__ == '__main__':
-    logging.basicConfig(filename=globals.logfile, level=logging.INFO,format='%(asctime)s %(message)s')
+    logging.basicConfig(
+        filename=globals.logfile,
+        level=logging.INFO,
+        format='%(asctime)s %(message)s')
     logging.info('Started on ' + socket.gethostname() )
     print "starting magnet app"
     app = magnetApp(sys.argv)

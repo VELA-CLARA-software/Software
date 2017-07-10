@@ -1,20 +1,25 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# DJS 2017
+# part of MagtnetApp
 from PyQt4 import QtGui, QtCore
 from Ui_magnetWidget import Ui_magnetWidget
 import sys
 
 # this class needs to know the magnet enums
-from VELA_CLARA_MagnetControl import MAG_PSU_STATE, MAG_TYPE, MAG_REV_TYPE
+from VELA_CLARA_Magnet_Control import MAG_PSU_STATE
+from VELA_CLARA_Magnet_Control import MAG_TYPE
+from VELA_CLARA_Magnet_Control import MAG_REV_TYPE
 
 class GUI_magnetWidget(QtGui.QMainWindow, Ui_magnetWidget):
-    # we know thwre will be many instances of this class,
+    # we know there will be many instances of this class,
     # so lets try and be more efficent with our memory
-    # class variables(sort of static),
+    # class variables (sort of static),
     # we only need one copy for each instance of this class
     psuStateColors = {MAG_PSU_STATE.MAG_PSU_OFF   : "background-color: red",
                       MAG_PSU_STATE.MAG_PSU_ON    : "background-color: green",
-                      MAG_PSU_STATE.MAG_PSU_TIMING: "background-color: yellow",
+                      # Lost in new magnet scheme
+                      #MAG_PSU_STATE.MAG_PSU_TIMING: "background-color: yellow",
                       MAG_PSU_STATE.MAG_PSU_ERROR : "background-color: magenta",
                       MAG_PSU_STATE.MAG_PSU_NONE  : "background-color: black"}
     # the meter is *1000 to give 3 decimal places precision
@@ -33,15 +38,18 @@ class GUI_magnetWidget(QtGui.QMainWindow, Ui_magnetWidget):
         self.isActive = False
         self.mag_Active.stateChanged.connect( self.setActiveState ) # check button connection
 
+        self.SIValue.setDecimals(3)
+
+
     def updatePSUButton(self, psuState, button):
         button.setStyleSheet(GUI_magnetWidget.psuStateColors.get(psuState, "background-color: black"))
 
     # called after the magnet
     def setDefaultOptions(self):
         self.name.setText(self.magRef[0].name)
-        self.rimin =  min(self.magRef[0].degValues) * GUI_magnetWidget.riMeterScalefactor
-        self.rimax =  max(self.magRef[0].degValues) * GUI_magnetWidget.riMeterScalefactor
-        self.RIMeter.setRange(self.rimin-0.1*self.rimin,self.rimax+0.1*self.rimin)
+        rimin =  self.magRef[0].minI * GUI_magnetWidget.riMeterScalefactor
+        rimax =  self.magRef[0].maxI * GUI_magnetWidget.riMeterScalefactor
+        self.RIMeter.setRange(rimin, rimax)
 
     #active magnets are those with the check box checked
     def setActiveState(self):
@@ -52,7 +60,7 @@ class GUI_magnetWidget(QtGui.QMainWindow, Ui_magnetWidget):
         #print 'update ' + self.localName
         self.SIValue.setValue(self.magRef[0].siWithPol)
         self.updatePSUButton(self.magRef[0].psuState, self.Mag_PSU_State_Button)
-        if self.magRef[0].magRevType == MAG_REV_TYPE.NR:
+        if self.magRef[0].revType == MAG_REV_TYPE.NR:
             self.updatePSUButton(self.magRef[0].nPSU.psuState, self.PSU_N_State_Button)
             self.updatePSUButton(self.magRef[0].rPSU.psuState, self.PSU_R_State_Button)
         self.RIMeter.setValue(self.magRef[0].riWithPol * self.riMeterScalefactor)

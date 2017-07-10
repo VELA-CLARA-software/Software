@@ -1,11 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import sys, os
-#get the magnet enums used to define magnet types and  PSU states
-
-import VELA_CLARA_MagnetControl as mag
+# DJS 2017
+# part of MagtnetApp
+import VELA_CLARA_Magnet_Control as mag
 import magnetAppGlobals as globals
-
 from PyQt4 import QtGui, QtCore
 from GUI.GUI_magnetAppStartup import GUI_magnetAppStartup
 from GUI.GUI_magnetAppMainView import GUI_magnetAppMainView
@@ -18,15 +16,15 @@ class magnetAppController(object):
         # initilaize the VELA_CLARA_MagnetControl,
         # from this object we can get all flavours of magnet controller
         self.magInit = mag.init()
-        self.magInit.setVerbose()
+        #self.magInit.setVerbose()
         # startView and connections
         # the startView is where you select the machine mode and area
         self.startView = GUI_magnetAppStartup()
         self.startView.show()
-        self.startView.startButton.clicked.connect( self.handle_startviewstartbutton )
-        self.startView.cancelButton.clicked.connect( self.handle_startviewstartbutton )
-        self.startView.machineAreaSignal.connect( self.handle_machineAreaSignal )
-        self.startView.machineModeSignal.connect( self.handle_machineModeSignal )
+        self.startView.startButton.clicked.connect(self.handle_startviewstartbutton)
+        self.startView.cancelButton.clicked.connect(self.handle_startviewcancelbutton )
+        self.startView.machineAreaSignal.connect(self.handle_machineAreaSignal)
+        self.startView.machineModeSignal.connect(self.handle_machineModeSignal)
         self.startView.destroyed.connect(self.startView.close) # needed ??
         # initial choices for area and mode are None
         self.machineArea = None
@@ -46,19 +44,21 @@ class magnetAppController(object):
         # we 'show' and 'hide' them where necessary
         # even calling close on them just hides them, until the mainView is closed
         # DBURT File Load Window
-        self.dburtLoadView = GUI_FileLoad("Load DBURT", globals.dburtLocation )
-        self.dburtLoadView.setWindowIcon(QtGui.QIcon( globals.appIcon ) )
-        self.dburtLoadView.selectButton.clicked.connect(self.handle_fileLoadSelect)
+        self.dburtLoadView = None
+        # self.dburtLoadView = GUI_FileLoad("Load DBURT", globals.dburtLocation2)
+        # self.dburtLoadView.setWindowIcon(QtGui.QIcon(globals.appIcon))
+        # self.dburtLoadView.selectButton.clicked.connect(self.handle_fileLoadSelect)
         # DBURT File Save Window
         self.dburtSaveView = GUI_FileSave()
-        self.dburtSaveView.setWindowIcon(QtGui.QIcon( globals.appIcon ))
+        self.dburtSaveView.setWindowIcon(QtGui.QIcon(globals.appIcon))
         self.dburtSaveView.saveNowButton_2.clicked.connect(self.handle_fileSaveNow)
         # this map is used a few places, sodefined here
         # I think there is a c++ method to get this, but the documentation is... meh...
-        self.Area_ENUM_to_Text ={mag.MACHINE_AREA.VELA_BA1     :'VELA_BA1',
-                                 mag.MACHINE_AREA.VELA_BA2     :'VELA_BA2',
-                                 mag.MACHINE_AREA.VELA_INJ     :'VELA_Injector'
-            # mag.MACHINE_AREA.CLARA_2_VELA :'CLARA 2 VELA Magnets',
+        self.Area_ENUM_to_Text ={
+            mag.MACHINE_AREA.VELA_BA1  :'VELA_BA1',
+            mag.MACHINE_AREA.VELA_BA2  :'VELA_BA2',
+            mag.MACHINE_AREA.VELA_INJ  :'VELA_Injector',
+            mag.MACHINE_AREA.CLARA_PH1 :'CLARA_PH1'
             # mag.MACHINE_AREA.CLARA_PHASE_1:'CLARA PHASE 1 Magnets',
             }
 #          __                 __             .__
@@ -100,6 +100,9 @@ class magnetAppController(object):
             self.startView.waitMessageLabel.setText(
                 "<font color='red'>ERROR: You must select a Machine Area and Mode first</font>")
             self.startView.waitMessageLabel.update()
+    # quit from start-up-screen
+    def handle_startviewcancelbutton(self):
+        QtCore.QCoreApplication.instance().quit()
 #                .__                  .__
 #  _____ _____  |__| ____      ___  _|__| ______  _  __
 # /     \\__  \ |  |/    \     \  \/ /  |/ __ \ \/ \/ /
@@ -114,18 +117,24 @@ class magnetAppController(object):
         self.mainView.show()
         self.startView.close()
         # connect button signals, some are connected in GUI_magnetAppMainView
-        self.mainView.selectedOn.clicked.connect( self.handle_selectedOn )
-        self.mainView.selectedOff.clicked.connect( self.handle_selectedOff )
-        self.mainView.allOff.clicked.connect( self.handle_allOff )
-        self.mainView.allOn.clicked.connect( self.handle_allOn )
-        self.mainView.allZero.clicked.connect( self.handle_allZero )
-        self.mainView.selectedDegauss.clicked.connect( self.handle_selectedDegauss )
-        self.mainView.loadSettings.clicked.connect( self.handle_loadSettings )
-        self.mainView.saveSettings.clicked.connect( self.handle_saveSettings )
-        # the dburtSaveView needs to know what controller type we are using to write it to the save file
-        self.dburtSaveView.controller_type = self.Area_ENUM_to_Text[self.machineArea]
+        self.mainView.selectedOn.clicked.connect(self.handle_selectedOn)
+        self.mainView.selectedOff.clicked.connect(self.handle_selectedOff)
+        self.mainView.allOff.clicked.connect(self.handle_allOff)
+        self.mainView.allOn.clicked.connect(self.handle_allOn)
+        self.mainView.allZero.clicked.connect(self.handle_allZero)
+        self.mainView.selectedDegauss.clicked.connect(self.handle_selectedDegauss)
+        self.mainView.selectedDegaussToZero.clicked.connect(
+            self.handle_selectedDegaussToZero)
+        self.mainView.loadSettings.clicked.connect(self.handle_loadSettings)
+        self.mainView.saveSettings.clicked.connect(self.handle_saveSettings)
+        # the dburtSaveView needs to know what controller
+        # type we are using to write it to the save file
+        self.dburtSaveView.controller_type = \
+            self.Area_ENUM_to_Text[self.machineArea]
         # connect the timer to mainViewUpdate, no threading in this app
-        QtCore.QTimer.connect(self.widgetUpdateTimer, QtCore.SIGNAL("timeout()"), self.mainViewUpdate)
+        QtCore.QTimer.connect(self.widgetUpdateTimer,
+                              QtCore.SIGNAL("timeout()"),
+                              self.mainViewUpdate)
         # start timer for 200 ms
         self.widgetUpdateTimer.start(self.widgetTimerUpdateTime_ms)
     # update the  mainViewUpdate
@@ -164,10 +173,25 @@ class magnetAppController(object):
             self.localMagnetController.switchONpsu(self.allMagNames)
 
     def handle_selectedDegauss(self):
+        self.handle_Degauss(False)
+
+    def handle_selectedDegaussToZero(self):
+        self.handle_Degauss(True)
+
+    def handle_Degauss(self,tozero):
         if self.activeEPICS:
-            self.activeMags = mag.std_vector_string()
-            self.activeMags.extend(self.mainView.getActiveNames())
-            self.localMagnetController.degauss(self.activeMags, True)
+            activeMags = self.mainView.getActiveNames()
+            solmags = []
+            mags = []
+            for mag in activeMags:
+                if self.localMagnetController.isASol(mag):
+                    solmags.append(mag)
+                else:
+                    mags.append(mag)
+            if len(solmags) > 0:
+                self.localMagnetController.degauss(solmags,tozero)
+            self.localMagnetController.degauss(mags,tozero)
+
 
     def handle_saveSettings(self):
         # dburtSaveView filename is set by current time and date
@@ -176,6 +200,10 @@ class magnetAppController(object):
         self.dburtSaveView.activateWindow()
 
     def handle_loadSettings(self):
+        self.dburtLoadView = GUI_FileLoad("Load DBURT", globals.dburtLocation2)
+        self.dburtLoadView.setWindowIcon(QtGui.QIcon(globals.appIcon))
+        self.dburtLoadView.selectButton.clicked.connect(self.handle_fileLoadSelect)
+
         self.dburtLoadView.show()
         self.dburtLoadView.activateWindow()
     # set mainview text depending on mode and area chosen in startview
@@ -194,8 +222,6 @@ class magnetAppController(object):
     def addMagnetsToMainView(self):
         # get all magnet names
         self.allMagNames = self.localMagnetController.getMagnetNames()
-        for name in self.allMagNames:
-            print name
         # iterate over all magnets, and add them to respective lists depending
         # on their magnet type
         for i in self.allMagNames:
@@ -252,28 +278,25 @@ class magnetAppController(object):
     def handle_fileLoadSelect(self):
         if self.haveDBurtAndNotInOfflineMode():
             if self.dburtLoadView.dburtType == self.dburtLoadView.allMagnets:
-                self.localMagnetController.applyDBURT(self.dburtLoadView.dburtFile)
+                self.localMagnetController.applyDBURT(self.dburtLoadView.selectedFile)
             elif self.dburtLoadView.dburtType == self.dburtLoadView.quadMagnets:
-                self.localMagnetController.applyDBURTQuadOnly(self.dburtLoadView.dburtFile)
+                self.localMagnetController.applyDBURTQuadOnly(self.dburtLoadView.selectedFile)
             elif self.dburtLoadView.dburtType == self.dburtLoadView.corrMagnets:
-                self.localMagnetController.applyDBURTCorOnly(self.dburtLoadView.dburtFile)
-        self.dburtLoadView.hide()
-        self.dburtLoadView.hide()
-        # reset the loadfile
-        self.dburtLoadView.dburtFile = ""
+                self.localMagnetController.applyDBURTCorOnly(self.dburtLoadView.selectedFile)
+        self.dburtLoadView.done(1)
 
     def haveDBurtAndNotInOfflineMode(self):
         self.ret = True
         if self.machineMode == mag.MACHINE_MODE.OFFLINE:
             self.ret = False
-        if self.dburtLoadView.dburtFile == "":
+        if self.dburtLoadView.selectedFile == "":
             self.ret = False
         return self.ret
 
     def launchPythonMagnetController(self):
         self.localMagnetController = \
             self.magInit.getMagnetController( self.machineMode, self.machineArea)
-        if  self.machineMode is not mag.MACHINE_MODE.OFFLINE:
+        if self.machineMode is not mag.MACHINE_MODE.OFFLINE:
             self.activeEPICS = True
 
 
