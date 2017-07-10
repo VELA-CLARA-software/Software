@@ -11,7 +11,7 @@ import scipy.interpolate
 
 # Solenoids that we know about.
 # The ones prefixed 'gb-' are referenced in the Gulliford/Bazarov paper.
-SOLENOID_LIST = ('gb-rf-gun', 'gb-dc-gun', 'Gun-10')
+SOLENOID_LIST = ('gb-rf-gun', 'gb-dc-gun', 'Gun-10', 'Linac1')
 
 field_map_attr = namedtuple('field_map_attr', 'coeffs z_map bc_area bc_turns sol_area sol_turns')
 
@@ -53,8 +53,36 @@ class Solenoid():
             self.bc_current = 5.0  # reasonable default value
             self.sol_current = 300.0  # reasonable default value
 
+        elif name == 'Linac1':
+            path = r'\\fed.cclrc.ac.uk\Org\NLab\ASTeC-TDL\Projects\tdl-1168 CLARA\CLARA-ASTeC Folder\Accelerator Physics\ASTRA\Injector\fieldmaps' + '\\'
+
+            self.bc_current = None
+            # TODO: fix these parameters
+            self.sol_current = 200.0
+            # Solenoid excitation is 5.18 gauss per amp
+            # See \\fed.cclrc.ac.uk\Org\NLab\ASTeC-TDL\Projects\tdl-1168 CLARA\mag - magnets (WP2)\SwissFEL Linac Solenoids\WFS Magnetic measurements.pdf
+            nom_sol_field = self.sol_current * 5.18e-4
+
+            # Define this in a simpler way - then we can just multiply by sol_current to get B-field value
+            z_list, B_list = np.loadtxt(path + 'SwissFEL_linac_sols.dat').T
+
+            # From document: file:///\\fed.cclrc.ac.uk\Org\NLab\ASTeC-TDL\Projects\tdl-1168%20CLARA\CLARA-ASTeC%20Folder\Accelerator%20Physics\ASTRA\Injector\CLARA%20v10%20Injector%20Simulations%20v0.3.docx
+            cell_length = 0.033327
+            n_cells = 61
+            n_sols = 2
+            dz = (z_list[-1] - z_list[0]) / (len(z_list) - 1)
+            # TODO: fix actual position of solenoids
+            z_offset = np.array([-1, 1]) * cell_length * (n_cells - 1) / 4
+            z_minmax = z_offset + z_list[[0, -1]]
+            z_map = np.arange(*z_minmax, step=dz)
+            B_map = np.zeros((n_sols, len(z_map)))
+            sol_interp = scipy.interpolate.interp1d(z_list, B_list, fill_value=0, bounds_error=False)
+            for i in range(n_sols):
+                B_map[i] = (-1) ** i * sol_interp(z_map + z_offset[i])
+            self.b_field = np.array([z_map, nom_sol_field * np.sum(B_map, 0) / self.sol_current])
+
         elif name[:3] == 'gb-':
-            self.bc_current = 0.0
+            self.bc_current = None
             self.sol_current = 300.0  # just a made-up number
 
             # Define this in a simpler way - then we can just multiply by sol_current to get B-field value

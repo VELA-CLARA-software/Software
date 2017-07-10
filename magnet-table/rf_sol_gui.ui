@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>781</width>
-    <height>985</height>
+    <height>699</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -30,11 +30,16 @@
          </sizepolicy>
         </property>
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select the RF/solenoid model to use.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Gun-10&lt;/span&gt;: VELA/CLARA 10 Hz gun&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;gb-rf-gun&lt;/span&gt;: Gulliford-Bazarov RF gun example&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;gb-dc-gun&lt;/span&gt;: Gulliford-Bazarov DC gun example&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select the RF/solenoid model to use.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Gun-10&lt;/span&gt;: VELA/CLARA 10 Hz gun&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Linac1&lt;/span&gt;: CLARA Linac 1&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;gb-rf-gun&lt;/span&gt;: Gulliford-Bazarov RF gun example&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;gb-dc-gun&lt;/span&gt;: Gulliford-Bazarov DC gun example&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <item>
          <property name="text">
           <string>Gun-10</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Linac1</string>
          </property>
         </item>
         <item>
@@ -561,6 +566,9 @@
         <property name="decimals">
          <number>3</number>
         </property>
+        <property name="minimum">
+         <double>-1000.000000000000000</double>
+        </property>
         <property name="maximum">
          <double>1000.000000000000000</double>
         </property>
@@ -573,6 +581,41 @@
     </item>
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_3">
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <widget class="QToolButton" name="phase_play_button">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Play an animation of the linac phase&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="icon">
+           <iconset>
+            <normaloff>Icons/play-button.png</normaloff>
+            <normalon>Icons/pause-symbol.png</normalon>Icons/play-button.png</iconset>
+          </property>
+          <property name="checkable">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QSlider" name="phase_slider">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Linac phase&lt;/span&gt; - use this to cycle through the displayed RF phase. This has no effect on the calculation.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="maximum">
+           <number>360</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
       <item>
        <widget class="PlotWidget" name="E_field_plot"/>
       </item>

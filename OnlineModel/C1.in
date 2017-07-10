@@ -1,0 +1,105 @@
+!CV.in - DIP01=5.68687
+!V2.in - DIP01=5.68687
+!C2.in - DIP01=5.68687
+!SP.in - DIP01=5.68687
+&NEWRUN
+Head='trial'
+RUN=003
+Loop=F
+Lprompt=F
+Distribution = XXXXXXX
+Xoff= 0.0
+Yoff= 0.0
+N_red = 10
+Lmagnetized=.F
+EmitS=.T
+TR_emitS=F
+PhaseS=.T
+TrackS=.F
+RefS=.F
+TcheckS=.F
+CathodeS=.F
+TRACK_ALL=.T
+PHASE_SCAN=.F
+AUTO_PHASE=.T
+check_ref_part=.F
+ZSTART= XXXX
+ZSTOP = XXXX
+Zphase=1
+Zemit=1050
+
+!VM-CLA-S01-DIA-WCM-01
+!C1-S01-WCM01
+Screen(1)=0.7277
+
+!VM-CLA-S01-DIA-BPM-01
+!C1-S01-BPM01
+Screen(2)=0.9377
+
+
+!VM-CLA-S01-DIA-CAM-01
+!C1-S01-YAG01
+Screen(3)=0.981032999999999
+
+!VM-CLA-S02-DIA-BPM-01
+!C1-S02-BPM01
+Screen(4)=3.62278031299999
+
+!VM-CLA-S02-DIA-CAM-01
+!C1-S02-YAG01
+Screen(5)=4.08983331299999
+
+!VM-CLA-S02-DIA-CAM-02
+!C1-S02-YAG02
+Screen(6)=5.01083331299999
+
+
+!VM-CLA-S02-DIA-BPM-02
+!C1-S02-BPM02
+Screen(7)=6.542000313
+
+
+!VM-CLA-S02-DIA-CAM-03
+!C1-S02-YAG03
+Screen(8)=6.671833313
+
+
+H_max=0.0007
+H_min=0.0007
+Qbunch= XXXX
+High_res=.T
+/
+
+&SCAN
+LScan=.F.
+/
+&CHARGE
+Loop=F
+Max_scale=0.1
+Max_count=100
+Lmirror=.F
+Nxf=6
+Nyf=6
+Nzf=6
+Smooth_x=2
+Smooth_y=2
+Smooth_z=2
+/
+
+&Aperture
+/
+
+&FEM
+/
+
+&CAVITY
+/
+
+&SOLENOID
+/
+
+&QUADRUPOLE
+/
+
+&DIPOLE
+/

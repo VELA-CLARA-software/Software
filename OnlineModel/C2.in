@@ -1,0 +1,75 @@
+!CV.in - DIP01=5.78687
+&NEWRUN
+Head='trial'
+RUN=004
+Loop=F
+Lprompt=F
+Distribution = XXXXXXX
+Xoff= 0.0
+Yoff= 0.0
+N_red = 10
+Lmagnetized=.F
+EmitS=.T
+TR_emitS=F
+PhaseS=.T
+TrackS=.F
+RefS=.F
+TcheckS=.F
+CathodeS=.F
+TRACK_ALL=.T
+PHASE_SCAN=.F
+AUTO_PHASE=.T
+check_ref_part=.F
+ZSTART= XXXX
+ZSTOP = XXXX
+Zphase=1
+Zemit=1050
+
+!C1-S02-BPM02
+!VM-CLA-S02-DIA-BPM-02:
+Screen(7)=0.31313
+
+!C1-S02-YAG03
+!VM-CLA-S02-DIA-CAM-03:CAM:
+Screen(8)=0.444963
+
+
+H_max=0.0007
+H_min=0.0007
+Qbunch= XXXX
+High_res=.T
+/
+
+&SCAN
+LScan=.F.
+/
+&CHARGE
+Loop=F
+Max_scale=0.1
+Max_count=100
+Lmirror=.F
+Nxf=6
+Nyf=6
+Nzf=6
+Smooth_x=2
+Smooth_y=2
+Smooth_z=2
+/
+
+&Aperture
+/
+
+&FEM
+/
+
+&CAVITY
+/
+
+&SOLENOID
+/
+
+&QUADRUPOLE
+/
+
+&DIPOLE
+/
