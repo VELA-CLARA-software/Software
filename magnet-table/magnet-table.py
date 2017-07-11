@@ -219,10 +219,11 @@ class Window(QtGui.QMainWindow):
             header_hbox = QtGui.QHBoxLayout()
             header_hbox.setAlignment(QtCore.Qt.AlignTop)
             magnet_list_frame = QtGui.QFrame()
-            title = self.collapsing_header(header_hbox, magnet_list_frame, section_name + '\t')
+            title = self.collapsing_header(header_hbox, magnet_list_frame, u'▲ ' + section_name + '\t')
             title.setFont(section_font)
+            magnet_list_frame.title_label = title
             min_momentum = 1.0
-            momentum = self.spinbox(header_hbox, 'MeV', step=0.1, value=section.default_momentum,
+            momentum = self.spinbox(header_hbox, 'MeV/c', step=0.1, value=section.default_momentum,
                                     decimals=3, min_value=min_momentum)
             momentum.valueChanged.connect(self.momentumChanged)
             section_vbox.addLayout(header_hbox)
@@ -451,10 +452,12 @@ class Window(QtGui.QMainWindow):
         evType = event.type()
         if evType == QtCore.QEvent.MouseButtonRelease:
             try:
-                vis = source.toggle_frame.isVisible()
-                source.toggle_frame.setVisible(not vis)
+                frame = source.toggle_frame
+                vis = frame.isVisible()
+                frame.setVisible(not vis)
+                frame.title_label.setText((u'▼' if vis else u'▲') + frame.title_label.text()[1:])
             except:
-                pass  # no toggle_frame - never mind
+                pass  # no toggle_frame - never mind (or perhaps no title_label)
         elif type(source) in (QtGui.QLineEdit, QtGui.QDoubleSpinBox):
             # event was triggered in a magnet spin box (K or current)
             if evType == QtCore.QEvent.Wheel:
@@ -610,7 +613,7 @@ class Window(QtGui.QMainWindow):
             int_strength = abs_k
         if int_strength is None:
             int_strength = effect * momentum / SPEED_OF_LIGHT
-        coeffs = magnet.k_coeffs if mag_type in ('SOL', 'BSOL') else magnet.fieldIntegralCoefficients
+        coeffs = np.copy(magnet.k_coeffs if mag_type in ('SOL', 'BSOL') else magnet.fieldIntegralCoefficients)
         if mag_type == 'BSOL':
             # These coefficients depend on solenoid current too - need to group together like terms
             y = next(self.magnetsOfType(magnet.section, 'SOL')).ref.siWithPol
@@ -619,7 +622,7 @@ class Window(QtGui.QMainWindow):
                       np.dot(coeffs[6:10], ypows),     # (c6 + c7*y + c8*y**2 + c9*y**3) * x**2
                       np.dot(coeffs[3:6], ypows[:-1]), # (c3 + c4*y + c5*y**2) * x
                       np.dot(coeffs[:3], ypows[1:])]   # (c0*y + c1*y**2 + c2*y**3)
-        elif mag_type == 'SOL':
+        elif mag_type == 'SOL' and len(coeffs) > 2:
             # These coefficients depend on momentum too - need to group together like terms
             ppows = momentum ** np.arange(3)
             coeffs = [np.dot(coeffs[2:4], ppows[:2]),               # (c2 + c3*p) * Isol
