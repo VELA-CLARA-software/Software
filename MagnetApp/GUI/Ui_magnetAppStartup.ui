@@ -76,6 +76,9 @@
        <property name="text">
         <string>VELA  INJ Magnets</string>
        </property>
+       <attribute name="buttonGroup">
+        <string notr="true">machineAreaButtons</string>
+       </attribute>
       </widget>
      </item>
      <item>
@@ -83,6 +86,9 @@
        <property name="text">
         <string>VELA  BA1 Magnets</string>
        </property>
+       <attribute name="buttonGroup">
+        <string notr="true">machineAreaButtons</string>
+       </attribute>
       </widget>
      </item>
      <item>
@@ -90,6 +96,9 @@
        <property name="text">
         <string>VELA  BA2 Magnets</string>
        </property>
+       <attribute name="buttonGroup">
+        <string notr="true">machineAreaButtons</string>
+       </attribute>
       </widget>
      </item>
      <item>
@@ -97,6 +106,9 @@
        <property name="text">
         <string>CLARA PHASE 1 Magnets</string>
        </property>
+       <attribute name="buttonGroup">
+        <string notr="true">machineAreaButtons</string>
+       </attribute>
       </widget>
      </item>
      <item>
@@ -104,6 +116,9 @@
        <property name="text">
         <string>CLARA 2 VELA</string>
        </property>
+       <attribute name="buttonGroup">
+        <string notr="true">machineAreaButtons</string>
+       </attribute>
       </widget>
      </item>
      <item>
@@ -150,6 +165,9 @@
        <property name="text">
         <string>Offline   (No EPICS)</string>
        </property>
+       <attribute name="buttonGroup">
+        <string notr="true">machineModeButtons</string>
+       </attribute>
       </widget>
      </item>
      <item>
@@ -157,6 +175,9 @@
        <property name="text">
         <string>Virtual   (Connect to Virtual Machine)</string>
        </property>
+       <attribute name="buttonGroup">
+        <string notr="true">machineModeButtons</string>
+       </attribute>
       </widget>
      </item>
      <item>
@@ -164,6 +185,9 @@
        <property name="text">
         <string>Physical (Connect to Real Machine)</string>
        </property>
+       <attribute name="buttonGroup">
+        <string notr="true">machineModeButtons</string>
+       </attribute>
       </widget>
      </item>
      <item>
@@ -266,4 +290,8 @@ Then Press START </string>
  </widget>
  <resources/>
  <connections/>
+ <buttongroups>
+  <buttongroup name="machineAreaButtons"/>
+  <buttongroup name="machineModeButtons"/>
+ </buttongroups>
 </ui>

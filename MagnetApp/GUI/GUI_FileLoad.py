@@ -1,113 +1,129 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import sys
+# DJS 2017
+# part of MagtnetApp
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
+from Ui_FileLoad import Ui_FileLoad
+import datetime
 
-class GUI_FileLoad(QWidget):
+
+
+class GUI_FileLoad(QDialog, Ui_FileLoad):
     def __init__(self, window_name = "", root = "/" ):
-        super(GUI_FileLoad, self).__init__()
-        # never got the below line to do what i hoped it might: close window with parent
-        #self.setAttribute(Qt.WA_DeleteOnClose,True)
-        self.resize(600, 600)
-        self.setWindowTitle(window_name)
-        # file browser tree view
-        self.treeView = QTreeView()
-        self.fileSystemModel = QFileSystemModel(self.treeView)
-        self.fileSystemModel.setReadOnly(True)
-        self.rootPath = self.fileSystemModel.setRootPath(root)
-        self.treeView.setModel(self.fileSystemModel)
-        self.treeView.setRootIndex( self.rootPath )
-        self.treeView.clicked.connect(self.on_treeView_clicked)
-        self.browserLayout = QVBoxLayout(self)
-        self.font = QFont()
-        self.font.setPointSize(12)
-        self.groupBox = QGroupBox()
-        # which magnets to apply to
-        self.groupBox.setFont(self.font)
-        self.groupBox.setObjectName("groupBox")
-        self.horizontalLayout = QHBoxLayout(self.groupBox)
-        self.horizontalLayout.setObjectName("horizontalLayout")
-        self.allMagnets = QRadioButton(self.groupBox)
-        self.allMagnets.setObjectName("allMagnets")
-        self.horizontalLayout.addWidget(self.allMagnets)
-        self.quadMagnets = QRadioButton(self.groupBox)
-        self.quadMagnets.setObjectName("quadMagnets")
-        self.horizontalLayout.addWidget(self.quadMagnets)
-        self.corrMagnets = QRadioButton(self.groupBox)
-        self.corrMagnets.setObjectName("corrMagnets")
-        self.horizontalLayout.addWidget(self.corrMagnets)
-        self.groupBox.setTitle  ( "Which Magnets To Apply File To ")
-        self.allMagnets.setText (  "All" )
-        self.quadMagnets.setText(  "Quads " )
-        self.corrMagnets.setText(  "Correctors" )
-        self.groupBox.setTitle("Which Magnets To Apply File To?")
-        self.treeView.hideColumn(1)
-        self.treeView.setColumnWidth (0,250)
-        self.treeView.setColumnWidth (2,100)
-        self.treeView.setColumnWidth (3,250)
-        self.treeView.setSortingEnabled(True)
-        self.quadMagnets.toggled.connect( lambda:self.handle_magRadio(self.quadMagnets) )
-        self.corrMagnets.toggled.connect( lambda:self.handle_magRadio(self.corrMagnets) )
-        self.allMagnets.toggled.connect ( lambda:self.handle_magRadio(self.allMagnets ) )
-        self.label = QLabel()
-        self.label.setText( "Choose File To Load Magnet Settings" )
-        self.buttonFrame = QFrame()
-        self.horizontalLayout2 = QHBoxLayout(self.buttonFrame)
-        self.selectButton = QPushButton( self.buttonFrame )
-        self.cancelButton = QPushButton( self.buttonFrame )
-        self.viewFiButton = QPushButton( self.buttonFrame )
-        self.horizontalLayout2.addWidget(self.selectButton)
-        self.horizontalLayout2.addWidget(self.cancelButton)
-        self.horizontalLayout2.addWidget(self.viewFiButton)
-        self.selectButton.setText( "Select" )
-        self.cancelButton.setText( "Cancel" )
-        self.viewFiButton.setText( "View" )
-        self.cancelButton.setFont(self.font)
-        self.selectButton.setFont(self.font)
-        self.viewFiButton.setFont(self.font)
-        self.browserLayout.addWidget(self.groupBox)
-        self.browserLayout.addWidget(self.label)
-        self.browserLayout.addWidget(self.treeView)
-        self.browserLayout.addWidget(self.buttonFrame)
-        self.setLayout(self.browserLayout)
-        self.dburtFile = ""
-        self.allMagnets.setChecked(True)
-        self.cancelButton.clicked.connect(self.handle_fileLoadCancel)
-        self.viewFiButton.clicked.connect(self.handle_fileLoadView)
+        QDialog.__init__(self)
+        self.setupUi(self)
         self.canWindowClose = False
+        #self.root = QDir(root)
+        self.root = root
+        self.root = QString("//fed.cclrc.ac.uk/org/NLab/ASTeC/Projects/VELA/")
+        self.snapshots = QString("//fed.cclrc.ac.uk/org/NLab/ASTeC/Projects/VELA/Snapshots")
+        self.dburtpath = QString("//fed.cclrc.ac.uk/org/NLab/ASTeC/Projects/VELA/Snapshots/DBURT/")
+        self.quadMagnets.toggled.connect(lambda: self.handle_magRadio(self.quadMagnets))
+        self.corrMagnets.toggled.connect(lambda: self.handle_magRadio(self.corrMagnets))
+        self.allMagnets.toggled.connect(lambda: self.handle_magRadio(self.allMagnets))
+        self.dburtType = self.allMagnets
 
+        self.dirModel = QFileSystemModel()
+        self.dirModel.setFilter(QDir.NoDotAndDotDot|QDir.Dirs)
+        self.rootPathIndex = self.dirModel.setRootPath(self.root)
+        self.treeView.setModel(self.dirModel)
+        self.treeView.setRootIndex(self.rootPathIndex)
+        self.treeView.hideColumn(1)
+        self.treeView.hideColumn(2)
+        self.treeView.setColumnWidth(0,250)
+        self.treeView.setColumnWidth(3,250)
+        self.treeView.setCurrentIndex(self.dirModel.index(self.dburtpath))
+        snapshotindex = self.dirModel.index(self.snapshots)
+        #self.treeView.expand(self.dirModel.index(self.dburtpath))
+        self.treeView.setExpanded(snapshotindex, True)
+        self.treeView.scrollTo(snapshotindex, QAbstractItemView.PositionAtCenter)
+
+
+        self.filesModel = QFileSystemModel()
+        self.filesModel.setFilter(QDir.NoDotAndDotDot|QDir.Files)
+        self.dburtpathIndex = self.filesModel.setRootPath(self.dburtpath)
+
+        self.listView.setModel(self.filesModel)
+        self.listView.setRootIndex(self.dburtpathIndex)
+
+        self.dirModel.directoryLoaded.connect(self.handle_directoryLoaded)
+        self.filesModel.directoryLoaded.connect(self.handle_filesLoaded)
+
+        self.cancelButton.clicked.connect(self.handle_fileLoadCancel)
+
+
+        #self.on_treeView_clicked(self.dirModel.index(self.dburtpath))
+        self.viewButton.clicked.connect(self.handle_fileLoadView)
+        self.selectedDirPath = self.dburtpath
+        self.selectedFile = ""
+        self.selectedFilePath = ""
+        self.watcher = QFileSystemWatcher()
+        self.watcher.addPath(self.dburtpath)
+        self.watcher.directoryChanged.connect(self.handle_fileDirectoryChanged)
+#        self.selectedDirPathselectedDirPath
+        #self.dirModel.dataChanged[QModelIndex,QModelIndex].connect(self.handle_fileDirectoryChanged2)
+
+
+    def handle_fileDirectoryChanged(self):
+        print 'watcher handle_fileDirectoryChanged'
+        print 'self.selectedDirPath  = ' + str(self.selectedDirPath)
+        self.dburtpathIndex = self.filesModel.setRootPath(self.selectedDirPath)
+        self.listView.setRootIndex(self.dburtpathIndex)
+
+    def handle_directoryLoaded(self):
+        print 'handle_directoryLoaded'
+
+    def handle_filesLoaded(self):
+        print 'handle_filesLoaded'
+        index = self.filesModel.index(self.filesModel.rowCount(),0)
+        self.listView.scrollTo(index, QAbstractItemView.PositionAtCenter)
+
+    def on_treeView_clicked(self, index):
+        print("on_treeView_clicked")
+        self.indexItem = self.dirModel.index(index.row(), 0, index.parent())
+        self.dburtFile = str(self.dirModel.fileName(self.indexItem))
+        self.selectedDirPath = self.dirModel.filePath(self.indexItem)
+        print 'self.selectedDirPath ' + str(self.selectedDirPath)
+        self.rootPathIndex = self.filesModel.setRootPath(self.selectedDirPath)
+        self.listView.setRootIndex(self.rootPathIndex)
+        self.watcher.removePaths(self.watcher.directories())
+        print 'Watching ' + str(self.selectedDirPath)
+        self.watcher.addPath(QString(self.selectedDirPath))
+
+    def on_listView_clicked(self, index):
+        indexItem = self.filesModel.index(index.row(), 0, index.parent())
+        self.selectedFile = str(self.filesModel.fileName(indexItem))
+        self.selectedFilePath = self.selectedDirPath + '/' + self.selectedFile
+        print 'on_listView_clicked = ' + self.selectedFilePath
+
+    def handle_magRadio(self, r):
+        if r.isChecked() == True:
+            self.dburtType = r
+
+    # This window only dies when the entire app closes
+    # top do this we call hide()
     def closeEvent(self, evnt):
-        print 'GUI_FileLoad  close event called'
+        # print 'GUI_FileLoad  close event called'
         if self.canWindowClose:
             super(GUI_FileLoad, self).closeEvent(evnt)
         else:
             evnt.ignore()
             self.hide()
-            #self.setWindowState(QtCore.Qt.WindowMinimized)
 
     def handle_fileLoadCancel(self):
-        self.hide()
+        self.done(0)
 
-    def handle_magRadio(self, r):
-        if r.isChecked() == True:
-            self.dburtType  = r
     def handle_fileLoadView(self):
-        if self.dburtPathAndFile != "":
+        if self.selectedFilePath != "":
             self.textWindow = QPlainTextEdit()
             print 'opening file'
-            self.fileText = open(self.dburtPathAndFile).read()
+            self.fileText = open(self.selectedFilePath).read()
             self.textWindow.setPlainText(self.fileText)
-            self.textWindow.resize(350, 700)
-            self.textWindow.setWindowTitle(self.dburtFile)
+            self.textWindow.resize(400, 700)
+            self.textWindow.setWindowTitle(self.selectedFile)
             self.textWindow.setWindowIcon(QIcon('magpic.jpg'))
             self.textWindow.show()
         else:
             print "can't open file "
 
-    def on_treeView_clicked(self, index):
-        self.indexItem = self.fileSystemModel.index(index.row(), 0, index.parent())
-        self.dburtFile = str(self.fileSystemModel.fileName(self.indexItem))
-        self.dburtPathAndFile = self.fileSystemModel.filePath(self.indexItem)
-        print  self.dburtFile
-        print  self.dburtPathAndFile

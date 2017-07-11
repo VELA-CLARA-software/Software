@@ -1,8 +1,13 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# DJS 2017
+# part of MagtnetApp
 from PyQt4 import QtGui, QtCore
 from Ui_magnetAppStartup import Ui_magnetAppStartup
 import magnetAppGlobals as globals
-from VELA_CLARA_MagnetControl import *
-from VELA_CLARA_MagnetControl import *
+from VELA_CLARA_Magnet_Control import MACHINE_MODE
+from VELA_CLARA_Magnet_Control import MACHINE_AREA
+
 
 class GUI_magnetAppStartup(QtGui.QMainWindow, Ui_magnetAppStartup):
     # static signals to emit when radioButtons are pressed
@@ -34,7 +39,7 @@ class GUI_magnetAppStartup(QtGui.QMainWindow, Ui_magnetAppStartup):
             self.VELA_BA2.objectName(): MACHINE_AREA.VELA_BA2,
             self.VELA_BA1.objectName(): MACHINE_AREA.VELA_BA1,
             self.VELA_INJ.objectName(): MACHINE_AREA.VELA_INJ,
-            self.CLARA_PHASE_1.objectName(): MACHINE_AREA.CLARA_S02
+            self.CLARA_PHASE_1.objectName(): MACHINE_AREA.CLARA_PH1
         #self.CLARA_2_VELA.objectName(): MACHINE_AREA.CLARA_2_VELA
         }
 
@@ -47,6 +52,7 @@ class GUI_magnetAppStartup(QtGui.QMainWindow, Ui_magnetAppStartup):
     # this is then set as a variable in the  magnetAppController
     def handle_areaRadio(self,r):
         if r.isChecked() == True:
+            print self.radioAreaTo_ENUM[r.objectName()]
             self.machineAreaSignal.emit(self.radioAreaTo_ENUM[r.objectName()])
     def handle_modeRadio(self,r):
         if r.isChecked() == True:

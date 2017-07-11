@@ -1,9 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# DJS 2017
+# part of MagtnetApp
 from PyQt4 import QtGui, QtCore
 from Ui_FileSave import Ui_FileSave
 import datetime
 import magnetAppGlobals as globals
+
 
 class GUI_FileSave(QtGui.QMainWindow, Ui_FileSave):
     def __init__(self  ):
@@ -21,7 +24,7 @@ class GUI_FileSave(QtGui.QMainWindow, Ui_FileSave):
         self.canWindowClose = False
 
     def setFileName(self):
-        self.filename = globals.dburtLocation + \
+        self.filename = globals.dburtLocation2 + \
                         self.controller_type + "_" + \
                         str(self.now.year)  + '-' + \
                         '{:02d}'.format(self.now.month) + '-' + \
@@ -30,6 +33,7 @@ class GUI_FileSave(QtGui.QMainWindow, Ui_FileSave):
                         '{:02d}'.format(self.now.minute)+ \
                         '.dburt'
         self.file_name_entry.setText(self.filename)
+        #print 'SAVE FIILENAME = ' + self.filename
 
     def getComboBoxEntries(self):
         self.keywords = str(self.areaCombo.currentText()) + '\t' +\

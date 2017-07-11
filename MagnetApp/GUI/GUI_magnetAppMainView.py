@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# DJS 2017
+# part of MagtnetApp
 from PyQt4 import QtGui, QtCore
 from Ui_magnetAppMainView import Ui_magnetAppMainView
 from GUI_magnetWidget import GUI_magnetWidget
@@ -19,7 +21,7 @@ class GUI_magnetAppMainView(QtGui.QMainWindow, Ui_magnetAppMainView):
         self.appPixMap = QtGui.QPixmap(globals.appIcon)
         self.scaledAppPixMapo = self.appPixMap.scaled(self.logoLabel.size(), QtCore.Qt.KeepAspectRatio)
         self.iconLabel.setPixmap(self.scaledAppPixMapo)
-        # magnet widgets held in
+        # magnet widgets held in these dicts
         self.quadWidgets = {}
         self.solWidgets = {}
         self.dipWidgets = {}
