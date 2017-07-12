@@ -90,7 +90,7 @@ class RFSolTracker(object):
         self.quiet = quiet
         if not name in MODEL_LIST:
             raise NotImplementedError(
-                'Unknown model "{name}". Valid models are {MODEL_LIST}.'.format(**locals()))
+                'Unknown model "{}". Valid models are {}.'.format(name, MODEL_LIST))
         self.name = name
 
         # Set up the simulation
@@ -132,8 +132,6 @@ class RFSolTracker(object):
             self.phase_offset = np.cumsum(np.radians(-grad_phase_data[:, 1]))
             n_cells = len(grad_phase_data)
 
-            sol_data = np.loadtxt(linac1_folder + 'SwissFEL_linac_sols.dat')
-
             self.freq = 2998.5 * 1e6  # in Hz
             self.phase = 330.0  # to get optimal acceleration - TODO: not tested
             self.rf_peak_field = 50  # MV/m, just a made-up figure at the moment (TODO)
@@ -148,9 +146,12 @@ class RFSolTracker(object):
             cell_length = 0.033327  # from document: file:///\\fed.cclrc.ac.uk\Org\NLab\ASTeC-TDL\Projects\tdl-1168%20CLARA\CLARA-ASTeC%20Folder\Accelerator%20Physics\ASTRA\Injector\CLARA%20v10%20Injector%20Simulations%20v0.3.docx
             self.dz = 0.001
             z_length = n_cells * cell_length + data_z_length  # include a bit extra at the ends
-            self.z_start = -z_length / 2
-            self.z_end = z_length / 2
-            z_map = np.arange(self.z_start, self.z_end, self.dz)
+            # self.z_start = -z_length / 2
+            # self.z_end = z_length / 2
+            z_map = self.solenoid.getZMap()
+            self.z_start = z_map[0]
+            self.z_end = z_map[-1]
+            #TODO: self.dz =
             self.norm_E = []
             self.gamma_start = np.sqrt(1 + abs(4e6 / epsilon_e) ** 2)  # 4 MeV
 

@@ -120,9 +120,17 @@ class ParasolApp(QtGui.QMainWindow, Ui_MainWindow):
 
     def gunChanged(self, index=None):
         """The model has been changed. Refresh the display."""
-        self.gun = RFSolTracker(self.gun_dropdown.currentText())
-        self.gun_label.setText('Linac' if 'Linac' in self.gun.name else 'Gun')
-        self.bc_spin.setEnabled(self.gun.solenoid.bc_current is not None)
+        self.gun = RFSolTracker(self.gun_dropdown.currentText(), quiet=True)
+        is_linac = 'Linac' in self.gun.name
+        self.gun_label.setText('Linac' if is_linac else 'Gun')
+        self.bc_label.setText('Solenoid 1 current' if is_linac else 'Bucking coil current')
+        self.sol_label.setText('Solenoid 2 current' if is_linac else 'Solenoid current')
+        self.cathode_field_spin.setEnabled(not is_linac)
+        has_bc = self.gun.solenoid.bc_current is not None
+        self.bc_spin.setEnabled(has_bc)
+        if has_bc:
+            self.bc_spin.setRange(*self.gun.solenoid.bc_range)
+        self.sol_spin.setRange(*self.gun.solenoid.sol_range)
         widgets = (self.phase_spin, self.off_crest_spin, self.crest_button, self.lock_button,
                    self.phase_play_button, self.phase_slider)
         [widget.setEnabled(self.gun.freq > 0) for widget in widgets]
@@ -200,14 +208,15 @@ class ParasolApp(QtGui.QMainWindow, Ui_MainWindow):
 
     def solCurrentsChanged(self, value=None):
         """The bucking coil or solenoid parameters have been modified - rerun the simulation and update the GUI."""
+        sol = self.gun.solenoid
         self.gun.setBuckingCoilCurrent(self.bc_spin.value())
         self.gun.setSolenoidCurrent(self.sol_spin.value())
         if self.machine_mode != 'Offline':
             self.controller.setSI('BSOL', self.bc_spin.value())
             self.controller.setSI('SOL', self.sol_spin.value())
-        self.cathode_field_spin.setValue(self.gun.getMagneticField(0))
-        self.sol_field_spin.setValue(self.gun.getPeakMagneticField())
-        self.B_field_plot.plot(self.gun.getZRange(), self.gun.getMagneticFieldMap(), pen='r', clear=True)
+        self.cathode_field_spin.setValue(sol.getMagneticField(0))
+        self.sol_field_spin.setValue(sol.getPeakMagneticField())
+        self.B_field_plot.plot(sol.getZMap(), sol.getMagneticFieldMap(), pen='r', clear=True)
         self.larmor_angle_plot.plot(self.gun.getZRange(), self.gun.getLarmorAngleMap(), pen='r', clear=True)
         self.larmor_angle_spin.setValue(self.gun.getFinalLarmorAngle())
         self.ustartChanged()

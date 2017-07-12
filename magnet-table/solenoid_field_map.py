@@ -14,6 +14,7 @@ import scipy.interpolate
 SOLENOID_LIST = ('gb-rf-gun', 'gb-dc-gun', 'Gun-10', 'Linac1')
 
 field_map_attr = namedtuple('field_map_attr', 'coeffs z_map bc_area bc_turns sol_area sol_turns')
+field_map_attr.__new__.__defaults__ = (1, 1, 1, 1)
 
 def interpolate(x, y):
     "Return an interpolation object with some default parameters."
@@ -52,34 +53,50 @@ class Solenoid():
             self.z_map = self.b_field.z_map
             self.bc_current = 5.0  # reasonable default value
             self.sol_current = 300.0  # reasonable default value
+            self.bc_range = (0.0, 5.0)
+            self.sol_range = (0.0, 500.0)
 
         elif name == 'Linac1':
-            path = r'\\fed.cclrc.ac.uk\Org\NLab\ASTeC-TDL\Projects\tdl-1168 CLARA\CLARA-ASTeC Folder\Accelerator Physics\ASTRA\Injector\fieldmaps' + '\\'
+            # Modelled solenoid field
+            # path = r'\\fed.cclrc.ac.uk\Org\NLab\ASTeC-TDL\Projects\tdl-1168 CLARA\CLARA-ASTeC Folder\Accelerator Physics\ASTRA\Injector\fieldmaps' + '\\'
+            # z_list, B_list = np.loadtxt(path + 'SwissFEL_linac_sols.dat').T
 
-            self.bc_current = None
-            # TODO: fix these parameters
-            self.sol_current = 200.0
-            # Solenoid excitation is 5.18 gauss per amp
-            # See \\fed.cclrc.ac.uk\Org\NLab\ASTeC-TDL\Projects\tdl-1168 CLARA\mag - magnets (WP2)\SwissFEL Linac Solenoids\WFS Magnetic measurements.pdf
-            nom_sol_field = self.sol_current * 5.18e-4
+            # Measured solenoid field
+            path = r'\\fed.cclrc.ac.uk\Org\NLab\ASTeC-TDL\Projects\tdl-1168 CLARA\mag - magnets (WP2)\SwissFEL Linac Solenoids' + '\\'
+            x, y, z, Bz = np.loadtxt(path + 'wfs08_YZ.lis', skiprows=17, unpack=True)
+            self.bc_current = 199.93  # defined in file
+            on_axis = y == 0
+            z_list_08 = z[on_axis] / 100  # convert cm -> m
+            B_list_08 = Bz[on_axis] * 1e-4 / self.bc_current  # convert G -> T and normalise to current
 
-            # Define this in a simpler way - then we can just multiply by sol_current to get B-field value
-            z_list, B_list = np.loadtxt(path + 'SwissFEL_linac_sols.dat').T
+            x, y, z, Bz = np.loadtxt(path + 'wfs09_YZ.lis', skiprows=17, unpack=True)
+            self.sol_current = 199.93  # defined in file
+            on_axis = y == 0
+            z_list_09 = z[on_axis] / 100  # convert cm -> m
+            B_list_09 = Bz[on_axis] * 1e-4 / self.sol_current  # convert G -> T and normalise to current
 
             # From document: file:///\\fed.cclrc.ac.uk\Org\NLab\ASTeC-TDL\Projects\tdl-1168%20CLARA\CLARA-ASTeC%20Folder\Accelerator%20Physics\ASTRA\Injector\CLARA%20v10%20Injector%20Simulations%20v0.3.docx
             cell_length = 0.033327
             n_cells = 61
             n_sols = 2
-            dz = (z_list[-1] - z_list[0]) / (len(z_list) - 1)
+            dz = (z_list_08[-1] - z_list_08[0]) / (len(z_list_08) - 1)
             # TODO: fix actual position of solenoids
             z_offset = np.array([-1, 1]) * cell_length * (n_cells - 1) / 4
-            z_minmax = z_offset + z_list[[0, -1]]
+            print(z_offset)
+            z_minmax = z_offset + z_list_08[[0, -1]]
+            print(z_minmax)
             z_map = np.arange(*z_minmax, step=dz)
             B_map = np.zeros((n_sols, len(z_map)))
-            sol_interp = scipy.interpolate.interp1d(z_list, B_list, fill_value=0, bounds_error=False)
+            sol_interp = [scipy.interpolate.interp1d(z_list, B_list, fill_value=0, bounds_error=False) for z_list, B_list in [[z_list_08, B_list_08], [z_list_09, B_list_09]]]
             for i in range(n_sols):
-                B_map[i] = (-1) ** i * sol_interp(z_map + z_offset[i])
-            self.b_field = np.array([z_map, nom_sol_field * np.sum(B_map, 0) / self.sol_current])
+                B_map[i] = sol_interp[i](z_map + z_offset[i])# / self.sol_current
+            coeffs = np.zeros((len(z_map), 12))
+            coeffs[:, 0] = B_map[0]
+            coeffs[:, 3] = B_map[1]
+            self.b_field = field_map_attr(coeffs=coeffs, z_map=z_map)
+            # self.b_field = np.array([z_map, nom_sol_field * np.sum(B_map, 0) / self.sol_current])
+            self.sol_range = self.bc_range = (-200.0, 200.0)
+            self.z_map = z_map
 
         elif name[:3] == 'gb-':
             self.bc_current = None
@@ -88,6 +105,8 @@ class Solenoid():
             # Define this in a simpler way - then we can just multiply by sol_current to get B-field value
             z_list, B_list = np.loadtxt('gb-field-maps/{}_b-field.csv'.format(name), delimiter=',').T
             self.b_field = np.array([z_list, B_list / self.sol_current])
+            self.bc_range = None
+            self.sol_range = (0.0, 500.0)
 
         self.bmax_index = np.argmax(self.getMagneticFieldMap())  # assume this won't change with sol/BC currents
 
