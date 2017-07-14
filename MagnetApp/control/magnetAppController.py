@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 # DJS 2017
 # part of MagtnetApp
+import os
 import VELA_CLARA_Magnet_Control as mag
 import magnetAppGlobals as globals
 from PyQt4 import QtGui, QtCore
@@ -55,10 +56,10 @@ class magnetAppController(object):
         # this map is used a few places, sodefined here
         # I think there is a c++ method to get this, but the documentation is... meh...
         self.Area_ENUM_to_Text ={
-            mag.MACHINE_AREA.VELA_BA1  :'VELA_BA1',
-            mag.MACHINE_AREA.VELA_BA2  :'VELA_BA2',
-            mag.MACHINE_AREA.VELA_INJ  :'VELA_Injector',
-            mag.MACHINE_AREA.CLARA_PH1 :'CLARA_PH1'
+            mag.MACHINE_AREA.VELA_BA1:'VELA_BA1',
+            mag.MACHINE_AREA.VELA_BA2:'VELA_BA2',
+            mag.MACHINE_AREA.VELA_INJ:'VELA_Injector',
+            mag.MACHINE_AREA.CLARA_PH1:'CLARA_PH1'
             # mag.MACHINE_AREA.CLARA_PHASE_1:'CLARA PHASE 1 Magnets',
             }
 #          __                 __             .__
@@ -82,12 +83,12 @@ class magnetAppController(object):
         return ret
     # pressing start, tries to lanuch a magcontroller and build the main view
     def handle_startviewstartbutton(self):
-        if  self.areaAndModeSet():
+        if self.areaAndModeSet():
             # forced update to the startup window showing choices
             self.startView.waitMessageLabel.setText(
                 "Building Main Window...Patience is a virtue")
             self.startView.update()
-            QtGui.QApplication.processEvents();
+            QtGui.QApplication.processEvents()
             # launch requested magnet controller
             self.launchPythonMagnetController()
             # get magnet names, required to build main view
@@ -261,8 +262,8 @@ class magnetAppController(object):
     # the load and save dburt windows can't be closed until this function is called
     def connectCloseEvents(self):
         self.widgetUpdateTimer.stop()
-        self.dburtLoadView.canWindowClose = True
-        self.dburtLoadView.close()
+        #self.dburtLoadView.canWindowClose = True
+        #self.dburtLoadView.close()
         self.dburtSaveView.canWindowClose = True
         self.dburtSaveView.close()
         self.mainView.close()
@@ -294,6 +295,9 @@ class magnetAppController(object):
         return self.ret
 
     def launchPythonMagnetController(self):
+
+        if self.machineMode == mag.MACHINE_MODE.VIRTUAL:
+            os.environ["EPICS_CA_SERVER_PORT"] = "6000"
         self.localMagnetController = \
             self.magInit.getMagnetController( self.machineMode, self.machineArea)
         if self.machineMode is not mag.MACHINE_MODE.OFFLINE:

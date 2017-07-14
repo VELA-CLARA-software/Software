@@ -4,13 +4,10 @@
 # Run this and everything follows
 from PyQt4 import QtGui
 import sys
-import os
 import logging
 import socket
 import magnetAppGlobals as globals
 import magnetAppController
-
-os.environ["EPICS_CA_SERVER_PORT"]="6000"
 
 
 class magnetApp(QtGui.QApplication):
