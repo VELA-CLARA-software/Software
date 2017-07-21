@@ -29,6 +29,12 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>22</height>
+         </size>
+        </property>
         <property name="toolTip">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select the RF/solenoid model to use.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Gun-10&lt;/span&gt;: VELA/CLARA 10 Hz gun&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Linac1&lt;/span&gt;: CLARA Linac 1&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;gb-rf-gun&lt;/span&gt;: Gulliford-Bazarov RF gun example&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;gb-dc-gun&lt;/span&gt;: Gulliford-Bazarov DC gun example&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>

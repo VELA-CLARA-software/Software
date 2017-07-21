@@ -87,7 +87,12 @@ class Solenoid():
             print(z_minmax)
             z_map = np.arange(*z_minmax, step=dz)
             B_map = np.zeros((n_sols, len(z_map)))
-            sol_interp = [scipy.interpolate.interp1d(z_list, B_list, fill_value=0, bounds_error=False) for z_list, B_list in [[z_list_08, B_list_08], [z_list_09, B_list_09]]]
+            # Here, we reverse the order of B_list since the solenoids are installed with the -Z end (in the measured coordinate system)
+            # at the +Z end (in the machine coordinate system). Source: private email from Vjeran Vrankovic to BJAS 12/7/17:
+            # "you can see on the picture the orientation of the magnets while being measured. The front face with the reference holes is at -Z"
+            # The picture is on the first page of the measurement report "WFS Magnetic Measurements.pdf" in the data files folder
+            # We can see that the connections are on the right-hand side - installed on CLARA they are on the left.
+            sol_interp = [scipy.interpolate.interp1d(z_list, B_list[::-1], fill_value=0, bounds_error=False) for z_list, B_list in [[z_list_08, B_list_08], [z_list_09, B_list_09]]]
             for i in range(n_sols):
                 B_map[i] = sol_interp[i](z_map + z_offset[i])# / self.sol_current
             coeffs = np.zeros((len(z_map), 12))
