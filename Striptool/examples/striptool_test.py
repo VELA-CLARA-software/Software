@@ -143,7 +143,7 @@ class striptool_Demo(QMainWindow):
         # self.sp2.setPlotType(FFT=True)
         # self.sp3.setPlotType(FFT=False)
         self.sp.setPlotRate(10)
-        self.sp2.setPlotRate(1)
+        self.sp2.setPlotRate(10)
         self.sp3.setPlotRate(10)
 
         ''' Display the Qt App '''

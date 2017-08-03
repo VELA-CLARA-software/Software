@@ -17,7 +17,7 @@ import loggerWidget as lw
 import logging
 logger = logging.getLogger(__name__)
 
-import VELA_CLARA_MagnetControl as vmag
+import VELA_CLARA_Magnet_Control as vmag
 import VELA_CLARA_BPM_Control as vbpmc
 import  VELA_CLARA_General_Monitor as vgen
 
@@ -197,7 +197,8 @@ class DockSplitter(QtGui.QSplitter):
 
         self.numberScatterPlots = 0
         self.scatterPlots = []
-        self.loadSettings(filename=inputfile)
+        if inputfile != None:
+            self.loadSettings(filename=inputfile)
 
     def loadSettings(self, overwrite=False, filename=None):
         if filename == None:
