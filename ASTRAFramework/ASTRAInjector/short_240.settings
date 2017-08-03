@@ -1,0 +1,32 @@
+global:
+  charge: 0.25
+  SC_2D_Nrad: 30
+  SC_2D_Nlong: 45
+  SC_3D_Nxf: 8
+  SC_3D_Nyf: 8
+  SC_3D_Nzf: 32
+  initial_distribution: ../1k-250pC-76fsrms-1mm_TE09fixN12.ini
+  npart: 1000
+files:
+  test.in.111:
+    gun_field: 70
+    gun_phase: -16
+    linac1_field: 21
+    linac1_phase: 20
+    gun_sol_field: 0.237
+  test.in.126:
+    linac2_field: 25.4558441227157
+    linac2_phase: -15
+    linac3_field: 25.4558441227157
+    linac3_phase: -15
+    4hc_field: 35.638181771802
+    4hc_phase: 187
+    quad_K: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+  test.in.127:
+    quad_K: [1.76571, -0.334896]
+  test.in.128:
+    linac4_field: 25.4558441227157
+    linac4_phase: 0
+    linac5_field: 0.0014142135623731
+    linac5_phase: 0
+    quad_K: [-2.38819, 3.60297, 5., -4., -3.29565, 3.38181, 1.52921, 2.22559, -2.95347, -1.71192, -5.98555, 7.72644, -5.24599]

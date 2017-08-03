@@ -1,0 +1,103 @@
+&NEWRUN
+  Head='trial'
+  RUN=127
+  Loop=F,
+  Lprompt=F
+  Distribution = 'test.in.126.2417.126', Xoff=0.0, Yoff=0.0
+  N_red = 1
+  Lmagnetized=.F
+  EmitS=.T
+  TR_emitS=F
+
+  PhaseS=.T
+  TrackS=.F
+  RefS=.F
+  TcheckS=.F
+  CathodeS=.F
+
+  TRACK_ALL=.T
+  PHASE_SCAN=.F
+  AUTO_PHASE=.T
+  check_ref_part=.F,
+
+  ZSTART=24.165,	ZSTOP=31.0825
+  Screen(1)=24.97
+  Screen(2)=28.89
+
+  Zphase=1
+  Zemit=1050
+  H_max=0.0007
+  H_min=0.0007
+  Qbunch=0.25
+  High_res=.T
+
+
+ /
+
+ &SCAN
+  LScan=.F.
+ /
+ &CHARGE
+  Loop=F
+  LSPCH=True
+  LSPCH3D=True
+
+
+  Max_scale=0.1
+  Max_count=100
+  Lmirror=.F
+  Nxf=$SC_3D_Nxf$
+  Nyf=$SC_3D_Nyf$
+  Nzf=$SC_3D_Nzf$
+
+  Smooth_x=2
+  Smooth_y=2
+  Smooth_z=2
+ /
+
+ &Aperture
+ /
+
+ &FEM
+ /
+&CAVITY
+  Loop=.F,
+  LEFieLD=.T
+
+
+/
+&SOLENOID
+  Loop=F
+  LBfield=F
+
+/
+ &QUADRUPOLE
+ Loop=.F,
+ LQUAD=.T
+  Q_K(1)=$quad_K$, Q_length(1)=0.15,
+  Q_pos(1)=24.54001, Q_smooth(1)=3, Q_bore(1)=0.003
+  Q_K(2)=$quad_K$ , Q_length(2)=0.15,
+  Q_pos(2)=25.29001, Q_smooth(2)=3, Q_bore(2)=0.003
+
+/
+ &DIPOLE
+ Loop=.F,
+ LDipole=.T
+ D_Type(1)='horizontal', D_Gap(1,1)=0.02,
+ D_Gap(2,1)=0.02,
+ D1(1)=(0.0401963,25.865), D3(1)=(0.0497357,26.0657), D4(1)=(-0.0306569,26.0657), D2(1)=(-0.0401963,25.865),
+ D_radius(1)=-2.11559447537663
+ D_Type(2)='horizontal', D_Gap(1,2)=0.02,
+ D_Gap(2,2)=0.02,
+ D1(2)=(0.192666,27.5657), D3(2)=(0.202205,27.7664), D4(2)=(0.121813,27.7664), D2(2)=(0.112273,27.5657),
+ D_radius(2)=2.11559447537663
+ D_Type(3)='horizontal', D_Gap(1,3)=0.02,
+ D_Gap(2,3)=0.02,
+ D1(3)=(0.202205,29.0664), D3(3)=(0.192666,29.267), D4(3)=(0.112273,29.267), D2(3)=(0.121813,29.0664),
+ D_radius(3)=2.11559447537663
+ D_Type(4)='horizontal', D_Gap(1,4)=0.02,
+ D_Gap(2,4)=0.02,
+ D1(4)=(0.0497357,30.767), D3(4)=(0.0401963,30.9677), D4(4)=(-0.0401963,30.9677), D2(4)=(-0.0306569,30.767),
+ D_radius(4)=-2.11559447537663
+
+/
