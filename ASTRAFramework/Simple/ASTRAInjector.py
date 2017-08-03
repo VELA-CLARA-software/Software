@@ -127,7 +127,7 @@ class ASTRAInjector(object):
     def convertToSDDS(self, file='test.in.128.4929.128'):
         os.chdir(self.subdirectory)
         command = self.astra2elegantCommand + [file, file+'.sdds']
-        print command
+        # print command
         comm = subprocess.call(command)
         os.chdir(self.basedirectory)
         return file+'.sdds'
@@ -136,7 +136,7 @@ class ASTRAInjector(object):
         os.chdir(self.subdirectory)
         # command = self.sddsprocessCommand[0]+' '+bunch+' '+outputbunch+' -process=p,average,pavenew -redefine=column,t,"p pavenew - '+str(compressedvalue)+' * t +"'
         command = self.sddsMatchTwissCommand + [bunch, outputbunch,'-zPlane=tStDev='+str(dt)]
-        print command
+        # print command
         comm = subprocess.call(command)
         os.chdir(self.basedirectory)
 
