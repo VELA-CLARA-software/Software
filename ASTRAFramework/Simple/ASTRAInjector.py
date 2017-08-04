@@ -20,9 +20,6 @@ class ASTRAInjector(object):
         super(ASTRAInjector, self).__init__()
         self.lineIterator = 0
         self.astraCommand = ['astra']
-        self.astra2elegantCommand = ['astra2elegant']
-        self.sddsprocessCommand = ['sddsprocess']
-        self.sddsMatchTwissCommand = ['sddsmatchtwiss']
         self.basedirectory = os.getcwd()
         self.subdir = subdir
         self.overwrite = overwrite
@@ -124,22 +121,6 @@ class ASTRAInjector(object):
             for scvar in ['SC_2D_Nrad','SC_2D_Nlong','SC_3D_Nxf','SC_3D_Nyf','SC_3D_Nzf']:
                 self.globalSettings[scvar] = scgrid.gridSizes
 
-    def convertToSDDS(self, file='test.in.128.4929.128'):
-        os.chdir(self.subdirectory)
-        command = self.astra2elegantCommand + [file, file+'.sdds']
-        # print command
-        comm = subprocess.call(command)
-        os.chdir(self.basedirectory)
-        return file+'.sdds'
-
-    def compressOutputBunch(self, bunch='test.in.128.4929.128.sdds', dt=5e-13, outputbunch='compressed.sdds'):
-        os.chdir(self.subdirectory)
-        # command = self.sddsprocessCommand[0]+' '+bunch+' '+outputbunch+' -process=p,average,pavenew -redefine=column,t,"p pavenew - '+str(compressedvalue)+' * t +"'
-        command = self.sddsMatchTwissCommand + [bunch, outputbunch,'-zPlane=tStDev='+str(dt)]
-        # print command
-        comm = subprocess.call(command)
-        os.chdir(self.basedirectory)
-
     def getScreenFiles(self):
         self.screenpositions = {}
         for f, s in self.fileSettings.iteritems():
@@ -156,22 +137,78 @@ class ASTRAInjector(object):
         filename = '_'.join(map(str,[self.runname,self.globalSettings['charge'],self.globalSettings['npart']])) + '.hdf5'
         print filename
         f = h5py.File(filename, "w")
-        inputemitgrp = f.create_group("Input")
+        inputgrp = f.create_group("Input")
+        inputgrp['charge'] = self.globalSettings['charge']
+        inputgrp['npart'] = self.globalSettings['npart']
+        inputgrp['subdirectory'] = self.subdirectory
         xemitgrp = f.create_group("Xemit")
         yemitgrp = f.create_group("Yemit")
         zemitgrp = f.create_group("Zemit")
         screengrp = f.create_group("screens")
         os.chdir(self.subdirectory)
+        inputgrp.create_dataset('initial_distribution',data=numpy.loadtxt(self.globalSettings['initial_distribution']))
         for n, screens in screenpositions.iteritems():
             inputfile = file('test.in.'+n+'.in','r')
             inputfilecontents = inputfile.read()
-            inputemitgrp.create_dataset(n,data=inputfilecontents)
+            inputgrp.create_dataset(n,data=inputfilecontents)
             for emit, grp in {'X': xemitgrp,'Y': yemitgrp,'Z': zemitgrp}.iteritems():
                 emitfile = 'test.in.'+n+'.'+emit+'emit.'+n
-                grp.create_dataset(n,data=numpy.fromfile(emitfile,sep=' '))
+                grp.create_dataset(n,data=numpy.loadtxt(emitfile))
             for s in screens:
                 screenfile = 'test.in.'+n+'.'+s+'.'+n
-                screengrp.create_dataset(s,data=numpy.fromfile(screenfile,sep=' '))
+                screengrp.create_dataset(s,data=numpy.loadtxt(screenfile))
+        os.chdir(self.basedirectory)
+
+class feltools(object):
+
+    def __init__(self, subdir='.'):
+        super(feltools, self).__init__()
+        self.subdirectory = subdir
+        self.basedirectory = os.getcwd()
+        self.astra2elegantCommand = ['astra2elegant']
+        self.sddsprocessCommand = ['sddsprocess']
+        self.sddsMatchTwissCommand = ['sddsmatchtwiss']
+
+    def convertToSDDS(self, inputfile='test.in.128.4929.128', outputfile=None):
+        os.chdir(self.subdirectory)
+        outputfile = outputfile if not outputfile == None else inputfile+'.sdds'
+        command = self.astra2elegantCommand + [inputfile, outputfile]
+        comm = subprocess.call(command)
+        os.chdir(self.basedirectory)
+        return outputfile
+
+    def filterInput(self, inputstr, parameters, **kwargs):
+        # print kwargs
+        # print parameters
+        kwargs = {k.lower():v for k,v in kwargs.items()}
+        if any(p.lower() in kwargs for p in parameters):
+            string = inputstr+'='
+            stringsep = ''
+            for p, s in parameters.iteritems():
+                string = string+stringsep+s+'='+str(kwargs[p.lower()]) if p.lower() in kwargs else string
+                if p in kwargs:
+                    stringsep = ','
+            return string
+        else:
+            return ''
+
+    def sddsMatchTwiss(self, bunch, outputbunch, **kwargs):
+        xstr = self.filterInput('-xPlane',{'betax': 'beta','alphax':'alpha','etax':'etaValue','etaxslope':'etaSlope'},**kwargs)
+        ystr = self.filterInput('-yPlane',{'betay': 'beta','alphay':'alpha','etay':'etaValue','etayslope':'etaSlope'},**kwargs)
+        zstr = self.filterInput('-zPlane',{'deltaStDev': 'deltaStDev','tStDev':'tStDev','correlation':'correlation','chirp':'chirp','betaGamma':'betaGamma'},**kwargs)
+        outputcommand = self.sddsMatchTwissCommand + [bunch, outputbunch]
+        outputcommand = outputcommand + [xstr] if not xstr == '' else outputcommand
+        outputcommand = outputcommand + [ystr] if not ystr == '' else outputcommand
+        outputcommand = outputcommand + [zstr] if not zstr == '' else outputcommand
+        outputcommand += ['-saveMatrices='+kwargs['saveMatrices']] if 'saveMatrices' in kwargs else []
+        outputcommand += ['-loadMatrices='+kwargs['loadMatrices']] if 'loadMatrices' in kwargs else []
+        outputcommand += ['-nowarnings ='+kwargs['nowarnings']] if 'nowarnings' in kwargs else []
+        os.chdir(self.subdirectory)
+        comm = subprocess.call(outputcommand)
+        os.chdir(self.basedirectory)
+
+    def compressOutputBunch(self, bunch='test.in.128.4929.128.sdds', dt=5e-13, outputbunch='compressed.sdds'):
+        self.sddsMatchTwiss(bunch,outputbunch,tStDev=dt)
 
 class ASTRAGenerator(object):
 
