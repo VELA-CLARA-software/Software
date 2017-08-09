@@ -22,18 +22,20 @@ class Reader:
         self.name = name
         self.data = open(name + ".txt", 'r' )       # store text in a "data" attribute
         self.Magnets_Used = self.search("Magnets_Used")
-        self.Machine_Type = self.search("Machine_Type")
-        self.Number_Magnets = self.search("Number_Magnets")
-        self.Num_Loops = self.search("Number_Loops")
+        self.Machine_Type = self.search("Machine_Type")[0] # [0] as technically gives a list with 1 value
+        self.Number_Magnets = self.search("Number_Magnets")[0]
+        self.Num_Loops = self.search("Number_Loops")[0]
         self.BPM_Names = self.search("BPM_Names")
         self.CAM_Names = self.search("CAM_Names")
-        self.Start_Element = self.search("Start_Element")
-        self.Stop_Element = self.search("Stop_Element")
-        self.LLRF_Amplitude = self.search("LLRF_Amplitude")
-        self.LLRF_Phase = self.search("LLRF_Phase")
-        self.LASER_HPos = self.search("LASER_HPos")
-        self.LASER_VPos = self.search("LASER_VPos")
-        self.LASER_Intensity = self.search("LASER_Intensity")
+        self.Start_Element = self.search("Start_Element")[0]
+        self.Stop_Element = self.search("Stop_Element")[0]
+        self.Gun_Type = self.search("Gun_Type")[0]
+        self.Gun_TypeKeywords = ["VELA, CLARA, L01"]
+        self.LLRF_Amplitude = self.search("LLRF_Amplitude")[0]
+        self.LLRF_Phase = self.search("LLRF_Phase")[0]
+        self.LASER_HPos = self.search("LASER_HPos")[0]
+        self.LASER_VPos = self.search("LASER_VPos")[0]
+        self.LASER_Intensity = self.search("LASER_Intensity")[0]
         self.Magdict = {}
         self.LLRFdict = {}
         self.Laserdict = {}
@@ -54,19 +56,13 @@ class Reader:
         self.BPMKeywords = ["BPM01", "BPM02", "BPM03", "BPM04"]
         self.CAMKeywords = ["YAG01", "YAG02", "YAG03", "YAG04"]
 
-
-    def closefile(self):    #shortcut to closing the file if necessary
-        self.data.close()
-        print self.name + " has been closed."
-
     def isPhysical(self):
-        if self.Machine_Type[0] == "V": # use virtual machine
+        if self.Machine_Type == "V": # use virtual machine
             return False
-        elif self.Machine_Type[0] == "P": # use Physical machine
+        elif self.Machine_Type == "P": # use Physical machine
             return True
         else: print "Cannot determine from file if Physical or Virtual!"
         quit()
-
 
     def filedict(self): # extract required magnet currents from txt file
         fdict={}
@@ -87,7 +83,6 @@ class Reader:
                             info.append(newwords[i])
                     fdict[newwords[0]] = info
         return fdict
-
 
     def search(self, searchphrase):
         for i,j in self.filedict().iteritems():
@@ -132,21 +127,14 @@ class Reader:
         return dict
         # Line is extracted (or block_of_lines.append(line), etc.)
 
-    def NumMCs(self):
-        p=0
-        for i, j in self.filedict().iteritems():
-            if 'MC' in i: p = p + 1
-        return p
-
-    # THIS NEEDS TO BE UPDATED FOR THE NEW FORMAT!!!
     def CompareLoops(self):
-        if int(self.Num_Loops[0]) == self.LoopsGiven():
+        if int(self.Num_Loops) == self.LoopsGiven():
             print "Number of loops stated and loops given are consistent!" # do nothing
         else: print "Number of loops stated and loops given are not consistent!"; quit()
          # dont allow the code to continue!
 
     def CompareMagNum(self):
-        if int(self.search('Number_Magnets')[0]) != len(self.search('Magnets_Used')):
+        if int(self.Number_Magnets) != len(self.Magnets_Used):
             print "Number of stated magnets and named magnets given do not match!"
             quit()
         print "Number of magnets and named magnets matches!"
@@ -174,7 +162,7 @@ class Reader:
 
     def MasterDict(self):
         Master ={}
-        for i in range(1, int(self.Num_Loops[0]) + 1):
+        for i in range(1, int(self.Num_Loops) + 1):
             Master["Loop_" + str(i)] = self.LoopMasterDict(i)
         return Master
 
@@ -184,7 +172,7 @@ class Reader:
 
     def CheckLoopLengths(self):
         M = []
-        for i in range(1, int(self.Num_Loops[0]) + 1):
+        for i in range(1, int(self.Num_Loops) + 1):
             M.append(len(self.LoopData(i)))
         seen = set()  # creates empty set
         for number in M:
@@ -194,4 +182,3 @@ class Reader:
         if len(seen) != 1:
             print "One or more loops is missing information! Check txt file!"
             quit()
-

@@ -40,7 +40,6 @@ class MasterController():
     # Need to check if the given file names  match those that exist in the controller!
     def CompareMags(self):
         # create list of magnet names that already exist in the system
-
         sysMags_1 = magnets_VELA.getMagnetNames()
         sysMags_2 = magnets_CLARA.getMagnetNames()
         for x in range(0, len(self.filedata.Magnets_Used)):
@@ -52,28 +51,13 @@ class MasterController():
             if B == 0: print "Requested Magnet does not exist!"; return False
         return True # if the code reaches here then all magnets have been verified
 
-    # NEED TO FIX THE LLRF AND LASERS SO THAT THEY CAN BE READ LOOP BY LOOP LIKE THE MAGNETS
-
-    def SetupLaserOff(self, k):  # for dark current
-        for i,j in self.filedata.LoopData(k).iteritems():
-            if "LASER_HPos" in i:
-                las_VELA.setHpos(float(j[0]))
-            elif "LASER_VPos" in i:
-                las_VELA.setVpos(float(j[0]))
-            elif "LASER_Intensity" in i:
-                las_VELA.setIntensity(0)
-        print "Laser (dark) has been successfully set up!"
-
-    def Setup(self, k): # This function will need to be updated as more controllers are added!
+    def Setup(self, k, u): # This function will need to be updated as more controllers are added!
         Z = self.filedata.MasterDict()["Loop_" + str(k)]
         for i in self.filedata.VariableTypeList: # VariableTypeList = ["MAGNETS, LLRF, LASER"]
-            # print i
             P = Z[i] # get for example FRC.MasterDict()["Loop_1"]["MAGNETS"]
             time.sleep(1)
             if i == self.filedata.Magnets:
                 for i,j in P.iteritems():
-                    # print i, j
-                    # setup magnets
                     magnets_VELA.switchONpsu(str(i))
                     magnets_VELA.setSI(str(i), float(j[0]))
                     # print "MAGNETS SUCESSFULLY SETUP"
@@ -92,10 +76,16 @@ class MasterController():
                     elif i == self.filedata.LaserKeywords[1]:
                         las_VELA.setVpos(float(j[0]))
                     elif i == self.filedata.LaserKeywords[2]:
-                        las_VELA.setIntensity(float(j[0]))
+                        if u == 1: # laser on
+                            las_VELA.setIntensity(float(j[0]))
+                        elif u == 0: # laser off
+                            las_VELA.setIntensity(0) # Use when the laser is off
+                            print "Laser (dark) has been successfully set up!"
                 # print "LASER SUCESSFULLY SETUP"
             else: print "Data exists in MasterDict that doesn't exist in VariableTypeList!"
             time.sleep(2) # to give the sytem time to set the variables before being used any further
+
+    # CAM and BPM read functions will need to be changed when Controllers are in system instead of reading PVs
 
     def ReadBPM(self):
         for x in range(0, len(self.filedata.BPM_Names)):
@@ -142,6 +132,8 @@ class MasterController():
 
         return [CAMXList, CAMYList, CAMSXList, CAMSYList]
 
+
+# This needs to be done in the MasterController py file as system controllers need to be accessed
 F = MasterController('Instructions2')
 if not F.filedata.isPhysical():
     # set up the environment variables and controllers to the Virtual Machine
@@ -160,22 +152,35 @@ if not F.filedata.isPhysical():
     magnets_CLARA = magInit.virtual_CLARA_PH1_Magnet_Controller()
     bpm_VELA = bpmInit.virtual_VELA_INJ_BPM_Controller()
     las_VELA = lasInit.virtual_PILaser_Controller()
+
+    # THIS BLOCK IS COMMENTED OUT AS CONFUSION ABOUT GUN NAME CONVENTION
+    #  BUT MAY BE USED WHE UPDATED IN THE FUTURE
+    # # Can either use CLARA, L01 or VELA gun
+    # if F.filedata.Gun_Type == F.filedata.Gun_TypeKeywords[0]: #   self.Gun_TypeKeywords = ["VELA, CLARA, L01"]
+    #     gun = llrfInit.virtual_VELA_HRRG_LLRF_Controller()
+    # elif F.filedata.Gun_Type == F.filedata.Gun_TypeKeywords[1]:
+    #     gun = llrfInit.virtual_CLARA_LRRG_LLRF_Controller()
+    # elif F.filedata.Gun_Type == F.filedata.Gun_TypeKeywords[2]:
+    #     gun = llrfInit.virtual_L01_LLRF_Controller()
+
+    # USE THIS CONTROLLER FOR THE GUN FOR NOW!
     gun = llrfInit.virtual_CLARA_LRRG_LLRF_Controller()
-
-    # Need if statement to choose the VELA or the Clara gun
-    # if F.filedata.search("Gun_Type")[0] == "VELA":
-    #      # using this because it have the same PVs
-
 
 elif F.filedata.isPhysical():
     print "Physical"
     print "USING PHYSICAL MACHINE!"
-    # set up the environment variables and controllers to the Physical Machine
+    # set up the environment variables and controllers to the Physical Machine when known!
+    # os.environ["EPICS_CA_AUTO_ADDR_LIST"] =
+    # os.environ["EPICS_CA_ADDR_LIST"] =
+    # os.environ["EPICS_CA_MAX_ARRAY_BYTES"] =
+    # os.environ["EPICS_CA_SERVER_PORT"] =
 
     magInit = mag.init()
     llrfInit = llrf.init()
     bpmInit = bpm.init()
     lasInit = las.init()
+
+    # GUN CONTROLLER ASSIGNMENT WILL NEED UPDATING IN THE FUTURE!
 
     magnets_VELA = magInit.physical_VELA_INJ_Magnet_Controller()
     gun = llrfInit.physical_CLARA_LRRG_LLRF_Controller()  # using this because it have the same PVs

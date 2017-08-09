@@ -20,7 +20,7 @@
 # LASER_VPos: J
 # LASER_Intensity: K
 #
-# Please make sure that values for the same variables are given in ech loop, even if they dont change!
+# Please make sure that values for the same variables are given in each loop, even if they dont change!
 #
 #
 
@@ -44,6 +44,8 @@ CAM_Names: YAG01, YAG02, YAG03, YAG04
 
 Start_Element: V1-GUN
 Stop_Element: SP-YAG04
+
+# Use VELA, CLARA or L01 gun
 Gun_Type: VELA
 
 VARYING VALUES:
