@@ -18,18 +18,30 @@ T.filedata.CheckLoopLengths()
 AllBPMdata=[] # this will store array of arrays with all the BPM data from each loop
 AllCAMdata=[] # this will store array of arrays with all the CAM data from each loop
 
-ASTRA = onlineModel.ASTRA(V_MAG_Ctrl=MC.magnets_VELA,
-						C_S01_MAG_Ctrl=None,
-						C_S02_MAG_Ctrl=None,
-						C2V_MAG_Ctrl=MC.magnets_CLARA,
-						V_RF_Ctrl=MC.gun,
-						C_RF_Ctrl=None,
-						L01_RF_Ctrl=None,
-						messages=True)
+if T.filedata.Gun_Type == T.filedata.Gun_TypeKeywords[0]: # using VELA line
+	ASTRA = onlineModel.ASTRA(V_MAG_Ctrl=MC.magnets_VELA,
+							C_S01_MAG_Ctrl=None,
+							C_S02_MAG_Ctrl=None,
+							C2V_MAG_Ctrl=MC.magnets_CLARA,
+							V_RF_Ctrl=MC.gun,
+							C_RF_Ctrl=None,
+							L01_RF_Ctrl=None,
+							messages=True)
+elif T.filedata.Gun_Type == T.filedata.Gun_TypeKeywords[1]: # Using CLARA line
+	ASTRA = onlineModel.ASTRA(V_MAG_Ctrl=MC.magnets_VELA,
+							C_S01_MAG_Ctrl=MC.magnets_CLARA,	# CS01/2 & Clara Mags use same controller
+							C_S02_MAG_Ctrl=MC.magnets_CLARA,
+							C2V_MAG_Ctrl=MC.magnets_CLARA,
+							V_RF_Ctrl=None,
+							C_RF_Ctrl=MC.gun, # C and L01 use same controller
+							L01_RF_Ctrl=MC.gun,
+							messages=True)
+
 
 # set the start and stop elements
 Start_Element = T.filedata.Start_Element
 Stop_Element = T.filedata.Stop_Element
+print Start_Element
 Bdat = open("BPMData.txt", 'w+') # to write data out to for later viewing
 Cdat = open("CAMData.txt", 'w+')
 
@@ -56,6 +68,7 @@ for x in range(1, 2 * int(T.filedata.Num_Loops)+1):  # Everything in this loop s
 		T.Setup(y,1) # This will set up everything from the information in the dictionary (1=laser on)
 
 		ASTRA.startElement = Start_Element	# Takes start and stop elements for the sim from the txt file
+		print "ASTRA.startElement = " + str(ASTRA.startElement)
 		ASTRA.stopElement = Stop_Element
 		ASTRA.initDistrib = 'temp-start.ini'
 		ASTRA.initCharge = 0.25 #The units are in nC (ASTRA) and in the online Model 0.25nC is the default setting

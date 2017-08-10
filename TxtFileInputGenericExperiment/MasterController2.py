@@ -51,6 +51,7 @@ class MasterController():
             if B == 0: print "Requested Magnet does not exist!"; return False
         return True # if the code reaches here then all magnets have been verified
 
+    # for this function u=0 is with laser off, u=1 for laser on
     def Setup(self, k, u): # This function will need to be updated as more controllers are added!
         Z = self.filedata.MasterDict()["Loop_" + str(k)]
         for i in self.filedata.VariableTypeList: # VariableTypeList = ["MAGNETS, LLRF, LASER"]
@@ -155,16 +156,20 @@ if not F.filedata.isPhysical():
 
     # THIS BLOCK IS COMMENTED OUT AS CONFUSION ABOUT GUN NAME CONVENTION
     #  BUT MAY BE USED WHE UPDATED IN THE FUTURE
-    # # Can either use CLARA, L01 or VELA gun
-    # if F.filedata.Gun_Type == F.filedata.Gun_TypeKeywords[0]: #   self.Gun_TypeKeywords = ["VELA, CLARA, L01"]
-    #     gun = llrfInit.virtual_VELA_HRRG_LLRF_Controller()
-    # elif F.filedata.Gun_Type == F.filedata.Gun_TypeKeywords[1]:
-    #     gun = llrfInit.virtual_CLARA_LRRG_LLRF_Controller()
-    # elif F.filedata.Gun_Type == F.filedata.Gun_TypeKeywords[2]:
-    #     gun = llrfInit.virtual_L01_LLRF_Controller()
+    # Can either use CLARA, L01 or VELA gun
+    if F.filedata.Gun_Type == F.filedata.Gun_TypeKeywords[0]: #   self.Gun_TypeKeywords = ["VELA, CLARA, L01"]
+        # gun = llrfInit.virtual_VELA_LRRG_LLRF_Controller()
+        gun = llrfInit.virtual_CLARA_LRRG_LLRF_Controller() # this has same PVs so can use this controller
+        print "Using VELA Gun"
+    elif F.filedata.Gun_Type == F.filedata.Gun_TypeKeywords[1]:
+        gun = llrfInit.virtual_CLARA_LRRG_LLRF_Controller()
+        print "Using CLARA Gun"
+    elif F.filedata.Gun_Type == F.filedata.Gun_TypeKeywords[2]:
+        gun = llrfInit.virtual_L01_LLRF_Controller()
+        print "Using L01 Gun"
 
     # USE THIS CONTROLLER FOR THE GUN FOR NOW!
-    gun = llrfInit.virtual_CLARA_LRRG_LLRF_Controller()
+    # gun = llrfInit.virtual_CLARA_LRRG_LLRF_Controller()
 
 elif F.filedata.isPhysical():
     print "Physical"
@@ -187,3 +192,10 @@ elif F.filedata.isPhysical():
     magnets_CLARA = magInit.physical_CLARA_PH1_Magnet_Controller()
     bpm_VELA = bpmInit.physical_VELA_INJ_BPM_Controller()
     las_VELA = lasInit.physical_PILaser_Controller()
+
+
+# magInit = mag.init()
+# magnets_CLARA = magInit.virtual_CLARA_PH1_Magnet_Controller()
+#
+# for i in magnets_CLARA.getMagnetNames():
+#     print i

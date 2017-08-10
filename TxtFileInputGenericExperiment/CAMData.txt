@@ -1,22 +1,22 @@
 Loop 1
 CAM01
-X = 7.60349e-09 Y = 7.856146e-09 SigmaX = 0.000437507442574 SigmaY = 0.000437509106017
+X = 0.0 Y = 0.0 SigmaX = 0.0 SigmaY = 0.0
 
 CAM02
-X = 3.88972e-08 Y = 3.98315e-08 SigmaX = 0.00202327714001 SigmaY = 0.00202328718783
+X = 0.0 Y = 0.0 SigmaX = 0.0 SigmaY = 0.0
 
 CAM03
-X = 6.94914e-08 Y = 8.77501e-08 SigmaX = 0.00350609273279 SigmaY = 0.00440418634882
+X = 0.0 Y = 0.0 SigmaX = 0.0 SigmaY = 0.0
 
 CAM04
-X = 8.98255e-08 Y = 1.505439e-07 SigmaX = 0.00455215568368 SigmaY = 0.00745842656878
+X = 0.0 Y = 0.0 SigmaX = 0.0 SigmaY = 0.0
 
 Loop 2
 CAM01
-X = 0.00176814492 Y = 0.00176814507 SigmaX = 0.000446367574044 SigmaY = 0.000446369572483
+X = 0.0 Y = 0.0 SigmaX = 0.0 SigmaY = 0.0
 
 CAM02
-X = 0.0081094183 Y = 0.0081094327 SigmaX = 0.00205700609892 SigmaY = 0.00205703411528
+X = 0.0 Y = 0.0 SigmaX = 0.0 SigmaY = 0.0
 
 CAM03
 X = 0.0 Y = 0.0 SigmaX = 0.0 SigmaY = 0.0
@@ -26,10 +26,10 @@ X = 0.0 Y = 0.0 SigmaX = 0.0 SigmaY = 0.0
 
 Loop 3
 CAM01
-X = 7.23876e-09 Y = 7.57691e-09 SigmaX = 0.000448913148506 SigmaY = 0.000448913398096
+X = 0.0 Y = 0.0 SigmaX = 0.0 SigmaY = 0.0
 
 CAM02
-X = 3.4853e-08 Y = 3.65672e-08 SigmaX = 0.002064911906 SigmaY = 0.00206491728027
+X = 0.0 Y = 0.0 SigmaX = 0.0 SigmaY = 0.0
 
 CAM03
 X = 0.0 Y = 0.0 SigmaX = 0.0 SigmaY = 0.0
@@ -39,14 +39,27 @@ X = 0.0 Y = 0.0 SigmaX = 0.0 SigmaY = 0.0
 
 Loop 4
 CAM01
-X = 7.23876e-09 Y = 7.57691e-09 SigmaX = 0.000448913148506 SigmaY = 0.000448913398096
+X = 0.0 Y = 0.0 SigmaX = 0.0 SigmaY = 0.0
 
 CAM02
-X = 3.4853e-08 Y = 3.65672e-08 SigmaX = 0.002064911906 SigmaY = 0.00206491728027
+X = 0.0 Y = 0.0 SigmaX = 0.0 SigmaY = 0.0
 
 CAM03
-X = 6.26109e-08 Y = 7.74954e-08 SigmaX = 0.00369100357852 SigmaY = 0.0043659245662
+X = 0.0 Y = 0.0 SigmaX = 0.0 SigmaY = 0.0
 
 CAM04
-X = 8.76039e-08 Y = 1.29618e-07 SigmaX = 0.00500873648859 SigmaY = 0.00719248401498
+X = 0.0 Y = 0.0 SigmaX = 0.0 SigmaY = 0.0
+
+Loop 5
+CAM01
+X = 0.0 Y = 0.0 SigmaX = 0.0 SigmaY = 0.0
+
+CAM02
+X = 0.0 Y = 0.0 SigmaX = 0.0 SigmaY = 0.0
+
+CAM03
+X = 0.0 Y = 0.0 SigmaX = 0.0 SigmaY = 0.0
+
+CAM04
+X = 0.0 Y = 0.0 SigmaX = 0.0 SigmaY = 0.0
 

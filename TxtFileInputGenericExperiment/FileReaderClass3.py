@@ -30,7 +30,7 @@ class Reader:
         self.Start_Element = self.search("Start_Element")[0]
         self.Stop_Element = self.search("Stop_Element")[0]
         self.Gun_Type = self.search("Gun_Type")[0]
-        self.Gun_TypeKeywords = ["VELA, CLARA, L01"]
+        self.Gun_TypeKeywords = ["VELA", "CLARA", "L01"]
         self.LLRF_Amplitude = self.search("LLRF_Amplitude")[0]
         self.LLRF_Phase = self.search("LLRF_Phase")[0]
         self.LASER_HPos = self.search("LASER_HPos")[0]
@@ -92,7 +92,7 @@ class Reader:
 
     def LoopsGiven(self):# Counts the number of Loops actually given in the txt file
         p = 0
-        for i, j in self.filedict().iteritems():
+        for i, j in self.filedict().iteritems(): #Dictionary gives number of Distinct loops in txt file
             if "Loop_" in i:
                 p = p + 1
         return p
@@ -130,7 +130,7 @@ class Reader:
     def CompareLoops(self):
         if int(self.Num_Loops) == self.LoopsGiven():
             print "Number of loops stated and loops given are consistent!" # do nothing
-        else: print "Number of loops stated and loops given are not consistent!"; quit()
+        else: print "Number of loops stated and loops given are not consistent or Loop number repeated!"; quit()
          # dont allow the code to continue!
 
     def CompareMagNum(self):
@@ -182,3 +182,5 @@ class Reader:
         if len(seen) != 1:
             print "One or more loops is missing information! Check txt file!"
             quit()
+T = Reader("Instructions2")
+print T.Gun_TypeKeywords

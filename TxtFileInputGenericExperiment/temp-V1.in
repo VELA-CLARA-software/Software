@@ -6,8 +6,8 @@
   Loop=F
   Lprompt=F
   Distribution ='/home/vmsim/Desktop/V2/ASTRA/temp-start.ini',
-  Xoff=0.0
-  Yoff=0.0
+  Xoff=1.0
+  Yoff=1.0
   Lmagnetized=.F
   EmitS=.T
   TR_emitS=F
@@ -81,7 +81,7 @@ LEFieLD=T
 !V1-GUN
 C_pos(1)=0.0
 FILE_EFieLD(1)='/home/vmsim/Desktop/V2/ASTRA/Field_Maps/bas_gun.txt'
-MaxE(1)=70.0
+MaxE(1)=50.0
 Phi(1)=0.0
 Nue(1)=2.9974431
 C_smooth(1)=10
@@ -102,19 +102,19 @@ Q_smooth(1)=3.0
 !V1-QUAD02
 Q_pos(2)=1.495
 Q_length(2)=0.1
-Q_grad(2)=0.00793661991808
+Q_grad(2)=1.6704237711
 Q_bore(2)=0.01
 Q_smooth(2)=3.0
 !V1-QUAD03
 Q_pos(3)=1.705
 Q_length(3)=0.1
-Q_grad(3)=0.00906788054469
+Q_grad(3)=2.50281992554
 Q_bore(3)=0.01
 Q_smooth(3)=3.0
 !V1-QUAD04
 Q_pos(4)=1.915
 Q_length(4)=0.1
-Q_grad(4)=0.00928865454431
+Q_grad(4)=4.18266647965
 Q_bore(4)=0.01
 Q_smooth(4)=3.0
 /
@@ -122,13 +122,4 @@ Q_smooth(4)=3.0
  &DIPOLE
 Loop=.F,
 LDipole=.T
-!INJ-DIP01
-D_Type(1)='horizontal'
-D_Gap(1,1)=0.02,
-D_Gap(2,1)=0.02,
-D1(1)=(0.0800007,3.83958)
-D2(1)=(-0.0800007,3.83958)
-D3(1)=(-0.0926015,4.25628)
-D4(1)=(-0.20574,4.14314)
-D_strength(1)=-0.0228420385366
 /
