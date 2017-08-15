@@ -11,6 +11,8 @@ import MasterController2 as MC
 import onlineModel
 
 T = MC.MasterController('Instructions2')
+# SetEnvironment function isnt working at the moment!
+# T.SetEnvironment() # sets to either Physical or Virtual Machine based on txt file
 # Run checks here before starting up the online model
 T.filedata.CompareLoops() # checks to see if the data given in the txt file is consistent!
 T.filedata.CompareMagNum()
@@ -19,6 +21,7 @@ AllBPMdata=[] # this will store array of arrays with all the BPM data from each 
 AllCAMdata=[] # this will store array of arrays with all the CAM data from each loop
 
 if T.filedata.Gun_Type == T.filedata.Gun_TypeKeywords[0]: # using VELA line
+	print "Using VELA LINE"
 	ASTRA = onlineModel.ASTRA(V_MAG_Ctrl=MC.magnets_VELA,
 							C_S01_MAG_Ctrl=None,
 							C_S02_MAG_Ctrl=None,
@@ -28,6 +31,7 @@ if T.filedata.Gun_Type == T.filedata.Gun_TypeKeywords[0]: # using VELA line
 							L01_RF_Ctrl=None,
 							messages=True)
 elif T.filedata.Gun_Type == T.filedata.Gun_TypeKeywords[1]: # Using CLARA line
+	print "Using CLARA LINE"
 	ASTRA = onlineModel.ASTRA(V_MAG_Ctrl=MC.magnets_VELA,
 							C_S01_MAG_Ctrl=MC.magnets_CLARA,	# CS01/2 & Clara Mags use same controller
 							C_S02_MAG_Ctrl=MC.magnets_CLARA,
@@ -59,13 +63,24 @@ for x in range(1, 2 * int(T.filedata.Num_Loops)+1):  # Everything in this loop s
 
 	if (x % 2 == 0): # if the loop number is even, record data with no RF? Measure "dark current" in this way
 		print "Dark current run of Loop Number :" + str(y)
-		T.Setup(y,0) # sets the laser intensity to 0 to get background information
+		# T.Setup(y,0) # sets the laser intensity to 0 to get background information
 		# do things
 	else:
 
 		print "LOOP NUMBER: " + str(y)
 
-		T.Setup(y,1) # This will set up everything from the information in the dictionary (1=laser on)
+		if T.filedata.Gun_Type == T.filedata.Gun_TypeKeywords[0]:  # using VELA line
+			T.SetupVELA(y,1) # This will set up everything from the information in the dictionary (1=laser on)
+
+			for i in T.filedata.Magnets_Used:	#checking
+				print str(i) + " = " + str(MC.magnets_VELA.getSI(i))
+
+		elif T.filedata.Gun_Type == T.filedata.Gun_TypeKeywords[1]: # using CLARA line
+			T.SetupCLARA(y, 1)
+			print "Here1"
+			for i in T.filedata.Magnets_Used:	#checking
+				print str(i) + " = " + str(MC.magnets_CLARA.getSI(i))
+			print "Here2"
 
 		ASTRA.startElement = Start_Element	# Takes start and stop elements for the sim from the txt file
 		print "ASTRA.startElement = " + str(ASTRA.startElement)

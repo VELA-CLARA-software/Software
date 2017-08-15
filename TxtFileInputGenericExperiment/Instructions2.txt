@@ -22,7 +22,8 @@
 #
 # Feel free to add whatevery magnets you'd like to use
 #
-# Please make sure that values for the same variables are # given in each loop, even if they dont change!
+# Please make sure that values for the same variables are
+# given in each loop, even if they dont change!
 #
 #
 
@@ -32,11 +33,13 @@ PERMANENT VALUES:
 
 # For Virtual Machine put V, for Physical Machine put P
 Machine_Type: V
-Number_Magnets: 7
+Number_Magnets: 6
 Number_Loops: 5
 
 # Here put the magnets that you want to use
-Magnets_Used: QUAD01, QUAD02, QUAD03, QUAD04, QUAD05, DIP01, DIP02
+# Magnets_Used: S02-QUAD1, S02-QUAD2, S02-QUAD3, S02-QUAD4, S02-QUAD5, DIP02
+
+Magnets_Used: QUAD01, QUAD02, QUAD03, QUAD04, QUAD05, DIP02
 
 # Here put the BPMs that you want to use
 BPM_Names: BPM01, BPM02, BPM03, BPM04
@@ -46,14 +49,12 @@ BPM_Names: BPM01, BPM02, BPM03, BPM04
 
 CAM_Names: YAG01, YAG02, YAG03, YAG04
 
-# Start_Element: V1-GUN
-# Stop_Element: SP-YAG04
-
-Start_Element: C1-GUN
+Start_Element: V1-GUN
 Stop_Element: SP-YAG04
 
 # Use VELA, CLARA or L01 gun (not implemented at the moment)
-Gun_Type: CLARA
+Gun_Type: VELA
+BPM_Type: VELA
 
 VARYING VALUES:
 
@@ -64,10 +65,9 @@ QUAD02: 0
 QUAD03: 0
 QUAD04: 0
 QUAD05: 0
-DIP01: 0
 DIP02: 0
 
-LLRF_Amplitude: 50 (MV/m)
+LLRF_Amplitude: 65 (MV/m)
 LLRF_Phase: 0 (degrees)
 
 LASER_HPos: 0
@@ -76,19 +76,18 @@ LASER_Intensity: 0
 
 Loop_2
 
-QUAD01: 2
-QUAD02: 1
-QUAD03: 3
-QUAD04: 4
-QUAD05: 4
-DIP01: -10
-DIP02: 0
+QUAD01: 0
+QUAD02: 0
+QUAD03: 0
+QUAD04: 0
+QUAD05: 0
+DIP02: -10
 
 LLRF_Amplitude: 65 (MV/m)
 LLRF_Phase: 0 (degrees)
 
-LASER_HPos: 1
-LASER_VPos: 1
+LASER_HPos: 0
+LASER_VPos: 0
 LASER_Intensity: 0
 
 Loop_3
@@ -98,8 +97,7 @@ QUAD02: 1
 QUAD03: 3
 QUAD04: 4
 QUAD05: 4
-DIP01: -20
-DIP02: 0
+DIP02: -5
 
 LLRF_Amplitude: 70 (MV/m)
 LLRF_Phase: 0 (degrees)
@@ -116,7 +114,6 @@ QUAD02: 0
 QUAD03: 0
 QUAD04: 0
 QUAD05: 4
-DIP01: -30
 DIP02: 0
 
 LLRF_Amplitude: 70 (MV/m)
@@ -133,8 +130,7 @@ QUAD02: 2
 QUAD03: 3
 QUAD04: 5
 QUAD05: 4
-DIP01: -40
-DIP02: 0
+DIP02: -11
 
 LLRF_Amplitude: 50 (MV/m)
 LLRF_Phase: 0 (degrees)

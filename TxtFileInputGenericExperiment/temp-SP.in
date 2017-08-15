@@ -18,7 +18,7 @@
   PHASE_SCAN=.F
   AUTO_PHASE=.T
   check_ref_part=.F
-  ZSTART=-0.64
+  ZSTART=-0.38845
   ZSTOP=1.8783
   Zphase=1
   Zemit=1050
@@ -71,7 +71,7 @@ LQUAD=.T,
 !SP-QUAD05
 Q_pos(1)=0.4213
 Q_length(1)=0.1
-Q_grad(1)=3.34306542403
+Q_grad(1)=0.00834182413957
 Q_bore(1)=0.01
 Q_smooth(1)=3.0
 !SP-QUAD06

@@ -30,6 +30,8 @@ class Reader:
         self.Start_Element = self.search("Start_Element")[0]
         self.Stop_Element = self.search("Stop_Element")[0]
         self.Gun_Type = self.search("Gun_Type")[0]
+        self.BPM_Type = self.search("BPM_Type")[0]
+        self.BPM_TypeKeywords = ["VELA", "CLARA"]
         self.Gun_TypeKeywords = ["VELA", "CLARA", "L01"]
         self.LLRF_Amplitude = self.search("LLRF_Amplitude")[0]
         self.LLRF_Phase = self.search("LLRF_Phase")[0]
@@ -182,5 +184,5 @@ class Reader:
         if len(seen) != 1:
             print "One or more loops is missing information! Check txt file!"
             quit()
-T = Reader("Instructions2")
-print T.Gun_TypeKeywords
+# T = Reader("Instructions2")
+# print T.Gun_TypeKeywords
