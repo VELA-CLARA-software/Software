@@ -1,0 +1,147 @@
+# Comments go in here!
+# more comments!
+# woo!
+
+# INSTRUCTIONS:
+# Add loops in (prerferably in order!) by copy and pasting # an existing loop and adding it on the end, e.g.
+# Loop_X
+#
+# QUAD01: A
+# QUAD02: B
+# QUAD03: C
+# QUAD04: D
+# QUAD05: E
+# DIP02: F
+#
+# LLRF_Amplitude: G (MV/m)
+# LLRF_Phase: H (degrees)
+#
+# LASER_HPos: I
+# LASER_VPos: J
+# LASER_Intensity: K
+#
+# Feel free to add whatevery magnets you'd like to use
+#
+# Please make sure that values for the same variables are
+# given in each loop, even if they dont change!
+#
+#
+
+# USER INPUT:
+
+PERMANENT VALUES:
+
+# For Virtual Machine put V, for Physical Machine put P
+Machine_Type: V
+Number_Magnets: 6
+Number_Loops: 5
+
+# Here put the magnets that you want to use
+# Magnets_Used: S02-QUAD1, S02-QUAD2, S02-QUAD3, S02-QUAD4, S02-QUAD5, DIP02
+
+Magnets_Used: QUAD01, QUAD02, QUAD03, QUAD04, QUAD05, DIP02
+
+# Here put the BPMs that you want to use
+BPM_Names: BPM01, BPM02, BPM03, BPM04
+
+# Here put the CAMs that you want to use
+# CONVENTION: YAG-01 HAS CAMERA CAM-02
+
+CAM_Names: YAG01, YAG02, YAG03, YAG04
+
+Start_Element: V1-GUN
+Stop_Element: SP-YAG04
+
+# Use VELA, CLARA or L01 gun (not implemented at the moment)
+Gun_Type: VELA
+BPM_Type: VELA
+
+VARYING VALUES:
+
+Loop_1
+
+QUAD01: 0
+QUAD02: 0
+QUAD03: 0
+QUAD04: 0
+QUAD05: 0
+DIP02: 0
+
+LLRF_Amplitude: 65 (MV/m)
+LLRF_Phase: 0 (degrees)
+
+LASER_HPos: 0
+LASER_VPos: 0
+LASER_Intensity: 0
+
+Loop_2
+
+QUAD01: 0
+QUAD02: 0
+QUAD03: 0
+QUAD04: 0
+QUAD05: 0
+DIP02: -10
+
+LLRF_Amplitude: 65 (MV/m)
+LLRF_Phase: 0 (degrees)
+
+LASER_HPos: 0
+LASER_VPos: 0
+LASER_Intensity: 0
+
+Loop_3
+
+QUAD01: 2
+QUAD02: 1
+QUAD03: 3
+QUAD04: 4
+QUAD05: 4
+DIP02: -5
+
+LLRF_Amplitude: 70 (MV/m)
+LLRF_Phase: 0 (degrees)
+
+LASER_HPos: 0
+LASER_VPos: 0
+LASER_Intensity: 0
+
+
+Loop_4
+
+QUAD01: 0
+QUAD02: 0
+QUAD03: 0
+QUAD04: 0
+QUAD05: 4
+DIP02: 0
+
+LLRF_Amplitude: 70 (MV/m)
+LLRF_Phase: 0 (degrees)
+
+LASER_HPos: 0
+LASER_VPos: 0
+LASER_Intensity: 0
+
+Loop_5
+
+QUAD01: 0
+QUAD02: 2
+QUAD03: 3
+QUAD04: 5
+QUAD05: 4
+DIP02: -11
+
+LLRF_Amplitude: 50 (MV/m)
+LLRF_Phase: 0 (degrees)
+
+LASER_HPos: 1
+LASER_VPos: 1
+LASER_Intensity: 0
+
+
+
+
+
+
+ 
