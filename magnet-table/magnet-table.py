@@ -302,7 +302,8 @@ class Window(QtGui.QMainWindow):
                 magnet.icon = icon
                 # The tab here aligns all the current spinboxes nicely
                 # title_text = magnet.name.replace(mag_type, attributes.friendly_name + ' ') + '\t'
-                title_text = magnet.name + '\t'
+                # Remove the S01- or S02- prefix at the start for a cleaner look
+                title_text = re.sub(r'^S\d\d-', '', magnet.name, 1) + '\t'
                 title = self.collapsing_header(main_hbox, more_info, title_text)
                 title.setFont(magnet_font)
                 magnet.title = title

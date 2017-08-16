@@ -8,7 +8,7 @@ between momentum, solenoid current, and Larmor angle
 import numpy as np
 import rf_sol_tracking
 
-name = 'Linac1'
+name = 'Gun-10'
 g = rf_sol_tracking.RFSolTracker(name)
 setSolCurrent = g.setSolenoidCurrent
 if name == 'Gun-10':

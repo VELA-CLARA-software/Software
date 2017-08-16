@@ -48,7 +48,7 @@ class Solenoid():
             # See BJAS' spreadsheet: coeffs-vs-z.xlsx
             # This takes care of interaction between the BC and solenoid
             self.b_field = field_map_attr(coeffs=np.loadtxt('gun10-coeffs-vs-z.csv', delimiter=','),
-                                          z_map=np.arange(-12, 467, dtype='float64') * 1e-3,
+                                          z_map=np.arange(0, 401, dtype='float64') * 1e-3,
                                           bc_area=856.0, bc_turns=720.0, sol_area=8281.0, sol_turns=144.0)
             self.z_map = self.b_field.z_map
             self.bc_current = 5.0  # reasonable default value
