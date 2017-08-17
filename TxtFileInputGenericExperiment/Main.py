@@ -7,7 +7,7 @@
 # Data from the BPMs and CAMs are stored in arrays for each run and are also outputted to textfiles in the path.
 
 
-import MasterController2 as MC
+import MasterController3 as MC
 import onlineModel
 
 T = MC.MasterController('Instructions2')
@@ -22,23 +22,23 @@ AllCAMdata=[] # this will store array of arrays with all the CAM data from each 
 
 if T.filedata.Gun_Type == T.filedata.Gun_TypeKeywords[0]: # using VELA line
 	print "Using VELA LINE"
-	ASTRA = onlineModel.ASTRA(V_MAG_Ctrl=MC.magnets_VELA,
+	ASTRA = onlineModel.ASTRA(V_MAG_Ctrl=T.magnets_VELA,
 							C_S01_MAG_Ctrl=None,
 							C_S02_MAG_Ctrl=None,
-							C2V_MAG_Ctrl=MC.magnets_CLARA,
-							V_RF_Ctrl=MC.gun,
+							C2V_MAG_Ctrl=T.magnets_CLARA,
+							V_RF_Ctrl=T.gun,
 							C_RF_Ctrl=None,
 							L01_RF_Ctrl=None,
 							messages=True)
 elif T.filedata.Gun_Type == T.filedata.Gun_TypeKeywords[1]: # Using CLARA line
 	print "Using CLARA LINE"
-	ASTRA = onlineModel.ASTRA(V_MAG_Ctrl=MC.magnets_VELA,
-							C_S01_MAG_Ctrl=MC.magnets_CLARA,	# CS01/2 & Clara Mags use same controller
-							C_S02_MAG_Ctrl=MC.magnets_CLARA,
-							C2V_MAG_Ctrl=MC.magnets_CLARA,
+	ASTRA = onlineModel.ASTRA(V_MAG_Ctrl=T.magnets_VELA,
+							C_S01_MAG_Ctrl=T.magnets_CLARA,	# CS01/2 & Clara Mags use same controller
+							C_S02_MAG_Ctrl=T.magnets_CLARA,
+							C2V_MAG_Ctrl=T.magnets_CLARA,
 							V_RF_Ctrl=None,
-							C_RF_Ctrl=MC.gun, # C and L01 use same controller
-							L01_RF_Ctrl=MC.gun,
+							C_RF_Ctrl=T.gun, # C and L01 use same controller
+							L01_RF_Ctrl=T.gun,
 							messages=True)
 
 
@@ -69,18 +69,19 @@ for x in range(1, 2 * int(T.filedata.Num_Loops)+1):  # Everything in this loop s
 
 		print "LOOP NUMBER: " + str(y)
 
-		if T.filedata.Gun_Type == T.filedata.Gun_TypeKeywords[0]:  # using VELA line
-			T.SetupVELA(y,1) # This will set up everything from the information in the dictionary (1=laser on)
+		T.Setup(y,1) # This will set up everything from the information in the dictionary (1=laser on)
 
-			for i in T.filedata.Magnets_Used:	#checking
-				print str(i) + " = " + str(MC.magnets_VELA.getSI(i))
+		for i in T.filedata.Magnets_Used_V:	#checking
+			print str(i) + " = " + str(T.magnets_VELA.getSI(i))
+		for i in T.filedata.Magnets_Used_C:	#checking
+			print str(i) + " = " + str(T.magnets_CLARA.getSI(i))
 
-		elif T.filedata.Gun_Type == T.filedata.Gun_TypeKeywords[1]: # using CLARA line
-			T.SetupCLARA(y, 1)
-			print "Here1"
-			for i in T.filedata.Magnets_Used:	#checking
-				print str(i) + " = " + str(MC.magnets_CLARA.getSI(i))
-			print "Here2"
+		# elif T.filedata.Gun_Type == T.filedata.Gun_TypeKeywords[1]: # using CLARA line
+		# 	T.Setup(y, 1)
+		# 	print "Here1"
+		# 	for i in T.filedata.Magnets_Used:	#checking
+		# 		print str(i) + " = " + str(T.magnets_CLARA.getSI(i))
+		# 	print "Here2"
 
 		ASTRA.startElement = Start_Element	# Takes start and stop elements for the sim from the txt file
 		print "ASTRA.startElement = " + str(ASTRA.startElement)
