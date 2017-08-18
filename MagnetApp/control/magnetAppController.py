@@ -295,7 +295,7 @@ class magnetAppController(object):
         return self.ret
 
     def launchPythonMagnetController(self):
-
+        print os.environ["EPICS_CA_ADDR_LIST"]
         if self.machineMode == mag.MACHINE_MODE.VIRTUAL:
             os.environ["EPICS_CA_SERVER_PORT"] = "6000"
         self.localMagnetController = \
