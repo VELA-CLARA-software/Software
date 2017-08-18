@@ -297,15 +297,19 @@ class matlabImageViewerController(object):
     def analyseData(self):
         if self.startView.measuretype == "emittance":
             # 19.6 micron per pixel for emittance scans
-            self.currentFile[self.datastruct]['pixelwidth'] = 19.6 * ( 1 * ( 10 ** -6 ) )
+            self.currentFile[self.datastruct]['pixelwidth'] = 0.0000196
             self.sigSquaredVals = self.emittanceMeasurement.getSigmaSquared(self.startView, self.currentFile, self.datastruct, self.arrayshape, self.croppedArrayShape, self.numshots)
             self.quadK = self.sigSquaredVals[0]
             self.sigmaXSquared = self.sigSquaredVals[1]
             self.xSigmas = self.sigSquaredVals[2]
-            self.sigmaYSquared = self.sigSquaredVals[3]
-            self.ySigmas = self.sigSquaredVals[4]
-            self.plotandfit = self.emittanceMeasurement.plotSigmaSquared(self.startView, self.quadK, self.sigmaXSquared, self.xSigmas, self.sigmaYSquared, self.ySigmas)
+            self.xSigmaRMS = self.sigSquaredVals[3]
+            self.sigmaYSquared = self.sigSquaredVals[4]
+            self.ySigmas = self.sigSquaredVals[5]
+            self.ySigmaRMS = self.sigSquaredVals[6]
+            self.plotandfit = self.emittanceMeasurement.plotSigmaSquared(self.startView, self.quadK, self.sigmaXSquared, self.xSigmas,
+                                                                         self.xSigmaRMS, self.sigmaYSquared, self.ySigmas, self.ySigmaRMS)
             self.driftlength = self.currentFile[self.datastruct]['drift']
+            self.quadlength = self.currentFile[self.datastruct]['Lq']
             self.energy = self.currentFile[self.datastruct]['energy']
             self.twiss = self.getEmittanceAndTwiss = self.emittanceMeasurement.getEmittance(self.plotandfit[0], self.plotandfit[1], self.driftlength, self.energy)
             for i in self.twiss[0]:

@@ -1,0 +1,84 @@
+&NEWRUN
+  Head='trial'
+  RUN=111
+  Loop=F,
+  Lprompt=F
+  Distribution = '$initial_distribution$', Xoff=0.0, Yoff=0.0
+  N_red = 1
+  Lmagnetized=.F
+  EmitS=.T
+  TR_emitS=F
+
+  PhaseS=.T
+  TrackS=.F
+  RefS=.F
+  TcheckS=.F
+  CathodeS=.F
+  
+  TRACK_ALL=.T
+  PHASE_SCAN=.F
+  AUTO_PHASE=.T
+  check_ref_part=.F,
+  
+  ZSTART=0, ZSTOP=3.37147
+  Screen(1)=0.981
+
+  Zphase=1
+  Zemit=1050
+  H_max=0.0007
+  H_min=0.0007
+  Qbunch=$charge$
+  High_res=.T
+
+
+ /
+
+ &SCAN
+  LScan=.F.
+ /
+ &CHARGE
+  Loop=F
+  LSPCH=True
+  LSPCH3D=False
+  Nrad=$SC_2D_Nrad$, Nlong_in=$SC_2D_Nlong$  
+
+  Cell_var=2.0
+  min_grid=3.424657D-13
+  Max_scale=0.1
+  Max_count=100
+  Lmirror=.T
+
+ /
+
+ &Aperture
+ /
+
+ &FEM
+ /
+ 
+&CAVITY
+  Loop=.F,
+  LEFieLD=.T
+
+  FILE_EFieLD(1) = '../bas_gun.txt',
+  Nue(1)=2.9974431, MaxE(1)=$gun_field$,  Phi(1)=$gun_phase$, C_pos(1)=0.0, C_smooth(1)=10
+
+  FILE_EFieLD(2) = '../TWS_S-DL.dat', Nue(2)=2.9985,
+  MaxE(2)=$linac1_field$,  Phi(2)=$linac1_phase$., C_pos(2)=1.19357, C_numb(2)=60, C_smooth(2)=10
+
+/
+&SOLENOID
+  Loop=F
+  LBfield=T
+
+  
+FILE_BFieLD(1)='../bas_sol.txt', MaxB(1)=$gun_sol_field$
+  S_pos(1)=0.0, S_xoff(1)=0.0, S_yoff(1)=0.0, S_smooth(1)=10 
+
+
+/
+ &QUADRUPOLE
+ Loop=.F,
+ LQUAD=.T
+
+/

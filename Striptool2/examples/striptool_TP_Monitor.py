@@ -8,16 +8,20 @@ from pyqtgraph.dockarea import *
 import striptool as striptool
 import scatterPlot as scatterplot
 import numpy as np
-
+os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
+os.environ["EPICS_CA_ADDR_LIST"] = "10.10.0.12" #BE SPECIFIC.... YOUR I.P. FOR YOUR VM
+os.environ["EPICS_CA_MAX_ARRAY_BYTES"] = "10000000"
+os.environ["EPICS_CA_SERVER_PORT"]="6000"
 
 ''' Load loggerWidget library (comment out if not available) '''
 sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\\..\\..\\loggerWidget\\')
+sys.path.append('\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Software\\VELA_CLARA_PYDs\\bin\\stagetim')
 from ConfigParser import SafeConfigParser
 import loggerWidget as lw
 import logging
 logger = logging.getLogger(__name__)
 
-import VELA_CLARA_Magnet_Control as vmag
+import VELA_CLARA_MagnetControl as vmag
 import VELA_CLARA_BPM_Control as vbpmc
 import  VELA_CLARA_General_Monitor as vgen
 
@@ -197,8 +201,7 @@ class DockSplitter(QtGui.QSplitter):
 
         self.numberScatterPlots = 0
         self.scatterPlots = []
-        if inputfile != None:
-            self.loadSettings(filename=inputfile)
+        self.loadSettings(filename=inputfile)
 
     def loadSettings(self, overwrite=False, filename=None):
         if filename == None:

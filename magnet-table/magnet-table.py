@@ -320,7 +320,8 @@ class Window(QtGui.QMainWindow):
                     # max_k = max_current
                 # else:
                 #     max_k = self.getK(magnet, max_current, min_momentum)
-                k_spin = self.spinbox(main_hbox, attributes.effect_units, step=0.1, decimals=3) #, min_value=min_k, max_value=max_k)
+                step = 0.01 if mag_type == 'BSOL' else 0.1
+                k_spin = self.spinbox(main_hbox, attributes.effect_units, step=step, decimals=3) #, min_value=min_k, max_value=max_k)
                 magnet.k_spin = k_spin
                 self.collapsing_header(main_hbox, more_info, lbl)
                 current_spin = self.spinbox(main_hbox, units, step=0.1, decimals=3,
@@ -575,7 +576,7 @@ class Window(QtGui.QMainWindow):
             # The 'K' value is the field at the cathode
             # x is BC current, y is solenoid current
             x = current
-            y = next(self.magnetsOfType(magnet.section, 'SOL')).ref.siWithPol
+            y = next(self.magnetsOfType(magnet.section, 'SOL')).current_spin.value() #ref.siWithPol
             k = np.dot(magnet.k_coeffs,
                        [y, y**2, y**3, x, x*y, x*y**2, x**2, x**2*y, x**2*y**2, x**2*y**3, x**3, x**3*y])
         elif mag_type == 'SOL': # solenoids
@@ -583,7 +584,7 @@ class Window(QtGui.QMainWindow):
             # The 'K' value is the Larmor angle
             I = current
             p = momentum
-            k = np.dot(magnet.k_coeffs, [1.0, p, I, p*I, p**2])
+            k = np.dot(magnet.k_coeffs, [I, p*I, p**2*I, p**3*I, p**4*I])
         return k
 
     def kValueChanged(self, value):
@@ -616,7 +617,7 @@ class Window(QtGui.QMainWindow):
         coeffs = np.copy(magnet.k_coeffs if mag_type in ('SOL', 'BSOL') else magnet.fieldIntegralCoefficients)
         if mag_type == 'BSOL':
             # These coefficients depend on solenoid current too - need to group together like terms
-            y = next(self.magnetsOfType(magnet.section, 'SOL')).ref.siWithPol
+            y = next(self.magnetsOfType(magnet.section, 'SOL')).current_spin.value() #ref.siWithPol
             ypows = y ** np.arange(4)
             coeffs = [np.dot(coeffs[10:], ypows[:2]),  # (c10 + c11*y) * x**3
                       np.dot(coeffs[6:10], ypows),     # (c6 + c7*y + c8*y**2 + c9*y**3) * x**2
@@ -624,9 +625,9 @@ class Window(QtGui.QMainWindow):
                       np.dot(coeffs[:3], ypows[1:])]   # (c0*y + c1*y**2 + c2*y**3)
         elif mag_type == 'SOL' and len(coeffs) > 2:
             # These coefficients depend on momentum too - need to group together like terms
-            ppows = momentum ** np.arange(3)
-            coeffs = [np.dot(coeffs[2:4], ppows[:2]),               # (c2 + c3*p) * Isol
-                      np.dot(coeffs[np.array([0, 1, 4])], ppows)]   # (c0 + c1*p * c4*p**2)
+            ppows = momentum ** np.arange(5)
+            coeffs = [np.dot(coeffs[:5], ppows), 0]  # (c1 + c2*p + c3*p**2 + c4*p**3 + c5*p**4) * Isol
+
         coeffs[-1] -= int_strength  # Need to find roots of polynomial, i.e. a1*x + a0 - y = 0
         roots = np.roots(coeffs)
         current = np.copysign(roots[-1].real, k) # last root is always x value (#TODO: can prove this?)

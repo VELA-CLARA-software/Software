@@ -50,7 +50,7 @@ class generalPlot(pg.PlotWidget):
         super(generalPlot, self).__init__(parent=parent)
         self.parent=parent
         self.stripplot = stripplot
-        self.paused = True
+        self.paused = False
         self.linearPlot = True
         self.autoscroll = True
         self.globalPlotRange = [time.time()-10,time.time()]
@@ -151,6 +151,10 @@ class generalPlot(pg.PlotWidget):
     ''' This is the event handler for when the horizontal axis time changes during "autoscroll" '''
     def timeAxisChanged(self):
         if self.linearPlot:
+            try:
+                self.statusTextX = time.strftime("%H:%M:%S", time.localtime(self.vLine.value()))
+            except:
+                self.statusTextX = time.strftime("%H:%M:%S", time.localtime(time.time()))
             self.statusTextX = time.strftime("%H:%M:%S", time.localtime(self.vLine.value()))
             self.statusTextY = "%0.3f" % (self.hLine.value())
             self.statusTextLogY = "%04.03e" % (np.power(10,self.hLine.value()))

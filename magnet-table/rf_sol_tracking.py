@@ -375,6 +375,12 @@ Bucking coil current: {self.solenoid.bc_current:.3f} A'''
         self.calc_level = min(self.calc_level, CALC_B_MAP - 1)
         self.solenoid.setBuckingCoilCurrent(current)  # to reset solenoid calc
 
+    def setCathodeField(self, field):
+        """Set the cathode field to a given level by changing the bucking coil 
+        current, and return the value of this current."""
+        self.calc_level = min(self.calc_level, CALC_B_MAP - 1)
+        return self.solenoid.setCathodeField(field)  # to reset solenoid calc
+
     def setDZ(self, dz):
         """Set the z step size in metres."""
         self.resetValue('dz', dz, INIT_ARRAYS - 1)

@@ -54,6 +54,8 @@ class ParasolApp(QtGui.QMainWindow, Ui_MainWindow):
         self.phase_lock = self.lock_button.isChecked()
         self.E_field_plot.setLabels(title='Electric field', left='E [MV/m]', bottom='z [m]')
         self.B_field_plot.setLabels(title='Magnetic field', left='B [T]', bottom='z [m]')
+        # self.proxy = pg.SignalProxy(self.B_field_plot.scene().sigMouseMoved, rateLimit=60, slot=self.mouseMoved)
+
         self.momentum_plot.setLabels(title='Momentum', left='p [MeV/c]', bottom='z [m]')
         self.larmor_angle_plot.setLabels(title='Larmor angle', left='&theta;<sub>L</sub> [&deg;]', bottom='z [m]')
         self.E_field_plot.setLabels(title='E field', left='E [MV/m]', bottom='z [m]')
@@ -89,12 +91,17 @@ class ParasolApp(QtGui.QMainWindow, Ui_MainWindow):
         self.startMainViewUpdateTimer()
         self.gunChanged() # initial update
 
+        # self.label.setText(
+        #     "<span style='font-size: 14pt; color: white'> x = %0.2f, <span style='color: white'> y = %0.2f</span>" % (
+        #     mousePoint.x(), mousePoint.y()))
+
     def resizeEvent(self, resizeEvent):
         # Remove plots one row at a time as the window shrinks
         height = self.geometry().height()
         self.xy_plot.setVisible(height >= 512)
         self.xdash_ydash_plot.setVisible(height >= 512)
-        self.E_field_plot.setVisible(height >= 420)
+        field_plots = (self.E_field_plot, self.B_field_plot, self.phase_play_button, self.phase_slider)
+        [control.setVisible(height >= 420) for control in field_plots]
         self.B_field_plot.setVisible(height >= 420)
         self.momentum_plot.setVisible(height >= 250)
         self.larmor_angle_plot.setVisible(height >= 250)
