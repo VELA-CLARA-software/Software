@@ -20,6 +20,7 @@ import VELA_CLARA_LLRFControl as llrf
 import VELA_CLARA_BPM_Control as bpm
 import VELA_CLARA_PILaserControl as las
 
+
 class MasterController():
 
     filedata = None
@@ -101,26 +102,32 @@ class MasterController():
     # This uses self to get controllers but the gun doent work at the moment!
     def Setup(self, k, u): # This function will need to be updated as more controllers are added!
         print "Setting up..."
-        Z = self.filedata.MasterDict()["Loop_" + str(k)]
+        Z = self.filedata.MasterDict()["Loop_" + str(k)] #MAGIC_STRING
         for i in self.filedata.VariableTypeList: # VariableTypeList = ["MAGNETS, LLRF, LASER"]
             P = Z[i] # get for example FRC.MasterDict()["Loop_1"]["MAGNETS"]
-            time.sleep(1)
+            time.sleep(1)# take a break...
             if i == self.filedata.Magnets:
                 for i,j in P.iteritems():
                     if i in self.sysMags_V: # if its a magnet on the VELA line
-                        print "Magnet in VELA: " + str(i)
+                        print "Switching ON Magnet in VELA: " + str(i)
                         self.magnets_VELA.switchONpsu(str(i))
+                        #while not self.MagRefsDict[i].psuState == MAG_PSU_STATE.ON : # waits until setI and readI are the same
+                        while self.magnets_VELA.isOFF(self.MagRefsDict[i].name): # waits until setI and readI are the same
+                            print "waiting... to switch ON" + str(self.MagRefsDict[i].name)
+                            time.sleep(1)
+
+
                         self.magnets_VELA.setSI(str(i), float(j[0]))
                         while not self.MagRefsDict[i].SETIequalREADI: # waits until setI and readI are the same
-                            print "waiting..."
+                            print "waiting...to SETI " + str(self.MagRefsDict[i].name) + ' to ' + str(float(j[0]))
                             time.sleep(1)
-                    elif i in self.sysMags_C: # if its a magnet on the VELA line
-                        print "Magnet in Clara: " + str(i)
-                        self.magnets_CLARA.switchONpsu(str(i))
-                        self.magnets_CLARA.setSI(str(i), float(j[0]))
-                        while not self.MagRefsDict[i].SETIequalREADI:
-                            print "waiting..."
-                            time.sleep(1)
+                    # elif i in self.sysMags_C: # if its a magnet on the VELA line
+                    #     print "Magnet in Clara: " + str(i)
+                    #     self.magnets_CLARA.switchONpsu(str(i))
+                    #     self.magnets_CLARA.setSI(str(i), float(j[0]))
+                    #     while not self.MagRefsDict[i].SETIequalREADI:
+                    #         print "waiting..."
+                    #         time.sleep(1)
                     print "MAGNETS SUCESSFULLY SETUP"
                 # setup LLRF
             elif i == self.filedata.LLRF:
@@ -246,14 +253,14 @@ class MasterController():
             # GUN CONTROLLER ASSIGNMENT WILL NEED UPDATING IN THE FUTURE!
 
             self.magnets_VELA = self.magInit.physical_VELA_INJ_Magnet_Controller()
-            self.gun = self.llrfInit.physical_CLARA_LRRG_LLRF_Controller()  # using this because it have the same PVs
+            #self.gun = self.llrfInit.physical_CLARA_LRRG_LLRF_Controller()  # using this because it have the same PVs
             self.magnets_CLARA = self.magInit.physical_CLARA_PH1_Magnet_Controller()
             self.bpm_VELA = self.bpmInit.physical_VELA_INJ_BPM_Controller()
             self.las_VELA = self.lasInit.physical_PILaser_Controller()
 
     def CreateRefList(self):
-        for i in self.filedata.Magnets_Used_C:
-            self.MagRefs.append(self.magnets_CLARA.getMagObjConstRef(i))
+        # for i in self.filedata.Magnets_Used_C:
+        #     self.MagRefs.append(self.magnets_CLARA.getMagObjConstRef(i))
         for i in self.filedata.Magnets_Used_V:
             self.MagRefs.append(self.magnets_VELA.getMagObjConstRef(i))
 

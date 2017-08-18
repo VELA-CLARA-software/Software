@@ -6,6 +6,10 @@
 # with the laser turned off so data from the background can be taken (and eventually subtracted from the data).
 # Data from the BPMs and CAMs are stored in arrays for each run and are also outputted to textfiles in the path.
 
+import sys
+
+sys.path.append('\\\\fed.cclrc.ac.uk\\org\\NLab\\ASTeC\\Projects\\VELA\\Software\\OnlineModel')
+
 
 import MasterController3 as MC
 import onlineModel
@@ -14,40 +18,46 @@ T = MC.MasterController('Instructions2')
 # SetEnvironment function isnt working at the moment!
 # T.SetEnvironment() # sets to either Physical or Virtual Machine based on txt file
 # Run checks here before starting up the online model
+
+# SANITY CHECKS
 T.filedata.CompareLoops() # checks to see if the data given in the txt file is consistent!
 T.filedata.CompareMagNum()
 T.filedata.CheckLoopLengths()
+
+# INIT DATA STORAGE ARRAYS
 AllBPMdata=[] # this will store array of arrays with all the BPM data from each loop
 AllCAMdata=[] # this will store array of arrays with all the CAM data from each loop
 
-if T.filedata.Gun_Type == T.filedata.Gun_TypeKeywords[0]: # using VELA line
-	print "Using VELA LINE"
-	ASTRA = onlineModel.ASTRA(V_MAG_Ctrl=T.magnets_VELA,
-							C_S01_MAG_Ctrl=None,
-							C_S02_MAG_Ctrl=None,
-							C2V_MAG_Ctrl=T.magnets_CLARA,
-							V_RF_Ctrl=T.gun,
-							C_RF_Ctrl=None,
-							L01_RF_Ctrl=None,
-							messages=True)
-elif T.filedata.Gun_Type == T.filedata.Gun_TypeKeywords[1]: # Using CLARA line
-	print "Using CLARA LINE"
-	ASTRA = onlineModel.ASTRA(V_MAG_Ctrl=T.magnets_VELA,
-							C_S01_MAG_Ctrl=T.magnets_CLARA,	# CS01/2 & Clara Mags use same controller
-							C_S02_MAG_Ctrl=T.magnets_CLARA,
-							C2V_MAG_Ctrl=T.magnets_CLARA,
-							V_RF_Ctrl=None,
-							C_RF_Ctrl=T.gun, # C and L01 use same controller
-							L01_RF_Ctrl=T.gun,
-							messages=True)
+
+if T.filedata.isVirtual():
+	if T.filedata.Gun_Type == T.filedata.Gun_TypeKeywords[0]: # using VELA line
+		print "Using VELA LINE"
+		ASTRA = onlineModel.ASTRA(V_MAG_Ctrl=T.magnets_VELA,
+								C_S01_MAG_Ctrl=None,
+								C_S02_MAG_Ctrl=None,
+								C2V_MAG_Ctrl=T.magnets_CLARA,
+								V_RF_Ctrl=T.gun,
+								C_RF_Ctrl=None,
+								L01_RF_Ctrl=None,
+								messages=True)
+	elif T.filedata.Gun_Type == T.filedata.Gun_TypeKeywords[1]: # Using CLARA line
+		print "Using CLARA LINE"
+		ASTRA = onlineModel.ASTRA(V_MAG_Ctrl=T.magnets_VELA,
+								C_S01_MAG_Ctrl=T.magnets_CLARA,	# CS01/2 & Clara Mags use same controller
+								C_S02_MAG_Ctrl=T.magnets_CLARA,
+								C2V_MAG_Ctrl=T.magnets_CLARA,
+								V_RF_Ctrl=None,
+								C_RF_Ctrl=T.gun, # C and L01 use same controller
+								L01_RF_Ctrl=T.gun,
+								messages=True)
 
 
-# set the start and stop elements
-Start_Element = T.filedata.Start_Element
-Stop_Element = T.filedata.Stop_Element
-print Start_Element
-Bdat = open("BPMData.txt", 'w+') # to write data out to for later viewing
-Cdat = open("CAMData.txt", 'w+')
+	# set the start and stop elements
+	Start_Element = T.filedata.Start_Element
+	Stop_Element = T.filedata.Stop_Element
+	print Start_Element
+	Bdat = open("BPMData.txt", 'w+') # to write data out to for later viewing
+	Cdat = open("CAMData.txt", 'w+')
 
 # It is not possible to simulate dark current on the Online Simulation so it will be written in but cannot be tested until
 # the script can be tested on the real machine!
