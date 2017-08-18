@@ -44,20 +44,30 @@ class MasterController():
         self.llrfInit = None
         self.llrfInit = llrf.init()
         self.LLRFSetup()
-        # self.gun = self.llrfInit.virtual_CLARA_LRRG_LLRF_Controller()
         self.CreateRefList()
         self.CreateRefDict()
 
     def LLRFSetup(self):
-        if self.filedata.Gun_Type == self.filedata.Gun_TypeKeywords[0]:  # self.Gun_TypeKeywords = ["VELA, CLARA, L01"]
-            self.gun = self.llrfInit.virtual_CLARA_LRRG_LLRF_Controller()  # this has same PVs so can use this controller
-            print "Using VELA Gun"
-        elif self.filedata.Gun_Type == self.filedata.Gun_TypeKeywords[1]:
-            self.gun = self.llrfInit.virtual_CLARA_LRRG_LLRF_Controller()
-            print "Using CLARA Gun"
-        elif self.filedata.Gun_Type == self.filedata.Gun_TypeKeywords[2]:
-            self.gun = self.llrfInit.virtual_L01_LLRF_Controller()
-            print "Using L01 Gun"
+        if not self.filedata.isPhysical(): # using virtual machine
+            if self.filedata.Gun_Type == self.filedata.Gun_TypeKeywords[0]:  # self.Gun_TypeKeywords = ["VELA, CLARA, L01"]
+                self.gun = self.llrfInit.virtual_CLARA_LRRG_LLRF_Controller()  # this has same PVs so can use this controller
+                print "Using virtual VELA Gun"
+            elif self.filedata.Gun_Type == self.filedata.Gun_TypeKeywords[1]:
+                self.gun = self.llrfInit.virtual_CLARA_LRRG_LLRF_Controller()
+                print "Using virtual CLARA Gun"
+            elif self.filedata.Gun_Type == self.filedata.Gun_TypeKeywords[2]:
+                self.gun = self.llrfInit.virtual_L01_LLRF_Controller()
+                print "Using virtual L01 Gun"
+        elif self.filedata.isPhysical():    # using physical machine
+            if self.filedata.Gun_Type == self.filedata.Gun_TypeKeywords[0]:  # self.Gun_TypeKeywords = ["VELA, CLARA, L01"]
+                self.gun = self.llrfInit.physical_CLARA_LRRG_LLRF_Controller()  # this has same PVs so can use this controller
+                print "Using physical VELA Gun"
+            elif self.filedata.Gun_Type == self.filedata.Gun_TypeKeywords[1]:
+                self.gun = self.llrfInit.physical_CLARA_LRRG_LLRF_Controller()
+                print "Using physical CLARA Gun"
+            elif self.filedata.Gun_Type == self.filedata.Gun_TypeKeywords[2]:
+                self.gun = self.llrfInit.physical_L01_LLRF_Controller()
+                print "Using physical L01 Gun"
 
     # Now use the Master Controller to set Variables using the existing Controllers!
 
@@ -79,9 +89,9 @@ class MasterController():
         for x in range(0, len(self.filedata.Magnets_Used_Total)):
             B = 0
             for y in range(0, len(self.sysMags_C)):
-                if self.filedata.Magnets_Used[x] == self.sysMags_C[y]: B = 1
+                if self.filedata.Magnets_Used_Total[x] == self.sysMags_C[y]: B = 1
             for z in range(0, len(self.sysMags_V)):
-                if self.filedata.Magnets_Used[x] == self.sysMags_V[z]: B = 1
+                if self.filedata.Magnets_Used_Total[x] == self.sysMags_V[z]: B = 1
             if B == 0: print "Requested Magnets does not exist!"; return False
         return True # if the code reaches here then all magnets have been verified
 
@@ -90,7 +100,7 @@ class MasterController():
 
     # This uses self to get controllers but the gun doent work at the moment!
     def Setup(self, k, u): # This function will need to be updated as more controllers are added!
-        print "Setting up VELA."
+        print "Setting up..."
         Z = self.filedata.MasterDict()["Loop_" + str(k)]
         for i in self.filedata.VariableTypeList: # VariableTypeList = ["MAGNETS, LLRF, LASER"]
             P = Z[i] # get for example FRC.MasterDict()["Loop_1"]["MAGNETS"]
@@ -164,8 +174,11 @@ class MasterController():
             # CONVENTION: YAG-01 HAS CAMERA CAM-02
 
             CAMNum = str(x+1)
+            if not self.filedata.isPhysical():  # using virtual machine
+                CAMName = "VM-EBT-INJ-DIA-CAM-0" + CAMNum + ":CAM"
+            elif self.filedata.isPhysical():  # using physical machine
+                CAMName = "EBT-INJ-DIA-CAM-0" + CAMNum + ":CAM"
 
-            CAMName = "VM-EBT-INJ-DIA-CAM-0" + CAMNum + ":CAM" # FIX THIS TO MAKE VIRTUAL OR PHYSICAL!
             CAMPVX = PV(CAMName + ":X")
             CAMPVY = PV(CAMName + ":Y")
             CAMPVSX = PV(CAMName + ":SigmaX")
@@ -210,6 +223,7 @@ class MasterController():
             # self.bpm_CLARA= self.bpmInit.virtual_CLARA_INJ_BPM_Controller()
             self.bpm_VELA = self.bpmInit.offline_VELA_INJ_BPM_Controller()
             self.bpm_CLARA = self.bpmInit.offline_CLARA_INJ_BPM_Controller()
+
             self.las_VELA = self.lasInit.virtual_PILaser_Controller()
 
             # THESE DONT EXIST AT THE MOMENT!
@@ -251,18 +265,18 @@ class MasterController():
 
 
 
-
-F = MasterController("Instructions2")
-# F.Setup(1,1)
+#
+# F = MasterController("Instructions2")
+# # F.Setup(1,1)
 # print F.magnets_VELA.getMagObjConstRef("QUAD01").name
 # print F.magnets_VELA.getMagObjConstRef("QUAD01").magType
 # print F.magnets_VELA.getMagObjConstRef("QUAD01").riTolerance
 # print F.magnets_VELA.getMagObjConstRef("QUAD01").SETIequalREADI
 # print F.magnets_VELA.getSI("QUAD01")
-
+#
 # for i in F.MagRefs:
 #     print i.SETIequalREADI
-
+#
 # for i,j in F.MagRefsDict.iteritems():
 #     print i, j.SETIequalREADI
 # print F.MagRefsDict["QUAD01"].SETIequalREADI
