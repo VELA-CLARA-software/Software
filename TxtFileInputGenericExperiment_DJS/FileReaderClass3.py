@@ -21,7 +21,10 @@ class Reader:
         print "A Reader object has been created called " + str(name) + ".txt"
         self.name = name
         self.data = open(name + ".txt", 'r' )       # store text in a "data" attribute
-        self.Magnets_Used = self.search("Magnets_Used")
+        #self.Magnets_Used_C = self.search("Magnets_Used_C")
+        self.Magnets_Used_V = self.search("Magnets_Used_V")
+        #self.Magnets_Used_Total = self.Magnets_Used_C + self.Magnets_Used_V
+        self.Magnets_Used_Total = self.Magnets_Used_V
         self.Machine_Type = self.search("Machine_Type")[0] # [0] as technically gives a list with 1 value
         self.Number_Magnets = self.search("Number_Magnets")[0]
         self.Num_Loops = self.search("Number_Loops")[0]
@@ -65,6 +68,12 @@ class Reader:
             return True
         else: print "Cannot determine from file if Physical or Virtual!"
         quit()
+
+    def isVirtual(self):
+        if self.Machine_Type == "V": # use virtual machine
+            return True
+        return False
+
 
     def filedict(self): # extract required magnet currents from txt file
         fdict={}
@@ -136,16 +145,11 @@ class Reader:
          # dont allow the code to continue!
 
     def CompareMagNum(self):
-        if int(self.Number_Magnets) != len(self.Magnets_Used):
+        #if int(self.Number_Magnets) != (len(self.Magnets_Used_C) + len(self.Magnets_Used_V)):
+        if int(self.Number_Magnets) !=  len(self.Magnets_Used_V):
             print "Number of stated magnets and named magnets given do not match!"
             quit()
         print "Number of magnets and named magnets matches!"
-
-    def MagCurrentList(self, k, q): # extract required magnet currents from txt file for kth loop
-        for i,j in self.LoopData(k).iteritems():
-            if i == 'MC'+str(k):
-                return j
-        print "Magnet_Currents not found."
 
     def LoopMasterDict(self, k): # gives a nested dictionary with information from all loops
         M ={}
@@ -175,14 +179,26 @@ class Reader:
     def CheckLoopLengths(self):
         M = []
         for i in range(1, int(self.Num_Loops) + 1):
+            print 'appending ' + str(len(self.LoopData(i)))
             M.append(len(self.LoopData(i)))
-        seen = set()  # creates empty set
-        for number in M:
-            if number in seen:
-                pass  # number repeated
-            seen.add(number)  # wont allow duplicates
-        if len(seen) != 1:
+        print 'len(set(M)) ' + str(len(set(M)))
+        if len(set(M)) == 1:
+            print 'loops have equal information, proceeding'
+        else:
             print "One or more loops is missing information! Check txt file!"
             quit()
+
+        # seen = set()  # creates empty set
+        # for number in M:
+        #     if number in seen:
+        #         pass  # number repeated
+        #     seen.add(number)  # wont allow duplicates
+        # if len(seen) != 1:
+        #     print "One or more loops is missing information! Check txt file!"
+        #     quit()
+
 # T = Reader("Instructions2")
-# print T.Gun_TypeKeywords
+# print T.MasterDict()["Loop_1"]["MAGNETS"]
+#
+# for i in T.Magnets_Used_Total:
+#     print i

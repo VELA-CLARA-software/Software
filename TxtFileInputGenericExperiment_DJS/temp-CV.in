@@ -1,6 +1,10 @@
+!V2.in - DIP01=1.2058490646
+!SP.in - DIP01=1.2058490646
+!This is C2V lin  ends with a Dipole on VELA INJ line
+
 &NEWRUN
   Head='trial'
-  RUN=005
+  RUN=003
   Loop=F,
   Lprompt=F
   Distribution ='/home/vmsim/Desktop/V2/ASTRA/temp-start.ini',
@@ -19,17 +23,17 @@
   AUTO_PHASE=.T
   check_ref_part=.F
   ZSTART=-0.38845
-  ZSTOP=1.8783
+  ZSTOP=1.2058490646
   Zphase=1
   Zemit=1050
 
-  !VM-EBT-INJ-DIA-BPMC-06
-  !SP-BPM03 from rotation point to centre of bpm
-  Screen(1)=0.1863
+  !VM-CLA-C2V-DIA-BPM-01
+  !CV-BPM01
+  Screen(1)=0.2100545323
 
-  !VM-EBT-INJ-DIA-CAM-05:CAM
-  !SP-YAG04
-  Screen(2)=1.8783
+  !VM-CLA-C2V-DIA-CAM-01
+  !CV-YAG01
+  Screen(2)=1.02415479845
 
   H_max=0.0007
   H_min=0.0007
@@ -49,7 +53,6 @@ LSPCH=False
   Max_scale=0.1
   Max_count=100
   Lmirror=.T
-
  /
 
  &Aperture
@@ -67,19 +70,6 @@ LEFieLD=T
  /
 
  &QUADRUPOLE
-LQUAD=.T,
-!SP-QUAD05
-Q_pos(1)=0.4213
-Q_length(1)=0.1
-Q_grad(1)=0.00834182413957
-Q_bore(1)=0.01
-Q_smooth(1)=3.0
-!SP-QUAD06
-Q_pos(2)=0.8213
-Q_length(2)=0.1
-Q_grad(2)=0.0158324080188
-Q_bore(2)=0.01
-Q_smooth(2)=3.0
 /
 
  &DIPOLE
