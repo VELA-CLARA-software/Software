@@ -29,21 +29,17 @@
 
 # USER INPUT:
 
-PERMANENT VALUES/HEADER:
+START_HEADER_DATA:
+
 
 # For Virtual Machine put V, for Physical Machine put P
 Machine_Type: V
 Number_Magnets: 6
 Number_Loops: 5
 
-# Here put the magnets that you want to use
-# NOTE: IF A MAGNET USED IS ON BOTH VELA AND CLARA, ONLY INCLUDE IN ONE LIST
-
-# Magnets on CLARA line
-#Magnets_Used_C: S02-QUAD1, S02-QUAD2, S02-QUAD3, S02-QUAD4, S02-QUAD5
-
-# Magnets on VELA line
-Magnets_Used_V: QUAD01, QUAD02, QUAD03, QUAD04, QUAD05, DIP02
+# Here put ALL the magnets that you want to use
+# ALL MAGNETS SHOULD BE PREDEFINED HERE, SO THAT CONST REFERNCES CAN BE GOT
+Magnets_Used: QUAD01, QUAD02, QUAD03, QUAD04, QUAD05, DIP02
 
 # Here put the BPMs that you want to use
 BPM_Names: BPM01, BPM02, BPM03, BPM04
@@ -68,27 +64,20 @@ USING_BPM: VELA_INJ
 USING_MAG: VELA_INJ
 MACHINE_MODE: VIRTUAL
 
-VARYING VALUES:
+END_HEADER_DATA:
 
+START_LOOP_1
 Loop_1
-
-#S02-QUAD1: 0
-#S02-QUAD2: 0
-#S02-QUAD3: 0
-#S02-QUAD4: 0
-#S02-QUAD5: 0
 
 QUAD01: 0.5
 QUAD02: 0.5
 QUAD03: 0.5
 QUAD04: 0.5
 QUAD05: 0.5
-
 DIP02: 0
 
 LLRF_Amplitude: 65 (MV/m)
-LLRF_Phase: 0 (degrees)
-
+LLRF_Phase: 0
 #LASER_HPos: 0
 #LASER_VPos: 0
 #LASER_Intensity: 0
@@ -97,24 +86,17 @@ LLRF_Phase: 0 (degrees)
 DAQ_LASER_ON: 100
 DAQ_LASER_OFF: 50
 
+START_LOOP_2
 Loop_2
-
-#S02-QUAD1: 0
-#S02-QUAD2: 0
-#S02-QUAD3: 0
-#S02-QUAD4: 0
-#S02-QUAD5: 0
 
 QUAD01: 0
 QUAD02: 0
 QUAD03: 0
 QUAD04: 0
 QUAD05: 0
-
 DIP02: -10
-
 LLRF_Amplitude: 65 (MV/m)
-LLRF_Phase: 0 (degrees)
+LLRF_Phase: 10
 
 #LASER_HPos: 0
 #LASER_VPos: 0
@@ -195,7 +177,7 @@ QUAD05: 4
 DIP02: -11
 
 LLRF_Amplitude: 65 (MV/m)
-LLRF_Phase: 0 (degrees)
+LLRF_Phase: 8989 (degrees)
 
 #LASER_HPos: 0
 #LASER_VPos: 0

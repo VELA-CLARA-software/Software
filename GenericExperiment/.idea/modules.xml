@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/TxtFileInputGenericExperiment.iml" filepath="$PROJECT_DIR$/.idea/TxtFileInputGenericExperiment.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/GenericExperiment.iml" filepath="$PROJECT_DIR$/.idea/GenericExperiment.iml" />
     </modules>
   </component>
 </project>
