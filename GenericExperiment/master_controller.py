@@ -37,7 +37,7 @@ import VELA_CLARA_Magnet_Control as mag
 
 #import VELA_CLARA_LLRFControl as llrf
 #import VELA_CLARA_BPM_Control as bpm
-#import VELA_CLARA_PILaserControl as las
+import VELA_CLARA_PILaserControl as las
 
 
 class master_controller(object):
@@ -49,12 +49,14 @@ class master_controller(object):
         self.filedata = None
         self.magInit = mag.init()
         self.mag_control = None
+        self.lasInit = las.init()
+        self.las_control = None
 
 
     def read_procedure_file(self,input_file_name):
-        print "taking instructions from " + str(input_file_name) + ".txt"
+        print "taking instructions from " + str(input_file_name)
         self.filedata = FRC.file_reader(input_file_name)  # so the MasterController obj can access data from txt file
-        print 'FILE PROCESSED '
+        print 'FILE PROCESSED'
 
     def create_magnet_controller(self):
         print(self.filedata.machineMode, self.filedata.magnetType)
@@ -68,19 +70,38 @@ class master_controller(object):
         # if USING_MAG == "VELA_BA1" and Machine_Type == 'V':
         # if USING_MAG == "VELA_BA1" and Machine_Type == 'P':
 
+    # If there is enough symmetry about the "create_controller" functions then could perhaps merge into single function?
+
+    def create_llrf_controller(self):
+        # would be useful if there was a "getLlrfController" function for different modes and machine type
+        pass
+
+    def create_laser_controller(self):
+        # THIS COULD BE DONE BETTER?
+        if self.filedata.processed_header_data[self.filedata.Machine_Type][0] == "V": # MAGIC STRING
+            self.las_control = self.lasInit.virtual_PILaser_Controller()
+        elif self.filedata.processed_header_data[self.filedata.Machine_Type][0] == "P": # MAGIC STRING
+            self.las_control = self.lasInit.physical_PILaser_Controller()
+
+    def create_bpm_controller(self):
+        pass
+
+    def create_daq_controller(self):
+        pass
 
     def SetEnvironment(self):
 
         self.create_magnet_controller()
+        self.create_laser_controller()
 
-        # if not self.filedata.isPhysical():
-        #     # set up the environment variables and controllers to the Virtual Machine
-        #     print "USING VIRTUAL MACHINE!"
-        #     os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
-        #     os.environ["EPICS_CA_ADDR_LIST"] = "10.10.0.12"
-        #     os.environ["EPICS_CA_MAX_ARRAY_BYTES"] = "10000000"
-        #     os.environ["EPICS_CA_SERVER_PORT"] = "6000"
-        #
+        if self.filedata.isVirtual():
+            # set up the environment variables and controllers to the Virtual Machine
+            print "USING VIRTUAL MACHINE!"
+            os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
+            os.environ["EPICS_CA_ADDR_LIST"] = "10.10.0.12"
+            os.environ["EPICS_CA_MAX_ARRAY_BYTES"] = "10000000"
+            os.environ["EPICS_CA_SERVER_PORT"] = "6000"
+
         #     if not self.filedata.Using_Mag == self.filedata.True_False_Offline[1]:  # if not "False"
         #         self.magInit = mag.init()
         #         if self.filedata.Using_Mag == self.filedata.True_False_Offline[2]:  # if Offline

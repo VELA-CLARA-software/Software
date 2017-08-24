@@ -76,8 +76,8 @@ QUAD04: 0.5
 QUAD05: 0.5
 DIP02: 0
 
-LLRF_Amplitude: 65 (MV/m)
-LLRF_Phase: 0
+LLRF_Amplitude_MVM: 65
+LLRF_Phase_DEG: 0
 #LASER_HPos: 0
 #LASER_VPos: 0
 #LASER_Intensity: 0
@@ -95,8 +95,8 @@ QUAD03: 0
 QUAD04: 0
 QUAD05: 0
 DIP02: -10
-LLRF_Amplitude: 65 (MV/m)
-LLRF_Phase: 10
+LLRF_Amplitude_MVM: 65
+LLRF_Phase_DEG: 10
 
 #LASER_HPos: 0
 #LASER_VPos: 0
@@ -122,8 +122,8 @@ QUAD05: 4
 
 DIP02: -5
 
-LLRF_Amplitude: 65 (MV/m)
-LLRF_Phase: 0 (degrees)
+LLRF_Amplitude_MVM: 65
+LLRF_Phase_DEG: 0
 
 #LASER_HPos: 0
 #LASER_VPos: 0
@@ -149,8 +149,8 @@ QUAD05: 4
 
 DIP02: 0
 
-LLRF_Amplitude: 65 (MV/m)
-LLRF_Phase: 0 (degrees)
+LLRF_Amplitude_MVM: 65
+LLRF_Phase_DEG: 0
 
 #LASER_HPos: 0
 #LASER_VPos: 0
@@ -176,8 +176,8 @@ QUAD05: 4
 
 DIP02: -11
 
-LLRF_Amplitude: 65 (MV/m)
-LLRF_Phase: 8989 (degrees)
+LLRF_Amplitude_MVM: 65
+LLRF_Phase_DEG: 8989
 
 #LASER_HPos: 0
 #LASER_VPos: 0
