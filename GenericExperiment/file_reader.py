@@ -14,7 +14,7 @@ import global_keywords as gk
 
 
 
-sys.path.remove('\\\\fed.cclrc.ac.uk\\org\\NLab\\ASTeC\\Projects\\VELA\\Software\\VELA_CLARA_PYDs\\bin\\stage')
+# sys.path.remove('\\\\fed.cclrc.ac.uk\\org\\NLab\\ASTeC\\Projects\\VELA\\Software\\VELA_CLARA_PYDs\\bin\\stage')
 sys.path.append('\\\\fed.cclrc.ac.uk\\org\\NLab\\ASTeC\\Projects\\VELA\\Software\\VELA_CLARA_PYDs\\bin\\stagetim')
 from VELA_CLARA_LLRF_Control import MACHINE_AREA
 from VELA_CLARA_LLRF_Control import MACHINE_MODE
@@ -69,8 +69,8 @@ class file_reader:
             self.Start_Element = self.processed_header_data[gk.Start_Element][0]
             self.Stop_Element = self.processed_header_data[gk.Stop_Element][0]
             self.BPM_Names = self.processed_header_data[gk.BPM_Names]
-            for names in self.BPM_Names:
-                print names
+            # for names in self.BPM_Names:
+            #     print names
             self.get_machine_mode()
             self.get_magnet_controller_type()
             # self.get_llrf_controller_state()

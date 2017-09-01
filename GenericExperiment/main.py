@@ -1,6 +1,6 @@
 import sys
 
-# sys.path.append('\\\\fed.cclrc.ac.uk\\org\\NLab\\ASTeC\\Projects\\VELA\\Software\\OnlineModel')
+sys.path.append('\\\\fed.cclrc.ac.uk\\org\\NLab\\ASTeC\\Projects\\VELA\\Software\\OnlineModel')
 # sys.path.append('\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Software\\VELA_CLARA_PYDs\\bin\\stage')
 import global_keywords as gk
 import master_controller as mc
@@ -38,7 +38,7 @@ def main_run(k, u): # kth loop, u for laser on/off
     for i in T.filedata.processed_header_data[gk.Magnets_Used]:  # checking
         print str(i) + " = " + str(T.mag_control.getSI(i))
 
-    print "T.llrf_control.getAmpMVM()", T.llrf_control.getAmpMVM()
+    # print "T.llrf_control.getAmpMVM()", T.llrf_control.getAmpMVM()
 
     if T.filedata.isVirtual():
         ASTRA.startElement = Start_Element  # Takes start and stop elements for the sim from the txt file
@@ -55,20 +55,10 @@ def main_run(k, u): # kth loop, u for laser on/off
 
 
 for i in range(1, T.filedata.number_loops + 1):
-    if not T.filedata.master_loop_dict[gk.Loop_ +str(i)][gk.DAQ_SETTINGS][gk.DAQ_LASER_ON] == 0:
-        main_run(i, 1)
-    if not T.filedata.master_loop_dict[gk.Loop_ +str(i)][gk.DAQ_SETTINGS][gk.DAQ_LASER_OFF] == 0:
+    for k,j in T.filedata.master_loop_dict[gk.Loop_ +str(i)].iteritems():
+        print k,j
+    print T.filedata.master_loop_dict[gk.Loop_ +str(i)][gk.DAQ_SETTINGS][gk.DAQ_LASER_OFF], 'llllllllllama'
+    # if not T.filedata.master_loop_dict[gk.Loop_ +str(i)][gk.DAQ_SETTINGS][gk.DAQ_LASER_ON][0] == 0:
+    #     main_run(i, 1)
+    if not int(T.filedata.master_loop_dict[gk.Loop_ +str(i)][gk.DAQ_SETTINGS][gk.DAQ_LASER_OFF]) == 0:
         main_run(i, 0)
-
-
-
-
-
-
-
-
-
-
-
-
-
