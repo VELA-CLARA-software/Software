@@ -206,6 +206,8 @@ class Functions():
 		print('Determinied Dispersion with '+dipole+' and '+screen)
 		print('dispersion'+str(c[1])+' and  beamsigma is'+str(sX))
 		return c[1],sX
+
+	'''The Follwing have been altered to waork with the online model (400.0033)'''
 	def calcMomSpread(self,dctrl,dipole, Is, I):
 		D = dctrl.getMagObjConstRef(dipole)
 		mom1= (400.0033/D.magneticLength)*(np.polyval(D.fieldIntegralCoefficients, abs(I-Is))*physics.c*180)/(45*physics.pi*1000000000)

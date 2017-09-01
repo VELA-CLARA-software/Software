@@ -113,8 +113,8 @@ class Model():
 			if self.view.checkBox_1_s.isChecked()==True:
 				"""1. Checks"""
 				print('hi')
-				self.p=5.49
-				self.I=-15.8093
+				self.p=7.49533
+				self.I=-21.61905
 
 			"""2. Set Disperaion"""
 			if self.view.checkBox_2_s.isChecked()==True:
