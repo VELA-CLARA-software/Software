@@ -47,7 +47,8 @@ BPM_Names: BPM01, BPM02, BPM03, BPM04
 # Here put the CAMs that you want to use
 # CONVENTION: YAG-01 HAS CAMERA CAM-02
 
-CAM_Names: YAG01, YAG02, YAG03, YAG04
+CAM_Type: VELA
+CAM_Names: YAG02, YAG01
 
 # for virtual machine only!
 Start_Element: V1-GUN
@@ -58,9 +59,10 @@ Gun_Type: VELA
 BPM_Type: VELA
 
 # T for True, F for False, O for Offline
-USING_LASER: F
-USING_LLRF: T
-USING_BPM: VELA_INJ
+USING_DAQ: T
+USING_LASER: T
+USING_LLRF: VELA_LRRG
+USING_BPM: None
 USING_MAG: VELA_INJ
 MACHINE_MODE: VIRTUAL
 
@@ -69,123 +71,49 @@ END_HEADER_DATA:
 START_LOOP_1
 Loop_1
 
-QUAD01: 0.5
-QUAD02: 0.5
-QUAD03: 0.5
-QUAD04: 0.5
-QUAD05: 0.5
-DIP02: 0
 
-LLRF_Amplitude_MVM: 65
-LLRF_Phase_DEG: 0
-#LASER_HPos: 0
-#LASER_VPos: 0
-#LASER_Intensity: 0
+MAGNET_SETTINGS: QUAD01 = 0.5, QUAD02 = 0.5, QUAD03 = 0.5, QUAD04 = 0.5, QUAD05 = 0.5, DIP02 = 0
+LLRF_SETTINGS: LLRF_Amplitude_MVM = 65, LLRF_Phase_DEG = 0
+LASER_SETTINGS: LASER_HPos = 0, LASER_VPos = 0, LASER_Intensity = 0
+DAQ_SETTINGS: DAQ_LASER_ON = 100, DAQ_LASER_OFF = 50
 
-# This will run and take 100 shots with laser on and then 50 shots with laser off
-DAQ_LASER_ON: 100
-DAQ_LASER_OFF: 50
 
 START_LOOP_2
 Loop_2
 
-QUAD01: 0
-QUAD02: 0
-QUAD03: 0
-QUAD04: 0
-QUAD05: 0
-DIP02: -10
-LLRF_Amplitude_MVM: 65
-LLRF_Phase_DEG: 10
 
-#LASER_HPos: 0
-#LASER_VPos: 0
-#LASER_Intensity: 0
+MAGNET_SETTINGS: QUAD01 = 0, QUAD02 = 0, QUAD03 = 0, QUAD04 = 0, QUAD05 = 0, DIP02 = -10
+LLRF_SETTINGS: LLRF_Amplitude_MVM = 65, LLRF_Phase_DEG = 10
+LASER_SETTINGS: LASER_HPos = 0, LASER_VPos = 0, LASER_Intensity = 0
+DAQ_SETTINGS: DAQ_LASER_ON = 100, DAQ_LASER_OFF = 50
 
-# This will run and take 100 shots with laser on and then 50 shots with laser off
-DAQ_LASER_ON: 100
-DAQ_LASER_OFF: 50
 
+START_LOOP_3
 Loop_3
 
-#S02-QUAD1: 2
-#S02-QUAD2: 1
-#S02-QUAD3: 3
-#S02-QUAD4: 4
-#S02-QUAD5: 4
 
-QUAD01: 2
-QUAD02: 1
-QUAD03: 3
-QUAD04: 4
-QUAD05: 4
+MAGNET_SETTINGS: QUAD01 = 2, QUAD02 = 1, QUAD03 = 3, QUAD04 = 4, QUAD05 = 4, DIP02 = -5
+LLRF_SETTINGS: LLRF_Amplitude_MVM = 65, LLRF_Phase_DEG = 0
+LASER_SETTINGS: LASER_HPos = 0, LASER_VPos = 0, LASER_Intensity = 0
+DAQ_SETTINGS: DAQ_LASER_ON = 100, DAQ_LASER_OFF = 50
 
-DIP02: -5
 
-LLRF_Amplitude_MVM: 65
-LLRF_Phase_DEG: 0
-
-#LASER_HPos: 0
-#LASER_VPos: 0
-#LASER_Intensity: 0
-
-# This will run and take 100 shots with laser on and then 50 shots with laser off
-DAQ_LASER_ON: 100
-DAQ_LASER_OFF: 50
-
+START_LOOP_4
 Loop_4
 
-#S02-QUAD1: 0
-#S02-QUAD2: 0
-#S02-QUAD3: 0
-#S02-QUAD4: 0
-#S02-QUAD5: 4
+MAGNET_SETTINGS: QUAD01 = 0, QUAD02 = 0, QUAD03 = 0, QUAD04 = 0, QUAD05 = 4, DIP02 = 0
+LLRF_SETTINGS: LLRF_Amplitude_MVM = 65, LLRF_Phase_DEG = 0
+LASER_SETTINGS: LASER_HPos = 0, LASER_VPos = 0, LASER_Intensity = 0
+DAQ_SETTINGS: DAQ_LASER_ON = 100, DAQ_LASER_OFF = 50
 
-QUAD01: 0
-QUAD02: 0
-QUAD03: 0
-QUAD04: 0
-QUAD05: 4
 
-DIP02: 0
-
-LLRF_Amplitude_MVM: 65
-LLRF_Phase_DEG: 0
-
-#LASER_HPos: 0
-#LASER_VPos: 0
-#LASER_Intensity: 0
-
-# This will run and take 100 shots with laser on and then 50 shots with laser off
-DAQ_LASER_ON: 100
-DAQ_LASER_OFF: 50
-
+START_LOOP_5
 Loop_5
 
-#S02-QUAD1: 0
-#S02-QUAD2: 2
-#S02-QUAD3: 3
-#S02-QUAD4: 5
-#S02-QUAD5: 4
-
-QUAD01: 0
-QUAD02: 2
-QUAD03: 3
-QUAD04: 5
-QUAD05: 4
-
-DIP02: -11
-
-LLRF_Amplitude_MVM: 65
-LLRF_Phase_DEG: 8989
-
-#LASER_HPos: 0
-#LASER_VPos: 0
-#LASER_Intensity: 0
-
-# This will run and take 100 shots with laser on and then 50 shots with laser off
-DAQ_LASER_ON: 100
-DAQ_LASER_OFF: 50
+MAGNET_SETTINGS: QUAD01 = 0, QUAD02 = 2, QUAD03 = 3, QUAD04 = 5, QUAD05 = 4, DIP02 = -11
+LLRF_SETTINGS: LLRF_Amplitude_MVM = 65, LLRF_Phase_DEG = 8989
+LASER_SETTINGS: LASER_HPos = 0, LASER_VPos = 0, LASER_Intensity = 0
+DAQ_SETTINGS: DAQ_LASER_ON = 100, DAQ_LASER_OFF = 50
 
 
 
