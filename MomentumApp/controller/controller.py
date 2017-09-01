@@ -6,6 +6,7 @@ import pyqtgraph as pg
 sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\\..\\..\\loggerWidget\\')
 import loggerWidget as lw
 import random as r
+import cv2
 from epics import caget,caput
 class Controller():
 
@@ -37,7 +38,7 @@ class Controller():
 		layout.nextRow()
 		'''1.2 Create plave to diplay and image of a YAG screen'''
 		yagImageBox = layout.addViewBox(lockAspect=True, colspan=2)
-		self.YAGImage = pg.ImageItem(np.random.normal(size=(1392,1040)))
+		self.YAGImage = pg.ImageItem(np.random.normal(size=(2560,2160)))
 		yagImageBox.addItem(self.YAGImage)
 		self.displayMom = layout.addLabel('MOMENTUM = MeV/c')
 		self.view.horizontalLayout_4.addWidget(monitor)
@@ -84,19 +85,19 @@ class Controller():
 
 	def updateDisplays(self):
 		self.displayMom.setText('MOMENTUM<br> Current: '+str(self.model.I)+' A<br>'+str(self.model.p)+' = MeV/c')
-		self.bg1.setOpts(x=self.xdict.keys(), height=[1000*self.model.bpms.getXFromPV('BPM01'),1000*self.model.bpms.getYFromPV('BPM01')], width=1)# replace the random generators with  bpm x read offs
-		self.bg2.setOpts(x=self.xdict.keys(), height=[1000*self.model.bpms.getXFromPV('BPM02'),1000*self.model.bpms.getYFromPV('BPM02')], width=1)
-		self.bg3.setOpts(x=self.xdict.keys(), height=[1000*self.model.bpms.getXFromPV('BPM04'),1000*self.model.bpms.getYFromPV('BPM04')], width=1)
+		#self.bg1.setOpts(x=self.xdict.keys(), height=[1000*self.model.bpms.getXFromPV('BPM01'),1000*self.model.bpms.getYFromPV('BPM01')], width=1)# replace the random generators with  bpm x read offs
+		#self.bg2.setOpts(x=self.xdict.keys(), height=[1000*self.model.bpms.getXFromPV('BPM02'),1000*self.model.bpms.getYFromPV('BPM02')], width=1)
+		#self.bg3.setOpts(x=self.xdict.keys(), height=[1000*self.model.bpms.getXFromPV('BPM04'),1000*self.model.bpms.getYFromPV('BPM04')], width=1)
 		self.dCurve.setData(x=self.model.dCurrents,y=self.model.dPositions)
 		self.fCurve.setData(x=self.model.fCurrents,y=self.model.fPositions)
 		self.displayDisp.setText('DISPERSION:<br>'+str(self.model.Dispersion)+' m/A')
 		self.displayMom_S.setText('MOMENTUM SPREAD:<br>'+str(self.model.pSpread)+' MeV/c')
 	def refreshImage(self):
-		image = np.array(caget('VM-EBT-INJ-DIA-CAM-02:CAM:ArrayData'))
-		print(image.shape)
-		image = image/100000
-		image.shape = (1392,1040)
-		self.YAGImage.setImage(image)
+		#image = np.random.normal(size=(2560,2160))
+		cap = cv2.VideoCapture("http://192.168.83.31:7080/MJPG1.mjpg")
+		_,frame = cap.read()
+		self.YAGImage.setImage(np.flip(np.transpose(frame[:,:,0]),1))
+
 
 	def setChecks_mom(self):
 		if self.view.checkBox_all.isChecked()==True:
