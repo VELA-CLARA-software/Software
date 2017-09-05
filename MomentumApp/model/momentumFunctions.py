@@ -56,7 +56,7 @@ class Functions():
 		sY=[]
 		for i in range(N):
 			sY.append(caget(camera+':SigmaY'))
-		return sum(sX)/N
+		return sum(sY)/N
 	def isBeamOnScreen(self,screen):
 		#this does nothing at the moment
 		return True											#Add a controller to input
@@ -107,13 +107,24 @@ class Functions():
 		print('Centered beam in Spectrometer line using ' + dipole + ' and ' + bpm)
 		return dctrl.getSI(dipole)										#return the current at which beam has been centered
 	def minimizeBeta(self,qctrl,quad,sctrl,screen,init_step,N=1):
-		QUAD = qctrl.getMagObjConstRef(quad)								#setup
-		qctrl.setSI(quad, 0.3)	#depends if +tine or -tive				#set a fake start current
+		QUAD = qctrl.getMagObjConstRef(quad)
+		minimisingInX = False
+		if(init_step>0):
+			minimisingInX=True
+
+		if(minimisingInX):
+			qctrl.setSI(quad, 0.3)	#depends if +tine or -tive				#set a fake start current
+		else:
+			qctrl.setSI(quad, -0.3)
 		self.simulate.run()
 		step  = init_step
 		I3_1 = 0																#I3_1 is the first value that is 3 time the size of the inita current
 		I3_2 = 0
-		sX_initial =self.getSigmaXScreen(sctrl,screen,N)
+		sX_initial = 0
+		if(minimisingInX):
+			sX_initial =self.getSigmaXScreen(sctrl,screen,N)
+		else:
+			sX_initial =self.getSigmaYScreen(sctrl,screen,N)
 		I_initial = QUAD.siWithPol
 		sX_1 = sX_initial
 		I_1 = QUAD.siWithPol
@@ -125,52 +136,82 @@ class Functions():
 			I_1 = I_2
 			self.stepCurrent(qctrl, quad, -step)
 			I_2 = QUAD.siWithPol
-			sX_2 = self.getSigmaXScreen(sctrl,screen,N)
-			print('Left Step Screen Width: '+str(sX_2))							#At this pot we have gone higher than 3*initial_size. Assume straight line and find prediction for 3*
+			if(minimisingInX):
+				sX_2 =self.getSigmaXScreen(sctrl,screen,N)
+			else:
+				sX_2 =self.getSigmaYScreen(sctrl,screen,N)
+			print 'Current: ', str(I_2)
+			print('Sigma: '+str(sX_2))							#At this pot we have gone higher than 3*initial_size. Assume straight line and find prediction for 3*
 		I3_1 = (3*sX_initial*(I_2 - I_1) + (sX_2*I_1 - sX_1*I_2))/(sX_2 - sX_1)
 
 		self.stepCurrent(qctrl, quad, 2*(I_initial - I3_1))						#predict where the the other location of the size being 3*the initial_size and go there
 		I_1 = QUAD.siWithPol
-		sX_1 = self.getSigmaXScreen(sctrl,screen,N)
+		if(minimisingInX):
+			sX_1 =self.getSigmaXScreen(sctrl,screen,N)
+		else:
+			sX_1 =self.getSigmaYScreen(sctrl,screen,N)
+
+		print 'Sigma: ', sX_1
+		sX_2 = sX_1
 		if (sX_1<3*sX_initial):
 			while (sX_2<3*sX_initial):
 				sX_1 = sX_2
 				I_1 = I_2
 				self.stepCurrent(qctrl, quad, step)
 				I_2 = QUAD.siWithPol
-				sX_2 = self.getSigmaXScreen(sctrl,screen,N)
-				print('Right Step Screen Width: '+str(sX_2))
+				if(minimisingInX):
+					sX_2 =self.getSigmaXScreen(sctrl,screen,N)
+				else:
+					sX_2 =self.getSigmaYScreen(sctrl,screen,N)
+
+				print 'Current: ', str(I_2)
+				print('Sigma: '+str(sX_2))
 		else:
 			while (sX_2>3*sX_initial):
-				sX_1 = sX_2
+				sX_1 = sX_2###MAKE ZERO!!!
 				I_1 = I_2
 				self.stepCurrent(qctrl, quad, -step)
 				I_2 = QUAD.siWithPol
-				sX_2 = self.getSigmaXScreen(sctrl,screen,N)
-				print('Left Step Screen Width: '+str(sX_2))
+				if(minimisingInX):
+					sX_2 =self.getSigmaXScreen(sctrl,screen,N)
+				else:
+					sX_2 =self.getSigmaYScreen(sctrl,screen,N)
+
+				print 'Current: ', str(I_2)
+				print('Sigma: '+str(sX_2))
 
 		I3_2 = (3*sX_initial*(I_2 - I_1) + (sX_2*I_1 - sX_1*I_2))/(sX_2 - sX_1)
 
-		self.magnets.setSI(quad,0.5*(I3_1 + I3_2),QUAD.riTolerance,30)			#assume minimum is half way in between these places so set magnet current to that
+		qctrl.setSI(quad,0.5*(I3_1 + I3_2))			#assume minimum is half way in between these places so set magnet current to that
 		self.simulate.run()
 		print('Minimizied Beta with '+quad+' on '+screen)
 	def fixDispersion(self,qctrl,quad,sctrl,screen,step_size,N=1):
 		#THis needs work!!!!
-		qctrl.setSI(quad, -0.1)	#depends if +tine or -tive				#set a fake start current
+		qctrl.setSI(quad, 0.0)													#set a fake start current
 		self.simulate.run()														#assumes beam is on screen
 		sX = self.getSigmaXScreen(sctrl, screen, N)
 		sX_old = sX
-		MaximumBeamSigma = 0.0005
-		while (sX>MaximumBeamSigma):
+		targetBeamSigma = 0.0005
+		while (abs(sX-targetBeamSigma)>0.00001):
 			self.stepCurrent(qctrl, quad, step_size)
 			sX_old = sX
 			sX = self.getSigmaXScreen(sctrl, screen, N)
 			print('Sigma of Beam: '+str(sX))
-			if (abs(sX-MaximumBeamSigma)>abs(sX_old-MaximumBeamSigma)):
-				step_size = -step_size
+
+			if (abs(sX-targetBeamSigma)>abs(sX_old-targetBeamSigma)):
+				step_size=-step_size
+				step_size = 0.5*step_size
+
+			if (abs(sX-targetBeamSigma)<abs(sX-sX_old)):
+				step_size = 0.5*step_size
+
 	def findDispersion(self,dctrl,dipole,sctrl,screen,centering_I,points,leveloff_threshold,N=1):
 		currents = np.zeros(points)
 		positions = np.zeros(points)
+		dCurrents=[]
+		dPositions=[]
+		fCurrents=[]
+		fPositions=[]
 		DIP = dctrl.getMagObjConstRef(dipole)
 		#position of beam
 		sX=0
@@ -194,18 +235,18 @@ class Functions():
 			self.stepCurrent(dctrl, dipole, I_diff)
 			currents[i] = DIP.siWithPol
 			positions[i] = self.getXScreen(sctrl,screen,N)
-			self.dCurrents=currents
-			self.dPositions= positions
+			dCurrents=currents
+			dPositions= positions
 			if i==(points-1)/2:
 				sX = self.getSigmaXScreen(sctrl,screen,N)
 
 		c, stats = P.polyfit(currents,positions,1,full=True)
-		self.fCurrents=[0.90*centering_I,1.1*centering_I]
-		self.fPositions=[(c[1]*0.90*centering_I)+c[0],(c[1]*1.10*centering_I)+c[0]]
+		fCurrents=[0.90*centering_I,1.1*centering_I]
+		fPositions=[(c[1]*0.90*centering_I)+c[0],(c[1]*1.10*centering_I)+c[0]]
 		print(c)
 		print('Determinied Dispersion with '+dipole+' and '+screen)
 		print('dispersion'+str(c[1])+' and  beamsigma is'+str(sX))
-		return c[1],sX
+		return c[1],sX,dCurrents,dPositions,fCurrents,fPositions
 
 	'''The Follwing have been altered to waork with the online model (400.0033)'''
 	def calcMomSpread(self,dctrl,dipole, Is, I):

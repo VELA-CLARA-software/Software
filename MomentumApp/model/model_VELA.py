@@ -98,7 +98,7 @@ class Model():
 		if self.view.checkBox_3.isChecked()==True:
 			self.I = self.func.bendBeam(self.Cmagnets,'DIP02',
 										self.bpms,'BPM03',
-										'YAG01',
+										'VM-EBT-INJ-DIA-CAM-05:CAM',
 										self.predictedI, 0.0001)				#tol=0.0001 (metres)
 
 		'''4. Convert Current to Momentum'''
@@ -115,18 +115,18 @@ class Model():
 				print('hi')
 				self.p=7.49533
 				self.I=-21.61905
-
+				self.Cmagnets.setSI('DIP02',self.I)
 			"""2. Set Disperaion"""
 			if self.view.checkBox_2_s.isChecked()==True:
 				"""1.1 Minimize Beta"""
 
 				#self.func.minimizeBeta('QUAD01','VM-EBT-INJ-DIA-CAM-04:CAM',0.05)
-				#self.func.minimizeBeta(self.magnets,'QUAD01',None, 'VM-EBT-INJ-DIA-CAM-04:CAM', 0.05)
+				#self.func.minimizeBeta(self.magnets,'QUAD01',None, 'VM-EBT-INJ-DIA-CAM-05:CAM', 0.5)
 				"""2.2 Set Dispersion Size on Spec Line"""
 				self.Cmagnets.setSI('DIP02',self.I)
 				self.func.fixDispersion(self.magnets,'QUAD06',None,'VM-EBT-INJ-DIA-CAM-05:CAM',-0.05)
 				#ONLY in REAL LIFE
-				#self.func.magnets.degauss('DIP01')
+				#self.Cmagnets.degauss('DIP02')
 
 			"""3. Calculate Dispersion """
 			if self.view.checkBox_3_s.isChecked()==True:

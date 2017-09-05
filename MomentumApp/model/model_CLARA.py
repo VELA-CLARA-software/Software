@@ -57,12 +57,12 @@ class Model():
 		self.gun = self.llrfInit.virtual_CLARA_LRRG_LLRF_Controller()
 		self.LINAC01 = 	self.llrfInit.virtual_L01_LLRF_Controller()
 		self.Cmagnets.switchONpsu('DIP01')
-		self.Cmagnets.switchONpsu('S01-HCOR01')
-		self.Cmagnets.switchONpsu('S01-HCOR02')
+		self.Cmagnets.switchONpsu('S01-HCOR1')
+		self.Cmagnets.switchONpsu('S01-HCOR2')
 		self.Cmagnets.switchONpsu('S02-HCOR01')
 		self.Cmagnets.switchONpsu('S02-HCOR02')
-		self.Cmagnets.switchONpsu('S02-QUAD02')
-		self.Cmagnets.switchONpsu('S02-QUAD02')
+		self.Cmagnets.switchONpsu('S02-QUAD1')
+		self.Cmagnets.switchONpsu('S02-QUAD2')
 		self.ASTRA = onlineModel.ASTRA(V_MAG_Ctrl=self.Vmagnets,
 											C_S01_MAG_Ctrl=self.Cmagnets,
 											C_S02_MAG_Ctrl=self.Cmagnets,
@@ -70,9 +70,9 @@ class Model():
 											V_RF_Ctrl=None,
 											C_RF_Ctrl=self.gun,
 											L01_RF_Ctrl=self.LINAC01,
-											messages=True)
+											messages=False)
 		self.ASTRA.startElement = 'C1-GUN'
-		self.ASTRA.stopElement = 'SP-YAG04'
+		self.ASTRA.stopElement = 'CV-YAG01'
 		self.ASTRA.initDistrib = 'temp-start.ini'
 		self.ASTRA.initCharge = 0.25
 		self.gun.setAmpMVM(65)
@@ -103,7 +103,7 @@ class Model():
 			self.I = self.func.bendBeam(self.Cmagnets,'DIP01',
 										self.C2Vbpms,'CV-BPM01',
 										'YAG01',
-						 				self.predictedI, 0.0001) # tol=0.0001 (metres)
+						 				self.predictedI, 0.0001) 				# tol=0.0001 (metres)
 
 		'''4. Convert Current to Momentum'''
 		if self.view.checkBox_4.isChecked()==True:
@@ -113,38 +113,41 @@ class Model():
 	#Outline of Momentum Spread Measurement Procedure
 	def measureMomentumSpread(self):
 		if self.view.checkBox_done_mom.isChecked()==True:
-			"""2. Set Disperaion"""
+			#1. Checks
 			if self.view.checkBox_1_s.isChecked()==True:
 				"""1. Checks"""
-				print('hi')#self.PSL.info('1. Run Checks')
-				#self.func.minimizeBeta('QUAD01','YAG03',0.01)
-				#self.func.minimizeBeta('QUAD03','YAG03',0.01)
-
+				self.p=34.41
+				self.I=self.func.mom2I(self.Cmagnets,'DIP01',self.p)
+				self.Cmagnets.setSI('DIP01',self.I)
 			"""2. Set Disperaion"""
 			if self.view.checkBox_2_s.isChecked()==True:
-				"""2.1 Minimize Beta"""
-				#self.PSL.info('2.1 Minimize Beta')
-				#self.func.minimizeBeta('QUAD01','YAG03',0.05)
-				self.minimizeBeta('QUAD01', 'VM-EBT-INJ-DIA-CAM-04:CAM', 0.05)
-				"""2.2 Set Dispersion Size on Spec Line"""
-				#self.PSL.info('2.2 Set Dipersion size')
-				#self.pySetSI('DIP01',self.I,0.01,30)
-				#self.fixDispersion('QUAD06','VM-EBT-INJ-DIA-CAM-05:CAM',-0.05)
+				#2.1 Minimize Beta
+				self.func.minimizeBeta(self.Cmagnets,'S02-QUAD3',
+										None,'VM-CLA-C2V-DIA-CAM-01',1)
+				self.func.minimizeBeta(self.Cmagnets,'S02-QUAD4',
+										None,'VM-CLA-C2V-DIA-CAM-01',-1)
+				#2.2 Set Dispersion Size on Spec Line
+				self.Cmagnets.setSI('DIP01',self.I)
+				self.fixDispersion('QUAD0','VM-EBT-INJ-DIA-CAM-05:CAM',-0.05)
 				#ONLY in REAL LIFE
 				#self.func.magnets.degauss('DIP01')
 
 			"""3. Calculate Dispersion """
 			if self.view.checkBox_3_s.isChecked()==True:
-				#self.PSL.info('3. Dertermine Dispersion')
-				self.Dispersion,beamSigma = self.func.findDispersion('DIP01','VM-EBT-INJ-DIA-CAM-05:CAM',self.predictedI,5,0.1)
+				self.Dispersion,beamSigma,
+				self.dCurrents,self.dPositions,
+				self.fCurrents,
+				self.fPositions = self.func.findDispersion(self.Cmagnets,
+														'DIP01',
+														None,
+														'VM-CLA-C2V-DIA-CAM-01',
+														self.I,5,0.1)
 				self.Is = beamSigma/self.Dispersion
 				print(self.Is)
 				#Haven't done errors yet
 
 			"""4. Calculate Momenum Spread """
 			if self.view.checkBox_4_s.isChecked()==True:
-				#self.PSL.info('4. Get Momentum Spread')
-				self.pSpread = self.func.calcMomSpread('DIP01',self.Is,self.predictedI)
+				self.pSpread = self.func.calcMomSpread(self.Cmagnets,'DIP01',self.Is,self.I)
 		else:
-			#self.PSL.error('Not confirmed momentum measurement')
 			print 'Not confirmed momentum measurement'
