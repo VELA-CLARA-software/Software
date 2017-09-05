@@ -48,7 +48,7 @@ class createSignalTimer(QObject):
 
     def __init__(self, name, function, arg=[]):
         # Initialize the signal as a QObject
-        QObject.__init__(self)
+        super(createSignalTimer, self).__init__()
         self.function = function
         self.args = arg
         self.name = name
@@ -65,19 +65,25 @@ class createSignalTimer(QObject):
         self.timer.stop()
         self.startTimer(interval)
 
-class recordWorker(QtCore.QObject):
+class recordWorker(QObject):
+
+    recordMeanSignal = QtCore.pyqtSignal(float)
+    recordStandardDeviationSignal = QtCore.pyqtSignal(float)
+    recordMinSignal = QtCore.pyqtSignal(float)
+    recordMaxSignal = QtCore.pyqtSignal(float)
+    nsamplesSignal = QtCore.pyqtSignal(int)
+
     def __init__(self, records, signal, name):
         super(recordWorker, self).__init__()
         self.records = records
         self.signal = signal
         self.name = name
+        self.nsamples = 0
         self.signal.dataReady.connect(self.updateRecord)
 
     @QtCore.pyqtSlot(list)
     def updateRecord(self, value):
-        # if len(self.records[self.name]['data']) > 1 and value[1] == self.records[self.name]['data'][-1][1] and value[1] == self.records[self.name]['data'][-2][1]:
-        #     self.records[self.name]['data'][-1] = value
-        # else:
+        self.nsamples += 1
         if len(self.records[self.name]['data']) > self.records[self.name]['maxlength']:
             cutlength = len(self.records[self.name]['data']) - self.records[self.name]['maxlength']
             self.records[self.name]['data'] = np.delete(self.records[self.name]['data'],range(cutlength),axis=0)
@@ -85,20 +91,27 @@ class recordWorker(QtCore.QObject):
             self.records[self.name]['data'] = np.array([value])
         else:
             self.records[self.name]['data'] = np.concatenate((self.records[self.name]['data'],[value]), axis=0)
+        values = zip(*self.records[self.name]['data'])[1]
+        self.recordMeanSignal.emit(np.mean(values))
+        self.recordStandardDeviationSignal.emit(np.std(values))
+        self.recordMinSignal.emit(np.min(values))
+        self.recordMaxSignal.emit(np.max(values))
+        self.nsamplesSignal.emit(self.nsamples)
 
 class createSignalRecord(QObject):
 
     def __init__(self, records, name, pen, timer, maxlength, function, arg=[], functionForm=None, functionArgument=None, logscale=False, VerticalScale=1, VerticalOffset=0, verticalMeanSubtraction=False):
-        QObject.__init__(self)
+        super(createSignalRecord, self).__init__()
         self.records = records
         self.name = name
         self.signal = createSignalTimer(name, function, arg=arg)
         self.records[name] = {'name': name, 'record': self, 'pen': pen, 'timer': timer, 'maxlength': maxlength, 'function': function, 'arg': arg, 'ploton': True, 'data': [],
         'functionForm': functionForm, 'functionArgument': functionArgument,
         'logscale': logscale, 'VerticalScale': VerticalScale, 'VerticalOffset': VerticalOffset, 'verticalMeanSubtraction': verticalMeanSubtraction, 'signal': self.signal}
-        self.thread = QtCore.QThread()
+        self.thread = QThread()
         self.worker = recordWorker(self.records, self.signal, name)
         self.worker.moveToThread(self.thread)
+        self.records[name]['worker'] = self.worker
         self.thread.start()
         self.signal.startTimer(timer)
 
@@ -112,3 +125,47 @@ class createSignalRecord(QObject):
         self.stop()
         self.thread.quit()
         self.thread.wait()
+
+import tables as tables
+
+class recordData(tables.IsDescription):
+    time  = tables.FloatCol()     # double (double-precision)
+    value  = tables.FloatCol()
+
+class signalRecorder(QObject):
+
+    def __init__(self, filename="test", flushtime=10):
+        super(signalRecorder, self).__init__()
+        self.records = {}
+        _, file_extension = os.path.splitext(filename)
+        if not file_extension in ['h5','hdf5']:
+            filename = filename+".h5"
+        self.h5file = tables.open_file(filename, mode = "w", title = filename)
+        self.group = self.h5file.create_group("/", 'data', 'Saved Data')
+        self.tables = []
+        self.rows = []
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.flushTables)
+        self.timer.start(1000*flushtime)
+
+    def addSignal(self, name='', pen='', timer=1, maxlength=100, function=None, arg=[], **kwargs):
+        createSignalRecord(records=self.records, name=name, pen=pen, timer=timer, maxlength=maxlength, function=function, arg=arg, **kwargs)
+        table = self.h5file.create_table(self.group, name, recordData, name)
+        self.tables.append(table)
+        row = table.row
+        self.rows.append(row)
+        self.records[name]['signal'].dataReady.connect(lambda x: self.addData(row,x))
+
+    def addData(self, row, x):
+        row['time'], row['value'] = x
+        row.append()
+
+    def flushTables(self):
+        for t in self.tables:
+            t.flush()
+
+    def closeEvent(self, event):
+        print 'Close event!'
+        for n,r in self.records.iteritems():
+            r['signal'].close()
+        self.flushTables()

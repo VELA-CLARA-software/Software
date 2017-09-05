@@ -132,7 +132,8 @@ class ASTRAInjector(object):
             os.chdir(self.basedirectory)
         return self.screenpositions
 
-    def createHDF5Summary(self):
+    def createHDF5Summary(self, screens=None):
+        savescreens = [str(s) for s in screens]
         screenpositions = self.getScreenFiles()
         filename = '_'.join(map(str,[self.runname,self.globalSettings['charge'],self.globalSettings['npart']])) + '.hdf5'
         print filename
@@ -156,7 +157,9 @@ class ASTRAInjector(object):
                 grp.create_dataset(n,data=numpy.loadtxt(emitfile))
             for s in screens:
                 screenfile = 'test.in.'+n+'.'+s+'.'+n
-                screengrp.create_dataset(s,data=numpy.loadtxt(screenfile))
+                if screens == None or s in savescreens:
+                    print 'screen = ', s
+                    screengrp.create_dataset(s,data=numpy.loadtxt(screenfile))
         os.chdir(self.basedirectory)
 
 class feltools(object):

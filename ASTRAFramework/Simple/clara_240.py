@@ -26,10 +26,9 @@ astra.loadSettings('short_240.settings')
 # astra.runASTRAFiles()
 
 ''' Run this to create a summary file with all required input files, and the consequent output files'''
-astra.createHDF5Summary()
+astra.createHDF5Summary(screens=[4929])
 
 ''' These commands convert the final bunch to SDDS and then compress it to an RMS value of <dt> '''
-ft = feltools('1')
-sddsfile = ft.convertToSDDS('test.in.128.4929.128')
-# ft.compressOutputBunch(sddsfile, dt=1e-13)
-ft.sddsMatchTwiss(sddsfile, 'compressed.sdds', tstdev=5e-13)
+# ft = feltools('1')
+# sddsfile = ft.convertToSDDS('test.in.128.4929.128')
+# ft.sddsMatchTwiss(sddsfile, 'compressed.sdds', tstdev=5e-13)
