@@ -7,6 +7,8 @@ from PyQt4 import QtGui, QtCore
 import scopeWriterLauncherView
 import scopeWriterView
 import scopeWriterController
+import scopeWriterLoadView
+import scopeWriterSaveView
 
 # this class handles everything
 class scopeWriterMasterController(object):
@@ -74,7 +76,9 @@ class scopeWriterMasterController(object):
             self.launchScopeController()
             # launch main view
             self.launchMainView()
-            self.controller = scopeWriterController.scopeWriterController(self.mainView, self.scopeController)
+            self.loadView = scopeWriterLoadView.scopeWriterLoadView("Load setup", scopeWriterGlobals.scopeSetupLocation)
+            self.saveView = scopeWriterSaveView.scopeWriterSaveView()
+            self.controller = scopeWriterController.scopeWriterController(self.mainView, self.scopeController, self.loadView, self.saveView)
             self.startLauncher.infoLabel.setText("Loading scope writer")
             self.mainViewClose()
         else:
@@ -96,6 +100,6 @@ class scopeWriterMasterController(object):
         self.mainView.close()
 
     def launchScopeController(self):
-        self.scopeController = self.scopeInit.getScopeController( self.machineMode, self.machineArea)
+        self.scopeController = self.scopeInit.getScopeController( self.machineMode, self.machineArea )
         if  self.machineMode is not vcsc.MACHINE_MODE.OFFLINE:
             self.activeEPICS = True

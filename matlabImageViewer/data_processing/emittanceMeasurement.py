@@ -44,6 +44,7 @@ class emittanceMeasurement:
         self.tmpyvec = []
         self.fitxvec = []
         self.fityvec = []
+        self.twodvec = []
         # the 1-d array containing "numshots" images is re-shaped according to the array size
         self.data = self.currentFile[self.datastruct][self.datastring]
         self.newdata = numpy.reshape(self.data, self.arrayshape)
@@ -71,13 +72,13 @@ class emittanceMeasurement:
                 self.mean = sum(slice_2d) / self.n
                 self.sigma = sum(slice_2d * (slice_2d - self.mean) ** 2) / self.n
                 self.sigmaY.append(self.sigma)
-                self.sigmaYAvg.append(numpy.mean(slice_2d))
+                self.sigmaYAvg.append(numpy.std(slice_2d))
             for slice_2d in numpy.transpose(self.newdata)[i][self.xCropMin:self.xCropMax]:
                 self.n = len(slice_2d)
                 self.mean = sum(slice_2d) / self.n
                 self.sigma = sum(slice_2d * (slice_2d - self.mean) ** 2) / self.n
                 self.sigmaX.append(self.sigma)
-                self.sigmaXAvg.append(numpy.mean(slice_2d))
+                self.sigmaXAvg.append(numpy.std(slice_2d))
             # the data is then arranged into 2-d arrays of the pixel value and the sigma value
             self.newarrayY = numpy.vstack((self.yy, self.sigmaY))
             self.newarrayX = numpy.vstack((self.xx, self.sigmaX))
@@ -85,37 +86,42 @@ class emittanceMeasurement:
             # self.xOutput = [x for x in self.sigmaXAvg if abs(x) > numpy.std(self.sigmaXAvg) * 2]
             self.yOutput = [x for x in self.sigmaYAvg if abs(x - numpy.mean(self.sigmaYAvg)) < numpy.std(self.sigmaYAvg) * 2]
             self.xOutput = [x for x in self.sigmaXAvg if abs(x - numpy.mean(self.sigmaXAvg)) < numpy.std(self.sigmaXAvg) * 2]
-            self.newarrayYAvg = numpy.vstack((range(len(self.yOutput)), self.yOutput))
-            # self.newarrayYAvg = numpy.vstack((self.yy, self.sigmaYAvg))
-            self.newarrayXAvg = numpy.vstack((range(len(self.xOutput)), self.xOutput))
-            # self.newarrayXAvg = numpy.vstack((self.xx, self.sigmaXAvg))
+            # self.newarrayYAvg = numpy.vstack((range(len(self.yOutput)), self.yOutput))
+            self.newarrayYAvg = numpy.vstack((self.yy, self.sigmaYAvg))
+            # self.newarrayXAvg = numpy.vstack((range(len(self.xOutput)), self.xOutput))
+            self.newarrayXAvg = numpy.vstack((self.xx, self.sigmaXAvg))
             # we fit a gaussian - see scipy.io.curve_fit documentation for more info
             self.fitx, self.tmpx = curve_fit(self.gaussFit, self.newarrayXAvg[0], self.newarrayXAvg[1], p0=[max(self.newarrayXAvg[1]), self.newarrayXAvg[1][int(len(self.newarrayXAvg[0])/2)], numpy.mean(self.newarrayXAvg[1])])
             # self.fitx, self.tmpx = curve_fit(self.gaussFit, self.newarrayX[0], self.newarrayX[1], p0=[max(self.newarrayX[1]), self.newarrayX[1][int(len(self.newarrayX[0])/2)], numpy.mean(self.newarrayX[1])])
             self.fity, self.tmpy = curve_fit(self.gaussFit, self.newarrayYAvg[0], self.newarrayYAvg[1], p0=[max(self.newarrayYAvg[1]), self.newarrayYAvg[1][int(len(self.newarrayYAvg[0])/2)], numpy.mean(self.newarrayYAvg[1])])
             # self.fity, self.tmpy = curve_fit(self.gaussFit, self.newarrayY[0], self.newarrayY[1], p0=[max(self.newarrayY[1]), self.newarrayY[1][int(len(self.newarrayY[0])/2)], numpy.mean(self.newarrayY[1])])
-            # self.yyy = numpy.transpose(numpy.transpose(numpy.transpose(self.newdata)[i][self.xCropMin:self.xCropMax])[self.yCropMin:self.yCropMax])
-            # self.xxx = numpy.transpose(self.newdata)[i][self.xCropMin:self.xCropMax]
-            # self.fit2ddata = self.twoD_Gaussian((self.xxx, self.yyy), 2, 50, 50, 20, 30, 0, 10)
+            self.yyy = numpy.transpose(numpy.transpose(numpy.transpose(self.newdata)[i][self.xCropMin:self.xCropMax])[self.yCropMin:self.yCropMax])
+            self.xxx = numpy.transpose(self.newdata)[i][self.xCropMin:self.xCropMax]
+            self.fit2ddata = self.twoD_Gaussian((self.xxx, self.yyy), 1, max(self.newarrayXAvg[1]), max(self.newarrayYAvg[1]), self.newarrayXAvg[1][int(len(self.newarrayXAvg[0])/2)], self.newarrayYAvg[1][int(len(self.newarrayYAvg[0])/2)], 0, 0)
+            self.initial_guess = (2, 50, 50, 20, 30, 0, 10)
+            self.popt, self.pcov = curve_fit(self.twoD_Gaussian, (self.xxx, self.yyy), self.fit2ddata, p0=[1, max(self.newarrayXAvg[1]), max(self.newarrayYAvg[1]), self.newarrayXAvg[1][int(len(self.newarrayXAvg[0])/2)], self.newarrayYAvg[1][int(len(self.newarrayYAvg[0])/2)], 0, 0])
+            # print self.popt, "pop"
+            # print self.fitx, "fitx"
+            # print self.fity, "fity"
+            # print self.popt
             # plt.plot(self.newarrayX[0], self.newarrayX[1])
             # plt.plot(self.newarrayX[0], self.gaussFit(self.newarrayX[0], *self.fitx))
             # plt.show()
             self.fitxvec.append(self.fitx)
             self.fityvec.append(self.fity)
+            self.twodvec.append(self.popt)
         # the vectors of all the fits are returned to the main controller
-        # self.initial_guess = (2, 50, 50, 20, 30, 0, 10)
-        #
-        # self.popt, self.pcov = curve_fit(self.twoD_Gaussian, (self.x, self.y), self.fit2ddata, p0=self.initial_guess)
-        # self.data_fitted = self.twoD_Gaussian((self.x, self.y), *self.popt)
+        self.data_fitted = self.twoD_Gaussian((self.x, self.y), *self.popt)
+        # print self.data_fitted
         # self.fig, self.ax = plt.subplots(1, 1)
         # self.ax.hold(True)
-        # # self.ax.imshow(numpy.transpose(self.fit2ddata.reshape(self.xCropMax - self.xCropMin, self.yCropMax - self.yCropMin)))
-        # self.ax.contour(numpy.transpose(self.data_fitted.reshape(self.xCropMax - self.xCropMin, self.yCropMax - self.yCropMin)))#, 8, colors='w')
+        # self.ax.imshow(numpy.transpose(self.data_fitted.reshape(self.xCropMax - self.xCropMin, self.yCropMax - self.yCropMin)))
+        # # self.ax.contour(numpy.transpose(self.data_fitted.reshape(self.xCropMax - self.xCropMin, self.yCropMax - self.yCropMin)))#, 8, colors='w')
         # # plt.figure()
         # # plt.imshow(numpy.transpose(self.fit2ddata.reshape(self.xCropMax - self.xCropMin, self.yCropMax - self.yCropMin)))
         # # plt.colorbar()
         # plt.show()
-        return self.fitxvec, self.fityvec
+        return self.fitxvec, self.fityvec, self.twodvec
 
     # for gaussian fitting of a set of data
     def gaussFit(self, x, amp, x0, sigma):

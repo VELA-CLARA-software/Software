@@ -5,8 +5,9 @@ from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 
 class scopeWriterLoadView(QWidget):
+    fileName = pyqtSignal(str)
     def __init__(self, window_name = "", root = "/" ):
-        super(GUI_FileLoad, self).__init__()
+        super(scopeWriterLoadView, self).__init__()
         self.resize(600, 600)
         self.setWindowTitle(window_name)
         # file browser tree view
@@ -79,6 +80,7 @@ class scopeWriterLoadView(QWidget):
         self.indexItem = self.fileSystemModel.index(index.row(), 0, index.parent())
         self.setupPath = str(self.fileSystemModel.fileName(self.indexItem))
         self.setupPathAndFile = self.fileSystemModel.filePath(self.indexItem)
+        self.fileName.emit(self.setupPathAndFile)
         print  self.setupPath
         print  self.setupPathAndFile
 

@@ -149,7 +149,7 @@ class scopeWriterUi(object):
         self.filterNameLabel = QtGui.QLabel()
         self.filterNameLabel.setObjectName(_fromUtf8("filterNameLabel"))
         self.filterNameLabel.setText(_translate("mainWindow", "Filter Type?", None))
-        self.filterTypes = ["None", "Moving Average", "Gaussian filter", "FFT"]
+        self.filterTypes = ["None", "Moving Average", "Gaussian filter", "FFT", "Baseline Subtraction"]
         self.filterComboBox = QtGui.QComboBox()
         self.filterComboBox.setObjectName(_fromUtf8("filterComboBox"))
         for i in self.filterTypes:

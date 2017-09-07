@@ -1,19 +1,17 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from PyQt4 import QtGui, QtCore
-from Ui_FileSave import Ui_FileSave
+from scopeWriterSaveUI import scopeWriterSaveUI
 import datetime
-import magnetAppGlobals as globals
+import scopeWriterGlobals as globals
 
 class scopeWriterSaveView(QtGui.QMainWindow, scopeWriterSaveUI):
+    fileName = QtCore.pyqtSignal(str)
     def __init__(self  ):
         QtGui.QMainWindow.__init__(self)
         # startup crap
         self.setupUi(self)
-        self.setWindowIcon(QtGui.QIcon(globals.appIcon))
-        self.appPixMap = QtGui.QPixmap(globals.appIcon)
         self.addComboKeywords()
-        self.commentsSection.appendPlainText("Some Interesting Comments...")
         self.now = datetime.datetime.now()
         #type(self.now.month)
         self.controller_type = "";
@@ -21,27 +19,26 @@ class scopeWriterSaveView(QtGui.QMainWindow, scopeWriterSaveUI):
         self.canWindowClose = False
 
     def setFileName(self):
-        self.filename = globals.dburtLocation + \
-                        self.controller_type + "_" + \
+        self.filename = globals.scopeSetupLocation + \
                         str(self.now.year)  + '-' + \
                         '{:02d}'.format(self.now.month) + '-' + \
                         '{:02d}'.format(self.now.day  ) + '-' + \
                         '{:02d}'.format(self.now.hour ) + \
                         '{:02d}'.format(self.now.minute)+ \
-                        '.dburt'
+                        '.lss'
         self.file_name_entry.setText(self.filename)
+        print self.filename
+        self.fileName.emit(self.filename)
+        return self.filename
 
     def getComboBoxEntries(self):
-        self.keywords = str(self.areaCombo.currentText()) + '\t' +\
-                        str(self.comboBox1.currentText()) + '\t' +\
-                        str(self.comboBox2.currentText()) + '\t' +\
-                        str(self.comboBox3.currentText()) + '\t'
+        self.keywords = str(self.areaCombo.currentText())
         return self.keywords
     # this event is inherited and we overlaod it so the GUI_FileSave
     # is never deleted, (until we call close on the entire program)
     def closeEvent(self, evnt):
         if self.canWindowClose:
-            super(GUI_FileSave, self).closeEvent(evnt)
+            super(scopeWriterSaveView, self).closeEvent(evnt)
         else:
             evnt.ignore()
             self.hide()
