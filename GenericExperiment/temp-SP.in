@@ -71,7 +71,7 @@ LQUAD=.T,
 !SP-QUAD05
 Q_pos(1)=0.4213
 Q_length(1)=0.1
-Q_grad(1)=0.00834182413957
+Q_grad(1)=0.671178323504
 Q_bore(1)=0.01
 Q_smooth(1)=3.0
 /

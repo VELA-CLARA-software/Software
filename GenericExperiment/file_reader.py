@@ -14,7 +14,7 @@ import global_keywords as gk
 
 
 
-# sys.path.remove('\\\\fed.cclrc.ac.uk\\org\\NLab\\ASTeC\\Projects\\VELA\\Software\\VELA_CLARA_PYDs\\bin\\stage')
+sys.path.remove('\\\\fed.cclrc.ac.uk\\org\\NLab\\ASTeC\\Projects\\VELA\\Software\\VELA_CLARA_PYDs\\bin\\stage')
 sys.path.append('\\\\fed.cclrc.ac.uk\\org\\NLab\\ASTeC\\Projects\\VELA\\Software\\VELA_CLARA_PYDs\\bin\\stagetim')
 from VELA_CLARA_LLRF_Control import MACHINE_AREA
 from VELA_CLARA_LLRF_Control import MACHINE_MODE
@@ -171,8 +171,6 @@ class file_reader:
                 # clear the t_dict for each run.
                 t_dict = {} # temporary dictionay
                 for key in self.search(setting_key,dict):
-                    # print "setting key: ", setting_key
-                    # print "key: ", key
                     # for each key to the left of the ":", split up from either side of "=" and put into dict
                     # t_dict stores all information of settings to right of :
                     # t_dict is then inserted as a value in r_dict with key of setting_key
@@ -231,9 +229,3 @@ class file_reader:
         if self.processed_header_data[gk.Machine_Type][0] == gk.Machine_type_keywords[0]: # use virtual machine
             return True
         return False
-#
-# T = file_reader('Instructions_machine.txt')
-# print "T.daqState", T.daqState
-# print T.bpmType, type(T.bpmType)
-# print T.magnetType, type(T.magnetType)
-# print T.machineMode, type(T.machineMode)

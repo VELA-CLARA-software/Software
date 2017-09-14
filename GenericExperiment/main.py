@@ -8,7 +8,6 @@ import onlineModel
 
 input_file = 'Instructions_machine.txt'
 
-
 T = mc.master_controller( )
 T.read_procedure_file(input_file)
 T.create_controllers()
@@ -49,16 +48,9 @@ def main_run(k, u): # kth loop, u for laser on/off
         ASTRA.run()
 
     T.get_daq(k, u)
-    T.read_cam(k, u)
-
-    # use the DAQ stuff here!
-
 
 for i in range(1, T.filedata.number_loops + 1):
-    for k,j in T.filedata.master_loop_dict[gk.Loop_ +str(i)].iteritems():
-        print k,j
-    print T.filedata.master_loop_dict[gk.Loop_ +str(i)][gk.DAQ_SETTINGS][gk.DAQ_LASER_OFF], 'llllllllllama'
-    # if not T.filedata.master_loop_dict[gk.Loop_ +str(i)][gk.DAQ_SETTINGS][gk.DAQ_LASER_ON][0] == 0:
-    #     main_run(i, 1)
+    if not T.filedata.master_loop_dict[gk.Loop_ +str(i)][gk.DAQ_SETTINGS][gk.DAQ_LASER_ON][0] == 0:
+        main_run(i, 1)
     if not int(T.filedata.master_loop_dict[gk.Loop_ +str(i)][gk.DAQ_SETTINGS][gk.DAQ_LASER_OFF]) == 0:
         main_run(i, 0)
