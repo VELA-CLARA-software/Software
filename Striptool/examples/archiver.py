@@ -1,4 +1,5 @@
 import sys, time, os
+from datetime import date
 sys.path.append("..")
 import striptoolRecord as striptoolRecord
 import tables as tables
@@ -9,6 +10,8 @@ from PyQt4.QtGui import *
 import pyqtgraph as pg
 from pyqtgraph.parametertree import Parameter, ParameterTree, ParameterItem, registerParameterType
 import signal
+import yaml
+import VELA_CLARA_General_Monitor as vgen
 
 def signal_term_handler(signal, frame):
     sys.exit(0)
@@ -21,6 +24,18 @@ def createRandomSignal(offset=0):
     signalValue = np.sin(2*2*np.pi*time.time()+0.05)+np.sin(1.384*2*np.pi*time.time()-0.1)+5*np.random.normal()
     return signalValue+offset
 
+def currentWorkFolder(today=None,createdirectory=False):
+    if today is None:
+        today = date.today()
+    datetuple = today.timetuple()
+    year, month, day = datetuple[0:3]
+    month = str(month) if month > 10 else '0' + str(month)
+    day = str(day) if day > 10 else '0' + str(day)
+    folder = '\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Work\\'+str(year)+'\\'+str(month)+'\\'+str(day)+'\\'
+    if not os.path.exists(folder) and createdirectory:
+        os.makedirs(folder)
+    return folder
+
 class signalRecorder(QMainWindow):
 
     def __init__(self, time):
@@ -31,6 +46,7 @@ class signalRecorder(QMainWindow):
         ''' Create Parameter Tree'''
         self.parameterTree = ParameterTree()
         self.parameters = {}
+        self.parameterGroups = []
         self.widget = QWidget()
         self.layout = QVBoxLayout()
         self.layout.addWidget(self.parameterTree)
@@ -40,11 +56,32 @@ class signalRecorder(QMainWindow):
         self.widget.setLayout(self.layout)
         self.setCentralWidget(self.widget)
         self.show()
+        self.general = vgen.init()
+        self.pvids = []
+        self.folder = currentWorkFolder(createdirectory=True)
 
-        self.sp = striptoolRecord.signalRecorder("test")
-        for i in range(5):
-            self.sp.addSignal(name='signal'+str(i), pen=pg.mkColor(i),timer=1.0/50.0, function=createRandomSignal, arg=[(-60+10*i)])
-            self.addParameterSignal('signal'+str(i))
+        self.sp = striptoolRecord.signalRecorderH5(self.folder+"test")
+
+        stream = file('archiver_pvs.yaml', 'r')
+        settings = yaml.load(stream)
+        stream.close()
+
+        for types in settings:
+            for name,pvs in settings[types].iteritems():
+                for pv in pvs:
+                    self.addGeneralPV(name+':'+pv,name.replace('-','_')+'_'+pv, types)
+
+    def addGeneralPV(self, functionArgument, name, group):
+        # try:
+            pvtype="DBR_DOUBLE"
+            pvid = self.general.connectPV(str(functionArgument),pvtype)
+            self.pvids.append(pvid)
+            #print 'pvid = ', pvid
+            testFunction = lambda: self.general.getValue(pvid)
+            self.sp.addSignal(name=name, pen=pg.mkColor(len(self.pvids)),timer=1.0, function=testFunction, arg=[])
+            self.addParameterSignal(name, group)
+        # except:
+        #     print 'Could not add signal: ', name
 
     def start(self):
         # QTimer.singleShot(1000*self.time, self.finish)
@@ -66,22 +103,34 @@ class signalRecorder(QMainWindow):
     def valueFormatter(self, value):
         return "{:.4}".format(value)
 
-    def addParameterSignal(self, name):
+    def addParameterSignal(self, name, group):
+        gparams = [
+            {'name': group, 'type': 'group'}
+            ]
         params = [
             {'name': name, 'type': 'group', 'children': [
-                {'name': 'Mean', 'type': 'float', 'readonly': True},
-                {'name': 'Standard Deviation', 'type': 'float', 'readonly': True},
-                {'name': 'Max', 'type': 'float', 'readonly': True},
-                {'name': 'Min', 'type': 'float', 'readonly': True},
-            ]}
-        ]
-        p = Parameter.create(name='params', type='group', children=params)
-        pChild = p.child(name)
+                    {'name': 'Mean', 'type': 'float', 'readonly': True},
+                    {'name': 'Standard Deviation', 'type': 'float', 'readonly': True},
+                    {'name': 'Max', 'type': 'float', 'readonly': True},
+                    {'name': 'Min', 'type': 'float', 'readonly': True},
+                ]}
+            ]
+        if not group in self.parameterGroups:
+            self.parameterGroups.append(group)
+            parameter = Parameter.create(name='params', type='group', children=gparams)
+            self.parameters[group] = parameter
+            self.parameterTree.addParameters(parameter, showTop=False)
+            header = self.parameterTree.findItems(group,Qt.MatchContains | Qt.MatchRecursive)[0]
+            header.setExpanded(False)
+        else:
+            parameter = self.parameters[group]
+        param = parameter.child(group)
+        p = param.addChildren(params)
+        pChild = param.child(name)
         self.sp.records[name]['worker'].recordMeanSignal.connect(lambda x : pChild.child('Mean').setValue(x))
         self.sp.records[name]['worker'].recordStandardDeviationSignal.connect(lambda x : pChild.child('Standard Deviation').setValue(x))
         self.sp.records[name]['worker'].recordMinSignal.connect(lambda x : pChild.child('Min').setValue(x))
         self.sp.records[name]['worker'].recordMaxSignal.connect(lambda x : pChild.child('Max').setValue(x))
-        self.parameterTree.addParameters(p, showTop=False)
         header = self.parameterTree.findItems(name,Qt.MatchContains | Qt.MatchRecursive)[0]
         header.setExpanded(False)
         header.setForeground(0,self.contrasting_text_color(self.sp.records[name]['pen']))

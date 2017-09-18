@@ -1,39 +1,49 @@
 global:
-  charge: 0.25
+  total_charge: 0.25
   SC_2D_Nrad: 30
   SC_2D_Nlong: 45
   SC_3D_Nxf: 8
   SC_3D_Nyf: 8
   SC_3D_Nzf: 32
-  initial_distribution: ../1k-250pC-76fsrms-1mm_TE09fixN12.ini
+  accuracy: 6
+  initial_distribution: 1k-250pC-76fsrms-1mm_TE09fixN12.ini
+  ASTRAsettings:
+    N_red: 1
+    EmitS: True
+    PhaseS: True
+    TrackS: True
+    RefS: True
+    Track_All: True
+    Phase_Scan: False
+    Auto_Phase: True
+    check_ref_part: False
+    Zphase: 1
+    Zemit: 1050
+    H_max: 0.0007
+    H_min: 0.0007
 files:
   test.in.111:
     settings:
       title: 'trial'
       run_no: 111
-      start_position: 0
-      end_position: 3.37147
-      accuracy: 6
     charge:
-      total_charge: 250
       position: [0.0, 0.0, 0.0] # [x, y, z]
       space_charge_mode: 2D
       SC_2D_Nrad: 30
       SC_2D_Nlong: 45
       cathode: True
     input:
-      particle_definition: ../1k-250pC-76fsrms-1mm_TE09fixN12.ini
+      particle_definition: 'initial_distribution'
+    output:
+      zstart: 0
+      zstop: 3.37147
     elements:
       [GUN10, LINAC-01, SOL-01, SCR-01]
   test.in.126:
     settings:
       title: 'trial'
       run_no: 126
-      start_position: 3.37151
-      end_position: 24.1653
-      accuracy: 6
     charge:
-      total_charge: 250
       position: [0.0, 0.0, 0.0] # [x, y, s]
       space_charge_mode: 3D
       SC_3D_Nxf: 8
@@ -42,6 +52,9 @@ files:
       cathode: False
     input:
       particle_definition: test.in.111.0337.111
+    output:
+      zstart: 3.37151
+      zstop: 24.1653
     elements:
       [SCR-02, SCR-03, SCR-04, SCR-05, SCR-06, SCR-07, SCR-08, SCR-09,
       LINAC-02, LINAC-03, 4HC,
@@ -53,16 +66,17 @@ elements:
   SCR-01:
     type: screen
     position: [0, 0, 0.981]
+    error_position: [0,0,0]
   GUN10:
     type: cavity
-    field_definition: '../bas_gun.txt'
+    field_definition: 'bas_gun.txt'
     frequency: 2.9974431e6
     field_amplitude: 70e6
     cavity_phase: -16
     position: [0.0, 0.0, 0.0]
   LINAC-01:
     type: cavity
-    field_definition: '../TWS_S-DL.dat'
+    field_definition: 'TWS_S-DL.dat'
     frequency: 2.9985e6
     field_amplitude: 21e6
     cavity_phase: 20
@@ -70,7 +84,7 @@ elements:
     number_of_cells: 60
   SOL-01:
     type: solenoid
-    field_definition: '../bas_sol.txt'
+    field_definition: 'bas_sol.txt'
     field_amplitude: 0.237
     position: [0.0, 0.0, 0.0]
   SCR-02:
@@ -102,7 +116,7 @@ elements:
     position: [0, 0, 21.36]
   LINAC-02:
     type: cavity
-    field_definition: '../TWS_S-DL.dat'
+    field_definition: 'TWS_S-DL.dat'
     frequency: 2.9985e6
     field_amplitude: 25.4558441227157e6
     cavity_phase: -15
@@ -110,7 +124,7 @@ elements:
     number_of_cells: 120
   LINAC-03:
     type: cavity
-    field_definition: '../TWS_S-DL.dat'
+    field_definition: 'TWS_S-DL.dat'
     frequency: 2.9985e6
     field_amplitude: 25.4558441227157e6
     cavity_phase: -15
@@ -118,7 +132,7 @@ elements:
     number_of_cells: 120
   4HC:
     type: cavity
-    field_definition: '../TWS_X-DL.dat'
+    field_definition: 'TWS_X-DL.dat'
     frequency: 11.994e6
     field_amplitude: 35.638181771802e6
     cavity_phase: 187
@@ -247,6 +261,9 @@ elements:
     length: 0.200981
     angle: 5.4431
     e2: 5.4431
+    PowerSupply:
+    bore:
+    vacuum_pressure:
   DIP-VBC-04:
     type: dipole
     length: 0.200981
@@ -256,3 +273,9 @@ groups:
   laser-heater:
     type: chicane
     elements: [DIP-S03-01, DIP-S03-02, DIP-S03-03, DIP-S03-04]
+#power-suplies:
+  laser-heater:
+    type: PS
+  laser-heater:
+    type: vac_chamber
+girders:

@@ -1,0 +1,6790 @@
+elements:
+  CLA$FAB$MAG$MOD$01$H1:
+    length: 2.5
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 80.5138]
+    position_start: [0, 0, 78.0138]
+    type: drift
+  CLA$FAB$MAG$MOD$01$H2:
+    length: 2.5
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 83.0138]
+    position_start: [0, 0, 80.5138]
+    type: drift
+  CLA$FMS$APER:
+    horizontal_size: 0.017
+    position_end: [0, 0, 52.6929]
+    position_start: [0, 0, 52.6929]
+    shape: rectangular
+    type: aperture
+    vertical_size: 0.017
+  CLA$FMS$DIA$BPM$01:
+    fit_point: 1.0
+    length: 0.2
+    position_end: [0, 0, 53.0929]
+    position_start: [0, 0, 52.8929]
+    type: monitor
+  CLA$FMS$DIA$BPM$03:
+    fit_point: 1.0
+    length: 0.15
+    position_end: [0, 0, 55.9932]
+    position_start: [0, 0, 55.8432]
+    type: monitor
+  CLA$FMS$DIA$SCR$01$A:
+    length: 0.1
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 53.2929]
+    position_start: [0, 0, 53.1929]
+    type: drift
+  CLA$FMS$DIA$SCR$01$B:
+    length: 0.1
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 53.1929]
+    position_start: [0, 0, 53.0929]
+    type: drift
+  CLA$FMS$DIA$SCR$01$W:
+    output_filename: '"CLA-FMS-DIA-SCR-01.SDDS"'
+    position_end: [0, 0, 53.1929]
+    position_start: [0, 0, 53.1929]
+    type: watch_point
+  CLA$FMS$DRIFT$01:
+    length: 0.05
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 54.7429]
+    position_start: [0, 0, 54.6929]
+    type: drift
+  CLA$FMS$DRIFT$02:
+    length: 0.100061
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 55.243]
+    position_start: [0, 0, 55.1429]
+    type: drift
+  CLA$FMS$DRIFT$03:
+    length: 0.100061
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 55.6432]
+    position_start: [0, 0, 55.5431]
+    type: drift
+  CLA$FMS$MAG$DIP$01$A:
+    length: 0.05
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 55.1429]
+    position_start: [0, 0, 55.0929]
+    type: drift
+  CLA$FMS$MAG$DIP$01$B:
+    length: 0.05
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 54.9929]
+    position_start: [0, 0, 54.9429]
+    type: drift
+  CLA$FMS$MAG$DIP$01$D:
+    angle: -0.0349066
+    csr_bins: 20.0
+    csr_output_filename: '"FMS-MAG-DIP-01.CSR"'
+    edge_field_integral: 0.4
+    exit_edge_angle: -0.0349066
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.100066
+    position_end: [0, 0, 55.0929]
+    position_start: [0, 0, 54.9929]
+    sr_enable: true
+    type: dipole
+  CLA$FMS$MAG$DIP$02$A:
+    length: 0.05
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 55.5431]
+    position_start: [0, 0, 55.4931]
+    type: drift
+  CLA$FMS$MAG$DIP$02$B:
+    length: 0.05
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 55.293]
+    position_start: [0, 0, 55.243]
+    type: drift
+  CLA$FMS$MAG$DIP$02$D:
+    angle: 0.0698132
+    csr_bins: 20.0
+    csr_output_filename: '"FMS-MAG-DIP-02.CSR"'
+    edge_field_integral: 0.4
+    entrance_edge_angle: 0.0349066
+    exit_edge_angle: 0.0349066
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.200132
+    position_end: [0, 0, 55.4931]
+    position_start: [0, 0, 55.293]
+    sr_enable: true
+    type: dipole
+  CLA$FMS$MAG$DIP$03$A:
+    length: 0.05
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 55.8432]
+    position_start: [0, 0, 55.7932]
+    type: drift
+  CLA$FMS$MAG$DIP$03$B:
+    length: 0.05
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 55.6932]
+    position_start: [0, 0, 55.6432]
+    type: drift
+  CLA$FMS$MAG$DIP$03$D:
+    angle: -0.0349066
+    csr_bins: 20.0
+    csr_output_filename: '"FMS-MAG-DIP-03.CSR"'
+    edge_field_integral: 0.4
+    entrance_edge_angle: -0.0349066
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.100066
+    position_end: [0, 0, 55.7932]
+    position_start: [0, 0, 55.6932]
+    sr_enable: true
+    type: dipole
+  CLA$FMS$MAG$HVCOR$01:
+    isr_enable: true
+    length: 0.2
+    position_end: [0, 0, 53.4929]
+    position_start: [0, 0, 53.2929]
+    sr_enable: true
+    type: kicker
+  CLA$FMS$MAG$MU1$A:
+    length: 0.05
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 54.6929]
+    position_start: [0, 0, 54.6429]
+    type: drift
+  CLA$FMS$MAG$MU1$B:
+    length: 0.05
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 53.7429]
+    position_start: [0, 0, 53.6929]
+    type: drift
+  CLA$FMS$MAG$MU1$W$H1:
+    length: 0.45
+    poles: 6.0
+    position_end: [0, 0, 54.1929]
+    position_start: [0, 0, 53.7429]
+    type: wiggler
+    undulator_k: 5.0
+  CLA$FMS$MAG$MU1$W$H2:
+    length: 0.45
+    poles: 6.0
+    position_end: [0, 0, 54.6429]
+    position_start: [0, 0, 54.1929]
+    type: wiggler
+    undulator_k: 5.0
+  CLA$FMS$MAG$MU2$A:
+    length: 0.015
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 57.2682]
+    position_start: [0, 0, 57.2532]
+    type: drift
+  CLA$FMS$MAG$MU2$B:
+    length: 0.015
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 56.1832]
+    position_start: [0, 0, 56.1682]
+    type: drift
+  CLA$FMS$MAG$MU2$W$H1:
+    length: 0.535
+    poles: 8.0
+    position_end: [0, 0, 56.7182]
+    position_start: [0, 0, 56.1832]
+    type: wiggler
+    undulator_k: 5.0
+  CLA$FMS$MAG$MU2$W$H2:
+    length: 0.535
+    poles: 8.0
+    position_end: [0, 0, 57.2532]
+    position_start: [0, 0, 56.7182]
+    type: wiggler
+    undulator_k: 5.0
+  CLA$FMS$MAG$QUAD$01$A:
+    length: 0.05
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 52.8929]
+    position_start: [0, 0, 52.8429]
+    type: drift
+  CLA$FMS$MAG$QUAD$01$B:
+    length: 0.05
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 52.7429]
+    position_start: [0, 0, 52.6929]
+    type: drift
+  CLA$FMS$MAG$QUAD$01$K:
+    isr_enable: true
+    k1: -1.0
+    length: 0.1
+    position_end: [0, 0, 52.8429]
+    position_start: [0, 0, 52.7429]
+    sr_enable: true
+    type: quadrupole
+  CLA$FMS$MAG$QUAD$02$A:
+    length: 0.05
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 53.6929]
+    position_start: [0, 0, 53.6429]
+    type: drift
+  CLA$FMS$MAG$QUAD$02$B:
+    length: 0.05
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 53.5429]
+    position_start: [0, 0, 53.4929]
+    type: drift
+  CLA$FMS$MAG$QUAD$02$K:
+    isr_enable: true
+    k1: -1.0
+    length: 0.1
+    position_end: [0, 0, 53.6429]
+    position_start: [0, 0, 53.5429]
+    sr_enable: true
+    type: quadrupole
+  CLA$FMS$MAG$QUAD$03$A:
+    length: 0.05
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 54.9429]
+    position_start: [0, 0, 54.8929]
+    type: drift
+  CLA$FMS$MAG$QUAD$03$B:
+    length: 0.05
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 54.7929]
+    position_start: [0, 0, 54.7429]
+    type: drift
+  CLA$FMS$MAG$QUAD$03$K:
+    isr_enable: true
+    k1: -1.0
+    length: 0.1
+    position_end: [0, 0, 54.8929]
+    position_start: [0, 0, 54.7929]
+    sr_enable: true
+    type: quadrupole
+  CLA$FMS$MAG$QUAD$04$A:
+    length: 0.025
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 56.1682]
+    position_start: [0, 0, 56.1432]
+    type: drift
+  CLA$FMS$MAG$QUAD$04$B:
+    length: 0.05
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 56.0432]
+    position_start: [0, 0, 55.9932]
+    type: drift
+  CLA$FMS$MAG$QUAD$04$K:
+    isr_enable: true
+    k1: -1.0
+    length: 0.1
+    position_end: [0, 0, 56.1432]
+    position_start: [0, 0, 56.0432]
+    sr_enable: true
+    type: quadrupole
+  CLA$FMS$MAG$QUAD$05$A:
+    length: 0.05
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 57.4432]
+    position_start: [0, 0, 57.3932]
+    type: drift
+  CLA$FMS$MAG$QUAD$05$B:
+    length: 0.025
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 57.2932]
+    position_start: [0, 0, 57.2682]
+    type: drift
+  CLA$FMS$MAG$QUAD$05$K:
+    isr_enable: true
+    k1: -1.0
+    length: 0.1
+    position_end: [0, 0, 57.3932]
+    position_start: [0, 0, 57.2932]
+    sr_enable: true
+    type: quadrupole
+  CLA$FMS$MARK$01:
+    fit_point: 1.0
+    position_end: [0, 0, 57.4432]
+    position_start: [0, 0, 57.4432]
+    type: marker
+  CLA$FMS$MU1$MARK$01:
+    fit_point: 1.0
+    position_end: [0, 0, 54.1929]
+    position_start: [0, 0, 54.1929]
+    type: marker
+  CLA$FMS$MU2$MARK$01:
+    fit_point: 1.0
+    position_end: [0, 0, 56.7182]
+    position_start: [0, 0, 56.7182]
+    type: marker
+  CLA$FRS$APER:
+    horizontal_size: 0.003
+    position_end: [0, 0, 57.4432]
+    position_start: [0, 0, 57.4432]
+    shape: rectangular
+    type: aperture
+    vertical_size: 0.003
+  CLA$FRS$R01$DIA$BPM$01:
+    fit_point: 1.0
+    position_end: [0, 0, 57.5032]
+    position_start: [0, 0, 57.5032]
+    type: monitor
+  CLA$FRS$R01$DIA$SCR$01$A:
+    length: 0.03
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 57.5032]
+    position_start: [0, 0, 57.4732]
+    type: drift
+  CLA$FRS$R01$DIA$SCR$01$B:
+    length: 0.03
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 57.4732]
+    position_start: [0, 0, 57.4432]
+    type: drift
+  CLA$FRS$R01$DIA$SCR$01$W:
+    output_filename: '"CLA-FRS-R01-DIA-SCR-01.SDDS"'
+    position_end: [0, 0, 57.4732]
+    position_start: [0, 0, 57.4732]
+    type: watch_point
+  CLA$FRS$R01$MAG$DIP$01$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 58.3432]
+    position_start: [0, 0, 58.3332]
+    type: drift
+  CLA$FRS$R01$MAG$DIP$01$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 58.2832]
+    position_start: [0, 0, 58.2732]
+    type: drift
+  CLA$FRS$R01$MAG$DIP$01$D:
+    angle: -0.0174533
+    csr_bins: 20.0
+    csr_output_filename: '"FRS-R01-MAG-DIP-01.CSR"'
+    edge_field_integral: 0.4
+    exit_edge_angle: -0.0174533
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.0500083
+    position_end: [0, 0, 58.3332]
+    position_start: [0, 0, 58.2832]
+    sr_enable: true
+    type: dipole
+  CLA$FRS$R01$MAG$DIP$02$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 58.4633]
+    position_start: [0, 0, 58.4533]
+    type: drift
+  CLA$FRS$R01$MAG$DIP$02$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 58.3532]
+    position_start: [0, 0, 58.3432]
+    type: drift
+  CLA$FRS$R01$MAG$DIP$02$D:
+    angle: 0.0349066
+    csr_bins: 20.0
+    csr_output_filename: '"FRS-R01-MAG-DIP-02.CSR"'
+    edge_field_integral: 0.4
+    entrance_edge_angle: 0.0174533
+    exit_edge_angle: 0.0174533
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.100017
+    position_end: [0, 0, 58.4533]
+    position_start: [0, 0, 58.3532]
+    sr_enable: true
+    type: dipole
+  CLA$FRS$R01$MAG$DIP$03$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 58.5333]
+    position_start: [0, 0, 58.5233]
+    type: drift
+  CLA$FRS$R01$MAG$DIP$03$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 58.4733]
+    position_start: [0, 0, 58.4633]
+    type: drift
+  CLA$FRS$R01$MAG$DIP$03$D:
+    angle: -0.0174533
+    csr_bins: 20.0
+    csr_output_filename: '"FRS-R01-MAG-DIP-03.CSR"'
+    edge_field_integral: 0.4
+    entrance_edge_angle: -0.0174533
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.0500083
+    position_end: [0, 0, 58.5233]
+    position_start: [0, 0, 58.4733]
+    sr_enable: true
+    type: dipole
+  CLA$FRS$R01$MAG$QUAD$01$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 58.6533]
+    position_start: [0, 0, 58.6433]
+    type: drift
+  CLA$FRS$R01$MAG$QUAD$01$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 58.5433]
+    position_start: [0, 0, 58.5333]
+    type: drift
+  CLA$FRS$R01$MAG$QUAD$01$K:
+    isr_enable: true
+    k1: -1.0
+    length: 0.1
+    position_end: [0, 0, 58.6433]
+    position_start: [0, 0, 58.5433]
+    sr_enable: true
+    type: quadrupole
+  CLA$FRS$R01$MAG$UND$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 58.2732]
+    position_start: [0, 0, 58.2632]
+    type: drift
+  CLA$FRS$R01$MAG$UND$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 57.5132]
+    position_start: [0, 0, 57.5032]
+    type: drift
+  CLA$FRS$R01$MAG$UND$W$H1:
+    length: 0.375
+    poles: 26.0
+    position_end: [0, 0, 57.8882]
+    position_start: [0, 0, 57.5132]
+    type: wiggler
+    undulator_k: 1.25
+  CLA$FRS$R01$MAG$UND$W$H2:
+    length: 0.375
+    poles: 26.0
+    position_end: [0, 0, 58.2632]
+    position_start: [0, 0, 57.8882]
+    type: wiggler
+    undulator_k: 1.25
+  CLA$FRS$R01$MARK$01:
+    fit_point: 1.0
+    position_end: [0, 0, 57.8882]
+    position_start: [0, 0, 57.8882]
+    type: marker
+  CLA$FRS$R02$DIA$BPM$01:
+    fit_point: 1.0
+    position_end: [0, 0, 58.7133]
+    position_start: [0, 0, 58.7133]
+    type: monitor
+  CLA$FRS$R02$DIA$SCR$01$A:
+    length: 0.03
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 58.7133]
+    position_start: [0, 0, 58.6833]
+    type: drift
+  CLA$FRS$R02$DIA$SCR$01$B:
+    length: 0.03
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 58.6833]
+    position_start: [0, 0, 58.6533]
+    type: drift
+  CLA$FRS$R02$DIA$SCR$01$W:
+    output_filename: '"CLA-FRS-R02-DIA-SCR-01.SDDS"'
+    position_end: [0, 0, 58.6833]
+    position_start: [0, 0, 58.6833]
+    type: watch_point
+  CLA$FRS$R02$MAG$DIP$01$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 59.5533]
+    position_start: [0, 0, 59.5433]
+    type: drift
+  CLA$FRS$R02$MAG$DIP$01$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 59.4933]
+    position_start: [0, 0, 59.4833]
+    type: drift
+  CLA$FRS$R02$MAG$DIP$01$D:
+    angle: -0.0174533
+    csr_bins: 20.0
+    csr_output_filename: '"FRS-R02-MAG-DIP-01.CSR"'
+    edge_field_integral: 0.4
+    exit_edge_angle: -0.0174533
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.0500083
+    position_end: [0, 0, 59.5433]
+    position_start: [0, 0, 59.4933]
+    sr_enable: true
+    type: dipole
+  CLA$FRS$R02$MAG$DIP$02$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 59.6733]
+    position_start: [0, 0, 59.6633]
+    type: drift
+  CLA$FRS$R02$MAG$DIP$02$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 59.5633]
+    position_start: [0, 0, 59.5533]
+    type: drift
+  CLA$FRS$R02$MAG$DIP$02$D:
+    angle: 0.0349066
+    csr_bins: 20.0
+    csr_output_filename: '"FRS-R02-MAG-DIP-02.CSR"'
+    edge_field_integral: 0.4
+    entrance_edge_angle: 0.0174533
+    exit_edge_angle: 0.0174533
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.100017
+    position_end: [0, 0, 59.6633]
+    position_start: [0, 0, 59.5633]
+    sr_enable: true
+    type: dipole
+  CLA$FRS$R02$MAG$DIP$03$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 59.7433]
+    position_start: [0, 0, 59.7333]
+    type: drift
+  CLA$FRS$R02$MAG$DIP$03$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 59.6833]
+    position_start: [0, 0, 59.6733]
+    type: drift
+  CLA$FRS$R02$MAG$DIP$03$D:
+    angle: -0.0174533
+    csr_bins: 20.0
+    csr_output_filename: '"FRS-R02-MAG-DIP-03.CSR"'
+    edge_field_integral: 0.4
+    entrance_edge_angle: -0.0174533
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.0500083
+    position_end: [0, 0, 59.7333]
+    position_start: [0, 0, 59.6833]
+    sr_enable: true
+    type: dipole
+  CLA$FRS$R02$MAG$QUAD$01$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 59.8633]
+    position_start: [0, 0, 59.8533]
+    type: drift
+  CLA$FRS$R02$MAG$QUAD$01$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 59.7533]
+    position_start: [0, 0, 59.7433]
+    type: drift
+  CLA$FRS$R02$MAG$QUAD$01$K:
+    isr_enable: true
+    k1: -1.0
+    length: 0.1
+    position_end: [0, 0, 59.8533]
+    position_start: [0, 0, 59.7533]
+    sr_enable: true
+    type: quadrupole
+  CLA$FRS$R02$MAG$UND$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 59.4833]
+    position_start: [0, 0, 59.4733]
+    type: drift
+  CLA$FRS$R02$MAG$UND$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 58.7233]
+    position_start: [0, 0, 58.7133]
+    type: drift
+  CLA$FRS$R02$MAG$UND$W$H1:
+    length: 0.375
+    poles: 26.0
+    position_end: [0, 0, 59.0983]
+    position_start: [0, 0, 58.7233]
+    type: wiggler
+    undulator_k: 1.25
+  CLA$FRS$R02$MAG$UND$W$H2:
+    length: 0.375
+    poles: 26.0
+    position_end: [0, 0, 59.4733]
+    position_start: [0, 0, 59.0983]
+    type: wiggler
+    undulator_k: 1.25
+  CLA$FRS$R02$MARK$01:
+    fit_point: 1.0
+    position_end: [0, 0, 59.0983]
+    position_start: [0, 0, 59.0983]
+    type: marker
+  CLA$FRS$R03$DIA$BPM$01:
+    fit_point: 1.0
+    position_end: [0, 0, 59.9233]
+    position_start: [0, 0, 59.9233]
+    type: monitor
+  CLA$FRS$R03$DIA$SCR$01$A:
+    length: 0.03
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 59.9233]
+    position_start: [0, 0, 59.8933]
+    type: drift
+  CLA$FRS$R03$DIA$SCR$01$B:
+    length: 0.03
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 59.8933]
+    position_start: [0, 0, 59.8633]
+    type: drift
+  CLA$FRS$R03$DIA$SCR$01$W:
+    output_filename: '"CLA-FRS-R03-DIA-SCR-01.SDDS"'
+    position_end: [0, 0, 59.8933]
+    position_start: [0, 0, 59.8933]
+    type: watch_point
+  CLA$FRS$R03$MAG$DIP$01$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 60.7633]
+    position_start: [0, 0, 60.7533]
+    type: drift
+  CLA$FRS$R03$MAG$DIP$01$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 60.7033]
+    position_start: [0, 0, 60.6933]
+    type: drift
+  CLA$FRS$R03$MAG$DIP$01$D:
+    angle: -0.0174533
+    csr_bins: 20.0
+    csr_output_filename: '"FRS-R03-MAG-DIP-01.CSR"'
+    edge_field_integral: 0.4
+    exit_edge_angle: -0.0174533
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.0500083
+    position_end: [0, 0, 60.7533]
+    position_start: [0, 0, 60.7033]
+    sr_enable: true
+    type: dipole
+  CLA$FRS$R03$MAG$DIP$02$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 60.8833]
+    position_start: [0, 0, 60.8733]
+    type: drift
+  CLA$FRS$R03$MAG$DIP$02$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 60.7733]
+    position_start: [0, 0, 60.7633]
+    type: drift
+  CLA$FRS$R03$MAG$DIP$02$D:
+    angle: 0.0349066
+    csr_bins: 20.0
+    csr_output_filename: '"FRS-R03-MAG-DIP-02.CSR"'
+    edge_field_integral: 0.4
+    entrance_edge_angle: 0.0174533
+    exit_edge_angle: 0.0174533
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.100017
+    position_end: [0, 0, 60.8733]
+    position_start: [0, 0, 60.7733]
+    sr_enable: true
+    type: dipole
+  CLA$FRS$R03$MAG$DIP$03$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 60.9533]
+    position_start: [0, 0, 60.9433]
+    type: drift
+  CLA$FRS$R03$MAG$DIP$03$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 60.8933]
+    position_start: [0, 0, 60.8833]
+    type: drift
+  CLA$FRS$R03$MAG$DIP$03$D:
+    angle: -0.0174533
+    csr_bins: 20.0
+    csr_output_filename: '"FRS-R03-MAG-DIP-03.CSR"'
+    edge_field_integral: 0.4
+    entrance_edge_angle: -0.0174533
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.0500083
+    position_end: [0, 0, 60.9433]
+    position_start: [0, 0, 60.8933]
+    sr_enable: true
+    type: dipole
+  CLA$FRS$R03$MAG$QUAD$01$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 61.0733]
+    position_start: [0, 0, 61.0633]
+    type: drift
+  CLA$FRS$R03$MAG$QUAD$01$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 60.9633]
+    position_start: [0, 0, 60.9533]
+    type: drift
+  CLA$FRS$R03$MAG$QUAD$01$K:
+    isr_enable: true
+    k1: -1.0
+    length: 0.1
+    position_end: [0, 0, 61.0633]
+    position_start: [0, 0, 60.9633]
+    sr_enable: true
+    type: quadrupole
+  CLA$FRS$R03$MAG$UND$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 60.6933]
+    position_start: [0, 0, 60.6833]
+    type: drift
+  CLA$FRS$R03$MAG$UND$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 59.9333]
+    position_start: [0, 0, 59.9233]
+    type: drift
+  CLA$FRS$R03$MAG$UND$W$H1:
+    length: 0.375
+    poles: 26.0
+    position_end: [0, 0, 60.3083]
+    position_start: [0, 0, 59.9333]
+    type: wiggler
+    undulator_k: 1.25
+  CLA$FRS$R03$MAG$UND$W$H2:
+    length: 0.375
+    poles: 26.0
+    position_end: [0, 0, 60.6833]
+    position_start: [0, 0, 60.3083]
+    type: wiggler
+    undulator_k: 1.25
+  CLA$FRS$R03$MARK$01:
+    fit_point: 1.0
+    position_end: [0, 0, 60.3083]
+    position_start: [0, 0, 60.3083]
+    type: marker
+  CLA$FRS$R04$DIA$BPM$01:
+    fit_point: 1.0
+    position_end: [0, 0, 61.1333]
+    position_start: [0, 0, 61.1333]
+    type: monitor
+  CLA$FRS$R04$DIA$SCR$01$A:
+    length: 0.03
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 61.1333]
+    position_start: [0, 0, 61.1033]
+    type: drift
+  CLA$FRS$R04$DIA$SCR$01$B:
+    length: 0.03
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 61.1033]
+    position_start: [0, 0, 61.0733]
+    type: drift
+  CLA$FRS$R04$DIA$SCR$01$W:
+    output_filename: '"CLA-FRS-R04-DIA-SCR-01.SDDS"'
+    position_end: [0, 0, 61.1033]
+    position_start: [0, 0, 61.1033]
+    type: watch_point
+  CLA$FRS$R04$MAG$DIP$01$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 61.9733]
+    position_start: [0, 0, 61.9633]
+    type: drift
+  CLA$FRS$R04$MAG$DIP$01$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 61.9133]
+    position_start: [0, 0, 61.9033]
+    type: drift
+  CLA$FRS$R04$MAG$DIP$01$D:
+    angle: -0.0174533
+    csr_bins: 20.0
+    csr_output_filename: '"FRS-R04-MAG-DIP-01.CSR"'
+    edge_field_integral: 0.4
+    exit_edge_angle: -0.0174533
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.0500083
+    position_end: [0, 0, 61.9633]
+    position_start: [0, 0, 61.9133]
+    sr_enable: true
+    type: dipole
+  CLA$FRS$R04$MAG$DIP$02$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 62.0934]
+    position_start: [0, 0, 62.0834]
+    type: drift
+  CLA$FRS$R04$MAG$DIP$02$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 61.9833]
+    position_start: [0, 0, 61.9733]
+    type: drift
+  CLA$FRS$R04$MAG$DIP$02$D:
+    angle: 0.0349066
+    csr_bins: 20.0
+    csr_output_filename: '"FRS-R04-MAG-DIP-02.CSR"'
+    edge_field_integral: 0.4
+    entrance_edge_angle: 0.0174533
+    exit_edge_angle: 0.0174533
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.100017
+    position_end: [0, 0, 62.0834]
+    position_start: [0, 0, 61.9833]
+    sr_enable: true
+    type: dipole
+  CLA$FRS$R04$MAG$DIP$03$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 62.1634]
+    position_start: [0, 0, 62.1534]
+    type: drift
+  CLA$FRS$R04$MAG$DIP$03$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 62.1034]
+    position_start: [0, 0, 62.0934]
+    type: drift
+  CLA$FRS$R04$MAG$DIP$03$D:
+    angle: -0.0174533
+    csr_bins: 20.0
+    csr_output_filename: '"FRS-R04-MAG-DIP-03.CSR"'
+    edge_field_integral: 0.4
+    entrance_edge_angle: -0.0174533
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.0500083
+    position_end: [0, 0, 62.1534]
+    position_start: [0, 0, 62.1034]
+    sr_enable: true
+    type: dipole
+  CLA$FRS$R04$MAG$QUAD$01$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 62.2834]
+    position_start: [0, 0, 62.2734]
+    type: drift
+  CLA$FRS$R04$MAG$QUAD$01$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 62.1734]
+    position_start: [0, 0, 62.1634]
+    type: drift
+  CLA$FRS$R04$MAG$QUAD$01$K:
+    isr_enable: true
+    k1: -1.0
+    length: 0.1
+    position_end: [0, 0, 62.2734]
+    position_start: [0, 0, 62.1734]
+    sr_enable: true
+    type: quadrupole
+  CLA$FRS$R04$MAG$UND$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 61.9033]
+    position_start: [0, 0, 61.8933]
+    type: drift
+  CLA$FRS$R04$MAG$UND$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 61.1433]
+    position_start: [0, 0, 61.1333]
+    type: drift
+  CLA$FRS$R04$MAG$UND$W$H1:
+    length: 0.375
+    poles: 26.0
+    position_end: [0, 0, 61.5183]
+    position_start: [0, 0, 61.1433]
+    type: wiggler
+    undulator_k: 1.25
+  CLA$FRS$R04$MAG$UND$W$H2:
+    length: 0.375
+    poles: 26.0
+    position_end: [0, 0, 61.8933]
+    position_start: [0, 0, 61.5183]
+    type: wiggler
+    undulator_k: 1.25
+  CLA$FRS$R04$MARK$01:
+    fit_point: 1.0
+    position_end: [0, 0, 61.5183]
+    position_start: [0, 0, 61.5183]
+    type: marker
+  CLA$FRS$R05$DIA$BPM$01:
+    fit_point: 1.0
+    position_end: [0, 0, 62.3434]
+    position_start: [0, 0, 62.3434]
+    type: monitor
+  CLA$FRS$R05$DIA$SCR$01$A:
+    length: 0.03
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 62.3434]
+    position_start: [0, 0, 62.3134]
+    type: drift
+  CLA$FRS$R05$DIA$SCR$01$B:
+    length: 0.03
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 62.3134]
+    position_start: [0, 0, 62.2834]
+    type: drift
+  CLA$FRS$R05$DIA$SCR$01$W:
+    output_filename: '"CLA-FRS-R05-DIA-SCR-01.SDDS"'
+    position_end: [0, 0, 62.3134]
+    position_start: [0, 0, 62.3134]
+    type: watch_point
+  CLA$FRS$R05$MAG$DIP$01$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 63.1834]
+    position_start: [0, 0, 63.1734]
+    type: drift
+  CLA$FRS$R05$MAG$DIP$01$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 63.1234]
+    position_start: [0, 0, 63.1134]
+    type: drift
+  CLA$FRS$R05$MAG$DIP$01$D:
+    angle: -0.0174533
+    csr_bins: 20.0
+    csr_output_filename: '"FRS-R05-MAG-DIP-01.CSR"'
+    edge_field_integral: 0.4
+    exit_edge_angle: -0.0174533
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.0500083
+    position_end: [0, 0, 63.1734]
+    position_start: [0, 0, 63.1234]
+    sr_enable: true
+    type: dipole
+  CLA$FRS$R05$MAG$DIP$02$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 63.3034]
+    position_start: [0, 0, 63.2934]
+    type: drift
+  CLA$FRS$R05$MAG$DIP$02$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 63.1934]
+    position_start: [0, 0, 63.1834]
+    type: drift
+  CLA$FRS$R05$MAG$DIP$02$D:
+    angle: 0.0349066
+    csr_bins: 20.0
+    csr_output_filename: '"FRS-R05-MAG-DIP-02.CSR"'
+    edge_field_integral: 0.4
+    entrance_edge_angle: 0.0174533
+    exit_edge_angle: 0.0174533
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.100017
+    position_end: [0, 0, 63.2934]
+    position_start: [0, 0, 63.1934]
+    sr_enable: true
+    type: dipole
+  CLA$FRS$R05$MAG$DIP$03$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 63.3734]
+    position_start: [0, 0, 63.3634]
+    type: drift
+  CLA$FRS$R05$MAG$DIP$03$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 63.3134]
+    position_start: [0, 0, 63.3034]
+    type: drift
+  CLA$FRS$R05$MAG$DIP$03$D:
+    angle: -0.0174533
+    csr_bins: 20.0
+    csr_output_filename: '"FRS-R05-MAG-DIP-03.CSR"'
+    edge_field_integral: 0.4
+    entrance_edge_angle: -0.0174533
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.0500083
+    position_end: [0, 0, 63.3634]
+    position_start: [0, 0, 63.3134]
+    sr_enable: true
+    type: dipole
+  CLA$FRS$R05$MAG$QUAD$01$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 63.4934]
+    position_start: [0, 0, 63.4834]
+    type: drift
+  CLA$FRS$R05$MAG$QUAD$01$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 63.3834]
+    position_start: [0, 0, 63.3734]
+    type: drift
+  CLA$FRS$R05$MAG$QUAD$01$K:
+    isr_enable: true
+    k1: -1.0
+    length: 0.1
+    position_end: [0, 0, 63.4834]
+    position_start: [0, 0, 63.3834]
+    sr_enable: true
+    type: quadrupole
+  CLA$FRS$R05$MAG$UND$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 63.1134]
+    position_start: [0, 0, 63.1034]
+    type: drift
+  CLA$FRS$R05$MAG$UND$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 62.3534]
+    position_start: [0, 0, 62.3434]
+    type: drift
+  CLA$FRS$R05$MAG$UND$W$H1:
+    length: 0.375
+    poles: 26.0
+    position_end: [0, 0, 62.7284]
+    position_start: [0, 0, 62.3534]
+    type: wiggler
+    undulator_k: 1.25
+  CLA$FRS$R05$MAG$UND$W$H2:
+    length: 0.375
+    poles: 26.0
+    position_end: [0, 0, 63.1034]
+    position_start: [0, 0, 62.7284]
+    type: wiggler
+    undulator_k: 1.25
+  CLA$FRS$R05$MARK$01:
+    fit_point: 1.0
+    position_end: [0, 0, 62.7284]
+    position_start: [0, 0, 62.7284]
+    type: marker
+  CLA$FRS$R06$DIA$BPM$01:
+    fit_point: 1.0
+    position_end: [0, 0, 63.5534]
+    position_start: [0, 0, 63.5534]
+    type: monitor
+  CLA$FRS$R06$DIA$SCR$01$A:
+    length: 0.03
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 63.5534]
+    position_start: [0, 0, 63.5234]
+    type: drift
+  CLA$FRS$R06$DIA$SCR$01$B:
+    length: 0.03
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 63.5234]
+    position_start: [0, 0, 63.4934]
+    type: drift
+  CLA$FRS$R06$DIA$SCR$01$W:
+    output_filename: '"CLA-FRS-R06-DIA-SCR-01.SDDS"'
+    position_end: [0, 0, 63.5234]
+    position_start: [0, 0, 63.5234]
+    type: watch_point
+  CLA$FRS$R06$MAG$DIP$01$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 64.3934]
+    position_start: [0, 0, 64.3834]
+    type: drift
+  CLA$FRS$R06$MAG$DIP$01$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 64.3334]
+    position_start: [0, 0, 64.3234]
+    type: drift
+  CLA$FRS$R06$MAG$DIP$01$D:
+    angle: -0.0174533
+    csr_bins: 20.0
+    csr_output_filename: '"FRS-R06-MAG-DIP-01.CSR"'
+    edge_field_integral: 0.4
+    exit_edge_angle: -0.0174533
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.0500083
+    position_end: [0, 0, 64.3834]
+    position_start: [0, 0, 64.3334]
+    sr_enable: true
+    type: dipole
+  CLA$FRS$R06$MAG$DIP$02$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 64.5134]
+    position_start: [0, 0, 64.5034]
+    type: drift
+  CLA$FRS$R06$MAG$DIP$02$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 64.4034]
+    position_start: [0, 0, 64.3934]
+    type: drift
+  CLA$FRS$R06$MAG$DIP$02$D:
+    angle: 0.0349066
+    csr_bins: 20.0
+    csr_output_filename: '"FRS-R06-MAG-DIP-02.CSR"'
+    edge_field_integral: 0.4
+    entrance_edge_angle: 0.0174533
+    exit_edge_angle: 0.0174533
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.100017
+    position_end: [0, 0, 64.5034]
+    position_start: [0, 0, 64.4034]
+    sr_enable: true
+    type: dipole
+  CLA$FRS$R06$MAG$DIP$03$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 64.5834]
+    position_start: [0, 0, 64.5734]
+    type: drift
+  CLA$FRS$R06$MAG$DIP$03$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 64.5234]
+    position_start: [0, 0, 64.5134]
+    type: drift
+  CLA$FRS$R06$MAG$DIP$03$D:
+    angle: -0.0174533
+    csr_bins: 20.0
+    csr_output_filename: '"FRS-R06-MAG-DIP-03.CSR"'
+    edge_field_integral: 0.4
+    entrance_edge_angle: -0.0174533
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.0500083
+    position_end: [0, 0, 64.5734]
+    position_start: [0, 0, 64.5234]
+    sr_enable: true
+    type: dipole
+  CLA$FRS$R06$MAG$QUAD$01$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 64.7034]
+    position_start: [0, 0, 64.6934]
+    type: drift
+  CLA$FRS$R06$MAG$QUAD$01$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 64.5934]
+    position_start: [0, 0, 64.5834]
+    type: drift
+  CLA$FRS$R06$MAG$QUAD$01$K:
+    isr_enable: true
+    k1: -1.0
+    length: 0.1
+    position_end: [0, 0, 64.6934]
+    position_start: [0, 0, 64.5934]
+    sr_enable: true
+    type: quadrupole
+  CLA$FRS$R06$MAG$UND$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 64.3234]
+    position_start: [0, 0, 64.3134]
+    type: drift
+  CLA$FRS$R06$MAG$UND$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 63.5634]
+    position_start: [0, 0, 63.5534]
+    type: drift
+  CLA$FRS$R06$MAG$UND$W$H1:
+    length: 0.375
+    poles: 26.0
+    position_end: [0, 0, 63.9384]
+    position_start: [0, 0, 63.5634]
+    type: wiggler
+    undulator_k: 1.25
+  CLA$FRS$R06$MAG$UND$W$H2:
+    length: 0.375
+    poles: 26.0
+    position_end: [0, 0, 64.3134]
+    position_start: [0, 0, 63.9384]
+    type: wiggler
+    undulator_k: 1.25
+  CLA$FRS$R06$MARK$01:
+    fit_point: 1.0
+    position_end: [0, 0, 63.9384]
+    position_start: [0, 0, 63.9384]
+    type: marker
+  CLA$FRS$R07$DIA$BPM$01:
+    fit_point: 1.0
+    position_end: [0, 0, 64.7634]
+    position_start: [0, 0, 64.7634]
+    type: monitor
+  CLA$FRS$R07$DIA$SCR$01$A:
+    length: 0.03
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 64.7634]
+    position_start: [0, 0, 64.7334]
+    type: drift
+  CLA$FRS$R07$DIA$SCR$01$B:
+    length: 0.03
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 64.7334]
+    position_start: [0, 0, 64.7034]
+    type: drift
+  CLA$FRS$R07$DIA$SCR$01$W:
+    output_filename: '"CLA-FRS-R07-DIA-SCR-01.SDDS"'
+    position_end: [0, 0, 64.7334]
+    position_start: [0, 0, 64.7334]
+    type: watch_point
+  CLA$FRS$R07$MAG$DIP$01$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 65.6034]
+    position_start: [0, 0, 65.5934]
+    type: drift
+  CLA$FRS$R07$MAG$DIP$01$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 65.5434]
+    position_start: [0, 0, 65.5334]
+    type: drift
+  CLA$FRS$R07$MAG$DIP$01$D:
+    angle: -0.0174533
+    csr_bins: 20.0
+    csr_output_filename: '"FRS-R07-MAG-DIP-01.CSR"'
+    edge_field_integral: 0.4
+    exit_edge_angle: -0.0174533
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.0500083
+    position_end: [0, 0, 65.5934]
+    position_start: [0, 0, 65.5434]
+    sr_enable: true
+    type: dipole
+  CLA$FRS$R07$MAG$DIP$02$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 65.7235]
+    position_start: [0, 0, 65.7135]
+    type: drift
+  CLA$FRS$R07$MAG$DIP$02$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 65.6134]
+    position_start: [0, 0, 65.6034]
+    type: drift
+  CLA$FRS$R07$MAG$DIP$02$D:
+    angle: 0.0349066
+    csr_bins: 20.0
+    csr_output_filename: '"FRS-R07-MAG-DIP-02.CSR"'
+    edge_field_integral: 0.4
+    entrance_edge_angle: 0.0174533
+    exit_edge_angle: 0.0174533
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.100017
+    position_end: [0, 0, 65.7135]
+    position_start: [0, 0, 65.6134]
+    sr_enable: true
+    type: dipole
+  CLA$FRS$R07$MAG$DIP$03$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 65.7935]
+    position_start: [0, 0, 65.7835]
+    type: drift
+  CLA$FRS$R07$MAG$DIP$03$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 65.7335]
+    position_start: [0, 0, 65.7235]
+    type: drift
+  CLA$FRS$R07$MAG$DIP$03$D:
+    angle: -0.0174533
+    csr_bins: 20.0
+    csr_output_filename: '"FRS-R07-MAG-DIP-03.CSR"'
+    edge_field_integral: 0.4
+    entrance_edge_angle: -0.0174533
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.0500083
+    position_end: [0, 0, 65.7835]
+    position_start: [0, 0, 65.7335]
+    sr_enable: true
+    type: dipole
+  CLA$FRS$R07$MAG$QUAD$01$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 65.9135]
+    position_start: [0, 0, 65.9035]
+    type: drift
+  CLA$FRS$R07$MAG$QUAD$01$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 65.8035]
+    position_start: [0, 0, 65.7935]
+    type: drift
+  CLA$FRS$R07$MAG$QUAD$01$K:
+    isr_enable: true
+    k1: -1.0
+    length: 0.1
+    position_end: [0, 0, 65.9035]
+    position_start: [0, 0, 65.8035]
+    sr_enable: true
+    type: quadrupole
+  CLA$FRS$R07$MAG$UND$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 65.5334]
+    position_start: [0, 0, 65.5234]
+    type: drift
+  CLA$FRS$R07$MAG$UND$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 64.7734]
+    position_start: [0, 0, 64.7634]
+    type: drift
+  CLA$FRS$R07$MAG$UND$W$H1:
+    length: 0.375
+    poles: 26.0
+    position_end: [0, 0, 65.1484]
+    position_start: [0, 0, 64.7734]
+    type: wiggler
+    undulator_k: 1.25
+  CLA$FRS$R07$MAG$UND$W$H2:
+    length: 0.375
+    poles: 26.0
+    position_end: [0, 0, 65.5234]
+    position_start: [0, 0, 65.1484]
+    type: wiggler
+    undulator_k: 1.25
+  CLA$FRS$R07$MARK$01:
+    fit_point: 1.0
+    position_end: [0, 0, 65.1484]
+    position_start: [0, 0, 65.1484]
+    type: marker
+  CLA$FRS$R08$DIA$BPM$01:
+    fit_point: 1.0
+    position_end: [0, 0, 65.9735]
+    position_start: [0, 0, 65.9735]
+    type: monitor
+  CLA$FRS$R08$DIA$SCR$01$A:
+    length: 0.03
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 65.9735]
+    position_start: [0, 0, 65.9435]
+    type: drift
+  CLA$FRS$R08$DIA$SCR$01$B:
+    length: 0.03
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 65.9435]
+    position_start: [0, 0, 65.9135]
+    type: drift
+  CLA$FRS$R08$DIA$SCR$01$W:
+    output_filename: '"CLA-FRS-R08-DIA-SCR-01.SDDS"'
+    position_end: [0, 0, 65.9435]
+    position_start: [0, 0, 65.9435]
+    type: watch_point
+  CLA$FRS$R08$MAG$DIP$01$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 66.8135]
+    position_start: [0, 0, 66.8035]
+    type: drift
+  CLA$FRS$R08$MAG$DIP$01$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 66.7535]
+    position_start: [0, 0, 66.7435]
+    type: drift
+  CLA$FRS$R08$MAG$DIP$01$D:
+    angle: -0.0174533
+    csr_bins: 20.0
+    csr_output_filename: '"FRS-R08-MAG-DIP-01.CSR"'
+    edge_field_integral: 0.4
+    exit_edge_angle: -0.0174533
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.0500083
+    position_end: [0, 0, 66.8035]
+    position_start: [0, 0, 66.7535]
+    sr_enable: true
+    type: dipole
+  CLA$FRS$R08$MAG$DIP$02$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 66.9335]
+    position_start: [0, 0, 66.9235]
+    type: drift
+  CLA$FRS$R08$MAG$DIP$02$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 66.8235]
+    position_start: [0, 0, 66.8135]
+    type: drift
+  CLA$FRS$R08$MAG$DIP$02$D:
+    angle: 0.0349066
+    csr_bins: 20.0
+    csr_output_filename: '"FRS-R08-MAG-DIP-02.CSR"'
+    edge_field_integral: 0.4
+    entrance_edge_angle: 0.0174533
+    exit_edge_angle: 0.0174533
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.100017
+    position_end: [0, 0, 66.9235]
+    position_start: [0, 0, 66.8235]
+    sr_enable: true
+    type: dipole
+  CLA$FRS$R08$MAG$DIP$03$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 67.0035]
+    position_start: [0, 0, 66.9935]
+    type: drift
+  CLA$FRS$R08$MAG$DIP$03$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 66.9435]
+    position_start: [0, 0, 66.9335]
+    type: drift
+  CLA$FRS$R08$MAG$DIP$03$D:
+    angle: -0.0174533
+    csr_bins: 20.0
+    csr_output_filename: '"FRS-R08-MAG-DIP-03.CSR"'
+    edge_field_integral: 0.4
+    entrance_edge_angle: -0.0174533
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.0500083
+    position_end: [0, 0, 66.9935]
+    position_start: [0, 0, 66.9435]
+    sr_enable: true
+    type: dipole
+  CLA$FRS$R08$MAG$QUAD$01$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 67.1235]
+    position_start: [0, 0, 67.1135]
+    type: drift
+  CLA$FRS$R08$MAG$QUAD$01$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 67.0135]
+    position_start: [0, 0, 67.0035]
+    type: drift
+  CLA$FRS$R08$MAG$QUAD$01$K:
+    isr_enable: true
+    k1: -1.0
+    length: 0.1
+    position_end: [0, 0, 67.1135]
+    position_start: [0, 0, 67.0135]
+    sr_enable: true
+    type: quadrupole
+  CLA$FRS$R08$MAG$UND$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 66.7435]
+    position_start: [0, 0, 66.7335]
+    type: drift
+  CLA$FRS$R08$MAG$UND$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 65.9835]
+    position_start: [0, 0, 65.9735]
+    type: drift
+  CLA$FRS$R08$MAG$UND$W$H1:
+    length: 0.375
+    poles: 26.0
+    position_end: [0, 0, 66.3585]
+    position_start: [0, 0, 65.9835]
+    type: wiggler
+    undulator_k: 1.25
+  CLA$FRS$R08$MAG$UND$W$H2:
+    length: 0.375
+    poles: 26.0
+    position_end: [0, 0, 66.7335]
+    position_start: [0, 0, 66.3585]
+    type: wiggler
+    undulator_k: 1.25
+  CLA$FRS$R08$MARK$01:
+    fit_point: 1.0
+    position_end: [0, 0, 66.3585]
+    position_start: [0, 0, 66.3585]
+    type: marker
+  CLA$FRS$R09$DIA$BPM$01:
+    fit_point: 1.0
+    position_end: [0, 0, 67.1835]
+    position_start: [0, 0, 67.1835]
+    type: monitor
+  CLA$FRS$R09$DIA$SCR$01$A:
+    length: 0.03
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 67.1835]
+    position_start: [0, 0, 67.1535]
+    type: drift
+  CLA$FRS$R09$DIA$SCR$01$B:
+    length: 0.03
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 67.1535]
+    position_start: [0, 0, 67.1235]
+    type: drift
+  CLA$FRS$R09$DIA$SCR$01$W:
+    output_filename: '"CLA-FRS-R09-DIA-SCR-01.SDDS"'
+    position_end: [0, 0, 67.1535]
+    position_start: [0, 0, 67.1535]
+    type: watch_point
+  CLA$FRS$R09$MAG$DIP$01$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 68.0235]
+    position_start: [0, 0, 68.0135]
+    type: drift
+  CLA$FRS$R09$MAG$DIP$01$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 67.9635]
+    position_start: [0, 0, 67.9535]
+    type: drift
+  CLA$FRS$R09$MAG$DIP$01$D:
+    angle: -0.0174533
+    csr_bins: 20.0
+    csr_output_filename: '"FRS-R09-MAG-DIP-01.CSR"'
+    edge_field_integral: 0.4
+    exit_edge_angle: -0.0174533
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.0500083
+    position_end: [0, 0, 68.0135]
+    position_start: [0, 0, 67.9635]
+    sr_enable: true
+    type: dipole
+  CLA$FRS$R09$MAG$DIP$02$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 68.1435]
+    position_start: [0, 0, 68.1335]
+    type: drift
+  CLA$FRS$R09$MAG$DIP$02$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 68.0335]
+    position_start: [0, 0, 68.0235]
+    type: drift
+  CLA$FRS$R09$MAG$DIP$02$D:
+    angle: 0.0349066
+    csr_bins: 20.0
+    csr_output_filename: '"FRS-R09-MAG-DIP-02.CSR"'
+    edge_field_integral: 0.4
+    entrance_edge_angle: 0.0174533
+    exit_edge_angle: 0.0174533
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.100017
+    position_end: [0, 0, 68.1335]
+    position_start: [0, 0, 68.0335]
+    sr_enable: true
+    type: dipole
+  CLA$FRS$R09$MAG$DIP$03$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 68.2135]
+    position_start: [0, 0, 68.2035]
+    type: drift
+  CLA$FRS$R09$MAG$DIP$03$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 68.1535]
+    position_start: [0, 0, 68.1435]
+    type: drift
+  CLA$FRS$R09$MAG$DIP$03$D:
+    angle: -0.0174533
+    csr_bins: 20.0
+    csr_output_filename: '"FRS-R09-MAG-DIP-03.CSR"'
+    edge_field_integral: 0.4
+    entrance_edge_angle: -0.0174533
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.0500083
+    position_end: [0, 0, 68.2035]
+    position_start: [0, 0, 68.1535]
+    sr_enable: true
+    type: dipole
+  CLA$FRS$R09$MAG$QUAD$01$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 68.3335]
+    position_start: [0, 0, 68.3235]
+    type: drift
+  CLA$FRS$R09$MAG$QUAD$01$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 68.2235]
+    position_start: [0, 0, 68.2135]
+    type: drift
+  CLA$FRS$R09$MAG$QUAD$01$K:
+    isr_enable: true
+    k1: -1.0
+    length: 0.1
+    position_end: [0, 0, 68.3235]
+    position_start: [0, 0, 68.2235]
+    sr_enable: true
+    type: quadrupole
+  CLA$FRS$R09$MAG$UND$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 67.9535]
+    position_start: [0, 0, 67.9435]
+    type: drift
+  CLA$FRS$R09$MAG$UND$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 67.1935]
+    position_start: [0, 0, 67.1835]
+    type: drift
+  CLA$FRS$R09$MAG$UND$W$H1:
+    length: 0.375
+    poles: 26.0
+    position_end: [0, 0, 67.5685]
+    position_start: [0, 0, 67.1935]
+    type: wiggler
+    undulator_k: 1.25
+  CLA$FRS$R09$MAG$UND$W$H2:
+    length: 0.375
+    poles: 26.0
+    position_end: [0, 0, 67.9435]
+    position_start: [0, 0, 67.5685]
+    type: wiggler
+    undulator_k: 1.25
+  CLA$FRS$R09$MARK$01:
+    fit_point: 1.0
+    position_end: [0, 0, 67.5685]
+    position_start: [0, 0, 67.5685]
+    type: marker
+  CLA$FRS$R10$DIA$BPM$01:
+    fit_point: 1.0
+    position_end: [0, 0, 68.3935]
+    position_start: [0, 0, 68.3935]
+    type: monitor
+  CLA$FRS$R10$DIA$SCR$01$A:
+    length: 0.03
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 68.3935]
+    position_start: [0, 0, 68.3635]
+    type: drift
+  CLA$FRS$R10$DIA$SCR$01$B:
+    length: 0.03
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 68.3635]
+    position_start: [0, 0, 68.3335]
+    type: drift
+  CLA$FRS$R10$DIA$SCR$01$W:
+    output_filename: '"CLA-FRS-R10-DIA-SCR-01.SDDS"'
+    position_end: [0, 0, 68.3635]
+    position_start: [0, 0, 68.3635]
+    type: watch_point
+  CLA$FRS$R10$MAG$DIP$01$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 69.2335]
+    position_start: [0, 0, 69.2235]
+    type: drift
+  CLA$FRS$R10$MAG$DIP$01$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 69.1735]
+    position_start: [0, 0, 69.1635]
+    type: drift
+  CLA$FRS$R10$MAG$DIP$01$D:
+    angle: -0.0174533
+    csr_bins: 20.0
+    csr_output_filename: '"FRS-R10-MAG-DIP-01.CSR"'
+    edge_field_integral: 0.4
+    exit_edge_angle: -0.0174533
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.0500083
+    position_end: [0, 0, 69.2235]
+    position_start: [0, 0, 69.1735]
+    sr_enable: true
+    type: dipole
+  CLA$FRS$R10$MAG$DIP$02$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 69.3536]
+    position_start: [0, 0, 69.3436]
+    type: drift
+  CLA$FRS$R10$MAG$DIP$02$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 69.2435]
+    position_start: [0, 0, 69.2335]
+    type: drift
+  CLA$FRS$R10$MAG$DIP$02$D:
+    angle: 0.0349066
+    csr_bins: 20.0
+    csr_output_filename: '"FRS-R10-MAG-DIP-02.CSR"'
+    edge_field_integral: 0.4
+    entrance_edge_angle: 0.0174533
+    exit_edge_angle: 0.0174533
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.100017
+    position_end: [0, 0, 69.3436]
+    position_start: [0, 0, 69.2435]
+    sr_enable: true
+    type: dipole
+  CLA$FRS$R10$MAG$DIP$03$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 69.4236]
+    position_start: [0, 0, 69.4136]
+    type: drift
+  CLA$FRS$R10$MAG$DIP$03$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 69.3636]
+    position_start: [0, 0, 69.3536]
+    type: drift
+  CLA$FRS$R10$MAG$DIP$03$D:
+    angle: -0.0174533
+    csr_bins: 20.0
+    csr_output_filename: '"FRS-R10-MAG-DIP-03.CSR"'
+    edge_field_integral: 0.4
+    entrance_edge_angle: -0.0174533
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.0500083
+    position_end: [0, 0, 69.4136]
+    position_start: [0, 0, 69.3636]
+    sr_enable: true
+    type: dipole
+  CLA$FRS$R10$MAG$QUAD$01$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 69.5436]
+    position_start: [0, 0, 69.5336]
+    type: drift
+  CLA$FRS$R10$MAG$QUAD$01$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 69.4336]
+    position_start: [0, 0, 69.4236]
+    type: drift
+  CLA$FRS$R10$MAG$QUAD$01$K:
+    isr_enable: true
+    k1: -1.0
+    length: 0.1
+    position_end: [0, 0, 69.5336]
+    position_start: [0, 0, 69.4336]
+    sr_enable: true
+    type: quadrupole
+  CLA$FRS$R10$MAG$UND$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 69.1635]
+    position_start: [0, 0, 69.1535]
+    type: drift
+  CLA$FRS$R10$MAG$UND$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 68.4035]
+    position_start: [0, 0, 68.3935]
+    type: drift
+  CLA$FRS$R10$MAG$UND$W$H1:
+    length: 0.375
+    poles: 26.0
+    position_end: [0, 0, 68.7785]
+    position_start: [0, 0, 68.4035]
+    type: wiggler
+    undulator_k: 1.25
+  CLA$FRS$R10$MAG$UND$W$H2:
+    length: 0.375
+    poles: 26.0
+    position_end: [0, 0, 69.1535]
+    position_start: [0, 0, 68.7785]
+    type: wiggler
+    undulator_k: 1.25
+  CLA$FRS$R10$MARK$01:
+    fit_point: 1.0
+    position_end: [0, 0, 68.7785]
+    position_start: [0, 0, 68.7785]
+    type: marker
+  CLA$FRS$R11$DIA$BPM$01:
+    fit_point: 1.0
+    position_end: [0, 0, 69.6036]
+    position_start: [0, 0, 69.6036]
+    type: monitor
+  CLA$FRS$R11$DIA$SCR$01$A:
+    length: 0.03
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 69.6036]
+    position_start: [0, 0, 69.5736]
+    type: drift
+  CLA$FRS$R11$DIA$SCR$01$B:
+    length: 0.03
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 69.5736]
+    position_start: [0, 0, 69.5436]
+    type: drift
+  CLA$FRS$R11$DIA$SCR$01$W:
+    output_filename: '"CLA-FRS-R11-DIA-SCR-01.SDDS"'
+    position_end: [0, 0, 69.5736]
+    position_start: [0, 0, 69.5736]
+    type: watch_point
+  CLA$FRS$R11$MAG$DIP$01$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 70.4436]
+    position_start: [0, 0, 70.4336]
+    type: drift
+  CLA$FRS$R11$MAG$DIP$01$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 70.3836]
+    position_start: [0, 0, 70.3736]
+    type: drift
+  CLA$FRS$R11$MAG$DIP$01$D:
+    angle: -0.0174533
+    csr_bins: 20.0
+    csr_output_filename: '"FRS-R11-MAG-DIP-01.CSR"'
+    edge_field_integral: 0.4
+    exit_edge_angle: -0.0174533
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.0500083
+    position_end: [0, 0, 70.4336]
+    position_start: [0, 0, 70.3836]
+    sr_enable: true
+    type: dipole
+  CLA$FRS$R11$MAG$DIP$02$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 70.5636]
+    position_start: [0, 0, 70.5536]
+    type: drift
+  CLA$FRS$R11$MAG$DIP$02$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 70.4536]
+    position_start: [0, 0, 70.4436]
+    type: drift
+  CLA$FRS$R11$MAG$DIP$02$D:
+    angle: 0.0349066
+    csr_bins: 20.0
+    csr_output_filename: '"FRS-R11-MAG-DIP-02.CSR"'
+    edge_field_integral: 0.4
+    entrance_edge_angle: 0.0174533
+    exit_edge_angle: 0.0174533
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.100017
+    position_end: [0, 0, 70.5536]
+    position_start: [0, 0, 70.4536]
+    sr_enable: true
+    type: dipole
+  CLA$FRS$R11$MAG$DIP$03$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 70.6336]
+    position_start: [0, 0, 70.6236]
+    type: drift
+  CLA$FRS$R11$MAG$DIP$03$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 70.5736]
+    position_start: [0, 0, 70.5636]
+    type: drift
+  CLA$FRS$R11$MAG$DIP$03$D:
+    angle: -0.0174533
+    csr_bins: 20.0
+    csr_output_filename: '"FRS-R11-MAG-DIP-03.CSR"'
+    edge_field_integral: 0.4
+    entrance_edge_angle: -0.0174533
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.0500083
+    position_end: [0, 0, 70.6236]
+    position_start: [0, 0, 70.5736]
+    sr_enable: true
+    type: dipole
+  CLA$FRS$R11$MAG$QUAD$01$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 70.7536]
+    position_start: [0, 0, 70.7436]
+    type: drift
+  CLA$FRS$R11$MAG$QUAD$01$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 70.6436]
+    position_start: [0, 0, 70.6336]
+    type: drift
+  CLA$FRS$R11$MAG$QUAD$01$K:
+    isr_enable: true
+    k1: -1.0
+    length: 0.1
+    position_end: [0, 0, 70.7436]
+    position_start: [0, 0, 70.6436]
+    sr_enable: true
+    type: quadrupole
+  CLA$FRS$R11$MAG$UND$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 70.3736]
+    position_start: [0, 0, 70.3636]
+    type: drift
+  CLA$FRS$R11$MAG$UND$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 69.6136]
+    position_start: [0, 0, 69.6036]
+    type: drift
+  CLA$FRS$R11$MAG$UND$W$H1:
+    length: 0.375
+    poles: 26.0
+    position_end: [0, 0, 69.9886]
+    position_start: [0, 0, 69.6136]
+    type: wiggler
+    undulator_k: 1.25
+  CLA$FRS$R11$MAG$UND$W$H2:
+    length: 0.375
+    poles: 26.0
+    position_end: [0, 0, 70.3636]
+    position_start: [0, 0, 69.9886]
+    type: wiggler
+    undulator_k: 1.25
+  CLA$FRS$R11$MARK$01:
+    fit_point: 1.0
+    position_end: [0, 0, 69.9886]
+    position_start: [0, 0, 69.9886]
+    type: marker
+  CLA$FRS$R12$DIA$BPM$01:
+    fit_point: 1.0
+    position_end: [0, 0, 70.8136]
+    position_start: [0, 0, 70.8136]
+    type: monitor
+  CLA$FRS$R12$DIA$SCR$01$A:
+    length: 0.03
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 70.8136]
+    position_start: [0, 0, 70.7836]
+    type: drift
+  CLA$FRS$R12$DIA$SCR$01$B:
+    length: 0.03
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 70.7836]
+    position_start: [0, 0, 70.7536]
+    type: drift
+  CLA$FRS$R12$DIA$SCR$01$W:
+    output_filename: '"CLA-FRS-R12-DIA-SCR-01.SDDS"'
+    position_end: [0, 0, 70.7836]
+    position_start: [0, 0, 70.7836]
+    type: watch_point
+  CLA$FRS$R12$MAG$DIP$01$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 71.6536]
+    position_start: [0, 0, 71.6436]
+    type: drift
+  CLA$FRS$R12$MAG$DIP$01$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 71.5936]
+    position_start: [0, 0, 71.5836]
+    type: drift
+  CLA$FRS$R12$MAG$DIP$01$D:
+    angle: -0.0174533
+    csr_bins: 20.0
+    csr_output_filename: '"FRS-R12-MAG-DIP-01.CSR"'
+    edge_field_integral: 0.4
+    exit_edge_angle: -0.0174533
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.0500083
+    position_end: [0, 0, 71.6436]
+    position_start: [0, 0, 71.5936]
+    sr_enable: true
+    type: dipole
+  CLA$FRS$R12$MAG$DIP$02$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 71.7736]
+    position_start: [0, 0, 71.7636]
+    type: drift
+  CLA$FRS$R12$MAG$DIP$02$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 71.6636]
+    position_start: [0, 0, 71.6536]
+    type: drift
+  CLA$FRS$R12$MAG$DIP$02$D:
+    angle: 0.0349066
+    csr_bins: 20.0
+    csr_output_filename: '"FRS-R12-MAG-DIP-02.CSR"'
+    edge_field_integral: 0.4
+    entrance_edge_angle: 0.0174533
+    exit_edge_angle: 0.0174533
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.100017
+    position_end: [0, 0, 71.7636]
+    position_start: [0, 0, 71.6636]
+    sr_enable: true
+    type: dipole
+  CLA$FRS$R12$MAG$DIP$03$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 71.8436]
+    position_start: [0, 0, 71.8336]
+    type: drift
+  CLA$FRS$R12$MAG$DIP$03$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 71.7836]
+    position_start: [0, 0, 71.7736]
+    type: drift
+  CLA$FRS$R12$MAG$DIP$03$D:
+    angle: -0.0174533
+    csr_bins: 20.0
+    csr_output_filename: '"FRS-R12-MAG-DIP-03.CSR"'
+    edge_field_integral: 0.4
+    entrance_edge_angle: -0.0174533
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.0500083
+    position_end: [0, 0, 71.8336]
+    position_start: [0, 0, 71.7836]
+    sr_enable: true
+    type: dipole
+  CLA$FRS$R12$MAG$QUAD$01$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 71.9636]
+    position_start: [0, 0, 71.9536]
+    type: drift
+  CLA$FRS$R12$MAG$QUAD$01$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 71.8536]
+    position_start: [0, 0, 71.8436]
+    type: drift
+  CLA$FRS$R12$MAG$QUAD$01$K:
+    isr_enable: true
+    k1: -1.0
+    length: 0.1
+    position_end: [0, 0, 71.9536]
+    position_start: [0, 0, 71.8536]
+    sr_enable: true
+    type: quadrupole
+  CLA$FRS$R12$MAG$UND$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 71.5836]
+    position_start: [0, 0, 71.5736]
+    type: drift
+  CLA$FRS$R12$MAG$UND$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 70.8236]
+    position_start: [0, 0, 70.8136]
+    type: drift
+  CLA$FRS$R12$MAG$UND$W$H1:
+    length: 0.375
+    poles: 26.0
+    position_end: [0, 0, 71.1986]
+    position_start: [0, 0, 70.8236]
+    type: wiggler
+    undulator_k: 1.25
+  CLA$FRS$R12$MAG$UND$W$H2:
+    length: 0.375
+    poles: 26.0
+    position_end: [0, 0, 71.5736]
+    position_start: [0, 0, 71.1986]
+    type: wiggler
+    undulator_k: 1.25
+  CLA$FRS$R12$MARK$01:
+    fit_point: 1.0
+    position_end: [0, 0, 71.1986]
+    position_start: [0, 0, 71.1986]
+    type: marker
+  CLA$FRS$R13$DIA$BPM$01:
+    fit_point: 1.0
+    position_end: [0, 0, 72.0236]
+    position_start: [0, 0, 72.0236]
+    type: monitor
+  CLA$FRS$R13$DIA$SCR$01$A:
+    length: 0.03
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 72.0236]
+    position_start: [0, 0, 71.9936]
+    type: drift
+  CLA$FRS$R13$DIA$SCR$01$B:
+    length: 0.03
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 71.9936]
+    position_start: [0, 0, 71.9636]
+    type: drift
+  CLA$FRS$R13$DIA$SCR$01$W:
+    output_filename: '"CLA-FRS-R13-DIA-SCR-01.SDDS"'
+    position_end: [0, 0, 71.9936]
+    position_start: [0, 0, 71.9936]
+    type: watch_point
+  CLA$FRS$R13$MAG$DIP$01$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 72.8636]
+    position_start: [0, 0, 72.8536]
+    type: drift
+  CLA$FRS$R13$MAG$DIP$01$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 72.8036]
+    position_start: [0, 0, 72.7936]
+    type: drift
+  CLA$FRS$R13$MAG$DIP$01$D:
+    angle: -0.0174533
+    csr_bins: 20.0
+    csr_output_filename: '"FRS-R13-MAG-DIP-01.CSR"'
+    edge_field_integral: 0.4
+    exit_edge_angle: -0.0174533
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.0500083
+    position_end: [0, 0, 72.8536]
+    position_start: [0, 0, 72.8036]
+    sr_enable: true
+    type: dipole
+  CLA$FRS$R13$MAG$DIP$02$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 72.9837]
+    position_start: [0, 0, 72.9737]
+    type: drift
+  CLA$FRS$R13$MAG$DIP$02$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 72.8736]
+    position_start: [0, 0, 72.8636]
+    type: drift
+  CLA$FRS$R13$MAG$DIP$02$D:
+    angle: 0.0349066
+    csr_bins: 20.0
+    csr_output_filename: '"FRS-R13-MAG-DIP-02.CSR"'
+    edge_field_integral: 0.4
+    entrance_edge_angle: 0.0174533
+    exit_edge_angle: 0.0174533
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.100017
+    position_end: [0, 0, 72.9737]
+    position_start: [0, 0, 72.8736]
+    sr_enable: true
+    type: dipole
+  CLA$FRS$R13$MAG$DIP$03$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 73.0537]
+    position_start: [0, 0, 73.0437]
+    type: drift
+  CLA$FRS$R13$MAG$DIP$03$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 72.9937]
+    position_start: [0, 0, 72.9837]
+    type: drift
+  CLA$FRS$R13$MAG$DIP$03$D:
+    angle: -0.0174533
+    csr_bins: 20.0
+    csr_output_filename: '"FRS-R13-MAG-DIP-03.CSR"'
+    edge_field_integral: 0.4
+    entrance_edge_angle: -0.0174533
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.0500083
+    position_end: [0, 0, 73.0437]
+    position_start: [0, 0, 72.9937]
+    sr_enable: true
+    type: dipole
+  CLA$FRS$R13$MAG$QUAD$01$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 73.1737]
+    position_start: [0, 0, 73.1637]
+    type: drift
+  CLA$FRS$R13$MAG$QUAD$01$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 73.0637]
+    position_start: [0, 0, 73.0537]
+    type: drift
+  CLA$FRS$R13$MAG$QUAD$01$K:
+    isr_enable: true
+    k1: -1.0
+    length: 0.1
+    position_end: [0, 0, 73.1637]
+    position_start: [0, 0, 73.0637]
+    sr_enable: true
+    type: quadrupole
+  CLA$FRS$R13$MAG$UND$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 72.7936]
+    position_start: [0, 0, 72.7836]
+    type: drift
+  CLA$FRS$R13$MAG$UND$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 72.0336]
+    position_start: [0, 0, 72.0236]
+    type: drift
+  CLA$FRS$R13$MAG$UND$W$H1:
+    length: 0.375
+    poles: 26.0
+    position_end: [0, 0, 72.4086]
+    position_start: [0, 0, 72.0336]
+    type: wiggler
+    undulator_k: 1.25
+  CLA$FRS$R13$MAG$UND$W$H2:
+    length: 0.375
+    poles: 26.0
+    position_end: [0, 0, 72.7836]
+    position_start: [0, 0, 72.4086]
+    type: wiggler
+    undulator_k: 1.25
+  CLA$FRS$R13$MARK$01:
+    fit_point: 1.0
+    position_end: [0, 0, 72.4086]
+    position_start: [0, 0, 72.4086]
+    type: marker
+  CLA$FRS$R14$DIA$BPM$01:
+    fit_point: 1.0
+    position_end: [0, 0, 73.2337]
+    position_start: [0, 0, 73.2337]
+    type: monitor
+  CLA$FRS$R14$DIA$SCR$01$A:
+    length: 0.03
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 73.2337]
+    position_start: [0, 0, 73.2037]
+    type: drift
+  CLA$FRS$R14$DIA$SCR$01$B:
+    length: 0.03
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 73.2037]
+    position_start: [0, 0, 73.1737]
+    type: drift
+  CLA$FRS$R14$DIA$SCR$01$W:
+    output_filename: '"CLA-FRS-R14-DIA-SCR-01.SDDS"'
+    position_end: [0, 0, 73.2037]
+    position_start: [0, 0, 73.2037]
+    type: watch_point
+  CLA$FRS$R14$MAG$DIP$01$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 74.0737]
+    position_start: [0, 0, 74.0637]
+    type: drift
+  CLA$FRS$R14$MAG$DIP$01$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 74.0137]
+    position_start: [0, 0, 74.0037]
+    type: drift
+  CLA$FRS$R14$MAG$DIP$01$D:
+    angle: -0.0174533
+    csr_bins: 20.0
+    csr_output_filename: '"FRS-R14-MAG-DIP-01.CSR"'
+    edge_field_integral: 0.4
+    exit_edge_angle: -0.0174533
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.0500083
+    position_end: [0, 0, 74.0637]
+    position_start: [0, 0, 74.0137]
+    sr_enable: true
+    type: dipole
+  CLA$FRS$R14$MAG$DIP$02$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 74.1937]
+    position_start: [0, 0, 74.1837]
+    type: drift
+  CLA$FRS$R14$MAG$DIP$02$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 74.0837]
+    position_start: [0, 0, 74.0737]
+    type: drift
+  CLA$FRS$R14$MAG$DIP$02$D:
+    angle: 0.0349066
+    csr_bins: 20.0
+    csr_output_filename: '"FRS-R14-MAG-DIP-02.CSR"'
+    edge_field_integral: 0.4
+    entrance_edge_angle: 0.0174533
+    exit_edge_angle: 0.0174533
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.100017
+    position_end: [0, 0, 74.1837]
+    position_start: [0, 0, 74.0837]
+    sr_enable: true
+    type: dipole
+  CLA$FRS$R14$MAG$DIP$03$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 74.2637]
+    position_start: [0, 0, 74.2537]
+    type: drift
+  CLA$FRS$R14$MAG$DIP$03$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 74.2037]
+    position_start: [0, 0, 74.1937]
+    type: drift
+  CLA$FRS$R14$MAG$DIP$03$D:
+    angle: -0.0174533
+    csr_bins: 20.0
+    csr_output_filename: '"FRS-R14-MAG-DIP-03.CSR"'
+    edge_field_integral: 0.4
+    entrance_edge_angle: -0.0174533
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.0500083
+    position_end: [0, 0, 74.2537]
+    position_start: [0, 0, 74.2037]
+    sr_enable: true
+    type: dipole
+  CLA$FRS$R14$MAG$QUAD$01$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 74.3837]
+    position_start: [0, 0, 74.3737]
+    type: drift
+  CLA$FRS$R14$MAG$QUAD$01$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 74.2737]
+    position_start: [0, 0, 74.2637]
+    type: drift
+  CLA$FRS$R14$MAG$QUAD$01$K:
+    isr_enable: true
+    k1: -1.0
+    length: 0.1
+    position_end: [0, 0, 74.3737]
+    position_start: [0, 0, 74.2737]
+    sr_enable: true
+    type: quadrupole
+  CLA$FRS$R14$MAG$UND$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 74.0037]
+    position_start: [0, 0, 73.9937]
+    type: drift
+  CLA$FRS$R14$MAG$UND$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 73.2437]
+    position_start: [0, 0, 73.2337]
+    type: drift
+  CLA$FRS$R14$MAG$UND$W$H1:
+    length: 0.375
+    poles: 26.0
+    position_end: [0, 0, 73.6187]
+    position_start: [0, 0, 73.2437]
+    type: wiggler
+    undulator_k: 1.25
+  CLA$FRS$R14$MAG$UND$W$H2:
+    length: 0.375
+    poles: 26.0
+    position_end: [0, 0, 73.9937]
+    position_start: [0, 0, 73.6187]
+    type: wiggler
+    undulator_k: 1.25
+  CLA$FRS$R14$MARK$01:
+    fit_point: 1.0
+    position_end: [0, 0, 73.6187]
+    position_start: [0, 0, 73.6187]
+    type: marker
+  CLA$FRS$R15$DIA$BPM$01:
+    fit_point: 1.0
+    position_end: [0, 0, 74.4437]
+    position_start: [0, 0, 74.4437]
+    type: monitor
+  CLA$FRS$R15$DIA$SCR$01$A:
+    length: 0.03
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 74.4437]
+    position_start: [0, 0, 74.4137]
+    type: drift
+  CLA$FRS$R15$DIA$SCR$01$B:
+    length: 0.03
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 74.4137]
+    position_start: [0, 0, 74.3837]
+    type: drift
+  CLA$FRS$R15$DIA$SCR$01$W:
+    output_filename: '"CLA-FRS-R15-DIA-SCR-01.SDDS"'
+    position_end: [0, 0, 74.4137]
+    position_start: [0, 0, 74.4137]
+    type: watch_point
+  CLA$FRS$R15$MAG$DIP$01$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 75.2837]
+    position_start: [0, 0, 75.2737]
+    type: drift
+  CLA$FRS$R15$MAG$DIP$01$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 75.2237]
+    position_start: [0, 0, 75.2137]
+    type: drift
+  CLA$FRS$R15$MAG$DIP$01$D:
+    angle: -0.0174533
+    csr_bins: 20.0
+    csr_output_filename: '"FRS-R15-MAG-DIP-01.CSR"'
+    edge_field_integral: 0.4
+    exit_edge_angle: -0.0174533
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.0500083
+    position_end: [0, 0, 75.2737]
+    position_start: [0, 0, 75.2237]
+    sr_enable: true
+    type: dipole
+  CLA$FRS$R15$MAG$DIP$02$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 75.4037]
+    position_start: [0, 0, 75.3937]
+    type: drift
+  CLA$FRS$R15$MAG$DIP$02$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 75.2937]
+    position_start: [0, 0, 75.2837]
+    type: drift
+  CLA$FRS$R15$MAG$DIP$02$D:
+    angle: 0.0349066
+    csr_bins: 20.0
+    csr_output_filename: '"FRS-R15-MAG-DIP-02.CSR"'
+    edge_field_integral: 0.4
+    entrance_edge_angle: 0.0174533
+    exit_edge_angle: 0.0174533
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.100017
+    position_end: [0, 0, 75.3937]
+    position_start: [0, 0, 75.2937]
+    sr_enable: true
+    type: dipole
+  CLA$FRS$R15$MAG$DIP$03$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 75.4737]
+    position_start: [0, 0, 75.4637]
+    type: drift
+  CLA$FRS$R15$MAG$DIP$03$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 75.4137]
+    position_start: [0, 0, 75.4037]
+    type: drift
+  CLA$FRS$R15$MAG$DIP$03$D:
+    angle: -0.0174533
+    csr_bins: 20.0
+    csr_output_filename: '"FRS-R15-MAG-DIP-03.CSR"'
+    edge_field_integral: 0.4
+    entrance_edge_angle: -0.0174533
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.0500083
+    position_end: [0, 0, 75.4637]
+    position_start: [0, 0, 75.4137]
+    sr_enable: true
+    type: dipole
+  CLA$FRS$R15$MAG$QUAD$01$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 75.5937]
+    position_start: [0, 0, 75.5837]
+    type: drift
+  CLA$FRS$R15$MAG$QUAD$01$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 75.4837]
+    position_start: [0, 0, 75.4737]
+    type: drift
+  CLA$FRS$R15$MAG$QUAD$01$K:
+    isr_enable: true
+    k1: -1.0
+    length: 0.1
+    position_end: [0, 0, 75.5837]
+    position_start: [0, 0, 75.4837]
+    sr_enable: true
+    type: quadrupole
+  CLA$FRS$R15$MAG$UND$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 75.2137]
+    position_start: [0, 0, 75.2037]
+    type: drift
+  CLA$FRS$R15$MAG$UND$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 74.4537]
+    position_start: [0, 0, 74.4437]
+    type: drift
+  CLA$FRS$R15$MAG$UND$W$H1:
+    length: 0.375
+    poles: 26.0
+    position_end: [0, 0, 74.8287]
+    position_start: [0, 0, 74.4537]
+    type: wiggler
+    undulator_k: 1.25
+  CLA$FRS$R15$MAG$UND$W$H2:
+    length: 0.375
+    poles: 26.0
+    position_end: [0, 0, 75.2037]
+    position_start: [0, 0, 74.8287]
+    type: wiggler
+    undulator_k: 1.25
+  CLA$FRS$R15$MARK$01:
+    fit_point: 1.0
+    position_end: [0, 0, 74.8287]
+    position_start: [0, 0, 74.8287]
+    type: marker
+  CLA$FRS$R16$DIA$BPM$01:
+    fit_point: 1.0
+    position_end: [0, 0, 75.6537]
+    position_start: [0, 0, 75.6537]
+    type: monitor
+  CLA$FRS$R16$DIA$SCR$01$A:
+    length: 0.03
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 75.6537]
+    position_start: [0, 0, 75.6237]
+    type: drift
+  CLA$FRS$R16$DIA$SCR$01$B:
+    length: 0.03
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 75.6237]
+    position_start: [0, 0, 75.5937]
+    type: drift
+  CLA$FRS$R16$DIA$SCR$01$W:
+    output_filename: '"CLA-FRS-R16-DIA-SCR-01.SDDS"'
+    position_end: [0, 0, 75.6237]
+    position_start: [0, 0, 75.6237]
+    type: watch_point
+  CLA$FRS$R16$MAG$DIP$01$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 76.4937]
+    position_start: [0, 0, 76.4837]
+    type: drift
+  CLA$FRS$R16$MAG$DIP$01$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 76.4337]
+    position_start: [0, 0, 76.4237]
+    type: drift
+  CLA$FRS$R16$MAG$DIP$01$D:
+    angle: -0.0174533
+    csr_bins: 20.0
+    csr_output_filename: '"FRS-R16-MAG-DIP-01.CSR"'
+    edge_field_integral: 0.4
+    exit_edge_angle: -0.0174533
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.0500083
+    position_end: [0, 0, 76.4837]
+    position_start: [0, 0, 76.4337]
+    sr_enable: true
+    type: dipole
+  CLA$FRS$R16$MAG$DIP$02$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 76.6138]
+    position_start: [0, 0, 76.6038]
+    type: drift
+  CLA$FRS$R16$MAG$DIP$02$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 76.5037]
+    position_start: [0, 0, 76.4937]
+    type: drift
+  CLA$FRS$R16$MAG$DIP$02$D:
+    angle: 0.0349066
+    csr_bins: 20.0
+    csr_output_filename: '"FRS-R16-MAG-DIP-02.CSR"'
+    edge_field_integral: 0.4
+    entrance_edge_angle: 0.0174533
+    exit_edge_angle: 0.0174533
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.100017
+    position_end: [0, 0, 76.6038]
+    position_start: [0, 0, 76.5037]
+    sr_enable: true
+    type: dipole
+  CLA$FRS$R16$MAG$DIP$03$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 76.6838]
+    position_start: [0, 0, 76.6738]
+    type: drift
+  CLA$FRS$R16$MAG$DIP$03$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 76.6238]
+    position_start: [0, 0, 76.6138]
+    type: drift
+  CLA$FRS$R16$MAG$DIP$03$D:
+    angle: -0.0174533
+    csr_bins: 20.0
+    csr_output_filename: '"FRS-R16-MAG-DIP-03.CSR"'
+    edge_field_integral: 0.4
+    entrance_edge_angle: -0.0174533
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.0500083
+    position_end: [0, 0, 76.6738]
+    position_start: [0, 0, 76.6238]
+    sr_enable: true
+    type: dipole
+  CLA$FRS$R16$MAG$QUAD$01$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 76.8038]
+    position_start: [0, 0, 76.7938]
+    type: drift
+  CLA$FRS$R16$MAG$QUAD$01$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 76.6938]
+    position_start: [0, 0, 76.6838]
+    type: drift
+  CLA$FRS$R16$MAG$QUAD$01$K:
+    isr_enable: true
+    k1: -1.0
+    length: 0.1
+    position_end: [0, 0, 76.7938]
+    position_start: [0, 0, 76.6938]
+    sr_enable: true
+    type: quadrupole
+  CLA$FRS$R16$MAG$UND$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 76.4237]
+    position_start: [0, 0, 76.4137]
+    type: drift
+  CLA$FRS$R16$MAG$UND$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 75.6637]
+    position_start: [0, 0, 75.6537]
+    type: drift
+  CLA$FRS$R16$MAG$UND$W$H1:
+    length: 0.375
+    poles: 26.0
+    position_end: [0, 0, 76.0387]
+    position_start: [0, 0, 75.6637]
+    type: wiggler
+    undulator_k: 1.25
+  CLA$FRS$R16$MAG$UND$W$H2:
+    length: 0.375
+    poles: 26.0
+    position_end: [0, 0, 76.4137]
+    position_start: [0, 0, 76.0387]
+    type: wiggler
+    undulator_k: 1.25
+  CLA$FRS$R16$MARK$01:
+    fit_point: 1.0
+    position_end: [0, 0, 76.0387]
+    position_start: [0, 0, 76.0387]
+    type: marker
+  CLA$FRS$R17$DIA$BPM$01:
+    fit_point: 1.0
+    position_end: [0, 0, 76.8638]
+    position_start: [0, 0, 76.8638]
+    type: monitor
+  CLA$FRS$R17$DIA$SCR$01$A:
+    length: 0.03
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 76.8638]
+    position_start: [0, 0, 76.8338]
+    type: drift
+  CLA$FRS$R17$DIA$SCR$01$B:
+    length: 0.03
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 76.8338]
+    position_start: [0, 0, 76.8038]
+    type: drift
+  CLA$FRS$R17$DIA$SCR$01$W:
+    output_filename: '"CLA-FRS-R17-DIA-SCR-01.SDDS"'
+    position_end: [0, 0, 76.8338]
+    position_start: [0, 0, 76.8338]
+    type: watch_point
+  CLA$FRS$R17$MAG$DIP$01$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 77.7038]
+    position_start: [0, 0, 77.6938]
+    type: drift
+  CLA$FRS$R17$MAG$DIP$01$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 77.6438]
+    position_start: [0, 0, 77.6338]
+    type: drift
+  CLA$FRS$R17$MAG$DIP$01$D:
+    angle: -0.0174533
+    csr_bins: 20.0
+    csr_output_filename: '"FRS-R17-MAG-DIP-01.CSR"'
+    edge_field_integral: 0.4
+    exit_edge_angle: -0.0174533
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.0500083
+    position_end: [0, 0, 77.6938]
+    position_start: [0, 0, 77.6438]
+    sr_enable: true
+    type: dipole
+  CLA$FRS$R17$MAG$DIP$02$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 77.8238]
+    position_start: [0, 0, 77.8138]
+    type: drift
+  CLA$FRS$R17$MAG$DIP$02$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 77.7138]
+    position_start: [0, 0, 77.7038]
+    type: drift
+  CLA$FRS$R17$MAG$DIP$02$D:
+    angle: 0.0349066
+    csr_bins: 20.0
+    csr_output_filename: '"FRS-R17-MAG-DIP-02.CSR"'
+    edge_field_integral: 0.4
+    entrance_edge_angle: 0.0174533
+    exit_edge_angle: 0.0174533
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.100017
+    position_end: [0, 0, 77.8138]
+    position_start: [0, 0, 77.7138]
+    sr_enable: true
+    type: dipole
+  CLA$FRS$R17$MAG$DIP$03$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 77.8938]
+    position_start: [0, 0, 77.8838]
+    type: drift
+  CLA$FRS$R17$MAG$DIP$03$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 77.8338]
+    position_start: [0, 0, 77.8238]
+    type: drift
+  CLA$FRS$R17$MAG$DIP$03$D:
+    angle: -0.0174533
+    csr_bins: 20.0
+    csr_output_filename: '"FRS-R17-MAG-DIP-03.CSR"'
+    edge_field_integral: 0.4
+    entrance_edge_angle: -0.0174533
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.0500083
+    position_end: [0, 0, 77.8838]
+    position_start: [0, 0, 77.8338]
+    sr_enable: true
+    type: dipole
+  CLA$FRS$R17$MAG$QUAD$01$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 78.0138]
+    position_start: [0, 0, 78.0038]
+    type: drift
+  CLA$FRS$R17$MAG$QUAD$01$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 77.9038]
+    position_start: [0, 0, 77.8938]
+    type: drift
+  CLA$FRS$R17$MAG$QUAD$01$K:
+    isr_enable: true
+    k1: -1.0
+    length: 0.1
+    position_end: [0, 0, 78.0038]
+    position_start: [0, 0, 77.9038]
+    sr_enable: true
+    type: quadrupole
+  CLA$FRS$R17$MAG$UND$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 77.6338]
+    position_start: [0, 0, 77.6238]
+    type: drift
+  CLA$FRS$R17$MAG$UND$B:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 76.8738]
+    position_start: [0, 0, 76.8638]
+    type: drift
+  CLA$FRS$R17$MAG$UND$W$H1:
+    length: 0.375
+    poles: 26.0
+    position_end: [0, 0, 77.2488]
+    position_start: [0, 0, 76.8738]
+    type: wiggler
+    undulator_k: 1.25
+  CLA$FRS$R17$MAG$UND$W$H2:
+    length: 0.375
+    poles: 26.0
+    position_end: [0, 0, 77.6238]
+    position_start: [0, 0, 77.2488]
+    type: wiggler
+    undulator_k: 1.25
+  CLA$FRS$R17$MARK$01:
+    fit_point: 1.0
+    position_end: [0, 0, 77.2488]
+    position_start: [0, 0, 77.2488]
+    type: marker
+  CLA$L01$APER:
+    horizontal_size: 0.01
+    position_end: [0, 0, 1.0577]
+    position_start: [0, 0, 1.0577]
+    shape: rectangular
+    type: aperture
+    vertical_size: 0.01
+  CLA$L01$CAV:
+    cell_length: 0.0333333
+    field_amplitude: 23383300.0
+    field_definition: TWS_S-DL.dat
+    frequency: 2998500000.0
+    length: 2.03333
+    longitudinal_wakefield_input: '"Sz5um10mm.sdds"'
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    phase: -31.0
+    position_end: [0, 0, 3.2269]
+    position_start: [0, 0, 1.19357]
+    transverse_wakefield_input: '"Sx5um10mm.sdds"'
+    type: cavity
+  CLA$L01$CAV$A:
+    length: 0.14457
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 3.37147]
+    position_start: [0, 0, 3.2269]
+    type: drift
+  CLA$L01$CAV$B:
+    length: 0.13587
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 1.19357]
+    position_start: [0, 0, 1.0577]
+    type: drift
+  CLA$L02$APER:
+    horizontal_size: 0.01
+    position_end: [0, 0, 6.7485]
+    position_start: [0, 0, 6.7485]
+    shape: rectangular
+    type: aperture
+    vertical_size: 0.01
+  CLA$L02$CAV:
+    cell_length: 0.0333333
+    field_amplitude: 46766700.0
+    field_definition: TWS_S-DL.dat
+    frequency: 2998500000.0
+    length: 4.06667
+    longitudinal_wakefield_input: '"Sz5um10mm.sdds"'
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    phase: -31.0
+    position_end: [0, 0, 10.8557]
+    position_start: [0, 0, 6.78904]
+    transverse_wakefield_input: '"Sx5um10mm.sdds"'
+    type: cavity
+  CLA$L02$CAV$A:
+    length: 0.0416666
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 10.8974]
+    position_start: [0, 0, 10.8557]
+    type: drift
+  CLA$L02$CAV$B:
+    length: 0.040538
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 6.78904]
+    position_start: [0, 0, 6.7485]
+    type: drift
+  CLA$L03$APER:
+    horizontal_size: 0.01
+    position_end: [0, 0, 12.0502]
+    position_start: [0, 0, 12.0502]
+    shape: rectangular
+    type: aperture
+    vertical_size: 0.01
+  CLA$L03$CAV:
+    cell_length: 0.0333333
+    field_amplitude: 91500000.0
+    field_definition: TWS_S-DL.dat
+    frequency: 2998500000.0
+    length: 4.06667
+    longitudinal_wakefield_input: '"Sz5um10mm.sdds"'
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    phase: 0.0
+    position_end: [0, 0, 16.1586]
+    position_start: [0, 0, 12.0919]
+    transverse_wakefield_input: '"Sx5um10mm.sdds"'
+    type: cavity
+  CLA$L03$CAV$A:
+    length: 0.0416666
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 16.2002]
+    position_start: [0, 0, 16.1586]
+    type: drift
+  CLA$L03$CAV$B:
+    length: 0.041667
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 12.0919]
+    position_start: [0, 0, 12.0502]
+    type: drift
+  CLA$L04$APER:
+    horizontal_size: 0.01
+    position_end: [0, 0, 34.1328]
+    position_start: [0, 0, 34.1328]
+    shape: rectangular
+    type: aperture
+    vertical_size: 0.01
+  CLA$L04$CAV:
+    cell_length: 0.0333333
+    field_amplitude: 91500000.0
+    field_definition: TWS_S-DL.dat
+    frequency: 2998500000.0
+    length: 4.06667
+    longitudinal_wakefield_input: '"Sz5um10mm.sdds"'
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    phase: 0.0
+    position_end: [0, 0, 38.2411]
+    position_start: [0, 0, 34.1744]
+    transverse_wakefield_input: '"Sx5um10mm.sdds"'
+    type: cavity
+  CLA$L04$CAV$A:
+    length: 0.0414916
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 38.2826]
+    position_start: [0, 0, 38.2411]
+    type: drift
+  CLA$L04$CAV$B:
+    length: 0.0416666
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 34.1744]
+    position_start: [0, 0, 34.1328]
+    type: drift
+  CLA$L4H$APER:
+    horizontal_size: 0.0041195
+    position_end: [0, 0, 23.4572]
+    position_start: [0, 0, 23.4572]
+    shape: rectangular
+    type: aperture
+    vertical_size: 0.0041195
+  CLA$L4H$CAV:
+    cell_length: 0.00833333
+    field_amplitude: 5475000.0
+    field_definition: TWS_X-DL.dat
+    frequency: 11994000000.0
+    length: 0.75
+    longitudinal_wakefield_input: '"Sz20um25mmxband.sdds"'
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    phase: 192.0
+    position_end: [0, 0, 24.3147]
+    position_start: [0, 0, 23.5647]
+    transverse_wakefield_input: '"Sx50um10mmxband.sdds"'
+    type: cavity
+  CLA$L4H$CAV$A:
+    length: 0.1075
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 24.4222]
+    position_start: [0, 0, 24.3147]
+    type: drift
+  CLA$L4H$CAV$B:
+    length: 0.1075
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 23.5647]
+    position_start: [0, 0, 23.4572]
+    type: drift
+  CLA$LRG1$APER:
+    horizontal_size: 0.017
+    position_end: [0, 0, 0]
+    position_start: [0, 0, 0]
+    shape: rectangular
+    type: aperture
+    vertical_size: 0.017
+  CLA$LRG1$GUN$CAV:
+    field_amplitude: 70000000
+    field_definition: bas_gun.txt
+    frequency: 2997440.0
+    length: 0
+    lsc_cutoff_high: [0, 0]
+    phase: -16
+    position_end: [0, 0, 0]
+    position_start: [0, 0, 0]
+    type: cavity
+  CLA$LRG1$GUN$SOL:
+    field_amplitude: 0.237
+    field_definition: bas_sol.txt
+    length: 0
+    position_end: [0, 0, 0]
+    position_start: [0, 0, 0]
+    type: solenoid
+  CLA$PFD$APER:
+    horizontal_size: 0.017
+    position_end: [0, 0, 85.3638]
+    position_start: [0, 0, 85.3638]
+    shape: rectangular
+    type: aperture
+    vertical_size: 0.017
+  CLA$PFD$DIA$BAM$01:
+    fit_point: 1.0
+    length: 0.1
+    position_end: [0, 0, 84.0638]
+    position_start: [0, 0, 83.9638]
+    type: monitor
+  CLA$PFD$DIA$BPM$01:
+    fit_point: 1.0
+    length: 0.2
+    position_end: [0, 0, 83.4138]
+    position_start: [0, 0, 83.2138]
+    type: monitor
+  CLA$PFD$DIA$BPM$02:
+    fit_point: 1.0
+    length: 0.2
+    position_end: [0, 0, 86.8638]
+    position_start: [0, 0, 86.6638]
+    type: monitor
+  CLA$PFD$DIA$BPM$03:
+    fit_point: 1.0
+    length: 0.2
+    position_end: [0, 0, 90.7138]
+    position_start: [0, 0, 90.5138]
+    type: monitor
+  CLA$PFD$DIA$FCUP:
+    fit_point: 1.0
+    position_end: [0, 0, 90.9138]
+    position_start: [0, 0, 90.9138]
+    type: marker
+  CLA$PFD$DIA$SCR$01$A:
+    length: 0.1
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 83.6138]
+    position_start: [0, 0, 83.5138]
+    type: drift
+  CLA$PFD$DIA$SCR$01$B:
+    length: 0.1
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 83.5138]
+    position_start: [0, 0, 83.4138]
+    type: drift
+  CLA$PFD$DIA$SCR$01$W:
+    output_filename: '"CLA-S07-DIA-SCR-01.SDDS"'
+    position_end: [0, 0, 83.5138]
+    position_start: [0, 0, 83.5138]
+    type: watch_point
+  CLA$PFD$DIA$SCR$02$A:
+    length: 0.1
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 87.0638]
+    position_start: [0, 0, 86.9638]
+    type: drift
+  CLA$PFD$DIA$SCR$02$B:
+    length: 0.1
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 86.9638]
+    position_start: [0, 0, 86.8638]
+    type: drift
+  CLA$PFD$DIA$SCR$02$W:
+    output_filename: '"CLA-S07-DIA-SCR-02.SDDS"'
+    position_end: [0, 0, 86.9638]
+    position_start: [0, 0, 86.9638]
+    type: watch_point
+  CLA$PFD$DIA$SCR$03$A:
+    length: 0.1
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 90.9138]
+    position_start: [0, 0, 90.8138]
+    type: drift
+  CLA$PFD$DIA$SCR$03$B:
+    length: 0.1
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 90.8138]
+    position_start: [0, 0, 90.7138]
+    type: drift
+  CLA$PFD$DIA$SCR$03$W:
+    output_filename: '"CLA-S07-DIA-SCR-03.SDDS"'
+    position_end: [0, 0, 90.8138]
+    position_start: [0, 0, 90.8138]
+    type: watch_point
+  CLA$PFD$DRIFT$01:
+    length: 0.2
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 84.2638]
+    position_start: [0, 0, 84.0638]
+    type: drift
+  CLA$PFD$DRIFT$02:
+    length: 0.4
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 86.3138]
+    position_start: [0, 0, 85.9138]
+    type: drift
+  CLA$PFD$DRIFT$03:
+    length: 0.2
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 87.8138]
+    position_start: [0, 0, 87.6138]
+    type: drift
+  CLA$PFD$DRIFT$04:
+    length: 0.9
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 89.0638]
+    position_start: [0, 0, 88.1638]
+    type: drift
+  CLA$PFD$DRIFT$05:
+    length: 0.1
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 89.5138]
+    position_start: [0, 0, 89.4138]
+    type: drift
+  CLA$PFD$DRIFT$06:
+    length: 0.4
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 90.5138]
+    position_start: [0, 0, 90.1138]
+    type: drift
+  CLA$PFD$MAG$HVCOR$01:
+    isr_enable: true
+    length: 0.2
+    position_end: [0, 0, 83.2138]
+    position_start: [0, 0, 83.0138]
+    sr_enable: true
+    type: kicker
+  CLA$PFD$MAG$HVCOR$02:
+    isr_enable: true
+    length: 0.2
+    position_end: [0, 0, 85.5638]
+    position_start: [0, 0, 85.3638]
+    sr_enable: true
+    type: kicker
+  CLA$PFD$MAG$HVCOR$03:
+    isr_enable: true
+    length: 0.2
+    position_end: [0, 0, 87.6138]
+    position_start: [0, 0, 87.4138]
+    sr_enable: true
+    type: kicker
+  CLA$PFD$MAG$QUAD$01$A:
+    length: 0.1
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 83.9638]
+    position_start: [0, 0, 83.8638]
+    type: drift
+  CLA$PFD$MAG$QUAD$01$B:
+    length: 0.088
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 83.7018]
+    position_start: [0, 0, 83.6138]
+    type: drift
+  CLA$PFD$MAG$QUAD$01$K:
+    isr_enable: true
+    k1: -1.46779
+    length: 0.162
+    position_end: [0, 0, 83.8638]
+    position_start: [0, 0, 83.7018]
+    sr_enable: true
+    type: quadrupole
+  CLA$PFD$MAG$QUAD$02$A:
+    length: 0.1
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 85.9138]
+    position_start: [0, 0, 85.8138]
+    type: drift
+  CLA$PFD$MAG$QUAD$02$B:
+    length: 0.088
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 85.6518]
+    position_start: [0, 0, 85.5638]
+    type: drift
+  CLA$PFD$MAG$QUAD$02$K:
+    isr_enable: true
+    k1: -0.64689
+    length: 0.162
+    position_end: [0, 0, 85.8138]
+    position_start: [0, 0, 85.6518]
+    sr_enable: true
+    type: quadrupole
+  CLA$PFD$MAG$QUAD$03$A:
+    length: 0.1
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 86.6638]
+    position_start: [0, 0, 86.5638]
+    type: drift
+  CLA$PFD$MAG$QUAD$03$B:
+    length: 0.088
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 86.4018]
+    position_start: [0, 0, 86.3138]
+    type: drift
+  CLA$PFD$MAG$QUAD$03$K:
+    isr_enable: true
+    k1: -2.01504
+    length: 0.162
+    position_end: [0, 0, 86.5638]
+    position_start: [0, 0, 86.4018]
+    sr_enable: true
+    type: quadrupole
+  CLA$PFD$MAG$QUAD$04$A:
+    length: 0.1
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 87.4138]
+    position_start: [0, 0, 87.3138]
+    type: drift
+  CLA$PFD$MAG$QUAD$04$B:
+    length: 0.088
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 87.1518]
+    position_start: [0, 0, 87.0638]
+    type: drift
+  CLA$PFD$MAG$QUAD$04$K:
+    isr_enable: true
+    k1: 0.98372
+    length: 0.162
+    position_end: [0, 0, 87.3138]
+    position_start: [0, 0, 87.1518]
+    sr_enable: true
+    type: quadrupole
+  CLA$PFD$MAG$QUAD$05$A:
+    length: 0.1
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 88.1638]
+    position_start: [0, 0, 88.0638]
+    type: drift
+  CLA$PFD$MAG$QUAD$05$B:
+    length: 0.088
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 87.9018]
+    position_start: [0, 0, 87.8138]
+    type: drift
+  CLA$PFD$MAG$QUAD$05$K:
+    isr_enable: true
+    k1: 4.25217
+    length: 0.162
+    position_end: [0, 0, 88.0638]
+    position_start: [0, 0, 87.9018]
+    sr_enable: true
+    type: quadrupole
+  CLA$PFD$MAG$QUAD$06$A:
+    length: 0.1
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 89.4138]
+    position_start: [0, 0, 89.3138]
+    type: drift
+  CLA$PFD$MAG$QUAD$06$B:
+    length: 0.088
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 89.1518]
+    position_start: [0, 0, 89.0638]
+    type: drift
+  CLA$PFD$MAG$QUAD$06$K:
+    isr_enable: true
+    k1: -2.6469
+    length: 0.162
+    position_end: [0, 0, 89.3138]
+    position_start: [0, 0, 89.1518]
+    sr_enable: true
+    type: quadrupole
+  CLA$PFD$MARK$01:
+    fit_point: 1.0
+    position_end: [0, 0, 83.9638]
+    position_start: [0, 0, 83.9638]
+    type: marker
+  CLA$PFD$MARK$02:
+    fit_point: 1.0
+    position_end: [0, 0, 90.9138]
+    position_start: [0, 0, 90.9138]
+    type: marker
+  CLA$PFD$SP4$DIP$DRI:
+    length: 0.6
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 90.1138]
+    position_start: [0, 0, 89.5138]
+    type: drift
+  CLA$PFD$TDC$01$A:
+    length: 0.1
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 85.3638]
+    position_start: [0, 0, 85.2638]
+    type: drift
+  CLA$PFD$TDC$01$APER:
+    horizontal_size: 0.005
+    position_end: [0, 0, 84.2638]
+    position_start: [0, 0, 84.2638]
+    shape: rectangular
+    type: aperture
+    vertical_size: 0.005
+  CLA$PFD$TDC$01$B:
+    length: 0.1
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 84.3638]
+    position_start: [0, 0, 84.2638]
+    type: drift
+  CLA$PFD$TDC$01$R:
+    length: 0.9
+    phase: 0.0
+    position_end: [0, 0, 85.2638]
+    position_start: [0, 0, 84.3638]
+    type: rf_deflecting_cavity
+  CLA$S01$APER:
+    horizontal_size: 0.017
+    position_end: [0, 0, 0.32482]
+    position_start: [0, 0, 0.32482]
+    shape: rectangular
+    type: aperture
+    vertical_size: 0.017
+  CLA$S01$DIA$BPM$01:
+    fit_point: 1.0
+    length: 0.108
+    position_end: [0, 0, 0.9377]
+    position_start: [0, 0, 0.8297]
+    type: monitor
+  CLA$S01$DIA$SCR$01$A:
+    length: 0.076667
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 1.0577]
+    position_start: [0, 0, 0.981033]
+    type: drift
+  CLA$S01$DIA$SCR$01$B:
+    length: 0.043333
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 0.981033]
+    position_start: [0, 0, 0.9377]
+    type: drift
+  CLA$S01$DIA$SCR$01$W:
+    output_filename: '"CLA-S01-DIA-SCR-01.SDDS"'
+    position_end: [0, 0, 0.981033]
+    position_start: [0, 0, 0.981033]
+    type: watch_point
+  CLA$S01$DIA$WCM$01:
+    length: 0.05
+    position_end: [0, 0, 0.7277]
+    position_start: [0, 0, 0.6777]
+    type: drift
+  CLA$S01$LSR$LBX$01:
+    length: 0.22288
+    position_end: [0, 0, 0.6777]
+    position_start: [0, 0, 0.45482]
+    type: drift
+  CLA$S01$MAG$HVCOR$01:
+    isr_enable: true
+    length: 0.03
+    position_end: [0, 0, 0.35482]
+    position_start: [0, 0, 0.32482]
+    sr_enable: true
+    type: kicker
+  CLA$S01$MAG$HVCOR$02:
+    isr_enable: true
+    length: 0.102
+    position_end: [0, 0, 0.8297]
+    position_start: [0, 0, 0.7277]
+    sr_enable: true
+    type: kicker
+  CLA$S01$VAC$VALV$01:
+    length: 0.1
+    position_end: [0, 0, 0.45482]
+    position_start: [0, 0, 0.35482]
+    type: drift
+  CLA$S02$APER:
+    horizontal_size: 0.017
+    position_end: [0, 0, 4.69362]
+    position_start: [0, 0, 4.69362]
+    shape: rectangular
+    type: aperture
+    vertical_size: 0.017
+  CLA$S02$C2V$DIP$DRI:
+    length: 0.5
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 6.22687]
+    position_start: [0, 0, 5.72687]
+    type: drift
+  CLA$S02$COL$01:
+    horizontal_size: 0.01
+    length: 0.35
+    position_end: [0, 0, 4.69362]
+    position_start: [0, 0, 4.34362]
+    shape: elliptical
+    type: collimator
+    vertical_size: 0.01
+  CLA$S02$DIA$BAM$01:
+    fit_point: 1.0
+    length: 0.08
+    position_end: [0, 0, 3.70278]
+    position_start: [0, 0, 3.62278]
+    type: monitor
+  CLA$S02$DIA$BPM$01:
+    fit_point: 1.0
+    length: 0.04528
+    position_end: [0, 0, 3.62278]
+    position_start: [0, 0, 3.5775]
+    type: monitor
+  CLA$S02$DIA$BPM$02:
+    fit_point: 1.0
+    length: 0.05135
+    position_end: [0, 0, 6.542]
+    position_start: [0, 0, 6.49065]
+    type: monitor
+  CLA$S02$DIA$SCR$01$A:
+    length: 0.076667
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 4.1665]
+    position_start: [0, 0, 4.08983]
+    type: drift
+  CLA$S02$DIA$SCR$01$B:
+    length: 0.043333
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 4.08983]
+    position_start: [0, 0, 4.0465]
+    type: drift
+  CLA$S02$DIA$SCR$01$W:
+    output_filename: '"CLA-S02-DIA-SCR-01.SDDS"'
+    position_end: [0, 0, 4.08983]
+    position_start: [0, 0, 4.08983]
+    type: watch_point
+  CLA$S02$DIA$SCR$02$A:
+    length: 0.076667
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 5.0875]
+    position_start: [0, 0, 5.01083]
+    type: drift
+  CLA$S02$DIA$SCR$02$B:
+    length: 0.043333
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 5.01083]
+    position_start: [0, 0, 4.9675]
+    type: drift
+  CLA$S02$DIA$SCR$02$W:
+    output_filename: '"CLA-S02-DIA-SCR-02.SDDS"'
+    position_end: [0, 0, 5.01083]
+    position_start: [0, 0, 5.01083]
+    type: watch_point
+  CLA$S02$DIA$SCR$03$A:
+    length: 0.076667
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 6.6601]
+    position_start: [0, 0, 6.58343]
+    type: drift
+  CLA$S02$DIA$SCR$03$B:
+    length: 0.033333
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 6.58343]
+    position_start: [0, 0, 6.5501]
+    type: drift
+  CLA$S02$DIA$SCR$03$W:
+    output_filename: '"CLA-S02-DIA-SCR-03.SDDS"'
+    position_end: [0, 0, 6.58343]
+    position_start: [0, 0, 6.58343]
+    type: watch_point
+  CLA$S02$DRIFT$01:
+    length: 0.1453
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 3.84808]
+    position_start: [0, 0, 3.70278]
+    type: drift
+  CLA$S02$DRIFT$02:
+    length: 0.04098
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 4.0465]
+    position_start: [0, 0, 4.00552]
+    type: drift
+  CLA$S02$DRIFT$03:
+    length: 0.07157
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 4.23807]
+    position_start: [0, 0, 4.1665]
+    type: drift
+  CLA$S02$DRIFT$04:
+    length: 0.07555
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 4.34362]
+    position_start: [0, 0, 4.26807]
+    type: drift
+  CLA$S02$DRIFT$05:
+    length: 0.12194
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 4.81556]
+    position_start: [0, 0, 4.69362]
+    type: drift
+  CLA$S02$DRIFT$06:
+    length: 0.12194
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 4.9675]
+    position_start: [0, 0, 4.84556]
+    type: drift
+  CLA$S02$DRIFT$07:
+    length: 0.06058
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 5.14808]
+    position_start: [0, 0, 5.0875]
+    type: drift
+  CLA$S02$DRIFT$08:
+    length: 0.24256
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 5.54808]
+    position_start: [0, 0, 5.30552]
+    type: drift
+  CLA$S02$DRIFT$09:
+    length: 0.02135
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 5.72687]
+    position_start: [0, 0, 5.70552]
+    type: drift
+  CLA$S02$DRIFT$10:
+    length: 0.13436
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 6.36123]
+    position_start: [0, 0, 6.22687]
+    type: drift
+  CLA$S02$DRIFT$11:
+    length: 0.0081
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 6.5501]
+    position_start: [0, 0, 6.542]
+    type: drift
+  CLA$S02$DRIFT$12:
+    length: 0.031
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 6.7485]
+    position_start: [0, 0, 6.7175]
+    type: drift
+  CLA$S02$MAG$HVCOR$01:
+    isr_enable: true
+    length: 0.076607
+    position_end: [0, 0, 3.44808]
+    position_start: [0, 0, 3.37147]
+    sr_enable: true
+    type: kicker
+  CLA$S02$MAG$HVCOR$02:
+    isr_enable: true
+    length: 0.03
+    position_end: [0, 0, 4.26807]
+    position_start: [0, 0, 4.23807]
+    sr_enable: true
+    type: kicker
+  CLA$S02$MAG$HVCOR$03:
+    isr_enable: true
+    length: 0.03
+    position_end: [0, 0, 4.84556]
+    position_start: [0, 0, 4.81556]
+    sr_enable: true
+    type: kicker
+  CLA$S02$MAG$HVCOR$04:
+    isr_enable: true
+    length: 0.0574
+    position_end: [0, 0, 6.7175]
+    position_start: [0, 0, 6.6601]
+    sr_enable: true
+    type: kicker
+  CLA$S02$MAG$QUAD$01$A:
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 3.5775]
+    position_start: [0, 0, 3.5775]
+    type: drift
+  CLA$S02$MAG$QUAD$01$B:
+    length: 0.02872
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 3.4768]
+    position_start: [0, 0, 3.44808]
+    type: drift
+  CLA$S02$MAG$QUAD$01$K:
+    isr_enable: true
+    k1: -3.09253
+    length: 0.1007
+    position_end: [0, 0, 3.5775]
+    position_start: [0, 0, 3.4768]
+    sr_enable: true
+    type: quadrupole
+  CLA$S02$MAG$QUAD$02$A:
+    length: 0.02802
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 4.00552]
+    position_start: [0, 0, 3.9775]
+    type: drift
+  CLA$S02$MAG$QUAD$02$B:
+    length: 0.02872
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 3.8768]
+    position_start: [0, 0, 3.84808]
+    type: drift
+  CLA$S02$MAG$QUAD$02$K:
+    isr_enable: true
+    k1: 6.34871
+    length: 0.1007
+    position_end: [0, 0, 3.9775]
+    position_start: [0, 0, 3.8768]
+    sr_enable: true
+    type: quadrupole
+  CLA$S02$MAG$QUAD$03$A:
+    length: 0.02802
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 5.30552]
+    position_start: [0, 0, 5.2775]
+    type: drift
+  CLA$S02$MAG$QUAD$03$B:
+    length: 0.02872
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 5.1768]
+    position_start: [0, 0, 5.14808]
+    type: drift
+  CLA$S02$MAG$QUAD$03$K:
+    isr_enable: true
+    k1: -4.07613
+    length: 0.1007
+    position_end: [0, 0, 5.2775]
+    position_start: [0, 0, 5.1768]
+    sr_enable: true
+    type: quadrupole
+  CLA$S02$MAG$QUAD$04$A:
+    length: 0.02802
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 5.70552]
+    position_start: [0, 0, 5.6775]
+    type: drift
+  CLA$S02$MAG$QUAD$04$B:
+    length: 0.02872
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 5.5768]
+    position_start: [0, 0, 5.54808]
+    type: drift
+  CLA$S02$MAG$QUAD$04$K:
+    isr_enable: true
+    k1: -4.07613
+    length: 0.1007
+    position_end: [0, 0, 5.6775]
+    position_start: [0, 0, 5.5768]
+    sr_enable: true
+    type: quadrupole
+  CLA$S02$MAG$QUAD$05$A:
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 6.49065]
+    position_start: [0, 0, 6.49065]
+    type: drift
+  CLA$S02$MAG$QUAD$05$B:
+    length: 0.02872
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 6.38995]
+    position_start: [0, 0, 6.36123]
+    type: drift
+  CLA$S02$MAG$QUAD$05$K:
+    isr_enable: true
+    k1: -4.07613
+    length: 0.1007
+    position_end: [0, 0, 6.49065]
+    position_start: [0, 0, 6.38995]
+    sr_enable: true
+    type: quadrupole
+  CLA$S03$APER:
+    horizontal_size: 0.017
+    position_end: [0, 0, 10.8974]
+    position_start: [0, 0, 10.8974]
+    shape: rectangular
+    type: aperture
+    vertical_size: 0.017
+  CLA$S03$DIA$BPM$01:
+    fit_point: 1.0
+    length: 0.21
+    position_end: [0, 0, 11.2974]
+    position_start: [0, 0, 11.0874]
+    type: monitor
+  CLA$S03$DIA$SCR$01$A:
+    length: 0.076667
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 11.9874]
+    position_start: [0, 0, 11.9107]
+    type: drift
+  CLA$S03$DIA$SCR$01$B:
+    length: 0.043333
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 11.9107]
+    position_start: [0, 0, 11.8674]
+    type: drift
+  CLA$S03$DIA$SCR$01$W:
+    output_filename: '"CLA-S03-DIA-SCR-01.SDDS"'
+    position_end: [0, 0, 11.9107]
+    position_start: [0, 0, 11.9107]
+    type: watch_point
+  CLA$S03$DRIFT$01:
+    length: 0.19
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 11.0874]
+    position_start: [0, 0, 10.8974]
+    type: drift
+  CLA$S03$DRIFT$02:
+    length: 0.1
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 11.7474]
+    position_start: [0, 0, 11.6474]
+    type: drift
+  CLA$S03$DRIFT$03:
+    length: 0.02
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 11.8674]
+    position_start: [0, 0, 11.8474]
+    type: drift
+  CLA$S03$DRIFT$04:
+    length: 0.06287
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 12.0502]
+    position_start: [0, 0, 11.9874]
+    type: drift
+  CLA$S03$MAG$HVCOR$01$A:
+    length: 0.025
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 11.8474]
+    position_start: [0, 0, 11.8224]
+    type: drift
+  CLA$S03$MAG$HVCOR$01$B:
+    length: 0.025
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 11.7724]
+    position_start: [0, 0, 11.7474]
+    type: drift
+  CLA$S03$MAG$HVCOR$01$K:
+    isr_enable: true
+    length: 0.05
+    position_end: [0, 0, 11.8224]
+    position_start: [0, 0, 11.7724]
+    sr_enable: true
+    type: kicker
+  CLA$S03$MAG$QUAD$01$A:
+    length: 0.1
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 11.6474]
+    position_start: [0, 0, 11.5474]
+    type: drift
+  CLA$S03$MAG$QUAD$01$B:
+    length: 0.088
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 11.3854]
+    position_start: [0, 0, 11.2974]
+    type: drift
+  CLA$S03$MAG$QUAD$01$K:
+    isr_enable: true
+    k1: 1.60125
+    length: 0.162
+    position_end: [0, 0, 11.5474]
+    position_start: [0, 0, 11.3854]
+    sr_enable: true
+    type: quadrupole
+  CLA$S04$APER:
+    horizontal_size: 0.017
+    position_end: [0, 0, 16.2002]
+    position_start: [0, 0, 16.2002]
+    shape: rectangular
+    type: aperture
+    vertical_size: 0.017
+  CLA$S04$DIA$BPM$01:
+    fit_point: 1.0
+    length: 0.21
+    position_end: [0, 0, 16.8907]
+    position_start: [0, 0, 16.6807]
+    type: monitor
+  CLA$S04$DIA$BPM$02:
+    fit_point: 1.0
+    length: 0.21
+    position_end: [0, 0, 17.8602]
+    position_start: [0, 0, 17.6502]
+    type: monitor
+  CLA$S04$DIA$BPM$03:
+    fit_point: 1.0
+    length: 0.035
+    position_end: [0, 0, 19.5202]
+    position_start: [0, 0, 19.4852]
+    type: monitor
+  CLA$S04$DIA$BPM$04:
+    fit_point: 1.0
+    length: 0.21
+    position_end: [0, 0, 20.4452]
+    position_start: [0, 0, 20.2352]
+    type: monitor
+  CLA$S04$DIA$BPM$05:
+    fit_point: 1.0
+    length: 0.21
+    position_end: [0, 0, 22.4052]
+    position_start: [0, 0, 22.1952]
+    type: monitor
+  CLA$S04$DIA$BPM$06:
+    fit_point: 1.0
+    length: 0.21
+    position_end: [0, 0, 23.3852]
+    position_start: [0, 0, 23.1752]
+    type: monitor
+  CLA$S04$DIA$ICT$01:
+    length: 0.0765
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 16.6807]
+    position_start: [0, 0, 16.6042]
+    type: drift
+  CLA$S04$DIA$SCR$01$A:
+    length: 0.076667
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 17.3902]
+    position_start: [0, 0, 17.3136]
+    type: drift
+  CLA$S04$DIA$SCR$01$B:
+    length: 0.043333
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 17.3136]
+    position_start: [0, 0, 17.2702]
+    type: drift
+  CLA$S04$DIA$SCR$01$M:
+    fit_point: 1.0
+    position_end: [0, 0, 17.3136]
+    position_start: [0, 0, 17.3136]
+    type: marker
+  CLA$S04$DIA$SCR$01$W:
+    output_filename: '"CLA-S04-DIA-SCR-01.SDDS"'
+    position_end: [0, 0, 17.3136]
+    position_start: [0, 0, 17.3136]
+    type: watch_point
+  CLA$S04$DIA$SCR$02$A:
+    length: 0.076667
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 18.5302]
+    position_start: [0, 0, 18.4536]
+    type: drift
+  CLA$S04$DIA$SCR$02$B:
+    length: 0.043333
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 18.4536]
+    position_start: [0, 0, 18.4102]
+    type: drift
+  CLA$S04$DIA$SCR$02$W:
+    output_filename: '"CLA-S04-DIA-SCR-02.SDDS"'
+    position_end: [0, 0, 18.4536]
+    position_start: [0, 0, 18.4536]
+    type: watch_point
+  CLA$S04$DIA$SCR$03$A:
+    length: 0.076667
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 19.3102]
+    position_start: [0, 0, 19.2336]
+    type: drift
+  CLA$S04$DIA$SCR$03$B:
+    length: 0.043333
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 19.2336]
+    position_start: [0, 0, 19.1902]
+    type: drift
+  CLA$S04$DIA$SCR$03$W:
+    output_filename: '"CLA-S04-DIA-SCR-03.SDDS"'
+    position_end: [0, 0, 19.2336]
+    position_start: [0, 0, 19.2336]
+    type: watch_point
+  CLA$S04$DIA$SCR$04$A:
+    length: 0.076667
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 20.5652]
+    position_start: [0, 0, 20.4886]
+    type: drift
+  CLA$S04$DIA$SCR$04$B:
+    length: 0.043333
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 20.4886]
+    position_start: [0, 0, 20.4452]
+    type: drift
+  CLA$S04$DIA$SCR$04$W:
+    output_filename: '"CLA-S04-DIA-SCR-04.SDDS"'
+    position_end: [0, 0, 20.4886]
+    position_start: [0, 0, 20.4886]
+    type: watch_point
+  CLA$S04$DIA$SCR$05$A:
+    length: 0.076667
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 21.3919]
+    position_start: [0, 0, 21.3152]
+    type: drift
+  CLA$S04$DIA$SCR$05$B:
+    length: 0.043333
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 21.3152]
+    position_start: [0, 0, 21.2719]
+    type: drift
+  CLA$S04$DIA$SCR$05$W:
+    output_filename: '"CLA-S04-DIA-SCR-05.SDDS"'
+    position_end: [0, 0, 21.3152]
+    position_start: [0, 0, 21.3152]
+    type: watch_point
+  CLA$S04$DRIFT$01:
+    length: 0.11
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 16.3102]
+    position_start: [0, 0, 16.2002]
+    type: drift
+  CLA$S04$DRIFT$02:
+    length: 0.0245
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 16.9152]
+    position_start: [0, 0, 16.8907]
+    type: drift
+  CLA$S04$DRIFT$03:
+    length: 0.135
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 17.2702]
+    position_start: [0, 0, 17.1352]
+    type: drift
+  CLA$S04$DRIFT$04:
+    length: 0.025
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 17.4152]
+    position_start: [0, 0, 17.3902]
+    type: drift
+  CLA$S04$DRIFT$05:
+    length: 0.015
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 17.6502]
+    position_start: [0, 0, 17.6352]
+    type: drift
+  CLA$S04$DRIFT$06:
+    length: 0.06
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 17.9202]
+    position_start: [0, 0, 17.8602]
+    type: drift
+  CLA$S04$DRIFT$07:
+    length: 0.17
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 18.3002]
+    position_start: [0, 0, 18.1302]
+    type: drift
+  CLA$S04$DRIFT$08:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 18.4102]
+    position_start: [0, 0, 18.4002]
+    type: drift
+  CLA$S04$DRIFT$09:
+    length: 0.25
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 18.9902]
+    position_start: [0, 0, 18.7402]
+    type: drift
+  CLA$S04$DRIFT$10:
+    length: 0.25
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 21.0152]
+    position_start: [0, 0, 20.7652]
+    type: drift
+  CLA$S04$DRIFT$11:
+    length: 0.056665
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 21.2719]
+    position_start: [0, 0, 21.2152]
+    type: drift
+  CLA$S04$DRIFT$12:
+    length: 0.043335
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 21.4352]
+    position_start: [0, 0, 21.3919]
+    type: drift
+  CLA$S04$DRIFT$13:
+    length: 0.155
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 21.9352]
+    position_start: [0, 0, 21.7802]
+    type: drift
+  CLA$S04$DRIFT$14:
+    length: 0.05
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 22.1952]
+    position_start: [0, 0, 22.1452]
+    type: drift
+  CLA$S04$DRIFT$15:
+    length: 0.095
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 22.7402]
+    position_start: [0, 0, 22.6452]
+    type: drift
+  CLA$S04$DRIFT$16:
+    length: 0.105
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 22.9452]
+    position_start: [0, 0, 22.8402]
+    type: drift
+  CLA$S04$DRIFT$17:
+    length: 0.072
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 23.4572]
+    position_start: [0, 0, 23.3852]
+    type: drift
+  CLA$S04$MAG$DIP$01$A:
+    length: 0.05
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 18.7402]
+    position_start: [0, 0, 18.6902]
+    type: drift
+  CLA$S04$MAG$DIP$01$B:
+    length: 0.06
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 18.5902]
+    position_start: [0, 0, 18.5302]
+    type: drift
+  CLA$S04$MAG$DIP$01$D:
+    angle: 0.0001
+    csr_bins: 20.0
+    csr_output_filename: '"CLA-S04-MAG-DIP-01.CSR"'
+    edge_field_integral: 0.4
+    exit_edge_angle: 0.0001
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.1
+    position_end: [0, 0, 18.6902]
+    position_start: [0, 0, 18.5902]
+    sr_enable: true
+    type: dipole
+  CLA$S04$MAG$DIP$02$A:
+    length: 0.05
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 19.1902]
+    position_start: [0, 0, 19.1402]
+    type: drift
+  CLA$S04$MAG$DIP$02$B:
+    length: 0.05
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 19.0402]
+    position_start: [0, 0, 18.9902]
+    type: drift
+  CLA$S04$MAG$DIP$02$D:
+    angle: -0.0001
+    csr_bins: 20.0
+    csr_output_filename: '"CLA-S04-MAG-DIP-02.CSR"'
+    edge_field_integral: 0.4
+    entrance_edge_angle: -0.0001
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.1
+    position_end: [0, 0, 19.1402]
+    position_start: [0, 0, 19.0402]
+    sr_enable: true
+    type: dipole
+  CLA$S04$MAG$DIP$03$A:
+    length: 0.05
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 20.7652]
+    position_start: [0, 0, 20.7152]
+    type: drift
+  CLA$S04$MAG$DIP$03$B:
+    length: 0.05
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 20.6152]
+    position_start: [0, 0, 20.5652]
+    type: drift
+  CLA$S04$MAG$DIP$03$D:
+    angle: -0.0001
+    csr_bins: 20.0
+    csr_output_filename: '"CLA-S04-MAG-DIP-03.CSR"'
+    edge_field_integral: 0.4
+    exit_edge_angle: -0.0001
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.1
+    position_end: [0, 0, 20.7152]
+    position_start: [0, 0, 20.6152]
+    sr_enable: true
+    type: dipole
+  CLA$S04$MAG$DIP$04$A:
+    length: 0.05
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 21.2152]
+    position_start: [0, 0, 21.1652]
+    type: drift
+  CLA$S04$MAG$DIP$04$B:
+    length: 0.05
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 21.0652]
+    position_start: [0, 0, 21.0152]
+    type: drift
+  CLA$S04$MAG$DIP$04$D:
+    angle: 0.0001
+    csr_bins: 20.0
+    csr_output_filename: '"CLA-S04-MAG-DIP-04.CSR"'
+    edge_field_integral: 0.4
+    entrance_edge_angle: 0.0001
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.1
+    position_end: [0, 0, 21.1652]
+    position_start: [0, 0, 21.0652]
+    sr_enable: true
+    type: dipole
+  CLA$S04$MAG$HVCOR$01$A:
+    length: 0.01
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 16.3952]
+    position_start: [0, 0, 16.3852]
+    type: drift
+  CLA$S04$MAG$HVCOR$01$B:
+    length: 0.025
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 16.3352]
+    position_start: [0, 0, 16.3102]
+    type: drift
+  CLA$S04$MAG$HVCOR$01$K:
+    isr_enable: true
+    length: 0.05
+    position_end: [0, 0, 16.3852]
+    position_start: [0, 0, 16.3352]
+    sr_enable: true
+    type: kicker
+  CLA$S04$MAG$HVCOR$02$A:
+    length: 0.025
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 18.4002]
+    position_start: [0, 0, 18.3752]
+    type: drift
+  CLA$S04$MAG$HVCOR$02$B:
+    length: 0.025
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 18.3252]
+    position_start: [0, 0, 18.3002]
+    type: drift
+  CLA$S04$MAG$HVCOR$02$K:
+    isr_enable: true
+    length: 0.05
+    position_end: [0, 0, 18.3752]
+    position_start: [0, 0, 18.3252]
+    sr_enable: true
+    type: kicker
+  CLA$S04$MAG$HVCOR$03$A:
+    length: 0.05
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 19.4852]
+    position_start: [0, 0, 19.4352]
+    type: drift
+  CLA$S04$MAG$HVCOR$03$B:
+    length: 0.075
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 19.3852]
+    position_start: [0, 0, 19.3102]
+    type: drift
+  CLA$S04$MAG$HVCOR$03$K:
+    isr_enable: true
+    length: 0.05
+    position_end: [0, 0, 19.4352]
+    position_start: [0, 0, 19.3852]
+    sr_enable: true
+    type: kicker
+  CLA$S04$MAG$HVCOR$04$A:
+    length: 0.025
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 21.7802]
+    position_start: [0, 0, 21.7552]
+    type: drift
+  CLA$S04$MAG$HVCOR$04$B:
+    length: 0.06
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 21.7052]
+    position_start: [0, 0, 21.6452]
+    type: drift
+  CLA$S04$MAG$HVCOR$04$K:
+    isr_enable: true
+    length: 0.05
+    position_end: [0, 0, 21.7552]
+    position_start: [0, 0, 21.7052]
+    sr_enable: true
+    type: kicker
+  CLA$S04$MAG$HVCOR$05$A:
+    length: 0.025
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 22.8402]
+    position_start: [0, 0, 22.8152]
+    type: drift
+  CLA$S04$MAG$HVCOR$05$B:
+    length: 0.025
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 22.7652]
+    position_start: [0, 0, 22.7402]
+    type: drift
+  CLA$S04$MAG$HVCOR$05$K:
+    isr_enable: true
+    length: 0.05
+    position_end: [0, 0, 22.8152]
+    position_start: [0, 0, 22.7652]
+    sr_enable: true
+    type: kicker
+  CLA$S04$MAG$LASER0$H1:
+    length: 0.3575
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 19.8777]
+    position_start: [0, 0, 19.5202]
+    type: drift
+  CLA$S04$MAG$LASER0$H2:
+    length: 0.3575
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 20.2352]
+    position_start: [0, 0, 19.8777]
+    type: drift
+  CLA$S04$MAG$LASER0$M:
+    fit_point: 1.0
+    position_end: [0, 0, 19.8777]
+    position_start: [0, 0, 19.8777]
+    type: marker
+  CLA$S04$MAG$QUAD$01$A:
+    length: 0.024
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 16.6042]
+    position_start: [0, 0, 16.5802]
+    type: drift
+  CLA$S04$MAG$QUAD$01$B:
+    length: 0.023
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 16.4182]
+    position_start: [0, 0, 16.3952]
+    type: drift
+  CLA$S04$MAG$QUAD$01$K:
+    isr_enable: true
+    k1: -0.647935
+    length: 0.162
+    position_end: [0, 0, 16.5802]
+    position_start: [0, 0, 16.4182]
+    sr_enable: true
+    type: quadrupole
+  CLA$S04$MAG$QUAD$02$A:
+    length: 0.035
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 17.1352]
+    position_start: [0, 0, 17.1002]
+    type: drift
+  CLA$S04$MAG$QUAD$02$B:
+    length: 0.023
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 16.9382]
+    position_start: [0, 0, 16.9152]
+    type: drift
+  CLA$S04$MAG$QUAD$02$K:
+    isr_enable: true
+    k1: -1.29197
+    length: 0.162
+    position_end: [0, 0, 17.1002]
+    position_start: [0, 0, 16.9382]
+    sr_enable: true
+    type: quadrupole
+  CLA$S04$MAG$QUAD$03$A:
+    length: 0.035
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 17.6352]
+    position_start: [0, 0, 17.6002]
+    type: drift
+  CLA$S04$MAG$QUAD$03$B:
+    length: 0.023
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 17.4382]
+    position_start: [0, 0, 17.4152]
+    type: drift
+  CLA$S04$MAG$QUAD$03$K:
+    isr_enable: true
+    k1: -0.185647
+    length: 0.162
+    position_end: [0, 0, 17.6002]
+    position_start: [0, 0, 17.4382]
+    sr_enable: true
+    type: quadrupole
+  CLA$S04$MAG$QUAD$04$A:
+    length: 0.03
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 18.1302]
+    position_start: [0, 0, 18.1002]
+    type: drift
+  CLA$S04$MAG$QUAD$04$B:
+    length: 0.018
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 17.9382]
+    position_start: [0, 0, 17.9202]
+    type: drift
+  CLA$S04$MAG$QUAD$04$K:
+    isr_enable: true
+    k1: -0.249037
+    length: 0.162
+    position_end: [0, 0, 18.1002]
+    position_start: [0, 0, 17.9382]
+    sr_enable: true
+    type: quadrupole
+  CLA$S04$MAG$QUAD$05$A:
+    length: 0.03
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 21.6452]
+    position_start: [0, 0, 21.6152]
+    type: drift
+  CLA$S04$MAG$QUAD$05$B:
+    length: 0.018
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 21.4532]
+    position_start: [0, 0, 21.4352]
+    type: drift
+  CLA$S04$MAG$QUAD$05$K:
+    isr_enable: true
+    k1: -0.647935
+    length: 0.162
+    position_end: [0, 0, 21.6152]
+    position_start: [0, 0, 21.4532]
+    sr_enable: true
+    type: quadrupole
+  CLA$S04$MAG$QUAD$06$A:
+    length: 0.03
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 22.1452]
+    position_start: [0, 0, 22.1152]
+    type: drift
+  CLA$S04$MAG$QUAD$06$B:
+    length: 0.018
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 21.9532]
+    position_start: [0, 0, 21.9352]
+    type: drift
+  CLA$S04$MAG$QUAD$06$K:
+    isr_enable: true
+    k1: -1.29197
+    length: 0.162
+    position_end: [0, 0, 22.1152]
+    position_start: [0, 0, 21.9532]
+    sr_enable: true
+    type: quadrupole
+  CLA$S04$MAG$QUAD$07$A:
+    length: 0.03
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 22.6452]
+    position_start: [0, 0, 22.6152]
+    type: drift
+  CLA$S04$MAG$QUAD$07$B:
+    length: 0.048
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 22.4532]
+    position_start: [0, 0, 22.4052]
+    type: drift
+  CLA$S04$MAG$QUAD$07$K:
+    isr_enable: true
+    k1: -0.185647
+    length: 0.162
+    position_end: [0, 0, 22.6152]
+    position_start: [0, 0, 22.4532]
+    sr_enable: true
+    type: quadrupole
+  CLA$S04$MAG$QUAD$08$A:
+    length: 0.05
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 23.1752]
+    position_start: [0, 0, 23.1252]
+    type: drift
+  CLA$S04$MAG$QUAD$08$B:
+    length: 0.018
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 22.9632]
+    position_start: [0, 0, 22.9452]
+    type: drift
+  CLA$S04$MAG$QUAD$08$K:
+    isr_enable: true
+    k1: -0.249037
+    length: 0.162
+    position_end: [0, 0, 23.1252]
+    position_start: [0, 0, 22.9632]
+    sr_enable: true
+    type: quadrupole
+  CLA$S04$MARK$01:
+    fit_point: 1.0
+    position_end: [0, 0, 16.2002]
+    position_start: [0, 0, 16.2002]
+    type: marker
+  CLA$S04$MARK$02:
+    fit_point: 1.0
+    position_end: [0, 0, 23.4572]
+    position_start: [0, 0, 23.4572]
+    type: marker
+  CLA$S05$APER:
+    horizontal_size: 0.017
+    position_end: [0, 0, 24.4222]
+    position_start: [0, 0, 24.4222]
+    shape: rectangular
+    type: aperture
+    vertical_size: 0.017
+  CLA$S05$DIA$BAM$01:
+    fit_point: 1.0
+    length: 0.08
+    position_end: [0, 0, 25.3361]
+    position_start: [0, 0, 25.2561]
+    type: monitor
+  CLA$S05$DIA$BPM$01:
+    fit_point: 1.0
+    length: 0.021
+    position_end: [0, 0, 25.1361]
+    position_start: [0, 0, 25.1151]
+    type: monitor
+  CLA$S05$DIA$BPM$02:
+    fit_point: 1.0
+    length: 0.21
+    position_end: [0, 0, 25.8251]
+    position_start: [0, 0, 25.6151]
+    type: monitor
+  CLA$S05$DIA$ICT$01:
+    length: 0.05
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 24.9119]
+    position_start: [0, 0, 24.8619]
+    type: drift
+  CLA$S05$DIA$SCR$01$A:
+    length: 0.0767
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 25.2561]
+    position_start: [0, 0, 25.1794]
+    type: drift
+  CLA$S05$DIA$SCR$01$B:
+    length: 0.043273
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 25.1794]
+    position_start: [0, 0, 25.1361]
+    type: drift
+  CLA$S05$DIA$SCR$01$W:
+    output_filename: '"CLA-S05-DIA-SCR-01.SDDS"'
+    position_end: [0, 0, 25.1794]
+    position_start: [0, 0, 25.1794]
+    type: watch_point
+  CLA$S05$DRIFT$01:
+    length: 0.11
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 24.5322]
+    position_start: [0, 0, 24.4222]
+    type: drift
+  CLA$S05$DRIFT$02:
+    length: 0.01416
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 25.1151]
+    position_start: [0, 0, 25.1009]
+    type: drift
+  CLA$S05$MAG$HVCOR$01$A:
+    length: 0.025
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 25.1009]
+    position_start: [0, 0, 25.0759]
+    type: drift
+  CLA$S05$MAG$HVCOR$01$B:
+    length: 0.114
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 25.0259]
+    position_start: [0, 0, 24.9119]
+    type: drift
+  CLA$S05$MAG$HVCOR$01$K:
+    isr_enable: true
+    length: 0.05
+    position_end: [0, 0, 25.0759]
+    position_start: [0, 0, 25.0259]
+    sr_enable: true
+    type: kicker
+  CLA$S05$MAG$QUAD$01$A:
+    length: 0.0467
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 24.8619]
+    position_start: [0, 0, 24.8152]
+    type: drift
+  CLA$S05$MAG$QUAD$01$B:
+    length: 0.121
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 24.6532]
+    position_start: [0, 0, 24.5322]
+    type: drift
+  CLA$S05$MAG$QUAD$01$K:
+    isr_enable: true
+    k1: 3.69875
+    length: 0.162
+    position_end: [0, 0, 24.8152]
+    position_start: [0, 0, 24.6532]
+    sr_enable: true
+    type: quadrupole
+  CLA$S05$MAG$QUAD$02$A:
+    length: 0.05
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 25.6151]
+    position_start: [0, 0, 25.5651]
+    type: drift
+  CLA$S05$MAG$QUAD$02$B:
+    length: 0.067
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 25.4031]
+    position_start: [0, 0, 25.3361]
+    type: drift
+  CLA$S05$MAG$QUAD$02$K:
+    isr_enable: true
+    k1: -1.57446
+    length: 0.162
+    position_end: [0, 0, 25.5651]
+    position_start: [0, 0, 25.4031]
+    sr_enable: true
+    type: quadrupole
+  CLA$S05$MARK$01:
+    fit_point: 1.0
+    position_end: [0, 0, 25.8251]
+    position_start: [0, 0, 25.8251]
+    type: marker
+  CLA$S06$APER:
+    horizontal_size: 0.017
+    position_end: [0, 0, 31.2826]
+    position_start: [0, 0, 31.2826]
+    shape: rectangular
+    type: aperture
+    vertical_size: 0.017
+  CLA$S06$DIA$BAM$01:
+    fit_point: 1.0
+    length: 0.145
+    position_end: [0, 0, 32.1876]
+    position_start: [0, 0, 32.0426]
+    type: monitor
+  CLA$S06$DIA$BPM$01:
+    fit_point: 1.0
+    length: 0.02
+    position_end: [0, 0, 31.6926]
+    position_start: [0, 0, 31.6726]
+    type: monitor
+  CLA$S06$DIA$BPM$02:
+    fit_point: 1.0
+    length: 0.025
+    position_end: [0, 0, 33.9566]
+    position_start: [0, 0, 33.9316]
+    type: monitor
+  CLA$S06$DIA$EOM$01:
+    fit_point: 1.0
+    length: 0.2885
+    position_end: [0, 0, 32.5526]
+    position_start: [0, 0, 32.2641]
+    type: monitor
+  CLA$S06$DIA$SCR$01$A:
+    length: 0.076667
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 33.0226]
+    position_start: [0, 0, 32.9459]
+    type: drift
+  CLA$S06$DIA$SCR$01$B:
+    length: 0.043333
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 32.9459]
+    position_start: [0, 0, 32.9026]
+    type: drift
+  CLA$S06$DIA$SCR$01$W:
+    output_filename: '"CLA-S06-DIA-SCR-01.SDDS"'
+    position_end: [0, 0, 32.9459]
+    position_start: [0, 0, 32.9459]
+    type: watch_point
+  CLA$S06$DIA$SCR$02$A:
+    length: 0.076667
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 34.0766]
+    position_start: [0, 0, 33.9999]
+    type: drift
+  CLA$S06$DIA$SCR$02$B:
+    length: 0.043333
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 33.9999]
+    position_start: [0, 0, 33.9566]
+    type: drift
+  CLA$S06$DIA$SCR$02$W:
+    output_filename: '"CLA-S06-DIA-SCR-02.SDDS"'
+    position_end: [0, 0, 33.9999]
+    position_start: [0, 0, 33.9999]
+    type: watch_point
+  CLA$S06$DRIFT$01:
+    length: 0.29
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 31.5726]
+    position_start: [0, 0, 31.2826]
+    type: drift
+  CLA$S06$DRIFT$02:
+    length: 0.0765
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 32.2641]
+    position_start: [0, 0, 32.1876]
+    type: drift
+  CLA$S06$DRIFT$03:
+    length: 0.167208
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 33.7898]
+    position_start: [0, 0, 33.6226]
+    type: drift
+  CLA$S06$DRIFT$04:
+    length: 0.041792
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 33.9316]
+    position_start: [0, 0, 33.8898]
+    type: drift
+  CLA$S06$DRIFT$05:
+    length: 0.056175
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 34.1328]
+    position_start: [0, 0, 34.0766]
+    type: drift
+  CLA$S06$MAG$HVCOR$01$A:
+    length: 0.025
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 31.6726]
+    position_start: [0, 0, 31.6476]
+    type: drift
+  CLA$S06$MAG$HVCOR$01$B:
+    length: 0.025
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 31.5976]
+    position_start: [0, 0, 31.5726]
+    type: drift
+  CLA$S06$MAG$HVCOR$01$K:
+    isr_enable: true
+    length: 0.05
+    position_end: [0, 0, 31.6476]
+    position_start: [0, 0, 31.5976]
+    sr_enable: true
+    type: kicker
+  CLA$S06$MAG$HVCOR$02$A:
+    length: 0.007
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 33.8898]
+    position_start: [0, 0, 33.8828]
+    type: drift
+  CLA$S06$MAG$HVCOR$02$B:
+    length: 0.043
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 33.8328]
+    position_start: [0, 0, 33.7898]
+    type: drift
+  CLA$S06$MAG$HVCOR$02$K:
+    isr_enable: true
+    length: 0.05
+    position_end: [0, 0, 33.8828]
+    position_start: [0, 0, 33.8328]
+    sr_enable: true
+    type: kicker
+  CLA$S06$MAG$QUAD$01$A:
+    length: 0.1
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 32.0426]
+    position_start: [0, 0, 31.9426]
+    type: drift
+  CLA$S06$MAG$QUAD$01$B:
+    length: 0.1
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 31.7926]
+    position_start: [0, 0, 31.6926]
+    type: drift
+  CLA$S06$MAG$QUAD$01$K:
+    isr_enable: true
+    k1: -0.64689
+    length: 0.15
+    position_end: [0, 0, 31.9426]
+    position_start: [0, 0, 31.7926]
+    sr_enable: true
+    type: quadrupole
+  CLA$S06$MAG$QUAD$02$A:
+    length: 0.1
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 32.9026]
+    position_start: [0, 0, 32.8026]
+    type: drift
+  CLA$S06$MAG$QUAD$02$B:
+    length: 0.1
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 32.6526]
+    position_start: [0, 0, 32.5526]
+    type: drift
+  CLA$S06$MAG$QUAD$02$K:
+    isr_enable: true
+    k1: -2.02504
+    length: 0.15
+    position_end: [0, 0, 32.8026]
+    position_start: [0, 0, 32.6526]
+    sr_enable: true
+    type: quadrupole
+  CLA$S06$MARK$01:
+    fit_point: 1.0
+    position_end: [0, 0, 31.2826]
+    position_start: [0, 0, 31.2826]
+    type: marker
+  CLA$S06$MARK$02:
+    fit_point: 1.0
+    position_end: [0, 0, 34.1328]
+    position_start: [0, 0, 34.1328]
+    type: marker
+  CLA$S06$SP2$DIP$DRI:
+    length: 0.6
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 33.6226]
+    position_start: [0, 0, 33.0226]
+    type: drift
+  CLA$S07$APER:
+    horizontal_size: 0.017
+    position_end: [0, 0, 44.5426]
+    position_start: [0, 0, 44.5426]
+    shape: rectangular
+    type: aperture
+    vertical_size: 0.017
+  CLA$S07$COL$01:
+    horizontal_size: 0.017
+    length: 0.5
+    position_end: [0, 0, 44.5426]
+    position_start: [0, 0, 44.0426]
+    shape: elliptical
+    type: collimator
+    vertical_size: 0.017
+  CLA$S07$DIA$BAM$01:
+    fit_point: 1.0
+    length: 0.1
+    position_end: [0, 0, 39.1426]
+    position_start: [0, 0, 39.0426]
+    type: monitor
+  CLA$S07$DIA$BPM$01:
+    fit_point: 1.0
+    length: 0.21
+    position_end: [0, 0, 38.4926]
+    position_start: [0, 0, 38.2826]
+    type: monitor
+  CLA$S07$DIA$BPM$02:
+    fit_point: 1.0
+    length: 0.21
+    position_end: [0, 0, 39.7026]
+    position_start: [0, 0, 39.4926]
+    type: monitor
+  CLA$S07$DIA$BPM$03:
+    fit_point: 1.0
+    position_end: [0, 0, 41.3226]
+    position_start: [0, 0, 41.3226]
+    type: monitor
+  CLA$S07$DIA$BPM$04:
+    fit_point: 1.0
+    length: 0.21
+    position_end: [0, 0, 42.6326]
+    position_start: [0, 0, 42.4226]
+    type: monitor
+  CLA$S07$DIA$BPM$05:
+    fit_point: 1.0
+    length: 0.21
+    position_end: [0, 0, 44.7526]
+    position_start: [0, 0, 44.5426]
+    type: monitor
+  CLA$S07$DIA$BPM$06:
+    fit_point: 1.0
+    length: 0.05
+    position_end: [0, 0, 46.3126]
+    position_start: [0, 0, 46.2626]
+    type: monitor
+  CLA$S07$DIA$BPM$07:
+    fit_point: 1.0
+    length: 0.21
+    position_end: [0, 0, 47.7426]
+    position_start: [0, 0, 47.5326]
+    type: monitor
+  CLA$S07$DIA$BPM$08:
+    fit_point: 1.0
+    length: 0.21
+    position_end: [0, 0, 49.2726]
+    position_start: [0, 0, 49.0626]
+    type: monitor
+  CLA$S07$DIA$CDR$01:
+    fit_point: 1.0
+    length: 0.3
+    position_end: [0, 0, 43.5398]
+    position_start: [0, 0, 43.2398]
+    type: monitor
+  CLA$S07$DIA$SCR$01$A:
+    length: 0.076667
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 40.0226]
+    position_start: [0, 0, 39.9459]
+    type: drift
+  CLA$S07$DIA$SCR$01$B:
+    length: 0.043333
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 39.9459]
+    position_start: [0, 0, 39.9026]
+    type: drift
+  CLA$S07$DIA$SCR$01$W:
+    output_filename: '"CLA-S07-DIA-SCR-01.SDDS"'
+    position_end: [0, 0, 39.9459]
+    position_start: [0, 0, 39.9459]
+    type: watch_point
+  CLA$S07$DIA$SCR$02$A:
+    length: 0.076667
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 42.7526]
+    position_start: [0, 0, 42.6759]
+    type: drift
+  CLA$S07$DIA$SCR$02$B:
+    length: 0.043333
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 42.6759]
+    position_start: [0, 0, 42.6326]
+    type: drift
+  CLA$S07$DIA$SCR$02$W:
+    output_filename: '"CLA-S07-DIA-SCR-02.SDDS"'
+    position_end: [0, 0, 42.6759]
+    position_start: [0, 0, 42.6759]
+    type: watch_point
+  CLA$S07$DIA$SCR$03$A:
+    length: 0.076667
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 46.5326]
+    position_start: [0, 0, 46.4559]
+    type: drift
+  CLA$S07$DIA$SCR$03$B:
+    length: 0.043333
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 46.4559]
+    position_start: [0, 0, 46.4126]
+    type: drift
+  CLA$S07$DIA$SCR$03$W:
+    output_filename: '"CLA-S07-DIA-SCR-03.SDDS"'
+    position_end: [0, 0, 46.4559]
+    position_start: [0, 0, 46.4559]
+    type: watch_point
+  CLA$S07$DIA$SCR$04$A:
+    length: 0.076667
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 47.9626]
+    position_start: [0, 0, 47.8859]
+    type: drift
+  CLA$S07$DIA$SCR$04$B:
+    length: 0.043333
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 47.8859]
+    position_start: [0, 0, 47.8426]
+    type: drift
+  CLA$S07$DIA$SCR$04$W:
+    output_filename: '"CLA-S07-DIA-SCR-04.SDDS"'
+    position_end: [0, 0, 47.8859]
+    position_start: [0, 0, 47.8859]
+    type: watch_point
+  CLA$S07$DIA$SCR$05$A:
+    length: 0.076667
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 49.3926]
+    position_start: [0, 0, 49.3159]
+    type: drift
+  CLA$S07$DIA$SCR$05$B:
+    length: 0.043333
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 49.3159]
+    position_start: [0, 0, 49.2726]
+    type: drift
+  CLA$S07$DIA$SCR$05$W:
+    output_filename: '"CLA-S07-DIA-SCR-05.SDDS"'
+    position_end: [0, 0, 49.3159]
+    position_start: [0, 0, 49.3159]
+    type: watch_point
+  CLA$S07$DRIFT$01:
+    length: 0.125
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 38.6176]
+    position_start: [0, 0, 38.4926]
+    type: drift
+  CLA$S07$DRIFT$02:
+    length: 0.075208
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 39.7778]
+    position_start: [0, 0, 39.7026]
+    type: drift
+  CLA$S07$DRIFT$03:
+    length: 0.024792
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 39.9026]
+    position_start: [0, 0, 39.8778]
+    type: drift
+  CLA$S07$DRIFT$04:
+    length: 0.075
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 41.1976]
+    position_start: [0, 0, 41.1226]
+    type: drift
+  CLA$S07$DRIFT$05:
+    length: 0.025
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 41.3226]
+    position_start: [0, 0, 41.2976]
+    type: drift
+  CLA$S07$DRIFT$06:
+    length: 0.4
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 42.0726]
+    position_start: [0, 0, 41.6726]
+    type: drift
+  CLA$S07$DRIFT$07:
+    length: 0.045208
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 43.1478]
+    position_start: [0, 0, 43.1026]
+    type: drift
+  CLA$S07$DRIFT$08:
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 43.5398]
+    position_start: [0, 0, 43.5398]
+    type: drift
+  CLA$S07$DRIFT$09:
+    length: 0.19
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 44.0426]
+    position_start: [0, 0, 43.8526]
+    type: drift
+  CLA$S07$DRIFT$10:
+    length: 0.160008
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 45.9626]
+    position_start: [0, 0, 45.8026]
+    type: drift
+  CLA$S07$DRIFT$11:
+    length: 0.199992
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 46.2626]
+    position_start: [0, 0, 46.0626]
+    type: drift
+  CLA$S07$DRIFT$12:
+    length: 0.1
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 46.4126]
+    position_start: [0, 0, 46.3126]
+    type: drift
+  CLA$S07$DRIFT$13:
+    length: 0.1
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 46.6326]
+    position_start: [0, 0, 46.5326]
+    type: drift
+  CLA$S07$DRIFT$14:
+    length: 0.2
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 47.1826]
+    position_start: [0, 0, 46.9826]
+    type: drift
+  CLA$S07$DRIFT$15:
+    length: 0.4
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 48.7126]
+    position_start: [0, 0, 48.3126]
+    type: drift
+  CLA$S07$MAG$HVCOR$01$A:
+    length: 0.025
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 38.7176]
+    position_start: [0, 0, 38.6926]
+    type: drift
+  CLA$S07$MAG$HVCOR$01$B:
+    length: 0.025
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 38.6426]
+    position_start: [0, 0, 38.6176]
+    type: drift
+  CLA$S07$MAG$HVCOR$01$K:
+    isr_enable: true
+    length: 0.05
+    position_end: [0, 0, 38.6926]
+    position_start: [0, 0, 38.6426]
+    sr_enable: true
+    type: kicker
+  CLA$S07$MAG$HVCOR$02$A:
+    length: 0.025
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 39.8778]
+    position_start: [0, 0, 39.8528]
+    type: drift
+  CLA$S07$MAG$HVCOR$02$B:
+    length: 0.025
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 39.8028]
+    position_start: [0, 0, 39.7778]
+    type: drift
+  CLA$S07$MAG$HVCOR$02$K:
+    isr_enable: true
+    length: 0.05
+    position_end: [0, 0, 39.8528]
+    position_start: [0, 0, 39.8028]
+    sr_enable: true
+    type: kicker
+  CLA$S07$MAG$HVCOR$03$A:
+    length: 0.025
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 41.2976]
+    position_start: [0, 0, 41.2726]
+    type: drift
+  CLA$S07$MAG$HVCOR$03$B:
+    length: 0.025
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 41.2226]
+    position_start: [0, 0, 41.1976]
+    type: drift
+  CLA$S07$MAG$HVCOR$03$K:
+    isr_enable: true
+    length: 0.05
+    position_end: [0, 0, 41.2726]
+    position_start: [0, 0, 41.2226]
+    sr_enable: true
+    type: kicker
+  CLA$S07$MAG$HVCOR$04$A:
+    length: 0.017
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 43.2398]
+    position_start: [0, 0, 43.2228]
+    type: drift
+  CLA$S07$MAG$HVCOR$04$B:
+    length: 0.025
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 43.1728]
+    position_start: [0, 0, 43.1478]
+    type: drift
+  CLA$S07$MAG$HVCOR$04$K:
+    isr_enable: true
+    length: 0.05
+    position_end: [0, 0, 43.2228]
+    position_start: [0, 0, 43.1728]
+    sr_enable: true
+    type: kicker
+  CLA$S07$MAG$HVCOR$05$A:
+    length: 0.025
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 45.2026]
+    position_start: [0, 0, 45.1776]
+    type: drift
+  CLA$S07$MAG$HVCOR$05$B:
+    length: 0.025
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 45.1276]
+    position_start: [0, 0, 45.1026]
+    type: drift
+  CLA$S07$MAG$HVCOR$05$K:
+    isr_enable: true
+    length: 0.05
+    position_end: [0, 0, 45.1776]
+    position_start: [0, 0, 45.1276]
+    sr_enable: true
+    type: kicker
+  CLA$S07$MAG$HVCOR$06$A:
+    length: 0.025
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 46.0626]
+    position_start: [0, 0, 46.0376]
+    type: drift
+  CLA$S07$MAG$HVCOR$06$B:
+    length: 0.025
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 45.9876]
+    position_start: [0, 0, 45.9626]
+    type: drift
+  CLA$S07$MAG$HVCOR$06$K:
+    isr_enable: true
+    length: 0.05
+    position_end: [0, 0, 46.0376]
+    position_start: [0, 0, 45.9876]
+    sr_enable: true
+    type: kicker
+  CLA$S07$MAG$HVCOR$07$A:
+    length: 0.025
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 47.8426]
+    position_start: [0, 0, 47.8176]
+    type: drift
+  CLA$S07$MAG$HVCOR$07$B:
+    length: 0.025
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 47.7676]
+    position_start: [0, 0, 47.7426]
+    type: drift
+  CLA$S07$MAG$HVCOR$07$K:
+    isr_enable: true
+    length: 0.05
+    position_end: [0, 0, 47.8176]
+    position_start: [0, 0, 47.7676]
+    sr_enable: true
+    type: kicker
+  CLA$S07$MAG$HVCOR$08$A:
+    length: 0.025
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 49.4926]
+    position_start: [0, 0, 49.4676]
+    type: drift
+  CLA$S07$MAG$HVCOR$08$B:
+    length: 0.025
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 49.4176]
+    position_start: [0, 0, 49.3926]
+    type: drift
+  CLA$S07$MAG$HVCOR$08$K:
+    isr_enable: true
+    length: 0.05
+    position_end: [0, 0, 49.4676]
+    position_start: [0, 0, 49.4176]
+    sr_enable: true
+    type: kicker
+  CLA$S07$MAG$QUAD$01$A:
+    length: 0.1
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 39.0426]
+    position_start: [0, 0, 38.9426]
+    type: drift
+  CLA$S07$MAG$QUAD$01$B:
+    length: 0.075
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 38.7926]
+    position_start: [0, 0, 38.7176]
+    type: drift
+  CLA$S07$MAG$QUAD$01$K:
+    isr_enable: true
+    length: 0.15
+    position_end: [0, 0, 38.9426]
+    position_start: [0, 0, 38.7926]
+    sr_enable: true
+    type: quadrupole
+  CLA$S07$MAG$QUAD$02$A:
+    length: 0.1
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 39.4926]
+    position_start: [0, 0, 39.3926]
+    type: drift
+  CLA$S07$MAG$QUAD$02$B:
+    length: 0.1
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 39.2426]
+    position_start: [0, 0, 39.1426]
+    type: drift
+  CLA$S07$MAG$QUAD$02$K:
+    isr_enable: true
+    k1: -1.46779
+    length: 0.15
+    position_end: [0, 0, 39.3926]
+    position_start: [0, 0, 39.2426]
+    sr_enable: true
+    type: quadrupole
+  CLA$S07$MAG$QUAD$03$A:
+    length: 0.1
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 41.6726]
+    position_start: [0, 0, 41.5726]
+    type: drift
+  CLA$S07$MAG$QUAD$03$B:
+    length: 0.1
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 41.4226]
+    position_start: [0, 0, 41.3226]
+    type: drift
+  CLA$S07$MAG$QUAD$03$K:
+    isr_enable: true
+    k1: -0.64689
+    length: 0.15
+    position_end: [0, 0, 41.5726]
+    position_start: [0, 0, 41.4226]
+    sr_enable: true
+    type: quadrupole
+  CLA$S07$MAG$QUAD$04$A:
+    length: 0.1
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 42.4226]
+    position_start: [0, 0, 42.3226]
+    type: drift
+  CLA$S07$MAG$QUAD$04$B:
+    length: 0.1
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 42.1726]
+    position_start: [0, 0, 42.0726]
+    type: drift
+  CLA$S07$MAG$QUAD$04$K:
+    isr_enable: true
+    k1: -2.01504
+    length: 0.15
+    position_end: [0, 0, 42.3226]
+    position_start: [0, 0, 42.1726]
+    sr_enable: true
+    type: quadrupole
+  CLA$S07$MAG$QUAD$05$A:
+    length: 0.1
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 43.1026]
+    position_start: [0, 0, 43.0026]
+    type: drift
+  CLA$S07$MAG$QUAD$05$B:
+    length: 0.1
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 42.8526]
+    position_start: [0, 0, 42.7526]
+    type: drift
+  CLA$S07$MAG$QUAD$05$K:
+    isr_enable: true
+    k1: 0.98372
+    length: 0.15
+    position_end: [0, 0, 43.0026]
+    position_start: [0, 0, 42.8526]
+    sr_enable: true
+    type: quadrupole
+  CLA$S07$MAG$QUAD$06$A:
+    length: 0.1
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 43.8526]
+    position_start: [0, 0, 43.7526]
+    type: drift
+  CLA$S07$MAG$QUAD$06$B:
+    length: 0.062792
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 43.6026]
+    position_start: [0, 0, 43.5398]
+    type: drift
+  CLA$S07$MAG$QUAD$06$K:
+    isr_enable: true
+    k1: 4.25217
+    length: 0.15
+    position_end: [0, 0, 43.7526]
+    position_start: [0, 0, 43.6026]
+    sr_enable: true
+    type: quadrupole
+  CLA$S07$MAG$QUAD$07$A:
+    length: 0.1
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 45.1026]
+    position_start: [0, 0, 45.0026]
+    type: drift
+  CLA$S07$MAG$QUAD$07$B:
+    length: 0.1
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 44.8526]
+    position_start: [0, 0, 44.7526]
+    type: drift
+  CLA$S07$MAG$QUAD$07$K:
+    isr_enable: true
+    k1: -2.6469
+    length: 0.15
+    position_end: [0, 0, 45.0026]
+    position_start: [0, 0, 44.8526]
+    sr_enable: true
+    type: quadrupole
+  CLA$S07$MAG$QUAD$08$A:
+    length: 0.1
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 46.9826]
+    position_start: [0, 0, 46.8826]
+    type: drift
+  CLA$S07$MAG$QUAD$08$B:
+    length: 0.1
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 46.7326]
+    position_start: [0, 0, 46.6326]
+    type: drift
+  CLA$S07$MAG$QUAD$08$K:
+    isr_enable: true
+    k1: -1.71192
+    length: 0.15
+    position_end: [0, 0, 46.8826]
+    position_start: [0, 0, 46.7326]
+    sr_enable: true
+    type: quadrupole
+  CLA$S07$MAG$QUAD$09$A:
+    length: 0.1
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 47.5326]
+    position_start: [0, 0, 47.4326]
+    type: drift
+  CLA$S07$MAG$QUAD$09$B:
+    length: 0.088
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 47.2706]
+    position_start: [0, 0, 47.1826]
+    type: drift
+  CLA$S07$MAG$QUAD$09$K:
+    isr_enable: true
+    k1: -5.98555
+    length: 0.162
+    position_end: [0, 0, 47.4326]
+    position_start: [0, 0, 47.2706]
+    sr_enable: true
+    type: quadrupole
+  CLA$S07$MAG$QUAD$10$A:
+    length: 0.1
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 48.3126]
+    position_start: [0, 0, 48.2126]
+    type: drift
+  CLA$S07$MAG$QUAD$10$B:
+    length: 0.088
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 48.0506]
+    position_start: [0, 0, 47.9626]
+    type: drift
+  CLA$S07$MAG$QUAD$10$K:
+    isr_enable: true
+    k1: 7.72644
+    length: 0.162
+    position_end: [0, 0, 48.2126]
+    position_start: [0, 0, 48.0506]
+    sr_enable: true
+    type: quadrupole
+  CLA$S07$MAG$QUAD$11$A:
+    length: 0.1
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 49.0626]
+    position_start: [0, 0, 48.9626]
+    type: drift
+  CLA$S07$MAG$QUAD$11$B:
+    length: 0.088
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 48.8006]
+    position_start: [0, 0, 48.7126]
+    type: drift
+  CLA$S07$MAG$QUAD$11$K:
+    isr_enable: true
+    k1: -5.24599
+    length: 0.162
+    position_end: [0, 0, 48.9626]
+    position_start: [0, 0, 48.8006]
+    sr_enable: true
+    type: quadrupole
+  CLA$S07$MARK$01:
+    fit_point: 1.0
+    position_end: [0, 0, 39.0426]
+    position_start: [0, 0, 39.0426]
+    type: marker
+  CLA$S07$MARK$02:
+    fit_point: 1.0
+    position_end: [0, 0, 46.5326]
+    position_start: [0, 0, 46.5326]
+    type: marker
+  CLA$S07$MARK$03:
+    fit_point: 1.0
+    position_end: [0, 0, 49.4926]
+    position_start: [0, 0, 49.4926]
+    type: marker
+  CLA$S07$SP3$DIP$DRI:
+    length: 0.6
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 45.8026]
+    position_start: [0, 0, 45.2026]
+    type: drift
+  CLA$S07$TDC$01$A:
+    length: 0.303334
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 41.1226]
+    position_start: [0, 0, 40.8193]
+    type: drift
+  CLA$S07$TDC$01$APER:
+    horizontal_size: 0.005
+    position_end: [0, 0, 40.0226]
+    position_start: [0, 0, 40.0226]
+    shape: rectangular
+    type: aperture
+    vertical_size: 0.005
+  CLA$S07$TDC$01$B:
+    length: 0.346666
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 40.3693]
+    position_start: [0, 0, 40.0226]
+    type: drift
+  CLA$S07$TDC$01$R:
+    length: 0.45
+    phase: 0.0
+    position_end: [0, 0, 40.8193]
+    position_start: [0, 0, 40.3693]
+    type: rf_deflecting_cavity
+  CLA$SLD$APER:
+    horizontal_size: 0.017
+    position_end: [0, 0, 49.4926]
+    position_start: [0, 0, 49.4926]
+    shape: rectangular
+    type: aperture
+    vertical_size: 0.017
+  CLA$SLD$DIA$BPM$01:
+    fit_point: 1.0
+    length: 0.1
+    position_end: [0, 0, 50.4677]
+    position_start: [0, 0, 50.3677]
+    type: monitor
+  CLA$SLD$DIA$BPM$02:
+    fit_point: 1.0
+    length: 0.1
+    position_end: [0, 0, 51.8177]
+    position_start: [0, 0, 51.7177]
+    type: monitor
+  CLA$SLD$DRIFT$01:
+    length: 0.125
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 50.0177]
+    position_start: [0, 0, 49.8927]
+    type: drift
+  CLA$SLD$DRIFT$02:
+    length: 0.1
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 50.9177]
+    position_start: [0, 0, 50.8177]
+    type: drift
+  CLA$SLD$DRIFT$03:
+    length: 0.125
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 52.2927]
+    position_start: [0, 0, 52.1677]
+    type: drift
+  CLA$SLD$MAG$DIP$01$A:
+    length: 0.1
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 49.8927]
+    position_start: [0, 0, 49.7927]
+    type: drift
+  CLA$SLD$MAG$DIP$01$B:
+    length: 0.1
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 49.5926]
+    position_start: [0, 0, 49.4926]
+    type: drift
+  CLA$SLD$MAG$DIP$01$D:
+    angle: 0.0349066
+    csr_bins: 20.0
+    csr_output_filename: '"SLD-MAG-DIP-01.CSR"'
+    edge_field_integral: 0.4
+    exit_edge_angle: 0.0349066
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.200132
+    position_end: [0, 0, 49.7927]
+    position_start: [0, 0, 49.5926]
+    sr_enable: true
+    type: dipole
+  CLA$SLD$MAG$DIP$02$A:
+    length: 0.1
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 52.6929]
+    position_start: [0, 0, 52.5929]
+    type: drift
+  CLA$SLD$MAG$DIP$02$B:
+    length: 0.1
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 52.3927]
+    position_start: [0, 0, 52.2927]
+    type: drift
+  CLA$SLD$MAG$DIP$02$D:
+    angle: -0.0349066
+    csr_bins: 20.0
+    csr_output_filename: '"SLD-MAG-DIP-02.CSR"'
+    edge_field_integral: 0.4
+    entrance_edge_angle: -0.0349066
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.200132
+    position_end: [0, 0, 52.5929]
+    position_start: [0, 0, 52.3927]
+    sr_enable: true
+    type: dipole
+  CLA$SLD$MAG$HVCOR$01:
+    isr_enable: true
+    length: 0.1
+    position_end: [0, 0, 51.3677]
+    position_start: [0, 0, 51.2677]
+    sr_enable: true
+    type: kicker
+  CLA$SLD$MAG$QUAD$01$A:
+    length: 0.1
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 50.3677]
+    position_start: [0, 0, 50.2677]
+    type: drift
+  CLA$SLD$MAG$QUAD$01$B:
+    length: 0.1
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 50.1177]
+    position_start: [0, 0, 50.0177]
+    type: drift
+  CLA$SLD$MAG$QUAD$01$K:
+    isr_enable: true
+    k1: 14.0029
+    length: 0.15
+    position_end: [0, 0, 50.2677]
+    position_start: [0, 0, 50.1177]
+    sr_enable: true
+    type: quadrupole
+  CLA$SLD$MAG$QUAD$02$A:
+    length: 0.1
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 50.8177]
+    position_start: [0, 0, 50.7177]
+    type: drift
+  CLA$SLD$MAG$QUAD$02$B:
+    length: 0.1
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 50.5677]
+    position_start: [0, 0, 50.4677]
+    type: drift
+  CLA$SLD$MAG$QUAD$02$K:
+    isr_enable: true
+    k1: 15.7358
+    length: 0.15
+    position_end: [0, 0, 50.7177]
+    position_start: [0, 0, 50.5677]
+    sr_enable: true
+    type: quadrupole
+  CLA$SLD$MAG$QUAD$03$A:
+    length: 0.1
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 51.2677]
+    position_start: [0, 0, 51.1677]
+    type: drift
+  CLA$SLD$MAG$QUAD$03$B:
+    length: 0.1
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 51.0177]
+    position_start: [0, 0, 50.9177]
+    type: drift
+  CLA$SLD$MAG$QUAD$03$K:
+    isr_enable: true
+    k1: -18.9731
+    length: 0.15
+    position_end: [0, 0, 51.1677]
+    position_start: [0, 0, 51.0177]
+    sr_enable: true
+    type: quadrupole
+  CLA$SLD$MAG$QUAD$04$A:
+    length: 0.1
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 51.7177]
+    position_start: [0, 0, 51.6177]
+    type: drift
+  CLA$SLD$MAG$QUAD$04$B:
+    length: 0.1
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 51.4677]
+    position_start: [0, 0, 51.3677]
+    type: drift
+  CLA$SLD$MAG$QUAD$04$K:
+    isr_enable: true
+    k1: 15.7358
+    length: 0.15
+    position_end: [0, 0, 51.6177]
+    position_start: [0, 0, 51.4677]
+    sr_enable: true
+    type: quadrupole
+  CLA$SLD$MAG$QUAD$05$A:
+    length: 0.1
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 52.1677]
+    position_start: [0, 0, 52.0677]
+    type: drift
+  CLA$SLD$MAG$QUAD$05$B:
+    length: 0.1
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 51.9177]
+    position_start: [0, 0, 51.8177]
+    type: drift
+  CLA$SLD$MAG$QUAD$05$K:
+    isr_enable: true
+    k1: 14.0029
+    length: 0.15
+    position_end: [0, 0, 52.0677]
+    position_start: [0, 0, 51.9177]
+    sr_enable: true
+    type: quadrupole
+  CLA$SLD$MARK$01:
+    fit_point: 1.0
+    position_end: [0, 0, 49.5926]
+    position_start: [0, 0, 49.5926]
+    type: marker
+  CLA$VBC$DIA$BPM$01:
+    fit_point: 1.0
+    length: 0.0312
+    position_end: [0, 0, 28.3943]
+    position_start: [0, 0, 28.3631]
+    type: monitor
+  CLA$VBC$DIA$SCR$01$A:
+    length: 0.076667
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 28.9888]
+    position_start: [0, 0, 28.9122]
+    type: drift
+  CLA$VBC$DIA$SCR$01$B:
+    length: 0.025463
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 28.9122]
+    position_start: [0, 0, 28.8867]
+    type: drift
+  CLA$VBC$DIA$SCR$01$W:
+    output_filename: '"CLA-VBC-DIA-SCR-01.SDDS"'
+    position_end: [0, 0, 28.9122]
+    position_start: [0, 0, 28.9122]
+    type: watch_point
+  CLA$VBC$DIA$WIN:
+    csr_enable: true
+    csr_interval: 0.01
+    length: 0.1
+    position_end: [0, 0, 31.2826]
+    position_start: [0, 0, 31.1826]
+    type: drift
+  CLA$VBC$DRIFT$01:
+    length: 0.14
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 25.9651]
+    position_start: [0, 0, 25.8251]
+    type: drift
+  CLA$VBC$DRIFT$02:
+    length: 1.30589
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 27.6724]
+    position_start: [0, 0, 26.3665]
+    type: drift
+  CLA$VBC$DRIFT$03:
+    length: 0.05667
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 28.1305]
+    position_start: [0, 0, 28.0738]
+    type: drift
+  CLA$VBC$DRIFT$04:
+    length: 0.0124
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 28.4067]
+    position_start: [0, 0, 28.3943]
+    type: drift
+  CLA$VBC$DRIFT$05:
+    length: 0.185
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 29.1738]
+    position_start: [0, 0, 28.9888]
+    type: drift
+  CLA$VBC$DRIFT$06:
+    length: 1.30589
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 30.8812]
+    position_start: [0, 0, 29.5753]
+    type: drift
+  CLA$VBC$MAG$DIP$01$A:
+    csr_enable: true
+    csr_interval: 0.01
+    length: 0.100453
+    position_end: [0, 0, 26.3665]
+    position_start: [0, 0, 26.2661]
+    type: drift
+  CLA$VBC$MAG$DIP$01$B:
+    length: 0.1
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 26.0651]
+    position_start: [0, 0, 25.9651]
+    type: drift
+  CLA$VBC$MAG$DIP$01$D:
+    angle: -0.095
+    csr_bins: 20.0
+    csr_output_filename: '"VBC-MAG-DIP-01.CSR"'
+    edge_field_integral: 0.4
+    exit_edge_angle: -0.095
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.200981
+    position_end: [0, 0, 26.2661]
+    position_start: [0, 0, 26.0651]
+    sr_enable: true
+    type: dipole
+  CLA$VBC$MAG$DIP$02$A:
+    csr_enable: true
+    csr_interval: 0.01
+    length: 0.1
+    position_end: [0, 0, 28.0738]
+    position_start: [0, 0, 27.9738]
+    type: drift
+  CLA$VBC$MAG$DIP$02$B:
+    length: 0.100453
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 27.7729]
+    position_start: [0, 0, 27.6724]
+    type: drift
+  CLA$VBC$MAG$DIP$02$D:
+    angle: 0.095
+    csr_bins: 20.0
+    csr_output_filename: '"VBC-MAG-DIP-02.CSR"'
+    edge_field_integral: 0.4
+    entrance_edge_angle: 0.095
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.200981
+    position_end: [0, 0, 27.9738]
+    position_start: [0, 0, 27.7729]
+    sr_enable: true
+    type: dipole
+  CLA$VBC$MAG$DIP$03$A:
+    csr_enable: true
+    csr_interval: 0.01
+    length: 0.100453
+    position_end: [0, 0, 29.5753]
+    position_start: [0, 0, 29.4748]
+    type: drift
+  CLA$VBC$MAG$DIP$03$B:
+    length: 0.1
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 29.2738]
+    position_start: [0, 0, 29.1738]
+    type: drift
+  CLA$VBC$MAG$DIP$03$D:
+    angle: 0.095
+    csr_bins: 20.0
+    csr_output_filename: '"VBC-MAG-DIP-03.CSR"'
+    edge_field_integral: 0.4
+    exit_edge_angle: 0.095
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.200981
+    position_end: [0, 0, 29.4748]
+    position_start: [0, 0, 29.2738]
+    sr_enable: true
+    type: dipole
+  CLA$VBC$MAG$DIP$04$B:
+    length: 0.100453
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 30.9816]
+    position_start: [0, 0, 30.8812]
+    type: drift
+  CLA$VBC$MAG$DIP$04$D:
+    angle: -0.095
+    csr_bins: 20.0
+    csr_output_filename: '"VBC-MAG-DIP-04.CSR"'
+    edge_field_integral: 0.4
+    entrance_edge_angle: -0.095
+    half_gap: 0.005
+    isr_enable: true
+    length: 0.200981
+    position_end: [0, 0, 31.1826]
+    position_start: [0, 0, 30.9816]
+    sr_enable: true
+    type: dipole
+  CLA$VBC$MAG$VCOR$01$A:
+    length: 0.0426
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.426]
+    lsc_enable: true
+    position_end: [0, 0, 28.3631]
+    position_start: [0, 0, 28.3205]
+    type: drift
+  CLA$VBC$MAG$VCOR$01$B:
+    length: 0.14
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    lsc_enable: true
+    position_end: [0, 0, 28.2705]
+    position_start: [0, 0, 28.1305]
+    type: drift
+  CLA$VBC$MAG$VCOR$01$K:
+    isr_enable: true
+    length: 0.05
+    position_end: [0, 0, 28.3205]
+    position_start: [0, 0, 28.2705]
+    sr_enable: true
+    type: kicker
+  CLA$VBC$MARK$01:
+    fit_point: 1.0
+    position_end: [0, 0, 31.2826]
+    position_start: [0, 0, 31.2826]
+    type: marker
+  CLA$VBC$RCOL$01:
+    horizontal_size: 0.01
+    length: 0.48
+    open_side: '"+x"'
+    position_end: [0, 0, 28.8867]
+    position_start: [0, 0, 28.4067]
+    shape: rectangular
+    type: collimator
+    vertical_size: 0.01

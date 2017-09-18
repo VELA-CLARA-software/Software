@@ -6,7 +6,7 @@ from PyQt4.QtGui import *
 import numpy as np
 import threading
 from threading import Thread, Event, Timer
-from PyQt4.QtCore import QObject, pyqtSignal, pyqtSlot
+# from PyQt4.QtCore import QObject, pyqtSignal, pyqtSlot
 
 class repeatedTimer:
 
@@ -59,7 +59,8 @@ class createSignalTimer(QObject):
     def update(self):
         ''' call signal generating Function '''
         value = self.function(*self.args)
-        self.dataReady.emit([round(time.time(),2),value])
+        if isinstance(value,float) or isinstance(value,int):
+            self.dataReady.emit([round(time.time(),2),value])
 
     def setInterval(self, interval):
         self.timer.stop()
@@ -129,19 +130,23 @@ class createSignalRecord(QObject):
 import tables as tables
 
 class recordData(tables.IsDescription):
-    time  = tables.FloatCol()     # double (double-precision)
-    value  = tables.FloatCol()
+    time  = tables.Float64Col()     # double (double-precision)
+    value  = tables.Float64Col()
 
-class signalRecorder(QObject):
+class signalRecorderH5(QObject):
 
     def __init__(self, filename="test", flushtime=10):
-        super(signalRecorder, self).__init__()
+        super(signalRecorderH5, self).__init__()
         self.records = {}
         _, file_extension = os.path.splitext(filename)
         if not file_extension in ['h5','hdf5']:
             filename = filename+".h5"
-        self.h5file = tables.open_file(filename, mode = "w", title = filename)
-        self.group = self.h5file.create_group("/", 'data', 'Saved Data')
+        self.h5file = tables.open_file(filename, mode = "a", title = filename)
+        if not os.path.exists(filename):
+            self.group = self.h5file.create_group("/", 'data', 'Saved Data')
+        else:
+            self.group = self.h5file.get_node('/data')
+            print self.group
         self.tables = []
         self.rows = []
         self.timer = QTimer()
@@ -149,9 +154,13 @@ class signalRecorder(QObject):
         self.timer.start(1000*flushtime)
 
     def addSignal(self, name='', pen='', timer=1, maxlength=100, function=None, arg=[], **kwargs):
-        createSignalRecord(records=self.records, name=name, pen=pen, timer=timer, maxlength=maxlength, function=function, arg=arg, **kwargs)
-        table = self.h5file.create_table(self.group, name, recordData, name)
-        self.tables.append(table)
+        sigrec = createSignalRecord(records=self.records, name=name, pen=pen, timer=timer, maxlength=maxlength, function=function, arg=arg, **kwargs)
+        if not name in self.group:
+            table = self.h5file.create_table(self.group, name, recordData, name)
+            self.tables.append(table)
+        else:
+            table = self.h5file.get_node('/data/'+name)
+            sigrec.worker.nsamples = table.nrows
         row = table.row
         self.rows.append(row)
         self.records[name]['signal'].dataReady.connect(lambda x: self.addData(row,x))
