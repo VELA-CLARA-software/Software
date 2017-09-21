@@ -67,6 +67,7 @@ class createSignalTimer(QObject):
 
 class recordWorker(QtCore.QObject):
 
+    recordLatestValueSignal = QtCore.pyqtSignal(float)
     recordMeanSignal = QtCore.pyqtSignal(float)
     recordStandardDeviationSignal = QtCore.pyqtSignal(float)
     recordMinSignal = QtCore.pyqtSignal(float)
@@ -92,6 +93,7 @@ class recordWorker(QtCore.QObject):
         else:
             self.records[self.name]['data'] = np.concatenate((self.records[self.name]['data'],[value]), axis=0)
         values = zip(*self.records[self.name]['data'])[1]
+        self.recordLatestValueSignal.emit(value[1])
         self.recordMeanSignal.emit(np.mean(values))
         self.recordStandardDeviationSignal.emit(np.std(values))
         self.recordMinSignal.emit(np.min(values))

@@ -82,6 +82,8 @@ class stripPlot(QWidget):
 
         ''' Create Parameter Tree'''
         self.parameterTree = ParameterTree()
+        self.parameterTree.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
+        self.parameterTree.selectionModel().selectionChanged.connect(self.enableSelectedAxis)
         self.parameters = {}
 
         ''' Create Splitter'''
@@ -179,6 +181,23 @@ class stripPlot(QWidget):
         # else:
             return "{:.4}".format(value)
 
+    def printValue(self, param):
+        print param.text(0).split(':')[0]
+        # print param.childCount()
+
+    def enableSelectedAxis(self, header):
+        headers = self.parameterTree.selectedItems()
+        for i in range(self.parameterTree.topLevelItemCount()):
+            child = self.parameterTree.topLevelItem(i).child(0)
+            if child in headers:
+                self.toggleAxisVisible(child, True)
+            else:
+                self.toggleAxisVisible(child, False)
+
+    def toggleAxisVisible(self, header, visible=False):
+        name = str(header.text(0).split(':')[0])
+        self.plotWidget.viewboxes[name]['axis'].setVisible(any([header.child(5).widget.value(),visible]))
+
     def addParameterSignal(self, name):
         params = [
             {'name': name, 'type': 'group', 'children': [
@@ -187,21 +206,25 @@ class stripPlot(QWidget):
                 {'name': 'Standard Deviation', 'type': 'float', 'readonly': True},
                 {'name': 'Max', 'type': 'float', 'readonly': True},
                 {'name': 'Min', 'type': 'float', 'readonly': True},
+                {'name': 'Show_Axis', 'title': 'Show Axis?', 'type': 'bool', 'value': False, 'tip': "Show or Remove the Axis"},
             ]}
         ]
         p = Parameter.create(name='params', type='group', children=params)
         pChild = p.child(name)
-        print pChild
-        self.records[name]['signal'].dataReady.connect(lambda x : pChild.child('Value').setValue(x[1]))
-        self.records[name]['worker'].recordMeanSignal.connect(lambda x : pChild.child('Mean').setValue(x))
-        self.records[name]['worker'].recordStandardDeviationSignal.connect(lambda x : pChild.child('Standard Deviation').setValue(x))
-        self.records[name]['worker'].recordMinSignal.connect(lambda x : pChild.child('Min').setValue(x))
-        self.records[name]['worker'].recordMaxSignal.connect(lambda x : pChild.child('Max').setValue(x))
+        self.records[name]['worker'].recordLatestValueSignal.connect(pChild.child('Value').setValue)
+        self.records[name]['worker'].recordMeanSignal.connect(pChild.child('Mean').setValue)
+        self.records[name]['worker'].recordStandardDeviationSignal.connect(pChild.child('Standard Deviation').setValue)
+        self.records[name]['worker'].recordMinSignal.connect(pChild.child('Min').setValue)
+        self.records[name]['worker'].recordMaxSignal.connect(pChild.child('Max').setValue)
+        self.plotWidget.viewboxes[name]['axis'].setVisible(False)
+        pChild.child('Show_Axis').sigValueChanged.connect(lambda x: self.plotWidget.viewboxes[name]['axis'].setVisible(x.value()))
         self.parameterTree.addParameters(p, showTop=False)
         header = self.parameterTree.findItems(name,Qt.MatchContains | Qt.MatchRecursive)[0]
+        header.setSelected(False)
+        header.setExpanded(False)
         header.setForeground(0,self.contrasting_text_color(self.records[name]['pen']))
         header.setBackground(0,pg.mkBrush(self.records[name]['pen']))
-        self.records[name]['signal'].dataReady.connect(lambda x :header.setText(0,name + ': ' + self.valueFormatter(x[1])))
+        self.records[name]['worker'].recordLatestValueSignal.connect(lambda x :header.setText(0,name + ': ' + "{:.4}".format(x)))
 
     def addSignal(self, name='', pen='r', timer=1, maxlength=pow(2,20), function=None, arg=[], **kwargs):
         if not name in self.records:

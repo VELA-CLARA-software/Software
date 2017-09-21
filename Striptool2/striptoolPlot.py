@@ -150,7 +150,6 @@ class generalPlot(pg.PlotWidget):
         self.threads[name].start()
         return self.workers[name].curve
 
-
 class curveRecordWorker(QtCore.QObject):
     def __init__(self, record, plot, name, axis, viewbox):
         QtCore.QObject.__init__(self)

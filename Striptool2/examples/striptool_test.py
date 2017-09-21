@@ -48,8 +48,8 @@ class striptool_Demo(QMainWindow):
         fileMenu = menubar.addMenu('&File')
         fileMenu.addAction(exitAction)
 
-        # self.toolbar = self.addToolBar('Exit')
-        # self.toolbar.addAction(exitAction)
+        self.toolbar = self.addToolBar('Exit')
+        self.toolbar.addAction(exitAction)
 
         ''' Initiate logger (requires loggerWidget - comment out if not available)'''
         # self.logwidget1 = lw.loggerWidget([logger,striptool.logger])
@@ -75,15 +75,15 @@ class striptool_Demo(QMainWindow):
         # self.sp3.setDecimateLength(1000)
 
         ''' Add some signals to the striptool - note they call our signal generator at a frequency of 1/timer (100 Hz and 10 Hz in these cases).
-            The 'pen' argument sets the color of the curves, but can be changed in the GUI
+            The 'pen' argument sets the color of the curves
                 - see <http://www.pyqtgraph.org/documentation/style.html>'''
         # self.sp.addSignal(name='signal1',pen='r', timer=1.0/100.0, function=self.createRandomSignal, arg=[0.5])
-        self.sp2.addSignal(name='signal3',pen='g', timer=1.0/10.0, function=self.createRandomSignal, arg=[100,10])
-        self.sp2.addSignal(name='signal2',pen='r', timer=1.0/10.0, function=self.createRandomSignal, arg=[1e-8, 1e-9], logScale=True, verticalRange=[1e-10, 1e-7])
-        # self.sp2.addSignal(name='signal4',pen='b', timer=1.0/10.0, function=self.createRandomSignal, arg=[-1])
-        # self.sp2.addSignal(name='signal5',pen='c', timer=1.0/10.0, function=self.createRandomSignal, arg=[1])
-        # self.sp2.addSignal(name='signal6',pen='m', timer=1.0/10.0, function=self.createRandomSignal, arg=[3])
-        # self.sp2.addSignal(name='signal7',pen='y', timer=1.0/10.0, function=self.createRandomSignal, arg=[5])
+        self.sp2.addSignal(name='signal3',pen='g', timer=1.0/1.0, function=self.createRandomSignal, arg=[100,10])
+        self.sp2.addSignal(name='signal2',pen='r', timer=1.0/1.0, function=self.createRandomSignal, arg=[1e-8, 1e-9], logScale=True, verticalRange=[1e-10, 1e-7])
+        self.sp2.addSignal(name='signal4',pen='b', timer=1.0/1.0, function=self.createRandomSignal, arg=[1e4, 1e6], logScale=True)
+        # self.sp2.addSignal(name='signal5',pen='c', timer=1.0/1.0, function=self.createRandomSignal, arg=[1])
+        # self.sp2.addSignal(name='signal6',pen='m', timer=1.0/1.0, function=self.createRandomSignal, arg=[3])
+        # self.sp2.addSignal(name='signal7',pen='y', timer=1.0/1.0, function=self.createRandomSignal, arg=[5])
         # self.sp3.addSignal(name='signal8',pen='b', timer=1.0/10.0, function=self.createRandomSignal, arg=[0.5])
 
         ''' this adds pre-data to the signal '''

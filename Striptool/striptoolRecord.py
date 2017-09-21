@@ -142,8 +142,9 @@ class signalRecorderH5(QObject):
         if not file_extension in ['h5','hdf5']:
             filename = filename+".h5"
         self.h5file = tables.open_file(filename, mode = "a", title = filename)
-        if not os.path.exists(filename):
-            self.group = self.h5file.create_group("/", 'data', 'Saved Data')
+        self.rootnode = self.h5file.get_node('/')
+        if 'data' not in self.rootnode:
+            self.group = self.h5file.create_group('/', 'data', 'Saved Data')
         else:
             self.group = self.h5file.get_node('/data')
             print self.group
@@ -173,8 +174,11 @@ class signalRecorderH5(QObject):
         for t in self.tables:
             t.flush()
 
-    def closeEvent(self, event):
-        print 'Close event!'
+    def close(self):
         for n,r in self.records.iteritems():
-            r['signal'].close()
+            r['record'].close()
         self.flushTables()
+        self.h5file.close()
+
+    def closeEvent(self, event):
+        self.close()
