@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1504887878 source:c:\users\wln24624\documents\software\vela-clara-software\software\onlineimageanalysis\main.cpp
+1505746862 source:c:\users\wln24624\documents\software\vela-clara-software\software\onlineimageanalysis\main.cpp
 	<fstream>
 	<iterator>
 	<vector>
@@ -9,11 +9,13 @@
 	<algorithm>
 	<cmath>
 	<chrono>
+	<cstdlib>
+	<ctime>
 	"imageAnalysisClass.h"
 
-1504884078 c:\users\wln24624\documents\software\vela-clara-software\software\onlineimageanalysis\imageanalysisclass.h
+1505742046 c:\users\wln24624\documents\software\vela-clara-software\software\onlineimageanalysis\imageanalysisclass.h
 
-1504887864 source:c:\users\wln24624\documents\software\vela-clara-software\software\onlineimageanalysis\imageanalysisclass.cpp
+1505742248 source:c:\users\wln24624\documents\software\vela-clara-software\software\onlineimageanalysis\imageanalysisclass.cpp
 	<fstream>
 	<iterator>
 	<vector>

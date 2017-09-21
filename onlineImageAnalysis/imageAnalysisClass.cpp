@@ -25,6 +25,7 @@ std::vector<dvec> imageAnalysisClass::anaylseImage(std::vector<double> &arrayDat
     //This is A speedy Version (no scaling)
     runningXCropCounter=0;
     runningYCropCounter=0;
+
     //1.Crop,Subtract Background and Apply Aask all in one loop.
     cropSubtractAndMask(arrayData,bkgrndData,imageCenterXPixel-imageXMaskRadius,
                         imageCenterXPixel+imageXMaskRadius,
@@ -36,6 +37,7 @@ std::vector<dvec> imageAnalysisClass::anaylseImage(std::vector<double> &arrayDat
     for(auto i=0;i!=imageSize;++i){
         sumPixIntensity+=processedPixelData[i];
     }
+
     double muX=dotProduct(processedPixelData,processedPixelXPosition)/sumPixIntensity;
     double muY=dotProduct(processedPixelData,processedPixelYPosition)/sumPixIntensity;
 
@@ -68,15 +70,20 @@ void imageAnalysisClass::passInData(std::vector<double> &dummyPixelData,
                                     const int &numberOfPixels,
                                     const int &pixelWidth,
                                     const int &pixelHeight,
-                                    const double &pix2mmRatio){
+                                    const double &pix2mmRatio,
+                                    const int step){
 
 
     //set up raw image data
+    jump=step;
     imageXMaskRadius        =   xMaskRadius;
     imageYMaskRadius        =   yMaskRadius;
     imageSize               =   numberOfPixels;
-    imageWidth              =   pixelWidth;
-    imageHeight             =   pixelHeight;
+    //imageWidth              =   pixelWidth;
+    //imageHeight             =   pixelHeight;
+    rawImageWidth              =   pixelWidth;
+    rawImageHeight             =   pixelHeight;
+    rawImageSize                = rawImageWidth*rawImageHeight;
     imagePix2mmRatio        =   pix2mmRatio;
     runningXCropCounter     =   0;
     runningYCropCounter     =   0;
@@ -96,6 +103,12 @@ void imageAnalysisClass::passInData(std::vector<double> &dummyPixelData,
     processedPixelData      =   dummyPixelData;
     imageWidth              =2*imageXMaskRadius;
     imageHeight             =2*imageYMaskRadius;
+
+    int A=(int)imageWidth/jump;
+    int B=(int)imageHeight/jump;
+    imageWidth = A;
+    imageHeight = B;
+
     imageSize               =imageWidth*imageHeight;
     c=0;
     for(auto i=imageHeight; i>0; --i){
@@ -105,9 +118,6 @@ void imageAnalysisClass::passInData(std::vector<double> &dummyPixelData,
             ++c;
         }
     }
-    //imageCenterXPixel       =   centerXPixel;
-    //imageCenterYPixel       =   centerYPixel;
-
 
 }
 void imageAnalysisClass::makeMask(){
@@ -135,14 +145,19 @@ void imageAnalysisClass::cropSubtractAndMask(std::vector<double> &image,
                                              const int &xMin, const int &xMax,
                                              const int &yMin, const int &yMax){
     int c(0);
-    for(auto i=0;i!=image.size();++i){
-        if(rawXPosition[i]>xMin&&rawXPosition[i]<=xMax&&rawYPosition[i]>yMin&&rawYPosition[i]<=yMax){
-            processedPixelData[c] = (image[i]-bkgrnd[i])*maskPixelData[i];
+    for(auto j=rawImageHeight-yMax;j<rawImageHeight-yMin;j+=jump)
+    {
+        for(auto i=xMin;i<xMax;i+=jump)
+        {
+            processedPixelData[c] = (image[i+j*rawImageWidth]-bkgrnd[i+j*rawImageWidth])*maskPixelData[i+j*rawImageWidth];
+            processedPixelXPosition[c] = rawXPosition[i+j*rawImageWidth];
+            processedPixelYPosition[c] = rawYPosition[i+j*rawImageWidth];
             ++c;
         }
     }
-    runningXCropCounter+=xMin;
-    runningYCropCounter+=yMin;
+
+    //runningXCropCounter+=xMin;
+    //runningYCropCounter+=yMin;
 }
 std::vector<double> imageAnalysisClass::calculateSigmas(const std::vector<double> &data,
                                                        const std::vector<double> &xData,

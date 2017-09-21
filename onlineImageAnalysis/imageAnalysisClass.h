@@ -20,7 +20,8 @@ class imageAnalysisClass{
                                        const int &numberOfPixels,
                                        const int &pixelWidth,
                                        const int &pixelHeight,
-                                       const double &p2mRatio);
+                                       const double &p2mRatio,
+                                       const int step);
         std::vector<double> scaleImage(const double &A,
                                        std::vector<double> &image);
         std::vector<double> pixelPositions2mm(const int &x,
@@ -47,7 +48,8 @@ class imageAnalysisClass{
         std::vector<double> rawXPosition;
         std::vector<double> rawYPosition;
         int runningXCropCounter, runningYCropCounter;
-        int imageSize, imageWidth, imageHeight;
+        int imageSize, imageWidth, imageHeight,jump;
+        int rawImageSize, rawImageWidth, rawImageHeight;
         std::vector<double> maskPixelData;
         std::vector<double> xProjection;
         std::vector<double> yProjection;
