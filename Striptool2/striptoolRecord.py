@@ -1,5 +1,5 @@
 import sys, time, os, datetime
-# import pyqtgraph as pg
+import collections
 from pyqtgraph.Qt import QtGui, QtCore
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
@@ -67,7 +67,7 @@ class createSignalTimer(QObject):
 
 class recordWorker(QtCore.QObject):
 
-    recordLatestValueSignal = QtCore.pyqtSignal(float)
+    recordLatestValueSignal = QtCore.pyqtSignal(list)
     recordMeanSignal = QtCore.pyqtSignal(float)
     recordStandardDeviationSignal = QtCore.pyqtSignal(float)
     recordMinSignal = QtCore.pyqtSignal(float)
@@ -79,25 +79,27 @@ class recordWorker(QtCore.QObject):
         self.signal = signal
         self.name = name
         self.signal.dataReady.connect(self.updateRecord)
+        self.buffer = self.records[self.name]['data']
+        self.min = sys.maxsize
+        self.max = -1*sys.maxsize
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.emitStatistics)
+        self.timer.start(1000)
 
     @QtCore.pyqtSlot(list)
     def updateRecord(self, value):
-        # if len(self.records[self.name]['data']) > 1 and value[1] == self.records[self.name]['data'][-1][1] and value[1] == self.records[self.name]['data'][-2][1]:
-        #     self.records[self.name]['data'][-1] = value
-        # else:
-        if len(self.records[self.name]['data']) > self.records[self.name]['maxlength']:
-            cutlength = len(self.records[self.name]['data']) - self.records[self.name]['maxlength']
-            self.records[self.name]['data'] = np.delete(self.records[self.name]['data'],range(cutlength),axis=0)
-        if len(self.records[self.name]['data']) < 1:
-            self.records[self.name]['data'] = np.array([value])
-        else:
-            self.records[self.name]['data'] = np.concatenate((self.records[self.name]['data'],[value]), axis=0)
-        values = zip(*self.records[self.name]['data'])[1]
-        self.recordLatestValueSignal.emit(value[1])
-        self.recordMeanSignal.emit(np.mean(values))
-        self.recordStandardDeviationSignal.emit(np.std(values))
-        self.recordMinSignal.emit(np.min(values))
-        self.recordMaxSignal.emit(np.max(values))
+        self.buffer.append(value)
+        self.recordLatestValueSignal.emit(value)
+        if value[1] < self.min:
+            self.min = value[1]
+            self.recordMinSignal.emit(value[1])
+        if value[1] > self.max:
+            self.max = value[1]
+            self.recordMaxSignal.emit(value[1])
+
+    def emitStatistics(self):
+        self.recordMeanSignal.emit(np.mean(self.buffer, axis=0)[1])
+        self.recordStandardDeviationSignal.emit(np.std(self.buffer, axis=0)[1])
 
 class SignalRecord(QObject):
 
@@ -106,7 +108,8 @@ class SignalRecord(QObject):
         self.records = records
         self.name = name
         self.signal = createSignalTimer(name, function, arg=arg)
-        self.records[name] = {'name': name, 'record': self, 'pen': pen, 'timer': timer, 'maxlength': maxlength, 'function': function, 'arg': arg, 'ploton': True, 'data': [],
+        self.records[name] = {'name': name, 'record': self, 'pen': pen, 'timer': timer, 'maxlength': maxlength,
+         'function': function, 'arg': arg, 'ploton': True, 'data': collections.deque(maxlen=maxlength),
         'functionForm': functionForm, 'functionArgument': functionArgument,
         'logScale': logScale, 'verticalRange': verticalRange, 'verticalMeanSubtraction': verticalMeanSubtraction, 'signal': self.signal, 'worker': None}
         self.thread = QtCore.QThread()
@@ -115,6 +118,9 @@ class SignalRecord(QObject):
         self.worker.moveToThread(self.thread)
         self.thread.start()
         self.signal.startTimer(timer)
+
+    def setLogMode(self, mode):
+        self.records[self.name]['logScale'] = mode
 
     def setInterval(self, newinterval):
         self.signal.setInterval(newinterval)

@@ -106,7 +106,7 @@ class signalTable(QWidget):
         self.stripTool.signalAdded.connect(self.updateColourBox)
         self.pvids = []
 
-    def addRow(self, name, functionForm, functionArgument, freq, colourpickercolour, logscale=False):
+    def addRow(self, name, functionForm, functionArgument, freq, colourpickercolour, logScale=False, **kwargs):
         if functionForm == 'custom':
             pvtype="DBR_DOUBLE"
             pvid = self.general.connectPV(str(functionArgument),pvtype)
@@ -119,7 +119,8 @@ class signalTable(QWidget):
             functionName = functionForm[1]
             function = eval(functionForm[0])
             testFunction = lambda: getattr(function,functionName)(functionArgument)
-        self.stripTool.addSignal(name=name,pen=colourpickercolour, function=testFunction, timer=1.0/freq, functionForm=functionForm, functionArgument=functionArgument, logscale=logscale)
+        print 'name = ', name
+        self.stripTool.addSignal(name=name,pen=colourpickercolour, function=testFunction, timer=1.0/freq, functionForm=functionForm, functionArgument=functionArgument, logScale=logScale,**kwargs)
 
     def updateColourBox(self):
         self.rowNumber = self.rowNumber + 1

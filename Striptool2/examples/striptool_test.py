@@ -78,12 +78,12 @@ class striptool_Demo(QMainWindow):
             The 'pen' argument sets the color of the curves
                 - see <http://www.pyqtgraph.org/documentation/style.html>'''
         # self.sp.addSignal(name='signal1',pen='r', timer=1.0/100.0, function=self.createRandomSignal, arg=[0.5])
-        self.sp2.addSignal(name='signal3',pen='g', timer=1.0/1.0, function=self.createRandomSignal, arg=[100,10])
-        self.sp2.addSignal(name='signal2',pen='r', timer=1.0/1.0, function=self.createRandomSignal, arg=[1e-8, 1e-9], logScale=True, verticalRange=[1e-10, 1e-7])
-        self.sp2.addSignal(name='signal4',pen='b', timer=1.0/1.0, function=self.createRandomSignal, arg=[1e4, 1e6], logScale=True)
-        # self.sp2.addSignal(name='signal5',pen='c', timer=1.0/1.0, function=self.createRandomSignal, arg=[1])
-        # self.sp2.addSignal(name='signal6',pen='m', timer=1.0/1.0, function=self.createRandomSignal, arg=[3])
-        # self.sp2.addSignal(name='signal7',pen='y', timer=1.0/1.0, function=self.createRandomSignal, arg=[5])
+        self.sp2.addSignal(name='signal3',pen='g', timer=1.0/100.0, function=self.createRandomSignal, arg=[100,10])
+        self.sp2.addSignal(name='signal2',pen='r', timer=1.0/100.0, function=self.createRandomSignal, arg=[1e-8, 1e-9], logScale=True, verticalRange=[1e-10, 1e-7])
+        self.sp2.addSignal(name='signal4',pen='b', timer=1.0/100.0, function=self.createRandomSignal, arg=[1e4, 1e1], logScale=True, verticalRange=[1e3, 1e5])
+        self.sp2.addSignal(name='signal5',pen='c', timer=1.0/100.0, function=self.createRandomSignal, arg=[1])
+        self.sp2.addSignal(name='signal6',pen='m', timer=1.0/100.0, function=self.createRandomSignal, arg=[3])
+        self.sp2.addSignal(name='signal7',pen='y', timer=1.0/100.0, function=self.createRandomSignal, arg=[5])
         # self.sp3.addSignal(name='signal8',pen='b', timer=1.0/10.0, function=self.createRandomSignal, arg=[0.5])
 
         ''' this adds pre-data to the signal '''

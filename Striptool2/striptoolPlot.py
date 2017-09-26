@@ -16,16 +16,22 @@ class HAxisTime(pg.AxisItem):
         super(HAxisTime, self).__init__(parent=parent, orientation=orientation, linkView=linkView)
         self.dateTicksOn = True
         self.autoscroll = True
-        self.fixedtimepoint = round(time.time(),2)
+
+    def updateTimeOffset(self,time):
+        self.timeOffset = time
+        self.resizeEvent()
+        self.update()
 
     def tickStrings(self, values, scale, spacing):
+        if not hasattr(self, 'fixedtimepoint'):
+            self.fixedtimepoint = round(time.time(),2)
         if self.dateTicksOn:
             if self.autoscroll:
                 reftime = round(time.time(),2)
             else:
                 reftime = self.fixedtimepoint
             try:
-                ticks = [time.strftime("%H:%M:%S", time.localtime(x)) for x in values]
+                ticks = [time.strftime("%H:%M:%S", time.localtime(round(time.time(),2)+x)) for x in values]
             except:
                 ticks = []
             return ticks
@@ -41,31 +47,12 @@ class HAxisTime(pg.AxisItem):
                 strings.append(vstr)
             return strings
 
-class VAxisScaled(pg.AxisItem):
+class VAxis(pg.AxisItem):
     def __init__(self, orientation=None, pen=None, linkView=None, parent=None, maxTickLength=-5, showValues=True):
-        super(VAxisScaled, self).__init__(parent=parent, orientation=orientation, linkView=linkView)
-        self.vrange = [0, 1]
-        self.vscale = self.vrange[1] - self.vrange[0]
-        self.offset = self.vrange[0]
+        super(VAxis, self).__init__(parent=parent, orientation=orientation, linkView=linkView)
 
-    def tickStrings(self, values, scale, spacing):
-        places = max(0, np.ceil(-np.log10(spacing*scale)))
-        strings = []
-        scale = 10
-        print 'scale = ', self.vscale
-        for v in values:
-            vs = v * self.vscale + self.offset
-            if abs(vs) < .001 or abs(vs) >= 10000:
-                vstr = "%g" % vs
-            else:
-                vstr = ("%%0.%df" % places) % vs
-            strings.append(vstr)
-        return strings
-
-    def setScale(self, min=0, max=1):
-        self.scale = [min, max]
-        self.range = max-min
-        self.offset = min
+    def logTickStrings(self, values, scale, spacing):
+        return ["%0.1g"%abs(x) for x in 10 ** np.array(values).astype(float)]
 
 ''' Basic plotting class, providing Linear, Histogram and FFT plots in a PyQtGraph PlotWidget '''
 class generalPlot(pg.PlotWidget):
@@ -78,7 +65,7 @@ class generalPlot(pg.PlotWidget):
         self.paused = False
         self.linearPlot = True
         self.autoscroll = True
-        self.globalPlotRange = [time.time()-10,time.time()]
+        self.globalPlotRange = [0-10,0+0.5]
         self.currentPlotTime = round(time.time(),2)
         self.plotWidget = pg.GraphicsLayoutWidget()
         self.crosshairs = crosshairs
@@ -89,7 +76,8 @@ class generalPlot(pg.PlotWidget):
     ''' This creates a PyQtGraph plot object (self.plot) and instantiates the bottom axis to be a CAxisTime axis '''
     def createPlot(self):
         self.date_axis = HAxisTime(orientation = 'bottom')
-        self.plotUpdated.connect(self.date_axis.update)
+        # self.plotUpdated.connect(self.date_axis.update)
+        self.stripplot.timeChangeSignal.connect(self.date_axis.updateTimeOffset)
         self.leftaxis = pg.AxisItem("left")
         self.plot = self.plotWidget.addPlot(row=0,col=50, autoDownsample=True, clipToView=True, antialias=False, downsampleMethod='peak', axisItems={'bottom':self.date_axis})
         self.plot.vb.setMouseEnabled(y=False)
@@ -121,7 +109,7 @@ class generalPlot(pg.PlotWidget):
         self.autoscroll = value
         if not value:
             self.currenttime = self.currentPlotTime
-            self.date_axis.fixedtimepoint = self.currentPlotTime
+            # self.date_axis.fixedtimepoint = self.currentPlotTime
             self.fixedtimepoint = self.currentPlotTime
 
     ''' Helper function to add a curve to the plot '''
@@ -150,10 +138,25 @@ class generalPlot(pg.PlotWidget):
         self.threads[name].start()
         return self.workers[name].curve
 
+    def toggleLogMode(self, record, name):
+        vb = self.viewboxes[name]['viewbox']
+        verticalRange = vb.viewRange()[1]
+        if record[name]['logScale']:
+            if verticalRange[0] < 0:
+                verticalRange[0] = 1e-12
+            logrange = [math.log(x,10) for x in verticalRange]
+            vb.setRange(yRange=logrange,disableAutoRange=True)
+        else:
+            normalrange = [10.0**x for x in verticalRange]
+            vb.setRange(yRange=normalrange,disableAutoRange=True)
+
+
 class curveRecordWorker(QtCore.QObject):
     def __init__(self, record, plot, name, axis, viewbox):
         QtCore.QObject.__init__(self)
         self.vb = viewbox
         self.axis = axis
         self.curve = stcurve.curve(record, plot, name, self.axis, self.vb)
-        plot.stripplot.doCurveUpdate.connect(self.curve.update)
+        # plot.stripplot.doCurveUpdate.connect(self.curve.update)
+        record[name]['worker'].recordLatestValueSignal.connect(self.curve.updateData)
+        plot.stripplot.timeChangeSignal.connect(self.curve.updateTimeOffset)

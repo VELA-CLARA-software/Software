@@ -17,8 +17,8 @@ import loggerWidget as lw
 import logging
 logger = logging.getLogger(__name__)
 
-import VELA_CLARA_Magnet_Control as vmag
-import VELA_CLARA_BPM_Control as vbpmc
+# import VELA_CLARA_Magnet_Control as vmag
+# import VELA_CLARA_BPM_Control as vbpmc
 import  VELA_CLARA_General_Monitor as vgen
 
 import striptoolSignalTable as stable
@@ -136,7 +136,7 @@ class DockSplitter(QtGui.QSplitter):
         self.setStyleSheet("QSplitter::handle{background-color:transparent;}");
 
         self.addLinearPlot()
-        self.signaltable=stable.signalTable(self.strip,MagnetController=magnets,BPMController=bpms, GeneralController=general)
+        self.signaltable=stable.signalTable(self.strip, GeneralController=general)
         self.addWidget(self.signaltable)
 
         self.timeButton10s = self.createTimeButton('10s')
@@ -217,10 +217,17 @@ class DockSplitter(QtGui.QSplitter):
                     else:
                         functionform = eval(config.get(section,'functionform'))
                     try:
-                        logscale = eval(config.get(section,'logscale'))
+                        logscale = eval(config.get(section,'logScale'))
                     except:
                         logscale = False
-                    self.signaltable.addRow(name=config.get(section,'name'), functionForm=functionform , functionArgument=config.get(section,'functionargument'), freq=config.getfloat(section,'freq'), colourpickercolour=config.get(section,'pen'), logscale=logscale)
+                    try:
+                        verticalRange = eval(config.get(section,'verticalRange'))
+                    except:
+                        verticalRange = False
+                    self.signaltable.addRow(name=config.get(section,'name'), functionForm=functionform ,
+                    functionArgument=config.get(section,'functionargument'), freq=config.getfloat(section,'freq'),
+                    colourpickercolour=config.get(section,'pen'), logScale=logscale,
+                    verticalRange=verticalRange)
 
     def saveSettings(self):
         saveFileName = str(QtGui.QFileDialog.getSaveFileName(self, 'Save Settings', '', filter="Settings files (*.cfg);;", selectedFilter="Settings files (*.cfg)"))
@@ -241,7 +248,8 @@ class DockSplitter(QtGui.QSplitter):
             config.set(section, 'maxlength', str(self.strip.records[name]['maxlength']))
             config.set(section, 'functionForm', str(self.strip.records[name]['functionForm']))
             config.set(section, 'functionArgument', str(self.strip.records[name]['functionArgument']))
-            config.set(section, 'logscale', str(self.strip.records[name]['logscale']))
+            config.set(section, 'logScale', str(self.strip.records[name]['logScale']))
+            config.set(section, 'verticalRange', str(self.strip.records[name]['verticalRange']))
         with open(saveFileName, 'wb') as configfile:
             config.write(configfile)
 
@@ -255,7 +263,7 @@ class DockSplitter(QtGui.QSplitter):
         self.area.addDock(dock=dock, position='bottom')
         self.strip.setPlotScale(60)
         self.strip.start()
-        self.strip.pausePlotting(False)
+        # self.strip.pausePlotting(False)
 
     def appendScatterPlots(self, dock):
         for widget in dock.widgets:
@@ -320,11 +328,11 @@ class DockSplitter(QtGui.QSplitter):
 def main():
    # app = QApplication(sys.argv)
    ''' Initiate magnet and BPM controllers '''
-   global magInit, magnets, bpms, general
-   magInit = vmag.init()
-   magnets = magInit.virtual_VELA_INJ_Magnet_Controller()
-   bpmInit = vbpmc.init()
-   bpms = bpmInit.virtual_VELA_INJ_BPM_Controller()
+   global general #magInit, magnets, bpms,
+   # magInit = vmag.init()
+   # magnets = magInit.virtual_VELA_INJ_Magnet_Controller()
+   # bpmInit = vbpmc.init()
+   # bpms = bpmInit.virtual_VELA_INJ_BPM_Controller()
    general = vgen.init()
 
    ''' These are some options for pyqtgraph that make the graph black-on-white, and turn on antialiasing, which is nicer on the eye '''
