@@ -140,6 +140,7 @@ class scopeWriterController(QObject):
 		self.cha1 = list(self.list)   #scope controller can dynamically change array size when reading values
 		for a in self.chan:
 			self.cha1.append(a)
+		print self.list
 		return self.cha1
 
 	def movingaverage(self, interval, window_size):
@@ -173,7 +174,7 @@ class scopeWriterController(QObject):
 		# This is a function in the .pyd library which allows the user to get a section of the trace.
 		self.partTrace = self.scopeCont.getPartOfTrace( self.wvf_name, self.channel_name, self.area_start, self.area_end )
 		self.partNoiseTrace = self.scopeCont.getPartOfTrace( self.wvf_name, self.channel_name, self.noise_start, self.noise_end )
-		#self.noise = self.scopeCont.getAvgNoise( self.wvf_name, self.channel_name, self.baseline_start, self.baseline_end) # This takes the mean value of a region with no signal on it.
+		self.noise = self.scopeCont.getAvgNoise( self.wvf_name, self.channel_name, self.noise_start, self.noise_end) # This takes the mean value of a region with no signal on it.
 		for i in range(self.numShots):
 			self.part_trace_data.append( numpy.sum( self.partTrace[i] )*self.allTraceDataStruct.timebase ) # This is the "raw" trace section.
 			if self.filter_type == "None":
@@ -181,8 +182,12 @@ class scopeWriterController(QObject):
 			elif self.filter_type == "Moving Average":
 				self.data.append( numpy.sum( self.movingaverage( self.partTrace[i], self.filter_interval ) )*self.allTraceDataStruct.timebase )
 			elif self.filter_type == "Baseline Subtraction":
-				self.data.append( numpy.sum( self.partTrace[i] )*self.allTraceDataStruct.timebase - numpy.sum( self.partNoiseTrace[i] )*self.allTraceDataStruct.timebase )
+				self.partNoiseSub = []
+				for j in self.partTrace[i]:
+					self.partNoiseSub.append(j - self.noise[i])
+				self.data.append( numpy.sum( self.partNoiseSub )*self.allTraceDataStruct.timebase )
 		self.mean_area = numpy.mean( self.data )*math.pow(10,9)
+		# print self.mean_area
 		epics.caput( self.epics_channel, self.mean_area )
 
 	def readTracesAndWriteMaxToEPICS( self, scope_names, channel_name, epics_channel, filter_type, filter_interval ):
