@@ -95,10 +95,10 @@ class signalTable(QWidget):
         self.customSelectionBox = self.createCustomSelectionBox()
         ''' create tableWidget and pushButton '''
         vBoxlayoutParameters = QVBoxLayout()
-        vBoxlayoutParameters.addWidget(self.normalSelectionBox,1)
+        # vBoxlayoutParameters.addWidget(self.normalSelectionBox,1)
         vBoxlayoutParameters.addWidget(self.customSelectionBox,1)
-        self.normalSelectionBox.show()
-        self.customSelectionBox.hide()
+        # self.normalSelectionBox.hide()
+        # self.customSelectionBox.show()
         self.setLayout(vBoxlayoutParameters)
         self.connect(self, QtCore.SIGNAL("firstColumnComboBoxChanged(PyQt_PyObject, PyQt_PyObject)"), self.changeSecondCombo)
         self.connect(self, QtCore.SIGNAL("firstColumnComboBoxChanged(PyQt_PyObject, PyQt_PyObject)"), self.changeThirdComboFromFirst)
@@ -111,7 +111,7 @@ class signalTable(QWidget):
             pvtype="DBR_DOUBLE"
             pvid = self.general.connectPV(str(functionArgument),pvtype)
             self.pvids.append(pvid)
-            testFunction = lambda: self.general.getValue(pvid)
+            testFunction = lambda: float(self.general.getValue(pvid))
         elif functionForm[0] == '':
             functionName = functionForm[1]
             testFunction = lambda: getattr(self.magnets,functionName)(functionArgument)
@@ -120,6 +120,7 @@ class signalTable(QWidget):
             function = eval(functionForm[0])
             testFunction = lambda: getattr(function,functionName)(functionArgument)
         print 'name = ', name
+        print 'logScale = ', logScale == True
         self.stripTool.addSignal(name=name,pen=colourpickercolour, function=testFunction, timer=1.0/freq, functionForm=functionForm, functionArgument=functionArgument, logScale=logScale,**kwargs)
 
     def updateColourBox(self):
@@ -191,7 +192,8 @@ class signalTable(QWidget):
         addButton = QPushButton('Add Signal')
         addButton.setFixedWidth(100)
         addButton.clicked.connect(self.addTableRowCustom)
-        combo1.addItems(self.headings)
+        self.logTickBox = QCheckBox('Log Scale')
+        # combo1.addItems(self.headings)
         combo4.addItems([str(i) + ' Hz'for i in self.frequencies])
         combo1.setEditable(True)
         combo1.lineEdit().setReadOnly(True);
@@ -215,9 +217,10 @@ class signalTable(QWidget):
             self.customcolorbox.setColor(self.penColors[0])
         else:
             self.customcolorbox.setColor(self.penColors[self.rowNumber])
-        self.pvEditlayout.addWidget(combo1,2)
+        # self.pvEditlayout.addWidget(combo1,2)
         self.pvEditlayout.addWidget(pvtextedit,5)
         self.pvEditlayout.addWidget(combo4,1)
+        self.pvEditlayout.addWidget(self.logTickBox,1)
         self.pvEditlayout.addWidget(self.customcolorbox,1)
         self.pvEditlayout.addWidget(addButton,1)
         customwidget.setLayout(self.pvEditlayout)
@@ -245,13 +248,14 @@ class signalTable(QWidget):
 
     def addTableRowCustom(self):
         row = self.rowNumber
-        combo3index = self.pvEditlayout.itemAt(2).widget().currentIndex()
-        name = str(self.pvEditlayout.itemAt(1).widget().displayText())
+        combo3index = self.pvEditlayout.itemAt(1).widget().currentIndex()
+        name = str(self.pvEditlayout.itemAt(0).widget().displayText())
         freq = int(self.frequencies[combo3index])
         functionForm = 'custom'
         colourpickercolour = self.customcolorbox._color
-        # print (string.replace(name,"_","$"), functionForm, name, freq, colourpickercolour)
-        self.addRow(string.replace(name,"_","$"), functionForm, name, freq, colourpickercolour)
+        logScale = self.logTickBox.isChecked()
+        print (string.replace(name,"_","$"), functionForm, name, freq, colourpickercolour, logScale)
+        self.addRow(string.replace(name,"_","$"), functionForm, name, freq, colourpickercolour, logScale=logScale)
 
     def changeSecondCombo(self, idnumber, ind):
         if ind == 'Custom':

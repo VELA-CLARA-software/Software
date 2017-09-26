@@ -285,7 +285,7 @@ class stripPlot(QWidget):
 
     def setPlotScale(self, timescale):
         self.timescale = timescale
-        self.plotWidget.setPlotScale([(-1.025*timescale)-self.timeOffset,(0.025*timescale)-self.timeOffset])
+        self.plotWidget.setPlotScale([(-1.025*timescale),(0.025*timescale)])
 
     def setDecimateLength(self, value=5000):
         for names in self.records:

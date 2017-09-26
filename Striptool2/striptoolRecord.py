@@ -89,6 +89,8 @@ class recordWorker(QtCore.QObject):
     @QtCore.pyqtSlot(list)
     def updateRecord(self, value):
         self.buffer.append(value)
+        # if self.records[self.name]['logScale']:
+        #     value = math.log(data[1],10)
         self.recordLatestValueSignal.emit(value)
         if value[1] < self.min:
             self.min = value[1]

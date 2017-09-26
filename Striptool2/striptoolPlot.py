@@ -79,7 +79,7 @@ class generalPlot(pg.PlotWidget):
         # self.plotUpdated.connect(self.date_axis.update)
         self.stripplot.timeChangeSignal.connect(self.date_axis.updateTimeOffset)
         self.leftaxis = pg.AxisItem("left")
-        self.plot = self.plotWidget.addPlot(row=0,col=50, autoDownsample=True, clipToView=True, antialias=False, downsampleMethod='peak', axisItems={'bottom':self.date_axis})
+        self.plot = self.plotWidget.addPlot(row=0,col=50, autoDownsample=True, clipToView=True, antialias=False, downsampleMethod='peak')#, axisItems={'bottom':self.date_axis})
         self.plot.vb.setMouseEnabled(y=False)
         self.plot.disableAutoRange(False)
         self.plot.setRange(xRange=[-0.5,1.5])
@@ -123,6 +123,7 @@ class generalPlot(pg.PlotWidget):
         if not record[name]['verticalRange'] == False:
             if record[name]['logScale']:
                 logrange = [math.log(x,10) for x in record[name]['verticalRange']]
+                print 'logrange = ', logrange
                 viewbox.setRange(yRange=logrange,disableAutoRange=True)
             else:
                 viewbox.setRange(yRange=record[name]['verticalRange'],disableAutoRange=True)

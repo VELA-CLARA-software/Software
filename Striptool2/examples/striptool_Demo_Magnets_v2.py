@@ -224,8 +224,8 @@ class DockSplitter(QtGui.QSplitter):
                         verticalRange = eval(config.get(section,'verticalRange'))
                     except:
                         verticalRange = False
-                    self.signaltable.addRow(name=config.get(section,'name'), functionForm=functionform ,
-                    functionArgument=config.get(section,'functionargument'), freq=config.getfloat(section,'freq'),
+                    self.signaltable.addRow(name=config.get(section,'name'), functionForm=functionform, functionArgument=config.get(section,'functionargument'),
+                    freq=config.getfloat(section,'freq'),
                     colourpickercolour=config.get(section,'pen'), logScale=logscale,
                     verticalRange=verticalRange)
 
@@ -248,6 +248,7 @@ class DockSplitter(QtGui.QSplitter):
             config.set(section, 'maxlength', str(self.strip.records[name]['maxlength']))
             config.set(section, 'functionForm', str(self.strip.records[name]['functionForm']))
             config.set(section, 'functionArgument', str(self.strip.records[name]['functionArgument']))
+            config.set(section, 'arg', str(self.strip.records[name]['arg']))
             config.set(section, 'logScale', str(self.strip.records[name]['logScale']))
             config.set(section, 'verticalRange', str(self.strip.records[name]['verticalRange']))
         with open(saveFileName, 'wb') as configfile:
