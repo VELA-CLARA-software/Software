@@ -3,6 +3,7 @@ TODO LLRFMonitor: Decide which traces are used for BD detection:
                         RF cavity reverse at the moment
 TODO LLRFMonitor: CAVITY_PROBE for HRRG ?
 TODO LLRFMonitor: HRRG implementation of the controller
+                        HRRG will result in AttributeError: 'NoneType' object has no attribute 'startTraceMonitoring'
 TODO LLRFMonitor: decide for which portion of the signals are the masks applied
                         At the moment for the whole of the trace
 TODO LLRFMonitor: Testing
@@ -41,12 +42,15 @@ from BDRollingAverage import BDRollingAverage
 repRate = 10
 bdRollingAvgT = 4 * 3600
 bdNormalRate = 1e-4#1e-5
-vacAvgSpikeDelta = 2e-9
-stepPow = 50e3
-stopPow = 9.0e6
+# Manually tuned value for LRRG with solenoid on with wobbler program.
+# Wobbling the solenoid creates vacuum spikes when at +/-62A. Old value
+# with no solenoid was 0.5e9
+vacSpikeDelta = 1e-9
+stepPow = 10e3
+stopPow = 10.0e6
 powIncreasePulses = 600
 
-rfPower = 6.00e6
+rfPower = 8.00e6
 
 averagingPulses = bdRollingAvgT * repRate
 
@@ -56,14 +60,9 @@ bdRollAvg = BDRollingAverage(
 
 genMon = GeneralMonitor(
     repRate,
-    # Manually tuned value for LRRG with solenoid on with wobbler program.
-    # Wobbling the solenoid creates vacuum spikes when at +/-62A. Old value
-    # with no solenoid was 0.5e9
-    vacSpikeDelta = 1e-9,
+    vacSpikeDelta = vacSpikeDelta,
     dcSpikeDelta = 0.2
 )
-
-# TODO HRRG will result in AttributeError: 'NoneType' object has no attribute 'startTraceMonitoring'
 
 # LRRG or HRRG
 llrfMon = LLRFMonitor(beamline = "LRRG")
@@ -112,6 +111,8 @@ while True:
     #    print "DC"
     if not rfOk:
         print "RF"
+    if not klyOk:
+        print "kly"
         
     # Breakdowns are detected on the vacuum, DC and RF
     #if vacOk and dcOk and rfOk and not inBreakdown:
@@ -147,7 +148,8 @@ while True:
                 pulsesSinceInBreakdown += 1
                 
             # If after the cooldown time the vacuum didn't recover
-            elif not vacOk:
+            # or if Klystron isn't started
+            elif not vacOk or not klyOk or not protectionOk:
                 pulsesSinceInBreakdown += 1
                 
             # RF ON

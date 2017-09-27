@@ -4,20 +4,18 @@ import epics
 
 import time
 #Debug
-import csv
 import array
 import os
 
 class LLRFMonitor:
     
     def __init__(self, beamline):
-        '''
-        self.__m = VELA_CLARA_LLRF_Control.init()
+        #self.__m = VELA_CLARA_LLRF_Control.init()
         
         # Test area
         #self.__m.CLARA_LRRG_LLRF_CONFIG = "C:\\prj\\test_area\\VELA_CLARA_PYDs\\Config\\CLARA_LRRG_LLRF.config"
         #self.__m.setVerbose()
-        
+        '''
         if beamline == "LRRG":
             self.__c = self.__m.physical_VELA_LRRG_LLRF_Controller()
             self.__traces = ["CAVITY_FORWARD_POWER", "CAVITY_REVERSE_POWER", "KLYSTRON_FORWARD_POWER", "KLYSTRON_REVERSE_POWER"]
@@ -31,7 +29,6 @@ class LLRFMonitor:
         for t in self.__traces:
             self.__c.startTraceMonitoring(t)
         '''
-        
         self.__lowMask = numpy.zeros(1017)
         self.__hiMask = numpy.zeros(1017)
         self.__maskCheckEnabled = False
