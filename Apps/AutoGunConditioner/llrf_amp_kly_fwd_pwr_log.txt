@@ -1,0 +1,7 @@
+2017/04/03 15:25:13 RF to 16700.0 kly_fwd_power =  8569753.15844 cav_fwd_power =  5336349.09066
+2017/04/03 15:25:17 RF to 16700.0 kly_fwd_power =  8564851.69225 cav_fwd_power =  5319213.03804
+2017/04/03 15:25:21 RF to 16700.0 kly_fwd_power =  8564767.04862 cav_fwd_power =  5333995.51932
+2017/04/03 15:25:25 RF to 16700.0 kly_fwd_power =  8561289.07355 cav_fwd_power =  5333420.55658
+2017/04/03 15:25:29 RF to 16700.0 kly_fwd_power =  8561911.14231 cav_fwd_power =  5313739.94052
+2017/04/03 15:25:33 RF to 16700.0 kly_fwd_power =  8563061.81439 cav_fwd_power =  5322138.58643
+2017/04/03 15:25:37 RF to 16700.0 kly_fwd_power =  8566252.61671 cav_fwd_power =  5310942.60793
