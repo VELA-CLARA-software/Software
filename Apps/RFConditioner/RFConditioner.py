@@ -50,7 +50,8 @@ stepPow = 10e3
 stopPow = 10.0e6
 powIncreasePulses = 600
 
-rfPower = 8.00e6
+# This is the klystron forward set point power.
+rfPower = 9.98e6
 
 averagingPulses = bdRollingAvgT * repRate
 
@@ -86,9 +87,10 @@ while True:
 
     llrfMon.waitForRfPulse()
     
-    print 'New Pulse SP: {0:.0f}  pow rd: {1:.3f} MW  pow SP: {2:.2f} MW  BDR {3:.3e}  (target {4:.1e})  {5:.0f} until next step'.format(
-        rfSetPoint, llrfMon.getKlyFwRfPower()/1e6, rfPower/1e6, bdRollAvg.getBdRate(), bdNormalRate,
-        powIncreasePulses-powIncreasePulseCounter)
+    if powIncreasePulseCounter%10 == 0:
+        print 'New Pulse SP: {0:.0f}  pow rd: {1:.3f} MW  pow SP: {2:.2f} MW  BDR {3:.3e}  (target {4:.1e})  {5:.0f} until next step'.format(
+            rfSetPoint, llrfMon.getKlyFwRfPower()/1e6, rfPower/1e6, bdRollAvg.getBdRate(), bdNormalRate,
+            powIncreasePulses-powIncreasePulseCounter)
     # print "New Pulse SP: " + str(rfSetPoint) + "   pow rd: " + str(llrfMon.getKlyFwRfPower()/1e6) + "   pow SP: " + str(rfPower/1e6) + "   BDR " + str(bdRollAvg.getBdRate()) + " " + str(bdRollAvg.isBdRateExceeded()) + \
     #    " " + str(len(bdRollAvg.bdHist)) + " " + str(bdRollAvg.pulseCount)  +  " " + str(bdRollAvg.bdCount)
     #sys.stdout.write('.')
@@ -102,21 +104,15 @@ while True:
     
     writeDetailedData = False
     
-    #TODO if kly not ok than reset the error
-    #TODO if protection not ok than reset the error
-    
     if not vacOk:
         print "vac"
-    #if not dcOk:
-    #    print "DC"
     if not rfOk:
         print "RF"
     if not klyOk:
         print "kly"
         
-    # Breakdowns are detected on the vacuum, DC and RF
-    #if vacOk and dcOk and rfOk and not inBreakdown:
-    if vacOk and rfOk and not inBreakdown: # Test only
+    # Breakdowns are detected on the vacuum, DC??? and RF
+    if vacOk and rfOk and not inBreakdown:
         bdRollAvg.addPulse(isBd = False)
         llrfMon.setRfMasks(llrfMon.getCavRevTrace())
         

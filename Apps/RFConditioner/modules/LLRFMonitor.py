@@ -72,10 +72,12 @@ class LLRFMonitor:
         
         if ( trace < self.__lowMask ).any():
             if self.__maskCheckEnabled:
+                print "Mask low err"
                 rtn = False
                 
         if ( trace > self.__hiMask ).any():
             if self.__maskCheckEnabled:
+                print "Mask high err"
                 rtn = False
                 
         return rtn
@@ -94,8 +96,8 @@ class LLRFMonitor:
         #    loMask = numpy.array(traces[i,:]) * 1#0.9
         #    self.__c.setHighMask(self.__traces[i], hiMask.tolist())
         #    self.__c.setLowMask(self.__traces[i], loMask.tolist())
-        self.__lowMask = trace * 0.5 - 100e3 # -10% -20kW
-        self.__hiMask = trace * 3 + 50e3 # +10% +20kW
+        self.__lowMask = trace * 0.3 - 100e3 # -10% -20kW
+        self.__hiMask = trace * 3 + 100e3 # +10% +20kW
         
     def enableRfMasks(self, state):
         self.__maskCheckEnabled = state
