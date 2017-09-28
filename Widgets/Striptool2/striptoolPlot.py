@@ -1,9 +1,13 @@
 import sys, time, os, datetime, math
 import pyqtgraph as pg
 from pyqtgraph.Qt import QtGui, QtCore
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-import numpy as np
+try:
+    from PyQt4.QtCore import *
+    from PyQt4.QtGui import *
+except:
+    from PyQt5.QtCore import *
+    from PyQt5.QtGui import *
+    from PyQt5.QtWidgets import *
 import colours as colours
 import striptoolCurve as stcurve
 
@@ -31,7 +35,7 @@ class HAxisTime(pg.AxisItem):
             else:
                 reftime = self.fixedtimepoint
             try:
-                ticks = [time.strftime("%H:%M:%S", time.localtime(round(time.time(),2)+x)) for x in values]
+                ticks = [time.strftime("%H:%M:%S", time.localtime(x)) for x in values]
             except:
                 ticks = []
             return ticks
@@ -79,7 +83,7 @@ class generalPlot(pg.PlotWidget):
         # self.plotUpdated.connect(self.date_axis.update)
         self.stripplot.timeChangeSignal.connect(self.date_axis.updateTimeOffset)
         self.leftaxis = pg.AxisItem("left")
-        self.plot = self.plotWidget.addPlot(row=0,col=50, autoDownsample=True, clipToView=True, antialias=False, downsampleMethod='peak')#, axisItems={'bottom':self.date_axis})
+        self.plot = self.plotWidget.addPlot(row=0,col=50, autoDownsample=True, clipToView=True, antialias=False, downsampleMethod='peak', axisItems={'bottom':self.date_axis})
         self.plot.vb.setMouseEnabled(y=False)
         self.plot.disableAutoRange(False)
         self.plot.setRange(xRange=[-0.5,1.5])
@@ -130,8 +134,10 @@ class generalPlot(pg.PlotWidget):
         labelStyle = {'color': '#'+pg.colorStr(pg.mkColor(record[name]['pen']))[0:-2]}
         axis.setLabel(name,**labelStyle)
         viewbox.setXLink(self.plot.vb)
-        self.viewboxes[name] = {'viewbox': viewbox, 'axis': axis}
-        self.plotWidget.ci.addItem(axis, row = 0, col = len(self.viewboxes)+1,  rowspan=1, colspan=1)
+        record[name]['viewbox'] = viewbox
+        record[name]['axis'] = axis
+        col = self.findFirstEmptyColumnInGraphicsLayout()
+        self.plotWidget.ci.addItem(axis, row = 0, col = col,  rowspan=1, colspan=1)
         self.plotWidget.ci.addItem(viewbox, row=0, col=50)
         self.threads[name] = QtCore.QThread(self.stripplot)
         self.workers[name] = curveRecordWorker(record, self, name, axis, viewbox)
@@ -139,8 +145,14 @@ class generalPlot(pg.PlotWidget):
         self.threads[name].start()
         return self.workers[name].curve
 
+    def findFirstEmptyColumnInGraphicsLayout(self):
+        rowsfilled =  self.plotWidget.ci.rows.get(0, {}).keys()
+        for i in range(49):
+            if not i in rowsfilled:
+                return i
+
     def toggleLogMode(self, record, name):
-        vb = self.viewboxes[name]['viewbox']
+        vb = record[name]['viewbox']
         verticalRange = vb.viewRange()[1]
         if record[name]['logScale']:
             if verticalRange[0] < 0:
@@ -155,9 +167,7 @@ class generalPlot(pg.PlotWidget):
 class curveRecordWorker(QtCore.QObject):
     def __init__(self, record, plot, name, axis, viewbox):
         QtCore.QObject.__init__(self)
-        self.vb = viewbox
-        self.axis = axis
-        self.curve = stcurve.curve(record, plot, name, self.axis, self.vb)
+        self.curve = stcurve.curve(record, plot, name)
         # plot.stripplot.doCurveUpdate.connect(self.curve.update)
         record[name]['worker'].recordLatestValueSignal.connect(self.curve.updateData)
         plot.stripplot.timeChangeSignal.connect(self.curve.updateTimeOffset)

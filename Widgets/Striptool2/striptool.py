@@ -1,13 +1,16 @@
-import sys, time, os, datetime, math
+import sys, time, os, datetime, math, collections, signal
 import pyqtgraph as pg
 from pyqtgraph.Qt import QtGui, QtCore
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+try:
+    from PyQt4.QtCore import *
+    from PyQt4.QtGui import *
+except:
+    from PyQt5.QtCore import *
+    from PyQt5.QtGui import *
+    from PyQt5.QtWidgets import *
 import numpy as np
 import threading
 from threading import Thread, Event, Timer
-from PyQt4.QtCore import QObject, pyqtSignal, pyqtSlot
-import signal, datetime
 import logging
 from striptoolRecord import *
 from striptoolLegend import *
@@ -172,6 +175,8 @@ class stripPlot(QWidget):
             self.plotWidget.setPlotScale(timescale)
 
     def start(self, timer=1000):
+        for name in self.records:
+            self.records[name]['record'].start()
         self.plotThread.start(timer)
         self.plotThread.timeout.connect(self.plotUpdate)
 
@@ -207,8 +212,10 @@ class stripPlot(QWidget):
         text = header.text(0)
         pos = [pos for pos, char in enumerate(text) if char == ':'][-1]
         name = str(text[0:pos])
-        # print 'name = ', name
-        self.plotWidget.viewboxes[name]['axis'].setVisible(any([header.child(6).widget.value(),visible]))
+        for i in range(header.childCount()):
+            if header.child(i).text(0) == 'Show Axis?':
+                pvisible = header.child(i).widget.value()
+        self.records[name]['axis'].setVisible(any([pvisible,visible]))
 
     def setLogModeSignals(self, signal, name):
         signal.sigValueChanged.connect(lambda x: self.plotWidget.viewboxes[name]['axis'].setLogMode(x.value()))
@@ -223,22 +230,24 @@ class stripPlot(QWidget):
                 {'name': 'Standard Deviation', 'type': 'float', 'readonly': True},
                 {'name': 'Max', 'type': 'float', 'readonly': True},
                 {'name': 'Min', 'type': 'float', 'readonly': True},
+                {'name': 'Plot_Colour', 'title': 'Line Colour', 'type': 'color', 'value': self.records[name]['pen'], 'tip': "Line Colour"},
                 {'name': 'Log_Mode', 'title': 'Log Mode', 'type': 'bool', 'value': self.records[name]['logScale'], 'tip': "Enable Log Mode"},
                 {'name': 'Show_Axis', 'title': 'Show Axis?', 'type': 'bool', 'value': False, 'tip': "Show or Remove the Axis"},
+                {'name': 'Show_Plot', 'title': 'Show Plot?', 'type': 'bool', 'value': True, 'tip': "Show or Remove the plot lines"},
             ]}
         ]
         p = Parameter.create(name='params', type='group', children=params)
         pChild = p.child(name)
-
         # self.records[name]['worker'].recordLatestValueSignal.connect(lambda x: pChild.child('Value').setValue(x[1]))
         self.proxyLatestValue[name] = pg.SignalProxy(self.records[name]['worker'].recordLatestValueSignal, rateLimit=1, slot=lambda x: pChild.child('Value').setValue(x[0][1]))
         self.proxyMean[name] = pg.SignalProxy(self.records[name]['worker'].recordMeanSignal, rateLimit=1, slot=lambda x: pChild.child('Mean').setValue(x[0]))
         self.proxySTD[name] = pg.SignalProxy(self.records[name]['worker'].recordStandardDeviationSignal, rateLimit=1, slot=lambda x: pChild.child('Standard Deviation').setValue(x[0]))
         self.proxyMin[name] = pg.SignalProxy(self.records[name]['worker'].recordMinSignal, rateLimit=1, slot=lambda x: pChild.child('Min').setValue(x[0]))
         self.proxyMax[name] = pg.SignalProxy(self.records[name]['worker'].recordMaxSignal, rateLimit=1, slot=lambda x: pChild.child('Max').setValue(x[0]))
-        self.plotWidget.viewboxes[name]['axis'].setVisible(False)
+        self.records[name]['axis'].setVisible(False)
         self.setLogModeSignals(pChild.child('Log_Mode'), name)
-        pChild.child('Show_Axis').sigValueChanged.connect(lambda x: self.plotWidget.viewboxes[name]['axis'].setVisible(x.value()))
+        pChild.child('Show_Axis').sigValueChanged.connect(lambda x: self.records[name]['axis'].setVisible(x.value()))
+        pChild.child('Show_Plot').sigValueChanged.connect(lambda x: self.records[name]['curve'].lines.setVisible(x.value()))
         self.parameterTree.addParameters(p, showTop=False)
         header = self.parameterTree.findItems(name,Qt.MatchContains | Qt.MatchRecursive)[0]
         header.setSelected(False)
@@ -246,6 +255,14 @@ class stripPlot(QWidget):
         header.setForeground(0,self.contrasting_text_color(self.records[name]['pen']))
         header.setBackground(0,pg.mkBrush(self.records[name]['pen']))
         self.proxyHeaderText[name] = pg.SignalProxy(self.records[name]['worker'].recordLatestValueSignal, rateLimit=1, slot=lambda x: header.setText(0,name + ': ' + "{:.4}".format(x[0][1])))
+        pChild.child('Plot_Colour').sigValueChanging.connect(lambda x, y: self.changePenColour(header,name,y))
+
+    def changePenColour(self, header, name, colourWidget):
+        colour = colourWidget.value()
+        header.setBackground(0,pg.mkBrush(colour))
+        header.setForeground(0,self.contrasting_text_color(colour))
+        self.records[name]['pen'] = colour
+        self.records[name]['curve'].changePenColour()
 
     def addSignal(self, name='', pen='r', timer=1, maxlength=pow(2,20), function=None, arg=[], **kwargs):
         if not name in self.records:
@@ -268,14 +285,19 @@ class stripPlot(QWidget):
     def plotUpdate(self):
         if not hasattr(self,'lastplottime'):
             self.lastplottime = round(time.time(),2)
-        if not self.plotWidget.paused:
+        if not self.paused:
             self.doCurveUpdate.emit()
             if self.plotWidget.autoscroll:
                 lastplottime = round(time.time(),2)
                 self.timeOffset = lastplottime-self.lastplottime
                 # self.plotWidget.globalPlotRange[0]+=(time.time()-self.lastplottime)
                 # self.plotWidget.globalPlotRange[1]+=(time.time()-self.lastplottime)
+                self.plotWidget.plot.vb.translateBy(x=self.timeOffset)
                 self.timeChangeSignal.emit(self.timeOffset)
+                self.lastplottime = lastplottime
+
+    def pausePlotting(self, value=True):
+        self.paused = value
 
     def removeSignal(self,name):
         self.records[name]['record'].close()
@@ -285,11 +307,11 @@ class stripPlot(QWidget):
 
     def setPlotScale(self, timescale):
         self.timescale = timescale
-        self.plotWidget.setPlotScale([(-1.025*timescale),(0.025*timescale)])
+        self.plotWidget.setPlotScale([time.time()+(-1.025*timescale),time.time()+(0.025*timescale)])
 
     def setDecimateLength(self, value=5000):
-        for names in self.records:
-            self.records[name]['curve'].setDecimateScale(value)
+        for name in self.records:
+            self.records[name]['data'] = collections.deque(self.records[name]['data'], maxlen=value)
 
     def close(self):
         for name in self.records:

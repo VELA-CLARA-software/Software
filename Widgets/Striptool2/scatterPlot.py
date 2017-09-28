@@ -1,26 +1,25 @@
-import sys, time, os, datetime
+import sys, time, os, datetime, signal
 import pyqtgraph as pg
 from pyqtgraph.Qt import QtGui, QtCore
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-import numpy as np
-import threading
-from threading import Thread, Event, Timer
-from PyQt4.QtCore import QObject, pyqtSignal, pyqtSlot
-import signal, datetime
-import logging
+try:
+    from PyQt4.QtCore import *
+    from PyQt4.QtGui import *
+except:
+    from PyQt5.QtCore import *
+    from PyQt5.QtGui import *
+    from PyQt5.QtWidgets import *
 from striptoolRecord import *
 from striptoolLegend import *
 from scatterPlotPlot import *
 
-logger = logging.getLogger(__name__)
+# logger = logging.getLogger(__name__)
 
 signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 
-def logthread(caller):
-    print('%-25s: %s, %s,' % (caller, threading.current_thread().name,
-                              threading.current_thread().ident))
+# def logthread(caller):
+#     print('%-25s: %s, %s,' % (caller, threading.current_thread().name,
+#                               threading.current_thread().ident))
 
 
 class scatterPlot(QWidget):
@@ -50,8 +49,8 @@ class scatterPlot(QWidget):
         ''' Create generalPlot object '''
         self.plotWidget = scatterPlotPlot(self, color=color)
         ''' If connected to stripplot - link plotranges '''
-        if not stripplot == None:
-            self.stripPlot.plotWidget.changePlotScale.connect(self.plotWidget.setPlotRange)
+        # if not stripplot == None:
+            # self.stripPlot.plotWidget.changePlotScale.connect(self.plotWidget.setPlotRange)
         ''' set-up setupSelectionBar '''
         self.selectionBar = self.setupSelectionBar()
         ''' set-up plot rate slider '''
@@ -63,11 +62,11 @@ class scatterPlot(QWidget):
             self.stripPlot.signalRemoved.connect(self.updateSelectionBar)
             selectionBarOffset = 1
         self.scatterPlot.addWidget(self.plotWidget.plotWidget, 5)
-        if plotRateBar:
-            self.scatterPlot.addWidget(self.plotRateLabel, selectionBarOffset + 5, 0)
-            self.scatterPlot.addWidget(self.plotRateSlider, selectionBarOffset + 5, 1)
+        # if plotRateBar:
+        #     self.scatterPlot.addWidget(self.plotRateLabel, selectionBarOffset + 5, 0)
+        #     self.scatterPlot.addWidget(self.plotRateSlider, selectionBarOffset + 5, 1)
         self.setLayout(self.scatterPlot)
-        logger.debug('scatterPlot initiated!')
+        # logger.debug('scatterPlot initiated!')
 
     def saveAllCurves(self, saveFileName=None):
         for name in self.records:
@@ -84,12 +83,10 @@ class scatterPlot(QWidget):
         self.combobox1 = QtGui.QComboBox()
         self.combobox1.setMaximumWidth(200)
         self.combobox1.setMinimumWidth(100)
-        # self.combobox1.setMaximumHeight(20)
         self.combobox1.currentIndexChanged.connect(self.selectionBarChanged)
         self.combobox2 = QtGui.QComboBox()
         self.combobox2.setMaximumWidth(200)
         self.combobox2.setMinimumWidth(100)
-        # self.combobox2.setMaximumHeight(20)
         self.combobox2.currentIndexChanged.connect(self.selectionBarChanged)
         for name in sorted(self.records):
             self.combobox1.addItem(name)
@@ -104,7 +101,6 @@ class scatterPlot(QWidget):
         self.selectionBarLayout.addSpacerItem(spacer)
 
     def selectionBarChanged(self, index):
-        # print 'index = ', index
         self.scatterSelectionChanged.emit(self.combobox1.currentText(), self.combobox2.currentText())
         self.plotWidget.update()
 
@@ -162,22 +158,12 @@ class scatterPlot(QWidget):
             logger.warning('Signal ' + name + ' already exists!')
 
     def plotUpdate(self):
-        self.plotWidget.currentPlotTime = time.time()
         self.plotWidget.update()
 
     def removeSignal(self, name):
         del self.records[name]
-        logger.info('Signal ' + name + ' removed!')
+        # logger.info('Signal ' + name + ' removed!')
 
     def pausePlotting(self, value=True):
         self.paused = value
         self.plotWidget.togglePause(self.paused)
-
-    def setDecimateLength(self, value=5000):
-        self.plotWidget.decimateScale = value
-
-    def setPlotRange(self, plotrange):
-        self.plotWidget.setPlotRange(plotrange)
-
-    def setPlotScale(self, xRange=None, yRange=None):
-        self.plotWidget.setPlotScale(xRange=xRange, yRange=yRange)

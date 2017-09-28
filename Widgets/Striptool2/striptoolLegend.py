@@ -1,8 +1,13 @@
 import pyqtgraph as pg
 from pyqtgraph.Qt import QtGui, QtCore
 import sys, time, os, datetime
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+try:
+    from PyQt4.QtCore import *
+    from PyQt4.QtGui import *
+except:
+    from PyQt5.QtCore import *
+    from PyQt5.QtGui import *
+    from PyQt5.QtWidgets import *
 
 class stripLegend(pg.TreeWidget):
 
