@@ -1,0 +1,554 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>610</width>
+    <height>448</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Cassis</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>blackcurrant.png</normaloff>blackcurrant.png</iconset>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <layout class="QVBoxLayout" name="all_vbox">
+      <item>
+       <layout class="QHBoxLayout" name="controls_hbox">
+        <item>
+         <layout class="QVBoxLayout" name="metadata_vbox">
+          <item>
+           <widget class="QLabel" name="title_label">
+            <property name="font">
+             <font>
+              <pointsize>24</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Dark Current</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="machine_hbox">
+            <item>
+             <widget class="QComboBox" name="machine_mode_dropdown">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>100</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Switch between machine modes:&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Offline&lt;/span&gt;: no interaction with machine&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Virtual&lt;/span&gt;: connect to local virtual machine&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Physical&lt;/span&gt;: connect to real machine via EPICS&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <item>
+               <property name="text">
+                <string>Offline</string>
+               </property>
+               <property name="icon">
+                <iconset>
+                 <normaloff>../magnet-table/Icons/Offline.png</normaloff>../magnet-table/Icons/Offline.png</iconset>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Virtual</string>
+               </property>
+               <property name="icon">
+                <iconset>
+                 <normaloff>../magnet-table/Icons/Virtual.png</normaloff>../magnet-table/Icons/Virtual.png</iconset>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Physical</string>
+               </property>
+               <property name="icon">
+                <iconset>
+                 <normaloff>../magnet-table/Icons/Physical.png</normaloff>../magnet-table/Icons/Physical.png</iconset>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item>
+             <widget class="QComboBox" name="machine_dropdown">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>100</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <item>
+               <property name="text">
+                <string>CLARA</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>VELA</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="gun_hbox">
+            <item>
+             <widget class="QComboBox" name="gun_dropdown">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>100</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <item>
+               <property name="text">
+                <string>Gun-10</string>
+               </property>
+               <property name="icon">
+                <iconset>
+                 <normaloff>pistol.png</normaloff>pistol.png</iconset>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Gun-400</string>
+               </property>
+               <property name="icon">
+                <iconset>
+                 <normaloff>submachine-gun.png</normaloff>submachine-gun.png</iconset>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item>
+             <widget class="QComboBox" name="cathode_dropdown">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>100</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <item>
+               <property name="text">
+                <string>Cathode 1</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Cathode 2</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="pulse_width_hbox">
+            <item>
+             <widget class="QLabel" name="pulse_width_label">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="text">
+               <string>RF pulse width</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QDoubleSpinBox" name="pulse_width_spinbox">
+              <property name="suffix">
+               <string> µs</string>
+              </property>
+              <property name="value">
+               <double>2.500000000000000</double>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QLabel" name="vacuum_label">
+            <property name="text">
+             <string>Gun vacuum: 1e-10 mbar</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="work_folder_label">
+            <property name="text">
+             <string>Data saved to work folder</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="scan_vbox">
+          <item>
+           <widget class="QLabel" name="momentum_label">
+            <property name="font">
+             <font>
+              <pointsize>14</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Momentum</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="mom_hbox">
+            <item>
+             <widget class="QLabel" name="mom_from_label">
+              <property name="text">
+               <string>from</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QDoubleSpinBox" name="mom_from_spinbox">
+              <property name="suffix">
+               <string> MeV</string>
+              </property>
+              <property name="value">
+               <double>1.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="mom_to_label">
+              <property name="text">
+               <string>to</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QDoubleSpinBox" name="mom_to_spinbox">
+              <property name="suffix">
+               <string> MeV</string>
+              </property>
+              <property name="value">
+               <double>4.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="mom_step_label">
+              <property name="text">
+               <string>step</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QDoubleSpinBox" name="mom_step_spinbox">
+              <property name="suffix">
+               <string> MeV</string>
+              </property>
+              <property name="value">
+               <double>0.500000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="mom_now_label">
+              <property name="text">
+               <string>now: 1.5 MeV</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QLabel" name="sol_label">
+            <property name="font">
+             <font>
+              <pointsize>14</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Solenoid current</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="sol_hbox">
+            <item>
+             <widget class="QLabel" name="sol_from_label">
+              <property name="text">
+               <string>from</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QDoubleSpinBox" name="sol_from_spinbox">
+              <property name="suffix">
+               <string> A</string>
+              </property>
+              <property name="minimum">
+               <double>-500.000000000000000</double>
+              </property>
+              <property name="maximum">
+               <double>500.000000000000000</double>
+              </property>
+              <property name="value">
+               <double>-200.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="sol_to_label">
+              <property name="text">
+               <string>to</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QDoubleSpinBox" name="sol_to_spinbox">
+              <property name="suffix">
+               <string> A</string>
+              </property>
+              <property name="minimum">
+               <double>-500.000000000000000</double>
+              </property>
+              <property name="maximum">
+               <double>500.000000000000000</double>
+              </property>
+              <property name="value">
+               <double>200.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="sol_step_label">
+              <property name="text">
+               <string>step</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QDoubleSpinBox" name="sol_step_spinbox">
+              <property name="suffix">
+               <string> A</string>
+              </property>
+              <property name="minimum">
+               <double>-500.000000000000000</double>
+              </property>
+              <property name="maximum">
+               <double>500.000000000000000</double>
+              </property>
+              <property name="value">
+               <double>50.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="sol_now_label">
+              <property name="text">
+               <string>now: -100 A</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QLabel" name="bc_label">
+            <property name="font">
+             <font>
+              <pointsize>14</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Bucking solenoid current</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="bc_hbox">
+            <item>
+             <widget class="QLabel" name="bc_from_label">
+              <property name="text">
+               <string>from</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QDoubleSpinBox" name="bc_from_spinbox">
+              <property name="suffix">
+               <string> A</string>
+              </property>
+              <property name="minimum">
+               <double>0.000000000000000</double>
+              </property>
+              <property name="maximum">
+               <double>7.000000000000000</double>
+              </property>
+              <property name="value">
+               <double>0.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="bc_to_label">
+              <property name="text">
+               <string>to</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QDoubleSpinBox" name="bc_to_spinbox">
+              <property name="suffix">
+               <string> A</string>
+              </property>
+              <property name="minimum">
+               <double>0.000000000000000</double>
+              </property>
+              <property name="maximum">
+               <double>7.000000000000000</double>
+              </property>
+              <property name="value">
+               <double>6.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="bc_step_label">
+              <property name="text">
+               <string>step</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QDoubleSpinBox" name="bc_step_spinbox">
+              <property name="suffix">
+               <string> A</string>
+              </property>
+              <property name="minimum">
+               <double>0.000000000000000</double>
+              </property>
+              <property name="maximum">
+               <double>7.000000000000000</double>
+              </property>
+              <property name="value">
+               <double>1.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="bc_now_label">
+              <property name="text">
+               <string>now: 3 A</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="buttons_hbox">
+            <item>
+             <widget class="QPushButton" name="go_button">
+              <property name="text">
+               <string>Go</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="cancel_button">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>Cancel</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QProgressBar" name="progressBar">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="value">
+               <number>24</number>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="plots_hbox">
+        <item>
+         <widget class="PlotWidget" name="wcm_plot"/>
+        </item>
+        <item>
+         <widget class="PlotWidget" name="blm_plot"/>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <widget class="ImageView" name="screen_image"/>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>PlotWidget</class>
+   <extends>QGraphicsView</extends>
+   <header>pyqtgraph</header>
+  </customwidget>
+  <customwidget>
+   <class>ImageView</class>
+   <extends>QGraphicsView</extends>
+   <header>pyqtgraph</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
