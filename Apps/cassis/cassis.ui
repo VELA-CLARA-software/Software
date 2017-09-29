@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>610</width>
-    <height>448</height>
+    <width>991</width>
+    <height>585</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -22,9 +22,9 @@
     <item>
      <layout class="QVBoxLayout" name="all_vbox">
       <item>
-       <layout class="QHBoxLayout" name="controls_hbox">
+       <layout class="QHBoxLayout" name="controls_hbox" stretch="0,1,4">
         <item>
-         <layout class="QVBoxLayout" name="metadata_vbox">
+         <layout class="QVBoxLayout" name="metadata_vbox" stretch="0,0,0,0,0,1">
           <item>
            <widget class="QLabel" name="title_label">
             <property name="font">
@@ -42,7 +42,7 @@
             <item>
              <widget class="QComboBox" name="machine_mode_dropdown">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
@@ -55,6 +55,9 @@
               </property>
               <property name="toolTip">
                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Switch between machine modes:&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Offline&lt;/span&gt;: no interaction with machine&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Virtual&lt;/span&gt;: connect to local virtual machine&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Physical&lt;/span&gt;: connect to real machine via EPICS&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="currentIndex">
+               <number>2</number>
               </property>
               <item>
                <property name="text">
@@ -98,6 +101,9 @@
                 <width>100</width>
                 <height>16777215</height>
                </size>
+              </property>
+              <property name="currentIndex">
+               <number>1</number>
               </property>
               <item>
                <property name="text">
@@ -216,12 +222,15 @@
             <property name="text">
              <string>Data saved to work folder</string>
             </property>
+            <property name="alignment">
+             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+            </property>
            </widget>
           </item>
          </layout>
         </item>
         <item>
-         <layout class="QVBoxLayout" name="scan_vbox">
+         <layout class="QVBoxLayout" name="scan_vbox" stretch="1,0,1,0,1,0,0">
           <item>
            <widget class="QLabel" name="momentum_label">
             <property name="font">
@@ -232,10 +241,13 @@
             <property name="text">
              <string>Momentum</string>
             </property>
+            <property name="alignment">
+             <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+            </property>
            </widget>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="mom_hbox">
+           <layout class="QHBoxLayout" name="mom_hbox" stretch="0,0,0,0,0,0,4">
             <item>
              <widget class="QLabel" name="mom_from_label">
               <property name="text">
@@ -306,10 +318,13 @@
             <property name="text">
              <string>Solenoid current</string>
             </property>
+            <property name="alignment">
+             <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+            </property>
            </widget>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="sol_hbox">
+           <layout class="QHBoxLayout" name="sol_hbox" stretch="0,0,0,0,0,0,4">
             <item>
              <widget class="QLabel" name="sol_from_label">
               <property name="text">
@@ -398,10 +413,13 @@
             <property name="text">
              <string>Bucking solenoid current</string>
             </property>
+            <property name="alignment">
+             <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+            </property>
            </widget>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="bc_hbox">
+           <layout class="QHBoxLayout" name="bc_hbox" stretch="0,0,0,0,0,0,4">
             <item>
              <widget class="QLabel" name="bc_from_label">
               <property name="text">
@@ -481,7 +499,7 @@
            </layout>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="buttons_hbox">
+           <layout class="QHBoxLayout" name="buttons_hbox" stretch="1,1,3">
             <item>
              <widget class="QPushButton" name="go_button">
               <property name="text">
@@ -500,7 +518,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QProgressBar" name="progressBar">
+             <widget class="QProgressBar" name="progress_bar">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -516,6 +534,9 @@
           </item>
          </layout>
         </item>
+        <item>
+         <widget class="ImageView" name="screen_image"/>
+        </item>
        </layout>
       </item>
       <item>
@@ -529,9 +550,6 @@
        </layout>
       </item>
      </layout>
-    </item>
-    <item>
-     <widget class="ImageView" name="screen_image"/>
     </item>
    </layout>
   </widget>
