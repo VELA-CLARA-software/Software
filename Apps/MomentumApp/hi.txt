@@ -1,0 +1,25 @@
+2016-12-01 10:03:41,717 	 loggerWidget 	 INFO 	 Log Saved to 
+2016-12-01 10:03:46,500 	 P Logger 	 CRITICAL 	 Llama!faghnagfnh!
+2016-12-01 10:03:46,506 	 P Spread Logger 	 INFO 	 Llama!!
+2016-12-01 10:03:46,512 	 P Spread Logger 	 DEBUG 	 Llama!!
+2016-12-01 10:03:50,539 	 P Logger 	 CRITICAL 	 Llama!faghnagfnh!
+2016-12-01 10:03:50,546 	 P Spread Logger 	 INFO 	 Llama!!
+2016-12-01 10:03:50,549 	 P Spread Logger 	 DEBUG 	 Llama!!
+2016-12-01 10:03:52,131 	 P Logger 	 CRITICAL 	 Llama!faghnagfnh!
+2016-12-01 10:03:52,138 	 P Spread Logger 	 INFO 	 Llama!!
+2016-12-01 10:03:52,142 	 P Spread Logger 	 DEBUG 	 Llama!!
+2016-12-01 10:03:55,243 	 P Logger 	 CRITICAL 	 Llama!faghnagfnh!
+2016-12-01 10:03:55,250 	 P Spread Logger 	 INFO 	 Llama!!
+2016-12-01 10:03:55,253 	 P Spread Logger 	 DEBUG 	 Llama!!
+2016-12-01 10:04:07,400 	 P Logger 	 CRITICAL 	 Llama!faghnagfnh!
+2016-12-01 10:04:07,421 	 P Spread Logger 	 INFO 	 Llama!!
+2016-12-01 10:04:07,424 	 P Spread Logger 	 DEBUG 	 Llama!!
+2016-12-01 10:04:07,572 	 P Logger 	 CRITICAL 	 Llama!faghnagfnh!
+2016-12-01 10:04:07,582 	 P Spread Logger 	 INFO 	 Llama!!
+2016-12-01 10:04:07,589 	 P Spread Logger 	 DEBUG 	 Llama!!
+2016-12-01 10:04:07,732 	 P Logger 	 CRITICAL 	 Llama!faghnagfnh!
+2016-12-01 10:04:07,736 	 P Spread Logger 	 INFO 	 Llama!!
+2016-12-01 10:04:07,742 	 P Spread Logger 	 DEBUG 	 Llama!!
+2016-12-01 10:04:07,878 	 P Logger 	 CRITICAL 	 Llama!faghnagfnh!
+2016-12-01 10:04:07,901 	 P Spread Logger 	 INFO 	 Llama!!
+2016-12-01 10:04:07,904 	 P Spread Logger 	 DEBUG 	 Llama!!

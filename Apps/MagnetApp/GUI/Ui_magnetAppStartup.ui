@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>magnetAppStartup</class>
+ <widget class="QMainWindow" name="magnetAppStartup">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1014</width>
+    <height>734</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QPushButton" name="startButton">
+    <property name="geometry">
+     <rect>
+      <x>370</x>
+      <y>380</y>
+      <width>111</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>START</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="cancelButton">
+    <property name="geometry">
+     <rect>
+      <x>500</x>
+      <y>380</y>
+      <width>151</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>CANCEL</string>
+    </property>
+   </widget>
+   <widget class="QGroupBox" name="machineAreaSelection">
+    <property name="geometry">
+     <rect>
+      <x>322</x>
+      <y>140</y>
+      <width>231</width>
+      <height>211</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="title">
+     <string>Machine Area</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_3">
+     <item>
+      <widget class="QRadioButton" name="VELA_INJ">
+       <property name="text">
+        <string>VELA  INJ Magnets</string>
+       </property>
+       <attribute name="buttonGroup">
+        <string notr="true">machineAreaButtons</string>
+       </attribute>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="VELA_BA1">
+       <property name="text">
+        <string>VELA  BA1 Magnets</string>
+       </property>
+       <attribute name="buttonGroup">
+        <string notr="true">machineAreaButtons</string>
+       </attribute>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="VELA_BA2">
+       <property name="text">
+        <string>VELA  BA2 Magnets</string>
+       </property>
+       <attribute name="buttonGroup">
+        <string notr="true">machineAreaButtons</string>
+       </attribute>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="CLARA_PHASE_1">
+       <property name="text">
+        <string>CLARA PHASE 1 Magnets</string>
+       </property>
+       <attribute name="buttonGroup">
+        <string notr="true">machineAreaButtons</string>
+       </attribute>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="CLARA_2_VELA">
+       <property name="text">
+        <string>CLARA 2 VELA</string>
+       </property>
+       <attribute name="buttonGroup">
+        <string notr="true">machineAreaButtons</string>
+       </attribute>
+      </widget>
+     </item>
+     <item>
+      <spacer name="verticalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+    <zorder>CLARA_PHASE_1</zorder>
+    <zorder>VELA_BA2</zorder>
+    <zorder>VELA_BA1</zorder>
+    <zorder>VELA_INJ</zorder>
+    <zorder>verticalSpacer_2</zorder>
+    <zorder>CLARA_2_VELA</zorder>
+   </widget>
+   <widget class="QGroupBox" name="modeSelection">
+    <property name="geometry">
+     <rect>
+      <x>580</x>
+      <y>140</y>
+      <width>301</width>
+      <height>211</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="title">
+     <string>Mode Selection</string>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_2">
+     <item>
+      <widget class="QRadioButton" name="offlineMode">
+       <property name="text">
+        <string>Offline   (No EPICS)</string>
+       </property>
+       <attribute name="buttonGroup">
+        <string notr="true">machineModeButtons</string>
+       </attribute>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="virtualMode">
+       <property name="text">
+        <string>Virtual   (Connect to Virtual Machine)</string>
+       </property>
+       <attribute name="buttonGroup">
+        <string notr="true">machineModeButtons</string>
+       </attribute>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="physicalMode">
+       <property name="text">
+        <string>Physical (Connect to Real Machine)</string>
+       </property>
+       <attribute name="buttonGroup">
+        <string notr="true">machineModeButtons</string>
+       </attribute>
+      </widget>
+     </item>
+     <item>
+      <spacer name="verticalSpacer">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QLabel" name="instructionLabel">
+    <property name="geometry">
+     <rect>
+      <x>350</x>
+      <y>50</y>
+      <width>611</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Welcome to the VELA-CLARA Magnet Application 
+Please Choose a Machine Area and an Operating Mode 
+Then Press START </string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="iconLabel">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>100</y>
+      <width>221</width>
+      <height>261</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Icon Label </string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="waitMessageLabel">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>460</y>
+      <width>491</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>placeholder</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="logoLabel">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>550</y>
+      <width>951</width>
+      <height>111</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1014</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+ <buttongroups>
+  <buttongroup name="machineAreaButtons"/>
+  <buttongroup name="machineModeButtons"/>
+ </buttongroups>
+</ui>
