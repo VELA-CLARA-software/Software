@@ -1,9 +1,13 @@
 import sys, time, os
 sys.path.append("..")
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-import pyqtgraph as pg
-import striptool as striptool
+try:
+    from PyQt4.QtCore import *
+    from PyQt4.QtGui import *
+except:
+    from PyQt5.QtCore import *
+    from PyQt5.QtGui import *
+    from PyQt5.QtWidgets import *
+import generalPlot as generalplot
 import numpy as np
 ''' Load loggerWidget library (comment out if not available) '''
 # import loggerWidget as lw
@@ -24,7 +28,7 @@ def main():
     app = QApplication(sys.argv)
 
     ''' initialise an instance of the stripPlot Widget '''
-    sp = striptool.stripPlot(plotRateBar=False)
+    sp = generalplot.generalPlot()
 
     ''' Add some signals to the striptool - note they call our signal generator at a frequency of 1/timer (100 Hz and 10 Hz in these cases).
         The 'pen' argument sets the color of the curves, but can be changed in the GUI
@@ -44,7 +48,7 @@ def main():
     sp.start()
 
     ''' collect 10s worth of data '''
-    for i in range(60):
+    for i in range(1):
         print i
         time.sleep(1)
     ''' save data '''
