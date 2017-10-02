@@ -78,6 +78,7 @@ class striptool_Demo(QMainWindow):
         self.generalplot = generalplot.generalPlot()
         self.scrollingplot = self.generalplot.scrollingPlot()
         self.fftplot = self.generalplot.fftPlot()
+        self.histogramplot = self.generalplot.histogramPlot()
         self.scatterplot = self.generalplot.scatterPlot()
         self.legend = self.generalplot.legend()
 
@@ -122,14 +123,17 @@ class striptool_Demo(QMainWindow):
         d2 = Dock("Plot Legend")
         d3 = Dock("FFT Plot")
         d4 = Dock("Scatter Plot")
+        d5 = Dock("Histogram Plot")
         d1.addWidget(self.scrollingplot)
         d2.addWidget(self.legend)
         d3.addWidget(self.fftplot)
         d4.addWidget(self.scatterplot)
+        d5.addWidget(self.histogramplot)
         self.area.addDock(d1,'top')
         self.area.addDock(d2, position='right', relativeTo=d1)
         self.area.addDock(d3,'bottom')
         self.area.addDock(d4, position='right', relativeTo=d3)
+        self.area.addDock(d5, position='right', relativeTo=d4)
         self.plotLayout = QVBoxLayout()
         self.plotLayout.addWidget(self.area)
         self.timeButtonList = []
@@ -158,6 +162,7 @@ class striptool_Demo(QMainWindow):
         self.scrollingplot.start()
         self.fftplot.start()
         self.scatterplot.start()
+        self.histogramplot.start()
 
         ''' modify the plot scale to 10 secs '''
         self.scrollingplot.setPlotScale(60)
