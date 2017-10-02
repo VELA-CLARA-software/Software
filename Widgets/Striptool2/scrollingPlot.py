@@ -86,6 +86,7 @@ class scrollingPlot(QWidget):
         self.generalPlot.signalRemoved.connect(self.removeSignal)
 
     def addSignal(self, name):
+        self.records[name]['scrollingplot'] = self.scrollingPlotPlot
         curve = self.scrollingPlotPlot.addCurve(name)
         self.records[name]['curve'] = curve
 
@@ -229,7 +230,6 @@ class scrollingPlotPlot(QWidget):
     def addCurve(self, name):
         # Create New Axis
         record = self.records
-        record[name]['scrollingplot'] = self
         if record[name]['axisname'] == None:
             axis, viewbox = self.createAxis(name=name, color=record[name]['pen'], logMode=record[name]['logScale'], verticalRange=record[name]['verticalRange'])
             record[name]['axisname'] = name

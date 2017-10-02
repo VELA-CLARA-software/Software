@@ -11,6 +11,7 @@ from signalRecord import *
 import scrollingPlot as scrollingplot
 import scatterPlot as scatterplot
 import fftPlot as fftplot
+import histogramPlot as histogramplot
 import plotLegend as plotlegend
 
 logger = logging.getLogger(__name__)
@@ -110,12 +111,27 @@ class generalPlot(QWidget):
         self.fftplot = fftplot.fftPlot(generalplot=self)
         return self.fftplot
 
+    def fftselectionchange(self, name, value):
+        if hasattr(self,'fftplot'):
+            self.fftplot.selectionChange(name, value)
+
+    def histogramPlot(self):
+        self.histogramplot = histogramplot.histogramPlot(generalplot=self)
+        return self.histogramplot
+
+    def histogramplotselectionchange(self, name, value):
+        if hasattr(self,'histogramplot'):
+            print 'histogram! = ', name
+            self.histogramplot.selectionChange(name, value)
+
     def scatterPlot(self):
         self.scatterplot = scatterplot.scatterPlot(generalplot=self)
         return self.scatterplot
 
     def legend(self):
         self.legend = plotlegend.plotLegend(generalplot=self)
+        self.legend.fftselectionchange.connect(self.fftselectionchange)
+        self.legend.histogramplotselectionchange.connect(self.histogramplotselectionchange)
         return self.legend
 
     def createAxis(self, *args, **kwargs):

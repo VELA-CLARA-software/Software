@@ -9,6 +9,7 @@ except:
     from PyQt5.QtGui import *
     from PyQt5.QtWidgets import *
 import peakutils
+import numpy as np
 # logger = logging.getLogger(__name__)
 
 signal.signal(signal.SIGINT, signal.SIG_DFL)
@@ -19,15 +20,14 @@ signal.signal(signal.SIGINT, signal.SIG_DFL)
 #                               threading.current_thread().ident))
 
 
-class fftPlot(QWidget):
-    fftSelectionChanged = QtCore.pyqtSignal('QString')
+class histogramPlot(QWidget):
 
     def __init__(self, generalplot, parent=None, plotRateBar=False):
-        super(fftPlot, self).__init__(parent)
+        super(histogramPlot, self).__init__(parent)
         self.pg = pg
         self.paused = False
         self.plotrate = 1
-        ''' create the fftPlot as a grid layout '''
+        ''' create the histogramPlot as a grid layout '''
         self.layout = QtGui.QVBoxLayout()
         self.plotThread = QTimer()
         self.generalPlot = generalplot
@@ -39,17 +39,16 @@ class fftPlot(QWidget):
         self.layout.addWidget(self.plotWidget, 5)
 
         ''' Create plot for curves '''
-        self.fftPlot = self.plotWidget.addPlot(row=0, col=0)
-        self.fftPlot.ctrl.fftCheck.setChecked(True)
-        self.fftPlot.setLabel('bottom','Frequency (Hz)')
-        self.fftPlot.setLabel('left','Amplitude')
-        self.fftPlot.showGrid(x=True, y=True)
-        self.fftPlotCurves = {}
+        self.histogramPlot = self.plotWidget.addPlot(row=0, col=0)
+        self.histogramPlot.setLabel('bottom','Value')
+        self.histogramPlot.setLabel('left','Count')
+        self.histogramPlot.showGrid(x=True, y=True)
+        self.histogramPlotCurves = {}
         if plotRateBar:
             self.setupPlotRateSlider()
             self.layout.addLayout(self.plotRateLayout)
         self.setLayout(self.layout)
-        # logger.debug('fftPlot initiated!')
+        # logger.debug('histogramPlot initiated!')
 
     def setupPlotRateSlider(self):
         self.plotRateLayout = QHBoxLayout()
@@ -79,7 +78,7 @@ class fftPlot(QWidget):
 
     def plotUpdate(self):
         if self.isVisible():
-            for curve in self.fftPlotCurves.values():
+            for curve in self.histogramPlotCurves.values():
                 curve.update()
 
     def pausePlotting(self, value=True):
@@ -87,28 +86,27 @@ class fftPlot(QWidget):
         self.plotWidget.togglePause(self.paused)
 
     def addCurve(self, name):
-        self.fftPlotCurves[name] = fftPlotCurve(self.fftPlot, self.records[name])
+        self.histogramPlotCurves[name] = histogramPlotCurve(self.histogramPlot, self.records[name])
 
     def removeCurve(self, name):
-        self.fftPlotCurves[name].removeFFTLabels()
-        self.fftPlot.removeItem(self.fftPlotCurves[name].plot)
-        del self.fftPlotCurves[name]
+        self.histogramPlot.removeItem(self.histogramPlotCurves[name].plot)
+        del self.histogramPlotCurves[name]
 
     def selectionChange(self, name, value):
-        if name in self.fftPlotCurves:
+        if name in self.histogramPlotCurves:
             if not value:
                 self.removeCurve(name)
-        elif value:
+        elif value == True:
             self.addCurve(name)
 
-class fftPlotCurve(QObject):
+class histogramPlotCurve(QObject):
 
     statusChanged = pyqtSignal(str)
 
-    def __init__(self, fftplot, records, parent = None):
-        super(fftPlotCurve, self).__init__(parent=parent)
+    def __init__(self, histogramplot, records, parent = None):
+        super(histogramPlotCurve, self).__init__(parent=parent)
         self.parent=parent
-        self.fftplot = fftplot
+        self.histogramplot = histogramplot
         self.color = records['pen']
         self.data = records['data']
         self.mean = records['worker'].mean
@@ -116,9 +114,9 @@ class fftPlotCurve(QObject):
         self.doingPlot = False
         self.paused = False
         self.paused = False
+        self.numberBins = 10
         self.decimateScale = 1000
-        self.plot = self.fftplot.plot()
-        self.fftTextLabels = []
+        self.plot = self.histogramplot.plot()
 
     def togglePause(self, value):
         self.paused = value
@@ -127,34 +125,17 @@ class fftPlotCurve(QObject):
         self.plotWidget.show()
 
     def removePlot(self, name):
-        self.fftplot.removeItem(self.plotWidget.getItem(0,0))
+        self.histogramplot.removeItem(self.plotWidget.getItem(0,0))
 
     def update(self):
         start = time.time()
-        self.removeFFTLabels()
         if not self.paused and not self.doingPlot and hasattr(self,'data') and len(self.data) > 1:
             self.doingPlot  = True
             data = list(self.data)
             if len(data) > self.decimateScale:
                 del data[:len(data)-self.decimateScale]
             x, y = zip(*data)
-            y = (y-self.mean)/self.stddev
-            self.plot.setData({'x': x, 'y': y}, pen=self.color)
-            if len(self.plot.yDisp) > 0:
-                indexes = peakutils.indexes(self.plot.yDisp, thres=0.5, min_dist=10)
-                if len(indexes) < 5:
-                    for index in indexes:
-                        fftTextlabel=pg.TextItem(html='<span style="color: '+pg.mkColor(self.color).name()+';">'+str(round(self.plot.xDisp[index],2))+'</span>',anchor=(-0.7,1.2), angle=0)
-                        fftTextlabel.setPos(self.plot.xDisp[index],self.plot.yDisp[index])
-                        fftTextArrow=pg.ArrowItem(pos=(self.plot.xDisp[index],self.plot.yDisp[index]), angle=-45, pen=self.color, brush=pg.mkBrush(self.color))
-                        self.fftTextLabels.append([fftTextlabel, fftTextArrow])
-                        self.fftplot.addItem(fftTextlabel)
-                        self.fftplot.addItem(fftTextArrow)
-            self.doingPlot = False
-        # self.fftPlot.enableAutoRange()
-
-    def removeFFTLabels(self):
-        for t, a in self.fftTextLabels:
-            self.fftplot.removeItem(t)
-            self.fftplot.removeItem(a)
-        self.fftTextLabels = []
+            y2,x2 = np.histogram(y, bins=self.numberBins)
+            self.plot.setData({'x': x2, 'y': y2}, pen=self.color, stepMode=True, fillLevel=0, fillBrush=self.color)
+        self.doingPlot = False
+        # self.histogramPlot.enableAutoRange()

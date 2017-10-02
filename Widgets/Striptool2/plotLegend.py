@@ -13,6 +13,11 @@ from pyqtgraph.parametertree import Parameter, ParameterTree, ParameterItem, reg
 
 class plotLegend(ParameterTree):
 
+    fftselectionchange = pyqtSignal('QString',bool)
+    histogramplotselectionchange = pyqtSignal('QString',bool)
+    axisselectionchanged = pyqtSignal('QString')
+
+
     def __init__(self, generalplot):
         super(plotLegend, self).__init__(generalplot)
         ''' Create Parameter Tree'''
@@ -28,8 +33,9 @@ class plotLegend(ParameterTree):
         self.proxySTD = {}
         self.proxyMin = {}
         self.proxyMax = {}
+        self.parameterChildren = {}
         self.generalPlot.signalAdded.connect(self.addParameterSignal)
-        # self.generalPlot.signalRemoved.connect(self.removeParameterSignal)
+        self.generalPlot.signalRemoved.connect(self.removeParameterSignal)
 
     def updateValue(self, param, value):
         param.setValue(value)
@@ -88,24 +94,26 @@ class plotLegend(ParameterTree):
                 {'name': 'Max', 'type': 'float', 'readonly': True},
                 {'name': 'Min', 'type': 'float', 'readonly': True},
                 {'name': 'Plot_Colour', 'title': 'Line Colour', 'type': 'color', 'value': self.records[name]['pen'], 'tip': "Line Colour"},
-                {'name': 'Axis', 'title': 'Choose Axis', 'type': 'list', 'values': self.records[name]['scrollingplot'].getAxes(), 'value': self.records[name]['axisname'], 'tip': "Choose which axis to display on"},
+                {'name': 'Axis', 'title': 'Choose Axis', 'type': 'list', 'values': {}, 'value': self.records[name]['axisname'], 'tip': "Choose which axis to display on"},
                 {'name': 'Show_Axis', 'title': 'Show Axis?', 'type': 'bool', 'value': False, 'tip': "Show or Remove the Axis"},
                 {'name': 'Show_Plot', 'title': 'Show Plot?', 'type': 'bool', 'value': True, 'tip': "Show or Remove the plot lines"},
+                {'name': 'FFT_Plot', 'title': 'Plot FFT', 'type': 'bool', 'value': False, 'tip': "Show or Remove the FFT Plot"},
+                {'name': 'Histogram_Plot', 'title': 'Plot Histogram', 'type': 'bool', 'value': False, 'tip': "Show or Remove the Histogram Plot"},
             ]}
         ]
         p = Parameter.create(name='params', type='group', children=params)
         pChild = p.child(name)
+        self.parameterChildren[name] = pChild
         self.proxyLatestValue[name] = pg.SignalProxy(self.records[name]['worker'].recordLatestValueSignal, rateLimit=1, slot=lambda x: pChild.child('Value').setValue(x[0][1]))
         self.proxyMean[name] = pg.SignalProxy(self.records[name]['worker'].recordMeanSignal, rateLimit=1, slot=lambda x: pChild.child('Mean').setValue(x[0]))
         self.proxySTD[name] = pg.SignalProxy(self.records[name]['worker'].recordStandardDeviationSignal, rateLimit=1, slot=lambda x: pChild.child('Standard Deviation').setValue(x[0]))
         self.proxyMin[name] = pg.SignalProxy(self.records[name]['worker'].recordMinSignal, rateLimit=1, slot=lambda x: pChild.child('Min').setValue(x[0]))
         self.proxyMax[name] = pg.SignalProxy(self.records[name]['worker'].recordMaxSignal, rateLimit=1, slot=lambda x: pChild.child('Max').setValue(x[0]))
-        self.records[name]['scrollingplot'].toggleAxis(name, False)
-        # self.setLogModeSignals(pChild.child('Log_Mode'), name)
-        self.records[name]['scrollingplot'].newaxis.connect(lambda x: pChild.child('Axis').setValue(self.records[name]['scrollingplot'].getAxes()))
-        pChild.child('Axis').sigValueChanged.connect(lambda x: self.records[name]['scrollingplot'].changeAxis(name,x.value()))
+        self.setupAxisList(name, pChild)
         pChild.child('Show_Axis').sigValueChanged.connect(lambda x: self.records[name]['axis'].setVisible(x.value()))
         pChild.child('Show_Plot').sigValueChanged.connect(lambda x: self.records[name]['curve'].lines.setVisible(x.value()))
+        pChild.child('FFT_Plot').sigValueChanged.connect(lambda x: self.fftselectionchange.emit(name, x.value()))
+        pChild.child('Histogram_Plot').sigValueChanged.connect(lambda x: self.histogramplotselectionchange.emit(name, x.value()))
         self.addParameters(p, showTop=False)
         header = self.findItems(name,Qt.MatchContains | Qt.MatchRecursive)[0]
         header.setSelected(False)
@@ -115,9 +123,12 @@ class plotLegend(ParameterTree):
         self.proxyHeaderText[name] = pg.SignalProxy(self.records[name]['worker'].recordLatestValueSignal, rateLimit=1, slot=lambda x: header.setText(0,name + ': ' + "{:.4}".format(x[0][1])))
         pChild.child('Plot_Colour').sigValueChanging.connect(lambda x, y: self.changePenColour(header,name,y))
 
-    def setupAxisList(self, child):
-        axes = self.records[name]['scrollingplot'].getAxes()
-        child.setValue(axes)
+    def setupAxisList(self, name, pChild):
+        if 'scrollingplot' in self.records[name]:
+            pChild.child('Axis').setLimits(self.records[name]['scrollingplot'].getAxes())
+            self.records[name]['scrollingplot'].toggleAxis(name, False)
+            self.records[name]['scrollingplot'].newaxis.connect(lambda x: pChild.child('Axis').setValue(self.records[name]['scrollingplot'].getAxes()))
+            pChild.child('Axis').sigValueChanged.connect(lambda x: self.records[name]['scrollingplot'].changeAxis(name,x.value()))
 
     def changePenColour(self, header, name, colourWidget):
         colour = colourWidget.value()
@@ -125,3 +136,6 @@ class plotLegend(ParameterTree):
         header.setForeground(0,self.contrasting_text_color(colour))
         self.records[name]['pen'] = colour
         self.records[name]['curve'].changePenColour()
+
+    def removeParameterSignal(self,name):
+        self.parameterChildren[name].remove()
