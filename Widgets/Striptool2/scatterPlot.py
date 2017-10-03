@@ -118,6 +118,9 @@ class scatterPlot(QWidget):
         self.plotThread.start(timer)
         self.plotThread.timeout.connect(self.plotUpdate)
 
+    def stop(self):
+        self.plotThread.stop()
+
     def plotUpdate(self):
         if self.isVisible():
             self.plotWidget.update()
@@ -167,6 +170,8 @@ class scatterPlotPlot(pg.PlotWidget):
         self.scatterPlot = pg.ScatterPlotItem(size=5, pen=pg.mkPen(None))
         self.plot.addItem(self.scatterPlot)
         self.scatterPlot.sigClicked.connect(self.printPoints)
+        self.data1 = []
+        self.data2 = []
 
     def printPoints(self,scatterPlot, points):
         point = points[0]
@@ -206,19 +211,19 @@ class scatterPlotPlot(pg.PlotWidget):
 
     def update(self):
         start = time.time()
-        if not self.paused and not self.doingPlot and hasattr(self,'data1') and hasattr(self,'data2'):
+        if not self.paused and not self.doingPlot:
             self.doingPlot  = True
             # self.plot.disableAutoRange()
             data1 = list(self.data1)
             data2 = list(self.data2)
             if len(data1) > 1 and len(data2) > 1:
                 if data1[0][0] < data2[0][0]:
-                    ans = takeClosestPosition(zip(*data1)[0], data1, data2[0][0])
+                    ans = takeClosestPosition(next(zip(*data1)), data1, data2[0][0])
                     starttime = ans[1]
                     startpos1 = ans[0]
                     startpos2 = 0
                 elif data1[0][0] > data2[0][0]:
-                    ans = takeClosestPosition(zip(*data2)[0], data2, data1[0][0])
+                    ans = takeClosestPosition(next(zip(*data2)), data2, data1[0][0])
                     starttime = ans[1]
                     startpos1 = 0
                     startpos2 = ans[0]

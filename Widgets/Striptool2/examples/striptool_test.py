@@ -10,9 +10,10 @@ except:
     from PyQt5.QtWidgets import *
 import pyqtgraph as pg
 from pyqtgraph.dockarea import *
-
 import generalPlot as generalplot
+import scrollingPlot as scrollingplot
 import numpy as np
+
 ''' Load loggerWidget library (comment out if not available) '''
 # sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\\..\\..\\loggerWidget\\')
 # import loggerWidget as lw
@@ -70,7 +71,7 @@ class striptool_Demo(QMainWindow):
         # self.logwidget1 = lw.loggerWidget([logger,striptool.logger])
 
         ''' These are some options for pyqtgraph that make the graph black-on-white, and turn on antialiasing, which is nicer on the eye '''
-        pg.setConfigOptions(antialias=True)
+        pg.setConfigOptions(antialias=False)
         pg.setConfigOption('background', 'w')
         pg.setConfigOption('foreground', 'k')
 
@@ -161,7 +162,7 @@ class striptool_Demo(QMainWindow):
         self.generalplot.start()
         self.scrollingplot.start()
         self.fftplot.start()
-        self.scatterplot.start()
+        # self.scatterplot.start()
         self.histogramplot.start()
 
         ''' modify the plot scale to 10 secs '''

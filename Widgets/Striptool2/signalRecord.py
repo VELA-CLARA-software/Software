@@ -31,7 +31,7 @@ class repeatedTimer(QObject):
         ''' call signal generating Function '''
         value = self.function(*self.args)
         currenttime = self.start + (time.clock() - self.start_accurate)
-        self.dataReady.emit([round(currenttime,3),value])
+        self.dataReady.emit([round(currenttime,4),value])
 
     def _target(self):
         while not self.event.wait(self._time):
@@ -87,6 +87,9 @@ class recordWorker(QtCore.QObject):
         self.sum_x1 = 0
         self.sum_x2 = 0
         self.stddeviation = 0
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.emitStatistics)
+        self.timer.start(1000)
 
     @QtCore.pyqtSlot(list)
     def updateRecord(self, value):
@@ -101,6 +104,8 @@ class recordWorker(QtCore.QObject):
         if val > self.max:
             self.max = val
             self.recordMaxSignal.emit(val)
+
+    def emitStatistics(self):
         length = len(self.buffer)
         self.mean = self.sum_x1/length
         self.recordMeanSignal.emit(self.mean)

@@ -1,5 +1,7 @@
 import sys, time, os, datetime, signal
 import pyqtgraph as pg
+import numpy as np
+from scipy import interpolate
 from pyqtgraph.Qt import QtGui, QtCore
 try:
     from PyQt4.QtCore import *
@@ -40,7 +42,7 @@ class fftPlot(QWidget):
 
         ''' Create plot for curves '''
         self.fftPlot = self.plotWidget.addPlot(row=0, col=0)
-        self.fftPlot.ctrl.fftCheck.setChecked(True)
+        # self.fftPlot.ctrl.fftCheck.setChecked(True)
         self.fftPlot.setLabel('bottom','Frequency (Hz)')
         self.fftPlot.setLabel('left','Amplitude')
         self.fftPlot.showGrid(x=True, y=True)
@@ -87,6 +89,7 @@ class fftPlot(QWidget):
         self.plotWidget.togglePause(self.paused)
 
     def addCurve(self, name):
+        name = str(name)
         self.fftPlotCurves[name] = fftPlotCurve(self.fftPlot, self.records[name])
 
     def removeCurve(self, name):
@@ -95,8 +98,10 @@ class fftPlot(QWidget):
         del self.fftPlotCurves[name]
 
     def selectionChange(self, name, value):
+        name = str(name)
         if name in self.fftPlotCurves:
             if not value:
+                print('removing curve = ', name)
                 self.removeCurve(name)
         elif value:
             self.addCurve(name)
@@ -129,6 +134,22 @@ class fftPlotCurve(QObject):
     def removePlot(self, name):
         self.fftplot.removeItem(self.plotWidget.getItem(0,0))
 
+    def _fourierTransform(self, x, y):
+        ## Perform fourier transform. If x values are not sampled uniformly,
+        ## then use np.interp to resample before taking fft.
+        dx = np.diff(x)
+        uniform = not np.any(np.abs(dx-dx[0]) > (abs(dx[0]) / 1000.))
+        if not uniform:
+            # print('FFT not uniform!  ', max(np.abs(dx-dx[0])))
+            x2 = np.linspace(x[0], x[-1], len(x))
+            y = np.interp(x2, x, y)
+            x = x2
+        f = np.fft.fft(y) / len(y)
+        y = abs(f[1:int(len(f)/2)])
+        dt = x[-1] - x[0]
+        x = np.linspace(0, 0.5*len(x)/dt, len(y))
+        return x, y
+
     def update(self):
         start = time.time()
         self.removeFFTLabels()
@@ -138,10 +159,11 @@ class fftPlotCurve(QObject):
             if len(data) > self.decimateScale:
                 del data[:len(data)-self.decimateScale]
             x, y = zip(*data)
-            y = (y-self.mean)/self.stddev
+            x, y = self._fourierTransform(x, y)
+            y = y/max(y)
             self.plot.setData({'x': x, 'y': y}, pen=self.color)
             if len(self.plot.yDisp) > 0:
-                indexes = peakutils.indexes(self.plot.yDisp, thres=0.5, min_dist=10)
+                indexes = peakutils.indexes(self.plot.yDisp, thres=0.75, min_dist=10)
                 if len(indexes) < 5:
                     for index in indexes:
                         fftTextlabel=pg.TextItem(html='<span style="color: '+pg.mkColor(self.color).name()+';">'+str(round(self.plot.xDisp[index],2))+'</span>',anchor=(-0.7,1.2), angle=0)

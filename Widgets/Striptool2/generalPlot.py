@@ -33,8 +33,8 @@ class CustomException(Exception):
 
 class generalPlot(QWidget):
 
-    signalAdded = QtCore.pyqtSignal('QString')
-    signalRemoved = QtCore.pyqtSignal('QString')
+    signalAdded = QtCore.pyqtSignal(str)
+    signalRemoved = QtCore.pyqtSignal(str)
 
     def __init__(self, parent = None):
         super(generalPlot, self).__init__(parent)
@@ -53,7 +53,7 @@ class generalPlot(QWidget):
             signalrecord = signalRecord(records=self.records, name=name, pen=pen, timer=timer, maxlength=maxlength, function=function, args=args, **kwargs)
             self.records[name]['record'] = signalrecord
             self.records[name]['parent'] = self
-            self.signalAdded.emit(name)
+            self.signalAdded.emit(str(name))
             logger.info('Signal '+name+' added!')
         else:
             logger.warning('Signal '+name+' already exists!')
@@ -121,7 +121,6 @@ class generalPlot(QWidget):
 
     def histogramplotselectionchange(self, name, value):
         if hasattr(self,'histogramplot'):
-            print 'histogram! = ', name
             self.histogramplot.selectionChange(name, value)
 
     def scatterPlot(self):
@@ -137,8 +136,3 @@ class generalPlot(QWidget):
     def createAxis(self, *args, **kwargs):
         if hasattr(self,'scrollingplot'):
             self.scrollingplot.createAxis(*args, **kwargs)
-        else:
-            try:
-                raise CustomException("Initialise scrollingPlot before use!")
-            except CustomException, (instance):
-                print "Caught: " + instance.parameter

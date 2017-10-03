@@ -86,6 +86,7 @@ class scrollingPlot(QWidget):
         self.generalPlot.signalRemoved.connect(self.removeSignal)
 
     def addSignal(self, name):
+        name = str(name)
         self.records[name]['scrollingplot'] = self.scrollingPlotPlot
         curve = self.scrollingPlotPlot.addCurve(name)
         self.records[name]['curve'] = curve
@@ -264,18 +265,6 @@ class scrollingPlotPlot(QWidget):
             if not i in rowsfilled:
                 return i
 
-    def toggleLogMode(self, record, name):
-        vb = record[name]['viewbox']
-        verticalRange = vb.viewRange()[1]
-        if record[name]['logScale']:
-            if verticalRange[0] < 0:
-                verticalRange[0] = 1e-12
-            logrange = [math.log(x,10) for x in verticalRange]
-            vb.setRange(yRange=logrange,disableAutoRange=True)
-        else:
-            normalrange = [10.0**x for x in verticalRange]
-            vb.setRange(yRange=normalrange,disableAutoRange=True)
-
 class curveRecordWorker(QtCore.QObject):
     def __init__(self, plot, name):
         QtCore.QObject.__init__(self)
@@ -298,6 +287,7 @@ class curve(QObject):
         self.cache = collections.deque()
         self.plot.scrollingPlot.timeChangeSignal.connect(self.updateTimeOffset)
         self.plot.records[name]['worker'].recordLatestValueSignal.connect(self.updateData)
+        self.path = None
 
     def changeViewbox(self, viewbox):
         name = self.name
@@ -342,9 +332,9 @@ class curve(QObject):
 
     ''' This updates the curve points based on the plot type and using the data from the timefilter function '''
     def updateData(self, data):
-        val = math.log(data[1],10) if self.records[self.name]['logScale'] else data[1]
+        val = data[1] if not self.records[self.name]['logScale'] else math.log(data[1],10)
         newpoint = QPointF(data[0], val)
-        if not hasattr(self,'path'):
+        if self.path == None:
             self.lastplottime = self.starttime = round(time.time(),2)
             self.path = QPainterPath(newpoint)
         self.path.lineTo(data[0], val)

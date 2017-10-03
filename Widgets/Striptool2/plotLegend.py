@@ -49,7 +49,7 @@ class plotLegend(ParameterTree):
         return "{:.4}".format(value)
 
     def printValue(self, param):
-        print param
+        print(param)
 
     def enableSelectedAxis(self, header):
         headers = self.selectedItems()
@@ -64,7 +64,7 @@ class plotLegend(ParameterTree):
                 axesdata[name] = []
             axesdata[name].append(onoff)
         # print 'axesdata = ', axesdata
-        for axis, booles in axesdata.iteritems():
+        for axis, booles in axesdata.items():
             axis.setVisible(any(booles))
         # print 'axis on = ', any([pvisible,visible])
         # self.records[name]['scrollingplot'].toggleAxis(name, any([pvisible,visible]))
@@ -86,6 +86,7 @@ class plotLegend(ParameterTree):
         # signal.sigValueChanged.connect(lambda: self.plotWidget.toggleLogMode(self.records,name))
 
     def addParameterSignal(self, name):
+        name = str(name)
         params = [
             {'name': name, 'type': 'group', 'children': [
                 {'name': 'Value', 'type': 'float', 'readonly': True, 'title': 'Value'},

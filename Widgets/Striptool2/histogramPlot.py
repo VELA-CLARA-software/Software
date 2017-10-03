@@ -86,6 +86,7 @@ class histogramPlot(QWidget):
         self.plotWidget.togglePause(self.paused)
 
     def addCurve(self, name):
+        name = str(name)
         self.histogramPlotCurves[name] = histogramPlotCurve(self.histogramPlot, self.records[name])
 
     def removeCurve(self, name):
@@ -93,8 +94,10 @@ class histogramPlot(QWidget):
         del self.histogramPlotCurves[name]
 
     def selectionChange(self, name, value):
+        name = str(name)
         if name in self.histogramPlotCurves:
             if not value:
+                print('removing Curve = ', name)
                 self.removeCurve(name)
         elif value == True:
             self.addCurve(name)
