@@ -9,9 +9,11 @@ except:
     from PyQt5.QtGui import *
     from PyQt5.QtWidgets import *
 import pyqtgraph as pg
-import striptool as striptool
-import scatterPlot as scatterplot
+from pyqtgraph.dockarea import *
+import generalPlot as generalplot
+import scrollingPlot as scrollingplot
 import numpy as np
+
 ''' Load loggerWidget library (comment out if not available) '''
 # sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\\..\\..\\loggerWidget\\')
 # import loggerWidget as lw
@@ -46,6 +48,14 @@ class striptool_Demo(QMainWindow):
         exitAction.setStatusTip('Exit application')
         exitAction.triggered.connect(qApp.quit)
 
+        scatterPlotAction = QAction('+Scatter', self)
+        scatterPlotAction.setStatusTip('Add Scatter Plot')
+        scatterPlotAction.triggered.connect(self.addScatterPlot)
+
+        fftPlotAction = QAction('+FFT', self)
+        fftPlotAction.setStatusTip('Add FFT Plot')
+        fftPlotAction.triggered.connect(self.addFFTPlot)
+
         self.setWindowTitle("striptool_Demo")
         self.statusBar = QStatusBar()
         self.setStatusBar(self.statusBar)
@@ -53,33 +63,43 @@ class striptool_Demo(QMainWindow):
         fileMenu = menubar.addMenu('&File')
         fileMenu.addAction(exitAction)
 
-        self.toolbar = self.addToolBar('Exit')
-        self.toolbar.addAction(exitAction)
+        self.toolbar = self.addToolBar('')
+        self.toolbar.addAction(scatterPlotAction)
+        self.toolbar.addAction(fftPlotAction)
 
         ''' Initiate logger (requires loggerWidget - comment out if not available)'''
         # self.logwidget1 = lw.loggerWidget([logger,striptool.logger])
 
         ''' These are some options for pyqtgraph that make the graph black-on-white, and turn on antialiasing, which is nicer on the eye '''
-        pg.setConfigOptions(antialias=True)
+        pg.setConfigOptions(antialias=False)
         pg.setConfigOption('background', 'w')
         pg.setConfigOption('foreground', 'k')
 
         ''' initialise an instance of the stripPlot Widget '''
-        self.sp = striptool.stripPlot(plotRateBar=True)
-        self.sp2 = striptool.stripPlot(plotRateBar=True)
-        self.sp3 = scatterplot.scatterPlot(stripplot=self.sp2, plotRateBar=True)
+        self.generalplot = generalplot.generalPlot()
+        self.scrollingplot = self.generalplot.scrollingPlot()
+        self.fftplot = self.generalplot.fftPlot()
+        self.histogramplot = self.generalplot.histogramPlot()
+        self.scatterplot = self.generalplot.scatterPlot()
+        self.legend = self.generalplot.legend()
+
+        ''' Create some common axes to plot similar signals with '''
+        self.generalplot.createAxis(name='logsmall', color='k',logMode=True, verticalRange=[1e-10, 1e-7])
+        self.generalplot.createAxis(name='logbig', color='b', logMode=True, verticalRange=[1e3, 1e5])
+        self.generalplot.createAxis(name='smallnumbers', color='g', logMode=False, verticalRange=[-5,10])
 
         ''' Add some signals to the striptool - note they call our signal generator at a frequency of 1/timer (100 Hz and 10 Hz in these cases).
             The 'pen' argument sets the color of the curves
                 - see <http://www.pyqtgraph.org/documentation/style.html>'''
-        self.sp.addSignal(name='signal1',pen='r', timer=1.0/10.0, function=self.createRandomSignal, arg=[0.5])
-        self.sp2.addSignal(name='signal3',pen='g', timer=1.0/10.0, function=self.createRandomSignal, arg=[100,10])
-        self.sp2.addSignal(name='signal2',pen='r', timer=1.0/10.0, function=self.createRandomSignal, arg=[1e-8, 1e-9], logScale=True, verticalRange=[1e-10, 1e-7])
-        self.sp2.addSignal(name='signal4',pen='b', timer=1.0/10.0, function=self.createRandomSignal, arg=[1e4, 1e1], logScale=True, verticalRange=[1e3, 1e5])
-        self.sp2.addSignal(name='signal5',pen='c', timer=1.0/10.0, function=self.createRandomSignal, arg=[1])
-        self.sp2.addSignal(name='signal6',pen='m', timer=1.0/10.0, function=self.createRandomSignal, arg=[3])
-        self.sp2.addSignal(name='signal7',pen='y', timer=1.0/10.0, function=self.createRandomSignal, arg=[5])
-        # self.sp3.addSignal(name='signal8',pen='b', timer=1.0/10.0, function=self.createRandomSignal, arg=[0.5])
+        self.generalplot.addSignal(name='signal1', pen='g', timer=1.0/50.0, function=self.createRandomSignal, args=[100,10,22])
+        self.generalplot.addSignal(name='signal2', pen='r', timer=1.0/10.0, function=self.createRandomSignal, args=[1e-8, 1e-9,4], axis='logsmall')
+        self.generalplot.addSignal(name='signal3', pen='b', timer=1.0/10.0, function=self.createRandomSignal, args=[1e4, 1e1, 2], axis='logbig')
+        self.generalplot.addSignal(name='signal4', pen='c', timer=1.0/20.0, function=self.createRandomSignal, args=[1,0.5,7.8], axis='smallnumbers')
+        self.generalplot.addSignal(name='signal5', pen='m', timer=1.0/10.0, function=self.createRandomSignal, args=[3,2,0.87], axis='smallnumbers')
+        self.generalplot.addSignal(name='signal6', pen='y', timer=1.0/10.0, function=self.createRandomSignal, args=[5,2,2.35], axis='smallnumbers')
+
+
+        # self.fftplot.addPlot('signal2')
 
         ''' this adds pre-data to the signal '''
         # ,'signal3':-3,'signal4':-1,'signal5':1,'signal6':3,'signal7':5
@@ -99,12 +119,24 @@ class striptool_Demo(QMainWindow):
             In the second tab we put the first stripplot. NB: the stripplot "sp" can only exist in one place at a time!
         '''
         self.tab = QTabWidget()
+        self.area = DockArea()
+        d1 = Dock("Scrolling Plot")
+        d2 = Dock("Plot Legend")
+        d3 = Dock("FFT Plot")
+        d4 = Dock("Scatter Plot")
+        d5 = Dock("Histogram Plot")
+        d1.addWidget(self.scrollingplot)
+        d2.addWidget(self.legend)
+        d3.addWidget(self.fftplot)
+        d4.addWidget(self.scatterplot)
+        d5.addWidget(self.histogramplot)
+        self.area.addDock(d1,'top')
+        self.area.addDock(d2, position='right', relativeTo=d1)
+        self.area.addDock(d3,'bottom')
+        self.area.addDock(d4, position='right', relativeTo=d3)
+        self.area.addDock(d5, position='right', relativeTo=d4)
         self.plotLayout = QVBoxLayout()
-        self.splitter = QSplitter()
-        self.splitter.setOrientation(Qt.Vertical)
-        self.splitter.addWidget(self.sp2)
-        self.splitter.addWidget(self.sp3)
-        self.plotLayout.addWidget(self.splitter)
+        self.plotLayout.addWidget(self.area)
         self.timeButtonList = []
         self.timeButton10 = self.createTimeButton('10s')
         self.timeButton60 = self.createTimeButton('1m')
@@ -122,45 +154,44 @@ class striptool_Demo(QMainWindow):
         self.plotWidget = QFrame()
         self.plotWidget.setLayout(self.plotLayout)
         self.tab.addTab(self.plotWidget,"Strip Plot")
-        self.tab.addTab(self.sp,"Strip Plot 1")
-        ''' Here we connect the QTabWidget signal "currentChanged" to a function defined above. This will pause plots not currently visible
-            whenever the tabs are changed. This reduces the load as only visible plots are updated. '''
-        self.tab.currentChanged.connect(lambda x: self.pausePlots(self.tab))
 
         ''' Add loggerWidget Tab (requires loggerWidget - comment out if not available)'''
         # self.tab.addTab(self.logwidget1,"Log")
 
         ''' This starts the plotting timer (by default at 1 Hz) '''
-        self.sp.start()
-        self.sp2.start()
-        self.sp3.start()
+        self.generalplot.start()
+        self.scrollingplot.start()
+        self.fftplot.start()
+        # self.scatterplot.start()
+        self.histogramplot.start()
 
         ''' modify the plot scale to 10 secs '''
-        self.sp.setPlotScale(600)
-        self.sp2.setPlotScale(60*1)
-        # self.sp3.setPlotScale(600)
-
-        # self.sp2.setPlotType(FFT=True)
-        # self.sp3.setPlotType(FFT=False)
-        self.sp.setPlotRate(10)
-        self.sp2.setPlotRate(1)
-        # self.sp3.setPlotRate(10)
+        self.scrollingplot.setPlotScale(60)
 
         ''' Display the Qt App '''
         self.setCentralWidget(self.tab)
 
-        # self.sp.plotWidget.statusChanged.connect(self.updateStatusBar)
-        # self.sp2.plotWidget.statusChanged.connect(self.updateStatusBar)
-        # self.sp3.plotWidget.statusChanged.connect(self.updateStatusBar)
     ''' This is a signal generator. It could easily read a magnet current using the hardware controllers
         The signal should have peaks at 5 Hz and 10 Hz, which should be seen on the FFT plot assuming the
         sample rate is high enough
     '''
-    def createRandomSignal(self, mean=0, sigma=1, t=None):
+    def createRandomSignal(self, mean=0, sigma=1, freq=1.682, t=None):
         if t == None:
             t = time.time()
-        signalValue = np.random.normal(mean, sigma)
+        signalValue = mean+sigma*np.sin(2*freq*np.pi*t+0.05)+0.5*np.random.normal(mean, sigma)#+np.sin(1.384*2*np.pi*t-0.1)+0.5*np.random.normal(mean, sigma)
         return signalValue
+
+    def addScatterPlot(self):
+        d = Dock("Scatter Plot")
+        scatterplot = self.generalplot.scatterPlot()
+        d.addWidget(scatterplot)
+        self.area.addDock(d, position='right', relativeTo="Scatter Plot")
+
+    def addFFTPlot(self):
+        d = Dock("FFT Plot")
+        fftplot = self.generalplot.fftPlot()
+        d.addWidget(fftplot)
+        self.area.addDock(d, position='right', relativeTo="FFT Plot")
 
     def pausePlots(self, parentwidget):
         widgets = parentwidget.findChildren((striptool.stripPlot))
@@ -178,7 +209,7 @@ class striptool_Demo(QMainWindow):
 
     def changePlotScales(self, time):
         print( 'time = ', time)
-        for plot in self.findChildren((striptool.stripPlot)):
+        for plot in self.findChildren((scrollingplot.scrollingPlot)):
             plot.setPlotScale(time)
 
     def updateStatusBar(self,text):
@@ -195,7 +226,7 @@ class striptool_Demo(QMainWindow):
         exit()
 
     def closeEvent(self, event):
-        for plot in self.findChildren((striptool.stripPlot)):
+        for plot in self.findChildren((scrollingplot.scrollingPlot)):
             plot.close()
 
 def main():
