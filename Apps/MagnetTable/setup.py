@@ -1,10 +1,10 @@
 from distutils.core import setup
 
 setup(
-    name='magnet-table',
+    name='MagnetTable',
     version='1.0',
     packages=[''],
-    url='https://github.com/VELA-CLARA-software/Software/tree/master/magnet-table',
+    url='https://github.com/VELA-CLARA-software/Software/tree/master/MagnetTable',
     license='',
     author='Ben Shepherd',
     author_email='ben.shepherd@stfc.ac.uk',
