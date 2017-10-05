@@ -14,8 +14,8 @@ os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
 os.environ["EPICS_CA_MAX_ARRAY_BYTES"] = "10000000"
 
 ## Switch to using dark grey background and white foreground
-pg.setConfigOption('background', 0.2)
-pg.setConfigOption('foreground', 'w')
+# pg.setConfigOption('background', 0.2)
+# pg.setConfigOption('foreground', 'w')
 
 image_credits = {
     'parasol.png': 'https://www.shareicon.net/parasol-sun-umbrella-travel-tools-and-utensils-summer-sunshade-summertime-794079',
@@ -26,7 +26,14 @@ image_credits = {
     'padlock-closed.png': 'https://www.iconfinder.com/icons/49855/closed_padlock_icon#size=32',
     'padlock-open.png': 'https://www.iconfinder.com/icons/49856/open_padlock_unlocked_unsecure_icon#size=32',
     'play-button.png': 'http://www.flaticon.com/free-icon/play-button_149657#term=play&page=1&position=11',
-    'pause-symbol.png': 'http://www.flaticon.com/free-icon/pause-symbol_25696#term=pause&page=1&position=7'}
+    'pause-symbol.png': 'http://www.flaticon.com/free-icon/pause-symbol_25696#term=pause&page=1&position=7',
+    'submachine-gun.png': 'https://www.flaticon.com/free-icon/submachine-gun_1233',
+    'pistol.png': 'https://www.flaticon.com/free-icon/pistol_116553',
+    'bike.png': 'https://www.flaticon.com/free-icon/man-cycling_60693',
+    'car.png': 'https://www.flaticon.com/free-icon/volkswagen-car-side-view_66906',
+    'jet.png': 'https://www.flaticon.com/free-icon/fighter-jet-silhouette_25431',
+    'rocket.png': 'https://www.flaticon.com/free-icon/small-rocket-ship-silhouette_25452',
+}
 
 Ui_MainWindow, QtBaseClass = uic.loadUiType("rf_sol_gui.ui")
 
@@ -82,7 +89,22 @@ class ParasolApp(QtGui.QMainWindow, Ui_MainWindow):
         self.phase_slider.valueChanged.connect(self.phaseSliderChanged)
         for spin in (self.x_spin, self.xdash_spin, self.y_spin, self.ydash_spin):
             spin.valueChanged.connect(self.ustartChanged)
+        self.tracking_dropdown.activated.connect(self.trackingDropdownChanged)
 
+        # Add these to the GUI with a custom view parameter, so we can show axes on the plots
+        self.initial_beam_plot = pg.ImageView(view=pg.PlotItem())
+        self.final_beam_plot = pg.ImageView(view=pg.PlotItem())
+        self.initial_beam_plot.setPredefinedGradient('thermal')
+        self.final_beam_plot.setPredefinedGradient('thermal')
+        self.initial_beam_plot.getView().setLabels(title='Initial beam', left='y [mm]', bottom='x [mm]')
+        self.final_beam_plot.getView().setLabels(title='Final beam', left='y [mm]', bottom='x [mm]')
+        self.initial_beam_plot.getView().invertY(False)
+        self.final_beam_plot.getView().invertY(False)
+        self.xy_plot_hbox.addWidget(self.initial_beam_plot)
+        self.xy_plot_hbox.addWidget(self.final_beam_plot)
+
+        self.initial_beam_plot.setVisible(False)
+        self.final_beam_plot.setVisible(False)
         self.gun_dropdown.activated.connect(self.gunChanged)
         self.magInit = MagCtrl.init()
         self.machine_mode_dropdown.activated.connect(self.machineModeChanged)
@@ -98,8 +120,11 @@ class ParasolApp(QtGui.QMainWindow, Ui_MainWindow):
     def resizeEvent(self, resizeEvent):
         # Remove plots one row at a time as the window shrinks
         height = self.geometry().height()
-        self.xy_plot.setVisible(height >= 512)
-        self.xdash_ydash_plot.setVisible(height >= 512)
+        show_beam = self.tracking_dropdown.currentIndex() == 1
+        self.xy_plot.setVisible(height >= 512 and not show_beam)
+        self.xdash_ydash_plot.setVisible(height >= 512 and not show_beam)
+        self.initial_beam_plot.setVisible(height >= 512 and show_beam)
+        self.final_beam_plot.setVisible(height >= 512 and show_beam)
         field_plots = (self.E_field_plot, self.B_field_plot, self.phase_play_button, self.phase_slider)
         [control.setVisible(height >= 420) for control in field_plots]
         self.B_field_plot.setVisible(height >= 420)
@@ -248,16 +273,51 @@ class ParasolApp(QtGui.QMainWindow, Ui_MainWindow):
         """The Larmor angle has been modified - find the solenoid current that gives this value."""
         self.sol_spin.setValue(self.gun.setLarmorAngle(value))
 
+    def trackingDropdownChanged(self, index=None):
+        """The tracking type dropdown has changed. Rerun the tracking."""
+        show_beam = index == 1
+        self.xy_plot.setVisible(not show_beam)
+        self.xdash_ydash_plot.setVisible(not show_beam)
+        self.initial_beam_plot.setVisible(show_beam)
+        self.final_beam_plot.setVisible(show_beam)
+        self.ustart_label.setText('Beam size (sigma)' if show_beam else 'Initial particle position')
+        self.ustartChanged()
+
     def ustartChanged(self, value=None):
-        """The particle start position has been modified - track the particle through the fields."""
-        uend = self.gun.trackBeam(1e-3 * np.matrix([spin.value() for spin in (self.x_spin, self.xdash_spin, self.y_spin, self.ydash_spin)], dtype='float').T)
-        self.xy_plot.plotItem.legend.items = []
-        self.xy_plot.plot(self.gun.getZRange(), 1e3 * self.gun.u_array[:, 0], pen='r', name='x', clear=True)
-        self.xy_plot.plot(self.gun.getZRange(), 1e3 * self.gun.u_array[:, 2], pen='g', name='y')
-        self.xdash_ydash_plot.plotItem.legend.items = []
-        self.xdash_ydash_plot.plot(self.gun.getZRange(), 1e3 * self.gun.u_array[:, 1], pen='r', name="x'", clear=True)
-        self.xdash_ydash_plot.plot(self.gun.getZRange(), 1e3 * self.gun.u_array[:, 3], pen='g', name="y'")
-        self.uend_label.setText("<b>Final particle position</b> x {0:.3g} mm, x' {1:.3g} mrad; y {2:.3g} mm, y' {3:.3g} mrad".format(*uend.flat))
+        """The particle start position has been modified - track the particle/beam through the fields."""
+        show_beam = self.tracking_dropdown.currentIndex() == 1
+        spin_values = [spin.value() for spin in (self.x_spin, self.xdash_spin, self.y_spin, self.ydash_spin)]
+        if show_beam:
+            matrix = self.gun.getOverallMatrix()
+            n = 30000
+            x0 = np.matrix([np.random.normal(0, sigma * 1e-3, n) for sigma in spin_values])
+            x1 = np.array([matrix.dot(x.T) for x in x0.T])
+
+            bins = 60
+            # x, y initial
+            histogram, x_edges, y_edges = np.histogram2d(np.asarray(x0)[0], np.asarray(x0)[2], bins)
+            x_edges *= 1e3
+            y_edges *= 1e3
+            x_range = x_edges[-1] - x_edges[0]
+            y_range = y_edges[-1] - y_edges[0]
+            self.initial_beam_plot.setImage(histogram, pos=(x_edges[0], y_edges[0]), scale=(x_range / bins, y_range / bins))
+            # x, y final
+            histogram, x_edges, y_edges = np.histogram2d(x1[:, 0].flatten(), x1[:, 2].flatten(), bins)
+            x_edges *= 1e3
+            y_edges *= 1e3
+            x_range = x_edges[-1] - x_edges[0]
+            y_range = y_edges[-1] - y_edges[0]
+            self.final_beam_plot.setImage(histogram, pos=(x_edges[0], y_edges[0]), scale=(x_range / bins, y_range / bins))
+            self.uend_label.setText("<b>Final beam size</b> x {0:.3g} mm, x' {1:.3g} mrad; y {2:.3g} mm, y' {3:.3g} mrad".format(*np.std(x1[:, :, 0], 0) * 1e3))
+        else:
+            uend = self.gun.trackBeam(1e-3 * np.matrix(spin_values, dtype='float').T)
+            self.xy_plot.plotItem.legend.items = []
+            self.xy_plot.plot(self.gun.getZRange(), 1e3 * self.gun.u_array[:, 0], pen='r', name='x', clear=True)
+            self.xy_plot.plot(self.gun.getZRange(), 1e3 * self.gun.u_array[:, 2], pen='g', name='y')
+            self.xdash_ydash_plot.plotItem.legend.items = []
+            self.xdash_ydash_plot.plot(self.gun.getZRange(), 1e3 * self.gun.u_array[:, 1], pen='r', name="x'", clear=True)
+            self.xdash_ydash_plot.plot(self.gun.getZRange(), 1e3 * self.gun.u_array[:, 3], pen='g', name="y'")
+            self.uend_label.setText("<b>Final particle position</b> x {0:.3g} mm, x' {1:.3g} mrad; y {2:.3g} mm, y' {3:.3g} mrad".format(*uend.flat))
 
     def machineModeChanged(self, index=None):
         mode = str(self.machine_mode_dropdown.currentText())

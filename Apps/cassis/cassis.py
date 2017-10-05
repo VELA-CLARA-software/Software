@@ -9,6 +9,10 @@ and grabbing traces from the wall current monitor and beam loss monitors via the
 #TODO: make link to work folder clickable
 #TODO: make sure Github has up-to-date version of cdsbox1 script
 
+# Dependencies
+# Easiest to install using Miniconda
+# conda install libtiff pyqt=4 pyzmq pyqtgraph
+
 import sys
 from PyQt4 import QtCore, QtGui, uic
 import os

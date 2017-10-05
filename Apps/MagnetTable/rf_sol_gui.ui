@@ -38,14 +38,25 @@
         <property name="toolTip">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select the RF/solenoid model to use.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Gun-10&lt;/span&gt;: VELA/CLARA 10 Hz gun&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Linac1&lt;/span&gt;: CLARA Linac 1&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;gb-rf-gun&lt;/span&gt;: Gulliford-Bazarov RF gun example&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;gb-dc-gun&lt;/span&gt;: Gulliford-Bazarov DC gun example&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
+        <property name="sizeAdjustPolicy">
+         <enum>QComboBox::AdjustToContentsOnFirstShow</enum>
+        </property>
         <item>
          <property name="text">
           <string>Gun-10</string>
+         </property>
+         <property name="icon">
+          <iconset>
+           <normaloff>Icons/pistol.png</normaloff>Icons/pistol.png</iconset>
          </property>
         </item>
         <item>
          <property name="text">
           <string>Linac1</string>
+         </property>
+         <property name="icon">
+          <iconset>
+           <normaloff>Icons/bike.png</normaloff>Icons/bike.png</iconset>
          </property>
         </item>
         <item>
@@ -642,6 +653,20 @@
     </item>
     <item>
      <layout class="QHBoxLayout" name="ustart_hbox">
+      <item>
+       <widget class="QComboBox" name="tracking_dropdown">
+        <item>
+         <property name="text">
+          <string>Single particle</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Beam</string>
+         </property>
+        </item>
+       </widget>
+      </item>
       <item>
        <widget class="QLabel" name="ustart_label">
         <property name="sizePolicy">

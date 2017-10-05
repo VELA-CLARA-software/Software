@@ -347,7 +347,7 @@ Bucking coil current: {self.solenoid.bc_current:.3f} A'''
         M4[mask, 3, 2] = off_diag
 
         self.M_array = np.matmul(np.matmul(np.matmul(M1, M2), M3), M4)
-        self.M_total = reduce(np.dot, self.M_array)
+        self.M_total = reduce(np.dot, self.M_array[::-1])  # multiply from the right!
         self.calc_level = CALC_MATRICES
 
     def resetValue(self, attr_name, value, calc_level):

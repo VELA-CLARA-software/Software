@@ -8,6 +8,7 @@ Combined solenoid and bucking coil maps are handled too."""
 import numpy as np
 from collections import namedtuple
 import scipy.interpolate
+from pkg_resources import resource_filename
 
 # Solenoids that we know about.
 # The ones prefixed 'gb-' are referenced in the Gulliford/Bazarov paper.
@@ -47,7 +48,8 @@ class Solenoid():
             # and n <= 3
             # See BJAS' spreadsheet: coeffs-vs-z.xlsx
             # This takes care of interaction between the BC and solenoid
-            self.b_field = field_map_attr(coeffs=np.loadtxt('gun10-coeffs-vs-z.csv', delimiter=','),
+            field_map_coeffs = np.loadtxt(resource_filename(__name__, 'gun10-coeffs-vs-z.csv'), delimiter=',')
+            self.b_field = field_map_attr(coeffs=field_map_coeffs,
                                           z_map=np.arange(0, 401, dtype='float64') * 1e-3,
                                           bc_area=856.0, bc_turns=720.0, sol_area=8281.0, sol_turns=144.0)
             self.z_map = self.b_field.z_map
