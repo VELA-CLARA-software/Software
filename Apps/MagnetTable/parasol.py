@@ -70,9 +70,6 @@ class ParasolApp(QtGui.QMainWindow, Ui_MainWindow):
         self.xy_plot.addLegend()
         self.xdash_ydash_plot.setLabels(title='Particle angle', left="x', y' [mrad]", bottom='z [m]')
         self.xdash_ydash_plot.addLegend()
-        for plot in (self.E_field_plot, self.B_field_plot, self.momentum_plot,
-                     self.larmor_angle_plot, self.E_field_plot, self.xy_plot, self.xdash_ydash_plot):
-            plot.showGrid(True, True)
 
         self.peak_field_spin.valueChanged.connect(self.rfPeakFieldChanged)
         self.phase_spin.valueChanged.connect(self.phaseChanged)
@@ -92,19 +89,22 @@ class ParasolApp(QtGui.QMainWindow, Ui_MainWindow):
         self.tracking_dropdown.activated.connect(self.trackingDropdownChanged)
 
         # Add these to the GUI with a custom view parameter, so we can show axes on the plots
-        self.initial_beam_plot = pg.ImageView(view=pg.PlotItem())
-        self.final_beam_plot = pg.ImageView(view=pg.PlotItem())
-        self.initial_beam_plot.setPredefinedGradient('thermal')
-        self.final_beam_plot.setPredefinedGradient('thermal')
-        self.initial_beam_plot.getView().setLabels(title='Initial beam', left='y [mm]', bottom='x [mm]')
-        self.final_beam_plot.getView().setLabels(title='Final beam', left='y [mm]', bottom='x [mm]')
-        self.initial_beam_plot.getView().invertY(False)
-        self.final_beam_plot.getView().invertY(False)
-        self.xy_plot_hbox.addWidget(self.initial_beam_plot)
-        self.xy_plot_hbox.addWidget(self.final_beam_plot)
+        for name in ('initial', 'final'):
+            plot = pg.ImageView(view=pg.PlotItem())
+            setattr(self, name + '_beam_plot', plot)
+            plot.setPredefinedGradient('thermal')
+            view = plot.getView()
+            view.invertY(False)  # otherwise positive Y is at the bottom
+            view.setLabels(title=name.title() + ' beam', left='y [mm]', bottom='x [mm]')
+            view.showGrid(True, True)
+            self.xy_plot_hbox.addWidget(plot)
+            plot.setVisible(False)
+        [link(self.initial_beam_plot.getView()) for link in (view.setXLink, view.setYLink)]
 
-        self.initial_beam_plot.setVisible(False)
-        self.final_beam_plot.setVisible(False)
+        for plot in (self.E_field_plot, self.B_field_plot, self.momentum_plot,
+                     self.larmor_angle_plot, self.E_field_plot, self.xy_plot, self.xdash_ydash_plot):
+            plot.showGrid(True, True)
+
         self.gun_dropdown.activated.connect(self.gunChanged)
         self.magInit = MagCtrl.init()
         self.machine_mode_dropdown.activated.connect(self.machineModeChanged)
@@ -294,21 +294,16 @@ class ParasolApp(QtGui.QMainWindow, Ui_MainWindow):
             x1 = np.array([matrix.dot(x.T) for x in x0.T])
 
             bins = 60
-            # x, y initial
-            histogram, x_edges, y_edges = np.histogram2d(np.asarray(x0)[0], np.asarray(x0)[2], bins)
-            x_edges *= 1e3
-            y_edges *= 1e3
-            x_range = x_edges[-1] - x_edges[0]
-            y_range = y_edges[-1] - y_edges[0]
-            self.initial_beam_plot.setImage(histogram, pos=(x_edges[0], y_edges[0]), scale=(x_range / bins, y_range / bins))
-            # x, y final
-            histogram, x_edges, y_edges = np.histogram2d(x1[:, 0].flatten(), x1[:, 2].flatten(), bins)
-            x_edges *= 1e3
-            y_edges *= 1e3
-            x_range = x_edges[-1] - x_edges[0]
-            y_range = y_edges[-1] - y_edges[0]
-            self.final_beam_plot.setImage(histogram, pos=(x_edges[0], y_edges[0]), scale=(x_range / bins, y_range / bins))
-            self.uend_label.setText("<b>Final beam size</b> x {0:.3g} mm, x' {1:.3g} mrad; y {2:.3g} mm, y' {3:.3g} mrad".format(*np.std(x1[:, :, 0], 0) * 1e3))
+            for xy_data, plot in ((np.asarray(x0)[0::2], self.initial_beam_plot),
+                                  (np.squeeze(x1[:, 0::2].T), self.final_beam_plot)):
+                histogram, x_edges, y_edges = np.histogram2d(*xy_data, bins=bins)
+                x_edges *= 1e3
+                y_edges *= 1e3
+                x_range = x_edges[-1] - x_edges[0]
+                y_range = y_edges[-1] - y_edges[0]
+                plot.setImage(histogram, pos=(x_edges[0], y_edges[0]), scale=(x_range / bins, y_range / bins))
+            label_text = "<b>Final beam size</b> ({n:.3g} particles): x {0:.3g} mm, x' {1:.3g} mrad; y {2:.3g} mm, y' {3:.3g} mrad"
+            self.uend_label.setText(label_text.format(*np.std(x1[:, :, 0], 0) * 1e3, n=n))
         else:
             uend = self.gun.trackBeam(1e-3 * np.matrix(spin_values, dtype='float').T)
             self.xy_plot.plotItem.legend.items = []
