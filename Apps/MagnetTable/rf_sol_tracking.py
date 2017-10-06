@@ -452,7 +452,7 @@ Bucking coil current: {self.solenoid.bc_current:.3f} A'''
         if not self.quiet:
             print("""Particle start position:
 x = {0:.3f} mm, x' = {1:.3f} mrad
-y = {2:.3f} mm, y' = {3:.3f} mrad""".format(*u.A1 * 1e3, **globals()))
+y = {2:.3f} mm, y' = {3:.3f} mrad""".format(*np.asarray(u).A1 * 1e3, **globals()))
         for i, M in enumerate(self.M_array):
             self.u_array[i] = u.T
             u = M * u
@@ -541,12 +541,27 @@ y = {2:.3f} mm, y' = {3:.3f} mrad'''.format(*u.A1 * 1e3, **globals()))
 
 
 if __name__ == '__main__':
-    gun10 = RFSolTracker('Gun-10', quiet=False)
-    gun10.setRFPhase(330)
-    # gun10 = RFSolTracker('gb-rf-gun', quiet=False)
-    # gun10.setRFPhase(300)
-    gun10.getFinalMomentum()
-    gun10.getMagneticFieldMap()
-    gun10.getFinalLarmorAngle()
-    # print(gun10.getOverallMatrix())
-    gun10.trackBeam(np.matrix([0.001, 0, 0, 0]).T)
+    gun = 'Gun-10'
+    print('Running simulation of ' + gun)
+    gun10 = RFSolTracker(gun, quiet=False)
+    peak_field = 50
+    phase = 330
+    print(u'Peak field: {:.3f}, phase {:.3f}°'.format(peak_field, phase))
+    gun10.setRFPeakField(peak_field)
+    gun10.setRFPhase(phase)
+    momentum = gun10.getFinalMomentum()
+    print('Final momentum: {:.3f} MeV/c'.format(momentum))
+    B_field = 0.2
+    print('Peak solenoid field: {:.3f} T'.format(B_field))
+    gun10.solenoid.setPeakMagneticField(B_field)
+    larmor_angle = gun10.getFinalLarmorAngle()
+    print(u'Final Larmor angle: {:.3f}°'.format(larmor_angle))
+    x_init = [1, 1, 4, 1]
+    n = 30000
+    print('\nBeam tracking, {} particles'.format(n))
+    matrix = gun10.getOverallMatrix()
+    x0 = np.matrix([np.random.normal(0, sigma * 1e-3, n) for sigma in x_init])
+    x1 = np.array([matrix.dot(x.T) for x in x0.T])
+    print("Initial sigmas: x = {:.3f} mm, x' = {:.3f} mrad, y = {:.3f} mm, y' = {:.3f} mrad".format(*x_init))
+    print("Final sigmas: x = {:.3f} mm, x' = {:.3f} mrad, y = {:.3f} mm, y' = {:.3f} mrad".format(*np.std(x1[:, :, 0], 0) * 1e3))
+
