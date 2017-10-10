@@ -97,6 +97,14 @@ class ParasolApp(QtGui.QMainWindow, Ui_MainWindow):
             view.invertY(False)  # otherwise positive Y is at the bottom
             view.setLabels(title=name.title() + ' beam', left='y [mm]', bottom='x [mm]')
             view.showGrid(True, True)
+            # I want the grid to be shown on top, otherwise the black areas of the image obscure the grid
+            # This works, but means that the image can only be panned horizontally
+            # so I'll comment it out for now
+            # https://stackoverflow.com/questions/46584438/show-grid-lines-over-image-in-pyqtgraph/46605797#46605797
+            # https://github.com/pyqtgraph/pyqtgraph/pull/565
+            # for axis_name in view.axes:
+            #     axis = view.getAxis(axis_name)
+            #     axis.setZValue(1)  # ensure grid is drawn on top of image
             self.xy_plot_hbox.addWidget(plot)
             plot.setVisible(False)
         [link(self.initial_beam_plot.getView()) for link in (view.setXLink, view.setYLink)]

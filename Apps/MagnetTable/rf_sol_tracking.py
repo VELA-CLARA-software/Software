@@ -76,7 +76,7 @@ def requires_calc_level(level):
 
 # Devices (guns/linacs) that we know about.
 # The ones prefixed 'gb-' are referenced in the Gulliford/Bazarov paper.
-MODEL_LIST = ('gb-rf-gun', 'gb-dc-gun', 'Gun-10', 'Linac1')
+MODEL_LIST = ('gb-rf-gun', 'gb-dc-gun', 'Gun-10', 'Gun-400', 'Linac1')
 
 field_map_attr = namedtuple('field_map_attr', 'coeffs z_map bc_area bc_turns sol_area sol_turns')
 
@@ -96,19 +96,18 @@ class RFSolTracker(object):
         # Set up the simulation
         self.solenoid = solenoid_field_map.Solenoid(name, quiet=self.quiet)
         astra_folder = r'\\fed.cclrc.ac.uk\Org\NLab\ASTeC-TDL\Projects\tdl-1168 CLARA\CLARA-ASTeC Folder\Accelerator Physics\ASTRA'
-        if name == 'Gun-10':
-            gun10_folder = astra_folder + r'\Archive from Delta + CDR' + '\\'
+        if name[:3] == 'Gun':
+            cav_fieldmap_file = astra_folder + (r'\Archive from Delta + CDR\bas_gun.txt' if name == 'Gun-10' \
+                else r'\Injector\fieldmaps\HRRG_1D_RF.dat')
 
             # Read in RF field map and normalise so peak = 1
-            gun10_cav_fieldmap_file = gun10_folder + 'bas_gun.txt'
-            gun10_cav_fieldmap = np.loadtxt(gun10_cav_fieldmap_file, delimiter='\t')
+            cav_fieldmap = np.loadtxt(cav_fieldmap_file, delimiter='\t')
 
-            self.rf_peak_field = float(np.max(gun10_cav_fieldmap[:, 1]) / 1e6)
+            self.rf_peak_field = 50  # float(np.max(cav_fieldmap[:, 1]) / 1e6)  # set a 'reasonable' value
             # Normalise
-            gun10_cav_fieldmap[:, 1] /= (self.rf_peak_field * 1e6)
-            self.norm_E = [solenoid_field_map.interpolate(*gun10_cav_fieldmap.T),]
+            cav_fieldmap[:, 1] /= np.max(cav_fieldmap[:, 1])
+            self.norm_E = [solenoid_field_map.interpolate(*cav_fieldmap.T),]
             self.phase_offset = np.zeros(1, dtype='float')
-            #            self.E = lambda z: E_gun10(z) * self.rf_peak_field * 1e6
             self.freq = 2998.5 * 1e6  # in Hz
             self.phase = 330.0  # to get optimal acceleration
 
@@ -117,7 +116,7 @@ class RFSolTracker(object):
             self.gamma_start = np.sqrt(1 + abs(1 / epsilon_e))  # 1 eV
 
             self.z_start = 0
-            self.z_end = max(gun10_cav_fieldmap[-1, 1], self.solenoid.getZMap()[-1])
+            self.z_end = max(cav_fieldmap[-1, 1], self.solenoid.getZMap()[-1])
 
         elif name == 'Linac1':
             linac1_folder = astra_folder + r'\Injector\fieldmaps' + '\\'

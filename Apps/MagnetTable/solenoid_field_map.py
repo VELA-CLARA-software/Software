@@ -12,7 +12,7 @@ from pkg_resources import resource_filename
 
 # Solenoids that we know about.
 # The ones prefixed 'gb-' are referenced in the Gulliford/Bazarov paper.
-SOLENOID_LIST = ('gb-rf-gun', 'gb-dc-gun', 'Gun-10', 'Linac1')
+SOLENOID_LIST = ('gb-rf-gun', 'gb-dc-gun', 'Gun-10', 'Gun-400', 'Linac1')
 
 field_map_attr = namedtuple('field_map_attr', 'coeffs z_map bc_area bc_turns sol_area sol_turns')
 field_map_attr.__new__.__defaults__ = (1, 1, 1, 1)
@@ -41,21 +41,28 @@ class Solenoid():
             raise NotImplementedError('Unknown solenoid "{name}". Valid names are {SOLENOID_LIST}.'.format(**locals()))
         self.name = name
         self.calc_done = False
-        if name == 'Gun-10':
+        if name[:3] == 'Gun':
+            # 2D models of Gun-10 and Gun-400 solenoids have slightly different sizes for their coils.
+            # This should be resolved at some point... TODO
+            if name == 'Gun-10':
+                bc_area, bc_turns, sol_area = (856.0, 720.0, 8281.0)
+                self.bc_range = (0.0, 5.0)
+                self.bc_current = 5.0  # reasonable default value
+            else:
+                bc_area, bc_turns, sol_area = (2744.82, 54.0, 7225.0)
+                self.bc_range = (0.0, 400.0)
+                self.bc_current = 400.0  # reasonable default value
             # magnetic field map built up from coefficients for x**n and y**n
             # where x = BC current density
             # and y = solenoid current density
             # and n <= 3
             # See BJAS' spreadsheet: coeffs-vs-z.xlsx
             # This takes care of interaction between the BC and solenoid
-            field_map_coeffs = np.loadtxt(resource_filename(__name__, 'gun10-coeffs-vs-z.csv'), delimiter=',')
-            self.b_field = field_map_attr(coeffs=field_map_coeffs,
-                                          z_map=np.arange(0, 401, dtype='float64') * 1e-3,
-                                          bc_area=856.0, bc_turns=720.0, sol_area=8281.0, sol_turns=144.0)
+            field_map_coeffs = np.loadtxt(str(name + '-coeffs-vs-z.csv'), delimiter=',')
+            self.b_field = field_map_attr(coeffs=field_map_coeffs, z_map=np.arange(0, 401, dtype='float64') * 1e-3,
+                                          bc_area=bc_area, bc_turns=bc_turns, sol_area=sol_area, sol_turns=144.0)
             self.z_map = self.b_field.z_map
-            self.bc_current = 5.0  # reasonable default value
             self.sol_current = 300.0  # reasonable default value
-            self.bc_range = (0.0, 5.0)
             self.sol_range = (0.0, 500.0)
 
         elif name == 'Linac1':

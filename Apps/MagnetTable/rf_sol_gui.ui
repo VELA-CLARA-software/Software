@@ -52,6 +52,15 @@
         </item>
         <item>
          <property name="text">
+          <string>Gun-400</string>
+         </property>
+         <property name="icon">
+          <iconset>
+           <normaloff>Icons/submachine-gun.png</normaloff>Icons/submachine-gun.png</iconset>
+         </property>
+        </item>
+        <item>
+         <property name="text">
           <string>Linac1</string>
          </property>
          <property name="icon">
