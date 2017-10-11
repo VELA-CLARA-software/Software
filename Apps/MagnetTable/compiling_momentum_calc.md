@@ -6,6 +6,8 @@ The momentum calculation routine `calcMomentum` used by the `rf_sol_tracking` co
 4. Open a command prompt. Run `"C:\Program Files (x86)\Microsoft Visual Studio 9.0\Common7\Tools\vsvars32.bat"`.
 5. Run **f2py** to compile the code. In the `magnet-table` folder: `python "C:\Program Files (x86)\Miniconda2\Scripts\f2py.py" -c --fcompiler=gnu95 -m calcMomentum momentum_calc.f90`
 
+For Linux, it's a lot easier. Assuming Numpy is already installed, just do `f2py -c -m calcMomentum momentum_calc.f90`. This will build a `calcMomentum.so` file that can be used on Linux.
+
 Here is the output from **f2py** for reference.
 
 ```dos
