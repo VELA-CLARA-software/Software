@@ -324,10 +324,27 @@ class Window(QtGui.QMainWindow):
                 step = 0.01 if mag_type == 'BSOL' else 0.1
                 k_spin = self.spinbox(main_hbox, attributes.effect_units, step=step, decimals=3) #, min_value=min_k, max_value=max_k)
                 magnet.k_spin = k_spin
+                if mag_type == 'DIP':
+                    magnet.branch_button = QtGui.QToolButton()
+                    magnet.branch_button.setCheckable(True)
+                    magnet.branch_button.clicked.connect(self.branchButtonClicked)
+                    magnet.branch_button.magnet = magnet  # link back to this magnet when clicked
+                    branch_icon = QtGui.QIcon()
+                    branch_icon.addPixmap(pixmap('branch-off'), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+                    branch_icon.addPixmap(pixmap('branch-on'), QtGui.QIcon.Normal, QtGui.QIcon.On)
+                    magnet.branch_button.setIcon(branch_icon)
+                    main_hbox.addWidget(magnet.branch_button)
+
                 self.collapsing_header(main_hbox, more_info, lbl)
                 current_spin = self.spinbox(main_hbox, units, step=0.1, decimals=3,
                                             min_value=min_current, max_value=max_current)
                 magnet.current_spin = current_spin
+                if mag_type == 'DIP':
+                    magnet.set_mom_checkbox = QtGui.QCheckBox('Set momentum')
+                    magnet.set_mom_checkbox.setSizePolicy(label_size_policy)
+                    magnet.set_mom_checkbox.setToolTip("Calculate the beam's momentum by adjusting this magnet's current")
+                    main_hbox.addWidget(magnet.set_mom_checkbox)
+
                 restore_button = QtGui.QToolButton()
                 restore_button.setIcon(QtGui.QIcon(pixmap('undo')))
                 restore_button.clicked.connect(self.restoreMagnet)
@@ -495,8 +512,15 @@ class Window(QtGui.QMainWindow):
         magnet = self.sender().parent().magnet
         self.controllers[magnet.section.id].setSI(magnet.name, value)
 
+        if str(magnet.ref.magType) == 'DIP' and magnet.set_mom_checkbox.isChecked():
+            # 'Set momentum' checkbox is ticked - we are using this dipole to check the momentum
+            # Calculate and set the momentum for this section
+            int_strength = np.polyval(magnet.fieldIntegralCoefficients, abs(value))
+            angle = magnet.k_spin.value()
+            momentum = 0.001 * SPEED_OF_LIGHT * int_strength / np.radians(angle)
+            magnet.section.momentum_spin.setValue(momentum)
         # To avoid a lot of iterating between K and current: check the calling function's name
-        if not sys._getframe(1).f_code.co_name == 'calcCurrentFromK':
+        elif not sys._getframe(1).f_code.co_name == 'calcCurrentFromK':
             self.calcKFromCurrent(magnet)
 
         # If we're already changing this magnet, alter the last value
@@ -519,7 +543,11 @@ class Window(QtGui.QMainWindow):
         section = self.sender().magnet_list_vbox
         mode = self.mom_mode_combo.currentText()
         changeFunc = self.calcKFromCurrent if mode == 'Change K/angle' else self.calcCurrentFromK
-        [changeFunc(magnet) for magnet in self.magnets.values() if magnet.section == section]
+        for magnet in self.magnets.values():
+            if magnet.section == section:
+                # Ensure dipoles with the "Set momentum" checkbox ticked are not modified
+                if not (str(magnet.ref.magType) == 'DIP' and magnet.set_mom_checkbox.isChecked()):
+                    changeFunc(magnet)
 
     def magnetsOfType(self, section, type_str):
         """Return all magnets of a given type within the given section."""
@@ -535,21 +563,17 @@ class Window(QtGui.QMainWindow):
         # Call procedure to actually do the calculation
         k = self.getK(magnet, current, momentum)
         mag_type = str(magnet.ref.magType)
-        if mag_type == 'DIP' and magnet.is_junction:
-            # hide/show magnets in branch
-            magnet.divert = k > 22.5  # fairly arbitrary!
-            beam_branch = magnet.name
-            mag_list = self.magnets.values()
-            # Go through the list starting at the magnet following the junction
-            for mag in mag_list[(mag_list.index(magnet) + 1):]:
-                # Highlight the branch when divert is in place, and everything else when not
-                highlight = (mag.ref.magnetBranch == beam_branch) == magnet.divert
-                mag.title.setStyleSheet('color:#000000;' if highlight else 'color:#a0a0a0;')
-        elif mag_type == 'SOL' and magnet.ref.magnetBranch != 'UNKNOWN_MAGNET_BRANCH':
+        if mag_type == 'SOL' and magnet.ref.magnetBranch != 'UNKNOWN_MAGNET_BRANCH':
             # A solenoid with a defined branch signifies that it has an attached bucking solenoid
             # We should also recalculate the field at the cathode
             self.calcKFromCurrent(next(self.magnetsOfType(magnet.section, 'BSOL')))
         magnet.k_spin.setValue(k)
+
+    def branchButtonClicked(self, checked):
+        """The 'branch' tool button on a dipole has been clicked. Toggle 0 or 45° for the angle."""
+        magnet = self.sender().magnet
+        # Currently only have 45° dipoles, need to update this for spectrometer line dipoles which are 30°
+        magnet.k_spin.setValue(45 if checked else 0)
 
     def getK(self, magnet, current, momentum):
         """Perform the calculation of K value (or bend angle)."""
@@ -592,6 +616,17 @@ class Window(QtGui.QMainWindow):
         """Called when a K spin box is changed by the user."""
         spinbox = self.sender()
         magnet = spinbox.parent().magnet
+        if str(magnet.ref.magType) == 'DIP' and magnet.is_junction:
+            # hide/show magnets in branch
+            magnet.divert = value > 22.5  # fairly arbitrary!
+            magnet.branch_button.setChecked(magnet.divert)
+            beam_branch = magnet.name
+            mag_list = self.magnets.values()
+            # Go through the list starting at the magnet following the junction
+            for mag in mag_list[(mag_list.index(magnet) + 1):]:
+                # Highlight the branch when divert is in place, and everything else when not
+                highlight = (mag.ref.magnetBranch == beam_branch) == magnet.divert
+                mag.title.setStyleSheet('color:#000000;' if highlight else 'color:#a0a0a0;')
         # To avoid a lot of iterating between K and current: check the calling function's name
         if not sys._getframe(1).f_code.co_name == 'calcKFromCurrent':
             self.calcCurrentFromK(magnet)
