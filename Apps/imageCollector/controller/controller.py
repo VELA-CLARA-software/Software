@@ -24,6 +24,7 @@ class Controller():
     def changeCamera(self):
         comboBox = self.view.cameraName_comboBox
         self.model.cameras.setCamera(str(comboBox.currentText()))
+        self.view.numImages_spinBox.setMaximum(self.model.selectedCamera.DAQ.maxShots) 
         print 'Set camera to ', str(comboBox.currentText())
 
     def openImageDir(self):

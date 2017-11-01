@@ -27,7 +27,7 @@ class Ui_MainWindow(object):
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
         MainWindow.resize(214, 362)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8("resources\icon.ico")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8("resources\imageCollector\icon.ico")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         MainWindow.setWindowIcon(icon)
         MainWindow.setUnifiedTitleAndToolBarOnMac(False)
         self.centralwidget = QtGui.QWidget(MainWindow)

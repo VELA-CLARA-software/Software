@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['mainApp.py'],
-             pathex=['C:\\Users\\wln24624\\Documents\\SOFTWARE\\VELA-CLARA-Software\\Software\\Apps\\imageSaver'],
+             pathex=['C:\\Users\\wln24624\\Documents\\SOFTWARE\\VELA-CLARA-Software\\Software\\Apps\\imageCollector'],
              binaries=[],
              datas=[],
              hiddenimports=[],
@@ -26,4 +26,4 @@ exe = EXE(pyz,
           strip=False,
           upx=True,
           runtime_tmpdir=None,
-          console=True , icon='resources\\icon.ico')
+          console=True , icon='view\\resources\\imageCollector\\icon.ico')

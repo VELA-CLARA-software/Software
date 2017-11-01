@@ -25,6 +25,6 @@ class Model():
 
     def collectAndSave(self, numberOfImages):
         if self.cameras.isAcquiring(self.selectedCamera.name):
-            self.collectAndSave(numberOfImages)
+            self.cameras.collectAndSave(numberOfImages)
         elif self.selectedCamera.DAQ.captureState == self.cap.CAPTURING:
             self.cameras.killCollectAndSave()
