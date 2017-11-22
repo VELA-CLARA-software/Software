@@ -91,7 +91,7 @@ def format_when_present(format_string, obj, attr):
         return ''
 
 def pixmap(icon_name):
-    icon_filename = 'resources\\magnetTable\\Icons\\' + icon_name + '.png' #resource_filename('MagnetTable', 'Icons/' + icon_name + '.png')
+    icon_filename = os.getcwd()+'\\resources\\magnetTable\\Icons\\' + icon_name + '.png' #resource_filename('MagnetTable', 'Icons/' + icon_name + '.png')
     return QtGui.QPixmap(icon_filename)
 
 # for debugging
@@ -131,7 +131,7 @@ class Window(QtGui.QMainWindow):
     def __init__(self, parent=None):
         QtGui.QMainWindow.__init__(self, parent)
 
-        ini_filename = 'resources\\magnetTable\\MagnetTable.ini' #resource_filename('MagnetTable', 'MagnetTable.ini')
+        ini_filename = os.getcwd()+'\\resources\\magnetTable\\MagnetTable.ini' #resource_filename('MagnetTable', 'MagnetTable.ini')
         self.settings = QtCore.QSettings(ini_filename, QtCore.QSettings.IniFormat)
         main_frame = QtGui.QFrame()
         layout = QtGui.QVBoxLayout(self)
