@@ -49,6 +49,7 @@ class histogramPlot(QWidget):
             self.layout.addLayout(self.plotRateLayout)
         self.setLayout(self.layout)
         # logger.debug('histogramPlot initiated!')
+        self.generalPlot.signalRemoved.connect(self.removeCurve)
 
     def setupPlotRateSlider(self):
         self.plotRateLayout = QHBoxLayout()
@@ -88,16 +89,19 @@ class histogramPlot(QWidget):
     def addCurve(self, name):
         name = str(name)
         self.histogramPlotCurves[name] = histogramPlotCurve(self.histogramPlot, self.records[name])
+        self.histogramPlotCurves[name].update()
 
     def removeCurve(self, name):
-        self.histogramPlot.removeItem(self.histogramPlotCurves[name].plot)
-        del self.histogramPlotCurves[name]
+        name = str(name)
+        if name in self.histogramPlotCurves:
+            self.histogramPlot.removeItem(self.histogramPlotCurves[name].plot)
+            del self.histogramPlotCurves[name]
 
     def selectionChange(self, name, value):
         name = str(name)
         if name in self.histogramPlotCurves:
             if not value:
-                print('removing Curve = ', name)
+                # print('removing Curve = ', name)
                 self.removeCurve(name)
         elif value == True:
             self.addCurve(name)

@@ -21,7 +21,7 @@ class check_conditioning(QObject):
 
     def setAlarm(self, output=None):
         if not output == None:
-            print time.strftime("%a, %d %b %Y %H:%M:%S") + ' alarm = ' + output
+            print time.strftime("%a, %d %b %Y %H:%M:%S") + ' alarm = ' + str(output)
         self.inAlarmState = True
         self.alarm_Signal.emit(self.inAlarmState)
         self.alarmStart = time.time()
@@ -33,7 +33,7 @@ class check_conditioning(QObject):
 
     def getLatestValue(self):
         self.latest_values = self.pv_to_monitor.get()
-        if len(self.latest_values) > 1:
+        if isinstance(self.latest_values,(list,tuple)):
             self.max = max(self.latest_values)
             self.min = min(self.latest_values)
 

@@ -58,10 +58,13 @@ class generalPlot(QWidget):
         else:
             logger.warning('Signal '+name+' already exists!')
 
+    def removeRecord(self, name):
+        del self.records[name]
+
     def removeSignal(self,name):
         self.records[name]['record'].close()
-        del self.records[name]
-        self.signalRemoved.emit(name)
+        self.signalRemoved.emit(str(name))
+        QTimer.singleShot(0, lambda: self.removeRecord(name))
         logger.info('Signal '+name+' removed!')
 
     def setDecimateLength(self, value=5000):

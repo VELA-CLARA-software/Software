@@ -218,12 +218,12 @@ class scatterPlotPlot(pg.PlotWidget):
             data2 = list(self.data2)
             if len(data1) > 1 and len(data2) > 1:
                 if data1[0][0] < data2[0][0]:
-                    ans = takeClosestPosition(next(zip(*data1)), data1, data2[0][0])
+                    ans = takeClosestPosition(next(iter(zip(*data1))), data1, data2[0][0])
                     starttime = ans[1]
                     startpos1 = ans[0]
                     startpos2 = 0
                 elif data1[0][0] > data2[0][0]:
-                    ans = takeClosestPosition(next(zip(*data2)), data2, data1[0][0])
+                    ans = takeClosestPosition(next(iter(zip(*data2))), data2, data1[0][0])
                     starttime = ans[1]
                     startpos1 = 0
                     startpos2 = ans[0]

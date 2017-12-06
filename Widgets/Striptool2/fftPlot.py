@@ -52,6 +52,7 @@ class fftPlot(QWidget):
             self.layout.addLayout(self.plotRateLayout)
         self.setLayout(self.layout)
         # logger.debug('fftPlot initiated!')
+        self.generalPlot.signalRemoved.connect(self.removeCurve)
 
     def setupPlotRateSlider(self):
         self.plotRateLayout = QHBoxLayout()
@@ -91,17 +92,20 @@ class fftPlot(QWidget):
     def addCurve(self, name):
         name = str(name)
         self.fftPlotCurves[name] = fftPlotCurve(self.fftPlot, self.records[name])
+        self.fftPlotCurves[name].update()
 
     def removeCurve(self, name):
-        self.fftPlotCurves[name].removeFFTLabels()
-        self.fftPlot.removeItem(self.fftPlotCurves[name].plot)
-        del self.fftPlotCurves[name]
+        name = str(name)
+        if name in self.fftPlotCurves:
+            self.fftPlotCurves[name].removeFFTLabels()
+            self.fftPlot.removeItem(self.fftPlotCurves[name].plot)
+            del self.fftPlotCurves[name]
 
     def selectionChange(self, name, value):
         name = str(name)
         if name in self.fftPlotCurves:
             if not value:
-                print('removing curve = ', name)
+                # print('removing curve = ', name)
                 self.removeCurve(name)
         elif value:
             self.addCurve(name)

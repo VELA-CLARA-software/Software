@@ -249,9 +249,10 @@ class scrollingPlotPlot(QWidget):
 
     def removeCurve(self, name):
         record = self.records
+        name = str(name)
         axisname = record[name]['axisname']
         axis, viewbox = self.namedaxes[record[name]['axisname']]
-        self.threads[name].stop()
+        self.threads[name].quit()
         self.plotWidget.ci.removeItem(axis)
         self.plotWidget.ci.removeItem(viewbox)
 
@@ -299,12 +300,12 @@ class curve(QObject):
 
     def updateTimeOffset(self,time):
         self.timeOffset += time
-        if hasattr(self,'path') and self.lines.isVisible():
+        if hasattr(self,'path') and self.path is not None and self.lines.isVisible():
             self.lines.setNewPath(self.path)
             if not self.lineOn:
                 self.lines.setPen(pg.mkPen(self.records[self.name]['pen']))
                 self.scenePath = self.vb.addItem(self.lines)
-                self.lines.setCacheMode(QGraphicsItem.DeviceCoordinateCache)
+                # self.lines.setCacheMode(QGraphicsItem.DeviceCoordinateCache)
                 self.lineOn = True
 
     def changePenColour(self):
@@ -346,7 +347,7 @@ class MultiLine(pg.QtGui.QGraphicsPathItem):
 
     def setNewPath(self, path):
         self.path = path
-        self.setPath(path)
+        self.setPath(self.path)
 
     def shape(self): # override because QGraphicsPathItem.shape is too expensive.
         return pg.QtGui.QGraphicsItem.shape(self)

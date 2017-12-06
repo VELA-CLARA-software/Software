@@ -16,13 +16,14 @@ class plotLegend(ParameterTree):
     fftselectionchange = pyqtSignal('QString',bool)
     histogramplotselectionchange = pyqtSignal('QString',bool)
     axisselectionchanged = pyqtSignal('QString')
-
+    legendselectionchanged = pyqtSignal(list)
 
     def __init__(self, generalplot):
         super(plotLegend, self).__init__(generalplot)
         ''' Create Parameter Tree'''
         self.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
         self.selectionModel().selectionChanged.connect(self.enableSelectedAxis)
+        self.selectionModel().selectionChanged.connect(self.emitSelectedAxis)
         self.parameters = {}
         self.generalPlot = generalplot
         self.records = self.generalPlot.records
@@ -51,23 +52,35 @@ class plotLegend(ParameterTree):
     def printValue(self, param):
         print(param)
 
+    def emitSelectedAxis(self, header):
+        headers = self.selectedItems()
+        names = []
+        for i in range(self.topLevelItemCount()):
+            child = self.topLevelItem(i).child(0)
+            if child in headers:
+                text = child.text(0)
+                pos = [pos for pos, char in enumerate(text) if char == ':'][-1]
+                name = str(text[0:pos])
+                names.append(name)
+        self.legendselectionchanged.emit(names)
+
     def enableSelectedAxis(self, header):
         headers = self.selectedItems()
         axesdata = {}
         for i in range(self.topLevelItemCount()):
-            child = self.topLevelItem(i).child(0)
-            if child in headers:
-                name, onoff = self.toggleAxisVisible(child, True)
-            else:
-                name, onoff = self.toggleAxisVisible(child, False)
-            if name not in axesdata:
-                axesdata[name] = []
-            axesdata[name].append(onoff)
-        # print 'axesdata = ', axesdata
-        for axis, booles in axesdata.items():
-            axis.setVisible(any(booles))
-        # print 'axis on = ', any([pvisible,visible])
-        # self.records[name]['scrollingplot'].toggleAxis(name, any([pvisible,visible]))
+            try:
+                child = self.topLevelItem(i).child(0)
+                if child in headers:
+                    name, onoff = self.toggleAxisVisible(child, True)
+                else:
+                    name, onoff = self.toggleAxisVisible(child, False)
+                if name not in axesdata:
+                    axesdata[name] = []
+                axesdata[name].append(onoff)
+            except:
+                pass
+            for axis, booles in axesdata.items():
+                axis.setVisible(any(booles))
 
     def toggleAxisVisible(self, header, visible=False):
         text = header.text(0)
@@ -79,16 +92,46 @@ class plotLegend(ParameterTree):
         # self.records[name]['axis'].setVisible(any([pvisible,visible]))
         return self.records[name]['axis'], any([pvisible,visible])
 
+    def returnTitleValue(self, name, titletext):
+        headers = self.selectedItems()
+        for i in range(self.topLevelItemCount()):
+            try:
+                header = self.topLevelItem(i).child(0)
+                text = header.text(0)
+                pos = [pos for pos, char in enumerate(text) if char == ':'][-1]
+                childname = str(text[0:pos])
+                if name == childname:
+                    for i in range(header.childCount()):
+                        if header.child(i).text(0) == titletext:
+                            return header.child(i).widget.value()
+            except:
+                pass
+
+    def isFFTEnabled(self,name):
+        return self.returnTitleValue(name, 'Plot FFT')
+
+    def isHistogramEnabled(self,name):
+        return self.returnTitleValue(name, 'Plot Histogram')
 
     def setLogModeSignals(self, signal, name):
         signal.sigValueChanged.connect(lambda x: self.plotWidget.viewboxes[name]['axis'].setLogMode(x.value()))
         signal.sigValueChanged.connect(lambda x: self.records[name]['record'].setLogMode(x.value()))
         # signal.sigValueChanged.connect(lambda: self.plotWidget.toggleLogMode(self.records,name))
 
+    def parameterSignalRemoved(self, parameter):
+        text = parameter.name()
+        pos = [pos for pos, char in enumerate(text) if char == ':'][-1]
+        name = str(text[0:pos])
+        print 'Signal Removed! Name = ', name
+        try:
+            self.generalPlot.removeSignal(str(name))
+        except:
+            pass
+
     def addParameterSignal(self, name):
         name = str(name)
         params = [
-            {'name': name, 'type': 'group', 'children': [
+            {'name': name, 'type': 'group', 'removable': True, 'children': [
                 {'name': 'Value', 'type': 'float', 'readonly': True, 'title': 'Value'},
                 {'name': 'Mean', 'type': 'float', 'readonly': True},
                 {'name': 'Standard Deviation', 'type': 'float', 'readonly': True},
@@ -104,6 +147,7 @@ class plotLegend(ParameterTree):
         ]
         p = Parameter.create(name='params', type='group', children=params)
         pChild = p.child(name)
+        pChild.sigRemoved.connect(self.parameterSignalRemoved)
         self.parameterChildren[name] = pChild
         self.proxyLatestValue[name] = pg.SignalProxy(self.records[name]['worker'].recordLatestValueSignal, rateLimit=1, slot=lambda x: pChild.child('Value').setValue(x[0][1]))
         self.proxyMean[name] = pg.SignalProxy(self.records[name]['worker'].recordMeanSignal, rateLimit=1, slot=lambda x: pChild.child('Mean').setValue(x[0]))
@@ -139,4 +183,93 @@ class plotLegend(ParameterTree):
         self.records[name]['curve'].changePenColour()
 
     def removeParameterSignal(self,name):
-        self.parameterChildren[name].remove()
+        pass
+        # name = str(name)
+        # self.parameterChildren[name].remove()
+
+class MenuBox(pg.GraphicsObject):
+    """
+    This class draws a rectangular area. Right-clicking inside the area will
+    raise a custom context menu which also includes the context menus of
+    its parents.
+    """
+    def __init__(self, name):
+        self.name = name
+        self.pen = pg.mkPen('r')
+
+        # menu creation is deferred because it is expensive and often
+        # the user will never see the menu anyway.
+        self.menu = None
+
+        # note that the use of super() is often avoided because Qt does not
+        # allow to inherit from multiple QObject subclasses.
+        pg.GraphicsObject.__init__(self)
+
+
+    # All graphics items must have paint() and boundingRect() defined.
+    def boundingRect(self):
+        return QtCore.QRectF(0, 0, 10, 10)
+
+    def paint(self, p, *args):
+        p.setPen(self.pen)
+        p.drawRect(self.boundingRect())
+
+
+    # On right-click, raise the context menu
+    def mouseClickEvent(self, ev):
+        if ev.button() == QtCore.Qt.RightButton:
+            if self.raiseContextMenu(ev):
+                ev.accept()
+
+    def raiseContextMenu(self, ev):
+        menu = self.getContextMenus()
+
+        # Let the scene add on to the end of our context menu
+        # (this is optional)
+        menu = self.scene().addParentContextMenus(self, menu, ev)
+
+        pos = ev.screenPos()
+        menu.popup(QtCore.QPoint(pos.x(), pos.y()))
+        return True
+
+    # This method will be called when this item's _children_ want to raise
+    # a context menu that includes their parents' menus.
+    def getContextMenus(self, event=None):
+        if self.menu is None:
+            self.menu = QtGui.QMenu()
+            self.menu.setTitle(self.name+ " options..")
+
+            green = QtGui.QAction("Turn green", self.menu)
+            green.triggered.connect(self.setGreen)
+            self.menu.addAction(green)
+            self.menu.green = green
+
+            blue = QtGui.QAction("Turn blue", self.menu)
+            blue.triggered.connect(self.setBlue)
+            self.menu.addAction(blue)
+            self.menu.green = blue
+
+            alpha = QtGui.QWidgetAction(self.menu)
+            alphaSlider = QtGui.QSlider()
+            alphaSlider.setOrientation(QtCore.Qt.Horizontal)
+            alphaSlider.setMaximum(255)
+            alphaSlider.setValue(255)
+            alphaSlider.valueChanged.connect(self.setAlpha)
+            alpha.setDefaultWidget(alphaSlider)
+            self.menu.addAction(alpha)
+            self.menu.alpha = alpha
+            self.menu.alphaSlider = alphaSlider
+        return self.menu
+
+    # Define context menu callbacks
+    def setGreen(self):
+        self.pen = pg.mkPen('g')
+        # inform Qt that this item must be redrawn.
+        self.update()
+
+    def setBlue(self):
+        self.pen = pg.mkPen('b')
+        self.update()
+
+    def setAlpha(self, a):
+        self.setOpacity(a/255.)

@@ -25,7 +25,6 @@ class repeatedTimer(QObject):
         self.event = Event()
         self.thread = Thread(target=self._target)
         self.thread.daemon = True
-        self.intervalChanged = False
 
     def update(self):
         ''' call signal generating Function '''
@@ -39,7 +38,7 @@ class repeatedTimer(QObject):
 
     @property
     def _time(self):
-        if (self.interval) - ((time.time() - self.start) % self.interval) < 0.001:
+        if (self.interval) - ((time.time() - self.start) % self.interval) < 0.01:
             return self.interval
         else:
             return (self.interval) - ((time.time() - self.start) % self.interval)
@@ -107,11 +106,15 @@ class recordWorker(QtCore.QObject):
 
     def emitStatistics(self):
         length = len(self.buffer)
-        self.mean = self.sum_x1/length
-        self.recordMeanSignal.emit(self.mean)
-        if length > 2:
-            self.stddeviation = math.sqrt((self.sum_x2 / length) - (self.mean*self.mean))
-            self.recordStandardDeviationSignal.emit(self.stddeviation)
+        if length > 0:
+            self.mean = self.sum_x1/length
+            self.recordMeanSignal.emit(self.mean)
+            if length > 2:
+                if (self.sum_x2 / length) - (self.mean*self.mean) > 0:
+                    self.stddeviation = math.sqrt((self.sum_x2 / length) - (self.mean*self.mean))
+                else:
+                    self.stddeviation = 0
+                self.recordStandardDeviationSignal.emit(self.stddeviation)
 
 class signalRecord(QObject):
 

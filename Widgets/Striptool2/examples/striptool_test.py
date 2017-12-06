@@ -12,8 +12,10 @@ import pyqtgraph as pg
 from pyqtgraph.dockarea import *
 import generalPlot as generalplot
 import scrollingPlot as scrollingplot
+import signalTable as signaltable
 import numpy as np
-
+import  VELA_CLARA_General_Monitor as vgen
+general = vgen.init()
 ''' Load loggerWidget library (comment out if not available) '''
 # sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\\..\\..\\loggerWidget\\')
 # import loggerWidget as lw
@@ -63,9 +65,9 @@ class striptool_Demo(QMainWindow):
         fileMenu = menubar.addMenu('&File')
         fileMenu.addAction(exitAction)
 
-        self.toolbar = self.addToolBar('')
-        self.toolbar.addAction(scatterPlotAction)
-        self.toolbar.addAction(fftPlotAction)
+        # self.toolbar = self.addToolBar('')
+        # self.toolbar.addAction(scatterPlotAction)
+        # self.toolbar.addAction(fftPlotAction)
 
         ''' Initiate logger (requires loggerWidget - comment out if not available)'''
         # self.logwidget1 = lw.loggerWidget([logger,striptool.logger])
@@ -82,21 +84,25 @@ class striptool_Demo(QMainWindow):
         self.histogramplot = self.generalplot.histogramPlot()
         self.scatterplot = self.generalplot.scatterPlot()
         self.legend = self.generalplot.legend()
+        self.signaltable = signaltable.signalTable(parent=self.generalplot, GeneralController=general)
+
+        self.enabledPlotNames = []
+        self.legend.legendselectionchanged.connect(self.addSignalToFFTHistogramPlots)
 
         ''' Create some common axes to plot similar signals with '''
-        self.generalplot.createAxis(name='logsmall', color='k',logMode=True, verticalRange=[1e-10, 1e-7])
-        self.generalplot.createAxis(name='logbig', color='b', logMode=True, verticalRange=[1e3, 1e5])
-        self.generalplot.createAxis(name='smallnumbers', color='g', logMode=False, verticalRange=[-5,10])
+        # self.generalplot.createAxis(name='logsmall', color='k',logMode=True, verticalRange=[1e-10, 1e-7])
+        # self.generalplot.createAxis(name='logbig', color='b', logMode=True, verticalRange=[1e3, 1e5])
+        # self.generalplot.createAxis(name='smallnumbers', color='g', logMode=False, verticalRange=[-5,10])
 
         ''' Add some signals to the striptool - note they call our signal generator at a frequency of 1/timer (100 Hz and 10 Hz in these cases).
             The 'pen' argument sets the color of the curves
                 - see <http://www.pyqtgraph.org/documentation/style.html>'''
-        self.generalplot.addSignal(name='signal1', pen='g', timer=1.0/50.0, function=self.createRandomSignal, args=[100,10,22])
-        self.generalplot.addSignal(name='signal2', pen='r', timer=1.0/10.0, function=self.createRandomSignal, args=[1e-8, 1e-9,4], axis='logsmall')
-        self.generalplot.addSignal(name='signal3', pen='b', timer=1.0/10.0, function=self.createRandomSignal, args=[1e4, 1e1, 2], axis='logbig')
-        self.generalplot.addSignal(name='signal4', pen='c', timer=1.0/20.0, function=self.createRandomSignal, args=[1,0.5,7.8], axis='smallnumbers')
-        self.generalplot.addSignal(name='signal5', pen='m', timer=1.0/10.0, function=self.createRandomSignal, args=[3,2,0.87], axis='smallnumbers')
-        self.generalplot.addSignal(name='signal6', pen='y', timer=1.0/10.0, function=self.createRandomSignal, args=[5,2,2.35], axis='smallnumbers')
+        # self.generalplot.addSignal(name='signal1', pen='g', timer=1.0/50.0, function=self.createRandomSignal, args=[100,10,22])
+        # self.generalplot.addSignal(name='signal2', pen='r', timer=1.0/10.0, function=self.createRandomSignal, args=[1e-8, 1e-9,4], axis='logsmall')
+        # self.generalplot.addSignal(name='signal3', pen='b', timer=1.0/10.0, function=self.createRandomSignal, args=[1e4, 1e1, 2], axis='logbig')
+        # self.generalplot.addSignal(name='signal4', pen='c', timer=1.0/20.0, function=self.createRandomSignal, args=[1,0.5,7.8], axis='smallnumbers')
+        # self.generalplot.addSignal(name='signal5', pen='m', timer=1.0/10.0, function=self.createRandomSignal, args=[3,2,0.87], axis='smallnumbers')
+        # self.generalplot.addSignal(name='signal6', pen='y', timer=1.0/10.0, function=self.createRandomSignal, args=[5,2,2.35], axis='smallnumbers')
 
 
         # self.fftplot.addPlot('signal2')
@@ -130,12 +136,13 @@ class striptool_Demo(QMainWindow):
         d3.addWidget(self.fftplot)
         d4.addWidget(self.scatterplot)
         d5.addWidget(self.histogramplot)
-        self.area.addDock(d1,'top')
+        self.area.addDock(d1, position='top')
         self.area.addDock(d2, position='right', relativeTo=d1)
         self.area.addDock(d3,'bottom')
         self.area.addDock(d4, position='right', relativeTo=d3)
         self.area.addDock(d5, position='right', relativeTo=d4)
         self.plotLayout = QVBoxLayout()
+        self.plotLayout.addWidget(self.signaltable)
         self.plotLayout.addWidget(self.area)
         self.timeButtonList = []
         self.timeButton10 = self.createTimeButton('10s')
@@ -162,7 +169,7 @@ class striptool_Demo(QMainWindow):
         self.generalplot.start()
         self.scrollingplot.start()
         self.fftplot.start()
-        # self.scatterplot.start()
+        self.scatterplot.start()
         self.histogramplot.start()
 
         ''' modify the plot scale to 10 secs '''
@@ -192,6 +199,17 @@ class striptool_Demo(QMainWindow):
         fftplot = self.generalplot.fftPlot()
         d.addWidget(fftplot)
         self.area.addDock(d, position='right', relativeTo="FFT Plot")
+
+    def addSignalToFFTHistogramPlots(self,names):
+        for name in names:
+            if name not in self.enabledPlotNames:
+                self.enabledPlotNames.append(name)
+            self.fftplot.selectionChange(name, True)
+            self.histogramplot.selectionChange(name, True)
+        for name in self.enabledPlotNames:
+            if name not in names:
+                self.fftplot.selectionChange(name, self.legend.isFFTEnabled(name))
+                self.histogramplot.selectionChange(name, self.legend.isHistogramEnabled(name))
 
     def pausePlots(self, parentwidget):
         widgets = parentwidget.findChildren((striptool.stripPlot))

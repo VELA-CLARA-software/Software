@@ -11,17 +11,16 @@ class check_vacuum(check_conditioning_buffer):
 
     def check_VAC_change_is_small(self):
         self.getLatestValue()
-        print 'self.latest_values = ', self.latest_values
         self.delta_VAC = self.latest_values - self.mean
         if self.delta_VAC > self.alarm:
-            self.setAlarm()
+            self.setAlarm(output='')
         else:
             self.clearAlarm()
             self.updateMean()
 
 def main():
     app = QApplication(sys.argv)
-    vac = check_vacuum(pv='CLA-S01-VAC-IMG-01:PRES')
+    vac = check_vacuum(pv='CLA-S01-VAC-IMG-01:PRES', alarm_value=1e-12)
     sys.exit(app.exec_())
 
 if __name__ == '__main__':

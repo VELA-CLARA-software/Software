@@ -21,7 +21,6 @@ class signalTypeComboBox(QtGui.QComboBox):
 
     def indexChanged(self, ind):
         # send signal to MainForm class, self.__comboID is actually row number, ind is what is selected
-        print 'comboID = ', self.__comboID, 'ind = ', ind
         self.__mainForm.emit(QtCore.SIGNAL("firstColumnComboBoxChanged(PyQt_PyObject,PyQt_PyObject)"), self.__comboID, ind)
 
 class signalElementComboBox(QtGui.QComboBox):
@@ -70,6 +69,15 @@ class colourPickerButton(QtGui.QPushButton):
         # send signal to MainForm class, self.__comboID is actually row number, ind is what is selected
         self.__mainForm.emit(QtCore.SIGNAL("colourPickerButtonPushed(PyQt_PyObject)"), self.__comboID)
 
+class customPVFunction(QObject):
+    def __init__(self, parent = None, pvid=None, GeneralController=None):
+        super(customPVFunction, self).__init__(parent)
+        self.pvid = pvid
+        self.general = GeneralController
+
+    def getValue(self):
+        return float(self.general.getValue(self.pvid))
+
 class signalTable(QWidget):
     def __init__(self, parent = None, MagnetController=None, BPMController=None, GeneralController=None):
         super(signalTable, self).__init__(parent)
@@ -95,10 +103,7 @@ class signalTable(QWidget):
         self.customSelectionBox = self.createCustomSelectionBox()
         ''' create tableWidget and pushButton '''
         vBoxlayoutParameters = QVBoxLayout()
-        # vBoxlayoutParameters.addWidget(self.normalSelectionBox,1)
         vBoxlayoutParameters.addWidget(self.customSelectionBox,1)
-        # self.normalSelectionBox.hide()
-        # self.customSelectionBox.show()
         self.setLayout(vBoxlayoutParameters)
         self.connect(self, QtCore.SIGNAL("firstColumnComboBoxChanged(PyQt_PyObject, PyQt_PyObject)"), self.changeSecondCombo)
         self.connect(self, QtCore.SIGNAL("firstColumnComboBoxChanged(PyQt_PyObject, PyQt_PyObject)"), self.changeThirdComboFromFirst)
@@ -111,17 +116,9 @@ class signalTable(QWidget):
             pvtype="DBR_DOUBLE"
             pvid = self.general.connectPV(str(functionArgument),pvtype)
             self.pvids.append(pvid)
-            testFunction = lambda: float(self.general.getValue(pvid))
-        elif functionForm[0] == '':
-            functionName = functionForm[1]
-            testFunction = lambda: getattr(self.magnets,functionName)(functionArgument)
-        else:
-            functionName = functionForm[1]
-            function = eval(functionForm[0])
-            testFunction = lambda: getattr(function,functionName)(functionArgument)
-        print 'name = ', name
-        print 'logScale = ', logScale == True
-        self.stripTool.addSignal(name=name,pen=colourpickercolour, function=testFunction, timer=1.0/freq, functionForm=functionForm, functionArgument=functionArgument, logScale=logScale,**kwargs)
+            testFunction = customPVFunction(parent=self, pvid=pvid, GeneralController=self.general)
+        self.stripTool.addSignal(name=name, pen=colourpickercolour, function=testFunction.getValue, timer=1.0/freq, logScale=logScale)
+        self.stripTool.records[name]['record'].start()
 
     def updateColourBox(self):
         self.rowNumber = self.rowNumber + 1
@@ -254,7 +251,6 @@ class signalTable(QWidget):
         functionForm = 'custom'
         colourpickercolour = self.customcolorbox._color
         logScale = self.logTickBox.isChecked()
-        print (string.replace(name,"_","$"), functionForm, name, freq, colourpickercolour, logScale)
         self.addRow(string.replace(name,"_","$"), functionForm, name, freq, colourpickercolour, logScale=logScale)
 
     def changeSecondCombo(self, idnumber, ind):
