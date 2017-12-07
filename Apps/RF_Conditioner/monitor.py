@@ -6,10 +6,16 @@ from PyQt4.QtCore import pyqtSignal
 # It has a timer that can be used to check the status
 # of something - so after instantiation you must call start on it (!)
 # you should overload cooldown_function in the child class
+import numbers
+
 
 class monitor(QThread):
+    # name
+    my_name = 'UNKNOWN'
     # is the monitor in cooldown or not?
     _in_cooldown = False
+    # flag to denote whether sanity checks etc have worked
+    set_success = True
     def __init__(self, update_time = 100, cooldown_time = 5000, timed_cooldown = False, level_cooldown = True):
         QThread.__init__(self)
         self.update_time = update_time
@@ -47,3 +53,12 @@ class monitor(QThread):
             self.set_timed_cooldown()
         else:
             self.set_level_cooldown()
+
+    def sanity_checks(self, items):
+        i = 0
+        for item in items:
+            if not isinstance(item, numbers.Real):
+                print(self.my_name,' item ', i, ' failed sanity check')
+                i+=1
+                self.set_success = False
+        return self.set_success

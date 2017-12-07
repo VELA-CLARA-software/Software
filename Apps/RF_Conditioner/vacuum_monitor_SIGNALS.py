@@ -2,18 +2,17 @@
 #
 # vacuum monitor
 # emits vac_signal giving the state of a vacuum pv,
-# vacuum is bad  = false
-# vacuum is good = true
+# vacuum is bad  = false signal
+# vacuum is good = true signal
 #
 #
 # inherits from monitor base class
 # This class runs in a separate Qthread
 # so after instantiation you must call start on it (!)
 # It relies on timers to automatically get new vacuum values
-# process them, then sets a flag in the passed stat_dict
-# when the state of the vacuum changes
+# process them, then emit signals when the state of the vacuum changes
 # from 'good' to 'bad'
-# these states are always tied to the state of the cooldown through the
+# these signals are always tied to the state of the cooldown through the
 # property 'in_cooldown' and only emitted when the cooldown state changes
 #
 # Assuming connecting the interface to a vacuum pv works:
@@ -22,7 +21,7 @@
 # self._latest_vac_value > self.vac_spike_delta + self._mean_vac_level
 # if the vacuum has not spiked, it appends the new value to 
 # vac_value_history and sets _mean_vac_level
-# if the vacuum spikes it sets 'bad' and the
+# if the vacuum spikes it emits vac_signal 'bad' and the
 # class enters a cooldown state
 # there are two cooldown states: 'timed' and 'level'
 # 'timed' waits cooldown_time ms and then emits signal 'good'
@@ -34,7 +33,8 @@
 # base-class
 from monitor import monitor
 from numpy import mean
-from state import state
+from PyQt4.QtCore import pyqtSignal
+
 
 class vacuum_monitor(monitor):
     # whoami
@@ -47,6 +47,9 @@ class vacuum_monitor(monitor):
     # a counter indexing each unique vacuum reading
     _vac_reading_counter = -1
     # the signal that's emitted on state-change, giving the new state
+    # vacuum is bad  = false signal
+    # vacuum is good = true signal
+    vac_signal = pyqtSignal(bool)
     # is the monitor in cooldown or not?
     _in_cooldown = False
     # is the vacuum 'good'
@@ -59,8 +62,7 @@ class vacuum_monitor(monitor):
     def __init__(self,
                  gen_mon,
                  vac_param,
-                 state_dict,
-                 gui_dict
+                 state_dict
                  # pv = '',
                  # vac_spike_delta = 1e-9,
                  # vac_spike_decay_level = 1.1,
@@ -73,7 +75,7 @@ class vacuum_monitor(monitor):
         # vac_keys = ['VAC_PV','VAC_SPIKE_DELTA','VAC_DECAY_MODE','VAC_SPIKE_DECAY_LEVEL','VAC_SPIKE_DECAY_LEVEL'
         #            ,'VAC_SPIKE_DECAY_TIME','VAC_NUM_SAMPLES_TO_AVERAGE', 'VAC_ID']
         self.state_dict = [state_dict]
-        self.gui_dict   = [gui_dict]
+        self.state_dict[0]['vacuum_state'] = 'HELLO'
         self.id = vac_param['VAC_ID']
         # set cool-down mode based on config, default will be LEVEL
         self.set_cooldown_mode(vac_param.get('VAC_DECAY_MODE'))
@@ -134,11 +136,9 @@ class vacuum_monitor(monitor):
         if self._latest_vac_value > self.vac_spike_delta + self._mean_vac_level:
             print('spike ',self._latest_vac_value, self.vac_spike_delta, self._mean_vac_level)
             # start the cooldown
-            self.state_dict[0]['vacuum_state'] = state.BAD
             self.start_cooldown()
         else:
             # if not a spike
-            self.state_dict[0]['vacuum_state'] = state.GOOD
             # append self._latest_vac_value to history buffer (_vac_value_history)
             self._vac_value_history.append(self._latest_vac_value)
             # if buffer is too large, remove oldest value and calculate average
@@ -166,18 +166,13 @@ class vacuum_monitor(monitor):
     def in_cooldown(self):
         return self._in_cooldown
 
-    @property
-    def latest_value(self):
-        return self._latest_vac_value
-
     @in_cooldown.setter
     def in_cooldown(self,value):
         self._in_cooldown = value
         #  the state of the vacuum is inverse to the in_cooldown state
         self._vacum_good = not self._in_cooldown
         # emit vacuum_state
-        #self.vac_signal.emit(self._vacum_good)
-        self.state_dict[0]['vacuum_state'] = state.GOOD
+        self.vac_signal.emit(self._vacum_good)
 
     # get latest value from gen_monitor
     def update_value(self):
@@ -188,7 +183,6 @@ class vacuum_monitor(monitor):
         if value.keys()[0] != self._vac_reading_counter:
             # update _latest_vac_value
             self._latest_vac_value = value.values()[0]
-            self.gui_dict[0]['vacuum_level'] = self._latest_vac_value
             # set new _vac_reading_counter
             self._vac_reading_counter = value.keys()[0]
             print('new_value = ', self._latest_vac_value, 'counter  = ',self._vac_reading_counter)

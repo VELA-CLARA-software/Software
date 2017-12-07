@@ -4,6 +4,7 @@ from PyQt4.QtCore import pyqtSlot
 import os
 import sys
 import time
+from state import state
 
 if os.environ['COMPUTERNAME'] == "DJS56PORT2":
 	print 'port'
@@ -32,11 +33,8 @@ import gui_conditioning
 
 
 class master(object):
-	# Initialize Hardware Controllers
-	#llrf_init = VELA_CLARA_LLRF_Control.init()
-	#llrf_init.setVerbose()
-
-
+	# whoami
+	my_name = 'master'
 	# general monitoring for parameters with no controller
 	# or just 1 parameter such as mod-status
 	# the master will handle ALL gen mon connections
@@ -53,7 +51,42 @@ class master(object):
 	all_id = [vac_id,dc_id,mod_id,cavity_temp_id,water_temp_id]
 	[gen_mon_keys.update({x:None}) for x in all_id]
 
-	#rf_mod_init = VELA_CLARA_RF_Modulator_Control.init()
+	# explicit flags for possible monitors & monitors states
+	# below
+
+	# flags for known monitors
+	# these are used to determine if monitoring these items is happening
+	# they're not for defining vacuum good, / bad etc.
+	modulator_monitoring 	= "modulator_monitoring"
+	DC_monitoring 			= "DC_monitoring"
+	rf_prot_monitoring 		= "rf_prot_monitoring"
+	vacuum_monitoring 		= "vacuum_monitoring"
+	breakdown_monitoring 	= "breakdown_monitoring"
+	water_temp_monitoring 	= "water_temp_monitoring"
+	cavity_temp_monitoring 	= "cavity_temp_monitoring"
+	monitoring_flags = {}
+	all_monitors = [modulator_monitoring,DC_monitoring,rf_prot_monitoring,
+						 vacuum_monitoring,breakdown_monitoring,water_temp_monitoring,
+					     cavity_temp_monitoring]
+	[monitoring_flags.update({x:False})for x in all_monitors]
+
+
+	# which things are monitored
+	vacuum_state="vacuum_state"
+	dc_state="dc_state"
+	breakdown_rate_state = "breakdown_rate_state"
+	rf_prot_state = "rf_prot_state"
+	modulator_state = "modulator_state"
+	all_state_names = [vacuum_state, dc_state, breakdown_rate_state]
+	all_states={}
+	[all_states.update({x:state.UNKNOWN})for x in all_state_names]
+
+
+	# gui value dict
+	vacuum_level = 'vacuum_level'
+	all_gui_values = [vacuum_level]
+	gui_values={}
+	[gui_values.update({x:0})for x in all_gui_values]
 
 
 	# Create Specific Hardware Controllers
@@ -85,12 +118,15 @@ class master(object):
 		# self.break_down_monitor = break_down_monitor.break_down_monitor(self.llrf_controller)
 		# self.break_down_monitor.newBreakDownSignal.connect(self.new_break_down)
 
-		# build a gui
-		#self.init_gui()
 
 		# read a config
 		self.get_config(config_file)
 		self.init_vac_monitor()
+
+		# build a gui
+		self.init_gui()
+
+
 
 	def get_config(self,fn):
 		reader = config_reader.config_reader(fn)
@@ -117,22 +153,14 @@ class master(object):
 		if bool(self.vac_param):
 			# NOT HAPPY ABOUT HARDCODED STRINGS...
 			if self.connectPV(self.vac_id,self.vac_param.get('VAC_PV')):
-				self.gen_mon_keys[self.vac_id]
+				self.vac_param[self.vac_id] = self.gen_mon_keys[self.vac_id]
 				# Vacuum monitoring requires a vacuum PV
-				self.vacuum = vacuum_monitor.vacuum_monitor(self.gen_mon, self.vac_param)
-				# connect the signal,
-				self.vacuum.vac_signal.connect(self.vac_signal)
-		self.vacuum.start()
-
-	# slot for vacuum monitor signal to connect to
-	@pyqtSlot()
-	def vac_signal(self,val):
-		self.vacuum_is_good = val
-		if self.vacuum_is_good:
-			print('Master controller: Vacuum is good!')
-		else:
-			print('Master Controller: Vacuum is bad!')
-
+				self.vacuum = vacuum_monitor.vacuum_monitor(self.gen_mon, self.vac_param,self.all_states,self.gui_values)
+				# connect the signal, OLD DEPRICATED
+				#self.vacuum.vac_signal.connect(self.vac_signal)
+				if self.vacuum.set_success:
+					self.vacuum.start()
+					self.monitoring_flags[self.vacuum_monitoring] = True
 
 	@pyqtSlot()
 	def new_break_down(self):
@@ -147,13 +175,14 @@ class master(object):
 	# connect to process variable pv
 	def connectPV(self, pvKey, pvValue):
 		connected = False
-		id = self.gen_mon.connectPV(pvValue)
-		if id != 'FAILED':
-			connected = True
-			print('Connected to PV = ', pvValue, ' with ID = ', id, ' acquiring data')
-			self.gen_mon_keys[pvKey] = id
-		else:
-			print('Failed to connect to PV = ',pvValue, ' ID = ', id, ' NOT acquiring data')
+		if pvValue is not None:
+			id = self.gen_mon.connectPV(pvValue)
+			if id != 'FAILED':
+				connected = True
+				print('Connected to PV = ', pvValue, ' with ID = ', id, ' acquiring data')
+				self.gen_mon_keys[pvKey] = id
+			else:
+				print('Failed to connect to PV = ',pvValue, ' ID = ', id, ' NOT acquiring data')
 		return connected
 
 	def main_loop(self):
@@ -198,5 +227,19 @@ class master(object):
 
 
 
+
+	# OLD AND DEPRICATED
+	# slot for vacuum monitor signal to connect to
+	# @pyqtSlot()
+	# def vac_signal(self,val):
+	# 	if val:
+	# 		self.all_states[self.vacuum_state] = self.state.GOOD
+	# 		print(self.my_name,': Vacuum is good!')
+	# 	elif not val:
+	# 		self.all_states[self.vacuum_state] = self.state.BAD
+	# 		print(self.my_name,': Vacuum is bad!')
+	# 	else:
+	# 		self.all_states[self.vacuum_state] = self.state.UNKNOWN
+	# 		print(self.my_name, ': Vacuum is in UNKNOWN STATE')
 
 
