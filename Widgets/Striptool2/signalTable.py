@@ -117,11 +117,16 @@ class signalTable(QWidget):
     def addRow(self, name, functionForm, functionArgument, freq, colourpickercolour, logScale=False, **kwargs):
         if functionForm == 'custom':
             pvtype="DBR_DOUBLE"
-            pvid = self.general.connectPV(str(functionArgument),pvtype)
-            self.pvids.append(pvid)
-            testFunction = customPVFunction(parent=self, pvid=pvid, GeneralController=self.general)
-        self.stripTool.addSignal(name=name, pen=colourpickercolour, function=testFunction.getValue, timer=1.0/freq, logScale=logScale)
-        self.stripTool.records[name]['record'].start()
+            pvid = self.general.connectPV(str(functionArgument))
+            if pvid is not 'FAILED':
+                self.pvids.append(pvid)
+                testFunction = customPVFunction(parent=self, pvid=pvid, GeneralController=self.general)
+                time.sleep(0.01)
+                testFunction.getValue()
+                self.stripTool.addSignal(name=name, pen=colourpickercolour, function=testFunction.getValue, timer=1.0/freq, logScale=logScale)
+                self.stripTool.records[name]['record'].start()
+            else:
+                print('Is this a valid PV? - ', functionArgument)
 
     def updateColourBox(self):
         self.rowNumber = self.rowNumber + 1

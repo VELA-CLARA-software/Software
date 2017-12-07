@@ -80,12 +80,7 @@ class recordWorker(QtCore.QObject):
         self.name = name
         self.signal.timer.dataReady.connect(self.updateRecord)
         self.buffer = self.records[self.name]['data']
-        self.min = sys.maxsize
-        self.max = -1*sys.maxsize
-        self.mean = 0
-        self.sum_x1 = 0
-        self.sum_x2 = 0
-        self.stddeviation = 0
+        self.resetStatistics(True)
         self.timer = QTimer()
         self.timer.timeout.connect(self.emitStatistics)
         self.timer.start(1000)
@@ -115,6 +110,15 @@ class recordWorker(QtCore.QObject):
                 else:
                     self.stddeviation = 0
                 self.recordStandardDeviationSignal.emit(self.stddeviation)
+
+    def resetStatistics(self, value):
+        if value is True:
+            self.min = sys.maxsize
+            self.max = -1*sys.maxsize
+            self.mean = 0
+            self.sum_x1 = 0
+            self.sum_x2 = 0
+            self.stddeviation = 0
 
 class signalRecord(QObject):
 

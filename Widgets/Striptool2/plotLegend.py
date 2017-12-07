@@ -140,6 +140,7 @@ class plotLegend(ParameterTree):
                     {'name': 'Standard Deviation', 'type': 'float', 'readonly': True},
                     {'name': 'Max', 'type': 'float', 'readonly': True},
                     {'name': 'Min', 'type': 'float', 'readonly': True},
+                    {'name': 'ClearStats', 'title': 'Clear Statistics', 'type': 'bool', 'value': False, 'tip': "Reset Statistics"},
                 ]},
                 {'name': 'Options', 'type': 'group', 'removable': False, 'expanded': False, 'children': [
                     {'name': 'Plot_Colour', 'title': 'Line Colour', 'type': 'color', 'value': self.records[name]['pen'], 'tip': "Line Colour"},
@@ -160,6 +161,7 @@ class plotLegend(ParameterTree):
         self.proxySTD[name] = pg.SignalProxy(self.records[name]['worker'].recordStandardDeviationSignal, rateLimit=1, slot=lambda x: pChild.child('Statistics').child('Standard Deviation').setValue(x[0]))
         self.proxyMin[name] = pg.SignalProxy(self.records[name]['worker'].recordMinSignal, rateLimit=1, slot=lambda x: pChild.child('Statistics').child('Min').setValue(x[0]))
         self.proxyMax[name] = pg.SignalProxy(self.records[name]['worker'].recordMaxSignal, rateLimit=1, slot=lambda x: pChild.child('Statistics').child('Max').setValue(x[0]))
+        pChild.child('Statistics').child('ClearStats').sigValueChanged.connect(lambda x: self.records[name]['worker'].resetStatistics(x.value()))
         self.setupAxisList(name, pChild)
         pChild.child('Options').child('Show_Axis').sigValueChanged.connect(lambda x: self.records[name]['axis'].setVisible(x.value()))
         pChild.child('Options').child('Show_Plot').sigValueChanged.connect(lambda x: self.records[name]['curve'].lines.setVisible(x.value()))
