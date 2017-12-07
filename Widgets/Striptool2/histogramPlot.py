@@ -1,13 +1,13 @@
 import sys, time, os, datetime, signal
 import pyqtgraph as pg
 from pyqtgraph.Qt import QtGui, QtCore
-try:
-    from PyQt4.QtCore import *
-    from PyQt4.QtGui import *
-except:
-    from PyQt5.QtCore import *
-    from PyQt5.QtGui import *
-    from PyQt5.QtWidgets import *
+# if sys.version_info<(3,0,0):
+from PyQt4.QtCore import *
+from PyQt4.QtGui import *
+# else:
+#     from PyQt5.QtCore import *
+#     from PyQt5.QtGui import *
+#     from PyQt5.QtWidgets import *
 import peakutils
 import numpy as np
 # logger = logging.getLogger(__name__)
@@ -44,12 +44,37 @@ class histogramPlot(QWidget):
         self.histogramPlot.setLabel('left','Count')
         self.histogramPlot.showGrid(x=True, y=True)
         self.histogramPlotCurves = {}
+        self.setupOptionsBox()
+        self.subtractMeans = False
+        self.normalise = False
+        self.layout.addLayout(self.subtractMeanLayout)
+        self.layout.addLayout(self.normaliseLayout)
         if plotRateBar:
             self.setupPlotRateSlider()
             self.layout.addLayout(self.plotRateLayout)
         self.setLayout(self.layout)
         # logger.debug('histogramPlot initiated!')
         self.generalPlot.signalRemoved.connect(self.removeCurve)
+
+    def setupOptionsBox(self):
+        self.subtractMeanLayout = QHBoxLayout()
+        self.subtractMeanLabel = QtGui.QLabel()
+        self.subtractMeanLabel.setText('Subtract Means')
+        self.subtractMeanLabel.setAlignment(Qt.AlignCenter)
+        self.subtractMeanCheckbox = QtGui.QCheckBox()
+        self.subtractMeanCheckbox.setChecked(False)
+        self.subtractMeanCheckbox.stateChanged.connect(self.setSubtractMeans)
+        self.subtractMeanLayout.addWidget(self.subtractMeanLabel)
+        self.subtractMeanLayout.addWidget(self.subtractMeanCheckbox)
+        self.normaliseLayout = QHBoxLayout()
+        self.normaliseLabel = QtGui.QLabel()
+        self.normaliseLabel.setText('Normalise')
+        self.normaliseLabel.setAlignment(Qt.AlignCenter)
+        self.normaliseCheckbox = QtGui.QCheckBox()
+        self.normaliseCheckbox.setChecked(False)
+        self.normaliseCheckbox.stateChanged.connect(self.setNormalise)
+        self.normaliseLayout.addWidget(self.normaliseLabel)
+        self.normaliseLayout.addWidget(self.normaliseCheckbox)
 
     def setupPlotRateSlider(self):
         self.plotRateLayout = QHBoxLayout()
@@ -66,6 +91,12 @@ class histogramPlot(QWidget):
         self.plotRateSlider.valueChanged.connect(self.setPlotRate)
         self.plotRateLayout.addWidget(self.plotRateLabel)
         self.plotRateLayout.addWidget(self.plotRateSlider)
+
+    def setSubtractMeans(self, value):
+        self.subtractMeans = value
+
+    def setNormalise(self, value):
+        self.normalise = value
 
     def setPlotRate(self, value):
         self.plotrate = value
@@ -88,7 +119,7 @@ class histogramPlot(QWidget):
 
     def addCurve(self, name):
         name = str(name)
-        self.histogramPlotCurves[name] = histogramPlotCurve(self.histogramPlot, self.records[name])
+        self.histogramPlotCurves[name] = histogramPlotCurve(self.histogramPlot, self.records[name], parent=self)
         self.histogramPlotCurves[name].update()
 
     def removeCurve(self, name):
@@ -143,6 +174,13 @@ class histogramPlotCurve(QObject):
                 del data[:len(data)-self.decimateScale]
             x, y = zip(*data)
             y2,x2 = np.histogram(y, bins=self.numberBins)
+            if self.parent.subtractMeans:
+                x2 = x2 - np.mean(x2)
+            if self.parent.normalise:
+                mean = np.mean(x2)
+                x2 = x2 - mean
+                x2 = x2 / np.std(x2)
+                x2 = x2 + mean
             self.plot.setData({'x': x2, 'y': y2}, pen=self.color, stepMode=True, fillLevel=0, fillBrush=self.color)
         self.doingPlot = False
         # self.histogramPlot.enableAutoRange()

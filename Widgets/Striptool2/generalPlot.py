@@ -1,11 +1,11 @@
 import sys, time, os, signal
-try:
-    from PyQt4.QtCore import *
-    from PyQt4.QtGui import *
-except:
-    from PyQt5.QtCore import *
-    from PyQt5.QtGui import *
-    from PyQt5.QtWidgets import *
+# if sys.version_info<(3,0,0):
+from PyQt4.QtCore import *
+from PyQt4.QtGui import *
+# else:
+#     from PyQt5.QtCore import *
+#     from PyQt5.QtGui import *
+#     from PyQt5.QtWidgets import *
 import logging
 from signalRecord import *
 import scrollingPlot as scrollingplot

@@ -1,2 +1,6 @@
 __*/
 *build*/
+*dist*/
+*.dll
+*.exe
+*.spec

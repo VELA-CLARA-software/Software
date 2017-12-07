@@ -2,12 +2,15 @@ import sys,os
 # import numpy as np
 import pyqtgraph as pg
 from pyqtgraph.Qt import QtGui, QtCore
+# if sys.version_info<(3,0,0):
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
+# else:
+#     from PyQt5.QtCore import *
+#     from PyQt5.QtGui import *
+#     from PyQt5.QtWidgets import *
 import numpy as np
 import time
-from PyQt4 import QtCore
-from PyQt4.QtCore import Qt
 import yaml
 import string as string
 import colours as colours

@@ -1,13 +1,13 @@
 import sys, time, os, datetime, math, collections
 import pyqtgraph as pg
 from pyqtgraph.Qt import QtGui, QtCore
-try:
-    from PyQt4.QtCore import *
-    from PyQt4.QtGui import *
-except:
-    from PyQt5.QtCore import *
-    from PyQt5.QtGui import *
-    from PyQt5.QtWidgets import *
+# if sys.version_info<(3,0,0):
+from PyQt4.QtCore import *
+from PyQt4.QtGui import *
+# else:
+#     from PyQt5.QtCore import *
+#     from PyQt5.QtGui import *
+#     from PyQt5.QtWidgets import *
 import colours as colours
 
 ''' This class is a PyQtGraph axis which modifies the data points from "seconds before the current time" into Hours:Mins:Secs format.

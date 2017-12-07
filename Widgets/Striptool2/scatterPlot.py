@@ -1,13 +1,13 @@
 import sys, time, os, datetime, signal
 import pyqtgraph as pg
 from pyqtgraph.Qt import QtGui, QtCore
-try:
-    from PyQt4.QtCore import *
-    from PyQt4.QtGui import *
-except:
-    from PyQt5.QtCore import *
-    from PyQt5.QtGui import *
-    from PyQt5.QtWidgets import *
+# if sys.version_info<(3,0,0):
+from PyQt4.QtCore import *
+from PyQt4.QtGui import *
+# else:
+#     from PyQt5.QtCore import *
+#     from PyQt5.QtGui import *
+#     from PyQt5.QtWidgets import *
 from bisect import bisect_left
 # logger = logging.getLogger(__name__)
 
@@ -25,7 +25,7 @@ class scatterPlot(QWidget):
         super(scatterPlot, self).__init__(parent)
         self.pg = pg
         self.paused = False
-        self.plotrate = 1
+        self.plotrate = 5
         ''' create the scatterPlot as a grid layout '''
         self.scatterPlot = QtGui.QVBoxLayout()
         self.plotThread = QTimer()
@@ -113,7 +113,7 @@ class scatterPlot(QWidget):
         self.plotRateLabel.setText('Plot Update Rate [' + str(self.plotrate) + ' Hz]:')
         self.plotThread.setInterval(1000 * 1 / value)
 
-    def start(self, timer=1000):
+    def start(self, timer=5000):
         self.plotUpdate()
         self.plotThread.start(timer)
         self.plotThread.timeout.connect(self.plotUpdate)
@@ -215,7 +215,11 @@ class scatterPlotPlot(pg.PlotWidget):
             self.doingPlot  = True
             # self.plot.disableAutoRange()
             data1 = list(self.data1)
+            if len(data1) > self.decimateScale:
+                del data1[:len(data1)-self.decimateScale]
             data2 = list(self.data2)
+            if len(data2) > self.decimateScale:
+                del data2[:len(data2)-self.decimateScale]
             if len(data1) > 1 and len(data2) > 1:
                 if data1[0][0] < data2[0][0]:
                     ans = takeClosestPosition(next(iter(zip(*data1))), data1, data2[0][0])
@@ -240,10 +244,10 @@ class scatterPlotPlot(pg.PlotWidget):
                     x=list(x)
                     x2,y = zip(*data2)
                     y=list(y)
-                    if len(x) > self.decimateScale:
-                        # xy = zip(x,y)
-                        del x[:len(x)-self.decimateScale]
-                        del y[:len(y)-self.decimateScale]
+                    # if len(x) > self.decimateScale:
+                    #     # xy = zip(x,y)
+                    #     del x[:len(x)-self.decimateScale]
+                    #     del y[:len(y)-self.decimateScale]
                     self.scatterPlot.setData(x, y, pxMode=True, pen=None)
             self.doingPlot = False
         # self.plot.enableAutoRange()

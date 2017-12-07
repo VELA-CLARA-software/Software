@@ -3,13 +3,13 @@ import pyqtgraph as pg
 import numpy as np
 from scipy import interpolate
 from pyqtgraph.Qt import QtGui, QtCore
-try:
-    from PyQt4.QtCore import *
-    from PyQt4.QtGui import *
-except:
-    from PyQt5.QtCore import *
-    from PyQt5.QtGui import *
-    from PyQt5.QtWidgets import *
+# if sys.version_info<(3,0,0):
+from PyQt4.QtCore import *
+from PyQt4.QtGui import *
+# else:
+#     from PyQt5.QtCore import *
+#     from PyQt5.QtGui import *
+#     from PyQt5.QtWidgets import *
 import peakutils
 # logger = logging.getLogger(__name__)
 
@@ -28,7 +28,7 @@ class fftPlot(QWidget):
         super(fftPlot, self).__init__(parent)
         self.pg = pg
         self.paused = False
-        self.plotrate = 1
+        self.plotrate = 5
         ''' create the fftPlot as a grid layout '''
         self.layout = QtGui.QVBoxLayout()
         self.plotThread = QTimer()
@@ -122,6 +122,8 @@ class fftPlotCurve(QObject):
         self.data = records['data']
         self.mean = records['worker'].mean
         self.stddev = records['worker'].stddeviation
+        self.timer = records['timer']
+        # print 'self.timer = ', self.timer
         self.doingPlot = False
         self.paused = False
         self.paused = False
@@ -141,17 +143,20 @@ class fftPlotCurve(QObject):
     def _fourierTransform(self, x, y):
         ## Perform fourier transform. If x values are not sampled uniformly,
         ## then use np.interp to resample before taking fft.
+        # print 'length x = ', len(x)
         dx = np.diff(x)
-        uniform = not np.any(np.abs(dx-dx[0]) > (abs(dx[0]) / 1000.))
+        uniform = not np.any(np.abs(dx-dx[0]) > 1.5*self.timer)
+        starttime = time.clock()
         if not uniform:
             # print('FFT not uniform!  ', max(np.abs(dx-dx[0])))
-            x2 = np.linspace(x[0], x[-1], len(x))
+            x2 = np.linspace(x[0], x[0] + len(x)*self.timer, len(x))
             y = np.interp(x2, x, y)
             x = x2
         f = np.fft.fft(y) / len(y)
         y = abs(f[1:int(len(f)/2)])
         dt = x[-1] - x[0]
         x = np.linspace(0, 0.5*len(x)/dt, len(y))
+        # print 'FFT took ', time.clock() - starttime
         return x, y
 
     def update(self):
@@ -161,21 +166,21 @@ class fftPlotCurve(QObject):
             self.doingPlot  = True
             data = list(self.data)
             if len(data) > self.decimateScale:
-                del data[:len(data)-self.decimateScale]
+                data = data[-self.decimateScale:]
             x, y = zip(*data)
             x, y = self._fourierTransform(x, y)
             y = y/max(y)
             self.plot.setData({'x': x, 'y': y}, pen=self.color)
-            if len(self.plot.yDisp) > 0:
-                indexes = peakutils.indexes(self.plot.yDisp, thres=0.75, min_dist=10)
-                if len(indexes) < 5:
-                    for index in indexes:
-                        fftTextlabel=pg.TextItem(html='<span style="color: '+pg.mkColor(self.color).name()+';">'+str(round(self.plot.xDisp[index],2))+'</span>',anchor=(-0.7,1.2), angle=0)
-                        fftTextlabel.setPos(self.plot.xDisp[index],self.plot.yDisp[index])
-                        fftTextArrow=pg.ArrowItem(pos=(self.plot.xDisp[index],self.plot.yDisp[index]), angle=-45, pen=self.color, brush=pg.mkBrush(self.color))
-                        self.fftTextLabels.append([fftTextlabel, fftTextArrow])
-                        self.fftplot.addItem(fftTextlabel)
-                        self.fftplot.addItem(fftTextArrow)
+            # if len(self.plot.yDisp) > 0:
+            #     indexes = peakutils.indexes(self.plot.yDisp, thres=0.75, min_dist=10)
+            #     if len(indexes) < 5:
+            #         for index in indexes:
+            #             fftTextlabel=pg.TextItem(html='<span style="color: '+pg.mkColor(self.color).name()+';">'+str(round(self.plot.xDisp[index],2))+'</span>',anchor=(-0.7,1.2), angle=0)
+            #             fftTextlabel.setPos(self.plot.xDisp[index],self.plot.yDisp[index])
+            #             fftTextArrow=pg.ArrowItem(pos=(self.plot.xDisp[index],self.plot.yDisp[index]), angle=-45, pen=self.color, brush=pg.mkBrush(self.color))
+            #             self.fftTextLabels.append([fftTextlabel, fftTextArrow])
+            #             self.fftplot.addItem(fftTextlabel)
+            #             self.fftplot.addItem(fftTextArrow)
             self.doingPlot = False
         # self.fftPlot.enableAutoRange()
 

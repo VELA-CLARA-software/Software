@@ -1,13 +1,13 @@
 import sys, time, os, datetime, math
 import collections
 from pyqtgraph.Qt import QtGui, QtCore
-try:
-    from PyQt4.QtCore import *
-    from PyQt4.QtGui import *
-except:
-    from PyQt5.QtCore import *
-    from PyQt5.QtGui import *
-    from PyQt5.QtWidgets import *
+# if sys.version_info<(3,0,0):
+from PyQt4.QtCore import *
+from PyQt4.QtGui import *
+# else:
+#     from PyQt5.QtCore import *
+#     from PyQt5.QtGui import *
+#     from PyQt5.QtWidgets import *
 from threading import Thread, Event, Timer
 
 class repeatedTimer(QObject):
@@ -38,7 +38,7 @@ class repeatedTimer(QObject):
 
     @property
     def _time(self):
-        if (self.interval) - ((time.time() - self.start) % self.interval) < 0.01:
+        if (self.interval) - ((time.time() - self.start) % self.interval) < 0.001:
             return self.interval
         else:
             return (self.interval) - ((time.time() - self.start) % self.interval)

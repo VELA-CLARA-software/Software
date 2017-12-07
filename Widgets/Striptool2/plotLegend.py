@@ -1,13 +1,13 @@
 import pyqtgraph as pg
 from pyqtgraph.Qt import QtGui, QtCore
 import sys, time, os, datetime
-try:
-    from PyQt4.QtCore import *
-    from PyQt4.QtGui import *
-except:
-    from PyQt5.QtCore import *
-    from PyQt5.QtGui import *
-    from PyQt5.QtWidgets import *
+# if sys.version_info<(3,0,0):
+from PyQt4.QtCore import *
+from PyQt4.QtGui import *
+# else:
+#     from PyQt5.QtCore import *
+#     from PyQt5.QtGui import *
+#     from PyQt5.QtWidgets import *
 import pyqtgraph.parametertree.parameterTypes as pTypes
 from pyqtgraph.parametertree import Parameter, ParameterTree, ParameterItem, registerParameterType
 
@@ -86,10 +86,12 @@ class plotLegend(ParameterTree):
         text = header.text(0)
         pos = [pos for pos, char in enumerate(text) if char == ':'][-1]
         name = str(text[0:pos])
+        # print header.findItems('Show Axis?')
         for i in range(header.childCount()):
-            if header.child(i).text(0) == 'Show Axis?':
-                pvisible = header.child(i).widget.value()
-        # self.records[name]['axis'].setVisible(any([pvisible,visible]))
+            for j in range(header.child(i).childCount()):
+                if header.child(i).child(j).text(0) == 'Show Axis?':
+                    pvisible = header.child(i).child(j).widget.value()
+        self.records[name]['axis'].setVisible(any([pvisible,visible]))
         return self.records[name]['axis'], any([pvisible,visible])
 
     def returnTitleValue(self, name, titletext):
@@ -122,7 +124,7 @@ class plotLegend(ParameterTree):
         text = parameter.name()
         pos = [pos for pos, char in enumerate(text) if char == ':'][-1]
         name = str(text[0:pos])
-        print 'Signal Removed! Name = ', name
+        # print 'Signal Removed! Name = ', name
         try:
             self.generalPlot.removeSignal(str(name))
         except:
@@ -132,33 +134,37 @@ class plotLegend(ParameterTree):
         name = str(name)
         params = [
             {'name': name, 'type': 'group', 'removable': True, 'children': [
-                {'name': 'Value', 'type': 'float', 'readonly': True, 'title': 'Value'},
-                {'name': 'Mean', 'type': 'float', 'readonly': True},
-                {'name': 'Standard Deviation', 'type': 'float', 'readonly': True},
-                {'name': 'Max', 'type': 'float', 'readonly': True},
-                {'name': 'Min', 'type': 'float', 'readonly': True},
-                {'name': 'Plot_Colour', 'title': 'Line Colour', 'type': 'color', 'value': self.records[name]['pen'], 'tip': "Line Colour"},
-                {'name': 'Axis', 'title': 'Choose Axis', 'type': 'list', 'values': {}, 'value': self.records[name]['axisname'], 'tip': "Choose which axis to display on"},
-                {'name': 'Show_Axis', 'title': 'Show Axis?', 'type': 'bool', 'value': False, 'tip': "Show or Remove the Axis"},
-                {'name': 'Show_Plot', 'title': 'Show Plot?', 'type': 'bool', 'value': True, 'tip': "Show or Remove the plot lines"},
-                {'name': 'FFT_Plot', 'title': 'Plot FFT', 'type': 'bool', 'value': False, 'tip': "Show or Remove the FFT Plot"},
-                {'name': 'Histogram_Plot', 'title': 'Plot Histogram', 'type': 'bool', 'value': False, 'tip': "Show or Remove the Histogram Plot"},
+                {'name': 'Statistics', 'type': 'group', 'removable': False, 'expanded': False, 'children': [
+                    {'name': 'Value', 'type': 'float', 'readonly': True, 'title': 'Value'},
+                    {'name': 'Mean', 'type': 'float', 'readonly': True},
+                    {'name': 'Standard Deviation', 'type': 'float', 'readonly': True},
+                    {'name': 'Max', 'type': 'float', 'readonly': True},
+                    {'name': 'Min', 'type': 'float', 'readonly': True},
+                ]},
+                {'name': 'Options', 'type': 'group', 'removable': False, 'expanded': False, 'children': [
+                    {'name': 'Plot_Colour', 'title': 'Line Colour', 'type': 'color', 'value': self.records[name]['pen'], 'tip': "Line Colour"},
+                    {'name': 'Axis', 'title': 'Choose Axis', 'type': 'list', 'values': {}, 'value': self.records[name]['axisname'], 'tip': "Choose which axis to display on"},
+                    {'name': 'Show_Axis', 'title': 'Show Axis?', 'type': 'bool', 'value': False, 'tip': "Show or Remove the Axis"},
+                    {'name': 'Show_Plot', 'title': 'Show Plot?', 'type': 'bool', 'value': True, 'tip': "Show or Remove the plot lines"},
+                    {'name': 'FFT_Plot', 'title': 'Plot FFT', 'type': 'bool', 'value': False, 'tip': "Show or Remove the FFT Plot"},
+                    {'name': 'Histogram_Plot', 'title': 'Plot Histogram', 'type': 'bool', 'value': False, 'tip': "Show or Remove the Histogram Plot"},
+                ]},
             ]}
         ]
         p = Parameter.create(name='params', type='group', children=params)
         pChild = p.child(name)
         pChild.sigRemoved.connect(self.parameterSignalRemoved)
         self.parameterChildren[name] = pChild
-        self.proxyLatestValue[name] = pg.SignalProxy(self.records[name]['worker'].recordLatestValueSignal, rateLimit=1, slot=lambda x: pChild.child('Value').setValue(x[0][1]))
-        self.proxyMean[name] = pg.SignalProxy(self.records[name]['worker'].recordMeanSignal, rateLimit=1, slot=lambda x: pChild.child('Mean').setValue(x[0]))
-        self.proxySTD[name] = pg.SignalProxy(self.records[name]['worker'].recordStandardDeviationSignal, rateLimit=1, slot=lambda x: pChild.child('Standard Deviation').setValue(x[0]))
-        self.proxyMin[name] = pg.SignalProxy(self.records[name]['worker'].recordMinSignal, rateLimit=1, slot=lambda x: pChild.child('Min').setValue(x[0]))
-        self.proxyMax[name] = pg.SignalProxy(self.records[name]['worker'].recordMaxSignal, rateLimit=1, slot=lambda x: pChild.child('Max').setValue(x[0]))
+        self.proxyLatestValue[name] = pg.SignalProxy(self.records[name]['worker'].recordLatestValueSignal, rateLimit=1, slot=lambda x: pChild.child('Statistics').child('Value').setValue(x[0][1]))
+        self.proxyMean[name] = pg.SignalProxy(self.records[name]['worker'].recordMeanSignal, rateLimit=1, slot=lambda x: pChild.child('Statistics').child('Mean').setValue(x[0]))
+        self.proxySTD[name] = pg.SignalProxy(self.records[name]['worker'].recordStandardDeviationSignal, rateLimit=1, slot=lambda x: pChild.child('Statistics').child('Standard Deviation').setValue(x[0]))
+        self.proxyMin[name] = pg.SignalProxy(self.records[name]['worker'].recordMinSignal, rateLimit=1, slot=lambda x: pChild.child('Statistics').child('Min').setValue(x[0]))
+        self.proxyMax[name] = pg.SignalProxy(self.records[name]['worker'].recordMaxSignal, rateLimit=1, slot=lambda x: pChild.child('Statistics').child('Max').setValue(x[0]))
         self.setupAxisList(name, pChild)
-        pChild.child('Show_Axis').sigValueChanged.connect(lambda x: self.records[name]['axis'].setVisible(x.value()))
-        pChild.child('Show_Plot').sigValueChanged.connect(lambda x: self.records[name]['curve'].lines.setVisible(x.value()))
-        pChild.child('FFT_Plot').sigValueChanged.connect(lambda x: self.fftselectionchange.emit(name, x.value()))
-        pChild.child('Histogram_Plot').sigValueChanged.connect(lambda x: self.histogramplotselectionchange.emit(name, x.value()))
+        pChild.child('Options').child('Show_Axis').sigValueChanged.connect(lambda x: self.records[name]['axis'].setVisible(x.value()))
+        pChild.child('Options').child('Show_Plot').sigValueChanged.connect(lambda x: self.records[name]['curve'].lines.setVisible(x.value()))
+        pChild.child('Options').child('FFT_Plot').sigValueChanged.connect(lambda x: self.fftselectionchange.emit(name, x.value()))
+        pChild.child('Options').child('Histogram_Plot').sigValueChanged.connect(lambda x: self.histogramplotselectionchange.emit(name, x.value()))
         self.addParameters(p, showTop=False)
         header = self.findItems(name,Qt.MatchContains | Qt.MatchRecursive)[0]
         header.setSelected(False)
@@ -166,14 +172,14 @@ class plotLegend(ParameterTree):
         header.setForeground(0,self.contrasting_text_color(self.records[name]['pen']))
         header.setBackground(0,pg.mkBrush(self.records[name]['pen']))
         self.proxyHeaderText[name] = pg.SignalProxy(self.records[name]['worker'].recordLatestValueSignal, rateLimit=1, slot=lambda x: header.setText(0,name + ': ' + "{:.4}".format(x[0][1])))
-        pChild.child('Plot_Colour').sigValueChanging.connect(lambda x, y: self.changePenColour(header,name,y))
+        pChild.child('Options').child('Plot_Colour').sigValueChanging.connect(lambda x, y: self.changePenColour(header,name,y))
 
     def setupAxisList(self, name, pChild):
         if 'scrollingplot' in self.records[name]:
-            pChild.child('Axis').setLimits(self.records[name]['scrollingplot'].getAxes())
+            pChild.child('Options').child('Axis').setLimits(self.records[name]['scrollingplot'].getAxes())
             self.records[name]['scrollingplot'].toggleAxis(name, False)
-            self.records[name]['scrollingplot'].newaxis.connect(lambda x: pChild.child('Axis').setValue(self.records[name]['scrollingplot'].getAxes()))
-            pChild.child('Axis').sigValueChanged.connect(lambda x: self.records[name]['scrollingplot'].changeAxis(name,x.value()))
+            self.records[name]['scrollingplot'].newaxis.connect(lambda x: pChild.child('Options').child('Axis').setValue(self.records[name]['scrollingplot'].getAxes()))
+            pChild.child('Options').child('Axis').sigValueChanged.connect(lambda x: self.records[name]['scrollingplot'].changeAxis(name,x.value()))
 
     def changePenColour(self, header, name, colourWidget):
         colour = colourWidget.value()
