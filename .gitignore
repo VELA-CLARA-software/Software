@@ -1,6 +1,7 @@
 magnet-table/magnet-table.ini
 *.pyc
 *.pyc
+*.dll
 MagnetApp/GUI_FileLoad.pyc
 magnet-table/.idea/*.*
 magnet-table/tmp/*.*
