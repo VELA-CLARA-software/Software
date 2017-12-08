@@ -1,6 +1,7 @@
 import sys, time, os, datetime, math, collections
 import pyqtgraph as pg
 from pyqtgraph.Qt import QtGui, QtCore
+import collections
 # if sys.version_info<(3,0,0):
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
@@ -208,7 +209,6 @@ class scrollingPlotPlot(QWidget):
                 logrange = [math.log(x,10) for x in verticalRange]
                 viewbox.setRange(yRange=logrange,disableAutoRange=True)
             else:
-
                 viewbox.setRange(yRange=verticalRange,disableAutoRange=True)
         col = self.findFirstEmptyColumnInGraphicsLayout()
         self.plotWidget.ci.addItem(axis, row = 0, col = col,  rowspan=1, colspan=1)
@@ -283,6 +283,7 @@ class curve(QObject):
         self.vb.addItem(self.curve)
         self.scene = self.vb.scene()
         self.lines = MultiLine()
+        self.points = collections.deque(maxlen=self.records[name]['maxlength'])
         self.lineOn = False
         self.timeOffset = 0
         self.cache = collections.deque()
@@ -292,15 +293,18 @@ class curve(QObject):
 
     def changeViewbox(self, viewbox):
         name = self.name
-        self.records[name]['viewbox'].removeItem(self.curve)
+        self.vb.removeItem(self.curve)
         self.vb = self.records[name]['viewbox']
         self.vb.addItem(self.curve)
-        self.redrawPath()
+        # self.redrawPath()
         self.lineOn = False
 
     def updateTimeOffset(self,time):
         self.timeOffset += time
-        if hasattr(self,'path') and self.path is not None and self.lines.isVisible():
+        if self.lines.isVisible() and len(self.points) > 0:
+            self.path = QPainterPath(self.points[0])
+            for point in self.points:
+                self.path.lineTo(point)
             self.lines.setNewPath(self.path)
             if not self.lineOn:
                 self.lines.setPen(pg.mkPen(self.records[self.name]['pen']))
@@ -335,10 +339,11 @@ class curve(QObject):
     def updateData(self, data):
         val = data[1] if not self.records[self.name]['logScale'] else math.log(data[1],10)
         newpoint = QPointF(data[0], val)
-        if self.path == None:
-            self.lastplottime = self.starttime = round(time.time(),2)
-            self.path = QPainterPath(newpoint)
-        self.path.lineTo(data[0], val)
+        self.points.append(newpoint)
+        # if self.path == None:
+        #     self.lastplottime = self.starttime = round(time.time(),2)
+        #     self.path = QPainterPath(newpoint)
+        # self.path.lineTo(data[0], val)
 
 class MultiLine(pg.QtGui.QGraphicsPathItem):
     def __init__(self, log=False):

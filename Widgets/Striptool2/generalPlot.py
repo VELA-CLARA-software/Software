@@ -48,7 +48,7 @@ class generalPlot(QWidget):
         for name in self.records:
             self.records[name]['record'].start()
 
-    def addSignal(self, name='', pen='r', timer=1, maxlength=pow(2,20), function=None, args=[], **kwargs):
+    def addSignal(self, name='', pen='r', timer=1, maxlength=pow(2,18), function=None, args=[], **kwargs):
         if not name in self.records:
             signalrecord = signalRecord(records=self.records, name=name, pen=pen, timer=timer, maxlength=maxlength, function=function, args=args, **kwargs)
             self.records[name]['record'] = signalrecord
