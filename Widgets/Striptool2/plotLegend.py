@@ -34,6 +34,9 @@ class plotLegend(ParameterTree):
         self.proxySTD = {}
         self.proxyMin = {}
         self.proxyMax = {}
+        self.proxyMean10 = {}
+        self.proxyMean100 = {}
+        self.proxyMean1000 = {}
         self.parameterChildren = {}
         self.generalPlot.signalAdded.connect(self.addParameterSignal)
         self.generalPlot.signalRemoved.connect(self.removeParameterSignal)
@@ -140,16 +143,21 @@ class plotLegend(ParameterTree):
                     {'name': 'Standard Deviation', 'type': 'float', 'readonly': True},
                     {'name': 'Max', 'type': 'float', 'readonly': True},
                     {'name': 'Min', 'type': 'float', 'readonly': True},
-                    {'name': 'ClearStats', 'title': 'Clear Statistics', 'type': 'bool', 'value': False, 'tip': "Reset Statistics"},
+                    {'name': 'Mean10', 'title': 'Moving Average 10 Shots', 'type': 'bool', 'value': False},
+                    {'name': 'Mean100', 'title': 'Moving Average 100 Shots', 'type': 'bool', 'value': False},
+                    {'name': 'Mean1000', 'title': 'Moving Average 1000 Shots', 'type': 'bool', 'value': False},
+                    {'name': 'ClearStats', 'title': 'Clear Statistics', 'type': 'action', 'tip': "Reset Statistics"},
                 ]},
                 {'name': 'Options', 'type': 'group', 'removable': False, 'expanded': False, 'children': [
                     {'name': 'Plot_Colour', 'title': 'Line Colour', 'type': 'color', 'value': self.records[name]['pen'], 'tip': "Line Colour"},
                     {'name': 'Axis', 'title': 'Choose Axis', 'type': 'list', 'values': {}, 'value': self.records[name]['axisname'], 'tip': "Choose which axis to display on"},
+                    {'name': 'AxisAutoScale', 'title': 'Enable Autoscaling', 'type': 'bool', 'value': True, 'tip': "Enable autoscaling for this axis"},
                     {'name': 'Show_Axis', 'title': 'Show Axis?', 'type': 'bool', 'value': False, 'tip': "Show or Remove the Axis"},
                     {'name': 'Show_Plot', 'title': 'Show Plot?', 'type': 'bool', 'value': True, 'tip': "Show or Remove the plot lines"},
                     {'name': 'FFT_Plot', 'title': 'Plot FFT', 'type': 'bool', 'value': False, 'tip': "Show or Remove the FFT Plot"},
                     {'name': 'Histogram_Plot', 'title': 'Plot Histogram', 'type': 'bool', 'value': False, 'tip': "Show or Remove the Histogram Plot"},
                 ]},
+                # {'name': 'AutoScale', 'type': 'action', 'tip': "AutoScale Axis"},
             ]}
         ]
         p = Parameter.create(name='params', type='group', children=params)
@@ -161,12 +169,18 @@ class plotLegend(ParameterTree):
         self.proxySTD[name] = pg.SignalProxy(self.records[name]['worker'].recordStandardDeviationSignal, rateLimit=1, slot=lambda x: pChild.child('Statistics').child('Standard Deviation').setValue(x[0]))
         self.proxyMin[name] = pg.SignalProxy(self.records[name]['worker'].recordMinSignal, rateLimit=1, slot=lambda x: pChild.child('Statistics').child('Min').setValue(x[0]))
         self.proxyMax[name] = pg.SignalProxy(self.records[name]['worker'].recordMaxSignal, rateLimit=1, slot=lambda x: pChild.child('Statistics').child('Max').setValue(x[0]))
-        pChild.child('Statistics').child('ClearStats').sigValueChanged.connect(lambda x: self.records[name]['worker'].resetStatistics(x.value()))
+        pChild.child('Statistics').child('Mean10').sigValueChanged.connect(lambda x: self.records[name]['curve'].setVisibility('lines10', x.value()))
+        pChild.child('Statistics').child('Mean100').sigValueChanged.connect(lambda x: self.records[name]['curve'].setVisibility('lines100', x.value()))
+        pChild.child('Statistics').child('Mean1000').sigValueChanged.connect(lambda x: self.records[name]['curve'].setVisibility('lines1000', x.value()))
+        pChild.child('Statistics').child('ClearStats').sigActivated.connect(lambda x: self.records[name]['worker'].resetStatistics(True))
         self.setupAxisList(name, pChild)
         pChild.child('Options').child('Show_Axis').sigValueChanged.connect(lambda x: self.records[name]['axis'].setVisible(x.value()))
-        pChild.child('Options').child('Show_Plot').sigValueChanged.connect(lambda x: self.records[name]['curve'].lines.setVisible(x.value()))
+        pChild.child('Options').child('Show_Plot').sigValueChanged.connect(lambda x: self.records[name]['curve'].setVisibility('lines', x.value()))
         pChild.child('Options').child('FFT_Plot').sigValueChanged.connect(lambda x: self.fftselectionchange.emit(name, x.value()))
         pChild.child('Options').child('Histogram_Plot').sigValueChanged.connect(lambda x: self.histogramplotselectionchange.emit(name, x.value()))
+        self.records[name]['viewbox'].sigStateChanged.connect(lambda x: pChild.child('Options').child('AxisAutoScale').setValue(x.state['autoRange'][1]))
+        pChild.child('Options').child('AxisAutoScale').sigValueChanged.connect(lambda x: self.records[name]['viewbox'].enableAutoRange(y=x.value()))
+        # pChild.child('AutoScale').sigActivated.connect(lambda x: self.records[name]['viewbox'].autoRange())
         self.addParameters(p, showTop=False)
         header = self.findItems(name,Qt.MatchContains | Qt.MatchRecursive)[0]
         header.setSelected(False)
@@ -180,7 +194,7 @@ class plotLegend(ParameterTree):
         if 'scrollingplot' in self.records[name]:
             pChild.child('Options').child('Axis').setLimits(self.records[name]['scrollingplot'].getAxes())
             self.records[name]['scrollingplot'].toggleAxis(name, False)
-            self.records[name]['scrollingplot'].newaxis.connect(lambda x: pChild.child('Options').child('Axis').setValue(self.records[name]['scrollingplot'].getAxes()))
+            self.records[name]['scrollingplot'].newaxis.connect(lambda: pChild.child('Options').child('Axis').setLimits(self.records[name]['scrollingplot'].getAxes()))
             pChild.child('Options').child('Axis').sigValueChanged.connect(lambda x: self.records[name]['scrollingplot'].changeAxis(name,x.value()))
 
     def changePenColour(self, header, name, colourWidget):

@@ -283,67 +283,81 @@ class curve(QObject):
         self.vb.addItem(self.curve)
         self.scene = self.vb.scene()
         self.lines = MultiLine()
+        self.lines10 = MultiLine()
+        self.lines10.setVisible(False)
+        self.lines100 = MultiLine()
+        self.lines100.setVisible(False)
+        self.lines1000 = MultiLine()
+        self.lines1000.setVisible(False)
         self.points = collections.deque(maxlen=self.records[name]['maxlength'])
+        self.points10 = collections.deque(maxlen=self.records[name]['maxlength'])
+        self.points100 = collections.deque(maxlen=self.records[name]['maxlength'])
+        self.points1000 = collections.deque(maxlen=self.records[name]['maxlength'])
         self.lineOn = False
+        self.line10On = False
+        self.line100On = False
+        self.line1000On = False
         self.timeOffset = 0
-        self.cache = collections.deque()
+        self.visibility = {'lines': True, 'lines10': False, 'lines100': False, 'lines1000': False}
         self.plot.scrollingPlot.timeChangeSignal.connect(self.updateTimeOffset)
-        self.plot.records[name]['worker'].recordLatestValueSignal.connect(self.updateData)
+        self.plot.records[name]['worker'].recordLatestValueSignal.connect(lambda x: self.updateData(x, self.points))
+        self.plot.records[name]['worker'].recordMean10Signal.connect(lambda x: self.updateData(x, self.points10))
+        self.plot.records[name]['worker'].recordMean100Signal.connect(lambda x: self.updateData(x, self.points100))
+        self.plot.records[name]['worker'].recordMean1000Signal.connect(lambda x: self.updateData(x, self.points1000))
         self.path = None
+
+    def setVisibility(self, linename, visible):
+        self.visibility[linename] = visible
+        # print self.visibility
+        if linename is 'lines':
+            if visible is False:
+                for k in self.visibility.keys():
+                    getattr(self, k).setVisible(False)
+            else:
+                for k,v in self.visibility.iteritems():
+                    getattr(self, k).setVisible(self.visibility[k])
+        else:
+            self.visibility[linename] = visible
+            if self.visibility['lines'] is True:
+                getattr(self, linename).setVisible(visible)
+
 
     def changeViewbox(self, viewbox):
         name = self.name
         self.vb.removeItem(self.curve)
         self.vb = self.records[name]['viewbox']
         self.vb.addItem(self.curve)
-        # self.redrawPath()
         self.lineOn = False
+
+    def redrawLines(self, points, line, lineOn, pen):
+        if line.isVisible() and len(points) > 0:
+            path = QPainterPath(points[0])
+            for point in points:
+                path.lineTo(point)
+            line.setNewPath(path)
+            if not lineOn:
+                line.setPen(pg.mkPen(**pen))
+                self.vb.addItem(line)
+                lineOn = True
 
     def updateTimeOffset(self,time):
         self.timeOffset += time
-        if self.lines.isVisible() and len(self.points) > 0:
-            self.path = QPainterPath(self.points[0])
-            for point in self.points:
-                self.path.lineTo(point)
-            self.lines.setNewPath(self.path)
-            if not self.lineOn:
-                self.lines.setPen(pg.mkPen(self.records[self.name]['pen']))
-                self.scenePath = self.vb.addItem(self.lines)
-                # self.lines.setCacheMode(QGraphicsItem.DeviceCoordinateCache)
-                self.lineOn = True
+        self.redrawLines(self.points, self.lines, self.lineOn, {'color': self.records[self.name]['pen']})
+        self.redrawLines(self.points10, self.lines10, self.line10On, {'color': self.records[self.name]['pen'], 'dash': [2,2], 'width': 2})
+        self.redrawLines(self.points100, self.lines100, self.line100On, {'color': self.records[self.name]['pen'], 'dash': [2,2], 'width': 3})
+        self.redrawLines(self.points1000, self.lines1000, self.line1000On, {'color': self.records[self.name]['pen'], 'dash': [3,3], 'width': 4})
 
     def changePenColour(self):
-        self.lines.setPen(pg.mkPen(self.records[self.name]['pen']))
-
-    def updateCache(self, data):
-        self.cache.append(data)
-
-    def redrawPath(self):
-        self.plot.records[self.name]['worker'].recordLatestValueSignal.connect(self.updateCache)
-        self.plot.records[self.name]['worker'].recordLatestValueSignal.disconnect(self.updateData)
-        data = self.plot.records[self.name]['data']
-        logscale = self.records[self.name]['logScale']
-        val = math.log(data[0][1],10) if logscale else data[0][1]
-        self.path = QPainterPath(QPointF(data[0][0],val))
-        for t, v in data:
-            val = math.log(v,10) if logscale else v
-            self.path.lineTo(t, val)
-        for t, v in self.cache:
-            val = math.log(v,10) if logscale else v
-            self.path.lineTo(t, val)
-        self.plot.records[self.name]['worker'].recordLatestValueSignal.connect(self.updateData)
-        self.plot.records[self.name]['worker'].recordLatestValueSignal.disconnect(self.updateCache)
-        self.cache = collections.deque()
+        self.lines.setPen(pg.mkPen(color=self.records[self.name]['pen']))
+        self.lines10.setPen(pg.mkPen(color=self.records[self.name]['pen'], dash=[1,1], width=2))
+        self.lines100.setPen(pg.mkPen(color=self.records[self.name]['pen'], dash=[2,2], width=3))
+        self.lines1000.setPen(pg.mkPen(color=self.records[self.name]['pen'], dash=[3,3], width=4))
 
     ''' This updates the curve points based on the plot type and using the data from the timefilter function '''
-    def updateData(self, data):
+    def updateData(self, data, points):
         val = data[1] if not self.records[self.name]['logScale'] else math.log(data[1],10)
         newpoint = QPointF(data[0], val)
-        self.points.append(newpoint)
-        # if self.path == None:
-        #     self.lastplottime = self.starttime = round(time.time(),2)
-        #     self.path = QPainterPath(newpoint)
-        # self.path.lineTo(data[0], val)
+        points.append(newpoint)
 
 class MultiLine(pg.QtGui.QGraphicsPathItem):
     def __init__(self, log=False):
