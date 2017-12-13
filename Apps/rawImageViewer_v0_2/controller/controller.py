@@ -41,11 +41,15 @@ class Controller():
         self.imarray = np.zeros((2560,2160))
         x = np.linspace(0,256,256)
         y = np.linspace(0,216,216)
-        z = np.divide(self.imarray[0:256, 0:216], 65535 / 10 )
-        self.p3d = gl.GLSurfacePlotItem(x=x, y=y, z=z, shader='shaded', computeNormals=True, smooth=False)
+        z = np.divide(self.imarray[0:256, 0:216], 65535)
+        colors = np.ones((256, 216, 4), dtype=float)
+        colors[..., 0] = np.clip(np.cos(((x.reshape(256, 1) ** 2) + (y.reshape(1,216) ** 2)) ** 0.5), 0, 1)
+        colors[..., 1] = colors[..., 0]
+        self.p3d = gl.GLSurfacePlotItem(x=x, y=y, z=z, shader='shaded', colors=colors.reshape(256*216,4) ,computeNormals=True, smooth=False)#shader='heightColor',
+
         self.p3d.translate(-128, -108, 0)
         self.w.addItem(self.p3d)
-
+        self.p3d.scale(1.0, 1.0, 1.0)
         self.w.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
 
         self.roi = pg.ROI([0,0], [256,216])
@@ -94,7 +98,7 @@ class Controller():
         self.Image.setImage(self.imarray)
         x = np.linspace(0, 256, 256)
         y = np.linspace(0, 216, 216)
-        z = np.divide(self.imarray[0:256, 0:216], self.view.spinBox_max.value())
+        z = np.divide(self.imarray[0:256, 0:216], 65535)#self.view.spinBox_max.value())
         sumX = np.sum(self.imarray, axis=1)
         sumY = np.sum(self.imarray, axis=0)
         self.p3d.setData(x=x, y=y, z=z)
@@ -113,5 +117,10 @@ class Controller():
         newArray = self.imarray[int(self.roi.pos()[0]):int(self.roi.pos()[0])+int(self.roi.size()[0]),
         int(self.roi.pos()[1]):int(self.roi.pos()[1])+int(self.roi.size()[1])]
         z = np.divide(newArray, np.amax(newArray)/50)
-
-        self.p3d.setData(x=x,y=y,z=z)
+        #self.p3d.shader()['colorMap'] = np.array([0.3, 2, 0.5, 0.3, 1, 1, 0.3, 0, 2])
+        colors = np.ones((256, 216, 4), dtype=float)
+        colors[..., 0] = np.divide(z, 3) # np.clip(np.cos(((x.reshape(256, 1) ** 2) + (y.reshape(1,216) ** 2)) ** 0.5), 0, 1)
+        colors[..., 1] = np.divide(z, 9)
+        colors[..., 2] = np.divide(z, 3 * 9) + 0.4# = np.divide(colors[..., 0], 4)
+        #colors[..., 3] = np.divide(colors[..., 0], 4)
+        self.p3d.setData(x=x,y=y,z=z, colors=colors.reshape(256*216,4))
