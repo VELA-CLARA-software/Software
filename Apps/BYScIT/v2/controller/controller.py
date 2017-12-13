@@ -144,18 +144,7 @@ class Controller():
         image = image.flatten().tolist()
         im = ia.std_vector_double()
         im.extend(image)
-        #Testing removing background image
-        f = open('C:\\Users\\wln24624\\Documents\\SOFTWARE\\VELA-CLARA-Software\\Software\\Apps\\BYScIT\\v2\\model\\testImages\\bk.raw', "r")
-        bk = np.fromfile(f, dtype=np.uint16)
-        bk = bk.tolist()
-        print len(bk)
-        print bk[0]
-        b = ia.std_vector_double()
-        b.extend(bk)
-
-
         self.model.offlineAnalysis.loadImage(im, self.model.imageHeight, self.model.imageWidth)
-        self.model.offlineAnalysis.loadBackgroundImage(b)
         if self.view.checkBox_useBackground.isChecked() is True:
             self.model.offlineAnalysis.useBackground(True)
         else:
