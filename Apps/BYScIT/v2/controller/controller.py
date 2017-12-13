@@ -3,6 +3,7 @@ from PyQt4 import QtGui
 import sys
 import numpy as np
 import pyqtgraph as pg
+import model.model as modelFunctions
 import pyqtgraph.opengl as gl
 sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\stage')
 import VELA_CLARA_Camera_IA_Control as ia
@@ -19,6 +20,10 @@ class Controller():
         monitor = pg.GraphicsView()
         layout = pg.GraphicsLayout(border=(100, 100, 100))
         monitor.setCentralItem(layout)
+        #Backgroun Image
+        monitorBkgrnd = pg.GraphicsView()
+        layoutBkgrnd = pg.GraphicsLayout(border=(100, 100, 100))
+        monitorBkgrnd.setCentralItem(layoutBkgrnd)
         # Display for x profile
         monitorX = pg.GraphicsView()
         layoutX = pg.GraphicsLayout(border=(100, 100, 100))
@@ -27,6 +32,7 @@ class Controller():
         monitorY = pg.GraphicsView()
         layoutY = pg.GraphicsLayout(border=(100, 100, 100))
         monitorY.setCentralItem(layoutY)
+        self.tabWidget = QtGui.QTabWidget()
 
         self.w = gl.GLViewWidget()
         self.w.setCameraPosition(distance=300, azimuth=270)
@@ -47,6 +53,7 @@ class Controller():
 
         self.roi = pg.ROI([0, 0], [256, 216])
 
+
         self.ImageBox = layout.addPlot(lockAspect=True, colspan=1, rowspan=1)
         self.yProfBox = layoutY.addPlot()
         self.xProfBox = layoutX.addPlot()
@@ -63,10 +70,16 @@ class Controller():
         self.xProfBox.plot(pen='w')
         self.yProfBox.plot(pen='w')
 
+        self.BkgrndBox = layoutBkgrnd.addPlot(colspan=1, rowspan=1)
+        self.bkgrndImage = pg.ImageItem(lockAspect=True)
+        self.BkgrndBox.addItem(self.bkgrndImage)
+        self.tabWidget.addTab(self.w,'3D Lens')
+        self.tabWidget.addTab(monitorBkgrnd,'Background')
+
         self.view.gridLayout.addWidget(monitor, 0, 3, 10, 1)
         self.view.gridLayout.addWidget(monitorY, 0, 4, 10, 1)
         self.view.gridLayout.addWidget(monitorX, 12, 3, 15, 1)
-        self.view.gridLayout.addWidget(self.w, 12, 4, 15, 1)
+        self.view.gridLayout.addWidget(self.tabWidget, 12, 4, 15, 1)
 
         STEPS = np.linspace(0, 1, 4)
         CLRS = ['k', 'r', 'y', 'w']
@@ -123,8 +136,19 @@ class Controller():
         self.view.spinBox_max.setValue(np.amax(self.model.imageData))
         self.view.pushButton_loadImage.setText('Load Image')
 
+    def openBkgrndImageDir(self):
+        self.view.pushButton_loadBkgrnd.setText('Loading...')
+        filename = QtGui.QFileDialog.getOpenFileName(self.view.centralwidget, 'Background Image')
+        self.backgroundData = modelFunctions.Model()
+        self.backgroundData.getImage(str(filename))
+        self.bkgrndImage.setImage(self.backgroundData.imageData)
+
+        self.view.spinBox_max.setValue(np.amax(self.model.imageData))
+        self.view.pushButton_loadBkgrnd.setText('Load Background')
+
     def update(self):
         self.Image.setLevels([self.view.spinBox_min.value(), self.view.spinBox_max.value()], update=True)
+        self.bkgrndImage.setLevels([self.view.spinBox_min.value(), self.view.spinBox_max.value()], update=True)
 
 
 
@@ -144,9 +168,26 @@ class Controller():
         image = image.flatten().tolist()
         im = ia.std_vector_double()
         im.extend(image)
+        #Testing removing background image
+        f = open('C:\\Users\\wln24624\\Documents\\SOFTWARE\\VELA-CLARA-Software\\Software\\Apps\\BYScIT\\v2\\model\\testImages\\bk.raw', "r")
+        bk = np.fromfile(f, dtype=np.uint16)
+        bk = bk.tolist()
+        print len(bk)
+        print bk[0]
+        b = ia.std_vector_double()
+        b.extend(bk)
+
+
         self.model.offlineAnalysis.loadImage(im, self.model.imageHeight, self.model.imageWidth)
+        self.model.offlineAnalysis.loadBackgroundImage(b)
         if self.view.checkBox_useBackground.isChecked() is True:
             self.model.offlineAnalysis.useBackground(True)
+
+            bk = np.transpose(np.flip(self.backgroundData.imageData, 1))
+            bk = bk.flatten().tolist()
+            b = ia.std_vector_double()
+            b.extend(bk)
+            self.model.offlineAnalysis.loadBackgroundImage(b)
         else:
             self.model.offlineAnalysis.useBackground(False)
         # This is where we will house expert settings
