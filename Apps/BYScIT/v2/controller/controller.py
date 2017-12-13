@@ -52,6 +52,7 @@ class Controller():
                              QtGui.QSizePolicy.Expanding)
 
         self.roi = pg.ROI([0, 0], [256, 216])
+        self.customMaskROI = pg.EllipseROI([50, 50], [50, 50])
 
 
         self.ImageBox = layout.addPlot(lockAspect=True, colspan=1, rowspan=1)
@@ -73,13 +74,13 @@ class Controller():
         self.BkgrndBox = layoutBkgrnd.addPlot(colspan=1, rowspan=1)
         self.bkgrndImage = pg.ImageItem(lockAspect=True)
         self.BkgrndBox.addItem(self.bkgrndImage)
-        self.tabWidget.addTab(self.w,'3D Lens')
-        self.tabWidget.addTab(monitorBkgrnd,'Background')
+        self.tabWidget.addTab(self.w, '3D Lens')
+        self.tabWidget.addTab(monitorBkgrnd, 'Background')
 
         self.view.gridLayout.addWidget(monitor, 0, 3, 10, 1)
         self.view.gridLayout.addWidget(monitorY, 0, 4, 10, 1)
-        self.view.gridLayout.addWidget(monitorX, 12, 3, 15, 1)
-        self.view.gridLayout.addWidget(self.tabWidget, 12, 4, 15, 1)
+        self.view.gridLayout.addWidget(monitorX, 10, 3, 10, 1)
+        self.view.gridLayout.addWidget(self.tabWidget, 10, 4, 10, 1)
 
         STEPS = np.linspace(0, 1, 4)
         CLRS = ['k', 'r', 'y', 'w']
@@ -94,13 +95,20 @@ class Controller():
         self.view.pushButton_analyse.clicked.connect(self.analyse)
         self.view.checkBox_showMLEFit.stateChanged.connect(self.showMLEFit)
         self.view.checkBox_showBVNFit.stateChanged.connect(self.showBVNFit)
+        self.view.checkBox_useCustomMask.stateChanged.connect(self.useCustomMask)
         # Update View every 100 ms
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.update)
         self.timer.start(100)
 
+    def useCustomMask(self):
+        if self.view.checkBox_useCustomMask.isChecked() is True:
+            self.ImageBox.addItem(self.customMaskROI)
+        else:
+            self.ImageBox.removeItem(self.customMaskROI)
+
     def showMLEFit(self):
-        if self.view.checkBox_showMLEFit.isChecked() == True:
+        if self.view.checkBox_showMLEFit.isChecked() is True:
             self.ImageBox.addItem(self.vLineMLE)
             self.ImageBox.addItem(self.hLineMLE)
         else:
@@ -151,8 +159,6 @@ class Controller():
         self.Image.setLevels([self.view.spinBox_min.value(), self.view.spinBox_max.value()], update=True)
         self.bkgrndImage.setLevels([self.view.spinBox_min.value(), self.view.spinBox_max.value()], update=True)
 
-
-
         x = np.linspace(0,int(self.roi.size()[0]),int(self.roi.size()[0]))
         y = np.linspace(0,int(self.roi.size()[1]),int(self.roi.size()[1]))
         newArray = self.imarray[int(self.roi.pos()[0]):int(self.roi.pos()[0])+int(self.roi.size()[0]),
@@ -163,24 +169,18 @@ class Controller():
         colors[..., 1] = np.divide(z, 9)
         colors[..., 2] = np.divide(z, 3 * 9) + 0.4
         self.p3d.setData(x=x, y=y, z=z, colors=colors.reshape(256 * 216, 4))
+        self.view.label_customX.setText('X: ' + str(self.customMaskROI.pos[0]))
+        self.view.label_customY.setText('Y: ' + str(self.customMaskROI.pos[1]))
+        self.view.label_customRX.setText('Radius X: ' + str(self.customMaskROI.size[0]))
+        self.view.label_customRY.setText('Radius Y: ' + str(self.customMaskROI.size[1]))
 
     def analyse(self):
         image = np.transpose(np.flip(self.model.imageData, 1))
         image = image.flatten().tolist()
         im = ia.std_vector_double()
         im.extend(image)
-        #Testing removing background image
-        f = open('C:\\Users\\wln24624\\Documents\\SOFTWARE\\VELA-CLARA-Software\\Software\\Apps\\BYScIT\\v2\\model\\testImages\\bk.raw', "r")
-        bk = np.fromfile(f, dtype=np.uint16)
-        bk = bk.tolist()
-        print len(bk)
-        print bk[0]
-        b = ia.std_vector_double()
-        b.extend(bk)
-
 
         self.model.offlineAnalysis.loadImage(im, self.model.imageHeight, self.model.imageWidth)
-        self.model.offlineAnalysis.loadBackgroundImage(b)
         if self.view.checkBox_useBackground.isChecked() is True:
             self.model.offlineAnalysis.useBackground(True)
 
