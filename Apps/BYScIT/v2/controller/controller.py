@@ -90,6 +90,7 @@ class Controller():
         # Connections
         self.timer = QtCore.QTimer()
         self.view.pushButton_loadImage.clicked.connect(self.openImageDir)
+        self.view.pushButton_loadBkgrnd.clicked.connect(self.openBkgrndImageDir)
         self.view.pushButton_analyse.clicked.connect(self.analyse)
         self.view.checkBox_showMLEFit.stateChanged.connect(self.showMLEFit)
         self.view.checkBox_showBVNFit.stateChanged.connect(self.showBVNFit)
