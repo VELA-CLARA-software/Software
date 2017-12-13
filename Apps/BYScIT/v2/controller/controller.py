@@ -53,6 +53,9 @@ class Controller():
 
         self.roi = pg.ROI([0, 0], [256, 216])
         self.customMaskROI = pg.EllipseROI([50, 50], [50, 50])
+        #handle = self.customMaskROI.getHandles()
+        #print handle[0]
+        #self.customMaskROI.replaceHandle(handle[0],handle[1])
 
 
         self.ImageBox = layout.addPlot(lockAspect=True, colspan=1, rowspan=1)
@@ -169,10 +172,11 @@ class Controller():
         colors[..., 1] = np.divide(z, 9)
         colors[..., 2] = np.divide(z, 3 * 9) + 0.4
         self.p3d.setData(x=x, y=y, z=z, colors=colors.reshape(256 * 216, 4))
-        self.view.label_customX.setText('X: ' + str(self.customMaskROI.pos[0]))
-        self.view.label_customY.setText('Y: ' + str(self.customMaskROI.pos[1]))
-        self.view.label_customRX.setText('Radius X: ' + str(self.customMaskROI.size[0]))
-        self.view.label_customRY.setText('Radius Y: ' + str(self.customMaskROI.size[1]))
+        #if self.view.checkBox_useCustomMask.isChecked() is True:
+            #self.view.label_customX.setText('X: ' + str(self.customMaskROI.pos()[0]))
+            #self.view.label_customY.setText('Y: ' + str(self.customMaskROI.pos()[1]))
+            #self.view.label_customRX.setText('Radius X: ' + str(self.customMaskROI.size()[0]))
+            #self.view.label_customRY.setText('Radius Y: ' + str(self.customMaskROI.size()[1]))
 
     def analyse(self):
         image = np.transpose(np.flip(self.model.imageData, 1))
