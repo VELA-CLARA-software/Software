@@ -13,16 +13,31 @@ from bokeh.layouts import row, column
 from bokeh.models import Spacer
 from bokeh.models.widgets import Panel, Tabs
 from PIL import Image
+import pyqtgraph as pg
 
 class Controller():
 
     def __init__(self, view, model):
         '''define model and view'''
+        monitor = pg.GraphicsView()
+        layout = pg.GraphicsLayout(border=(100, 100, 100))
+        monitor.setCentralItem(layout)
         self.view = view
         self.model = model
         self.timer = QtCore.QTimer()
         self.view.pushButton.clicked.connect(self.openImageDir)
         self.view.pushButton_2.clicked.connect(self.openImageDirs)
+        self.ImageBox = layout.addViewBox(lockAspect=True, colspan=2)
+        self.Image = pg.ImageItem(np.random.normal(size=(2560, 2160)))
+
+        self.ImageBox.addItem(self.Image)
+        self.view.gridLayout.addWidget(monitor, 0, 2, 2, 3)
+        STEPS = np.linspace(0, 1, 4)
+        CLRS = ['k', 'r', 'y', 'w']
+        a = np.array([pg.colorTuple(pg.Color(c)) for c in CLRS])
+        clrmp = pg.ColorMap(STEPS, a)
+        lut = clrmp.getLookupTable()
+        self.Image.setLookupTable(lut)
 
     def openImageDir(self):
         self.view.pushButton.setText('Loading...')
@@ -34,6 +49,7 @@ class Controller():
         a = a.reshape((2160, 2560))
 
         imarray =np.array(a)
+        self.Image.setImage(np.flip(np.transpose(imarray), 1))
         #imarray = np.array(im)
         sumX = np.sum(np.flipud(imarray),axis=0)
         sumY = np.sum(np.flipud(imarray),axis=1)

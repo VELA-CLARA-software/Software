@@ -240,19 +240,19 @@ class Controller():
 
         if self.view.checkBox_rollingAverage.isChecked() is True:
             self.model.offlineAnalysis.useESFilter(True)
-            self.model.offlineAnalysis.setESFilter(int(self.view.lineEdit_rollingAverage))
+            self.model.offlineAnalysis.setESFilter(int(self.view.lineEdit_rollingAverage.text()))
         else:
             self.model.offlineAnalysis.useESFilter(False)
 
         if self.view.checkBox_rSquared.isChecked() is True:
             self.model.offlineAnalysis.useESRRThreshold(True)
-            self.model.offlineAnalysis.setESRRThreshold(float(self.view.lineEdit_rSquared))
+            self.model.offlineAnalysis.setESRRThreshold(float(self.view.lineEdit_rSquared.text()))
         else:
             self.model.offlineAnalysis.useESRRThreshold(False)
 
         if self.view.checkBox_lowestPixValue.isChecked() is True:
             self.model.offlineAnalysis.useESDirectCut(True)
-            self.model.offlineAnalysis.setESDirectCut(float(self.view.lineEdit_lowestPixelValue))
+            self.model.offlineAnalysis.setESDirectCut(float(self.view.lineEdit_lowestPixelValue.text()))
         else:
             self.model.offlineAnalysis.useESDirectCut(False)
         self.model.offlineAnalysis.analyse()
