@@ -52,18 +52,24 @@ class Controller():
                              QtGui.QSizePolicy.Expanding)
 
         self.roi = pg.ROI([0, 0], [256, 216])
-        self.customMaskROI = pg.EllipseROI([50, 50], [50, 50])
+        self.customMaskROI = pg.ROI([50, 50], [100, 100])
         #handle = self.customMaskROI.getHandles()
         #print handle[0]
         #self.customMaskROI.replaceHandle(handle[0],handle[1])
+        self.customMaskROI.addScaleHandle([0.5, 1], [0.5, 0.5])
+        self.customMaskROI.addScaleHandle([0, 0.5], [0.5, 0.5])
+        # Isocurve drawing
+
 
 
         self.ImageBox = layout.addPlot(lockAspect=True, colspan=1, rowspan=1)
         self.yProfBox = layoutY.addPlot()
         self.xProfBox = layoutX.addPlot()
         self.Image = pg.ImageItem(lockAspect=True)
-        self.saturatedPixelImage = pg.ImageItem()
+        self.saturatedPixelImage = pg.ImageItem(lockAspect=True)
+        self.saturatedPixelImage.setZValue(5)
         self.ImageBox.addItem(self.Image)
+
         self.vLineMLE = self.ImageBox.plot(pen='g')
         self.hLineMLE = self.ImageBox.plot(pen='g')
         self.vLineBVN = self.ImageBox.plot(pen='b')
@@ -91,6 +97,14 @@ class Controller():
         clrmp = pg.ColorMap(STEPS, a)
         lut = clrmp.getLookupTable()
         self.Image.setLookupTable(lut)
+
+        #SATURATED PIXEL COLOURING
+        STEPS = np.array([0.0, 1.0])
+        CLRS = ['w', 'g']
+        clrmp_sat = pg.ColorMap(STEPS, np.array([pg.colorTuple(pg.Color(c)) for c in CLRS]))
+        lut_sat = clrmp_sat.getLookupTable(nPts=2)
+        self.saturatedPixelImage.setLookupTable(lut_sat)
+
         # Connections
         self.timer = QtCore.QTimer()
         self.view.pushButton_loadImage.clicked.connect(self.openImageDir)
@@ -99,10 +113,25 @@ class Controller():
         self.view.checkBox_showMLEFit.stateChanged.connect(self.showMLEFit)
         self.view.checkBox_showBVNFit.stateChanged.connect(self.showBVNFit)
         self.view.checkBox_useCustomMask.stateChanged.connect(self.useCustomMask)
+        self.view.checkBox_useCustomMask.stateChanged.connect(self.useCustomMask)
+        self.view.checkBox_showSaturatedPixels.stateChanged.connect(self.showSatPix)
+        self.view.checkBox_show3DLens.stateChanged.connect(self.show3DLens)
         # Update View every 100 ms
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.update)
         self.timer.start(100)
+
+    def show3DLens(self):
+        if self.view.checkBox_show3DLens.isChecked() is True:
+            self.ImageBox.addItem(self.roi)
+        else:
+            self.ImageBox.removeItem(self.roi)
+
+    def showSatPix(self):
+        if self.view.checkBox_showSaturatedPixels.isChecked() is True:
+            self.ImageBox.addItem(self.saturatedPixelImage)
+        else:
+            self.ImageBox.removeItem(self.saturatedPixelImage)
 
     def useCustomMask(self):
         if self.view.checkBox_useCustomMask.isChecked() is True:
@@ -133,6 +162,7 @@ class Controller():
         filename = QtGui.QFileDialog.getOpenFileName(self.view.centralwidget, 'Image')
         self.model.getImage(str(filename))
         self.Image.setImage(self.model.imageData)
+        self.saturatedPixelImage.setImage(self.model.imageData, opacity=0.4)
         self.imarray = self.model.imageData
         x = np.linspace(0, 256, 256)
         y = np.linspace(0, 216, 216)
@@ -144,8 +174,8 @@ class Controller():
         y = np.linspace(0, self.model.imageHeight, self.model.imageHeight)
         self.xProfBox.plot(x=x, y=sumX, pen='w')
         self.yProfBox.plot(x=sumY, y=y, pen='w')
-        self.ImageBox.addItem(self.roi)
         self.view.spinBox_max.setValue(np.amax(self.model.imageData))
+        self.view.spinBox_satLevel.setValue(int(np.amax(self.model.imageData)))
         self.view.pushButton_loadImage.setText('Load Image')
 
     def openBkgrndImageDir(self):
@@ -154,12 +184,11 @@ class Controller():
         self.backgroundData = modelFunctions.Model()
         self.backgroundData.getImage(str(filename))
         self.bkgrndImage.setImage(self.backgroundData.imageData)
-
-        self.view.spinBox_max.setValue(np.amax(self.model.imageData))
         self.view.pushButton_loadBkgrnd.setText('Load Background')
 
     def update(self):
         self.Image.setLevels([self.view.spinBox_min.value(), self.view.spinBox_max.value()], update=True)
+        self.saturatedPixelImage.setLevels([0, self.view.spinBox_satLevel.value()], update=True)
         self.bkgrndImage.setLevels([self.view.spinBox_min.value(), self.view.spinBox_max.value()], update=True)
 
         x = np.linspace(0,int(self.roi.size()[0]),int(self.roi.size()[0]))
@@ -172,13 +201,14 @@ class Controller():
         colors[..., 1] = np.divide(z, 9)
         colors[..., 2] = np.divide(z, 3 * 9) + 0.4
         self.p3d.setData(x=x, y=y, z=z, colors=colors.reshape(256 * 216, 4))
-        #if self.view.checkBox_useCustomMask.isChecked() is True:
-            #self.view.label_customX.setText('X: ' + str(self.customMaskROI.pos()[0]))
-            #self.view.label_customY.setText('Y: ' + str(self.customMaskROI.pos()[1]))
-            #self.view.label_customRX.setText('Radius X: ' + str(self.customMaskROI.size()[0]))
-            #self.view.label_customRY.setText('Radius Y: ' + str(self.customMaskROI.size()[1]))
+        if self.view.checkBox_useCustomMask.isChecked() is True:
+            self.view.label_customX.setText('X: ' + str(int(self.customMaskROI.pos()[0]+self.customMaskROI.size()[0]/2)))
+            self.view.label_customY.setText('Y: ' + str(int(self.customMaskROI.pos()[1]+self.customMaskROI.size()[0]/2)))
+            self.view.label_customRX.setText('XRad: ' + str(int(self.customMaskROI.size()[0]/2)))
+            self.view.label_customRY.setText('YRad: ' + str(int(self.customMaskROI.size()[1]/2)))
 
     def analyse(self):
+        self.view.pushButton_analyse.setText('Analysing ...')
         image = np.transpose(np.flip(self.model.imageData, 1))
         image = image.flatten().tolist()
         im = ia.std_vector_double()
@@ -196,17 +226,35 @@ class Controller():
         else:
             self.model.offlineAnalysis.useBackground(False)
         # This is where we will house expert settings
-        manualCrop = False
         self.model.offlineAnalysis.useESMask(True)
-        if manualCrop is True:
-            self.model.offlineAnalysis.setESMask(700, 600, 300, 400)
+        if self.view.checkBox_useCustomMask.isChecked() is True:
+            self.model.offlineAnalysis.setESMask(int(self.customMaskROI.pos()[0]+self.customMaskROI.size()[0]/2),
+                                                 int(self.customMaskROI.pos()[1]+self.customMaskROI.size()[0]/2),
+                                                 int(self.customMaskROI.size()[0]/2),
+                                                 int(self.customMaskROI.size()[1]/2))
         else:
             # make mask span full width of image
             x = int(self.model.imageWidth / 2)
             y = int(self.model.imageHeight / 2)
             self.model.offlineAnalysis.setESMask(x, y, x, y)
 
+        if self.view.checkBox_rollingAverage.isChecked() is True:
+            self.model.offlineAnalysis.useESFilter(True)
+            self.model.offlineAnalysis.setESFilter(int(self.view.lineEdit_rollingAverage))
+        else:
+            self.model.offlineAnalysis.useESFilter(False)
 
+        if self.view.checkBox_rSquared.isChecked() is True:
+            self.model.offlineAnalysis.useESRRThreshold(True)
+            self.model.offlineAnalysis.setESRRThreshold(float(self.view.lineEdit_rSquared))
+        else:
+            self.model.offlineAnalysis.useESRRThreshold(False)
+
+        if self.view.checkBox_lowestPixValue.isChecked() is True:
+            self.model.offlineAnalysis.useESDirectCut(True)
+            self.model.offlineAnalysis.setESDirectCut(float(self.view.lineEdit_lowestPixelValue))
+        else:
+            self.model.offlineAnalysis.useESDirectCut(False)
         self.model.offlineAnalysis.analyse()
         # Set Results Labels in GUI
         self.view.label_xMLE.setText(str(self.model.offlineAnalysis.CoIA.xMLE))
@@ -246,3 +294,4 @@ class Controller():
               float(self.model.offlineAnalysis.CoIA.sxBVN))
         self.vLineBVN.setData(x=[x, x], y=[v1, v2])
         self.hLineBVN.setData(x=[h1, h2], y=[y, y])
+        self.view.pushButton_analyse.setText('Analyse')
