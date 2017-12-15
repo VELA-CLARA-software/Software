@@ -10,15 +10,17 @@ Calculates the transfer matrix.
 See Gulliford and Bazarov (2012): http://journals.aps.org/prab/abstract/10.1103/PhysRevSTAB.15.024002#fulltext
 """
 
+from collections import namedtuple
+from fractions import Fraction
+from functools import wraps  # for class method decorators
+
+from Apps.Parasol.calcMomentum import calcmomentum # Fortran code to do the momentum calculation
 import numpy as np
 import scipy.constants
-import scipy.optimize
 import scipy.linalg
-from functools import wraps  # for class method decorators
-from collections import namedtuple
-import calcMomentum  # Fortran code to do the momentum calculation
-import solenoid_field_map
-from fractions import Fraction
+import scipy.optimize
+
+import Apps.Parasol.solenoid_field_map as sol_field_map
 
 # import clipboard  # for temporary debugging, can copy matrices into Excel
 
@@ -51,13 +53,16 @@ def timeit(method):
         result = method(*args, **kw)
         dt = millis() - ts
         if not args[0].quiet:  # args[0] is always self
-            print '{method.__name__} ({args}, {kw}) {dt:.3f} ms'.format(**locals())
+            print('{method.__name__} ({args}, {kw}) {dt:.3f} ms'.format(**locals()))
         return result
     return timed
 
 # Calculation levels
 # When parameters are changed, the calculation level is reset.
 # A calculation will be performed again when necessary.
+# This means that the calculation can be split up into sections.
+# For instance, if the solenoid current is changed this will not affect
+# the momentum, so no need to recalculate that.
 CALC_NONE, INIT_ARRAYS, CALC_MOM, CALC_B_MAP, CALC_LA, CALC_MATRICES = range(6)
 
 def requires_calc_level(level):
@@ -94,7 +99,7 @@ class RFSolTracker(object):
         self.name = name
 
         # Set up the simulation
-        self.solenoid = solenoid_field_map.Solenoid(name, quiet=self.quiet)
+        self.solenoid = sol_field_map.Solenoid(name, quiet=self.quiet)
         astra_folder = r'\\fed.cclrc.ac.uk\Org\NLab\ASTeC-TDL\Projects\tdl-1168 CLARA\CLARA-ASTeC Folder\Accelerator Physics\ASTRA'
         if name[:3] == 'Gun':
             cav_fieldmap_file = astra_folder + (r'\Archive from Delta + CDR\bas_gun.txt' if name == 'Gun-10' \
@@ -106,7 +111,7 @@ class RFSolTracker(object):
             self.rf_peak_field = 50  # float(np.max(cav_fieldmap[:, 1]) / 1e6)  # set a 'reasonable' value
             # Normalise
             cav_fieldmap[:, 1] /= np.max(cav_fieldmap[:, 1])
-            self.norm_E = [solenoid_field_map.interpolate(*cav_fieldmap.T),]
+            self.norm_E = [sol_field_map.interpolate(*cav_fieldmap.T), ]
             self.phase_offset = np.zeros(1, dtype='float')
             self.freq = 2998.5 * 1e6  # in Hz
             self.phase = 330.0  # to get optimal acceleration
@@ -178,7 +183,7 @@ class RFSolTracker(object):
             self.rf_peak_field = float(np.max(E_list))
             # Normalise
             E_list /= self.rf_peak_field
-            self.norm_E = [solenoid_field_map.interpolate(z_list, E_list),]
+            self.norm_E = [sol_field_map.interpolate(z_list, E_list), ]
             self.phase_offset = [0,]
 
         self.calc_level = CALC_NONE
@@ -225,7 +230,9 @@ Phase: {self.phase:.1f}°'''
             print(fs.format(**locals()))
 
         # Fortran method (0.8 ms to run cf 11 ms for Python code)
-        self.t_array, self.gamma_dash_array, self.gamma_array, self.beta_array, self.p_array = calcMomentum.calcmomentum(self.freq, self.phase, self.gamma_start, self.dz, self.gamma_tilde_dash, self.phase_offset)
+        self.t_array, self.gamma_dash_array, self.gamma_array, self.beta_array, self.p_array = \
+            calcmomentum(self.freq, self.phase, self.gamma_start, self.dz,
+                         self.gamma_tilde_dash, self.phase_offset)
         # print(self.gamma_dash_array)
         self.final_p_MeV = self.p_array[-1] * -1e-6 * epsilon_e
 
@@ -355,6 +362,10 @@ Bucking coil current: {self.solenoid.bc_current:.3f} A'''
             setattr(self, attr_name, float(value))
             # Reset calculation level
             self.calc_level = min(self.calc_level, calc_level)
+
+    def setInitialMomentum(self, momentum):
+        """Set the initial momentum in MeV/c."""
+        self.resetValue('gamma_start', np.sqrt(1 + abs(1e6 * momentum / epsilon_e)), CALC_NONE)
 
     def setRFPeakField(self, field):
         """Set the peak electric field in MV/m."""

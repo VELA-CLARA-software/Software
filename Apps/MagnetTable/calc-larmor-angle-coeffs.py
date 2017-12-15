@@ -6,7 +6,8 @@ between momentum, solenoid current, and Larmor angle
 @author: bjs54
 """
 import numpy as np
-import rf_sol_tracking
+
+from Apps.Parasol import rf_sol_tracking
 
 name = 'Gun-10'
 g = rf_sol_tracking.RFSolTracker(name)

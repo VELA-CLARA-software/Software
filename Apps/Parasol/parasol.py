@@ -2,20 +2,26 @@
 # -*- coding: utf-8 -*-
 
 import sys
-from PyQt4 import QtCore, QtGui, uic
-from rf_sol_tracking import RFSolTracker
+try:
+    from PyQt4 import QtCore, QtGui, uic
+except ImportError:
+    from PyQt5 import QtCore, QtGui, uic
+from Apps.Parasol.rf_sol_tracking import RFSolTracker
 import pyqtgraph as pg
 import numpy as np
 import os
 sys.path.insert(0, r'\\fed.cclrc.ac.uk\Org\NLab\ASTeC\Projects\VELA\Software\VELA_CLARA_PYDs\bin\Release')
-import VELA_CLARA_Magnet_Control as MagCtrl
+try:
+    import VELA_CLARA_Magnet_Control as MagCtrl
+except ImportError:
+    MagCtrl = None
 
 os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
 os.environ["EPICS_CA_MAX_ARRAY_BYTES"] = "10000000"
 
 ## Switch to using dark grey background and white foreground
 # pg.setConfigOption('background', 0.2)
-# pg.setConfigOption('foreground', 'w')
+pg.setConfigOption('foreground', 'w')
 
 image_credits = {
     'parasol.png': 'https://www.shareicon.net/parasol-sun-umbrella-travel-tools-and-utensils-summer-sunshade-summertime-794079',
@@ -114,9 +120,13 @@ class ParasolApp(QtGui.QMainWindow, Ui_MainWindow):
             plot.showGrid(True, True)
 
         self.gun_dropdown.activated.connect(self.gunChanged)
-        self.magInit = MagCtrl.init()
-        self.machine_mode_dropdown.activated.connect(self.machineModeChanged)
-        self.machineModeChanged()
+        if MagCtrl is None:
+            self.magInit = None
+            self.machine_mode_dropdown.setEnabled(False)  # use "offline" mode only!
+        else:
+            self.magInit = MagCtrl.init()
+            self.machine_mode_dropdown.activated.connect(self.machineModeChanged)
+            self.machineModeChanged()
         self.update_period = 100  # milliseconds
         self.startMainViewUpdateTimer()
         self.gunChanged() # initial update
@@ -206,7 +216,7 @@ class ParasolApp(QtGui.QMainWindow, Ui_MainWindow):
 
     def phaseSliderChanged(self):
         """The phase slider has been altered. Update the RF field plot. (No extra calculation needed.)"""
-        self.E_field_plot.plot(self.gun.getZRange(), self.gun.getRFFieldMap(phase=np.radians(self.phase_slider.value())) / 1e6, pen='r', clear=True)
+        self.E_field_plot.plot(self.gun.getZRange(), self.gun.getRFFieldMap(phase=np.radians(self.phase_slider.value())) / 1e6, pen='w', clear=True)
         title = 'Electric field' + (u', phase {:.0f}°'.format(self.phase_slider.value()) if self.phase_slider.isEnabled() else '')
         self.E_field_plot.setTitle(title)
         # self.phase_play_button.setChecked(False)
@@ -215,7 +225,7 @@ class ParasolApp(QtGui.QMainWindow, Ui_MainWindow):
         """The gun parameters have been modified - rerun the simulation and update the GUI."""
         self.E_field_plot.setYRange(-self.gun.rf_peak_field, self.gun.rf_peak_field)
         self.phaseSliderChanged()  # update the RF field plot
-        self.momentum_plot.plot(self.gun.getZRange(), self.gun.getMomentumMap(), pen='r', clear=True)
+        self.momentum_plot.plot(self.gun.getZRange(), self.gun.getMomentumMap(), pen='w', clear=True)
         self.momentum_spin.setValue(self.gun.getFinalMomentum())
         self.solCurrentsChanged()
 
@@ -256,8 +266,8 @@ class ParasolApp(QtGui.QMainWindow, Ui_MainWindow):
             self.controller.setSI('SOL', self.sol_spin.value())
         self.cathode_field_spin.setValue(sol.getMagneticField(0))
         self.sol_field_spin.setValue(sol.getPeakMagneticField())
-        self.B_field_plot.plot(sol.getZMap(), sol.getMagneticFieldMap(), pen='r', clear=True)
-        self.larmor_angle_plot.plot(self.gun.getZRange(), self.gun.getLarmorAngleMap(), pen='r', clear=True)
+        self.B_field_plot.plot(sol.getZMap(), sol.getMagneticFieldMap(), pen='w', clear=True)
+        self.larmor_angle_plot.plot(self.gun.getZRange(), self.gun.getLarmorAngleMap(), pen='w', clear=True)
         self.larmor_angle_spin.setValue(self.gun.getFinalLarmorAngle())
         self.ustartChanged()
 
@@ -315,10 +325,10 @@ class ParasolApp(QtGui.QMainWindow, Ui_MainWindow):
         else:
             uend = self.gun.trackBeam(1e-3 * np.matrix(spin_values, dtype='float').T)
             self.xy_plot.plotItem.legend.items = []
-            self.xy_plot.plot(self.gun.getZRange(), 1e3 * self.gun.u_array[:, 0], pen='r', name='x', clear=True)
+            self.xy_plot.plot(self.gun.getZRange(), 1e3 * self.gun.u_array[:, 0], pen='w', name='x', clear=True)
             self.xy_plot.plot(self.gun.getZRange(), 1e3 * self.gun.u_array[:, 2], pen='g', name='y')
             self.xdash_ydash_plot.plotItem.legend.items = []
-            self.xdash_ydash_plot.plot(self.gun.getZRange(), 1e3 * self.gun.u_array[:, 1], pen='r', name="x'", clear=True)
+            self.xdash_ydash_plot.plot(self.gun.getZRange(), 1e3 * self.gun.u_array[:, 1], pen='w', name="x'", clear=True)
             self.xdash_ydash_plot.plot(self.gun.getZRange(), 1e3 * self.gun.u_array[:, 3], pen='g', name="y'")
             self.uend_label.setText("<b>Final particle position</b> x {0:.3g} mm, x' {1:.3g} mrad; y {2:.3g} mm, y' {3:.3g} mrad".format(*uend.flat))
 

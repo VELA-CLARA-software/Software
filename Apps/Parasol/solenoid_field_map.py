@@ -8,7 +8,6 @@ Combined solenoid and bucking coil maps are handled too."""
 import numpy as np
 from collections import namedtuple
 import scipy.interpolate
-from pkg_resources import resource_filename
 
 # Solenoids that we know about.
 # The ones prefixed 'gb-' are referenced in the Gulliford/Bazarov paper.
@@ -17,8 +16,9 @@ SOLENOID_LIST = ('gb-rf-gun', 'gb-dc-gun', 'Gun-10', 'Gun-400', 'Linac1')
 field_map_attr = namedtuple('field_map_attr', 'coeffs z_map bc_area bc_turns sol_area sol_turns')
 field_map_attr.__new__.__defaults__ = (1, 1, 1, 1)
 
+
 def interpolate(x, y):
-    "Return an interpolation object with some default parameters."
+    """Return an interpolation object with some default parameters."""
     if scipy.version.full_version >= '0.17.0':
         interp = scipy.interpolate.interp1d(x, y, fill_value='extrapolate', bounds_error=False)
     else:
@@ -31,7 +31,7 @@ def interpolate(x, y):
     return interp
 
 
-class Solenoid():
+class Solenoid:
     """Create a reference to a known solenoid."""
 
     def __init__(self, name, quiet=True):
@@ -101,9 +101,10 @@ class Solenoid():
             # "you can see on the picture the orientation of the magnets while being measured. The front face with the reference holes is at -Z"
             # The picture is on the first page of the measurement report "WFS Magnetic Measurements.pdf" in the data files folder
             # We can see that the connections are on the right-hand side - installed on CLARA they are on the left.
-            sol_interp = [scipy.interpolate.interp1d(z_list, B_list[::-1], fill_value=0, bounds_error=False) for z_list, B_list in [[z_list_08, B_list_08], [z_list_09, B_list_09]]]
+            sol_interp = [scipy.interpolate.interp1d(z_list, B_list[::-1], fill_value=0, bounds_error=False) for
+                          z_list, B_list in [[z_list_08, B_list_08], [z_list_09, B_list_09]]]
             for i in range(n_sols):
-                B_map[i] = sol_interp[i](z_map + z_offset[i])# / self.sol_current
+                B_map[i] = sol_interp[i](z_map + z_offset[i])  # / self.sol_current
             coeffs = np.zeros((len(z_map), 12))
             coeffs[:, 0] = B_map[0]
             coeffs[:, 3] = B_map[1]
@@ -182,8 +183,9 @@ class Solenoid():
         # operation should be of form "Set peak field" etc.
         x_init = getattr(self, x_name)
         if not self.quiet:
-            target_text = '' if target == None else ', target {target:.3f} {target_units}'.format(**locals())
-            print('{operation}{target_text}, by varying {x_name} starting at {x_init:.3f} {x_units}.'.format(**locals()))
+            target_text = '' if target is None else ', target {target:.3f} {target_units}'.format(**locals())
+            print(
+                '{operation}{target_text}, by varying {x_name} starting at {x_init:.3f} {x_units}.'.format(**locals()))
         xopt = scipy.optimize.fmin(opt_func, x_init, xtol=1e-3, disp=not self.quiet)
         if not self.quiet:
             print('Optimised with {x_name} setting of {0:.3f} {x_units}'.format(float(xopt), **locals()))
@@ -208,4 +210,3 @@ class Solenoid():
         solenoid current, and return the value of this current."""
         delta_B_sq = lambda soli: (self.solCurrentToPeakField(soli) - field) ** 2
         return self.optimiseParam(delta_B_sq, 'Set solenoid peak field', 'sol_current', 'A', field, 'T')
-
