@@ -386,7 +386,7 @@ Bucking coil current: {self.solenoid.bc_current:.3f} A'''
         self.solenoid.setBuckingCoilCurrent(current)  # to reset solenoid calc
 
     def setCathodeField(self, field):
-        """Set the cathode field to a given level by changing the bucking coil 
+        """Set the cathode field to a given level by changing the bucking coil
         current, and return the value of this current."""
         self.calc_level = min(self.calc_level, CALC_B_MAP - 1)
         return self.solenoid.setCathodeField(field)  # to reset solenoid calc
@@ -424,7 +424,7 @@ Bucking coil current: {self.solenoid.bc_current:.3f} A'''
 
     @requires_calc_level(CALC_MOM)
     def getMomentumMap(self):
-        """Return an array showing how the momentum (in MeV/c) varies 
+        """Return an array showing how the momentum (in MeV/c) varies
         along the length of the cavity."""
         return self.p_array * -1e-6 * epsilon_e
 
@@ -435,7 +435,7 @@ Bucking coil current: {self.solenoid.bc_current:.3f} A'''
 
     @requires_calc_level(CALC_LA)
     def getLarmorAngleMap(self):
-        """Return an array showing how the Larmor angle (in degrees) varies 
+        """Return an array showing how the Larmor angle (in degrees) varies
         along the length of the cavity."""
         return np.degrees(self.theta_L_array)
 
@@ -446,7 +446,7 @@ Bucking coil current: {self.solenoid.bc_current:.3f} A'''
 
     @requires_calc_level(CALC_MATRICES)
     def getMatrixMap(self):
-        """Return an array showing how the transfer matrix evolves along the 
+        """Return an array showing how the transfer matrix evolves along the
         length of the cavity."""
         return self.M_array
 
@@ -457,7 +457,7 @@ Bucking coil current: {self.solenoid.bc_current:.3f} A'''
 
     @requires_calc_level(CALC_MATRICES)
     def trackBeam(self, u):
-        """Track a particle (represented by a four-vector (x, x', y, y')) 
+        """Track a particle (represented by a four-vector (x, x', y, y'))
         through the field maps and return the final phase space coordinates."""
         if not self.quiet:
             print("""Particle start position:
@@ -526,7 +526,7 @@ y = {2:.3f} mm, y' = {3:.3f} mrad'''.format(*u.A1 * 1e3, **globals()))
         return self.getFinalMomentum()
 
     def crestCavity(self):
-        """Maximise the output momentum by changing the RF phase, and return 
+        """Maximise the output momentum by changing the RF phase, and return
         the value of this phase."""
         return self.optimiseParam(lambda ph: -self.phaseToMomentum(ph), 'Crest cavity', 'phase', 'degrees', tol=1e-4)
 
@@ -544,7 +544,7 @@ y = {2:.3f} mm, y' = {3:.3f} mrad'''.format(*u.A1 * 1e3, **globals()))
         return self.getFinalLarmorAngle()
 
     def setLarmorAngle(self, angle):
-        """Set the Larmor angle to a given value (in degrees) by changing the 
+        """Set the Larmor angle to a given value (in degrees) by changing the
         solenoid current, and return the value of this current."""
         delta_thl_sq = lambda soli: (self.solCurrentToLarmorAngle(soli) - angle) ** 2
         return self.optimiseParam(delta_thl_sq, 'Set Larmor angle', 'solenoid.sol_current', 'A', angle, 'degrees')
@@ -574,4 +574,3 @@ if __name__ == '__main__':
     x1 = np.array([matrix.dot(x.T) for x in x0.T])
     print("Initial sigmas: x = {:.3f} mm, x' = {:.3f} mrad, y = {:.3f} mm, y' = {:.3f} mrad".format(*x_init))
     print("Final sigmas: x = {:.3f} mm, x' = {:.3f} mrad, y = {:.3f} mm, y' = {:.3f} mrad".format(*np.std(x1[:, :, 0], 0) * 1e3))
-

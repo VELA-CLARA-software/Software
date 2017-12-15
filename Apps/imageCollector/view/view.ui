@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>307</width>
+    <height>444</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowTitle">
+   <string>Image Collector</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>../icon.ico</normaloff>../icon.ico</iconset>
+  </property>
+  <property name="unifiedTitleAndToolBarOnMac">
+   <bool>false</bool>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="3" column="0">
+     <widget class="QLabel" name="label_3">
+      <property name="font">
+       <font>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Min. Level:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="8" column="1">
+     <widget class="QSpinBox" name="numImages_spinBox">
+      <property name="minimum">
+       <number>1</number>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0" colspan="2">
+     <widget class="QComboBox" name="cameraName_comboBox"/>
+    </item>
+    <item row="7" column="0" colspan="2">
+     <widget class="QPushButton" name="acquire_pushButton">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>20</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>100</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>Acquire</string>
+      </property>
+     </widget>
+    </item>
+    <item row="9" column="0" colspan="2">
+     <widget class="QPushButton" name="save_pushButton">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>20</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>100</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>Collect and Save</string>
+      </property>
+     </widget>
+    </item>
+    <item row="8" column="0">
+     <widget class="QLabel" name="label_2">
+      <property name="font">
+       <font>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Number of Images:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0" colspan="2">
+     <widget class="QPushButton" name="liveStream_pushButton">
+      <property name="text">
+       <string>Live Steam</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="0" colspan="2">
+     <widget class="QLabel" name="label">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Selected Camera:</string>
+      </property>
+      <property name="scaledContents">
+       <bool>false</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="10" column="0" colspan="2">
+     <widget class="QPushButton" name="getImages_pushButton">
+      <property name="text">
+       <string>Open Image Directory</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="0">
+     <widget class="QSpinBox" name="spinBox_minLevel">
+      <property name="maximum">
+       <number>65536</number>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="1">
+     <widget class="QSpinBox" name="spinBox_maxLevel">
+      <property name="maximum">
+       <number>65536</number>
+      </property>
+      <property name="value">
+       <number>65536</number>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="1">
+     <widget class="QLabel" name="label_4">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Max. Level:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="0" colspan="2">
+     <spacer name="verticalSpacer">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>307</width>
+     <height>18</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

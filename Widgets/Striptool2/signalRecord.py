@@ -1,13 +1,13 @@
 import sys, time, os, datetime, math
 import collections
 from pyqtgraph.Qt import QtGui, QtCore
-try:
-    from PyQt4.QtCore import *
-    from PyQt4.QtGui import *
-except:
-    from PyQt5.QtCore import *
-    from PyQt5.QtGui import *
-    from PyQt5.QtWidgets import *
+# if sys.version_info<(3,0,0):
+from PyQt4.QtCore import *
+from PyQt4.QtGui import *
+# else:
+#     from PyQt5.QtCore import *
+#     from PyQt5.QtGui import *
+#     from PyQt5.QtWidgets import *
 from threading import Thread, Event, Timer
 
 class repeatedTimer(QObject):
@@ -25,7 +25,6 @@ class repeatedTimer(QObject):
         self.event = Event()
         self.thread = Thread(target=self._target)
         self.thread.daemon = True
-        self.intervalChanged = False
 
     def update(self):
         ''' call signal generating Function '''
@@ -70,9 +69,15 @@ class recordWorker(QtCore.QObject):
 
     recordLatestValueSignal = QtCore.pyqtSignal(list)
     recordMeanSignal = QtCore.pyqtSignal(float)
+    recordMean10Signal = QtCore.pyqtSignal(list)
+    recordMean100Signal = QtCore.pyqtSignal(list)
+    recordMean1000Signal = QtCore.pyqtSignal(list)
     recordStandardDeviationSignal = QtCore.pyqtSignal(float)
     recordMinSignal = QtCore.pyqtSignal(float)
     recordMaxSignal = QtCore.pyqtSignal(float)
+
+    def calculate_mean(self, numbers):
+        return float(sum(numbers)) /  max(len(numbers), 1)
 
     def __init__(self, records, signal, name):
         super(recordWorker, self).__init__()
@@ -81,12 +86,10 @@ class recordWorker(QtCore.QObject):
         self.name = name
         self.signal.timer.dataReady.connect(self.updateRecord)
         self.buffer = self.records[self.name]['data']
-        self.min = sys.maxsize
-        self.max = -1*sys.maxsize
-        self.mean = 0
-        self.sum_x1 = 0
-        self.sum_x2 = 0
-        self.stddeviation = 0
+        self.buffer1000 = collections.deque(maxlen=1000)
+        self.buffer100 = collections.deque(maxlen=100)
+        self.buffer10 = collections.deque(maxlen=10)
+        self.resetStatistics(True)
         self.timer = QTimer()
         self.timer.timeout.connect(self.emitStatistics)
         self.timer.start(1000)
@@ -96,22 +99,50 @@ class recordWorker(QtCore.QObject):
         self.buffer.append(value)
         self.recordLatestValueSignal.emit(value)
         time, val = value
+        self.buffer10.append(val)
+        self.buffer100.append(val)
+        self.buffer1000.append(val)
+        self.length += 1
         self.sum_x1 += val
         self.sum_x2 += val**2
         if val < self.min:
-            self.min = val
+            self.min = float(val)
             self.recordMinSignal.emit(val)
         if val > self.max:
-            self.max = val
+            self.max = float(val)
             self.recordMaxSignal.emit(val)
+        self.recordMean10Signal.emit([time,self.calculate_mean(self.buffer10)])
+        self.recordMean100Signal.emit([time,self.calculate_mean(self.buffer100)])
+        self.recordMean1000Signal.emit([time,self.calculate_mean(self.buffer1000)])
 
     def emitStatistics(self):
-        length = len(self.buffer)
-        self.mean = self.sum_x1/length
-        self.recordMeanSignal.emit(self.mean)
-        if length > 2:
-            self.stddeviation = math.sqrt((self.sum_x2 / length) - (self.mean*self.mean))
-            self.recordStandardDeviationSignal.emit(self.stddeviation)
+        length = self.length
+        if length > 0:
+            self.mean = self.sum_x1/length
+            self.recordMeanSignal.emit(self.mean)
+            if length > 2:
+                if (self.sum_x2 / length) - (self.mean*self.mean) > 0:
+                    self.stddeviation = math.sqrt((self.sum_x2 / length) - (self.mean*self.mean))
+                else:
+                    self.stddeviation = 0
+                self.recordStandardDeviationSignal.emit(self.stddeviation)
+        # if len(self.buffer10) > 0:
+        #     self.recordMean10Signal.emit(self.calculate_mean(self.buffer10))
+        #     self.recordMean100Signal.emit(self.calculate_mean(self.buffer100))
+        #     self.recordMean1000Signal.emit(self.calculate_mean(self.buffer1000))
+
+    def resetStatistics(self, value):
+        if value is True:
+            self.length = 0
+            self.min = sys.maxsize
+            self.max = -1*sys.maxsize
+            self.mean = 0
+            self.sum_x1 = 0
+            self.sum_x2 = 0
+            self.stddeviation = 0
+            # self.buffer10.clear()
+            # self.buffer100.clear()
+            # self.buffer1000.clear()
 
 class signalRecord(QObject):
 

@@ -1,11 +1,11 @@
 import sys, time, os, signal
-try:
-    from PyQt4.QtCore import *
-    from PyQt4.QtGui import *
-except:
-    from PyQt5.QtCore import *
-    from PyQt5.QtGui import *
-    from PyQt5.QtWidgets import *
+# if sys.version_info<(3,0,0):
+from PyQt4.QtCore import *
+from PyQt4.QtGui import *
+# else:
+#     from PyQt5.QtCore import *
+#     from PyQt5.QtGui import *
+#     from PyQt5.QtWidgets import *
 import logging
 from signalRecord import *
 import scrollingPlot as scrollingplot
@@ -48,7 +48,7 @@ class generalPlot(QWidget):
         for name in self.records:
             self.records[name]['record'].start()
 
-    def addSignal(self, name='', pen='r', timer=1, maxlength=pow(2,20), function=None, args=[], **kwargs):
+    def addSignal(self, name='', pen='r', timer=1, maxlength=pow(2,18), function=None, args=[], **kwargs):
         if not name in self.records:
             signalrecord = signalRecord(records=self.records, name=name, pen=pen, timer=timer, maxlength=maxlength, function=function, args=args, **kwargs)
             self.records[name]['record'] = signalrecord
@@ -58,10 +58,13 @@ class generalPlot(QWidget):
         else:
             logger.warning('Signal '+name+' already exists!')
 
+    def removeRecord(self, name):
+        del self.records[name]
+
     def removeSignal(self,name):
         self.records[name]['record'].close()
-        del self.records[name]
-        self.signalRemoved.emit(name)
+        self.signalRemoved.emit(str(name))
+        QTimer.singleShot(0, lambda: self.removeRecord(name))
         logger.info('Signal '+name+' removed!')
 
     def setDecimateLength(self, value=5000):
