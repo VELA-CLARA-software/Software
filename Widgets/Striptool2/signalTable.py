@@ -82,7 +82,7 @@ class customPVFunction(QObject):
         return float(self.general.getValue(self.pvid))
 
 class signalTable(QWidget):
-    def __init__(self, parent = None, MagnetController=None, BPMController=None, GeneralController=None):
+    def __init__(self, parent = None, VELAMagnetController=None, CLARAMagnetController=None, BPMController=None, GeneralController=None):
         super(signalTable, self).__init__(parent)
         self.setMaximumHeight(100)
         self.stream = file('settings.yaml', 'r')
@@ -91,7 +91,8 @@ class signalTable(QWidget):
         self.magnetnames = self.settings['magnets']
         self.headings = self.settings['headings']
         self.frequencies = self.settings['frequencies']
-        self.magnets = MagnetController
+        self.VELAMagnets = VELAMagnetController
+        self.CLARAMagnets = CLARAMagnetController
         self.bpms = BPMController
         self.general = GeneralController
         self.stripTool = parent
@@ -106,7 +107,10 @@ class signalTable(QWidget):
         self.customSelectionBox = self.createCustomSelectionBox()
         ''' create tableWidget and pushButton '''
         vBoxlayoutParameters = QVBoxLayout()
+        vBoxlayoutParameters.addWidget(self.normalSelectionBox,1)
         vBoxlayoutParameters.addWidget(self.customSelectionBox,1)
+        self.normalSelectionBox.show()
+        self.customSelectionBox.hide()
         self.setLayout(vBoxlayoutParameters)
         self.connect(self, QtCore.SIGNAL("firstColumnComboBoxChanged(PyQt_PyObject, PyQt_PyObject)"), self.changeSecondCombo)
         self.connect(self, QtCore.SIGNAL("firstColumnComboBoxChanged(PyQt_PyObject, PyQt_PyObject)"), self.changeThirdComboFromFirst)
@@ -120,13 +124,20 @@ class signalTable(QWidget):
             pvid = self.general.connectPV(str(functionArgument))
             if pvid is not 'FAILED':
                 self.pvids.append(pvid)
-                testFunction = customPVFunction(parent=self, pvid=pvid, GeneralController=self.general)
+                testFunction = customPVFunction(parent=self, pvid=pvid, GeneralController=self.general).getValue
                 time.sleep(0.01)
                 testFunction.getValue()
-                self.stripTool.addSignal(name=name, pen=colourpickercolour, function=testFunction.getValue, timer=1.0/freq, logScale=logScale)
-                self.stripTool.records[name]['record'].start()
             else:
                 print('Is this a valid PV? - ', functionArgument)
+        # elif functionForm[0] == '':
+        #     functionName = functionForm[1]
+        #     testFunction = lambda: getattr(self.magnets,functionName)(functionArgument)
+        else:
+            functionName = functionForm[1]
+            function = eval(functionForm[0])
+            testFunction = lambda: getattr(function,functionName)(functionArgument)
+        self.stripTool.addSignal(name=name, pen=colourpickercolour, function=testFunction, timer=1.0/freq, logScale=logScale)
+        self.stripTool.records[name]['record'].start()
 
     def updateColourBox(self):
         self.rowNumber = self.rowNumber + 1
@@ -198,7 +209,7 @@ class signalTable(QWidget):
         addButton.setFixedWidth(100)
         addButton.clicked.connect(self.addTableRowCustom)
         self.logTickBox = QCheckBox('Log Scale')
-        # combo1.addItems(self.headings)
+        combo1.addItems(self.headings)
         combo4.addItems([str(i) + ' Hz'for i in self.frequencies])
         combo1.setEditable(True)
         combo1.lineEdit().setReadOnly(True);
@@ -222,7 +233,7 @@ class signalTable(QWidget):
             self.customcolorbox.setColor(self.penColors[0])
         else:
             self.customcolorbox.setColor(self.penColors[self.rowNumber])
-        # self.pvEditlayout.addWidget(combo1,2)
+        self.pvEditlayout.addWidget(combo1,2)
         self.pvEditlayout.addWidget(pvtextedit,5)
         self.pvEditlayout.addWidget(combo4,1)
         self.pvEditlayout.addWidget(self.logTickBox,1)
@@ -240,7 +251,7 @@ class signalTable(QWidget):
         combo3index = self.normalSelectionBox.children()[3].currentIndex()
         combo3text = str(self.normalSelectionBox.children()[3].currentText())
         combo4index = self.normalSelectionBox.children()[4].currentIndex()
-        if len(self.magnetnames[combo1text]['Names'][combo2index]) > 1:
+        if isinstance(self.magnetnames[combo1text]['Names'][combo2index], (tuple, list, set)):
             functionArgument = self.magnetnames[combo1text]['Names'][combo2index][0]
         else:
             functionArgument = self.magnetnames[combo1text]['Names'][combo2index]
@@ -279,7 +290,7 @@ class signalTable(QWidget):
             if combo2 != None:
                 combo2.clear()
                 for name in self.magnetnames["%s"%(ind)]['Names']:
-                    if len(name) > 1:
+                    if isinstance(name, (tuple, list, set)):
                         combo2.addItem(name[1])
                     else:
                         combo2.addItem(name)

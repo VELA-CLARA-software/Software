@@ -248,11 +248,15 @@ class scrollingPlotPlot(QWidget):
         return self.workers[name].curve
 
     def removeCurve(self, name):
+        print 'REMOVE CURVE CALLED = ', name
         record = self.records
         name = str(name)
         axisname = record[name]['axisname']
         axis, viewbox = self.namedaxes[record[name]['axisname']]
         self.threads[name].quit()
+        self.workers[name].curve.stop()
+        self.workers[name].curve.deleteLater()
+        self.workers[name].deleteLater
         self.plotWidget.ci.removeItem(axis)
         self.plotWidget.ci.removeItem(viewbox)
 
@@ -283,11 +287,15 @@ class curve(QObject):
         self.vb.addItem(self.curve)
         self.scene = self.vb.scene()
         self.lines = MultiLine()
+        self.lines.setCacheMode(QGraphicsItem.DeviceCoordinateCache)
         self.lines10 = MultiLine()
+        self.lines10.setCacheMode(QGraphicsItem.DeviceCoordinateCache)
         self.lines10.setVisible(False)
         self.lines100 = MultiLine()
+        self.lines100.setCacheMode(QGraphicsItem.DeviceCoordinateCache)
         self.lines100.setVisible(False)
         self.lines1000 = MultiLine()
+        self.lines1000.setCacheMode(QGraphicsItem.DeviceCoordinateCache)
         self.lines1000.setVisible(False)
         self.points = collections.deque(maxlen=self.records[name]['maxlength'])
         self.points10 = collections.deque(maxlen=self.records[name]['maxlength'])
@@ -305,6 +313,13 @@ class curve(QObject):
         self.plot.records[name]['worker'].recordMean100Signal.connect(lambda x: self.updateData(x, self.points100))
         self.plot.records[name]['worker'].recordMean1000Signal.connect(lambda x: self.updateData(x, self.points1000))
         self.path = None
+
+    def stop(self):
+        self.plot.scrollingPlot.timeChangeSignal.disconnect()
+        self.plot.records[self.name]['worker'].recordLatestValueSignal.disconnect()
+        self.plot.records[self.name]['worker'].recordMean10Signal.disconnect()
+        self.plot.records[self.name]['worker'].recordMean100Signal.disconnect()
+        self.plot.records[self.name]['worker'].recordMean1000Signal.disconnect()
 
     def setVisibility(self, linename, visible):
         self.visibility[linename] = visible
@@ -335,17 +350,18 @@ class curve(QObject):
             for point in points:
                 path.lineTo(point)
             line.setNewPath(path)
-            if not lineOn:
+            if getattr(self,lineOn) == False:
+                print 'line not on!'
                 line.setPen(pg.mkPen(**pen))
                 self.vb.addItem(line)
-                lineOn = True
+                setattr(self, lineOn, True)
 
     def updateTimeOffset(self,time):
         self.timeOffset += time
-        self.redrawLines(self.points, self.lines, self.lineOn, {'color': self.records[self.name]['pen']})
-        self.redrawLines(self.points10, self.lines10, self.line10On, {'color': self.records[self.name]['pen'], 'dash': [2,2], 'width': 2})
-        self.redrawLines(self.points100, self.lines100, self.line100On, {'color': self.records[self.name]['pen'], 'dash': [2,2], 'width': 3})
-        self.redrawLines(self.points1000, self.lines1000, self.line1000On, {'color': self.records[self.name]['pen'], 'dash': [3,3], 'width': 4})
+        self.redrawLines(self.points, self.lines, 'lineOn', {'color': self.records[self.name]['pen']})
+        self.redrawLines(self.points10, self.lines10, 'line10On', {'color': self.records[self.name]['pen'], 'dash': [2,2], 'width': 2})
+        self.redrawLines(self.points100, self.lines100, 'line100On', {'color': self.records[self.name]['pen'], 'dash': [2,2], 'width': 3})
+        self.redrawLines(self.points1000, self.lines1000, 'line1000On', {'color': self.records[self.name]['pen'], 'dash': [3,3], 'width': 4})
 
     def changePenColour(self):
         self.lines.setPen(pg.mkPen(color=self.records[self.name]['pen']))
