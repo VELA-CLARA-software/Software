@@ -570,7 +570,7 @@ class Window(QtGui.QMainWindow):
         magnet.k_spin.setValue(k)
 
     def branchButtonClicked(self, checked):
-        """The 'branch' tool button on a dipole has been clicked. Toggle 0 or 45° for the angle."""
+        """The 'branch' tool button on a dipole has been clicked. Toggle 0 or 45° for the angle.from scipy import constants"""
         magnet = self.sender().magnet
         # Currently only have 45° dipoles, need to update this for spectrometer line dipoles which are 30°
         magnet.k_spin.setValue(45 if checked else 0)
