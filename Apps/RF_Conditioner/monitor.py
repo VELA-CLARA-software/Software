@@ -7,7 +7,7 @@ from PyQt4.QtCore import pyqtSignal
 # of something - so after instantiation you must call start on it (!)
 # you should overload cooldown_function in the child class
 import numbers
-
+from state import state
 
 class monitor(QThread):
     # name

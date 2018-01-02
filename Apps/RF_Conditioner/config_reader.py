@@ -9,6 +9,9 @@
 #       the type of their value, (string, int, float, bool)
 # once the config file is parsed functions can be called
 # to retrieve processed data for as particular item (i.e vacuum monitoring)
+from VELA_CLARA_enums import MACHINE_AREA
+from VELA_CLARA_LLRF_Control import LLRF_TYPE
+
 
 class config_reader(object):
     # whoami
@@ -23,6 +26,7 @@ class config_reader(object):
 
     def __init__(self, filename = ""):
         self._filename = filename
+        self.llrf_type = LLRF_TYPE.UNKNOWN_TYPE
 
     @property
     def filename(self):
@@ -67,7 +71,7 @@ class config_reader(object):
         return r
     #//mfw Cancer below\\
     #//we must assume value type\\
-    def get_param_dict(self,string_param,float_param,int_param):
+    def get_param_dict(self,string_param=[],float_param=[],int_param=[],area_param=[],type_param=[],bool_param=[],monitor_param=[]):
         r = {}
         for item in string_param:
             try:
@@ -84,8 +88,29 @@ class config_reader(object):
                 r.update({item: float(self._config_dict[item])})
             except:
                 print(self.name," FAILED to Find, ",item)
-        for k, v in r.iteritems():
-            print k, v
+        for item in area_param:
+            try:
+                r.update({item: self.get_machine_area(self._config_dict[item])})
+            except:
+                print(self.name," FAILED to Find, ",item)
+        for item in type_param:
+            try:
+                r.update({item: self.get_llrf_type(self._config_dict[item])})
+                self.llrf_type = r[item]
+            except:
+                print(self.name," FAILED to Find, ",item)
+        for item in bool_param:
+            try:
+                r.update({item: self.get_bool(self._config_dict[item])})
+            except:
+                print(self.name," FAILED to Find, ",item)
+        for item in monitor_param:
+            try:
+                r.update({item: self.get_traces_to_monitor(self._config_dict[item])})
+            except:
+                print(self.name, " FAILED to Find, ", item)
+        # for k, v in r.iteritems():
+        #     print k, v
         return r
     # neater but not type for values
     def get_vac_parameter_NO_TYPE(self):
@@ -98,11 +123,92 @@ class config_reader(object):
 
 
     def get_vac_parameter(self):
-        string_param = ['VAC_PV', 'VAC_DECAY_MODE',]
+        string_param = ['VAC_PV', 'VAC_DECAY_MODE']
         float_param = ['VAC_SPIKE_DECAY_LEVEL', 'VAC_SPIKE_DELTA']
-        int_param = ['VAC_NUM_SAMPLES_TO_AVERAGE','VAC_SPIKE_DECAY_TIME']
+        int_param = ['VAC_NUM_SAMPLES_TO_AVERAGE','VAC_SPIKE_DECAY_TIME','VAC_CHECK_TIME']
         return self.get_param_dict(string_param=string_param,float_param=float_param,int_param=int_param)
 
     def get_log_files(self):
         keys = ['LOG_FILE','BREAK_DOWN_LOG','DATA_LOG']
         return self.get_param_dict(string_param=keys)
+
+    def get_vac_valve_parameter(self):
+        string_param = ['VAC_VALVE']
+        area_param = ['VAC_VALVE_CONTROLLER']
+        int_param = ['VAC_VALVE_CHECK_TIME']
+        return self.get_param_dict(string_param=string_param,area_param=area_param,int_param=int_param)
+
+    def get_water_temp_parameter(self):
+        string_param=['WATER_TEMPERATURE_PV']
+        int_param=['WATER_TEMPERATURE_CHECK_TIME']
+        return self.get_param_dict(string_param=string_param,int_param=int_param)
+
+    def get_cavity_temp_parameter(self):
+        string_param=['CAVITY_TEMPERATURE_PV']
+        int_param=['CAVITY_TEMPERATURE_CHECK_TIME']
+        return self.get_param_dict(string_param=string_param,int_param=int_param)
+
+    def get_llrf_param(self):
+        type_param=['RF_STRUCTURE']
+        int_param=['TIME_BETWEEN_RF_INCREASES','RF_INCREASE_LEVEL','RF_REPETITION_RATE','BREAKDOWN_RATE_AIM','CRP_S1','CRP_S2','CRP_S3','CRP_S4','CRP_MASK_LEVEL','CFP_S1','CFP_S2','CFP_S3','CFP_S4','CFP_MASK_LEVEL']
+        bool_param=['CRP_AUTO_SET','CFP_AUTO_SET']
+        string_param=['CRP_MASK_TYPE','CFP_MASK_TYPE']
+        monitor_param=['TRACES_TO_SAVE']
+        return self.get_param_dict(string_param=string_param,int_param=int_param,bool_param=bool_param,type_param=type_param,monitor_param=monitor_param)
+
+    def get_mod_param(self):
+        int_param=['MOD_IN_TRIG_CHECK_TIME']
+        return self.get_param_dict(int_param=int_param)
+
+    def get_rfprot_param(self):
+        string_param=['RF_STRUCTURE']
+        return self.get_param_dict(string_param=string_param)
+
+    def get_llrf_type(self,text):
+        if text == "CLARA_HRRG":
+            return LLRF_TYPE.CLARA_HRRG
+        elif text == 'CLARA_LRRG':
+            return LLRF_TYPE.CLARA_LRRG
+        elif text == 'VELA_HRRG':
+            return LLRF_TYPE.VELA_HRRG
+        elif text == 'VELA_LRRG':
+            return LLRF_TYPE.VELA_LRRG
+        elif text == 'L01':
+            return LLRF_TYPE.L01
+        else:
+            return LLRF_TYPE.UNKNOWN_TYPE
+
+    def get_bool(self,text):
+        if text == 'TRUE':
+            return True
+        elif text == 'FALSE':
+            return False
+
+    def get_machine_area(self,text):
+        if text == 'S01':
+            return MACHINE_AREA.CLARA_S01
+        elif text == 'INJ':
+            return MACHINE_AREA.VELA_INJ
+        else:
+            return MACHINE_AREA.UNKNOWN_AREA
+
+    def which_cavity(self,trace):
+        if self.llrf_type == LLRF_TYPE.CLARA_HRRG:
+            return trace.replace("CAVITY","HRRG_CAVITY")
+        elif  self.llrf_type == LLRF_TYPE.CLARA_LRRG:
+            return trace.replace("CAVITY","LRRG_CAVITY")
+        elif  self.llrf_type == LLRF_TYPE.L01:
+            return trace.replace("CAVITY", "L01_CAVITY")
+        else:
+            return "error"
+
+    def get_traces_to_monitor(self,traces_to_monitor):
+        #print 'get_traces_to_monitor'
+        traces = []
+        for trace in traces_to_monitor.split(','):
+            if "CAVITY" in trace:
+                traces.append(self.which_cavity(trace))
+            else:
+                traces.append(trace)
+            #print('NEW TRACE To Monitor',traces[-1])
+        return traces
