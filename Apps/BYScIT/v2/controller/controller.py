@@ -5,11 +5,12 @@ import numpy as np
 import pyqtgraph as pg
 import model.model as modelFunctions
 import pyqtgraph.opengl as gl
+import threads
 sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\stage')
 import VELA_CLARA_Camera_IA_Control as ia
 
-class Controller():
 
+class Controller():
     def __init__(self, view, model):
         # Define model and view
         self.view = view
@@ -18,19 +19,19 @@ class Controller():
         pg.setConfigOptions(antialias=True)
         # Image
         monitor = pg.GraphicsView()
-        layout = pg.GraphicsLayout(border=(100, 100, 100))
+        layout = pg.GraphicsLayout()
         monitor.setCentralItem(layout)
-        #Backgroun Image
+        # Background Image
         monitorBkgrnd = pg.GraphicsView()
-        layoutBkgrnd = pg.GraphicsLayout(border=(100, 100, 100))
+        layoutBkgrnd = pg.GraphicsLayout()
         monitorBkgrnd.setCentralItem(layoutBkgrnd)
         # Display for x profile
         monitorX = pg.GraphicsView()
-        layoutX = pg.GraphicsLayout(border=(100, 100, 100))
+        layoutX = pg.GraphicsLayout()
         monitorX.setCentralItem(layoutX)
         # Display for y profile
         monitorY = pg.GraphicsView()
-        layoutY = pg.GraphicsLayout(border=(100, 100, 100))
+        layoutY = pg.GraphicsLayout()
         monitorY.setCentralItem(layoutY)
         self.tabWidget = QtGui.QTabWidget()
 
@@ -74,7 +75,11 @@ class Controller():
         self.hLineMLE = self.ImageBox.plot(pen='g')
         self.vLineBVN = self.ImageBox.plot(pen='b')
         self.hLineBVN = self.ImageBox.plot(pen='b')
-
+        # Hide them
+        self.ImageBox.removeItem(self.vLineBVN)
+        self.ImageBox.removeItem(self.hLineBVN)
+        self.ImageBox.removeItem(self.vLineMLE)
+        self.ImageBox.removeItem(self.hLineMLE)
         self.yProfBox.setYLink(self.ImageBox)
         self.xProfBox.setXLink(self.ImageBox)
         self.xProfBox.plot(pen='w')
@@ -86,10 +91,10 @@ class Controller():
         self.tabWidget.addTab(self.w, '3D Lens')
         self.tabWidget.addTab(monitorBkgrnd, 'Background')
 
-        self.view.gridLayout.addWidget(monitor, 0, 3, 10, 1)
-        self.view.gridLayout.addWidget(monitorY, 0, 4, 10, 1)
-        self.view.gridLayout.addWidget(monitorX, 10, 3, 10, 1)
-        self.view.gridLayout.addWidget(self.tabWidget, 10, 4, 10, 1)
+        self.view.gridLayout_4.addWidget(monitor, 0, 0, 1, 1)
+        self.view.gridLayout_4.addWidget(monitorY, 0, 1, 1, 1)
+        self.view.gridLayout_4.addWidget(monitorX, 1, 0, 1, 1)
+        self.view.gridLayout_4.addWidget(self.tabWidget, 1, 1, 1, 1)
 
         STEPS = np.linspace(0, 1, 4)
         CLRS = ['k', 'r', 'y', 'w']
@@ -97,8 +102,7 @@ class Controller():
         clrmp = pg.ColorMap(STEPS, a)
         lut = clrmp.getLookupTable()
         self.Image.setLookupTable(lut)
-
-        #SATURATED PIXEL COLOURING
+        # SATURATED PIXEL COLOURING
         STEPS = np.array([0.0, 1.0])
         CLRS = ['w', 'g']
         clrmp_sat = pg.ColorMap(STEPS, np.array([pg.colorTuple(pg.Color(c)) for c in CLRS]))
