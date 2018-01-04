@@ -1,5 +1,5 @@
 from PyQt4 import QtCore
-import copy
+import time
 import sys
 import numpy as np
 sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\stage')
@@ -57,9 +57,9 @@ class GenericThread(QtCore.QThread):
         else:
             self.model.offlineAnalysis.useESDirectCut(False)
 
-        self.model.start()
-        #while self.model.isRunning():
-            #time.sleep(1)
+        self.model.offlineAnalysis.analyse()
+        time.sleep(30)
+
         # Set Results Labels in GUI
         self.view.label_xMLE.setText(str(self.model.offlineAnalysis.CoIA.xMLE))
         self.view.label_yMLE.setText(str(self.model.offlineAnalysis.CoIA.yMLE))
@@ -83,8 +83,8 @@ class GenericThread(QtCore.QThread):
               float(self.model.offlineAnalysis.CoIA.sxMLE))
         h2 = (float(self.model.offlineAnalysis.CoIA.xMLE) +
               float(self.model.offlineAnalysis.CoIA.sxMLE))
-        self.vLineMLE.setData(x=[x, x], y=[v1, v2])
-        self.hLineMLE.setData(x=[h1, h2], y=[y, y])
+        #self.vLineMLE.setData(x=[x, x], y=[v1, v2])
+        #self.hLineMLE.setData(x=[h1, h2], y=[y, y])
 
         x = float(self.model.offlineAnalysis.CoIA.xBVN)
         y = float(self.model.offlineAnalysis.CoIA.yBVN)
@@ -96,6 +96,6 @@ class GenericThread(QtCore.QThread):
               float(self.model.offlineAnalysis.CoIA.sxBVN))
         h2 = (float(self.model.offlineAnalysis.CoIA.xBVN) +
               float(self.model.offlineAnalysis.CoIA.sxBVN))
-        self.vLineBVN.setData(x=[x, x], y=[v1, v2])
-        self.hLineBVN.setData(x=[h1, h2], y=[y, y])
+        #self.vLineBVN.setData(x=[x, x], y=[v1, v2])
+        #self.hLineBVN.setData(x=[h1, h2], y=[y, y])
         self.view.pushButton_analyse.setText('Analyse')

@@ -1,15 +1,14 @@
-from PyQt4 import QtCore
 from PIL import Image
 import h5py
 import numpy as np
 import sys
+import time
 sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\stage')
 import VELA_CLARA_Camera_IA_Control as ia
 
 
-class Model(QtCore.QThread):
+class Model():
     def __init__(self):
-        QtCore.QThread.__init__(self)
         self.imageData = None
         self.imageHeight = 0
         self.imageWidth = 0
@@ -89,98 +88,3 @@ class Model(QtCore.QThread):
         except IOError:
             print "Unable to load image"
 
-    '''def analyseImage(self):
-        self.view.pushButton_analyse.setText('Analysing ...')
-        image = np.transpose(np.flip(self.imageData, 1))
-        image = image.flatten().tolist()
-        im = ia.std_vector_double()
-        im.extend(image)
-
-        self.offlineAnalysis.loadImage(im, self.imageHeight, self.imageWidth)
-        if self.view.checkBox_useBackground.isChecked() is True:
-            self.offlineAnalysis.useBackground(True)
-
-            bk = np.transpose(np.flip(self.backgroundData.imageData, 1))
-            bk = bk.flatten().tolist()
-            b = ia.std_vector_double()
-            b.extend(bk)
-            self.offlineAnalysis.loadBackgroundImage(b)
-        else:
-            self.offlineAnalysis.useBackground(False)
-        # This is where we will house expert settings
-        self.offlineAnalysis.useESMask(True)
-        if self.view.checkBox_useCustomMask.isChecked() is True:
-            self.offlineAnalysis.setESMask(int(self.customMaskROI.pos()[0]+self.customMaskROI.size()[0]/2),
-                                                 int(self.customMaskROI.pos()[1]+self.customMaskROI.size()[0]/2),
-                                                 int(self.customMaskROI.size()[0]/2),
-                                                 int(self.customMaskROI.size()[1]/2))
-        else:
-            # make mask span full width of image
-            x = int(self.imageWidth / 2)
-            y = int(self.imageHeight / 2)
-            self.offlineAnalysis.setESMask(x, y, x, y)
-
-        if self.view.checkBox_rollingAverage.isChecked() is True:
-            self.offlineAnalysis.useESFilter(True)
-            self.offlineAnalysis.setESFilter(int(self.view.lineEdit_rollingAverage.text()))
-        else:
-            self.offlineAnalysis.useESFilter(False)
-
-        if self.view.checkBox_rSquared.isChecked() is True:
-            self.offlineAnalysis.useESRRThreshold(True)
-            self.offlineAnalysis.setESRRThreshold(float(self.view.lineEdit_rSquared.text()))
-        else:
-            self.offlineAnalysis.useESRRThreshold(False)
-
-        if self.view.checkBox_lowestPixValue.isChecked() is True:
-            self.offlineAnalysis.useESDirectCut(True)
-            self.offlineAnalysis.setESDirectCut(float(self.view.lineEdit_lowestPixelValue.text()))
-        else:
-            self.offlineAnalysis.useESDirectCut(False)
-        self.offlineAnalysis.analyse()
-        # Set Results Labels in GUI
-        self.view.label_xMLE.setText(str(self.offlineAnalysis.CoIA.xMLE))
-        self.view.label_yMLE.setText(str(self.offlineAnalysis.CoIA.yMLE))
-        self.view.label_sxMLE.setText(str(self.offlineAnalysis.CoIA.sxMLE))
-        self.view.label_syMLE.setText(str(self.offlineAnalysis.CoIA.syMLE))
-        self.view.label_cxyMLE.setText(str(self.offlineAnalysis.CoIA.cxyMLE))
-        self.view.label_xBVN.setText(str(self.offlineAnalysis.CoIA.xBVN))
-        self.view.label_yBVN.setText(str(self.offlineAnalysis.CoIA.yBVN))
-        self.view.label_sxBVN.setText(str(self.offlineAnalysis.CoIA.sxBVN))
-        self.view.label_syBVN.setText(str(self.offlineAnalysis.CoIA.syBVN))
-        self.view.label_cxyBVN.setText(str(self.offlineAnalysis.CoIA.cxyBVN))
-
-        # Set crosshairs
-        x = float(self.offlineAnalysis.CoIA.xMLE)
-        y = float(self.offlineAnalysis.CoIA.yMLE)
-        v1 = (float(self.offlineAnalysis.CoIA.yMLE) -
-              float(self.offlineAnalysis.CoIA.syMLE))
-        v2 = (float(self.offlineAnalysis.CoIA.yMLE) +
-              float(self.offlineAnalysis.CoIA.syMLE))
-        h1 = (float(self.offlineAnalysis.CoIA.xMLE) -
-              float(self.offlineAnalysis.CoIA.sxMLE))
-        h2 = (float(self.offlineAnalysis.CoIA.xMLE) +
-              float(self.offlineAnalysis.CoIA.sxMLE))
-        #self.vLineMLE.setData(x=[x, x], y=[v1, v2])
-        #self.hLineMLE.setData(x=[h1, h2], y=[y, y])
-
-        x = float(self.offlineAnalysis.CoIA.xBVN)
-        y = float(self.offlineAnalysis.CoIA.yBVN)
-        v1 = (float(self.offlineAnalysis.CoIA.yBVN) -
-              float(self.offlineAnalysis.CoIA.syBVN))
-        v2 = (float(self.offlineAnalysis.CoIA.yBVN) +
-              float(self.offlineAnalysis.CoIA.syBVN))
-        h1 = (float(self.offlineAnalysis.CoIA.xBVN) -
-              float(self.offlineAnalysis.CoIA.sxBVN))
-        h2 = (float(self.offlineAnalysis.CoIA.xBVN) +
-              float(self.offlineAnalysis.CoIA.sxBVN))
-        #self.vLineBVN.setData(x=[x, x], y=[v1, v2])
-        #self.hLineBVN.setData(x=[h1, h2], y=[y, y])
-        self.view.pushButton_analyse.setText('Analyse')
-
-
-	def __del__(self):
-		self.wait()
-
-    def run(self):
-        self.analyseImage()'''
