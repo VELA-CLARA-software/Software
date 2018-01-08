@@ -1,0 +1,1 @@
+pyinstaller -yF -n Striptool2Test striptool_test.py --noupx --hidden-import=scipy._lib.messagestream --hidden-import=PyQt4.QtCore --hidden-import=PyQt4.QtGui --paths=c:\anaconda32\Work --hidden-import=scipy.interpolate --hidden-import=scipy.optimize --hidden-import=scipy.integrate --hidden-import=scipy.special

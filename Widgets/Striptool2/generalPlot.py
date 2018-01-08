@@ -1,19 +1,14 @@
-import sys, time, os, signal
-# if sys.version_info<(3,0,0):
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-# else:
-#     from PyQt5.QtCore import *
-#     from PyQt5.QtGui import *
-#     from PyQt5.QtWidgets import *
+import time, signal
+import PyQt4.QtCore
+import PyQt4.QtGui
 import logging
-from signalRecord import *
-import scrollingPlot as scrollingplot
-import scatterPlot as scatterplot
-import fftPlot as fftplot
-import histogramPlot as histogramplot
-import plotLegend as plotlegend
-
+from .signalRecord import *
+import Software.Widgets.Striptool2.scrollingPlot as scrollingplot
+import Software.Widgets.Striptool2.scatterPlot as scatterplot
+import Software.Widgets.Striptool2.fftPlot as fftplot
+import Software.Widgets.Striptool2.histogramPlot as histogramplot
+import Software.Widgets.Striptool2.plotLegend as plotlegend
+import numpy as np
 logger = logging.getLogger(__name__)
 
 signal.signal(signal.SIGINT, signal.SIG_DFL)
@@ -31,7 +26,7 @@ class CustomException(Exception):
     def __str__(self):
         return repr(self.parameter)
 
-class generalPlot(QWidget):
+class generalPlot(QtGui.QWidget):
 
     signalAdded = QtCore.pyqtSignal(str)
     signalRemoved = QtCore.pyqtSignal(str)
@@ -48,7 +43,7 @@ class generalPlot(QWidget):
         for name in self.records:
             self.records[name]['record'].start()
 
-    def addSignal(self, name='', pen='r', timer=1, maxlength=pow(2,18), function=None, args=[], **kwargs):
+    def addSignal(self, name='', pen='r', timer=1, maxlength=pow(2,16), function=None, args=[], **kwargs):
         if not name in self.records:
             signalrecord = signalRecord(records=self.records, name=name, pen=pen, timer=timer, maxlength=maxlength, function=function, args=args, **kwargs)
             self.records[name]['record'] = signalrecord
@@ -64,7 +59,7 @@ class generalPlot(QWidget):
     def removeSignal(self,name):
         self.records[name]['record'].close()
         self.signalRemoved.emit(str(name))
-        QTimer.singleShot(0, lambda: self.removeRecord(name))
+        QtCore.QTimer.singleShot(0, lambda: self.removeRecord(name))
         logger.info('Signal '+name+' removed!')
 
     def setDecimateLength(self, value=5000):
@@ -85,14 +80,14 @@ class generalPlot(QWidget):
         if not saveFileName == None:
             for name in self.records:
                 if self.records[name]['parent'] == self:
-                    filename, file_extension = os.path.splitext(saveFileName)
+                    filename, file_extension = sys.path.splitext(saveFileName)
                     saveFileName2 = filename + '_' + self.records[name]['name'] + file_extension
                     self.saveCurve(self.records[name]['name'],saveFileName2)
 
     def saveCurve(self, name, saveFileName=None):
         if saveFileName == None:
             saveFileName = str(QtGui.QFileDialog.getSaveFileName(self, 'Save Array ['+name+']', name, filter="CSV files (*.csv);; Binary Files (*.bin)", selectedFilter="CSV files (*.csv)"))
-        filename, file_extension = os.path.splitext(saveFileName)
+        filename, file_extension = sys.path.splitext(saveFileName)
         saveData = self.formatCurveData(name)
         if file_extension == '.csv':
             # fmt='%s,%s,%.18e'

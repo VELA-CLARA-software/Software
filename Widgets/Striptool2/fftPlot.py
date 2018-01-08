@@ -2,15 +2,11 @@ import sys, time, os, datetime, signal
 import pyqtgraph as pg
 import numpy as np
 from scipy import interpolate
-from pyqtgraph.Qt import QtGui, QtCore
-# if sys.version_info<(3,0,0):
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-# else:
-#     from PyQt5.QtCore import *
-#     from PyQt5.QtGui import *
-#     from PyQt5.QtWidgets import *
-import peakutils
+# from pyqtgraph.Qt import QtGui, QtCore
+# from PyQt5.QtCore import QtCore.QObject, QtCore.pyqtSignal, QtCore.QTimer, Qt
+# from PyQt5.QtGui import QtGui.QHBoxLayout
+from PyQt4 import QtCore, QtGui
+# import peakutils
 # logger = logging.getLogger(__name__)
 
 signal.signal(signal.SIGINT, signal.SIG_DFL)
@@ -21,7 +17,7 @@ signal.signal(signal.SIGINT, signal.SIG_DFL)
 #                               threading.current_thread().ident))
 
 
-class fftPlot(QWidget):
+class fftPlot(QtGui.QWidget):
     fftSelectionChanged = QtCore.pyqtSignal('QString')
 
     def __init__(self, generalplot, parent=None, plotRateBar=False):
@@ -31,7 +27,7 @@ class fftPlot(QWidget):
         self.plotrate = 5
         ''' create the fftPlot as a grid layout '''
         self.layout = QtGui.QVBoxLayout()
-        self.plotThread = QTimer()
+        self.plotThread = QtCore.QTimer()
         self.generalPlot = generalplot
         self.records = self.generalPlot.records
         ''' Create generalPlot object '''
@@ -55,10 +51,10 @@ class fftPlot(QWidget):
         self.generalPlot.signalRemoved.connect(self.removeCurve)
 
     def setupPlotRateSlider(self):
-        self.plotRateLayout = QHBoxLayout()
+        self.plotRateLayout = QtGui.QHBoxLayout()
         self.plotRateLabel = QtGui.QLabel()
         self.plotRateLabel.setText('Plot Update Rate ['+str(self.plotrate)+' Hz]:')
-        self.plotRateLabel.setAlignment(Qt.AlignCenter)
+        self.plotRateLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.plotRateSlider = QtGui.QSlider()
         self.plotRateSlider.setOrientation(QtCore.Qt.Horizontal)
         self.plotRateSlider.setInvertedAppearance(False)
@@ -110,9 +106,9 @@ class fftPlot(QWidget):
         elif value:
             self.addCurve(name)
 
-class fftPlotCurve(QObject):
+class fftPlotCurve(QtCore.QObject):
 
-    statusChanged = pyqtSignal(str)
+    statusChanged = QtCore.pyqtSignal(str)
 
     def __init__(self, fftplot, records, parent = None):
         super(fftPlotCurve, self).__init__(parent=parent)
@@ -145,11 +141,12 @@ class fftPlotCurve(QObject):
         ## then use np.interp to resample before taking fft.
         # print 'length x = ', len(x)
         dx = np.diff(x)
-        uniform = not np.any(np.abs(dx-dx[0]) > 1.5*self.timer)
+        uniform = not np.any(np.abs(dx-dx[0]) > (abs(dx[0]) / 100.))
         starttime = time.clock()
         if not uniform:
-            # print('FFT not uniform!  ', max(np.abs(dx-dx[0])))
-            x2 = np.linspace(x[0], x[0] + len(x)*self.timer, len(x))
+            # print('FFT not uniform!  ', max(np.abs(dx-dx[0])), ' > ', (abs(dx[0]) / 1000.))
+            # x2 = np.linspace(x[0], x[0] + len(x)*self.timer, len(x))
+            x2 = np.linspace(x[0], x[-1], len(x))
             y = np.interp(x2, x, y)
             x = x2
         f = np.fft.fft(y) / len(y)

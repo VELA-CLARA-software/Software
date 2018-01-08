@@ -9,14 +9,14 @@ import Software.Widgets.Striptool2.scrollingPlot as scrollingplot
 import Software.Widgets.Striptool2.signalTable as signaltable
 import numpy as np
 from Software.Widgets.Striptool2.splitterWithHandles import splitterWithHandles
-# import VELA_CLARA_Magnet_Control as vmag
-# maginit = vmag.init()
-# Vmagnets = maginit.physical_VELA_INJ_Magnet_Controller()
-# Cmagnets = maginit.physical_CLARA_PH1_Magnet_Controller()
-# import VELA_CLARA_BPM_Control as vbpmc
-# bpms = vbpmc.init()
-# import  VELA_CLARA_General_Monitor as vgen
-# general = vgen.init()
+import VELA_CLARA_Magnet_Control as vmag
+maginit = vmag.init()
+Vmagnets = maginit.physical_VELA_INJ_Magnet_Controller()
+Cmagnets = maginit.physical_CLARA_PH1_Magnet_Controller()
+import VELA_CLARA_BPM_Control as vbpmc
+bpms = vbpmc.init()
+import  VELA_CLARA_General_Monitor as vgen
+general = vgen.init()
 ''' Load loggerWidget library (comment out if not available) '''
 # sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\\..\\..\\loggerWidget\\')
 # import loggerWidget as lw
@@ -66,10 +66,6 @@ class striptool_Demo(QMainWindow):
         fileMenu = menubar.addMenu('&File')
         fileMenu.addAction(exitAction)
 
-        # self.toolbar = self.addToolBar('')
-        # self.toolbar.addAction(scatterPlotAction)
-        # self.toolbar.addAction(fftPlotAction)
-
         ''' Initiate logger (requires loggerWidget - comment out if not available)'''
         # self.logwidget1 = lw.loggerWidget([logger,striptool.logger])
 
@@ -85,47 +81,14 @@ class striptool_Demo(QMainWindow):
         self.histogramplot = self.generalplot.histogramPlot()
         self.scatterplot = self.generalplot.scatterPlot()
         self.legend = self.generalplot.legend()
-        self.signaltable = signaltable.signalTable(parent=self.generalplot)#, VELAMagnetController=Vmagnets, CLARAMagnetController=Cmagnets, BPMController=bpms, GeneralController=general)
+        self.signaltable = signaltable.signalTable(parent=self.generalplot, VELAMagnetController=Vmagnets, CLARAMagnetController=Cmagnets, BPMController=bpms, GeneralController=general)
 
         self.enabledPlotNames = []
         self.legend.legendselectionchanged.connect(self.addSignalToFFTHistogramPlots)
 
-        ''' Create some common axes to plot similar signals with '''
-        self.generalplot.createAxis(name='logsmall', color='k',logMode=True, verticalRange=[1e-10, 1e-7])
-        # self.generalplot.createAxis(name='logbig', color='b', logMode=True, verticalRange=[1e3, 1e5])
-        # self.generalplot.createAxis(name='smallnumbers', color='g', logMode=False, verticalRange=[-5,10])
-
-        ''' Add some signals to the striptool - note they call our signal generator at a frequency of 1/timer (100 Hz and 10 Hz in these cases).
-            The 'pen' argument sets the color of the curves
-                - see <http://www.pyqtgraph.org/documentation/style.html>'''
-        self.generalplot.addSignal(name='signal1', pen='g', timer=1.0/50.0, function=self.createRandomSignal, args=[100,10,22])
-        self.generalplot.addSignal(name='signal2', pen='r', timer=1.0/10.0, function=self.createRandomSignal, args=[1e-8, 1e-9,4], axis='logsmall')
-        self.generalplot.addSignal(name='signal3', pen='b', timer=1.0/10.0, function=self.createRandomSignal, args=[1e4, 1e1, 2])
-        self.generalplot.addSignal(name='signal4', pen='c', timer=1.0/20.0, function=self.createRandomSignal, args=[1,0.5,7.8], axis='smallnumbers')
-        # self.generalplot.addSignal(name='signal5', pen='m', timer=1.0/10.0, function=self.createRandomSignal, args=[3,2,0.87], axis='smallnumbers')
-        # self.generalplot.addSignal(name='signal6', pen='y', timer=1.0/10.0, function=self.createRandomSignal, args=[5,2,2.35], axis='smallnumbers')
-
-
-        # self.fftplot.addPlot('signal2')
-
-        ''' this adds pre-data to the signal '''
-        # ,'signal3':-3,'signal4':-1,'signal5':1,'signal6':3,'signal7':5
-        # for name, moffset in {'signal3':[1e4, 1e1, 2]}.items():
-        #     testdata = []
-        #     t = time.time()
-        #     n = 10000
-        #     for i in range(n):
-        #         self.generalplot.records[name]['signal'].timer.dataReady.emit([t-(n/10)+i/10.0,self.createRandomSignal(moffset[0], moffset[1], moffset[2],t-(n/10)+i/10.0)])
-        # #
-
-        ''' To remove a signal, reference it by name or use the in-built controls'''
-        # sp.removeSignal(name='signal1')
-        # sp.removeSignal(name='signal2')
-
-        ''' Here we create a tab layout widget, and put the 3 stripplots into a grid layout in one of the tabs
-            In the second tab we put the first stripplot. NB: the stripplot "sp" can only exist in one place at a time!
+        ''' Here we create a DockArea layout widget, and put the 4 types of plot into a grid layout
+            We place all of it in a modified QSPlitter (with Handles)
         '''
-        self.tab = QTabWidget()
         self.area = DockArea()
         d1 = Dock("Scrolling Plot")
         d2 = Dock("Plot Legend")
@@ -163,35 +126,29 @@ class striptool_Demo(QMainWindow):
         self.timeButtonLayout.addWidget(self.timeButton60000)
         self.timeButtonWidget.setLayout(self.timeButtonLayout)
         self.plotLayout.addWidget(self.timeButtonWidget)
+
         ''' Style QSplitter Handles '''
         self.plotLayout.setHandleWidth(14)
         self.plotLayout.setStyleSheet("QSplitter::handle{background-color:transparent;}");
+        ''' Set up the Handles with labels '''
         self.plotLayout.handle(1).setLocation('top','Add Signal')
         self.plotLayout.handle(2).setLocation('bottom','Set Timebase')
+        ''' Default the Handles to closed '''
         self.plotLayout.handle(1).setClosed()
         self.plotLayout.handle(2).setClosed()
-
-        ''' Make Frame Widget '''
-        # self.plotWidget = QFrame()
-        # self.plotWidget.setLayout(self.plotLayout)
-        # self.tab.addTab(self.plotWidget,"Strip Plot")
-
-        ''' Add loggerWidget Tab (requires loggerWidget - comment out if not available)'''
-        # self.tab.addTab(self.logwidget1,"Log")
 
         ''' This starts the plotting timer (by default at 1 Hz) '''
         self.generalplot.start()
         self.scrollingplot.start()
         self.fftplot.start()
-        # self.scatterplot.start()
+        self.scatterplot.start()
         self.histogramplot.start()
 
-        ''' modify the plot scale to 10 secs '''
+        ''' modify the plot scale to 60 secs '''
         self.scrollingplot.setPlotScale(60)
 
         ''' Display the Qt App '''
         self.setCentralWidget(self.plotLayout)
-
 
     ''' This is a signal generator. It could easily read a magnet current using the hardware controllers
         The signal should have peaks at 5 Hz and 10 Hz, which should be seen on the FFT plot assuming the

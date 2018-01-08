@@ -2,22 +2,22 @@ import sys, time, os, datetime, math
 import collections
 from pyqtgraph.Qt import QtGui, QtCore
 # if sys.version_info<(3,0,0):
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+# from PyQt4.QtCore import *
+# from PyQt4.QtGui import *
 # else:
-#     from PyQt5.QtCore import *
-#     from PyQt5.QtGui import *
-#     from PyQt5.QtWidgets import *
+from PyQt4 import QtCore
+# from PyQt5.QtGui import *
+# from PyQt5.QtWidgets import *
 from threading import Thread, Event, Timer
 
-class repeatedTimer(QObject):
+class repeatedTimer(QtCore.QObject):
 
     """Repeat `function` every `interval` seconds."""
 
     dataReady = QtCore.pyqtSignal(list)
 
     def __init__(self, function, args=[]):
-        QObject.__init__(self)
+        QtCore.QObject.__init__(self)
         self.function = function
         self.args = args
         self.start = time.time()
@@ -50,11 +50,11 @@ class repeatedTimer(QObject):
     def setInterval(self, interval):
         self.interval = interval
 
-class createSignalTimer(QObject):
+class createSignalTimer(QtCore.QObject):
 
     def __init__(self, function, args=[]):
-        # Initialize the signal as a QObject
-        QObject.__init__(self)
+        # Initialize the signal as a QtCore.QObject
+        QtCore.QObject.__init__(self)
         self.timer = repeatedTimer(function, args)
 
     def startTimer(self, interval=1):
@@ -90,7 +90,7 @@ class recordWorker(QtCore.QObject):
         self.buffer100 = collections.deque(maxlen=100)
         self.buffer10 = collections.deque(maxlen=10)
         self.resetStatistics(True)
-        self.timer = QTimer()
+        self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.emitStatistics)
         self.timer.start(1000)
 
@@ -144,10 +144,10 @@ class recordWorker(QtCore.QObject):
             # self.buffer100.clear()
             # self.buffer1000.clear()
 
-class signalRecord(QObject):
+class signalRecord(QtCore.QObject):
 
     def __init__(self, records, name, pen, timer, maxlength, function, args=[], functionForm=None, functionArgument=None, logScale=False, verticalRange=None, verticalMeanSubtraction=False, axis=None):
-        QObject.__init__(self)
+        QtCore.QObject.__init__(self)
         self.records = records
         self.name = name
         self.timer = timer

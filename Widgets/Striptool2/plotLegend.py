@@ -1,22 +1,17 @@
 import pyqtgraph as pg
 from pyqtgraph.Qt import QtGui, QtCore
 import sys, time, os, datetime
-# if sys.version_info<(3,0,0):
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-# else:
-#     from PyQt5.QtCore import *
-#     from PyQt5.QtGui import *
-#     from PyQt5.QtWidgets import *
+# from PyQt5.QtCore import QtCore.pyqtSignal, Qt
+from PyQt4 import QtCore
 import pyqtgraph.parametertree.parameterTypes as pTypes
 from pyqtgraph.parametertree import Parameter, ParameterTree, ParameterItem, registerParameterType
 
 class plotLegend(ParameterTree):
 
-    fftselectionchange = pyqtSignal('QString',bool)
-    histogramplotselectionchange = pyqtSignal('QString',bool)
-    axisselectionchanged = pyqtSignal('QString')
-    legendselectionchanged = pyqtSignal(list)
+    fftselectionchange = QtCore.pyqtSignal('QString',bool)
+    histogramplotselectionchange = QtCore.pyqtSignal('QString',bool)
+    axisselectionchanged = QtCore.pyqtSignal('QString')
+    legendselectionchanged = QtCore.pyqtSignal(list)
 
     def __init__(self, generalplot):
         super(plotLegend, self).__init__(generalplot)
@@ -127,11 +122,27 @@ class plotLegend(ParameterTree):
         text = parameter.name()
         pos = [pos for pos, char in enumerate(text) if char == ':'][-1]
         name = str(text[0:pos])
-        # print 'Signal Removed! Name = ', name
+        # print 'Signal Removed! Name = ', parameter
+        self.proxyLatestValue[name].disconnect()
+        self.proxyLatestValue[name].disconnect()
+        self.proxyMean[name].disconnect()
+        self.proxySTD[name].disconnect()
+        self.proxyMin[name].disconnect()
+        self.proxyMax[name].disconnect()
+        self.proxyHeaderText[name].disconnect()
         try:
             self.generalPlot.removeSignal(str(name))
         except:
             pass
+        finally:
+            for i in range(self.topLevelItemCount()):
+                item = self.topLevelItem(i)
+                if item is not None and item.childCount() < 1:
+                    index =  self.indexOfTopLevelItem(item)
+                    try:
+                        self.takeTopLevelItem(index)
+                    except:
+                        pass
 
     def addParameterSignal(self, name):
         name = str(name)
@@ -160,7 +171,7 @@ class plotLegend(ParameterTree):
                 # {'name': 'AutoScale', 'type': 'action', 'tip': "AutoScale Axis"},
             ]}
         ]
-        p = Parameter.create(name='params', type='group', children=params)
+        p = Parameter.create(parent=self, name='params', type='group', children=params)
         pChild = p.child(name)
         pChild.sigRemoved.connect(self.parameterSignalRemoved)
         self.parameterChildren[name] = pChild
@@ -182,7 +193,7 @@ class plotLegend(ParameterTree):
         pChild.child('Options').child('AxisAutoScale').sigValueChanged.connect(lambda x: self.records[name]['viewbox'].enableAutoRange(y=x.value()))
         # pChild.child('AutoScale').sigActivated.connect(lambda x: self.records[name]['viewbox'].autoRange())
         self.addParameters(p, showTop=False)
-        header = self.findItems(name,Qt.MatchContains | Qt.MatchRecursive)[0]
+        header = self.findItems(name,QtCore.Qt.MatchContains | QtCore.Qt.MatchRecursive)[0]
         header.setSelected(False)
         header.setExpanded(False)
         header.setForeground(0,self.contrasting_text_color(self.records[name]['pen']))
@@ -224,7 +235,7 @@ class MenuBox(pg.GraphicsObject):
         self.menu = None
 
         # note that the use of super() is often avoided because Qt does not
-        # allow to inherit from multiple QObject subclasses.
+        # allow to inherit from multiple QtCore.QObject subclasses.
         pg.GraphicsObject.__init__(self)
 
 
@@ -239,7 +250,7 @@ class MenuBox(pg.GraphicsObject):
 
     # On right-click, raise the context menu
     def mouseClickEvent(self, ev):
-        if ev.button() == QtCore.Qt.RightButton:
+        if ev.button() == QtCore.QtCore.Qt.RightButton:
             if self.raiseContextMenu(ev):
                 ev.accept()
 
@@ -271,9 +282,9 @@ class MenuBox(pg.GraphicsObject):
             self.menu.addAction(blue)
             self.menu.green = blue
 
-            alpha = QtGui.QWidgetAction(self.menu)
+            alpha = QtGui.QtGui.QWidgetAction(self.menu)
             alphaSlider = QtGui.QSlider()
-            alphaSlider.setOrientation(QtCore.Qt.Horizontal)
+            alphaSlider.setOrientation(QtCore.QtCore.Qt.Horizontal)
             alphaSlider.setMaximum(255)
             alphaSlider.setValue(255)
             alphaSlider.valueChanged.connect(self.setAlpha)

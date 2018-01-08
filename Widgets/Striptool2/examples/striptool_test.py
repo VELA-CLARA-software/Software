@@ -2,31 +2,23 @@ import sys, time, os
 sys.path.append(".")
 sys.path.append("..")
 # if sys.version_info<(3,0,0):
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+# from PyQt4.QtCore import *
+# from PyQt4.QtGui import *
 # else:
-#     from PyQt5.QtCore import *
-#     from PyQt5.QtGui import *
-#     from PyQt5.QtWidgets import *
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
 import pyqtgraph as pg
 from pyqtgraph.dockarea import *
 import generalPlot as generalplot
 import scrollingPlot as scrollingplot
 import signalTable as signaltable
 import numpy as np
-import VELA_CLARA_Magnet_Control as vmag
-maginit = vmag.init()
-Vmagnets = maginit.physical_VELA_INJ_Magnet_Controller()
-Cmagnets = maginit.physical_CLARA_PH1_Magnet_Controller()
-import VELA_CLARA_BPM_Control as vbpmc
-bpms = vbpmc.init()
-import  VELA_CLARA_General_Monitor as vgen
-general = vgen.init()
+from splitterWithHandles import *
 ''' Load loggerWidget library (comment out if not available) '''
-# sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\\..\\..\\loggerWidget\\')
-# import loggerWidget as lw
-# import logging
-# logger = logging.getLogger(__name__)
+import Software.Widgets.loggerWidget.loggerWidget as lw
+import logging
+logger = logging.getLogger(__name__)
 
 seconds_per_unit = {"s": 1, "m": 60, "h": 3600, "d": 86400, "w": 604800}
 
@@ -90,21 +82,21 @@ class striptool_Demo(QMainWindow):
         self.histogramplot = self.generalplot.histogramPlot()
         self.scatterplot = self.generalplot.scatterPlot()
         self.legend = self.generalplot.legend()
-        self.signaltable = signaltable.signalTable(parent=self.generalplot, VELAMagnetController=Vmagnets, CLARAMagnetController=Cmagnets, BPMController=bpms, GeneralController=general)
+        self.signaltable = signaltable.signalTable(parent=self.generalplot)#, VELAMagnetController=Vmagnets, CLARAMagnetController=Cmagnets, BPMController=bpms, GeneralController=general)
 
         self.enabledPlotNames = []
         self.legend.legendselectionchanged.connect(self.addSignalToFFTHistogramPlots)
 
         ''' Create some common axes to plot similar signals with '''
-        # self.generalplot.createAxis(name='logsmall', color='k',logMode=True, verticalRange=[1e-10, 1e-7])
+        self.generalplot.createAxis(name='logsmall', color='k',logMode=True, verticalRange=[1e-10, 1e-7])
         # self.generalplot.createAxis(name='logbig', color='b', logMode=True, verticalRange=[1e3, 1e5])
         # self.generalplot.createAxis(name='smallnumbers', color='g', logMode=False, verticalRange=[-5,10])
 
         ''' Add some signals to the striptool - note they call our signal generator at a frequency of 1/timer (100 Hz and 10 Hz in these cases).
             The 'pen' argument sets the color of the curves
                 - see <http://www.pyqtgraph.org/documentation/style.html>'''
-        # self.generalplot.addSignal(name='signal1', pen='g', timer=1.0/50.0, function=self.createRandomSignal, args=[100,10,22])
-        # self.generalplot.addSignal(name='signal2', pen='r', timer=1.0/10.0, function=self.createRandomSignal, args=[1e-8, 1e-9,4], axis='logsmall')
+        self.generalplot.addSignal(name='signal1', pen='g', timer=1.0/50.0, function=self.createRandomSignal, args=[100,10,22])
+        self.generalplot.addSignal(name='signal2', pen='r', timer=1.0/10.0, function=self.createRandomSignal, args=[1e-8, 1e-9,4], axis='logsmall')
         # self.generalplot.addSignal(name='signal3', pen='b', timer=1.0/10.0, function=self.createRandomSignal, args=[1e4, 1e1, 2], axis='logbig')
         # self.generalplot.addSignal(name='signal4', pen='c', timer=1.0/20.0, function=self.createRandomSignal, args=[1,0.5,7.8], axis='smallnumbers')
         # self.generalplot.addSignal(name='signal5', pen='m', timer=1.0/10.0, function=self.createRandomSignal, args=[3,2,0.87], axis='smallnumbers')
@@ -147,7 +139,10 @@ class striptool_Demo(QMainWindow):
         self.area.addDock(d3,'bottom')
         self.area.addDock(d4, position='right', relativeTo=d3)
         self.area.addDock(d5, position='right', relativeTo=d4)
-        self.plotLayout = QVBoxLayout()
+
+        ''' Make QSPlitter '''
+        self.plotLayout = splitterWithHandles()
+        self.plotLayout.setOrientation(Qt.Vertical)
         self.plotLayout.addWidget(self.signaltable)
         self.plotLayout.addWidget(self.area)
         self.timeButtonList = []
@@ -163,10 +158,20 @@ class striptool_Demo(QMainWindow):
         self.timeButtonLayout.addWidget(self.timeButton600)
         self.timeButtonLayout.addWidget(self.timeButton6000)
         self.timeButtonLayout.addWidget(self.timeButton60000)
-        self.plotLayout.addLayout(self.timeButtonLayout)
-        self.plotWidget = QFrame()
-        self.plotWidget.setLayout(self.plotLayout)
-        self.tab.addTab(self.plotWidget,"Strip Plot")
+        self.timeButtonWidget.setLayout(self.timeButtonLayout)
+        self.plotLayout.addWidget(self.timeButtonWidget)
+        ''' Style QSplitter Handles '''
+        self.plotLayout.setHandleWidth(14)
+        self.plotLayout.setStyleSheet("QSplitter::handle{background-color:transparent;}");
+        self.plotLayout.handle(1).setLocation('top','Add Signal')
+        self.plotLayout.handle(2).setLocation('bottom','Set Timebase')
+        self.plotLayout.handle(1).setClosed()
+        self.plotLayout.handle(2).setClosed()
+
+        ''' Make Frame Widget '''
+        # self.plotWidget = QFrame()
+        # self.plotWidget.setLayout(self.plotLayout)
+        # self.tab.addTab(self.plotWidget,"Strip Plot")
 
         ''' Add loggerWidget Tab (requires loggerWidget - comment out if not available)'''
         # self.tab.addTab(self.logwidget1,"Log")
@@ -182,7 +187,8 @@ class striptool_Demo(QMainWindow):
         self.scrollingplot.setPlotScale(60)
 
         ''' Display the Qt App '''
-        self.setCentralWidget(self.tab)
+        self.setCentralWidget(self.plotLayout)
+
 
     ''' This is a signal generator. It could easily read a magnet current using the hardware controllers
         The signal should have peaks at 5 Hz and 10 Hz, which should be seen on the FFT plot assuming the

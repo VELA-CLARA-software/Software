@@ -1,4 +1,4 @@
-headings: ['Off', 'Gun-10', 'Quads', 'Dipoles', 'Correctors', 'BPMs', 'Custom']
+headings: ['Off', 'Gun-10', 'CLARA-Quads', 'VELA-Quads', 'VELA-Dipoles', 'VELA-Correctors', 'BPMs', 'Custom']
 frequencies: [1, 5, 10, 25, 50, 100]
 magnets:
   'Gun-10':
@@ -6,29 +6,34 @@ magnets:
     ['CLA-LRG1-VAC-IMG-01:P','IMG-01 Pressure']]
     PVs:
       RI: 'custom'
-  Correctors:
+  VELA-Correctors:
     Names: [HCOR01, HCOR02, HCOR03, HCOR04, HCOR05, HCOR06, HCOR07, HCOR08, HCOR09,
       HCOR10, HCOR11, VCOR01, VCOR02, VCOR03, VCOR04, VCOR05, VCOR06, VCOR07, VCOR08,
       VCOR09, VCOR10, VCOR11]
     PVs:
-      RI: ['', getRI]
-      SI: ['', getSI]
-  Dipoles:
+      RI: ['self.VELAMagnets', getRI]
+      SI: ['self.VELAMagnets', getSI]
+  VELA-Dipoles:
     Names: [DIP01, DIP02, DIP03]
     PVs:
-      RI: ['', getRI]
-      SI: ['', getSI]
+      RI: ['self.VELAMagnets', getRI]
+      SI: ['self.VELAMagnets', getSI]
   'Off':
     Names: []
     PVs: {}
-  Quads:
+  VELA-Quads:
     Names: [QUAD01, QUAD02, QUAD03, QUAD04, QUAD05, QUAD06, QUAD07, QUAD08, QUAD09,
       QUAD10, QUAD11, QUAD12, QUAD13, QUAD14, QUAD15]
     PVs:
-      RI: ['self.magnets', getRI]
-      SI: ['self.magnets', getSI]
-  BPMs:
-    Names: [BPM01, BPM02, BPM03, BPM04, BPM05]
+      RI: ['self.VELAMagnets', getRI]
+      SI: ['self.VELAMagnets', getSI]
+  CLARA-Quads:
+    Names: [C2V-QUAD1, C2V-QUAD2, C2V-QUAD3, S02-QUAD1, S02-QUAD2, S02-QUAD3, S02-QUAD4]
     PVs:
-      X: ['self.bpms', getXFromPV]
-      Y: ['self.bpms', getYFromPV]
+      RI: ['self.CLARAMagnets', getRI]
+      SI: ['self.CLARAMagnets', getSI]
+  # BPMs:
+  #   Names: [BPM01, BPM02, BPM03, BPM04, BPM05]
+  #   PVs:
+  #     X: ['self.bpms', getXFromPV]
+  #     Y: ['self.bpms', getYFromPV]

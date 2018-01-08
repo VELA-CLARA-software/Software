@@ -1,7 +1,5 @@
-# try:
-from PyQt4.QtGui import *
-# except:
-    # from PyQt5.QtGui import *
+# from PyQt5.QtGui import QColor
+from PyQt4.QtGui import QColor
 
 tableau20 = [(31, 119, 180), (174, 199, 232), (255, 127, 14), (255, 187, 120),
              (44, 160, 44), (152, 223, 138), (214, 39, 40), (255, 152, 150),

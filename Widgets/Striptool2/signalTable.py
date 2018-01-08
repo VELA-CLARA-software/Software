@@ -2,77 +2,71 @@ import sys,os
 # import numpy as np
 import pyqtgraph as pg
 from pyqtgraph.Qt import QtGui, QtCore
-# if sys.version_info<(3,0,0):
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-# else:
-#     from PyQt5.QtCore import *
-#     from PyQt5.QtGui import *
-#     from PyQt5.QtWidgets import *
-import numpy as np
+# from PyQt5.QtCore import QtCore.QObject, QtCore.pyqtSignal, Qt
+# from PyQt5.QtGui import QtGui.QHBoxLayout, QtGui.QVBoxLayout
+# from PyQt5.QtWidgets import QtGui.QWidget, QPushButton, QLineEdit, QCheckBox
+from PyQt4 import QtCore, QtGui
 import time
 import yaml
 import string as string
-import colours as colours
+import Software.Widgets.Striptool2.colours as colours
 
 class signalTypeComboBox(QtGui.QComboBox):
     def __init__(self, comboID, mainForm):
         super(signalTypeComboBox, self).__init__()
         self.__comboID = comboID
         self.__mainForm = mainForm
-        self.connect(self, QtCore.SIGNAL("currentIndexChanged (const QString&)"), self.indexChanged)
+        self.currentIndexChanged.connect(self.indexChanged)
 
     def indexChanged(self, ind):
         # send signal to MainForm class, self.__comboID is actually row number, ind is what is selected
-        self.__mainForm.emit(QtCore.SIGNAL("firstColumnComboBoxChanged(PyQt_PyObject,PyQt_PyObject)"), self.__comboID, ind)
+        self.__mainForm.firstColumnComboBoxChanged.emit(self.__comboID, self.currentText())
 
 class signalElementComboBox(QtGui.QComboBox):
     def __init__(self, comboID, mainForm):
         super(signalElementComboBox, self).__init__()
         self.__comboID = comboID
         self.__mainForm = mainForm
-        self.connect(self, QtCore.SIGNAL("currentIndexChanged (const QString&)"), self.indexChanged)
+        self.currentIndexChanged.connect(self.indexChanged)
 
     def indexChanged(self, ind):
         # send signal to MainForm class, self.__comboID is actually row number, ind is what is selected
-        self.__mainForm.emit(QtCore.SIGNAL("secondColumnComboBoxChanged(PyQt_PyObject,PyQt_PyObject)"), self.__comboID, ind)
+        self.__mainForm.secondColumnComboBoxChanged.emit(self.__comboID, self.currentText())
 
 class signalPVComboBox(QtGui.QComboBox):
     def __init__(self, comboID, mainForm):
         super(signalPVComboBox, self).__init__()
         self.__comboID = comboID
         self.__mainForm = mainForm
-
-        self.connect(self, QtCore.SIGNAL("currentIndexChanged (const QString&)"), self.indexChanged)
+        self.currentIndexChanged.connect(self.indexChanged)
 
     def indexChanged(self, ind):
         # send signal to MainForm class, self.__comboID is actually row number, ind is what is selected
-        self.__mainForm.emit(QtCore.SIGNAL("thirdColumnComboBoxChanged(PyQt_PyObject,PyQt_PyObject)"), self.__comboID, ind)
+        self.__mainForm.thirdColumnComboBoxChanged.emit(self.__comboID, self.currentText())
 
 class signalRateComboBox(QtGui.QComboBox):
     def __init__(self, comboID, mainForm):
         super(signalRateComboBox, self).__init__()
         self.__comboID = comboID
         self.__mainForm = mainForm
-
-        self.connect(self, QtCore.SIGNAL("currentIndexChanged (const QString&)"), self.indexChanged)
+        self.currentIndexChanged.connect(self.indexChanged)
 
     def indexChanged(self, ind):
         # send signal to MainForm class, self.__comboID is actually row number, ind is what is selected
-        self.__mainForm.emit(QtCore.SIGNAL("signalRateChanged(PyQt_PyObject,PyQt_PyObject)"), self.__comboID, ind)
+        self.__mainForm.signalRateChanged.emit(self.__comboID, self.currentText())
 
 class colourPickerButton(QtGui.QPushButton):
     def __init__(self, comboID, mainForm):
         super(colourPickerButton, self).__init__()
         self.__comboID = comboID
         self.__mainForm = mainForm
-        self.connect(self, QtCore.SIGNAL("clicked ()"), self.buttonPushed)
+        self.clicked.connect(self.buttonPushed)
 
     def buttonPushed(self):
         # send signal to MainForm class, self.__comboID is actually row number, ind is what is selected
-        self.__mainForm.emit(QtCore.SIGNAL("colourPickerButtonPushed(PyQt_PyObject)"), self.__comboID)
+        self.__mainForm.colourPickerButtonPushed.emit(self.__comboID)
 
-class customPVFunction(QObject):
+class customPVFunction(QtCore.QObject):
     def __init__(self, parent = None, pvid=None, GeneralController=None):
         super(customPVFunction, self).__init__(parent)
         self.pvid = pvid
@@ -81,11 +75,18 @@ class customPVFunction(QObject):
     def getValue(self):
         return float(self.general.getValue(self.pvid))
 
-class signalTable(QWidget):
+class signalTable(QtGui.QWidget):
+
+    firstColumnComboBoxChanged = QtCore.pyqtSignal('PyQt_PyObject', 'PyQt_PyObject')
+    secondColumnComboBoxChanged = QtCore.pyqtSignal('PyQt_PyObject', 'PyQt_PyObject')
+    thirdColumnComboBoxChanged = QtCore.pyqtSignal('PyQt_PyObject', 'PyQt_PyObject')
+    signalRateChanged = QtCore.pyqtSignal('PyQt_PyObject', 'PyQt_PyObject')
+    colourPickerButtonPushed = QtCore.pyqtSignal('PyQt_PyObject')
+
     def __init__(self, parent = None, VELAMagnetController=None, CLARAMagnetController=None, BPMController=None, GeneralController=None):
         super(signalTable, self).__init__(parent)
         self.setMaximumHeight(100)
-        self.stream = file('settings.yaml', 'r')
+        self.stream = open('settings.yaml', 'r')
         self.settings = yaml.load(self.stream)
         self.stream.close()
         self.magnetnames = self.settings['magnets']
@@ -106,15 +107,15 @@ class signalTable(QWidget):
         self.normalSelectionBox = self.createNormalSelectionBox()
         self.customSelectionBox = self.createCustomSelectionBox()
         ''' create tableWidget and pushButton '''
-        vBoxlayoutParameters = QVBoxLayout()
+        vBoxlayoutParameters = QtGui.QVBoxLayout()
         vBoxlayoutParameters.addWidget(self.normalSelectionBox,1)
         vBoxlayoutParameters.addWidget(self.customSelectionBox,1)
         self.normalSelectionBox.show()
         self.customSelectionBox.hide()
         self.setLayout(vBoxlayoutParameters)
-        self.connect(self, QtCore.SIGNAL("firstColumnComboBoxChanged(PyQt_PyObject, PyQt_PyObject)"), self.changeSecondCombo)
-        self.connect(self, QtCore.SIGNAL("firstColumnComboBoxChanged(PyQt_PyObject, PyQt_PyObject)"), self.changeThirdComboFromFirst)
-        self.connect(self, QtCore.SIGNAL("colourPickerButtonPushed(PyQt_PyObject)"), self.colorPicker)
+        self.firstColumnComboBoxChanged.connect(self.changeSecondCombo)
+        self.secondColumnComboBoxChanged.connect(self.changeThirdComboFromSecond)
+        self.colourPickerButtonPushed.connect(self.colorPicker)
         self.stripTool.signalAdded.connect(self.updateColourBox)
         self.pvids = []
 
@@ -135,6 +136,8 @@ class signalTable(QWidget):
         else:
             functionName = functionForm[1]
             function = eval(functionForm[0])
+            print('functionName = ', functionName)
+            print('functionForm = ', functionForm)
             testFunction = lambda: getattr(function,functionName)(functionArgument)
         self.stripTool.addSignal(name=name, pen=colourpickercolour, function=testFunction, timer=1.0/freq, logScale=logScale)
         self.stripTool.records[name]['record'].start()
@@ -145,13 +148,13 @@ class signalTable(QWidget):
         self.customcolorbox.setColor(self.penColors[self.rowNumber])
 
     def createNormalSelectionBox(self):
-        self.selectionBoxlayout = QHBoxLayout()
+        self.selectionBoxlayout = QtGui.QHBoxLayout()
         normalwidget = QtGui.QWidget()
         combo1=signalTypeComboBox(0, self)
         combo2=signalElementComboBox(0, self)
         combo3=signalPVComboBox(0, self)
         combo4=signalRateComboBox(0, self)
-        addButton = QPushButton('Add Signal')
+        addButton = QtGui.QPushButton('Add Signal')
         addButton.setFixedWidth(100)
         addButton.clicked.connect(self.addTableRow)
         combo1.addItems(self.headings)
@@ -160,26 +163,26 @@ class signalTable(QWidget):
         combo4.addItems([str(i) + ' Hz'for i in self.frequencies])
         combo1.setEditable(True)
         combo1.lineEdit().setReadOnly(True);
-        combo1.lineEdit().setAlignment(Qt.AlignCenter);
+        combo1.lineEdit().setAlignment(QtCore.Qt.AlignCenter);
         combo1.setMinimumWidth(80)
         combo1.setMaximumWidth(100)
         combo2.setEditable(True)
         combo2.lineEdit().setReadOnly(True);
-        combo2.lineEdit().setAlignment(Qt.AlignCenter);
+        combo2.lineEdit().setAlignment(QtCore.Qt.AlignCenter);
         combo2.setMinimumWidth(80)
         combo2.setMaximumWidth(100)
         combo3.setEditable(True)
         combo3.lineEdit().setReadOnly(True);
-        combo3.lineEdit().setAlignment(Qt.AlignCenter);
+        combo3.lineEdit().setAlignment(QtCore.Qt.AlignCenter);
         combo3.setMinimumWidth(80)
         combo3.setMaximumWidth(100)
         combo4.setEditable(True)
         combo4.lineEdit().setReadOnly(True);
-        combo4.lineEdit().setAlignment(Qt.AlignCenter);
+        combo4.lineEdit().setAlignment(QtCore.Qt.AlignCenter);
         combo4.setCurrentIndex(2)
         combo4.setMinimumWidth(80)
         combo4.setMaximumWidth(100)
-        pvtextedit = QLineEdit()
+        pvtextedit = QtGui.QLineEdit()
         pvtextedit.setMinimumWidth(240)
         pvtextedit.setMaximumWidth(300)
         self.normalcolorbox = pg.ColorButton()
@@ -201,28 +204,28 @@ class signalTable(QWidget):
         return normalwidget
 
     def createCustomSelectionBox(self):
-        self.pvEditlayout = QHBoxLayout()
+        self.pvEditlayout = QtGui.QHBoxLayout()
         customwidget = QtGui.QWidget()
         combo1=signalTypeComboBox(0, self)
         combo4=signalRateComboBox(0, self)
-        addButton = QPushButton('Add Signal')
+        addButton = QtGui.QPushButton('Add Signal')
         addButton.setFixedWidth(100)
         addButton.clicked.connect(self.addTableRowCustom)
-        self.logTickBox = QCheckBox('Log Scale')
+        self.logTickBox = QtGui.QCheckBox('Log Scale')
         combo1.addItems(self.headings)
         combo4.addItems([str(i) + ' Hz'for i in self.frequencies])
         combo1.setEditable(True)
         combo1.lineEdit().setReadOnly(True);
-        combo1.lineEdit().setAlignment(Qt.AlignCenter);
+        combo1.lineEdit().setAlignment(QtCore.Qt.AlignCenter);
         combo1.setMinimumWidth(80)
         combo1.setMaximumWidth(100)
         combo4.setEditable(True)
         combo4.lineEdit().setReadOnly(True);
-        combo4.lineEdit().setAlignment(Qt.AlignCenter);
+        combo4.lineEdit().setAlignment(QtCore.Qt.AlignCenter);
         combo4.setCurrentIndex(2)
         combo4.setMinimumWidth(80)
         combo4.setMaximumWidth(100)
-        pvtextedit = QLineEdit()
+        pvtextedit = QtGui.QLineEdit()
         pvtextedit.setMinimumWidth(230)
         pvtextedit.setMaximumWidth(290)
         self.customcolorbox = pg.ColorButton()
@@ -273,6 +276,7 @@ class signalTable(QWidget):
         self.addRow(string.replace(name,"_","$"), functionForm, name, freq, colourpickercolour, logScale=logScale)
 
     def changeSecondCombo(self, idnumber, ind):
+        print('ind = ', ind)
         if ind == 'Custom':
             self.pvEditlayout.itemAt(0).widget().setCurrentIndex(self.selectionBoxlayout.itemAt(0).widget().currentIndex())
             self.customPVInput = True

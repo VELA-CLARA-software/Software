@@ -1,13 +1,11 @@
 import sys, time, os, datetime, signal
 import pyqtgraph as pg
 from pyqtgraph.Qt import QtGui, QtCore
-# if sys.version_info<(3,0,0):
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-# else:
-#     from PyQt5.QtCore import *
-#     from PyQt5.QtGui import *
-#     from PyQt5.QtWidgets import *
+# from PyQt5.QtCore import QtCore.QObject, QtCore.pyqtSignal, QtCore.QTimer, Qt
+# from PyQt5.QtGui import QtGui.QHBoxLayout
+# from PyQt5.QtWidgets import QtGui.QWidget
+from PyQt4 import QtCore, QtGui
+
 from bisect import bisect_left
 # logger = logging.getLogger(__name__)
 
@@ -18,28 +16,29 @@ signal.signal(signal.SIGINT, signal.SIG_DFL)
 #     print('%-25s: %s, %s,' % (caller, threading.current_thread().name,
 #                               threading.current_thread().ident))
 
-class scatterPlot(QWidget):
+class scatterPlot(QtGui.QWidget):
     scatterSelectionChanged = QtCore.pyqtSignal('QString', 'QString')
 
     def __init__(self, generalplot, parent=None, plotRateBar=False):
         super(scatterPlot, self).__init__(parent)
         self.pg = pg
         self.paused = False
-        self.plotrate = 5
+        self.plotrate = 1
         ''' create the scatterPlot as a grid layout '''
         self.scatterPlot = QtGui.QVBoxLayout()
-        self.plotThread = QTimer()
+        self.plotThread = QtCore.QTimer()
         self.generalPlot = generalplot
         self.records = self.generalPlot.records
         ''' Create generalPlot object '''
         self.plotWidget = scatterPlotPlot(self)
         ''' set-up setupSelectionBar '''
         self.selectionBar = self.setupSelectionBar()
+        self.removedname = ''
         ''' set-up plot rate slider '''
         self.setupPlotRateSlider()
         self.scatterPlot.addLayout(self.selectionBarLayout, 1)
         self.generalPlot.signalAdded.connect(self.updateSelectionBar)
-        self.generalPlot.signalRemoved.connect(self.updateSelectionBar)
+        self.generalPlot.signalRemoved.connect(self.removeSignal)
         self.scatterPlot.addWidget(self.plotWidget.plotWidget, 5)
         if plotRateBar:
             self.setupPlotRateSlider()
@@ -47,11 +46,15 @@ class scatterPlot(QWidget):
         self.setLayout(self.scatterPlot)
         # logger.debug('scatterPlot initiated!')
 
+    def removeSignal(self, name):
+        self.removedname = name
+        self.updateSelectionBar()
+
     def setupPlotRateSlider(self):
-        self.plotRateLayout = QHBoxLayout()
+        self.plotRateLayout = QtGui.QHBoxLayout()
         self.plotRateLabel = QtGui.QLabel()
         self.plotRateLabel.setText('Plot Update Rate ['+str(self.plotrate)+' Hz]:')
-        self.plotRateLabel.setAlignment(Qt.AlignCenter)
+        self.plotRateLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.plotRateSlider = QtGui.QSlider()
         self.plotRateSlider.setOrientation(QtCore.Qt.Horizontal)
         self.plotRateSlider.setInvertedAppearance(False)
@@ -94,10 +97,11 @@ class scatterPlot(QWidget):
         combobox2text = self.combobox2.currentText()
         allnames = []
         for name in sorted(self.records):
-            allnames.append(name)
-            if self.combobox1.findText(name) == -1:
-                self.combobox1.addItem(name)
-                self.combobox2.addItem(name)
+            if not str(name) == str(self.removedname):
+                allnames.append(name)
+                if self.combobox1.findText(name) == -1:
+                    self.combobox1.addItem(name)
+                    self.combobox2.addItem(name)
         for index in range(self.combobox1.count()):
             if not self.combobox1.itemText(index) in allnames:
                 self.combobox1.removeItem(index)
@@ -113,7 +117,7 @@ class scatterPlot(QWidget):
         self.plotRateLabel.setText('Plot Update Rate [' + str(self.plotrate) + ' Hz]:')
         self.plotThread.setInterval(1000 * 1 / value)
 
-    def start(self, timer=5000):
+    def start(self, timer=1000):
         self.plotUpdate()
         self.plotThread.start(timer)
         self.plotThread.timeout.connect(self.plotUpdate)
@@ -149,7 +153,7 @@ def takeClosestPosition(xvalues, myList, myNumber):
 
 class scatterPlotPlot(pg.PlotWidget):
 
-    statusChanged = pyqtSignal(str)
+    statusChanged = QtCore.pyqtSignal(str)
 
     def __init__(self, scatterplot, parent = None):
         super(scatterPlotPlot, self).__init__(parent=parent)
@@ -176,6 +180,7 @@ class scatterPlotPlot(pg.PlotWidget):
     def printPoints(self,scatterPlot, points):
         point = points[0]
         text =  "{%0.3f, %0.3f}" % (point.pos()[0], point.pos()[1])
+        print(text)
         self.statusChanged.emit(text)
 
     def setSelectionIndex(self, x, y):
@@ -187,6 +192,11 @@ class scatterPlotPlot(pg.PlotWidget):
             self.data1 = self.records[self.selectionNameX]['data']
             self.data2 = self.records[self.selectionNameY]['data']
             self.createPlot(self.selectionNameX, self.selectionNameY, self.color)
+        else:
+            self.data1 = []
+            self.data2 = []
+            self.scatterPlot.clear()
+            self.createPlot('', '', 'w')
 
     def togglePause(self, value):
         self.paused = value
