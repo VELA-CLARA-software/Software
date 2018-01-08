@@ -1,8 +1,8 @@
-
 from PIL import Image
 import h5py
 import numpy as np
 import sys
+import time
 sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\stage')
 import VELA_CLARA_Camera_IA_Control as ia
 
@@ -12,9 +12,8 @@ class Model():
         self.imageData = None
         self.imageHeight = 0
         self.imageWidth = 0
-        self.comment = 'Hello World!!    and the Llamas in the Universe :)'
         self.imageAnalysis = ia.init()
-        #self.imageAnalysis.setVerbose()
+        # self.imageAnalysis.setVerbose()
         self.cameras = self.imageAnalysis.offline_CLARA_Camera_IA_Controller()
         self.offlineAnalysis = self.cameras.getOfflineIARef()
         print("Model Initialized")
@@ -88,3 +87,4 @@ class Model():
                 print('Unrecognised file type!')
         except IOError:
             print "Unable to load image"
+

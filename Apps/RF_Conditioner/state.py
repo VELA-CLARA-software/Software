@@ -5,4 +5,5 @@ from enum import Enum
 class state(Enum):
     BAD = 0
     GOOD = 1
+
     UNKNOWN = 2

@@ -1,15 +1,17 @@
 from PyQt4 import QtCore
 from PyQt4 import QtGui
+import time
 import sys
 import numpy as np
 import pyqtgraph as pg
 import model.model as modelFunctions
 import pyqtgraph.opengl as gl
+import threads
 sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\stage')
 import VELA_CLARA_Camera_IA_Control as ia
 
-class Controller():
 
+class Controller():
     def __init__(self, view, model):
         # Define model and view
         self.view = view
@@ -18,19 +20,19 @@ class Controller():
         pg.setConfigOptions(antialias=True)
         # Image
         monitor = pg.GraphicsView()
-        layout = pg.GraphicsLayout(border=(100, 100, 100))
+        layout = pg.GraphicsLayout()
         monitor.setCentralItem(layout)
-        #Backgroun Image
+        # Background Image
         monitorBkgrnd = pg.GraphicsView()
-        layoutBkgrnd = pg.GraphicsLayout(border=(100, 100, 100))
+        layoutBkgrnd = pg.GraphicsLayout()
         monitorBkgrnd.setCentralItem(layoutBkgrnd)
         # Display for x profile
         monitorX = pg.GraphicsView()
-        layoutX = pg.GraphicsLayout(border=(100, 100, 100))
+        layoutX = pg.GraphicsLayout()
         monitorX.setCentralItem(layoutX)
         # Display for y profile
         monitorY = pg.GraphicsView()
-        layoutY = pg.GraphicsLayout(border=(100, 100, 100))
+        layoutY = pg.GraphicsLayout()
         monitorY.setCentralItem(layoutY)
         self.tabWidget = QtGui.QTabWidget()
 
@@ -74,7 +76,11 @@ class Controller():
         self.hLineMLE = self.ImageBox.plot(pen='g')
         self.vLineBVN = self.ImageBox.plot(pen='b')
         self.hLineBVN = self.ImageBox.plot(pen='b')
-
+        # Hide them
+        self.ImageBox.removeItem(self.vLineBVN)
+        self.ImageBox.removeItem(self.hLineBVN)
+        self.ImageBox.removeItem(self.vLineMLE)
+        self.ImageBox.removeItem(self.hLineMLE)
         self.yProfBox.setYLink(self.ImageBox)
         self.xProfBox.setXLink(self.ImageBox)
         self.xProfBox.plot(pen='w')
@@ -86,10 +92,10 @@ class Controller():
         self.tabWidget.addTab(self.w, '3D Lens')
         self.tabWidget.addTab(monitorBkgrnd, 'Background')
 
-        self.view.gridLayout.addWidget(monitor, 0, 3, 10, 1)
-        self.view.gridLayout.addWidget(monitorY, 0, 4, 10, 1)
-        self.view.gridLayout.addWidget(monitorX, 10, 3, 10, 1)
-        self.view.gridLayout.addWidget(self.tabWidget, 10, 4, 10, 1)
+        self.view.gridLayout_4.addWidget(monitor, 0, 0, 1, 1)
+        self.view.gridLayout_4.addWidget(monitorY, 0, 1, 1, 1)
+        self.view.gridLayout_4.addWidget(monitorX, 1, 0, 1, 1)
+        self.view.gridLayout_4.addWidget(self.tabWidget, 1, 1, 1, 1)
 
         STEPS = np.linspace(0, 1, 4)
         CLRS = ['k', 'r', 'y', 'w']
@@ -97,8 +103,7 @@ class Controller():
         clrmp = pg.ColorMap(STEPS, a)
         lut = clrmp.getLookupTable()
         self.Image.setLookupTable(lut)
-
-        #SATURATED PIXEL COLOURING
+        # SATURATED PIXEL COLOURING
         STEPS = np.array([0.0, 1.0])
         CLRS = ['w', 'g']
         clrmp_sat = pg.ColorMap(STEPS, np.array([pg.colorTuple(pg.Color(c)) for c in CLRS]))
@@ -106,6 +111,7 @@ class Controller():
         self.saturatedPixelImage.setLookupTable(lut_sat)
 
         # Connections
+        self.analysethread = threads.GenericThread(self.model, self.view)
         self.timer = QtCore.QTimer()
         self.view.pushButton_loadImage.clicked.connect(self.openImageDir)
         self.view.pushButton_loadBkgrnd.clicked.connect(self.openBkgrndImageDir)
@@ -206,9 +212,49 @@ class Controller():
             self.view.label_customY.setText('Y: ' + str(int(self.customMaskROI.pos()[1]+self.customMaskROI.size()[0]/2)))
             self.view.label_customRX.setText('XRad: ' + str(int(self.customMaskROI.size()[0]/2)))
             self.view.label_customRY.setText('YRad: ' + str(int(self.customMaskROI.size()[1]/2)))
+        if self.model.offlineAnalysis.isAnalysing()==True:
+            self.view.pushButton_analyse.setText('Analysing ...')
+        else:
+            self.view.pushButton_analyse.setText('Analyse')
+        self.view.label_xMLE.setText(str(self.model.offlineAnalysis.CoIA.xMLE))
+        self.view.label_yMLE.setText(str(self.model.offlineAnalysis.CoIA.yMLE))
+        self.view.label_sxMLE.setText(str(self.model.offlineAnalysis.CoIA.sxMLE))
+        self.view.label_syMLE.setText(str(self.model.offlineAnalysis.CoIA.syMLE))
+        self.view.label_cxyMLE.setText(str(self.model.offlineAnalysis.CoIA.cxyMLE))
+        self.view.label_xBVN.setText(str(self.model.offlineAnalysis.CoIA.xBVN))
+        self.view.label_yBVN.setText(str(self.model.offlineAnalysis.CoIA.yBVN))
+        self.view.label_sxBVN.setText(str(self.model.offlineAnalysis.CoIA.sxBVN))
+        self.view.label_syBVN.setText(str(self.model.offlineAnalysis.CoIA.syBVN))
+        self.view.label_cxyBVN.setText(str(self.model.offlineAnalysis.CoIA.cxyBVN))
+
+        # Set crosshairs
+        x = float(self.model.offlineAnalysis.CoIA.xMLE)
+        y = float(self.model.offlineAnalysis.CoIA.yMLE)
+        v1 = (float(self.model.offlineAnalysis.CoIA.yMLE) -
+              float(self.model.offlineAnalysis.CoIA.syMLE))
+        v2 = (float(self.model.offlineAnalysis.CoIA.yMLE) +
+              float(self.model.offlineAnalysis.CoIA.syMLE))
+        h1 = (float(self.model.offlineAnalysis.CoIA.xMLE) -
+              float(self.model.offlineAnalysis.CoIA.sxMLE))
+        h2 = (float(self.model.offlineAnalysis.CoIA.xMLE) +
+              float(self.model.offlineAnalysis.CoIA.sxMLE))
+        self.vLineMLE.setData(x=[x, x], y=[v1, v2])
+        self.hLineMLE.setData(x=[h1, h2], y=[y, y])
+
+        x = float(self.model.offlineAnalysis.CoIA.xBVN)
+        y = float(self.model.offlineAnalysis.CoIA.yBVN)
+        v1 = (float(self.model.offlineAnalysis.CoIA.yBVN) -
+              float(self.model.offlineAnalysis.CoIA.syBVN))
+        v2 = (float(self.model.offlineAnalysis.CoIA.yBVN) +
+              float(self.model.offlineAnalysis.CoIA.syBVN))
+        h1 = (float(self.model.offlineAnalysis.CoIA.xBVN) -
+              float(self.model.offlineAnalysis.CoIA.sxBVN))
+        h2 = (float(self.model.offlineAnalysis.CoIA.xBVN) +
+              float(self.model.offlineAnalysis.CoIA.sxBVN))
+        self.vLineBVN.setData(x=[x, x], y=[v1, v2])
+        self.hLineBVN.setData(x=[h1, h2], y=[y, y])
 
     def analyse(self):
-        self.view.pushButton_analyse.setText('Analysing ...')
         image = np.transpose(np.flip(self.model.imageData, 1))
         image = image.flatten().tolist()
         im = ia.std_vector_double()
@@ -256,42 +302,3 @@ class Controller():
         else:
             self.model.offlineAnalysis.useESDirectCut(False)
         self.model.offlineAnalysis.analyse()
-        # Set Results Labels in GUI
-        self.view.label_xMLE.setText(str(self.model.offlineAnalysis.CoIA.xMLE))
-        self.view.label_yMLE.setText(str(self.model.offlineAnalysis.CoIA.yMLE))
-        self.view.label_sxMLE.setText(str(self.model.offlineAnalysis.CoIA.sxMLE))
-        self.view.label_syMLE.setText(str(self.model.offlineAnalysis.CoIA.syMLE))
-        self.view.label_cxyMLE.setText(str(self.model.offlineAnalysis.CoIA.cxyMLE))
-        self.view.label_xBVN.setText(str(self.model.offlineAnalysis.CoIA.xBVN))
-        self.view.label_yBVN.setText(str(self.model.offlineAnalysis.CoIA.yBVN))
-        self.view.label_sxBVN.setText(str(self.model.offlineAnalysis.CoIA.sxBVN))
-        self.view.label_syBVN.setText(str(self.model.offlineAnalysis.CoIA.syBVN))
-        self.view.label_cxyBVN.setText(str(self.model.offlineAnalysis.CoIA.cxyBVN))
-
-        # Set crosshairs
-        x = float(self.model.offlineAnalysis.CoIA.xMLE)
-        y = float(self.model.offlineAnalysis.CoIA.yMLE)
-        v1 = (float(self.model.offlineAnalysis.CoIA.yMLE) -
-              float(self.model.offlineAnalysis.CoIA.syMLE))
-        v2 = (float(self.model.offlineAnalysis.CoIA.yMLE) +
-              float(self.model.offlineAnalysis.CoIA.syMLE))
-        h1 = (float(self.model.offlineAnalysis.CoIA.xMLE) -
-              float(self.model.offlineAnalysis.CoIA.sxMLE))
-        h2 = (float(self.model.offlineAnalysis.CoIA.xMLE) +
-              float(self.model.offlineAnalysis.CoIA.sxMLE))
-        self.vLineMLE.setData(x=[x, x], y=[v1, v2])
-        self.hLineMLE.setData(x=[h1, h2], y=[y, y])
-
-        x = float(self.model.offlineAnalysis.CoIA.xBVN)
-        y = float(self.model.offlineAnalysis.CoIA.yBVN)
-        v1 = (float(self.model.offlineAnalysis.CoIA.yBVN) -
-              float(self.model.offlineAnalysis.CoIA.syBVN))
-        v2 = (float(self.model.offlineAnalysis.CoIA.yBVN) +
-              float(self.model.offlineAnalysis.CoIA.syBVN))
-        h1 = (float(self.model.offlineAnalysis.CoIA.xBVN) -
-              float(self.model.offlineAnalysis.CoIA.sxBVN))
-        h2 = (float(self.model.offlineAnalysis.CoIA.xBVN) +
-              float(self.model.offlineAnalysis.CoIA.sxBVN))
-        self.vLineBVN.setData(x=[x, x], y=[v1, v2])
-        self.hLineBVN.setData(x=[h1, h2], y=[y, y])
-        self.view.pushButton_analyse.setText('Analyse')

@@ -1,30 +1,30 @@
 from monitor import monitor
-from PyQt4.QtCore import pyqtSignal
-from VELA_CLARA_RF_Modulator_Control import GUN_MOD_STATE
-#import VELA_CLARA_RF_Modulator_Control as mod
+import VELA_CLARA_RF_Modulator_Control
+
 # This class runs in a separate Qthread
 # so after instantiation you must call start on it (!)
-# Assuming connecting the interface works
+# At the moment its a very small simple class,
+# we may increase what it can do (i.e. reset the mod)
+# at a later date
 
 class gun_modulator(monitor):
+    init = VELA_CLARA_RF_Modulator_Control.init()
+    init.setQuiet()
 
-    gunModStateSignal = pyqtSignal(bool)
-
-    def __init__(self, gun_mod_controller, update_time = 100):
+    def __init__(self,param,gui_dict,gui_dict_key):
         monitor.__init__(self)
-        self.gun_mod_controller = gun_mod_controller
-        self.modulator = [ self.gun_mod_controller.getGunObjConstRef() ]
-        self.update_time = update_time
-        self.get_timer = QTimer()
-        self.get_timer.timeout.connect(self.is_gun_modulator_in_Trig)
-        self.get_timer.start( self.update_time )
-        self.currentState = self.modulator[0].state
+        self.param = param
+        self.gui_dict = [gui_dict]
+        self.gui_dict_key = gui_dict_key
+        self.gun = self.init.physical_GUN_MOD_Controller()
+        self.mod = [self.gun.getGunObjConstRef()]
+        self.gui_dict[0][self.gui_dict_key] = self.mod[0].state
+        print 'gun_modulator'
+        print 'gun_modulator'
+        print 'gun_modulator'
+        print 'gun_modulator'
+        print 'gun_modulator'
+        print 'gun_modulator'
+        print 'gun_modulator'
+        print 'gun_modulator'
 
-    def is_gun_modulator_in_Trig(self):
-        new_state = self.modulator[0].state
-        if self.currentState != new_state:
-            if self.modulator[0].state == GUN_MOD_STATE.Trig:
-                self.gunModInTrigSignal.emit(False)
-            else:
-                self.gunModInTrigSignal.emit(True)
-            self.currentState = new_state
