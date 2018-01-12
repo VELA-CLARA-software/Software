@@ -16,8 +16,7 @@ a:focus { color:#0000FF; text-decoration:underline }
 
 td {
   color:black;
-  font-family:sans-serif;
-  font-size:8pt; 
+  font-family:sans-serif; 
 }
 
 /* frame table */
@@ -33,7 +32,7 @@ td {
 /* standard formatting for logbook tabs */
 .tabs {
   font-family:sans-serif;
-  font-size:8pt;
+  font-size:10pt;
   background-color:white;
 }
 
@@ -100,7 +99,7 @@ td {
   border-top:1px solid #E0E0E0;
   border-left:1px solid #E0E0E0;
   color:white;
-  font-size:10pt;
+  font-size:medium;
   font-family:sans-serif;
   text-align:left;
 }
@@ -110,7 +109,7 @@ td {
   border-bottom:1px solid black;
   border-top:1px solid #E0E0E0;
   color:white;
-  font-size:10pt;
+  font-size:medium;
   font-family:sans-serif;
   text-align:center;
 }
@@ -135,17 +134,17 @@ td {
 
 .menu1 {
   text-align:left;
-  font-size:8pt;
+  font-size:10pt;
 }
 
 .menu2a {
   text-align:left;
-  font-size:8pt;
+  font-size:10pt;
 }
 
 .menu2b {
   text-align:right;
-  font-size:8pt;
+  font-size:10pt;
 }
 
 .menu3 {
@@ -156,7 +155,7 @@ td {
 
 .menu4 {
   text-align:right;
-  font-size:8pt;
+  font-size:10pt;
   vertical-align:middle;
 }
 
@@ -248,7 +247,7 @@ td {
   border-top:1px solid white;
   border-left:1px solid white;
   padding:1px;
-  font-size:8pt;
+  font-size:10pt;
   font-family:sans-serif;
 }
 
@@ -284,7 +283,7 @@ td {
   border-left:1px solid gray;
   border-bottom:1px solid gray;
   font-family:'lucida console',courier,monospace;
-  font-size:8pt;
+  font-size:10pt;
   padding:1px;
 }
 
@@ -298,13 +297,13 @@ td {
 
 .messagepre {
   font-family:'lucida console',courier,monospace;
-  font-size:8pt;
+  font-size:10pt;
 }
 
 /* attachment size */
 .bytes {
   font-family:'lucida console',courier,monospace;
-  font-size:8pt;
+  font-size:10pt;
 }
 
 /* summary display (threaded mode expand) */
@@ -340,7 +339,7 @@ td {
   padding:1px;
   background-color:#FFB0B0;
   text-align:center;
-  font-size:10pt;
+  font-size:medium;
 }
 
 /* notification (warning) */
@@ -351,7 +350,7 @@ td {
   border-left:1px solid white;
   background-color:#FFD070;
   text-align:center;
-  font-size:10pt;
+  font-size:small;
 }
 
 /* dialog boxes (login, delete, etc.) */
@@ -365,16 +364,16 @@ td {
 .dlgerror {
   background-color:red;
   padding:10px;
-  font-size:10pt;
+  font-size:small;
   text-align:center;
-  font-size:10pt;
+  font-size:medium;
   color:white;
 }
 
 .dlgtitle {
   background-color:#486090;
   color:white;
-  font-size:10pt;
+  font-size:medium;
   text-align:center;
   padding:5px;
 }
@@ -387,6 +386,6 @@ td {
 /* ELOG home page link at bottom of page */
 .bottomlink {
   font-family:sans-serif; 
-  font-size:6pt;
+  font-size:xx-small;
 }
 
