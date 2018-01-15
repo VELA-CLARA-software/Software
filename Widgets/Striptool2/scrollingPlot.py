@@ -69,6 +69,7 @@ class scrollingPlot(QtGui.QWidget):
         ''' create the scatterPlot as a grid layout '''
         self.scrollingPlot = QtGui.QVBoxLayout()
         self.plotThread = QtCore.QTimer()
+        self.paused = False
         self.generalPlot = generalplot
         self.records = self.generalPlot.records
         ''' Create generalPlot object '''
@@ -118,18 +119,18 @@ class scrollingPlot(QtGui.QWidget):
     def start(self, timer=1000):
         self.plotUpdate()
         self.plotThread.start(timer)
+        self.lastplottime = round(time.time(),2)
         self.plotThread.timeout.connect(self.plotUpdate)
 
     def plotUpdate(self):
         if self.isVisible():
-            if not hasattr(self,'lastplottime'):
-                self.lastplottime = round(time.time(),2)
             if not self.paused:
                 self.doCurveUpdate.emit()
                 lastplottime = round(time.time(),2)
                 self.timeOffset = lastplottime-self.lastplottime
                 for name in self.records:
                     self.records[name]['curve'].clearCurve()
+                self.scrollingPlotPlot.plot.vb.disableAutoRange(axis='x')
                 self.scrollingPlotPlot.plot.vb.translateBy(x=self.timeOffset)
                 for name in self.records:
                     self.records[name]['curve'].drawCurve()
@@ -138,7 +139,7 @@ class scrollingPlot(QtGui.QWidget):
 
     def pausePlotting(self, value=True):
         self.paused = value
-        self.plotWidget.togglePause(self.paused)
+        # self.plotWidget.togglePause(self.paused)
 
     def setPlotScale(self, timescale):
         self.timescale = timescale
@@ -151,6 +152,7 @@ class scrollingPlotPlot(QtGui.QWidget):
 
     plotUpdated = QtCore.pyqtSignal()
     newaxis = QtCore.pyqtSignal()
+    yAxisScaled = QtCore.pyqtSignal(float, float)
 
     def __init__(self, scrollingplot, parent = None):
         super(scrollingPlotPlot, self).__init__(parent=parent)
@@ -165,19 +167,29 @@ class scrollingPlotPlot(QtGui.QWidget):
         self.viewboxes = {}
         self.namedaxes = {}
         self.createPlot()
+        self.yScale = 1
+        self.yPos = 1
 
     ''' This creates a PyQtGraph plot object (self.plot) and instantiates the bottom axis to be a CAxisTime axis '''
     def createPlot(self):
         self.date_axis = HAxisTime(orientation = 'bottom')
         self.scrollingPlot.timeChangeSignal.connect(self.date_axis.updateTimeOffset)
         self.leftaxis = pg.AxisItem("left")
-        self.plot = self.plotWidget.addPlot(row=0,col=50, autoDownsample=True, clipToView=True, antialias=False, downsampleMethod='peak', axisItems={'bottom':self.date_axis})
-        self.plot.vb.setMouseEnabled(y=False)
+        self.plot = self.plotWidget.addPlot(row=0,col=50, autoDownsample=True, clipToView=True, antialias=False, downsampleMethod='subsample', axisItems={'bottom':self.date_axis})
+        self.plot.vb.setMouseEnabled()
+        self.plot.vb.sigYRangeChanged.connect(self.vbYRangeChanged)
         self.plot.disableAutoRange(False)
         self.plot.setRange(xRange=[-0.5,1.5])
         self.plot.showAxis('left', False)
         self.plot.mouseOver = False
         self.plot.showGrid(x=True, y=True)
+
+    def vbYRangeChanged(self,x,y):
+        pos = (y[1]+y[0])/2 - self.yPos
+        scale = (y[1]-y[0])/self.yScale
+        self.yAxisScaled.emit(scale, pos)
+        self.yScale = (y[1]-y[0])
+        self.yPos = (y[1]+y[0])/2
 
     ''' Sets the timescale of the plotting data '''
     def setPlotScale(self, timescale, padding=0.0):
@@ -206,6 +218,7 @@ class scrollingPlotPlot(QtGui.QWidget):
         viewbox = pg.ViewBox()
         axis.linkToView(viewbox)
         viewbox.setXLink(self.plot.vb)
+        # viewbox.setYLink(self.plot.vb)
         self.namedaxes[name] = [axis, viewbox]
         if not verticalRange == None:
             if logMode:
@@ -292,36 +305,34 @@ class curve(QtCore.QObject):
         self.records = self.plot.records
         self.name = name
         self.vb = self.records[name]['viewbox']
-        # self.curve = pg.PlotDataItem()
-        # self.vb.addItem(self.curve)
-        self.scene = self.vb.scene()
-        self.lines = MultiLine()
-        # self.lines.setCacheMode(QtGui.QGraphicsItem.DeviceCoordinateCache)
-        self.lines10 = MultiLine()
-        self.lines10.setCacheMode(QtGui.QGraphicsItem.DeviceCoordinateCache)
-        self.lines10.setVisible(False)
-        self.lines100 = MultiLine()
-        self.lines100.setCacheMode(QtGui.QGraphicsItem.DeviceCoordinateCache)
-        self.lines100.setVisible(False)
-        self.lines1000 = MultiLine()
-        self.lines1000.setCacheMode(QtGui.QGraphicsItem.DeviceCoordinateCache)
-        self.lines1000.setVisible(False)
+        self.plot.yAxisScaled.connect(self.scaleYAxis)
+        self.curve = pg.PlotDataItem(autoDownsample=True,clipToView=True)
+        self.curve.setPen(pg.mkPen(self.records[self.name]['pen']))
+        self.curve10 = pg.PlotDataItem(autoDownsample=True,clipToView=True)
+        self.curve10.setPen(pg.mkPen(**{'color': self.records[self.name]['pen'], 'dash': [2,2], 'width': 2}))
+        self.curve100 = pg.PlotDataItem(autoDownsample=True,clipToView=True)
+        self.curve100.setPen(pg.mkPen(**{'color': self.records[self.name]['pen'], 'dash': [2,2], 'width': 3}))
+        self.curve1000 = pg.PlotDataItem(autoDownsample=True,clipToView=True)
+        self.curve1000.setPen(pg.mkPen(**{'color': self.records[self.name]['pen'], 'dash': [3,3], 'width': 4}))
+        self.vb.addItem(self.curve)
+        self.vb.addItem(self.curve10)
+        self.vb.addItem(self.curve100)
+        self.vb.addItem(self.curve1000)
         self.points = collections.deque(maxlen=self.records[name]['maxlength'])
         self.points10 = collections.deque(maxlen=self.records[name]['maxlength'])
         self.points100 = collections.deque(maxlen=self.records[name]['maxlength'])
         self.points1000 = collections.deque(maxlen=self.records[name]['maxlength'])
-        self.lineOn = False
-        self.line10On = False
-        self.line100On = False
-        self.line1000On = False
-        self.timeOffset = 0
-        self.visibility = {'lines': True, 'lines10': False, 'lines100': False, 'lines1000': False}
-        # self.plot.scrollingPlot.timeChangeSignal.connect(self.updateTimeOffset)
+        self.visibility = {'curve': True, 'curve10': False, 'curve100': False, 'curve1000': False}
         self.plot.records[name]['worker'].recordLatestValueSignal.connect(lambda x: self.updateData(x, self.points))
         self.plot.records[name]['worker'].recordMean10Signal.connect(lambda x: self.updateData(x, self.points10))
         self.plot.records[name]['worker'].recordMean100Signal.connect(lambda x: self.updateData(x, self.points100))
         self.plot.records[name]['worker'].recordMean1000Signal.connect(lambda x: self.updateData(x, self.points1000))
-        self.path = None
+
+    def scaleYAxis(self, scale, pos):
+        newpos = self.vb.state['viewRange'][1]
+        newscale = newpos[1] - newpos[0]
+        # self.vb.translateBy(y=pos*newscale)
+        self.vb.scaleBy(y=scale, center=self.points1000[-1])
 
     def stop(self):
         try:
@@ -335,8 +346,7 @@ class curve(QtCore.QObject):
 
     def setVisibility(self, linename, visible):
         self.visibility[linename] = visible
-        # print self.visibility
-        if linename is 'lines':
+        if linename is 'curve':
             if visible is False:
                 for k in self.visibility.keys():
                     getattr(self, k).setVisible(False)
@@ -345,68 +355,36 @@ class curve(QtCore.QObject):
                     getattr(self, k).setVisible(self.visibility[k])
         else:
             self.visibility[linename] = visible
-            if self.visibility['lines'] is True:
+            if self.visibility['curve'] is True:
                 getattr(self, linename).setVisible(visible)
 
 
     def changeViewbox(self, viewbox):
         name = self.name
-        # self.vb.removeItem(self.curve)
         self.vb = self.records[name]['viewbox']
-        # self.vb.addItem(self.curve)
         self.lineOn = False
 
     def clearCurve(self):
-        self.vb.removeItem(self.lines)
-        self.lineOn = False
+        pass
 
     def drawCurve(self):
-        self.redrawLines(self.points, self.lines, 'lineOn', {'color': self.records[self.name]['pen']})
+        self.redrawLines(self.points, self.curve, 'curve', {'color': self.records[self.name]['pen']})
+        self.redrawLines(self.points10, self.curve10, 'curve10', {'color': self.records[self.name]['pen'], 'dash': [2,2], 'width': 2})
+        self.redrawLines(self.points100, self.curve100, 'curve100', {'color': self.records[self.name]['pen'], 'dash': [2,2], 'width': 3})
+        self.redrawLines(self.points1000, self.curve1000, 'curve1000', {'color': self.records[self.name]['pen'], 'dash': [3,3], 'width': 4})
 
-#self.scrollingPlotPlot.plot.vb.translateBy(x=self.timeOffset)
-    def redrawLines(self, points, line, lineOn, pen):
-        if line.isVisible() and len(points) > 0:
-            path = QtGui.QPainterPath(points[0])
-            line.setNewPath(path)
-            self.vb.translateBy(x=self.timeOffset/4.0)
-            for point in points:
-                path.lineTo(point)
-            line.setNewPath(path)
-            if getattr(self, lineOn) == False:
-                line.setPen(pg.mkPen(**pen))
-                self.vb.addItem(line)
-                # print 'vb.addedItems = ', self.vb.addedItems
-                setattr(self, lineOn, True)
-
-    def updateTimeOffset(self, time):
-        self.timeOffset = time
-        self.redrawLines(self.points, self.lines, 'lineOn', {'color': self.records[self.name]['pen']})
-        self.redrawLines(self.points10, self.lines10, 'line10On', {'color': self.records[self.name]['pen'], 'dash': [2,2], 'width': 2})
-        self.redrawLines(self.points100, self.lines100, 'line100On', {'color': self.records[self.name]['pen'], 'dash': [2,2], 'width': 3})
-        self.redrawLines(self.points1000, self.lines1000, 'line1000On', {'color': self.records[self.name]['pen'], 'dash': [3,3], 'width': 4})
+    def redrawLines(self, points, curve, curvename, pen):
+        if curve.isVisible() and self.visibility[curvename] is True and len(points) > 1:
+            curve.setData(np.array(points))
 
     def changePenColour(self):
-        self.lines.setPen(pg.mkPen(color=self.records[self.name]['pen']))
-        self.lines10.setPen(pg.mkPen(color=self.records[self.name]['pen'], dash=[1,1], width=2))
-        self.lines100.setPen(pg.mkPen(color=self.records[self.name]['pen'], dash=[2,2], width=3))
-        self.lines1000.setPen(pg.mkPen(color=self.records[self.name]['pen'], dash=[3,3], width=4))
+        self.curve.setPen(pg.mkPen(color=self.records[self.name]['pen']))
+        self.curve10.setPen(pg.mkPen(color=self.records[self.name]['pen'], dash=[1,1], width=2))
+        self.curve100.setPen(pg.mkPen(color=self.records[self.name]['pen'], dash=[2,2], width=3))
+        self.curve1000.setPen(pg.mkPen(color=self.records[self.name]['pen'], dash=[3,3], width=4))
 
     ''' This updates the curve points based on the plot type and using the data from the timefilter function '''
     def updateData(self, data, points):
         val = data[1] if not self.records[self.name]['logScale'] else math.log(data[1],10)
-        newpoint = QtCore.QPointF(data[0], val)
+        newpoint = (data[0], val)
         points.append(newpoint)
-
-class MultiLine(QtGui.QGraphicsPathItem):
-    def __init__(self, log=False):
-        """x and y are 1D arrays of shape (Nplots, Nsamples)"""
-        super(MultiLine, self).__init__()
-
-    def setNewPath(self, path):
-        self.path = path
-        self.setPath(self.path)
-
-    def shape(self): # override because QGraphicsPathItem.shape is too expensive.
-        return QtGui.QGraphicsItem.shape(self)
-    def boundingRect(self):
-        return self.path.boundingRect()

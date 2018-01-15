@@ -2,19 +2,45 @@ import pyqtgraph as pg
 from pyqtgraph.Qt import QtGui, QtCore
 import sys, time, os, datetime
 # from PyQt5.QtCore import QtCore.pyqtSignal, Qt
-from PyQt4 import QtCore
+from PyQt4 import QtCore, QtGui
 import pyqtgraph.parametertree.parameterTypes as pTypes
 from pyqtgraph.parametertree import Parameter, ParameterTree, ParameterItem, registerParameterType
 
-class plotLegend(ParameterTree):
+class plotLegend(QtGui.QWidget):
+
+    pausePlottingSignal = QtCore.pyqtSignal(bool)
+
+    def __init__(self, generalplot):
+        super(plotLegend, self).__init__()
+        self.tree = plotLegendTree(generalplot)
+        self.layout = QtGui.QVBoxLayout()
+        self.layout.addWidget(self.tree)
+        self.buttonLayout = QtGui.QHBoxLayout()
+        self.pauseButton = QtGui.QPushButton('Pause')
+        self.pauseButton.setCheckable(True)
+        self.pauseButton.clicked.connect(self.pauseButtonClicked)
+        self.buttonLayout.addWidget(self.pauseButton)
+        self.layout.addLayout(self.buttonLayout)
+        self.setLayout(self.layout)
+
+    def pauseButtonClicked(self, value):
+        if self.pauseButton.text() == 'Pause':
+            self.pauseButton.setText('Resume')
+            self.pausePlottingSignal.emit(True)
+        else:
+            self.pauseButton.setText('Pause')
+            self.pausePlottingSignal.emit(False)
+
+class plotLegendTree(ParameterTree):
 
     fftselectionchange = QtCore.pyqtSignal('QString',bool)
     histogramplotselectionchange = QtCore.pyqtSignal('QString',bool)
     axisselectionchanged = QtCore.pyqtSignal('QString')
     legendselectionchanged = QtCore.pyqtSignal(list)
+    savecurve = QtCore.pyqtSignal(str)
 
     def __init__(self, generalplot):
-        super(plotLegend, self).__init__(generalplot)
+        super(plotLegendTree, self).__init__(generalplot)
         ''' Create Parameter Tree'''
         self.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
         self.selectionModel().selectionChanged.connect(self.enableSelectedAxis)
@@ -168,7 +194,7 @@ class plotLegend(ParameterTree):
                     {'name': 'FFT_Plot', 'title': 'Plot FFT', 'type': 'bool', 'value': False, 'tip': "Show or Remove the FFT Plot"},
                     {'name': 'Histogram_Plot', 'title': 'Plot Histogram', 'type': 'bool', 'value': False, 'tip': "Show or Remove the Histogram Plot"},
                 ]},
-                # {'name': 'AutoScale', 'type': 'action', 'tip': "AutoScale Axis"},
+                {'name': 'Save_Curve', 'type': 'action', 'tip': "Save Curve Data"},
             ]}
         ]
         p = Parameter.create(parent=self, name='params', type='group', children=params)
@@ -180,18 +206,18 @@ class plotLegend(ParameterTree):
         self.proxySTD[name] = pg.SignalProxy(self.records[name]['worker'].recordStandardDeviationSignal, rateLimit=1, slot=lambda x: pChild.child('Statistics').child('Standard Deviation').setValue(x[0]))
         self.proxyMin[name] = pg.SignalProxy(self.records[name]['worker'].recordMinSignal, rateLimit=1, slot=lambda x: pChild.child('Statistics').child('Min').setValue(x[0]))
         self.proxyMax[name] = pg.SignalProxy(self.records[name]['worker'].recordMaxSignal, rateLimit=1, slot=lambda x: pChild.child('Statistics').child('Max').setValue(x[0]))
-        pChild.child('Statistics').child('Mean10').sigValueChanged.connect(lambda x: self.records[name]['curve'].setVisibility('lines10', x.value()))
-        pChild.child('Statistics').child('Mean100').sigValueChanged.connect(lambda x: self.records[name]['curve'].setVisibility('lines100', x.value()))
-        pChild.child('Statistics').child('Mean1000').sigValueChanged.connect(lambda x: self.records[name]['curve'].setVisibility('lines1000', x.value()))
+        pChild.child('Statistics').child('Mean10').sigValueChanged.connect(lambda x: self.records[name]['curve'].setVisibility('curve10', x.value()))
+        pChild.child('Statistics').child('Mean100').sigValueChanged.connect(lambda x: self.records[name]['curve'].setVisibility('curve100', x.value()))
+        pChild.child('Statistics').child('Mean1000').sigValueChanged.connect(lambda x: self.records[name]['curve'].setVisibility('curve1000', x.value()))
         pChild.child('Statistics').child('ClearStats').sigActivated.connect(lambda x: self.records[name]['worker'].resetStatistics(True))
         self.setupAxisList(name, pChild)
         pChild.child('Options').child('Show_Axis').sigValueChanged.connect(lambda x: self.records[name]['axis'].setVisible(x.value()))
-        pChild.child('Options').child('Show_Plot').sigValueChanged.connect(lambda x: self.records[name]['curve'].setVisibility('lines', x.value()))
+        pChild.child('Options').child('Show_Plot').sigValueChanged.connect(lambda x: self.records[name]['curve'].setVisibility('curve', x.value()))
         pChild.child('Options').child('FFT_Plot').sigValueChanged.connect(lambda x: self.fftselectionchange.emit(name, x.value()))
         pChild.child('Options').child('Histogram_Plot').sigValueChanged.connect(lambda x: self.histogramplotselectionchange.emit(name, x.value()))
         self.records[name]['viewbox'].sigStateChanged.connect(lambda x: pChild.child('Options').child('AxisAutoScale').setValue(x.state['autoRange'][1]))
         pChild.child('Options').child('AxisAutoScale').sigValueChanged.connect(lambda x: self.records[name]['viewbox'].enableAutoRange(y=x.value()))
-        # pChild.child('AutoScale').sigActivated.connect(lambda x: self.records[name]['viewbox'].autoRange())
+        pChild.child('Save_Curve').sigActivated.connect(lambda x: self.savecurve.emit(str(name)))
         self.addParameters(p, showTop=False)
         header = self.findItems(name,QtCore.Qt.MatchContains | QtCore.Qt.MatchRecursive)[0]
         header.setSelected(False)

@@ -60,15 +60,8 @@ class striptool_Demo(QMainWindow):
         fftPlotAction.triggered.connect(self.addFFTPlot)
 
         self.setWindowTitle("striptool_Demo")
-        self.statusBar = QStatusBar()
-        self.setStatusBar(self.statusBar)
         menubar = self.menuBar()
         fileMenu = menubar.addMenu('&File')
-        fileMenu.addAction(exitAction)
-
-        # self.toolbar = self.addToolBar('')
-        # self.toolbar.addAction(scatterPlotAction)
-        # self.toolbar.addAction(fftPlotAction)
 
         ''' Initiate logger (requires loggerWidget - comment out if not available)'''
         # self.logwidget1 = lw.loggerWidget([logger,striptool.logger])
@@ -87,11 +80,22 @@ class striptool_Demo(QMainWindow):
         self.legend = self.generalplot.legend()
         self.signaltable = signaltable.signalTable(parent=self.generalplot)#, VELAMagnetController=Vmagnets, CLARAMagnetController=Cmagnets, BPMController=bpms, GeneralController=general)
 
+        reloadSettingsAction = QAction('Reload Settings', self)
+        reloadSettingsAction.setStatusTip('Reload Settings YAML File')
+        reloadSettingsAction.triggered.connect(self.signaltable.reloadSettings)
+        fileMenu.addAction(reloadSettingsAction)
+
+        saveAllDataAction = QAction('Save Data', self)
+        saveAllDataAction.setStatusTip('Save All Data')
+        saveAllDataAction.triggered.connect(self.generalplot.saveAllData)
+        fileMenu.addAction(saveAllDataAction)
+        fileMenu.addAction(exitAction)
+
         self.enabledPlotNames = []
-        self.legend.legendselectionchanged.connect(self.addSignalToFFTHistogramPlots)
+        self.legend.tree.legendselectionchanged.connect(self.addSignalToFFTHistogramPlots)
 
         ''' Create some common axes to plot similar signals with '''
-        self.generalplot.createAxis(name='logsmall', color='k',logMode=True, verticalRange=[1e-10, 1e-7])
+        # self.generalplot.createAxis(name='logsmall', color='k',logMode=True, verticalRange=[1e-10, 1e-7])
         # self.generalplot.createAxis(name='logbig', color='b', logMode=True, verticalRange=[1e3, 1e5])
         # self.generalplot.createAxis(name='smallnumbers', color='g', logMode=False, verticalRange=[-5,10])
 
@@ -99,11 +103,11 @@ class striptool_Demo(QMainWindow):
             The 'pen' argument sets the color of the curves
                 - see <http://www.pyqtgraph.org/documentation/style.html>'''
         self.generalplot.addSignal(name='signal1', pen='g', timer=1.0/50.0, function=self.createRandomSignal, args=[100,10,22])
-        self.generalplot.addSignal(name='signal2', pen='r', timer=1.0/10.0, function=self.createRandomSignal, args=[1e-8, 1e-9,4], axis='logsmall')
-        self.generalplot.addSignal(name='signal3', pen='b', timer=1.0/10.0, function=self.createRandomSignal, args=[1e4, 1e1, 2])
-        self.generalplot.addSignal(name='signal4', pen='c', timer=1.0/20.0, function=self.createRandomSignal, args=[1,0.5,7.8], axis='smallnumbers')
-        # self.generalplot.addSignal(name='signal5', pen='m', timer=1.0/10.0, function=self.createRandomSignal, args=[3,2,0.87], axis='smallnumbers')
-        # self.generalplot.addSignal(name='signal6', pen='y', timer=1.0/10.0, function=self.createRandomSignal, args=[5,2,2.35], axis='smallnumbers')
+        # self.generalplot.addSignal(name='signal2', pen='r', timer=1.0/10.0, function=self.createRandomSignal, args=[1e-8, 1e-9,4], logScale=True)
+        # self.generalplot.addSignal(name='signal3', pen='b', timer=1.0/10.0, function=self.createRandomSignal, args=[1e4, 1e1, 2])
+        # self.generalplot.addSignal(name='signal4', pen='c', timer=1.0/20.0, function=self.createRandomSignal, args=[1,0.5,7.8])
+        # self.generalplot.addSignal(name='signal5', pen='m', timer=1.0/10.0, function=self.createRandomSignal, args=[3,2,0.87])
+        # self.generalplot.addSignal(name='signal6', pen='y', timer=1.0/10.0, function=self.createRandomSignal, args=[5,2,2.35])
 
 
         # self.fftplot.addPlot('signal2')
@@ -116,7 +120,6 @@ class striptool_Demo(QMainWindow):
         #     n = 10000
         #     for i in range(n):
         #         self.generalplot.records[name]['signal'].timer.dataReady.emit([t-(n/10)+i/10.0,self.createRandomSignal(moffset[0], moffset[1], moffset[2],t-(n/10)+i/10.0)])
-        # #
 
         ''' To remove a signal, reference it by name or use the in-built controls'''
         # sp.removeSignal(name='signal1')
@@ -181,7 +184,7 @@ class striptool_Demo(QMainWindow):
 
         ''' This starts the plotting timer (by default at 1 Hz) '''
         self.generalplot.start()
-        self.scrollingplot.start()
+        self.scrollingplot.start(100)
         self.fftplot.start()
         # self.scatterplot.start()
         self.histogramplot.start()
@@ -223,8 +226,8 @@ class striptool_Demo(QMainWindow):
             self.histogramplot.selectionChange(name, True)
         for name in self.enabledPlotNames:
             if name not in names:
-                self.fftplot.selectionChange(name, self.legend.isFFTEnabled(name))
-                self.histogramplot.selectionChange(name, self.legend.isHistogramEnabled(name))
+                self.fftplot.selectionChange(name, self.legend.tree.isFFTEnabled(name))
+                self.histogramplot.selectionChange(name, self.legend.tree.isHistogramEnabled(name))
 
     def pausePlots(self, parentwidget):
         widgets = parentwidget.findChildren((striptool.stripPlot))

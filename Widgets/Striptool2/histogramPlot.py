@@ -110,13 +110,12 @@ class histogramPlot(QtGui.QWidget):
         self.plotThread.timeout.connect(self.plotUpdate)
 
     def plotUpdate(self):
-        if self.isVisible():
+        if self.isVisible() and not self.paused:
             for curve in self.histogramPlotCurves.values():
                 curve.update()
 
     def pausePlotting(self, value=True):
         self.paused = value
-        self.plotWidget.togglePause(self.paused)
 
     def addCurve(self, name):
         name = str(name)
@@ -146,12 +145,11 @@ class histogramPlotCurve(QtCore.QObject):
         super(histogramPlotCurve, self).__init__(parent=parent)
         self.parent=parent
         self.histogramplot = histogramplot
-        self.color = records['pen']
+        self.recordspen = records['pen']
         self.data = records['data']
         self.mean = records['worker'].mean
         self.stddev = records['worker'].stddeviation
         self.doingPlot = False
-        self.paused = False
         self.paused = False
         self.numberBins = 10
         self.decimateScale = 1000
@@ -182,6 +180,9 @@ class histogramPlotCurve(QtCore.QObject):
                 x2 = x2 - mean
                 x2 = x2 / np.std(x2)
                 x2 = x2 + mean
-            self.plot.setData({'x': x2, 'y': y2}, pen=self.color, stepMode=True, fillLevel=0, fillBrush=self.color)
+            r,g,b,a = pg.colorTuple(pg.mkColor(self.recordspen))
+            self.pencolor = pg.mkColor(r,g,b,255)
+            self.brushcolor = pg.mkColor(r,g,b,64)
+            self.plot.setData({'x': x2, 'y': y2}, pen=self.pencolor, stepMode=True, fillLevel=0, fillBrush=self.brushcolor)
         self.doingPlot = False
         # self.histogramPlot.enableAutoRange()
