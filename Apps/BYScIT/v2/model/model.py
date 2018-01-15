@@ -16,9 +16,11 @@ class Model():
         # self.imageAnalysis.setVerbose()
         self.cameras = self.imageAnalysis.offline_CLARA_Camera_IA_Controller()
         self.offlineAnalysis = self.cameras.getOfflineIARef()
+        self.fullName = 'None'
         print("Model Initialized")
 
     def getImage(self, fullName):
+        self.fullName = fullName
         # Get image type by read last part of the image name
         # IF and image is in RGB/RGBA Format
         imageType = fullName.split('.')[-1]

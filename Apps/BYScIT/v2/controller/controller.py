@@ -1,7 +1,10 @@
+from __future__ import division
 from PyQt4 import QtCore
 from PyQt4 import QtGui
+from PyQt4.QtGui import QApplication
 import time
 import sys
+import os
 import numpy as np
 import pyqtgraph as pg
 import model.model as modelFunctions
@@ -11,12 +14,16 @@ sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\stage
 import VELA_CLARA_Camera_IA_Control as ia
 
 
-class Controller():
+class Controller(QtCore.QThread):
     def __init__(self, view, model):
         # Define model and view
+        QtCore.QThread.__init__(self)
         self.view = view
         self.model = model
-
+        self.backgroundData = modelFunctions.Model()
+        self.listOfImages = []
+        self.listOfBkgrndImages = []
+        self.progress = 0
         pg.setConfigOptions(antialias=True)
         # Image
         monitor = pg.GraphicsView()
@@ -39,6 +46,7 @@ class Controller():
         self.w = gl.GLViewWidget()
         self.w.setCameraPosition(distance=300, azimuth=270)
         self.imarray = np.zeros((2560, 2160))
+        self.imarray[0][0]=1
         x = np.linspace(0, 256, 256)
         y = np.linspace(0, 216, 216)
         z = np.divide(self.imarray[0:256, 0:216], 65535)
@@ -60,8 +68,6 @@ class Controller():
         #self.customMaskROI.replaceHandle(handle[0],handle[1])
         self.customMaskROI.addScaleHandle([0.5, 1], [0.5, 0.5])
         self.customMaskROI.addScaleHandle([0, 0.5], [0.5, 0.5])
-        # Isocurve drawing
-
 
 
         self.ImageBox = layout.addPlot(lockAspect=True, colspan=1, rowspan=1)
@@ -122,10 +128,93 @@ class Controller():
         self.view.checkBox_useCustomMask.stateChanged.connect(self.useCustomMask)
         self.view.checkBox_showSaturatedPixels.stateChanged.connect(self.showSatPix)
         self.view.checkBox_show3DLens.stateChanged.connect(self.show3DLens)
+        self.view.pushButton_saveCurrentData.clicked.connect(self.saveCurrentData)
+        self.view.pushButton_saveCurrentData.clicked.connect(self.saveCurrentData)
+        self.view.pushButton_loadImagesBatch.clicked.connect(self.getListOfImages)
+        self.view.pushButton_loadBkgrndImagesBatch.clicked.connect(self.getListOfBackgroundImagesImages)
+        self.view.pushButton_analyseBatch.clicked.connect(self.start)#self.batchAnalyse)
         # Update View every 100 ms
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.update)
-        self.timer.start(100)
+        self.timer.start(10)
+
+    def run(self):
+        for i in range(self.listOfImages.count()):
+
+            self.model.getImage(str(self.listOfImages[i]))
+            image = np.transpose(np.flip(self.model.imageData, 1))
+            image = image.flatten().tolist()
+            im = ia.std_vector_double()
+            im.extend(image)
+            self.model.offlineAnalysis.loadImage(im, self.model.fullName, self.model.imageHeight, self.model.imageWidth)
+            if len(self.listOfBkgrndImages) > 0:
+                self.model.offlineAnalysis.useBackground(True)
+                if self.backgroundData.imageHeight != self.model.imageHeight or self.backgroundData.imageWidth != self.model.imageWidth:
+                    print 'ERROR: Image and Background are not the same dimensions!'
+                    return
+                if len(self.listOfBkgrndImages)==1:
+                    self.backgroundData.getImage(str(self.listOfBkgrndImages[0]))
+                elif len(self.listOfBkgrndImages) == len(self.listOfImages):
+                    self.backgroundData.getImage(str(self.listOfBkgrndImages[i]))
+                else:
+                    print "ERROR: I correct number of background images! Either have one or an equal amount to the number of images being analysed in the batch."
+                    return
+                bk = np.transpose(np.flip(self.backgroundData.imageData, 1))
+                bk = bk.flatten().tolist()
+                b = ia.std_vector_double()
+                b.extend(bk)
+                self.model.offlineAnalysis.loadBackgroundImage(b, self.backgroundData.fullName)
+            else:
+                self.model.offlineAnalysis.useBackground(False)
+            # This is where we will house expert settings
+            self.model.offlineAnalysis.useESMask(True)
+            if self.view.checkBox_useCustomMask.isChecked() is True:
+                self.model.offlineAnalysis.setESMask(int(self.customMaskROI.pos()[0]+self.customMaskROI.size()[0]/2),
+                                                     int(self.customMaskROI.pos()[1]+self.customMaskROI.size()[0]/2),
+                                                     int(self.customMaskROI.size()[0]/2),
+                                                     int(self.customMaskROI.size()[1]/2))
+            else:
+                # make mask span full width of image
+                x = int(self.model.imageWidth / 2)
+                y = int(self.model.imageHeight / 2)
+                self.model.offlineAnalysis.setESMask(x, y, x, y)
+
+            if self.view.checkBox_rollingAverage.isChecked() is True:
+                self.model.offlineAnalysis.useESFilter(True)
+                self.model.offlineAnalysis.setESFilter(int(self.view.lineEdit_rollingAverage.text()))
+            else:
+                self.model.offlineAnalysis.useESFilter(False)
+
+            if self.view.checkBox_rSquared.isChecked() is True:
+                self.model.offlineAnalysis.useESRRThreshold(True)
+                self.model.offlineAnalysis.setESRRThreshold(float(self.view.lineEdit_rSquared.text()))
+            else:
+                self.model.offlineAnalysis.useESRRThreshold(False)
+
+            if self.view.checkBox_lowestPixValue.isChecked() is True:
+                self.model.offlineAnalysis.useESDirectCut(True)
+                self.model.offlineAnalysis.setESDirectCut(float(self.view.lineEdit_lowestPixelValue.text()))
+            else:
+                self.model.offlineAnalysis.useESDirectCut(False)
+
+            self.model.offlineAnalysis.analyse()
+
+            while self.model.offlineAnalysis.isAnalysing():
+                time.sleep(1)
+            self.model.offlineAnalysis.writeData(str(self.view.lineEdit_dataFileNameBatch.text()))
+
+            self.progress=100*((i+1)/self.listOfImages.count())
+            self.view.progressBar_batchMode.setValue(self.progress)
+    def getListOfImages(self):
+        self.listOfImages = QtGui.QFileDialog.getOpenFileNames(self.view.centralwidget, 'Images')
+
+    def getListOfBackgroundImagesImages(self):
+        self.listOfBkgrndImagesImages = QtGui.QFileDialog.getOpenFileNames(self.view.centralwidget, 'Backgrounds')
+
+    def saveCurrentData(self):
+        self.view.pushButton_saveCurrentData.setText("Saving...")
+        self.model.offlineAnalysis.writeData(str(self.view.lineEdit_dataFileName.text()))
+        self.view.pushButton_saveCurrentData.setText("Save Current Results")
 
     def show3DLens(self):
         if self.view.checkBox_show3DLens.isChecked() is True:
@@ -166,6 +255,9 @@ class Controller():
         self.xProfBox.clear()
         self.view.pushButton_loadImage.setText('Loading...')
         filename = QtGui.QFileDialog.getOpenFileName(self.view.centralwidget, 'Image')
+        if str(filename)=='':
+            self.view.pushButton_loadImage.setText('Load Image')
+            return
         self.model.getImage(str(filename))
         self.Image.setImage(self.model.imageData)
         self.saturatedPixelImage.setImage(self.model.imageData, opacity=0.4)
@@ -187,7 +279,9 @@ class Controller():
     def openBkgrndImageDir(self):
         self.view.pushButton_loadBkgrnd.setText('Loading...')
         filename = QtGui.QFileDialog.getOpenFileName(self.view.centralwidget, 'Background Image')
-        self.backgroundData = modelFunctions.Model()
+        if str(filename)=='':
+            self.view.pushButton_loadBkgrnd.setText('Load Background')
+            return
         self.backgroundData.getImage(str(filename))
         self.bkgrndImage.setImage(self.backgroundData.imageData)
         self.view.pushButton_loadBkgrnd.setText('Load Background')
@@ -214,8 +308,14 @@ class Controller():
             self.view.label_customRY.setText('YRad: ' + str(int(self.customMaskROI.size()[1]/2)))
         if self.model.offlineAnalysis.isAnalysing()==True:
             self.view.pushButton_analyse.setText('Analysing ...')
+            self.view.pushButton_analyseBatch.setText('Batch Analysing ...')
+            self.view.pushButton_analyse.setEnabled(False)
+            self.view.pushButton_analyseBatch.setEnabled(False)
         else:
             self.view.pushButton_analyse.setText('Analyse')
+            self.view.pushButton_analyseBatch.setText('Batch Analyse')
+            self.view.pushButton_analyse.setEnabled(True)
+            self.view.pushButton_analyseBatch.setEnabled(True)
         self.view.label_xMLE.setText(str(self.model.offlineAnalysis.CoIA.xMLE))
         self.view.label_yMLE.setText(str(self.model.offlineAnalysis.CoIA.yMLE))
         self.view.label_sxMLE.setText(str(self.model.offlineAnalysis.CoIA.sxMLE))
@@ -260,7 +360,7 @@ class Controller():
         im = ia.std_vector_double()
         im.extend(image)
 
-        self.model.offlineAnalysis.loadImage(im, self.model.imageHeight, self.model.imageWidth)
+        self.model.offlineAnalysis.loadImage(im, self.model.fullName, self.model.imageHeight, self.model.imageWidth)
         if self.view.checkBox_useBackground.isChecked() is True:
             self.model.offlineAnalysis.useBackground(True)
 
@@ -268,7 +368,10 @@ class Controller():
             bk = bk.flatten().tolist()
             b = ia.std_vector_double()
             b.extend(bk)
-            self.model.offlineAnalysis.loadBackgroundImage(b)
+            self.model.offlineAnalysis.loadBackgroundImage(b, self.backgroundData.fullName)
+            if self.backgroundData.imageHeight != self.model.imageHeight or self.backgroundData.imageWidth != self.model.imageWidth:
+                print 'ERROR: Image and Background are not the same dimensions!'
+                return
         else:
             self.model.offlineAnalysis.useBackground(False)
         # This is where we will house expert settings

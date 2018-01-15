@@ -1,0 +1,23 @@
+<p><strong>Week Beginning:</strong>&nbsp;</p>
+<p><strong>Role: </strong><em>[AP/RF/Technical Systems etc.]</em></p>
+<hr />
+<p><strong>Tasks for the Week:</strong></p>
+<ol>
+	<li>&nbsp;</li>
+</ol>
+<hr />
+<p><strong>Major Problems:</strong></p>
+<ul>
+	<li>&nbsp;</li>
+</ul>
+<hr />
+<p><strong>Actions for the following Week:</strong></p>
+<ol>
+	<li>&nbsp;</li>
+</ol>
+<hr />
+<p><strong>Other Notes:</strong></p>
+<ul>
+	<li>&nbsp;</li>
+</ul>
+
