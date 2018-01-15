@@ -16,8 +16,8 @@ class rf_condition_data(dat.rf_condition_data_base):
         dat.rf_condition_data_base.__init__(self)
         self.llrf = None
 
-        plt.ion()
-        plt.show()
+        # plt.ion()
+        # plt.show()
 
     def close(self):
         plt.close()
@@ -32,7 +32,7 @@ class rf_condition_data(dat.rf_condition_data_base):
         myset = sorted(set(x))
         if len(myset) > 3:
             min_sp =list(myset)[-4]
-            print 'myset[-3] ' + str(min_sp)
+            # print 'myset[-3] ' + str(min_sp)
             a = [[x2,y2] for x2,y2 in self.sp_pwr_hist if x2>=min_sp]
 
             # fit with np.polyfit
@@ -44,7 +44,7 @@ class rf_condition_data(dat.rf_condition_data_base):
 
             current_power_data = [[x2,y2] for x2,y2 in a if x2==max(x_tofit)]
 
-            print(current_power_data)
+            #print(current_power_data)
 
             self.current_power = np.mean(  np.array([i[1] for i in current_power_data]) ) / 1000
 

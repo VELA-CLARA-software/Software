@@ -4,7 +4,8 @@ from PyQt4.QtGui import QApplication
 from controller_base import controller_base
 from data_monitors.data_monitoring import data_monitoring
 from gui.gui_conditioning import gui_conditioning
-import  data.rf_condition_data as dat
+import data.rf_condition_data_base as dat
+from data.rf_condition_data import rf_condition_data
 import sys
 import time
 from VELA_CLARA_enums import STATE
@@ -15,7 +16,7 @@ class main_controller(controller_base):
 	#
 	# all the data lives in here
 	# to access data you have to "know" the keywords etc..
-	data = dat.rf_condition_data()
+	data = rf_condition_data()
 	#
 	# all the data_monitoring lives here
 	# pass in HWC and data to update
@@ -70,65 +71,82 @@ class main_controller(controller_base):
 
 
 	def main_loop(self):
-		print('The RF Conditioning Master is Entering Main_Loop ')
-		i = 0
-		# print 'time = ' + str(ts.total_seconds())
-		new_amp = None
+		print(self.my_name + ' The RF Conditioning is Entering Main_Loop !')
 
-		self.llrf_control.setAmpSP(1000)
+		self.data_monitor.init_monitor_states()
 
+
+		self.llrf_control.setAmpSP(500)
+		# remove time.sleep(10 at you rperil
+		time.sleep(1)
 		self.mask_set = False
 
 		self.llrf_control.setGlobalCheckMask(False)
-		time.sleep(5)
 
 		while self.mask_set == False:
 			self.mask_set = self.llrf_handler.set_mask()
 
-
 		print('entering mainloop')
 		print('entering mainloop')
-
 
 		# start the clock
 		self.start_time()
 
 		while True:
 			QApplication.processEvents()
+
+			#the GUI can overide this loop
+			if self.gui.can_run:
+
 			# update main monitor states
-			self.data_monitor.update()
 
-			# if new_bad drop SP
-			if self.data_monitor.new_bad():
-				print('MAIN-LOOP New Bad State dropping ngSP=0')
-				self.llrf_control.setGlobalCheckMask(False)
-				self.llrf_handler.set_amp(0)
+				self.data_monitor.update()
+				#
+				# # if new_bad drop SP
+				if self.data_monitor.new_bad():
+					print('MAIN-LOOP New Bad State droppingng SP=0')
+					self.llrf_control.setGlobalCheckMask(False)
 
-			if self.data_monitor.no_bad():
+					if self.data_monitor.vac_new_bad():
+						self.llrf_handler.set_amp( 5 ) # vac amp set value
+					if self.data_monitor.dc_new_bad():
+						self.llrf_handler.set_amp( 6 ) # DC amp set value
+
+				if 	self.data_monitor.new_good_no_bad():
+					m = max([i[0] for i in self.data.sp_pwr_hist])
+					print(self.my_name +' new good, seting amp_sp = ' + str(m ))
+
+					# if breakdown rate is good set previous max value (should this be max?
+					self.llrf_handler.set_amp( m  )
+					# if breakdown rate is bd, go to previous power and wait for breakdown_rate to recover
+					# if anothe breakdown occurs then drop down agaain
+					print('restart main_loop clock')
+					self.start_time()
 
 
-				if self.data_monitor.new_good_no_bad():
-					# reset amp, but with previous SP value
-					pass
-			# if self.data_monitor.bad():
-			if self.data_monitor.all_good():
+				# if everything is good carry on increasing
+				if self.data_monitor.all_good():
+					#print('all good')
 
-							# set the masks
-				if self.mask_set == False:
-					print('main loop mask not set')
-					self.mask_set = self.llrf_handler.set_mask()
-					# if GOOD set checking for breakdowns
+								# set the masks
+					if self.mask_set == False:
+						#print('main loop mask not set')
+						self.mask_set = self.llrf_handler.set_mask()
+						# if GOOD set checking for breakdowns
+					else:
+						#print('main loop setting global check mask = TRUE')
+						self.llrf_control.setGlobalCheckMask(True)
+						# if there has been enough time since
+						# the last increase get the new llrf sp
+						if self.seconds_elapsed(self.llrf_param['TIME_BETWEEN_RF_INCREASES']):
+							self.apply_new_amp()
+							self.start_time()
 				else:
-					print('main loop setting global check mask = TRUE')
-					self.llrf_control.setGlobalCheckMask(True)
-					# if there has been enough time since
-					# the last increase get the new llrf sp
-					if self.seconds_elapsed(self.llrf_param['TIME_BETWEEN_RF_INCREASES']):
-						self.apply_new_amp()
-						self.start_time()
-
-
-			time.sleep(1)
+					pass
+					#print('not all good')
+			else:
+				print('press start ramp to continue')
+				time.sleep(1)
 
 	def check_vac(self):
 		print'check_vac'

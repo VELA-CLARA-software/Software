@@ -5,9 +5,7 @@
 # rf_ccondition owns all other objects and does nothing else
 import os
 import sys
-from PyQt4 import QtGui
-import VELA_CLARA_enums
-from controllers.main_controller import main_controller
+
 
 if os.environ['COMPUTERNAME'] == "DJS56PORT2":
 	print 'port'
@@ -15,6 +13,13 @@ if os.environ['COMPUTERNAME'] == "DJS56PORT2":
 else:
 	print 'desk'
 	sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\stage')
+
+
+from PyQt4 import QtGui
+
+import VELA_CLARA_enums
+from controllers.main_controller import main_controller
+
 
 
 # os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"

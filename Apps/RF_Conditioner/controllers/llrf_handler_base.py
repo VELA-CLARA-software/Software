@@ -23,7 +23,7 @@ class llrf_handler_base(object):
 	mask_2 = 0
 	mask_3 = 0
 	# this is allowed to change from trace to trace
-	mask_4 = []
+	mask_4 = {}
 
 	def __init__(self,llrf_controller,breakdown_param,llrf_param):
 		self.llrf = llrf_controller
@@ -49,29 +49,27 @@ class llrf_handler_base(object):
 				return False
 		return True
 
-	def set_amp(self,val):
-		self.llrf.setAmpSP(val)
-		## ???
-		self.llrf.resetAverageTraces()
 
 	def set_mask(self):
-		print(self.my_name + ' setting mask')
+		#print(self.my_name + ' setting mask')
 		r = False
 		if self.have_averages():
-			mask_end = self.pulse_end_index + len([x for x in self.timevector if x <= self.breakdown_param['CRP_MASK_END']])
-
-			if self.breakdown_param['CRP_MASK_TYPE'] == 'PERCENT':
-				self.llrf.setCavRevPwrMaskPercent(self.mask_1, self.mask_2, self.mask_3,mask_end, self.breakdown_param['CRP_MASK_LEVEL'])
-				#print('Mask set for ' + self.CRP + ' ' + str(self.breakdown_param['CRP_MASK_LEVEL']) + '%')
-			# else:
-			# 	self.llrf.setAbsoluteMask(mask_hi_end_1, mask_hi_start_2, mask_hi_end_2,mask_end, self.breakdown_param['CRP_MASK_LEVEL'],self.CRP)
-
-			# mask_end = self.pulse_end_index + len([x for x in self.timevector if x <= self.breakdown_param['CFP_MASK_END']])
-			# if self.breakdown_param['CFP_MASK_TYPE'] == 'PERCENT':
-			# 	self.llrf.setPercentMask(mask_hi_end_1, mask_hi_start_2, mask_hi_end_2,mask_end, self.breakdown_param['CFP_MASK_LEVEL'],self.CFP)
-				#print('Mask set for ' + self.CFP + ' ' + str(self.breakdown_param['CFP_MASK_LEVEL']) + '%')
-			# else:
-			# 	self.llrf.setAbsoluteMask(mask_hi_end_1, mask_hi_start_2, mask_hi_end_2,mask_end, self.breakdown_param['CFP_MASK_LEVEL'],self.CFP)
+			for trace in self.breakdown_param['BREAKDOWN_TRACES']:
+				if 'REVERSE' in trace:
+					a = self.llrf.setPercentMask(self.mask_1, self.mask_2, self.mask_3,
+					                         self.mask_4[trace], self.breakdown_param['CRP_MASK_LEVEL'],trace)
+					if a == False:
+						print(self.my_name + ' ERROR SETTING MASK for ' + trace)
+				if 'FORWARD' in trace:
+					a = self.llrf.setPercentMask(self.mask_1, self.mask_2, self.mask_3,
+					                         self.mask_4[trace], self.breakdown_param['CFP_MASK_LEVEL'],trace)
+					if a == False:
+						print(self.my_name + ' ERROR SETTING MASK for ' + trace)
+				if 'PROBE' in trace:
+					a = self.llrf.setPercentMask(self.mask_1, self.mask_2, self.mask_3,
+					                         self.mask_4[trace], self.breakdown_param['CPP_MASK_LEVEL'],trace)
+					if a == False:
+						print(self.my_name + ' ERROR SETTING MASK for ' + trace)
 
 			if self.llrf.shouldCheckMasks(self.CFP):
 				pass
@@ -84,7 +82,7 @@ class llrf_handler_base(object):
 
 			r =  True
 		else:
-			print self.my_name + ' cant set mask, NO AVERAGE Traces'
+			#print self.my_name + ' cant set mask, NO AVERAGE Traces'
 			pass
 		return r
 
@@ -93,97 +91,44 @@ class llrf_handler_base(object):
 	def set_outside_mask_trace_param(self):
 		# much cancer??
 		for trace in self.breakdown_param['BREAKDOWN_TRACES']:
-			try:
-				if 'REVERSE' in trace:
-					streak = self.breakdown_param['CRP_CHECK_STREAK']
-					floor = self.breakdown_param['CRP_MASK_FLOOR']
-					drop = self.breakdown_param['CRP_AMP_DROP']
-					drop_val   = self.breakdown_param['CRP_AMP_DROP_VAL']
+		# try:
+			if 'REVERSE' in trace:
+				streak = self.breakdown_param['CRP_CHECK_STREAK']
+				floor = self.breakdown_param['CRP_MASK_FLOOR']
+				drop = self.breakdown_param['CRP_AMP_DROP']
+				drop_val   = self.breakdown_param['CRP_AMP_DROP_VAL']
 
-					self.mask_end[trace] = self.pulse_end_index + len(
-						[x for x in self.timevector if x <= self.breakdown_param['CRP_MASK_END']])
+				self.mask_4[trace] = self.pulse_end_index + len(
+					[x for x in self.timevector if x <= self.breakdown_param['CRP_MASK_END']])
 
-				elif 'FORWARD' in trace:
-					streak = self.breakdown_param['CFP_CHECK_STREAK']
-					floor = self.breakdown_param['CFP_MASK_FLOOR']
-					drop = self.breakdown_param['CFP_AMP_DROP']
-					drop_val   = self.breakdown_param['CFP_AMP_DROP_VAL']
-					self.mask_end[trace] = self.pulse_end_index + len(
-						[x for x in self.timevector if x <= self.breakdown_param['CFP_MASK_END']])
+			elif 'FORWARD' in trace:
+				streak = self.breakdown_param['CFP_CHECK_STREAK']
+				floor = self.breakdown_param['CFP_MASK_FLOOR']
+				drop = self.breakdown_param['CFP_AMP_DROP']
+				drop_val   = self.breakdown_param['CFP_AMP_DROP_VAL']
+				self.mask_4[trace] = self.pulse_end_index + len([x for x in self.timevector if x <= self.breakdown_param['CFP_MASK_END']])
 
-				elif 'PROBE' in trace:
-					streak = self.breakdown_param['CPP_CHECK_STREAK']
-					floor = self.breakdown_param['CPP_MASK_FLOOR']
-					drop = self.breakdown_param['CPP_AMP_DROP']
-					drop_val   = self.breakdown_param['CPP_AMP_DROP_VAL']
-					self.mask_end[trace] = self.pulse_end_index + len(
-					[x for x in self.timevector if x <= self.breakdown_param['CPP_MASK_END']])
+			elif 'PROBE' in trace:
+				streak = self.breakdown_param['CPP_CHECK_STREAK']
+				floor = self.breakdown_param['CPP_MASK_FLOOR']
+				drop = self.breakdown_param['CPP_AMP_DROP']
+				drop_val   = self.breakdown_param['CPP_AMP_DROP_VAL']
+				self.mask_4[trace] = self.pulse_end_index + len(
+				[x for x in self.timevector if x <= self.breakdown_param['CPP_MASK_END']])
 
-				if self.llrf.setNumContinuousOutsideMaskCount(trace, streak) == False:
-					print('ERROR setNumContinuousOutsideMaskCount ' + trace)
-				if self.llrf.setMaskFloor(trace, floor)  == False:
-						print('ERROR setMaskFloor ' + trace)
-				if self.llrf.setShouldCheckMask(trace) == False:
-					print('ERROR SETTING SHOULD CHECK MASK ' + trace)
-				if self.llrf.setDropAmpOnOutsideMaskDetection(trace,drop,drop_val) == False:
-					print('ERROR setDropAmpOnOutsideMaskDetection ' + trace)
-			except:
-				print('set_outside_mas_trace_param ERROR')
+			if self.llrf.setNumContinuousOutsideMaskCount(trace, streak) == False:
+				print('ERROR setNumContinuousOutsideMaskCount ' + trace)
+			if self.llrf.setMaskFloor(trace, floor)  == False:
+					print('ERROR setMaskFloor ' + trace)
+			if self.llrf.setShouldCheckMask(trace) == False:
+				print('ERROR SETTING SHOULD CHECK MASK ' + trace)
+			if self.llrf.setDropAmpOnOutsideMaskDetection(trace,drop,drop_val) == False:
+				print('ERROR setDropAmpOnOutsideMaskDetection ' + trace)
+		# except:
+		# 	print('set_outside_mas_trace_param ERROR')
 		self.mask_1 = self.llrfObj[0].pulse_latency + 15  # MAGIC_INT
 		self.mask_2 = self.pulse_end_index - 10  # MAGIC_INT
 		self.mask_3 = self.pulse_end_index + 3  # MAGIC_INT
-#
-# 				a = self.llrf.setMaskFloor(self.CRP, self.breakdown_param['CRP_MASK_FLOOR'])
-# 		if a == False:
-# 			print('ERROR SETTING MASK FLOOR ' + self.CFP)
-# -		a = self.llrf.setMaskFloor(self.CFP, self.breakdown_param['CFP_MASK_FLOOR'])
-# 		if a == False:
-# 			print('ERROR SETTING MASK FLOOR ' + self.CFP)
-#
-# 		# a = self.llrf.setShouldCheckMask(self.CFP)
-# 		# if a == False:
-# 		# 	print('ERROR SETTING SHOULD CHECK MASK ' + self.CFP)
-# 		a = self.llrf.setShouldCheckMask(self.CRP)
-# 		if a == False:
-# 			print('ERROR SETTING SHOULD CHECK MASK ' + self.CRP)
-#
-#
-#
-# 		self.llrf.setDropAmpOnOutsideMaskDetection(self.CFP,
-# 		                                           self.breakdown_param['CFP_AMP_DROP'],
-# 		                                           self.breakdown_param['CFP_AMP_DROP_VAL']
-# 		                                           )
-
-
-	# i want to set th emak automatically form here
-	# plus set the mask deafultparamters opnce
-	# def set_auto_mask(self, val):
-	# 	try:
-	# 		if 'REVERSE' in trace:
-	# 			num_mean = self.breakdown_param['CRP_NUM_AVERAGE_TRACES']
-	# 		elif 'FORWARD' in trace:
-	# 			num_mean = self.breakdown_param['CFP_NUM_AVERAGE_TRACES']
-	# 		elif 'PROBE' in trace:
-	# 			num_mean = self.breakdown_param['CPP_NUM_AVERAGE_TRACES']
-	# 	except:
-	# 		num_mean = 3  # MAGIC_NUM
-	#
-	# 	mask_hi_end_1 = llrfObj[0].pulse_latency + 15
-	# 	mask_hi_start_2 = self.pulse_end_index - 10
-	# 	mask_hi_end_2 = self.pulse_end_index + 3
-	# 	mask_end = self.pulse_end_index + len([x for x in self.timevector if x <= self.breakdown_param['']])
-	# 	gun.setCavRevPwrMaskAbsolute(mask_hi_end_1, mask_hi_start_2, mask_hi_end_2, mask_end, 1000)
-	# def set_masks(self):
-	# 	mask_hi_end_1 = self.llrfObj[0].pulse_latency + 15
-	# 	mask_hi_start_2 = self.pulse_end_index - 10
-	# 	mask_hi_end_2 = self.pulse_end_index + 3
-	# 	mask_end = 1016
-	# 	for trace in self.outside_mask_traces:
-	# 		a = self.llrf.setPercentMask(mask_hi_end_1, mask_hi_start_2, mask_hi_end_2, mask_end, 10, trace)
-	# 		if a:
-	# 			print('mask applied for ' + trace)
-	# 		else:
-	# 			print('mask NOT applied for ' + trace)
 
 	def start_trace_monitoring(self,trace_to_save):
 		if "error" not in trace_to_save:

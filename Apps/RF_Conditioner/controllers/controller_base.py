@@ -87,10 +87,11 @@ class controller_base(object):
 			# self.vac_param = reader.vac_parameter()
 			# self.cavity_temp_param = reader.cavity_temp_parameter()
 			# self.water_temp_param = reader.water_temp_parameter()
-			# self.mod_param = reader.mod_param()
 			# self.vac_valve_param = reader.vac_valve_parameter()
 			# self.rfprot_param = reader.rfprot_param()
 			# self.DC_param = reader.DC_parameter()
+
+			self.mod_param = reader.mod_param()
 
 			if bool(self.mod_param):
 				self.start_mod_control()
