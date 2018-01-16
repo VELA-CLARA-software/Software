@@ -27,10 +27,10 @@ except AttributeError:
 class energySpreadViewUI(object):
 
     def setupUi(self, mainWindow):
-        mainWindow.resize(1010, 1010)
+        mainWindow.resize(1510, 1010)
         mainWindow.setObjectName(_fromUtf8('Matlab energy spread viewer'))
         self.mainWidget = QtGui.QWidget(mainWindow)
-        self.mainWidget.resize(1000, 1000)
+        self.mainWidget.resize(1500, 1000)
         self.mainWidget.setObjectName(_fromUtf8('mainWidget'))
         self.mainBox = QtGui.QHBoxLayout(self.mainWidget)
 
@@ -39,6 +39,7 @@ class energySpreadViewUI(object):
         self.plotVBox = QtGui.QVBoxLayout()
         self.analysisPlotVBox = QtGui.QVBoxLayout()
         self.plotsVBox = QtGui.QVBoxLayout()
+        self.measurementPlotsVBox = QtGui.QVBoxLayout()
         self.sigmaPlotsVBox = QtGui.QVBoxLayout()
         self.setDirOrFileLayout = QtGui.QHBoxLayout()
         self.setDirOrFile = QtGui.QGroupBox()
@@ -129,12 +130,7 @@ class energySpreadViewUI(object):
 
         # analysis plots
         self.makeAnalysisPlotButton = QtGui.QPushButton('Analyse data', self)
-        self.analysisPlotWidget = self.addAnalysisPlotPanel()
         self.analysisPlotVBox.addWidget(self.makeAnalysisPlotButton)
-        # self.makeSigmaPlotButton = QtGui.QPushButton('Make sigma plots', self)
-        # self.analysisPlotVBox.addWidget(self.makeSigmaPlotButton)
-        # # self.clearSigmaPlotsButton = QtGui.QPushButton('Clear sigma plots', self)
-        self.analysisPlotVBox.addLayout(self.analysislayoutVertical)
         self.analysisPlotVBox.addStretch()
         self.averagingHBox = QtGui.QHBoxLayout()
         self.averagingGroupBox = QtGui.QGroupBox()
@@ -166,9 +162,17 @@ class energySpreadViewUI(object):
         self.plotsVBox.addLayout(self.averagingHBox)
         self.plotsVBox.addLayout(self.analysisPlotVBox)
 
+        self.currentPlotWidget = self.addCurrentPlotPanel()
+        self.energySpreadPlotWidget = self.addEnergySpreadPlotPanel()
+        self.measurementPlotsVBox.addLayout(self.currentLayoutVertical)
+        self.measurementPlotsVBox.addLayout(self.energySpreadLayoutVertical)
+        self.measurementPlotsVBox.addStretch()
+
         # add all layouts and make main panel
         self.mainBox.addLayout(self.configVBox)
         self.mainBox.addLayout(self.plotsVBox)
+        self.mainBox.addLayout(self.measurementPlotsVBox)
+        self.mainBox.addStretch()
         self.retranslateUi(mainWindow)
         QtCore.QMetaObject.connectSlotsByName(mainWindow)
 
@@ -200,18 +204,31 @@ class energySpreadViewUI(object):
         self.canvas.setFocus()
         return self.figure
 
-    def addAnalysisPlotPanel(self):
-        self.analysisfigure = plt.figure()
-        self.analysiscanvas = FigureCanvasQTAgg(self.analysisfigure)
-        self.analysistoolbar = NavigationToolbar(self.analysiscanvas, self)
-        self.analysisaxis = self.analysisfigure.add_subplot(111)
-        self.analysislayoutVertical = QtGui.QVBoxLayout(self)
-        self.analysislayoutVertical.addWidget(self.analysiscanvas)
-        self.analysislayoutVertical.addWidget(self.analysistoolbar)
-        self.analysiscanvas.setParent(self.mainWidget)
-        self.analysiscanvas.setFocusPolicy(QtCore.Qt.ClickFocus)
-        self.analysiscanvas.setFocus()
-        return self.analysisfigure
+    def addCurrentPlotPanel(self):
+        self.currentfigure = plt.figure()
+        self.currentcanvas = FigureCanvasQTAgg(self.currentfigure)
+        self.currenttoolbar = NavigationToolbar(self.currentcanvas, self)
+        self.currentaxis = self.currentfigure.add_subplot(111)
+        self.currentLayoutVertical = QtGui.QVBoxLayout(self)
+        self.currentLayoutVertical.addWidget(self.currentcanvas)
+        self.currentLayoutVertical.addWidget(self.currenttoolbar)
+        self.currentcanvas.setParent(self.mainWidget)
+        self.currentcanvas.setFocusPolicy(QtCore.Qt.ClickFocus)
+        self.currentcanvas.setFocus()
+        return self.currentfigure
+
+    def addEnergySpreadPlotPanel(self):
+        self.energySpreadfigure = plt.figure()
+        self.energySpreadcanvas = FigureCanvasQTAgg(self.energySpreadfigure)
+        self.energySpreadtoolbar = NavigationToolbar(self.energySpreadcanvas, self)
+        self.energySpreadaxis = self.currentfigure.add_subplot(111)
+        self.energySpreadLayoutVertical = QtGui.QVBoxLayout(self)
+        self.energySpreadLayoutVertical.addWidget(self.energySpreadcanvas)
+        self.energySpreadLayoutVertical.addWidget(self.energySpreadtoolbar)
+        self.energySpreadcanvas.setParent(self.mainWidget)
+        self.energySpreadcanvas.setFocusPolicy(QtCore.Qt.ClickFocus)
+        self.energySpreadcanvas.setFocus()
+        return self.energySpreadfigure
 
     def makePlots(self, datafile, datastruct, imagedata, arrayshape, shotnum, plotfigure):
         self.datafile = datafile

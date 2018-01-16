@@ -85,7 +85,7 @@ class matlabFileRead:
         for strg in matobj._fieldnames:
             self.elem = matobj.__dict__[strg]
             if isinstance(self.elem, scipy.io.matlab.mio5_params.mat_struct):
-                self.dict[strg] = self._todict(self.elem)
+                self.dict[strg] = self._todict(self.elem, self.filetype)
             elif isinstance(self.elem, numpy.ndarray):
                 self.parameter_list = []
                 self.dict[strg] = self._tolist(self.elem, self.parameter_list)
