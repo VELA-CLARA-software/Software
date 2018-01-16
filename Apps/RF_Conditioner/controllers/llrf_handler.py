@@ -46,3 +46,10 @@ class llrf_handler(llrf_handler_base):
     def stop_keep_average_trace(self):
         print('def stop_keep_average_trace')
 
+
+    def set_amp(self, val):
+        self.llrf.setAmpSP(val)
+        ## ???
+        self.llrf.resetAverageTraces()
+
+

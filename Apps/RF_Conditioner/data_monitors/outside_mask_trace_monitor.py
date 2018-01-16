@@ -3,7 +3,8 @@ import pickle
 import data.rf_condition_data_base as dat
 import os
 import datetime
-from VELA_CLARA_enums import STATE
+#from VELA_CLARA_enums import STATE
+from data.state import state
 
 
 class outside_mask_trace_monitor(monitor.monitor):
@@ -68,12 +69,12 @@ class outside_mask_trace_monitor(monitor.monitor):
         self.data_dict = data_dict
         self.timer.timeout.connect(self.update_value)
         self.timer.start(breakdown_param['OUTSIDE_MASK_CHECK_TIME'])
-        self.data_dict[dat.breakdown_status] = STATE.GOOD
+        self.data_dict[dat.breakdown_status] = state.GOOD
 
     def cooldown_function(self):
         print self.my_name + ' monitor function called, cool down ended'
         self.incool_down = False
-        self.data_dict[dat.breakdown_status] = STATE.GOOD
+        self.data_dict[dat.breakdown_status] = state.GOOD
 
     def update_value(self):
         self.data_dict[dat.breakdown_rate] = self.llrfObj[0].breakdown_rate
@@ -85,10 +86,11 @@ class outside_mask_trace_monitor(monitor.monitor):
         #print(self.my_name + ' checking, cont = ' +str(_count))
         if _count > self.previous_outside_mask_trace_count:
             print(self.my_name +' NEW OUTSIDE MASK TRACE DETECTED, entering cooldown')
-            self.data_dict[dat.breakdown_status] = STATE.BAD
-            self.cooldown_timer.start(5000)
+            self.data_dict[dat.breakdown_status] = state.BAD
+            self.cooldown_timer.start(5000)# set to value from config
 
-            self.get_new_outside_mask_traces(_count)
+            #THE BELOW HAS DISABLED DATA SAVING"!!!!!
+            #self.get_new_outside_mask_traces(_count)
             self.previous_outside_mask_trace_count = _count
 
     def get_new_outside_mask_traces(self, _count):
