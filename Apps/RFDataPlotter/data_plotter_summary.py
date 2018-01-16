@@ -90,13 +90,13 @@ class picklePlotWidget(QWidget):
     def mkPen(self, colorindex, index):
         color = Qtableau20[index]
         if index == -2:
-            pen = pg.mkPen(color=color, dash=[6,6])
+            pen = pg.mkPen(color='g', dash=[6,6])
         elif index == -1:
-            pen = pg.mkPen(color=color, dash=[4,4])
+            pen = pg.mkPen(color='b', dash=[4,4])
         elif index == 0:
-            pen = pg.mkPen(color=color, width=2)
+            pen = pg.mkPen(color='r', width=2)
         elif index == 1:
-            pen = pg.mkPen(color=color, dash=[2,2])
+            pen = pg.mkPen(color='k', dash=[2,2])
         return pen
 
     def loadPickle(self):
@@ -111,7 +111,7 @@ class picklePlotWidget(QWidget):
                 i += 1
                 event = {}
                 for k, v in value.iteritems():
-                    # print 'key = ', k
+                    # print k
                     if 'trace_name' in k:
                         self.tracename = v
                     if 'name_' in k:
@@ -119,18 +119,13 @@ class picklePlotWidget(QWidget):
                         if not name in event:
                             event[name] = {'-1': dict(), '-2': dict(), '0': dict(), '1': dict}
                         pos = k[[i for i, j in enumerate(k) if j == '_'][-1]+1:]
-                        # print 'pos = ', pos, '  name = ', name
                         event[name][pos] = { 'data': value[k.replace('name', 'value')],
                                             'eventID': value[k.replace('name', 'EVID')],
                                             'time': value[k.replace('name', 'time')]
                                             }
                     elif '_mask' in k:
-                        # print 'k = ', k
                         event[k] = {'data': v}
-                        # print event.keys()
                 self.data.append(event)
-            # print len(self.data)
-            # print self.data[0]['LRRG_CAVITY_REVERSE_POWER']['-1']['time']
             self.updateIndexSelectionBox()
             self.updatePlot()
 
@@ -176,7 +171,10 @@ class picklePlotWidget(QWidget):
                         if len(datadict) > 1:
                             j += 1
                             p = self.plotWidget.addPlot(title=datalabel)
-                            for i in range(-2,1):
+                            evids = [[i,datadict[str(i)]['eventID']] for i in range(-2,2)]
+                            evidorder =  zip(*sorted(evids, key=lambda x: x[1]))[0]
+                            for i in evidorder:
+                                # print 'eventID[',i,'] = ', datadict[str(i)]['eventID']
                                 y = datadict[str(i)]['data']
                                 x = range(len(y))
                                 p.plot(x=x, y=y, pen=self.mkPen(0, i))
