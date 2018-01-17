@@ -85,9 +85,8 @@ class data_monitoring_base(object):
 	                   llrf_param,
 	                   breakdown_param,
 			           log_param,
-			           DC_param,
-			           logger
-				):
+			           DC_param
+	                ):
 		if prot_control:
 			self.rfprot_monitor(prot_control,rfprot_param)
 		if valve_control:
@@ -105,11 +104,7 @@ class data_monitoring_base(object):
 		if bool(llrf_param):
 			self.start_llrf_simple_param_monitor(llrf_control,llrf_param)
 			if bool(log_param):
-				self.start_outside_mask_trace__monitor(llrf_control=llrf_control,
-				                                       llrf_param=llrf_param,
-				                                       log_param=log_param,
-				                                       breakdown_param=breakdown_param,
-				                                       logger=logger)
+				self.start_outside_mask_trace__monitor(llrf_control,llrf_param,log_param,breakdown_param)
 
 	def start_vac_monitor(self, llrf_controller, vac_param):
 		# NOT HAPPY ABOUT HARDCODED STRINGS...
@@ -240,14 +235,13 @@ class data_monitoring_base(object):
 		self.is_monitoring[self.llrf_simple_monitoring] = self.llrf_simple_param_monitor.set_success
 		return self.is_monitoring[self.llrf_simple_monitoring]
 
-	def start_outside_mask_trace__monitor(self, llrf_control, llrf_param, log_param, breakdown_param, logger):
+	def start_outside_mask_trace__monitor(self, llrf_controller, llrf_param, log_param, breakdown_param):
 		self.outside_mask_trace_monitor = outside_mask_trace_monitor.outside_mask_trace_monitor(
-				llrf_control=llrf_control,
+				llrf_controller=llrf_controller,
 				data_dict=self.data.values,
 				llrf_param=llrf_param,
 				log_param=log_param,
-				breakdown_param=breakdown_param,
-				logger=logger
+				breakdown_param=breakdown_param
 			)
 		self.is_monitoring[dat.breakdown_status] = self.outside_mask_trace_monitor.set_success
 		self.is_monitoring[dat.rev_power_spike_status] = self.outside_mask_trace_monitor.set_success

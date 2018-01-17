@@ -1,0 +1,9 @@
+Data saving does not work, it works in llrf_test.py!!
+need to clean up logic and functions in main loop
+need to check the set mask function in c++ controller
+make a monitor base to hide crap
+make an enum for different responses, good, bad, still, bad, new bad, new-good, etc
+monitor should have simple function to check states
+graph updating ? is it time consuming
+when to reset the mask?
+Is there a single EPICS parameter that says we can get RF power (intelrocs, llrf, mod etc ?)

@@ -33,9 +33,6 @@ class llrf_handler_base(object):
 		self.breakdown_param = breakdown_param
 		self.llrf_param = llrf_param
 		self.start_trace_monitoring(llrf_param['TRACES_TO_SAVE'])
-		# you have to tell the HWC what to save on
-		self.llrf.setTracesToSaveOnBreakDown(llrf_param['TRACES_TO_SAVE'])
-
 		self.set_mean_pwr_position()
 		self.start_trace_rolling_average()
 		self.set_outside_mask_trace_param()
