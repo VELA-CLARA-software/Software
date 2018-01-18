@@ -161,13 +161,10 @@ class data_monitoring(data_monitoring_base):
 				self.set_state(key, state.GOOD)
 
 		elif self.data.values[key] == state.BAD:
-
 			if self.previous_main_monitor_states[key] == state.GOOD:
 				self.set_state(key, state.NEW_BAD)
-
 			elif self.previous_main_monitor_states[key] == state.NEW_BAD:
 				self.set_state(key, state.BAD)
-
 			elif self.previous_main_monitor_states[key] == state.BAD:
 				pass
 			else:

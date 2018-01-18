@@ -6,12 +6,8 @@ import VELA_CLARA_Vac_Valve_Control
 import VELA_CLARA_RF_Modulator_Control
 import VELA_CLARA_RF_Protection_Control
 from data.config_reader import config_reader
-from data.data_logger import data_logger
 import llrf_handler
 import datetime
-from data_monitors.data_monitoring import data_monitoring
-from data.rf_condition_data import rf_condition_data
-
 
 
 class controller_base(object):
@@ -21,7 +17,6 @@ class controller_base(object):
 	# init LLRF Hardware Controllers
 	llrf_init = VELA_CLARA_LLRF_Control.init()
 	llrf_init.setVerbose()
-	#llrf_init.setQuiet()
 	llrf_control = None  # LLRF HWC
 	llrf_handler = None
 	#
@@ -67,17 +62,6 @@ class controller_base(object):
 		self.argv = argv
 		# read the config file
 		self.read_config()
-		# data logging
-		self.logger = data_logger(self.log_param)
-		#
-		# all the data lives in here
-		# to access data you have to "know" the keywords etc..
-		self.data = rf_condition_data(logger=self.logger)
-		#
-		# all the data_monitoring lives here
-		# pass in HWC and data to update
-		self.data_monitor = data_monitoring(self.data)
-
 
 	def start_time(self):
 		self.t_start = datetime.datetime.now()
@@ -98,14 +82,13 @@ class controller_base(object):
 		self.llrf_type = reader.llrf_type
 		if self.have_config:
 			self.log_param = reader.log_param()
-
 			# monitors
 			self.vac_param = reader.vac_parameter()
-			# self.cavity_temp_param = reader.cavity_temp_parameter()
-			# self.water_temp_param = reader.water_temp_parameter()
-			# self.vac_valve_param = reader.vac_valve_parameter()
-			# self.rfprot_param = reader.rfprot_param()
-			# self.DC_param = reader.DC_parameter()
+			self.cavity_temp_param = reader.cavity_temp_parameter()
+			self.water_temp_param = reader.water_temp_parameter()
+			self.vac_valve_param = reader.vac_valve_parameter()
+			self.rfprot_param = reader.rfprot_param()
+			self.DC_param = reader.DC_parameter()
 
 			self.mod_param = reader.mod_param()
 

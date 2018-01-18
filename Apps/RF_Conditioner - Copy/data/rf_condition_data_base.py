@@ -6,6 +6,7 @@ from VELA_CLARA_Vac_Valve_Control import VALVE_STATE
 from VELA_CLARA_RF_Protection_Control import RF_GUN_PROT_STATUS
 from VELA_CLARA_LLRF_Control import LLRF_TYPE
 import datetime
+import struct
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -146,16 +147,21 @@ class rf_condition_data_base(QObject):
 
 
     def start_logging(self, log_param):
-        self.log_start = self.logger.start_data_logging()
+        print(self.my_name + ' starting monitoring, update time = ' +\
+              str(log_param['DATA_LOG_TIME']))#MAGIC_STRING
         self.timer.timeout.connect(self.log)
+        self.data_log_directory = log_param['DATA_LOG_DIRECTORY']#MAGIC_STRING
+        self.data_log_filename  = log_param['DATA_LOG_FILENAME']#MAGIC_STRING
+
+        self.log_start = datetime.datetime.now()
+        time = str(self.log_start.year) + '-' + \
+        '{:02d}'.format(self.log_start.month) + '-' + \
+        '{:02d}'.format(self.log_start.day) + '-' + \
+        '{:02d}'.format(self.log_start.hour) + '-' + \
+        '{:02d}'.format(self.log_start.minute) + '-' + \
+        '{:02d}'.format(self.log_start.second)
+        self.path = self.data_log_directory +  self.data_log_filename + '_' + time
         self.timer.start(log_param['DATA_LOG_TIME'])
-
-    def timestamp(self):
-        ts = datetime.datetime.now() - self.log_start
-        #print 'time = ' + str(ts.total_seconds())
-        self.values[time_stamp] = ts.total_seconds()
-
-
 
     # the main logging data file is binary(!)
     # With the amount of data etc. i think this is the only practical way
@@ -164,9 +170,9 @@ class rf_condition_data_base(QObject):
         self.log_kly_fwd_power_vs_amp()
         self.timestamp()
         if self.should_write_header:
-            self.logger.write_data_log_header(self.values)
+            self.write_header()
             self.should_write_header = False
-        self.logger.write_data(self.values)
+        self.write_data()
 
     def log_kly_fwd_power_vs_amp(self):
         self.kly_fwd_power_history.append(self.values[fwd_kly_pwr ])
@@ -174,8 +180,55 @@ class rf_condition_data_base(QObject):
         self.sp_pwr_hist.append( [self.values[amp_sp ],self.values[fwd_kly_pwr]] )
         #self.max_sp = [i[0] for i in self.sp_pwr_hist]
 
+    def write_data(self):
+        with open(self.path + '.dat', 'ab') as f:
+            for val in self.values.itervalues():
+                self.write_binary(f,val)
 
+    def write_binary(self, f, val):
+        if type(val) is long:
+            f.write(struct.pack('<l', val))
+            #print struct.calcsize('<l')
+        elif type(val) is int:
+            f.write(struct.pack('<i', val))
+            #print struct.calcsize('<i')
+        elif type(val) is float:
+            f.write(struct.pack('<f', val))
+            #print struct.calcsize('<f')
+        elif type(val) is RF_GUN_PROT_STATUS:
+            f.write(struct.pack('<B', val))
+            #print struct.calcsize('<B')
+        elif type(val) is STATE:
+            f.write(struct.pack('<B', val))
+            #print struct.calcsize('<B')
+        elif type(val) is GUN_MOD_STATE:
+            f.write(struct.pack('<B', val))
+            #print struct.calcsize('<B')
+        elif type(val) is VALVE_STATE:
+            f.write(struct.pack('<B', val))
+            #print struct.calcsize('<B')
+        elif type(val) is bool:
+            f.write(struct.pack('<?', val))
+            #print struct.calcsize('<?')
+        else:
+            print(self.my_name + ' write_binary() error unknown type, ' + str(type(val)) )
+        #print str(val) + '   ' + str(type(val))
 
+    def write_header(self):
+        joiner = '\t'
+        names = []
+        types = []
+        [names.append(x) for x,y in self.values.iteritems()]
+        [types.append(str(type(y)))  for x,y in self.values.iteritems()]
+        with open(self.path  + '.dat', 'ab') as f:
+            f.write(joiner.join(names)+ "\n")
+            f.write(joiner.join(types)+ "\n")
+            # f.write(struct.pack('<i', 245))
+
+    def timestamp(self):
+        ts = datetime.datetime.now() - self.log_start
+        #print 'time = ' + str(ts.total_seconds())
+        self.values[time_stamp] = ts.total_seconds()
 
 
 

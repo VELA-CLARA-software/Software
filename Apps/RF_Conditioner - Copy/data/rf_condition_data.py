@@ -12,49 +12,18 @@ class rf_condition_data(dat.rf_condition_data_base):
     # they are VAC,DC,BREAKDOWN,BREAKDOWN_RATE,RF
     main_monitor_states = {}
     previous_main_monitor_states = {}
-    # settings from config file
-    llrf_param = None
-    power_inocrese_f1= None
-    def __init__(self,logger=None):
-        dat.rf_condition_data_base.__init__(self,logger=logger)
+    def __init__(self):
+        dat.rf_condition_data_base.__init__(self)
         self.llrf = None
 
-
-    def power_increase_set_up(self):
-        #these are constants in the power_increase function
-        self.power_increase_1 = self.llrf_param['RF_INCREASE_RATE'] * self.llrf_param['NORMAL_POWER_INCREASE'] / self.llrf_param['LOW_POWER_INCREASE_RATE_LIMIT']
-        self.power_increase_2 = self.llrf_param['LOW_POWER_INCREASE_RATE_LIMIT'] / self.llrf_param['RF_INCREASE_RATE']
-        print(self.my_name + ' power_increase_set_up: ' + str(self.llrf_param['RF_INCREASE_RATE']) + '  ' + str(self.llrf_param['NORMAL_POWER_INCREASE']) + ' ' + str(self.llrf_param['LOW_POWER_INCREASE_RATE_LIMIT']))
-        print(self.my_name + ' power_increase_set_up: power_increase_1  =  ' + str(
-            self.power_increase_1) + ' power_increase_2 = ' + str(self.power_increase_2))
-
+        # plt.ion()
+        # plt.show()
 
     def close(self):
         plt.close()
 
-    def ceiling(self,x, base=1000):
-        return int(base * np.ceil(float(x) / base))
-
-    def power_increase(self):
-        # will break if setting in config have not been passed
-        if self.values[dat.pulse_count] < self.power_increase_2:
-            a = self.power_increase_1 * self.values[dat.pulse_count]
-        else:
-            a = self.llrf_param['NORMAL_POWER_INCREASE']
-        print(self.my_name + ' power_increase = ' +str(a) + ' ' + str(self.ceiling(a, self.llrf_param['LOW_POWER_INCREASE'])) )
-        return self.ceiling(a, self.llrf_param['LOW_POWER_INCREASE'])
-
-    def get_next_power(self):
-        pwr_inc = self.power_increase()
-        power = self.ceiling( self.values[dat.pulse_count] * self.llrf_param['RF_INCREASE_RATE'], pwr_inc )
-        print(self.my_name + ' get_next_power: power_inc = ' + str(pwr_inc) + ', power =   ' + str(power) )
-        return pwr_inc / 1000 # kW !
-
-    def get_new_sp(self):
-        return self.get_new_set_point( self.get_next_power())
-
     # neatean up!
-    def get_new_set_point(self,pwr_kw):
+    def get_new_sp(self,pwr_kw):
         self.previous_power = self.current_power
         x = np.array([i[0] for i in self.sp_pwr_hist])
         y = np.array([i[1] for i in self.sp_pwr_hist]) / 1000

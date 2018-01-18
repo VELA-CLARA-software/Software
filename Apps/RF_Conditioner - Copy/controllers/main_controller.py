@@ -2,8 +2,10 @@
 # holds everything
 from PyQt4.QtGui import QApplication
 from controller_base import controller_base
+from data_monitors.data_monitoring import data_monitoring
 from gui.gui_conditioning import gui_conditioning
 import data.rf_condition_data_base as dat
+from data.rf_condition_data import rf_condition_data
 import sys
 import time
 from VELA_CLARA_enums import STATE
@@ -11,7 +13,14 @@ from VELA_CLARA_enums import STATE
 class main_controller(controller_base):
 	# whoami
 	my_name = 'main_controller'
-
+	#
+	# all the data lives in here
+	# to access data you have to "know" the keywords etc..
+	data = rf_condition_data()
+	#
+	# all the data_monitoring lives here
+	# pass in HWC and data to update
+	data_monitor = data_monitoring(data)
 	#
 	# other attributes will be initiliased in base-class
 	mask_set = False
@@ -21,10 +30,6 @@ class main_controller(controller_base):
 		controller_base.__init__(self, argv, config_file)
 		self.data.llrf_type = self.llrf_type
 		self.data_monitor.llrf_type = self.llrf_type
-		# start data recording
-		#
-		self.data.start_logging(self.log_param)
-
 		#
 		# start monitoring data
 		self.data_monitor.start_monitors(
@@ -41,9 +46,8 @@ class main_controller(controller_base):
 		                   llrf_param=self.llrf_param,
 						   breakdown_param=self.breakdown_param,
 						   log_param=self.log_param,
-						   DC_param=self.DC_param,
-						   logger = self.logger
-						)
+						   DC_param=self.DC_param
+		                   )
 		# build the gui and pass in the data
 		#
 		# build the gui and pass in the data
@@ -54,13 +58,9 @@ class main_controller(controller_base):
 		self.gui.closing.connect(self.connectCloseEvents)
 		self.gui.show()
 		self.gui.activateWindow()
-
-		# set dat llrf parm, so dat can work out the
-		# amplitude increase step size
-		print self.llrf_param['RF_INCREASE_RATE']
-		self.data.llrf_param = self.llrf_param
-		self.data.power_increase_set_up()
-
+		# start data recording
+		#
+		self.data.start_logging(self.log_param)
 		# everything now runs from the main_loop
 		#
 		#self.llrf_handler.check_masks()
@@ -75,9 +75,9 @@ class main_controller(controller_base):
 
 		self.data_monitor.init_monitor_states()
 
-		self.llrf_control.setPulseCountOffset(410000)
-		self.llrf_control.setAmpSP(500)
-		# remove time.sleep(10 at your peril
+
+		self.llrf_control.setAmpSP(14751)
+		# remove time.sleep(10 at you rperil
 		time.sleep(1)
 		self.mask_set = False
 
@@ -86,14 +86,13 @@ class main_controller(controller_base):
 		while self.mask_set == False:
 			self.mask_set = self.llrf_handler.set_mask()
 
-		print(self.my_name + ' entering mainloop')
+		print('entering mainloop')
+		print('entering mainloop')
 
 		# start the clock
 		self.start_time()
 
-		i = 0
-
-		while 1:
+		while True:
 			QApplication.processEvents()
 
 			#the GUI can overide this loop
@@ -113,8 +112,6 @@ class main_controller(controller_base):
 					if self.data_monitor.dc_new_bad():
 						self.llrf_handler.set_amp( 6 ) # DC amp set value
 
-					while 1:
-						QApplication.processEvents()
 				if 	self.data_monitor.new_good_no_bad():
 					m = max([i[0] for i in self.data.sp_pwr_hist])
 					print(self.my_name +' new good, seting amp_sp = ' + str(m ))
@@ -138,9 +135,7 @@ class main_controller(controller_base):
 						# if GOOD set checking for breakdowns
 					else:
 						#print('main loop setting global check mask = TRUE')
-						if i == 0:
-							self.llrf_control.setGlobalCheckMask(True)
-							i = 1
+						self.llrf_control.setGlobalCheckMask(True)
 						# if there has been enough time since
 						# the last increase get the new llrf sp
 						if self.seconds_elapsed(self.llrf_param['TIME_BETWEEN_RF_INCREASES']):
@@ -162,7 +157,7 @@ class main_controller(controller_base):
 		if sp < 30:#???
 			pass # sp ???????
 		else:
-			new_amp = self.data.get_new_sp()
+			new_amp = self.data.get_new_sp(self.llrf_param['RF_INCREASE_LEVEL'])  # MAGIC_STRING kw to increase by
 			if new_amp:
 				self.llrf_handler.set_amp(new_amp)
 			else:

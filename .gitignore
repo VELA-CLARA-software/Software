@@ -1,11 +1,9 @@
 magnet-table/magnet-table.ini
 *.pyc
-*.pyc
 *.dll
 *.pyd
 *.dat
 *.pkl
-MagnetApp/GUI_FileLoad.pyc
 magnet-table/.idea/*.*
 magnet-table/tmp/*.*
 magnet-table/rf_sol_gui.py
