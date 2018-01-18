@@ -189,6 +189,7 @@ class plotLegendTree(ParameterTree):
                     {'name': 'Plot_Colour', 'title': 'Line Colour', 'type': 'color', 'value': self.records[name]['pen'], 'tip': "Line Colour"},
                     {'name': 'Axis', 'title': 'Choose Axis', 'type': 'list', 'values': {}, 'value': self.records[name]['axisname'], 'tip': "Choose which axis to display on"},
                     {'name': 'AxisAutoScale', 'title': 'Enable Autoscaling', 'type': 'bool', 'value': True, 'tip': "Enable autoscaling for this axis"},
+                    {'name': 'Log_Mode', 'title': 'Log Mode', 'type': 'bool', 'value': False, 'tip': "Set Log mode scaling"},
                     {'name': 'Show_Axis', 'title': 'Show Axis?', 'type': 'bool', 'value': False, 'tip': "Show or Remove the Axis"},
                     {'name': 'Show_Plot', 'title': 'Show Plot?', 'type': 'bool', 'value': True, 'tip': "Show or Remove the plot lines"},
                     {'name': 'FFT_Plot', 'title': 'Plot FFT', 'type': 'bool', 'value': False, 'tip': "Show or Remove the FFT Plot"},
@@ -212,6 +213,7 @@ class plotLegendTree(ParameterTree):
         pChild.child('Statistics').child('ClearStats').sigActivated.connect(lambda x: self.records[name]['worker'].resetStatistics(True))
         self.setupAxisList(name, pChild)
         pChild.child('Options').child('Show_Axis').sigValueChanged.connect(lambda x: self.records[name]['axis'].setVisible(x.value()))
+        pChild.child('Options').child('Log_Mode').sigValueChanged.connect(lambda x: self.records[name]['curve'].setLogMode(x.value()))
         pChild.child('Options').child('Show_Plot').sigValueChanged.connect(lambda x: self.records[name]['curve'].setVisibility('curve', x.value()))
         pChild.child('Options').child('FFT_Plot').sigValueChanged.connect(lambda x: self.fftselectionchange.emit(name, x.value()))
         pChild.child('Options').child('Histogram_Plot').sigValueChanged.connect(lambda x: self.histogramplotselectionchange.emit(name, x.value()))

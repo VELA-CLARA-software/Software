@@ -214,18 +214,14 @@ class scrollingPlotPlot(QtGui.QWidget):
         axis = pg.AxisItem("left")
         labelStyle = {'color': '#'+pg.colorStr(pg.mkColor(color))[0:-2]}
         axis.setLabel(name,**labelStyle)
-        axis.setLogMode(logMode)
+        # axis.setLogMode(logMode)
         viewbox = pg.ViewBox()
         axis.linkToView(viewbox)
         viewbox.setXLink(self.plot.vb)
         # viewbox.setYLink(self.plot.vb)
         self.namedaxes[name] = [axis, viewbox]
         if not verticalRange == None:
-            if logMode:
-                logrange = [math.log(x,10) for x in verticalRange]
-                viewbox.setRange(yRange=logrange,disableAutoRange=True)
-            else:
-                viewbox.setRange(yRange=verticalRange,disableAutoRange=True)
+            viewbox.setRange(yRange=verticalRange,disableAutoRange=True)
         col = self.findFirstEmptyColumnInGraphicsLayout()
         self.plotWidget.ci.addItem(axis, row = 0, col = col,  rowspan=1, colspan=1)
         self.plotWidget.ci.addItem(viewbox, row=0, col=50)
@@ -305,6 +301,7 @@ class curve(QtCore.QObject):
         self.records = self.plot.records
         self.name = name
         self.vb = self.records[name]['viewbox']
+        self.logMode = self.records[name]['logScale']
         self.plot.yAxisScaled.connect(self.scaleYAxis)
         self.curve = pg.PlotDataItem(autoDownsample=True,clipToView=True)
         self.curve.setPen(pg.mkPen(self.records[self.name]['pen']))
@@ -373,9 +370,36 @@ class curve(QtCore.QObject):
         self.redrawLines(self.points100, self.curve100, 'curve100', {'color': self.records[self.name]['pen'], 'dash': [2,2], 'width': 3})
         self.redrawLines(self.points1000, self.curve1000, 'curve1000', {'color': self.records[self.name]['pen'], 'dash': [3,3], 'width': 4})
 
+    def setLogMode(self, mode):
+        self.logMode = True
+        self.records[self.name]['logScale'] = mode
+        currentRange = self.vb.state['viewRange'][1]
+        self.plot.records[self.name]['axis'].setLogMode(self.records[self.name]['logScale'])
+        self.curve.setLogMode(False, mode)
+        self.curve10.setLogMode(False, mode)
+        self.curve100.setLogMode(False, mode)
+        self.curve1000.setLogMode(False, mode)
+        # self.vb.enableAutoRange(y=True)
+        if mode:
+            # print 'entering log mode, currentRange = ', currentRange, ' == ', [np.log10(i) for i in currentRange]
+            if currentRange[0] < 0:
+                newRange = [0,0]
+                newRange[1] = np.log10(currentRange[1])
+                newRange[0] = newRange[1] - np.log10(currentRange[1]-currentRange[0])
+            else:
+                newRange = [np.log10(i) for i in currentRange]
+            self.vb.setYRange(*newRange, padding=0)
+        else:
+            # print 'leaving log mode, currentRange = ', currentRange, ' == ', [10**i for i in currentRange]
+            newRange = [10**i for i in currentRange]
+            self.vb.setYRange(*newRange, padding=0)
+
     def redrawLines(self, points, curve, curvename, pen):
         if curve.isVisible() and self.visibility[curvename] is True and len(points) > 1:
-            curve.setData(np.array(points))
+            if self.logMode:
+                curve.setData(np.abs(np.array(points)))
+            else:
+                curve.setData(np.array(points))
 
     def changePenColour(self):
         self.curve.setPen(pg.mkPen(color=self.records[self.name]['pen']))
@@ -385,6 +409,6 @@ class curve(QtCore.QObject):
 
     ''' This updates the curve points based on the plot type and using the data from the timefilter function '''
     def updateData(self, data, points):
-        val = data[1] if not self.records[self.name]['logScale'] else math.log(data[1],10)
+        val = data[1] #if not self.records[self.name]['logScale'] else math.log(data[1],10)
         newpoint = (data[0], val)
         points.append(newpoint)

@@ -89,9 +89,9 @@ class createNormalSelectionBox(QtGui.QWidget):
         self.addButton = QtGui.QPushButton('Add Signal')
         self.addButton.setFixedWidth(100)
         if self.custom:
-            self.addButton.clicked.connect(self.parent.addTableRow)
-        else:
             self.addButton.clicked.connect(self.parent.addTableRowCustom)
+        else:
+            self.addButton.clicked.connect(self.parent.addTableRow)
         self.logTickBox = QtGui.QCheckBox('Log Scale')
         self.combo1.addItems(self.parent.headings)
         if not self.custom:
@@ -241,12 +241,12 @@ class signalTable(QtGui.QWidget):
 
     def addTableRow(self):
         row = self.rowNumber
-        combo1index = str(self.normalSelectionBox.children()[1].currentText())
-        combo1text = str(self.normalSelectionBox.children()[1].currentText())
-        combo2index = self.normalSelectionBox.children()[2].currentIndex()
-        combo3index = self.normalSelectionBox.children()[3].currentIndex()
-        combo3text = str(self.normalSelectionBox.children()[3].currentText())
-        combo4index = self.normalSelectionBox.children()[4].currentIndex()
+        combo1index = str(self.normalSelectionBox.combo1.currentText())
+        combo1text = str(self.normalSelectionBox.combo1.currentText())
+        combo2index = self.normalSelectionBox.combo2.currentIndex()
+        combo3index = self.normalSelectionBox.combo3.currentIndex()
+        combo3text = str(self.normalSelectionBox.combo3.currentText())
+        combo4index = self.normalSelectionBox.combo4.currentIndex()
         if isinstance(self.magnetnames[combo1text]['Names'][combo2index], (tuple, list, set)):
             functionArgument = self.magnetnames[combo1text]['Names'][combo2index][0]
         else:
@@ -254,34 +254,34 @@ class signalTable(QtGui.QWidget):
         name = functionArgument+'.'+self.magnetnames[combo1index]['PVs'].keys()[combo3index]
         freq = int(self.frequencies[combo4index])
         functionForm = self.magnetnames[combo1index]['PVs'][combo3text]
-        colourpickercolour = self.normalSelectionBox.children()[5]._color
-        logScale = self.logTickBox.isChecked()
+        colourpickercolour = self.normalSelectionBox.colorbox._color
+        logScale = self.normalSelectionBox.logTickBox.isChecked()
         if combo1index > 0:
             self.addRow(name, functionForm, functionArgument, freq, colourpickercolour, logScale=logScale)
 
     def addTableRowCustom(self):
         row = self.rowNumber
-        combo3index = self.customSelectionBox.selectionBoxlayout.itemAt(1).widget().currentIndex()
-        name = str(self.customSelectionBox.selectionBoxlayout.itemAt(0).widget().displayText())
-        freq = int(self.frequencies[combo3index])
+        combo4index = self.customSelectionBox.selectionBoxlayout.combo4.currentIndex()
+        name = str(self.customSelectionBox.selectionBoxlayout.combo1.displayText())
+        freq = int(self.frequencies[combo4index])
         functionForm = 'custom'
-        colourpickercolour = self.customcolorbox._color
-        logScale = self.logTickBox.isChecked()
+        colourpickercolour = self.customSelectionBox.colorbox._color
+        logScale = self.customSelectionBox.logTickBox.isChecked()
         self.addRow(string.replace(name,"_","$"), functionForm, name, freq, colourpickercolour, logScale=logScale)
 
     def changeSecondCombo(self, idnumber, ind):
         print('ind = ', ind)
         if ind == 'Custom':
-            self.customSelectionBox.selectionBoxlayout.itemAt(0).widget().setCurrentIndex(self.normalSelectionBox.selectionBoxlayout.itemAt(0).widget().currentIndex())
+            self.customSelectionBox.combo1.setCurrentIndex(self.normalSelectionBox.combo1.currentIndex())
             self.customPVInput = True
             self.normalSelectionBox.hide()
             self.customSelectionBox.show()
         else:
             if self.normalSelectionBox.isVisible():
-                self.customSelectionBox.selectionBoxlayout.itemAt(0).widget().setCurrentIndex(self.normalSelectionBox.selectionBoxlayout.itemAt(0).widget().currentIndex())
+                self.customSelectionBox.combo1.setCurrentIndex(self.normalSelectionBox.combo1.currentIndex())
             else:
-                self.normalSelectionBox.selectionBoxlayout.itemAt(0).widget().setCurrentIndex(self.customSelectionBox.selectionBoxlayout.itemAt(0).widget().currentIndex())
-            combo2 = self.normalSelectionBox.children()[2]
+                self.normalSelectionBox.combo1.setCurrentIndex(self.customSelectionBox.combo1.currentIndex())
+            combo2 = self.normalSelectionBox.combo2
             self.customPVInput = False
             self.normalSelectionBox.show()
             self.customSelectionBox.hide()
@@ -295,9 +295,9 @@ class signalTable(QtGui.QWidget):
 
     def changeThirdComboFromFirst(self, idnumber, ind):
         if not self.customPVInput or not ind == 'Custom':
-            combo1 = self.normalSelectionBox.children()[1]
-            combo2 = self.normalSelectionBox.children()[2]
-            combo3 = self.normalSelectionBox.children()[3]
+            combo1 = self.normalSelectionBox.combo1
+            combo2 = self.normalSelectionBox.combo2
+            combo3 = self.normalSelectionBox.combo3
             if combo3 != None:
                 signalType = str(combo1.currentText())
                 signalName = str(combo2.currentText())
@@ -308,8 +308,8 @@ class signalTable(QtGui.QWidget):
 
     def changeThirdComboFromSecond(self, idnumber, ind):
         if not self.customPVInput:
-            combo3 = self.normalSelectionBox.children()[3]
-            combo1 = self.normalSelectionBox.children()[1]
+            combo3 = self.normalSelectionBox.combo3
+            combo1 = self.normalSelectionBox.combo1
             if combo3 != None:
                 signalType = combo1.currentText()
                 combo3.clear()
