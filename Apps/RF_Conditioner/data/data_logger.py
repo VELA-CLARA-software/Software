@@ -5,15 +5,29 @@ from VELA_CLARA_RF_Modulator_Control import GUN_MOD_STATE
 from VELA_CLARA_Vac_Valve_Control import VALVE_STATE
 from VELA_CLARA_RF_Protection_Control import RF_GUN_PROT_STATUS
 import os
-
+import pickle
 
 class data_logger(object):
     my_name = 'data_logger'
     def __init__(self,
-                 log_param,
-
+                 log_param
                  ):
         self.log_param = log_param
+
+        self.pulse_count_log = log_param['PULSE_COUNT_BREAKDOWN_LOG_DIRECTORY'] + '\\' + \
+                        log_param['PULSE_COUNT_BREAKDOWN_LOG_FILENAME']
+
+
+    def get_pulse_count_breakdown_log(self):
+        with open(self.pulse_count_log) as f:
+            log = [[int(x) for x in line.split()] for line in f]
+
+        print ('get_pulse_count_breakdown_log', log)
+
+        for x,y in log:
+            print ('get_pulse_count_breakdown_log', x, y)
+
+        return log
 
     def start_data_logging(self):
         self.data_log_directory = self.log_param['DATA_LOG_DIRECTORY']  # MAGIC_STRING

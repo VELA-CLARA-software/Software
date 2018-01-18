@@ -150,7 +150,10 @@ class config_reader(object):
 
     def log_param(self):
         string_param = ['LOG_FILENAME','LOG_DIRECTORY','DATA_LOG_FILENAME','DATA_LOG_DIRECTORY',
-                        'OUTSIDE_MASK_FORWARD_FILENAME','OUTSIDE_MASK_REVERSE_FILENAME','OUTSIDE_MASK_DIRECTORY','OUTSIDE_MASK_PROBE_FILENAME']
+                        'OUTSIDE_MASK_FORWARD_FILENAME','OUTSIDE_MASK_REVERSE_FILENAME',
+                        'OUTSIDE_MASK_DIRECTORY','OUTSIDE_MASK_PROBE_FILENAME','PULSE_COUNT_BREAKDOWN_LOG_FILENAME',
+                        'PULSE_COUNT_BREAKDOWN_LOG_DIRECTORY'
+                        ]
         int_param = ['DATA_LOG_TIME']
         return self.get_param_dict(string_param=string_param,int_param=int_param)
 

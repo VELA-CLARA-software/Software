@@ -21,7 +21,7 @@ class controller_base(object):
 	# init LLRF Hardware Controllers
 	llrf_init = VELA_CLARA_LLRF_Control.init()
 	llrf_init.setVerbose()
-	#llrf_init.setQuiet()
+	llrf_init.setQuiet()
 	llrf_control = None  # LLRF HWC
 	llrf_handler = None
 	#

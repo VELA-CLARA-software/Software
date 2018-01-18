@@ -14,10 +14,15 @@ class rf_condition_data(dat.rf_condition_data_base):
     previous_main_monitor_states = {}
     # settings from config file
     llrf_param = None
-    power_inocrese_f1= None
+    power_increase_1= None
+    power_increase_2= None
+
+    pulse_break_down_log = None
+
     def __init__(self,logger=None):
         dat.rf_condition_data_base.__init__(self,logger=logger)
         self.llrf = None
+
 
 
     def power_increase_set_up(self):
@@ -28,11 +33,18 @@ class rf_condition_data(dat.rf_condition_data_base):
         print(self.my_name + ' power_increase_set_up: power_increase_1  =  ' + str(
             self.power_increase_1) + ' power_increase_2 = ' + str(self.power_increase_2))
 
+    def get_pulse_count_breakdown_log(self):
+        self.pulse_break_down_log = self.logger.get_pulse_count_breakdown_log()
+        for x,y in self.pulse_break_down_log:
+            print ('get_pulse_count_breakdown_log', x,y)
+
 
     def close(self):
         plt.close()
 
     def ceiling(self,x, base=1000):
+        if base ==0:
+            print 'MAJOR ERROR'
         return int(base * np.ceil(float(x) / base))
 
     def power_increase(self):

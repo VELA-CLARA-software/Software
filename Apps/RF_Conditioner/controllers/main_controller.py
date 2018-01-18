@@ -23,6 +23,7 @@ class main_controller(controller_base):
 		self.data_monitor.llrf_type = self.llrf_type
 		# start data recording
 		#
+		self.data.get_pulse_count_breakdown_log()
 		self.data.start_logging(self.log_param)
 
 		#
@@ -75,7 +76,7 @@ class main_controller(controller_base):
 
 		self.data_monitor.init_monitor_states()
 
-		self.llrf_control.setPulseCountOffset(410000)
+		#self.llrf_control.setPulseCountOffset(410000)
 		self.llrf_control.setAmpSP(500)
 		# remove time.sleep(10 at your peril
 		time.sleep(1)

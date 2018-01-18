@@ -1,5 +1,4 @@
 import monitor
-import pickle
 import data.rf_condition_data_base as dat
 import os
 import datetime
@@ -24,7 +23,6 @@ class outside_mask_trace_monitor(monitor.monitor):
                  llrf_control,
                  data_dict,
                  llrf_param,
-                 log_param,
                  breakdown_param,
                  logger
                 ):
@@ -47,7 +45,6 @@ class outside_mask_trace_monitor(monitor.monitor):
                 print(self.my_name + ' has ' + self.CPP)
 
         self.logger.start_break_down_log()
-
         self.llrf = llrf_control
         self.llrfObj = [self.llrf.getLLRFObjConstRef()]
         self.data_dict = data_dict
@@ -72,9 +69,6 @@ class outside_mask_trace_monitor(monitor.monitor):
             print(self.my_name +' NEW OUTSIDE MASK TRACE DETECTED, entering cooldown')
             self.data_dict[dat.breakdown_status] = state.BAD
             self.cooldown_timer.start(self.breakdown_param['OUTSIDE_MASK_COOLDOWN_TIME'])
-
-            #THE BELOW HAS DISABLED DATA SAVING"!!!!!
-            #time.sleep(1)
             self.get_new_outside_mask_traces(_count)
             self.previous_outside_mask_trace_count = _count
 
@@ -86,7 +80,7 @@ class outside_mask_trace_monitor(monitor.monitor):
 
             if 'FORWARD' in new['trace_name']:
                 self.forward_power_data.append(new)
-                print(self.my_name + ' forward trace outside mask! count = ' + str(len(self.forward_power_data)) + ' fn = ' +self.forward_file+str(len(self.forward_power_data)))
+                print(self.my_name + ' forward trace outside mask! count = ' + str(len(self.forward_power_data)))
                 self.logger.dump_forward(new,len(self.forward_power_data) )
 
             elif 'REVERSE' in new['trace_name']:
@@ -99,13 +93,4 @@ class outside_mask_trace_monitor(monitor.monitor):
                 print(self.my_name + ' probe trace outside mask! count = ' + str(len(self.probe_power_data)))
                 self.logger.dump_probe(new, len(self.probe_power_data))
 
-    # def save_breakdown(self, obj, num):
-    #     fn = self.log_directory + '/' + self.breakdown_file + '_' + str(num)
-    #     self.save(fn, obj)
-    #
-    # def dump_breakdown_data(self):
-    #     self.update_value()
-    #     fn = self.log_directory + '/' + self.breakdown_file
-    #     self.save(fn, self.breakdown_data)
-    
 

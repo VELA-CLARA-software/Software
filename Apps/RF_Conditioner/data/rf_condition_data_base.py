@@ -84,8 +84,6 @@ class rf_condition_data_base(QObject):
 
     # for logging
     log_param = None
-    data_log_filename = None
-    data_log_directory = None
     path = None
     time = None
     log_start = None

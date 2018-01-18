@@ -245,7 +245,6 @@ class data_monitoring_base(object):
 				llrf_control=llrf_control,
 				data_dict=self.data.values,
 				llrf_param=llrf_param,
-				log_param=log_param,
 				breakdown_param=breakdown_param,
 				logger=logger
 			)
