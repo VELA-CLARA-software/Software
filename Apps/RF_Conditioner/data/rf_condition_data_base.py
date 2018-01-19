@@ -34,22 +34,39 @@ forward_outside_mask_count = 'probe_outside_mask_count'
 reverse_outside_mask_count = 'reverse_outside_mask_count'
 
 breakdown_status = 'breakdown_status'
+breakdown_rate_aim = 'breakdown_rate_aim'
 
-breakdown_rate_limit = 'breakdown_rate_limit'
+# these are values from the pulse_breakdown_log
+log_active_pulse_count = 'log_active_pulse_count'
+log_breakdown_count = 'log_breakdown_count'
+log_amp_set = 'log_amp_set'
+log_index = 'log_index'
+
 breakdown_count = 'breakdown_count'
 elapsed_time = 'elapsed_time'
 breakdown_rate = 'breakdown_rate'
+breakdown_rate_hi= 'breakdown_rate_hi'
+last_106_bd_count='last_106_bd_count'
+
 pulse_count = 'pulse_count'
+event_pulse_count = 'event_pulse_count'
 modulator_state = 'modulator_state'
 rfprot_state = 'rfprot_state'
 llrf_output = 'llrf_output'
 llrf_ff_amp_locked = 'llrf_ff_amp_locked'
 llrf_ff_ph_locked = 'llrf_ff_ph_locked'
+
+power_aim = 'power_aim'
+pulse_length_aim = 'pulse_length_aim'
+pulse_length_step = 'pulse_length_step'
+pulse_length_start = 'pulse_length_start'
+
+
 amp_ff = 'amp_ff'
 amp_sp = 'amp_sp'
 all_value_keys = [rev_power_spike_status,
                   num_outside_mask_traces,
-                  breakdown_rate_limit,
+                  breakdown_rate_aim,
                   vac_spike_status,
                   vac_valve_status,
                   DC_spike_status,
@@ -57,6 +74,7 @@ all_value_keys = [rev_power_spike_status,
                   modulator_state,
                   breakdown_count,
                   breakdown_status,
+                  breakdown_rate_hi,
                   breakdown_rate,
                   fwd_cav_pwr,
                   fwd_kly_pwr,
@@ -70,10 +88,21 @@ all_value_keys = [rev_power_spike_status,
                   llrf_ff_ph_locked,
                   probe_pwr,
                   pulse_count,
+                  event_pulse_count,
                   water_temp,
                   vac_level,
                   cav_temp,
-                  time_stamp
+                  time_stamp,
+                  log_active_pulse_count,
+                  log_breakdown_count,
+                  log_amp_set,
+                  log_index,
+                  power_aim,
+                  pulse_length_aim,
+                  pulse_length_step,
+                  pulse_length_start,
+                  amp_sp,
+                  last_106_bd_count
                   ]
 
 class rf_condition_data_base(QObject):
@@ -101,7 +130,7 @@ class rf_condition_data_base(QObject):
     old_c = 0
 
     values = {}
-    [values.update({x: -999}) for x in all_value_keys]
+    [values.update({x: 0}) for x in all_value_keys]
     def __init__(self,
                  logger=None):
         QObject.__init__(self)
@@ -124,18 +153,20 @@ class rf_condition_data_base(QObject):
         self.values[water_temp] = dummy + 1
         self.values[pulse_length] = dummy + 2
         self.values[fwd_cav_pwr] = dummy + 3
-        self.values[fwd_kly_pwr] = dummy + 4
         self.values[rev_kly_pwr] = dummy + 5
         self.values[rev_cav_pwr] = dummy + 6
         self.values[probe_pwr] = dummy + 7
         self.values[vac_level] = dummy + 8
-        self.values[breakdown_rate_limit] = dummy + 10
+
+        self.values[breakdown_rate_aim] = dummy + 10
+        self.values[breakdown_rate_hi] = False
         self.values[breakdown_rate] = dummy + 11
-        self.values[pulse_count] = dummy + 12
         self.values[breakdown_count] = dummy + 14
+
+        self.values[pulse_count] = dummy + 12
+        self.values[event_pulse_count] = dummy + 13
+
         self.values[elapsed_time] = dummy + 15
-        self.values[amp_ff] = dummy + 16
-        self.values[amp_sp] = dummy + 17
         self.values[DC_level] = dummy + 18
         self.timer = QTimer()
         # matplot lib bplot set-up, plotting needs improving for speed...

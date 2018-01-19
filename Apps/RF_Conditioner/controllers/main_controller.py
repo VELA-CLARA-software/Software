@@ -21,10 +21,10 @@ class main_controller(controller_base):
 		controller_base.__init__(self, argv, config_file)
 		self.data.llrf_type = self.llrf_type
 		self.data_monitor.llrf_type = self.llrf_type
-		# start data recording
-		#
-		self.data.get_pulse_count_breakdown_log()
-		self.data.start_logging(self.log_param)
+
+		# more set-up after config read
+		self.data.llrf_param= self.llrf_param
+		self.data.init_after_config_read()
 
 		#
 		# start monitoring data
@@ -56,16 +56,22 @@ class main_controller(controller_base):
 		self.gui.show()
 		self.gui.activateWindow()
 
+		# more set-up after controller built
+		self.llrf_control.addPulseCountOffset(self.data.values[dat.log_active_pulse_count])
+		print(self.my_name + ' setting pulse length to last previous log value = ' + str(self.llrf_param['PULSE_LENGTH_START']))
+		self.llrf_handler.set_pulse_length( self.llrf_param['PULSE_LENGTH_START'] )
 		# set dat llrf parm, so dat can work out the
 		# amplitude increase step size
 		print self.llrf_param['RF_INCREASE_RATE']
 		self.data.llrf_param = self.llrf_param
 		self.data.power_increase_set_up()
-
 		# everything now runs from the main_loop
 		#
 		#self.llrf_handler.check_masks()
 		self.monitor_states = self.data.main_monitor_states
+		# start data recording
+		#
+		self.data.start_logging(self.log_param)
 
 		self.main_loop()
 
@@ -97,8 +103,8 @@ class main_controller(controller_base):
 		while 1:
 			QApplication.processEvents()
 
-			#the GUI can overide this loop
-			if self.gui.can_run:
+			#the GUI can overide omcreasing the power
+			if self.gui.can_ramp:
 
 			# update main monitor states
 
@@ -108,14 +114,11 @@ class main_controller(controller_base):
 				if self.data_monitor.new_bad():
 					print('MAIN-LOOP New Bad State droppingng SP=0')
 					self.llrf_control.setGlobalCheckMask(False)
-
 					if self.data_monitor.vac_new_bad():
 						self.llrf_handler.set_amp( 5 ) # vac amp set value
 					if self.data_monitor.dc_new_bad():
 						self.llrf_handler.set_amp( 6 ) # DC amp set value
 
-					while 1:
-						QApplication.processEvents()
 				if 	self.data_monitor.new_good_no_bad():
 					m = max([i[0] for i in self.data.sp_pwr_hist])
 					print(self.my_name +' new good, seting amp_sp = ' + str(m ))
@@ -144,14 +147,18 @@ class main_controller(controller_base):
 							i = 1
 						# if there has been enough time since
 						# the last increase get the new llrf sp
-						if self.seconds_elapsed(self.llrf_param['TIME_BETWEEN_RF_INCREASES']):
+						# we use dto updat ebased on time elapsed
+						#if self.seconds_elapsed(self.llrf_param['TIME_BETWEEN_RF_INCREASES']):
+						# now we update base do npulses
+						if self.data.values['event_pulse_count'] > 150: # check this number in the look up table / index
 							self.apply_new_amp()
 							self.start_time()
+							self.data_monitor.outside_mask_trace_monitor.reset_event_pulse_count()
 				else:
 					pass
 					#print('not all good')
 			else:
-				print('press start ramp to continue')
+				#print('press start ramp to continue')
 				time.sleep(1)
 
 	def check_vac(self):

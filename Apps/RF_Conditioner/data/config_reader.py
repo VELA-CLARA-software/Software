@@ -176,10 +176,12 @@ class config_reader(object):
     def llrf_param(self):
         type_param=['RF_STRUCTURE']
         int_param=['TIME_BETWEEN_RF_INCREASES','DEFAULT_RF_INCREASE_LEVEL','RF_REPETITION_RATE','BREAKDOWN_RATE_AIM',
-                   'LLRF_CHECK_TIME','NORMAL_POWER_INCREASE','LOW_POWER_INCREASE','LOW_POWER_INCREASE_RATE_LIMIT']
+                   'LLRF_CHECK_TIME','NORMAL_POWER_INCREASE','LOW_POWER_INCREASE','LOW_POWER_INCREASE_RATE_LIMIT'
+                   ,'NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY'
+                   ]
         string_param=[]
         monitor_param=['TRACES_TO_SAVE']
-        float_param=['MEAN_TIME_TO_AVERAGE','RF_INCREASE_LEVEL','RF_INCREASE_RATE']
+        float_param=['MEAN_TIME_TO_AVERAGE','RF_INCREASE_LEVEL','RF_INCREASE_RATE','POWER_AIM','PULSE_LENGTH_AIM','PULSE_LENGTH_STEP']
         return self.get_param_dict(string_param=string_param,int_param=int_param,
                                    type_param=type_param,monitor_param=monitor_param,
                                    float_param=float_param

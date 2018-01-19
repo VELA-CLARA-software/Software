@@ -41,7 +41,7 @@ class llrf_simple_param_monitor(monitor):
         self.data_dict[dat.llrf_ff_ph_locked] = self.llrfObj[0].ff_ph_lock_state
         self.data_dict[dat.llrf_output] = self.llrfObj[0].rf_output
         self.data_dict[dat.amp_sp] = self.llrfObj[0].amp_sp
-        self.data_dict[dat.amp_ff] = self.llrfObj[0].amp_ff
+        #self.data_dict[dat.amp_ff] = self.llrfObj[0].amp_ff
 
 
     def get_mean_power(self,key,trace):

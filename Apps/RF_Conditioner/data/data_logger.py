@@ -19,14 +19,12 @@ class data_logger(object):
 
 
     def get_pulse_count_breakdown_log(self):
+        log = []
         with open(self.pulse_count_log) as f:
-            log = [[int(x) for x in line.split()] for line in f]
-
-        print ('get_pulse_count_breakdown_log', log)
-
-        for x,y in log:
-            print ('get_pulse_count_breakdown_log', x, y)
-
+            for line in f:
+                if '#' not in line:
+                    log.append([int(x) for x in line.split()])
+        print(self.my_name + ' read pulse_count_log: ' + self.pulse_count_log)
         return log
 
     def start_data_logging(self):
@@ -38,7 +36,8 @@ class data_logger(object):
         self.log_start_str = self.log_start.isoformat('-').replace(":", "-").split('.', 1)[0]
 
         self.data_path = self.data_log_directory + '\\' + self.data_log_filename + '_' + self.log_start_str
-
+        print('*')
+        print('*** start_data_logging****')
         print(self.my_name + ', data_log_directory = ' + self.data_log_directory)
         print(self.my_name + ', data_log_filename = ' + self.data_log_filename)
         print(self.my_name + ', data_path = ' + self.data_path)
@@ -47,6 +46,8 @@ class data_logger(object):
         print(
         self.my_name + ' starting monitoring, update time = ' + str(self.log_param['DATA_LOG_TIME']))  # MAGIC_STRING
         return self.log_start
+        self.start_break_down_log()
+
 
     def write_data_log_header(self,values):
         print(self.my_name + ' writing data_log header to ' + self.data_path)
