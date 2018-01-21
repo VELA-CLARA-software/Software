@@ -10,19 +10,12 @@ import time
 class llrf_handler(llrf_handler_base):
     #whoami
     my_name= 'llrf_handler'
-    def __init__(self,
-                 llrf_controller,
-                 breakdown_param,
-                 llrf_param
-                 ):
-        llrf_handler_base.__init__(self,
-                                   llrf_controller=llrf_controller,
-                                   breakdown_param=breakdown_param,
-                                   llrf_param=llrf_param)
-
+    def __init__(self):
+        #super(llrf_handler_base,self).__init__()
+        llrf_handler_base.__init__(self)
         # assume true, but next loops will set to false if it fails
         # start the timer (at the ms level
-        self.llrf.startTimer()
+        llrf_handler_base.llrf_control.startTimer()
         self.kly_fwd_pwr_data = []
 
 

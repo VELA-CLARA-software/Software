@@ -17,9 +17,11 @@ import data.rf_condition_data_base as dat
 # and then update as appropriate!
 # every time
 # other data  should be monitored in the dat aclass?
+from base.base import base
 
 
-class gui_conditioning(QMainWindow, Ui_MainWindow):
+
+class gui_conditioning(QMainWindow, Ui_MainWindow, base):
     my_name = 'gui_conditioning'
     # clipboard
     clip_app = QApplication([])
@@ -42,25 +44,24 @@ class gui_conditioning(QMainWindow, Ui_MainWindow):
     widget = {}
     previous_values = {}
     [previous_values.update({x: None}) for x in dat.all_value_keys]
-    
-        
+    #
+
     def __init__(self,
                  window_name = "",
-                 root = "/",
-                 update_time = 2000,
-                 data = None,
+                 root = "/"
                  ):
         QMainWindow.__init__(self)
+        super(base,self).__init__()
         self.setupUi(self)
-        self.values  = data.values
-        self.data = data
+        self.values  = base.data.values
+        self.data = base.data
         # CONNECT BUTTONS TO FUNCTIONS
         self.start_pause_ramp_button.clicked.connect(self.handle_start_pause_ramp_button)
         self.shutdown_rf_button.clicked.connect(self.handle_shutdown_rf_button)
         self.copy_to_clipboard_button.clicked.connect(self.handle_copy_to_clipboard_button)
 
         # widgets are held in dict, with same keys as data
-        self.init_widget_dict(data)
+        self.init_widget_dict(base.data)
         # the clipboard has a string version of data
         self.clip_vals = self.values.copy()
         # init to paused
@@ -70,7 +71,8 @@ class gui_conditioning(QMainWindow, Ui_MainWindow):
         self.timer = QTimer()
         self.timer.setSingleShot(False)
         self.timer.timeout.connect(self.update_gui)
-        self.timer.start(update_time)
+        self.timer.start(base.config.gui_config['GUI_UPDATE_TIME'])
+
     # custom close function
     def closeEvent(self,event):
         self.closing.emit()

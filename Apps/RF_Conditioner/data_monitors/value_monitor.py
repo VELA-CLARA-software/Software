@@ -1,7 +1,7 @@
-import monitor
+from monitor import monitor
 
 
-class value_monitor(monitor.monitor):
+class value_monitor(monitor):
     # whoami
     my_name = 'value_monitor'
     # the latest signal value
@@ -9,6 +9,27 @@ class value_monitor(monitor.monitor):
     # a counter indexing each unique signal reading
     _reading_counter = -1
     set_success = False
+
+
+    # get latest value from gen_monitor
+    def __init__(self,
+                 gen_mon=None,
+                 id_key='',
+                 data_dict_key='',
+                 update_time=1000
+                 ):
+        # init base-class
+        # super(monitor, self).__init__()
+        monitor.__init__(self,update_time=1000)
+        self.gen_monitor = gen_mon
+        #self.data_dict = monitor.data.values
+        self.data_dict_key = data_dict_key
+        self.id = id_key
+        # a timer to run check_signal automatically every self.update_time
+        self.timer.timeout.connect(self.update_value)
+        self.timer.start(self.update_time)
+        self.set_success = True
+
     def update_value(self):
         # if self._connected:
         value = self.gen_monitor.getCounterAndValue(self.id)
@@ -17,34 +38,7 @@ class value_monitor(monitor.monitor):
         if value.keys()[0] != self._reading_counter:
             # update _latest_value
             self._latest_value = value.values()[0]
-            self.data_dict[0][self.data_dict_key] = self._latest_value
+            monitor.data.values[self.data_dict_key] = self._latest_value
             # set new _reading_counter
             self._reading_counter = value.keys()[0]
             #print(self.my_name, ' new_value = ', self._latest_value, 'counter  = ',self._reading_counter)
-            return True
-        return False
-
-    # get latest value from gen_monitor
-    def __init__(self,
-                 llrf_type=monitor.LLRF_TYPE.UNKNOWN_TYPE,
-                 gen_mon=None,
-                 settings_dict=None,
-                 id_key='',
-                 data_dict=None,
-                 data_dict_key='',
-                 update_time=1000
-                 ):
-        # init base-class
-        # super(monitor, self).__init__()
-        monitor.monitor.__init__(self,
-                                 update_time,
-                                 llrf_type
-                                 )
-        self.gen_monitor = gen_mon
-        self.data_dict = [data_dict]
-        self.data_dict_key = data_dict_key
-        self.id = settings_dict[id_key]
-        # a timer to run check_signal automatically every self.update_time
-        self.timer.timeout.connect(self.update_value)
-        self.timer.start(self.update_time)
-        self.set_success = True

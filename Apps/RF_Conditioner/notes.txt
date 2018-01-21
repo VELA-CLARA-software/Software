@@ -3,3 +3,14 @@ graph updating ? is it time consuming
 when to reset the mask?
 create a look up table of pulse count vs power(fast??)
 use the above table to index current power and increment / decrement on events
+
+logger has print, write to event log, then send as signal to gui
+look up table for power / pulse held in data and data gives next step for up or down, and has current index
+have to think about what to do with kly-pwr_v_amp when we move down in power, delete data ?
+kly_fwd_power should use means,apart from the data we are fitting ? and replace lots of points with mean 
+last_10^6_log add lastest pulse count, breakdowns to end and remove out of date pulse counts form start
+then update breakdown rate and breakdownrate-HI
+
+MAKE SURE THAT twin vac and dc events don't add two breakdowns
+
+only increase breakdown when not in cooldown

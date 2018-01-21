@@ -28,14 +28,14 @@
 #
 # base-class
 
-import monitor
-from PyQt4.QtCore import QThread
+from monitor import monitor
+from VELA_CLARA_enums import STATE
 
 from numpy import mean
 import time
 
 
-class spike_monitor(monitor.monitor):
+class spike_monitor(monitor):
     # whoami
     my_name = 'spike_monitor'
     # a history of the values when not in cooldown
@@ -56,17 +56,15 @@ class spike_monitor(monitor.monitor):
     _mean_level = 1
 
     def __init__(self,
-                 llrf_control,
                  gen_mon,
-                 settings_dict,
+                 #settings_dict,
                  id_key,
-                 decay_mode_key,
-                 spike_delta_key,
-                 spike_decay_level_key,
-                 spike_decay_time_key,
-                 num_samples_to_average_key,
-                 update_time_key,
-                 data_dict,
+                 decay_mode,
+                 spike_delta,
+                 spike_decay_level,
+                 spike_decay_time,
+                 num_samples_to_average,
+                 update_time,
                  data_dict_val_key,
                  data_dict_state_key,
                  should_drop_amp,
@@ -76,25 +74,22 @@ class spike_monitor(monitor.monitor):
         self.my_name = my_name
         # init base-class
         # super(monitor, self).__init__()
-        monitor.monitor.__init__(self)
+        monitor.__init__(self)
         # see config_reader and.or config file for keys / values
-        self.llrf = llrf_control
-        self.should_drop_amp = settings_dict[should_drop_amp]
+        #self.llrf = llrf_control
+        self.should_drop_amp = should_drop_amp
 
         if self.should_drop_amp:
             print('dropping amp')
         else:
             print('Not dropping amp')
 
-
-
-        self.amp_drop_value = settings_dict[amp_drop_value]
-        self.data_dict = [data_dict]
+        self.amp_drop_value = amp_drop_value
         self.data_dict_val_key = data_dict_val_key
         self.data_dict_state_key = data_dict_state_key
-        self.id = settings_dict[id_key]
+        self.id = id_key
         # set cool-down mode based on config, default will be LEVEL
-        self.set_cooldown_mode(settings_dict.get(decay_mode_key))
+        self.set_cooldown_mode(decay_mode)
         # a general_monitor HWC
         self.gen_monitor = gen_mon
         # a timer to run check_signal automatically every self.update_time
@@ -102,30 +97,30 @@ class spike_monitor(monitor.monitor):
         # the amount above baseline (self._mean_level) that triggers a vacuum spike event
         # noinspection PyBroadException
         try:
-            self.spike_delta = settings_dict[spike_delta_key]
+            self.spike_delta = spike_delta
         except:
             self.spike_delta = None
         # factor applied to _mean_level to set the "recovered from spike" value
         # we're setting a recovery based on vacuum level not time here
         # this is for 'level' cool-down mode
         try:
-            self.spike_decay_level = settings_dict[spike_decay_level_key]
+            self.spike_decay_level = spike_decay_level
         except:
             self.spike_decay_level = 1.1
 
         try:
-            self.cool_down_time = settings_dict[spike_decay_time_key]
+            self.cool_down_time = spike_decay_time
         except:
             # set a default value???
             self.cool_down_time = 5000
         try:
-            self.update_time = settings_dict[update_time_key]
+            self.update_time = update_time
         except:
             # set a default value???
             self.update_time = 1000
         # the number of signal values to keep in the history buffer
         try:
-            self._num_samples_to_average = settings_dict[num_samples_to_average_key]
+            self._num_samples_to_average = num_samples_to_average
         except:
             self._num_samples_to_average = None
         # now we're ready to start the timer, (could be called from a function)
@@ -133,7 +128,7 @@ class spike_monitor(monitor.monitor):
         # if self.sanity_checks(item):
         #     self.timer.start(self.update_time)
         #     self.set_good()
-        self.data_dict[0][self.data_dict_state_key] = monitor.STATE.UNKNOWN
+        monitor.data.values[self.data_dict_state_key] = STATE.UNKNOWN
         self.run()
 
     def run(self):
@@ -172,7 +167,7 @@ class spike_monitor(monitor.monitor):
             #print('spike ',self._latest_value, self.spike_delta, self._latest_value-self._mean_level)
             # this is the first place we can detect a spike, so drop amp here
             if self.should_drop_amp:
-                self.llrf.setAmpSP(self.amp_drop_value)
+                monitor.llrf_control.setAmpSP(self.amp_drop_value)
             # start the cooldown
             self.start_cooldown()
         else:
@@ -229,7 +224,7 @@ class spike_monitor(monitor.monitor):
         if value.keys()[0] != self._reading_counter:
             # update _latest_value
             self._latest_value = value.values()[0]
-            self.data_dict[0][self.data_dict_val_key] = self._latest_value
+            monitor.data.values[self.data_dict_val_key] = self._latest_value
             # set new _reading_counter
             self._reading_counter = value.keys()[0]
             #print('new_value = ', self._latest_value, 'counter  = ',self._reading_counter,' , ',
@@ -240,7 +235,7 @@ class spike_monitor(monitor.monitor):
         return False
 
     def set_bad(self):
-        self.data_dict[0][self.data_dict_state_key] = monitor.STATE.BAD
+        monitor.data.values[self.data_dict_state_key] = STATE.BAD
 
     def set_good(self):
-        self.data_dict[0][self.data_dict_state_key] = monitor.STATE.GOOD
+        monitor.data.values[self.data_dict_state_key] = STATE.GOOD

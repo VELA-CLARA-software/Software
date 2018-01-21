@@ -19,13 +19,13 @@ class data_monitoring(data_monitoring_base):
 	my_name = 'data_monitoring'
 
 	monitor_funcs = {}
-	def __init__(self,data):
-		data_monitoring_base.__init__(self,data=data)
+	def __init__(self):
+		data_monitoring_base.__init__(self)
 		# these are the monitors for the main_loop param
 		# they are VAC,DC,BREAKDOWN,BREAKDOWN_RATE,RF 
 		# and connected if monitoring those parameters
-		self.main_monitor_states = data.main_monitor_states
-		self.previous_main_monitor_states = data.previous_main_monitor_states
+		self.main_monitor_states = data_monitoring.data.main_monitor_states
+		self.previous_main_monitor_states = data_monitoring.data.previous_main_monitor_states
 
 
 	def init_monitor_states(self):

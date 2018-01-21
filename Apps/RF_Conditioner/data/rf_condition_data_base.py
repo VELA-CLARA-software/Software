@@ -8,6 +8,7 @@ from VELA_CLARA_LLRF_Control import LLRF_TYPE
 import datetime
 import numpy as np
 import matplotlib.pyplot as plt
+from data.config_reader import config_reader
 
 
 # keys for all the data we monitor
@@ -61,6 +62,9 @@ pulse_length_aim = 'pulse_length_aim'
 pulse_length_step = 'pulse_length_step'
 pulse_length_start = 'pulse_length_start'
 
+required_pulses = 'required_pulses'
+next_power_increase = 'next_power_increase'
+next_power_decrease = 'next_power_decrease'
 
 amp_ff = 'amp_ff'
 amp_sp = 'amp_sp'
@@ -111,6 +115,11 @@ class rf_condition_data_base(QObject):
     # we know there will be some LLRF involved
     llrf_type = LLRF_TYPE.UNKNOWN_TYPE
 
+    # config
+    config = config_reader()
+
+
+
     # for logging
     log_param = None
     path = None
@@ -131,58 +140,68 @@ class rf_condition_data_base(QObject):
 
     values = {}
     [values.update({x: 0}) for x in all_value_keys]
-    def __init__(self,
-                 logger=None):
+    values[vac_valve_status] = VALVE_STATE.VALVE_ERROR
+    values[vac_spike_status] = STATE.UNKNOWN
+    values[DC_spike_status] = STATE.UNKNOWN
+    values[breakdown_status] = STATE.UNKNOWN
+    values[rev_power_spike_status] = STATE.UNKNOWN
+    values[modulator_state] = GUN_MOD_STATE.UNKNOWN1
+    values[rfprot_state] = RF_GUN_PROT_STATUS.UNKNOWN
+    values[llrf_output] = STATE.UNKNOWN
+    values[llrf_ff_amp_locked] = STATE.UNKNOWN
+    dummy = -999.0
+    values[cav_temp] = dummy
+    values[water_temp] = dummy + 1
+    values[pulse_length] = dummy + 2
+    values[rev_kly_pwr] = dummy + 5
+    values[rev_cav_pwr] = dummy + 6
+    values[probe_pwr] = dummy + 7
+    values[vac_level] = dummy
+    values[breakdown_rate_aim] = dummy + 10
+    values[breakdown_rate_hi] = False
+    values[breakdown_rate] = dummy + 11
+    values[breakdown_count] = dummy +2
+    values[pulse_count] = dummy + 13
+    values[event_pulse_count] = dummy +14
+    values[elapsed_time] = dummy + 15
+    values[DC_level] = dummy + 16
+
+    #logger
+    _logger = None
+    _llrf_config = None
+    _log_config = None
+
+    def __init__(self):
         QObject.__init__(self)
-        self.llrf = None
-
-        self.logger = logger
-
-        self.values[vac_valve_status] = VALVE_STATE.VALVE_ERROR
-        self.values[vac_spike_status] = STATE.UNKNOWN
-        self.values[DC_spike_status] = STATE.UNKNOWN
-        self.values[breakdown_status ] = STATE.UNKNOWN
-        self.values[rev_power_spike_status] = STATE.UNKNOWN
-        self.values[modulator_state] = GUN_MOD_STATE.UNKNOWN1
-        self.values[rfprot_state] = RF_GUN_PROT_STATUS.UNKNOWN
-        self.values[llrf_output] = STATE.UNKNOWN
-        self.values[llrf_ff_amp_locked] = STATE.UNKNOWN
-
-        dummy = -999.0
-        self.values[cav_temp] = dummy
-        self.values[water_temp] = dummy + 1
-        self.values[pulse_length] = dummy + 2
-        self.values[fwd_cav_pwr] = dummy + 3
-        self.values[rev_kly_pwr] = dummy + 5
-        self.values[rev_cav_pwr] = dummy + 6
-        self.values[probe_pwr] = dummy + 7
-        self.values[vac_level] = dummy + 8
-
-        self.values[breakdown_rate_aim] = dummy + 10
-        self.values[breakdown_rate_hi] = False
-        self.values[breakdown_rate] = dummy + 11
-        self.values[breakdown_count] = dummy + 14
-
-        self.values[pulse_count] = dummy + 12
-        self.values[event_pulse_count] = dummy + 13
-
-        self.values[elapsed_time] = dummy + 15
-        self.values[DC_level] = dummy + 18
         self.timer = QTimer()
         # matplot lib bplot set-up, plotting needs improving for speed...
         plt.ion()
         plt.show()
 
+    @property
+    def logger(self):
+        return rf_condition_data_base._logger
+    @logger.setter
+    def logger(self,value):
+        rf_condition_data_base._logger = value
+    @property
+    def llrf_config(self):
+        return rf_condition_data_base._llrf_config
+    @llrf_config.setter
+    def llrf_config(self,value):
+        rf_condition_data_base._llrf_config= value
 
-    def start_logging(self, log_param):
+
+
+    def start_logging(self):
         self.log_start = self.logger.start_data_logging()
         self.timer.timeout.connect(self.log)
-        self.timer.start(log_param['DATA_LOG_TIME'])
+        self.timer.start(rf_condition_data_base.config.log_config['DATA_LOG_TIME'])
 
     def timestamp(self):
         ts = datetime.datetime.now() - self.log_start
         #print 'time = ' + str(ts.total_seconds())
-        self.values[time_stamp] = ts.total_seconds()
+        rf_condition_data_base.values[time_stamp] = ts.total_seconds()
 
 
 
@@ -193,14 +212,14 @@ class rf_condition_data_base(QObject):
         self.log_kly_fwd_power_vs_amp()
         self.timestamp()
         if self.should_write_header:
-            self.logger.write_data_log_header(self.values)
+            self.logger.write_data_log_header(rf_condition_data_base.values)
             self.should_write_header = False
-        self.logger.write_data(self.values)
+        self.logger.write_data(rf_condition_data_base.values)
 
     def log_kly_fwd_power_vs_amp(self):
-        self.kly_fwd_power_history.append(self.values[fwd_kly_pwr ])
-        self.amp_sp_history.append(self.values[amp_sp ])
-        self.sp_pwr_hist.append( [self.values[amp_sp ],self.values[fwd_kly_pwr]] )
+        self.kly_fwd_power_history.append(rf_condition_data_base.values[fwd_kly_pwr ])
+        self.amp_sp_history.append(rf_condition_data_base.values[amp_sp ])
+        self.sp_pwr_hist.append( [rf_condition_data_base.values[amp_sp ],self.values[fwd_kly_pwr]] )
         #self.max_sp = [i[0] for i in self.sp_pwr_hist]
 
 

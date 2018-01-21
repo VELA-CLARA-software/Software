@@ -6,47 +6,58 @@ from VELA_CLARA_Vac_Valve_Control import VALVE_STATE
 from VELA_CLARA_RF_Protection_Control import RF_GUN_PROT_STATUS
 import os
 import pickle
+from data.config_reader import config_reader
+
 
 class data_logger(object):
     my_name = 'data_logger'
-    def __init__(self,
-                 log_param
-                 ):
-        self.log_param = log_param
+    config = config_reader()
+    _log_config = None
 
-        self.pulse_count_log = log_param['PULSE_COUNT_BREAKDOWN_LOG_DIRECTORY'] + '\\' + \
-                        log_param['PULSE_COUNT_BREAKDOWN_LOG_FILENAME']
+    log_start = datetime.now()
+    log_start_str = log_start.isoformat('-').replace(":", "-").split('.', 1)[0]
+
+    def __init__(self):
+        log_param = data_logger.config.log_config
+
+    @property
+    def log_config(self):
+        return data_logger._log_config
+
+    @log_config.setter
+    def log_config(self,value):
+        data_logger._log_config = value
+        self.log_directory = data_logger.config.log_config['LOG_DIRECTORY'] + self.log_start_str
+        os.makedirs(self.log_directory)
+        self.working_directory = self.log_directory + '\\'
+        self.data_path = self.working_directory + self.log_config['DATA_LOG_FILENAME']  # MAGIC_STRING
+        self.forward_file = self.working_directory + self._log_config['OUTSIDE_MASK_FORWARD_FILENAME']  #
+        self.probe_file = self.working_directory + self._log_config['OUTSIDE_MASK_PROBE_FILENAME']  #
+        self.reverse_file = self.working_directory + self._log_config['OUTSIDE_MASK_REVERSE_FILENAME']
+        #
 
 
     def get_pulse_count_breakdown_log(self):
+        self.pulse_count_log = data_logger.config.log_config['LOG_DIRECTORY']+ \
+                               data_logger.config.log_config['PULSE_COUNT_BREAKDOWN_LOG_FILENAME']
         log = []
         with open(self.pulse_count_log) as f:
             for line in f:
                 if '#' not in line:
                     log.append([int(x) for x in line.split()])
-        print(self.my_name + ' read pulse_count_log: ' + self.pulse_count_log)
+        print('*')
+        print('*** ' + self.my_name + ' read pulse_count_log: ' + self.pulse_count_log + '***')
+        for i in log:
+            print i
+        log.append(log[-1])
         return log
 
     def start_data_logging(self):
-        self.data_log_directory = self.log_param['DATA_LOG_DIRECTORY']  # MAGIC_STRING
-        self.data_log_filename = self.log_param['DATA_LOG_FILENAME']  # MAGIC_STRING
-
-        self.log_start = datetime.now()
-
-        self.log_start_str = self.log_start.isoformat('-').replace(":", "-").split('.', 1)[0]
-
-        self.data_path = self.data_log_directory + '\\' + self.data_log_filename + '_' + self.log_start_str
         print('*')
         print('*** start_data_logging****')
-        print(self.my_name + ', data_log_directory = ' + self.data_log_directory)
-        print(self.my_name + ', data_log_filename = ' + self.data_log_filename)
         print(self.my_name + ', data_path = ' + self.data_path)
-        print(
-        self.my_name + ' starting monitoring, update time = ' + str(self.log_param['DATA_LOG_TIME']))  # MAGIC_STRING
-        print(
-        self.my_name + ' starting monitoring, update time = ' + str(self.log_param['DATA_LOG_TIME']))  # MAGIC_STRING
+        print(self.my_name + ' starting monitoring, update time = ' + str(self.log_config['DATA_LOG_TIME']))#MAGIC_STRING
         return self.log_start
-        self.start_break_down_log()
 
 
     def write_data_log_header(self,values):
@@ -94,27 +105,6 @@ class data_logger(object):
         else:
             print(self.my_name + ' write_binary() error unknown type, ' + str(type(val)) )
         #print str(val) + '   ' + str(type(val))
-
-
-    def start_break_down_log(self):
-        self.breakdown_directory = self.log_param['OUTSIDE_MASK_DIRECTORY']+'\\' + self.log_start_str  #MAGIC_STRING
-        os.makedirs(self.breakdown_directory)
-        print(self.my_name + ' breakdown_directory = ' + self.breakdown_directory)
-        try:
-            self.forward_file = self.breakdown_directory +'\\' + self.log_param['OUTSIDE_MASK_FORWARD_FILENAME']#MAGIC_STRING
-            print(self.my_name + ' forward_file = ' + self.forward_file)
-        except:
-            self.forward_file = None
-        try:
-            self.reverse_file = self.breakdown_directory +'\\' + self.log_param['OUTSIDE_MASK_REVERSE_FILENAME']#MAGIC_STRING
-            print(self.my_name + ' reverse_file = ' + self.reverse_file)
-        except:
-            self.reverse_file = None
-        try:
-            self.probe_file = self.breakdown_directory +'\\' + log_param['OUTSIDE_MASK_PROBE_FILENAME']#MAGIC_STRING
-            print(self.my_name + ' probe_file   = ' + self.probe_file)
-        except:
-            self.probe_file = None#add to attributes
 
 
     def dump_forward(self, obj, index):
