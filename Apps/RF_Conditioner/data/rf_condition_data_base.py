@@ -64,7 +64,11 @@ pulse_length_start = 'pulse_length_start'
 
 required_pulses = 'required_pulses'
 next_power_increase = 'next_power_increase'
-next_power_decrease = 'next_power_decrease'
+next_sp_decrease = 'next_sp_decrease'
+
+log_pulse_length = 'log_pulse_length'
+
+llrf_trigger = 'llrf_trigger'
 
 amp_ff = 'amp_ff'
 amp_sp = 'amp_sp'
@@ -106,7 +110,10 @@ all_value_keys = [rev_power_spike_status,
                   pulse_length_step,
                   pulse_length_start,
                   amp_sp,
-                  last_106_bd_count
+                  last_106_bd_count,
+                  log_pulse_length,
+                  llrf_trigger,
+                  next_sp_decrease
                   ]
 
 class rf_condition_data_base(QObject):
@@ -167,23 +174,28 @@ class rf_condition_data_base(QObject):
     values[DC_level] = dummy + 16
 
     #logger
-    _logger = None
+    logger = None
     _llrf_config = None
     _log_config = None
 
+    last_fwd_kly_pwr = None
+    last_amp = None
+
     def __init__(self):
         QObject.__init__(self)
-        self.timer = QTimer()
+        self.data_log_timer = QTimer()
+        self.amp_pwr_log_timer = QTimer()
         # matplot lib bplot set-up, plotting needs improving for speed...
         plt.ion()
         plt.show()
 
-    @property
-    def logger(self):
-        return rf_condition_data_base._logger
-    @logger.setter
-    def logger(self,value):
-        rf_condition_data_base._logger = value
+    # @property
+    # def logger(self):
+    #     return rf_condition_data_base._logger
+    # @logger.setter
+    # def logger(self,value):
+    #     rf_condition_data_base._logger = value
+
     @property
     def llrf_config(self):
         return rf_condition_data_base._llrf_config
@@ -194,12 +206,16 @@ class rf_condition_data_base(QObject):
 
 
     def start_logging(self):
-        self.log_start = self.logger.start_data_logging()
-        self.timer.timeout.connect(self.log)
-        self.timer.start(rf_condition_data_base.config.log_config['DATA_LOG_TIME'])
+        self.logger.start_data_logging()
+        self.data_log_timer.timeout.connect(self.data_log)
+        self.data_log_timer.start(rf_condition_data_base.config.log_config['DATA_LOG_TIME'])
+
+        self.amp_pwr_log_timer.timeout.connect(self.log_kly_fwd_power_vs_amp)
+        self.amp_pwr_log_timer.start(rf_condition_data_base.config.log_config['AMP_PWR_LOG_TIME'])
+
 
     def timestamp(self):
-        ts = datetime.datetime.now() - self.log_start
+        ts = datetime.datetime.now() - self.logger.log_start
         #print 'time = ' + str(ts.total_seconds())
         rf_condition_data_base.values[time_stamp] = ts.total_seconds()
 
@@ -208,8 +224,7 @@ class rf_condition_data_base(QObject):
     # the main logging data file is binary(!)
     # With the amount of data etc. i think this is the only practical way
     # to save it, the header fo reach file with give types and names
-    def log(self):
-        self.log_kly_fwd_power_vs_amp()
+    def data_log(self):
         self.timestamp()
         if self.should_write_header:
             self.logger.write_data_log_header(rf_condition_data_base.values)
@@ -217,13 +232,26 @@ class rf_condition_data_base(QObject):
         self.logger.write_data(rf_condition_data_base.values)
 
     def log_kly_fwd_power_vs_amp(self):
-        self.kly_fwd_power_history.append(rf_condition_data_base.values[fwd_kly_pwr ])
-        self.amp_sp_history.append(rf_condition_data_base.values[amp_sp ])
-        self.sp_pwr_hist.append( [rf_condition_data_base.values[amp_sp ],self.values[fwd_kly_pwr]] )
-        #self.max_sp = [i[0] for i in self.sp_pwr_hist]
+        if self.kly_power_changed():
+            #rf_condition_data_base.kly_fwd_power_history.append( rf_condition_data_base.values[fwd_kly_pwr] )
+            rf_condition_data_base.sp_pwr_hist.append( [rf_condition_data_base.values[amp_sp ],rf_condition_data_base.values[fwd_kly_pwr]] )
+        if self.amp_changed():
+            rf_condition_data_base.amp_sp_history.append(rf_condition_data_base.values[amp_sp])
+            rf_condition_data_base.amp_sp_history = sorted(list(set(rf_condition_data_base.amp_sp_history)))
 
+    def kly_power_changed(self):
+        r = False
+        if rf_condition_data_base.last_fwd_kly_pwr != rf_condition_data_base.values[fwd_kly_pwr]:
+            r = True
+        rf_condition_data_base.last_fwd_kly_pwr = rf_condition_data_base.values[fwd_kly_pwr]
+        return r
 
-
+    def amp_changed(self):
+        r = False
+        if rf_condition_data_base.last_amp != rf_condition_data_base.values[amp_sp]:
+            r = True
+        rf_condition_data_base.last_amp = rf_condition_data_base.values[amp_sp]
+        return r
 
 
 

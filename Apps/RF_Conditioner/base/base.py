@@ -19,7 +19,9 @@ class base(object):
     logger = data_logger()
     data = rf_condition_data()
 
+    # pass logger to base classes
     data.logger = logger
+    config.logger = logger
 
     #def __init__(self):
     llrf_type = LLRF_TYPE.UNKNOWN_TYPE
@@ -39,6 +41,7 @@ class base(object):
     # vaccume valves
     valve_init = VELA_CLARA_Vac_Valve_Control.init()
     valve_init.setQuiet()
+    #valve_init.setVerbose()
     valve_control = None
     #
     mod_init = VELA_CLARA_RF_Modulator_Control.init()
@@ -48,6 +51,7 @@ class base(object):
     # RF protection
     prot_init = VELA_CLARA_RF_Protection_Control.init()
     prot_init.setQuiet()
+    #rot_init.setVerbose()
     prot_control = None
     # def __init__(self):
     #     super(config_reader, self).__init__()
@@ -60,18 +64,6 @@ class base(object):
 
     @llrf_control.setter
     def llrf_control(self,value):
-        print("new llrf control")
-        print("new llrf control")
-        print("new llrf control")
-        print("new llrf control")
-        print("new llrf control")
-        print("new llrf control")
-        print("new llrf control")
-        print("new llrf control")
-        print("new llrf control")
-        print("new llrf control")
-        print("new llrf control")
-        print("new llrf control")
         base._llrf_control = value
 
     @property

@@ -45,7 +45,7 @@
           </widget>
          </item>
          <item row="2" column="1">
-          <widget class="QLabel" name="elapsed_time_outputwidget_2">
+          <widget class="QLabel" name="llrf_trigger_outputwidget">
            <property name="frameShape">
             <enum>QFrame::Box</enum>
            </property>
@@ -93,7 +93,7 @@
           </widget>
          </item>
          <item row="2" column="0">
-          <widget class="QLabel" name="elapse_time_label_2">
+          <widget class="QLabel" name="llrf_trigger_label">
            <property name="frameShape">
             <enum>QFrame::Box</enum>
            </property>
@@ -101,7 +101,7 @@
             <enum>QFrame::Sunken</enum>
            </property>
            <property name="text">
-            <string>dummy</string>
+            <string>LLRF Trigger</string>
            </property>
            <property name="scaledContents">
             <bool>false</bool>

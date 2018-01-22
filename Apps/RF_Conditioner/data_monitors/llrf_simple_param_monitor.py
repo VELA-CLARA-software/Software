@@ -1,6 +1,6 @@
 from monitor import monitor
 import data.rf_condition_data_base as dat
-
+from VELA_CLARA_LLRF_Control import TRIG
 
 class llrf_simple_param_monitor(monitor):
     my_name = 'llrf_gui_param_monitor'
@@ -23,13 +23,13 @@ class llrf_simple_param_monitor(monitor):
                 self.trace_pwr_keys[trace] = dat.probe_pwr
 
         self.timer.timeout.connect(self.update_value)
-        #self.timer.start( monitor.config.llrf_config['LLRF_CHECK_TIME'])
-        self.timer.start( 1000 )
+        self.timer.start( monitor.config.llrf_config['LLRF_CHECK_TIME'])
+        #self.timer.start( 1000 )
         self.set_success = True
 
 
         ## WARNING
-        monitor.llrf_control.setActivePulsePowerLimit(2.0)
+        monitor.llrf_control.setActivePulsePowerLimit(500)
 
 
 
@@ -42,7 +42,14 @@ class llrf_simple_param_monitor(monitor):
         monitor.data.values[dat.llrf_ff_ph_locked] = monitor.llrfObj[0].ff_ph_lock_state
         monitor.data.values[dat.llrf_output] = monitor.llrfObj[0].rf_output
         monitor.data.values[dat.amp_sp] = monitor.llrfObj[0].amp_sp
-        #self.values[dat.amp_ff] = self.llrfObj[0].amp_ff
+        monitor.data.values[dat.llrf_trigger] = monitor.llrfObj[0].amp_sp
+
+        if monitor.llrfObj[0].trig_source == TRIG.OFF:
+            monitor.data.values[dat.llrf_trigger] = False
+        elif monitor.llrfObj[0].trig_source == TRIG.UNKNOWN_TRIG:
+            monitor.data.values[dat.llrf_trigger] = False
+        else:
+            monitor.data.values[dat.llrf_trigger] = True
 
 
     def get_mean_power(self,key,trace):

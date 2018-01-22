@@ -30,6 +30,7 @@
 
 from monitor import monitor
 from VELA_CLARA_enums import STATE
+from PyQt4.QtCore import QTimer
 
 from numpy import mean
 import time
@@ -69,7 +70,8 @@ class spike_monitor(monitor):
                  data_dict_state_key,
                  should_drop_amp,
                  amp_drop_value,
-                 my_name = 'spike_monitor'
+                 my_name = 'spike_monitor',
+                 min_cooldown_time = 7000
                  ):
         self.my_name = my_name
         # init base-class
@@ -94,6 +96,13 @@ class spike_monitor(monitor):
         self.gen_monitor = gen_mon
         # a timer to run check_signal automatically every self.update_time
         self.timer.timeout.connect(self.check_signal)
+
+        self.min_cooldown_timer = QTimer()
+        self.min_cooldown_timer.setSingleShot(True)
+        self.min_cooldown_time = min_cooldown_time
+        self.min_cooldown_timer.timeout.connect(self.min_cooldown_finished)
+        self.min_time_good = True
+
         # the amount above baseline (self._mean_level) that triggers a vacuum spike event
         # noinspection PyBroadException
         try:
@@ -157,8 +166,9 @@ class spike_monitor(monitor):
     def check_has_cooled_down(self):
         if self.level_cooldown:
             if self._latest_value < self.spike_decay_level * self._mean_level:
-                print(self.my_name,' _has_cooled_down')
-                self.incool_down = False
+                if self.min_time_good:
+                    print(self.my_name, ' _has_cooled_down')
+                    self.in_cooldown = False
 
     def check_for_spike(self):
         #print 'check_for_spike'
@@ -181,9 +191,15 @@ class spike_monitor(monitor):
                 self._mean_level = mean(self._value_history)
                 #print('new mean = ',self._mean_level)
 
+    def min_cooldown_finished(self):
+        print('min time good')
+        self.min_time_good = True
+
     def start_cooldown(self):
         #print 'start_cooldown called'
         self.in_cooldown = True
+        self.min_time_good = False
+        self.min_cooldown_timer.start(self.min_cooldown_time)
         # if in timed_cooldown mode
         if self.timed_cooldown:
             # start the cooldown timer

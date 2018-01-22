@@ -25,14 +25,14 @@ class data_monitoring(data_monitoring_base):
 		# they are VAC,DC,BREAKDOWN,BREAKDOWN_RATE,RF 
 		# and connected if monitoring those parameters
 		self.main_monitor_states = data_monitoring.data.main_monitor_states
-		self.previous_main_monitor_states = data_monitoring.data.previous_main_monitor_states
+		#self.previous_main_monitor_states = data_monitoring.data.previous_main_monitor_states
 
 
 	def init_monitor_states(self):
 		if self.is_monitoring[dat.vac_spike_status]:
 			print(self.my_name + ' adding vac_spike to main loop checks')
 			self.main_monitor_states[dat.vac_spike_status] = state.INIT
-			self.previous_main_monitor_states[dat.vac_spike_status] = state.UNKNOWN
+			#self.previous_main_monitor_states[dat.vac_spike_status] = state.UNKNOWN
 			self.monitor_funcs['VAC'] = self.vac
 		else:
 			print(self.my_name + ' NOT adding vac_spike_status to main loop checks')
@@ -40,7 +40,7 @@ class data_monitoring(data_monitoring_base):
 		if self.is_monitoring[dat.DC_spike_status]:
 			print(self.my_name + ' adding DC_spike_status to main loop checks')
 			self.main_monitor_states[dat.DC_spike_status] = state.INIT
-			self.previous_main_monitor_states[dat.DC_spike_status] = state.UNKNOWN
+			#self.previous_main_monitor_states[dat.DC_spike_status] = state.UNKNOWN
 			self.monitor_funcs['DC'] = self.DC
 		else:
 			print(self.my_name + ' NOT adding DC_spike to main loop checks')
@@ -48,21 +48,21 @@ class data_monitoring(data_monitoring_base):
 		if self.is_monitoring[dat.breakdown_status]:
 			print(self.my_name + ' adding breakdown_status to main loop checks')
 			self.main_monitor_states[dat.breakdown_status] = state.INIT
-			self.previous_main_monitor_states[dat.breakdown_status] = state.UNKNOWN
+			#self.previous_main_monitor_states[dat.breakdown_status] = state.UNKNOWN
 			self.monitor_funcs['breakdown'] = self.breakdown
 		else:
 			print(self.my_name + ' NOT adding breakdown_status to main loop checks')
 		if self.is_monitoring[dat.modulator_state]:
 			print(self.my_name + ' adding breakdown_rate to main loop checks')
 			self.main_monitor_states[dat.llrf_output] = state.INIT
-			self.previous_main_monitor_states[dat.llrf_output] = state.UNKNOWN
+			#self.previous_main_monitor_states[dat.llrf_output] = state.UNKNOWN
 			self.monitor_funcs['RF'] = self.RF
 		else:
 			print(self.my_name + ' NOT adding breakdown_rate to main loop checks')
 		self.main_monitor_states[dat.llrf_output] = state.INIT		
 
-	def update(self):
-		#print('update')
+	def update_states(self):
+		#print('update_state')
 		for key in self.monitor_funcs.keys():
 			self.monitor_funcs[key]()
 
@@ -92,19 +92,23 @@ class data_monitoring(data_monitoring_base):
 
 	def vac_new_bad(self):
 		try:
-			return main_monitor_states[dat.vac_spike_status] == state.NEW_BAD
+			return self.main_monitor_states[dat.vac_spike_status] == state.NEW_BAD
 		except:
 			return False
 
 	def dc_new_bad(self):
 		try:
-			return main_monitor_states[dat.dc_spike_status] == state.NEW_BAD
+			return self.main_monitor_states[dat.dc_spike_status] == state.NEW_BAD
 		except:
 			return False
 
+	def print_main_monitor_states(self):
+		for key,value in self.main_monitor_states.iteritems():
+			print(key," ", state.statename[value])
+
 
 	def new_bad_is_not_outside_mask(self):
-		return main_monitor_states[dat.breakdown_status] != state.NEW_BAD
+		return self.main_monitor_states[dat.breakdown_status] != state.NEW_BAD
 
 
 			# # this sets up a dict of states for things that ARE being monitored
@@ -149,32 +153,46 @@ class data_monitoring(data_monitoring_base):
 
 	# its horrible atm but can be cleaned up later .. ?
 	def update_state(self,key):
-		if self.data.values[key] == state.GOOD:
-			if self.previous_main_monitor_states[key] == state.GOOD:
-				#assume main state i sgood
-				pass
-			elif self.previous_main_monitor_states[key] == state.BAD:
-				self.set_state(key, state.NEW_GOOD)
-			elif self.previous_main_monitor_states[key] == state.NEW_GOOD:
-				self.set_state(key, state.GOOD)
-			else:
-				self.set_state(key, state.GOOD)
+		if self.data.values[key] == state.BAD:
 
-		elif self.data.values[key] == state.BAD:
+			if self.main_monitor_states[key] == state.GOOD:
+				self.main_monitor_states[key] = state.NEW_BAD
 
-			if self.previous_main_monitor_states[key] == state.GOOD:
-				self.set_state(key, state.NEW_BAD)
+			elif self.main_monitor_states[key] == state.NEW_GOOD:
+				self.main_monitor_states[key] = state.NEW_BAD
 
-			elif self.previous_main_monitor_states[key] == state.NEW_BAD:
-				self.set_state(key, state.BAD)
+			elif self.main_monitor_states[key] == state.NEW_BAD:
+				self.main_monitor_states[key] = state.BAD
 
-			elif self.previous_main_monitor_states[key] == state.BAD:
+			elif self.main_monitor_states[key] == state.BAD:
+				self.main_monitor_states[key] = state.BAD
+
+			elif self.main_monitor_states[key] == state.BAD:
 				pass
 			else:
-				self.set_state(key, state.BAD)
+				self.main_monitor_states[key] = state.BAD
+
+
+		elif self.data.values[key] == state.GOOD:
+
+			if self.main_monitor_states[key] == state.BAD:
+				self.main_monitor_states[key] = state.NEW_GOOD
+
+			elif self.main_monitor_states[key] == state.NEW_GOOD:
+				self.main_monitor_states[key] = state.GOOD
+
+			elif self.main_monitor_states[key] == state.NEW_BAD:
+				self.main_monitor_states[key] = state.NEW_GOOD
+
+			elif self.main_monitor_states[key] == state.GOOD:
+				pass
+			else:
+				self.main_monitor_states[key] = state.GOOD
+
 		elif self.data.values[key] == state.UNKNOWN:
-			self.set_state(key, state.UNKNOWN)
+			print('UNKNOWN STAE')
+			#self.set_state(key, state.UNKNOWN)
 
-	def set_state(self,key,state):
-		self.previous_main_monitor_states[key] =self.main_monitor_states[key]
-		self.main_monitor_states[key] = state
+	# def set_state(self,key,state):
+	# 	#self.previous_main_monitor_states[key] =self.main_monitor_states[key]
+	# 	self.main_monitor_states[key] = state

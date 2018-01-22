@@ -45,18 +45,18 @@ class controller_base(base):
 	# prot_init.setQuiet()
 	# prot_control = None
 	# init attributes
-	log_param = None
-	vac_param = None
-	cavity_temp_param = None
-	water_temp_param = None
-	mod_param = None
-	vac_valve_param = None
-	llrf_param = None
-	settings = None
-	gui_param = None
-	breakdown_param = None
-	rfprot_param = None
-	DC_param = None
+	# log_param = None
+	# vac_param = None
+	# cavity_temp_param = None
+	# water_temp_param = None
+	# mod_param = None
+	# vac_valve_param = None
+	# llrf_param = None
+	# settings = None
+	# gui_param = None
+	# breakdown_param = None
+	# rfprot_param = None
+	# DC_param = None
 
 	have_config = False
 
@@ -71,9 +71,9 @@ class controller_base(base):
 		base.__init__(self)
 		self.argv = argv
 		# read the config file
-		print(controller_base.my_name +' is reading config')
 		base.config.config_file = config_file
 		self.read_config()
+
 		# data logging
 		self.logger = base.logger
 
@@ -92,21 +92,38 @@ class controller_base(base):
 		# set llr_typ e(i.e. which cavity to value in reader
 		# to continue this MUST NOT BE UNKNOWN
 		base.llrf_type = base.config.llrf_type
+		self.set_config()
 		if base.have_config:
+
+			self.logger.header(self.my_name + ' creating HWC ', True)
+
 			if bool(base.config.llrf_config):
 				self.start_llrf_control()
 			if bool(base.config.mod_config):
 				self.start_mod_control()
+
 			if bool(base.config.vac_valve_config):
 				self.start_vac_valve_control()
+				print('bool(base.config.vac_valve_config) = False')
+			else:
+				print('bool(base.config.vac_valve_config) = False')
+
 			if bool(base.config.rfprot_config):
 				self.start_rf_prot_control()
-		self.set_config()
+		else:
+			self.logger.header(self.my_name + ' read_config failed sanity checks!!!', True)
+
+		base.logger.header(controller_base.my_name +' has read config',True)
+		logdata = ['config file = ' +base.config.config_file,
+		'dumping data to log']
+		for item in base.config.all_config_data:
+			logdata.append(''.join(['%s:%s, ' % (key, value) for (key, value) in item.iteritems()]))
+		base.logger.message(logdata, True)
 
 	def is_gun_type(self, type):
 		if type == LLRF_TYPE.CLARA_HRRG: return True
 		elif type == LLRF_TYPE.CLARA_LRRG: return True
-		elif type == LLRF_TYPE.VEAL_HRRG: return True
+		elif type == LLRF_TYPE.VELA_HRRG: return True
 		elif type == LLRF_TYPE.VELA_LRRG: return True
 		else: return False
 
@@ -119,14 +136,16 @@ class controller_base(base):
 			print 'cannot create rf_prot control object'
 
 	def start_vac_valve_control(self):
+		print('start_vac_valve_control')
 		try:
 			a = base.config.vac_valve_config['VAC_VALVE_AREA']# MAGIC_STRING
 		except:
 			a = MACHINE_AREA.UNKNOWN_AREA
 		if a is not MACHINE_AREA.UNKNOWN_AREA:
 			base.valve_control = base.valve_init.getVacValveController(MACHINE_MODE.PHYSICAL,a)
+			self.logger.message('start_vac_valve_control created ' + str(base.config.vac_valve_config['VAC_VALVE_AREA']) + ' object', True)
 		else:
-			print(self.my_name +' cannot create vac-valve object,')
+			self.logger.message('start_vac_valve_control UNKNOWN_MACHINE area cannot create vac-valve object', True)
 
 	def start_mod_control(self):
 		if self.is_gun_type(base.llrf_type):

@@ -34,7 +34,44 @@ class data_logger(object):
         self.forward_file = self.working_directory + self._log_config['OUTSIDE_MASK_FORWARD_FILENAME']  #
         self.probe_file = self.working_directory + self._log_config['OUTSIDE_MASK_PROBE_FILENAME']  #
         self.reverse_file = self.working_directory + self._log_config['OUTSIDE_MASK_REVERSE_FILENAME']
-        #
+        self.log_path = self.working_directory + self._log_config['LOG_FILENAME']
+        self.header(self.my_name + ' log_config')
+        self.message([
+            'log_directory     = ' + self.log_directory,
+            'working_directory = ' + self.working_directory,
+            'data_path    = ' + self.data_path,
+            'forward_file = ' + self.forward_file,
+            'probe_file   = ' + self.probe_file,
+            'reverse_file = ' + self.reverse_file,
+            'log_path     = ' + self.log_path
+        ])
+
+
+    def header(self, text, add_to_log = False):
+        str = '*' + '\n' +'*** ' + text + '***'
+        print(str)
+        if add_to_log:
+            self.write_log(str)
+
+    def message(self,text=[], add_to_log = False):
+        if isinstance(text, basestring):
+            str = text
+        else:
+            str = '\n'.join(text)
+        print(str)
+        if add_to_log:
+            self.write_log(str)
+
+    def write_log(self, str):
+        with open(self.log_path,'a') as f:
+            f.write(str)
+            f.write('\n')
+
+    def write_pulse_count_breakdown_log(self, data):
+        string = " ".join(map(str, data))
+        with open(self.pulse_count_log,'a') as f:
+            f.write(string)
+            f.write('\n')
 
 
     def get_pulse_count_breakdown_log(self):
@@ -45,20 +82,19 @@ class data_logger(object):
             for line in f:
                 if '#' not in line:
                     log.append([int(x) for x in line.split()])
-        print('*')
-        print('*** ' + self.my_name + ' read pulse_count_log: ' + self.pulse_count_log + '***')
+        self.header(self.my_name + ' get_pulse_count_breakdown_log')
+        self.message('read pulse_count_log: ' + self.pulse_count_log)
         for i in log:
             print i
         log.append(log[-1])
         return log
 
     def start_data_logging(self):
-        print('*')
-        print('*** start_data_logging****')
-        print(self.my_name + ', data_path = ' + self.data_path)
-        print(self.my_name + ' starting monitoring, update time = ' + str(self.log_config['DATA_LOG_TIME']))#MAGIC_STRING
-        return self.log_start
-
+        self.header(self.my_name + ' start_data_logging')
+        self.message([
+            'data_path     = ' + self.data_path,
+            'starting monitoring, update time = ' + str(self.log_config['DATA_LOG_TIME'])
+        ])
 
     def write_data_log_header(self,values):
         print(self.my_name + ' writing data_log header to ' + self.data_path)

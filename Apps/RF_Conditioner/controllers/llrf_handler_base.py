@@ -39,9 +39,9 @@ class llrf_handler_base(base):
 		# you have to tell the HWC what to save on
 		base.llrf_control.setTracesToSaveOnBreakDown( base.config.llrf_config['TRACES_TO_SAVE'])
 
-		self.set_mean_pwr_position()
+		#self.set_mean_pwr_position()
 		self.start_trace_rolling_average()
-		self.set_outside_mask_trace_param()
+		#self.set_outside_mask_trace_param()
 
 	def is_checking_masks(self):
 		for trace in base.config.breakdown_config['BREAKDOWN_TRACES']:
@@ -96,29 +96,29 @@ class llrf_handler_base(base):
 
 
 	def start_trace_monitoring(self,trace_to_save):
+		base.logger.header(self.my_name + ' start_trace_monitoring', True)
 		if "error" not in trace_to_save:
 			for trace in trace_to_save:
 				print 'trace = ' + trace
 				a = base.llrf_control.startTraceMonitoring(trace)
 				if a:
-					print(self.my_name + ' started monitoring ' + trace)
+					base.logger.message('started monitoring ' + trace, True)
 					if 'POWER' in trace:  # MAGIC_STRING
 						self.power_traces.append(trace)
+						base.logger.message('added ' + trace + ' to power_traces', True)
 						print('added ' + trace + ' to power_traces')
 				else:
-					print(self.my_name + ' ERROR trying to monitor ' + trace)
+					base.logger.message(' ERROR trying to monitor ' + trace, True)
 		else:
-			print('ERROR IN TRACES TO SAVE')
-			print('ERROR IN TRACES TO SAVE')
-			print('ERROR IN TRACES TO SAVE')
-			print('ERROR IN TRACES TO SAVE')
-			print('ERROR IN TRACES TO SAVE')
+			base.logger.message('ERROR IN TRACES TO SAVE', True)
+			base.logger.message('ERROR IN TRACES TO SAVE', True)
 
 	def start_trace_rolling_average(self):
+		base.logger.header(self.my_name + ' start_trace_rolling_average', True)
 		# the cavity trace need a mean
 		num_mean = 3  # MAGIC_NUM
 		for trace in base.config.breakdown_config['BREAKDOWN_TRACES']:
-			print self.my_name + ' starting rolling average for ' + trace
+			base.logger.message('starting rolling average for ' + trace, True)
 			try:
 				if 'REVERSE' in trace:
 					num_mean = base.config.breakdown_config['CRP_NUM_AVERAGE_TRACES']
@@ -133,14 +133,14 @@ class llrf_handler_base(base):
 			base.llrf_control.setShouldKeepRollingAverage(trace)
 
 			if base.llrfObj[0].trace_data[trace].keep_rolling_average:
-				print self.my_name + ' started rolling average for ' + trace
+				base.logger.message('STARTED rolling average for ' + trace, True)
 			else:
-				print self.my_name + ' starting rolling average FAILED for ' + trace
-
+				base.logger.message('STARTED rolling average FAILED for ' + trace, True)
 
 	def get_pulse_end(self):
 		self.pulse_end = self.timevector[base.llrfObj[0].pulse_latency] + base.llrf_control.getPulseLength()
 		self.pulse_end_index = len([x for x in self.timevector if x <= self.pulse_end])
+		base.logger.header(self.my_name + ' set_mean_pwr_position',True)
 
 
 	def set_mean_pwr_position(self):
@@ -149,19 +149,21 @@ class llrf_handler_base(base):
 		meantime= int(base.config.llrf_config['MEAN_TIME_TO_AVERAGE'] / self.timevector_dt  )
 		trace_mean_start = self.pulse_end_index - 5 - meantime # -10 fudgefactor
 		trace_mean_end = self.pulse_end_index - 5 # -10 fudgefactor
-		print('*')
-		print('*** set_mean_pwr_position ***')
-		print(self.my_name + ' timevector_dt = ' +str(self.timevector_dt ))
-		print(
-		self.my_name + ' rf pulse end time = ' + str(self.pulse_end) + ', end index      = ' + str(self.pulse_end_index))
-		print(self.my_name + ' llrfObj[0].pulse_latency = '  + str(base.llrfObj[0].pulse_latency))
-		print(self.my_name + ' base.llrf_control.getPulseLength() = ' + str(base.llrf_control.getPulseLength()) )
-		print(self.my_name + ' trace_mean_startend (index)  = ' + str(trace_mean_start) + ', ' + str(trace_mean_end))
-		print(self.my_name + ' trace_mean_start/end  (us)   = ' + str(self.timevector[trace_mean_start]) + ', ' + str(self.timevector[trace_mean_end]) )
+
+		base.logger.header(self.my_name + ' set_mean_pwr_position',True)
+		base.logger.message([
+			'timevector_dt = ' +str(self.timevector_dt ),
+			'rf pulse end time = ' + str(self.pulse_end) + ', index = ' + str(self.pulse_end_index),
+			'pulse_latency     = '  + str(base.llrfObj[0].pulse_latency),
+			'.getPulseLength() = ' + str(base.llrf_control.getPulseLength()),
+			'trace_mean_start/end (index) = ' + str(trace_mean_start) + ', ' + str(trace_mean_end),
+			'trace_mean_start/end    (us) = ' + str(self.timevector[trace_mean_start]) + \
+			', ' + str(self.timevector[trace_mean_end])],True)
+
 		for trace in self.power_traces:
 			base.llrf_control.setMeanStartIndex(trace, trace_mean_start)
 			base.llrf_control.setMeanStopIndex(trace, trace_mean_end)
-			print(trace+' mean cal star/end = ' +str(trace_mean_start)+' ' +str(trace_mean_end))
+			#print(trace+' mean cal star/end = ' +str(trace_mean_start)+' ' +str(trace_mean_end))
 
 
 	# these are the main outside_mask_trace parameters that shouldn't change after init
@@ -171,6 +173,17 @@ class llrf_handler_base(base):
 		floor= None
 		drop= None
 		drop_val= None
+
+		# base.logger.message([
+		# 	'timevector_dt = ' +str(self.timevector_dt ),
+		# 	'rf pulse end time = ' + str(self.pulse_end) + ', index = ' + str(self.pulse_end_index),
+		# 	'pulse_latency     = '  + str(base.llrfObj[0].pulse_latency),
+		# 	'.getPulseLength() = ' + str(base.llrf_control.getPulseLength()),
+		# 	'trace_mean_start/end (index) = ' + str(trace_mean_start) + ', ' + str(trace_mean_end),
+		# 	'trace_mean_start/end    (us) = ' + str(self.timevector[trace_mean_start]) + ', ' + str(self.timevector[trace_mean_end])])
+
+
+
 		for trace in base.config.breakdown_config['BREAKDOWN_TRACES']:
 		# try:
 			if 'REVERSE' in trace:

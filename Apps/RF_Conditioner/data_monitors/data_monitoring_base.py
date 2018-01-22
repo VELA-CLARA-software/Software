@@ -69,26 +69,81 @@ class data_monitoring_base(base):
 		base.__init__(self)
 
 	def start_monitors(self):
-
-		# if base.config.rfprot_config:
-		# 	self.rfprot_monitor()
-		# if base.config.vac_valve_config:
-		# 	self.start_valve_monitor()
-		# if base.config.mod_config:
-		# 	self.start_mod_monitor()
-		# if bool(base.config.cavity_temp_config):
-		# 	self.start_cavity_temp_monitor()
-		# if bool(base.config.water_temp_config):
-		# 	self.start_water_temp_monitor()
-		# if bool(base.config.vac_config):
-		# 	self.start_vac_monitor()
-		# if bool(base.config.DC_config):
-		# 	self.start_DC_monitor()
+		self.logger.header(self.my_name + ' start_monitors ')
+		##
+		if base.config.rfprot_config:
+			if self.rfprot_monitor():
+				self.logger.message('Monitoring RF-PROTECTION', True)
+			else:
+				self.logger.message('Not monitoring RF-PROTECTION rfprot_monitor failed', True)
+		else:
+			self.logger.message('Not monitoring RF-PROTECTION No config data',True)
+		##
+		if base.config.vac_valve_config:
+			if self.start_valve_monitor():
+				self.logger.message('Monitoring VAC-VALVE', True)
+			else:
+				self.logger.message('Not monitoring VAC-VALVE valve_monitor failed', True)
+		else:
+			self.logger.message('Not monitoring VAC-VALVE No config data',True)
+		##
+		if base.config.mod_config:
+			if self.start_mod_monitor():
+				self.logger.message('Monitoring MODULATOR', True)
+			else:
+				self.logger.message('Not monitoring VAC-VALVE mod_monitor failed', True)
+		else:
+			self.logger.message('Not monitoring VAC-VALVE No config data',True)
+		##
+		if bool(base.config.cavity_temp_config):
+			if self.start_cavity_temp_monitor():
+				self.logger.message('Monitoring CAVITY TEMPERATURE', True)
+			else:
+				self.logger.message('Not monitoring CAVITY TEMPERATURE cavity_temp_monitor failed', True)
+		else:
+			self.logger.message('Not monitoring CAVITY TEMPERATURE No config data',True)
+		##
+		if bool(base.config.water_temp_config):
+			if self.start_water_temp_monitor():
+				self.logger.message('Monitoring WATER TEMP', True)
+			else:
+				self.logger.message('Not monitoring WATER TEMP valve_monitor failed', True)
+		else:
+			self.logger.message('Not monitoring WATER TEMP No config data',True)
+		##
+		if bool(base.config.vac_config):
+			if self.start_vac_monitor():
+				self.logger.message('Monitoring VACUUM', True)
+			else:
+				self.logger.message('Not monitoring VACUUM vac_monitor failed', True)
+		else:
+			self.logger.message('Not monitoring VACUUM  No config data',True)
+		##
+		if bool(base.config.DC_config):
+			if self.start_DC_monitor():
+				self.logger.message('Monitoring DC', True)
+			else:
+				self.logger.message('Not monitoring DC dc_monitor failed', True)
+		else:
+			self.logger.message('Not monitoring DC No config data',True)
 
 		if bool(base.config.llrf_config):
-			self.start_llrf_simple_param_monitor()
+			if self.start_llrf_simple_param_monitor():
+				self.logger.message('Monitoring llrf', True)
+			else:
+				self.logger.message('Not monitoring llrf llrf_monitor failed', True)
 			if bool(base.config.log_config):
-				self.start_outside_mask_trace__monitor()
+				if self.start_outside_mask_trace__monitor():
+					self.logger.message('Monitoring outside_masks', True)
+				else:
+					self.logger.message('Not monitoring outside_masks outside_mask_trace_monitor failed', True)
+			else:
+				self.logger.message('Not monitoring outside_masks No config data', True)
+		else:
+			self.logger.message('Not monitoring llrf No config data', True)
+
+
+
 
 	def start_vac_monitor(self):
 		# NOT HAPPY ABOUT HARDCODED STRINGS...
@@ -204,10 +259,10 @@ class data_monitoring_base(base):
 			id = self.gen_mon.connectPV(pvValue)
 			if id != 'FAILED':
 				connected = True
-				print(self.my_name + ' Connected to PV = ', pvValue, ' with ID = ', id, ' acquiring data')
+				self.logger.message(self.my_name + ' Connected to PV = ' + str(pvValue) + ' with ID = ' + str(id) + ' acquiring data',True)
 				self.gen_mon_keys[pvKey] = id
 			else:
-				print(self.my_name + ' Failed to connect to PV = ', pvValue, ' ID = ', id, ' NOT acquiring data')
+				self.logger.message(self.my_name + ' Failed to connect to PV = ' + str(pvValue) + ' ID = ' + str(id) + ' NOT acquiring data',True)
 		else:
-			print(self.my_name + 'connectPV passed empty PV')
+			self.logger.message(self.my_name + 'connectPV passed empty PV')
 		return connected

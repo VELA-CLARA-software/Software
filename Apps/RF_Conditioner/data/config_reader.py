@@ -24,9 +24,13 @@ class config_reader(object):
     # parsed config data
     config = {}
 
+    #
+    logger = None
+
     have_config = False
     _config_file = None
 
+    all_config_data = None
 
     vac_config= None
     DC_config = None
@@ -92,6 +96,18 @@ class config_reader(object):
         self.rfprot_param()
         self.gui_param()
         print(config_reader.my_name + ' read input from ' + str(config_reader.config_file) )
+
+        config_reader.all_config_data = [config_reader.vac_config,
+                                         config_reader.DC_config,
+                                         config_reader.log_config,
+                                         config_reader.vac_valve_config,
+                                         config_reader.water_temp_config,
+                                         config_reader.cavity_temp_config,
+                                         config_reader.llrf_config,
+                                         config_reader.breakdown_config,
+                                         config_reader.mod_config,
+                                         config_reader.rfprot_config,
+                                         config_reader.gui_config]
         return self.sanity_checks()
 
     def sanity_checks(self):
@@ -165,7 +181,7 @@ class config_reader(object):
     def vac_parameter(self):
         string_param = ['VAC_PV', 'VAC_DECAY_MODE']
         float_param = ['VAC_SPIKE_DECAY_LEVEL', 'VAC_SPIKE_DELTA','VAC_SPIKE_AMP_DROP']
-        int_param = ['VAC_NUM_SAMPLES_TO_AVERAGE','VAC_SPIKE_DECAY_TIME','VAC_CHECK_TIME']
+        int_param = ['VAC_NUM_SAMPLES_TO_AVERAGE','VAC_SPIKE_DECAY_TIME','VAC_CHECK_TIME','OUTSIDE_MASK_COOLDOWN_TIME']
         bool_param = ['VAC_SHOULD_DROP_AMP']
         config_reader.vac_config = self.get_param_dict(string_param=string_param,float_param=float_param,
                                                     int_param=int_param,bool_param=bool_param)
@@ -174,7 +190,7 @@ class config_reader(object):
     def DC_parameter(self):
         string_param = ['DC_PV', 'DC_DECAY_MODE']
         float_param = ['DC_SPIKE_DECAY_LEVEL', 'DC_SPIKE_DELTA','DC_SPIKE_AMP_DROP']
-        int_param = ['DC_NUM_SAMPLES_TO_AVERAGE','DC_SPIKE_DECAY_TIME','DC_CHECK_TIME']
+        int_param = ['DC_NUM_SAMPLES_TO_AVERAGE','DC_SPIKE_DECAY_TIME','DC_CHECK_TIME','OUTSIDE_MASK_COOLDOWN_TIME']
         bool_param = ['DC_SHOULD_DROP_AMP']
         config_reader.DC_config = self.get_param_dict(string_param=string_param,float_param=float_param,
                                                     int_param=int_param,bool_param=bool_param)
@@ -182,12 +198,11 @@ class config_reader(object):
 
 
     def log_param(self):
-        string_param = ['LOG_FILENAME','LOG_DIRECTORY','DATA_LOG_FILENAME','DATA_LOG_DIRECTORY',
+        string_param = ['LOG_FILENAME','LOG_DIRECTORY','DATA_LOG_FILENAME',
                         'OUTSIDE_MASK_FORWARD_FILENAME','OUTSIDE_MASK_REVERSE_FILENAME',
-                        'OUTSIDE_MASK_DIRECTORY','OUTSIDE_MASK_PROBE_FILENAME','PULSE_COUNT_BREAKDOWN_LOG_FILENAME',
-                        'PULSE_COUNT_BREAKDOWN_LOG_DIRECTORY'
+                        'OUTSIDE_MASK_PROBE_FILENAME','PULSE_COUNT_BREAKDOWN_LOG_FILENAME'
                         ]
-        int_param = ['DATA_LOG_TIME']
+        int_param = ['DATA_LOG_TIME','AMP_PWR_LOG_TIME']
         config_reader.log_config = self.get_param_dict(string_param=string_param,int_param=int_param)
         return config_reader.log_config
 
@@ -285,7 +300,8 @@ class config_reader(object):
     def get_machine_area(self,text):
         if text == 'S01':
             return MACHINE_AREA.CLARA_S01
-        elif text == 'INJ':
+        elif text == 'VELA_INJ':
+            print('VELA_INJ AREA')
             return MACHINE_AREA.VELA_INJ
         else:
             return MACHINE_AREA.UNKNOWN_AREA
@@ -295,6 +311,10 @@ class config_reader(object):
         if self.llrf_type == LLRF_TYPE.CLARA_HRRG:
             return trace.replace("CAVITY","CAVITY")
         elif  self.llrf_type == LLRF_TYPE.CLARA_LRRG:
+            return trace.replace("CAVITY","CAVITY")
+        elif  self.llrf_type == LLRF_TYPE.VELA_LRRG:
+            return trace.replace("CAVITY","CAVITY")
+        elif  self.llrf_type == LLRF_TYPE.VELA_HRRG:
             return trace.replace("CAVITY","CAVITY")
         elif  self.llrf_type == LLRF_TYPE.L01:
             return trace.replace("CAVITY", "L01_CAVITY")

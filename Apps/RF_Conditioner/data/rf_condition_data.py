@@ -24,10 +24,83 @@ class rf_condition_data(dat.rf_condition_data_base):
 
     def __init__(self):
         dat.rf_condition_data_base.__init__(self)
+        self.values = dat.rf_condition_data_base.values
 
-    #close function
-    def close(self):
-        plt.close()
+    # def get_next_ramp_values(self):
+    #     self.values[dat.next_sp_decrease]
+
+
+    def ramp_up(self):
+        self.values[dat.next_sp_decrease] = dat.rf_condition_data_base.amp_sp_history[-2]
+        self.move_ramp_index(1)
+
+    def ramp_down(self):
+        self.move_ramp_index(-1)
+
+    def clear_last_sp_history(self):
+        limit = dat.rf_condition_data_base.amp_sp_history[-2]
+        print('limit = ', limit)
+        # could maybe do this more clever like
+        dat.rf_condition_data_base.amp_sp_history = [x for x in dat.rf_condition_data_base.amp_sp_history if x <= limit ]
+        dat.rf_condition_data_base.sp_pwr_hist = [x for x in dat.rf_condition_data_base.sp_pwr_hist if x[0] <= limit ]
+
+    def move_ramp_index(self,val):
+        self.values[dat.log_index] += val
+        self.set_ramp_values()
+
+
+    def set_ramp_values(self):
+        self.values[dat.required_pulses] = ramp[self.values[dat.log_index]][0]
+        self.values[dat.next_power_increase] = ramp[self.values[dat.log_index]][1]
+
+        self.logger.header( self.my_name + ' set_ramp_values ', True)
+        self.logger.message(['next required pulses =' + str(self.values[dat.required_pulses]),
+                             'next power increase  =' + str(self.values[dat.next_power_increase]),
+                             'next sp decrease  =' + str(self.values[dat.next_sp_decrease])])
+
+
+    def get_new_sp(self):
+        return self.get_new_set_point( self.get_next_power())
+
+    # neatean up!
+    def get_new_set_point(self,pwr_kw):
+        self.previous_power = self.current_power
+        x = np.array([i[0] for i in self.sp_pwr_hist])
+        y = np.array([i[1] for i in self.sp_pwr_hist]) / 1000
+        # for p in x:
+        #     print p,
+        myset = sorted(set(x))
+        if len(myset) > 3:
+            min_sp =list(myset)[-4]
+            # print 'myset[-3] ' + str(min_sp)
+            a = [[x2,y2] for x2,y2 in self.sp_pwr_hist if x2>=min_sp]
+
+            # fit with np.polyfit
+            x_tofit = np.array([i[0] for i in a])
+            y_tofit = np.array([i[1] for i in a]) / 1000
+
+            x_min = min(x_tofit)
+            x_max = max(x_tofit)
+
+            current_power_data = [[x2,y2] for x2,y2 in a if x2==max(x_tofit)]
+
+            #print(current_power_data)
+
+            self.current_power = np.mean(  np.array([i[1] for i in current_power_data]) ) / 1000
+
+            m, c = np.polyfit(x_tofit, y_tofit, 1)
+
+            predict = (self.current_power + pwr_kw - c) / m
+            p =[predict,self.current_power + pwr_kw]
+            print('current = ', "%.3E"%max(x_tofit),"%.3E"%self.current_power)
+            print('predict = ', "%.3E"%p[0],"%.3E"%p[1])
+            print('Measured Power increase = ' + str(self.current_power - self.previous_power))
+            self.plot(x,y,m,c,x_min,x_max,p)
+            return p[0]
+        else:
+            return None
+
+
 
     def init_after_config_read(self):
         if self.llrf_config is not None:
@@ -37,26 +110,11 @@ class rf_condition_data(dat.rf_condition_data_base):
             self.values[dat.pulse_length_aim] = self.llrf_config['PULSE_LENGTH_AIM']
             self.values[dat.pulse_length_step] = self.llrf_config['PULSE_LENGTH_STEP']
             self.values[dat.breakdown_rate_aim] = self.llrf_config['BREAKDOWN_RATE_AIM']
-            print('*')
-            print('*** ' +self.my_name + ' init_after_config_read ***')
-            print(self.my_name + ' ' + dat.pulse_length_start + ' ' +str(self.values[dat.pulse_length_start]))
-            print(self.my_name + ' ' + dat.pulse_length_aim + ' ' +str(self.values[dat.pulse_length_aim]))
-            print(self.my_name + ' ' + dat.pulse_length_step + ' ' +str(self.values[dat.pulse_length_step]))
-            print(self.my_name + ' ' + dat.breakdown_rate_aim + ' ' +str(self.values[dat.breakdown_rate_aim]))
-
-    def power_increase_set_up(self):
-        #these are constants in the power_increase function
-        self.power_increase_1 = self._llrf_config['RF_INCREASE_RATE'] * \
-                                self._llrf_config['NORMAL_POWER_INCREASE'] / \
-                                self._llrf_config['LOW_POWER_INCREASE_RATE_LIMIT']
-        self.power_increase_2 = self._llrf_config['LOW_POWER_INCREASE_RATE_LIMIT'] / \
-                                self._llrf_config['RF_INCREASE_RATE']
-        print('*')
-        print('*** ' +self.my_name + ' power_increase_set_up ***')
-        print(self.my_name + ' power_increase_set_up: ' + str(self._llrf_config['RF_INCREASE_RATE']) + '  ' + str(
-            self._llrf_config['NORMAL_POWER_INCREASE']) + ' ' + str(self._llrf_config['LOW_POWER_INCREASE_RATE_LIMIT']))
-        print(self.my_name + ' power_increase_set_up: power_increase_1  =  ' + str(
-            self.power_increase_1) + ' power_increase_2 = ' + str(self.power_increase_2))
+            self.logger.header(self.my_name + ' init_after_config_read')
+            self.logger.message([dat.pulse_length_start + ' ' +str(self.values[dat.pulse_length_start]),
+            dat.pulse_length_aim + ' ' +str(self.values[dat.pulse_length_aim]),
+            dat.pulse_length_step + ' ' +str(self.values[dat.pulse_length_step]),
+            dat.breakdown_rate_aim + ' ' +str(self.values[dat.breakdown_rate_aim])])
 
     def update_last_million_pulse_log(self):
         self.last_million_log.pop()
@@ -95,25 +153,35 @@ class rf_condition_data(dat.rf_condition_data_base):
         #for x in self.pulse_break_down_log:
         # based on the log file we set active pulse count total,
         # number of breakdowns and breakdown rate
-        self.values[dat.log_active_pulse_count] = pulse_break_down_log[-1][0]
+        self.values[dat.log_active_pulse_count] = int(pulse_break_down_log[-1][0])
         self.values[dat.pulse_count] = self.values[dat.log_active_pulse_count]
-        self.values[dat.log_breakdown_count] = pulse_break_down_log[-1][1]
-        self.values[dat.log_amp_set] = pulse_break_down_log[-1][2]
-        self.values[dat.log_index] = pulse_break_down_log[-1][3]
+        self.values[dat.log_breakdown_count] = int(pulse_break_down_log[-1][1])
+        self.values[dat.log_amp_set] = int(pulse_break_down_log[-1][2])
+
+        dat.rf_condition_data_base.amp_sp_history = sorted(list(set( [ int(i[2]) for i in pulse_break_down_log] )))
+
+        self.values[dat.next_sp_decrease] = dat.rf_condition_data_base.amp_sp_history[-2]
+
+        self.values[dat.log_index] = int(pulse_break_down_log[-1-2][3])# WARNING we add a rpeat of th elast last_million_log !
+
+
+
+        self.values[dat.log_pulse_length] = float(pulse_break_down_log[-1][4]) / float(1000.0)
         self.set_ramp_values()
 
         self.llrf_config['PULSE_LENGTH_START'] = ( pulse_break_down_log[-1][4] * 0.001)# !!!
-        print('*****')
-        print('**** pulse_count_breakdown_log ****')
-        print(self.my_name + ' ' + dat.log_active_pulse_count + ' ' + str(self.values[dat.log_active_pulse_count]))
-        print(self.my_name + ' ' + dat.log_breakdown_count + ' ' + str(self.values[dat.log_breakdown_count]))
-        print(self.my_name + ' ' + dat.log_amp_set + ' ' + str(self.values[dat.log_amp_set]))
-        print(self.my_name + ' ' + dat.log_index + ' ' + str(self.values[dat.log_index]))
-        print(self.my_name + ' PULSE_LENGTH_START = '  + str(self._llrf_config['PULSE_LENGTH_START']) )
-        print('')
+
+        self.logger.header( self.my_name + ' pulse_count_breakdown_log ', True)
+        self.logger.message([
+            dat.log_active_pulse_count + ' ' + str(self.values[dat.log_active_pulse_count]),
+            dat.log_breakdown_count + ' ' + str(self.values[dat.log_breakdown_count]),
+            dat.log_amp_set + ' ' + str(self.values[dat.log_amp_set]),
+            dat.log_index + ' ' + str(self.values[dat.log_index]),' PULSE_LENGTH_START = ' + str(self._llrf_config['PULSE_LENGTH_START']),
+            dat.next_sp_decrease + ' ' + str(self.values[dat.next_sp_decrease])
+        ],True)
+
         # set the last 10^6 breakdown last_106_bd_count
         temp = pulse_break_down_log[-1][0] - self.llrf_config['NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY']
-        print(temp)
         self.last_million_log = [x for x in pulse_break_down_log if x[0] >= temp ]
         #[x for x in if x[0] > temp ]
         for i in self.last_million_log:
@@ -122,17 +190,8 @@ class rf_condition_data(dat.rf_condition_data_base):
 
 
 
-    def ramp_up(self):
-        self.move_ramp_index(1)
-    def ramp_down(self):
-        self.move_ramp_index(-1)
-    def move_ramp_index(self,val):
-        self.values[dat.log_index] += val
-        self.set_ramp_values()
-    def set_ramp_values(self):
-        self.values[dat.required_pulses] = ramp[self.values[dat.log_index]][0]
-        self.values[dat.next_power_increase] = ramp[self.values[dat.log_index]][1]
-        self.values[dat.next_power_decrease] = ramp[self.values[dat.log_index-1]][1]
+
+
 
 
 
@@ -153,55 +212,29 @@ class rf_condition_data(dat.rf_condition_data_base):
         print(self.my_name + ' power_increase = ' +str(a) + ' ' + str(self.ceiling(a, self._llrf_config['LOW_POWER_INCREASE'])) )
         return self.ceiling(a, self._llrf_config['LOW_POWER_INCREASE'])
 
+    def power_increase_set_up(self):
+        #these are constants in the power_increase function
+        self.power_increase_1 = self._llrf_config['RF_INCREASE_RATE'] * \
+                                self._llrf_config['NORMAL_POWER_INCREASE'] / \
+                                self._llrf_config['LOW_POWER_INCREASE_RATE_LIMIT']
+        self.power_increase_2 = self._llrf_config['LOW_POWER_INCREASE_RATE_LIMIT'] / \
+                                self._llrf_config['RF_INCREASE_RATE']
+
+        self.logger.header( self.my_name + ' power_increase_set_up  ', True)
+        self.logger.message(['power_increase_set_up: ' + str(self._llrf_config['RF_INCREASE_RATE']) + '  ' + str(
+        self._llrf_config['NORMAL_POWER_INCREASE']) + ' ' + str(self._llrf_config['LOW_POWER_INCREASE_RATE_LIMIT']),
+        self.my_name + ' power_increase_set_up: power_increase_1  =  ' + str(self.power_increase_1) +
+         ' power_increase_2 = ' + str(self.power_increase_2)])
+
+
+
     def get_next_power(self):
         pwr_inc = self.power_increase()
         power = self.ceiling( self.values[dat.pulse_count] * self._llrf_config['RF_INCREASE_RATE'], pwr_inc )
         print(self.my_name + ' get_next_power: power_inc = ' + str(pwr_inc) + ', power =   ' + str(power) )
         return pwr_inc / 1000 # kW !
 
-    def get_new_sp(self):
-        return self.get_new_set_point( self.get_next_power())
 
-    # neatean up!
-    def get_new_set_point(self,pwr_kw):
-        self.previous_power = self.current_power
-        x = np.array([i[0] for i in self.sp_pwr_hist])
-        y = np.array([i[1] for i in self.sp_pwr_hist]) / 1000
-        # for p in x:
-        #     print p,
-        myset = sorted(set(x))
-        if len(myset) > 3:
-            min_sp =list(myset)[-4]
-            # print 'myset[-3] ' + str(min_sp)
-            a = [[x2,y2] for x2,y2 in self.sp_pwr_hist if x2>=min_sp]
-
-            # fit with np.polyfit
-            x_tofit = np.array([i[0] for i in a])
-            y_tofit = np.array([i[1] for i in a]) / 1000
-
-            x_min = min(x_tofit)
-            x_max = max(x_tofit)
-
-            current_power_data = [[x2,y2] for x2,y2 in a if x2==max(x_tofit)]
-
-            #print(current_power_data)
-
-            self.current_power = np.mean(  np.array([i[1] for i in current_power_data]) ) / 1000
-
-            m, c = np.polyfit(x_tofit, y_tofit, 1)
-
-            predict = (self.current_power + pwr_kw - c) / m
-            p =[predict,self.current_power + pwr_kw]
-
-
-            print('current = ', "%.3E"%max(x_tofit),"%.3E"%self.current_power)
-            print('predict = ', "%.3E"%p[0],"%.3E"%p[1])
-            print('Measured Power increase = ' + str(self.current_power - self.previous_power))
-
-            self.plot(x,y,m,c,x_min,x_max,p)
-            return p[0]
-        else:
-            return None
 
     # neaten up, do we have to redraw each time?
     def plot(self,x,y,m,c,x0,x1,predict):
@@ -216,7 +249,9 @@ class rf_condition_data(dat.rf_condition_data_base):
         self.old_x1 = x1
         self.old_m = m
         self.old_c = c
-
+    #close function
+    def close(self):
+        plt.close()
 
 
 

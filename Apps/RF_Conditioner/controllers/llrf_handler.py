@@ -22,16 +22,16 @@ class llrf_handler(llrf_handler_base):
 
     def check_masks_OLD(self):
         for trace in self.outside_mask_traces:
-            a = self.llrf.setShouldCheckMask(trace)
+            a = llrf_handler_base.llrf_control.setShouldCheckMask(trace)
             if a:
                 print('mask checking  for ' + trace)
             else:
                 print('mask NOT checking for ' + trace)
-        self.llrf.setGlobalCheckMask(True)
+        llrf_handler_base.llrf_control.setGlobalCheckMask(True)
 
 
     def set_pulse_length(self,value):
-        self.llrf.setPulseLength(value)
+        llrf_handler_base.llrf_control.setPulseLength(value)
         # is the pulse length changes update the trace mean values n
         time.sleep(0.2)
         self.set_mean_pwr_position()
@@ -45,8 +45,13 @@ class llrf_handler(llrf_handler_base):
 
 
     def set_amp(self, val):
-        self.llrf.setAmpSP(val)
+        print('set_amp = ' + str(val))
+        llrf_handler_base.llrf_control.setAmpSP(val)
         ## ???
-        self.llrf.resetAverageTraces()
+        llrf_handler_base.llrf_control.resetAverageTraces()
 
+
+    def set_amp_hp(self, val):
+        llrf_handler_base.llrf_control.setAmpHP(val)
+        ## ???
 

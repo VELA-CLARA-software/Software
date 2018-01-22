@@ -277,3 +277,4 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
         self.widget[dat.breakdown_rate_aim] = self.breakdown_rate_limit_outputwidget
         self.widget[dat.breakdown_rate_hi] = self.measured_breakdown_rate_outputwidget
         self.widget[dat.last_106_bd_count] = self.last_106_count_outputwidget
+        self.widget[dat.llrf_trigger] = self.llrf_trigger_outputwidget
