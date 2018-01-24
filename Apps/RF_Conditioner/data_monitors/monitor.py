@@ -1,6 +1,6 @@
 from PyQt4.QtCore import QTimer
 from PyQt4.QtCore import QObject
-from VELA_CLARA_enums import STATE
+
 from VELA_CLARA_LLRF_Control import LLRF_TYPE
 # The 'monitor' is a base class designed to be used for monitoring
 # parameters in a a separate Qthread.
@@ -9,9 +9,10 @@ from VELA_CLARA_LLRF_Control import LLRF_TYPE
 # you should overload cooldown_function in the child class
 import numbers
 from VELA_CLARA_enums import STATE
+from base.base import base
 
 
-class monitor(QObject):
+class monitor(QObject,base):
     # name
     my_name = 'monitor'
     # is the monitor in cooldown or not?
@@ -22,11 +23,10 @@ class monitor(QObject):
                  update_time=100,
                  cooldown_time=5000,
                  timed_cooldown=False,
-                 level_cooldown=True,
-                 llrf_type=LLRF_TYPE.UNKNOWN_TYPE
+                 level_cooldown=True
             ):
         QObject.__init__(self)
-        self.llrf_type = llrf_type
+        base.__init__(self)
         self.update_time = update_time
         self.cool_down_time = cooldown_time
         self.timer = QTimer()
@@ -73,17 +73,17 @@ class monitor(QObject):
         return self.set_success
 
     def llrf_type_string(self):
-        if self.llrf_type == LLRF_TYPE.CLARA_HRRG:
+        if monitor.llrf_type == LLRF_TYPE.CLARA_HRRG:
             return 'CLARA_HRRG'
-        elif self.llrf_type == LLRF_TYPE.CLARA_LRRG:
+        elif monitor.llrf_type == LLRF_TYPE.CLARA_LRRG:
             return 'CLARA_LRRG'
-        elif self.llrf_type == LLRF_TYPE.VELA_HRRG:
+        elif monitor.llrf_type == LLRF_TYPE.VELA_HRRG:
             return 'VELA_HRRG'
-        elif self.llrf_type == LLRF_TYPE.VELA_LRRG:
+        elif monitor.llrf_type == LLRF_TYPE.VELA_LRRG:
             return 'VELA_LRRG'
-        elif self.llrf_type == LLRF_TYPE.L01:
+        elif monitor.llrf_type == LLRF_TYPE.L01:
             return 'L01'
-        elif self.llrf_type == LLRF_TYPE.UNKNOWN_TYPE:
+        elif monitor.llrf_type == LLRF_TYPE.UNKNOWN_TYPE:
             print 'ERROR LLRF TYPE NOT CORRECT'
             return False
         else:

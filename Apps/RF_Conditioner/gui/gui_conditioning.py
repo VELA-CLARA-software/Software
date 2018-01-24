@@ -17,15 +17,17 @@ import data.rf_condition_data_base as dat
 # and then update as appropriate!
 # every time
 # other data  should be monitored in the dat aclass?
+from base.base import base
 
 
-class gui_conditioning(QMainWindow, Ui_MainWindow):
+
+class gui_conditioning(QMainWindow, Ui_MainWindow, base):
     my_name = 'gui_conditioning'
     # clipboard
     clip_app = QApplication([])
     clip = clip_app.clipboard()
     # global state
-    can_run = False
+    can_ramp = True
     #constant colors
     good = open  = trig = 'green'
     bad  = error = closed = 'red'
@@ -42,49 +44,51 @@ class gui_conditioning(QMainWindow, Ui_MainWindow):
     widget = {}
     previous_values = {}
     [previous_values.update({x: None}) for x in dat.all_value_keys]
-    
-        
+    #
+
     def __init__(self,
                  window_name = "",
-                 root = "/",
-                 update_time = 2000,
-                 data = None,
+                 root = "/"
                  ):
         QMainWindow.__init__(self)
+        super(base,self).__init__()
         self.setupUi(self)
-        self.values  = data.values
-        self.data = data
+        self.values  = base.data.values
+        self.data = base.data
         # CONNECT BUTTONS TO FUNCTIONS
-        self.start_button.clicked.connect(self.handle_start_button)
-        self.pause_ramp_button.clicked.connect(self.handle_pause_ramp_button)
+        self.start_pause_ramp_button.clicked.connect(self.handle_start_pause_ramp_button)
         self.shutdown_rf_button.clicked.connect(self.handle_shutdown_rf_button)
         self.copy_to_clipboard_button.clicked.connect(self.handle_copy_to_clipboard_button)
 
         # widgets are held in dict, with same keys as data
-        self.init_widget_dict(data)
+        self.init_widget_dict(base.data)
         # the clipboard has a string version of data
         self.clip_vals = self.values.copy()
         # init to paused
         #self.handle_pause_ramp_button()
-        self.handle_start_button()
+        self.handle_start_pause_ramp_button()
         # update timer
         self.timer = QTimer()
         self.timer.setSingleShot(False)
         self.timer.timeout.connect(self.update_gui)
-        self.timer.start(update_time)
-    # customclose function
+        self.timer.start(base.config.gui_config['GUI_UPDATE_TIME'])
+
+    # custom close function
     def closeEvent(self,event):
         self.closing.emit()
     # button functions
-    def handle_start_button(self):
-        print self.my_name +' is statrting RF conditioning'
-        self.label.setStyleSheet('Qlabel { background-color : '+ self.good +'; color : black; }')
-        self.can_run = True
-
-    def handle_pause_ramp_button(self):
-        print self.my_name +' is pausing RF conditioning'
-        self.label.setStyleSheet('Qlabel { background-color : '+ self.bad +'; color : black; }')
-        self.can_run = False
+    def handle_start_pause_ramp_button(self):
+        if self.can_ramp:
+            self.can_ramp = False
+            #print self.my_name + ' is pausing RF conditioning'
+            self.start_pause_ramp_button.setText("ENABLE RAMPING")
+            self.start_pause_ramp_button.setStyleSheet('QPushButton { background-color : ' + self.bad + '; color : black; }')
+            print self.my_name + ' has disabled ramping RF'
+        else:
+            self.can_ramp = True
+            self.start_pause_ramp_button.setText("DISABLE RAMPING")
+            self.start_pause_ramp_button.setStyleSheet('QPushButton { background-color : '+ self.good +'; color : black; }')
+            print self.my_name + ' has enabled ramping RF'
 
     def handle_shutdown_rf_button(self):
         print 'handle_shutdown_rf_button'
@@ -92,27 +96,22 @@ class gui_conditioning(QMainWindow, Ui_MainWindow):
     def handle_copy_to_clipboard_button(self):
         string = ''
         for key,value in self.clip_vals.iteritems():
-            string += key + ' : ' + str(value) + '\n'
+            string += key + ' : ' + str(value) + '\n'# shit python
         self.clip.setText(QString(string))
 
-    # main update gui function, loop over all data and update gui with new values
+    # main update gui function, loop over all widgets, and if values is new update gui with new value
     def update_gui(self):
         for key,val in self.widget.iteritems():
             if self.value_is_new(key, self.values[key]):
                 self.update_widget(key, self.values[key], val)
 
-        # #print 'update_gui'
-        # for key,val in self.values.iteritems():
-        #         if self.value_is_new(key,val):
-        #             try:
-        #                 widget = self.widget[key]
-        #             except (KeyError):
-        #                 pass
-                    #print 'MAJOR ERROR MISSING WIDGET ' + key
     # the outputwidget is update based on data type
     def update_widget(self, key, val, widget):
         #print(type(val),key,widget.objectName())
-        if type(val) is long:
+        # meh
+        if key == dat.breakdown_rate_hi:
+            self.set_break_down_color(widget, val)
+        elif type(val) is long:
             widget.setText('%i' % val)
             self.clip_vals[key] = widget.text()
         elif type(val) is int:
@@ -133,16 +132,29 @@ class gui_conditioning(QMainWindow, Ui_MainWindow):
             self.set_locked_enabled(widget, val, key)
         else:
             print 'update_widget error ' + str(val) + ' ' + str(type(val))
+
     # if a value is new we update the widget
     def value_is_new(self,key,val):
-        try:
-            if self.previous_values[key] != val:
-                self.previous_values[key] = val
-                return True
-            else:
-                return False
-        except:
+        if self.previous_values[key] != val:
+            self.previous_values[key] = val
             return True
+        else:
+            return False
+        # try:
+        #     if self.previous_values[key] != val:
+        #         self.previous_values[key] = val
+        #         return True
+        #     else:
+        #         return False
+        # except:
+        #     return True
+
+    def set_break_down_color(self,widget,val):
+        if val:
+            widget.setStyleSheet('QLabel { background-color : ' + self.bad + '; color : black; }')
+        else:
+            widget.setStyleSheet('QLabel { background-color : ' + self.good + '; color : black; }')
+
     # functions to update colors in widgets
     def set_status(self, widget, val, status):
         if val == STATE.UNKNOWN:
@@ -256,7 +268,13 @@ class gui_conditioning(QMainWindow, Ui_MainWindow):
         self.widget[dat.breakdown_count] =self.breakdown_count_outputwidget
         self.widget[dat.pulse_count] =self.pulse_count_outputwidget
         self.widget[dat.rev_power_spike_status] =self.rev_power_spike_status_outputwidget
-        self.widget[dat.breakdown_rate_limit] =self.breakdown_rate_limit_outputwidget
         self.widget[dat.vac_valve_status] =self.vac_valve_status_outputwidget
-        self.widget[dat.amp_ff] =self.amp_set_outputwidget
-        self.widget[dat.DC_level] =self.dc_level_outputwidget
+        self.widget[dat.amp_sp] =self.amp_set_outputwidget
+        self.widget[dat.DC_level] = self.dc_level_outputwidget
+        self.widget[dat.event_pulse_count] = self.event_pulse_count_outputwidget
+        self.widget[dat.pulse_length_aim] = self.pulse_length_aim_outputwidget
+        self.widget[dat.power_aim] = self.power_aim_outputwidget
+        self.widget[dat.breakdown_rate_aim] = self.breakdown_rate_limit_outputwidget
+        self.widget[dat.breakdown_rate_hi] = self.measured_breakdown_rate_outputwidget
+        self.widget[dat.last_106_bd_count] = self.last_106_count_outputwidget
+        self.widget[dat.llrf_trigger] = self.llrf_trigger_outputwidget

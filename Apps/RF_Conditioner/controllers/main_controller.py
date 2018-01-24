@@ -11,61 +11,62 @@ from VELA_CLARA_enums import STATE
 class main_controller(controller_base):
 	# whoami
 	my_name = 'main_controller'
-
 	#
 	# other attributes will be initiliased in base-class
 	mask_set = False
 	old_sp = 0
 
 	def __init__(self, argv, config_file):
-		controller_base.__init__(self, argv, config_file)
-		self.data.llrf_type = self.llrf_type
-		self.data_monitor.llrf_type = self.llrf_type
-		# start data recording
-		#
-		self.data.get_pulse_count_breakdown_log()
-		self.data.start_logging(self.log_param)
+		#super(controller_base,self).__init__()
+		controller_base.__init__(self,argv, config_file)
+
+		controller_base.data.llrf_type = self.llrf_type
+		controller_base.data_monitor.llrf_type = self.llrf_type
+
+		# more set-up after config read
+		#self.data.llrf_param= self.llrf_param
+		self.data.init_after_config_read()
 
 		#
 		# start monitoring data
-		self.data_monitor.start_monitors(
-		                   prot_control=self.prot_control,
-		                   rfprot_param=self.rfprot_param,
-		                   valve_control=self.valve_control,
-		                   vac_valve_param=self.vac_valve_param,
-		                   mod_control=self.mod_control,
-		                   mod_param=self.mod_param,
-		                   cavity_temp_param=self.cavity_temp_param,
-		                   water_temp_param=self.water_temp_param,
-		                   vac_param=self.vac_param,
-		                   llrf_control=self.llrf_control,
-		                   llrf_param=self.llrf_param,
-						   breakdown_param=self.breakdown_param,
-						   log_param=self.log_param,
-						   DC_param=self.DC_param,
-						   logger = self.logger
-						)
+		self.data_monitor.start_monitors()
 		# build the gui and pass in the data
 		#
 		# build the gui and pass in the data
-		self.gui = gui_conditioning(
-				data=self.data,
-				update_time=self.gui_param['GUI_UPDATE_TIME']#MAGIC_STRING
-			)
+		self.gui = gui_conditioning()
 		self.gui.closing.connect(self.connectCloseEvents)
 		self.gui.show()
 		self.gui.activateWindow()
+		QApplication.processEvents()
+
+		# more set-up after controller built
+		controller_base.llrf_control.addPulseCountOffset(self.data.values[dat.log_active_pulse_count])
+
+
+		print(self.my_name + ' setting pulse length to last previous log value = ' +\
+			  str(controller_base.config.llrf_config['PULSE_LENGTH_START']))
+
+
+		self.llrf_handler.set_pulse_length(self.data.values[dat.log_pulse_length] )
+		QApplication.processEvents()
 
 		# set dat llrf parm, so dat can work out the
 		# amplitude increase step size
-		print self.llrf_param['RF_INCREASE_RATE']
-		self.data.llrf_param = self.llrf_param
-		self.data.power_increase_set_up()
+		print controller_base.config.llrf_config['RF_INCREASE_RATE']
+		#controller_base.data.llrf_param = self.llrf_param
+		controller_base.data.power_increase_set_up()
+		QApplication.processEvents()
 
 		# everything now runs from the main_loop
 		#
 		#self.llrf_handler.check_masks()
 		self.monitor_states = self.data.main_monitor_states
+		QApplication.processEvents()
+
+		# start data recording
+		#
+		self.data.start_logging()
+		QApplication.processEvents()
 
 		self.main_loop()
 
@@ -77,7 +78,7 @@ class main_controller(controller_base):
 		self.data_monitor.init_monitor_states()
 
 		#self.llrf_control.setPulseCountOffset(410000)
-		self.llrf_control.setAmpSP(500)
+		#self.llrf_control.setAmpHP(0)
 		# remove time.sleep(10 at your peril
 		time.sleep(1)
 		self.mask_set = False
@@ -90,72 +91,109 @@ class main_controller(controller_base):
 		print(self.my_name + ' entering mainloop')
 
 		# start the clock
-		self.start_time()
+		#self.start_time()
 
-		i = 0
+		values = controller_base.data.values
 
+		self.llrf_handler.set_amp(values[dat.next_sp_decrease])
+		self.data.clear_last_sp_history()
+		self.continue_ramp()
+
+		controller_base.data_monitor.outside_mask_trace_monitor.reset_event_pulse_count()
+		self.logger.header('ENTERING MAIN LOOP')
 		while 1:
 			QApplication.processEvents()
 
-			#the GUI can overide this loop
-			if self.gui.can_run:
-
 			# update main monitor states
 
-				self.data_monitor.update()
-				#
-				# # if new_bad drop SP
-				if self.data_monitor.new_bad():
-					print('MAIN-LOOP New Bad State droppingng SP=0')
-					self.llrf_control.setGlobalCheckMask(False)
+			self.data_monitor.update_states()
+			#
+			# # if new_bad drop SP
+			if self.data_monitor.new_bad():
+				self.llrf_control.setGlobalCheckMask(False)
 
-					if self.data_monitor.vac_new_bad():
-						self.llrf_handler.set_amp( 5 ) # vac amp set value
-					if self.data_monitor.dc_new_bad():
-						self.llrf_handler.set_amp( 6 ) # DC amp set value
+				self.llrf_handler.set_amp_hp(0)  # vac amp set value
 
-					while 1:
-						QApplication.processEvents()
-				if 	self.data_monitor.new_good_no_bad():
-					m = max([i[0] for i in self.data.sp_pwr_hist])
-					print(self.my_name +' new good, seting amp_sp = ' + str(m ))
+				if self.data_monitor.vac_new_bad():
+					self.llrf_handler.set_amp(5) # DC amp set value
 
-					# if breakdown rate is good set previous max value (should this be max?
-					self.llrf_handler.set_amp( m  )
-					# if breakdown rate is bd, go to previous power and wait for breakdown_rate to recover
-					# if anothe breakdown occurs then drop down agaain
-					print('restart main_loop clock')
-					self.start_time()
+					values[dat.breakdown_count] += 1
+
+					self.logger.message('MAIN-LOOP New VAC BAD State dropping amp = 5', True)
+				if self.data_monitor.dc_new_bad():
+					self.llrf_handler.set_amp(6) # DC amp set value
+					values[dat.breakdown_count] += 1
+					self.logger.message('MAIN-LOOP New DC BAD State dropping amp = 6', True)
 
 
-				# if everything is good carry on increasing
-				if self.data_monitor.all_good():
-					#print('all good')
+			elif self.data_monitor.new_good_no_bad():
 
-								# set the masks
-					if self.mask_set == False:
-						#print('main loop mask not set')
-						self.mask_set = self.llrf_handler.set_mask()
-						# if GOOD set checking for breakdowns
-					else:
-						#print('main loop setting global check mask = TRUE')
-						if i == 0:
-							self.llrf_control.setGlobalCheckMask(True)
-							i = 1
-						# if there has been enough time since
-						# the last increase get the new llrf sp
-						if self.seconds_elapsed(self.llrf_param['TIME_BETWEEN_RF_INCREASES']):
-							self.apply_new_amp()
-							self.start_time()
+				if values[dat.breakdown_rate_hi]:
+					self.ramp_down()
 				else:
-					pass
-					#print('not all good')
+					self.continue_ramp()
+
+
+			# if everything is good carry on increasing
+			if self.data_monitor.all_good():
+				#print('all good')
+							# set the masks
+				if self.mask_set == False:
+					#print('main loop mask not set')
+					self.mask_set = self.llrf_handler.set_mask()
+					# if GOOD set checking for breakdowns
+				else:
+					#print('main loop setting global check mask = TRUE')
+					self.llrf_control.setGlobalCheckMask(True)
+					# if there has been enough time since
+					# the last increase get the new llrf sp
+					# we use dto updat ebased on time elapsed
+					#if self.seconds_elapsed(self.llrf_param['TIME_BETWEEN_RF_INCREASES']):
+					# now we update base do npulses
+					if values[dat.event_pulse_count] > values[dat.required_pulses]: # check this number in the look up
+						if self.gui.can_ramp:
+							if values[dat.breakdown_rate_hi]:
+								self.logger.message('MAIN LOOP allgood, but breakdown rate too high ' + str(values[dat.breakdown_rate]))
+							else:
+								self.ramp_up()
+						else:
+							pass
+							#self.logger.message('MAIN LOOP allgood, pulse count good gui in pause ramp mode')
+					else:
+						pass
+						#self.logger.message('MAIN LOOP all good, but pulse count low, ' + str(values[dat.event_pulse_count]) +' \ '+ str(values[dat.required_pulses]))
+
 			else:
-				print('press start ramp to continue')
-				time.sleep(1)
+				pass
+				#print('not all good')
 
 	def check_vac(self):
 		print'check_vac'
+
+
+	def continue_ramp(self):
+		print('continue_ramp ' + str(self.data.amp_sp_history[-1]))
+		# apply the old settings
+		self.llrf_handler.set_amp(self.data.amp_sp_history[-1])
+		self.data_monitor.outside_mask_trace_monitor.reset_event_pulse_count()
+
+	def ramp_up(self):
+		print('ramp_up')
+		new_amp = self.data.get_new_set_point( self.data.values[dat.next_power_increase]  )
+		if new_amp:
+			self.llrf_handler.set_amp(new_amp)
+			self.data.values[dat.next_sp_decrease] = dat.rf_condition_data_base.amp_sp_history[-2]
+		else:
+			self.llrf_handler.set_amp(self.llrf_control.getAmpSP() + controller_base.config.llrf_config['DEFAULT_RF_INCREASE_LEVEL'])
+			self.data.ramp_up()
+		self.data_monitor.outside_mask_trace_monitor.reset_event_pulse_count()
+
+	def ramp_down(self):
+		self.llrf_handler.set_amp(self.data.amp_sp_history[-2])
+		self.data_monitor.outside_mask_trace_monitor.reset_event_pulse_count()
+		self.data.clear_last_sp_history()
+		self.data.ramp_down()
+
 
 	def apply_new_amp(self):
 		sp = self.llrf_control.getAmpSP()
