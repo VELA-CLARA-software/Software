@@ -82,9 +82,9 @@ class spike_monitor(monitor):
         self.should_drop_amp = should_drop_amp
 
         if self.should_drop_amp:
-            print('dropping amp')
+            monitor.logger.message(self.my_name + ' will drop amp on spike detection',True)
         else:
-            print('Not dropping amp')
+            monitor.logger.message(self.my_name + ' will NOT drop amp on spike detection',True)
 
         self.amp_drop_value = amp_drop_value
         self.data_dict_val_key = data_dict_val_key
@@ -145,10 +145,10 @@ class spike_monitor(monitor):
         item = [self.spike_delta, self.spike_decay_level, self.cool_down_time]
         if self.sanity_checks(item):
             self.timer.start(self.update_time)
-            print self.my_name + ' STARTED'
+            monitor.logger.message(self.my_name, ' STARTED running')
             self.set_good()
         else:
-            print self.my_name + ' NOT STARTED'
+            monitor.logger.message(self.my_name, ' NOT STARTED running')
 
 
     def check_signal(self):
@@ -167,7 +167,7 @@ class spike_monitor(monitor):
         if self.level_cooldown:
             if self._latest_value < self.spike_decay_level * self._mean_level:
                 if self.min_time_good:
-                    print(self.my_name, ' _has_cooled_down')
+                    monitor.logger.message(self.my_name, ' has_cooled_down')
                     self.in_cooldown = False
 
     def check_for_spike(self):
@@ -177,7 +177,7 @@ class spike_monitor(monitor):
             #print('spike ',self._latest_value, self.spike_delta, self._latest_value-self._mean_level)
             # this is the first place we can detect a spike, so drop amp here
             if self.should_drop_amp:
-                monitor.llrf_control.setAmpSP(self.amp_drop_value)
+                monitor.llrf_control.setAmpHP(self.amp_drop_value)
             # start the cooldown
             self.start_cooldown()
         else:
@@ -192,10 +192,10 @@ class spike_monitor(monitor):
                 #print('new mean = ',self._mean_level)
 
     def min_cooldown_finished(self):
-        print('min time good')
         self.min_time_good = True
 
     def start_cooldown(self):
+        monitor.data.update_break_down_count()
         #print 'start_cooldown called'
         self.in_cooldown = True
         self.min_time_good = False

@@ -1,0 +1,148 @@
+*
+*** main_controller creating HWC ***
+*
+*** llrf_handler start_trace_monitoring***
+started monitoring KLYSTRON_FORWARD_PHASE
+started monitoring KLYSTRON_REVERSE_PHASE
+started monitoring KLYSTRON_FORWARD_POWER
+added KLYSTRON_FORWARD_POWER to power_traces
+started monitoring KLYSTRON_REVERSE_POWER
+added KLYSTRON_REVERSE_POWER to power_traces
+started monitoring HRRG_CAVITY_REVERSE_PHASE
+started monitoring HRRG_CAVITY_FORWARD_PHASE
+started monitoring HRRG_CAVITY_FORWARD_POWER
+added HRRG_CAVITY_FORWARD_POWER to power_traces
+started monitoring HRRG_CAVITY_REVERSE_POWER
+added HRRG_CAVITY_REVERSE_POWER to power_traces
+started monitoring CAVITY_PROBE_POWER
+added CAVITY_PROBE_POWER to power_traces
+started monitoring CAVITY_PROBE_PHASE
+*
+*** llrf_handler start_trace_rolling_average***
+starting rolling average for HRRG_CAVITY_FORWARD_POWER
+STARTED rolling average for HRRG_CAVITY_FORWARD_POWER
+starting rolling average for HRRG_CAVITY_REVERSE_POWER
+STARTED rolling average for HRRG_CAVITY_REVERSE_POWER
+start_llrf_control created VELA_HRRG, llrf_handler and got full trace names:
+TRACES TO SAVE:
+KLYSTRON_FORWARD_PHASE
+KLYSTRON_REVERSE_PHASE
+KLYSTRON_FORWARD_POWER
+KLYSTRON_REVERSE_POWER
+HRRG_CAVITY_REVERSE_PHASE
+HRRG_CAVITY_FORWARD_PHASE
+HRRG_CAVITY_FORWARD_POWER
+HRRG_CAVITY_REVERSE_POWER
+CAVITY_PROBE_POWER
+CAVITY_PROBE_PHASE
+BREAKDOWN_TRACES SAVE:
+HRRG_CAVITY_FORWARD_POWER
+HRRG_CAVITY_REVERSE_POWER
+start_mod_control created a gun modulator object
+start_vac_valve_control created VELA_INJ object
+start_rf_prot_control created a protection control  object
+*
+*** controller_base has read config***
+config file = test.config
+dumping data to log
+VAC_CHECK_TIME:200, VAC_SPIKE_DECAY_TIME:2000, VAC_DECAY_MODE:LEVEL, VAC_SHOULD_DROP_AMP:True, VAC_SPIKE_AMP_DROP:5.0, OUTSIDE_MASK_COOLDOWN_TIME:2000, VAC_PV:EBT-HRG1-VAC-IMG-01:PRES, VAC_SPIKE_DECAY_LEVEL:1.2, VAC_SPIKE_DELTA:1e-09, VAC_NUM_SAMPLES_TO_AVERAGE:5, 
+DC_SPIKE_DECAY_LEVEL:1.1, DC_PV:EBT-INJ-SCOPE-01:P4, DC_NUM_SAMPLES_TO_AVERAGE:5, DC_SPIKE_AMP_DROP:6.0, OUTSIDE_MASK_COOLDOWN_TIME:2000, DC_SHOULD_DROP_AMP:False, DC_CHECK_TIME:1000, DC_SPIKE_DELTA:0.015, DC_SPIKE_DECAY_TIME:2000, DC_DECAY_MODE:TIMED, 
+PULSE_COUNT_BREAKDOWN_LOG_FILENAME:pulse_breakdown_log.txt, OUTSIDE_MASK_FORWARD_FILENAME:outside_forward_log, OUTSIDE_MASK_REVERSE_FILENAME:outside_reverse_log, OUTSIDE_MASK_PROBE_FILENAME:outside_probe_log, LOG_DIRECTORY:C:\Users\dlerlp\Documents\RF_condition_2018\logs\, AMP_PWR_LOG_TIME:50, DATA_LOG_TIME:1000, LOG_FILENAME:log.txt, DATA_LOG_FILENAME:data_log, 
+VAC_VALVE:VALV01, VAC_VALVE_AREA:VELA_INJ, VAC_VALVE_CHECK_TIME:1000, 
+WATER_TEMPERATURE_CHECK_TIME:1000, WATER_TEMPERATURE_PV:CLA-GUN-RF-LRRG-01:RT, 
+CAVITY_TEMPERATURE_CHECK_TIME:1000, CAVITY_TEMPERATURE_PV:CLA-GUN-H20-GUN-01:RTA, 
+MEAN_TIME_TO_AVERAGE:0.125, LLRF_CHECK_TIME:50, RF_REPETITION_RATE:100, POWER_AIM:0.1, LOW_POWER_INCREASE:1000, PULSE_LENGTH_AIM:2500.0, RF_INCREASE_LEVEL:0.001, BREAKDOWN_RATE_AIM:5, TRACES_TO_SAVE:['KLYSTRON_FORWARD_PHASE', 'KLYSTRON_REVERSE_PHASE', 'KLYSTRON_FORWARD_POWER', 'KLYSTRON_REVERSE_POWER', 'HRRG_CAVITY_REVERSE_PHASE', 'HRRG_CAVITY_FORWARD_PHASE', 'HRRG_CAVITY_FORWARD_POWER', 'HRRG_CAVITY_REVERSE_POWER', 'CAVITY_PROBE_POWER', 'CAVITY_PROBE_PHASE'], RF_STRUCTURE:VELA_HRRG, PULSE_LENGTH_START:100.0, NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY:1000000, RF_INCREASE_RATE:0.33333, PULSE_LENGTH_STEP:250.0, DEFAULT_RF_INCREASE_LEVEL:25, LOW_POWER_INCREASE_RATE_LIMIT:1000000, TIME_BETWEEN_RF_INCREASES:10, NORMAL_POWER_INCREASE:10000, 
+CPP_MASK_LEVEL:30, CRP_MASK_FLOOR:1000, CRP_AMP_DROP_VAL:2, CRP_MASK_END:2.0, CFP_CHECK_STREAK:10, CFP_AMP_DROP_VAL:3, CFP_MASK_END:2.0, CPP_AUTO_SET:True, CPP_MASK_END:2.0, CPP_AMP_DROP:False, CFP_AUTO_SET:True, CPP_CHECK_STREAK:10, BREAKDOWN_TRACES:['HRRG_CAVITY_FORWARD_POWER', 'HRRG_CAVITY_REVERSE_POWER'], CFP_MASK_LEVEL:30, CPP_MASK_TYPE:PERCENT, CFP_MASK_FLOOR:3000, CPP_S4:0, CPP_S1:0, CPP_S3:0, CPP_S2:0, CRP_S3:0, CRP_S2:0, CRP_S1:0, CRP_NUM_AVERAGE_TRACES:3, CRP_AMP_DROP:True, OUTSIDE_MASK_COOLDOWN_TIME:2000, CRP_S4:0, CPP_AMP_DROP_VAL:4, CFP_AMP_DROP:False, CPP_MASK_FLOOR:1000, OUTSIDE_MASK_CHECK_TIME:100, CRP_MASK_LEVEL:30, CFP_S4:0, CFP_S3:0, CFP_S2:0, CFP_S1:0, CRP_AUTO_SET:True, CPP_NUM_AVERAGE_TRACES:4, CFP_MASK_TYPE:PERCENT, CFP_NUM_AVERAGE_TRACES:4, CRP_CHECK_STREAK:10, CRP_MASK_TYPE:PERCENT, 
+MOD_CHECK_TIME:1000, 
+RF_PROT_CHECK_TIME:1000, RF_STRUCTURE:VELA_HRRG, 
+GUI_UPDATE_TIME:1000, 
+*
+*** rf_condition_data set_ramp_values ***
+next required pulses =150
+next power increase  =0.1
+next sp decrease  =400
+*
+*** rf_condition_data pulse_count_breakdown_log ***
+log_active_pulse_count 5
+log_breakdown_count 0
+log_amp_set 500
+current_ramp_index 3
+ PULSE_LENGTH_START = 0.25
+next_sp_decrease 400
+Monitoring RF-PROTECTION
+Monitoring VAC-VALVE
+Monitoring MODULATOR
+data_monitoring Connected to PV = CLA-GUN-H20-GUN-01:RTA with ID = d0 acquiring data
+Monitoring CAVITY TEMPERATURE
+data_monitoring Connected to PV = CLA-GUN-RF-LRRG-01:RT with ID = d1 acquiring data
+Monitoring WATER TEMP
+data_monitoring Connected to PV = EBT-HRG1-VAC-IMG-01:PRES with ID = d2 acquiring data
+vac_spike_monitor will drop amp on spike detection
+vac_spike_monitor
+Monitoring VACUUM
+data_monitoring Connected to PV = EBT-INJ-SCOPE-01:P4 with ID = d3 acquiring data
+dc_spike_monitor will NOT drop amp on spike detection
+dc_spike_monitor
+Monitoring DC
+Monitoring llrf
+Monitoring outside_masks
+gui_conditioning has disabled ramping RF
+*
+*** llrf_handler set_mean_pwr_position***
+timevector_dt = 0.00900450229617
+meantime = 13
+rf pulse end time = 0.792396202063, index = 79
+pulse_latency     = 50
+.getPulseLength() = 0.252126064293
+trace_mean_start/end (index) = 61, 74
+trace_mean_start/end    (us) = 0.639319663028, 0.756378192878
+*
+*** llrf_handler set_outside_mask_trace_param***
+HRRG_CAVITY_FORWARD_POWER
+streak  = 10
+ floor   = 3000
+ drop    = False
+ drop_val= 3
+setNumContinuousOutsideMaskCount = True
+setMaskFloor = True
+setShouldCheckMask = True
+setDropAmpOnOutsideMaskDetection = True
+HRRG_CAVITY_REVERSE_POWER
+streak  = 10
+ floor   = 1000
+ drop    = True
+ drop_val= 2
+setNumContinuousOutsideMaskCount = True
+setMaskFloor = True
+setShouldCheckMask = True
+setDropAmpOnOutsideMaskDetection = True
+mask_1 index/us = 65/0.675337672213
+mask_2 index/us = 179/1.70185093398
+mask_3 index/us = 179/1.70185093398
+HRRG_CAVITY_FORWARD_POWER mask_4 index/us = 292/2.71935969344
+HRRG_CAVITY_REVERSE_POWER mask_4 index/us = 292/2.71935969344
+*
+*** rf_condition_data power_increase_set_up  ***
+gui_conditioning has enabled ramping RF
+*
+*** rf_condition_data set_ramp_values ***
+next required pulses =150
+next power increase  =0.1
+next sp decrease  =400
+*
+*** rf_condition_data set_ramp_values ***
+next required pulses =150
+next power increase  =0.1
+next sp decrease  =425.0
+*
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+increasing breakdown count = 
+new outside_mask_trace = HRRG_CAVITY_REVERSE_POWER reverse count = 1
+*
+*** rf_condition_data set_ramp_values ***
+next required pulses =150
+next power increase  =0.1
+next sp decrease  =425.0
+*
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+new outside_mask_trace = HRRG_CAVITY_FORWARD_POWER forward count = 1

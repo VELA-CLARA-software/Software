@@ -6,7 +6,6 @@
 import os
 import sys
 
-
 if os.environ['COMPUTERNAME'] == "DJS56PORT2":
 	print 'port'
 	sys.path.append(os.getcwd())
@@ -41,3 +40,44 @@ if __name__ == '__main__':
 	print('Starting rf_condition Application')
 	app = rf_condition(sys.argv)
 	sys.exit(app.exec_())
+
+# from PyQt4.QtGui import *
+# import gui.splash as splash
+# import time
+#
+# if __name__ == "__main__":
+#
+# 	# movie = QMovie(os.getcwd()+'\splash\' + random.choice(os.listdir(os.getcwd()+'\splash')))
+# 	# movie = QMovie(a)
+#     #
+# 	# splash = MovieSplashScreen(movie)
+#     #
+# 	# splash.show()
+#
+# 	pp = QApplication(sys.argv)
+#
+# 	movie = splash.work()
+#
+#
+# 	app = rf_condition(sys.argv)
+#
+# 	start = time.time()
+# 	while movie.state() == QMovie.Running and time.time() < start + 10:
+# 		pp.processEvents()
+#
+#
+#
+# 	#app = rf_condition(sys.argv)
+#
+# 	# start = time.time()
+#     #
+# 	# while movie.state() == QMovie.Running and time.time() < start + 10:
+# 	# 	app.processEvents()
+#
+# 	sys.exit(app.exec_())
+#
+# 	#window = QWidget()
+# 	#window.show()
+# 	splash.splash.finish()
+#
+# 	sys.exit(app.exec_())

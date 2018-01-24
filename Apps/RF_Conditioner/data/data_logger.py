@@ -18,7 +18,7 @@ class data_logger(object):
     log_start_str = log_start.isoformat('-').replace(":", "-").split('.', 1)[0]
 
     def __init__(self):
-        log_param = data_logger.config.log_config
+        pass
 
     @property
     def log_config(self):
@@ -67,19 +67,23 @@ class data_logger(object):
             f.write(str)
             f.write('\n')
 
-    def write_pulse_count_breakdown_log(self, data):
-        string = " ".join(map(str, data))
-        with open(self.pulse_count_log,'a') as f:
-            f.write(string)
-            f.write('\n')
+    def write_list(self, data, file):
+        with open(file,'w') as f:
+            for item in data:
+                f.write("%s\n" % item)
 
+
+    def add_to_pulse_breakdown_log(self,x):
+        with open(self.pulse_count_log,'a') as f:
+            f.write(" ".join(map(str,x)) + '\n')
 
     def get_pulse_count_breakdown_log(self):
         self.pulse_count_log = data_logger.config.log_config['LOG_DIRECTORY']+ \
                                data_logger.config.log_config['PULSE_COUNT_BREAKDOWN_LOG_FILENAME']
         log = []
         with open(self.pulse_count_log) as f:
-            for line in f:
+            lines = list(line for line in (l.strip() for l in f) if line)
+            for line in lines:
                 if '#' not in line:
                     log.append([int(x) for x in line.split()])
         self.header(self.my_name + ' get_pulse_count_breakdown_log')

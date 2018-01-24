@@ -83,12 +83,12 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
             #print self.my_name + ' is pausing RF conditioning'
             self.start_pause_ramp_button.setText("ENABLE RAMPING")
             self.start_pause_ramp_button.setStyleSheet('QPushButton { background-color : ' + self.bad + '; color : black; }')
-            print self.my_name + ' has disabled ramping RF'
+            base.logger.message(self.my_name + ' has disabled ramping RF',True)
         else:
             self.can_ramp = True
             self.start_pause_ramp_button.setText("DISABLE RAMPING")
             self.start_pause_ramp_button.setStyleSheet('QPushButton { background-color : '+ self.good +'; color : black; }')
-            print self.my_name + ' has enabled ramping RF'
+            base.logger.message(self.my_name + ' has enabled ramping RF',True)
 
     def handle_shutdown_rf_button(self):
         print 'handle_shutdown_rf_button'
@@ -267,7 +267,7 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
         self.widget[dat.breakdown_rate] =self.measured_breakdown_rate_outputwidget
         self.widget[dat.breakdown_count] =self.breakdown_count_outputwidget
         self.widget[dat.pulse_count] =self.pulse_count_outputwidget
-        self.widget[dat.rev_power_spike_status] =self.rev_power_spike_status_outputwidget
+        self.widget[dat.rev_power_spike_count] =self.rev_power_spike_status_outputwidget
         self.widget[dat.vac_valve_status] =self.vac_valve_status_outputwidget
         self.widget[dat.amp_sp] =self.amp_set_outputwidget
         self.widget[dat.DC_level] = self.dc_level_outputwidget

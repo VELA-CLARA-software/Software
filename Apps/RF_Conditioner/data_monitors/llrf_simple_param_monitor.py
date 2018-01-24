@@ -29,9 +29,10 @@ class llrf_simple_param_monitor(monitor):
 
 
         ## WARNING
-        monitor.llrf_control.setActivePulsePowerLimit(500)
-
-
+        # min kyl fwd power to enable incrementing the pulse RF counter
+        monitor.llrf_control.setActivePulsePowerLimit( monitor.config.llrf_config['KLY_PWR_FOR_ACTIVE_PULSE'] )
+        #; number extra traces to save after an out_side_mask_trace is detected
+        monitor.llrf_control.setNumExtraTraces( monitor.config.llrf_config['EXTRA_TRACES_ON_BREAKDOWN'])
 
     def update_value(self):
         for trace, key  in self.trace_pwr_keys.iteritems():

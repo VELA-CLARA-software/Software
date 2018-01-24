@@ -29,7 +29,7 @@ class base(object):
     # init LLRF Hardware Controllers
     llrf_init = VELA_CLARA_LLRF_Control.init()
     llrf_init.setVerbose()
-    llrf_init.setQuiet()
+    #llrf_init.setQuiet()
     _llrf_control = None  # LLRF HWC
     _llrfObj = None  # LLRF HWC
     _llrf_handler = None
@@ -54,9 +54,10 @@ class base(object):
     #rot_init.setVerbose()
     prot_control = None
     # def __init__(self):
-    #     super(config_reader, self).__init__()
-    #     super(data_logger, self).__init__()
-    #     super(rf_condition_data, self).__init__()
+    #     print('Base init')
+        # super(config_reader, self).__init__()
+        # super(data_logger, self).__init__()
+        # super(rf_condition_data, self).__init__()
 
     @property
     def llrf_control(self):

@@ -25,6 +25,7 @@ class rf_condition_data(dat.rf_condition_data_base):
     def __init__(self):
         dat.rf_condition_data_base.__init__(self)
         self.values = dat.rf_condition_data_base.values
+        self.ramp_max_index = len(ramp) -1
 
     # def get_next_ramp_values(self):
     #     self.values[dat.next_sp_decrease]
@@ -45,39 +46,47 @@ class rf_condition_data(dat.rf_condition_data_base):
         dat.rf_condition_data_base.sp_pwr_hist = [x for x in dat.rf_condition_data_base.sp_pwr_hist if x[0] <= limit ]
 
     def move_ramp_index(self,val):
-        self.values[dat.log_index] += val
+        print('move_ramp_index')
+        self.values[dat.current_ramp_index] += val
+        if self.values[dat.current_ramp_index] < 0:
+            self.values[dat.current_ramp_index] = 0
+        elif self.values[dat.current_ramp_index] > self.ramp_max_index:
+            self.values[dat.current_ramp_index] = self.ramp_max_index
         self.set_ramp_values()
 
 
     def set_ramp_values(self):
-        self.values[dat.required_pulses] = ramp[self.values[dat.log_index]][0]
-        self.values[dat.next_power_increase] = ramp[self.values[dat.log_index]][1]
+        self.values[dat.required_pulses] = ramp[self.values[dat.current_ramp_index]][0]
+        self.values[dat.next_power_increase] = float(ramp[self.values[dat.current_ramp_index]][1])
 
         self.logger.header( self.my_name + ' set_ramp_values ', True)
         self.logger.message(['next required pulses =' + str(self.values[dat.required_pulses]),
                              'next power increase  =' + str(self.values[dat.next_power_increase]),
-                             'next sp decrease  =' + str(self.values[dat.next_sp_decrease])])
+                             'next sp decrease  =' + str(self.values[dat.next_sp_decrease])],True)
 
 
     def get_new_sp(self):
         return self.get_new_set_point( self.get_next_power())
 
     # neatean up!
-    def get_new_set_point(self,pwr_kw):
+    # neatean up!
+    # neatean up!
+    # neatean up!
+    def get_new_set_point(self,pwr_w):
         self.previous_power = self.current_power
-        x = np.array([i[0] for i in self.sp_pwr_hist])
-        y = np.array([i[1] for i in self.sp_pwr_hist]) / 1000
+        x = np.array([i[0] for i in dat.rf_condition_data_base.sp_pwr_hist])
+        y = np.array([i[1] for i in dat.rf_condition_data_base.sp_pwr_hist])
         # for p in x:
         #     print p,
         myset = sorted(set(x))
         if len(myset) > 3:
             min_sp =list(myset)[-4]
             # print 'myset[-3] ' + str(min_sp)
-            a = [[x2,y2] for x2,y2 in self.sp_pwr_hist if x2>=min_sp]
+            a = [[x2,y2] for x2,y2 in dat.rf_condition_data_base.sp_pwr_hist if x2>=min_sp]
 
             # fit with np.polyfit
             x_tofit = np.array([i[0] for i in a])
-            y_tofit = np.array([i[1] for i in a]) / 1000
+            y_tofit = np.array([i[1] for i in a])
 
             x_min = min(x_tofit)
             x_max = max(x_tofit)
@@ -86,12 +95,12 @@ class rf_condition_data(dat.rf_condition_data_base):
 
             #print(current_power_data)
 
-            self.current_power = np.mean(  np.array([i[1] for i in current_power_data]) ) / 1000
+            self.current_power = np.mean(  np.array([i[1] for i in current_power_data]) )
 
             m, c = np.polyfit(x_tofit, y_tofit, 1)
 
-            predict = (self.current_power + pwr_kw - c) / m
-            p =[predict,self.current_power + pwr_kw]
+            predict = (self.current_power + pwr_w - c) / m
+            p =[predict,self.current_power + pwr_w]
             print('current = ', "%.3E"%max(x_tofit),"%.3E"%self.current_power)
             print('predict = ', "%.3E"%p[0],"%.3E"%p[1])
             print('Measured Power increase = ' + str(self.current_power - self.previous_power))
@@ -121,7 +130,7 @@ class rf_condition_data(dat.rf_condition_data_base):
         self.last_million_log.append([
             self.values[dat.pulse_count],
             self.values[dat.breakdown_count],
-            self.values[dat.log_index],
+            self.values[dat.current_ramp_index],
             self.values[dat.pulse_length]]
         )
         while self.last_million_log[-1][0] - self.last_million_log[0][0]  > self.llrf_config['NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY']:
@@ -162,21 +171,19 @@ class rf_condition_data(dat.rf_condition_data_base):
 
         self.values[dat.next_sp_decrease] = dat.rf_condition_data_base.amp_sp_history[-2]
 
-        self.values[dat.log_index] = int(pulse_break_down_log[-1-2][3])# WARNING we add a rpeat of th elast last_million_log !
-
-
+        self.values[dat.current_ramp_index] = int(pulse_break_down_log[-1-2][3])# WARNING we add a rpeat of th elast last_million_log !
 
         self.values[dat.log_pulse_length] = float(pulse_break_down_log[-1][4]) / float(1000.0)
         self.set_ramp_values()
 
-        self.llrf_config['PULSE_LENGTH_START'] = ( pulse_break_down_log[-1][4] * 0.001)# !!!
+        self.llrf_config['PULSE_LENGTH_START'] = ( pulse_break_down_log[-1][4] * 0.001)# !!! UNITS
 
         self.logger.header( self.my_name + ' pulse_count_breakdown_log ', True)
         self.logger.message([
             dat.log_active_pulse_count + ' ' + str(self.values[dat.log_active_pulse_count]),
             dat.log_breakdown_count + ' ' + str(self.values[dat.log_breakdown_count]),
             dat.log_amp_set + ' ' + str(self.values[dat.log_amp_set]),
-            dat.log_index + ' ' + str(self.values[dat.log_index]),' PULSE_LENGTH_START = ' + str(self._llrf_config['PULSE_LENGTH_START']),
+            dat.current_ramp_index + ' ' + str(self.values[dat.current_ramp_index]),' PULSE_LENGTH_START = ' + str(self._llrf_config['PULSE_LENGTH_START']),
             dat.next_sp_decrease + ' ' + str(self.values[dat.next_sp_decrease])
         ],True)
 

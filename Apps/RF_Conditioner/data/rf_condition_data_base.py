@@ -13,10 +13,10 @@ from data.config_reader import config_reader
 
 # keys for all the data we monitor
 time_stamp = 'time_stamp'
-vacuum_level = 'vacuum_level'
+#vacuum_level = 'vacuum_level'
 vac_spike_status = 'vac_spike_status'
 DC_spike_status = 'DC_spike_status'
-rev_power_spike_status = 'rev_power_spike_status'
+rev_power_spike_count = 'rev_power_spike_count'
 cav_temp = 'cav_temp'
 water_temp = 'water_temp'
 pulse_length = 'pulse_length'
@@ -41,7 +41,7 @@ breakdown_rate_aim = 'breakdown_rate_aim'
 log_active_pulse_count = 'log_active_pulse_count'
 log_breakdown_count = 'log_breakdown_count'
 log_amp_set = 'log_amp_set'
-log_index = 'log_index'
+current_ramp_index = 'current_ramp_index'
 
 breakdown_count = 'breakdown_count'
 elapsed_time = 'elapsed_time'
@@ -72,7 +72,7 @@ llrf_trigger = 'llrf_trigger'
 
 amp_ff = 'amp_ff'
 amp_sp = 'amp_sp'
-all_value_keys = [rev_power_spike_status,
+all_value_keys = [rev_power_spike_count,
                   num_outside_mask_traces,
                   breakdown_rate_aim,
                   vac_spike_status,
@@ -104,7 +104,7 @@ all_value_keys = [rev_power_spike_status,
                   log_active_pulse_count,
                   log_breakdown_count,
                   log_amp_set,
-                  log_index,
+                  current_ramp_index,
                   power_aim,
                   pulse_length_aim,
                   pulse_length_step,
@@ -151,7 +151,7 @@ class rf_condition_data_base(QObject):
     values[vac_spike_status] = STATE.UNKNOWN
     values[DC_spike_status] = STATE.UNKNOWN
     values[breakdown_status] = STATE.UNKNOWN
-    values[rev_power_spike_status] = STATE.UNKNOWN
+    values[rev_power_spike_count] = STATE.UNKNOWN
     values[modulator_state] = GUN_MOD_STATE.UNKNOWN1
     values[rfprot_state] = RF_GUN_PROT_STATUS.UNKNOWN
     values[llrf_output] = STATE.UNKNOWN
@@ -172,6 +172,7 @@ class rf_condition_data_base(QObject):
     values[event_pulse_count] = dummy +14
     values[elapsed_time] = dummy + 15
     values[DC_level] = dummy + 16
+    values[rev_power_spike_count] = 0
 
     #logger
     logger = None
@@ -219,6 +220,15 @@ class rf_condition_data_base(QObject):
         #print 'time = ' + str(ts.total_seconds())
         rf_condition_data_base.values[time_stamp] = ts.total_seconds()
 
+    def update_break_down_count(self):
+        # if all status are not bad then add tpo breakdown count
+        if STATE.BAD not in [rf_condition_data_base.values[DC_spike_status],
+                             rf_condition_data_base.values[DC_spike_status],
+                             rf_condition_data_base.values[breakdown_status]
+                             ]:
+            rf_condition_data_base.values[breakdown_count] += 1
+            self.logger.message('increasing breakdown count = ' + str(rf_condition_data_base.values[breakdown_count]), True)
+            self.add_to_pulse_breakdown_log()
 
 
     # the main logging data file is binary(!)
@@ -232,12 +242,13 @@ class rf_condition_data_base(QObject):
         self.logger.write_data(rf_condition_data_base.values)
 
     def log_kly_fwd_power_vs_amp(self):
-        if self.kly_power_changed():
-            #rf_condition_data_base.kly_fwd_power_history.append( rf_condition_data_base.values[fwd_kly_pwr] )
-            rf_condition_data_base.sp_pwr_hist.append( [rf_condition_data_base.values[amp_sp ],rf_condition_data_base.values[fwd_kly_pwr]] )
-        if self.amp_changed():
-            rf_condition_data_base.amp_sp_history.append(rf_condition_data_base.values[amp_sp])
-            rf_condition_data_base.amp_sp_history = sorted(list(set(rf_condition_data_base.amp_sp_history)))
+        if rf_condition_data_base.values[amp_sp] > 10:
+            if self.kly_power_changed():
+                #rf_condition_data_base.kly_fwd_power_history.append( rf_condition_data_base.values[fwd_kly_pwr] )
+                rf_condition_data_base.sp_pwr_hist.append( [rf_condition_data_base.values[amp_sp],rf_condition_data_base.values[fwd_kly_pwr]] )
+            if self.amp_changed():
+                rf_condition_data_base.amp_sp_history.append(rf_condition_data_base.values[amp_sp])
+                rf_condition_data_base.amp_sp_history = sorted(list(set(rf_condition_data_base.amp_sp_history)))
 
     def kly_power_changed(self):
         r = False
@@ -253,6 +264,16 @@ class rf_condition_data_base(QObject):
         rf_condition_data_base.last_amp = rf_condition_data_base.values[amp_sp]
         return r
 
+
+    def add_to_pulse_breakdown_log(self):
+        self.logger.add_to_pulse_breakdown_log(
+            [rf_condition_data_base.values[pulse_count],
+             rf_condition_data_base.values[breakdown_count],
+             int(rf_condition_data_base.amp_sp_history[-1]),
+             int(rf_condition_data_base.values[current_ramp_index]),
+             int(rf_condition_data_base.values[pulse_length] * 1000)
+            ]
+        )
 
 
 
