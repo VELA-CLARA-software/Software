@@ -66,15 +66,17 @@ class Model():
                 self.imageData = image
                 self.imageHeight = self.imageData.shape[1]
                 self.imageWidth = self.imageData.shape[0]
-            elif imageType == 'h5':
+            elif imageType == 'h5' or imageType == 'hdf5':
                 print("Importing HDF5...")
                 f = h5py.File(fullName, 'r')
                 # Won't need this when we know what our standard data key is.
-                print("Keys: %s" % f.keys())
-                a_group_key = list(f.keys())[1]
+                #print("Keys: %s" % f.keys())
+                #a_group_key = list(f.keys())[1]
                 # Get the data
-                image = list(f[a_group_key])
-                self.imageData =  np.array(image)
+                image = list(f['entry']['data']['data'])
+                self.imageData = np.array(image)
+                self.imageData=self.imageData[0,:,:]
+                #print self.imageData.shape
                 self.imageData = np.flip(np.transpose(np.array(self.imageData)), 1)
                 self.imageHeight = self.imageData.shape[1]
                 self.imageWidth = self.imageData.shape[0]
@@ -89,4 +91,3 @@ class Model():
                 print('Unrecognised file type!')
         except IOError:
             print "Unable to load image"
-
