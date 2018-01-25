@@ -56,6 +56,7 @@ class spike_monitor(monitor):
     # the mean signal  level, dummy init value that is very high
     _mean_level = 1
 
+
     def __init__(self,
                  gen_mon,
                  #settings_dict,
@@ -74,6 +75,7 @@ class spike_monitor(monitor):
                  min_cooldown_time = 7000
                  ):
         self.my_name = my_name
+        self.spike_count = 0
         # init base-class
         # super(monitor, self).__init__()
         monitor.__init__(self)
@@ -178,6 +180,8 @@ class spike_monitor(monitor):
             # this is the first place we can detect a spike, so drop amp here
             if self.should_drop_amp:
                 monitor.llrf_control.setAmpHP(self.amp_drop_value)
+            # dump_data
+            self.dump_data()
             # start the cooldown
             self.start_cooldown()
         else:
@@ -255,3 +259,12 @@ class spike_monitor(monitor):
 
     def set_good(self):
         monitor.data.values[self.data_dict_state_key] = STATE.GOOD
+
+
+    def dump_data(self):
+        # increase count:
+        self.spike_count += 1
+        new = monitor.llrf_control.dump_traces()
+        new.update({'vacuum': monitor.data.values[dat.vac_level]})
+        new.update({'DC': monitor.data.values[dat.DC_level]})
+        monitor.logger.pickle_file(self.my_name + '_' + str(self.spike_count), new)

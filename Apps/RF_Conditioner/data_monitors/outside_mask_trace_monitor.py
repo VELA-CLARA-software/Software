@@ -75,15 +75,15 @@ class outside_mask_trace_monitor(monitor):
 			string = 'new outside_mask_trace = ' + new['trace_name'] + ', count = ' + str(i)
 
 			temp.append(i)
-			if monitor.is_forward(new['trace_name']):
+			if self.is_forward(new['trace_name']):
 				#string = string + ' forward count = ' + str(len(self.forward_power_data))
 				monitor.data.values[dat.rev_power_spike_count] += 1
 
-			elif monitor.is_reverse(new['trace_name']):
+			elif self.is_reverse(new['trace_name']):
 				self.new_breakdown()
 				#string = string + ' reverse count = ' + str(len(self.reverse_power_data))
 
-			elif monitor.is_probe(new['trace_name']):
+			elif self.is_probe(new['trace_name']):
 				self.new_breakdown()
 				#self.probe_power_data.append(new)
 				#string = string + ' probe count = ' + str(len(self.probe_power_data))
@@ -110,13 +110,13 @@ class outside_mask_trace_monitor(monitor):
 				new.update({ 'vacuum' : monitor.data.values[dat.vac_level] })
 				new.update({ 'DC' : monitor.data.values[dat.DC_level] })
 
-				if monitor.is_forward(new['trace_name']):
+				if self.is_forward(new['trace_name']):
 					self.forward_power_data.append(new)
 					self.logger.dump_forward(new, len(self.forward_power_data))
-				elif monitor.is_reverse(new['trace_name']):
+				elif self.is_reverse(new['trace_name']):
 					self.reverse_power_data.append(new)
 					self.logger.dump_reverse(new, len(self.reverse_power_data))
-				elif monitor.is_probe(new['trace_name']):
+				elif self.is_probe(new['trace_name']):
 					self.probe_power_data.append(new)
 					self.logger.dump_probe(new, len(self.probe_power_data))
 				monitor.logger.message('Saved outside_mask_data part = ' + str(part), True)

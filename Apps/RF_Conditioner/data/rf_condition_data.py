@@ -20,6 +20,7 @@ class rf_condition_data(dat.rf_condition_data_base):
     # log of last million pulses including:
     # Total ACTIVE Pulses, # breakdowns, amp_set, index (point on pulse / power curve) , pulse length
     last_million_log = None
+    current_power = 0
 
 
     def __init__(self):
@@ -56,14 +57,14 @@ class rf_condition_data(dat.rf_condition_data_base):
 
 
     def set_ramp_values(self):
-        self.values[dat.required_pulses] = ramp[self.values[dat.current_ramp_index]][0]
-        self.values[dat.next_power_increase] = float(ramp[self.values[dat.current_ramp_index]][1])
+        dat.rf_condition_data_base.values[dat.required_pulses] = ramp[dat.rf_condition_data_base.values[dat.current_ramp_index]][0]
+        dat.rf_condition_data_base.values[dat.next_power_increase] = float(ramp[dat.rf_condition_data_base.values[dat.current_ramp_index]][1])
 
         self.logger.header( self.my_name + ' set_ramp_values ', True)
-        self.logger.message(['current ramp index   = ' + str(self.values[dat.current_ramp_index]),
-                             'next required pulses = ' + str(self.values[dat.required_pulses]),
-                             'next power increase  = ' + str(self.values[dat.next_power_increase]),
-                             'next sp decrease     = ' + str(self.values[dat.next_sp_decrease])],True)
+        self.logger.message(['current ramp index   = ' + str(dat.rf_condition_data_base.values[dat.current_ramp_index]),
+                             'next required pulses = ' + str(dat.rf_condition_data_base.values[dat.required_pulses]),
+                             'next power increase  = ' + str(dat.rf_condition_data_base.values[dat.next_power_increase]),
+                             'next sp decrease     = ' + str(dat.rf_condition_data_base.values[dat.next_sp_decrease])],True)
 
 
     def get_new_sp(self):
@@ -73,17 +74,22 @@ class rf_condition_data(dat.rf_condition_data_base):
     # neatean up!
     # neatean up!
     # neatean up!
-    def get_new_set_point(self,pwr_w):
+    def get_new_set_point(self, pwr_w):
         self.previous_power = self.current_power
         x = np.array([i[0] for i in dat.rf_condition_data_base.sp_pwr_hist])
         y = np.array([i[1] for i in dat.rf_condition_data_base.sp_pwr_hist])
         # for p in x:
         #     print p,
         myset = sorted(set(x))
+
+        self.current_power = np.mean(np.array([f[1] for f in dat.rf_condition_data_base.sp_pwr_hist if f[0] == max(myset)]))
+        dat.rf_condition_data_base.values[dat.last_mean_power] = self.current_power
+
+
         if len(myset) > 3:
             min_sp =list(myset)[-4]
             # print 'myset[-3] ' + str(min_sp)
-            a = [[x2,y2] for x2,y2 in dat.rf_condition_data_base.sp_pwr_hist if x2>=min_sp]
+            a = [[x2,y2] for x2,y2 in dat.rf_condition_data_base.sp_pwr_hist if x2 >= min_sp]
 
             # fit with np.polyfit
             x_tofit = np.array([i[0] for i in a])
@@ -92,22 +98,22 @@ class rf_condition_data(dat.rf_condition_data_base):
             x_min = min(x_tofit)
             x_max = max(x_tofit)
 
-            current_power_data = [[x2,y2] for x2,y2 in a if x2==max(x_tofit)]
-
-            #print(current_power_data)
-
-            self.current_power = np.mean(  np.array([i[1] for i in current_power_data]) )
+            # current_power_data = [[x2,y2] for x2,y2 in a if x2==max(x_tofit)]
+            #
+            # self.current_power = np.mean(np.array([i[1] for i in current_power_data]))
 
             m, c = np.polyfit(x_tofit, y_tofit, 1)
 
             predict = (self.current_power + pwr_w - c) / m
             p =[predict,self.current_power + pwr_w]
-            print('current = ', "%.3E"%max(x_tofit),"%.3E"%self.current_power)
-            print('predict = ', "%.3E"%p[0],"%.3E"%p[1])
-            print('Measured Power increase = ' + str(self.current_power - self.previous_power))
+            self.logger.header(self.my_name + ' get_new_set_point New SP',True)
+            self.logger.message('current sp/W   = ' + "%.3E"%max(x_tofit) + ", %.3E"%self.current_power, True)
+            self.logger.message('predict sp/W   = ' + "%.3E"%p[0] +  ", %.3E"%p[1], True)
+            self.logger.message('currentx/request = ' + str(self.current_power - self.previous_power) + ' ' + str(pwr_w), True)
             self.plot(x,y,m,c,x_min,x_max,p)
             return p[0]
         else:
+            self.logger.message('current sp/W = ' + str(self.current_power - self.previous_power) + ' ' + str(pwr_w), True)
             return None
 
 
@@ -235,12 +241,12 @@ class rf_condition_data(dat.rf_condition_data_base):
     #      ' power_increase_2 = ' + str(self.power_increase_2)])
 
 
-
-    def get_next_power(self):
-        pwr_inc = self.power_increase()
-        power = self.ceiling( self.values[dat.pulse_count] * self._llrf_config['RF_INCREASE_RATE'], pwr_inc )
-        print(self.my_name + ' get_next_power: power_inc = ' + str(pwr_inc) + ', power =   ' + str(power) )
-        return pwr_inc / 1000 # kW !
+    #
+    # def get_next_power(self):
+    #     pwr_inc = self.power_increase()
+    #     power = self.ceiling( self.values[dat.pulse_count] * self._llrf_config['RF_INCREASE_RATE'], pwr_inc )
+    #     print(self.my_name + ' get_next_power: power_inc = ' + str(pwr_inc) + ', power =   ' + str(power) )
+    #     return pwr_inc / 1000 # kW !
 
 
 

@@ -63,9 +63,9 @@ class data_logger(object):
             self.write_log(str)
 
     def write_log(self, str):
+        write_str = datetime.now().isoformat('-').replace(":", "-").split('.', 1)[0] + ' ' + str + '\n'
         with open(self.log_path,'a') as f:
-            f.write(str)
-            f.write('\n')
+            f.write(write_str)
 
     def write_list(self, data, file):
         with open(file,'w') as f:
@@ -157,7 +157,12 @@ class data_logger(object):
         self.pickle_dump(path=self.probe_file + str(index), obj=obj)
 
     # noinspection PyMethodMayBeStatic
+    def pickle_file(self, file_name, obj):
+        path = self.working_directory + file_name
+        self.pickle_dump(path,obj)
+
+    # noinspection PyMethodMayBeStatic
     def pickle_dump(self, path, obj):
-        print(self.my_name + ' pickle_dumping to ' + path)
+        self.message(self.my_name + ' pickle_dumping to ' + path,True)
         with open(path + '.pkl', 'wb') as f:
             pickle.dump(obj, f, pickle.HIGHEST_PROTOCOL)

@@ -22,6 +22,8 @@ class llrf_handler_base(base):
 		#base.__init__(self)
 		self.start_trace_rolling_average()
 
+		self.num_buffer_traces = 40
+
 		self.timevector = base.llrfObj[0].time_vector.value
 		#self.timevector_dt = self.timevector[1]-self.timevector[0]
 		base.config.llrf_config = base.config.llrf_config
@@ -141,6 +143,7 @@ class llrf_handler_base(base):
 			for trace in trace_to_save:
 				print 'trace = ' + trace
 				a = base.llrf_control.startTraceMonitoring(trace)
+				base.llrf_control.setNumBufferTraces(trace, self.num_buffer_traces)
 				if a:
 					base.logger.message('started monitoring ' + trace, True)
 					if 'POWER' in trace:  # MAGIC_STRING

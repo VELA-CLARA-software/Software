@@ -13,6 +13,9 @@ else:
 	print 'desk'
 	sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\stage')
 
+for i in sys.path:
+	print i
+
 
 from PyQt4 import QtGui
 

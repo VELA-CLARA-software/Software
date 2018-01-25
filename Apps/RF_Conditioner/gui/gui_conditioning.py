@@ -115,7 +115,7 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
 		if key == dat.breakdown_rate_hi:
 			self.set_break_down_color(widget, val)
 		elif widget == self.event_pulse_count_outputwidget:
-			widget.setText(('%i' % val) + ('/%i' % base.data.values[dat.event_pulse_count]))
+			widget.setText(('%i' % val) + ('/%i' % base.data.values[dat.required_pulses]))
 			self.clip_vals[key] = widget.text()
 		elif type(val) is long:
 			widget.setText('%i' % val)
@@ -276,3 +276,8 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
 		self.widget[dat.breakdown_rate_hi] = self.measured_breakdown_rate_outputwidget
 		self.widget[dat.last_106_bd_count] = self.last_106_count_outputwidget
 		self.widget[dat.llrf_trigger] = self.llrf_trigger_outputwidget
+
+		self.widget[dat.last_mean_power] = self.last_setpoint_power_outputwidget
+		self.widget[dat.next_power_increase] = self.next_power_increase_outputwidget
+		self.widget[dat.next_sp_decrease] = self.next_sp_decrease_outputwidget
+		self.widget[dat.current_ramp_index] = self.current_index_outputwidget

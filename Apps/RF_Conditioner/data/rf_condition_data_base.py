@@ -70,6 +70,8 @@ log_pulse_length = 'log_pulse_length'
 
 llrf_trigger = 'llrf_trigger'
 
+last_mean_power = 'last_mean_power'
+
 amp_ff = 'amp_ff'
 amp_sp = 'amp_sp'
 all_value_keys = [rev_power_spike_count,
@@ -113,7 +115,9 @@ all_value_keys = [rev_power_spike_count,
                   last_106_bd_count,
                   log_pulse_length,
                   llrf_trigger,
-                  next_sp_decrease
+                  next_sp_decrease,
+                  last_mean_power,
+                  next_power_increase
                   ]
 
 class rf_condition_data_base(QObject):
@@ -228,7 +232,7 @@ class rf_condition_data_base(QObject):
                              ]:
             rf_condition_data_base.values[breakdown_count] += 1
             self.logger.message('increasing breakdown count = ' + str(rf_condition_data_base.values[breakdown_count]), True)
-            self.add_to_pulse_breakdown_log()
+            self.add_to_pulse_breakdown_log(rf_condition_data_base.amp_sp_history[-1] )
 
     def reached_min_pulse_count_for_this_step(self):
         return self.values[event_pulse_count] >= self.values[required_pulses]
@@ -244,13 +248,13 @@ class rf_condition_data_base(QObject):
         self.logger.write_data(rf_condition_data_base.values)
 
     def log_kly_fwd_power_vs_amp(self):
-        if rf_condition_data_base.values[amp_sp] > 10:
+        if rf_condition_data_base.values[amp_sp] > 100:
             if self.kly_power_changed():
                 #rf_condition_data_base.kly_fwd_power_history.append( rf_condition_data_base.values[fwd_kly_pwr] )
                 rf_condition_data_base.sp_pwr_hist.append( [rf_condition_data_base.values[amp_sp],rf_condition_data_base.values[fwd_kly_pwr]] )
             if self.amp_changed():
-                rf_condition_data_base.amp_sp_history.append(rf_condition_data_base.values[amp_sp])
-                rf_condition_data_base.amp_sp_history = sorted(list(set(rf_condition_data_base.amp_sp_history)))
+                if rf_condition_data_base.values[amp_sp] not in sorted(list(set(rf_condition_data_base.amp_sp_history))):
+                    rf_condition_data_base.amp_sp_history = sorted(list(set(rf_condition_data_base.amp_sp_history)))
 
     def kly_power_changed(self):
         r = False
@@ -267,14 +271,15 @@ class rf_condition_data_base(QObject):
         return r
 
 
-    def add_to_pulse_breakdown_log(self):
-        self.logger.add_to_pulse_breakdown_log(
-            [rf_condition_data_base.values[pulse_count],
-             rf_condition_data_base.values[breakdown_count],
-             int(rf_condition_data_base.amp_sp_history[-1]),
-             int(rf_condition_data_base.values[current_ramp_index]),
-             int(rf_condition_data_base.values[pulse_length] * 1000)
-            ]
+    def add_to_pulse_breakdown_log(self,amp):
+        if amp > 100:
+            self.logger.add_to_pulse_breakdown_log(
+                [rf_condition_data_base.values[pulse_count],
+                 rf_condition_data_base.values[breakdown_count],
+                 int(amp),
+                 int(rf_condition_data_base.values[current_ramp_index]),
+                 int(rf_condition_data_base.values[pulse_length] * 1000)
+                ]
         )
 
 
