@@ -230,6 +230,8 @@ class rf_condition_data_base(QObject):
             self.logger.message('increasing breakdown count = ' + str(rf_condition_data_base.values[breakdown_count]), True)
             self.add_to_pulse_breakdown_log()
 
+    def reached_min_pulse_count_for_this_step(self):
+        return self.values[event_pulse_count] >= self.values[required_pulses]
 
     # the main logging data file is binary(!)
     # With the amount of data etc. i think this is the only practical way

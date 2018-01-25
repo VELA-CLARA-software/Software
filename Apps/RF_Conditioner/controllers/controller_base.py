@@ -22,9 +22,11 @@ class controller_base(base):
 
 	#llrfObj = None
 	#
-	t_start = None
+	#t_start = None
 
 	data_monitor = data_monitoring()
+
+	llrf_handler = None
 
 	def __init__(self, argv, config_file):
 		#super(base, self).__init__()
@@ -35,15 +37,15 @@ class controller_base(base):
 		self.read_config()
 
 		# data logging
-		self.logger = base.logger
+		base.logger = base.logger
 
-	# not sur ethese are used anymore
-	def start_time(self):
-		self.t_start = datetime.datetime.now()
-	def seconds_since_start(self):
-		return (datetime.datetime.now() - self.t_start).total_seconds()
-	def seconds_elapsed(self,val):
-		return self.seconds_since_start() >= val
+	# # not sur ethese are used anymore
+	# def start_time(self):
+	# 	self.t_start = datetime.datetime.now()
+	# def seconds_since_start(self):
+	# 	return (datetime.datetime.now() - self.t_start).total_seconds()
+	# def seconds_elapsed(self,val):
+	# 	return self.seconds_since_start() >= val
 
 	# read config
 	def read_config(self):
@@ -56,7 +58,7 @@ class controller_base(base):
 		self.set_config()
 		if base.have_config:
 
-			self.logger.header(self.my_name + ' creating HWC ', True)
+			base.logger.header(self.my_name + ' creating HWC ', True)
 
 			if bool(base.config.llrf_config):
 				self.start_llrf_control()
@@ -68,7 +70,7 @@ class controller_base(base):
 			if bool(base.config.rfprot_config):
 				self.start_rf_prot_control()
 		else:
-			self.logger.header(self.my_name + ' read_config failed sanity checks!!!', True)
+			base.logger.header(self.my_name + ' read_config failed sanity checks!!!', True)
 
 		base.logger.header(controller_base.my_name +' has read config',True)
 		logdata = ['config file = ' + base.config.config_file,
@@ -87,12 +89,12 @@ class controller_base(base):
 	def start_rf_prot_control(self):
 		if self.is_gun_type(base.llrf_type):
 			base.prot_control = base.prot_init.physical_Gun_Protection_Controller()
-			self.logger.message('start_rf_prot_control created a protection control  object',True)
-		elif self.llrf_type == LLRF_TYPE.L01:
+			base.logger.message('start_rf_prot_control created a protection control  object',True)
+		elif base.llrf_type == LLRF_TYPE.L01:
 			self.prot_control = None
-			self.logger.message('start_rf_prot_control did not create a protection control  object',True)
+			base.logger.message('start_rf_prot_control did not create a protection control  object',True)
 		else:
-			self.logger.message('start_rf_prot_control did not create a protection control  object',True)
+			base.logger.message('start_rf_prot_control did not create a protection control  object',True)
 
 	def start_vac_valve_control(self):
 		try:
@@ -101,19 +103,19 @@ class controller_base(base):
 			a = MACHINE_AREA.UNKNOWN_AREA
 		if a is not MACHINE_AREA.UNKNOWN_AREA:
 			base.valve_control = base.valve_init.getVacValveController(MACHINE_MODE.PHYSICAL,a)
-			self.logger.message('start_vac_valve_control created ' + str(base.config.vac_valve_config['VAC_VALVE_AREA']) + ' object', True)
+			base.logger.message('start_vac_valve_control created ' + str(base.config.vac_valve_config['VAC_VALVE_AREA']) + ' object', True)
 		else:
-			self.logger.message('start_vac_valve_control UNKNOWN_MACHINE area cannot create vac-valve object', True)
+			base.logger.message('start_vac_valve_control UNKNOWN_MACHINE area cannot create vac-valve object', True)
 
 	def start_mod_control(self):
 		if self.is_gun_type(base.llrf_type):
 			base.mod_control = base.mod_init.physical_GUN_MOD_Controller()
-			self.logger.message('start_mod_control created a gun modulator object',True)
+			base.logger.message('start_mod_control created a gun modulator object',True)
 		elif base.llrf_type == LLRF_TYPE.L01:
 			base.mod_control = None
-			self.logger.message('start_mod_control can\'t create a linac modulator object',True)
+			base.logger.message('start_mod_control can\'t create a linac modulator object',True)
 		else:
-			self.logger.message('start_mod_control can\'t create a modulator, unknown llrf_type',True)
+			base.logger.message('start_mod_control can\'t create a modulator, unknown llrf_type',True)
 
 
 	def start_llrf_control(self):
@@ -122,23 +124,23 @@ class controller_base(base):
 			base.llrfObj = [base.llrf_control.getLLRFObjConstRef()]
 			# rationalise the trace names
 			base.config.llrf_config['TRACES_TO_SAVE'] = self.get_full_trace_name(
-				self.config.llrf_config['TRACES_TO_SAVE'])
+				base.config.llrf_config['TRACES_TO_SAVE'])
 			base.config.breakdown_config['BREAKDOWN_TRACES'] = self.get_full_trace_name(base.config.breakdown_config[ 'BREAKDOWN_TRACES'])
-			self.llrf_handler = llrf_handler.llrf_handler()
-			self.logger.message('start_llrf_control created ' + str(base.llrf_type) + ', llrf_handler and got full trace names:',True)
-			self.logger.message('TRACES TO SAVE:',True)
-			self.logger.message(base.config.llrf_config['TRACES_TO_SAVE'], True)
-			self.logger.message('BREAKDOWN_TRACES SAVE:', True)
-			self.logger.message(base.config.breakdown_config['BREAKDOWN_TRACES'], True)
+			controller_base.llrf_handler= llrf_handler.llrf_handler()
+			base.logger.message('start_llrf_control created ' + str(base.llrf_type) + ', llrf_handler and got full trace names:',True)
+			base.logger.message('TRACES TO SAVE:',True)
+			base.logger.message(base.config.llrf_config['TRACES_TO_SAVE'], True)
+			base.logger.message('BREAKDOWN_TRACES SAVE:', True)
+			base.logger.message(base.config.breakdown_config['BREAKDOWN_TRACES'], True)
 		else:
-			self.llrf_control = None
-			self.logger.message('start_llrf_control can\'t create a llrf_control unknown llrf_type',True)
+			base.llrf_control = None
+			base.logger.message('start_llrf_control can\'t create a llrf_control unknown llrf_type',True)
 
 	# rationalise the trace names
 	def get_full_trace_name(self,traces):
 		temp = []
 		for trace in traces:
-			temp.append(self.llrf_control.fullCavityTraceName(trace))
+			temp.append(base.llrf_control.fullCavityTraceName(trace))
 		return temp
 
 

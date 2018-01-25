@@ -53,7 +53,8 @@ class base(object):
     prot_init.setQuiet()
     #rot_init.setVerbose()
     prot_control = None
-    # def __init__(self):
+    def __init__(self):
+        pass
     #     print('Base init')
         # super(config_reader, self).__init__()
         # super(data_logger, self).__init__()
@@ -86,3 +87,18 @@ class base(object):
     def set_config(self):
         base.data.llrf_config = base.config.llrf_config
         base.logger.log_config = base.config.log_config
+
+    def is_forward(self,str):
+        return 'FORWARD' in str
+    def is_reverse(self,str):
+        return 'REVERSE' in str
+    def is_probe(self,str):
+        return 'PROBE' in str
+    def is_kly_forward(self,str):
+        return 'FORWARD' in str
+    def is_kly_reverse(self,str):
+        return 'REVERSE' in str
+    def is_cav_forward(self,str):
+        return 'FORWARD' in str
+    def is_cav_reverse(self,str):
+        return 'REVERSE' in str

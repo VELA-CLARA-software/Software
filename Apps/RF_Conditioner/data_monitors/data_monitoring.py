@@ -99,7 +99,7 @@ class data_monitoring(data_monitoring_base):
 
 	def dc_new_bad(self):
 		try:
-			return self.main_monitor_states[dat.dc_spike_status] == state.NEW_BAD
+			return self.main_monitor_states[dat.DC_spike_status] == state.NEW_BAD
 		except:
 			return False
 
@@ -111,18 +111,13 @@ class data_monitoring(data_monitoring_base):
 	def new_bad_is_not_outside_mask(self):
 		return self.main_monitor_states[dat.breakdown_status] != state.NEW_BAD
 
+	def check_if_new_bad_is_vac_or_DC(self):
+		if self.vac_new_bad():
+			data_monitoring_base.logger.message('MAIN-LOOP New VAC BAD State', True)
+		if self.dc_new_bad():
+			data_monitoring.logger.message('MAIN-LOOP New DC BAD State', True)
 
-			# # this sets up a dict of states for things that ARE being monitored
-		# # run this function after setting up monitor!
-		# for key,val in self.is_monitoring.iteritems():
-		# 	if key not in self.passive_monitors:
-		# 		if val:
-		# 			self.main_monitor_states[key] = state.INIT
-		# # set the previous  values
-		# for key,value in self.main_monitor_states:
-		# 	self.previous_main_monitor_states[key] = state.UNKNOWN
 
-	# this function updates parameters used in main_loop that decide what the programme should do
 	def DC(self):
 		#print('DC')
 		self.update_state(dat.DC_spike_status)
@@ -173,9 +168,7 @@ class data_monitoring(data_monitoring_base):
 			else:
 				self.main_monitor_states[key] = state.BAD
 
-
 		elif self.data.values[key] == state.GOOD:
-
 			if self.main_monitor_states[key] == state.BAD:
 				self.main_monitor_states[key] = state.NEW_GOOD
 
@@ -191,9 +184,5 @@ class data_monitoring(data_monitoring_base):
 				self.main_monitor_states[key] = state.GOOD
 
 		elif self.data.values[key] == state.UNKNOWN:
-			print('UNKNOWN STAE')
-			#self.set_state(key, state.UNKNOWN)
+			data_monitoring_base.logger.message(self.my_name + ' update_state UNKNOWN', True)
 
-	# def set_state(self,key,state):
-	# 	#self.previous_main_monitor_states[key] =self.main_monitor_states[key]
-	# 	self.main_monitor_states[key] = state

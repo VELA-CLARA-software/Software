@@ -1,8 +1,6 @@
 # llrf_handler.py
 from llrf_handler_base import llrf_handler_base
-from VELA_CLARA_enums import MACHINE_AREA
-import VELA_CLARA_LLRF_Control
-from VELA_CLARA_LLRF_Control import LLRF_TYPE
+from VELA_CLARA_LLRF_Control import TRIG
 import time
 
 
@@ -21,15 +19,20 @@ class llrf_handler(llrf_handler_base):
 
 
 
+    #
+    # def check_masks_OLD(self):
+    #     for trace in self.outside_mask_traces:
+    #         a = llrf_handler_base.llrf_control.setShouldCheckMask(trace)
+    #         if a:
+    #             print('mask checking  for ' + trace)
+    #         else:
+    #             print('mask NOT checking for ' + trace)
+    #     llrf_handler_base.llrf_control.setGlobalCheckMask(True)
 
-    def check_masks_OLD(self):
-        for trace in self.outside_mask_traces:
-            a = llrf_handler_base.llrf_control.setShouldCheckMask(trace)
-            if a:
-                print('mask checking  for ' + trace)
-            else:
-                print('mask NOT checking for ' + trace)
-        llrf_handler_base.llrf_control.setGlobalCheckMask(True)
+    def enable_trigger(self):
+        if llrf_handler_base.llrfObj[0].trig_source == TRIG.OFF:
+            llrf_handler_base.llrf_control.trigExt()
+
 
 
     def set_pulse_length(self,value):
@@ -40,8 +43,6 @@ class llrf_handler(llrf_handler_base):
         # and mask positions!
         self.setup_outside_mask_trace_param()
 
-
-
     def stop_keep_average_trace(self):
         print('def stop_keep_average_trace')
 
@@ -51,8 +52,6 @@ class llrf_handler(llrf_handler_base):
         self.mask_set = False
         print('set_amp = ' + str(val) + ' averages reset, mask_set = False')
         llrf_handler_base.llrf_control.resetAverageTraces()
-
-
 
     def set_amp_hp(self, val):
         llrf_handler_base.llrf_control.setAmpHP(val)

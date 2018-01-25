@@ -60,9 +60,10 @@ class rf_condition_data(dat.rf_condition_data_base):
         self.values[dat.next_power_increase] = float(ramp[self.values[dat.current_ramp_index]][1])
 
         self.logger.header( self.my_name + ' set_ramp_values ', True)
-        self.logger.message(['next required pulses =' + str(self.values[dat.required_pulses]),
-                             'next power increase  =' + str(self.values[dat.next_power_increase]),
-                             'next sp decrease  =' + str(self.values[dat.next_sp_decrease])],True)
+        self.logger.message(['current ramp index   = ' + str(self.values[dat.current_ramp_index]),
+                             'next required pulses = ' + str(self.values[dat.required_pulses]),
+                             'next power increase  = ' + str(self.values[dat.next_power_increase]),
+                             'next sp decrease     = ' + str(self.values[dat.next_sp_decrease])],True)
 
 
     def get_new_sp(self):
@@ -219,19 +220,19 @@ class rf_condition_data(dat.rf_condition_data_base):
         print(self.my_name + ' power_increase = ' +str(a) + ' ' + str(self.ceiling(a, self._llrf_config['LOW_POWER_INCREASE'])) )
         return self.ceiling(a, self._llrf_config['LOW_POWER_INCREASE'])
 
-    def power_increase_set_up(self):
-        #these are constants in the power_increase function
-        self.power_increase_1 = self._llrf_config['RF_INCREASE_RATE'] * \
-                                self._llrf_config['NORMAL_POWER_INCREASE'] / \
-                                self._llrf_config['LOW_POWER_INCREASE_RATE_LIMIT']
-        self.power_increase_2 = self._llrf_config['LOW_POWER_INCREASE_RATE_LIMIT'] / \
-                                self._llrf_config['RF_INCREASE_RATE']
-
-        self.logger.header( self.my_name + ' power_increase_set_up  ', True)
-        self.logger.message(['power_increase_set_up: ' + str(self._llrf_config['RF_INCREASE_RATE']) + '  ' + str(
-        self._llrf_config['NORMAL_POWER_INCREASE']) + ' ' + str(self._llrf_config['LOW_POWER_INCREASE_RATE_LIMIT']),
-        self.my_name + ' power_increase_set_up: power_increase_1  =  ' + str(self.power_increase_1) +
-         ' power_increase_2 = ' + str(self.power_increase_2)])
+    # def power_increase_set_up(self):
+    #     #these are constants in the power_increase function
+    #     self.power_increase_1 = self._llrf_config['RF_INCREASE_RATE'] * \
+    #                             self._llrf_config['NORMAL_POWER_INCREASE'] / \
+    #                             self._llrf_config['LOW_POWER_INCREASE_RATE_LIMIT']
+    #     self.power_increase_2 = self._llrf_config['LOW_POWER_INCREASE_RATE_LIMIT'] / \
+    #                             self._llrf_config['RF_INCREASE_RATE']
+    #
+    #     self.logger.header( self.my_name + ' power_increase_set_up  ', True)
+    #     self.logger.message(['power_increase_set_up: ' + str(self._llrf_config['RF_INCREASE_RATE']) + '  ' + str(
+    #     self._llrf_config['NORMAL_POWER_INCREASE']) + ' ' + str(self._llrf_config['LOW_POWER_INCREASE_RATE_LIMIT']),
+    #     self.my_name + ' power_increase_set_up: power_increase_1  =  ' + str(self.power_increase_1) +
+    #      ' power_increase_2 = ' + str(self.power_increase_2)])
 
 
 
