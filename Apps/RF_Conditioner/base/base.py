@@ -95,10 +95,18 @@ class base(object):
     def is_probe(self,str):
         return 'PROBE' in str
     def is_kly_forward(self,str):
-        return 'FORWARD' in str
+        return 'KLYSTRON_FORWARD' in str
     def is_kly_reverse(self,str):
-        return 'REVERSE' in str
+        return 'KLYSTRON_REVERSE' in str
     def is_cav_forward(self,str):
-        return 'FORWARD' in str
+        return 'CAVITY_FORWARD' in str
     def is_cav_reverse(self,str):
-        return 'REVERSE' in str
+        return 'CAVITY_REVERSE' in str
+    def is_kly_forward_power(self,str):
+        return 'KLYSTRON_FORWARD_POWER' in str
+    def is_kly_reverse_power(self,str):
+        return 'KLYSTRON_REVERSE_POWER' in str
+    def is_cav_forward_power(self,str):
+        return 'CAVITY_FORWARD_POWER' in str
+    def is_cav_reverse_power(self,str):
+        return 'CAVITY_REVERSE_POWER' in str

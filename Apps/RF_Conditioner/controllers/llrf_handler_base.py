@@ -20,7 +20,6 @@ class llrf_handler_base(base):
 	def __init__(self):
 		super(llrf_handler_base, self).__init__()
 		#base.__init__(self)
-		self.start_trace_rolling_average()
 
 		self.num_buffer_traces = 40
 
@@ -28,6 +27,9 @@ class llrf_handler_base(base):
 		#self.timevector_dt = self.timevector[1]-self.timevector[0]
 		base.config.llrf_config = base.config.llrf_config
 		self.start_trace_monitoring( base.config.llrf_config['TRACES_TO_SAVE'])#MAGIC_STRING
+		# must come after start_trace_monitoring
+		self.start_trace_rolling_average()
+
 		base.llrf_control.setTracesToSaveOnBreakDown( base.config.llrf_config['TRACES_TO_SAVE'])#MAGIC_STRING
 
 		self.reverse_mask_dict = {}
@@ -95,24 +97,24 @@ class llrf_handler_base(base):
 		base.logger.message(string, True)
 
 		if base.llrf_control.setNumContinuousOutsideMaskCount( dict['TRACE'], streak) == False:
-			base.logger.message(dict['TRACE'] + 'ERROR setNumContinuousOutsideMaskCount = False', True)
+			base.logger.message(dict['TRACE'] + ' ERROR setNumContinuousOutsideMaskCount = False', True)
 		else:
 			base.logger.message('setNumContinuousOutsideMaskCount = True', True)
 
 		if base.llrf_control.setMaskFloor(dict['TRACE'], floor) == False:
-			base.logger.message(dict['TRACE'] + 'ERROR setMaskFloor = False', True)
+			base.logger.message(dict['TRACE'] + ' ERROR setMaskFloor = False', True)
 		else:
 			base.logger.message('setMaskFloor = True', True)
 
 		if base.llrf_control.setShouldCheckMask(dict['TRACE']) == False:
-			base.logger.message(dict['TRACE'] + 'setShouldCheckMask = False', True)
+			base.logger.message(dict['TRACE'] + ', setShouldCheckMask = False', True)
 		else:
-			base.logger.message(dict['TRACE'] + 'setShouldCheckMask = True', True)
+			base.logger.message(dict['TRACE'] + ', setShouldCheckMask = True', True)
 
 		if base.llrf_control.setDropAmpOnOutsideMaskDetection(dict['TRACE'], drop, drop_val) == False:
-			base.logger.message(dict['TRACE'] + 'setDropAmpOnOutsideMaskDetection = False', True)
+			base.logger.message(dict['TRACE'] + ', setDropAmpOnOutsideMaskDetection = False', True)
 		else:
-			base.logger.message(dict['TRACE'] + 'setDropAmpOnOutsideMaskDetection = True', True)
+			base.logger.message(dict['TRACE'] + ', setDropAmpOnOutsideMaskDetection = True', True)
 
 	def time_percent_mask(self,dict):
 		return self.llrf_control.setPercentTimeMask(dict['S1'],dict['S2'],dict['S3'],dict['S4'],dict['LEVEL'],dict['TRACE'])
@@ -137,6 +139,12 @@ class llrf_handler_base(base):
 				return False
 		return True
 
+
+	def start_trace_average_no_reset(self,value):
+		for trace in base.config.breakdown_config['BREAKDOWN_TRACES']:
+			base.llrf_control.setKeepRollingAverageNoReset(trace,value)
+
+
 	def start_trace_monitoring(self,trace_to_save):
 		base.logger.header(self.my_name + ' start_trace_monitoring', True)
 		if "error" not in trace_to_save:
@@ -152,8 +160,8 @@ class llrf_handler_base(base):
 				else:
 					base.logger.message(' ERROR trying to monitor ' + trace, True)
 		else:
-			base.logger.message('ERROR IN TRACES TO SAVE', True)
-			base.logger.message('ERROR IN TRACES TO SAVE', True)
+			base.logger.message('!!! ERROR IN TRACES TO SAVE !!!', True)
+
 
 	def start_trace_rolling_average(self):
 		base.logger.header(self.my_name + ' start_trace_rolling_average', True)
@@ -180,10 +188,11 @@ class llrf_handler_base(base):
 
 	def get_pulse_end(self):
 		# must be called after setting a pulse length
-		self.pulse_end_index = self.timevector[base.llrfObj[0].pulse_latency] + self.llrf_control.getIndex(base.llrf_control.getPulseLength())
+		self.pulse_end_index = base.llrfObj[0].pulse_latency + self.llrf_control.getIndex(base.llrf_control.getPulseLength())
 		self.pulse_end = self.llrf_control.getTime( self.pulse_end_index)#len([x for x in self.timevector if x <= self.pulse_end])
 
 	def set_mean_pwr_position(self):
+		self.get_pulse_end()
 		# MUST BE CALLED AFTER CHANGING PULSE WIDTH ' CANCER
 		base.logger.header(self.my_name + ' set_mean_pwr_position',True)
 		base.logger.message([
@@ -196,25 +205,57 @@ class llrf_handler_base(base):
 			if self.is_kly_forward(trace):
 				s = base.config.llrf_config['KFP_MEAN_TIME_TO_AVERAGE_START']#MAGIC_STRING
 				e = base.config.llrf_config['KFP_MEAN_TIME_TO_AVERAGE_END']#MAGIC_STRING
-			elif self.is_kly_reverse(trace):
+				a = base.llrf_control.setMeanStartEndTime(s,e,trace)
+				if a:
+					base.logger.message(trace + ' mean monitoring started')
+					base.logger.message(['trace_mean_start/end (us) = ' + str(s) +'/'+str((e)),
+					'meantime = ' + str(e - s)])
+				else:
+					base.logger.message(trace + ' mean monitoring NOT started')
+
+			if self.is_kly_reverse(trace):
 				s = base.config.llrf_config['KRP_MEAN_TIME_TO_AVERAGE_START']#MAGIC_STRING
 				e = base.config.llrf_config['KRP_MEAN_TIME_TO_AVERAGE_END']#MAGIC_STRING
-			elif self.is_cav_reverse(trace):
+				a = base.llrf_control.setMeanStartEndTime(s,e,trace)
+				if a:
+					base.logger.message(trace + ' mean monitoring started')
+					base.logger.message(['trace_mean_start/end (us) = ' + str(s) +'/'+str((e)),
+					'meantime = ' + str(e - s)])
+				else:
+					base.logger.message(trace + ' mean monitoring NOT started')
+
+			if self.is_cav_reverse(trace):
 				s= base.config.llrf_config['CRP_MEAN_TIME_TO_AVERAGE_START']#MAGIC_STRING
 				e= base.config.llrf_config['CRP_MEAN_TIME_TO_AVERAGE_END']#MAGIC_STRING
-			elif self.is_cav_forward(trace):
+				a = base.llrf_control.setMeanStartEndTime(s,e,trace)
+				if a:
+					base.logger.message(trace + ' mean monitoring started')
+					base.logger.message(['trace_mean_start/end (us) = ' + str(s) +'/'+str((e)),
+					'meantime = ' + str(e - s)])
+				else:
+					base.logger.message(trace + ' mean monitoring NOT started')
+
+			if self.is_cav_forward(trace):
 				s = base.config.llrf_config['CFP_MEAN_TIME_TO_AVERAGE_START']#MAGIC_STRING
 				e = base.config.llrf_config['CFP_MEAN_TIME_TO_AVERAGE_END']#MAGIC_STRING
-			elif self.is_probe(trace):
+				a = base.llrf_control.setMeanStartEndTime(s,e,trace)
+				if a:
+					base.logger.message(trace + ' mean monitoring started')
+					base.logger.message(['trace_mean_start/end (us) = ' + str(s) +'/'+str((e)),
+					'meantime = ' + str(e - s)])
+				else:
+					base.logger.message(trace + ' mean monitoring NOT started')
+
+			if self.is_probe(trace):
 				s = base.config.llrf_config['CPP_MEAN_TIME_TO_AVERAGE_START']#MAGIC_STRING
 				e = base.config.llrf_config['CPP_MEAN_TIME_TO_AVERAGE_END']#MAGIC_STRING
-			a = base.llrf_control.setMeanStartEndTime(s,e,trace)
-			if a:
-				base.logger.message(trace + ' mean monitoring started')
-				base.logger.message(['trace_mean_start/end (us) = ' + str(s) +'/'+str((e)),
-				'meantime = ' + str(e - s)])
-			else:
-				base.logger.message(trace + ' mean monitoring NOT started')
+				a = base.llrf_control.setMeanStartEndTime(s,e,trace)
+				if a:
+					base.logger.message(trace + ' mean monitoring started')
+					base.logger.message(['trace_mean_start/end (us) = ' + str(s) +'/'+str((e)),
+					'meantime = ' + str(e - s)])
+				else:
+					base.logger.message(trace + ' mean monitoring NOT started')
 
 
 

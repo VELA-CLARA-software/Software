@@ -7,6 +7,7 @@ from VELA_CLARA_RF_Protection_Control import RF_GUN_PROT_STATUS
 import os
 import pickle
 from data.config_reader import config_reader
+import numpy
 
 
 class data_logger(object):
@@ -107,15 +108,21 @@ class data_logger(object):
         types = []
         [names.append(x) for x,y in values.iteritems()]
         [types.append(str(type(y)))  for x,y in values.iteritems()]
-        with open(self.data_path  + '.dat', 'ab') as f:
-            f.write(joiner.join(names)+ "\n")
-            f.write(joiner.join(types)+ "\n")
-            # f.write(struct.pack('<i', 245))
+        try:
+            with open(self.data_path  + '.dat', 'ab') as f:
+                f.write(joiner.join(names)+ "\n")
+                f.write(joiner.join(types)+ "\n")
+                # f.write(struct.pack('<i', 245))
+        except:
+            pass
 
     def write_data(self,values):
-        with open(self.data_path + '.dat', 'ab') as f:
-            for val in values.itervalues():
-                self.write_binary(f,val)
+        try:
+            with open(self.data_path + '.dat', 'ab') as f:
+                for val in values.itervalues():
+                    self.write_binary(f,val)
+        except:
+            pass
 
     def write_binary(self, f, val):
         if type(val) is long:
@@ -142,6 +149,9 @@ class data_logger(object):
         elif type(val) is bool:
             f.write(struct.pack('<?', val))
             #print struct.calcsize('<?')
+        elif type(val) is numpy.float64:
+            f.write(struct.pack('<f', val))
+            #f.write(struct.pack('<?', val))
         else:
             print(self.my_name + ' write_binary() error unknown type, ' + str(type(val)) )
         #print str(val) + '   ' + str(type(val))
@@ -164,5 +174,8 @@ class data_logger(object):
     # noinspection PyMethodMayBeStatic
     def pickle_dump(self, path, obj):
         self.message(self.my_name + ' pickle_dumping to ' + path,True)
-        with open(path + '.pkl', 'wb') as f:
-            pickle.dump(obj, f, pickle.HIGHEST_PROTOCOL)
+        try:
+            with open(path + '.pkl', 'wb') as f:
+                pickle.dump(obj, f, pickle.HIGHEST_PROTOCOL)
+        except:
+            pass

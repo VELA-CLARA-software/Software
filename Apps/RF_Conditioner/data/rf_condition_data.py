@@ -33,18 +33,18 @@ class rf_condition_data(dat.rf_condition_data_base):
 
 
     def ramp_up(self):
-        self.values[dat.next_sp_decrease] = dat.rf_condition_data_base.amp_sp_history[-2]
         self.move_ramp_index(1)
 
     def ramp_down(self):
+        self.clear_last_sp_history()
         self.move_ramp_index(-1)
 
+
     def clear_last_sp_history(self):
-        limit = dat.rf_condition_data_base.amp_sp_history[-2]
-        print('limit = ', limit)
+        if len(dat.rf_condition_data_base.amp_sp_history) > 1:
+            dat.rf_condition_data_base.amp_sp_history = dat.rf_condition_data_base.amp_sp_history[:-1]
         # could maybe do this more clever like
-        dat.rf_condition_data_base.amp_sp_history = [x for x in dat.rf_condition_data_base.amp_sp_history if x <= limit ]
-        dat.rf_condition_data_base.sp_pwr_hist = [x for x in dat.rf_condition_data_base.sp_pwr_hist if x[0] <= limit ]
+        dat.rf_condition_data_base.sp_pwr_hist = [x for x in dat.rf_condition_data_base.sp_pwr_hist if x[0] < dat.rf_condition_data_base.amp_sp_history[-1] ]
 
     def move_ramp_index(self,val):
         print('move_ramp_index')
@@ -60,11 +60,23 @@ class rf_condition_data(dat.rf_condition_data_base):
         dat.rf_condition_data_base.values[dat.required_pulses] = ramp[dat.rf_condition_data_base.values[dat.current_ramp_index]][0]
         dat.rf_condition_data_base.values[dat.next_power_increase] = float(ramp[dat.rf_condition_data_base.values[dat.current_ramp_index]][1])
 
+        self.set_next_sp_decrease()
+
         self.logger.header( self.my_name + ' set_ramp_values ', True)
         self.logger.message(['current ramp index   = ' + str(dat.rf_condition_data_base.values[dat.current_ramp_index]),
                              'next required pulses = ' + str(dat.rf_condition_data_base.values[dat.required_pulses]),
                              'next power increase  = ' + str(dat.rf_condition_data_base.values[dat.next_power_increase]),
                              'next sp decrease     = ' + str(dat.rf_condition_data_base.values[dat.next_sp_decrease])],True)
+
+    def set_next_sp_decrease(self):
+        a = dat.rf_condition_data_base.values[dat.next_sp_decrease]
+        if len(dat.rf_condition_data_base.amp_sp_history) > 1:
+            dat.rf_condition_data_base.values[dat.next_sp_decrease] = dat.rf_condition_data_base.amp_sp_history[-2]
+        else:
+            self.logger.message('Warning len(dat.rf_condition_data_base.amp_sp_history) not > 1')
+            dat.rf_condition_data_base.values[dat.next_sp_decrease] = dat.rf_condition_data_base.amp_sp_history[0]
+        self.logger.message('Changed next_sp_decrease from ' + str(a) + ' to ' + str(dat.rf_condition_data_base.values[dat.next_sp_decrease]))
+
 
 
     def get_new_sp(self):
@@ -83,8 +95,6 @@ class rf_condition_data(dat.rf_condition_data_base):
         myset = sorted(set(x))
 
         self.current_power = np.mean(np.array([f[1] for f in dat.rf_condition_data_base.sp_pwr_hist if f[0] == max(myset)]))
-        dat.rf_condition_data_base.values[dat.last_mean_power] = self.current_power
-
 
         if len(myset) > 3:
             min_sp =list(myset)[-4]
@@ -180,7 +190,7 @@ class rf_condition_data(dat.rf_condition_data_base):
 
         self.values[dat.current_ramp_index] = int(pulse_break_down_log[-1-2][3])# WARNING we add a rpeat of th elast last_million_log !
 
-        self.values[dat.log_pulse_length] = float(pulse_break_down_log[-1][4]) / float(1000.0)
+        self.values[dat.log_pulse_length] = float(pulse_break_down_log[-1][4]) / float(1000.0)# warning
         self.set_ramp_values()
 
         self.llrf_config['PULSE_LENGTH_START'] = ( pulse_break_down_log[-1][4] * 0.001)# !!! UNITS
@@ -193,6 +203,7 @@ class rf_condition_data(dat.rf_condition_data_base):
             dat.current_ramp_index + ' ' + str(self.values[dat.current_ramp_index]),' PULSE_LENGTH_START = ' + str(self._llrf_config['PULSE_LENGTH_START']),
             dat.next_sp_decrease + ' ' + str(self.values[dat.next_sp_decrease])
         ],True)
+
 
         # set the last 10^6 breakdown last_106_bd_count
         temp = pulse_break_down_log[-1][0] - self.llrf_config['NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY']

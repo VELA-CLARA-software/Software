@@ -29,10 +29,10 @@ class outside_mask_trace_monitor(monitor):
 		#self.breakdown_config = outside_mask_trace_monitor.config.breakdown_config
 
 		# log traces to monitor
-		str=[]
-		for trace in monitor.config.llrf_config['TRACES_TO_SAVE']:
-			str.append(self.my_name + ' has ' + trace)
-		monitor.logger.message(str,True)
+		# str=[]
+		# for trace in monitor.config.llrf_config['TRACES_TO_SAVE']:
+		# 	str.append(self.my_name + ' has ' + trace)
+		# monitor.logger.message(str,True)
 
 		self.timer.timeout.connect(self.update_value)
 		self.timer.start(monitor.config.breakdown_config['OUTSIDE_MASK_CHECK_TIME'])
@@ -62,10 +62,10 @@ class outside_mask_trace_monitor(monitor):
 			monitor.logger.header(self.my_name + ' NEW OUTSIDE MASK TRACE DETECTED', True)
 			self.get_new_outside_mask_traces(_count)
 			self.previous_outside_mask_trace_count = _count
+		else:
+			if len(self.data_to_collect) > 0:
+				self.collect_data()
 		monitor.data.update_last_million_pulse_log()
-		if len(self.data_to_collect) > 0:
-			self.collect_data()
-
 
 	def get_new_outside_mask_traces(self, _count):
 		temp = []

@@ -178,6 +178,8 @@ class rf_condition_data_base(QObject):
     values[DC_level] = dummy + 16
     values[rev_power_spike_count] = 0
 
+    amp_pwr_mean_data = {}
+
     #logger
     logger = None
     _llrf_config = None
@@ -248,13 +250,30 @@ class rf_condition_data_base(QObject):
         self.logger.write_data(rf_condition_data_base.values)
 
     def log_kly_fwd_power_vs_amp(self):
-        if rf_condition_data_base.values[amp_sp] > 100:
+        if rf_condition_data_base.values[amp_sp] > 100:#MAGIC_NUMBER
             if self.kly_power_changed():
                 #rf_condition_data_base.kly_fwd_power_history.append( rf_condition_data_base.values[fwd_kly_pwr] )
                 rf_condition_data_base.sp_pwr_hist.append( [rf_condition_data_base.values[amp_sp],rf_condition_data_base.values[fwd_kly_pwr]] )
-            if self.amp_changed():
-                if rf_condition_data_base.values[amp_sp] not in sorted(list(set(rf_condition_data_base.amp_sp_history))):
-                    rf_condition_data_base.amp_sp_history = sorted(list(set(rf_condition_data_base.amp_sp_history)))
+                self.update_amp_pwr_mean_dict(rf_condition_data_base.values[amp_sp],rf_condition_data_base.values[fwd_kly_pwr])
+            # cancer
+            if rf_condition_data_base.values[amp_sp] \
+                    not in rf_condition_data_base.amp_sp_history:
+                rf_condition_data_base.amp_sp_history.append(rf_condition_data_base.values[amp_sp])
+
+    def update_amp_pwr_mean_dict(self,x,x2):
+        if x not in self.amp_pwr_mean_data:
+            self.amp_pwr_mean_data.update({x :[0,0,0,0,0]})
+            self.amp_pwr_mean_data[x][0] += x2
+            self.amp_pwr_mean_data[x][1] += 1
+            self.amp_pwr_mean_data[x][2] = float(self.amp_pwr_mean_data[x][0]) / float(self.amp_pwr_mean_data[x][1])
+        if self.amp_pwr_mean_data[x][3] > x:
+            self.amp_pwr_mean_data[x][3] = x
+        elif self.amp_pwr_mean_data[x][4] < x:
+            self.amp_pwr_mean_data[x][4] = x
+        self.values[last_mean_power] = self.amp_pwr_mean_data[x][2]
+
+        #elf.logger.message(str(x) + ', total, mean, count, min, max, ' , True)
+
 
     def kly_power_changed(self):
         r = False
@@ -263,12 +282,12 @@ class rf_condition_data_base(QObject):
         rf_condition_data_base.last_fwd_kly_pwr = rf_condition_data_base.values[fwd_kly_pwr]
         return r
 
-    def amp_changed(self):
-        r = False
-        if rf_condition_data_base.last_amp != rf_condition_data_base.values[amp_sp]:
-            r = True
-        rf_condition_data_base.last_amp = rf_condition_data_base.values[amp_sp]
-        return r
+    # def amp_changed(self):
+    #     r = False
+    #     if rf_condition_data_base.last_amp != rf_condition_data_base.values[amp_sp]:
+    #         r = True
+    #     rf_condition_data_base.last_amp = rf_condition_data_base.values[amp_sp]
+    #     return r
 
 
     def add_to_pulse_breakdown_log(self,amp):

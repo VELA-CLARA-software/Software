@@ -80,25 +80,33 @@ class main_controller(controller_base):
 		# remove time.sleep(1) at your peril
 		time.sleep(1)
 		#
-		# self.llrf_control.setGlobalCheckMask(False)
 		#
 		# set the 2nd last amplitude from log file, and delete last entry
-		#controller_base.llrf_handler.set_amp( controller_base.data.values[dat.next_sp_decrease])
-		self.data.clear_last_sp_history()
-		# continue the ramp
-		self.continue_ramp()
-
+		self.ramp_down()
 		controller_base.data_monitor.outside_mask_trace_monitor.reset_event_pulse_count()
+		time.sleep(1)
+		while controller_base.llrf_handler.mask_set == False:
+			controller_base.llrf_handler.set_mask()
+
 
 		controller_base.logger.header('ENTERING MAIN LOOP')
 
-		self.set_epoch()
+		self.set_last_mask_epoch()
 
 		while 1:
 			#start = timer()
 			# ...
 			# reset trigger
+
+			the mask should be based on th elast good trace
+
 			controller_base.llrf_handler.enable_trigger()
+
+			if controller_base.llrfObj[0].kly_fwd_power_max > 1000.0:
+				controller_base.llrf_handler.set_mask()
+				controller_base.llrf_handler.set_global_check_mask(True)
+			else:
+				controller_base.llrf_handler.set_global_check_mask(False)
 
 			QApplication.processEvents()
 
@@ -108,31 +116,33 @@ class main_controller(controller_base):
 			#
 			# # if new_bad drop SP
 			if controller_base.data_monitor.new_bad():
-				controller_base.llrf_handler.mask_set = False
 				# disable checking masks,(precautionary)
-				controller_base.llrf_handler.set_global_check_mask(False)
+				# controller_base.llrf_handler.set_global_check_mask(False)
 				# check if spike was vac or DC
 				controller_base.data_monitor.check_if_new_bad_is_vac_or_DC()
 
 			elif controller_base.data_monitor.new_good_no_bad():
-
 				if controller_base.data.values[dat.breakdown_rate_hi]:
 					self.ramp_down()
 				else:
 					self.continue_ramp()
-				if controller_base.llrf_handler.mask_set == False:
-					controller_base.llrf_handler.set_mask()
-					self.set_epoch()
-				controller_base.llrf_handler.set_global_check_mask(True)
+
 
 			# if everything is good carry on increasing
 			elif controller_base.data_monitor.all_good():
+
+				controller_base.llrf_handler.start_trace_average_no_reset(True)
+
+
+				if controller_base.llrf_handler.mask_set == False:
+					controller_base.llrf_handler.set_mask()
+					self.set_last_mask_epoch()
 				#print('all good')
 							# set the masks
 				#else:
-				if self.seconds_passed(5):#magic number, rest masks every now and then if lal good?
-					controller_base.llrf_handler.set_mask()
-					self.set_epoch()
+				# if self.seconds_passed(2):#magic number, reset masks every now and then if lal good?
+				# 	controller_base.llrf_handler.set_mask()
+				# 	self.set_last_mask_epoch()
 
 				#print('main loop setting global check mask = TRUE')
 				#self.llrf_control.setGlobalCheckMask(True)
@@ -143,7 +153,6 @@ class main_controller(controller_base):
 				#if self.seconds_elapsed(self.llrf_param['TIME_BETWEEN_RF_INCREASES']):
 				# now we update base do npulses
 				if controller_base.data.reached_min_pulse_count_for_this_step(): # check this number in the look up
-					controller_base.llrf_handler.set_global_check_mask(True)
 					if self.gui.can_ramp:
 						if controller_base.data.values[dat.breakdown_rate_hi]:
 							if i > 0:
@@ -151,6 +160,7 @@ class main_controller(controller_base):
 								i = 1
 						else:
 							self.ramp_up()
+							#controller_base.llrf_handler.start_trace_average_no_reset(True)
 							i = 0
 					else:
 						pass
@@ -165,14 +175,13 @@ class main_controller(controller_base):
 			# end = timer()
 			# print(end - start)
 
-
 	def continue_ramp(self):
 		self.logger.message('continue_ramp ' + str(controller_base.data.amp_sp_history[-1]))
 		# apply the old settings
 		controller_base.llrf_handler.set_amp(controller_base.data.amp_sp_history[-1])
 		controller_base.data_monitor.outside_mask_trace_monitor.reset_event_pulse_count()
 		self.data.add_to_pulse_breakdown_log(controller_base.llrfObj[0].amp_sp)
-		self.llrf_control.resetAverageTraces()
+		#self.llrf_control.resetAverageTraces()
 
 
 	def ramp_up(self):
@@ -180,24 +189,28 @@ class main_controller(controller_base):
 		new_amp = controller_base.data.get_new_set_point( controller_base.data.values[dat.next_power_increase]  )
 		if new_amp:
 			controller_base.llrf_handler.set_amp(new_amp)
-			controller_base.data.values[dat.next_sp_decrease] = dat.rf_condition_data_base.amp_sp_history[-2]
 			controller_base.data.ramp_up()
 		else:
+			# do nomminal increase
 			controller_base.llrf_handler.set_amp(self.llrf_control.getAmpSP() + controller_base.config.llrf_config['DEFAULT_RF_INCREASE_LEVEL'])
+			# update the next sp decraese
+			controller_base.data.set_next_sp_decrease()
 		self.data_monitor.outside_mask_trace_monitor.reset_event_pulse_count()
 		#  YES, for now
-		self.llrf_control.resetAverageTraces()
+		#self.llrf_control.resetAverageTraces()
+    #
+	# check power is hi berfor turning on start average taking
+	# clean up the sp_pwr log and predicted power
+	# check log ndex position
+
 
 	def ramp_down(self):
-		if len(self.data.amp_sp_history) > 1:
-				controller_base.llrf_handler.set_amp(self.data.amp_sp_history[-2])
-		else:
-			controller_base.llrf_handler.set_amp(self.data.amp_sp_history[0])
+		controller_base.llrf_handler.set_amp(controller_base.data.values[dat.next_sp_decrease])
 		self.data.add_to_pulse_breakdown_log(controller_base.llrfObj[0].amp_sp)
 		self.data_monitor.outside_mask_trace_monitor.reset_event_pulse_count()
-		self.data.clear_last_sp_history()
+		# reset values RENAME
 		self.data.ramp_down()
-		self.llrf_control.resetAverageTraces()
+		#self.llrf_control.resetAverageTraces()
 
 
 	# over load close
@@ -207,7 +220,7 @@ class main_controller(controller_base):
 		print 'Fin - RF condtioning closing down, goodbye.'
 		sys.exit()
 
-	def set_epoch(self):
+	def set_last_mask_epoch(self):
 		self.epoch = time.time()
 
 	def seconds_passed(self,secs):

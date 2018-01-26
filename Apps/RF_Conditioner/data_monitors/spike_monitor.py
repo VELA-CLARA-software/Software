@@ -31,6 +31,7 @@
 from monitor import monitor
 from VELA_CLARA_enums import STATE
 from PyQt4.QtCore import QTimer
+import data.rf_condition_data_base as dat
 
 from numpy import mean
 import time

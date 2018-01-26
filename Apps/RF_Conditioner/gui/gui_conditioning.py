@@ -18,6 +18,7 @@ import data.rf_condition_data_base as dat
 # every time
 # other data  should be monitored in the dat aclass?
 from base.base import base
+import numpy
 
 
 class gui_conditioning(QMainWindow, Ui_MainWindow, base):
@@ -136,6 +137,9 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
 			self.set_valve(widget, val, key)
 		elif type(val) is bool:
 			self.set_locked_enabled(widget, val, key)
+		elif type(val) is numpy.float64:
+			widget.setText('%.3E' % val)
+			self.clip_vals[key] = widget.text()
 		else:
 			print 'update_widget error ' + str(val) + ' ' + str(type(val))
 

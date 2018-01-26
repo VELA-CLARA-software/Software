@@ -11,13 +11,13 @@ class llrf_simple_param_monitor(monitor):
         self.trace_pwr_keys = {}
         for trace in monitor.config.llrf_config['TRACES_TO_SAVE']:
             print(self.my_name + ' adding ' + trace + ' to mean power list')
-            if self.is_cav_reverse(trace):
+            if self.is_cav_reverse_power(trace):
                 self.trace_pwr_keys[trace] = dat.rev_cav_pwr
-            elif self.is_cav_forward(trace):
+            elif self.is_cav_forward_power(trace):
                 self.trace_pwr_keys[trace] = dat.fwd_cav_pwr
-            elif self.is_kly_forward(trace):
+            elif self.is_kly_forward_power(trace):
                 self.trace_pwr_keys[trace] = dat.fwd_kly_pwr
-            elif self.is_kly_reverse(trace):
+            elif self.is_kly_reverse_power(trace):
                 self.trace_pwr_keys[trace] = dat.rev_kly_pwr
             elif self.is_probe(trace):
                 self.trace_pwr_keys[trace] = dat.probe_pwr
