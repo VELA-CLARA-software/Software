@@ -38,8 +38,8 @@ breakdown_status = 'breakdown_status'
 breakdown_rate_aim = 'breakdown_rate_aim'
 
 # these are values from the pulse_breakdown_log
-log_active_pulse_count = 'log_active_pulse_count'
-log_breakdown_count = 'log_breakdown_count'
+log_pulse_count = 'log_pulse_count'
+#log_breakdown_count = 'log_breakdown_count'
 log_amp_set = 'log_amp_set'
 current_ramp_index = 'current_ramp_index'
 
@@ -103,8 +103,8 @@ all_value_keys = [rev_power_spike_count,
                   vac_level,
                   cav_temp,
                   time_stamp,
-                  log_active_pulse_count,
-                  log_breakdown_count,
+                  log_pulse_count,
+#                  log_breakdown_count,
                   log_amp_set,
                   current_ramp_index,
                   power_aim,
@@ -141,11 +141,11 @@ class rf_condition_data_base(QObject):
     kly_fwd_power_history = []
     amp_sp_history = []
     sp_pwr_hist =[]
-
+    # fitting parameters
     previous_power = 0
     current_power = 0
-    old_x0 = 0
-    old_x1 = 0
+    old_x_min = 0
+    old_x_max = 0
     old_m = 0
     old_c = 0
 
@@ -177,6 +177,7 @@ class rf_condition_data_base(QObject):
     values[elapsed_time] = dummy + 15
     values[DC_level] = dummy + 16
     values[rev_power_spike_count] = 0
+    values[next_power_increase] = 'STARTUP'
 
     amp_pwr_mean_data = {}
 
@@ -261,6 +262,7 @@ class rf_condition_data_base(QObject):
                 rf_condition_data_base.amp_sp_history.append(rf_condition_data_base.values[amp_sp])
 
     def update_amp_pwr_mean_dict(self,x,x2):
+        # amp_pwr_mean_data[amp_sp] { pwr_total,pwr_total_count, current_mean, max, min]
         if x not in self.amp_pwr_mean_data:
             self.amp_pwr_mean_data.update({x :[0,0,0,0,0]})
             self.amp_pwr_mean_data[x][0] += x2
@@ -297,9 +299,13 @@ class rf_condition_data_base(QObject):
                  rf_condition_data_base.values[breakdown_count],
                  int(amp),
                  int(rf_condition_data_base.values[current_ramp_index]),
-                 int(rf_condition_data_base.values[pulse_length] * 1000)
+                 int(rf_condition_data_base.values[pulse_length] * 1000)#MAGIC_NUMMBER UNITS
                 ]
         )
+        else:
+            self.logger.message('Not adding to pulse_breakdown_log, amp = ' + str(amp),True)
+
+
 
 
 

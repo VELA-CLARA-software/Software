@@ -75,8 +75,10 @@ class data_logger(object):
 
 
     def add_to_pulse_breakdown_log(self,x):
+        towrite = " ".join(map(str, x))
+        self.message('Adding to pulse_breakdown_log =  ' + towrite, True)
         with open(self.pulse_count_log,'a') as f:
-            f.write(" ".join(map(str,x)) + '\n')
+            f.write( towrite + '\n')
 
     def get_pulse_count_breakdown_log(self):
         self.pulse_count_log = data_logger.config.log_config['LOG_DIRECTORY']+ \
@@ -89,9 +91,8 @@ class data_logger(object):
                     log.append([int(x) for x in line.split()])
         self.header(self.my_name + ' get_pulse_count_breakdown_log')
         self.message('read pulse_count_log: ' + self.pulse_count_log)
-        for i in log:
-            print i
-        log.append(log[-1])
+        # for i in log:
+        #     self.message(map(str,i),True)
         return log
 
     def start_data_logging(self):
@@ -152,6 +153,8 @@ class data_logger(object):
         elif type(val) is numpy.float64:
             f.write(struct.pack('<f', val))
             #f.write(struct.pack('<?', val))
+        elif type(val) is str:
+            f.write(struct.pack('<i', -1))
         else:
             print(self.my_name + ' write_binary() error unknown type, ' + str(type(val)) )
         #print str(val) + '   ' + str(type(val))

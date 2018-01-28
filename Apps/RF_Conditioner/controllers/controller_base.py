@@ -128,10 +128,9 @@ class controller_base(base):
 			base.config.breakdown_config['BREAKDOWN_TRACES'] = self.get_full_trace_name(base.config.breakdown_config[ 'BREAKDOWN_TRACES'])
 			controller_base.llrf_handler= llrf_handler.llrf_handler()
 			base.logger.message('start_llrf_control created ' + str(base.llrf_type) + ', llrf_handler and got full trace names:',True)
-			base.logger.message('TRACES TO SAVE:',True)
-			base.logger.message(base.config.llrf_config['TRACES_TO_SAVE'], True)
-			base.logger.message('BREAKDOWN_TRACES SAVE:', True)
-			base.logger.message(base.config.breakdown_config['BREAKDOWN_TRACES'], True)
+			base.logger.message('TRACES TO SAVE: '+ ' '.join(base.config.llrf_config['TRACES_TO_SAVE']), True)
+			base.logger.message('BREAKDOWN_TRACES:' + ' '.join(base.config.breakdown_config[
+																		'BREAKDOWN_TRACES']), True)
 		else:
 			base.llrf_control = None
 			base.logger.message('start_llrf_control can\'t create a llrf_control unknown llrf_type',True)

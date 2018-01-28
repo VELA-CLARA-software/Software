@@ -28,7 +28,7 @@ class llrf_handler_base(base):
 		base.config.llrf_config = base.config.llrf_config
 		self.start_trace_monitoring( base.config.llrf_config['TRACES_TO_SAVE'])#MAGIC_STRING
 		# must come after start_trace_monitoring
-		self.start_trace_rolling_average()
+		self.setup_trace_rolling_average()
 
 		base.llrf_control.setTracesToSaveOnBreakDown( base.config.llrf_config['TRACES_TO_SAVE'])#MAGIC_STRING
 
@@ -89,11 +89,8 @@ class llrf_handler_base(base):
 		drop = base.config.breakdown_config['C'+l+'P_AMP_DROP']#MAGIC_STRING
 		drop_val = base.config.breakdown_config['C'+l+'P_AMP_DROP_VAL']#MAGIC_STRING
 
-		string = [dict['TRACE'],
-				  'streak  = ' + str(streak),
-				  ' floor   = ' + str(floor),
-				  ' drop    = ' + str(drop),
-				  ' drop_val= ' + str(drop_val)]
+		string = [dict['TRACE'] + ', streak = ' + str(streak) + ', floor = ' + str(floor) \
+				  + ', drop = ' + str(drop) + ', drop_val= ' + str(drop_val)]
 		base.logger.message(string, True)
 
 		if base.llrf_control.setNumContinuousOutsideMaskCount( dict['TRACE'], streak) == False:
@@ -143,6 +140,12 @@ class llrf_handler_base(base):
 	def start_trace_average_no_reset(self,value):
 		for trace in base.config.breakdown_config['BREAKDOWN_TRACES']:
 			base.llrf_control.setKeepRollingAverageNoReset(trace,value)
+	def start_trace_average(self):
+		for trace in base.config.breakdown_config['BREAKDOWN_TRACES']:
+			base.llrf_control.setShouldKeepRollingAverage(trace)
+	def stop_trace_average(self):
+		for trace in base.config.breakdown_config['BREAKDOWN_TRACES']:
+			base.llrf_control.setShouldNotKeepRollingAverage(trace)
 
 
 	def start_trace_monitoring(self,trace_to_save):
@@ -151,7 +154,7 @@ class llrf_handler_base(base):
 			for trace in trace_to_save:
 				print 'trace = ' + trace
 				a = base.llrf_control.startTraceMonitoring(trace)
-				base.llrf_control.setNumBufferTraces(trace, self.num_buffer_traces)
+				base.llrf_control.setNumBufferTraces(trace, base.config.llrf_config['NUM_BUFFER_TRACES'])
 				if a:
 					base.logger.message('started monitoring ' + trace, True)
 					if 'POWER' in trace:  # MAGIC_STRING
@@ -163,8 +166,8 @@ class llrf_handler_base(base):
 			base.logger.message('!!! ERROR IN TRACES TO SAVE !!!', True)
 
 
-	def start_trace_rolling_average(self):
-		base.logger.header(self.my_name + ' start_trace_rolling_average', True)
+	def setup_trace_rolling_average(self):
+		base.logger.header(self.my_name + ' setup_trace_rolling_average', True)
 		# the cavity trace need a mean
 		num_mean = 3  # MAGIC_NUM
 		for trace in base.config.breakdown_config['BREAKDOWN_TRACES']:
@@ -180,6 +183,7 @@ class llrf_handler_base(base):
 			#	num_mean = 3#MAGIC_NUM
 			base.llrf_control.clearRollingAverage(trace)
 			base.llrf_control.setNumRollingAverageTraces(trace, num_mean)
+			base.llrf_control.setInfiniteMasks(trace)
 			base.llrf_control.setShouldKeepRollingAverage(trace)
 			if base.llrfObj[0].trace_data[trace].keep_rolling_average:
 				base.logger.message('STARTED rolling average for ' + trace, True)
@@ -191,6 +195,7 @@ class llrf_handler_base(base):
 		self.pulse_end_index = base.llrfObj[0].pulse_latency + self.llrf_control.getIndex(base.llrf_control.getPulseLength())
 		self.pulse_end = self.llrf_control.getTime( self.pulse_end_index)#len([x for x in self.timevector if x <= self.pulse_end])
 
+	# this can be tidied up a lot
 	def set_mean_pwr_position(self):
 		self.get_pulse_end()
 		# MUST BE CALLED AFTER CHANGING PULSE WIDTH ' CANCER
@@ -205,57 +210,56 @@ class llrf_handler_base(base):
 			if self.is_kly_forward(trace):
 				s = base.config.llrf_config['KFP_MEAN_TIME_TO_AVERAGE_START']#MAGIC_STRING
 				e = base.config.llrf_config['KFP_MEAN_TIME_TO_AVERAGE_END']#MAGIC_STRING
-				a = base.llrf_control.setMeanStartEndTime(s,e,trace)
-				if a:
-					base.logger.message(trace + ' mean monitoring started')
-					base.logger.message(['trace_mean_start/end (us) = ' + str(s) +'/'+str((e)),
-					'meantime = ' + str(e - s)])
-				else:
-					base.logger.message(trace + ' mean monitoring NOT started')
+				# a = base.llrf_control.setMeanStartEndTime(s,e,trace)
+				# if a:
+				# 	base.logger.message(trace + ' mean monitoring started')
+				# 	base.logger.message(['trace_mean_start/end (us) = ' + str(s) +'/'+str((e)),
+				# 	'meantime = ' + str(e - s)])
+				# else:
+				# 	base.logger.message(trace + ' mean monitoring NOT started')
 
-			if self.is_kly_reverse(trace):
+			elif self.is_kly_reverse(trace):
 				s = base.config.llrf_config['KRP_MEAN_TIME_TO_AVERAGE_START']#MAGIC_STRING
 				e = base.config.llrf_config['KRP_MEAN_TIME_TO_AVERAGE_END']#MAGIC_STRING
-				a = base.llrf_control.setMeanStartEndTime(s,e,trace)
-				if a:
-					base.logger.message(trace + ' mean monitoring started')
-					base.logger.message(['trace_mean_start/end (us) = ' + str(s) +'/'+str((e)),
-					'meantime = ' + str(e - s)])
-				else:
-					base.logger.message(trace + ' mean monitoring NOT started')
+				# a = base.llrf_control.setMeanStartEndTime(s,e,trace)
+				# if a:
+				# 	base.logger.message(trace + ' mean monitoring started')
+				# 	base.logger.message(['trace_mean_start/end (us) = ' + str(s) +'/'+str((e)),
+				# 	'meantime = ' + str(e - s)])
+				# else:
+				# 	base.logger.message(trace + ' mean monitoring NOT started')
 
-			if self.is_cav_reverse(trace):
+			elif self.is_cav_reverse(trace):
 				s= base.config.llrf_config['CRP_MEAN_TIME_TO_AVERAGE_START']#MAGIC_STRING
 				e= base.config.llrf_config['CRP_MEAN_TIME_TO_AVERAGE_END']#MAGIC_STRING
-				a = base.llrf_control.setMeanStartEndTime(s,e,trace)
-				if a:
-					base.logger.message(trace + ' mean monitoring started')
-					base.logger.message(['trace_mean_start/end (us) = ' + str(s) +'/'+str((e)),
-					'meantime = ' + str(e - s)])
-				else:
-					base.logger.message(trace + ' mean monitoring NOT started')
+				# a = base.llrf_control.setMeanStartEndTime(s,e,trace)
+				# if a:
+				# 	base.logger.message(trace + ' mean monitoring started')
+				# 	base.logger.message(['trace_mean_start/end (us) = ' + str(s) +'/'+str((e)),
+				# 	'meantime = ' + str(e - s)])
+				# else:
+				# 	base.logger.message(trace + ' mean monitoring NOT started')
 
-			if self.is_cav_forward(trace):
+			elif self.is_cav_forward(trace):
 				s = base.config.llrf_config['CFP_MEAN_TIME_TO_AVERAGE_START']#MAGIC_STRING
-				e = base.config.llrf_config['CFP_MEAN_TIME_TO_AVERAGE_END']#MAGIC_STRING
 				a = base.llrf_control.setMeanStartEndTime(s,e,trace)
-				if a:
-					base.logger.message(trace + ' mean monitoring started')
-					base.logger.message(['trace_mean_start/end (us) = ' + str(s) +'/'+str((e)),
-					'meantime = ' + str(e - s)])
-				else:
-					base.logger.message(trace + ' mean monitoring NOT started')
+				# if a:
+				# 	base.logger.message(trace + ' mean monitoring started')
+				# 	base.logger.message(['trace_mean_start/end (us) = ' + str(s) +'/'+str((e)),
+				# 	'meantime = ' + str(e - s)])
+				# else:
+				# 	base.logger.message(trace + ' mean monitoring NOT started')
 
-			if self.is_probe(trace):
+			elif self.is_probe(trace):
 				s = base.config.llrf_config['CPP_MEAN_TIME_TO_AVERAGE_START']#MAGIC_STRING
 				e = base.config.llrf_config['CPP_MEAN_TIME_TO_AVERAGE_END']#MAGIC_STRING
-				a = base.llrf_control.setMeanStartEndTime(s,e,trace)
-				if a:
-					base.logger.message(trace + ' mean monitoring started')
-					base.logger.message(['trace_mean_start/end (us) = ' + str(s) +'/'+str((e)),
-					'meantime = ' + str(e - s)])
-				else:
-					base.logger.message(trace + ' mean monitoring NOT started')
+			a = base.llrf_control.setMeanStartEndTime(s,e,trace)
+			if a:
+				base.logger.message(trace + ' mean monitoring started')
+				base.logger.message(['trace_mean_start/end (us) = ' + str(s) +'/'+str((e)),
+				'meantime = ' + str(e - s)])
+			else:
+				base.logger.message(trace + ' mean monitoring NOT started')
 
 
 

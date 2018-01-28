@@ -28,23 +28,29 @@ class rf_condition_data(dat.rf_condition_data_base):
         self.values = dat.rf_condition_data_base.values
         self.ramp_max_index = len(ramp) -1
 
-    # def get_next_ramp_values(self):
-    #     self.values[dat.next_sp_decrease]
 
-
-    def ramp_up(self):
+    # these functions move up and down the ramp curve
+    # and set the next increase, decrease values,
+    # if ramping down delete previous entries that are above our new working point
+    def move_up_ramp_curve(self):
         self.move_ramp_index(1)
 
-    def ramp_down(self):
+    def move_down_ramp_curve(self):
         self.clear_last_sp_history()
         self.move_ramp_index(-1)
 
-
     def clear_last_sp_history(self):
         if len(dat.rf_condition_data_base.amp_sp_history) > 1:
+            # dlete last entry from amp_history
             dat.rf_condition_data_base.amp_sp_history = dat.rf_condition_data_base.amp_sp_history[:-1]
         # could maybe do this more clever like
+        # if we only keep mean values, just delete last entry in mean pwr vs amp_sp data dicts
         dat.rf_condition_data_base.sp_pwr_hist = [x for x in dat.rf_condition_data_base.sp_pwr_hist if x[0] < dat.rf_condition_data_base.amp_sp_history[-1] ]
+        # delete entries from amp_pwr_mean_data
+        dat.rf_condition_data_base.amp_pwr_mean_data = {key: value for key, value in
+                                                        dat.rf_condition_data_base.amp_pwr_mean_data.iteritems()
+                     if key > dat.rf_condition_data_base.amp_sp_history[-1]}
+
 
     def move_ramp_index(self,val):
         print('move_ramp_index')
@@ -82,7 +88,45 @@ class rf_condition_data(dat.rf_condition_data_base):
     def get_new_sp(self):
         return self.get_new_set_point( self.get_next_power())
 
-    # neatean up!
+    def get_new_set_point_DEV(self,pwr_w):
+        if len(dat.rf_condition_data_base.amp_pwr_mean_data ) > 3:
+
+            self.x_tofit = np.array([])
+            self.y_tofit = np.array([])
+            for key,value in reversed(sorted(dat.rf_condition_data_base.amp_pwr_mean_data.iterkeys())):
+                self.x_tofit = np.append(self.x_tofit ,key)
+                self.y_tofit = np.append(self.y_tofit ,value[0])
+                if len(x_tofit) == 4:
+                    break
+            self.m, self.c = np.polyfit(self.x_tofit, self.y_tofit, 1)
+
+            self.current_power = self.y_tofit[0]
+            self.requested_power = self.current_power + pwr_w
+
+            self.predicted_sp = int((self.requested_power  - self.c) / self.m)
+
+            #p =[predicted_sp, requested_power ]
+            self.logger.header(self.my_name + ' get_new_set_point for power = ' ,True)
+            self.logger.message('current sp/W   = ' + "%i"%self.x_tofit[0] + ", %.3E"%self.current_power, True)
+            self.logger.message('predict sp/W   = ' + "%i"%self.predicted_sp +  ", %.3E"%self.requested_power, True)
+            self.logger.message('Delta SP/power = ' + str(self.predicted_sp-self.x_tofit[0]) \
+                                +str(self.requested_power - self.current_power), True)
+            # plotting values
+            self.x_plot = []
+            self.y_plot = []
+            for key,value in dat.rf_condition_data_base.amp_pwr_mean_data.iterkeys():
+                self.x_plot.append(key)
+                self.y_plot.append(value[0])
+            self.x_min = min(self.x_tofit)
+            self.x_max = max(self.x_tofit)
+            self.plot(self.x_plot, self.y_plot, self.m, self.c, self.x_min, self.x_max, [self.predicted_sp, self.requested_power ])
+
+        else:
+#            self.logger.message('current sp/W = ' + str(self.current_power - self.previous_power) + ' ' + str(pwr_w),True)
+            return None
+
+
+        # neatean up!
     # neatean up!
     # neatean up!
     # neatean up!
@@ -167,7 +211,10 @@ class rf_condition_data(dat.rf_condition_data_base):
         if self.last_million_log[-1][0] > self.llrf_config['NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY']:
             self.values[dat.breakdown_rate] = self.values[dat.last_106_bd_count]
         else:
-            self.values[dat.breakdown_rate] = \
+            if self.last_million_log[-1][0] == 0:
+                self.values[dat.breakdown_rate] = 0
+            else:
+                self.values[dat.breakdown_rate] = \
             float(self.values[dat.last_106_bd_count] * self.llrf_config['NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY']) \
             / \
             float(self.last_million_log[-1][0] - self.last_million_log[0][0])
@@ -175,40 +222,79 @@ class rf_condition_data(dat.rf_condition_data_base):
 
 
     def get_pulse_count_breakdown_log(self):
+        # this is waaay too complicated
         pulse_break_down_log = self.logger.get_pulse_count_breakdown_log()
-        #for x in self.pulse_break_down_log:
-        # based on the log file we set active pulse count total,
-        # number of breakdowns and breakdown rate
-        self.values[dat.log_active_pulse_count] = int(pulse_break_down_log[-1][0])
-        self.values[dat.pulse_count] = self.values[dat.log_active_pulse_count]
-        self.values[dat.log_breakdown_count] = int(pulse_break_down_log[-1][1])
-        self.values[dat.log_amp_set] = int(pulse_break_down_log[-1][2])
+        # ba xsed on the log file we set active pulse count total,
+        # the starting point is the one before the last entry
+        # save the last entry, number of breakdowns and breakdown rate
+        # keep thsi seperate as pulse_count will get overwritten!!
+        self.values[dat.log_pulse_count] = int(pulse_break_down_log[-1][0])
+        self.values[dat.breakdown_count] = int(pulse_break_down_log[-1][1])
+        # first amp is the second to last one in log file
+        last_amp_sp_in_file = int(pulse_break_down_log[-1][2])
+        # remove values greater than than last_amp_sp_in_file
+        to_remove = []
+        temp = 0
+        for i in pulse_break_down_log:
+            if i[2] > last_amp_sp_in_file:
+                to_remove.append(temp)
+            temp += 1
+        for i in reversed(to_remove):
+            del pulse_break_down_log[i]
+        # sort the list by sp (part 2) then pulse (part 0)
+        sorted_pulse_break_down_log_1 = sorted(pulse_break_down_log, key=lambda x: (x[2], x[0]))
+        # the final list is the sp point with highest pulse count
+        sorted_pulse_break_down_log_2 = []
+        last_i = sorted_pulse_break_down_log_1[0]
+        for i in sorted_pulse_break_down_log_1:
+            #print i
+            if last_i[2] == i[2]:
+                pass
+            else:
+                sorted_pulse_break_down_log_2.append(i)
+            last_i=i
+        # delete the last element
+        del sorted_pulse_break_down_log_2[-1]
+        print('rationalised pulse log ')
+        for i in sorted_pulse_break_down_log_2:
+            print i
 
-        dat.rf_condition_data_base.amp_sp_history = sorted(list(set( [ int(i[2]) for i in pulse_break_down_log] )))
-
+        # next we must insert the values
+        # set the ramp index
+        self.values[dat.current_ramp_index] = sorted_pulse_break_down_log_2[-1][3]
+        # sp history
+        dat.rf_condition_data_base.amp_sp_history = [int(i[2]) for i in sorted_pulse_break_down_log_2 ]
+        # amp_set
+        self.values[dat.log_amp_set] = dat.rf_condition_data_base.amp_sp_history[-1]
+        # next decrease
         self.values[dat.next_sp_decrease] = dat.rf_condition_data_base.amp_sp_history[-2]
+        # pulse length
+        self.values[dat.log_pulse_length] = float(sorted_pulse_break_down_log_2[-1][4]) / float(1000.0)# warning UNIT
+        self.llrf_config['PULSE_LENGTH_START'] = self.values[dat.log_pulse_length]
+        # next number of pulses
+        self.values[dat.required_pulses]=self.llrf_config['DEFAULT_PULSE_COUNT']
 
-        self.values[dat.current_ramp_index] = int(pulse_break_down_log[-1-2][3])# WARNING we add a rpeat of th elast last_million_log !
-
-        self.values[dat.log_pulse_length] = float(pulse_break_down_log[-1][4]) / float(1000.0)# warning
-        self.set_ramp_values()
-
-        self.llrf_config['PULSE_LENGTH_START'] = ( pulse_break_down_log[-1][4] * 0.001)# !!! UNITS
 
         self.logger.header( self.my_name + ' pulse_count_breakdown_log ', True)
         self.logger.message([
-            dat.log_active_pulse_count + ' ' + str(self.values[dat.log_active_pulse_count]),
-            dat.log_breakdown_count + ' ' + str(self.values[dat.log_breakdown_count]),
+            dat.log_pulse_count + ' ' + str(self.values[dat.log_pulse_count]),
+            dat.required_pulses + ' ' + str(self.values[dat.required_pulses]),
+            dat.breakdown_count + ' ' + str(self.values[dat.breakdown_count]),
             dat.log_amp_set + ' ' + str(self.values[dat.log_amp_set]),
-            dat.current_ramp_index + ' ' + str(self.values[dat.current_ramp_index]),' PULSE_LENGTH_START = ' + str(self._llrf_config['PULSE_LENGTH_START']),
+            dat.current_ramp_index + ' ' + str(self.values[dat.current_ramp_index]),'pulse length = ' + str(self._llrf_config['PULSE_LENGTH_START']),
             dat.next_sp_decrease + ' ' + str(self.values[dat.next_sp_decrease])
         ],True)
-
-
         # set the last 10^6 breakdown last_106_bd_count
-        temp = pulse_break_down_log[-1][0] - self.llrf_config['NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY']
-        self.last_million_log = [x for x in pulse_break_down_log if x[0] >= temp ]
-        #[x for x in if x[0] > temp ]
+        # find the breakdown count self.llrf_config['NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY'] pulse before
+        temp = self.values[dat.log_pulse_count] - self.llrf_config['NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY']
+        temp_2 = [x for x in pulse_break_down_log if x[0] >= temp ]
+        sorted_pulse_break_down_log_2.insert(0,temp_2[0])
+        self.last_million_log = [x for x in sorted_pulse_break_down_log_2 if x[0] >= temp ]
+        self.last_million_log[-1][1] = self.values[dat.breakdown_count]
+        self.last_million_log[-1][0] = self.values[dat.log_pulse_count]
+        self.logger.header('Last million pulses',True)
+        self.logger.message('Million pulses agao  = ' + str(temp),True)
+
         for i in self.last_million_log:
             print 'get_last_million_pulse ',i
         self.update_breakdown_stats()
@@ -265,13 +351,13 @@ class rf_condition_data(dat.rf_condition_data_base):
     def plot(self,x,y,m,c,x0,x1,predict):
         plt.clf()
         plt.plot(x, y, '.')
-        plt.plot( np.unique([self.old_x0,self.old_x1]), self.old_m * np.unique([self.old_x0,self.old_x1]) + self.old_c, '-')
+        plt.plot( np.unique([self.old_x_min,self.old_x_max]), self.old_m * np.unique([self.old_x_min,self.old_x_max]) + self.old_c, '-')
         plt.plot( np.unique([x0,x1]), m * np.unique([x0,x1]) + c, '-')
         plt.plot(predict[0],predict[1], '*')
         plt.draw()
         plt.pause(0.00001)
-        self.old_x0 = x0
-        self.old_x1 = x1
+        self.old_x_min = x0
+        self.old_x_max = x1
         self.old_m = m
         self.old_c = c
     #close function

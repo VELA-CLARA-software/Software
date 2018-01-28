@@ -18,7 +18,7 @@ import data.rf_condition_data_base as dat
 # every time
 # other data  should be monitored in the dat aclass?
 from base.base import base
-import numpy
+import numpy as np
 
 
 class gui_conditioning(QMainWindow, Ui_MainWindow, base):
@@ -48,9 +48,9 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
 	#
 
 	def __init__(self,
-	             window_name="",
-	             root="/"
-	             ):
+				 window_name="",
+				 root="/"
+				 ):
 		QMainWindow.__init__(self)
 		super(base, self).__init__()
 		self.setupUi(self)
@@ -137,9 +137,11 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
 			self.set_valve(widget, val, key)
 		elif type(val) is bool:
 			self.set_locked_enabled(widget, val, key)
-		elif type(val) is numpy.float64:
+		elif type(val) is np.float64:
 			widget.setText('%.3E' % val)
 			self.clip_vals[key] = widget.text()
+		elif type(val) is str:
+			widget.setText('%i' % -1)
 		else:
 			print 'update_widget error ' + str(val) + ' ' + str(type(val))
 
@@ -285,3 +287,21 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
 		self.widget[dat.next_power_increase] = self.next_power_increase_outputwidget
 		self.widget[dat.next_sp_decrease] = self.next_sp_decrease_outputwidget
 		self.widget[dat.current_ramp_index] = self.current_index_outputwidget
+
+	def plot_amp_sp_pwr(self):
+		#base.data.x_plot, base.data.y_plot, base.data.m, base.data.c, base.data.x_min, base.data.x_max,
+		#		  [base.data.predicted_sp, base.data.requested_power]
+		self.power_vs_pulses_plotwidget.cleasr()
+		self.power_vs_pulses_plotwidget.plot( np.array(base.data.old_x_min, base.data.old_x_max),
+						base.data.old_m *np.array([base.data.old_x_min,base.data.old_xmax]) + base.data.old_c,'-')
+
+		self.power_vs_pulses_plotwidget.plot(base.data.x_plot, base.data.y_plot, '.')
+		self.power_vs_pulses_plotwidget.plot(base.data.x_plot, (base.data.m * base.data.y_plot) + base.data.c, '-')
+
+		self.power_vs_pulses_plotwidget.plot(base.data.predicted_sp, base.data.requested_power, '*')
+
+		self.power_vs_pulses_plotwidget.show()
+		base.data.old_xmin = base.data.x_min
+		base.data.old_xmax = base.data.x_max
+		base.data.old_m = base.data.m
+		base.data.old_c = base.data.c
