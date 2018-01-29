@@ -16,11 +16,13 @@ class value_monitor(monitor):
                  gen_mon=None,
                  id_key='',
                  data_dict_key='',
+                 my_name ='value_monitor',
                  update_time=1000
                  ):
         # init base-class
         # super(monitor, self).__init__()
         monitor.__init__(self,update_time=1000)
+        self.my_name = my_name
         self.gen_monitor = gen_mon
         #self.data_dict = monitor.data.values
         self.data_dict_key = data_dict_key

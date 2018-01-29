@@ -7,6 +7,7 @@ from VELA_CLARA_RF_Protection_Control import RF_GUN_PROT_STATUS
 import os
 import pickle
 from data.config_reader import config_reader
+import numpy
 
 
 class data_logger(object):
@@ -18,7 +19,7 @@ class data_logger(object):
     log_start_str = log_start.isoformat('-').replace(":", "-").split('.', 1)[0]
 
     def __init__(self):
-        log_param = data_logger.config.log_config
+        pass
 
     @property
     def log_config(self):
@@ -63,30 +64,35 @@ class data_logger(object):
             self.write_log(str)
 
     def write_log(self, str):
+        write_str = datetime.now().isoformat('-').replace(":", "-").split('.', 1)[0] + ' ' + str + '\n'
         with open(self.log_path,'a') as f:
-            f.write(str)
-            f.write('\n')
+            f.write(write_str)
 
-    def write_pulse_count_breakdown_log(self, data):
-        string = " ".join(map(str, data))
+    def write_list(self, data, file):
+        with open(file,'w') as f:
+            for item in data:
+                f.write("%s\n" % item)
+
+
+    def add_to_pulse_breakdown_log(self,x):
+        towrite = " ".join(map(str, x))
+        self.message('Adding to pulse_breakdown_log =  ' + towrite, True)
         with open(self.pulse_count_log,'a') as f:
-            f.write(string)
-            f.write('\n')
-
+            f.write( towrite + '\n')
 
     def get_pulse_count_breakdown_log(self):
         self.pulse_count_log = data_logger.config.log_config['LOG_DIRECTORY']+ \
                                data_logger.config.log_config['PULSE_COUNT_BREAKDOWN_LOG_FILENAME']
         log = []
         with open(self.pulse_count_log) as f:
-            for line in f:
+            lines = list(line for line in (l.strip() for l in f) if line)
+            for line in lines:
                 if '#' not in line:
                     log.append([int(x) for x in line.split()])
         self.header(self.my_name + ' get_pulse_count_breakdown_log')
         self.message('read pulse_count_log: ' + self.pulse_count_log)
-        for i in log:
-            print i
-        log.append(log[-1])
+        # for i in log:
+        #     self.message(map(str,i),True)
         return log
 
     def start_data_logging(self):
@@ -103,15 +109,21 @@ class data_logger(object):
         types = []
         [names.append(x) for x,y in values.iteritems()]
         [types.append(str(type(y)))  for x,y in values.iteritems()]
-        with open(self.data_path  + '.dat', 'ab') as f:
-            f.write(joiner.join(names)+ "\n")
-            f.write(joiner.join(types)+ "\n")
-            # f.write(struct.pack('<i', 245))
+        try:
+            with open(self.data_path  + '.dat', 'ab') as f:
+                f.write(joiner.join(names)+ "\n")
+                f.write(joiner.join(types)+ "\n")
+                # f.write(struct.pack('<i', 245))
+        except:
+            pass
 
     def write_data(self,values):
-        with open(self.data_path + '.dat', 'ab') as f:
-            for val in values.itervalues():
-                self.write_binary(f,val)
+        try:
+            with open(self.data_path + '.dat', 'ab') as f:
+                for val in values.itervalues():
+                    self.write_binary(f,val)
+        except:
+            pass
 
     def write_binary(self, f, val):
         if type(val) is long:
@@ -138,6 +150,11 @@ class data_logger(object):
         elif type(val) is bool:
             f.write(struct.pack('<?', val))
             #print struct.calcsize('<?')
+        elif type(val) is numpy.float64:
+            f.write(struct.pack('<f', val))
+            #f.write(struct.pack('<?', val))
+        elif type(val) is str:
+            f.write(struct.pack('<i', -1))
         else:
             print(self.my_name + ' write_binary() error unknown type, ' + str(type(val)) )
         #print str(val) + '   ' + str(type(val))
@@ -153,7 +170,15 @@ class data_logger(object):
         self.pickle_dump(path=self.probe_file + str(index), obj=obj)
 
     # noinspection PyMethodMayBeStatic
+    def pickle_file(self, file_name, obj):
+        path = self.working_directory + file_name
+        self.pickle_dump(path,obj)
+
+    # noinspection PyMethodMayBeStatic
     def pickle_dump(self, path, obj):
-        print(self.my_name + ' pickle_dumping to ' + path)
-        with open(path + '.pkl', 'wb') as f:
-            pickle.dump(obj, f, pickle.HIGHEST_PROTOCOL)
+        self.message(self.my_name + ' pickle_dumping to ' + path,True)
+        try:
+            with open(path + '.pkl', 'wb') as f:
+                pickle.dump(obj, f, pickle.HIGHEST_PROTOCOL)
+        except:
+            pass

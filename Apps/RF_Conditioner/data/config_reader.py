@@ -230,12 +230,19 @@ class config_reader(object):
         type_param=['RF_STRUCTURE']
         int_param=['TIME_BETWEEN_RF_INCREASES','DEFAULT_RF_INCREASE_LEVEL','RF_REPETITION_RATE','BREAKDOWN_RATE_AIM',
                    'LLRF_CHECK_TIME','NORMAL_POWER_INCREASE','LOW_POWER_INCREASE','LOW_POWER_INCREASE_RATE_LIMIT'
-                   ,'NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY'
+                   ,'NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY','EXTRA_TRACES_ON_BREAKDOWN','NUM_BUFFER_TRACES',
+                   'DEFAULT_PULSE_COUNT'
                    ]
         string_param=[]
         monitor_param=['TRACES_TO_SAVE']
         float_param = ['MEAN_TIME_TO_AVERAGE','RF_INCREASE_LEVEL','RF_INCREASE_RATE','POWER_AIM','PULSE_LENGTH_AIM',
-                      'PULSE_LENGTH_STEP','PULSE_LENGTH_START']
+                      'PULSE_LENGTH_STEP','PULSE_LENGTH_START','KLY_PWR_FOR_ACTIVE_PULSE',
+                       'KFP_MEAN_TIME_TO_AVERAGE_START','KFP_MEAN_TIME_TO_AVERAGE_END','KRP_MEAN_TIME_TO_AVERAGE_START',
+        'KRP_MEAN_TIME_TO_AVERAGE_END','CFP_MEAN_TIME_TO_AVERAGE_START','CFP_MEAN_TIME_TO_AVERAGE_END',
+        'CRP_MEAN_TIME_TO_AVERAGE_START','CRP_MEAN_TIME_TO_AVERAGE_END',
+                        'CPP_MEAN_TIME_TO_AVERAGE_START', 'CPP_MEAN_TIME_TO_AVERAGE_END'
+                       ]
+
         config_reader.llrf_config = self.get_param_dict(string_param=string_param,int_param=int_param,
                                    type_param=type_param,monitor_param=monitor_param,
                                    float_param=float_param
@@ -246,14 +253,45 @@ class config_reader(object):
         bool_param=['CRP_AUTO_SET','CFP_AUTO_SET','CPP_AUTO_SET','CRP_AMP_DROP','CFP_AMP_DROP','CPP_AMP_DROP']
         monitor_param = ['BREAKDOWN_TRACES']
         int_param=[
-            'CRP_S1','CRP_S2','CRP_S3','CRP_S4','CRP_MASK_LEVEL','CRP_CHECK_STREAK','CRP_MASK_FLOOR','CRP_NUM_AVERAGE_TRACES',
-            'CFP_S1','CFP_S2','CFP_S3','CFP_S4','CFP_MASK_LEVEL','CFP_CHECK_STREAK','CFP_MASK_FLOOR','CFP_NUM_AVERAGE_TRACES',
-            'CPP_S1','CPP_S2','CPP_S3','CPP_S4','CPP_MASK_LEVEL','CPP_CHECK_STREAK','CPP_MASK_FLOOR','CPP_NUM_AVERAGE_TRACES',
+            'CRP_MASK_LEVEL','CRP_CHECK_STREAK','CRP_MASK_FLOOR','CRP_NUM_AVERAGE_TRACES',
+            'CFP_MASK_LEVEL','CFP_CHECK_STREAK','CFP_MASK_FLOOR','CFP_NUM_AVERAGE_TRACES',
+            'CPP_MASK_LEVEL','CPP_CHECK_STREAK','CPP_MASK_FLOOR','CPP_NUM_AVERAGE_TRACES',
             'CRP_AMP_DROP_VAL','CFP_AMP_DROP_VAL','CPP_AMP_DROP_VAL','OUTSIDE_MASK_CHECK_TIME','OUTSIDE_MASK_COOLDOWN_TIME'
             ]
-        float_param = ['CRP_MASK_END','CFP_MASK_END','CPP_MASK_END']
-        string_param=['CRP_MASK_TYPE','CFP_MASK_TYPE','CPP_MASK_TYPE']
+
+        float_param = ['CRP_MASK_END','CFP_MASK_END','CPP_MASK_END','CRP_S1', 'CRP_S2', 'CRP_S3', 'CRP_S4','CFP_S1',
+                       'CFP_S2', 'CFP_S3', 'CFP_S4','CPP_S1', 'CPP_S2', 'CPP_S3', 'CPP_S4']
+
+
+        string_param=['CRP_MASK_TYPE','CFP_MASK_TYPE','CPP_MASK_TYPE','CRP_MASK_SET_TYPE','CFP_MASK_SET_TYPE','CPP_MASK_SET_TYPE']
         config_reader.breakdown_config = self.get_param_dict(int_param=int_param, bool_param=bool_param, monitor_param=monitor_param,float_param=float_param, string_param=string_param)
+
+        # we do some more manual processing here:
+        #cancer
+        if config_reader.breakdown_config['CRP_AUTO_SET']:
+            pass
+        else:
+            if config_reader.breakdown_config['CRP_MASK_SET_TYPE'] == 'INDEX':
+                config_reader.breakdown_config['CRP_S1'] = int(config_reader.breakdown_config['CRP_S1'])
+                config_reader.breakdown_config['CRP_S2'] = int(config_reader.breakdown_config['CRP_S4'])
+                config_reader.breakdown_config['CRP_S3'] = int(config_reader.breakdown_config['CRP_S4'])
+                config_reader.breakdown_config['CRP_S4'] = int(config_reader.breakdown_config['CRP_S4'])
+        if config_reader.breakdown_config['CFP_AUTO_SET']:
+            pass
+        else:
+            if config_reader.breakdown_config['CFP_MASK_SET_TYPE'] == 'INDEX':
+                config_reader.breakdown_config['CFP_S1'] = int(config_reader.breakdown_config['CFP_S1'])
+                config_reader.breakdown_config['CFP_S2'] = int(config_reader.breakdown_config['CFP_S4'])
+                config_reader.breakdown_config['CFP_S3'] = int(config_reader.breakdown_config['CFP_S4'])
+                config_reader.breakdown_config['CFP_S4'] = int(config_reader.breakdown_config['CFP_S4'])
+        if config_reader.breakdown_config['CPP_AUTO_SET']:
+            pass
+        else:
+            if config_reader.breakdown_config['CPP_MASK_SET_TYPE'] == 'INDEX':
+                config_reader.breakdown_config['CPP_S1'] = int(config_reader.breakdown_config['CPP_S1'])
+                config_reader.breakdown_config['CPP_S2'] = int(config_reader.breakdown_config['CPP_S4'])
+                config_reader.breakdown_config['CPP_S3'] = int(config_reader.breakdown_config['CPP_S4'])
+                config_reader.breakdown_config['CPP_S4'] = int(config_reader.breakdown_config['CPP_S4'])
         return config_reader.breakdown_config
 
     def mod_param(self):

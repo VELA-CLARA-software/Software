@@ -43,7 +43,7 @@ class data_monitoring_base(base):
 	                dat.vac_valve_status,
 	                dat.modulator_state,
 	                dat.breakdown_status,
-	                dat.rev_power_spike_status,
+	                dat.rev_power_spike_count,
 	                dat.vac_spike_status,
 	                dat.rfprot_state,
 	                dat.DC_spike_status]
@@ -163,11 +163,11 @@ class data_monitoring_base(base):
 				data_dict_val_key=dat.vac_level,
 				data_dict_state_key=dat.vac_spike_status,
 				should_drop_amp = base.config.vac_config['VAC_SHOULD_DROP_AMP'],  # MAGIC_STRING
-				amp_drop_value = base.config.vac_config['VAC_SPIKE_AMP_DROP']  # MAGIC_STRING
-
+				amp_drop_value = base.config.vac_config['VAC_SPIKE_AMP_DROP'] , # MAGIC_STRING
+				my_name='vac_spike_monitor',
+                min_cooldown_time=base.config.breakdown_config['OUTSIDE_MASK_COOLDOWN_TIME'] # MAGIC_STRING
 			)  # MAGIC_STRING
 			data_monitoring_base.is_monitoring[dat.vac_spike_status] = data_monitoring_base.vacuum_monitor.set_success
-			data_monitoring_base.vacuum_monitor.my_name = 'vacuum_monitor'  # MAGIC_STRING
 		return data_monitoring_base.vacuum_monitor.set_success
 
 	def start_DC_monitor(self):
@@ -188,7 +188,9 @@ class data_monitoring_base(base):
 				data_dict_val_key=dat.DC_level,
 				data_dict_state_key=dat.DC_spike_status,
 				should_drop_amp=base.config.DC_config['DC_SHOULD_DROP_AMP'], #MAGIC_STRING
-				amp_drop_value= base.config.DC_config['DC_SPIKE_AMP_DROP'] #MAGIC_STRING
+				amp_drop_value= base.config.DC_config['DC_SPIKE_AMP_DROP'], #MAGIC_STRING
+				my_name = 'dc_spike_monitor',
+				min_cooldown_time=base.config.breakdown_config['OUTSIDE_MASK_COOLDOWN_TIME']  # MAGIC_STRING
 			)  # MAGIC_STRING
 			data_monitoring_base.is_monitoring[dat.DC_spike_status] = data_monitoring_base.DC_monitor.set_success
 			data_monitoring_base.DC_monitor.my_name = 'DC_monitor'  # MAGIC_STRING
@@ -219,9 +221,9 @@ class data_monitoring_base(base):
 				gen_mon=self.gen_mon,
 				id_key=data_monitoring_base.gen_mon_keys[data_monitoring_base.cavity_temp_id],
 				data_dict_key=dat.cav_temp,
-				update_time=base.config.cavity_temp_config['CAVITY_TEMPERATURE_CHECK_TIME']  # MAGIC_STRING
+				update_time=base.config.cavity_temp_config['CAVITY_TEMPERATURE_CHECK_TIME'],  # MAGIC_STRING
+				my_name='cavity_temp_monitor'
 			)
-			data_monitoring_base.cavity_temp_monitor.my_name = 'cavity_temp_monitor'  # MAGIC_STRING
 			data_monitoring_base.is_monitoring[data_monitoring_base.cavity_temp_monitoring] = data_monitoring_base.cavity_temp_monitor.set_success
 		return data_monitoring_base.is_monitoring[data_monitoring_base.cavity_temp_monitoring]
 
@@ -234,9 +236,9 @@ class data_monitoring_base(base):
 				gen_mon=self.gen_mon,
 				id_key=self.gen_mon_keys[self.water_temp_id],
 				data_dict_key=dat.water_temp,
-				update_time=base.config.water_temp_config['WATER_TEMPERATURE_CHECK_TIME']  # MAGIC_STRING
+				update_time=base.config.water_temp_config['WATER_TEMPERATURE_CHECK_TIME'],  # MAGIC_STRING
+				my_name='water_temp_monitor'
 			)
-			data_monitoring_base.water_temp_monitor.my_name = 'water_temp_monitor'  # MAGIC_STRING
 			data_monitoring_base.is_monitoring[data_monitoring_base.water_temp_monitoring] = self.water_temp_monitor.set_success
 		return data_monitoring_base.is_monitoring[data_monitoring_base.water_temp_monitoring]
 
@@ -249,7 +251,7 @@ class data_monitoring_base(base):
 	def start_outside_mask_trace__monitor(self):
 		data_monitoring_base.outside_mask_trace_monitor = outside_mask_trace_monitor.outside_mask_trace_monitor()
 		data_monitoring_base.is_monitoring[dat.breakdown_status] = data_monitoring_base.outside_mask_trace_monitor.set_success
-		data_monitoring_base.is_monitoring[dat.rev_power_spike_status] = data_monitoring_base.outside_mask_trace_monitor.set_success
+		data_monitoring_base.is_monitoring[dat.rev_power_spike_count] = data_monitoring_base.outside_mask_trace_monitor.set_success
 		return data_monitoring_base.outside_mask_trace_monitor.set_success
 
 	# connect to process variable pv

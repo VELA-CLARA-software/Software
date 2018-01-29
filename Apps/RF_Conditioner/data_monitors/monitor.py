@@ -52,7 +52,7 @@ class monitor(QObject,base):
 
     # you should probably overload this in child class
     def cooldown_function(self):
-        print self.my_name + 'monitor function called, cool down ended'
+        base.logger.message(self.my_name + 'monitor function called, cool down ended')
         self.incool_down = False
 
     def set_cooldown_mode(self,mode):
@@ -67,7 +67,7 @@ class monitor(QObject,base):
         i = 0
         for item in items:
             if not isinstance(item, numbers.Real):
-                print(self.my_name,' item ', i, ' failed sanity check')
+                base.logger.message(self.my_name,' item ', i, ' failed sanity check',True)
                 i+=1
                 self.set_success = False
         return self.set_success
@@ -84,7 +84,7 @@ class monitor(QObject,base):
         elif monitor.llrf_type == LLRF_TYPE.L01:
             return 'L01'
         elif monitor.llrf_type == LLRF_TYPE.UNKNOWN_TYPE:
-            print 'ERROR LLRF TYPE NOT CORRECT'
+            base.logger.message(self.my_name + ' llrf_type_string ERROR llrf_type UNKNOWN',True)
             return False
         else:
             return False
