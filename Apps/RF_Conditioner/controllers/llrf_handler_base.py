@@ -40,17 +40,17 @@ class llrf_handler_base(base):
 		if 'update_func' in self.forward_mask_dict:
 			a = self.forward_mask_dict['update_func'](self.forward_mask_dict)
 			if a == False:
-				base.logger.message(dict['TRACE'] + 'ERROR SETTING MASK', True)
+				base.logger.message(self.forward_mask_dict['TRACE'] + 'ERROR SETTING MASK', True)
 
 		if 'update_func' in self.probe_mask_dict:
 			a = self.probe_mask_dict['update_func'](self.probe_mask_dict)
 			if a == False:
-				base.logger.message(dict['TRACE'] + 'ERROR SETTING MASK', True)
+				base.logger.message(self.probe_mask_dict['TRACE'] + 'ERROR SETTING MASK', True)
 		# temp
 		if 'update_func' in self.reverse_mask_dict:
 			a = self.reverse_mask_dict['update_func'](self.reverse_mask_dict)
 			if a == False:
-				base.logger.message(dict['TRACE'] + 'ERROR SETTING MASK', True)
+				base.logger.message(self.reverse_mask_dict['TRACE'] + 'ERROR SETTING MASK', True)
 
 	# more cancer but hopefully will be neatened up
 	def setup_outside_mask_trace_param(self):
@@ -126,8 +126,8 @@ class llrf_handler_base(base):
 		return self.llrf_control.setPercentMask(dict['S1'],dict['S2'],dict['S3'],dict['S4'],dict['LEVEL'],dict['TRACE'])
 
 	def index_absolute_mask(self,dict):
-		return self.llrf_control.setAbsoluteMask(dict['S1'],dict['S2'],dict['S3'],dict['S4'],dict['LEVEL'],dict['TRACE'])
 		#print 'time_absolute_mask'
+		return self.llrf_control.setAbsoluteMask(dict['S1'],dict['S2'],dict['S3'],dict['S4'],dict['LEVEL'],dict['TRACE'])
 
 	# return stre if all breakdown traces have averages, we could do this slightly more clever like
 	def have_averages(self):

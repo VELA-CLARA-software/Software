@@ -268,4 +268,5 @@ class spike_monitor(monitor):
         new = monitor.llrf_control.dump_traces()
         new.update({'vacuum': monitor.data.values[dat.vac_level]})
         new.update({'DC': monitor.data.values[dat.DC_level]})
+        new.update({'SOL': monitor.data.values[dat.sol_value]})
         monitor.logger.pickle_file(self.my_name + '_' + str(self.spike_count), new)

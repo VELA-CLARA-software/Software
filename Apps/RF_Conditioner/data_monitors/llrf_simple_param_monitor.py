@@ -9,6 +9,10 @@ class llrf_simple_param_monitor(monitor):
         #
         # now match up trace names with the keys for power outputs from the 'values' dict
         self.trace_pwr_keys = {}
+        #
+        # only update new values
+        self.old_mean_values = {}
+        # set up dicts
         for trace in monitor.config.llrf_config['TRACES_TO_SAVE']:
             print(self.my_name + ' adding ' + trace + ' to mean power list')
             if self.is_cav_reverse_power(trace):
@@ -21,6 +25,7 @@ class llrf_simple_param_monitor(monitor):
                 self.trace_pwr_keys[trace] = dat.rev_kly_pwr
             elif self.is_probe(trace):
                 self.trace_pwr_keys[trace] = dat.probe_pwr
+            self.old_mean_values[trace]  = 0
 
         self.timer.timeout.connect(self.update_value)
         self.timer.start( monitor.config.llrf_config['LLRF_CHECK_TIME'])
@@ -43,7 +48,6 @@ class llrf_simple_param_monitor(monitor):
         monitor.data.values[dat.llrf_ff_ph_locked] = monitor.llrfObj[0].ff_ph_lock_state
         monitor.data.values[dat.llrf_output] = monitor.llrfObj[0].rf_output
         monitor.data.values[dat.amp_sp] = int(monitor.llrfObj[0].amp_sp)
-
         if monitor.llrfObj[0].trig_source == TRIG.OFF:
             monitor.data.values[dat.llrf_trigger] = False
         elif monitor.llrfObj[0].trig_source == TRIG.UNKNOWN_TRIG:
@@ -53,5 +57,28 @@ class llrf_simple_param_monitor(monitor):
 
 
     def get_mean_power(self,key,trace):
-        llrf_simple_param_monitor.data.values[key] = \
+        if  self.old_mean_values[trace] == \
+            monitor.llrfObj[0].trace_data[trace].traces[monitor.llrfObj[0].trace_data[trace].latest_trace_index].mean:
+            pass
+        else:
+            llrf_simple_param_monitor.data.values[key] = \
             monitor.llrfObj[0].trace_data[trace].traces[monitor.llrfObj[0].trace_data[trace].latest_trace_index].mean
+            self.old_mean_values[trace] = llrf_simple_param_monitor.data.values[key]
+            if self.is_kly_forward(trace):
+                if self.old_mean_values[trace] > monitor.config.llrf_config['KLY_PWR_FOR_ACTIVE_PULSE']:
+                    self.update_amp_pwr_mean_dict(monitor.data.values[dat.amp_sp],self.old_mean_values[trace])
+
+            # we should check the value has changed !
+    def update_amp_pwr_mean_dict(self,x,x2):
+        # amp_pwr_mean_data[amp_sp] { pwr_total,pwr_total_count, current_mean, max, min]
+        #print('called')
+        if x not in monitor.data.amp_pwr_mean_data:
+            monitor.data.amp_pwr_mean_data.update({x :[0,0,0,0,0]})
+            monitor.data.amp_pwr_mean_data[x][0] += x2
+            monitor.data.amp_pwr_mean_data[x][1] += 1
+            monitor.data.amp_pwr_mean_data[x][2] = float(monitor.data.amp_pwr_mean_data[x][0]) / float(monitor.data.amp_pwr_mean_data[x][1])
+        if monitor.data.amp_pwr_mean_data[x][3] > x:
+            monitor.data.amp_pwr_mean_data[x][3] = x
+        elif monitor.data.amp_pwr_mean_data[x][4] < x:
+            monitor.data.amp_pwr_mean_data[x][4] = x
+        monitor.data.values[dat.last_mean_power] = monitor.data.amp_pwr_mean_data[x][2]

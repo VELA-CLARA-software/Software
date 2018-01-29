@@ -109,6 +109,7 @@ class outside_mask_trace_monitor(monitor):
 				new = monitor.llrf_control.getOutsideMaskDataPart(part)
 				new.update({ 'vacuum' : monitor.data.values[dat.vac_level] })
 				new.update({ 'DC' : monitor.data.values[dat.DC_level] })
+				new.update({ 'SOL' : monitor.data.values[dat.sol_value] })
 
 				if self.is_forward(new['trace_name']):
 					self.forward_power_data.append(new)

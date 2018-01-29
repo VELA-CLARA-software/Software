@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1149</width>
-    <height>763</height>
+    <width>1151</width>
+    <height>759</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -829,7 +829,15 @@
         </widget>
        </item>
        <item row="0" column="0">
-        <widget class="QLabel" name="elapse_time_label">
+        <widget class="QLabel" name="breakdown_rate_limit_label">
+         <property name="font">
+          <font>
+           <weight>50</weight>
+           <italic>false</italic>
+           <bold>false</bold>
+           <underline>false</underline>
+          </font>
+         </property>
          <property name="frameShape">
           <enum>QFrame::Box</enum>
          </property>
@@ -837,7 +845,7 @@
           <enum>QFrame::Sunken</enum>
          </property>
          <property name="text">
-          <string>Elapsed Time</string>
+          <string>Breakdownrate aim (per 10^6)</string>
          </property>
          <property name="scaledContents">
           <bool>false</bool>
@@ -845,7 +853,7 @@
         </widget>
        </item>
        <item row="0" column="1">
-        <widget class="QLabel" name="elapsed_time_outputwidget">
+        <widget class="QLabel" name="breakdown_rate_limit_outputwidget">
          <property name="frameShape">
           <enum>QFrame::Box</enum>
          </property>
@@ -853,7 +861,7 @@
           <enum>QFrame::Sunken</enum>
          </property>
          <property name="text">
-          <string>-9</string>
+          <string>0</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignAbsolute|Qt::AlignBottom|Qt::AlignCenter|Qt::AlignHCenter|Qt::AlignHorizontal_Mask|Qt::AlignJustify|Qt::AlignLeading|Qt::AlignLeft|Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing|Qt::AlignVCenter|Qt::AlignVertical_Mask</set>
@@ -996,15 +1004,7 @@
         </widget>
        </item>
        <item row="4" column="0">
-        <widget class="QLabel" name="breakdown_rate_limit_label">
-         <property name="font">
-          <font>
-           <weight>50</weight>
-           <italic>false</italic>
-           <bold>false</bold>
-           <underline>false</underline>
-          </font>
-         </property>
+        <widget class="QLabel" name="elapse_time_label">
          <property name="frameShape">
           <enum>QFrame::Box</enum>
          </property>
@@ -1012,7 +1012,7 @@
           <enum>QFrame::Sunken</enum>
          </property>
          <property name="text">
-          <string>Breakdownrate aim (per 10^6)</string>
+          <string>Elapsed Time</string>
          </property>
          <property name="scaledContents">
           <bool>false</bool>
@@ -1020,7 +1020,7 @@
         </widget>
        </item>
        <item row="4" column="1">
-        <widget class="QLabel" name="breakdown_rate_limit_outputwidget">
+        <widget class="QLabel" name="elapsed_time_outputwidget">
          <property name="frameShape">
           <enum>QFrame::Box</enum>
          </property>
@@ -1028,7 +1028,7 @@
           <enum>QFrame::Sunken</enum>
          </property>
          <property name="text">
-          <string>0</string>
+          <string>-9</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignAbsolute|Qt::AlignBottom|Qt::AlignCenter|Qt::AlignHCenter|Qt::AlignHorizontal_Mask|Qt::AlignJustify|Qt::AlignLeading|Qt::AlignLeft|Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing|Qt::AlignVCenter|Qt::AlignVertical_Mask</set>
@@ -1260,7 +1260,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1149</width>
+     <width>1151</width>
      <height>21</height>
     </rect>
    </property>

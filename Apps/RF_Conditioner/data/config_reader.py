@@ -43,6 +43,7 @@ class config_reader(object):
     mod_config = None
     rfprot_config = None
     gui_config = None
+    sol_config = None
 
     #
     llrf_type = LLRF_TYPE.UNKNOWN_TYPE
@@ -95,6 +96,7 @@ class config_reader(object):
         self.mod_param()
         self.rfprot_param()
         self.gui_param()
+        self.sol_parameter()
         print(config_reader.my_name + ' read input from ' + str(config_reader.config_file) )
 
         config_reader.all_config_data = [config_reader.vac_config,
@@ -107,7 +109,8 @@ class config_reader(object):
                                          config_reader.breakdown_config,
                                          config_reader.mod_config,
                                          config_reader.rfprot_config,
-                                         config_reader.gui_config]
+                                         config_reader.gui_config,
+                                         config_reader.sol_config]
         return self.sanity_checks()
 
     def sanity_checks(self):
@@ -225,6 +228,12 @@ class config_reader(object):
         int_param=['CAVITY_TEMPERATURE_CHECK_TIME']
         config_reader.cavity_temp_config = self.get_param_dict(string_param=string_param,int_param=int_param)
         return config_reader.cavity_temp_config
+
+    def sol_parameter(self):
+        string_param=['SOL_PV']
+        int_param=['SOL_CHECK_TIME']
+        config_reader.sol_config = self.get_param_dict(string_param=string_param,int_param=int_param)
+        return config_reader.sol_config
 
     def llrf_param(self):
         type_param=['RF_STRUCTURE']

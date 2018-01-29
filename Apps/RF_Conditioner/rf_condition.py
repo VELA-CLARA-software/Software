@@ -16,9 +16,16 @@ else:
 for i in sys.path:
 	print i
 
+# ifrom os.path import isfile, join
+# from os import listdir
+# onlyfiles = [f for f in listdir('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\stage') if isfile(join('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\stage', f))]
+#
+# for i in onlyfiles:
+# 	print i
+
+
 
 from PyQt4 import QtGui
-
 import VELA_CLARA_enums
 from controllers.main_controller import main_controller
 
