@@ -249,8 +249,6 @@ class Controller(QtCore.QThread):
 
             self.model.offlineAnalysis.analyse()
 
-            while self.model.offlineAnalysis.isAnalysing():
-                time.sleep(1)
             self.model.offlineAnalysis.writeData(str(self.view.lineEdit_dataFileNameBatch.text()))
 
             self.progress=100*((i+1)/self.listOfImages.count())
@@ -371,6 +369,7 @@ class Controller(QtCore.QThread):
         self.setSubtarctedImage()
 
     def update(self):
+
         self.Image.setLevels([self.view.spinBox_min.value(), self.view.spinBox_max.value()], update=True)
         self.saturatedPixelImage.setLevels([0, self.view.spinBox_satLevel.value()], update=True)
         self.bkgrndImage.setLevels([self.view.spinBox_min.value(), self.view.spinBox_max.value()], update=True)
@@ -401,16 +400,31 @@ class Controller(QtCore.QThread):
             self.view.pushButton_analyseBatch.setText('Batch Analyse')
             self.view.pushButton_analyse.setEnabled(True)
             self.view.pushButton_analyseBatch.setEnabled(True)
-        self.view.label_xMLE.setText(str(round(self.model.offlineAnalysis.CoIA.xMLE, 3))+'+/-'+str(round(self.model.offlineAnalysis.CoIA.xMLEerr, 3)))
-        self.view.label_yMLE.setText(str(round(self.model.offlineAnalysis.CoIA.yMLE, 3))+'+/-'+str(round(self.model.offlineAnalysis.CoIA.yMLEerr, 3)))
-        self.view.label_sxMLE.setText(str(round(self.model.offlineAnalysis.CoIA.sxMLE, 3))+'+/-'+str(round(self.model.offlineAnalysis.CoIA.sxMLEerr, 3)))
-        self.view.label_syMLE.setText(str(round(self.model.offlineAnalysis.CoIA.syMLE, 3))+'+/-'+str(round(self.model.offlineAnalysis.CoIA.syMLEerr, 3)))
-        self.view.label_cxyMLE.setText(str(round(self.model.offlineAnalysis.CoIA.cxyMLE, 3))+'+/-'+str(round(self.model.offlineAnalysis.CoIA.cxyMLEerr, 3)))
-        self.view.label_xBVN.setText(str(round(self.model.offlineAnalysis.CoIA.xBVN, 3))+'+/-'+str(round(self.model.offlineAnalysis.CoIA.xBVNerr, 3)))
-        self.view.label_yBVN.setText(str(round(self.model.offlineAnalysis.CoIA.yBVN, 3))+'+/-'+str(round(self.model.offlineAnalysis.CoIA.yBVNerr, 3)))
-        self.view.label_sxBVN.setText(str(round(self.model.offlineAnalysis.CoIA.sxBVN, 3))+'+/-'+str(round(self.model.offlineAnalysis.CoIA.sxBVNerr, 3)))
-        self.view.label_syBVN.setText(str(round(self.model.offlineAnalysis.CoIA.syBVN, 3))+'+/-'+str(round(self.model.offlineAnalysis.CoIA.syBVNerr, 3)))
-        self.view.label_cxyBVN.setText(str(round(self.model.offlineAnalysis.CoIA.cxyBVN, 3))+'+/-'+str(round(self.model.offlineAnalysis.CoIA.cxyBVNerr, 3)))
+        pix2mm = self.model.offlineAnalysis.CoIA.pixToMM
+        if pix2mm==1.0:
+            self.view.label_3.setText("Results (pixels)")
+        else:
+            self.view.label_3.setText("Results (mm)")
+        self.view.label_xMLE.setText(str(pix2mm*round(self.model.offlineAnalysis.CoIA.xMLE, 3))+
+                                     '+/-'+str(pix2mm*round(self.model.offlineAnalysis.CoIA.xMLEerr, 3)))
+        self.view.label_yMLE.setText(str(pix2mm*round(self.model.offlineAnalysis.CoIA.yMLE, 3))+
+                                     '+/-'+str(pix2mm*round(self.model.offlineAnalysis.CoIA.yMLEerr, 3)))
+        self.view.label_sxMLE.setText(str(pix2mm*round(self.model.offlineAnalysis.CoIA.sxMLE, 3))+
+                                      '+/-'+str(pix2mm*round(self.model.offlineAnalysis.CoIA.sxMLEerr, 3)))
+        self.view.label_syMLE.setText(str(pix2mm*round(self.model.offlineAnalysis.CoIA.syMLE, 3))+
+                                      '+/-'+str(pix2mm*round(self.model.offlineAnalysis.CoIA.syMLEerr, 3)))
+        self.view.label_cxyMLE.setText(str(pix2mm*pix2mm*round(self.model.offlineAnalysis.CoIA.cxyMLE, 3))+
+                                       '+/-'+str(pix2mm*pix2mm*round(self.model.offlineAnalysis.CoIA.cxyMLEerr, 3)))
+        self.view.label_xBVN.setText(str(pix2mm*round(self.model.offlineAnalysis.CoIA.xBVN, 3))+
+                                     '+/-'+str(pix2mm*round(self.model.offlineAnalysis.CoIA.xBVNerr, 3)))
+        self.view.label_yBVN.setText(str(pix2mm*round(self.model.offlineAnalysis.CoIA.yBVN, 3))+
+                                     '+/-'+str(pix2mm*round(self.model.offlineAnalysis.CoIA.yBVNerr, 3)))
+        self.view.label_sxBVN.setText(str(pix2mm*round(self.model.offlineAnalysis.CoIA.sxBVN, 3))+
+                                      '+/-'+str(pix2mm*round(self.model.offlineAnalysis.CoIA.sxBVNerr, 3)))
+        self.view.label_syBVN.setText(str(pix2mm*round(self.model.offlineAnalysis.CoIA.syBVN, 3))+
+                                      '+/-'+str(pix2mm*round(self.model.offlineAnalysis.CoIA.syBVNerr, 3)))
+        self.view.label_cxyBVN.setText(str(pix2mm*pix2mm*round(self.model.offlineAnalysis.CoIA.cxyBVN, 3))+
+                                       '+/-'+str(pix2mm*pix2mm*round(self.model.offlineAnalysis.CoIA.cxyBVNerr, 3)))
 
         # Set crosshairs
         x = float(self.model.offlineAnalysis.CoIA.xMLE)
@@ -445,6 +459,7 @@ class Controller(QtCore.QThread):
         im = ia.std_vector_double()
         im.extend(image)
 
+        self.model
         self.model.offlineAnalysis.loadImage(im, self.model.fullName, self.model.imageHeight, self.model.imageWidth)
         if self.view.checkBox_useBackground.isChecked() is True:
             self.model.offlineAnalysis.useBackground(True)
@@ -460,13 +475,15 @@ class Controller(QtCore.QThread):
         else:
             self.model.offlineAnalysis.useBackground(False)
         # This is where we will house expert settings
-        self.model.offlineAnalysis.useESMask(True)
+
         if self.view.checkBox_useCustomMask.isChecked() is True:
+            self.model.offlineAnalysis.useESMask(True)
             self.model.offlineAnalysis.setESMask(int(self.customMaskROI.pos()[0]+self.customMaskROI.size()[0]/2),
                                                  int(self.customMaskROI.pos()[1]+self.customMaskROI.size()[0]/2),
                                                  int(self.customMaskROI.size()[0]/2),
                                                  int(self.customMaskROI.size()[1]/2))
         else:
+            self.model.offlineAnalysis.useESMask(False)
             # make mask span full width of image
             x = int(self.model.imageWidth / 2)
             y = int(self.model.imageHeight / 2)

@@ -73,9 +73,10 @@ class Model():
                 #print("Keys: %s" % f.keys())
                 #a_group_key = list(f.keys())[1]
                 # Get the data
-                image = list(f['entry']['data']['data'])
+                image = list(f['entry']['data']['data'][0])
+                f.close()
                 self.imageData = np.array(image)
-                self.imageData=self.imageData[0,:,:]
+                #self.imageData=self.imageData[0,:,:]
                 #print self.imageData.shape
                 self.imageData = np.flip(np.transpose(np.array(self.imageData)), 1)
                 self.imageHeight = self.imageData.shape[1]

@@ -1,9 +1,0 @@
-ANALYSIS DATA
-Expert Settings:
-Mask,,,,R^2 Threshold,Rolling Average,Pecentage Cut of Lowest Pixels
-X,Y,X Radius,Y Radius
-696,520,696,520,0,0,0
-BVN, , , , , , , , , ,MLE, , , , , , , , , , 
-X,err,Y,err,Sigma X,err, Sigma Y,err,Covariance XY,err,X,err,Y,err,Sigma X,err, Sigma Y,err,Covariance XY,err, ,Image Name,Background Image Name
-698.705,0.0937896,566.93,0.0670908,63.532,0.0018777,47.611,0.00155279,-128.867,5.57323,689.201,0.219309,565.15,0.140526,67.6364,0.312447,49.6918,0.457486,-10.8325,36.4186,,C:/Users/wln24624/Documents/SOFTWARE/VELA-CLARA-Software/Software/Apps/BYScIT/v2/model/testImages/im.raw,None
-854.929,4171.94,781.062,4171.94,45.5788,0.0136165,39.6385,1.39006e-034,0,59.4718,860.364,0.0673366,780.218,0.0363251,42.2658,0.137555,35.3614,0.139685,-37.1007,0.335676,,C:/Users/wln24624/Documents/SOFTWARE/VELA-CLARA-Software/Software/Apps/BYScIT/v2/model/testImages/binTest.bin,None
