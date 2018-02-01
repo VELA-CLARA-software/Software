@@ -1,0 +1,2 @@
+chek whe we set the masks etc!
+use averages for plotting / fitting

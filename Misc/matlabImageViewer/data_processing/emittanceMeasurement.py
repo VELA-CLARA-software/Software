@@ -52,6 +52,7 @@ class emittanceMeasurement:
         self.xCropMin = min(self.croppedArrayShape[:2])
         self.yCropMax = max(self.croppedArrayShape[2:])
         self.yCropMin = min(self.croppedArrayShape[2:])
+        print self.croppedArrayShape
         self.i = 0
         for i in range(0, self.numshots - 1):
             self.sigmaY = []
@@ -73,23 +74,27 @@ class emittanceMeasurement:
                 self.sigma = sum(slice_2d * (slice_2d - self.mean) ** 2) / self.n
                 self.sigmaY.append(self.sigma)
                 self.sigmaYAvg.append(numpy.std(slice_2d))
+                # self.sigmaYAvg.append(numpy.sqrt(numpy.mean(numpy.square(slice_2d))))
             for slice_2d in numpy.transpose(self.newdata)[i][self.xCropMin:self.xCropMax]:
                 self.n = len(slice_2d)
                 self.mean = sum(slice_2d) / self.n
                 self.sigma = sum(slice_2d * (slice_2d - self.mean) ** 2) / self.n
                 self.sigmaX.append(self.sigma)
                 self.sigmaXAvg.append(numpy.std(slice_2d))
+                # self.sigmaXAvg.append(numpy.sqrt(numpy.mean(numpy.square(slice_2d))))
             # the data is then arranged into 2-d arrays of the pixel value and the sigma value
             self.newarrayY = numpy.vstack((self.yy, self.sigmaY))
             self.newarrayX = numpy.vstack((self.xx, self.sigmaX))
-            # self.yOutput = [x for x in self.sigmaYAvg if abs(x) > numpy.std(self.sigmaYAvg) * 2]
-            # self.xOutput = [x for x in self.sigmaXAvg if abs(x) > numpy.std(self.sigmaXAvg) * 2]
-            self.yOutput = [x for x in self.sigmaYAvg if abs(x - numpy.mean(self.sigmaYAvg)) < numpy.std(self.sigmaYAvg) * 2]
-            self.xOutput = [x for x in self.sigmaXAvg if abs(x - numpy.mean(self.sigmaXAvg)) < numpy.std(self.sigmaXAvg) * 2]
-            # self.newarrayYAvg = numpy.vstack((range(len(self.yOutput)), self.yOutput))
-            self.newarrayYAvg = numpy.vstack((self.yy, self.sigmaYAvg))
-            # self.newarrayXAvg = numpy.vstack((range(len(self.xOutput)), self.xOutput))
-            self.newarrayXAvg = numpy.vstack((self.xx, self.sigmaXAvg))
+            self.yOutput = [x for x in self.sigmaYAvg if abs(x) > numpy.std(self.sigmaYAvg) * 1]
+            self.xOutput = [x for x in self.sigmaXAvg if abs(x) > numpy.std(self.sigmaXAvg) * 1]
+            # self.yOutput = [x for x in self.sigmaYAvg if abs(x - numpy.mean(self.sigmaYAvg)) < numpy.std(self.sigmaYAvg) * 1]
+            # self.xOutput = [x for x in self.sigmaXAvg if abs(x - numpy.mean(self.sigmaXAvg)) < numpy.std(self.sigmaXAvg) * 1]
+            self.newarrayYAvg = numpy.vstack((range(len(self.yOutput)), self.yOutput))
+            # self.newarrayYAvg = numpy.vstack((self.yy, self.sigmaYAvg))
+            # self.newarrayYAvg = numpy.vstack((self.yy, self.sigmaY))
+            self.newarrayXAvg = numpy.vstack((range(len(self.xOutput)), self.xOutput))
+            # self.newarrayXAvg = numpy.vstack((self.xx, self.sigmaXAvg))
+            # self.newarrayXAvg = numpy.vstack((self.xx, self.sigmaX))
             # we fit a gaussian - see scipy.io.curve_fit documentation for more info
             self.fitx, self.tmpx = curve_fit(self.gaussFit, self.newarrayXAvg[0], self.newarrayXAvg[1], p0=[max(self.newarrayXAvg[1]), self.newarrayXAvg[1][int(len(self.newarrayXAvg[0])/2)], numpy.mean(self.newarrayXAvg[1])])
             # self.fitx, self.tmpx = curve_fit(self.gaussFit, self.newarrayX[0], self.newarrayX[1], p0=[max(self.newarrayX[1]), self.newarrayX[1][int(len(self.newarrayX[0])/2)], numpy.mean(self.newarrayX[1])])
@@ -97,9 +102,10 @@ class emittanceMeasurement:
             # self.fity, self.tmpy = curve_fit(self.gaussFit, self.newarrayY[0], self.newarrayY[1], p0=[max(self.newarrayY[1]), self.newarrayY[1][int(len(self.newarrayY[0])/2)], numpy.mean(self.newarrayY[1])])
             self.yyy = numpy.transpose(numpy.transpose(numpy.transpose(self.newdata)[i][self.xCropMin:self.xCropMax])[self.yCropMin:self.yCropMax])
             self.xxx = numpy.transpose(self.newdata)[i][self.xCropMin:self.xCropMax]
-            self.fit2ddata = self.twoD_Gaussian((self.xxx, self.yyy), 1, max(self.newarrayXAvg[1]), max(self.newarrayYAvg[1]), self.newarrayXAvg[1][int(len(self.newarrayXAvg[0])/2)], self.newarrayYAvg[1][int(len(self.newarrayYAvg[0])/2)], 0, 0)
+            # self.chi_squared = numpy.sum(((self.gaussFit(self.newarrayXAvg[0], *self.fitx) - self.newarrayXAvg[1]) / self.xerror) ** 2)
+            # self.fit2ddata = self.twoD_Gaussian((self.xxx, self.yyy), 1, max(self.newarrayXAvg[1]), max(self.newarrayYAvg[1]), self.newarrayXAvg[1][int(len(self.newarrayXAvg[0])/2)], self.newarrayYAvg[1][int(len(self.newarrayYAvg[0])/2)], 0, 0)
             self.initial_guess = (2, 50, 50, 20, 30, 0, 10)
-            self.popt, self.pcov = curve_fit(self.twoD_Gaussian, (self.xxx, self.yyy), self.fit2ddata, p0=[1, max(self.newarrayXAvg[1]), max(self.newarrayYAvg[1]), self.newarrayXAvg[1][int(len(self.newarrayXAvg[0])/2)], self.newarrayYAvg[1][int(len(self.newarrayYAvg[0])/2)], 0, 0])
+            # self.popt, self.pcov = curve_fit(self.twoD_Gaussian, (self.xxx, self.yyy), self.fit2ddata, p0=[1, max(self.newarrayXAvg[1]), max(self.newarrayYAvg[1]), self.newarrayXAvg[1][int(len(self.newarrayXAvg[0])/2)], self.newarrayYAvg[1][int(len(self.newarrayYAvg[0])/2)], 0, 0])
             # print self.popt, "pop"
             # print self.fitx, "fitx"
             # print self.fity, "fity"
@@ -109,9 +115,9 @@ class emittanceMeasurement:
             # plt.show()
             self.fitxvec.append(self.fitx)
             self.fityvec.append(self.fity)
-            self.twodvec.append(self.popt)
+            # self.twodvec.append(self.popt)
         # the vectors of all the fits are returned to the main controller
-        self.data_fitted = self.twoD_Gaussian((self.x, self.y), *self.popt)
+        # self.data_fitted = self.twoD_Gaussian((self.x, self.y), *self.popt)
         # print self.data_fitted
         # self.fig, self.ax = plt.subplots(1, 1)
         # self.ax.hold(True)
@@ -188,7 +194,7 @@ class emittanceMeasurement:
             elif i == "kq":
                 self.quadK = self.currentFile[self.datastruct][i]
                 for j in self.quadK:
-                    self.quadKL.append( j * self.currentFile[self.datastruct]["Lq"] )
+                    self.quadKL.append( j )# * self.currentFile[self.datastruct]["Lq"] )
         # get the standard deviation of each gaussian fit in x and y for each shot and square it
         for i, j in sorted(self.xProjs.items()):
             self.sig = []
@@ -211,6 +217,16 @@ class emittanceMeasurement:
             self.ySigmaSquared.append(self.meanSigma)
             self.ySigmaRMS.append(self.rmsSigma)
             # self.ySigmaSquared.append(self.meanSigma)
+        del self.xSigmaSquared[-4:]
+        del self.xSigmas[-4:]
+        del self.xSigmaRMS[-4:]
+        del self.ySigmaSquared[-4:]
+        del self.ySigmas[-4:]
+        del self.ySigmaRMS[-4:]
+        if len(self.quadK)!=len(self.ySigmaSquared):
+            del self.quadK[-4:]
+        print len(self.quadK)
+        print len(self.ySigmaSquared)
         return self.quadK, self.xSigmaSquared, self.xSigmas, self.xSigmaRMS, self.ySigmaSquared, self.ySigmas, self.ySigmaRMS
 
     # fit a polynomial (x^2) to (sigma_x-y)^2 and extract fit parameters to calculate emittance and Twiss
@@ -235,10 +251,10 @@ class emittanceMeasurement:
         self.yemitax = self.yemitplotfig.add_subplot(111)
         # self.yemitax.plot(self.newarrayY[0], self.newarrayY[1])
         self.yemitax.set_xlabel('quad k')
-        self.yemitax.set_ylabel('(sigma y)^2 (pix)')
+        self.yemitax.set_ylabel('(sigma y)^2 (mm^2)')
         # self.xemitax.plot(self.newarrayX[0], self.newarrayX[1])
         self.xemitax.set_xlabel('quad k')
-        self.xemitax.set_ylabel('(sigma x)^2 (pix)')
+        self.xemitax.set_ylabel('(sigma x)^2 (mm^2)')
         # we fit a polynomial to the (sigma_x)^2 values as a function of quad strength
         self.x_new = numpy.linspace(self.newarrayX[0][0], self.newarrayX[0][-1], num=len(self.newarrayX[0]) * 10)
         self.fitpolyx = numpy.polynomial.polynomial.polyfit(self.newarrayX[0], self.newarrayX[1], 2, full=True)

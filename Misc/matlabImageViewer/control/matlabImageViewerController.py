@@ -65,6 +65,9 @@ class matlabImageViewerController(object):
         self.croppedArrayShape.append(self.xCropEnd)
         self.croppedArrayShape.append(self.yCropStart)
         self.croppedArrayShape.append(self.yCropEnd)
+        self.rect = plt.Rectangle((min(self.xCropStart, self.xCropEnd), min(self.yCropStart, self.yCropEnd)), numpy.abs(self.xCropStart - self.xCropEnd), numpy.abs(self.yCropStart - self.yCropEnd), fill = None)
+        self.startView.axis.add_patch(self.rect)
+        self.startView.canvas.draw()
         return self.xCropEnd, self.yCropEnd
 
     # individual files can be picked, or the user can load in a folder and read each file individually from within the GUI
@@ -88,6 +91,8 @@ class matlabImageViewerController(object):
         if self.currentFile[self.datastruct]:
             self.arrayshape = [self.currentFile[self.datastruct]['arrayy'], self.currentFile[self.datastruct]['arrayx'], self.currentFile[self.datastruct]['numshots']]
             self.croppedArrayShape = [0, self.currentFile[self.datastruct]['arrayx'], 0, self.currentFile[self.datastruct]['arrayy']]
+            if self.rect:
+                self.rect.remove()
         print self.croppedArrayShape
 
     # set flags for averaging of energy spread images
@@ -316,6 +321,14 @@ class matlabImageViewerController(object):
                 print i
             for i in self.twiss[1]:
                 print i
+            self.startView.emitxNorm.setText(str(self.twiss[0][1]))
+            self.startView.betax.setText(str(self.twiss[0][3]))
+            self.startView.alphax.setText(str(self.twiss[0][2]))
+            self.startView.gammax.setText(str(self.twiss[0][4]))
+            self.startView.emityNorm.setText(str(self.twiss[1][1]))
+            self.startView.betay.setText(str(self.twiss[1][3]))
+            self.startView.alphay.setText(str(self.twiss[1][2]))
+            self.startView.gammay.setText(str(self.twiss[1][4]))
         elif self.startView.measuretype == "energyspread":
             self.currentFile[self.datastruct]['pixelwidth'] = 31.2 * ( 1 * ( 10 ** -6 ) )
             self.energySpreadMeasurement.getEnergySpread(self.startView, self.currentFile, self.datastruct, self.imagedata, self.arrayshape, self.croppedArrayShape, self.index)

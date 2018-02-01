@@ -75,6 +75,84 @@ class customPVFunction(QtCore.QObject):
     def getValue(self):
         return float(self.general.getValue(self.pvid))
 
+class createNormalSelectionBox(QtGui.QWidget):
+
+    def __init__(self, parent=None, custom=False):
+        super(createNormalSelectionBox, self).__init__(parent=parent)
+        self.parent = parent
+        self.custom = custom
+        self.selectionBoxlayout = QtGui.QHBoxLayout()
+        self.combo1=signalTypeComboBox(0, self.parent)
+        self.combo2=signalElementComboBox(0, self.parent)
+        self.combo3=signalPVComboBox(0, self.parent)
+        self.combo4=signalRateComboBox(0, self.parent)
+        self.addButton = QtGui.QPushButton('Add Signal')
+        self.addButton.setFixedWidth(100)
+        if self.custom:
+            self.addButton.clicked.connect(self.parent.addTableRowCustom)
+        else:
+            self.addButton.clicked.connect(self.parent.addTableRow)
+        self.logTickBox = QtGui.QCheckBox('Log Scale')
+        self.combo1.addItems(self.parent.headings)
+        if not self.custom:
+            self.combo2.addItems(self.parent.magnetnames['Off']['Names'])
+            self.combo3.addItems(self.parent.magnetnames['Off']['PVs'].keys())
+        self.combo4.addItems([str(i) + ' Hz'for i in self.parent.frequencies])
+        self.combo1.setEditable(True)
+        self.combo1.lineEdit().setReadOnly(True);
+        self.combo1.lineEdit().setAlignment(QtCore.Qt.AlignCenter);
+        self.combo1.setMinimumWidth(80)
+        self.combo1.setMaximumWidth(100)
+        if not self.custom:
+            self.combo2.setEditable(True)
+            self.combo2.lineEdit().setReadOnly(True);
+            self.combo2.lineEdit().setAlignment(QtCore.Qt.AlignCenter);
+            self.combo2.setMinimumWidth(80)
+            self.combo2.setMaximumWidth(100)
+            self.combo3.setEditable(True)
+            self.combo3.lineEdit().setReadOnly(True);
+            self.combo3.lineEdit().setAlignment(QtCore.Qt.AlignCenter);
+            self.combo3.setMinimumWidth(80)
+            self.combo3.setMaximumWidth(100)
+        self.combo4.setEditable(True)
+        self.combo4.lineEdit().setReadOnly(True);
+        self.combo4.lineEdit().setAlignment(QtCore.Qt.AlignCenter);
+        self.combo4.setCurrentIndex(2)
+        self.combo4.setMinimumWidth(80)
+        self.combo4.setMaximumWidth(100)
+        self.pvtextedit = QtGui.QLineEdit()
+        self.pvtextedit.setMinimumWidth(240)
+        self.pvtextedit.setMaximumWidth(300)
+        self.colorbox = pg.ColorButton()
+        self.colorbox.setMinimumWidth(60)
+        self.colorbox.setMaximumWidth(80)
+        self.colorbox.setFlat(True)
+        if(self.parent.rowNumber < 0):
+            self.colorbox.setColor(self.parent.penColors[0])
+        else:
+            self.colorbox.setColor(self.parent.penColors[self.parent.rowNumber])
+        self.selectionBoxlayout.addWidget(self.combo1,2)
+        if self.custom:
+            self.selectionBoxlayout.addWidget(self.pvtextedit,5)
+        else:
+            self.selectionBoxlayout.addWidget(self.combo2,3)
+            self.selectionBoxlayout.addWidget(self.combo3,2)
+        self.selectionBoxlayout.addWidget(self.combo4,1)
+        self.selectionBoxlayout.addWidget(self.logTickBox,1)
+        self.selectionBoxlayout.addWidget(self.colorbox,1)
+        self.selectionBoxlayout.addWidget(self.addButton,1)
+        self.setLayout(self.selectionBoxlayout)
+        self.setMaximumHeight(100)
+
+    def resetHeadings(self):
+        self.combo1.clear()
+        self.combo1.addItems(self.parent.headings)
+        if not self.custom:
+            self.combo2.clear()
+            self.combo2.addItems(self.parent.magnetnames['Off']['Names'])
+            self.combo3.clear()
+            self.combo3.addItems(self.parent.magnetnames['Off']['PVs'].keys())
+
 class signalTable(QtGui.QWidget):
 
     firstColumnComboBoxChanged = QtCore.pyqtSignal('PyQt_PyObject', 'PyQt_PyObject')
@@ -104,8 +182,8 @@ class signalTable(QtGui.QWidget):
             self.penColors[i] = colours.Qtableau20[2*i % 20]
         ''' create selectionBox '''
         self.customPVInput = False
-        self.normalSelectionBox = self.createNormalSelectionBox()
-        self.customSelectionBox = self.createCustomSelectionBox()
+        self.normalSelectionBox = createNormalSelectionBox(parent=self)
+        self.customSelectionBox = createNormalSelectionBox(parent=self, custom=True)
         ''' create tableWidget and pushButton '''
         vBoxlayoutParameters = QtGui.QVBoxLayout()
         vBoxlayoutParameters.addWidget(self.normalSelectionBox,1)
@@ -119,6 +197,20 @@ class signalTable(QtGui.QWidget):
         self.stripTool.signalAdded.connect(self.updateColourBox)
         self.pvids = []
 
+    def reloadSettings(self):
+        self.stream = open('settings.yaml', 'r')
+        self.settings = yaml.load(self.stream)
+        self.stream.close()
+        self.magnetnames = self.settings['magnets']
+        self.headings = self.settings['headings']
+        self.frequencies = self.settings['frequencies']
+        self.firstColumnComboBoxChanged.disconnect(self.changeSecondCombo)
+        self.secondColumnComboBoxChanged.disconnect(self.changeThirdComboFromSecond)
+        self.normalSelectionBox.resetHeadings()
+        self.customSelectionBox.resetHeadings()
+        self.firstColumnComboBoxChanged.connect(self.changeSecondCombo)
+        self.secondColumnComboBoxChanged.connect(self.changeThirdComboFromSecond)
+
     def addRow(self, name, functionForm, functionArgument, freq, colourpickercolour, logScale=False, **kwargs):
         if functionForm == 'custom':
             pvtype="DBR_DOUBLE"
@@ -127,7 +219,7 @@ class signalTable(QtGui.QWidget):
                 self.pvids.append(pvid)
                 testFunction = customPVFunction(parent=self, pvid=pvid, GeneralController=self.general).getValue
                 time.sleep(0.01)
-                testFunction.getValue()
+                testFunction()
             else:
                 print('Is this a valid PV? - ', functionArgument)
         # elif functionForm[0] == '':
@@ -144,116 +236,17 @@ class signalTable(QtGui.QWidget):
 
     def updateColourBox(self):
         self.rowNumber = self.rowNumber + 1
-        self.normalcolorbox.setColor(self.penColors[self.rowNumber])
-        self.customcolorbox.setColor(self.penColors[self.rowNumber])
-
-    def createNormalSelectionBox(self):
-        self.selectionBoxlayout = QtGui.QHBoxLayout()
-        normalwidget = QtGui.QWidget()
-        combo1=signalTypeComboBox(0, self)
-        combo2=signalElementComboBox(0, self)
-        combo3=signalPVComboBox(0, self)
-        combo4=signalRateComboBox(0, self)
-        addButton = QtGui.QPushButton('Add Signal')
-        addButton.setFixedWidth(100)
-        addButton.clicked.connect(self.addTableRow)
-        combo1.addItems(self.headings)
-        combo2.addItems(self.magnetnames['Off']['Names'])
-        combo3.addItems(self.magnetnames['Off']['PVs'].keys())
-        combo4.addItems([str(i) + ' Hz'for i in self.frequencies])
-        combo1.setEditable(True)
-        combo1.lineEdit().setReadOnly(True);
-        combo1.lineEdit().setAlignment(QtCore.Qt.AlignCenter);
-        combo1.setMinimumWidth(80)
-        combo1.setMaximumWidth(100)
-        combo2.setEditable(True)
-        combo2.lineEdit().setReadOnly(True);
-        combo2.lineEdit().setAlignment(QtCore.Qt.AlignCenter);
-        combo2.setMinimumWidth(80)
-        combo2.setMaximumWidth(100)
-        combo3.setEditable(True)
-        combo3.lineEdit().setReadOnly(True);
-        combo3.lineEdit().setAlignment(QtCore.Qt.AlignCenter);
-        combo3.setMinimumWidth(80)
-        combo3.setMaximumWidth(100)
-        combo4.setEditable(True)
-        combo4.lineEdit().setReadOnly(True);
-        combo4.lineEdit().setAlignment(QtCore.Qt.AlignCenter);
-        combo4.setCurrentIndex(2)
-        combo4.setMinimumWidth(80)
-        combo4.setMaximumWidth(100)
-        pvtextedit = QtGui.QLineEdit()
-        pvtextedit.setMinimumWidth(240)
-        pvtextedit.setMaximumWidth(300)
-        self.normalcolorbox = pg.ColorButton()
-        self.normalcolorbox.setMinimumWidth(60)
-        self.normalcolorbox.setMaximumWidth(80)
-        self.normalcolorbox.setFlat(True)
-        if(self.rowNumber < 0):
-            self.normalcolorbox.setColor(self.penColors[0])
-        else:
-            self.normalcolorbox.setColor(self.penColors[self.rowNumber])
-        self.selectionBoxlayout.addWidget(combo1,2)
-        self.selectionBoxlayout.addWidget(combo2,3)
-        self.selectionBoxlayout.addWidget(combo3,2)
-        self.selectionBoxlayout.addWidget(combo4,1)
-        self.selectionBoxlayout.addWidget(self.normalcolorbox,1)
-        self.selectionBoxlayout.addWidget(addButton,1)
-        normalwidget.setLayout(self.selectionBoxlayout)
-        normalwidget.setMaximumHeight(100)
-        return normalwidget
-
-    def createCustomSelectionBox(self):
-        self.pvEditlayout = QtGui.QHBoxLayout()
-        customwidget = QtGui.QWidget()
-        combo1=signalTypeComboBox(0, self)
-        combo4=signalRateComboBox(0, self)
-        addButton = QtGui.QPushButton('Add Signal')
-        addButton.setFixedWidth(100)
-        addButton.clicked.connect(self.addTableRowCustom)
-        self.logTickBox = QtGui.QCheckBox('Log Scale')
-        combo1.addItems(self.headings)
-        combo4.addItems([str(i) + ' Hz'for i in self.frequencies])
-        combo1.setEditable(True)
-        combo1.lineEdit().setReadOnly(True);
-        combo1.lineEdit().setAlignment(QtCore.Qt.AlignCenter);
-        combo1.setMinimumWidth(80)
-        combo1.setMaximumWidth(100)
-        combo4.setEditable(True)
-        combo4.lineEdit().setReadOnly(True);
-        combo4.lineEdit().setAlignment(QtCore.Qt.AlignCenter);
-        combo4.setCurrentIndex(2)
-        combo4.setMinimumWidth(80)
-        combo4.setMaximumWidth(100)
-        pvtextedit = QtGui.QLineEdit()
-        pvtextedit.setMinimumWidth(230)
-        pvtextedit.setMaximumWidth(290)
-        self.customcolorbox = pg.ColorButton()
-        self.customcolorbox.setMinimumWidth(60)
-        self.customcolorbox.setMaximumWidth(80)
-        self.customcolorbox.setFlat(True)
-        if(self.rowNumber < 0):
-            self.customcolorbox.setColor(self.penColors[0])
-        else:
-            self.customcolorbox.setColor(self.penColors[self.rowNumber])
-        self.pvEditlayout.addWidget(combo1,2)
-        self.pvEditlayout.addWidget(pvtextedit,5)
-        self.pvEditlayout.addWidget(combo4,1)
-        self.pvEditlayout.addWidget(self.logTickBox,1)
-        self.pvEditlayout.addWidget(self.customcolorbox,1)
-        self.pvEditlayout.addWidget(addButton,1)
-        customwidget.setLayout(self.pvEditlayout)
-        customwidget.setMaximumHeight(100)
-        return customwidget
+        self.normalSelectionBox.colorbox.setColor(self.penColors[self.rowNumber])
+        self.customSelectionBox.colorbox.setColor(self.penColors[self.rowNumber])
 
     def addTableRow(self):
         row = self.rowNumber
-        combo1index = str(self.normalSelectionBox.children()[1].currentText())
-        combo1text = str(self.normalSelectionBox.children()[1].currentText())
-        combo2index = self.normalSelectionBox.children()[2].currentIndex()
-        combo3index = self.normalSelectionBox.children()[3].currentIndex()
-        combo3text = str(self.normalSelectionBox.children()[3].currentText())
-        combo4index = self.normalSelectionBox.children()[4].currentIndex()
+        combo1index = str(self.normalSelectionBox.combo1.currentText())
+        combo1text = str(self.normalSelectionBox.combo1.currentText())
+        combo2index = self.normalSelectionBox.combo2.currentIndex()
+        combo3index = self.normalSelectionBox.combo3.currentIndex()
+        combo3text = str(self.normalSelectionBox.combo3.currentText())
+        combo4index = self.normalSelectionBox.combo4.currentIndex()
         if isinstance(self.magnetnames[combo1text]['Names'][combo2index], (tuple, list, set)):
             functionArgument = self.magnetnames[combo1text]['Names'][combo2index][0]
         else:
@@ -261,33 +254,34 @@ class signalTable(QtGui.QWidget):
         name = functionArgument+'.'+self.magnetnames[combo1index]['PVs'].keys()[combo3index]
         freq = int(self.frequencies[combo4index])
         functionForm = self.magnetnames[combo1index]['PVs'][combo3text]
-        colourpickercolour = self.normalSelectionBox.children()[5]._color
+        colourpickercolour = self.normalSelectionBox.colorbox._color
+        logScale = self.normalSelectionBox.logTickBox.isChecked()
         if combo1index > 0:
-            self.addRow(name, functionForm, functionArgument, freq, colourpickercolour)
+            self.addRow(name, functionForm, functionArgument, freq, colourpickercolour, logScale=logScale)
 
     def addTableRowCustom(self):
         row = self.rowNumber
-        combo3index = self.pvEditlayout.itemAt(1).widget().currentIndex()
-        name = str(self.pvEditlayout.itemAt(0).widget().displayText())
-        freq = int(self.frequencies[combo3index])
+        combo4index = self.customSelectionBox.selectionBoxlayout.combo4.currentIndex()
+        name = str(self.customSelectionBox.selectionBoxlayout.combo1.displayText())
+        freq = int(self.frequencies[combo4index])
         functionForm = 'custom'
-        colourpickercolour = self.customcolorbox._color
-        logScale = self.logTickBox.isChecked()
+        colourpickercolour = self.customSelectionBox.colorbox._color
+        logScale = self.customSelectionBox.logTickBox.isChecked()
         self.addRow(string.replace(name,"_","$"), functionForm, name, freq, colourpickercolour, logScale=logScale)
 
     def changeSecondCombo(self, idnumber, ind):
         print('ind = ', ind)
         if ind == 'Custom':
-            self.pvEditlayout.itemAt(0).widget().setCurrentIndex(self.selectionBoxlayout.itemAt(0).widget().currentIndex())
+            self.customSelectionBox.combo1.setCurrentIndex(self.normalSelectionBox.combo1.currentIndex())
             self.customPVInput = True
             self.normalSelectionBox.hide()
             self.customSelectionBox.show()
         else:
             if self.normalSelectionBox.isVisible():
-                self.pvEditlayout.itemAt(0).widget().setCurrentIndex(self.selectionBoxlayout.itemAt(0).widget().currentIndex())
+                self.customSelectionBox.combo1.setCurrentIndex(self.normalSelectionBox.combo1.currentIndex())
             else:
-                self.selectionBoxlayout.itemAt(0).widget().setCurrentIndex(self.pvEditlayout.itemAt(0).widget().currentIndex())
-            combo2 = self.normalSelectionBox.children()[2]
+                self.normalSelectionBox.combo1.setCurrentIndex(self.customSelectionBox.combo1.currentIndex())
+            combo2 = self.normalSelectionBox.combo2
             self.customPVInput = False
             self.normalSelectionBox.show()
             self.customSelectionBox.hide()
@@ -301,9 +295,9 @@ class signalTable(QtGui.QWidget):
 
     def changeThirdComboFromFirst(self, idnumber, ind):
         if not self.customPVInput or not ind == 'Custom':
-            combo1 = self.normalSelectionBox.children()[1]
-            combo2 = self.normalSelectionBox.children()[2]
-            combo3 = self.normalSelectionBox.children()[3]
+            combo1 = self.normalSelectionBox.combo1
+            combo2 = self.normalSelectionBox.combo2
+            combo3 = self.normalSelectionBox.combo3
             if combo3 != None:
                 signalType = str(combo1.currentText())
                 signalName = str(combo2.currentText())
@@ -314,8 +308,8 @@ class signalTable(QtGui.QWidget):
 
     def changeThirdComboFromSecond(self, idnumber, ind):
         if not self.customPVInput:
-            combo3 = self.normalSelectionBox.children()[3]
-            combo1 = self.normalSelectionBox.children()[1]
+            combo3 = self.normalSelectionBox.combo3
+            combo1 = self.normalSelectionBox.combo1
             if combo3 != None:
                 signalType = combo1.currentText()
                 combo3.clear()

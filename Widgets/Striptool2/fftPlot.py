@@ -77,13 +77,12 @@ class fftPlot(QtGui.QWidget):
         self.plotThread.timeout.connect(self.plotUpdate)
 
     def plotUpdate(self):
-        if self.isVisible():
+        if self.isVisible() and not self.paused:
             for curve in self.fftPlotCurves.values():
                 curve.update()
 
     def pausePlotting(self, value=True):
         self.paused = value
-        self.plotWidget.togglePause(self.paused)
 
     def addCurve(self, name):
         name = str(name)
@@ -121,7 +120,6 @@ class fftPlotCurve(QtCore.QObject):
         self.timer = records['timer']
         # print 'self.timer = ', self.timer
         self.doingPlot = False
-        self.paused = False
         self.paused = False
         self.decimateScale = 1000
         self.plot = self.fftplot.plot()

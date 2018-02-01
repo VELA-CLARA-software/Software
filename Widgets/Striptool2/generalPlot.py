@@ -1,8 +1,11 @@
-import time, signal
-import PyQt4.QtCore
-import PyQt4.QtGui
+import time, signal, os, copy
+import xlsxwriter
+import datetime as dt
+from PyQt4 import QtCore, QtGui
+# import PyQt4.QtGui
 import logging
-from .signalRecord import *
+import tables as tables
+import Software.Widgets.Striptool2.signalRecord as signalRecord
 import Software.Widgets.Striptool2.scrollingPlot as scrollingplot
 import Software.Widgets.Striptool2.scatterPlot as scatterplot
 import Software.Widgets.Striptool2.fftPlot as fftplot
@@ -10,6 +13,10 @@ import Software.Widgets.Striptool2.histogramPlot as histogramplot
 import Software.Widgets.Striptool2.plotLegend as plotlegend
 import numpy as np
 logger = logging.getLogger(__name__)
+
+class recordData(tables.IsDescription):
+    time  = tables.Float64Col()     # double (double-precision)
+    value  = tables.Float64Col()
 
 signal.signal(signal.SIGINT, signal.SIG_DFL)
 
@@ -39,13 +46,13 @@ class generalPlot(QtGui.QWidget):
         ''' Create the signalRecord object '''
         self.records = {}
 
-    def start(self, timer=1000):
+    def start(self):
         for name in self.records:
             self.records[name]['record'].start()
 
     def addSignal(self, name='', pen='r', timer=1, maxlength=pow(2,16), function=None, args=[], **kwargs):
         if not name in self.records:
-            signalrecord = signalRecord(records=self.records, name=name, pen=pen, timer=timer, maxlength=maxlength, function=function, args=args, **kwargs)
+            signalrecord = signalRecord.signalRecord(records=self.records, name=name, pen=pen, timer=timer, maxlength=maxlength, function=function, args=args, **kwargs)
             self.records[name]['record'] = signalrecord
             self.records[name]['parent'] = self
             self.signalAdded.emit(str(name))
@@ -74,20 +81,102 @@ class generalPlot(QtGui.QWidget):
         # return [(str(time.strftime('%Y/%m/%d', time.localtime(x[0]))),str(datetime.datetime.fromtimestamp(x[0]).strftime('%H:%M:%S.%f')),x[1]) for x in self.records[name]['data']]
         return copy.copy(self.records[name]['data'])
 
-    def saveAllCurves(self, saveFileName=False):
+    def saveAllData(self,saveFileName=False):
         if not saveFileName:
-            saveFileName = str(QtGui.QFileDialog.getSaveFileName(self, 'Save Arrays', '', filter="CSV files (*.csv);; Binary Files (*.bin)", selectedFilter="CSV files (*.csv)"))
-        if not saveFileName == None:
-            for name in self.records:
-                if self.records[name]['parent'] == self:
-                    filename, file_extension = sys.path.splitext(saveFileName)
-                    saveFileName2 = filename + '_' + self.records[name]['name'] + file_extension
-                    self.saveCurve(self.records[name]['name'],saveFileName2)
+            today = dt.datetime.today()
+            datetuple = today.timetuple()
+            year, month, day, hour, minute = datetuple[0:5]
+            month = str(month) if month >= 10 else '0' + str(month)
+            day = str(day) if day >= 10 else '0' + str(day)
+            hour = str(hour) if hour >= 10 else '0' + str(hour)
+            minute = str(minute) if minute >= 10 else '0' + str(minute)
+            suggestedfilename = str(year)+'_'+str(month)+'_'+str(day)+'_'+str(hour)+str(minute)+'_striptool_data'
+            saveFileName = str(QtGui.QFileDialog.getSaveFileName(self, 'Save Data', suggestedfilename,
+            filter="HDF5 files (*.h5);;XLSX files (*.xlsx);;CSV files (*.csv);; Binary Files (*.bin)", selectedFilter="HDF5 files (*.h5)"))
+        _, file_extension = os.path.splitext(saveFileName)
+        if file_extension == '.csv' or file_extension == '.bin':
+            self.saveDataCSVBin(saveFileName)
+        if file_extension == '.xlsx':
+            self.saveDataXLSX(saveFileName)
+        else:
+            if not file_extension in ['.h5','.hdf5']:
+                file_extension = '.h5'
+                saveFileName = saveFileName+file_extension
+            self.saveDataH5(saveFileName)
 
-    def saveCurve(self, name, saveFileName=None):
-        if saveFileName == None:
-            saveFileName = str(QtGui.QFileDialog.getSaveFileName(self, 'Save Array ['+name+']', name, filter="CSV files (*.csv);; Binary Files (*.bin)", selectedFilter="CSV files (*.csv)"))
-        filename, file_extension = sys.path.splitext(saveFileName)
+    def saveCurve(self, name):
+        name = str(name)
+        today = dt.datetime.today()
+        datetuple = today.timetuple()
+        year, month, day, hour, minute = datetuple[0:5]
+        month = str(month) if month >= 10 else '0' + str(month)
+        day = str(day) if day >= 10 else '0' + str(day)
+        hour = str(hour) if hour >= 10 else '0' + str(hour)
+        minute = str(minute) if minute >= 10 else '0' + str(minute)
+        suggestedfilename = str(year)+'_'+str(month)+'_'+str(day)+'_'+str(hour)+str(minute)+'_'+name
+        saveFileName = str(QtGui.QFileDialog.getSaveFileName(self, 'Save Data', suggestedfilename,
+        filter="HDF5 files (*.h5);;XLSX files (*.xlsx);;CSV files (*.csv);; Binary Files (*.bin)", selectedFilter="HDF5 files (*.h5)"))
+        _, file_extension = os.path.splitext(saveFileName)
+        if file_extension == '.csv' or file_extension == '.bin':
+            print 'file_extension = ', file_extension
+            self.saveCurveCSVBin(saveFileName, name)
+        elif file_extension == '.xlsx':
+            self.saveDataXLSX(saveFileName, name)
+        else:
+            if not file_extension in ['.h5','.hdf5']:
+                file_extension = '.h5'
+                saveFileName = saveFileName+file_extension
+            self.saveDataH5(saveFileName, name)
+
+    def saveDataH5(self, saveFileName, name=False):
+        self.h5file = tables.open_file(saveFileName, mode = "w", title = saveFileName)
+        self.rootnode = self.h5file.get_node('/')
+        self.group = self.h5file.create_group('/', 'data', 'Saved Data')
+        if not name:
+            records = self.records
+        else:
+            records = [name]
+        for name in records:
+            saveData = self.formatCurveData(name)
+            table = self.h5file.create_table(self.group, name, recordData, name)
+            row = table.row
+            for x in saveData:
+                row['time'], row['value'] = x
+                row.append()
+        self.h5file.close()
+
+    def saveDataXLSX(self, saveFileName, name=False):
+        workbook = xlsxwriter.Workbook(saveFileName)
+        date_format = workbook.add_format({'num_format': 'dd/mm/yyyy'})
+        time_format = workbook.add_format({'num_format': 'hh:mm:ss.000'})
+        if not name:
+            records = self.records
+        else:
+            records = [name]
+        for name in records:
+            saveData = self.formatCurveData(name)
+            worksheet = workbook.add_worksheet(name)
+            # Start from the first cell. Rows and columns are zero indexed.
+            row = 0
+            col = 0
+            # Iterate over the data and write it out row by row.
+            for time, val in (saveData):
+                datetimetime = dt.datetime.fromtimestamp(time)
+                worksheet.write_datetime(row, col, datetimetime, date_format)
+                worksheet.write_datetime(row, col + 1, datetimetime, time_format)
+                worksheet.write(row, col + 2, val)
+                row += 1
+        workbook.close()
+
+    def saveDataCSVBin(self, saveFileName):
+        for name in self.records:
+            if self.records[name]['parent'] == self:
+                filename, file_extension = os.path.splitext(saveFileName)
+                saveFileName2 = filename + '_' + self.records[name]['name'] + file_extension
+                self.saveCurveCSVBin(saveFileName2, self.records[name]['name'])
+
+    def saveCurveCSVBin(self, saveFileName, name=False):
+        filename, file_extension = os.path.splitext(saveFileName)
         saveData = self.formatCurveData(name)
         if file_extension == '.csv':
             # fmt='%s,%s,%.18e'
@@ -127,9 +216,20 @@ class generalPlot(QtGui.QWidget):
 
     def legend(self):
         self.legend = plotlegend.plotLegend(generalplot=self)
-        self.legend.fftselectionchange.connect(self.fftselectionchange)
-        self.legend.histogramplotselectionchange.connect(self.histogramplotselectionchange)
+        self.legend.tree.fftselectionchange.connect(self.fftselectionchange)
+        self.legend.tree.histogramplotselectionchange.connect(self.histogramplotselectionchange)
+        self.legend.tree.savecurve.connect(self.saveCurve)
+        self.legend.pausePlottingSignal.connect(self.pausePlotting)
         return self.legend
+
+    def pausePlotting(self, value):
+        if hasattr(self,'histogramplot'):
+            self.histogramplot.pausePlotting(value)
+        if hasattr(self,'fftplot'):
+            self.fftplot.pausePlotting(value)
+        if hasattr(self,'scrollingplot'):
+            self.scrollingplot.pausePlotting(value)
+
 
     def createAxis(self, *args, **kwargs):
         if hasattr(self,'scrollingplot'):

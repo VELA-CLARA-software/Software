@@ -60,11 +60,8 @@ class striptool_Demo(QMainWindow):
         fftPlotAction.triggered.connect(self.addFFTPlot)
 
         self.setWindowTitle("striptool_Demo")
-        self.statusBar = QStatusBar()
-        self.setStatusBar(self.statusBar)
         menubar = self.menuBar()
         fileMenu = menubar.addMenu('&File')
-        fileMenu.addAction(exitAction)
 
         ''' Initiate logger (requires loggerWidget - comment out if not available)'''
         # self.logwidget1 = lw.loggerWidget([logger,striptool.logger])
@@ -83,8 +80,19 @@ class striptool_Demo(QMainWindow):
         self.legend = self.generalplot.legend()
         self.signaltable = signaltable.signalTable(parent=self.generalplot, VELAMagnetController=Vmagnets, CLARAMagnetController=Cmagnets, BPMController=bpms, GeneralController=general)
 
+        reloadSettingsAction = QAction('Reload Settings', self)
+        reloadSettingsAction.setStatusTip('Reload Settings YAML File')
+        reloadSettingsAction.triggered.connect(self.signaltable.reloadSettings)
+        fileMenu.addAction(reloadSettingsAction)
+
+        saveAllDataAction = QAction('Save Data', self)
+        saveAllDataAction.setStatusTip('Save All Data')
+        saveAllDataAction.triggered.connect(self.generalplot.saveAllData)
+        fileMenu.addAction(saveAllDataAction)
+        fileMenu.addAction(exitAction)
+
         self.enabledPlotNames = []
-        self.legend.legendselectionchanged.connect(self.addSignalToFFTHistogramPlots)
+        self.legend.tree.legendselectionchanged.connect(self.addSignalToFFTHistogramPlots)
 
         ''' Here we create a DockArea layout widget, and put the 4 types of plot into a grid layout
             We place all of it in a modified QSPlitter (with Handles)
@@ -180,8 +188,8 @@ class striptool_Demo(QMainWindow):
             self.histogramplot.selectionChange(name, True)
         for name in self.enabledPlotNames:
             if name not in names:
-                self.fftplot.selectionChange(name, self.legend.isFFTEnabled(name))
-                self.histogramplot.selectionChange(name, self.legend.isHistogramEnabled(name))
+                self.fftplot.selectionChange(name, self.legend.tree.isFFTEnabled(name))
+                self.histogramplot.selectionChange(name, self.legend.tree.isHistogramEnabled(name))
 
     def pausePlots(self, parentwidget):
         widgets = parentwidget.findChildren((striptool.stripPlot))
