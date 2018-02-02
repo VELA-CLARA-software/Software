@@ -13,7 +13,7 @@ import http.server
 import ssl
 import re
 import sys, os
-os.environ["EPICS_CA_ADDR_LIST"] = "192.168.83.255"  # CLARA EPICS gateway
+# os.environ["EPICS_CA_ADDR_LIST"] = "192.168.83.255"  # CLARA EPICS gateway
 if os.name == 'posix':
     # Help pyepics find the right library
     os.environ['PYEPICS_LIBCA'] = '/home/opt/EPICS/base/lib/linux-x86_64/libca.so'
