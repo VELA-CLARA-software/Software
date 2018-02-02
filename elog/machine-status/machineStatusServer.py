@@ -1,4 +1,4 @@
-#!python
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 # encoding=utf8
 app_name = 'CLARA Machine Status Server'
@@ -200,6 +200,7 @@ class MyHandler(http.server.BaseHTTPRequestHandler):
 try:
     port = 27643
     server = StoppableServer(('', port), MyHandler)
+
     certfile = '/etc/pki/tls/certs/apsv2-dl-ac-uk.crt'
     keyfile = '/home/bjs54/apsv2-dl-ac-uk.key'
     try:
@@ -209,7 +210,7 @@ try:
         protocol = 'http'
     print('Started server: try {protocol}://localhost:{port}/'.format(**locals()))
     server.serve_forever()  # until /restartServer requested
-    sleep(2)
+    del(server)
 
     # Restart the script
     args = sys.argv[:]
