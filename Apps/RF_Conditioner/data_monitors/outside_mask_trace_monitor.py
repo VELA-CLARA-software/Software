@@ -102,26 +102,34 @@ class outside_mask_trace_monitor(monitor):
 		self.cooldown_timer.start(monitor.config.breakdown_config['OUTSIDE_MASK_COOLDOWN_TIME'])
 
 	def collect_data(self):
+		print('collecting data')
 		x = []
 		for part in self.data_to_collect:
+			print part
 			if monitor.llrf_control.isOutsideMaskDataFinishedCollecting(part):
-
+				print('getting data')
 				new = monitor.llrf_control.getOutsideMaskDataPart(part)
+				print('got data' )
+
 				new.update({ 'vacuum' : monitor.data.values[dat.vac_level] })
 				new.update({ 'DC' : monitor.data.values[dat.DC_level] })
 				new.update({ 'SOL' : monitor.data.values[dat.sol_value] })
 
+				print'dumping'
 				if self.is_forward(new['trace_name']):
 					self.forward_power_data.append(new)
 					self.logger.dump_forward(new, len(self.forward_power_data))
+					print'f dumped'
 				elif self.is_reverse(new['trace_name']):
 					self.reverse_power_data.append(new)
 					self.logger.dump_reverse(new, len(self.reverse_power_data))
+					print'r dumped'
 				elif self.is_probe(new['trace_name']):
 					self.probe_power_data.append(new)
 					self.logger.dump_probe(new, len(self.probe_power_data))
 				monitor.logger.message('Saved outside_mask_data part = ' + str(part), True)
 			else:
+				print('data not ready yet')
 				x.append(part)
 				pass
 

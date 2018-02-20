@@ -81,17 +81,18 @@ class main_controller(controller_base):
         self.continue_ramp()
         # enforced paus
         time.sleep(1)
-        # start trace averaging, power should on by now
+        # start trace averaging, power should be on by now
         controller_base.llrf_handler.start_trace_average()
-        if controller_base.llrfObj[0].kly_fwd_power_max < controller_base.config.llrf_config[
-            'KLY_PWR_FOR_ACTIVE_PULSE']:
-            controller_base.logger.message('WARNING Expecting RF power by now, mean power is ' + str(
-                controller_base.llrfObj[0].kly_fwd_power_max),True)
+        if controller_base.llrfObj[0].kly_fwd_power_max < controller_base.config.llrf_config['KLY_PWR_FOR_ACTIVE_PULSE']:
+            controller_base.logger.message('WARNING Expecting RF power by now, mean power is ' + \
+                                           str(controller_base.llrfObj[0].kly_fwd_power_max),True)
         controller_base.llrf_handler.set_global_check_mask(True)
 
+        # this loop hangs the application if no RF power...
         while controller_base.llrf_handler.mask_set == False:
             controller_base.llrf_handler.set_mask()
             self.set_last_mask_epoch()
+
         # print some values
         controller_base.llrf_handler.get_lo_masks_max()
         controller_base.llrf_handler.get_hi_masks_max()

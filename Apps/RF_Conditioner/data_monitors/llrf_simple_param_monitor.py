@@ -55,7 +55,6 @@ class llrf_simple_param_monitor(monitor):
         else:
             monitor.data.values[dat.llrf_trigger] = True
 
-
     def get_mean_power(self,key,trace):
         if  self.old_mean_values[trace] == \
             monitor.llrfObj[0].trace_data[trace].traces[monitor.llrfObj[0].trace_data[trace].latest_trace_index].mean:

@@ -2,7 +2,7 @@
 
 from VELA_CLARA_enums import MACHINE_AREA
 import VELA_CLARA_LLRF_Control
-from VELA_CLARA_LLRF_Control import LLRF_TYPE
+from VELA_CLARA_LLRF_Control import LLRF_SCAN
 from base.base import base
 
 
@@ -149,10 +149,20 @@ class llrf_handler_base(base):
 
 
 	def start_trace_monitoring(self,trace_to_save):
+		base.logger.header(self.my_name + ' setting all SCAN to passive', True)
+		base.llrf_control.setAllSCANToPassive()
+
 		base.logger.header(self.my_name + ' start_trace_monitoring', True)
 		if "error" not in trace_to_save:
 			for trace in trace_to_save:
-				print 'trace = ' + trace
+
+				a = base.llrf_control.setTraceSCAN(trace, LLRF_SCAN.ZERO_POINT_ONE) # SHOULD BE INPUIT Parameter
+
+				if a:
+					base.logger.message(trace + ' SCAN set to LLRF_SCAN.ZERO_POINT_ONE', True) # SHOULD BE INPUIT Parameter
+				else:
+					base.logger.message(' ERROR trying to set LLRF_SCAN.ZERO_POINT_ONE SCAN for ' + trace, True)
+
 				a = base.llrf_control.startTraceMonitoring(trace)
 				base.llrf_control.setNumBufferTraces(trace, base.config.llrf_config['NUM_BUFFER_TRACES'])
 				if a:

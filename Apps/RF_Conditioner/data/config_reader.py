@@ -173,13 +173,13 @@ class config_reader(object):
         #     print k, v
         return r
     # neater but not type for values
-    def get_vac_parameter_NO_TYPE(self):
-        vac_keys = ['VAC_PV','VAC_SPIKE_DELTA','VAC_DECAY_MODE','VAC_SPIKE_DECAY_LEVEL','VAC_SPIKE_DECAY_LEVEL'
-                    ,'VAC_SPIKE_DECAY_TIME','VAC_NUM_SAMPLES_TO_AVERAGE']
-        vac_param = self.get_part_dict(vac_keys)
-        for k, v in vac_param.iteritems():
-            print k, v
-        return config_reader.vac_param
+    # def get_vac_parameter_NO_TYPE(self):
+    #     vac_keys = ['VAC_PV','VAC_SPIKE_DELTA','VAC_DECAY_MODE','VAC_SPIKE_DECAY_LEVEL','VAC_SPIKE_DECAY_LEVEL'
+    #                 ,'VAC_SPIKE_DECAY_TIME','VAC_NUM_SAMPLES_TO_AVERAGE']
+    #     vac_param = self.get_part_dict(vac_keys)
+    #     for k, v in vac_param.iteritems():
+    #         print k, v
+    #     return config_reader.vac_param
 
     def vac_parameter(self):
         string_param = ['VAC_PV', 'VAC_DECAY_MODE']
@@ -277,30 +277,36 @@ class config_reader(object):
 
         # we do some more manual processing here:
         #cancer
-        if config_reader.breakdown_config['CRP_AUTO_SET']:
-            pass
-        else:
-            if config_reader.breakdown_config['CRP_MASK_SET_TYPE'] == 'INDEX':
-                config_reader.breakdown_config['CRP_S1'] = int(config_reader.breakdown_config['CRP_S1'])
-                config_reader.breakdown_config['CRP_S2'] = int(config_reader.breakdown_config['CRP_S4'])
-                config_reader.breakdown_config['CRP_S3'] = int(config_reader.breakdown_config['CRP_S4'])
-                config_reader.breakdown_config['CRP_S4'] = int(config_reader.breakdown_config['CRP_S4'])
-        if config_reader.breakdown_config['CFP_AUTO_SET']:
-            pass
-        else:
-            if config_reader.breakdown_config['CFP_MASK_SET_TYPE'] == 'INDEX':
-                config_reader.breakdown_config['CFP_S1'] = int(config_reader.breakdown_config['CFP_S1'])
-                config_reader.breakdown_config['CFP_S2'] = int(config_reader.breakdown_config['CFP_S4'])
-                config_reader.breakdown_config['CFP_S3'] = int(config_reader.breakdown_config['CFP_S4'])
-                config_reader.breakdown_config['CFP_S4'] = int(config_reader.breakdown_config['CFP_S4'])
-        if config_reader.breakdown_config['CPP_AUTO_SET']:
-            pass
-        else:
-            if config_reader.breakdown_config['CPP_MASK_SET_TYPE'] == 'INDEX':
-                config_reader.breakdown_config['CPP_S1'] = int(config_reader.breakdown_config['CPP_S1'])
-                config_reader.breakdown_config['CPP_S2'] = int(config_reader.breakdown_config['CPP_S4'])
-                config_reader.breakdown_config['CPP_S3'] = int(config_reader.breakdown_config['CPP_S4'])
-                config_reader.breakdown_config['CPP_S4'] = int(config_reader.breakdown_config['CPP_S4'])
+        if config_reader.breakdown_config.has_key('CRP_AUTO_SET'):
+            if config_reader.breakdown_config['CRP_AUTO_SET']:
+                pass
+            else:
+                if config_reader.breakdown_config.has_key('CRP_MASK_SET_TYPE'):
+                    if config_reader.breakdown_config['CRP_MASK_SET_TYPE'] == 'INDEX':
+                        config_reader.breakdown_config['CRP_S1'] = int(config_reader.breakdown_config['CRP_S1'])
+                        config_reader.breakdown_config['CRP_S2'] = int(config_reader.breakdown_config['CRP_S4'])
+                        config_reader.breakdown_config['CRP_S3'] = int(config_reader.breakdown_config['CRP_S4'])
+                        config_reader.breakdown_config['CRP_S4'] = int(config_reader.breakdown_config['CRP_S4'])
+        if config_reader.breakdown_config.has_key('CFP_AUTO_SET'):
+            if config_reader.breakdown_config['CFP_AUTO_SET']:
+                pass
+            else:
+                if config_reader.breakdown_config.has_key('CFP_MASK_SET_TYPE'):
+                    if config_reader.breakdown_config['CFP_MASK_SET_TYPE'] == 'INDEX':
+                        config_reader.breakdown_config['CFP_S1'] = int(config_reader.breakdown_config['CFP_S1'])
+                        config_reader.breakdown_config['CFP_S2'] = int(config_reader.breakdown_config['CFP_S4'])
+                        config_reader.breakdown_config['CFP_S3'] = int(config_reader.breakdown_config['CFP_S4'])
+                        config_reader.breakdown_config['CFP_S4'] = int(config_reader.breakdown_config['CFP_S4'])
+        if config_reader.breakdown_config.has_key('CPP_AUTO_SET'):
+            if config_reader.breakdown_config['CPP_AUTO_SET']:
+                pass
+            else:
+                if config_reader.breakdown_config.has_key('CPP_MASK_SET_TYPE'):
+                        if config_reader.breakdown_config['CPP_MASK_SET_TYPE'] == 'INDEX':
+                            config_reader.breakdown_config['CPP_S1'] = int(config_reader.breakdown_config['CPP_S1'])
+                            config_reader.breakdown_config['CPP_S2'] = int(config_reader.breakdown_config['CPP_S4'])
+                            config_reader.breakdown_config['CPP_S3'] = int(config_reader.breakdown_config['CPP_S4'])
+                            config_reader.breakdown_config['CPP_S4'] = int(config_reader.breakdown_config['CPP_S4'])
         return config_reader.breakdown_config
 
     def mod_param(self):
@@ -348,8 +354,9 @@ class config_reader(object):
         if text == 'S01':
             return MACHINE_AREA.CLARA_S01
         elif text == 'VELA_INJ':
-            print('VELA_INJ AREA')
             return MACHINE_AREA.VELA_INJ
+        elif text == 'CLARA_PH1':
+            return MACHINE_AREA.CLARA_PH1
         else:
             return MACHINE_AREA.UNKNOWN_AREA
 

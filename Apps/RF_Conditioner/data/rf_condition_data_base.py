@@ -236,8 +236,12 @@ class rf_condition_data_base(QObject):
                              rf_condition_data_base.values[breakdown_status]
                              ]:
             rf_condition_data_base.values[breakdown_count] += 1
-            self.logger.message('increasing breakdown count = ' + str(rf_condition_data_base.values[breakdown_count]), True)
+            self.logger.message(self.my_name + ' increasing breakdown count = ' + str(rf_condition_data_base.values[breakdown_count]), True)
             self.add_to_pulse_breakdown_log(rf_condition_data_base.amp_sp_history[-1] )
+        else:
+            self.logger.message(
+                self.my_name + ' NOT increasing breakdown count, already in cooldown, = ' + str(rf_condition_data_base.values[breakdown_count]),
+                True)
 
     def reached_min_pulse_count_for_this_step(self):
         return self.values[event_pulse_count] >= self.values[required_pulses]
@@ -286,14 +290,6 @@ class rf_condition_data_base(QObject):
             r = True
         rf_condition_data_base.last_fwd_kly_pwr = rf_condition_data_base.values[fwd_kly_pwr]
         return r
-
-    # def amp_changed(self):
-    #     r = False
-    #     if rf_condition_data_base.last_amp != rf_condition_data_base.values[amp_sp]:
-    #         r = True
-    #     rf_condition_data_base.last_amp = rf_condition_data_base.values[amp_sp]
-    #     return r
-
 
     def add_to_pulse_breakdown_log(self,amp):
         if amp > 100:
