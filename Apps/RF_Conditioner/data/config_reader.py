@@ -269,10 +269,12 @@ class config_reader(object):
             ]
 
         float_param = ['CRP_MASK_END','CFP_MASK_END','CPP_MASK_END','CRP_S1', 'CRP_S2', 'CRP_S3', 'CRP_S4','CFP_S1',
-                       'CFP_S2', 'CFP_S3', 'CFP_S4','CPP_S1', 'CPP_S2', 'CPP_S3', 'CPP_S4']
+                       'CFP_S2', 'CFP_S3', 'CFP_S4','CPP_S1', 'CPP_S2', 'CPP_S3', 'CPP_S4','PHASE_MASK_BY_POWER_LEVEL_1','PHASE_MASK_BY_POWER_LEVEL_2']
 
 
-        string_param=['CRP_MASK_TYPE','CFP_MASK_TYPE','CPP_MASK_TYPE','CRP_MASK_SET_TYPE','CFP_MASK_SET_TYPE','CPP_MASK_SET_TYPE']
+        string_param=['CRP_MASK_TYPE','CFP_MASK_TYPE','CPP_MASK_TYPE','CRP_MASK_SET_TYPE','CFP_MASK_SET_TYPE','CPP_MASK_SET_TYPE',
+
+                      'PHASE_MASK_BY_POWER_PHASE_TRACE_1','PHASE_MASK_BY_POWER_POWER_TRACE_1']
         config_reader.breakdown_config = self.get_param_dict(int_param=int_param, bool_param=bool_param, monitor_param=monitor_param,float_param=float_param, string_param=string_param)
 
         # we do some more manual processing here:

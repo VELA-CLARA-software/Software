@@ -36,6 +36,50 @@ class llrf_handler_base(base):
 		self.forward_mask_dict = {}
 		self.probe_mask_dict = {}
 
+		self.set_infinite_mask_end_by_power()
+
+	def set_infinite_mask_end_by_power(self):
+		a = base.llrf_control.setInfiniteMaskEndByPower(base.config.breakdown_config['PHASE_MASK_BY_POWER_POWER_TRACE_1'],
+														base.config.breakdown_config[
+															'PHASE_MASK_BY_POWER_PHASE_TRACE_1'],
+														base.config.breakdown_config[
+															'PHASE_MASK_BY_POWER_LEVEL_1'])
+
+		if a:
+			base.logger.message('setInfiniteMaskEndByPower SUCCESS', True)
+			base.logger.message('setInfiniteMaskEndByPower SUCCESS', True)
+			base.logger.message('setInfiniteMaskEndByPower SUCCESS', True)
+			base.logger.message('setInfiniteMaskEndByPower SUCCESS', True)
+			base.logger.message('setInfiniteMaskEndByPower SUCCESS', True)
+			base.logger.message('setInfiniteMaskEndByPower SUCCESS', True)
+			base.logger.message('setInfiniteMaskEndByPower SUCCESS', True)
+		else:
+			base.logger.message('setInfiniteMaskEndByPower FAIL', True)
+			base.logger.message('setInfiniteMaskEndByPower FAIL', True)
+			base.logger.message('setInfiniteMaskEndByPower FAIL', True)
+			base.logger.message('setInfiniteMaskEndByPower FAIL', True)
+			base.logger.message('setInfiniteMaskEndByPower FAIL', True)
+			base.logger.message('setInfiniteMaskEndByPower FAIL', True)
+			base.logger.message('setInfiniteMaskEndByPower FAIL', True)
+			base.logger.message('setInfiniteMaskEndByPower FAIL', True)
+			base.logger.message('setInfiniteMaskEndByPower FAIL', True)
+			base.logger.message('setInfiniteMaskEndByPower FAIL', True)
+			base.logger.message('setInfiniteMaskEndByPower FAIL', True)
+        #
+		# if base.config.breakdown_config.has_key('PHASE_MASK_BY_POWER_TRACE_1'):
+		# 	if base.config.breakdown_config.has_key('PHASE_MASK_BY_POWER_PHASE_TRACE_1'):
+		# 		if base.config.breakdown_config.has_key('PHASE_MASK_BY_POWER_POWER_TRACE_1'):
+		# 			a = base.llrf_control.setInfiniteMaskEndByPower(base.config.breakdown_config['PHASE_MASK_BY_POWER_TRACE_1'],
+		# 													base.config.breakdown_config['PHASE_MASK_BY_POWER_POWER_TRACE_1'],
+		# 													base.config.breakdown_config['PHASE_MASK_BY_POWER_PHASE_TRACE_1'])
+        #
+        #
+		# if base.config.breakdown_config.has_key('PHASE_MASK_BY_POWER_TRACE_2'):
+		# 	if base.config.breakdown_config.has_key('PHASE_MASK_BY_POWER_LEVEL_2'):
+		# 		base.llrf_control.setInfiniteMaskEndByPower(base.config.breakdown_config['PHASE_MASK_BY_POWER_TRACE_2'][1],
+		# 													base.config.breakdown_config['PHASE_MASK_BY_POWER_TRACE2_'][0],
+		# 													base.config.breakdown_config['PHASE_MASK_BY_POWER_LEVEL_2'])
+
 	def set_trace_masks(self):
 		if 'update_func' in self.forward_mask_dict:
 			a = self.forward_mask_dict['update_func'](self.forward_mask_dict)
