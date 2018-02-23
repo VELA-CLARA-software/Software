@@ -1,0 +1,9 @@
+ANALYSIS DATA
+Expert Settings:
+Mask,,,,R^2 Threshold,Rolling Average,Pecentage Cut of Lowest Pixels
+X,Y,X Radius,Y Radius
+1280,1080,1280,1080,0,0,0
+BVN, , , , , , , , , ,MLE, , , , , , , , , , 
+X,err,Y,err,Sigma X,err, Sigma Y,err,Covariance XY,err,X,err,Y,err,Sigma X,err, Sigma Y,err,Covariance XY,err, ,pix2MM,,Image Name,Background Image Name
+1289.25,0.115599,450.791,0.157646,140.233,0.000963541,191.127,0.000850338,-10605,32.1176,1294.7,0.000691578,448.314,0.000640136,121.342,0.00172403,151.608,0.00189132,-5441.08,0.234741,,1,,C:\Users\wln24624\Documents\SOFTWARE\NonGitHubWork\TestBenchControllers\TestBenchTests\imageCollectorTB\DATA\Shapes and Positions\Big_Beam_Pos_1_000.hdf5,None
+1243.04,15145.8,1083.65,15145.8,125.898,9.97651e-022,198.59,0.00717114,0,401.98,1246.04,0.000580496,1084.02,0.000565851,116.335,0.0015326,153.055,0.00197192,-4323.93,0.00470674,,1,,C:\Users\wln24624\Documents\SOFTWARE\NonGitHubWork\TestBenchControllers\TestBenchTests\imageCollectorTB\DATA\Shapes and Positions\Big_Beam_Pos_2_000.hdf5,None

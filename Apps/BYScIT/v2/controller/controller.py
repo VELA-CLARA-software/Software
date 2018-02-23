@@ -189,9 +189,15 @@ class Controller(QtCore.QThread):
                                 padding=0)
 
     def run(self):
-        for i in range(self.listOfImages.count()):
+        NumberOfImages = self.listOfImages.count()
+        if len(self.listOfImages)==1 and str(self.listOfImages[0]).split('.')[-1]=='hdf5':
+            NumberOfImages=100
+        for i in range(NumberOfImages):
 
-            self.model.getImage(str(self.listOfImages[i]))
+            if len(self.listOfImages)==1 and str(self.listOfImages[0]).split('.')[-1]=='hdf5':
+                self.model.getHDF5Images(str(self.listOfImages[0]),i)
+            else:
+                self.model.getImage(str(self.listOfImages[i]))
             image = np.transpose(np.flip(self.model.imageData, 1))
             image = image.flatten().tolist()
             im = ia.std_vector_double()
@@ -248,12 +254,13 @@ class Controller(QtCore.QThread):
                 self.model.offlineAnalysis.useESDirectCut(False)
 
             self.model.offlineAnalysis.analyse()
-
+            while self.model.offlineAnalysis.isAnalysing()==True:
+                time.sleep(1)
             self.model.offlineAnalysis.writeData(str(self.view.lineEdit_dataFileNameBatch.text()))
 
-            self.progress=100*((i+1)/self.listOfImages.count())
+            self.progress=100*((i+1)/NumberOfImages)
             self.view.progressBar_batchMode.setValue(self.progress)
-
+            del im
     def changeColourMap(self):
         if self.view.comboBox_colourMap.currentIndex() is 0:
             self.Image.setLookupTable(self.lutGray)
