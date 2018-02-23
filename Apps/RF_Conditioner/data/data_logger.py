@@ -5,34 +5,102 @@ from VELA_CLARA_RF_Modulator_Control import GUN_MOD_STATE
 from VELA_CLARA_Vac_Valve_Control import VALVE_STATE
 from VELA_CLARA_RF_Protection_Control import RF_GUN_PROT_STATUS
 import os
+import pickle
+from data.config_reader import config_reader
+import numpy
 
 
 class data_logger(object):
     my_name = 'data_logger'
-    def __init__(self,
-                 log_param,
+    config = config_reader()
+    _log_config = None
 
-                 ):
-        self.log_param = log_param
+    log_start = datetime.now()
+    log_start_str = log_start.isoformat('-').replace(":", "-").split('.', 1)[0]
+
+    def __init__(self):
+        pass
+
+    @property
+    def log_config(self):
+        return data_logger._log_config
+
+    @log_config.setter
+    def log_config(self,value):
+        data_logger._log_config = value
+        self.log_directory = data_logger.config.log_config['LOG_DIRECTORY'] + self.log_start_str
+        os.makedirs(self.log_directory)
+        self.working_directory = self.log_directory + '\\'
+        self.data_path = self.working_directory + self.log_config['DATA_LOG_FILENAME']  # MAGIC_STRING
+        self.forward_file = self.working_directory + self._log_config['OUTSIDE_MASK_FORWARD_FILENAME']  #
+        self.probe_file = self.working_directory + self._log_config['OUTSIDE_MASK_PROBE_FILENAME']  #
+        self.reverse_file = self.working_directory + self._log_config['OUTSIDE_MASK_REVERSE_FILENAME']
+        self.log_path = self.working_directory + self._log_config['LOG_FILENAME']
+        self.header(self.my_name + ' log_config')
+        self.message([
+            'log_directory     = ' + self.log_directory,
+            'working_directory = ' + self.working_directory,
+            'data_path    = ' + self.data_path,
+            'forward_file = ' + self.forward_file,
+            'probe_file   = ' + self.probe_file,
+            'reverse_file = ' + self.reverse_file,
+            'log_path     = ' + self.log_path
+        ])
+
+
+    def header(self, text, add_to_log = False):
+        str = '*' + '\n' +'*** ' + text + '***'
+        print(str)
+        if add_to_log:
+            self.write_log(str)
+
+    def message(self,text=[], add_to_log = False):
+        if isinstance(text, basestring):
+            str = text
+        else:
+            str = '\n'.join(text)
+        print(str)
+        if add_to_log:
+            self.write_log(str)
+
+    def write_log(self, str):
+        write_str = datetime.now().isoformat('-').replace(":", "-").split('.', 1)[0] + ' ' + str + '\n'
+        with open(self.log_path,'a') as f:
+            f.write(write_str)
+
+    def write_list(self, data, file):
+        with open(file,'w') as f:
+            for item in data:
+                f.write("%s\n" % item)
+
+
+    def add_to_pulse_breakdown_log(self,x):
+        towrite = " ".join(map(str, x))
+        self.message('Adding to pulse_breakdown_log =  ' + towrite, True)
+        with open(self.pulse_count_log,'a') as f:
+            f.write( towrite + '\n')
+
+    def get_pulse_count_breakdown_log(self):
+        self.pulse_count_log = data_logger.config.log_config['LOG_DIRECTORY']+ \
+                               data_logger.config.log_config['PULSE_COUNT_BREAKDOWN_LOG_FILENAME']
+        log = []
+        with open(self.pulse_count_log) as f:
+            lines = list(line for line in (l.strip() for l in f) if line)
+            for line in lines:
+                if '#' not in line:
+                    log.append([int(x) for x in line.split()])
+        self.header(self.my_name + ' get_pulse_count_breakdown_log')
+        self.message('read pulse_count_log: ' + self.pulse_count_log)
+        # for i in log:
+        #     self.message(map(str,i),True)
+        return log
 
     def start_data_logging(self):
-        self.data_log_directory = self.log_param['DATA_LOG_DIRECTORY']  # MAGIC_STRING
-        self.data_log_filename = self.log_param['DATA_LOG_FILENAME']  # MAGIC_STRING
-
-        self.log_start = datetime.now()
-
-        self.log_start_str = self.log_start.isoformat('-').replace(":", "-").split('.', 1)[0]
-
-        self.data_path = self.data_log_directory + '\\' + self.data_log_filename + '_' + self.log_start_str
-
-        print(self.my_name + ', data_log_directory = ' + self.data_log_directory)
-        print(self.my_name + ', data_log_filename = ' + self.data_log_filename)
-        print(self.my_name + ', data_path = ' + self.data_path)
-        print(
-        self.my_name + ' starting monitoring, update time = ' + str(self.log_param['DATA_LOG_TIME']))  # MAGIC_STRING
-        print(
-        self.my_name + ' starting monitoring, update time = ' + str(self.log_param['DATA_LOG_TIME']))  # MAGIC_STRING
-        return self.log_start
+        self.header(self.my_name + ' start_data_logging')
+        self.message([
+            'data_path     = ' + self.data_path,
+            'starting monitoring, update time = ' + str(self.log_config['DATA_LOG_TIME'])
+        ])
 
     def write_data_log_header(self,values):
         print(self.my_name + ' writing data_log header to ' + self.data_path)
@@ -41,15 +109,21 @@ class data_logger(object):
         types = []
         [names.append(x) for x,y in values.iteritems()]
         [types.append(str(type(y)))  for x,y in values.iteritems()]
-        with open(self.data_path  + '.dat', 'ab') as f:
-            f.write(joiner.join(names)+ "\n")
-            f.write(joiner.join(types)+ "\n")
-            # f.write(struct.pack('<i', 245))
+        try:
+            with open(self.data_path  + '.dat', 'ab') as f:
+                f.write(joiner.join(names)+ "\n")
+                f.write(joiner.join(types)+ "\n")
+                # f.write(struct.pack('<i', 245))
+        except:
+            pass
 
     def write_data(self,values):
-        with open(self.data_path + '.dat', 'ab') as f:
-            for val in values.itervalues():
-                self.write_binary(f,val)
+        try:
+            with open(self.data_path + '.dat', 'ab') as f:
+                for val in values.itervalues():
+                    self.write_binary(f,val)
+        except:
+            pass
 
     def write_binary(self, f, val):
         if type(val) is long:
@@ -76,30 +150,14 @@ class data_logger(object):
         elif type(val) is bool:
             f.write(struct.pack('<?', val))
             #print struct.calcsize('<?')
+        elif type(val) is numpy.float64:
+            f.write(struct.pack('<f', val))
+            #f.write(struct.pack('<?', val))
+        elif type(val) is str:
+            f.write(struct.pack('<i', -1))
         else:
             print(self.my_name + ' write_binary() error unknown type, ' + str(type(val)) )
         #print str(val) + '   ' + str(type(val))
-
-
-    def start_break_down_log(self):
-        self.breakdown_directory = self.log_param['OUTSIDE_MASK_DIRECTORY']+'\\' + self.log_start_str  #MAGIC_STRING
-        os.makedirs(self.breakdown_directory)
-        print(self.my_name + ' breakdown_directory = ' + self.breakdown_directory)
-        try:
-            self.forward_file = self.breakdown_directory +'\\' + self.log_param['OUTSIDE_MASK_FORWARD_FILENAME']#MAGIC_STRING
-            print(self.my_name + ' forward_file = ' + self.forward_file)
-        except:
-            self.forward_file = None
-        try:
-            self.reverse_file = self.breakdown_directory +'\\' + self.log_param['OUTSIDE_MASK_REVERSE_FILENAME']#MAGIC_STRING
-            print(self.my_name + ' reverse_file = ' + self.reverse_file)
-        except:
-            self.reverse_file = None
-        try:
-            self.probe_file = self.breakdown_directory +'\\' + log_param['OUTSIDE_MASK_PROBE_FILENAME']#MAGIC_STRING
-            print(self.my_name + ' probe_file   = ' + self.probe_file)
-        except:
-            self.probe_file = None#add to attributes
 
 
     def dump_forward(self, obj, index):
@@ -112,7 +170,15 @@ class data_logger(object):
         self.pickle_dump(path=self.probe_file + str(index), obj=obj)
 
     # noinspection PyMethodMayBeStatic
+    def pickle_file(self, file_name, obj):
+        path = self.working_directory + file_name
+        self.pickle_dump(path,obj)
+
+    # noinspection PyMethodMayBeStatic
     def pickle_dump(self, path, obj):
-        print(self.my_name + ' pickle_dumping to ' + path)
-        with open(path + '.pkl', 'wb') as f:
-            pickle.dump(obj, f, pickle.HIGHEST_PROTOCOL)
+        self.message(self.my_name + ' pickle_dumping to ' + path,True)
+        try:
+            with open(path + '.pkl', 'wb') as f:
+                pickle.dump(obj, f, pickle.HIGHEST_PROTOCOL)
+        except:
+            pass
