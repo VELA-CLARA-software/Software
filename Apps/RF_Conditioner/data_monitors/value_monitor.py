@@ -8,8 +8,8 @@ class value_monitor(monitor):
     _latest_value = -1
     # a counter indexing each unique signal reading
     _reading_counter = -1
+    # successfully instantiated and 'working'
     set_success = False
-
 
     # get latest value from gen_monitor
     def __init__(self,
@@ -29,7 +29,7 @@ class value_monitor(monitor):
         self.id = id_key
         # a timer to run check_signal automatically every self.update_time
         self.timer.timeout.connect(self.update_value)
-        self.timer.start(self.update_time)
+        self.timer.start(update_time)
         self.set_success = True
 
     def update_value(self):

@@ -195,7 +195,7 @@ function initVELA(jQuery)
 	else if (msg.length > 0) {pageType = 'log';}
 	else if (textBox.length > 0) {pageType = 'edit';}
 
-	var inLogBook = (/\/EBTF\//.test (location.pathname));
+	var inLogBook = (/\/vela\//.test (location.pathname));
 	var inOpsLog = (/\/operations\//.test (location.pathname));
 	var inCBSLog = (/\/cbslog\//.test (location.pathname));
 	var inCryoLog = (/\/cryogenics\//.test (location.pathname));
@@ -343,7 +343,7 @@ function initVELA(jQuery)
 		if (inLogBook) {
             topText = document.createElement ('div');
             topText.innerHTML = 'Entries will be <strong>automatically saved</strong> (or press <strong>Ctrl-S</strong>). Type <strong>Ctrl+D</strong> for a timestamp.' +
-                ' Please use <strong>headings</strong> above each separate task or activity. Have you read <a href="http://projects.astec.ac.uk/VELAManual/index.php/Updates" target="_blank">Updates</a> today? <span id="mcWorking"></span>';
+                ' Please use <strong>headings</strong> above each separate task or activity. <span id="mcWorking"></span>';
             topText.id = 'addedText';
             if (!document.getElementById ('addedText')) textBox.parentNode.insertBefore (topText, textBox);
             }
@@ -357,14 +357,14 @@ function initVELA(jQuery)
 	}
 }
 
-var mcTimer, mcServer = 'erlpcon2.dl.ac.uk';
+var mcTimer, mcServer = 'apsv2.dl.ac.uk';
 function elogRequestMachineStatus (area) {
 	document.getElementById ('mcWorking').innerHTML = 'Working...';
 	mcTimer = setTimeout ('mcRequestTimeout()', 10*1000);
 	var remoteScript=document.createElement('script');
 	remoteScript.id = 'rs';
 	remoteScript.setAttribute('type','text/javascript');
-	remoteScript.setAttribute('src', 'http://' + mcServer + ':27643/' + area);
+	remoteScript.setAttribute('src', 'https://' + mcServer + ':27643/' + area);
 	var hd=document.getElementsByTagName('head')[0];
 	hd.appendChild(remoteScript);
 }

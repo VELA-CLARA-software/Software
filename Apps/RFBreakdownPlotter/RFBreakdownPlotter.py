@@ -1,23 +1,25 @@
 import pickle
 import sys, os, time, math, datetime
 from PyQt4.QtCore import QObject, pyqtSignal, QThread, QTimer
-from PyQt4.QtGui import QApplication, QMainWindow, QWidget, QPushButton, QVBoxLayout, QHBoxLayout, QComboBox, QTabWidget, QLineEdit, QFileDialog
-import pyqtgraph as pg
+from PyQt4.QtGui import QApplication, QMainWindow, QWidget, QPushButton, QVBoxLayout, QHBoxLayout, QComboBox, QTabWidget, QLineEdit, QFileDialog, QLabel, QAction
+from pyqtgraph import LegendItem, mkPen, mkBrush, LabelItem, TableWidget, GraphicsLayoutWidget, setConfigOption, setConfigOptions, InfiniteLine
+from pyqtgraph.graphicsItems.LegendItem import ItemSample
 import glob
 from itertools import groupby
 import argparse
+import json
 
 parser = argparse.ArgumentParser(description='Monitor a directory for RF breakdown traces')
 parser.add_argument('-d', '--directory', default='.')
 
-class myLegend(pg.LegendItem):
+class myLegend(LegendItem):
     def __init__(self, size=None, offset=None, background=(255,255,255,255)):
         super(myLegend, self).__init__(size, offset)
         self.background = background
 
     def paint(self, p, *args):
-        p.setPen(pg.mkPen(0,0,0)) # outline
-        p.setBrush(pg.mkBrush(self.background))   # background
+        p.setPen(mkPen(0,0,0)) # outline
+        p.setBrush(mkBrush(self.background))   # background
         p.drawRect(self.boundingRect())
 
     def addItem(self, item, name):
@@ -33,11 +35,11 @@ class myLegend(pg.LegendItem):
         title           The title to display for this item. Simple HTML allowed.
         ==============  ========================================================
         """
-        label = pg.LabelItem(name, color=(0,0,0))
-        if isinstance(item, pg.graphicsItems.LegendItem.ItemSample):
+        label = LabelItem(name, color=(0,0,0))
+        if isinstance(item, ItemSample):
             sample = item
         else:
-            sample = pg.graphicsItems.LegendItem.ItemSample(item)
+            sample = ItemSample(item)
         row = self.layout.rowCount()
         self.items.append((sample, label))
         self.layout.addItem(sample, row, 0)
@@ -68,17 +70,14 @@ class watchWorker(QObject):
 
 from PyQt4.QtGui import QColor
 
-tableau20 = [(31, 119, 180), (174, 199, 232), (255, 127, 14), (255, 187, 120),
-             (44, 160, 44), (152, 223, 138), (214, 39, 40), (255, 152, 150),
-             (148, 103, 189), (197, 176, 213), (140, 86, 75), (196, 156, 148),
-             (227, 119, 194), (247, 182, 210), (127, 127, 127), (199, 199, 199),
-             (188, 189, 34), (219, 219, 141), (23, 190, 207), (158, 218, 229)]
+tableau20 = [(255,0,0), (0,153,255), (0,172,0), (237,69, 201), (247,173,25)]
 
 Qtableau20 = [QColor(i,j,k) for (i,j,k) in tableau20]
 
 class pickleGUI(QMainWindow):
     def __init__(self, parent = None, directory='.'):
         super(pickleGUI, self).__init__(parent)
+        global app
         self.resize(1800,900)
         self.centralWidget = QWidget()
         self.layout = QHBoxLayout()
@@ -100,6 +99,21 @@ class pickleGUI(QMainWindow):
 
         self.setCentralWidget(self.centralWidget)
 
+        self.setWindowTitle("RF Breakdown Plotter")
+        menubar = self.menuBar()
+        fileMenu = menubar.addMenu('&File')
+
+        reloadSettingsAction = QAction('Reload Settings', self)
+        reloadSettingsAction.setStatusTip('Reload Settings YAML File')
+        reloadSettingsAction.triggered.connect(self.picklePlot.reloadSettings)
+        fileMenu.addAction(reloadSettingsAction)
+
+        exitAction = QAction('&Exit', self)
+        exitAction.setShortcut('Ctrl+Q')
+        exitAction.setStatusTip('Exit application')
+        exitAction.triggered.connect(app.quit)
+        fileMenu.addAction(exitAction)
+
 class picklePlotWidget(QWidget):
 
     def __init__(self, directory='.', **kwargs):
@@ -110,7 +124,6 @@ class picklePlotWidget(QWidget):
         self.setLayout(self.layout)
         self.layout.addWidget(self.plotWidget)
         self.folderButton = QPushButton('Select Directory')
-        self.folderButton.clicked.connect(self.changeDirectory)
         self.folderLineEdit = QLineEdit()
         self.folderLineEdit.setReadOnly(True)
         self.folderLineEdit.setText(self.directory)
@@ -121,42 +134,74 @@ class picklePlotWidget(QWidget):
         self.folderWidget.setLayout(self.folderLayout)
         self.folderWidget.setMaximumWidth(800)
         self.fileCombo = QComboBox()
-        self.fileCombo.currentIndexChanged.connect(self.loadPickle)
         self.fileCombo.setMaximumWidth(800)
+        self.sortByLabel = QLabel('\tSort data by:')
+        self.sortByLabel.setMaximumWidth(120)
+        self.sortByCombo = QComboBox()
+        self.sortByCombo.addItems(['time', 'eventID', 'pos'])
+        self.sortBy = 'time'
+        self.fileSortWidget = QWidget()
+        self.fileSortWidgetLayout = QHBoxLayout()
+        self.fileSortWidgetLayout.addWidget(self.fileCombo)
+        self.fileSortWidgetLayout.addWidget(self.sortByLabel)
+        self.fileSortWidgetLayout.addWidget(self.sortByCombo)
+        self.fileSortWidget.setLayout(self.fileSortWidgetLayout)
+
         self.comboWidget = QWidget()
         self.comboLayout = QVBoxLayout()
         self.comboWidget.setLayout(self.comboLayout)
         self.comboLayout.addWidget(self.folderWidget)
-        self.comboLayout.addWidget(self.fileCombo)
+        self.comboLayout.addWidget(self.fileSortWidget)
         self.layout.addWidget(self.comboWidget)
         self.layout.addWidget(self.plotWidget)
-        self.pens = pg.mkPen(color='r', dash=[4,4])
-        self.plotorder = [ ['new_tab', 'Power'],
-                            'KLYSTRON_FORWARD_POWER', 'KLYSTRON_REVERSE_POWER',
-                            'next_row',
-                            'LRRG_CAVITY_FORWARD_POWER', 'LRRG_CAVITY_REVERSE_POWER',
-                            ['new_tab', 'Phase'],
-                            'KLYSTRON_FORWARD_PHASE', 'KLYSTRON_REVERSE_PHASE',
-                            'next_row',
-                            'LRRG_CAVITY_FORWARD_PHASE', 'LRRG_CAVITY_REVERSE_PHASE',
-                            ['new_tab', 'Parameters'],
-                            'trace_name',
-                            ]
+
+        self.folderButton.clicked.connect(self.changeDirectory)
+        self.fileCombo.currentIndexChanged.connect(self.loadPickle)
+        self.sortByCombo.currentIndexChanged.connect(self.setSortBy)
+
+        self.floorLine = InfiniteLine(angle=0, pen='k')
+        self.outsideMaskLine = InfiniteLine(angle=90, pen='k')
+        #
+        # self.plotorder = [ ['new_tab', 'Power'],
+        #                     'KLYSTRON_FORWARD_POWER', 'KLYSTRON_REVERSE_POWER',
+        #                     'next_row',
+        #                     'HRRG_CAVITY_FORWARD_POWER', 'HRRG_CAVITY_REVERSE_POWER', 'HRRG_CAVITY_PROBE_POWER',
+        #                     ['new_tab', 'Phase'],
+        #                     'KLYSTRON_FORWARD_PHASE', 'KLYSTRON_REVERSE_PHASE',
+        #                     'next_row',
+        #                     'HRRG_CAVITY_FORWARD_PHASE', 'HRRG_CAVITY_REVERSE_PHASE', 'HRRG_CAVITY_PROBE_PHASE',
+        #                     ['new_tab', 'Parameters'],
+        #                     'trace_name',
+        #                     ]
+        try:
+            with open("HRRG.json", "r") as infile:
+                self.plotorder = json.load(infile)
+        except IOError:
+            self.reloadSettings()
+        # exit()
+
+    def reloadSettings(self):
+        self.settingsFile = str(QFileDialog.getOpenFileName(self, 'Select Settings JSON', filter="JSON files (*.json);;", selectedFilter="JSON files (*.json)"))
+        with open(self.settingsFile, "r") as infile:
+            self.plotorder = json.load(infile)
+        # print self.plotorder
+        self.loadPickle()
+
+    def setSortBy(self, index):
+        self.sortBy = str(self.sortByCombo.currentText())
+        self.updatePlot()
 
     def mkPen(self, colorindex, index):
-        color = Qtableau20[index]
-        if index == -2:
-            pen = pg.mkPen(color='g', dash=[6,6])
-        elif index == -1:
-            pen = pg.mkPen(color='b', dash=[4,4])
-        elif index == 0:
-            pen = pg.mkPen(color='r', width=2)
-        elif index == 1:
-            pen = pg.mkPen(color='k', dash=[2,2])
+        color = Qtableau20[index % len(Qtableau20)]
+        if index == 0:
+            pen = mkPen(color=color, width=3)
+        else:
+            pen = mkPen(color=color, width=2, dash=[1,1])
         return pen
 
     def loadPickle(self):
         self.data = []
+        self.tracename = ''
         filename = str(self.fileCombo.currentText())
         if filename is not '':
             # print 'filename = ', filename
@@ -164,25 +209,35 @@ class picklePlotWidget(QWidget):
             data1 = pickle.load(pkl_file)
             pkl_file.close()
             event = {}
+            reject_strings = ['time', 'EVID', 'value']
             for k, v in data1.iteritems():
-
-                if 'trace_name' in k:
-                    self.tracename = v
-                    event[k] = {'data': v}
                 if 'name_' in k:
                     name = v
                     if not name in event:
                         # print name
-                        event[name] = dict()
+                        event[name] = {'name': name, 'type': 'data'}
                     pos = k[[i for i, j in enumerate(k) if j == '_'][-1]+1:]
-                    # print name, '  ', pos
-                    event[name][str(pos)] = {'data': data1[k.replace('name', 'value')][:600],
+                    if 'NOT_SET' in data1[k.replace('name', 'EVID')]:
+                        data1[k.replace('name', 'EVID')] = -1
+                    event[name][str(pos)] = {
+                                        'data': data1[k.replace('name', 'value')][:600],
                                         'eventID': data1[k.replace('name', 'EVID')],
                                         'time': data1[k.replace('name', 'time')],
                                         'pos': pos
                                         }
                 elif '_mask' in k:
-                    event[k] = {'data': v[:600]}
+                    try:
+                        trydict = {'name': k, 'type': 'mask', 'data': v[:600]}
+                        event[k] = trydict
+                    except:
+                        print 'Error reading mask: ', k
+                        event[k] = {'name': k, 'type': 'parameter', 'data': v}
+                elif not any([x in k for x in reject_strings]) :
+                    event[k] = {'name': k, 'type': 'parameter', 'data': v}
+                    if 'trace_name' in k:
+                        self.tracename = v
+                    if k not in self.plotorder:
+                        self.plotorder.append(k)
             self.data = event
             self.updatePlot()
 
@@ -207,8 +262,10 @@ class picklePlotWidget(QWidget):
         self.loadPickle()
 
     def updatePlot(self):
+        starttime =  time.time()
+        self.setUpdatesEnabled(False)
         self.plotWidget.clear()
-        self.tableData = {}
+        self.tableData = []
         alldata = self.data
         j = -1
         # for datalabel, datadict in alldata.iteritems():
@@ -218,36 +275,34 @@ class picklePlotWidget(QWidget):
                     graphicslayoutwidget.nextRow()
                 elif datalabel[0] == 'new_tab':
                     if datalabel[1] == 'Parameters':
-                        w = pg.TableWidget()
+                        w = TableWidget()
                         self.plotWidget.addTab(w, datalabel[1])
                     else:
-                        graphicslayoutwidget = pg.GraphicsLayoutWidget()
+                        graphicslayoutwidget = GraphicsLayoutWidget()
                         self.plotWidget.addTab(graphicslayoutwidget, datalabel[1])
                 else:
                     datadict = alldata[datalabel]
                     # print 'keys = ', datadict.keys()
-                    if len(datadict.keys()) > 1:
+                    if datadict['type'] == 'data':
                         j += 1
                         p = graphicslayoutwidget.addPlot(title=datalabel)
                         legendoffset = (-10,50)
                         legend = myLegend(offset=legendoffset)
                         legend.setParentItem(p)
-                        legendoffsett = list(legendoffset)
-                        legendoffsett[1] += 150
-                        legendt = myLegend(offset=legendoffsett)
-                        legendt.setParentItem(p)
-                        evids = [[int(i), datadict[str(i)]['time']] for i in datadict.keys() if 'eventID' in datadict[str(i)]]
-                        # print datalabel
-                        # print 'evids = ', evids
-                        # print 'sorted evids = ', sorted(evids, key=lambda x: x[1])
+                        evids = [[int(i), float(datadict[str(i)][self.sortBy])] for i in datadict.keys() if 'eventID' in datadict[str(i)]]
                         evidorder =  zip(*sorted(evids, key=lambda x: x[1]))[0]
+                        colorindex = -1
                         for i in evidorder:
+                            colorindex += 1
                             y = datadict[str(i)]['data']
                             x = range(len(y))
-                            plot = p.plot(x=x, y=y, pen=self.mkPen(0, i))
-                            legend.addItem(plot, str(datadict[str(i)]['eventID']))
-                            time = datetime.datetime.fromtimestamp(datadict[str(i)]['time']).strftime('%H:%M:%S.%f')
-                            legendt.addItem(plot, time)
+                            plot = p.plot(x=x, y=y, pen=self.mkPen(0, colorindex))
+                            if i < 6:
+                                if self.sortBy == 'time':
+                                    signaltime = datetime.datetime.fromtimestamp(datadict[str(i)]['time']).strftime('%H:%M:%S.%f')
+                                    legend.addItem(plot, signaltime)
+                                else:
+                                    legend.addItem(plot, str(datadict[str(i)][self.sortBy]))
                         newRange = p.vb.state['viewRange'][0]
                         newRange[1] += 0
                         p.vb.setXRange(*newRange, padding=0)
@@ -259,31 +314,47 @@ class picklePlotWidget(QWidget):
                             maxpoint = max(max([x for x in yLO if not math.isinf(x)]), max([x for x in yHI if not math.isinf(x)]))
                             self.plotMask(yLO, p, maxpoint, 'min')
                             self.plotMask(yHI, p, maxpoint, 'max')
-                    else:
-                        self.tableData[datalabel] = datadict
+                            if 'mask_floor' in alldata:
+                                self.floorLine.setValue(alldata['mask_floor']['data'])
+                                p.addItem(self.floorLine)
+                            if 'outside_mask_index' in alldata:
+                                self.outsideMaskLine.setValue(alldata['outside_mask_index']['data'])
+                                p.addItem(self.outsideMaskLine)
+                    elif datadict['type'] == 'parameter':
+                        self.tableData.append([datalabel, alldata[datalabel]['data']])
+        # print self.tableData
         w.setData(self.tableData)
+        self.setUpdatesEnabled(True)
+
 
     def plotMask(self, y, p, filllevel, minmax):
         x = range(len(y))
         xy = zip(x, y)
         xy = [list(grp) for k, grp in groupby(xy, lambda x: math.isinf(x[1]))]
+        maskno = -1
         for mask in xy:
+            maskno += 1
             x, y = zip(*mask)
+            # self.data['mask_'+minmax+'_'+str(maskno)+'_start'] = {'name': 'mask_'+minmax+'_'+str(maskno)+'_start', 'type': 'parameter', 'data': x[0]}
+            # self.data['mask_'+minmax+'_'+str(maskno)+'_end'] = {'name': 'mask_'+minmax+'_'+str(maskno)+'_end', 'type': 'parameter', 'data': x[-1]}
+            # self.plotorder.append('mask_'+minmax+'_'+str(maskno)+'_start')
+            # self.plotorder.append('mask_'+minmax+'_'+str(maskno)+'_end')
             if math.isinf(y[0]):
                 y = [0 for i in x]
-                p.plot(x=list(x), y=y, pen=None, fillLevel=1.5*filllevel, brush=pg.mkBrush((211,211,211,75)))
+                p.plot(x=list(x), y=y, pen=None, fillLevel=1.5*filllevel, brush=mkBrush((211,211,211,75)))
             else:
                 if minmax == 'min':
-                    p.plot(x=list(x), y=list(y), pen=None, fillLevel=0, brush=pg.mkBrush((211,211,211,128)))
+                    p.plot(x=list(x), y=list(y), pen=None, fillLevel=0, brush=mkBrush((211,211,211,128)))
                 else:
-                    p.plot(x=list(x), y=list(y), pen=None, fillLevel=1.5*filllevel, brush=pg.mkBrush((211,211,211,128)))
+                    p.plot(x=list(x), y=list(y), pen=None, fillLevel=1.5*filllevel, brush=mkBrush((211,211,211,128)))
 
 def main():
+    global app
     args = parser.parse_args()
     app = QApplication(sys.argv)
-    pg.setConfigOptions(antialias=True)
-    pg.setConfigOption('background', 'w')
-    pg.setConfigOption('foreground', 'k')
+    setConfigOptions(antialias=True)
+    setConfigOption('background', 'w')
+    setConfigOption('foreground', 'k')
     # app.setStyle(QStyleFactory.create("plastique"))
     ex = pickleGUI(directory=args.directory)
     ex.show()

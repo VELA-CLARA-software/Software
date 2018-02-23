@@ -16,9 +16,16 @@ else:
 for i in sys.path:
 	print i
 
+# ifrom os.path import isfile, join
+# from os import listdir
+# onlyfiles = [f for f in listdir('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\stage') if isfile(join('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\stage', f))]
+#
+# for i in onlyfiles:
+# 	print i
+
+
 
 from PyQt4 import QtGui
-
 import VELA_CLARA_enums
 from controllers.main_controller import main_controller
 
@@ -36,7 +43,7 @@ class rf_condition(QtGui.QApplication):
 		# you need this init line here to instantiate a QTApplication
 		QtGui.QApplication.__init__(self, argv)
 		# Everything else is handled by a main _controller
-		self.controller = main_controller(argv, config_file='test.config')
+		self.controller = main_controller(argv, config_file='test_LLRG.config')
 
 
 if __name__ == '__main__':

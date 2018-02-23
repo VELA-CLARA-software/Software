@@ -71,6 +71,7 @@ log_pulse_length = 'log_pulse_length'
 llrf_trigger = 'llrf_trigger'
 
 last_mean_power = 'last_mean_power'
+sol_value = 'sol_value'
 
 amp_ff = 'amp_ff'
 amp_sp = 'amp_sp'
@@ -117,7 +118,8 @@ all_value_keys = [rev_power_spike_count,
                   llrf_trigger,
                   next_sp_decrease,
                   last_mean_power,
-                  next_power_increase
+                  next_power_increase,
+                  sol_value
                   ]
 
 class rf_condition_data_base(QObject):
@@ -234,8 +236,12 @@ class rf_condition_data_base(QObject):
                              rf_condition_data_base.values[breakdown_status]
                              ]:
             rf_condition_data_base.values[breakdown_count] += 1
-            self.logger.message('increasing breakdown count = ' + str(rf_condition_data_base.values[breakdown_count]), True)
+            self.logger.message(self.my_name + ' increasing breakdown count = ' + str(rf_condition_data_base.values[breakdown_count]), True)
             self.add_to_pulse_breakdown_log(rf_condition_data_base.amp_sp_history[-1] )
+        else:
+            self.logger.message(
+                self.my_name + ' NOT increasing breakdown count, already in cooldown, = ' + str(rf_condition_data_base.values[breakdown_count]),
+                True)
 
     def reached_min_pulse_count_for_this_step(self):
         return self.values[event_pulse_count] >= self.values[required_pulses]
@@ -254,8 +260,9 @@ class rf_condition_data_base(QObject):
         if rf_condition_data_base.values[amp_sp] > 100:#MAGIC_NUMBER
             if self.kly_power_changed():
                 #rf_condition_data_base.kly_fwd_power_history.append( rf_condition_data_base.values[fwd_kly_pwr] )
-                rf_condition_data_base.sp_pwr_hist.append( [rf_condition_data_base.values[amp_sp],rf_condition_data_base.values[fwd_kly_pwr]] )
-                self.update_amp_pwr_mean_dict(rf_condition_data_base.values[amp_sp],rf_condition_data_base.values[fwd_kly_pwr])
+                if rf_condition_data_base.values[fwd_kly_pwr] > rf_condition_data_base.config.llrf_config['KLY_PWR_FOR_ACTIVE_PULSE']:
+                    rf_condition_data_base.sp_pwr_hist.append( [rf_condition_data_base.values[amp_sp],rf_condition_data_base.values[fwd_kly_pwr]] )
+                    self.update_amp_pwr_mean_dict(rf_condition_data_base.values[amp_sp],rf_condition_data_base.values[fwd_kly_pwr])
             # cancer
             if rf_condition_data_base.values[amp_sp] \
                     not in rf_condition_data_base.amp_sp_history:
@@ -283,14 +290,6 @@ class rf_condition_data_base(QObject):
             r = True
         rf_condition_data_base.last_fwd_kly_pwr = rf_condition_data_base.values[fwd_kly_pwr]
         return r
-
-    # def amp_changed(self):
-    #     r = False
-    #     if rf_condition_data_base.last_amp != rf_condition_data_base.values[amp_sp]:
-    #         r = True
-    #     rf_condition_data_base.last_amp = rf_condition_data_base.values[amp_sp]
-    #     return r
-
 
     def add_to_pulse_breakdown_log(self,amp):
         if amp > 100:

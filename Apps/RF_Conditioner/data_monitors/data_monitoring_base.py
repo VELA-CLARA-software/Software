@@ -26,7 +26,8 @@ class data_monitoring_base(base):
 	mod_id = 'MOD_ID'
 	cavity_temp_id = 'CAVITY_TEMP_ID'
 	water_temp_id = 'WATER_TEMP_ID'
-	all_id = [vac_id, dc_id, mod_id, cavity_temp_id, water_temp_id]
+	sol_id = 'WATER_TEMP_ID'
+	all_id = [vac_id, dc_id, mod_id, cavity_temp_id, water_temp_id,sol_id]
 	[gen_mon_keys.update({x: None}) for x in all_id]
 	# explicit flags for possible monitors & monitors states
 	# these are used to determine if monitoring these items is happening
@@ -36,6 +37,7 @@ class data_monitoring_base(base):
 	llrf_simple_monitoring = "llrf_simple_monitoring"
 	cavity_temp_monitoring = "cavity_temp_monitoring"
 	water_temp_monitoring = "water_temp_monitoring"
+	sol_monitoring = "sol_monitoring "
 	is_monitoring = {}
 	all_monitors = [llrf_simple_monitoring,
 	                cavity_temp_monitoring,
@@ -46,13 +48,15 @@ class data_monitoring_base(base):
 	                dat.rev_power_spike_count,
 	                dat.vac_spike_status,
 	                dat.rfprot_state,
-	                dat.DC_spike_status]
+	                dat.DC_spike_status,
+					sol_monitoring]
 	[is_monitoring.update({x: False}) for x in all_monitors]
 	# these monitors have no bearing on the conditioning main_loop
 	passive_monitors = [llrf_simple_monitoring,
 					cavity_temp_monitoring,
 					water_temp_monitoring,
-		]
+						sol_monitoring
+						]
 
 	#
 	#all poossible monitors
@@ -65,6 +69,7 @@ class data_monitoring_base(base):
 	water_temp_monitor = None
 	rf_prot_monitor = None
 	vac_valve_monitor = None
+	sol_monitor = None
 	def __init__(self):
 		base.__init__(self)
 
@@ -111,6 +116,13 @@ class data_monitoring_base(base):
 		else:
 			self.logger.message('Not monitoring WATER TEMP No config data',True)
 		##
+		if bool(base.config.sol_config):
+			if self.start_sol_monitor():
+				self.logger.message('Monitoring SOLENOID READI', True)
+			else:
+				self.logger.message('Not monitoring SOLENOID READI start_sol_monitor failed', True)
+		else:
+			self.logger.message('Not monitoring SOLENOID READI No config data',True)
 		if bool(base.config.vac_config):
 			if self.start_vac_monitor():
 				self.logger.message('Monitoring VACUUM', True)
@@ -141,8 +153,6 @@ class data_monitoring_base(base):
 				self.logger.message('Not monitoring outside_masks No config data', True)
 		else:
 			self.logger.message('Not monitoring llrf No config data', True)
-
-
 
 
 	def start_vac_monitor(self):
@@ -241,6 +251,22 @@ class data_monitoring_base(base):
 			)
 			data_monitoring_base.is_monitoring[data_monitoring_base.water_temp_monitoring] = self.water_temp_monitor.set_success
 		return data_monitoring_base.is_monitoring[data_monitoring_base.water_temp_monitoring]
+
+	def start_sol_monitor(self):
+		# NOT HAPPY ABOUT HARDCODED STRINGS...
+		if self.connectPV(self.sol_id, base.config.sol_config.get('SOL_PV')):  #
+			# MAGIC_STRING
+			base.config.sol_config[self.sol_id] = self.gen_mon_keys[self.sol_id]
+			data_monitoring_base.sol_monitor = value_monitor.value_monitor(
+				gen_mon=self.gen_mon,
+				id_key=self.gen_mon_keys[self.sol_id],
+				data_dict_key=dat.sol_value,
+				update_time=base.config.sol_config['SOL_CHECK_TIME'],  # MAGIC_STRING
+				my_name='solenoid_monitor'
+			)
+			data_monitoring_base.is_monitoring[data_monitoring_base.sol_monitoring] = self.sol_monitor.set_success
+		return data_monitoring_base.is_monitoring[data_monitoring_base.sol_monitoring]
+
 
 	def start_llrf_simple_param_monitor(self):
 		data_monitoring_base.llrf_simple_param_monitor = llrf_simple_param_monitor.llrf_simple_param_monitor(

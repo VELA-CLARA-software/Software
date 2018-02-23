@@ -130,7 +130,7 @@ class rf_condition_data(dat.rf_condition_data_base):
     # neatean up!
     # neatean up!
     # neatean up!
-    def get_new_set_point(self, pwr_w):
+    def get_new_set_point(self, pwr_win):
         self.previous_power = self.current_power
         x = np.array([i[0] for i in dat.rf_condition_data_base.sp_pwr_hist])
         y = np.array([i[1] for i in dat.rf_condition_data_base.sp_pwr_hist])
@@ -140,7 +140,15 @@ class rf_condition_data(dat.rf_condition_data_base):
 
         self.current_power = np.mean(np.array([f[1] for f in dat.rf_condition_data_base.sp_pwr_hist if f[0] == max(myset)]))
 
+        # frig because start-up is using sp steps
+        pwr_w = pwr_win
+        if len(myset) == 4:
+            pwr_w = dat.rf_condition_data_base.values[dat.next_power_increase] = float(
+                ramp[dat.rf_condition_data_base.values[dat.current_ramp_index]][1])
         if len(myset) > 3:
+            dat.rf_condition_data_base.values[dat.next_power_increase] = float(
+                ramp[dat.rf_condition_data_base.values[dat.current_ramp_index]][1])
+
             min_sp =list(myset)[-4]
             # print 'myset[-3] ' + str(min_sp)
             a = [[x2,y2] for x2,y2 in dat.rf_condition_data_base.sp_pwr_hist if x2 >= min_sp]
@@ -152,13 +160,20 @@ class rf_condition_data(dat.rf_condition_data_base):
             x_min = min(x_tofit)
             x_max = max(x_tofit)
 
-            # current_power_data = [[x2,y2] for x2,y2 in a if x2==max(x_tofit)]
+            current_power_data = [[x2,y2] for x2,y2 in a if x2==max(x_tofit)]
             #
-            # self.current_power = np.mean(np.array([i[1] for i in current_power_data]))
+            self.current_power = np.mean(np.array([i[1] for i in current_power_data]))
+
+
 
             m, c = np.polyfit(x_tofit, y_tofit, 1)
+            print(m,c,self.current_power,dat.rf_condition_data_base.values[dat.last_mean_power], pwr_w )
+            print(m,c,self.current_power,dat.rf_condition_data_base.values[dat.last_mean_power], pwr_w )
+            print(m,c,self.current_power,dat.rf_condition_data_base.values[dat.last_mean_power], pwr_w )
+            print(m,c,self.current_power,dat.rf_condition_data_base.values[dat.last_mean_power], pwr_w )
 
-            predict = (self.current_power + pwr_w - c) / m
+
+            predict = int((self.current_power + pwr_w - c) / m)
             p =[predict,self.current_power + pwr_w]
             self.logger.header(self.my_name + ' get_new_set_point New SP',True)
             self.logger.message('current sp/W   = ' + "%.3E"%max(x_tofit) + ", %.3E"%self.current_power, True)

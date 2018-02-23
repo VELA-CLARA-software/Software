@@ -81,17 +81,18 @@ class main_controller(controller_base):
         self.continue_ramp()
         # enforced paus
         time.sleep(1)
-        # start trace averaging, power should on by now
+        # start trace averaging, power should be on by now
         controller_base.llrf_handler.start_trace_average()
-        if controller_base.llrfObj[0].kly_fwd_power_max < controller_base.config.llrf_config[
-            'KLY_PWR_FOR_ACTIVE_PULSE']:
-            controller_base.logger.message('WARNING Expecting RF power by now, mean power is ' + str(
-                controller_base.llrfObj[0].kly_fwd_power_max),True)
+        if controller_base.llrfObj[0].kly_fwd_power_max < controller_base.config.llrf_config['KLY_PWR_FOR_ACTIVE_PULSE']:
+            controller_base.logger.message('WARNING Expecting RF power by now, mean power is ' + \
+                                           str(controller_base.llrfObj[0].kly_fwd_power_max),True)
         controller_base.llrf_handler.set_global_check_mask(True)
 
+        # this loop hangs the application if no RF power...
         while controller_base.llrf_handler.mask_set == False:
             controller_base.llrf_handler.set_mask()
             self.set_last_mask_epoch()
+
         # print some values
         controller_base.llrf_handler.get_lo_masks_max()
         controller_base.llrf_handler.get_hi_masks_max()
@@ -105,12 +106,14 @@ class main_controller(controller_base):
             controller_base.llrf_handler.enable_trigger()
             # only check masks when power is high enough
             if controller_base.llrfObj[0].kly_fwd_power_max > controller_base.config.llrf_config['KLY_PWR_FOR_ACTIVE_PULSE']:
-                controller_base.llrf_handler.set_mask()
                 controller_base.llrf_handler.set_global_check_mask(True)
-                #self.has_power_message(True)
-                if self.has_power == False:
-                     controller_base.logger.message('main loop has power, ' + str(controller_base.llrfObj[0].kly_fwd_power_max ))
-                     self.has_power = True
+            #     controller_base.llrf_handler.force_new_mask()
+            #     #controller_base.llrf_handler.set_mask()
+            #     controller_base.llrf_handler.set_global_check_mask(True)
+            #     #self.has_power_message(True)
+            #     if self.has_power == False:
+            #          controller_base.logger.message('main loop has power, ' + str(controller_base.llrfObj[0].kly_fwd_power_max ))
+            #          self.has_power = True
             else:
                 controller_base.llrf_handler.set_global_check_mask(False)
                 #self.has_power_message(False)
@@ -133,36 +136,33 @@ class main_controller(controller_base):
 
             elif controller_base.data_monitor.new_good_no_bad():
                 # start checking masks again
-                controller_base.llrf_handler.set_global_check_mask(True)
                 if controller_base.data.values[dat.breakdown_rate_hi]:
                     self.ramp_down()
                 else:
                     self.continue_ramp()
+                controller_base.llrf_handler.set_global_check_mask(True)
+
 
             # if everything is good carry on increasing
             elif controller_base.data_monitor.all_good():
 
-                #controller_base.llrf_handler.start_trace_average_no_reset(True)
+                # if controller_base.llrfObj[0].kly_fwd_power_max > controller_base.config.llrf_config[
+                #     'KLY_PWR_FOR_ACTIVE_PULSE']:
+                #     if controller_base.llrf_handler.mask_set == False:
+                #         #controller_base.llrf_handler.set_mask()
+                #         controller_base.llrf_handler.set_mask()
+                #         self.set_last_mask_epoch()
 
-
-                if controller_base.llrf_handler.mask_set == False:
-                    controller_base.llrf_handler.set_mask()
-                    self.set_last_mask_epoch()
+                #do we force a new mask evry loop?
+                # or live with the mask at the start?
                 #print('all good')
                             # set the masks
-                #else:
-                # if self.seconds_passed(2):#magic number, reset masks every now and then if lal good?
-                # 	controller_base.llrf_handler.set_mask()
-                # 	self.set_last_mask_epoch()
-                QApplication.processEvents()
                 #print('main loop setting global check mask = TRUE')
                 #self.llrf_control.setGlobalCheckMask(True)
                 # controller_base.llrf_handler.set_global_check_mask(True)
                 # if there has been enough time since
                 # the last increase get the new llrf sp
-                # we use dto updat ebased on time elapsed
-                #if self.seconds_elapsed(self.llrf_param['TIME_BETWEEN_RF_INCREASES']):
-                # now we update base do npulses
+                # now we update based on pulses
                 if controller_base.data.reached_min_pulse_count_for_this_step(): # check this number in the look up
                     if self.gui.can_ramp:
                         if controller_base.data.values[dat.breakdown_rate_hi]:
@@ -172,6 +172,9 @@ class main_controller(controller_base):
                         else:
                             self.ramp_up()
                             self.has_not_shown_br_hi = True
+                            # if controller_base.llrfObj[0].kly_fwd_power_max > controller_base.config.llrf_config[
+                            #     'KLY_PWR_FOR_ACTIVE_PULSE']:
+                            #     controller_base.llrf_handler.force_new_mask()
                     else:# gui disabled ramp
                         pass
                         #self.logger.message('MAIN LOOP allgood, pulse count good gui in pause ramp mode')
@@ -199,7 +202,7 @@ class main_controller(controller_base):
         if new_amp:
             controller_base.llrf_handler.set_amp(new_amp)
             controller_base.data.move_up_ramp_curve()
-            self.gui.plot_amp_sp_pwr()
+            #self.gui.plot_amp_sp_pwr()
         else:
             # do nomminal increase
             controller_base.llrf_handler.set_amp(self.llrf_control.getAmpSP() + controller_base.config.llrf_config['DEFAULT_RF_INCREASE_LEVEL'])
