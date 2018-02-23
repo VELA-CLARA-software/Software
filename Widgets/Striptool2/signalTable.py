@@ -66,15 +66,6 @@ class colourPickerButton(QtGui.QPushButton):
         # send signal to MainForm class, self.__comboID is actually row number, ind is what is selected
         self.__mainForm.colourPickerButtonPushed.emit(self.__comboID)
 
-class customPVFunction(QtCore.QObject):
-    def __init__(self, parent = None, pvid=None, GeneralController=None):
-        super(customPVFunction, self).__init__(parent)
-        self.pvid = pvid
-        self.general = GeneralController
-
-    def getValue(self):
-        return float(self.general.getValue(self.pvid))
-
 class createNormalSelectionBox(QtGui.QWidget):
 
     def __init__(self, parent=None, custom=False):
@@ -153,6 +144,16 @@ class createNormalSelectionBox(QtGui.QWidget):
             self.combo3.clear()
             self.combo3.addItems(self.parent.magnetnames['Off']['PVs'].keys())
 
+class customPVFunction(QtCore.QObject):
+    def __init__(self, parent = None, pvid=None, GeneralController=None):
+        super(customPVFunction, self).__init__(parent)
+        self.pvid = pvid
+        self.general = GeneralController
+
+    def getValue(self):
+        return float(self.general.getValue(self.pvid))
+
+
 class signalTable(QtGui.QWidget):
 
     firstColumnComboBoxChanged = QtCore.pyqtSignal('PyQt_PyObject', 'PyQt_PyObject')
@@ -211,9 +212,11 @@ class signalTable(QtGui.QWidget):
         self.firstColumnComboBoxChanged.connect(self.changeSecondCombo)
         self.secondColumnComboBoxChanged.connect(self.changeThirdComboFromSecond)
 
+
     def addRow(self, name, functionForm, functionArgument, freq, colourpickercolour, logScale=False, **kwargs):
         if functionForm == 'custom':
             pvtype="DBR_DOUBLE"
+            print 'functionArgument = ', functionArgument
             pvid = self.general.connectPV(str(functionArgument))
             if pvid is not 'FAILED':
                 self.pvids.append(pvid)
@@ -261,8 +264,8 @@ class signalTable(QtGui.QWidget):
 
     def addTableRowCustom(self):
         row = self.rowNumber
-        combo4index = self.customSelectionBox.selectionBoxlayout.combo4.currentIndex()
-        name = str(self.customSelectionBox.selectionBoxlayout.combo1.displayText())
+        combo4index = self.customSelectionBox.combo4.currentIndex()
+        name = str(self.customSelectionBox.pvtextedit.displayText())
         freq = int(self.frequencies[combo4index])
         functionForm = 'custom'
         colourpickercolour = self.customSelectionBox.colorbox._color

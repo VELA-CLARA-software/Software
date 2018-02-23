@@ -1,4 +1,4 @@
-headings: ['Off', 'Gun-10', 'Quads', 'Dipoles', 'Correctors', 'BPMs', 'Custom']
+headings: ['Off', 'Gun-10', 'VELA Quads', 'Dipoles', 'Correctors', 'BPMs', 'Custom']
 frequencies: [1, 5, 10, 25, 50, 100]
 magnets:
   'Gun-10':
@@ -29,12 +29,12 @@ magnets:
   'Off':
     Names: []
     PVs: {}
-  Quads:
+  VELA Quads:
     Names: [QUAD01, QUAD02, QUAD03, QUAD04, QUAD05, QUAD06, QUAD07, QUAD08, QUAD09,
       QUAD10, QUAD11, QUAD12, QUAD13, QUAD14, QUAD15]
     PVs:
-      RI: ['self.magnets', getRI]
-      SI: ['self.magnets', getSI]
+      RI: ['self.VELAMagnets', getRI]
+      SI: ['self.VELAMagnets', getSI]
   BPMs:
     Names: [BPM01, BPM02, BPM03, BPM04, BPM05]
     PVs:
