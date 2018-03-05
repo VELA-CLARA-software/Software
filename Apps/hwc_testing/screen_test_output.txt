@@ -1,0 +1,66 @@
+Instantiated a VCscreens in Quiet Mode
+VCscreens Quiet Mode Set.
+Creating physical_VELA_INJ_Screen_Controller object
+messages Off
+debugMessages Off
+found input file
+Creating physical_CLARA_PH1_Screen_Controller object
+messages Off
+debugMessages Off
+found input file
+S01-SCR-01 monitorScreens H_GET_DEV
+CA.Client.Exception...............................................
+S01-SCR-01 monitorScreens H_DEV_STATE
+S01-SCR-01 monitorScreens H_DEV_CENT
+S01-SCR-01 monitorScreens H_MOVING
+    Warning: "User specified timeout on IO operation expired"
+    Context: "ca_create_channelS01-SCR-01 monitorScreens H_ACTPOS
+S01-SCR-01 monitorScreens H_EN
+S01-SCR-01 monitorScreens H_READY
+"
+    Source File: ..\..\Hardware\interface.cpp line 218
+S01-SCR-01 monitorScreens V_GET_DEV
+S01-SCR-01 monitorScreens V_DEV_STATE
+S01-SCR-01 monitorScreens V_DEV_CENT
+    Current Time: Wed Feb 28 2018 17:48:50.214966135
+..................................................................
+S01-SCR-01 monitorScreens V_MOVING
+S01-SCR-01 monitorScreens V_ACTPOS
+S01-SCR-01 monitorScreens V_EN
+S01-SCR-01 monitorScreens V_READY
+S02-SCR-01 monitorScreens H_GET_DEV
+S02-SCR-01 monitorScreens H_DEV_STATE
+S02-SCR-01 monitorScreens H_DEV_CENT
+S02-SCR-01 monitorScreens H_MOVING
+S02-SCR-01 monitorScreens H_ACTPOS
+S02-SCR-01 monitorScreens H_EN
+S02-SCR-01 monitorScreens H_READY
+S02-SCR-01 monitorScreens V_GET_DEV
+S02-SCR-01 monitorScreens V_DEV_STATE
+S02-SCR-01 monitorScreens V_DEV_CENT
+S02-SCR-01 monitorScreens V_MOVING
+S02-SCR-01 monitorScreens V_ACTPOS
+S02-SCR-01 monitorScreens V_EN
+S02-SCR-01 monitorScreens V_READY
+S02-SCR-02 monitorScreens H_GET_DEV
+S02-SCR-02 monitorScreens H_DEV_STATE
+S02-SCR-02 monitorScreens H_DEV_CENT
+S02-SCR-02 monitorScreens H_MOVING
+S02-SCR-02 monitorScreens H_ACTPOS
+S02-SCR-02 monitorScreens H_EN
+S02-SCR-02 monitorScreens H_READY
+S02-SCR-02 monitorScreens V_GET_DEV
+S02-SCR-02 monitorScreens V_DEV_STATE
+S02-SCR-02 monitorScreens V_DEV_CENT
+S02-SCR-02 monitorScreens V_MOVING
+S02-SCR-02 monitorScreens V_ACTPOS
+S02-SCR-02 monitorScreens V_EN
+S02-SCR-02 monitorScreens V_READY
+Number of arguments: 2 arguments.
+Argument List: ['Y:\\Controllers\\bin\\Python_Unit_Testing\\screen_test.py', 'screen_test_output.txt']
+Running Filename = Y:\Controllers\bin\Python_Unit_Testing\screen_test.py
+Passed File = screen_test_output.txt
+Traceback (most recent call last):
+  File "Y:\Controllers\bin\Python_Unit_Testing\screen_test.py", line 30, in <module>
+    from my_project import my_module
+ImportError: No module named my_project

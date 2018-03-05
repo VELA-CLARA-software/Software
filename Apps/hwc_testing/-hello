@@ -1,0 +1,3 @@
+S01-SCR-01, function = isHOut, arg = S01-SCR-01,  return = True , return type  = <type 'bool'>
+S02-SCR-01, function = isHOut, arg = S02-SCR-01,  return = True , return type  = <type 'bool'>
+S03-SCR-01, function = isHOut, arg = S03-SCR-01,  return = False , return type  = <type 'bool'>
