@@ -189,6 +189,11 @@ class plotLegendTree(ParameterTree):
                     {'name': 'Plot_Colour', 'title': 'Line Colour', 'type': 'color', 'value': self.records[name]['pen'], 'tip': "Line Colour"},
                     {'name': 'Axis', 'title': 'Choose Axis', 'type': 'list', 'values': {}, 'value': self.records[name]['axisname'], 'tip': "Choose which axis to display on"},
                     {'name': 'AxisAutoScale', 'title': 'Enable Autoscaling', 'type': 'bool', 'value': True, 'tip': "Enable autoscaling for this axis"},
+                    {'name': 'Plot Range', 'type': 'group', 'removable': False, 'expanded': False, 'children': [
+                        {'name': 'AxisZero', 'title': 'Set Axis to Zero', 'type': 'bool', 'tip': "Set Axis to start from 0"},
+                        {'name': 'RangeLower', 'title': 'From:', 'type': 'float', 'tip': "Set axis lower range"},
+                        {'name': 'RangeUpper', 'title': 'To:', 'type': 'float', 'tip': "Set axis upper range"},
+                    ]},
                     {'name': 'Log_Mode', 'title': 'Log Mode', 'type': 'bool', 'value': False, 'tip': "Set Log mode scaling"},
                     {'name': 'Show_Axis', 'title': 'Show Axis?', 'type': 'bool', 'value': False, 'tip': "Show or Remove the Axis"},
                     {'name': 'Show_Plot', 'title': 'Show Plot?', 'type': 'bool', 'value': True, 'tip': "Show or Remove the plot lines"},
@@ -199,6 +204,7 @@ class plotLegendTree(ParameterTree):
             ]}
         ]
         p = Parameter.create(parent=self, name='params', type='group', children=params)
+        self.addParameters(p, showTop=False)
         pChild = p.child(name)
         pChild.sigRemoved.connect(self.parameterSignalRemoved)
         self.parameterChildren[name] = pChild
@@ -213,6 +219,12 @@ class plotLegendTree(ParameterTree):
         pChild.child('Statistics').child('ClearStats').sigActivated.connect(lambda x: self.records[name]['worker'].resetStatistics(True))
         self.setupAxisList(name, pChild)
         pChild.child('Options').child('Show_Axis').sigValueChanged.connect(lambda x: self.records[name]['axis'].setVisible(x.value()))
+        pChild.child('Options').child('Plot Range').child('AxisZero').sigValueChanged.connect(lambda x: self.setAxisFromZero(name, pChild))
+
+        pChild.child('Options').child('Plot Range').child('RangeLower').items.keys()[0].widget.editingFinished.connect(lambda : self.setAxisLowRange(name, pChild))
+        pChild.child('Options').child('Plot Range').child('RangeUpper').items.keys()[0].widget.editingFinished.connect(lambda : self.setAxisHighRange(name, pChild))
+        self.records[name]['viewbox'].sigStateChanged.connect(lambda x: self.vbRangeChanged(x, pChild))
+
         pChild.child('Options').child('Log_Mode').sigValueChanged.connect(lambda x: self.records[name]['curve'].setLogMode(x.value()))
         pChild.child('Options').child('Show_Plot').sigValueChanged.connect(lambda x: self.records[name]['curve'].setVisibility('curve', x.value()))
         pChild.child('Options').child('FFT_Plot').sigValueChanged.connect(lambda x: self.fftselectionchange.emit(name, x.value()))
@@ -220,7 +232,7 @@ class plotLegendTree(ParameterTree):
         self.records[name]['viewbox'].sigStateChanged.connect(lambda x: pChild.child('Options').child('AxisAutoScale').setValue(x.state['autoRange'][1]))
         pChild.child('Options').child('AxisAutoScale').sigValueChanged.connect(lambda x: self.records[name]['viewbox'].enableAutoRange(y=x.value()))
         pChild.child('Save_Curve').sigActivated.connect(lambda x: self.savecurve.emit(str(name)))
-        self.addParameters(p, showTop=False)
+
         header = self.findItems(name,QtCore.Qt.MatchContains | QtCore.Qt.MatchRecursive)[0]
         header.setSelected(False)
         header.setExpanded(False)
@@ -228,6 +240,35 @@ class plotLegendTree(ParameterTree):
         header.setBackground(0,pg.mkBrush(self.records[name]['pen']))
         self.proxyHeaderText[name] = pg.SignalProxy(self.records[name]['worker'].recordLatestValueSignal, rateLimit=1, slot=lambda x: header.setText(0,name + ': ' + "{:.4}".format(x[0][1])))
         pChild.child('Options').child('Plot_Colour').sigValueChanging.connect(lambda x, y: self.changePenColour(header,name,y))
+
+    def setAxisFromZero(self, name, pChild):
+        if pChild.child('Options').child('Plot Range').child('AxisZero').value() is True:
+            self.records[name]['viewbox'].enableAutoRange(y=False)
+            currentrange = self.records[name]['viewbox'].viewRange()
+            self.records[name]['viewbox'].setYRange(0, currentrange[1][1], padding=0)
+            self.setAxisZeroState(self.records[name]['viewbox'], pChild)
+
+    def setAxisLowRange(self, name, pChild):
+            lowrange = pChild.child('Options').child('Plot Range').child('RangeLower').value()
+            self.records[name]['viewbox'].enableAutoRange(y=False)
+            currentrange = self.records[name]['viewbox'].viewRange()
+            self.records[name]['viewbox'].setYRange(lowrange, currentrange[1][1], padding=0)
+
+    def setAxisHighRange(self, name, pChild):
+        highrange = pChild.child('Options').child('Plot Range').child('RangeUpper').value()
+        self.records[name]['viewbox'].enableAutoRange(y=False)
+        currentrange = self.records[name]['viewbox'].viewRange()
+        self.records[name]['viewbox'].setYRange(currentrange[1][0], highrange, padding=0)
+
+    def vbRangeChanged(self, vb, pChild):
+        currentrange = vb.state['viewRange'][1]
+        pChild.child('Options').child('Plot Range').child('RangeLower').setValue(currentrange[0])
+        pChild.child('Options').child('Plot Range').child('RangeUpper').setValue(currentrange[1])
+        self.setAxisZeroState(vb, pChild)
+
+    def setAxisZeroState(self, vb, pChild):
+        if not abs(vb.state['viewRange'][1][0]) == 0:
+            pChild.child('Options').child('Plot Range').child('AxisZero').items.keys()[0].widget.setCheckState(False)
 
     def setupAxisList(self, name, pChild):
         if 'scrollingplot' in self.records[name]:

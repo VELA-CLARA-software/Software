@@ -56,6 +56,93 @@ class VAxis(pg.AxisItem):
     def logTickStrings(self, values, scale, spacing):
         return ["%0.1g"%abs(x) for x in 10 ** np.array(values).astype(float)]
 
+class MenuBox(pg.GraphicsObject):
+    """
+    This class draws a rectangular area. Right-clicking inside the area will
+    raise a custom context menu which also includes the context menus of
+    its parents.
+    """
+    def __init__(self, name):
+        self.name = name
+        self.pen = pg.mkPen('r')
+
+        # menu creation is deferred because it is expensive and often
+        # the user will never see the menu anyway.
+        self.menu = None
+
+        # note that the use of super() is often avoided because Qt does not
+        # allow to inherit from multiple QObject subclasses.
+        pg.GraphicsObject.__init__(self)
+
+
+    # All graphics items must have paint() and boundingRect() defined.
+    def boundingRect(self):
+        return QtCore.QRectF(0, 0, 10, 10)
+
+    def paint(self, p, *args):
+        p.setPen(self.pen)
+        p.drawRect(self.boundingRect())
+
+
+    # On right-click, raise the context menu
+    def mouseClickEvent(self, ev):
+        if ev.button() == QtCore.Qt.RightButton:
+            if self.raiseContextMenu(ev):
+                ev.accept()
+
+    def raiseContextMenu(self, ev):
+        menu = self.getContextMenus()
+
+        # Let the scene add on to the end of our context menu
+        # (this is optional)
+        menu = self.scene().addParentContextMenus(self, menu, ev)
+
+        pos = ev.screenPos()
+        menu.popup(QtCore.QPoint(pos.x(), pos.y()))
+        return True
+
+    # This method will be called when this item's _children_ want to raise
+    # a context menu that includes their parents' menus.
+    def getContextMenus(self, event=None):
+        if self.menu is None:
+            self.menu = QtGui.QMenu()
+            self.menu.setTitle(self.name+ " options..")
+
+            green = QtGui.QAction("Turn green", self.menu)
+            green.triggered.connect(self.setGreen)
+            self.menu.addAction(green)
+            self.menu.green = green
+
+            blue = QtGui.QAction("Turn blue", self.menu)
+            blue.triggered.connect(self.setBlue)
+            self.menu.addAction(blue)
+            self.menu.green = blue
+
+            alpha = QtGui.QWidgetAction(self.menu)
+            alphaSlider = QtGui.QSlider()
+            alphaSlider.setOrientation(QtCore.Qt.Horizontal)
+            alphaSlider.setMaximum(255)
+            alphaSlider.setValue(255)
+            alphaSlider.valueChanged.connect(self.setAlpha)
+            alpha.setDefaultWidget(alphaSlider)
+            self.menu.addAction(alpha)
+            self.menu.alpha = alpha
+            self.menu.alphaSlider = alphaSlider
+        return self.menu
+
+    # Define context menu callbacks
+    def setGreen(self):
+        self.pen = pg.mkPen('g')
+        # inform Qt that this item must be redrawn.
+        self.update()
+
+    def setBlue(self):
+        self.pen = pg.mkPen('b')
+        self.update()
+
+    def setAlpha(self, a):
+        self.setOpacity(a/255.)
+
 class scrollingPlot(QtGui.QWidget):
 
     doCurveUpdate = QtCore.pyqtSignal()
@@ -164,7 +251,6 @@ class scrollingPlotPlot(QtGui.QWidget):
         self.plotWidget = pg.GraphicsLayoutWidget()
         self.threads = {}
         self.workers = {}
-        self.viewboxes = {}
         self.namedaxes = {}
         self.createPlot()
         self.yScale = 1
@@ -177,12 +263,26 @@ class scrollingPlotPlot(QtGui.QWidget):
         self.leftaxis = pg.AxisItem("left")
         self.plot = self.plotWidget.addPlot(row=0,col=50, autoDownsample=True, clipToView=True, antialias=False, downsampleMethod='subsample', axisItems={'bottom':self.date_axis})
         self.plot.vb.setMouseEnabled()
+        axiszero = self.plot.vb.menu.addAction('Set Axes to 0')
+        axiszero.triggered.connect(self.setAxesToZero)
         self.plot.vb.sigYRangeChanged.connect(self.vbYRangeChanged)
         self.plot.disableAutoRange(False)
         self.plot.setRange(xRange=[-0.5,1.5])
         self.plot.showAxis('left', False)
         self.plot.mouseOver = False
         self.plot.showGrid(x=True, y=True)
+
+    def setAxesToZero(self):
+        for a in self.namedaxes.iteritems():
+            axis, vb = a[1]
+            vb.enableAutoRange(y=False)
+            currentrange = vb.viewRange()
+            vb.setYRange(0, currentrange[1][1], padding=0)
+
+    def setAxisToZero(self, vb):
+        vb.enableAutoRange(y=False)
+        currentrange = vb.viewRange()
+        vb.setYRange(0, currentrange[1][1], padding=0)
 
     def vbYRangeChanged(self,x,y):
         pos = (y[1]+y[0])/2 - self.yPos
@@ -219,6 +319,8 @@ class scrollingPlotPlot(QtGui.QWidget):
         axis.linkToView(viewbox)
         viewbox.setXLink(self.plot.vb)
         # viewbox.setYLink(self.plot.vb)
+        axiszero = viewbox.menu.addAction('Set Axis to 0')
+        axiszero.triggered.connect(lambda: self.setAxisToZero(viewbox))
         self.namedaxes[name] = [axis, viewbox]
         if not verticalRange == None:
             viewbox.setRange(yRange=verticalRange,disableAutoRange=True)
