@@ -148,6 +148,8 @@ class scopeWriterController(QObject):
         self.view.traceSizeLabel.setText(str(self.list))
         if (self.list) > 2002:
             self.view.traceWarningLabel.setText("WARNING!!!! Trace size > 2002!!!")
+        else:
+            self.view.traceWarningLabel.setText("")
         return self.cha1
 
     def movingaverage(self, interval, window_size):

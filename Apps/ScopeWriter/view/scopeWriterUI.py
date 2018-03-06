@@ -16,11 +16,11 @@ except AttributeError:
 
 class scopeWriterUi(object):
     def setupUi(self, mainWindow):
-        mainWindow.resize(1010, 410)
+        mainWindow.resize(1010, 510)
         #self.scopeCont = scopeCont
         mainWindow.setObjectName(_fromUtf8("Scope writer"))
         self.mainWidget = QtGui.QWidget(mainWindow)
-        self.mainWidget.resize(1000,400)
+        self.mainWidget.resize(1000,500)
         self.mainWidget.setObjectName(_fromUtf8("mainWidget"))
         self.mainBox = QtGui.QHBoxLayout(self.mainWidget)
         self.channelsVBox = QtGui.QVBoxLayout()
@@ -82,7 +82,7 @@ class scopeWriterUi(object):
         self.traceSizeLabel.setMaximumSize(QtCore.QSize(50, 30))
         self.traceWarningLabel = QtGui.QLabel()
         self.traceWarningLabel.setObjectName(_fromUtf8("traceWarningLabel"))
-        self.traceWarningLabel.setMaximumSize(QtCore.QSize(50, 100))
+        self.traceWarningLabel.setMaximumSize(QtCore.QSize(100, 150))
         self.setTimeBaseHBox = QtGui.QHBoxLayout()
         self.setTimeBaseHBox.addWidget(self.setTimebaseButton)
         self.setTimeBaseHBox.addWidget(self.setTimebaseTextEdit)
@@ -117,7 +117,7 @@ class scopeWriterUi(object):
         self.addToListButton.setText(_translate("mainWindow", "Add channel\n to list", None))
         self.startButton.setText(_translate("mainWindow", "Start logging\n to EPICS", None))
         self.stopButton.setText(_translate("mainWindow", "Stop logging", None))
-        self.stopButton.setText(_translate("mainWindow", "Remove channel", None))
+        self.clearLayoutButton.setText(_translate("mainWindow", "Remove channel", None))
         # self.loadButton.setText(_translate("mainWindow", "Load setup", None))
         self.setTimebaseButton.setText(_translate("mainWindow", "Set timebase", None))
         self.newFont = QtGui.QFont("Comic Sans", 20, QtGui.QFont.Bold)
