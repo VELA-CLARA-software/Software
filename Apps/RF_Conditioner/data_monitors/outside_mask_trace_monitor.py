@@ -7,6 +7,7 @@ from data.state import state
 import time
 
 
+
 class outside_mask_trace_monitor(monitor):
 	#whoami
 	my_name = 'outside_mask_trace_monitor'
@@ -23,7 +24,7 @@ class outside_mask_trace_monitor(monitor):
 	event_pulse_count_zero = 0
 
 	def __init__(self):
-		# init base-class
+		# init base-ccaget lass
 		monitor.__init__(self,timed_cooldown=True)
 		# breakdown param
 		#self.breakdown_config = outside_mask_trace_monitor.config.breakdown_config
@@ -90,7 +91,9 @@ class outside_mask_trace_monitor(monitor):
 
 			monitor.logger.message(string, True)
 
-		self.data_to_collect = list(set(temp))
+		self.data_to_collect = self.data_to_collect + temp
+		self.data_to_collect = list(set(self.data_to_collect))
+
 
 
 	def new_breakdown(self):
@@ -105,21 +108,17 @@ class outside_mask_trace_monitor(monitor):
 		print('collecting data')
 		x = []
 		for part in self.data_to_collect:
-			print part
 			if monitor.llrf_control.isOutsideMaskDataFinishedCollecting(part):
-				print('getting data')
 				new = monitor.llrf_control.getOutsideMaskDataPart(part)
-				print('got data' )
-
 				new.update({ 'vacuum' : monitor.data.values[dat.vac_level] })
 				new.update({ 'DC' : monitor.data.values[dat.DC_level] })
 				new.update({ 'SOL' : monitor.data.values[dat.sol_value] })
+				monitor.logger.message(new['message'], True)
 
 				print'dumping'
 				if self.is_forward(new['trace_name']):
 					self.forward_power_data.append(new)
 					self.logger.dump_forward(new, len(self.forward_power_data))
-					print'f dumped'
 				elif self.is_reverse(new['trace_name']):
 					self.reverse_power_data.append(new)
 					self.logger.dump_reverse(new, len(self.reverse_power_data))

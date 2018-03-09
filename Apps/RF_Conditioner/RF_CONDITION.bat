@@ -1,0 +1,1 @@
+start cmd.exe /k "C:\Users\dlerlp\Documents\RF_condition_2018\rf_condition.py"

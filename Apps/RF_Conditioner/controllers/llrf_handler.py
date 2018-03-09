@@ -3,7 +3,7 @@ from llrf_handler_base import llrf_handler_base
 from VELA_CLARA_LLRF_Control import TRIG
 import time
 from timeit import default_timer as timer
-
+from VELA_CLARA_LLRF_Control import LLRF_SCAN
 
 
 class llrf_handler(llrf_handler_base):
@@ -60,18 +60,42 @@ class llrf_handler(llrf_handler_base):
                 llrf_handler_base.logger.message(trace + ' hi max except =  ' + str(max(t)))
 
     def set_amp(self, val):
-        llrf_handler_base.llrf_control.trigOff()
+        #llrf_handler_base.llrf_control.trigOff()
+        # for trace in llrf_handler_base.config.breakdown_config['BREAKDOWN_TRACES']:#MAGIC_STRING:
+        #     llrf_handler_base.llrf_control.setTraceSCAN(trace, LLRF_SCAN.PASSIVE)  # SHOULD BE INPUT Parameter
+
+
         llrf_handler_base.llrf_control.setAmpSP(val)
         self.mask_set = False
         start = timer()
         end = start
+        success = True
         while llrf_handler_base.llrfObj[0].amp_sp != val:
             end = timer()
-        llrf_handler_base.logger.message('set_amp = ' + str(val) + ', took ' + str(end - start)+\
-                                         'time,  averages NOT reset, mask_set = False', True)
-        llrf_handler_base.llrf_control.trigExt()
+            if start - end > 3.0:#MAGIC_NUMBER
+                success = False
+                break
+        if success:
+            llrf_handler_base.logger.message('set_amp = ' + str(val) + ', took ' + str(end - start)+\
+                                         ' time,  averages NOT reset, mask_set = False', True)
+        else:
+            llrf_handler_base.logger.message('set_amp = ' + str(val) + ', FAILED to set amp in less than 3 seconds '
+                                                                       'averages NOT reset, mask_set = False', True)
+
+        #llrf_handler_base.llrf_control.trigExt()
+        # start = timer()
+        # end = start
+        # while llrf_handler_base.llrfObj[0].trig_source != TRIG.EXTERNAL:
+        #     end = timer()
+        #     if start - end > 3.0:#MAGIC_NUMBER
+        #         success = False
+        #         break
         # traces get added to the average when they pass the mask
         #self.start_trace_average_no_reset(True)
+        # for trace in llrf_handler_base.config.breakdown_config['BREAKDOWN_TRACES']:#MAGIC_STRING:
+        #     llrf_handler_base.llrf_control.setTraceSCAN(trace, LLRF_SCAN.ZERO_POINT_ONE) # SHOULD BE INPUIT Parameter
+
+
 
     def set_amp_hp(self, val):
         llrf_handler_base.llrf_control.setAmpHP(val)
@@ -85,7 +109,7 @@ class llrf_handler(llrf_handler_base):
             r = True
             #if llrf_handler_base.llrfObj[0].amp_sp > 100: #'MAGIC'
             if self.have_averages():
-            # cancerous name, chnage !!!!!
+            # cancerous name, change !!!!!
                if llrf_handler_base.llrfObj[0].kly_fwd_power_max > llrf_handler_base.config.llrf_config['KLY_PWR_FOR_ACTIVE_PULSE']:
                     self.set_trace_masks()
                     for trace in llrf_handler_base.config.breakdown_config['BREAKDOWN_TRACES']:
@@ -98,12 +122,12 @@ class llrf_handler(llrf_handler_base):
                    llrf_handler_base.logger.message(self.my_name + ' cant set mask - kly fwd power low', True)
             else:
                 if self.mask_not_set_message:
-                    llrf_handler_base.logger.message(self.my_name + ' cant set mask, NO AVERAGE Traces')
+                    llrf_handler_base.logger.message(self.my_name + ' cant set mask, NO AVERAGE Traces', True)
                 self.mask_not_set_message = False
                 r = False
                 # pass
             if r:
-                llrf_handler_base.logger.message(self.my_name + ' has set mask ')
+                llrf_handler_base.logger.message(self.my_name + ' has set mask ', True)
                 self.mask_not_set_message = True
             self.mask_set = r
 

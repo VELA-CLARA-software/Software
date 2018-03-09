@@ -3,6 +3,8 @@
 # at a later date
 from state_monitor import state_monitor
 import data.rf_condition_data_base as dat
+from VELA_CLARA_RF_Modulator_Control import GUN_MOD_STATE
+
 # At the moment its a very small simple class,
 # we may increase what it can do (i.e. reset the protection)
 # at a later date
@@ -19,4 +21,6 @@ class modulator_monitor(state_monitor):
     def check(self):
         #print('Checking mod state ' + str(self.mod[0].state))
         state_monitor.data.values[dat.modulator_state] =  self.mod[0].state
+
+
 

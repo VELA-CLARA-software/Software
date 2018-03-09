@@ -1,0 +1,429 @@
+it is redirected now
+this is also redirected
+redirected to a file
+Logging to file
+End Logging
+ unit_testing_functions
+ unit_testing_functions
+ unit_testing_functions
+ unit_testing_functions
+S01-SCR-01, function = isHOut, arg = S01-SCR-01,  return = True , return type  = <type 'bool'>
+S02-SCR-01, function = isHOut, arg = S02-SCR-01,  return = True , return type  = <type 'bool'>
+S03-SCR-01, function = isHOut, arg = S03-SCR-01,  return = False , return type  = <type 'bool'>
+ unit_testing_functions
+ unit_testing_functions
+ unit_testing_functions
+ unit_testing_functions
+S01-SCR-01, function = isHOut, arg = S01-SCR-01,  return = True , return type  = <type 'bool'>
+S02-SCR-01, function = isHOut, arg = S02-SCR-01,  return = True , return type  = <type 'bool'>
+S03-SCR-01, function = isHOut, arg = S03-SCR-01,  return = False , return type  = <type 'bool'>
+ unit_testing_functions
+ unit_testing_functions
+ unit_testing_functions
+ unit_testing_functions
+ unit_testing_functions
+ unit_testing_functions
+ unit_testing_functions
+ unit_testing_functions
+S01-SCR-01, function = isHOut, arg = S01-SCR-01,  return = True , return type  = <type 'bool'>
+S02-SCR-01, function = isHOut, arg = S02-SCR-01,  return = True , return type  = <type 'bool'>
+S03-SCR-01, function = isHOut, arg = S03-SCR-01,  return = False , return type  = <type 'bool'>
+ unit_testing_functions
+ unit_testing_functions
+ unit_testing_functions
+ unit_testing_functions
+Running Y:\Controllers\bin\Python_Unit_Testing\screen_test.py
+Running Y:\Controllers\bin\Python_Unit_Testing\screen_test.py
+Running Y:\Controllers\bin\Python_Unit_Testing\screen_test.py
+Running Y:\Controllers\bin\Python_Unit_Testing\screen_test.py
+Running Y:\Controllers\bin\Python_Unit_Testing\screen_test.py
+Running Y:\Controllers\bin\Python_Unit_Testing\screen_test.py
+Running Y:\Controllers\bin\Python_Unit_Testing\screen_test.py
+Running Y:\Controllers\bin\Python_Unit_Testing\screen_test.py
+Running Y:\Controllers\bin\Python_Unit_Testing\screen_test.py
+Running Y:\Controllers\bin\Python_Unit_Testing\screen_test.py
+Passed file = -hello
+Running Y:\Controllers\bin\Python_Unit_Testing\screen_test.py
+Passed file = -screen_test_output.txt
+Running Y:\Controllers\bin\Python_Unit_Testing\screen_test.py
+Passed file = -screen_test_output.txt
+Running Y:\Controllers\bin\Python_Unit_Testing\screen_test.py
+Passed file = -screen_test_output.txt
+Running Y:\Controllers\bin\Python_Unit_Testing\screen_test.py
+Passed file = -screen_test_output.txt
+Running Y:\Controllers\bin\Python_Unit_Testing\screen_test.py
+Passed file = screen_test_output.txt
+Running Filename = Y:\Controllers\bin\Python_Unit_Testing\screen_test.py
+Passed File = screen_test_output.txt
+Running Filename = Y:\Controllers\bin\Python_Unit_Testing\screen_test.py
+Running Filename = Y:\Controllers\bin\Python_Unit_Testing\screen_test.py
+Passed File = test.txt
+Running Filename = Y:\Controllers\bin\Python_Unit_Testing\screen_test.py
+Passed File = test.txt
+Running Filename = Y:\Controllers\bin\Python_Unit_Testing\screen_test.py
+Passed File = test.txt
+Running Filename = Y:\Controllers\bin\Python_Unit_Testing\screen_test.py
+Passed File = test.txt
+Running Filename = X:\Controllers\bin\Python_Unit_Testing\screen_test.py
+Running Filename = X:\Controllers\bin\Python_Unit_Testing\screen_test.py
+Passed File = out.txt
+Running Filename = W:\Controllers\bin\Python_HWC_Testing\screen_test.py
+Running Filename = W:\Controllers\bin\Python_HWC_Testing\screen_test.py
+Running Filename = W:\Controllers\bin\Python_HWC_Testing\screen_test.py
+Running Filename = W:\Controllers\bin\Python_HWC_Testing\screen_test.py
+Output  File = Default = log_file.txt
+Running Filename = W:\Controllers\bin\Python_HWC_Testing\screen_test.py
+Output  File = Default = log_file.txt
+Running Filename = W:\Controllers\bin\Python_HWC_Testing\screen_test.py
+Output  File = Default = log_file.txt
+Running Filename = V:\Controllers\bin\Python_HWC_Testing\screen_test.py
+Output  File = Default = log_file.txt
+scr_init = scr.init()
+scr_init.setVerbose()
+clara_ph1 = scr_init.physical_CLARA_PH1_Screen_Controller()
+Running Filename = V:\Controllers\bin\Python_HWC_Testing\screen_test.py
+Output  File = Default = log_file.txt
+scr_init = scr.init()
+scr_init.setVerbose()
+clara_ph1 = scr_init.physical_CLARA_PH1_Screen_Controller()
+Number of arguments = 1
+Argument List:['D:/VELA/GIT Projects/Software/Apps/hwc_testing/screen_test.py']
+Output  File  log_file.txt
+scr_init = scr.init()
+scr_init.setVerbose()
+clara_ph1 = scr_init.physical_CLARA_PH1_Screen_Controller()
+Number of arguments = 1
+Argument List:['D:/VELA/GIT Projects/Software/Apps/hwc_testing/screen_test.py']
+Output  File  log_file.txt
+scr_init = scr.init()
+scr_init.setVerbose()
+clara_ph1 = scr_init.physical_CLARA_PH1_Screen_Controller()
+Number of arguments = 1
+Argument List:['D:/VELA/GIT Projects/Software/Apps/hwc_testing/screen_test.py']
+Output  File  log_file.txt
+scr_init = scr.init()
+scr_init.setVerbose()
+clara_ph1 = scr_init.physical_CLARA_PH1_Screen_Controller()
+silence cant find docstring, 
+Number of arguments = 1
+Argument List:['D:/VELA/GIT Projects/Software/Apps/hwc_testing/screen_test.py']
+Output  File  log_file.txt
+scr_init = scr.init()
+scr_init.setVerbose()
+clara_ph1 = scr_init.physical_CLARA_PH1_Screen_Controller()
+silence cant find docstring, 
+Number of arguments = 1
+Argument List:['D:/VELA/GIT Projects/Software/Apps/hwc_testing/screen_test.py']
+Output  File  log_file.txt
+scr_init = scr.init()
+scr_init.setVerbose()
+clara_ph1 = scr_init.physical_CLARA_PH1_Screen_Controller()
+silence cant find docstring, 
+Number of arguments = 1
+Argument List:['D:/VELA/GIT Projects/Software/Apps/hwc_testing/screen_test.py']
+Output  File  log_file.txt
+scr_init = scr.init()
+scr_init.setVerbose()
+clara_ph1 = scr_init.physical_CLARA_PH1_Screen_Controller()
+silence cant find docstring, 
+Number of arguments = 1
+Argument List:['D:/VELA/GIT Projects/Software/Apps/hwc_testing/screen_test.py']
+Output  File  log_file.txt
+scr_init = scr.init()
+scr_init.setVerbose()
+clara_ph1 = scr_init.physical_CLARA_PH1_Screen_Controller()
+silence cant find docstring, 
+Number of arguments = 1
+Argument List:['D:/VELA/GIT Projects/Software/Apps/hwc_testing/screen_test.py']
+Output  File  log_file.txt
+scr_init = scr.init()
+scr_init.setVerbose()
+clara_ph1 = scr_init.physical_CLARA_PH1_Screen_Controller()
+silence cant find docstring, 
+Number of arguments = 1
+Argument List:['D:/VELA/GIT Projects/Software/Apps/hwc_testing/screen_test.py']
+Output  File  log_file.txt
+scr_init = scr.init()
+scr_init.setVerbose()
+clara_ph1 = scr_init.physical_CLARA_PH1_Screen_Controller()
+silence cant find docstring, 
+Number of arguments = 1
+Argument List:['D:/VELA/GIT Projects/Software/Apps/hwc_testing/screen_test.py']
+Output  File  log_file.txt
+scr_init = scr.init()
+scr_init.setVerbose()
+clara_ph1 = scr_init.physical_CLARA_PH1_Screen_Controller()
+silence cant find docstring, 
+Number of arguments = 1
+Argument List:['D:/VELA/GIT Projects/Software/Apps/hwc_testing/screen_test.py']
+Output  File  log_file.txt
+scr_init = scr.init()
+scr_init.setVerbose()
+clara_ph1 = scr_init.physical_CLARA_PH1_Screen_Controller()
+silence cant find docstring, 
+silence Has a docstring = 
+isVOut cant find docstring, 
+isVOut Has a docstring = 
+Number of arguments = 1
+Argument List:['D:/VELA/GIT Projects/Software/Apps/hwc_testing/screen_test.py']
+Output  File  log_file.txt
+scr_init = scr.init()
+scr_init.setVerbose()
+clara_ph1 = scr_init.physical_CLARA_PH1_Screen_Controller()
+silence cant find docstring, 
+silence Has a docstring = 
+isVOut cant find docstring, 
+isVOut Has a docstring = 
+Number of arguments = 1
+Argument List:['D:/VELA/GIT Projects/Software/Apps/hwc_testing/screen_test.py']
+Output  File  log_file.txt
+scr_init = scr.init()
+scr_init.setVerbose()
+clara_ph1 = scr_init.physical_CLARA_PH1_Screen_Controller()
+silence cant find docstring, 
+silence Has a docstring = 
+isVOut cant find docstring, 
+isVOut Has a docstring = 
+Number of arguments = 1
+Argument List:['D:/VELA/GIT Projects/Software/Apps/hwc_testing/screen_test.py']
+Output  File  log_file.txt
+scr_init = scr.init()
+scr_init.setVerbose()
+clara_ph1 = scr_init.physical_CLARA_PH1_Screen_Controller()
+silence cant find docstring, 
+Number of arguments = 1
+Argument List:['D:/VELA/GIT Projects/Software/Apps/hwc_testing/screen_test.py']
+Output  File  log_file.txt
+scr_init = scr.init()
+scr_init.setVerbose()
+clara_ph1 = scr_init.physical_CLARA_PH1_Screen_Controller()
+silence cant find docstring, 
+Number of arguments = 1
+Argument List:['D:/VELA/GIT Projects/Software/Apps/hwc_testing/screen_test.py']
+Output  File  log_file.txt
+scr_init = scr.init()
+scr_init.setVerbose()
+clara_ph1 = scr_init.physical_CLARA_PH1_Screen_Controller()
+silence cant find docstring, 
+Number of arguments = 1
+Argument List:['D:/VELA/GIT Projects/Software/Apps/hwc_testing/screen_test.py']
+Output  File  log_file.txt
+scr_init = scr.init()
+scr_init.setVerbose()
+clara_ph1 = scr_init.physical_CLARA_PH1_Screen_Controller()
+silence cant find docstring, 
+silence Has a docstring = 
+isVOut cant find docstring, 
+isVOut Has a docstring = 
+Number of arguments = 1
+Argument List:['D:/VELA/GIT Projects/Software/Apps/hwc_testing/screen_test.py']
+Output  File  log_file.txt
+scr_init = scr.init()
+scr_init.setVerbose()
+clara_ph1 = scr_init.physical_CLARA_PH1_Screen_Controller()
+silence cant find docstring, 
+silence cant find docstring, 
+isVOut cant find docstring, 
+isVOut Has a docstring = 
+Number of arguments = 1
+Argument List:['D:/VELA/GIT Projects/Software/Apps/hwc_testing/screen_test.py']
+Output  File  log_file.txt
+scr_init = scr.init()
+scr_init.setVerbose()
+clara_ph1 = scr_init.physical_CLARA_PH1_Screen_Controller()
+silence cant find docstring, 
+silence cant find docstring, 
+isVOut cant find docstring, 
+isVOut Has a docstring = 
+Number of arguments = 1
+Argument List:['D:/VELA/GIT Projects/Software/Apps/hwc_testing/screen_test.py']
+Output  File  log_file.txt
+scr_init = scr.init()
+scr_init.setVerbose()
+clara_ph1 = scr_init.physical_CLARA_PH1_Screen_Controller()
+silence cant find docstring, 
+silence Has a docstring = 
+isVOut cant find docstring, 
+isVOut Has a docstring = 
+Number of arguments = 1
+Argument List:['D:/VELA/GIT Projects/Software/Apps/hwc_testing/screen_test.py']
+Output  File  log_file.txt
+scr_init = scr.init()
+scr_init.setVerbose()
+clara_ph1 = scr_init.physical_CLARA_PH1_Screen_Controller()
+silence cant find docstring, 
+silence Has a docstring = 
+isVOut cant find docstring, 
+isVOut Has a docstring = 
+Number of arguments = 1
+Argument List:['D:/VELA/GIT Projects/Software/Apps/hwc_testing/screen_test.py']
+Output  File  log_file.txt
+scr_init = scr.init()
+scr_init.setVerbose()
+clara_ph1 = scr_init.physical_CLARA_PH1_Screen_Controller()
+silence cant find docstring, 
+silence Has a docstring = 
+isVOut cant find docstring, 
+isVOut Has a docstring = 
+Number of arguments = 1
+Argument List:['D:/VELA/GIT Projects/Software/Apps/hwc_testing/screen_test.py']
+Output  File  log_file.txt
+scr_init = scr.init()
+scr_init.setVerbose()
+clara_ph1 = scr_init.physical_CLARA_PH1_Screen_Controller()
+silence cant find docstring, 
+silence Has a docstring = 
+isVOut cant find docstring, 
+isVOut Has a docstring = 
+Number of arguments = 1
+Argument List:['D:/VELA/GIT Projects/Software/Apps/hwc_testing/screen_test.py']
+Output  File  log_file.txt
+scr_init = scr.init()
+scr_init.setVerbose()
+clara_ph1 = scr_init.physical_CLARA_PH1_Screen_Controller()
+silence cant find docstring, 
+silence Has a docstring = 
+isVOut cant find docstring, 
+isVOut Has a docstring = 
+Number of arguments = 1
+Argument List:['D:/VELA/GIT Projects/Software/Apps/hwc_testing/screen_test.py']
+Output  File  log_file.txt
+scr_init = scr.init()
+scr_init.setVerbose()
+clara_ph1 = scr_init.physical_CLARA_PH1_Screen_Controller()
+silence cant find docstring, 
+silence Has a docstring = 
+isVOut cant find docstring, 
+isVOut Has a docstring = 
+S01-SCR-01, function = isHOut, arg = S01-SCR-01,  return = True , return type  = <type 'bool'>
+S02-SCR-01, function = isHOut, arg = S02-SCR-01,  return = True , return type  = <type 'bool'>
+S03-SCR-01, function = isHOut, arg = S03-SCR-01,  return = False , return type  = <type 'bool'>
+Number of arguments = 1
+Argument List:['D:/VELA/GIT Projects/Software/Apps/hwc_testing/screen_test.py']
+Output  File  log_file.txt
+scr_init = scr.init()
+scr_init.setVerbose()
+clara_ph1 = scr_init.physical_CLARA_PH1_Screen_Controller()
+silence cant find docstring, 
+Number of arguments = 1
+Argument List:['D:/VELA/GIT Projects/Software/Apps/hwc_testing/screen_test.py']
+Output  File  log_file.txt
+scr_init = scr.init()
+scr_init.setVerbose()
+clara_ph1 = scr_init.physical_CLARA_PH1_Screen_Controller()
+silence cant find docstring, 
+silence Has a docstring = 
+isVOut cant find docstring, 
+isVOut Has a docstring = 
+S01-SCR-01, function = isHOut, arg = S01-SCR-01,  return = True , return type  = <type 'bool'>
+S02-SCR-01, function = isHOut, arg = S02-SCR-01,  return = True , return type  = <type 'bool'>
+S03-SCR-01, function = isHOut, arg = S03-SCR-01,  return = False , return type  = <type 'bool'>
+Number of arguments = 1
+Argument List:['D:/VELA/GIT Projects/Software/Apps/hwc_testing/screen_test.py']
+Output  File  log_file.txt
+scr_init = scr.init()
+scr_init.setVerbose()
+clara_ph1 = scr_init.physical_CLARA_PH1_Screen_Controller()
+silence cant find docstring, 
+silence Has a docstring = 
+isVOut cant find docstring, 
+isVOut Has a docstring = 
+S01-SCR-01, function = isHOut, arg = S01-SCR-01,  return = True , return type  = <type 'bool'>
+S02-SCR-01, function = isHOut, arg = S02-SCR-01,  return = True , return type  = <type 'bool'>
+S03-SCR-01, function = isHOut, arg = S03-SCR-01,  return = False , return type  = <type 'bool'>
+Number of arguments = 1
+Argument List:['D:/VELA/GIT Projects/Software/Apps/hwc_testing/screen_test.py']
+Output  File  log_file.txt
+scr_init = scr.init()
+scr_init.setVerbose()
+clara_ph1 = scr_init.physical_CLARA_PH1_Screen_Controller()
+silence cant find docstring, 
+silence Has a docstring = 
+isVOut cant find docstring, 
+isVOut Has a docstring = 
+S01-SCR-01, function = isHOut, arg = S01-SCR-01,  return = True , return type  = <type 'bool'>
+S02-SCR-01, function = isHOut, arg = S02-SCR-01,  return = True , return type  = <type 'bool'>
+S03-SCR-01, function = isHOut, arg = S03-SCR-01,  return = False , return type  = <type 'bool'>
+Number of arguments = 1
+Argument List:['D:/VELA/GIT Projects/Software/Apps/hwc_testing/screen_test.py']
+Output  File  log_file.txt
+scr_init = scr.init()
+scr_init.setVerbose()
+clara_ph1 = scr_init.physical_CLARA_PH1_Screen_Controller()
+silence cant find docstring, 
+silence Has a docstring = 
+isVOut cant find docstring, 
+isVOut Has a docstring = 
+S01-SCR-01, function = isHOut, arg = S01-SCR-01,  return = True , return type  = <type 'bool'>
+S02-SCR-01, function = isHOut, arg = S02-SCR-01,  return = True , return type  = <type 'bool'>
+S03-SCR-01, function = isHOut, arg = S03-SCR-01,  return = False , return type  = <type 'bool'>
+Number of arguments = 1
+Argument List:['D:/VELA/GIT Projects/Software/Apps/hwc_testing/screen_test.py']
+Output  File  log_file.txt
+scr_init = scr.init()
+scr_init.setVerbose()
+clara_ph1 = scr_init.physical_CLARA_PH1_Screen_Controller()
+silence cant find docstring, 
+silence Has a docstring = 
+isVOut cant find docstring, 
+isVOut Has a docstring = 
+S01-SCR-01, function = isHOut, arg = S01-SCR-01,  return = True , return type  = <type 'bool'>
+S02-SCR-01, function = isHOut, arg = S02-SCR-01,  return = True , return type  = <type 'bool'>
+S03-SCR-01, function = isHOut, arg = S03-SCR-01,  return = False , return type  = <type 'bool'>
+Number of arguments = 1
+Argument List:['D:/VELA/GIT Projects/Software/Apps/hwc_testing/screen_test.py']
+Output  File  log_file.txt
+scr_init = scr.init()
+scr_init.setVerbose()
+clara_ph1 = scr_init.physical_CLARA_PH1_Screen_Controller()
+silence cant find docstring, 
+silence Has a docstring = 
+isVOut cant find docstring, 
+isVOut Has a docstring = 
+S01-SCR-01, function = isHOut, arg = S01-SCR-01,  return = True , return type  = <type 'bool'>
+S02-SCR-01, function = isHOut, arg = S02-SCR-01,  return = True , return type  = <type 'bool'>
+S03-SCR-01, function = isHOut, arg = S03-SCR-01,  return = False , return type  = <type 'bool'>
+Number of arguments = 1
+Argument List:['D:/VELA/GIT Projects/Software/Apps/hwc_testing/screen_test.py']
+Output  File  log_file.txt
+scr_init = scr.init()
+scr_init.setVerbose()
+clara_ph1 = scr_init.physical_CLARA_PH1_Screen_Controller()
+silence cant find docstring, 
+silence Has a docstring = 
+isVOut cant find docstring, 
+isVOut Has a docstring = 
+S01-SCR-01, function = isHOut, arg = S01-SCR-01,  return = True , return type  = <type 'bool'>
+S02-SCR-01, function = isHOut, arg = S02-SCR-01,  return = True , return type  = <type 'bool'>
+S03-SCR-01, function = isHOut, arg = S03-SCR-01,  return = False , return type  = <type 'bool'>
+Number of arguments = 1
+Argument List:['D:/VELA/GIT Projects/Software/Apps/hwc_testing/screen_test.py']
+Output  File  log_file.txt
+scr_init = scr.init()
+scr_init.setVerbose()
+clara_ph1 = scr_init.physical_CLARA_PH1_Screen_Controller()
+silence cant find docstring, 
+silence Has Good Argument names, 
+isVOut cant find docstring, 
+isVOut Has Good Argument names, name
+S01-SCR-01, function = isHOut, arg = S01-SCR-01,  return = True , return type  = <type 'bool'>
+S02-SCR-01, function = isHOut, arg = S02-SCR-01,  return = True , return type  = <type 'bool'>
+S03-SCR-01, function = isHOut, arg = S03-SCR-01,  return = False , return type  = <type 'bool'>
+Number of arguments = 1
+Argument List:['D:/VELA/GIT Projects/Software/Apps/hwc_testing/screen_test.py']
+Output  File  log_file.txt
+scr_init = scr.init()
+scr_init.setVerbose()
+clara_ph1 = scr_init.physical_CLARA_PH1_Screen_Controller()
+Number of arguments = 1
+Argument List:['D:/VELA/GIT Projects/Software/Apps/hwc_testing/screen_test.py']
+Output  File  log_file.txt
+scr_init = scr.init()
+scr_init.setVerbose()
+clara_ph1 = scr_init.physical_CLARA_PH1_Screen_Controller()
+Number of arguments = 1
+Argument List:['D:/VELA/GIT Projects/Software/Apps/hwc_testing/screen_test.py']
+Output  File  log_file.txt
+scr_init = scr.init()
+scr_init.setVerbose()
+clara_ph1 = scr_init.physical_CLARA_PH1_Screen_Controller()

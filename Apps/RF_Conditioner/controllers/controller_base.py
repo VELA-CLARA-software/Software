@@ -123,9 +123,10 @@ class controller_base(base):
 			base.llrf_control = base.llrf_init.getLLRFController(MACHINE_MODE.PHYSICAL, base.llrf_type)
 			base.llrfObj = [base.llrf_control.getLLRFObjConstRef()]
 			# rationalise the trace names
-			base.config.llrf_config['TRACES_TO_SAVE'] = self.get_full_trace_name(
-				base.config.llrf_config['TRACES_TO_SAVE'])
+			base.config.llrf_config['TRACES_TO_SAVE'] = self.get_full_trace_name(base.config.llrf_config['TRACES_TO_SAVE'])
 			base.config.breakdown_config['BREAKDOWN_TRACES'] = self.get_full_trace_name(base.config.breakdown_config[ 'BREAKDOWN_TRACES'])
+			base.config.llrf_config['MEAN_TRACES'] = self.get_full_trace_name(base.config.llrf_config['MEAN_TRACES'])
+
 			controller_base.llrf_handler= llrf_handler.llrf_handler()
 			base.logger.message('start_llrf_control created ' + str(base.llrf_type) + ', llrf_handler and got full trace names:',True)
 			base.logger.message('TRACES TO SAVE: '+ ' '.join(base.config.llrf_config['TRACES_TO_SAVE']), True)

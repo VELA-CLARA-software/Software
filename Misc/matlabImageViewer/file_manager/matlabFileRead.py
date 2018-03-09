@@ -49,6 +49,7 @@ class matlabFileRead:
     def getMatlabData(self, filename, filetype):
         self.filename = filename
         self.matlabData = self.loadmat(self.filename, filetype)
+        #self.matlabData = self.loadmat1(self.filename)
         self.matlabData['filename'] = self.filename
         return self.matlabData
 
@@ -78,7 +79,6 @@ class matlabFileRead:
         """
         A recursive function which constructs from matobjects nested dictionaries
         """
-        self.allFigs = []
         self.filetype = filetype
         self.dict = {}
         self.index = 0
@@ -112,7 +112,6 @@ class matlabFileRead:
                     print "you done fucked up"
             else:
                 self.dict[strg] = self.elem
-
         return self.dict
 
     def _tolist(self, ndarray, parameter_list):
@@ -129,5 +128,69 @@ class matlabFileRead:
                 self._tolist(sub_elem, self.elem_list)
             else:
                 self.elem_list.append(sub_elem)
-
         return self.elem_list
+
+    def print_mat_nested(self, d, indent=0, nkeys=0):
+        """Pretty print nested structures from .mat files   
+        Inspired by: `StackOverflow <http://stackoverflow.com/questions/3229419/pretty-printing-nested-dictionaries-in-python>`_
+        """
+
+        # Subset dictionary to limit keys to print.  Only works on first level
+        self.d = d
+        self.indent = indent
+        self.nkeys = nkeys
+        if self.nkeys > 0:
+            self.d = {k: self.d[k] for k in self.d.keys()[:self.nkeys]}  # Dictionary comprehension: limit to first nkeys keys.
+
+        if isinstance(self.d, dict):
+            for key, value in self.d.iteritems():  # iteritems loops through key, value pairs
+                print '\t' * self.indent + 'Key: ' + str(key)
+                self.print_mat_nested(value, indent + 1)
+
+        if isinstance(self.d, numpy.ndarray) and self.d.dtype.names is not None:  # Note: and short-circuits by default
+            for n in self.d.dtype.names:  # This means it's a struct, it's bit of a kludge test.
+                print '\t' * self.indent + 'Field: ' + str(n)
+                self.print_mat_nested(self.d[n], self.indent + 1)
+
+    def loadmat1(self, filename):
+        '''
+        this function should be called instead of direct spio.loadmat
+        as it cures the problem of not properly recovering python dictionaries
+        from mat files. It calls the function check keys to cure all entries
+        which are still mat-objects
+    
+        from: `StackOverflow <http://stackoverflow.com/questions/7008608/scipy-io-loadmat-nested-structures-i-e-dictionaries>`_
+        '''
+        self.data = scipy.io.loadmat(filename, struct_as_record=False, squeeze_me=True)
+        return self._check_keys1(self.data)
+
+    def _check_keys1(self, dict):
+        '''
+        checks if entries in dictionary are mat-objects. If yes
+        todict is called to change them to nested dictionaries
+        '''
+        self.dict = dict
+        for key in self.dict:
+            if isinstance(self.dict[key], scipy.io.matlab.mio5_params.mat_struct):
+                self.dict[key] = self._todict1(self.dict[key])
+        return self.dict
+
+    def _todict1(self, matobj):
+        '''
+        A recursive function which constructs from matobjects nested dictionaries
+        '''
+        self.dictt = {}
+        self.matobj = matobj
+        for strg in self.matobj._fieldnames:
+            self.elem = self.matobj.__dict__[strg]
+            if isinstance(self.elem, scipy.io.matlab.mio5_params.mat_struct):
+                self.dictt[strg] = self._todict1(self.elem)
+            elif isinstance(self.elem, numpy.ndarray):
+                self.parameter_list = []
+                self.dictt[strg] = self._tolist(self.elem, self.parameter_list)
+            else:
+                print type(self.elem)
+                print strg
+                self.dictt[strg] = self.elem
+        return self.dictt
+

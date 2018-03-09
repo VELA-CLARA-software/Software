@@ -6,6 +6,7 @@ from gui.gui_conditioning import gui_conditioning
 import data.rf_condition_data_base as dat
 import sys
 import time
+import os
 from timeit import default_timer as timer
 
 
@@ -68,7 +69,6 @@ class main_controller(controller_base):
         self.logger.header(self.my_name + ' The RF Conditioning is Preparing to Entering Main_Loop !',True)
         # reset trigger
         controller_base.llrf_handler.enable_trigger()
-
         #
         self.llrf_control.setGlobalCheckMask(False)
         # this sets up main monitors, based on what was successfully connected
@@ -87,7 +87,7 @@ class main_controller(controller_base):
             controller_base.logger.message('WARNING Expecting RF power by now, mean power is ' + \
                                            str(controller_base.llrfObj[0].kly_fwd_power_max),True)
         controller_base.llrf_handler.set_global_check_mask(True)
-
+        #
         # this loop hangs the application if no RF power...
         while controller_base.llrf_handler.mask_set == False:
             controller_base.llrf_handler.set_mask()
@@ -97,16 +97,16 @@ class main_controller(controller_base):
         controller_base.llrf_handler.get_lo_masks_max()
         controller_base.llrf_handler.get_hi_masks_max()
 
+        #os.system("C://Users//dlerlp//Documents//RF_condition_2018//sol_wobble.py 1")
 
         controller_base.logger.header('ENTERING MAIN LOOP')
         while 1:
             #start = timer()
             # ...
             # reset trigger
-            controller_base.llrf_handler.enable_trigger()
             # only check masks when power is high enough
             if controller_base.llrfObj[0].kly_fwd_power_max > controller_base.config.llrf_config['KLY_PWR_FOR_ACTIVE_PULSE']:
-                controller_base.llrf_handler.set_global_check_mask(True)
+                pass
             #     controller_base.llrf_handler.force_new_mask()
             #     #controller_base.llrf_handler.set_mask()
             #     controller_base.llrf_handler.set_global_check_mask(True)
@@ -115,10 +115,10 @@ class main_controller(controller_base):
             #          controller_base.logger.message('main loop has power, ' + str(controller_base.llrfObj[0].kly_fwd_power_max ))
             #          self.has_power = True
             else:
-                controller_base.llrf_handler.set_global_check_mask(False)
+                #controller_base.llrf_handler.set_global_check_mask(False)
                 #self.has_power_message(False)
                 if self.has_power:
-                     controller_base.logger.message('main loop has NO power ' + str(controller_base.llrfObj[0].kly_fwd_power_max ))
+                     controller_base.logger.message('main loop has NO power ' + str(controller_base.llrfObj[0].kly_fwd_power_max ),True)
                 self.has_power = False
 
             QApplication.processEvents()
@@ -140,26 +140,17 @@ class main_controller(controller_base):
                     self.ramp_down()
                 else:
                     self.continue_ramp()
+                controller_base.llrf_handler.enable_trigger()
                 controller_base.llrf_handler.set_global_check_mask(True)
 
 
             # if everything is good carry on increasing
             elif controller_base.data_monitor.all_good():
+                # set new mask, if changed power
+                controller_base.llrf_handler.set_mask()
+                # make sure global mask checking is enabled
+                controller_base.llrf_handler.set_global_check_mask(True)
 
-                # if controller_base.llrfObj[0].kly_fwd_power_max > controller_base.config.llrf_config[
-                #     'KLY_PWR_FOR_ACTIVE_PULSE']:
-                #     if controller_base.llrf_handler.mask_set == False:
-                #         #controller_base.llrf_handler.set_mask()
-                #         controller_base.llrf_handler.set_mask()
-                #         self.set_last_mask_epoch()
-
-                #do we force a new mask evry loop?
-                # or live with the mask at the start?
-                #print('all good')
-                            # set the masks
-                #print('main loop setting global check mask = TRUE')
-                #self.llrf_control.setGlobalCheckMask(True)
-                # controller_base.llrf_handler.set_global_check_mask(True)
                 # if there has been enough time since
                 # the last increase get the new llrf sp
                 # now we update based on pulses
@@ -167,14 +158,11 @@ class main_controller(controller_base):
                     if self.gui.can_ramp:
                         if controller_base.data.values[dat.breakdown_rate_hi]:
                             if self.has_not_shown_br_hi:
-                                self.logger.message('MAIN LOOP allgood, but breakdown rate too high ' + str(controller_base.data.values[dat.breakdown_rate]))
+                                self.logger.message('MAIN LOOP all good, but breakdown rate too high ' + str(controller_base.data.values[dat.breakdown_rate]))
                                 self.has_not_shown_br_hi = False
                         else:
                             self.ramp_up()
                             self.has_not_shown_br_hi = True
-                            # if controller_base.llrfObj[0].kly_fwd_power_max > controller_base.config.llrf_config[
-                            #     'KLY_PWR_FOR_ACTIVE_PULSE']:
-                            #     controller_base.llrf_handler.force_new_mask()
                     else:# gui disabled ramp
                         pass
                         #self.logger.message('MAIN LOOP allgood, pulse count good gui in pause ramp mode')
@@ -206,7 +194,7 @@ class main_controller(controller_base):
         else:
             # do nomminal increase
             controller_base.llrf_handler.set_amp(self.llrf_control.getAmpSP() + controller_base.config.llrf_config['DEFAULT_RF_INCREASE_LEVEL'])
-            # update the next sp decraese
+            # update the next sp decrease
             controller_base.data.set_next_sp_decrease()
         self.data_monitor.outside_mask_trace_monitor.reset_event_pulse_count()
 
@@ -222,7 +210,7 @@ class main_controller(controller_base):
         self.gui.close()
         self.data.close()
         self.data.add_to_pulse_breakdown_log(controller_base.llrfObj[0].amp_sp)
-        self.logger.message('Fin - RF condtioning closing down, goodbye.')
+        self.logger.message('Fin - RF conditioning closing down, goodbye.')
         sys.exit()
 
     def set_last_mask_epoch(self):

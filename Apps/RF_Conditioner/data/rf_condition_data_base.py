@@ -20,11 +20,20 @@ rev_power_spike_count = 'rev_power_spike_count'
 cav_temp = 'cav_temp'
 water_temp = 'water_temp'
 pulse_length = 'pulse_length'
+
 fwd_cav_pwr = 'fwd_cav_pwr'
-fwd_kly_pwr = 'fwd_kly_pwer'
+fwd_kly_pwr = 'fwd_kly_pha'
 rev_kly_pwr = 'rev_kly_pwr'
 rev_cav_pwr = 'rev_cav_pwr'
 probe_pwr = 'probe_pwr'
+fwd_cav_pha = 'fwd_cav_pwr'
+fwd_kly_pha = 'fwd_kly_pha'
+rev_kly_pha = 'rev_kly_pha'
+rev_cav_pha = 'rev_cav_pha'
+probe_pha = 'probe_pha'
+
+
+
 vac_level = 'vac_level'
 DC_level = 'DC_level'
 vac_valve_status = 'vac_valve_status'
@@ -75,6 +84,13 @@ sol_value = 'sol_value'
 
 amp_ff = 'amp_ff'
 amp_sp = 'amp_sp'
+# meh ...
+phase_mask_by_power_trace_1_set = 'phase_mask_by_power_trace_1_set'
+phase_mask_by_power_trace_2_set = 'phase_mask_by_power_trace_2_set'
+
+phase_end_mask_by_power_trace_1_time = 'phase_end_mask_by_power_trace_1_time'
+phase_end_mask_by_power_trace_2_time = 'phase_end_mask_by_power_trace_2_time'
+
 all_value_keys = [rev_power_spike_count,
                   num_outside_mask_traces,
                   breakdown_rate_aim,
@@ -91,13 +107,17 @@ all_value_keys = [rev_power_spike_count,
                   fwd_kly_pwr,
                   rev_kly_pwr,
                   rev_cav_pwr,
+                  probe_pwr,
+                  fwd_kly_pha,
+                  rev_kly_pha,
+                  rev_cav_pha,
+                  probe_pha,
                   pulse_length,
                   rfprot_state,
                   llrf_output,
                   elapsed_time,
                   llrf_ff_amp_locked,
                   llrf_ff_ph_locked,
-                  probe_pwr,
                   pulse_count,
                   event_pulse_count,
                   water_temp,
@@ -119,7 +139,11 @@ all_value_keys = [rev_power_spike_count,
                   next_sp_decrease,
                   last_mean_power,
                   next_power_increase,
-                  sol_value
+                  sol_value,
+                  phase_mask_by_power_trace_1_set,
+                  phase_mask_by_power_trace_2_set,
+                  phase_end_mask_by_power_trace_1_time,
+                  phase_end_mask_by_power_trace_2_time
                   ]
 
 class rf_condition_data_base(QObject):
@@ -130,9 +154,6 @@ class rf_condition_data_base(QObject):
 
     # config
     config = config_reader()
-
-
-
     # for logging
     log_param = None
     path = None
@@ -179,7 +200,11 @@ class rf_condition_data_base(QObject):
     values[elapsed_time] = dummy + 15
     values[DC_level] = dummy + 16
     values[rev_power_spike_count] = 0
-    values[next_power_increase] = 'STARTUP'
+    values[next_power_increase] = -1
+    values[phase_mask_by_power_trace_1_set] = False
+    values[phase_mask_by_power_trace_2_set] = False
+    values[phase_end_mask_by_power_trace_1_time] = -1.0
+    values[phase_end_mask_by_power_trace_2_time] = -1.0
 
     amp_pwr_mean_data = {}
 
