@@ -7,6 +7,7 @@ import data.rf_condition_data_base as dat
 class rf_protection_monitor(state_monitor):
     # whoami
     my_name = 'rf_protection_monitor'
+    old_value = None
     def __init__(self):
         state_monitor.__init__(self, update_time=state_monitor.config.rfprot_config['RF_PROT_CHECK_TIME'])
         self.prot_object = [state_monitor.prot_control.getRFProtObjConstRef(self.llrf_type_string())]
@@ -17,4 +18,3 @@ class rf_protection_monitor(state_monitor):
     def check(self):
         #print('Checking rf protection state')
         state_monitor.data.values[dat.rfprot_state] = self.prot_object[0].status
-

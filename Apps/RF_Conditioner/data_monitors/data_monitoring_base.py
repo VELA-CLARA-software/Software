@@ -175,7 +175,9 @@ class data_monitoring_base(base):
 				should_drop_amp = base.config.vac_config['VAC_SHOULD_DROP_AMP'],  # MAGIC_STRING
 				amp_drop_value = base.config.vac_config['VAC_SPIKE_AMP_DROP'] , # MAGIC_STRING
 				my_name='vac_spike_monitor',
-                min_cooldown_time=base.config.breakdown_config['OUTSIDE_MASK_COOLDOWN_TIME'] # MAGIC_STRING
+                min_cooldown_time=base.config.breakdown_config['OUTSIDE_MASK_COOLDOWN_TIME'], # MAGIC_STRING
+				max_level=base.config.vac_config['VAC_MAX_LEVEL'], # MAGIC_STRING
+				max_drop_amp=base.config.vac_config['VAC_MAX_AMP_DROP'] # MAGIC_STRING
 			)  # MAGIC_STRING
 			data_monitoring_base.is_monitoring[dat.vac_spike_status] = data_monitoring_base.vacuum_monitor.set_success
 		return data_monitoring_base.vacuum_monitor.set_success
@@ -269,8 +271,7 @@ class data_monitoring_base(base):
 
 
 	def start_llrf_simple_param_monitor(self):
-		data_monitoring_base.llrf_simple_param_monitor = llrf_simple_param_monitor.llrf_simple_param_monitor(
-		)
+		data_monitoring_base.llrf_simple_param_monitor = llrf_simple_param_monitor.llrf_simple_param_monitor()
 		data_monitoring_base.is_monitoring[data_monitoring_base.llrf_simple_monitoring] = data_monitoring_base.llrf_simple_param_monitor.set_success
 		return data_monitoring_base.is_monitoring[data_monitoring_base.llrf_simple_monitoring]
 

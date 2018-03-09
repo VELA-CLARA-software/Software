@@ -8,6 +8,7 @@ import os
 import pickle
 from data.config_reader import config_reader
 import numpy
+import data.rf_condition_data_base as dat
 
 
 class data_logger(object):
@@ -64,7 +65,8 @@ class data_logger(object):
             self.write_log(str)
 
     def write_log(self, str):
-        write_str = datetime.now().isoformat('-').replace(":", "-").split('.', 1)[0] + ' ' + str + '\n'
+        #write_str = datetime.now().isoformat('-').replace(":", "-").split('.', 1)[0] + ' ' + str + '\n'
+        write_str = datetime.now().isoformat(' ') + ' ' + str + '\n'
         with open(self.log_path,'a') as f:
             f.write(write_str)
 
@@ -108,6 +110,7 @@ class data_logger(object):
         names = []
         types = []
         [names.append(x) for x,y in values.iteritems()]
+        names[names.index(dat.time_stamp)] =  dat.time_stamp +  ", (start = " + datetime.now().isoformat(' ') + ")"
         [types.append(str(type(y)))  for x,y in values.iteritems()]
         try:
             with open(self.data_path  + '.dat', 'ab') as f:

@@ -1,0 +1,2326 @@
+2018-02-27 09:39:35.706000 *
+*** main_controller creating HWC ***
+2018-02-27 09:39:38.561000 *
+*** llrf_handler setting all SCAN to passive***
+2018-02-27 09:39:38.577000 *
+*** llrf_handler start_trace_monitoring***
+2018-02-27 09:39:38.577000 KLYSTRON_FORWARD_PHASE SCAN set to LLRF_SCAN.ZERO_POINT_ONE
+2018-02-27 09:39:38.608000 started monitoring KLYSTRON_FORWARD_PHASE
+2018-02-27 09:39:38.608000 KLYSTRON_REVERSE_PHASE SCAN set to LLRF_SCAN.ZERO_POINT_ONE
+2018-02-27 09:39:38.624000 started monitoring KLYSTRON_REVERSE_PHASE
+2018-02-27 09:39:38.624000 KLYSTRON_FORWARD_POWER SCAN set to LLRF_SCAN.ZERO_POINT_ONE
+2018-02-27 09:39:38.655000 started monitoring KLYSTRON_FORWARD_POWER
+2018-02-27 09:39:38.655000 added KLYSTRON_FORWARD_POWER to power_traces. [should beKLYSTRON_FORWARD_POWER]
+2018-02-27 09:39:38.655000 KLYSTRON_REVERSE_POWER SCAN set to LLRF_SCAN.ZERO_POINT_ONE
+2018-02-27 09:39:38.670000 started monitoring KLYSTRON_REVERSE_POWER
+2018-02-27 09:39:38.670000 added KLYSTRON_REVERSE_POWER to power_traces. [should beKLYSTRON_REVERSE_POWER]
+2018-02-27 09:39:38.670000 LRRG_CAVITY_REVERSE_PHASE SCAN set to LLRF_SCAN.ZERO_POINT_ONE
+2018-02-27 09:39:38.702000 started monitoring LRRG_CAVITY_REVERSE_PHASE
+2018-02-27 09:39:38.702000 LRRG_CAVITY_FORWARD_PHASE SCAN set to LLRF_SCAN.ZERO_POINT_ONE
+2018-02-27 09:39:38.717000 started monitoring LRRG_CAVITY_FORWARD_PHASE
+2018-02-27 09:39:38.717000 LRRG_CAVITY_FORWARD_POWER SCAN set to LLRF_SCAN.ZERO_POINT_ONE
+2018-02-27 09:39:38.748000 started monitoring LRRG_CAVITY_FORWARD_POWER
+2018-02-27 09:39:38.748000 added LRRG_CAVITY_FORWARD_POWER to power_traces. [should beLRRG_CAVITY_FORWARD_POWER]
+2018-02-27 09:39:38.748000 LRRG_CAVITY_REVERSE_POWER SCAN set to LLRF_SCAN.ZERO_POINT_ONE
+2018-02-27 09:39:38.764000 started monitoring LRRG_CAVITY_REVERSE_POWER
+2018-02-27 09:39:38.764000 added LRRG_CAVITY_REVERSE_POWER to power_traces. [should beLRRG_CAVITY_REVERSE_POWER]
+2018-02-27 09:39:38.764000 *
+*** llrf_handler setup_trace_rolling_average***
+2018-02-27 09:39:38.764000 starting rolling average for LRRG_CAVITY_REVERSE_PHASE
+2018-02-27 09:39:38.764000 STARTED rolling average for LRRG_CAVITY_REVERSE_PHASE
+2018-02-27 09:39:38.780000 Set Infinite End Mask by Power 1, power trace = CAVITY_REVERSE_POWER, phase trace = CAVITY_REVERSE_PHASE, power level 5000.0 SUCCESS
+2018-02-27 09:39:38.780000 start_llrf_control created CLARA_LRRG, llrf_handler and got full trace names:
+2018-02-27 09:39:38.780000 TRACES TO SAVE: KLYSTRON_FORWARD_PHASE KLYSTRON_REVERSE_PHASE KLYSTRON_FORWARD_POWER KLYSTRON_REVERSE_POWER LRRG_CAVITY_REVERSE_PHASE LRRG_CAVITY_FORWARD_PHASE LRRG_CAVITY_FORWARD_POWER LRRG_CAVITY_REVERSE_POWER
+2018-02-27 09:39:38.780000 BREAKDOWN_TRACES:LRRG_CAVITY_REVERSE_PHASE
+2018-02-27 09:39:42.836000 start_mod_control created a gun modulator object
+2018-02-27 09:39:45.394000 start_vac_valve_control created CLARA_PH1 object
+2018-02-27 09:39:51.447000 start_rf_prot_control created a protection control  object
+2018-02-27 09:39:51.447000 *
+*** controller_base has read config***
+2018-02-27 09:39:51.463000 config file = test_LLRG.config
+dumping data to log
+VAC_SPIKE_DECAY_TIME:2000, VAC_CHECK_TIME:200, VAC_SHOULD_DROP_AMP:True, OUTSIDE_MASK_COOLDOWN_TIME:3000, VAC_PV:CLA-LRG1-VAC-IMG-01:P, VAC_MAX_AMP_DROP:7.0, VAC_SPIKE_DECAY_LEVEL:1.2, VAC_DECAY_MODE:LEVEL, VAC_MAX_LEVEL:5e-09, VAC_SPIKE_AMP_DROP:5.0, VAC_SPIKE_DELTA:4e-09, VAC_NUM_SAMPLES_TO_AVERAGE:7, 
+DC_SPIKE_DECAY_LEVEL:1.2, DC_PV:EBT-INJ-SCOPE-01:P1, DC_NUM_SAMPLES_TO_AVERAGE:5, DC_SPIKE_AMP_DROP:6.0, OUTSIDE_MASK_COOLDOWN_TIME:3000, DC_SHOULD_DROP_AMP:False, DC_CHECK_TIME:1000, DC_SPIKE_DELTA:0.015, DC_SPIKE_DECAY_TIME:2000, DC_DECAY_MODE:TIMED, 
+PULSE_COUNT_BREAKDOWN_LOG_FILENAME:pulse_breakdown_log.txt, OUTSIDE_MASK_FORWARD_FILENAME:outside_forward_log, OUTSIDE_MASK_REVERSE_FILENAME:outside_reverse_log, OUTSIDE_MASK_PROBE_FILENAME:outside_probe_log, LOG_DIRECTORY:C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\, AMP_PWR_LOG_TIME:50, DATA_LOG_TIME:1000, LOG_FILENAME:log.txt, DATA_LOG_FILENAME:data_log, 
+VAC_VALVE:S01-VALV-01, VAC_VALVE_AREA:CLARA_PH1, VAC_VALVE_CHECK_TIME:1000, 
+WATER_TEMPERATURE_CHECK_TIME:1000, WATER_TEMPERATURE_PV:CLA-GUN-RF-LRRG-01:RT, 
+CAVITY_TEMPERATURE_CHECK_TIME:1000, CAVITY_TEMPERATURE_PV:CLA-GUN-RF-LRRG-01:RT, 
+KRP_MEAN_TIME_TO_AVERAGE_START:1.6, KFP_MEAN_TIME_TO_AVERAGE_START:1.4, KFP_MEAN_TIME_TO_AVERAGE_END:1.8, DEFAULT_RF_INCREASE_LEVEL:10, CRP_MEAN_TIME_TO_AVERAGE_START:1.9, BREAKDOWN_RATE_AIM:100, TRACES_TO_SAVE:['KLYSTRON_FORWARD_PHASE', 'KLYSTRON_REVERSE_PHASE', 'KLYSTRON_FORWARD_POWER', 'KLYSTRON_REVERSE_POWER', 'LRRG_CAVITY_REVERSE_PHASE', 'LRRG_CAVITY_FORWARD_PHASE', 'LRRG_CAVITY_FORWARD_POWER', 'LRRG_CAVITY_REVERSE_POWER'], NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY:1000000, POWER_AIM:0.1, CFP_MEAN_TIME_TO_AVERAGE_START:1.8, LOW_POWER_INCREASE_RATE_LIMIT:1000000, DEFAULT_PULSE_COUNT:150, RF_INCREASE_LEVEL:0.001, CPP_MEAN_TIME_TO_AVERAGE_START:0.85, CPP_MEAN_TIME_TO_AVERAGE_END:0.98, LLRF_CHECK_TIME:50, RF_REPETITION_RATE:10, CRP_MEAN_TIME_TO_AVERAGE_END:2.1, KRP_MEAN_TIME_TO_AVERAGE_END:1.9, CFP_MEAN_TIME_TO_AVERAGE_END:2.0, PULSE_LENGTH_AIM:2500.0, RF_INCREASE_RATE:0.33333, EXTRA_TRACES_ON_BREAKDOWN:2, RF_STRUCTURE:CLARA_LRRG, NUM_BUFFER_TRACES:40, PULSE_LENGTH_START:100.0, PULSE_LENGTH_STEP:250.0, NORMAL_POWER_INCREASE:10000, LOW_POWER_INCREASE:1000, TIME_BETWEEN_RF_INCREASES:10, KLY_PWR_FOR_ACTIVE_PULSE:500.0, 
+CRP_MASK_FLOOR:0, CRP_AMP_DROP_VAL:2, CRP_S2:2.13, CFP_CHECK_STREAK:10, CFP_AMP_DROP_VAL:3, PHASE_MASK_BY_POWER_POWER_TRACE_1:CAVITY_REVERSE_POWER, CFP_MASK_END:2.0, BREAKDOWN_TRACES:['LRRG_CAVITY_REVERSE_PHASE'], CFP_MASK_LEVEL:35, CFP_MASK_FLOOR:5000, PHASE_MASK_BY_POWER_LEVEL_1:5000.0, CFP_AUTO_SET:False, CRP_MASK_END:4.6, CRP_NUM_AVERAGE_TRACES:5, CRP_S3:2.23, CRP_MASK_SET_TYPE:TIME, CRP_S1:0.73, CRP_AMP_DROP:True, OUTSIDE_MASK_COOLDOWN_TIME:3000, CRP_S4:4.5, PHASE_MASK_BY_POWER_PHASE_TRACE_1:CAVITY_REVERSE_PHASE, CFP_AMP_DROP:False, OUTSIDE_MASK_CHECK_TIME:100, CRP_MASK_LEVEL:20, CRP_CHECK_STREAK:2, CFP_S4:301, CFP_S3:301, CFP_S2:301, CFP_S1:63, CRP_AUTO_SET:False, CFP_MASK_TYPE:PERCENT, CFP_NUM_AVERAGE_TRACES:1, CFP_MASK_SET_TYPE:INDEX, CRP_MASK_TYPE:ABSOLUTE, 
+MOD_CHECK_TIME:1000, 
+RF_PROT_CHECK_TIME:1000, RF_STRUCTURE:CLARA_LRRG, 
+GUI_UPDATE_TIME:1000, 
+SOL_PV:CLA-GUN-MAG-SOL-02:READI, SOL_CHECK_TIME:1000, 
+2018-02-27 09:39:51.541000 *
+*** rf_condition_data pulse_count_breakdown_log ***
+2018-02-27 09:39:51.541000 log_pulse_count 1232226
+required_pulses 150
+breakdown_count 30
+log_amp_set 15698
+current_ramp_index 237
+pulse length = 1.503
+next_sp_decrease 15682
+2018-02-27 09:39:51.541000 *
+*** Last million pulses***
+2018-02-27 09:39:51.541000 Million pulses agao  = 232226
+2018-02-27 09:39:51.541000 Monitoring RF-PROTECTION
+2018-02-27 09:39:51.541000 Monitoring VAC-VALVE
+2018-02-27 09:39:51.541000 Monitoring MODULATOR
+2018-02-27 09:39:52.602000 data_monitoring Connected to PV = CLA-GUN-RF-LRRG-01:RT with ID = d0 acquiring data
+2018-02-27 09:39:52.602000 Monitoring CAVITY TEMPERATURE
+2018-02-27 09:39:53.662000 data_monitoring Connected to PV = CLA-GUN-RF-LRRG-01:RT with ID = d1 acquiring data
+2018-02-27 09:39:53.662000 Monitoring WATER TEMP
+2018-02-27 09:39:54.723000 data_monitoring Connected to PV = CLA-GUN-MAG-SOL-02:READI with ID = d2 acquiring data
+2018-02-27 09:39:54.723000 Monitoring SOLENOID READI
+2018-02-27 09:39:55.815000 data_monitoring Connected to PV = CLA-LRG1-VAC-IMG-01:P with ID = d3 acquiring data
+2018-02-27 09:39:55.815000 vac_spike_monitor will drop amp on spike detection
+2018-02-27 09:39:55.815000 vac_spike_monitor STARTED running
+2018-02-27 09:39:55.815000 Monitoring VACUUM
+2018-02-27 09:39:56.907000 data_monitoring Connected to PV = EBT-INJ-SCOPE-01:P1 with ID = d4 acquiring data
+2018-02-27 09:39:56.907000 dc_spike_monitor will NOT drop amp on spike detection
+2018-02-27 09:39:56.907000 dc_spike_monitor STARTED running
+2018-02-27 09:39:56.907000 Monitoring DC
+2018-02-27 09:39:56.907000 Monitoring llrf
+2018-02-27 09:39:56.907000 Monitoring outside_masks
+2018-02-27 09:39:56.924000 gui_conditioning has disabled ramping RF
+2018-02-27 09:39:57.180000 *
+*** llrf_handler set_mean_pwr_position***
+2018-02-27 09:39:57.180000 rf pulse end time = 1.95397699827, index = 207
+pulse_latency     = 50
+.getPulseLength() = 1.50375188346
+2018-02-27 09:39:57.180000 set_mean_pwr_position is looking for KLYSTRON_FORWARD_POWER
+2018-02-27 09:39:57.180000 KLYSTRON_FORWARD_POWER mean monitoring started
+2018-02-27 09:39:57.195000 trace_mean_start/end (us) = 1.4/1.8
+meantime = 0.4
+2018-02-27 09:39:57.195000 set_mean_pwr_position is looking for KLYSTRON_REVERSE_POWER
+2018-02-27 09:39:57.195000 KLYSTRON_REVERSE_POWER mean monitoring started
+2018-02-27 09:39:57.195000 trace_mean_start/end (us) = 1.6/1.9
+meantime = 0.3
+2018-02-27 09:39:57.211000 set_mean_pwr_position is looking for LRRG_CAVITY_FORWARD_POWER
+2018-02-27 09:39:57.211000 LRRG_CAVITY_FORWARD_POWER mean monitoring started
+2018-02-27 09:39:57.211000 trace_mean_start/end (us) = 1.8/2.0
+meantime = 0.2
+2018-02-27 09:39:57.211000 set_mean_pwr_position is looking for LRRG_CAVITY_REVERSE_POWER
+2018-02-27 09:39:57.211000 LRRG_CAVITY_REVERSE_POWER mean monitoring started
+2018-02-27 09:39:57.211000 trace_mean_start/end (us) = 1.9/2.1
+meantime = 0.2
+2018-02-27 09:39:57.211000 LRRG_CAVITY_REVERSE_PHASE, streak = 2, floor = 0, drop = True, drop_val= 2
+2018-02-27 09:39:57.211000 setNumContinuousOutsideMaskCount = True
+2018-02-27 09:39:57.211000 setMaskFloor = True
+2018-02-27 09:39:57.211000 LRRG_CAVITY_REVERSE_PHASE, setShouldCheckMask = True
+2018-02-27 09:39:57.211000 LRRG_CAVITY_REVERSE_PHASE, setDropAmpOnOutsideMaskDetection = True
+2018-02-27 09:39:57.227000 *
+*** main_controller The RF Conditioning is Preparing to Entering Main_Loop !***
+2018-02-27 09:39:58.241000 set_amp = 15698, took 0.00620855004023 time,  averages NOT reset, mask_set = False
+2018-02-27 09:39:58.241000 Adding to pulse_breakdown_log =  1232413 30 15698 237 1503
+2018-02-27 09:39:59.270000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:39:59.270000 llrf_handler cant set mask, NO AVERAGE Traces
+2018-02-27 09:39:59.660000 llrf_handler has set mask 
+2018-02-27 09:40:28.583000 gui_conditioning has enabled ramping RF
+2018-02-27 09:40:28.599000 Adding to pulse_breakdown_log =  1232726 30 15698 237 1503
+2018-02-27 09:40:28.599000 current sp/W = 8506306.73968 -1
+2018-02-27 09:40:28.614000 set_amp = 15708.0, took 0.0130862816028 time,  averages NOT reset, mask_set = False
+2018-02-27 09:40:43.544000 Adding to pulse_breakdown_log =  1232876 30 15708 237 1503
+2018-02-27 09:40:43.544000 current sp/W = 28193.7481066 -1
+2018-02-27 09:40:43.544000 set_amp = 15718.0, took 0.00601412964176 time,  averages NOT reset, mask_set = False
+2018-02-27 09:40:58.505000 Adding to pulse_breakdown_log =  1233026 30 15718 237 1503
+2018-02-27 09:40:58.505000 current sp/W = 16218.3521318 -1
+2018-02-27 09:40:58.505000 set_amp = 15728.0, took 0.00619007570373 time,  averages NOT reset, mask_set = False
+2018-02-27 09:41:13.465000 Adding to pulse_breakdown_log =  1233176 30 15728 237 1503
+2018-02-27 09:41:13.496000 *
+*** rf_condition_data get_new_set_point New SP***
+2018-02-27 09:41:13.496000 current sp/W   = 1.573E+04, 8.575E+06
+2018-02-27 09:41:13.496000 predict sp/W   = 1.574E+04, 8.595E+06
+2018-02-27 09:41:13.496000 currentx/request = 24429.8317367 20000.0
+2018-02-27 09:41:13.793000 set_amp = 15736, took 0.0062748230569 time,  averages NOT reset, mask_set = False
+2018-02-27 09:41:13.793000 *
+*** rf_condition_data set_ramp_values ***
+2018-02-27 09:41:13.793000 current ramp index   = 237
+next required pulses = 1000
+next power increase  = 20000.0
+next sp decrease     = 15708
+2018-02-27 09:42:08.004000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:42:08.004000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:42:08.066000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:42:08.066000 rf_condition_data increasing breakdown count = 31
+2018-02-27 09:42:08.066000 Adding to pulse_breakdown_log =  1233722 31 15736 237 1503
+2018-02-27 09:42:08.066000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 0
+2018-02-27 09:42:08.285000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 294.005, 273.935 < 274.005 at i = 220 us = 2.07104, EVID NOT_SET, previous EVID = 174921438
+2018-02-27 09:42:08.285000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log1
+2018-02-27 09:42:08.347000 Saved outside_mask_data part = 0
+2018-02-27 09:42:11.077000 set_amp = 15736, took 0.00592205120265 time,  averages NOT reset, mask_set = False
+2018-02-27 09:42:11.077000 Adding to pulse_breakdown_log =  1233722 31 15736 237 1503
+2018-02-27 09:43:51.153000 Adding to pulse_breakdown_log =  1234722 31 15736 237 1503
+2018-02-27 09:43:51.387000 *
+*** rf_condition_data get_new_set_point New SP***
+2018-02-27 09:43:51.387000 current sp/W   = 1.574E+04, 8.644E+06
+2018-02-27 09:43:51.387000 predict sp/W   = 1.574E+04, 8.664E+06
+2018-02-27 09:43:51.387000 currentx/request = 68369.8504871 20000.0
+2018-02-27 09:43:51.574000 set_amp = 15741, took 0.00680676665093 time,  averages NOT reset, mask_set = False
+2018-02-27 09:43:51.574000 *
+*** rf_condition_data set_ramp_values ***
+2018-02-27 09:43:51.574000 current ramp index   = 237
+next required pulses = 1000
+next power increase  = 20000.0
+next sp decrease     = 15728
+2018-02-27 09:45:31.401000 Adding to pulse_breakdown_log =  1235726 31 15741 237 1503
+2018-02-27 09:45:31.884000 *
+*** rf_condition_data get_new_set_point New SP***
+2018-02-27 09:45:31.884000 current sp/W   = 1.574E+04, 8.730E+06
+2018-02-27 09:45:31.884000 predict sp/W   = 1.574E+04, 8.750E+06
+2018-02-27 09:45:31.900000 currentx/request = 86089.1196967 20000.0
+2018-02-27 09:45:32.087000 set_amp = 15745, took 0.00555901582811 time,  averages NOT reset, mask_set = False
+2018-02-27 09:45:32.087000 *
+*** rf_condition_data set_ramp_values ***
+2018-02-27 09:45:32.087000 current ramp index   = 237
+next required pulses = 1000
+next power increase  = 20000.0
+next sp decrease     = 15736
+2018-02-27 09:47:11.976000 Adding to pulse_breakdown_log =  1236733 31 15745 237 1503
+2018-02-27 09:47:12.787000 *
+*** rf_condition_data get_new_set_point New SP***
+2018-02-27 09:47:12.787000 current sp/W   = 1.574E+04, 8.778E+06
+2018-02-27 09:47:12.787000 predict sp/W   = 1.575E+04, 8.798E+06
+2018-02-27 09:47:12.787000 currentx/request = 48402.8302636 20000.0
+2018-02-27 09:47:12.990000 set_amp = 15746, took 0.0166999204724 time,  averages NOT reset, mask_set = False
+2018-02-27 09:47:12.990000 *
+*** rf_condition_data set_ramp_values ***
+2018-02-27 09:47:12.990000 current ramp index   = 237
+next required pulses = 1000
+next power increase  = 20000.0
+next sp decrease     = 15741
+2018-02-27 09:48:52.878000 Adding to pulse_breakdown_log =  1237743 31 15746 237 1503
+2018-02-27 09:48:54.111000 *
+*** rf_condition_data get_new_set_point New SP***
+2018-02-27 09:48:54.111000 current sp/W   = 1.575E+04, 8.827E+06
+2018-02-27 09:48:54.111000 predict sp/W   = 1.575E+04, 8.847E+06
+2018-02-27 09:48:54.111000 currentx/request = 48718.0450014 20000.0
+2018-02-27 09:48:54.314000 set_amp = 15748, took 0.00432944609838 time,  averages NOT reset, mask_set = False
+2018-02-27 09:48:54.314000 *
+*** rf_condition_data set_ramp_values ***
+2018-02-27 09:48:54.314000 current ramp index   = 237
+next required pulses = 1000
+next power increase  = 20000.0
+next sp decrease     = 15745
+2018-02-27 09:50:34.109000 Adding to pulse_breakdown_log =  1238757 31 15748 237 1503
+2018-02-27 09:50:35.045000 *
+*** rf_condition_data get_new_set_point New SP***
+2018-02-27 09:50:35.045000 current sp/W   = 1.575E+04, 8.882E+06
+2018-02-27 09:50:35.060000 predict sp/W   = 1.575E+04, 8.902E+06
+2018-02-27 09:50:35.060000 currentx/request = 55703.294213 20000.0
+2018-02-27 09:50:35.248000 set_amp = 15749, took 0.00410100946112 time,  averages NOT reset, mask_set = False
+2018-02-27 09:50:35.248000 *
+*** rf_condition_data set_ramp_values ***
+2018-02-27 09:50:35.248000 current ramp index   = 237
+next required pulses = 1000
+next power increase  = 20000.0
+next sp decrease     = 15746
+2018-02-27 09:51:21.986000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:51:21.986000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:51:22.049000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:51:22.049000 rf_condition_data increasing breakdown count = 32
+2018-02-27 09:51:22.049000 Adding to pulse_breakdown_log =  1239237 32 15749 237 1503
+2018-02-27 09:51:22.049000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 1
+2018-02-27 09:51:22.267000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 142.125, 170.218 > 162.125 at i = 240 us = 2.25113, EVID NOT_SET, previous EVID = 174926986
+2018-02-27 09:51:22.267000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log2
+2018-02-27 09:51:22.329000 Saved outside_mask_data part = 1
+2018-02-27 09:51:22.345000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\vac_spike_monitor_1
+2018-02-27 09:51:22.907000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 32
+2018-02-27 09:51:22.907000 vac_spike_monitor new spike: 2.4e-08 > 4.94428571429e-09, mean = 9.44285714286e-10
+2018-02-27 09:51:22.907000 MAIN-LOOP New VAC BAD State
+2018-02-27 09:51:30.020000 vac_spike_monitor
+2018-02-27 09:51:30.020000 set_amp = 15749, took 0.013307973641 time,  averages NOT reset, mask_set = False
+2018-02-27 09:51:30.036000 Adding to pulse_breakdown_log =  1239237 32 15749 237 1503
+2018-02-27 09:51:32.766000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:51:32.782000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:51:32.860000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:51:32.860000 rf_condition_data increasing breakdown count = 33
+2018-02-27 09:51:32.860000 Adding to pulse_breakdown_log =  1239263 33 15749 237 1503
+2018-02-27 09:51:32.860000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 2
+2018-02-27 09:51:33.078000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 289.848, 310.199 > 309.848 at i = 226 us = 2.12506, EVID NOT_SET, previous EVID = 174927095
+2018-02-27 09:51:33.078000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log3
+2018-02-27 09:51:33.140000 Saved outside_mask_data part = 2
+2018-02-27 09:51:35.870000 set_amp = 15749, took 0.0109388599165 time,  averages NOT reset, mask_set = False
+2018-02-27 09:51:35.870000 Adding to pulse_breakdown_log =  1239263 33 15749 237 1503
+2018-02-27 09:51:36.167000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:51:36.182000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:51:36.245000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:51:36.245000 rf_condition_data increasing breakdown count = 34
+2018-02-27 09:51:36.245000 Adding to pulse_breakdown_log =  1239265 34 15749 237 1503
+2018-02-27 09:51:36.245000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 3
+2018-02-27 09:51:36.354000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:51:36.354000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 34
+2018-02-27 09:51:36.354000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 4
+2018-02-27 09:51:36.463000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 296.351, 318.259 > 316.351 at i = 218 us = 2.05303, EVID NOT_SET, previous EVID = 174927131
+2018-02-27 09:51:36.463000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log4
+2018-02-27 09:51:36.526000 Saved outside_mask_data part = 3
+2018-02-27 09:51:36.541000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 317.751, 245.558 < 297.751 at i = 76 us = 0.774387, EVID NOT_SET, previous EVID = 174927132
+2018-02-27 09:51:36.541000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log5
+2018-02-27 09:51:36.604000 Saved outside_mask_data part = 4
+2018-02-27 09:51:39.365000 set_amp = 15749, took 0.00732492780355 time,  averages NOT reset, mask_set = False
+2018-02-27 09:51:39.365000 Adding to pulse_breakdown_log =  1239265 34 15749 237 1503
+2018-02-27 09:51:39.365000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:51:39.677000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:51:39.693000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:51:39.739000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:51:39.739000 rf_condition_data increasing breakdown count = 35
+2018-02-27 09:51:39.739000 Adding to pulse_breakdown_log =  1239267 35 15749 237 1503
+2018-02-27 09:51:39.739000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 5
+2018-02-27 09:51:39.958000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 301.702, 323.839 > 321.702 at i = 214 us = 2.01701, EVID NOT_SET, previous EVID = 174927168
+2018-02-27 09:51:39.958000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log6
+2018-02-27 09:51:40.020000 Saved outside_mask_data part = 5
+2018-02-27 09:51:42.750000 set_amp = 15749, took 0.00704136140018 time,  averages NOT reset, mask_set = False
+2018-02-27 09:51:42.750000 Adding to pulse_breakdown_log =  1239267 35 15749 237 1503
+2018-02-27 09:51:43.078000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:51:43.078000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:51:43.125000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:51:43.125000 rf_condition_data increasing breakdown count = 36
+2018-02-27 09:51:43.125000 Adding to pulse_breakdown_log =  1239269 36 15749 237 1503
+2018-02-27 09:51:43.125000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 6
+2018-02-27 09:51:43.343000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 305.114, 327.495 > 325.114 at i = 211 us = 1.99, EVID NOT_SET, previous EVID = 174927203
+2018-02-27 09:51:43.343000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log7
+2018-02-27 09:51:43.405000 Saved outside_mask_data part = 6
+2018-02-27 09:51:46.135000 set_amp = 15749, took 0.00511973716004 time,  averages NOT reset, mask_set = False
+2018-02-27 09:51:46.135000 Adding to pulse_breakdown_log =  1239269 36 15749 237 1503
+2018-02-27 09:51:46.385000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:51:46.385000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:51:46.401000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:51:46.401000 rf_condition_data increasing breakdown count = 37
+2018-02-27 09:51:46.401000 Adding to pulse_breakdown_log =  1239271 37 15749 237 1503
+2018-02-27 09:51:46.401000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 7
+2018-02-27 09:51:46.619000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 306.076, 327.865 > 326.076 at i = 209 us = 1.97199, EVID NOT_SET, previous EVID = 174927237
+2018-02-27 09:51:46.619000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log8
+2018-02-27 09:51:46.681000 Saved outside_mask_data part = 7
+2018-02-27 09:51:49.411000 set_amp = 15749, took 0.00639417313562 time,  averages NOT reset, mask_set = False
+2018-02-27 09:51:49.411000 Adding to pulse_breakdown_log =  1239271 37 15749 237 1503
+2018-02-27 09:51:49.692000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:51:49.692000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:51:49.786000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:51:49.786000 rf_condition_data increasing breakdown count = 38
+2018-02-27 09:51:49.786000 Adding to pulse_breakdown_log =  1239273 38 15749 237 1503
+2018-02-27 09:51:49.786000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 8
+2018-02-27 09:51:49.895000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:51:49.895000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 38
+2018-02-27 09:51:49.895000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 9
+2018-02-27 09:51:50.004000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 307.521, 328.623 > 327.521 at i = 206 us = 1.94497, EVID NOT_SET, previous EVID = 174927271
+2018-02-27 09:51:50.004000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log9
+2018-02-27 09:51:50.067000 Saved outside_mask_data part = 8
+2018-02-27 09:51:50.067000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 322.945, 293.087 < 302.945 at i = 73 us = 0.747374, EVID NOT_SET, previous EVID = 174927272
+2018-02-27 09:51:50.082000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log10
+2018-02-27 09:51:50.145000 Saved outside_mask_data part = 9
+2018-02-27 09:51:52.906000 set_amp = 15749, took 0.00457019895975 time,  averages NOT reset, mask_set = False
+2018-02-27 09:51:52.906000 Adding to pulse_breakdown_log =  1239273 38 15749 237 1503
+2018-02-27 09:51:52.906000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:51:53.031000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:51:53.031000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:51:53.062000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:51:53.062000 rf_condition_data increasing breakdown count = 39
+2018-02-27 09:51:53.062000 Adding to pulse_breakdown_log =  1239275 39 15749 237 1503
+2018-02-27 09:51:53.062000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 10
+2018-02-27 09:51:53.280000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 307.52, 327.685 > 327.52 at i = 202 us = 1.90895, EVID NOT_SET, previous EVID = 174927305
+2018-02-27 09:51:53.280000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log11
+2018-02-27 09:51:53.343000 Saved outside_mask_data part = 10
+2018-02-27 09:51:56.073000 set_amp = 15749, took 0.00352683881226 time,  averages NOT reset, mask_set = False
+2018-02-27 09:51:56.073000 Adding to pulse_breakdown_log =  1239275 39 15749 237 1503
+2018-02-27 09:51:56.400000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:51:56.400000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:51:56.447000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:51:56.447000 rf_condition_data increasing breakdown count = 40
+2018-02-27 09:51:56.447000 Adding to pulse_breakdown_log =  1239277 40 15749 237 1503
+2018-02-27 09:51:56.447000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 11
+2018-02-27 09:51:56.556000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:51:56.556000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 40
+2018-02-27 09:51:56.556000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 12
+2018-02-27 09:51:56.666000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 307.948, 330.458 > 327.948 at i = 203 us = 1.91796, EVID NOT_SET, previous EVID = 174927340
+2018-02-27 09:51:56.666000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log12
+2018-02-27 09:51:56.728000 Saved outside_mask_data part = 11
+2018-02-27 09:51:56.744000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 322.945, 254.979 < 302.945 at i = 73 us = 0.747374, EVID NOT_SET, previous EVID = 174927341
+2018-02-27 09:51:56.744000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log13
+2018-02-27 09:51:56.806000 Saved outside_mask_data part = 12
+2018-02-27 09:51:59.567000 set_amp = 15749, took 0.00613494593767 time,  averages NOT reset, mask_set = False
+2018-02-27 09:51:59.567000 Adding to pulse_breakdown_log =  1239277 40 15749 237 1503
+2018-02-27 09:51:59.567000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:51:59.801000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:51:59.801000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:51:59.832000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:51:59.832000 rf_condition_data increasing breakdown count = 41
+2018-02-27 09:51:59.832000 Adding to pulse_breakdown_log =  1239278 41 15749 237 1503
+2018-02-27 09:51:59.832000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 13
+2018-02-27 09:51:59.942000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:51:59.942000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 41
+2018-02-27 09:51:59.942000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 14
+2018-02-27 09:52:00.051000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 306.772, 329.218 > 326.772 at i = 200 us = 1.89095, EVID NOT_SET, previous EVID = 174927374
+2018-02-27 09:52:00.051000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log14
+2018-02-27 09:52:00.113000 Saved outside_mask_data part = 13
+2018-02-27 09:52:00.129000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 322.945, 296.025 < 302.945 at i = 73 us = 0.747374, EVID NOT_SET, previous EVID = 174927375
+2018-02-27 09:52:00.129000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log15
+2018-02-27 09:52:00.191000 Saved outside_mask_data part = 14
+2018-02-27 09:52:03.015000 set_amp = 15749, took 0.0690737847405 time,  averages NOT reset, mask_set = False
+2018-02-27 09:52:03.015000 Adding to pulse_breakdown_log =  1239278 41 15749 237 1503
+2018-02-27 09:52:03.015000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:52:03.109000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:52:03.109000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:52:03.202000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:52:03.202000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:52:03.218000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:52:03.218000 rf_condition_data increasing breakdown count = 42
+2018-02-27 09:52:03.218000 Adding to pulse_breakdown_log =  1239279 42 15749 237 1503
+2018-02-27 09:52:03.218000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 15
+2018-02-27 09:52:03.218000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 42
+2018-02-27 09:52:03.218000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 16
+2018-02-27 09:52:03.327000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 304.575, 324.977 > 324.575 at i = 189 us = 1.7919, EVID NOT_SET, previous EVID = 174927410
+2018-02-27 09:52:03.327000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log16
+2018-02-27 09:52:03.389000 Saved outside_mask_data part = 15
+2018-02-27 09:52:03.436000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 322.945, 282.871 < 302.945 at i = 73 us = 0.747374, EVID NOT_SET, previous EVID = 174927411
+2018-02-27 09:52:03.436000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log17
+2018-02-27 09:52:03.499000 Saved outside_mask_data part = 16
+2018-02-27 09:52:06.229000 set_amp = 15749, took 0.00599829449618 time,  averages NOT reset, mask_set = False
+2018-02-27 09:52:06.229000 Adding to pulse_breakdown_log =  1239279 42 15749 237 1503
+2018-02-27 09:52:06.509000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:52:06.509000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:52:06.603000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:52:06.603000 rf_condition_data increasing breakdown count = 43
+2018-02-27 09:52:06.603000 Adding to pulse_breakdown_log =  1239281 43 15749 237 1503
+2018-02-27 09:52:06.603000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 17
+2018-02-27 09:52:06.712000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 305.787, 326.131 > 325.787 at i = 186 us = 1.76488, EVID NOT_SET, previous EVID = 174927446
+2018-02-27 09:52:06.712000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log18
+2018-02-27 09:52:06.775000 Saved outside_mask_data part = 17
+2018-02-27 09:52:09.614000 set_amp = 15749, took 0.00565256048435 time,  averages NOT reset, mask_set = False
+2018-02-27 09:52:09.614000 Adding to pulse_breakdown_log =  1239281 43 15749 237 1503
+2018-02-27 09:52:09.910000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:52:09.926000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:52:09.988000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:52:09.988000 rf_condition_data increasing breakdown count = 44
+2018-02-27 09:52:09.988000 Adding to pulse_breakdown_log =  1239283 44 15749 237 1503
+2018-02-27 09:52:09.988000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 18
+2018-02-27 09:52:10.097000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:52:10.097000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 44
+2018-02-27 09:52:10.097000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 19
+2018-02-27 09:52:10.207000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 308.077, 328.225 > 328.077 at i = 183 us = 1.73787, EVID NOT_SET, previous EVID = 174927481
+2018-02-27 09:52:10.207000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log19
+2018-02-27 09:52:10.285000 Saved outside_mask_data part = 18
+2018-02-27 09:52:10.285000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 322.945, 208.252 < 302.945 at i = 73 us = 0.747374, EVID NOT_SET, previous EVID = 174927482
+2018-02-27 09:52:10.285000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log20
+2018-02-27 09:52:10.363000 Saved outside_mask_data part = 19
+2018-02-27 09:52:13.108000 set_amp = 15749, took 0.00836711497732 time,  averages NOT reset, mask_set = False
+2018-02-27 09:52:13.108000 Adding to pulse_breakdown_log =  1239283 44 15749 237 1503
+2018-02-27 09:52:13.108000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:52:13.420000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:52:13.420000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:52:13.483000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:52:13.483000 rf_condition_data increasing breakdown count = 45
+2018-02-27 09:52:13.483000 Adding to pulse_breakdown_log =  1239285 45 15749 237 1503
+2018-02-27 09:52:13.483000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 20
+2018-02-27 09:52:13.701000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 309.72, 331.272 > 329.72 at i = 181 us = 1.71986, EVID NOT_SET, previous EVID = 174927518
+2018-02-27 09:52:13.701000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log21
+2018-02-27 09:52:13.764000 Saved outside_mask_data part = 20
+2018-02-27 09:52:16.494000 set_amp = 15749, took 0.00489745863513 time,  averages NOT reset, mask_set = False
+2018-02-27 09:52:16.494000 Adding to pulse_breakdown_log =  1239285 45 15749 237 1503
+2018-02-27 09:52:16.728000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:52:16.728000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:52:16.759000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:52:16.759000 rf_condition_data increasing breakdown count = 46
+2018-02-27 09:52:16.759000 Adding to pulse_breakdown_log =  1239286 46 15749 237 1503
+2018-02-27 09:52:16.759000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 21
+2018-02-27 09:52:16.977000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 309.72, 331.567 > 329.72 at i = 181 us = 1.71986, EVID NOT_SET, previous EVID = 174927552
+2018-02-27 09:52:16.977000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log22
+2018-02-27 09:52:17.040000 Saved outside_mask_data part = 21
+2018-02-27 09:52:19.770000 set_amp = 15749, took 0.00664577600423 time,  averages NOT reset, mask_set = False
+2018-02-27 09:52:19.770000 Adding to pulse_breakdown_log =  1239286 46 15749 237 1503
+2018-02-27 09:52:20.128000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:52:20.128000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:52:20.144000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:52:20.144000 rf_condition_data increasing breakdown count = 47
+2018-02-27 09:52:20.144000 Adding to pulse_breakdown_log =  1239288 47 15749 237 1503
+2018-02-27 09:52:20.144000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 22
+2018-02-27 09:52:20.253000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:52:20.253000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 47
+2018-02-27 09:52:20.253000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 23
+2018-02-27 09:52:20.362000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 309.72, 332.575 > 329.72 at i = 181 us = 1.71986, EVID NOT_SET, previous EVID = 174927587
+2018-02-27 09:52:20.362000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log23
+2018-02-27 09:52:20.425000 Saved outside_mask_data part = 22
+2018-02-27 09:52:20.440000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 322.945, 258.585 < 302.945 at i = 73 us = 0.747374, EVID NOT_SET, previous EVID = 174927588
+2018-02-27 09:52:20.440000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log24
+2018-02-27 09:52:20.503000 Saved outside_mask_data part = 23
+2018-02-27 09:52:23.264000 set_amp = 15749, took 0.00684371532395 time,  averages NOT reset, mask_set = False
+2018-02-27 09:52:23.264000 Adding to pulse_breakdown_log =  1239288 47 15749 237 1503
+2018-02-27 09:52:23.264000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:52:23.529000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:52:23.529000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:52:23.639000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:52:23.639000 rf_condition_data increasing breakdown count = 48
+2018-02-27 09:52:23.639000 Adding to pulse_breakdown_log =  1239289 48 15749 237 1503
+2018-02-27 09:52:23.639000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 24
+2018-02-27 09:52:23.748000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:52:23.748000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 48
+2018-02-27 09:52:23.748000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 25
+2018-02-27 09:52:23.857000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 312.568, 333.868 > 332.568 at i = 178 us = 1.69285, EVID NOT_SET, previous EVID = 174927623
+2018-02-27 09:52:23.857000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log25
+2018-02-27 09:52:23.919000 Saved outside_mask_data part = 24
+2018-02-27 09:52:23.935000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 320.837, 282.289 < 300.837 at i = 74 us = 0.756378, EVID NOT_SET, previous EVID = 174927624
+2018-02-27 09:52:23.935000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log26
+2018-02-27 09:52:23.997000 Saved outside_mask_data part = 25
+2018-02-27 09:52:26.759000 set_amp = 15749, took 0.00525169670652 time,  averages NOT reset, mask_set = False
+2018-02-27 09:52:26.759000 Adding to pulse_breakdown_log =  1239289 48 15749 237 1503
+2018-02-27 09:52:26.774000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:52:27.133000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:52:27.133000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:52:27.242000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:52:27.242000 rf_condition_data increasing breakdown count = 49
+2018-02-27 09:52:27.242000 Adding to pulse_breakdown_log =  1239291 49 15749 237 1503
+2018-02-27 09:52:27.242000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 26
+2018-02-27 09:52:27.351000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 313.306, 334.634 > 333.306 at i = 177 us = 1.68384, EVID NOT_SET, previous EVID = 174927659
+2018-02-27 09:52:27.351000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log27
+2018-02-27 09:52:27.414000 Saved outside_mask_data part = 26
+2018-02-27 09:52:30.253000 set_amp = 15749, took 0.00679122474878 time,  averages NOT reset, mask_set = False
+2018-02-27 09:52:30.253000 Adding to pulse_breakdown_log =  1239291 49 15749 237 1503
+2018-02-27 09:52:30.627000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:52:30.627000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:52:30.737000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:52:30.737000 rf_condition_data increasing breakdown count = 50
+2018-02-27 09:52:30.737000 Adding to pulse_breakdown_log =  1239293 50 15749 237 1503
+2018-02-27 09:52:30.737000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 27
+2018-02-27 09:52:30.846000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:52:30.846000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 50
+2018-02-27 09:52:30.846000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 28
+2018-02-27 09:52:30.955000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 313.306, 333.542 > 333.306 at i = 177 us = 1.68384, EVID NOT_SET, previous EVID = 174927694
+2018-02-27 09:52:30.955000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log28
+2018-02-27 09:52:31.017000 Saved outside_mask_data part = 27
+2018-02-27 09:52:31.033000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 322.945, 228.526 < 302.945 at i = 73 us = 0.747374, EVID NOT_SET, previous EVID = 174927695
+2018-02-27 09:52:31.033000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log29
+2018-02-27 09:52:31.095000 Saved outside_mask_data part = 28
+2018-02-27 09:52:33.857000 set_amp = 15749, took 0.00548805091637 time,  averages NOT reset, mask_set = False
+2018-02-27 09:52:33.857000 Adding to pulse_breakdown_log =  1239293 50 15749 237 1503
+2018-02-27 09:52:33.857000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:52:34.231000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:52:34.247000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:52:34.340000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:52:34.340000 rf_condition_data increasing breakdown count = 51
+2018-02-27 09:52:34.340000 Adding to pulse_breakdown_log =  1239295 51 15749 237 1503
+2018-02-27 09:52:34.340000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 29
+2018-02-27 09:52:34.450000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:52:34.450000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 51
+2018-02-27 09:52:34.450000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 30
+2018-02-27 09:52:34.559000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 314.263, 335.261 > 334.263 at i = 176 us = 1.67484, EVID NOT_SET, previous EVID = 174927730
+2018-02-27 09:52:34.559000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log30
+2018-02-27 09:52:34.621000 Saved outside_mask_data part = 29
+2018-02-27 09:52:34.637000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 312.166, 254.865 < 292.166 at i = 79 us = 0.801401, EVID NOT_SET, previous EVID = 174927731
+2018-02-27 09:52:34.637000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log31
+2018-02-27 09:52:34.699000 Saved outside_mask_data part = 30
+2018-02-27 09:52:37.460000 set_amp = 15749, took 0.00670677063908 time,  averages NOT reset, mask_set = False
+2018-02-27 09:52:37.460000 Adding to pulse_breakdown_log =  1239295 51 15749 237 1503
+2018-02-27 09:52:37.460000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:52:37.648000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:52:37.648000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:52:37.726000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:52:37.726000 rf_condition_data increasing breakdown count = 52
+2018-02-27 09:52:37.726000 Adding to pulse_breakdown_log =  1239296 52 15749 237 1503
+2018-02-27 09:52:37.726000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 31
+2018-02-27 09:52:37.835000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:52:37.835000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 52
+2018-02-27 09:52:37.835000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 32
+2018-02-27 09:52:37.944000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 322.945, 346.873 > 342.945 at i = 73 us = 0.747374, EVID NOT_SET, previous EVID = 174927768
+2018-02-27 09:52:37.944000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log32
+2018-02-27 09:52:38.006000 Saved outside_mask_data part = 32
+2018-02-27 09:52:38.022000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 313.306, 336.261 > 333.306 at i = 177 us = 1.68384, EVID NOT_SET, previous EVID = 174927767
+2018-02-27 09:52:38.022000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log33
+2018-02-27 09:52:38.084000 Saved outside_mask_data part = 31
+2018-02-27 09:52:40.846000 set_amp = 15749, took 0.00521298857279 time,  averages NOT reset, mask_set = False
+2018-02-27 09:52:40.846000 Adding to pulse_breakdown_log =  1239296 52 15749 237 1503
+2018-02-27 09:52:40.846000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:52:41.048000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:52:41.048000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:52:41.111000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:52:41.111000 rf_condition_data increasing breakdown count = 53
+2018-02-27 09:52:41.111000 Adding to pulse_breakdown_log =  1239297 53 15749 237 1503
+2018-02-27 09:52:41.111000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 33
+2018-02-27 09:52:41.329000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 314.263, 336.878 > 334.263 at i = 176 us = 1.67484, EVID NOT_SET, previous EVID = 174927803
+2018-02-27 09:52:41.329000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log34
+2018-02-27 09:52:41.392000 Saved outside_mask_data part = 33
+2018-02-27 09:52:44.122000 set_amp = 15749, took 0.00478368018162 time,  averages NOT reset, mask_set = False
+2018-02-27 09:52:44.122000 Adding to pulse_breakdown_log =  1239297 53 15749 237 1503
+2018-02-27 09:52:44.340000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:52:44.340000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:52:44.387000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:52:44.387000 rf_condition_data increasing breakdown count = 54
+2018-02-27 09:52:44.387000 Adding to pulse_breakdown_log =  1239299 54 15749 237 1503
+2018-02-27 09:52:44.387000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 34
+2018-02-27 09:52:44.496000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:52:44.496000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 54
+2018-02-27 09:52:44.496000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 35
+2018-02-27 09:52:44.605000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 314.263, 336.749 > 334.263 at i = 176 us = 1.67484, EVID NOT_SET, previous EVID = 174927837
+2018-02-27 09:52:44.605000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log35
+2018-02-27 09:52:44.683000 Saved outside_mask_data part = 34
+2018-02-27 09:52:44.683000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 317.751, 289.998 < 297.751 at i = 76 us = 0.774387, EVID NOT_SET, previous EVID = 174927838
+2018-02-27 09:52:44.683000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log36
+2018-02-27 09:52:44.761000 Saved outside_mask_data part = 35
+2018-02-27 09:52:47.507000 set_amp = 15749, took 0.00694898971767 time,  averages NOT reset, mask_set = False
+2018-02-27 09:52:47.507000 Adding to pulse_breakdown_log =  1239299 54 15749 237 1503
+2018-02-27 09:52:47.507000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:52:47.647000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:52:47.647000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:52:47.663000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:52:47.663000 rf_condition_data increasing breakdown count = 55
+2018-02-27 09:52:47.663000 Adding to pulse_breakdown_log =  1239300 55 15749 237 1503
+2018-02-27 09:52:47.663000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 36
+2018-02-27 09:52:47.881000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 314.659, 335.977 > 334.659 at i = 174 us = 1.65683, EVID NOT_SET, previous EVID = 174927872
+2018-02-27 09:52:47.881000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log37
+2018-02-27 09:52:47.944000 Saved outside_mask_data part = 36
+2018-02-27 09:52:50.674000 set_amp = 15749, took 0.00668331116412 time,  averages NOT reset, mask_set = False
+2018-02-27 09:52:50.674000 Adding to pulse_breakdown_log =  1239300 55 15749 237 1503
+2018-02-27 09:52:50.955000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:52:50.955000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:52:51.048000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:52:51.048000 rf_condition_data increasing breakdown count = 56
+2018-02-27 09:52:51.048000 Adding to pulse_breakdown_log =  1239302 56 15749 237 1503
+2018-02-27 09:52:51.048000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 37
+2018-02-27 09:52:51.157000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:52:51.157000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 56
+2018-02-27 09:52:51.157000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 38
+2018-02-27 09:52:51.267000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 314.659, 336.73 > 334.659 at i = 174 us = 1.65683, EVID NOT_SET, previous EVID = 174927906
+2018-02-27 09:52:51.267000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log38
+2018-02-27 09:52:51.329000 Saved outside_mask_data part = 37
+2018-02-27 09:52:51.329000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 322.945, 290.966 < 302.945 at i = 73 us = 0.747374, EVID NOT_SET, previous EVID = 174927907
+2018-02-27 09:52:51.345000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log39
+2018-02-27 09:52:51.407000 Saved outside_mask_data part = 38
+2018-02-27 09:52:54.168000 set_amp = 15749, took 0.00673844093023 time,  averages NOT reset, mask_set = False
+2018-02-27 09:52:54.168000 Adding to pulse_breakdown_log =  1239302 56 15749 237 1503
+2018-02-27 09:52:54.168000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:52:54.449000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:52:54.449000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:52:54.543000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:52:54.543000 rf_condition_data increasing breakdown count = 57
+2018-02-27 09:52:54.543000 Adding to pulse_breakdown_log =  1239304 57 15749 237 1503
+2018-02-27 09:52:54.543000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 39
+2018-02-27 09:52:54.652000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:52:54.652000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 57
+2018-02-27 09:52:54.652000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 40
+2018-02-27 09:52:54.761000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 322.945, 283.675 < 302.945 at i = 73 us = 0.747374, EVID NOT_SET, previous EVID = 174927944
+2018-02-27 09:52:54.761000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log40
+2018-02-27 09:52:54.824000 Saved outside_mask_data part = 40
+2018-02-27 09:52:54.839000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 314.659, 336.541 > 334.659 at i = 174 us = 1.65683, EVID NOT_SET, previous EVID = 174927943
+2018-02-27 09:52:54.839000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log41
+2018-02-27 09:52:54.902000 Saved outside_mask_data part = 39
+2018-02-27 09:52:57.663000 set_amp = 15749, took 0.0066657165579 time,  averages NOT reset, mask_set = False
+2018-02-27 09:52:57.663000 Adding to pulse_breakdown_log =  1239304 57 15749 237 1503
+2018-02-27 09:52:57.663000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:52:57.959000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:52:57.959000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:52:58.037000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:52:58.037000 rf_condition_data increasing breakdown count = 58
+2018-02-27 09:52:58.037000 Adding to pulse_breakdown_log =  1239306 58 15749 237 1503
+2018-02-27 09:52:58.037000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 41
+2018-02-27 09:52:58.256000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 314.765, 335.087 > 334.765 at i = 172 us = 1.63882, EVID NOT_SET, previous EVID = 174927980
+2018-02-27 09:52:58.256000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log42
+2018-02-27 09:52:58.318000 Saved outside_mask_data part = 41
+2018-02-27 09:53:01.048000 set_amp = 15749, took 0.00793839307289 time,  averages NOT reset, mask_set = False
+2018-02-27 09:53:01.048000 Adding to pulse_breakdown_log =  1239306 58 15749 237 1503
+2018-02-27 09:53:01.360000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:53:01.360000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:53:01.422000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:53:01.422000 rf_condition_data increasing breakdown count = 59
+2018-02-27 09:53:01.422000 Adding to pulse_breakdown_log =  1239308 59 15749 237 1503
+2018-02-27 09:53:01.422000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 42
+2018-02-27 09:53:01.532000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:53:01.532000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 59
+2018-02-27 09:53:01.532000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 43
+2018-02-27 09:53:01.641000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 314.765, 335.585 > 334.765 at i = 172 us = 1.63882, EVID NOT_SET, previous EVID = 174928015
+2018-02-27 09:53:01.641000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log43
+2018-02-27 09:53:01.703000 Saved outside_mask_data part = 42
+2018-02-27 09:53:01.719000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 322.945, 224.36 < 302.945 at i = 73 us = 0.747374, EVID NOT_SET, previous EVID = 174928016
+2018-02-27 09:53:01.719000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log44
+2018-02-27 09:53:01.781000 Saved outside_mask_data part = 43
+2018-02-27 09:53:04.543000 set_amp = 15749, took 0.00625019060817 time,  averages NOT reset, mask_set = False
+2018-02-27 09:53:04.543000 Adding to pulse_breakdown_log =  1239308 59 15749 237 1503
+2018-02-27 09:53:04.543000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:53:04.761000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:53:04.761000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:53:04.808000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:53:04.808000 rf_condition_data increasing breakdown count = 60
+2018-02-27 09:53:04.808000 Adding to pulse_breakdown_log =  1239309 60 15749 237 1503
+2018-02-27 09:53:04.808000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 44
+2018-02-27 09:53:04.917000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:53:04.917000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 60
+2018-02-27 09:53:04.917000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 45
+2018-02-27 09:53:05.026000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 314.553, 337.64 > 334.553 at i = 173 us = 1.64782, EVID NOT_SET, previous EVID = 174928051
+2018-02-27 09:53:05.026000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log45
+2018-02-27 09:53:05.089000 Saved outside_mask_data part = 44
+2018-02-27 09:53:05.104000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 322.945, 124.873 < 302.945 at i = 73 us = 0.747374, EVID NOT_SET, previous EVID = 174928052
+2018-02-27 09:53:05.104000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log46
+2018-02-27 09:53:05.167000 Saved outside_mask_data part = 45
+2018-02-27 09:53:07.928000 set_amp = 15749, took 0.00660589489689 time,  averages NOT reset, mask_set = False
+2018-02-27 09:53:07.928000 Adding to pulse_breakdown_log =  1239309 60 15749 237 1503
+2018-02-27 09:53:07.928000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:53:08.271000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:53:08.271000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:53:08.302000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:53:08.302000 rf_condition_data increasing breakdown count = 61
+2018-02-27 09:53:08.302000 Adding to pulse_breakdown_log =  1239311 61 15749 237 1503
+2018-02-27 09:53:08.302000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 46
+2018-02-27 09:53:08.411000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:53:08.411000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 61
+2018-02-27 09:53:08.411000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 47
+2018-02-27 09:53:08.521000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 314.553, 337.674 > 334.553 at i = 173 us = 1.64782, EVID NOT_SET, previous EVID = 174928086
+2018-02-27 09:53:08.521000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log47
+2018-02-27 09:53:08.583000 Saved outside_mask_data part = 46
+2018-02-27 09:53:08.599000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 322.945, 31.7759 < 302.945 at i = 73 us = 0.747374, EVID NOT_SET, previous EVID = 174928087
+2018-02-27 09:53:08.599000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log48
+2018-02-27 09:53:08.661000 Saved outside_mask_data part = 47
+2018-02-27 09:53:11.422000 set_amp = 15749, took 0.00607981617156 time,  averages NOT reset, mask_set = False
+2018-02-27 09:53:11.422000 Adding to pulse_breakdown_log =  1239311 61 15749 237 1503
+2018-02-27 09:53:11.422000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:53:11.765000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:53:11.765000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:53:11.797000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:53:11.797000 rf_condition_data increasing breakdown count = 62
+2018-02-27 09:53:11.797000 Adding to pulse_breakdown_log =  1239313 62 15749 237 1503
+2018-02-27 09:53:11.797000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 48
+2018-02-27 09:53:11.906000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:53:11.906000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 62
+2018-02-27 09:53:11.906000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 49
+2018-02-27 09:53:12.015000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 314.702, 336.329 > 334.702 at i = 171 us = 1.62981, EVID NOT_SET, previous EVID = 174928121
+2018-02-27 09:53:12.015000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log49
+2018-02-27 09:53:12.077000 Saved outside_mask_data part = 48
+2018-02-27 09:53:12.093000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 322.945, 122.43 < 302.945 at i = 73 us = 0.747374, EVID NOT_SET, previous EVID = 174928122
+2018-02-27 09:53:12.093000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log50
+2018-02-27 09:53:12.155000 Saved outside_mask_data part = 49
+2018-02-27 09:53:14.917000 set_amp = 15749, took 0.00569302807867 time,  averages NOT reset, mask_set = False
+2018-02-27 09:53:14.917000 Adding to pulse_breakdown_log =  1239313 62 15749 237 1503
+2018-02-27 09:53:14.917000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:53:15.276000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:53:15.276000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:53:15.291000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:53:15.291000 rf_condition_data increasing breakdown count = 63
+2018-02-27 09:53:15.291000 Adding to pulse_breakdown_log =  1239315 63 15749 237 1503
+2018-02-27 09:53:15.291000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 50
+2018-02-27 09:53:15.400000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:53:15.400000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 63
+2018-02-27 09:53:15.400000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 51
+2018-02-27 09:53:15.510000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 314.13, 335.095 > 334.13 at i = 170 us = 1.62081, EVID NOT_SET, previous EVID = 174928156
+2018-02-27 09:53:15.510000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log51
+2018-02-27 09:53:15.588000 Saved outside_mask_data part = 50
+2018-02-27 09:53:15.588000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 322.945, 289.413 < 302.945 at i = 73 us = 0.747374, EVID NOT_SET, previous EVID = 174928157
+2018-02-27 09:53:15.588000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log52
+2018-02-27 09:53:15.666000 Saved outside_mask_data part = 51
+2018-02-27 09:53:18.411000 set_amp = 15749, took 0.00691028158406 time,  averages NOT reset, mask_set = False
+2018-02-27 09:53:18.411000 Adding to pulse_breakdown_log =  1239315 63 15749 237 1503
+2018-02-27 09:53:18.411000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:53:18.676000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:53:18.676000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:53:18.770000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:53:18.770000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:53:18.786000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:53:18.786000 rf_condition_data increasing breakdown count = 64
+2018-02-27 09:53:18.786000 Adding to pulse_breakdown_log =  1239317 64 15749 237 1503
+2018-02-27 09:53:18.786000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 52
+2018-02-27 09:53:18.786000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 64
+2018-02-27 09:53:18.786000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 53
+2018-02-27 09:53:18.895000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 314.13, 334.765 > 334.13 at i = 170 us = 1.62081, EVID NOT_SET, previous EVID = 174928193
+2018-02-27 09:53:18.895000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log53
+2018-02-27 09:53:18.957000 Saved outside_mask_data part = 52
+2018-02-27 09:53:19.113000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 322.945, 292.313 < 302.945 at i = 73 us = 0.747374, EVID NOT_SET, previous EVID = 174928194
+2018-02-27 09:53:19.113000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log54
+2018-02-27 09:53:19.176000 Saved outside_mask_data part = 53
+2018-02-27 09:53:21.796000 set_amp = 15749, took 0.0039391390842 time,  averages NOT reset, mask_set = False
+2018-02-27 09:53:21.796000 Adding to pulse_breakdown_log =  1239317 64 15749 237 1503
+2018-02-27 09:53:22.077000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:53:22.077000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:53:22.171000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:53:22.171000 rf_condition_data increasing breakdown count = 65
+2018-02-27 09:53:22.171000 Adding to pulse_breakdown_log =  1239319 65 15749 237 1503
+2018-02-27 09:53:22.171000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 54
+2018-02-27 09:53:22.280000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:53:22.280000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 65
+2018-02-27 09:53:22.280000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 55
+2018-02-27 09:53:22.389000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 313.315, 333.41 > 333.315 at i = 168 us = 1.6028, EVID NOT_SET, previous EVID = 174928229
+2018-02-27 09:53:22.389000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log55
+2018-02-27 09:53:22.452000 Saved outside_mask_data part = 54
+2018-02-27 09:53:22.467000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 317.751, 280.738 < 297.751 at i = 76 us = 0.774387, EVID NOT_SET, previous EVID = 174928230
+2018-02-27 09:53:22.467000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log56
+2018-02-27 09:53:22.530000 Saved outside_mask_data part = 55
+2018-02-27 09:53:25.291000 set_amp = 15749, took 0.00610239591617 time,  averages NOT reset, mask_set = False
+2018-02-27 09:53:25.291000 Adding to pulse_breakdown_log =  1239319 65 15749 237 1503
+2018-02-27 09:53:25.291000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:53:25.587000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:53:25.587000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:53:25.665000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:53:25.665000 rf_condition_data increasing breakdown count = 66
+2018-02-27 09:53:25.665000 Adding to pulse_breakdown_log =  1239321 66 15749 237 1503
+2018-02-27 09:53:25.665000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 56
+2018-02-27 09:53:25.775000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:53:25.775000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 66
+2018-02-27 09:53:25.775000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 57
+2018-02-27 09:53:25.884000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 313.537, 334.418 > 333.537 at i = 169 us = 1.61181, EVID NOT_SET, previous EVID = 174928266
+2018-02-27 09:53:25.884000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log57
+2018-02-27 09:53:25.946000 Saved outside_mask_data part = 56
+2018-02-27 09:53:25.962000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 322.945, 275.97 < 302.945 at i = 73 us = 0.747374, EVID NOT_SET, previous EVID = 174928267
+2018-02-27 09:53:25.962000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log58
+2018-02-27 09:53:26.024000 Saved outside_mask_data part = 57
+2018-02-27 09:53:28.785000 set_amp = 15749, took 0.00853719617055 time,  averages NOT reset, mask_set = False
+2018-02-27 09:53:28.785000 Adding to pulse_breakdown_log =  1239321 66 15749 237 1503
+2018-02-27 09:53:28.785000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:53:29.019000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:53:29.035000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:53:29.051000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:53:29.051000 rf_condition_data increasing breakdown count = 67
+2018-02-27 09:53:29.051000 Adding to pulse_breakdown_log =  1239322 67 15749 237 1503
+2018-02-27 09:53:29.051000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 58
+2018-02-27 09:53:29.269000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 313.537, 335.308 > 333.537 at i = 169 us = 1.61181, EVID NOT_SET, previous EVID = 174928302
+2018-02-27 09:53:29.269000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log59
+2018-02-27 09:53:29.331000 Saved outside_mask_data part = 58
+2018-02-27 09:53:32.061000 set_amp = 15749, took 0.00441155426051 time,  averages NOT reset, mask_set = False
+2018-02-27 09:53:32.061000 Adding to pulse_breakdown_log =  1239322 67 15749 237 1503
+2018-02-27 09:53:32.389000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:53:32.389000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:53:32.436000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:53:32.436000 rf_condition_data increasing breakdown count = 68
+2018-02-27 09:53:32.436000 Adding to pulse_breakdown_log =  1239324 68 15749 237 1503
+2018-02-27 09:53:32.436000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 59
+2018-02-27 09:53:32.654000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 313.537, 335.631 > 333.537 at i = 169 us = 1.61181, EVID NOT_SET, previous EVID = 174928336
+2018-02-27 09:53:32.654000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log60
+2018-02-27 09:53:32.717000 Saved outside_mask_data part = 59
+2018-02-27 09:53:35.447000 set_amp = 15749, took 0.00574082675882 time,  averages NOT reset, mask_set = False
+2018-02-27 09:53:35.447000 Adding to pulse_breakdown_log =  1239324 68 15749 237 1503
+2018-02-27 09:53:35.790000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:53:35.790000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:53:35.821000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:53:35.821000 rf_condition_data increasing breakdown count = 69
+2018-02-27 09:53:35.821000 Adding to pulse_breakdown_log =  1239326 69 15749 237 1503
+2018-02-27 09:53:35.821000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 60
+2018-02-27 09:53:35.930000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:53:35.930000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 69
+2018-02-27 09:53:35.946000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 61
+2018-02-27 09:53:36.040000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 313.315, 335.257 > 333.315 at i = 168 us = 1.6028, EVID NOT_SET, previous EVID = 174928371
+2018-02-27 09:53:36.040000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log61
+2018-02-27 09:53:36.102000 Saved outside_mask_data part = 60
+2018-02-27 09:53:36.118000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 322.945, 284.362 < 302.945 at i = 73 us = 0.747374, EVID NOT_SET, previous EVID = 174928372
+2018-02-27 09:53:36.118000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log62
+2018-02-27 09:53:36.180000 Saved outside_mask_data part = 61
+2018-02-27 09:53:38.957000 set_amp = 15749, took 0.00711877766753 time,  averages NOT reset, mask_set = False
+2018-02-27 09:53:38.957000 Adding to pulse_breakdown_log =  1239326 69 15749 237 1503
+2018-02-27 09:53:38.957000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:53:39.206000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:53:39.206000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:53:39.316000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:53:39.316000 rf_condition_data increasing breakdown count = 70
+2018-02-27 09:53:39.316000 Adding to pulse_breakdown_log =  1239327 70 15749 237 1503
+2018-02-27 09:53:39.316000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 62
+2018-02-27 09:53:39.425000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 313.315, 334.882 > 333.315 at i = 168 us = 1.6028, EVID NOT_SET, previous EVID = 174928406
+2018-02-27 09:53:39.425000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log63
+2018-02-27 09:53:39.487000 Saved outside_mask_data part = 62
+2018-02-27 09:53:42.326000 set_amp = 15749, took 0.00648889076558 time,  averages NOT reset, mask_set = False
+2018-02-27 09:53:42.326000 Adding to pulse_breakdown_log =  1239327 70 15749 237 1503
+2018-02-27 09:53:42.607000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:53:42.607000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:53:42.701000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:53:42.701000 rf_condition_data increasing breakdown count = 71
+2018-02-27 09:53:42.701000 Adding to pulse_breakdown_log =  1239328 71 15749 237 1503
+2018-02-27 09:53:42.701000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 63
+2018-02-27 09:53:42.810000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:53:42.810000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 71
+2018-02-27 09:53:42.810000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 64
+2018-02-27 09:53:42.919000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 322.945, 32.1993 < 302.945 at i = 73 us = 0.747374, EVID NOT_SET, previous EVID = 174928441
+2018-02-27 09:53:42.919000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log64
+2018-02-27 09:53:42.982000 Saved outside_mask_data part = 64
+2018-02-27 09:53:42.997000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 313.537, 336.628 > 333.537 at i = 169 us = 1.61181, EVID NOT_SET, previous EVID = 174928440
+2018-02-27 09:53:42.997000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log65
+2018-02-27 09:53:43.060000 Saved outside_mask_data part = 63
+2018-02-27 09:53:45.821000 set_amp = 15749, took 0.00591853228138 time,  averages NOT reset, mask_set = False
+2018-02-27 09:53:45.821000 Adding to pulse_breakdown_log =  1239328 71 15749 237 1503
+2018-02-27 09:53:45.821000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:53:46.102000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:53:46.117000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:53:46.195000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:53:46.195000 rf_condition_data increasing breakdown count = 72
+2018-02-27 09:53:46.195000 Adding to pulse_breakdown_log =  1239330 72 15749 237 1503
+2018-02-27 09:53:46.195000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 65
+2018-02-27 09:53:46.305000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:53:46.305000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 72
+2018-02-27 09:53:46.305000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 66
+2018-02-27 09:53:46.414000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 311.486, 332.608 > 331.486 at i = 165 us = 1.57579, EVID NOT_SET, previous EVID = 174928478
+2018-02-27 09:53:46.414000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log66
+2018-02-27 09:53:46.476000 Saved outside_mask_data part = 65
+2018-02-27 09:53:46.492000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 322.945, 155.554 < 302.945 at i = 73 us = 0.747374, EVID NOT_SET, previous EVID = 174928479
+2018-02-27 09:53:46.492000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log67
+2018-02-27 09:53:46.570000 Saved outside_mask_data part = 66
+2018-02-27 09:53:49.315000 set_amp = 15749, took 0.00395732017728 time,  averages NOT reset, mask_set = False
+2018-02-27 09:53:49.315000 Adding to pulse_breakdown_log =  1239330 72 15749 237 1503
+2018-02-27 09:53:49.315000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:53:49.612000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:53:49.612000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:53:49.690000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:53:49.690000 rf_condition_data increasing breakdown count = 73
+2018-02-27 09:53:49.690000 Adding to pulse_breakdown_log =  1239332 73 15749 237 1503
+2018-02-27 09:53:49.690000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 67
+2018-02-27 09:53:49.799000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:53:49.799000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 73
+2018-02-27 09:53:49.799000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 68
+2018-02-27 09:53:49.908000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 312.295, 332.484 > 332.295 at i = 166 us = 1.58479, EVID NOT_SET, previous EVID = 174928515
+2018-02-27 09:53:49.908000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log68
+2018-02-27 09:53:49.971000 Saved outside_mask_data part = 67
+2018-02-27 09:53:49.986000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 322.945, 235.695 < 302.945 at i = 73 us = 0.747374, EVID NOT_SET, previous EVID = 174928516
+2018-02-27 09:53:49.986000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log69
+2018-02-27 09:53:50.049000 Saved outside_mask_data part = 68
+2018-02-27 09:53:52.810000 set_amp = 15749, took 0.0127860003237 time,  averages NOT reset, mask_set = False
+2018-02-27 09:53:52.810000 Adding to pulse_breakdown_log =  1239332 73 15749 237 1503
+2018-02-27 09:53:52.825000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:53:53.028000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:53:53.028000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:53:53.075000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:53:53.075000 rf_condition_data increasing breakdown count = 74
+2018-02-27 09:53:53.075000 Adding to pulse_breakdown_log =  1239333 74 15749 237 1503
+2018-02-27 09:53:53.075000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 69
+2018-02-27 09:53:53.184000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:53:53.184000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 74
+2018-02-27 09:53:53.184000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 70
+2018-02-27 09:53:53.293000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 313.012, 335.124 > 333.012 at i = 167 us = 1.5938, EVID NOT_SET, previous EVID = 174928551
+2018-02-27 09:53:53.293000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log70
+2018-02-27 09:53:53.356000 Saved outside_mask_data part = 69
+2018-02-27 09:53:53.371000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 319.222, 235.352 < 299.222 at i = 75 us = 0.765383, EVID NOT_SET, previous EVID = 174928552
+2018-02-27 09:53:53.371000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log71
+2018-02-27 09:53:53.434000 Saved outside_mask_data part = 70
+2018-02-27 09:53:56.195000 set_amp = 15749, took 0.0033426819341 time,  averages NOT reset, mask_set = False
+2018-02-27 09:53:56.195000 Adding to pulse_breakdown_log =  1239333 74 15749 237 1503
+2018-02-27 09:53:56.195000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:53:56.523000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:53:56.523000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:53:56.570000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:53:56.570000 rf_condition_data increasing breakdown count = 75
+2018-02-27 09:53:56.570000 Adding to pulse_breakdown_log =  1239335 75 15749 237 1503
+2018-02-27 09:53:56.570000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 71
+2018-02-27 09:53:56.679000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:53:56.679000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 75
+2018-02-27 09:53:56.679000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 72
+2018-02-27 09:53:56.788000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 311.486, 331.59 > 331.486 at i = 165 us = 1.57579, EVID NOT_SET, previous EVID = 174928588
+2018-02-27 09:53:56.788000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log72
+2018-02-27 09:53:56.850000 Saved outside_mask_data part = 71
+2018-02-27 09:53:56.897000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 322.945, 233.811 < 302.945 at i = 73 us = 0.747374, EVID NOT_SET, previous EVID = 174928589
+2018-02-27 09:53:56.897000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log73
+2018-02-27 09:53:56.960000 Saved outside_mask_data part = 72
+2018-02-27 09:53:59.690000 set_amp = 15749, took 0.00540242383295 time,  averages NOT reset, mask_set = False
+2018-02-27 09:53:59.690000 Adding to pulse_breakdown_log =  1239335 75 15749 237 1503
+2018-02-27 09:53:59.705000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:54:00.017000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:54:00.017000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:54:00.064000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:54:00.064000 rf_condition_data increasing breakdown count = 76
+2018-02-27 09:54:00.064000 Adding to pulse_breakdown_log =  1239337 76 15749 237 1503
+2018-02-27 09:54:00.064000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 73
+2018-02-27 09:54:00.282000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 311.486, 332.751 > 331.486 at i = 165 us = 1.57579, EVID NOT_SET, previous EVID = 174928625
+2018-02-27 09:54:00.282000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log74
+2018-02-27 09:54:00.345000 Saved outside_mask_data part = 73
+2018-02-27 09:54:03.075000 set_amp = 15749, took 0.00308697365733 time,  averages NOT reset, mask_set = False
+2018-02-27 09:54:03.075000 Adding to pulse_breakdown_log =  1239337 76 15749 237 1503
+2018-02-27 09:54:03.324000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:54:03.324000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:54:03.340000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:54:03.340000 rf_condition_data increasing breakdown count = 77
+2018-02-27 09:54:03.340000 Adding to pulse_breakdown_log =  1239338 77 15749 237 1503
+2018-02-27 09:54:03.340000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 74
+2018-02-27 09:54:03.449000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:54:03.449000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 77
+2018-02-27 09:54:03.449000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 75
+2018-02-27 09:54:03.558000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 311.486, 331.981 > 331.486 at i = 165 us = 1.57579, EVID NOT_SET, previous EVID = 174928659
+2018-02-27 09:54:03.558000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log75
+2018-02-27 09:54:03.621000 Saved outside_mask_data part = 74
+2018-02-27 09:54:03.636000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 322.945, 271.583 < 302.945 at i = 73 us = 0.747374, EVID NOT_SET, previous EVID = 174928660
+2018-02-27 09:54:03.636000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log76
+2018-02-27 09:54:03.699000 Saved outside_mask_data part = 75
+2018-02-27 09:54:06.460000 set_amp = 15749, took 0.00635898392318 time,  averages NOT reset, mask_set = False
+2018-02-27 09:54:06.460000 Adding to pulse_breakdown_log =  1239338 77 15749 237 1503
+2018-02-27 09:54:06.460000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:54:06.835000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:54:06.835000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:54:06.944000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:54:06.944000 rf_condition_data increasing breakdown count = 78
+2018-02-27 09:54:06.944000 Adding to pulse_breakdown_log =  1239340 78 15749 237 1503
+2018-02-27 09:54:06.944000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 76
+2018-02-27 09:54:07.053000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 310.93, 332.314 > 330.93 at i = 164 us = 1.56678, EVID NOT_SET, previous EVID = 174928695
+2018-02-27 09:54:07.053000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log77
+2018-02-27 09:54:07.115000 Saved outside_mask_data part = 76
+2018-02-27 09:54:09.955000 set_amp = 15749, took 0.00656572054595 time,  averages NOT reset, mask_set = False
+2018-02-27 09:54:09.955000 Adding to pulse_breakdown_log =  1239340 78 15749 237 1503
+2018-02-27 09:54:10.329000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:54:10.329000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:54:10.438000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:54:10.438000 rf_condition_data increasing breakdown count = 79
+2018-02-27 09:54:10.438000 Adding to pulse_breakdown_log =  1239342 79 15749 237 1503
+2018-02-27 09:54:10.438000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 77
+2018-02-27 09:54:10.547000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 308.699, 328.786 > 328.699 at i = 161 us = 1.53977, EVID NOT_SET, previous EVID = 174928730
+2018-02-27 09:54:10.547000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log78
+2018-02-27 09:54:10.610000 Saved outside_mask_data part = 77
+2018-02-27 09:54:13.449000 set_amp = 15749, took 0.00574669162756 time,  averages NOT reset, mask_set = False
+2018-02-27 09:54:13.449000 Adding to pulse_breakdown_log =  1239342 79 15749 237 1503
+2018-02-27 09:54:13.839000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:54:13.839000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:54:13.933000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:54:13.933000 rf_condition_data increasing breakdown count = 80
+2018-02-27 09:54:13.948000 Adding to pulse_breakdown_log =  1239344 80 15749 237 1503
+2018-02-27 09:54:13.948000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 78
+2018-02-27 09:54:14.042000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:54:14.042000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 80
+2018-02-27 09:54:14.042000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 79
+2018-02-27 09:54:14.151000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 308.699, 328.826 > 328.699 at i = 161 us = 1.53977, EVID NOT_SET, previous EVID = 174928765
+2018-02-27 09:54:14.151000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log79
+2018-02-27 09:54:14.213000 Saved outside_mask_data part = 78
+2018-02-27 09:54:14.229000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 322.945, 229.732 < 302.945 at i = 73 us = 0.747374, EVID NOT_SET, previous EVID = 174928766
+2018-02-27 09:54:14.229000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log80
+2018-02-27 09:54:14.291000 Saved outside_mask_data part = 79
+2018-02-27 09:54:17.053000 set_amp = 15749, took 0.00349018338272 time,  averages NOT reset, mask_set = False
+2018-02-27 09:54:17.053000 Adding to pulse_breakdown_log =  1239344 80 15749 237 1503
+2018-02-27 09:54:17.053000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:54:17.240000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:54:17.240000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:54:17.318000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:54:17.318000 rf_condition_data increasing breakdown count = 81
+2018-02-27 09:54:17.318000 Adding to pulse_breakdown_log =  1239345 81 15749 237 1503
+2018-02-27 09:54:17.318000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 80
+2018-02-27 09:54:17.427000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:54:17.427000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 81
+2018-02-27 09:54:17.427000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 81
+2018-02-27 09:54:17.536000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 310.483, 331.265 > 330.483 at i = 163 us = 1.55778, EVID NOT_SET, previous EVID = 174928802
+2018-02-27 09:54:17.536000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log81
+2018-02-27 09:54:17.599000 Saved outside_mask_data part = 80
+2018-02-27 09:54:17.599000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 322.945, 292.912 < 302.945 at i = 73 us = 0.747374, EVID NOT_SET, previous EVID = 174928803
+2018-02-27 09:54:17.614000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log82
+2018-02-27 09:54:17.677000 Saved outside_mask_data part = 81
+2018-02-27 09:54:20.438000 set_amp = 15749, took 0.00923218311539 time,  averages NOT reset, mask_set = False
+2018-02-27 09:54:20.438000 Adding to pulse_breakdown_log =  1239345 81 15749 237 1503
+2018-02-27 09:54:20.438000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:54:20.734000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:54:20.734000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:54:20.812000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:54:20.812000 rf_condition_data increasing breakdown count = 82
+2018-02-27 09:54:20.812000 Adding to pulse_breakdown_log =  1239347 82 15749 237 1503
+2018-02-27 09:54:20.812000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 82
+2018-02-27 09:54:21.031000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 308.699, 329.31 > 328.699 at i = 161 us = 1.53977, EVID NOT_SET, previous EVID = 174928839
+2018-02-27 09:54:21.031000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log83
+2018-02-27 09:54:21.109000 Saved outside_mask_data part = 82
+2018-02-27 09:54:23.823000 set_amp = 15749, took 0.00713930470806 time,  averages NOT reset, mask_set = False
+2018-02-27 09:54:23.823000 Adding to pulse_breakdown_log =  1239347 82 15749 237 1503
+2018-02-27 09:54:24.151000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:54:24.151000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:54:24.198000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:54:24.198000 rf_condition_data increasing breakdown count = 83
+2018-02-27 09:54:24.198000 Adding to pulse_breakdown_log =  1239349 83 15749 237 1503
+2018-02-27 09:54:24.198000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 83
+2018-02-27 09:54:24.416000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 308.699, 329.193 > 328.699 at i = 161 us = 1.53977, EVID NOT_SET, previous EVID = 174928874
+2018-02-27 09:54:24.416000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log84
+2018-02-27 09:54:24.478000 Saved outside_mask_data part = 83
+2018-02-27 09:54:27.209000 set_amp = 15749, took 0.00340572927291 time,  averages NOT reset, mask_set = False
+2018-02-27 09:54:27.209000 Adding to pulse_breakdown_log =  1239349 83 15749 237 1503
+2018-02-27 09:54:27.552000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:54:27.552000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:54:27.583000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:54:27.583000 rf_condition_data increasing breakdown count = 84
+2018-02-27 09:54:27.583000 Adding to pulse_breakdown_log =  1239351 84 15749 237 1503
+2018-02-27 09:54:27.583000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 84
+2018-02-27 09:54:27.801000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 308.699, 329.041 > 328.699 at i = 161 us = 1.53977, EVID NOT_SET, previous EVID = 174928909
+2018-02-27 09:54:27.801000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log85
+2018-02-27 09:54:27.864000 Saved outside_mask_data part = 84
+2018-02-27 09:54:30.594000 set_amp = 15749, took 0.00598421881125 time,  averages NOT reset, mask_set = False
+2018-02-27 09:54:30.594000 Adding to pulse_breakdown_log =  1239351 84 15749 237 1503
+2018-02-27 09:54:30.859000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:54:30.859000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:54:30.968000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:54:30.968000 rf_condition_data increasing breakdown count = 85
+2018-02-27 09:54:30.968000 Adding to pulse_breakdown_log =  1239353 85 15749 237 1503
+2018-02-27 09:54:30.968000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 85
+2018-02-27 09:54:31.077000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 307.408, 327.577 > 327.408 at i = 159 us = 1.52176, EVID NOT_SET, previous EVID = 174928943
+2018-02-27 09:54:31.077000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log86
+2018-02-27 09:54:31.140000 Saved outside_mask_data part = 85
+2018-02-27 09:54:34.010000 set_amp = 15749, took 0.0358701236549 time,  averages NOT reset, mask_set = False
+2018-02-27 09:54:34.010000 Adding to pulse_breakdown_log =  1239353 85 15749 237 1503
+2018-02-27 09:54:34.353000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:54:34.353000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:54:34.463000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:54:34.463000 rf_condition_data increasing breakdown count = 86
+2018-02-27 09:54:34.463000 Adding to pulse_breakdown_log =  1239355 86 15749 237 1503
+2018-02-27 09:54:34.463000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 86
+2018-02-27 09:54:34.572000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:54:34.572000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 86
+2018-02-27 09:54:34.572000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 87
+2018-02-27 09:54:34.681000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 308.699, 329.505 > 328.699 at i = 161 us = 1.53977, EVID NOT_SET, previous EVID = 174928979
+2018-02-27 09:54:34.681000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log87
+2018-02-27 09:54:34.743000 Saved outside_mask_data part = 86
+2018-02-27 09:54:34.759000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 322.945, 254.564 < 302.945 at i = 73 us = 0.747374, EVID NOT_SET, previous EVID = 174928980
+2018-02-27 09:54:34.759000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log88
+2018-02-27 09:54:34.821000 Saved outside_mask_data part = 87
+2018-02-27 09:54:37.583000 set_amp = 15749, took 0.00619154192088 time,  averages NOT reset, mask_set = False
+2018-02-27 09:54:37.583000 Adding to pulse_breakdown_log =  1239355 86 15749 237 1503
+2018-02-27 09:54:37.583000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:54:37.864000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:54:37.864000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:54:37.957000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:54:37.957000 rf_condition_data increasing breakdown count = 87
+2018-02-27 09:54:37.957000 Adding to pulse_breakdown_log =  1239357 87 15749 237 1503
+2018-02-27 09:54:37.957000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 88
+2018-02-27 09:54:38.066000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 308.699, 329.584 > 328.699 at i = 161 us = 1.53977, EVID NOT_SET, previous EVID = 174929016
+2018-02-27 09:54:38.066000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log89
+2018-02-27 09:54:38.129000 Saved outside_mask_data part = 88
+2018-02-27 09:54:41.030000 set_amp = 15749, took 0.0722103165386 time,  averages NOT reset, mask_set = False
+2018-02-27 09:54:41.030000 Adding to pulse_breakdown_log =  1239357 87 15749 237 1503
+2018-02-27 09:54:41.155000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:54:41.155000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:54:41.233000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:54:41.233000 rf_condition_data increasing breakdown count = 88
+2018-02-27 09:54:41.233000 Adding to pulse_breakdown_log =  1239358 88 15749 237 1503
+2018-02-27 09:54:41.233000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 89
+2018-02-27 09:54:41.452000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 305.204, 325.314 > 325.204 at i = 153 us = 1.46773, EVID NOT_SET, previous EVID = 174929049
+2018-02-27 09:54:41.452000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log90
+2018-02-27 09:54:41.530000 Saved outside_mask_data part = 89
+2018-02-27 09:54:44.244000 set_amp = 15749, took 0.00692758294679 time,  averages NOT reset, mask_set = False
+2018-02-27 09:54:44.244000 Adding to pulse_breakdown_log =  1239358 88 15749 237 1503
+2018-02-27 09:54:44.462000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:54:44.462000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:54:44.509000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:54:44.509000 rf_condition_data increasing breakdown count = 89
+2018-02-27 09:54:44.509000 Adding to pulse_breakdown_log =  1239359 89 15749 237 1503
+2018-02-27 09:54:44.509000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 90
+2018-02-27 09:54:44.618000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:54:44.618000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 89
+2018-02-27 09:54:44.618000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 91
+2018-02-27 09:54:44.728000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 305.521, 325.552 > 325.521 at i = 156 us = 1.49475, EVID NOT_SET, previous EVID = 174929082
+2018-02-27 09:54:44.728000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log91
+2018-02-27 09:54:44.790000 Saved outside_mask_data part = 90
+2018-02-27 09:54:44.806000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 319.222, 57.6073 < 299.222 at i = 75 us = 0.765383, EVID NOT_SET, previous EVID = 174929083
+2018-02-27 09:54:44.806000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log92
+2018-02-27 09:54:44.868000 Saved outside_mask_data part = 91
+2018-02-27 09:54:47.629000 set_amp = 15749, took 0.00532060891408 time,  averages NOT reset, mask_set = False
+2018-02-27 09:54:47.629000 Adding to pulse_breakdown_log =  1239359 89 15749 237 1503
+2018-02-27 09:54:47.629000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:54:47.863000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:54:47.863000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:54:47.895000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:54:47.895000 rf_condition_data increasing breakdown count = 90
+2018-02-27 09:54:47.895000 Adding to pulse_breakdown_log =  1239361 90 15749 237 1503
+2018-02-27 09:54:47.895000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 92
+2018-02-27 09:54:48.113000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 305.521, 325.97 > 325.521 at i = 156 us = 1.49475, EVID NOT_SET, previous EVID = 174929117
+2018-02-27 09:54:48.113000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log93
+2018-02-27 09:54:48.175000 Saved outside_mask_data part = 92
+2018-02-27 09:54:50.905000 set_amp = 15749, took 0.00708564115916 time,  averages NOT reset, mask_set = False
+2018-02-27 09:54:50.905000 Adding to pulse_breakdown_log =  1239361 90 15749 237 1503
+2018-02-27 09:54:51.061000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:54:51.061000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:54:51.171000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:54:51.171000 rf_condition_data increasing breakdown count = 91
+2018-02-27 09:54:51.171000 Adding to pulse_breakdown_log =  1239362 91 15749 237 1503
+2018-02-27 09:54:51.171000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 93
+2018-02-27 09:54:51.280000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:54:51.280000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 91
+2018-02-27 09:54:51.280000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 94
+2018-02-27 09:54:51.389000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 307.408, 327.907 > 327.408 at i = 159 us = 1.52176, EVID NOT_SET, previous EVID = 174929151
+2018-02-27 09:54:51.389000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log94
+2018-02-27 09:54:51.451000 Saved outside_mask_data part = 93
+2018-02-27 09:54:51.467000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 322.945, 148.165 < 302.945 at i = 73 us = 0.747374, EVID NOT_SET, previous EVID = 174929152
+2018-02-27 09:54:51.467000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log95
+2018-02-27 09:54:51.529000 Saved outside_mask_data part = 94
+2018-02-27 09:54:54.291000 set_amp = 15749, took 0.00546693738897 time,  averages NOT reset, mask_set = False
+2018-02-27 09:54:54.291000 Adding to pulse_breakdown_log =  1239362 91 15749 237 1503
+2018-02-27 09:54:54.291000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:54:54.571000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:54:54.571000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:54:54.665000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:54:54.665000 rf_condition_data increasing breakdown count = 92
+2018-02-27 09:54:54.665000 Adding to pulse_breakdown_log =  1239364 92 15749 237 1503
+2018-02-27 09:54:54.665000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 95
+2018-02-27 09:54:54.774000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:54:54.774000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 92
+2018-02-27 09:54:54.774000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 96
+2018-02-27 09:54:54.883000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 322.945, 285.512 < 302.945 at i = 73 us = 0.747374, EVID NOT_SET, previous EVID = 174929189
+2018-02-27 09:54:54.883000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log96
+2018-02-27 09:54:54.946000 Saved outside_mask_data part = 96
+2018-02-27 09:54:54.961000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 305.299, 325.501 > 325.299 at i = 155 us = 1.48574, EVID NOT_SET, previous EVID = 174929188
+2018-02-27 09:54:54.961000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log97
+2018-02-27 09:54:55.024000 Saved outside_mask_data part = 95
+2018-02-27 09:54:57.785000 set_amp = 15749, took 0.00624696493048 time,  averages NOT reset, mask_set = False
+2018-02-27 09:54:57.785000 Adding to pulse_breakdown_log =  1239364 92 15749 237 1503
+2018-02-27 09:54:57.785000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:54:57.972000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:54:57.972000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:54:58.050000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:54:58.050000 rf_condition_data increasing breakdown count = 93
+2018-02-27 09:54:58.050000 Adding to pulse_breakdown_log =  1239365 93 15749 237 1503
+2018-02-27 09:54:58.050000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 97
+2018-02-27 09:54:58.269000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 305.196, 325.479 > 325.196 at i = 154 us = 1.47674, EVID NOT_SET, previous EVID = 174929224
+2018-02-27 09:54:58.269000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log98
+2018-02-27 09:54:58.331000 Saved outside_mask_data part = 97
+2018-02-27 09:55:01.061000 set_amp = 15749, took 0.00477576260892 time,  averages NOT reset, mask_set = False
+2018-02-27 09:55:01.061000 Adding to pulse_breakdown_log =  1239365 93 15749 237 1503
+2018-02-27 09:55:01.373000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:55:01.373000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:55:01.436000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:55:01.436000 rf_condition_data increasing breakdown count = 94
+2018-02-27 09:55:01.436000 Adding to pulse_breakdown_log =  1239367 94 15749 237 1503
+2018-02-27 09:55:01.436000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 98
+2018-02-27 09:55:01.654000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 305.196, 325.466 > 325.196 at i = 154 us = 1.47674, EVID NOT_SET, previous EVID = 174929259
+2018-02-27 09:55:01.654000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log99
+2018-02-27 09:55:01.716000 Saved outside_mask_data part = 98
+2018-02-27 09:55:04.446000 set_amp = 15749, took 0.00626485278008 time,  averages NOT reset, mask_set = False
+2018-02-27 09:55:04.446000 Adding to pulse_breakdown_log =  1239367 94 15749 237 1503
+2018-02-27 09:55:04.774000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:55:04.774000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:55:04.821000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:55:04.821000 rf_condition_data increasing breakdown count = 95
+2018-02-27 09:55:04.821000 Adding to pulse_breakdown_log =  1239369 95 15749 237 1503
+2018-02-27 09:55:04.821000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 99
+2018-02-27 09:55:04.930000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:55:04.930000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 95
+2018-02-27 09:55:04.930000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 100
+2018-02-27 09:55:05.148000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 305.204, 325.435 > 325.204 at i = 153 us = 1.46773, EVID NOT_SET, previous EVID = 174929294
+2018-02-27 09:55:05.148000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log100
+2018-02-27 09:55:05.211000 Saved outside_mask_data part = 99
+2018-02-27 09:55:05.226000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 322.945, 238.716 < 302.945 at i = 73 us = 0.747374, EVID NOT_SET, previous EVID = 174929295
+2018-02-27 09:55:05.226000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log101
+2018-02-27 09:55:05.289000 Saved outside_mask_data part = 100
+2018-02-27 09:55:07.941000 set_amp = 15749, took 0.00583554438879 time,  averages NOT reset, mask_set = False
+2018-02-27 09:55:07.941000 Adding to pulse_breakdown_log =  1239369 95 15749 237 1503
+2018-02-27 09:55:07.941000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:55:08.284000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:55:08.284000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:55:08.315000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:55:08.315000 rf_condition_data increasing breakdown count = 96
+2018-02-27 09:55:08.315000 Adding to pulse_breakdown_log =  1239371 96 15749 237 1503
+2018-02-27 09:55:08.315000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 101
+2018-02-27 09:55:08.425000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:55:08.425000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 96
+2018-02-27 09:55:08.425000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 102
+2018-02-27 09:55:08.534000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 305.204, 325.357 > 325.204 at i = 153 us = 1.46773, EVID NOT_SET, previous EVID = 174929331
+2018-02-27 09:55:08.534000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log102
+2018-02-27 09:55:08.596000 Saved outside_mask_data part = 101
+2018-02-27 09:55:08.612000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 322.945, 164.857 < 302.945 at i = 73 us = 0.747374, EVID NOT_SET, previous EVID = 174929332
+2018-02-27 09:55:08.612000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log103
+2018-02-27 09:55:08.674000 Saved outside_mask_data part = 102
+2018-02-27 09:55:11.435000 set_amp = 15749, took 0.00470978283568 time,  averages NOT reset, mask_set = False
+2018-02-27 09:55:11.435000 Adding to pulse_breakdown_log =  1239371 96 15749 237 1503
+2018-02-27 09:55:11.435000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:55:11.794000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:55:11.794000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:55:11.810000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:55:11.810000 rf_condition_data increasing breakdown count = 97
+2018-02-27 09:55:11.810000 Adding to pulse_breakdown_log =  1239373 97 15749 237 1503
+2018-02-27 09:55:11.810000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 103
+2018-02-27 09:55:12.137000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 305.521, 326.032 > 325.521 at i = 156 us = 1.49475, EVID NOT_SET, previous EVID = 174929367
+2018-02-27 09:55:12.137000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log104
+2018-02-27 09:55:12.200000 Saved outside_mask_data part = 103
+2018-02-27 09:55:14.821000 set_amp = 15749, took 0.00688740859596 time,  averages NOT reset, mask_set = False
+2018-02-27 09:55:14.821000 Adding to pulse_breakdown_log =  1239373 97 15749 237 1503
+2018-02-27 09:55:15.289000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:55:15.289000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:55:15.304000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:55:15.304000 rf_condition_data increasing breakdown count = 98
+2018-02-27 09:55:15.304000 Adding to pulse_breakdown_log =  1239377 98 15749 237 1503
+2018-02-27 09:55:15.304000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 104
+2018-02-27 09:55:15.413000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:55:15.413000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 98
+2018-02-27 09:55:15.413000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 105
+2018-02-27 09:55:15.523000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 305.447, 325.822 > 325.447 at i = 152 us = 1.45873, EVID NOT_SET, previous EVID = 174929402
+2018-02-27 09:55:15.523000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log105
+2018-02-27 09:55:15.585000 Saved outside_mask_data part = 104
+2018-02-27 09:55:15.601000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 322.945, 163.365 < 302.945 at i = 73 us = 0.747374, EVID NOT_SET, previous EVID = 174929403
+2018-02-27 09:55:15.601000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log106
+2018-02-27 09:55:15.663000 Saved outside_mask_data part = 105
+2018-02-27 09:55:18.424000 set_amp = 15749, took 0.00687157345044 time,  averages NOT reset, mask_set = False
+2018-02-27 09:55:18.424000 Adding to pulse_breakdown_log =  1239377 98 15749 237 1503
+2018-02-27 09:55:18.424000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:55:18.690000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:55:18.690000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:55:18.799000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:55:18.799000 rf_condition_data increasing breakdown count = 99
+2018-02-27 09:55:18.799000 Adding to pulse_breakdown_log =  1239379 99 15749 237 1503
+2018-02-27 09:55:18.799000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 106
+2018-02-27 09:55:18.908000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 305.204, 325.407 > 325.204 at i = 153 us = 1.46773, EVID NOT_SET, previous EVID = 174929439
+2018-02-27 09:55:18.908000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log107
+2018-02-27 09:55:18.970000 Saved outside_mask_data part = 106
+2018-02-27 09:55:21.810000 set_amp = 15749, took 0.00567543347245 time,  averages NOT reset, mask_set = False
+2018-02-27 09:55:21.810000 Adding to pulse_breakdown_log =  1239379 99 15749 237 1503
+2018-02-27 09:55:22.090000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:55:22.106000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:55:22.184000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:55:22.184000 rf_condition_data increasing breakdown count = 100
+2018-02-27 09:55:22.184000 Adding to pulse_breakdown_log =  1239381 100 15749 237 1503
+2018-02-27 09:55:22.184000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 107
+2018-02-27 09:55:22.293000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:55:22.293000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 100
+2018-02-27 09:55:22.293000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 108
+2018-02-27 09:55:22.402000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 305.196, 325.368 > 325.196 at i = 154 us = 1.47674, EVID NOT_SET, previous EVID = 174929474
+2018-02-27 09:55:22.402000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log108
+2018-02-27 09:55:22.465000 Saved outside_mask_data part = 107
+2018-02-27 09:55:22.465000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 322.945, 251.658 < 302.945 at i = 73 us = 0.747374, EVID NOT_SET, previous EVID = 174929475
+2018-02-27 09:55:22.480000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log109
+2018-02-27 09:55:22.543000 Saved outside_mask_data part = 108
+2018-02-27 09:55:25.304000 set_amp = 15749, took 0.00645985966537 time,  averages NOT reset, mask_set = False
+2018-02-27 09:55:25.304000 Adding to pulse_breakdown_log =  1239381 100 15749 237 1503
+2018-02-27 09:55:25.304000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:55:25.507000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:55:25.507000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:55:25.569000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:55:25.569000 rf_condition_data increasing breakdown count = 101
+2018-02-27 09:55:25.569000 Adding to pulse_breakdown_log =  1239382 101 15749 237 1503
+2018-02-27 09:55:25.569000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 109
+2018-02-27 09:55:25.678000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:55:25.678000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 101
+2018-02-27 09:55:25.678000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 110
+2018-02-27 09:55:25.788000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 305.196, 325.541 > 325.196 at i = 154 us = 1.47674, EVID NOT_SET, previous EVID = 174929510
+2018-02-27 09:55:25.788000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log110
+2018-02-27 09:55:25.850000 Saved outside_mask_data part = 109
+2018-02-27 09:55:25.866000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 322.945, 301.507 < 302.945 at i = 73 us = 0.747374, EVID NOT_SET, previous EVID = 174929511
+2018-02-27 09:55:25.866000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log111
+2018-02-27 09:55:25.928000 Saved outside_mask_data part = 110
+2018-02-27 09:55:28.689000 set_amp = 15749, took 0.00673814768675 time,  averages NOT reset, mask_set = False
+2018-02-27 09:55:28.689000 Adding to pulse_breakdown_log =  1239382 101 15749 237 1503
+2018-02-27 09:55:28.689000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:55:28.908000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:55:28.908000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:55:28.955000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:55:28.955000 rf_condition_data increasing breakdown count = 102
+2018-02-27 09:55:28.955000 Adding to pulse_breakdown_log =  1239383 102 15749 237 1503
+2018-02-27 09:55:28.955000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 111
+2018-02-27 09:55:29.064000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:55:29.064000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 102
+2018-02-27 09:55:29.064000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 112
+2018-02-27 09:55:29.173000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 305.204, 325.411 > 325.204 at i = 153 us = 1.46773, EVID NOT_SET, previous EVID = 174929546
+2018-02-27 09:55:29.173000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log112
+2018-02-27 09:55:29.235000 Saved outside_mask_data part = 111
+2018-02-27 09:55:29.282000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 322.945, 224.112 < 302.945 at i = 73 us = 0.747374, EVID NOT_SET, previous EVID = 174929547
+2018-02-27 09:55:29.282000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log113
+2018-02-27 09:55:29.345000 Saved outside_mask_data part = 112
+2018-02-27 09:55:32.075000 set_amp = 15746, took 0.00421126899334 time,  averages NOT reset, mask_set = False
+2018-02-27 09:55:32.075000 Adding to pulse_breakdown_log =  1239383 102 15746 237 1503
+2018-02-27 09:55:32.075000 *
+*** rf_condition_data set_ramp_values ***
+2018-02-27 09:55:32.075000 current ramp index   = 236
+next required pulses = 1000
+next power increase  = 20000.0
+next sp decrease     = 15746
+2018-02-27 09:55:32.075000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:55:32.418000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:55:32.418000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:55:32.449000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:55:32.449000 rf_condition_data increasing breakdown count = 103
+2018-02-27 09:55:32.449000 Adding to pulse_breakdown_log =  1239385 103 15748 236 1503
+2018-02-27 09:55:32.449000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 113
+2018-02-27 09:55:32.558000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:55:32.558000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 103
+2018-02-27 09:55:32.558000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 114
+2018-02-27 09:55:32.667000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 305.204, 325.252 > 325.204 at i = 153 us = 1.46773, EVID NOT_SET, previous EVID = 174929582
+2018-02-27 09:55:32.667000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log114
+2018-02-27 09:55:32.730000 Saved outside_mask_data part = 113
+2018-02-27 09:55:32.745000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 322.945, 136.097 < 302.945 at i = 73 us = 0.747374, EVID NOT_SET, previous EVID = 174929583
+2018-02-27 09:55:32.745000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log115
+2018-02-27 09:55:32.808000 Saved outside_mask_data part = 114
+2018-02-27 09:55:35.569000 set_amp = 15746, took 0.00606427426942 time,  averages NOT reset, mask_set = False
+2018-02-27 09:55:35.569000 Adding to pulse_breakdown_log =  1239385 103 15746 236 1503
+2018-02-27 09:55:35.569000 *
+*** rf_condition_data set_ramp_values ***
+2018-02-27 09:55:35.569000 current ramp index   = 235
+next required pulses = 1000
+next power increase  = 20000.0
+next sp decrease     = 15745
+2018-02-27 09:55:35.569000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:55:35.912000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:55:35.912000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:55:35.943000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:55:35.943000 rf_condition_data increasing breakdown count = 104
+2018-02-27 09:55:35.943000 Adding to pulse_breakdown_log =  1239387 104 15746 235 1503
+2018-02-27 09:55:35.943000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 115
+2018-02-27 09:55:36.053000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:55:36.053000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 104
+2018-02-27 09:55:36.053000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 116
+2018-02-27 09:55:36.162000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 306.087, 326.149 > 326.087 at i = 150 us = 1.44072, EVID NOT_SET, previous EVID = 174929618
+2018-02-27 09:55:36.162000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log116
+2018-02-27 09:55:36.224000 Saved outside_mask_data part = 115
+2018-02-27 09:55:36.240000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 322.945, 18.5706 < 302.945 at i = 73 us = 0.747374, EVID NOT_SET, previous EVID = 174929619
+2018-02-27 09:55:36.240000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log117
+2018-02-27 09:55:36.302000 Saved outside_mask_data part = 116
+2018-02-27 09:55:39.064000 set_amp = 15745, took 0.00360308210577 time,  averages NOT reset, mask_set = False
+2018-02-27 09:55:39.064000 Adding to pulse_breakdown_log =  1239387 104 15745 235 1503
+2018-02-27 09:55:39.064000 *
+*** rf_condition_data set_ramp_values ***
+2018-02-27 09:55:39.064000 current ramp index   = 234
+next required pulses = 1000
+next power increase  = 20000.0
+next sp decrease     = 15741
+2018-02-27 09:55:39.064000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:55:39.422000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:55:39.422000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:55:39.438000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:55:39.438000 rf_condition_data increasing breakdown count = 105
+2018-02-27 09:55:39.438000 Adding to pulse_breakdown_log =  1239389 105 15745 234 1503
+2018-02-27 09:55:39.438000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 117
+2018-02-27 09:55:39.547000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:55:39.547000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 105
+2018-02-27 09:55:39.547000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 118
+2018-02-27 09:55:39.656000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 305.75, 325.902 > 325.75 at i = 151 us = 1.44972, EVID NOT_SET, previous EVID = 174929654
+2018-02-27 09:55:39.656000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log118
+2018-02-27 09:55:39.719000 Saved outside_mask_data part = 117
+2018-02-27 09:55:39.734000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 322.945, 136.738 < 302.945 at i = 73 us = 0.747374, EVID NOT_SET, previous EVID = 174929655
+2018-02-27 09:55:39.734000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log119
+2018-02-27 09:55:39.797000 Saved outside_mask_data part = 118
+2018-02-27 09:55:42.558000 set_amp = 15741, took 0.00544787656565 time,  averages NOT reset, mask_set = False
+2018-02-27 09:55:42.558000 Adding to pulse_breakdown_log =  1239389 105 15741 234 1503
+2018-02-27 09:55:42.558000 *
+*** rf_condition_data set_ramp_values ***
+2018-02-27 09:55:42.558000 current ramp index   = 233
+next required pulses = 1000
+next power increase  = 20000.0
+next sp decrease     = 15736
+2018-02-27 09:55:42.558000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:55:42.730000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:55:42.730000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:55:42.823000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:55:42.823000 rf_condition_data increasing breakdown count = 106
+2018-02-27 09:55:42.823000 Adding to pulse_breakdown_log =  1239390 106 15741 233 1503
+2018-02-27 09:55:42.823000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 119
+2018-02-27 09:55:42.932000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:55:42.932000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 106
+2018-02-27 09:55:42.948000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 120
+2018-02-27 09:55:43.042000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 305.447, 325.919 > 325.447 at i = 152 us = 1.45873, EVID NOT_SET, previous EVID = 174929689
+2018-02-27 09:55:43.042000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log120
+2018-02-27 09:55:43.104000 Saved outside_mask_data part = 119
+2018-02-27 09:55:43.151000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 312.166, 255.761 < 292.166 at i = 79 us = 0.801401, EVID NOT_SET, previous EVID = 174929691
+2018-02-27 09:55:43.151000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log121
+2018-02-27 09:55:43.213000 Saved outside_mask_data part = 120
+2018-02-27 09:55:45.959000 set_amp = 15736, took 0.006503259694 time,  averages NOT reset, mask_set = False
+2018-02-27 09:55:45.959000 Adding to pulse_breakdown_log =  1239390 106 15736 233 1503
+2018-02-27 09:55:45.959000 *
+*** rf_condition_data set_ramp_values ***
+2018-02-27 09:55:45.959000 current ramp index   = 232
+next required pulses = 1000
+next power increase  = 20000.0
+next sp decrease     = 15728
+2018-02-27 09:55:45.959000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:55:46.130000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:55:46.130000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:55:46.208000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:55:46.208000 rf_condition_data increasing breakdown count = 107
+2018-02-27 09:55:46.208000 Adding to pulse_breakdown_log =  1239391 107 15736 232 1503
+2018-02-27 09:55:46.208000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 121
+2018-02-27 09:55:46.318000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:55:46.318000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 107
+2018-02-27 09:55:46.318000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 122
+2018-02-27 09:55:46.427000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 305.447, 326.067 > 325.447 at i = 152 us = 1.45873, EVID NOT_SET, previous EVID = 174929726
+2018-02-27 09:55:46.427000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log122
+2018-02-27 09:55:46.489000 Saved outside_mask_data part = 121
+2018-02-27 09:55:46.489000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 322.945, 240.218 < 302.945 at i = 73 us = 0.747374, EVID NOT_SET, previous EVID = 174929727
+2018-02-27 09:55:46.505000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log123
+2018-02-27 09:55:46.567000 Saved outside_mask_data part = 122
+2018-02-27 09:55:49.329000 set_amp = 15728, took 0.0057396537851 time,  averages NOT reset, mask_set = False
+2018-02-27 09:55:49.329000 Adding to pulse_breakdown_log =  1239391 107 15728 232 1503
+2018-02-27 09:55:49.329000 *
+*** rf_condition_data set_ramp_values ***
+2018-02-27 09:55:49.329000 current ramp index   = 231
+next required pulses = 1000
+next power increase  = 20000.0
+next sp decrease     = 15708
+2018-02-27 09:55:49.329000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:55:49.531000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:55:49.531000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:55:49.594000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:55:49.594000 rf_condition_data increasing breakdown count = 108
+2018-02-27 09:55:49.594000 Adding to pulse_breakdown_log =  1239392 108 15728 231 1503
+2018-02-27 09:55:49.594000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 123
+2018-02-27 09:55:49.812000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 305.75, 325.757 > 325.75 at i = 151 us = 1.44972, EVID NOT_SET, previous EVID = 174929762
+2018-02-27 09:55:49.812000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log124
+2018-02-27 09:55:49.875000 Saved outside_mask_data part = 123
+2018-02-27 09:55:52.605000 set_amp = 15708, took 0.00635751770608 time,  averages NOT reset, mask_set = False
+2018-02-27 09:55:52.605000 Adding to pulse_breakdown_log =  1239392 108 15708 231 1503
+2018-02-27 09:55:52.605000 *
+*** rf_condition_data set_ramp_values ***
+2018-02-27 09:55:52.605000 current ramp index   = 230
+next required pulses = 1000
+next power increase  = 20000.0
+next sp decrease     = 15718
+2018-02-27 09:55:52.932000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:55:52.932000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:55:52.979000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:55:52.979000 rf_condition_data increasing breakdown count = 109
+2018-02-27 09:55:52.979000 Adding to pulse_breakdown_log =  1239394 109 15708 230 1503
+2018-02-27 09:55:52.979000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 124
+2018-02-27 09:55:53.197000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 305.204, 325.421 > 325.204 at i = 153 us = 1.46773, EVID NOT_SET, previous EVID = 174929797
+2018-02-27 09:55:53.197000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log125
+2018-02-27 09:55:53.260000 Saved outside_mask_data part = 124
+2018-02-27 09:55:56.052000 set_amp = 15718, took 0.0640830746927 time,  averages NOT reset, mask_set = False
+2018-02-27 09:55:56.052000 Adding to pulse_breakdown_log =  1239394 109 15718 230 1503
+2018-02-27 09:55:56.052000 *
+*** rf_condition_data set_ramp_values ***
+2018-02-27 09:55:56.052000 current ramp index   = 229
+next required pulses = 1000
+next power increase  = 20000.0
+next sp decrease     = 15698
+2018-02-27 09:55:56.349000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:55:56.349000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:55:56.364000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:55:56.364000 rf_condition_data increasing breakdown count = 110
+2018-02-27 09:55:56.364000 Adding to pulse_breakdown_log =  1239396 110 15718 229 1503
+2018-02-27 09:55:56.364000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 125
+2018-02-27 09:55:56.583000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 305.196, 325.38 > 325.196 at i = 154 us = 1.47674, EVID NOT_SET, previous EVID = 174929832
+2018-02-27 09:55:56.583000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log126
+2018-02-27 09:55:56.645000 Saved outside_mask_data part = 125
+2018-02-27 09:55:59.375000 set_amp = 15698, took 0.00589302010246 time,  averages NOT reset, mask_set = False
+2018-02-27 09:55:59.375000 Adding to pulse_breakdown_log =  1239396 110 15698 229 1503
+2018-02-27 09:55:59.375000 *
+*** rf_condition_data set_ramp_values ***
+2018-02-27 09:55:59.375000 current ramp index   = 228
+next required pulses = 1000
+next power increase  = 20000.0
+next sp decrease     = 15682
+2018-02-27 09:55:59.734000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:55:59.734000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:55:59.750000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:55:59.750000 rf_condition_data increasing breakdown count = 111
+2018-02-27 09:55:59.750000 Adding to pulse_breakdown_log =  1239398 111 15698 228 1503
+2018-02-27 09:55:59.750000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 126
+2018-02-27 09:55:59.859000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:55:59.859000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 111
+2018-02-27 09:55:59.859000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 127
+2018-02-27 09:55:59.968000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 305.447, 325.715 > 325.447 at i = 152 us = 1.45873, EVID NOT_SET, previous EVID = 174929867
+2018-02-27 09:55:59.968000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log127
+2018-02-27 09:56:00.030000 Saved outside_mask_data part = 126
+2018-02-27 09:56:00.046000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 322.945, 282.911 < 302.945 at i = 73 us = 0.747374, EVID NOT_SET, previous EVID = 174929868
+2018-02-27 09:56:00.046000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log128
+2018-02-27 09:56:00.108000 Saved outside_mask_data part = 127
+2018-02-27 09:56:02.870000 set_amp = 15682, took 0.00556429420999 time,  averages NOT reset, mask_set = False
+2018-02-27 09:56:02.870000 Adding to pulse_breakdown_log =  1239398 111 15682 228 1503
+2018-02-27 09:56:02.870000 *
+*** rf_condition_data set_ramp_values ***
+2018-02-27 09:56:02.870000 current ramp index   = 227
+next required pulses = 1000
+next power increase  = 20000.0
+next sp decrease     = 15659
+2018-02-27 09:56:02.870000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:56:03.244000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:56:03.244000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:56:03.353000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:56:03.353000 rf_condition_data increasing breakdown count = 112
+2018-02-27 09:56:03.353000 Adding to pulse_breakdown_log =  1239400 112 15682 227 1503
+2018-02-27 09:56:03.353000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 128
+2018-02-27 09:56:03.462000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 305.196, 325.222 > 325.196 at i = 154 us = 1.47674, EVID NOT_SET, previous EVID = 174929903
+2018-02-27 09:56:03.462000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log129
+2018-02-27 09:56:03.525000 Saved outside_mask_data part = 128
+2018-02-27 09:56:06.364000 set_amp = 15659, took 0.0053739792196 time,  averages NOT reset, mask_set = False
+2018-02-27 09:56:06.364000 Adding to pulse_breakdown_log =  1239400 112 15659 227 1503
+2018-02-27 09:56:06.364000 *
+*** rf_condition_data set_ramp_values ***
+2018-02-27 09:56:06.364000 current ramp index   = 226
+next required pulses = 1000
+next power increase  = 20000.0
+next sp decrease     = 15632
+2018-02-27 09:56:06.754000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:56:06.754000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:56:06.848000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:56:06.848000 rf_condition_data increasing breakdown count = 113
+2018-02-27 09:56:06.848000 Adding to pulse_breakdown_log =  1239402 113 15659 226 1503
+2018-02-27 09:56:06.848000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 129
+2018-02-27 09:56:06.957000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 305.196, 325.423 > 325.196 at i = 154 us = 1.47674, EVID NOT_SET, previous EVID = 174929938
+2018-02-27 09:56:06.957000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log130
+2018-02-27 09:56:07.019000 Saved outside_mask_data part = 129
+2018-02-27 09:56:09.858000 set_amp = 15632, took 0.00678506663667 time,  averages NOT reset, mask_set = False
+2018-02-27 09:56:09.858000 Adding to pulse_breakdown_log =  1239402 113 15632 226 1503
+2018-02-27 09:56:09.858000 *
+*** rf_condition_data set_ramp_values ***
+2018-02-27 09:56:09.858000 current ramp index   = 225
+next required pulses = 1000
+next power increase  = 20000.0
+next sp decrease     = 15624
+2018-02-27 09:56:10.249000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:56:10.249000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:56:10.342000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:56:10.342000 rf_condition_data increasing breakdown count = 114
+2018-02-27 09:56:10.342000 Adding to pulse_breakdown_log =  1239404 114 15632 225 1503
+2018-02-27 09:56:10.342000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 130
+2018-02-27 09:56:10.451000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 305.521, 325.936 > 325.521 at i = 156 us = 1.49475, EVID NOT_SET, previous EVID = 174929973
+2018-02-27 09:56:10.451000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log131
+2018-02-27 09:56:10.514000 Saved outside_mask_data part = 130
+2018-02-27 09:56:13.353000 set_amp = 15624, took 0.00346144552589 time,  averages NOT reset, mask_set = False
+2018-02-27 09:56:13.353000 Adding to pulse_breakdown_log =  1239404 114 15624 225 1503
+2018-02-27 09:56:13.353000 *
+*** rf_condition_data set_ramp_values ***
+2018-02-27 09:56:13.353000 current ramp index   = 224
+next required pulses = 1000
+next power increase  = 20000.0
+next sp decrease     = 15612
+2018-02-27 09:56:13.556000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:56:13.556000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:56:13.618000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:56:13.618000 rf_condition_data increasing breakdown count = 115
+2018-02-27 09:56:13.618000 Adding to pulse_breakdown_log =  1239405 115 15624 224 1503
+2018-02-27 09:56:13.618000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 131
+2018-02-27 09:56:13.727000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:56:13.727000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 115
+2018-02-27 09:56:13.727000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 132
+2018-02-27 09:56:13.837000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 305.299, 325.563 > 325.299 at i = 155 us = 1.48574, EVID NOT_SET, previous EVID = 174930008
+2018-02-27 09:56:13.837000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log132
+2018-02-27 09:56:13.899000 Saved outside_mask_data part = 131
+2018-02-27 09:56:13.915000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 322.945, 185.863 < 302.945 at i = 73 us = 0.747374, EVID NOT_SET, previous EVID = 174930009
+2018-02-27 09:56:13.915000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log133
+2018-02-27 09:56:13.977000 Saved outside_mask_data part = 132
+2018-02-27 09:56:16.738000 set_amp = 15612, took 0.0059167728208 time,  averages NOT reset, mask_set = False
+2018-02-27 09:56:16.738000 Adding to pulse_breakdown_log =  1239405 115 15612 224 1503
+2018-02-27 09:56:16.738000 *
+*** rf_condition_data set_ramp_values ***
+2018-02-27 09:56:16.738000 current ramp index   = 223
+next required pulses = 1000
+next power increase  = 20000.0
+next sp decrease     = 15596
+2018-02-27 09:56:16.738000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:56:16.957000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:56:16.957000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:56:17.003000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:56:17.003000 rf_condition_data increasing breakdown count = 116
+2018-02-27 09:56:17.003000 Adding to pulse_breakdown_log =  1239406 116 15612 223 1503
+2018-02-27 09:56:17.003000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 133
+2018-02-27 09:56:17.113000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:56:17.113000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 116
+2018-02-27 09:56:17.113000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 134
+2018-02-27 09:56:17.222000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 305.204, 325.598 > 325.204 at i = 153 us = 1.46773, EVID NOT_SET, previous EVID = 174930044
+2018-02-27 09:56:17.222000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log134
+2018-02-27 09:56:17.284000 Saved outside_mask_data part = 133
+2018-02-27 09:56:17.300000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 322.945, 259.526 < 302.945 at i = 73 us = 0.747374, EVID NOT_SET, previous EVID = 174930045
+2018-02-27 09:56:17.300000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log135
+2018-02-27 09:56:17.362000 Saved outside_mask_data part = 134
+2018-02-27 09:56:20.123000 set_amp = 15596, took 0.00450040702196 time,  averages NOT reset, mask_set = False
+2018-02-27 09:56:20.123000 Adding to pulse_breakdown_log =  1239406 116 15596 223 1503
+2018-02-27 09:56:20.123000 *
+*** rf_condition_data set_ramp_values ***
+2018-02-27 09:56:20.123000 current ramp index   = 222
+next required pulses = 1000
+next power increase  = 20000.0
+next sp decrease     = 15579
+2018-02-27 09:56:20.123000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:56:20.357000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:56:20.357000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:56:20.389000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:56:20.389000 rf_condition_data increasing breakdown count = 117
+2018-02-27 09:56:20.389000 Adding to pulse_breakdown_log =  1239408 117 15596 222 1503
+2018-02-27 09:56:20.389000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 135
+2018-02-27 09:56:20.498000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:56:20.498000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 117
+2018-02-27 09:56:20.498000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 136
+2018-02-27 09:56:20.607000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 305.196, 325.297 > 325.196 at i = 154 us = 1.47674, EVID NOT_SET, previous EVID = 174930080
+2018-02-27 09:56:20.607000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log136
+2018-02-27 09:56:20.670000 Saved outside_mask_data part = 135
+2018-02-27 09:56:20.716000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 312.166, 287.453 < 292.166 at i = 79 us = 0.801401, EVID NOT_SET, previous EVID = 174930081
+2018-02-27 09:56:20.716000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log137
+2018-02-27 09:56:20.779000 Saved outside_mask_data part = 136
+2018-02-27 09:56:23.509000 set_amp = 15579, took 0.00528366024116 time,  averages NOT reset, mask_set = False
+2018-02-27 09:56:23.509000 Adding to pulse_breakdown_log =  1239408 117 15579 222 1503
+2018-02-27 09:56:23.509000 *
+*** rf_condition_data set_ramp_values ***
+2018-02-27 09:56:23.509000 current ramp index   = 221
+next required pulses = 1000
+next power increase  = 20000.0
+next sp decrease     = 15561
+2018-02-27 09:56:23.509000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:56:23.665000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:56:23.665000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:56:23.758000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:56:23.758000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:56:23.774000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:56:23.774000 rf_condition_data increasing breakdown count = 118
+2018-02-27 09:56:23.774000 Adding to pulse_breakdown_log =  1239409 118 15579 221 1503
+2018-02-27 09:56:23.774000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 137
+2018-02-27 09:56:23.774000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 118
+2018-02-27 09:56:23.774000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 138
+2018-02-27 09:56:23.883000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 305.196, 325.412 > 325.196 at i = 154 us = 1.47674, EVID NOT_SET, previous EVID = 174930115
+2018-02-27 09:56:23.883000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log138
+2018-02-27 09:56:23.961000 Saved outside_mask_data part = 137
+2018-02-27 09:56:23.961000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 315.597, 289.056 < 295.597 at i = 77 us = 0.783392, EVID NOT_SET, previous EVID = 174930116
+2018-02-27 09:56:23.961000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log139
+2018-02-27 09:56:24.039000 Saved outside_mask_data part = 138
+2018-02-27 09:56:26.785000 set_amp = 15561, took 0.00691086807092 time,  averages NOT reset, mask_set = False
+2018-02-27 09:56:26.785000 Adding to pulse_breakdown_log =  1239409 118 15561 221 1503
+2018-02-27 09:56:26.785000 *
+*** rf_condition_data set_ramp_values ***
+2018-02-27 09:56:26.785000 current ramp index   = 220
+next required pulses = 1000
+next power increase  = 20000.0
+next sp decrease     = 15548
+2018-02-27 09:56:26.972000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:56:26.972000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:56:27.050000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:56:27.050000 rf_condition_data increasing breakdown count = 119
+2018-02-27 09:56:27.050000 Adding to pulse_breakdown_log =  1239410 119 15561 220 1503
+2018-02-27 09:56:27.050000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 139
+2018-02-27 09:56:27.159000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:56:27.159000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 119
+2018-02-27 09:56:27.159000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 140
+2018-02-27 09:56:27.268000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 307.408, 327.94 > 327.408 at i = 159 us = 1.52176, EVID NOT_SET, previous EVID = 174930150
+2018-02-27 09:56:27.268000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log140
+2018-02-27 09:56:27.331000 Saved outside_mask_data part = 139
+2018-02-27 09:56:27.331000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 322.945, 111.611 < 302.945 at i = 73 us = 0.747374, EVID NOT_SET, previous EVID = 174930151
+2018-02-27 09:56:27.346000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log141
+2018-02-27 09:56:27.409000 Saved outside_mask_data part = 140
+2018-02-27 09:56:30.170000 set_amp = 15548, took 0.00472327203374 time,  averages NOT reset, mask_set = False
+2018-02-27 09:56:30.170000 Adding to pulse_breakdown_log =  1239410 119 15548 220 1503
+2018-02-27 09:56:30.170000 *
+*** rf_condition_data set_ramp_values ***
+2018-02-27 09:56:30.170000 current ramp index   = 219
+next required pulses = 1000
+next power increase  = 20000.0
+next sp decrease     = 15535
+2018-02-27 09:56:30.170000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:56:30.373000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:56:30.373000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:56:30.435000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:56:30.435000 rf_condition_data increasing breakdown count = 120
+2018-02-27 09:56:30.435000 Adding to pulse_breakdown_log =  1239411 120 15548 219 1503
+2018-02-27 09:56:30.435000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 141
+2018-02-27 09:56:30.544000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:56:30.544000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 120
+2018-02-27 09:56:30.544000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 142
+2018-02-27 09:56:30.654000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 307.408, 327.956 > 327.408 at i = 159 us = 1.52176, EVID NOT_SET, previous EVID = 174930185
+2018-02-27 09:56:30.654000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log142
+2018-02-27 09:56:30.716000 Saved outside_mask_data part = 141
+2018-02-27 09:56:30.732000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 322.945, 240.053 < 302.945 at i = 73 us = 0.747374, EVID NOT_SET, previous EVID = 174930186
+2018-02-27 09:56:30.732000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log143
+2018-02-27 09:56:30.794000 Saved outside_mask_data part = 142
+2018-02-27 09:56:33.555000 set_amp = 15535, took 0.00484496805996 time,  averages NOT reset, mask_set = False
+2018-02-27 09:56:33.555000 Adding to pulse_breakdown_log =  1239411 120 15535 219 1503
+2018-02-27 09:56:33.555000 *
+*** rf_condition_data set_ramp_values ***
+2018-02-27 09:56:33.555000 current ramp index   = 218
+next required pulses = 1000
+next power increase  = 20000.0
+next sp decrease     = 15518
+2018-02-27 09:56:33.555000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:56:33.867000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:56:33.867000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:56:33.930000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:56:33.945000 rf_condition_data increasing breakdown count = 121
+2018-02-27 09:56:33.945000 Adding to pulse_breakdown_log =  1239413 121 15535 218 1503
+2018-02-27 09:56:33.945000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 143
+2018-02-27 09:56:34.039000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:56:34.039000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 121
+2018-02-27 09:56:34.039000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 144
+2018-02-27 09:56:34.148000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 306.059, 326.143 > 326.059 at i = 157 us = 1.50375, EVID NOT_SET, previous EVID = 174930222
+2018-02-27 09:56:34.148000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log144
+2018-02-27 09:56:34.211000 Saved outside_mask_data part = 143
+2018-02-27 09:56:34.257000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 322.945, 218.203 < 302.945 at i = 73 us = 0.747374, EVID NOT_SET, previous EVID = 174930223
+2018-02-27 09:56:34.257000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log145
+2018-02-27 09:56:34.320000 Saved outside_mask_data part = 144
+2018-02-27 09:56:37.050000 set_amp = 15518, took 0.00360220237553 time,  averages NOT reset, mask_set = False
+2018-02-27 09:56:37.050000 Adding to pulse_breakdown_log =  1239413 121 15518 218 1503
+2018-02-27 09:56:37.050000 *
+*** rf_condition_data set_ramp_values ***
+2018-02-27 09:56:37.050000 current ramp index   = 217
+next required pulses = 1000
+next power increase  = 20000.0
+next sp decrease     = 15496
+2018-02-27 09:56:37.050000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:56:37.268000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:56:37.268000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:56:37.315000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:56:37.315000 rf_condition_data increasing breakdown count = 122
+2018-02-27 09:56:37.315000 Adding to pulse_breakdown_log =  1239414 122 15518 217 1503
+2018-02-27 09:56:37.315000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 145
+2018-02-27 09:56:37.424000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:56:37.424000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 122
+2018-02-27 09:56:37.424000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 146
+2018-02-27 09:56:37.533000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 305.521, 325.553 > 325.521 at i = 156 us = 1.49475, EVID NOT_SET, previous EVID = 174930257
+2018-02-27 09:56:37.533000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log146
+2018-02-27 09:56:37.596000 Saved outside_mask_data part = 145
+2018-02-27 09:56:37.611000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 322.945, 201.391 < 302.945 at i = 73 us = 0.747374, EVID NOT_SET, previous EVID = 174930258
+2018-02-27 09:56:37.611000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log147
+2018-02-27 09:56:37.674000 Saved outside_mask_data part = 146
+2018-02-27 09:56:40.435000 set_amp = 15496, took 0.00683726396824 time,  averages NOT reset, mask_set = False
+2018-02-27 09:56:40.435000 Adding to pulse_breakdown_log =  1239414 122 15496 217 1503
+2018-02-27 09:56:40.435000 *
+*** rf_condition_data set_ramp_values ***
+2018-02-27 09:56:40.435000 current ramp index   = 216
+next required pulses = 1000
+next power increase  = 20000.0
+next sp decrease     = 15468
+2018-02-27 09:56:40.435000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:56:40.685000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:56:40.685000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:56:40.700000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:56:40.700000 rf_condition_data increasing breakdown count = 123
+2018-02-27 09:56:40.700000 Adding to pulse_breakdown_log =  1239415 123 15496 216 1503
+2018-02-27 09:56:40.700000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 147
+2018-02-27 09:56:40.809000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:56:40.809000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 123
+2018-02-27 09:56:40.809000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 148
+2018-02-27 09:56:40.919000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 307.884, 328.358 > 327.884 at i = 160 us = 1.53077, EVID NOT_SET, previous EVID = 174930291
+2018-02-27 09:56:40.919000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log148
+2018-02-27 09:56:40.981000 Saved outside_mask_data part = 147
+2018-02-27 09:56:40.997000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 322.945, 197.251 < 302.945 at i = 73 us = 0.747374, EVID NOT_SET, previous EVID = 174930292
+2018-02-27 09:56:40.997000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log149
+2018-02-27 09:56:41.059000 Saved outside_mask_data part = 148
+2018-02-27 09:56:43.820000 set_amp = 15468, took 0.00604785263704 time,  averages NOT reset, mask_set = False
+2018-02-27 09:56:43.820000 Adding to pulse_breakdown_log =  1239415 123 15468 216 1503
+2018-02-27 09:56:43.820000 *
+*** rf_condition_data set_ramp_values ***
+2018-02-27 09:56:43.820000 current ramp index   = 215
+next required pulses = 1000
+next power increase  = 20000.0
+next sp decrease     = 15454
+2018-02-27 09:56:43.820000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:56:44.179000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:56:44.179000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:56:44.195000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:56:44.195000 rf_condition_data increasing breakdown count = 124
+2018-02-27 09:56:44.195000 Adding to pulse_breakdown_log =  1239417 124 15468 215 1503
+2018-02-27 09:56:44.195000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 149
+2018-02-27 09:56:44.304000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:56:44.304000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 124
+2018-02-27 09:56:44.304000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 150
+2018-02-27 09:56:44.413000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 308.699, 329.445 > 328.699 at i = 161 us = 1.53977, EVID NOT_SET, previous EVID = 174930326
+2018-02-27 09:56:44.413000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log150
+2018-02-27 09:56:44.476000 Saved outside_mask_data part = 149
+2018-02-27 09:56:44.491000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 322.945, 31.5413 < 302.945 at i = 73 us = 0.747374, EVID NOT_SET, previous EVID = 174930327
+2018-02-27 09:56:44.491000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log151
+2018-02-27 09:56:44.554000 Saved outside_mask_data part = 150
+2018-02-27 09:56:47.315000 set_amp = 15454, took 0.00444996915098 time,  averages NOT reset, mask_set = False
+2018-02-27 09:56:47.315000 Adding to pulse_breakdown_log =  1239417 124 15454 215 1503
+2018-02-27 09:56:47.315000 *
+*** rf_condition_data set_ramp_values ***
+2018-02-27 09:56:47.315000 current ramp index   = 214
+next required pulses = 1000
+next power increase  = 20000.0
+next sp decrease     = 15442
+2018-02-27 09:56:47.315000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:56:47.580000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:56:47.580000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:56:47.689000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:56:47.689000 rf_condition_data increasing breakdown count = 125
+2018-02-27 09:56:47.689000 Adding to pulse_breakdown_log =  1239420 125 15454 214 1503
+2018-02-27 09:56:47.689000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 151
+2018-02-27 09:56:47.798000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:56:47.798000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 125
+2018-02-27 09:56:47.798000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 152
+2018-02-27 09:56:47.908000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 322.945, 300.424 < 302.945 at i = 73 us = 0.747374, EVID NOT_SET, previous EVID = 174930363
+2018-02-27 09:56:47.908000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log152
+2018-02-27 09:56:47.970000 Saved outside_mask_data part = 152
+2018-02-27 09:56:47.986000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 307.408, 327.669 > 327.408 at i = 159 us = 1.52176, EVID NOT_SET, previous EVID = 174930362
+2018-02-27 09:56:47.986000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log153
+2018-02-27 09:56:48.048000 Saved outside_mask_data part = 151
+2018-02-27 09:56:50.809000 set_amp = 15442, took 0.0051109398571 time,  averages NOT reset, mask_set = False
+2018-02-27 09:56:50.809000 Adding to pulse_breakdown_log =  1239420 125 15442 214 1503
+2018-02-27 09:56:50.809000 *
+*** rf_condition_data set_ramp_values ***
+2018-02-27 09:56:50.809000 current ramp index   = 213
+next required pulses = 1000
+next power increase  = 20000.0
+next sp decrease     = 15427
+2018-02-27 09:56:50.809000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:56:51.074000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:56:51.090000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:56:51.184000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:56:51.184000 rf_condition_data increasing breakdown count = 126
+2018-02-27 09:56:51.184000 Adding to pulse_breakdown_log =  1239422 126 15442 213 1503
+2018-02-27 09:56:51.184000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 153
+2018-02-27 09:56:51.293000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:56:51.293000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 126
+2018-02-27 09:56:51.293000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 154
+2018-02-27 09:56:51.402000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 307.884, 328.418 > 327.884 at i = 160 us = 1.53077, EVID NOT_SET, previous EVID = 174930400
+2018-02-27 09:56:51.402000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log154
+2018-02-27 09:56:51.464000 Saved outside_mask_data part = 153
+2018-02-27 09:56:51.480000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 322.945, 248.393 < 302.945 at i = 73 us = 0.747374, EVID NOT_SET, previous EVID = 174930401
+2018-02-27 09:56:51.480000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log155
+2018-02-27 09:56:51.542000 Saved outside_mask_data part = 154
+2018-02-27 09:56:54.304000 set_amp = 15427, took 0.00571238214548 time,  averages NOT reset, mask_set = False
+2018-02-27 09:56:54.304000 Adding to pulse_breakdown_log =  1239422 126 15427 213 1503
+2018-02-27 09:56:54.304000 *
+*** rf_condition_data set_ramp_values ***
+2018-02-27 09:56:54.304000 current ramp index   = 212
+next required pulses = 1000
+next power increase  = 20000.0
+next sp decrease     = 15409
+2018-02-27 09:56:54.304000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:56:54.585000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:56:54.600000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:56:54.678000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:56:54.678000 rf_condition_data increasing breakdown count = 127
+2018-02-27 09:56:54.678000 Adding to pulse_breakdown_log =  1239424 127 15427 212 1503
+2018-02-27 09:56:54.678000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 155
+2018-02-27 09:56:54.787000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 310.93, 332.593 > 330.93 at i = 164 us = 1.56678, EVID NOT_SET, previous EVID = 174930437
+2018-02-27 09:56:54.787000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log156
+2018-02-27 09:56:54.850000 Saved outside_mask_data part = 155
+2018-02-27 09:56:57.689000 set_amp = 15409, took 0.00598040664659 time,  averages NOT reset, mask_set = False
+2018-02-27 09:56:57.689000 Adding to pulse_breakdown_log =  1239424 127 15409 212 1503
+2018-02-27 09:56:57.689000 *
+*** rf_condition_data set_ramp_values ***
+2018-02-27 09:56:57.689000 current ramp index   = 211
+next required pulses = 1000
+next power increase  = 20000.0
+next sp decrease     = 15380
+2018-02-27 09:56:57.985000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:56:57.985000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:56:58.063000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:56:58.063000 rf_condition_data increasing breakdown count = 128
+2018-02-27 09:56:58.063000 Adding to pulse_breakdown_log =  1239426 128 15409 211 1503
+2018-02-27 09:56:58.063000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 156
+2018-02-27 09:56:58.282000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 310.483, 331.488 > 330.483 at i = 163 us = 1.55778, EVID NOT_SET, previous EVID = 174930472
+2018-02-27 09:56:58.282000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log157
+2018-02-27 09:56:58.344000 Saved outside_mask_data part = 156
+2018-02-27 09:57:01.074000 set_amp = 15380, took 0.00435085286927 time,  averages NOT reset, mask_set = False
+2018-02-27 09:57:01.074000 Adding to pulse_breakdown_log =  1239426 128 15380 211 1503
+2018-02-27 09:57:01.074000 *
+*** rf_condition_data set_ramp_values ***
+2018-02-27 09:57:01.074000 current ramp index   = 210
+next required pulses = 1000
+next power increase  = 20000.0
+next sp decrease     = 15362
+2018-02-27 09:57:01.402000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:57:01.402000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:57:01.449000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:57:01.449000 rf_condition_data increasing breakdown count = 129
+2018-02-27 09:57:01.449000 Adding to pulse_breakdown_log =  1239428 129 15380 210 1503
+2018-02-27 09:57:01.449000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 157
+2018-02-27 09:57:01.667000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 310.93, 332.455 > 330.93 at i = 164 us = 1.56678, EVID NOT_SET, previous EVID = 174930507
+2018-02-27 09:57:01.667000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log158
+2018-02-27 09:57:01.729000 Saved outside_mask_data part = 157
+2018-02-27 09:57:04.460000 set_amp = 15362, took 0.00591794579441 time,  averages NOT reset, mask_set = False
+2018-02-27 09:57:04.460000 Adding to pulse_breakdown_log =  1239428 129 15362 210 1503
+2018-02-27 09:57:04.460000 *
+*** rf_condition_data set_ramp_values ***
+2018-02-27 09:57:04.460000 current ramp index   = 209
+next required pulses = 1000
+next power increase  = 20000.0
+next sp decrease     = 15350
+2018-02-27 09:57:04.694000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:57:04.694000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:57:04.725000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:57:04.725000 rf_condition_data increasing breakdown count = 130
+2018-02-27 09:57:04.725000 Adding to pulse_breakdown_log =  1239429 130 15362 209 1503
+2018-02-27 09:57:04.725000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 158
+2018-02-27 09:57:04.834000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:57:04.834000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 130
+2018-02-27 09:57:04.834000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 159
+2018-02-27 09:57:04.943000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 307.884, 328.29 > 327.884 at i = 160 us = 1.53077, EVID NOT_SET, previous EVID = 174930541
+2018-02-27 09:57:04.943000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log159
+2018-02-27 09:57:05.021000 Saved outside_mask_data part = 158
+2018-02-27 09:57:05.162000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 322.945, 264.888 < 302.945 at i = 73 us = 0.747374, EVID NOT_SET, previous EVID = 174930542
+2018-02-27 09:57:05.162000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log160
+2018-02-27 09:57:05.240000 Saved outside_mask_data part = 159
+2018-02-27 09:57:07.845000 set_amp = 15350, took 0.00537925760159 time,  averages NOT reset, mask_set = False
+2018-02-27 09:57:07.845000 Adding to pulse_breakdown_log =  1239429 130 15350 209 1503
+2018-02-27 09:57:07.845000 *
+*** rf_condition_data set_ramp_values ***
+2018-02-27 09:57:07.845000 current ramp index   = 208
+next required pulses = 1000
+next power increase  = 20000.0
+next sp decrease     = 15332
+2018-02-27 09:57:07.845000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:57:08.204000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:57:08.204000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:57:08.219000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:57:08.235000 rf_condition_data increasing breakdown count = 131
+2018-02-27 09:57:08.235000 Adding to pulse_breakdown_log =  1239431 131 15350 208 1503
+2018-02-27 09:57:08.235000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 160
+2018-02-27 09:57:08.438000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 310.93, 332.355 > 330.93 at i = 164 us = 1.56678, EVID NOT_SET, previous EVID = 174930578
+2018-02-27 09:57:08.438000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log161
+2018-02-27 09:57:08.500000 Saved outside_mask_data part = 160
+2018-02-27 09:57:11.246000 set_amp = 15332, took 0.0042493906401 time,  averages NOT reset, mask_set = False
+2018-02-27 09:57:11.246000 Adding to pulse_breakdown_log =  1239431 131 15332 208 1503
+2018-02-27 09:57:11.246000 *
+*** rf_condition_data set_ramp_values ***
+2018-02-27 09:57:11.246000 current ramp index   = 207
+next required pulses = 1000
+next power increase  = 20000.0
+next sp decrease     = 15312
+2018-02-27 09:57:11.495000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:57:11.511000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:57:11.604000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:57:11.604000 rf_condition_data increasing breakdown count = 132
+2018-02-27 09:57:11.604000 Adding to pulse_breakdown_log =  1239432 132 15332 207 1503
+2018-02-27 09:57:11.604000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 161
+2018-02-27 09:57:11.714000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 310.93, 332.407 > 330.93 at i = 164 us = 1.56678, EVID NOT_SET, previous EVID = 174930611
+2018-02-27 09:57:11.714000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log162
+2018-02-27 09:57:11.776000 Saved outside_mask_data part = 161
+2018-02-27 09:57:14.615000 set_amp = 15312, took 0.00576575245077 time,  averages NOT reset, mask_set = False
+2018-02-27 09:57:14.615000 Adding to pulse_breakdown_log =  1239432 132 15312 207 1503
+2018-02-27 09:57:14.631000 *
+*** rf_condition_data set_ramp_values ***
+2018-02-27 09:57:14.647000 current ramp index   = 206
+next required pulses = 1000
+next power increase  = 20000.0
+next sp decrease     = 15281
+2018-02-27 09:57:14.803000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:57:14.803000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:57:14.881000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:57:14.881000 rf_condition_data increasing breakdown count = 133
+2018-02-27 09:57:14.881000 Adding to pulse_breakdown_log =  1239433 133 15312 206 1503
+2018-02-27 09:57:14.881000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 162
+2018-02-27 09:57:14.990000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:57:14.990000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 133
+2018-02-27 09:57:14.990000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 163
+2018-02-27 09:57:15.099000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 310.93, 332.307 > 330.93 at i = 164 us = 1.56678, EVID NOT_SET, previous EVID = 174930644
+2018-02-27 09:57:15.099000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log163
+2018-02-27 09:57:15.161000 Saved outside_mask_data part = 162
+2018-02-27 09:57:15.177000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 322.945, 251.25 < 302.945 at i = 73 us = 0.747374, EVID NOT_SET, previous EVID = 174930645
+2018-02-27 09:57:15.177000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log164
+2018-02-27 09:57:15.239000 Saved outside_mask_data part = 163
+2018-02-27 09:57:18.047000 set_amp = 15281, took 0.0554728609063 time,  averages NOT reset, mask_set = False
+2018-02-27 09:57:18.047000 Adding to pulse_breakdown_log =  1239433 133 15281 206 1503
+2018-02-27 09:57:18.047000 *
+*** rf_condition_data set_ramp_values ***
+2018-02-27 09:57:18.047000 current ramp index   = 205
+next required pulses = 1000
+next power increase  = 20000.0
+next sp decrease     = 15259
+2018-02-27 09:57:18.047000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:57:18.313000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:57:18.313000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:57:18.375000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:57:18.375000 rf_condition_data increasing breakdown count = 134
+2018-02-27 09:57:18.375000 Adding to pulse_breakdown_log =  1239434 134 15281 205 1503
+2018-02-27 09:57:18.375000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 164
+2018-02-27 09:57:18.484000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:57:18.484000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 134
+2018-02-27 09:57:18.484000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 165
+2018-02-27 09:57:18.593000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 308.699, 329.177 > 328.699 at i = 161 us = 1.53977, EVID NOT_SET, previous EVID = 174930680
+2018-02-27 09:57:18.593000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log165
+2018-02-27 09:57:18.656000 Saved outside_mask_data part = 164
+2018-02-27 09:57:18.656000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 322.945, 300.083 < 302.945 at i = 73 us = 0.747374, EVID NOT_SET, previous EVID = 174930681
+2018-02-27 09:57:18.671000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log166
+2018-02-27 09:57:18.734000 Saved outside_mask_data part = 165
+2018-02-27 09:57:21.495000 set_amp = 15259, took 0.0059592931193 time,  averages NOT reset, mask_set = False
+2018-02-27 09:57:21.495000 Adding to pulse_breakdown_log =  1239434 134 15259 205 1503
+2018-02-27 09:57:21.495000 *
+*** rf_condition_data set_ramp_values ***
+2018-02-27 09:57:21.495000 current ramp index   = 204
+next required pulses = 1000
+next power increase  = 20000.0
+next sp decrease     = 15248
+2018-02-27 09:57:21.495000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:57:21.620000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:57:21.620000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:57:21.651000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:57:21.651000 rf_condition_data increasing breakdown count = 135
+2018-02-27 09:57:21.651000 Adding to pulse_breakdown_log =  1239435 135 15259 204 1503
+2018-02-27 09:57:21.651000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 166
+2018-02-27 09:57:21.760000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:57:21.760000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 135
+2018-02-27 09:57:21.760000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 167
+2018-02-27 09:57:21.869000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 308.699, 328.988 > 328.699 at i = 161 us = 1.53977, EVID NOT_SET, previous EVID = 174930716
+2018-02-27 09:57:21.869000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log167
+2018-02-27 09:57:21.932000 Saved outside_mask_data part = 166
+2018-02-27 09:57:21.947000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 322.945, 229.589 < 302.945 at i = 73 us = 0.747374, EVID NOT_SET, previous EVID = 174930717
+2018-02-27 09:57:21.947000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log168
+2018-02-27 09:57:22.010000 Saved outside_mask_data part = 167
+2018-02-27 09:57:24.771000 set_amp = 15248, took 0.00440920831306 time,  averages NOT reset, mask_set = False
+2018-02-27 09:57:24.771000 Adding to pulse_breakdown_log =  1239435 135 15248 204 1503
+2018-02-27 09:57:24.771000 *
+*** rf_condition_data set_ramp_values ***
+2018-02-27 09:57:24.771000 current ramp index   = 203
+next required pulses = 1000
+next power increase  = 20000.0
+next sp decrease     = 15235
+2018-02-27 09:57:24.771000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:57:25.052000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:57:25.052000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:57:25.146000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:57:25.146000 rf_condition_data increasing breakdown count = 136
+2018-02-27 09:57:25.146000 Adding to pulse_breakdown_log =  1239437 136 15248 203 1503
+2018-02-27 09:57:25.146000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 168
+2018-02-27 09:57:25.255000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 310.93, 331.1 > 330.93 at i = 164 us = 1.56678, EVID NOT_SET, previous EVID = 174930752
+2018-02-27 09:57:25.255000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log169
+2018-02-27 09:57:25.317000 Saved outside_mask_data part = 168
+2018-02-27 09:57:28.156000 set_amp = 15235, took 0.00497047625095 time,  averages NOT reset, mask_set = False
+2018-02-27 09:57:28.156000 Adding to pulse_breakdown_log =  1239437 136 15235 203 1503
+2018-02-27 09:57:28.156000 *
+*** rf_condition_data set_ramp_values ***
+2018-02-27 09:57:28.156000 current ramp index   = 202
+next required pulses = 1000
+next power increase  = 20000.0
+next sp decrease     = 15222
+2018-02-27 09:57:28.422000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:57:28.422000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:57:28.531000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:57:28.531000 rf_condition_data increasing breakdown count = 137
+2018-02-27 09:57:28.531000 Adding to pulse_breakdown_log =  1239439 137 15235 202 1503
+2018-02-27 09:57:28.531000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 169
+2018-02-27 09:57:28.640000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:57:28.640000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 137
+2018-02-27 09:57:28.640000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 170
+2018-02-27 09:57:28.749000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 308.699, 328.949 > 328.699 at i = 161 us = 1.53977, EVID NOT_SET, previous EVID = 174930787
+2018-02-27 09:57:28.749000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log170
+2018-02-27 09:57:28.812000 Saved outside_mask_data part = 169
+2018-02-27 09:57:28.812000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 322.945, 89.8599 < 302.945 at i = 73 us = 0.747374, EVID NOT_SET, previous EVID = 174930788
+2018-02-27 09:57:28.827000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log171
+2018-02-27 09:57:28.890000 Saved outside_mask_data part = 170
+2018-02-27 09:57:31.651000 set_amp = 15222, took 0.00640795557729 time,  averages NOT reset, mask_set = False
+2018-02-27 09:57:31.651000 Adding to pulse_breakdown_log =  1239439 137 15222 202 1503
+2018-02-27 09:57:31.651000 *
+*** rf_condition_data set_ramp_values ***
+2018-02-27 09:57:31.651000 current ramp index   = 201
+next required pulses = 1000
+next power increase  = 20000.0
+next sp decrease     = 15216
+2018-02-27 09:57:31.651000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:57:31.932000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:57:31.932000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:57:32.025000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:57:32.025000 rf_condition_data increasing breakdown count = 138
+2018-02-27 09:57:32.025000 Adding to pulse_breakdown_log =  1239441 138 15222 201 1503
+2018-02-27 09:57:32.025000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 171
+2018-02-27 09:57:32.134000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 308.699, 328.909 > 328.699 at i = 161 us = 1.53977, EVID NOT_SET, previous EVID = 174930824
+2018-02-27 09:57:32.134000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log172
+2018-02-27 09:57:32.197000 Saved outside_mask_data part = 171
+2018-02-27 09:57:35.052000 set_amp = 15216, took 0.0180781646245 time,  averages NOT reset, mask_set = False
+2018-02-27 09:57:35.052000 Adding to pulse_breakdown_log =  1239441 138 15216 201 1503
+2018-02-27 09:57:35.052000 *
+*** rf_condition_data set_ramp_values ***
+2018-02-27 09:57:35.052000 current ramp index   = 200
+next required pulses = 1000
+next power increase  = 20000.0
+next sp decrease     = 15192
+2018-02-27 09:57:35.333000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:57:35.333000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:57:35.411000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:57:35.411000 rf_condition_data increasing breakdown count = 139
+2018-02-27 09:57:35.411000 Adding to pulse_breakdown_log =  1239443 139 15216 200 1503
+2018-02-27 09:57:35.411000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 172
+2018-02-27 09:57:35.520000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:57:35.520000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 139
+2018-02-27 09:57:35.520000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 173
+2018-02-27 09:57:35.629000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 310.483, 331.192 > 330.483 at i = 163 us = 1.55778, EVID NOT_SET, previous EVID = 174930859
+2018-02-27 09:57:35.629000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log173
+2018-02-27 09:57:35.691000 Saved outside_mask_data part = 172
+2018-02-27 09:57:35.707000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 322.945, 278.878 < 302.945 at i = 73 us = 0.747374, EVID NOT_SET, previous EVID = 174930860
+2018-02-27 09:57:35.707000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log174
+2018-02-27 09:57:35.769000 Saved outside_mask_data part = 173
+2018-02-27 09:57:38.531000 set_amp = 15192, took 0.0105884340096 time,  averages NOT reset, mask_set = False
+2018-02-27 09:57:38.531000 Adding to pulse_breakdown_log =  1239443 139 15192 200 1503
+2018-02-27 09:57:38.531000 *
+*** rf_condition_data set_ramp_values ***
+2018-02-27 09:57:38.546000 current ramp index   = 199
+next required pulses = 1000
+next power increase  = 20000.0
+next sp decrease     = 15170
+2018-02-27 09:57:38.546000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:57:38.843000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:57:38.843000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:57:38.905000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:57:38.905000 rf_condition_data increasing breakdown count = 140
+2018-02-27 09:57:38.905000 Adding to pulse_breakdown_log =  1239445 140 15192 199 1503
+2018-02-27 09:57:38.905000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 174
+2018-02-27 09:57:39.123000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 310.93, 332.236 > 330.93 at i = 164 us = 1.56678, EVID NOT_SET, previous EVID = 174930896
+2018-02-27 09:57:39.123000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log175
+2018-02-27 09:57:39.186000 Saved outside_mask_data part = 174
+2018-02-27 09:57:41.916000 set_amp = 15170, took 0.00462005034387 time,  averages NOT reset, mask_set = False
+2018-02-27 09:57:41.916000 Adding to pulse_breakdown_log =  1239445 140 15170 199 1503
+2018-02-27 09:57:41.947000 *
+*** rf_condition_data set_ramp_values ***
+2018-02-27 09:57:41.947000 current ramp index   = 198
+next required pulses = 1000
+next power increase  = 20000.0
+next sp decrease     = 15150
+2018-02-27 09:57:42.243000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:57:42.243000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:57:42.290000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:57:42.290000 rf_condition_data increasing breakdown count = 141
+2018-02-27 09:57:42.290000 Adding to pulse_breakdown_log =  1239447 141 15170 198 1503
+2018-02-27 09:57:42.290000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 175
+2018-02-27 09:57:42.399000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:57:42.399000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 141
+2018-02-27 09:57:42.399000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 176
+2018-02-27 09:57:42.509000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 311.486, 333.008 > 331.486 at i = 165 us = 1.57579, EVID NOT_SET, previous EVID = 174930931
+2018-02-27 09:57:42.509000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log176
+2018-02-27 09:57:42.571000 Saved outside_mask_data part = 175
+2018-02-27 09:57:42.618000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 322.945, 277.146 < 302.945 at i = 73 us = 0.747374, EVID NOT_SET, previous EVID = 174930932
+2018-02-27 09:57:42.618000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log177
+2018-02-27 09:57:42.680000 Saved outside_mask_data part = 176
+2018-02-27 09:57:45.410000 set_amp = 15150, took 0.00570299835567 time,  averages NOT reset, mask_set = False
+2018-02-27 09:57:45.410000 Adding to pulse_breakdown_log =  1239447 141 15150 198 1503
+2018-02-27 09:57:45.410000 *
+*** rf_condition_data set_ramp_values ***
+2018-02-27 09:57:45.410000 current ramp index   = 197
+next required pulses = 1000
+next power increase  = 20000.0
+next sp decrease     = 15137
+2018-02-27 09:57:45.410000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:57:45.738000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:57:45.738000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 09:57:45.785000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:57:45.785000 rf_condition_data increasing breakdown count = 142
+2018-02-27 09:57:45.785000 Adding to pulse_breakdown_log =  1239449 142 15150 197 1503
+2018-02-27 09:57:45.785000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 177
+2018-02-27 09:57:45.894000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 09:57:45.894000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 142
+2018-02-27 09:57:45.894000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 178
+2018-02-27 09:57:46.003000 LRRG_CAVITY_REVERSE_PHASE HI MASK FAIL: current average = 311.486, 331.749 > 331.486 at i = 165 us = 1.57579, EVID NOT_SET, previous EVID = 174930968
+2018-02-27 09:57:46.003000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log178
+2018-02-27 09:57:46.066000 Saved outside_mask_data part = 177
+2018-02-27 09:57:46.081000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 320.837, 255.681 < 300.837 at i = 74 us = 0.756378, EVID NOT_SET, previous EVID = 174930969
+2018-02-27 09:57:46.081000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-09-39-35\outside_reverse_log179
+2018-02-27 09:57:46.144000 Saved outside_mask_data part = 178
+2018-02-27 09:57:46.424000 Not adding to pulse_breakdown_log, amp = 2.0

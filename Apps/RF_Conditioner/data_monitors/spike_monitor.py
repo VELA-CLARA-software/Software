@@ -82,7 +82,10 @@ class spike_monitor(monitor):
                  # object name
                  my_name = 'spike_monitor',
                  # minimum cooldown time for level decay
-                 min_cooldown_time = 7000
+                 min_cooldown_time = 7000,
+                 # max_level above which cool down
+                 max_level = 1,
+                 max_drop_amp = 7
                  ):
         # init base-class
         monitor.__init__(self)
@@ -98,6 +101,8 @@ class spike_monitor(monitor):
         # how many spikes have there been?
         self.spike_count = 0
         # see config_reader and.or config file for keys / values
+        self.max_level = max_level
+        self.max_drop_amp = max_drop_amp
 
         if self.should_drop_amp:
             monitor.logger.message(self.my_name + ' will drop amp on spike detection',True)
@@ -190,6 +195,9 @@ class spike_monitor(monitor):
             self.dump_data()
             # start the cooldown
             self.start_cooldown()
+            monitor.logger.header(self.my_name + ' new spike: ')
+            monitor.logger.message(str(self._latest_value) + ' > ' + str(self.spike_delta + self._mean_level) + ', mean = ' +str(self._mean_level),True)
+            self.alarm('spike')
         else:
             # if not a spike
             #self.set_good()
@@ -200,6 +208,10 @@ class spike_monitor(monitor):
                 self._value_history.pop(0)
                 self._mean_level = mean(self._value_history)
                 #print('new mean = ',self._mean_level)
+        # if self.max_level < self._latest_value:
+        #     if monitor.data.values[dat.breakdown_status] == state.GOOD:
+        #         monitor.llrf_control.setAmpHP(self.max_drop_value)
+        #         monitor.logger.message(self.my_name, ' level too high has_cooled_down')
 
     def min_cooldown_finished(self):
         self.min_time_good = True
@@ -265,7 +277,6 @@ class spike_monitor(monitor):
 
     def set_good(self):
         monitor.data.values[self.data_dict_state_key] = STATE.GOOD
-
 
     def dump_data(self):
         # increase count:

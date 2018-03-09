@@ -1,7 +1,5 @@
 # llrf_handler.py
-
-from VELA_CLARA_enums import MACHINE_AREA
-import VELA_CLARA_LLRF_Control
+import data.rf_condition_data_base as dat
 from VELA_CLARA_LLRF_Control import LLRF_SCAN
 from base.base import base
 
@@ -13,15 +11,13 @@ class llrf_handler_base(base):
 	power_traces = []
 	pulse_end_index = 0
 	pulse_end = 0
-
 	mask_set = False
 	mask_count = 0
 
 	def __init__(self):
 		super(llrf_handler_base, self).__init__()
 		#base.__init__(self)
-
-		self.num_buffer_traces = 40
+		#self.num_buffer_traces = 40
 
 		self.timevector = base.llrfObj[0].time_vector.value
 		#self.timevector_dt = self.timevector[1]-self.timevector[0]
@@ -39,61 +35,48 @@ class llrf_handler_base(base):
 		self.set_infinite_mask_end_by_power()
 
 	def set_infinite_mask_end_by_power(self):
-		a = base.llrf_control.setInfiniteMaskEndByPower(base.config.breakdown_config['PHASE_MASK_BY_POWER_POWER_TRACE_1'],
-														base.config.breakdown_config[
-															'PHASE_MASK_BY_POWER_PHASE_TRACE_1'],
-														base.config.breakdown_config[
-															'PHASE_MASK_BY_POWER_LEVEL_1'])
+		if base.config.breakdown_config.has_key('PHASE_MASK_BY_POWER_POWER_TRACE_1'):#MAGIC_STRING
+			if base.config.breakdown_config.has_key('PHASE_MASK_BY_POWER_PHASE_TRACE_1'):#MAGIC_STRING
+				if base.config.breakdown_config.has_key('PHASE_MASK_BY_POWER_LEVEL_1'):#MAGIC_STRING
+					pwr = base.config.breakdown_config['PHASE_MASK_BY_POWER_POWER_TRACE_1']#MAGIC_STRING
+					pha = base.config.breakdown_config['PHASE_MASK_BY_POWER_PHASE_TRACE_1']#MAGIC_STRING
+					lev = base.config.breakdown_config['PHASE_MASK_BY_POWER_LEVEL_1']#MAGIC_STRING
+					base.data.values[dat.phase_mask_by_power_trace_1_set] = self.apply_infinite_mask_end_by_power(pwr, pha, lev)
+		if base.config.breakdown_config.has_key('PHASE_MASK_BY_POWER_POWER_TRACE_2'):#MAGIC_STRING
+			if base.config.breakdown_config.has_key('PHASE_MASK_BY_POWER_PHASE_TRACE_2'):#MAGIC_STRING
+				if base.config.breakdown_config.has_key('PHASE_MASK_BY_POWER_LEVEL_2'):#MAGIC_STRING
+					pwr = base.config.breakdown_config['PHASE_MASK_BY_POWER_POWER_TRACE_2']#MAGIC_STRING
+					pha = base.config.breakdown_config['PHASE_MASK_BY_POWER_PHASE_TRACE_2']#MAGIC_STRING
+					lev = base.config.breakdown_config['PHASE_MASK_BY_POWER_LEVEL_2']#MAGIC_STRING
+					base.data.values[dat.phase_mask_by_power_trace_2_set] = self.apply_infinite_mask_end_by_power(pwr, pha, lev)
 
-		if a:
-			base.logger.message('setInfiniteMaskEndByPower SUCCESS', True)
-			base.logger.message('setInfiniteMaskEndByPower SUCCESS', True)
-			base.logger.message('setInfiniteMaskEndByPower SUCCESS', True)
-			base.logger.message('setInfiniteMaskEndByPower SUCCESS', True)
-			base.logger.message('setInfiniteMaskEndByPower SUCCESS', True)
-			base.logger.message('setInfiniteMaskEndByPower SUCCESS', True)
-			base.logger.message('setInfiniteMaskEndByPower SUCCESS', True)
+	def apply_infinite_mask_end_by_power(self,power,phase,level, ):
+		success = base.llrf_control.setInfiniteMaskEndByPower(power, phase, level)
+		st = 'Set Infinite End Mask by Power 1, power trace = ' + power + ', phase trace = ' \
+			 + phase + ', power level ' + str(level)
+		if success:
+			base.logger.message(st + ' SUCCESS', True)
 		else:
-			base.logger.message('setInfiniteMaskEndByPower FAIL', True)
-			base.logger.message('setInfiniteMaskEndByPower FAIL', True)
-			base.logger.message('setInfiniteMaskEndByPower FAIL', True)
-			base.logger.message('setInfiniteMaskEndByPower FAIL', True)
-			base.logger.message('setInfiniteMaskEndByPower FAIL', True)
-			base.logger.message('setInfiniteMaskEndByPower FAIL', True)
-			base.logger.message('setInfiniteMaskEndByPower FAIL', True)
-			base.logger.message('setInfiniteMaskEndByPower FAIL', True)
-			base.logger.message('setInfiniteMaskEndByPower FAIL', True)
-			base.logger.message('setInfiniteMaskEndByPower FAIL', True)
-			base.logger.message('setInfiniteMaskEndByPower FAIL', True)
-        #
-		# if base.config.breakdown_config.has_key('PHASE_MASK_BY_POWER_TRACE_1'):
-		# 	if base.config.breakdown_config.has_key('PHASE_MASK_BY_POWER_PHASE_TRACE_1'):
-		# 		if base.config.breakdown_config.has_key('PHASE_MASK_BY_POWER_POWER_TRACE_1'):
-		# 			a = base.llrf_control.setInfiniteMaskEndByPower(base.config.breakdown_config['PHASE_MASK_BY_POWER_TRACE_1'],
-		# 													base.config.breakdown_config['PHASE_MASK_BY_POWER_POWER_TRACE_1'],
-		# 													base.config.breakdown_config['PHASE_MASK_BY_POWER_PHASE_TRACE_1'])
-        #
-        #
-		# if base.config.breakdown_config.has_key('PHASE_MASK_BY_POWER_TRACE_2'):
-		# 	if base.config.breakdown_config.has_key('PHASE_MASK_BY_POWER_LEVEL_2'):
-		# 		base.llrf_control.setInfiniteMaskEndByPower(base.config.breakdown_config['PHASE_MASK_BY_POWER_TRACE_2'][1],
-		# 													base.config.breakdown_config['PHASE_MASK_BY_POWER_TRACE2_'][0],
-		# 													base.config.breakdown_config['PHASE_MASK_BY_POWER_LEVEL_2'])
+			base.logger.message(st + ' FAIL', True)
+		return success
 
 	def set_trace_masks(self):
 		if 'update_func' in self.forward_mask_dict:
-			a = self.forward_mask_dict['update_func'](self.forward_mask_dict)
-			if a == False:
+			if self.forward_mask_dict['update_func'](self.forward_mask_dict):
+				pass
+			else:
 				base.logger.message(self.forward_mask_dict['TRACE'] + 'ERROR SETTING MASK', True)
 
 		if 'update_func' in self.probe_mask_dict:
-			a = self.probe_mask_dict['update_func'](self.probe_mask_dict)
-			if a == False:
+			if self.probe_mask_dict['update_func'](self.probe_mask_dict):
+				pass
+			else:
 				base.logger.message(self.probe_mask_dict['TRACE'] + 'ERROR SETTING MASK', True)
 		# temp
 		if 'update_func' in self.reverse_mask_dict:
-			a = self.reverse_mask_dict['update_func'](self.reverse_mask_dict)
-			if a == False:
+			if self.reverse_mask_dict['update_func'](self.reverse_mask_dict):
+				pass
+			else:
 				base.logger.message(self.reverse_mask_dict['TRACE'] + 'ERROR SETTING MASK', True)
 
 	# more cancer but hopefully will be neatened up
@@ -134,7 +117,7 @@ class llrf_handler_base(base):
 		drop_val = base.config.breakdown_config['C'+l+'P_AMP_DROP_VAL']#MAGIC_STRING
 
 		string = [dict['TRACE'] + ', streak = ' + str(streak) + ', floor = ' + str(floor) \
-				  + ', drop = ' + str(drop) + ', drop_val= ' + str(drop_val)]
+				  + ', drop = ' + str(drop) + ', drop_val= ' + str(drop_val) + ', update func = ' + str(dict['update_func']) ]
 		base.logger.message(string, True)
 
 		if base.llrf_control.setNumContinuousOutsideMaskCount( dict['TRACE'], streak) == False:
@@ -158,20 +141,38 @@ class llrf_handler_base(base):
 			base.logger.message(dict['TRACE'] + ', setDropAmpOnOutsideMaskDetection = True', True)
 
 	def time_percent_mask(self,dict):
-		return self.llrf_control.setPercentTimeMask(dict['S1'],dict['S2'],dict['S3'],dict['S4'],dict['LEVEL'],dict['TRACE'])
-		#print 'time_percent_mask'
+		if self.llrf_control.setPercentTimeMask(dict['S1'],dict['S2'],dict['S3'],dict['S4'],dict['LEVEL'],dict['TRACE']):
+			base.logger.message(dict['TRACE'] + ', set time_percent_mask', True)
+			return True
+		else:
+			base.logger.message(dict['TRACE'] + ', Failed to set set time_percent_mask', True)
+			return False
 
 	def time_absolute_mask(self,dict):
-		return self.llrf_control.setAbsoluteTimeMask(dict['S1'],dict['S2'],dict['S3'],dict['S4'],dict['LEVEL'],dict['TRACE'])
+		if self.llrf_control.setAbsoluteTimeMask(dict['S1'],dict['S2'],dict['S3'],dict['S4'],dict['LEVEL'],dict['TRACE']):
+			base.logger.message(dict['TRACE'] + ', set time_absolute_mask', True)
+			return True
+		else:
+			base.logger.message(dict['TRACE'] + ', Failed to set set time_absolute_mask', True)
+			return False
 		#print 'time_absolute_mask'
 
 	def index_percent_mask(self,dict):
 		#print 'index_percent_mask'
-		return self.llrf_control.setPercentMask(dict['S1'],dict['S2'],dict['S3'],dict['S4'],dict['LEVEL'],dict['TRACE'])
+		if self.llrf_control.setPercentMask(dict['S1'],dict['S2'],dict['S3'],dict['S4'],dict['LEVEL'],dict['TRACE']):
+			base.logger.message(dict['TRACE'] + ', set index_percent_mask', True)
+			return True
+		else:
+			base.logger.message(dict['TRACE'] + ', Failed to set set index_percent_mask', True)
+			return False
 
 	def index_absolute_mask(self,dict):
-		#print 'time_absolute_mask'
-		return self.llrf_control.setAbsoluteMask(dict['S1'],dict['S2'],dict['S3'],dict['S4'],dict['LEVEL'],dict['TRACE'])
+		if self.llrf_control.setAbsoluteMask(dict['S1'],dict['S2'],dict['S3'],dict['S4'],dict['LEVEL'],dict['TRACE']):
+			base.logger.message(dict['TRACE'] + ', set index_absolute_mask', True)
+			return True
+		else:
+			base.logger.message(dict['TRACE'] + ', Failed to set set index_absolute_mask', True)
+			return False
 
 	# return stre if all breakdown traces have averages, we could do this slightly more clever like
 	def have_averages(self):
@@ -180,29 +181,25 @@ class llrf_handler_base(base):
 				return False
 		return True
 
-
 	def start_trace_average_no_reset(self,value):
 		for trace in base.config.breakdown_config['BREAKDOWN_TRACES']:
 			base.llrf_control.setKeepRollingAverageNoReset(trace,value)
+
 	def start_trace_average(self):
 		for trace in base.config.breakdown_config['BREAKDOWN_TRACES']:
 			base.llrf_control.setShouldKeepRollingAverage(trace)
+
 	def stop_trace_average(self):
 		for trace in base.config.breakdown_config['BREAKDOWN_TRACES']:
 			base.llrf_control.setShouldNotKeepRollingAverage(trace)
 
-
 	def start_trace_monitoring(self,trace_to_save):
 		base.logger.header(self.my_name + ' setting all SCAN to passive', True)
 		base.llrf_control.setAllSCANToPassive()
-
 		base.logger.header(self.my_name + ' start_trace_monitoring', True)
 		if "error" not in trace_to_save:
 			for trace in trace_to_save:
-
-				a = base.llrf_control.setTraceSCAN(trace, LLRF_SCAN.ZERO_POINT_ONE) # SHOULD BE INPUIT Parameter
-
-				if a:
+				if base.llrf_control.setTraceSCAN(trace, LLRF_SCAN.ZERO_POINT_ONE): # SHOULD BE INPUIT Parameter
 					base.logger.message(trace + ' SCAN set to LLRF_SCAN.ZERO_POINT_ONE', True) # SHOULD BE INPUIT Parameter
 				else:
 					base.logger.message(' ERROR trying to set LLRF_SCAN.ZERO_POINT_ONE SCAN for ' + trace, True)
@@ -213,12 +210,11 @@ class llrf_handler_base(base):
 					base.logger.message('started monitoring ' + trace, True)
 					if 'POWER' in trace:  # MAGIC_STRING
 						self.power_traces.append(trace)
-						base.logger.message('added ' + trace + ' to power_traces', True)
+						base.logger.message('added ' + self.power_traces[-1] + ' to power_traces. [should be' + trace + ']', True)
 				else:
 					base.logger.message(' ERROR trying to monitor ' + trace, True)
 		else:
 			base.logger.message('!!! ERROR IN TRACES TO SAVE !!!', True)
-
 
 	def setup_trace_rolling_average(self):
 		base.logger.header(self.my_name + ' setup_trace_rolling_average', True)
@@ -226,15 +222,14 @@ class llrf_handler_base(base):
 		num_mean = 3  # MAGIC_NUM
 		for trace in base.config.breakdown_config['BREAKDOWN_TRACES']:
 			base.logger.message('starting rolling average for ' + trace, True)
-#try:
+
 			if self.is_reverse(trace):
 				num_mean = base.config.breakdown_config['CRP_NUM_AVERAGE_TRACES']
 			elif self.is_forward(trace):
 				num_mean = base.config.breakdown_config['CFP_NUM_AVERAGE_TRACES']
 			elif self.is_probe(trace):
 				num_mean = base.config.breakdown_config['CPP_NUM_AVERAGE_TRACES']
-			#except:
-			#	num_mean = 3#MAGIC_NUM
+
 			base.llrf_control.clearRollingAverage(trace)
 			base.llrf_control.setNumRollingAverageTraces(trace, num_mean)
 			base.llrf_control.setInfiniteMasks(trace)
@@ -260,84 +255,31 @@ class llrf_handler_base(base):
 			'.getPulseLength() = ' + str(base.llrf_control.getPulseLength())],True)
 		s = None
 		e = None
-		for trace in self.power_traces:
-			if self.is_kly_forward(trace):
-				s = base.config.llrf_config['KFP_MEAN_TIME_TO_AVERAGE_START']#MAGIC_STRING
-				e = base.config.llrf_config['KFP_MEAN_TIME_TO_AVERAGE_END']#MAGIC_STRING
-				# a = base.llrf_control.setMeanStartEndTime(s,e,trace)
-				# if a:
-				# 	base.logger.message(trace + ' mean monitoring started')
-				# 	base.logger.message(['trace_mean_start/end (us) = ' + str(s) +'/'+str((e)),
-				# 	'meantime = ' + str(e - s)])
-				# else:
-				# 	base.logger.message(trace + ' mean monitoring NOT started')
+		if base.config.llrf_config.has_key('MEAN_TRACES'):
+			i = 0
+			for trace in base.config.llrf_config['MEAN_TRACES']:
+				base.logger.message(trace + ' found in config file', True)
+				i += 1
+				r = self.has_mean_start_end_key_i(i)
+				if r != False:
+					if base.llrf_control.setMeanStartEndTime(r[0], r[1], trace):
+						base.logger.message(trace + ' mean monitoring started', True)
+						base.logger.message(['trace_mean_start/end (us) = ' + str(r[0]) + '/' + str(r[1]),
+											 'meantime = ' + str(r[1] - r[0])], True)
+				else:
+					base.logger.message(trace + ' setting mean monitoring failed', True)
+		else:
+			base.logger.message('keyword MEAN_TRACES not found in config file, no mean value for traces applied', True)
 
-			elif self.is_kly_reverse(trace):
-				s = base.config.llrf_config['KRP_MEAN_TIME_TO_AVERAGE_START']#MAGIC_STRING
-				e = base.config.llrf_config['KRP_MEAN_TIME_TO_AVERAGE_END']#MAGIC_STRING
-				# a = base.llrf_control.setMeanStartEndTime(s,e,trace)
-				# if a:
-				# 	base.logger.message(trace + ' mean monitoring started')
-				# 	base.logger.message(['trace_mean_start/end (us) = ' + str(s) +'/'+str((e)),
-				# 	'meantime = ' + str(e - s)])
-				# else:
-				# 	base.logger.message(trace + ' mean monitoring NOT started')
-
-			elif self.is_cav_reverse(trace):
-				s= base.config.llrf_config['CRP_MEAN_TIME_TO_AVERAGE_START']#MAGIC_STRING
-				e= base.config.llrf_config['CRP_MEAN_TIME_TO_AVERAGE_END']#MAGIC_STRING
-				# a = base.llrf_control.setMeanStartEndTime(s,e,trace)
-				# if a:
-				# 	base.logger.message(trace + ' mean monitoring started')
-				# 	base.logger.message(['trace_mean_start/end (us) = ' + str(s) +'/'+str((e)),
-				# 	'meantime = ' + str(e - s)])
-				# else:
-				# 	base.logger.message(trace + ' mean monitoring NOT started')
-
-			elif self.is_cav_forward(trace):
-				s = base.config.llrf_config['CFP_MEAN_TIME_TO_AVERAGE_START']#MAGIC_STRING
-				a = base.llrf_control.setMeanStartEndTime(s,e,trace)
-				# if a:
-				# 	base.logger.message(trace + ' mean monitoring started')
-				# 	base.logger.message(['trace_mean_start/end (us) = ' + str(s) +'/'+str((e)),
-				# 	'meantime = ' + str(e - s)])
-				# else:
-				# 	base.logger.message(trace + ' mean monitoring NOT started')
-
-			elif self.is_probe(trace):
-				s = base.config.llrf_config['CPP_MEAN_TIME_TO_AVERAGE_START']#MAGIC_STRING
-				e = base.config.llrf_config['CPP_MEAN_TIME_TO_AVERAGE_END']#MAGIC_STRING
-			a = base.llrf_control.setMeanStartEndTime(s,e,trace)
-			if a:
-				base.logger.message(trace + ' mean monitoring started')
-				base.logger.message(['trace_mean_start/end (us) = ' + str(s) +'/'+str((e)),
-				'meantime = ' + str(e - s)])
-			else:
-				base.logger.message(trace + ' mean monitoring NOT started')
-
-
-
-
-
-
-	# def set_mask_4_param(self):
-	# 	self.get_pulse_end()
-	# 	for trace in base.config.breakdown_config['BREAKDOWN_TRACES']:
-	# 		# try:
-	# 		if 'REVERSE' in trace:
-	# 			self.mask_4[trace] = self.pulse_end_index + len(
-	# 				[x for x in self.timevector if x <= base.config.breakdown_config['CRP_MASK_END']])
-	#
-	# 		elif 'FORWARD' in trace:
-	# 			self.mask_4[trace] = self.pulse_end_index + len(
-	# 				[x for x in self.timevector if x <= base.config.breakdown_config['CFP_MASK_END']])
-	#
-	# 		elif 'PROBE' in trace:
-	# 			self.mask_4[trace] = self.pulse_end_index + len(
-	# 				[x for x in self.timevector if x <= base.config.breakdown_config['CPP_MASK_END']])
-	# 		base.logger.message(trace + ' mask_4 index/us = ' + str(self.mask_4[trace]) + '/' + str(self.timevector[self.mask_4[trace]]), True)
+	def has_mean_start_end_key_i(self,i):
+		if base.config.llrf_config.has_key(str(i) + '_MEAN_START'):#MAGIC_STRING
+			s = base.config.llrf_config[str(i) + '_MEAN_START']#MAGIC_STRING
+			if base.config.llrf_config.has_key(str(i) + '_MEAN_END'):#MAGIC_STRING
+				e = base.config.llrf_config[str(i) + '_MEAN_END']#MAGIC_STRING
+				return [s,e]
+		return False
 
 	def set_global_check_mask(self,val):
 		if base.llrfObj[0].check_mask != val:
 			base.llrf_control.setGlobalCheckMask(val)
-			base.logger.message('setGlobalCheckMask '+str(val),True)
+			base.logger.message('set_global_check_mask setGlobalCheckMask '+str(val),True)
