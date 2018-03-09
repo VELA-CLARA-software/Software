@@ -7,6 +7,7 @@ from data.state import state
 import time
 
 
+
 class outside_mask_trace_monitor(monitor):
 	#whoami
 	my_name = 'outside_mask_trace_monitor'
@@ -23,7 +24,7 @@ class outside_mask_trace_monitor(monitor):
 	event_pulse_count_zero = 0
 
 	def __init__(self):
-		# init base-class
+		# init base-ccaget lass
 		monitor.__init__(self,timed_cooldown=True)
 		# breakdown param
 		#self.breakdown_config = outside_mask_trace_monitor.config.breakdown_config
