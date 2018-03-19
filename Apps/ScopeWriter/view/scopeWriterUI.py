@@ -54,7 +54,7 @@ class scopeWriterUi(object):
         #self.logVBox.addWidget( self.logTable )
         self.logVBox.addWidget( self.startButton )
         self.logVBox.addWidget( self.stopButton )
-        self.logVBox.addWidget( self.clearLayoutButton )
+        # self.logVBox.addWidget( self.clearLayoutButton )
         self.titleLabel = QtGui.QLabel()
         self.titleLabel.setObjectName(_fromUtf8("titleLabel"))
         self.titleLabel.setMaximumSize(QtCore.QSize(300,200))

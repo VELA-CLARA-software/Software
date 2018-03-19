@@ -4,6 +4,7 @@ import sys,scopeWriterGlobals
 import VELA_CLARA_Scope_Control as vcsc
 import time, numpy, epics, math, threading
 import win32com.client
+import scope_writer_logger
 
 class scopeWriterController(QObject):
     def __init__(self, view, scopeCont, loadView, saveView):
@@ -15,14 +16,16 @@ class scopeWriterController(QObject):
         self.saveView = saveView
         self.threading = threading
         self.scopeCont = scopeCont
+        self.data_logger = scope_writer_logger.data_logger()
         self.scopeName = self.scopeCont.getScopeNames()
         self.pvRoot = self.scopeCont.getScopeTraceDataStruct(self.scopeName[0]).pvRoot
         self.started = False
-        self.scope=win32com.client.Dispatch("LeCroy.XStreamDSO")
-        self.scope.Measure.MeasureMode = "StdVertical"
+        # self.scope=win32com.client.Dispatch("LeCroy.XStreamDSO")
+        # self.scope.Measure.MeasureMode = "StdVertical"
         self.traceNames = self.scopeCont.getScopeTracePVs()
         self.numNames = self.scopeCont.getScopeNumPVs()
         self.appendToList()
+        self.scope=1
         #self.loadView.selectButton.clicked.connect(self.handle_fileLoadSelect)
         #self.saveView.saveNowButton_2.clicked.connect(self.handle_fileSave)
         #self.loadView.fileName.connect(self.handlefilenameUpdated)
@@ -30,9 +33,9 @@ class scopeWriterController(QObject):
         self.view.addToListButton.clicked.connect(self.appendToList)
         self.view.startButton.clicked.connect(self.startLogging)
         self.view.stopButton.clicked.connect(self.stopLogging)
-        self.view.ui_btn.clicked.connect(self.browse)
-        self.view.saveButton.clicked.connect(self.handle_fileSave)
-        self.view.loadButton.clicked.connect(self.handle_fileLoadSelect)
+        # self.view.ui_btn.clicked.connect(self.browse)
+        # self.view.saveButton.clicked.connect(self.handle_fileSave)
+        # self.view.loadButton.clicked.connect(self.handle_fileLoadSelect)
         self.view.clearLayoutButton.clicked.connect(self.clearLayout)
         self.view.setTimebaseButton.clicked.connect(self.setTimebase)
         self.view.clearLayoutButton.setEnabled(False)
@@ -145,9 +148,9 @@ class scopeWriterController(QObject):
         self.cha1 = list(self.list)   #scope controller can dynamically change array size when reading values
         for a in self.chan:
             self.cha1.append(a)
-        self.view.traceSizeLabel.setText(str(self.list))
-        if (self.list) > 2002:
-            self.view.traceWarningLabel.setText("WARNING!!!! Trace size > 2002!!!")
+        self.view.traceSizeLabel.setText(str(len(self.chan)))
+        if len(self.chan) > 2002:
+            self.view.traceWarningLabel.setText("WARNING!!!! \nTrace size > 2002!!!")
         else:
             self.view.traceWarningLabel.setText("")
         return self.cha1
@@ -238,7 +241,7 @@ class scopeWriterController(QObject):
         self.scopeTraceData = self.allTraceDataStruct.traceData
         self.min = self.scopeCont.getMinOfTraces( self.wvf_name, self.channel_name )
 
-        self.mean_max = numpy.mean( self.min )
+        self.mean_min = numpy.mean( self.min )
 
         epics.caput( self.epics_channel, self.mean_min )
         time.sleep(0.1)
@@ -272,19 +275,44 @@ class scopeWriterController(QObject):
     @QtCore.pyqtSlot()
     def setTimebase(self):
         self.timebase = float(self.view.setTimebaseTextEdit.toPlainText())
-        self.scopeCont.setTimebase( self.wvf_name, self.timebase )
+        if self.timebase is not None:
+            self.scopeCont.setTimebase( self.wvf_name, self.timebase )
 
     @QtCore.pyqtSlot()
     def clearLayout(self):
-        self.layout = self.view.channelsLayout[-1]
-        if self.layout is not None:
-            while self.layout.count():
-                self.item = self.layout.takeAt(0)
-                self.widget = self.item.widget()
-                if self.widget is not None:
-                    self.widget.deleteLater()
-                else:
-                    self.clearLayout(self.item.layout())
+        self.length = len(self.view.channelsLayout)
+        if self.length > 1:
+            self.layout = self.view.channelsLayout.takeAt(self.length - 1)
+            self.chanVBox = self.layout.takeAt(0)
+            self.allVBox = []
+            self.allVBox.append(self.chanVBox)
+            # print len(self.allVBox)
+            if self.layout is not None:
+                if self.layout.count():
+                    for vBox in self.allVBox:
+                        if vBox.count():
+                            for i in range(0, vBox.count()):
+                                self.vBoxItem = vBox.takeAt(i) 
+                                if self.vBoxItem is not None:
+                                    print i
+                                    # vBox.removeItem(self.vBoxItem)
+                                    self.vBoxItem.widget().hide()
+                                    # vBox.removeWidget(self.vBoxItem.widget())
+                                # if self.vBoxItem is not None:
+                                    # self.vBoxWidget = self.vBoxItem.widget()
+                                    # if self.vBoxWidget is not None:
+                                        # print "aaa"
+                                        # self.vBoxWidget.deleteLater()
+                                    # else:
+                                        # print "ddd"
+                                        # self.clearLayout()
+                    # self.item = self.layout.takeAt(0)
+                    # self.widget = self.item.widget()
+                    # if self.widget is not None:
+                        # self.widget.deleteLater()
+                    # else:
+                        # self.clearLayout()
+            # self.clearLayout()
 
     @QtCore.pyqtSlot()
     def handlefilenameUpdated(self,event):

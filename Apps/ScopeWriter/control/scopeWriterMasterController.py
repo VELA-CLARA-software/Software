@@ -45,12 +45,6 @@ class scopeWriterMasterController(object):
                       "Virtual":  vcsc.MACHINE_MODE.VIRTUAL,
                       "Offline":  vcsc.MACHINE_MODE.OFFLINE}
 
-#          __                 __             .__
-#  _______/  |______ ________/  |_     ___  _|__| ______  _  __
-# /  ___/\   __\__  \\_  __ \   __\    \  \/ /  |/ __ \ \/ \/ /
-# \___ \  |  |  / __ \|  | \/|  |       \   /|  \  ___/\     /
-#/____  > |__| (____  /__|   |__|        \_/ |__|\___  >\/\_/
-#     \/            \/                               \/
     # these functions handle the start view signals
     # start view radio group 1
     def handle_machineAreaSignal(self,r):
