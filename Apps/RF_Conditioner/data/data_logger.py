@@ -1,9 +1,9 @@
 from datetime import  datetime
 import struct
 from VELA_CLARA_enums import STATE
-from VELA_CLARA_RF_Modulator_Control import GUN_MOD_STATE
 from VELA_CLARA_Vac_Valve_Control import VALVE_STATE
 from VELA_CLARA_RF_Protection_Control import RF_GUN_PROT_STATUS
+from VELA_CLARA_RF_Modulator_Control import GUN_MOD_STATE
 import os
 import pickle
 from data.config_reader import config_reader

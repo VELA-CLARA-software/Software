@@ -427,3 +427,95 @@ Output  File  log_file.txt
 scr_init = scr.init()
 scr_init.setVerbose()
 clara_ph1 = scr_init.physical_CLARA_PH1_Screen_Controller()
+Number of arguments = 1
+Argument List:['D:/VELA/GIT Projects/Software/Apps/hwc_testing/screen_test.py']
+Output  File  log_file.txt
+scr_init = scr.init()
+scr_init.setVerbose()
+clara_ph1 = scr_init.physical_CLARA_PH1_Screen_Controller()
+Number of arguments = 1
+Argument List:['D:/VELA/GIT Projects/Software/Apps/hwc_testing/screen_test.py']
+Output  File  log_file.txt
+scr_init = scr.init()
+scr_init.setVerbose()
+clara_ph1 = scr_init.physical_CLARA_PH1_Screen_Controller()
+Number of arguments = 1
+Argument List:['D:/VELA/GIT Projects/Software/Apps/hwc_testing/screen_test.py']
+Output  File  log_file.txt
+scr_init = scr.init()
+scr_init.setVerbose()
+clara_ph1 = scr_init.physical_CLARA_PH1_Screen_Controller()
+Number of arguments = 1
+Argument List:['D:/VELA/GIT Projects/Software/Apps/hwc_testing/screen_test.py']
+Output  File  log_file.txt
+scr_init = scr.init()
+scr_init.setVerbose()
+clara_ph1 = scr_init.physical_CLARA_PH1_Screen_Controller()
+Number of arguments = 1
+Argument List:['D:/VELA/GIT Projects/Software/Apps/hwc_testing/screen_test.py']
+Output  File  log_file.txt
+scr_init = scr.init()
+scr_init.setVerbose()
+clara_ph1 = scr_init.physical_CLARA_PH1_Screen_Controller()
+Number of arguments = 1
+Argument List:['D:/VELA/GIT Projects/Software/Apps/hwc_testing/screen_test.py']
+Output  File  log_file.txt
+scr_init = scr.init()
+scr_init.setVerbose()
+clara_ph1 = scr_init.physical_CLARA_PH1_Screen_Controller()
+getScreenObject cant find docstring, 
+getScreenObject Has Good Argument names, name
+Number of arguments = 1
+Argument List:['D:/VELA/GIT Projects/Software/Apps/hwc_testing/screen_test.py']
+Output  File  log_file.txt
+scr_init = scr.init()
+scr_init.setVerbose()
+clara_ph1 = scr_init.physical_CLARA_PH1_Screen_Controller()
+Number of arguments = 1
+Argument List:['D:/VELA/GIT Projects/Software/Apps/hwc_testing/screen_test.py']
+Output  File  log_file.txt
+scr_init = scr.init()
+scr_init.setVerbose()
+clara_ph1 = scr_init.physical_CLARA_PH1_Screen_Controller()
+Number of arguments = 1
+Argument List:['D:/VELA/GIT Projects/Software/Apps/hwc_testing/screen_test.py']
+Output  File  log_file.txt
+scr_init = scr.init()
+scr_init.setVerbose()
+clara_ph1 = scr_init.physical_CLARA_PH1_Screen_Controller()
+Number of arguments = 1
+Argument List:['D:/VELA/GIT Projects/Software/Apps/hwc_testing/screen_test.py']
+Output  File  log_file.txt
+scr_init = scr.init()
+scr_init.setVerbose()
+clara_ph1 = scr_init.physical_CLARA_PH1_Screen_Controller()
+Number of arguments = 1
+Argument List:['D:/VELA/GIT Projects/Software/Apps/hwc_testing/screen_test.py']
+Output  File  log_file.txt
+scr_init = scr.init()
+scr_init.setVerbose()
+clara_ph1 = scr_init.physical_CLARA_PH1_Screen_Controller()
+Number of arguments = 1
+Argument List:['D:/VELA/GIT Projects/Software/Apps/hwc_testing/screen_test.py']
+Output  File  log_file.txt
+scr_init = scr.init()
+scr_init.setVerbose()
+clara_ph1 = scr_init.physical_CLARA_PH1_Screen_Controller()
+Number of arguments = 1
+Argument List:['D:/VELA/GIT Projects/Software/Apps/hwc_testing/screen_test.py']
+Output  File  log_file.txt
+scr_init = scr.init()
+scr_init.setVerbose()
+clara_ph1 = scr_init.physical_CLARA_PH1_Screen_Controller()
+Number of arguments = 1
+Argument List:['D:/VELA/GIT Projects/Software/Apps/hwc_testing/screen_test.py']
+Output  File  log_file.txt
+scr_init = scr.init()
+scr_init.setVerbose()
+clara_ph1 = scr_init.physical_CLARA_PH1_Screen_Controller()
+Number of arguments = 1
+Argument List:['D:/VELA/GIT Projects/Software/Apps/hwc_testing/screen_test.py']
+Output  File  log_file.txt
+scr_init = scr.init()
+scr_init.setVerbose()
+clara_ph1 = scr_init.physical_CLARA_PH1_Screen_Controller()

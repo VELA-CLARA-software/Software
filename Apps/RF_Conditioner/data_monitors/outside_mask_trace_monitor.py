@@ -7,7 +7,6 @@ from data.state import state
 import time
 
 
-
 class outside_mask_trace_monitor(monitor):
 	#whoami
 	my_name = 'outside_mask_trace_monitor'
