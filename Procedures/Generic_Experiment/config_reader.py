@@ -40,7 +40,7 @@ class Config_Reader():
 		"""read_file reads a generic experimental config file, yaml format etc...
 		   yes, two lines, that's all it takes ...
 		"""
-		if file_name == "":
+		if file_name == '':
 			pass
 		else:
 			Config_Reader._config_filename = file_name
@@ -48,8 +48,8 @@ class Config_Reader():
 		try:
 			stream = file(Config_Reader._config_filename , 'r')
 		except:
-			Config_Reader.logger.message('MAJOR ERROR Can not read config file =' +
-			                             str(Config_Reader._config_filename) )
+			Config_Reader.logger.message(['MAJOR ERROR Can not read config file =',
+			                             Config_Reader._config_filename])
 		else:
 			Config_Reader.data.raw_config_data = yaml.load(stream)
 			# some basic parsing
@@ -95,26 +95,16 @@ class Config_Reader():
 			self.get_machine_mode()
 		else:
 			print()
-
-		# 2. if machien_mode_set we MUST have some controllers
+		# 2. if machine_mode_set we MUST have some controllers
 		if d.machine_mode_set:
 			self.get_controllers()
-
 		# 3. If we have controllers we MUST have an experiment
 		if d.controller_set:
 			d.experiment_set = self.get_experiment()
-
 		# 4. do the experiment elements exist in the controllers we have?
 		if d.experiment_set:
 			d.elements_exist = self.get_elements()
-
 		Config_Reader.data.config_data_good = d.elements_exist
-
-
-		# for item in Config_Reader.data.top_level_kwords:
-		#     if item in Config_Reader.data.raw_config_data:
-		#         top_level_kwrds_flags[item] = True
-		#
 
 	def get_machine_mode(self):
 		Config_Reader.logger.message('Finding MachineMode', True)
@@ -154,8 +144,7 @@ class Config_Reader():
 							         area=d.machine_areas.get(area))
 						)
 			else:
-				s = ['Not using a ', str(d.controller_types_inv.get(item)),' controller']
-				Config_Reader.logger.message(s, True)
+				Config_Reader.logger.message(['Not using a', item,'controller'], True)
 		# check d.HWC_data_list for None types, if they exist assume an error
 		a = True
 		for item in d.HWC_data_list:
