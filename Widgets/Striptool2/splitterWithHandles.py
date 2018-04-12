@@ -1,9 +1,12 @@
-# from PyQt5.QtCore import QTimer, pyqtSignal, pyqtSlot, Qt
-# from PyQt5.QtGui import QHBoxLayout
-# from PyQt5.QtWidgets import QSplitter, QToolButton, QSplitterHandle, QLabel
-from PyQt4 import QtCore, QtGui
+try:
+    from PyQt4.QtCore import *
+    from PyQt4.QtGui import *
+except ImportError:
+    from PyQt5.QtCore import *
+    from PyQt5.QtGui import *
+    from PyQt5.QtWidgets import *
 
-class splitterWithHandles(QtGui.QSplitter):
+class splitterWithHandles(QSplitter):
 
     def __init__(self, parent = None):
         super(splitterWithHandles, self).__init__(parent)
@@ -14,21 +17,21 @@ class splitterWithHandles(QtGui.QSplitter):
 
     def handleSplitterMoved(self, pos, index):
         widgetIndex = 0 if index is 1 else 2
-        if self.orientation() == QtCore.Qt.Horizontal:
+        if self.orientation() == Qt.Horizontal:
             self.handle(index).setState(self.widget(widgetIndex).size().width())
         else:
             self.handle(index).setState(self.widget(widgetIndex).size().height())
 
-class QDoubleClickToolButton(QtGui.QToolButton):
-    doubleClicked = QtCore.pyqtSignal()
+class QDoubleClickToolButton(QToolButton):
+    doubleClicked = pyqtSignal()
 
     def __init__(self, *args, **kwargs):
         super(QDoubleClickToolButton, self).__init__(*args, **kwargs)
-        self.timer = QtCore.QTimer()
+        self.timer = QTimer()
         self.timer.setSingleShot(True)
         self.clicked.connect(self.checkDoubleClick)
 
-    @QtCore.pyqtSlot()
+    @pyqtSlot()
     def checkDoubleClick(self):
         if self.timer.isActive():
             self.doubleClicked.emit()
@@ -36,9 +39,9 @@ class QDoubleClickToolButton(QtGui.QToolButton):
         else:
             self.timer.start(250)
 
-class splitterHandle(QtGui.QSplitterHandle):
+class splitterHandle(QSplitterHandle):
 
-    def __init__(self, orientation=QtCore.Qt.Horizontal, parent = None):
+    def __init__(self, orientation=Qt.Horizontal, parent = None):
         super(splitterHandle, self).__init__(orientation, parent)
         self.orientation = orientation
         self.open = True
@@ -46,14 +49,14 @@ class splitterHandle(QtGui.QSplitterHandle):
     def setLocation(self, location='top', label=None):
         self.location = location
         self.label = label
-        if self.orientation == QtCore.Qt.Vertical:
-            self.layout = QtGui.QHBoxLayout()
-            self.openArrow = QtCore.Qt.UpArrow if location is 'top' else QtCore.Qt.DownArrow
-            self.closedArrow = QtCore.Qt.DownArrow if location is 'top' else QtCore.Qt.UpArrow
+        if self.orientation == Qt.Vertical:
+            self.layout = QHBoxLayout()
+            self.openArrow = Qt.UpArrow if location is 'top' else Qt.DownArrow
+            self.closedArrow = Qt.DownArrow if location is 'top' else Qt.UpArrow
         else:
-            self.layout = QtGui.QVBoxLayout()
-            self.openArrow = QtCore.Qt.LeftArrow if location is 'top' else QtCore.Qt.RightArrow
-            self.closedArrow = QtCore.Qt.RightArrow if location is 'top' else QtCore.Qt.LeftArrow
+            self.layout = QVBoxLayout()
+            self.openArrow = Qt.LeftArrow if location is 'top' else Qt.RightArrow
+            self.closedArrow = Qt.RightArrow if location is 'top' else Qt.LeftArrow
         self.layout.setContentsMargins(0, 0, 0, 0)
         self.button = QDoubleClickToolButton(self)
         self.button.doubleClicked.connect(self.handleButtonClick)
@@ -61,7 +64,7 @@ class splitterHandle(QtGui.QSplitterHandle):
         self.layout.addStretch()
         self.layout.addWidget(self.button)
         if self.label is not None:
-            self.labelWidget = QtGui.QLabel(self.label)
+            self.labelWidget = QLabel(self.label)
             self.layout.addWidget(self.labelWidget)
         self.layout.addStretch()
         self.setLayout(self.layout)
@@ -93,13 +96,13 @@ class splitterHandle(QtGui.QSplitterHandle):
         if self.location is 'top' or self.location is 'left':
             return 0
         else:
-            if self.orientation == QtCore.Qt.Horizontal:
+            if self.orientation == Qt.Horizontal:
                 return self.splitter().size().width()
             else:
                 return self.splitter().size().height()
 
     def getCurrentPosition(self):
-        if self.orientation == QtCore.Qt.Horizontal:
+        if self.orientation == Qt.Horizontal:
             if self.location is 'left':
                 if not self.isVisible():
                     return  self.splitter().widget(0).sizeHint().width()

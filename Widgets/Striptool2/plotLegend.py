@@ -1,22 +1,27 @@
 import pyqtgraph as pg
 from pyqtgraph.Qt import QtGui, QtCore
 import sys, time, os, datetime
-# from PyQt5.QtCore import QtCore.pyqtSignal, Qt
-from PyQt4 import QtCore, QtGui
+try:
+    from PyQt4.QtCore import *
+    from PyQt4.QtGui import *
+except ImportError:
+    from PyQt5.QtCore import *
+    from PyQt5.QtGui import *
+    from PyQt5.QtWidgets import *
 import pyqtgraph.parametertree.parameterTypes as pTypes
 from pyqtgraph.parametertree import Parameter, ParameterTree, ParameterItem, registerParameterType
 
-class plotLegend(QtGui.QWidget):
+class plotLegend(QWidget):
 
-    pausePlottingSignal = QtCore.pyqtSignal(bool)
+    pausePlottingSignal = pyqtSignal(bool)
 
     def __init__(self, generalplot):
         super(plotLegend, self).__init__()
         self.tree = plotLegendTree(generalplot)
-        self.layout = QtGui.QVBoxLayout()
+        self.layout = QVBoxLayout()
         self.layout.addWidget(self.tree)
-        self.buttonLayout = QtGui.QHBoxLayout()
-        self.pauseButton = QtGui.QPushButton('Pause')
+        self.buttonLayout = QHBoxLayout()
+        self.pauseButton = QPushButton('Pause')
         self.pauseButton.setCheckable(True)
         self.pauseButton.clicked.connect(self.pauseButtonClicked)
         self.buttonLayout.addWidget(self.pauseButton)
@@ -33,16 +38,16 @@ class plotLegend(QtGui.QWidget):
 
 class plotLegendTree(ParameterTree):
 
-    fftselectionchange = QtCore.pyqtSignal('QString',bool)
-    histogramplotselectionchange = QtCore.pyqtSignal('QString',bool)
-    axisselectionchanged = QtCore.pyqtSignal('QString')
-    legendselectionchanged = QtCore.pyqtSignal(list)
-    savecurve = QtCore.pyqtSignal(str)
+    fftselectionchange = pyqtSignal('QString',bool)
+    histogramplotselectionchange = pyqtSignal('QString',bool)
+    axisselectionchanged = pyqtSignal('QString')
+    legendselectionchanged = pyqtSignal(list)
+    savecurve = pyqtSignal(str)
 
     def __init__(self, generalplot):
         super(plotLegendTree, self).__init__(generalplot)
         ''' Create Parameter Tree'''
-        self.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
+        self.setSelectionMode(QAbstractItemView.ExtendedSelection)
         self.selectionModel().selectionChanged.connect(self.enableSelectedAxis)
         self.selectionModel().selectionChanged.connect(self.emitSelectedAxis)
         self.parameters = {}
@@ -187,14 +192,14 @@ class plotLegendTree(ParameterTree):
                 ]},
                 {'name': 'Options', 'type': 'group', 'removable': False, 'expanded': False, 'children': [
                     {'name': 'Plot_Colour', 'title': 'Line Colour', 'type': 'color', 'value': self.records[name]['pen'], 'tip': "Line Colour"},
-                    {'name': 'Axis', 'title': 'Choose Axis', 'type': 'list', 'values': {}, 'value': self.records[name]['axisname'], 'tip': "Choose which axis to display on"},
+                    # {'name': 'Axis', 'title': 'Choose Axis', 'type': 'list', 'values': {}, 'value': self.records[name]['axisname'], 'tip': "Choose which axis to display on"},
                     {'name': 'AxisAutoScale', 'title': 'Enable Autoscaling', 'type': 'bool', 'value': True, 'tip': "Enable autoscaling for this axis"},
                     {'name': 'Plot Range', 'type': 'group', 'removable': False, 'expanded': False, 'children': [
                         {'name': 'AxisZero', 'title': 'Set Axis to Zero', 'type': 'bool', 'tip': "Set Axis to start from 0"},
                         {'name': 'RangeLower', 'title': 'From:', 'type': 'float', 'tip': "Set axis lower range"},
                         {'name': 'RangeUpper', 'title': 'To:', 'type': 'float', 'tip': "Set axis upper range"},
                     ]},
-                    {'name': 'Log_Mode', 'title': 'Log Mode', 'type': 'bool', 'value': False, 'tip': "Set Log mode scaling"},
+                    {'name': 'Log_Mode', 'title': 'Log Mode', 'type': 'bool', 'value': self.records[name]['logScale'], 'tip': "Set Log mode scaling"},
                     {'name': 'Show_Axis', 'title': 'Show Axis?', 'type': 'bool', 'value': False, 'tip': "Show or Remove the Axis"},
                     {'name': 'Show_Plot', 'title': 'Show Plot?', 'type': 'bool', 'value': True, 'tip': "Show or Remove the plot lines"},
                     {'name': 'FFT_Plot', 'title': 'Plot FFT', 'type': 'bool', 'value': False, 'tip': "Show or Remove the FFT Plot"},
@@ -217,7 +222,7 @@ class plotLegendTree(ParameterTree):
         pChild.child('Statistics').child('Mean100').sigValueChanged.connect(lambda x: self.records[name]['curve'].setVisibility('curve100', x.value()))
         pChild.child('Statistics').child('Mean1000').sigValueChanged.connect(lambda x: self.records[name]['curve'].setVisibility('curve1000', x.value()))
         pChild.child('Statistics').child('ClearStats').sigActivated.connect(lambda x: self.records[name]['worker'].resetStatistics(True))
-        self.setupAxisList(name, pChild)
+        # self.setupAxisList(name, pChild)
         pChild.child('Options').child('Show_Axis').sigValueChanged.connect(lambda x: self.records[name]['axis'].setVisible(x.value()))
         pChild.child('Options').child('Plot Range').child('AxisZero').sigValueChanged.connect(lambda x: self.setAxisFromZero(name, pChild))
 
@@ -233,7 +238,7 @@ class plotLegendTree(ParameterTree):
         pChild.child('Options').child('AxisAutoScale').sigValueChanged.connect(lambda x: self.records[name]['viewbox'].enableAutoRange(y=x.value()))
         pChild.child('Save_Curve').sigActivated.connect(lambda x: self.savecurve.emit(str(name)))
 
-        header = self.findItems(name,QtCore.Qt.MatchContains | QtCore.Qt.MatchRecursive)[0]
+        header = self.findItems(name,Qt.MatchContains | Qt.MatchRecursive)[0]
         header.setSelected(False)
         header.setExpanded(False)
         header.setForeground(0,self.contrasting_text_color(self.records[name]['pen']))
@@ -304,13 +309,13 @@ class MenuBox(pg.GraphicsObject):
         self.menu = None
 
         # note that the use of super() is often avoided because Qt does not
-        # allow to inherit from multiple QtCore.QObject subclasses.
+        # allow to inherit from multiple QObject subclasses.
         pg.GraphicsObject.__init__(self)
 
 
     # All graphics items must have paint() and boundingRect() defined.
     def boundingRect(self):
-        return QtCore.QRectF(0, 0, 10, 10)
+        return QRectF(0, 0, 10, 10)
 
     def paint(self, p, *args):
         p.setPen(self.pen)
@@ -319,7 +324,7 @@ class MenuBox(pg.GraphicsObject):
 
     # On right-click, raise the context menu
     def mouseClickEvent(self, ev):
-        if ev.button() == QtCore.QtCore.Qt.RightButton:
+        if ev.button() == Qt.RightButton:
             if self.raiseContextMenu(ev):
                 ev.accept()
 
@@ -331,29 +336,29 @@ class MenuBox(pg.GraphicsObject):
         menu = self.scene().addParentContextMenus(self, menu, ev)
 
         pos = ev.screenPos()
-        menu.popup(QtCore.QPoint(pos.x(), pos.y()))
+        menu.popup(QPoint(pos.x(), pos.y()))
         return True
 
     # This method will be called when this item's _children_ want to raise
     # a context menu that includes their parents' menus.
     def getContextMenus(self, event=None):
         if self.menu is None:
-            self.menu = QtGui.QMenu()
+            self.menu = QMenu()
             self.menu.setTitle(self.name+ " options..")
 
-            green = QtGui.QAction("Turn green", self.menu)
+            green = QAction("Turn green", self.menu)
             green.triggered.connect(self.setGreen)
             self.menu.addAction(green)
             self.menu.green = green
 
-            blue = QtGui.QAction("Turn blue", self.menu)
+            blue = QAction("Turn blue", self.menu)
             blue.triggered.connect(self.setBlue)
             self.menu.addAction(blue)
             self.menu.green = blue
 
-            alpha = QtGui.QtGui.QWidgetAction(self.menu)
-            alphaSlider = QtGui.QSlider()
-            alphaSlider.setOrientation(QtCore.QtCore.Qt.Horizontal)
+            alpha = QWidgetAction(self.menu)
+            alphaSlider = QSlider()
+            alphaSlider.setOrientation(Qt.Horizontal)
             alphaSlider.setMaximum(255)
             alphaSlider.setValue(255)
             alphaSlider.valueChanged.connect(self.setAlpha)

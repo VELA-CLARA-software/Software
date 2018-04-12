@@ -1,8 +1,13 @@
 import sys, time, os
 
-sys.path.append("..")
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+sys.path.append("../../../../")
+try:
+    from PyQt4.QtCore import *
+    from PyQt4.QtGui import *
+except ImportError:
+    from PyQt5.QtCore import *
+    from PyQt5.QtGui import *
+    from PyQt5.QtWidgets import *
 import pyqtgraph as pg
 import striptool as striptool
 import scatterPlot as scatterplot

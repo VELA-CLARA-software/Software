@@ -1,16 +1,22 @@
 import time, signal, os, copy
 import xlsxwriter
 import datetime as dt
-from PyQt4 import QtCore, QtGui
+try:
+    from PyQt4.QtCore import *
+    from PyQt4.QtGui import *
+except ImportError:
+    from PyQt5.QtCore import *
+    from PyQt5.QtGui import *
+    from PyQt5.QtWidgets import *
 # import PyQt4.QtGui
 import logging
 import tables as tables
-import Software.Widgets.Striptool2.signalRecord as signalRecord
-import Software.Widgets.Striptool2.scrollingPlot as scrollingplot
-import Software.Widgets.Striptool2.scatterPlot as scatterplot
-import Software.Widgets.Striptool2.fftPlot as fftplot
-import Software.Widgets.Striptool2.histogramPlot as histogramplot
-import Software.Widgets.Striptool2.plotLegend as plotlegend
+import Widgets.Striptool2.signalRecord as signalRecord
+import Widgets.Striptool2.scrollingPlot as scrollingplot
+import Widgets.Striptool2.scatterPlot as scatterplot
+import Widgets.Striptool2.fftPlot as fftplot
+import Widgets.Striptool2.histogramPlot as histogramplot
+import Widgets.Striptool2.plotLegend as plotlegend
 import numpy as np
 logger = logging.getLogger(__name__)
 
@@ -33,10 +39,10 @@ class CustomException(Exception):
     def __str__(self):
         return repr(self.parameter)
 
-class generalPlot(QtGui.QWidget):
+class generalPlot(QWidget):
 
-    signalAdded = QtCore.pyqtSignal(str)
-    signalRemoved = QtCore.pyqtSignal(str)
+    signalAdded = pyqtSignal(str)
+    signalRemoved = pyqtSignal(str)
 
     def __init__(self, parent = None):
         super(generalPlot, self).__init__(parent)
@@ -66,7 +72,7 @@ class generalPlot(QtGui.QWidget):
     def removeSignal(self,name):
         self.records[name]['record'].close()
         self.signalRemoved.emit(str(name))
-        QtCore.QTimer.singleShot(0, lambda: self.removeRecord(name))
+        QTimer.singleShot(0, lambda: self.removeRecord(name))
         logger.info('Signal '+name+' removed!')
 
     def setDecimateLength(self, value=5000):
@@ -91,7 +97,7 @@ class generalPlot(QtGui.QWidget):
             hour = str(hour) if hour >= 10 else '0' + str(hour)
             minute = str(minute) if minute >= 10 else '0' + str(minute)
             suggestedfilename = str(year)+'_'+str(month)+'_'+str(day)+'_'+str(hour)+str(minute)+'_striptool_data'
-            saveFileName = str(QtGui.QFileDialog.getSaveFileName(self, 'Save Data', suggestedfilename,
+            saveFileName = str(QFileDialog.getSaveFileName(self, 'Save Data', suggestedfilename,
             filter="HDF5 files (*.h5);;XLSX files (*.xlsx);;CSV files (*.csv);; Binary Files (*.bin)", selectedFilter="HDF5 files (*.h5)"))
         _, file_extension = os.path.splitext(saveFileName)
         if file_extension == '.csv' or file_extension == '.bin':
@@ -114,7 +120,7 @@ class generalPlot(QtGui.QWidget):
         hour = str(hour) if hour >= 10 else '0' + str(hour)
         minute = str(minute) if minute >= 10 else '0' + str(minute)
         suggestedfilename = str(year)+'_'+str(month)+'_'+str(day)+'_'+str(hour)+str(minute)+'_'+name
-        saveFileName = str(QtGui.QFileDialog.getSaveFileName(self, 'Save Data', suggestedfilename,
+        saveFileName = str(QFileDialog.getSaveFileName(self, 'Save Data', suggestedfilename,
         filter="HDF5 files (*.h5);;XLSX files (*.xlsx);;CSV files (*.csv);; Binary Files (*.bin)", selectedFilter="HDF5 files (*.h5)"))
         _, file_extension = os.path.splitext(saveFileName)
         if file_extension == '.csv' or file_extension == '.bin':
