@@ -235,8 +235,8 @@ class bpm_calibration_gui(QMainWindow, Ui_MainWindow, base):
 	def handle_calibrate_button(self):
 		self.check_ready()
 		self.data.values[dat.values_saved] = False
-		self.calibrateButton.setEnabled(False)
 		if self.data.values[dat.ready_to_go]:
+			self.calibrateButton.setEnabled(False)
 			base.logger.message('Starting scan', True)
 		else:
 			base.logger.message('NOT ready to go, is everything set?', True)

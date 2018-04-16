@@ -20,13 +20,13 @@ class scope_monitor(monitor):
         # init base-class
         monitor.__init__(self,update_time=1000)
 
+        self.check_scope_is_monitoring()
         self.timer = QTimer()
         self.timer.timeout.connect(self.update_bunch_charge)
 
         self.set_success = True
         self.timer.start(self.update_time)
 
-        self.check_scope_is_monitoring()
         self.run()
 
     def run(self):
@@ -41,6 +41,8 @@ class scope_monitor(monitor):
 
     def check_scope_is_monitoring(self):
         num_data_buffer = monitor.scope_control.getScopeNumBuffer(monitor.config.scope_config['SCOPE_NAME'][0], monitor.config.scope_config['SCOPE_CHANNEL'])
+        print num_data_buffer
+        print type(monitor.config.scope_config['SCOPE_CHANNEL'])
         if len(num_data_buffer) > 1:
             if num_data_buffer[-1] != num_data_buffer[-2]:
                 monitor.data.values[dat.scope_status] = True

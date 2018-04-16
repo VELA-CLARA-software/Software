@@ -61,9 +61,13 @@ class data_monitoring_base(base):
 	def start_bpm_monitor(self):
 		data_monitoring_base.bpm_monitor = bpm_monitor.bpm_monitor()
 		data_monitoring_base.is_monitoring[dat.bpm_status] = data_monitoring_base.bpm_monitor.set_success
+		self.check_mode()
 		return data_monitoring_base.bpm_monitor.set_success
 
 	def start_scope_monitor(self):
 		data_monitoring_base.scope_monitor = scope_monitor.scope_monitor()
 		data_monitoring_base.is_monitoring[dat.scope_status] = data_monitoring_base.scope_monitor.set_success
 		return data_monitoring_base.scope_monitor.set_success
+
+	def check_mode(self):
+		print dat.machine_mode
