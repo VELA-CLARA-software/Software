@@ -1,4 +1,4 @@
-from VELA_CLARA_enums import MACHINE_MODE,MACHINE_AREA
+from VELA_CLARA_Scope_Control import MACHINE_MODE,MACHINE_AREA
 from data.config_reader import config_reader
 from data.data_logger import data_logger
 import bpm_handler

@@ -1,5 +1,4 @@
 from monitor import monitor
-from VELA_CLARA_enums import STATE
 from PyQt4.QtCore import QTimer
 import data.bpm_calibrate_data_base as dat
 import numpy

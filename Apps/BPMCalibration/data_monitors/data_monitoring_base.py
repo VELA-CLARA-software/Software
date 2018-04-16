@@ -1,4 +1,3 @@
-import VELA_CLARA_General_Monitor
 import scope_monitor
 import bpm_monitor
 import data.bpm_calibrate_data_base as dat
@@ -7,9 +6,6 @@ from base.base import base
 class data_monitoring_base(base):
 	#whomai
 	my_name = 'data_monitoring_base'
-	#
-	# general monitoring for parameters with no controller
-	gen_mon = VELA_CLARA_General_Monitor.init()
 	# we can make some reasonable guesses as to what will be
 	# monitored from gen_mon
 	# every key from gen_mon will be stored here

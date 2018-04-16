@@ -1,4 +1,4 @@
-from VELA_CLARA_enums import MACHINE_AREA, MACHINE_MODE
+from VELA_CLARA_BPM_Control import MACHINE_AREA, MACHINE_MODE
 from VELA_CLARA_Scope_Control import SCOPE_PV_TYPE, DIAG_TYPE
 
 class config_reader(object):

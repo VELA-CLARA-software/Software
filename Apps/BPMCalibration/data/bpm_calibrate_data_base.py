@@ -1,7 +1,5 @@
 from PyQt4.QtCore import QTimer
 from PyQt4.QtCore import QObject
-from VELA_CLARA_enums import STATE
-from VELA_CLARA_LLRF_Control import LLRF_TYPE
 import datetime
 import numpy as np
 import matplotlib.pyplot as plt

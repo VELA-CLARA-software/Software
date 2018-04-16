@@ -4,8 +4,6 @@ from PyQt4.QtGui import QApplication
 from PyQt4.QtCore import pyqtSignal
 from PyQt4.QtCore import QString
 from gui_mainwindow import Ui_MainWindow
-from VELA_CLARA_enums import STATE
-from VELA_CLARA_LLRF_Control import LLRF_TYPE
 import data.bpm_calibrate_data_base as dat
 from pyqtgraph import mkPen
 from base.base import base

@@ -1,13 +1,13 @@
 import os
 import sys
 
-if os.environ['COMPUTERNAME'] == "ASTECDELL10":
-	print 'port'
-	sys.path.append(os.getcwd())
-	sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\stage')
-else:
-	print 'desk'
-	sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\stage')
+# if os.environ['COMPUTERNAME'] == "ASTECDELL10":
+# 	print 'port'
+# 	sys.path.append(os.getcwd())
+# 	sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\stage')
+# else:
+# 	print 'desk'
+# 	sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\stage')
 from PyQt4 import QtGui
 from controllers.main_controller import main_controller
 
