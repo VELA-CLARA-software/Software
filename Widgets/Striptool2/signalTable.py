@@ -219,7 +219,7 @@ class signalTable(QWidget):
     def addRow(self, name, functionForm, functionArgument, freq, colourpickercolour, logScale=False, **kwargs):
         if functionForm == 'custom':
             pvtype="DBR_DOUBLE"
-            print 'functionArgument = ', functionArgument
+            print ('functionArgument = ', functionArgument)
             pvid = self.general.connectPV(str(functionArgument))
             if pvid is not 'FAILED':
                 self.pvids.append(pvid)

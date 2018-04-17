@@ -497,7 +497,7 @@ class curve(QObject):
             else:
                 newRange = [np.log10(i) for i in currentRange]
             if (not newRange[0] == 0.0) and isinstance(newRange[0], (float, int)) and not np.isnan(newRange[0]):
-                print 'newRange = ', newRange
+                print ('newRange = ', newRange)
                 self.vb.setYRange(*newRange, padding=0)
         else:
             # print 'leaving log mode, currentRange = ', currentRange, ' == ', [10**i for i in currentRange]

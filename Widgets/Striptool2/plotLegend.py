@@ -226,8 +226,8 @@ class plotLegendTree(ParameterTree):
         pChild.child('Options').child('Show_Axis').sigValueChanged.connect(lambda x: self.records[name]['axis'].setVisible(x.value()))
         pChild.child('Options').child('Plot Range').child('AxisZero').sigValueChanged.connect(lambda x: self.setAxisFromZero(name, pChild))
 
-        pChild.child('Options').child('Plot Range').child('RangeLower').items.keys()[0].widget.editingFinished.connect(lambda : self.setAxisLowRange(name, pChild))
-        pChild.child('Options').child('Plot Range').child('RangeUpper').items.keys()[0].widget.editingFinished.connect(lambda : self.setAxisHighRange(name, pChild))
+        list(pChild.child('Options').child('Plot Range').child('RangeLower').items.keys())[0].widget.editingFinished.connect(lambda : self.setAxisLowRange(name, pChild))
+        list(pChild.child('Options').child('Plot Range').child('RangeUpper').items.keys())[0].widget.editingFinished.connect(lambda : self.setAxisHighRange(name, pChild))
         self.records[name]['viewbox'].sigStateChanged.connect(lambda x: self.vbRangeChanged(x, pChild))
 
         pChild.child('Options').child('Log_Mode').sigValueChanged.connect(lambda x: self.records[name]['curve'].setLogMode(x.value()))
@@ -273,7 +273,7 @@ class plotLegendTree(ParameterTree):
 
     def setAxisZeroState(self, vb, pChild):
         if not abs(vb.state['viewRange'][1][0]) == 0:
-            pChild.child('Options').child('Plot Range').child('AxisZero').items.keys()[0].widget.setCheckState(False)
+            list(pChild.child('Options').child('Plot Range').child('AxisZero').items.keys())[0].widget.setCheckState(False)
 
     def setupAxisList(self, name, pChild):
         if 'scrollingplot' in self.records[name]:
