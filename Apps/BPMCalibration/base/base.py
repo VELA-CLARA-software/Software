@@ -18,6 +18,7 @@ class base(object):
     data.logger = logger
     config.logger = logger
     # init LLRF Hardware Controllers
+    bpm_cont = VELA_CLARA_BPM_Control
     bpm_init = VELA_CLARA_BPM_Control.init()
     bpm_init.setVerbose()
 
@@ -25,6 +26,7 @@ class base(object):
     _bpmObj = None
     _bpm_handler = None
     #
+    scope_cont = VELA_CLARA_Scope_Control
     scope_init = VELA_CLARA_Scope_Control.init()
     scope_init.setVerbose()
     #valve_init.setVerbose()

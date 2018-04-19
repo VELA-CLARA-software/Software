@@ -1,7 +1,5 @@
 from PyQt4.QtCore import QTimer
 from PyQt4.QtCore import QObject
-from VELA_CLARA_enums import STATE
-from VELA_CLARA_LLRF_Control import LLRF_TYPE
 import datetime
 import numpy as np
 import matplotlib.pyplot as plt
@@ -68,6 +66,7 @@ v_2_cal = 'v_2_cal'
 q_cal = 'q_cal'
 plots_done = 'plots_done'
 values_saved = 'values_saved'
+machine_mode = 'machine_mode'
 
 all_value_keys = [time_stamp,
                   calibration_type,
@@ -126,7 +125,8 @@ all_value_keys = [time_stamp,
                   v_2_cal,
                   q_cal,
                   plots_done,
-                  values_saved
+                  values_saved,
+                  machine_mode
                   ]
 
 class bpm_calibrate_data_base(QObject):
@@ -205,6 +205,7 @@ class bpm_calibrate_data_base(QObject):
     values[q_cal] = dummy_dbl + 18
     values[plots_done] = False
     values[values_saved] = False
+    values[machine_mode] = dummy_str
     # amp_pwr_mean_data = {}
 
     #logger

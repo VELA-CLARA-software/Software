@@ -1,11 +1,13 @@
 import sys, time, os, datetime, signal
 import pyqtgraph as pg
-from pyqtgraph.Qt import QtGui, QtCore
-# from PyQt5.QtCore import QtCore.QObject, QtCore.pyqtSignal, QtCore.QTimer, Qt
-# from PyQt5.QtGui import QtGui.QHBoxLayout
-# from PyQt5.QtWidgets import QtGui.QWidget
-from PyQt4 import QtCore, QtGui
-
+# from pyqtgraph.Qt import QtGui, QtCore
+try:
+    from PyQt4.QtCore import *
+    from PyQt4.QtGui import *
+except ImportError:
+    from PyQt5.QtCore import *
+    from PyQt5.QtGui import *
+    from PyQt5.QtWidgets import *
 from bisect import bisect_left
 # logger = logging.getLogger(__name__)
 
@@ -16,8 +18,8 @@ signal.signal(signal.SIGINT, signal.SIG_DFL)
 #     print('%-25s: %s, %s,' % (caller, threading.current_thread().name,
 #                               threading.current_thread().ident))
 
-class scatterPlot(QtGui.QWidget):
-    scatterSelectionChanged = QtCore.pyqtSignal('QString', 'QString')
+class scatterPlot(QWidget):
+    scatterSelectionChanged = pyqtSignal('QString', 'QString')
 
     def __init__(self, generalplot, parent=None, plotRateBar=False):
         super(scatterPlot, self).__init__(parent)
@@ -25,8 +27,8 @@ class scatterPlot(QtGui.QWidget):
         self.paused = False
         self.plotrate = 1
         ''' create the scatterPlot as a grid layout '''
-        self.scatterPlot = QtGui.QVBoxLayout()
-        self.plotThread = QtCore.QTimer()
+        self.scatterPlot = QVBoxLayout()
+        self.plotThread = QTimer()
         self.generalPlot = generalplot
         self.records = self.generalPlot.records
         ''' Create generalPlot object '''
@@ -51,12 +53,12 @@ class scatterPlot(QtGui.QWidget):
         self.updateSelectionBar()
 
     def setupPlotRateSlider(self):
-        self.plotRateLayout = QtGui.QHBoxLayout()
-        self.plotRateLabel = QtGui.QLabel()
+        self.plotRateLayout = QHBoxLayout()
+        self.plotRateLabel = QLabel()
         self.plotRateLabel.setText('Plot Update Rate ['+str(self.plotrate)+' Hz]:')
-        self.plotRateLabel.setAlignment(QtCore.Qt.AlignCenter)
-        self.plotRateSlider = QtGui.QSlider()
-        self.plotRateSlider.setOrientation(QtCore.Qt.Horizontal)
+        self.plotRateLabel.setAlignment(Qt.AlignCenter)
+        self.plotRateSlider = QSlider()
+        self.plotRateSlider.setOrientation(Qt.Horizontal)
         self.plotRateSlider.setInvertedAppearance(False)
         self.plotRateSlider.setInvertedControls(False)
         self.plotRateSlider.setMinimum(1)
@@ -67,12 +69,12 @@ class scatterPlot(QtGui.QWidget):
         self.plotRateLayout.addWidget(self.plotRateSlider)
 
     def setupSelectionBar(self):
-        spacer = QtGui.QSpacerItem(100, 20)
-        self.combobox1 = QtGui.QComboBox()
+        spacer = QSpacerItem(100, 20)
+        self.combobox1 = QComboBox()
         self.combobox1.setMaximumWidth(200)
         self.combobox1.setMinimumWidth(100)
         self.combobox1.currentIndexChanged.connect(self.selectionBarChanged)
-        self.combobox2 = QtGui.QComboBox()
+        self.combobox2 = QComboBox()
         self.combobox2.setMaximumWidth(200)
         self.combobox2.setMinimumWidth(100)
         self.combobox2.currentIndexChanged.connect(self.selectionBarChanged)
@@ -81,7 +83,7 @@ class scatterPlot(QtGui.QWidget):
             self.combobox2.addItem(name)
         self.combobox1.setCurrentIndex(0)
         self.combobox2.setCurrentIndex(1)
-        self.selectionBarLayout = QtGui.QHBoxLayout()
+        self.selectionBarLayout = QHBoxLayout()
         self.selectionBarLayout.addSpacerItem(spacer)
         self.selectionBarLayout.addWidget(self.combobox1)
         self.selectionBarLayout.addSpacerItem(spacer)
@@ -153,7 +155,7 @@ def takeClosestPosition(xvalues, myList, myNumber):
 
 class scatterPlotPlot(pg.PlotWidget):
 
-    statusChanged = QtCore.pyqtSignal(str)
+    statusChanged = pyqtSignal(str)
 
     def __init__(self, scatterplot, parent = None):
         super(scatterPlotPlot, self).__init__(parent=parent)
@@ -225,11 +227,11 @@ class scatterPlotPlot(pg.PlotWidget):
             self.doingPlot  = True
             # self.plot.disableAutoRange()
             data1 = list(self.data1)
-            if len(data1) > self.decimateScale:
-                del data1[:len(data1)-self.decimateScale]
+            # if len(data1) > self.decimateScale:
+            #     del data1[:len(data1)-self.decimateScale]
             data2 = list(self.data2)
-            if len(data2) > self.decimateScale:
-                del data2[:len(data2)-self.decimateScale]
+            # if len(data2) > self.decimateScale:
+            #     del data2[:len(data2)-self.decimateScale]
             if len(data1) > 1 and len(data2) > 1:
                 if data1[0][0] < data2[0][0]:
                     ans = takeClosestPosition(next(iter(zip(*data1))), data1, data2[0][0])
@@ -254,10 +256,10 @@ class scatterPlotPlot(pg.PlotWidget):
                     x=list(x)
                     x2,y = zip(*data2)
                     y=list(y)
-                    # if len(x) > self.decimateScale:
-                    #     # xy = zip(x,y)
-                    #     del x[:len(x)-self.decimateScale]
-                    #     del y[:len(y)-self.decimateScale]
+                    if len(x) > self.decimateScale:
+                        # xy = zip(x,y)
+                        del x[:len(x)-self.decimateScale]
+                        del y[:len(y)-self.decimateScale]
                     self.scatterPlot.setData(x, y, pxMode=True, pen=None)
             self.doingPlot = False
         # self.plot.enableAutoRange()

@@ -1,23 +1,23 @@
 import sys, time, os, datetime, math
 import collections
-from pyqtgraph.Qt import QtGui, QtCore
-# if sys.version_info<(3,0,0):
-# from PyQt4.QtCore import *
-# from PyQt4.QtGui import *
-# else:
-from PyQt4 import QtCore
-# from PyQt5.QtGui import *
-# from PyQt5.QtWidgets import *
+# from pyqtgraph.Qt import QtGui, QtCore
+try:
+    from PyQt4.QtCore import *
+    from PyQt4.QtGui import *
+except ImportError:
+    from PyQt5.QtCore import *
+    from PyQt5.QtGui import *
+    from PyQt5.QtWidgets import *
 from threading import Thread, Event, Timer
 
-class repeatedTimer(QtCore.QObject):
+class repeatedTimer(QObject):
 
     """Repeat `function` every `interval` seconds."""
 
-    dataReady = QtCore.pyqtSignal(list)
+    dataReady = pyqtSignal(list)
 
     def __init__(self, function, args=[]):
-        QtCore.QObject.__init__(self)
+        QObject.__init__(self)
         self.function = function
         self.args = args
         self.start = time.time()
@@ -50,11 +50,11 @@ class repeatedTimer(QtCore.QObject):
     def setInterval(self, interval):
         self.interval = interval
 
-class createSignalTimer(QtCore.QObject):
+class createSignalTimer(QObject):
 
     def __init__(self, function, args=[]):
-        # Initialize the signal as a QtCore.QObject
-        QtCore.QObject.__init__(self)
+        # Initialize the signal as a QObject
+        QObject.__init__(self)
         self.timer = repeatedTimer(function, args)
 
     def startTimer(self, interval=1):
@@ -65,16 +65,16 @@ class createSignalTimer(QtCore.QObject):
         # self.timer.stop()
         self.startTimer(interval)
 
-class recordWorker(QtCore.QObject):
+class recordWorker(QObject):
 
-    recordLatestValueSignal = QtCore.pyqtSignal(list)
-    recordMeanSignal = QtCore.pyqtSignal(float)
-    recordMean10Signal = QtCore.pyqtSignal(list)
-    recordMean100Signal = QtCore.pyqtSignal(list)
-    recordMean1000Signal = QtCore.pyqtSignal(list)
-    recordStandardDeviationSignal = QtCore.pyqtSignal(float)
-    recordMinSignal = QtCore.pyqtSignal(float)
-    recordMaxSignal = QtCore.pyqtSignal(float)
+    recordLatestValueSignal = pyqtSignal(list)
+    recordMeanSignal = pyqtSignal(float)
+    recordMean10Signal = pyqtSignal(list)
+    recordMean100Signal = pyqtSignal(list)
+    recordMean1000Signal = pyqtSignal(list)
+    recordStandardDeviationSignal = pyqtSignal(float)
+    recordMinSignal = pyqtSignal(float)
+    recordMaxSignal = pyqtSignal(float)
 
     def calculate_mean(self, numbers):
         return float(sum(numbers)) /  max(len(numbers), 1)
@@ -90,11 +90,11 @@ class recordWorker(QtCore.QObject):
         self.buffer100 = collections.deque(maxlen=100)
         self.buffer10 = collections.deque(maxlen=10)
         self.resetStatistics(True)
-        self.timer = QtCore.QTimer()
+        self.timer = QTimer()
         self.timer.timeout.connect(self.emitStatistics)
         self.timer.start(1000)
 
-    @QtCore.pyqtSlot(list)
+    @pyqtSlot(list)
     def updateRecord(self, value):
         self.buffer.append(value)
         self.recordLatestValueSignal.emit(value)
@@ -144,10 +144,10 @@ class recordWorker(QtCore.QObject):
             # self.buffer100.clear()
             # self.buffer1000.clear()
 
-class signalRecord(QtCore.QObject):
+class signalRecord(QObject):
 
     def __init__(self, records, name, pen, timer, maxlength, function, args=[], functionForm=None, functionArgument=None, logScale=False, verticalRange=None, verticalMeanSubtraction=False, axis=None):
-        QtCore.QObject.__init__(self)
+        QObject.__init__(self)
         self.records = records
         self.name = name
         self.timer = timer
@@ -156,7 +156,7 @@ class signalRecord(QtCore.QObject):
          'function': function, 'args': args, 'functionForm': functionForm, 'functionArgument': functionArgument,
         'signal': self.signal, 'logScale': logScale, 'verticalRange': verticalRange,
         'axisname': axis}
-        self.thread = QtCore.QThread()
+        self.thread = QThread()
         self.worker = recordWorker(self.records, self.signal, name)
         self.records[name]['worker'] = self.worker
         self.worker.moveToThread(self.thread)

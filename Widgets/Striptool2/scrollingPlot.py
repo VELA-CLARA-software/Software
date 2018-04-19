@@ -1,13 +1,16 @@
 import sys, time, os, datetime, math
 import pyqtgraph as pg
-from pyqtgraph.Qt import QtGui, QtCore
+# from pyqtgraph.Qt import QtGui, QtCore
 import collections
 import numpy as np
-# from PyQt5.QtCore import QtCore.pyqtSignal, QtCore.QObject, QtCore.QTimer, Qt, QtCore.QPointF
-# from PyQt5.QtGui import QtGui.QHBoxLayout, QtGui.QGraphicsItem, QtGui.QPainterPath
-# from PyQt5.QtWidgets import QtGui.QWidget
-from PyQt4 import QtCore, QtGui
-import Software.Widgets.Striptool2.colours as colours
+try:
+    from PyQt4.QtCore import *
+    from PyQt4.QtGui import *
+except ImportError:
+    from PyQt5.QtCore import *
+    from PyQt5.QtGui import *
+    from PyQt5.QtWidgets import *
+import Widgets.Striptool2.colours as colours
 
 ''' This class is a PyQtGraph axis which modifies the data points from "seconds before the current time" into Hours:Mins:Secs format.
 We only want to do this for linear plots, so it is turned off in the FFT and Histogram plots. Also, if we turn "autoscroll" off, the
@@ -56,10 +59,97 @@ class VAxis(pg.AxisItem):
     def logTickStrings(self, values, scale, spacing):
         return ["%0.1g"%abs(x) for x in 10 ** np.array(values).astype(float)]
 
-class scrollingPlot(QtGui.QWidget):
+class MenuBox(pg.GraphicsObject):
+    """
+    This class draws a rectangular area. Right-clicking inside the area will
+    raise a custom context menu which also includes the context menus of
+    its parents.
+    """
+    def __init__(self, name):
+        self.name = name
+        self.pen = pg.mkPen('r')
 
-    doCurveUpdate = QtCore.pyqtSignal()
-    timeChangeSignal = QtCore.pyqtSignal('float')
+        # menu creation is deferred because it is expensive and often
+        # the user will never see the menu anyway.
+        self.menu = None
+
+        # note that the use of super() is often avoided because Qt does not
+        # allow to inherit from multiple QObject subclasses.
+        pg.GraphicsObject.__init__(self)
+
+
+    # All graphics items must have paint() and boundingRect() defined.
+    def boundingRect(self):
+        return QRectF(0, 0, 10, 10)
+
+    def paint(self, p, *args):
+        p.setPen(self.pen)
+        p.drawRect(self.boundingRect())
+
+
+    # On right-click, raise the context menu
+    def mouseClickEvent(self, ev):
+        if ev.button() == Qt.RightButton:
+            if self.raiseContextMenu(ev):
+                ev.accept()
+
+    def raiseContextMenu(self, ev):
+        menu = self.getContextMenus()
+
+        # Let the scene add on to the end of our context menu
+        # (this is optional)
+        menu = self.scene().addParentContextMenus(self, menu, ev)
+
+        pos = ev.screenPos()
+        menu.popup(QPoint(pos.x(), pos.y()))
+        return True
+
+    # This method will be called when this item's _children_ want to raise
+    # a context menu that includes their parents' menus.
+    def getContextMenus(self, event=None):
+        if self.menu is None:
+            self.menu = QMenu()
+            self.menu.setTitle(self.name+ " options..")
+
+            green = QAction("Turn green", self.menu)
+            green.triggered.connect(self.setGreen)
+            self.menu.addAction(green)
+            self.menu.green = green
+
+            blue = QAction("Turn blue", self.menu)
+            blue.triggered.connect(self.setBlue)
+            self.menu.addAction(blue)
+            self.menu.green = blue
+
+            alpha = QWidgetAction(self.menu)
+            alphaSlider = QSlider()
+            alphaSlider.setOrientation(Qt.Horizontal)
+            alphaSlider.setMaximum(255)
+            alphaSlider.setValue(255)
+            alphaSlider.valueChanged.connect(self.setAlpha)
+            alpha.setDefaultWidget(alphaSlider)
+            self.menu.addAction(alpha)
+            self.menu.alpha = alpha
+            self.menu.alphaSlider = alphaSlider
+        return self.menu
+
+    # Define context menu callbacks
+    def setGreen(self):
+        self.pen = pg.mkPen('g')
+        # inform Qt that this item must be redrawn.
+        self.update()
+
+    def setBlue(self):
+        self.pen = pg.mkPen('b')
+        self.update()
+
+    def setAlpha(self, a):
+        self.setOpacity(a/255.)
+
+class scrollingPlot(QWidget):
+
+    doCurveUpdate = pyqtSignal()
+    timeChangeSignal = pyqtSignal('float')
 
     def __init__(self, generalplot, parent=None, plotRateBar=False, color=0):
         super(scrollingPlot, self).__init__(parent)
@@ -67,8 +157,8 @@ class scrollingPlot(QtGui.QWidget):
         self.paused = False
         self.plotrate = 1
         ''' create the scatterPlot as a grid layout '''
-        self.scrollingPlot = QtGui.QVBoxLayout()
-        self.plotThread = QtCore.QTimer()
+        self.scrollingPlot = QVBoxLayout()
+        self.plotThread = QTimer()
         self.paused = False
         self.generalPlot = generalplot
         self.records = self.generalPlot.records
@@ -96,12 +186,12 @@ class scrollingPlot(QtGui.QWidget):
         self.scrollingPlotPlot.removeCurve(name)
 
     def setupPlotRateSlider(self):
-        self.plotRateLayout = QtGui.QHBoxLayout()
-        self.plotRateLabel = QtGui.QLabel()
+        self.plotRateLayout = QHBoxLayout()
+        self.plotRateLabel = QLabel()
         self.plotRateLabel.setText('Plot Update Rate ['+str(self.plotrate)+' Hz]:')
-        self.plotRateLabel.setAlignment(QtCore.Qt.AlignCenter)
-        self.plotRateSlider = QtGui.QSlider()
-        self.plotRateSlider.setOrientation(QtCore.Qt.Horizontal)
+        self.plotRateLabel.setAlignment(Qt.AlignCenter)
+        self.plotRateSlider = QSlider()
+        self.plotRateSlider.setOrientation(Qt.Horizontal)
         self.plotRateSlider.setInvertedAppearance(False)
         self.plotRateSlider.setInvertedControls(False)
         self.plotRateSlider.setMinimum(1)
@@ -148,11 +238,11 @@ class scrollingPlot(QtGui.QWidget):
     def createAxis(self, *args, **kwargs):
         self.scrollingPlotPlot.createAxis(*args, **kwargs)
 
-class scrollingPlotPlot(QtGui.QWidget):
+class scrollingPlotPlot(QWidget):
 
-    plotUpdated = QtCore.pyqtSignal()
-    newaxis = QtCore.pyqtSignal()
-    yAxisScaled = QtCore.pyqtSignal(float, float)
+    plotUpdated = pyqtSignal()
+    newaxis = pyqtSignal()
+    yAxisScaled = pyqtSignal(float, float)
 
     def __init__(self, scrollingplot, parent = None):
         super(scrollingPlotPlot, self).__init__(parent=parent)
@@ -164,7 +254,6 @@ class scrollingPlotPlot(QtGui.QWidget):
         self.plotWidget = pg.GraphicsLayoutWidget()
         self.threads = {}
         self.workers = {}
-        self.viewboxes = {}
         self.namedaxes = {}
         self.createPlot()
         self.yScale = 1
@@ -177,12 +266,26 @@ class scrollingPlotPlot(QtGui.QWidget):
         self.leftaxis = pg.AxisItem("left")
         self.plot = self.plotWidget.addPlot(row=0,col=50, autoDownsample=True, clipToView=True, antialias=False, downsampleMethod='subsample', axisItems={'bottom':self.date_axis})
         self.plot.vb.setMouseEnabled()
+        axiszero = self.plot.vb.menu.addAction('Set Axes to 0')
+        axiszero.triggered.connect(self.setAxesToZero)
         self.plot.vb.sigYRangeChanged.connect(self.vbYRangeChanged)
         self.plot.disableAutoRange(False)
         self.plot.setRange(xRange=[-0.5,1.5])
         self.plot.showAxis('left', False)
         self.plot.mouseOver = False
         self.plot.showGrid(x=True, y=True)
+
+    def setAxesToZero(self):
+        for a in self.namedaxes.iteritems():
+            axis, vb = a[1]
+            vb.enableAutoRange(y=False)
+            currentrange = vb.viewRange()
+            vb.setYRange(0, currentrange[1][1], padding=0)
+
+    def setAxisToZero(self, vb):
+        vb.enableAutoRange(y=False)
+        currentrange = vb.viewRange()
+        vb.setYRange(0, currentrange[1][1], padding=0)
 
     def vbYRangeChanged(self,x,y):
         pos = (y[1]+y[0])/2 - self.yPos
@@ -214,18 +317,20 @@ class scrollingPlotPlot(QtGui.QWidget):
         axis = pg.AxisItem("left")
         labelStyle = {'color': '#'+pg.colorStr(pg.mkColor(color))[0:-2]}
         axis.setLabel(name,**labelStyle)
-        # axis.setLogMode(logMode)
         viewbox = pg.ViewBox()
         axis.linkToView(viewbox)
         viewbox.setXLink(self.plot.vb)
         # viewbox.setYLink(self.plot.vb)
+        axiszero = viewbox.menu.addAction('Set Axis to 0')
+        axiszero.triggered.connect(lambda: self.setAxisToZero(viewbox))
         self.namedaxes[name] = [axis, viewbox]
         if not verticalRange == None:
-            viewbox.setRange(yRange=verticalRange,disableAutoRange=True)
+            viewbox.setRange(yRange=verticalRange, disableAutoRange=True)
         col = self.findFirstEmptyColumnInGraphicsLayout()
         self.plotWidget.ci.addItem(axis, row = 0, col = col,  rowspan=1, colspan=1)
         self.plotWidget.ci.addItem(viewbox, row=0, col=50)
-        self.newaxis.emit()
+        axis.setLogMode(logMode)
+        # self.newaxis.emit()
         return axis, viewbox
 
     def getAxes(self):
@@ -252,8 +357,9 @@ class scrollingPlotPlot(QtGui.QWidget):
             axis, viewbox = self.createAxis(name=record[name]['axisname'], color=record[name]['pen'], logMode=record[name]['logScale'],verticalRange=record[name]['verticalRange'])
         record[name]['viewbox'] = viewbox
         record[name]['axis'] = axis
-        record[name]['logScale'] = axis.logMode
-        self.threads[name] = QtCore.QThread(self.scrollingPlot)
+        axis.setLogMode(record[name]['logScale'])
+        # record[name]['logScale'] = axis.logMode
+        self.threads[name] = QThread(self.scrollingPlot)
         self.workers[name] = curveRecordWorker(self, name)
         self.workers[name].moveToThread(self.threads[name])
         self.threads[name].start()
@@ -278,9 +384,9 @@ class scrollingPlotPlot(QtGui.QWidget):
         self.workers[name].deleteLater()
 
 
-    def toggleAxis(self, name, visible):
-        axis, viewbox = self.namedaxes[self.records[name]['axisname']]
-        axis.setVisible(visible)
+    # def toggleAxis(self, name, visible):
+    #     axis, viewbox = self.namedaxes[self.records[name]['axisname']]
+    #     axis.setVisible(visible)
 
     def findFirstEmptyColumnInGraphicsLayout(self):
         rowsfilled =  self.plotWidget.ci.rows.get(0, {}).keys()
@@ -288,20 +394,21 @@ class scrollingPlotPlot(QtGui.QWidget):
             if not i in rowsfilled:
                 return i
 
-class curveRecordWorker(QtCore.QObject):
+class curveRecordWorker(QObject):
     def __init__(self, plot, name):
-        QtCore.QObject.__init__(self)
+        QObject.__init__(self)
         self.curve = curve(plot, name)
 
 ''' This is the curve class which enables plotting on a plotting object. Making it a class eases control of the different options for multiple curves'''
-class curve(QtCore.QObject):
+class curve(QObject):
     def __init__(self, plot, name):
-        QtCore.QObject.__init__(self)
+        QObject.__init__(self)
         self.plot = plot
         self.records = self.plot.records
         self.name = name
         self.vb = self.records[name]['viewbox']
         self.logMode = self.records[name]['logScale']
+        # print 'self.logMode = ', self.logMode
         self.plot.yAxisScaled.connect(self.scaleYAxis)
         self.curve = pg.PlotDataItem(autoDownsample=True,clipToView=True)
         self.curve.setPen(pg.mkPen(self.records[self.name]['pen']))
@@ -371,7 +478,8 @@ class curve(QtCore.QObject):
         self.redrawLines(self.points1000, self.curve1000, 'curve1000', {'color': self.records[self.name]['pen'], 'dash': [3,3], 'width': 4})
 
     def setLogMode(self, mode):
-        self.logMode = True
+        # print 'change log mode = ', self.records['signal2']['axis'].logMode
+        self.logMode = mode
         self.records[self.name]['logScale'] = mode
         currentRange = self.vb.state['viewRange'][1]
         self.plot.records[self.name]['axis'].setLogMode(self.records[self.name]['logScale'])
@@ -380,24 +488,32 @@ class curve(QtCore.QObject):
         self.curve100.setLogMode(False, mode)
         self.curve1000.setLogMode(False, mode)
         # self.vb.enableAutoRange(y=True)
-        if mode:
+        if mode and not currentRange[0] == 0.0 and isinstance(currentRange[0], (float, int)):
             # print 'entering log mode, currentRange = ', currentRange, ' == ', [np.log10(i) for i in currentRange]
-            if currentRange[0] < 0:
+            if currentRange[0] <= 0:
                 newRange = [0,0]
                 newRange[1] = np.log10(currentRange[1])
                 newRange[0] = newRange[1] - np.log10(currentRange[1]-currentRange[0])
             else:
                 newRange = [np.log10(i) for i in currentRange]
-            self.vb.setYRange(*newRange, padding=0)
+            if (not newRange[0] == 0.0) and isinstance(newRange[0], (float, int)) and not np.isnan(newRange[0]):
+                print ('newRange = ', newRange)
+                self.vb.setYRange(*newRange, padding=0)
         else:
             # print 'leaving log mode, currentRange = ', currentRange, ' == ', [10**i for i in currentRange]
             newRange = [10**i for i in currentRange]
             self.vb.setYRange(*newRange, padding=0)
+        # print 'change log mode 2 = ', self.records['signal2']['axis'].logMode
+
 
     def redrawLines(self, points, curve, curvename, pen):
         if curve.isVisible() and self.visibility[curvename] is True and len(points) > 1:
             if self.logMode:
                 curve.setData(np.abs(np.array(points)))
+                self.setLogMode(True)
+                # print 'axis mode = ', self.plot.records[self.name]['axis'].logMode
+                # self.plot.records[self.name]['axis'].setLogMode(False)
+                # self.plot.records[self.name]['axis'].setLogMode(True)
             else:
                 curve.setData(np.array(points))
 
