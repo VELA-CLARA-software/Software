@@ -1,22 +1,22 @@
 import sys, time, os
-sys.path.append(".")
-sys.path.append("..")
-# if sys.version_info<(3,0,0):
-# from PyQt4.QtCore import *
-# from PyQt4.QtGui import *
-# else:
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
+# sys.path.append(".")
+sys.path.append("../../../")
+try:
+    from PyQt4.QtCore import *
+    from PyQt4.QtGui import *
+except ImportError:
+    from PyQt5.QtCore import *
+    from PyQt5.QtGui import *
+    from PyQt5.QtWidgets import *
 import pyqtgraph as pg
 from pyqtgraph.dockarea import *
-import generalPlot as generalplot
-import scrollingPlot as scrollingplot
-import signalTable as signaltable
+import Widgets.Striptool2.generalPlot as generalplot
+import Widgets.Striptool2.scrollingPlot as scrollingplot
+import Widgets.Striptool2.signalTable as signaltable
 import numpy as np
-from splitterWithHandles import *
+from  Widgets.Striptool2.splitterWithHandles import *
 ''' Load loggerWidget library (comment out if not available) '''
-import Software.Widgets.loggerWidget.loggerWidget as lw
+import Widgets.loggerWidget.loggerWidget as lw
 import logging
 logger = logging.getLogger(__name__)
 
@@ -85,10 +85,10 @@ class striptool_Demo(QMainWindow):
         self.signaltable = signaltable.signalTable(parent=self.generalplot)#, VELAMagnetController=Vmagnets, CLARAMagnetController=Cmagnets, BPMController=bpms, GeneralController=general)
 
         self.enabledPlotNames = []
-        self.legend.legendselectionchanged.connect(self.addSignalToFFTHistogramPlots)
+        self.legend.tree.legendselectionchanged.connect(self.addSignalToFFTHistogramPlots)
 
         ''' Create some common axes to plot similar signals with '''
-        self.generalplot.createAxis(name='logsmall', color='k',logMode=True, verticalRange=[1e-10, 1e-7])
+        # self.generalplot.createAxis(name='logsmall', color='k',logMode=True, verticalRange=[1e-10, 1e-7])
         # self.generalplot.createAxis(name='logbig', color='b', logMode=True, verticalRange=[1e3, 1e5])
         # self.generalplot.createAxis(name='smallnumbers', color='g', logMode=False, verticalRange=[-5,10])
 
@@ -96,12 +96,11 @@ class striptool_Demo(QMainWindow):
             The 'pen' argument sets the color of the curves
                 - see <http://www.pyqtgraph.org/documentation/style.html>'''
         self.generalplot.addSignal(name='signal1', pen='g', timer=1.0/50.0, function=self.createRandomSignal, args=[100,10,22])
-        self.generalplot.addSignal(name='signal2', pen='r', timer=1.0/10.0, function=self.createRandomSignal, args=[1e-8, 1e-9,4], axis='logsmall')
+        self.generalplot.addSignal(name='signal2', pen='r', timer=1.0/10.0, function=self.createRandomSignal, args=[1e-8, 1e-9,4], logScale=True)
         # self.generalplot.addSignal(name='signal3', pen='b', timer=1.0/10.0, function=self.createRandomSignal, args=[1e4, 1e1, 2], axis='logbig')
         # self.generalplot.addSignal(name='signal4', pen='c', timer=1.0/20.0, function=self.createRandomSignal, args=[1,0.5,7.8], axis='smallnumbers')
         # self.generalplot.addSignal(name='signal5', pen='m', timer=1.0/10.0, function=self.createRandomSignal, args=[3,2,0.87], axis='smallnumbers')
         # self.generalplot.addSignal(name='signal6', pen='y', timer=1.0/10.0, function=self.createRandomSignal, args=[5,2,2.35], axis='smallnumbers')
-
 
         # self.fftplot.addPlot('signal2')
 
@@ -189,7 +188,6 @@ class striptool_Demo(QMainWindow):
         ''' Display the Qt App '''
         self.setCentralWidget(self.plotLayout)
 
-
     ''' This is a signal generator. It could easily read a magnet current using the hardware controllers
         The signal should have peaks at 5 Hz and 10 Hz, which should be seen on the FFT plot assuming the
         sample rate is high enough
@@ -220,8 +218,8 @@ class striptool_Demo(QMainWindow):
             self.histogramplot.selectionChange(name, True)
         for name in self.enabledPlotNames:
             if name not in names:
-                self.fftplot.selectionChange(name, self.legend.isFFTEnabled(name))
-                self.histogramplot.selectionChange(name, self.legend.isHistogramEnabled(name))
+                self.fftplot.selectionChange(name, self.legend.tree.isFFTEnabled(name))
+                self.histogramplot.selectionChange(name, self.legend.tree.isHistogramEnabled(name))
 
     def pausePlots(self, parentwidget):
         widgets = parentwidget.findChildren((striptool.stripPlot))

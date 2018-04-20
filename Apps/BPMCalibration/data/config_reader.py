@@ -1,6 +1,5 @@
-from VELA_CLARA_enums import MACHINE_AREA, MACHINE_MODE
+from VELA_CLARA_BPM_Control import MACHINE_AREA, MACHINE_MODE
 from VELA_CLARA_Scope_Control import SCOPE_PV_TYPE, DIAG_TYPE
-
 
 class config_reader(object):
     # whoami
@@ -95,7 +94,7 @@ class config_reader(object):
     # //mfw Cancer below\\
     # //we must assume value type\\
     def get_param_dict(self, string_param=[], float_param=[], int_param=[], area_param=[], type_param=[], bool_param=[],
-                       monitor_param=[],channel_param=[],diag_param=[]):
+                       monitor_param=[],channel_param=[],diag_param=[],mode_param=[]):
         r = {}
         for item in string_param:
             try:
@@ -122,6 +121,11 @@ class config_reader(object):
                 r.update({item: self.get_diag_type(config_reader.config[item])})
             except:
                 print(self.my_name, " FAILED to Find, ", item)
+        for item in mode_param:
+            try:
+                r.update({item: self.get_machine_mode(config_reader.config[item])})
+            except:
+                print(self.my_name, " FAILED to Find, ", item)
         for item in channel_param:
             try:
                 r.update({item: self.get_scope_channel(config_reader.config[item])})
@@ -139,9 +143,10 @@ class config_reader(object):
     def bpm_parameter(self):
         string_param = ['BPM_NAMES']
         area_param = ['BPM_AREA']
+        mode_param = ['BPM_MODE']
         int_param = ['BPM_CHECK_TIME']
         config_reader.bpm_config = self.get_param_dict(string_param=string_param, area_param=area_param,
-                                                       int_param=int_param)
+                                                       int_param=int_param,mode_param=mode_param)
         return config_reader.bpm_config
 
     def scope_parameter(self):
@@ -149,10 +154,11 @@ class config_reader(object):
         area_param = ['SCOPE_AREA']
         int_param = ['SCOPE_CHECK_TIME']
         channel_param = ['SCOPE_CHANNEL']
+        mode_param = ['SCOPE_MODE']
         diag_param = ['SCOPE_DIAG_TYPE']
         config_reader.scope_config = self.get_param_dict(string_param=string_param, area_param=area_param,
                                                          int_param=int_param,channel_param=channel_param,
-                                                         diag_param=diag_param)
+                                                         diag_param=diag_param,mode_param=mode_param)
         return config_reader.scope_config
 
     def log_param(self):

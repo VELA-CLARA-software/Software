@@ -1,6 +1,5 @@
 from datetime import  datetime
 import struct
-from VELA_CLARA_enums import STATE
 import os
 import pickle
 from data.config_reader import config_reader
@@ -132,15 +131,15 @@ class data_logger(object):
         elif type(val) is RF_GUN_PROT_STATUS:
             f.write(struct.pack('<B', val))
             #print struct.calcsize('<B')
-        elif type(val) is STATE:
-            f.write(struct.pack('<B', val))
-            #print struct.calcsize('<B')
-        elif type(val) is GUN_MOD_STATE:
-            f.write(struct.pack('<B', val))
-            #print struct.calcsize('<B')
-        elif type(val) is VALVE_STATE:
-            f.write(struct.pack('<B', val))
-            #print struct.calcsize('<B')
+        # elif type(val) is STATE:
+        #     f.write(struct.pack('<B', val))
+        #     #print struct.calcsize('<B')
+        # elif type(val) is GUN_MOD_STATE:
+        #     f.write(struct.pack('<B', val))
+        #     #print struct.calcsize('<B')
+        # elif type(val) is VALVE_STATE:
+        #     f.write(struct.pack('<B', val))
+        #     #print struct.calcsize('<B')
         elif type(val) is bool:
             f.write(struct.pack('<?', val))
             #print struct.calcsize('<?')

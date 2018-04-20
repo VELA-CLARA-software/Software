@@ -4,8 +4,6 @@ from PyQt4.QtGui import QApplication
 from PyQt4.QtCore import pyqtSignal
 from PyQt4.QtCore import QString
 from gui_mainwindow import Ui_MainWindow
-from VELA_CLARA_enums import STATE
-from VELA_CLARA_LLRF_Control import LLRF_TYPE
 import data.bpm_calibrate_data_base as dat
 from pyqtgraph import mkPen
 from base.base import base
@@ -235,8 +233,8 @@ class bpm_calibration_gui(QMainWindow, Ui_MainWindow, base):
 	def handle_calibrate_button(self):
 		self.check_ready()
 		self.data.values[dat.values_saved] = False
-		self.calibrateButton.setEnabled(False)
 		if self.data.values[dat.ready_to_go]:
+			self.calibrateButton.setEnabled(False)
 			base.logger.message('Starting scan', True)
 		else:
 			base.logger.message('NOT ready to go, is everything set?', True)

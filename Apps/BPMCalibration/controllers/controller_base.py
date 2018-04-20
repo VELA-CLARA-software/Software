@@ -1,11 +1,9 @@
-from VELA_CLARA_enums import MACHINE_MODE
-from VELA_CLARA_enums import MACHINE_AREA
-import VELA_CLARA_BPM_Control
-import VELA_CLARA_Scope_Control
+from VELA_CLARA_Scope_Control import MACHINE_MODE,MACHINE_AREA
 from data.config_reader import config_reader
 from data.data_logger import data_logger
 import bpm_handler
 import datetime
+import data.bpm_calibrate_data_base as dat
 from data_monitors.data_monitoring import data_monitoring
 from base.base import base
 
@@ -47,7 +45,6 @@ class controller_base(base):
 				self.start_bpm_control()
 			if bool(base.config.scope_config):
 				self.start_scope_control()
-
 		else:
 			base.logger.header(self.my_name + ' read_config failed sanity checks!!!', True)
 
@@ -58,22 +55,17 @@ class controller_base(base):
 			logdata.append(''.join(['%s:%s, ' % (key, value) for (key, value) in item.iteritems()]))
 		base.logger.message(logdata, True)
 
-	def is_gun_type(self, type):
-		if type == LLRF_TYPE.CLARA_HRRG: return True
-		elif type == LLRF_TYPE.CLARA_LRRG: return True
-		elif type == LLRF_TYPE.VELA_HRRG: return True
-		elif type == LLRF_TYPE.VELA_LRRG: return True
-		else: return False
-
 	def start_scope_control(self):
 		try:
 			a = base.config.scope_config['SCOPE_AREA']# MAGIC_STRING
 		except:
 			a = MACHINE_AREA.UNKNOWN_AREA
 		if a is not MACHINE_AREA.UNKNOWN_AREA:
-			base.scope_control = base.scope_init.getScopeController(MACHINE_MODE.PHYSICAL,a)
+			b = base.config.scope_config['SCOPE_MODE']
+			base.scope_control = base.scope_init.getScopeController(b,a)
+			# base.scope_control = base.scope_init.physical_VELA_INJ_Scope_Controller()
 			base.logger.message('start_scope_control created ' + str(base.config.scope_config['SCOPE_AREA']) + ' object', True)
-			base.logger.message('Monitoring Scope: ' + ' '.join(self.get_scope_names()), True)
+			base.logger.message('Monitoring Scope: ' + ' ' + self.get_scope_names()[0], True)
 			base.config.scope_config['SCOPE_NAME'] = self.get_scope_names()
 		else:
 			base.logger.message('start_scope_control UNKNOWN_MACHINE area cannot create scope object', True)
@@ -84,10 +76,13 @@ class controller_base(base):
 		except:
 			a = MACHINE_AREA.UNKNOWN_AREA
 		if a is not MACHINE_AREA.UNKNOWN_AREA:
-			base.bpm_control = base.bpm_init.getBPMController(MACHINE_MODE.PHYSICAL,a)
+			b = base.config.bpm_config['BPM_MODE']
+			base.bpm_control = base.bpm_init.getBPMController(b,a)
+			# base.bpm_control = base.bpm_init.virtual_CLARA_PH1_BPM_Controller()
 			base.logger.message('start_bpm_control created ' + str(base.config.bpm_config['BPM_AREA']) + ' object', True)
 			base.logger.message('Monitoring BPMs: ' + ' '.join(self.get_bpm_names()), True)
 			base.config.bpm_config['BPM_NAMES'] = self.get_bpm_names()
+			base.data.values[dat.machine_mode] = 'virtual'
 			controller_base.bpm_handler = bpm_handler.bpm_handler()
 		else:
 			base.logger.message('start_bpm_control UNKNOWN_MACHINE area cannot create bpm object', True)

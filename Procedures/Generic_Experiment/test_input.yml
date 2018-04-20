@@ -30,8 +30,8 @@ screen:
 experiment:
     set_1:
         magnet:
-			# these need to be unique names???
-			S02-QUAD1: !!float 0.2
+        # these need to be unique names???
+            S02-QUAD1: !!float 0.2
             S02-QUAD2: !!float -0.2
         llrf:
             clara_lrrg_phase: !!float 165

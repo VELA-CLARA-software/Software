@@ -86,6 +86,7 @@ class main_controller(controller_base):
                     # controller_base.data_monitor.bpm_monitor.update_bpm_raw_data()
                     controller_base.data_monitor.bpm_monitor.update_bpm_voltages()
                     controller_base.data_monitor.scope_monitor.update_bunch_charge()
+                    controller_base.bpm_handler.update_bpm_att_voltages()
 
     def set_delays_and_record(self):
         if controller_base.data.values[dat.ready_to_go]:

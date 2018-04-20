@@ -1,4 +1,3 @@
-import VELA_CLARA_General_Monitor
 import scope_monitor
 import bpm_monitor
 import data.bpm_calibrate_data_base as dat
