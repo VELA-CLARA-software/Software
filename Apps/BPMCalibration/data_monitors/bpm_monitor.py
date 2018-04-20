@@ -41,6 +41,7 @@ class bpm_monitor(monitor):
             monitor.data.values[dat.bpm_status] = False
 
     def update_bpm_voltages(self):
+        self.check_bpm_is_monitoring()
         if monitor.data.values[dat.bpm_status] and monitor.data.values[dat.scope_status]:
             monitor.data.values[dat.bpm_raw_data] = monitor.bpm_control.getBPMRawDataBuffer(monitor.data.values[dat.bpm_name])
             monitor.data.values[dat.bpm_u11] = monitor.data.values[dat.bpm_raw_data][1]
