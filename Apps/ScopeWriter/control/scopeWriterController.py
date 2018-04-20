@@ -30,9 +30,13 @@ class scopeWriterController(QObject):
 		self.view.addToListButton.clicked.connect(self.appendToList)
 		self.view.startButton.clicked.connect(self.startLogging)
 		self.view.stopButton.clicked.connect(self.stopLogging)
-		self.view.ui_btn.clicked.connect(self.browse)
-		self.view.saveButton.clicked.connect(self.handle_fileSave)
-		self.view.loadButton.clicked.connect(self.handle_fileLoadSelect)
+		# self.view.ui_btn.clicked.connect(self.browse)
+		# self.view.saveButton.clicked.connect(self.handle_fileSave)
+		# self.view.loadButton.clicked.connect(self.handle_fileLoadSelect)
+		self.view.clearLayoutButton.clicked.connect(self.clearLayout)
+		self.view.setTimebaseButton.clicked.connect(self.setTimebase)
+		self.view.clearLayoutButton.setEnabled(False)
+
 
 	@QtCore.pyqtSlot()
 	def startLogging(self):
@@ -123,6 +127,7 @@ class scopeWriterController(QObject):
 
 	@QtCore.pyqtSlot()
 	def appendToList(self):
+		self.view.clearLayoutButton.setEnabled(True)
 		self.view.addChannel( self.view.channelsVBox, self.scopeCont )
 
 	def recordChannel( self, channelName ):
@@ -137,10 +142,14 @@ class scopeWriterController(QObject):
 		elif self.channelName == "TR4":
 			self.chan = self.scope.Zoom.Z4.Out.Result.DataArray
 		self.list = (len(self.chan),) #Appends the array size to the vector sent to EPICS so that the
-		self.cha1 = list(self.list)   #scope controller can dynamically change array size when reading values
+		self.cha1 = list(self.list)	  #scope controller can dynamically change array size when reading values
 		for a in self.chan:
 			self.cha1.append(a)
-		print self.list
+		self.view.traceSizeLabel.setText(str(len(self.chan)))
+		if len(self.chan) > 2002:
+			self.view.traceWarningLabel.setText("WARNING!!!! \nTrace size > 2002!!!")
+		else:
+			self.view.traceWarningLabel.setText("")
 		return self.cha1
 
 	def movingaverage(self, interval, window_size):
@@ -186,7 +195,7 @@ class scopeWriterController(QObject):
 				for j in self.partTrace[i]:
 					self.partNoiseSub.append(j - self.noise[i])
 				self.data.append( numpy.sum( self.partNoiseSub )*self.allTraceDataStruct.timebase )
-		self.mean_area = numpy.mean( self.data )*math.pow(10,9)
+		self.mean_area = numpy.mean( self.data )*math.pow(10,12)
 		# print self.mean_area
 		epics.caput( self.epics_channel, self.mean_area )
 
@@ -229,7 +238,7 @@ class scopeWriterController(QObject):
 		self.scopeTraceData = self.allTraceDataStruct.traceData
 		self.min = self.scopeCont.getMinOfTraces( self.wvf_name, self.channel_name )
 
-		self.mean_max = numpy.mean( self.min )
+		self.mean_min = numpy.mean( self.min )
 
 		epics.caput( self.epics_channel, self.mean_min )
 		time.sleep(0.1)
@@ -259,12 +268,54 @@ class scopeWriterController(QObject):
 
 		epics.caput( self.epics_channel, self.mean_p2p )
 		time.sleep(0.1)
-	
+
+	@QtCore.pyqtSlot()
+	def setTimebase(self):
+		self.timebase = float(self.view.setTimebaseTextEdit.toPlainText())
+		if self.timebase is not None:
+			self.scopeCont.setTimebase( self.wvf_name, self.timebase )
+
+	@QtCore.pyqtSlot()
+	def clearLayout(self):
+		self.length = len(self.view.channelsLayout)
+		if self.length > 1:
+			self.layout = self.view.channelsLayout.takeAt(self.length - 1)
+			self.chanVBox = self.layout.takeAt(0)
+			self.allVBox = []
+			self.allVBox.append(self.chanVBox)
+			# print len(self.allVBox)
+			if self.layout is not None:
+				if self.layout.count():
+					for vBox in self.allVBox:
+						if vBox.count():
+							for i in range(0, vBox.count()):
+								self.vBoxItem = vBox.takeAt(i) 
+								if self.vBoxItem is not None:
+									print i
+									# vBox.removeItem(self.vBoxItem)
+									self.vBoxItem.widget().hide()
+									# vBox.removeWidget(self.vBoxItem.widget())
+								# if self.vBoxItem is not None:
+									# self.vBoxWidget = self.vBoxItem.widget()
+									# if self.vBoxWidget is not None:
+										# print "aaa"
+										# self.vBoxWidget.deleteLater()
+									# else:
+										# print "ddd"
+										# self.clearLayout()
+					# self.item = self.layout.takeAt(0)
+					# self.widget = self.item.widget()
+					# if self.widget is not None:
+						# self.widget.deleteLater()
+					# else:
+						# self.clearLayout()
+			# self.clearLayout()
+
 	@QtCore.pyqtSlot()
 	def handlefilenameUpdated(self,event):
 		print event
-		self.view.ui_line.setText(event)		
-		
+		self.view.ui_line.setText(event)
+
 	@QtCore.pyqtSlot()
 	def browse(self):
 		self.path = str(QtGui.QFileDialog.getOpenFileName(None, 'Select a folder:', scopeWriterGlobals.scopeSetupLocation, "Scope files (*.lss)"))
@@ -290,12 +341,12 @@ class scopeWriterController(QObject):
 	def handle_loadSettings(self):
 		self.loadView.show()
 		self.loadView.activateWindow()
-		
+
 	@QtCore.pyqtSlot()
 	def handle_saveSettings(self):
 		self.saveView.show()
 		self.saveView.activateWindow()
-		
+
 	@QtCore.pyqtSlot()
 	def handle_fileLoadSelect(self):
 		self.scope.SaveRecall.Setup.PanelFilename = str(self.view.ui_line.text())
@@ -305,7 +356,7 @@ class scopeWriterController(QObject):
 	@QtCore.pyqtSlot()
 	def handle_fileSave(self):
 		#self.name = self.saveView.setFileName()
-		#self.view.ui_line.setText(self.name)	
+		#self.view.ui_line.setText(self.name)
 		self.scope.SaveRecall.Setup.PanelFilename = str(self.view.ui_line.text())
 		self.scope.SaveRecall.Setup.DoSavePanel
 		self.saveView.hide()

@@ -63,8 +63,8 @@ class Controller(QObject):
 			self.machineArea = "VELA_BA1"
 		elif self.view.velaBA2Button.isChecked():
 			self.machineArea = "VELA_BA2"
-		elif self.view.claraINJButton.isChecked():
-			self.machineArea = "CLARA_INJ"
+		elif self.view.claraButton.isChecked():
+			self.machineArea = "CLARA_PH1"
 		elif self.view.c2vButton.isChecked():
 			self.machineArea = "C2V"
 		if self.view.virtualButton.isChecked():
