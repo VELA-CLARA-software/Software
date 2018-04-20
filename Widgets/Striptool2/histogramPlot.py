@@ -1,14 +1,13 @@
 import sys, time, os, datetime, signal
 import pyqtgraph as pg
 from pyqtgraph.Qt import QtGui, QtCore
-# if sys.version_info<(3,0,0):
-# from PyQt4.QtCore import *
-# from PyQt4.QtGui import *
-# else:
-# from PyQt5.QtCore import QtCore.QObject, QtCore.pyqtSignal, QtCore.QTimer, Qt
-# from PyQt5.QtGui import QtGui.QHBoxLayout
-# from PyQt5.QtWidgets import QtGui.QWidget
-from PyQt4 import QtCore, QtGui
+try:
+    from PyQt4.QtCore import *
+    from PyQt4.QtGui import *
+except ImportError:
+    from PyQt5.QtCore import *
+    from PyQt5.QtGui import *
+    from PyQt5.QtWidgets import *
 # import peakutils
 import numpy as np
 # logger = logging.getLogger(__name__)

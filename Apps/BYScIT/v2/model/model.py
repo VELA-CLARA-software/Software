@@ -73,7 +73,7 @@ class Model():
                 #print("Keys: %s" % f.keys())
                 #a_group_key = list(f.keys())[1]
                 # Get the data
-                image = list(f['entry']['data']['data'][0])
+                image = list(f['entry']['data']['data'])
                 f.close()
                 self.imageData = np.array(image)
                 #self.imageData=self.imageData[0,:,:]
@@ -92,3 +92,18 @@ class Model():
                 print('Unrecognised file type!')
         except IOError:
             print "Unable to load image"
+
+    def getHDF5Images(self, fullName,number):
+        self.fullName = fullName
+        # Get image type by read last part of the image name
+        # IF and image is in RGB/RGBA Format
+        imageType = fullName.split('.')[-1]
+        image = []
+        print("Importing HDF5...")
+        f = h5py.File(fullName, 'r')
+        image = list(f['entry']['data']['data'][number])
+        f.close()
+        self.imageData = np.array(image)
+        self.imageData = np.flip(np.transpose(np.array(self.imageData)), 1)
+        self.imageHeight = self.imageData.shape[1]
+        self.imageWidth = self.imageData.shape[0]

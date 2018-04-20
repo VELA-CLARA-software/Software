@@ -71,8 +71,11 @@ class Ui_magnetWidget(object):
         self.mag_Active.setTristate(False)
         self.mag_Active.setObjectName(_fromUtf8("mag_Active"))
         self.name = QtGui.QLabel(magnetWidget)
-        self.name.setGeometry(QtCore.QRect(33, 10, 41, 20))
-        self.name.setAlignment(QtCore.Qt.AlignCenter)
+        self.name.setGeometry(QtCore.QRect(20, 10, 61, 20))
+        font = QtGui.QFont()
+        font.setPointSize(7)
+        self.name.setFont(font)
+        self.name.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.name.setObjectName(_fromUtf8("name"))
 
         self.retranslateUi(magnetWidget)

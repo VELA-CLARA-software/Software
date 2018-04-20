@@ -1,5 +1,9 @@
 import sys, time, os
 sys.path.append("../../../")
+#os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
+#os.environ["EPICS_CA_ADDR_LIST"] = "10.10.0.12"
+#os.environ["EPICS_CA_MAX_ARRAY_BYTES"] = "10000000"
+#os.environ["EPICS_CA_SERVER_PORT"]="6000"
 from PyQt4.QtCore import pyqtSignal, Qt
 from PyQt4.QtGui import QFileDialog, QWidget, QPushButton, QMainWindow, QApplication, QStyle, QAction, qApp, QStatusBar, QTabWidget, QHBoxLayout
 import pyqtgraph as pg

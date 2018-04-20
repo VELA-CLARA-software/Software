@@ -20,11 +20,20 @@ rev_power_spike_count = 'rev_power_spike_count'
 cav_temp = 'cav_temp'
 water_temp = 'water_temp'
 pulse_length = 'pulse_length'
+
 fwd_cav_pwr = 'fwd_cav_pwr'
-fwd_kly_pwr = 'fwd_kly_pwer'
+fwd_kly_pwr = 'fwd_kly_pha'
 rev_kly_pwr = 'rev_kly_pwr'
 rev_cav_pwr = 'rev_cav_pwr'
 probe_pwr = 'probe_pwr'
+fwd_cav_pha = 'fwd_cav_pwr'
+fwd_kly_pha = 'fwd_kly_pha'
+rev_kly_pha = 'rev_kly_pha'
+rev_cav_pha = 'rev_cav_pha'
+probe_pha = 'probe_pha'
+
+
+
 vac_level = 'vac_level'
 DC_level = 'DC_level'
 vac_valve_status = 'vac_valve_status'
@@ -71,9 +80,17 @@ log_pulse_length = 'log_pulse_length'
 llrf_trigger = 'llrf_trigger'
 
 last_mean_power = 'last_mean_power'
+sol_value = 'sol_value'
 
 amp_ff = 'amp_ff'
 amp_sp = 'amp_sp'
+# meh ...
+phase_mask_by_power_trace_1_set = 'phase_mask_by_power_trace_1_set'
+phase_mask_by_power_trace_2_set = 'phase_mask_by_power_trace_2_set'
+
+phase_end_mask_by_power_trace_1_time = 'phase_end_mask_by_power_trace_1_time'
+phase_end_mask_by_power_trace_2_time = 'phase_end_mask_by_power_trace_2_time'
+
 all_value_keys = [rev_power_spike_count,
                   num_outside_mask_traces,
                   breakdown_rate_aim,
@@ -90,13 +107,17 @@ all_value_keys = [rev_power_spike_count,
                   fwd_kly_pwr,
                   rev_kly_pwr,
                   rev_cav_pwr,
+                  probe_pwr,
+                  fwd_kly_pha,
+                  rev_kly_pha,
+                  rev_cav_pha,
+                  probe_pha,
                   pulse_length,
                   rfprot_state,
                   llrf_output,
                   elapsed_time,
                   llrf_ff_amp_locked,
                   llrf_ff_ph_locked,
-                  probe_pwr,
                   pulse_count,
                   event_pulse_count,
                   water_temp,
@@ -117,7 +138,12 @@ all_value_keys = [rev_power_spike_count,
                   llrf_trigger,
                   next_sp_decrease,
                   last_mean_power,
-                  next_power_increase
+                  next_power_increase,
+                  sol_value,
+                  phase_mask_by_power_trace_1_set,
+                  phase_mask_by_power_trace_2_set,
+                  phase_end_mask_by_power_trace_1_time,
+                  phase_end_mask_by_power_trace_2_time
                   ]
 
 class rf_condition_data_base(QObject):
@@ -128,9 +154,6 @@ class rf_condition_data_base(QObject):
 
     # config
     config = config_reader()
-
-
-
     # for logging
     log_param = None
     path = None
@@ -177,7 +200,11 @@ class rf_condition_data_base(QObject):
     values[elapsed_time] = dummy + 15
     values[DC_level] = dummy + 16
     values[rev_power_spike_count] = 0
-    values[next_power_increase] = 'STARTUP'
+    values[next_power_increase] = -1
+    values[phase_mask_by_power_trace_1_set] = False
+    values[phase_mask_by_power_trace_2_set] = False
+    values[phase_end_mask_by_power_trace_1_time] = -1.0
+    values[phase_end_mask_by_power_trace_2_time] = -1.0
 
     amp_pwr_mean_data = {}
 
@@ -234,8 +261,12 @@ class rf_condition_data_base(QObject):
                              rf_condition_data_base.values[breakdown_status]
                              ]:
             rf_condition_data_base.values[breakdown_count] += 1
-            self.logger.message('increasing breakdown count = ' + str(rf_condition_data_base.values[breakdown_count]), True)
+            self.logger.message(self.my_name + ' increasing breakdown count = ' + str(rf_condition_data_base.values[breakdown_count]), True)
             self.add_to_pulse_breakdown_log(rf_condition_data_base.amp_sp_history[-1] )
+        else:
+            self.logger.message(
+                self.my_name + ' NOT increasing breakdown count, already in cooldown, = ' + str(rf_condition_data_base.values[breakdown_count]),
+                True)
 
     def reached_min_pulse_count_for_this_step(self):
         return self.values[event_pulse_count] >= self.values[required_pulses]
@@ -254,8 +285,9 @@ class rf_condition_data_base(QObject):
         if rf_condition_data_base.values[amp_sp] > 100:#MAGIC_NUMBER
             if self.kly_power_changed():
                 #rf_condition_data_base.kly_fwd_power_history.append( rf_condition_data_base.values[fwd_kly_pwr] )
-                rf_condition_data_base.sp_pwr_hist.append( [rf_condition_data_base.values[amp_sp],rf_condition_data_base.values[fwd_kly_pwr]] )
-                self.update_amp_pwr_mean_dict(rf_condition_data_base.values[amp_sp],rf_condition_data_base.values[fwd_kly_pwr])
+                if rf_condition_data_base.values[fwd_kly_pwr] > rf_condition_data_base.config.llrf_config['KLY_PWR_FOR_ACTIVE_PULSE']:
+                    rf_condition_data_base.sp_pwr_hist.append( [rf_condition_data_base.values[amp_sp],rf_condition_data_base.values[fwd_kly_pwr]] )
+                    self.update_amp_pwr_mean_dict(rf_condition_data_base.values[amp_sp],rf_condition_data_base.values[fwd_kly_pwr])
             # cancer
             if rf_condition_data_base.values[amp_sp] \
                     not in rf_condition_data_base.amp_sp_history:
@@ -283,14 +315,6 @@ class rf_condition_data_base(QObject):
             r = True
         rf_condition_data_base.last_fwd_kly_pwr = rf_condition_data_base.values[fwd_kly_pwr]
         return r
-
-    # def amp_changed(self):
-    #     r = False
-    #     if rf_condition_data_base.last_amp != rf_condition_data_base.values[amp_sp]:
-    #         r = True
-    #     rf_condition_data_base.last_amp = rf_condition_data_base.values[amp_sp]
-    #     return r
-
 
     def add_to_pulse_breakdown_log(self,amp):
         if amp > 100:

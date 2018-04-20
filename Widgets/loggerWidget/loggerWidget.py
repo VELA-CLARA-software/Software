@@ -1,6 +1,11 @@
 import sys
-import PyQt4
-from PyQt4 import QtCore, QtGui
+try:
+    from PyQt4.QtCore import *
+    from PyQt4.QtGui import *
+except ImportError:
+    from PyQt5.QtCore import *
+    from PyQt5.QtGui import *
+    from PyQt5.QtWidgets import *
 import logging
 import os
 # import rpyc
@@ -221,21 +226,21 @@ class QPlainTextEditLogger(logging.Handler):
         if hasattr(record, 'networkname'):
             record.name = record.networkname
         logdata = [record.asctime, record.publisher+'('+record.name+')', record.levelname, record.message]
-        font = QtGui.QFont()
+        font = QFont()
         font.setBold(bold)
         for i in range(4):
-            # self.textbox = QtGui.QPlainTextEdit()
+            # self.textbox = QPlainTextEdit()
             # self.textbox.setReadOnly(True)
             # self.textbox.appendHtml(color+str(logdata[i])+'</font>')
             # self.tableWidget.setIndexWidget(self.model.index(newRowNumber, i), self.textbox)
-            standarditem = QtGui.QStandardItem()
+            standarditem = QStandardItem()
             standarditem.setText(str(logdata[i]))
             standarditem.setFont(font)
-            standarditem.setForeground(QtGui.QColor(color))
+            standarditem.setForeground(QColor(color))
             self.model.setItem(newRowNumber,i, standarditem)
-            # self.model.setData(self.model.index(newRowNumber,i), QtCore.Qt.blue, QtCore.Qt.BackgroundRole)
+            # self.model.setData(self.model.index(newRowNumber,i), Qt.blue, Qt.BackgroundRole)
 
-class zmqPublishLogger(QtCore.QObject):
+class zmqPublishLogger(QObject):
     def __init__(self, logger=None, *args, **kwargs):
         super(zmqPublishLogger,self).__init__()
         self.networkLogger = zmqPublishLoggerHandler(*args, **kwargs)
@@ -278,13 +283,13 @@ class zmqPublishLoggerHandler(logging.Handler):
     def emit(self, record, *args, **kwargs):
         self.socket.send_pyobj([self.publisher, record.name, record.levelno, record.message])
 
-class zmqReceiverLogger(QtCore.QObject):
+class zmqReceiverLogger(QObject):
     def __init__(self, *args, **kwargs):
         super(zmqReceiverLogger,self).__init__()
         self.thread = zmqReceiverLoggerThread(*args, **kwargs)
         self.thread.start()
 
-class zmqReceiverLoggerThread(QtCore.QThread):
+class zmqReceiverLoggerThread(QThread):
 
     def __init__(self, port=5556):
         super(zmqReceiverLoggerThread, self).__init__()
@@ -300,34 +305,34 @@ class zmqReceiverLoggerThread(QtCore.QThread):
             publisher, name, level, message = string
             widgetLogger.log(level, message, extra={'networkname': name, 'publisher': publisher})
 
-class loggerWidget(QtGui.QWidget):
+class loggerWidget(QWidget):
     def __init__(self, logger=None, networkLogger=False, parent=None):
         super(loggerWidget,self).__init__(parent)
-        self.tablewidget = QtGui.QTableView()
+        self.tablewidget = QTableView()
 
-        layout = QtGui.QGridLayout()
-        self.model = QtGui.QStandardItemModel(0, 4)
+        layout = QGridLayout()
+        self.model = QStandardItemModel(0, 4)
         self.model.setHorizontalHeaderLabels(['Date', 'Logger', 'Severity', 'VALUE'])
 
         # filter proxy model
-        self.filter_proxy_model = QtGui.QSortFilterProxyModel()
+        self.filter_proxy_model = QSortFilterProxyModel()
         self.filter_proxy_model.setSourceModel(self.model)
         self.filter_proxy_model.setFilterKeyColumn(2) # third column
 
         # # line edit for filtering
-        # layout = QtGui.QVBoxLayout()
-        filterbox = QtGui.QComboBox()
+        # layout = QVBoxLayout()
+        filterbox = QComboBox()
         filterbox.addItems(['All', 'Info','Warning','Error','Critical'])
         filterbox.setMinimumWidth(100)
         filterbox.currentIndexChanged.connect(lambda x: self.filter_proxy_model.setFilterRegExp(self.filterLogs(x)))
         layout.addWidget(filterbox,0,1,1,1)
-        clearButton = QtGui.QPushButton('Clear Log')
+        clearButton = QPushButton('Clear Log')
         clearButton.setFixedSize(74,20)
         clearButton.setFlat(True)
         clearButton.clicked.connect(self.clearLog)
         layout.addWidget(clearButton,0,2,1,1)
         self.tablewidget.setModel(self.filter_proxy_model)
-        saveButton = QtGui.QPushButton('Save Log')
+        saveButton = QPushButton('Save Log')
         saveButton.setFixedSize(74,20)
         saveButton.setFlat(True)
         saveButton.clicked.connect(self.saveLog)
@@ -436,7 +441,7 @@ class loggerWidget(QtGui.QWidget):
                 row[i] = widg.text()
             saveData[r] = row
         # print saveData
-        saveFileName = str(QtGui.QFileDialog.getSaveFileName(self, 'Save Log', filter="TXT files (*.txt);;", selectedFilter="TXT files (*.txt)"))
+        saveFileName = str(QFileDialog.getSaveFileName(self, 'Save Log', filter="TXT files (*.txt);;", selectedFilter="TXT files (*.txt)"))
         filename, file_extension = os.path.splitext(saveFileName)
         if file_extension == '.txt':
         #     print "csv!"

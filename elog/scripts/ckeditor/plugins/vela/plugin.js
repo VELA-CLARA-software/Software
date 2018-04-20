@@ -3,11 +3,19 @@
  * Ben Shepherd, June 2015
  */
 
+// add buttons for machine status
+machineAreas = ['Gun', 'Linac1'];//, 'ST1', 'Arc 1', 'ST2', 'ST3', 'Arc 2', 'ST4', 'RF', 'RF Sliders', 'FEL'];
+maIcons = machineAreas.slice();
+for (var i=0; i < maIcons.length; i++) {
+    maIcons[i] = maIcons[i].replace(' ', '') + 'status';
+}
+maIcons = maIcons.join(',').toLowerCase();
+
 // Register the plugin within the editor.
 CKEDITOR.plugins.add( 'vela', {
 
 	// Register the icons.
-	icons: 'timestamp,callout',
+	icons: 'timestamp,callout,' + maIcons,
 
 	// The plugin initialization logic goes inside this method.
 	init: function( editor ) {
@@ -95,25 +103,22 @@ CKEDITOR.plugins.add( 'vela', {
 			}
 		} );
 
-		// add buttons for machine status
-		//~ machineAreas = ['Gun', 'Injector', 'ST1', 'Arc 1', 'ST2', 'ST3', 'Arc 2', 'ST4', 'RF', 'RF Sliders', 'FEL'];
+		function reqStatus(name, editor) {
+			window.top.elogRequestMachineStatus (name);
+		}
 
-		//~ function reqStatus(name, editor) {
-			//~ window.top.elogRequestMachineStatus (name);
-		//~ }
+		for (i = 0; i < machineAreas.length; i++) {
 
-		//~ for (i = 0; i < machineAreas.length; i++) {
+            name = machineAreas[i];
+            nameNoSpace = name.replace(' ', '');
+            commandName = nameNoSpace + 'Status';
+            editor.addCommand( commandName, {
+                allowedContent: 'table[class]',
+                exec: reqStatus.bind(null, nameNoSpace) // call the request function with specified name
+            } );
 
-			//~ name = machineAreas[i];
-			//~ nameNoSpace = name.replace(' ', '');
-			//~ commandName = nameNoSpace + 'Status';
-			//~ editor.addCommand( commandName, {
-				//~ allowedContent: 'table[class]',
-				//~ exec: reqStatus.bind(null, nameNoSpace) // call the request function with specified name
-			//~ } );
-
-			//~ editor.ui.addButton( commandName, {label: name, command: commandName, toolbar: 'machine-status'});
-		//~ }
+            editor.ui.addButton( commandName, {label: name, command: commandName, toolbar: 'machine-status'});
+		}
 
 	}
 });

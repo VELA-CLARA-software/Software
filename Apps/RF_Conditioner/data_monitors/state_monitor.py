@@ -8,9 +8,6 @@ class state_monitor(monitor.monitor):
 		monitor.monitor.__init__(self,
 		                         update_time=update_time
 			)
-		# self.localcontrol = controller
-		# self.dict = data_dict
-		# self.key = data_dict_key
 		self.update_time = update_time
 		self.timer.timeout.connect(self.check)
 		self.timer.start(update_time)

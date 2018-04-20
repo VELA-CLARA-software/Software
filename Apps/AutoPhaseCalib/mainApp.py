@@ -9,13 +9,13 @@ from epics import caget,caput
 '''This is the place to get contollers'''
 #sys.path.append('\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Software\\VELA_CLARA_PYDs\\bin\\Release')
 
-sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\\model')
-sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\\controller')
-sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\\view')
+#sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\\model')
+#sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\\controller')
+#sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\\view')
 from PyQt4 import QtGui, QtCore
-import model
-import controller
-import view
+import model.model as model
+import controller.controller as controller
+import view.view as view
 
 class App(QtGui.QApplication):
 	def __init__(self, sys_argv):

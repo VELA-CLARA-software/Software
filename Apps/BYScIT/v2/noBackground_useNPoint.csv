@@ -1,0 +1,8 @@
+ANALYSIS DATA
+Expert Settings:
+Mask,,,,R^2 Threshold,Rolling Average,Pecentage Cut of Lowest Pixels
+X,Y,X Radius,Y Radius
+1280,1080,1280,1080,0,0,0
+BVN, , , , , , , , , ,MLE, , , , , , , , , , 
+X,err,Y,err,Sigma X,err, Sigma Y,err,Covariance XY,err,X,err,Y,err,Sigma X,err, Sigma Y,err,Covariance XY,err, ,pix2MM,,Image Name,Background Image Name
+1434.64,0.0681881,1052.44,0.215702,47.7121,0.00132671,153.038,0.00124932,-6486.7,17.5231,1436.24,0.000321557,1049.26,0.000694745,40.4591,0.00145367,123.886,0.00172146,-4133.77,0.00742097,,1,,C:/Users/wln24624/Documents/SOFTWARE/NonGitHubWork/TestBenchControllers/TestBenchTests/imageCollectorTB/DATA/laser_noBkgrnd_002.hdf5,None

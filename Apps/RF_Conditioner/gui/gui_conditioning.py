@@ -287,6 +287,7 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
 		self.widget[dat.next_power_increase] = self.next_power_increase_outputwidget
 		self.widget[dat.next_sp_decrease] = self.next_sp_decrease_outputwidget
 		self.widget[dat.current_ramp_index] = self.current_index_outputwidget
+		self.widget[dat.sol_value] = self.sol_outputwidget
 
 	def plot_amp_sp_pwr(self):
 		#base.data.x_plot, base.data.y_plot, base.data.m, base.data.c, base.data.x_min, base.data.x_max,

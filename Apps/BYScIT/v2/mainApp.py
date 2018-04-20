@@ -5,8 +5,12 @@ from PyQt4 import QtGui, QtCore
 import model.model as model
 import controller.controller as controller
 import view.view as view
+<<<<<<< HEAD
 #import qdarkstyle
 #import qdarkgraystyle
+=======
+
+>>>>>>> refs/remotes/origin/master
 
 class App(QtGui.QApplication):
 	def __init__(self, sys_argv):     
@@ -23,6 +27,10 @@ class App(QtGui.QApplication):
 if __name__ == '__main__':
 
 	app = App(sys.argv)
+<<<<<<< HEAD
 	#app.setStyleSheet(qdarkstyle.load_stylesheet())
 #	app.setStyleSheet(qdarkgraystyle.load_stylesheet())
+=======
+
+>>>>>>> refs/remotes/origin/master
 	sys.exit(app.exec_())
