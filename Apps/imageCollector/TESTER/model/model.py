@@ -30,7 +30,7 @@ class Model():
 
     def useBkgrnd(self, use):
         print(use)
-      #  self.camerasIA.useBackground(use)
+        self.camerasIA.useBackground(use)
 
     def useNPoint(self, use):
         print(use)

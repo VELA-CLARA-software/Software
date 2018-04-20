@@ -30,7 +30,7 @@ class Controller():
         '''Update GUI'''
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.update)
-        self.timer.start(1000)
+        self.timer.start(100)
 
         self.ImageBox = layout.addViewBox(lockAspect=True, colspan=2)
         self.Image = pg.ImageItem(np.random.normal(size=(1280, 1080)))
@@ -52,12 +52,8 @@ class Controller():
         print 'Set camera to ', str(comboBox.currentText())
 
     def openImageDir(self):
-        if comboBox.currentText() == 'VC':
             QtGui.QFileDialog.getOpenFileNames(self.view.centralwidget, 'Images',
-                                              '\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\Work\\2017\\VirtualCathode')
-        else:
-            QtGui.QFileDialog.getOpenFileNames(self.view.centralwidget, 'Images',
-                                          '\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\Work\\2017\\CurrentCamera')
+                                              '\\\\claraserv3\\CameraImages')
 
     def update(self):
         name = self.model.selectedCamera.name

@@ -39,7 +39,7 @@ class Controller():
         self.Image = pg.ImageItem(np.random.normal(size=(1280, 1080)))
         self.Image.scale(2,2)
         self.ImageBox= layout.addPlot(lockAspect=True)
-        self.view.gridLayout.addWidget(monitor, 0, 2, 11, 3)
+        self.view.gridLayout.addWidget(monitor, 0, 2, 17, 3)
         STEPS = np.linspace(0, 1, 4)
         CLRS = ['k', 'r', 'y', 'w']
         a = np.array([pg.colorTuple(pg.Color(c)) for c in CLRS])
@@ -82,16 +82,14 @@ class Controller():
             self.view.acquire_pushButton.setStyleSheet("background-color: green")
             self.view.save_pushButton.setEnabled(True)
             # Set crosshairs
-            x = caget('CLA-VCA-DIA-CAM-01:ANA:X_RBV')
-            y = caget('CLA-VCA-DIA-CAM-01:ANA:Y_RBV')
-            v1 = (caget('CLA-VCA-DIA-CAM-01:ANA:Y_RBV') -
-                  caget('CLA-VCA-DIA-CAM-01:ANA:SigmaY_RBV'))
-            v2 = (caget('CLA-VCA-DIA-CAM-01:ANA:Y_RBV') +
-                  caget('CLA-VCA-DIA-CAM-01:ANA:SigmaY_RBV'))
-            h1 = (caget('CLA-VCA-DIA-CAM-01:ANA:X_RBV') -
-                  caget('CLA-VCA-DIA-CAM-01:ANA:SigmaX_RBV'))
-            h2 = (caget('CLA-VCA-DIA-CAM-01:ANA:X_RBV') +
-                  caget('CLA-VCA-DIA-CAM-01:ANA:SigmaX_RBV'))
+            x = self.model.selectedCameraIA.IA.x
+            y = self.model.selectedCameraIA.IA.y
+            sigX = self.model.selectedCameraIA.IA.sigmaX
+            sigY = self.model.selectedCameraIA.IA.sigmaY
+            v1 = (y - sigY)
+            v2 = (y + sigY)
+            h1 = (x - sigX)
+            h2 = (x + sigX)
             self.vLineMLE.setData(x=[x, x], y=[v1, v2])
             self.hLineMLE.setData(x=[h1, h2], y=[y, y])
 
