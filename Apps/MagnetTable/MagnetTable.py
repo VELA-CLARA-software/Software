@@ -16,7 +16,7 @@ import numpy as np  # handling polynomials
 import re  # parsing lattice files
 import scipy.constants  # speed of light
 import webbrowser  # to get help
-sys.path.insert(0, r'\\fed.cclrc.ac.uk\Org\NLab\ASTeC\Projects\VELA\Software\VELA_CLARA_PYDs\bin\Release')
+sys.path.insert(0, r'\\apclara1\Controllers\bin\Release')
 import VELA_CLARA_Magnet_Control as VC_MagCtrl
 # import CLARA_Magnet_Control as CLARA_MagCtrl
 from pkg_resources import resource_filename
