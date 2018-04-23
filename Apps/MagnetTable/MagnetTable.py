@@ -26,6 +26,7 @@ try:
 except ImportError:
     lw = None
 import logging
+from time import sleep, time
 
 # Note: to be able to import the magnet controller, I used
 # pip install -e "\\fed.cclrc.ac.uk\Org\NLab\ASTeC\Projects\VELA\Software\VELA_CLARA_PYDs\bin\stage"
@@ -399,6 +400,7 @@ class Window(QtGui.QMainWindow):
         self.setWindowTitle('Magnet Table')
         self.setGeometry(300, 300, 300, 450)
         self.update_period = 100  # milliseconds
+        self.wait_for_magnet, self.wait_for_value = None, None  # what magnet and SI are we waiting for?
         self.startMainViewUpdateTimer()
         self.setWindowIcon(QtGui.QIcon(pixmap('magnet')))
         self.show()
@@ -457,7 +459,10 @@ class Window(QtGui.QMainWindow):
             mag_type = str(magnet.ref.magType)
             if mag_type == 'QUAD':
                 magnet.icon.setPixmap(pixmap('Quadrupole_' + ('F' if set_current >= 0 else 'D')).scaled(32, 32))
-            if not magnet.current_spin.hasFocus():
+            # are we waiting for the SI value for this magnet to 'take'?
+            if magnet is self.wait_for_magnet and abs(set_current - self.wait_for_value) <= 0.001:  # it's taken now! # TODO: tolerance from somewhere?
+                self.wait_for_magnet = None
+            if not magnet.current_spin.hasFocus() and magnet is not self.wait_for_magnet:
                 magnet.current_spin.setValue(set_current)
             attributes = mag_attributes[mag_type]
             int_strength = np.copysign(np.polyval(magnet.fieldIntegralCoefficients, abs(set_current)), set_current)
@@ -511,7 +516,9 @@ class Window(QtGui.QMainWindow):
         """Called when a current spin box is changed by the user."""
         magnet = self.sender().parent().magnet
         self.controllers[magnet.section.id].setSI(magnet.name, value)
-
+        # Stop the GUI updating until the SI value 'takes' - otherwise it will update from an old value and be 'sticky'
+        self.wait_for_magnet, self.wait_for_value = magnet, value
+        
         if str(magnet.ref.magType) == 'DIP' and magnet.set_mom_checkbox.isChecked():
             # 'Set momentum' checkbox is ticked - we are using this dipole to check the momentum
             # Calculate and set the momentum for this section
@@ -519,7 +526,7 @@ class Window(QtGui.QMainWindow):
             angle = magnet.k_spin.value()
             momentum = 0.001 * SPEED_OF_LIGHT * int_strength / np.radians(angle)
             magnet.section.momentum_spin.setValue(momentum)
-        # To avoid a lot of iterating between K and current: check the calling function's name
+            # To avoid a lot of iterating between K and current: check the calling function's name
         elif not sys._getframe(1).f_code.co_name == 'calcCurrentFromK':
             self.calcKFromCurrent(magnet)
 
