@@ -3,7 +3,7 @@ import h5py
 import numpy as np
 import sys
 import time
-sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\stage')
+sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release')
 import VELA_CLARA_Camera_IA_Control as ia
 
 
@@ -35,16 +35,16 @@ class Model():
                 self.imageData = np.flip(np.transpose(np.array(self.imageData)), 1)
                 self.imageHeight = self.imageData.shape[1]
                 self.imageWidth = self.imageData.shape[0]
-            elif imageType == 'jpg':
-                print("Importing JPG...")
-                image = Image.open(fullName)
-                self.imageData = np.array(image)
-                if self.imageData.ndim == 3:# RBG/RGBA condition
-                    self.imageData = self.imageData[:, :, 1]
-                print(self.imageData.shape)
-                self.imageData = np.flip(np.transpose(np.array(self.imageData)), 1)
-                self.imageHeight = self.imageData.shape[1]
-                self.imageWidth = self.imageData.shape[0]
+            #elif imageType == 'jpg':
+             #   print("Importing JPG...")
+             #   image = Image.open(fullName)
+             #   self.imageData = np.array(image)
+             #   if self.imageData.ndim == 3:# RBG/RGBA condition
+             #       self.imageData = self.imageData[:, :, 1]
+             #   print(self.imageData.shape)
+             #   self.imageData = np.flip(np.transpose(np.array(self.imageData)), 1)
+             #   self.imageHeight = self.imageData.shape[1]
+             #   self.imageWidth = self.imageData.shape[0]
             elif imageType == 'raw':
                 print("Importing RAW...")
                 f = open(fullName, "r")

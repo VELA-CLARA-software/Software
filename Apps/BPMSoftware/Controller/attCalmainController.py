@@ -4,8 +4,8 @@ import threading
 import sys
 import attCalthreads
 import VELA_CLARA_BPM_Control as vbpmc
-import logging
-logger = logging.getLogger(__name__)
+# import logging
+# logger = logging.getLogger(__name__)
 
 class attCalController(QObject):
 
@@ -14,7 +14,7 @@ class attCalController(QObject):
 		super(attCalController, self).__init__()
 		self.view = view
 		self.model = model
-		self.logger = logger
+		# self.logger = logger
 		self.attCalthreads = attCalthreads
 		self.threading = threading
 		#This is a vector of strings - it is required for the monitorMultipleDataForNShots function in the attCalmainModel.py
@@ -39,7 +39,7 @@ class attCalController(QObject):
 		for i in self.pvList:
 			self.genPVList.append(i)
 		print self.genPVList
-		self.logger.info('Attenuation calibration for '+str(self.genPVList)+' initiated!')
+		# self.logger.info('Attenuation calibration for '+str(self.genPVList)+' initiated!')
 		#Get ranges and numshots from GUI
 		self.numShots = int(self.view.numShots.toPlainText())
 		self.sliderMin = int(self.view.lowerATTBound.toPlainText())
@@ -89,8 +89,8 @@ class attCalController(QObject):
 			self.makestr = self.makestr+("\nNew BPM ATT1 for "+i+" = "+str(self.model.getBPMReadAttenuation(str(i))[0]))
 			self.makestr = self.makestr+("\nNew BPM ATT2 for "+i+" = "+str(self.model.getBPMReadAttenuation(str(i))[1]))
 		self.view.newATTVals.setText(self.makestr)
-		self.logger.info('Attenuation calibration for '+str(self.genPVList)+' complete!')
-		self.logger.info(self.makestr)
+		# self.logger.info('Attenuation calibration for '+str(self.genPVList)+' complete!')
+		# self.logger.info(self.makestr)
 		self.view.calibrateButton.setEnabled(True)
 		self.view.calibrateButton.setText("Calibrate Attenuations")
 
