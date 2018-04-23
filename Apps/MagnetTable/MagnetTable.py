@@ -380,7 +380,7 @@ class Window(QtGui.QMainWindow):
                 more_info.hide()
                 magnet_vbox.addWidget(more_info)
                 title.toggle_frame = more_info
-                title.installEventFilter(self)
+                # title.installEventFilter(self)
                 magnet_list_vbox.addWidget(magnet_frame)
             
         if lw is not None:
@@ -411,7 +411,7 @@ class Window(QtGui.QMainWindow):
         label.setSizePolicy(label_size_policy)
         label.setCursor(QtCore.Qt.PointingHandCursor)
         label.toggle_frame = more_info
-        label.installEventFilter(self)
+        # label.installEventFilter(self)
         parent_widget.addWidget(label)
         return label
         
@@ -426,7 +426,7 @@ class Window(QtGui.QMainWindow):
         if step:
             spinbox.setSingleStep(step)
         parent.addWidget(spinbox)
-        spinbox.installEventFilter(self)
+        # spinbox.installEventFilter(self)
         return spinbox
     
     # these functions update the GUI and (re)start the timer
@@ -472,8 +472,10 @@ class Window(QtGui.QMainWindow):
             magnet.online_info.setText(online_text_format.format(**locals()))
 
     def eventFilter(self, source, event):
-        """Handle events - QLabel doesn't have click or wheel events."""
+        """Enable scroll wheel functionality for the spin boxes, and also make clickable labels that
+        make extra information appear and disappear (collapsing_headers)."""
         evType = event.type()
+        modifiers = QtGui.QApplication.keyboardModifiers()
         if evType == QtCore.QEvent.MouseButtonRelease:
             try:
                 frame = source.toggle_frame
@@ -487,7 +489,6 @@ class Window(QtGui.QMainWindow):
             if evType == QtCore.QEvent.Wheel:
                 # don't allow changes if Shift isn't pressed -
                 # makes it easier to scroll the window up and down
-                modifiers = QtGui.QApplication.keyboardModifiers()
                 if not (modifiers & QtCore.Qt.ShiftModifier):
                     return True  # do nothing
             elif evType == QtCore.QEvent.FocusOut:
@@ -497,6 +498,11 @@ class Window(QtGui.QMainWindow):
                     magnet.active = False
                 except AttributeError: # won't work for momentum spin boxes
                     pass
+        elif evType == QtCore.QEvent.Wheel and (modifiers & QtCore.Qt.ShiftModifier):
+            # don't allow scrolling if Shift _is_ held outwith a spin box - 
+            # otherwise we'll accidentally scroll the window while we're trying to 
+            # modify the spin box and the mouse slips a bit_length
+            return True
         return QtGui.QMainWindow.eventFilter(self, source, event)
     
     def toggleMagType(self, toggled):
@@ -798,7 +804,7 @@ if __name__ == "__main__":
     app.processEvents()
 
     window = Window()
-#    app.installEventFilter(window)
+    app.installEventFilter(window)
     app.aboutToQuit.connect(window.close)
     window.show()
     splash.finish(window)
