@@ -19,6 +19,7 @@ class Controller():
         monitor.setCentralItem(layout)
         self.view = view
         self.model = model
+        self.runFeedback = False
         self.view.acquire_pushButton.clicked.connect(self.model.acquire)
         self.view.cameraName_comboBox.currentIndexChanged.connect(self.changeCamera)
         self.view.save_pushButton.clicked.connect(lambda: self.model.collectAndSave(self.view.numImages_spinBox.value()))
@@ -33,6 +34,7 @@ class Controller():
         self.cameraNames = self.model.camerasDAQ.getCameraNames()
         self.view.cameraName_comboBox.addItems(self.cameraNames)
         self.view.useBackground_checkBox.stateChanged.connect(self.setUseBkgrnd)
+        self.view.checkBox.stateChanged.connect(lambda: self.toggleFeedBack(self.view.checkBox.isChecked()))
 
         self.view.maskX_spinBox.valueChanged.connect(self.changeEllipse)
         self.view.maskY_spinBox.valueChanged.connect(self.changeEllipse)
@@ -91,12 +93,8 @@ class Controller():
 
 
     def openImageDir(self):
-        if self.view.comboBox.currentText() == 'FAKE_VC':
-            QtGui.QFileDialog.getOpenFileNames(self.view.centralwidget, 'Images',
-                                              '\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\Work\\2017\\VirtualCathode')
-        else:
-            QtGui.QFileDialog.getOpenFileNames(self.view.centralwidget, 'Images',
-                                          '\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\Work\\2017\\CurrentCamera')
+        QtGui.QFileDialog.getOpenFileNames(self.view.centralwidget, 'Images',
+                                          '\\\\claraserv3\\CameraImages\\')
 
     def setUseBkgrnd(self):
         if self.view.useBackground_checkBox.isChecked() == True:
@@ -114,6 +112,9 @@ class Controller():
         pointRad = QtCore.QPoint(xRad,yRad)
         self.roi.setSize(pointRad)
 
+    def toggleFeedBack(self,use):
+        print(use)
+        self.runFeedback = use
 
     def update(self):
         #print(self.model.selectedCameraIA.IA.x)
@@ -157,9 +158,9 @@ class Controller():
             self.view.analyse_pushButton.setText('Analyse')
             
         #This should be activated by a button
-        #self.model.feedback(True)
+
+        #self.model.feedback(self.runFeedback)
         #self.view.maskX_spinBox.setValue(self.model.selectedCameraIA.IA.maskX)
         #self.view.maskY_spinBox.setValue(self.model.selectedCameraIA.IA.maskY)
         #self.view.maskXRadius_spinBox.setValue(self.model.selectedCameraIA.IA.maskXRad)
         #self.view.maskYRadius_spinBox.setValue(self.model.selectedCameraIA.IA.maskYRad)
-
