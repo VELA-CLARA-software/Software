@@ -38,6 +38,8 @@ class Controller():
         self.view.maskY_spinBox.valueChanged.connect(self.changeEllipse)
         self.view.maskXRadius_spinBox.valueChanged.connect(self.changeEllipse)
         self.view.maskYRadius_spinBox.valueChanged.connect(self.changeEllipse)
+        
+        self.view.stepSize_spinBox.valueChanged.connect(lambda: self.model.setStepSize(self.view.stepSize_spinBox.value()))
 
         '''Update GUI'''
         self.timer = QtCore.QTimer()
@@ -153,4 +155,11 @@ class Controller():
             self.view.analyse_pushButton.setText('Analysing...')
         else:
             self.view.analyse_pushButton.setText('Analyse')
+            
+        #This should be activated by a button
+        #self.model.feedback(True)
+        #self.view.maskX_spinBox.setValue(self.model.selectedCameraIA.IA.maskX)
+        #self.view.maskY_spinBox.setValue(self.model.selectedCameraIA.IA.maskY)
+        #self.view.maskXRadius_spinBox.setValue(self.model.selectedCameraIA.IA.maskXRad)
+        #self.view.maskYRadius_spinBox.setValue(self.model.selectedCameraIA.IA.maskYRad)
 
