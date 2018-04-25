@@ -198,7 +198,7 @@ class bpm_calibration_gui(QMainWindow, Ui_MainWindow, base):
 	def get_end(self):
 		self.set_end_text = self.upperBoundOutputWidget.toPlainText()
 		if len(self.set_end_text) > 0:
-			self.data.values[dat.set_end] = long(self.set_end_text)
+			self.data.values[dat.set_end] = long(self.set_end_text) + 1
 			self.set_end_set = True
 			return True
 		else:
