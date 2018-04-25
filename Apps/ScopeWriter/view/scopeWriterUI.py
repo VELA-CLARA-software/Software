@@ -16,11 +16,11 @@ except AttributeError:
 
 class scopeWriterUi(object):
     def setupUi(self, mainWindow):
-        mainWindow.resize(1010, 510)
+        mainWindow.resize(1210, 510)
         #self.scopeCont = scopeCont
         mainWindow.setObjectName(_fromUtf8("Scope writer"))
         self.mainWidget = QtGui.QWidget(mainWindow)
-        self.mainWidget.resize(1000,500)
+        self.mainWidget.resize(1200,500)
         self.mainWidget.setObjectName(_fromUtf8("mainWidget"))
         self.mainBox = QtGui.QHBoxLayout(self.mainWidget)
         self.channelsVBox = QtGui.QVBoxLayout()
@@ -174,6 +174,18 @@ class scopeWriterUi(object):
         self.measurementVBox.addWidget( self.measurementNameLabel )
         self.measurementVBox.addWidget( self.measurementComboBox )
         self.measurementVBox.addStretch()
+        self.diagnosticVBox = QtGui.QVBoxLayout()
+        self.diagnosticNameLabel = QtGui.QLabel()
+        self.diagnosticNameLabel.setObjectName(_fromUtf8("measurementNameLabel"))
+        self.diagnosticNameLabel.setText(_translate("mainWindow", "Diagnostic", None))
+        self.diagnosticTypes = ["WCM", "S02-FCUP", "SP1-FCUP"]
+        self.diagnosticComboBox = QtGui.QComboBox()
+        self.diagnosticComboBox.setObjectName(_fromUtf8("diagnosticComboBox"))
+        for i in self.diagnosticTypes:
+            self.diagnosticComboBox.addItem( i )
+        self.diagnosticVBox.addWidget( self.diagnosticNameLabel )
+        self.diagnosticVBox.addWidget( self.diagnosticComboBox )
+        self.diagnosticVBox.addStretch()
         self.filterVBox = QtGui.QVBoxLayout()
         self.filterNameLabel = QtGui.QLabel()
         self.filterNameLabel.setObjectName(_fromUtf8("filterNameLabel"))
@@ -222,6 +234,7 @@ class scopeWriterUi(object):
         self.hBox.addLayout( self.chanVBox )
         self.hBox.addLayout( self.epicsVBox )
         self.hBox.addLayout( self.measurementVBox )
+        self.hBox.addLayout( self.diagnosticVBox )
         self.hBox.addLayout( self.filterVBox )
         self.hBox.addLayout( self.filterIntervalVBox )
         self.hBox.addLayout( self.signalVBox )

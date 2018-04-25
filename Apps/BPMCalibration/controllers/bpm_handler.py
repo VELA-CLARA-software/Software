@@ -8,6 +8,11 @@ class bpm_handler(bpm_handler_base):
     def __init__(self):
         bpm_handler_base.__init__(self)
 
+    def set_bpm_buffer(self,pv,value):
+        bpm_handler_base.bpm_control.setSA1(pv,value)
+        bpm_handler_base.bpm_control.setSA2(pv,value)
+        bpm_handler_base.logger.message('setting SA1 = SA2 = ' + str(value) + ' for ' + pv, True)
+
     def set_attenuation(self,pv,value):
         bpm_handler_base.bpm_control.setSA1(pv,value)
         bpm_handler_base.bpm_control.setSA2(pv,value)
@@ -68,6 +73,7 @@ class bpm_handler(bpm_handler_base):
         bpm_handler_base.data.values[dat.dv2_dly1_min_val] = min(bpm_handler_base.data.values[dat.dv2_dly1].values())
         bpm_handler_base.data.values[dat.new_dly_1] = int(numpy.mean(bpm_handler_base.data.values[dat.dv1_dly1_min_val] + bpm_handler_base.data.values[dat.dv2_dly1_min_val]))
         self.set_dly_1(bpm_handler_base.data.values[dat.bpm_name],bpm_handler_base.data.values[dat.new_dly_1])
+        print bpm_handler_base.data.values[dat.new_dly_1]
         self.read_delay(bpm_handler_base.data.values[dat.bpm_name])
         bpm_handler_base.data.values[dat.new_dly_1_set] = True
 

@@ -6,7 +6,7 @@ try:
     from PyQt4 import QtCore, QtGui, uic
 except ImportError:
     from PyQt5 import QtCore, QtGui, uic
-from Apps.Parasol.rf_sol_tracking import RFSolTracker
+from rf_sol_tracking import RFSolTracker
 import pyqtgraph as pg
 import numpy as np
 import os

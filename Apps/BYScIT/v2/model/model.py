@@ -73,7 +73,7 @@ class Model():
                 #print("Keys: %s" % f.keys())
                 #a_group_key = list(f.keys())[1]
                 # Get the data
-                image = list(f['entry']['data']['data'])
+                image = list(f['Capture000001'])
                 f.close()
                 self.imageData = np.array(image)
                 #self.imageData=self.imageData[0,:,:]
