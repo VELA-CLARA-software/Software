@@ -21,7 +21,7 @@ class Model():
         self.wr = daq.WRITE_STATE
         self.initDAQ = daq.init()
         self.initIA = ia.init()
-        #self.initIA.setVerbose()
+       # self.initIA.setVerbose()
         self.camerasDAQ = self.initDAQ.physical_CLARA_Camera_DAQ_Controller()
         self.camerasIA = self.initIA.physical_CLARA_Camera_IA_Controller()
         self.selectedCameraDAQ = self.camerasDAQ.getSelectedDAQRef()
@@ -67,10 +67,11 @@ class Model():
         elif self.selectedCameraDAQ.DAQ.captureState == self.cap.CAPTURING:
             self.camerasDAQ.killCollectAndSave()
            # self.camerasDAQ.killCollectAndSaveJPG()
-    def feedback(self,use):
-        if use is True:
-            x = self.selectedCameraIA.IA.x
-            y = self.selectedCameraIA.IA.y
-            sX = self.selectedCameraIA.IA.sigmaX
-            sY = self.selectedCameraIA.IA.sigmaY
-            self.camerasIA.setMask(int(x),int(y),int(5*sX),int(5*sY))
+           
+  #  def feedback(self,use):
+  #      if use is True:
+  #          x = self.selectedCameraIA.IA.x
+  #          y = self.selectedCameraIA.IA.y
+  #          sX = self.selectedCameraIA.IA.sigmaX
+  #          sY = self.selectedCameraIA.IA.sigmaY
+  #          self.camerasIA.setMask(int(x),int(y),int(5*sX),int(5*sY))
