@@ -84,6 +84,8 @@ class main_controller(controller_base):
                 controller_base.data_monitor.bpm_monitor.update_bpm_attenuations()
                 if controller_base.data_monitor.bpm_monitor.check_sa_equals_ra():
                     # controller_base.data_monitor.bpm_monitor.update_bpm_raw_data()
+                    time.sleep(1)
+                    QApplication.processEvents()
                     controller_base.data_monitor.bpm_monitor.update_bpm_voltages()
                     controller_base.data_monitor.scope_monitor.update_bunch_charge()
                     controller_base.bpm_handler.update_bpm_att_voltages()
@@ -91,12 +93,16 @@ class main_controller(controller_base):
     def set_delays_and_record(self):
         if controller_base.data.values[dat.ready_to_go]:
             for i in range(controller_base.data.values[dat.set_start], controller_base.data.values[dat.set_end]):
+                time.sleep(1)
+                QApplication.processEvents()
                 controller_base.data_monitor.bpm_monitor.update_bpm_voltages()
                 controller_base.bpm_handler.scan_dly1(i)
                 controller_base.data_monitor.scope_monitor.update_bunch_charge()
             controller_base.bpm_handler.find_min_dly_1()
             if controller_base.data.values[dat.new_dly_1_set]:
                 for i in range(controller_base.data.values[dat.new_dly_1] - 20, controller_base.data.values[dat.new_dly_1] + 20):
+                    time.sleep(1)
+                    QApplication.processEvents()
                     controller_base.data_monitor.bpm_monitor.update_bpm_voltages()
                     controller_base.bpm_handler.scan_dly2(i)
                     controller_base.data_monitor.scope_monitor.update_bunch_charge()
