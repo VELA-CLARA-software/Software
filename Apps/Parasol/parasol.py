@@ -53,6 +53,7 @@ def noFeedback(method):
 
 class ParasolApp(QtGui.QMainWindow, Ui_MainWindow):
     def __init__(self):
+        self.machine_mode = 'Offline'
         #TODO: get initial parameters from INI file, and save them as we go
         self.gun = RFSolTracker('Gun-10', quiet=True)
         QtGui.QMainWindow.__init__(self)
