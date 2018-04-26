@@ -24,6 +24,7 @@ class GUI_FileSave(QtGui.QMainWindow, Ui_FileSave):
         self.canWindowClose = False
 
     def setFileName(self):
+        self.now = datetime.datetime.now()
         self.filename = globals.dburtLocation2 + \
                         self.controller_type + "_" + \
                         str(self.now.year)  + '-' + \
