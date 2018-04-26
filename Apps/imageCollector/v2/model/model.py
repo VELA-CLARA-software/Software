@@ -1,5 +1,6 @@
-import sys
+import sys,os
 sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\stage')
+os.environ['PATH']=os.environ['PATH']+';\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\stage\\root_v5.34.34\\bin\\'
 #import VELA_CLARA_Camera_DAQ_Control as daq
 import os
 from epics import caget, caput
@@ -67,11 +68,16 @@ class Model():
         elif self.selectedCameraDAQ.DAQ.captureState == self.cap.CAPTURING:
             self.camerasDAQ.killCollectAndSave()
            # self.camerasDAQ.killCollectAndSaveJPG()
-           
-  #  def feedback(self,use):
-  #      if use is True:
-  #          x = self.selectedCameraIA.IA.x
-  #          y = self.selectedCameraIA.IA.y
-  #          sX = self.selectedCameraIA.IA.sigmaX
-  #          sY = self.selectedCameraIA.IA.sigmaY
-  #          self.camerasIA.setMask(int(x),int(y),int(5*sX),int(5*sY))
+
+    def feedback(self,use):
+        if use is True:
+            height = 2160#self.selectedCameraIA.IA.imageHeight
+            width = 2560#self.selectedCameraIA.IA.imageWidth
+            x = self.selectedCameraIA.IA.xPix
+            y = self.selectedCameraIA.IA.yPix
+            sX = self.selectedCameraIA.IA.xSigmaPix
+            sY = self.selectedCameraIA.IA.ySigmaPix
+            if x-5*sX > 0 and x+5*sX < width and y-5*sY > 0 and y+5*sY < height:
+                #print(x-sX)
+                #print(y-sY)
+                self.camerasIA.setMask(int(x),int(y),int(5*sX),int(5*sY))
