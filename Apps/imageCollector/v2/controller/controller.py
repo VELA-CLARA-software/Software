@@ -8,6 +8,8 @@ import pyqtgraph as pg
 from epics import caget
 #from epics import caput
 import numpy as np
+from decimal import *
+
 
 
 class Controller():
@@ -20,6 +22,7 @@ class Controller():
         self.view = view
         self.model = model
         self.runFeedback = False
+        self.counter=0
         self.view.acquire_pushButton.clicked.connect(self.model.acquire)
         self.view.cameraName_comboBox.currentIndexChanged.connect(self.changeCamera)
         self.view.save_pushButton.clicked.connect(lambda: self.model.collectAndSave(self.view.numImages_spinBox.value()))
@@ -124,10 +127,10 @@ class Controller():
             self.view.acquire_pushButton.setStyleSheet("background-color: green")
             self.view.save_pushButton.setEnabled(True)
             # Set crosshairs
-            x = self.model.selectedCameraIA.IA.x
-            y = self.model.selectedCameraIA.IA.y
-            sigX = self.model.selectedCameraIA.IA.sigmaX
-            sigY = self.model.selectedCameraIA.IA.sigmaY
+            x = self.model.selectedCameraIA.IA.xPix
+            y = self.model.selectedCameraIA.IA.yPix
+            sigX = self.model.selectedCameraIA.IA.xSigmaPix
+            sigY = self.model.selectedCameraIA.IA.ySigmaPix
             v1 = (y - sigY)
             v2 = (y + sigY)
             h1 = (x - sigX)
@@ -135,6 +138,14 @@ class Controller():
             self.vLineMLE.setData(x=[x, x], y=[v1, v2])
             self.hLineMLE.setData(x=[h1, h2], y=[y, y])
 
+            #labels
+            self.view.apI_label.setText(str(round(self.model.selectedCameraIA.IA.averagePixelIntensity,3)))
+            self.view.xMM_label.setText(str(round(self.model.selectedCameraIA.IA.x,3)))
+            self.view.yMM_label.setText(str(round(self.model.selectedCameraIA.IA.y,3)))
+            self.view.sxMM_label.setText(str(round(self.model.selectedCameraIA.IA.sigmaX,3)))
+            self.view.syMM_label.setText(str(round(self.model.selectedCameraIA.IA.sigmaY,3)))
+            self.view.covXY_label.setText(str(round(self.model.selectedCameraIA.IA.covXY,3)))
+            
             data = caget(self.model.selectedCameraDAQ.pvRoot + 'CAM2:ArrayData')
             npData = np.array(data).reshape((1080, 1280))
             self.Image.setImage(np.flip(np.transpose(npData), 1))
@@ -158,9 +169,12 @@ class Controller():
             self.view.analyse_pushButton.setText('Analyse')
             
         #This should be activated by a button
-
-        #self.model.feedback(self.runFeedback)
-        #self.view.maskX_spinBox.setValue(self.model.selectedCameraIA.IA.maskX)
-        #self.view.maskY_spinBox.setValue(self.model.selectedCameraIA.IA.maskY)
-        #self.view.maskXRadius_spinBox.setValue(self.model.selectedCameraIA.IA.maskXRad)
-        #self.view.maskYRadius_spinBox.setValue(self.model.selectedCameraIA.IA.maskYRad)
+        self.counter += 1
+        if self.counter == 10:
+            self.counter = 0
+            self.model.feedback(self.runFeedback)
+            if self.runFeedback is True:
+                self.view.maskX_spinBox.setValue(self.model.selectedCameraIA.IA.maskX)
+                self.view.maskY_spinBox.setValue(self.model.selectedCameraIA.IA.maskY)
+                self.view.maskXRadius_spinBox.setValue(self.model.selectedCameraIA.IA.maskXRad)
+                self.view.maskYRadius_spinBox.setValue(self.model.selectedCameraIA.IA.maskYRad)
