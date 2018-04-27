@@ -4,7 +4,7 @@
  */
 
 // add buttons for machine status
-machineAreas = ['Gun', 'Linac1', 'Straight 2', 'C2V'];//, 'ST1', 'Arc 1', 'ST2', 'ST3', 'Arc 2', 'ST4', 'RF', 'RF Sliders', 'FEL'];
+machineAreas = ['Gun', 'Linac1', 'Straight 2', 'C2V', 'VELA Straight 2'];//, 'ST1', 'Arc 1', 'ST2', 'ST3', 'Arc 2', 'ST4', 'RF', 'RF Sliders', 'FEL'];
 maIcons = machineAreas.slice();
 for (var i=0; i < maIcons.length; i++) {
     maIcons[i] = maIcons[i].replace(' ', '') + 'status';
@@ -110,7 +110,7 @@ CKEDITOR.plugins.add( 'vela', {
 		for (i = 0; i < machineAreas.length; i++) {
 
             name = machineAreas[i];
-            nameNoSpace = name.replace(' ', '');
+            nameNoSpace = name.replace(/ /g, '');
             commandName = nameNoSpace + 'Status';
             editor.addCommand( commandName, {
                 allowedContent: 'table[class]',
