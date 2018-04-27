@@ -1,5 +1,7 @@
 ## How to add more Machine Status tables
 
+Note: All these changes should be made on the Github repo and then copied to the right place on apsv2 - either in the `elog2` folder or `bjs54/machine-status`.
+
 1. In the [machine-status](elog/machine-status) folder, create a new HTML file, using one of the existing files as a template. This will have the naming format `status.NN.MachineArea.html`, where NN is a number to help the server put the areas in order in the menu. (It doesn't affect the button order in the eLog edit page.)
 2. In this file, set the table `class` in the top line. This will be used later for the table style, so remember it.
 3. Write your table. It may be useful at this point to put some typical values in (instead of EPICS PVs) so you get a sensible preview of what it will look like. Make use of the `colspan` attribute of the `td` table cells to ensure wide columns are spanned over a number of smaller ones. Set the total `colspan` to be the same for each row (including the header row).
