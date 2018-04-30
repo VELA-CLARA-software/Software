@@ -15,11 +15,10 @@ class GUI_FileSave(QtGui.QMainWindow, Ui_FileSave):
         self.setupUi(self)
         self.setWindowIcon(QtGui.QIcon(globals.appIcon))
         self.appPixMap = QtGui.QPixmap(globals.appIcon)
-        self.addComboKeywords()
         self.commentsSection.appendPlainText("Some Interesting Comments...")
         self.now = datetime.datetime.now()
         #type(self.now.month)
-        self.controller_type = "";
+        self.controller_type = ""
         self.cancelButton_2.clicked.connect(self.handle_fileSaveCancel)
         self.canWindowClose = False
 
@@ -54,15 +53,12 @@ class GUI_FileSave(QtGui.QMainWindow, Ui_FileSave):
     def handle_fileSaveCancel(self):
         self.hide()
     # when we decide keywords we'll add more here...
-    def addComboKeywords(self):
-        self.list1 = [
-            self.tr('VELA  INJ'),
-            self.tr('CLARA INJ'),
-            self.tr('VELA  BA1'),
-            self.tr('VELA  BA2'),
+    def addComboKeywords(self,controller_type):
+        list1 = [
+            self.tr(controller_type),
             self.tr('AREA   51'),
             self.tr('Cheyenne ')]
-        self.areaCombo.addItems(self.list1)
+        self.areaCombo.addItems(list1)
 
 
 

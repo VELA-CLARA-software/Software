@@ -5,7 +5,7 @@ block_cipher = None
 
 a = Analysis(['magnetApp.py'],
              pathex=['D:\\VELA\\GIT Projects\\Software\\Apps\\MagnetApp'],
-             binaries=[('H:\\Controllers\\bin\\stage', 'VELA_CLARA_Magnet_Control.pyd')],
+             binaries=[('D:\\VELA\\GIT Projects\\Software\\Apps\\MagnetApp', 'VELA_CLARA_Magnet_Control.pyd')],
              datas=[],
              hiddenimports=[],
              hookspath=[],

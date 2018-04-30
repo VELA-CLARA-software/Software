@@ -197,19 +197,24 @@ class magnetAppController(object):
             activeMags = self.mainView.getActiveNames()
             solmags = []
             mags = []
-            for mag in activeMags:
-                if self.localMagnetController.isASol(mag):
-                    solmags.append(mag)
-                else:
-                    mags.append(mag)
+            if self.machineArea == mag.MACHINE_AREA.VELA_INJ:
+                for magnet in activeMags:
+                    if self.localMagnetController.isASol(magnet):
+                        solmags.append(magnet)
+                    else:
+                        mags.append(magnet)
+            else:
+                mags = activeMags
             if len(solmags) > 0:
                 self.localMagnetController.degauss(solmags,tozero)
-            self.localMagnetController.degauss(mags,tozero)
+            if len(mags) > 0:
+                self.localMagnetController.degauss(mags,tozero)
 
 
     def handle_saveSettings(self):
         # dburtSaveView filename is set by current time and date
         self.dburtSaveView.setFileName()
+        self.dburtSaveView.addComboKeywords(self.Area_ENUM_to_Text[self.machineArea])
         self.dburtSaveView.show()
         self.dburtSaveView.activateWindow()
 
