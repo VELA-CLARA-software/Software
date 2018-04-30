@@ -18,7 +18,7 @@ class magnetAppController(object):
         # initilaize the VELA_CLARA_MagnetControl,
         # from this object we can get all flavours of magnet controller
         self.magInit = mag.init()
-        self.magInit.setVerbose()
+        # self.magInit.setVerbose()
         # startView and connections
         # the startView is where you select the machine mode and area
         self.startView = GUI_magnetAppStartup()

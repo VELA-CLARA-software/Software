@@ -282,11 +282,13 @@ class scopeWriterController(QObject):
 	def getDiagnosticCalibration( self, diagnostic_type ):
 		self.diagnostic_type = diagnostic_type
 		if self.diagnostic_type == "WCM":
-			return 250
+			return 1# 250
 		elif self.diagnostic_type == "S02-FCUP":
-			return 84.5
+			return 1# 84.5
 		elif self.diagnostic_type == "SP1-FCUP":
-			return 104.4
+			return 1# 104.4
+		else:
+			return 1
 
 	@QtCore.pyqtSlot()
 	def setTimebase(self):
