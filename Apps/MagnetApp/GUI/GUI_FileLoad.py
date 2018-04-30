@@ -52,6 +52,9 @@ class GUI_FileLoad(QDialog, Ui_FileLoad):
 
         self.cancelButton.clicked.connect(self.handle_fileLoadCancel)
 
+        # The select button is handled in the magnetAppController.handle_fileLoadSelect()
+        #self.selectButton.clicked.connect(self.handle_fileLoadSelect)
+
 
         #self.on_treeView_clicked(self.dirModel.index(self.dburtpath))
         self.viewButton.clicked.connect(self.handle_fileLoadView)
@@ -64,6 +67,8 @@ class GUI_FileLoad(QDialog, Ui_FileLoad):
 #        self.selectedDirPathselectedDirPath
         #self.dirModel.dataChanged[QModelIndex,QModelIndex].connect(self.handle_fileDirectoryChanged2)
 
+    def handle_fileLoadSelect(self):
+        print 'handle_fileLoadSelect'
 
     def handle_fileDirectoryChanged(self):
         print 'watcher handle_fileDirectoryChanged'
@@ -94,7 +99,7 @@ class GUI_FileLoad(QDialog, Ui_FileLoad):
     def on_listView_clicked(self, index):
         indexItem = self.filesModel.index(index.row(), 0, index.parent())
         self.selectedFile = str(self.filesModel.fileName(indexItem))
-        self.selectedFilePath = self.selectedDirPath + '/' + self.selectedFile
+        self.selectedFilePath = self.selectedDirPath + self.selectedFile
         print 'on_listView_clicked = ' + self.selectedFilePath
 
     def handle_magRadio(self, r):
@@ -104,7 +109,7 @@ class GUI_FileLoad(QDialog, Ui_FileLoad):
     # This window only dies when the entire app closes
     # top do this we call hide()
     def closeEvent(self, evnt):
-        # print 'GUI_FileLoad  close event called'
+        print 'GUI_FileLoad  close event called'
         if self.canWindowClose:
             super(GUI_FileLoad, self).closeEvent(evnt)
         else:

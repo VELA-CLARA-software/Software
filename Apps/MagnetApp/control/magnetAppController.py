@@ -10,6 +10,7 @@ from GUI.GUI_magnetAppStartup import GUI_magnetAppStartup
 from GUI.GUI_magnetAppMainView import GUI_magnetAppMainView
 from GUI.GUI_FileLoad import GUI_FileLoad
 from GUI.GUI_FileSave import GUI_FileSave
+import sys
 
 # this class handles everything
 class magnetAppController(object):
@@ -17,7 +18,7 @@ class magnetAppController(object):
         # initilaize the VELA_CLARA_MagnetControl,
         # from this object we can get all flavours of magnet controller
         self.magInit = mag.init()
-        #self.magInit.setVerbose()
+        self.magInit.setVerbose()
         # startView and connections
         # the startView is where you select the machine mode and area
         self.startView = GUI_magnetAppStartup()
@@ -62,6 +63,8 @@ class magnetAppController(object):
             mag.MACHINE_AREA.CLARA_PH1:'CLARA_PH1'
             # mag.MACHINE_AREA.CLARA_PHASE_1:'CLARA PHASE 1 Magnets',
             }
+        for i in sys.path:
+            print i
 #          __                 __             .__
 #  _______/  |______ ________/  |_     ___  _|__| ______  _  __
 # /  ___/\   __\__  \\_  __ \   __\    \  \/ /  |/ __ \ \/ \/ /
@@ -151,14 +154,24 @@ class magnetAppController(object):
     # ones that require a magnet controller are handled here
     def handle_selectedOn(self):
         if self.activeEPICS:
-            self.activeMags = mag.std_vector_string()
-            self.activeMags.extend(self.mainView.getActiveNames())
+            self.activeMags = self.mainView.getActiveNames()
+            print type(self.activeMags )
+            print type(self.activeMags )
+            print type(self.activeMags[0] )
+            print type(self.activeMags[0] )
             self.localMagnetController.switchONpsu(self.activeMags)
 
     def handle_selectedOff(self):
         if self.activeEPICS:
-            self.activeMags = mag.std_vector_string()
-            self.activeMags.extend(self.mainView.getActiveNames())
+            self.activeMags = self.mainView.getActiveNames()
+            print type(self.activeMags )
+            print type(self.activeMags )
+            print type(self.activeMags[0] )
+            print type(self.activeMags[0] )
+            print self.activeMags[0]
+            print self.activeMags[0]
+            for i in self.activeMags:
+                print i
             self.localMagnetController.switchOFFpsu(self.activeMags)
 
     def handle_allOff(self):
@@ -184,19 +197,24 @@ class magnetAppController(object):
             activeMags = self.mainView.getActiveNames()
             solmags = []
             mags = []
-            for mag in activeMags:
-                if self.localMagnetController.isASol(mag):
-                    solmags.append(mag)
-                else:
-                    mags.append(mag)
+            if self.machineArea == mag.MACHINE_AREA.VELA_INJ:
+                for magnet in activeMags:
+                    if self.localMagnetController.isASol(magnet):
+                        solmags.append(magnet)
+                    else:
+                        mags.append(magnet)
+            else:
+                mags = activeMags
             if len(solmags) > 0:
                 self.localMagnetController.degauss(solmags,tozero)
-            self.localMagnetController.degauss(mags,tozero)
+            if len(mags) > 0:
+                self.localMagnetController.degauss(mags,tozero)
 
 
     def handle_saveSettings(self):
         # dburtSaveView filename is set by current time and date
         self.dburtSaveView.setFileName()
+        self.dburtSaveView.addComboKeywords(self.Area_ENUM_to_Text[self.machineArea])
         self.dburtSaveView.show()
         self.dburtSaveView.activateWindow()
 
@@ -204,9 +222,9 @@ class magnetAppController(object):
         self.dburtLoadView = GUI_FileLoad("Load DBURT", globals.dburtLocation2)
         self.dburtLoadView.setWindowIcon(QtGui.QIcon(globals.appIcon))
         self.dburtLoadView.selectButton.clicked.connect(self.handle_fileLoadSelect)
-
         self.dburtLoadView.show()
         self.dburtLoadView.activateWindow()
+
     # set mainview text depending on mode and area chosen in startview
     def setMainViewHeaderText(self):
         self.Mode_Text = {
@@ -278,12 +296,16 @@ class magnetAppController(object):
 
     def handle_fileLoadSelect(self):
         if self.haveDBurtAndNotInOfflineMode():
+            print "self.haveDBurtAndNotInOfflineMode() is TRUE"
             if self.dburtLoadView.dburtType == self.dburtLoadView.allMagnets:
+                print("all")
                 self.localMagnetController.applyDBURT(self.dburtLoadView.selectedFile)
             elif self.dburtLoadView.dburtType == self.dburtLoadView.quadMagnets:
                 self.localMagnetController.applyDBURTQuadOnly(self.dburtLoadView.selectedFile)
             elif self.dburtLoadView.dburtType == self.dburtLoadView.corrMagnets:
                 self.localMagnetController.applyDBURTCorOnly(self.dburtLoadView.selectedFile)
+        else:
+            print "self.haveDBurtAndNotInOfflineMode() is FALSE"
         self.dburtLoadView.done(1)
 
     def haveDBurtAndNotInOfflineMode(self):

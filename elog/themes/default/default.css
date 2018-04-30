@@ -823,10 +823,10 @@ table.linac1 {background: #dce6cf;}
 table.linac1 th {background: #b8e673;}
 table.s02 {background: #cfe6cf;}
 table.s02 th {background: #5cb85c;}
-table.arc1 {background: #cfd4e6;}
-table.arc1 th {background: #5c73b8;}
-table.st2 {background: #d6cfe6;}
-table.st2 th {background: #5c458a;}
+table.c2v {background: #cfd4e6;}
+table.c2v th {background: #5c73b8;}
+table.vs2 {background: #d6cfe6;}
+table.vs2 th {background: #5c458a;}
 table.st3 {background: #e6cfcf;}
 table.st3 th {background: #e67373;}
 table.arc2 {background: #e6d8cf;}

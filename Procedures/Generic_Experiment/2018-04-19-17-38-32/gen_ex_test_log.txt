@@ -1,0 +1,12 @@
+2018-04-19 17:38:32.206000 Created log_file = D:\VELA\GIT Projects\Software\Procedures\Generic_Experiment\2018-04-19-17-38-32\gen_ex_test_log.txt
+2018-04-19 17:38:32.208000 Finding MachineMode
+2018-04-19 17:38:32.211000 Machine Mode = physical
+2018-04-19 17:38:32.212000 Finding Controllers
+2018-04-19 17:38:32.214000 Not using a gen_mon controller
+2018-04-19 17:38:32.215000 Not using a camera controller
+2018-04-19 17:38:32.217000 Not using a laser controller
+2018-04-19 17:38:32.218000 Not using a bpm controller
+2018-04-19 17:38:32.220000 Found HWC: magnets physical clara_ph1
+2018-04-19 17:38:32.221000 Found HWC: screen physical clara_ph1
+2018-04-19 17:38:32.222000 Found HWC: llrf physical rf_gun
+2018-04-19 17:38:32.224000 Error in HWC config: llrf physical None

@@ -1,0 +1,4 @@
+# run this from the commnand line, 
+# should compile in all libraries that have 
+# a path defined in the python source code
+pyinstaller -F -n  "app_name" launcher.py --add-binary "H:\Controllers\bin\stage\VELA_CLARA_Magnet_Control.pyd"

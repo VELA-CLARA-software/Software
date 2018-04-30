@@ -139,7 +139,7 @@ class Ui_MainWindow(object):
         self.acquire_pushButton.setText(_translate("MainWindow", "Acquire", None))
         self.save_pushButton.setText(_translate("MainWindow", "Collect and Save", None))
         self.label_2.setText(_translate("MainWindow", "Number of Images:", None))
-        self.liveStream_pushButton.setText(_translate("MainWindow", "Live Steam", None))
+        self.liveStream_pushButton.setText(_translate("MainWindow", "Live Stream", None))
         self.label.setText(_translate("MainWindow", "Selected Camera:", None))
         self.getImages_pushButton.setText(_translate("MainWindow", "Open Image Directory", None))
         self.label_4.setText(_translate("MainWindow", "Max. Level:", None))
