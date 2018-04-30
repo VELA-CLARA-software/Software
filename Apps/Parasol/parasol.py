@@ -6,7 +6,7 @@ try:
     from PyQt4 import QtCore, QtGui, uic
 except ImportError:
     from PyQt5 import QtCore, QtGui, uic
-from Apps.Parasol.rf_sol_tracking import RFSolTracker
+from rf_sol_tracking import RFSolTracker
 import pyqtgraph as pg
 import numpy as np
 import os
@@ -53,6 +53,7 @@ def noFeedback(method):
 
 class ParasolApp(QtGui.QMainWindow, Ui_MainWindow):
     def __init__(self):
+        self.machine_mode = 'Offline'
         #TODO: get initial parameters from INI file, and save them as we go
         self.gun = RFSolTracker('Gun-10', quiet=True)
         QtGui.QMainWindow.__init__(self)

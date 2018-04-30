@@ -12,8 +12,8 @@ import VELA_CLARA_Scope_Control as vcsc
 import attCalmainModel
 import attCalmainController
 import attCalmainView
-import loggerWidget as lw
-import logging
+# import loggerWidget as lw
+# import logging
 
 class attCalApp(QtGui.QApplication):
     def __init__(self, sys_argv):
@@ -21,7 +21,7 @@ class attCalApp(QtGui.QApplication):
         super(attCalApp, self).__init__(sys_argv)
         self.bpm = vbpmc.init()
         self.scope = vcsc.init()
-        self.logger = logging.getLogger(__name__)
+        # self.logger = logging.getLogger(__name__)
         if sys_argv[2] == "VELA_INJ":
             self.contType = "VELA_INJ"
             if sys_argv[1] == "Virtual":
@@ -55,17 +55,17 @@ class attCalApp(QtGui.QApplication):
             elif sys_argv[1] == "Physical":
                 self.bpmCont = self.bpm.physical_VELA_BA2_BPM_Controller()
                 self.scopeCont = self.scope.physical_VELA_BA2_Scope_Controller()
-        elif sys_argv[2] == "CLARA_INJ":
-            self.contType = "CLARA_INJ"
+        elif sys_argv[2] == "CLARA_PH1":
+            self.contType = "CLARA_PH1"
             if sys_argv[1] == "Virtual":
-                self.bpmCont = self.bpm.virtual_CLARA_INJ_BPM_Controller()
-                self.scopeCont = self.scope.virtual_CLARA_INJ_Scope_Controller()
+                self.bpmCont = self.bpm.virtual_CLARA_PH1_BPM_Controller()
+                self.scopeCont = self.scope.virtual_VELA_INJ_Scope_Controller()
             elif sys_argv[1] == "Offline":
-                self.bpmCont = self.bpm.offline_CLARA_INJ_BPM_Controller()
-                self.scopeCont = self.scope.offline_CLARA_INJ_Scope_Controller()
+                self.bpmCont = self.bpm.offline_CLARA_PH1_BPM_Controller()
+                self.scopeCont = self.scope.offline_VELA_INJ_Scope_Controller()
             elif sys_argv[1] == "Physical":
-                self.bpmCont = self.bpm.physical_CLARA_INJ_BPM_Controller()
-                self.scopeCont = self.scope.physical_CLARA_INJ_Scope_Controller()
+                self.bpmCont = self.bpm.physical_CLARA_PH1_BPM_Controller()
+                self.scopeCont = self.scope.physical_VELA_INJ_Scope_Controller()
         elif sys_argv[2] == "CLARA_2_VELA":
             self.contType = "CLARA_2_VELA"
             if sys_argv[1] == "Virtual":
@@ -82,8 +82,8 @@ class attCalApp(QtGui.QApplication):
         self.view.setupUi(self.MainWindow, self.bpmCont, sys_argv[1], sys_argv[2])
         self.model = attCalmainModel.attCalModel(self.bpmCont, self.scopeCont)
         self.controller = attCalmainController.attCalController(self.view, self.model, self.bpmCont, self.scopeCont)
-        self.logwidget1 = lw.loggerWidget([self.logger, attCalmainController.logger])
-        self.MainWindow.addTab(self.logwidget1,"Log")
+        # self.logwidget1 = lw.loggerWidget([self.logger, attCalmainController.logger])
+        # self.MainWindow.addTab(self.logwidget1,"Log")
         self.MainWindow.show()
 
 if __name__ == '__main__':

@@ -14,7 +14,7 @@ from collections import namedtuple
 from fractions import Fraction
 from functools import wraps  # for class method decorators
 
-from Apps.Parasol.calcMomentum import calcmomentum # Fortran code to do the momentum calculation
+from calcMomentum import calcmomentum # Fortran code to do the momentum calculation
 import numpy as np
 import scipy.constants
 import scipy.linalg

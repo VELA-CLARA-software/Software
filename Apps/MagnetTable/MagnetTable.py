@@ -16,7 +16,7 @@ import numpy as np  # handling polynomials
 import re  # parsing lattice files
 import scipy.constants  # speed of light
 import webbrowser  # to get help
-sys.path.insert(0, r'\\fed.cclrc.ac.uk\Org\NLab\ASTeC\Projects\VELA\Software\VELA_CLARA_PYDs\bin\Release')
+sys.path.insert(0, r'\\apclara1\ControlRoomApps\Controllers\bin\Release')
 import VELA_CLARA_Magnet_Control as VC_MagCtrl
 # import CLARA_Magnet_Control as CLARA_MagCtrl
 from pkg_resources import resource_filename
@@ -26,6 +26,7 @@ try:
 except ImportError:
     lw = None
 import logging
+from time import sleep, time
 
 # Note: to be able to import the magnet controller, I used
 # pip install -e "\\fed.cclrc.ac.uk\Org\NLab\ASTeC\Projects\VELA\Software\VELA_CLARA_PYDs\bin\stage"
@@ -145,6 +146,9 @@ class Window(QtGui.QMainWindow):
             checkbox.setChecked(True)
             checkbox.clicked.connect(self.toggleMagType)
             checkbox_grid.addWidget(checkbox)
+
+        layout.addLayout(checkbox_grid)
+        checkbox_grid = QtGui.QHBoxLayout()
 
         machine_modes = ('Offline', 'Virtual', 'Physical')
         mode_combo = QtGui.QComboBox()
@@ -379,7 +383,7 @@ class Window(QtGui.QMainWindow):
                 more_info.hide()
                 magnet_vbox.addWidget(more_info)
                 title.toggle_frame = more_info
-                title.installEventFilter(self)
+                # title.installEventFilter(self)
                 magnet_list_vbox.addWidget(magnet_frame)
             
         if lw is not None:
@@ -399,6 +403,7 @@ class Window(QtGui.QMainWindow):
         self.setWindowTitle('Magnet Table')
         self.setGeometry(300, 300, 300, 450)
         self.update_period = 100  # milliseconds
+        self.wait_for_magnet, self.wait_for_value = None, None  # what magnet and SI are we waiting for?
         self.startMainViewUpdateTimer()
         self.setWindowIcon(QtGui.QIcon(pixmap('magnet')))
         self.show()
@@ -409,7 +414,7 @@ class Window(QtGui.QMainWindow):
         label.setSizePolicy(label_size_policy)
         label.setCursor(QtCore.Qt.PointingHandCursor)
         label.toggle_frame = more_info
-        label.installEventFilter(self)
+        # label.installEventFilter(self)
         parent_widget.addWidget(label)
         return label
         
@@ -424,7 +429,7 @@ class Window(QtGui.QMainWindow):
         if step:
             spinbox.setSingleStep(step)
         parent.addWidget(spinbox)
-        spinbox.installEventFilter(self)
+        # spinbox.installEventFilter(self)
         return spinbox
     
     # these functions update the GUI and (re)start the timer
@@ -457,7 +462,10 @@ class Window(QtGui.QMainWindow):
             mag_type = str(magnet.ref.magType)
             if mag_type == 'QUAD':
                 magnet.icon.setPixmap(pixmap('Quadrupole_' + ('F' if set_current >= 0 else 'D')).scaled(32, 32))
-            if not magnet.current_spin.hasFocus():
+            # are we waiting for the SI value for this magnet to 'take'?
+            if magnet is self.wait_for_magnet and abs(set_current - self.wait_for_value) <= 0.001:  # it's taken now! # TODO: tolerance from somewhere?
+                self.wait_for_magnet = None
+            if not magnet.current_spin.hasFocus() and magnet is not self.wait_for_magnet:
                 magnet.current_spin.setValue(set_current)
             attributes = mag_attributes[mag_type]
             int_strength = np.copysign(np.polyval(magnet.fieldIntegralCoefficients, abs(set_current)), set_current)
@@ -467,8 +475,10 @@ class Window(QtGui.QMainWindow):
             magnet.online_info.setText(online_text_format.format(**locals()))
 
     def eventFilter(self, source, event):
-        """Handle events - QLabel doesn't have click or wheel events."""
+        """Enable scroll wheel functionality for the spin boxes, and also make clickable labels that
+        make extra information appear and disappear (collapsing_headers)."""
         evType = event.type()
+        modifiers = QtGui.QApplication.keyboardModifiers()
         if evType == QtCore.QEvent.MouseButtonRelease:
             try:
                 frame = source.toggle_frame
@@ -482,7 +492,6 @@ class Window(QtGui.QMainWindow):
             if evType == QtCore.QEvent.Wheel:
                 # don't allow changes if Shift isn't pressed -
                 # makes it easier to scroll the window up and down
-                modifiers = QtGui.QApplication.keyboardModifiers()
                 if not (modifiers & QtCore.Qt.ShiftModifier):
                     return True  # do nothing
             elif evType == QtCore.QEvent.FocusOut:
@@ -492,6 +501,11 @@ class Window(QtGui.QMainWindow):
                     magnet.active = False
                 except AttributeError: # won't work for momentum spin boxes
                     pass
+        elif evType == QtCore.QEvent.Wheel and (modifiers & QtCore.Qt.ShiftModifier):
+            # don't allow scrolling if Shift _is_ held outwith a spin box - 
+            # otherwise we'll accidentally scroll the window while we're trying to 
+            # modify the spin box and the mouse slips a bit_length
+            return True
         return QtGui.QMainWindow.eventFilter(self, source, event)
     
     def toggleMagType(self, toggled):
@@ -511,7 +525,9 @@ class Window(QtGui.QMainWindow):
         """Called when a current spin box is changed by the user."""
         magnet = self.sender().parent().magnet
         self.controllers[magnet.section.id].setSI(magnet.name, value)
-
+        # Stop the GUI updating until the SI value 'takes' - otherwise it will update from an old value and be 'sticky'
+        self.wait_for_magnet, self.wait_for_value = magnet, value
+        
         if str(magnet.ref.magType) == 'DIP' and magnet.set_mom_checkbox.isChecked():
             # 'Set momentum' checkbox is ticked - we are using this dipole to check the momentum
             # Calculate and set the momentum for this section
@@ -519,7 +535,7 @@ class Window(QtGui.QMainWindow):
             angle = magnet.k_spin.value()
             momentum = 0.001 * SPEED_OF_LIGHT * int_strength / np.radians(angle)
             magnet.section.momentum_spin.setValue(momentum)
-        # To avoid a lot of iterating between K and current: check the calling function's name
+            # To avoid a lot of iterating between K and current: check the calling function's name
         elif not sys._getframe(1).f_code.co_name == 'calcCurrentFromK':
             self.calcKFromCurrent(magnet)
 
@@ -791,7 +807,7 @@ if __name__ == "__main__":
     app.processEvents()
 
     window = Window()
-#    app.installEventFilter(window)
+    app.installEventFilter(window)
     app.aboutToQuit.connect(window.close)
     window.show()
     splash.finish(window)

@@ -8,6 +8,11 @@ class bpm_handler(bpm_handler_base):
     def __init__(self):
         bpm_handler_base.__init__(self)
 
+    def set_bpm_buffer(self,pv,value):
+        bpm_handler_base.bpm_control.setSA1(pv,value)
+        bpm_handler_base.bpm_control.setSA2(pv,value)
+        bpm_handler_base.logger.message('setting SA1 = SA2 = ' + str(value) + ' for ' + pv, True)
+
     def set_attenuation(self,pv,value):
         bpm_handler_base.bpm_control.setSA1(pv,value)
         bpm_handler_base.bpm_control.setSA2(pv,value)
@@ -38,12 +43,12 @@ class bpm_handler(bpm_handler_base):
         bpm_handler_base.logger.message('RD1 = ' + str(bpm_handler_base.data.values[dat.get_rd1]) + ' for ' + pv, True)
         bpm_handler_base.logger.message('RD2 = ' + str(bpm_handler_base.data.values[dat.get_rd2]) + ' for ' + pv, True)
 
-    def update_bpm_voltages(self):
+    def update_bpm_att_voltages(self):
         if bpm_handler_base.data.values[dat.bpm_status] and bpm_handler_base.data.values[dat.scope_status]:
             bpm_handler_base.data.values[dat.bpm_raw_data_mean_v11] = abs(numpy.mean(bpm_handler_base.data.values[dat.bpm_u11]) - numpy.mean(bpm_handler_base.data.values[dat.bpm_u14]))
             bpm_handler_base.data.values[dat.bpm_raw_data_mean_v12] = abs(numpy.mean(bpm_handler_base.data.values[dat.bpm_u12]) - numpy.mean(bpm_handler_base.data.values[dat.bpm_u14]))
             bpm_handler_base.data.values[dat.bpm_raw_data_mean_v21] = abs(numpy.mean(bpm_handler_base.data.values[dat.bpm_u21]) - numpy.mean(bpm_handler_base.data.values[dat.bpm_u24]))
-            bpm_handler_base.data.values[dat.bpm_raw_data_mean_v22] = abs(numpy.mean(monitor.data.values[dat.bpm_u22]) - numpy.mean(monitor.data.values[dat.bpm_u24]))
+            bpm_handler_base.data.values[dat.bpm_raw_data_mean_v22] = abs(numpy.mean(bpm_handler_base.data.values[dat.bpm_u22]) - numpy.mean(bpm_handler_base.data.values[dat.bpm_u24]))
             bpm_handler_base.data.values[dat.bpm_v11_v12_sum][bpm_handler_base.data.values[dat.set_sa1_current]] = (bpm_handler_base.data.values[
                                                                                                       dat.bpm_raw_data_mean_v11] +
                                                                                                                     bpm_handler_base.data.values[
@@ -68,6 +73,7 @@ class bpm_handler(bpm_handler_base):
         bpm_handler_base.data.values[dat.dv2_dly1_min_val] = min(bpm_handler_base.data.values[dat.dv2_dly1].values())
         bpm_handler_base.data.values[dat.new_dly_1] = int(numpy.mean(bpm_handler_base.data.values[dat.dv1_dly1_min_val] + bpm_handler_base.data.values[dat.dv2_dly1_min_val]))
         self.set_dly_1(bpm_handler_base.data.values[dat.bpm_name],bpm_handler_base.data.values[dat.new_dly_1])
+        print bpm_handler_base.data.values[dat.new_dly_1]
         self.read_delay(bpm_handler_base.data.values[dat.bpm_name])
         bpm_handler_base.data.values[dat.new_dly_1_set] = True
 
