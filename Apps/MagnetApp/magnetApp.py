@@ -3,11 +3,15 @@
 # DJS 2017
 # Run this and everything follows
 from PyQt4 import QtGui
-import sys
 import logging
 import socket
 import magnetAppGlobals as globals
-import magnetAppController
+import sys
+import os
+sys.path.append(os.path.join(sys.path[0],'GUI'))
+sys.path.append(os.path.join(sys.path[0],'control'))
+
+import control.magnetAppController as magnetAppController
 
 
 class magnetApp(QtGui.QApplication):
