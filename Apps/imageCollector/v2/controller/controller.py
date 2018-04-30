@@ -37,7 +37,7 @@ class Controller():
         self.cameraNames = self.model.camerasDAQ.getCameraNames()
         self.view.cameraName_comboBox.addItems(self.cameraNames)
         self.view.useBackground_checkBox.stateChanged.connect(self.setUseBkgrnd)
-       # self.view.checkBox.stateChanged.connect(lambda: self.toggleFeedBack(self.view.checkBox.isChecked()))
+        self.view.checkBox.stateChanged.connect(lambda: self.toggleFeedBack(self.view.checkBox.isChecked()))
 
         self.view.maskX_spinBox.valueChanged.connect(self.changeEllipse)
         self.view.maskY_spinBox.valueChanged.connect(self.changeEllipse)
@@ -115,9 +115,9 @@ class Controller():
         pointRad = QtCore.QPoint(xRad,yRad)
         self.roi.setSize(pointRad)
 
-   # def toggleFeedBack(self,use):
-   #     print(use)
-   #     self.runFeedback = use
+    def toggleFeedBack(self,use):
+        print(use)
+        self.runFeedback = use
 
     def update(self):
         #print(self.model.selectedCameraIA.IA.x)
@@ -169,12 +169,12 @@ class Controller():
             self.view.analyse_pushButton.setText('Analyse')
             
         #This should be activated by a button
-        #self.counter += 1
-        #if self.counter == 5:
-        #    self.counter = 0
-        #    self.model.feedback(self.runFeedback)
-        #    if self.runFeedback is True:
-        #        self.view.maskX_spinBox.setValue(self.model.selectedCameraIA.IA.maskX)
-        #        self.view.maskY_spinBox.setValue(self.model.selectedCameraIA.IA.maskY)
-        #        self.view.maskXRadius_spinBox.setValue(self.model.selectedCameraIA.IA.maskXRad)
-        #        self.view.maskYRadius_spinBox.setValue(self.model.selectedCameraIA.IA.maskYRad)
+        self.counter += 1
+        if self.counter == 10:
+            self.counter = 0
+            self.model.feedback(self.runFeedback)
+            if self.runFeedback is True:
+                self.view.maskX_spinBox.setValue(self.model.selectedCameraIA.IA.maskX)
+                self.view.maskY_spinBox.setValue(self.model.selectedCameraIA.IA.maskY)
+                self.view.maskXRadius_spinBox.setValue(self.model.selectedCameraIA.IA.maskXRad)
+                self.view.maskYRadius_spinBox.setValue(self.model.selectedCameraIA.IA.maskYRad)
