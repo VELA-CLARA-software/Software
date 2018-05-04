@@ -2,15 +2,12 @@
 # -*- coding: utf-8 -*-
 
 import sys
-try:
-    from PyQt4 import QtCore, QtGui, uic
-except ImportError:
-    from PyQt5 import QtCore, QtGui, uic
+from PyQt4 import QtCore, QtGui, uic
 from rf_sol_tracking import RFSolTracker
 import pyqtgraph as pg
 import numpy as np
 import os
-sys.path.insert(0, r'\\fed.cclrc.ac.uk\Org\NLab\ASTeC\Projects\VELA\Software\VELA_CLARA_PYDs\bin\Release')
+sys.path.insert(0, r'\\apclara1\ControlRoomApps\Controllers\bin\Release')
 try:
     import VELA_CLARA_Magnet_Control as MagCtrl
 except ImportError:
