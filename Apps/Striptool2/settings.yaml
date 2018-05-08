@@ -1,4 +1,4 @@
-headings: ['Off', 'Gun-10', 'VELA Quads', 'Dipoles', 'Correctors', 'BPMs', 'Custom']
+headings: ['Off', 'Gun-10', 'VELA Quads', 'Dipoles', 'Correctors', 'CLARA PH1 BPMs', 'Custom']
 frequencies: [1, 5, 10, 25, 50, 100]
 magnets:
   'Gun-10':
@@ -35,8 +35,8 @@ magnets:
     PVs:
       RI: ['self.VELAMagnets', getRI]
       SI: ['self.VELAMagnets', getSI]
-  BPMs:
-    Names: [BPM01, BPM02, BPM03, BPM04, BPM05]
+  CLARA PH1 BPMs:
+    Names: [S01-BPM01, S02-BPM01, S02-BPM02, C2V-BPM01]
     PVs:
       X: ['self.bpms', getXFromPV]
       Y: ['self.bpms', getYFromPV]

@@ -12,7 +12,7 @@ except ImportError:
 import time
 import yaml
 import string as string
-import Widgets.Striptool2.colours as colours
+import Software.Widgets.Striptool2.colours as colours
 
 class signalTypeComboBox(QComboBox):
     def __init__(self, comboID, mainForm):

@@ -19,7 +19,9 @@ class PVObject(QObject):
     def __init__(self, pv, readback=None, parent=None):
         super(PVObject, self).__init__()
         self.name = pv
+        # print ('name = ', self.name)
         self.pv = PV(self.name, callback=self.callback)
+        # print ('pv = ', self.pv)
         self.dict = OrderedDict()
         self._value = [time.time(), self.pv.get()]
         self.writeAccess = False
@@ -67,7 +69,7 @@ class PVObject(QObject):
             self.pv.put(value)
             if not self.readBackName is None:
                 rbkValue = self.readBackPV.get()
-                while abs(rbkValue - self.value) > 0.01 and ntries < 10:
+                while abs(rbkValue - self.value) > 0.001 and ntries < 10:
                     time.sleep(0.05)
                     rbkValue = self.readBackPV.get()
                     ntries += 1

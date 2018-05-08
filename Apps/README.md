@@ -42,3 +42,17 @@ a.binaries = a.binaries - [('mfc90.dll', None, None), ('mfc90u.dll', None, None)
 ```
 
 Now rerun the *pyinstaller* command, but type `AppName.spec` at the end instead of `AppName.py` (it will use the modified `.spec` file instead of generating its own).
+
+## Including scipy
+
+Adding scipy into your pyinstaller exe can be more difficult than expected. A simple recipe that has so far always worked for me (@titchjones) is the following:
+1. Create your **spec** file as per the instructions above
+2. In the spec file add the location of your scipy **extra-dll** directory to the **pathex** line - for instance: 
+```bat
+pathex=['C:\\anaconda32\\Lib\\site-packages\\scipy\\extra-dll'],
+```
+3. Add `'scipy._lib.messagestream'` to the hiddenimports section - i.e.:
+```bat
+hiddenimports=['scipy._lib.messagestream'],
+```
+4. Done!

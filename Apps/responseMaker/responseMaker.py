@@ -83,7 +83,7 @@ class corrector(PVObject):
     def __init__(self, pv=None, rdbk=None, parent=None):
         super(corrector, self).__init__(pv, rdbk, parent)
         self.name = pv
-        self.writeAccess = False
+        self.writeAccess = True
 
 class recordRMData(tables.IsDescription):
     actuator  = tables.Float64Col()     # double (double-precision)
@@ -124,12 +124,12 @@ class responsePlotterTab(QWidget):
         self.plotTabs.addTab(self.verticalPlot, 'Vertical')
 
         self.monitors = []
-        type = '_H'
+        type = ':X'
         for m in monitors:
             self.monitors.append(monitor(m+type, self.pv))
             self.horizontalPlot.newLine(m+type)
             self.monitors[-1].emitAverageSignal.connect(self.horizontalPlot.newBPMReading)
-        type = '_V'
+        type = ':Y'
         for m in monitors:
             self.monitors.append(monitor(m+type, self.pv))
             self.verticalPlot.newLine(m+type)
@@ -159,8 +159,6 @@ class responsePlotterTab(QWidget):
     def resetPlots(self):
         self.horizontalPlot.reset()
         self.verticalPlot.reset()
-        self.phasePlot.reset()
-        self.intensityPlot.reset()
 
     def runResponse(self):
         global app
