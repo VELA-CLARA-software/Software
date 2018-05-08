@@ -1,0 +1,8 @@
+monitors: [
+IA1BPA01,
+IA1BPB01,
+]
+actuators: [
+MA2CHC01_cmd,
+MA2CVC01_cmd,
+]
