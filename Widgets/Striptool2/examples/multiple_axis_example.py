@@ -17,7 +17,7 @@ v4 = pg.ViewBox()
 v5 = pg.ViewBox()
 v6 = pg.ViewBox()
 
-# main ui
+# main view
 pw = pg.GraphicsView()
 pw.setWindowTitle('pyqtgraph example: multiple y-axis')
 pw.show()
@@ -69,7 +69,7 @@ a4.setLabel('axis 4 in Viewbox 4', color='#2EFE2E')
 a5.setLabel('axis 5 in Viewbox 5', color='#FFFF00')
 a6.setLabel('axis 6 in Viewbox 6', color='#FE2E64')
 
-# slot: update ui when resized
+# slot: update view when resized
 def updateViews():
 
     v2.setGeometry(v1.sceneBoundingRect())

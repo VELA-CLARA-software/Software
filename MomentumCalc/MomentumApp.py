@@ -1,7 +1,7 @@
 import sys,os
 #sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\\model')
 #sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\\controller')
-#sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\\ui')
+#sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\\view')
 from PyQt4 import QtGui, QtCore
 import model.mtmcalc as mtmcalc
 import controller.controller as controller

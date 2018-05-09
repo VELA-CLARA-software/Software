@@ -305,7 +305,7 @@ class scopeWriterController(QObject):
 	@QtCore.pyqtSlot()
 	def handle_fileSave(self):
 		#self.name = self.saveView.setFileName()
-		#self.ui.ui_line.setText(self.name)
+		#self.view.ui_line.setText(self.name)	
 		self.scope.SaveRecall.Setup.PanelFilename = str(self.view.ui_line.text())
 		self.scope.SaveRecall.Setup.DoSavePanel
 		self.saveView.hide()
