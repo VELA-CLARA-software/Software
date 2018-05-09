@@ -15,7 +15,7 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>Icons/parasol.png</normaloff>Icons/parasol.png</iconset>
+    <normaloff>resources/parasol/Icons/parasol.png</normaloff>resources/parasol/Icons/parasol.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -47,7 +47,7 @@
          </property>
          <property name="icon">
           <iconset>
-           <normaloff>Icons/pistol.png</normaloff>Icons/pistol.png</iconset>
+           <normaloff>resources/parasol/Icons/pistol.png</normaloff>resources/parasol/Icons/pistol.png</iconset>
          </property>
         </item>
         <item>
@@ -56,7 +56,7 @@
          </property>
          <property name="icon">
           <iconset>
-           <normaloff>Icons/submachine-gun.png</normaloff>Icons/submachine-gun.png</iconset>
+           <normaloff>resources/parasol/Icons/submachine-gun.png</normaloff>resources/parasol/Icons/submachine-gun.png</iconset>
          </property>
         </item>
         <item>
@@ -65,7 +65,7 @@
          </property>
          <property name="icon">
           <iconset>
-           <normaloff>Icons/bike.png</normaloff>Icons/bike.png</iconset>
+           <normaloff>resources/parasol/Icons/bike.png</normaloff>resources/parasol/Icons/bike.png</iconset>
          </property>
         </item>
         <item>
@@ -97,7 +97,7 @@
          </property>
          <property name="icon">
           <iconset>
-           <normaloff>Icons/Offline.png</normaloff>Icons/Offline.png</iconset>
+           <normaloff>resources/parasol/Icons/Offline.png</normaloff>resources/parasol/Icons/Offline.png</iconset>
          </property>
         </item>
         <item>
@@ -106,7 +106,7 @@
          </property>
          <property name="icon">
           <iconset>
-           <normaloff>Icons/Virtual.png</normaloff>Icons/Virtual.png</iconset>
+           <normaloff>resources/parasol/Icons/Virtual.png</normaloff>resources/parasol/Icons/Virtual.png</iconset>
          </property>
         </item>
         <item>
@@ -115,7 +115,7 @@
          </property>
          <property name="icon">
           <iconset>
-           <normaloff>Icons/Physical.png</normaloff>Icons/Physical.png</iconset>
+           <normaloff>resources/parasol/Icons/Physical.png</normaloff>resources/parasol/Icons/Physical.png</iconset>
          </property>
         </item>
        </widget>
@@ -344,7 +344,7 @@
         </property>
         <property name="icon">
          <iconset>
-          <normaloff>Icons/mountain-summit.png</normaloff>Icons/mountain-summit.png</iconset>
+          <normaloff>resources/parasol/Icons/mountain-summit.png</normaloff>resources/parasol/Icons/mountain-summit.png</iconset>
         </property>
        </widget>
       </item>
@@ -364,8 +364,8 @@
         </property>
         <property name="icon">
          <iconset>
-          <normaloff>Icons/padlock-open.png</normaloff>
-          <normalon>Icons/padlock-closed.png</normalon>Icons/padlock-open.png</iconset>
+          <normaloff>resources/parasol/Icons/padlock-open.png</normaloff>
+          <normalon>resources/parasol/Icons/padlock-closed.png</normalon>resources/parasol/Icons/padlock-open.png</iconset>
         </property>
         <property name="checkable">
          <bool>true</bool>
@@ -619,8 +619,8 @@
           </property>
           <property name="icon">
            <iconset>
-            <normaloff>Icons/play-button.png</normaloff>
-            <normalon>Icons/pause-symbol.png</normalon>Icons/play-button.png</iconset>
+            <normaloff>resources/parasol/Icons/play-button.png</normaloff>
+            <normalon>resources/parasol/Icons/pause-symbol.png</normalon>resources/parasol/Icons/play-button.png</iconset>
           </property>
           <property name="checkable">
            <bool>true</bool>

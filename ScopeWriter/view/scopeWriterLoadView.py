@@ -10,7 +10,7 @@ class scopeWriterLoadView(QWidget):
         super(scopeWriterLoadView, self).__init__()
         self.resize(600, 600)
         self.setWindowTitle(window_name)
-        # file browser tree view
+        # file browser tree ui
         self.treeView = QTreeView()
         self.fileSystemModel = QFileSystemModel(self.treeView)
         self.fileSystemModel.setReadOnly(True)

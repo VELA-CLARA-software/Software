@@ -2,8 +2,9 @@
 # -*- coding: utf-8 -*-
 
 import sys
-from PyQt4 import QtCore, QtGui, uic
+from PyQt4 import QtCore, QtGui
 from rf_sol_tracking import RFSolTracker
+import rf_sol_gui
 import pyqtgraph as pg
 import numpy as np
 import os
@@ -38,7 +39,9 @@ image_credits = {
     'rocket.png': 'https://www.flaticon.com/free-icon/small-rocket-ship-silhouette_25452',
 }
 
-Ui_MainWindow, QtBaseClass = uic.loadUiType("rf_sol_gui.ui")
+# figure out where the script is (or EXE file if we've been bundled)
+bundle_dir = os.path.dirname(os.path.abspath(sys.executable if getattr(sys, 'frozen', False) else __file__))
+# Ui_MainWindow, QtBaseClass = uic.loadUiType(bundle_dir + "/resources/parasol/rf_sol_gui.ui")
 
 def noFeedback(method):
     """Wrapper to prevent feedback loops - don't keep cycling through (e.g.) current <-> field calculations."""
@@ -48,54 +51,59 @@ def noFeedback(method):
     return feedbackless
 
 
-class ParasolApp(QtGui.QMainWindow, Ui_MainWindow):
+class ParasolApp(QtGui.QMainWindow): #, Ui_MainWindow):
     def __init__(self):
+        QtGui.QMainWindow.__init__(self)
         self.machine_mode = 'Offline'
         #TODO: get initial parameters from INI file, and save them as we go
         self.gun = RFSolTracker('Gun-10', quiet=True)
-        QtGui.QMainWindow.__init__(self)
-        Ui_MainWindow.__init__(self)
-        self.setupUi(self)
+        self.ui = rf_sol_gui.Ui_RF_Solenoid_Tracker()
+        self.MainWindow = QtGui.QMainWindow()
+        self.ui.setupUi(self.MainWindow)
+        self.MainWindow.show()
 
-        self.peak_field_spin.setValue(self.gun.rf_peak_field)
-        self.phase_spin.setValue(self.gun.phase)
-        self.bc_spin.setValue(self.gun.solenoid.bc_current)
-        self.sol_spin.setValue(self.gun.solenoid.sol_current)
+        # QtGui.QMainWindow.__init__(self)
+        # Ui_MainWindow.__init__(self)
+        # self.setupUi(self)
+        self.ui.peak_field_spin.setValue(self.gun.rf_peak_field)
+        self.ui.phase_spin.setValue(self.gun.phase)
+        self.ui.bc_spin.setValue(self.gun.solenoid.bc_current)
+        self.ui.sol_spin.setValue(self.gun.solenoid.sol_current)
         self.crest_phase = float('nan')
-        self.phase_lock = self.lock_button.isChecked()
-        self.E_field_plot.setLabels(title='Electric field', left='E [MV/m]', bottom='z [m]')
-        self.B_field_plot.setLabels(title='Magnetic field', left='B [T]', bottom='z [m]')
+        self.phase_lock = self.ui.lock_button.isChecked()
+        self.ui.E_field_plot.setLabels(title='Electric field', left='E [MV/m]', bottom='z [m]')
+        self.ui.B_field_plot.setLabels(title='Magnetic field', left='B [T]', bottom='z [m]')
         # self.proxy = pg.SignalProxy(self.B_field_plot.scene().sigMouseMoved, rateLimit=60, slot=self.mouseMoved)
 
-        self.momentum_plot.setLabels(title='Momentum', left='p [MeV/c]', bottom='z [m]')
-        self.larmor_angle_plot.setLabels(title='Larmor angle', left='&theta;<sub>L</sub> [&deg;]', bottom='z [m]')
-        self.E_field_plot.setLabels(title='E field', left='E [MV/m]', bottom='z [m]')
-        self.xy_plot.setLabels(title='Particle position', left='x, y [mm]', bottom='z [m]')
-        self.xy_plot.addLegend()
-        self.xdash_ydash_plot.setLabels(title='Particle angle', left="x', y' [mrad]", bottom='z [m]')
-        self.xdash_ydash_plot.addLegend()
+        self.ui.momentum_plot.setLabels(title='Momentum', left='p [MeV/c]', bottom='z [m]')
+        self.ui.larmor_angle_plot.setLabels(title='Larmor angle', left='&theta;<sub>L</sub> [&deg;]', bottom='z [m]')
+        self.ui.E_field_plot.setLabels(title='E field', left='E [MV/m]', bottom='z [m]')
+        self.ui.xy_plot.setLabels(title='Particle position', left='x, y [mm]', bottom='z [m]')
+        self.ui.xy_plot.addLegend()
+        self.ui.xdash_ydash_plot.setLabels(title='Particle angle', left="x', y' [mrad]", bottom='z [m]')
+        self.ui.xdash_ydash_plot.addLegend()
 
-        self.peak_field_spin.valueChanged.connect(self.rfPeakFieldChanged)
-        self.phase_spin.valueChanged.connect(self.phaseChanged)
-        self.off_crest_spin.valueChanged.connect(self.offCrestSpinChanged)
-        self.crest_button.clicked.connect(self.crestButtonClicked)
-        self.lock_button.clicked.connect(self.lockButtonClicked)
-        self.lock_button.setEnabled(False)
-        self.bc_spin.valueChanged.connect(self.solCurrentsChanged)
-        self.sol_spin.valueChanged.connect(self.solCurrentsChanged)
-        self.cathode_field_spin.valueChanged.connect(self.cathodeFieldChanged)
-        self.sol_field_spin.valueChanged.connect(self.solPeakFieldChanged)
-        self.momentum_spin.valueChanged.connect(self.momentumChanged)
-        self.larmor_angle_spin.valueChanged.connect(self.larmorAngleChanged)
-        self.phase_slider.valueChanged.connect(self.phaseSliderChanged)
-        for spin in (self.x_spin, self.xdash_spin, self.y_spin, self.ydash_spin):
+        self.ui.peak_field_spin.valueChanged.connect(self.rfPeakFieldChanged)
+        self.ui.phase_spin.valueChanged.connect(self.phaseChanged)
+        self.ui.off_crest_spin.valueChanged.connect(self.offCrestSpinChanged)
+        self.ui.crest_button.clicked.connect(self.crestButtonClicked)
+        self.ui.lock_button.clicked.connect(self.lockButtonClicked)
+        self.ui.lock_button.setEnabled(False)
+        self.ui.bc_spin.valueChanged.connect(self.solCurrentsChanged)
+        self.ui.sol_spin.valueChanged.connect(self.solCurrentsChanged)
+        self.ui.cathode_field_spin.valueChanged.connect(self.cathodeFieldChanged)
+        self.ui.sol_field_spin.valueChanged.connect(self.solPeakFieldChanged)
+        self.ui.momentum_spin.valueChanged.connect(self.momentumChanged)
+        self.ui.larmor_angle_spin.valueChanged.connect(self.larmorAngleChanged)
+        self.ui.phase_slider.valueChanged.connect(self.phaseSliderChanged)
+        for spin in (self.ui.x_spin, self.ui.xdash_spin, self.ui.y_spin, self.ui.ydash_spin):
             spin.valueChanged.connect(self.ustartChanged)
-        self.tracking_dropdown.activated.connect(self.trackingDropdownChanged)
+        self.ui.tracking_dropdown.activated.connect(self.trackingDropdownChanged)
 
-        # Add these to the GUI with a custom view parameter, so we can show axes on the plots
+        # Add these to the GUI with a custom ui parameter, so we can show axes on the plots
         for name in ('initial', 'final'):
             plot = pg.ImageView(view=pg.PlotItem())
-            setattr(self, name + '_beam_plot', plot)
+            setattr(self.ui, name + '_beam_plot', plot)
             plot.setPredefinedGradient('thermal')
             view = plot.getView()
             view.invertY(False)  # otherwise positive Y is at the bottom
@@ -106,24 +114,24 @@ class ParasolApp(QtGui.QMainWindow, Ui_MainWindow):
             # so I'll comment it out for now
             # https://stackoverflow.com/questions/46584438/show-grid-lines-over-image-in-pyqtgraph/46605797#46605797
             # https://github.com/pyqtgraph/pyqtgraph/pull/565
-            # for axis_name in view.axes:
-            #     axis = view.getAxis(axis_name)
+            # for axis_name in ui.axes:
+            #     axis = ui.getAxis(axis_name)
             #     axis.setZValue(1)  # ensure grid is drawn on top of image
-            self.xy_plot_hbox.addWidget(plot)
+            self.ui.xy_plot_hbox.addWidget(plot)
             plot.setVisible(False)
-        [link(self.initial_beam_plot.getView()) for link in (view.setXLink, view.setYLink)]
+        [link(self.ui.initial_beam_plot.getView()) for link in (view.setXLink, view.setYLink)]
 
-        for plot in (self.E_field_plot, self.B_field_plot, self.momentum_plot,
-                     self.larmor_angle_plot, self.E_field_plot, self.xy_plot, self.xdash_ydash_plot):
+        for plot in (self.ui.E_field_plot, self.ui.B_field_plot, self.ui.momentum_plot,
+                     self.ui.larmor_angle_plot, self.ui.E_field_plot, self.ui.xy_plot, self.ui.xdash_ydash_plot):
             plot.showGrid(True, True)
 
-        self.gun_dropdown.activated.connect(self.gunChanged)
+        self.ui.gun_dropdown.activated.connect(self.gunChanged)
         if MagCtrl is None:
             self.magInit = None
-            self.machine_mode_dropdown.setEnabled(False)  # use "offline" mode only!
+            self.ui.machine_mode_dropdown.setEnabled(False)  # use "offline" mode only!
         else:
             self.magInit = MagCtrl.init()
-            self.machine_mode_dropdown.activated.connect(self.machineModeChanged)
+            self.ui.machine_mode_dropdown.activated.connect(self.machineModeChanged)
             self.machineModeChanged()
         self.update_period = 100  # milliseconds
         self.startMainViewUpdateTimer()
@@ -135,17 +143,17 @@ class ParasolApp(QtGui.QMainWindow, Ui_MainWindow):
 
     def resizeEvent(self, resizeEvent):
         # Remove plots one row at a time as the window shrinks
-        height = self.geometry().height()
-        show_beam = self.tracking_dropdown.currentIndex() == 1
-        self.xy_plot.setVisible(height >= 512 and not show_beam)
-        self.xdash_ydash_plot.setVisible(height >= 512 and not show_beam)
-        self.initial_beam_plot.setVisible(height >= 512 and show_beam)
-        self.final_beam_plot.setVisible(height >= 512 and show_beam)
-        field_plots = (self.E_field_plot, self.B_field_plot, self.phase_play_button, self.phase_slider)
+        height = self.ui.geometry().height()
+        show_beam = self.ui.tracking_dropdown.currentIndex() == 1
+        self.ui.xy_plot.setVisible(height >= 512 and not show_beam)
+        self.ui.xdash_ydash_plot.setVisible(height >= 512 and not show_beam)
+        self.ui.initial_beam_plot.setVisible(height >= 512 and show_beam)
+        self.ui.final_beam_plot.setVisible(height >= 512 and show_beam)
+        field_plots = (self.ui.E_field_plot, self.ui.B_field_plot, self.ui.phase_play_button, self.ui.phase_slider)
         [control.setVisible(height >= 420) for control in field_plots]
-        self.B_field_plot.setVisible(height >= 420)
-        self.momentum_plot.setVisible(height >= 250)
-        self.larmor_angle_plot.setVisible(height >= 250)
+        self.ui.B_field_plot.setVisible(height >= 420)
+        self.ui.momentum_plot.setVisible(height >= 250)
+        self.ui.larmor_angle_plot.setVisible(height >= 250)
 
     # these functions update the GUI and (re)start the timer
     def startMainViewUpdateTimer(self):
@@ -154,155 +162,155 @@ class ParasolApp(QtGui.QMainWindow, Ui_MainWindow):
         self.widgetUpdateTimer.start(self.update_period)
     def mainViewUpdate(self):
         # Increment the phase slider if it's running
-        if self.phase_play_button.isChecked():
-            self.phase_slider.setValue((self.phase_slider.value() + 5) % 360)
+        if self.ui.phase_play_button.isChecked():
+            self.ui.phase_slider.setValue((self.ui.phase_slider.value() + 5) % 360)
         # conceivably the timer could restart this function before it complete - so guard against that
         try:
             if not self.machine_mode == 'Offline':
-                if not self.bc_spin.hasFocus():
-                    self.bc_spin.setValue(self.bc_ref.siWithPol)
-                if not self.sol_spin.hasFocus():
-                    self.sol_spin.setValue(self.sol_ref.siWithPol)
+                if not self.ui.bc_spin.hasFocus():
+                    self.ui.bc_spin.setValue(self.bc_ref.siWithPol)
+                if not self.ui.sol_spin.hasFocus():
+                    self.ui.sol_spin.setValue(self.sol_ref.siWithPol)
         finally:
             self.widgetUpdateTimer.start(self.update_period)
 
     def gunChanged(self, index=None):
         """The model has been changed. Refresh the display."""
-        self.gun = RFSolTracker(self.gun_dropdown.currentText(), quiet=True)
+        self.gun = RFSolTracker(self.ui.gun_dropdown.currentText(), quiet=True)
         is_linac = 'Linac' in self.gun.name
-        self.gun_label.setText('Linac' if is_linac else 'Gun')
-        self.bc_label.setText('Solenoid 1 current' if is_linac else 'Bucking coil current')
-        self.sol_label.setText('Solenoid 2 current' if is_linac else 'Solenoid current')
-        self.cathode_field_spin.setEnabled(not is_linac)
+        self.ui.gun_label.setText('Linac' if is_linac else 'Gun')
+        self.ui.bc_label.setText('Solenoid 1 current' if is_linac else 'Bucking coil current')
+        self.ui.sol_label.setText('Solenoid 2 current' if is_linac else 'Solenoid current')
+        self.ui.cathode_field_spin.setEnabled(not is_linac)
         has_bc = self.gun.solenoid.bc_current is not None
-        self.bc_spin.setEnabled(has_bc)
+        self.ui.bc_spin.setEnabled(has_bc)
         if has_bc:
-            self.bc_spin.setRange(*self.gun.solenoid.bc_range)
-        self.sol_spin.setRange(*self.gun.solenoid.sol_range)
-        widgets = (self.phase_spin, self.off_crest_spin, self.crest_button, self.lock_button,
-                   self.phase_play_button, self.phase_slider)
+            self.ui.bc_spin.setRange(*self.gun.solenoid.bc_range)
+        self.ui.sol_spin.setRange(*self.gun.solenoid.sol_range)
+        widgets = (self.ui.phase_spin, self.ui.off_crest_spin, self.ui.crest_button, self.ui.lock_button,
+                   self.ui.phase_play_button, self.ui.phase_slider)
         [widget.setEnabled(self.gun.freq > 0) for widget in widgets]
         self.rfPeakFieldChanged(update=False)
         self.phaseChanged(self.gun.phase)
 
     def rfPeakFieldChanged(self, value=None, update=True):
         """The RF peak field has been changed."""
-        self.gun.setRFPeakField(self.peak_field_spin.value())
+        self.gun.setRFPeakField(self.ui.peak_field_spin.value())
         if self.phase_lock:
             self.crest_phase = self.gun.crestCavity()
-            self.phase_spin.setValue(self.crest_phase + self.off_crest_spin.value())
+            self.ui.phase_spin.setValue(self.crest_phase + self.ui.off_crest_spin.value())
         else:
             self.crest_phase = float('nan')
-            self.off_crest_spin.setValue(self.off_crest_spin.minimum())  # show special value (unknown)
-            # self.crest_button.show()
-            self.lock_button.setEnabled(False)
+            self.ui.off_crest_spin.setValue(self.ui.off_crest_spin.minimum())  # show special value (unknown)
+            # self.ui.crest_button.show()
+            self.ui.lock_button.setEnabled(False)
         if update:
             self.gunParamsChanged()
 
     def phaseChanged(self, value=None):
         """The RF phase has been changed."""
         if value <= -360:
-            self.phase_spin.setValue(value + 360)
+            self.ui.phase_spin.setValue(value + 360)
             return
         elif value >= 360:
-            self.phase_spin.setValue(value - 360)
+            self.ui.phase_spin.setValue(value - 360)
             return
         if not np.isnan(self.crest_phase):
-            self.off_crest_spin.setValue(value - self.crest_phase)
-        self.gun.setRFPhase(self.phase_spin.value())
+            self.ui.off_crest_spin.setValue(value - self.crest_phase)
+        self.gun.setRFPhase(self.ui.phase_spin.value())
         self.gunParamsChanged()
 
     def phaseSliderChanged(self):
         """The phase slider has been altered. Update the RF field plot. (No extra calculation needed.)"""
-        self.E_field_plot.plot(self.gun.getZRange(), self.gun.getRFFieldMap(phase=np.radians(self.phase_slider.value())) / 1e6, pen='w', clear=True)
-        title = 'Electric field' + (u', phase {:.0f}°'.format(self.phase_slider.value()) if self.phase_slider.isEnabled() else '')
-        self.E_field_plot.setTitle(title)
-        # self.phase_play_button.setChecked(False)
+        self.ui.E_field_plot.plot(self.gun.getZRange(), self.gun.getRFFieldMap(phase=np.radians(self.ui.phase_slider.value())) / 1e6, pen='w', clear=True)
+        title = 'Electric field' + (u', phase {:.0f}°'.format(self.ui.phase_slider.value()) if self.ui.phase_slider.isEnabled() else '')
+        self.ui.E_field_plot.setTitle(title)
+        # self.ui.phase_play_button.setChecked(False)
 
     def gunParamsChanged(self):
         """The gun parameters have been modified - rerun the simulation and update the GUI."""
-        self.E_field_plot.setYRange(-self.gun.rf_peak_field, self.gun.rf_peak_field)
+        self.ui.E_field_plot.setYRange(-self.gun.rf_peak_field, self.gun.rf_peak_field)
         self.phaseSliderChanged()  # update the RF field plot
-        self.momentum_plot.plot(self.gun.getZRange(), self.gun.getMomentumMap(), pen='w', clear=True)
-        self.momentum_spin.setValue(self.gun.getFinalMomentum())
+        self.ui.momentum_plot.plot(self.gun.getZRange(), self.gun.getMomentumMap(), pen='w', clear=True)
+        self.ui.momentum_spin.setValue(self.gun.getFinalMomentum())
         self.solCurrentsChanged()
 
     def offCrestSpinChanged(self, value):
         """The off-crest value has been changed - change the phase accordingly."""
-        if value == self.off_crest_spin.minimum():
+        if value == self.ui.off_crest_spin.minimum():
             # it's set to 'unknown' due to RF peak field being changed (and lock not set)
             return
-        self.off_crest_spin.setPrefix('+' if value > 0 else '')
+        self.ui.off_crest_spin.setPrefix('+' if value > 0 else '')
         if np.isnan(self.crest_phase):
             # Just come off special value (unknown)
-            self.off_crest_spin.setValue(0)
+            self.ui.off_crest_spin.setValue(0)
             self.crestButtonClicked()
         else:
-            self.phase_spin.setValue(self.crest_phase + value)
+            self.ui.phase_spin.setValue(self.crest_phase + value)
 
     def crestButtonClicked(self):
         """Find the crest of the RF cavity."""
         self.crest_phase = self.gun.crestCavity()
-        self.phase_spin.setValue(self.crest_phase)
-        self.off_crest_spin.setValue(0)
-        self.lock_button.setEnabled(True)
+        self.ui.phase_spin.setValue(self.crest_phase)
+        self.ui.off_crest_spin.setValue(0)
+        self.ui.lock_button.setEnabled(True)
         self.phase_lock = True
-        self.lock_button.setChecked(self.phase_lock)
-        # self.crest_button.hide()
+        self.ui.lock_button.setChecked(self.phase_lock)
+        # self.ui.crest_button.hide()
 
     def lockButtonClicked(self):
         """Set the phase lock state - does the off-crest value persist even when the RF peak field is changed?"""
-        self.phase_lock = self.lock_button.isChecked()
+        self.phase_lock = self.ui.lock_button.isChecked()
 
     def solCurrentsChanged(self, value=None):
         """The bucking coil or solenoid parameters have been modified - rerun the simulation and update the GUI."""
         sol = self.gun.solenoid
-        self.gun.setBuckingCoilCurrent(self.bc_spin.value())
-        self.gun.setSolenoidCurrent(self.sol_spin.value())
+        self.gun.setBuckingCoilCurrent(self.ui.bc_spin.value())
+        self.gun.setSolenoidCurrent(self.ui.sol_spin.value())
         if self.machine_mode != 'Offline':
-            self.controller.setSI('BSOL', self.bc_spin.value())
-            self.controller.setSI('SOL', self.sol_spin.value())
-        self.cathode_field_spin.setValue(sol.getMagneticField(0))
-        self.sol_field_spin.setValue(sol.getPeakMagneticField())
-        self.B_field_plot.plot(sol.getZMap(), sol.getMagneticFieldMap(), pen='w', clear=True)
-        self.larmor_angle_plot.plot(self.gun.getZRange(), self.gun.getLarmorAngleMap(), pen='w', clear=True)
-        self.larmor_angle_spin.setValue(self.gun.getFinalLarmorAngle())
+            self.controller.setSI('BSOL', self.ui.bc_spin.value())
+            self.controller.setSI('SOL', self.ui.sol_spin.value())
+        self.ui.cathode_field_spin.setValue(sol.getMagneticField(0))
+        self.ui.sol_field_spin.setValue(sol.getPeakMagneticField())
+        self.ui.B_field_plot.plot(sol.getZMap(), sol.getMagneticFieldMap(), pen='w', clear=True)
+        self.ui.larmor_angle_plot.plot(self.gun.getZRange(), self.gun.getLarmorAngleMap(), pen='w', clear=True)
+        self.ui.larmor_angle_spin.setValue(self.gun.getFinalLarmorAngle())
         self.ustartChanged()
 
     @noFeedback
     def cathodeFieldChanged(self, value=None):
         """The cathode field has been modified - find the bucking coil current that gives this field."""
-        self.bc_spin.setValue(self.gun.solenoid.setCathodeField(value))
+        self.ui.bc_spin.setValue(self.gun.solenoid.setCathodeField(value))
 
     @noFeedback
     def solPeakFieldChanged(self, value=None):
         """The solenoid peak field has been modified - find the solenoid current that gives this field."""
-        self.sol_spin.setValue(self.gun.solenoid.setPeakMagneticField(value))
+        self.ui.sol_spin.setValue(self.gun.solenoid.setPeakMagneticField(value))
 
     @noFeedback
     def momentumChanged(self, value=None):
         """The momentum has been modified - find the gun peak field that gives this value."""
-        self.peak_field_spin.setValue(self.gun.setFinalMomentum(value))
+        self.ui.peak_field_spin.setValue(self.gun.setFinalMomentum(value))
 
     @noFeedback
     def larmorAngleChanged(self, value=None):
         """The Larmor angle has been modified - find the solenoid current that gives this value."""
-        self.sol_spin.setValue(self.gun.setLarmorAngle(value))
+        self.ui.sol_spin.setValue(self.gun.setLarmorAngle(value))
 
     def trackingDropdownChanged(self, index=None):
         """The tracking type dropdown has changed. Rerun the tracking."""
         show_beam = index == 1
-        self.xy_plot.setVisible(not show_beam)
-        self.xdash_ydash_plot.setVisible(not show_beam)
-        self.initial_beam_plot.setVisible(show_beam)
-        self.final_beam_plot.setVisible(show_beam)
-        self.ustart_label.setText('Beam size (sigma)' if show_beam else 'Initial particle position')
+        self.ui.xy_plot.setVisible(not show_beam)
+        self.ui.xdash_ydash_plot.setVisible(not show_beam)
+        self.ui.initial_beam_plot.setVisible(show_beam)
+        self.ui.final_beam_plot.setVisible(show_beam)
+        self.ui.ustart_label.setText('Beam size (sigma)' if show_beam else 'Initial particle position')
         self.ustartChanged()
 
     def ustartChanged(self, value=None):
         """The particle start position has been modified - track the particle/beam through the fields."""
-        show_beam = self.tracking_dropdown.currentIndex() == 1
-        spin_values = [spin.value() for spin in (self.x_spin, self.xdash_spin, self.y_spin, self.ydash_spin)]
+        show_beam = self.ui.tracking_dropdown.currentIndex() == 1
+        spin_values = [spin.value() for spin in (self.ui.x_spin, self.ui.xdash_spin, self.ui.y_spin, self.ui.ydash_spin)]
         if show_beam:
             matrix = self.gun.getOverallMatrix()
             n = 30000
@@ -310,8 +318,8 @@ class ParasolApp(QtGui.QMainWindow, Ui_MainWindow):
             x1 = np.array([matrix.dot(x.T) for x in x0.T])
 
             bins = 60
-            for xy_data, plot in ((np.asarray(x0)[0::2], self.initial_beam_plot),
-                                  (np.squeeze(x1[:, 0::2].T), self.final_beam_plot)):
+            for xy_data, plot in ((np.asarray(x0)[0::2], self.ui.initial_beam_plot),
+                                  (np.squeeze(x1[:, 0::2].T), self.ui.final_beam_plot)):
                 histogram, x_edges, y_edges = np.histogram2d(*xy_data, bins=bins)
                 x_edges *= 1e3
                 y_edges *= 1e3
@@ -319,26 +327,26 @@ class ParasolApp(QtGui.QMainWindow, Ui_MainWindow):
                 y_range = y_edges[-1] - y_edges[0]
                 plot.setImage(histogram, pos=(x_edges[0], y_edges[0]), scale=(x_range / bins, y_range / bins))
             label_text = "<b>Final beam size</b> ({n:.3g} particles): x {0:.3g} mm, x' {1:.3g} mrad; y {2:.3g} mm, y' {3:.3g} mrad"
-            self.uend_label.setText(label_text.format(*np.std(x1[:, :, 0], 0) * 1e3, n=n))
+            self.ui.uend_label.setText(label_text.format(*np.std(x1[:, :, 0], 0) * 1e3, n=n))
         else:
             uend = self.gun.trackBeam(1e-3 * np.matrix(spin_values, dtype='float').T)
-            self.xy_plot.plotItem.legend.items = []
-            self.xy_plot.plot(self.gun.getZRange(), 1e3 * self.gun.u_array[:, 0], pen='w', name='x', clear=True)
-            self.xy_plot.plot(self.gun.getZRange(), 1e3 * self.gun.u_array[:, 2], pen='g', name='y')
-            self.xdash_ydash_plot.plotItem.legend.items = []
-            self.xdash_ydash_plot.plot(self.gun.getZRange(), 1e3 * self.gun.u_array[:, 1], pen='w', name="x'", clear=True)
-            self.xdash_ydash_plot.plot(self.gun.getZRange(), 1e3 * self.gun.u_array[:, 3], pen='g', name="y'")
-            self.uend_label.setText("<b>Final particle position</b> x {0:.3g} mm, x' {1:.3g} mrad; y {2:.3g} mm, y' {3:.3g} mrad".format(*uend.flat))
+            self.ui.xy_plot.plotItem.legend.items = []
+            self.ui.xy_plot.plot(self.gun.getZRange(), 1e3 * self.gun.u_array[:, 0], pen='w', name='x', clear=True)
+            self.ui.xy_plot.plot(self.gun.getZRange(), 1e3 * self.gun.u_array[:, 2], pen='g', name='y')
+            self.ui.xdash_ydash_plot.plotItem.legend.items = []
+            self.ui.xdash_ydash_plot.plot(self.gun.getZRange(), 1e3 * self.gun.u_array[:, 1], pen='w', name="x'", clear=True)
+            self.ui.xdash_ydash_plot.plot(self.gun.getZRange(), 1e3 * self.gun.u_array[:, 3], pen='g', name="y'")
+            self.ui.uend_label.setText("<b>Final particle position</b> x {0:.3g} mm, x' {1:.3g} mrad; y {2:.3g} mm, y' {3:.3g} mrad".format(*uend.flat))
 
     def machineModeChanged(self, index=None):
-        mode = str(self.machine_mode_dropdown.currentText())
+        mode = str(self.ui.machine_mode_dropdown.currentText())
         self.setMachineMode(mode)
         self.bc_ref = self.controller.getMagObjConstRef('BSOL')
         self.sol_ref = self.controller.getMagObjConstRef('SOL')
 
     def setMachineMode(self, mode=None):
         self.machine_mode = mode
-        print('Setting machine mode:', mode)
+        # print('Setting machine mode:', mode)
         os.environ["EPICS_CA_ADDR_LIST"] = "192.168.83.255" if mode == 'Physical' else "10.10.0.12"
         self.controller = self.magInit.getMagnetController(MagCtrl.MACHINE_MODE.names[mode.upper()], MagCtrl.MACHINE_AREA.VELA_INJ)
         # self.settings.setValue('machine_mode', mode)
@@ -346,5 +354,5 @@ class ParasolApp(QtGui.QMainWindow, Ui_MainWindow):
 if __name__ == "__main__":
     app = QtGui.QApplication(sys.argv)
     window = ParasolApp()
-    window.show()
+    # window.show()
     sys.exit(app.exec_())

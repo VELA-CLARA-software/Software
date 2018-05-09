@@ -30,12 +30,12 @@ class matlabImageViewerMasterController(object):
             ret = True
         return ret
 
-    # pressing start, tries to launch a scope controller and build the main view
+    # pressing start, tries to launch a scope controller and build the main ui
     def handle_startviewstartbutton(self):
         if self.areaAndModeSet():
             self.startLauncher.update()
             QtGui.QApplication.processEvents();
-            # launch main view
+            # launch main ui
             self.launchMainView()
             print "starting"
             self.controller = matlabImageViewerController( self.mainView )

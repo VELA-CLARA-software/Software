@@ -51,7 +51,7 @@ class matlabImageViewerController(object):
         self.startView.canvas.mpl_connect('button_press_event', self.on_mouse_press)
         self.startView.canvas.mpl_connect('button_release_event', self.on_mouse_release)
 
-    # these functions are linked to the "main" canvas containing the images - the user can drag the mouse over the beam to view a cropped image
+    # these functions are linked to the "main" canvas containing the images - the user can drag the mouse over the beam to ui a cropped image
     # if this is not done, processing of the full image is done
     def on_mouse_press(self, event):
         self.croppedArrayShape = []

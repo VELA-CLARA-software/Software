@@ -10,6 +10,7 @@ Calculates the transfer matrix.
 See Gulliford and Bazarov (2012): http://journals.aps.org/prab/abstract/10.1103/PhysRevSTAB.15.024002#fulltext
 """
 
+import sys, os
 from collections import namedtuple
 from fractions import Fraction
 from functools import wraps  # for class method decorators
@@ -17,10 +18,10 @@ from functools import wraps  # for class method decorators
 from calcMomentum import calcmomentum # Fortran code to do the momentum calculation
 import numpy as np
 import scipy.constants
-import scipy.linalg
+# import scipy.linalg
 import scipy.optimize
 
-import Apps.Parasol.solenoid_field_map as sol_field_map
+import solenoid_field_map as sol_field_map
 
 # import clipboard  # for temporary debugging, can copy matrices into Excel
 
@@ -179,7 +180,9 @@ class RFSolTracker(object):
                 self.z_end = 0.3
                 self.phase = 295  # to get optimal acceleration
 
-            z_list, E_list = np.loadtxt('gb-field-maps/{}_e-field.csv'.format(name), delimiter=',').T
+            # figure out where the script is (or EXE file if we've been bundled)
+            bundle_dir = os.path.dirname(os.path.abspath(sys.executable if getattr(sys, 'frozen', False) else __file__))
+            z_list, E_list = np.loadtxt(bundle_dir + '/resources/parasol/gb-field-maps/{}_e-field.csv'.format(name), delimiter=',').T
             self.rf_peak_field = float(np.max(E_list))
             # Normalise
             E_list /= self.rf_peak_field

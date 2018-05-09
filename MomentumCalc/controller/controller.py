@@ -6,7 +6,7 @@ import time
 class controllerer():
 
 	def __init__(self, view, model):
-		'''define model and view'''
+		'''define model and ui'''
 		self.view = view
 		self.model = model
 		self.view.pushButton.clicked.connect(self.clicked_go)

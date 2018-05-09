@@ -51,8 +51,8 @@ class scopeWriterMasterController(object):
 # \___ \  |  |  / __ \|  | \/|  |       \   /|  \  ___/\     /
 #/____  > |__| (____  /__|   |__|        \_/ |__|\___  >\/\_/
 #     \/            \/                               \/
-    # these functions handle the start view signals
-    # start view radio group 1
+    # these functions handle the start ui signals
+    # start ui radio group 1
     def handle_machineAreaSignal(self,r):
          self.machineArea = r
 
@@ -67,14 +67,14 @@ class scopeWriterMasterController(object):
             ret = True
         return ret
 
-    # pressing start, tries to launch a scope controller and build the main view
+    # pressing start, tries to launch a scope controller and build the main ui
     def handle_startviewstartbutton(self):
         if self.areaAndModeSet():
             self.startLauncher.update()
             QtGui.QApplication.processEvents();
             # launch requested scope controller
             self.launchScopeController()
-            # launch main view
+            # launch main ui
             self.launchMainView()
             self.loadView = scopeWriterLoadView.scopeWriterLoadView("Load setup", scopeWriterGlobals.scopeSetupLocation)
             self.saveView = scopeWriterSaveView.scopeWriterSaveView()
