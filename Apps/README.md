@@ -57,7 +57,7 @@ hiddenimports=['scipy._lib.messagestream'],
 ```
 4. Done!
 
-#Compiling to exe using py2exe
+# Compiling to exe using py2exe
 
 I (@LouiseCowie) do it a different way - in py2exe. I got all this from two sources: the py2exe tutorial page http://www.py2exe.org/index.cgi/Tutorial, and this excellent blog post that fixed all the issues I had https://pythontips.com/2014/03/03/using-py2exe-the-right-way/ .
 
@@ -66,7 +66,7 @@ I (@LouiseCowie) do it a different way - in py2exe. I got all this from two sour
 2. Make a setup file and save it in the same location as your python script. I call mine setup.py.
 
 To make "YourApp.py" into a bundled executable, it should look like this:
-
+```bat
 from distutils.core import setup
 import py2exe
 setup(
@@ -74,7 +74,7 @@ setup(
     windows = [{'script': "YourApp.py"}],
     zipfile = None,
 )
-
+```
 3. Open the command prompt from the location of your python script and setup file. 
 
 4. Run the command : python setup.py py2exe
