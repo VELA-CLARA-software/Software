@@ -1,6 +1,6 @@
 import pyqtgraph as pg
 from pyqtgraph.Qt import QtGui, QtCore
-import sys, time, os, datetime
+import sys, time, os, datetime, sip
 try:
     from PyQt4.QtCore import *
     from PyQt4.QtGui import *
@@ -88,7 +88,11 @@ class plotLegendTree(ParameterTree):
             child = self.topLevelItem(i).child(0)
             if child in headers:
                 text = child.text(0)
-                pos = [pos for pos, char in enumerate(text) if char == ':'][-1]
+                pos = [pos for pos, char in enumerate(text) if char == ':']
+                if len(pos) > 0:
+                    pos = pos[-1]
+                else:
+                    pos = -1
                 name = str(text[0:pos])
                 names.append(name)
         self.legendselectionchanged.emit(names)
@@ -161,6 +165,8 @@ class plotLegendTree(ParameterTree):
         self.proxyMin[name].disconnect()
         self.proxyMax[name].disconnect()
         self.proxyHeaderText[name].disconnect()
+        pChild = self.parameterChildren[name]
+        self.records[name]['viewbox'].sigStateChanged.disconnect()
         try:
             self.generalPlot.removeSignal(str(name))
         except:
@@ -272,8 +278,11 @@ class plotLegendTree(ParameterTree):
         self.setAxisZeroState(vb, pChild)
 
     def setAxisZeroState(self, vb, pChild):
-        if not abs(vb.state['viewRange'][1][0]) == 0:
-            list(pChild.child('Options').child('Plot Range').child('AxisZero').items.keys())[0].widget.setCheckState(False)
+        try:
+            if not abs(vb.state['viewRange'][1][0]) == 0:
+                list(pChild.child('Options').child('Plot Range').child('AxisZero').items.keys())[0].widget.setCheckState(False)
+        except:
+            pass
 
     def setupAxisList(self, name, pChild):
         if 'scrollingplot' in self.records[name]:

@@ -1,6 +1,9 @@
-headings: ['Off', 'Gun-10', 'VELA Quads', 'Dipoles', 'Correctors', 'CLARA PH1 BPMs', 'Custom']
+headings: ['Off', 'Gun-10', 'CLARA Quads', 'CLARA Dipoles', 'CLARA Correctors', 'CLARA BPMs', 'VELA Quads', 'VELA Dipoles', 'VELA Correctors', 'Custom']
 frequencies: [1, 5, 10, 25, 50, 100]
 magnets:
+  'Off':
+    Names: []
+    PVs: {}
   'Gun-10':
     Names: [
     ['CLA-GUN-LRF-CTRL-01:vm:dsp:ff_amp:amplitude','RF Amplitude'],
@@ -14,29 +17,41 @@ magnets:
     ]
     PVs:
       RI: 'custom'
-  Correctors:
+  VELA Correctors:
     Names: [HCOR01, HCOR02, HCOR03, HCOR04, HCOR05, HCOR06, HCOR07, HCOR08, HCOR09,
       HCOR10, HCOR11, VCOR01, VCOR02, VCOR03, VCOR04, VCOR05, VCOR06, VCOR07, VCOR08,
       VCOR09, VCOR10, VCOR11]
     PVs:
-      RI: ['', getRI]
-      SI: ['', getSI]
-  Dipoles:
+      RI: ['self.VELAMagnets', getRI]
+      SI: ['self.VELAMagnets', getSI]
+  VELA Dipoles:
     Names: [DIP01, DIP02, DIP03]
     PVs:
-      RI: ['', getRI]
-      SI: ['', getSI]
-  'Off':
-    Names: []
-    PVs: {}
+      RI: ['self.VELAMagnets', getRI]
+      SI: ['self.VELAMagnets', getSI]
   VELA Quads:
     Names: [QUAD01, QUAD02, QUAD03, QUAD04, QUAD05, QUAD06, QUAD07, QUAD08, QUAD09,
       QUAD10, QUAD11, QUAD12, QUAD13, QUAD14, QUAD15]
     PVs:
       RI: ['self.VELAMagnets', getRI]
       SI: ['self.VELAMagnets', getSI]
-  CLARA PH1 BPMs:
+  CLARA Correctors:
+    Names: [S01-HCOR1, S01-VCOR1, S01-HCOR2, S01-VCOR2, S02-HCOR1, S02-VCOR1, S02-HCOR2, S02-VCOR2, C2V-HCOR1, C2V-VCOR1, ]
+    PVs:
+      RI: ['self.CLARAMagnets', getRI]
+      SI: ['self.CLARAMagnets', getSI]
+  CLARA Dipoles:
+    Names: [DIP01, DIP02]
+    PVs:
+      RI: ['self.CLARAMagnets', getRI]
+      SI: ['self.CLARAMagnets', getSI]
+  CLARA Quads:
+    Names: [S02-QUAD1, S02-QUAD2, S02-QUAD3, S02-QUAD4, S02-QUAD5, C2V-QUAD1, C2V-QUAD2, C2V-QUAD3]
+    PVs:
+      RI: ['self.CLARAMagnets', getRI]
+      SI: ['self.CLARAMagnets', getSI]
+  CLARA BPMs:
     Names: [S01-BPM01, S02-BPM01, S02-BPM02, C2V-BPM01]
     PVs:
-      X: ['self.bpms', getXFromPV]
-      Y: ['self.bpms', getYFromPV]
+      X: ['self.CLARAbpms', getXFromPV]
+      Y: ['self.CLARAbpms', getYFromPV]

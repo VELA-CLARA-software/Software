@@ -9,21 +9,20 @@ sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\\view')
 from PyQt4 import QtGui, QtCore
 import model_VELA as model
 #import model_CLARA as model
-import controller
-import view
-
-
+import controller.controller
+import view.view
 
 
 class App(QtGui.QApplication):
 	def __init__(self, sys_argv):
 		super(App, self).__init__(sys_argv)
 		print'Well this is fun'
-		self.view= view.Ui_MainWindow()
+		print view
+		self.view = view.view.Ui_MainWindow()
 		self.MainWindow = QtGui.QMainWindow()
 		self.view.setupUi(self.MainWindow)
 		self.model = model.Model(self.view)
-		self.controller = controller.Controller(self.view,self.model)
+		self.controller = controller.controller.Controller(self.view,self.model)
 		self.MainWindow.show()
 
 

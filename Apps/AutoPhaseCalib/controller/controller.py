@@ -7,7 +7,7 @@ import pyqtgraph as pg
 import threads
 from epics import caget,caput
 
-sys.path.append('C:\\Users\\wln24624\\Documents\\SOFTWARE\\VELA-CLARA-Software\\Software\\loggerWidget')
+sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\\..\\..\\..\\Widgets\\loggerWidget\\')
 import loggerWidget as lw
 
 class Controller():

@@ -15,9 +15,9 @@ sys.path.append('\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Software
 
 import onlineModel
 
-import VELA_CLARA_MagnetControl as mag
+import VELA_CLARA_Magnet_Control as mag
 import VELA_CLARA_BPM_Control as bpm
-import VELA_CLARA_LLRFControl as llrf
+import VELA_CLARA_LLRF_Control as llrf
 import VELA_CLARA_Scope_Control as scope
 
 class Model(QThread):
@@ -71,9 +71,9 @@ class Model(QThread):
 			self.bpms = self.bpmInit.virtual_VELA_INJ_BPM_Controller()
 			self.gun = self.llrfInit.virtual_VELA_LRRG_LLRF_Controller()
 		elif self.lineType=='CLARA'and self.machineType=='Virtual':
-			self.magnets = self.magInit.virtual_CLARA_INJ_Magnet_Controller()
-			self.scope = self.scopeInit.virtual_CLARA_INJ_Scope_Controller()
-			self.bpms = self.bpmInit.virtual_CLARA_INJ_BPM_Controller()
+			self.magnets = self.magInit.virtual_CLARA_PH1_Magnet_Controller()
+			self.scope = self.scopeInit.virtual_CLARA_PH1_Scope_Controller()
+			self.bpms = self.bpmInit.virtual_CLARA_PH1_BPM_Controller()
 			self.gun = self.llrfInit.virtual_CLARA_LRRG_LLRF_Controller()
 		self.ASTRA = onlineModel.ASTRA(V_MAG_Ctrl=self.magnets, V_RF_Ctrl=self.gun,messages=False)
 

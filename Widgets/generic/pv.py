@@ -1,9 +1,13 @@
 import time, copy, sys
 from epics import caget, caput, cainfo, PV
-#import numpy as np
-from PyQt5.QtCore import *
-from  PyQt5.QtGui import *
-from  PyQt5.QtWidgets import *
+import numpy as np
+try:
+    from PyQt4.QtCore import *
+    from PyQt4.QtGui import *
+except ImportError:
+    from PyQt5.QtCore import *
+    from PyQt5.QtGui import *
+    from PyQt5.QtWidgets import *
 from collections import deque, OrderedDict
 from six import string_types
 
@@ -14,7 +18,9 @@ def tablePrint(**kwargs):
 
 class PVObject(QObject):
 
-    newValue = pyqtSignal(float, float)
+    newValue = pyqtSignal(float, 'PyQt_PyObject', str)
+    # newValue = pyqtSignal(float, list)
+    # newValue = pyqtSignal(float, np.ndarray)
 
     def __init__(self, pv, readback=None, parent=None):
         super(PVObject, self).__init__()
@@ -34,7 +40,7 @@ class PVObject(QObject):
         if 'status' in kwargs and 'value' in kwargs and self.dict['status'] is 0:
             if not 'timestamp' in kwargs:
                 timestamp = time.time()
-            self._value = [self.dict['timestamp'], self.dict['value']]
+            self._value = [self.dict['timestamp'], self.dict['value'], self.name]
             self.newValue.emit(*self._value)
 
     def setValue(self, value):

@@ -13,6 +13,18 @@ import time
 import yaml
 import string as string
 import Software.Widgets.Striptool2.colours as colours
+from collections import OrderedDict
+
+_mapping_tag = yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG
+
+def dict_representer(dumper, data):
+    return dumper.represent_dict(data.iteritems())
+
+def dict_constructor(loader, node):
+    return OrderedDict(loader.construct_pairs(node))
+
+yaml.add_representer(OrderedDict, dict_representer)
+yaml.add_constructor(_mapping_tag, dict_constructor)
 
 class signalTypeComboBox(QComboBox):
     def __init__(self, comboID, mainForm):
@@ -95,14 +107,14 @@ class createNormalSelectionBox(QWidget):
         self.combo1.setEditable(True)
         self.combo1.lineEdit().setReadOnly(True);
         self.combo1.lineEdit().setAlignment(Qt.AlignCenter);
-        self.combo1.setMinimumWidth(80)
-        self.combo1.setMaximumWidth(100)
+        self.combo1.setMinimumWidth(100)
+        self.combo1.setMaximumWidth(150)
         if not self.custom:
             self.combo2.setEditable(True)
             self.combo2.lineEdit().setReadOnly(True);
             self.combo2.lineEdit().setAlignment(Qt.AlignCenter);
-            self.combo2.setMinimumWidth(80)
-            self.combo2.setMaximumWidth(100)
+            self.combo2.setMinimumWidth(100)
+            self.combo2.setMaximumWidth(150)
             self.combo3.setEditable(True)
             self.combo3.lineEdit().setReadOnly(True);
             self.combo3.lineEdit().setAlignment(Qt.AlignCenter);
@@ -112,7 +124,7 @@ class createNormalSelectionBox(QWidget):
         self.combo4.lineEdit().setReadOnly(True);
         self.combo4.lineEdit().setAlignment(Qt.AlignCenter);
         self.combo4.setCurrentIndex(2)
-        self.combo4.setMinimumWidth(80)
+        self.combo4.setMinimumWidth(100)
         self.combo4.setMaximumWidth(100)
         self.pvtextedit = QLineEdit()
         self.pvtextedit.setMinimumWidth(240)
@@ -165,10 +177,10 @@ class signalTable(QWidget):
     signalRateChanged = pyqtSignal('PyQt_PyObject', 'PyQt_PyObject')
     colourPickerButtonPushed = pyqtSignal('PyQt_PyObject')
 
-    def __init__(self, parent = None, VELAMagnetController=None, CLARAMagnetController=None, BPMController=None, GeneralController=None):
+    def __init__(self, parent = None, VELAMagnetController=None, CLARAMagnetController=None, VELABPMController=None, CLARABPMController=None, GeneralController=None):
         super(signalTable, self).__init__(parent)
         self.setMaximumHeight(100)
-        self.stream = open('settings.yaml', 'r')
+        self.stream = open('striptool.yaml', 'r')
         self.settings = yaml.load(self.stream)
         self.stream.close()
         self.magnetnames = self.settings['magnets']
@@ -176,7 +188,8 @@ class signalTable(QWidget):
         self.frequencies = self.settings['frequencies']
         self.VELAMagnets = VELAMagnetController
         self.CLARAMagnets = CLARAMagnetController
-        self.bpms = BPMController
+        self.VELAbpms = VELABPMController
+        self.CLARAbpms = CLARABPMController
         self.general = GeneralController
         self.stripTool = parent
         self.rowNumber = 0
@@ -196,30 +209,30 @@ class signalTable(QWidget):
         self.customSelectionBox.hide()
         self.setLayout(vBoxlayoutParameters)
         self.firstColumnComboBoxChanged.connect(self.changeSecondCombo)
-        self.secondColumnComboBoxChanged.connect(self.changeThirdComboFromSecond)
+        self.firstColumnComboBoxChanged.connect(self.changeThirdComboFromFirst)
         self.colourPickerButtonPushed.connect(self.colorPicker)
         self.stripTool.signalAdded.connect(self.updateColourBox)
         self.pvids = []
 
     def reloadSettings(self):
-        self.stream = open('settings.yaml', 'r')
+        self.stream = open('striptool.yaml', 'r')
         self.settings = yaml.load(self.stream)
         self.stream.close()
         self.magnetnames = self.settings['magnets']
         self.headings = self.settings['headings']
         self.frequencies = self.settings['frequencies']
         self.firstColumnComboBoxChanged.disconnect(self.changeSecondCombo)
-        self.secondColumnComboBoxChanged.disconnect(self.changeThirdComboFromSecond)
+        self.firstColumnComboBoxChanged.disconnect(self.changeThirdComboFromFirst)
         self.normalSelectionBox.resetHeadings()
         self.customSelectionBox.resetHeadings()
         self.firstColumnComboBoxChanged.connect(self.changeSecondCombo)
-        self.secondColumnComboBoxChanged.connect(self.changeThirdComboFromSecond)
+        self.firstColumnComboBoxChanged.connect(self.changeThirdComboFromFirst)
 
 
     def addRow(self, name, functionForm, functionArgument, freq, colourpickercolour, logScale=False, **kwargs):
         if functionForm == 'custom':
             pvtype="DBR_DOUBLE"
-            print ('functionArgument = ', functionArgument)
+            # print ('functionArgument = ', functionArgument)
             pvid = self.general.connectPV(str(functionArgument))
             if pvid is not 'FAILED':
                 self.pvids.append(pvid)
@@ -234,8 +247,8 @@ class signalTable(QWidget):
         else:
             functionName = functionForm[1]
             function = eval(functionForm[0])
-            print('functionName = ', functionName)
-            print('functionForm = ', functionForm)
+            # print('functionName = ', functionName)
+            # print('functionForm = ', functionForm)
             testFunction = lambda: getattr(function,functionName)(functionArgument)
         self.stripTool.addSignal(name=name, pen=colourpickercolour, function=testFunction, timer=1.0/freq, logScale=logScale)
         self.stripTool.records[name]['record'].start()
@@ -276,7 +289,7 @@ class signalTable(QWidget):
         self.addRow(string.replace(name,"_","$"), functionForm, name, freq, colourpickercolour, logScale=logScale)
 
     def changeSecondCombo(self, idnumber, ind):
-        print('ind = ', ind)
+        # print('ind = ', ind)
         if ind == 'Custom':
             self.customSelectionBox.combo1.setCurrentIndex(self.normalSelectionBox.combo1.currentIndex())
             self.customPVInput = True

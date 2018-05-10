@@ -479,43 +479,36 @@ class curve(QObject):
 
     def setLogMode(self, mode):
         # print 'change log mode = ', self.records['signal2']['axis'].logMode
-        self.logMode = mode
         self.records[self.name]['logScale'] = mode
         currentRange = self.vb.state['viewRange'][1]
-        self.plot.records[self.name]['axis'].setLogMode(self.records[self.name]['logScale'])
+        self.plot.records[self.name]['axis'].setLogMode(mode)
         self.curve.setLogMode(False, mode)
         self.curve10.setLogMode(False, mode)
         self.curve100.setLogMode(False, mode)
         self.curve1000.setLogMode(False, mode)
-        # self.vb.enableAutoRange(y=True)
-        if mode and not currentRange[0] == 0.0 and isinstance(currentRange[0], (float, int)):
-            # print 'entering log mode, currentRange = ', currentRange, ' == ', [np.log10(i) for i in currentRange]
-            if currentRange[0] <= 0:
-                newRange = [0,0]
-                newRange[1] = np.log10(currentRange[1])
-                newRange[0] = newRange[1] - np.log10(currentRange[1]-currentRange[0])
-            else:
-                newRange = [np.log10(i) for i in currentRange]
-            if (not newRange[0] == 0.0) and isinstance(newRange[0], (float, int)) and not np.isnan(newRange[0]):
-                print ('newRange = ', newRange)
-                self.vb.setYRange(*newRange, padding=0)
-        else:
-            # print 'leaving log mode, currentRange = ', currentRange, ' == ', [10**i for i in currentRange]
-            newRange = [10**i for i in currentRange]
-            self.vb.setYRange(*newRange, padding=0)
+        self.vb.enableAutoRange(y=True)
+        # if not self.logMode and mode and not currentRange[0] == 0.0 and isinstance(currentRange[0], (float, int)):
+        #     print ('entering log mode, currentRange = ', currentRange, ' == ', [np.log10(i) for i in currentRange])
+        #     if currentRange[0] <= 0:
+        #         newRange = [0,0]
+        #         newRange[1] = np.log10(currentRange[1])
+        #         newRange[0] = newRange[1] - np.log10(currentRange[1]-currentRange[0])
+        #     else:
+        #         newRange = [np.log10(i) for i in currentRange]
+        #     if (not newRange[0] == 0.0) and isinstance(newRange[0], (float, int)) and not np.isnan(newRange[0]):
+        #         print ('newRange = ', newRange)
+        #         self.vb.setYRange(*newRange, padding=0)
+        # else:
+        #     # print 'leaving log mode, currentRange = ', currentRange, ' == ', [10**i for i in currentRange]
+        #     newRange = [10**i for i in currentRange]
+        #     self.vb.setYRange(*newRange, padding=0)
         # print 'change log mode 2 = ', self.records['signal2']['axis'].logMode
+        self.logMode = mode
 
 
     def redrawLines(self, points, curve, curvename, pen):
         if curve.isVisible() and self.visibility[curvename] is True and len(points) > 1:
-            if self.logMode:
-                curve.setData(np.abs(np.array(points)))
-                self.setLogMode(True)
-                # print 'axis mode = ', self.plot.records[self.name]['axis'].logMode
-                # self.plot.records[self.name]['axis'].setLogMode(False)
-                # self.plot.records[self.name]['axis'].setLogMode(True)
-            else:
-                curve.setData(np.array(points))
+            curve.setData(np.array(points))
 
     def changePenColour(self):
         self.curve.setPen(pg.mkPen(color=self.records[self.name]['pen']))
