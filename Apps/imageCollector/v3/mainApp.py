@@ -5,11 +5,13 @@ os.environ['PATH']=os.environ['PATH']+';\\\\apclara1.dl.ac.uk\\ControlRoomApps\\
 #sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\\model')
 #sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\\controller')
 #sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\\view')
+for i in sys.path:
+    print "hi"
+    print i
 from PyQt4 import QtGui, QtCore
 import model.model as model
 import controller.controller as controller
 import view.view as view
-
 
 
 class App(QtGui.QApplication):
@@ -25,6 +27,9 @@ class App(QtGui.QApplication):
 
 
 if __name__ == '__main__':
+
+
+
 
     app = App(sys.argv)
     sys.exit(app.exec_())
