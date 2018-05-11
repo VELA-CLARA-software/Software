@@ -37,36 +37,31 @@ class crester(QMainWindow):
         self.widget.setLayout(self.layout)
         self.setCentralWidget(self.widget)
 
-        self.newButton = QPushButton('Reset')
-        self.newButton.clicked.connect(self.newAcc)
+        # self.newButton = QPushButton('Reset')
+        # self.newButton.clicked.connect(self.newAcc)
 
-        self.BFieldWidget = labeledWidget(QLineEdit(),'B Field:')
+        self.BFieldWidget = labeledWidget(QLineEdit(),'Dipole Current:')
         self.BFieldWidget.widget.setValidator(QDoubleValidator())
         self.acc.newBfield.connect(lambda x: self.BFieldWidget.widget.setText(str(x)))
-
-        self.pWidget = labeledWidget(QLineEdit(),'Momentum:')
-        self.pWidget.widget.setValidator(QDoubleValidator())
-        self.acc.newP.connect(lambda x: self.pWidget.widget.setText(str(x/1e6)))
 
         self.tabs = QTabWidget()
         for i in range(1):
             self.tabs.addTab(cavityCrester(i, self.acc),'Cavity '+str(i+1))
-        self.layout.addWidget(self.newButton,0,0)
+        # self.layout.addWidget(self.newButton,0,0)
         self.layout.addWidget(self.BFieldWidget,0,1)
-        self.layout.addWidget(self.pWidget,0,2)
         self.layout.addWidget(self.tabs,1,0,6,6)
 
         self.newAcc()
 
-    def newAcc(self):
-        for i in range(1):
-            self.acc.cavityNumber = i
-            self.acc.crest = 360.0*np.random.random()
-            self.acc.turnOffCavity()
-            self.tabs.widget(i).reset()
-        self.acc.cavityNumber = 0
-        self.acc.B = 0.1
-        self.acc.reset()
+    # def newAcc(self):
+    #     for i in range(1):
+    #         self.acc.cavityNumber = i
+    #         self.acc.crest = 360.0*np.random.random()
+    #         self.acc.turnOffCavity()
+    #         self.tabs.widget(i).reset()
+    #     self.acc.cavityNumber = 0
+    #     self.acc.B = 0.1
+    #     self.acc.reset()
 
 class cavityCrester(QWidget):
     def __init__(self, cavityNumber=0, acc=None, parent = None):
@@ -82,15 +77,11 @@ class cavityCrester(QWidget):
         self.gradientWidget.widget.setReadOnly(True)
         self.calculatedCrestWidget = labeledWidget(QLineEdit(), 'Computed Crest Phase:')
         self.calculatedCrestWidget.widget.setReadOnly(True)
-        self.crestWidget = labeledWidget(QLineEdit(), 'Crest Phase:')
-        self.crestWidget.widget.setReadOnly(False)
-        self.crestWidget.widget.editingFinished.connect(self.setCrest)
         self.acc.newGradient.connect(self.check_autocrest)
 
         self.controlLayout = QHBoxLayout()
         self.controlLayout.addWidget(self.crestButton)
         self.controlLayout.addWidget(self.gradientWidget)
-        self.controlLayout.addWidget(self.crestWidget)
         self.controlLayout.addWidget(self.calculatedCrestWidget)
 
         self.plotWidget = crestingPlot(cavity=self.cavityNumber)
@@ -109,9 +100,6 @@ class cavityCrester(QWidget):
         self.acc.cavityNumber = self.cavityNumber
         self.crestWidget.widget.setText(str(self.acc.crest))
 
-    def setCrest(self):
-        self.acc.crest = float(str(self.crestWidget.text()))
-
     def autocrest(self):
         self.crestButton.clicked.disconnect(self.autocrest)
         self.crestButton.clicked.connect(self.stopCrest)
@@ -127,12 +115,11 @@ class cavityCrester(QWidget):
         if cavityNumber == self.cavityNumber:
             self.gradientWidget.widget.setText(str(gradient))
             fitting_params = self.acc.calculate_crest()
-            self.calculatedCrestWidget.widget.setText(str(self.acc.crest - np.mod(fitting_params[2],360)))
             self.plotWidget.newFittedReading(self.acc.fittedData())
             if not phasesign * gradient > -1:
                 self.stopCrest()
                 self.acc.set_on_phase(self.acc.calculated_crest)
-                print ('final values = ', self.acc.crest - self.acc.phase)
+                print ('final values = ', self.acc.phase)
 
     def stopCrest(self):
         self.timer.stop()

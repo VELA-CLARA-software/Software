@@ -3,84 +3,108 @@ import numpy as np
 try:
     from PyQt4.QtCore import *
     from PyQt4.QtGui import *
+    from PyQt4 import QtTest
 except ImportError:
     from PyQt5.QtCore import *
     from PyQt5.QtGui import *
     from PyQt5.QtWidgets import *
 import scipy.constants as constants
 from scipy.optimize import curve_fit
+import inspect
 
 degree = constants.pi/180.0
 q_e = constants.elementary_charge
 c = constants.speed_of_light
 
-p0 = 5e6
+import VELA_CLARA_Magnet_Control as vcmag
+maginit = vcmag.init()
+Cmagnets = maginit.physical_CLARA_PH1_Magnet_Controller()
+import VELA_CLARA_BPM_Control as vcbpmc
+bpms = vcbpmc.init()
+Cbpms = bpms.physical_CLARA_PH1_BPM_Controller()
+# print zip(*inspect.getmembers(Cbpms, predicate=inspect.ismethod))[0]
+# exit()
+import VELA_CLARA_LLRF_Control as vcllrf
+llrf = vcllrf.init()
+Cllrf = llrf.physical_LRRG_LLRF_Controller()
+print zip(*inspect.getmembers(Cbpms, predicate=inspect.ismethod))[0]
+exit()
 
-class RF_Cavity(object):
+def qSleep(time):
+    QtTest.QTest.qWait(time)
+
+
+class RF_Cavity(QObject):
 
     def __init__(self, name, crest):
         super(RF_Cavity, self).__init__()
-        self.phase = 
+        self.name = name
+        self._phase = 0
 
     @property
     def phase(self):
+        #Cllrf.getPhiLLRF()
         return self._phase
     @phase.setter
     def phase(self, value):
+        # Cllrf.setPhiLLRF()
         self._phase = value
 
     @property
-    def crest(self):
-        return self._crest
-    @crest.setter
-    def crest(self, value):
-        self._crest = value
-
-    @property
     def amplitude(self):
-        return self._amplitude
+        return Cllrf.getAmpLLRF()
     @amplitude.setter
     def amplitude(self, value):
-        self._amplitude = value
+        pass
+        # self._amplitude = value
 
-    @property
-    def p(self):
-        return self.amplitude * np.cos((self.crest - self.phase) * degree)
-
-class dipole(PVObject):
+class dipole(object):
 
     def __init__(self, name, length):
-        super(dipole, self).__init__(name)
-
-class bpm(PVBuffer):
-
-    def __init__(self, name, length):
-        super(bpm, self).__init__(name)
+        super(dipole, self).__init__()
         self.name = name
         self.length = length
 
     @property
+    def I(self):
+        return Cmagnets.getRI(self.name)
+    @I.setter
+    def I(self, value):
+        pass
+        # Cmagnets.setSI(self.name, value)
+
+class bpm(object):
+
+    def __init__(self, name, length):
+        super(bpm, self).__init__()
+        self.name = name
+        self.length = length
+        self.startBuffer = Cbpms.getBPMXBuffer(self.name)
+
+    @property
     def x(self):
-        return self.mean
+        if Cbpms.getBPMXBuffer(self.name) == self.startBuffer:
+            return -100
+        else:
+            return Cbpms.getXFromPV(self.name)
 
 class accelerator(QObject):
 
     newBPMReading = pyqtSignal(int, list)
     newGradient = pyqtSignal(int, int, float)
     newBfield = pyqtSignal(float)
-    newP = pyqtSignal(float)
 
     def __init__(self):
         super(accelerator, self).__init__()
         self.cavs = []
-        for i in range(6):
+        for i in range(1):
             self.cavs.append(RF_Cavity('cav' + str(i + 1), 0))
-        self.dip = dipole('dip1', 0.400003)
-        self.bpm = bpm('bpm1', 0.31)
+        self.dip = dipole('DIP01', 0.400003)
+        self.bpm = bpm('C2V-BPM01', 0.31)
         self.bpmReadings = np.empty((0,2),int)
         self.offset = 0
         self.cavityNumber = 0
-        self.cavityPower = 45e6
+        self.cavityPower = 14800
         self.maxPower = 1 * self.cavityPower
 
     def turnOnCavity(self):
@@ -91,8 +115,7 @@ class accelerator(QObject):
 
     @property
     def multiplier(self):
-        power = np.sum([self.cavs[i].amplitude for i in range(1)])
-        return 2 * power / self.maxPower
+        return 2 * self.cavityPower / self.maxPower
 
     @property
     def crest(self):
@@ -115,36 +138,28 @@ class accelerator(QObject):
     def amplitude(self, value):
         self.cavs[self.cavityNumber].amplitude = value
 
-    def momentum(self):
-        p = float(p0 + np.sum(np.array([getattr(x, 'p') for x in self.cavs])))
-        p = p if p > 0 else p0
-        self.newP.emit(p)
-        return p
-
     @property
-    def B(self):
-        return self.dip.B
-    @B.setter
-    def B(self, value):
-        self.dip.B = value
-        self.newBfield.emit(self.dip.B)
+    def I(self):
+        return self.dip.I
+    @I.setter
+    def I(self, value):
+        self.dip.I = value
+        self.newBfield.emit(self.dip.I)
 
-    @property
     def x(self):
-        self.dip.p = self.momentum()
-        self.bpm.dipole_angle = self.dip.angle
         return 1e3*self.bpm.x
 
     def bpmReading(self):
-        self.bpmReadings = np.append(self.bpmReadings, [[self.phase, self.x + self.offset]], axis=0)
+        self.bpmReadings = np.append(self.bpmReadings, [[self.phase, self.x() + self.offset]], axis=0)
 
     def findStartingPhase(self, phase=0):
+        print ('finding start phase!')
         self.phase = phase
-        # self.B += 0.05
-        bpmpos = self.x
-        while((self.x > 10 or self.x < -10) and self.phase < 355):
-            self.phase += 1
-        print ('starting phase = ', self.phase, self.crest)
+        while((self.x() > 10 or self.x() < -10) and self.phase < 355):
+            self.phase += 5
+            qSleep(250)
+            print ('phase = ', self.phase)
+        print ('starting phase = ', self.phase)
 
     def gradient(self):
         return np.polyfit(x=self.bpmReadings[-5:,0], y=self.bpmReadings[-5:,1], deg=1)[0] * self.multiplier
@@ -155,14 +170,16 @@ class accelerator(QObject):
             self.bpmReading()
 
     def center_beam(self, acc=3):
-        startx = self.x
-        if self.x > acc:
-            while(self.x > acc):
-                self.B += 0.001
+        startx = self.x()
+        if self.x() > acc:
+            while(self.x() > acc):
+                self.I += 0.1
+                qSleep(250)
         else:
-            while(self.x < -1*acc):
-                self.B -= 0.001
-        self.offset += startx - self.x
+            while(self.x() < -1*acc):
+                self.I -= 0.1
+                qSleep(250)
+        self.offset += startx - self.x()
         self.bpmReading()
 
     def guess_crest(self):
@@ -185,8 +202,9 @@ class accelerator(QObject):
         if((self.phasesign * self.gradient()) < 1):
             while((self.phasesign * self.gradient()) < 1):
                 self.phase -= self.phasesign * np.max([0.5, 1*np.abs(self.gradient())])
+                qSleep(250)
                 self.center_beam()
-                self.newBPMReading.emit(self.cavityNumber, [self.phase, self.x + self.offset])
+                self.newBPMReading.emit(self.cavityNumber, [self.phase, self.x() + self.offset])
 
     def optimise(self):
         while((self.phasesign * self.gradient()) > -1):
@@ -195,8 +213,9 @@ class accelerator(QObject):
     def step(self):
         if((self.phasesign * self.gradient()) > -1):
             self.phase += self.phasesign * np.max([1, 1*np.abs(self.gradient())])
+            qSleep(250)
             self.center_beam()
-            self.newBPMReading.emit(self.cavityNumber, [self.phase, self.x + self.offset])
+            self.newBPMReading.emit(self.cavityNumber, [self.phase, self.x() + self.offset])
         self.newGradient.emit(self.cavityNumber, self.phasesign, self.gradient())
         # self.set_on_phase(self.calculated_crest)
 
@@ -204,6 +223,7 @@ class accelerator(QObject):
         while(np.abs(crest - self.phase) > 0.1):
             phasesign = np.sign(crest - self.phase)
             self.phase += phasesign*np.max([1, 1*np.abs(crest - self.phase)])
+            qSleep(250)
             self.center_beam(acc=0.1)
 
     def calculate_crest(self):
@@ -231,19 +251,19 @@ class accelerator(QObject):
 
 def main():
     acc = accelerator()
-    acc.B = 0.05
-    for i in [5,4,3,2,1,0]:
+    acc.I = 80
+    for i in [0]:
         acc.cavityNumber = i
-        acc.crest = 360.0*np.random.random()
         acc.turnOnCavity()
         acc.reset()
         acc.findCrest(0)
-        acc.optimise()
+        # acc.optimise()
         # print 'guess crest = ', acc.guess_crest(), acc.crest
-        acc.calculate_crest()
-        acc.set_on_phase(acc.calculated_crest)
+        # acc.calculate_crest()
+        # acc.set_on_phase(acc.calculated_crest)
         # print 'momentum = ', acc.momentum()/1e6, acc.B
-        print (i+1, acc.crest - np.mod(acc.phase,360))
+        # print (i+1, acc.crest - np.mod(acc.phase,360))
+    exit()
 
 if __name__ == '__main__':
    main()
