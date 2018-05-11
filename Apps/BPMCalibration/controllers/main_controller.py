@@ -79,8 +79,10 @@ class main_controller(controller_base):
 
     def set_attenuations_and_record(self):
         if controller_base.data.values[dat.ready_to_go]:
+            controller_base.bpm_handler.set_bpm_buffer(controller_base.data.values[dat.bpm_name],controller_base.data.values[dat.num_shots])
             for i in range(controller_base.data.values[dat.set_start], controller_base.data.values[dat.set_end]):
                 controller_base.bpm_handler.set_attenuation(controller_base.data.values[dat.bpm_name], i)
+                time.sleep(1)
                 controller_base.data_monitor.bpm_monitor.update_bpm_attenuations()
                 if controller_base.data_monitor.bpm_monitor.check_sa_equals_ra():
                     # controller_base.data_monitor.bpm_monitor.update_bpm_raw_data()
@@ -89,6 +91,18 @@ class main_controller(controller_base):
                     controller_base.data_monitor.bpm_monitor.update_bpm_voltages()
                     controller_base.data_monitor.scope_monitor.update_bunch_charge()
                     controller_base.bpm_handler.update_bpm_att_voltages()
+
+    # def set_delays_and_record(self):
+    #     if controller_base.data.values[dat.ready_to_go]:
+    #         for i in range(controller_base.data.values[dat.set_start],
+    #                        controller_base.data.values[dat.set_end]):
+    #             time.sleep(1)
+    #             QApplication.processEvents()
+    #             controller_base.data_monitor.bpm_monitor.update_bpm_voltages()
+    #             controller_base.bpm_handler.scan_dly(i)
+    #             controller_base.data_monitor.scope_monitor.update_bunch_charge()
+    #         controller_base.bpm_handler.find_min_dly_1()
+    #         controller_base.bpm_handler.find_min_dly_2()
 
     def set_delays_and_record(self):
         if controller_base.data.values[dat.ready_to_go]:

@@ -1,6 +1,6 @@
 import os
 import sys
-print sys.path
+
 # if os.environ['COMPUTERNAME'] == "ASTECDELL10":
 # 	print 'port'
 # 	sys.path.append(os.getcwd())
@@ -9,6 +9,7 @@ print sys.path
 # 	print 'desk'
 # 	sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\stage')
 from PyQt4 import QtGui
+
 from controllers.main_controller import main_controller
 
 # os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
