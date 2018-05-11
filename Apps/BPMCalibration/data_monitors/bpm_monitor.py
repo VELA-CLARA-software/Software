@@ -43,22 +43,22 @@ class bpm_monitor(monitor):
     def update_bpm_voltages(self):
         self.check_bpm_is_monitoring()
         if monitor.data.values[dat.bpm_status] and monitor.data.values[dat.scope_status]:
-            monitor.data.values[dat.bpm_raw_data] = monitor.bpm_control.getBPMRawDataBuffer(monitor.data.values[dat.bpm_name])
-            monitor.data.values[dat.bpm_u11] = monitor.data.values[dat.bpm_raw_data][1]
-            monitor.data.values[dat.bpm_u12] = monitor.data.values[dat.bpm_raw_data][2]
-            monitor.data.values[dat.bpm_u14] = monitor.data.values[dat.bpm_raw_data][4]
-            monitor.data.values[dat.bpm_u21] = monitor.data.values[dat.bpm_raw_data][5]
-            monitor.data.values[dat.bpm_u22] = monitor.data.values[dat.bpm_raw_data][6]
-            monitor.data.values[dat.bpm_u24] = monitor.data.values[dat.bpm_raw_data][8]
-        else:
-            monitor.data.values[dat.bpm_v11_v12_sum][monitor.data.values[dat.set_sa1_current]] = random.uniform(-2,2)
-            monitor.data.values[dat.bpm_v21_v22_sum][monitor.data.values[dat.set_sa2_current]] = random.uniform(-2,2)
-            monitor.data.values[dat.bpm_u11] = random.uniform(-2,2)
-            monitor.data.values[dat.bpm_u12] = random.uniform(-2,2)
-            monitor.data.values[dat.bpm_u14] = random.uniform(-2,2)
-            monitor.data.values[dat.bpm_u21] = random.uniform(-2,2)
-            monitor.data.values[dat.bpm_u22] = random.uniform(-2,2)
-            monitor.data.values[dat.bpm_u24] = random.uniform(-2,2)
+            monitor.data.values[dat.bpm_raw_data] = numpy.transpose(monitor.bpm_control.getBPMRawDataBuffer(monitor.data.values[dat.bpm_name]))
+            monitor.data.values[dat.bpm_u11] = monitor.data.values[dat.bpm_raw_data][5]
+            monitor.data.values[dat.bpm_u12] = monitor.data.values[dat.bpm_raw_data][6]
+            monitor.data.values[dat.bpm_u14] = monitor.data.values[dat.bpm_raw_data][8]
+            monitor.data.values[dat.bpm_u21] = monitor.data.values[dat.bpm_raw_data][1]
+            monitor.data.values[dat.bpm_u22] = monitor.data.values[dat.bpm_raw_data][2]
+            monitor.data.values[dat.bpm_u24] = monitor.data.values[dat.bpm_raw_data][4]
+        # else:
+        #     monitor.data.values[dat.bpm_v11_v12_sum][monitor.data.values[dat.set_sa1_current]] = random.uniform(-2,2)
+        #     monitor.data.values[dat.bpm_v21_v22_sum][monitor.data.values[dat.set_sa2_current]] = random.uniform(-2,2)
+        #     monitor.data.values[dat.bpm_u11] = random.uniform(-2,2)
+        #     monitor.data.values[dat.bpm_u12] = random.uniform(-2,2)
+        #     monitor.data.values[dat.bpm_u14] = random.uniform(-2,2)
+        #     monitor.data.values[dat.bpm_u21] = random.uniform(-2,2)
+        #     monitor.data.values[dat.bpm_u22] = random.uniform(-2,2)
+        #     monitor.data.values[dat.bpm_u24] = random.uniform(-2,2)
         # monitor.data.logger.message(monitor.data.values[dat.bpm_name] + ' V11 + V12 for SA1 = ' + str(
         #     monitor.data.values[dat.set_sa1_current]) + ' + = ' + str(monitor.data.values[dat.bpm_v11_v12_sum]), True)
         # monitor.data.logger.message(monitor.data.values[dat.bpm_name] + ' V21 + V22 for SA2 = ' + str(
@@ -76,15 +76,15 @@ class bpm_monitor(monitor):
                         set_sa2_current]):
             r = True
         else:
-            r = True
+            # r = True
             monitor.data.values[dat.set_sa1_current] = monitor.data.values[dat.set_sa1_current] + 1
             monitor.data.values[dat.set_sa2_current] = monitor.data.values[dat.set_sa2_current] + 1
-            # self.logger.message('SA1 ' + str(monitor.data.values[dat.
-            #                     set_sa1_current]) + ' != RA1 ' + str(monitor.data.values[
-            #                         dat.get_ra1]), True)
-            # self.logger.message('or SA2 ' + str(monitor.data.values[dat.
-            #                     set_sa2_current]) + ' != RA2 ' + str(monitor.data.values[
-            #                         dat.get_ra2]), True)
+            self.logger.message('SA1 ' + str(monitor.data.values[dat.
+                                set_sa1_current]) + ' != RA1 ' + str(monitor.data.values[
+                                    dat.get_ra1]), True)
+            self.logger.message('or SA2 ' + str(monitor.data.values[dat.
+                                set_sa2_current]) + ' != RA2 ' + str(monitor.data.values[
+                                    dat.get_ra2]), True)
         return r
 
     def update_bpm_delays(self):
@@ -99,15 +99,15 @@ class bpm_monitor(monitor):
                         set_sd2_current]):
             r = True
         else:
-            r = True
+            # r = True
             monitor.data.values[dat.set_sd1_current] = monitor.data.values[dat.set_sd1_current] + 1
             monitor.data.values[dat.set_sd2_current] = monitor.data.values[dat.set_sd2_current] + 1
-            # self.logger.message('SA1 ' + str(monitor.data.values[dat.
-            #                     set_sa1_current]) + ' != RA1 ' + str(monitor.data.values[
-            #                         dat.get_ra1]), True)
-            # self.logger.message('or SA2 ' + str(monitor.data.values[dat.
-            #                     set_sa2_current]) + ' != RA2 ' + str(monitor.data.values[
-            #                         dat.get_ra2]), True)
+            self.logger.message('SA1 ' + str(monitor.data.values[dat.
+                                set_sa1_current]) + ' != RA1 ' + str(monitor.data.values[
+                                    dat.get_ra1]), True)
+            self.logger.message('or SA2 ' + str(monitor.data.values[dat.
+                                set_sa2_current]) + ' != RA2 ' + str(monitor.data.values[
+                                    dat.get_ra2]), True)
         return r
 
     def find_nearest(self, dict, value):

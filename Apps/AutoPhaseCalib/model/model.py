@@ -5,22 +5,25 @@ import scipy.constants as physics
 import numpy as np
 from scipy.optimize import curve_fit
 import random as r
-os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
-os.environ["EPICS_CA_ADDR_LIST"] = "10.10.0.12" #BE SPECIFIC.... YOUR I.P. FOR YOUR VM
-os.environ["EPICS_CA_MAX_ARRAY_BYTES"] = "10000000"
-os.environ["EPICS_CA_SERVER_PORT"]="6000"
+# os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
+# os.environ["EPICS_CA_ADDR_LIST"] = "10.10.0.12" #BE SPECIFIC.... YOUR I.P. FOR YOUR VM
+# os.environ["EPICS_CA_MAX_ARRAY_BYTES"] = "10000000"
+# os.environ["EPICS_CA_SERVER_PORT"]="6000"
 
-sys.path.append('\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Software\\VELA_CLARA_PYDs\\bin\\stagetim')
+sys.path.append('\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Software\\VELA_CLARA_PYDs\\bin\\release\\')
 sys.path.append('\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Software\\OnlineModel')
 
 import onlineModel
 
-import VELA_CLARA_MagnetControl as mag
+import VELA_CLARA_Magnet_Control as mag
 import VELA_CLARA_BPM_Control as bpm
-import VELA_CLARA_LLRFControl as llrf
+import VELA_CLARA_LLRF_Control as llrf
 import VELA_CLARA_Scope_Control as scope
 
 class Model(QThread):
+
+	gun = None
+
 	def __init__(self,view,machineType,lineType,gunType):
 		QThread.__init__(self)
 		self.view = view
@@ -30,8 +33,8 @@ class Model(QThread):
 		self.scopeInit = scope.init()
 		self.machineType = machineType
 		self.lineType = lineType
-		self.gunType = gunType
-		self.view.label_MODE.setText('MODE: '+self.machineType+' '+self.lineType+' with '+self.gunType+' Hz gun')
+		Model.gunType = gunType
+		self.view.label_MODE.setText('MODE: '+self.machineType+' '+self.lineType+' with '+Model.gunType+' Hz gun')
 		self.setUpCtrls()
 		#self.beamlines = {"VELA":  mag.MACHINE_AREA.VELA_INJ, "CLARA": [mag.MACHINE_AREA.CLARA_INJ,mag.MACHINE_AREA.CLARA_S01,mag.MACHINE_AREA.CLARA_S02,mag.MACHINE_AREA.CLARA_2_VELA]}
 		#self.modes = {"Physical": mag.MACHINE_MODE.PHYSICAL, "Virtual": mag.MACHINE_MODE.VIRTUAL}
@@ -55,27 +58,30 @@ class Model(QThread):
 			self.claraMethod()
 
 	def setUpCtrls(self):
-		if self.lineType=='VELA'and self.machineType=='Physical':
-			self.magnets = self.magInit.physical_VELA_INJ_Magnet_Controller()
-			self.scope = self.scopeInit.physical_VELA_INJ_Scope_Controller()
-			self.bpms = self.bpmInit.physical_VELA_INJ_BPM_Controller()
-			self.gun = self.llrfInit.physical_VELA_LRRG_LLRF_Controller()
-		elif self.lineType=='CLARA'and self.machineType=='Physical':
-			self.magnets = self.magInit.physical_CLARA_INJ_Magnet_Controller()
-			self.scope = self.scopeInit.physical_CLARA_INJ_Scope_Controller()
-			self.bpms = self.bpmInit.physical_CLARA_INJ_BPM_Controller()
-			self.gun = self.llrfInit.physical_CLARA_LRRG_LLRF_Controller()
-		elif self.lineType=='VELA'and self.machineType=='Virtual':
-			self.magnets = self.magInit.virtual_VELA_INJ_Magnet_Controller()
-			self.scope = self.scopeInit.virtual_VELA_INJ_Scope_Controller()
-			self.bpms = self.bpmInit.virtual_VELA_INJ_BPM_Controller()
-			self.gun = self.llrfInit.virtual_VELA_LRRG_LLRF_Controller()
-		elif self.lineType=='CLARA'and self.machineType=='Virtual':
-			self.magnets = self.magInit.virtual_CLARA_INJ_Magnet_Controller()
-			self.scope = self.scopeInit.virtual_CLARA_INJ_Scope_Controller()
-			self.bpms = self.bpmInit.virtual_CLARA_INJ_BPM_Controller()
-			self.gun = self.llrfInit.virtual_CLARA_LRRG_LLRF_Controller()
-		self.ASTRA = onlineModel.ASTRA(V_MAG_Ctrl=self.magnets, V_RF_Ctrl=self.gun,messages=False)
+		# if self.lineType=='VELA'and self.machineType=='Physical':
+		# 	self.magnets = self.magInit.physical_VELA_INJ_Magnet_Controller()
+		# 	self.scope = self.scopeInit.physical_VELA_INJ_Scope_Controller()
+		# 	self.bpms = self.bpmInit.physical_VELA_INJ_BPM_Controller()
+		# 	Model.gun = self.llrfInit.physical_VELA_LRRG_LLRF_Controller()
+		# elif self.lineType=='CLARA'and self.machineType=='Physical':
+			self.magnets = self.magInit.physical_CLARA_PH1_Magnet_Controller()
+			self.scope = self.scopeInit.physical_CLARA_PH1_Scope_Controller()
+			self.bpms = self.bpmInit.physical_CLARA_PH1_BPM_Controller()
+			print 'physical gun'
+			Model.gun = self.llrfInit.physical_CLARA_LRRG_LLRF_Controller()
+			Model.gun.setPhiSP(25.00)
+			print 'gun = ', Model.gun
+		# elif self.lineType=='VELA'and self.machineType=='Virtual':
+		# 	self.magnets = self.magInit.virtual_VELA_INJ_Magnet_Controller()
+		# 	self.scope = self.scopeInit.virtual_VELA_INJ_Scope_Controller()
+		# 	self.bpms = self.bpmInit.virtual_VELA_INJ_BPM_Controller()
+		# 	Model.gun = self.llrfInit.virtual_VELA_LRRG_LLRF_Controller()
+		# elif self.lineType=='CLARA'and self.machineType=='Virtual':
+		# 	self.magnets = self.magInit.virtual_CLARA_PH1_Magnet_Controller()
+		# 	self.scope = self.scopeInit.virtual_CLARA_PH1_Scope_Controller()
+		# 	self.bpms = self.bpmInit.virtual_CLARA_PH1_BPM_Controller()
+		# 	Model.gun = self.llrfInit.virtual_CLARA_LRRG_LLRF_Controller()
+		# self.ASTRA = onlineModel.ASTRA(V_MAG_Ctrl=self.magnets, V_RF_Ctrl=Model.gun,messages=False)
 
 	def claraMethod(self):
 		print('clara Method')
@@ -107,6 +113,7 @@ class Model(QThread):
 		if self.view.checkBox_4.isChecked()==True:
 			print('4. Set Momentum of Beam')
 			self.setUpGun(int(self.view.lineEdit.text()),bpm)
+
 	def setUpMagnets(self,magnets):
 		deguassingList=[]
 		print('Deguassing magnets...')
@@ -161,29 +168,36 @@ class Model(QThread):
 		self.finePhaseData=[]
 		self.fineBPMData=[]
 
-		self.gun.setAmp(62.3)
-		self.approxcrest=0
+		# Model.gun.setAmpSP(16270)
+		self.approxcrest = Model.gun.getPhiSP()
+		# print Model.gun.setPhiSP(40.00)
 		for phase in np.linspace(self.approxcrest-phiRange/2, self.approxcrest+phiRange/2, phiSteps):
-			self.gun.setPhi(phase)
-
-			currphase = self.gun.getPhi()
-			time.sleep(0)
-			#while abs(phase - currphase) > abs(0.01*phase):
-			#	currphase = self.gun.getPhi()
-				#print(currphase)
+			phase = float(int(1000*phase)/1000.)
+			print 'setting phase = ', phase
+			Model.gun.setPhiSP(int(phase))
+			time.sleep(1)
+			currphase = Model.gun.getPhiSP()
+			# while abs(phase - currphase) > abs(0.1*phase):
+			# 	Model.gun.setPhiSP(phase)
+			# 	time.sleep(0.01)
+			# 	currphase = Model.gun.getPhiSP()
+			# 	#print(currphase)
+			# time.sleep(1)
 			print 'set phase to',phase
 			print 'phase got to', currphase
-			self.ASTRA.go('V1-GUN','SP-YAG04','temp-start.ini')
-			while self.ASTRA.isRunning()==True:
-				time.sleep(1)
+			# self.ASTRA.go('V1-GUN','SP-YAG04','temp-start.ini')
+			# while self.ASTRA.isRunning()==True:
+				# time.sleep(1)
 			data =1000*self.bpms.getXFromPV(bpm)
-			print data
+			# print data
 			self.fineBPMData.append(data)
 			self.finePhaseData.append(currphase)
 			#time.sleep(5)
+
 		def func(list, a, b, c):
 			x = np.array(list)
 			return a*x**2 + b*x + c
+
 		popt, pcov = curve_fit(func, self.finePhaseData, self.fineBPMData, p0=None)
 		self.finePhaseFit = np.linspace(self.approxcrest-phiRange/2, self.approxcrest+phiRange/2, 200)
 		self.fineBPMFit = func(self.finePhaseFit, *popt)
@@ -193,15 +207,15 @@ class Model(QThread):
 
 	def setUpGun(self,desiredPhase,bpm):
 		self.calibrationPhase=-0.5
-		self.gun.setPhi(desiredPhase+self.calibrationPhase)
+		Model.gun.setPhiSP(desiredPhase+self.calibrationPhase)
 		x=1000*self.bpms.getXFromPV(bpm)
-		currentAmp=self.gun.getAmp()
-		step=1 #(MV/m)
+		currentAmp=Model.gun.getAmpSP()
+		step=20 #(MV/m)
 		time.sleep(1)
 		print x
 		while abs(x)>0.01:
 
-			self.gun.setAmp(currentAmp+step)
+			Model.gun.setAmpSP(currentAmp+step)
 			time.sleep(1)
 			x_old=x
 			self.ASTRA.go('V1-GUN','SP-YAG04','temp-start.ini')

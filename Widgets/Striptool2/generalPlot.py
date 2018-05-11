@@ -1,4 +1,5 @@
-import time, signal, os, copy
+import time, signal, copy
+import os
 import xlsxwriter
 import datetime as dt
 try:
@@ -11,12 +12,12 @@ except ImportError:
 # import PyQt4.QtGui
 import logging
 import tables as tables
-import Widgets.Striptool2.signalRecord as signalRecord
-import Widgets.Striptool2.scrollingPlot as scrollingplot
-import Widgets.Striptool2.scatterPlot as scatterplot
-import Widgets.Striptool2.fftPlot as fftplot
-import Widgets.Striptool2.histogramPlot as histogramplot
-import Widgets.Striptool2.plotLegend as plotlegend
+import Software.Widgets.Striptool2.signalRecord as signalRecord
+import Software.Widgets.Striptool2.scrollingPlot as scrollingplot
+import Software.Widgets.Striptool2.scatterPlot as scatterplot
+import Software.Widgets.Striptool2.fftPlot as fftplot
+import Software.Widgets.Striptool2.histogramPlot as histogramplot
+import Software.Widgets.Striptool2.plotLegend as plotlegend
 import numpy as np
 logger = logging.getLogger(__name__)
 
@@ -121,7 +122,7 @@ class generalPlot(QWidget):
         minute = str(minute) if minute >= 10 else '0' + str(minute)
         suggestedfilename = str(year)+'_'+str(month)+'_'+str(day)+'_'+str(hour)+str(minute)+'_'+name
         saveFileName = str(QFileDialog.getSaveFileName(self, 'Save Data', suggestedfilename,
-        filter="HDF5 files (*.h5);;XLSX files (*.xlsx);;CSV files (*.csv);; Binary Files (*.bin)", initialFilter="HDF5 files (*.h5)")[0])
+        filter="HDF5 files (*.h5);;XLSX files (*.xlsx);;CSV files (*.csv);; Binary Files (*.bin)", selectedFilter="HDF5 files (*.h5)"))
         _, file_extension = os.path.splitext(saveFileName)
         if file_extension == '.csv' or file_extension == '.bin':
             print ('file_extension = ', file_extension)

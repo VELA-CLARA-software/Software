@@ -1,6 +1,10 @@
 import sys,os
 
+<<<<<<< HEAD
 os.environ['PATH']=os.environ['PATH']+';\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release\\'
+=======
+os.environ['PATH']=os.environ['PATH']+';\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\stage\\'
+>>>>>>> efec22cf5e952f3d87d75e4a21930c12008c3145
 os.environ['PATH']=os.environ['PATH']+';\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\stage\\root_v5.34.34\\bin\\'
 #sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\\model')
 #sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\\controller')

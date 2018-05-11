@@ -1,5 +1,6 @@
 missing module named PySide - imported by c:\python27\lib\site-packages\PyInstaller\loader\rthooks\pyi_rth_qt4plugins.py
 missing module named org - imported by copy
+missing module named VELA_CLARA_Magnet_Control - imported by control.magnetAppController, GUI.GUI_magnetAppStartup, GUI.GUI_magnetWidget
 missing module named readline - imported by cmd, pdb
 missing module named 'org.python' - imported by pickle
 missing module named fcntl - imported by tempfile, subprocess
@@ -12,4 +13,3 @@ missing module named os2 - imported by os
 missing module named pwd - imported by posixpath
 missing module named posix - imported by os
 missing module named resource - imported by posix
-missing module named magnetAppController - imported by D:\VELA\GIT Projects\Software\Apps\MagnetApp\magnetApp.py

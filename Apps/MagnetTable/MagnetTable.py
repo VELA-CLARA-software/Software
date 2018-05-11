@@ -92,7 +92,7 @@ def format_when_present(format_string, obj, attr):
         return ''
 
 def pixmap(icon_name):
-    icon_filename = os.getcwd()+'\\resources\\magnetTable\\Icons\\' + icon_name + '.png' #resource_filename('MagnetTable', 'Icons/' + icon_name + '.png')
+    icon_filename = os.getcwd() + r'\resources\magnetTable\Icons\{}.png'.format(icon_name)
     return QtGui.QPixmap(icon_filename)
 
 # for debugging
@@ -132,16 +132,18 @@ class Window(QtGui.QMainWindow):
     def __init__(self, parent=None):
         QtGui.QMainWindow.__init__(self, parent)
 
-        ini_filename = os.getcwd()+'\\resources\\magnetTable\\MagnetTable.ini' #resource_filename('MagnetTable', 'MagnetTable.ini')
+        ini_filename = os.getcwd() + r'\resources\magnetTable\MagnetTable.ini'
         self.settings = QtCore.QSettings(ini_filename, QtCore.QSettings.IniFormat)
         main_frame = QtGui.QFrame()
         layout = QtGui.QVBoxLayout(self)
         main_frame.setLayout(layout)
         self.setCentralWidget(main_frame)
+
         checkbox_grid = QtGui.QHBoxLayout()
         magnet_types = ('Dipoles', 'Quadrupoles', 'Correctors', 'Solenoids')
         for mag in magnet_types:
             checkbox = QtGui.QCheckBox(mag)
+            checkbox.help_text = 'Toggle visibility of <b>' + mag.lower() + '</b>.'
             checkbox.setIcon(QtGui.QIcon(pixmap(mag)))
             checkbox.setChecked(True)
             checkbox.clicked.connect(self.toggleMagType)
@@ -152,6 +154,8 @@ class Window(QtGui.QMainWindow):
 
         machine_modes = ('Offline', 'Virtual', 'Physical')
         mode_combo = QtGui.QComboBox()
+        mode_combo.help_text = "Switch between the <b>virtual</b> and <b>physical</b> machines. There is also an " \
+            "<b>offline</b> mode that doesn't connect to anything."
         checkbox_grid.addWidget(mode_combo)
         mode_combo.activated.connect(self.machineModeRadioClicked)
         [mode_combo.addItem(QtGui.QIcon(pixmap(mode)), mode) for mode in machine_modes]
@@ -162,14 +166,19 @@ class Window(QtGui.QMainWindow):
             i = 0
         mode_combo.setCurrentIndex(i)
         self.setMachineMode(set_mode)
-        
-        checkbox_grid.addWidget(QtGui.QLabel('Momentum change mode'))
-        mom_modes = ('Change K/angle', 'Change current')
+
+        label = QtGui.QLabel('On momentum change:')
+        checkbox_grid.addWidget(label)
+        mom_modes = ('Recalculate K', 'Scale currents')
         mode_combo = QtGui.QComboBox()
+        help_text = "When the momentum value is altered for a section, either <b>recalculate</b> all the " \
+            "K values for that section, or <b>scale</b> the magnet currents to keep the K values the same."
+        label.help_text = help_text
+        mode_combo.help_text = help_text
         checkbox_grid.addWidget(mode_combo)
         mode_combo.activated.connect(self.momentumModeRadioClicked)
-        [mode_combo.addItem(mode) for mode in mom_modes]
-        set_mode = self.settings.value('momentum_mode', 'Change K/angle').toString()
+        [mode_combo.addItem(QtGui.QIcon(pixmap(mode.lower().replace(' ', '_'))), mode) for mode in mom_modes]
+        set_mode = self.settings.value('momentum_mode', mom_modes[0]).toString()
         try:
             i = mom_modes.index(set_mode)
         except ValueError:
@@ -178,11 +187,13 @@ class Window(QtGui.QMainWindow):
         self.mom_mode_combo = mode_combo
 
         load_button = QtGui.QPushButton(QtGui.QIcon(pixmap('Open')), 'Load...')
+        load_button.help_text = "<b>Load</b> magnet settings from an .lte (lattice) file."
         load_button.setToolTip('Read in a lattice file')
         checkbox_grid.addWidget(load_button)
         load_button.clicked.connect(self.loadButtonClicked)
 
         help_button = QtGui.QPushButton(QtGui.QIcon(pixmap('help')), '')
+
         help_button.setToolTip('Get help on this program')
         help_button.setMaximumWidth(32)
         checkbox_grid.addWidget(help_button, 0)
@@ -223,12 +234,14 @@ class Window(QtGui.QMainWindow):
             header_hbox = QtGui.QHBoxLayout()
             header_hbox.setAlignment(QtCore.Qt.AlignTop)
             magnet_list_frame = QtGui.QFrame()
-            title = self.collapsing_header(header_hbox, magnet_list_frame, u'▲ ' + section_name + '\t')
+            title = self.collapsing_header(header_hbox, magnet_list_frame, u'▲ ' + section_name + '\t',
+                                           help_text="Click to collapse/expand the " + section_name + " section.")
             title.setFont(section_font)
             magnet_list_frame.title_label = title
             min_momentum = 1.0
-            momentum = self.spinbox(header_hbox, 'MeV/c', step=0.1, value=section.default_momentum,
-                                    decimals=3, min_value=min_momentum)
+            momentum_value, ok = self.settings.value(section.title + '/momentum', section.default_momentum).toFloat()
+            momentum = self.spinbox(header_hbox, 'MeV/c', step=0.1, value=momentum_value, decimals=3,
+                                    min_value=min_momentum, help_text="Set the momentum of the " + section_name + " section. ")
             momentum.valueChanged.connect(self.momentumChanged)
             section_vbox.addLayout(header_hbox)
             magnet_list_vbox = QtGui.QVBoxLayout()
@@ -278,7 +291,7 @@ class Window(QtGui.QMainWindow):
                 magnet_frame.setFrameShape(QtGui.QFrame.Box | QtGui.QFrame.Plain)
                 magnet_frame.setStyleSheet('#branch {background-color: #ffffee;} #junction {background-color: qlineargradient( x1:0 y1:0, x2:0 y2:1, stop:0 #f0f0f0, stop:1 #ffffee);}')
 
-                #different shading for magnets in branches, and smooth transition at junctions
+                # different shading for magnets in branches, and smooth transition at junctions
                 branch_name = magnet.ref.magnetBranch
                 in_branch = branch_name != 'UNKNOWN_MAGNET_BRANCH'
                 if in_branch:
@@ -286,7 +299,7 @@ class Window(QtGui.QMainWindow):
                     junc_magnet = self.magnets[key + "_" + branch_name]
                     junc_magnet.is_junction = True
                     junc_magnet.magnet_frame.setObjectName('junction')
-                end_of_branch = False#magnet.name in ('QUAD06', 'QUAD14')
+                end_of_branch = False  # magnet.name in ('QUAD06', 'QUAD14')
                 magnet_frame.setLineWidth(3 if end_of_branch else 1)
                 magnet_frame.setContentsMargins(0, 0, 0, 3 if end_of_branch else 1)
                 magnet_vbox = QtGui.QVBoxLayout()
@@ -301,17 +314,18 @@ class Window(QtGui.QMainWindow):
                 # 'H Corrector' -> 'Correctors'; 'Quadrupole' -> 'Quadrupoles'
                 generic_name = attributes.friendly_name.split(' ')[-1].capitalize() + 's'
 
-                icon = self.collapsing_header(main_hbox, more_info)
+                show_hide_info = "Click to show/hide more information about <b>{}</b>.".format(magnet.name)
+                icon = self.collapsing_header(main_hbox, more_info, help_text=show_hide_info)
                 icon.setPixmap(pixmap(generic_name).scaled(32, 32))
                 magnet.icon = icon
                 # The tab here aligns all the current spinboxes nicely
                 # title_text = magnet.name.replace(mag_type, attributes.friendly_name + ' ') + '\t'
                 # Remove the S01- or S02- prefix at the start for a cleaner look
                 title_text = re.sub(r'^S\d\d-', '', magnet.name, 1) + '\t'
-                title = self.collapsing_header(main_hbox, more_info, title_text)
+                title = self.collapsing_header(main_hbox, more_info, title_text, help_text=show_hide_info)
                 title.setFont(magnet_font)
                 magnet.title = title
-                self.collapsing_header(main_hbox, more_info, attributes.effect_name)
+                self.collapsing_header(main_hbox, more_info, attributes.effect_name, help_text=show_hide_info)
                 # bipolar = mag_type in ('BSOL', 'SOL', 'DIP')  # not rev_type == VC_MagCtrl.MAG_REV_TYPE.POS
                 max_current = magnet.ref.maxI
                 min_current = magnet.ref.minI
@@ -326,32 +340,44 @@ class Window(QtGui.QMainWindow):
                 # else:
                 #     max_k = self.getK(magnet, max_current, min_momentum)
                 step = 0.01 if mag_type == 'BSOL' else 0.1
-                k_spin = self.spinbox(main_hbox, attributes.effect_units, step=step, decimals=3) #, min_value=min_k, max_value=max_k)
+                help_text = "Set the {} in the <b>{}</b> magnet. The magnet current will be automatically adjusted, depending on the momentum in the {} section. ".format(
+                    attributes.effect_name.lower(), magnet.name, section_name)
+                k_spin = self.spinbox(main_hbox, attributes.effect_units, step=step, decimals=3,
+                                      help_text=help_text) #, min_value=min_k, max_value=max_k)
                 magnet.k_spin = k_spin
                 if mag_type == 'DIP':
                     magnet.branch_button = QtGui.QToolButton()
                     magnet.branch_button.setCheckable(True)
                     magnet.branch_button.clicked.connect(self.branchButtonClicked)
                     magnet.branch_button.magnet = magnet  # link back to this magnet when clicked
+                    magnet.branch_button.setToolTip('Toggle branch on/off')
+                    magnet.branch_button.help_text = "Click to toggle this dipole, either sending the beam straight through, or onto a branch."
                     branch_icon = QtGui.QIcon()
                     branch_icon.addPixmap(pixmap('branch-off'), QtGui.QIcon.Normal, QtGui.QIcon.Off)
                     branch_icon.addPixmap(pixmap('branch-on'), QtGui.QIcon.Normal, QtGui.QIcon.On)
                     magnet.branch_button.setIcon(branch_icon)
                     main_hbox.addWidget(magnet.branch_button)
 
-                self.collapsing_header(main_hbox, more_info, lbl)
+                self.collapsing_header(main_hbox, more_info, lbl, help_text=show_hide_info)
+                help_text = "Set the current in the <b>{}</b> magnet. The {} will be calculated, depending on the momentum in the {} section. ".format(
+                    magnet.name, attributes.effect_name.lower(), section_name)
                 current_spin = self.spinbox(main_hbox, units, step=0.1, decimals=3,
-                                            min_value=min_current, max_value=max_current)
+                                            min_value=min_current, max_value=max_current, help_text=help_text)
                 magnet.current_spin = current_spin
                 if mag_type == 'DIP':
                     magnet.set_mom_checkbox = QtGui.QCheckBox('Set momentum')
                     magnet.set_mom_checkbox.setSizePolicy(label_size_policy)
                     magnet.set_mom_checkbox.setToolTip("Calculate the beam's momentum by adjusting this magnet's current")
+                    magnet.set_mom_checkbox.help_text = u"Measure the momentum using this dipole. First, set the dipole angle to 45°. " \
+                        "Then check this box and adjust the current until the beam is centred on the screen. The momentum in the {} section " \
+                        "will be automatically set. Finally, clear the checkbox."
                     main_hbox.addWidget(magnet.set_mom_checkbox)
 
                 restore_button = QtGui.QToolButton()
                 restore_button.setIcon(QtGui.QIcon(pixmap('undo')))
                 restore_button.clicked.connect(self.restoreMagnet)
+                restore_button.setToolTip('Undo')
+                restore_button.help_text = "Undo the previous change to the <b>{}</b> magnet. Multiple changes while the control has the focus are counted as one.".format(magnet.name)
                 main_hbox.addWidget(restore_button)
                 magnet.restore_button = restore_button
                 restore_button.setEnabled(False)
@@ -359,6 +385,7 @@ class Window(QtGui.QMainWindow):
                 self.empty_icon.fill(QtCore.Qt.transparent)
                 warning_icon = self.collapsing_header(main_hbox, more_info)
                 warning_icon.setPixmap(self.empty_icon)
+                warning_icon.help_text = "An orange warning icon indicates that the magnet's read value and set value are different. Red indicates that the magnet is not powered on. " + show_hide_info
                 magnet.warning_icon = warning_icon
                 #TODO: warn when magnet needs degaussing
 
@@ -375,9 +402,11 @@ class Window(QtGui.QMainWindow):
                 offline_info = QtGui.QLabel(''.join(static_info))
                 offline_info.linkActivated.connect(lambda url: os.system('start "" "' + str(url) + '"'))
                 offline_info.setAlignment(QtCore.Qt.AlignTop)
+                offline_info.help_text = ''
                 more_info_layout.addWidget(offline_info)
                 online_info = QtGui.QLabel()
                 online_info.setAlignment(QtCore.Qt.AlignTop)
+                online_info.help_text = ''
                 more_info_layout.addWidget(online_info)
                 magnet.online_info = online_info
                 more_info.hide()
@@ -386,6 +415,13 @@ class Window(QtGui.QMainWindow):
                 # title.installEventFilter(self)
                 magnet_list_vbox.addWidget(magnet_frame)
             
+        self.helpLabel = QtGui.QLabel()
+        self.helpLabel.setWordWrap(True)
+        self.helpLabel.setStyleSheet("QLabel { background-color : rgb(255, 248, 220); }")
+        self.helpLabel.setText('Welcome to the <b>Magnet Table</b>. Hover over any control for detailed help.')
+        self.helpLabel.help_text = ''
+        layout.addWidget(self.helpLabel)
+
         if lw is not None:
             self.log_widget = lw.loggerWidget(logger)
             self.log_widget.hide()
@@ -401,16 +437,19 @@ class Window(QtGui.QMainWindow):
 
         self.magnet_controls = magnet_list
         self.setWindowTitle('Magnet Table')
-        self.setGeometry(300, 300, 300, 450)
+        rect = self.settings.value('geometry', QtCore.QRect(300, 300, 400, 600)).toRect()
+        self.setGeometry(rect)
         self.update_period = 100  # milliseconds
         self.wait_for_magnet, self.wait_for_value = None, None  # what magnet and SI are we waiting for?
         self.startMainViewUpdateTimer()
         self.setWindowIcon(QtGui.QIcon(pixmap('magnet')))
         self.show()
 
-    def collapsing_header(self, parent_widget, more_info, label_text=''):
+    def collapsing_header(self, parent_widget, more_info, label_text='', help_text=''):
         """Make a label that shows or hides the more_info widget when clicked."""
         label = QtGui.QLabel(label_text)
+        if help_text:
+            label.help_text = help_text
         label.setSizePolicy(label_size_policy)
         label.setCursor(QtCore.Qt.PointingHandCursor)
         label.toggle_frame = more_info
@@ -418,7 +457,8 @@ class Window(QtGui.QMainWindow):
         parent_widget.addWidget(label)
         return label
         
-    def spinbox(self, parent, units, step=None, value=float('nan'), decimals=2, min_value=float('-inf'), max_value=float('inf')):
+    def spinbox(self, parent, units, step=None, value=float('nan'), decimals=2,
+                min_value=float('-inf'), max_value=float('inf'), help_text = ''):
         """Make a double-valued spinbox."""
         spinbox = QtGui.QDoubleSpinBox()
         spinbox.setSuffix(' ' + units)
@@ -428,6 +468,9 @@ class Window(QtGui.QMainWindow):
         spinbox.setKeyboardTracking(False)
         if step:
             spinbox.setSingleStep(step)
+        more_help_text = help_text + "Hold SHIFT + mouse wheel to adjust by small steps, and CTRL + SHIFT + mouse wheel to adjust by large steps."
+        spinbox.help_text = more_help_text
+        spinbox.lineEdit().help_text = more_help_text
         parent.addWidget(spinbox)
         # spinbox.installEventFilter(self)
         return spinbox
@@ -487,6 +530,13 @@ class Window(QtGui.QMainWindow):
                 frame.title_label.setText((u'▼' if vis else u'▲') + frame.title_label.text()[1:])
             except:
                 pass  # no toggle_frame - never mind (or perhaps no title_label)
+        elif evType == QtCore.QEvent.MouseMove:
+            # show help text when mouse hovers over a control
+            try:
+                text = source.parent().help_text if type(source) is QtGui.QLineEdit else source.help_text
+                self.helpLabel.setText(text)
+            except AttributeError:  # no help text for this control
+                pass
         elif type(source) in (QtGui.QLineEdit, QtGui.QDoubleSpinBox):
             # event was triggered in a magnet spin box (K or current)
             if evType == QtCore.QEvent.Wheel:
@@ -502,8 +552,8 @@ class Window(QtGui.QMainWindow):
                 except AttributeError: # won't work for momentum spin boxes
                     pass
         elif evType == QtCore.QEvent.Wheel and (modifiers & QtCore.Qt.ShiftModifier):
-            # don't allow scrolling if Shift _is_ held outwith a spin box - 
-            # otherwise we'll accidentally scroll the window while we're trying to 
+            # don't allow scrolling if Shift _is_ held outwith a spin box -
+            # otherwise we'll accidentally scroll the window while we're trying to
             # modify the spin box and the mouse slips a bit_length
             return True
         return QtGui.QMainWindow.eventFilter(self, source, event)
@@ -557,8 +607,9 @@ class Window(QtGui.QMainWindow):
     def momentumChanged(self, value):
         """Called when a momentum spin box is changed by the user."""
         section = self.sender().magnet_list_vbox
+        self.settings.setValue(section.id + '/momentum', self.sender().value())
         mode = self.mom_mode_combo.currentText()
-        changeFunc = self.calcKFromCurrent if mode == 'Change K/angle' else self.calcCurrentFromK
+        changeFunc = self.calcKFromCurrent if mode == 'Recalculate K' else self.calcCurrentFromK
         for magnet in self.magnets.values():
             if magnet.section == section:
                 # Ensure dipoles with the "Set momentum" checkbox ticked are not modified
@@ -791,6 +842,7 @@ class Window(QtGui.QMainWindow):
     def closeEvent(self, event):
         logger.info('Close app')
         self.widgetUpdateTimer.stop()
+        self.settings.setValue('geometry', self.geometry())
         exit()
         
     def __repr__(self):
