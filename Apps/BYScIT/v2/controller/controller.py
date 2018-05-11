@@ -12,7 +12,7 @@ import pyqtgraph.opengl as gl
 import threads
 from decimal import *
 
-sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\stage')
+sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release')
 import VELA_CLARA_Camera_IA_Control as ia
 
 
@@ -201,8 +201,9 @@ class Controller(QtCore.QThread):
                 self.model.getImage(str(self.listOfImages[i]))
             image = np.transpose(np.flip(self.model.imageData, 1))
             image = image.flatten().tolist()
-            im = ia.std_vector_double()
-            im.extend(image)
+            #im = ia.std_vector_double()
+            #im.extend(image)
+            im = image
             self.model.offlineAnalysis.loadImage(im, self.model.fullName, self.model.imageHeight, self.model.imageWidth)
             if len(self.listOfBkgrndImages) > 0:
                 self.model.offlineAnalysis.useBackground(True)
@@ -464,9 +465,9 @@ class Controller(QtCore.QThread):
     def analyse(self):
         image = np.transpose(np.flip(self.model.imageData, 1))
         image = image.flatten().tolist()
-        im = ia.std_vector_double()
-        im.extend(image)
-
+        #im = ia.std_vector_double()
+        #im.extend(image)
+        im = image
         self.model
         self.model.offlineAnalysis.loadImage(im, self.model.fullName, self.model.imageHeight, self.model.imageWidth)
         if self.view.checkBox_useBackground.isChecked() is True:
@@ -474,9 +475,9 @@ class Controller(QtCore.QThread):
 
             bk = np.transpose(np.flip(self.backgroundData.imageData, 1))
             bk = bk.flatten().tolist()
-            b = ia.std_vector_double()
-            b.extend(bk)
-            self.model.offlineAnalysis.loadBackgroundImage(b, self.backgroundData.fullName)
+            #b = ia.std_vector_double()
+            #b.extend(bk)
+            self.model.offlineAnalysis.loadBackgroundImage(bk, self.backgroundData.fullName)
             if self.backgroundData.imageHeight != self.model.imageHeight or self.backgroundData.imageWidth != self.model.imageWidth:
                 print 'ERROR: Image and Background are not the same dimensions!'
                 return

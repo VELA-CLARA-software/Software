@@ -3,7 +3,7 @@ import sys,os
 import time
 import numpy as np
 import pyqtgraph as pg
-sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\\..\\..\\loggerWidget\\')
+sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\\..\\..\\..\\Widgets\\loggerWidget\\')
 import loggerWidget as lw
 import random as r
 import cv2

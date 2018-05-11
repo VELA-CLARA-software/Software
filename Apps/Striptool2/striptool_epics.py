@@ -15,10 +15,12 @@ import numpy as np
 from Software.Widgets.Striptool2.splitterWithHandles import splitterWithHandles
 import VELA_CLARA_Magnet_Control as vmag
 maginit = vmag.init()
-Vmagnets = maginit.physical_VELA_INJ_Magnet_Controller()
-Cmagnets = maginit.physical_CLARA_PH1_Magnet_Controller()
 import VELA_CLARA_BPM_Control as vbpmc
 bpms = vbpmc.init()
+Vmagnets = maginit.physical_VELA_INJ_Magnet_Controller()
+Cmagnets = maginit.physical_CLARA_PH1_Magnet_Controller()
+Vbpms = bpms.physical_VELA_INJ_BPM_Controller()
+Cbpms = bpms.physical_CLARA_PH1_BPM_Controller()
 import  VELA_CLARA_General_Monitor as vgen
 general = vgen.init()
 ''' Load loggerWidget library (comment out if not available) '''
@@ -82,7 +84,12 @@ class striptool_Demo(QMainWindow):
         self.histogramplot = self.generalplot.histogramPlot()
         self.scatterplot = self.generalplot.scatterPlot()
         self.legend = self.generalplot.legend()
-        self.signaltable = signaltable.signalTable(parent=self.generalplot, VELAMagnetController=Vmagnets, CLARAMagnetController=Cmagnets, BPMController=bpms, GeneralController=general)
+        self.signaltable = signaltable.signalTable(parent=self.generalplot,
+        VELAMagnetController=Vmagnets,
+        CLARAMagnetController=Cmagnets,
+        VELABPMController=Vbpms,
+        CLARABPMController=Cbpms,
+        GeneralController=general)
 
         reloadSettingsAction = QAction('Reload Settings', self)
         reloadSettingsAction.setStatusTip('Reload Settings YAML File')

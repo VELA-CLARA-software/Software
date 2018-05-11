@@ -17,7 +17,7 @@ os.environ["EPICS_CA_MAX_ARRAY_BYTES"] = "10000000"
 os.environ["EPICS_CA_SERVER_PORT"]="6000"
 '''Maybe look in at apclara1.dl.ac.uk for latest version'''
 sys.path.append('\\\\fed.cclrc.ac.uk\\Org\\NLab\ASTeC\\Projects\\VELA\\Software\\OnlineModel')
-sys.path.append('\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Software\\VELA_CLARA_PYDs\\bin\\stagetim')
+# sys.path.append('\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Software\\VELA_CLARA_PYDs\\bin\\stagetim')
 import onlineModel
 import VELA_CLARA_Magnet_Control as mag
 import VELA_CLARA_BPM_Control as bpm

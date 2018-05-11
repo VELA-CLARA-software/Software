@@ -5,6 +5,7 @@ Ben Shepherd, April 2017
 Given a named solenoid and current, provides a field map.
 Combined solenoid and bucking coil maps are handled too."""
 
+import sys, os
 import numpy as np
 from collections import namedtuple
 import scipy.interpolate
@@ -16,6 +17,8 @@ SOLENOID_LIST = ('gb-rf-gun', 'gb-dc-gun', 'Gun-10', 'Gun-400', 'Linac1')
 field_map_attr = namedtuple('field_map_attr', 'coeffs z_map bc_area bc_turns sol_area sol_turns')
 field_map_attr.__new__.__defaults__ = (1, 1, 1, 1)
 
+# figure out where the script is (or EXE file if we've been bundled)
+bundle_dir = os.path.dirname(os.path.abspath(sys.executable if getattr(sys, 'frozen', False) else __file__))
 
 def interpolate(x, y):
     """Return an interpolation object with some default parameters."""
@@ -58,7 +61,7 @@ class Solenoid:
             # and n <= 3
             # See BJAS' spreadsheet: coeffs-vs-z.xlsx
             # This takes care of interaction between the BC and solenoid
-            field_map_coeffs = np.loadtxt(str(name + '-coeffs-vs-z.csv'), delimiter=',')
+            field_map_coeffs = np.loadtxt(str(bundle_dir + '/resources/parasol/' + name + '-coeffs-vs-z.csv'), delimiter=',')
             self.b_field = field_map_attr(coeffs=field_map_coeffs, z_map=np.arange(0, 401, dtype='float64') * 1e-3,
                                           bc_area=bc_area, bc_turns=bc_turns, sol_area=sol_area, sol_turns=144.0)
             self.z_map = self.b_field.z_map
@@ -91,9 +94,9 @@ class Solenoid:
             dz = (z_list_08[-1] - z_list_08[0]) / (len(z_list_08) - 1)
             # TODO: fix actual position of solenoids
             z_offset = np.array([-1, 1]) * cell_length * (n_cells - 1) / 4
-            print(z_offset)
+            # print(z_offset)
             z_minmax = z_offset + z_list_08[[0, -1]]
-            print(z_minmax)
+            # print(z_minmax)
             z_map = np.arange(*z_minmax, step=dz)
             B_map = np.zeros((n_sols, len(z_map)))
             # Here, we reverse the order of B_list since the solenoids are installed with the -Z end (in the measured coordinate system)
@@ -118,7 +121,7 @@ class Solenoid:
             self.sol_current = 300.0  # just a made-up number
 
             # Define this in a simpler way - then we can just multiply by sol_current to get B-field value
-            z_list, B_list = np.loadtxt('gb-field-maps/{}_b-field.csv'.format(name), delimiter=',').T
+            z_list, B_list = np.loadtxt(bundle_dir + '/resources/parasol/gb-field-maps/{}_b-field.csv'.format(name), delimiter=',').T
             self.b_field = np.array([z_list, B_list / self.sol_current])
             self.bc_range = None
             self.sol_range = (0.0, 500.0)
