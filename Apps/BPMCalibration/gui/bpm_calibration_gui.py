@@ -248,19 +248,19 @@ class bpm_calibration_gui(QMainWindow, Ui_MainWindow, base):
 		elif b.text() == "Delay":
 			if b.isChecked() == True:
 				self.lowerBoundOutputWidget.setPlainText("1")
-				self.upperBoundOutputWidget.setPlainText("511")
+				self.upperBoundOutputWidget.setPlainText("255")
 				self.data.values[dat.calibration_type] = 'delay'
 
 	def plot_bpm_vs_sa(self):
 		self.bpmxPlot.clear()
 		self.bpmyPlot.clear()
 		self.vbx = self.bpmxPlot.vb
-		self.vbx.setYRange(-2,2)
+		self.vbx.setYRange(min(self.data.values[dat.bpm_v11_v12_sum].values()),max(self.data.values[dat.bpm_v11_v12_sum].values()))
 		self.xplot = self.bpmxPlot.plot(pen=mkPen('b',width=3), symbol='o')
 		self.xplot.setData(range(self.data.values[dat.set_start],self.data.values[dat.set_end]),
 						   self.data.values[dat.bpm_v11_v12_sum].values())
 		self.vby = self.bpmyPlot.vb
-		self.vby.setYRange(-2, 2)
+		self.vby.setYRange(min(self.data.values[dat.bpm_v21_v22_sum].values()),max(self.data.values[dat.bpm_v21_v22_sum].values()))
 		self.yplot = self.bpmyPlot.plot(pen=mkPen('b', width=3), symbol='o')
 		self.yplot.setData(range(self.data.values[dat.set_start], self.data.values[dat.set_end]),
 						   self.data.values[dat.bpm_v21_v22_sum].values())
@@ -270,17 +270,17 @@ class bpm_calibration_gui(QMainWindow, Ui_MainWindow, base):
 		self.bpmxPlot.clear()
 		self.bpmyPlot.clear()
 		self.vbx = self.bpmxPlot.vb
-		self.vbx.setYRange(-2,2)
+		self.vbx.setYRange(min(self.data.values[dat.dv1_dly1].values()),max(self.data.values[dat.dv1_dly1].values()))
 		self.xplot = self.bpmxPlot.plot(pen=mkPen('b',width=3), symbol='o')
 		self.xplot.setData(range(self.data.values[dat.set_start],self.data.values[dat.set_end]),
 						   self.data.values[dat.dv1_dly1].values())
 		self.xplot.setData(range(self.data.values[dat.set_start], self.data.values[dat.set_end]),
 						   self.data.values[dat.dv2_dly1].values())
 		self.vby = self.bpmyPlot.vb
-		self.vby.setYRange(-2, 2)
+		self.vby.setYRange(min(self.data.values[dat.dv1_dly2].values()),max(self.data.values[dat.dv1_dly2].values()))
 		self.yplot = self.bpmyPlot.plot(pen=mkPen('b', width=3), symbol='o')
 		self.yplot.setData(range(self.data.values[dat.new_dly_1] - 20, self.data.values[dat.new_dly_1] + 20),
 						   self.data.values[dat.dv1_dly2].values())
-		self.yplot.setData(range(self.data.values[dat.new_dly_1] - 20, self.data.values[dat.new_dly_1] + 20),
-						   self.data.values[dat.dv2_dly2].values())
+		# self.yplot.setData(range(self.data.values[dat.new_dly_1] - 20, self.data.values[dat.new_dly_1] + 20),
+		# 				   self.data.values[dat.dv2_dly2].values())
 		self.data.values[dat.plots_done] = True

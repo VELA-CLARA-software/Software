@@ -147,7 +147,10 @@ class Controller():
             self.view.covXY_label.setText(str(round(self.model.selectedCameraIA.IA.covXY,3)))
             
             data = caget(self.model.selectedCameraDAQ.pvRoot + 'CAM2:ArrayData')
-            npData = np.array(data).reshape((1080, 1280))
+            if name == "VC":
+                npData = np.array(data).reshape((1080, 1280))
+            else:
+                npData = np.array(data).reshape((1280, 1080))
             self.Image.setImage(np.flip(np.transpose(npData), 1))
             self.Image.setLevels([self.view.spinBox_minLevel.value(),
                                   self.view.spinBox_maxLevel.value()], update=True)
