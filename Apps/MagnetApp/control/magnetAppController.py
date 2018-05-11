@@ -63,8 +63,8 @@ class magnetAppController(object):
             mag.MACHINE_AREA.CLARA_PH1:'CLARA_PH1'
             # mag.MACHINE_AREA.CLARA_PHASE_1:'CLARA PHASE 1 Magnets',
             }
-        for i in sys.path:
-            print i
+#        for i in sys.path:
+#            print i
 #          __                 __             .__
 #  _______/  |______ ________/  |_     ___  _|__| ______  _  __
 # /  ___/\   __\__  \\_  __ \   __\    \  \/ /  |/ __ \ \/ \/ /

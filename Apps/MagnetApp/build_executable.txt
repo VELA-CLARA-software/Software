@@ -1,4 +1,20 @@
+# manually clear pyinstaller cache
+%AppData%Roaming\pyinstaller
+
 # run this from the commnand line, 
 # should compile in all libraries that have 
 # a path defined in the python source code
-pyinstaller -F -n  "app_name" launcher.py --add-binary "H:\Controllers\bin\stage\VELA_CLARA_Magnet_Control.pyd"
+pyinstaller -F -n  "magnetApp" magnetApp.py 
+
+
+# include relative paths in python file you run, e.g. 
+import sys
+import os
+sys.path.append(os.path.join(sys.path[0],'GUI'))
+sys.path.append(os.path.join(sys.path[0],'control'))
+
+# if you use images then put them in resource\YOURAPPNAME\ adn make sure you app can see them
+#  copy those folders to release 
+
+# you shoould be able to include pyd files, but i haven't managed that yet
+--add-binary "D:\VELA\GIT Projects\Software\Apps\MagnetApp;VELA_CLARA_Magnet_Control.pyd"
