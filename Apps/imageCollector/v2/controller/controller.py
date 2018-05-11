@@ -65,6 +65,11 @@ class Controller():
         self.ImageBox.setRange(xRange=[0,2560],yRange=[0,2160])
         self.ImageBox.addItem(self.Image)
         self.roi = pg.EllipseROI([0, 0], [500, 500], movable=False)
+        print("ROI CREATED")
+        print("ROI CREATED")
+        print("ROI CREATED")
+        print("ROI CREATED")
+        print("ROI CREATED")
         self.ImageBox.addItem(self.roi)
         self.vLineMLE = self.ImageBox.plot(x=[1000,1000],y=[900,1100],pen='g')
         self.hLineMLE = self.ImageBox.plot(x=[900,1100],y=[1000,1000],pen='g')
@@ -147,7 +152,10 @@ class Controller():
             self.view.covXY_label.setText(str(round(self.model.selectedCameraIA.IA.covXY,3)))
             
             data = caget(self.model.selectedCameraDAQ.pvRoot + 'CAM2:ArrayData')
-            npData = np.array(data).reshape((1080, 1280))
+            if name == "VC":
+                npData = np.array(data).reshape((1080, 1280))
+            else:
+                npData = np.array(data).reshape((1280, 1080))
             self.Image.setImage(np.flip(np.transpose(npData), 1))
             self.Image.setLevels([self.view.spinBox_minLevel.value(),
                                   self.view.spinBox_maxLevel.value()], update=True)
