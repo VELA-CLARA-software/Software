@@ -56,7 +56,7 @@ class Linac(QObject):
 
     def changeTiming(self, actuator, offset=0):
         for a, initial in zip(self.setList, self.initialValues):
-            if a.name == actuator:
+            if a.name == actuator or a.name in actuator:
                 print 'setting timing ', a.name, ' = ', initial+offset
                 a.put(initial+offset)
 
@@ -89,7 +89,7 @@ class recordBPMData(tables.IsDescription):
 
 class Accelerator(QObject):
 
-    newBPMReading = pyqtSignal(str, list)
+    newBPMReading = pyqtSignal('PyQt_PyObject', list)
     scanFinished = pyqtSignal()
 
     def __init__(self, actuator):
@@ -100,18 +100,20 @@ class Accelerator(QObject):
         self.stopScanning = False
 
     def emitSignal(self, offset=0, bpmReading=0):
-        for a in actuators:
-            self.newBPMReading.emit(a, [offset, bpmReading])
+        self.newBPMReading.emit(self.actuator, [offset, bpmReading])
 
-    def setTiming(self, offset=0):
+    def setTiming(self, offset=0, nsamples=10):
         self.linac.changeTiming(self.actuator, offset)
-        lastbpmreading = self.bpm.get_reading(100)
+        lastbpmreading = self.bpm.get_reading(nsamples)
         print 'bpm = ', lastbpmreading
         self.emitSignal(offset, lastbpmreading)
         self.saveData(offset)
 
     def saveData(self, offset=0):
-        filename = str(self.actuator.replace(':','.'))+'_timing_'+("%.2f" % offset)+'_bpm_C2V.h5'
+        if isinstance(self.actuator, list):
+            filename = str('combined_timing_'+("%.2f" % offset)+'_bpm_C2V.h5')
+        else:
+            filename = str(self.actuator.replace(':','.'))+'_timing_'+("%.2f" % offset)+'_bpm_C2V.h5'
         print 'filename = ', filename
         self.h5file = tables.open_file(filename, mode = "w")
         self.rootnode = self.h5file.get_node('/')
@@ -130,11 +132,11 @@ class Accelerator(QObject):
             row['time'], row['bpmReading'] = a, m
             row.append()
 
-    def scan(self, start=-0.05, stop=0.05, step=0.01):
+    def scan(self, start=-0.05, stop=0.05, step=0.01, nsamples=10):
         self.stopScanning = False
         self.linac.reset()
         for i in np.arange(start,stop,step):
-            self.setTiming(i)
+            self.setTiming(i, nsamples)
             if self.stopScanning == True:
                 print 'stopping scan = ', self.stopScanning
                 break
@@ -160,6 +162,7 @@ class linacPhaseScan(QMainWindow):
         fileMenu.addAction(exitAction)
 
         self.widget = QTabWidget()
+        self.widget.addTab(linacPhaseScanWidget(actuators), "Combined")
         for a in actuators:
             self.widget.addTab(linacPhaseScanWidget(a), a)
         self.setCentralWidget(self.widget)
@@ -184,15 +187,31 @@ class linacPhaseScanWidget(QWidget):
         self.start = QLabeledWidget(QLineEdit(),"Start")
         self.stop = QLabeledWidget(QLineEdit(),"Stop")
         self.step = QLabeledWidget(QLineEdit(),"Step")
+        self.nsamples = QLabeledWidget(QLineEdit(),"Samples")
+        self.start.widget.setValidator(QDoubleValidator())
+        self.stop.widget.setValidator(QDoubleValidator())
+        self.step.widget.setValidator(QDoubleValidator())
+        self.nsamples.widget.setValidator(QIntValidator(0,1000))
+        self.start.widget.setText('-0.06')
+        self.stop.widget.setText('0.1')
+        self.step.widget.setText('0.01')
+        self.nsamples.widget.setText('100')
+
+
+        self.settingsLayout = QHBoxLayout()
+        self.settingsLayout.addWidget(self.start)
+        self.settingsLayout.addWidget(self.stop)
+        self.settingsLayout.addWidget(self.step)
+        self.settingsLayout.addWidget(self.nsamples)
 
         self.plot = plotter(actuator)
         self.accelerator.newBPMReading.connect(self.plot.newBPMReading)
         self.layout.addWidget(self.resetButton,0,0)
         self.layout.addWidget(self.runButton,0,1)
         self.layout.addWidget(self.saveButton,0,2)
-        self.layout.addWidget(self.start,1,0)
-        self.layout.addWidget(self.stop,1,1)
-        self.layout.addWidget(self.step,1,2)
+        self.layout.addLayout(self.settingsLayout,1,0,1,4)
+        # self.layout.addWidget(self.stop,1,1)
+        # self.layout.addWidget(self.step,1,2)
         self.layout.addWidget(self.plot,2,0,6,6)
 
     def doScan(self):
@@ -200,7 +219,7 @@ class linacPhaseScanWidget(QWidget):
         self.runButton.clicked.disconnect(self.doScan)
         self.runButton.clicked.connect(self.stopScan)
         self.accelerator.scanFinished.connect(self.scanFinished)
-        self.accelerator.scan(float(self.start.widget.text()), float(self.stop.widget.text()), float(self.step.widget.text()))
+        self.accelerator.scan(float(self.start.widget.text()), float(self.stop.widget.text()), float(self.step.widget.text()), int(self.nsamples.widget.text()))
 
     def scanFinished(self):
         self.runButton.setText("Scan")
@@ -211,7 +230,10 @@ class linacPhaseScanWidget(QWidget):
         self.accelerator.stopScanning = True
 
     def saveData(self):
-        self.h5file = tables.open_file(actuator+'_energy_vs_timing.h5', mode = "w")
+        if isinstance(self.actuator, list):
+            self.h5file = tables.open_file('combined_energy_vs_timing.h5', mode = "w")
+        else:
+            self.h5file = tables.open_file(self.actuator+'_energy_vs_timing.h5', mode = "w")
         self.rootnode = self.h5file.get_node('/')
         group = self.h5file.create_group('/', 'c2vbpm01', 'c2v-bpm-01')
         self.savePlotData(group, self.plot)

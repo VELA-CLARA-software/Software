@@ -160,7 +160,7 @@ class linacPhaseScan(QMainWindow):
 
         self.tabs = QTabWidget()
         self.plots = {}
-        for a in actuators:
+        for a in actuators[:1]:
             plot = plotter(a)
             self.plots[a] = plot
             self.tabs.addTab(plot, a)
