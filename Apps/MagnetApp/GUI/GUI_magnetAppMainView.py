@@ -29,7 +29,7 @@ class GUI_magnetAppMainView(QtGui.QMainWindow, Ui_magnetAppMainView):
         # ok so i set these like this... meh, just fixes the dimensions of the window
         # when we start with different machien areas this may neeed to be revisted
         self.maxNumQuadPerRow = 5
-        self.maxNumCorPerRow  = 7
+        self.maxNumCorPerRow  = 6
         self.quadCount = 0
         self.dipCount = 0
         self.solCount = 0
@@ -106,7 +106,7 @@ class GUI_magnetAppMainView(QtGui.QMainWindow, Ui_magnetAppMainView):
     # set check boxes true or false
     def activateMags(self,magnets,value):
         for mag  in magnets.values():
-            mag.mag_Active.setCheckState(value)
+            mag.mag_Active.setChecked(value)
     def activateAll(self):
         self.activateMags(self.dipWidgets,True)
         self.activateMags(self.solWidgets,True)

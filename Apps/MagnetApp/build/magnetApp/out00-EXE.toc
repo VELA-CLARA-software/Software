@@ -2,7 +2,7 @@
  True,
  False,
  False,
- None,
+ 'resources\\magnetApp\\magpic.ico',
  None,
  False,
  False,
@@ -121,7 +121,7 @@
  [],
  False,
  False,
- 1525270773L,
+ 1526368844L,
  [('run.exe',
    'c:\\python27\\lib\\site-packages\\PyInstaller\\bootloader\\Windows-32bit\\run.exe',
    'EXECUTABLE')])

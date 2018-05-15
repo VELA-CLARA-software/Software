@@ -23,6 +23,8 @@ class GUI_magnetAppStartup(QtGui.QMainWindow, Ui_magnetAppStartup):
         self.VELA_BA1.toggled.connect(lambda:self.handle_areaRadio(self.VELA_BA1))
         self.VELA_INJ.toggled.connect(lambda:self.handle_areaRadio(self.VELA_INJ))
         self.CLARA_PHASE_1.toggled.connect(lambda:self.handle_areaRadio(self.CLARA_PHASE_1))
+        self.CLARA_2_BA1.toggled.connect(lambda:self.handle_areaRadio(self.CLARA_2_BA1))
+        self.CLARA_2_BA2.toggled.connect(lambda:self.handle_areaRadio(self.CLARA_2_BA2))
         self.virtualMode.toggled.connect(lambda:self.handle_modeRadio(self.virtualMode))
         self.physicalMode.toggled.connect(lambda:self.handle_modeRadio(self.physicalMode))
         self.offlineMode.toggled.connect(lambda:self.handle_modeRadio(self.offlineMode))
@@ -39,7 +41,9 @@ class GUI_magnetAppStartup(QtGui.QMainWindow, Ui_magnetAppStartup):
             self.VELA_BA2.objectName(): MACHINE_AREA.VELA_BA2,
             self.VELA_BA1.objectName(): MACHINE_AREA.VELA_BA1,
             self.VELA_INJ.objectName(): MACHINE_AREA.VELA_INJ,
-            self.CLARA_PHASE_1.objectName(): MACHINE_AREA.CLARA_PH1
+            self.CLARA_PHASE_1.objectName(): MACHINE_AREA.CLARA_PH1,
+            self.CLARA_2_BA1.objectName(): MACHINE_AREA.CLARA_2_BA1,
+            self.CLARA_2_BA2.objectName(): MACHINE_AREA.CLARA_2_BA2
         #self.CLARA_2_VELA.objectName(): MACHINE_AREA.CLARA_2_VELA
         }
 
