@@ -1,8 +1,8 @@
 import sys,os
-os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
-os.environ["EPICS_CA_ADDR_LIST"] = "10.10.0.12"
-os.environ["EPICS_CA_MAX_ARRAY_BYTES"] = "10000000"
-os.environ["EPICS_CA_SERVER_PORT"]="6000"
+# os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
+# os.environ["EPICS_CA_ADDR_LIST"] = "10.10.0.12"
+# os.environ["EPICS_CA_MAX_ARRAY_BYTES"] = "10000000"
+# os.environ["EPICS_CA_SERVER_PORT"]="6000"
 '''if needed'''
 from epics import caget,caput
 

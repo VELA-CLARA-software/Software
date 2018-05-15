@@ -107,16 +107,16 @@ class PVBuffer(PVObject):
         self._length = 0
         self.buffer = deque(maxlen=self.maxlen)
         self.reset()
-        self.buffer.append(self.pv.get())
+        # self.buffer.append(self.pv.get())
 
     def callback(self, **kwargs):
         self.dict = OrderedDict(kwargs)
         if hasattr(self, 'sum_x1') and 'status' in kwargs and 'value' in kwargs and self.dict['status'] == 0:
             if not 'timestamp' in kwargs:
                 timestamp = time.time()
-            self._value = [self.dict['timestamp'], self.dict['value']]
+            self._value = [self.dict['timestamp'], self.dict['value'], self.name]
             self.newValue.emit(*self._value)
-            time, val = self._value
+            time, val, name = self._value
             self.buffer.append(self._value)
             self.length += 1
             self.sum_x1 += val
@@ -131,6 +131,11 @@ class PVBuffer(PVObject):
 
     def get(self):
         return self.buffer
+
+    @property
+    def values(self):
+        values = [a[1] for a in self.buffer]
+        return values
 
     @property
     def length(self):
@@ -156,6 +161,7 @@ class PVBuffer(PVObject):
         return self.maxValue
 
     def reset(self):
+        self.buffer = deque(maxlen=self.maxlen)
         self._length = 0
         self.minValue = sys.maxsize
         self.maxValue = -1*sys.maxsize
