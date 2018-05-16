@@ -48,9 +48,14 @@ class Controller():
 		self.view.setupMagnetsButton.clicked.connect(self.model.magnetDegausser)
 		self.view.crestGunWCMButton.clicked.connect(self.model.gunWCMCrester)
 		self.view.crestGunBPM.clicked.connect(self.model.gunBPMCrester)
-		self.view.setGunPhaseButton.clicked.connect(self.model.gunPhaser)
+		self.view.setGunPhaseButton.clicked.connect(lambda : self.model.gunPhaser(True))
 		self.view.crestLinacButton.clicked.connect(self.model.linacBPMCrester)
-		self.view.setLinacPhaseButton.clicked.connect(self.model.linac1Phaser)
+		self.view.setLinacPhaseButton.clicked.connect(lambda : self.model.linac1Phaser(True))
+		self.view.crestLinacRoughButton.clicked.connect(self.model.linacCresterQuick)
+		self.view.abortButton.hide()
+		self.view.abortButton.clicked.connect(self.model.abortRunning)
+		self.view.actionSave_Calibation_Data.triggered.connect(self.model.saveData)
+
 
 	def updateDisplays(self):
 		self.approxData.setData(x=self.model.approxPhaseData,y=self.model.approxChargeData)
