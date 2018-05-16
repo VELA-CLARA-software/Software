@@ -285,7 +285,7 @@ class magnetAppController(object):
 
     def magnet_names_to_canonical_order(self):
 
-        canon_order = ['GUN','S01','L01','S02','C2V','INJ','BA1','BA2']
+        canon_order = ['LRG','S01','L01','S02','C2V','INJ','BA1','BA2']
         order = []
         for name in self.allMagNames:
             i = 0

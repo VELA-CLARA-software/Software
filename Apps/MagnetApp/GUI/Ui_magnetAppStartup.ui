@@ -53,7 +53,7 @@
    <widget class="QGroupBox" name="machineAreaSelection">
     <property name="geometry">
      <rect>
-      <x>322</x>
+      <x>320</x>
       <y>140</y>
       <width>231</width>
       <height>241</height>

@@ -3,7 +3,7 @@
 block_cipher = None
 
 
-a = Analysis(['magnetApp.py'],
+a = Analysis(['magnetApp.pyw'],
              pathex=['D:\\VELA\\GIT Projects\\Software\\Apps\\MagnetApp'],
              binaries=[],
              datas=[],
@@ -26,4 +26,4 @@ exe = EXE(pyz,
           strip=False,
           upx=True,
           runtime_tmpdir=None,
-          console=True , icon='resources\\magnetApp\\magpic.ico')
+          console=False , icon='resources\\magnetApp\\magpic.ico')
