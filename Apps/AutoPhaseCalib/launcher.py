@@ -7,6 +7,7 @@
 # WARNING! All changes made in this file will be lost!
 import os,sys
 from PyQt4 import QtCore, QtGui
+from mainApp import *
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -87,7 +88,19 @@ class Ui_MainWindow(object):
         self.comboBox_3.setItemText(1, _translate("MainWindow", "100 Hz", None))
 
     def launch(self):
-        os.system("python mainApp.py "+str(self.comboBox.currentText())+' '+str(self.comboBox_2.currentText())+' '+str(self.comboBox_3.currentText()))
+        # os.system("python mainApp.py "+str(self.comboBox.currentText())+' '+str(self.comboBox_2.currentText())+' '+str(self.comboBox_3.currentText()))
+        self.workerThread = runMainApp(self, str(self.comboBox.currentText()), str(self.comboBox_2.currentText()), str(self.comboBox_3.currentText()))
+        self.workerThread.start()
+
+class runMainApp(QtCore.QThread):
+    def __init__(self, *sys_argv):
+        super(runMainApp, self).__init__()
+        self.args = sys_argv
+        print self.args
+
+    def start(self):
+        self.appObject = App(self.args)
+
 
 if __name__ == "__main__":
     import sys

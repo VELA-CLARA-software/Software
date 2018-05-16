@@ -8,22 +8,15 @@ except ImportError:
     from PyQt5.QtCore import *
     from PyQt5.QtGui import *
     from PyQt5.QtWidgets import *
-import scipy.constants as constants
-from scipy.optimize import curve_fit
 sys.path.append(os.path.dirname( os.path.abspath(__file__)) + "/../../../")
 from Software.Widgets.generic.pv import *
 from Software.Widgets.QLabeledWidget import *
 import pyqtgraph as pg
-import numpy as np
 import tables as tables
 
 pg.setConfigOptions(antialias=True)
 pg.setConfigOption('background', 'w')
 pg.setConfigOption('foreground', 'k')
-
-degree = constants.pi/180.0
-q_e = constants.elementary_charge
-c = constants.speed_of_light
 
 def qSleep(time):
     QtTest.QTest.qWait(time)

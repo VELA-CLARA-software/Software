@@ -1,43 +1,28 @@
-from PyQt4.QtCore import QThread
+from PyQt4.QtCore import QThread, QObject, pyqtSignal, QTimer
 import sys,os
 import time
 import scipy.constants as physics
 import numpy as np
 from scipy.optimize import curve_fit
 import random as r
-# os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
-# os.environ["EPICS_CA_ADDR_LIST"] = "10.10.0.12" #BE SPECIFIC.... YOUR I.P. FOR YOUR VM
-# os.environ["EPICS_CA_MAX_ARRAY_BYTES"] = "10000000"
-# os.environ["EPICS_CA_SERVER_PORT"]="6000"
 
-sys.path.append('\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Software\\VELA_CLARA_PYDs\\bin\\release\\')
-sys.path.append('\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Software\\OnlineModel')
+class Model(QObject):
 
-import onlineModel
+	bpmX = pyqtSignal(float)
 
-import VELA_CLARA_Magnet_Control as mag
-import VELA_CLARA_BPM_Control as bpm
-import VELA_CLARA_LLRF_Control as llrf
-import VELA_CLARA_Scope_Control as scope
-
-class Model(QThread):
-
-	gun = None
-
-	def __init__(self,view,machineType,lineType,gunType):
+	def __init__(self, app, view, machineType, lineType, gunType, mag, scope, bpm, gunllrf, linac1llrf):
 		QThread.__init__(self)
+		self.app = app
 		self.view = view
-		self.magInit = mag.init()
-		self.bpmInit = bpm.init()
-		self.llrfInit = llrf.init()
-		self.scopeInit = scope.init()
+		self.magnets = mag
+		self.scope = scope
+		self.bpm = bpm
+		self.gunllrf = gunllrf
+		self.linac1llrf = linac1llrf
 		self.machineType = machineType
 		self.lineType = lineType
-		Model.gunType = gunType
-		self.view.label_MODE.setText('MODE: '+self.machineType+' '+self.lineType+' with '+Model.gunType+' Hz gun')
-		self.setUpCtrls()
-		#self.beamlines = {"VELA":  mag.MACHINE_AREA.VELA_INJ, "CLARA": [mag.MACHINE_AREA.CLARA_INJ,mag.MACHINE_AREA.CLARA_S01,mag.MACHINE_AREA.CLARA_S02,mag.MACHINE_AREA.CLARA_2_VELA]}
-		#self.modes = {"Physical": mag.MACHINE_MODE.PHYSICAL, "Virtual": mag.MACHINE_MODE.VIRTUAL}
+		self.gunType = gunType
+		self.view.label_MODE.setText('MODE: '+self.machineType+' '+self.lineType+' with '+self.gunType+' Hz gun')
 		self.approxPhaseData=[]
 		self.approxChargeData=[]
 		self.approxPhaseFit=[]
@@ -46,73 +31,80 @@ class Model(QThread):
 		self.fineBPMFit=[]
 		self.finePhaseData=[]
 		self.fineBPMData=[]
-
+		self.parameters={}
+		self.calibrationPhase = {'Gun': 0, 'Linac1': 0}
+		self.run()
 		print("Model Initialized")
 	#DESTRUCTOR
-	def __del__(self):
-		self.wait()
+
+	def start(self):
+		self.run()
+
 	def run(self):
 		if self.lineType=='VELA':
 			self.velaMethod()
 		elif self.lineType=='CLARA':
 			self.claraMethod()
 
-	def setUpCtrls(self):
-		# if self.lineType=='VELA'and self.machineType=='Physical':
-		# 	self.magnets = self.magInit.physical_VELA_INJ_Magnet_Controller()
-		# 	self.scope = self.scopeInit.physical_VELA_INJ_Scope_Controller()
-		# 	self.bpms = self.bpmInit.physical_VELA_INJ_BPM_Controller()
-		# 	Model.gun = self.llrfInit.physical_VELA_LRRG_LLRF_Controller()
-		# elif self.lineType=='CLARA'and self.machineType=='Physical':
-			self.magnets = self.magInit.physical_CLARA_PH1_Magnet_Controller()
-			self.scope = self.scopeInit.physical_CLARA_PH1_Scope_Controller()
-			self.bpms = self.bpmInit.physical_CLARA_PH1_BPM_Controller()
-			print 'physical gun'
-			Model.gun = self.llrfInit.physical_CLARA_LRRG_LLRF_Controller()
-			Model.gun.setPhiSP(25.00)
-			print 'gun = ', Model.gun
-		# elif self.lineType=='VELA'and self.machineType=='Virtual':
-		# 	self.magnets = self.magInit.virtual_VELA_INJ_Magnet_Controller()
-		# 	self.scope = self.scopeInit.virtual_VELA_INJ_Scope_Controller()
-		# 	self.bpms = self.bpmInit.virtual_VELA_INJ_BPM_Controller()
-		# 	Model.gun = self.llrfInit.virtual_VELA_LRRG_LLRF_Controller()
-		# elif self.lineType=='CLARA'and self.machineType=='Virtual':
-		# 	self.magnets = self.magInit.virtual_CLARA_PH1_Magnet_Controller()
-		# 	self.scope = self.scopeInit.virtual_CLARA_PH1_Scope_Controller()
-		# 	self.bpms = self.bpmInit.virtual_CLARA_PH1_BPM_Controller()
-		# 	Model.gun = self.llrfInit.virtual_CLARA_LRRG_LLRF_Controller()
-		# self.ASTRA = onlineModel.ASTRA(V_MAG_Ctrl=self.magnets, V_RF_Ctrl=Model.gun,messages=False)
-
 	def claraMethod(self):
 		print('clara Method')
-		self.method(magnets=[],bpm='',scope='')
+		self.parameters['magnets']=[]
+		self.parameters['bpm'] = 'C2V-BPM01'
+		self.parameters['scope'] = ''
 
 	def velaMethod(self):
 		print('vela Method')
-		self.method(magnets=['QUAD01', 'QUAD02', 'QUAD03', 'QUAD04', 'QUAD05', 'QUAD06',
+		self.parameters['magnets']=['QUAD01', 'QUAD02', 'QUAD03', 'QUAD04', 'QUAD05', 'QUAD06',
 							'HCOR03', 'HCOR04', 'HCOR05', 'VCOR03', 'VCOR04', 'VCOR05',
-							'SOL', 'BSOL', 'DIP01'], bpm='BPM03', scope='SCOP01')
+							'SOL', 'BSOL', 'DIP01']
+		self.parameters['bpm'] = 'C2V-BPM01'
+		self.parameters['scope'] = 'SCOP01'
 
-	def method(self,magnets=None,bpm=None,scope=None):
-		print('generic method')
-		'''1. Setup Magnets'''
-		if self.view.checkBox_1.isChecked()==True:
+	def magnetDegausser(self):
 			print('1. Setting up Magnets')
-			self.setUpMagnets(magnets)
+			self.setUpMagnets(self.parameters['magnets'])
 
-		'''2. Approximately Find Crest with WCM'''
+	def gunWCMCrester(self):
 		if self.view.checkBox_2.isChecked()==True:
 			print('2. Approximately Finding Crest')
 
-		'''3. Find Crest using BPM'''
-		if self.view.checkBox_3.isChecked()==True:
-			print('3. Finding Crest')
-			self.findingCrest(magnets,bpm,int(self.view.lineEdit_4.text()),int(self.view.lineEdit_5.text()))
+	def gunBPMCrester(self):
+			print('3. Finding Crest of Gun')
+			self.crester = findingGunCrest(self, self.parameters['magnets'], self.parameters['bpm'], int(self.view.rangeSet.text()), int(self.view.nScanningSet.text()))
+			self.bpmX.connect(self.crester.updateBPMPosition)
+			self.timer = QTimer()
+			self.timer.timeout.connect(lambda : self.getBPMPosition(self.parameters['bpm']))
+			self.timer.start(100)
+			self.thread = QThread()  # no parent!
+			self.crester.moveToThread(self.thread)
+			self.thread.started.connect(self.crester.findingCrest)
+			self.crester.finished.connect(self.thread.quit)
+			self.crester.finished.connect(self.timer.stop)
+			self.crester.setPhase.connect(self.setPhase)
+			self.thread.start()
 
-		'''4. Convert Current to Momentum'''
-		if self.view.checkBox_4.isChecked()==True:
-			print('4. Set Momentum of Beam')
-			self.setUpGun(int(self.view.lineEdit.text()),bpm)
+	def linacBPMCrester(self):
+			print('5. Finding Crest of Linac')
+			self.crester = findingLinacCrest(self, self.parameters['magnets'], self.parameters['bpm'], int(self.view.rangeSet.text()), int(self.view.nScanningSet.text()))
+			self.bpmX.connect(self.crester.updateBPMPosition)
+			self.timer = QTimer()
+			self.timer.timeout.connect(lambda : self.getBPMPosition(self.parameters['bpm']))
+			self.timer.start(100)
+			self.thread = QThread()  # no parent!
+			self.crester.moveToThread(self.thread)
+			self.thread.started.connect(self.crester.findingCrest)
+			self.crester.finished.connect(self.thread.quit)
+			self.crester.finished.connect(self.timer.stop)
+			self.crester.setPhase.connect(self.setPhase)
+			self.thread.start()
+
+	def gunPhaser(self):
+			print('6. Setting Linac 1 Phase to ', str(self.calibrationPhase['Gun'] + int(self.view.gunPhaseSet.text())), ' (',self.view.linac1PhaseSet.text()),')'
+			self.setGunPhase(self.calibrationPhase['Gun'] + int(self.view.gunPhaseSet.text()))
+
+	def linac1Phaser(self):
+			print('6. Setting Linac 1 Phase to ', str(self.calibrationPhase['Linac1'] + int(self.view.linac1PhaseSet.text())), ' (', self.view.linac1PhaseSet.text()),')'
+			self.setLinac1Phase(self.calibrationPhase['Linac1'] + int(self.view.linac1PhaseSet.text()))
 
 	def setUpMagnets(self,magnets):
 		deguassingList=[]
@@ -162,70 +154,114 @@ class Model(QThread):
 			time.sleep(10)
 		self.magnets.setSI(dipole,-current)
 
-	def findingCrest(self, magnets,bpm,phiRange,phiSteps):
-		self.finePhaseFit=[]
-		self.fineBPMFit=[]
-		self.finePhaseData=[]
-		self.fineBPMData=[]
+	def setPhase(self, cavity, value):
+		if cavity == 'Gun':
+			self.setGunPhase(value)
+		elif cavity == 'Linac1':
+			self.setLinac1Phase(value)
 
-		# Model.gun.setAmpSP(16270)
-		self.approxcrest = Model.gun.getPhiSP()
-		# print Model.gun.setPhiSP(40.00)
-		for phase in np.linspace(self.approxcrest-phiRange/2, self.approxcrest+phiRange/2, phiSteps):
-			phase = float(int(1000*phase)/1000.)
-			print 'setting phase = ', phase
-			Model.gun.setPhiSP(int(phase))
-			time.sleep(1)
-			currphase = Model.gun.getPhiSP()
-			# while abs(phase - currphase) > abs(0.1*phase):
-			# 	Model.gun.setPhiSP(phase)
-			# 	time.sleep(0.01)
-			# 	currphase = Model.gun.getPhiSP()
-			# 	#print(currphase)
-			# time.sleep(1)
+	def getPhase(self, cavity):
+		if cavity == 'Gun':
+			return self.getGunPhase()
+		elif cavity == 'Linac1':
+			return self.getLinac1Phase()
+
+	def setGunPhase(self, phase):
+		print 'setting Gun phase = ', phase
+		self.gunllrf.setPhiSP(phase)
+
+	def getGunPhase(self):
+		return self.gunllrf.getPhiSP()
+
+	def setLinac1Phase(self, phase):
+		print 'setting L01 phase = ', phase
+		self.linac1llrf.setPhiSP(phase)
+
+	def getLinac1Phase(self):
+		return self.linac1llrf.getPhiSP()
+
+	def getBPMPosition(self, bpm):
+		self.bpmX.emit(1000*self.bpm.getXFromPV(bpm))
+
+class findingGunCrest(QObject):
+
+	cavity = 'Gun'
+	finished = pyqtSignal()
+	setPhase = pyqtSignal(str, float)
+	data = []
+
+	def __init__(self, parent,  magnets, bpm, phiRange, phiSteps):
+		super(findingGunCrest, self).__init__()
+		self.parent = parent
+		self.magnets = magnets
+		self.bpm = bpm
+		self.phiRange = phiRange
+		self.phiSteps = phiSteps
+		self.bpmX = None
+
+	def updateBPMPosition(self, value):
+		self.data.append(value)
+
+	def findingCrest(self):
+		self.parent.finePhaseFit=[]
+		self.parent.fineBPMFit=[]
+		self.parent.finePhaseData=[]
+		self.parent.fineBPMData=[]
+
+		self.approxcrest = self.parent.getPhase(self.cavity)
+		for phase in np.linspace(self.approxcrest-self.phiRange, self.approxcrest+self.phiRange, self.phiSteps):
+			self.setPhase.emit(self.cavity, phase)
+			time.sleep(0.1)
+			currphase = self.parent.getPhase(self.cavity)
 			print 'set phase to',phase
 			print 'phase got to', currphase
-			# self.ASTRA.go('V1-GUN','SP-YAG04','temp-start.ini')
-			# while self.ASTRA.isRunning()==True:
-				# time.sleep(1)
-			data =1000*self.bpms.getXFromPV(bpm)
-			# print data
-			self.fineBPMData.append(data)
-			self.finePhaseData.append(currphase)
-			#time.sleep(5)
+			self.data = []
+			while len(self.data) < 10:
+				time.sleep(0.1)
+			data = np.mean(self.data)
+			self.parent.fineBPMData.append(data)
+			self.parent.finePhaseData.append(currphase)
 
 		def func(list, a, b, c):
 			x = np.array(list)
 			return a*x**2 + b*x + c
 
-		popt, pcov = curve_fit(func, self.finePhaseData, self.fineBPMData, p0=None)
-		self.finePhaseFit = np.linspace(self.approxcrest-phiRange/2, self.approxcrest+phiRange/2, 200)
-		self.fineBPMFit = func(self.finePhaseFit, *popt)
+		popt, pcov = curve_fit(func, self.parent.finePhaseData, self.parent.fineBPMData, p0=None)
+		self.parent.finePhaseFit = np.linspace(self.approxcrest-self.phiRange, self.approxcrest+self.phiRange, 200)
+		self.parent.fineBPMFit = func(self.parent.finePhaseFit, *popt)
 
-		self.calibrationPhase=-popt[1]/(2*popt[1])
-		print 'calibration phase is', self.calibrationPhase
+		self.parent.calibrationPhase[self.cavity] = -popt[1]/(2*popt[0])
+		print 'Calibration phase is', self.parent.calibrationPhase[self.cavity]
+		self.finished.emit()
 
-	def setUpGun(self,desiredPhase,bpm):
-		self.calibrationPhase=-0.5
-		Model.gun.setPhiSP(desiredPhase+self.calibrationPhase)
-		x=1000*self.bpms.getXFromPV(bpm)
-		currentAmp=Model.gun.getAmpSP()
-		step=20 #(MV/m)
+class findingLinacCrest(findingGunCrest):
+
+	cavity = 'Linac1'
+	setPhase = pyqtSignal(str, float)
+
+
+class setUpGun(QObject):
+
+	def setUpGun(self, desiredPhase, bpm):
+		self.gun.setPhiSP(desiredPhase+self.calibrationPhase)
+		x = 1000*self.bpm.getXFromPV(bpm)
+		currentAmp = self.gun.getAmpSP()
+		step = 50 #(MV/m)
 		time.sleep(1)
 		print x
 		while abs(x)>0.01:
-
-			Model.gun.setAmpSP(currentAmp+step)
-			time.sleep(1)
-			x_old=x
-			self.ASTRA.go('V1-GUN','SP-YAG04','temp-start.ini')
-			while self.ASTRA.isRunning()==True:
-				time.sleep(1)
-			x=1000*self.bpms.getXFromPV(bpm)
-			print x
-			if x>0:
-				step=-abs(step)
-			elif x<0:
-				step=abs(step)
-			if abs(x-x_old)>abs(x):
-				step=0.5*step
+			currentAmp = self.gun.getAmpSP()
+			print 'currentAmp = ', currentAmp
+			self.gun.setAmpSP(currentAmp+step)
+			print 'setting  = ', currentAmp+step
+			time.sleep(0.1)
+			self.app.processEvents()
+			x_old = x
+			x = 1000*self.bpm.getXFromPV(bpm)
+			print bpm,' = ', x
+			if x < 0:
+				step = -abs(step)
+			elif x > 0:
+				step = abs(step)
+			if abs(x - x_old) > abs(x):
+				step = 0.5*step

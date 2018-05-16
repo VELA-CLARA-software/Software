@@ -5,10 +5,10 @@ import time
 import numpy as np
 import pyqtgraph as pg
 import threads
-from epics import caget,caput
+# from epics import caget,caput
 
-sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\\..\\..\\..\\Widgets\\loggerWidget\\')
-import loggerWidget as lw
+sys.path.append("../../../")
+import Software.Widgets.loggerWidget.loggerWidget as lw
 
 class Controller():
 
@@ -45,22 +45,26 @@ class Controller():
 		self.timer.timeout.connect(self.updateDisplays)
 		self.timer.start(10)
 
-		self.view.checkBox_all.stateChanged.connect(self.allMethod)
-		self.view.pushButton_run.clicked.connect(self.model.start)
+		self.view.setupMagnetsButton.clicked.connect(self.model.magnetDegausser)
+		self.view.crestGunWCMButton.clicked.connect(self.model.gunWCMCrester)
+		self.view.crestGunBPM.clicked.connect(self.model.gunBPMCrester)
+		self.view.setGunPhaseButton.clicked.connect(self.model.gunPhaser)
+		self.view.crestLinacButton.clicked.connect(self.model.linacBPMCrester)
+		self.view.setLinacPhaseButton.clicked.connect(self.model.linac1Phaser)
 
 	def updateDisplays(self):
 		self.approxData.setData(x=self.model.approxPhaseData,y=self.model.approxChargeData)
 		self.approxFit.setData(x=self.model.approxPhaseFit,y=self.model.approxChargeFit)
 		self.fineData.setData(x=self.model.finePhaseData,y=self.model.fineBPMData)
 		self.fineFit.setData(x=self.model.finePhaseFit,y=self.model.fineBPMFit)
-	def allMethod(self):
-		if self.view.checkBox_all.isChecked()==True:
-			self.view.checkBox_1.setChecked (True)
-			self.view.checkBox_2.setChecked (True)
-			self.view.checkBox_3.setChecked (True)
-			self.view.checkBox_4.setChecked (True)
-		elif self.view.checkBox_all.isChecked()==False:
-			self.view.checkBox_1.setChecked (False)
-			self.view.checkBox_2.setChecked (False)
-			self.view.checkBox_3.setChecked (False)
-			self.view.checkBox_4.setChecked (False)
+	# def allMethod(self):
+	# 	if self.view.checkBox_all.isChecked()==True:
+	# 		self.view.checkBox_1.setChecked (True)
+	# 		self.view.checkBox_2.setChecked (True)
+	# 		self.view.checkBox_3.setChecked (True)
+	# 		self.view.checkBox_4.setChecked (True)
+	# 	elif self.view.checkBox_all.isChecked()==False:
+	# 		self.view.checkBox_1.setChecked (False)
+	# 		self.view.checkBox_2.setChecked (False)
+	# 		self.view.checkBox_3.setChecked (False)
+	# 		self.view.checkBox_4.setChecked (False)
