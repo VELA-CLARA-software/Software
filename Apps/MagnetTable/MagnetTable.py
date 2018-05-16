@@ -18,18 +18,16 @@ import scipy.constants  # speed of light
 import webbrowser  # to get help
 sys.path.insert(0, r'\\apclara1\ControlRoomApps\Controllers\bin\Release')
 import VELA_CLARA_Magnet_Control as VC_MagCtrl
+import VELA_CLARA_BPM_Control
 # import CLARA_Magnet_Control as CLARA_MagCtrl
 from pkg_resources import resource_filename
-sys.path.append('../loggerWidget')
+sys.path.append('../../Widgets/loggerWidget')
 try:
     import loggerWidget as lw
 except ImportError:
     lw = None
 import logging
 from time import sleep, time
-
-# Note: to be able to import the magnet controller, I used
-# pip install -e "\\fed.cclrc.ac.uk\Org\NLab\ASTeC\Projects\VELA\Software\VELA_CLARA_PYDs\bin\stage"
 
 os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
 os.environ["EPICS_CA_MAX_ARRAY_BYTES"] = "10000000"
@@ -54,7 +52,8 @@ image_credits = {
     'magnet.png': 'https://www.iconfinder.com/icons/15217/magnet_icon',
     'Open.png': 'https://www.iconfinder.com/icons/146495/data_document_documents_file_files_folder_open_open_file_open_folder_icon#size=24',
     'help.png': 'https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-help-circled-128.png',
-    'log.png': 'http://www.charitysciencehealth.com/'}
+    'log.png': 'http://www.charitysciencehealth.com/',
+    'BPM.png': 'https://www.flaticon.com/free-icon/target_118753#term=target&page=1&position=31'}
     
 # Define the speed of light. We need this to convert field integral to angle or K.
 # e.g. theta = field_int * c / p[eV/c]
@@ -77,7 +76,8 @@ mag_attributes = {
     'SEXT': mag_attr('Sextupole', 'K', u'm⁻³', 'gradient', u'T/m²', 'T/m'),
     'HCOR': mag_attr('H Corrector', 'Angle', 'mrad', 'field', 'mT', 'T.mm'),
     'VCOR': mag_attr('V Corrector', 'Angle', 'mrad', 'field', 'mT', 'T.mm'),
-    'UNKNOWN_MAGNET_TYPE': mag_attr('Unknown', 'Strength', 'AU', 'strength', 'AU', 'AU')}
+    'UNKNOWN_MAGNET_TYPE': mag_attr('Unknown', 'Strength', 'AU', 'strength', 'AU', 'AU'),
+    'BPM': mag_attr('Beam position monitor', 'X position', '', 'Y position', '', '')}
 
 def format_when_present(format_string, obj, attr):
     """"Returns a formatted string with the object's given attribute,
@@ -102,23 +102,38 @@ def echo(fn):
      @functools.wraps(fn)
      def wrapped(*v, **k):
          name = fn.__name__
-         print "%s(%s)" % (name, ", ".join(map(repr, chain(v, k.values()))))
+         print ("%s(%s)" % (name, ", ".join(map(repr, chain(v, k.values())))))
          return fn(*v, **k)
      return wrapped
-    
+
+
 class Magnet(object):
     """Currently doesn't do anything in particular - just a container for magnet properties."""
+
     def __init__(self, name):
         self.name = name
         self.is_junction = False
         self.divert = False
-        
+
     def __repr__(self):
         return '<Magnet {}>'.format(self.name)
 
+
+class BPM(object):
+    """Currently doesn't do anything in particular - just a container for BPM properties."""
+
+    def __init__(self, name):
+        self.name = name
+
+    def __repr__(self):
+        return '<BPM {}>'.format(self.name)
+
+
 logger = logging.getLogger('Magnet Table')
 mag_init_VC = VC_MagCtrl.init()
-# mag_init_CLARA = CLARA_MagCtrl.init()
+bpm_init = VELA_CLARA_BPM_Control.init()
+magnet_controllers = {}
+bpm_controllers = {}
 section_attr = namedtuple('section_attr', 'title machine_area default_momentum min_pos max_pos')
 section_attr.__new__.__defaults__ = (float('-inf'), float('inf'))
 sections = OrderedDict([
@@ -140,12 +155,14 @@ class Window(QtGui.QMainWindow):
         self.setCentralWidget(main_frame)
 
         checkbox_grid = QtGui.QHBoxLayout()
-        magnet_types = ('Dipoles', 'Quadrupoles', 'Correctors', 'Solenoids')
-        for mag in magnet_types:
+        magnet_types = [('Dipoles', ('DIP',)), ('Quadrupoles', ('QUAD',)), ('Correctors', ('HCOR', 'VCOR')),
+                        ('Solenoids', ('SOL', 'BSOL')), ('BPMs', ('BPM',))]
+        for mag, types in magnet_types:
             checkbox = QtGui.QCheckBox(mag)
             checkbox.help_text = 'Toggle visibility of <b>' + mag.lower() + '</b>.'
             checkbox.setIcon(QtGui.QIcon(pixmap(mag)))
             checkbox.setChecked(True)
+            checkbox.types_to_show = types
             checkbox.clicked.connect(self.toggleMagType)
             checkbox_grid.addWidget(checkbox)
 
@@ -227,6 +244,7 @@ class Window(QtGui.QMainWindow):
         section_font = QtGui.QFont('', 16, QtGui.QFont.Bold)
         magnet_font = QtGui.QFont('', 14, QtGui.QFont.Bold)
         self.magnets = OrderedDict()
+        self.bpms = OrderedDict()
         pv_root_re = re.compile('^VM-(.*):$')
         for key, section in sections.items():
             section_name = section.title
@@ -253,153 +271,49 @@ class Window(QtGui.QMainWindow):
             section_vbox.addWidget(magnet_list_frame)
             section_list.addLayout(section_vbox)
 
-            controller = self.controllers[key]
-            mag_names = list(controller.getMagnetNames())
+            magnet_controller = magnet_controllers[key]
+            bpm_controller = bpm_controllers[key]
+            mag_names = list(magnet_controller.getMagnetNames())
+            bpm_names = list(bpm_controller.getBPMNames())
             # Filter to make sure we only get the ones for this section
-            mag_names = [name for name in mag_names if section.min_pos <= controller.getPosition(name) <= section.max_pos]
+            mag_names = [(magnet_controller.getPosition(name), name) for name in mag_names
+                         if section.min_pos <= magnet_controller.getPosition(name) <= section.max_pos]
+            mag_names.extend([(bpm_controller.getPosition(name), name) for name in bpm_names
+                         if section.min_pos <= bpm_controller.getPosition(name) <= section.max_pos])
             # These don't come in the right order so need to sort them too
-            mag_names.sort(key=lambda name: controller.getPosition(name))
-            for name in mag_names:
-                # need a more specific dict key, since self.magnets contains magnets from several sections
-                magnet = Magnet(name)
-                self.magnets[key + '_' + name] = magnet
-            # section = 'VELA Injector' #TODO: get this for each magnet
-            # for magnet in self.magnets.values():
-                magnet.section = magnet_list_vbox
-                magnet.ref = controller.getMagObjConstRef(magnet.name)
-                lbl, units = 'Current', 'A'
-
-                # Replace the PV root VM-XXX: --> XXX
-                magnet.pv_base = re.sub(pv_root_re, r'\1', magnet.ref.pvRoot)
-
-                mag_type = str(magnet.ref.magType)
-                if mag_type in ('SOL', 'BSOL'):
-                    # The coefficients work a little differently - use a different attribute to calculate the
-                    # K value (Larmor angle or field at cathode)
-                    # and replace the original so that it really represents the coeffs for integrated strength
-                    magnet.k_coeffs = np.array(magnet.ref.fieldIntegralCoefficients[:-4])
-                    magnet.fieldIntegralCoefficients = np.array(magnet.ref.fieldIntegralCoefficients[-4:])
-                else:
-                    # In any case, make the FICs an attribute of the magnet object rather than the ref
-                    # so that it persists even when we switch between machine modes
-                    magnet.fieldIntegralCoefficients = np.array(magnet.ref.fieldIntegralCoefficients)
-                # rev_type = magnet.ref.magRevType  #  23/6 magRevType not implemented
-
-                magnet.prev_values = []
-                magnet.active = False  # whether magnet is being changed
+            mag_names.sort()
+            for pos, name in mag_names:
+                # Extract type without querying the object directly, e.g. L01-SOL -> SOL, C2V-BPM01 -> BPM
+                mag_type = ''.join([c for c in name.split('-')[-1] if not c.isdigit()])
                 magnet_frame = QtGui.QFrame()
                 magnet_frame.setFrameShape(QtGui.QFrame.Box | QtGui.QFrame.Plain)
-                magnet_frame.setStyleSheet('#branch {background-color: #ffffee;} #junction {background-color: qlineargradient( x1:0 y1:0, x2:0 y2:1, stop:0 #f0f0f0, stop:1 #ffffee);}')
-
-                # different shading for magnets in branches, and smooth transition at junctions
-                branch_name = magnet.ref.magnetBranch
-                in_branch = branch_name != 'UNKNOWN_MAGNET_BRANCH'
-                if in_branch:
-                    magnet_frame.setObjectName('branch')
-                    junc_magnet = self.magnets[key + "_" + branch_name]
-                    junc_magnet.is_junction = True
-                    junc_magnet.magnet_frame.setObjectName('junction')
-                end_of_branch = False  # magnet.name in ('QUAD06', 'QUAD14')
-                magnet_frame.setLineWidth(3 if end_of_branch else 1)
-                magnet_frame.setContentsMargins(0, 0, 0, 3 if end_of_branch else 1)
+                magnet_frame.setStyleSheet(
+                    '#branch {background-color: #ffffee;} #junction {background-color: qlineargradient( x1:0 y1:0, x2:0 y2:1, stop:0 #f0f0f0, stop:1 #ffffee);}')
                 magnet_vbox = QtGui.QVBoxLayout()
                 magnet_frame.setLayout(magnet_vbox)
-                magnet_frame.magnet = magnet
-                magnet.magnet_frame = magnet_frame
                 main_hbox = QtGui.QHBoxLayout()
                 main_hbox.setAlignment(QtCore.Qt.AlignTop)
                 magnet_vbox.addLayout(main_hbox)
                 more_info = QtGui.QFrame()
                 attributes = mag_attributes[mag_type]
                 # 'H Corrector' -> 'Correctors'; 'Quadrupole' -> 'Quadrupoles'
-                generic_name = attributes.friendly_name.split(' ')[-1].capitalize() + 's'
+                generic_name = attributes.friendly_name + 's'
 
-                show_hide_info = "Click to show/hide more information about <b>{}</b>.".format(magnet.name)
+                show_hide_info = "Click to show/hide more information about <b>{}</b>.".format(name)
                 icon = self.collapsing_header(main_hbox, more_info, help_text=show_hide_info)
                 icon.setPixmap(pixmap(generic_name).scaled(32, 32))
-                magnet.icon = icon
                 # The tab here aligns all the current spinboxes nicely
-                # title_text = magnet.name.replace(mag_type, attributes.friendly_name + ' ') + '\t'
                 # Remove the S01- or S02- prefix at the start for a cleaner look
-                title_text = re.sub(r'^S\d\d-', '', magnet.name, 1) + '\t'
+                title_text = name.split('-')[-1] + '\t'
                 title = self.collapsing_header(main_hbox, more_info, title_text, help_text=show_hide_info)
                 title.setFont(magnet_font)
-                magnet.title = title
                 self.collapsing_header(main_hbox, more_info, attributes.effect_name, help_text=show_hide_info)
-                # bipolar = mag_type in ('BSOL', 'SOL', 'DIP')  # not rev_type == VC_MagCtrl.MAG_REV_TYPE.POS
-                max_current = magnet.ref.maxI
-                min_current = magnet.ref.minI
-                if min_current == -999.999:  # default value, means no min has been set
-                    min_current = float('-inf')
-                    # min_k = min_current
-                # else:
-                #     min_k = self.getK(magnet, min_current, min_momentum)
-                if max_current == -999.999:  # default value, means no max has been set
-                    max_current = float('inf')
-                    # max_k = max_current
-                # else:
-                #     max_k = self.getK(magnet, max_current, min_momentum)
-                step = 0.01 if mag_type == 'BSOL' else 0.1
-                help_text = "Set the {} in the <b>{}</b> magnet. The magnet current will be automatically adjusted, depending on the momentum in the {} section. ".format(
-                    attributes.effect_name.lower(), magnet.name, section_name)
-                k_spin = self.spinbox(main_hbox, attributes.effect_units, step=step, decimals=3,
-                                      help_text=help_text) #, min_value=min_k, max_value=max_k)
-                magnet.k_spin = k_spin
-                if mag_type == 'DIP':
-                    magnet.branch_button = QtGui.QToolButton()
-                    magnet.branch_button.setCheckable(True)
-                    magnet.branch_button.clicked.connect(self.branchButtonClicked)
-                    magnet.branch_button.magnet = magnet  # link back to this magnet when clicked
-                    magnet.branch_button.setToolTip('Toggle branch on/off')
-                    magnet.branch_button.help_text = "Click to toggle this dipole, either sending the beam straight through, or onto a branch."
-                    branch_icon = QtGui.QIcon()
-                    branch_icon.addPixmap(pixmap('branch-off'), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-                    branch_icon.addPixmap(pixmap('branch-on'), QtGui.QIcon.Normal, QtGui.QIcon.On)
-                    magnet.branch_button.setIcon(branch_icon)
-                    main_hbox.addWidget(magnet.branch_button)
-
-                self.collapsing_header(main_hbox, more_info, lbl, help_text=show_hide_info)
-                help_text = "Set the current in the <b>{}</b> magnet. The {} will be calculated, depending on the momentum in the {} section. ".format(
-                    magnet.name, attributes.effect_name.lower(), section_name)
-                current_spin = self.spinbox(main_hbox, units, step=0.1, decimals=3,
-                                            min_value=min_current, max_value=max_current, help_text=help_text)
-                magnet.current_spin = current_spin
-                if mag_type == 'DIP':
-                    magnet.set_mom_checkbox = QtGui.QCheckBox('Set momentum')
-                    magnet.set_mom_checkbox.setSizePolicy(label_size_policy)
-                    magnet.set_mom_checkbox.setToolTip("Calculate the beam's momentum by adjusting this magnet's current")
-                    magnet.set_mom_checkbox.help_text = u"Measure the momentum using this dipole. First, set the dipole angle to 45°. " \
-                        "Then check this box and adjust the current until the beam is centred on the screen. The momentum in the {} section " \
-                        "will be automatically set. Finally, clear the checkbox."
-                    main_hbox.addWidget(magnet.set_mom_checkbox)
-
-                restore_button = QtGui.QToolButton()
-                restore_button.setIcon(QtGui.QIcon(pixmap('undo')))
-                restore_button.clicked.connect(self.restoreMagnet)
-                restore_button.setToolTip('Undo')
-                restore_button.help_text = "Undo the previous change to the <b>{}</b> magnet. Multiple changes while the control has the focus are counted as one.".format(magnet.name)
-                main_hbox.addWidget(restore_button)
-                magnet.restore_button = restore_button
-                restore_button.setEnabled(False)
-                self.empty_icon = QtGui.QPixmap(24, 24)
-                self.empty_icon.fill(QtCore.Qt.transparent)
-                warning_icon = self.collapsing_header(main_hbox, more_info)
-                warning_icon.setPixmap(self.empty_icon)
-                warning_icon.help_text = "An orange warning icon indicates that the magnet's read value and set value are different. Red indicates that the magnet is not powered on. " + show_hide_info
-                magnet.warning_icon = warning_icon
-                #TODO: warn when magnet needs degaussing
-
-                static_info = ['<b>', magnet.name, '</b> ', attributes.friendly_name]
-                static_info.extend([format_when_present('<br><b>Manufactured by</b> {}', magnet.ref, 'manufacturer'),
-                               format_when_present('<br><b>Serial number</b> {}', magnet.ref, 'serialNumber'),
-                               format_when_present('<br><b>Magnetic length</b>: {:.1f} mm', magnet.ref, 'magneticLength'),
-                               format_when_present('<br><a href="{}">Measurement data</a>', magnet.ref, 'measurementDataLocation'),
-                               format_when_present('<br><b>Position</b>: {:.3f} m', magnet.ref, 'position')])
+                static_info = ['<b>', name, '</b> ', attributes.friendly_name]
 
                 more_info_layout = QtGui.QHBoxLayout()
                 more_info.setLayout(more_info_layout)
 
-                offline_info = QtGui.QLabel(''.join(static_info))
+                offline_info = QtGui.QLabel()
                 offline_info.linkActivated.connect(lambda url: os.system('start "" "' + str(url) + '"'))
                 offline_info.setAlignment(QtCore.Qt.AlignTop)
                 offline_info.help_text = ''
@@ -408,13 +322,148 @@ class Window(QtGui.QMainWindow):
                 online_info.setAlignment(QtCore.Qt.AlignTop)
                 online_info.help_text = ''
                 more_info_layout.addWidget(online_info)
-                magnet.online_info = online_info
+
+                if 'BPM' in name:
+                    bpm = BPM(name)
+                    self.bpms[key + '_' + name] = bpm
+                    bpm.ref = bpm_controller.getBPMDataObject(name)
+                    bpm.x_label = self.collapsing_header(main_hbox, more_info, help_text=show_hide_info)
+                    # show "Y position" label
+                    self.collapsing_header(main_hbox, more_info, attributes.strength_name, help_text=show_hide_info)
+                    bpm.y_label = self.collapsing_header(main_hbox, more_info, help_text=show_hide_info)
+                    static_info.append(format_when_present('<br><b>Position</b>: {:.3f} m', bpm.ref, 'position'))
+                    # No branch info for BPMs (yet), we have to add it ourselves
+                    if 'C2V' in name:
+                        in_branch = True
+                        branch_name = 'DIP01'
+                    elif key == 'VELA_INJ' and name == 'BPM03':
+                        in_branch = True
+                        branch_name = 'DIP01'
+                    else:
+                        in_branch = False
+                        branch_name = 'UNKNOWN_MAGNET_BRANCH'
+                    magnet_frame.magnet = bpm
+                else:
+                    # need a more specific dict key, since self.magnets contains magnets from several sections
+                    magnet = Magnet(name)
+                    self.magnets[key + '_' + name] = magnet
+                    magnet.section = magnet_list_vbox
+                    magnet.ref = magnet_controller.getMagObjConstRef(magnet.name)
+                    lbl, units = 'Current', 'A'
+
+                    # Replace the PV root VM-XXX: --> XXX
+                    magnet.pv_base = re.sub(pv_root_re, r'\1', magnet.ref.pvRoot)
+
+                    if mag_type in ('SOL', 'BSOL'):
+                        # The coefficients work a little differently - use a different attribute to calculate the
+                        # K value (Larmor angle or field at cathode)
+                        # and replace the original so that it really represents the coeffs for integrated strength
+                        magnet.k_coeffs = np.array(magnet.ref.fieldIntegralCoefficients[:-4])
+                        magnet.fieldIntegralCoefficients = np.array(magnet.ref.fieldIntegralCoefficients[-4:])
+                    else:
+                        # In any case, make the FICs an attribute of the magnet object rather than the ref
+                        # so that it persists even when we switch between machine modes
+                        magnet.fieldIntegralCoefficients = np.array(magnet.ref.fieldIntegralCoefficients)
+                    # rev_type = magnet.ref.magRevType  #  23/6 magRevType not implemented
+
+                    magnet.prev_values = []
+                    magnet.active = False  # whether magnet is being changed
+
+                    magnet_frame.magnet = magnet
+                    magnet.magnet_frame = magnet_frame
+                    magnet.icon = icon
+                    magnet.title = title
+                    # bipolar = mag_type in ('BSOL', 'SOL', 'DIP')  # not rev_type == VC_MagCtrl.MAG_REV_TYPE.POS
+                    max_current = magnet.ref.maxI
+                    min_current = magnet.ref.minI
+                    if min_current == -999.999:  # default value, means no min has been set
+                        min_current = float('-inf')
+                        # min_k = min_current
+                    # else:
+                    #     min_k = self.getK(magnet, min_current, min_momentum)
+                    if max_current == -999.999:  # default value, means no max has been set
+                        max_current = float('inf')
+                        # max_k = max_current
+                    # else:
+                    #     max_k = self.getK(magnet, max_current, min_momentum)
+                    step = 0.01 if mag_type == 'BSOL' else 0.1
+                    help_text = "Set the {} in the <b>{}</b> magnet. The magnet current will be automatically adjusted, depending on the momentum in the {} section. ".format(
+                        attributes.effect_name.lower(), magnet.name, section_name)
+                    k_spin = self.spinbox(main_hbox, attributes.effect_units, step=step, decimals=3,
+                                          help_text=help_text) #, min_value=min_k, max_value=max_k)
+                    magnet.k_spin = k_spin
+                    branch_name = magnet.ref.magnetBranch
+                    in_branch = branch_name != 'UNKNOWN_MAGNET_BRANCH'
+                    if mag_type == 'DIP':
+                        magnet.branch_button = QtGui.QToolButton()
+                        magnet.branch_button.setCheckable(True)
+                        magnet.branch_button.clicked.connect(self.branchButtonClicked)
+                        magnet.branch_button.magnet = magnet  # link back to this magnet when clicked
+                        magnet.branch_button.setToolTip('Toggle branch on/off')
+                        magnet.branch_button.help_text = "Click to toggle this dipole, either sending the beam straight through, or onto a branch."
+                        branch_icon = QtGui.QIcon()
+                        branch_icon.addPixmap(pixmap('branch-off'), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+                        branch_icon.addPixmap(pixmap('branch-on'), QtGui.QIcon.Normal, QtGui.QIcon.On)
+                        magnet.branch_button.setIcon(branch_icon)
+                        main_hbox.addWidget(magnet.branch_button)
+
+                    self.collapsing_header(main_hbox, more_info, lbl, help_text=show_hide_info)
+                    help_text = "Set the current in the <b>{}</b> magnet. The {} will be calculated, depending on the momentum in the {} section. ".format(
+                        magnet.name, attributes.effect_name.lower(), section_name)
+                    current_spin = self.spinbox(main_hbox, units, step=0.1, decimals=3,
+                                                min_value=min_current, max_value=max_current, help_text=help_text)
+                    magnet.current_spin = current_spin
+                    if mag_type == 'DIP':
+                        magnet.set_mom_checkbox = QtGui.QCheckBox('Set momentum')
+                        magnet.set_mom_checkbox.setSizePolicy(label_size_policy)
+                        magnet.set_mom_checkbox.setToolTip("Calculate the beam's momentum by adjusting this magnet's current")
+                        magnet.set_mom_checkbox.help_text = u"Measure the momentum using this dipole. First, set the dipole angle to 45°. " \
+                            "Then check this box and adjust the current until the beam is centred on the screen. The momentum in the {} section " \
+                            "will be automatically set. Finally, clear the checkbox."
+                        main_hbox.addWidget(magnet.set_mom_checkbox)
+
+                    restore_button = QtGui.QToolButton()
+                    restore_button.setIcon(QtGui.QIcon(pixmap('undo')))
+                    restore_button.clicked.connect(self.restoreMagnet)
+                    restore_button.setToolTip('Undo')
+                    restore_button.help_text = "Undo the previous change to the <b>{}</b> magnet. Multiple changes while the control has the focus are counted as one.".format(magnet.name)
+                    main_hbox.addWidget(restore_button)
+                    magnet.restore_button = restore_button
+                    restore_button.setEnabled(False)
+                    self.empty_icon = QtGui.QPixmap(24, 24)
+                    self.empty_icon.fill(QtCore.Qt.transparent)
+                    warning_icon = self.collapsing_header(main_hbox, more_info)
+                    warning_icon.setPixmap(self.empty_icon)
+                    warning_icon.help_text = "An orange warning icon indicates that the magnet's read value and set value are different. Red indicates that the magnet is not powered on. " + show_hide_info
+                    magnet.warning_icon = warning_icon
+                    #TODO: warn when magnet needs degaussing
+                    static_info.extend(
+                        [format_when_present('<br><b>Manufactured by</b> {}', magnet.ref, 'manufacturer'),
+                         format_when_present('<br><b>Serial number</b> {}', magnet.ref, 'serialNumber'),
+                         format_when_present('<br><b>Magnetic length</b>: {:.1f} mm', magnet.ref,
+                                             'magneticLength'),
+                         format_when_present('<br><a href="{}">Measurement data</a>', magnet.ref,
+                                             'measurementDataLocation'),
+                         format_when_present('<br><b>Position</b>: {:.3f} m', magnet.ref, 'position')])
+                    magnet.online_info = online_info
+                offline_info.setText(''.join(static_info))
                 more_info.hide()
                 magnet_vbox.addWidget(more_info)
                 title.toggle_frame = more_info
-                # title.installEventFilter(self)
+                    # title.installEventFilter(self)
                 magnet_list_vbox.addWidget(magnet_frame)
-            
+
+                # different shading for magnets in branches, and smooth transition at junctions
+                if in_branch:
+                    print(branch_name)
+                    magnet_frame.setObjectName('branch')
+                    junc_magnet = self.magnets[key + "_" + branch_name]
+                    junc_magnet.is_junction = True
+                    junc_magnet.magnet_frame.setObjectName('junction')
+                end_of_branch = False  # magnet.name in ('QUAD06', 'QUAD14')
+                magnet_frame.setLineWidth(3 if end_of_branch else 1)
+                magnet_frame.setContentsMargins(0, 0, 0, 3 if end_of_branch else 1)
+
         self.helpLabel = QtGui.QLabel()
         self.helpLabel.setWordWrap(True)
         self.helpLabel.setStyleSheet("QLabel { background-color : rgb(255, 248, 220); }")
@@ -516,6 +565,9 @@ class Window(QtGui.QMainWindow):
             if mag_type == 'QUAD' or mag_type[1:] == 'COR':
                 strength *= 1000  # convert to mT for correctors, T/m for quads
             magnet.online_info.setText(online_text_format.format(**locals()))
+        for bpm in self.bpms.values():
+            bpm.x_label.setText('<b>{:.3f} mm</b>\t'.format(bpm.ref.xPV))
+            bpm.y_label.setText('<b>{:.3f} mm</b>'.format(bpm.ref.yPV))
 
     def eventFilter(self, source, event):
         """Enable scroll wheel functionality for the spin boxes, and also make clickable labels that
@@ -561,20 +613,19 @@ class Window(QtGui.QMainWindow):
     def toggleMagType(self, toggled):
         """Called when a magnet type checkbox is clicked. Hide or show all the magnets of that type."""
         #which checkbox was clicked? remove 's' from end, last 6 letters, lower case
-        mag_type = str(self.sender().text())
-        logger.info(('Show ' if toggled else 'Hide ') + mag_type)
-        mag_type = mag_type[-7:-1].lower()
+        types_to_show = self.sender().types_to_show
+        logger.info(('Show ' if toggled else 'Hide ') + ','.join(types_to_show))
         for mag_list in self.magnet_controls.values():
             for i in range(mag_list.count()):
                 magnet_vbox = mag_list.itemAt(i).widget()
-                attributes = mag_attributes[str(magnet_vbox.magnet.ref.magType)]
-                if attributes.friendly_name[-6:].lower() == mag_type:
+                mag_type = ''.join([c for c in magnet_vbox.magnet.name.split('-')[-1] if not c.isdigit()])
+                if mag_type in types_to_show:
                     magnet_vbox.setVisible(toggled)
 
     def currentValueChanged(self, value):
         """Called when a current spin box is changed by the user."""
         magnet = self.sender().parent().magnet
-        self.controllers[magnet.section.id].setSI(magnet.name, value)
+        magnet_controllers[magnet.section.id].setSI(magnet.name, value)
         # Stop the GUI updating until the SI value 'takes' - otherwise it will update from an old value and be 'sticky'
         self.wait_for_magnet, self.wait_for_value = magnet, value
         
@@ -764,7 +815,7 @@ class Window(QtGui.QMainWindow):
         self.setMachineMode(mode)
         # Change all the magnet references
         for magnet in self.magnets.values():
-            magnet.ref = self.controllers[magnet.section.id].getMagObjConstRef(magnet.name)
+            magnet.ref = magnet_controllers[magnet.section.id].getMagObjConstRef(magnet.name)
             # Set the current_spin value
             magnet.current_spin.setValue(magnet.ref.siWithPol)
             # Reset the undo state
@@ -783,16 +834,15 @@ class Window(QtGui.QMainWindow):
         """Set the machine mode (offline/virtual/physical and redefine the controllers accordingly."""
         logger.info('Set machine mode: ' + mode)
         os.environ["EPICS_CA_ADDR_LIST"] = "192.168.83.255" if mode == 'Physical' else "10.10.0.12"
-        self.controllers = {}
+        magnet_controllers.clear()
+        bpm_controllers.clear()
         mode_name = VC_MagCtrl.MACHINE_MODE.names[mode.upper()]
         for key, section in sections.items():
-            # if section == 'CLARA_PH1':
-            #     get_controller_func = getattr(mag_init_CLARA, '_'.join((mode.lower(), section, 'Magnet_Controller')))
-            #     self.controllers[section] = get_controller_func()
-            # else:
             area = VC_MagCtrl.MACHINE_AREA.names[section.machine_area]
-            controller = mag_init_VC.getMagnetController(mode_name, area)
-            self.controllers[key] = controller
+            magnet_controller = mag_init_VC.getMagnetController(mode_name, area)
+            magnet_controllers[key] = magnet_controller
+            bpm_controller = bpm_init.getBPMController(mode_name, area)
+            bpm_controllers[key] = bpm_controller
         self.settings.setValue('machine_mode', mode)
         #TODO: check that it actually worked
 
