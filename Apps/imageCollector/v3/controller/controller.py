@@ -23,10 +23,11 @@ class Controller():
         self.model = model
         self.runFeedback = False
         self.counter=0
+        self.counter=0
         self.view.acquire_pushButton.clicked.connect(self.model.acquire)
         self.view.cameraName_comboBox.currentIndexChanged.connect(self.changeCamera)
         self.view.save_pushButton.clicked.connect(lambda: self.model.collectAndSave(self.view.numImages_spinBox.value()))
-        self.view.liveStream_pushButton.clicked.connect(lambda: webbrowser.open(self.model.selectedCameraDAQ.streamingIPAddress))
+        self.view.liveStream_pushButton.clicked.connect(lambda: webbrowser.open(self.model.selectedCameraDAQ[0].streamingIPAddress))
         self.view.setMask_pushButton.clicked.connect(lambda: self.model.setMask(self.view.maskX_spinBox.value(),
                                                                                 self.view.maskY_spinBox.value(),
                                                                                 self.view.maskXRadius_spinBox.value(),
@@ -47,6 +48,7 @@ class Controller():
         self.view.stepSize_spinBox.valueChanged.connect(lambda: self.model.setStepSize(self.view.stepSize_spinBox.value()))
 
         '''Update GUI'''
+        print 'starting GUI update'
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.update)
         self.timer.start(100)
@@ -73,23 +75,32 @@ class Controller():
         # self.ImageView.autoLevels()
 
     def changeCamera(self):
+        print 'changeCamera called'
         comboBox = self.view.cameraName_comboBox
         self.model.camerasDAQ.setCamera(str(comboBox.currentText()))
         self.model.camerasIA.setCamera(str(comboBox.currentText()))
-        self.view.numImages_spinBox.setMaximum(self.model.selectedCameraDAQ.DAQ.maxShots)
-        if self.model.selectedCameraIA.IA.useBkgrnd is True:
+
+
+        self.view.numImages_spinBox.setMaximum(self.model.selectedCameraDAQ[0].DAQ.maxShots)
+        if self.model.selectedCameraIA[0].IA.useBkgrnd is True:
             self.view.useBackground_checkBox.setChecked(True)
         else:
             self.view.useBackground_checkBox.setChecked(False)
-        if self.model.selectedCameraIA.IA.useNPoint is True:
+        if self.model.selectedCameraIA[0].IA.useNPoint is True:
             self.view.useNPoint_checkBox.setChecked(True)
         else:
             self.view.useNPoint_checkBox.setChecked(False)
 
-        self.view.maskX_spinBox.setValue(self.model.selectedCameraIA.IA.maskX)
-        self.view.maskY_spinBox.setValue(self.model.selectedCameraIA.IA.maskY)
-        self.view.maskXRadius_spinBox.setValue(self.model.selectedCameraIA.IA.maskXRad)
-        self.view.maskYRadius_spinBox.setValue(self.model.selectedCameraIA.IA.maskYRad)
+        print ('maskX = ', self.model.selectedCameraIA[0].IA.maskX)
+        print ('maskY = ', self.model.selectedCameraIA[0].IA.maskY)
+        print ('maskXRad = ', self.model.selectedCameraIA[0].IA.maskXRad)
+        print ('maskYRad = ', self.model.selectedCameraIA[0].IA.maskYRad)
+
+
+        self.view.maskX_spinBox.setValue(self.model.selectedCameraIA[0].IA.maskX)
+        self.view.maskY_spinBox.setValue(self.model.selectedCameraIA[0].IA.maskY)
+        self.view.maskXRadius_spinBox.setValue(self.model.selectedCameraIA[0].IA.maskXRad)
+        self.view.maskYRadius_spinBox.setValue(self.model.selectedCameraIA[0].IA.maskYRad)
         self.changeEllipse()
 
         print 'Set camera to ', str(comboBox.currentText())
@@ -120,53 +131,53 @@ class Controller():
         self.runFeedback = use
 
     def update(self):
-        #print(self.model.selectedCameraIA.IA.x)
-        name = self.model.selectedCameraDAQ.name
+        #print(self.model.selectedCameraIA[0].IA.x)
+        name = self.model.selectedCameraDAQ[0].name
         if self.model.camerasDAQ.isAcquiring(name):
             self.view.acquire_pushButton.setText('Stop Acquiring')
             self.view.acquire_pushButton.setStyleSheet("background-color: green")
             self.view.save_pushButton.setEnabled(True)
             # Set crosshairs
-            x = self.model.selectedCameraIA.IA.xPix
-            y = self.model.selectedCameraIA.IA.yPix
-            sigX = self.model.selectedCameraIA.IA.xSigmaPix
-            sigY = self.model.selectedCameraIA.IA.ySigmaPix
+            x = self.model.selectedCameraIA[0].IA.xPix
+            y = self.model.selectedCameraIA[0].IA.yPix
+            sigX = self.model.selectedCameraIA[0].IA.xSigmaPix
+            sigY = self.model.selectedCameraIA[0].IA.ySigmaPix
             v1 = (y - sigY)
             v2 = (y + sigY)
             h1 = (x - sigX)
             h2 = (x + sigX)
             self.vLineMLE.setData(x=[x, x], y=[v1, v2])
             self.hLineMLE.setData(x=[h1, h2], y=[y, y])
-
             #labels
-            self.view.apI_label.setText(str(round(self.model.selectedCameraIA.IA.averagePixelIntensity,3)))
-            self.view.xMM_label.setText(str(round(self.model.selectedCameraIA.IA.x,3)))
-            self.view.yMM_label.setText(str(round(self.model.selectedCameraIA.IA.y,3)))
-            self.view.sxMM_label.setText(str(round(self.model.selectedCameraIA.IA.sigmaX,3)))
-            self.view.syMM_label.setText(str(round(self.model.selectedCameraIA.IA.sigmaY,3)))
-            self.view.covXY_label.setText(str(round(self.model.selectedCameraIA.IA.covXY,3)))
-            
-            data = caget(self.model.selectedCameraDAQ.pvRoot + 'CAM2:ArrayData')
-            if name == "VC":
-                npData = np.array(data).reshape((1080, 1280))
-            else:
-                npData = np.array(data).reshape((1280, 1080))
-            self.Image.setImage(np.flip(np.transpose(npData), 1))
-            self.Image.setLevels([self.view.spinBox_minLevel.value(),
-                                  self.view.spinBox_maxLevel.value()], update=True)
+            self.view.apI_label.setText(str(round(self.model.selectedCameraIA[0].IA.averagePixelIntensity,3)))
+            self.view.xMM_label.setText(str(round(self.model.selectedCameraIA[0].IA.x,3)))
+            self.view.yMM_label.setText(str(round(self.model.selectedCameraIA[0].IA.y,3)))
+            self.view.sxMM_label.setText(str(round(self.model.selectedCameraIA[0].IA.sigmaX,3)))
+            self.view.syMM_label.setText(str(round(self.model.selectedCameraIA[0].IA.sigmaY,3)))
+            self.view.covXY_label.setText(str(round(self.model.selectedCameraIA[0].IA.covXY,3)))
+            data = caget(self.model.selectedCameraDAQ[0].pvRoot + 'CAM2:ArrayData')
+            if data is not None:
+                if len(data) == 1080*1280:
+                    if name == "VC":
+                        npData = np.array(data).reshape((1080, 1280))
+                    else:
+                        npData = np.array(data).reshape((1280, 1080))
+                    self.Image.setImage(np.flip(np.transpose(npData), 1))
+                    self.Image.setLevels([self.view.spinBox_minLevel.value(),
+                                          self.view.spinBox_maxLevel.value()], update=True)
         else:
             self.view.acquire_pushButton.setText('Start Acquiring')
             self.view.acquire_pushButton.setStyleSheet("background-color: red")
             self.view.save_pushButton.setEnabled(False)
 
-        if self.model.selectedCameraDAQ.DAQ.captureState == self.model.cap.CAPTURING:
+        if self.model.selectedCameraDAQ[0].DAQ.captureState == self.model.cap.CAPTURING:
             self.view.save_pushButton.setText('Kill')
-        elif self.model.selectedCameraDAQ.DAQ.writeState == self.model.wr.WRITING:
+        elif self.model.selectedCameraDAQ[0].DAQ.writeState == self.model.wr.WRITING:
             self.view.save_pushButton.setText('Writing to Disk..')
         else:
             self.view.save_pushButton.setText('Collect and Save')
 
-        if self.model.selectedCameraIA.IA.analysisState == True:
+        if self.model.selectedCameraIA[0].IA.analysisState == True:
             self.view.analyse_pushButton.setText('Analysing...')
         else:
             self.view.analyse_pushButton.setText('Analyse')
@@ -177,7 +188,7 @@ class Controller():
             self.counter = 0
             self.model.feedback(self.runFeedback)
             if self.runFeedback is True:
-                self.view.maskX_spinBox.setValue(self.model.selectedCameraIA.IA.maskX)
-                self.view.maskY_spinBox.setValue(self.model.selectedCameraIA.IA.maskY)
-                self.view.maskXRadius_spinBox.setValue(self.model.selectedCameraIA.IA.maskXRad)
-                self.view.maskYRadius_spinBox.setValue(self.model.selectedCameraIA.IA.maskYRad)
+                self.view.maskX_spinBox.setValue(self.model.selectedCameraIA[0].IA.maskX)
+                self.view.maskY_spinBox.setValue(self.model.selectedCameraIA[0].IA.maskY)
+                self.view.maskXRadius_spinBox.setValue(self.model.selectedCameraIA[0].IA.maskXRad)
+                self.view.maskYRadius_spinBox.setValue(self.model.selectedCameraIA[0].IA.maskYRad)
