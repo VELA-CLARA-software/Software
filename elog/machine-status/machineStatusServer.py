@@ -155,7 +155,7 @@ class MyHandler(http.server.BaseHTTPRequestHandler):
                 output = '''elogInsertMachineStatus(
                             {{"status": "ok",
                               "area": "{0}",
-                              "params": '{1}'}})'''.format(path, output.replace('\n', ''))
+                              "params": '{1}'}})'''.format(path, output.replace('\n', '').replace('\r', ''))
 
         elif path == '':
             content_type = "text/html"

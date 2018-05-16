@@ -5,7 +5,6 @@ REM needs to be done by Ben Shepherd.
 REM The /d flag ensures only newer files are copied
 xcopy /y /d machine-status\status.* \\apsv2\bjs54\machine-status
 xcopy /y /d scripts\ckeditor\plugins\vela\icons\*.png \\apsv2\elog2\scripts\ckeditor\plugins\vela\icons
-xcopy /y scripts\ckeditor\plugins\vela\plugin.js \\apsv2\elog2\scripts\ckeditor\plugins\vela
-xcopy /y scripts\ckeditor\contents.css \\apsv2\elog2\scripts\ckeditor
-xcopy /y themes\default\default.css \\apsv2\elog2\themes\default
-pause
+xcopy /y /d scripts\ckeditor\plugins\vela\plugin.js \\apsv2\elog2\scripts\ckeditor\plugins\vela
+xcopy /y /d scripts\ckeditor\contents.css \\apsv2\elog2\scripts\ckeditor
+xcopy /y /d themes\default\default.css \\apsv2\elog2\themes\default

@@ -1,8 +1,9 @@
 import sys,os
 
 os.environ['PATH']=os.environ['PATH']+';\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release\\'
-os.environ['PATH']=os.environ['PATH']+';\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\stage\\'
-os.environ['PATH']=os.environ['PATH']+';\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\stage\\root_v5.34.34\\bin\\'
+#os.environ['PATH']=os.environ['PATH']+';\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin
+# \\stage\\'
+os.environ['PATH']=os.environ['PATH']+';\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release\\root_v5.34.34\\bin\\'
 #sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\\model')
 #sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\\controller')
 #sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\\view')
@@ -23,6 +24,7 @@ class App(QtGui.QApplication):
         self.MainWindow = QtGui.QMainWindow()
         self.view.setupUi(self.MainWindow)
         self.model = model.Model()
+        print 'Creating Controller'
         self.controller = controller.Controller(self.view, self.model)
         self.MainWindow.show()
 

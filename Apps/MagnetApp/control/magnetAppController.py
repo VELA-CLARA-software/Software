@@ -10,6 +10,7 @@ from GUI.GUI_magnetAppStartup import GUI_magnetAppStartup
 from GUI.GUI_magnetAppMainView import GUI_magnetAppMainView
 from GUI.GUI_FileLoad import GUI_FileLoad
 from GUI.GUI_FileSave import GUI_FileSave
+from operator import itemgetter
 import sys
 
 # this class handles everything
@@ -60,7 +61,9 @@ class magnetAppController(object):
             mag.MACHINE_AREA.VELA_BA1:'VELA_BA1',
             mag.MACHINE_AREA.VELA_BA2:'VELA_BA2',
             mag.MACHINE_AREA.VELA_INJ:'VELA_Injector',
-            mag.MACHINE_AREA.CLARA_PH1:'CLARA_PH1'
+            mag.MACHINE_AREA.CLARA_PH1:'CLARA_PH1',
+            mag.MACHINE_AREA.CLARA_2_BA1:'CLARA_2_BA1',
+            mag.MACHINE_AREA.CLARA_2_BA2:'CLARA_"_BA2'
             # mag.MACHINE_AREA.CLARA_PHASE_1:'CLARA PHASE 1 Magnets',
             }
 #        for i in sys.path:
@@ -241,6 +244,7 @@ class magnetAppController(object):
     def addMagnetsToMainView(self):
         # get all magnet names
         self.allMagNames = self.localMagnetController.getMagnetNames()
+        self.magnet_names_to_canonical_order()
         # iterate over all magnets, and add them to respective lists depending
         # on their magnet type
         for i in self.allMagNames:
@@ -278,6 +282,20 @@ class magnetAppController(object):
         # ensures that when the main view is closed all the other views (saveview nad loadView) are closed too
         self.mainView.closing.connect(self.connectCloseEvents)
     # the load and save dburt windows can't be closed until this function is called
+
+    def magnet_names_to_canonical_order(self):
+
+        canon_order = ['LRG','S01','L01','S02','C2V','INJ','BA1','BA2']
+        order = []
+        for name in self.allMagNames:
+            i = 0
+            for area in canon_order:
+                if area in name:
+                    order.append([i,name])
+                else:
+                    i += 1
+        self.allMagNames = [x[1] for x in sorted(order, key=itemgetter(0))]
+
     def connectCloseEvents(self):
         self.widgetUpdateTimer.stop()
         #self.dburtLoadView.canWindowClose = True

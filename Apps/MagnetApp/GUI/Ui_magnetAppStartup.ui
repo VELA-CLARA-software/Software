@@ -18,7 +18,7 @@
     <property name="geometry">
      <rect>
       <x>370</x>
-      <y>380</y>
+      <y>440</y>
       <width>111</width>
       <height>23</height>
      </rect>
@@ -36,7 +36,7 @@
     <property name="geometry">
      <rect>
       <x>500</x>
-      <y>380</y>
+      <y>440</y>
       <width>151</width>
       <height>23</height>
      </rect>
@@ -53,10 +53,10 @@
    <widget class="QGroupBox" name="machineAreaSelection">
     <property name="geometry">
      <rect>
-      <x>322</x>
+      <x>320</x>
       <y>140</y>
       <width>231</width>
-      <height>211</height>
+      <height>241</height>
      </rect>
     </property>
     <property name="font">
@@ -122,6 +122,20 @@
       </widget>
      </item>
      <item>
+      <widget class="QRadioButton" name="CLARA_2_BA1">
+       <property name="text">
+        <string>CLARA 2 BA1</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="CLARA_2_BA2">
+       <property name="text">
+        <string>CLARA 2 BA2</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <spacer name="verticalSpacer_2">
        <property name="orientation">
         <enum>Qt::Vertical</enum>
@@ -141,6 +155,8 @@
     <zorder>VELA_INJ</zorder>
     <zorder>verticalSpacer_2</zorder>
     <zorder>CLARA_2_VELA</zorder>
+    <zorder>CLARA_2_BA1</zorder>
+    <zorder>CLARA_2_BA2</zorder>
    </widget>
    <widget class="QGroupBox" name="modeSelection">
     <property name="geometry">
