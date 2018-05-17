@@ -3,7 +3,7 @@ import sys,os
 # from epics import caget,caput
 
 '''This is the place to get contollers'''
-sys.path.append('\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Software\\VELA_CLARA_PYDs\\bin\\release\\')
+sys.path.append(r'\\apclara1\ControlRoomApps\Controllers\bin\Release')
 import VELA_CLARA_Magnet_Control as mag
 import VELA_CLARA_BPM_Control as bpm
 import VELA_CLARA_LLRF_Control as llrf

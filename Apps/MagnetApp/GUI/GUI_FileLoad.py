@@ -125,7 +125,18 @@ class GUI_FileLoad(QDialog, Ui_FileLoad):
             print 'opening file'
             self.fileText = open(self.selectedFilePath).read()
             self.textWindow.setPlainText(self.fileText)
-            self.textWindow.resize(400, 700)
+            self.textWindow.resize(500, 700)
+
+            self.textWindow.selectAll()
+
+            font = QFont()
+            font.setPointSize(16)
+            self.textWindow.setFont(font)
+            tc = QTextCursor()
+            tc.setPosition(self.textWindow.document().characterCount())
+            self.textWindow.setTextCursor(tc)
+            #self.textWindow.setFontPointSize(32)
+
             self.textWindow.setWindowTitle(self.selectedFile)
             self.textWindow.setWindowIcon(QIcon('magpic.jpg'))
             self.textWindow.show()
