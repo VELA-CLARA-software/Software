@@ -19,6 +19,7 @@ import webbrowser  # to get help
 sys.path.insert(0, r'\\apclara1\ControlRoomApps\Controllers\bin\Release')
 import VELA_CLARA_Magnet_Control as VC_MagCtrl
 import VELA_CLARA_BPM_Control
+import epics
 # import CLARA_Magnet_Control as CLARA_MagCtrl
 from pkg_resources import resource_filename
 sys.path.append('../../Widgets/loggerWidget')
@@ -245,6 +246,7 @@ class Window(QtGui.QMainWindow):
         magnet_font = QtGui.QFont('', 14, QtGui.QFont.Bold)
         self.magnets = OrderedDict()
         self.bpms = OrderedDict()
+        self.wait_for = {} # what magnet(s) and SI are we waiting for?
         pv_root_re = re.compile('^VM-(.*):$')
         for key, section in sections.items():
             section_name = section.title
@@ -489,7 +491,6 @@ class Window(QtGui.QMainWindow):
         rect = self.settings.value('geometry', QtCore.QRect(300, 300, 400, 600)).toRect()
         self.setGeometry(rect)
         self.update_period = 100  # milliseconds
-        self.wait_for_magnet, self.wait_for_value = None, None  # what magnet and SI are we waiting for?
         self.startMainViewUpdateTimer()
         self.setWindowIcon(QtGui.QIcon(pixmap('magnet')))
         self.show()
@@ -555,10 +556,16 @@ class Window(QtGui.QMainWindow):
             if mag_type == 'QUAD':
                 magnet.icon.setPixmap(pixmap('Quadrupole_' + ('F' if set_current >= 0 else 'D')).scaled(32, 32))
             # are we waiting for the SI value for this magnet to 'take'?
-            if magnet is self.wait_for_magnet and abs(set_current - self.wait_for_value) <= 0.001:  # it's taken now! # TODO: tolerance from somewhere?
-                self.wait_for_magnet = None
-            if not magnet.current_spin.hasFocus() and magnet is not self.wait_for_magnet:
-                magnet.current_spin.setValue(set_current)
+            try:
+                if abs(set_current - self.wait_for[magnet]) <= 0.001:  # it's taken now! # TODO: tolerance from somewhere?
+                    self.wait_for.pop(magnet)  # remove it from 'waiting for' list
+            except KeyError:  # we're not waiting for this one
+                if not magnet.current_spin.hasFocus():
+                    magnet.current_spin.setValue(set_current)
+            # if magnet is self.wait_for_magnet and abs(set_current - self.wait_for_value) <= 0.001:  # it's taken now! # TODO: tolerance from somewhere?
+            #     self.wait_for_magnet = None
+            # if not magnet.current_spin.hasFocus() and magnet is not self.wait_for_magnet:
+            #     magnet.current_spin.setValue(set_current)
             attributes = mag_attributes[mag_type]
             int_strength = np.copysign(np.polyval(magnet.fieldIntegralCoefficients, abs(set_current)), set_current)
             strength = int_strength / magnet.ref.magneticLength if magnet.ref.magneticLength else 0
@@ -627,7 +634,9 @@ class Window(QtGui.QMainWindow):
         magnet = self.sender().parent().magnet
         magnet_controllers[magnet.section.id].setSI(magnet.name, value)
         # Stop the GUI updating until the SI value 'takes' - otherwise it will update from an old value and be 'sticky'
-        self.wait_for_magnet, self.wait_for_value = magnet, value
+        # Add it to a list of "waiting for" magnets. We might need more than one if we're changing the momentum in a section
+        self.wait_for[magnet] = value
+        # self.wait_for_magnet, self.wait_for_value = magnet, value
         
         if str(magnet.ref.magType) == 'DIP' and magnet.set_mom_checkbox.isChecked():
             # 'Set momentum' checkbox is ticked - we are using this dipole to check the momentum
@@ -658,7 +667,14 @@ class Window(QtGui.QMainWindow):
     def momentumChanged(self, value):
         """Called when a momentum spin box is changed by the user."""
         section = self.sender().magnet_list_vbox
-        self.settings.setValue(section.id + '/momentum', self.sender().value())
+        momentum = self.sender().value()
+        self.settings.setValue(section.id + '/momentum', momentum)
+        # Put the momentum in the correct PV
+        if section.id == 'S01':
+            epics.caput('CLA-LRG1-DIA-MOM-01:RB', momentum)
+        elif section.id == 'S02':
+            epics.caput('CLA-L01-DIA-MOM-01:RB', momentum)
+
         mode = self.mom_mode_combo.currentText()
         changeFunc = self.calcKFromCurrent if mode == 'Recalculate K' else self.calcCurrentFromK
         for magnet in self.magnets.values():
