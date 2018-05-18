@@ -9,3 +9,6 @@ magnet-table/tmp/*.*
 magnet-table/rf_sol_gui.py
 magnet-table/src/pip-delete-this-directory.txt
 .idea
+*.bat
+*.bat
+Apps/imageCollector/v3/pyinstaller-build.bat

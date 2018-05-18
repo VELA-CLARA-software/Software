@@ -16,18 +16,19 @@ degree = constants.pi/180.0
 q_e = constants.elementary_charge
 c = constants.speed_of_light
 
-import VELA_CLARA_Magnet_Control as vcmag
-maginit = vcmag.init()
-Cmagnets = maginit.physical_CLARA_PH1_Magnet_Controller()
-import VELA_CLARA_BPM_Control as vcbpmc
-bpms = vcbpmc.init()
-Cbpms = bpms.physical_CLARA_PH1_BPM_Controller()
+# import VELA_CLARA_Magnet_Control as vcmag
+# maginit = vcmag.init()
+# Cmagnets = maginit.physical_CLARA_PH1_Magnet_Controller()
+# import VELA_CLARA_BPM_Control as vcbpmc
+# bpms = vcbpmc.init()
+# Cbpms = bpms.physical_CLARA_PH1_BPM_Controller()
 # print zip(*inspect.getmembers(Cbpms, predicate=inspect.ismethod))[0]
 # exit()
 import VELA_CLARA_LLRF_Control as vcllrf
 llrf = vcllrf.init()
-Cllrf = llrf.physical_LRRG_LLRF_Controller()
-print zip(*inspect.getmembers(Cbpms, predicate=inspect.ismethod))[0]
+print inspect.getmembers(llrf, inspect.ismethod)
+# Cllrf = llrf.physical_LRRG_LLRF_Controller()
+# print zip(*inspect.getmembers(Cbpms, predicate=inspect.ismethod))[0]
 exit()
 
 def qSleep(time):
