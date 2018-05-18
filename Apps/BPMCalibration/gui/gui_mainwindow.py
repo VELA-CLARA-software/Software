@@ -15,7 +15,7 @@ import glob
 from PyQt4.QtCore import QObject, pyqtSignal, QThread, QTimer, QRectF, Qt
 from PyQt4.QtGui import * #QApplication, QMainWindow, QWidget, QPushButton, QVBoxLayout, QHBoxLayout, QComboBox, QTabWidget, QLineEdit, QFileDialog, QLabel, QAction, QPixmap, qApp, QStyle, QGroupBox, QSpinBox
 from pyqtgraph import LegendItem, mkPen, mkBrush, LabelItem, TableWidget, GraphicsLayoutWidget, setConfigOption, \
-setConfigOptions, InfiniteLine, ImageItem, GraphicsView, GraphicsLayout, AxisItem, ViewBox, PlotDataItem, colorStr, mkColor
+setConfigOptions, InfiniteLine, ImageItem, GraphicsView, GraphicsLayout, GraphicsWindow, ViewBox, PlotDataItem, colorStr, mkColor
 from pyqtgraph.graphicsItems.LegendItem import ItemSample
 import argparse
 import imageio
@@ -126,8 +126,6 @@ class Ui_MainWindow(object):
         self.bunchChargeHBox = QtGui.QHBoxLayout()
         self.bunchChargeLabel = QtGui.QLabel()
         self.bunchChargeLabel.setObjectName(_fromUtf8("bunchChargeLabel"))
-        self.bunchChargeScopeLabel = QtGui.QLabel()
-        self.bunchChargeScopeLabel.setObjectName(_fromUtf8("bunchChargeScopeLabel"))
         self.bunchChargeChannelLabel = QtGui.QLabel()
         self.bunchChargeChannelLabel.setObjectName(_fromUtf8("bunchChargeChannelLabel"))
         self.bunchChargeDiagTypeLabel = QtGui.QLabel()
@@ -135,8 +133,6 @@ class Ui_MainWindow(object):
         self.bunchChargeOutputWidget = QtGui.QLabel()
         self.bunchChargeOutputWidget.setObjectName(_fromUtf8("bunchChargeOutputWidget"))
         self.bunchChargeHBox.addWidget(self.bunchChargeLabel)
-        self.bunchChargeHBox.addWidget(self.bunchChargeScopeLabel)
-        self.bunchChargeHBox.addWidget(self.bunchChargeChannelLabel)
         self.bunchChargeHBox.addWidget(self.bunchChargeDiagTypeLabel)
         self.bunchChargeHBox.addWidget(self.bunchChargeOutputWidget)
         self.midVBox.addWidget(self.comboBox)

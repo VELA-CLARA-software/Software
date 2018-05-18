@@ -4,16 +4,21 @@ import os
 import pickle
 from data.config_reader import config_reader
 import numpy
-# import data.rf_condition_data_base as dat
+import data.bpm_calibrate_data_base as dat
+import yaml,json
 
 
 class data_logger(object):
     my_name = 'data_logger'
     config = config_reader()
     _log_config = None
+    _bpm_name = None
+    _scan_type = None
 
     log_start = datetime.now()
     log_start_str = log_start.isoformat('-').replace(":", "-").split('.', 1)[0]
+    bpm_name = "dummy"
+    scan_type = "dummy"
 
     def __init__(self):
         pass
@@ -65,24 +70,39 @@ class data_logger(object):
             for item in data:
                 f.write("%s\n" % item)
 
-
-    def add_to_pulse_breakdown_log(self,x):
+    def add_to_bpm_scan_log(self,x):
         towrite = " ".join(map(str, x))
-        self.message('Adding to pulse_breakdown_log =  ' + towrite, True)
-        with open(self.pulse_count_log,'a') as f:
+        self.message('Adding to bpm scan log =  ' + towrite, True)
+        with open(self.bpm_scan_log,'a') as f:
             f.write( towrite + '\n')
 
-    def get_pulse_count_breakdown_log(self):
-        self.pulse_count_log = data_logger.config.log_config['LOG_DIRECTORY']+ \
-                               data_logger.config.log_config['PULSE_COUNT_BREAKDOWN_LOG_FILENAME']
+    def add_to_bpm_scan_yaml(self,d):
+        with open(self.bpm_scan_log, 'w') as outfile:
+            yaml.dump(d, outfile, default_flow_style=False)
+
+    def add_to_bpm_scan_json(self,d):
+        with open(self.bpm_scan_log, 'a') as outfile:
+            outfile.write(json.dumps(d, indent=4, sort_keys=True))
+            outfile.write('\n')
+
+    def get_bpm_scan_log(self):
+        self.scan_log_start = datetime.now()
+        self.scan_log_start_str = self.scan_log_start.isoformat('-').replace(":", "-").split('.', 1)[0]
+        self.bpm_directory = data_logger.config.log_config['LOG_DIRECTORY'] + self.bpm_name
+        self.scan_directory = data_logger.config.log_config['LOG_DIRECTORY'] + self.bpm_name + '\\' + self.scan_type
+        if not os.path.isdir(self.bpm_directory):
+            os.makedirs(self.bpm_directory)
+        if not os.path.isdir(self.scan_directory):
+            os.makedirs(self.scan_directory)
+        self.bpm_scan_log = self.scan_directory + '\\' + self.scan_log_start_str + ".json"
         log = []
-        with open(self.pulse_count_log) as f:
+        with open(self.bpm_scan_log,"w+") as f:
             lines = list(line for line in (l.strip() for l in f) if line)
             for line in lines:
                 if '#' not in line:
                     log.append([int(x) for x in line.split()])
-        self.header(self.my_name + ' get_pulse_count_breakdown_log')
-        self.message('read pulse_count_log: ' + self.pulse_count_log)
+        self.header(self.my_name + ' get_bpm_scan_log')
+        self.message('read bpm_scan_log: ' + self.bpm_scan_log)
         # for i in log:
         #     self.message(map(str,i),True)
         return log

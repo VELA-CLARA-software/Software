@@ -1,5 +1,5 @@
 from VELA_CLARA_BPM_Control import MACHINE_AREA, MACHINE_MODE
-from VELA_CLARA_Scope_Control import SCOPE_PV_TYPE, DIAG_TYPE
+#from VELA_CLARA_Scope_Control import SCOPE_PV_TYPE, DIAG_TYPE
 
 class config_reader(object):
     # whoami
@@ -22,7 +22,7 @@ class config_reader(object):
 
     bpm_config = None
     log_config = None
-    scope_config = None
+    charge_config = None
     machine_mode = None
     gui_config = None
 
@@ -65,13 +65,13 @@ class config_reader(object):
         #     return False
         self.bpm_parameter()
         self.log_param()
-        self.scope_parameter()
+        self.charge_parameter()
         self.gui_param()
         print(config_reader.my_name + ' read input from ' + str(config_reader.config_file))
 
         config_reader.all_config_data = [config_reader.bpm_config,
                                          config_reader.log_config,
-                                         config_reader.scope_config,
+                                         config_reader.charge_config,
                                          config_reader.gui_config]
 
         return self.sanity_checks()
@@ -126,11 +126,6 @@ class config_reader(object):
                 r.update({item: self.get_machine_mode(config_reader.config[item])})
             except:
                 print(self.my_name, " FAILED to Find, ", item)
-        for item in channel_param:
-            try:
-                r.update({item: self.get_scope_channel(config_reader.config[item])})
-            except:
-                print(self.my_name, " FAILED to Find, ", item)
         for item in bool_param:
             try:
                 r.update({item: self.get_bool(config_reader.config[item])})
@@ -149,17 +144,14 @@ class config_reader(object):
                                                        int_param=int_param,mode_param=mode_param)
         return config_reader.bpm_config
 
-    def scope_parameter(self):
-        string_param = ['SCOPE_NAME']
-        area_param = ['SCOPE_AREA']
-        int_param = ['SCOPE_CHECK_TIME']
-        channel_param = ['SCOPE_CHANNEL']
-        mode_param = ['SCOPE_MODE']
-        diag_param = ['SCOPE_DIAG_TYPE']
-        config_reader.scope_config = self.get_param_dict(string_param=string_param, area_param=area_param,
-                                                         int_param=int_param,channel_param=channel_param,
-                                                         diag_param=diag_param,mode_param=mode_param)
-        return config_reader.scope_config
+    def charge_parameter(self):
+        string_param = ['CHARGE_NAME','CHARGE_DIAG_TYPE']
+        area_param = ['CHARGE_AREA']
+        int_param = ['CHARGE_CHECK_TIME']
+        mode_param = ['CHARGE_MODE']
+        config_reader.charge_config = self.get_param_dict(string_param=string_param, area_param=area_param,
+                                                         int_param=int_param,mode_param=mode_param)
+        return config_reader.charge_config
 
     def log_param(self):
         string_param = ['LOG_FILENAME', 'LOG_DIRECTORY', 'DATA_LOG_FILENAME']
@@ -200,26 +192,6 @@ class config_reader(object):
             return MACHINE_MODE.VIRTUAL
         elif text == 'OFFLINE':
             return MACHINE_MODE.OFFLINE
-
-    def get_scope_channel(self, text):
-        if text == 'P1':
-            return SCOPE_PV_TYPE.P1
-        elif text == 'P2':
-            return SCOPE_PV_TYPE.P2
-        elif text == 'P3':
-            return SCOPE_PV_TYPE.P3
-        elif text == 'P4':
-            return SCOPE_PV_TYPE.P4
-        elif text == 'TR1':
-            return SCOPE_PV_TYPE.TR1
-        elif text == 'TR2':
-            return SCOPE_PV_TYPE.TR2
-        elif text == 'TR3':
-            return SCOPE_PV_TYPE.TR3
-        elif text == 'TR4':
-            return SCOPE_PV_TYPE.TR4
-        else:
-            return SCOPE_PV_TYPE.UNKNOWN
 
     def get_diag_type(self, text):
         if text == 'WCM':

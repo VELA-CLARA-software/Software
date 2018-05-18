@@ -43,8 +43,8 @@ class controller_base(base):
 
 			if bool(base.config.bpm_config):
 				self.start_bpm_control()
-			if bool(base.config.scope_config):
-				self.start_scope_control()
+			if bool(base.config.charge_config):
+				self.start_charge_control()
 		else:
 			base.logger.header(self.my_name + ' read_config failed sanity checks!!!', True)
 
@@ -55,20 +55,20 @@ class controller_base(base):
 			logdata.append(''.join(['%s:%s, ' % (key, value) for (key, value) in item.iteritems()]))
 		base.logger.message(logdata, True)
 
-	def start_scope_control(self):
+	def start_charge_control(self):
 		try:
-			a = base.config.scope_config['SCOPE_AREA']# MAGIC_STRING
+			a = base.config.charge_config['CHARGE_AREA']# MAGIC_STRING
 		except:
 			a = MACHINE_AREA.UNKNOWN_AREA
 		if a is not MACHINE_AREA.UNKNOWN_AREA:
-			b = base.config.scope_config['SCOPE_MODE']
-			base.scope_control = base.scope_init.getScopeController(b,a)
+			b = base.config.charge_config['CHARGE_MODE']
+			base.charge_control = base.charge_init.getChargeController(b,a)
 			# base.scope_control = base.scope_init.physical_VELA_INJ_Scope_Controller()
-			base.logger.message('start_scope_control created ' + str(base.config.scope_config['SCOPE_AREA']) + ' object', True)
-			base.logger.message('Monitoring Scope: ' + ' ' + self.get_scope_names()[0], True)
-			base.config.scope_config['SCOPE_NAME'] = self.get_scope_names()
+			base.logger.message('start_charge_control created ' + str(base.config.charge_config['CHARGE_AREA']) + ' object', True)
+			base.logger.message('Monitoring Charge: ' + ' ' + self.get_charge_names()[0], True)
+			base.config.charge_config['CHARGE_NAME'] = self.get_charge_names()
 		else:
-			base.logger.message('start_scope_control UNKNOWN_MACHINE area cannot create scope object', True)
+			base.logger.message('start_charge_control UNKNOWN_MACHINE area cannot create charge object', True)
 
 	def start_bpm_control(self):
 		try:
@@ -94,10 +94,10 @@ class controller_base(base):
 			temp.append(names)
 		return temp
 
-	def get_scope_names(self):
+	def get_charge_names(self):
 		temp = []
-		scope_names = base.scope_control.getScopeNames()
-		for names in scope_names:
+		charge_names = base.charge_control.getChargePVs()
+		for names in charge_names:
 			temp.append(names)
 		return temp
 
