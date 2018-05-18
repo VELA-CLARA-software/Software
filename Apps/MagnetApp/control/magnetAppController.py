@@ -302,6 +302,9 @@ class magnetAppController(object):
         #self.dburtLoadView.close()
         self.dburtSaveView.canWindowClose = True
         self.dburtSaveView.close()
+        for window in self.dburtLoadView.textWindowList:
+            window.close()
+        self.dburtLoadView.close()
         self.mainView.close()
         print 'Fin - magnetApp closed down, goodbye.'
 
