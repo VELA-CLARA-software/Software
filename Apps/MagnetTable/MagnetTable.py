@@ -276,7 +276,7 @@ class Window(QtGui.QMainWindow):
             magnet_controller = magnet_controllers[key]
             bpm_controller = bpm_controllers[key]
             mag_names = list(magnet_controller.getMagnetNames())
-            bpm_names = list(bpm_controller.getBPMNames())
+            bpm_names = list(bpm_controller.getBPMNames()) if bpm_controller is not None else []
             # Filter to make sure we only get the ones for this section
             mag_names = [(magnet_controller.getPosition(name), name) for name in mag_names
                          if section.min_pos <= magnet_controller.getPosition(name) <= section.max_pos]
@@ -457,7 +457,6 @@ class Window(QtGui.QMainWindow):
 
                 # different shading for magnets in branches, and smooth transition at junctions
                 if in_branch:
-                    print(branch_name)
                     magnet_frame.setObjectName('branch')
                     junc_magnet = self.magnets[key + "_" + branch_name]
                     junc_magnet.is_junction = True
@@ -670,10 +669,13 @@ class Window(QtGui.QMainWindow):
         momentum = self.sender().value()
         self.settings.setValue(section.id + '/momentum', momentum)
         # Put the momentum in the correct PV
-        if section.id == 'S01':
-            epics.caput('CLA-LRG1-DIA-MOM-01:RB', momentum)
-        elif section.id == 'S02':
-            epics.caput('CLA-L01-DIA-MOM-01:RB', momentum)
+        try:
+            if section.id == 'S01':
+                epics.caput('CLA-LRG1-DIA-MOM-01:RB', momentum)
+            elif section.id == 'S02':
+                epics.caput('CLA-L01-DIA-MOM-01:RB', momentum)
+        except:
+            pass
 
         mode = self.mom_mode_combo.currentText()
         changeFunc = self.calcKFromCurrent if mode == 'Recalculate K' else self.calcCurrentFromK
@@ -857,8 +859,12 @@ class Window(QtGui.QMainWindow):
             area = VC_MagCtrl.MACHINE_AREA.names[section.machine_area]
             magnet_controller = mag_init_VC.getMagnetController(mode_name, area)
             magnet_controllers[key] = magnet_controller
-            bpm_controller = bpm_init.getBPMController(mode_name, area)
-            bpm_controllers[key] = bpm_controller
+            try:
+                bpm_controller = bpm_init.getBPMController(mode_name, area)
+                bpm_controllers[key] = bpm_controller
+            except RuntimeError:
+                print("Couldn't load {} BPM controller for area {}".format(mode_name, area))
+                bpm_controllers[key] = None
         self.settings.setValue('machine_mode', mode)
         #TODO: check that it actually worked
 

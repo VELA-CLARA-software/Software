@@ -4,7 +4,7 @@ rem  --noconfirm: overwrite things without confirming
 rem  -i: use a custom icon file
 rem  --windowed: don't show a console window
 
-pyinstaller --onefile --noconfirm -i resources\magnetTable\Icons\magnet.ico --windowed MagnetTable.py
+pyinstaller --onefile --noconfirm -i resources\magnetTable\Icons\magnet.ico MagnetTable.py
 
 rem Copy files in the resources tree to dist
 rem  /d: only copy newer files

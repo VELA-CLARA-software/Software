@@ -29,10 +29,13 @@ class App(QtCore.QObject):
 
 	def setUpCtrls(self):
 		self.magInit = mag.init()
-		# self.magInit.setVerbose()
+		self.magInit.setQuiet()
 		self.bpmInit = bpm.init()
+		self.bpmInit.setQuiet()
 		self.llrfInit = llrf.init()
+		self.llrfInit.setQuiet()
 		self.scopeInit = scope.init()
+		self.scopeInit.setQuiet()
 		if self.machineType == 'Virtual':
 			os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
 			os.environ["EPICS_CA_ADDR_LIST"] = "10.10.0.12"
