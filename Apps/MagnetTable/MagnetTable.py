@@ -553,7 +553,7 @@ class Window(QtGui.QMainWindow):
                 magnet.warning_icon.setPixmap(self.empty_icon)
             mag_type = str(magnet.ref.magType)
             if mag_type == 'QUAD':
-                magnet.icon.setPixmap(pixmap('Quadrupole_' + ('F' if set_current >= 0 else 'D')).scaled(32, 32))
+                magnet.icon.setPixmap(pixmap('Quadrupole_' + ('F' if magnet.k_spin.value() >= 0 else 'D')).scaled(32, 32))
             # are we waiting for the SI value for this magnet to 'take'?
             try:
                 if abs(set_current - self.wait_for[magnet]) <= 0.001:  # it's taken now! # TODO: tolerance from somewhere?
@@ -561,10 +561,6 @@ class Window(QtGui.QMainWindow):
             except KeyError:  # we're not waiting for this one
                 if not magnet.current_spin.hasFocus():
                     magnet.current_spin.setValue(set_current)
-            # if magnet is self.wait_for_magnet and abs(set_current - self.wait_for_value) <= 0.001:  # it's taken now! # TODO: tolerance from somewhere?
-            #     self.wait_for_magnet = None
-            # if not magnet.current_spin.hasFocus() and magnet is not self.wait_for_magnet:
-            #     magnet.current_spin.setValue(set_current)
             attributes = mag_attributes[mag_type]
             int_strength = np.copysign(np.polyval(magnet.fieldIntegralCoefficients, abs(set_current)), set_current)
             strength = int_strength / magnet.ref.magneticLength if magnet.ref.magneticLength else 0
@@ -670,10 +666,11 @@ class Window(QtGui.QMainWindow):
         self.settings.setValue(section.id + '/momentum', momentum)
         # Put the momentum in the correct PV
         try:
-            if section.id == 'S01':
-                epics.caput('CLA-LRG1-DIA-MOM-01:RB', momentum)
-            elif section.id == 'S02':
-                epics.caput('CLA-L01-DIA-MOM-01:RB', momentum)
+            if self.settings.value('machine_mode') == 'Physical':
+                if section.id == 'S01':
+                    epics.caput('CLA-LRG1-DIA-MOM-01:RB', momentum)
+                elif section.id == 'S02':
+                    epics.caput('CLA-L01-DIA-MOM-01:RB', momentum)
         except:
             pass
 
@@ -717,11 +714,14 @@ class Window(QtGui.QMainWindow):
         # Get the integrated strength, based on an excitation curve
         # This is in T.mm for dipoles, T for quads, T/m for sextupoles
         # Note that excitation curves are defined with positive current,
-        # so we have to take the absolute value and then later reapply the sign
-        int_strength = np.polyval(magnet.fieldIntegralCoefficients, abs(current))
+        # so we invert the coefficients (except the offset) for negative current
+        # This gives a smooth transition through zero
+        coeffs = np.append(np.copysign(magnet.fieldIntegralCoefficients[:-1], current), magnet.fieldIntegralCoefficients[-1])
+        int_strength = np.polyval(coeffs, abs(current))
         # Calculate the normalised effect on the beam
         # This is in radians for dipoles, m⁻¹ for quads, m⁻² for sextupoles
-        effect = np.copysign(SPEED_OF_LIGHT * int_strength / momentum, current)
+        # effect = np.copysign(SPEED_OF_LIGHT * int_strength / momentum, current)
+        effect = SPEED_OF_LIGHT * int_strength / momentum
         # Depending on the magnet type, convert to meaningful units
         mag_type = str(magnet.ref.magType)
         if mag_type == 'DIP':
@@ -770,23 +770,24 @@ class Window(QtGui.QMainWindow):
     def calcCurrentFromK(self, magnet):
         """Calculate the current to set in a magnet based on its K value (or bend angle)."""
         k = magnet.k_spin.value()
-        # We need the absolute value, since excitation curves are only defined with positive current
-        abs_k = abs(k)
         # What is the momentum in this section?
         momentum = magnet.section.momentum_spin.value()
         mag_type = str(magnet.ref.magType)
         int_strength = None
-        if mag_type == 'DIP': # k represents deflection in degrees
-            effect = math.radians(abs_k) * 1000
+        if mag_type == 'DIP':  # k represents deflection in degrees
+            effect = math.radians(k) * 1000
         elif mag_type in ('QUAD', 'SEXT'):
-            effect = abs_k * magnet.ref.magneticLength / 1000
-        elif mag_type in ('HCOR', 'VCOR'): # k represents deflection in mrad
-            effect = abs_k
+            effect = k * magnet.ref.magneticLength / 1000
+        elif mag_type in ('HCOR', 'VCOR'):  # k represents deflection in mrad
+            effect = k
         else: # solenoids
-            int_strength = abs_k
+            int_strength = k
         if int_strength is None:
             int_strength = effect * momentum / SPEED_OF_LIGHT
         coeffs = np.copy(magnet.k_coeffs if mag_type in ('SOL', 'BSOL') else magnet.fieldIntegralCoefficients)
+        # are we above or below residual field? Need to set coeffs accordingly to have a smooth transition through zero
+        sign = int_strength - coeffs[-1]
+        coeffs = np.append(np.copysign(coeffs[:-1], sign), coeffs[-1])
         if mag_type == 'BSOL':
             # These coefficients depend on solenoid current too - need to group together like terms
             y = next(self.magnetsOfType(magnet.section, 'SOL')).current_spin.value() #ref.siWithPol
@@ -802,7 +803,7 @@ class Window(QtGui.QMainWindow):
 
         coeffs[-1] -= int_strength  # Need to find roots of polynomial, i.e. a1*x + a0 - y = 0
         roots = np.roots(coeffs)
-        current = np.copysign(roots[-1].real, k) # last root is always x value (#TODO: can prove this?)
+        current = np.copysign(roots[-1].real, sign) # last root is always x value (#TODO: can prove this?)
         magnet.current_spin.setValue(current)
         if mag_type == 'SOL' and magnet.ref.magnetBranch != 'UNKNOWN_MAGNET_BRANCH':
             # We should also recalculate the field at the cathode
