@@ -17,6 +17,7 @@ import re  # parsing lattice files
 import scipy.constants  # speed of light
 import webbrowser  # to get help
 sys.path.insert(0, r'\\apclara1\ControlRoomApps\Controllers\bin\Release')
+# import VELA_CLARA_enums
 import VELA_CLARA_Magnet_Control as VC_MagCtrl
 import VELA_CLARA_BPM_Control
 import epics
@@ -855,13 +856,17 @@ class Window(QtGui.QMainWindow):
         os.environ["EPICS_CA_ADDR_LIST"] = "192.168.83.255" if mode == 'Physical' else "10.10.0.12"
         magnet_controllers.clear()
         bpm_controllers.clear()
-        mode_name = VC_MagCtrl.MACHINE_MODE.names[mode.upper()]
+        # mode_name = VELA_CLARA_enums.MACHINE_MODE.names[mode.upper()]
         for key, section in sections.items():
-            area = VC_MagCtrl.MACHINE_AREA.names[section.machine_area]
-            magnet_controller = mag_init_VC.getMagnetController(mode_name, area)
+            # area = VELA_CLARA_enums.MACHINE_AREA.names[section.machine_area]
+            # magnet_controller = mag_init_VC.getMagnetController(mode_name, area)
+            get_controller = getattr(mag_init_VC, '{}_{}_Magnet_Controller'.format(mode.lower(), section.machine_area))
+            magnet_controller = get_controller()
             magnet_controllers[key] = magnet_controller
             try:
-                bpm_controller = bpm_init.getBPMController(mode_name, area)
+                # bpm_controller = bpm_init.getBPMController(mode_name, area)
+                get_controller = getattr(bpm_init, '{}_{}_BPM_Controller'.format(mode.lower(), section.machine_area))
+                bpm_controller = get_controller()
                 bpm_controllers[key] = bpm_controller
             except RuntimeError:
                 print("Couldn't load {} BPM controller for area {}".format(mode_name, area))
