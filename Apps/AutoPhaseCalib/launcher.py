@@ -72,6 +72,9 @@ class Ui_MainWindow(object):
 
 
         self.retranslateUi(MainWindow)
+        self.comboBox_2.setCurrentIndex(1)
+        self.comboBox.setCurrentIndex(1)
+
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -81,7 +84,7 @@ class Ui_MainWindow(object):
         self.comboBox_2.setItemText(1, _translate("MainWindow", "CLARA", None))
         self.comboBox.setItemText(0, _translate("MainWindow", "Virtual", None))
         self.comboBox.setItemText(1, _translate("MainWindow", "Physical", None))
-        self.label.setText(_translate("MainWindow", "Virtual of Physical?", None))
+        self.label.setText(_translate("MainWindow", "Virtual or Physical?", None))
         self.label_2.setText(_translate("MainWindow", "VELA or CLARA?", None))
         self.label_3.setText(_translate("MainWindow", "10 or 100 Hz Gun?", None))
         self.comboBox_3.setItemText(0, _translate("MainWindow", "10 Hz", None))

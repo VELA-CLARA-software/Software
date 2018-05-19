@@ -26,7 +26,7 @@ class Model(QObject):
 		self.machineType = machineType
 		self.lineType = lineType
 		self.gunType = gunType
-		self.view.label_MODE.setText('MODE: '+self.machineType+' '+self.lineType+' with '+self.gunType+' Hz gun')
+		self.view.label_MODE.setText('MODE: '+self.machineType+' '+self.lineType+' with '+self.gunType+' gun')
 		self.crestingData = {}
 		for cavity in ['Gun', 'Linac1']:
 			self.crestingData[cavity]={'approxPhaseData': [], 'approxChargeData': [], 'approxPhaseFit': [], 'approxChargeFit': [], 'finePhaseFit': [],
@@ -70,6 +70,9 @@ class Model(QObject):
 		print('2. Approximately Finding Crest')
 		self.disableButtons()
 		self.crester = findingGunCrestWCM(self)
+		# print(self.crester)
+		# print(self.crester.offset)
+		# print(dir(self.crester))
 		self.crester.setPhase.connect(self.setPhase)
 		self.wcmQ.connect(self.crester.updateWCMCharge)
 
@@ -181,12 +184,9 @@ class Model(QObject):
 
 	def gunPhaser(self, offset=True):
 		if isinstance(self.calibrationPhase['Gun'],(float, int)) and isinstance(int(self.view.gunPhaseSet.text()), (float, int)):
-			if offset == True:
-				# print('Setting Gun Phase to ', str(self.calibrationPhase['Gun'] + int(self.view.gunPhaseSet.text())), ' (',self.view.gunPhaseSet.text()),')'
-				self.setGunPhase(self.calibrationPhase['Gun'] + int(self.view.gunPhaseSet.text()))
-			else:
-				# print('Setting Gun Phase to ', str(self.calibrationPhase['Gun']))
-				self.setGunPhase(self.calibrationPhase['Gun'])
+			set_phase = self.calibrationPhase['Gun'] + (float(self.view.gunPhaseSet.text()) if offset else 0)
+			print('Setting Gun Phase to ', set_phase)
+			self.setGunPhase(set_phase)
 
 	def linac1Phaser(self, offset=True):
 		if isinstance(self.calibrationPhase['Linac1'],(float, int)) and isinstance(int(self.view.linac1PhaseSet.text()), (float, int)):
@@ -199,7 +199,7 @@ class Model(QObject):
 
 	def setUpMagnets(self,magnets):
 		deguassingList=[]
-		print('Deguassing magnets...')
+		print('Degaussing magnets...')
 		for magnet in magnets:
 			if self.view.checkBox_deguassQ.isChecked() and self.magnets.isAQuad(magnet):
 				deguassingList.append(magnet)
@@ -211,7 +211,7 @@ class Model(QObject):
 				deguassingList.append(magnet)
 			#else:
 			#	print('Magnet '+magnet+' is off or not selected to be deguassed.')
-		print('Magnet to be Deguassed: '+str(deguassingList))
+		print('Magnet to be Degaussed: '+str(deguassingList))
 		self.activeMags = mag.std_vector_string()
 		self.activeMags.extend(deguassingList)
 		self.magnets.degauss(self.activeMags,True)
@@ -301,12 +301,13 @@ class crestingObject(QObject):
 		self._isRunning = False
 
 class crestingObjectQuick(crestingObject):
+
 	def __init__(self, parent):
 		super(crestingObjectQuick, self).__init__()
 		self.parent = parent
 		self.resetDataArray()
 		self.offset = 0
-
+		
 	def resetDataArray(self):
 		self.parent.crestingData[self.cavity]['approxPhaseFit'] = []
 		self.parent.crestingData[self.cavity]['approxChargeFit'] = []
@@ -337,27 +338,39 @@ class crestingObjectQuick(crestingObject):
 	def setFinalPhase(self, phase):
 		self.parent.calibrationPhase[self.cavity] = phase + self.offset
 
-	def fitness_function(self, list, a, b, c):
+	def fitness_function(self, list, a, b, c, d, e, f):
 		x = np.array(list)
-		return a*x**2 + b*x + c
+		return f*x**5 + e*x**4 + d*x**3 + a*x**2 + b*x + c
 
 	def doFit(self):
-		try:
+		# try:
 			cutData = self.cutData()
 			xData, yData = zip(*cutData)
 			popt, pcov = curve_fit(self.fitness_function, xData, yData, p0=None)
 			self.setFitData(np.array(xData), self.fitness_function(np.array(xData), *popt))
+			# print(popt)
+			# Find the peak, assuming the fit function is a polynomial
+			# We have to take the derivative, so e*x**4 -> 4*e*x**3 etc.
+			crest_phase = np.real(np.roots(np.multiply(range(len(popt) - 1, 0, -1), popt[:-1]))[0])
+			print 'Crest phase is ', crest_phase
 
-			self.setFinalPhase(-popt[1]/(2*popt[0])) # Assume Max Charge is -15deg from crest
+			# self.setFinalPhase(-popt[1]/(2*popt[0])) # Assume Max Charge is -15deg from crest
+			self.setFinalPhase(crest_phase)
 			print 'Calibration phase is', self.parent.calibrationPhase[self.cavity]
 			self.finishedSuccesfully.emit()
-		except:
-			print 'Error in fitting!'
+		# except e:
+			# print(e)
+			# print 'Error in fitting!'
 
 class findingGunCrestWCM(crestingObjectQuick):
 
 	cavity = 'Gun'
-	offset = +15
+
+	def __init__(self, parent):
+		super(findingGunCrestWCM, self).__init__(parent)
+		# from wiki: http://projects.astec.ac.uk/VELAManual2/index.php/Momentum
+		# For 5 MeV/c beam a phase shift of approximately +30 deg will put the beam close to maximum momentum
+		self.offset = 30
 
 	def updateWCMCharge(self, value):
 		self.data.append(value)
@@ -371,8 +384,10 @@ class findingGunCrestWCM(crestingObjectQuick):
 		return [np.mean(self.data), np.std(self.data)]
 
 	def cutData(self):
+		"""Return all data where the charge is >= 50% of the maximum."""
+		max_charge = max(self.parent.crestingData[self.cavity]['approxChargeData'])
 		allData = zip(self.parent.crestingData[self.cavity]['approxPhaseData'], self.parent.crestingData[self.cavity]['approxChargeData'])
-		cutData = [a for a in allData if a[1] > 10]
+		cutData = [a for a in allData if a[1] > max_charge / 2]
 		return cutData
 
 class findingLinacCrestQuick(crestingObjectQuick):
@@ -401,7 +416,9 @@ class crestingObjectFine(crestingObject):
 		self.magnets = magnets
 		self.bpm = bpm
 		self.phiRange = phiRange
+		print('phiRange', phiRange)
 		self.phiSteps = phiSteps
+		print('phiSteps', phiSteps)
 		self.bpmSamples = bpmSamples
 		self.resetDataArray()
 
@@ -445,10 +462,11 @@ class crestingObjectFine(crestingObject):
 	def fitting(self):
 
 		def fitting_equation(x, a, b, crest):
-			return a + b * (np.cos((crest - (x + 180)) * degree)**2)
+			return a + b * (np.sin((crest - (x + 180)) * degree)**2)
 
 		popt, pcov = curve_fit(fitting_equation, self.parent.crestingData[self.cavity]['finePhaseData'], self.parent.crestingData[self.cavity]['fineBPMData'], \
-		sigma=self.parent.crestingData[self.cavity]['fineBPMStd'],	p0=[0,10,self.approxcrest])
+			sigma=self.parent.crestingData[self.cavity]['fineBPMStd'],	p0=[0,10,self.approxcrest])
+		print(popt)
 		self.parent.crestingData[self.cavity]['finePhaseFit'] = np.array(self.parent.crestingData[self.cavity]['finePhaseData'])
 		self.parent.crestingData[self.cavity]['fineBPMFit'] = fitting_equation(self.parent.crestingData[self.cavity]['finePhaseFit'], *popt)
 
