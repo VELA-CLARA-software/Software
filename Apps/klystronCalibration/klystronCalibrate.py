@@ -8,7 +8,7 @@ except ImportError:
     from PyQt5.QtWidgets import *
 import pyqtgraph as pg
 import numpy as np
-import random, time
+import time
 sys.path.append(os.path.dirname( os.path.abspath(__file__)) + "/../../../")
 from Software.Widgets.generic.pv import *
 from Software.Widgets.QLabeledWidget import *
@@ -17,9 +17,11 @@ from Software.Widgets.typeCounter import *
 pg.setConfigOptions(antialias=True)
 pg.setConfigOption('background', 'w')
 pg.setConfigOption('foreground', 'k')
-from collections import OrderedDict
-import yaml
+# from collections import OrderedDict
+# import yaml
 import tables as tables
+import os
+os.environ["EPICS_CA_ADDR_LIST"] = "192.168.83.255"
 
 
 class recordWaveformData(tables.IsDescription):
@@ -61,7 +63,7 @@ class klystronCalibrate(QMainWindow):
         self.widget.setLayout(self.layout)
 
         self.setCentralWidget(self.widget)
-        # self.scanAmp()
+        self.scanAmp()
 
     def scanAmp(self):
         self.ampranges = np.arange(100,16301,100)
@@ -75,7 +77,7 @@ class klystronCalibrate(QMainWindow):
     def changeAmp(self):
         self.ampPV.put(self.ampranges[self.i])
         time.sleep(0.5)
-        # print 'amp = ', self.ampranges[self.i]
+        print 'amp = ', self.ampranges[self.i], 'PV value = ', self.ampPV.value
         if self.i+1 >= len(self.ampranges):
             self.timer.stop()
             sys.exit()
@@ -85,7 +87,7 @@ class klystronCalibrate(QMainWindow):
         amp = str(int(self.ampPV.value))
         if not '/set_'+amp in self.h5file:
             self.group = self.h5file.create_group('/', 'set_'+amp, 'set_'+amp)
-        data = self.wavePV.value
+        # data = self.wavePV.value
         no = self.counter.add(amp)
         print 'no = ', no
         table = self.h5file.create_table(self.group, 'no_'+str(no), recordWaveformData, 'set = '+str(amp)+', no = '+str(no))
@@ -95,7 +97,7 @@ class klystronCalibrate(QMainWindow):
         table.flush()
 
     def saveRow(self, row, data):
-        for x, y in data:
+        for x, y in data[self.gunKLYFWDPowerPV.name]:
             row['x'], row['y'] = x, y
             row.append()
 
