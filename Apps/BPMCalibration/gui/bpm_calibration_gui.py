@@ -49,7 +49,7 @@ class bpm_calibration_gui(QMainWindow, Ui_MainWindow, base):
 		self.setupUi(self)
 		self.data = base.data
 		self.append_pv_to_list()
-		self.add_scope_name()
+		self.add_charge_name()
 		# CONNECT BUTTONS TO FUNCTIONS
 		self.calibrateButton.clicked.connect(self.handle_calibrate_button)
 		self.attenuationButton.toggled.connect(lambda: self.handle_measure_type(self.attenuationButton))
@@ -75,13 +75,10 @@ class bpm_calibration_gui(QMainWindow, Ui_MainWindow, base):
 			self.comboBox.addItem((i))
 		self.comboBox.update()
 
-	def add_scope_name(self):
+	def add_charge_name(self):
 		self.bunchChargeOutputWidget.clear()
-		self.scope_name = base.config.scope_config['SCOPE_NAME'][0]
-		self.scope_channel = base.config.scope_config['SCOPE_CHANNEL']
-		self.diag_type = base.config.scope_config['SCOPE_DIAG_TYPE']
-		self.bunchChargeScopeLabel.setText(self.scope_name)
-		self.bunchChargeChannelLabel.setText(str(self.scope_channel))
+		self.charge_name = base.config.charge_config['CHARGE_NAME'][0]
+		self.diag_type = base.config.charge_config['CHARGE_DIAG_TYPE']
 		self.bunchChargeDiagTypeLabel.setText(str(self.diag_type))
 
 	def init_widget_dict(self, data):
@@ -226,7 +223,7 @@ class bpm_calibration_gui(QMainWindow, Ui_MainWindow, base):
 	def check_ready(self):
 		if self.get_bpm_name() and self.get_start() and self.get_end() and self.get_num_shots() and self.is_measure_type_set():
 			self.data.values[dat.all_values_set] = True
-			if self.data.values[dat.scope_monitoring]:
+			if self.data.values[dat.charge_monitoring]:
 				self.data.values[dat.ready_to_go] = True
 
 	# button functions
@@ -235,6 +232,7 @@ class bpm_calibration_gui(QMainWindow, Ui_MainWindow, base):
 		self.data.values[dat.values_saved] = False
 		if self.data.values[dat.ready_to_go]:
 			self.calibrateButton.setEnabled(False)
+			self.data.values[dat.plots_done] = False
 			base.logger.message('Starting scan', True)
 		else:
 			base.logger.message('NOT ready to go, is everything set?', True)
@@ -270,17 +268,35 @@ class bpm_calibration_gui(QMainWindow, Ui_MainWindow, base):
 		self.bpmxPlot.clear()
 		self.bpmyPlot.clear()
 		self.vbx = self.bpmxPlot.vb
-		self.vbx.setYRange(min(self.data.values[dat.dv1_dly1].values()),max(self.data.values[dat.dv1_dly1].values()))
-		self.xplot = self.bpmxPlot.plot(pen=mkPen('b',width=3), symbol='o')
-		self.xplot.setData(range(self.data.values[dat.set_start],self.data.values[dat.set_end]),
-						   self.data.values[dat.dv1_dly1].values())
+		if min(self.data.values[dat.dv1_dly1].values()) > min(self.data.values[dat.dv2_dly1].values()):
+			self.xMin = min(self.data.values[dat.dv2_dly1].values())
+		else:
+			self.xMin = min(self.data.values[dat.dv1_dly1].values())
+		if max(self.data.values[dat.dv1_dly1].values()) > max(self.data.values[dat.dv2_dly1].values()):
+			self.xMax = max(self.data.values[dat.dv1_dly1].values())
+		else:
+			self.xMax = max(self.data.values[dat.dv2_dly1].values())
+		self.vbx.setYRange(self.xMin,self.xMax)
+		self.xplot = self.bpmxPlot.plot(pen=mkPen('b', width=3), symbol='o')
 		self.xplot.setData(range(self.data.values[dat.set_start], self.data.values[dat.set_end]),
+						   self.data.values[dat.dv1_dly1].values())
+		self.xplot1 = self.bpmxPlot.plot(pen=mkPen('r', width=3), symbol='o')
+		self.xplot1.setData(range(self.data.values[dat.set_start], self.data.values[dat.set_end]),
 						   self.data.values[dat.dv2_dly1].values())
 		self.vby = self.bpmyPlot.vb
-		self.vby.setYRange(min(self.data.values[dat.dv1_dly2].values()),max(self.data.values[dat.dv1_dly2].values()))
+		if min(self.data.values[dat.dv1_dly2].values()) > min(self.data.values[dat.dv2_dly2].values()):
+			self.yMin = min(self.data.values[dat.dv2_dly2].values())
+		else:
+			self.yMin = min(self.data.values[dat.dv1_dly2].values())
+		if max(self.data.values[dat.dv1_dly2].values()) > max(self.data.values[dat.dv2_dly2].values()):
+			self.yMax = max(self.data.values[dat.dv1_dly2].values())
+		else:
+			self.yMax = max(self.data.values[dat.dv2_dly2].values())
+		self.vby.setYRange(self.yMin,self.yMax)
 		self.yplot = self.bpmyPlot.plot(pen=mkPen('b', width=3), symbol='o')
-		self.yplot.setData(range(self.data.values[dat.new_dly_1] - 20, self.data.values[dat.new_dly_1] + 20),
+		self.yplot.setData(range(self.data.values[dat.set_start], self.data.values[dat.set_end]),
 						   self.data.values[dat.dv1_dly2].values())
-		# self.yplot.setData(range(self.data.values[dat.new_dly_1] - 20, self.data.values[dat.new_dly_1] + 20),
-		# 				   self.data.values[dat.dv2_dly2].values())
+		self.yplot1 = self.bpmyPlot.plot(pen=mkPen('r', width=3), symbol='o')
+		self.yplot1.setData(range(self.data.values[dat.set_start], self.data.values[dat.set_end]),
+						   self.data.values[dat.dv2_dly2].values())
 		self.data.values[dat.plots_done] = True
