@@ -54,6 +54,7 @@ class Model(QObject):
 		print('clara Method')
 		self.parameters['magnets']=[]
 		self.parameters['bpm'] = 'C2V-BPM01'
+		#self.parameters['bpm'] = 'S02-BPM01'
 		self.parameters['scope'] = 'WCM'
 
 	def velaMethod(self):
@@ -357,10 +358,10 @@ class findingGunCrestWCM(crestingObjectQuick):
 		return [np.mean(self.data), np.std(self.data)]
 
 	def cutData(self):
-		"""Return all data where the charge is >= 50% of the maximum."""
+		"""Return all data where the charge is >= 25% of the maximum."""
 		max_charge = max(self.parent.crestingData[self.cavity]['approxChargeData'])
 		allData = zip(self.parent.crestingData[self.cavity]['approxPhaseData'], self.parent.crestingData[self.cavity]['approxChargeData'], self.parent.crestingData[self.cavity]['approxChargeStd'])
-		cutData = [a for a in allData if a[1] > max_charge / 3 and a[1] > 10]
+		cutData = [a for a in allData if a[1] > max_charge / 4 and a[1] > 10]
 		return cutData
 
 	def doFit(self):
@@ -401,25 +402,27 @@ class findingLinacCrestQuick(crestingObjectQuick):
 			time.sleep(0.1)
 			if not self._isRunning:
 				break
-		return [np.mean(self.data), np.std(self.data)] if np.std(self.data) > 0.005 else [20,0]
+		return [np.mean(self.data), np.std(self.data)] if np.std(self.data) > 0.001 else [20,0]
 
 	def cutData(self):
 		allData = zip(self.parent.crestingData[self.cavity]['approxPhaseData'], self.parent.crestingData[self.cavity]['approxChargeData'], self.parent.crestingData[self.cavity]['approxChargeStd'])
-		cutData = [a for a in allData if a[1] < 20]
+		cutData = [a for a in allData if a[1] == 20]
 		return cutData
 
 	def doFit(self):
 		try:
 			cutData = self.cutData()
 			x, y, std = zip(*cutData)
-			f = UnivariateSpline(x, y, w=std, k=5)
+			#splineF = UnivariateSpline(x, y, w=std, k=5)
 
-			xnew = np.linspace(np.min(x), np.max(x), num=100, endpoint=True)
-			ynew = f(xnew)
+			#xnew = np.linspace(np.min(x), np.max(x), num=100, endpoint=True)
+			#ynew = splineF(xnew)
+			crest_phase = np.mean(x)-180
+			#print 'Cutdata', xnew
 
-			self.setFitData(xnew, ynew)
+			#self.setFitData(xnew, ynew)
 
-			crest_phase = xnew[np.argmin(ynew)]
+			#crest_phase = xnew[np.argmin(ynew)]
 
 			print 'Crest phase is ', crest_phase
 
