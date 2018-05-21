@@ -54,7 +54,17 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="lineEdit"/>
+        <widget class="QPushButton" name="finishButton">
+         <property name="maximumSize">
+          <size>
+           <width>200</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Finish Scan</string>
+         </property>
+        </widget>
        </item>
        <item>
         <widget class="QPushButton" name="abortButton">
@@ -64,8 +74,18 @@
            <height>16777215</height>
           </size>
          </property>
+         <property name="autoFillBackground">
+          <bool>true</bool>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(255, 0, 0);</string>
+         </property>
          <property name="text">
           <string>Abort</string>
+         </property>
+         <property name="icon">
+          <iconset>
+           <normaloff>../../Resources/Icons/off.png</normaloff>../../Resources/Icons/off.png</iconset>
          </property>
         </widget>
        </item>
@@ -81,12 +101,12 @@
        </sizepolicy>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="gunTab">
        <attribute name="icon">
         <iconset>
-         <normaloff>../../../Resources/Icons/pistol.png</normaloff>../../../Resources/Icons/pistol.png</iconset>
+         <normaloff>../../Resources/Icons/pistol.png</normaloff>../../Resources/Icons/pistol.png</iconset>
        </attribute>
        <attribute name="title">
         <string>Gun</string>
@@ -107,7 +127,7 @@
            <item>
             <widget class="QPushButton" name="crestGunWCMButton">
              <property name="text">
-              <string>Aprroximately Find Crest with WCM</string>
+              <string>Approximately Find Crest with WCM</string>
              </property>
              <property name="checked">
               <bool>false</bool>
@@ -263,7 +283,7 @@
       <widget class="QWidget" name="linacTab">
        <attribute name="icon">
         <iconset>
-         <normaloff>../../../Resources/Icons/bike.png</normaloff>../../../Resources/Icons/bike.png</iconset>
+         <normaloff>../../Resources/Icons/bike.png</normaloff>../../Resources/Icons/bike.png</iconset>
        </attribute>
        <attribute name="title">
         <string>Linac 1</string>
@@ -440,7 +460,7 @@
       <widget class="QWidget" name="magnetTab">
        <attribute name="icon">
         <iconset>
-         <normaloff>../../../Resources/Icons/magnet_greyscale.png</normaloff>../../../Resources/Icons/magnet_greyscale.png</iconset>
+         <normaloff>../../Resources/Icons/magnet_greyscale.png</normaloff>../../Resources/Icons/magnet_greyscale.png</iconset>
        </attribute>
        <attribute name="title">
         <string>Magnets</string>
@@ -469,12 +489,20 @@
              <property name="text">
               <string>Deguass Quadruoles</string>
              </property>
+             <property name="icon">
+              <iconset>
+               <normaloff>../../Resources/Icons/Quadrupoles.png</normaloff>../../Resources/Icons/Quadrupoles.png</iconset>
+             </property>
             </widget>
            </item>
            <item>
             <widget class="QCheckBox" name="checkBox_deguassD">
              <property name="text">
               <string>Deguass Dipoles</string>
+             </property>
+             <property name="icon">
+              <iconset>
+               <normaloff>../../Resources/Icons/Dipoles.png</normaloff>../../Resources/Icons/Dipoles.png</iconset>
              </property>
             </widget>
            </item>
@@ -483,12 +511,20 @@
              <property name="text">
               <string>Deguass Correctors</string>
              </property>
+             <property name="icon">
+              <iconset>
+               <normaloff>../../Resources/Icons/Correctors.png</normaloff>../../Resources/Icons/Correctors.png</iconset>
+             </property>
             </widget>
            </item>
            <item>
             <widget class="QCheckBox" name="checkBox_deguassS">
              <property name="text">
               <string>Deguass Solenoids</string>
+             </property>
+             <property name="icon">
+              <iconset>
+               <normaloff>../../Resources/Icons/Solenoids.png</normaloff>../../Resources/Icons/Solenoids.png</iconset>
              </property>
             </widget>
            </item>
@@ -497,12 +533,20 @@
              <property name="text">
               <string>Turn Off Quads</string>
              </property>
+             <property name="icon">
+              <iconset>
+               <normaloff>../../Resources/Icons/Quadrupoles_Off.png</normaloff>../../Resources/Icons/Quadrupoles_Off.png</iconset>
+             </property>
             </widget>
            </item>
            <item>
             <widget class="QCheckBox" name="checkBox_corrOff">
              <property name="text">
               <string>Turn Off Correctors</string>
+             </property>
+             <property name="icon">
+              <iconset>
+               <normaloff>../../Resources/Icons/Correctors_Off.png</normaloff>../../Resources/Icons/Correctors_Off.png</iconset>
              </property>
             </widget>
            </item>
@@ -530,7 +574,7 @@
       <widget class="QWidget" name="logTab">
        <attribute name="icon">
         <iconset>
-         <normaloff>../../../Resources/Icons/log.png</normaloff>../../../Resources/Icons/log.png</iconset>
+         <normaloff>../../Resources/Icons/log.png</normaloff>../../Resources/Icons/log.png</iconset>
        </attribute>
        <attribute name="title">
         <string>Log</string>

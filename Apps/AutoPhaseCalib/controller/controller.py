@@ -85,21 +85,23 @@ class Controller():
 		self.view.crestLinacRoughButton.clicked.connect(self.model.linacCresterQuick)
 		self.view.abortButton.hide()
 		self.view.abortButton.clicked.connect(self.model.abortRunning)
+		self.view.finishButton.hide()
+		self.view.finishButton.clicked.connect(self.model.finishRunning)
 		self.view.actionSave_Calibation_Data.triggered.connect(self.model.saveData)
 
 
 	def updateDisplays(self):
 		for cavity in ['Gun', 'Linac1']:
-			self.approxData[cavity].setData(x=self.model.crestingData[cavity]['approxPhaseData'],y=self.model.crestingData[cavity]['approxChargeData'])
-			self.approxFit[cavity].setData(x=self.model.crestingData[cavity]['approxPhaseFit'],y=self.model.crestingData[cavity]['approxChargeFit'])
 			try:
+				self.approxData[cavity].setData(x=self.model.crestingData[cavity]['approxPhaseData'],y=self.model.crestingData[cavity]['approxChargeData'])
+				self.approxFit[cavity].setData(x=self.model.crestingData[cavity]['approxPhaseFit'],y=self.model.crestingData[cavity]['approxChargeFit'])
 				self.approxStd[cavity].setData(x=self.model.crestingData[cavity]['approxPhaseData'],y=self.model.crestingData[cavity]['approxChargeData'],
 				height=np.array(self.model.crestingData[cavity]['approxChargeStd']))
 			except:
 				pass
-			self.fineData[cavity].setData(x=self.model.crestingData[cavity]['finePhaseData'],y=self.model.crestingData[cavity]['fineBPMData'])
-			self.fineFit[cavity].setData(x=self.model.crestingData[cavity]['finePhaseFit'],y=self.model.crestingData[cavity]['fineBPMFit'])
 			try:
+				self.fineData[cavity].setData(x=self.model.crestingData[cavity]['finePhaseData'],y=self.model.crestingData[cavity]['fineBPMData'])
+				self.fineFit[cavity].setData(x=self.model.crestingData[cavity]['finePhaseFit'],y=self.model.crestingData[cavity]['fineBPMFit'])
 				self.fineStd[cavity].setData(x=self.model.crestingData[cavity]['finePhaseData'],y=self.model.crestingData[cavity]['fineBPMData'],
 				height=np.array(self.model.crestingData[cavity]['fineBPMStd']))
 			except:
