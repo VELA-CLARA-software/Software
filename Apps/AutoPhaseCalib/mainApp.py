@@ -3,7 +3,7 @@ import sys,os
 # from epics import caget,caput
 
 '''This is the place to get contollers'''
-sys.path.append('\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Software\\VELA_CLARA_PYDs\\bin\\release\\')
+sys.path.append(r'\\apclara1\ControlRoomApps\Controllers\bin\Release')
 import VELA_CLARA_Magnet_Control as mag
 import VELA_CLARA_BPM_Control as bpm
 import VELA_CLARA_LLRF_Control as llrf
@@ -29,10 +29,13 @@ class App(QtCore.QObject):
 
 	def setUpCtrls(self):
 		self.magInit = mag.init()
-		# self.magInit.setVerbose()
+		self.magInit.setQuiet()
 		self.bpmInit = bpm.init()
+		self.bpmInit.setQuiet()
 		self.llrfInit = llrf.init()
+		self.llrfInit.setQuiet()
 		self.scopeInit = scope.init()
+		self.scopeInit.setQuiet()
 		if self.machineType == 'Virtual':
 			os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
 			os.environ["EPICS_CA_ADDR_LIST"] = "10.10.0.12"

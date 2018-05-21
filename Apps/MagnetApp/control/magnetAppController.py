@@ -19,7 +19,7 @@ class magnetAppController(object):
         # initilaize the VELA_CLARA_MagnetControl,
         # from this object we can get all flavours of magnet controller
         self.magInit = mag.init()
-        # self.magInit.setVerbose()
+        self.magInit.setVerbose()
         # startView and connections
         # the startView is where you select the machine mode and area
         self.startView = GUI_magnetAppStartup()
@@ -63,7 +63,7 @@ class magnetAppController(object):
             mag.MACHINE_AREA.VELA_INJ:'VELA_Injector',
             mag.MACHINE_AREA.CLARA_PH1:'CLARA_PH1',
             mag.MACHINE_AREA.CLARA_2_BA1:'CLARA_2_BA1',
-            mag.MACHINE_AREA.CLARA_2_BA2:'CLARA_"_BA2'
+            mag.MACHINE_AREA.CLARA_2_BA2:'CLARA_2_BA2'
             # mag.MACHINE_AREA.CLARA_PHASE_1:'CLARA PHASE 1 Magnets',
             }
 #        for i in sys.path:
@@ -302,6 +302,9 @@ class magnetAppController(object):
         #self.dburtLoadView.close()
         self.dburtSaveView.canWindowClose = True
         self.dburtSaveView.close()
+        for window in self.dburtLoadView.textWindowList:
+            window.close()
+        self.dburtLoadView.close()
         self.mainView.close()
         print 'Fin - magnetApp closed down, goodbye.'
 

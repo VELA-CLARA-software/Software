@@ -17,8 +17,10 @@ import re  # parsing lattice files
 import scipy.constants  # speed of light
 import webbrowser  # to get help
 sys.path.insert(0, r'\\apclara1\ControlRoomApps\Controllers\bin\Release')
+# import VELA_CLARA_enums
 import VELA_CLARA_Magnet_Control as VC_MagCtrl
 import VELA_CLARA_BPM_Control
+import epics
 # import CLARA_Magnet_Control as CLARA_MagCtrl
 from pkg_resources import resource_filename
 sys.path.append('../../Widgets/loggerWidget')
@@ -245,6 +247,7 @@ class Window(QtGui.QMainWindow):
         magnet_font = QtGui.QFont('', 14, QtGui.QFont.Bold)
         self.magnets = OrderedDict()
         self.bpms = OrderedDict()
+        self.wait_for = {} # what magnet(s) and SI are we waiting for?
         pv_root_re = re.compile('^VM-(.*):$')
         for key, section in sections.items():
             section_name = section.title
@@ -274,7 +277,7 @@ class Window(QtGui.QMainWindow):
             magnet_controller = magnet_controllers[key]
             bpm_controller = bpm_controllers[key]
             mag_names = list(magnet_controller.getMagnetNames())
-            bpm_names = list(bpm_controller.getBPMNames())
+            bpm_names = list(bpm_controller.getBPMNames()) if bpm_controller is not None else []
             # Filter to make sure we only get the ones for this section
             mag_names = [(magnet_controller.getPosition(name), name) for name in mag_names
                          if section.min_pos <= magnet_controller.getPosition(name) <= section.max_pos]
@@ -419,7 +422,7 @@ class Window(QtGui.QMainWindow):
                         magnet.set_mom_checkbox.setToolTip("Calculate the beam's momentum by adjusting this magnet's current")
                         magnet.set_mom_checkbox.help_text = u"Measure the momentum using this dipole. First, set the dipole angle to 45°. " \
                             "Then check this box and adjust the current until the beam is centred on the screen. The momentum in the {} section " \
-                            "will be automatically set. Finally, clear the checkbox."
+                            "will be automatically set. Finally, clear the checkbox.".format(key)
                         main_hbox.addWidget(magnet.set_mom_checkbox)
 
                     restore_button = QtGui.QToolButton()
@@ -455,7 +458,6 @@ class Window(QtGui.QMainWindow):
 
                 # different shading for magnets in branches, and smooth transition at junctions
                 if in_branch:
-                    print(branch_name)
                     magnet_frame.setObjectName('branch')
                     junc_magnet = self.magnets[key + "_" + branch_name]
                     junc_magnet.is_junction = True
@@ -489,7 +491,6 @@ class Window(QtGui.QMainWindow):
         rect = self.settings.value('geometry', QtCore.QRect(300, 300, 400, 600)).toRect()
         self.setGeometry(rect)
         self.update_period = 100  # milliseconds
-        self.wait_for_magnet, self.wait_for_value = None, None  # what magnet and SI are we waiting for?
         self.startMainViewUpdateTimer()
         self.setWindowIcon(QtGui.QIcon(pixmap('magnet')))
         self.show()
@@ -553,12 +554,14 @@ class Window(QtGui.QMainWindow):
                 magnet.warning_icon.setPixmap(self.empty_icon)
             mag_type = str(magnet.ref.magType)
             if mag_type == 'QUAD':
-                magnet.icon.setPixmap(pixmap('Quadrupole_' + ('F' if set_current >= 0 else 'D')).scaled(32, 32))
+                magnet.icon.setPixmap(pixmap('Quadrupole_' + ('F' if magnet.k_spin.value() >= 0 else 'D')).scaled(32, 32))
             # are we waiting for the SI value for this magnet to 'take'?
-            if magnet is self.wait_for_magnet and abs(set_current - self.wait_for_value) <= 0.001:  # it's taken now! # TODO: tolerance from somewhere?
-                self.wait_for_magnet = None
-            if not magnet.current_spin.hasFocus() and magnet is not self.wait_for_magnet:
-                magnet.current_spin.setValue(set_current)
+            try:
+                if abs(set_current - self.wait_for[magnet]) <= 0.001:  # it's taken now! # TODO: tolerance from somewhere?
+                    self.wait_for.pop(magnet)  # remove it from 'waiting for' list
+            except KeyError:  # we're not waiting for this one
+                if not magnet.current_spin.hasFocus():
+                    magnet.current_spin.setValue(set_current)
             attributes = mag_attributes[mag_type]
             int_strength = np.copysign(np.polyval(magnet.fieldIntegralCoefficients, abs(set_current)), set_current)
             strength = int_strength / magnet.ref.magneticLength if magnet.ref.magneticLength else 0
@@ -627,16 +630,12 @@ class Window(QtGui.QMainWindow):
         magnet = self.sender().parent().magnet
         magnet_controllers[magnet.section.id].setSI(magnet.name, value)
         # Stop the GUI updating until the SI value 'takes' - otherwise it will update from an old value and be 'sticky'
-        self.wait_for_magnet, self.wait_for_value = magnet, value
-        
+        # Add it to a list of "waiting for" magnets. We might need more than one if we're changing the momentum in a section
+        self.wait_for[magnet] = value
+
         if str(magnet.ref.magType) == 'DIP' and magnet.set_mom_checkbox.isChecked():
-            # 'Set momentum' checkbox is ticked - we are using this dipole to check the momentum
-            # Calculate and set the momentum for this section
-            int_strength = np.polyval(magnet.fieldIntegralCoefficients, abs(value))
-            angle = magnet.k_spin.value()
-            momentum = 0.001 * SPEED_OF_LIGHT * int_strength / np.radians(angle)
-            magnet.section.momentum_spin.setValue(momentum)
-            # To avoid a lot of iterating between K and current: check the calling function's name
+            self.setMomentum(magnet)
+        # To avoid a lot of iterating between K and current: check the calling function's name
         elif not sys._getframe(1).f_code.co_name == 'calcCurrentFromK':
             self.calcKFromCurrent(magnet)
 
@@ -655,16 +654,44 @@ class Window(QtGui.QMainWindow):
             # and when first value is restored (no -2 index)
             pass
 
+    def setMomentum(self, magnet):
+        """'Set momentum' checkbox is ticked - we are using this dipole to check the momentum.
+        Calculate and set the momentum for this section."""
+        current = magnet.current_spin.value()
+        sign = np.copysign(1, current)
+        coeffs = np.append(magnet.fieldIntegralCoefficients[:-1] * sign, magnet.fieldIntegralCoefficients[-1])
+        int_strength = np.polyval(coeffs, abs(current))
+        angle = magnet.k_spin.value()
+        momentum = 0.001 * SPEED_OF_LIGHT * int_strength / np.radians(angle)
+        magnet.section.momentum_spin.setValue(momentum)
+
     def momentumChanged(self, value):
         """Called when a momentum spin box is changed by the user."""
         section = self.sender().magnet_list_vbox
-        self.settings.setValue(section.id + '/momentum', self.sender().value())
+        momentum = self.sender().value()
+        self.settings.setValue(section.id + '/momentum', momentum)
+        # Put the momentum in the correct PV
+        try:
+            if self.settings.value('machine_mode') == 'Physical':
+                if section.id == 'S01':
+                    epics.caput('CLA-LRG1-DIA-MOM-01:RB', momentum)
+                elif section.id == 'S02':
+                    epics.caput('CLA-L01-DIA-MOM-01:RB', momentum)
+        except:
+            pass
+
         mode = self.mom_mode_combo.currentText()
         changeFunc = self.calcKFromCurrent if mode == 'Recalculate K' else self.calcCurrentFromK
+        # are we adjusting the spinbox directly? or is it being changed by the "Set momentum" routine?
+        direct = sys._getframe(1).f_code.co_name == '<module>'
         for magnet in self.magnets.values():
             if magnet.section == section:
+                is_dipole = str(magnet.ref.magType) == 'DIP'
+                # Clear "Set momentum" checkbox if we're adjusting the momentum directly (otherwise will get out of sync)
+                if is_dipole and direct:
+                    magnet.set_mom_checkbox.setChecked(False)
                 # Ensure dipoles with the "Set momentum" checkbox ticked are not modified
-                if not (str(magnet.ref.magType) == 'DIP' and magnet.set_mom_checkbox.isChecked()):
+                if not (is_dipole and magnet.set_mom_checkbox.isChecked()):
                     changeFunc(magnet)
 
     def magnetsOfType(self, section, type_str):
@@ -699,11 +726,15 @@ class Window(QtGui.QMainWindow):
         # Get the integrated strength, based on an excitation curve
         # This is in T.mm for dipoles, T for quads, T/m for sextupoles
         # Note that excitation curves are defined with positive current,
-        # so we have to take the absolute value and then later reapply the sign
-        int_strength = np.polyval(magnet.fieldIntegralCoefficients, abs(current))
+        # so we invert the coefficients (except the offset) for negative current
+        # This gives a smooth transition through zero
+        sign = np.copysign(1, current)
+        coeffs = np.append(magnet.fieldIntegralCoefficients[:-1] * sign, magnet.fieldIntegralCoefficients[-1])
+        int_strength = np.polyval(coeffs, abs(current))
         # Calculate the normalised effect on the beam
         # This is in radians for dipoles, m⁻¹ for quads, m⁻² for sextupoles
-        effect = np.copysign(SPEED_OF_LIGHT * int_strength / momentum, current)
+        # effect = np.copysign(SPEED_OF_LIGHT * int_strength / momentum, current)
+        effect = SPEED_OF_LIGHT * int_strength / momentum
         # Depending on the magnet type, convert to meaningful units
         mag_type = str(magnet.ref.magType)
         if mag_type == 'DIP':
@@ -745,30 +776,33 @@ class Window(QtGui.QMainWindow):
                 # Highlight the branch when divert is in place, and everything else when not
                 highlight = (mag.ref.magnetBranch == beam_branch) == magnet.divert
                 mag.title.setStyleSheet('color:#000000;' if highlight else 'color:#a0a0a0;')
+        if str(magnet.ref.magType) == 'DIP' and magnet.set_mom_checkbox.isChecked():
+            self.setMomentum(magnet)
         # To avoid a lot of iterating between K and current: check the calling function's name
-        if not sys._getframe(1).f_code.co_name == 'calcKFromCurrent':
+        elif not sys._getframe(1).f_code.co_name == 'calcKFromCurrent':
             self.calcCurrentFromK(magnet)
         
     def calcCurrentFromK(self, magnet):
         """Calculate the current to set in a magnet based on its K value (or bend angle)."""
         k = magnet.k_spin.value()
-        # We need the absolute value, since excitation curves are only defined with positive current
-        abs_k = abs(k)
         # What is the momentum in this section?
         momentum = magnet.section.momentum_spin.value()
         mag_type = str(magnet.ref.magType)
         int_strength = None
-        if mag_type == 'DIP': # k represents deflection in degrees
-            effect = math.radians(abs_k) * 1000
+        if mag_type == 'DIP':  # k represents deflection in degrees
+            effect = math.radians(k) * 1000
         elif mag_type in ('QUAD', 'SEXT'):
-            effect = abs_k * magnet.ref.magneticLength / 1000
-        elif mag_type in ('HCOR', 'VCOR'): # k represents deflection in mrad
-            effect = abs_k
+            effect = k * magnet.ref.magneticLength / 1000
+        elif mag_type in ('HCOR', 'VCOR'):  # k represents deflection in mrad
+            effect = k
         else: # solenoids
-            int_strength = abs_k
+            int_strength = k
         if int_strength is None:
             int_strength = effect * momentum / SPEED_OF_LIGHT
         coeffs = np.copy(magnet.k_coeffs if mag_type in ('SOL', 'BSOL') else magnet.fieldIntegralCoefficients)
+        # are we above or below residual field? Need to set coeffs accordingly to have a smooth transition through zero
+        sign = np.copysign(1, int_strength - coeffs[-1])
+        coeffs = np.append(coeffs[:-1] * sign, coeffs[-1])
         if mag_type == 'BSOL':
             # These coefficients depend on solenoid current too - need to group together like terms
             y = next(self.magnetsOfType(magnet.section, 'SOL')).current_spin.value() #ref.siWithPol
@@ -784,7 +818,7 @@ class Window(QtGui.QMainWindow):
 
         coeffs[-1] -= int_strength  # Need to find roots of polynomial, i.e. a1*x + a0 - y = 0
         roots = np.roots(coeffs)
-        current = np.copysign(roots[-1].real, k) # last root is always x value (#TODO: can prove this?)
+        current = np.copysign(roots[-1].real, sign) # last root is always x value (#TODO: can prove this?)
         magnet.current_spin.setValue(current)
         if mag_type == 'SOL' and magnet.ref.magnetBranch != 'UNKNOWN_MAGNET_BRANCH':
             # We should also recalculate the field at the cathode
@@ -836,13 +870,21 @@ class Window(QtGui.QMainWindow):
         os.environ["EPICS_CA_ADDR_LIST"] = "192.168.83.255" if mode == 'Physical' else "10.10.0.12"
         magnet_controllers.clear()
         bpm_controllers.clear()
-        mode_name = VC_MagCtrl.MACHINE_MODE.names[mode.upper()]
+        # mode_name = VELA_CLARA_enums.MACHINE_MODE.names[mode.upper()]
         for key, section in sections.items():
-            area = VC_MagCtrl.MACHINE_AREA.names[section.machine_area]
-            magnet_controller = mag_init_VC.getMagnetController(mode_name, area)
+            # area = VELA_CLARA_enums.MACHINE_AREA.names[section.machine_area]
+            # magnet_controller = mag_init_VC.getMagnetController(mode_name, area)
+            get_controller = getattr(mag_init_VC, '{}_{}_Magnet_Controller'.format(mode.lower(), section.machine_area))
+            magnet_controller = get_controller()
             magnet_controllers[key] = magnet_controller
-            bpm_controller = bpm_init.getBPMController(mode_name, area)
-            bpm_controllers[key] = bpm_controller
+            try:
+                # bpm_controller = bpm_init.getBPMController(mode_name, area)
+                get_controller = getattr(bpm_init, '{}_{}_BPM_Controller'.format(mode.lower(), section.machine_area))
+                bpm_controller = get_controller()
+                bpm_controllers[key] = bpm_controller
+            except RuntimeError:
+                print("Couldn't load {} BPM controller for area {}".format(mode_name, area))
+                bpm_controllers[key] = None
         self.settings.setValue('machine_mode', mode)
         #TODO: check that it actually worked
 

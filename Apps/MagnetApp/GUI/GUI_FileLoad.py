@@ -39,23 +39,16 @@ class GUI_FileLoad(QDialog, Ui_FileLoad):
         self.treeView.setExpanded(snapshotindex, True)
         self.treeView.scrollTo(snapshotindex, QAbstractItemView.PositionAtCenter)
 
-
         self.filesModel = QFileSystemModel()
         self.filesModel.setFilter(QDir.NoDotAndDotDot|QDir.Files)
         self.dburtpathIndex = self.filesModel.setRootPath(self.dburtpath)
-
         self.listView.setModel(self.filesModel)
         self.listView.setRootIndex(self.dburtpathIndex)
-
         self.dirModel.directoryLoaded.connect(self.handle_directoryLoaded)
         self.filesModel.directoryLoaded.connect(self.handle_filesLoaded)
-
         self.cancelButton.clicked.connect(self.handle_fileLoadCancel)
-
         # The select button is handled in the magnetAppController.handle_fileLoadSelect()
         #self.selectButton.clicked.connect(self.handle_fileLoadSelect)
-
-
         #self.on_treeView_clicked(self.dirModel.index(self.dburtpath))
         self.viewButton.clicked.connect(self.handle_fileLoadView)
         self.selectedDirPath = self.dburtpath
@@ -66,6 +59,8 @@ class GUI_FileLoad(QDialog, Ui_FileLoad):
         self.watcher.directoryChanged.connect(self.handle_fileDirectoryChanged)
 #        self.selectedDirPathselectedDirPath
         #self.dirModel.dataChanged[QModelIndex,QModelIndex].connect(self.handle_fileDirectoryChanged2)
+        self.textWindowList = []
+
 
     def handle_fileLoadSelect(self):
         print 'handle_fileLoadSelect'
@@ -121,14 +116,24 @@ class GUI_FileLoad(QDialog, Ui_FileLoad):
 
     def handle_fileLoadView(self):
         if self.selectedFilePath != "":
-            self.textWindow = QPlainTextEdit()
+            textWindow = QPlainTextEdit()
             print 'opening file'
-            self.fileText = open(self.selectedFilePath).read()
-            self.textWindow.setPlainText(self.fileText)
-            self.textWindow.resize(400, 700)
-            self.textWindow.setWindowTitle(self.selectedFile)
-            self.textWindow.setWindowIcon(QIcon('magpic.jpg'))
-            self.textWindow.show()
+            fileText = open(self.selectedFilePath).read()
+            textWindow.setPlainText(fileText)
+            textWindow.resize(500, 700)
+            textWindow.selectAll()
+            font = QFont()
+            font.setPointSize(16)
+            textWindow.setFont(font)
+            tc = QTextCursor()
+            tc.setPosition(textWindow.document().characterCount())
+            textWindow.setTextCursor(tc)
+            textWindow.setWindowTitle(self.selectedFile)
+            textWindow.setWindowIcon(QIcon('magpic.jpg'))
+
+            self.textWindowList.append(textWindow)
+
+            self.textWindowList[-1].show()
         else:
             print "can't open file "
 

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>374</width>
-    <height>235</height>
+    <height>238</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -30,6 +30,9 @@
     </item>
     <item row="3" column="0">
      <widget class="QComboBox" name="comboBox_2">
+      <property name="currentIndex">
+       <number>1</number>
+      </property>
       <item>
        <property name="text">
         <string>VELA</string>
@@ -44,6 +47,9 @@
     </item>
     <item row="1" column="0">
      <widget class="QComboBox" name="comboBox">
+      <property name="currentIndex">
+       <number>1</number>
+      </property>
       <item>
        <property name="text">
         <string>Virtual</string>
@@ -59,7 +65,7 @@
     <item row="0" column="0">
      <widget class="QLabel" name="label">
       <property name="text">
-       <string>Virtual of Physical?</string>
+       <string>Virtual or Physical?</string>
       </property>
      </widget>
     </item>
@@ -99,7 +105,7 @@
      <x>0</x>
      <y>0</y>
      <width>374</width>
-     <height>18</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>

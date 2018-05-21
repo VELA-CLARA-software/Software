@@ -1,0 +1,10 @@
+monitors: [
+'CLA-S01-DIA-CAM-01:ANA:CovXY_RBV',
+'CLA-S01-DIA-CAM-01:ANA:SigmaXPix_RBV',
+'CLA-S01-DIA-CAM-01:ANA:SigmaYPix_RBV',
+]
+actuators:
+  bsol:
+    name: 'CLA-LRG1-MAG-BSOL-01:SETI'
+    min: -3
+    max: 3

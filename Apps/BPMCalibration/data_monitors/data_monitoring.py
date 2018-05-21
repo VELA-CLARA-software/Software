@@ -1,4 +1,4 @@
-import scope_monitor
+import charge_monitor
 import bpm_monitor
 import data.bpm_calibrate_data_base as dat
 from data_monitoring_base import data_monitoring_base
@@ -29,13 +29,13 @@ class data_monitoring(data_monitoring_base):
 		else:
 			self.logger.message('NOT adding bpm_status to main loop checks')
 
-		if self.is_monitoring[dat.scope_status]:
-			self.logger.message('adding scopes to monitor checks')
-			self.main_monitor_states[dat.scope_status] = True
+		if self.is_monitoring[dat.charge_status]:
+			self.logger.message('adding charge to monitor checks')
+			self.main_monitor_states[dat.charge_status] = True
 			# self.previous_main_monitor_states[dat.vac_spike_status] = state.UNKNOWN
-			self.monitor_funcs['SCOPES'] = True
+			self.monitor_funcs['CHARGE'] = True
 		else:
-			self.logger.message('NOT adding scope_status to main loop checks')
+			self.logger.message('NOT adding charge_status to main loop checks')
     #
 	def update_states(self):
 		for key in self.monitor_funcs.keys():

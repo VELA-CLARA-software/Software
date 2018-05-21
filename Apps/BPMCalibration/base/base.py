@@ -4,7 +4,7 @@ from data.data_logger import data_logger
 from data.bpm_calibrate_data import bpm_calibrate_data
 import VELA_CLARA_enums
 import VELA_CLARA_BPM_Control
-import VELA_CLARA_Scope_Control
+import VELA_CLARA_Charge_Control
 
 class base(object):
     #whoami
@@ -27,9 +27,9 @@ class base(object):
     _bpmObj = None
     _bpm_handler = None
     #
-    scope_cont = VELA_CLARA_Scope_Control
-    scope_init = VELA_CLARA_Scope_Control.init()
-    scope_init.setVerbose()
+    charge_cont = VELA_CLARA_Charge_Control
+    charge_init = VELA_CLARA_Charge_Control.init()
+    charge_init.setVerbose()
     #valve_init.setVerbose()
     _scope_control = None
     _scopeObj = None
@@ -62,22 +62,22 @@ class base(object):
         base._bpm_handler = value
 
     @property
-    def scope_control(self):
-        return base._scope_control
+    def charge_control(self):
+        return base._charge_control
 
-    @scope_control.setter
-    def scope_control(self,value):
-        base._scope_control = value
+    @charge_control.setter
+    def charge_control(self,value):
+        base._charge_control = value
 
     @property
-    def scopeObj(self):
-        return base._scopeObj
+    def chargeObj(self):
+        return base._chargeObj
 
-    @scopeObj.setter
-    def scopeObj(self, value):
-        base._scopeObj = value
+    @chargeObj.setter
+    def chargeObj(self, value):
+        base._chargeObj = value
 
     def set_config(self):
         base.data.bpm_config = base.config.bpm_config
         base.logger.log_config = base.config.log_config
-        base.data.scope_config = base.config.scope_config
+        base.data.charge_config = base.config.charge_config

@@ -42,7 +42,7 @@ class bpm_monitor(monitor):
 
     def update_bpm_voltages(self):
         self.check_bpm_is_monitoring()
-        if monitor.data.values[dat.bpm_status] and monitor.data.values[dat.scope_status]:
+        if monitor.data.values[dat.bpm_status] and monitor.data.values[dat.charge_status]:
             monitor.data.values[dat.bpm_raw_data] = numpy.transpose(monitor.bpm_control.getBPMRawDataBuffer(monitor.data.values[dat.bpm_name]))
             monitor.data.values[dat.bpm_u11] = monitor.data.values[dat.bpm_raw_data][5]
             monitor.data.values[dat.bpm_u12] = monitor.data.values[dat.bpm_raw_data][6]

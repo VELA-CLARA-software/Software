@@ -6,6 +6,7 @@ from gui.bpm_calibration_gui import bpm_calibration_gui
 import data.bpm_calibrate_data_base as dat
 import sys
 import time
+import numpy
 from timeit import default_timer as timer
 
 
@@ -48,6 +49,9 @@ class main_controller(controller_base):
         while 1:
             while 1:
                 if controller_base.data.values[dat.ready_to_go]:
+                    self.logger.bpm_name = controller_base.data.values[dat.bpm_name]
+                    self.logger.scan_type = controller_base.data.values[dat.calibration_type]
+                    self.logger.get_bpm_scan_log()
                     self.clear_values()
                     controller_base.data.values[dat.scan_status] = 'scanning'
                     if controller_base.data.values[dat.calibration_type] == 'attenuation':
@@ -71,15 +75,39 @@ class main_controller(controller_base):
                     controller_base.data.values[dat.att_2_cal] = att2_v2_cal[0]
                     controller_base.data.values[dat.v_2_cal] = att2_v2_cal[1]
                     controller_base.data.values[dat.q_cal] = controller_base.data.values[dat.bunch_charge]
+                    controller_base.bpm_handler.set_sa1(controller_base.data.values[dat.bpm_name],
+                                                        controller_base.data.values[dat.att_1_cal])
+                    controller_base.bpm_handler.set_sa2(controller_base.data.values[dat.bpm_name],
+                                                        controller_base.data.values[dat.att_2_cal])
+                    self.json_data = {"bpm_name": self.data.values[dat.bpm_name],
+                                      "bpm_v11_v12_sum": self.data.values[dat.bpm_v11_v12_sum],
+                                      "bpm_v21_v22_sum": self.data.values[dat.bpm_v21_v22_sum],
+                                      "att_1_cal": self.data.values[dat.att_1_cal],
+                                      "v_1_cal": self.data.values[dat.v_1_cal],
+                                      "att_2_cal": self.data.values[dat.att_2_cal],
+                                      "v_2_cal": self.data.values[dat.v_2_cal],
+                                      "q_cal": self.data.values[dat.q_cal]}
+                    self.logger.add_to_bpm_scan_json(self.json_data)
 
             elif controller_base.data.values[dat.calibration_type] == 'delay':
                 self.gui.plot_bpm_vs_sd()
+
+                self.json_data = {"bpm_name": self.data.values[dat.bpm_name],
+                             "dv1_dly1_min_val": self.data.values[dat.dv1_dly1_min_val],
+                             "dv2_dly1_min_val": self.data.values[dat.dv2_dly1_min_val],
+                             "dv1_dly2_min_val": self.data.values[dat.dv1_dly2_min_val],
+                             "dv2_dly2_min_val": self.data.values[dat.dv2_dly2_min_val],
+                             "dv1_dly1": self.data.values[dat.dv1_dly1],
+                             "dv2_dly1": self.data.values[dat.dv2_dly1],
+                             "dv1_dly2": self.data.values[dat.dv1_dly2],
+                             "dv2_dly2": self.data.values[dat.dv2_dly2]}
+                self.logger.add_to_bpm_scan_json(self.json_data)
 
             controller_base.data.values[dat.ready_to_go] = False
 
     def set_attenuations_and_record(self):
         if controller_base.data.values[dat.ready_to_go]:
-            controller_base.bpm_handler.set_bpm_buffer(controller_base.data.values[dat.bpm_name],controller_base.data.values[dat.num_shots])
+            controller_base.bpm_handler.set_bpm_buffer(controller_base.data.values[dat.num_shots])
             for i in range(controller_base.data.values[dat.set_start], controller_base.data.values[dat.set_end]):
                 controller_base.bpm_handler.set_attenuation(controller_base.data.values[dat.bpm_name], i)
                 time.sleep(1)
@@ -89,38 +117,40 @@ class main_controller(controller_base):
                     time.sleep(1)
                     QApplication.processEvents()
                     controller_base.data_monitor.bpm_monitor.update_bpm_voltages()
-                    controller_base.data_monitor.scope_monitor.update_bunch_charge()
+                    controller_base.data_monitor.charge_monitor.update_bunch_charge()
                     controller_base.bpm_handler.update_bpm_att_voltages()
-
-    # def set_delays_and_record(self):
-    #     if controller_base.data.values[dat.ready_to_go]:
-    #         for i in range(controller_base.data.values[dat.set_start],
-    #                        controller_base.data.values[dat.set_end]):
-    #             time.sleep(1)
-    #             QApplication.processEvents()
-    #             controller_base.data_monitor.bpm_monitor.update_bpm_voltages()
-    #             controller_base.bpm_handler.scan_dly(i)
-    #             controller_base.data_monitor.scope_monitor.update_bunch_charge()
-    #         controller_base.bpm_handler.find_min_dly_1()
-    #         controller_base.bpm_handler.find_min_dly_2()
 
     def set_delays_and_record(self):
         if controller_base.data.values[dat.ready_to_go]:
-            for i in range(controller_base.data.values[dat.set_start], controller_base.data.values[dat.set_end]):
+            for i in range(controller_base.data.values[dat.set_start],
+                           controller_base.data.values[dat.set_end]):
                 time.sleep(1)
                 QApplication.processEvents()
                 controller_base.data_monitor.bpm_monitor.update_bpm_voltages()
-                controller_base.bpm_handler.scan_dly1(i)
-                controller_base.data_monitor.scope_monitor.update_bunch_charge()
+                controller_base.bpm_handler.scan_dly(i)
+                controller_base.data_monitor.charge_monitor.update_bunch_charge()
             controller_base.bpm_handler.find_min_dly_1()
-            if controller_base.data.values[dat.new_dly_1_set]:
-                for i in range(controller_base.data.values[dat.new_dly_1] - 20, controller_base.data.values[dat.new_dly_1] + 20):
-                    time.sleep(1)
-                    QApplication.processEvents()
-                    controller_base.data_monitor.bpm_monitor.update_bpm_voltages()
-                    controller_base.bpm_handler.scan_dly2(i)
-                    controller_base.data_monitor.scope_monitor.update_bunch_charge()
-                controller_base.bpm_handler.find_min_dly_2()
+            controller_base.bpm_handler.find_min_dly_2()
+
+    # def set_delays_and_record(self):
+    #     if controller_base.data.values[dat.ready_to_go]:
+    #         for i in range(controller_base.data.values[dat.set_start], controller_base.data.values[dat.set_end]):
+    #             controller_base.bpm_handler.set_bpm_buffer(controller_base.data.values[dat.num_shots])
+    #             time.sleep(1)
+    #             QApplication.processEvents()
+    #             controller_base.data_monitor.bpm_monitor.update_bpm_voltages()
+    #             controller_base.bpm_handler.scan_dly1(i)
+    #             controller_base.data_monitor.charge_monitor.update_bunch_charge()
+    #         controller_base.bpm_handler.find_min_dly_1()
+    #         if controller_base.data.values[dat.new_dly_1_set]:
+    #             for i in range(controller_base.data.values[dat.new_dly_1] - 20, controller_base.data.values[dat.new_dly_1] + 20):
+    #                 controller_base.bpm_handler.set_bpm_buffer(controller_base.data.values[dat.num_shots])
+    #                 time.sleep(1)
+    #                 QApplication.processEvents()
+    #                 controller_base.data_monitor.bpm_monitor.update_bpm_voltages()
+    #                 controller_base.bpm_handler.scan_dly2(i)
+    #                 controller_base.data_monitor.charge_monitor.update_bunch_charge()
+    #             controller_base.bpm_handler.find_min_dly_2()
 
     def clear_values(self):
         controller_base.data.values[dat.bpm_v11_v12_sum] = {}
