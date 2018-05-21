@@ -81,8 +81,8 @@ LEFieLD=T
 !V1-GUN
 C_pos(1)=0.0
 FILE_EFieLD(1)='/home/vmsim/Desktop/V2/ASTRA/Field_Maps/bas_gun.txt'
-MaxE(1)=65.0
-Phi(1)=0.0
+MaxE(1)=-999.999
+Phi(1)=-999.999
 Nue(1)=2.9974431
 C_smooth(1)=10
 C_numb(1)=1
@@ -112,5 +112,5 @@ D1(1)=(0.0800007,3.83958)
 D2(1)=(-0.0800007,3.83958)
 D3(1)=(-0.0926015,4.25628)
 D4(1)=(-0.20574,4.14314)
-D_strength(1)=-0.0490903607952
+D_strength(1)=-0.295286768049
 /

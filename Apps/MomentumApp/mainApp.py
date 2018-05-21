@@ -7,8 +7,8 @@ sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\\model')
 sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\\controller')
 sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\\view')
 from PyQt4 import QtGui, QtCore
-import model_VELA as model
-#import model_CLARA as model
+#import model_VELA as model
+import model_CLARA as model
 import controller.controller
 import view.view
 
@@ -22,6 +22,7 @@ class App(QtGui.QApplication):
 		self.MainWindow = QtGui.QMainWindow()
 		self.view.setupUi(self.MainWindow)
 		self.model = model.Model(self.view)
+		print 'Model done'
 		self.controller = controller.controller.Controller(self.view,self.model)
 		self.MainWindow.show()
 

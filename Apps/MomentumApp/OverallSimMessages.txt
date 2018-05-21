@@ -20009,3 +20009,1597 @@ Renaming files...
 Setting EPICS values with ASTRA output...
 	Setting BPM: VM-EBT-INJ-DIA-BPMC-06
 	Setting Camera: VM-EBT-INJ-DIA-CAM-05:CAM
+/home/vmsim/Desktop/V2/ASTRA
+C1.in
+Running ASTRA for section C1...
+     finished simulation  17. 5.2018     17:59
+     execution time: 19.44 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-EBT-INJ-SCOPE-01:P1
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+cannot connect to VM-CLA-S02-DIA-CAM-01:X
+cannot connect to VM-CLA-S02-DIA-CAM-01:Y
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribY
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+cannot connect to VM-CLA-S01-DIA-CAM-01:X
+cannot connect to VM-CLA-S01-DIA-CAM-01:Y
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribY
+	Setting WCM: VM-EBT-INJ-SCOPE-01:P1
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+cannot connect to VM-CLA-S02-DIA-CAM-02:X
+cannot connect to VM-CLA-S02-DIA-CAM-02:Y
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribY
+Reference Z mom : 34416768.7899
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation  17. 5.2018     18:01
+     execution time:  3.38 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0141.003 > CV.VM-CLA-C2V-DIA-CAM-01
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+	Setting Camera: VM-CLA-C2V-DIA-CAM-01
+cannot connect to VM-CLA-C2V-DIA-CAM-01:X
+cannot connect to VM-CLA-C2V-DIA-CAM-01:Y
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribY
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-CAM-01
+cannot connect to VM-CLA-C2V-DIA-CAM-01:X
+cannot connect to VM-CLA-C2V-DIA-CAM-01:Y
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribY
+C1.VM-CLA-S02-DIA-BPM-01
+C1.VM-CLA-S02-DIA-CAM-01
+cannot connect to VM-CLA-S02-DIA-CAM-01:X
+cannot connect to VM-CLA-S02-DIA-CAM-01:Y
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribY
+C1.VM-CLA-S01-DIA-CAM-01
+cannot connect to VM-CLA-S01-DIA-CAM-01:X
+cannot connect to VM-CLA-S01-DIA-CAM-01:Y
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribY
+C1.VM-CLA-S02-DIA-CAM-02
+cannot connect to VM-CLA-S02-DIA-CAM-02:X
+cannot connect to VM-CLA-S02-DIA-CAM-02:Y
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribY
+C1.in
+Running ASTRA for section C1...
+     finished simulation  17. 5.2018     18:04
+     execution time: 18.36 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-EBT-INJ-SCOPE-01:P1
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+cannot connect to VM-CLA-S02-DIA-CAM-01:X
+cannot connect to VM-CLA-S02-DIA-CAM-01:Y
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribY
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+cannot connect to VM-CLA-S01-DIA-CAM-01:X
+cannot connect to VM-CLA-S01-DIA-CAM-01:Y
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribY
+	Setting WCM: VM-EBT-INJ-SCOPE-01:P1
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+cannot connect to VM-CLA-S02-DIA-CAM-02:X
+cannot connect to VM-CLA-S02-DIA-CAM-02:Y
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribY
+Reference Z mom : 34416768.7899
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation  17. 5.2018     18:06
+     execution time:  3.24 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0141.003 > CV.VM-CLA-C2V-DIA-CAM-01
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+	Setting Camera: VM-CLA-C2V-DIA-CAM-01
+cannot connect to VM-CLA-C2V-DIA-CAM-01:X
+cannot connect to VM-CLA-C2V-DIA-CAM-01:Y
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribY
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-CAM-01
+cannot connect to VM-CLA-C2V-DIA-CAM-01:X
+cannot connect to VM-CLA-C2V-DIA-CAM-01:Y
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribY
+C1.VM-CLA-S02-DIA-BPM-01
+C1.VM-CLA-S02-DIA-CAM-01
+cannot connect to VM-CLA-S02-DIA-CAM-01:X
+cannot connect to VM-CLA-S02-DIA-CAM-01:Y
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribY
+C1.VM-CLA-S01-DIA-CAM-01
+cannot connect to VM-CLA-S01-DIA-CAM-01:X
+cannot connect to VM-CLA-S01-DIA-CAM-01:Y
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribY
+C1.VM-CLA-S02-DIA-CAM-02
+cannot connect to VM-CLA-S02-DIA-CAM-02:X
+cannot connect to VM-CLA-S02-DIA-CAM-02:Y
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribY
+C1.in
+Running ASTRA for section C1...
+     finished simulation  17. 5.2018     21:35
+     execution time: 19.07 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-EBT-INJ-SCOPE-01:P1
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+cannot connect to VM-CLA-S02-DIA-CAM-01:X
+cannot connect to VM-CLA-S02-DIA-CAM-01:Y
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribY
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+cannot connect to VM-CLA-S01-DIA-CAM-01:X
+cannot connect to VM-CLA-S01-DIA-CAM-01:Y
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribY
+	Setting WCM: VM-EBT-INJ-SCOPE-01:P1
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+cannot connect to VM-CLA-S02-DIA-CAM-02:X
+cannot connect to VM-CLA-S02-DIA-CAM-02:Y
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribY
+Reference Z mom : 34416768.7899
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation  17. 5.2018     21:36
+     execution time:  3.32 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0141.003 > CV.VM-CLA-C2V-DIA-CAM-01
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+	Setting Camera: VM-CLA-C2V-DIA-CAM-01
+cannot connect to VM-CLA-C2V-DIA-CAM-01:X
+cannot connect to VM-CLA-C2V-DIA-CAM-01:Y
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribY
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-CAM-01
+cannot connect to VM-CLA-C2V-DIA-CAM-01:X
+cannot connect to VM-CLA-C2V-DIA-CAM-01:Y
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribY
+C1.VM-CLA-S02-DIA-BPM-01
+C1.VM-CLA-S02-DIA-CAM-01
+cannot connect to VM-CLA-S02-DIA-CAM-01:X
+cannot connect to VM-CLA-S02-DIA-CAM-01:Y
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribY
+C1.VM-CLA-S01-DIA-CAM-01
+cannot connect to VM-CLA-S01-DIA-CAM-01:X
+cannot connect to VM-CLA-S01-DIA-CAM-01:Y
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribY
+C1.VM-CLA-S02-DIA-CAM-02
+cannot connect to VM-CLA-S02-DIA-CAM-02:X
+cannot connect to VM-CLA-S02-DIA-CAM-02:Y
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribY
+C1.in
+Running ASTRA for section C1...
+     finished simulation  17. 5.2018     21:41
+     execution time: 18.75 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-EBT-INJ-SCOPE-01:P1
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+cannot connect to VM-CLA-S02-DIA-CAM-01:X
+cannot connect to VM-CLA-S02-DIA-CAM-01:Y
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribY
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+cannot connect to VM-CLA-S01-DIA-CAM-01:X
+cannot connect to VM-CLA-S01-DIA-CAM-01:Y
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribY
+	Setting WCM: VM-EBT-INJ-SCOPE-01:P1
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+cannot connect to VM-CLA-S02-DIA-CAM-02:X
+cannot connect to VM-CLA-S02-DIA-CAM-02:Y
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribY
+Reference Z mom : 34416768.7899
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation  17. 5.2018     21:43
+     execution time:  3.22 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0141.003 > CV.VM-CLA-C2V-DIA-CAM-01
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+	Setting Camera: VM-CLA-C2V-DIA-CAM-01
+cannot connect to VM-CLA-C2V-DIA-CAM-01:X
+cannot connect to VM-CLA-C2V-DIA-CAM-01:Y
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribY
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-CAM-01
+cannot connect to VM-CLA-C2V-DIA-CAM-01:X
+cannot connect to VM-CLA-C2V-DIA-CAM-01:Y
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribY
+C1.VM-CLA-S02-DIA-BPM-01
+C1.VM-CLA-S02-DIA-CAM-01
+cannot connect to VM-CLA-S02-DIA-CAM-01:X
+cannot connect to VM-CLA-S02-DIA-CAM-01:Y
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaY
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-CAM-01
+cannot connect to VM-CLA-C2V-DIA-CAM-01:X
+cannot connect to VM-CLA-C2V-DIA-CAM-01:Y
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribY
+C1.VM-CLA-S02-DIA-BPM-01
+C1.VM-CLA-S02-DIA-CAM-01
+cannot connect to VM-CLA-S02-DIA-CAM-01:X
+cannot connect to VM-CLA-S02-DIA-CAM-01:Y
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribY
+C1.VM-CLA-S01-DIA-CAM-01
+cannot connect to VM-CLA-S01-DIA-CAM-01:X
+cannot connect to VM-CLA-S01-DIA-CAM-01:Y
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribY
+C1.VM-CLA-S02-DIA-CAM-02
+cannot connect to VM-CLA-S02-DIA-CAM-02:X
+cannot connect to VM-CLA-S02-DIA-CAM-02:Y
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribY
+C1.in
+Running ASTRA for section C1...
+     finished simulation  17. 5.2018     21:54
+     execution time: 18.34 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-EBT-INJ-SCOPE-01:P1
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+cannot connect to VM-CLA-S02-DIA-CAM-01:X
+cannot connect to VM-CLA-S02-DIA-CAM-01:Y
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribY
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+cannot connect to VM-CLA-S01-DIA-CAM-01:X
+cannot connect to VM-CLA-S01-DIA-CAM-01:Y
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribY
+	Setting WCM: VM-EBT-INJ-SCOPE-01:P1
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+cannot connect to VM-CLA-S02-DIA-CAM-02:X
+cannot connect to VM-CLA-S02-DIA-CAM-02:Y
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribY
+Reference Z mom : 34416768.7899
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation  17. 5.2018     21:55
+     execution time:  3.28 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0141.003 > CV.VM-CLA-C2V-DIA-CAM-01
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+	Setting Camera: VM-CLA-C2V-DIA-CAM-01
+cannot connect to VM-CLA-C2V-DIA-CAM-01:X
+cannot connect to VM-CLA-C2V-DIA-CAM-01:Y
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribY
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-CAM-01
+cannot connect to VM-CLA-C2V-DIA-CAM-01:X
+cannot connect to VM-CLA-C2V-DIA-CAM-01:Y
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribY
+C1.VM-CLA-S02-DIA-BPM-01
+C1.VM-CLA-S02-DIA-CAM-01
+cannot connect to VM-CLA-S02-DIA-CAM-01:X
+cannot connect to VM-CLA-S02-DIA-CAM-01:Y
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribY
+C1.VM-CLA-S01-DIA-CAM-01
+cannot connect to VM-CLA-S01-DIA-CAM-01:X
+cannot connect to VM-CLA-S01-DIA-CAM-01:Y
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribY
+C1.VM-CLA-S02-DIA-CAM-02
+cannot connect to VM-CLA-S02-DIA-CAM-02:X
+cannot connect to VM-CLA-S02-DIA-CAM-02:Y
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribY
+C1.in
+Running ASTRA for section C1...
+     finished simulation  17. 5.2018     21:59
+     execution time: 18.42 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-EBT-INJ-SCOPE-01:P1
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+cannot connect to VM-CLA-S02-DIA-CAM-01:X
+cannot connect to VM-CLA-S02-DIA-CAM-01:Y
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribY
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+cannot connect to VM-CLA-S01-DIA-CAM-01:X
+cannot connect to VM-CLA-S01-DIA-CAM-01:Y
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribY
+	Setting WCM: VM-EBT-INJ-SCOPE-01:P1
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+cannot connect to VM-CLA-S02-DIA-CAM-02:X
+cannot connect to VM-CLA-S02-DIA-CAM-02:Y
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribY
+Reference Z mom : 34416768.7899
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation  17. 5.2018     22:01
+     execution time:  3.16 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0141.003 > CV.VM-CLA-C2V-DIA-CAM-01
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+	Setting Camera: VM-CLA-C2V-DIA-CAM-01
+cannot connect to VM-CLA-C2V-DIA-CAM-01:X
+cannot connect to VM-CLA-C2V-DIA-CAM-01:Y
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribY
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-CAM-01
+cannot connect to VM-CLA-C2V-DIA-CAM-01:X
+cannot connect to VM-CLA-C2V-DIA-CAM-01:Y
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribY
+C1.VM-CLA-S02-DIA-BPM-01
+C1.VM-CLA-S02-DIA-CAM-01
+cannot connect to VM-CLA-S02-DIA-CAM-01:X
+cannot connect to VM-CLA-S02-DIA-CAM-01:Y
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribY
+C1.VM-CLA-S01-DIA-CAM-01
+cannot connect to VM-CLA-S01-DIA-CAM-01:X
+cannot connect to VM-CLA-S01-DIA-CAM-01:Y
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribY
+C1.VM-CLA-S02-DIA-CAM-02
+cannot connect to VM-CLA-S02-DIA-CAM-02:X
+cannot connect to VM-CLA-S02-DIA-CAM-02:Y
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribY
+C1.in
+Running ASTRA for section C1...
+     finished simulation  18. 5.2018     11:30
+     execution time: 18.41 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-EBT-INJ-SCOPE-01:P1
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+cannot connect to VM-CLA-S02-DIA-CAM-01:X
+cannot connect to VM-CLA-S02-DIA-CAM-01:Y
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribY
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+cannot connect to VM-CLA-S01-DIA-CAM-01:X
+cannot connect to VM-CLA-S01-DIA-CAM-01:Y
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribY
+	Setting WCM: VM-EBT-INJ-SCOPE-01:P1
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+cannot connect to VM-CLA-S02-DIA-CAM-02:X
+cannot connect to VM-CLA-S02-DIA-CAM-02:Y
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribY
+Reference Z mom : 34416768.7899
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation  18. 5.2018     11:31
+     execution time:  3.33 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0141.003 > CV.VM-CLA-C2V-DIA-CAM-01
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+	Setting Camera: VM-CLA-C2V-DIA-CAM-01
+cannot connect to VM-CLA-C2V-DIA-CAM-01:X
+cannot connect to VM-CLA-C2V-DIA-CAM-01:Y
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribY
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-CAM-01
+cannot connect to VM-CLA-C2V-DIA-CAM-01:X
+cannot connect to VM-CLA-C2V-DIA-CAM-01:Y
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribY
+C1.VM-CLA-S02-DIA-BPM-01
+C1.VM-CLA-S02-DIA-CAM-01
+cannot connect to VM-CLA-S02-DIA-CAM-01:X
+cannot connect to VM-CLA-S02-DIA-CAM-01:Y
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribY
+C1.VM-CLA-S01-DIA-CAM-01
+cannot connect to VM-CLA-S01-DIA-CAM-01:X
+cannot connect to VM-CLA-S01-DIA-CAM-01:Y
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribY
+C1.VM-CLA-S02-DIA-CAM-02
+cannot connect to VM-CLA-S02-DIA-CAM-02:X
+cannot connect to VM-CLA-S02-DIA-CAM-02:Y
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribY
+C1.in
+Running ASTRA for section C1...
+     finished simulation  18. 5.2018     11:36
+     execution time: 18.79 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-EBT-INJ-SCOPE-01:P1
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+cannot connect to VM-CLA-S02-DIA-CAM-01:X
+cannot connect to VM-CLA-S02-DIA-CAM-01:Y
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribY
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+cannot connect to VM-CLA-S01-DIA-CAM-01:X
+cannot connect to VM-CLA-S01-DIA-CAM-01:Y
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribY
+	Setting WCM: VM-EBT-INJ-SCOPE-01:P1
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+cannot connect to VM-CLA-S02-DIA-CAM-02:X
+cannot connect to VM-CLA-S02-DIA-CAM-02:Y
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribY
+Reference Z mom : 34416768.7899
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation  18. 5.2018     11:38
+     execution time:  3.19 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0141.003 > CV.VM-CLA-C2V-DIA-CAM-01
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+	Setting Camera: VM-CLA-C2V-DIA-CAM-01
+cannot connect to VM-CLA-C2V-DIA-CAM-01:X
+cannot connect to VM-CLA-C2V-DIA-CAM-01:Y
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribY
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-CAM-01
+cannot connect to VM-CLA-C2V-DIA-CAM-01:X
+cannot connect to VM-CLA-C2V-DIA-CAM-01:Y
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribY
+C1.VM-CLA-S02-DIA-BPM-01
+C1.VM-CLA-S02-DIA-CAM-01
+cannot connect to VM-CLA-S02-DIA-CAM-01:X
+cannot connect to VM-CLA-S02-DIA-CAM-01:Y
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribY
+C1.VM-CLA-S01-DIA-CAM-01
+cannot connect to VM-CLA-S01-DIA-CAM-01:X
+cannot connect to VM-CLA-S01-DIA-CAM-01:Y
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribY
+C1.VM-CLA-S02-DIA-CAM-02
+cannot connect to VM-CLA-S02-DIA-CAM-02:X
+cannot connect to VM-CLA-S02-DIA-CAM-02:Y
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribY
+C1.in
+Running ASTRA for section C1...
+     finished simulation  18. 5.2018     12:02
+     execution time: 18.90 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-EBT-INJ-SCOPE-01:P1
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+cannot connect to VM-CLA-S02-DIA-CAM-01:X
+cannot connect to VM-CLA-S02-DIA-CAM-01:Y
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribY
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+cannot connect to VM-CLA-S01-DIA-CAM-01:X
+cannot connect to VM-CLA-S01-DIA-CAM-01:Y
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribY
+	Setting WCM: VM-EBT-INJ-SCOPE-01:P1
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+cannot connect to VM-CLA-S02-DIA-CAM-02:X
+cannot connect to VM-CLA-S02-DIA-CAM-02:Y
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribY
+Reference Z mom : 34416768.7899
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation  18. 5.2018     12:04
+     execution time:  3.47 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0141.003 > CV.VM-CLA-C2V-DIA-CAM-01
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+	Setting Camera: VM-CLA-C2V-DIA-CAM-01
+cannot connect to VM-CLA-C2V-DIA-CAM-01:X
+cannot connect to VM-CLA-C2V-DIA-CAM-01:Y
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribY
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-CAM-01
+cannot connect to VM-CLA-C2V-DIA-CAM-01:X
+cannot connect to VM-CLA-C2V-DIA-CAM-01:Y
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribY
+C1.VM-CLA-S02-DIA-BPM-01
+C1.VM-CLA-S02-DIA-CAM-01
+cannot connect to VM-CLA-S02-DIA-CAM-01:X
+cannot connect to VM-CLA-S02-DIA-CAM-01:Y
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribY
+C1.VM-CLA-S01-DIA-CAM-01
+cannot connect to VM-CLA-S01-DIA-CAM-01:X
+cannot connect to VM-CLA-S01-DIA-CAM-01:Y
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribY
+C1.VM-CLA-S02-DIA-CAM-02
+cannot connect to VM-CLA-S02-DIA-CAM-02:X
+cannot connect to VM-CLA-S02-DIA-CAM-02:Y
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribY
+C1.in
+Running ASTRA for section C1...
+     finished simulation  18. 5.2018     17:34
+     execution time: 18.48 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-EBT-INJ-SCOPE-01:P1
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+cannot connect to VM-CLA-S02-DIA-CAM-01:X
+cannot connect to VM-CLA-S02-DIA-CAM-01:Y
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribY
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+cannot connect to VM-CLA-S01-DIA-CAM-01:X
+cannot connect to VM-CLA-S01-DIA-CAM-01:Y
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribY
+	Setting WCM: VM-EBT-INJ-SCOPE-01:P1
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+cannot connect to VM-CLA-S02-DIA-CAM-02:X
+cannot connect to VM-CLA-S02-DIA-CAM-02:Y
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribY
+Reference Z mom : 34416768.7899
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation  18. 5.2018     17:36
+     execution time:  3.22 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0141.003 > CV.VM-CLA-C2V-DIA-CAM-01
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+	Setting Camera: VM-CLA-C2V-DIA-CAM-01
+cannot connect to VM-CLA-C2V-DIA-CAM-01:X
+cannot connect to VM-CLA-C2V-DIA-CAM-01:Y
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribY
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-CAM-01
+cannot connect to VM-CLA-C2V-DIA-CAM-01:X
+cannot connect to VM-CLA-C2V-DIA-CAM-01:Y
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribY
+C1.VM-CLA-S02-DIA-BPM-01
+C1.VM-CLA-S02-DIA-CAM-01
+cannot connect to VM-CLA-S02-DIA-CAM-01:X
+cannot connect to VM-CLA-S02-DIA-CAM-01:Y
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribY
+C1.VM-CLA-S01-DIA-CAM-01
+cannot connect to VM-CLA-S01-DIA-CAM-01:X
+cannot connect to VM-CLA-S01-DIA-CAM-01:Y
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribY
+C1.VM-CLA-S02-DIA-CAM-02
+cannot connect to VM-CLA-S02-DIA-CAM-02:X
+cannot connect to VM-CLA-S02-DIA-CAM-02:Y
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribY
+C1.in
+Running ASTRA for section C1...
+     finished simulation  18. 5.2018     17:42
+     execution time: 20.56 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-EBT-INJ-SCOPE-01:P1
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+cannot connect to VM-CLA-S02-DIA-CAM-01:X
+cannot connect to VM-CLA-S02-DIA-CAM-01:Y
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribY
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+cannot connect to VM-CLA-S01-DIA-CAM-01:X
+cannot connect to VM-CLA-S01-DIA-CAM-01:Y
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribY
+	Setting WCM: VM-EBT-INJ-SCOPE-01:P1
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+cannot connect to VM-CLA-S02-DIA-CAM-02:X
+cannot connect to VM-CLA-S02-DIA-CAM-02:Y
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribY
+Reference Z mom : 34416768.7899
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation  18. 5.2018     17:43
+     execution time:  3.14 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0141.003 > CV.VM-CLA-C2V-DIA-CAM-01
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+	Setting Camera: VM-CLA-C2V-DIA-CAM-01
+cannot connect to VM-CLA-C2V-DIA-CAM-01:X
+cannot connect to VM-CLA-C2V-DIA-CAM-01:Y
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribY
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-CAM-01
+cannot connect to VM-CLA-C2V-DIA-CAM-01:X
+cannot connect to VM-CLA-C2V-DIA-CAM-01:Y
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribY
+C1.VM-CLA-S02-DIA-BPM-01
+C1.VM-CLA-S02-DIA-CAM-01
+cannot connect to VM-CLA-S02-DIA-CAM-01:X
+cannot connect to VM-CLA-S02-DIA-CAM-01:Y
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribY
+C1.VM-CLA-S01-DIA-CAM-01
+cannot connect to VM-CLA-S01-DIA-CAM-01:X
+cannot connect to VM-CLA-S01-DIA-CAM-01:Y
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribY
+C1.VM-CLA-S02-DIA-CAM-02
+cannot connect to VM-CLA-S02-DIA-CAM-02:X
+cannot connect to VM-CLA-S02-DIA-CAM-02:Y
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribY
+C1.in
+Running ASTRA for section C1...
+     finished simulation  21. 5.2018      9:50
+     execution time: 18.85 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-EBT-INJ-SCOPE-01:P1
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+cannot connect to VM-CLA-S02-DIA-CAM-01:X
+cannot connect to VM-CLA-S02-DIA-CAM-01:Y
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribY
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+cannot connect to VM-CLA-S01-DIA-CAM-01:X
+cannot connect to VM-CLA-S01-DIA-CAM-01:Y
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribY
+	Setting WCM: VM-EBT-INJ-SCOPE-01:P1
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+cannot connect to VM-CLA-S02-DIA-CAM-02:X
+cannot connect to VM-CLA-S02-DIA-CAM-02:Y
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribY
+Reference Z mom : 34416768.7899
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation  21. 5.2018      9:51
+     execution time:  3.38 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0141.003 > CV.VM-CLA-C2V-DIA-CAM-01
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+	Setting Camera: VM-CLA-C2V-DIA-CAM-01
+cannot connect to VM-CLA-C2V-DIA-CAM-01:X
+cannot connect to VM-CLA-C2V-DIA-CAM-01:Y
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribY
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-CAM-01
+cannot connect to VM-CLA-C2V-DIA-CAM-01:X
+cannot connect to VM-CLA-C2V-DIA-CAM-01:Y
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribY
+C1.VM-CLA-S02-DIA-BPM-01
+C1.VM-CLA-S02-DIA-CAM-01
+cannot connect to VM-CLA-S02-DIA-CAM-01:X
+cannot connect to VM-CLA-S02-DIA-CAM-01:Y
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribY
+C1.VM-CLA-S01-DIA-CAM-01
+cannot connect to VM-CLA-S01-DIA-CAM-01:X
+cannot connect to VM-CLA-S01-DIA-CAM-01:Y
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribY
+C1.VM-CLA-S02-DIA-CAM-02
+cannot connect to VM-CLA-S02-DIA-CAM-02:X
+cannot connect to VM-CLA-S02-DIA-CAM-02:Y
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribY
+C1.in
+Running ASTRA for section C1...
+     finished simulation  21. 5.2018     10:01
+     execution time: 18.56 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-EBT-INJ-SCOPE-01:P1
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+cannot connect to VM-CLA-S02-DIA-CAM-01:X
+cannot connect to VM-CLA-S02-DIA-CAM-01:Y
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribY
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+cannot connect to VM-CLA-S01-DIA-CAM-01:X
+cannot connect to VM-CLA-S01-DIA-CAM-01:Y
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribY
+	Setting WCM: VM-EBT-INJ-SCOPE-01:P1
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+cannot connect to VM-CLA-S02-DIA-CAM-02:X
+cannot connect to VM-CLA-S02-DIA-CAM-02:Y
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribY
+Reference Z mom : 34416768.7899
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation  21. 5.2018     10:03
+     execution time:  3.34 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0141.003 > CV.VM-CLA-C2V-DIA-CAM-01
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+	Setting Camera: VM-CLA-C2V-DIA-CAM-01
+cannot connect to VM-CLA-C2V-DIA-CAM-01:X
+cannot connect to VM-CLA-C2V-DIA-CAM-01:Y
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribY
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-CAM-01
+cannot connect to VM-CLA-C2V-DIA-CAM-01:X
+cannot connect to VM-CLA-C2V-DIA-CAM-01:Y
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribY
+C1.VM-CLA-S02-DIA-BPM-01
+C1.VM-CLA-S02-DIA-CAM-01
+cannot connect to VM-CLA-S02-DIA-CAM-01:X
+cannot connect to VM-CLA-S02-DIA-CAM-01:Y
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribY
+C1.VM-CLA-S01-DIA-CAM-01
+cannot connect to VM-CLA-S01-DIA-CAM-01:X
+cannot connect to VM-CLA-S01-DIA-CAM-01:Y
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribY
+C1.VM-CLA-S02-DIA-CAM-02
+cannot connect to VM-CLA-S02-DIA-CAM-02:X
+cannot connect to VM-CLA-S02-DIA-CAM-02:Y
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribY
+C1.in
+Running ASTRA for section C1...
+     finished simulation  21. 5.2018     10:09
+     execution time: 18.77 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-EBT-INJ-SCOPE-01:P1
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+cannot connect to VM-CLA-S02-DIA-CAM-01:X
+cannot connect to VM-CLA-S02-DIA-CAM-01:Y
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribY
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+cannot connect to VM-CLA-S01-DIA-CAM-01:X
+cannot connect to VM-CLA-S01-DIA-CAM-01:Y
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribY
+	Setting WCM: VM-EBT-INJ-SCOPE-01:P1
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+cannot connect to VM-CLA-S02-DIA-CAM-02:X
+cannot connect to VM-CLA-S02-DIA-CAM-02:Y
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribY
+Reference Z mom : 34416768.7899
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation  21. 5.2018     10:10
+     execution time:  3.28 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0141.003 > CV.VM-CLA-C2V-DIA-CAM-01
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+	Setting Camera: VM-CLA-C2V-DIA-CAM-01
+cannot connect to VM-CLA-C2V-DIA-CAM-01:X
+cannot connect to VM-CLA-C2V-DIA-CAM-01:Y
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribY
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-CAM-01
+cannot connect to VM-CLA-C2V-DIA-CAM-01:X
+cannot connect to VM-CLA-C2V-DIA-CAM-01:Y
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribY
+C1.VM-CLA-S02-DIA-BPM-01
+C1.VM-CLA-S02-DIA-CAM-01
+cannot connect to VM-CLA-S02-DIA-CAM-01:X
+cannot connect to VM-CLA-S02-DIA-CAM-01:Y
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribY
+C1.VM-CLA-S01-DIA-CAM-01
+cannot connect to VM-CLA-S01-DIA-CAM-01:X
+cannot connect to VM-CLA-S01-DIA-CAM-01:Y
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribY
+C1.VM-CLA-S02-DIA-CAM-02
+cannot connect to VM-CLA-S02-DIA-CAM-02:X
+cannot connect to VM-CLA-S02-DIA-CAM-02:Y
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribY
+C1.in
+Running ASTRA for section C1...
+     finished simulation  21. 5.2018     10:17
+     execution time: 18.55 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-EBT-INJ-SCOPE-01:P1
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+cannot connect to VM-CLA-S02-DIA-CAM-01:X
+cannot connect to VM-CLA-S02-DIA-CAM-01:Y
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribY
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+cannot connect to VM-CLA-S01-DIA-CAM-01:X
+cannot connect to VM-CLA-S01-DIA-CAM-01:Y
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribY
+	Setting WCM: VM-EBT-INJ-SCOPE-01:P1
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+cannot connect to VM-CLA-S02-DIA-CAM-02:X
+cannot connect to VM-CLA-S02-DIA-CAM-02:Y
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribY
+Reference Z mom : 34416768.7899
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation  21. 5.2018     10:18
+     execution time:  3.26 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0141.003 > CV.VM-CLA-C2V-DIA-CAM-01
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+	Setting Camera: VM-CLA-C2V-DIA-CAM-01
+cannot connect to VM-CLA-C2V-DIA-CAM-01:X
+cannot connect to VM-CLA-C2V-DIA-CAM-01:Y
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribY
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-CAM-01
+cannot connect to VM-CLA-C2V-DIA-CAM-01:X
+cannot connect to VM-CLA-C2V-DIA-CAM-01:Y
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribY
+C1.VM-CLA-S02-DIA-BPM-01
+C1.VM-CLA-S02-DIA-CAM-01
+cannot connect to VM-CLA-S02-DIA-CAM-01:X
+cannot connect to VM-CLA-S02-DIA-CAM-01:Y
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribY
+C1.VM-CLA-S01-DIA-CAM-01
+cannot connect to VM-CLA-S01-DIA-CAM-01:X
+cannot connect to VM-CLA-S01-DIA-CAM-01:Y
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribY
+C1.VM-CLA-S02-DIA-CAM-02
+cannot connect to VM-CLA-S02-DIA-CAM-02:X
+cannot connect to VM-CLA-S02-DIA-CAM-02:Y
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribY
+C1.in
+Running ASTRA for section C1...
+     finished simulation  21. 5.2018     10:23
+     execution time: 18.78 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-EBT-INJ-SCOPE-01:P1
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+cannot connect to VM-CLA-S02-DIA-CAM-01:X
+cannot connect to VM-CLA-S02-DIA-CAM-01:Y
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribY
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+cannot connect to VM-CLA-S01-DIA-CAM-01:X
+cannot connect to VM-CLA-S01-DIA-CAM-01:Y
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribY
+	Setting WCM: VM-EBT-INJ-SCOPE-01:P1
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+cannot connect to VM-CLA-S02-DIA-CAM-02:X
+cannot connect to VM-CLA-S02-DIA-CAM-02:Y
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribY
+Reference Z mom : 34416768.7899
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation  21. 5.2018     10:25
+     execution time:  3.27 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0141.003 > CV.VM-CLA-C2V-DIA-CAM-01
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+	Setting Camera: VM-CLA-C2V-DIA-CAM-01
+cannot connect to VM-CLA-C2V-DIA-CAM-01:X
+cannot connect to VM-CLA-C2V-DIA-CAM-01:Y
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribY
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-CAM-01
+cannot connect to VM-CLA-C2V-DIA-CAM-01:X
+cannot connect to VM-CLA-C2V-DIA-CAM-01:Y
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribY
+C1.VM-CLA-S02-DIA-BPM-01
+C1.VM-CLA-S02-DIA-CAM-01
+cannot connect to VM-CLA-S02-DIA-CAM-01:X
+cannot connect to VM-CLA-S02-DIA-CAM-01:Y
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribY
+C1.VM-CLA-S01-DIA-CAM-01
+cannot connect to VM-CLA-S01-DIA-CAM-01:X
+cannot connect to VM-CLA-S01-DIA-CAM-01:Y
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribY
+C1.VM-CLA-S02-DIA-CAM-02
+cannot connect to VM-CLA-S02-DIA-CAM-02:X
+cannot connect to VM-CLA-S02-DIA-CAM-02:Y
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribY
+C1.in
+Running ASTRA for section C1...
+     finished simulation  21. 5.2018     10:32
+     execution time: 18.74 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-EBT-INJ-SCOPE-01:P1
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+cannot connect to VM-CLA-S02-DIA-CAM-01:X
+cannot connect to VM-CLA-S02-DIA-CAM-01:Y
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribY
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+cannot connect to VM-CLA-S01-DIA-CAM-01:X
+cannot connect to VM-CLA-S01-DIA-CAM-01:Y
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribY
+	Setting WCM: VM-EBT-INJ-SCOPE-01:P1
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+cannot connect to VM-CLA-S02-DIA-CAM-02:X
+cannot connect to VM-CLA-S02-DIA-CAM-02:Y
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribY
+Reference Z mom : 34416768.7899
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation  21. 5.2018     10:33
+     execution time:  3.21 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0141.003 > CV.VM-CLA-C2V-DIA-CAM-01
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+	Setting Camera: VM-CLA-C2V-DIA-CAM-01
+cannot connect to VM-CLA-C2V-DIA-CAM-01:X
+cannot connect to VM-CLA-C2V-DIA-CAM-01:Y
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribY
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-CAM-01
+cannot connect to VM-CLA-C2V-DIA-CAM-01:X
+cannot connect to VM-CLA-C2V-DIA-CAM-01:Y
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribY
+C1.VM-CLA-S02-DIA-BPM-01
+C1.VM-CLA-S02-DIA-CAM-01
+cannot connect to VM-CLA-S02-DIA-CAM-01:X
+cannot connect to VM-CLA-S02-DIA-CAM-01:Y
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribY
+C1.VM-CLA-S01-DIA-CAM-01
+cannot connect to VM-CLA-S01-DIA-CAM-01:X
+cannot connect to VM-CLA-S01-DIA-CAM-01:Y
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribY
+C1.VM-CLA-S02-DIA-CAM-02
+cannot connect to VM-CLA-S02-DIA-CAM-02:X
+cannot connect to VM-CLA-S02-DIA-CAM-02:Y
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribY
+C1.in
+Running ASTRA for section C1...
+     finished simulation  21. 5.2018     10:36
+     execution time: 18.78 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-C1.0362.003 > C1.VM-CLA-S02-DIA-BPM-01
+	Moving: temp-C1.0094.003 > C1.VM-CLA-S01-DIA-BPM-01
+	Moving: temp-C1.0501.003 > C1.VM-CLA-S02-DIA-CAM-02
+	Moving: temp-C1.0073.003 > C1.VM-EBT-INJ-SCOPE-01:P1
+	Moving: temp-C1.0409.003 > C1.VM-CLA-S02-DIA-CAM-01
+	Moving: temp-C1.0098.003 > C1.VM-CLA-S01-DIA-CAM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-S01-DIA-BPM-01
+	Setting BPM: VM-CLA-S02-DIA-BPM-01
+	Setting Camera: VM-CLA-S02-DIA-CAM-01
+cannot connect to VM-CLA-S02-DIA-CAM-01:X
+cannot connect to VM-CLA-S02-DIA-CAM-01:Y
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribY
+	Setting Camera: VM-CLA-S01-DIA-CAM-01
+cannot connect to VM-CLA-S01-DIA-CAM-01:X
+cannot connect to VM-CLA-S01-DIA-CAM-01:Y
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S01-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-S01-DIA-CAM-01:DistribY
+	Setting WCM: VM-EBT-INJ-SCOPE-01:P1
+	Setting Camera: VM-CLA-S02-DIA-CAM-02
+cannot connect to VM-CLA-S02-DIA-CAM-02:X
+cannot connect to VM-CLA-S02-DIA-CAM-02:Y
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-02:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribX
+cannot connect to VM-CLA-S02-DIA-CAM-02:DistribY
+Reference Z mom : 34416768.7899
+Offset in next sim will be = -0.38845
+CV.in
+Running ASTRA for section CV...
+     finished simulation  21. 5.2018     10:38
+     execution time:  3.47 sec                         
+     Goodbye.
+Renaming files...
+	Moving: temp-CV.0141.003 > CV.VM-CLA-C2V-DIA-CAM-01
+	Moving: temp-CV.0060.003 > CV.VM-CLA-C2V-DIA-BPM-01
+Setting EPICS values with ASTRA output...
+	Setting BPM: VM-CLA-C2V-DIA-BPM-01
+	Setting Camera: VM-CLA-C2V-DIA-CAM-01
+cannot connect to VM-CLA-C2V-DIA-CAM-01:X
+cannot connect to VM-CLA-C2V-DIA-CAM-01:Y
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribY
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-CAM-01
+cannot connect to VM-CLA-C2V-DIA-CAM-01:X
+cannot connect to VM-CLA-C2V-DIA-CAM-01:Y
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaY
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-CAM-01
+cannot connect to VM-CLA-C2V-DIA-CAM-01:X
+cannot connect to VM-CLA-C2V-DIA-CAM-01:Y
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribX
+cannot connect to VM-CLA-C2V-DIA-CAM-01:DistribY
+C1.VM-CLA-S02-DIA-BPM-01
+C1.VM-CLA-S02-DIA-CAM-01
+cannot connect to VM-CLA-S02-DIA-CAM-01:X
+cannot connect to VM-CLA-S02-DIA-CAM-01:Y
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaX
+cannot connect to VM-CLA-S02-DIA-CAM-01:SigmaY
+cannot connect to VM-CLA-S02-DIA-CAM-01:DistribX
