@@ -34,25 +34,26 @@ class Functions():
     def getXBPM(self,ctrl,bpm,N):
         x=[]
         for i in range(N):
+            print bpm
             x.append(ctrl.getXFromPV(bpm))
         return sum(x)/N
 
     def getXScreen(self,ctrl,camera,N):
         x=[]
         for i in range(N):
-            x.append(caget(camera+':X'))
+            x.append(caget(camera+':ANA:X_RBV'))
         return sum(x)/N
 
     def getSigmaXScreen(self,ctrl,camera,N):
         sX=[]
         for i in range(N):
-            sX.append(caget(camera+':SigmaX'))
+            sX.append(caget(camera+':ANA:SigmaX_RBV'))
         return sum(sX)/N
 
     def getSigmaYScreen(self,ctrl,camera,N):
         sY=[]
         for i in range(N):
-            sY.append(caget(camera+':SigmaY'))
+            sY.append(caget(camera+':ANA:SigmaY_RBV'))
         return sum(sY)/N
 
     def isBeamOnScreen(self,screen):
@@ -96,8 +97,11 @@ class Functions():
             self.stepCurrent(magCtrl,dipole,step)
         x_old=0                                                                    #fake start x position
         x=self.getXBPM(bctrl, bpm, N)                                            #All BPM posiotn are fake and based of the previous position
-                                                                                #it wont stay this way for the real procedure
+        print 'x = ', str(x), 'tol = ', str(tol)                                                                        #it wont stay this way for the real procedure
+
         while(x>tol):                                                            #start loop that ramps up dipole current (conitines unitl x<tolerance)
+            print 'x = ', str(x), 'tol = ', str(tol)
+            print '!!!In bend beam!!!: ', str(caget('VM-CLA-C2V-DIA-BPM-01:X'))
             self.stepCurrent(dctrl, dipole, step)
             x_old=x                                                                # keep a note of teh last beam position to roughly predict the effect of the next step
             x=self.getXBPM(bctrl, bpm, N)
@@ -112,6 +116,34 @@ class Functions():
         minimisingInX = False
         if(init_step>0):
             minimisingInX=True
+
+        # '''Quick scan to find rough minimum'''
+        # if(minimisingInX):
+        #     print 'Rough scan in X'
+        #     sX_scan = []
+        #     xrange = np.arange(-50,50,10)
+        #     for x in xrange:
+        #         qctrl.setSI(quad, x)
+        #         self.simulate.run()
+        #         time.sleep(1)
+        #         print(qctrl.getSI(quad))
+        #         sX_scan.append(self.getSigmaXScreen(sctrl,screen,N))
+        #     print sX_scan
+        #     sX_approxmin = xrange[np.argmin(sX_scan)]
+        #     print sX_approxmin
+        # else:
+        #     print 'Rough scan in Y'
+        #     sY_scan = []
+        #     yrange = np.arange(-50,50,10)
+        #     for y in yrange:
+        #         qctrl.setSI(quad, y)
+        #         self.simulate.run()
+        #         time.sleep(1)
+        #         print(qctrl.getSI(quad))
+        #         sY_scan.append(self.getSigmaYScreen(sctrl,screen,N))
+        #     print sY_scan
+        #     sY_approxmin = yrange[np.argmin(sY_scan)]
+        #     print sY_approxmin
 
         if(minimisingInX):
             qctrl.setSI(quad, 0.3)    #depends if +tine or -tive                #set a fake start current
@@ -135,14 +167,16 @@ class Functions():
         while (sX_2<3*sX_initial):                                                #step 'left', i.e reduce current
             sX_1 = sX_2
             I_1 = I_2
-            self.stepCurrent(qctrl, quad, -step)
+            self.stepCurrent(qctrl, quad, step)
             I_2 = QUAD.siWithPol
             if(minimisingInX):
+                print 'Minimising in x'
                 sX_2 =self.getSigmaXScreen(sctrl,screen,N)
             else:
+                print 'Minimising in y'
                 sX_2 =self.getSigmaYScreen(sctrl,screen,N)
-            print 'Current: ', str(I_2)
-            print('Sigma: '+str(sX_2))                            #At this pot we have gone higher than 3*initial_size. Assume straight line and find prediction for 3*
+            print 'Loc1Current: ', str(I_2)
+            print('Loc1Sigma: '+str(sX_2)+' Initial sigma: '+str(sX_initial))                            #At this point we have gone higher than 3*initial_size. Assume straight line and find prediction for 3*
         I3_1 = (3*sX_initial*(I_2 - I_1) + (sX_2*I_1 - sX_1*I_2))/(sX_2 - sX_1)
 
         self.stepCurrent(qctrl, quad, 2*(I_initial - I3_1))                        #predict where the the other location of the size being 3*the initial_size and go there
@@ -158,19 +192,6 @@ class Functions():
             while (sX_2<3*sX_initial):
                 sX_1 = sX_2
                 I_1 = I_2
-                self.stepCurrent(qctrl, quad, step)
-                I_2 = QUAD.siWithPol
-                if(minimisingInX):
-                    sX_2 =self.getSigmaXScreen(sctrl,screen,N)
-                else:
-                    sX_2 =self.getSigmaYScreen(sctrl,screen,N)
-
-                print 'Current: ', str(I_2)
-                print('Sigma: '+str(sX_2))
-        else:
-            while (sX_2>3*sX_initial):
-                sX_1 = sX_2###MAKE ZERO!!!
-                I_1 = I_2
                 self.stepCurrent(qctrl, quad, -step)
                 I_2 = QUAD.siWithPol
                 if(minimisingInX):
@@ -178,14 +199,92 @@ class Functions():
                 else:
                     sX_2 =self.getSigmaYScreen(sctrl,screen,N)
 
-                print 'Current: ', str(I_2)
-                print('Sigma: '+str(sX_2))
+                print 'Loc2Current: ', str(I_2)
+                print('Loc2Sigma: '+str(sX_2)+' Initial sigma: '+str(sX_initial))
+        else:
+            while (sX_2>3*sX_initial):
+                sX_1 = sX_2###MAKE ZERO!!!
+                I_1 = I_2
+                self.stepCurrent(qctrl, quad, step)
+                I_2 = QUAD.siWithPol
+                if(minimisingInX):
+                    sX_2 =self.getSigmaXScreen(sctrl,screen,N)
+                else:
+                    sX_2 =self.getSigmaYScreen(sctrl,screen,N)
+
+                print 'Loc3Current: ', str(I_2)
+                print('Loc3Sigma: '+str(sX_2)+' Initial sigma: '+str(sX_initial))
 
         I3_2 = (3*sX_initial*(I_2 - I_1) + (sX_2*I_1 - sX_1*I_2))/(sX_2 - sX_1)
 
         qctrl.setSI(quad,0.5*(I3_1 + I3_2))            #assume minimum is half way in between these places so set magnet current to that
         self.simulate.run()
-        print('Minimizied Beta with '+quad+' on '+screen)
+        print('Minimised Beta with '+quad+' on '+screen)
+
+    def minimizeBeta2(self,qctrl,quad,sctrl,screen,init_step,N=1):
+        QUAD = qctrl.getMagObjConstRef(quad)
+        minimisingInX = False
+        if(init_step>0):
+            minimisingInX=True
+
+        '''Quick scan to find rough minimum'''
+        if(minimisingInX):
+            print 'Rough scan in X'
+            sX_scan = []
+            xrange = np.arange(-50,50,10)
+            for x in xrange:
+                qctrl.setSI(quad, x)
+                self.simulate.run()
+                time.sleep(1)
+                print(qctrl.getSI(quad))
+                sX_scan.append(self.getSigmaXScreen(sctrl,screen,N))
+            print sX_scan
+            sX_approxmin = xrange[np.argmin(sX_scan)]
+            print sX_approxmin
+
+            print 'Fine scan in X'
+            sX_scan2 = []
+            xrange2 = np.arange(sX_approxmin-10,sX_approxmin+10,2)
+            for x in xrange2:
+                qctrl.setSI(quad, x)
+                self.simulate.run()
+                time.sleep(1)
+                print(qctrl.getSI(quad))
+                sX_scan2.append(self.getSigmaXScreen(sctrl,screen,N))
+            print sX_scan2
+            sX_min = xrange2[np.argmin(sX_scan2)]
+            print sX_min
+            qctrl.setSI(quad,sX_min)
+        else:
+            print 'Rough scan in Y'
+            sY_scan = []
+            yrange = np.arange(-50,50,10)
+            for y in yrange:
+                qctrl.setSI(quad, y)
+                self.simulate.run()
+                time.sleep(1)
+                print(qctrl.getSI(quad))
+                sY_scan.append(self.getSigmaYScreen(sctrl,screen,N))
+            print sY_scan
+            sY_approxmin = yrange[np.argmin(sY_scan)]
+            print sY_approxmin
+
+            print 'Fine scan in Y'
+            sY_scan2 = []
+            yrange2 = np.arange(sY_approxmin-10,sY_approxmin+10,2)
+            for y in yrange2:
+                qctrl.setSI(quad, y)
+                self.simulate.run()
+                time.sleep(1)
+                print(qctrl.getSI(quad))
+                sY_scan2.append(self.getSigmaYScreen(sctrl,screen,N))
+            print sY_scan2
+            sY_min = yrange2[np.argmin(sY_scan2)]
+            print sY_min
+            qctrl.setSI(quad,sY_min)
+
+        self.simulate.run()
+        print('Minimised Beta with '+quad+' on '+screen)
 
     def fixDispersion(self,qctrl,quad,sctrl,screen,step_size,N=1):
         #THis needs work!!!!
@@ -246,11 +345,13 @@ class Functions():
         fCurrents=[0.90*centering_I,1.1*centering_I]
         fPositions=[(c[1]*0.90*centering_I)+c[0],(c[1]*1.10*centering_I)+c[0]]
         print(c)
-        print('Determinied Dispersion with '+dipole+' and '+screen)
+        print('Determined Dispersion with '+dipole+' and '+screen)
         print('dispersion'+str(c[1])+' and  beamsigma is'+str(sX))
+        print 'dCurrents', str(dCurrents)
+        print 'fCurrents', str(fCurrents)
         return c[1],sX,dCurrents,dPositions,fCurrents,fPositions
 
-    '''The Follwing have been altered to work with the online model (400.0033)'''
+    '''The following has been altered to work with the online model (400.0033)'''
     def calcMomSpread(self,dctrl,dipole, Is, I):
         D = dctrl.getMagObjConstRef(dipole)
         mom1= (400.0033/D.magneticLength)*(np.polyval(D.fieldIntegralCoefficients, abs(I-Is))*physics.c*180)/(45*physics.pi*1000000000)
