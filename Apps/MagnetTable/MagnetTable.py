@@ -18,14 +18,13 @@ import numpy as np  # handling polynomials
 import re  # parsing lattice files
 import scipy.constants  # speed of light
 import webbrowser  # to get help
+import functools  # for magnet on/off menu actions
 sys.path.insert(0, r'\\apclara1\ControlRoomApps\Controllers\bin\Release')
 import VELA_CLARA_Magnet_Control as VC_MagCtrl
 import VELA_CLARA_BPM_Control
 # import VELA_CLARA_enums
 # sys.path[0] = r'\\apclara1\ControlRoomApps\Controllers\bin\Release'
 import epics  # for setting momentum
-# import CLARA_Magnet_Control as CLARA_MagCtrl
-from pkg_resources import resource_filename
 sys.path.append('../../Widgets/loggerWidget')
 try:
     import loggerWidget as lw
@@ -235,9 +234,9 @@ class Window(QtGui.QMainWindow):
         for mag_menu_name, mods in (('visible', 'Ctrl+'), ('all', 'Ctrl+Shift+')):
             mag_menu = QtGui.QMenu(machine_menu)
             mag_menu.setTitle('&{} magnets'.format(mag_menu_name.title()))
-            self.createMenuItem('All o&n...', mag_menu, shortcut=mods+'+', event=lambda: self.magnetsOn(mag_menu_name))
-            self.createMenuItem('All o&ff...', mag_menu, shortcut=mods+'-').setEnabled(False)
-            self.createMenuItem('&Degauss', mag_menu, shortcut=mods+'G').setEnabled(False)
+            self.createMenuItem('All o&n...', mag_menu, shortcut=mods+'+', event=functools.partial(self.powerMagnets, 'on', mag_menu_name))
+            self.createMenuItem('All o&ff...', mag_menu, shortcut=mods+'-', event=functools.partial(self.powerMagnets, 'off', mag_menu_name))
+            self.createMenuItem('&Degauss', mag_menu, shortcut=mods+'G', event=functools.partial(self.degaussMagnets, mag_menu_name))
             machine_menu.addAction(mag_menu.menuAction())
 
         for mag, types in magnet_types:
@@ -568,7 +567,13 @@ class Window(QtGui.QMainWindow):
             set_current = magnet.current_spin.value() if offline else magnet.ref.siWithPol
             read_current = magnet.current_spin.value() if offline else magnet.ref.riWithPol
             magnet_on = magnet.ref.psuState == VC_MagCtrl.MAG_PSU_STATE.MAG_PSU_ON
-            if not magnet_on:
+            degaussing = magnet.ref.isDegaussing
+            magnet.current_spin.setEnabled(not degaussing)
+            magnet.k_spin.setEnabled(not degaussing)
+            if degaussing:
+                # light orange when magnets are being degaussed, and disable spin boxes
+                magnet.magnet_frame.setStyleSheet('background-color: rgb(255, 178, 102);')
+            elif not magnet_on:
                 # red background to highlight magnets that are OFF
                 magnet.magnet_frame.setStyleSheet('background-color: rgb(139, 0, 0);')
                 magnet.warning_icon.setPixmap(pixmap('error'))
@@ -599,6 +604,8 @@ class Window(QtGui.QMainWindow):
                 '<br><a href="{}/{}">Switch magnet ON</a>'.format(magnet.section.id, magnet.ref.name)
             if mag_type == 'DIP':
                 online_text += '<br>Section momentum: {:.3f} MeV/c'.format(magnet.section.momentum_spin.value())
+            if degaussing:
+                online_text += '<p style="color:red"><b>Degaussing</b>: {} steps remaining</p>'.format(magnet.ref.remainingDegaussSteps)
             magnet.online_info.setText(online_text)
         for bpm in self.bpms.values():
             bpm.x_label.setText('<b>{:.3f} mm</b>\t'.format(bpm.ref.xPV))
@@ -607,8 +614,6 @@ class Window(QtGui.QMainWindow):
     def onlineInfoLinkClicked(self, url):
         """A link was clicked in the 'online info' box."""
         section, magnet = str(url).split('/')
-        print(section, magnet)
-        print(magnet_controllers)
         magnet_controllers[section].switchONpsu(magnet)
 
 
@@ -884,11 +889,20 @@ class Window(QtGui.QMainWindow):
             magnet.restore_button.setEnabled(False)
             magnet.restore_button.setToolTip('')
 
-    def magnetsOn(self, mag_group):
-        print(mag_group)
-        for magnet in self.magnets:
+    def powerMagnets(self, on_off, mag_group):
+        """Switch magnets on or off, either visible or all."""
+        self.statusBar().showMessage('Switching {} magnets {}.'.format(mag_group, on_off.upper()), msecs=10000)
+        on_state = VC_MagCtrl.MAG_PSU_STATE.MAG_PSU_ON if on_off == 'on' else VC_MagCtrl.MAG_PSU_STATE.MAG_PSU_OFF
+        for magnet in self.magnets.values():
             if mag_group == 'all' or magnet.magnet_frame.isVisible():
-                magnet.ref.PSU = VC_MagCtrl.MAG_PSU_STATE.MAG_PSU_ON
+                magnet.ref.PSU = on_state
+
+    def degaussMagnets(self, mag_group):
+        """Degauss magnets, either visible or all."""
+        self.statusBar().showMessage('Degaussing {} magnets...'.format(mag_group), msecs=30000)
+        for magnet in self.magnets.values():
+            if mag_group == 'all' or magnet.magnet_frame.isVisible():
+                magnet_controllers[magnet.section.id].degauss(magnet.name)
 
     def machineModeChanged(self):
         mode = self.sender().mode  # Each "change mode" menu item has a 'mode' attribute
