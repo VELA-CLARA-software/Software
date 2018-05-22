@@ -150,6 +150,7 @@ class magnetAppController(object):
         # so guard against that
         try:
             self.mainView.updateMagnetWidgets()
+            #self.mainView.updateMagnetDegaussButton()
         finally:
             self.widgetUpdateTimer.start(self.widgetTimerUpdateTime_ms)
     # mainView buttons
