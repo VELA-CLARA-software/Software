@@ -13,14 +13,13 @@ calibration_type = 'calibration_type'
 bunch_charge = 'bunch_charge'
 bpm_name = 'bpm_name'
 bpm_status = 'bpm_status'
-scope_name = 'scope_name'
-scope_status = 'scope_status'
+charge_name = 'charge_name'
+charge_status = 'charge_status'
 scan_status = 'scan_status'
-scope_monitoring = 'scope_monitoring'
+charge_monitoring = 'charge_monitoring'
 all_values_set = 'all_values_set'
 ready_to_go = 'ready_to_go'
-scope_values = 'scope_values'
-scope_channel = 'scope_channel'
+charge_values = 'charge_values'
 set_start = 'set_start'
 set_end = 'set_end'
 get_ra1 = 'get_ra1'
@@ -67,20 +66,21 @@ q_cal = 'q_cal'
 plots_done = 'plots_done'
 values_saved = 'values_saved'
 machine_mode = 'machine_mode'
+scan_log = 'scan_log'
+scan_type = 'scan_type'
 
 all_value_keys = [time_stamp,
                   calibration_type,
                   bunch_charge,
                   bpm_name,
                   bpm_status,
-                  scope_name,
-                  scope_status,
+                  charge_name,
+                  charge_status,
                   scan_status,
-                  scope_monitoring,
+                  charge_monitoring,
                   all_values_set,
                   ready_to_go,
-                  scope_values,
-                  scope_channel,
+                  charge_values,
                   set_start,
                   set_end,
                   set_sa1_current,
@@ -126,7 +126,9 @@ all_value_keys = [time_stamp,
                   q_cal,
                   plots_done,
                   values_saved,
-                  machine_mode
+                  machine_mode,
+                  scan_log,
+                  scan_type
                   ]
 
 class bpm_calibrate_data_base(QObject):
@@ -152,14 +154,13 @@ class bpm_calibrate_data_base(QObject):
     values[bunch_charge] = dummy_dbl + 1
     values[bpm_name] = dummy_str
     values[bpm_status] = False
-    values[scope_name] = dummy_str
-    values[scope_channel] = dummy_str
-    values[scope_status] = False
+    values[charge_name] = dummy_str
+    values[charge_status] = False
     values[scan_status] = 'dummy_str'
-    values[scope_monitoring] = dummy_str
+    values[charge_monitoring] = dummy_str
     values[all_values_set] = False
     values[ready_to_go] = False
-    values[scope_values] = []
+    values[charge_values] = []
     values[set_start] = dummy_long
     values[set_end] = dummy_long + 1
     values[set_sa1_current] = dummy_long + 2
@@ -206,13 +207,15 @@ class bpm_calibrate_data_base(QObject):
     values[plots_done] = False
     values[values_saved] = False
     values[machine_mode] = dummy_str
+    values[scan_log] = dummy_str
+    values[scan_type] = dummy_str
     # amp_pwr_mean_data = {}
 
     #logger
     logger = None
     _bpm_config = None
     _log_config = None
-    _scope_config = None
+    _charge_config = None
 
     last_fwd_kly_pwr = None
     last_amp = None
@@ -240,11 +243,11 @@ class bpm_calibrate_data_base(QObject):
         bpm_calibrate_data_base._bpm_config = value
 
     @property
-    def scope_config(self):
-        return bpm_calibrate_data_base._scope_config
-    @scope_config.setter
-    def scope_config(self,value):
-        bpm_calibrate_data_base._scope_config = value
+    def charge_config(self):
+        return bpm_calibrate_data_base._charge_config
+    @charge_config.setter
+    def charge_config(self,value):
+        bpm_calibrate_data_base._charge_config = value
 
     def start_logging(self):
         self.logger.start_data_logging()

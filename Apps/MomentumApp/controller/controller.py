@@ -14,6 +14,7 @@ class Controller():
 		'''define model and view'''
 		self.view = view
 		self.model = model
+		print 'HERE WE ARE(controller)!!!!: BPM readout =', str(model.Cbpms.getXFromPV('C2V-BPM01'))
 		'''1 Create Momentum Graphs'''
 		monitor = pg.GraphicsView()
 		layout = pg.GraphicsLayout(border=(100,100,100))
@@ -36,7 +37,7 @@ class Controller():
 		self.positionGraph_2.addItem(self.bg2)
 		self.positionGraph_3.addItem(self.bg3)
 		layout.nextRow()
-		'''1.2 Create plave to diplay and image of a YAG screen'''
+		'''1.2 Create place to diplay an image of a YAG screen'''
 		yagImageBox = layout.addViewBox(lockAspect=True, colspan=2)
 		self.YAGImage = pg.ImageItem(np.random.normal(size=(2560,2160)))
 		yagImageBox.addItem(self.YAGImage)
@@ -73,7 +74,7 @@ class Controller():
 		'''Threads for updating graphs and labels'''
 		self.timer = QtCore.QTimer()
 		self.timer.timeout.connect(self.updateDisplays)
-		self.timer.start(500)
+		self.timer.start(100)
 
 		'''Connections to GUI Buttons'''
 		self.view.pushButton.clicked.connect(self.model.measureMomentum)
@@ -84,20 +85,21 @@ class Controller():
 
 
 	def updateDisplays(self):
+		#print 'HERE WE ARE(updateDisplays)!!!!: BPM readout =', str(self.model.Cbpms.getXFromPV('C2V-BPM01'))
 		self.displayMom.setText('MOMENTUM<br> Current: '+str(self.model.I)+' A<br>'+str(self.model.p)+' = MeV/c')
-		#self.bg1.setOpts(x=self.xdict.keys(), height=[1000*self.model.bpms.getXFromPV('BPM01'),1000*self.model.bpms.getYFromPV('BPM01')], width=1)# replace the random generators with  bpm x read offs
-		#self.bg2.setOpts(x=self.xdict.keys(), height=[1000*self.model.bpms.getXFromPV('BPM02'),1000*self.model.bpms.getYFromPV('BPM02')], width=1)
-		#self.bg3.setOpts(x=self.xdict.keys(), height=[1000*self.model.bpms.getXFromPV('BPM04'),1000*self.model.bpms.getYFromPV('BPM04')], width=1)
+		self.bg1.setOpts(x=self.xdict.keys(), height=[1000*self.model.Cbpms.getXFromPV('S01-BPM01'),1000*self.model.Cbpms.getYFromPV('S01-BPM01')], width=1)# replace the random generators with  bpm x read offs
+		self.bg2.setOpts(x=self.xdict.keys(), height=[1000*self.model.Cbpms.getXFromPV('S02-BPM01'),1000*self.model.Cbpms.getYFromPV('S02-BPM01')], width=1)
+		self.bg3.setOpts(x=self.xdict.keys(), height=[1000*self.model.Cbpms.getXFromPV('C2V-BPM01'),1000*self.model.Cbpms.getYFromPV('C2V-BPM01')], width=1)
 		self.dCurve.setData(x=self.model.dCurrents,y=self.model.dPositions)
 		self.fCurve.setData(x=self.model.fCurrents,y=self.model.fPositions)
 		self.displayDisp.setText('DISPERSION:<br>'+str(self.model.Dispersion)+' m/A')
 		self.displayMom_S.setText('MOMENTUM SPREAD:<br>'+str(self.model.pSpread)+' MeV/c')
 	def refreshImage(self):
-		#image = np.random.normal(size=(2560,2160))
-		cap = cv2.VideoCapture("http://192.168.83.31:7080/MJPG1.mjpg")
-		_,frame = cap.read()
-		self.YAGImage.setImage(np.flip(np.transpose(frame[:,:,0]),1))
-
+		 #image = np.random.normal(size=(2560,2160))
+		 cap = cv2.VideoCapture("http://192.168.83.31:7080/MJPG1.mjpg")
+		 #print cap
+		 _,frame = cap.read()
+		 self.YAGImage.setImage(np.flip(np.transpose(frame[:,:,0]),1))
 
 	def setChecks_mom(self):
 		if self.view.checkBox_all.isChecked()==True:

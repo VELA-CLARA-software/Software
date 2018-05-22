@@ -4,7 +4,9 @@ import time
 import scipy.constants as physics
 import numpy as np
 from scipy.optimize import curve_fit
+from scipy.interpolate import UnivariateSpline
 import random as r
+import csv
 
 degree = physics.pi/180.0
 
@@ -26,7 +28,7 @@ class Model(QObject):
 		self.machineType = machineType
 		self.lineType = lineType
 		self.gunType = gunType
-		self.view.label_MODE.setText('MODE: '+self.machineType+' '+self.lineType+' with '+self.gunType+' Hz gun')
+		self.view.label_MODE.setText('MODE: '+self.machineType+' '+self.lineType+' with '+self.gunType+' gun')
 		self.crestingData = {}
 		for cavity in ['Gun', 'Linac1']:
 			self.crestingData[cavity]={'approxPhaseData': [], 'approxChargeData': [], 'approxPhaseFit': [], 'approxChargeFit': [], 'finePhaseFit': [],
@@ -52,6 +54,7 @@ class Model(QObject):
 		print('clara Method')
 		self.parameters['magnets']=[]
 		self.parameters['bpm'] = 'C2V-BPM01'
+		#self.parameters['bpm'] = 'S02-BPM01'
 		self.parameters['scope'] = 'WCM'
 
 	def velaMethod(self):
@@ -66,101 +69,56 @@ class Model(QObject):
 			print('1. Setting up Magnets')
 			self.setUpMagnets(self.parameters['magnets'])
 
-	def gunWCMCrester(self):
-		print('2. Approximately Finding Crest')
-		self.disableButtons()
-		self.crester = findingGunCrestWCM(self)
-		self.crester.setPhase.connect(self.setPhase)
-		self.wcmQ.connect(self.crester.updateWCMCharge)
-
+	def startWCMTimer(self, crester):
+		self.wcmQ.connect(crester.updateWCMCharge)
 		self.timer = QTimer()
 		self.timer.timeout.connect(lambda : self.getWCMCharge(self.parameters['scope']))
 		self.timer.start(100)
 
-		self.thread = QThread()  # no parent!
-		self.crester.moveToThread(self.thread)
-		self.thread.started.connect(self.crester.findingCrest)
-		self.disableButtons()
-		self.crester.finished.connect(self.printFinished)
-		self.crester.finished.connect(self.timer.stop)
-		self.crester.finished.connect(self.enableButtons)
-		self.crester.finishedSuccesfully.connect(lambda : self.gunPhaser(offset=False))
-		self.crester.finished.connect(self.thread.quit)
+	def startBPMTimer(self, crester):
+		self.bpmX.connect(crester.updateBPMPosition)
+		self.timer = QTimer()
+		self.timer.timeout.connect(lambda : self.getBPMPosition(self.parameters['bpm']))
+		self.timer.start(100)
 
-		self.thread.start()
+	class crestingMethod(QObject):
+		def __init__(self, parent, timer, phaser, crestingfunction, *args, **kwargs):
+			parent.disableButtons()
+			self.crester = crestingfunction(parent, *args, **kwargs)
+			self.crester.setPhase.connect(parent.setPhase)
+
+			timer(self.crester)
+
+			self.thread = QThread()  # no parent!
+			self.crester.moveToThread(self.thread)
+			self.thread.started.connect(self.crester.findingCrest)
+
+			self.crester.finished.connect(parent.printFinished)
+			self.crester.finished.connect(parent.timer.stop)
+			self.crester.finished.connect(parent.enableButtons)
+			self.crester.finishedSuccesfully.connect(lambda : phaser(offset=False))
+			self.crester.finished.connect(self.thread.quit)
+
+			self.thread.start()
+
+	def gunWCMCrester(self):
+		print('2. Approximately Finding Crest')
+		self.cresterObject = self.crestingMethod(self, self.startWCMTimer, self.gunPhaser, findingGunCrestWCM)
 
 	def linacCresterQuick(self):
 		print('x. Approximately Finding Crest')
-		self.disableButtons()
-		self.crester = findingLinacCrestQuick(self)
-		self.crester.setPhase.connect(self.setPhase)
-		self.bpmX.connect(self.crester.updateBPMPosition)
+		self.cresterObject = self.crestingMethod(self, self.startBPMTimer, self.linac1Phaser, findingLinacCrestQuick)
 
-		self.timer = QTimer()
-		self.timer.timeout.connect(lambda : self.getBPMPosition(self.parameters['bpm']))
-		self.timer.start(100)
-
-		self.thread = QThread()  # no parent!
-		self.crester.moveToThread(self.thread)
-		self.thread.started.connect(self.crester.findingCrest)
-		self.disableButtons()
-		self.crester.finished.connect(self.printFinished)
-		self.crester.finished.connect(self.timer.stop)
-		self.crester.finished.connect(self.enableButtons)
-		self.crester.finishedSuccesfully.connect(lambda : self.linac1Phaser(offset=False))
-		self.crester.finished.connect(self.thread.quit)
-
-		self.thread.start()
 
 	def gunBPMCrester(self):
 		print('3. Finding Crest of Gun')
-		self.disableButtons()
-		self.crester = findingGunCrest(self, self.parameters['magnets'], self.parameters['bpm'], \
+		self.cresterObject = self.crestingMethod(self, self.startBPMTimer, self.gunPhaser, findingGunCrest, self.parameters['magnets'], self.parameters['bpm'], \
 			int(self.view.rangeSetGun.text()), int(self.view.nScanningSetGun.text()), int(self.view.nShotsSetGun.text()))
-		self.crester.setPhase.connect(self.setPhase)
-		self.bpmX.connect(self.crester.updateBPMPosition)
-
-		self.timer = QTimer()
-		self.timer.timeout.connect(lambda : self.getBPMPosition(self.parameters['bpm']))
-		self.timer.start(100)
-
-		self.thread = QThread()  # no parent!
-		self.crester.moveToThread(self.thread)
-		self.thread.started.connect(self.crester.findingCrest)
-		self.disableButtons()
-
-		self.crester.finished.connect(self.printFinished)
-		self.crester.finished.connect(self.timer.stop)
-		self.crester.finishedSuccesfully.connect(lambda : self.gunPhaser(offset=False))
-		self.crester.finished.connect(self.enableButtons)
-		self.crester.finished.connect(self.thread.quit)
-
-		self.thread.start()
 
 	def linacBPMCrester(self):
 		print('5. Finding Crest of Linac')
-		self.disableButtons()
-		self.crester = findingLinacCrest(self, self.parameters['magnets'], self.parameters['bpm'], \
+		self.cresterObject = self.crestingMethod(self, self.startBPMTimer, self.linac1Phaser, findingLinacCrest, self.parameters['magnets'], self.parameters['bpm'], \
 			int(self.view.rangeSetLinac1.text()), int(self.view.nScanningSetLinac1.text()), int(self.view.nShotsSetLinac1.text()))
-		self.crester.setPhase.connect(self.setPhase)
-		self.bpmX.connect(self.crester.updateBPMPosition)
-
-		self.timer = QTimer()
-		self.timer.timeout.connect(lambda : self.getBPMPosition(self.parameters['bpm']))
-		self.timer.start(100)
-
-		self.thread = QThread()  # no parent!
-		self.crester.moveToThread(self.thread)
-		self.thread.started.connect(self.crester.findingCrest)
-		self.disableButtons()
-
-		self.crester.finished.connect(self.printFinished)
-		self.crester.finished.connect(self.timer.stop)
-		self.crester.finishedSuccesfully.connect(lambda : self.linac1Phaser(offset=False))
-		self.crester.finished.connect(self.enableButtons)
-		self.crester.finished.connect(self.thread.quit)
-
-		self.thread.start()
 
 	def printFinished(self):
 		print "Thread Finished!"
@@ -171,22 +129,23 @@ class Model(QObject):
 
 	def enableButtons(self):
 		self.setButtonState(True)
+		self.view.finishButton.clicked.disconnect(self.finishRunning)
+		self.view.finishButton.hide()
 		self.view.abortButton.clicked.disconnect(self.abortRunning)
 		self.view.abortButton.hide()
 
 	def disableButtons(self):
 		self.setButtonState(False)
+		self.view.finishButton.clicked.connect(self.finishRunning)
+		self.view.finishButton.show()
 		self.view.abortButton.clicked.connect(self.abortRunning)
 		self.view.abortButton.show()
 
 	def gunPhaser(self, offset=True):
 		if isinstance(self.calibrationPhase['Gun'],(float, int)) and isinstance(int(self.view.gunPhaseSet.text()), (float, int)):
-			if offset == True:
-				# print('Setting Gun Phase to ', str(self.calibrationPhase['Gun'] + int(self.view.gunPhaseSet.text())), ' (',self.view.gunPhaseSet.text()),')'
-				self.setGunPhase(self.calibrationPhase['Gun'] + int(self.view.gunPhaseSet.text()))
-			else:
-				# print('Setting Gun Phase to ', str(self.calibrationPhase['Gun']))
-				self.setGunPhase(self.calibrationPhase['Gun'])
+			set_phase = self.calibrationPhase['Gun'] + (float(self.view.gunPhaseSet.text()) if offset else 0)
+			# print('Setting Gun Phase to ', set_phase)
+			self.setGunPhase(set_phase)
 
 	def linac1Phaser(self, offset=True):
 		if isinstance(self.calibrationPhase['Linac1'],(float, int)) and isinstance(int(self.view.linac1PhaseSet.text()), (float, int)):
@@ -199,7 +158,7 @@ class Model(QObject):
 
 	def setUpMagnets(self,magnets):
 		deguassingList=[]
-		print('Deguassing magnets...')
+		print('Degaussing magnets...')
 		for magnet in magnets:
 			if self.view.checkBox_deguassQ.isChecked() and self.magnets.isAQuad(magnet):
 				deguassingList.append(magnet)
@@ -211,7 +170,7 @@ class Model(QObject):
 				deguassingList.append(magnet)
 			#else:
 			#	print('Magnet '+magnet+' is off or not selected to be deguassed.')
-		print('Magnet to be Deguassed: '+str(deguassingList))
+		print('Magnet to be Degaussed: '+str(deguassingList))
 		self.activeMags = mag.std_vector_string()
 		self.activeMags.extend(deguassingList)
 		self.magnets.degauss(self.activeMags,True)
@@ -247,8 +206,12 @@ class Model(QObject):
 
 	def abortRunning(self):
 		if hasattr(self,'thread'):
-			self.crester.stop()
-			self.thread.quit()
+			self.cresterObject.crester.stop()
+			self.cresterObject.thread.quit()
+
+	def finishRunning(self):
+		if hasattr(self,'thread'):
+			self.cresterObject.crester.stop()
 
 	def setPhase(self, cavity, value):
 		if cavity == 'Gun':
@@ -283,10 +246,12 @@ class Model(QObject):
 		self.wcmQ.emit(self.scope.getCharge(scope))
 
 	def saveData(self):
-		data = np.array(zip(self.finePhaseData, self.fineBPMData))
-		np.savetxt('fineCrestingData.txt', data, delimiter=',')
-		data = np.array(zip(self.approxPhaseData, self.approxPhaseFit))
-		np.savetxt('approxCrestingData.txt', data, delimiter=',')
+		for cavity in ['Gun', 'Linac1']:
+			my_dict = self.crestingData[cavity]
+			with open(cavity+'_CrestingData.csv', 'wb') as f:  # Just use 'w' mode in 3.x
+			    w = csv.DictWriter(f, my_dict.keys())
+			    w.writeheader()
+			    w.writerow(my_dict)
 
 class crestingObject(QObject):
 
@@ -295,12 +260,20 @@ class crestingObject(QObject):
 	setPhase = pyqtSignal(str, float)
 	data = []
 	_isRunning = True
+	_finish = False
 
 	def stop(self):
 		print 'stopping worker!'
 		self._isRunning = False
 
+	def finish(self):
+		print 'finishing worker!'
+		self._finish = True
+
 class crestingObjectQuick(crestingObject):
+
+	stepSize = 5
+
 	def __init__(self, parent):
 		super(crestingObjectQuick, self).__init__()
 		self.parent = parent
@@ -315,11 +288,11 @@ class crestingObjectQuick(crestingObject):
 		self.parent.crestingData[self.cavity]['approxChargeStd'] = []
 
 	def findingCrest(self):
-		for phase in np.arange(-180,180,2.5):
+		for phase in np.arange(-180,180,self.stepSize):
 			self.setPhase.emit(self.cavity, phase)
 			data, stddata = self.getData()
 			self.setData(phase, data, stddata)
-			if not self._isRunning:
+			if not self._isRunning or self._finish:
 				break
 		if self._isRunning:
 			self.doFit()
@@ -337,9 +310,9 @@ class crestingObjectQuick(crestingObject):
 	def setFinalPhase(self, phase):
 		self.parent.calibrationPhase[self.cavity] = phase + self.offset
 
-	def fitness_function(self, list, a, b, c):
+	def fitness_function(self, list, a, b, c, d, e, f):
 		x = np.array(list)
-		return a*x**2 + b*x + c
+		return f*x**5 + e*x**4 + d*x**3 + a*x**2 + b*x + c
 
 	def doFit(self):
 		try:
@@ -347,17 +320,29 @@ class crestingObjectQuick(crestingObject):
 			xData, yData = zip(*cutData)
 			popt, pcov = curve_fit(self.fitness_function, xData, yData, p0=None)
 			self.setFitData(np.array(xData), self.fitness_function(np.array(xData), *popt))
+			# print(popt)
+			# Find the peak, assuming the fit function is a polynomial
+			# We have to take the derivative, so e*x**4 -> 4*e*x**3 etc.
+			crest_phase = np.real(np.roots(np.multiply(range(len(popt) - 1, 0, -1), popt[:-1]))[0])
+			print 'Crest phase is ', crest_phase
 
-			self.setFinalPhase(-popt[1]/(2*popt[0])) # Assume Max Charge is -15deg from crest
+			# self.setFinalPhase(-popt[1]/(2*popt[0])) # Assume Max Charge is -15deg from crest
+			self.setFinalPhase(crest_phase)
 			print 'Calibration phase is', self.parent.calibrationPhase[self.cavity]
 			self.finishedSuccesfully.emit()
-		except:
+		except Exception as e:
+			print(e)
 			print 'Error in fitting!'
 
 class findingGunCrestWCM(crestingObjectQuick):
 
 	cavity = 'Gun'
-	offset = +15
+	offset = 0
+
+	def __init__(self, parent):
+		super(findingGunCrestWCM, self).__init__(parent)
+		# from wiki: http://projects.astec.ac.uk/VELAManual2/index.php/Momentum
+		# For 5 MeV/c beam a phase shift of approximately +30 deg will put the beam close to maximum momentum
 
 	def updateWCMCharge(self, value):
 		self.data.append(value)
@@ -367,18 +352,46 @@ class findingGunCrestWCM(crestingObjectQuick):
 			time.sleep(0.1)
 		self.data = []
 		while len(self.data) < 3:
+			if not self._isRunning:
+				break
 			time.sleep(0.1)
 		return [np.mean(self.data), np.std(self.data)]
 
 	def cutData(self):
-		allData = zip(self.parent.crestingData[self.cavity]['approxPhaseData'], self.parent.crestingData[self.cavity]['approxChargeData'])
-		cutData = [a for a in allData if a[1] > 10]
+		"""Return all data where the charge is >= 25% of the maximum."""
+		max_charge = max(self.parent.crestingData[self.cavity]['approxChargeData'])
+		allData = zip(self.parent.crestingData[self.cavity]['approxPhaseData'], self.parent.crestingData[self.cavity]['approxChargeData'], self.parent.crestingData[self.cavity]['approxChargeStd'])
+		cutData = [a for a in allData if a[1] > max_charge / 4 and a[1] > 10]
 		return cutData
+
+	def doFit(self):
+		try:
+			cutData = self.cutData()
+			x, y, std = zip(*cutData)
+			# f = UnivariateSpline(x, y, w=std, k=5)
+
+			# xnew = np.linspace(np.min(x), np.max(x), num=100, endpoint=True)
+			# ynew = f(xnew)
+
+			self.setFitData(np.array(x), np.array(y))
+
+			crest_phase = (x[-1] + x[0]) / 2.0
+
+			print 'Crest phase is ', crest_phase
+
+			# self.setFinalPhase(-popt[1]/(2*popt[0])) # Assume Max Charge is -15deg from crest
+			self.setFinalPhase(crest_phase)
+			print 'Calibration phase is', self.parent.calibrationPhase[self.cavity]
+			self.finishedSuccesfully.emit()
+		except Exception as e:
+			print(e)
+			print 'Error in fitting!'
 
 class findingLinacCrestQuick(crestingObjectQuick):
 
 	cavity = 'Linac1'
 	offset = 0
+	stepSize = 5
 
 	def updateBPMPosition(self, value):
 		self.data.append(value)
@@ -387,12 +400,39 @@ class findingLinacCrestQuick(crestingObjectQuick):
 		self.data = []
 		while len(self.data) < 3:
 			time.sleep(0.1)
-		return [np.mean(self.data), np.std(self.data)] if np.std(self.data) > 0.005 else [20,0]
+			if not self._isRunning:
+				break
+		return [np.mean(self.data), np.std(self.data)] if np.std(self.data) > 0.001 else [20,0]
 
 	def cutData(self):
-		allData = zip(self.parent.crestingData[self.cavity]['approxPhaseData'], self.parent.crestingData[self.cavity]['approxChargeData'])
-		cutData = [a for a in allData if a[1] < 20]
+		allData = zip(self.parent.crestingData[self.cavity]['approxPhaseData'], self.parent.crestingData[self.cavity]['approxChargeData'], self.parent.crestingData[self.cavity]['approxChargeStd'])
+		cutData = [a for a in allData if a[1] == 20]
 		return cutData
+
+	def doFit(self):
+		try:
+			cutData = self.cutData()
+			x, y, std = zip(*cutData)
+			#splineF = UnivariateSpline(x, y, w=std, k=5)
+
+			#xnew = np.linspace(np.min(x), np.max(x), num=100, endpoint=True)
+			#ynew = splineF(xnew)
+			crest_phase = np.mean(x)-180
+			#print 'Cutdata', xnew
+
+			#self.setFitData(xnew, ynew)
+
+			#crest_phase = xnew[np.argmin(ynew)]
+
+			print 'Crest phase is ', crest_phase
+
+			# self.setFinalPhase(-popt[1]/(2*popt[0])) # Assume Max Charge is -15deg from crest
+			self.setFinalPhase(crest_phase)
+			print 'Calibration phase is', self.parent.calibrationPhase[self.cavity]
+			self.finishedSuccesfully.emit()
+		except Exception as e:
+			print(e)
+			print 'Error in fitting!'
 
 class crestingObjectFine(crestingObject):
 	def __init__(self, parent, magnets, bpm, phiRange, phiSteps, bpmSamples):
@@ -401,7 +441,9 @@ class crestingObjectFine(crestingObject):
 		self.magnets = magnets
 		self.bpm = bpm
 		self.phiRange = phiRange
+		# print('phiRange', phiRange)
 		self.phiSteps = phiSteps
+		# print('phiSteps', phiSteps)
 		self.bpmSamples = bpmSamples
 		self.resetDataArray()
 
@@ -420,21 +462,27 @@ class crestingObjectFine(crestingObject):
 			self.approxcrest = self.parent.getPhase(self.cavity)
 		else:
 			self.approxcrest = self.parent.calibrationPhase[self.cavity]
-		for phase in np.linspace(self.approxcrest-self.phiRange, self.approxcrest+self.phiRange, self.phiSteps):
+		self.approxcrest = self.parent.getPhase(self.cavity)
+		self.minPhase = self.approxcrest-self.phiRange
+		self.maxPhase = self.approxcrest+self.phiRange
+		for phase in np.linspace(self.minPhase, self.maxPhase, self.phiSteps):
 			self.setPhase.emit(self.cavity, phase)
 			time.sleep(0.1)
 			currphase = self.parent.getPhase(self.cavity)
+			self.data = []
 			while len(self.data) < 3:
 				time.sleep(0.1)
 			self.data = []
 			while len(self.data) < self.bpmSamples:
 				time.sleep(0.1)
+				if not self._isRunning:
+					break
 			data = np.mean(self.data)
 			if np.std(self.data) > 0.0005:
 				self.parent.crestingData[self.cavity]['fineBPMData'].append(data)
 				self.parent.crestingData[self.cavity]['fineBPMStd'].append(np.std(self.data))
 				self.parent.crestingData[self.cavity]['finePhaseData'].append(currphase)
-			if not self._isRunning:
+			if not self._isRunning or self._finish:
 				break
 
 		if self._isRunning:
@@ -442,15 +490,19 @@ class crestingObjectFine(crestingObject):
 		else:
 			self.finished.emit()
 
+	def fitting_equation(self, x, a, b, crest):
+		return a + b * (np.sin((crest - (x + 180)) * degree)**2)
+
+	def calculateCrest(self, popt):
+		return ((180 + popt[2]) % 360) - 180
+
 	def fitting(self):
 
-		def fitting_equation(x, a, b, crest):
-			return a + b * (np.cos((crest - (x + 180)) * degree)**2)
-
-		popt, pcov = curve_fit(fitting_equation, self.parent.crestingData[self.cavity]['finePhaseData'], self.parent.crestingData[self.cavity]['fineBPMData'], \
-		sigma=self.parent.crestingData[self.cavity]['fineBPMStd'],	p0=[0,10,self.approxcrest])
+		popt, pcov = curve_fit(self.fitting_equation, self.parent.crestingData[self.cavity]['finePhaseData'], self.parent.crestingData[self.cavity]['fineBPMData'], \
+			sigma=self.parent.crestingData[self.cavity]['fineBPMStd'],	p0=[0,10,self.approxcrest])
+		print(popt)
 		self.parent.crestingData[self.cavity]['finePhaseFit'] = np.array(self.parent.crestingData[self.cavity]['finePhaseData'])
-		self.parent.crestingData[self.cavity]['fineBPMFit'] = fitting_equation(self.parent.crestingData[self.cavity]['finePhaseFit'], *popt)
+		self.parent.crestingData[self.cavity]['fineBPMFit'] = self.fitting_equation(self.parent.crestingData[self.cavity]['finePhaseFit'], *popt)
 
 		self.parent.calibrationPhase[self.cavity] = ((180 + popt[2]) % 360) - 180
 		print 'Calibration phase is', self.parent.calibrationPhase[self.cavity]
@@ -461,9 +513,45 @@ class findingGunCrest(crestingObjectFine):
 
 	cavity = 'Gun'
 
+	def fitting(self):
+		x = self.parent.crestingData[self.cavity]['finePhaseData']
+		y = self.parent.crestingData[self.cavity]['fineBPMData']
+		f = UnivariateSpline(x, y, w=self.parent.crestingData[self.cavity]['fineBPMStd'], k=5)
+
+		xnew = np.linspace(np.min(x), np.max(x), num=100, endpoint=True)
+		ynew = f(xnew)
+
+		crest = xnew[np.argmin(ynew)]
+
+		self.parent.crestingData[self.cavity]['finePhaseFit'] = xnew
+		self.parent.crestingData[self.cavity]['fineBPMFit'] = ynew
+
+		self.parent.calibrationPhase[self.cavity] = crest
+		print 'Calibration phase is', self.parent.calibrationPhase[self.cavity]
+		self.finishedSuccesfully.emit()
+		self.finished.emit()
+
 class findingLinacCrest(crestingObjectFine):
 
 	cavity = 'Linac1'
+
+	def fitting(self):
+		x = self.parent.crestingData[self.cavity]['finePhaseData']
+		y = self.parent.crestingData[self.cavity]['fineBPMData']
+		f = UnivariateSpline(x, y, w=self.parent.crestingData[self.cavity]['fineBPMStd'], k=5)
+
+		xnew = np.linspace(np.min(x), np.max(x), num=100, endpoint=True)
+		ynew = f(xnew)
+
+		crest = xnew[np.argmin(ynew)]
+
+		self.parent.crestingData[self.cavity]['finePhaseFit'] = xnew
+		self.parent.crestingData[self.cavity]['fineBPMFit'] = ynew
+
+		self.parent.calibrationPhase[self.cavity] = crest
+		print 'Calibration phase is', self.parent.calibrationPhase[self.cavity]
+		self.finishedSuccesfully.emit()
+		self.finished.emit()
 
 class setUpGun(QObject):
 
