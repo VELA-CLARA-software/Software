@@ -184,8 +184,8 @@ class Controller():
                         npData = np.array(data).reshape((1280, 1080))
                     self.Image.setImage(np.flip(np.transpose(npData), 1))
                     # self.histogram.plot(np.histogram(npData.flatten()))
-                    self.Image.setLevels([self.view.spinBox_minLevel.value(),
-                                          self.view.spinBox_maxLevel.value()], update=True)
+                    # self.Image.setLevels([self.view.spinBox_minLevel.value(),
+                                          # self.view.spinBox_maxLevel.value()], update=True)
         else:
             self.view.acquire_pushButton.setText('Start Acquiring')
             self.view.acquire_pushButton.setStyleSheet("background-color: red")
