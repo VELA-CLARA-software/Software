@@ -7,6 +7,7 @@ from scipy.optimize import curve_fit
 from scipy.interpolate import UnivariateSpline
 import random as r
 import csv
+from  functools import partial
 
 degree = physics.pi/180.0
 
@@ -53,8 +54,8 @@ class Model(QObject):
 	def claraMethod(self):
 		print('clara Method')
 		self.parameters['magnets']=[]
-		self.parameters['bpm'] = 'C2V-BPM01'
-		#self.parameters['bpm'] = 'S02-BPM01'
+		self.parameters['dispersive_bpm'] = 'C2V-BPM01'
+		self.parameters['linac_rough_bpm'] = 'S02-BPM01'
 		self.parameters['scope'] = 'WCM'
 
 	def velaMethod(self):
@@ -75,10 +76,10 @@ class Model(QObject):
 		self.timer.timeout.connect(lambda : self.getWCMCharge(self.parameters['scope']))
 		self.timer.start(100)
 
-	def startBPMTimer(self, crester):
+	def startBPMTimer(self, crester, bpm):
 		self.bpmX.connect(crester.updateBPMPosition)
 		self.timer = QTimer()
-		self.timer.timeout.connect(lambda : self.getBPMPosition(self.parameters['bpm']))
+		self.timer.timeout.connect(lambda : self.getBPMPosition(bpm))
 		self.timer.start(100)
 
 	class crestingMethod(QObject):
@@ -106,18 +107,20 @@ class Model(QObject):
 		self.cresterObject = self.crestingMethod(self, self.startWCMTimer, self.gunPhaser, findingGunCrestWCM)
 
 	def linacCresterQuick(self):
-		print('x. Approximately Finding Crest')
-		self.cresterObject = self.crestingMethod(self, self.startBPMTimer, self.linac1Phaser, findingLinacCrestQuick)
-
+		print('4. Approximately Finding Crest')
+		timer = partial(self.startBPMTimer, bpm=self.parameters['linac_rough_bpm'])
+		self.cresterObject = self.crestingMethod(self, timer, self.linac1Phaser, findingLinacCrestQuick)
 
 	def gunBPMCrester(self):
 		print('3. Finding Crest of Gun')
-		self.cresterObject = self.crestingMethod(self, self.startBPMTimer, self.gunPhaser, findingGunCrest, self.parameters['magnets'], self.parameters['bpm'], \
+		timer = partial(self.startBPMTimer, bpm=self.parameters['dispersive_bpm'])
+		self.cresterObject = self.crestingMethod(self, timer, self.gunPhaser, findingGunCrest, self.parameters['magnets'], self.parameters['dispersive_bpm'], \
 			int(self.view.rangeSetGun.text()), int(self.view.nScanningSetGun.text()), int(self.view.nShotsSetGun.text()))
 
 	def linacBPMCrester(self):
 		print('5. Finding Crest of Linac')
-		self.cresterObject = self.crestingMethod(self, self.startBPMTimer, self.linac1Phaser, findingLinacCrest, self.parameters['magnets'], self.parameters['bpm'], \
+		timer = partial(self.startBPMTimer, bpm=self.parameters['dispersive_bpm'])
+		self.cresterObject = self.crestingMethod(self, timer, self.linac1Phaser, findingLinacCrest, self.parameters['magnets'], self.parameters['dispersive_bpm'], \
 			int(self.view.rangeSetLinac1.text()), int(self.view.nScanningSetLinac1.text()), int(self.view.nShotsSetLinac1.text()))
 
 	def printFinished(self):
@@ -171,9 +174,9 @@ class Model(QObject):
 			#else:
 			#	print('Magnet '+magnet+' is off or not selected to be deguassed.')
 		print('Magnet to be Degaussed: '+str(deguassingList))
-		self.activeMags = mag.std_vector_string()
-		self.activeMags.extend(deguassingList)
-		self.magnets.degauss(self.activeMags,True)
+		# self.activeMags = mag.std_vector_string()
+		# self.activeMags.extend(deguassingList)
+		self.magnets.degauss(deguassingList,True)
 
 		print('Switching off magnets...')
 		switchOfFList=[]
@@ -341,8 +344,6 @@ class findingGunCrestWCM(crestingObjectQuick):
 
 	def __init__(self, parent):
 		super(findingGunCrestWCM, self).__init__(parent)
-		# from wiki: http://projects.astec.ac.uk/VELAManual2/index.php/Momentum
-		# For 5 MeV/c beam a phase shift of approximately +30 deg will put the beam close to maximum momentum
 
 	def updateWCMCharge(self, value):
 		self.data.append(value)
@@ -358,7 +359,7 @@ class findingGunCrestWCM(crestingObjectQuick):
 		return [np.mean(self.data), np.std(self.data)]
 
 	def cutData(self):
-		"""Return all data where the charge is >= 25% of the maximum."""
+		"""Return all data where the charge is >= 25% of the maximum and is at least 10pC"""
 		max_charge = max(self.parent.crestingData[self.cavity]['approxChargeData'])
 		allData = zip(self.parent.crestingData[self.cavity]['approxPhaseData'], self.parent.crestingData[self.cavity]['approxChargeData'], self.parent.crestingData[self.cavity]['approxChargeStd'])
 		cutData = [a for a in allData if a[1] > max_charge / 4 and a[1] > 10]
@@ -379,7 +380,6 @@ class findingGunCrestWCM(crestingObjectQuick):
 
 			print 'Crest phase is ', crest_phase
 
-			# self.setFinalPhase(-popt[1]/(2*popt[0])) # Assume Max Charge is -15deg from crest
 			self.setFinalPhase(crest_phase)
 			print 'Calibration phase is', self.parent.calibrationPhase[self.cavity]
 			self.finishedSuccesfully.emit()
@@ -413,20 +413,10 @@ class findingLinacCrestQuick(crestingObjectQuick):
 		try:
 			cutData = self.cutData()
 			x, y, std = zip(*cutData)
-			#splineF = UnivariateSpline(x, y, w=std, k=5)
-
-			#xnew = np.linspace(np.min(x), np.max(x), num=100, endpoint=True)
-			#ynew = splineF(xnew)
 			crest_phase = np.mean(x)-180
-			#print 'Cutdata', xnew
-
-			#self.setFitData(xnew, ynew)
-
-			#crest_phase = xnew[np.argmin(ynew)]
 
 			print 'Crest phase is ', crest_phase
 
-			# self.setFinalPhase(-popt[1]/(2*popt[0])) # Assume Max Charge is -15deg from crest
 			self.setFinalPhase(crest_phase)
 			print 'Calibration phase is', self.parent.calibrationPhase[self.cavity]
 			self.finishedSuccesfully.emit()
@@ -441,9 +431,7 @@ class crestingObjectFine(crestingObject):
 		self.magnets = magnets
 		self.bpm = bpm
 		self.phiRange = phiRange
-		# print('phiRange', phiRange)
 		self.phiSteps = phiSteps
-		# print('phiSteps', phiSteps)
 		self.bpmSamples = bpmSamples
 		self.resetDataArray()
 
@@ -500,7 +488,7 @@ class crestingObjectFine(crestingObject):
 
 		popt, pcov = curve_fit(self.fitting_equation, self.parent.crestingData[self.cavity]['finePhaseData'], self.parent.crestingData[self.cavity]['fineBPMData'], \
 			sigma=self.parent.crestingData[self.cavity]['fineBPMStd'],	p0=[0,10,self.approxcrest])
-		print(popt)
+
 		self.parent.crestingData[self.cavity]['finePhaseFit'] = np.array(self.parent.crestingData[self.cavity]['finePhaseData'])
 		self.parent.crestingData[self.cavity]['fineBPMFit'] = self.fitting_equation(self.parent.crestingData[self.cavity]['finePhaseFit'], *popt)
 

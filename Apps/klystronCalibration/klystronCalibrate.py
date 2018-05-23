@@ -36,7 +36,7 @@ class klystronCalibrate(QMainWindow):
         self.gunKLYFWDPowerPV = PVObject('CLA-GUN-LRF-CTRL-01:ad1:ch1:power_remote.POWER')
         self.gunGUNFWDPowerPV = PVObject('CLA-GUN-LRF-CTRL-01:ad1:ch3:power_remote.POWER')
         self.ampPV = PVObject('CLA-GUN-LRF-CTRL-01:vm:dsp:sp_amp:amplitude')
-        self.ampPV.writeAccess = False
+        self.ampPV.writeAccess = True
         self.wavePlot = waveformPlot([self.gunKLYFWDPowerPV,self.gunGUNFWDPowerPV])
         # self.wavePV.newValue.connect(self.wavePlot.newWaveform)
         self.h5file = tables.open_file('klystron_ampset.h5', mode = "w", title = 'Klystron vs amp set')
