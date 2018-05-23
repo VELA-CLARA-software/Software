@@ -11,6 +11,7 @@ from GUI.GUI_magnetAppMainView import GUI_magnetAppMainView
 from GUI.GUI_FileLoad import GUI_FileLoad
 from GUI.GUI_FileSave import GUI_FileSave
 from operator import itemgetter
+import time
 import sys
 
 # this class handles everything
@@ -63,8 +64,9 @@ class magnetAppController(object):
             mag.MACHINE_AREA.VELA_INJ:'VELA_Injector',
             mag.MACHINE_AREA.CLARA_PH1:'CLARA_PH1',
             mag.MACHINE_AREA.CLARA_2_BA1:'CLARA_2_BA1',
-            mag.MACHINE_AREA.CLARA_2_BA2:'CLARA_2_BA2'
-            # mag.MACHINE_AREA.CLARA_PHASE_1:'CLARA PHASE 1 Magnets',
+            mag.MACHINE_AREA.CLARA_2_BA2:'CLARA_2_BA2',
+            mag.MACHINE_AREA.CLARA_2_BA1_BA2:'CLARA_2_BA1_BA2'
+            #mag.MACHINE_AREA.CLARA_PHASE_1:'CLARA PHASE 1 Magnets',
             }
 #        for i in sys.path:
 #            print i
@@ -317,18 +319,30 @@ class magnetAppController(object):
         self.dburtSaveView.hide()
 
     def handle_fileLoadSelect(self):
+        burt_applied = False
         if self.haveDBurtAndNotInOfflineMode():
             print "self.haveDBurtAndNotInOfflineMode() is TRUE"
             if self.dburtLoadView.dburtType == self.dburtLoadView.allMagnets:
                 print("all")
-                self.localMagnetController.applyDBURT(self.dburtLoadView.selectedFile)
+                burt_applied = self.localMagnetController.applyDBURT(
+                        self.dburtLoadView.selectedFile)
             elif self.dburtLoadView.dburtType == self.dburtLoadView.quadMagnets:
-                self.localMagnetController.applyDBURTQuadOnly(self.dburtLoadView.selectedFile)
+                burt_applied = self.localMagnetController.applyDBURTQuadOnly(
+                        self.dburtLoadView.selectedFile)
             elif self.dburtLoadView.dburtType == self.dburtLoadView.corrMagnets:
-                self.localMagnetController.applyDBURTCorOnly(self.dburtLoadView.selectedFile)
+                burt_applied = self.localMagnetController.applyDBURTCorOnly(
+                        self.dburtLoadView.selectedFile)
         else:
             print "self.haveDBurtAndNotInOfflineMode() is FALSE"
-        self.dburtLoadView.done(1)
+        if burt_applied:
+            print 'burt load failed'
+            self.dburtLoadView.burtLoadSuccess()
+            #time.sleep(2)
+            self.dburtLoadView.done(1)
+        else:
+            print 'burt load failed'
+            self.dburtLoadView.burtLoadFailed()
+
 
     def haveDBurtAndNotInOfflineMode(self):
         self.ret = True
@@ -339,7 +353,7 @@ class magnetAppController(object):
         return self.ret
 
     def launchPythonMagnetController(self):
-        print os.environ["EPICS_CA_ADDR_LIST"]
+        #print os.environ["EPICS_CA_ADDR_LIST"]
         if self.machineMode == mag.MACHINE_MODE.VIRTUAL:
             os.environ["EPICS_CA_SERVER_PORT"] = "6000"
 

@@ -82,56 +82,9 @@
       </widget>
      </item>
      <item>
-      <widget class="QRadioButton" name="VELA_BA1">
+      <widget class="QRadioButton" name="CLARA_2_BA1_BA2">
        <property name="text">
-        <string>VELA  BA1 Magnets</string>
-       </property>
-       <attribute name="buttonGroup">
-        <string notr="true">machineAreaButtons</string>
-       </attribute>
-      </widget>
-     </item>
-     <item>
-      <widget class="QRadioButton" name="VELA_BA2">
-       <property name="text">
-        <string>VELA  BA2 Magnets</string>
-       </property>
-       <attribute name="buttonGroup">
-        <string notr="true">machineAreaButtons</string>
-       </attribute>
-      </widget>
-     </item>
-     <item>
-      <widget class="QRadioButton" name="CLARA_PHASE_1">
-       <property name="text">
-        <string>CLARA PHASE 1 Magnets</string>
-       </property>
-       <attribute name="buttonGroup">
-        <string notr="true">machineAreaButtons</string>
-       </attribute>
-      </widget>
-     </item>
-     <item>
-      <widget class="QRadioButton" name="CLARA_2_VELA">
-       <property name="text">
-        <string>CLARA 2 VELA</string>
-       </property>
-       <attribute name="buttonGroup">
-        <string notr="true">machineAreaButtons</string>
-       </attribute>
-      </widget>
-     </item>
-     <item>
-      <widget class="QRadioButton" name="CLARA_2_BA1">
-       <property name="text">
-        <string>CLARA 2 BA1</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QRadioButton" name="CLARA_2_BA2">
-       <property name="text">
-        <string>CLARA 2 BA2</string>
+        <string>CLARA 2 BA1 and BA2</string>
        </property>
       </widget>
      </item>
@@ -149,14 +102,9 @@
       </spacer>
      </item>
     </layout>
-    <zorder>CLARA_PHASE_1</zorder>
-    <zorder>VELA_BA2</zorder>
-    <zorder>VELA_BA1</zorder>
     <zorder>VELA_INJ</zorder>
     <zorder>verticalSpacer_2</zorder>
-    <zorder>CLARA_2_VELA</zorder>
-    <zorder>CLARA_2_BA1</zorder>
-    <zorder>CLARA_2_BA2</zorder>
+    <zorder>CLARA_2_BA1_BA2</zorder>
    </widget>
    <widget class="QGroupBox" name="modeSelection">
     <property name="geometry">
