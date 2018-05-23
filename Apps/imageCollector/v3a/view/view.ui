@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1038</width>
-    <height>753</height>
+    <height>871</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -27,7 +27,7 @@
    <bool>false</bool>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QGridLayout" name="gridLayout" columnstretch="0,1,20,0">
+   <layout class="QGridLayout" name="gridLayout" columnstretch="0,1,20">
     <item row="17" column="0">
      <widget class="QLabel" name="label_8">
       <property name="text">
@@ -51,6 +51,9 @@
     </item>
     <item row="4" column="1">
      <widget class="QSpinBox" name="spinBox_maxLevel">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="maximum">
        <number>65536</number>
       </property>
@@ -89,19 +92,6 @@
       </property>
       <property name="scaledContents">
        <bool>false</bool>
-      </property>
-     </widget>
-    </item>
-    <item row="3" column="0">
-     <widget class="QLabel" name="label_3">
-      <property name="font">
-       <font>
-        <weight>75</weight>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>Min. Level:</string>
       </property>
      </widget>
     </item>
@@ -146,16 +136,6 @@
       </property>
      </widget>
     </item>
-    <item row="4" column="0">
-     <widget class="QSpinBox" name="spinBox_minLevel">
-      <property name="maximum">
-       <number>65536</number>
-      </property>
-      <property name="singleStep">
-       <number>100</number>
-      </property>
-     </widget>
-    </item>
     <item row="18" column="0">
      <widget class="QLabel" name="label_9">
       <property name="text">
@@ -196,25 +176,6 @@
       </property>
      </widget>
     </item>
-    <item row="3" column="1">
-     <widget class="QLabel" name="label_4">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="font">
-       <font>
-        <weight>75</weight>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>Max. Level:</string>
-      </property>
-     </widget>
-    </item>
     <item row="11" column="0" colspan="2">
      <widget class="QPushButton" name="analyse_pushButton">
       <property name="sizePolicy">
@@ -235,7 +196,14 @@
      </widget>
     </item>
     <item row="1" column="0" colspan="2">
-     <widget class="QComboBox" name="cameraName_comboBox"/>
+     <widget class="QListWidget" name="cameraName_comboBox">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>75</height>
+       </size>
+      </property>
+     </widget>
     </item>
     <item row="17" column="1">
      <widget class="QSpinBox" name="maskXRadius_spinBox">
@@ -512,14 +480,49 @@
       </property>
      </widget>
     </item>
-    <item row="0" column="2" rowspan="21">
+    <item row="0" column="2">
+     <widget class="QLabel" name="title_label">
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="2" rowspan="20">
      <layout class="QGridLayout" name="gridLayout_2"/>
+    </item>
+    <item row="4" column="0">
+     <widget class="QSpinBox" name="spinBox_minLevel">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="readOnly">
+       <bool>false</bool>
+      </property>
+      <property name="maximum">
+       <number>65536</number>
+      </property>
+      <property name="singleStep">
+       <number>100</number>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="0" colspan="2">
+     <widget class="QLabel" name="label_3">
+      <property name="font">
+       <font>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Use histogram controls on the right</string>
+      </property>
+     </widget>
     </item>
    </layout>
    <zorder>label_3</zorder>
    <zorder>liveStream_pushButton</zorder>
    <zorder>label</zorder>
-   <zorder>label_4</zorder>
    <zorder>cameraName_comboBox</zorder>
    <zorder>spinBox_minLevel</zorder>
    <zorder>spinBox_maxLevel</zorder>
@@ -547,7 +550,7 @@
    <zorder>maskYRadius_spinBox</zorder>
    <zorder>setMask_pushButton</zorder>
    <zorder>groupBox</zorder>
-   <zorder></zorder>
+   <zorder>title_label</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
