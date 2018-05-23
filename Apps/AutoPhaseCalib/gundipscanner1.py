@@ -49,9 +49,9 @@ class testApp(QMainWindow):
 
     def setUp_Controllers(self):
         self.magInit = mag.init()
-        self.magInit.setVerbose()
+        self.magInit.setQuiet()
         self.bpmInit = bpm.init()
-        self.bpmInit.setQuiet()
+        self.bpmInit.setVerbose()
         self.llrfInit = llrf.init()
         self.llrfInit.setQuiet()
         self.scopeInit = scope.init()
@@ -72,6 +72,7 @@ class testApp(QMainWindow):
 
     def readMonitor(self):
         return self.bpm.getXFromPV(self.monitor)
+        #return self.bpm.getCharge(self.monitor)
 
     def crestingFunction(self):
         self.startButton.setEnabled(False)
@@ -113,18 +114,18 @@ class testApp(QMainWindow):
             time.sleep(0.1)
             app.processEvents()
             self.data.append(self.readMonitor())
-        return [np.mean(self.data), np.std(self.data)] if np.std(self.data) > 0.001 else [20,0]
+        return [np.mean(self.data), np.std(self.data)] if np.std(self.data) > 0.01 else [20,0]
 
     def cutData(self):
         allData = zip(self.crestingData[self.actuator]['approxPhaseData'], self.crestingData[self.actuator]['approxChargeData'], self.crestingData[self.actuator]['approxChargeStd'])
-        cutData = [a for a in allData if a[1] == 20]
+        cutData = [a for a in allData if a[1] < 15 and a[1] > -15 ]
         return cutData
 
     def doFit(self):
         try:
             cutData = self.cutData()
             x, y, std = zip(*cutData)
-            crest_phase = np.mean(x)-180
+            crest_phase = np.mean(x)
 
             print 'Crest phase is ', crest_phase
 

@@ -20,9 +20,9 @@ class testApp(QMainWindow):
     #actuator = 'linac1'
     monitor = 'C2V-BPM01'
     samplesPerReading = 3
-    start = 5
-    stop = 12
-    stepSize = 0.1
+    start = 30
+    stop = 120
+    stepSize = 1
     data = []
 
     def __init__(self, parent=None):
@@ -49,7 +49,7 @@ class testApp(QMainWindow):
 
     def setUp_Controllers(self):
         self.magInit = mag.init()
-        self.magInit.setVerbose()
+        self.magInit.setQuiet()
         self.bpmInit = bpm.init()
         self.bpmInit.setQuiet()
         self.llrfInit = llrf.init()
@@ -65,13 +65,13 @@ class testApp(QMainWindow):
 
     def changeActuator(self, value):
         #self.linac1llrf.setPhiSP(value)
-        print(testApp.actuator)
-        print(value)
         self.magnets.setSI(testApp.actuator,value)
 
 
     def readMonitor(self):
-        return self.bpm.getXFromPV(self.monitor)
+        #return self.bpm.getXFromPV(self.monitor)
+        return self.bpm.getBPMQBuffer(self.monitor)
+
 
     def crestingFunction(self):
         self.startButton.setEnabled(False)
@@ -113,20 +113,29 @@ class testApp(QMainWindow):
             time.sleep(0.1)
             app.processEvents()
             self.data.append(self.readMonitor())
-        return [np.mean(self.data), np.std(self.data)] if np.std(self.data) > 0.001 else [20,0]
+        return [np.mean(self.data), np.std(self.data)] if np.std(self.data) > 0.01 else [0,0]
 
     def cutData(self):
+    	max_signal = max(self.crestingData[self.actuator]['approxChargeData'])
         allData = zip(self.crestingData[self.actuator]['approxPhaseData'], self.crestingData[self.actuator]['approxChargeData'], self.crestingData[self.actuator]['approxChargeStd'])
-        cutData = [a for a in allData if a[1] == 20]
+        #cutData = [a for a in allData if a[1] < 15 and a[1] > -15 ]
+        cutData = [a for a in allData if a[1] > max_signal *(3/4) and a[1] > 10]
+        print 'ypeak is', max_signal
+        print cutData[-1]
+        print cutData[1]
         return cutData
 
     def doFit(self):
         try:
             cutData = self.cutData()
             x, y, std = zip(*cutData)
-            crest_phase = np.mean(x)-180
+            crest_phase = np.mean(x)
+            crest_phase2 = (x[-1] + x[1])/3
+            #peak_phase = np.max(x)
 
             print 'Crest phase is ', crest_phase
+            print 'Crest phase2 is ', crest_phase2
+            #print 'Peak phase is ', peak_phase
 
             # self.setFinalPhase(crest_phase)
             print 'Calibration phase is', self.calibrationPhase[self.actuator]

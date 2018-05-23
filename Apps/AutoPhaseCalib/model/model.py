@@ -362,7 +362,7 @@ class findingGunCrestWCM(crestingObjectQuick):
 		"""Return all data where the charge is >= 25% of the maximum and is at least 10pC"""
 		max_charge = max(self.parent.crestingData[self.cavity]['approxChargeData'])
 		allData = zip(self.parent.crestingData[self.cavity]['approxPhaseData'], self.parent.crestingData[self.cavity]['approxChargeData'], self.parent.crestingData[self.cavity]['approxChargeStd'])
-		cutData = [a for a in allData if a[1] > max_charge / 4 and a[1] > 10]
+		cutData = [a for a in allData if a[1] > max_charge / 4 and a[1] > 2]
 		return cutData
 
 	def doFit(self):
@@ -413,7 +413,8 @@ class findingLinacCrestQuick(crestingObjectQuick):
 		try:
 			cutData = self.cutData()
 			x, y, std = zip(*cutData)
-			crest_phase = np.mean(x)-180
+			#crest_phase = np.mean(x)-180
+			crest_phase = ((x[-1] + x[0]) / 2.0)-180
 
 			print 'Crest phase is ', crest_phase
 
