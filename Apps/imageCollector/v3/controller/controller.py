@@ -25,7 +25,7 @@ class Controller():
         self.counter=0
         self.counter=0
         self.view.acquire_pushButton.clicked.connect(self.model.acquire)
-        self.view.cameraName_comboBox.currentIndexChanged.connect(self.changeCamera)
+        self.view.cameraName_comboBox.currentRowChanged.connect(self.changeCamera)
         self.view.save_pushButton.clicked.connect(lambda: self.model.collectAndSave(self.view.numImages_spinBox.value()))
         self.view.liveStream_pushButton.clicked.connect(lambda: webbrowser.open(self.model.selectedCameraDAQ[0].streamingIPAddress))
         self.view.setMask_pushButton.clicked.connect(lambda: self.model.setMask(self.view.maskX_spinBox.value(),
@@ -57,7 +57,7 @@ class Controller():
         self.Image = pg.ImageItem(np.random.normal(size=(1280, 1080)))
         self.Image.scale(2,2)
         self.ImageBox= layout.addPlot(lockAspect=True)
-        self.view.gridLayout.addWidget(monitor, 2, 2, 23, 3)
+        self.view.gridLayout.addWidget(monitor, 1, 2, 23, 3)  # row, col, rowspan, colspan
         STEPS = np.linspace(0, 1, 4)
         CLRS = ['k', 'r', 'y', 'w']
         a = np.array([pg.colorTuple(pg.Color(c)) for c in CLRS])
@@ -77,7 +77,7 @@ class Controller():
     def changeCamera(self):
         print 'changeCamera called'
         comboBox = self.view.cameraName_comboBox
-        camera_name = str(comboBox.currentText())
+        camera_name = str(comboBox.currentItem().text())
         self.view.title_label.setText('<h1>{}</h1>'.format(camera_name))
         print 'Setting camera to', camera_name
         self.model.camerasDAQ.setCamera(camera_name)
