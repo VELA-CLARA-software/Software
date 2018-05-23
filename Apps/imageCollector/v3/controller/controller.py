@@ -11,7 +11,6 @@ import numpy as np
 from decimal import *
 
 
-
 class Controller():
 
     def __init__(self, view, model):
@@ -23,7 +22,8 @@ class Controller():
         self.model = model
         self.runFeedback = False
         self.counter=0
-        self.counter=0
+        # self.histogram = pg.PlotWidget()
+        # self.view.gridLayout.addWidget(self.histogram, 21, 0, 1, 1)
         self.view.acquire_pushButton.clicked.connect(self.model.acquire)
         self.view.cameraName_comboBox.currentRowChanged.connect(self.changeCamera)
         self.view.save_pushButton.clicked.connect(lambda: self.model.collectAndSave(self.view.numImages_spinBox.value()))
@@ -57,23 +57,43 @@ class Controller():
         self.Image = pg.ImageItem(np.random.normal(size=(1280, 1080)))
         self.Image.scale(2,2)
         self.ImageBox= layout.addPlot(lockAspect=True)
-        self.view.gridLayout.addWidget(monitor, 1, 2, 23, 3)  # row, col, rowspan, colspan
+        self.view.gridLayout.addWidget(monitor, 1, 2, 20, 3)  # row, col, rowspan, colspan
+        # build colour map: black-red-yellow-white
         STEPS = np.linspace(0, 1, 4)
         CLRS = ['k', 'r', 'y', 'w']
         a = np.array([pg.colorTuple(pg.Color(c)) for c in CLRS])
         clrmp = pg.ColorMap(STEPS, a)
         lut = clrmp.getLookupTable()
-        self.Image.setLookupTable(lut)
+        # self.Image.setLookupTable(lut)
         self.ImageBox.setRange(xRange=[0,2560],yRange=[0,2160])
         self.ImageBox.addItem(self.Image)
         self.roi = pg.EllipseROI([0, 0], [500, 500], movable=False)
         self.ImageBox.addItem(self.roi)
         self.vLineMLE = self.ImageBox.plot(x=[1000,1000],y=[900,1100],pen='g')
         self.hLineMLE = self.ImageBox.plot(x=[900,1100],y=[1000,1000],pen='g')
+        histogram = pg.HistogramLUTItem(self.Image)
+        grad = histogram.gradient
+        # Show the colour map on the histogram, and make the outermost ticks draggable
+        grad.setColorMap(clrmp)
+        grad.getTick(0).sigMoving.connect(self.tickMoving)
+        grad.getTick(1).movable = False
+        grad.getTick(2).movable = False
+        grad.getTick(3).sigMoving.connect(self.tickMoving)
+        layout.addItem(histogram)
+        
         #self.ImageBox.removeItem(self.vLineMLE)
         #self.ImageBox.removeItem(self.hLineMLE)
         # self.ImageView.autoLevels()
 
+    def tickMoving(self, tick):
+        """We're moving one of the outermost histogram tick marks - adjust the other two to the correct position."""
+        ref = tick.view  # weakref to the view
+        grad = ref()
+        min_val, max_val = grad.tickValue(0), grad.tickValue(3)  # they are returned in order
+        for i in (1, 2):
+            val = i * (max_val - min_val) / 3 + min_val
+            grad.setTickValue(i, val)
+        
     def changeCamera(self):
         print 'changeCamera called'
         comboBox = self.view.cameraName_comboBox
@@ -163,6 +183,7 @@ class Controller():
                     else:
                         npData = np.array(data).reshape((1280, 1080))
                     self.Image.setImage(np.flip(np.transpose(npData), 1))
+                    # self.histogram.plot(np.histogram(npData.flatten()))
                     self.Image.setLevels([self.view.spinBox_minLevel.value(),
                                           self.view.spinBox_maxLevel.value()], update=True)
         else:
