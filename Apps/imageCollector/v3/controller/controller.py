@@ -57,7 +57,7 @@ class Controller():
         self.Image = pg.ImageItem(np.random.normal(size=(1280, 1080)))
         self.Image.scale(2,2)
         self.ImageBox= layout.addPlot(lockAspect=True)
-        self.view.gridLayout.addWidget(monitor, 0, 2, 23, 3)
+        self.view.gridLayout.addWidget(monitor, 2, 2, 23, 3)
         STEPS = np.linspace(0, 1, 4)
         CLRS = ['k', 'r', 'y', 'w']
         a = np.array([pg.colorTuple(pg.Color(c)) for c in CLRS])
@@ -77,8 +77,11 @@ class Controller():
     def changeCamera(self):
         print 'changeCamera called'
         comboBox = self.view.cameraName_comboBox
-        self.model.camerasDAQ.setCamera(str(comboBox.currentText()))
-        self.model.camerasIA.setCamera(str(comboBox.currentText()))
+        camera_name = str(comboBox.currentText())
+        self.view.title_label.setText('<h1>{}</h1>'.format(camera_name))
+        print 'Setting camera to', camera_name
+        self.model.camerasDAQ.setCamera(camera_name)
+        self.model.camerasIA.setCamera(camera_name)
 
 
         self.view.numImages_spinBox.setMaximum(self.model.selectedCameraDAQ[0].DAQ.maxShots)
@@ -102,9 +105,6 @@ class Controller():
         self.view.maskXRadius_spinBox.setValue(self.model.selectedCameraIA[0].IA.maskXRad)
         self.view.maskYRadius_spinBox.setValue(self.model.selectedCameraIA[0].IA.maskYRad)
         self.changeEllipse()
-
-        print 'Set camera to ', str(comboBox.currentText())
-
 
     def openImageDir(self):
         QtGui.QFileDialog.getOpenFileNames(self.view.centralwidget, 'Images',
