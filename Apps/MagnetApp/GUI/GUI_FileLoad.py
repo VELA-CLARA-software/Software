@@ -61,6 +61,14 @@ class GUI_FileLoad(QDialog, Ui_FileLoad):
         #self.dirModel.dataChanged[QModelIndex,QModelIndex].connect(self.handle_fileDirectoryChanged2)
         self.textWindowList = []
 
+    def burtLoadFailed(self):
+        self.label.setText(
+                "<font color='red'>)-: !!WARNING!! CLARA did not accept requested "
+                "magnet current settings try re-applying or check file !!WARNING!! :-( </font>")
+
+    def burtLoadSuccess(self):
+        self.label.setText(
+                "<font color='green'>!!Success!! CLARA did not accept all settings :)  </font>")
 
     def handle_fileLoadSelect(self):
         print 'handle_fileLoadSelect'

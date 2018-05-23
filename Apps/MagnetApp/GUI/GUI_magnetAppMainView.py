@@ -51,8 +51,6 @@ class GUI_magnetAppMainView(QtGui.QMainWindow, Ui_magnetAppMainView):
         self.selectNone.clicked.connect( self.deActivateAll )
         self.degauss_default_style = self.selectedDegauss.styleSheet()
 
-
-
     def closeEvent(self,event):
         self.closing.emit()
 

@@ -150,8 +150,6 @@ class GUI_magnetWidget(QMainWindow, Ui_magnetWidget):
         elif self.magRef[0].psuState == MAG_PSU_STATE.MAG_PSU_OFF:
             self.magRef[0].PSU = MAG_PSU_STATE.MAG_PSU_ON
 
-
-
     # set the PSU button colors based on their state
     # CANCER, but it's been refactored out and i'm leaving this here to remind
     # myself how NOT to do things...

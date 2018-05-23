@@ -19,12 +19,35 @@ class GUI_magnetAppStartup(QtGui.QMainWindow, Ui_magnetAppStartup):
         self.setupUi(self)
         # I can't find a *good* way to get the toggled radio button, apart from emitting signals and
         # interpreting them later... meh
-        self.VELA_BA2.toggled.connect(lambda:self.handle_areaRadio(self.VELA_BA2))
-        self.VELA_BA1.toggled.connect(lambda:self.handle_areaRadio(self.VELA_BA1))
-        self.VELA_INJ.toggled.connect(lambda:self.handle_areaRadio(self.VELA_INJ))
-        self.CLARA_PHASE_1.toggled.connect(lambda:self.handle_areaRadio(self.CLARA_PHASE_1))
-        self.CLARA_2_BA1.toggled.connect(lambda:self.handle_areaRadio(self.CLARA_2_BA1))
-        self.CLARA_2_BA2.toggled.connect(lambda:self.handle_areaRadio(self.CLARA_2_BA2))
+        try:
+            self.VELA_BA2.toggled.connect(lambda:self.handle_areaRadio(self.VELA_BA2))
+        except:
+            pass
+        try:
+            self.VELA_BA1.toggled.connect(lambda:self.handle_areaRadio(self.VELA_BA1))
+        except:
+            pass
+        try:
+            self.VELA_INJ.toggled.connect(lambda:self.handle_areaRadio(self.VELA_INJ))
+        except:
+            pass
+        try:
+            self.CLARA_PHASE_1.toggled.connect(lambda:self.handle_areaRadio(self.CLARA_PHASE_1))
+        except:
+            pass
+        try:
+            self.CLARA_2_BA1.toggled.connect(lambda:self.handle_areaRadio(self.CLARA_2_BA1))
+        except:
+            pass
+        try:
+            self.CLARA_2_BA2.toggled.connect(lambda:self.handle_areaRadio(self.CLARA_2_BA2))
+        except:
+            pass
+        try:
+            self.CLARA_2_BA1_BA2.toggled.connect(lambda:self.handle_areaRadio(self.CLARA_2_BA1_BA2))
+        except:
+            pass
+
         self.virtualMode.toggled.connect(lambda:self.handle_modeRadio(self.virtualMode))
         self.physicalMode.toggled.connect(lambda:self.handle_modeRadio(self.physicalMode))
         self.offlineMode.toggled.connect(lambda:self.handle_modeRadio(self.offlineMode))
@@ -38,13 +61,13 @@ class GUI_magnetAppStartup(QtGui.QMainWindow, Ui_magnetAppStartup):
         self.waitMessageLabel.setText("")
         # This dict needs updating when you add in different machine areas
         self.radioAreaTo_ENUM ={
-            self.VELA_BA2.objectName(): MACHINE_AREA.VELA_BA2,
-            self.VELA_BA1.objectName(): MACHINE_AREA.VELA_BA1,
+            #self.VELA_BA2.objectName(): MACHINE_AREA.VELA_BA2,
+            #self.VELA_BA1.objectName(): MACHINE_AREA.VELA_BA1,
             self.VELA_INJ.objectName(): MACHINE_AREA.VELA_INJ,
-            self.CLARA_PHASE_1.objectName(): MACHINE_AREA.CLARA_PH1,
-            self.CLARA_2_BA1.objectName(): MACHINE_AREA.CLARA_2_BA1,
-            self.CLARA_2_BA2.objectName(): MACHINE_AREA.CLARA_2_BA2
-        #self.CLARA_2_VELA.objectName(): MACHINE_AREA.CLARA_2_VELA
+            #self.CLARA_PHASE_1.objectName(): MACHINE_AREA.CLARA_PH1,
+            #self.CLARA_2_BA1.objectName(): MACHINE_AREA.CLARA_2_BA1,
+            self.CLARA_2_BA1_BA2.objectName(): MACHINE_AREA.CLARA_2_BA1_BA2
+            #self.CLARA_2_VELA.objectName(): MACHINE_AREA.CLARA_2_VELA
         }
 
         self.radioModeTo_ENUM = {
@@ -52,6 +75,9 @@ class GUI_magnetAppStartup(QtGui.QMainWindow, Ui_magnetAppStartup):
             self.physicalMode.objectName(): MACHINE_MODE.PHYSICAL,
             self.offlineMode.objectName(): MACHINE_MODE.OFFLINE
         }
+
+
+
     # the radio buttones emit a MACHINE_MODE or MACHINE_AREA enum
     # this is then set as a variable in the  magnetAppController
     def handle_areaRadio(self,r):
