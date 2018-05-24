@@ -8,7 +8,7 @@ import math as m
 import random as r
 import numpy as np
 from numpy.polynomial import polynomial as P
-import copy
+
 
 
 class dummyOM():
@@ -21,11 +21,9 @@ class dummyOM():
 '''This Class contain function to use in a momentum procedure independant '''
 
 
-class Functions(QObject):
-    qctrl_sig = pyqtSignal(float)
-
+class Functions():
     def __init__(self, OM = dummyOM() ):
-        QThread.__init__(self)
+        #QThread.__init__(self)
         self.simulate = OM
 
     def stepCurrent(self,ctrl,magnet,step):
@@ -319,136 +317,81 @@ class Functions(QObject):
         current = roots[-1].real
         return -current
 
-    def get_qctrl_sig(self):
-        print 'in get_qctrl_sig'
-
-    def startBPMTimer(self, crester):
-        self.qctrl_sig.connect(crester.update_qctrl_sig)
-        self.timer = QTimer()
-        self.timer.timeout.connect(lambda : self.getBPMPosition(self.parameters['bpm']))
-        self.timer.start(100)
-
     def using_move_to_thread(self,qctrl,quad,sctrl,screen,init_step,N=1):
-        #self.qctrl = qctrl
-        #self.qctrl = copy.deepcopy(qctrl)
-        print('Function using_move_to_thread')
-        print qctrl
-        print quad
-        print 'did it work??'
-        self.qctrl_sig.emit(0.1)
-        print 'in between'
-        self.get_qctrl_sig()
-        self.cresterObject = self.crestingMethod(self, minimisebetaclass, qctrl,quad,sctrl,screen,init_step,self.simulate)
-        #self.cresterObject = self.crestingMethod(self, self.startWCMTimer, self.gunPhaser, minimisebetaclass)
+        #print '\n\n\n Test in using_move_to_thread:'
+        #self.simulate.run()
+        #print '\n\n\n Simulation ran?'
+        #print 'qctrl1'
+        #print qctrl
+        #print '\n\n\n'
+        app = QCoreApplication([])
+        objThread = QThread()
+        obj = SomeObject()
+        obj.moveToThread(objThread)
+        obj.finished.connect(objThread.quit)
+        objThread.started.connect(obj.minimizeBeta2(qctrl,quad,sctrl,screen,init_step))
+        objThread.finished.connect(app.exit)
+        objThread.start()
+        sys.exit(app.exec_())
 
-    class crestingMethod(QObject):
-		def __init__(self, parent, minimisebetaclass, *args, **kwargs):
-			#parent.disableButtons()
-			self.crester = minimisebetaclass(parent, *args, **kwargs)
-			#self.crester.setPhase.connect(parent.setPhase)
-			#timer(self.crester)
-			self.thread = QThread()  # no parent!
-			self.crester.moveToThread(self.thread)
-			self.thread.started.connect(self.crester.minimizeBeta2)
-			#self.crester.finished.connect(parent.printFinished)
-			#self.crester.finished.connect(parent.timer.stop)
-			#self.crester.finished.connect(parent.enableButtons)
-			#self.crester.finishedSuccesfully.connect(lambda : phaser(offset=False))
-			self.crester.finished.connect(self.thread.quit)
-			self.thread.start()
+class SomeObject(QObject):
 
-class crestingObject(QObject):
-	finished = pyqtSignal()
-	finishedSuccesfully = pyqtSignal()
-	setPhase = pyqtSignal(str, float)
-	data = []
-	_isRunning = True
-	_finish = False
-
-	def stop(self):
-		print 'stopping worker!'
-		self._isRunning = False
-
-	def finish(self):
-		print 'finishing worker!'
-		self._finish = True
-
-class minimisebetaclass(crestingObject):
-    def __init__(self, parent,qctrl,quad,sctrl,screen,init_step,simulate,N=1):
-        super(minimisebetaclass, self).__init__()
-        self.parent = parent
-        #self.resetDataArray()
-        #self.offset = 0
-        #self.qctrl = copy.deepcopy(qctrl)
-        print('minimisebetaclass')
-        #print self.qctrl
-        #print 'did it work2??'
-        self.qctrl = qctrl
-        self.quad = quad
-        self.sctrl = sctrl
-        self.screen = screen
-        self.init_step = init_step
-        self.simulate = simulate
-        self.N = N
-        print self.qctrl
-        print self.quad
-        print 'did it work2??'
-
-    def minimizeBeta3(self):
-        print('minimizeBeta3fn')
-        print self.qctrl
-        print self.quad
-        print 'did it work4??'
-
-    def minimizeBeta2(self):
-        #self.qctrl = qctrl
-        print('minimizeBeta2fn')
-        print self.qctrl
-        print self.quad
-        print 'did it work3??'
-        QUAD = self.qctrl.getMagObjConstRef(self.quad)
+    finished = pyqtSignal()
+    def minimizeBeta2(self,qctrl,quad,sctrl,screen,init_step,N=1):
+        print 'we are heererereerere'
+        #print Functions().TEST
+        self.simulate = Functions.simulate
+        #print Functions.stepCurrent.TEST
+        #print Functions.__init__.TEST
+        #print Functions.init.TEST
+        #self.simulate = simulate
+        #self.getSigmaXScreen = getSigmaXScreen
+        #print 'qctrl2'
+        #print qctrl
+        #print '\n\n\n'
+        QUAD = qctrl.getMagObjConstRef(quad)
         minimisingInX = False
-        if(self.init_step>0):
+        if(init_step>0):
             minimisingInX=True
 
         '''Quick scan to find rough minimum'''
         if(minimisingInX):
             print 'Rough scan in X'
             sX_scan = []
-            xrange = np.arange(-50,50,5)
+            xrange = np.arange(-50,50,10)
             for x in xrange:
-                self.qctrl.setSI(self.quad, x)
+                qctrl.setSI(quad, x)
                 self.simulate.run()
                 time.sleep(0.1)
-                print(self.qctrl.getSI(self.quad))
-                sX_scan.append(Functions.getSigmaXScreen(self.sctrl,self.screen,self.N))
+                print(qctrl.getSI(quad))
+                sX_scan.append(self.getSigmaXScreen(sctrl,screen,N))
             print sX_scan
             sX_approxmin = xrange[np.argmin(sX_scan)]
             print sX_approxmin
 
             print 'Fine scan in X'
             sX_scan2 = []
-            xrange2 = np.arange(sX_approxmin-10,sX_approxmin+10,1)
+            xrange2 = np.arange(sX_approxmin-10,sX_approxmin+10,2)
             for x in xrange2:
-                self.qctrl.setSI(self.quad, x)
+                qctrl.setSI(quad, x)
                 self.simulate.run()
                 time.sleep(0.1)
-                print(self.qctrl.getSI(self.quad))
-                sX_scan2.append(Functions.getSigmaXScreen(self.sctrl,self.screen,self.N))
+                print(qctrl.getSI(quad))
+                sX_scan2.append(self.getSigmaXScreen(sctrl,screen,N))
             print sX_scan2
             sX_min = xrange2[np.argmin(sX_scan2)]
             print sX_min
-            self.qctrl.setSI(self.quad,sX_min)
+            qctrl.setSI(quad,sX_min)
         else:
             print 'Rough scan in Y'
             sY_scan = []
             yrange = np.arange(-50,50,10)
             for y in yrange:
-                self.qctrl.setSI(self.quad, y)
+                qctrl.setSI(quad, y)
                 self.simulate.run()
                 time.sleep(0.1)
-                print(self.qctrl.getSI(self.quad))
-                sY_scan.append(Functions.getSigmaYScreen(self.sctrl,self.screen,self.N))
+                print(qctrl.getSI(quad))
+                sY_scan.append(self.getSigmaYScreen(sctrl,screen,N))
             print sY_scan
             sY_approxmin = yrange[np.argmin(sY_scan)]
             print sY_approxmin
@@ -457,16 +400,16 @@ class minimisebetaclass(crestingObject):
             sY_scan2 = []
             yrange2 = np.arange(sY_approxmin-10,sY_approxmin+10,2)
             for y in yrange2:
-                self.qctrl.setSI(self.quad, y)
+                qctrl.setSI(quad, y)
                 self.simulate.run()
                 time.sleep(0.1)
-                print(self.qctrl.getSI(self.quad))
-                sY_scan2.append(Functions.getSigmaYScreen(self.sctrl,self.screen,self.N))
+                print(qctrl.getSI(quad))
+                sY_scan2.append(self.getSigmaYScreen(sctrl,screen,N))
             print sY_scan2
             sY_min = yrange2[np.argmin(sY_scan2)]
             print sY_min
-            self.qctrl.setSI(self.quad,sY_min)
+            qctrl.setSI(quad,sY_min)
 
         self.simulate.run()
-        print('Minimised Beta with '+self.quad+' on '+self.screen)
-        #self.finished.emit()
+        print('Minimised Beta with '+quad+' on '+screen)
+        self.finished.emit()

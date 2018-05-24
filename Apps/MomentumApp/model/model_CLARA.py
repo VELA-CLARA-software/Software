@@ -3,6 +3,7 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """Ingredients"""
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+from PyQt4.QtCore import QThread, QObject, pyqtSignal, QTimer
 from epics import caget,caput
 import os,sys
 import time
@@ -36,8 +37,10 @@ import momentumFunctions
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-class Model():
-    def __init__(self,view):
+class Model(QObject):
+    def __init__(self,app,view):
+        QThread.__init__(self)
+        self.app = app
         self.view = view
         '''variables to hold important values'''
         self.p = 0                        #momentum
@@ -158,11 +161,11 @@ class Model():
             """2. Set Dispersion"""
             if self.view.checkBox_2_s.isChecked()==True:
                 #2.1 Minimize Beta
-                self.func.minimizeBeta2(self.Cmagnets,'S02-QUAD3',
+                self.func.using_move_to_thread(self.Cmagnets,'S02-QUAD3',
                                         None,'VM-CLA-C2V-DIA-CAM-01',1)
                 #'''Re-instate minimising beta with Quad-04 here!!!'''
-                self.func.minimizeBeta2(self.Cmagnets,'S02-QUAD4',
-                                        None,'VM-CLA-C2V-DIA-CAM-01',-1)
+                #self.func.minimizeBeta2(self.Cmagnets,'S02-QUAD4',
+                #                        None,'VM-CLA-C2V-DIA-CAM-01',-1)
                 #2.2 Set Dispersion Size on Spec Line
                 self.Cmagnets.setSI('DIP01',self.I)
                 #minimizeBeta(self,qctrl,quad,sctrl,screen,init_step,N=1):
