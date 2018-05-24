@@ -1,4 +1,4 @@
-import time, copy, sys
+import time, copy, sys, math
 from epics import caget, caput, cainfo, PV
 import numpy as np
 try:

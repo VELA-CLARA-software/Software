@@ -1,7 +1,11 @@
 import sys, os
-from PyQt5.QtCore import *
-from  PyQt5.QtGui import *
-from  PyQt5.QtWidgets import *
+try:
+    from PyQt4.QtCore import *
+    from PyQt4.QtGui import *
+except ImportError:
+    from PyQt5.QtCore import *
+    from PyQt5.QtGui import *
+    from PyQt5.QtWidgets import *
 import pyqtgraph as pg
 import numpy as np
 import random, time
@@ -92,7 +96,12 @@ class recordRMData(tables.IsDescription):
 class responsePlotterTab(QWidget):
     def __init__(self, actuator=None, parent=None):
         super(responsePlotterTab, self).__init__(parent)
-        self.name = actuator
+        self.name = actuators[actuator]['pv']
+        self.min = float(actuators[actuator]['min'])
+        self.max = float(actuators[actuator]['max'])
+        print 'actuator = ', self.name
+        print 'min = ', self.min
+        print 'max = ', self.max
         self.pv = corrector(self.name, self.name.replace(':SETI',':READI'))
 
         self.layout = QVBoxLayout()
@@ -136,16 +145,16 @@ class responsePlotterTab(QWidget):
             self.monitors[-1].emitAverageSignal.connect(self.verticalPlot.newBPMReading)
 
     def saveData(self):
-        self.h5file = tables.open_file(self.name+'.h5', mode = "w", title = self.name)
+        self.h5file = tables.open_file(self.name.replace(':','-')+'.h5', mode = "w", title = self.name)
         self.rootnode = self.h5file.get_node('/')
         for m in ['horizontal','vertical']:
-            group = self.h5file.create_group('/', m, m+' Data')
+            group = self.h5file.create_group('/', m.replace(':','-'), m+' Data')
             self.savePlotData(group, getattr(self,m+'Plot'))
         self.h5file.close()
 
     def savePlotData(self, group, plot):
         for d in plot.data:
-            table = self.h5file.create_table(group, d, recordRMData, d)
+            table = self.h5file.create_table(group, d.replace(':','-'), recordRMData, d)
             row = table.row
             data = plot.data[d]
             self.saveRow(row, data)
@@ -165,9 +174,7 @@ class responsePlotterTab(QWidget):
         self.resetPlots()
         self.runButton.setEnabled(False)
         self.runButton.clicked.disconnect(self.runResponse)
-        min = -0.1#self.pv.pv.lower_disp_limit
-        max = 0.1#self.pv.pv.upper_disp_limit
-        range = self.generateRange(min, max)
+        range = self.generateRange(self.min, self.max)
         self.progressBar.setMinimum(0)
         self.progressBar.setMaximum(len(range))
         self.progressBar.setValue(0)
@@ -179,7 +186,7 @@ class responsePlotterTab(QWidget):
             for m in self.monitors:
                 m.reset()
             length = np.min([m.length for m in self.monitors])
-            while length < 3:
+            while length < 5:
                 length = np.min([m.length for m in self.monitors])
                 app.processEvents()
             # print ('i = ', i)
@@ -194,14 +201,14 @@ class responsePlotterTab(QWidget):
 
     def generateRange(self, min, max):
         data = []
-        value = 10.0
+        value = 5.0
         while abs(value) > 0.1:
             data.append(value)
             data.append(-1. * value)
             value = value / np.sqrt(2)
         data.append(0)
         data = np.array(data)
-        data = ((data + 10) * ((max-min)/20)) + min
+        data = ((data + 5) * ((max-min)/10)) + min
         return list(sorted(data))
 
 class responsePlot(pg.PlotWidget):
@@ -216,9 +223,11 @@ class responsePlot(pg.PlotWidget):
         self.color = 0
 
     def newLine(self, monitor):
+        print 'new Line = ', monitor
         self.data[monitor] = np.empty((0,2),int)
         self.bpmPlots[monitor] = self.plotItem.plot(symbol='+', symbolPen=pg.mkColor(self.color))
         self.fittedPlots[monitor] = self.plotItem.plot(pen=pg.mkColor(self.color))
+        print 'Lines = ', self.data
         self.color += 1
 
     def reset(self):
@@ -228,9 +237,13 @@ class responsePlot(pg.PlotWidget):
             self.fittedPlots[p].clear()
 
     def newBPMReading(self, actuator, monitor, data):
-        if actuator == self.actuator and monitor in self.data:
-            self.data[monitor] = np.append(self.data[monitor], [data], axis=0)
+        monitor = str(monitor)
+        if actuator == self.actuator and monitor in self.data.keys():
+            self.data[monitor] = np.append(self.data[monitor], [data[:2]], axis=0)
             self.bpmPlots[monitor].setData(self.data[monitor])
+        else:
+            print actuator == self.actuator
+            print monitor in self.data.keys()
 
     def newFittedReading(self, actuator, monitor, data):
         if actuator == self.actuator and monitor in self.data:

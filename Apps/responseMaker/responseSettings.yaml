@@ -1,8 +1,37 @@
 monitors: [
-'CLA-S01-DIA-BPM-01',
-'CLA-S01-DIA-BPM-01',
+'CLA-S02-DIA-BPM-01',
+'CLA-C2V-DIA-BPM-01',
 ]
-actuators: [
-'EBT-INJ-MAG-HCOR-01:SETI',
-'EBT-INJ-MAG-VCOR-01:SETI',
-]
+actuators:
+  S1HCORR01:
+    pv: 'CLA-S01-MAG-HCOR-01:SETI'
+    min: -1
+    max: 1
+  S1VCORR01:
+    pv: 'CLA-S01-MAG-VCOR-01:SETI'
+    min: -1
+    max: 1
+  S1HCORR02:
+    pv: 'CLA-S01-MAG-HCOR-02:SETI'
+    min: -1
+    max: 1
+  S1VCORR02:
+    pv: 'CLA-S01-MAG-VCOR-02:SETI'
+    min: -1
+    max: 1
+  S2HCORR01:
+    pv: 'CLA-S02-MAG-HCOR-01:SETI'
+    min: -1
+    max: 1
+  S2VCORR01:
+    pv: 'CLA-S02-MAG-VCOR-01:SETI'
+    min: -1
+    max: 1
+  S2HCORR02:
+    pv: 'CLA-S02-MAG-HCOR-02:SETI'
+    min: -1
+    max: 1
+  S2VCORR02:
+    pv: 'CLA-S02-MAG-VCOR-02:SETI'
+    min: -1
+    max: 1

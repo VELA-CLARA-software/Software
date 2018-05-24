@@ -67,6 +67,8 @@ class GUI_magnetWidget(QMainWindow, Ui_magnetWidget):
 
         self.menu = QTableWidget(1,2)
         self.menu.setItem(0, 0, QTableWidgetItem("SI Step"))
+        #
+        self.isDegaussing = None
 
 
     def showMenu(self,position):
@@ -138,6 +140,8 @@ class GUI_magnetWidget(QMainWindow, Ui_magnetWidget):
         #     self.updatePSUButton(self.magRef[0].rPSU.psuState, self.PSU_R_State_Button)
         self.RIMeter.setValue(self.magRef[0].riWithPol * self.riMeterScalefactor)
         self.Mag_PSU_State_Button.setText("{:.3f}".format(self.magRef[0].riWithPol))
+        self.isDegaussing = self.magRef[0].isDegaussing
+
 
     def psu_pressed(self):
         print 'psu pressed'
@@ -145,8 +149,6 @@ class GUI_magnetWidget(QMainWindow, Ui_magnetWidget):
             self.magRef[0].PSU = MAG_PSU_STATE.MAG_PSU_OFF
         elif self.magRef[0].psuState == MAG_PSU_STATE.MAG_PSU_OFF:
             self.magRef[0].PSU = MAG_PSU_STATE.MAG_PSU_ON
-
-
 
     # set the PSU button colors based on their state
     # CANCER, but it's been refactored out and i'm leaving this here to remind
