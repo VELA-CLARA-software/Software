@@ -12,15 +12,15 @@ import math as m
 import random as r
 import numpy as np
 from numpy.polynomial import polynomial as P
-#os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
-#os.environ["EPICS_CA_ADDR_LIST"] = "10.10.0.12"
-#os.environ["EPICS_CA_MAX_ARRAY_BYTES"] = "10000000"
-#os.environ["EPICS_CA_SERVER_PORT"]="6000"
+os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
+os.environ["EPICS_CA_ADDR_LIST"] = "10.10.0.12"
+os.environ["EPICS_CA_MAX_ARRAY_BYTES"] = "10000000"
+os.environ["EPICS_CA_SERVER_PORT"]="6000"
 #sys.path.append('\\\\fed.cclrc.ac.uk\\Org\\NLab\ASTeC\\Projects\\VELA\\Software\\OnlineModel')
-#sys.path.append('C:\\Users\\djd63\\Desktop\\VA workshop\\OnlineModel-master\\OnlineModel-master')
+sys.path.append('C:\\Users\\djd63\\Desktop\\VA workshop\\OnlineModel-master\\OnlineModel-master')
 #os.environ["PATH"] = os.environ["PATH"]+";\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release\\root_v5.34.34\\bin\\"
-#sys.path.append('C:\\Users\\djd63\\Desktop\\VA workshop\\Examples Scripts')
-#import SAMPL.v2_developing.sampl as sampl
+sys.path.append('C:\\Users\\djd63\\Desktop\\VA workshop\\Examples Scripts')
+import SAMPL.v2_developing.sampl as sampl
 #sys.path.append('\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Software\\VELA_CLARA_PYDs\\bin\\stagetim')
 sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release')
 os.environ["PATH"] = os.environ["PATH"]+";\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release\\root_v5.34.34\\bin\\"
@@ -63,14 +63,14 @@ class Model(QObject):
         self.pilInit = pil.init()
         self.llrfInit = llrf.init()
         self.camInit = camIA.init()
-        ##self.Vmagnets = self.magInit.VELA_INJ_Magnet_Controller()
-        self.Cmagnets = self.magInit.physical_CLARA_PH1_Magnet_Controller()
-        self.laser = self.pilInit.physical_PILaser_Controller()
-        self.Cbpms = self.bpmInit.physical_CLARA_PH1_BPM_Controller()
+        self.Vmagnets = self.magInit.virtual_VELA_INJ_Magnet_Controller()
+        self.Cmagnets = self.magInit.virtual_CLARA_PH1_Magnet_Controller()
+        self.laser = self.pilInit.virtual_PILaser_Controller()
+        self.Cbpms = self.bpmInit.virtual_CLARA_PH1_BPM_Controller()
         print 'HERE WE ARE(model_CLARA)!!!!: BPM readout =', str(self.Cbpms.getXFromPV('C2V-BPM01'))
         #self.C2Vbpms = self.bpmInit.virtual_CLARA_2_VELA_BPM_Controller()
-        self.gun = self.llrfInit.physical_CLARA_LRRG_LLRF_Controller()
-        self.LINAC01 = self.llrfInit.physical_L01_LLRF_Controller()
+        self.gun = self.llrfInit.virtual_CLARA_LRRG_LLRF_Controller()
+        self.LINAC01 = self.llrfInit.virtual_L01_LLRF_Controller()
         self.Cmagnets.switchONpsu('DIP01')
         self.Cmagnets.switchONpsu('S01-HCOR1')
         self.Cmagnets.switchONpsu('S01-HCOR2')
@@ -90,33 +90,33 @@ class Model(QObject):
         # self.SAMPL.stopElement = 'CV-YAG01'
         # self.SAMPL.initDistrib = 'temp-start.ini'
         # self.SAMPL.initCharge = 0.25
-        #self.gun400 = self.llrfInit.physical_VELA_HRRG_LLRF_Controller()
-        self.cameras = self.camInit.physical_CLARA_Camera_IA_Controller()
+        self.gun400 = self.llrfInit.virtual_VELA_HRRG_LLRF_Controller()
+        self.cameras = self.camInit.virtual_CLARA_Camera_IA_Controller()
         #Setup Virtual Accelerators
         #Cmagnets.switchONpsu('DIP01')
         #cameras.setCamera('C2V-CAM-01')
         self.selectedCamera = self.cameras.getSelectedIARef()
-        self.Cmagnets.setSI('DIP01',91.6)
-        # self.gun400.setAmpMVM(70) #set gun10 instead!
-        # self.gun400.setPhiDEG(-16)
-        # self.LINAC01.setAmpMVM(21)
-        # self.LINAC01.setPhiDEG(-9)
-        # self.SAMPL = sampl.Setup(V_MAG_Ctrl=None,
-        #                     C_S01_MAG_Ctrl=self.Cmagnets,
-        #                     C_S02_MAG_Ctrl=self.Cmagnets,
-        #                     C2V_MAG_Ctrl=self.Cmagnets,
-        #                     LRRG_RF_Ctrl=None,
-        #                     HRRG_RF_Ctrl=self.gun400,
-        #                     L01_RF_Ctrl=self.LINAC01,
-        #                     messages=True)
+        self.Cmagnets.setSI('DIP01',-91.6)
+        self.gun400.setAmpMVM(70)
+        self.gun400.setPhiDEG(-16)
+        self.LINAC01.setAmpMVM(21)
+        self.LINAC01.setPhiDEG(-9)
+        self.SAMPL = sampl.Setup(V_MAG_Ctrl=None,
+                            C_S01_MAG_Ctrl=self.Cmagnets,
+                            C_S02_MAG_Ctrl=self.Cmagnets,
+                            C2V_MAG_Ctrl=self.Cmagnets,
+                            LRRG_RF_Ctrl=None,
+                            HRRG_RF_Ctrl=self.gun400,
+                            L01_RF_Ctrl=self.LINAC01,
+                            messages=True)
 
-        #self.SAMPL.startElement = 'CLA-HRG1-GUN-CAV'
-        #self.SAMPL.stopElement = 'CLA-C2V-DIA-SCR-01-W'
-        #self.SAMPL.initDistribFile = '4k-250pC.ini'
-        #self.gun.setAmpMVM(65)
-        #self.LINAC01.setAmpMVM(20)
-        self.func = momentumFunctions.Functions(OM='')
-        #print("Model Initialized")
+        self.SAMPL.startElement = 'CLA-HRG1-GUN-CAV'
+        self.SAMPL.stopElement = 'CLA-C2V-DIA-SCR-01-W'
+        self.SAMPL.initDistribFile = '4k-250pC.ini'
+        self.gun.setAmpMVM(65)
+        self.LINAC01.setAmpMVM(20)
+        self.func = momentumFunctions.Functions(OM=self.SAMPL)
+        print("Model Initialized")
 
     #Outline of Momentum Measurement Procedure
     def measureMomentum(self):
@@ -141,7 +141,7 @@ class Model(QObject):
             self.I = self.func.bendBeam(self.Cmagnets,'DIP01',
                                         self.Cbpms,'C2V-BPM01',
                                         'YAG01',
-                                         self.predictedI, 0.1)#0.00001                 # tol=0.0001 (metres)
+                                         self.predictedI, 0.00001)                 # tol=0.0001 (metres)
 
         '''4. Convert Current to Momentum'''
         if self.view.checkBox_4.isChecked()==True:
@@ -161,10 +161,8 @@ class Model(QObject):
             """2. Set Dispersion"""
             if self.view.checkBox_2_s.isChecked()==True:
                 #2.1 Minimize Beta
-                self.func.minimizeBeta(self.Cmagnets,'S02-QUAD3',
-                                        None,'CLA-C2V-DIA-CAM-01',1)
-                #self.func.using_move_to_thread(self.Cmagnets,'S02-QUAD3',
-                #                        None,'VM-CLA-C2V-DIA-CAM-01',1)
+                self.func.using_move_to_thread(self.Cmagnets,'S02-QUAD3',
+                                        None,'VM-CLA-C2V-DIA-CAM-01',1)
                 #'''Re-instate minimising beta with Quad-04 here!!!'''
                 #self.func.minimizeBeta2(self.Cmagnets,'S02-QUAD4',
                 #                        None,'VM-CLA-C2V-DIA-CAM-01',-1)
@@ -192,8 +190,8 @@ class Model(QObject):
                 x = self.func.findDispersion(self.Cmagnets,
                                                         'DIP01',
                                                         None,
-                                                        'CLA-C2V-DIA-CAM-01',
-                                                        self.I,20,0.1)
+                                                        'VM-CLA-C2V-DIA-CAM-01',
+                                                        self.I,5,0.1)
                 print x[0]
                 self.Dispersion = x[0]
                 self.beamSigma = x[1]

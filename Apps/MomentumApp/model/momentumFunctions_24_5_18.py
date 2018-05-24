@@ -33,34 +33,31 @@ class Functions(QObject):
         setI = MAG.siWithPol + step
         print('Stepping current to: '+str(setI))
         ctrl.setSI(magnet,setI)
-        #self.simulate.run()
+        self.simulate.run()
 
     def getXBPM(self,ctrl,bpm,N):
         x=[]
         for i in range(N):
-            print ctrl.getXFromPV(bpm)
+            print bpm
             x.append(ctrl.getXFromPV(bpm))
         return sum(x)/N
 
     def getXScreen(self,ctrl,camera,N):
         x=[]
         for i in range(N):
-            print str(camera),', x = ', str(caget(camera+':ANA:X_RBV'))
             x.append(caget(camera+':ANA:X_RBV'))
         return sum(x)/N
 
     def getSigmaXScreen(self,ctrl,camera,N):
         sX=[]
         for i in range(N):
-            print str(camera),', sigma_x = ', str(caget(camera+':ANA:SigmaX_RBV'))
             sX.append(caget(camera+':ANA:SigmaX_RBV'))
         return sum(sX)/N
 
     def getSigmaYScreen(self,ctrl,camera,N):
         sY=[]
         for i in range(N):
-            print str(camera),', sigma_y = ', str(caget(camera+':ANA:SigmaY_RBV'))
-            Y.append(caget(camera+':ANA:SigmaY_RBV'))
+            sY.append(caget(camera+':ANA:SigmaY_RBV'))
         return sum(sY)/N
 
     def isBeamOnScreen(self,screen):
@@ -78,14 +75,14 @@ class Functions(QObject):
         else:
             initialStep = 0.0001
         self.stepCurrent(hctrl, hcor, initialStep)
-        #self.simulate.run()                                                        #take inital step
+        self.simulate.run()                                                        #take inital step
         x2=self.getXBPM(bctrl, bpm, N)
         I2=COR.siWithPol
         while(x2>tol):                                                            # Algorithm loops until the current position is < the tolerance 'tol'
             I_o = (I1*x2-I2*x1)/(x2-x1)                                            # find the zero-crossing of straight line mde from positions at currents I1 and I2
             print('Predicted current intercept at '+str(I_o))
             hctrl.setSI(hcor,I_o)
-            #self.simulate.run()                                                    # set magnet to intercept current
+            self.simulate.run()                                                    # set magnet to intercept current
             x1=x2                                                                #Get rid of first set of position and current
             I1=I2
             I2=I_o
@@ -94,23 +91,13 @@ class Functions(QObject):
             time.sleep(0.1)
         print('Aligned beam using ' + hcor + ' and ' + bpm)
 
-    def bendBeam(self,dctrl,dipole,bctrl,bpm,screen, predictedI, tol, N=10):
+    def bendBeam(self,dctrl,dipole,bctrl,bpm,screen, predictedI, tol, N=1):
         DIP = dctrl.getMagObjConstRef(dipole)                                    #create a reference to the dipole
         step = predictedI/100                                                    #1% of predicted current
-        setI = 0.95*predictedI
-        print ('95% of predicted current is: ',setI)
-        dctrl.setSI(dipole,setI)
-        time.sleep(1)
-        print self.getXBPM(bctrl, bpm, N)
-        getsi = dctrl.getSI(dipole)
-        print getsi
-        getri = dctrl.getRI(dipole)
-        print getri                                                 #set dipole current to 90% of predicted
-        #self.simulate.run()
-        print 'Did it set correctly?'
-        print 'getsi/setI = ', str(getsi/setI)
-        print 'getri/setI = ', str(getsi/setI)
-        time.sleep(0.1)
+        setI = 0.9*predictedI
+        print ('90% of predicticted current is: ',setI)
+        dctrl.setSI(dipole,setI)                                                #set dipole current to 90% of predicted
+        self.simulate.run()
         while(self.isBeamOnScreen(screen)==False):                                #keep iterration of a 1% current step until beam is on screen
             self.stepCurrent(magCtrl,dipole,step)
             time.sleep(0.1)
@@ -118,22 +105,20 @@ class Functions(QObject):
         x=self.getXBPM(bctrl, bpm, N)                                            #All BPM posiotn are fake and based of the previous position
         print 'x = ', str(x), 'tol = ', str(tol)                                                                        #it wont stay this way for the real procedure
 
-        while(x<-tol):                                                            #start loop that ramps up dipole current (conitines unitl x<tolerance)
+        while(x>tol):                                                            #start loop that ramps up dipole current (conitines unitl x<tolerance)
             print 'x = ', str(x), 'tol = ', str(tol)
-            print '!!!In bend beam!!!: ', str(caget('CLA-C2V-DIA-BPM-01:X'))
+            print '!!!In bend beam!!!: ', str(caget('VM-CLA-C2V-DIA-BPM-01:X'))
             self.stepCurrent(dctrl, dipole, step)
-            time.sleep(2)
             x_old=x                                                                # keep a note of teh last beam position to roughly predict the effect of the next step
             x=self.getXBPM(bctrl, bpm, N)
             print(x)
             time.sleep(0.1)
-            if abs(x)<abs(x_old-x):                                                        #if the step size look like it is will over bend the beam, half it.
+            if x<(x_old-x):                                                        #if the step size look like it is will over bend the beam, half it.
                 step = step*0.5
         print('Centered beam in Spectrometer line using ' + dipole + ' and ' + bpm)
         return dctrl.getSI(dipole)                                        #return the current at which beam has been centered
-
     """NEED TO TEST MINIMIZE BETA ON REAL MACHINE"""
-    def minimizeBeta(self,qctrl,quad,sctrl,screen,init_step,N=10):
+    def minimizeBeta(self,qctrl,quad,sctrl,screen,init_step,N=1):
         QUAD = qctrl.getMagObjConstRef(quad)
         minimisingInX = False
         if(init_step>0):
@@ -169,13 +154,9 @@ class Functions(QObject):
 
         if(minimisingInX):
             qctrl.setSI(quad, 0.3)    #depends if +tine or -tive                #set a fake start current
-            print 'Minimising in x'
-            time.sleep(1)
         else:
             qctrl.setSI(quad, -0.3)
-            print 'Minimising in y'
-            time.sleep(1)
-        #self.simulate.run()
+        self.simulate.run()
         step  = init_step
         I3_1 = 0                                                                #I3_1 is the first value that is 3 time the size of the inita current
         I3_2 = 0
@@ -191,11 +172,9 @@ class Functions(QObject):
         I_2 = QUAD.siWithPol
 
         while (sX_2<3*sX_initial):                                                #step 'left', i.e reduce current
-            'Entering Loc1'
             sX_1 = sX_2
             I_1 = I_2
             self.stepCurrent(qctrl, quad, step)
-            time.sleep(1)
             I_2 = QUAD.siWithPol
             if(minimisingInX):
                 print 'Minimising in x'
@@ -222,7 +201,6 @@ class Functions(QObject):
                 sX_1 = sX_2
                 I_1 = I_2
                 self.stepCurrent(qctrl, quad, -step)
-                time.sleep(1)
                 I_2 = QUAD.siWithPol
                 if(minimisingInX):
                     sX_2 =self.getSigmaXScreen(sctrl,screen,N)
@@ -237,7 +215,6 @@ class Functions(QObject):
                 sX_1 = sX_2###MAKE ZERO!!!
                 I_1 = I_2
                 self.stepCurrent(qctrl, quad, step)
-                time.sleep(1)
                 I_2 = QUAD.siWithPol
                 if(minimisingInX):
                     sX_2 =self.getSigmaXScreen(sctrl,screen,N)
@@ -251,13 +228,13 @@ class Functions(QObject):
         I3_2 = (3*sX_initial*(I_2 - I_1) + (sX_2*I_1 - sX_1*I_2))/(sX_2 - sX_1)
 
         qctrl.setSI(quad,0.5*(I3_1 + I3_2))            #assume minimum is half way in between these places so set magnet current to that
-        #self.simulate.run()
+        self.simulate.run()
         print('Minimised Beta with '+quad+' on '+screen)
 
     def fixDispersion(self,qctrl,quad,sctrl,screen,step_size,N=1):
         #THis needs work!!!!self.finished.emit()
         qctrl.setSI(quad, 0.0)                                                    #set a fake start current
-        #self.simulate.run()                                                        #assumes beam is on screen
+        self.simulate.run()                                                        #assumes beam is on screen
         sX = self.getSigmaXScreen(sctrl, screen, N)
         sX_old = sX
         targetBeamSigma = 0.0005
@@ -275,7 +252,7 @@ class Functions(QObject):
             if (abs(sX-targetBeamSigma)<abs(sX-sX_old)):
                 step_size = 0.5*step_size
 
-    def findDispersion(self,dctrl,dipole,sctrl,screen,centering_I,points,leveloff_threshold,N=10):
+    def findDispersion(self,dctrl,dipole,sctrl,screen,centering_I,points,leveloff_threshold,N=1):
         currents = np.zeros(points)
         positions = np.zeros(points)
         dCurrents=[]
@@ -286,33 +263,23 @@ class Functions(QObject):
         #position of beam
         sX=0
         dctrl.setSI(dipole,centering_I)                                    #set dipole current to 90% of predicted
-        #self.simulate.run()
-        time.sleep(1)
+        self.simulate.run()
 
         #set dipole current to 95% of centering current
         setI = 0.95*centering_I
         print setI
-        for a in reversed(np.linspace(setI,centering_I, 10)): #slowly set offset to allow image collector to keep up
-            #dctrl.setSI(dipole,setI)
-            dctrl.setSI(dipole,a)
-            #self.simulate.run()
-            time.sleep(5)
+        dctrl.setSI(dipole,setI)
+        self.simulate.run()
         #I = totalIntensity(screen)
         #I_old = I/2
         #while(I/I_old-1>leveloff_threshold):
         #self.stepCurrent(dipole,step)
         currents[0] = DIP.siWithPol
         positions[0] = self.getXScreen(sctrl,screen,N)
-        print centering_I
-        print currents[0]
-        print points-1
         I_diff = 2*(centering_I-currents[0])/(points-1)
 
         for i in range(1,points):
-            print 'i', str(i)
-            print 'I_diff', str(I_diff)
             self.stepCurrent(dctrl, dipole, I_diff)
-            time.sleep(2)
             currents[i] = DIP.siWithPol
             positions[i] = self.getXScreen(sctrl,screen,N)
             dCurrents=currents
@@ -350,7 +317,7 @@ class Functions(QObject):
         coeffs[-1] -= (D.magneticLength/400.0033)*(1000000000*(mom*physics.pi*45)/(physics.c*180))
         roots = np.roots(coeffs)
         current = roots[-1].real
-        return current
+        return -current
 
     def get_qctrl_sig(self):
         print 'in get_qctrl_sig'
