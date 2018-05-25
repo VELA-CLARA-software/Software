@@ -105,6 +105,10 @@ class bpm_handler(bpm_handler_base):
         bpm_handler_base.data.values[dat.dv2_dly1][dly_1] = numpy.mean(bpm_handler_base.data.values[dat.bpm_u12])
         bpm_handler_base.data.values[dat.dv1_dly2][dly_1] = numpy.mean(bpm_handler_base.data.values[dat.bpm_u21])
         bpm_handler_base.data.values[dat.dv2_dly2][dly_1] = numpy.mean(bpm_handler_base.data.values[dat.bpm_u22])
+        print bpm_handler_base.data.values[dat.dv1_dly1][dly_1]
+        print bpm_handler_base.data.values[dat.dv1_dly2][dly_1]
+        print bpm_handler_base.data.values[dat.dv2_dly1][dly_1]
+        print bpm_handler_base.data.values[dat.dv2_dly2][dly_1]
 
     def find_min_dly_1(self):
         print bpm_handler_base.data.values[dat.dv1_dly1].values()
