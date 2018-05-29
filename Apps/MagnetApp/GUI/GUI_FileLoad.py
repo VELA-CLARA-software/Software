@@ -61,12 +61,36 @@ class GUI_FileLoad(QDialog, Ui_FileLoad):
         #self.dirModel.dataChanged[QModelIndex,QModelIndex].connect(self.handle_fileDirectoryChanged2)
         self.textWindowList = []
 
-    def burtLoadFailed(self):
+    def burtLoadFailed(self,text=""):
+        #self.label.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Ignored)
         self.label.setText(
-                "<font color='red'>)-: !!WARNING!! CLARA did not accept requested "
-                "magnet current settings try re-applying or check file !!WARNING!! :-( </font>")
+                "<font color='red'>!!WARNING!! "+ text +"</font>")
+        print 'set fontsize'
+        font = self.label.font()
+        cRect = self.label.contentsRect()
+        fontSize = 1
+        while 1:
+            should_break = False
+
+            f = QFont()
+            f.setPixelSize(fontSize)
+            r = QFontMetrics(f).boundingRect( self.label.text() )
+            print(r.height() ,cRect.height() , r.width() , cRect.width())
+            if r.height() <= cRect.height():
+                fontSize += 1
+            else:
+                should_break = True
+            if r.width() <= cRect.width():
+                fontSize += 1
+            else:
+                should_break = True
+            if should_break:
+                break
+        font.setPixelSize(fontSize)
+        self.label.setFont(font)
 
     def burtLoadSuccess(self):
+
         self.label.setText(
                 "<font color='green'>!!Success!! CLARA did not accept all settings :)  </font>")
 
