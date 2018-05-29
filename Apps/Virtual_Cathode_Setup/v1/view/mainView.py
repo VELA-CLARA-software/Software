@@ -9,6 +9,31 @@ import numpy as np
 from epics import caget
 import pyqtgraph as pg
 
+<<<<<<< HEAD
+mask_x_user  = 'mask_x_user'
+mask_y_user  = 'mask_y_user'
+mask_x_rad_user  = 'mask_x_rad_user'
+mask_y_rad_user  = 'mask_y_rad_user'
+mask_feedback = 'mask_feedback'
+# imageCollection
+num_images = 'num_images'
+is_collecting_or_saving = 'is_collecting_or_saving'
+last_filename = 'last_filename'
+
+#imageview
+is_acquiring = 'is_acquiring'
+is_liverstream = 'is_liverstream'
+min_level = 'min_level'
+max_level = 'max_level'
+# imageAnalysis
+is_analysing = 'is_analysing'
+use_background  = 'use_background'
+use_npoint  = 'use_npoint'
+ana_step_size = 'ana_step_size'
+
+
+=======
+>>>>>>> 61a9e380278271c5f352948c5d3699d21e6b48d6
 class mainView(QtGui.QMainWindow, Ui_mainView ):
     closing = QtCore.pyqtSignal()# custom close signal to send to controller
 
@@ -91,6 +116,16 @@ class mainView(QtGui.QMainWindow, Ui_mainView ):
         # self.roi.setSize(pointRad)
 
 
+<<<<<<< HEAD
+
+
+
+
+
+
+
+=======
+>>>>>>> 61a9e380278271c5f352948c5d3699d21e6b48d6
 #
     # collectAndSave_pushButton
     # last_filename

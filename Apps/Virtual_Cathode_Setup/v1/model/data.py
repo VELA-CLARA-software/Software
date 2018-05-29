@@ -8,6 +8,13 @@ mask_x_rbv  = 'mask_x_rbv'
 mask_y_rbv  = 'mask_y_rbv'
 mask_x_rad_rbv  = 'mask_x_rad_rbv'
 mask_y_rad_rbv  = 'mask_y_rad_rbv'
+<<<<<<< HEAD
+
+
+
+
+
+=======
 mask_x_user  = 'mask_x_user'
 mask_y_user  = 'mask_y_user'
 mask_x_rad_user  = 'mask_x_rad_user'
@@ -30,6 +37,7 @@ is_analysing = 'is_analysing'
 use_background  = 'use_background'
 use_npoint  = 'use_npoint'
 ana_step_size = 'ana_step_size'
+>>>>>>> 61a9e380278271c5f352948c5d3699d21e6b48d6
 
 x_val = 'x_val'
 y_val = 'y_val'

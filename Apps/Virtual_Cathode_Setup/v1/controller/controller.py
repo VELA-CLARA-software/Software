@@ -13,12 +13,199 @@ from decimal import *
 
 
 class Controller():
+<<<<<<< HEAD
+    view = None
+    model = None
+
+    def __init__(self, view, model):
+        '''define model and view'''
+        Controller.view = view
+        Controller.model = model
+        self.connect_widgets()
+        Controller.view.show()
+        print 'Running'
+
+    def handle_collectAndSave_pushButton(self):
+        print 'handle_collectAndSave_pushButton'
+
+    def handle_liveStream_pushButton(self):
+        print 'handle_liveStream_pushButton'
+
+    def handle_setPosition_pushButton(self):
+        print 'handle_setPosition_pushButton'
+
+    def handle_setMask_pushButton(self):
+        print 'handle_setMask_pushButton'
+
+    def handle_setIntensity_pushButton(self):
+        print 'handle_setIntensity_pushButton'
+
+    def handle_load_pushButton(self):
+        print 'handle_load_pushButton'
+
+    def handle_save_pushButton(self):
+        print 'handle_save_pushButton'
+
+    def handle_resetMeanSD_pushButton(self):
+        print 'handle_resetMeanSD_pushButton'
+
+    def handle_analyse_pushButton(self):
+        print 'handle_analyse_pushButton'
+
+    def handle_resetBackground_pushButton(self):
+        print 'handle_resetBackground_pushButton'
+
+    def handle_useBackground_checkBox(self):
+        print 'handle_useBackground_checkBox'
+
+    def handle_useNPoint_checkBox(self):
+        print 'handle_useNPoint_checkBox'
+
+    def handle_acquire_pushButton(self):
+        print 'handle_acquire_pushButton'
+
+    def handle_numImages_spinBox(self):
+        print 'handle_numImages_spinBox'
+
+    def handle_stepSize_spinBox(self):
+        print 'handle_stepSize_spinBox'
+
+    def handle_maskX_spinBox(self):
+        print 'handle_maskX_spinBox'
+
+    def handle_maskY_spinBox(self):
+        print 'handle_maskY_spinBox'
+
+    def handle_maskXRadius_spinBox(self):
+        print 'handle_maskXRadius_spinBox'
+
+    def handle_maskYRadius_spinBox(self):
+        print 'handle_maskYRadius_spinBox'
+
+    def handle_feed_back_check(self):
+        print 'handle_feed_back_check'
+
+    def handle_spinBox_minLevel(self):
+        print 'handle_spinBox_minLevel'
+
+    def handle_spinBox_maxLevel(self):
+        print 'handle_spinBox_maxLevel'
+
+    def connect_widgets(self):
+        Controller.view.collectAndSave_pushButton.clicked.connect(self.handle_collectAndSave_pushButton)
+        Controller.view.liveStream_pushButton.clicked.connect(self.handle_liveStream_pushButton)
+        Controller.view.setPosition_pushButton.clicked.connect(self.handle_setPosition_pushButton)
+        Controller.view.setInt_pushButton.clicked.connect(
+                self.handle_setIntensity_pushButton)
+        Controller.view.setMask_pushButton_2.clicked.connect(self.handle_setMask_pushButton)
+        Controller.view.setMask_pushButton.clicked.connect(self.handle_setMask_pushButton)
+        Controller.view.load_pushButton.clicked.connect(self.handle_load_pushButton)
+        Controller.view.save_pushButton.clicked.connect(self.handle_save_pushButton)
+        Controller.view.save_pushButton_2.clicked.connect(self.handle_save_pushButton)
+        Controller.view.resetMeanSD_pushButton.clicked.connect(self.handle_resetMeanSD_pushButton)
+        Controller.view.analyse_pushButton.clicked.connect(self.handle_analyse_pushButton)
+        Controller.view.resetBackground_pushButton.clicked.connect(self.handle_resetBackground_pushButton)
+        Controller.view.useBackground_checkBox.released.connect(self.handle_useBackground_checkBox)
+        Controller.view.feed_back_check.released.connect(self.handle_feed_back_check)
+        Controller.view.useNPoint_checkBox.released.connect(self.handle_useNPoint_checkBox)
+        Controller.view.acquire_pushButton.clicked.connect(self.handle_acquire_pushButton)
+        Controller.view.numImages_spinBox.valueChanged.connect(self.handle_numImages_spinBox)
+        Controller.view.stepSize_spinBox.valueChanged.connect(self.handle_stepSize_spinBox)
+        Controller.view.maskX_spinBox.valueChanged.connect(self.handle_maskX_spinBox)
+        Controller.view.maskY_spinBox.valueChanged.connect(self.handle_maskY_spinBox)
+        Controller.view.maskXRadius_spinBox.valueChanged.connect(self.handle_maskXRadius_spinBox)
+        Controller.view.maskYRadius_spinBox.valueChanged.connect(self.handle_maskYRadius_spinBox)
+        Controller.view.spinBox_minLevel.valueChanged.connect(self.handle_spinBox_minLevel)
+        Controller.view.spinBox_maxLevel.valueChanged.connect(self.handle_spinBox_maxLevel)
+
+    # stepSize_spinBox
+    # maskX_spinBox
+    # maskY_spinBox
+    # maskXRadius_spinBox
+    # maskYRadius_spinBox
+
+    # acquire_pushButton
+    # numImages_spinBox
+
+    # resetMeanSD_pushButton
+    # analyse_pushButton
+    # resetBackground_pushButton
+    # useBackground_checkBox
+    # useNPoint_checkBox
+
+    # last_filename
+    # liveStream_pushButton
+    # spinBox_maxLevel
+    # spinBox_minLevel
+    # maskX_spinBox_5
+    # maskX_spinBox_4
+    # int_read_2
+    # int_spinBox_2
+    # setPosition_pushButton
+    # setInt_pushButton
+    # setMask_pushButton_2
+    # load_pushButton
+    # save_pushButton_2
+    # sum_val
+    # sum_mean
+    # sum_sd
+    # x_val
+    # x_mean
+    # x_sd
+    # y_val
+    # y_mean
+    # y_sd
+    # sx_val
+    # sx_mean
+    # sx_sd
+    # sy_val
+    # sy_mean
+    # sy_sd
+    # cov_val
+    # cov_mean
+    # cov_sd
+    # resetMeanSD_pushButton
+    # analyse_pushButton
+    # resetBackground_pushButton
+    # useBackground_checkBox
+    # useNPoint_checkBox
+    # stepSize_spinBox
+    # mask_x_read
+    # maskX_spinBox
+    # mask_y_read
+    # maskY_spinBox
+    # mas_y_rad
+    # maskXRadius_spinBox
+    # mask_y_rad
+    # maskYRadius_spinBox
+    # feed_back_check
+    # setMask_pushButton
+    # acquire_pushButton
+    # numImages_spinBox
+    # save_pushButton
+    # getImages_pushButton
+    # menubar
+    # statusbar
+    # liveStream_pushButton
+    # spinBox_minLevel
+    # spinBox_maxLevel
+    # analyse_pushButton
+    # resetBackground_pushButton
+    # useBackground_checkBox
+    # useNPoint_checkBox
+    # stepSize_spinBox
+    # maskX_spinBox
+    # maskY_spinBox
+    # maskXRadius_spinBox
+    # maskYRadius_spinBox
+=======
 
     def __init__(self, view, model):
         '''define model and view'''
 
 
 
+>>>>>>> 61a9e380278271c5f352948c5d3699d21e6b48d6
 
 
 

@@ -12,8 +12,13 @@ os.environ['PATH']=os.environ['PATH']+';\\\\apclara1.dl.ac.uk\\ControlRoomApps\\
 #     print "hi"
 #     print i
 from PyQt4 import QtGui, QtCore
+<<<<<<< HEAD
+import model.model as model
+import controller.controller as controller
+=======
 #import model.model as model
 #import controller.controller as controller
+>>>>>>> 61a9e380278271c5f352948c5d3699d21e6b48d6
 import view.mainView as view
 
 
@@ -21,6 +26,13 @@ class App(QtGui.QApplication):
     def __init__(self, sys_argv):
         super(App, self).__init__(sys_argv)
         self.view = view.mainView()
+<<<<<<< HEAD
+        self.model = model.Model()
+        print 'Creating Controller'
+        self.controller = controller.Controller(view =self.view, model = self.model)
+        #self.view.show()
+        print 'Running'
+=======
         #self.MainWindow = QtGui.QMainWindow()
         #self.view.setupUi(self.MainWindow)
         #self.model = model.Model()
@@ -28,6 +40,7 @@ class App(QtGui.QApplication):
         #self.controller = controller.Controller(self.view, self.model)
         self.view.show()
 
+>>>>>>> 61a9e380278271c5f352948c5d3699d21e6b48d6
 
 if __name__ == '__main__':
     app = App(sys.argv)
