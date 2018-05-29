@@ -77,9 +77,9 @@ class gen_ex_config(object):
 
         gen_ex_config.magnet_data =\
             {1: {gen_ex_config.names: ['S02-QUAD1','S02-QUAD2'],
-                 gen_ex_config.values:[0.23,0.33]},
+                 gen_ex_config.values:[6.23,6.33]},
              2: {gen_ex_config.names: ['S02-QUAD1','S02-QUAD2'],
-                 gen_ex_config.values:[-2.23,-2.33]}}
+                 gen_ex_config.values:[-9.23,-7.33]}}
 
         gen_ex_config.shutter_data =\
             {1: {gen_ex_config.names: ['SHUT01'],
