@@ -10,20 +10,34 @@ from epics import caget
 import numpy as np
 from decimal import *
 
+#import model.model as model
+#import controller.controller as controller
+import view.mainView as view
+import model.model as model
 
 
-class Controller():
-<<<<<<< HEAD
-    view = None
+
+class controller(object):
     model = None
-
-    def __init__(self, view, model):
+    view  = None
+    def __init__(self,sys_argv = None,view = None, model= None):
         '''define model and view'''
-        Controller.view = view
-        Controller.model = model
+        controller.model = model
+        controller.view = view
+
         self.connect_widgets()
-        Controller.view.show()
-        print 'Running'
+        print('controller, starting timer')
+        self.timer = QtCore.QTimer()
+        self.timer.setSingleShot(False)
+        self.timer.timeout.connect(self.update_gui)
+        self.timer.start(100)
+
+        self.view.show()
+
+    def update_gui(self):
+        print('controller update_gui')
+        controller.model.update_values()
+        controller.view.update_gui()
 
     def handle_collectAndSave_pushButton(self):
         print 'handle_collectAndSave_pushButton'
@@ -47,7 +61,7 @@ class Controller():
         print 'handle_save_pushButton'
 
     def handle_resetMeanSD_pushButton(self):
-        print 'handle_resetMeanSD_pushButton'
+        controller.model.resetRunningValues()
 
     def handle_analyse_pushButton(self):
         print 'handle_analyse_pushButton'
@@ -59,16 +73,27 @@ class Controller():
         print 'handle_useBackground_checkBox'
 
     def handle_useNPoint_checkBox(self):
+        if controller.view.useNPoint_checkBox.isChecked():
+            controller.model.useNPoint(True)
+        else:
+            controller.model.useNPoint(False)
         print 'handle_useNPoint_checkBox'
 
     def handle_acquire_pushButton(self):
+        controller.model.analyse()
         print 'handle_acquire_pushButton'
 
     def handle_numImages_spinBox(self):
+
         print 'handle_numImages_spinBox'
 
     def handle_stepSize_spinBox(self):
+        controller.model.setStepSize(controller.view.stepSize_spinBox.value())
         print 'handle_stepSize_spinBox'
+
+
+
+
 
     def handle_maskX_spinBox(self):
         print 'handle_maskX_spinBox'
@@ -91,32 +116,39 @@ class Controller():
     def handle_spinBox_maxLevel(self):
         print 'handle_spinBox_maxLevel'
 
+    def handle_opencloseShut_pushButton(self):
+        controller.model.toggle_shutter()
+        print 'handle_opencloseShut_pushButton'
+
+
     def connect_widgets(self):
-        Controller.view.collectAndSave_pushButton.clicked.connect(self.handle_collectAndSave_pushButton)
-        Controller.view.liveStream_pushButton.clicked.connect(self.handle_liveStream_pushButton)
-        Controller.view.setPosition_pushButton.clicked.connect(self.handle_setPosition_pushButton)
-        Controller.view.setInt_pushButton.clicked.connect(
+        print('connect_widgets')
+        controller.view.collectAndSave_pushButton.clicked.connect(self.handle_collectAndSave_pushButton)
+        controller.view.liveStream_pushButton.clicked.connect(self.handle_liveStream_pushButton)
+        controller.view.setPosition_pushButton.clicked.connect(self.handle_setPosition_pushButton)
+        controller.view.setInt_pushButton.clicked.connect(
                 self.handle_setIntensity_pushButton)
-        Controller.view.setMask_pushButton_2.clicked.connect(self.handle_setMask_pushButton)
-        Controller.view.setMask_pushButton.clicked.connect(self.handle_setMask_pushButton)
-        Controller.view.load_pushButton.clicked.connect(self.handle_load_pushButton)
-        Controller.view.save_pushButton.clicked.connect(self.handle_save_pushButton)
-        Controller.view.save_pushButton_2.clicked.connect(self.handle_save_pushButton)
-        Controller.view.resetMeanSD_pushButton.clicked.connect(self.handle_resetMeanSD_pushButton)
-        Controller.view.analyse_pushButton.clicked.connect(self.handle_analyse_pushButton)
-        Controller.view.resetBackground_pushButton.clicked.connect(self.handle_resetBackground_pushButton)
-        Controller.view.useBackground_checkBox.released.connect(self.handle_useBackground_checkBox)
-        Controller.view.feed_back_check.released.connect(self.handle_feed_back_check)
-        Controller.view.useNPoint_checkBox.released.connect(self.handle_useNPoint_checkBox)
-        Controller.view.acquire_pushButton.clicked.connect(self.handle_acquire_pushButton)
-        Controller.view.numImages_spinBox.valueChanged.connect(self.handle_numImages_spinBox)
-        Controller.view.stepSize_spinBox.valueChanged.connect(self.handle_stepSize_spinBox)
-        Controller.view.maskX_spinBox.valueChanged.connect(self.handle_maskX_spinBox)
-        Controller.view.maskY_spinBox.valueChanged.connect(self.handle_maskY_spinBox)
-        Controller.view.maskXRadius_spinBox.valueChanged.connect(self.handle_maskXRadius_spinBox)
-        Controller.view.maskYRadius_spinBox.valueChanged.connect(self.handle_maskYRadius_spinBox)
-        Controller.view.spinBox_minLevel.valueChanged.connect(self.handle_spinBox_minLevel)
-        Controller.view.spinBox_maxLevel.valueChanged.connect(self.handle_spinBox_maxLevel)
+        controller.view.setMask_pushButton_2.clicked.connect(self.handle_setMask_pushButton)
+        controller.view.setMask_pushButton.clicked.connect(self.handle_setMask_pushButton)
+        controller.view.load_pushButton.clicked.connect(self.handle_load_pushButton)
+        controller.view.save_pushButton.clicked.connect(self.handle_save_pushButton)
+        controller.view.save_pushButton_2.clicked.connect(self.handle_save_pushButton)
+        controller.view.resetMeanSD_pushButton.clicked.connect(self.handle_resetMeanSD_pushButton)
+        controller.view.analyse_pushButton.clicked.connect(self.handle_analyse_pushButton)
+        controller.view.resetBackground_pushButton.clicked.connect(self.handle_resetBackground_pushButton)
+        controller.view.useBackground_checkBox.released.connect(self.handle_useBackground_checkBox)
+        controller.view.feed_back_check.released.connect(self.handle_feed_back_check)
+        controller.view.useNPoint_checkBox.released.connect(self.handle_useNPoint_checkBox)
+        controller.view.acquire_pushButton.clicked.connect(self.handle_acquire_pushButton)
+        controller.view.numImages_spinBox.valueChanged.connect(self.handle_numImages_spinBox)
+        controller.view.stepSize_spinBox.valueChanged.connect(self.handle_stepSize_spinBox)
+        controller.view.maskX_spinBox.valueChanged.connect(self.handle_maskX_spinBox)
+        controller.view.maskY_spinBox.valueChanged.connect(self.handle_maskY_spinBox)
+        controller.view.maskXRadius_spinBox.valueChanged.connect(self.handle_maskXRadius_spinBox)
+        controller.view.maskYRadius_spinBox.valueChanged.connect(self.handle_maskYRadius_spinBox)
+        controller.view.spinBox_minLevel.valueChanged.connect(self.handle_spinBox_minLevel)
+        controller.view.spinBox_maxLevel.valueChanged.connect(self.handle_spinBox_maxLevel)
+        controller.view.opencloseShut_pushButton.clicked.connect(self.handle_opencloseShut_pushButton)
 
     # stepSize_spinBox
     # maskX_spinBox
@@ -198,14 +230,12 @@ class Controller():
     # maskY_spinBox
     # maskXRadius_spinBox
     # maskYRadius_spinBox
-=======
 
-    def __init__(self, view, model):
-        '''define model and view'''
-
+    # def __init__(self, view, model):
+    #     '''define model and view'''
 
 
->>>>>>> 61a9e380278271c5f352948c5d3699d21e6b48d6
+
 
 
 

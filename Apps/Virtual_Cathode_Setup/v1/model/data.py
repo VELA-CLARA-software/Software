@@ -8,13 +8,7 @@ mask_x_rbv  = 'mask_x_rbv'
 mask_y_rbv  = 'mask_y_rbv'
 mask_x_rad_rbv  = 'mask_x_rad_rbv'
 mask_y_rad_rbv  = 'mask_y_rad_rbv'
-<<<<<<< HEAD
 
-
-
-
-
-=======
 mask_x_user  = 'mask_x_user'
 mask_y_user  = 'mask_y_user'
 mask_x_rad_user  = 'mask_x_rad_user'
@@ -25,7 +19,9 @@ mask_feedback = 'mask_feedback'
 num_images = 'num_images'
 is_collecting_or_saving = 'is_collecting_or_saving'
 last_filename = 'last_filename'
+image = 'image'
 
+shutter_open = 'shutter_open'
 #imageview
 is_acquiring = 'is_acquiring'
 is_liverstream = 'is_liverstream'
@@ -37,7 +33,6 @@ is_analysing = 'is_analysing'
 use_background  = 'use_background'
 use_npoint  = 'use_npoint'
 ana_step_size = 'ana_step_size'
->>>>>>> 61a9e380278271c5f352948c5d3699d21e6b48d6
 
 x_val = 'x_val'
 y_val = 'y_val'
@@ -89,6 +84,7 @@ is_analysing,
 use_background,
 use_npoint,
 ana_step_size,
+
 x_val,
 y_val,
 sx_val,
@@ -112,15 +108,18 @@ y_buf,
 sx_buf,
 sy_buf,
 i_buf,
-cov_buf
-] = 
+cov_buf,
+image,
+
+shutter_open
+]
 
 
 
 
 
 class data(QObject):
-
+    print('New Data')
     # dictionary of all data
     values = {}
     [values.update({x: 0}) for x in all_value_keys]

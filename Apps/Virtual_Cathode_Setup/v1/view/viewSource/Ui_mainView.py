@@ -39,11 +39,7 @@ class Ui_mainView(object):
         self.centralwidget = QtGui.QWidget(mainView)
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
         self.tabWidget = QtGui.QTabWidget(self.centralwidget)
-<<<<<<< HEAD
-        self.tabWidget.setGeometry(QtCore.QRect(0, 10, 182, 561))
-=======
-        self.tabWidget.setGeometry(QtCore.QRect(0, 10, 182, 522))
->>>>>>> 61a9e380278271c5f352948c5d3699d21e6b48d6
+        self.tabWidget.setGeometry(QtCore.QRect(0, 10, 182, 541))
         self.tabWidget.setObjectName(_fromUtf8("tabWidget"))
         self.tab = QtGui.QWidget()
         self.tab.setObjectName(_fromUtf8("tab"))
@@ -235,10 +231,7 @@ class Ui_mainView(object):
         self.gridLayout = QtGui.QGridLayout()
         self.gridLayout.setObjectName(_fromUtf8("gridLayout"))
         self.sum_val = QtGui.QLabel(self.tab)
-<<<<<<< HEAD
         self.sum_val.setMinimumSize(QtCore.QSize(15, 15))
-=======
->>>>>>> 61a9e380278271c5f352948c5d3699d21e6b48d6
         font = QtGui.QFont()
         font.setPointSize(8)
         font.setBold(True)
@@ -247,10 +240,7 @@ class Ui_mainView(object):
         self.sum_val.setObjectName(_fromUtf8("sum_val"))
         self.gridLayout.addWidget(self.sum_val, 0, 0, 1, 1)
         self.sum_mean = QtGui.QLabel(self.tab)
-<<<<<<< HEAD
         self.sum_mean.setMinimumSize(QtCore.QSize(15, 15))
-=======
->>>>>>> 61a9e380278271c5f352948c5d3699d21e6b48d6
         font = QtGui.QFont()
         font.setPointSize(8)
         font.setBold(True)
@@ -259,10 +249,7 @@ class Ui_mainView(object):
         self.sum_mean.setObjectName(_fromUtf8("sum_mean"))
         self.gridLayout.addWidget(self.sum_mean, 0, 1, 1, 1)
         self.sum_sd = QtGui.QLabel(self.tab)
-<<<<<<< HEAD
         self.sum_sd.setMinimumSize(QtCore.QSize(15, 15))
-=======
->>>>>>> 61a9e380278271c5f352948c5d3699d21e6b48d6
         font = QtGui.QFont()
         font.setPointSize(8)
         font.setBold(True)
@@ -271,10 +258,7 @@ class Ui_mainView(object):
         self.sum_sd.setObjectName(_fromUtf8("sum_sd"))
         self.gridLayout.addWidget(self.sum_sd, 0, 2, 1, 1)
         self.x_val = QtGui.QLabel(self.tab)
-<<<<<<< HEAD
         self.x_val.setMinimumSize(QtCore.QSize(15, 15))
-=======
->>>>>>> 61a9e380278271c5f352948c5d3699d21e6b48d6
         font = QtGui.QFont()
         font.setPointSize(8)
         font.setBold(True)
@@ -283,10 +267,7 @@ class Ui_mainView(object):
         self.x_val.setObjectName(_fromUtf8("x_val"))
         self.gridLayout.addWidget(self.x_val, 1, 0, 1, 1)
         self.x_mean = QtGui.QLabel(self.tab)
-<<<<<<< HEAD
         self.x_mean.setMinimumSize(QtCore.QSize(15, 15))
-=======
->>>>>>> 61a9e380278271c5f352948c5d3699d21e6b48d6
         font = QtGui.QFont()
         font.setPointSize(8)
         font.setBold(True)
@@ -295,10 +276,7 @@ class Ui_mainView(object):
         self.x_mean.setObjectName(_fromUtf8("x_mean"))
         self.gridLayout.addWidget(self.x_mean, 1, 1, 1, 1)
         self.x_sd = QtGui.QLabel(self.tab)
-<<<<<<< HEAD
         self.x_sd.setMinimumSize(QtCore.QSize(15, 15))
-=======
->>>>>>> 61a9e380278271c5f352948c5d3699d21e6b48d6
         font = QtGui.QFont()
         font.setPointSize(8)
         font.setBold(True)
@@ -307,10 +285,7 @@ class Ui_mainView(object):
         self.x_sd.setObjectName(_fromUtf8("x_sd"))
         self.gridLayout.addWidget(self.x_sd, 1, 2, 1, 1)
         self.y_val = QtGui.QLabel(self.tab)
-<<<<<<< HEAD
         self.y_val.setMinimumSize(QtCore.QSize(15, 15))
-=======
->>>>>>> 61a9e380278271c5f352948c5d3699d21e6b48d6
         font = QtGui.QFont()
         font.setPointSize(8)
         font.setBold(True)
@@ -319,10 +294,7 @@ class Ui_mainView(object):
         self.y_val.setObjectName(_fromUtf8("y_val"))
         self.gridLayout.addWidget(self.y_val, 2, 0, 1, 1)
         self.y_mean = QtGui.QLabel(self.tab)
-<<<<<<< HEAD
         self.y_mean.setMinimumSize(QtCore.QSize(15, 15))
-=======
->>>>>>> 61a9e380278271c5f352948c5d3699d21e6b48d6
         font = QtGui.QFont()
         font.setPointSize(8)
         font.setBold(True)
@@ -331,10 +303,7 @@ class Ui_mainView(object):
         self.y_mean.setObjectName(_fromUtf8("y_mean"))
         self.gridLayout.addWidget(self.y_mean, 2, 1, 1, 1)
         self.y_sd = QtGui.QLabel(self.tab)
-<<<<<<< HEAD
         self.y_sd.setMinimumSize(QtCore.QSize(15, 15))
-=======
->>>>>>> 61a9e380278271c5f352948c5d3699d21e6b48d6
         font = QtGui.QFont()
         font.setPointSize(8)
         font.setBold(True)
@@ -343,10 +312,7 @@ class Ui_mainView(object):
         self.y_sd.setObjectName(_fromUtf8("y_sd"))
         self.gridLayout.addWidget(self.y_sd, 2, 2, 1, 1)
         self.sx_val = QtGui.QLabel(self.tab)
-<<<<<<< HEAD
         self.sx_val.setMinimumSize(QtCore.QSize(15, 15))
-=======
->>>>>>> 61a9e380278271c5f352948c5d3699d21e6b48d6
         font = QtGui.QFont()
         font.setPointSize(8)
         font.setBold(True)
@@ -355,10 +321,7 @@ class Ui_mainView(object):
         self.sx_val.setObjectName(_fromUtf8("sx_val"))
         self.gridLayout.addWidget(self.sx_val, 3, 0, 1, 1)
         self.sx_mean = QtGui.QLabel(self.tab)
-<<<<<<< HEAD
         self.sx_mean.setMinimumSize(QtCore.QSize(15, 15))
-=======
->>>>>>> 61a9e380278271c5f352948c5d3699d21e6b48d6
         font = QtGui.QFont()
         font.setPointSize(8)
         font.setBold(True)
@@ -367,10 +330,7 @@ class Ui_mainView(object):
         self.sx_mean.setObjectName(_fromUtf8("sx_mean"))
         self.gridLayout.addWidget(self.sx_mean, 3, 1, 1, 1)
         self.sx_sd = QtGui.QLabel(self.tab)
-<<<<<<< HEAD
         self.sx_sd.setMinimumSize(QtCore.QSize(15, 15))
-=======
->>>>>>> 61a9e380278271c5f352948c5d3699d21e6b48d6
         font = QtGui.QFont()
         font.setPointSize(8)
         font.setBold(True)
@@ -379,10 +339,7 @@ class Ui_mainView(object):
         self.sx_sd.setObjectName(_fromUtf8("sx_sd"))
         self.gridLayout.addWidget(self.sx_sd, 3, 2, 1, 1)
         self.sy_val = QtGui.QLabel(self.tab)
-<<<<<<< HEAD
         self.sy_val.setMinimumSize(QtCore.QSize(15, 15))
-=======
->>>>>>> 61a9e380278271c5f352948c5d3699d21e6b48d6
         font = QtGui.QFont()
         font.setPointSize(8)
         font.setBold(True)
@@ -391,10 +348,7 @@ class Ui_mainView(object):
         self.sy_val.setObjectName(_fromUtf8("sy_val"))
         self.gridLayout.addWidget(self.sy_val, 4, 0, 1, 1)
         self.sy_mean = QtGui.QLabel(self.tab)
-<<<<<<< HEAD
         self.sy_mean.setMinimumSize(QtCore.QSize(15, 15))
-=======
->>>>>>> 61a9e380278271c5f352948c5d3699d21e6b48d6
         font = QtGui.QFont()
         font.setPointSize(8)
         font.setBold(True)
@@ -403,10 +357,7 @@ class Ui_mainView(object):
         self.sy_mean.setObjectName(_fromUtf8("sy_mean"))
         self.gridLayout.addWidget(self.sy_mean, 4, 1, 1, 1)
         self.sy_sd = QtGui.QLabel(self.tab)
-<<<<<<< HEAD
         self.sy_sd.setMinimumSize(QtCore.QSize(15, 15))
-=======
->>>>>>> 61a9e380278271c5f352948c5d3699d21e6b48d6
         font = QtGui.QFont()
         font.setPointSize(8)
         font.setBold(True)
@@ -415,10 +366,7 @@ class Ui_mainView(object):
         self.sy_sd.setObjectName(_fromUtf8("sy_sd"))
         self.gridLayout.addWidget(self.sy_sd, 4, 2, 1, 1)
         self.cov_val = QtGui.QLabel(self.tab)
-<<<<<<< HEAD
         self.cov_val.setMinimumSize(QtCore.QSize(15, 15))
-=======
->>>>>>> 61a9e380278271c5f352948c5d3699d21e6b48d6
         font = QtGui.QFont()
         font.setPointSize(8)
         font.setBold(True)
@@ -427,10 +375,7 @@ class Ui_mainView(object):
         self.cov_val.setObjectName(_fromUtf8("cov_val"))
         self.gridLayout.addWidget(self.cov_val, 5, 0, 1, 1)
         self.cov_mean = QtGui.QLabel(self.tab)
-<<<<<<< HEAD
         self.cov_mean.setMinimumSize(QtCore.QSize(15, 15))
-=======
->>>>>>> 61a9e380278271c5f352948c5d3699d21e6b48d6
         font = QtGui.QFont()
         font.setPointSize(8)
         font.setBold(True)
@@ -439,10 +384,7 @@ class Ui_mainView(object):
         self.cov_mean.setObjectName(_fromUtf8("cov_mean"))
         self.gridLayout.addWidget(self.cov_mean, 5, 1, 1, 1)
         self.cov_sd = QtGui.QLabel(self.tab)
-<<<<<<< HEAD
         self.cov_sd.setMinimumSize(QtCore.QSize(15, 15))
-=======
->>>>>>> 61a9e380278271c5f352948c5d3699d21e6b48d6
         font = QtGui.QFont()
         font.setPointSize(8)
         font.setBold(True)
@@ -455,6 +397,9 @@ class Ui_mainView(object):
         self.resetMeanSD_pushButton = QtGui.QPushButton(self.tab)
         self.resetMeanSD_pushButton.setObjectName(_fromUtf8("resetMeanSD_pushButton"))
         self.verticalLayout_2.addWidget(self.resetMeanSD_pushButton)
+        self.opencloseShut_pushButton = QtGui.QPushButton(self.tab)
+        self.opencloseShut_pushButton.setObjectName(_fromUtf8("opencloseShut_pushButton"))
+        self.verticalLayout_2.addWidget(self.opencloseShut_pushButton)
         self.tabWidget.addTab(self.tab, _fromUtf8(""))
         self.tab_2 = QtGui.QWidget()
         self.tab_2.setObjectName(_fromUtf8("tab_2"))
@@ -519,9 +464,9 @@ class Ui_mainView(object):
         self.label_8 = QtGui.QLabel(self.tab_2)
         self.label_8.setObjectName(_fromUtf8("label_8"))
         self.gridLayout_6.addWidget(self.label_8, 2, 0, 1, 1)
-        self.mas_y_rad = QtGui.QLabel(self.tab_2)
-        self.mas_y_rad.setObjectName(_fromUtf8("mas_y_rad"))
-        self.gridLayout_6.addWidget(self.mas_y_rad, 2, 1, 1, 1)
+        self.mask_x_rad = QtGui.QLabel(self.tab_2)
+        self.mask_x_rad.setObjectName(_fromUtf8("mask_x_rad"))
+        self.gridLayout_6.addWidget(self.mask_x_rad, 2, 1, 1, 1)
         self.maskXRadius_spinBox = QtGui.QSpinBox(self.tab_2)
         self.maskXRadius_spinBox.setMaximum(9999)
         self.maskXRadius_spinBox.setObjectName(_fromUtf8("maskXRadius_spinBox"))
@@ -585,11 +530,7 @@ class Ui_mainView(object):
         self.verticalLayout.addItem(spacerItem)
         self.tabWidget.addTab(self.tab_2, _fromUtf8(""))
         self.layoutWidget = QtGui.QWidget(self.centralwidget)
-<<<<<<< HEAD
         self.layoutWidget.setGeometry(QtCore.QRect(10, 580, 991, 231))
-=======
-        self.layoutWidget.setGeometry(QtCore.QRect(10, 540, 991, 271))
->>>>>>> 61a9e380278271c5f352948c5d3699d21e6b48d6
         self.layoutWidget.setObjectName(_fromUtf8("layoutWidget"))
         self.graphLayout = QtGui.QGridLayout(self.layoutWidget)
         self.graphLayout.setObjectName(_fromUtf8("graphLayout"))
@@ -608,7 +549,7 @@ class Ui_mainView(object):
         mainView.setStatusBar(self.statusbar)
 
         self.retranslateUi(mainView)
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(mainView)
         mainView.setTabOrder(self.liveStream_pushButton, self.spinBox_minLevel)
         mainView.setTabOrder(self.spinBox_minLevel, self.spinBox_maxLevel)
@@ -664,6 +605,7 @@ class Ui_mainView(object):
         self.cov_mean.setText(_translate("mainView", "-", None))
         self.cov_sd.setText(_translate("mainView", "-", None))
         self.resetMeanSD_pushButton.setText(_translate("mainView", "Reset Means and SD", None))
+        self.opencloseShut_pushButton.setText(_translate("mainView", "Open / CLose Shutter", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("mainView", "Tab 1", None))
         self.analyse_pushButton.setText(_translate("mainView", "Analyse", None))
         self.resetBackground_pushButton.setText(_translate("mainView", "Reset Background Image", None))
@@ -676,7 +618,7 @@ class Ui_mainView(object):
         self.label_7.setText(_translate("mainView", "Center Y :", None))
         self.mask_y_read.setText(_translate("mainView", "y Read", None))
         self.label_8.setText(_translate("mainView", "X Radius:", None))
-        self.mas_y_rad.setText(_translate("mainView", "x Rad", None))
+        self.mask_x_rad.setText(_translate("mainView", "x Rad", None))
         self.label_9.setText(_translate("mainView", "Y Radius :", None))
         self.mask_y_rad.setText(_translate("mainView", "y Rad", None))
         self.feed_back_check.setText(_translate("mainView", "Feedback", None))

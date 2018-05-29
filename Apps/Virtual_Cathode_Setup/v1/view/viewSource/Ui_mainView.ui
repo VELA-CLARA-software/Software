@@ -39,15 +39,11 @@
       <x>0</x>
       <y>10</y>
       <width>182</width>
-<<<<<<< HEAD
-      <height>561</height>
-=======
-      <height>522</height>
->>>>>>> 61a9e380278271c5f352948c5d3699d21e6b48d6
+      <height>541</height>
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -388,15 +384,12 @@
          <layout class="QGridLayout" name="gridLayout">
           <item row="0" column="0">
            <widget class="QLabel" name="sum_val">
-<<<<<<< HEAD
             <property name="minimumSize">
              <size>
               <width>15</width>
               <height>15</height>
              </size>
             </property>
-=======
->>>>>>> 61a9e380278271c5f352948c5d3699d21e6b48d6
             <property name="font">
              <font>
               <pointsize>8</pointsize>
@@ -411,15 +404,12 @@
           </item>
           <item row="0" column="1">
            <widget class="QLabel" name="sum_mean">
-<<<<<<< HEAD
             <property name="minimumSize">
              <size>
               <width>15</width>
               <height>15</height>
              </size>
             </property>
-=======
->>>>>>> 61a9e380278271c5f352948c5d3699d21e6b48d6
             <property name="font">
              <font>
               <pointsize>8</pointsize>
@@ -434,15 +424,12 @@
           </item>
           <item row="0" column="2">
            <widget class="QLabel" name="sum_sd">
-<<<<<<< HEAD
             <property name="minimumSize">
              <size>
               <width>15</width>
               <height>15</height>
              </size>
             </property>
-=======
->>>>>>> 61a9e380278271c5f352948c5d3699d21e6b48d6
             <property name="font">
              <font>
               <pointsize>8</pointsize>
@@ -457,17 +444,13 @@
           </item>
           <item row="1" column="0">
            <widget class="QLabel" name="x_val">
-<<<<<<< HEAD
             <property name="minimumSize">
              <size>
               <width>15</width>
               <height>15</height>
              </size>
             </property>
-		   <property name="font">
-=======
             <property name="font">
->>>>>>> 61a9e380278271c5f352948c5d3699d21e6b48d6
              <font>
               <pointsize>8</pointsize>
               <weight>75</weight>
@@ -481,15 +464,12 @@
           </item>
           <item row="1" column="1">
            <widget class="QLabel" name="x_mean">
-<<<<<<< HEAD
-		               <property name="minimumSize">
+            <property name="minimumSize">
              <size>
               <width>15</width>
               <height>15</height>
              </size>
             </property>
-=======
->>>>>>> 61a9e380278271c5f352948c5d3699d21e6b48d6
             <property name="font">
              <font>
               <pointsize>8</pointsize>
@@ -504,15 +484,12 @@
           </item>
           <item row="1" column="2">
            <widget class="QLabel" name="x_sd">
-<<<<<<< HEAD
-		               <property name="minimumSize">
+            <property name="minimumSize">
              <size>
               <width>15</width>
               <height>15</height>
              </size>
             </property>
-=======
->>>>>>> 61a9e380278271c5f352948c5d3699d21e6b48d6
             <property name="font">
              <font>
               <pointsize>8</pointsize>
@@ -527,15 +504,12 @@
           </item>
           <item row="2" column="0">
            <widget class="QLabel" name="y_val">
-<<<<<<< HEAD
-		               <property name="minimumSize">
+            <property name="minimumSize">
              <size>
               <width>15</width>
               <height>15</height>
              </size>
             </property>
-=======
->>>>>>> 61a9e380278271c5f352948c5d3699d21e6b48d6
             <property name="font">
              <font>
               <pointsize>8</pointsize>
@@ -550,15 +524,12 @@
           </item>
           <item row="2" column="1">
            <widget class="QLabel" name="y_mean">
-<<<<<<< HEAD
-		               <property name="minimumSize">
+            <property name="minimumSize">
              <size>
               <width>15</width>
               <height>15</height>
              </size>
             </property>
-=======
->>>>>>> 61a9e380278271c5f352948c5d3699d21e6b48d6
             <property name="font">
              <font>
               <pointsize>8</pointsize>
@@ -573,15 +544,12 @@
           </item>
           <item row="2" column="2">
            <widget class="QLabel" name="y_sd">
-<<<<<<< HEAD
-		               <property name="minimumSize">
+            <property name="minimumSize">
              <size>
               <width>15</width>
               <height>15</height>
              </size>
             </property>
-=======
->>>>>>> 61a9e380278271c5f352948c5d3699d21e6b48d6
             <property name="font">
              <font>
               <pointsize>8</pointsize>
@@ -596,15 +564,12 @@
           </item>
           <item row="3" column="0">
            <widget class="QLabel" name="sx_val">
-<<<<<<< HEAD
-		               <property name="minimumSize">
+            <property name="minimumSize">
              <size>
               <width>15</width>
               <height>15</height>
              </size>
             </property>
-=======
->>>>>>> 61a9e380278271c5f352948c5d3699d21e6b48d6
             <property name="font">
              <font>
               <pointsize>8</pointsize>
@@ -619,15 +584,12 @@
           </item>
           <item row="3" column="1">
            <widget class="QLabel" name="sx_mean">
-<<<<<<< HEAD
-		               <property name="minimumSize">
+            <property name="minimumSize">
              <size>
               <width>15</width>
               <height>15</height>
              </size>
             </property>
-=======
->>>>>>> 61a9e380278271c5f352948c5d3699d21e6b48d6
             <property name="font">
              <font>
               <pointsize>8</pointsize>
@@ -642,15 +604,12 @@
           </item>
           <item row="3" column="2">
            <widget class="QLabel" name="sx_sd">
-<<<<<<< HEAD
-		               <property name="minimumSize">
+            <property name="minimumSize">
              <size>
               <width>15</width>
               <height>15</height>
              </size>
             </property>
-=======
->>>>>>> 61a9e380278271c5f352948c5d3699d21e6b48d6
             <property name="font">
              <font>
               <pointsize>8</pointsize>
@@ -665,15 +624,12 @@
           </item>
           <item row="4" column="0">
            <widget class="QLabel" name="sy_val">
-<<<<<<< HEAD
-		               <property name="minimumSize">
+            <property name="minimumSize">
              <size>
               <width>15</width>
               <height>15</height>
              </size>
             </property>
-=======
->>>>>>> 61a9e380278271c5f352948c5d3699d21e6b48d6
             <property name="font">
              <font>
               <pointsize>8</pointsize>
@@ -688,15 +644,12 @@
           </item>
           <item row="4" column="1">
            <widget class="QLabel" name="sy_mean">
-<<<<<<< HEAD
-		               <property name="minimumSize">
+            <property name="minimumSize">
              <size>
               <width>15</width>
               <height>15</height>
              </size>
             </property>
-=======
->>>>>>> 61a9e380278271c5f352948c5d3699d21e6b48d6
             <property name="font">
              <font>
               <pointsize>8</pointsize>
@@ -711,15 +664,12 @@
           </item>
           <item row="4" column="2">
            <widget class="QLabel" name="sy_sd">
-<<<<<<< HEAD
-		               <property name="minimumSize">
+            <property name="minimumSize">
              <size>
               <width>15</width>
               <height>15</height>
              </size>
             </property>
-=======
->>>>>>> 61a9e380278271c5f352948c5d3699d21e6b48d6
             <property name="font">
              <font>
               <pointsize>8</pointsize>
@@ -734,15 +684,12 @@
           </item>
           <item row="5" column="0">
            <widget class="QLabel" name="cov_val">
-<<<<<<< HEAD
-		               <property name="minimumSize">
+            <property name="minimumSize">
              <size>
               <width>15</width>
               <height>15</height>
              </size>
             </property>
-=======
->>>>>>> 61a9e380278271c5f352948c5d3699d21e6b48d6
             <property name="font">
              <font>
               <pointsize>8</pointsize>
@@ -757,15 +704,12 @@
           </item>
           <item row="5" column="1">
            <widget class="QLabel" name="cov_mean">
-<<<<<<< HEAD
-		               <property name="minimumSize">
+            <property name="minimumSize">
              <size>
               <width>15</width>
               <height>15</height>
              </size>
             </property>
-=======
->>>>>>> 61a9e380278271c5f352948c5d3699d21e6b48d6
             <property name="font">
              <font>
               <pointsize>8</pointsize>
@@ -780,15 +724,12 @@
           </item>
           <item row="5" column="2">
            <widget class="QLabel" name="cov_sd">
-<<<<<<< HEAD
-		               <property name="minimumSize">
+            <property name="minimumSize">
              <size>
               <width>15</width>
               <height>15</height>
              </size>
             </property>
-=======
->>>>>>> 61a9e380278271c5f352948c5d3699d21e6b48d6
             <property name="font">
              <font>
               <pointsize>8</pointsize>
@@ -809,6 +750,13 @@
        <widget class="QPushButton" name="resetMeanSD_pushButton">
         <property name="text">
          <string>Reset Means and SD</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="opencloseShut_pushButton">
+        <property name="text">
+         <string>Open / CLose Shutter</string>
         </property>
        </widget>
       </item>
@@ -945,7 +893,7 @@
          </widget>
         </item>
         <item row="2" column="1">
-         <widget class="QLabel" name="mas_y_rad">
+         <widget class="QLabel" name="mask_x_rad">
           <property name="text">
            <string>x Rad</string>
           </property>
@@ -1088,15 +1036,9 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-<<<<<<< HEAD
       <y>580</y>
       <width>991</width>
       <height>231</height>
-=======
-      <y>540</y>
-      <width>991</width>
-      <height>271</height>
->>>>>>> 61a9e380278271c5f352948c5d3699d21e6b48d6
      </rect>
     </property>
     <layout class="QGridLayout" name="graphLayout"/>
