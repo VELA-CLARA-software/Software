@@ -80,15 +80,17 @@ class Controller():
 		self.view.crestGunWCMButton.clicked.connect(self.model.gunWCMCrester)
 		self.view.crestGunBPM.clicked.connect(self.model.gunBPMCrester)
 		self.view.setGunPhaseButton.clicked.connect(lambda : self.model.gunPhaser(True))
-		self.view.crestLinacButton.clicked.connect(self.model.linacBPMCrester)
-		self.view.setLinacPhaseButton.clicked.connect(lambda : self.model.linac1Phaser(True))
-		self.view.crestLinacRoughButton.clicked.connect(self.model.linacCresterQuick)
+		self.view.crestLinac1Button.clicked.connect(self.model.linac1BPMCrester)
+		self.view.setLinac1PhaseButton.clicked.connect(lambda : self.model.linac1Phaser(True))
+		self.view.crestLinac1RoughButton.clicked.connect(self.model.linac1CresterQuick)
 		self.view.abortButton.hide()
 		self.view.abortButton.clicked.connect(self.model.abortRunning)
 		self.view.finishButton.hide()
 		self.view.finishButton.clicked.connect(self.model.finishRunning)
 		self.view.actionSave_Calibation_Data.triggered.connect(self.model.saveData)
-
+		self.view.turnOnGunButton.clicked.connect(self.model.turnOnGun)
+		self.view.setGunDipoleButton.clicked.connect(self.model.setDipoleCurrentForGun)
+		self.view.setLinac1DipoleButton.clicked.connect(self.model.setDipoleCurrentForLinac1)
 
 	def updateDisplays(self):
 		for cavity in ['Gun', 'Linac1']:
