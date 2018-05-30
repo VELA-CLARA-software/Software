@@ -335,13 +335,18 @@ class magnetAppController(object):
         else:
             print "self.haveDBurtAndNotInOfflineMode() is FALSE"
         if burt_applied:
-            print 'burt load failed'
+            print 'burt load success'
             self.dburtLoadView.burtLoadSuccess()
             #time.sleep(2)
             self.dburtLoadView.done(1)
         else:
             print 'burt load failed'
-            self.dburtLoadView.burtLoadFailed()
+            # cancer
+            failed = self.localMagnetController.getLastFailedSet()
+            #flattened_list = [y for x in failed for y in x]
+            f3 = ', '.join(str(e) for e in failed)
+            print f3
+            self.dburtLoadView.burtLoadFailed(text=f3)
 
 
     def haveDBurtAndNotInOfflineMode(self):

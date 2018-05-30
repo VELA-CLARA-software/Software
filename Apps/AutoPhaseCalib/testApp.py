@@ -12,15 +12,17 @@ import VELA_CLARA_Magnet_Control as mag
 import VELA_CLARA_BPM_Control as bpm
 import VELA_CLARA_LLRF_Control as llrf
 import VELA_CLARA_Charge_Control as scope
+import VELA_CLARA_PILaser_Control as laser
 
 class testApp(QMainWindow):
 
-    actuator = 'Linac1'
+    actuator = 'DIP01'
+    #actuator = 'linac1'
     monitor = 'C2V-BPM01'
     samplesPerReading = 3
-    start = -180
-    stop = 180
-    stepSize = 5
+    start = 5
+    stop = 12
+    stepSize = 0.1
     data = []
 
     def __init__(self, parent=None):
@@ -47,7 +49,7 @@ class testApp(QMainWindow):
 
     def setUp_Controllers(self):
         self.magInit = mag.init()
-        self.magInit.setQuiet()
+        self.magInit.setVerbose()
         self.bpmInit = bpm.init()
         self.bpmInit.setQuiet()
         self.llrfInit = llrf.init()
@@ -62,11 +64,14 @@ class testApp(QMainWindow):
         self.linac1llrf = self.llrfInit.physical_L01_LLRF_Controller()
 
     def changeActuator(self, value):
-        self.linac1llrf.setPhiSP(value)
+        #self.linac1llrf.setPhiSP(value)
+        print(testApp.actuator)
+        print(value)
+        self.magnets.setSI(testApp.actuator,value)
+
 
     def readMonitor(self):
         return self.bpm.getXFromPV(self.monitor)
-
 
     def crestingFunction(self):
         self.startButton.setEnabled(False)

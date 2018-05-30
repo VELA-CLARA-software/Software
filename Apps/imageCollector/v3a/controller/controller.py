@@ -10,6 +10,9 @@ from epics import caget
 import numpy as np
 from decimal import *
 
+IMAGE_WIDTH = 1080
+IMAGE_HEIGHT = 1280
+IMAGE_DIMS = (IMAGE_WIDTH, IMAGE_HEIGHT)
 
 class Controller():
 
@@ -54,21 +57,22 @@ class Controller():
         self.timer.start(100)
 
         #self.ImageBox = layout.addViewBox(lockAspect=True, colspan=2)
-        self.Image = pg.ImageItem(np.random.normal(size=(1280, 1080)))
+        self.Image = pg.ImageItem(np.random.normal(size=(IMAGE_HEIGHT, IMAGE_WIDTH)))
         self.Image.scale(2,2)
-        self.ImageBox= layout.addPlot(lockAspect=True)
+        self.ImageBox = layout.addPlot()
         self.view.gridLayout.addWidget(monitor, 1, 2, 20, 3)  # row, col, rowspan, colspan
         # build colour map: black-red-yellow-white
         STEPS = np.linspace(0, 1, 4)
         CLRS = ['k', 'r', 'y', 'w']
         a = np.array([pg.colorTuple(pg.Color(c)) for c in CLRS])
         clrmp = pg.ColorMap(STEPS, a)
-        lut = clrmp.getLookupTable()
+        # lut = clrmp.getLookupTable()
         # self.Image.setLookupTable(lut)
-        self.ImageBox.setRange(xRange=[0,2560],yRange=[0,2160])
+        self.ImageBox.setRange(xRange=[0,IMAGE_HEIGHT*2],yRange=[0,IMAGE_WIDTH*2])
         self.ImageBox.addItem(self.Image)
         self.roi = pg.EllipseROI([0, 0], [500, 500], movable=False)
         self.ImageBox.addItem(self.roi)
+        self.ImageBox.setAspectLocked(True)
         self.vLineMLE = self.ImageBox.plot(x=[1000,1000],y=[900,1100],pen='g')
         self.hLineMLE = self.ImageBox.plot(x=[900,1100],y=[1000,1000],pen='g')
         histogram = pg.HistogramLUTItem(self.Image)
@@ -176,16 +180,12 @@ class Controller():
             self.view.syMM_label.setText(str(round(self.model.selectedCameraIA[0].IA.sigmaY,3)))
             self.view.covXY_label.setText(str(round(self.model.selectedCameraIA[0].IA.covXY,3)))
             data = caget(self.model.selectedCameraDAQ[0].pvRoot + 'CAM2:ArrayData')
-            if data is not None:
-                if len(data) == 1080*1280:
-                    if name == "VC":
-                        npData = np.array(data).reshape((1080, 1280))
-                    else:
-                        npData = np.array(data).reshape((1280, 1080))
-                    self.Image.setImage(np.flip(np.transpose(npData), 1))
-                    # self.histogram.plot(np.histogram(npData.flatten()))
-                    # self.Image.setLevels([self.view.spinBox_minLevel.value(),
-                                          # self.view.spinBox_maxLevel.value()], update=True)
+            if data is not None and len(data) == IMAGE_HEIGHT * IMAGE_WIDTH:
+                dims = (IMAGE_WIDTH, IMAGE_HEIGHT) if name == 'VC' else (IMAGE_HEIGHT, IMAGE_WIDTH)
+                npData = np.array(data).reshape(dims)
+                self.Image.setImage(np.flip(np.transpose(npData), 1))
+                # self.Image.setLevels([self.view.spinBox_minLevel.value(),
+                                      # self.view.spinBox_maxLevel.value()], update=True)
         else:
             self.view.acquire_pushButton.setText('Start Acquiring')
             self.view.acquire_pushButton.setStyleSheet("background-color: red")

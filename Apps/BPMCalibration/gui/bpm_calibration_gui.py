@@ -223,7 +223,7 @@ class bpm_calibration_gui(QMainWindow, Ui_MainWindow, base):
 	def check_ready(self):
 		if self.get_bpm_name() and self.get_start() and self.get_end() and self.get_num_shots() and self.is_measure_type_set():
 			self.data.values[dat.all_values_set] = True
-			if self.data.values[dat.charge_monitoring]:
+			if self.data.values[dat.charge_status]:
 				self.data.values[dat.ready_to_go] = True
 
 	# button functions
@@ -234,8 +234,10 @@ class bpm_calibration_gui(QMainWindow, Ui_MainWindow, base):
 			self.calibrateButton.setEnabled(False)
 			self.data.values[dat.plots_done] = False
 			base.logger.message('Starting scan', True)
+			self.messageLabel.setText('Starting scan')
 		else:
 			base.logger.message('NOT ready to go, is everything set?', True)
+			self.messageLabel.setText('WARNING: NOT ready to go, is everything set?')
 
 	def handle_measure_type(self, b):
 		if b.text() == "Attenuation":
@@ -250,6 +252,7 @@ class bpm_calibration_gui(QMainWindow, Ui_MainWindow, base):
 				self.data.values[dat.calibration_type] = 'delay'
 
 	def plot_bpm_vs_sa(self):
+		self.messageLabel.setText('Scan complete')
 		self.bpmxPlot.clear()
 		self.bpmyPlot.clear()
 		self.vbx = self.bpmxPlot.vb
@@ -265,6 +268,7 @@ class bpm_calibration_gui(QMainWindow, Ui_MainWindow, base):
 		self.data.values[dat.plots_done] = True
 
 	def plot_bpm_vs_sd(self):
+		self.messageLabel.setText('Scan complete')
 		self.bpmxPlot.clear()
 		self.bpmyPlot.clear()
 		self.vbx = self.bpmxPlot.vb
