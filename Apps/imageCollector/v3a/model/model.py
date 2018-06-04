@@ -72,14 +72,20 @@ class Model():
            # self.camerasDAQ.killCollectAndSaveJPG()
 
     def feedback(self,use):
-        if use is True:
+        if use:
             height = 2160#self.selectedCameraIA.IA.imageHeight
             width = 2560#self.selectedCameraIA.IA.imageWidth
             x = self.selectedCameraIA[0].IA.xPix
             y = self.selectedCameraIA[0].IA.yPix
             sX = self.selectedCameraIA[0].IA.xSigmaPix
             sY = self.selectedCameraIA[0].IA.ySigmaPix
-            if x-5*sX > 0 and x+5*sX < width and y-5*sY > 0 and y+5*sY < height:
-                #print(x-sX)
-                #print(y-sY)
-                self.setMask(int(x),int(y),int(5*sX),int(5*sY))
+            # DAW says that +/-4sigma should be OK for a window
+            # See http://www.ophiropt.com/user_files/laser/beam_profilers/Techniques_Beam_Width_Cameras_pt3.pdf
+            # if x-5*sX > 0 and x+5*sX < width and y-5*sY > 0 and y+5*sY < height:
+            for n in (4, 3, 2):
+            # n = 4
+                print 'Setting mask', x, y, n * sX, n * sY
+                if 0 < n * sX < height / 2 and 0 < n * sY < width / 2:
+                    self.setMask(int(x), int(y), int(n * sX), int(n * sY))
+                    break
+            
