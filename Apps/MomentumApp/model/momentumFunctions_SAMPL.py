@@ -34,7 +34,7 @@ class Functions(QObject):
         print('Stepping current to: '+str(setI))
         ctrl.setSI(magnet,setI)
         while ctrl.getSI(magnet) != setI:
-            print self.dctrl.getSI(self.dipole)
+            print ctrl.getSI(magnet)
             #self.qctrl.setSI(self.quad, x)
             time.sleep(0.5)
         #self.simulate.run()
