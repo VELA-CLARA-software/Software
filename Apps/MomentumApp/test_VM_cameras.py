@@ -9,7 +9,7 @@ os.environ["EPICS_CA_SERVER_PORT"]="6000"
 #sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\\view')
 #from PyQt4 import QtGui, QtCore
 #import model_VELA as model
-import model.model_CLARA as model
+import model.model_CLARA_SAMPL as model
 #import controller.controller
 #import view.view
 from epics import caget, caput
