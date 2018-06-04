@@ -15,15 +15,14 @@ logger = logging.getLogger(__name__)
 class plotWidgets(pg.GraphicsView):
 
 	actuators = ['approx', 'dipole', 'fine']
-	mainPlot = {}
-	subPlots = {}
 
 	def __init__(self, cavity, approximateText='Charge', approximateUnits='pC'):
 		super(plotWidgets, self).__init__()
 		self.cavity = cavity
 		self.layout = pg.GraphicsLayout(border=(100,100,100))
 		self.setCentralItem(self.layout)
-
+		self.mainPlot = {}
+		self.subPlots = {}
 		self.mainPlot['approx'] = self.layout.addPlot(title="Approximate Callibration")
 		self.mainPlot['approx'].setLabel('left', approximateText, approximateUnits)
 		self.mainPlot['approx'].setLabel('bottom', text='Phase', units='Degrees')
@@ -48,6 +47,7 @@ class plotWidgets(pg.GraphicsView):
 	def newData(self, cavity, actuator, data):
 		actuator = str(actuator)
 		if str(cavity) == self.cavity:
+			print 'newdata = ', cavity, self.cavity
 			if 'xData' in data and 'yData' in data and 'yStd' in data:
 				self.subPlots[actuator]['data'].setData(x=data['xData'], y=data['yData'])
 				self.subPlots[actuator]['std'].setData(x=data['xData'], y=data['yData'], height=np.array(data['yStd']))

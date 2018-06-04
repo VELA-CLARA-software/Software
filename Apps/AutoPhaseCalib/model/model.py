@@ -298,17 +298,28 @@ class Model(QObject):
 			return self.getLinac1KlystronForwardPower()
 
 	def setGunPhase(self, phase):
-		self.gunllrf.setPhiSP(phase)
+		if self.machineType == 'None':
+			self.gunPhiSp = phase
+		else:
+			self.gunllrf.setPhiSP(phase)
 
 	def getGunPhase(self):
-		return self.gunllrf.getPhiSP()
+		if self.machineType == 'None':
+			return self.gunPhiSp if hasattr(self, 'gunPhiSp') else 0
+		else:
+			return self.gunllrf.getPhiSP()
 
 	def setGunAmplitude(self, amp):
-		print 'setting gun to ', amp
-		self.gunllrf.setAmpSP(amp)
+		if self.machineType == 'None':
+			self.gunAmpSp = amp
+		else:
+			self.gunllrf.setAmpSP(amp)
 
 	def getGunAmplitude(self):
-		return self.gunllrf.getAmpSP()
+		if self.machineType == 'None':
+			return self.gunAmpSp if hasattr(self, 'gunAmpSp') else 0
+		else:
+			return self.gunllrf.getAmpSP()
 
 	def getGunKlystronForwardPower(self):
 		return self.gunllrf.getKlyFwdPower()
@@ -329,10 +340,16 @@ class Model(QObject):
 			return self.linac1llrf.getPhiSP()
 
 	def setLinac1Amplitude(self, amp):
-		self.linac1llrf.setAmpFF(amp)
+		if self.machineType == 'None':
+			self.linac1AmpSp = amp
+		else:
+			self.linac1llrf.setAmpFF(amp)
 
 	def getLinac1Amplitude(self):
-		return self.linac1llrf.getAmpSP()
+		if self.machineType == 'None':
+			return self.linac1AmpSp if hasattr(self, 'linac1AmpSp') else 0
+		else:
+			return self.linac1llrf.getAmpSP()
 
 	def getBPMPosition(self, bpm):
 		if self.machineType == 'None':
@@ -343,7 +360,11 @@ class Model(QObject):
 			self.bpmX.emit(self.bpm.getXFromPV(bpm))
 
 	def getWCMCharge(self, scope):
-		self.wcmQ.emit(self.scope.getCharge(scope))
+		if self.machineType == 'None':
+			value = np.random.random_sample()
+			self.wcmQ.emit(value)
+		else:
+			self.wcmQ.emit(self.scope.getCharge(scope))
 
 	def saveData(self):
 		for cavity in ['Gun', 'Linac1']:
@@ -792,6 +813,7 @@ class crestingObjectFine(crestingObject):
 		self.data.append(value)
 
 	def findingCrest(self):
+		self.resetDataArray()
 		if self.parent.calibrationPhase[self.cavity] is None:
 			self.approxcrest = self.parent.getPhase(self.cavity)
 		else:
