@@ -238,6 +238,10 @@ class scrollingPlot(QWidget):
     def createAxis(self, *args, **kwargs):
         self.scrollingPlotPlot.createAxis(*args, **kwargs)
 
+
+    def setYRange(self, min, max):
+        self.scrollingPlotPlot.setYRange(min, max)
+
 class scrollingPlotPlot(QWidget):
 
     plotUpdated = pyqtSignal()
@@ -281,6 +285,13 @@ class scrollingPlotPlot(QWidget):
             vb.enableAutoRange(y=False)
             currentrange = vb.viewRange()
             vb.setYRange(0, currentrange[1][1], padding=0)
+
+    def setYRange(self, *args, **kwargs):
+        for a in self.namedaxes.iteritems():
+            axis, vb = a[1]
+            vb.enableAutoRange(y=False)
+            vb.setYRange(*args, **kwargs)
+
 
     def setAxisToZero(self, vb):
         vb.enableAutoRange(y=False)

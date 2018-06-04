@@ -47,7 +47,6 @@ class plotWidgets(pg.GraphicsView):
 	def newData(self, cavity, actuator, data):
 		actuator = str(actuator)
 		if str(cavity) == self.cavity:
-			print 'newdata = ', cavity, self.cavity
 			if 'xData' in data and 'yData' in data and 'yStd' in data:
 				self.subPlots[actuator]['data'].setData(x=data['xData'], y=data['yData'])
 				self.subPlots[actuator]['std'].setData(x=data['xData'], y=data['yData'], height=np.array(data['yStd']))
