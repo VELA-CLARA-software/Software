@@ -389,7 +389,7 @@ class Ui_MainWindow(object):
         self.nShotsSetLinac1.setText(_translate("MainWindow", "10", None))
         self.label_8.setText(_translate("MainWindow", "Number of Scanning Points", None))
         self.nScanningSetLinac1.setText(_translate("MainWindow", "20", None))
-        self.label_9.setText(_translate("MainWindow", "Range (Degrees)", None))
+        self.label_9.setText(_translate("MainWindow", "Range (Degrees) plus/minus", None))
         self.rangeSetLinac1.setText(_translate("MainWindow", "15", None))
         self.groupBox_methodLinac1.setTitle(_translate("MainWindow", "Method", None))
         self.turnOnLinac1Button.setText(_translate("MainWindow", "Turn On Linac", None))
