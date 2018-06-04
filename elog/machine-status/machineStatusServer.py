@@ -4,6 +4,7 @@
 app_name = 'CLARA Machine Status Server'
 author = 'Ben Shepherd'
 version_history = {
+    '3.3': ('2018-06-04', 'option for reset buttons in PVs'),
     '3.2': ('2018-02-01', 'HTML pages in separate files'),
     '3.1': ('2016-01-14', 'fixed issue with non-connected parameters, misinterpretation of NaNs'),
     '3.0': ('', 'converted to Python')}
@@ -14,6 +15,7 @@ import os
 import re
 import ssl
 import sys
+from time import sleep
 
 if os.name == 'posix':
     # Help pyepics find the right library
@@ -44,7 +46,7 @@ class StoppableServer(http.server.HTTPServer):
 
 class MyHandler(http.server.BaseHTTPRequestHandler):
     params = {}
-    pvs = {}
+    pvs = OrderedDict()
 
     # Read in HTML snippets for status tables 
     # File names should be "status.nn.Region.html"
@@ -87,9 +89,11 @@ class MyHandler(http.server.BaseHTTPRequestHandler):
             escapedParam = param.replace(':', '`')
             escapedParam = escapedParam.replace('.', '¬')
             if escapedParam not in pvs:
-                pvs[escapedParam] = PV(param)
+                # When formatCode is 'btn', we need to "press a button" to get an updated value for the PVs
+                # The PV is stored inside a tuple in the dict to distinguish it from ordinary "get" PVs
+                pvs[escapedParam] = (PV(param), 1, 0) if formatCode == 'btn' else PV(param)
             text = text.replace('{' + param + ':' + formatCode + '}',
-                                '{' + escapedParam + ':' + formatCode + '}', 1)
+                                '' if formatCode == 'btn' else ('{' + escapedParam + ':' + formatCode + '}'), 1)
             params[region.lower()].append(escapedParam)
         newOutput[region.lower()] = text
     output = newOutput
@@ -117,10 +121,14 @@ class MyHandler(http.server.BaseHTTPRequestHandler):
                 #                print(param)
                 pv = self.pvs[param]
                 print(pv)
-                if not pv.connected:
-                    pv_val = float('nan')
-                else:
-                    pv_val = pv.get()
+                if isinstance(pv, tuple):  # This PV is a 'button' type - we have to set it to the given values
+                    pv, values = pv[0], pv[1:]
+                    for val in values:
+                        pv.put(val)
+                        sleep(0.1)  # short delay to mimic button press
+                    sleep(1)  # longer delay to let the updated values propagate
+                pv_val = pv.get() if pv.connected else float('nan')
+
                 # handle special cases
                 # report a nicely formatted value for the train length
                 # in micro- or nanoseconds

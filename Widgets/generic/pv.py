@@ -39,7 +39,7 @@ class PVObject(QObject):
         self.dict = OrderedDict(kwargs)
         if 'status' in kwargs and 'value' in kwargs and self.dict['status'] is 0:
             if not 'timestamp' in kwargs:
-                timestamp = time.time()
+                self.dict['timestamp'] = time.time()
             self._value = [self.dict['timestamp'], self.dict['value'], self.name]
             self.newValue.emit(*self._value)
 
@@ -150,7 +150,7 @@ class PVBuffer(PVObject):
 
     @property
     def std(self):
-        return math.sqrt((self.sum_x2 / self.length) - (self.mean*self.mean)) if (self.sum_x2 / self.length) - (self.mean*self.mean) > 0 else 0
+        return math.sqrt((self.sum_x2 / self.length) - (self.mean*self.mean)) if self.length > 0 else 0
 
     @property
     def min(self):

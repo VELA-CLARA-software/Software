@@ -30,7 +30,7 @@ while abs(req_x - x) > sx * precision or abs(req_y - y) > sy * precision:
     # Gotcha: a negative H move means the beam goes RIGHT, contrary to convention
     h_step = math.copysign(move_amount, -(req_x - x)) if abs(req_x - x) > sx * precision else 0
     # Do a bigger step in y
-    v_step = 3 * math.copysign(move_amount, req_y - y) if abs(req_y - y) > sy * precision else 0
+    v_step = math.copysign(move_amount, req_y - y) if abs(req_y - y) > sy * precision else 0
     print('Move amount', h_step, v_step)
     pilc.setHstep(h_step)
     assert pilc.moveH()  # returns True on success, presumably False on fail?
