@@ -75,7 +75,7 @@
           </size>
          </property>
          <property name="autoFillBackground">
-          <bool>true</bool>
+          <bool>false</bool>
          </property>
          <property name="styleSheet">
           <string notr="true">background-color: rgb(255, 0, 0);</string>
@@ -101,7 +101,7 @@
        </sizepolicy>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="gunTab">
        <attribute name="icon">
@@ -125,12 +125,26 @@
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_5">
            <item>
+            <widget class="QPushButton" name="turnOnGunButton">
+             <property name="text">
+              <string>Turn On Gun</string>
+             </property>
+            </widget>
+           </item>
+           <item>
             <widget class="QPushButton" name="crestGunWCMButton">
              <property name="text">
               <string>Approximately Find Crest with WCM</string>
              </property>
              <property name="checked">
               <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="setGunDipoleButton">
+             <property name="text">
+              <string>Set Dipole Current</string>
              </property>
             </widget>
            </item>
@@ -290,7 +304,7 @@
        </attribute>
        <layout class="QGridLayout" name="linacTabLayout">
         <item row="0" column="1" rowspan="4">
-         <widget class="QGroupBox" name="groupBox_plotsLinac">
+         <widget class="QGroupBox" name="groupBox_plotsLinac1">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
             <horstretch>1</horstretch>
@@ -432,21 +446,41 @@
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_4">
            <item>
-            <widget class="QPushButton" name="crestLinacRoughButton">
+            <widget class="QPushButton" name="turnOnLinac1Button">
+             <property name="text">
+              <string>Turn On Linac</string>
+             </property>
+             <property name="checkable">
+              <bool>false</bool>
+             </property>
+             <property name="flat">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="crestLinac1RoughButton">
              <property name="text">
               <string>Aprroximately Find Crest with BPM</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="crestLinacButton">
+            <widget class="QPushButton" name="setLinac1DipoleButton">
+             <property name="text">
+              <string>Set Dipole Current</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="crestLinac1Button">
              <property name="text">
               <string>Fine Crest Linac with BPM</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="setLinacPhaseButton">
+            <widget class="QPushButton" name="setLinac1PhaseButton">
              <property name="text">
               <string>Set Linac Phase</string>
              </property>

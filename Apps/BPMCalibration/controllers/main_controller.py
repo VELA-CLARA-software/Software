@@ -131,6 +131,8 @@ class main_controller(controller_base):
                 controller_base.data_monitor.charge_monitor.update_bunch_charge()
             controller_base.bpm_handler.find_min_dly_1()
             controller_base.bpm_handler.find_min_dly_2()
+        else:
+            print "not ready!!!!"
 
     # def set_delays_and_record(self):
     #     if controller_base.data.values[dat.ready_to_go]:

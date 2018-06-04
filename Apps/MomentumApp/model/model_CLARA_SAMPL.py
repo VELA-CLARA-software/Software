@@ -32,7 +32,7 @@ import VELA_CLARA_LLRF_Control as llrf
 import VELA_CLARA_PILaser_Control as pil
 import VELA_CLARA_Camera_IA_Control as camIA
 
-import momentumFunctions
+import momentumFunctions_SAMPL as momentumFunctions
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -138,7 +138,7 @@ class Model(QObject):
 
         '''3. Centre in Spec. Line'''
         if self.view.checkBox_3.isChecked()==True:
-            self.I = self.func.bendBeam(self.Cmagnets,'DIP01',
+            self.I = self.func.bendBeamThread(self.Cmagnets,'DIP01',
                                         self.Cbpms,'C2V-BPM01',
                                         'YAG01',
                                          self.predictedI, 0.00001)                 # tol=0.0001 (metres)
@@ -161,8 +161,13 @@ class Model(QObject):
             """2. Set Dispersion"""
             if self.view.checkBox_2_s.isChecked()==True:
                 #2.1 Minimize Beta
-                self.func.using_move_to_thread(self.Cmagnets,'S02-QUAD3',
+                test_continue = 0
+                print 'test_continue0', test_continue
+                self.func.minBetaThread(self.Cmagnets,'S02-QUAD3',
                                         None,'VM-CLA-C2V-DIA-CAM-01',1)
+                #while test_continue < 1:
+                #    print 'test_continue', test_continue
+                #    time.sleep(1)
                 #'''Re-instate minimising beta with Quad-04 here!!!'''
                 #self.func.minimizeBeta2(self.Cmagnets,'S02-QUAD4',
                 #                        None,'VM-CLA-C2V-DIA-CAM-01',-1)
