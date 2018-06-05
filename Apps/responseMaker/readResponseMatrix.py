@@ -48,6 +48,7 @@ class responseMatrix(object):
                 ans = rm[m] if abs(rm[m]) > 0.1 else 0
                 line.append(ans)
             responseMatrix.append(line)
+        return responseMatrix
 
 class horizontalResponseMatrix(responseMatrix):
 
