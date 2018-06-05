@@ -42,7 +42,7 @@ class responseMaker(QMainWindow):
 
         stdicon = self.style().standardIcon
         style = QStyle
-        self.setWindowTitle("RF Cavity Cresting Application")
+        self.setWindowTitle("Orbit Correction")
 
         menubar = self.menuBar()
         fileMenu = menubar.addMenu('&File')
@@ -52,6 +52,10 @@ class responseMaker(QMainWindow):
         exitAction.setStatusTip('Exit application')
         exitAction.triggered.connect(qApp.quit)
         fileMenu.addAction(exitAction)
+        runAllAction = QAction('&Run All', self)
+        runAllAction.setStatusTip('Run All Tabs')
+        runAllAction.triggered.connect(self.runAll)
+        fileMenu.addAction(runAllAction)
 
         self.layout = QGridLayout()
         self.widget = QWidget()
@@ -65,6 +69,12 @@ class responseMaker(QMainWindow):
             self.tabs.addTab(responsePlotterTab(a), a)
         # self.layout.addWidget(self.newButton,0,0)
         self.layout.addWidget(self.tabs,0,0,6,6)
+
+    def runAll(self):
+        for t in range(self.tabs.count()):
+            self.tabs.setCurrentIndex(t)
+            self.tabs.widget(t).runButton.click()
+            self.tabs.widget(t).saveButton.click()
 
 class monitor(PVBuffer):
 
@@ -87,7 +97,7 @@ class corrector(PVObject):
     def __init__(self, pv=None, rdbk=None, parent=None):
         super(corrector, self).__init__(pv, rdbk, parent)
         self.name = pv
-        self.writeAccess = True
+        self.writeAccess = False
 
 class recordRMData(tables.IsDescription):
     actuator  = tables.Float64Col()     # double (double-precision)
@@ -188,7 +198,7 @@ class responsePlotterTab(QWidget):
             length = np.min([m.length for m in self.monitors])
             while length < 5:
                 length = np.min([m.length for m in self.monitors])
-                app.processEvents()
+                qApp.processEvents()
             # print ('i = ', i)
             for m in self.monitors:
                 m.emitAverage()

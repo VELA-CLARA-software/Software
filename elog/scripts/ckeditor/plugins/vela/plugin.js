@@ -4,7 +4,7 @@
  */
 
 // add buttons for machine status
-machineAreas = ['Gun', 'Linac1', 'Straight 2', 'C2V', 'VELA Straight 2'];//, 'ST1', 'Arc 1', 'ST2', 'ST3', 'Arc 2', 'ST4', 'RF', 'RF Sliders', 'FEL'];
+machineAreas = ['Gun', 'Linac1', 'Straight 2', 'C2V', 'VELA Straight 2', 'BA1', 'BA1 Motors'];
 maIcons = machineAreas.slice();
 for (var i=0; i < maIcons.length; i++) {
     maIcons[i] = maIcons[i].replace(' ', '') + 'status';
