@@ -6,7 +6,6 @@ import numpy as np
 from scipy.optimize import curve_fit
 from scipy.interpolate import UnivariateSpline
 import random as r
-import csv
 from  functools import partial
 
 degree = physics.pi/180.0
@@ -62,6 +61,8 @@ class dataArray(QObject):
 		self.emitSignal(cavity, actuator)
 
 	def __getitem__(self, key):
+		if not str(key) in self.dict:
+			self[str(key)] = {}
 		return self.dict[str(key)]
 
 	def __setitem__(self, key, value):
@@ -71,6 +72,7 @@ class Model(QObject):
 
 	bpmX = pyqtSignal(float)
 	wcmQ = pyqtSignal(float)
+	running = False
 
 	def __init__(self, machineType, lineType, gunType, mag, scope, bpm, gunllrf, linac1llrf, cameras=None):
 		super(Model, self).__init__()
@@ -90,6 +92,12 @@ class Model(QObject):
 		self.calibrationPhase = {'Gun': None, 'Linac1': None}
 		self.run()
 		print("Model Initialized")
+
+	def setRunning(self):
+		self.running = True
+
+	def setNotRunning(self):
+		self.running = False
 
 	def virtualSetUp(self):
 		sys.path.append('C:\\anaconda32\\Work\\OnlineModel')
@@ -179,6 +187,7 @@ class Model(QObject):
 			self.crester.moveToThread(self)
 			self.crestfunc = getattr(self.crester, crestingfunction)
 			self.started.connect(self.crestfunc)
+			self.started.connect(parent.setRunning)
 
 			self.crester.finished.connect(parent.printFinished)
 			if timer is not None:
@@ -187,6 +196,7 @@ class Model(QObject):
 			if phaser is not None:
 				self.crester.finishedSuccesfully.connect(lambda : phaser(offset=False))
 			self.crester.finished.connect(self.quit)
+			self.crester.finished.connect(parent.setNotRunning)
 
 	def gunWCMCrester(self, gunPhaseSet=0):
 		print('2. Approximately Finding Crest')
@@ -366,23 +376,6 @@ class Model(QObject):
 		else:
 			self.wcmQ.emit(self.scope.getCharge(scope))
 
-	def saveData(self):
-		for cavity in ['Gun', 'Linac1']:
-			my_dict = {}
-			for name in ['approxPhaseData', 'approxChargeData', 'approxPhaseFit', 'approxChargeFit', 'approxChargeStd']:
-				my_dict[name] = self.crestingData[cavity][name]
-			with open(cavity+'_approx_CrestingData.csv', 'wb') as f:  # Just use 'w' mode in 3.x
-			    w = csv.DictWriter(f, my_dict.keys())
-			    w.writeheader()
-			    w.writerow(my_dict)
-			my_dict = {}
-			for name in ['finePhaseFit', 'fineBPMFit', 'finePhaseData', 'fineBPMData', 'fineBPMStd']:
-				my_dict[name] = self.crestingData[cavity][name]
-			with open(cavity+'_fine_CrestingData.csv', 'wb') as f:  # Just use 'w' mode in 3.x
-			    w = csv.DictWriter(f, my_dict.keys())
-			    w.writeheader()
-			    w.writerow(my_dict)
-
 	def turnOnGun(self):
 		self.crester = turnGunOn(self)
 		self.crester.setAmp.connect(self.setAmplitude)
@@ -413,10 +406,11 @@ class Model(QObject):
 
 			self.crester.moveToThread(self)
 			self.started.connect(self.crester.findDipoleCurrent)
+			self.started.connect(parent.setRunning)
 
 			self.crester.finished.connect(parent.timer.stop)
-			self.crester.finished.connect(parent.printFinished)
 			self.crester.finished.connect(self.quit)
+			self.crester.finished.connect(parent.setNotRunning)
 
 	def setDipoleCurrentForGun(self):
 		self.cresterObject = self.dipoleSettingMethod(self, setUpGunDipole)
@@ -513,16 +507,21 @@ class crestingObject(QObject):
 		self.resetDataSignal.connect(self.crestingData.resetData)
 		self.setDataSignal.connect(self.crestingData.setData)
 		self.appendDataSignal.connect(self.crestingData.appendData)
+		self.finishedSuccesfully.connect(self.printFinished)
+
+	def printFinished(self):
+		self.setLabel.emit(self.cavity + ' calibration phase finished.')
 
 	def printFinalPhase(self):
 		print 'Calibration phase is', self.crestingData[self.cavity][self.actuator]['calibrationPhase']
+		self.setLabel.emit(self.cavity + ' calibration phase is ' + str(self.crestingData[self.cavity][self.actuator]['calibrationPhase']))
 
 	def abort(self):
-		print 'stopping worker!'
+		self.setLabel.emit('stopping worker!')
 		self._isRunning = False
 
 	def finish(self):
-		print 'finishing worker!'
+		self.setLabel.emit('finishing worker!')
 		self._finish = True
 
 	def resetDataArray(self):
@@ -534,13 +533,15 @@ class crestingObject(QObject):
 	def setFitArray(self, x, y):
 		self.setDataSignal.emit(self.cavity, self.actuator, ['xFit', 'yFit'], [x, y])
 
-	def getDataArray(self, column=None, zipped=True):
+	def getDataArray(self, column=None, zipped=True, sortKey=None):
 		if column is not None:
 			return self.crestingData[self.cavity][self.actuator][column]
 		else:
 			data = [self.crestingData[self.cavity][self.actuator]['xData'],
 				self.crestingData[self.cavity][self.actuator]['yData'],
 				self.crestingData[self.cavity][self.actuator]['yStd']]
+			if sortKey is not None:
+				data = zip(*sorted(zip(*data), key=sortKey))
 			if zipped:
 				return zip(*data)
 			else:
@@ -632,7 +633,7 @@ class setUpGunDipole(crestingObject):
 		popt, pcov = curve_fit(self.fitting_equation, x, y, sigma=std, \
 		p0=self.initialGuess, bounds=([-np.inf, -np.inf, -np.inf, min(x)], [np.inf, np.inf, np.inf, max(x)]))
 
-		print 'Calibration dipole Sin fit is', popt[3]
+		self.setLabel.emit('Calibration dipole Sin fit is', popt[3])
 
 		self.setFitArray(np.array(xnew), self.fitting_equation(xnew, *popt))
 		self.finalDipoleI = popt[3]
@@ -669,7 +670,7 @@ class crestingObjectQuick(crestingObject):
 		self.offset = 0
 
 	def findingCrest(self):
-		self.setLabel.emit('Starting Thread!')
+		self.setLabel.emit('Finding ' + self.cavity + ' crest - quick method!')
 		self.approxcrest = self.parent.getPhase(self.cavity)
 		for phase in np.arange(-180,180,self.stepSize):
 			self.setPhase.emit(self.cavity, phase)
@@ -703,7 +704,7 @@ class crestingObjectQuick(crestingObject):
 			self.finishedSuccesfully.emit()
 		except Exception as e:
 			print(e)
-			print 'Error in fitting!'
+			self.setLabel.emit('Error in fitting!')
 
 class findingGunCrestWCM(crestingObjectQuick):
 
@@ -752,7 +753,7 @@ class findingGunCrestWCM(crestingObjectQuick):
 			self.finishedSuccesfully.emit()
 		except Exception as e:
 			print(e)
-			print 'Error in fitting!'
+			self.setLabel.emit('Error in fitting!')
 
 class findingLinac1CrestQuick(crestingObjectQuick):
 
@@ -803,7 +804,7 @@ class findingLinac1CrestQuick(crestingObjectQuick):
 			self.finishedSuccesfully.emit()
 		except Exception as e:
 			print(e)
-			print 'Error in fitting!'
+			self.setLabel.emit('Error in fitting!')
 
 class crestingObjectFine(crestingObject):
 	def __init__(self, parent, magnets, bpm, phiRange, phiSteps, bpmSamples):
@@ -821,6 +822,7 @@ class crestingObjectFine(crestingObject):
 
 	def findingCrest(self):
 		self.resetDataArray()
+		self.setLabel.emit('Finding ' + self.cavity + ' crest - fine method!')
 		if self.parent.calibrationPhase[self.cavity] is None:
 			self.approxcrest = self.parent.getPhase(self.cavity)
 		else:
@@ -877,9 +879,8 @@ class findingGunCrest(crestingObjectFine):
 	actuator = 'fine'
 
 	def fitting(self):
-		x, y, std = self.getDataArray(zipped=False)
+		x, y, std = self.getDataArray(zipped=False, sortKey=lambda x: x[0])
 		if (max(x) - min(x)) > (self.maxPhase - self.minPhase):
-			print 'split!'
 			x = [a if a >= 0 else a+360 for a in x]
 		# k = 5 if len(x) < 6 else (len(x) - 1)
 		f = UnivariateSpline(x, y, w=std, k=5)
@@ -903,12 +904,10 @@ class findingLinac1Crest(crestingObjectFine):
 	actuator = 'fine'
 
 	def fitting(self):
-		x, y, std = self.getDataArray(zipped=False)
+		x, y, std = self.getDataArray(zipped=False, sortKey=lambda x: x[0])
 		if (max(x) - min(x)) > (self.maxPhase - self.minPhase):
-			print 'split!'
 			x = [a if a >= 0 else a+360 for a in x]
 		k = 5 if len(x) > 6 else (len(x) - 2)
-		print 'k = ', k
 		if k > 0:
 			f = UnivariateSpline(x, y, w=std, k=k)
 
