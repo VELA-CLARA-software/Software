@@ -555,7 +555,7 @@ class crestingObject(QObject):
 			return data
 
 	def setFinalPhase(self, phase):
-		phase = mod(180+phase,360)-180
+		phase = np.mod(180+phase,360)-180
 		self.crestingData[self.cavity][self.actuator]['calibrationPhase'] = phase
 		self.setPhase.emit(self.cavity, phase)
 

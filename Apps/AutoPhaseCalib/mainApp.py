@@ -36,8 +36,8 @@ class App(QtCore.QObject):
 			import VELA_CLARA_BPM_Control as bpm
 			import VELA_CLARA_LLRF_Control as llrf
 			import VELA_CLARA_Charge_Control as scope
-			import VELA_CLARA_Camera_IA_Control as camIA
-			
+			# import VELA_CLARA_Camera_IA_Control as camIA
+
 			self.magInit = mag.init()
 			self.magInit.setQuiet()
 			self.bpmInit = bpm.init()
@@ -46,8 +46,8 @@ class App(QtCore.QObject):
 			self.llrfInit.setQuiet()
 			self.scopeInit = scope.init()
 			self.scopeInit.setQuiet()
-			self.camInit = camIA.init()
-			self.camInit.setQuiet()
+			# self.camInit = camIA.init()
+			# self.camInit.setQuiet()
 			if self.machineType == 'Virtual':
 				os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
 				os.environ["EPICS_CA_ADDR_LIST"] = "10.10.0.12"
@@ -67,7 +67,7 @@ class App(QtCore.QObject):
 					self.bpms = self.bpmInit.virtual_CLARA_PH1_BPM_Controller()
 					self.gun = self.llrfInit.virtual_CLARA_LRRG_LLRF_Controller()
 					self.linac = self.llrfInit.virtual_L01_LLRF_Controller()
-					self.cameras = self.camInit.virtual_CLARA_Camera_IA_Controller()
+					self.cameras = None
 			elif self.machineType == 'Physical':
 				print 'PHYSICAL CONTROLLERS!'
 				if self.lineType == 'VELA':
