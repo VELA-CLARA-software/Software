@@ -301,7 +301,7 @@ class Model(QObject):
 		if self.machineType == 'None':
 			self.gunPhiSp = phase
 		else:
-			self.gunllrf.setPhiSP(phase)
+			self.gunllrf.setPhiSP(np.mod(180+phase,360)-180)
 
 	def getGunPhase(self):
 		if self.machineType == 'None':
@@ -331,7 +331,7 @@ class Model(QObject):
 		if self.machineType == 'None':
 			self.linac1PhiSp = phase
 		else:
-			self.linac1llrf.setPhiSP(phase)
+			self.linac1llrf.setPhiSP(np.mod(180+phase,360)-180)
 
 	def getLinac1Phase(self):
 		if self.machineType == 'None':
@@ -356,7 +356,7 @@ class Model(QObject):
 			value = np.random.random_sample()
 			self.bpmX.emit(value)
 		else:
-			print 'BPM X = ', self.bpm.getXFromPV(bpm)
+			# print 'BPM ', bpm, ' = ', self.bpm.getXFromPV(bpm)
 			self.bpmX.emit(self.bpm.getXFromPV(bpm))
 
 	def getWCMCharge(self, scope):
@@ -555,7 +555,9 @@ class crestingObject(QObject):
 			return data
 
 	def setFinalPhase(self, phase):
-		self.setDataSignal.emit(self.cavity, self.actuator, ['calibrationPhase'], [phase])
+		phase = mod(180+phase,360)-180
+		self.crestingData[self.cavity][self.actuator]['calibrationPhase'] = phase
+		self.setPhase.emit(self.cavity, phase)
 
 class setUpGunDipole(crestingObject):
 
@@ -729,24 +731,22 @@ class findingGunCrestWCM(crestingObjectQuick):
 	def cutData(self):
 		"""Return all data where the charge is >= 25% of the maximum and is at least 10pC"""
 		allData = self.getDataArray()
-		max_charge = max(getDataArray('yData'))
+		max_charge = max(self.getDataArray('yData'))
 
-		cutData = [a for a in allData if a[1] > max_charge / 4 and a[1] > 10]
+		cutData = [a for a in allData if a[1] > max_charge / 4 and a[1] > 10 and a[2] < 2]
 		return cutData
 
 	def doFit(self):
 		try:
 			cutData = self.cutData()
 			x, y, std = zip(*cutData)
-			# f = UnivariateSpline(x, y, w=std, k=5)
-
-			# xnew = np.linspace(np.min(x), np.max(x), num=100, endpoint=True)
-			# ynew = f(xnew)
-
-			self.setFitData(np.array(x), np.array(y))
-
+			if max(x) - min(x) > 90:
+				x = [a if a >= 0 else a+360 for a in x]
 			crest_phase = (x[-1] + x[0]) / 2.0
-
+			if crest_phase > 180:
+				crest_phase -= 360
+			x = [a if a <= 180 else a-360 for a in x]
+			self.setFitArray(np.array(x), np.array(y))
 			self.setFinalPhase(crest_phase)
 			self.printFinalPhase()
 			self.finishedSuccesfully.emit()
@@ -789,8 +789,15 @@ class findingLinac1CrestQuick(crestingObjectQuick):
 		try:
 			cutData = self.cutData()
 			x, y, std = zip(*cutData)
+			if max(x) - min(x) > 180:
+				x = [a if a >= 0 else a+360 for a in x]
 			crest_phase = np.mean(x)-180
-			self.setFitData(np.array(x), np.array(y))
+			if crest_phase > 180:
+				crest_phase -= 360
+			if crest_phase < 180:
+				crest_phase += 360
+			x = [a if a <= 180 else a-360 for a in x]
+			self.setFitArray(np.array(x), np.array(y))
 			self.setFinalPhase(crest_phase)
 			self.printFinalPhase()
 			self.finishedSuccesfully.emit()
@@ -871,17 +878,22 @@ class findingGunCrest(crestingObjectFine):
 
 	def fitting(self):
 		x, y, std = self.getDataArray(zipped=False)
-		k = 5 if len(x) < 6 else (len(x) - 1)
-		f = UnivariateSpline(x, y, w=std, k=k)
-
+		if (max(x) - min(x)) > (self.maxPhase - self.minPhase):
+			print 'split!'
+			x = [a if a >= 0 else a+360 for a in x]
+		# k = 5 if len(x) < 6 else (len(x) - 1)
+		f = UnivariateSpline(x, y, w=std, k=5)
 		xnew = np.linspace(np.min(x), np.max(x), num=100, endpoint=True)
 		ynew = f(xnew)
-
-		crest = xnew[np.argmin(ynew)]
-
+		crest_phase = xnew[np.argmin(ynew)]
+		xnew = [a if a <= 180 else a-360 for a in xnew]
+		if crest_phase > 180:
+			crest_phase -= 360
+		if crest_phase < 180:
+			crest_phase += 360
 		self.setFitArray(xnew, ynew)
 
-		self.setFinalPhase(crest)
+		self.setFinalPhase(crest_phase)
 		self.printFinalPhase()
 		self.finishedSuccesfully.emit()
 
@@ -892,6 +904,9 @@ class findingLinac1Crest(crestingObjectFine):
 
 	def fitting(self):
 		x, y, std = self.getDataArray(zipped=False)
+		if (max(x) - min(x)) > (self.maxPhase - self.minPhase):
+			print 'split!'
+			x = [a if a >= 0 else a+360 for a in x]
 		k = 5 if len(x) > 6 else (len(x) - 2)
 		print 'k = ', k
 		if k > 0:
@@ -900,10 +915,13 @@ class findingLinac1Crest(crestingObjectFine):
 			xnew = np.linspace(np.min(x), np.max(x), num=100, endpoint=True)
 			ynew = f(xnew)
 
-			crest = xnew[np.argmin(ynew)]
-
+			crest_phase = xnew[np.argmin(ynew)]
+			xnew = [a if a <= 180 else a-360 for a in xnew]
+			if crest_phase > 180:
+				crest_phase -= 360
+			if crest_phase < 180:
+				crest_phase += 360
 			self.setFitArray(xnew, ynew)
-
-			self.setFinalPhase(crest)
+			self.setFinalPhase(crest_phase)
 			self.printFinalPhase()
 			self.finishedSuccesfully.emit()
