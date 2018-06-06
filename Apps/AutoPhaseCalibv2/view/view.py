@@ -351,7 +351,7 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menuFile.menuAction())
 
         self.retranslateUi(MainWindow)
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
         MainWindow.setTabOrder(self.checkBox_deguassQ, self.checkBox_deguassD)
         MainWindow.setTabOrder(self.checkBox_deguassD, self.checkBox_deguassC)
