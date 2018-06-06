@@ -4,13 +4,23 @@ import sys,os
 import time
 import numpy as np
 import pyqtgraph as pg
-import threads
 import csv
 from  functools import partial
 sys.path.append("../../../")
 import Software.Widgets.loggerWidget.loggerWidget as lw
 import logging
 logger = logging.getLogger(__name__)
+
+class GenericThread(QThread):
+	def __init__(self, function, *args, **kwargs):
+		QThread.__init__(self)
+		self.function = function
+		self.args = args
+		self.kwargs = kwargs
+
+	def run(self):
+		self.object = self.function(*self.args,**self.kwargs)
+		print 'finished!'
 
 class plotWidgets(pg.GraphicsView):
 
@@ -46,19 +56,29 @@ class plotWidgets(pg.GraphicsView):
 
 	def newData(self, cavity, actuator, data):
 		actuator = str(actuator)
-		if str(cavity) == self.cavity:
-			if 'xData' in data and 'yData' in data and 'yStd' in data:
-				self.subPlots[actuator]['data'].setData(x=data['xData'], y=data['yData'])
-				self.subPlots[actuator]['std'].setData(x=data['xData'], y=data['yData'], height=np.array(data['yStd']))
-			if 'xFit' in data and 'yFit' in data:
-				self.subPlots[actuator]['fit'].setData(x=data['xFit'], y=data['yFit'])
+		try:
+			if str(cavity) == self.cavity:
+				if 'xData' in data and 'yData' in data and 'yStd' in data:
+					self.subPlots[actuator]['data'].setData(x=data['xData'], y=data['yData'])
+					self.subPlots[actuator]['std'].setData(x=data['xData'], y=data['yData'], height=np.array(data['yStd']))
+				if 'xFit' in data and 'yFit' in data:
+					self.subPlots[actuator]['fit'].setData(x=data['xFit'], y=data['yFit'])
+		except:
+			pass
 
-class Controller():
+class Controller(QObject):
+
+	newDataSignal = pyqtSignal()
+	loggerSignal = pyqtSignal(str)
 
 	def __init__(self, view, model):
+		super(Controller, self).__init__()
 		'''define model and view'''
 		self.view = view
 		self.model = model
+		self.model.logger = self.loggerSignal
+		self.model.newData = self.newDataSignal
+		self.loggerSignal.connect(self.setLabel)
 		self.plots = {}
 
 		'''Plots'''
@@ -66,11 +86,9 @@ class Controller():
 		# Gun
 		self.plots['Gun'] = plotWidgets('Gun', approximateText='Charge', approximateUnits='pC')
 		self.view.plotLayoutGun.addWidget(self.plots['Gun'])
-		self.model.crestingData.newDataSignal.connect(self.plots['Gun'].newData)
 		# LINAC1
 		self.plots['Linac1'] = plotWidgets('Linac1', approximateText='BPM X Position', approximateUnits='mm')
 		self.view.plotLayoutLinac1.addWidget(self.plots['Linac1'])
-		self.model.crestingData.newDataSignal.connect(self.plots['Linac1'].newData)
 
 		self.log = lw.loggerWidget()
 		self.view.logTabLayout.addWidget(self.log)
@@ -92,7 +110,7 @@ class Controller():
 		self.view.finishButton.hide()
 		self.view.finishButton.clicked.connect(self.finishRunning)
 		self.view.actionSave_Calibation_Data.triggered.connect(self.saveData)
-		self.view.turnOnGunButton.clicked.connect(self.model.turnOnGun)
+		# self.view.turnOnGunButton.clicked.connect(self.model.turnOnGun)
 		self.view.setGunDipoleButton.clicked.connect(self.setDipoleCurrentForGun)
 		self.view.setLinac1DipoleButton.clicked.connect(self.setDipoleCurrentForLinac1)
 
@@ -126,35 +144,44 @@ class Controller():
 		if hasattr(self,'crester'):
 			self.crester.crester.finish()
 
-	class crestingThread:
-
-		def __init__(self, parent, crester):
-			parent.disableButtons()
-			self.crester = crester()
-			parent.crester = self.crester
-			self.crester.crester.finished.connect(parent.enableButtons)
-			self.crester.crester.setLabel.connect(parent.setLabel)
-			self.crester.start()
+	def updatePlot(self):
+		self.plots[self.cavity].newData(self.model.cavity, self.model.actuator, self.model.crestingData[self.model.cavity][self.model.actuator])
 
 	def gunWCMCrester(self):
-		thread = self.crestingThread(self, self.model.gunWCMCrester)
+		self.cavity = 'Gun'
+		self.thread = GenericThread(self.model.gunWCMCrester)
+		self.newDataSignal.connect(self.updatePlot)
+		self.thread.start()
 
 	def linac1CresterQuick(self):
-		thread = self.crestingThread(self, self.model.linac1CresterQuick)
+		self.cavity = 'Linac1'
+		self.thread = GenericThread(self.model.linac1CresterQuick)
+		self.newDataSignal.connect(self.updatePlot)
+		self.thread.start()
 
 	def gunBPMCrester(self):
-		func = partial(self.model.gunBPMCrester, int(self.view.rangeSetGun.text()), int(self.view.nScanningSetGun.text()), int(self.view.nShotsSetGun.text()))
-		thread = self.crestingThread(self, func)
+		self.cavity = 'Gun'
+		self.thread = GenericThread(self.model.gunCresterFine, int(self.view.rangeSetGun.text()), int(self.view.nScanningSetGun.text()), int(self.view.nShotsSetGun.text()))
+		self.newDataSignal.connect(self.updatePlot)
+		self.thread.start()
 
 	def linac1BPMCrester(self):
-		func = partial(self.model.linac1BPMCrester, int(self.view.rangeSetLinac1.text()), int(self.view.nScanningSetLinac1.text()), int(self.view.nShotsSetLinac1.text()))
-		thread = self.crestingThread(self, func)
+		self.cavity = 'Linac1'
+		self.thread = GenericThread(self.model.linac1CresterFine, int(self.view.rangeSetLinac1.text()), int(self.view.nScanningSetLinac1.text()), int(self.view.nShotsSetLinac1.text()))
+		self.newDataSignal.connect(self.updatePlot)
+		self.thread.start()
 
 	def setDipoleCurrentForGun(self):
-		thread = self.crestingThread(self, self.model.setDipoleCurrentForGun)
+		self.cavity = 'Gun'
+		self.thread = GenericThread(self.model.gunDipoleSet)
+		self.newDataSignal.connect(self.updatePlot)
+		self.thread.start()
 
 	def setDipoleCurrentForLinac1(self):
-		thread = self.crestingThread(self, self.model.setDipoleCurrentForLinac1)
+		self.cavity = 'Linac1'
+		self.thread = GenericThread(self.model.linac1DipoleSet)
+		self.newDataSignal.connect(self.updatePlot)
+		self.thread.start()
 
 	def setLabel(self, string):
 		logger.info(string)
