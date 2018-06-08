@@ -152,6 +152,7 @@ sections = OrderedDict([
                         ('S02', section_attr('CLARA Straight 2',   'CLARA_PH1', 50.0, 1)),
                         ])
 frame_style_sheet = '#branch {background-color: #ffffee;} #junction {background-color: qlineargradient( x1:0 y1:0, x2:0 y2:1, stop:0 #f0f0f0, stop:1 #ffffee);}'
+spinbox_highlight = 'QDoubleSpinBox {background-color: yellow;}'
 mom_modes = ('Recalculate K', 'Scale currents')
 
 # Are we bundled as an EXE, or running as a script?
@@ -433,6 +434,7 @@ class Window(QtGui.QMainWindow):
                         attributes.effect_name.lower(), magnet.name, section_name)
                     k_spin = self.spinbox(main_hbox, attributes.effect_units, step=step, decimals=3,
                                           help_text=help_text) #, min_value=min_k, max_value=max_k)
+
                     # k_spin.lineEdit().installEventFilter(self)
                     magnet.k_spin = k_spin
                     branch_name = magnet.ref.magnetBranch
@@ -653,24 +655,35 @@ class Window(QtGui.QMainWindow):
                 # makes it easier to scroll the window up and down
                 if not (modifiers & QtCore.Qt.ShiftModifier):
                     return True  # do nothing
-            elif evType == QtCore.QEvent.FocusOut:
-                # record the change to a magnet
+            elif evType in (QtCore.QEvent.FocusOut, QtCore.QEvent.FocusIn):
+                focused = evType == QtCore.QEvent.FocusIn
+                style_sheet = spinbox_highlight if focused else ''  # highlight which attributes will be changed
+                # record the change to a magnet when defocused
                 try:
                     magnet = source.parent().magnet
-                    magnet.active = False
+                    magnet.active = focused
+                    magnet.k_spin.setStyleSheet(style_sheet)
+                    magnet.current_spin.setStyleSheet(style_sheet)
                 except AttributeError: # won't work for momentum spin boxes
-                    pass
+                    source.setStyleSheet(style_sheet)
+                    self.highlightMagControls(source.magnet_list_vbox, style_sheet)
+
         elif evType == QtCore.QEvent.Wheel and (modifiers & QtCore.Qt.ShiftModifier):
             # don't allow scrolling if Shift _is_ held outwith a spin box -
             # otherwise we'll accidentally scroll the window while we're trying to
-            # modify the spin box and the mouse slips a bit_length
+            # modify the spin box and the mouse slips a bit
             return True
-        # elif evType == QtCore.QEvent.ShortcutOverride:
-        #     print('ignoring shortcut ', event.modifiers(), event.key())
-        #     event.ignore()
-        #     return True
         return QtGui.QMainWindow.eventFilter(self, source, event)
-    
+
+    def highlightMagControls(self, section, style_sheet):
+        """When a momentum spinbox has the focus, highlight all the magnet spinboxes (K or current)
+        that will be affected by a change in momentum. This should make it clear what mode we are in."""
+        mode = self.settings.value('momentum_mode', mom_modes[0])
+        for magnet in self.magnets.values():
+            if magnet.section == section:
+                magnet.k_spin.setStyleSheet(style_sheet if mode == 'Recalculate K' else '')
+                magnet.current_spin.setStyleSheet('' if mode == 'Recalculate K' else style_sheet)
+
     def toggleMagType(self, toggled):
         """Called when a magnet type checkbox is clicked. Hide or show all the magnets of that type."""
         #which checkbox was clicked? remove 's' from end, last 6 letters, lower case
@@ -965,7 +978,11 @@ class Window(QtGui.QMainWindow):
         mode = combo.mode # currentText()
         logger.info('Set momentum mode: ' + mode)
         self.settings.setValue('momentum_mode', mode)
-        
+        # check if we are focused on a momentum spinbox
+        for magnet_list in self.magnet_controls.values():
+            if magnet_list.momentum_spin.hasFocus():
+                self.highlightMagControls(magnet_list, spinbox_highlight)  # make sure correct boxes are highlighted
+
     def setMachineMode(self, mode=None):
         """Set the machine mode (offline/virtual/physical and redefine the controllers accordingly."""
         logger.info('Set machine mode: ' + mode)
