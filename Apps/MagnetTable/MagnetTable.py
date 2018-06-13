@@ -139,6 +139,34 @@ class BPM(object):
         return '<BPM {}>'.format(self.name)
 
 
+class ExtendedDialog(QtGui.QMessageBox):
+    """Extension of QMessageBox with checkboxes and a comment input."""
+
+    def __init__(self, parent=None, checkboxes=[]):
+        super(ExtendedDialog, self).__init__()
+
+        # Access the Layout of the MessageBox to add the Checkboxes
+        layout = self.layout()
+        vbox = QtGui.QVBoxLayout()
+        layout.addLayout(vbox, 1, 1)
+        self.checkboxes = []
+        for i, (name, checked) in enumerate(checkboxes):
+            checkbox = QtGui.QCheckBox(name)
+            checkbox.setChecked(checked)
+            vbox.addWidget(checkbox)
+            self.checkboxes.append(checkbox)
+        hbox = QtGui.QHBoxLayout()
+        vbox.addLayout(hbox)
+        hbox.addWidget(QtGui.QLabel('Comment:'))
+        self.textbox = QtGui.QLineEdit()
+        self.textbox.setMinimumWidth(200)
+        hbox.addWidget(self.textbox)
+
+    def exec_(self, *args, **kwargs):
+        """Override the exec_ method so you can return the value of the checkboxes and the input box."""
+        return QtGui.QMessageBox.exec_(self, *args, **kwargs), [box.isChecked() for box in self.checkboxes], str(self.textbox.text())
+
+
 logger = logging.getLogger('Magnet Table')
 mag_init_VC = VC_MagCtrl.init()
 bpm_init = VELA_CLARA_BPM_Control.init()
@@ -222,6 +250,9 @@ class Window(QtGui.QMainWindow):
         machine_menu.addAction(machine_mode_menu.menuAction())
         self.machine_mode_status = QtGui.QLabel('')
         self.statusBar().addPermanentWidget(self.machine_mode_status)
+        self.status_bar_message = QtGui.QLabel('')
+        self.statusBar().addWidget(self.status_bar_message)
+        self.status_bar_message.linkActivated.connect(self.linkClicked)
         self.setMachineMode(set_mode)
 
         help_texts = ("Recalculate all the K values when the momentum is changed.",
@@ -305,7 +336,7 @@ class Window(QtGui.QMainWindow):
                                     min_value=min_momentum, help_text="Set the momentum of the " + section_name + " section. ")
             momentum.valueChanged.connect(self.momentumChanged)
             section_vbox.addLayout(header_hbox)
-            magnet_list_vbox = QtGui.QVBoxLayout()
+            magnet_list_vbox = QtGui.QVBoxLayout(magnet_list_frame)
             magnet_list_frame.setLayout(magnet_list_vbox)
             magnet_list_vbox.momentum_spin = momentum  # so we can reference it from a magnet
             magnet_list_vbox.id = key
@@ -356,7 +387,7 @@ class Window(QtGui.QMainWindow):
                 more_info.setLayout(more_info_layout)
 
                 offline_info = QtGui.QLabel()
-                offline_info.linkActivated.connect(lambda url: os.system('start "" "' + str(url) + '"'))
+                offline_info.linkActivated.connect(self.linkClicked)
                 offline_info.setAlignment(QtCore.Qt.AlignTop)
                 offline_info.help_text = ''
                 more_info_layout.addWidget(offline_info)
@@ -700,6 +731,7 @@ class Window(QtGui.QMainWindow):
         """Called when a current spin box is changed by the user."""
         magnet = self.sender().parent().magnet
         magnet_controllers[magnet.section.id].setSI(magnet.name, value)
+        self.status_bar_message.setText('')  # get rid of any 'saved' message
         # Stop the GUI updating until the SI value 'takes' - otherwise it will update from an old value and be 'sticky'
         # Add it to a list of "waiting for" magnets. We might need more than one if we're changing the momentum in a section
         self.wait_for[magnet] = value
@@ -1048,10 +1080,32 @@ class Window(QtGui.QMainWindow):
 
     def saveDBURT(self):
         """Save a DBURT file."""
-        folder = r'\\fed.cclrc.ac.uk\org\NLab\ASTeC\Projects\VELA\Snapshots\DBURT' + '\\'
-        filename = time.strftime(r'%Y-%m-%d-%H%M.dburt')
-        # how to decide which areas to save? which are open? or visible on the screen?
+        # how to decide which areas to save? ask the user, defaulting to the ones that are currently open
+        checkboxes = [(section.title, self.magnet_controls[id].parent().isVisible()) for id, section in sections.items()]
+        message_box = ExtendedDialog(self, checkboxes)
+        message_box.setWindowTitle('Magnet Table')
+        message_box.setIcon(QtGui.QMessageBox.Question)
+        message_box.setText('Select areas to save. Individual DBURT files will be created in the <a href="{}">default folder</a>.'.format(dburt_folder))
+        save = message_box.addButton("Save", QtGui.QMessageBox.YesRole)
+        message_box.addButton("Cancel", QtGui.QMessageBox.NoRole)
+        ret, boxes_ticked, comment = message_box.exec_()
+        if message_box.clickedButton() == save:
+            status_links = []
+            timestamp = time.strftime(r'%Y-%m-%d-%H%M')
+            for ticked, id in zip(boxes_ticked, sections.keys()):
+                if ticked:
+                    # Currently keywords doesn't do anything - but put one in anyway in case it gets implemented later
+                    filename = dburt_folder + id + '_' + timestamp + '.dburt'
+                    magnet_controllers[id].writeDBURT(filename, comment, 'magnet-table')
+                    status_links.append('<a href="{}">{}</a>'.format(filename, id))
+            plural = 's' if len(status_links) > 1 else ''
+            status_message = "Saved DBURT{}: {} with timestamp {}".format(plural, ', '.join(status_links), timestamp)
+            self.status_bar_message.setText(status_message)
 
+    def linkClicked(self, url):
+        """A link was clicked in a label - maybe the status_bar_message or offline_info boxes.
+        Open an Explorer window with that file highlighted."""
+        os.system('explorer.exe /select,"{}"'.format(url))
 
     def logButtonClicked(self):
         """Show or hide the log."""
