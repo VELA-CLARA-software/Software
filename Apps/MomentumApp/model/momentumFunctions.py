@@ -43,7 +43,9 @@ class Functions(QObject):
             x.append(ctrl.getXFromPV(bpm))
         return sum(x)/N
 
+
     def getXScreen(self,ctrl,camera,N):
+        # need to change to use controllers e.g.'x1 = self.model.camerasIA.getSelectedIARef().IA.x' etc.
         x=[]
         for i in range(N):
             print str(camera),', x = ', str(caget(camera+':ANA:X_RBV'))
@@ -109,6 +111,50 @@ class Functions(QObject):
             time.sleep(0.1)
         print('Aligned beam using ' + hcor + ' and ' + bpm)
 
+
+    def alignScreen(self,hctrl,hcor, sctrl, screen, off, tol, N=10):
+        #DIP = dctrl.getMagObjConstRef(dipole)                                    #create a reference to the dipole
+        print 'in align screen'
+        COR = [hctrl.getMagObjConstRef(hcor)]                                        #create a reference to the corrector
+        #x1= self.getXBPM(sctrl, screen, N)                                            #get the x position on the screen
+        x1 = -off+self.getXScreen(sctrl, screen, N)
+        I1 = COR[0].siWithPol                                                        #x1,x2,I1,I2 are point to determine a straight linear relationship (I=mx+c)
+        print 'I1', str(I1)
+        x2=x1
+        print 'beforehere1, x1:', str(x1), 'x2', str(x2), 'tol', str(tol)
+        I2=0
+        print 'here1'
+        if (COR[0].riWithPol>0.0):                                                    #determine intial step
+            print 'polarity>0'
+            initialStep = -0.0001
+        else:
+            print 'polarity<0'
+            initialStep = 0.0001
+        print 'here2'
+        self.stepCurrent(hctrl, hcor, initialStep)
+        time.sleep(1)
+        #self.simulate.run()                                                        #take inital step
+        x2=-off+self.getXScreen(sctrl, screen, N)
+        I2=COR[0].siWithPol
+        print 'here3'
+        print 'before while, x1:', str(x1), 'x2', str(x2), 'tol', str(tol)
+        while(abs(x2)>tol):                                                            # Algorithm loops until the current position is < the tolerance 'tol'
+            print 'in while, x1:', str(x1), 'x2', str(x2), 'tol', str(tol)
+            I_o = (I1*x2-I2*x1)/(x2-x1)                                            # find the zero-crossing of straight line mde from positions at currents I1 and I2
+            print('Predicted current intercept at '+str(I_o))
+            hctrl.setSI(hcor,I_o)
+            time.sleep(1)
+            QApplication.processEvents()
+            #self.simulate.run()                                                    # set magnet to intercept current
+            x1=x2                                                                #Get rid of first set of position and current
+            I1=I2
+            I2=I_o
+            x2=-off+self.getXScreen(sctrl, screen, N)
+            print('Current at'+str(x2))
+            time.sleep(0.1)
+        print('Aligned beam using ' + hcor + ' and ' + screen)
+
+
     def bendBeam(self,dctrl,dipole,bctrl,bpm,screen, predictedI, tol, N=10):
         DIP = dctrl.getMagObjConstRef(dipole)                                    #create a reference to the dipole
         step = predictedI/100                                                    #1% of predicted current
@@ -153,6 +199,19 @@ class Functions(QObject):
         return dctrl.getSI(dipole)                                        #return the current at which beam has been centered
 
     """NEED TO TEST MINIMIZE BETA ON REAL MACHINE"""
+    def minimizeBeta2D(self,qctrl,quad1,quad2,quad1max,quad2max,steps,sctrl,screen,init_step,N=10):
+        QUAD1 = qctrl.getMagObjConstRef(quad1)
+        QUAD2 = qctrl.getMagObjConstRef(quad2)
+        xrange = np.linspace(-quad1max,quad1max,steps)
+        yrange = np.linspace(-quad2max,quad2max,steps)
+        for xnum, x in enumerate(xrange, start=0):
+            for ynum, y in enumerate(yrange, start=0):
+                print xnum, ynum, x, y
+                qctrl.setSI(quad1, x)
+                qctrl.setSI(quad2, y)
+                time.sleep(2)
+
+
     def minimizeBeta(self,qctrl,quad,sctrl,screen,init_step,N=10):
         QUAD = qctrl.getMagObjConstRef(quad)
         minimisingInX = False

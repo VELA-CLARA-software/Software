@@ -119,65 +119,100 @@ class Model(QObject):
         print("Model Initialized")
 
     #Outline of Momentum Measurement Procedure
-    def measureMomentum(self):
+
+    def measureMomentumPrelim(self):
         '''1. Preliminaries'''
-        if self.view.checkBox_1.isChecked()==True:
-            self.predictedMomentum = float(self.view.lineEdit_predictMom.text())
-            self.predictedI = self.func.mom2I(self.Cmagnets,
-                                            'DIP01',
-                                            self.predictedMomentum)
-            print('Predicted Current: '+str(self.predictedI))
-            print('Predicted Momentum: '+str(self.predictedMomentum))
+        #if self.view.checkBox_1.isChecked()==True:
+        print 'Setting C2V dipole to zero'
+        self.Cmagnets.setSI('S02-DIP01',0)
+        time.sleep(1)
+        self.predictedMomentum = float(self.view.lineEdit_predictMom.text())
+        self.predictedI = self.func.mom2I(self.Cmagnets,
+                                        'DIP01',
+                                        self.predictedMomentum)
+        print('Predicted Current: '+str(self.predictedI))
+        print('Predicted Momentum: '+str(self.predictedMomentum))
 
-        '''2. Align Beam through Dipole'''
-        if self.view.checkBox_2.isChecked()==True:
-            #for i in range(3):
-                #self.func.align('HCOR01','BPM01',0.000001)
-                #self.func.align('HCOR02','BPM02',0.000001)'''
-            print('No alignment here')
+    def measureMomentumAlign(self):
+        self.func.align(self.Cmagnets,'S02-HCOR2',self.Cbpms,'S02-BPM02',0.5)
 
-        '''3. Centre in Spec. Line'''
-        if self.view.checkBox_3.isChecked()==True:
-            self.I = self.func.bendBeamThread(self.Cmagnets,'DIP01',
-                                        self.Cbpms,'C2V-BPM01',
-                                        'YAG01',
-                                         self.predictedI, 0.00001)                 # tol=0.0001 (metres)
+    def measureMomentumCentreC2V(self):
+        self.I = self.func.bendBeam(self.Cmagnets,'DIP01',
+                                    self.Cbpms,'C2V-BPM01',
+                                    'YAG01',
+                                     self.predictedI, 0.00001)                 # tol=0.0001 (metres)
 
-        '''4. Convert Current to Momentum'''
-        if self.view.checkBox_4.isChecked()==True:
-            #self.PL.info('4. Calculate Momentum')
-            self.p = self.func.calcMom(self.Cmagnets,'DIP01',self.I)
-            print self.p
-    #Outline of Momentum Spread Measurement Procedure
-    def measureMomentumSpread(self):
+    def measureMomentumCalcMom(self):
+        self.p = self.func.calcMom(self.Cmagnets,'DIP01',self.I)
+        print self.p
+
+    # def measureMomentum(self):
+    #     # '''1. Preliminaries'''
+    #     # if self.view.checkBox_1.isChecked()==True:
+    #     #     print 'Setting C2V dipole to zero'
+    #     #     self.Cmagnets.setSI('S02-DIP01',0)
+    #     #     time.sleep(1)
+    #     #     self.predictedMomentum = float(self.view.lineEdit_predictMom.text())
+    #     #     self.predictedI = self.func.mom2I(self.Cmagnets,
+    #     #                                     'DIP01',
+    #     #                                     self.predictedMomentum)
+    #     #     print('Predicted Current: '+str(self.predictedI))
+    #     #     print('Predicted Momentum: '+str(self.predictedMomentum))
+    #
+    #     '''2. Align Beam through Dipole'''
+    #     if self.view.checkBox_2.isChecked()==True:
+    #         self.func.align(self.Cmagnets,'S02-HCOR2',self.Cbpms,'S02-BPM02',0.5)
+    #         #for i in range(3):
+    #             #self.func.align('HCOR01','BPM01',0.000001)
+    #             #self.func.align('HCOR02','BPM02',0.000001)'''
+    #         #print('No alignment here')
+    #
+    #     '''3. Centre in Spec. Line'''
+    #     if self.view.checkBox_3.isChecked()==True:
+    #         self.I = self.func.bendBeam(self.Cmagnets,'DIP01',
+    #                                     self.Cbpms,'C2V-BPM01',
+    #                                     'YAG01',
+    #                                      self.predictedI, 0.00001)                 # tol=0.0001 (metres)
+    #
+    #     '''4. Convert Current to Momentum'''
+    #     if self.view.checkBox_4.isChecked()==True:
+    #         #self.PL.info('4. Calculate Momentum')
+    #         self.p = self.func.calcMom(self.Cmagnets,'DIP01',self.I)
+    #         print self.p
+    # #Outline of Momentum Spread Measurement Procedure
+    def measureMomentumSpreadChecks(self):
         if self.view.checkBox_done_mom.isChecked()==True:
             #1. Checks
-            if self.view.checkBox_1_s.isChecked()==True:
-                """1. Checks"""
-                #self.p=34.41
-                self.I=self.func.mom2I(self.Cmagnets,'DIP01',self.p)
-                self.Cmagnets.setSI('DIP01',self.I)
-                print 'measureMomentum(step 1), p = ', str(self.p)
-            """2. Set Dispersion"""
-            if self.view.checkBox_2_s.isChecked()==True:
-                #2.1 Minimize Beta
-                test_continue = 0
-                print 'test_continue0', test_continue
-                self.func.minimizeBeta2(self.Cmagnets,'S02-QUAD3',
-                                        None,'VM-CLA-C2V-DIA-CAM-01',1)
-                #self.func.minBetaThread(self.Cmagnets,'S02-QUAD3',
-                #                        None,'VM-CLA-C2V-DIA-CAM-01',1)
-                #while test_continue < 1:
-                #    print 'test_continue', test_continue
-                #    time.sleep(1)
-                #'''Re-instate minimising beta with Quad-04 here!!!'''
-                #self.func.minimizeBeta2(self.Cmagnets,'S02-QUAD4',
-                #                        None,'VM-CLA-C2V-DIA-CAM-01',-1)
-                #2.2 Set Dispersion Size on Spec Line
-                self.Cmagnets.setSI('DIP01',self.I)
-                #minimizeBeta(self,qctrl,quad,sctrl,screen,init_step,N=1):
+            #if self.view.checkBox_1_s.isChecked()==True:
+            """1. Checks"""
+            #self.p=34.41
+            self.I=self.func.mom2I(self.Cmagnets,'DIP01',self.p)
+            self.Cmagnets.setSI('DIP01',self.I)
+            print 'measureMomentum(step 1), p = ', str(self.p)
+    def measureMomentumSpreadMinBeta(self):
+            """2. Minimise Beta"""
+            #if self.view.checkBox_2_s.isChecked()==True:
+            #2.1 Minimize Beta
+            test_continue = 0
+            print 'test_continue0', test_continue
+            self.func.minimizeBeta2(self.Cmagnets,'S02-QUAD3',
+                                    None,'VM-CLA-C2V-DIA-CAM-01',1)
+            #self.func.minBetaThread(self.Cmagnets,'S02-QUAD3',
+            #                        None,'VM-CLA-C2V-DIA-CAM-01',1)
+            #while test_continue < 1:
+            #    print 'test_continue', test_continue
+            #    time.sleep(1)
+            #'''Re-instate minimising beta with Quad-04 here!!!'''
+            #self.func.minimizeBeta2(self.Cmagnets,'S02-QUAD4',
+            #                        None,'VM-CLA-C2V-DIA-CAM-01',-1)
+            #2.2 Set Dispersion Size on Spec Line
+            self.Cmagnets.setSI('DIP01',self.I)
+            #minimizeBeta(self,qctrl,quad,sctrl,screen,init_step,N=1):
 
-                '''Fix Dispersion section needs work!'''
+    def measureMomentumSpreadSetDispSize(self):
+        """3. Set Dispersion Size"""
+        '''Fix Dispersion section needs work!'''
+        print 'does nothing'
                 #from model_VELA:
                 #self.func.fixDispersion(self.magnets,'QUAD06',None,'VM-EBT-INJ-DIA-CAM-05:CAM',-0.05)
                 #fixDispersion(self,qctrl,quad,sctrl,screen,step_size,N=1):
@@ -185,41 +220,41 @@ class Model(QObject):
                 #self.func.fixDispersion('QUAD0','VM-EBT-INJ-DIA-CAM-05:CAM',-0.05)
                 #ONLY in REAL LIFE
                 #self.func.magnets.degauss('DIP01')
-
-            """3. Calculate Dispersion """
-            if self.view.checkBox_3_s.isChecked()==True:
-                #self.Dispersion,beamSigma = self.func.findDispersion(self.Cmagnets,'DIP02',None,'VM-CLA-C2V-DIA-CAM-01',self.I,5,0.1)
-                #self.Dispersion,self.beamSigma,
-                #self.dCurrents,self.dPositions,
-                #self.fCurrents,
-                #self.fPositions =
-                # Don't know why the above didn't work, that's why it's returned to x then unpacked below
-                x = self.func.findDispersion(self.Cmagnets,
-                                                        'DIP01',
-                                                        None,
-                                                        'VM-CLA-C2V-DIA-CAM-01',
-                                                        self.I,5,0.1)
-                print x[0]
-                self.Dispersion = x[0]
-                self.beamSigma = x[1]
-                self.dCurrents = x[2]
-                self.dPositions = x[3]
-                self.fCurrents = x[4]
-                self.fPositions = x[5]
-                print(self.beamSigma)
-                print(self.Dispersion)
-                print(self.dCurrents)
-                print(self.dPositions)
-                print(self.fCurrents)
-                print(self.fPositions)
-                self.Is = self.beamSigma/self.Dispersion
-                print(self.Is)
-                #Haven't done errors yet
-
-            """4. Calculate Momentum Spread """
-            if self.view.checkBox_4_s.isChecked()==True:
-                self.pSpread = self.func.calcMomSpread(self.Cmagnets,'DIP01',self.Is,self.I)
+    def measureMomentumSpreadCalcDisp(self):
+            """4. Calculate Dispersion """
+            #if self.view.checkBox_3_s.isChecked()==True:
+            #self.Dispersion,beamSigma = self.func.findDispersion(self.Cmagnets,'DIP02',None,'VM-CLA-C2V-DIA-CAM-01',self.I,5,0.1)
+            #self.Dispersion,self.beamSigma,
+            #self.dCurrents,self.dPositions,
+            #self.fCurrents,
+            #self.fPositions =
+            # Don't know why the above didn't work, that's why it's returned to x then unpacked below
+            x = self.func.findDispersion(self.Cmagnets,
+                                                    'DIP01',
+                                                    None,
+                                                    'VM-CLA-C2V-DIA-CAM-01',
+                                                    self.I,10,0.1)
+            print x[0]
+            self.Dispersion = x[0]
+            self.beamSigma = x[1]
+            self.dCurrents = x[2]
+            self.dPositions = x[3]
+            self.fCurrents = x[4]
+            self.fPositions = x[5]
+            print(self.beamSigma)
+            print(self.Dispersion)
+            print(self.dCurrents)
+            print(self.dPositions)
+            print(self.fCurrents)
+            print(self.fPositions)
+            self.Is = self.beamSigma/self.Dispersion
+            print(self.Is)
+            #Haven't done errors yet
+    def measureMomentumSpreadCalc(self):
+            """5. Calculate Momentum Spread """
+            #if self.view.checkBox_4_s.isChecked()==True:
+            self.pSpread = self.func.calcMomSpread(self.Cmagnets,'DIP01',self.Is,self.I)
                 #a = self.func.calcMomSpread(self.Cmagnets,'DIP01',self.Is,self.I)
                 #print a
-        else:
-            print 'Not confirmed momentum measurement'
+            #else:
+            #    print 'Not confirmed momentum measurement'

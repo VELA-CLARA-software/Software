@@ -1,5 +1,6 @@
 from PyQt4.QtCore import (QCoreApplication, QObject, QRunnable, QThread,
                           QThreadPool, pyqtSignal)
+from PyQt4.QtGui import QApplication
 from epics import caget,caput
 import scipy.constants as physics
 import os,sys
@@ -68,7 +69,7 @@ class Functions(QObject):
         #this does nothing at the moment
         return True                                            #Add a controller to input
 
-    def align(self,hctrl,hcor, bctrl, bpm, tol, N):
+    def align(self,hctrl,hcor, bctrl, bpm, tol, N=10):
         COR = hctrl.getMagObjConstRef(hcor)                                        #create a reference to the corrector
         x1= self.getXBPM(bctrl, bpm, N)                                            #get the x position on the BPM
         I1 = COR.siWithPol                                                        #x1,x2,I1,I2 are point to determine a straight linear relationship (I=mx+c)
@@ -79,14 +80,18 @@ class Functions(QObject):
         else:
             initialStep = 0.0001
         self.stepCurrent(hctrl, hcor, initialStep)
-        self.simulate.run()                                                        #take inital step
+        self.simulate.run()
+        time.sleep(1)
+        QApplication.processEvents()                                                  #take inital step
         x2=self.getXBPM(bctrl, bpm, N)
         I2=COR.siWithPol
         while(x2>tol):                                                            # Algorithm loops until the current position is < the tolerance 'tol'
             I_o = (I1*x2-I2*x1)/(x2-x1)                                            # find the zero-crossing of straight line mde from positions at currents I1 and I2
             print('Predicted current intercept at '+str(I_o))
             hctrl.setSI(hcor,I_o)
-            self.simulate.run()                                                    # set magnet to intercept current
+            self.simulate.run()
+            time.sleep(1)
+            QApplication.processEvents()                                                    # set magnet to intercept current
             x1=x2                                                                #Get rid of first set of position and current
             I1=I2
             I2=I_o
@@ -102,6 +107,8 @@ class Functions(QObject):
         print ('90% of predicticted current is: ',setI)
         dctrl.setSI(dipole,setI)                                                #set dipole current to 90% of predicted
         self.simulate.run()
+        time.sleep(1)
+        QApplication.processEvents()
         while(self.isBeamOnScreen(screen)==False):                                #keep iterration of a 1% current step until beam is on screen
             self.stepCurrent(magCtrl,dipole,step)
             time.sleep(0.1)
@@ -115,6 +122,7 @@ class Functions(QObject):
             self.stepCurrent(dctrl, dipole, step)
             self.simulate.run()
             time.sleep(1)
+            QApplication.processEvents()
             print '\n\n\nHere we are', str(x)                                                #set dipole current to 90% of predicted
             print dctrl.getSI(dipole)
             print '\n\n\n'
@@ -166,6 +174,8 @@ class Functions(QObject):
         else:
             qctrl.setSI(quad, -0.3)
         self.simulate.run()
+        time.sleep(1)
+        QApplication.processEvents()
         step  = init_step
         I3_1 = 0                                                                #I3_1 is the first value that is 3 time the size of the inita current
         I3_2 = 0
@@ -238,12 +248,16 @@ class Functions(QObject):
 
         qctrl.setSI(quad,0.5*(I3_1 + I3_2))            #assume minimum is half way in between these places so set magnet current to that
         self.simulate.run()
+        time.sleep(1)
+        QApplication.processEvents()
         print('Minimised Beta with '+quad+' on '+screen)
 
     def fixDispersion(self,qctrl,quad,sctrl,screen,step_size,N=1):
         #THis needs work!!!!self.finished.emit()
         qctrl.setSI(quad, 0.0)                                                    #set a fake start current
         self.simulate.run()                                                        #assumes beam is on screen
+        time.sleep(1)
+        QApplication.processEvents()
         sX = self.getSigmaXScreen(sctrl, screen, N)
         sX_old = sX
         targetBeamSigma = 0.0005
@@ -273,12 +287,16 @@ class Functions(QObject):
         sX=0
         dctrl.setSI(dipole,centering_I)                                    #set dipole current to 90% of predicted
         self.simulate.run()
+        time.sleep(1)
+        QApplication.processEvents()
 
         #set dipole current to 95% of centering current
         setI = 0.95*centering_I
         print setI
         dctrl.setSI(dipole,setI)
         self.simulate.run()
+        time.sleep(1)
+        QApplication.processEvents()
         #I = totalIntensity(screen)
         #I_old = I/2
         #while(I/I_old-1>leveloff_threshold):
@@ -289,6 +307,9 @@ class Functions(QObject):
 
         for i in range(1,points):
             self.stepCurrent(dctrl, dipole, I_diff)
+            self.simulate.run()
+            time.sleep(1)
+            QApplication.processEvents()
             currents[i] = DIP.siWithPol
             positions[i] = self.getXScreen(sctrl,screen,N)
             dCurrents=currents
@@ -427,7 +448,8 @@ class MinimiseBetaClass(threadObject):
                     time.sleep(0.5)
                 #time.sleep(5)
                 self.simulate.run()
-                time.sleep(2)
+                time.sleep(1)
+                QApplication.processEvents()
                 print '\n\n\nDID IT WORK HERE?', str(x)
                 print(self.qctrl.getSI(self.quad))
                 print '\n\n\n'
@@ -442,7 +464,8 @@ class MinimiseBetaClass(threadObject):
             for x in xrange2:
                 self.qctrl.setSI(self.quad, x)
                 self.simulate.run()
-                time.sleep(0.1)
+                time.sleep(1)
+                QApplication.processEvents()
                 print(self.qctrl.getSI(self.quad))
                 sX_scan2.append(self.Fns.getSigmaXScreen(self.sctrl,self.screen,self.N))
             print sX_scan2
@@ -456,7 +479,8 @@ class MinimiseBetaClass(threadObject):
             for y in yrange:
                 self.qctrl.setSI(self.quad, y)
                 self.simulate.run()
-                time.sleep(0.1)
+                time.sleep(1)
+                QApplication.processEvents()
                 print(self.qctrl.getSI(self.quad))
                 sY_scan.append(self.Fns.getSigmaYScreen(self.sctrl,self.screen,self.N))
             print sY_scan
@@ -469,7 +493,8 @@ class MinimiseBetaClass(threadObject):
             for y in yrange2:
                 self.qctrl.setSI(self.quad, y)
                 self.simulate.run()
-                time.sleep(0.1)
+                time.sleep(1)
+                QApplication.processEvents()
                 print(self.qctrl.getSI(self.quad))
                 sY_scan2.append(self.Fns.getSigmaYScreen(self.sctrl,self.screen,self.N))
             print sY_scan2
@@ -478,6 +503,8 @@ class MinimiseBetaClass(threadObject):
             self.qctrl.setSI(self.quad,sY_min)
 
         self.simulate.run()
+        time.sleep(1)
+        QApplication.processEvents()
         print('Minimised Beta with '+self.quad+' on '+self.screen)
         self.finished.emit()
 
