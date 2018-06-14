@@ -345,7 +345,8 @@ class Model(object):
 		x, y, std = zip(*cutData)
 		if max(x) - min(x) > 90:
 			x = [a if a >= 0 else a+360 for a in x]
-		crest_phase = (x[-1] + x[0]) / 2.0
+		#crest_phase = (x[-1] + x[0]) / 2.0
+		crest_phase = np.mean(x)
 		if crest_phase > 180:
 			crest_phase -= 360
 		x = [a if a <= 180 else a-360 for a in x]
