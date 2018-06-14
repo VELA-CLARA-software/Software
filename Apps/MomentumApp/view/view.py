@@ -656,7 +656,7 @@ class Ui_MainWindow(object):
         self.checkBox_all_s.setText(_translate("MainWindow", "Select All", None))
         self.checkBox_3_s.setText(_translate("MainWindow", "3. Calculate Dispersion", None))
         self.checkBox_4_s.setText(_translate("MainWindow", "4. Calculate Momentum Spread", None))
-        self.checkBox_2_s.setText(_translate("MainWindow", "2. Set Dispersion", None))
+        self.checkBox_2_s.setText(_translate("MainWindow", "2. Minimise Beta and Set Dispersion", None))
         self.pushButton_s.setText(_translate("MainWindow", "Get Momentum Spread", None))
         self.checkBox_done_mom.setText(_translate("MainWindow", "Momentum Measurement Done", None))
         self.pushButton_refreshProfile.setText(_translate("MainWindow", "Refresh Profile", None))

@@ -64,18 +64,24 @@ class Model(QObject):
         self.llrfInit = llrf.init()
         self.camInit = camIA.init()
         ##self.Vmagnets = self.magInit.VELA_INJ_Magnet_Controller()
-        self.Cmagnets = self.magInit.physical_CLARA_PH1_Magnet_Controller()
+        #self.Cmagnets = self.magInit.physical_CLARA_PH1_Magnet_Controller()
+        self.Cmagnets = self.magInit.physical_CB1_Magnet_Controller()
         self.laser = self.pilInit.physical_PILaser_Controller()
         self.Cbpms = self.bpmInit.physical_CLARA_PH1_BPM_Controller()
         print 'HERE WE ARE(model_CLARA)!!!!: BPM readout =', str(self.Cbpms.getXFromPV('C2V-BPM01'))
         #self.C2Vbpms = self.bpmInit.virtual_CLARA_2_VELA_BPM_Controller()
         self.gun = self.llrfInit.physical_CLARA_LRRG_LLRF_Controller()
         self.LINAC01 = self.llrfInit.physical_L01_LLRF_Controller()
-        self.Cmagnets.switchONpsu('DIP01')
+        self.Cmagnets.switchONpsu('S02-DIP01')
         self.Cmagnets.switchONpsu('S01-HCOR1')
         self.Cmagnets.switchONpsu('S01-HCOR2')
-        self.Cmagnets.switchONpsu('S02-HCOR01')
-        self.Cmagnets.switchONpsu('S02-HCOR02')
+        self.Cmagnets.switchONpsu('S02-HCOR1')
+        self.Cmagnets.switchONpsu('S02-HCOR2')
+        COR = [self.Cmagnets.getMagObjConstRef('S02-HCOR2')]                                        #create a reference to the corrector
+        #x1= self.getXBPM(bctrl, bpm, N)                                            #get the x position on the BPM
+        I1 = COR[0].siWithPol
+        self.Cmagnets.getSI('S02-HCOR2')
+        print '\n\n\n\n\n\n\n\n\n',str(I1)
         self.Cmagnets.switchONpsu('S02-QUAD1')
         self.Cmagnets.switchONpsu('S02-QUAD2')
         # self.SAMPL = onlineModel.SAMPL(V_MAG_Ctrl=self.Vmagnets,
@@ -96,7 +102,7 @@ class Model(QObject):
         #Cmagnets.switchONpsu('DIP01')
         #cameras.setCamera('C2V-CAM-01')
         self.selectedCamera = self.cameras.getSelectedIARef()
-        self.Cmagnets.setSI('DIP01',91.6)
+        #self.Cmagnets.setSI('S02-DIP01',0)#91.6
         # self.gun400.setAmpMVM(70) #set gun10 instead!
         # self.gun400.setPhiDEG(-16)
         # self.LINAC01.setAmpMVM(21)
@@ -122,23 +128,30 @@ class Model(QObject):
     def measureMomentum(self):
         '''1. Preliminaries'''
         if self.view.checkBox_1.isChecked()==True:
+            print 'Setting C2V dipole to zero'
+            self.Cmagnets.setSI('S02-DIP01',0)
+            time.sleep(1)
             self.predictedMomentum = float(self.view.lineEdit_predictMom.text())
             self.predictedI = self.func.mom2I(self.Cmagnets,
-                                            'DIP01',
+                                            'S02-DIP01',
                                             self.predictedMomentum)
             print('Predicted Current: '+str(self.predictedI))
             print('Predicted Momentum: '+str(self.predictedMomentum))
 
         '''2. Align Beam through Dipole'''
         if self.view.checkBox_2.isChecked()==True:
+            self.func.align(self.Cmagnets,'S02-HCOR2',self.Cbpms,'S02-BPM02',0.5) #was 0.000001
+            #self.func.align(self.Cmagnets,'S02-VCOR2',self.Cbpms,'S02-BPM02',0.5)
+            #align(self,hctrl,hcor, bctrl, bpm, tol, N=10):
+            #self.func.align(self.Cmagnets,'VCOR02',self.Cbpms,'BPM02',0.000001)
             #for i in range(3):
                 #self.func.align('HCOR01','BPM01',0.000001)
                 #self.func.align('HCOR02','BPM02',0.000001)'''
-            print('No alignment here')
+            #print('No alignment here')
 
         '''3. Centre in Spec. Line'''
         if self.view.checkBox_3.isChecked()==True:
-            self.I = self.func.bendBeam(self.Cmagnets,'DIP01',
+            self.I = self.func.bendBeam(self.Cmagnets,'S02-DIP01',
                                         self.Cbpms,'C2V-BPM01',
                                         'YAG01',
                                          self.predictedI, 0.1)#0.00001                 # tol=0.0001 (metres)
@@ -146,7 +159,7 @@ class Model(QObject):
         '''4. Convert Current to Momentum'''
         if self.view.checkBox_4.isChecked()==True:
             #self.PL.info('4. Calculate Momentum')
-            self.p = self.func.calcMom(self.Cmagnets,'DIP01',self.I)
+            self.p = self.func.calcMom(self.Cmagnets,'S02-DIP01',self.I)
             print self.p
     #Outline of Momentum Spread Measurement Procedure
     def measureMomentumSpread(self):
@@ -155,8 +168,8 @@ class Model(QObject):
             if self.view.checkBox_1_s.isChecked()==True:
                 """1. Checks"""
                 #self.p=34.41
-                self.I=self.func.mom2I(self.Cmagnets,'DIP01',self.p)
-                self.Cmagnets.setSI('DIP01',self.I)
+                self.I=self.func.mom2I(self.Cmagnets,'S02-DIP01',self.p)
+                self.Cmagnets.setSI('S02-DIP01',self.I)
                 print 'measureMomentum(step 1), p = ', str(self.p)
             """2. Set Dispersion"""
             if self.view.checkBox_2_s.isChecked()==True:
@@ -169,7 +182,7 @@ class Model(QObject):
                 #self.func.minimizeBeta2(self.Cmagnets,'S02-QUAD4',
                 #                        None,'VM-CLA-C2V-DIA-CAM-01',-1)
                 #2.2 Set Dispersion Size on Spec Line
-                self.Cmagnets.setSI('DIP01',self.I)
+                self.Cmagnets.setSI('S02-DIP01',self.I)
                 #minimizeBeta(self,qctrl,quad,sctrl,screen,init_step,N=1):
 
                 '''Fix Dispersion section needs work!'''
@@ -190,10 +203,10 @@ class Model(QObject):
                 #self.fPositions =
                 # Don't know why the above didn't work, that's why it's returned to x then unpacked below
                 x = self.func.findDispersion(self.Cmagnets,
-                                                        'DIP01',
+                                                        'S02-DIP01',
                                                         None,
                                                         'CLA-C2V-DIA-CAM-01',
-                                                        self.I,20,0.1)
+                                                        self.I,10,0.1)
                 print x[0]
                 self.Dispersion = x[0]
                 self.beamSigma = x[1]
@@ -213,7 +226,7 @@ class Model(QObject):
 
             """4. Calculate Momentum Spread """
             if self.view.checkBox_4_s.isChecked()==True:
-                self.pSpread = self.func.calcMomSpread(self.Cmagnets,'DIP01',self.Is,self.I)
+                self.pSpread = self.func.calcMomSpread(self.Cmagnets,'S02-DIP01',self.Is,self.I)
                 #a = self.func.calcMomSpread(self.Cmagnets,'DIP01',self.Is,self.I)
                 #print a
         else:

@@ -163,8 +163,10 @@ class Model(QObject):
                 #2.1 Minimize Beta
                 test_continue = 0
                 print 'test_continue0', test_continue
-                self.func.minBetaThread(self.Cmagnets,'S02-QUAD3',
+                self.func.minimizeBeta2(self.Cmagnets,'S02-QUAD3',
                                         None,'VM-CLA-C2V-DIA-CAM-01',1)
+                #self.func.minBetaThread(self.Cmagnets,'S02-QUAD3',
+                #                        None,'VM-CLA-C2V-DIA-CAM-01',1)
                 #while test_continue < 1:
                 #    print 'test_continue', test_continue
                 #    time.sleep(1)
