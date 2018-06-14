@@ -1,12 +1,13 @@
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
+# import PyQt4.QApplication
 import sys,os
 import time
 import numpy as np
 import pyqtgraph as pg
-import csv
 from  functools import partial
 sys.path.append("../../../")
+from Software.Utils.dict_to_h5 import *
 import Software.Widgets.loggerWidget.loggerWidget as lw
 import logging
 logger = logging.getLogger(__name__)
@@ -19,8 +20,50 @@ class GenericThread(QThread):
 		self.kwargs = kwargs
 
 	def run(self):
-		self.object = self.function(*self.args,**self.kwargs)
+		self.object = self.function(*self.args, **self.kwargs)
 		print 'finished!'
+
+class machineReciever(QObject):
+
+	fromMachine = pyqtSignal(int, 'PyQt_PyObject')
+
+	def __init__(self, machine):
+		super(machineReciever, self).__init__()
+		self.machine = machine
+
+	def toMachine(self, id, function, args, kwargs):
+		ans = getattr(self.machine,str(function))(*args, **kwargs)
+		self.fromMachine.emit(id, ans)
+
+class machineSignaller(QObject):
+
+	toMachine = pyqtSignal(int, str, tuple, dict)
+
+	def __init__(self, machine):
+		super(machineSignaller, self).__init__()
+		self.machine = machine
+		self.recievedSignal = {}
+		self.signalRecieved = {}
+		self.id = -1
+
+	def get(self, id, function, *args, **kwargs):
+		self.toMachine.emit(id, function, args, kwargs)
+		while self.signalRecieved[id] == False:
+			time.sleep(0.001)
+		return self.recievedSignal[id]
+
+	def fromMachine(self, id, response):
+		self.signalRecieved[id] = True
+		self.recievedSignal[id] = response
+
+	def __getattr__(self, attr):
+		if 'set' in attr:
+			id = int(self.id) + 1
+			self.signalRecieved[id] = False
+			self.id += 1
+			return partial(self.get, id, attr)
+		else:
+			return getattr(self.machine, attr)
 
 class plotWidgets(pg.GraphicsView):
 
@@ -78,6 +121,11 @@ class Controller(QObject):
 		self.model = model
 		self.model.logger = self.loggerSignal
 		self.model.newData = self.newDataSignal
+		self.machineSignaller = machineSignaller(self.model.baseMachine)
+		self.machineReciever = machineReciever(self.model.baseMachine)
+		self.model.machine = self.machineSignaller
+		self.machineSignaller.toMachine.connect(self.machineReciever.toMachine)
+		self.machineReciever.fromMachine.connect(self.machineSignaller.fromMachine)
 		self.loggerSignal.connect(self.setLabel)
 		self.plots = {}
 
@@ -85,34 +133,42 @@ class Controller(QObject):
 		pg.setConfigOption('background', 'w')
 		# Gun
 		self.plots['Gun'] = plotWidgets('Gun', approximateText='Charge', approximateUnits='pC')
-		self.view.plotLayoutGun.addWidget(self.plots['Gun'])
+		self.view.Gun_Plots_Layout.addWidget(self.plots['Gun'])
 		# LINAC1
 		self.plots['Linac1'] = plotWidgets('Linac1', approximateText='BPM X Position', approximateUnits='mm')
-		self.view.plotLayoutLinac1.addWidget(self.plots['Linac1'])
+		self.view.Linac1_Plots_Layout.addWidget(self.plots['Linac1'])
+
+		self.view.actionExit.triggered.connect(qApp.quit)
 
 		self.log = lw.loggerWidget()
 		self.view.logTabLayout.addWidget(self.log)
 		self.log.addLogger(logger)
 
-		self.buttons = [self.view.setupMagnetsButton, self.view.crestGunWCMButton, self.view.crestGunBPM, self.view.setGunPhaseButton,
-							self.view.crestLinac1Button, self.view.setLinac1PhaseButton, self.view.crestLinac1RoughButton, self.view.turnOnGunButton,
-							self.view.setGunDipoleButton, self.view.setLinac1DipoleButton, self.view.turnOnLinac1Button]
+		self.buttons = [self.view.setupMagnetsButton,
+		self.view.Gun_Rough_Button, self.view.Gun_Dipole_Button,self.view.Gun_Fine_Button, self.view.Gun_SetPhase_Button,
+		self.view.Linac1_Rough_Button, self.view.Linac1_Dipole_Button, self.view.Linac1_Fine_Button, self.view.Linac1_SetPhase_Button,
+		# self.view.Gun_TurnOn_Button, self.view.Linac1_TurnOn_Button,
+		]
 
 		# self.view.setupMagnetsButton.clicked.connect(self.model.magnetDegausser)
-		self.view.crestGunWCMButton.clicked.connect(self.gunWCMCrester)
-		self.view.crestGunBPM.clicked.connect(self.gunBPMCrester)
-		self.view.setGunPhaseButton.clicked.connect(lambda : self.model.gunPhaser(gunPhaseSet=float(self.view.gunPhaseSet.text()), offset=True))
-		self.view.crestLinac1Button.clicked.connect(self.linac1BPMCrester)
-		self.view.setLinac1PhaseButton.clicked.connect(lambda : self.model.linac1Phaser(linac1PhaseSet=float(self.view.linac1PhaseSet.text()), offset=True))
-		self.view.crestLinac1RoughButton.clicked.connect(self.linac1CresterQuick)
-		self.view.abortButton.hide()
-		self.view.abortButton.clicked.connect(self.abortRunning)
-		self.view.finishButton.hide()
-		self.view.finishButton.clicked.connect(self.finishRunning)
+		# self.view.Gun_TurnOn_Button.clicked.connect(self.model.turnOnGun)
+		self.view.Gun_Rough_Button.clicked.connect(self.gunWCMCrester)
+		self.view.Gun_Dipole_Button.clicked.connect(self.setDipoleCurrentForGun)
+		self.view.Gun_Fine_Button.clicked.connect(self.gunBPMCrester)
+		self.view.Gun_SetPhase_Button.clicked.connect(lambda : self.model.gunPhaser(gunPhaseSet=self.view.Gun_OffCrest_Phase_Set.value(), offset=True))
+
+		# self.view.Linac1_TurnOn_Button.clicked.connect(self.model.turnOnLinac)
+		self.view.Linac1_Rough_Button.clicked.connect(self.linac1CresterQuick)
+		self.view.Linac1_Dipole_Button.clicked.connect(self.setDipoleCurrentForLinac1)
+		self.view.Linac1_Fine_Button.clicked.connect(self.linac1BPMCrester)
+		self.view.Linac1_SetPhase_Button.clicked.connect(lambda : self.model.linac1Phaser(linac1PhaseSet=self.view.Linac1_OffCrest_Phase_Set.value(), offset=True))
+
+		self.view.Abort_Button.hide()
+		self.view.Abort_Button.clicked.connect(self.abortRunning)
+		self.view.Finish_Button.hide()
+		self.view.Finish_Button.clicked.connect(self.finishRunning)
+
 		self.view.actionSave_Calibation_Data.triggered.connect(self.saveData)
-		# self.view.turnOnGunButton.clicked.connect(self.model.turnOnGun)
-		self.view.setGunDipoleButton.clicked.connect(self.setDipoleCurrentForGun)
-		self.view.setLinac1DipoleButton.clicked.connect(self.setDipoleCurrentForLinac1)
 
 		self.setLabel('MODE: '+self.model.machineType+' '+self.model.lineType+' with '+self.model.gunType+' gun')
 
@@ -122,84 +178,110 @@ class Controller(QObject):
 
 	def enableButtons(self):
 		self.setButtonState(True)
-		self.view.finishButton.clicked.disconnect(self.finishRunning)
-		self.view.finishButton.hide()
-		self.view.abortButton.clicked.disconnect(self.abortRunning)
-		self.view.abortButton.hide()
+		self.view.Finish_Button.clicked.disconnect(self.finishRunning)
+		self.view.Finish_Button.hide()
+		self.view.Abort_Button.clicked.disconnect(self.abortRunning)
+		self.view.Abort_Button.hide()
 
 	def disableButtons(self):
 		self.setButtonState(False)
-		self.view.finishButton.clicked.connect(self.finishRunning)
-		self.view.finishButton.show()
-		self.view.abortButton.clicked.connect(self.abortRunning)
-		self.view.abortButton.show()
+		self.view.Finish_Button.clicked.connect(self.finishRunning)
+		self.view.Finish_Button.show()
+		self.view.Abort_Button.clicked.connect(self.abortRunning)
+		self.view.Abort_Button.show()
 
 	def abortRunning(self):
-		if hasattr(self,'crester'):
-			self.crester.crester.abort()
-			self.crester.quit()
-			self.enableButtons()
+		self.model.abort()
 
 	def finishRunning(self):
-		if hasattr(self,'crester'):
-			self.crester.crester.finish()
+		self.model.finish()
 
 	def updatePlot(self):
 		self.plots[self.cavity].newData(self.model.cavity, self.model.actuator, self.model.crestingData[self.model.cavity][self.model.actuator])
 
 	def gunWCMCrester(self):
+		self.disableButtons()
 		self.cavity = 'Gun'
-		self.thread = GenericThread(self.model.gunWCMCrester)
+		self.actuator = 'approx'
+		self.thread = GenericThread(self.model.gunWCMCrester, self.view.Gun_Rough_PointSeperation_Set.value(), self.view.Gun_Rough_NShots_Set.value())
 		self.newDataSignal.connect(self.updatePlot)
+		self.thread.finished.connect(self.enableButtons)
+		self.thread.finished.connect(self.autoSaveData)
 		self.thread.start()
 
 	def linac1CresterQuick(self):
+		self.disableButtons()
 		self.cavity = 'Linac1'
-		self.thread = GenericThread(self.model.linac1CresterQuick)
+		self.actuator = 'approx'
+		self.thread = GenericThread(self.model.linac1CresterQuick, self.view.Linac1_Rough_PointSeperation_Set.value(), self.view.Linac1_Rough_NShots_Set.value())
 		self.newDataSignal.connect(self.updatePlot)
+		self.thread.finished.connect(self.enableButtons)
+		self.thread.finished.connect(self.autoSaveData)
 		self.thread.start()
 
 	def gunBPMCrester(self):
+		self.disableButtons()
 		self.cavity = 'Gun'
-		self.thread = GenericThread(self.model.gunCresterFine, int(self.view.rangeSetGun.text()), int(self.view.nScanningSetGun.text()), int(self.view.nShotsSetGun.text()))
+		self.actuator = 'fine'
+		self.thread = GenericThread(self.model.gunCresterFine, self.view.Gun_Fine_Range_Set.value(), self.view.Gun_Fine_PointSeperation_Set.value(), self.view.Gun_Fine_NShots_Set.value())
 		self.newDataSignal.connect(self.updatePlot)
+		self.thread.finished.connect(self.enableButtons)
+		self.thread.finished.connect(self.autoSaveData)
 		self.thread.start()
 
 	def linac1BPMCrester(self):
+		self.disableButtons()
 		self.cavity = 'Linac1'
-		self.thread = GenericThread(self.model.linac1CresterFine, int(self.view.rangeSetLinac1.text()), int(self.view.nScanningSetLinac1.text()), int(self.view.nShotsSetLinac1.text()))
+		self.actuator = 'fine'
+		self.thread = GenericThread(self.model.linac1CresterFine, self.view.Linac1_Fine_Range_Set.value(), self.view.Linac1_Fine_PointSeperation_Set.value(), self.view.Linac1_Fine_NShots_Set.value())
 		self.newDataSignal.connect(self.updatePlot)
+		self.thread.finished.connect(self.enableButtons)
+		self.thread.finished.connect(self.autoSaveData)
 		self.thread.start()
 
 	def setDipoleCurrentForGun(self):
+		self.disableButtons()
 		self.cavity = 'Gun'
-		self.thread = GenericThread(self.model.gunDipoleSet)
+		self.actuator = 'dipole'
+		self.thread = GenericThread(self.model.gunDipoleSet, self.view.Gun_Dipole_Start_Set.value(), self.view.Gun_Dipole_End_Set.value())
 		self.newDataSignal.connect(self.updatePlot)
+		self.thread.finished.connect(self.enableButtons)
+		self.thread.finished.connect(self.autoSaveData)
 		self.thread.start()
 
 	def setDipoleCurrentForLinac1(self):
+		self.disableButtons()
 		self.cavity = 'Linac1'
-		self.thread = GenericThread(self.model.linac1DipoleSet)
+		self.actuator = 'dipole'
+		self.thread = GenericThread(self.model.linac1DipoleSet, self.view.Linac1_Dipole_Start_Set.value(), self.view.Linac1_Dipole_End_Set.value())
 		self.newDataSignal.connect(self.updatePlot)
+		self.thread.finished.connect(self.enableButtons)
+		self.thread.finished.connect(self.autoSaveData)
 		self.thread.start()
 
 	def setLabel(self, string):
 		logger.info(string)
 		self.view.label_MODE.setText('Status: <font color="red">' + string + '</font>')
 
-	def saveData(self):
-		for cavity in ['Gun', 'Linac1']:
-			my_dict = {}
-			for name in ['approxPhaseData', 'approxChargeData', 'approxPhaseFit', 'approxChargeFit', 'approxChargeStd']:
-				my_dict[name] = self.model.crestingData[cavity][name]
-			with open(cavity+'_approx_CrestingData.csv', 'wb') as f:  # Just use 'w' mode in 3.x
-			    w = csv.DictWriter(f, my_dict.keys())
-			    w.writeheader()
-			    w.writerow(my_dict)
-			my_dict = {}
-			for name in ['finePhaseFit', 'fineBPMFit', 'finePhaseData', 'fineBPMData', 'fineBPMStd']:
-				my_dict[name] = self.model.crestingData[cavity][name]
-			with open(cavity+'_fine_CrestingData.csv', 'wb') as f:  # Just use 'w' mode in 3.x
-			    w = csv.DictWriter(f, my_dict.keys())
-			    w.writeheader()
-			    w.writerow(my_dict)
+	def autoSaveData(self):
+		if self.view.actionAuto_Save_Data.isChecked():
+			self.saveData(cavity=[self.cavity], type=[self.actuator])
+
+	def saveData(self, cavity=None, type=None):
+		if cavity is not None and not isinstance(cavity, (tuple, list)):
+			cavity = [cavity]
+		elif cavity is None:
+			cavity = ['Gun', 'Linac1']
+		if type is not None and not isinstance(type, (tuple, list)):
+			type = [type]
+		elif type is None:
+			type = ['approx', 'fine', 'dipole']
+		timestr = time.strftime("%H%M%S")
+		dir = '\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Work\\'+time.strftime("%Y\\%m\\%d")+'\\' if self.view.actionSave_to_Work_Folder.isChecked() else '.'
+		for c in cavity:
+			if c in self.model.crestingData:
+				for t in type:
+					if t in self.model.crestingData[c]:
+						mydata = {a: np.array(self.model.crestingData[c][t][a]) for a in ['xData', 'yData', 'yStd']}
+						filename = dir+timestr+'_'+c+'_'+t+'_crestingData.h5'
+						save_dict_to_hdf5(mydata, filename)

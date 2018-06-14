@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1040</width>
-    <height>530</height>
+    <height>753</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -31,16 +31,31 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="centralWidgetLayout">
-    <item row="1" column="0">
-     <widget class="QWidget" name="widget_3" native="true">
-      <layout class="QHBoxLayout" name="horizontalLayout">
-       <item>
+    <item row="0" column="0">
+     <widget class="QGroupBox" name="groupBox">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="title">
+       <string>Status</string>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_2">
+       <item row="1" column="0">
         <widget class="QLabel" name="label_MODE">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>25</height>
+          </size>
          </property>
          <property name="maximumSize">
           <size>
@@ -53,8 +68,8 @@
          </property>
         </widget>
        </item>
-       <item>
-        <widget class="QPushButton" name="finishButton">
+       <item row="1" column="1">
+        <widget class="QPushButton" name="Finish_Button">
          <property name="maximumSize">
           <size>
            <width>200</width>
@@ -66,8 +81,8 @@
          </property>
         </widget>
        </item>
-       <item>
-        <widget class="QPushButton" name="abortButton">
+       <item row="1" column="2">
+        <widget class="QPushButton" name="Abort_Button">
          <property name="maximumSize">
           <size>
            <width>200</width>
@@ -92,7 +107,7 @@
       </layout>
      </widget>
     </item>
-    <item row="3" column="0">
+    <item row="2" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -103,7 +118,7 @@
       <property name="currentIndex">
        <number>0</number>
       </property>
-      <widget class="QWidget" name="gunTab">
+      <widget class="QWidget" name="Gun_Tab">
        <attribute name="icon">
         <iconset>
          <normaloff>../../Resources/Icons/pistol.png</normaloff>../../Resources/Icons/pistol.png</iconset>
@@ -112,8 +127,22 @@
         <string>Gun</string>
        </attribute>
        <layout class="QGridLayout" name="gunTabLayout">
-        <item row="2" column="0">
-         <widget class="QGroupBox" name="groupBox_methodGun">
+        <item row="0" column="1" rowspan="6">
+         <widget class="QGroupBox" name="Gun_Plots_Box">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>1</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="title">
+           <string>Phase Calibration Plots</string>
+          </property>
+          <layout class="QVBoxLayout" name="Gun_Plots_Layout"/>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QGroupBox" name="Gun_Startup">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -121,18 +150,110 @@
            </sizepolicy>
           </property>
           <property name="title">
-           <string>Method</string>
+           <string>Gun Startup</string>
           </property>
-          <layout class="QVBoxLayout" name="verticalLayout_5">
-           <item>
-            <widget class="QPushButton" name="turnOnGunButton">
+          <layout class="QFormLayout" name="formLayout_7">
+           <item row="2" column="0" colspan="2">
+            <widget class="QPushButton" name="Gun_TurnOn_Button">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="font">
+              <font>
+               <strikeout>true</strikeout>
+              </font>
+             </property>
              <property name="text">
               <string>Turn On Gun</string>
              </property>
+             <property name="flat">
+              <bool>false</bool>
+             </property>
             </widget>
            </item>
-           <item>
-            <widget class="QPushButton" name="crestGunWCMButton">
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_13">
+             <property name="minimumSize">
+              <size>
+               <width>150</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Amp Set</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QSpinBox" name="Gun_Amp_Set">
+             <property name="maximum">
+              <number>16280</number>
+             </property>
+             <property name="singleStep">
+              <number>100</number>
+             </property>
+             <property name="value">
+              <number>16280</number>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_14">
+             <property name="text">
+              <string>Step Size</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QSpinBox" name="Gun_Amp_Step_Set">
+             <property name="maximum">
+              <number>1000</number>
+             </property>
+             <property name="singleStep">
+              <number>100</number>
+             </property>
+             <property name="value">
+              <number>100</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QGroupBox" name="Gun_Rough_Crest">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="title">
+           <string>Rough Crest</string>
+          </property>
+          <layout class="QFormLayout" name="formLayout_5">
+           <item row="0" column="0">
+            <widget class="QLabel" name="label">
+             <property name="minimumSize">
+              <size>
+               <width>150</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Number of Shots (per point)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_10">
+             <property name="text">
+              <string>Point Seperation</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0" colspan="2">
+            <widget class="QPushButton" name="Gun_Rough_Button">
              <property name="text">
               <string>Approximately Find Crest with WCM</string>
              </property>
@@ -141,38 +262,37 @@
              </property>
             </widget>
            </item>
-           <item>
-            <widget class="QPushButton" name="setGunDipoleButton">
-             <property name="text">
-              <string>Set Dipole Current</string>
+           <item row="0" column="1">
+            <widget class="QSpinBox" name="Gun_Rough_NShots_Set">
+             <property name="value">
+              <number>3</number>
              </property>
             </widget>
            </item>
-           <item>
-            <widget class="QPushButton" name="crestGunBPM">
-             <property name="text">
-              <string>Fine Crest Gun with BPM</string>
+           <item row="1" column="1">
+            <widget class="QDoubleSpinBox" name="Gun_Rough_PointSeperation_Set">
+             <property name="suffix">
+              <string>°</string>
              </property>
-             <property name="checked">
-              <bool>false</bool>
+             <property name="decimals">
+              <number>1</number>
              </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="setGunPhaseButton">
-             <property name="text">
-              <string>Set Gun Phase</string>
+             <property name="minimum">
+              <double>0.100000000000000</double>
              </property>
-             <property name="checked">
-              <bool>false</bool>
+             <property name="singleStep">
+              <double>0.100000000000000</double>
+             </property>
+             <property name="value">
+              <double>5.000000000000000</double>
              </property>
             </widget>
            </item>
           </layout>
          </widget>
         </item>
-        <item row="1" column="0">
-         <widget class="QGroupBox" name="groupBox_2">
+        <item row="2" column="0">
+         <widget class="QGroupBox" name="Gun_Dipole_Set">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -180,7 +300,75 @@
            </sizepolicy>
           </property>
           <property name="title">
-           <string>Settings</string>
+           <string>Dipole Set</string>
+          </property>
+          <layout class="QFormLayout" name="formLayout_6">
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_11">
+             <property name="minimumSize">
+              <size>
+               <width>150</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Starting Current</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_12">
+             <property name="text">
+              <string>Final Current</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QDoubleSpinBox" name="Gun_Dipole_Start_Set">
+             <property name="suffix">
+              <string>A</string>
+             </property>
+             <property name="decimals">
+              <number>1</number>
+             </property>
+             <property name="value">
+              <double>5.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QDoubleSpinBox" name="Gun_Dipole_End_Set">
+             <property name="suffix">
+              <string>A</string>
+             </property>
+             <property name="decimals">
+              <number>1</number>
+             </property>
+             <property name="value">
+              <double>10.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0" colspan="2">
+            <widget class="QPushButton" name="Gun_Dipole_Button">
+             <property name="text">
+              <string>Set Dipole Current</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QGroupBox" name="Gun_Fine_Crest">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="title">
+           <string>Fine Crest</string>
           </property>
           <layout class="QFormLayout" name="formLayout_2">
            <property name="fieldGrowthPolicy">
@@ -199,60 +387,83 @@
              </property>
             </widget>
            </item>
-           <item row="0" column="1">
-            <widget class="QLineEdit" name="nShotsSetGun">
-             <property name="text">
-              <string>10</string>
-             </property>
-            </widget>
-           </item>
            <item row="1" column="0">
             <widget class="QLabel" name="label_5">
              <property name="text">
-              <string>Number of Scanning Points</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QLineEdit" name="nScanningSetGun">
-             <property name="text">
-              <string>20</string>
+              <string>Point Seperation</string>
              </property>
             </widget>
            </item>
            <item row="2" column="0">
             <widget class="QLabel" name="label_4">
              <property name="text">
-              <string>Range (Degrees) plus/minus</string>
+              <string>Range (±)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0" colspan="2">
+            <widget class="QPushButton" name="Gun_Fine_Button">
+             <property name="text">
+              <string>Fine Crest Gun with BPM</string>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
              </property>
             </widget>
            </item>
            <item row="2" column="1">
-            <widget class="QLineEdit" name="rangeSetGun">
-             <property name="text">
-              <string>20</string>
+            <widget class="QSpinBox" name="Gun_Fine_Range_Set">
+             <property name="suffix">
+              <string>°</string>
+             </property>
+             <property name="prefix">
+              <string/>
+             </property>
+             <property name="minimum">
+              <number>1</number>
+             </property>
+             <property name="maximum">
+              <number>30</number>
+             </property>
+             <property name="value">
+              <number>20</number>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QDoubleSpinBox" name="Gun_Fine_PointSeperation_Set">
+             <property name="suffix">
+              <string>°</string>
+             </property>
+             <property name="decimals">
+              <number>1</number>
+             </property>
+             <property name="minimum">
+              <double>0.100000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>0.100000000000000</double>
+             </property>
+             <property name="value">
+              <double>1.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QSpinBox" name="Gun_Fine_NShots_Set">
+             <property name="maximum">
+              <number>100</number>
+             </property>
+             <property name="value">
+              <number>10</number>
              </property>
             </widget>
            </item>
           </layout>
          </widget>
         </item>
-        <item row="0" column="1" rowspan="4">
-         <widget class="QGroupBox" name="groupBox_plotsGun">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-            <horstretch>1</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="title">
-           <string>Phase Calibration Plots</string>
-          </property>
-          <layout class="QVBoxLayout" name="plotLayoutGun"/>
-         </widget>
-        </item>
-        <item row="0" column="0">
-         <widget class="QGroupBox" name="groupBox">
+        <item row="4" column="0">
+         <widget class="QGroupBox" name="Gun_Set_Phase">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -266,16 +477,9 @@
            </size>
           </property>
           <property name="title">
-           <string>Gun Phase</string>
+           <string>Set Final Phase</string>
           </property>
           <layout class="QFormLayout" name="formLayout">
-           <item row="0" column="1">
-            <widget class="QLineEdit" name="gunPhaseSet">
-             <property name="text">
-              <string>-15</string>
-             </property>
-            </widget>
-           </item>
            <item row="0" column="0">
             <widget class="QLabel" name="label_2">
              <property name="minimumSize">
@@ -289,12 +493,41 @@
              </property>
             </widget>
            </item>
+           <item row="1" column="0" colspan="2">
+            <widget class="QPushButton" name="Gun_SetPhase_Button">
+             <property name="text">
+              <string>Set Gun Phase</string>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QDoubleSpinBox" name="Gun_OffCrest_Phase_Set">
+             <property name="suffix">
+              <string>°</string>
+             </property>
+             <property name="decimals">
+              <number>1</number>
+             </property>
+             <property name="minimum">
+              <double>-30.000000000000000</double>
+             </property>
+             <property name="maximum">
+              <double>30.000000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>0.500000000000000</double>
+             </property>
+            </widget>
+           </item>
           </layout>
          </widget>
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="linacTab">
+      <widget class="QWidget" name="linac1_Tab">
        <attribute name="icon">
         <iconset>
          <normaloff>../../Resources/Icons/bike.png</normaloff>../../Resources/Icons/bike.png</iconset>
@@ -302,9 +535,9 @@
        <attribute name="title">
         <string>Linac 1</string>
        </attribute>
-       <layout class="QGridLayout" name="linacTabLayout">
-        <item row="0" column="1" rowspan="4">
-         <widget class="QGroupBox" name="groupBox_plotsLinac1">
+       <layout class="QGridLayout" name="gridLayout">
+        <item row="0" column="2" rowspan="6">
+         <widget class="QGroupBox" name="Linac1_Plots_Box">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
             <horstretch>1</horstretch>
@@ -314,11 +547,11 @@
           <property name="title">
            <string>Phase Calibration Plots</string>
           </property>
-          <layout class="QVBoxLayout" name="plotLayoutLinac1"/>
+          <layout class="QVBoxLayout" name="Linac1_Plots_Layout"/>
          </widget>
         </item>
         <item row="0" column="0">
-         <widget class="QGroupBox" name="groupBox_4">
+         <widget class="QGroupBox" name="Linac1_Startup">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -326,30 +559,28 @@
            </sizepolicy>
           </property>
           <property name="title">
-           <string>Linac Phase</string>
+           <string>Linac Startup</string>
           </property>
-          <layout class="QFormLayout" name="formLayout_4">
-           <item row="0" column="1">
-            <widget class="QLineEdit" name="linac1PhaseSet">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
+          <layout class="QFormLayout" name="formLayout_8">
+           <item row="2" column="0" colspan="2">
+            <widget class="QPushButton" name="Linac1_TurnOn_Button">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="font">
+              <font>
+               <weight>50</weight>
+               <bold>false</bold>
+               <strikeout>true</strikeout>
+              </font>
              </property>
              <property name="text">
-              <string>0</string>
+              <string>Turn On Linac</string>
              </property>
             </widget>
            </item>
-           <item row="0" column="0">
-            <widget class="QLabel" name="label_6">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_15">
              <property name="minimumSize">
               <size>
                <width>150</width>
@@ -357,18 +588,48 @@
               </size>
              </property>
              <property name="text">
-              <string>Off-crest Phase</string>
+              <string>Amp Set</string>
              </property>
-             <property name="alignment">
-              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QSpinBox" name="Linac1_Amp_Set">
+             <property name="maximum">
+              <number>13000</number>
+             </property>
+             <property name="singleStep">
+              <number>100</number>
+             </property>
+             <property name="value">
+              <number>13000</number>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_16">
+             <property name="text">
+              <string>Step Size</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QSpinBox" name="Linac1_Amp_Step_Set">
+             <property name="maximum">
+              <number>1000</number>
+             </property>
+             <property name="singleStep">
+              <number>100</number>
+             </property>
+             <property name="value">
+              <number>100</number>
              </property>
             </widget>
            </item>
           </layout>
          </widget>
         </item>
-        <item row="1" column="0">
-         <widget class="QGroupBox" name="groupBox_5">
+        <item row="2" column="0">
+         <widget class="QGroupBox" name="Linac1_Dipole_Set">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -376,7 +637,152 @@
            </sizepolicy>
           </property>
           <property name="title">
-           <string>Settings</string>
+           <string>Dipole Set</string>
+          </property>
+          <layout class="QFormLayout" name="formLayout_10">
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_18">
+             <property name="minimumSize">
+              <size>
+               <width>150</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Starting Current</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_19">
+             <property name="text">
+              <string>Final Current</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QDoubleSpinBox" name="Linac1_Dipole_Start_Set">
+             <property name="suffix">
+              <string>A</string>
+             </property>
+             <property name="decimals">
+              <number>1</number>
+             </property>
+             <property name="maximum">
+              <double>100.000000000000000</double>
+             </property>
+             <property name="value">
+              <double>70.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QDoubleSpinBox" name="Linac1_Dipole_End_Set">
+             <property name="suffix">
+              <string>A</string>
+             </property>
+             <property name="decimals">
+              <number>1</number>
+             </property>
+             <property name="maximum">
+              <double>120.000000000000000</double>
+             </property>
+             <property name="value">
+              <double>100.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0" colspan="2">
+            <widget class="QPushButton" name="Linac1_Dipole_Button">
+             <property name="text">
+              <string>Set Dipole Current</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QGroupBox" name="Linac1_Rough_Crest">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="title">
+           <string>Rough Crest</string>
+          </property>
+          <layout class="QFormLayout" name="formLayout_9">
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_6">
+             <property name="minimumSize">
+              <size>
+               <width>150</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Number of Shots (per point)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_17">
+             <property name="text">
+              <string>Point Seperation</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0" colspan="2">
+            <widget class="QPushButton" name="Linac1_Rough_Button">
+             <property name="text">
+              <string>Approximately Find Crest with BPM</string>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QSpinBox" name="Linac1_Rough_NShots_Set">
+             <property name="value">
+              <number>3</number>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QDoubleSpinBox" name="Linac1_Rough_PointSeperation_Set">
+             <property name="suffix">
+              <string>°</string>
+             </property>
+             <property name="decimals">
+              <number>1</number>
+             </property>
+             <property name="minimum">
+              <double>0.100000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>0.100000000000000</double>
+             </property>
+             <property name="value">
+              <double>5.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QGroupBox" name="Linac1_Fine_Crest">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="title">
+           <string>Fine Crest</string>
           </property>
           <layout class="QFormLayout" name="formLayout_3">
            <property name="fieldGrowthPolicy">
@@ -395,94 +801,129 @@
              </property>
             </widget>
            </item>
-           <item row="0" column="1">
-            <widget class="QLineEdit" name="nShotsSetLinac1">
-             <property name="text">
-              <string>10</string>
-             </property>
-            </widget>
-           </item>
            <item row="1" column="0">
             <widget class="QLabel" name="label_8">
              <property name="text">
-              <string>Number of Scanning Points</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QLineEdit" name="nScanningSetLinac1">
-             <property name="text">
-              <string>20</string>
+              <string>Point Seperation</string>
              </property>
             </widget>
            </item>
            <item row="2" column="0">
             <widget class="QLabel" name="label_9">
              <property name="text">
-              <string>Range (Degrees) plus/minus</string>
+              <string>Range (±)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0" colspan="2">
+            <widget class="QPushButton" name="Linac1_Fine_Button">
+             <property name="text">
+              <string>Fine Crest Linac with BPM</string>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QDoubleSpinBox" name="Linac1_Fine_PointSeperation_Set">
+             <property name="suffix">
+              <string>°</string>
+             </property>
+             <property name="decimals">
+              <number>1</number>
+             </property>
+             <property name="minimum">
+              <double>0.100000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>0.100000000000000</double>
+             </property>
+             <property name="value">
+              <double>1.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QSpinBox" name="Linac1_Fine_NShots_Set">
+             <property name="maximum">
+              <number>100</number>
+             </property>
+             <property name="value">
+              <number>10</number>
              </property>
             </widget>
            </item>
            <item row="2" column="1">
-            <widget class="QLineEdit" name="rangeSetLinac1">
-             <property name="text">
-              <string>15</string>
+            <widget class="QSpinBox" name="Linac1_Fine_Range_Set">
+             <property name="suffix">
+              <string>°</string>
+             </property>
+             <property name="value">
+              <number>20</number>
              </property>
             </widget>
            </item>
           </layout>
          </widget>
         </item>
-        <item row="2" column="0">
-         <widget class="QGroupBox" name="groupBox_methodLinac1">
+        <item row="4" column="0">
+         <widget class="QGroupBox" name="Linac1_Set_Phase">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
-          <property name="title">
-           <string>Method</string>
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>0</height>
+           </size>
           </property>
-          <layout class="QVBoxLayout" name="verticalLayout_4">
-           <item>
-            <widget class="QPushButton" name="turnOnLinac1Button">
+          <property name="title">
+           <string>Set Final Phase</string>
+          </property>
+          <layout class="QFormLayout" name="formLayout_4">
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_20">
+             <property name="minimumSize">
+              <size>
+               <width>150</width>
+               <height>0</height>
+              </size>
+             </property>
              <property name="text">
-              <string>Turn On Linac</string>
-             </property>
-             <property name="checkable">
-              <bool>false</bool>
-             </property>
-             <property name="flat">
-              <bool>false</bool>
+              <string>Off-crest Phase</string>
              </property>
             </widget>
            </item>
-           <item>
-            <widget class="QPushButton" name="crestLinac1RoughButton">
-             <property name="text">
-              <string>Aprroximately Find Crest with BPM</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="setLinac1DipoleButton">
-             <property name="text">
-              <string>Set Dipole Current</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="crestLinac1Button">
-             <property name="text">
-              <string>Fine Crest Linac with BPM</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="setLinac1PhaseButton">
+           <item row="1" column="0" colspan="2">
+            <widget class="QPushButton" name="Linac1_SetPhase_Button">
              <property name="text">
               <string>Set Linac Phase</string>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QDoubleSpinBox" name="Linac1_OffCrest_Phase_Set">
+             <property name="suffix">
+              <string>°</string>
+             </property>
+             <property name="decimals">
+              <number>1</number>
+             </property>
+             <property name="minimum">
+              <double>-30.000000000000000</double>
+             </property>
+             <property name="maximum">
+              <double>30.000000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>0.500000000000000</double>
              </property>
             </widget>
            </item>
@@ -632,14 +1073,50 @@
     <property name="title">
      <string>File</string>
     </property>
+    <addaction name="actionExit"/>
+   </widget>
+   <widget class="QMenu" name="menuSave_Data">
+    <property name="title">
+     <string>Save Data</string>
+    </property>
+    <addaction name="actionAuto_Save_Data"/>
+    <addaction name="actionSave_to_Work_Folder"/>
     <addaction name="actionSave_Calibation_Data"/>
    </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuSave_Data"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionSave_Calibation_Data">
    <property name="text">
     <string>Save Calibation Data</string>
+   </property>
+  </action>
+  <action name="actionAuto_Save_Data">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Auto Save Data</string>
+   </property>
+  </action>
+  <action name="actionSave_to_Work_Folder">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Save to Work Folder</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="text">
+    <string>Exit</string>
    </property>
   </action>
  </widget>
