@@ -205,7 +205,7 @@ class Controller():
             
         #This should be activated by a button
         self.counter += 1
-        if self.counter == 10:
+        if self.counter == 1:
             self.counter = 0
             self.model.feedback(self.runFeedback)
             if self.runFeedback is True:

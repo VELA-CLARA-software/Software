@@ -4,7 +4,6 @@ import sys,scopeWriterGlobals
 import VELA_CLARA_Scope_Control as vcsc
 import time, numpy, epics, math, threading
 import win32com.client
-import scope_writer_logger
 
 class scopeWriterController(QObject):
 	def __init__(self, view, scopeCont, loadView, saveView):
@@ -151,7 +150,7 @@ class scopeWriterController(QObject):
 		if len(self.chan) > 2002:
 			self.view.traceWarningLabel.setText("WARNING!!!! \nTrace size > 2002!!!")
 		else:
-			self.view.traceWarningLabel.setText("")
+			self.view.traceWarningLabel.setText(str(len(self.chan)))
 		return self.cha1
 
 	def movingaverage(self, interval, window_size):
@@ -191,6 +190,7 @@ class scopeWriterController(QObject):
 			self.part_trace_data.append( numpy.sum( self.partTrace[i] )*self.allTraceDataStruct.timebase ) # This is the "raw" trace section.
 			if self.filter_type == "None":
 				self.data.append( numpy.sum( self.partTrace[i] )*self.allTraceDataStruct.timebase )
+				print numpy.sum( self.partTrace[i] )*self.allTraceDataStruct.timebase
 			elif self.filter_type == "Moving Average":
 				self.data.append( numpy.sum( self.movingaverage( self.partTrace[i], self.filter_interval ) )*self.allTraceDataStruct.timebase )
 			elif self.filter_type == "Baseline Subtraction":
