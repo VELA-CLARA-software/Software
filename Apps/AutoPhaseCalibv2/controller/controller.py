@@ -156,12 +156,16 @@ class Controller(QObject):
 		self.view.Gun_Dipole_Button.clicked.connect(self.setDipoleCurrentForGun)
 		self.view.Gun_Fine_Button.clicked.connect(self.gunBPMCrester)
 		self.view.Gun_SetPhase_Button.clicked.connect(lambda : self.model.gunPhaser(gunPhaseSet=self.view.Gun_OffCrest_Phase_Set.value(), offset=True))
+		self.view.Gun_Momentum_Set.valueChanged[float].connect(self.updateGunDipoleSet)
+		self.view.Gun_Dipole_Set.valueChanged[float].connect(self.updateGunMomentumSet)
 
 		# self.view.Linac1_TurnOn_Button.clicked.connect(self.model.turnOnLinac)
 		self.view.Linac1_Rough_Button.clicked.connect(self.linac1CresterQuick)
 		self.view.Linac1_Dipole_Button.clicked.connect(self.setDipoleCurrentForLinac1)
 		self.view.Linac1_Fine_Button.clicked.connect(self.linac1BPMCrester)
 		self.view.Linac1_SetPhase_Button.clicked.connect(lambda : self.model.linac1Phaser(linac1PhaseSet=self.view.Linac1_OffCrest_Phase_Set.value(), offset=True))
+		self.view.Linac1_Momentum_Set.valueChanged[float].connect(self.updateLinac1DipoleSet)
+		self.view.Linac1_Dipole_Set.valueChanged[float].connect(self.updateLinac1MomentumSet)
 
 		self.view.Abort_Button.hide()
 		self.view.Abort_Button.clicked.connect(self.abortRunning)
@@ -171,6 +175,26 @@ class Controller(QObject):
 		self.view.actionSave_Calibation_Data.triggered.connect(self.saveData)
 
 		self.setLabel('MODE: '+self.model.machineType+' '+self.model.lineType+' with '+self.model.gunType+' gun')
+
+	def updateGunDipoleSet(self, mom):
+		self.view.Gun_Dipole_Set.valueChanged[float].disconnect(self.updateGunMomentumSet)
+		self.view.Gun_Dipole_Set.setValue(self.model.calculateDipoleFromMomentum(mom))
+		self.view.Gun_Dipole_Set.valueChanged[float].connect(self.updateGunMomentumSet)
+
+	def updateGunMomentumSet(self, I):
+		self.view.Gun_Momentum_Set.valueChanged[float].disconnect(self.updateGunDipoleSet)
+		self.view.Gun_Momentum_Set.setValue(self.model.calculateMomentumFromDipole(I))
+		self.view.Gun_Momentum_Set.valueChanged[float].connect(self.updateGunDipoleSet)
+
+	def updateLinac1DipoleSet(self, mom):
+		self.view.Linac1_Dipole_Set.valueChanged[float].disconnect(self.updateLinac1MomentumSet)
+		self.view.Linac1_Dipole_Set.setValue(self.model.calculateDipoleFromMomentum(mom))
+		self.view.Linac1_Dipole_Set.valueChanged[float].connect(self.updateLinac1MomentumSet)
+
+	def updateLinac1MomentumSet(self, I):
+		self.view.Linac1_Momentum_Set.valueChanged[float].disconnect(self.updateLinac1DipoleSet)
+		self.view.Linac1_Momentum_Set.setValue(self.model.calculateMomentumFromDipole(I))
+		self.view.Linac1_Momentum_Set.valueChanged[float].connect(self.updateLinac1DipoleSet)
 
 	def setButtonState(self, state=True):
 		for b in self.buttons:
@@ -247,6 +271,7 @@ class Controller(QObject):
 		self.newDataSignal.connect(self.updatePlot)
 		self.thread.finished.connect(self.enableButtons)
 		self.thread.finished.connect(self.autoSaveData)
+		self.thread.finished.connect(lambda : self.view.Gun_Dipole_Set.setValue(self.model.finalDipoleI))
 		self.thread.start()
 
 	def setDipoleCurrentForLinac1(self):
@@ -257,6 +282,7 @@ class Controller(QObject):
 		self.newDataSignal.connect(self.updatePlot)
 		self.thread.finished.connect(self.enableButtons)
 		self.thread.finished.connect(self.autoSaveData)
+		self.thread.finished.connect(lambda : self.view.Linac1_Dipole_Set.setValue(self.model.finalDipoleI))
 		self.thread.start()
 
 	def setLabel(self, string):

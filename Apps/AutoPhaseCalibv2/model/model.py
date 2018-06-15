@@ -456,7 +456,7 @@ class Model(object):
 		self.setFinalPhase(((180 + popt[2]) % 360) - 180)
 		self.printFinalPhase()
 
-########### findingCrestGunFine ###############
+########### findingDipoleCurrent ###############
 
 	def findDipoleCurrent(self):
 		self.startingDipole = self.machine.getDip()
@@ -509,3 +509,25 @@ class Model(object):
 		while abs(self.machine.getDip() - self.finalDipoleI) > 0.2:
 			time.sleep(self.sleepTimeDipole)
 		self.printFinalDip()
+
+########### SetDipoleMomentum ###############
+
+	def SetDipoleMomentum(self, mom):
+		current = self.machine.calculateDipoleMomentum(mom)
+		self.machine.setDip(current)
+
+	def calculateDipoleFromMomentum(self, mom):
+		D = self.machine.magnets.getMagObjConstRef('DIP01')
+		coeffs = list(D.fieldIntegralCoefficients)
+		coeffs[-1] -= (1000000000*(mom*physics.pi*45)/(physics.c*180))
+		roots = np.roots(coeffs)
+		return roots[-1].real
+
+	def calculateMomentumFromDipole(self, current):
+		D = self.machine.magnets.getMagObjConstRef('DIP01')
+		sign = np.copysign(1, current)
+		coeffs = np.append(D.fieldIntegralCoefficients[:-1] * sign, D.fieldIntegralCoefficients[-1])
+		int_strength = np.polyval(coeffs, abs(current))
+		angle = 45  # reset to 45
+		print 1e-6*0.001 * physics.c * int_strength / np.radians(angle)
+		return 1e-6*0.001 * physics.c * int_strength / np.radians(angle)
