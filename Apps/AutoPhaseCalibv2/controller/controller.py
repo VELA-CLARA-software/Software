@@ -46,10 +46,13 @@ class machineSignaller(QObject):
 		self.signalRecieved = {}
 		self.id = -1
 
-	def get(self, id, function, *args, **kwargs):
+	def get(self, function, *args, **kwargs):
+		id = int(self.id) + 1
+		self.signalRecieved[id] = False
 		self.toMachine.emit(id, function, args, kwargs)
-		while self.signalRecieved[id] == False:
-			time.sleep(0.001)
+		self.id += 1
+		while not all([self.signalRecieved[i] for i in range(id+1)]):
+			time.sleep(0.01)
 		return self.recievedSignal[id]
 
 	def fromMachine(self, id, response):
@@ -57,13 +60,7 @@ class machineSignaller(QObject):
 		self.recievedSignal[id] = response
 
 	def __getattr__(self, attr):
-		if 'set' in attr:
-			id = int(self.id) + 1
-			self.signalRecieved[id] = False
-			self.id += 1
-			return partial(self.get, id, attr)
-		else:
-			return getattr(self.machine, attr)
+		return getattr(self.machine, attr)
 
 class plotWidgets(pg.GraphicsView):
 

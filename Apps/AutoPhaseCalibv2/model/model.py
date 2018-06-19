@@ -70,7 +70,7 @@ class machineSetter(object):
 class Model(object):
 
 	sleepTime = 0.001
-	sleepTimeDipole = 0.01
+	sleepTimeDipole = 0.001
 
 	def __init__(self, machineType, lineType, gunType):
 		super(Model, self).__init__()
@@ -299,10 +299,11 @@ class Model(object):
 		self.machine.setDip(dip)
 
 	def getData(self):
-		self.data = []
-		while len(self.data) < 2:
-			self.data.append(self.getDataFunction())
-			time.sleep(self.sleepTime)
+		# self.data = []
+		# while len(self.data) < 2:
+		# 	self.data.append(self.getDataFunction())
+		# 	time.sleep(self.sleepTime)
+		time.sleep(self.sleepTime)
 		self.data = []
 		while len(self.data) < self.nSamples:
 			self.data.append(self.getDataFunction())
@@ -336,8 +337,7 @@ class Model(object):
 		"""Return all data where the charge is >= 25% of the maximum and is at least 10pC"""
 		allData = self.getDataArray()
 		max_charge = max(self.getDataArray('yData'))
-
-		cutData = [a for a in allData if a[1] > max_charge / 4 and a[1] > 10 and a[2] < 2]
+		cutData = [a for a in allData if a[1] > max_charge / 4 and a[1] > 10]
 		return cutData
 
 	def doFitGunQuick(self):

@@ -25,31 +25,43 @@ class GenericThread(QThread):
 		print 'finished!'
 
 class machineReciever(QObject):
+
+	fromMachine = pyqtSignal(int, 'PyQt_PyObject')
+
 	def __init__(self, machine):
 		super(machineReciever, self).__init__()
 		self.machine = machine
-		print 'self.machine = ', self.machine
 
-	def set(self, function, *args, **kwargs):
-		# print 'calling function ', getattr(self.machine, str(function))
-		getattr(self.machine,str(function))(*args, **kwargs)
+	def toMachine(self, id, function, args, kwargs):
+		ans = getattr(self.machine,str(function))(*args, **kwargs)
+		self.fromMachine.emit(id, ans)
 
 class machineSignaller(QObject):
 
-	setMachine = pyqtSignal(str, 'PyQt_PyObject', 'PyQt_PyObject')
+	toMachine = pyqtSignal(int, str, tuple, dict)
 
 	def __init__(self, machine):
 		super(machineSignaller, self).__init__()
 		self.machine = machine
-		print 'self.machine = ', self.machine
-
-	def set(self, function, *args, **kwargs):
-		# getattr(self.machine,function)(*args, **kwargs)
-		self.setMachine.emit(function, *args, **kwargs)
+		self.recievedSignal = {}
+		self.signalRecieved = {}
+		self.id = -1
 
 	def get(self, function, *args, **kwargs):
-		return getattr(self.machine,function)(*args, **kwargs)
+		id = int(self.id) + 1
+		self.signalRecieved[id] = False
+		self.toMachine.emit(id, function, args, kwargs)
+		self.id += 1
+		while not all([self.signalRecieved[i] for i in range(id+1)]):
+			time.sleep(0.01)
+		return self.recievedSignal[id]
 
+	def fromMachine(self, id, response):
+		self.signalRecieved[id] = True
+		self.recievedSignal[id] = response
+
+	def __getattr__(self, attr):
+		return getattr(self.machine, attr)
 
 from matplotlib.figure import Figure
 import matplotlib
@@ -201,81 +213,53 @@ class Controller(QObject):
 	def updatePlot(self):
 		self.plots[self.cavity].plot(self.model.actuator, self.model.experimentalData[self.model.cavity][self.model.actuator])
 
-	def sol1XRoughScan(self):
+	def solScan(self, scanfunction, stepsize):
 		self.disableButtons()
+		self.thread = GenericThread(scanfunction, self.plane,
+			self.view.sol1LowerSet.value(), \
+			self.view.sol1UpperSet.value(), \
+			[self.view.Corr1_Min.value(), self.view.Corr1_Max.value()], \
+			[self.view.Corr2_Min.value(), self.view.Corr2_Max.value()], \
+			stepsize, \
+			self.view.nSamples.value() \
+		)
+		self.thread.finished.connect(self.updatePlot)
+		self.thread.finished.connect(self.enableButtons)
+		self.thread.start()
+
+	def sol1RoughScan(self):
 		self.cavity = 'L01-SOL1'
-		self.thread = GenericThread(self.model.sol1RoughScan, 'X', float(self.view.sol1LowerSet.text()), \
-			float(self.view.sol1UpperSet.text()), \
-			float(self.view.rangeSetCorrector.text()), \
-			float(self.view.approxStepSetCorrector.text()), \
-			float(self.view.nSamples.text()) \
-		)
-		self.thread.finished.connect(self.updatePlot)
-		self.thread.finished.connect(self.enableButtons)
-		self.thread.start()
+		self.plane = 'X' if self.view.horizontalRadio.isChecked() else 'Y'
+		self.solScan(self.model.sol1RoughScan, self.view.approxStepSetCorrector.value())
 
-	def sol2XRoughScan(self):
-		self.disableButtons()
+	def sol2RoughScan(self):
 		self.cavity = 'L01-SOL2'
-		self.thread = GenericThread(self.model.sol2RoughScan, 'X', float(self.view.sol2LowerSet.text()), \
-			float(self.view.sol2UpperSet.text()), \
-			float(self.view.rangeSetCorrector.text()), \
-			float(self.view.approxStepSetCorrector.text()), \
-			float(self.view.nSamples.text()) \
-		)
-		self.thread.finished.connect(self.updatePlot)
-		self.thread.finished.connect(self.enableButtons)
-		self.thread.start()
+		self.plane = 'X' if self.view.horizontalRadio.isChecked() else 'Y'
+		self.solScan(self.model.sol2RoughScan, self.view.approxStepSetCorrector.value())
 
-	def sol1YRoughScan(self):
-		self.disableButtons()
-		self.cavity = 'L01-SOL1'
-		self.thread = GenericThread(self.model.sol1RoughScan, 'Y', float(self.view.sol1LowerSet.text()), \
-			float(self.view.sol1UpperSet.text()), \
-			float(self.view.rangeSetCorrector.text()), \
-			float(self.view.approxStepSetCorrector.text()), \
-			float(self.view.nSamples.text()) \
+	def linac1Scan(self, scanfunction, actuator, stepsize):
+		self.cavity = 'Linac1'
+		self.thread = GenericThread(scanfunction, actuator, self.plane, \
+			self.view.linac1LowerSet.value(), \
+			self.view.linac1UpperSet.value(), \
+			[self.view.Corr1_Min.value(), self.view.Corr1_Max.value()], \
+			[self.view.Corr2_Min.value(), self.view.Corr2_Max.value()], \
+			stepsize, \
+			self.view.nSamples.value() \
 		)
-		self.thread.finished.connect(self.updatePlot)
-		self.thread.finished.connect(self.enableButtons)
-		self.thread.start()
-
-	def sol2YRoughScan(self):
-		self.disableButtons()
-		self.cavity = 'L01-SOL2'
-		self.thread = GenericThread(self.model.sol2RoughScan, 'Y', float(self.view.sol1LowerSet.text()), \
-			float(self.view.sol1UpperSet.text()), \
-			float(self.view.rangeSetCorrector.text()), \
-			float(self.view.approxStepSetCorrector.text()), \
-			float(self.view.nSamples.text()) \
-		)
-		self.thread.finished.connect(self.updatePlot)
+		self.model.newData.connect(self.updatePlot)
 		self.thread.finished.connect(self.enableButtons)
 		self.thread.start()
 
 	def linac1RoughScan(self):
 		self.cavity = 'Linac1'
-		self.thread = GenericThread(self.model.linac1RoughScan, float(self.view.linac1LowerSet.text()), \
-			float(self.view.linac1UpperSet.text()), \
-			float(self.view.rangeSetCorrector.text()), \
-			float(self.view.approxStepSetCorrector.text()), \
-			float(self.view.nSamples.text()) \
-		)
-		self.model.newData.connect(self.updatePlot)
-		self.thread.finished.connect(self.enableButtons)
-		self.thread.start()
+		self.plane = 'X' if self.view.horizontalRadio.isChecked() else 'Y'
+		self.linac1Scan(self.model.linac1Scan, 'approx', self.view.approxStepSetCorrector.value())
 
 	def linac1FineScan(self):
 		self.cavity = 'Linac1'
-		self.thread = GenericThread(self.model.linac1FineScan, float(self.view.linac1LowerSet.text()), \
-			float(self.view.linac1UpperSet.text()), \
-			float(self.view.rangeSetCorrector.text()), \
-			float(self.view.fineStepSetCorrector.text()), \
-			float(self.view.nSamples.text()) \
-		)
-		self.model.newData.connect(self.updatePlot)
-		self.thread.finished.connect(self.enableButtons)
-		self.thread.start()
+		self.plane = 'X' if self.view.horizontalRadio.isChecked() else 'Y'
+		self.linac1Scan(self.model.linac1Scan, 'fine', self.view.approxStepSetCorrector.value())
 
 	def setLabel(self, string):
 		logger.info(string)

@@ -25,9 +25,9 @@ class Machine(object):
 			os.environ["EPICS_CA_ADDR_LIST"] = "10.10.0.12"
 			os.environ["EPICS_CA_MAX_ARRAY_BYTES"] = "10000000"
 			os.environ["EPICS_CA_SERVER_PORT"]="6000"
-			self.magInit = mag.init()
-			self.magInit.setQuiet()
-			self.magnets = self.magInit.virtual_CLARA_PH1_Magnet_Controller()
+			# self.magInit = mag.init()
+			# self.magInit.setQuiet()
+			self.magnets = None#self.magInit.virtual_CLARA_PH1_Magnet_Controller()
 			self.scope = None
 			self.bpms = None
 			self.gunllrf = None
