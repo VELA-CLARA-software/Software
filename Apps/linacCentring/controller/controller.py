@@ -142,7 +142,8 @@ class Controller(QObject):
 		self.machineSignaller = machineSignaller(self.model.baseMachine)
 		self.machineReciever = machineReciever(self.model.baseMachine)
 		self.model.machine = self.machineSignaller
-		self.machineSignaller.setMachine.connect(self.machineReciever.set)
+		self.machineSignaller.toMachine.connect(self.machineReciever.toMachine)
+		self.machineReciever.fromMachine.connect(self.machineSignaller.fromMachine)
 		self.loggerSignal.connect(self.setLabel)
 		self.plots = {}
 
@@ -160,8 +161,8 @@ class Controller(QObject):
 		self.view.plotLayoutSOL2.addWidget(self.plots['L01-SOL2'])
 
 		self.buttons = [self.view.linac1StartRoughScanButton, self.view.linac1StartFineScanButton,
-		self.view.sol1XStartRoughScanButton, self.view.sol1YStartRoughScanButton,
-		self.view.sol2XStartRoughScanButton, self.view.sol2YStartRoughScanButton
+		self.view.sol1StartRoughScanButton, self.view.sol1StartFineScanButton,
+		self.view.sol2StartRoughScanButton, self.view.sol2StartFineScanButton
 		]
 
 		self.log = lw.loggerWidget()
@@ -170,10 +171,10 @@ class Controller(QObject):
 
 		self.view.linac1StartRoughScanButton.clicked.connect(self.linac1RoughScan)
 		self.view.linac1StartFineScanButton.clicked.connect(self.linac1FineScan)
-		self.view.sol1XStartRoughScanButton.clicked.connect(self.sol1XRoughScan)
-		self.view.sol2XStartRoughScanButton.clicked.connect(self.sol2XRoughScan)
-		self.view.sol1YStartRoughScanButton.clicked.connect(self.sol1YRoughScan)
-		self.view.sol2YStartRoughScanButton.clicked.connect(self.sol2YRoughScan)
+		self.view.sol1StartRoughScanButton.clicked.connect(self.sol1RoughScan)
+		self.view.sol1StartFineScanButton.clicked.connect(self.sol1FineScan)
+		self.view.sol2StartRoughScanButton.clicked.connect(self.sol2RoughScan)
+		self.view.sol2StartFineScanButton.clicked.connect(self.sol2FineScan)
 		self.view.abortButton.hide()
 		self.view.abortButton.clicked.connect(self.abortRunning)
 		self.view.finishButton.hide()
@@ -188,10 +189,16 @@ class Controller(QObject):
 
 	def enableButtons(self):
 		self.setButtonState(True)
-		self.view.finishButton.clicked.disconnect(self.finishRunning)
-		self.view.finishButton.hide()
-		self.view.abortButton.clicked.disconnect(self.abortRunning)
-		self.view.abortButton.hide()
+		try:
+			self.view.finishButton.clicked.disconnect(self.finishRunning)
+			self.view.finishButton.hide()
+		except:
+			pass
+		try:
+			self.view.abortButton.clicked.disconnect(self.abortRunning)
+			self.view.abortButton.hide()
+		except:
+			pass
 
 	def disableButtons(self):
 		self.setButtonState(False)
@@ -230,12 +237,23 @@ class Controller(QObject):
 	def sol1RoughScan(self):
 		self.cavity = 'L01-SOL1'
 		self.plane = 'X' if self.view.horizontalRadio.isChecked() else 'Y'
-		self.solScan(self.model.sol1RoughScan, self.view.approxStepSetCorrector.value())
+		self.solScan(self.model.sol1Scan, self.view.roughStepSetCorrector.value())
 
 	def sol2RoughScan(self):
 		self.cavity = 'L01-SOL2'
 		self.plane = 'X' if self.view.horizontalRadio.isChecked() else 'Y'
-		self.solScan(self.model.sol2RoughScan, self.view.approxStepSetCorrector.value())
+		self.solScan(self.model.sol2Scan, self.view.roughStepSetCorrector.value())
+
+	def sol1FineScan(self):
+		self.cavity = 'L01-SOL1'
+		self.plane = 'X' if self.view.horizontalRadio.isChecked() else 'Y'
+		self.solScan(self.model.sol1Scan, self.view.fineStepSetCorrector.value())
+
+	def sol2FineScan(self):
+		self.cavity = 'L01-SOL2'
+		self.plane = 'X' if self.view.horizontalRadio.isChecked() else 'Y'
+		self.solScan(self.model.sol2Scan, self.view.fineStepSetCorrector.value())
+
 
 	def linac1Scan(self, scanfunction, actuator, stepsize):
 		self.cavity = 'Linac1'
@@ -254,12 +272,12 @@ class Controller(QObject):
 	def linac1RoughScan(self):
 		self.cavity = 'Linac1'
 		self.plane = 'X' if self.view.horizontalRadio.isChecked() else 'Y'
-		self.linac1Scan(self.model.linac1Scan, 'approx', self.view.approxStepSetCorrector.value())
+		self.linac1Scan(self.model.linac1Scan, 'approx', self.view.roughStepSetCorrector.value())
 
 	def linac1FineScan(self):
 		self.cavity = 'Linac1'
 		self.plane = 'X' if self.view.horizontalRadio.isChecked() else 'Y'
-		self.linac1Scan(self.model.linac1Scan, 'fine', self.view.approxStepSetCorrector.value())
+		self.linac1Scan(self.model.linac1Scan, 'fine', self.view.fineStepSetCorrector.value())
 
 	def setLabel(self, string):
 		logger.info(string)
