@@ -406,6 +406,8 @@ class Window(QtGui.QMainWindow):
                     # show "Y position" label
                     self.collapsing_header(main_hbox, more_info, attributes.strength_name, help_text=show_hide_info)
                     bpm.y_label = self.collapsing_header(main_hbox, more_info, help_text=show_hide_info)
+                    self.collapsing_header(main_hbox, more_info, 'Charge', help_text=show_hide_info)
+                    bpm.q_label = self.collapsing_header(main_hbox, more_info, help_text=show_hide_info)
                     static_info.append(format_when_present('<br><b>Position</b>: {:.3f} m', bpm.ref, 'position'))
                     # No branch info for BPMs (yet), we have to add it ourselves
                     if 'C2V' in name:
@@ -664,6 +666,7 @@ class Window(QtGui.QMainWindow):
         for bpm in self.bpms.values():
             bpm.x_label.setText('<b>{:.3f} mm</b>\t'.format(bpm.ref.xPV))
             bpm.y_label.setText('<b>{:.3f} mm</b>'.format(bpm.ref.yPV))
+            bpm.q_label.setText('<b>{:.3f} pC</b>'.format(bpm.ref.q))
 
     def onlineInfoLinkClicked(self, url):
         """A link was clicked in the 'online info' box."""
