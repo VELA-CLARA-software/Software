@@ -327,9 +327,11 @@ class Window(QtGui.QMainWindow):
             title.section_key = key
             magnet_list_frame.title_label = title
             min_momentum = 1.0
-            momentum_value, ok = self.settings.value(section.title + '/momentum', section.default_momentum).toFloat()
-            momentum = self.spinbox(header_hbox, 'MeV/c', step=0.1, value=momentum_value, decimals=3,
+            momentum_value, ok = self.settings.value(key + '/momentum', section.default_momentum).toFloat()
+            step = float(self.settings.value(key + '/mom_step', 0.1).toString())
+            momentum = self.spinbox(header_hbox, 'MeV/c', step=step, value=momentum_value, decimals=3,
                                     min_value=min_momentum, help_text="Set the momentum of the " + section_name + " section. ")
+            momentum.setMaximumWidth(200)
             momentum.valueChanged.connect(self.momentumChanged)
             section_vbox.addLayout(header_hbox)
             magnet_list_vbox = QtGui.QVBoxLayout(magnet_list_frame)
@@ -458,7 +460,8 @@ class Window(QtGui.QMainWindow):
                         # max_k = max_current
                     # else:
                     #     max_k = self.getK(magnet, max_current, min_momentum)
-                    step = 0.01 if mag_type == 'BSOL' else 0.1
+                    # The float(.toString()) here is necessary since Qt's string-to-float conversion doesn't match Python's
+                    step = float(self.settings.value('{}/{}_k_step'.format(key, name), 0.01 if mag_type == 'BSOL' else 0.1).toString())
                     help_text = "Set the {} in the {} magnet. The magnet current will be set depending on the momentum in the {} section. ".format(
                         attributes.effect_name.lower(), magnet.name, section_name)
                     k_spin = self.spinbox(main_hbox, attributes.effect_units, step=step, decimals=3,
@@ -483,13 +486,15 @@ class Window(QtGui.QMainWindow):
                         if name == 'DIP01':
                             # We can use this dipole to set the momentum - add a button to the section header
                             set_mom_button = QtGui.QPushButton('Set momentum from ' + name)
+                            set_mom_button.setMaximumWidth(200)
                             set_mom_button.clicked.connect(functools.partial(self.setMomentum, magnet))
                             header_hbox.addWidget(set_mom_button)
 
                     self.collapsing_header(main_hbox, more_info, lbl, help_text=show_hide_info)
                     help_text = "Set the current in the {} magnet. The {} will be calculated, depending on the momentum in the {} section. ".format(
                         magnet.name, attributes.effect_name.lower(), section_name)
-                    current_spin = self.spinbox(main_hbox, units, step=0.1, decimals=3,
+                    step = float(self.settings.value('{}/{}_i_step'.format(key, name), 0.1).toString())
+                    current_spin = self.spinbox(main_hbox, units, step=step, decimals=3,
                                                 min_value=min_current, max_value=max_current, help_text=help_text)
                     magnet.current_spin = current_spin
                     # if mag_type == 'DIP':
@@ -708,6 +713,42 @@ class Window(QtGui.QMainWindow):
                 except AttributeError: # won't work for momentum spin boxes
                     source.setStyleSheet(style_sheet)
                     self.highlightMagControls(source.magnet_list_vbox, style_sheet)
+            elif evType == QtCore.QEvent.ContextMenu and isinstance(source, QtGui.QDoubleSpinBox):
+                # Create a submenu item to adjust the step size, with a nice inline slider
+                single_step = source.singleStep()
+                menu = source.lineEdit().createStandardContextMenu()  #QtGui.QMenu(self) to create a blank menu
+                menu.addSeparator().setText('Step size')
+                step_sizes = [0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1, 3, 10, 30]
+                frame = QtGui.QFrame(menu)
+                hbox = QtGui.QHBoxLayout(menu)
+                frame.setLayout(hbox)
+                slider = QtGui.QSlider(QtCore.Qt.Horizontal)
+                slider.setRange(0, len(step_sizes) - 1)
+                slider.setValue(step_sizes.index(single_step))
+                hbox.addWidget(slider)
+                # Show a label on the right displaying the actual value
+                label = QtGui.QLabel('{:.3g}'.format(single_step))
+                label.setMinimumWidth(30)  # about right for the widest value (0.003) - if we don't do this, the slider will change size as we slide
+                def setStepSize(i):
+                    step = step_sizes[i]
+                    source.setSingleStep(step)
+                    label.setText(str(step))
+                    try:  # do we have a magnet spin box?
+                        magnet = source.parent().magnet
+                        spinbox_type = 'k' if source is magnet.k_spin else 'i'
+                        settings_key = '{0.section.id}/{0.name}_{1}_step'.format(magnet, spinbox_type)
+                    except AttributeError:  # no, a momentum one!
+                        section = source.magnet_list_vbox
+                        settings_key = section.id + '/mom_step'
+                    self.settings.setValue(settings_key, step)
+                slider.valueChanged.connect(setStepSize)
+                hbox.addWidget(label)
+                widget_action = QtGui.QWidgetAction(menu)
+                widget_action.setDefaultWidget(frame)
+                menu.addAction(widget_action)
+                menu.exec_(event.globalPos())
+                menu.deleteLater()
+                return True
 
         elif evType == QtCore.QEvent.Wheel and (modifiers & QtCore.Qt.ShiftModifier):
             # don't allow scrolling if Shift _is_ held outwith a spin box -
