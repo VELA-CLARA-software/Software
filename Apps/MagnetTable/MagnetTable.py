@@ -62,7 +62,8 @@ image_credits = {
     'off.png': 'https://www.flaticon.com/free-icon/power-on-semicircle_17131',
     'yes.png': 'https://www.flaticon.com/free-icon/check-symbol_60731',
     'no.png': 'https://www.flaticon.com/free-icon/clear-button_60994',
-    'yes-all.png': 'https://www.flaticon.com/free-icon/double-tick-indicator_60727'
+    'yes-all.png': 'https://www.flaticon.com/free-icon/double-tick-indicator_60727',
+    'degauss.gif': 'http://icon-park.com/icon/loadingpreloading-image-spin-4-blue/',
 }
     
 # Define the speed of light. We need this to convert field integral to angle or K.
@@ -555,6 +556,9 @@ class Window(QtGui.QMainWindow):
             magnet.restore_button.setEnabled(False) # will be automatically shown when event triggered
             magnet.active = False
 
+        self.degauss_animation = QtGui.QMovie(os.getcwd() + r'\resources\magnetTable\Icons\degauss.gif')
+        self.degauss_animation.setScaledSize(QtCore.QSize(32, 32))
+
         self.magnet_controls = magnet_list
         self.setWindowTitle('Magnet Table')
         rect = self.settings.value('geometry', QtCore.QRect(300, 300, 400, 600)).toRect()
@@ -618,6 +622,10 @@ class Window(QtGui.QMainWindow):
             if degaussing:
                 # light orange when magnets are being degaussed, and disable spin boxes
                 magnet.magnet_frame.setStyleSheet('background-color: rgb(255, 178, 102);')
+                magnet.warning_icon.setToolTip('Degaussing')
+                if not magnet.warning_icon.movie():
+                    magnet.warning_icon.setMovie(self.degauss_animation)
+                    self.degauss_animation.start()
             elif not magnet_on:
                 # red background to highlight magnets that are OFF
                 magnet.magnet_frame.setStyleSheet('background-color: rgb(139, 0, 0);')
@@ -646,11 +654,12 @@ class Window(QtGui.QMainWindow):
             if mag_type == 'QUAD' or mag_type[1:] == 'COR':
                 strength *= 1000  # convert to mT for correctors, T/m for quads
             online_text = online_text_format.format(**locals()) if magnet_on else \
-                '<br><a href="{}/{}">Switch magnet ON</a>'.format(magnet.section.id, magnet.ref.name)
+                '<a href="{}/{}/on">Switch magnet ON</a>'.format(magnet.section.id, magnet.ref.name)
             if mag_type == 'DIP':
-                online_text += '<br>Section momentum: {:.3f} MeV/c'.format(magnet.section.momentum_spin.value())
-            if degaussing:
-                online_text += '<p style="color:red"><b>Degaussing</b>: {} steps remaining</p>'.format(magnet.ref.remainingDegaussSteps)
+                online_text += '<br><b>Section momentum</b>: {:.3f} MeV/c'.format(magnet.section.momentum_spin.value())
+            online_text += '<p style="color:red"><b>Degaussing</b>: {} steps remaining</p>'.format(magnet.ref.remainingDegaussSteps) if degaussing else \
+                '<br><a href="{}/{}/degauss">Degauss magnet</a>'.format(magnet.section.id, magnet.ref.name)
+
             magnet.online_info.setText(online_text)
         for bpm in self.bpms.values():
             bpm.x_label.setText('<b>{:.3f} mm</b>\t'.format(bpm.ref.xPV))
@@ -658,8 +667,11 @@ class Window(QtGui.QMainWindow):
 
     def onlineInfoLinkClicked(self, url):
         """A link was clicked in the 'online info' box."""
-        section, magnet = str(url).split('/')
-        magnet_controllers[section].switchONpsu(magnet)
+        section, magnet, action = str(url).split('/')
+        if action == 'on':
+            magnet_controllers[section].switchONpsu(magnet)
+        elif action == 'degauss':
+            magnet_controllers[section].degauss(magnet)
 
 
     def eventFilter(self, source, event):
