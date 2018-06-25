@@ -142,14 +142,14 @@ class Model(object):
 		return [b() for b in self.bpms]
 
 	def sol1Scan(self, plane, ampLower, ampUpper, corrRange, corrStep, nSamples):
-		self.cavity = 'L01-SOL1'
+		self.main = 'L01-SOL1'
 		self.plane = plane
 		if plane == 'Y':
-			self.actuator = 'fine'
+			self.sub = 'fine'
 			self.corrector1 = 'S01-VCOR1'
 			self.corrector2 = 'S01-VCOR2'
 		else:
-			self.actuator = 'approx'
+			self.sub = 'approx'
 			self.corrector1 = 'S01-HCOR1'
 			self.corrector2 = 'S01-HCOR2'
 		self.correctorStepSize = corrStep
@@ -161,14 +161,14 @@ class Model(object):
 		self.findSOLCentre()
 
 	def sol2Scan(self, plane, ampLower, ampUpper, corr1Range, corr2Range, corrStep, nSamples):
-		self.cavity = 'L01-SOL2'
+		self.main = 'L01-SOL2'
 		self.plane = plane
 		if plane == 'Y':
-			self.actuator = 'fine'
+			self.sub = 'fine'
 			self.corrector1 = 'S01-VCOR1'
 			self.corrector2 = 'S01-VCOR2'
 		else:
-			self.actuator = 'approx'
+			self.sub = 'approx'
 			self.corrector1 = 'S01-HCOR1'
 			self.corrector2 = 'S01-HCOR2'
 		self.correctorStepSize = corrStep
@@ -181,8 +181,8 @@ class Model(object):
 		self.findSOLCentre()
 
 	def linac1Scan(self, actuator, plane, ampLower, ampUpper, corr1Range, corr2Range, corrStep, nSamples):
-		self.cavity = 'Linac1'
-		self.actuator = actuator
+		self.main = 'Linac1'
+		self.sub = actuator
 		self.plane = plane
 		if plane == 'Y':
 			self.corrector1 = 'S01-VCOR1'
@@ -199,30 +199,48 @@ class Model(object):
 		self.bpms = [partial(self.machine.getBPMPosition, 'S01-BPM01'), partial(self.machine.getBPMPosition, 'S02-BPM01'), partial(self.machine.getBPMPosition, 'S02-BPM02')]
 		self.findRFCentre()
 
+	def linac1ScanBLM(self, actuator, ampLower, ampUpper, nSamples):
+		"""
+			This function will perform the BLM linac fit. 2 Correctors are defined for X and Y (4 total!)
+			The BPM readings are the X and Y values of the first 2 BPMs in S02.
+			The camera readings for S02-YAG-03 needed to be added.
+			The values of the 2 linac settings and the number of bpm samples are also defined.
+		"""
+		self.corrector1X = 'S01-HCOR1'
+		self.corrector1Y = 'S01-VCOR1'
+		self.corrector2X = 'S01-HCOR2'
+		self.corrector2Y = 'S01-VCOR2'
+		self.linacLowerAmp = ampLower
+		self.linacUpperAmp = ampUpper
+		self.nSamples = nSamples
+		self.bpms = [partial(self.machine.getBPMPosition, 'S02-BPM01', plane='X'), partial(self.machine.getBPMPosition, 'S02-BPM01', plane='Y')\
+					 partial(self.machine.getBPMPosition, 'S02-BPM02', plane='X'), partial(self.machine.getBPMPosition, 'S02-BPM02', plane='Y')]
+		self.findRFCentreBLM()
+
 	def printFinalValue(self):
-		print self.cavity+' '+self.actuator+' fit = '+str(self.experimentalData[self.cavity]['calibrationPhase'])
-		self.logger.emit(self.cavity+' '+self.actuator+' fit = '+str(self.experimentalData[self.cavity]['calibrationPhase']))
+		print self.main+' '+self.sub+' fit = '+str(self.experimentalData[self.main]['calibrationPhase'])
+		self.logger.emit(self.main+' '+self.sub+' fit = '+str(self.experimentalData[self.main]['calibrationPhase']))
 
 	def printFinalDip(self):
-		print self.cavity+' '+self.actuator+' fit = '+str(self.experimentalData[self.cavity]['calibrationDip'])
-		self.logger.emit(self.cavity+' '+self.actuator+' fit = '+str(self.experimentalData[self.cavity]['calibrationDip']))
+		print self.main+' '+self.sub+' fit = '+str(self.experimentalData[self.main]['calibrationDip'])
+		self.logger.emit(self.main+' '+self.sub+' fit = '+str(self.experimentalData[self.main]['calibrationDip']))
 
 	def resetDataArray(self):
-		self.experimentalData.resetData(self.cavity, self.actuator, ['x', 'y', 'z'])
+		self.experimentalData.resetData(self.main, self.sub, ['x', 'y', 'z'])
 
 	def setDataArray(self, x, y, z):
-		self.experimentalData[self.cavity][self.actuator]['x'].append(x)
-		self.experimentalData[self.cavity][self.actuator]['y'].append(y)
-		self.experimentalData[self.cavity][self.actuator]['z'].append(z)
+		self.experimentalData[self.main][self.sub]['x'].append(x)
+		self.experimentalData[self.main][self.sub]['y'].append(y)
+		self.experimentalData[self.main][self.sub]['z'].append(z)
 		self.newData.emit()
 
 	def getDataArray(self, column=None, zipped=True, sortKey=None):
 		if column is not None:
-			return self.experimentalData[self.cavity][self.actuator][column]
+			return self.experimentalData[self.main][self.sub][column]
 		else:
-			data = [self.experimentalData[self.cavity][self.actuator]['x'],
-				self.experimentalData[self.cavity][self.actuator]['y'],
-				self.experimentalData[self.cavity][self.actuator]['z']]
+			data = [self.experimentalData[self.main][self.sub]['x'],
+				self.experimentalData[self.main][self.sub]['y'],
+				self.experimentalData[self.main][self.sub]['z']]
 			if sortKey is not None:
 				data = zip(*sorted(zip(*data), key=sortKey))
 			if zipped:
@@ -231,7 +249,7 @@ class Model(object):
 				return data
 
 	def setFinalCorr(self, corr, I):
-		self.experimentalData[self.cavity]['calibrationCorr1'] = I
+		self.experimentalData[self.main]['calibrationCorr1'] = I
 		self.machine.set('setCorr', corr, I)
 
 	def getData(self):
@@ -243,11 +261,77 @@ class Model(object):
 		while len(self.data) < self.nSamples:
 			self.data.append(self.getDataFunction())
 			time.sleep(self.sleepTime)
+		## This returns means in the form [bpm1, bpm2, bpm3...]
 		return np.array([np.mean(a) if np.std(a) > 0.01 else 20 for a in zip(*self.data)])
+
+########### findRFCentreBLM ###############
+
+	def findRFCentreBLM(self):
+		"""
+			The suggested solution (from BLM) is to scan c1 at five points in x/y at
+			[[0,0], [-1,0], [1,0], [0, -1], [0,1]]
+			at two energies and then solve for the zero point in x/y corrector space.
+			Repeat for c2.
+
+			Data is stored in self.experimentalData[self.main][self.sub]
+
+			I haven't figured out how to do the fit yet...
+		"""
+		self.resetDataArray()
+		cx = self.corrector1X
+		cy = self.corrector1Y
+		self.doBMLScan(cx, cy, 1)
+		self.saveLinacDataBLM(corr=1)
+
+		cx = self.corrector2X
+		cy = self.corrector2Y
+		self.doBMLScan(cx, cy, 2)
+
+	def doBMLScan(self, corrx, corry, no=1):
+		self.resetDataArray()
+		self.machine.setLinac1Amplitude(self.linacLowerAmp)
+		self.main = 'Corr1'
+		self.sub = 'Low'
+		for c1x, c1y in [[0,0], [-1,0], [1,0], [0, -1], [0,1]]:
+			self.machine.setCorr(corrx, c1x)
+			self.machine.setCorr(corry, c1y)
+			time.sleep(self.sleepTime)
+			data = self.getData()
+			self.setDataArray(c1x, c1y, data)
+		self.saveLinacDataBLM(corr=no)
+
+		self.resetDataArray()
+		self.machine.setLinac1Amplitude(self.linacUpperAmp)
+		self.main = 'Corr1'
+		self.sub = 'High'
+		for c1x, c1y in [[0,0], [-1,0], [1,0], [0, -1], [0,1]]:
+			self.machine.setCorr(corrx, c1x)
+			self.machine.setCorr(corry, c1y)
+			time.sleep(self.sleepTime)
+			data = self.getData()
+			self.setDataArray(c1x, c1y, data)
+		self.saveLinacDataBLM(corr=no)
+
+	def saveLinacDataBLM(self, corr=1):
+		self.timestr = time.strftime("%Y%m%d-%H%M%S")
+		c1, c2, bpms = self.getDataArray(zipped=False)
+		rawData = np.array(zip(c1, c2, *zip(*bpms)))
+		labels = ['BPM'+str(i+1) for i in range(len(bpms[1]))]
+		df = pd.DataFrame(rawData)
+		df.columns = ['cx', 'cy'] + labels
+		df.to_csv(self.timestr+'_'+self.main+'_'+self.sub+'_'+str(self.linacLowerAmp)+'_'+str(self.linacUpperAmp)+'_Corr_'+str(corr)+'_rawData.csv', index=0)
 
 ########### findRFCentre ###############
 
 	def findRFCentre(self):
+		"""
+			This function will scan corrector 1 (c1) to minimise the average difference between the BPM readings
+			at high and low amplitude of the linac RF. This is simply the mean value of the differences.
+			Once found for c1, it does the same for corrector 2 (c2).
+			Currently this function only works in one plane at a time.
+
+			Data is stored in self.experimentalData[self.main][self.sub]
+		"""
 		self.resetDataArray()
 		for c1 in np.arange(self.corrector1Min, self.corrector1Max+self.correctorStepSize, self.correctorStepSize):
 			self.machine.setCorr(self.corrector1, c1)
@@ -301,19 +385,19 @@ class Model(object):
 		labels = ['BPM'+str(i+1) for i in range(len(bpms[1]))]
 		df = pd.DataFrame(rawData)
 		df.columns = ['c1', 'c2'] + labels
-		df.to_csv(self.timestr+'_'+self.cavity+'_'+self.plane+'_'+str(self.linacLowerAmp)+'_'+str(self.linacUpperAmp)+'_Corr_'+str(corr)+'_rawData.csv', index=0)
+		df.to_csv(self.timestr+'_'+self.main+'_'+self.plane+'_'+str(self.linacLowerAmp)+'_'+str(self.linacUpperAmp)+'_Corr_'+str(corr)+'_rawData.csv', index=0)
 
 ########### findSOLCentre ###############
 
 	def findSOLCentre(self):
 		self.timestr = time.strftime("%Y%m%d-%H%M%S")
-		with open(self.timestr+'_'+self.cavity+'_'+self.plane+'_'+str(self.solLowerAmp)+'A_'+str(self.solUpperAmp)+'A_rawData_log.csv', 'w') as logfile:
+		with open(self.timestr+'_'+self.main+'_'+self.plane+'_'+str(self.solLowerAmp)+'A_'+str(self.solUpperAmp)+'A_rawData_log.csv', 'w') as logfile:
 			self.resetDataArray()
 			self.data1 = {}
 			self.data2 = {}
 			self.rawData = {'x':[], 'y': [], 'z1':[], 'z2': []}
-			self.machine.setSol(self.cavity, self.solLowerAmp)
-			while abs(self.machine.getSol(self.cavity) - self.solLowerAmp) > 0.2:
+			self.machine.setSol(self.main, self.solLowerAmp)
+			while abs(self.machine.getSol(self.main) - self.solLowerAmp) > 0.2:
 				time.sleep(0.1)
 			flip = -1
 			for c1 in np.arange(self.corrector1Min, self.corrector1Max+self.correctorStepSize, self.correctorStepSize):
@@ -333,8 +417,8 @@ class Model(object):
 					logfile.write('data1,'+str(self.solLowerAmp)+','+str(c1)+','+str(c2)+','+str(data1))
 					self.data1[c1][c2] = data1
 
-			self.machine.setSol(self.cavity, self.solUpperAmp)
-			while abs(self.machine.getSol(self.cavity) - self.solUpperAmp) > 0.2:
+			self.machine.setSol(self.main, self.solUpperAmp)
+			while abs(self.machine.getSol(self.main) - self.solUpperAmp) > 0.2:
 				time.sleep(0.1)
 			flip = -1
 			for c1 in np.arange(self.corrector1Min, self.corrector1Max+self.correctorStepSize, self.correctorStepSize):
@@ -350,8 +434,8 @@ class Model(object):
 					logfile.write('data2,'+str(self.solLowerAmp)+','+str(c1)+','+str(c2)+','+str(data2))
 					self.data2[c1][c2] = data2
 
-			self.machine.set('setSol', self.cavity, 0)
-			while abs(self.machine.getSol(self.cavity) - 0) > 0.2:
+			self.machine.set('setSol', self.main, 0)
+			while abs(self.machine.getSol(self.main) - 0) > 0.2:
 				time.sleep(0.1)
 
 			flip = -1
@@ -374,13 +458,13 @@ class Model(object):
 		# my_dict = {}
 		# for name in ['x', 'y', 'z1','z2']:
 		# 	my_dict[name] = self.rawData[name]
-		# with open(self.cavity+'_'+self.actuator+'_rawData.csv', 'wb') as f:  # Just use 'w' mode in 3.x
+		# with open(self.main+'_'+self.sub+'_rawData.csv', 'wb') as f:  # Just use 'w' mode in 3.x
 		# 	w = csv.DictWriter(f, my_dict.keys())
 		# 	w.writeheader()
 		# 	w.writerow(my_dict)
 		df = pd.DataFrame(self.rawData)
 		df.columns = ['x', 'y', 'z1','z2']
-		df.to_csv(self.timestr+'_'+self.cavity+'_'+self.plane+'_'+str(self.solLowerAmp)+'A_'+str(self.solUpperAmp)+'A_rawData.csv', index=0)
+		df.to_csv(self.timestr+'_'+self.main+'_'+self.plane+'_'+str(self.solLowerAmp)+'A_'+str(self.solUpperAmp)+'A_rawData.csv', index=0)
 
 	def cutDataRFCentre(self):
 		"""Return all data where the charge is >= 25% of the maximum and is at least 10pC"""
