@@ -235,8 +235,7 @@ class Window(QtGui.QMainWindow):
         self.createMenuItem('E&xit', file_menu, event=self.close, shortcut="Esc",
                             help_text='Close the program.')
 
-        machine_mode_menu = QtGui.QMenu(machine_menu)
-        machine_mode_menu.setTitle('&Mode')
+        machine_menu.addSeparator().setText('Mode')
         machine_mode_group = QtGui.QActionGroup(self, exclusive=True)
         machine_modes = (('Offline', 'Ctrl+0', "Don't connect to anything."),
                          ('Virtual', 'Ctrl+1', "Connect to a local virtual machine."),
@@ -247,8 +246,7 @@ class Window(QtGui.QMainWindow):
                                          event=self.machineModeChanged, checkable=True, help_text=help_text)
             action.setChecked(mode == set_mode)
             action.mode = mode  # so we know which one to set when this menu item is selected
-            machine_mode_menu.addAction(action)
-        machine_menu.addAction(machine_mode_menu.menuAction())
+            machine_menu.addAction(action)
         self.machine_mode_status = QtGui.QLabel('')
         self.statusBar().addPermanentWidget(self.machine_mode_status)
         self.status_bar_message = QtGui.QLabel('')
@@ -258,29 +256,26 @@ class Window(QtGui.QMainWindow):
 
         help_texts = ("Recalculate all the K values when the momentum is changed.",
                       "Rescale the magnet currents when the momentum is changed, and keep the K values the same.")
-        mom_mode_menu = QtGui.QMenu(machine_menu)
-        mom_mode_menu.setTitle('On momentum &change')
+        shortcuts = ('Ctrl+K', 'Ctrl+I')
+        machine_menu.addSeparator().setText('On momentum change')
         mom_mode_group = QtGui.QActionGroup(self, exclusive=True)
         mom_set_mode = self.settings.value('momentum_mode', mom_modes[0]).toString()
         self.mom_mode_action = {}
-        for mode, help_text in zip(mom_modes, help_texts):
-            action = self.createMenuItem('&' + mode, mom_mode_group, icon_name=mode.replace(' ', '_').lower(),
+        for mode, help_text, shortcut in zip(mom_modes, help_texts, shortcuts):
+            action = self.createMenuItem('&' + mode, mom_mode_group, icon_name=mode.replace(' ', '_').lower(), shortcut=shortcut,
                                          checkable=True, event=self.momentumModeRadioClicked, help_text=help_text)
-            mom_mode_menu.addAction(action)
+            machine_menu.addAction(action)
             action.mode = mode
             action.setChecked(mode == mom_set_mode)
             self.mom_mode_action[mode] = action  # so we can set it checked manually if necessary
-        machine_menu.addAction(mom_mode_menu.menuAction())
         self.always_rescale = False
 
-        machine_menu.addSeparator()
+        machine_menu.addSeparator().setText('Visible magnets')
         for mag_menu_name, mods in (('visible', 'Ctrl+'), ('all', 'Ctrl+Shift+')):
-            mag_menu = QtGui.QMenu(machine_menu)
-            mag_menu.setTitle('&{} magnets'.format(mag_menu_name.title()))
-            self.createMenuItem('All o&n', mag_menu, shortcut=mods+'+', event=functools.partial(self.powerMagnets, 'on', mag_menu_name), icon_name='on')
-            self.createMenuItem('All o&ff', mag_menu, shortcut=mods+'-', event=functools.partial(self.powerMagnets, 'off', mag_menu_name), icon_name='off')
-            self.createMenuItem('&Degauss', mag_menu, shortcut=mods+'G', event=functools.partial(self.degaussMagnets, mag_menu_name), icon_name='cycle')
-            machine_menu.addAction(mag_menu.menuAction())
+            machine_menu.addSeparator().setText('{} magnets'.format(mag_menu_name.title()))
+            self.createMenuItem('All o&n', machine_menu, shortcut=mods+'+', event=functools.partial(self.powerMagnets, 'on', mag_menu_name), icon_name='on')
+            self.createMenuItem('All o&ff', machine_menu, shortcut=mods+'-', event=functools.partial(self.powerMagnets, 'off', mag_menu_name), icon_name='off')
+            self.createMenuItem('&Degauss', machine_menu, shortcut=mods+'G', event=functools.partial(self.degaussMagnets, mag_menu_name), icon_name='cycle')
 
         for mag, types in magnet_types:
             action = self.createMenuItem('&' + mag, view_menu, self.toggleMagType,
@@ -1141,6 +1136,7 @@ class Window(QtGui.QMainWindow):
 
 if __name__ == "__main__":
     app = QtGui.QApplication(sys.argv)
+    app.setStyle(QtGui.QStyleFactory.create('Plastique'))
 
     # Create and display the splash screen
     splash_pix = pixmap('splash-screen')
