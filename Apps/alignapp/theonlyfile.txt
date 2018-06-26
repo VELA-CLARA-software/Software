@@ -1,1 +1,2 @@
 This is the only file and I put some text in it. 
+And now I've changed the text
