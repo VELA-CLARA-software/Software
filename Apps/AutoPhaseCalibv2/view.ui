@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1040</width>
-    <height>753</height>
+    <height>886</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -116,7 +116,7 @@
        </sizepolicy>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="Gun_Tab">
        <attribute name="icon">
@@ -127,7 +127,7 @@
         <string>Gun</string>
        </attribute>
        <layout class="QGridLayout" name="gunTabLayout">
-        <item row="0" column="1" rowspan="6">
+        <item row="0" column="1" rowspan="7">
          <widget class="QGroupBox" name="Gun_Plots_Box">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -264,6 +264,9 @@
            </item>
            <item row="0" column="1">
             <widget class="QSpinBox" name="Gun_Rough_NShots_Set">
+             <property name="minimum">
+              <number>2</number>
+             </property>
              <property name="value">
               <number>3</number>
              </property>
@@ -292,7 +295,7 @@
          </widget>
         </item>
         <item row="2" column="0">
-         <widget class="QGroupBox" name="Gun_Dipole_Set">
+         <widget class="QGroupBox" name="Gun_Dipole_Set_Box">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -326,7 +329,7 @@
            <item row="0" column="1">
             <widget class="QDoubleSpinBox" name="Gun_Dipole_Start_Set">
              <property name="suffix">
-              <string>A</string>
+              <string> A</string>
              </property>
              <property name="decimals">
               <number>1</number>
@@ -339,7 +342,7 @@
            <item row="1" column="1">
             <widget class="QDoubleSpinBox" name="Gun_Dipole_End_Set">
              <property name="suffix">
-              <string>A</string>
+              <string> A</string>
              </property>
              <property name="decimals">
               <number>1</number>
@@ -352,7 +355,7 @@
            <item row="2" column="0" colspan="2">
             <widget class="QPushButton" name="Gun_Dipole_Button">
              <property name="text">
-              <string>Set Dipole Current</string>
+              <string>Find Dipole Current</string>
              </property>
             </widget>
            </item>
@@ -462,7 +465,7 @@
           </layout>
          </widget>
         </item>
-        <item row="4" column="0">
+        <item row="5" column="0">
          <widget class="QGroupBox" name="Gun_Set_Phase">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -525,6 +528,53 @@
           </layout>
          </widget>
         </item>
+        <item row="4" column="0">
+         <widget class="QGroupBox" name="groupBox_2">
+          <property name="title">
+           <string>Set Momentum</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_3">
+           <item row="1" column="1">
+            <widget class="QDoubleSpinBox" name="Gun_Dipole_Set">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="suffix">
+              <string> A</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLabel" name="label_22">
+             <property name="text">
+              <string>Dipole Current</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_21">
+             <property name="text">
+              <string>Momentum</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QDoubleSpinBox" name="Gun_Momentum_Set">
+             <property name="suffix">
+              <string> MeV/c</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0" colspan="2">
+            <widget class="QPushButton" name="Gun_EnergySet_Button">
+             <property name="text">
+              <string>Set Dipole Current</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
        </layout>
       </widget>
       <widget class="QWidget" name="linac1_Tab">
@@ -536,7 +586,7 @@
         <string>Linac 1</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout">
-        <item row="0" column="2" rowspan="6">
+        <item row="0" column="2" rowspan="7">
          <widget class="QGroupBox" name="Linac1_Plots_Box">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -629,7 +679,7 @@
          </widget>
         </item>
         <item row="2" column="0">
-         <widget class="QGroupBox" name="Linac1_Dipole_Set">
+         <widget class="QGroupBox" name="Linac1_Dipole_Set_Box">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -663,7 +713,7 @@
            <item row="0" column="1">
             <widget class="QDoubleSpinBox" name="Linac1_Dipole_Start_Set">
              <property name="suffix">
-              <string>A</string>
+              <string> A</string>
              </property>
              <property name="decimals">
               <number>1</number>
@@ -679,7 +729,7 @@
            <item row="1" column="1">
             <widget class="QDoubleSpinBox" name="Linac1_Dipole_End_Set">
              <property name="suffix">
-              <string>A</string>
+              <string> A</string>
              </property>
              <property name="decimals">
               <number>1</number>
@@ -695,7 +745,7 @@
            <item row="2" column="0" colspan="2">
             <widget class="QPushButton" name="Linac1_Dipole_Button">
              <property name="text">
-              <string>Set Dipole Current</string>
+              <string>Find Dipole Current</string>
              </property>
             </widget>
            </item>
@@ -746,6 +796,9 @@
            </item>
            <item row="0" column="1">
             <widget class="QSpinBox" name="Linac1_Rough_NShots_Set">
+             <property name="minimum">
+              <number>2</number>
+             </property>
              <property name="value">
               <number>3</number>
              </property>
@@ -867,7 +920,7 @@
           </layout>
          </widget>
         </item>
-        <item row="4" column="0">
+        <item row="5" column="0">
          <widget class="QGroupBox" name="Linac1_Set_Phase">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -924,6 +977,53 @@
              </property>
              <property name="singleStep">
               <double>0.500000000000000</double>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QGroupBox" name="groupBox_3">
+          <property name="title">
+           <string>Set Momentum</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_4">
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_23">
+             <property name="text">
+              <string>Momentum</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QDoubleSpinBox" name="Linac1_Dipole_Set">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="suffix">
+              <string> A</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QDoubleSpinBox" name="Linac1_Momentum_Set">
+             <property name="suffix">
+              <string> MeV/c</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLabel" name="label_24">
+             <property name="text">
+              <string>Dipole Current</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0" colspan="2">
+            <widget class="QPushButton" name="Linac1_EnergySet_Button">
+             <property name="text">
+              <string>Set Dipole Current</string>
              </property>
             </widget>
            </item>

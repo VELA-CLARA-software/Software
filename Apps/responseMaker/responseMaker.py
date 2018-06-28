@@ -17,7 +17,12 @@ pg.setConfigOption('foreground', 'k')
 from collections import OrderedDict
 import yaml
 import tables as tables
+import argparse
 
+parser = argparse.ArgumentParser(description='Convert h5 files to png.')
+parser.add_argument('-f', default='responseSettings.yaml', help='settings file', type=str)
+parser.add_argument('--samples', default=5, help='number bpm samples', type=int)
+args = parser.parse_args()
 
 _mapping_tag = yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG
 
@@ -30,7 +35,7 @@ def dict_constructor(loader, node):
 yaml.add_representer(OrderedDict, dict_representer)
 yaml.add_constructor(_mapping_tag, dict_constructor)
 
-with open(os.path.dirname( os.path.abspath(__file__))+'/responseSettings.yaml', 'r') as infile:
+with open(os.path.dirname( os.path.abspath(__file__))+'/'+args.f, 'r') as infile:
     responseSettings = yaml.load(infile)
 
 monitors = responseSettings['monitors']
@@ -87,7 +92,7 @@ class monitor(PVBuffer):
         #self._value = random.random()-0.5
 
     def value(self):
-        return [self.actuator.name, self.name, [self.actuator.value, self.mean]]
+        return [self.actuator.name, self.name, [self.actuator.value, self.mean, self.std]]
 
     def emitAverage(self):
         a, m, v = self.value()
@@ -97,11 +102,12 @@ class corrector(PVObject):
     def __init__(self, pv=None, rdbk=None, parent=None):
         super(corrector, self).__init__(pv, rdbk, parent)
         self.name = pv
-        self.writeAccess = False
+        self.writeAccess = True
 
 class recordRMData(tables.IsDescription):
     actuator  = tables.Float64Col()     # double (double-precision)
     monitor  = tables.Float64Col()
+    monitorstd  = tables.Float64Col()
 
 class responsePlotterTab(QWidget):
     def __init__(self, actuator=None, parent=None):
@@ -171,8 +177,8 @@ class responsePlotterTab(QWidget):
             table.flush()
 
     def saveRow(self, row, data):
-        for a, m in data:
-            row['actuator'], row['monitor'] = a, m
+        for a, m, s in data:
+            row['actuator'], row['monitor'], row['monitorstd'] = a, m, s
             row.append()
 
     def resetPlots(self):
@@ -196,7 +202,7 @@ class responsePlotterTab(QWidget):
             for m in self.monitors:
                 m.reset()
             length = np.min([m.length for m in self.monitors])
-            while length < 5:
+            while length < args.samples:
                 length = np.min([m.length for m in self.monitors])
                 qApp.processEvents()
             # print ('i = ', i)
@@ -234,7 +240,7 @@ class responsePlot(pg.PlotWidget):
 
     def newLine(self, monitor):
         print 'new Line = ', monitor
-        self.data[monitor] = np.empty((0,2),int)
+        self.data[monitor] = np.empty((0,3),int)
         self.bpmPlots[monitor] = self.plotItem.plot(symbol='+', symbolPen=pg.mkColor(self.color))
         self.fittedPlots[monitor] = self.plotItem.plot(pen=pg.mkColor(self.color))
         print 'Lines = ', self.data
@@ -242,15 +248,16 @@ class responsePlot(pg.PlotWidget):
 
     def reset(self):
         for p in self.bpmPlots:
-            self.data[p] = np.empty((0,2),int)
+            self.data[p] = np.empty((0,3),int)
             self.bpmPlots[p].clear()
             self.fittedPlots[p].clear()
 
     def newBPMReading(self, actuator, monitor, data):
         monitor = str(monitor)
         if actuator == self.actuator and monitor in self.data.keys():
-            self.data[monitor] = np.append(self.data[monitor], [data[:2]], axis=0)
-            self.bpmPlots[monitor].setData(self.data[monitor])
+            self.data[monitor] = np.append(self.data[monitor], [data], axis=0)
+            plotdata = np.array([a[:2] for a in self.data[monitor]])
+            self.bpmPlots[monitor].setData(plotdata)
         else:
             print actuator == self.actuator
             print monitor in self.data.keys()

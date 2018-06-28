@@ -70,7 +70,7 @@ class machineSetter(object):
 class Model(object):
 
 	sleepTime = 0.001
-	sleepTimeDipole = 0.01
+	sleepTimeDipole = 0.001
 
 	def __init__(self, machineType, lineType, gunType):
 		super(Model, self).__init__()
@@ -299,10 +299,11 @@ class Model(object):
 		self.machine.setDip(dip)
 
 	def getData(self):
-		self.data = []
-		while len(self.data) < 2:
-			self.data.append(self.getDataFunction())
-			time.sleep(self.sleepTime)
+		# self.data = []
+		# while len(self.data) < 2:
+		# 	self.data.append(self.getDataFunction())
+		# 	time.sleep(self.sleepTime)
+		time.sleep(self.sleepTime)
 		self.data = []
 		while len(self.data) < self.nSamples:
 			self.data.append(self.getDataFunction())
@@ -336,8 +337,7 @@ class Model(object):
 		"""Return all data where the charge is >= 25% of the maximum and is at least 10pC"""
 		allData = self.getDataArray()
 		max_charge = max(self.getDataArray('yData'))
-
-		cutData = [a for a in allData if a[1] > max_charge / 4 and a[1] > 10 and a[2] < 2]
+		cutData = [a for a in allData if a[1] > max_charge / 4 and a[1] > 10]
 		return cutData
 
 	def doFitGunQuick(self):
@@ -345,7 +345,8 @@ class Model(object):
 		x, y, std = zip(*cutData)
 		if max(x) - min(x) > 90:
 			x = [a if a >= 0 else a+360 for a in x]
-		crest_phase = (x[-1] + x[0]) / 2.0
+		#crest_phase = (x[-1] + x[0]) / 2.0
+		crest_phase = np.mean(x)
 		if crest_phase > 180:
 			crest_phase -= 360
 		x = [a if a <= 180 else a-360 for a in x]
@@ -456,7 +457,7 @@ class Model(object):
 		self.setFinalPhase(((180 + popt[2]) % 360) - 180)
 		self.printFinalPhase()
 
-########### findingCrestGunFine ###############
+########### findingDipoleCurrent ###############
 
 	def findDipoleCurrent(self):
 		self.startingDipole = self.machine.getDip()
@@ -509,3 +510,25 @@ class Model(object):
 		while abs(self.machine.getDip() - self.finalDipoleI) > 0.2:
 			time.sleep(self.sleepTimeDipole)
 		self.printFinalDip()
+
+########### SetDipoleMomentum ###############
+
+	def SetDipoleMomentum(self, mom):
+		current = self.machine.calculateDipoleMomentum(mom)
+		self.machine.setDip(current)
+
+	def calculateDipoleFromMomentum(self, mom):
+		D = self.machine.magnets.getMagObjConstRef('DIP01')
+		coeffs = list(D.fieldIntegralCoefficients)
+		coeffs[-1] -= (1000000000*(mom*physics.pi*45)/(physics.c*180))
+		roots = np.roots(coeffs)
+		return roots[-1].real
+
+	def calculateMomentumFromDipole(self, current):
+		D = self.machine.magnets.getMagObjConstRef('DIP01')
+		sign = np.copysign(1, current)
+		coeffs = np.append(D.fieldIntegralCoefficients[:-1] * sign, D.fieldIntegralCoefficients[-1])
+		int_strength = np.polyval(coeffs, abs(current))
+		angle = 45  # reset to 45
+		print 1e-6*0.001 * physics.c * int_strength / np.radians(angle)
+		return 1e-6*0.001 * physics.c * int_strength / np.radians(angle)

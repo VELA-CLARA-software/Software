@@ -141,7 +141,7 @@ class Model(object):
 	def getDataFunction(self):
 		return [b() for b in self.bpms]
 
-	def sol1RoughScan(self, plane, ampLower, ampUpper, corrRange, corrStep, nSamples):
+	def sol1Scan(self, plane, ampLower, ampUpper, corrRange, corrStep, nSamples):
 		self.cavity = 'L01-SOL1'
 		self.plane = plane
 		if plane == 'Y':
@@ -157,10 +157,10 @@ class Model(object):
 		self.solLowerAmp = ampLower
 		self.solUpperAmp = ampUpper
 		self.nSamples = nSamples
-		self.bpms = [partial(self.machine.get, 'getBPMPosition', 'S02-BPM01', plane)]
+		self.bpms = [partial(self.machine.getBPMPosition, 'S02-BPM01', plane)]
 		self.findSOLCentre()
 
-	def sol2RoughScan(self, plane, ampLower, ampUpper, corrRange, corrStep, nSamples):
+	def sol2Scan(self, plane, ampLower, ampUpper, corr1Range, corr2Range, corrStep, nSamples):
 		self.cavity = 'L01-SOL2'
 		self.plane = plane
 		if plane == 'Y':
@@ -172,37 +172,31 @@ class Model(object):
 			self.corrector1 = 'S01-HCOR1'
 			self.corrector2 = 'S01-HCOR2'
 		self.correctorStepSize = corrStep
-		self.correctorRange = corrRange
+		self.corrector1Min, self.corrector1Max = corr1Range
+		self.corrector2Min, self.corrector2Max = corr2Range
 		self.solLowerAmp = ampLower
 		self.solUpperAmp = ampUpper
 		self.nSamples = nSamples
-		self.bpms = [partial(self.machine.get, 'getBPMPosition', 'S02-BPM01', plane), partial(self.machine.get, 'getBPMPosition', 'S02-BPM02', plane)]
+		self.bpms = [partial(self.machine.getBPMPosition, 'S02-BPM01', plane), partial(self.machine.getBPMPosition, 'S02-BPM02', plane)]
 		self.findSOLCentre()
 
-	def linac1RoughScan(self, ampLower, ampUpper, corrRange, corrStep, nSamples):
+	def linac1Scan(self, actuator, plane, ampLower, ampUpper, corr1Range, corr2Range, corrStep, nSamples):
 		self.cavity = 'Linac1'
-		self.actuator = 'approx'
-		self.corrector1 = 'S01-HCOR1'
-		self.corrector2 = 'S01-HCOR2'
+		self.actuator = actuator
+		self.plane = plane
+		if plane == 'Y':
+			self.corrector1 = 'S01-VCOR1'
+			self.corrector2 = 'S01-VCOR2'
+		else:
+			self.corrector1 = 'S01-HCOR1'
+			self.corrector2 = 'S01-HCOR2'
 		self.correctorStepSize = corrStep
-		self.correctorRange = corrRange
+		self.corrector1Min, self.corrector1Max = corr1Range
+		self.corrector2Min, self.corrector2Max = corr2Range
 		self.linacLowerAmp = ampLower
 		self.linacUpperAmp = ampUpper
 		self.nSamples = nSamples
-		self.bpms = [partial(self.machine.get, 'getBPMPosition', 'S01-BPM01'), partial(self.machine.get, 'getBPMPosition', 'S02-BPM01'), partial(self.machine.get, 'getBPMPosition', 'S02-BPM02')]
-		self.findRFCentre()
-
-	def linac1FineScan(self, ampLower, ampUpper, corrRange, corrStep, nSamples):
-		self.cavity = 'Linac1'
-		self.actuator = 'fine'
-		self.corrector1 = 'S01-HCOR1'
-		self.corrector2 = 'S01-HCOR2'
-		self.correctorStepSize = corrStep
-		self.correctorRange = corrRange
-		self.linacLowerAmp = ampLower
-		self.linacUpperAmp = ampUpper
-		self.nSamples = nSamples
-		self.bpms = [partial(self.machine.get, 'getBPMPosition', 'S01-BPM01'), partial(self.machine.get, 'getBPMPosition', 'S02-BPM01'), partial(self.machine.get, 'getBPMPosition', 'S02-BPM02')]
+		self.bpms = [partial(self.machine.getBPMPosition, 'S01-BPM01'), partial(self.machine.getBPMPosition, 'S02-BPM01'), partial(self.machine.getBPMPosition, 'S02-BPM02')]
 		self.findRFCentre()
 
 	def printFinalValue(self):
@@ -255,34 +249,59 @@ class Model(object):
 
 	def findRFCentre(self):
 		self.resetDataArray()
-		for c1 in np.arange(-1*self.correctorRange, self.correctorRange+self.correctorStepSize, self.correctorStepSize):
-			self.machine.set('setCorr', self.corrector1, c1)
-			for c2 in np.arange(-1*self.correctorRange, self.correctorRange+self.correctorStepSize, self.correctorStepSize):
-				self.machine.set('setCorr', self.corrector2, c2)
-				data = self.getData()
-				self.setDataArray(c1, c2, data)
-		# self.doFitRFCentre()
+		for c1 in np.arange(self.corrector1Min, self.corrector1Max+self.correctorStepSize, self.correctorStepSize):
+			self.machine.setCorr(self.corrector1, c1)
+			self.machine.setCorr(self.corrector2, 0)
+			self.machine.setLinac1Amplitude(self.linacLowerAmp)
+			time.sleep(self.sleepTime)
+			dataLow = self.getData()
+			self.machine.setLinac1Amplitude(self.linacUpperAmp)
+			time.sleep(self.sleepTime)
+			dataHigh = self.getData()
+			self.setDataArray(c1, 0, dataLow - dataHigh)
+		c1Min = self.findC1Min()
+		print 'c1Min = ', c1Min
+		self.resetDataArray()
+		for c2 in np.arange(self.corrector2Min, self.corrector2Max+self.correctorStepSize, self.correctorStepSize):
+			self.machine.setCorr(self.corrector1, c1Min)
+			self.machine.setCorr(self.corrector2, c2)
+			self.machine.setLinac1Amplitude(self.linacLowerAmp)
+			time.sleep(self.sleepTime)
+			dataLow = self.getData()
+			self.machine.setLinac1Amplitude(self.linacUpperAmp)
+			time.sleep(self.sleepTime)
+			dataHigh = self.getData()
+			self.setDataArray(c1Min, c2, dataLow - dataHigh)
+		c2Min = self.findC2Min()
+		print 'c2Min = ', c2Min
+		self.machine.setCorr(self.corrector1, c1Min)
+		self.machine.setCorr(self.corrector2, c2Min)
 
-	def cutDataRFCentre(self):
-		"""Return all data where the charge is >= 25% of the maximum and is at least 10pC"""
-		allData = self.getDataArray()
-		max_charge = max(self.getDataArray('yData'))
+	def findC1Min(self):
+		self.timestr = time.strftime("%Y%m%d-%H%M%S")
+		c1, c2, bpms = self.getDataArray(zipped=False)
+		# This is the mean of the BPMs for each value of corrector
+		BPMMean = [np.mean(b) for b in bpms]
+		index = BPMMean.index(min(BPMMean))
+		self.saveLinacData(1)
+		return c1[index]
 
-		cutData = [a for a in allData if a[1] > max_charge / 4 and a[1] > 10 and a[2] < 2]
-		return cutData
+	def findC2Min(self):
+		c1, c2, bpms = self.getDataArray(zipped=False)
+		# This is the mean of the BPMs for each value of corrector
+		BPMMean = [np.mean(b) for b in bpms]
+		index = BPMMean.index(min(BPMMean))
+		self.saveLinacData(2)
+		return c2[index]
 
-	def doFitRFCentre(self):
-		cutData = self.cutDataGunQuick()
-		x, y, std = zip(*cutData)
-		if max(x) - min(x) > 90:
-			x = [a if a >= 0 else a+360 for a in x]
-		crest_phase = (x[-1] + x[0]) / 2.0
-		if crest_phase > 180:
-			crest_phase -= 360
-		x = [a if a <= 180 else a-360 for a in x]
-		self.setFitArray(np.array(x), np.array(y))
-		self.setFinalPhase(crest_phase)
-		self.printFinalPhase()
+	def saveLinacData(self, corr=1):
+		self.timestr = time.strftime("%Y%m%d-%H%M%S")
+		c1, c2, bpms = self.getDataArray(zipped=False)
+		rawData = np.array(zip(c1, c2, *zip(*bpms)))
+		labels = ['BPM'+str(i+1) for i in range(len(bpms[1]))]
+		df = pd.DataFrame(rawData)
+		df.columns = ['c1', 'c2'] + labels
+		df.to_csv(self.timestr+'_'+self.cavity+'_'+self.plane+'_'+str(self.linacLowerAmp)+'_'+str(self.linacUpperAmp)+'_Corr_'+str(corr)+'_rawData.csv', index=0)
 
 ########### findSOLCentre ###############
 
@@ -293,17 +312,17 @@ class Model(object):
 			self.data1 = {}
 			self.data2 = {}
 			self.rawData = {'x':[], 'y': [], 'z1':[], 'z2': []}
-			self.machine.set('setSol', self.cavity, self.solLowerAmp)
-			while abs(self.machine.get('getSol', self.cavity) - self.solLowerAmp) > 0.2:
+			self.machine.setSol(self.cavity, self.solLowerAmp)
+			while abs(self.machine.getSol(self.cavity) - self.solLowerAmp) > 0.2:
 				time.sleep(0.1)
 			flip = -1
-			for c1 in np.arange(-1*self.correctorRange, self.correctorRange+self.correctorStepSize, self.correctorStepSize):
-				self.machine.set('setCorr', self.corrector1, c1)
+			for c1 in np.arange(self.corrector1Min, self.corrector1Max+self.correctorStepSize, self.correctorStepSize):
+				self.machine.setCorr(self.corrector1, c1)
 				self.data1[c1] = {}
 				flip = -1*flip
-				for c2 in np.arange(flip*-1*self.correctorRange, flip*(self.correctorRange+self.correctorStepSize), flip*self.correctorStepSize):
-					self.machine.set('setCorr', self.corrector2, c2)
-					while abs(self.machine.get('getCorr', self.corrector1) - c1) > 0.05 or abs(self.machine.get('getCorr', self.corrector2) - c2) > 0.05:
+				for c2 in np.arange(flip*self.corrector2Min, flip*(self.corrector2Max+self.correctorStepSize), flip*self.correctorStepSize):
+					self.machine.setCorr(self.corrector2, c2)
+					while abs(self.machine.getCorr(self.corrector1) - c1) > 0.05 or abs(self.machine.getCorr(self.corrector2) - c2) > 0.05:
 						# print self.machine.get('getCorr', self.corrector1) , c1, self.machine.get('getCorr', self.corrector2) , c2
 						time.sleep(0.1)
 					if self._abort:
@@ -314,17 +333,17 @@ class Model(object):
 					logfile.write('data1,'+str(self.solLowerAmp)+','+str(c1)+','+str(c2)+','+str(data1))
 					self.data1[c1][c2] = data1
 
-			self.machine.set('setSol', self.cavity, self.solUpperAmp)
-			while abs(self.machine.get('getSol', self.cavity) - self.solUpperAmp) > 0.2:
+			self.machine.setSol(self.cavity, self.solUpperAmp)
+			while abs(self.machine.getSol(self.cavity) - self.solUpperAmp) > 0.2:
 				time.sleep(0.1)
 			flip = -1
-			for c1 in np.arange(-1*self.correctorRange, self.correctorRange+self.correctorStepSize, self.correctorStepSize):
-				self.machine.set('setCorr', self.corrector1, c1)
+			for c1 in np.arange(self.corrector1Min, self.corrector1Max+self.correctorStepSize, self.correctorStepSize):
+				self.machine.setCorr(self.corrector1, c1)
 				self.data2[c1] = {}
 				flip = -1*flip
-				for c2 in np.arange(flip*-1*self.correctorRange, flip*(self.correctorRange+self.correctorStepSize), flip*self.correctorStepSize):
-					self.machine.set('setCorr', self.corrector2, c2)
-					while abs(self.machine.get('getCorr', self.corrector1) - c1) > 0.05 or abs(self.machine.get('getCorr', self.corrector2) - c2) > 0.05:
+				for c2 in np.arange(flip*self.corrector2Min, flip*(self.corrector2Max+self.correctorStepSize), flip*self.correctorStepSize):
+					self.machine.setCorr(self.corrector2, c2)
+					while abs(self.machine.getCorr(self.corrector1) - c1) > 0.05 or abs(self.machine.getCorr(self.corrector2) - c2) > 0.05:
 						time.sleep(0.1)
 					print 'sol = ', self.solUpperAmp, '  c1 = ', c1, '  c2 = ', c2
 					data2 = self.getData()
@@ -332,13 +351,13 @@ class Model(object):
 					self.data2[c1][c2] = data2
 
 			self.machine.set('setSol', self.cavity, 0)
-			while abs(self.machine.get('getSol', self.cavity) - 0) > 0.2:
+			while abs(self.machine.getSol(self.cavity) - 0) > 0.2:
 				time.sleep(0.1)
 
 			flip = -1
-			for c1 in np.arange(-1*self.correctorRange, self.correctorRange+self.correctorStepSize, self.correctorStepSize):
+			for c1 in np.arange(self.corrector1Min, self.corrector1Max+self.correctorStepSize, self.correctorStepSize):
 				flip = -1*flip
-				for c2 in np.arange(flip*-1*self.correctorRange, flip*(self.correctorRange+self.correctorStepSize), flip*self.correctorStepSize):
+				for c2 in np.arange(flip*self.corrector2Min, flip*(self.corrector2Max+self.correctorStepSize), flip*self.correctorStepSize):
 					self.rawData['x'].append(c1)
 					self.rawData['y'].append(c2)
 					data1 = self.data1[c1][c2]
