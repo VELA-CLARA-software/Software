@@ -1,4 +1,6 @@
-execfile('vcmove_proto1.py')
+import lasmover as lm
+
+#exit()
 
 import math as ma
 import numpy as np
@@ -6,6 +8,7 @@ import os, sys
 import time
 import datetime
 timestr = time.strftime("%Y%m%d-%H%M%S")
+from epics import caput, caget
 
 sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release')
 os.environ["PATH"] = os.environ["PATH"]+";\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release\\root_v5.34.34\\bin\\"
@@ -34,10 +37,16 @@ Init.setVerbose()
 #Init.setDebugMessage()
 camInit = camIA.init()
 #camInit.setVerbose()
-
-
 camerasIA = camInit.physical_CLARA_Camera_IA_Controller()
 cameras = Init.physical_CLARA_Camera_DAQ_Controller()
+
+# new camera controller
+#import VELA_CLARA_Camera_Control as cam
+#cam_init = cam.init()
+#cam_init.setVerbose()
+#cam_control = cam_init.physical_Camera_Controller()
+
+
 
 #exit()
 
@@ -61,17 +70,25 @@ lintens = monini.connectPV('CLA-VCA-DIA-CAM-01:ANA:Intensity_RBV')
 
 #exit()
 
-mylasmove = lasmover()
+mylasmove = lm.lasmover()
 mylasmove.getposition()
 
 #exit()
 
-xlo = 5.75
-xhi = 6.75
-ylo = 4.20
-yhi = 5.20
+#xlo = 5.75
+#xhi = 6.75
+#ylo = 4.20
+#yhi = 5.20
+#nx = 5
+#ny = 5
+
+xlo = 5.1
+xhi = 7.1
+ylo = 3.9
+yhi = 5.9
 nx = 5
 ny = 5
+
 
 #xlo =  5.25
 #xhi = 5.25
@@ -112,10 +129,11 @@ theshut.open("SHUT02")
 for x in xrange:
     for y in yrange:
         print x, y, '\n'
-        caput('EBT-LAS-OPT-HWP-1:ROT:MABSS',135)
+#        caput('EBT-LAS-OPT-HWP-1:ROT:MABSS',135)
+        caput('EBT-LAS-OPT-HWP-2:ROT:MABS',120)
         time.sleep(3)
         mylasmove.setposition(x,y,5,0.05)
-        caput('EBT-LAS-OPT-HWP-1:ROT:MABSS',90)	
+        caput('EBT-LAS-OPT-HWP-2:ROT:MABS',80)	
         time.sleep(3)
 		
         raw_input("Press Enter to continue...")
@@ -131,17 +149,17 @@ for x in xrange:
         chargenow = monini.getValue(charge)
         bpms.reCalAttenuation('S01-BPM01',chargenow)
 #        raw_input(" VC Press Enter to continue...")
-        phi1 = 155 
-        phi2 = 161
+        phi1 = -160 
+        phi2 = -165
 
         #############################
         # Set RF phase to FIRST VALUE
         #############################
-        therf.setPhiDEG(phi1)
-#        magnets.setSI('LRG-SOL',140)
+#        therf.setPhiDEG(phi1)
+        magnets.setSI('LRG-SOL',110)
 #       vsol = magnets.getRI('LRG-SOL')
 #       vbsol = magnets.getRI('LRG-BSOL')
-        time.sleep(3)
+        time.sleep(10)
         xbuff =  bpms.getBPMXPVBuffer('S01-BPM01')
         ybuff =  bpms.getBPMYPVBuffer('S01-BPM01')
         #print ' xbuff ', xbuff, ' y buff ', ybuff 
@@ -179,9 +197,9 @@ for x in xrange:
         ##############################
         # Set RF phase to SECOND VALUE
         ##############################
-        therf.setPhiDEG(phi2)
-#        magnets.setSI('LRG-SOL',170)
-        time.sleep(3)       
+#        therf.setPhiDEG(phi2)
+        magnets.setSI('LRG-SOL',-110)
+        time.sleep(10)       
         vsol = magnets.getRI('LRG-SOL')
         vbsol = magnets.getRI('LRG-BSOL')
         xbuff =  bpms.getBPMXPVBuffer('S01-BPM01')
