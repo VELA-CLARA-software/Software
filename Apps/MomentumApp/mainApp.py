@@ -15,17 +15,18 @@ from PyQt4 import QtGui, QtCore
 if mode=='virtual':
 	import model_CLARA_SAMPL as model
 	import controller.controller_SAMPL as controller
+	import view.view1_2 as view
 elif mode=='physical':
 	import model_CLARA as model
 	import controller.controller as controller
-import view.view
+	import view.view1_2 as view
 
 class App(QtCore.QObject):
 	def __init__(self, sys_argv):
 		super(App, self).__init__()
 		print'Well this is fun'
 		print view
-		self.view = view.view.Ui_MainWindow()
+		self.view = view.Ui_MainWindow()
 		self.MainWindow = QtGui.QMainWindow()
 		self.view.setupUi(self.MainWindow)
 		self.model = model.Model(self, self.view)

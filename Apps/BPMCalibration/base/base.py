@@ -2,7 +2,9 @@
 from data.config_reader import config_reader
 from data.data_logger import data_logger
 from data.bpm_calibrate_data import bpm_calibrate_data
-import VELA_CLARA_enums
+import sys, os
+sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release')
+#import VELA_CLARA_enums
 import VELA_CLARA_BPM_Control
 import VELA_CLARA_Charge_Control
 
