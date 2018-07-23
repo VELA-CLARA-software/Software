@@ -3,6 +3,9 @@
 import sys, math, time
 sys.path.insert(0, r'\\apclara1\ControlRoomApps\Controllers\bin\Release')
 import VELA_CLARA_PILaser_Control
+import epics
+vert_pv = 'CLA-LAS-OPT-PICO-4C-PM-4:V:MREL'
+horiz_pv = 'CLA-LAS-OPT-PICO-4C-PM-4:H:MREL'
 
 # where do we want to put it?
 try:
@@ -35,8 +38,10 @@ while abs(req_x - x) > sx * precision or abs(req_y - y) > sy * precision:
     pilc.setHstep(h_step)
     assert pilc.moveH()  # returns True on success, presumably False on fail?
     time.sleep(0.1)
-    pilc.setVstep(v_step)
-    assert pilc.moveV()
+    # vertical movement is currently not working in the controller - use EPICS instead
+    # pilc.setVstep(v_step)
+    # assert pilc.moveV()
+    epics.caput(vert_pv, -v_step)  # have to reverse the sign
     time.sleep(0.1)
     x = pilc.getX()  # h position
     y = pilc.getY()  # v position

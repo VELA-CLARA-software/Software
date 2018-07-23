@@ -351,7 +351,7 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menuFile.menuAction())
 
         self.retranslateUi(MainWindow)
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
         MainWindow.setTabOrder(self.checkBox_deguassQ, self.checkBox_deguassD)
         MainWindow.setTabOrder(self.checkBox_deguassD, self.checkBox_deguassC)
@@ -410,4 +410,3 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.logTab), _translate("MainWindow", "Log", None))
         self.menuFile.setTitle(_translate("MainWindow", "File", None))
         self.actionSave_Calibation_Data.setText(_translate("MainWindow", "Save Calibation Data", None))
-

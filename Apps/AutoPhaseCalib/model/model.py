@@ -633,7 +633,7 @@ class setUpGunDipole(crestingObject):
 		popt, pcov = curve_fit(self.fitting_equation, x, y, sigma=std, \
 		p0=self.initialGuess, bounds=([-np.inf, -np.inf, -np.inf, min(x)], [np.inf, np.inf, np.inf, max(x)]))
 
-		self.setLabel.emit('Calibration dipole Sin fit is', popt[3])
+		self.setLabel.emit('Calibration dipole Sin fit is' + str(popt[3]))
 
 		self.setFitArray(np.array(xnew), self.fitting_equation(xnew, *popt))
 		self.finalDipoleI = popt[3]
@@ -832,7 +832,7 @@ class crestingObjectFine(crestingObject):
 		self.maxPhase = self.approxcrest+self.phiRange
 		for phase in np.linspace(self.minPhase, self.maxPhase, self.phiSteps):
 			self.setPhase.emit(self.cavity, phase)
-			time.sleep(0.1)
+			time.sleep(0.2)
 			currphase = self.parent.getPhase(self.cavity)
 			self.data = []
 			while len(self.data) < 3:
@@ -879,10 +879,11 @@ class findingGunCrest(crestingObjectFine):
 	actuator = 'fine'
 
 	def fitting(self):
-		x, y, std = self.getDataArray(zipped=False, sortKey=lambda x: x[0])
+		x, y, std = self.getDataArray(zipped=False)
 		if (max(x) - min(x)) > (self.maxPhase - self.minPhase):
 			x = [a if a >= 0 else a+360 for a in x]
 		# k = 5 if len(x) < 6 else (len(x) - 1)
+		print x,y,std
 		f = UnivariateSpline(x, y, w=std, k=5)
 		xnew = np.linspace(np.min(x), np.max(x), num=100, endpoint=True)
 		ynew = f(xnew)

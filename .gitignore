@@ -12,3 +12,5 @@ magnet-table/src/pip-delete-this-directory.txt
 *.bat
 *.bat
 Apps/imageCollector/v3/pyinstaller-build.bat
+Apps/MomentumApp/controller/controller.py
+Apps/MomentumApp/controller/controller.py
