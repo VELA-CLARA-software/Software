@@ -1,0 +1,165 @@
+# -*- coding: utf-8 -*-
+
+# Form implementation generated from reading ui file 'draftzero.ui'
+#
+# Created by: PyQt4 UI code generator 4.11.4
+#
+# WARNING! All changes made in this file will be lost!
+
+from PyQt4 import QtCore, QtGui
+
+try:
+    _fromUtf8 = QtCore.QString.fromUtf8
+except AttributeError:
+    def _fromUtf8(s):
+        return s
+
+try:
+    _encoding = QtGui.QApplication.UnicodeUTF8
+    def _translate(context, text, disambig):
+        return QtGui.QApplication.translate(context, text, disambig, _encoding)
+except AttributeError:
+    def _translate(context, text, disambig):
+        return QtGui.QApplication.translate(context, text, disambig)
+
+class Ui_MainWindow(object):
+    def setupUi(self, MainWindow):
+        MainWindow.setObjectName(_fromUtf8("MainWindow"))
+        MainWindow.resize(800, 785)
+        self.centralwidget = QtGui.QWidget(MainWindow)
+        self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
+        self.dorfalign = QtGui.QPushButton(self.centralwidget)
+        self.dorfalign.setGeometry(QtCore.QRect(30, 400, 211, 41))
+        self.dorfalign.setObjectName(_fromUtf8("dorfalign"))
+        self.dosolalign = QtGui.QPushButton(self.centralwidget)
+        self.dosolalign.setGeometry(QtCore.QRect(40, 590, 211, 41))
+        self.dosolalign.setObjectName(_fromUtf8("dosolalign"))
+        self.label = QtGui.QLabel(self.centralwidget)
+        self.label.setGeometry(QtCore.QRect(20, 0, 601, 101))
+        self.label.setObjectName(_fromUtf8("label"))
+        self.vcxminbox = QtGui.QDoubleSpinBox(self.centralwidget)
+        self.vcxminbox.setGeometry(QtCore.QRect(180, 100, 45, 22))
+        self.vcxminbox.setObjectName(_fromUtf8("vcxminbox"))
+        self.vcmaxxbox = QtGui.QDoubleSpinBox(self.centralwidget)
+        self.vcmaxxbox.setGeometry(QtCore.QRect(180, 130, 42, 22))
+        self.vcmaxxbox.setObjectName(_fromUtf8("vcmaxxbox"))
+        self.npxbox = QtGui.QDoubleSpinBox(self.centralwidget)
+        self.npxbox.setGeometry(QtCore.QRect(180, 160, 42, 22))
+        self.npxbox.setObjectName(_fromUtf8("npxbox"))
+        self.vcminybox = QtGui.QDoubleSpinBox(self.centralwidget)
+        self.vcminybox.setGeometry(QtCore.QRect(180, 190, 42, 22))
+        self.vcminybox.setObjectName(_fromUtf8("vcminybox"))
+        self.vcmaxybox = QtGui.QDoubleSpinBox(self.centralwidget)
+        self.vcmaxybox.setGeometry(QtCore.QRect(180, 220, 42, 22))
+        self.vcmaxybox.setObjectName(_fromUtf8("vcmaxybox"))
+        self.npybox = QtGui.QDoubleSpinBox(self.centralwidget)
+        self.npybox.setGeometry(QtCore.QRect(180, 250, 42, 22))
+        self.npybox.setObjectName(_fromUtf8("npybox"))
+        self.label_2 = QtGui.QLabel(self.centralwidget)
+        self.label_2.setGeometry(QtCore.QRect(60, 100, 101, 16))
+        self.label_2.setObjectName(_fromUtf8("label_2"))
+        self.label_3 = QtGui.QLabel(self.centralwidget)
+        self.label_3.setGeometry(QtCore.QRect(60, 130, 121, 20))
+        self.label_3.setObjectName(_fromUtf8("label_3"))
+        self.label_4 = QtGui.QLabel(self.centralwidget)
+        self.label_4.setGeometry(QtCore.QRect(60, 220, 121, 20))
+        self.label_4.setObjectName(_fromUtf8("label_4"))
+        self.label_5 = QtGui.QLabel(self.centralwidget)
+        self.label_5.setGeometry(QtCore.QRect(60, 190, 121, 20))
+        self.label_5.setObjectName(_fromUtf8("label_5"))
+        self.label_6 = QtGui.QLabel(self.centralwidget)
+        self.label_6.setGeometry(QtCore.QRect(60, 160, 91, 16))
+        self.label_6.setObjectName(_fromUtf8("label_6"))
+        self.label_7 = QtGui.QLabel(self.centralwidget)
+        self.label_7.setGeometry(QtCore.QRect(60, 250, 91, 16))
+        self.label_7.setObjectName(_fromUtf8("label_7"))
+        self.s1scr1vew = QtGui.QGraphicsView(self.centralwidget)
+        self.s1scr1vew.setGeometry(QtCore.QRect(480, 130, 256, 192))
+        self.s1scr1vew.setObjectName(_fromUtf8("s1scr1vew"))
+        self.label_8 = QtGui.QLabel(self.centralwidget)
+        self.label_8.setGeometry(QtCore.QRect(490, 110, 91, 16))
+        self.label_8.setObjectName(_fromUtf8("label_8"))
+        self.label_9 = QtGui.QLabel(self.centralwidget)
+        self.label_9.setGeometry(QtCore.QRect(50, 300, 91, 16))
+        self.label_9.setObjectName(_fromUtf8("label_9"))
+        self.rfphi1box = QtGui.QDoubleSpinBox(self.centralwidget)
+        self.rfphi1box.setGeometry(QtCore.QRect(170, 300, 42, 22))
+        self.rfphi1box.setObjectName(_fromUtf8("rfphi1box"))
+        self.rfphi2box = QtGui.QDoubleSpinBox(self.centralwidget)
+        self.rfphi2box.setGeometry(QtCore.QRect(170, 330, 42, 22))
+        self.rfphi2box.setObjectName(_fromUtf8("rfphi2box"))
+        self.label_10 = QtGui.QLabel(self.centralwidget)
+        self.label_10.setGeometry(QtCore.QRect(50, 330, 91, 16))
+        self.label_10.setObjectName(_fromUtf8("label_10"))
+        self.hwpspinbox = QtGui.QDoubleSpinBox(self.centralwidget)
+        self.hwpspinbox.setGeometry(QtCore.QRect(570, 440, 42, 22))
+        self.hwpspinbox.setObjectName(_fromUtf8("hwpspinbox"))
+        self.label_11 = QtGui.QLabel(self.centralwidget)
+        self.label_11.setGeometry(QtCore.QRect(460, 440, 91, 16))
+        self.label_11.setObjectName(_fromUtf8("label_11"))
+        self.rfphi1box_2 = QtGui.QDoubleSpinBox(self.centralwidget)
+        self.rfphi1box_2.setGeometry(QtCore.QRect(180, 480, 42, 22))
+        self.rfphi1box_2.setObjectName(_fromUtf8("rfphi1box_2"))
+        self.rfphi2box_2 = QtGui.QDoubleSpinBox(self.centralwidget)
+        self.rfphi2box_2.setGeometry(QtCore.QRect(180, 510, 42, 22))
+        self.rfphi2box_2.setObjectName(_fromUtf8("rfphi2box_2"))
+        self.label_12 = QtGui.QLabel(self.centralwidget)
+        self.label_12.setGeometry(QtCore.QRect(60, 480, 91, 16))
+        self.label_12.setObjectName(_fromUtf8("label_12"))
+        self.label_13 = QtGui.QLabel(self.centralwidget)
+        self.label_13.setGeometry(QtCore.QRect(60, 510, 91, 16))
+        self.label_13.setObjectName(_fromUtf8("label_13"))
+        self.rfphi2box_3 = QtGui.QDoubleSpinBox(self.centralwidget)
+        self.rfphi2box_3.setGeometry(QtCore.QRect(180, 550, 42, 22))
+        self.rfphi2box_3.setObjectName(_fromUtf8("rfphi2box_3"))
+        self.label_14 = QtGui.QLabel(self.centralwidget)
+        self.label_14.setGeometry(QtCore.QRect(40, 550, 141, 20))
+        self.label_14.setObjectName(_fromUtf8("label_14"))
+        self.label_15 = QtGui.QLabel(self.centralwidget)
+        self.label_15.setGeometry(QtCore.QRect(30, 360, 141, 20))
+        self.label_15.setObjectName(_fromUtf8("label_15"))
+        self.rfphi2box_4 = QtGui.QDoubleSpinBox(self.centralwidget)
+        self.rfphi2box_4.setGeometry(QtCore.QRect(170, 360, 42, 22))
+        self.rfphi2box_4.setObjectName(_fromUtf8("rfphi2box_4"))
+        MainWindow.setCentralWidget(self.centralwidget)
+        self.menubar = QtGui.QMenuBar(MainWindow)
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 21))
+        self.menubar.setObjectName(_fromUtf8("menubar"))
+        MainWindow.setMenuBar(self.menubar)
+        self.statusbar = QtGui.QStatusBar(MainWindow)
+        self.statusbar.setObjectName(_fromUtf8("statusbar"))
+        MainWindow.setStatusBar(self.statusbar)
+
+        self.retranslateUi(MainWindow)
+        QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+    def retranslateUi(self, MainWindow):
+        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow", None))
+        self.dorfalign.setText(_translate("MainWindow", "Find beam alignment in gun RF", None))
+        self.dosolalign.setText(_translate("MainWindow", "Find beam alignement in gun main solenoid", None))
+        self.label.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" font-size:16pt; font-weight:600;\">This is the gui for performing </span></p><p><span style=\" font-size:16pt; font-weight:600;\">the alignment of the beam in the gun and it\'s solenoid</span></p></body></html>", None))
+        self.label_2.setText(_translate("MainWindow", "virtual cathode min x", None))
+        self.label_3.setText(_translate("MainWindow", "virtual cathode max x", None))
+        self.label_4.setText(_translate("MainWindow", "virtual cathode max y", None))
+        self.label_5.setText(_translate("MainWindow", "virtual cathode min y", None))
+        self.label_6.setText(_translate("MainWindow", "num points in x", None))
+        self.label_7.setText(_translate("MainWindow", "num points in y", None))
+        self.label_8.setText(_translate("MainWindow", "S01-SCR-01", None))
+        self.label_9.setText(_translate("MainWindow", "RF phase 1", None))
+        self.label_10.setText(_translate("MainWindow", "RF phase 2", None))
+        self.label_11.setText(_translate("MainWindow", "HWP plate position", None))
+        self.label_12.setText(_translate("MainWindow", "sol val 1", None))
+        self.label_13.setText(_translate("MainWindow", "sol val 2", None))
+        self.label_14.setText(_translate("MainWindow", "rf phase during sol align", None))
+        self.label_15.setText(_translate("MainWindow", "sol value during rf align", None))
+
+
+if __name__ == "__main__":
+    import sys
+    app = QtGui.QApplication(sys.argv)
+    MainWindow = QtGui.QMainWindow()
+    ui = Ui_MainWindow()
+    ui.setupUi(MainWindow)
+    MainWindow.show()
+    sys.exit(app.exec_())
+
