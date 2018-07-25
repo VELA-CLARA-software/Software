@@ -1,3 +1,4 @@
+# Aligment application
 from PyQt4 import QtGui, QtCore
 import sys,os
 
