@@ -117,7 +117,7 @@ class Model(QObject):
                 self.cameras.stopAcquiring()
                 time.sleep(1)
         #print name
-        self.chosen_camera = 'S01-CAM-01'
+        self.chosen_camera = 'S02-CAM-02'
         self.cameras.setCamera(self.chosen_camera)
         print '\n\n\n\n\n\nstart acquiring', self.chosen_camera
         self.cameras.startAcquiring()
@@ -180,16 +180,16 @@ class Model(QObject):
         '''2. Align Beam through Dipole'''
         #if self.view.checkBox_2.isChecked()==True:
         print 'Aligning on S02-BPM-01 with S01-HCOR-02'
-        #self.func.align(self.Cmagnets,'S01-HCOR2',self.Cbpms,'S02-BPM01',0.5)
-        self.func.align(self.Cmagnets,'S02-HCOR3',self.Cbpms,'S02-BPM02',0.5)
+        self.func.align(self.Cmagnets,'S01-HCOR2',self.Cbpms,'S02-BPM01',0.5)
+        #self.func.align(self.Cmagnets,'S02-HCOR2',self.Cbpms,'S02-BPM02',0.5)
 
-        #raw_input('Put S02-YAG-02 in, then press enter')
+        #raw_input('Put in S02-YAG-02, then press enter')
         #print 'Aligning on S02-YAG-02 with S02-HCOR-02'
-        #self.func.alignScreen(self.Cmagnets,'S02-HCOR2',self.camerasIA,'S02-CAM-01',13,0.5)
-        #raw_input('Take S02-YAG-02 out, then press enter')
+        #self.func.alignScreen(self.Cmagnets,'S02-HCOR1',self.camerasIA,'S02-CAM-01',13,0.5)
+        raw_input('Take out S02-YAG-02, then press enter')
 
-        #print 'Aligning on S02-BPM-02 with S02-HCOR-03'
-        #self.func.align(self.Cmagnets,'S02-HCOR3',self.Cbpms,'S02-BPM02',0.5) #was 0.000001
+        print 'Aligning on S02-BPM-02 with S02-HCOR-03'
+        self.func.align(self.Cmagnets,'S02-HCOR2',self.Cbpms,'S02-BPM02',0.5) #was 0.000001
         #self.func.align(self.Cmagnets,'S02-VCOR2',self.Cbpms,'S02-BPM02',0.5)
         #align(self,hctrl,hcor, bctrl, bpm, tol, N=10):
         #self.func.align(self.Cmagnets,'VCOR02',self.Cbpms,'BPM02',0.000001)
@@ -228,8 +228,13 @@ class Model(QObject):
         """2. Minimise Beta"""
         #if self.view.checkBox_2_s.isChecked()==True:
         #2.1 Minimize Beta
-        self.func.minimizeBeta(self.Cmagnets,'S02-QUAD3',
-                                None,'CLA-C2V-DIA-CAM-01',1)
+        ##self.func.minimizeBeta(self.Cmagnets,'S02-QUAD3',
+        #                        None,'CLA-C2V-DIA-CAM-01',1)
+        quad1max = 0.5
+        quad2max = 0.5
+        steps=5
+        self.func.minimizeBeta2D(self.Cmagnets,'S02-QUAD1','S02-QUAD2',
+                                quad1max,quad2max,steps,None,'CLA-C2V-DIA-CAM-01',1)
         #self.func.using_move_to_thread(self.Cmagnets,'S02-QUAD3',
         #                        None,'VM-CLA-C2V-DIA-CAM-01',1)
         #'''Re-instate minimising beta with Quad-04 here!!!'''
