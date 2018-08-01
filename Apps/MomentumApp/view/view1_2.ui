@@ -548,6 +548,16 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
              </property>
             </widget>
            </item>
+           <item row="4" column="0">
+            <widget class="QPushButton" name="pushButton_Align">
+             <property name="text">
+              <string>2. Align Through Dipole</string>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
            <item row="3" column="0">
             <widget class="QPushButton" name="pushButton_Prelim">
              <property name="sizePolicy">
@@ -564,22 +574,12 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
              </property>
              <property name="maximumSize">
               <size>
-               <width>150</width>
+               <width>371</width>
                <height>16777215</height>
               </size>
              </property>
              <property name="text">
-              <string>1. Preliminaries</string>
-             </property>
-             <property name="checked">
-              <bool>false</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="0">
-            <widget class="QPushButton" name="pushButton_Align">
-             <property name="text">
-              <string>2. Align Through Dipole</string>
+              <string>1. Preliminaries (set S02-DIP-01=0 and switch to S02-CAM-02)</string>
              </property>
              <property name="checked">
               <bool>false</bool>
