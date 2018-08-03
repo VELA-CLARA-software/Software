@@ -178,7 +178,7 @@ class scopeWriterUi(object):
         self.diagnosticNameLabel = QtGui.QLabel()
         self.diagnosticNameLabel.setObjectName(_fromUtf8("measurementNameLabel"))
         self.diagnosticNameLabel.setText(_translate("mainWindow", "Diagnostic", None))
-        self.diagnosticTypes = ["WCM", "S02-FCUP", "SP1-FCUP"]
+        self.diagnosticTypes = ["WCM", "S02-FCUP", "SP1-FCUP", "ICT1"]
         self.diagnosticComboBox = QtGui.QComboBox()
         self.diagnosticComboBox.setObjectName(_fromUtf8("diagnosticComboBox"))
         for i in self.diagnosticTypes:

@@ -20,7 +20,7 @@ import scipy.constants  # speed of light
 import webbrowser  # to get help
 import functools  # for magnet on/off menu actions
 sys.path.insert(0, r'\\apclara1\ControlRoomApps\Controllers\bin\Release')
-import VELA_CLARA_Magnet_Control as VC_MagCtrl
+import Magnet_Control_Physics_Units as VC_MagCtrl
 import VELA_CLARA_BPM_Control
 # import VELA_CLARA_enums
 # sys.path[0] = r'\\apclara1\ControlRoomApps\Controllers\bin\Release'
@@ -62,7 +62,8 @@ image_credits = {
     'off.png': 'https://www.flaticon.com/free-icon/power-on-semicircle_17131',
     'yes.png': 'https://www.flaticon.com/free-icon/check-symbol_60731',
     'no.png': 'https://www.flaticon.com/free-icon/clear-button_60994',
-    'yes-all.png': 'https://www.flaticon.com/free-icon/double-tick-indicator_60727'
+    'yes-all.png': 'https://www.flaticon.com/free-icon/double-tick-indicator_60727',
+    'degauss.gif': 'http://icon-park.com/icon/loadingpreloading-image-spin-4-blue/',
 }
     
 # Define the speed of light. We need this to convert field integral to angle or K.
@@ -89,6 +90,7 @@ mag_attributes = {
     'UNKNOWN_MAGNET_TYPE': mag_attr('Unknown', 'Strength', 'AU', 'strength', 'AU', 'AU'),
     'BPM': mag_attr('Beam position monitor', 'X position', '', 'Y position', '', '')}
 
+
 def format_when_present(format_string, obj, attr):
     """"Returns a formatted string with the object's given attribute,
     or a blank string when the attribute is not present or begins UNKNOWN."""
@@ -101,20 +103,10 @@ def format_when_present(format_string, obj, attr):
     except AttributeError:
         return ''
 
+
 def pixmap(icon_name):
     icon_filename = os.getcwd() + r'\resources\magnetTable\Icons\{}.png'.format(icon_name)
     return QtGui.QPixmap(icon_filename)
-
-# for debugging
-import functools
-def echo(fn):
-     from itertools import chain
-     @functools.wraps(fn)
-     def wrapped(*v, **k):
-         name = fn.__name__
-         print ("%s(%s)" % (name, ", ".join(map(repr, chain(v, k.values())))))
-         return fn(*v, **k)
-     return wrapped
 
 
 class Magnet(object):
@@ -139,6 +131,34 @@ class BPM(object):
         return '<BPM {}>'.format(self.name)
 
 
+class ExtendedDialog(QtGui.QMessageBox):
+    """Extension of QMessageBox with checkboxes and a comment input."""
+
+    def __init__(self, parent=None, checkboxes=[]):
+        super(ExtendedDialog, self).__init__()
+
+        # Access the Layout of the MessageBox to add the Checkboxes
+        layout = self.layout()
+        vbox = QtGui.QVBoxLayout()
+        layout.addLayout(vbox, 1, 1)
+        self.checkboxes = []
+        for i, (name, checked) in enumerate(checkboxes):
+            checkbox = QtGui.QCheckBox(name)
+            checkbox.setChecked(checked)
+            vbox.addWidget(checkbox)
+            self.checkboxes.append(checkbox)
+        hbox = QtGui.QHBoxLayout()
+        vbox.addLayout(hbox)
+        hbox.addWidget(QtGui.QLabel('Comment:'))
+        self.textbox = QtGui.QLineEdit()
+        self.textbox.setMinimumWidth(200)
+        hbox.addWidget(self.textbox)
+
+    def exec_(self, *args, **kwargs):
+        """Override the exec_ method so you can return the value of the checkboxes and the input box."""
+        return QtGui.QMessageBox.exec_(self, *args, **kwargs), [box.isChecked() for box in self.checkboxes], str(self.textbox.text())
+
+
 logger = logging.getLogger('Magnet Table')
 mag_init_VC = VC_MagCtrl.init()
 bpm_init = VELA_CLARA_BPM_Control.init()
@@ -152,14 +172,13 @@ sections = OrderedDict([
                         ('S02', section_attr('CLARA Straight 2',   'CLARA_PH1', 50.0, 1)),
                         ])
 frame_style_sheet = '#branch {background-color: #ffffee;} #junction {background-color: qlineargradient( x1:0 y1:0, x2:0 y2:1, stop:0 #f0f0f0, stop:1 #ffffee);}'
-mom_modes = ('Recalculate K', 'Scale currents')
 
 # Are we bundled as an EXE, or running as a script?
 is_bundled = getattr(sys, 'frozen', False)
 file_name = sys.executable if is_bundled else __file__
 build_date = os.path.getmtime(file_name)
 bundle_dir = os.path.dirname(file_name)
-
+dburt_folder = r'\\fed.cclrc.ac.uk\Org\NLab\ASTeC\Projects\VELA\Snapshots\DBURT'
 
 class Window(QtGui.QMainWindow):
 
@@ -180,6 +199,11 @@ class Window(QtGui.QMainWindow):
 
     def __init__(self, parent=None):
         QtGui.QMainWindow.__init__(self, parent)
+        self.setStyle(QtGui.QStyleFactory.create('Plastique'))
+        self.setStyleSheet('''QDoubleSpinBox[linked="true"]  {background-color: yellow;}
+                              QDoubleSpinBox[waiting="true"] {color: gray;}
+                              QFrame[branch="true"] {background-color: #ffffee;}
+                              QFrame[junction="true"] {background-color: qlineargradient( x1:0 y1:0, x2:0 y2:1, stop:0 #f0f0f0, stop:1 #ffffee);}''')
 
         ini_filename = os.getcwd() + r'\resources\magnetTable\MagnetTable.ini'
         self.settings = QtCore.QSettings(ini_filename, QtCore.QSettings.IniFormat)
@@ -191,22 +215,25 @@ class Window(QtGui.QMainWindow):
         magnet_types = [('Dipoles', ('DIP',)), ('Quadrupoles', ('QUAD',)), ('Correctors', ('HCOR', 'VCOR')),
                         ('Solenoids', ('SOL', 'BSOL')), ('BPMs', ('BPM',))]
 
-        mainMenu = self.menuBar()
+        main_menu = self.menuBar()
         self.setStatusBar(QtGui.QStatusBar(self))
-        file_menu = mainMenu.addMenu('&File')
-        machine_menu = mainMenu.addMenu('&Machine')
-        view_menu = mainMenu.addMenu('&View')
-        help_menu = mainMenu.addMenu('&Help')
+        file_menu = main_menu.addMenu('&File')
+        machine_menu = main_menu.addMenu('&Machine')
+        view_menu = main_menu.addMenu('&View')
+        help_menu = main_menu.addMenu('&Help')
         self.createMenuItem('&Load LTE...', file_menu, shortcut='Ctrl+L', event=self.loadButtonClicked,
                             help_text='Load magnet settings from an .lte (lattice) file.')
         self.createMenuItem('Load &DBURT...', file_menu, shortcut='Ctrl+O').setEnabled(False)
         self.createMenuItem('&Save DBURT...', file_menu, shortcut='Ctrl+S', event=self.saveDBURT).setEnabled(False)
-        #TODO: add recent files
+        self.mru_menu = file_menu.addMenu('&Recent')
+        self.updateMRUMenu()
+
+        # TODO: add recent files
         self.createMenuItem('E&xit', file_menu, event=self.close, shortcut="Esc",
                             help_text='Close the program.')
 
-        machine_mode_menu = QtGui.QMenu(machine_menu)
-        machine_mode_menu.setTitle('&Mode')
+        machine_menu.setSeparatorsCollapsible(False)  # so we can see top label
+        machine_menu.addSeparator().setText('Mode')
         machine_mode_group = QtGui.QActionGroup(self, exclusive=True)
         machine_modes = (('Offline', 'Ctrl+0', "Don't connect to anything."),
                          ('Virtual', 'Ctrl+1', "Connect to a local virtual machine."),
@@ -217,37 +244,37 @@ class Window(QtGui.QMainWindow):
                                          event=self.machineModeChanged, checkable=True, help_text=help_text)
             action.setChecked(mode == set_mode)
             action.mode = mode  # so we know which one to set when this menu item is selected
-            machine_mode_menu.addAction(action)
-        machine_menu.addAction(machine_mode_menu.menuAction())
+            machine_menu.addAction(action)
         self.machine_mode_status = QtGui.QLabel('')
         self.statusBar().addPermanentWidget(self.machine_mode_status)
+        self.status_bar_message = QtGui.QLabel('')
+        self.statusBar().addWidget(self.status_bar_message)
+        self.status_bar_message.linkActivated.connect(self.linkClicked)
         self.setMachineMode(set_mode)
 
         help_texts = ("Recalculate all the K values when the momentum is changed.",
                       "Rescale the magnet currents when the momentum is changed, and keep the K values the same.")
-        mom_mode_menu = QtGui.QMenu(machine_menu)
-        mom_mode_menu.setTitle('On momentum &change')
+        shortcuts = ('Ctrl+K', 'Ctrl+I')
+        machine_menu.addSeparator().setText('On momentum change')
         mom_mode_group = QtGui.QActionGroup(self, exclusive=True)
-        mom_set_mode = self.settings.value('momentum_mode', mom_modes[0]).toString()
+        mom_set_mode, ok = self.settings.value('momentum_mode', VC_MagCtrl.MomentumMode.RECALCULATE_K).toInt()
         self.mom_mode_action = {}
-        for mode, help_text in zip(mom_modes, help_texts):
-            action = self.createMenuItem('&' + mode, mom_mode_group, icon_name=mode.replace(' ', '_').lower(),
+        for mode, help_text, shortcut in zip(VC_MagCtrl.MomentumMode, help_texts, shortcuts):
+            name = mode.name.replace('_', ' ').title()
+            action = self.createMenuItem('&' + name, mom_mode_group, icon_name=mode.name.lower(), shortcut=shortcut,
                                          checkable=True, event=self.momentumModeRadioClicked, help_text=help_text)
-            mom_mode_menu.addAction(action)
+            machine_menu.addAction(action)
             action.mode = mode
             action.setChecked(mode == mom_set_mode)
             self.mom_mode_action[mode] = action  # so we can set it checked manually if necessary
-        machine_menu.addAction(mom_mode_menu.menuAction())
         self.always_rescale = False
 
-        machine_menu.addSeparator()
+        machine_menu.addSeparator().setText('Visible magnets')
         for mag_menu_name, mods in (('visible', 'Ctrl+'), ('all', 'Ctrl+Shift+')):
-            mag_menu = QtGui.QMenu(machine_menu)
-            mag_menu.setTitle('&{} magnets'.format(mag_menu_name.title()))
-            self.createMenuItem('All o&n', mag_menu, shortcut=mods+'+', event=functools.partial(self.powerMagnets, 'on', mag_menu_name), icon_name='on')
-            self.createMenuItem('All o&ff', mag_menu, shortcut=mods+'-', event=functools.partial(self.powerMagnets, 'off', mag_menu_name), icon_name='off')
-            self.createMenuItem('&Degauss', mag_menu, shortcut=mods+'G', event=functools.partial(self.degaussMagnets, mag_menu_name), icon_name='cycle')
-            machine_menu.addAction(mag_menu.menuAction())
+            machine_menu.addSeparator().setText('{} magnets'.format(mag_menu_name.title()))
+            self.createMenuItem('All o&n', machine_menu, shortcut=mods+'+', event=functools.partial(self.powerMagnets, 'on', mag_menu_name), icon_name='on')
+            self.createMenuItem('All o&ff', machine_menu, shortcut=mods+'-', event=functools.partial(self.powerMagnets, 'off', mag_menu_name), icon_name='off')
+            self.createMenuItem('&Degauss', machine_menu, shortcut=mods+'G', event=functools.partial(self.degaussMagnets, mag_menu_name), icon_name='cycle')
 
         for mag, types in magnet_types:
             action = self.createMenuItem('&' + mag, view_menu, self.toggleMagType,
@@ -283,7 +310,7 @@ class Window(QtGui.QMainWindow):
         magnet_font = QtGui.QFont('', 14, QtGui.QFont.Bold)
         self.magnets = OrderedDict()
         self.bpms = OrderedDict()
-        self.wait_for = {} # what magnet(s) and SI are we waiting for?
+        self.wait_for = {}  # what magnet(s) and SI are we waiting for?
         pv_root_re = re.compile('^VM-(.*):$')
         for key, section in sections.items():
             section_name = section.title
@@ -299,12 +326,14 @@ class Window(QtGui.QMainWindow):
             title.section_key = key
             magnet_list_frame.title_label = title
             min_momentum = 1.0
-            momentum_value, ok = self.settings.value(section.title + '/momentum', section.default_momentum).toFloat()
-            momentum = self.spinbox(header_hbox, 'MeV/c', step=0.1, value=momentum_value, decimals=3,
+            momentum_value, ok = self.settings.value(key + '/momentum', section.default_momentum).toFloat()
+            step = float(self.settings.value(key + '/mom_step', 0.1).toString())
+            momentum = self.spinbox(header_hbox, 'MeV/c', step=step, value=momentum_value, decimals=3,
                                     min_value=min_momentum, help_text="Set the momentum of the " + section_name + " section. ")
+            momentum.setMaximumWidth(200)
             momentum.valueChanged.connect(self.momentumChanged)
             section_vbox.addLayout(header_hbox)
-            magnet_list_vbox = QtGui.QVBoxLayout()
+            magnet_list_vbox = QtGui.QVBoxLayout(magnet_list_frame)
             magnet_list_frame.setLayout(magnet_list_vbox)
             magnet_list_vbox.momentum_spin = momentum  # so we can reference it from a magnet
             magnet_list_vbox.id = key
@@ -321,7 +350,7 @@ class Window(QtGui.QMainWindow):
             mag_names = [(magnet_controller.getPosition(name), name) for name in mag_names
                          if section.min_pos <= magnet_controller.getPosition(name) <= section.max_pos]
             mag_names.extend([(bpm_controller.getPosition(name), name) for name in bpm_names
-                         if section.min_pos <= bpm_controller.getPosition(name) <= section.max_pos])
+                             if section.min_pos <= bpm_controller.getPosition(name) <= section.max_pos])
             # These don't come in the right order so need to sort them too
             mag_names.sort()
             for pos, name in mag_names:
@@ -329,7 +358,7 @@ class Window(QtGui.QMainWindow):
                 mag_type = ''.join([c for c in name.split('-')[-1] if not c.isdigit()])
                 magnet_frame = QtGui.QFrame()
                 magnet_frame.setFrameShape(QtGui.QFrame.Box | QtGui.QFrame.Plain)
-                magnet_frame.setStyleSheet(frame_style_sheet)
+                # magnet_frame.setStyleSheet(frame_style_sheet)
                 magnet_vbox = QtGui.QVBoxLayout()
                 magnet_frame.setLayout(magnet_vbox)
                 main_hbox = QtGui.QHBoxLayout()
@@ -355,7 +384,7 @@ class Window(QtGui.QMainWindow):
                 more_info.setLayout(more_info_layout)
 
                 offline_info = QtGui.QLabel()
-                offline_info.linkActivated.connect(lambda url: os.system('start "" "' + str(url) + '"'))
+                offline_info.linkActivated.connect(self.linkClicked)
                 offline_info.setAlignment(QtCore.Qt.AlignTop)
                 offline_info.help_text = ''
                 more_info_layout.addWidget(offline_info)
@@ -373,6 +402,8 @@ class Window(QtGui.QMainWindow):
                     # show "Y position" label
                     self.collapsing_header(main_hbox, more_info, attributes.strength_name, help_text=show_hide_info)
                     bpm.y_label = self.collapsing_header(main_hbox, more_info, help_text=show_hide_info)
+                    self.collapsing_header(main_hbox, more_info, 'Charge', help_text=show_hide_info)
+                    bpm.q_label = self.collapsing_header(main_hbox, more_info, help_text=show_hide_info)
                     static_info.append(format_when_present('<br><b>Position</b>: {:.3f} m', bpm.ref, 'position'))
                     # No branch info for BPMs (yet), we have to add it ourselves
                     if 'C2V' in name:
@@ -408,7 +439,7 @@ class Window(QtGui.QMainWindow):
                         magnet.fieldIntegralCoefficients = np.array(magnet.ref.fieldIntegralCoefficients)
                     # rev_type = magnet.ref.magRevType  #  23/6 magRevType not implemented
 
-                    magnet.prev_values = []
+                    magnet.prev_values = [magnet.ref.siWithPol]
                     magnet.active = False  # whether magnet is being changed
 
                     magnet_frame.magnet = magnet
@@ -428,12 +459,12 @@ class Window(QtGui.QMainWindow):
                         # max_k = max_current
                     # else:
                     #     max_k = self.getK(magnet, max_current, min_momentum)
-                    step = 0.01 if mag_type == 'BSOL' else 0.1
+                    # The float(.toString()) here is necessary since Qt's string-to-float conversion doesn't match Python's
+                    step = float(self.settings.value('{}/{}_k_step'.format(key, name), 0.01 if mag_type == 'BSOL' else 0.1).toString())
                     help_text = "Set the {} in the {} magnet. The magnet current will be set depending on the momentum in the {} section. ".format(
                         attributes.effect_name.lower(), magnet.name, section_name)
                     k_spin = self.spinbox(main_hbox, attributes.effect_units, step=step, decimals=3,
-                                          help_text=help_text) #, min_value=min_k, max_value=max_k)
-                    # k_spin.lineEdit().installEventFilter(self)
+                                          help_text=help_text)  #, min_value=min_k, max_value=max_k)
                     magnet.k_spin = k_spin
                     branch_name = magnet.ref.magnetBranch
                     in_branch = branch_name != 'UNKNOWN_MAGNET_BRANCH'
@@ -452,21 +483,17 @@ class Window(QtGui.QMainWindow):
                         if name == 'DIP01':
                             # We can use this dipole to set the momentum - add a button to the section header
                             set_mom_button = QtGui.QPushButton('Set momentum from ' + name)
+                            set_mom_button.setMaximumWidth(200)
                             set_mom_button.clicked.connect(functools.partial(self.setMomentum, magnet))
                             header_hbox.addWidget(set_mom_button)
 
                     self.collapsing_header(main_hbox, more_info, lbl, help_text=show_hide_info)
                     help_text = "Set the current in the {} magnet. The {} will be calculated, depending on the momentum in the {} section. ".format(
                         magnet.name, attributes.effect_name.lower(), section_name)
-                    current_spin = self.spinbox(main_hbox, units, step=0.1, decimals=3,
+                    step = float(self.settings.value('{}/{}_i_step'.format(key, name), 0.1).toString())
+                    current_spin = self.spinbox(main_hbox, units, step=step, decimals=3,
                                                 min_value=min_current, max_value=max_current, help_text=help_text)
                     magnet.current_spin = current_spin
-                    # if mag_type == 'DIP':
-                    #     magnet.set_mom_checkbox = QtGui.QCheckBox('Set momentum')
-                    #     magnet.set_mom_checkbox.setSizePolicy(label_size_policy)
-                    #     magnet.set_mom_checkbox.setToolTip("Calculate the beam's momentum by adjusting this magnet's current")
-                    #     magnet.set_mom_checkbox.setStatusTip(u"Measure the momentum in the {} section using this dipole.".format(key))
-                    #     main_hbox.addWidget(magnet.set_mom_checkbox)
 
                     restore_button = QtGui.QToolButton()
                     restore_button.setIcon(QtGui.QIcon(pixmap('undo')))
@@ -501,10 +528,10 @@ class Window(QtGui.QMainWindow):
 
                 # different shading for magnets in branches, and smooth transition at junctions
                 if in_branch:
-                    magnet_frame.setObjectName('branch')
+                    magnet_frame.setProperty('branch', True)
                     junc_magnet = self.magnets[key + "_" + branch_name]
                     junc_magnet.is_junction = True
-                    junc_magnet.magnet_frame.setObjectName('junction')
+                    junc_magnet.magnet_frame.setProperty('junction', True)
                 end_of_branch = False  # magnet.name in ('QUAD06', 'QUAD14')
                 magnet_frame.setLineWidth(3 if end_of_branch else 1)
                 magnet_frame.setContentsMargins(0, 0, 0, 3 if end_of_branch else 1)
@@ -516,11 +543,15 @@ class Window(QtGui.QMainWindow):
 
         # set up events (need to do setup first)
         for magnet in self.magnets.values():
-            magnet.current_spin.valueChanged.connect(self.currentValueChanged)
             magnet.current_spin.setValue(magnet.ref.siWithPol)
+            magnet.k_spin.setValue(magnet.ref.k)
+            magnet.current_spin.valueChanged.connect(self.currentValueChanged)
             magnet.k_spin.valueChanged.connect(self.kValueChanged)
-            magnet.restore_button.setEnabled(False) # will be automatically shown when event triggered
+            magnet.restore_button.setEnabled(False)  # will be automatically shown when event triggered
             magnet.active = False
+
+        self.degauss_animation = QtGui.QMovie(os.getcwd() + r'\resources\magnetTable\Icons\degauss.gif')
+        self.degauss_animation.setScaledSize(QtCore.QSize(32, 32))
 
         self.magnet_controls = magnet_list
         self.setWindowTitle('Magnet Table')
@@ -585,49 +616,70 @@ class Window(QtGui.QMainWindow):
             if degaussing:
                 # light orange when magnets are being degaussed, and disable spin boxes
                 magnet.magnet_frame.setStyleSheet('background-color: rgb(255, 178, 102);')
-            elif not magnet_on:
+                magnet.warning_icon.setToolTip('Degaussing')
+                if not magnet.warning_icon.movie():
+                    magnet.warning_icon.setMovie(self.degauss_animation)
+                    self.degauss_animation.start()
+            elif not magnet_on and not offline:
                 # red background to highlight magnets that are OFF
                 magnet.magnet_frame.setStyleSheet('background-color: rgb(139, 0, 0);')
                 magnet.warning_icon.setPixmap(pixmap('error'))
                 magnet.warning_icon.setToolTip('Magnet PSU: ' + str(magnet.ref.psuState)[8:])
             elif abs(set_current - read_current) > magnet.ref.riTolerance:
-                magnet.magnet_frame.setStyleSheet(frame_style_sheet)
+                magnet.magnet_frame.setStyleSheet('')
                 magnet.warning_icon.setPixmap(pixmap('warning'))
                 magnet.warning_icon.setToolTip('Read current and set current do not match')
             else:
-                magnet.magnet_frame.setStyleSheet(frame_style_sheet)
+                magnet.magnet_frame.setStyleSheet('')
                 magnet.warning_icon.setPixmap(self.empty_icon)
             mag_type = str(magnet.ref.magType)
             if mag_type == 'QUAD':
                 magnet.icon.setPixmap(pixmap('Quadrupole_' + ('F' if magnet.k_spin.value() >= 0 else 'D')).scaled(32, 32))
-            # are we waiting for the SI value for this magnet to 'take'?
+            # are we waiting for the SI value or K value for this magnet to 'take'?
             try:
-                if abs(set_current - self.wait_for[magnet]) <= 0.001:  # it's taken now! # TODO: tolerance from somewhere?
+                attribute, wait_val = self.wait_for[magnet]
+                if attribute == 'current':  # we're waiting for the SI value to take
+                    now_val = set_current
+                    update_spin = magnet.k_spin
+                    update_val = magnet.ref.k
+                else:  # we're waiting for the K value to take
+                    now_val = magnet.ref.k
+                    update_spin = magnet.current_spin
+                    update_val = set_current
+                if abs(now_val - wait_val) <= 0.001:  # it's taken now! # TODO: tolerance from somewhere?
                     self.wait_for.pop(magnet)  # remove it from 'waiting for' list
+                    update_spin.setProperty('waiting', False)
+                    update_spin.setValue(update_val)
             except KeyError:  # we're not waiting for this one
                 if not magnet.current_spin.hasFocus():
                     magnet.current_spin.setValue(set_current)
+                if not magnet.k_spin.hasFocus():
+                    magnet.k_spin.setValue(magnet.ref.k)
             attributes = mag_attributes[mag_type]
             int_strength = np.copysign(np.polyval(magnet.fieldIntegralCoefficients, abs(set_current)), set_current)
             strength = int_strength / magnet.ref.magneticLength if magnet.ref.magneticLength else 0
             if mag_type == 'QUAD' or mag_type[1:] == 'COR':
                 strength *= 1000  # convert to mT for correctors, T/m for quads
             online_text = online_text_format.format(**locals()) if magnet_on else \
-                '<br><a href="{}/{}">Switch magnet ON</a>'.format(magnet.section.id, magnet.ref.name)
+                '<a href="{}/{}/on">Switch magnet ON</a>'.format(magnet.section.id, magnet.ref.name)
             if mag_type == 'DIP':
-                online_text += '<br>Section momentum: {:.3f} MeV/c'.format(magnet.section.momentum_spin.value())
-            if degaussing:
-                online_text += '<p style="color:red"><b>Degaussing</b>: {} steps remaining</p>'.format(magnet.ref.remainingDegaussSteps)
+                online_text += '<br><b>Section momentum</b>: {:.3f} MeV/c'.format(magnet.section.momentum_spin.value())
+            online_text += '<p style="color:red"><b>Degaussing</b>: {} steps remaining</p>'.format(magnet.ref.remainingDegaussSteps) if degaussing else \
+                '<br><a href="{}/{}/degauss">Degauss magnet</a>'.format(magnet.section.id, magnet.ref.name)
+
             magnet.online_info.setText(online_text)
         for bpm in self.bpms.values():
             bpm.x_label.setText('<b>{:.3f} mm</b>\t'.format(bpm.ref.xPV))
             bpm.y_label.setText('<b>{:.3f} mm</b>'.format(bpm.ref.yPV))
+            bpm.q_label.setText('<b>{:.3f} pC</b>'.format(bpm.ref.q))
 
     def onlineInfoLinkClicked(self, url):
         """A link was clicked in the 'online info' box."""
-        section, magnet = str(url).split('/')
-        magnet_controllers[section].switchONpsu(magnet)
-
+        section, magnet, action = str(url).split('/')
+        if action == 'on':
+            magnet_controllers[section].switchONpsu(magnet)
+        elif action == 'degauss':
+            magnet_controllers[section].degauss(magnet)
 
     def eventFilter(self, source, event):
         """Enable scroll wheel functionality for the spin boxes, and also make clickable labels that
@@ -653,27 +705,76 @@ class Window(QtGui.QMainWindow):
                 # makes it easier to scroll the window up and down
                 if not (modifiers & QtCore.Qt.ShiftModifier):
                     return True  # do nothing
-            elif evType == QtCore.QEvent.FocusOut:
-                # record the change to a magnet
+            elif evType in (QtCore.QEvent.FocusOut, QtCore.QEvent.FocusIn):
+                focused = evType == QtCore.QEvent.FocusIn
+                # record the change to a magnet when defocused
                 try:
                     magnet = source.parent().magnet
-                    magnet.active = False
+                    magnet.active = focused
+                    magnet.k_spin.setProperty('linked', focused)
+                    magnet.current_spin.setProperty('linked', focused)
                 except AttributeError: # won't work for momentum spin boxes
-                    pass
+                    print(type(source))
+                    source.setProperty('linked', focused)
+                    print(source.property('linked').toBool())
+                    self.highlightMagControls(source.magnet_list_vbox, focused)
+            elif evType == QtCore.QEvent.ContextMenu and isinstance(source, QtGui.QDoubleSpinBox):
+                # Create a submenu item to adjust the step size, with a nice inline slider
+                single_step = source.singleStep()
+                menu = source.lineEdit().createStandardContextMenu()  #QtGui.QMenu(self) to create a blank menu
+                menu.addSeparator().setText('Step size')
+                step_sizes = [i * 10**j for j in range(-3, 2) for i in (1, 2, 5)]
+                frame = QtGui.QFrame(menu)
+                hbox = QtGui.QHBoxLayout(menu)
+                frame.setLayout(hbox)
+                slider = QtGui.QSlider(QtCore.Qt.Horizontal)
+                slider.setRange(0, len(step_sizes) - 1)
+                slider.setValue(step_sizes.index(single_step))
+                hbox.addWidget(slider)
+                # Show a label on the right displaying the actual value
+                label = QtGui.QLabel('{:.3g}'.format(single_step))
+                label.setMinimumWidth(30)  # about right for the widest value (0.005) - if we don't do this, the slider will change size as we slide
+
+                def setStepSize(i):
+                    step = step_sizes[i]
+                    source.setSingleStep(step)
+                    label.setText(str(step))
+                    try:  # do we have a magnet spin box?
+                        magnet = source.parent().magnet
+                        spinbox_type = 'k' if source is magnet.k_spin else 'i'
+                        settings_key = '{0.section.id}/{0.name}_{1}_step'.format(magnet, spinbox_type)
+                    except AttributeError:  # no, a momentum one!
+                        section = source.magnet_list_vbox
+                        settings_key = section.id + '/mom_step'
+                    self.settings.setValue(settings_key, step)
+                slider.valueChanged.connect(setStepSize)
+                hbox.addWidget(label)
+                widget_action = QtGui.QWidgetAction(menu)
+                widget_action.setDefaultWidget(frame)
+                menu.addAction(widget_action)
+                menu.exec_(event.globalPos())
+                menu.deleteLater()
+                return True
+
         elif evType == QtCore.QEvent.Wheel and (modifiers & QtCore.Qt.ShiftModifier):
             # don't allow scrolling if Shift _is_ held outwith a spin box -
             # otherwise we'll accidentally scroll the window while we're trying to
-            # modify the spin box and the mouse slips a bit_length
+            # modify the spin box and the mouse slips a bit
             return True
-        # elif evType == QtCore.QEvent.ShortcutOverride:
-        #     print('ignoring shortcut ', event.modifiers(), event.key())
-        #     event.ignore()
-        #     return True
         return QtGui.QMainWindow.eventFilter(self, source, event)
-    
+
+    def highlightMagControls(self, section, focused):
+        """When a momentum spinbox has the focus, highlight all the magnet spinboxes (K or current)
+        that will be affected by a change in momentum. This should make it clear what mode we are in."""
+        mode, ok = self.settings.value('momentum_mode', VC_MagCtrl.MomentumMode.RECALCULATE_K).toInt()
+        for magnet in self.magnets.values():
+            if magnet.section == section:
+                magnet.k_spin.setProperty('linked', focused and mode == VC_MagCtrl.MomentumMode.RECALCULATE_K)
+                magnet.current_spin.setProperty('linked', focused and mode == VC_MagCtrl.MomentumMode.SCALE_CURRENTS)
+
     def toggleMagType(self, toggled):
         """Called when a magnet type checkbox is clicked. Hide or show all the magnets of that type."""
-        #which checkbox was clicked? remove 's' from end, last 6 letters, lower case
+        # which checkbox was clicked? remove 's' from end, last 6 letters, lower case
         types_to_show = self.sender().types_to_show
         logger.info(('Show ' if toggled else 'Hide ') + ','.join(types_to_show))
         for mag_list in self.magnet_controls.values():
@@ -687,15 +788,15 @@ class Window(QtGui.QMainWindow):
         """Called when a current spin box is changed by the user."""
         magnet = self.sender().parent().magnet
         magnet_controllers[magnet.section.id].setSI(magnet.name, value)
+        self.status_bar_message.setText('')  # get rid of any 'saved' message
         # Stop the GUI updating until the SI value 'takes' - otherwise it will update from an old value and be 'sticky'
         # Add it to a list of "waiting for" magnets. We might need more than one if we're changing the momentum in a section
-        self.wait_for[magnet] = value
+        self.wait_for[magnet] = ('current', value)  # indicates we are waiting for a current value to take
+        magnet.k_spin.setProperty('waiting', True)
 
-        # if str(magnet.ref.magType) == 'DIP' and magnet.set_mom_checkbox.isChecked():
-        #     self.setMomentum(magnet)
         # To avoid a lot of iterating between K and current: check the calling function's name
-        if not sys._getframe(1).f_code.co_name == 'calcCurrentFromK':
-            self.calcKFromCurrent(magnet)
+        # if not sys._getframe(1).f_code.co_name == 'calcCurrentFromK':
+        #     self.calcKFromCurrent(magnet)
 
         # If we're already changing this magnet, alter the last value
         # Otherwise add a value
@@ -721,9 +822,10 @@ class Window(QtGui.QMainWindow):
         int_strength = np.polyval(coeffs, abs(current))
         angle = 45  # reset to 45°
         momentum = 0.001 * SPEED_OF_LIGHT * int_strength / np.radians(angle)
-        mode = self.settings.value('momentum_mode', mom_modes[0])
+        mode, ok = self.settings.value('momentum_mode', VC_MagCtrl.MomentumMode.RECALCULATE_K).toInt()
 
-        if mode == 'Scale currents' and not self.always_rescale:  # need to check this is really what we want!
+        if mode == VC_MagCtrl.MomentumMode.SCALE_CURRENTS and not self.always_rescale:
+            # need to check this is really what we want!
             message_box = QtGui.QMessageBox(self)
             message_box.setWindowTitle('Magnet Table')
             message_box.setIcon(QtGui.QMessageBox.Warning)
@@ -768,19 +870,14 @@ class Window(QtGui.QMainWindow):
         except:
             pass
 
-        mode = self.settings.value('momentum_mode', mom_modes[0])
-        changeFunc = self.calcKFromCurrent if mode == 'Recalculate K' else self.calcCurrentFromK
-        # are we adjusting the spinbox directly? or is it being changed by the "Set momentum" routine?
-        direct = sys._getframe(1).f_code.co_name == '<module>'
+        magnet_controllers[section.id].setMomentum(momentum)
+        # mode = self.settings.value('momentum_mode', mom_modes[0])
+        # changeFunc = self.calcKFromCurrent if mode == 'Recalculate K' else self.calcCurrentFromK
+        # # are we adjusting the spinbox directly? or is it being changed by the "Set momentum" routine?
+        # # direct = sys._getframe(1).f_code.co_name == '<module>'
         for magnet in self.magnets.values():
             if magnet.section == section:
-                # is_dipole = str(magnet.ref.magType) == 'DIP'
-                # # Clear "Set momentum" checkbox if we're adjusting the momentum directly (otherwise will get out of sync)
-                # if is_dipole and direct:
-                #     magnet.set_mom_checkbox.setChecked(False)
-                # # Ensure dipoles with the "Set momentum" checkbox ticked are not modified
-                # if not (is_dipole and magnet.set_mom_checkbox.isChecked()):
-                    changeFunc(magnet)
+                changeFunc(magnet)
 
     def magnetsOfType(self, section, type_str):
         """Return all magnets of a given type within the given section."""
@@ -867,8 +964,11 @@ class Window(QtGui.QMainWindow):
         # if str(magnet.ref.magType) == 'DIP' and magnet.set_mom_checkbox.isChecked():
         #     self.setMomentum(magnet)
         # To avoid a lot of iterating between K and current: check the calling function's name
-        elif not sys._getframe(1).f_code.co_name == 'calcKFromCurrent':
-            self.calcCurrentFromK(magnet)
+        if not sys._getframe(1).f_code.co_name == 'updateMagnetWidgets':
+            magnet.ref.k = value
+            self.wait_for[magnet] = ('k', value)
+            magnet.current_spin.setProperty('waiting', True)
+            # self.calcCurrentFromK(magnet)
         
     def calcCurrentFromK(self, magnet):
         """Calculate the current to set in a magnet based on its K value (or bend angle)."""
@@ -962,10 +1062,16 @@ class Window(QtGui.QMainWindow):
 
     def momentumModeRadioClicked(self):
         combo = self.sender()
-        mode = combo.mode # currentText()
-        logger.info('Set momentum mode: ' + mode)
-        self.settings.setValue('momentum_mode', mode)
-        
+        mode = combo.mode  # currentText()
+        logger.info('Set momentum mode: ' + mode.name)
+        self.settings.setValue('momentum_mode', mode.value)
+        for controller in magnet_controllers.values():
+            controller.momentum_mode = mode
+        # check if we are focused on a momentum spinbox
+        for magnet_list in self.magnet_controls.values():
+            if magnet_list.momentum_spin.hasFocus():
+                self.highlightMagControls(magnet_list, True)  # make sure correct boxes are highlighted
+
     def setMachineMode(self, mode=None):
         """Set the machine mode (offline/virtual/physical and redefine the controllers accordingly."""
         logger.info('Set machine mode: ' + mode)
@@ -978,6 +1084,10 @@ class Window(QtGui.QMainWindow):
             # magnet_controller = mag_init_VC.getMagnetController(mode_name, area)
             get_controller = getattr(mag_init_VC, '{}_{}_Magnet_Controller'.format(mode.lower(), section.machine_area))
             magnet_controller = get_controller()
+            try:
+                magnet_controller.setMomentum(self.magnet_controls[key].momentum_spin.value())
+            except AttributeError:  # won't work on startup - no spinbox yet
+                pass
             magnet_controllers[key] = magnet_controller
             try:
                 # bpm_controller = bpm_init.getBPMController(mode_name, area)
@@ -985,17 +1095,20 @@ class Window(QtGui.QMainWindow):
                 bpm_controller = get_controller()
                 bpm_controllers[key] = bpm_controller
             except RuntimeError:
-                print("Couldn't load {} BPM controller for area {}".format(mode_name, area))
+                print("Couldn't load {} BPM controller for area {}".format(mode, section.machine_area))
                 bpm_controllers[key] = None
         self.settings.setValue('machine_mode', mode)
         self.machine_mode_status.setText(mode)
         #TODO: check that it actually worked
 
     def loadButtonClicked(self):
-        """Load a lattice file and apply it to magnets."""
+        """Choose an LTE file and apply it."""
         filename = QtGui.QFileDialog.getOpenFileName(self, 'Open lattice file', '', 'Lattice files (*.lte);;All files (*.*)')
-        if filename == '': # Cancel clicked
-            return
+        if filename != ''
+            self.loadLTEFile(filename)
+
+    def loadLTEFile(self, filename):
+        """Load a lattice file and apply it to magnets."""
         text = open(filename).read()
         # Handle continuation character & at end of lines
         text = text.replace('&\n', '')
@@ -1031,10 +1144,71 @@ class Window(QtGui.QMainWindow):
 
     def saveDBURT(self):
         """Save a DBURT file."""
-        folder = r'\\fed.cclrc.ac.uk\org\NLab\ASTeC\Projects\VELA\Snapshots\DBURT' + '\\'
-        filename = time.strftime(r'%Y-%m-%d-%H%M.dburt')
-        # how to decide which areas to save? which are open? or visible on the screen?
+        # how to decide which areas to save? ask the user, defaulting to the ones that are currently open
+        checkboxes = [(section.title, self.magnet_controls[id].parent().isVisible()) for id, section in sections.items()]
+        message_box = ExtendedDialog(self, checkboxes)
+        message_box.setWindowTitle('Magnet Table')
+        message_box.setIcon(QtGui.QMessageBox.Question)
+        message_box.setText('Select areas to save. Individual DBURT files will be created in the <a href="{}">default folder</a>.'.format(dburt_folder))
+        save = message_box.addButton("Save", QtGui.QMessageBox.YesRole)
+        message_box.addButton("Cancel", QtGui.QMessageBox.NoRole)
+        ret, boxes_ticked, comment = message_box.exec_()
+        if message_box.clickedButton() == save:
+            status_links = []
+            timestamp = time.strftime(r'%Y-%m-%d-%H%M')
+            for ticked, id in zip(boxes_ticked, sections.keys()):
+                if ticked:
+                    # Currently keywords doesn't do anything - but put one in anyway in case it gets implemented later
+                    filename = dburt_folder + '\\' + id + '_' + timestamp + '.dburt'
+                    magnet_controllers[id].writeDBURT(filename, comment, 'magnet-table')
+                    status_links.append('<a href="{}">{}</a>'.format(filename, id))
+            plural = 's' if len(status_links) > 1 else ''
+            status_message = "Saved DBURT{}: {} with timestamp {}".format(plural, ', '.join(status_links), timestamp)
+            self.status_bar_message.setText(status_message)
 
+    def addToMRU(self, filename):
+        """Add a filename to the most recently used list in the File menu."""
+        self.settings.beginGroup('Recent')
+        self.settings.setValue(time.strftime(r'%Y%m%d%H%M%S'), filename)
+        # Remove the oldest item from the menu
+        keys = self.settings.childKeys()
+        if len(keys) > 9:
+            oldest_key = min([str(k) for k in keys])
+            self.settings.remove(oldest_key)
+        self.settings.endGroup()
+        self.updateMRUMenu()
+
+    def updateMRUMenu(self):
+        """Update the most recently used list in the File menu."""
+        self.settings.beginGroup('Recent')
+        self.mru_menu.clear()
+        keys = sorted(self.settings.childKeys())
+        for i, key in enumerate(keys):
+            full_name = self.settings.value(key)
+            path, filename = os.path.split(full_name)
+            self.createMenuItem('&{}: {}'.format(i, filename), self.mru_menu, event=functools.partial(self.mruEntryClicked, full_name),
+                                help_text=full_name)
+        self.settings.endGroup()
+
+    def mruEntryClicked(self, filename):
+        """An entry in the most recently used list has been clicked."""
+        if not os.path.isfile(filename):
+            QtGui.QMessageBox.information(self, 'Magnet Table', 'File "{}" not found.'.format(filename), icon=QtGui.QMessageBox.Warning)
+            return
+        # What kind of file?
+        main, ext = os.path.splitext(filename)
+        ext = ext.lower()
+        if ext == '.dburt':
+            self.applyDBURT(filename)
+        elif ext == '.lte':
+            self.loadLTEFile(filename)
+        else:
+            QtGui.QMessageBox.information(self, 'Magnet Table', 'File "{}" is not a DBURT or LTE file.'.format(filename), icon=QtGui.QMessageBox.Warning)
+
+    def linkClicked(self, url):
+        """A link was clicked in a label - maybe the status_bar_message or offline_info boxes.
+        Open an Explorer window with that file highlighted."""
+        os.system('explorer.exe /select,"{}"'.format(url))
 
     def logButtonClicked(self):
         """Show or hide the log."""
@@ -1055,6 +1229,9 @@ class Window(QtGui.QMainWindow):
 
 if __name__ == "__main__":
     app = QtGui.QApplication(sys.argv)
+    app.setStyle(QtGui.QStyleFactory.create('Plastique'))
+    # app.setStyleSheet('''*[linked="true"] {background-color: yellow;}
+    #                      *[waiting="true"] {color: gray;}''')
 
     # Create and display the splash screen
     splash_pix = pixmap('splash-screen')

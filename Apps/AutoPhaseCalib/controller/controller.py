@@ -5,7 +5,7 @@ import time
 import numpy as np
 import pyqtgraph as pg
 import threads
-# from epics import caget,caput
+import csv
 from  functools import partial
 sys.path.append("../../../")
 import Software.Widgets.loggerWidget.loggerWidget as lw
@@ -91,7 +91,7 @@ class Controller():
 		self.view.abortButton.clicked.connect(self.abortRunning)
 		self.view.finishButton.hide()
 		self.view.finishButton.clicked.connect(self.finishRunning)
-		self.view.actionSave_Calibation_Data.triggered.connect(self.model.saveData)
+		self.view.actionSave_Calibation_Data.triggered.connect(self.saveData)
 		self.view.turnOnGunButton.clicked.connect(self.model.turnOnGun)
 		self.view.setGunDipoleButton.clicked.connect(self.setDipoleCurrentForGun)
 		self.view.setLinac1DipoleButton.clicked.connect(self.setDipoleCurrentForLinac1)
@@ -159,3 +159,20 @@ class Controller():
 	def setLabel(self, string):
 		logger.info(string)
 		self.view.label_MODE.setText('Status: <font color="red">' + string + '</font>')
+
+	def saveData(self):
+		for cavity in ['Gun', 'Linac1']:
+			my_dict = {}
+			for name in ['approxPhaseData', 'approxChargeData', 'approxPhaseFit', 'approxChargeFit', 'approxChargeStd']:
+				my_dict[name] = self.model.crestingData[cavity][name]
+			with open(cavity+'_approx_CrestingData.csv', 'wb') as f:  # Just use 'w' mode in 3.x
+			    w = csv.DictWriter(f, my_dict.keys())
+			    w.writeheader()
+			    w.writerow(my_dict)
+			my_dict = {}
+			for name in ['finePhaseFit', 'fineBPMFit', 'finePhaseData', 'fineBPMData', 'fineBPMStd']:
+				my_dict[name] = self.model.crestingData[cavity][name]
+			with open(cavity+'_fine_CrestingData.csv', 'wb') as f:  # Just use 'w' mode in 3.x
+			    w = csv.DictWriter(f, my_dict.keys())
+			    w.writeheader()
+			    w.writerow(my_dict)
