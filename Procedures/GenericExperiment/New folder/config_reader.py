@@ -25,17 +25,17 @@
 import yaml
 from gen_ex_data import General_Experiment_Data
 from gen_ex_data import HWC_data
+from diagnositc_station.data_logger import Data_Logger
 from data_logger import Data_Logger
-
 
 class Config_Reader():
 	my_name = 'Config_Reader'
 	_config_filename = None
 	data = General_Experiment_Data()
-	logger  = Data_Logger()
 	def __init__(self, file_name=''):
+		self.logger = Data_Logger()
 		Config_Reader._config_filename = file_name
-
+		self.logger = Data_Logger()
 	def read_file(self,file_name=''):
 		"""read_file reads a generic experimental config file, yaml format etc...
 		   yes, two lines, that's all it takes ...
@@ -48,8 +48,8 @@ class Config_Reader():
 		try:
 			stream = file(Config_Reader._config_filename , 'r')
 		except:
-			Config_Reader.logger.message(['MAJOR ERROR Can not read config file =',
-			                             Config_Reader._config_filename])
+			self.logger.message(['MAJOR ERROR Can not read config file =',
+										 Config_Reader._config_filename],True)
 		else:
 			Config_Reader.data.raw_config_data = yaml.load(stream)
 			# some basic parsing
@@ -133,15 +133,15 @@ class Config_Reader():
 				if isinstance(r[item].get(d.MACHINE_AREA), basestring):
 					d.HWC_data_list.append(
 						HWC_data(type = d.controller_types.get(item),
-				                 mode = d.machine_mode,
+								 mode = d.machine_mode,
 								 area = d.machine_areas.get(r[item].get(d.MACHINE_AREA)))
 					)
 				elif isinstance(r[item].get(d.MACHINE_AREA), list):
 					for area in r[item].get(d.MACHINE_AREA):
 						d.HWC_data_list.append(
 							HWC_data(type=d.controller_types.get(item),
-							         mode=d.machine_mode,
-							         area=d.machine_areas.get(area))
+									 mode=d.machine_mode,
+									 area=d.machine_areas.get(area))
 						)
 			else:
 				Config_Reader.logger.message(['Not using a', item,'controller'], True)
@@ -149,8 +149,8 @@ class Config_Reader():
 		a = True
 		for item in d.HWC_data_list:
 			s = [d.controller_types_inv.get(item.type),
-			     d.machine_modes_inv.get(item.mode),
-			     d.machine_areas_inv.get(item.area)]
+				 d.machine_modes_inv.get(item.mode),
+				 d.machine_areas_inv.get(item.area)]
 			if None in item:
 				s.insert(0,'Error in HWC config:')
 				a = False

@@ -1,20 +1,37 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+'''
+/*
+//              This file is part of VELA-CLARA-Software.                             //
+//------------------------------------------------------------------------------------//
+//    VELA-CLARA-Controllers is free software: you can redistribute it and/or modify  //
+//    it under the terms of the GNU General Public License as published by            //
+//    the Free Software Foundation, either version 3 of the License, or               //
+//    (at your option) any later version.                                             //
+//    VELA-CLARA-Controllers is distributed in the hope that it will be useful,       //
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of                  //
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                   //
+//    GNU General Public License for more details.                                    //
+//                                                                                    //
+//    You should have received a copy of the GNU General Public License               //
+//    along with VELA-CLARA-Software.  If not, see <http://www.gnu.org/licenses/>.    //
+//
+//  Author:      DJS
+//  Last edit:   03-07-2018
+//  FileName:    controller.py
+//  Description: The controller for the virtual cathode operator application
+//
+//
+//
+//
+//*/
+'''
 from PyQt4 import QtCore
 from PyQt4 import QtGui
 from PyQt4 import Qt
-import webbrowser
-#import os
-import pyqtgraph as pg
-#import cv2
-from epics import caget
-#from epics import caput
-import numpy as np
-from decimal import *
-
-#import model.model as model
-#import controller.controller as controller
 import view.mainView as view
 import model.model as model
-
+import model.data as data
 
 
 class controller(object):
@@ -24,32 +41,63 @@ class controller(object):
         '''define model and view'''
         controller.model = model
         controller.view = view
-
+        #
+        # connect widgest to functions
         self.connect_widgets()
-        print('controller, starting timer')
+        #
+        # The app updates states, values and the gui via a timer
+        # to allow some time for start-up we have a counter
+        self.start_count = 0
         self.timer = QtCore.QTimer()
         self.timer.setSingleShot(False)
-        self.timer.timeout.connect(self.update_gui)
+        self.timer.timeout.connect(self.start_up_update)
         self.timer.start(100)
-
+        #
+        # show the gui
         self.view.show()
+        self.view.activateWindow()
 
-    def update_gui(self):
-        print('controller update_gui')
+        # a clipboad item fro copying paths to
+        self.cb = QtGui.QApplication.clipboard()
+        self.cb.clear(mode = self.cb.Clipboard)
+
+
+    def start_up_update(self):
+        # we give the app a few ticks to init the hardware controllers before updating the mainView
+        if self.start_count < 5:
+            self.start_count += 1
+        elif self.start_count == 5:
+            print 'self.start_count == 5'
+            controller.model.update_values()
+            self.view.start_up()
+            self.start_count += 1
+        else:
+            print 'self.start_count > 5'
+            self.timer.stop()
+            self.timer = QtCore.QTimer()
+            self.timer.setSingleShot(False)
+            self.timer.timeout.connect(self.update)
+            self.timer.start(100)
+
+
+    def update(self):
+        # we give the app a few ticks to init the hardware controllers before updating the mainView
         controller.model.update_values()
+        self.model.feedback(controller.view.feed_back_check.isChecked())
         controller.view.update_gui()
 
-    def handle_collectAndSave_pushButton(self):
-        print 'handle_collectAndSave_pushButton'
-
-    def handle_liveStream_pushButton(self):
-        print 'handle_liveStream_pushButton'
+    def handle_collect_and_save_pushButton(self):
+        controller.model.collect_and_save(controller.view.numImages_spinBox.value())
 
     def handle_setPosition_pushButton(self):
         print 'handle_setPosition_pushButton'
 
     def handle_setMask_pushButton(self):
-        print 'handle_setMask_pushButton'
+        controller.model.setMask( x = controller.view.maskX_spinBox.value(),
+                                  y = controller.view.maskY_spinBox.value(),
+                                  xRad = controller.view.maskXRadius_spinBox.value(),
+                                  yRad = controller.view.maskYRadius_spinBox.value()
+                                  )
 
     def handle_setIntensity_pushButton(self):
         print 'handle_setIntensity_pushButton'
@@ -61,53 +109,45 @@ class controller(object):
         print 'handle_save_pushButton'
 
     def handle_resetMeanSD_pushButton(self):
-        controller.model.resetRunningValues()
+        controller.model.reset_running_values()
 
     def handle_analyse_pushButton(self):
         print 'handle_analyse_pushButton'
+        controller.model.analyse()
 
-    def handle_resetBackground_pushButton(self):
-        print 'handle_resetBackground_pushButton'
+    def handle_reset_background_pushButton(self):
+        controller.model.set_background()
+        print 'handle_reset_background_pushButton'
 
-    def handle_useBackground_checkBox(self):
+    def handle_useBackground_pushButton(self):
+        controller.model.use_background()
         print 'handle_useBackground_checkBox'
 
-    def handle_useNPoint_checkBox(self):
-        if controller.view.useNPoint_checkBox.isChecked():
-            controller.model.useNPoint(True)
-        else:
-            controller.model.useNPoint(False)
-        print 'handle_useNPoint_checkBox'
+    def handle_use_npoint_pushButton(self):
+        controller.model.use_npoint()
+        print 'handle_use_npoint_checkBox'
 
     def handle_acquire_pushButton(self):
-        controller.model.analyse()
+        controller.model.acquire()
         print 'handle_acquire_pushButton'
 
     def handle_numImages_spinBox(self):
-
         print 'handle_numImages_spinBox'
 
     def handle_stepSize_spinBox(self):
         controller.model.setStepSize(controller.view.stepSize_spinBox.value())
         print 'handle_stepSize_spinBox'
 
+    def handle_autoLevel_pushButton(self):
+        controller.view.autoSetLevel()
+        print 'handle_stepSize_spinBox'
 
-
-
-
-    def handle_maskX_spinBox(self):
-        print 'handle_maskX_spinBox'
-
-    def handle_maskY_spinBox(self):
-        print 'handle_maskY_spinBox'
-
-    def handle_maskXRadius_spinBox(self):
-        print 'handle_maskXRadius_spinBox'
-
-    def handle_maskYRadius_spinBox(self):
-        print 'handle_maskYRadius_spinBox'
+    def handle_setLevel_pushButton(self):
+        controller.view.setLevel()
+        print 'handle_stepSize_spinBox'
 
     def handle_feed_back_check(self):
+        controller.view.feed_back_check.isChecked()
         print 'handle_feed_back_check'
 
     def handle_spinBox_minLevel(self):
@@ -120,386 +160,96 @@ class controller(object):
         controller.model.toggle_shutter()
         print 'handle_opencloseShut_pushButton'
 
+    def handle_hwp_up_pushButton(self):
+        controller.model.set_delta_hwp(controller.view.hwp_set_spinBox.value())
+
+    def handle_hwp_down_pushButton(self):
+        controller.model.set_delta_hwp(-controller.view.hwp_set_spinBox.value())
+
+    def handle_move_H_left_pushButton(self):
+        controller.model.move_H_mirror(controller.view.mirror_h_step_set_spinBox.value())
+
+    def handle_move_H_right_pushButton(self):
+        controller.model.move_H_mirror(-controller.view.mirror_h_step_set_spinBox.value())
+
+    def handle_move_V_down_pushButton(self):
+        controller.model.move_V_mirror(-controller.view.mirror_v_step_set_spinBox.value())
+
+    def handle_move_V_up_pushButton(self):
+        controller.model.move_V_mirror(controller.view.mirror_v_step_set_spinBox.value())
+
+    def handle_open_path_push_button(self):
+        f = '\\\\claraserv3'
+        if controller.model.data.values[data.last_save_dir] == 'UNKNOWN':
+            f.join('\\CameraImages\\')
+        else:
+            f = f + controller.model.data.values[data.last_save_path]
+        QtGui.QFileDialog.getOpenFileNames(self.view.centralwidget, 'Images', f)
+
+    def handle_copy_path_pushButton(self):
+        if controller.model.data.values.get(data.last_save_path) != 'UNKNOWN':#
+            # MAGIC_STRING
+            s = controller.model.data.values.get(data.image_save_dir_root)+ \
+                controller.model.data.values.get(data.last_save_dir)
+            self.cb.setText(s, mode = self.cb.Clipboard)
+
+    def handle_center_mask_pushButton(self):
+        controller.model.center_mask()
+
+
+        def handle_setMask_pushButton(self):
+            controller.model.setMask(x=controller.view.maskX_spinBox.value(),
+                                     y=controller.view.maskY_spinBox.value(),
+                                     xRad=controller.view.maskXRadius_spinBox.value(),
+                                     yRad=controller.view.maskYRadius_spinBox.value()
+                                     )
+
+
 
     def connect_widgets(self):
         print('connect_widgets')
-        controller.view.collectAndSave_pushButton.clicked.connect(self.handle_collectAndSave_pushButton)
-        controller.view.liveStream_pushButton.clicked.connect(self.handle_liveStream_pushButton)
+        controller.view.copy_path_pushButton.clicked.connect(self.handle_copy_path_pushButton)
+        controller.view.open_path_push_button.clicked.connect(self.handle_open_path_push_button)
+        controller.view.collectAndSave_pushButton.clicked.connect(self.handle_collect_and_save_pushButton)
         controller.view.setPosition_pushButton.clicked.connect(self.handle_setPosition_pushButton)
         controller.view.setInt_pushButton.clicked.connect(
                 self.handle_setIntensity_pushButton)
-        controller.view.setMask_pushButton_2.clicked.connect(self.handle_setMask_pushButton)
         controller.view.setMask_pushButton.clicked.connect(self.handle_setMask_pushButton)
         controller.view.load_pushButton.clicked.connect(self.handle_load_pushButton)
         controller.view.save_pushButton.clicked.connect(self.handle_save_pushButton)
-        controller.view.save_pushButton_2.clicked.connect(self.handle_save_pushButton)
         controller.view.resetMeanSD_pushButton.clicked.connect(self.handle_resetMeanSD_pushButton)
         controller.view.analyse_pushButton.clicked.connect(self.handle_analyse_pushButton)
-        controller.view.resetBackground_pushButton.clicked.connect(self.handle_resetBackground_pushButton)
-        controller.view.useBackground_checkBox.released.connect(self.handle_useBackground_checkBox)
+        controller.view.analyse_pushButton_2.clicked.connect(self.handle_analyse_pushButton)
+        controller.view.resetBackground_pushButton.clicked.connect(self.handle_reset_background_pushButton)
         controller.view.feed_back_check.released.connect(self.handle_feed_back_check)
-        controller.view.useNPoint_checkBox.released.connect(self.handle_useNPoint_checkBox)
         controller.view.acquire_pushButton.clicked.connect(self.handle_acquire_pushButton)
         controller.view.numImages_spinBox.valueChanged.connect(self.handle_numImages_spinBox)
         controller.view.stepSize_spinBox.valueChanged.connect(self.handle_stepSize_spinBox)
-        controller.view.maskX_spinBox.valueChanged.connect(self.handle_maskX_spinBox)
-        controller.view.maskY_spinBox.valueChanged.connect(self.handle_maskY_spinBox)
-        controller.view.maskXRadius_spinBox.valueChanged.connect(self.handle_maskXRadius_spinBox)
-        controller.view.maskYRadius_spinBox.valueChanged.connect(self.handle_maskYRadius_spinBox)
         controller.view.spinBox_minLevel.valueChanged.connect(self.handle_spinBox_minLevel)
         controller.view.spinBox_maxLevel.valueChanged.connect(self.handle_spinBox_maxLevel)
         controller.view.opencloseShut_pushButton.clicked.connect(self.handle_opencloseShut_pushButton)
+        controller.view.hwp_down_pushButton.clicked.connect(self.handle_hwp_down_pushButton)
+        controller.view.hwp_up_pushButton.clicked.connect(self.handle_hwp_up_pushButton)
+        controller.view.move_H_left_pushButton.clicked.connect(self.handle_move_H_left_pushButton)
+        controller.view.move_H_right_pushButton.clicked.connect(
+                self.handle_move_H_right_pushButton)
+        controller.view.move_V_up_pushButton.clicked.connect(self.handle_move_V_up_pushButton)
+        controller.view.move_V_down_pushButton.clicked.connect(
+                self.handle_move_V_down_pushButton)
 
-    # stepSize_spinBox
-    # maskX_spinBox
-    # maskY_spinBox
-    # maskXRadius_spinBox
-    # maskYRadius_spinBox
 
-    # acquire_pushButton
-    # numImages_spinBox
+        controller.view.useNPoint_pushButton.clicked.connect(self.handle_use_npoint_pushButton)
+        controller.view.useBackground_pushButton.clicked.connect(
+                self.handle_useBackground_pushButton)
 
-    # resetMeanSD_pushButton
-    # analyse_pushButton
-    # resetBackground_pushButton
-    # useBackground_checkBox
-    # useNPoint_checkBox
+        controller.view.autoLevel_pushButton.clicked.connect(
+                self.handle_autoLevel_pushButton)
 
-    # last_filename
-    # liveStream_pushButton
-    # spinBox_maxLevel
-    # spinBox_minLevel
-    # maskX_spinBox_5
-    # maskX_spinBox_4
-    # int_read_2
-    # int_spinBox_2
-    # setPosition_pushButton
-    # setInt_pushButton
-    # setMask_pushButton_2
-    # load_pushButton
-    # save_pushButton_2
-    # sum_val
-    # sum_mean
-    # sum_sd
-    # x_val
-    # x_mean
-    # x_sd
-    # y_val
-    # y_mean
-    # y_sd
-    # sx_val
-    # sx_mean
-    # sx_sd
-    # sy_val
-    # sy_mean
-    # sy_sd
-    # cov_val
-    # cov_mean
-    # cov_sd
-    # resetMeanSD_pushButton
-    # analyse_pushButton
-    # resetBackground_pushButton
-    # useBackground_checkBox
-    # useNPoint_checkBox
-    # stepSize_spinBox
-    # mask_x_read
-    # maskX_spinBox
-    # mask_y_read
-    # maskY_spinBox
-    # mas_y_rad
-    # maskXRadius_spinBox
-    # mask_y_rad
-    # maskYRadius_spinBox
-    # feed_back_check
-    # setMask_pushButton
-    # acquire_pushButton
-    # numImages_spinBox
-    # save_pushButton
-    # getImages_pushButton
-    # menubar
-    # statusbar
-    # liveStream_pushButton
-    # spinBox_minLevel
-    # spinBox_maxLevel
-    # analyse_pushButton
-    # resetBackground_pushButton
-    # useBackground_checkBox
-    # useNPoint_checkBox
-    # stepSize_spinBox
-    # maskX_spinBox
-    # maskY_spinBox
-    # maskXRadius_spinBox
-    # maskYRadius_spinBox
-
-    # def __init__(self, view, model):
-    #     '''define model and view'''
+        controller.view.center_mask_pushButton.clicked.connect(
+                self.handle_center_mask_pushButton)
 
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-#    def connectMainView(self):
-        # collectAndSave_pushButton
-        # liveStream_pushButton
-        # spinBox_maxLevel
-        # spinBox_minLevel
-        # maskX_spinBox_5
-        # maskX_spinBox_4
-        # int_read_2
-        # int_spinBox_2
-        # setPosition_pushButton
-        # setInt_pushButton
-        # setMask_pushButton_2
-        # load_pushButton
-        # save_pushButton_2
-        # sum_val
-        # sum_mean
-        # sum_sd
-        # x_val
-        # x_mean
-        # x_sd
-        # y_val
-        # y_mean
-        # y_sd
-        # sx_val
-        # sx_mean
-        # sx_sd
-        # sy_val
-        # sy_mean
-        # sy_sd
-        # cov_val
-        # cov_mean
-        # cov_sd
-        # resetMeanSD_pushButton
-        # analyse_pushButton
-        # resetBackground_pushButton
-        # useBackground_checkBox
-        # useNPoint_checkBox
-        # stepSize_spinBox
-        # mask_x_read
-        # maskX_spinBox
-        # mask_y_read
-        # maskY_spinBox
-        # mas_y_rad
-        # maskXRadius_spinBox
-        # mask_y_rad
-        # maskYRadius_spinBox
-        # feed_back_check
-        # setMask_pushButton
-        # acquire_pushButton
-        # numImages_spinBox
-        # save_pushButton
-        # getImages_pushButton
-        # menubar
-        # statusbar
-        # liveStream_pushButton
-        # spinBox_minLevel
-        # spinBox_maxLevel
-        # analyse_pushButton
-        # resetBackground_pushButton
-        # useBackground_checkBox
-        # useNPoint_checkBox
-        # stepSize_spinBox
-        # maskX_spinBox
-        # maskY_spinBox
-        # maskXRadius_spinBox
-        # maskYRadius_spinBox
-
-
-
-
-
-
-
-
-
-
-    #
-    #
-    #
-    #     monitor = pg.GraphicsView()
-    #     layout = pg.GraphicsLayout(border=(100, 100, 100))
-    #     monitor.setCentralItem(layout)
-    #     self.view = view
-    #     self.model = model
-    #     self.runFeedback = False
-    #     self.counter=0
-    #     self.counter=0
-    #     self.view.acquire_pushButton.clicked.connect(self.model.acquire)
-    #     self.view.cameraName_comboBox.currentIndexChanged.connect(self.changeCamera)
-    #     self.view.save_pushButton.clicked.connect(lambda: self.model.collectAndSave(self.view.numImages_spinBox.value()))
-    #     self.view.liveStream_pushButton.clicked.connect(lambda: webbrowser.open(self.model.selectedCameraDAQ[0].streamingIPAddress))
-    #     self.view.setMask_pushButton.clicked.connect(lambda: self.model.setMask(self.view.maskX_spinBox.value(),
-    #                                                                             self.view.maskY_spinBox.value(),
-    #                                                                             self.view.maskXRadius_spinBox.value(),
-    #                                                                             self.view.maskYRadius_spinBox.value()))
-    #     self.view.getImages_pushButton.clicked.connect(self.openImageDir)
-    #     self.view.analyse_pushButton.clicked.connect(self.model.analyse)
-    #     self.view.resetBackground_pushButton.clicked.connect(self.model.setBkgrnd)
-    #     self.cameraNames = self.model.camerasDAQ.getCameraNames()
-    #     self.view.cameraName_comboBox.addItems(self.cameraNames)
-    #     self.view.useBackground_checkBox.stateChanged.connect(self.setUseBkgrnd)
-    #     self.view.checkBox.stateChanged.connect(lambda: self.toggleFeedBack(self.view.checkBox.isChecked()))
-    #
-    #     self.view.maskX_spinBox.valueChanged.connect(self.changeEllipse)
-    #     self.view.maskY_spinBox.valueChanged.connect(self.changeEllipse)
-    #     self.view.maskXRadius_spinBox.valueChanged.connect(self.changeEllipse)
-    #     self.view.maskYRadius_spinBox.valueChanged.connect(self.changeEllipse)
-    #
-    #     self.view.stepSize_spinBox.valueChanged.connect(lambda: self.model.setStepSize(self.view.stepSize_spinBox.value()))
-    #
-    #     '''Update GUI'''
-    #     print 'starting GUI update'
-    #     self.timer = QtCore.QTimer()
-    #     self.timer.timeout.connect(self.update)
-    #     self.timer.start(100)
-    #
-    #     #self.ImageBox = layout.addViewBox(lockAspect=True, colspan=2)
-    #     self.Image = pg.ImageItem(np.random.normal(size=(1280, 1080)))
-    #     self.Image.scale(2,2)
-    #     self.ImageBox= layout.addPlot(lockAspect=True)
-    #     self.view.gridLayout.addWidget(monitor, 0, 2, 23, 3)
-    #     STEPS = np.linspace(0, 1, 4)
-    #     CLRS = ['k', 'r', 'y', 'w']
-    #     a = np.array([pg.colorTuple(pg.Color(c)) for c in CLRS])
-    #     clrmp = pg.ColorMap(STEPS, a)
-    #     lut = clrmp.getLookupTable()
-    #     self.Image.setLookupTable(lut)
-    #     self.ImageBox.setRange(xRange=[0,2560],yRange=[0,2160])
-    #     self.ImageBox.addItem(self.Image)
-    #     self.roi = pg.EllipseROI([0, 0], [500, 500], movable=False)
-    #     self.ImageBox.addItem(self.roi)
-    #     self.vLineMLE = self.ImageBox.plot(x=[1000,1000],y=[900,1100],pen='g')
-    #     self.hLineMLE = self.ImageBox.plot(x=[900,1100],y=[1000,1000],pen='g')
-    #     #self.ImageBox.removeItem(self.vLineMLE)
-    #     #self.ImageBox.removeItem(self.hLineMLE)
-    #     # self.ImageView.autoLevels()
-    #
-    # def changeCamera(self):
-    #     print 'changeCamera called'
-    #     comboBox = self.view.cameraName_comboBox
-    #     self.model.camerasDAQ.setCamera(str(comboBox.currentText()))
-    #     self.model.camerasIA.setCamera(str(comboBox.currentText()))
-    #
-    #
-    #     self.view.numImages_spinBox.setMaximum(self.model.selectedCameraDAQ[0].DAQ.maxShots)
-    #     if self.model.selectedCameraIA[0].IA.useBkgrnd is True:
-    #         self.view.useBackground_checkBox.setChecked(True)
-    #     else:
-    #         self.view.useBackground_checkBox.setChecked(False)
-    #     if self.model.selectedCameraIA[0].IA.useNPoint is True:
-    #         self.view.useNPoint_checkBox.setChecked(True)
-    #     else:
-    #         self.view.useNPoint_checkBox.setChecked(False)
-    #
-    #     print ('maskX = ', self.model.selectedCameraIA[0].IA.maskX)
-    #     print ('maskY = ', self.model.selectedCameraIA[0].IA.maskY)
-    #     print ('maskXRad = ', self.model.selectedCameraIA[0].IA.maskXRad)
-    #     print ('maskYRad = ', self.model.selectedCameraIA[0].IA.maskYRad)
-    #
-    #
-    #     self.view.maskX_spinBox.setValue(self.model.selectedCameraIA[0].IA.maskX)
-    #     self.view.maskY_spinBox.setValue(self.model.selectedCameraIA[0].IA.maskY)
-    #     self.view.maskXRadius_spinBox.setValue(self.model.selectedCameraIA[0].IA.maskXRad)
-    #     self.view.maskYRadius_spinBox.setValue(self.model.selectedCameraIA[0].IA.maskYRad)
-    #     self.changeEllipse()
-    #
-    #     print 'Set camera to ', str(comboBox.currentText())
-    #
-    #
-    # def openImageDir(self):
-    #     QtGui.QFileDialog.getOpenFileNames(self.view.centralwidget, 'Images',
-    #                                       '\\\\claraserv3\\CameraImages\\')
-    #
-    # def setUseBkgrnd(self):
-    #     if self.view.useBackground_checkBox.isChecked() == True:
-    #         self.model.useBkgrnd(True)
-    #     else:
-    #         self.model.useBkgrnd(False)
-    #
-    # def changeEllipse(self):
-    #     x = self.view.maskX_spinBox.value()-self.view.maskXRadius_spinBox.value()
-    #     y = self.view.maskY_spinBox.value()-self.view.maskYRadius_spinBox.value()
-    #     xRad = 2*self.view.maskXRadius_spinBox.value()
-    #     yRad = 2*self.view.maskYRadius_spinBox.value()
-    #     point = QtCore.QPoint(x,y)
-    #     self.roi.setPos(point)
-    #     pointRad = QtCore.QPoint(xRad,yRad)
-    #     self.roi.setSize(pointRad)
-    #
-    # def toggleFeedBack(self,use):
-    #     print(use)
-    #     self.runFeedback = use
-    #
-    # def update(self):
-    #     #print(self.model.selectedCameraIA[0].IA.x)
-    #     name = self.model.selectedCameraDAQ[0].name
-    #     if self.model.camerasDAQ.isAcquiring(name):
-    #         self.view.acquire_pushButton.setText('Stop Acquiring')
-    #         self.view.acquire_pushButton.setStyleSheet("background-color: green")
-    #         self.view.save_pushButton.setEnabled(True)
-    #         # Set crosshairs
-    #         x = self.model.selectedCameraIA[0].IA.xPix
-    #         y = self.model.selectedCameraIA[0].IA.yPix
-    #         sigX = self.model.selectedCameraIA[0].IA.xSigmaPix
-    #         sigY = self.model.selectedCameraIA[0].IA.ySigmaPix
-    #         v1 = (y - sigY)
-    #         v2 = (y + sigY)
-    #         h1 = (x - sigX)
-    #         h2 = (x + sigX)
-    #         self.vLineMLE.setData(x=[x, x], y=[v1, v2])
-    #         self.hLineMLE.setData(x=[h1, h2], y=[y, y])
-    #         #labels
-    #         self.view.apI_label.setText(str(round(self.model.selectedCameraIA[0].IA.averagePixelIntensity,3)))
-    #         self.view.xMM_label.setText(str(round(self.model.selectedCameraIA[0].IA.x,3)))
-    #         self.view.yMM_label.setText(str(round(self.model.selectedCameraIA[0].IA.y,3)))
-    #         self.view.sxMM_label.setText(str(round(self.model.selectedCameraIA[0].IA.sigmaX,3)))
-    #         self.view.syMM_label.setText(str(round(self.model.selectedCameraIA[0].IA.sigmaY,3)))
-    #         self.view.covXY_label.setText(str(round(self.model.selectedCameraIA[0].IA.covXY,3)))
-    #         data = caget(self.model.selectedCameraDAQ[0].pvRoot + 'CAM2:ArrayData')
-    #         if data is not None:
-    #             if len(data) == 1080*1280:
-    #                 if name == "VC":
-    #                     npData = np.array(data).reshape((1080, 1280))
-    #                 else:
-    #                     npData = np.array(data).reshape((1280, 1080))
-    #                 self.Image.setImage(np.flip(np.transpose(npData), 1))
-    #                 self.Image.setLevels([self.view.spinBox_minLevel.value(),
-    #                                       self.view.spinBox_maxLevel.value()], update=True)
-    #     else:
-    #         self.view.acquire_pushButton.setText('Start Acquiring')
-    #         self.view.acquire_pushButton.setStyleSheet("background-color: red")
-    #         self.view.save_pushButton.setEnabled(False)
-    #
-    #     if self.model.selectedCameraDAQ[0].DAQ.captureState == self.model.cap.CAPTURING:
-    #         self.view.save_pushButton.setText('Kill')
-    #     elif self.model.selectedCameraDAQ[0].DAQ.writeState == self.model.wr.WRITING:
-    #         self.view.save_pushButton.setText('Writing to Disk..')
-    #     else:
-    #         self.view.save_pushButton.setText('Collect and Save')
-    #
-    #     if self.model.selectedCameraIA[0].IA.analysisState == True:
-    #         self.view.analyse_pushButton.setText('Analysing...')
-    #     else:
-    #         self.view.analyse_pushButton.setText('Analyse')
-    #
-    #     #This should be activated by a button
-    #     self.counter += 1
-    #     if self.counter == 10:
-    #         self.counter = 0
-    #         self.model.feedback(self.runFeedback)
-    #         if self.runFeedback is True:
-    #             self.view.maskX_spinBox.setValue(self.model.selectedCameraIA[0].IA.maskX)
-    #             self.view.maskY_spinBox.setValue(self.model.selectedCameraIA[0].IA.maskY)
-    #             self.view.maskXRadius_spinBox.setValue(self.model.selectedCameraIA[0].IA.maskXRad)
-    #             self.view.maskYRadius_spinBox.setValue(self.model.selectedCameraIA[0].IA.maskYRad)

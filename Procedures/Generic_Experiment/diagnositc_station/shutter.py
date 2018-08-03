@@ -30,11 +30,11 @@ import time
 
 class shutter(hardware_base):
 	_my_name = 'shutter'
-	init = shut.init()
-	init.setQuiet()
+	# init = shut.init()
+	# init.setQuiet()
 	#init.setVerbose()
 	#controller = None
-
+	init = None
 	def __init__(self,mode=MACHINE_MODE.PHYSICAL,area=MACHINE_AREA.CLARA_PH1):
 		hardware_base.__init__(self,mode=mode,area=area)
 		self._my_name = shutter._my_name
