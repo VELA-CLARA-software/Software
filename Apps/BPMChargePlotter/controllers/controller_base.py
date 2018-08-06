@@ -6,7 +6,7 @@ import datetime
 import data.bpm_charge_plotter_data_base as dat
 from data_monitors.data_monitoring import data_monitoring
 from base.base import base
-
+import operator
 
 class controller_base(base):
 	# whoami
@@ -84,7 +84,10 @@ class controller_base(base):
 			base.config.bpm_config['BPM_NAMES'] = self.get_bpm_names()
 			base.data.values[dat.machine_mode] = 'virtual'
 			base.data.values[dat.num_bpms] = len(base.config.bpm_config['BPM_NAMES'])
-			base.data.values[dat.bpm_names] = base.config.bpm_config['BPM_NAMES']
+			for i in base.config.bpm_config['BPM_NAMES']:
+				self.obj = base.bpm_control.getBPMDataObject(i)
+				base.data.values[dat.bpm_positions][i] = self.obj.position
+			base.data.values[dat.bpm_names] = [i[0] for i in sorted(base.data.values[dat.bpm_positions].items(), key=operator.itemgetter(1))]
 			controller_base.bpm_handler = bpm_handler.bpm_handler()
 		else:
 			base.logger.message('start_bpm_control UNKNOWN_MACHINE area cannot create bpm object', True)
