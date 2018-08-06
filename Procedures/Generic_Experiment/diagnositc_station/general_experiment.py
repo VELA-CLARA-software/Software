@@ -1,55 +1,75 @@
 from screen import screen
 from magnet import magnet
 from shutter import shutter
-from camdaq import camdaq
+from camera import camera
+from data_logger import Data_Logger
 import gen_ex_config
 import time
 
 class general_experiment(object):
     screen_obj  = None
-    camdaq_obj  = None
+    camera_obj  = None
     shutter_obj = None
     magnet_obj  = None
 
     screen_working = False
     magnet_working = False
-    camdaq_working = False
+    camera_working = False
     shutter_working = False
 
     should_check_screen_working = True
     should_check_magnet_working = True
-    should_check_camdaq_working = True
+    should_check_camera_working = True
     should_check_shutter_working = True
 
-    def __init__(self,filename=''):
-        a = 1
-        self.config = gen_ex_config.gen_ex_config(filename)
+    def __init__(self,config_file='',log_dir=''):
+        '''
+        set the log_file in the data logger
+        :param config_file:
+        :param log_file:
+        '''
+        self.logger = Data_Logger()
+        self.logger.start_log(log_dir,log_file='log.txt')
+        '''
+            Read the config file
+            :param filename:
+        '''
+        self.config = gen_ex_config.gen_ex_config(config_file)
         if  self.config.screen_data:
-            general_experiment.screen_obj = screen(mode=self.config.screen_type['mode'],
-                                                   area=self.config.screen_type['area'])
+            self.logger.message('Creating screen controller object',True)
+            general_experiment.screen_obj = \
+                screen(mode = self.config.screen_data[gen_ex_config.machine_mode],
+                       area = self.config.screen_data[gen_ex_config.machine_area])
+            self.logger.message('SUCCESS Creating screen controller object',True)
+
         else:
             general_experiment.should_check_screen_working = False
 
         if  self.config.magnet_data:
-            general_experiment.magnet_obj = magnet(mode=self.config.magnet_type['mode'],
-                                                   area=self.config.magnet_type['area'])
+            self.logger.message('Creating magnet controller object',True)
+            general_experiment.magnet_obj = \
+                magnet(mode = self.config.magnet_data[gen_ex_config.machine_mode],
+                       area = self.config.magnet_data[gen_ex_config.machine_area])
+            self.logger.message('SUCCESS Creating magnet controller object',True)
         else:
             general_experiment.should_check_magnet_working = False
 
         if  self.config.shutter_data is not None:
-            general_experiment.shutter_obj = shutter(mode=self.config.shutter_type['mode'],
-                                                     area=self.config.shutter_type['area'])
+            general_experiment.shutter_obj = \
+                shutter(mode = self.config.shutter_data[gen_ex_config.machine_mode],
+                        area = self.config.shutter_data[gen_ex_config.machine_area])
         else:
             general_experiment.should_check_shutter_working = False
 
-        if  self.config.camdaq_data is not None:
-            general_experiment.camdaq_obj = camdaq(mode=self.config.camdaq_type['mode'],
-                                                   area=self.config.camdaq_type['area'])
+        if  self.config.camera_data is not None:
+            general_experiment.camera_obj = \
+                camera(mode = self.config.camera_data[gen_ex_config.machine_mode],
+                       area = self.config.camera_data[gen_ex_config.machine_area])
         else:
-            general_experiment.should_check_camdaq_working = False
+            general_experiment.should_check_camera_working = False
 
-        self.run_exp()
 
+        #self.run_exp()
 
     def run_exp(self):
         print('applying settings')
@@ -80,13 +100,13 @@ class general_experiment(object):
                 else:
                     general_experiment.should_check_magnet_working = False
 
-        if general_experiment.should_check_camdaq_working:
-            if self.config.camdaq_data:
-                general_experiment.camdaq_working = general_experiment.camdaq_obj.is_busy()
-                if general_experiment.camdaq_working:
-                    print('Waiting for camdaq')
+        if general_experiment.should_check_camera_working:
+            if self.config.camera_data:
+                general_experiment.camera_working = general_experiment.camera_obj.is_busy()
+                if general_experiment.camera_working:
+                    print('Waiting for camera')
                 else:
-                    general_experiment.should_check_camdaq_working = False
+                    general_experiment.should_check_camera_working = False
 
         if general_experiment.should_check_shutter_working:
             if self.config.shutter_data:
@@ -98,7 +118,7 @@ class general_experiment(object):
 
         if general_experiment.screen_working:
             return True
-        if general_experiment.camdaq_working:
+        if general_experiment.camera_working:
             return True
         if general_experiment.magnet_working:
             return True
@@ -111,8 +131,8 @@ class general_experiment(object):
             general_experiment.screen_obj.next_step(num)
         if self.config.magnet_data:
             general_experiment.magnet_obj.next_step(num)
-        if self.config.camdaq_data:
-            general_experiment.camdaq_obj.next_step(num)
+        if self.config.camera_data:
+            general_experiment.camera_obj.next_step(num)
         if self.config.shutter_data:
             general_experiment.shutter_obj.next_step(num)
 

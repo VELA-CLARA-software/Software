@@ -37,7 +37,11 @@ class screen(hardware_base):
 		hardware_base.__init__(self,mode=mode,area=area)
 		self._my_name = screen._my_name
 		self.init_screen()
-		self.get_controller_mode_and_area(self.init.getScreenController)
+		print 'get_controller_mode_and_area'
+
+		self.get_controller_mode_and_area(screen.init.getScreenController)
+		print 'get names'
+
 		self.get_names(self.controller.getScreenNames)
 		print(screen._my_name + ' has controller, testing procedure')
 		self.test_procedure()
@@ -48,16 +52,19 @@ class screen(hardware_base):
 
 
 	def init_screen(self):
+		print 'screen init'
 		screen.init = scr.init()
 		screen.init.setQuiet()
 		#screen.init.setVerbose()
+		print 'screen init fin'
+
 
 	def test_procedure(self):
-		'assumes [names,state] for each iteration'
-		if self.parse_procedure(self.config.screen_data):
-			self.test_names_are_good()
-			self.test_values_are_good(type(scr.SCREEN_STATE.SCREEN_IN))
-		self.procedure_good = self.names_good & self.values_good
+			'assumes [names,state] for each iteration'
+			if self.parse_procedure(self.config.screen_data):
+				self.test_names_are_good()
+				self.test_values_are_good(type(scr.SCREEN_STATE.SCREEN_IN))
+			self.procedure_good = self.names_good & self.values_good
 
 	'''apply the next iteration'''
 	def next_step(self,num):

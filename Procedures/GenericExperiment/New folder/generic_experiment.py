@@ -1,5 +1,5 @@
 from config_reader import Config_Reader
-from data_logger import Data_Logger
+from diagnositc_station.data_logger import Data_Logger
 
 
 

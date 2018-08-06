@@ -50,6 +50,7 @@ class magnet(hardware_base):
         # print(magnet._my_name + ' has controller')
 
     def init_magnet(self):
+        print('sssssSSSSSSSSSSSSSSSSSSSSSS')
         magnet.init = mag.init()
         magnet.init.setQuiet()
         # magnet.init.setVerbose()

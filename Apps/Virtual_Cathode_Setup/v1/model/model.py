@@ -1,16 +1,31 @@
-import sys,os
-sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Stage')
-os.environ['PATH']=os.environ['PATH']+';\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\stage\\root_v5.34.34\\bin\\'
-#import VELA_CLARA_Camera_DAQ_Control as daq
-import os
-from epics import caget, caput
-#os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
-#os.environ["EPICS_CA_ADDR_LIST"] = "192.168.83.255"
-#import enum_ext
-
-#import members_as_pyobjects_test
-import VELA_CLARA_Camera_DAQ_Control as daq
-import VELA_CLARA_Camera_IA_Control as ia
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+'''
+/*
+//              This file is part of VELA-CLARA-Software.                             //
+//------------------------------------------------------------------------------------//
+//    VELA-CLARA-Controllers is free software: you can redistribute it and/or modify  //
+//    it under the terms of the GNU General Public License as published by            //
+//    the Free Software Foundation, either version 3 of the License, or               //
+//    (at your option) any later version.                                             //
+//    VELA-CLARA-Controllers is distributed in the hope that it will be useful,       //
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of                  //
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                   //
+//    GNU General Public License for more details.                                    //
+//                                                                                    //
+//    You should have received a copy of the GNU General Public License               //
+//    along with VELA-CLARA-Software.  If not, see <http://www.gnu.org/licenses/>.    //
+//
+//  Author:      DJS
+//  Last edit:   03-07-2018
+//  FileName:    model.py
+//  Description: The model for the virtual cathode operator application
+//
+//
+//
+//
+//*/
+'''
 import VELA_CLARA_PILaser_Control as pil
 import VELA_CLARA_Shutter_Control as shut
 import numpy as np
@@ -18,75 +33,144 @@ import data
 
 
 class model():
-    # initDAQ = daq.init()
-    initIA = ia.init()
-    initpil = pil.init()
-    # initDAQ.setVerbose()
-    initIA.setVerbose()
-    initpil.setVerbose()
-    pil = initpil.physical_PILaser_Controller()
+    init = pil.init()
+    #init.setVerbose()
+    pil = init.physical_PILaser_Controller()
 
-    cam_ia = initIA.physical_CLARA_Camera_IA_Controller()
-
+    # holds a copy of the data dictionary
     data = data.data()
 
     initShut = shut.init()
     shutter = initShut.physical_PIL_Shutter_Controller()
 
     def __init__(self):
-        # self.comment = 'Hello World!!    and the Llamas in the Universe :)'
-        # self.cap = daq.CAPTURE_STATE
-        # self.wr = daq.WRITE_STATE
-        # self.camerasDAQ = self.initDAQ.physical_CLARA_Camera_DAQ_Controller()
-        # self.camerasIA = self.initIA.physical_CLARA_Camera_IA_Controller()
-        # self.selectedCameraDAQ = [self.camerasDAQ.getSelectedDAQRef()]
-        # self.selectedCameraIA = [self.camerasIA.getSelectedIARef()]
-        print("model Initialized")
+        '''
+            Get some object references. These are used to update values in data dict
+            I normally hold these in a list, (maybe one day try holding them in a dictionary
+            to see if that the code clearer?)
+        '''
+        self.shutter  = [model.shutter.getShutterObjConstRef('SHUT01')]#MAGIC_STRING
+        self.mirror   = [model.pil.getpilMirrorObjConstRef()]
+        self.vc_data  = [model.pil.getVCDataObjConstRef()]
+        self.vc_daq   = [model.pil.getClaraDAQObj_VC()]
+        self.pil_obj  = [model.pil.getPILObjConstRef()]
+        self.vc_cam   = [model.pil.getCameraObj_VC()]
+        self.vc_image = [model.pil.getImageObj_VC()]
+        self.vc_state = [model.pil.getStateObj_VC()]
+        self.vc_mask  = [model.pil.getMaskObj_VC()]
+        '''
+            Some constants
+        '''
+        model.data.values[data.y_pix_scale_factor] = self.vc_image[0].y_pix_scale_factor
+        model.data.values[data.x_pix_scale_factor] = self.vc_image[0].x_pix_scale_factor
+        model.data.values[data.x_pix_to_mm] = self.vc_image[0].x_pix_to_mm
+        model.data.values[data.y_pix_to_mm] = self.vc_image[0].y_pix_to_mm
+        model.data.values[data.num_pix_x] = self.vc_image[0].num_pix_x
+        model.data.values[data.num_pix_y] = self.vc_image[0].num_pix_y
 
-        self.vc_data = [model.pil.getVCDataObjConstRef()]
-        self.vc_IA = [model.cam_ia.getCamIAObjConstRef('VC')]
-        self.shutter = [model.shutter.getShutterObjConstRef('SHUT01')]
-
-    def resetRunningValues(self):
+    def reset_running_values(self):
         model.pil.clearRunningValues()
 
-
     def update_values(self):
+        '''
+            set previous_values to values, then update values
+            https://stackoverflow.com/questions/2465921/how-to-copy-a-dictionary-and-only-edit-the-copy
+        '''
+        for key, value in  model.data.values.iteritems():
+            model.data.previous_values[key] = value
+        '''
+            Get latest values from controllers adn put them in the data dict
+        '''
+        model.data.values[data.is_acquiring] = model.pil.isAcquiring_VC()
+        model.data.values[data.is_analysing] = model.pil.isAnalysing_VC()
+        model.data.values[data.is_collecting_or_saving] = model.pil.isNotBusy_VC()
+
+
+        # if model.data.values[data.is_collecting_or_saving]:
+        #     print 'COLLECTING AND SAVING'
+        # else:
+        #     print 'NOT COLLECTING AND SAVING'
+
+
+
+        model.data.values[data.x_pix] = self.vc_data[0].x_pix
+        model.data.values[data.y_pix] = self.vc_data[0].y_pix
+        model.data.values[data.sig_x_pix] = self.vc_data[0].sig_x_pix
+        model.data.values[data.sig_y_pix] = self.vc_data[0].sig_y_pix
+
         model.data.values[data.x_val] = self.vc_data[0].x
         model.data.values[data.y_val] = self.vc_data[0].y
         model.data.values[data.sx_val] = self.vc_data[0].sig_x
         model.data.values[data.sy_val] = self.vc_data[0].sig_y
-        #model.data.values[i_val] = self.vc_data[0].x
         model.data.values[data.cov_val] = self.vc_data[0].sig_xy
+        model.data.values[data.avg_pix_val] = self.vc_data[0].avg_pix
+
         model.data.values[data.x_mean] = self.vc_data[0].x_mean
         model.data.values[data.y_mean] = self.vc_data[0].y_mean
         model.data.values[data.sx_mean] = self.vc_data[0].sig_x_mean
         model.data.values[data.sy_mean] = self.vc_data[0].sig_y_mean
-        #model.data.values[i_mean] = self.vc_data[0].
         model.data.values[data.cov_mean] = self.vc_data[0].sig_xy_mean
+        model.data.values[data.avg_pix_mean] = self.vc_data[0].avg_pix_mean
+
         model.data.values[data.x_sd] = self.vc_data[0].x_sd
         model.data.values[data.y_sd] = self.vc_data[0].y_sd
         model.data.values[data.sx_sd] = self.vc_data[0].sig_x_sd
         model.data.values[data.sy_sd] = self.vc_data[0].sig_y_sd
-        #model.data.values[i_sd] = self.vc_data[0].
         model.data.values[data.cov_sd] = self.vc_data[0].sig_xy_sd
+        model.data.values[data.avg_pix_sd] = self.vc_data[0].avg_pix_sd
 
         model.data.values[data.image]  = self.get_fast_image()
+        model.data.values[data.mask_x_rbv] = self.vc_mask[0].mask_x
+        model.data.values[data.mask_y_rbv] = self.vc_mask[0].mask_y
+        model.data.values[data.mask_x_rad_rbv] = self.vc_mask[0].mask_x_rad
+        model.data.values[data.mask_y_rad_rbv] = self.vc_mask[0].mask_y_rad
+        model.data.values[data.use_background] = self.vc_state[0].use_background
 
-        model.data.values[data.mask_x_rbv] = self.vc_IA[0].IA.maskX
-        model.data.values[data.mask_y_rbv] = self.vc_IA[0].IA.maskY
-        model.data.values[data.mask_x_rad_rbv] = self.vc_IA[0].IA.maskXRad
-        model.data.values[data.mask_y_rad_rbv] = self.vc_IA[0].IA.maskYRad
+        model.data.values[data.use_npoint] = self.vc_state[0].use_npoint
+        model.data.values[data.min_level_rbv] = self.vc_image[0].data_min
+        model.data.values[data.max_level_rbv] = self.vc_image[0].data_max
 
+        model.data.values[data.ana_step_size] = self.vc_data[0].step_size
+        #print('self.vc_data[0].step_size = ', self.vc_data[0].step_size)
         if self.shutter[0].state == shut.SHUTTER_STATE.OPEN:
             model.data.values[data.shutter_open] = True
         else:
             model.data.values[data.shutter_open] = False
 
+        model.data.values[data.wcm_val] = self.pil_obj[0].Q
+        model.data.values[data.wcm_mean] = self.pil_obj[0].Q_mean
+        model.data.values[data.wcm_sd] = self.pil_obj[0].Q_sd
+        #
+        # these don't exist yet, laser INTENSITY
+        model.data.values[data.int_val] = '-'
+        model.data.values[data.int_mean] = '-'
+        model.data.values[data.int_sd] = '-'
+
+        model.data.values[data.H_step_read] = self.mirror[0].hStep
+        model.data.values[data.V_step_read] = self.mirror[0].vStep
+        model.data.values[data.hwp_read] = self.pil_obj[0].HWP
+        model.data.values[data.last_save_dir] = self.vc_daq[0].latestDirectory.replace('/', '\\')
+        model.data.values[data.last_save_file] = self.vc_daq[0].latestFilename
+        model.data.values[data.last_save_path] =  model.data.values[data.last_save_dir] + '\\' + \
+                                                  model.data.values[data.last_save_file]
+
+    def move_H_mirror(self,step):
+        model.pil.setHstep(step)
+        model.pil.moveH()
+
+    def move_V_mirror(self, step):
+        model.pil.setVstep(step)
+        model.pil.moveV()
+
+    def set_delta_hwp(self, delta_value):
+        model.pil.setHWP(self.pil_obj[0].HWP + delta_value)
+
     def get_fast_image(self):
-        data = model.pil.getFastImage()
-        npData = np.array(data).reshape((1080, 1280))
-        return np.flip(np.transpose(npData), 1)
+        if model.pil.isAcquiring_VC():
+            if model.pil.takeFastImage_VC():
+                npData = np.array(  self.vc_image[0].data ).reshape(( self.vc_image[0].num_pix_x,
+                                                                self.vc_image[0].num_pix_y))
+                return np.flipud(npData)
 
     def toggle_shutter(self):
         if self.shutter[0].state == shut.SHUTTER_STATE.CLOSED:
@@ -96,180 +180,71 @@ class model():
 
     def setStepSize(self, stepSize):
         print(stepSize)
-        self.camerasIA.setStepSize(stepSize)
+        model.pil.setStepSize(stepSize)
 
     def setMask(self, x, y, xRad, yRad):
-        print 'python setMask called'
-        self.camerasIA.setMask(x, y, xRad, yRad)
+        model.pil.setMask_VC(x,y,xRad,yRad)
 
-    def useBkgrnd(self, use):
-        print(use)
-        self.camerasIA.useBackground(use)
+    def useBkgrnd(self):
+        if self.pil.isUsingBackground_VC():
+            self.pil.useBackground_VC(False)
+        else:
+            self.pil.useBackground_VC(True)
 
-    def useNPoint(self, use):
-        print(use)
-        self.camerasIA.useNPoint(use)
-
-    def setBkgrnd(self, step):
-        print("Setting a new background...")
-        self.camerasIA.setBackground()
+    def set_background(self):
+        self.pil.setBackground_VC()
 
     def analyse(self):
-        if self.vc_IA[0].IA.analysisState == 0:
-            mdoel.cam_ia.startAnalysis()
-            model.data.values[data.is_analysing] = True
-        elif self.vc_IA[0].IA.analysisState == 1:
-            mdoel.cam_ia.stopAnalysis()
-            model.data.values[data.is_analysing] = False
-
+        if model.pil.isAnalysing_VC():
+            model.pil.stopAnalysis_VC()
+        else:
+            model.pil.startAnalysis_VC()
 
     def acquire(self):
-        if self.camerasDAQ.isNotAcquiring('VC'):
-            self.camerasDAQ.startAcquiring()
-            model.data.values[data.is_acquiring] = True
-        elif self.camerasDAQ.isAcquiring('VC'):
-            self.camerasDAQ.stopAcquiring()
-            model.data.values[data.is_acquiring] = False
+        if model.pil.isNotAcquiring_VC():
+            model.pil.startAcquiring_VC()
+        elif model.pil.isAcquiring_VC():
+            model.pil.stopAcquireAndAnalysis_VC()
 
-    def collectAndSave(self, numberOfImages):
-        if self.camerasDAQ.isAcquiring(self.selectedCameraDAQ[0].name):
-            self.camerasDAQ.collectAndSave(numberOfImages)
-            # self.camerasDAQ.collectAndSaveJPG()
-        elif self.selectedCameraDAQ[0].DAQ.captureState == self.cap.CAPTURING:
-            self.camerasDAQ.killCollectAndSave()
+    def collect_and_save(self, numberOfImages):
+        if model.pil.isNotCollectingOrSaving_VC():
+            if model.pil.isAcquiring_VC():
+                model.pil.collectAndSave_VC(numberOfImages)
+                # self.camerasDAQ.collectAndSaveJPG()
+        #elif self.selectedCameraDAQ[0].DAQ.captureState == self.cap.CAPTURING:
+        #    self.camerasDAQ.killCollectAndSave()
         # self.camerasDAQ.killCollectAndSaveJPG()
 
-    def feedback(self, use):
-        if use is True:
-            height = 2160  # self.selectedCameraIA.IA.imageHeight
-            width = 2560  # self.selectedCameraIA.IA.imageWidth
-            x = self.vc_IA[0].IA.xPix
-            y = self.vc_IA[0].IA.yPix
-            sX = self.vc_IA[0].IA.xSigmaPix
-            sY = self.vc_IA[0].IA.ySigmaPix
-            if x - 5 * sX > 0 and x + 5 * sX < width and y - 5 * sY > 0 and y + 5 * sY < height:
-                # print(x-sX)
-                # print(y-sY)
-                self.setMask(int(x), int(y), int(5 * sX), int(5 * sY))
+    def use_background(self):
+        if model.pil.isUsingBackground_VC():
+            model.pil.useBackground_VC(False)
+        else:
+            model.pil.useBackground_VC(True)
+
+    def use_npoint(self):
+        if model.pil.isUsingNPoint_VC():
+            model.pil.useNPoint_VC(False)
+        else:
+            model.pil.useNPoint_VC(True)
+
+    def feedback(self,use):
+        if use:
+            height = 2160#self.selectedCameraIA.IA.imageHeight
+            width = 2560#self.selectedCameraIA.IA.imageWidth
+            x  = self.vc_data[0].x_pix
+            y  = self.vc_data[0].y_pix
+            sX = self.vc_data[0].sig_x_pix
+            sY = self.vc_data[0].sig_y_pix
+            if x-5*sX > 0 and x+5*sX < width and y-5*sY > 0 and y+5*sY < height:
+                #print(x-sX)
+                #print(y-sY)
+                self.setMask(int(x),int(y),int(5*sX),int(5*sY))
+
+    def center_mask(self):
 
 
-
-            #
-    # def setStepSize(self, stepSize):
-    #     print(stepSize)
-    #     self.camerasIA.setStepSize(stepSize)
-    #
-    # def setMask(self, x,y, xRad, yRad):
-    #     print 'python setMask called'
-    #     self.camerasIA.setMask(x,y,xRad,yRad)
-    #
-    # def useBkgrnd(self, use):
-    #     print(use)
-    #     self.camerasIA.useBackground(use)
-    #
-    # def useNPoint(self, use):
-    #     print(use)
-    #     self.camerasIA.useNPoint(use)
-    #
-    # def setBkgrnd(self, step):
-    #     print("Setting a new background...")
-    #     self.camerasIA.setBackground()
-    #
-    # def analyse(self):
-    #     if self.selectedCameraIA[0].IA.analysisState== 0:
-    #         self.camerasIA.startAnalysis()
-    #     elif self.selectedCameraIA[0].IA.analysisState == 1:
-    #         self.camerasIA.stopAnalysis()
-    #
-    # def acquire(self):
-    #     if self.camerasDAQ.isNotAcquiring(self.selectedCameraDAQ[0].name):
-    #         self.camerasDAQ.startAcquiring()
-    #     elif self.camerasDAQ.isAcquiring(self.selectedCameraDAQ[0].name):
-    #         self.camerasDAQ.stopAcquiring()
-    #
-    # def collectAndSave(self, numberOfImages):
-    #     if self.camerasDAQ.isAcquiring(self.selectedCameraDAQ[0].name):
-    #         self.camerasDAQ.collectAndSave(numberOfImages)
-    #         #self.camerasDAQ.collectAndSaveJPG()
-    #     elif self.selectedCameraDAQ[0].DAQ.captureState == self.cap.CAPTURING:
-    #         self.camerasDAQ.killCollectAndSave()
-    #        # self.camerasDAQ.killCollectAndSaveJPG()
-    #
-    # def feedback(self,use):
-    #     if use is True:
-    #         height = 2160#self.selectedCameraIA.IA.imageHeight
-    #         width = 2560#self.selectedCameraIA.IA.imageWidth
-    #         x = self.selectedCameraIA[0].IA.xPix
-    #         y = self.selectedCameraIA[0].IA.yPix
-    #         sX = self.selectedCameraIA[0].IA.xSigmaPix
-    #         sY = self.selectedCameraIA[0].IA.ySigmaPix
-    #         if x-5*sX > 0 and x+5*sX < width and y-5*sY > 0 and y+5*sY < height:
-    #             #print(x-sX)
-    #             #print(y-sY)
-    #             self.setMask(int(x),int(y),int(5*sX),int(5*sY))
-    # def __init__(self):
-    #     self.comment = 'Hello World!!    and the Llamas in the Universe :)'
-    #     self.cap = daq.CAPTURE_STATE
-    #     self.wr = daq.WRITE_STATE
-    #     self.initDAQ = daq.init()
-    #     self.initIA = ia.init()
-    #     self.initDAQ.setVerbose()
-    #     self.initIA.setVerbose()
-    #     self.camerasDAQ = self.initDAQ.physical_CLARA_Camera_DAQ_Controller()
-    #     self.camerasIA = self.initIA.physical_CLARA_Camera_IA_Controller()
-    #     self.selectedCameraDAQ = [self.camerasDAQ.getSelectedDAQRef()]
-    #     self.selectedCameraIA = [self.camerasIA.getSelectedIARef()]
-    #     print("model Initialized")
-    #
-    # def setStepSize(self, stepSize):
-    #     print(stepSize)
-    #     self.camerasIA.setStepSize(stepSize)
-    #
-    # def setMask(self, x,y, xRad, yRad):
-    #     print 'python setMask called'
-    #     self.camerasIA.setMask(x,y,xRad,yRad)
-    #
-    # def useBkgrnd(self, use):
-    #     print(use)
-    #     self.camerasIA.useBackground(use)
-    #
-    # def useNPoint(self, use):
-    #     print(use)
-    #     self.camerasIA.useNPoint(use)
-    #
-    # def setBkgrnd(self, step):
-    #     print("Setting a new background...")
-    #     self.camerasIA.setBackground()
-    #
-    # def analyse(self):
-    #     if self.selectedCameraIA[0].IA.analysisState== 0:
-    #         self.camerasIA.startAnalysis()
-    #     elif self.selectedCameraIA[0].IA.analysisState == 1:
-    #         self.camerasIA.stopAnalysis()
-    #
-    # def acquire(self):
-    #     if self.camerasDAQ.isNotAcquiring(self.selectedCameraDAQ[0].name):
-    #         self.camerasDAQ.startAcquiring()
-    #     elif self.camerasDAQ.isAcquiring(self.selectedCameraDAQ[0].name):
-    #         self.camerasDAQ.stopAcquiring()
-    #
-    # def collectAndSave(self, numberOfImages):
-    #     if self.camerasDAQ.isAcquiring(self.selectedCameraDAQ[0].name):
-    #         self.camerasDAQ.collectAndSave(numberOfImages)
-    #         #self.camerasDAQ.collectAndSaveJPG()
-    #     elif self.selectedCameraDAQ[0].DAQ.captureState == self.cap.CAPTURING:
-    #         self.camerasDAQ.killCollectAndSave()
-    #        # self.camerasDAQ.killCollectAndSaveJPG()
-    #
-    # def feedback(self,use):
-    #     if use is True:
-    #         height = 2160#self.selectedCameraIA.IA.imageHeight
-    #         width = 2560#self.selectedCameraIA.IA.imageWidth
-    #         x = self.selectedCameraIA[0].IA.xPix
-    #         y = self.selectedCameraIA[0].IA.yPix
-    #         sX = self.selectedCameraIA[0].IA.xSigmaPix
-    #         sY = self.selectedCameraIA[0].IA.ySigmaPix
-    #         if x-5*sX > 0 and x+5*sX < width and y-5*sY > 0 and y+5*sY < height:
-    #             #print(x-sX)
-    #             #print(y-sY)
-    #             self.setMask(int(x),int(y),int(5*sX),int(5*sY))
+        x = model.data.values[data.mask_x_rbv] - model.data.values[data.mask_x_rad_rbv]
+        y = model.data.values[data.mask_y_rbv] - model.data.values[model.data.mask_y_rad_rbv]
+        xRad = 2 * model.data.values[data.mask_x_rad_rbv]
+        yRad = 2 * model.data.values[data.mask_y_rad_rbv]
+        self.setMask(x, y, xRad, yRad)
