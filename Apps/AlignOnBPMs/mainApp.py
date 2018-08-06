@@ -15,7 +15,7 @@ from PyQt4 import QtGui, QtCore
 if mode=='virtual':
 	import model_CLARA_SAMPL as model
 	import controller.controller_SAMPL as controller
-	import view.view1_2 as view
+	import view.view1_7 as view
 elif mode=='physical':
 	import model_CLARA as model
 	import controller.controller as controller
