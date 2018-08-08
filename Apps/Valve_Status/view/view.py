@@ -18,6 +18,7 @@ class view(QMainWindow, Ui_view ):
 
     valves = {}
 
+    # create a procedure object to access static data
     procedure = procedure()
     data = procedure.valve_states
 
