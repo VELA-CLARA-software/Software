@@ -10,6 +10,7 @@ from functools import partial
 import machine
 degree = physics.pi/180.0
 import pandas as pd
+from collections import OrderedDict
 
 class dataArray(dict):
 
@@ -76,10 +77,11 @@ class Model(object):
 	sleepTime = 0.001
 	sleepTimeDipole = 0.001
 
-	def __init__(self, machineType, lineType, gunType):
+	def __init__(self, machineType, lineType, gunType, verbose=True):
 		super(Model, self).__init__()
 		self.baseMachine = machine.Machine(machineType, lineType, gunType)
 		self._abort = False
+		self.verbose = verbose
 		self.machine = machineSetter(self.baseMachine)
 		self.machineType = machineType
 		self.lineType = lineType
@@ -93,7 +95,7 @@ class Model(object):
 		self.parameters={}
 		self.data = []
 		self.calibrationPhase = {'Gun': None, 'Linac1': None}
-		self.run()
+		self.parameters = self.baseMachine.initilise_parameters()
 		print("Model Initialized")
 
 	def setRunning(self):
@@ -110,30 +112,6 @@ class Model(object):
 		if self.machineType == 'Virtual':
 			self.SAMPL.run()
 
-	def run(self):
-		if self.lineType=='VELA':
-			self.velaMethod()
-		elif self.lineType=='CLARA':
-			self.claraMethod()
-
-	def claraMethod(self):
-		print('clara Method')
-		self.parameters['magnets']=['S02-QUAD01', 'S02-QUAD02', 'S02-QUAD03', 'S02-QUAD04',
-							'S01-HCOR1', 'S01-VCOR1', 'S01-HCOR2', 'S01-VCOR2',
-							'S02-HCOR1', 'S02-VCOR1', 'S02-HCOR2', 'S02-VCOR2',
-							'LRG-SOL', 'LRG-BSOL', 'DIP01']
-		self.parameters['dispersive_bpm'] = 'C2V-BPM01'
-		self.parameters['linac_rough_bpm'] = 'S02-BPM01'
-		self.parameters['scope'] = 'WCM'
-
-	def velaMethod(self):
-		print('vela Method')
-		self.parameters['magnets']=['QUAD01', 'QUAD02', 'QUAD03', 'QUAD04', 'QUAD05', 'QUAD06',
-							'HCOR03', 'HCOR04', 'HCOR05', 'VCOR03', 'VCOR04', 'VCOR05',
-							'SOL', 'BSOL', 'DIP01']
-		self.parameters['bpm'] = 'C2V-BPM01'
-		self.parameters['scope'] = 'WCM'
-
 	def magnetDegausser(self):
 		print('1. Setting up Magnets')
 		self.setUpMagnets(self.parameters['magnets'])
@@ -141,7 +119,7 @@ class Model(object):
 	def getDataFunction(self):
 		return [b() for b in self.bpms]
 
-	def sol1Scan(self, plane, ampLower, ampUpper, corrRange, corrStep, nSamples):
+	def sol1Scan(self, plane, ampLower, ampUpper, corr1Range, corr2Range, corrStep, nSamples):
 		self.main = 'L01-SOL1'
 		self.plane = plane
 		if plane == 'Y':
@@ -153,7 +131,8 @@ class Model(object):
 			self.corrector1 = 'S01-HCOR1'
 			self.corrector2 = 'S01-HCOR2'
 		self.correctorStepSize = corrStep
-		self.correctorRange = corrRange
+		self.corrector1Min, self.corrector1Max = corr1Range
+		self.corrector2Min, self.corrector2Max = corr2Range
 		self.solLowerAmp = ampLower
 		self.solUpperAmp = ampUpper
 		self.nSamples = nSamples
@@ -196,16 +175,21 @@ class Model(object):
 		self.linacLowerAmp = ampLower
 		self.linacUpperAmp = ampUpper
 		self.nSamples = nSamples
-		self.bpms = [partial(self.machine.getBPMPosition, 'S01-BPM01'), partial(self.machine.getBPMPosition, 'S02-BPM01'), partial(self.machine.getBPMPosition, 'S02-BPM02')]
-		self.findRFCentre()
+		self.bpms = [partial(self.machine.getBPMPosition, 'S01-BPM01'), \
+		partial(self.machine.getBPMPosition, 'S02-BPM01'), \
+		partial(self.machine.getBPMPosition, 'S02-BPM02')]
+		self.findRFCentre2D()
 
-	def linac1ScanBLM(self, actuator, ampLower, ampUpper, nSamples):
+	def linac1BLMScan(self, actuator, ampLower, ampUpper, nSamples):
 		"""
 			This function will perform the BLM linac fit. 2 Correctors are defined for X and Y (4 total!)
 			The BPM readings are the X and Y values of the first 2 BPMs in S02.
 			The camera readings for S02-YAG-03 needed to be added.
 			The values of the 2 linac settings and the number of bpm samples are also defined.
 		"""
+		self.main = 'Linac1BLM'
+		self.sub = actuator
+		self.plane = 'XY'
 		self.corrector1X = 'S01-HCOR1'
 		self.corrector1Y = 'S01-VCOR1'
 		self.corrector2X = 'S01-HCOR2'
@@ -213,8 +197,9 @@ class Model(object):
 		self.linacLowerAmp = ampLower
 		self.linacUpperAmp = ampUpper
 		self.nSamples = nSamples
-		self.bpms = [partial(self.machine.getBPMPosition, 'S02-BPM01', plane='X'), partial(self.machine.getBPMPosition, 'S02-BPM01', plane='Y')\
-					 partial(self.machine.getBPMPosition, 'S02-BPM02', plane='X'), partial(self.machine.getBPMPosition, 'S02-BPM02', plane='Y')]
+		self.bpms = [partial(self.machine.getBPMPosition, 'S02-BPM01', plane='X'), partial(self.machine.getBPMPosition, 'S02-BPM02', plane='X'), \
+					 partial(self.machine.getBPMPosition, 'S02-BPM01', plane='Y'), partial(self.machine.getBPMPosition, 'S02-BPM02', plane='Y'), \
+					]
 		self.findRFCentreBLM()
 
 	def printFinalValue(self):
@@ -266,7 +251,7 @@ class Model(object):
 
 ########### findRFCentreBLM ###############
 
-	def findRFCentreBLM(self):
+	def findRFCentreBLM(self, scale=1):
 		"""
 			The suggested solution (from BLM) is to scan c1 at five points in x/y at
 			[[0,0], [-1,0], [1,0], [0, -1], [0,1]]
@@ -277,40 +262,40 @@ class Model(object):
 
 			I haven't figured out how to do the fit yet...
 		"""
-		self.resetDataArray()
 		cx = self.corrector1X
 		cy = self.corrector1Y
-		self.doBMLScan(cx, cy, 1)
-		self.saveLinacDataBLM(corr=1)
+		self.doBMLScan(cx, cy, scale, 1)
 
 		cx = self.corrector2X
 		cy = self.corrector2Y
-		self.doBMLScan(cx, cy, 2)
+		self.doBMLScan(cx, cy, scale, 2)
 
-	def doBMLScan(self, corrx, corry, no=1):
-		self.resetDataArray()
+	def doBMLScan(self, corrx, corry, scale=1, no=1):
 		self.machine.setLinac1Amplitude(self.linacLowerAmp)
-		self.main = 'Corr1'
+		# self.main = 'Corr1'
 		self.sub = 'Low'
-		for c1x, c1y in [[0,0], [-1,0], [1,0], [0, -1], [0,1]]:
-			self.machine.setCorr(corrx, c1x)
-			self.machine.setCorr(corry, c1y)
-			time.sleep(self.sleepTime)
-			data = self.getData()
-			self.setDataArray(c1x, c1y, data)
-		self.saveLinacDataBLM(corr=no)
-
 		self.resetDataArray()
-		self.machine.setLinac1Amplitude(self.linacUpperAmp)
-		self.main = 'Corr1'
-		self.sub = 'High'
 		for c1x, c1y in [[0,0], [-1,0], [1,0], [0, -1], [0,1]]:
-			self.machine.setCorr(corrx, c1x)
-			self.machine.setCorr(corry, c1y)
+			self.machine.setCorr(corrx, scale*c1x)
+			self.machine.setCorr(corry, scale*c1y)
 			time.sleep(self.sleepTime)
 			data = self.getData()
 			self.setDataArray(c1x, c1y, data)
-		self.saveLinacDataBLM(corr=no)
+		if self.verbose:
+			self.saveLinacDataBLM(corr=no)
+
+		self.machine.setLinac1Amplitude(self.linacUpperAmp)
+		# self.main = 'Corr1'
+		self.sub = 'High'
+		self.resetDataArray()
+		for c1x, c1y in [[0,0], [-1,0], [1,0], [0, -1], [0,1]]:
+			self.machine.setCorr(corrx, scale*c1x)
+			self.machine.setCorr(corry, scale*c1y)
+			time.sleep(self.sleepTime)
+			data = self.getData()
+			self.setDataArray(c1x, c1y, data)
+		if self.verbose:
+			self.saveLinacDataBLM(corr=no)
 
 	def saveLinacDataBLM(self, corr=1):
 		self.timestr = time.strftime("%Y%m%d-%H%M%S")
@@ -319,7 +304,7 @@ class Model(object):
 		labels = ['BPM'+str(i+1) for i in range(len(bpms[1]))]
 		df = pd.DataFrame(rawData)
 		df.columns = ['cx', 'cy'] + labels
-		df.to_csv(self.timestr+'_'+self.main+'_'+self.sub+'_'+str(self.linacLowerAmp)+'_'+str(self.linacUpperAmp)+'_Corr_'+str(corr)+'_rawData.csv', index=0)
+		df.to_csv(self.timestr+'_'+self.main+'_'+self.sub+'_'+str(self.linacLowerAmp)+'_'+str(self.linacUpperAmp)+'_Corr_'+str(corr)+'_rawDataBLM.csv', index=0)
 
 ########### findRFCentre ###############
 
@@ -367,7 +352,8 @@ class Model(object):
 		# This is the mean of the BPMs for each value of corrector
 		BPMMean = [np.mean(b) for b in bpms]
 		index = BPMMean.index(min(BPMMean))
-		self.saveLinacData(1)
+		if self.verbose:
+			self.saveLinacData(1)
 		return c1[index]
 
 	def findC2Min(self):
@@ -375,7 +361,8 @@ class Model(object):
 		# This is the mean of the BPMs for each value of corrector
 		BPMMean = [np.mean(b) for b in bpms]
 		index = BPMMean.index(min(BPMMean))
-		self.saveLinacData(2)
+		if self.verbose:
+			self.saveLinacData(2)
 		return c2[index]
 
 	def saveLinacData(self, corr=1):
@@ -386,6 +373,85 @@ class Model(object):
 		df = pd.DataFrame(rawData)
 		df.columns = ['c1', 'c2'] + labels
 		df.to_csv(self.timestr+'_'+self.main+'_'+self.plane+'_'+str(self.linacLowerAmp)+'_'+str(self.linacUpperAmp)+'_Corr_'+str(corr)+'_rawData.csv', index=0)
+
+########### findRFCentre2D ###############
+
+	def findRFCentre2D(self):
+		"""
+			This function will scan corrector 1 (c1) to minimise the average difference between the BPM readings
+			at high and low amplitude of the linac RF. This is simply the mean value of the differences.
+			Once found for c1, it does the same for corrector 2 (c2).
+			Currently this function only works in one plane at a time.
+
+			Data is stored in self.experimentalData[self.main][self.sub]
+		"""
+		self.timestr = time.strftime("%Y%m%d-%H%M%S")
+		with open(self.timestr+'_'+self.main+'_'+self.plane+'_'+str(self.linacLowerAmp)+'A_'+str(self.linacUpperAmp)+'A_rawData_log.csv', 'w') as logfile:
+			self.resetDataArray()
+			self.data1 = {}
+			self.data2 = {}
+			self.rawData = OrderedDict({'x':[], 'y': [], 'z1':[], 'z2': [], 'diff': []})
+			self.machine.setLinac1Amplitude(self.linacLowerAmp)
+			flip = -1
+			for c1 in np.arange(self.corrector1Min, self.corrector1Max+self.correctorStepSize, self.correctorStepSize):
+				self.machine.setCorr(self.corrector1, c1)
+				self.data1[c1] = {}
+				flip = -1*flip
+				for c2 in np.arange(flip*self.corrector2Min, flip*(self.corrector2Max+self.correctorStepSize), flip*self.correctorStepSize):
+					self.machine.setCorr(self.corrector2, c2)
+					while abs(self.machine.getCorr(self.corrector1) - c1) > 0.05 or abs(self.machine.getCorr(self.corrector2) - c2) > 0.05:
+						print '0'
+						# print self.machine.get('getCorr', self.corrector1) , c1, self.machine.get('getCorr', self.corrector2) , c2
+						time.sleep(self.sleepTime)
+					if self._abort:
+						self._abort = False
+						return 0
+					print 'linac = ', self.linacLowerAmp, '  c1 = ', c1, '  c2 = ', c2
+					data1 = self.getData()
+					if self.verbose:
+						logfile.write('data1,'+str(self.linacLowerAmp)+','+str(c1)+','+str(c2)+','+str(data1))
+					self.data1[c1][c2] = data1
+
+			self.machine.setLinac1Amplitude(self.linacUpperAmp)
+			flip = -1
+			for c1 in np.arange(self.corrector1Min, self.corrector1Max+self.correctorStepSize, self.correctorStepSize):
+				self.machine.setCorr(self.corrector1, c1)
+				self.data2[c1] = {}
+				flip = -1*flip
+				for c2 in np.arange(flip*self.corrector2Min, flip*(self.corrector2Max+self.correctorStepSize), flip*self.correctorStepSize):
+					self.machine.setCorr(self.corrector2, c2)
+					while abs(self.machine.getCorr(self.corrector1) - c1) > 0.05 or abs(self.machine.getCorr(self.corrector2) - c2) > 0.05:
+						print '1'
+						time.sleep(self.sleepTime)
+					print 'linac = ', self.linacUpperAmp, '  c1 = ', c1, '  c2 = ', c2
+					data2 = self.getData()
+					if self.verbose:
+						logfile.write('data2,'+str(self.linacUpperAmp)+','+str(c1)+','+str(c2)+','+str(data2))
+					self.data2[c1][c2] = data2
+
+			flip = -1
+			for c1 in np.arange(self.corrector1Min, self.corrector1Max+self.correctorStepSize, self.correctorStepSize):
+				flip = -1*flip
+				for c2 in np.arange(flip*self.corrector2Min, flip*(self.corrector2Max+self.correctorStepSize), flip*self.correctorStepSize):
+					self.rawData['x'].append(c1)
+					self.rawData['y'].append(c2)
+					data1 = self.data1[c1][c2]
+					data2 = self.data2[c1][c2]
+					self.rawData['z1'].append(data1)
+					self.rawData['z2'].append(data2)
+					diff = np.mean(np.array([abs(a[1] - a[0]) if a[0] < 20 and a[1] < 20 else 20 for a in zip(data1,data2)]))
+					self.rawData['diff'].append(diff)
+					if self.verbose:
+						logfile.write('diff,'+str(self.linacUpperAmp)+','+str(c1)+','+str(c2)+','+str(data1)+','+str(data2)+','+str(diff))
+					self.setDataArray(c1, c2, diff)
+		if self.verbose:
+			self.saveLinacData2D()
+		# self.doFitRFCentre()
+
+	def saveLinacData2D(self):
+		df = pd.DataFrame(self.rawData)
+		df.columns = ['x', 'y', 'z1', 'z2', 'diff']
+		df.to_csv(self.timestr+'_'+self.main+'_'+self.plane+'_'+str(self.linacLowerAmp)+'_'+str(self.linacUpperAmp)+'_rawData.csv', index=0)
 
 ########### findSOLCentre ###############
 
@@ -398,7 +464,8 @@ class Model(object):
 			self.rawData = {'x':[], 'y': [], 'z1':[], 'z2': []}
 			self.machine.setSol(self.main, self.solLowerAmp)
 			while abs(self.machine.getSol(self.main) - self.solLowerAmp) > 0.2:
-				time.sleep(0.1)
+				print 'wait'
+				time.sleep(self.sleepTime)
 			flip = -1
 			for c1 in np.arange(self.corrector1Min, self.corrector1Max+self.correctorStepSize, self.correctorStepSize):
 				self.machine.setCorr(self.corrector1, c1)
@@ -407,18 +474,21 @@ class Model(object):
 				for c2 in np.arange(flip*self.corrector2Min, flip*(self.corrector2Max+self.correctorStepSize), flip*self.correctorStepSize):
 					self.machine.setCorr(self.corrector2, c2)
 					while abs(self.machine.getCorr(self.corrector1) - c1) > 0.05 or abs(self.machine.getCorr(self.corrector2) - c2) > 0.05:
+						print '0'
 						# print self.machine.get('getCorr', self.corrector1) , c1, self.machine.get('getCorr', self.corrector2) , c2
-						time.sleep(0.1)
+						time.sleep(self.sleepTime)
 					if self._abort:
 						self._abort = False
 						return 0
 					print 'sol = ', self.solLowerAmp, '  c1 = ', c1, '  c2 = ', c2
 					data1 = self.getData()
-					logfile.write('data1,'+str(self.solLowerAmp)+','+str(c1)+','+str(c2)+','+str(data1))
+					if self.verbose:
+						logfile.write('data1,'+str(self.solLowerAmp)+','+str(c1)+','+str(c2)+','+str(data1))
 					self.data1[c1][c2] = data1
 
 			self.machine.setSol(self.main, self.solUpperAmp)
 			while abs(self.machine.getSol(self.main) - self.solUpperAmp) > 0.2:
+				print 'wait2'
 				time.sleep(0.1)
 			flip = -1
 			for c1 in np.arange(self.corrector1Min, self.corrector1Max+self.correctorStepSize, self.correctorStepSize):
@@ -428,13 +498,15 @@ class Model(object):
 				for c2 in np.arange(flip*self.corrector2Min, flip*(self.corrector2Max+self.correctorStepSize), flip*self.correctorStepSize):
 					self.machine.setCorr(self.corrector2, c2)
 					while abs(self.machine.getCorr(self.corrector1) - c1) > 0.05 or abs(self.machine.getCorr(self.corrector2) - c2) > 0.05:
-						time.sleep(0.1)
+						print '1'
+						time.sleep(self.sleepTime)
 					print 'sol = ', self.solUpperAmp, '  c1 = ', c1, '  c2 = ', c2
 					data2 = self.getData()
-					logfile.write('data2,'+str(self.solLowerAmp)+','+str(c1)+','+str(c2)+','+str(data2))
+					if self.verbose:
+						logfile.write('data2,'+str(self.solLowerAmp)+','+str(c1)+','+str(c2)+','+str(data2))
 					self.data2[c1][c2] = data2
 
-			self.machine.set('setSol', self.main, 0)
+			self.machine.setSol(self.main, 0)
 			while abs(self.machine.getSol(self.main) - 0) > 0.2:
 				time.sleep(0.1)
 
@@ -449,19 +521,14 @@ class Model(object):
 					self.rawData['z1'].append(data1)
 					self.rawData['z2'].append(data2)
 					diff = np.mean(np.array([abs(a[1] - a[0]) if a[0] < 20 and a[1] < 20 else 20 for a in zip(data1,data2)]))
-					logfile.write('diff,'+str(self.solLowerAmp)+','+str(c1)+','+str(c2)+','+str(data1)+','+str(data2)+','+str(diff))
+					if self.verbose:
+						logfile.write('diff,'+str(self.solLowerAmp)+','+str(c1)+','+str(c2)+','+str(data1)+','+str(data2)+','+str(diff))
 					self.setDataArray(c1, c2, diff)
-		self.saveSOLData()
+		if self.verbose:
+			self.saveSOLData()
 		# self.doFitRFCentre()
 
 	def saveSOLData(self):
-		# my_dict = {}
-		# for name in ['x', 'y', 'z1','z2']:
-		# 	my_dict[name] = self.rawData[name]
-		# with open(self.main+'_'+self.sub+'_rawData.csv', 'wb') as f:  # Just use 'w' mode in 3.x
-		# 	w = csv.DictWriter(f, my_dict.keys())
-		# 	w.writeheader()
-		# 	w.writerow(my_dict)
 		df = pd.DataFrame(self.rawData)
 		df.columns = ['x', 'y', 'z1','z2']
 		df.to_csv(self.timestr+'_'+self.main+'_'+self.plane+'_'+str(self.solLowerAmp)+'A_'+str(self.solUpperAmp)+'A_rawData.csv', index=0)

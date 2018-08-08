@@ -16,6 +16,32 @@ class Machine(object):
 		self.setUpCtrls()
 		self.corrSI = {}
 		self.solSI = {}
+		self.parameters={}
+
+	def initilise_parameters(self):
+		if self.lineType=='VELA':
+			self.velaMethod()
+		elif self.lineType=='CLARA':
+			self.claraMethod()
+		return self.parameters
+
+	def claraMethod(self):
+		print('clara Method')
+		self.parameters['magnets']=['S02-QUAD01', 'S02-QUAD02', 'S02-QUAD03', 'S02-QUAD04',
+							'S01-HCOR1', 'S01-VCOR1', 'S01-HCOR2', 'S01-VCOR2',
+							'S02-HCOR1', 'S02-VCOR1', 'S02-HCOR2', 'S02-VCOR2',
+							'LRG-SOL', 'LRG-BSOL', 'DIP01']
+		self.parameters['dispersive_bpm'] = 'C2V-BPM01'
+		self.parameters['linac_rough_bpm'] = 'S02-BPM01'
+		self.parameters['scope'] = 'WCM'
+
+	def velaMethod(self):
+		print('vela Method')
+		self.parameters['magnets']=['QUAD01', 'QUAD02', 'QUAD03', 'QUAD04', 'QUAD05', 'QUAD06',
+							'HCOR03', 'HCOR04', 'HCOR05', 'VCOR03', 'VCOR04', 'VCOR05',
+							'SOL', 'BSOL', 'DIP01']
+		self.parameters['bpm'] = 'C2V-BPM01'
+		self.parameters['scope'] = 'WCM'
 
 	def setUpCtrls(self):
 		if self.machineType == 'None':
