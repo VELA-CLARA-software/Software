@@ -31,67 +31,6 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="centralWidgetLayout">
-    <item row="1" column="0">
-     <widget class="QGroupBox" name="groupBox_3">
-      <layout class="QHBoxLayout" name="horizontalLayout">
-       <item>
-        <widget class="QLabel" name="label_MODE">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>16777215</width>
-           <height>100</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>Mode</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="finishButton">
-         <property name="maximumSize">
-          <size>
-           <width>200</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>Finish Scan</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="abortButton">
-         <property name="maximumSize">
-          <size>
-           <width>200</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="autoFillBackground">
-          <bool>false</bool>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">background-color: rgb(255, 0, 0);</string>
-         </property>
-         <property name="text">
-          <string>Abort</string>
-         </property>
-         <property name="icon">
-          <iconset>
-           <normaloff>../../Resources/Icons/off.png</normaloff>../../Resources/Icons/off.png</iconset>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </item>
     <item row="4" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="sizePolicy">
@@ -101,9 +40,9 @@
        </sizepolicy>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
-      <widget class="QWidget" name="linacTab">
+      <widget class="QWidget" name="linac1Tab">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
          <horstretch>0</horstretch>
@@ -248,6 +187,164 @@
         </item>
         <item row="2" column="0" rowspan="2">
          <spacer name="verticalSpacer_3">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="linac1BLMTab">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <attribute name="icon">
+        <iconset>
+         <normaloff>../../Resources/Icons/bike.png</normaloff>../../Resources/Icons/bike.png</iconset>
+       </attribute>
+       <attribute name="title">
+        <string>Linac 1 BLM</string>
+       </attribute>
+       <layout class="QGridLayout" name="linac1BLMTabLayout">
+        <item row="0" column="1" rowspan="4">
+         <widget class="QGroupBox" name="groupBox_plotsLinac1BLM">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>1</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="title">
+           <string>Plots</string>
+          </property>
+          <layout class="QHBoxLayout" name="plotLayoutLinac1BLM"/>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QGroupBox" name="groupBox_4BLM">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="title">
+           <string>Linac Settings</string>
+          </property>
+          <layout class="QFormLayout" name="formLayout_4BLM">
+           <property name="fieldGrowthPolicy">
+            <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+           </property>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_6BLM">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>150</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Lower Amplitude</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QSpinBox" name="linac1BLMLowerSet">
+             <property name="minimumSize">
+              <size>
+               <width>100</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="maximum">
+              <number>13000</number>
+             </property>
+             <property name="singleStep">
+              <number>100</number>
+             </property>
+             <property name="value">
+              <number>6500</number>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label">
+             <property name="text">
+              <string>Upper Amplitude</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QSpinBox" name="linac1BLMUpperSet">
+             <property name="minimumSize">
+              <size>
+               <width>100</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="maximum">
+              <number>13000</number>
+             </property>
+             <property name="singleStep">
+              <number>100</number>
+             </property>
+             <property name="value">
+              <number>13000</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QGroupBox" name="groupBox_methodLinac1BLM">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="title">
+           <string>Method</string>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_4BLM">
+           <item>
+            <widget class="QPushButton" name="linac1BLMStartRoughScanButton">
+             <property name="text">
+              <string>Scan RF centre (Approx)</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="linac1BLMStartFineScanButton">
+             <property name="text">
+              <string>Scan RF centre (Fine)</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="2" column="0" rowspan="2">
+         <spacer name="verticalSpacer_3BLM">
           <property name="orientation">
            <enum>Qt::Vertical</enum>
           </property>
@@ -587,10 +684,48 @@
        <property name="bottomMargin">
         <number>0</number>
        </property>
-       <item row="0" column="0" rowspan="2">
+       <item row="0" column="3" rowspan="4">
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="1" column="2">
+        <widget class="QGroupBox" name="groupBox_8">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="title">
+          <string>Verbosity</string>
+         </property>
+         <layout class="QFormLayout" name="formLayout_3">
+          <item row="0" column="0" colspan="2">
+           <widget class="QCheckBox" name="saveDataCheckbox">
+            <property name="text">
+             <string>Save Data</string>
+            </property>
+            <property name="checked">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="1" column="0" rowspan="2">
         <widget class="QGroupBox" name="groupBox_5">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
@@ -612,7 +747,7 @@
              <string> A</string>
             </property>
             <property name="decimals">
-             <number>1</number>
+             <number>2</number>
             </property>
             <property name="minimum">
              <double>-5.000000000000000</double>
@@ -656,7 +791,7 @@
              <string> A</string>
             </property>
             <property name="decimals">
-             <number>1</number>
+             <number>2</number>
             </property>
             <property name="minimum">
              <double>-5.000000000000000</double>
@@ -688,7 +823,7 @@
              <string> A</string>
             </property>
             <property name="decimals">
-             <number>1</number>
+             <number>2</number>
             </property>
             <property name="minimum">
              <double>-5.000000000000000</double>
@@ -722,7 +857,7 @@
              <string> A</string>
             </property>
             <property name="decimals">
-             <number>1</number>
+             <number>2</number>
             </property>
             <property name="minimum">
              <double>-5.000000000000000</double>
@@ -758,7 +893,7 @@
              <string> A</string>
             </property>
             <property name="decimals">
-             <number>1</number>
+             <number>2</number>
             </property>
             <property name="maximum">
              <double>5.000000000000000</double>
@@ -777,7 +912,7 @@
              <string> A</string>
             </property>
             <property name="decimals">
-             <number>1</number>
+             <number>2</number>
             </property>
             <property name="maximum">
              <double>5.000000000000000</double>
@@ -813,23 +948,10 @@
          </layout>
         </widget>
        </item>
-       <item row="0" column="2" rowspan="2">
-        <spacer name="horizontalSpacer">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
        <item row="1" column="1">
         <widget class="QGroupBox" name="groupBox">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
@@ -864,7 +986,7 @@
          </layout>
         </widget>
        </item>
-       <item row="0" column="1">
+       <item row="2" column="1" colspan="2">
         <widget class="QGroupBox" name="groupBox_9">
          <property name="enabled">
           <bool>true</bool>
@@ -897,6 +1019,67 @@
            </widget>
           </item>
          </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="QGroupBox" name="groupBox_3">
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QLabel" name="label_MODE">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>100</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Mode</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="finishButton">
+         <property name="maximumSize">
+          <size>
+           <width>200</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Finish Scan</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="abortButton">
+         <property name="maximumSize">
+          <size>
+           <width>200</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="autoFillBackground">
+          <bool>false</bool>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(255, 0, 0);</string>
+         </property>
+         <property name="text">
+          <string>Abort</string>
+         </property>
+         <property name="icon">
+          <iconset>
+           <normaloff>../../Resources/Icons/off.png</normaloff>../../Resources/Icons/off.png</iconset>
+         </property>
         </widget>
        </item>
       </layout>

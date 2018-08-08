@@ -149,6 +149,7 @@ class Controller(QObject):
 
 		# self.view.setupMagnetsButton.clicked.connect(self.model.magnetDegausser)
 		# self.view.Gun_TurnOn_Button.clicked.connect(self.model.turnOnGun)
+		self.view.Gun_LoadBURT_Button.clicked.connect(self.loadGunBURT)
 		self.view.Gun_Rough_Button.clicked.connect(self.gunWCMCrester)
 		self.view.Gun_Dipole_Button.clicked.connect(self.setDipoleCurrentForGun)
 		self.view.Gun_Fine_Button.clicked.connect(self.gunBPMCrester)
@@ -157,6 +158,7 @@ class Controller(QObject):
 		self.view.Gun_Dipole_Set.valueChanged[float].connect(self.updateGunMomentumSet)
 
 		# self.view.Linac1_TurnOn_Button.clicked.connect(self.model.turnOnLinac)
+		self.view.Linac1_LoadBURT_Button.clicked.connect(self.loadLinac1BURT)
 		self.view.Linac1_Rough_Button.clicked.connect(self.linac1CresterQuick)
 		self.view.Linac1_Dipole_Button.clicked.connect(self.setDipoleCurrentForLinac1)
 		self.view.Linac1_Fine_Button.clicked.connect(self.linac1BPMCrester)
@@ -172,6 +174,20 @@ class Controller(QObject):
 		self.view.actionSave_Calibation_Data.triggered.connect(self.saveData)
 
 		self.setLabel('MODE: '+self.model.machineType+' '+self.model.lineType+' with '+self.model.gunType+' gun')
+
+	def loadBURT(self, function, button):
+		success = getattr(self.model,function)()
+		if success:
+			getattr(self.view,button).setStyleSheet("background-color: green")
+		else:
+			getattr(self.view,button).setStyleSheet("background-color: red")
+		QTimer.singleShot(1000, lambda: getattr(self.view,button).setStyleSheet("background-color: None"))
+
+	def loadGunBURT(self):
+		self.loadBURT('loadGunBURT','Gun_LoadBURT_Button')
+
+	def loadLinac1BURT(self):
+		self.loadBURT('loadLinac1BURT', 'Linac1_LoadBURT_Button')
 
 	def updateGunDipoleSet(self, mom):
 		self.view.Gun_Dipole_Set.valueChanged[float].disconnect(self.updateGunMomentumSet)
@@ -234,7 +250,7 @@ class Controller(QObject):
 		self.disableButtons()
 		self.cavity = 'Linac1'
 		self.actuator = 'approx'
-		self.thread = GenericThread(self.model.linac1CresterQuick, self.view.Linac1_Rough_PointSeperation_Set.value(), self.view.Linac1_Rough_NShots_Set.value())
+		self.thread = GenericThread(self.model.linacCresterQuick, 1, self.view.Linac1_Rough_PointSeperation_Set.value(), self.view.Linac1_Rough_NShots_Set.value())
 		self.newDataSignal.connect(self.updatePlot)
 		self.thread.finished.connect(self.enableButtons)
 		self.thread.finished.connect(self.autoSaveData)
@@ -254,7 +270,7 @@ class Controller(QObject):
 		self.disableButtons()
 		self.cavity = 'Linac1'
 		self.actuator = 'fine'
-		self.thread = GenericThread(self.model.linac1CresterFine, self.view.Linac1_Fine_Range_Set.value(), self.view.Linac1_Fine_PointSeperation_Set.value(), self.view.Linac1_Fine_NShots_Set.value())
+		self.thread = GenericThread(self.model.linacCresterFine, 1, self.view.Linac1_Fine_Range_Set.value(), self.view.Linac1_Fine_PointSeperation_Set.value(), self.view.Linac1_Fine_NShots_Set.value())
 		self.newDataSignal.connect(self.updatePlot)
 		self.thread.finished.connect(self.enableButtons)
 		self.thread.finished.connect(self.autoSaveData)
@@ -275,7 +291,7 @@ class Controller(QObject):
 		self.disableButtons()
 		self.cavity = 'Linac1'
 		self.actuator = 'dipole'
-		self.thread = GenericThread(self.model.linac1DipoleSet, self.view.Linac1_Dipole_Start_Set.value(), self.view.Linac1_Dipole_End_Set.value())
+		self.thread = GenericThread(self.model.linacDipoleSet, 1, self.view.Linac1_Dipole_Start_Set.value(), self.view.Linac1_Dipole_End_Set.value())
 		self.newDataSignal.connect(self.updatePlot)
 		self.thread.finished.connect(self.enableButtons)
 		self.thread.finished.connect(self.autoSaveData)
@@ -301,6 +317,12 @@ class Controller(QObject):
 			type = ['approx', 'fine', 'dipole']
 		timestr = time.strftime("%H%M%S")
 		dir = '\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Work\\'+time.strftime("%Y\\%m\\%d")+'\\' if self.view.actionSave_to_Work_Folder.isChecked() else '.'
+		try:
+			os.makedirs(dir)
+		except OSError:
+			if not os.path.isdir(path):
+				self.loggerSignal.emit('Error creating directory - saving to local directory')
+				dir = '.'
 		for c in cavity:
 			if c in self.model.crestingData:
 				for t in type:

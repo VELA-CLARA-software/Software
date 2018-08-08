@@ -32,7 +32,7 @@ import VELA_CLARA_LLRF_Control as llrf
 import VELA_CLARA_PILaser_Control as pil
 import VELA_CLARA_Camera_DAQ_Control as daq
 import VELA_CLARA_Camera_IA_Control as camIA
-
+import VELA_CLARA_Screen_Control as scrn
 
 import momentumFunctions
 
@@ -75,18 +75,20 @@ class Model(QObject):
         #self.C2Vbpms = self.bpmInit.virtual_CLARA_2_VELA_BPM_Controller()
         self.gun = self.llrfInit.physical_CLARA_LRRG_LLRF_Controller()
         self.LINAC01 = self.llrfInit.physical_L01_LLRF_Controller()
-        self.Cmagnets.switchONpsu('S02-DIP01')
-        self.Cmagnets.switchONpsu('S01-HCOR1')
-        self.Cmagnets.switchONpsu('S01-HCOR2')
-        self.Cmagnets.switchONpsu('S02-HCOR1')
-        self.Cmagnets.switchONpsu('S02-HCOR2')
+
+        # 23/7/18 all these should be on already really...
+        #self.Cmagnets.switchONpsu('S02-DIP01')
+        #self.Cmagnets.switchONpsu('S01-HCOR1')
+        #self.Cmagnets.switchONpsu('S01-HCOR2')
+        #self.Cmagnets.switchONpsu('S02-HCOR1')
+        #self.Cmagnets.switchONpsu('S02-HCOR2')
         COR = [self.Cmagnets.getMagObjConstRef('S02-HCOR2')]                                        #create a reference to the corrector
         #x1= self.getXBPM(bctrl, bpm, N)                                            #get the x position on the BPM
         I1 = COR[0].siWithPol
         self.Cmagnets.getSI('S02-HCOR2')
         print '\n\n\n\n\n\n\n\n\n',str(I1)
-        self.Cmagnets.switchONpsu('S02-QUAD1')
-        self.Cmagnets.switchONpsu('S02-QUAD2')
+        #self.Cmagnets.switchONpsu('S02-QUAD1')
+        #self.Cmagnets.switchONpsu('S02-QUAD2')
         # self.SAMPL = onlineModel.SAMPL(V_MAG_Ctrl=self.Vmagnets,
         #                                     C_S01_MAG_Ctrl=self.Cmagnets,
         #                                     C_S02_MAG_Ctrl=self.Cmagnets,
@@ -108,24 +110,7 @@ class Model(QObject):
         self.cameras = self.camdaqInit.physical_CLARA_Camera_DAQ_Controller()
         self.camerasIA = self.camInit.physical_CLARA_Camera_IA_Controller()
         self.camNames = list(self.cameras.getCameraNames())
-        #print names
-        self.camNames.remove('VC')
-        #print names
-        for name in self.camNames:
-            if self.cameras.isAcquiring(name):
-                self.cameras.setCamera(name)
-                self.cameras.stopAcquiring()
-                time.sleep(1)
-        #print name
-        self.chosen_camera = 'S02-CAM-02'
-        self.cameras.setCamera(self.chosen_camera)
-        print '\n\n\n\n\n\nstart acquiring', self.chosen_camera
-        self.cameras.startAcquiring()
-        self.camerasIA.setCamera(self.chosen_camera)
-        time.sleep(2)
-        ia = self.camerasIA.getSelectedIARef().IA
-        for x in dir(ia):
-            print x, getattr(ia, x)
+
         # camx1 = self.camerasIA.getSelectedIARef().IA.x
         # print  self.camerasIA.getSelectedIARef().IA
         #
@@ -139,7 +124,7 @@ class Model(QObject):
         # camy1 = self.camerasIA.getSelectedIARef().IA.covXY
         # print 'camy1', str(camy1)
 
-        print '\n\n\n\n\n\n'
+        #print '\n\n\n\n\n\n'
         #self.Cmagnets.setSI('S02-DIP01',0)#91.6
         # self.gun400.setAmpMVM(70) #set gun10 instead!
         # self.gun400.setPhiDEG(-16)
@@ -166,15 +151,36 @@ class Model(QObject):
     def measureMomentumPrelim(self):
         '''1. Preliminaries'''
         #if self.view.checkBox_1.isChecked()==True:
-        print 'Setting C2V dipole to zero'
-        self.Cmagnets.setSI('S02-DIP01',0)
-        time.sleep(1)
+        print 'Read predicted momentum and calculate predicted current:'
         self.predictedMomentum = float(self.view.lineEdit_predictMom.text())
+        print('Predicted Momentum: '+str(self.predictedMomentum))
         self.predictedI = self.func.mom2I(self.Cmagnets,
                                         'S02-DIP01',
                                         self.predictedMomentum)
         print('Predicted Current: '+str(self.predictedI))
-        print('Predicted Momentum: '+str(self.predictedMomentum))
+
+        print 'Setting C2V dipole to zero'
+        self.Cmagnets.setSI('S02-DIP01',0)
+        time.sleep(1)
+
+        print 'Switching to S02-CAM-02'
+        self.camNames.remove('VC')
+        #print names
+        for name in self.camNames:
+            if self.cameras.isAcquiring(name):
+                self.cameras.setCamera(name)
+                self.cameras.stopAcquiring()
+                time.sleep(1)
+        #print name
+        self.chosen_camera = 'S02-CAM-02'
+        self.cameras.setCamera(self.chosen_camera)
+        print '\n\n\n\n\n\nstart acquiring', self.chosen_camera
+        self.cameras.startAcquiring()
+        self.camerasIA.setCamera(self.chosen_camera)
+        time.sleep(2)
+        ia = self.camerasIA.getSelectedIARef().IA
+        for x in dir(ia):
+            print x, getattr(ia, x)
 
     def measureMomentumAlign(self):
         '''2. Align Beam through Dipole'''

@@ -85,10 +85,9 @@ class Model(object):
 			self.sleepTime = 0.1
 			self.sleepTimeDipole = 0.25
 		self.crestingData = dataArray()
-		self.parameters={}
+		self.parameters = self.baseMachine.initilise_parameters()
 		self.data = []
 		self.calibrationPhase = {'Gun': None, 'Linac1': None}
-		self.run()
 		print("Model Initialized")
 
 	def abort(self):
@@ -105,33 +104,21 @@ class Model(object):
 		if self.machineType == 'Virtual':
 			self.SAMPL.run()
 
-	def run(self):
-		if self.lineType=='VELA':
-			self.velaMethod()
-		elif self.lineType=='CLARA':
-			self.claraMethod()
-
-	def claraMethod(self):
-		print('clara Method')
-		self.parameters['magnets']=['S02-QUAD01', 'S02-QUAD02', 'S02-QUAD03', 'S02-QUAD04',
-							'S01-HCOR1', 'S01-VCOR1', 'S01-HCOR2', 'S01-VCOR2',
-							'S02-HCOR1', 'S02-VCOR1', 'S02-HCOR2', 'S02-VCOR2',
-							'LRG-SOL', 'LRG-BSOL', 'DIP01']
-		self.parameters['dispersive_bpm'] = 'C2V-BPM01'
-		self.parameters['linac_rough_bpm'] = 'S02-BPM01'
-		self.parameters['scope'] = 'WCM'
-
-	def velaMethod(self):
-		print('vela Method')
-		self.parameters['magnets']=['QUAD01', 'QUAD02', 'QUAD03', 'QUAD04', 'QUAD05', 'QUAD06',
-							'HCOR03', 'HCOR04', 'HCOR05', 'VCOR03', 'VCOR04', 'VCOR05',
-							'SOL', 'BSOL', 'DIP01']
-		self.parameters['bpm'] = 'C2V-BPM01'
-		self.parameters['scope'] = 'WCM'
-
 	def magnetDegausser(self):
 		print('1. Setting up Magnets')
 		self.setUpMagnets(self.parameters['magnets'])
+
+	def loadGunBURT(self):
+		if self.machineType is not 'Physical':
+			return True
+		else:
+			return self.machine.magnets.applyDBURT('GunCrest.dburt')
+
+	def loadLinac1BURT(self):
+		if self.machineType is not 'Physical':
+			return True
+		else:
+			return self.machine.magnets.applyDBURT('Linac1Crest.dburt')
 
 	def gunWCMCrester(self, stepSize=5, nSamples=4):
 		self.resetAbortFinish()
@@ -142,14 +129,14 @@ class Model(object):
 		self.getDataFunction = partial(self.machine.getWCMCharge, self.parameters['scope'])
 		self.findingCrestGunQuick()
 
-	def linac1CresterQuick(self, stepSize=5, nSamples=4):
+	def linacCresterQuick(self, no, stepSize=5, nSamples=4):
 		self.resetAbortFinish()
-		self.cavity = 'Linac1'
+		self.cavity = 'Linac'+str(no)
 		self.actuator = 'approx'
 		self.stepSize = stepSize
 		self.nSamples = nSamples
-		self.getDataFunction = partial(self.machine.getBPMPosition, self.parameters['linac_rough_bpm'])
-		self.findingCrestLinac1Quick()
+		self.getDataFunction = partial(self.machine.getBPMPosition, self.parameters['linac_rough_bpm'][no])
+		self.findingCrestLinacQuick()
 
 	def gunCresterFine(self, phiRange, phiSteps, nSamples):
 		self.resetAbortFinish()
@@ -159,18 +146,18 @@ class Model(object):
 		self.nSamples = nSamples
 		self.phiRange = phiRange
 		self.phiSteps = phiSteps
-		self.getDataFunction = partial(self.machine.getBPMPosition, self.parameters['dispersive_bpm'])
+		self.getDataFunction = partial(self.machine.getBPMPosition, self.parameters['gun_dispersive_bpm'])
 		self.findingCrestFine()
 
-	def linac1CresterFine(self, phiRange, phiSteps, nSamples):
+	def linacCresterFine(self, no, phiRange, phiSteps, nSamples):
 		self.resetAbortFinish()
-		self.cavity = 'Linac1'
+		self.cavity = 'Linac'+str(no)
 		self.actuator = 'fine'
 		self.stepSize = 5
 		self.nSamples = nSamples
 		self.phiRange = phiRange
 		self.phiSteps = phiSteps
-		self.getDataFunction = partial(self.machine.getBPMPosition, self.parameters['dispersive_bpm'])
+		self.getDataFunction = partial(self.machine.getBPMPosition, self.parameters['linac_dispersive_bpm'][no])
 		self.findingCrestFine()
 
 	def gunDipoleSet(self, start=5, stop=10):
@@ -185,16 +172,16 @@ class Model(object):
 		self.getDataFunction = partial(self.machine.getBPMPosition, self.parameters['dispersive_bpm'])
 		self.findDipoleCurrent()
 
-	def linac1DipoleSet(self, start=70, stop=100):
+	def linacDipoleSet(self, no, start=70, stop=100):
 		self.resetAbortFinish()
-		self.cavity = 'Linac1'
+		self.cavity = 'Linac'+str(no)
 		self.actuator = 'dipole'
 		self.nSamples = 3
 		self.minDipoleI = start
 		self.maxDipoleI = stop
 		self.dipoleIStep = 1
 		self.initialGuess = [0, 10, 0.3, 89]
-		self.getDataFunction = partial(self.machine.getBPMPosition, self.parameters['dispersive_bpm'])
+		self.getDataFunction = partial(self.machine.getBPMPosition, self.parameters['linac_dispersive_bpm'][no])
 		self.findDipoleCurrent()
 
 	def gunPhaser(self, gunPhaseSet=0, offset=True):
@@ -356,15 +343,15 @@ class Model(object):
 
 ########### findingCrestLinac1Quick ###############
 
-	def findingCrestLinac1Quick(self):
+	def findingCrestLinacQuick(self):
 		self.startingPhase = self.machine.getPhase(self.cavity)
 		self.findingCrestQuick()
 		if not self._abort:
-			self.doFitLinac1Quick()
+			self.doFitLinacQuick()
 		else:
 			 self.machine.setPhase(self.cavity, self.startingPhase)
 
-	def cutDataLinac1Quick(self):
+	def cutDataLinacQuick(self):
 		allData = self.getDataArray()
 		cutData = [a for a in allData if a[1] == 20]
 		newlist = []
@@ -376,9 +363,9 @@ class Model(object):
 				newlist.append(pt)
 		return newlist
 
-	def doFitLinac1Quick(self):
+	def doFitLinacQuick(self):
 		try:
-			cutData = self.cutDataLinac1Quick()
+			cutData = self.cutDataLinacQuick()
 			x, y, std = zip(*cutData)
 			if max(x) - min(x) > 180:
 				x = [a if a >= 0 else a+360 for a in x]
