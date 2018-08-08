@@ -199,6 +199,19 @@ class Functions(QObject):
         return dctrl.getSI(dipole)                                        #return the current at which beam has been centered
 
     """NEED TO TEST MINIMIZE BETA ON REAL MACHINE"""
+    def minimizeBeta2D(self,qctrl,quad1,quad2,quad1max,quad2max,steps,sctrl,screen,init_step,N=10):
+        QUAD1 = qctrl.getMagObjConstRef(quad1)
+        QUAD2 = qctrl.getMagObjConstRef(quad2)
+        xrange = np.linspace(-quad1max,quad1max,steps)
+        yrange = np.linspace(-quad2max,quad2max,steps)
+        for xnum, x in enumerate(xrange, start=0):
+            for ynum, y in enumerate(yrange, start=0):
+                print xnum, ynum, x, y
+                qctrl.setSI(quad1, x)
+                qctrl.setSI(quad2, y)
+                time.sleep(2)
+
+
     def minimizeBeta(self,qctrl,quad,sctrl,screen,init_step,N=10):
         QUAD = qctrl.getMagObjConstRef(quad)
         minimisingInX = False

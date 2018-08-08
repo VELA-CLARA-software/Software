@@ -6,7 +6,7 @@ import pyqtgraph as pg
 sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\\..\\..\\..\\Widgets\\loggerWidget\\')
 import loggerWidget as lw
 import random as r
-# import cv2
+import cv2
 from epics import caget,caput
 class Controller():
 
@@ -109,7 +109,7 @@ class Controller():
 		self.displayMom_S.setText('MOMENTUM SPREAD:<br>'+str(self.model.pSpread)+' MeV/c')
 	def refreshImage(self):
 		 #image = np.random.normal(size=(2560,2160))
-		 # cap = cv2.VideoCapture("http://192.168.83.31:7080/MJPG1.mjpg")
+		 cap = cv2.VideoCapture("http://192.168.83.31:7080/MJPG1.mjpg")
 		 #print cap
 		 _,frame = cap.read()
 		 self.YAGImage.setImage(np.flip(np.transpose(frame[:,:,0]),1))

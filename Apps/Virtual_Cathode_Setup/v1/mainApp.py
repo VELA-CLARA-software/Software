@@ -1,6 +1,36 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+'''
+/*
+//              This file is part of VELA-CLARA-Software.                             //
+//------------------------------------------------------------------------------------//
+//    VELA-CLARA-Controllers is free software: you can redistribute it and/or modify  //
+//    it under the terms of the GNU General Public License as published by            //
+//    the Free Software Foundation, either version 3 of the License, or               //
+//    (at your option) any later version.                                             //
+//    VELA-CLARA-Controllers is distributed in the hope that it will be useful,       //
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of                  //
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                   //
+//    GNU General Public License for more details.                                    //
+//                                                                                    //
+//    You should have received a copy of the GNU General Public License               //
+//    along with VELA-CLARA-Software.  If not, see <http://www.gnu.org/licenses/>.    //
+//
+//  Author:      DJS
+//  Last edit:   03-07-2018
+//  FileName:    controller.py
+//  Description: The controller for the virtual cathode operator application
+//
+//
+//
+//
+//*/
+'''
+
 import sys,os
 
-os.environ['PATH']=os.environ['PATH']+';\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release\\'
+os.environ['PATH']=os.environ['PATH']+';\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin' \
+                                      '\\Stage\\'
 #os.environ['PATH']=os.environ['PATH']+';\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin
 # \\stage\\'
 #os.environ['PATH']=os.environ['PATH']+';\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin

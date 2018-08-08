@@ -7,8 +7,20 @@ sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\stage')
 import general_experiment
 
 if __name__ == '__main__':
-    fn = 'test_input.yaml'
-    general_experiment = general_experiment.general_experiment(filename=fn)
+    '''
+        Entire procedure is contained in a YAML config-file 
+    '''
+    experiment_config_file = 'D:\\VELA\\GIT ' \
+                              'Projects\\Software\\Procedures\\Generic_Experiment' \
+                              '\\diagnositc_station' \
+                              '\\test_input.yml'
+    log_dir = 'D:\VELA\GIT Projects\Software\Procedures\Generic_Experiment\diagnositc_station\log\\'
+    '''
+        Create a generic experiment object and pass in config file        
+    '''
+    general_experiment = \
+        general_experiment.general_experiment(config_file = experiment_config_file,log_dir =
+        log_dir )
 
 
 #

@@ -15,7 +15,7 @@
 //
 //  Author:      DJS
 //  Last edit:   27-03-2018
-//  FileName:    screen.py
+//  FileName:    hardware_base.py
 //  Description: reads in yaml config files for the generic_experiment class...
 //      		 Why is parsing config files so messy? What tricks am i issing?
 //  			 Why am i asking you?
@@ -57,6 +57,7 @@ class hardware_base(object):
 
     def get_controller_mode_and_area(self,controller_func):
         try:
+            print(self.mode,self.area)
             self.controller = controller_func(self.mode, self.area)
             self.has_controller = True
         except:
