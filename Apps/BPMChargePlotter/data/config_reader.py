@@ -182,6 +182,8 @@ class config_reader(object):
             return MACHINE_AREA.VELA_INJ
         elif text == 'CLARA_PH1':
             return MACHINE_AREA.CLARA_PH1
+        elif text == 'CLARA_2_BA1_BA2':
+            return MACHINE_AREA.CLARA_2_BA1_BA2
         else:
             return MACHINE_AREA.UNKNOWN_AREA
 

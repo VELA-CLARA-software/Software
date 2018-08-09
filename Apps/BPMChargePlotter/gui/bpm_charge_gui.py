@@ -3,7 +3,7 @@ from PyQt4.QtCore import QTimer
 from PyQt4.QtGui import QApplication
 from PyQt4.QtCore import pyqtSignal
 from PyQt4.QtCore import QString
-from pyqtgraph import BarGraphItem, plot
+from pyqtgraph import BarGraphItem, PlotDataItem, plot
 from gui_mainwindow import Ui_MainWindow
 import data.bpm_charge_plotter_data_base as dat
 from pyqtgraph import mkPen
@@ -11,6 +11,7 @@ from base.base import base
 from random import randint
 import numpy as np
 import pyqtgraph
+import operator
 
 class bpm_charge_plotter_gui(QMainWindow, Ui_MainWindow, base):
 	my_name = 'bpm_charge_plotter_gui'
@@ -53,6 +54,10 @@ class bpm_charge_plotter_gui(QMainWindow, Ui_MainWindow, base):
 		self.data = base.data
 		# CONNECT BUTTONS TO FUNCTIONS
 		self.calibrateButton.clicked.connect(self.handle_recalibrate_button)
+		self.claraPH1Button.toggled.connect(lambda: self.handle_beamline(self.claraPH1Button))
+		self.c2BA1Button.toggled.connect(lambda: self.handle_beamline(self.c2BA1Button))
+		self.c2S02Button.toggled.connect(lambda: self.handle_beamline(self.c2S02Button))
+		self.c2BA1Button.setChecked(True)
 		self.clip_vals = base.data.values.copy()
 		self.timer = QTimer()
 		self.timer.timeout.connect(self.update_gui)
@@ -69,8 +74,15 @@ class bpm_charge_plotter_gui(QMainWindow, Ui_MainWindow, base):
 		self.closing.emit()
 
 	def update_gui(self):
-		self.bpmChargeBarGraph.setOpts(height=np.random.randint(1,10,size=len(self.data.values[dat.bpm_names])))
-		self.wcmChargeBarGraph.setOpts(height=self.data.values[dat.bunch_charge])
+		self.bpm_charge_sorted = []
+		self.wcm_charge = []
+		print self.data.values[dat.current_beamline]
+		for i in base.data.values[dat.current_beamline]:
+			if i in self.data.values[dat.bpm_charge]:
+				self.bpm_charge_sorted.append(self.data.values[dat.bpm_charge][i])
+				self.wcm_charge.append(self.data.values[dat.bunch_charge])
+		self.bpmChargeBarGraph.setOpts(x=range(len(self.bpm_charge_sorted)), height=self.bpm_charge_sorted)
+		self.wcmChargeBarGraph.setData(x=range(len(self.bpm_charge_sorted)), y=self.wcm_charge)
 		self.calibrateButton.setEnabled(True)
 
 	# the outputwidget is update based on data type
@@ -109,3 +121,31 @@ class bpm_charge_plotter_gui(QMainWindow, Ui_MainWindow, base):
 		else:
 			base.logger.message('NOT ready to go, is everything set?', True)
 			self.messageLabel.setText('WARNING: NOT ready to go, is everything set?')
+
+	def handle_beamline(self, b):
+		if b.text() == "CLARA PH1":
+			if b.isChecked() == True:
+				self.data.values[dat.current_beamline] = ["S01-BPM01", "S02-BPM01", "C2V-BPM01"]
+		if b.text() == "CLARA to BA1":
+			if b.isChecked() == True:
+				self.data.values[dat.current_beamline] = ["S01-BPM01", "S02-BPM01", "C2V-BPM01", "INJ-BPM04", "INJ-BPM05"]
+		if b.text() == "CLARA to S02":
+			if b.isChecked() == True:
+				self.data.values[dat.current_beamline] = ["S01-BPM01", "S02-BPM01", "S02-BPM01"]
+		self.bpmChargePlot.clear()
+		self.bpmChargeBarGraph = BarGraphItem(x=range(len(self.data.values[dat.current_beamline])), height=1, width=0.2, brush=0.9, pen='b',
+											  name='BPM charge')
+		self.wcmChargeBarGraph = PlotDataItem(x=range(len(self.data.values[dat.current_beamline])), y=range(len(self.data.values[dat.current_beamline])), brush=0.9, symbol='o', pen='r')
+		# self.bpmChargePlot = plot()
+		# self.wcmChargePlot = plot()
+		# self.bpmChargePlot.addLegend()
+		# self.bpmChargePlot.addItem(self.bpmChargeBarGraph)
+		# self.bpmChargePlot.addItem(self.wcmChargeBarGraph)
+		self.bpmChargePlot.addItem(self.bpmChargeBarGraph)
+		self.bpmChargePlot.addItem(self.wcmChargeBarGraph)
+		self.bpmChargePlot.showGrid(x=True, y=True)
+		self.bpmChargePlot.layout.setMinimumWidth(1140.0)
+		self.bpmChargePlot.layout.setMinimumHeight(500.0)
+		self.bpmChargePlot.layout.setMaximumWidth(1140.0)
+		self.bpmChargePlot.layout.setMaximumHeight(500.0)
+		self.windowView.addItem(self.bpmChargePlot)

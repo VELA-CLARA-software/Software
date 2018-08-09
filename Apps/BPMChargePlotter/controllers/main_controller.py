@@ -45,9 +45,9 @@ class main_controller(controller_base):
 
         self.data_monitor.init_monitor_states()
     #     #
-        time.sleep(1)
         while 1:
             while 1:
+                time.sleep(1)
                 if controller_base.data.values[dat.ready_to_go]:
                     for i in controller_base.data.values[dat.bpm_names]:
                         controller_base.data_monitor.bpm_monitor.update_bpm_charge(i)
