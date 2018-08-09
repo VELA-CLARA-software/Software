@@ -120,11 +120,89 @@ class plotWidgets(QWidget):
 					zi = rbf(xi, yi)
 					plt = self.subPlots[a]
 					plt.clear()
+					print 'ranges = ', [x.min(), x.max(), y.min(), y.max()]
 					plt.imshow(zi, vmin=z.min(), vmax=z.max(), origin='lower',
 	       					extent=[x.min(), x.max(), y.min(), y.max()])
 					self.mainPlot[a].draw()
 				except:
 					pass
+			self.plotting = False
+
+class plotWidgetsBLM(QWidget):
+
+	actuators = ['approx', 'fine']
+
+	def __init__(self, cavity, approximateText='Charge', approximateUnits='pC'):
+		super(plotWidgetsBLM, self).__init__()
+		self.plotting = False
+		self.cavity = cavity
+		self.layout = QGridLayout()
+		self.setLayout(self.layout)
+		self.mainPlot = {}
+		self.subPlots = {}
+		self.subPlots['BPM1'] = {}
+		self.mainPlot['BPM1'] = pg.PlotWidget(title='BPM 1')
+		self.subPlots['BPM1']['High'] = self.mainPlot['BPM1'].getPlotItem().plot()
+		self.subPlots['BPM1']['Low'] = self.mainPlot['BPM1'].getPlotItem().plot()
+		self.mainPlot['BPM1'].showGrid(x=True, y=True)
+		self.layout.addWidget(self.mainPlot['BPM1'],0,0)
+		self.mainPlot['BPM2'] = pg.PlotWidget(title='BPM 2')
+		self.subPlots['BPM2'] = {}
+		self.subPlots['BPM2']['Low'] = self.mainPlot['BPM2'].getPlotItem().plot()
+		self.subPlots['BPM2']['High'] = self.mainPlot['BPM2'].getPlotItem().plot()
+		self.mainPlot['BPM2'].showGrid(x=True, y=True)
+		self.layout.addWidget(self.mainPlot['BPM2'],0,1)
+		self.subPlots['X'] = {}
+		self.mainPlot['X'] = pg.PlotWidget(title='X Plane')
+		self.subPlots['X']['BPM1'] = self.mainPlot['X'].getPlotItem().plot()
+		self.subPlots['X']['BPM2'] = self.mainPlot['X'].getPlotItem().plot()
+		self.mainPlot['X'].showGrid(x=True, y=True)
+		self.line = QFrame()
+		self.line.setFrameShape(QFrame.HLine);
+		self.layout.addWidget(self.line,1,0,1,2)
+		self.layout.addWidget(self.mainPlot['X'],2,0)
+		self.subPlots['Y'] = {}
+		self.mainPlot['Y'] = pg.PlotWidget(title='Y Plane')
+		self.subPlots['Y']['BPM1'] = self.mainPlot['Y'].getPlotItem().plot()
+		self.subPlots['Y']['BPM2'] = self.mainPlot['Y'].getPlotItem().plot()
+		self.mainPlot['Y'].showGrid(x=True, y=True)
+		self.layout.addWidget(self.mainPlot['Y'],2,1)
+
+	def plot(self, alldata):
+		if not self.plotting:
+			xydata = {}
+			corrdata = {}
+			self.plotting = True
+			for actuator in ['Low','High']:
+				data = alldata[actuator]
+				corrdata[actuator] = zip(data['x'], data['y'])
+				# print 'corrdata[actuator] = ', corrdata[actuator]
+				xydata[actuator] = zip(*[[[a[0], a[2]],[a[1],a[3]]] for a in data['z']])
+				# print 'xydata[actuator] = ', xydata[actuator][0]
+				if actuator == 'Low':
+					symbol = 'o'
+					color = 'b'
+				else:
+					symbol = 's'
+					color = 'r'
+				self.subPlots['BPM1'][actuator].setData(np.array(xydata[actuator][0]), symbol=symbol, pen=None, symbolPen=color, symbolBrush=color)
+				self.subPlots['BPM2'][actuator].setData(np.array(xydata[actuator][1]), symbol=symbol, pen=None, symbolPen=color, symbolBrush=color)
+
+			# print 'xydata[Low] = ', xydata['Low']
+			xdata1 = [b[0] for a,b in zip(corrdata['Low'], xydata['Low'][0]) if a[1] == 0]
+			xdata2 = [b[0] for a,b in zip(corrdata['High'], xydata['High'][0]) if a[1] == 0]
+			self.subPlots['X']['BPM1'].setData(np.array(zip(xdata1,xdata2)), symbol='o', pen=None, symbolPen='b', symbolBrush='b')
+			xdata1 = [b[0] for a,b in zip(corrdata['Low'], xydata['Low'][1]) if a[1] == 0]
+			xdata2 = [b[0] for a,b in zip(corrdata['High'], xydata['High'][1]) if a[1] == 0]
+			self.subPlots['X']['BPM2'].setData(np.array(zip(xdata1,xdata2)), symbol='s', pen=None, symbolPen='r', symbolBrush='r')
+
+			ydata1 = [b[1] for a,b in zip(corrdata['Low'], xydata['Low'][0]) if a[0] == 0]
+			ydata2 = [b[1] for a,b in zip(corrdata['High'], xydata['High'][0]) if a[0] == 0]
+			self.subPlots['Y']['BPM1'].setData(np.array(zip(ydata1,ydata2)), symbol='o', pen=None, symbolPen='b', symbolBrush='b')
+			ydata1 = [b[1] for a,b in zip(corrdata['Low'], xydata['Low'][1]) if a[0] == 0]
+			ydata2 = [b[1] for a,b in zip(corrdata['High'], xydata['High'][1]) if a[0] == 0]
+			self.subPlots['Y']['BPM2'].setData(np.array(zip(ydata1,ydata2)), symbol='s', pen=None, symbolPen='r', symbolBrush='r')
+
 			self.plotting = False
 
 class Controller(QObject):
@@ -154,13 +232,18 @@ class Controller(QObject):
 		self.plots['Linac1'] = plotWidgets('Linac1', approximateText='BPM X Position', approximateUnits='mm')
 		self.view.plotLayoutLinac1.addWidget(self.plots['Linac1'])
 
+		self.plots['Linac1BLM'] = plotWidgetsBLM('Linac1BLM', approximateText='BPM X Position', approximateUnits='mm')
+		self.view.plotLayoutLinac1BLM.addWidget(self.plots['Linac1BLM'])
+
 		self.plots['L01-SOL1'] = plotWidgets('L01-SOL1', approximateText='BPM X Position', approximateUnits='mm')
 		self.view.plotLayoutSOL1.addWidget(self.plots['L01-SOL1'])
 
 		self.plots['L01-SOL2'] = plotWidgets('L01-SOL2', approximateText='BPM X Position', approximateUnits='mm')
 		self.view.plotLayoutSOL2.addWidget(self.plots['L01-SOL2'])
 
-		self.buttons = [self.view.linac1StartRoughScanButton, self.view.linac1StartFineScanButton,
+		self.buttons = [
+		self.view.linac1StartRoughScanButton, self.view.linac1StartFineScanButton,
+		self.view.linac1BLMStartRoughScanButton, self.view.linac1BLMStartFineScanButton,
 		self.view.sol1StartRoughScanButton, self.view.sol1StartFineScanButton,
 		self.view.sol2StartRoughScanButton, self.view.sol2StartFineScanButton
 		]
@@ -171,6 +254,8 @@ class Controller(QObject):
 
 		self.view.linac1StartRoughScanButton.clicked.connect(self.linac1RoughScan)
 		self.view.linac1StartFineScanButton.clicked.connect(self.linac1FineScan)
+		self.view.linac1BLMStartRoughScanButton.clicked.connect(self.linac1BLMRoughScan)
+		self.view.linac1BLMStartFineScanButton.clicked.connect(self.linac1BLMFineScan)
 		self.view.sol1StartRoughScanButton.clicked.connect(self.sol1RoughScan)
 		self.view.sol1StartFineScanButton.clicked.connect(self.sol1FineScan)
 		self.view.sol2StartRoughScanButton.clicked.connect(self.sol2RoughScan)
@@ -180,8 +265,13 @@ class Controller(QObject):
 		self.view.finishButton.hide()
 		self.view.finishButton.clicked.connect(self.finishRunning)
 		self.view.actionSave_Calibation_Data.triggered.connect(self.saveData)
-
+		self.toggleVerbose(self.view.saveDataCheckbox.isChecked())
+		self.view.saveDataCheckbox.toggled.connect(self.toggleVerbose)
 		self.setLabel('MODE: '+self.model.machineType+' '+self.model.lineType+' with '+self.model.gunType+' gun')
+
+	def toggleVerbose(self, state):
+		print 'state = ', state
+		self.model.verbose = state
 
 	def setButtonState(self, state=True):
 		for b in self.buttons:
@@ -218,7 +308,7 @@ class Controller(QObject):
 			self.thread.function.finish()
 
 	def updatePlot(self):
-		self.plots[self.cavity].plot(self.model.actuator, self.model.experimentalData[self.model.cavity][self.model.actuator])
+		self.plots[self.cavity].plot(self.model.sub, self.model.experimentalData[self.model.main][self.model.sub])
 
 	def solScan(self, scanfunction, stepsize):
 		self.disableButtons()
@@ -254,8 +344,8 @@ class Controller(QObject):
 		self.plane = 'X' if self.view.horizontalRadio.isChecked() else 'Y'
 		self.solScan(self.model.sol2Scan, self.view.fineStepSetCorrector.value())
 
-
 	def linac1Scan(self, scanfunction, actuator, stepsize):
+		self.disableButtons()
 		self.cavity = 'Linac1'
 		self.thread = GenericThread(scanfunction, actuator, self.plane, \
 			self.view.linac1LowerSet.value(), \
@@ -265,7 +355,7 @@ class Controller(QObject):
 			stepsize, \
 			self.view.nSamples.value() \
 		)
-		self.model.newData.connect(self.updatePlot)
+		self.thread.finished.connect(self.updatePlot)
 		self.thread.finished.connect(self.enableButtons)
 		self.thread.start()
 
@@ -278,6 +368,31 @@ class Controller(QObject):
 		self.cavity = 'Linac1'
 		self.plane = 'X' if self.view.horizontalRadio.isChecked() else 'Y'
 		self.linac1Scan(self.model.linac1Scan, 'fine', self.view.fineStepSetCorrector.value())
+
+	def updatePlotBLM(self):
+		self.plots[self.cavity].plot(self.model.experimentalData[self.model.main])
+
+	def linac1ScanBLM(self, scanfunction, actuator, stepsize):
+		self.disableButtons()
+		self.cavity = 'Linac1BLM'
+		self.thread = GenericThread(scanfunction, actuator, \
+			self.view.linac1LowerSet.value(), \
+			self.view.linac1UpperSet.value(), \
+			self.view.nSamples.value() \
+		)
+		self.thread.finished.connect(self.updatePlotBLM)
+		self.thread.finished.connect(self.enableButtons)
+		self.thread.start()
+
+	def linac1BLMRoughScan(self):
+		self.cavity = 'Linac1BLM'
+		self.plane = 'X' if self.view.horizontalRadio.isChecked() else 'Y'
+		self.linac1ScanBLM(self.model.linac1BLMScan, 'approx', self.view.roughStepSetCorrector.value())
+
+	def linac1BLMFineScan(self):
+		self.cavity = 'Linac1BLM'
+		self.plane = 'X' if self.view.horizontalRadio.isChecked() else 'Y'
+		self.linac1ScanBLM(self.model.linac1BLMScan, 'fine', self.view.fineStepSetCorrector.value())
 
 	def setLabel(self, string):
 		logger.info(string)

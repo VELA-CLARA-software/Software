@@ -116,7 +116,7 @@
        </sizepolicy>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="Gun_Tab">
        <attribute name="icon">
@@ -214,6 +214,13 @@
              </property>
              <property name="value">
               <number>100</number>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0" colspan="2">
+            <widget class="QPushButton" name="Gun_LoadBURT_Button">
+             <property name="text">
+              <string>Load BURT</string>
              </property>
             </widget>
            </item>
@@ -672,6 +679,13 @@
              </property>
              <property name="value">
               <number>100</number>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0" colspan="2">
+            <widget class="QPushButton" name="Linac1_LoadBURT_Button">
+             <property name="text">
+              <string>Load BURT</string>
              </property>
             </widget>
            </item>
