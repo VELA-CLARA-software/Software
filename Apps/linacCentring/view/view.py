@@ -368,7 +368,7 @@ class Ui_MainWindow(object):
         self.formLayout_3 = QtGui.QFormLayout(self.groupBox_8)
         self.formLayout_3.setObjectName(_fromUtf8("formLayout_3"))
         self.saveDataCheckbox = QtGui.QCheckBox(self.groupBox_8)
-        self.saveDataCheckbox.setChecked(False)
+        self.saveDataCheckbox.setChecked(True)
         self.saveDataCheckbox.setObjectName(_fromUtf8("saveDataCheckbox"))
         self.formLayout_3.setWidget(0, QtGui.QFormLayout.SpanningRole, self.saveDataCheckbox)
         self.gridLayout_3.addWidget(self.groupBox_8, 1, 2, 1, 1)
@@ -547,7 +547,7 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menuFile.menuAction())
 
         self.retranslateUi(MainWindow)
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):

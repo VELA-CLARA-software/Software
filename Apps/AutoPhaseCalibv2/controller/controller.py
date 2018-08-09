@@ -8,6 +8,7 @@ import pyqtgraph as pg
 from  functools import partial
 sys.path.append("../../../")
 from Software.Utils.dict_to_h5 import *
+from Software.Procedures.Machine.signaller import machineReciever, machineSignaller
 import Software.Widgets.loggerWidget.loggerWidget as lw
 import logging
 logger = logging.getLogger(__name__)
@@ -22,45 +23,6 @@ class GenericThread(QThread):
 	def run(self):
 		self.object = self.function(*self.args, **self.kwargs)
 		print 'finished!'
-
-class machineReciever(QObject):
-
-	fromMachine = pyqtSignal(int, 'PyQt_PyObject')
-
-	def __init__(self, machine):
-		super(machineReciever, self).__init__()
-		self.machine = machine
-
-	def toMachine(self, id, function, args, kwargs):
-		ans = getattr(self.machine,str(function))(*args, **kwargs)
-		self.fromMachine.emit(id, ans)
-
-class machineSignaller(QObject):
-
-	toMachine = pyqtSignal(int, str, tuple, dict)
-
-	def __init__(self, machine):
-		super(machineSignaller, self).__init__()
-		self.machine = machine
-		self.recievedSignal = {}
-		self.signalRecieved = {}
-		self.id = -1
-
-	def get(self, function, *args, **kwargs):
-		id = int(self.id) + 1
-		self.signalRecieved[id] = False
-		self.toMachine.emit(id, function, args, kwargs)
-		self.id += 1
-		while not all([self.signalRecieved[i] for i in range(id+1)]):
-			time.sleep(0.01)
-		return self.recievedSignal[id]
-
-	def fromMachine(self, id, response):
-		self.signalRecieved[id] = True
-		self.recievedSignal[id] = response
-
-	def __getattr__(self, attr):
-		return getattr(self.machine, attr)
 
 class plotWidgets(pg.GraphicsView):
 
@@ -320,7 +282,7 @@ class Controller(QObject):
 		try:
 			os.makedirs(dir)
 		except OSError:
-			if not os.path.isdir(path):
+			if not os.path.isdir(dir):
 				self.loggerSignal.emit('Error creating directory - saving to local directory')
 				dir = '.'
 		for c in cavity:
