@@ -27,7 +27,7 @@ class GenericThread(QThread):
 
 from matplotlib.figure import Figure
 import matplotlib
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 
 class noToolBarWidget(QWidget):
 

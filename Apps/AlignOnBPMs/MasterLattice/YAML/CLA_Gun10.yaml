@@ -1,0 +1,5 @@
+elements:
+  filename: [../../MasterLattice/YAML/Injector10.yaml, ../../MasterLattice/YAML/S02.yaml, ../../MasterLattice/YAML/L02.yaml,
+             ../../MasterLattice/YAML/S03.yaml, ../../MasterLattice/YAML/L03.yaml, ../../MasterLattice/YAML/S04.yaml, ../../MasterLattice/YAML/L4H.yaml,
+             ../../MasterLattice/YAML/S05.yaml, ../../MasterLattice/YAML/VBC.yaml, ../../MasterLattice/YAML/S06.yaml, ../../MasterLattice/YAML/L04.yaml,
+             ../../MasterLattice/YAML/S07.yaml]

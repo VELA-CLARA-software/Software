@@ -38,7 +38,7 @@ class Functions(QObject):
             print ctrl.getSI(magnet)
             #self.qctrl.setSI(self.quad, x)
             time.sleep(0.5)
-            
+
     def stepCurrent(self,ctrl,magnet,step):
         MAG = ctrl.getMagObjConstRef(magnet)
         setI = MAG.siWithPol + step
@@ -163,7 +163,7 @@ class Functions(QObject):
             time.sleep(0.1)
         print('Aligned beam using ' + hcor + ' and ' + bpm)
 
-    def align3(self,hvctrl,hvcor, bctrl, bpm, off, tol, xory, N=10):
+    def align3(self,hvctrl,hvcor, bctrl, bpm, off, tol, xory, initstep, N=10):
         print 'In align3, in align3..', bpm, type(bpm), len(bpm)
         print xory
         COR = hvctrl.getMagObjConstRef(hvcor)                                        #create a reference to the corrector
@@ -176,9 +176,9 @@ class Functions(QObject):
         x2=x1
         I2=0
         if (COR.riWithPol>0.0):                                                    #determine intial step
-            initialStep = -0.01
+            initialStep = -initstep
         else:
-            initialStep = 0.01
+            initialStep = initstep
         self.stepCurrent(hvctrl, hvcor, initialStep)
         self.simulate.run()
         time.sleep(2)

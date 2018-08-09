@@ -1,0 +1,2357 @@
+alph:
+  xmax: double
+  xs1: double
+  xs2: double
+  dp1: double
+  dp2: double
+  xpuck: double
+  widthpuck: double
+  dx: double
+  dy: double
+  dz: double
+  tilt: double
+  part: long
+  order: long
+  group: string
+
+bggexp:
+  l: double
+  lfield: double
+  filename: string
+  strength: double
+  tilt: double
+  dx: double
+  dy: double
+  dz: double
+  maximum_m: long
+  maximum_2n: long
+  z_interval: long
+  symplectic: long
+  group: string
+
+bmapxy:
+  l: double
+  strength: double
+  accuracy: double
+  method: string
+  filename: string
+  fx: string
+  fy: string
+  group: string
+
+bmxyz:
+  l: double
+  lfield: double
+  strength: double
+  accuracy: double
+  method: string
+  filename: string
+  group: string
+
+branch:
+  counter: long
+  verbosity: long
+  branch_to: string
+  group: string
+
+brat:
+  l: double
+  angle: double
+  fse: double
+  accuracy: double
+  method: string
+  filename: string
+  xvertex: double
+  zvertex: double
+  xentry: double
+  zentry: double
+  xexit: double
+  zexit: double
+  dxmap: double
+  dzmap: double
+  yawmap: double
+  factor: double
+  use_ftable: long
+  group: string
+
+bumper:
+  l: double
+  angle: double
+  tilt: double
+  dx: double
+  dy: double
+  dz: double
+  b2: double
+  time_offset: double
+  periodic: long
+  phase_reference: long
+  fire_on_pass: long
+  n_kicks: long
+  waveform: string
+  deflection_map: string
+  group: string
+
+center:
+  x: long
+  xp: long
+  y: long
+  yp: long
+  s: long
+  delta: long
+  t: long
+  once_only: long
+  on_pass: long
+  group: string
+
+cepl:
+  l: double
+  ramp_time: double
+  time_offset: double
+  voltage: double
+  gap: double
+  static_voltage: double
+  tilt: double
+  accuracy: double
+  x_max: double
+  y_max: double
+  dx: double
+  dy: double
+  phase_reference: long
+  n_steps: long
+  method: string
+  fiducial: string
+  group: string
+
+charge:
+  total: double
+  per_particle: double
+  allow_total_change: long
+  group: string
+
+clean:
+  mode: string
+  xlimit: double
+  xplimit: double
+  ylimit: double
+  yplimit: double
+  tlimit: double
+  deltalimit: double
+  group: string
+
+corgpipe:
+  l: double
+  radius: double
+  period: double
+  gap: double
+  depth: double
+  dt: double
+  tmax: double
+  n_bins: long
+  interpolate: long
+  smoothing: long
+  sg_halfwidth: long
+  sg_order: long
+  change_p0: long
+  allow_long_beam: long
+  ramp_passes: long
+  group: string
+
+csbend:
+  l: double
+  angle: double
+  k1: double
+  k2: double
+  k3: double
+  k4: double
+  k5: double
+  k6: double
+  k7: double
+  k8: double
+  e1: double
+  e2: double
+  tilt: double
+  h1: double
+  h2: double
+  hgap: double
+  fint: double
+  dx: double
+  dy: double
+  dz: double
+  fse: double
+  etilt: double
+  n_kicks: long
+  nonlinear: long
+  synch_rad: long
+  edge1_effects: long
+  edge2_effects: long
+  edge_order: long
+  integration_order: long
+  edge1_kick_limit: double
+  edge2_kick_limit: double
+  kick_limit_scaling: long
+  use_bn: long
+  expansion_order: long
+  b1: double
+  b2: double
+  b3: double
+  b4: double
+  b5: double
+  b6: double
+  b7: double
+  b8: double
+  xreference: double
+  f1: double
+  f2: double
+  f3: double
+  f4: double
+  f5: double
+  f6: double
+  f7: double
+  f8: double
+  isr: long
+  isr1part: long
+  sqrt_order: long
+  use_rad_dist: long
+  add_opening_angle: long
+  photon_output_file: string
+  photon_low_energy_cutoff: double
+  reference_correction: long
+  tracking_matrix: long
+  group: string
+
+csrcsbend:
+  l: double
+  angle: double
+  k1: double
+  k2: double
+  k3: double
+  k4: double
+  k5: double
+  k6: double
+  k7: double
+  k8: double
+  e1: double
+  e2: double
+  tilt: double
+  h1: double
+  h2: double
+  hgap: double
+  fint: double
+  dx: double
+  dy: double
+  dz: double
+  fse: double
+  etilt: double
+  n_kicks: long
+  nonlinear: long
+  linearize: long
+  synch_rad: long
+  edge1_effects: long
+  edge2_effects: long
+  edge_order: long
+  integration_order: long
+  bins: long
+  bin_once: long
+  bin_range_factor: double
+  sg_halfwidth: long
+  sg_order: long
+  sgderiv_halfwidth: long
+  sgderiv_order: long
+  trapazoid_integration: long
+  output_file: string
+  output_interval: long
+  output_last_wake_only: long
+  steady_state: long
+  igf: long
+  use_bn: long
+  expansion_order: long
+  b1: double
+  b2: double
+  b3: double
+  b4: double
+  b5: double
+  b6: double
+  b7: double
+  b8: double
+  isr: long
+  isr1part: long
+  csr: long
+  block_csr: long
+  derbenev_criterion_mode: string
+  particle_output_file: string
+  particle_output_interval: long
+  slice_analysis_interval: long
+  low_frequency_cutoff0: double
+  low_frequency_cutoff1: double
+  high_frequency_cutoff0: double
+  high_frequency_cutoff1: double
+  clip_negative_bins: long
+  wake_filter_file: string
+  wff_freq_column: string
+  wff_real_column: string
+  wff_imag_column: string
+  group: string
+
+csrdrift:
+  l: double
+  attenuation_length: double
+  dz: double
+  n_kicks: long
+  spread: long
+  use_overtaking_length: long
+  ol_multiplier: double
+  use_saldin54: long
+  saldin54points: long
+  csr: long
+  saldin54norm_mode: string
+  spread_mode: string
+  wavelength_mode: string
+  bunchlength_mode: string
+  saldin54_output: string
+  use_stupakov: long
+  stupakov_output: string
+  stupakov_output_interval: long
+  slice_analysis_interval: long
+  linearize: long
+  lsc_bins: long
+  lsc_interpolate: long
+  lsc_low_frequency_cutoff0: double
+  lsc_low_frequency_cutoff1: double
+  lsc_high_frequency_cutoff0: double
+  lsc_high_frequency_cutoff1: double
+  lsc_radius_factor: double
+  group: string
+
+cwiggler:
+  l: double
+  b_max: double
+  bx_max: double
+  by_max: double
+  dx: double
+  dy: double
+  dz: double
+  tilt: double
+  periods: long
+  steps_per_period: long
+  integration_order: long
+  by_file: string
+  bx_file: string
+  by_split_pole: long
+  bx_split_pole: long
+  synch_rad: long
+  isr: long
+  isr1part: long
+  sinusoidal: long
+  vertical: long
+  helical: long
+  force_matched: long
+  field_output: string
+  verbosity: long
+  group: string
+
+drif:
+  l: double
+  order: long
+  group: string
+
+drift:
+  l: double
+  order: long
+  group: string
+
+dscatter:
+  plane: string
+  filename: string
+  valuename: string
+  cdfname: string
+  pdfname: string
+  onceperparticle: long
+  factor: double
+  probability: double
+  groupid: long
+  randomsign: long
+  limitperpass: long
+  limittotal: long
+  startonpass: long
+  endonpass: long
+  group: string
+
+ecol:
+  l: double
+  x_max: double
+  y_max: double
+  dx: double
+  dy: double
+  open_side: string
+  exponent: long
+  yexponent: long
+  invert: long
+  group: string
+
+edrift:
+  l: double
+  group: string
+
+ehkick:
+  l: double
+  kick: double
+  tilt: double
+  calibration: double
+  steering: long
+  synch_rad: long
+  isr: long
+  lerad: double
+  steering_multipoles: string
+  group: string
+
+ekicker:
+  l: double
+  hkick: double
+  vkick: double
+  tilt: double
+  hcalibration: double
+  vcalibration: double
+  steering: long
+  synch_rad: long
+  isr: long
+  lerad: double
+  steering_multipoles: string
+  group: string
+
+else:
+  group: string
+
+ematrix:
+  l: double
+  angle: double
+  dx: double
+  dy: double
+  dz: double
+  tilt: double
+  yaw: double
+  pitch: double
+  order: long
+  c1: double
+  c2: double
+  c3: double
+  c4: double
+  c5: double
+  c6: double
+  deltap: double
+  r11: double
+  r12: double
+  r13: double
+  r14: double
+  r15: double
+  r16: double
+  r21: double
+  r22: double
+  r23: double
+  r24: double
+  r25: double
+  r26: double
+  r31: double
+  r32: double
+  r33: double
+  r34: double
+  r35: double
+  r36: double
+  r41: double
+  r42: double
+  r43: double
+  r44: double
+  r45: double
+  r46: double
+  r51: double
+  r52: double
+  r53: double
+  r54: double
+  r55: double
+  r56: double
+  r61: double
+  r62: double
+  r63: double
+  r64: double
+  r65: double
+  r66: double
+  t111: double
+  t121: double
+  t122: double
+  t131: double
+  t132: double
+  t133: double
+  t141: double
+  t142: double
+  t143: double
+  t144: double
+  t151: double
+  t152: double
+  t153: double
+  t154: double
+  t155: double
+  t161: double
+  t162: double
+  t163: double
+  t164: double
+  t165: double
+  t166: double
+  t211: double
+  t221: double
+  t222: double
+  t231: double
+  t232: double
+  t233: double
+  t241: double
+  t242: double
+  t243: double
+  t244: double
+  t251: double
+  t252: double
+  t253: double
+  t254: double
+  t255: double
+  t261: double
+  t262: double
+  t263: double
+  t264: double
+  t265: double
+  t266: double
+  t311: double
+  t321: double
+  t322: double
+  t331: double
+  t332: double
+  t333: double
+  t341: double
+  t342: double
+  t343: double
+  t344: double
+  t351: double
+  t352: double
+  t353: double
+  t354: double
+  t355: double
+  t361: double
+  t362: double
+  t363: double
+  t364: double
+  t365: double
+  t366: double
+  t411: double
+  t421: double
+  t422: double
+  t431: double
+  t432: double
+  t433: double
+  t441: double
+  t442: double
+  t443: double
+  t444: double
+  t451: double
+  t452: double
+  t453: double
+  t454: double
+  t455: double
+  t461: double
+  t462: double
+  t463: double
+  t464: double
+  t465: double
+  t466: double
+  t511: double
+  t521: double
+  t522: double
+  t531: double
+  t532: double
+  t533: double
+  t541: double
+  t542: double
+  t543: double
+  t544: double
+  t551: double
+  t552: double
+  t553: double
+  t554: double
+  t555: double
+  t561: double
+  t562: double
+  t563: double
+  t564: double
+  t565: double
+  t566: double
+  t611: double
+  t621: double
+  t622: double
+  t631: double
+  t632: double
+  t633: double
+  t641: double
+  t642: double
+  t643: double
+  t644: double
+  t651: double
+  t652: double
+  t653: double
+  t654: double
+  t655: double
+  t661: double
+  t662: double
+  t663: double
+  t664: double
+  t665: double
+  t666: double
+  group: string
+
+emittance:
+  emitx: double
+  emity: double
+  emitnx: double
+  emitny: double
+  group: string
+
+energy:
+  central_energy: double
+  central_momentum: double
+  match_beamline: long
+  match_particles: long
+  group: string
+
+evkick:
+  l: double
+  kick: double
+  tilt: double
+  calibration: double
+  steering: long
+  synch_rad: long
+  isr: long
+  lerad: double
+  steering_multipoles: string
+  group: string
+
+floor:
+  x: double
+  y: double
+  z: double
+  theta: double
+  phi: double
+  psi: double
+  group: string
+
+fmult:
+  l: double
+  tilt: double
+  dx: double
+  dy: double
+  dz: double
+  fse: double
+  n_kicks: long
+  synch_rad: long
+  filename: string
+  sqrt_order: long
+  group: string
+
+frfmode:
+  filename: string
+  bin_size: double
+  n_bins: long
+  rigid_until_pass: long
+  use_symm_data: long
+  factor: double
+  cutoff: double
+  output_file: string
+  flush_interval: long
+  ramp_passes: long
+  reset_for_each_step: long
+  long_range_only: long
+  n_cavities: long
+  bunched_beam_mode: long
+  group: string
+
+ftable:
+  l: double
+  angle: double
+  l1: double
+  l2: double
+  e1: double
+  e2: double
+  tilt: double
+  dx: double
+  dy: double
+  dz: double
+  factor: double
+  threshold: double
+  input_file: string
+  n_kicks: long
+  verbose: long
+  simple_input: long
+  group: string
+
+ftrfmode:
+  filename: string
+  bin_size: double
+  n_bins: long
+  rigid_until_pass: long
+  use_symm_data: long
+  dx: double
+  dy: double
+  xfactor: double
+  yfactor: double
+  cutoff: double
+  output_file: string
+  flush_interval: long
+  ramp_passes: long
+  reset_for_each_step: long
+  long_range_only: long
+  n_cavities: long
+  bunched_beam_mode: long
+  group: string
+
+gfwiggler:
+  l: double
+  b_max: double
+  shim_scale: double
+  dx: double
+  dy: double
+  dz: double
+  tilt: double
+  periods: long
+  step: long
+  order: long
+  end_pole: long
+  shim_on: long
+  input_file: string
+  shim_input: string
+  synch_rad: long
+  isr: long
+  isr1part: long
+  x0: double
+  gap0: double
+  d_gap: double
+  phase_1: double
+  phase_2: double
+  phase_3: double
+  phase_4: double
+  verbosity: long
+  group: string
+
+histogram:
+  filename: string
+  interval: long
+  start_pass: long
+  bins: long
+  fixed_bin_size: long
+  x_data: long
+  y_data: long
+  longit_data: long
+  bin_size_factor: double
+  normalize: long
+  disable: long
+  sparse: long
+  start_pid: long
+  end_pid: long
+  group: string
+
+hkick:
+  l: double
+  kick: double
+  tilt: double
+  b2: double
+  calibration: double
+  edge_effects: long
+  order: long
+  steering: long
+  synch_rad: long
+  isr: long
+  lerad: double
+  group: string
+
+hmon:
+  l: double
+  dx: double
+  dy: double
+  weight: double
+  tilt: double
+  calibration: double
+  setpoint: double
+  order: long
+  readout: string
+  co_fitpoint: long
+  group: string
+
+ibscatter:
+  factor: double
+  do_x: long
+  do_y: long
+  do_z: long
+  nslice: long
+  smooth: long
+  force_matched_twiss: long
+  isring: long
+  interval: long
+  filename: string
+  bunched_beam_mode: long
+  verbose: long
+  group: string
+
+ilmatrix:
+  l: double
+  nux: double
+  nuy: double
+  nux1m: double
+  nuy1m: double
+  nux2m: double
+  nuy2m: double
+  nux3m: double
+  nuy3m: double
+  nux1ax: double
+  nuy1ax: double
+  nux1ay: double
+  nuy1ay: double
+  nux2ax: double
+  nuy2ax: double
+  nux2ay: double
+  nuy2ay: double
+  nux1ax1ay: double
+  nuy1ax1ay: double
+  betax: double
+  betay: double
+  betax1m: double
+  betay1m: double
+  alphax: double
+  alphay: double
+  alphax1m: double
+  alphay1m: double
+  etax: double
+  etapx: double
+  etay: double
+  etapy: double
+  etax1: double
+  etapx1: double
+  etay1: double
+  etapy1: double
+  alphac: double
+  alphac2: double
+  alphac3: double
+  ds1ax: double
+  ds1ay: double
+  ds2ax: double
+  ds2ay: double
+  ds1ax1ay: double
+  tilt: double
+  cross_resonance: long
+  verbosity: long
+  group: string
+
+kicker:
+  l: double
+  hkick: double
+  vkick: double
+  tilt: double
+  b2: double
+  hcalibration: double
+  vcalibration: double
+  edge_effects: long
+  order: long
+  steering: long
+  synch_rad: long
+  isr: long
+  lerad: double
+  group: string
+
+koct:
+  l: double
+  k3: double
+  tilt: double
+  bore: double
+  b: double
+  dx: double
+  dy: double
+  dz: double
+  fse: double
+  n_kicks: long
+  synch_rad: long
+  systematic_multipoles: string
+  random_multipoles: string
+  integration_order: long
+  sqrt_order: long
+  isr: long
+  isr1part: long
+  group: string
+
+kpoly:
+  coefficient: double
+  tilt: double
+  dx: double
+  dy: double
+  dz: double
+  factor: double
+  order: long
+  plane: string
+  group: string
+
+kquad:
+  l: double
+  k1: double
+  tilt: double
+  bore: double
+  b: double
+  dx: double
+  dy: double
+  dz: double
+  fse: double
+  hkick: double
+  vkick: double
+  hcalibration: double
+  vcalibration: double
+  hsteering: long
+  vsteering: long
+  n_kicks: long
+  synch_rad: long
+  systematic_multipoles: string
+  edge_multipoles: string
+  random_multipoles: string
+  steering_multipoles: string
+  integration_order: long
+  sqrt_order: long
+  isr: long
+  isr1part: long
+  edge1_effects: long
+  edge2_effects: long
+  leffective: double
+  i0p: double
+  i1p: double
+  i2p: double
+  i3p: double
+  lambda2p: double
+  i0m: double
+  i1m: double
+  i2m: double
+  i3m: double
+  lambda2m: double
+  edge1_linear: long
+  edge2_linear: long
+  edge1_nonlinear_factor: double
+  edge2_nonlinear_factor: double
+  radial: long
+  group: string
+
+kquse:
+  l: double
+  k1: double
+  k2: double
+  tilt: double
+  dx: double
+  dy: double
+  dz: double
+  fse1: double
+  fse2: double
+  n_kicks: long
+  synch_rad: long
+  integration_order: long
+  isr: long
+  isr1part: long
+  matrix_tracking: long
+  group: string
+
+ksbend:
+  l: double
+  angle: double
+  k1: double
+  k2: double
+  k3: double
+  k4: double
+  e1: double
+  e2: double
+  tilt: double
+  h1: double
+  h2: double
+  hgap: double
+  fint: double
+  dx: double
+  dy: double
+  dz: double
+  fse: double
+  etilt: double
+  n_kicks: long
+  nonlinear: long
+  synch_rad: long
+  edge1_effects: long
+  edge2_effects: long
+  edge_order: long
+  paraxial: long
+  transport: long
+  method: string
+  group: string
+
+ksext:
+  l: double
+  k2: double
+  tilt: double
+  bore: double
+  b: double
+  dx: double
+  dy: double
+  dz: double
+  fse: double
+  hkick: double
+  vkick: double
+  hcalibration: double
+  vcalibration: double
+  hsteering: long
+  vsteering: long
+  n_kicks: long
+  synch_rad: long
+  systematic_multipoles: string
+  edge_multipoles: string
+  random_multipoles: string
+  steering_multipoles: string
+  integration_order: long
+  sqrt_order: long
+  isr: long
+  isr1part: long
+  group: string
+
+lmirror:
+  rx: double
+  ry: double
+  theta: double
+  dx: double
+  dy: double
+  dz: double
+  tilt: double
+  yaw: double
+  pitch: double
+  group: string
+
+lrwake:
+  inputfile: string
+  tcolumn: string
+  wxcolumn: string
+  wycolumn: string
+  wzcolumn: string
+  qxcolumn: string
+  qycolumn: string
+  factor: double
+  xfactor: double
+  yfactor: double
+  zfactor: double
+  qxfactor: double
+  qyfactor: double
+  turns_to_keep: long
+  ramp_passes: long
+  group: string
+
+lscdrift:
+  l: double
+  leffective: double
+  bins: long
+  smoothing: long
+  sg_halfwidth: long
+  sg_order: long
+  interpolate: long
+  low_frequency_cutoff0: double
+  low_frequency_cutoff1: double
+  high_frequency_cutoff0: double
+  high_frequency_cutoff1: double
+  radius_factor: double
+  lsc: long
+  group: string
+
+lsrmdltr:
+  l: double
+  bu: double
+  periods: long
+  method: string
+  field_expansion: string
+  accuracy: double
+  n_steps: long
+  pole_factor1: double
+  pole_factor2: double
+  pole_factor3: double
+  laser_wavelength: double
+  laser_peak_power: double
+  laser_w0: double
+  laser_phase: double
+  laser_x0: double
+  laser_y0: double
+  laser_z0: double
+  laser_tilt: double
+  laser_m: long
+  laser_n: long
+  synch_rad: long
+  isr: long
+  time_profile: string
+  time_offset: double
+  helical: long
+  group: string
+
+lthinlens:
+  fx: double
+  fy: double
+  dx: double
+  dy: double
+  dz: double
+  tilt: double
+  yaw: double
+  pitch: double
+  group: string
+
+magnify:
+  mx: double
+  mxp: double
+  my: double
+  myp: double
+  ms: double
+  mdp: double
+  group: string
+
+malign:
+  dxp: double
+  dyp: double
+  dx: double
+  dy: double
+  dz: double
+  dt: double
+  dp: double
+  de: double
+  on_pass: long
+  force_modify_matrix: long
+  start_pid: long
+  end_pid: long
+  group: string
+
+mapsolenoid:
+  l: double
+  dx: double
+  dy: double
+  etilt: double
+  eyaw: double
+  epitch: double
+  n_steps: long
+  inputfile: string
+  rcolumn: string
+  zcolumn: string
+  brcolumn: string
+  bzcolumn: string
+  factor: double
+  bxuniform: double
+  byuniform: double
+  luniform: double
+  accuracy: double
+  method: string
+  group: string
+  
+mark:
+  dx: double
+  dy: double
+  fitpoint: long
+  group: string
+
+marker:
+  dx: double
+  dy: double
+  fitpoint: long
+  group: string
+  
+matr:
+  l: double
+  filename: string
+  order: long
+  group: string
+
+matter:
+  l: double
+  leffective: double
+  xo: double
+  energy_decay: long
+  energy_straggle: long
+  nuclear_bremsstrahlung: long
+  electron_recoil: long
+  z: long
+  a: double
+  rho: double
+  plimit: double
+  width: double
+  spacing: double
+  tilt: double
+  center: double
+  n_slots: long
+  group: string
+
+maxamp:
+  x_max: double
+  y_max: double
+  elliptical: long
+  exponent: long
+  yexponent: long
+  open_side: string
+  group: string
+
+mbumper:
+  l: double
+  strength: double
+  tilt: double
+  dx: double
+  dy: double
+  dz: double
+  time_offset: double
+  order: long
+  periodic: long
+  phase_reference: long
+  fire_on_pass: long
+  n_kicks: long
+  waveform: string
+  group: string
+
+mhistogram:
+  file1d: string
+  file2dh: string
+  file2dv: string
+  file2dl: string
+  file4d: string
+  file6d: string
+  input_bins: string
+  interval: long
+  start_pass: long
+  normalize: long
+  disable: long
+  lumped: long
+  group: string
+
+modrf:
+  l: double
+  volt: double
+  phase: double
+  freq: double
+  q: double
+  phase_reference: long
+  ammag: double
+  amphase: double
+  amfreq: double
+  amdecay: double
+  pmmag: double
+  pmphase: double
+  pmfreq: double
+  pmdecay: double
+  fiducial: string
+  group: string
+
+moni:
+  l: double
+  dx: double
+  dy: double
+  weight: double
+  tilt: double
+  xcalibration: double
+  ycalibration: double
+  xsetpoint: double
+  ysetpoint: double
+  order: long
+  xreadout: string
+  yreadout: string
+  co_fitpoint: long
+  group: string
+
+mrfdf:
+  factor: double
+  tilt: double
+  a1: double
+  a2: double
+  a3: double
+  a4: double
+  a5: double
+  b1: double
+  b2: double
+  b3: double
+  b4: double
+  b5: double
+  frequency1: double
+  frequency2: double
+  frequency3: double
+  frequency4: double
+  frequency5: double
+  phase1: double
+  phase2: double
+  phase3: double
+  phase4: double
+  phase5: double
+  phase_reference: long
+  group: string
+
+mult:
+  l: double
+  knl: double
+  tilt: double
+  bore: double
+  btipl: double
+  dx: double
+  dy: double
+  dz: double
+  factor: double
+  order: long
+  n_kicks: long
+  synch_rad: long
+  group: string
+
+nibend:
+  l: double
+  angle: double
+  e1: double
+  e2: double
+  tilt: double
+  dx: double
+  dy: double
+  dz: double
+  fint: double
+  hgap: double
+  fp1: double
+  fp2: double
+  fp3: double
+  fp4: double
+  fse: double
+  etilt: double
+  accuracy: double
+  model: string
+  method: string
+  synch_rad: long
+  adjust_boundary: long
+  adjust_field: long
+  fudge_path_length: long
+  fringe_position: long
+  group: string
+
+nisept:
+  l: double
+  angle: double
+  e1: double
+  b1: double
+  q1ref: double
+  flen: double
+  accuracy: double
+  method: string
+  model: string
+  group: string
+
+octu:
+  l: double
+  k3: double
+  tilt: double
+  dx: double
+  dy: double
+  dz: double
+  fse: double
+  order: long
+  group: string
+
+peppot:
+  l: double
+  radii: double
+  transmission: double
+  tilt: double
+  theta_rms: double
+  n_holes: long
+  group: string
+
+pfilter:
+  deltalimit: double
+  lowerfraction: double
+  upperfraction: double
+  fixplimits: long
+  beamcentered: long
+  bins: long
+  group: string
+
+quad:
+  l: double
+  k1: double
+  tilt: double
+  dx: double
+  dy: double
+  dz: double
+  fse: double
+  hkick: double
+  vkick: double
+  hcalibration: double
+  vcalibration: double
+  hsteering: long
+  vsteering: long
+  order: long
+  edge1_effects: long
+  edge2_effects: long
+  fringe_type: string
+  ffringe: double
+  leffective: double
+  i0p: double
+  i1p: double
+  i2p: double
+  i3p: double
+  lambda2p: double
+  i0m: double
+  i1m: double
+  i2m: double
+  i3m: double
+  lambda2m: double
+  radial: long
+  group: string
+
+quadrupole:
+  l: double
+  k1: double
+  tilt: double
+  dx: double
+  dy: double
+  dz: double
+  fse: double
+  hkick: double
+  vkick: double
+  hcalibration: double
+  vcalibration: double
+  hsteering: long
+  vsteering: long
+  order: long
+  edge1_effects: long
+  edge2_effects: long
+  fringe_type: string
+  ffringe: double
+  leffective: double
+  i0p: double
+  i1p: double
+  i2p: double
+  i3p: double
+  lambda2p: double
+  i0m: double
+  i1m: double
+  i2m: double
+  i3m: double
+  lambda2m: double
+  radial: long
+  group: string
+  
+qufringe:
+  l: double
+  k1: double
+  tilt: double
+  dx: double
+  dy: double
+  dz: double
+  fse: double
+  direction: long
+  order: long
+  group: string
+
+rampp:
+  waveform: string
+  group: string
+
+ramprf:
+  l: double
+  volt: double
+  phase: double
+  freq: double
+  phase_reference: long
+  volt_waveform: string
+  phase_waveform: string
+  freq_waveform: string
+  fiducial: string
+  group: string
+
+rben:
+  l: double
+  angle: double
+  k1: double
+  e1: double
+  e2: double
+  tilt: double
+  k2: double
+  h1: double
+  h2: double
+  hgap: double
+  fint: double
+  dx: double
+  dy: double
+  dz: double
+  fse: double
+  etilt: double
+  edge1_effects: long
+  edge2_effects: long
+  order: long
+  edge_order: long
+  transport: long
+  use_bn: long
+  b1: double
+  b2: double
+  group: string
+
+rcol:
+  l: double
+  x_max: double
+  y_max: double
+  dx: double
+  dy: double
+  open_side: string
+  invert: long
+  group: string
+
+recirc:
+  i_recirc_element: long
+  group: string
+
+reflect:
+  dummy: long
+  group: string
+
+remcor:
+  x: long
+  xp: long
+  y: long
+  yp: long
+  with: long
+  once_only: long
+  group: string
+
+rfca:
+  l: double
+  volt: double
+  phase: double
+  freq: double
+  q: double
+  phase_reference: long
+  change_p0: long
+  change_t: long
+  fiducial: string
+  end1_focus: long
+  end2_focus: long
+  body_focus_model: string
+  n_kicks: long
+  dx: double
+  dy: double
+  t_reference: double
+  linearize: long
+  lock_phase: long
+  group: string
+
+rfcw:
+  l: double
+  cell_length: double
+  volt: double
+  phase: double
+  freq: double
+  q: double
+  phase_reference: long
+  change_p0: long
+  change_t: long
+  fiducial: string
+  end1_focus: long
+  end2_focus: long
+  body_focus_model: string
+  n_kicks: long
+  zwake: long
+  trwake: long
+  wakefile: string
+  zwakefile: string
+  trwakefile: string
+  tcolumn: string
+  wxcolumn: string
+  wycolumn: string
+  wzcolumn: string
+  n_bins: long
+  interpolate: long
+  smoothing: long
+  sg_halfwidth: long
+  sg_order: long
+  dx: double
+  dy: double
+  linearize: long
+  lsc: long
+  lsc_bins: long
+  lsc_interpolate: long
+  lsc_low_frequency_cutoff0: double
+  lsc_low_frequency_cutoff1: double
+  lsc_high_frequency_cutoff0: double
+  lsc_high_frequency_cutoff1: double
+  lsc_radius_factor: double
+  wakes_at_end: long
+  group: string
+
+rfdf:
+  l: double
+  phase: double
+  tilt: double
+  frequency: double
+  voltage: double
+  fse: double
+  b2: double
+  time_offset: double
+  n_kicks: long
+  phase_reference: long
+  standing_wave: long
+  voltage_waveform: string
+  voltage_periodic: long
+  align_waveforms: long
+  voltage_noise: double
+  phase_noise: double
+  group_voltage_noise: double
+  group_phase_noise: double
+  voltage_noise_group: long
+  phase_noise_group: long
+  start_pass: long
+  end_pass: long
+  drift_matrix: long
+  dx: double
+  dy: double
+  dz: double
+  magnetic_deflection: long
+  group: string
+
+rfmode:
+  ra: double
+  rs: double
+  q: double
+  freq: double
+  charge: double
+  initial_v: double
+  initial_phase: double
+  initial_t: double
+  beta: double
+  bin_size: double
+  n_bins: long
+  interpolate: long
+  preload: long
+  preload_charge: double
+  preload_factor: double
+  preload_harmonic: long
+  rigid_until_pass: long
+  detuned_until_pass: long
+  sample_interval: long
+  flush_interval: long
+  record: string
+  single_pass: long
+  pass_interval: long
+  freq_waveform: string
+  q_waveform: string
+  ramp_passes: long
+  binless: long
+  reset_for_each_step: long
+  long_range_only: long
+  n_cavities: long
+  bunched_beam_mode: long
+  bunch_interval: double
+  drive_frequency: double
+  v_setpoint: double
+  phase_setpoint: double
+  update_interval: long
+  amplitude_filter: string
+  phase_filter: string
+  in_phase_filter: string
+  quadrature_filter: string
+  feedback_record: string
+  mute_generator: long
+  noise_alpha_gen: string
+  noise_phi_gen: string
+  noise_alpha_v: string
+  noise_phi_v: string
+  noise_i_gen: string
+  noise_q_gen: string
+  noise_i_v: string
+  noise_q_v: string
+  group: string
+
+rftm110:
+  phase: double
+  tilt: double
+  frequency: double
+  voltage: double
+  phase_reference: long
+  voltage_waveform: string
+  voltage_periodic: long
+  align_waveforms: long
+  voltage_noise: double
+  phase_noise: double
+  group_voltage_noise: double
+  group_phase_noise: double
+  voltage_noise_group: long
+  phase_noise_group: long
+  start_pass: long
+  end_pass: long
+  group: string
+
+rftmez0:
+  l: double
+  frequency: double
+  phase: double
+  ez_peak: double
+  time_offset: double
+  phase_reference: long
+  dx: double
+  dy: double
+  dz: double
+  etilt: double
+  eyaw: double
+  epitch: double
+  n_steps: long
+  radial_order: long
+  change_p0: long
+  inputfile: string
+  zcolumn: string
+  ezcolumn: string
+  solenoid_file: string
+  solenoid_zcolumn: string
+  solenoid_rcolumn: string
+  solenoid_bzcolumn: string
+  solenoid_brcolumn: string
+  solenoid_factor: double
+  solenoid_dx: double
+  solenoid_dy: double
+  solenoid_dz: double
+  solenoid_etilt: double
+  solenoid_eyaw: double
+  solenoid_epitch: double
+  bx_stray: double
+  by_stray: double
+  accuracy: double
+  method: string
+  fiducial: string
+  field_test_file: string
+  group: string
+
+rimult:
+  factor: double
+  group: string
+
+rmdf:
+  l: double
+  tilt: double
+  ramp_time: double
+  voltage: double
+  gap: double
+  time_offset: double
+  n_sections: long
+  phase_reference: long
+  dx: double
+  dy: double
+  group: string
+
+rotate:
+  tilt: double
+  group: string
+
+sample:
+  fraction: double
+  interval: long
+  group: string
+
+sbend:
+  l: double
+  angle: double
+  k1: double
+  e1: double
+  e2: double
+  tilt: double
+  k2: double
+  h1: double
+  h2: double
+  hgap: double
+  fint: double
+  dx: double
+  dy: double
+  dz: double
+  fse: double
+  etilt: double
+  edge1_effects: long
+  edge2_effects: long
+  order: long
+  edge_order: long
+  transport: long
+  use_bn: long
+  b1: double
+  b2: double
+  group: string
+  
+sben:
+  l: double
+  angle: double
+  k1: double
+  e1: double
+  e2: double
+  tilt: double
+  k2: double
+  h1: double
+  h2: double
+  hgap: double
+  fint: double
+  dx: double
+  dy: double
+  dz: double
+  fse: double
+  etilt: double
+  edge1_effects: long
+  edge2_effects: long
+  order: long
+  edge_order: long
+  transport: long
+  use_bn: long
+  b1: double
+  b2: double
+  group: string
+
+scatter:
+  x: double
+  xp: double
+  y: double
+  yp: double
+  dp: double
+  probability: double
+  startonpass: long
+  endonpass: long
+  group: string
+
+scmult:
+  group: string
+
+scraper:
+  l: double
+  xo: double
+  energy_decay: long
+  energy_straggle: long
+  nuclear_bremsstrahlung: long
+  electron_recoil: long
+  z: long
+  a: double
+  rho: double
+  plimit: double
+  position: double
+  dx: double
+  dy: double
+  insert_from: string
+  direction: long
+  group: string
+
+script:
+  l: double
+  command: string
+  use_csh: long
+  verbosity: long
+  start_pass: long
+  end_pass: long
+  pass_interval: long
+  on_pass: long
+  directory: string
+  rootname: string
+  input_extension: string
+  output_extension: string
+  keep_files: long
+  drift_matrix: long
+  use_particle_id: long
+  no_new_particles: long
+  determine_losses_from_pid: long
+  np0: double
+  np1: double
+  np2: double
+  np3: double
+  np4: double
+  np5: double
+  np6: double
+  np7: double
+  np8: double
+  np9: double
+  sp0: string
+  sp1: string
+  sp2: string
+  sp3: string
+  sp4: string
+  sp5: string
+  sp6: string
+  sp7: string
+  sp8: string
+  sp9: string
+  group: string
+
+sext:
+  l: double
+  k2: double
+  tilt: double
+  dx: double
+  dy: double
+  dz: double
+  fse: double
+  ffringe: double
+  order: long
+  group: string
+
+sextupole:
+  l: double
+  k2: double
+  tilt: double
+  dx: double
+  dy: double
+  dz: double
+  fse: double
+  ffringe: double
+  order: long
+  group: string
+  
+sole:
+  l: double
+  ks: double
+  b: double
+  dx: double
+  dy: double
+  dz: double
+  order: long
+  group: string
+
+sreffects:
+  jx: double
+  jy: double
+  jdelta: double
+  exref: double
+  eyref: double
+  sdeltaref: double
+  ddeltaref: double
+  pref: double
+  coupling: double
+  fraction: double
+  damping: long
+  qexcitation: long
+  losses: long
+  cutoff: double
+  include_offsets: long
+  group: string
+
+stray:
+  l: double
+  lbx: double
+  lby: double
+  gbx: double
+  gby: double
+  gbz: double
+  order: long
+  group: string
+
+tfbdriver:
+  id: string
+  strength: double
+  kick_limit: double
+  frequency: double
+  phase: double
+  delay: long
+  longitudinal: long
+  output_file: string
+  a0: double
+  a1: double
+  a2: double
+  a3: double
+  a4: double
+  a5: double
+  a6: double
+  a7: double
+  a8: double
+  a9: double
+  a10: double
+  a11: double
+  a12: double
+  a13: double
+  a14: double
+  a15: double
+  a16: double
+  a17: double
+  a18: double
+  a19: double
+  a20: double
+  a21: double
+  a22: double
+  a23: double
+  a24: double
+  a25: double
+  a26: double
+  a27: double
+  a28: double
+  a29: double
+  bunched_beam_mode: long
+  update_interval: long
+  output_interval: long
+  group: string
+
+tfbpickup:
+  id: string
+  plane: string
+  rms_noise: double
+  a0: double
+  a1: double
+  a2: double
+  a3: double
+  a4: double
+  a5: double
+  a6: double
+  a7: double
+  a8: double
+  a9: double
+  a10: double
+  a11: double
+  a12: double
+  a13: double
+  a14: double
+  a15: double
+  a16: double
+  a17: double
+  a18: double
+  a19: double
+  a20: double
+  a21: double
+  a22: double
+  a23: double
+  a24: double
+  a25: double
+  a26: double
+  a27: double
+  a28: double
+  a29: double
+  bunched_beam_mode: long
+  update_interval: long
+  reference_frequency: double
+  dx: double
+  dy: double
+  group: string
+
+tmcf:
+  l: double
+  frequency: double
+  phase: double
+  time_offset: double
+  radial_offset: double
+  tilt: double
+  er: double
+  bphi: double
+  ez: double
+  accuracy: double
+  x_max: double
+  y_max: double
+  dx: double
+  dy: double
+  phase_reference: long
+  n_steps: long
+  method: string
+  fiducial: string
+  group: string
+
+trcount:
+  dummy: long
+  group: string
+
+trfmode:
+  ra: double
+  rs: double
+  q: double
+  freq: double
+  charge: double
+  beta: double
+  bin_size: double
+  n_bins: long
+  interpolate: long
+  plane: string
+  sample_interval: long
+  per_particle_output: long
+  record: string
+  single_pass: long
+  rigid_until_pass: long
+  dx: double
+  dy: double
+  xfactor: double
+  yfactor: double
+  ramp_passes: long
+  binless: long
+  reset_for_each_step: long
+  long_range_only: long
+  n_cavities: long
+  bunched_beam_mode: long
+  group: string
+
+trwake:
+  inputfile: string
+  tcolumn: string
+  wxcolumn: string
+  wycolumn: string
+  charge: double
+  factor: double
+  xfactor: double
+  yfactor: double
+  n_bins: long
+  interpolate: long
+  smoothing: long
+  sg_halfwidth: long
+  sg_order: long
+  dx: double
+  dy: double
+  tilt: double
+  x_drive_exponent: long
+  y_drive_exponent: long
+  x_probe_exponent: long
+  y_probe_exponent: long
+  ramp_passes: long
+  bunched_beam_mode: long
+  group: string
+
+tscatter:
+  dummy: long
+  group: string
+
+tubend:
+  l: double
+  angle: double
+  fse: double
+  offset: double
+  magnet_width: double
+  magnet_angle: double
+  group: string
+
+twiss:
+  betax: double
+  alphax: double
+  etax: double
+  etaxp: double
+  betay: double
+  alphay: double
+  etay: double
+  etayp: double
+  from_beam: long
+  from_0values: long
+  compute_once: long
+  apply_once: long
+  verbose: long
+  disable: long
+  betax0: double
+  alphax0: double
+  etax0: double
+  etaxp0: double
+  betay0: double
+  alphay0: double
+  etay0: double
+  etayp0: double
+  group: string
+
+twla:
+  l: double
+  frequency: double
+  phase: double
+  time_offset: double
+  ez: double
+  b_solenoid: double
+  accuracy: double
+  x_max: double
+  y_max: double
+  dx: double
+  dy: double
+  beta_wave: double
+  alpha: double
+  phase_reference: long
+  n_steps: long
+  focussing: long
+  method: string
+  fiducial: string
+  change_p0: long
+  sum_bn2: double
+  group: string
+
+twmta:
+  l: double
+  frequency: double
+  phase: double
+  ez: double
+  accuracy: double
+  x_max: double
+  y_max: double
+  dx: double
+  dy: double
+  kx: double
+  beta_wave: double
+  bsol: double
+  alpha: double
+  phase_reference: long
+  n_steps: long
+  method: string
+  fiducial: string
+  group: string
+
+twpl:
+  l: double
+  ramp_time: double
+  time_offset: double
+  voltage: double
+  gap: double
+  static_voltage: double
+  tilt: double
+  accuracy: double
+  x_max: double
+  y_max: double
+  dx: double
+  dy: double
+  phase_reference: long
+  n_steps: long
+  method: string
+  fiducial: string
+  group: string
+
+ukickmap:
+  l: double
+  tilt: double
+  dx: double
+  dy: double
+  dz: double
+  field_factor: double
+  xy_factor: double
+  input_file: string
+  n_kicks: long
+  periods: long
+  kref: double
+  synch_rad: long
+  isr: long
+  group: string
+
+vkick:
+  l: double
+  kick: double
+  tilt: double
+  b2: double
+  calibration: double
+  edge_effects: long
+  order: long
+  steering: long
+  synch_rad: long
+  isr: long
+  lerad: double
+  group: string
+
+vmon:
+  l: double
+  dx: double
+  dy: double
+  weight: double
+  tilt: double
+  calibration: double
+  setpoint: double
+  order: long
+  readout: string
+  co_fitpoint: long
+  group: string
+
+wake:
+  inputfile: string
+  tcolumn: string
+  wcolumn: string
+  charge: double
+  factor: double
+  n_bins: long
+  interpolate: long
+  smoothing: long
+  sg_halfwidth: long
+  sg_order: long
+  change_p0: long
+  allow_long_beam: long
+  ramp_passes: long
+  bunched_beam_mode: long
+  group: string
+
+watch:
+  fraction: double
+  start_pid: long
+  end_pid: long
+  interval: long
+  start_pass: long
+  end_pass: long
+  filename: string
+  label: string
+  mode: string
+  x_data: long
+  y_data: long
+  longit_data: long
+  exclude_slopes: long
+  flush_interval: long
+  disable: long
+  use_disconnect: long
+  index_offset: long
+  reference_frequency: double
+  group: string
+
+wiggler:
+  l: double
+  radius: double
+  k: double
+  b: double
+  dx: double
+  dy: double
+  dz: double
+  tilt: double
+  poles: long
+  focusing: long
+  group: string
+
+zlongit:
+  charge: double
+  broad_band: long
+  ra: double
+  rs: double
+  q: double
+  freq: double
+  zreal: string
+  zimag: string
+  bin_size: double
+  n_bins: long
+  max_n_bins: long
+  wakes: string
+  wake_interval: long
+  wake_start: long
+  wake_end: long
+  area_weight: long
+  interpolate: long
+  smoothing: long
+  sg_order: long
+  sg_halfwidth: long
+  reverse_time_order: long
+  factor: double
+  start_on_pass: long
+  ramp_passes: long
+  high_frequency_cutoff0: double
+  high_frequency_cutoff1: double
+  bunched_beam_mode: long
+  allow_long_beam: long
+  group: string
+
+ztransverse:
+  charge: double
+  broad_band: long
+  rs: double
+  q: double
+  freq: double
+  inputfile: string
+  freqcolumn: string
+  zxreal: string
+  zximag: string
+  zyreal: string
+  zyimag: string
+  bin_size: double
+  interpolate: long
+  n_bins: long
+  max_n_bins: long
+  smoothing: long
+  sg_order: long
+  sg_halfwidth: long
+  dx: double
+  dy: double
+  factor: double
+  xfactor: double
+  yfactor: double
+  wakes: string
+  wake_interval: long
+  wake_start: long
+  wake_end: long
+  start_on_pass: long
+  ramp_passes: long
+  high_frequency_cutoff0: double
+  high_frequency_cutoff1: double
+  x_drive_exponent: long
+  y_drive_exponent: long
+  x_probe_exponent: long
+  y_probe_exponent: long
+  bunched_beam_mode: long
+  allow_long_beam: long
+  group: string

@@ -1,0 +1,134 @@
+!SP.in - DIP01=3.799580
+!V2.in - DIP01=3.799580
+&NEWRUN
+  Head='trial'
+  RUN=001
+  Loop=F
+  Lprompt=F
+  Distribution ='/home/vmsim/Desktop/V2/ASTRA/temp-start.ini',
+  Xoff=0.0
+  Yoff=0.0
+  Lmagnetized=.F
+  EmitS=.T
+  TR_emitS=F
+  PhaseS=.T
+  TrackS=.F
+  RefS=.F
+  TcheckS=.F
+  CathodeS=.F
+  TRACK_ALL=.T
+  PHASE_SCAN=.F
+  AUTO_PHASE=.T
+  check_ref_part=.F
+  ZSTART=0.0
+  ZSTOP =3.799580
+  Zphase=1
+  Zemit=1050
+
+  !VM-EBT-INJ-DIA-CAM-01:CAM
+  !V1-GUNEXIT
+  Screen(1)=0.146
+
+  !VM-EBT-INJ-DIA-BPMC-02
+  !V1-BPM01
+  Screen(2)=0.9075
+
+  !VM-EBT-INJ-DIA-CAM-02:CAM
+  !V1-YAG01
+  Screen(3)=1.05
+
+  !VM-EBT-INJ-DIA-CAM-03:CAM
+  !V1-YAG02
+  Screen(4)=2.145
+
+  !VM-EBT-INJ-DIA-CAM-04:CAM
+  !V1-YAG03
+  Screen(5)=3.293
+
+  !VM-EBT-INJ-DIA-BPMC-04
+  !V1-BPM02
+  Screen(6)=3.4970
+
+  H_max=0.0007
+  H_min=0.0007
+  Qbunch=0.25,
+ /
+
+ &SCAN
+  LScan=.F.
+ /
+
+ &CHARGE
+  Loop=F
+LSPCH=False
+  Nrad=30, Nlong_in=45
+  Cell_var=2.0
+  min_grid=3.424657D-13
+  Max_scale=0.1
+  Max_count=100
+  Lmirror=.T
+ /
+
+ &Aperture
+ /
+
+ &FEM
+ /
+
+ &CAVITY
+Loop=F
+LEFieLD=T
+!V1-GUN
+C_pos(1)=0.0
+FILE_EFieLD(1)='/home/vmsim/Desktop/V2/ASTRA/Field_Maps/bas_gun.txt'
+MaxE(1)=65.0
+Phi(1)=0.0
+Nue(1)=2.9974431
+C_smooth(1)=10
+C_numb(1)=1
+ /
+
+ &SOLENOID
+ /
+
+ &QUADRUPOLE
+LQUAD=.T,
+!V1-QUAD01
+Q_pos(1)=1.285
+Q_length(1)=0.1
+Q_grad(1)=0.0100166122407
+Q_bore(1)=0.01
+Q_smooth(1)=3.0
+!V1-QUAD02
+Q_pos(2)=1.495
+Q_length(2)=0.1
+Q_grad(2)=0.00793661991808
+Q_bore(2)=0.01
+Q_smooth(2)=3.0
+!V1-QUAD03
+Q_pos(3)=1.705
+Q_length(3)=0.1
+Q_grad(3)=0.00906788054469
+Q_bore(3)=0.01
+Q_smooth(3)=3.0
+!V1-QUAD04
+Q_pos(4)=1.915
+Q_length(4)=0.1
+Q_grad(4)=0.00928865454431
+Q_bore(4)=0.01
+Q_smooth(4)=3.0
+/
+
+ &DIPOLE
+Loop=.F,
+LDipole=.T
+!INJ-DIP01
+D_Type(1)='horizontal'
+D_Gap(1,1)=0.02,
+D_Gap(2,1)=0.02,
+D1(1)=(0.0800007,3.83958)
+D2(1)=(-0.0800007,3.83958)
+D3(1)=(-0.0926015,4.25628)
+D4(1)=(-0.20574,4.14314)
+D_strength(1)=-0.0291606689002
+/

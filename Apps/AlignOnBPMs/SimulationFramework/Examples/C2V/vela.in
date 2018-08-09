@@ -1,0 +1,85 @@
+&NEWRUN
+ Loop=False
+ Lprompt=False
+ Head='trial'
+ Run=1
+ Distribution='CLA-C2V-DIA-SCR-01-W.astra'
+ high_res=True
+ N_red=1
+ Track_All=True
+ Auto_Phase=True
+ Phase_Scan=False
+ check_ref_part=False
+ H_max=0.0007
+ H_min=0.0007
+/
+&OUTPUT
+ ZSTART=-0.51689
+ ZSTOP=10.74601
+ ZEMIT=1050
+ ZPHASE=1
+ REFS=True
+ EMITS=True
+ PHASES=True
+ TRACKS=True
+ Screen(1)=2.91601
+ Screen(2)=6.31301
+/
+&CHARGE
+ Loop=False
+ LSPCH=True
+ LSPCH3D=True
+ Lmirror=False
+ Nxf=8, Nyf=8, Nzf=8
+ CELL_VAR=2
+ MIN_GRID=3.424657e-13
+ SMOOTH_X=2
+ SMOOTH_Y=2
+ SMOOTH_Z=2
+ MAX_SCALE=0.1
+ MAX_COUNT=100
+/
+&SCAN
+ Loop=False
+ LScan=False
+/
+&APERTURE
+ Loop=False
+ LApert=False
+/
+&CAVITY
+ Loop=False
+ LEField=False
+/
+&SOLENOID
+ Loop=False
+ LBField=False
+/
+&QUADRUPOLE
+ Loop=False
+ LQuad=True
+ Q_K(1)=17.0945, Q_length(1)=0.1,
+Q_pos(1)=0.714, Q_smooth(1)=3, Q_bore(1)=0.01
+ Q_K(2)=-17.8686, Q_length(2)=0.1,
+Q_pos(2)=0.984, Q_smooth(2)=3, Q_bore(2)=0.01
+ Q_K(3)=4.14677, Q_length(3)=0.075,
+Q_pos(3)=2.87851, Q_smooth(3)=3, Q_bore(3)=0.01
+ Q_K(4)=-4.2847, Q_length(4)=0.075,
+Q_pos(4)=5.03051, Q_smooth(4)=3, Q_bore(4)=0.01
+ Q_K(5)=5.66182, Q_length(5)=0.075,
+Q_pos(5)=7.17851, Q_smooth(5)=3, Q_bore(5)=0.01
+ Q_K(6)=4.0731, Q_length(6)=0.075,
+Q_pos(6)=10.27351, Q_smooth(6)=3, Q_bore(6)=0.01
+/
+&DIPOLE
+ Loop=False
+ LDipole=True
+ D_Type(1)='horizontal',
+D_Gap(1,1)=0.02,
+D_Gap(2,1)=0.02,
+D1(1)=(0.205738976002,-0.303561042484),
+D3(1)=(0.0800002176093,0),
+D4(1)=(-0.0800009823907,0),
+D2(1)=(0.0926010239978,-0.416698957516),
+D_radius(1)=-0.50929974357
+/

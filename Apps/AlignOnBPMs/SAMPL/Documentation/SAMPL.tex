@@ -1,0 +1,157 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[usenames, dvipsnames]{color}
+\usepackage[pdftex]{graphicx}
+\usepackage[pdftex]{hyperref}
+\usepackage{amsmath}
+\begin{document}
+	
+	\title{SAMPL: Simple Accelerator Modelling Python Library}
+	\author{T.\,Price}
+	\date{Version 1.0: January 12, 2018}
+	
+	\maketitle
+	
+	\begin{abstract}
+	SAMPL has been created from the simulation code SAMM (Simple Accelerator Modelling in MatLab) written by Andy Wolski, for the purposes of having simulation code to be used to investigate trends in the machine VELA-CLARA. These notes describe the equations behind each section of code in SAMPL that maps particles through a given element used in an accelerator. These are notes on the Hamiltonians and quotes have been used directly from Andy's Book 'Beam Dynamics in High Energy Particle Accelerators'. This material is NOT to be redistributed as a manual.
+	\end{abstract}
+	
+	\newpage
+	
+	\tableofcontents
+	
+	\newpage
+	\section{Introduction}
+	All Hamiltonian will start with thr form.
+	\[
+	H=\frac{\delta}{\beta_0}-(1+hx)\sqrt{(\delta+\frac{1}{\beta_0}-\frac{q\phi}{cP_0})^2-(p_x-a_x)^2-(p_y-a_y)^2-\frac{1}{\beta_0^2\gamma_0^2}}-(1+hx)a_s
+	\]
+	This is a curved coordinate system where:
+	
+	$h=\frac{1}{\rho}$ is curvature of the trajectory ($\rho$ is th radius of the trajectory)
+	
+	$A=\frac{P_0}{q}(a_x,a_y,a_s)$ is the vector potential field
+	
+	$p_x=\frac{\gamma m\dot{x}+qA_x}{P_0}$, $p_y=\frac{\gamma m\dot{y}+qA_y}{P_0}$
+	
+	$\delta =  \frac{E}{cP_0}-\frac{1}{\beta_0}$ is the conjugate momentum, or energy deviation
+	
+	$0$ reference to the reference frame which this equation describe.
+	
+	We will also use Hamilton's equations which are:
+	\[
+	\frac{dx_i}{dt}=\frac{\partial H}{\partial p_i}
+	\]	
+	\[
+	\frac{dp_i}{dt}=-\frac{\partial H}{\partial x_i}
+	\]
+	\section{Drift}
+	Lets start with the simplest of all the elements, a drift space. This element maps the positions of individual particles under no external electric or magnetic fields.This simplifies the Hamiltonian to 
+	\[
+	H=\frac{\delta}{\beta_0}-\sqrt{(\delta+\frac{1}{\beta_0})^2-(p_x)^2-(p_y)^2-\frac{1}{\beta_0^2\gamma_0^2}}
+	\]
+	As $\phi$, $\textbf{A}$ and $h$ can all be taken to 0. Now using Hamilton's equations we can achieve the equations of motion.
+	\[
+	\frac{dp_x}{ds}=0, \frac{dx}{ds}=\frac{p_x}{d}, \frac{dp_y}{ds}=0, \frac{dy}{ds}=\frac{p_y}{d}
+	\]
+	\[
+	\frac{d\delta}{ds}=0, \frac{dz}{ds}=\frac{1}{\beta_0}(1-\frac{1}{d})-\frac{\delta}{d}
+	\]
+	where
+	\[
+	d=\sqrt{(\delta+\frac{1}{\beta_0})^2-(p_x)^2-(p_y)^2-\frac{1}{\beta_0^2\gamma_0^2}}
+	\]	
+	In SAMM, and therefore currently in SAMPL this value $d$ is used frequently. The internal quadratic containing $\delta$ has been expanded and a high energy approximation has been assumed ($\frac{1}{\beta_0^2}\rightarrow1$ and $\frac{1}{\gamma_0^2}\rightarrow0$).
+	Therefore the equation for $d$ simplifies to:
+	\[
+	d=\sqrt{1-p_x^2-p_y^2+\delta^2+\frac{2\delta}{\beta_0}}
+	\]	
+	Now for simulating low energy section of VELA and CLARA this will now be appropriate, but for now the approximation will be kept in for all elements. Later if will be replaced with the non-approximated version which is:
+	\[
+	d=\sqrt{\frac{\gamma_0^2-1}{\gamma_0^2\beta_0^2}-p_x^2-p_y^2+\delta^2}
+	\]	
+	The equations of motion are calculated and can be express in the following matrices:
+	\[
+	\begin{pmatrix}
+	x_1\\ p_{x_1}\\ xy_1\\ p_{y_1}\\ z_1\\ \delta_1\\
+	\end{pmatrix}
+	=
+	\begin{pmatrix}
+	1 & \frac{L}{d} & 0 & 0 & 0 & 0\\
+	0 & 1 & 0 & 0 & 0 & 0\\
+	0 & 0 & 1 &\frac{L}{d} & 0 & 0\\
+	0 & 0 & 0 & 1 & 0 & 0\\
+	0 & 0 & 0 & 0 & 1 & -\frac{L}{d}\\
+	0 & 0 & 0 & 0 & 0 & 1\\
+	\end{pmatrix}
+	\begin{pmatrix}
+	x_0\\ p_{x_0}\\ y_0\\ p_{y_0}\\ z_0\\ \delta_0\\
+	\end{pmatrix}
+	+
+	\begin{pmatrix}
+	0\\ 0\\ 0\\ 0\\ \frac{L}{\beta_0}(1-\frac{1}{d})\\ 0\\
+	\end{pmatrix}	
+	\]
+	After some condensing (mainly for the mapping of $z$) these equations this is used in SAMPL and are seen to be implemented in SAMPLcore\textbackslash Components\textbackslash Drift.py in the $Track$ function.
+	\section{Dipole}
+	With a dipole magnet their is no electric field and therefore no potential component to the Hamiltonian (thought there is a vector potential part). This means we can sart with a Hamiltonian of the from:
+	\[
+	H=\frac{\delta}{\beta_0}-(1+hx)\sqrt{(\delta+\frac{1}{\beta_0})^2-(p_x-a_x)^2-(p_y-a_y)^2-\frac{1}{\beta_0^2\gamma_0^2}}-(1+hx)a_s
+	\]	
+	The vector field of a dipole is only in the y direction ($\textbf{B}=(0,B_0,0)$).  From this B field we need to deduce the vector potential components (in the coorindinate system $(x,y,s)$) using the following equation:
+	\[
+	\textbf{B}=\nabla \times \textbf{A}=\frac{1}{u_iu_ju_k}\sum_{i,j,k}\epsilon_{ijk}\textbf{u}_i\frac{\partial(u_kA_k)}{\partial x_j}
+	\]
+	where
+	\[ 
+	\textbf{u}_i=\frac{\partial \textbf{r}}{\partial x_i}, \textbf{r}=(X,Y,Z)
+	 \]
+	 Note that $\textbf{r}$ if in Cartesian coordinates. and the transformations are as follows:
+	 \[X=(x+\frac{1}{h})\cos(sh)-\frac{1}{h}\]
+	 \[Y=y \]
+	 \[Z=(x+\frac{1}{h})\sin(sh) \]
+	  Using these conversion and assuming $\cos(hs)\sim 1$ and $\sin(hs)\sim 0$ you can reach the equations \textcolor{red}{[CHECK THESE ASSUMPTION]}
+	  \[ [\nabla \times \textbf{A}]_x=\frac{\partial A_s}{\partial y}-\frac{1}{1+hx}\frac{\partial A_y}{\partial s}\]
+	  \[ [\nabla \times \textbf{A}]_y=\frac{1}{1+hx}\frac{\partial A_x}{\partial s}-\frac{\partial A_s}{\partial x}-\frac{hA_s}{1+hx}  \]	
+	  \[ [\nabla \times \textbf{A}]_s=\frac{\partial A_y}{\partial x}-\frac{\partial A_x}{\partial y}  \]	
+	  
+	  Know \textbf{B} and the above equations you can determine \textbf{A} with a gauge in which $A_y=A_x=0$ and you get 
+	  \[ \textbf{A}=(0,0,-B_0x+\frac{B_0hx^2}{2(1+hx)}) \]
+	  Using this you can get \textbf{a} 
+	  \[ \textbf{a}=\frac{q}{P_0}\textbf{A}=(0,0,-k_0x+\frac{k_0hx^2}{2(1+hx)}) \]
+	  
+	   
+	 
+	\section{Solenoid}
+	dhgsfhj
+
+	\section{Quadrupole}
+	sgjsgj
+	\section{Sextupole}
+	zgjzgjcv
+	\section{Octupole}
+	zxgjvxc
+	\section{Multipole}
+	xgvxcjg
+	\section{RF Cavity}
+	zxcgjvca
+	\section{RF Accelerating Structure}
+	zgjzcvcvz
+	\section{NEW: Solenoid and RF Class}
+	zcgcvcvzg
+	\section{Orbit Corrector}
+	zgjzvjvzc
+	\section{Screen}
+	zdgjzcvhatd
+	\section{Beam Position Monitor}
+	zgjzcvzf
+		
+	\begin{thebibliography}{99}
+		
+		\bibitem{cite:matlab}
+		Mathworks, \texttt{http://www.mathworks.co.uk/}
+
+		
+	\end{thebibliography}
+	
+\end{document}

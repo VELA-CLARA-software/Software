@@ -1,0 +1,192 @@
+ --------------------------------------------------------------------------
+
+               Astra - A space charge tracking algorithm 
+                             Version 3.2              
+                         DESY,  Hamburg 2011          
+                          6. 4.2018  16:23
+
+     Parameter file is:  injector400.in                                    
+     trial                                                                           
+
+ Initialize element settings:
+ --------------------------------------------------------------------------
+ Cavity:
+
+     Reading cavity field data from:      ../../../MasterLattice/Data_Files/HRRG_1D_RF.dat                                
+     field smoothing is applied
+     Cavity Frequency               f =    2.998     GHz
+     maximum gradient                      120.0     MV/m
+     at                                    0.000     m
+     estimated average gradient            29.81     MV/m
+     nominal phase                        -9.000     deg
+
+     Reading cavity field data from:      ../../../MasterLattice/Data_Files/TWS_S-DL.dat                                  
+     field smoothing is applied
+     Cavity Frequency               f =    2.998     GHz
+     beta = 1 traveling wave structure
+     TW Cell Length                        3.3333E-02 m
+     Number of Cells                        60
+     Phase Advance/Cell                     120.0     deg
+     TW Section starts at                   1.194     m
+     TW Section ends at                     3.293     m
+     Max E-field                            21.00     MV/m
+     at                                     1.243     m
+     nominal phase                         -16.00     deg
+
+ --------------------------------------------------------------------------
+ Solenoid:
+
+     Reading solenoid field data from:    ../../../MasterLattice/Data_Files/HRRG_combined_sols_100mm_onaxis.dat           
+     field smoothing is applied
+     maximum |Bz| field                    0.3450     T
+     at                                    0.1010     m
+     integral Bz squared                   1.1549E-02 T^2m
+
+     Reading solenoid field data from:    ../../../MasterLattice/Data_Files/SwissFEL_linac_sols.dat                       
+     field smoothing is applied
+     maximum |Bz| field                    5.0000E-02 T
+     at                                     1.700     m
+     integral Bz squared                   1.6003E-03 T^2m
+
+     Reading solenoid field data from:    ../../../MasterLattice/Data_Files/SwissFEL_linac_sols.dat                       
+     field smoothing is applied
+     maximum |Bz| field                   -5.0000E-02 T
+     at                                     2.700     m
+     integral Bz squared                   1.6003E-03 T^2m
+
+     solenoids number:   2 and   3 overlap
+ --------------------------------------------------------------------------
+     512 particles from file 512-250pC.ini                                     
+
+
+     Cathode located at:               z =      0.000     m
+     Particles taken into account      N =        512
+     total charge                      Q =    -0.2500     nC
+     horizontal beam position          x =     2.0618E-04 mm
+     vertical beam position            y =     1.3760E-05 mm
+     longitudinal beam position        z =      0.000     m
+     horizontal beam size          sig x =     0.2501     mm
+     vertical beam size            sig y =     0.2500     mm
+     longitudinal beam size        sig z =      0.000     mm
+     total emission time               t =     3.0975E-03 ns
+     rms emission time             sig t =     8.7102E-04 ns
+     average kinetic energy            E =     6.3178E-07 MeV
+     energy spread                    dE =     4.2008E-05 keV
+     average momentum                  P =     8.0355E-04 MeV/c
+     transverse beam emittance     eps x =     0.2248     pi mrad mm
+     correlated divergence         cor x =     0.3345     mrad 
+     transverse beam emittance     eps y =     0.2248     pi mrad mm
+     correlated divergence         cor y =    -0.6599     mrad
+     longitudinal beam emittance   eps z =      0.000     pi keV mm
+     correlated energy spread      cor z =      0.000     keV
+     emittance ratio eps y/eps x         =      1.000    
+
+     WARNING: Bz is not zero at the cathode,
+     estimated emittance contribution: 
+     eps x =   4.6116E-04 pi mrad mm
+     eps y =   4.6092E-04 pi mrad mm
+
+ --------------------------------------------------------------------------
+     Start auto phasing: 
+     Scan cavity number  :   1
+        7 unstable trajectories out of   50
+     Scan cavity number  :   2
+        2 unstable trajectories out of   50
+
+     Cavity phasing completed:
+     Cavity number   Energy gain [MeV]  at  Phase [deg]
+           1             4.709               235.80    
+           2             31.17               68.905    
+ --------------------------------------------------------------------------
+ on axis tracking of the reference particle:
+     initial position                  z =    0.000     m
+                                       x =    0.000     mm
+                                       y =    0.000     mm
+     initial momentum                  p =   7.9602E-04 MeV/c
+     global phase shift              phi =    0.000     deg
+     time step for integration        dt =   0.7000     ps
+ --------------------------------------------------------------------------
+ Online element settings:
+
+ --------------------------------------------------------------------------
+
+     particle reaches position         z =    3.371     m
+     time of flight is                 t =    11.29     ns
+     final momentum                    p =    35.16     MeV/c
+     final phase (cavity 1)      phi_end =    272.4     deg
+ --------------------------------------------------------------------------
+ off axis tracking of the reference particle: 
+     initial position                  z =    0.000     m
+                                       x =   0.2501     mm
+                                       y =   0.2500     mm
+
+     final position                    x =   0.7780     mm
+                                       y =  -0.4604     mm
+     divergence                    px/pz =   2.0464E-02 mrad
+                                   py/pz =  -1.2241E-02 mrad
+ --------------------------------------------------------------------------
+ tracking of      512 particles :
+     tracking will stop at             z =    3.371     m
+
+     space charge forces are INCLUDED
+     cylindrical symmetric algorithm
+     mirror charges at the cathode are taken into account
+     mirror charge switched off at:          9.3165E-03 m
+
+     final checkpoint at               z =    3.371     m
+     total number of iteration steps:         16344
+
+     **********************************************************************
+
+     Particles taken into account      N =        512
+     total charge                      Q =    -0.2500     nC
+     horizontal beam position          x =    -9.9893E-03 mm
+     vertical beam position            y =     2.2179E-02 mm
+     longitudinal beam position        z =      3.371     m
+     horizontal beam size          sig x =     0.4619     mm
+     vertical beam size            sig y =     0.4687     mm
+     longitudinal beam size        sig z =     0.4844     mm
+     average kinetic energy            E =      34.75     MeV
+     energy spread                    dE =      180.7     keV
+     average momentum                  P =      35.26     MeV/c
+     transverse beam emittance     eps x =     0.9016     pi mrad mm
+     correlated divergence         cor x =     5.5587E-02 mrad 
+     transverse beam emittance     eps y =     0.7956     pi mrad mm
+     correlated divergence         cor y =     5.4924E-02 mrad
+     longitudinal beam emittance   eps z =      10.77     pi keV mm
+     correlated energy spread      cor z =     -179.4     keV
+     emittance ratio eps y/eps x         =      1.133    
+
+     Particle Statistics: 
+
+
+     Total number of particles on stack     =        512
+     Electrons (total)                      =        512
+     particles at the cathode               =          0
+     active particles                       =        512
+     passive particles (lost out of bunch)  =          0
+     probe particles                        =          6
+     backward traveling particles           =          0
+     particles lost with z<Zmin             =          0
+     particles lost due to cathode field    =          0
+     particles lost on aperture             =          0
+
+     Tracking ended with     1 warning(s)
+
+
+     **********************************************************************
+
+     Emittance information saved to file    : injector400.Xemit.001         
+     Emittance information saved to file    : injector400.Yemit.001         
+     Emittance information saved to file    : injector400.Zemit.001         
+     Ref. part. information saved to file   : injector400.ref.001           
+     Trajectories saved to file             : injector400.track.001         
+     Phase-space distributions logged in    : injector400.Log.001           
+
+     **********************************************************************
+
+
+     finished simulation   6. 4.2018     16:24
+     execution time: 30.98 sec                         
+     Goodbye.
+ --------------------------------------------------------------------------

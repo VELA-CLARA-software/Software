@@ -4,6 +4,7 @@
 """Ingredients"""
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 from PyQt4.QtCore import QThread, QObject, pyqtSignal, QTimer
+from PyQt4 import QtGui
 from epics import caget,caput
 import os,sys
 import time
@@ -17,9 +18,9 @@ os.environ["EPICS_CA_ADDR_LIST"] = "10.10.0.12"
 os.environ["EPICS_CA_MAX_ARRAY_BYTES"] = "10000000"
 os.environ["EPICS_CA_SERVER_PORT"]="6000"
 #sys.path.append('\\\\fed.cclrc.ac.uk\\Org\\NLab\ASTeC\\Projects\\VELA\\Software\\OnlineModel')
-sys.path.append('C:\\Users\\djd63\\Desktop\\VA workshop\\OnlineModel-master\\OnlineModel-master')
+#sys.path.append('C:\\Users\\djd63\\Desktop\\VA workshop\\OnlineModel-master\\OnlineModel-master')
 #os.environ["PATH"] = os.environ["PATH"]+";\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release\\root_v5.34.34\\bin\\"
-sys.path.append('C:\\Users\\djd63\\Desktop\\VA workshop\\Examples Scripts')
+#sys.path.append('C:\\Users\\djd63\\Desktop\\VA workshop\\Examples Scripts')
 import SAMPL.v2_developing.sampl_noprint as sampl
 #sys.path.append('\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Software\\VELA_CLARA_PYDs\\bin\\stagetim')
 sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release')
@@ -162,7 +163,8 @@ class Model(QObject):
             self.target = self.targety
             self.cor = str(getattr(self.view, 'comboBox_V_'+row).currentText())
         self.tol = float(getattr(self.view, 'doubleSpinBox_tol_'+row).value())
-        self.func.align3(self.Cmagnets,self.cor,self.Cbpms,self.bpm2align,self.target,self.tol,xory)
+        self.initstep = float(getattr(self.view, 'doubleSpinBox_step_'+row).value())
+        self.func.align3(self.Cmagnets,self.cor,self.Cbpms,self.bpm2align,self.target,self.tol,xory,self.initstep)
 
     def combobox_bpm(self,text):
         print text
@@ -319,3 +321,73 @@ class Model(QObject):
                 #print a
             #else:
             #    print 'Not confirmed momentum measurement'
+
+    def save(self):
+        #self.filename = QtGui.QFileDialog::getOpenFileName
+        #print self.filename
+        self.savefile=QtGui.QFileDialog.getSaveFileName()
+        print self.savefile
+        row = 1
+        open(self.savefile,'w').writelines(self.getall(row))
+        for row in np.arange(2,5,1):
+            open(self.savefile,'a').writelines(self.getall(row))
+
+    def getall(self, row):
+        row = str(row)
+        self.save_targetx = str(getattr(self.view, 'doubleSpinBox_x_'+row).value())
+        self.save_targety = str(getattr(self.view, 'doubleSpinBox_y_'+row).value())
+        self.save_tol = str(getattr(self.view, 'doubleSpinBox_tol_'+row).value())
+        self.save_initstep = str(getattr(self.view, 'doubleSpinBox_step_'+row).value())
+        self.save_hcor = str(getattr(self.view, 'doubleSpinBox_H_'+row).value())
+        self.save_vcor = str(getattr(self.view, 'doubleSpinBox_V_'+row).value())
+        items = [self.save_targetx, self.save_targety, self.save_tol, self.save_initstep, self.save_hcor, self.save_vcor]
+        items = map(lambda x: x + ' ', items)
+        items[-1] = items[-1]+'\n'
+        print items
+        return items
+
+    def save_positions(self):
+        #self.filename = QtGui.QFileDialog::getOpenFileName
+        #print self.filename
+        self.savefile=QtGui.QFileDialog.getSaveFileName()
+        print self.savefile
+        row = 1
+        open(self.savefile,'w').writelines(self.getall2(row))
+        for row in np.arange(2,5,1):
+            open(self.savefile,'a').writelines(self.getall2(row))
+
+    def getall2(self, row):
+        row = str(row)
+        self.save_targetx = str(self.Cbpms.getXFromPV(str(getattr(self.view, 'comboBox_'+row).currentText())))
+        self.save_targety = str(self.Cbpms.getYFromPV(str(getattr(self.view, 'comboBox_'+row).currentText())))
+        self.save_tol = str(getattr(self.view, 'doubleSpinBox_tol_'+row).value())
+        self.save_initstep = str(getattr(self.view, 'doubleSpinBox_step_'+row).value())
+        self.save_hcor = str(getattr(self.view, 'doubleSpinBox_H_'+row).value())
+        self.save_vcor = str(getattr(self.view, 'doubleSpinBox_V_'+row).value())
+        items = [self.save_targetx, self.save_targety, self.save_tol, self.save_initstep, self.save_hcor, self.save_vcor]
+        items = map(lambda x: x + ' ', items)
+        items[-1] = items[-1]+'\n'
+        print items
+        return items
+
+    def load(self):
+        self.loadfile=QtGui.QFileDialog.getOpenFileName()
+        print self.loadfile
+        #firstline = open(self.loadfile,'r').readline()
+        #print firstline
+        #r = 0
+        with open(str(self.loadfile)) as f:
+            #r = r + 1
+            #row = str(r)
+            a = f.readlines()
+            for r in np.arange(0, len(a), 1):
+                row = str(r+1)
+                b = a[r].split()
+                #print b[0]
+                getattr(self.view, 'doubleSpinBox_x_'+row).setValue(float(b[0]))
+                getattr(self.view, 'doubleSpinBox_y_'+row).setValue(float(b[1]))
+                getattr(self.view, 'doubleSpinBox_tol_'+row).setValue(float(b[2]))
+                getattr(self.view, 'doubleSpinBox_step_'+row).setValue(float(b[3]))
+                # Commenting out setting correctors
+                #getattr(self.view, 'doubleSpinBox_H_'+row).setValue(float(b[4]))
+                #getattr(self.view, 'doubleSpinBox_V_'+row).setValue(float(b[5]))

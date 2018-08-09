@@ -1,0 +1,24 @@
+ &INPUT
+  FNAME = '512-250pC.ini'
+  ADD=.F
+  IPart=512
+  Species='electrons'
+  Probe=.True.
+  Noise_reduc=.F.
+  High_res=.T.
+  Cathode=.T.
+  Lprompt=F
+  Q_total=0.25
+  Ref_zpos=0.
+  Ref_clock=0E-3
+  Dist_z='p',
+  Ref_Ekin=0.
+  Lt=3E-3, rt=0.2E-3
+!  sig_clock=76E-6,
+!  sig_z=100E-3, Lz=0.,	rz=0.
+!  Lt=0.1E-3, rt=0.05E-3
+  Dist_pz='i', LE=0.62E-03
+  Dist_x='radial',  sig_x=0.25
+  Dist_y='r' , sig_y=0.25
+!  Dist_px='radial', Nemit_x=0
+ /
