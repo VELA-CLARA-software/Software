@@ -1,0 +1,35 @@
+&run_setup
+	lattice = clara_V12.lte
+	default_order = 3,
+	use_beamline = CLA,
+	p_central = 7.031112751880472e+01,
+	print_statistics = 1
+        always_change_p0 = 1
+	echo_lattice = 1
+&end
+
+&run_control          
+        n_steps = 1,
+&end      
+
+&save_lattice
+	filename = clara_V12_simple.lte
+&end
+
+&run_setup
+	lattice = clara_V12.lte
+	default_order = 3,
+	use_beamline = CLA-EBT-BA1,
+	p_central = 7.031112751880472e+01,
+	print_statistics = 1
+        always_change_p0 = 1
+	echo_lattice = 1
+&end
+
+&run_control          
+        n_steps = 1,
+&end      
+
+&save_lattice
+	filename = clara_V12_CLA-EBT-BA1_simple.lte
+&end

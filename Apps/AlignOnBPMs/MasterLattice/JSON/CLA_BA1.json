@@ -1,0 +1,1706 @@
+{
+    "elements": {
+        "CLA-LRG1-APER": {
+            "type": "aperture",
+            "shape": "rectangular",
+            "horizontal_size": 0.017,
+            "vertical_size": 0.017,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                0,
+                0,
+                0
+            ],
+            "position_start": [
+                0,
+                0,
+                0
+            ]
+        },
+        "CLA-LRG1-GUN-CAV": {
+            "type": "cavity",
+            "length": 0,
+            "field_amplitude": 7e7,
+            "frequency": 2.99744e9,
+            "phase": -16,
+            "field_definition": "../bas_gun.txt",
+            "lsc_cutoff_high": [
+                0,
+                0
+            ],
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                0,
+                0,
+                0
+            ],
+            "position_start": [
+                0,
+                0,
+                0
+            ]
+        },
+        "CLA-LRG1-GUN-SOL": {
+            "type": "solenoid",
+            "length": 0,
+            "field_amplitude": 0.237,
+            "field_definition": "../bas_sol.txt",
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                0,
+                0,
+                0
+            ],
+            "position_start": [
+                0,
+                0,
+                0
+            ]
+        },
+        "CLA-S01-APER": {
+            "type": "aperture",
+            "shape": "rectangular",
+            "horizontal_size": 0.017,
+            "vertical_size": 0.017,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                0,
+                0,
+                0.32482
+            ],
+            "position_start": [
+                0,
+                0,
+                0.32482
+            ]
+        },
+        "CLA-S01-MAG-HVCOR-01": {
+            "type": "kicker",
+            "length": 0.03,
+            "sr_enable": true,
+            "isr_enable": true,
+            "Controller_Name": "COR1",
+            "Online_Model_Name": "C1-COR01",
+            "Horizontal_PV": "CLA-S01-MAG-HCOR-01",
+            "Vertcal_PV": "CLA-S01-MAG-VCOR-01",
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                0,
+                0,
+                0.35482
+            ],
+            "position_start": [
+                0,
+                0,
+                0.32482
+            ]
+        },
+        "CLA-S01-DIA-WCM-01": {
+            "type": "wall_current_monitor",
+            "length": 0.05,
+            "Controller_Name": "WCM01",
+            "Online_Model_Name": "C1-WCM01",
+            "PV": "CLA-S01-DIA-WCM-01",
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                0,
+                0,
+                0.7277
+            ],
+            "position_start": [
+                0,
+                0,
+                0.6777
+            ]
+        },
+        "CLA-S01-MAG-HVCOR-02": {
+            "type": "kicker",
+            "length": 0.102,
+            "sr_enable": true,
+            "isr_enable": true,
+            "Controller_Name": "COR2",
+            "Online_Model_Name": "C1-COR02",
+            "Horizontal_PV": "CLA-S01-MAG-HCOR-02",
+            "Vertcal_PV": "CLA-S01-MAG-VCOR-02",
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                0,
+                0,
+                0.8297
+            ],
+            "position_start": [
+                0,
+                0,
+                0.7277
+            ]
+        },
+        "CLA-S01-DIA-BPM-01": {
+            "type": "beam_position_monitor",
+            "length": 0.108,
+            "Controller_Name": "BPM01",
+            "Online_Model_Name": "C1-BPM01",
+            "PV": "CLA-S01-DIA-BPM-01",
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                0,
+                0,
+                0.9377
+            ],
+            "position_start": [
+                0,
+                0,
+                0.8297
+            ]
+        },
+        "CLA-S01-DIA-SCR-01-W": {
+            "type": "screen",
+            "output_filename": "\"CLA-S01-DIA-SCR-01.SDDS\"",
+            "buffer_start": [
+                0,
+                0,
+                0.9377
+            ],
+            "buffer_start_length": 0.043333,
+            "buffer_end_length": 0.076667,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                0,
+                0,
+                0.981033
+            ],
+            "position_start": [
+                0,
+                0,
+                0.981033
+            ]
+        },
+        "CLA-L01-APER": {
+            "type": "aperture",
+            "shape": "rectangular",
+            "horizontal_size": 0.01,
+            "vertical_size": 0.01,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                0,
+                0,
+                1.0577
+            ],
+            "position_start": [
+                0,
+                0,
+                1.0577
+            ]
+        },
+        "CLA-L01-CAV": {
+            "type": "cavity",
+            "length": 2.03333,
+            "cell_length": 0.0333333,
+            "field_amplitude": 2.1e7,
+            "frequency": 2.9985e9,
+            "phase": -16,
+            "longitudinal_wakefield_input": "\"Sz5um10mm.sdds\"",
+            "transverse_wakefield_input": "\"Sx5um10mm.sdds\"",
+            "field_definition": "../TWS_S-DL.dat",
+            "lsc_enable": true,
+            "lsc_bins": 20.0,
+            "lsc_cutoff_high": [
+                0.2,
+                0.25
+            ],
+            "buffer_start": [
+                0,
+                0,
+                1.0577
+            ],
+            "buffer_start_length": 0.13587,
+            "buffer_end_length": 0.14457,
+            "Controller_Name": "L01",
+            "Online_Model_Name": "C1-L01",
+            "PV": "CLA-L01-LRF-CTRL-01",
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                0,
+                0,
+                3.2269
+            ],
+            "position_start": [
+                0,
+                0,
+                1.19357
+            ]
+        },
+        "CLA-S02-APER-01": {
+            "type": "aperture",
+            "shape": "rectangular",
+            "horizontal_size": 0.017,
+            "vertical_size": 0.017,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                0,
+                0,
+                3.37147
+            ],
+            "position_start": [
+                0,
+                0,
+                3.37147
+            ]
+        },
+        "CLA-S02-MAG-HVCOR-01": {
+            "type": "kicker",
+            "length": 0.076607,
+            "sr_enable": true,
+            "isr_enable": true,
+            "Controller_Name": "COR1",
+            "Online_Model_Name": "C1-S02-COR01",
+            "Horizontal_PV": "CLA-S02-MAG-HCOR-01",
+            "Vertcal_PV": "CLA-S02-MAG-VCOR-01",
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                0,
+                0,
+                3.44808
+            ],
+            "position_start": [
+                0,
+                0,
+                3.37147
+            ]
+        },
+        "CLA-S02-MAG-QUAD-01": {
+            "type": "quadrupole",
+            "length": 0.1007,
+            "k1": -3.09253,
+            "sr_enable": true,
+            "isr_enable": true,
+            "buffer_start": [
+                0,
+                0,
+                3.44808
+            ],
+            "buffer_start_length": 0.02872,
+            "buffer_end_length": 0,
+            "Controller_Name": "S02-QUAD1",
+            "Online_Model_Name": "C1-S02-QUAD01",
+            "PV": "CLA-S02-MAG-QUAD-01",
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                0,
+                0,
+                3.5775
+            ],
+            "position_start": [
+                0,
+                0,
+                3.4768
+            ]
+        },
+        "CLA-S02-DIA-BPM-01": {
+            "type": "beam_position_monitor",
+            "length": 0.04528,
+            "Controller_Name": "BPM01",
+            "Online_Model_Name": "C1-S01-BPM01",
+            "PV": "CLA-S02-DIA-BPM-01",
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                0,
+                0,
+                3.62278
+            ],
+            "position_start": [
+                0,
+                0,
+                3.5775
+            ]
+        },
+        "CLA-S02-MAG-QUAD-02": {
+            "type": "quadrupole",
+            "length": 0.1007,
+            "k1": 6.34871,
+            "sr_enable": true,
+            "isr_enable": true,
+            "buffer_start": [
+                0,
+                0,
+                3.84808
+            ],
+            "buffer_start_length": 0.02872,
+            "buffer_end_length": 0.02802,
+            "Controller_Name": "S02-QUAD2",
+            "Online_Model_Name": "C1-S02-QUAD02",
+            "PV": "CLA-S02-MAG-QUAD-02",
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                0,
+                0,
+                3.9775
+            ],
+            "position_start": [
+                0,
+                0,
+                3.8768
+            ]
+        },
+        "CLA-S02-DIA-SCR-01-W": {
+            "type": "screen",
+            "output_filename": "\"CLA-S02-DIA-SCR-01.SDDS\"",
+            "buffer_start": [
+                0,
+                0,
+                4.0465
+            ],
+            "buffer_start_length": 0.043333,
+            "buffer_end_length": 0.076667,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                0,
+                0,
+                4.08983
+            ],
+            "position_start": [
+                0,
+                0,
+                4.08983
+            ]
+        },
+        "CLA-S02-MAG-HVCOR-02": {
+            "type": "kicker",
+            "length": 0.03,
+            "sr_enable": true,
+            "isr_enable": true,
+            "Controller_Name": "COR2",
+            "Online_Model_Name": "C1-S02-COR02",
+            "Horizontal_PV": "CLA-S02-MAG-HCOR-02",
+            "Vertcal_PV": "CLA-S02-MAG-VCOR-02",
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                0,
+                0,
+                4.26807
+            ],
+            "position_start": [
+                0,
+                0,
+                4.23807
+            ]
+        },
+        "CLA-S02-COL-01": {
+            "type": "collimator",
+            "length": 0.35,
+            "shape": "elliptical",
+            "horizontal_size": 0.01,
+            "vertical_size": 0.01,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                0,
+                0,
+                4.69362
+            ],
+            "position_start": [
+                0,
+                0,
+                4.34362
+            ]
+        },
+        "CLA-S02-APER-02": {
+            "type": "aperture",
+            "shape": "rectangular",
+            "horizontal_size": 0.017,
+            "vertical_size": 0.017,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                0,
+                0,
+                4.69362
+            ],
+            "position_start": [
+                0,
+                0,
+                4.69362
+            ]
+        },
+        "CLA-S02-MAG-HVCOR-03": {
+            "type": "kicker",
+            "length": 0.03,
+            "sr_enable": true,
+            "isr_enable": true,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                0,
+                0,
+                4.84556
+            ],
+            "position_start": [
+                0,
+                0,
+                4.81556
+            ]
+        },
+        "CLA-S02-DIA-SCR-02-W": {
+            "type": "screen",
+            "output_filename": "\"CLA-S02-DIA-SCR-02.SDDS\"",
+            "buffer_start": [
+                0,
+                0,
+                4.9675
+            ],
+            "buffer_start_length": 0.043333,
+            "buffer_end_length": 0.076667,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                0,
+                0,
+                5.01083
+            ],
+            "position_start": [
+                0,
+                0,
+                5.01083
+            ]
+        },
+        "CLA-S02-MAG-QUAD-03": {
+            "type": "quadrupole",
+            "length": 0.1007,
+            "k1": -4.07613,
+            "sr_enable": true,
+            "isr_enable": true,
+            "buffer_start": [
+                0,
+                0,
+                5.14808
+            ],
+            "buffer_start_length": 0.02872,
+            "buffer_end_length": 0.02802,
+            "Controller_Name": "S02-QUAD3",
+            "Online_Model_Name": "C1-S02-QUAD03",
+            "PV": "CLA-S02-MAG-QUAD-03",
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                0,
+                0,
+                5.2775
+            ],
+            "position_start": [
+                0,
+                0,
+                5.1768
+            ]
+        },
+        "CLA-S02-MAG-QUAD-04": {
+            "type": "quadrupole",
+            "length": 0.1007,
+            "k1": -4.07613,
+            "sr_enable": true,
+            "isr_enable": true,
+            "buffer_start": [
+                0,
+                0,
+                5.54808
+            ],
+            "buffer_start_length": 0.02872,
+            "buffer_end_length": 0.02802,
+            "Controller_Name": "S02-QUAD4",
+            "Online_Model_Name": "C1-S02-QUAD04",
+            "PV": "CLA-S02-MAG-QUAD-04",
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                0,
+                0,
+                5.6775
+            ],
+            "position_start": [
+                0,
+                0,
+                5.5768
+            ]
+        },
+        "CLA-C2V-MARK-01": {
+            "type": "marker",
+            "fit_point": 1.0,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                0,
+                0,
+                5.72687
+            ],
+            "position_start": [
+                0,
+                0,
+                5.72687
+            ]
+        },
+        "CLA-C2V-MAG-DIP-01": {
+            "type": "dipole",
+            "length": 0.400003,
+            "angle": 0.785398,
+            "half_gap": 0.005,
+            "edge_field_integral": 0.4,
+            "csr_bins": 20.0,
+            "sr_enable": true,
+            "isr_enable": true,
+            "csr_output_filename": "\"C2V-MAG-DIP-01-D.CSR\"",
+            "buffer_start": [
+                0,
+                0,
+                5.72687
+            ],
+            "buffer_start_length": 0.1,
+            "buffer_end_length": 0.1,
+            "Controller_Name": "DIP01",
+            "Online_Model_Name": "CV-DIP01",
+            "PV": "CLA-C2V-MAG-DIP-01",
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                -0.149171,
+                0,
+                6.187
+            ],
+            "position_start": [
+                0,
+                0,
+                5.82687
+            ]
+        },
+        "CLA-C2V-MAG-HVCOR-01": {
+            "type": "kicker",
+            "length": 0.21,
+            "sr_enable": true,
+            "isr_enable": true,
+            "Controller_Name": "COR1",
+            "Online_Model_Name": "CV-COR01",
+            "Horizontal_PV": "CLA-C2V-MAG-HCOR-01",
+            "Vertcal_PV": "CLA-C2V-MAG-VCOR-01",
+            "global_rotation": [
+                0,
+                0,
+                0.785398
+            ],
+            "position_end": [
+                -0.368412,
+                0,
+                6.40624
+            ],
+            "position_start": [
+                -0.21992,
+                0,
+                6.25775
+            ]
+        },
+        "CLA-C2V-DIA-BPM-01": {
+            "type": "beam_position_monitor",
+            "Controller_Name": "BPM01",
+            "Online_Model_Name": "CV-BPM01",
+            "PV": "CLA-C2V-DIA-BPM-01",
+            "global_rotation": [
+                0,
+                0,
+                0.785398
+            ],
+            "position_end": [
+                -0.368412,
+                0,
+                6.40624
+            ],
+            "position_start": [
+                -0.368412,
+                0,
+                6.40624
+            ]
+        },
+        "CLA-C2V-MAG-QUAD-01": {
+            "type": "quadrupole",
+            "length": 0.1007,
+            "k1": 55.9853,
+            "sr_enable": true,
+            "isr_enable": true,
+            "buffer_start": [
+                0.368412,
+                0,
+                6.40624
+            ],
+            "buffer_start_length": 0.02252,
+            "buffer_end_length": 0.02252,
+            "Controller_Name": "C2V-QUAD1",
+            "Online_Model_Name": "CV-QUAD01",
+            "PV": "CLA-C2V-MAG-QUAD-01",
+            "global_rotation": [
+                0,
+                0,
+                0.785398
+            ],
+            "position_end": [
+                -0.455542,
+                0,
+                6.49337
+            ],
+            "position_start": [
+                -0.384336,
+                0,
+                6.42217
+            ]
+        },
+        "CLA-C2V-MAG-QUAD-02": {
+            "type": "quadrupole",
+            "length": 0.1007,
+            "k1": -50.2792,
+            "sr_enable": true,
+            "isr_enable": true,
+            "buffer_start": [
+                0.573473,
+                0,
+                6.6113
+            ],
+            "buffer_start_length": 0.02252,
+            "buffer_end_length": 0.02252,
+            "Controller_Name": "C2V-QUAD2",
+            "Online_Model_Name": "CV-QUAD02",
+            "PV": "CLA-C2V-MAG-QUAD-02",
+            "global_rotation": [
+                0,
+                0,
+                0.785398
+            ],
+            "position_end": [
+                -0.660603,
+                0,
+                6.69843
+            ],
+            "position_start": [
+                -0.589397,
+                0,
+                6.62723
+            ]
+        },
+        "CLA-C2V-MAG-QUAD-03": {
+            "type": "quadrupole",
+            "length": 0.1007,
+            "k1": 55.9853,
+            "sr_enable": true,
+            "isr_enable": true,
+            "buffer_start": [
+                0.778534,
+                0,
+                6.81636
+            ],
+            "buffer_start_length": 0.02252,
+            "buffer_end_length": 0.02252,
+            "Controller_Name": "C2V-QUAD1",
+            "Online_Model_Name": "CV-QUAD03",
+            "PV": "CLA-C2V-MAG-QUAD-03",
+            "global_rotation": [
+                0,
+                0,
+                0.785398
+            ],
+            "position_end": [
+                -0.865664,
+                0,
+                6.90349
+            ],
+            "position_start": [
+                -0.794458,
+                0,
+                6.83229
+            ]
+        },
+        "CLA-C2V-DIA-SCR-01-W": {
+            "type": "screen",
+            "output_filename": "\"C2V-DIA-SCR-01.SDDS\"",
+            "buffer_start": [
+                0.913427,
+                0,
+                6.95126
+            ],
+            "buffer_start_length": 0.043333,
+            "buffer_end_length": 0.076667,
+            "global_rotation": [
+                0,
+                0,
+                0.785398
+            ],
+            "position_end": [
+                -0.944068,
+                0,
+                6.9819
+            ],
+            "position_start": [
+                -0.944068,
+                0,
+                6.9819
+            ]
+        },
+        "CLA-C2V-MAG-DIP-02": {
+            "type": "dipole",
+            "length": 0.400003,
+            "angle": -0.785398,
+            "half_gap": 0.005,
+            "edge_field_integral": 0.4,
+            "csr_bins": 20.0,
+            "sr_enable": true,
+            "isr_enable": true,
+            "csr_output_filename": "\"CLA-C2V-MAG-DIP-02-D.CSR\"",
+            "buffer_start": [
+                1.03012,
+                0,
+                7.06795
+            ],
+            "buffer_start_length": 0.1,
+            "buffer_end_length": 0.1,
+            "Controller_Name": "DIP02",
+            "Online_Model_Name": "CV-DIP03",
+            "PV": "CLA-C2V-MAG-DIP-03",
+            "global_rotation": [
+                0,
+                0,
+                0.785398
+            ],
+            "position_end": [
+                -1.25,
+                0,
+                7.49879
+            ],
+            "position_start": [
+                -1.10083,
+                0,
+                7.13866
+            ]
+        },
+        "EBT-INJ-DIA-YAG-05": {
+            "type": "watch_point",
+            "output_filename": "\"EBT-INJ-DIA-YAG-05.SDDS\"",
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                -1.25,
+                0,
+                7.83179
+            ],
+            "position_start": [
+                -1.25,
+                0,
+                7.83179
+            ]
+        },
+        "EBT-INJ-MAG-HVCOR-06": {
+            "type": "kicker",
+            "length": 0.064,
+            "sr_enable": true,
+            "isr_enable": true,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                -1.25,
+                0,
+                8.16279
+            ],
+            "position_start": [
+                -1.25,
+                0,
+                8.09879
+            ]
+        },
+        "EBT-INJ-MAG-QUAD-07": {
+            "type": "quadrupole",
+            "length": 0.1,
+            "k1": 17.0945,
+            "sr_enable": true,
+            "isr_enable": true,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                -1.25,
+                0,
+                8.26279
+            ],
+            "position_start": [
+                -1.25,
+                0,
+                8.16279
+            ]
+        },
+        "EBT-INJ-MAG-QUAD-08": {
+            "type": "quadrupole",
+            "length": 0.1,
+            "k1": -17.8686,
+            "sr_enable": true,
+            "isr_enable": true,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                -1.25,
+                0,
+                8.53279
+            ],
+            "position_start": [
+                -1.25,
+                0,
+                8.43279
+            ]
+        },
+        "EBT-INJ-DIA-YAG-06": {
+            "type": "watch_point",
+            "output_filename": "\"EBT-INJ-DIA-YAG-06.SDDS\"",
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                -1.25,
+                0,
+                9.53979
+            ],
+            "position_start": [
+                -1.25,
+                0,
+                9.53979
+            ]
+        },
+        "EBT-INJ-DIA-FCUP-02": {
+            "type": "watch_point",
+            "output_filename": "\"EBT-INJ-DIA-FCUP-02.SDDS\"",
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                -1.25,
+                0,
+                9.88979
+            ],
+            "position_start": [
+                -1.25,
+                0,
+                9.88979
+            ]
+        },
+        "EBT-INJ-MAG-HVCOR-07": {
+            "type": "kicker",
+            "length": 0.1825,
+            "sr_enable": true,
+            "isr_enable": true,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                -1.25,
+                0,
+                10.3398
+            ],
+            "position_start": [
+                -1.25,
+                0,
+                10.1573
+            ]
+        },
+        "EBT-INJ-MAG-QUAD-09": {
+            "type": "quadrupole",
+            "length": 0.075,
+            "k1": 4.14677,
+            "sr_enable": true,
+            "isr_enable": true,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                -1.25,
+                0,
+                10.4148
+            ],
+            "position_start": [
+                -1.25,
+                0,
+                10.3398
+            ]
+        },
+        "EBT-INJ-DIA-BPM-04": {
+            "type": "beam_position_monitor",
+            "length": 0.243,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                -1.25,
+                0,
+                10.6578
+            ],
+            "position_start": [
+                -1.25,
+                0,
+                10.4148
+            ]
+        },
+        "EBT-INJ-DIA-YAG-07": {
+            "type": "watch_point",
+            "output_filename": "\"EBT-INJ-DIA-YAG-07.SDDS\"",
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                -1.25,
+                0,
+                12.0898
+            ],
+            "position_start": [
+                -1.25,
+                0,
+                12.0898
+            ]
+        },
+        "EBT-INJ-MAG-HVCOR-08": {
+            "type": "kicker",
+            "length": 0.2,
+            "sr_enable": true,
+            "isr_enable": true,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                -1.25,
+                0,
+                12.2898
+            ],
+            "position_start": [
+                -1.25,
+                0,
+                12.0898
+            ]
+        },
+        "EBT-INJ-MAG-QUAD-10": {
+            "type": "quadrupole",
+            "length": 0.075,
+            "k1": -4.2847,
+            "sr_enable": true,
+            "isr_enable": true,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                -1.25,
+                0,
+                12.5668
+            ],
+            "position_start": [
+                -1.25,
+                0,
+                12.4918
+            ]
+        },
+        "EBT-INJ-DIA-BPM-05": {
+            "type": "beam_position_monitor",
+            "length": 0.2,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                -1.25,
+                0,
+                14.0118
+            ],
+            "position_start": [
+                -1.25,
+                0,
+                13.8118
+            ]
+        },
+        "EBT-INJ-MAG-QUAD-11": {
+            "type": "quadrupole",
+            "length": 0.075,
+            "k1": 5.66182,
+            "sr_enable": true,
+            "isr_enable": true,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                -1.25,
+                0,
+                14.7148
+            ],
+            "position_start": [
+                -1.25,
+                0,
+                14.6398
+            ]
+        },
+        "EBT-INJ-DIA-YAG-08": {
+            "type": "watch_point",
+            "output_filename": "\"EBT-INJ-DIA-YAG-08.SDDS\"",
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                -1.25,
+                0,
+                15.5898
+            ],
+            "position_start": [
+                -1.25,
+                0,
+                15.5898
+            ]
+        },
+        "EBT-INJ-MAG-HVCOR-09": {
+            "type": "kicker",
+            "length": 0.1675,
+            "sr_enable": true,
+            "isr_enable": true,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                -1.25,
+                0,
+                15.7573
+            ],
+            "position_start": [
+                -1.25,
+                0,
+                15.5898
+            ]
+        },
+        "EBT-INJ-DIA-ICT-03": {
+            "type": "marker",
+            "fit_point": 1.0,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                -1.25,
+                0,
+                17.1398
+            ],
+            "position_start": [
+                -1.25,
+                0,
+                17.1398
+            ]
+        },
+        "EBT-INJ-DIA-YAG-10": {
+            "type": "watch_point",
+            "output_filename": "\"EBT-INJ-DIA-YAG-10.SDDS\"",
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                -1.25,
+                0,
+                17.1398
+            ],
+            "position_start": [
+                -1.25,
+                0,
+                17.1398
+            ]
+        },
+        "EBT-INJ-MAG-QUAD-15": {
+            "type": "quadrupole",
+            "length": 0.075,
+            "k1": 4.0731,
+            "sr_enable": true,
+            "isr_enable": true,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                -1.25,
+                0,
+                17.8098
+            ],
+            "position_start": [
+                -1.25,
+                0,
+                17.7348
+            ]
+        },
+        "EBT-INJ-PSS-SHUT-02": {
+            "type": "marker",
+            "fit_point": 1.0,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                -1.25,
+                0,
+                18.2448
+            ],
+            "position_start": [
+                -1.25,
+                0,
+                18.2448
+            ]
+        },
+        "EBT-BA1-DIA-BPM-01": {
+            "type": "beam_position_monitor",
+            "length": 0.235,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                -1.25,
+                0,
+                21.3888
+            ],
+            "position_start": [
+                -1.25,
+                0,
+                21.1538
+            ]
+        },
+        "EBT-BA1-DIA-YAG-01": {
+            "type": "watch_point",
+            "output_filename": "\"EBT-BA1-DIA-YAG-01.SDDS\"",
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                -1.25,
+                0,
+                21.3888
+            ],
+            "position_start": [
+                -1.25,
+                0,
+                21.3888
+            ]
+        },
+        "EBT-BA1-MAG-QUAD-01": {
+            "type": "quadrupole",
+            "length": 0.16,
+            "sr_enable": true,
+            "isr_enable": true,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                -1.25,
+                0,
+                22.5498
+            ],
+            "position_start": [
+                -1.25,
+                0,
+                22.3898
+            ]
+        },
+        "EBT-BA1-MAG-QUAD-02": {
+            "type": "quadrupole",
+            "length": 0.16,
+            "sr_enable": true,
+            "isr_enable": true,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                -1.25,
+                0,
+                22.9498
+            ],
+            "position_start": [
+                -1.25,
+                0,
+                22.7898
+            ]
+        },
+        "EBT-BA1-DIA-BPM-02": {
+            "type": "beam_position_monitor",
+            "length": 0.235,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                -1.25,
+                0,
+                23.1848
+            ],
+            "position_start": [
+                -1.25,
+                0,
+                22.9498
+            ]
+        },
+        "EBT-BA1-MAG-QUAD-03": {
+            "type": "quadrupole",
+            "length": 0.16,
+            "sr_enable": true,
+            "isr_enable": true,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                -1.25,
+                0,
+                23.3448
+            ],
+            "position_start": [
+                -1.25,
+                0,
+                23.1848
+            ]
+        },
+        "EBT-BA1-LASERBOX-BEG": {
+            "type": "marker",
+            "fit_point": 1.0,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                -1.25,
+                0,
+                23.6848
+            ],
+            "position_start": [
+                -1.25,
+                0,
+                23.6848
+            ]
+        },
+        "EBT-BA1-LASERBOX-END": {
+            "type": "marker",
+            "fit_point": 1.0,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                -1.25,
+                0,
+                24.3348
+            ],
+            "position_start": [
+                -1.25,
+                0,
+                24.3348
+            ]
+        },
+        "EBT-BA1-COFFIN-BEG": {
+            "type": "marker",
+            "fit_point": 1.0,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                -1.25,
+                0,
+                24.4348
+            ],
+            "position_start": [
+                -1.25,
+                0,
+                24.4348
+            ]
+        },
+        "EBT-BA1-COFFIN-FOC": {
+            "type": "marker",
+            "fit_point": 1.0,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                -1.25,
+                0,
+                25.4848
+            ],
+            "position_start": [
+                -1.25,
+                0,
+                25.4848
+            ]
+        },
+        "EBT-BA1-COFFIN-END": {
+            "type": "marker",
+            "fit_point": 1.0,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                -1.25,
+                0,
+                26.7948
+            ],
+            "position_start": [
+                -1.25,
+                0,
+                26.7948
+            ]
+        },
+        "EBT-BA1-DIA-BPM-03": {
+            "type": "beam_position_monitor",
+            "length": 0.235,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                -1.25,
+                0,
+                27.0298
+            ],
+            "position_start": [
+                -1.25,
+                0,
+                26.7948
+            ]
+        },
+        "EBT-BA1-MAG-QUAD-04": {
+            "type": "quadrupole",
+            "length": 0.16,
+            "sr_enable": true,
+            "isr_enable": true,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                -1.25,
+                0,
+                27.1898
+            ],
+            "position_start": [
+                -1.25,
+                0,
+                27.0298
+            ]
+        },
+        "EBT-BA1-MAG-QUAD-05": {
+            "type": "quadrupole",
+            "length": 0.16,
+            "sr_enable": true,
+            "isr_enable": true,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                -1.25,
+                0,
+                27.6228
+            ],
+            "position_start": [
+                -1.25,
+                0,
+                27.4628
+            ]
+        },
+        "EBT-BA1-MAG-QUAD-06": {
+            "type": "quadrupole",
+            "length": 0.16,
+            "sr_enable": true,
+            "isr_enable": true,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                -1.25,
+                0,
+                28.0558
+            ],
+            "position_start": [
+                -1.25,
+                0,
+                27.8958
+            ]
+        },
+        "EBT-BA1-DIA-YAG-02": {
+            "type": "watch_point",
+            "output_filename": "\"EBT-BA1-DIA-YAG-02.SDDS\"",
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                -1.25,
+                0,
+                28.1558
+            ],
+            "position_start": [
+                -1.25,
+                0,
+                28.1558
+            ]
+        },
+        "EBT-BA1-MAG-DIP-01": {
+            "type": "dipole",
+            "length": 0.500037,
+            "angle": 1.0472,
+            "half_gap": 0.005,
+            "edge_field_integral": 0.4,
+            "csr_bins": 20.0,
+            "sr_enable": true,
+            "isr_enable": true,
+            "csr_output_filename": "\"CLA-C2V-MAG-DIP-01-D.CSR\"",
+            "buffer_start": [
+                1.25,
+                0,
+                28.4538
+            ],
+            "buffer_start_length": 0.1,
+            "buffer_end_length": 0.1,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                -1.48875,
+                0,
+                28.9673
+            ],
+            "position_start": [
+                -1.25,
+                0,
+                28.5538
+            ]
+        },
+        "EBT-BA1-MAG-QUAD-07": {
+            "type": "quadrupole",
+            "length": 0.3,
+            "sr_enable": true,
+            "isr_enable": true,
+            "global_rotation": [
+                0,
+                0,
+                1.0472
+            ],
+            "position_end": [
+                -2.07159,
+                0,
+                29.3038
+            ],
+            "position_start": [
+                -1.81178,
+                0,
+                29.1538
+            ]
+        },
+        "EBT-BA1-DIA-BPM-04": {
+            "type": "beam_position_monitor",
+            "length": 0.235,
+            "global_rotation": [
+                0,
+                0,
+                1.0472
+            ],
+            "position_end": [
+                -2.51153,
+                0,
+                29.5578
+            ],
+            "position_start": [
+                -2.30801,
+                0,
+                29.4403
+            ]
+        },
+        "EBT-BA1-DIA-YAG-03": {
+            "type": "watch_point",
+            "output_filename": "\"EBT-BA1-DIA-YAG-03.SDDS\"",
+            "global_rotation": [
+                0,
+                0,
+                1.0472
+            ],
+            "position_end": [
+                -3.19136,
+                0,
+                29.9503
+            ],
+            "position_start": [
+                -3.19136,
+                0,
+                29.9503
+            ]
+        },
+        "EBT-BA1-DIA-FCUP-01": {
+            "type": "watch_point",
+            "output_filename": "\"EBT-BA1-DIA-FCUP-01.SDDS\"",
+            "global_rotation": [
+                0,
+                0,
+                1.0472
+            ],
+            "position_end": [
+                -3.19136,
+                0,
+                29.9503
+            ],
+            "position_start": [
+                -3.19136,
+                0,
+                29.9503
+            ]
+        }
+    }
+}

@@ -1,0 +1,1326 @@
+assign, print="lattice.print.txt",&
+echo="lattice.echo.txt";
+Title,"lattice8.5 HLO/BDM";
+
+!**********************************
+!This is lattice 8.5 for the ERLP *
+!**********************************
+!
+!BTS - Beam Transfer System
+!
+!this is the general name for the part of the ERLP which does not
+!include the injection line. It is sub-divided as follows:
+!
+!ST1 - BTS straight 1 (injection to arc1)
+!
+!ST2 - BTS straight 2 (arc1 to wiggler)
+!
+!ST3 - BTS straight 3 (wiggler to arc2)
+!
+!ST4 - BTS straight 4 (arc2 to injection)
+!
+!AR1 - BTS arc1
+!
+!AR2 - BTS arc2
+!
+!DMP - Dump
+!
+!INJ - Injection
+!
+!all numbers refer to which element in the section it is in the clockwise
+!direction. e.g. AR1DIP03 means the third dipole of arc2, etc.
+!
+!please record ANY changes made below:
+!
+!new matched solution (20/07/04)
+!
+!**************************************************************************
+!********************** very important note *******************************
+!**************************************************************************
+!if the latter section of the erlp is used, the line below MUST be changed*
+!to the correct energy !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*
+!**************************************************************************
+!**************************************************************************
+
+BEAM,PARTICLE=electron,PC=0.00835;
+!BEAM,PARTICLE=electron,PC=0.035;
+
+!*************
+!BTS dipoles:
+!*************
+
+!extraction chicane
+ST1DIP01HIGH:SBEND,L=0.215,K1=0,Angle=0.083110916,&
+Type=ST1MAGDIPOLE01,E1=0.,E2=-0.265954933,HGAP=gapchi,FINT=fringe;
+
+ST1DIP01LOW:SBEND,L=0.215,K1=0,Angle=0.34906585,&
+Type=ST1MAGDIPOLE01,E1=0.0,E2=0.0,HGAP=gapchi,FINT=fringe;
+
+ST1DIP02:SBEND,L=0.43,K1=0,Angle=-0.166221832,Type=ST1MAGDIPOLE02,&
+E1=-0.146275212,E2=-0.146275212,HGAP=gapchi,FINT=fringe;
+
+ST1DIP03:SBEND,L=0.215,K1=0,Angle=0.083110916,Type=ST1MAGDIPOLE03,&
+E1=-0.265954933,E2=0.0,HGAP=gapchi,FINT=fringe;
+
+!arc1
+AR1DIP01:SBEND,L=0.5,K1=0.,Angle=1.0471976,Type=AR1MAGDIPOLE01,&
+E1=0.0,E2=0.0,HGAP=gaparc,FINT=fringe;
+
+AR1DIP02:SBEND,L=0.5,K1=0.,Angle=1.0471976,Type=AR1MAGDIPOLE02,&
+E1=0.0,E2=0.0,HGAP=gaparc,FINT=fringe;
+
+AR1DIP03:SBEND,L=0.5,K1=0.,Angle=1.0471976,Type=AR1MAGDIPOLE03,&
+E1=0.0,E2=0.0,HGAP=gaparc,FINT=fringe;
+
+!chicane #1
+ST2DIP01:SBEND,L=0.41025,K1=0,Angle=0.375245789,Type=ST2MAGDIPOLE01,&
+E1=0.187622895,E2=0.187622895,HGAP=gapchi,FINT=fringe;
+
+ST2DIP02:SBEND,L=0.41025,K1=0,Angle=-0.375245789,Type=ST2MAGDIPOLE02,&
+E1=-0.187622895,E2=-0.187622895,HGAP=gapchi,FINT=fringe;
+
+ST2DIP03:SBEND,L=0.41025,K1=0,Angle=-0.375245789,Type=ST2MAGDIPOLE03,&
+E1=-0.187622895,E2=-0.187622895,HGAP=gapchi,FINT=fringe;
+
+ST2DIP04:SBEND,L=0.41025,K1=0,Angle=0.375245789,Type=ST2MAGDIPOLE04,&
+E1=0.187622895,E2=0.187622895,HGAP=gapchi,FINT=fringe;
+
+!chicane #2
+ST3DIP01:SBEND,L=0.41025,K1=0,Angle=0.368846248,Type=ST3MAGDIPOLE01,&
+E1=0.184423124,E2=0.184423124,HGAP=gapchi,FINT=fringe;
+
+ST3DIP02:SBEND,L=0.41025,K1=0,Angle=-0.368846248,Type=ST3MAGDIPOLE02,&
+E1=-0.184423124,E2=-0.184423124,HGAP=gapchi,FINT=fringe;
+
+ST3DIP03:SBEND,L=0.41025,K1=0,Angle=-0.368846248,Type=ST3MAGDIPOLE03,&
+E1=-0.184423124,E2=-0.184423124,HGAP=gapchi,FINT=fringe;
+
+ST3DIP04:SBEND,L=0.41025,K1=0,Angle=0.368846248,Type=ST3MAGDIPOLE04,&
+E1=0.184423124,E2=0.184423124,HGAP=gapchi,FINT=fringe;
+
+!arc2
+AR2DIP01:SBEND,L=0.5,K1=0.,Angle=1.0471976,Type=AR2MAGDIPOLE01,&
+E1=0.0,E2=0.0,HGAP=gaparc,FINT=fringe;
+
+AR2DIP02:SBEND,L=0.5,K1=0.,Angle=1.0471976,Type=AR2MAGDIPOLE02,&
+E1=0.0,E2=0.0,HGAP=gaparc,FINT=fringe;
+
+AR2DIP03:SBEND,L=0.5,K1=0.,Angle=1.0471976,Type=AR2MAGDIPOLE03,&
+E1=0.0,E2=0.0,HGAP=gaparc,FINT=fringe;
+
+ST4DIP01:SBEND,L=0.215,K1=0,Angle=-0.083110916,Type=ST4MAGDIPOLE01,&
+E1=0.0,E2=0.265954933,HGAP=gapchi,FINT=fringe;
+
+ST4DIP02:SBEND,L=0.43,K1=0,Angle=0.166221832,Type=ST4MAGDIPOLE02,&
+E1=0.146275212,E2=0.146275212,HGAP=gapchi,FINT=fringe;
+
+ST4DIP03HIGH:SBEND,L=0.215,K1=0,Angle=-0.083110916,&
+Type=ST4MAGDIPOLE03,E1=0.265954933,E2=0.0,HGAP=gapchi,FINT=fringe;
+
+ST4DIP03LOW:SBEND,L=0.215,K1=0,Angle=-0.34906585,&
+Type=ST4MAGDIPOLE03,E1=0.0,E2=0.0,HGAP=gapchi,FINT=fringe;
+
+!below are the half gaps of the various dipoles in the main part of the erlp
+gaparc=0.02;
+gapchi=0.025;
+
+!********
+!BTS drifts:
+!********
+
+ST1DRIFT01:DRIFT,L=1.397;
+ST1DRIFT02:DRIFT,L=2.5087;
+ST1DRIFT03:DRIFT,L=0.457;
+ST1DRIFT04:DRIFT,L=0.457;
+ST1DRIFT05:DRIFT,L=0.296;
+ST1DRIFT06:DRIFT,L=0.8776;
+ST1DRIFT07:DRIFT,L=1.4821;
+ST1DRIFT08:DRIFT,L=0.3976;
+ST1DRIFT09:DRIFT,L=0.8088;
+AR1DRIFT01:DRIFT,L=0.35;
+AR1DRIFT02:DRIFT,L=0.385;
+AR1DRIFT03:DRIFT,L=0.205;
+AR1DRIFT04:DRIFT,L=0.335;
+AR1DRIFT05:DRIFT,L=0.475;
+AR1DRIFT06:DRIFT,L=0.475;
+AR1DRIFT07:DRIFT,L=0.335;
+AR1DRIFT08:DRIFT,L=0.205;
+AR1DRIFT09:DRIFT,L=0.385;
+AR1DRIFT10:DRIFT,L=0.35;
+ST2DRIFT01:DRIFT,L=0.8088;
+ST2DRIFT02:DRIFT,L=0.3176;
+!ST2DRIFT03:DRIFT,L=4.54948;
+!replacement for the above drift of 8.1 below
+ST2DRIFT03:DRIFT,L=4.496;
+!ST2DRIFT04:DRIFT,L=0.2733;
+!replacement for the above drift of 8.1 below
+ST2DRIFT04:DRIFT,L=0.3176;
+ST2DRIFT05:DRIFT,L=2.347;
+ST2DRIFT06:DRIFT,L=0.697;
+ST2DRIFT07:DRIFT,L=0.649;
+ST2DRIFT08:DRIFT,L=0.697;
+!ST2DRIFT09:DRIFT,L=0.2705;
+!replacement for the above drift of 8.1 below
+ST2DRIFT09:DRIFT,L=0.269;
+!ST2DRIFT10:DRIFT,L=1.24847;
+!replacement for the above drift of 8.2 below
+!ST2DRIFT10:DRIFT,L=1.1109;
+!replacement for the above drift of 8.3 below
+ST2DRIFT10:DRIFT,L=1.071;
+!ST2DRIFT11:DRIFT,L=0.2826;
+!replacement for the above drift of 8.2 below
+!ST2DRIFT11:DRIFT,L=0.422;
+!replacement for the above drift of 8.3 below
+ST2DRIFT11:DRIFT,L=0.4667;
+ST2DRIFT12:DRIFT,L=0.2726;
+!wiggler goes here
+ST3DRIFT01:DRIFT,L=0.2726;
+!ST3DRIFT02:DRIFT,L=0.2826;
+!replacement for the above drift of 8.2 below
+!ST3DRIFT02:DRIFT,L=0.422;
+!replacement for the above drift of 8.3 below
+ST3DRIFT02:DRIFT,L=0.4667;
+!ST3DRIFT03:DRIFT,L=0.77415;
+!replacement for the above drift of 8.1 below
+!ST3DRIFT03:DRIFT,L=0.778;
+!replacement for the above drift of 8.2 below
+!ST3DRIFT03:DRIFT,L=0.6383;
+!replacement for the above drift of 8.3 below
+ST3DRIFT03:DRIFT,L=0.6003;
+!ST3DRIFT04:DRIFT,L=0.4676;
+!replacement for the above drift of 8.1 below
+!ST3DRIFT04:DRIFT,L=0.46373;
+!replacement for the above drift of 8.2 below
+ST3DRIFT04:DRIFT,L=0.464;
+ST3DRIFT05:DRIFT,L=0.8088;
+
+!**********************************************************************
+!include definition of ST3DRIFT05 below if the modelling of CBS is ****
+!being concidered !****************************************************
+!divided up ST3DRIFT05 !***********************************************
+!**********************************************************************
+
+!ST3DRIFT05P:DRIFT,L=0.08088;
+!CBSM:MARKER;
+
+!ST3DRIFT05: Line= ( ST3DRIFT05P,ST3DRIFT05P,ST3DRIFT05P,ST3DRIFT05P,&
+!ST3DRIFT05P,ST3DRIFT05P,CBSM,ST3DRIFT05P,ST3DRIFT05P,&
+!ST3DRIFT05P,ST3DRIFT05P );
+
+AR2DRIFT01:DRIFT,L=0.35;
+AR2DRIFT02:DRIFT,L=0.385;
+AR2DRIFT03:DRIFT,L=0.205;
+AR2DRIFT04:DRIFT,L=0.335;
+AR2DRIFT05:DRIFT,L=0.475;
+AR2DRIFT06:DRIFT,L=0.475;
+AR2DRIFT07:DRIFT,L=0.335;
+AR2DRIFT08:DRIFT,L=0.205;
+AR2DRIFT09:DRIFT,L=0.385;
+AR2DRIFT10:DRIFT,L=0.35;
+ST4DRIFT01:DRIFT,L=0.8588;
+ST4DRIFT02:DRIFT,L=0.3902;
+ST4DRIFT03:DRIFT,L=0.4976;
+ST4DRIFT04:DRIFT,L=0.4476;
+ST4DRIFT05:DRIFT,L=0.2976;
+!ST4DRIFT06:DRIFT,L=0.8308;
+!replacement for the above drift of 8.1 below
+ST4DRIFT06:DRIFT,L=0.8393;
+ST4DRIFT07:DRIFT,L=0.457;
+ST4DRIFT08:DRIFT,L=0.457;
+
+!in order to try & save quadrupoles, the following drifts are introduced
+!whose length is precisely one quadrupole (not in the arcs or injector)
+
+QUADRIFT1:DRIFT,L=0.1524;
+QUADRIFT2:DRIFT,L=0.1524;
+
+!in order to try & save sextupoles, the following drifts are introduced
+!whose length is precisely one sextupole (only in the arcs)
+
+SEXTDRIFT1:DRIFT,L=0.18;
+SEXTDRIFT2:DRIFT,L=0.18;
+
+!in order to remove one chicane (downstream of fel), the following drift
+!is introduced whose length is precisely one chicane (3.55329 m)
+
+CHICDRIFT:DRIFT,L=3.55328;
+
+!*************
+!BTS quadrupoles:
+!*************
+
+ST1QUAD01:QUADRUPOLE,L=0.1524,K1=-3.093908529481,Type=ST1MAGQUAD01;
+ST1QUAD02:QUADRUPOLE,L=0.1524,K1=4.564698676916,Type=ST1MAGQUAD02;
+ST1QUAD03:QUADRUPOLE,L=0.1524,K1=-4.006264339543,Type=ST1MAGQUAD03;
+ST1QUAD04:QUADRUPOLE,L=0.1524,K1=1.20737790394,Type=ST1MAGQUAD04;
+AR1QUAD01:QUADRUPOLE,L=0.15,K1=KQ1,Type=AR1MAGQUAD01;
+AR1QUAD02:QUADRUPOLE,L=0.15,K1=KQ2,Type=AR1MAGQUAD02;
+AR1QUAD03:QUADRUPOLE,L=0.15,K1=KQ2,Type=AR1MAGQUAD03;
+AR1QUAD04:QUADRUPOLE,L=0.15,K1=KQ1,Type=AR1MAGQUAD04;
+ST2QUAD01:QUADRUPOLE,L=0.1524,K1=-8,Type=ST2MAGQUAD01;
+ST2QUAD02:QUADRUPOLE,L=0.1524,K1=8,Type=ST2MAGQUAD02;
+ST2QUAD03:QUADRUPOLE,L=0.1524,K1=-2,Type=ST2MAGQUAD03;
+ST2QUAD04:QUADRUPOLE,L=0.1524,K1=4,Type=ST2MAGQUAD04;
+ST2QUAD05:QUADRUPOLE,L=0.1524,K1=-7,Type=ST2MAGQUAD05;
+ST2QUAD06:QUADRUPOLE,L=0.1524,K1=2,Type=ST2MAGQUAD06;
+ST2QUAD07:QUADRUPOLE,L=0.1524,K1=2,Type=ST2MAGQUAD07;
+
+!ST3QUAD01:QUADRUPOLE,L=0.1524,K1=2,Type=ST3MAGQUAD01;
+!ST3QUAD02:QUADRUPOLE,L=0.1524,K1=-7,Type=ST3MAGQUAD02;
+!ST3QUAD03:QUADRUPOLE,L=0.1524,K1=4,Type=ST3MAGQUAD03;
+!ST3QUAD04:QUADRUPOLE,L=0.1524,K1=-2,Type=ST3MAGQUAD04;
+!ST3QUAD05:QUADRUPOLE,L=0.1524,K1=8,Type=ST3MAGQUAD05;
+!ST3QUAD06:QUADRUPOLE,L=0.1524,K1=-8,Type=ST3MAGQUAD06;
+
+AR2QUAD01:QUADRUPOLE,L=0.15,K1=KQ3,Type=AR2MAGQUAD01;
+AR2QUAD02:QUADRUPOLE,L=0.15,K1=KQ4,Type=AR2MAGQUAD02;
+AR2QUAD03:QUADRUPOLE,L=0.15,K1=KQ4,Type=AR2MAGQUAD03;
+AR2QUAD04:QUADRUPOLE,L=0.15,K1=KQ3,Type=AR2MAGQUAD04;
+ST4QUAD01:QUADRUPOLE,L=0.1524,K1=-8,Type=ST4MAGQUAD01;
+ST4QUAD02:QUADRUPOLE,L=0.1524,K1=8,Type=ST4MAGQUAD02;
+ST4QUAD03:QUADRUPOLE,L=0.1524,K1=-1.4309814,Type=ST4MAGQUAD03;
+ST4QUAD04:QUADRUPOLE,L=0.1524,K1=4.2245557,Type=ST4MAGQUAD04;
+ST4QUAD05:QUADRUPOLE,L=0.1524,K1=-2.8867881,Type=ST4MAGQUAD05;
+
+!does the below make a difference to CBS ?
+!ST3QUAD01: QUADRUPOLE, TYPE=ST3MAGQUAD01, L=0.1524, K1=1.0
+!ST3QUAD02: QUADRUPOLE, TYPE=ST3MAGQUAD02, L=0.1524, K1=-1.0
+
+ST3QUAD01: QUADRUPOLE, TYPE=ST3MAGQUAD01, L=0.1524, K1=11.187567747496
+ST3QUAD02: QUADRUPOLE, TYPE=ST3MAGQUAD02, L=0.1524, K1=-9.83575862307
+ST3QUAD03: QUADRUPOLE, TYPE=ST3MAGQUAD03, L=0.1524, K1=4.0
+ST3QUAD04: QUADRUPOLE, TYPE=ST3MAGQUAD04, L=0.1524, K1=-2.0
+ST3QUAD05: QUADRUPOLE, TYPE=ST3MAGQUAD05, L=0.1524, K1=8.63457709045
+ST3QUAD06: QUADRUPOLE, TYPE=ST3MAGQUAD06, L=0.1524, K1=-6.91961281399
+
+KQ1=12;
+KQ2=-5.6;
+
+!KQ3=12;
+!KQ4=-5.6;
+
+KQ3=10.820631600851;
+KQ4=-7.707816809742;
+
+!KQ3=8.141986;
+!KQ4=-11.5743;
+
+!************
+!BTS sextupoles:
+!************
+
+AR1SEXT01:SEXTUPOLE,L=0.18,K2=0,Type=AR1MAGSEXT01;
+AR1SEXT02:SEXTUPOLE,L=0.18,K2=0,Type=AR1MAGSEXT02;
+AR2SEXT01:SEXTUPOLE,L=0.18,K2=0,Type=AR2MAGSEXT01;
+AR2SEXT02:SEXTUPOLE,L=0.18,K2=0,Type=AR2MAGSEXT02;
+
+!spare sextupoles
+!AR1SEXT03:SEXTUPOLE,L=0.18,K2=0,Type=AR1MAGSEXT03;
+!AR1SEXT04:SEXTUPOLE,L=0.18,K2=0,Type=AR1MAGSEXT04;
+!AR2SEXT03:SEXTUPOLE,L=0.18,K2=0,Type=AR2MAGSEXT03;
+!AR2SEXT04:SEXTUPOLE,L=0.18,K2=0,Type=AR2MAGSEXT04;
+
+!********
+!DMP drifts:
+!********
+
+DMPDRIFT01:DRIFT,L=1.66;
+DMPDRIFT02:DRIFT,L=0.4;
+DMPDRIFT03:DRIFT,L=0.4;
+DMPDRIFT04:DRIFT,L=0.4;
+
+!*****************
+!DMP quadrupoles:
+!*****************
+
+DMPQUAD01:QUADRUPOLE,L=0.15,K1=4,Type=DMPMAGQUAD01;
+DMPQUAD02:QUADRUPOLE,L=0.15,K1=-4,Type=DMPMAGQUAD02;
+DMPQUAD03:QUADRUPOLE,L=0.15,K1=-4,Type=DMPMAGQUAD03;
+
+!*************
+!INJ dipoles:
+!*************
+
+INJDIPOLE01:SBEND,L=0.2,K1=0,Angle=0.52359878,Type=INJMAGDIPOLE01,&
+E1=0.261799,E2=0.261799,HGAP=gapinj,FINT=fringe;
+
+INJDIPOLE02:SBEND,L=0.2,K1=0,Angle=0.52359878,Type=INJMAGDIPOLE02,&
+E1=0.261799,E2=0.261799,HGAP=gapinj,FINT=fringe;
+
+!INJDIPOLE03:SBEND,L=0.215,K1=0,Angle=0.34906585,Type=INJMAGDIPOLE03,&
+!E1=0.0,E2=0.0,HGAP=gapinj,FINT=fringe;
+
+!below is a possible rectangular option for the above magnet
+INJDIPOLE03:SBEND,L=0.2,K1=0,Angle=0.34906585,Type=INJMAGDIPOLE03,&
+E1=0.174532925,E2=0.174532925,HGAP=gapinj,FINT=fringe;
+
+!below are the half gaps of the various dipoles in the injection of the erlp
+gapinj=0.035;
+
+!************
+!INJ drifts:
+!************
+
+INJDRIFT01:DRIFT,L=0.09;
+INJDRIFT02:DRIFT,L=0.45;
+INJDRIFT03:DRIFT,L=0.5321;
+INJDRIFT04:DRIFT,L=0.3;
+INJDRIFT05:DRIFT,L=0.5;
+INJDRIFT06:DRIFT,L=0.4;
+INJDRIFT07:DRIFT,L=0.4;
+INJDRIFT08:DRIFT,L=0.695;
+INJDRIFT09:DRIFT,L=0.25;
+INJDRIFT10:DRIFT,L=0.25;
+INJDRIFT11:DRIFT,L=0.25;
+INJDRIFT12:DRIFT,L=0.25;
+INJDRIFT13:DRIFT,L=1.0;
+INJDRIFT14:DRIFT,L=1.0;
+INJDRIFT15:DRIFT,L=1.0;
+INJDRIFT16:DRIFT,L=1.0;
+
+!below is an 'extra' drift (xd for short !) to make up for the missing length
+!in INJDIPOLE03 when we try to make this the same as INJDIPOLE01,02
+XD:DRIFT,L=0.0075;
+XD4:DRIFT,L=0.001875;
+
+!*****************
+!INJ quadrupoles:
+!*****************
+
+INJQUAD01:QUADRUPOLE,L=0.15,K1=-10,Type=INJMAGQUAD01;
+INJQUAD02:QUADRUPOLE,L=0.15,K1=10,Type=INJMAGQUAD02;
+INJQUAD03:QUADRUPOLE,L=0.15,K1=4,Type=INJMAGQUAD03;
+INJQUAD04:QUADRUPOLE,L=0.15,K1=-4,Type=INJMAGQUAD04;
+INJQUAD05:QUADRUPOLE,L=0.15,K1=36.575501924476,Type=INJMAGQUAD05;
+INJQUAD06:QUADRUPOLE,L=0.15,K1=16.684217,Type=INJMAGQUAD06;
+INJQUAD07:QUADRUPOLE,L=0.15,K1=-9.6701568,Type=INJMAGQUAD07;
+INJQUAD08:QUADRUPOLE,L=0.15,K1=11.796023,Type=INJMAGQUAD08;
+INJQUAD09:QUADRUPOLE,L=0.15,K1=-8.5417113,Type=INJMAGQUAD09;
+INJQUAD10:QUADRUPOLE,L=0.15,K1=KQ,Type=INJMAGQUAD10;
+INJQUAD11:QUADRUPOLE,L=0.15,K1=-13.8,Type=INJMAGQUAD11;
+INJQUAD12:QUADRUPOLE,L=0.15,K1=KQ,Type=INJMAGQUAD12;
+
+KQ=12.0;
+
+!*****************
+!CAVITIES:
+!A - accelerating
+!D - decelerating
+!*****************
+
+TCAVITY1A:LCAVITY,L=1.0362,Type=Cavity1,DELTAE=13.5,PHI0=-0.025,FREQ=1300;
+TCAVITY1D:LCAVITY,L=1.0362,Type=Cavity1,DELTAE=13.5,PHI0=0.475,FREQ=1300;
+TCAVITY2A:LCAVITY,L=1.0362,Type=Cavity2,DELTAE=13.5,PHI0=-0.025,FREQ=1300;
+TCAVITY2D:LCAVITY,L=1.0362,Type=Cavity2,DELTAE=13.5,PHI0=0.475,FREQ=1300;
+
+!*****************
+!CAVITY RELATED
+!DRIFTS
+!*****************
+
+TENDDRIFT:DRIFT,L=0.440,Type=TENDDRIFT;
+TINTDRIFT:DRIFT,L=0.3126,Type=TINTDRIFT;
+
+!*****************
+!WIGGLER
+!*****************
+
+!HWIGGLER1:DRIFT,L=0.54002,Type=JLabWiggler;
+!HWIGGLER2:DRIFT,L=0.54002,Type=JLabWiggler;
+
+lambda=0.027;
+
+DIPa1:SBEND,L=diplen/2,K1=0,Angle=phi,TILT=pi/2,&
+E1=phi,E2=0.0;
+
+DIPb1:SBEND,L=diplen/2,K1=0,Angle=phi,TILT=pi/2,&
+E1=0.0,E2=phi;
+
+DIPa2:SBEND,L=diplen/2,K1=0,Angle=-phi,TILT=pi/2,&
+E1=-phi,E2=0.0;
+
+DIPb2:SBEND,L=diplen/2,K1=0,Angle=-phi,TILT=pi/2,&
+E1=0.0,E2=-phi;
+
+Dr:DRIFT,L=driftlen;
+
+diplen=lambda/4;
+phi=0.011463261;
+driftlen=(lambda-2*diplen)/2;
+
+!*******************************************
+!markers (used for matching purposes only):
+!*******************************************
+
+preinjm:marker;
+endinjm:marker;
+
+beginj1:marker;
+endinj1:marker;
+
+beginj2:marker;
+endinj2:marker;
+
+begarc1:marker;
+endarc1:marker;
+
+begstr1:marker;
+endstr1:marker;
+
+begwig:marker;
+halfwig:marker;
+endwig:marker;
+
+begarc2:marker;
+endarc2:marker;
+
+begstr2:marker;
+endstr2:marker;
+
+!TCavity1A: Line = ( TCavity11A, TCavity12A, TCavity13A, TCavity14A,&
+!TCavity15A, TCavity16A, TCavity17A, TCavity18A, TCavity19A );
+
+!TCavity2A: Line = ( TCavity21A, TCavity22A, TCavity23A, TCavity24A,&
+!TCavity25A, TCavity26A, TCavity27A, TCavity28A, TCavity29A );
+
+!TCavity1D: Line = ( TCavity11D, TCavity12D, TCavity13D, TCavity14D,&
+!TCavity15D, TCavity16D, TCavity17D, TCavity18D, TCavity19D );
+
+!TCavity2D: Line = ( TCavity21D, TCavity22D, TCavity23D, TCavity24D,&
+!TCavity25D, TCavity26D, TCavity27D, TCavity28D, TCavity29D );
+
+preinj: Line= ( preinjm, INJDRIFT01, INJQUAD01, INJDRIFT02, INJQUAD02,&
+INJDRIFT03, INJQUAD03, INJDRIFT04, INJQUAD04, INJDRIFT05, endinjm );
+
+injector1: Line= ( beginj1, INJDIPOLE01, INJDRIFT06,&
+INJQUAD05, INJDRIFT07, INJDIPOLE02, INJDRIFT08, INJQUAD06,&
+INJDRIFT09, INJQUAD07, INJDRIFT10, INJQUAD08, INJDRIFT11, INJQUAD09,&
+INJDRIFT12, XD, INJDIPOLE03, XD4, INJDRIFT13, INJQUAD10, XD4,&
+INJDRIFT14, INJQUAD11, XD4, INJDRIFT15, INJQUAD12, XD4, INJDRIFT16,&
+ST4DIP03LOW, ST1DRIFT01, TENDDRIFT,TCAVITY1A, TINTDRIFT, TCAVITY2A,&
+TENDDRIFT, ST1DRIFT02, endinj1 );
+
+!below we test by just how much we get the dispersion wrong when we change
+!the dipoles in the injector line (i.e. we have *only* 'XD' either side of
+!INJDIPOLE03 and no other extra drifts for compensation)
+
+!injector1: Line= ( beginj1, INJDIPOLE01, INJDRIFT06,&
+!INJQUAD05, INJDRIFT07, INJDIPOLE02, INJDRIFT08, INJQUAD06,&
+!INJDRIFT09, INJQUAD07, INJDRIFT10, INJQUAD08, INJDRIFT11, INJQUAD09,&
+!INJDRIFT12, XD, INJDIPOLE03, XD, INJDRIFT13, INJQUAD10,&
+!INJDRIFT14, INJQUAD11, INJDRIFT15, INJQUAD12, INJDRIFT16,&
+!ST4DIP03LOW, ST1DRIFT01, TENDDRIFT,TCAVITY1A, TINTDRIFT, TCAVITY2A,&
+!TENDDRIFT, ST1DRIFT02, endinj1 );
+
+!modified version below with the smallest amount of quadrupoles possible
+injector2: Line= ( beginj2, ST1DIP01HIGH, ST1DRIFT03, ST1DIP02,&
+ST1DRIFT04, ST1DIP03, ST1DRIFT05, ST1QUAD01, ST1DRIFT06, ST1QUAD02,&
+ST1DRIFT07, ST1QUAD03, ST1DRIFT08, ST1QUAD04, ST1DRIFT09, endinj2 );
+
+arc1: Line= ( begarc1, AR1DIP01, AR1DRIFT01, AR1SEXT01, AR1DRIFT02,&
+AR1QUAD01, AR1DRIFT03, SEXTDRIFT1, AR1DRIFT04, AR1QUAD02, AR1DRIFT05,&
+AR1DIP02, AR1DRIFT06, AR1QUAD03, AR1DRIFT07, SEXTDRIFT2, AR1DRIFT08,&
+AR1QUAD04, AR1DRIFT09, AR1SEXT02, AR1DRIFT10, AR1DIP03, ST2DRIFT01,&
+ST2QUAD01, ST2DRIFT02, ST2QUAD02, endarc1 );
+
+!this is the same as arc1 but without the two final quadrupoles which
+!belong to the straight but are used for matching
+arco1: Line= ( begarc1, AR1DIP01, AR1DRIFT01, AR1SEXT01, AR1DRIFT02,&
+AR1QUAD01, AR1DRIFT03, SEXTDRIFT1, AR1DRIFT04, AR1QUAD02, AR1DRIFT05,&
+AR1DIP02, AR1DRIFT06, AR1QUAD03, AR1DRIFT07, SEXTDRIFT2, AR1DRIFT08,&
+AR1QUAD04, AR1DRIFT09, AR1SEXT02, AR1DRIFT10, AR1DIP03, endarc1 );
+
+!put the comments in or out to include/exclude the modelling of the wiggler
+!if commented out, remember to include the definition of the wiggler as a 
+!drift above !
+!comment;
+
+hwiggler1: Line= ( DIPb1, Dr, DIPa2, DIPb2, Dr, DIPa1, DIPb1, Dr,&
+DIPa2, DIPb2, Dr, DIPa1, DIPb1, Dr, DIPa2, DIPb2, Dr, DIPa1, DIPb1, Dr,&
+DIPa2, DIPb2, Dr, DIPa1, DIPb1, Dr, DIPa2, DIPb2, Dr, DIPa1, DIPb1, Dr,&
+DIPa2, DIPb2, Dr, DIPa1, DIPb1, Dr, DIPa2, DIPb2, Dr, DIPa1, DIPb1, Dr,&
+DIPa2, DIPb2, Dr, DIPa1, DIPb1, Dr, DIPa2, DIPb2, Dr, DIPa1, DIPb1, Dr,&
+DIPa2, DIPb2, Dr, DIPa1, DIPb1, Dr, DIPa2, DIPb2, Dr, DIPa1, DIPb1, Dr,&
+DIPa2, DIPb2, Dr, DIPa1, DIPb1, Dr, DIPa2, DIPb2, Dr, DIPa1, DIPb1, Dr,&
+DIPa2, DIPb2, Dr, DIPa1, DIPb1, Dr, DIPa2, DIPb2, Dr, DIPa1, DIPb1, Dr,&
+DIPa2, DIPb2, Dr, DIPa1, DIPb1, Dr, DIPa2, DIPb2, Dr, DIPa1, DIPb1, Dr,&
+DIPa2, DIPb2, Dr, DIPa1, DIPb1, Dr, DIPa2, DIPb2, Dr, DIPa1, DIPb1, Dr,&
+DIPa2, DIPb2, Dr, DIPa1 );
+
+hwiggler2: Line= ( DIPb1, Dr, DIPa2, DIPb2, Dr, DIPa1, DIPb1, Dr,&
+DIPa2, DIPb2, Dr, DIPa1, DIPb1, Dr, DIPa2, DIPb2, Dr, DIPa1, DIPb1, Dr,&
+DIPa2, DIPb2, Dr, DIPa1, DIPb1, Dr, DIPa2, DIPb2, Dr, DIPa1, DIPb1, Dr,&
+DIPa2, DIPb2, Dr, DIPa1, DIPb1, Dr, DIPa2, DIPb2, Dr, DIPa1, DIPb1, Dr,&
+DIPa2, DIPb2, Dr, DIPa1, DIPb1, Dr, DIPa2, DIPb2, Dr, DIPa1, DIPb1, Dr,&
+DIPa2, DIPb2, Dr, DIPa1, DIPb1, Dr, DIPa2, DIPb2, Dr, DIPa1, DIPb1, Dr,&
+DIPa2, DIPb2, Dr, DIPa1, DIPb1, Dr, DIPa2, DIPb2, Dr, DIPa1, DIPb1, Dr,&
+DIPa2, DIPb2, Dr, DIPa1, DIPb1, Dr, DIPa2, DIPb2, Dr, DIPa1, DIPb1, Dr,&
+DIPa2, DIPb2, Dr, DIPa1, DIPb1, Dr, DIPa2, DIPb2, Dr, DIPa1, DIPb1, Dr,&
+DIPa2, DIPb2, Dr, DIPa1, DIPb1, Dr, DIPa2, DIPb2, Dr, DIPa1, DIPb1, Dr,&
+DIPa2, DIPb2, Dr, DIPa1 );
+
+!endcomment;
+
+wiggler: Line= (hwiggler1, hwiggler2 );
+
+straight1: Line= ( begstr1, ST2DRIFT03, ST2QUAD03, ST2DRIFT04, ST2QUAD04,&
+ST2DRIFT05, ST2DIP01, ST2DRIFT06, ST2DIP02, ST2DRIFT07, ST2DIP03,&
+ST2DRIFT08, ST2DIP04, ST2DRIFT09, ST2QUAD05, ST2DRIFT10, ST2QUAD06,&
+ST2DRIFT11, ST2QUAD07, ST2DRIFT12, begwig, HWIGGLER1, halfwig, HWIGGLER2,&
+endwig, ST3DRIFT01, ST3QUAD01, ST3DRIFT02, ST3QUAD02, ST3DRIFT03, endstr1 );
+
+!the line below goes to the centre of the wiggler and is temporary (i hope !)
+!for 1 chicane only !
+str1wig: Line= ( begstr1, ST2DRIFT01, ST2QUAD01, ST2DRIFT02, ST2QUAD02,&
+ST2DRIFT03, ST2QUAD03, ST2DRIFT04, ST2QUAD04, ST2DRIFT05, ST2DIP01,&
+ST2DRIFT06, ST2DIP02, ST2DRIFT07, ST2DIP03, ST2DRIFT08, ST2DIP04,&
+ST2DRIFT09, ST2QUAD05, ST2DRIFT10, ST2QUAD06, ST2DRIFT11, ST2QUAD07,&
+ST2DRIFT12, begwig, HWIGGLER1, halfwig );
+
+!the line below goes from the end of the wiggler to the end of straight1
+!for 1 chicane only !
+wigstr1: Line= ( endwig, ST3DRIFT01, ST3QUAD01, ST3DRIFT02, ST3QUAD02,&
+ST3DRIFT03, endstr1 );
+
+arc2: Line= ( begarc2, ST3QUAD03, ST3DRIFT04, ST3QUAD04,&
+ST3DRIFT05, AR2DIP01, AR2DRIFT01, AR2SEXT01, AR2DRIFT02, AR2QUAD01,&
+AR2DRIFT03, SEXTDRIFT1, AR2DRIFT04, AR2QUAD02, AR2DRIFT05, AR2DIP02,&
+AR2DRIFT06, AR2QUAD03, AR2DRIFT07, SEXTDRIFT2, AR2DRIFT08, AR2QUAD04,&
+AR2DRIFT09, AR2SEXT02, AR2DRIFT10, AR2DIP03, endarc2 );
+
+!this is the same as arc2 but without the two initial quadrupoles which
+!belong to the straight but are used for matching
+arco2: Line= ( AR2DIP01, AR2DRIFT01, AR2SEXT01, AR2DRIFT02, AR2QUAD01,&
+AR2DRIFT03, SEXTDRIFT1, AR2DRIFT04, AR2QUAD02, AR2DRIFT05, AR2DIP02,&
+AR2DRIFT06, AR2QUAD03, AR2DRIFT07, SEXTDRIFT2, AR2DRIFT08, AR2QUAD04,&
+AR2DRIFT09, AR2SEXT02, AR2DRIFT10, AR2DIP03);
+
+!original below with five quadrupoles between last arc & linac
+straight2: Line= ( begstr2, ST4DRIFT01, ST4QUAD01,&
+ST4DRIFT02, ST4QUAD02, ST4DRIFT03, ST4QUAD03, ST4DRIFT04, ST4QUAD04,&
+ST4DRIFT05, ST4QUAD05, ST4DRIFT06, ST4DIP01, ST4DRIFT07,&
+ST4DIP02, ST4DRIFT08, ST4DIP03HIGH, ST1DRIFT01, TENDDRIFT,&
+TCAVITY1D, TINTDRIFT, TCAVITY2D, TENDDRIFT, ST1DRIFT02,&
+ST1DIP01LOW, DMPDRIFT01, DMPQUAD01, DMPDRIFT02, DMPQUAD02,&
+DMPDRIFT03, DMPQUAD03, DMPDRIFT04, endstr2 );
+
+!straight2 minus dump
+straight2nod: Line= ( begstr2, ST4DRIFT01, ST4QUAD01,&
+ST4DRIFT02, ST4QUAD02, ST4DRIFT03, ST4QUAD03, ST4DRIFT04, ST4QUAD04,&
+ST4DRIFT05, ST4QUAD05, ST4DRIFT06, ST4DIP01, ST4DRIFT07,&
+ST4DIP02, ST4DRIFT08, ST4DIP03HIGH, ST1DRIFT01, TENDDRIFT,&
+TCAVITY1D, TINTDRIFT, TCAVITY2D, TENDDRIFT, ST1DRIFT02,&
+ST1DIP01LOW );
+
+!below is the dump on its own
+dmp: Line= ( DMPDRIFT01, DMPQUAD01, DMPDRIFT02, DMPQUAD02,&
+DMPDRIFT03, DMPQUAD03, DMPDRIFT04, endstr2 );
+
+ring: Line= ( ST1DRIFT01, TENDDRIFT, TCAVITY1A, TINTDRIFT, TCAVITY2A,&
+TENDDRIFT, ST1DRIFT02, ENDINJ1, BEGINJ2, ST1DIP01HIGH, ST1DRIFT03,&
+ST1DIP02, ST1DRIFT04, ST1DIP03, ST1DRIFT05, ST1QUAD01, ST1DRIFT06,&
+ST1QUAD02, ST1DRIFT07, QUADRIFT1, ST1DRIFT08, QUADRIFT2, ST1DRIFT09,&
+ST1QUAD03, ST1DRIFT10, ST1QUAD04, ST1DRIFT11, ENDINJ2, ARC1, STRAIGHT1,&
+ARC2, BEGSTR2, ST4DRIFT01, ST4QUAD01, ST4DRIFT02, ST4QUAD02, ST4DRIFT03,&
+ST4QUAD03, ST4DRIFT04, ST4QUAD04, ST4DRIFT05, ST4QUAD05, ST4DRIFT06,&
+ST4DIP01, ST4DRIFT07, ST4DIP02, ST4DRIFT08, ST4DIP03HIGH );
+
+str1: Line= ( ST2DRIFT01, ST2QUAD01, ST2DRIFT02, ST2QUAD02, ST2DRIFT03,&
+STRAIGHT1, ST3DRIFT09, ST3QUAD05, ST3DRIFT10, ST3QUAD06, ST3DRIFT11 );
+
+str2qds1: Line= ( ST4DRIFT01, ST4QUAD01, ST4DRIFT02, ST4QUAD02, ST4DRIFT03,&
+ST4QUAD03, ST4DRIFT04, ST4QUAD04, ST4DRIFT05, ST4QUAD05, ST4DRIFT06 );
+
+inchicane: Line= ( ST4DIP01, ST4DRIFT07, ST4DIP02, ST4DRIFT08,&
+ST4DIP03HIGH );
+
+exchicane: Line= ( ST1DIP01HIGH, ST1DRIFT03, ST1DIP02, ST1DRIFT04,&
+ST1DIP03 );
+
+linaca: Line=( TENDDRIFT, TCAVITY1A, TINTDRIFT, TCAVITY2A, TENDDRIFT );
+
+linacd: Line=( TENDDRIFT, TCAVITY1D, TINTDRIFT, TCAVITY2D, TENDDRIFT );
+
+str2qds2: Line= ( ST1DRIFT05, ST1QUAD01, ST1DRIFT06,&
+ST1QUAD02, ST1DRIFT07, QUADRIFT1, ST1DRIFT08, QUADRIFT2, ST1DRIFT09,&
+ST1QUAD03, ST1DRIFT10, ST1QUAD04, ST1DRIFT11 );
+
+str2: Line= ( str2qds1, inchicane, ST1DRIFT01, linaca, ST1DRIFT02,&
+exchicane, str2qds2 );
+
+cchicane1: Line= ( ST2DIP01, ST2DRIFT05, ST2DIP02, ST2DRIFT06,&
+ST2DIP03, ST2DRIFT07, ST2DIP04 );
+
+cchicane2: Line= ( ST3DIP01, ST3DRIFT05, ST3DIP02, ST3DRIFT06,&
+ST3DIP03, ST3DRIFT07, ST3DIP04 );
+
+injectors: Line= ( preinj, injector1 );
+
+injectorl: Line= ( injectors, injector2 );
+
+injarc1: Line= ( injectorl, arc1 );
+
+injarc1wig: Line= (injarc1, str1wig );
+
+lin2wig: Line= ( injector2, arc1, str1wig );
+
+arc2arc2dmp: Line= ( arc1, straight1, arc2, straight2 );
+
+wig2arc2: Line= ( wigstr1, arc2 );
+
+wig2lin: Line= ( wig2arc2, straight2nod );
+
+wig2dmp: Line= ( wig2lin, dmp );
+
+str12dmp: Line= ( str1wig, wig2dmp );
+
+straight12dmp: Line= ( straight1, arc2, straight2 );
+
+injarc1str1: Line= ( injarc1, straight1 );
+
+injarc1str1arc2: Line= ( injarc1str1, arc2 );
+
+ERLP: Line= ( injarc1str1arc2, straight2 );
+
+!Use,preinj;
+!Use,injector1;
+!Use,injector2;
+!Use,injectors;
+!Use,lin2wig;
+!Use,injectorl;
+!Use,injarc1;
+!Use,injarc1wig;
+!Use,wiggler;
+!Use,injarc1str1;
+!Use,injarc1str1arc2;
+!Use,str12dmp;
+!Use,wigstr1;
+!Use,straight12dmp;
+!Use,arc2arc2dmp;
+!Use,wig2arc2;
+!Use,wig2lin;
+!Use,wig2dmp;
+Use,ERLP;
+
+print,#s/#e;
+
+!set the parameter for fringe fields below:
+fringe=0.45;
+
+!betinix=26.5;
+!betiniy=26.5;
+!alfinix=-2.74;
+!alfiniy=-2.74;
+
+!betinix=40;
+!betiniy=40;
+!alfinix=-4;
+!alfiniy=-4;
+
+!rem to change these if needed, the ones below are the latest which
+!worked as at 16/08/04 !
+!betinix=30;
+!betiniy=30;
+!alfinix=-3;
+!alfiniy=-3;
+
+!below are the values to be used for the model including the wiggler
+!from chris #1
+betinix=13.4;
+betiniy=13.4;
+!betinix=14.6;
+!betiniy=14.6;
+alfinix=-2.2;
+alfiniy=-2.2;
+
+!below are the values to be used for the model up to the linac
+!from chris #2
+!betinix=9.2;
+!betiniy=9.2;
+!alfinix=-0.5;
+!alfiniy=-0.5;
+
+!below are the values to be used for the model up to the wiggler
+!from chris after the linac
+!betinix=8.52248;
+!betiniy=4.579206;
+!alfinix=-1.009263;
+!alfiniy=-0.4983333;
+
+!values below in case you start from after the linac
+!betinix=18.753;
+!betiniy=14.609;
+!alfinix=-2.489;
+!alfiniy=-1.489;
+
+!below are the values to be used from the entrance of arc1
+!betinix=0.421;
+!betiniy=8.638;
+!alfinix=-0.333;
+!alfiniy=4.401;
+
+!below are the values to be used from the exit of arc1
+!betinix=0.426;
+!betiniy=6.951;
+!alfinix=0.336;
+!alfiniy=-4.248;
+
+!below are the values to be used from the exit of arc1 followed by the
+!next two quadrupoles
+!betinix=8.338;
+!betiniy=6.217;
+!alfinix=0.782;
+!alfiniy=0.184;
+
+!below are the values to be used to check the wiggler only
+!betinix=0.5;
+!betiniy=1.25;
+!alfinix=0.0;
+!alfiniy=1.75;
+
+!below are the values to be used to check the wiggler only
+!betinix=0.5;
+!betiniy=1.35;
+!alfinix=-0.2;
+!alfiniy=0.5;
+
+!below are the values at the exit of the wiggler from chris (genesis)
+!#1
+!betinix=0.4;
+!betiniy=1.0;
+!alfinix=-0.2;
+!alfiniy=-1.8;
+
+!below are the values at the exit of the wiggler from chris (genesis)
+!#2
+!betinix=0.4;
+!betiniy=1.0;
+!alfinix=-0.4;
+!alfiniy=-0.8;
+
+!below are the values at the exit of the wiggler from me ... when you 
+!demand a waist of betx=bety=0.5m and alfx=alfy=0.0 at the centre of 
+!the wiggler
+!betinix=0.507;
+!betiniy=1.225;
+!alfinix=0.022;
+!alfiniy=1.731;
+
+!below are the values at the start of the first dipole in the injector
+betfinx=2.0;
+betfiny=2.0;
+alfinx=0.0;
+alfiny=0.0;
+
+!value below only to be used for small values from chris (#2)
+!betfinx=0.0;
+!betinix=betfinx;
+!betiniy=betfiny;
+!alfinix=alfinx;
+!alfiniy=alfiny;
+
+!twiss,betx=betinix,bety=betiniy,alfx=alfinix,alfy=alfiniy,save=f0;
+!plot,haxis=s,vaxis1=betx,bety,colour=100;
+!plot,haxis=s,vaxis1=alfx,alfy,colour=100;
+!plot,haxis=s,vaxis1=dx,dy,colour=100;
+!plot,haxis=s,vaxis1=dpx,dpy,colour=100;
+
+!save,filename="matched.mff";
+
+!stop;
+
+!*********************************************************************
+!comment;
+!*********************************************************************
+
+!matching the pre-injector
+
+Match,betx=betinix,bety=betiniy,alfx=alfinix,alfy=alfiniy;
+vary,INJQUAD01[k1],step=1,lower=-12.0,upper=12.0;
+vary,INJQUAD02[k1],step=1,lower=-12.0,upper=12.0;
+vary,INJQUAD03[k1],step=1,lower=-12.0,upper=12.0;
+vary,INJQUAD04[k1],step=1,lower=-12.0,upper=12.0;
+
+!vary,INJQUAD01[k1],step=1,lower=-20.0,upper=20.0;
+!vary,INJQUAD02[k1],step=1,lower=-20.0,upper=20.0;
+!vary,INJQUAD03[k1],step=1,lower=-20.0,upper=20.0;
+!vary,INJQUAD04[k1],step=1,lower=-20.0,upper=20.0;
+
+constraint,INJDRIFT05,betx=betfinx,bety=betfiny;
+constraint,INJDRIFT05,alfx=alfinx,alfy=alfiny;
+!constraint,preinjm/endinjm,betx<30,bety<30;
+weight,betx=1000,bety=1000;
+
+simplex,calls=50000,tolerance=1.0E-5;
+
+endmatch;
+
+!twiss,betx=betinix,bety=betiniy,alfx=alfinix,alfy=alfiniy,save=f1;
+!plot,haxis=s,vaxis1=betx,bety,colour=100;
+!plot,haxis=s,vaxis1=alfx,alfy,colour=100;
+!plot,haxis=s,vaxis1=dx,dy,colour=100;
+!plot,haxis=s,vaxis1=dpx,dpy,colour=100;
+
+!save,filename="matched.mff";
+
+!stop;
+
+!------
+
+!matching the injector
+
+Match,betx=betinix,bety=betiniy,alfx=alfinix,alfy=alfiniy;
+
+vary,INJQUAD05[k1],step=0.001,lower=-40.0,upper=40.0;
+
+constraint,beginj1,dx=0.0,dpx=0.0;
+constraint,INJDIPOLE02,dx=0.0,dpx=0.0;
+
+simplex,calls=50000,tolerance=1.0E-15;
+
+endmatch;
+
+Match,betx=betinix,bety=betiniy,alfx=alfinix,alfy=alfiniy;
+
+vary,KQ,step=0.001,lower=-30.0,upper=30.0;
+
+weight,dpx=1000;
+
+constraint,ST4DIP03LOW,dpx=0.0,dx=0.0;
+
+simplex,calls=50000,tolerance=1.0E-15;
+endmatch;
+
+Match,betx=betinix,bety=betiniy,alfx=alfinix,alfy=alfiniy;
+
+vary,INJQUAD06[k1],step=0.0001,lower=0.0,upper=30.0;
+vary,INJQUAD07[k1],step=0.0001,lower=-30.0,upper=0.0;
+vary,INJQUAD08[k1],step=0.0001,lower=0.0,upper=30.0;
+vary,INJQUAD09[k1],step=0.0001,lower=-30.0,upper=0.0;
+vary,INJQUAD11[k1],step=0.0001,lower=-30.0,upper=0.0;
+
+!vary,INJQUAD06[k1],step=0.0001,lower=-30.0,upper=30.0;
+!vary,INJQUAD07[k1],step=0.0001,lower=-30.0,upper=30.0;
+!vary,INJQUAD08[k1],step=0.0001,lower=-30.0,upper=30.0;
+!vary,INJQUAD09[k1],step=0.0001,lower=-30.0,upper=30.0;
+!vary,INJQUAD11[k1],step=0.0001,lower=-30.0,upper=30.0;
+
+weight,betx=1000,bety=1000,alfx=100,alfy=100;
+
+constraint,INJDRIFT10,betx<25;
+constraint,INJQUAD06,betx<25;
+constraint,INJQUAD08,betx<25;
+constraint,INJQUAD07,bety<25;
+constraint,INJQUAD09,bety<25;
+constraint,INJQUAD11,bety<25;
+
+constraint,TCavity1A,alfx=0.0,alfy=0.0;
+constraint,TCavity1A,betx=2.0,bety=2.0;
+
+!below is a constraint from the start to end of injector1
+!sometimes this works and provides a better matching but
+!it is not possible to tell where the constraints have been
+!applied which can be a bad thing at times !
+!constraint,INJDRIFT10/INJQUAD11,betx<25,bety<25;
+
+!constraint,TCavity2A,betx=1.0,bety=1.0;
+!note the last constraint makes little difference up to here
+!but maybe should be kept for later
+
+simplex,calls=50000,tolerance=1.0E-5;
+endmatch;
+
+Match,betx=betinix,bety=betiniy,alfx=alfinix,alfy=alfiniy;
+
+vary,KQ,step=0.001,lower=-30.0,upper=30.0;
+
+weight,dpx=1000;
+
+constraint,ST4DIP03LOW,dpx=0.0,dx=0.0;
+
+simplex,calls=50000,tolerance=1.0E-15;
+endmatch;
+
+!twiss,betx=betinix,bety=betiniy,alfx=alfinix,alfy=alfiniy,save=f2;
+!plot,haxis=s,vaxis1=betx,bety,colour=100;
+!plot,haxis=s,vaxis1=alfx,alfy,colour=100;
+!plot,haxis=s,vaxis1=dx,dy,colour=100;
+!plot,haxis=s,vaxis1=dpx,dpy,colour=100;
+
+!save,filename="matched.mff";
+
+!stop;
+
+!------
+
+!*********************************************************************
+!***************** very important note *******************************
+!*********************************************************************
+!*****you MUST have the correct energy at this stage !****************
+!*********************************************************************
+!*********************************************************************
+
+!*********************************************************************
+!endcomment;
+!*********************************************************************
+
+!matching the last part of the injector to the first arc
+
+Match,betx=betinix,bety=betiniy,alfx=alfinix,alfy=alfiniy;
+
+vary,ST1QUAD01[k1],step=0.0001,lower=0.0,upper=12.0;
+vary,ST1QUAD02[k1],step=0.0001,lower=-12.0,upper=0.0;
+vary,ST1QUAD03[k1],step=0.0001,lower=0.0,upper=12.0;
+vary,ST1QUAD04[k1],step=0.0001,lower=-12.0,upper=0.0;
+
+!*********************************************************************
+!rem to change the above for below if mad instead of elegant used*****
+!note this was true - only true now IF linac phase wrong !************
+!*********************************************************************
+
+!vary,ST1QUAD01[k1],step=0.0001,lower=-12.0,upper=12.0;
+!vary,ST1QUAD02[k1],step=0.0001,lower=-12.0,upper=12.0;
+!vary,ST1QUAD03[k1],step=0.0001,lower=-12.0,upper=12.0;
+!vary,ST1QUAD04[k1],step=0.0001,lower=-12.0,upper=12.0;
+
+weight,betx=100,bety=100,alfx=100,alfy=100;
+
+constraint,ST1QUAD02,bety<35;
+constraint,ST1DRIFT07,bety<35;
+constraint,endinj2,betx=0.425,bety=8.524,alfx=-0.361,alfy=4.365;
+constraint,endinj2,dpx=0.0,dx=0.0;
+
+simplex,calls=50000,tolerance=1.0E-15;
+endmatch;
+
+!------
+
+!twiss,betx=betinix,bety=betiniy,alfx=alfinix,alfy=alfiniy,save=f3;
+!plot,haxis=s,vaxis1=betx,bety,colour=100;
+!plot,haxis=s,vaxis1=alfx,alfy,colour=100;
+!plot,haxis=s,vaxis1=dx,dy,colour=100;
+!plot,haxis=s,vaxis1=dpx,dpy,colour=100;
+
+!save,filename="matched.mff";
+
+!stop;
+
+!*********************************************************************
+!endcomment;
+!*********************************************************************
+
+!matching through the first arc
+
+rc56=0.28;
+
+!rc56 is the r56 arising from the chicane
+
+Match,betx=betinix,bety=betiniy,alfx=alfinix,alfy=alfiniy;
+RMATRIX,ST1QUAD03/ST2QUAD02,RM(5,6)=0*rc56;
+vary,KQ1,step=0.0001,lower=-12.0,upper=12.0;
+vary,KQ2,step=0.0001,lower=-12.0,upper=12.0;
+constraint,begarc1,dx=0.0,dpx=0.0;
+constraint,endarc1,dx=0.0,dpx=0.0;
+constraint,begarc1/endarc1,betx<35,bety<35;
+weight,dpx=100;
+simplex,calls=50000,tolerance=1E-15; 
+endmatch;
+
+!twiss,betx=betinix,bety=betiniy,alfx=alfinix,alfy=alfiniy,save=f4;
+!plot,haxis=s,vaxis1=betx,bety,colour=100;
+!plot,haxis=s,vaxis1=alfx,alfy,colour=100;
+!plot,haxis=s,vaxis1=dx,dy,colour=100;
+!plot,haxis=s,vaxis1=dpx,dpy,colour=100;
+
+!save,filename="matched.mff";
+
+!stop;
+
+!*********************************************************************
+!endcomment;
+!*********************************************************************
+
+!matching the first arc to the 1/2 wiggler
+
+Match,betx=betinix,bety=betiniy,alfx=alfinix,alfy=alfiniy;
+
+!there is a slight difference in the two blocks below, don't
+!really know why - try both & choose the best !
+
+vary,ST2QUAD01[k1],step=0.0001,lower=-12.0,upper=0.0;
+vary,ST2QUAD02[k1],step=0.0001,lower=0.0,upper=12.0;
+vary,ST2QUAD03[k1],step=0.0001,lower=-12.0,upper=0.0;
+vary,ST2QUAD04[k1],step=0.0001,lower=0.0,upper=12.0;
+
+!vary,ST2QUAD01[k1],step=0.0001,lower=-12.0,upper=12.0;
+!vary,ST2QUAD02[k1],step=0.0001,lower=-12.0,upper=12.0;
+!vary,ST2QUAD03[k1],step=0.0001,lower=-12.0,upper=12.0;
+!vary,ST2QUAD04[k1],step=0.0001,lower=-12.0,upper=12.0;
+
+!remember to reverse the polarity of the two quads below
+!depending on whether the 1 or 2 chicane model is adopted
+!2 chicanes:
+
+!vary,ST2QUAD05[k1],step=0.0001,lower=-12.0,upper=0.0;
+!vary,ST2QUAD06[k1],step=0.0001,lower=0.0,upper=12.0;
+
+!1 chicane:
+vary,ST2QUAD05[k1],step=0.0001,lower=0.0,upper=12.0;
+vary,ST2QUAD06[k1],step=0.0001,lower=-12.0,upper=0.0;
+
+!remember to add the quadrupole below if the 1 chicane option
+!is desired as, in this case, there are 7 quadrupoles before 
+!the wiggler rather than only 6
+
+vary,ST2QUAD07[k1],step=0.0001,lower=0.0,upper=12.0;
+
+weight,betx=1000,bety=1000,alfx=100,alfy=100;
+
+constraint,begstr1,dpx=0.0,dx=0.0;
+
+constraint,begarc1/halfwig,betx<20,bety<20;
+!constraint,begstr1/halfwig,betx<20,bety<20;
+!below we have the same constraint in the case of 
+!R56 compensation (see explanation above)
+!constraint,begarc1/halfwig,betx<30,bety<30;
+
+!below is the constraint at the start of the wiggler from neil
+constraint,begwig,betx=0.5,bety=1.25,alfx=0.1,alfy=1.75;
+!constraint,begwig,betx=0.5,bety=1.35,alfx=-0.2,alfy=0.5;
+
+!but the one below is still used for now
+!constraint,halfwig,betx=0.5,bety=0.5,alfx=0.0,alfy=0.0;
+!constraint,halfwig,betx=1.0,bety=1.0,alfx=0.0,alfy=0.0;
+!constraint,halfwig,betx=2.0,bety=2.0,alfx=0.0,alfy=0.0;
+
+simplex,calls=50000,tolerance=1E-15;                                           
+endmatch;
+
+!twiss,betx=betinix,bety=betiniy,alfx=alfinix,alfy=alfiniy,save=f5;
+!plot,haxis=s,vaxis1=betx,bety,colour=100;
+!plot,haxis=s,vaxis1=alfx,alfy,colour=100;
+!plot,haxis=s,vaxis1=dx,dy,colour=100;
+!plot,haxis=s,vaxis1=dpx,dpy,colour=100;
+
+!save,filename="matched.mff";
+
+!stop;
+
+!------
+
+!*********************************************************************
+!endcomment;
+!*********************************************************************
+
+!*********************************************************************
+!********************** CBS Matching Section *************************
+!*********************************************************************
+!take care to turn all required things on/off to use this section for
+!the very narrow waist used in Compton Back-scattering (CBS). The 
+!settings are found at the top of this file and include the marker
+!CBSM (always active) and the redefinition of ST3DRIFT05 as a small
+!line. If not in use, remember to change the range for the variation
+!of the quads from +/- 50 back down to +/- 12 !***********************
+!*********************************************************************
+
+!matching the 1/2 wiggler to the second arc
+
+Match,betx=betinix,bety=betiniy,alfx=alfinix,alfy=alfiniy;
+
+!vary,ST3QUAD01[k1],step=0.0001,lower=-12.0,upper=12.0;
+!vary,ST3QUAD02[k1],step=0.0001,lower=-12.0,upper=12.0;
+
+!vary,ST3QUAD03[k1],step=0.0001,lower=-12.0,upper=12.0;
+!vary,ST3QUAD04[k1],step=0.0001,lower=-12.0,upper=12.0;
+
+vary,ST3QUAD01[k1],step=0.0001,lower=0.0,upper=12.0;
+vary,ST3QUAD02[k1],step=0.0001,lower=-12.0,upper=0.0;
+
+vary,ST3QUAD03[k1],step=0.0001,lower=0.0,upper=12.0;
+vary,ST3QUAD04[k1],step=0.0001,lower=-12.0,upper=0.0;
+
+!note the particular ranges below are ONLY to be used for CBS and nothing
+!else - otherwise the ranges are way outside the specs !
+
+!vary,ST3QUAD01[k1],step=0.0001,lower=-50.0,upper=0.0;
+!vary,ST3QUAD02[k1],step=0.0001,lower=0.0,upper=50.0;
+
+!vary,ST3QUAD03[k1],step=0.0001,lower=-50.0,upper=0.0;
+!vary,ST3QUAD04[k1],step=0.0001,lower=0.0,upper=50.0;
+
+vary,betax,step=0.0001,lower=0.0,upper=30.0;
+vary,betay,step=0.0001,lower=0.0,upper=30.0;
+vary,alfax,step=0.0001,lower=-10.0,upper=10.0;
+vary,alfay,step=0.0001,lower=-10.0,upper=10.0;
+
+weight,betx=1000,bety=1000,alfx=1000,alfy=1000;
+
+!constraint,halfwig/endarc2,betx<30,bety<30;
+constraint,halfwig/#e,betx<30,bety<30;
+
+!constraint,endwig/endarc2,betx<150,bety<150;
+!constraint,endwig/endstr1,betx<30,bety<30;
+!constraint,halfwig/endstr1,betx<30,bety<30;
+!below we have the same constraint in the case of 
+!R56 compensation (see explanation above)
+
+constraint,endstr1,dpx=0.0,dx=0.0;
+!constraint,endstr1,betx<25,bety<25;
+
+!constraint,ST3DRIFT05,betx=0.425,bety=8.524,alfx=-0.361,alfy=4.365;
+!constraint,ST3DRIFT05,betx=0.425,bety=10.0,alfx=-0.361,alfy=3.0;
+constraint,ST3DRIFT05,betx=betax,bety=betay,alfx=alfax,alfy=alfay;
+
+!include the line below for CBS modelling *******************************
+!constraint,CBSM,betx=0.0,bety=0.0,alfx=0.0,alfy=0.0;
+!************************************************************************
+
+simplex,calls=50000,tolerance=1E-15;
+endmatch;
+
+!twiss,betx=betinix,bety=betiniy,alfx=alfinix,alfy=alfiniy,save=f6;
+!plot,haxis=s,vaxis1=betx,bety,colour=100;
+!plot,haxis=s,vaxis1=alfx,alfy,colour=100;
+!plot,haxis=s,vaxis1=dx,dy,colour=100;
+!plot,haxis=s,vaxis1=dpx,dpy,colour=100;
+
+!save,filename="matched.mff";
+
+!stop;
+
+!------
+
+!matching through the second arc
+
+!don't forget to repeat this if the above is commented out, otherwise
+!rc56=0.0 and it is useless to match it !
+!rc56=0.28;
+
+!Match,betx=betinix,bety=betiniy,alfx=alfinix,alfy=alfiniy;
+!RMATRIX,ST3QUAD03/ST4QUAD02,RM(5,6)=-1*rc56;
+!vary,KQ3,step=0.0001,lower=-12.0,upper=12.0;
+!vary,KQ4,step=0.0001,lower=-12.0,upper=12.0;
+!constraint,begarc2,dx=0.0,dpx=0.0;
+!constraint,endarc2,dx=0.0,dpx=0.0;
+!constraint,begarc2/endarc2,betx<35,bety<35;
+!weight,dpx=100;
+!simplex,calls=50000,tolerance=1E-15; 
+!endmatch;
+
+!twiss,betx=betinix,bety=betiniy,alfx=alfinix,alfy=alfiniy,save=f4;
+!plot,haxis=s,vaxis1=betx,bety,colour=100;
+!plot,haxis=s,vaxis1=alfx,alfy,colour=100;
+!plot,haxis=s,vaxis1=dx,dy,colour=100;
+!plot,haxis=s,vaxis1=dpx,dpy,colour=100;
+
+!save,filename="matched.mff";
+
+!stop;
+
+!take the two lines below out if matching arc2 independently from arc1
+!but in that case, also remember to comment in the lines above !
+
+!KQ03=KQ3;
+!KQ04=KQ4;
+
+!KQ3=KQ1;
+!KQ4=KQ2;
+
+!------
+
+!matching the second arc to the dump via the straight & linac
+
+Match,betx=betinix,bety=betiniy,alfx=alfinix,alfy=alfiniy;
+
+vary,ST4QUAD01[k1],step=0.0001,lower=-30.0,upper=0.0;
+vary,ST4QUAD02[k1],step=0.0001,lower=0.0,upper=30.0;
+vary,ST4QUAD03[k1],step=0.0001,lower=-30.0,upper=0.0;
+vary,ST4QUAD04[k1],step=0.0001,lower=0.0,upper=30.0;
+vary,ST4QUAD05[k1],step=0.0001,lower=-30.0,upper=0.0;
+
+!vary,ST4QUAD01[k1],step=0.0001,lower=-30.0,upper=30.0;
+!vary,ST4QUAD02[k1],step=0.0001,lower=-30.0,upper=30.0;
+!vary,ST4QUAD03[k1],step=0.0001,lower=-30.0,upper=30.0;
+!vary,ST4QUAD04[k1],step=0.0001,lower=-30.0,upper=30.0;
+!vary,ST4QUAD05[k1],step=0.0001,lower=-30.0,upper=30.0;
+
+weight,betx=1000,bety=1000,alfx=100,alfy=100;
+
+constraint,begarc2,dx=0.0,dpx=0.0;
+constraint,endarc2,dx=0.0,dpx=0.0;
+
+constraint,begstr2/TendDrift[4],betx<35,bety<35;
+constraint,begstr2,dpx=0.0,dx=0.0;
+constraint,TendDrift[4],dpx=0.0,dx=0.0;
+constraint,TendDrift[3],alfx=0.0,alfy=0.0
+
+!*********************************************************************
+!special below - to be taken out !************************************
+!only valid when comming from the wiggler !***************************
+!*********************************************************************
+
+!constraint,begstr2/TendDrift[2],betx<25,bety<25;
+!constraint,begstr2,dpx=0.0,dx=0.0;
+!constraint,TendDrift[2],dpx=0.0,dx=0.0;
+!constraint,TendDrift[1],alfx=0.0,alfy=0.0
+
+!constraint,ST1DRIFT02,betx=2.0,bety=2.0;
+
+simplex,calls=50000,tolerance=1.0E-10;
+endmatch;
+
+!twiss,betx=betinix,bety=betiniy,alfx=alfinix,alfy=alfiniy,save=f7;
+!plot,haxis=s,vaxis1=betx,bety,colour=100;
+!plot,haxis=s,vaxis1=alfx,alfy,colour=100;
+!plot,haxis=s,vaxis1=dx,dy,colour=100;
+!plot,haxis=s,vaxis1=dpx,dpy,colour=100;
+
+!save,filename="matched.mff";
+
+!stop;
+
+!-----
+
+!matching inside the dump line (if required)
+
+Match,betx=betinix,bety=betiniy,alfx=alfinix,alfy=alfiniy;
+
+vary,DMPQUAD01[k1],step=0.0001,lower=0.0,upper=30.0;
+vary,DMPQUAD02[k1],step=0.0001,lower=-30.0,upper=0.0;
+vary,DMPQUAD03[k1],step=0.0001,lower=0.0,upper=30.0;
+
+weight,betx=1000,bety=1000;
+
+constraint,DMPQUAD01/DMPQUAD03,betx<20,bety<20;
+constraint,#e,betx=0.1,bety=0.1;
+
+simplex,calls=50000,tolerance=1.0E-15;
+endmatch;
+
+twiss,betx=betinix,bety=betiniy,alfx=alfinix,alfy=alfiniy,save=f8;
+plot,haxis=s,vaxis1=betx,bety,colour=100;
+plot,haxis=s,vaxis1=alfx,alfy,colour=100;
+plot,haxis=s,vaxis1=dx,dy,colour=100;
+plot,haxis=s,vaxis1=dpx,dpy,colour=100;
+
+save,filename="matched.mff";
+
+stop;
+
+!*****************************************************************
+!add the plotting below for CBS modelling ************************
+!*****************************************************************
+
+plot,haxis=s,vaxis1=betx,bety,colour=100,hmin=0.0,hmax=10.0,&
+ vmin=0.0,vmax=0.1;
+plot,haxis=s,vaxis1=betx,bety,colour=100,hmin=0.0,hmax=10.0,&
+ vmin=0.0,vmax=1.0;
+plot,haxis=s,vaxis1=betx,bety,colour=100,hmin=0.0,hmax=10.0,&
+ vmin=0.0,vmax=2.0;
+plot,haxis=s,vaxis1=betx,bety,colour=100,hmin=0.0,hmax=10.0,&
+ vmin=0.0,vmax=100.0;
+plot,haxis=s,vaxis1=dx,dy,colour=100;
+
+save,filename="matched.mff";
+
+stop;

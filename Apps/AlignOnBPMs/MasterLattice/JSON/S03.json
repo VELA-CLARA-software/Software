@@ -1,0 +1,127 @@
+{
+    "elements": {
+        "CLA-S03-APER": {
+            "type": "aperture",
+            "shape": "rectangular",
+            "horizontal_size": 0.017,
+            "vertical_size": 0.017,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                0,
+                0,
+                10.8974
+            ],
+            "position_start": [
+                0,
+                0,
+                10.8974
+            ]
+        },
+        "CLA-S03-DIA-BPM-01": {
+            "type": "beam_position_monitor",
+            "length": 0.21,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                0,
+                0,
+                11.2974
+            ],
+            "position_start": [
+                0,
+                0,
+                11.0874
+            ]
+        },
+        "CLA-S03-MAG-QUAD-01": {
+            "type": "quadrupole",
+            "length": 0.162,
+            "k1": -0.972061,
+            "sr_enable": true,
+            "isr_enable": true,
+            "buffer_start": [
+                0,
+                0,
+                11.2974
+            ],
+            "buffer_start_length": 0.088,
+            "buffer_end_length": 0.1,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                0,
+                0,
+                11.5474
+            ],
+            "position_start": [
+                0,
+                0,
+                11.3854
+            ]
+        },
+        "CLA-S03-MAG-HVCOR-01": {
+            "type": "kicker",
+            "length": 0.05,
+            "sr_enable": true,
+            "isr_enable": true,
+            "buffer_start": [
+                0,
+                0,
+                11.7474
+            ],
+            "buffer_start_length": 0.025,
+            "buffer_end_length": 0.025,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                0,
+                0,
+                11.8224
+            ],
+            "position_start": [
+                0,
+                0,
+                11.7724
+            ]
+        },
+        "CLA-S03-DIA-SCR-01-W": {
+            "type": "screen",
+            "output_filename": "\"CLA-S03-DIA-SCR-01.SDDS\"",
+            "buffer_start": [
+                0,
+                0,
+                11.8674
+            ],
+            "buffer_start_length": 0.043333,
+            "buffer_end_length": 0.076667,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                0,
+                0,
+                11.9107
+            ],
+            "position_start": [
+                0,
+                0,
+                11.9107
+            ]
+        }
+    }
+}

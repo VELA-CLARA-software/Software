@@ -1,0 +1,254 @@
+{
+    "elements": {
+        "CLA-VBC-MAG-DIP-01": {
+            "type": "dipole",
+            "length": 0.200981,
+            "angle": -0.095,
+            "exit_edge_angle": "angle",
+            "half_gap": 0.005,
+            "edge_field_integral": 0.4,
+            "csr_bins": 20.0,
+            "sr_enable": true,
+            "isr_enable": true,
+            "csr_output_filename": "\"VBC-MAG-DIP-01.CSR\"",
+            "buffer_start": [
+                0,
+                0,
+                25.9651
+            ],
+            "buffer_start_length": 0.1,
+            "buffer_end_length": 0.100453,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                -0.00953944,
+                0,
+                26.2658
+            ],
+            "position_start": [
+                0,
+                0,
+                26.0651
+            ]
+        },
+        "CLA-VBC-MAG-DIP-02": {
+            "type": "dipole",
+            "length": 0.200981,
+            "angle": 0.095,
+            "entrance_edge_angle": "angle",
+            "half_gap": 0.005,
+            "edge_field_integral": 0.4,
+            "csr_bins": 20.0,
+            "sr_enable": true,
+            "isr_enable": true,
+            "csr_output_filename": "\"VBC-MAG-DIP-02.CSR\"",
+            "buffer_start": [
+                -0.142941,
+                0,
+                27.6658
+            ],
+            "buffer_start_length": 0.100453,
+            "buffer_end_length": 0.1,
+            "global_rotation": [
+                0,
+                0,
+                -0.095
+            ],
+            "position_end": [
+                -0.162009,
+                0,
+                27.9664
+            ],
+            "position_start": [
+                -0.15247,
+                0,
+                27.7658
+            ]
+        },
+        "CLA-VBC-MAG-VCOR-01": {
+            "type": "kicker",
+            "length": 0.05,
+            "sr_enable": true,
+            "isr_enable": true,
+            "buffer_start": [
+                -0.162009,
+                0,
+                28.1231
+            ],
+            "buffer_start_length": 0.14,
+            "buffer_end_length": 0.0426,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                -0.162009,
+                0,
+                28.3131
+            ],
+            "position_start": [
+                -0.162009,
+                0,
+                28.2631
+            ]
+        },
+        "CLA-VBC-DIA-BPM-01": {
+            "type": "beam_position_monitor",
+            "length": 0.0312,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                -0.162009,
+                0,
+                28.3869
+            ],
+            "position_start": [
+                -0.162009,
+                0,
+                28.3557
+            ]
+        },
+        "CLA-VBC-RCOL-01": {
+            "type": "collimator",
+            "length": 0.48,
+            "shape": "rectangular",
+            "horizontal_size": 0.01,
+            "vertical_size": 0.01,
+            "open_side": "\"+x\"",
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                -0.162009,
+                0,
+                28.8793
+            ],
+            "position_start": [
+                -0.162009,
+                0,
+                28.3993
+            ]
+        },
+        "CLA-VBC-DIA-SCR-01-W": {
+            "type": "screen",
+            "output_filename": "\"CLA-VBC-DIA-SCR-01.SDDS\"",
+            "buffer_start": [
+                -0.162009,
+                0,
+                28.8793
+            ],
+            "buffer_start_length": 0.025463,
+            "buffer_end_length": 0.076667,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                -0.162009,
+                0,
+                28.9048
+            ],
+            "position_start": [
+                -0.162009,
+                0,
+                28.9048
+            ]
+        },
+        "CLA-VBC-MAG-DIP-03": {
+            "type": "dipole",
+            "length": 0.200981,
+            "angle": 0.095,
+            "exit_edge_angle": "angle",
+            "half_gap": 0.005,
+            "edge_field_integral": 0.4,
+            "csr_bins": 20.0,
+            "sr_enable": true,
+            "isr_enable": true,
+            "csr_output_filename": "\"VBC-MAG-DIP-03.CSR\"",
+            "buffer_start": [
+                -0.162009,
+                0,
+                29.1664
+            ],
+            "buffer_start_length": 0.1,
+            "buffer_end_length": 0.100453,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                -0.15247,
+                0,
+                29.4671
+            ],
+            "position_start": [
+                -0.162009,
+                0,
+                29.2664
+            ]
+        },
+        "CLA-VBC-MAG-DIP-04": {
+            "type": "dipole",
+            "length": 0.200981,
+            "angle": -0.095,
+            "entrance_edge_angle": "angle",
+            "half_gap": 0.005,
+            "edge_field_integral": 0.4,
+            "csr_bins": 20.0,
+            "sr_enable": true,
+            "isr_enable": true,
+            "csr_output_filename": "\"VBC-MAG-DIP-04.CSR\"",
+            "buffer_start": [
+                -0.0190681,
+                0,
+                30.8671
+            ],
+            "buffer_start_length": 0.100453,
+            "global_rotation": [
+                0,
+                0,
+                0.095
+            ],
+            "position_end": [
+                0,
+                0,
+                31.1678
+            ],
+            "position_start": [
+                -0.00953944,
+                0,
+                30.9671
+            ]
+        },
+        "CLA-VBC-MARK-01": {
+            "type": "marker",
+            "fit_point": 1.0,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                0,
+                0,
+                31.2678
+            ],
+            "position_start": [
+                0,
+                0,
+                31.2678
+            ]
+        }
+    }
+}

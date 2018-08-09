@@ -1,0 +1,285 @@
+"cla-q": charge, total = 2.5e-10;
+"cla-s01-aper": maxamp, y_max = 0.017, x_max = 0.017, elliptical = 1;
+"cla-s01-gun": drif, l = 0.32482;
+"cla-s01-mag-hvcor-01": kicker, isr = 1, edge_effects = 1, l = 0.03,&
+synch_rad = 1, order = 2;
+"cla-s01-vac-valv-01": drif, l = 0.1;
+"cla-s01-lsr-lbx-01": drif, l = 0.22288;
+"cla-s01-dia-wcm-01": drif, l = 0.05;
+"cla-s01-dia-bpm-01": moni, co_fitpoint = 1, l = 0.21;
+"cla-s01-mag-hvcor-02": kicker, isr = 1, edge_effects = 1, synch_rad = 1,&
+order = 2;
+"cla-s01-dia-scr-01-b": lscdrift, l = 0.043333,&
+high_frequency_cutoff1 = 0.25, high_frequency_cutoff0 = 0.2, bins = 20;
+"cla-s01-dia-scr-01-w": watch, filename = "CLA-S01-DIA-SCR-01.SDDS",&
+mode = "COORDINATE";
+"cla-s01-dia-scr-01-a": lscdrift, l = 0.076667,&
+high_frequency_cutoff1 = 0.25, high_frequency_cutoff0 = 0.2, bins = 20;
+"cla-l01-aper": maxamp, y_max = 0.01, x_max = 0.01, elliptical = 1;
+"cla-l01-cav-b": lscdrift, l = 0.13587, high_frequency_cutoff1 = 0.25,&
+high_frequency_cutoff0 = 0.2, bins = 20;
+"cla-l01-cav": rfcw, lsc_high_frequency_cutoff0 = 0.2,&
+lsc_high_frequency_cutoff1 = 0.25, change_p0 = 1, body_focus_model = "SRS",&
+n_kicks = 2000, end1_focus = 1, l = 2.033333313, smoothing = 1,&
+cell_length = 0.033333333, volt = 23383333.0995, end2_focus = 1,&
+phase = 59.0, freq = 2998500000.0, lsc_bins = 20, lsc = 1;
+"cla-l01-cav-a": lscdrift, l = 0.14457, high_frequency_cutoff1 = 0.25,&
+high_frequency_cutoff0 = 0.2, bins = 20;
+"cla-s02-aper": maxamp, y_max = 0.017, x_max = 0.017, elliptical = 1;
+"cla-s02-mag-hvcor-01": kicker, isr = 1, edge_effects = 1, l = 0.076607,&
+synch_rad = 1, order = 2;
+"cla-s02-mag-quad-01-b": lscdrift, l = 0.02872,&
+high_frequency_cutoff1 = 0.25, high_frequency_cutoff0 = 0.2, bins = 20;
+"cla-s02-mag-quad-01-k": kquad, n_kicks = 10, edge2_effects = 1,&
+edge1_effects = 1, l = 0.1007, k1 = -3.09253, synch_rad = 1, isr = 1;
+"cla-s02-mag-quad-01-a": lscdrift, high_frequency_cutoff1 = 0.25, bins = 20,&
+high_frequency_cutoff0 = 0.2;
+"cla-s02-dia-bpm-01": moni, co_fitpoint = 1, l = 0.04528;
+"cla-s02-dia-bam-01": moni, co_fitpoint = 1, l = 0.08;
+"cla-s02-drift-01": lscdrift, l = 0.1453, high_frequency_cutoff1 = 0.25,&
+high_frequency_cutoff0 = 0.2, bins = 20;
+"cla-s02-mag-quad-02-b": lscdrift, l = 0.02872,&
+high_frequency_cutoff1 = 0.25, high_frequency_cutoff0 = 0.2, bins = 20;
+"cla-s02-mag-quad-02-k": kquad, n_kicks = 10, edge2_effects = 1,&
+edge1_effects = 1, l = 0.1007, k1 = 6.34871, synch_rad = 1, isr = 1;
+"cla-s02-mag-quad-02-a": lscdrift, l = 0.02802,&
+high_frequency_cutoff1 = 0.25, high_frequency_cutoff0 = 0.2, bins = 20;
+"cla-s02-drift-02": lscdrift, l = 0.04098, high_frequency_cutoff1 = 0.25,&
+high_frequency_cutoff0 = 0.2, bins = 20;
+"cla-s02-dia-scr-01-b": lscdrift, l = 0.043333,&
+high_frequency_cutoff1 = 0.25, high_frequency_cutoff0 = 0.2, bins = 20;
+"cla-s02-dia-scr-01-w": watch, filename = "CLA-S02-DIA-SCR-01.SDDS",&
+mode = "COORDINATE";
+"cla-s02-dia-scr-01-a": lscdrift, l = 0.076667,&
+high_frequency_cutoff1 = 0.25, high_frequency_cutoff0 = 0.2, bins = 20;
+"cla-s02-drift-03": lscdrift, l = 0.07157, high_frequency_cutoff1 = 0.25,&
+high_frequency_cutoff0 = 0.2, bins = 20;
+"cla-s02-mag-hvcor-02": kicker, isr = 1, edge_effects = 1, l = 0.03,&
+synch_rad = 1, order = 2;
+"cla-s02-drift-04": lscdrift, l = 0.07555, high_frequency_cutoff1 = 0.25,&
+high_frequency_cutoff0 = 0.2, bins = 20;
+"cla-s02-col-01": ecol, y_max = 0.01, x_max = 0.01, l = 0.35;
+"cla-s02-drift-05": lscdrift, l = 0.12194, high_frequency_cutoff1 = 0.25,&
+high_frequency_cutoff0 = 0.2, bins = 20;
+"cla-s02-mag-hvcor-03": kicker, isr = 1, edge_effects = 1, l = 0.03,&
+synch_rad = 1, order = 2;
+"cla-s02-drift-06": lscdrift, l = 0.12194, high_frequency_cutoff1 = 0.25,&
+high_frequency_cutoff0 = 0.2, bins = 20;
+"cla-s02-dia-scr-02-b": lscdrift, l = 0.043333,&
+high_frequency_cutoff1 = 0.25, high_frequency_cutoff0 = 0.2, bins = 20;
+"cla-s02-dia-scr-02-w": watch, filename = "CLA-S02-DIA-SCR-02.SDDS",&
+mode = "COORDINATE";
+"cla-s02-dia-scr-02-a": lscdrift, l = 0.076667,&
+high_frequency_cutoff1 = 0.25, high_frequency_cutoff0 = 0.2, bins = 20;
+"cla-s02-drift-07": lscdrift, l = 0.06058, high_frequency_cutoff1 = 0.25,&
+high_frequency_cutoff0 = 0.2, bins = 20;
+"cla-s02-mag-quad-03-b": lscdrift, l = 0.02872,&
+high_frequency_cutoff1 = 0.25, high_frequency_cutoff0 = 0.2, bins = 20;
+"cla-s02-mag-quad-03-k": kquad, n_kicks = 10, edge2_effects = 1,&
+edge1_effects = 1, l = 0.1007, k1 = -4.07613, synch_rad = 1, isr = 1;
+"cla-s02-mag-quad-03-a": lscdrift, l = 0.02802,&
+high_frequency_cutoff1 = 0.25, high_frequency_cutoff0 = 0.2, bins = 20;
+"cla-s02-drift-08": lscdrift, l = 0.24256, high_frequency_cutoff1 = 0.25,&
+high_frequency_cutoff0 = 0.2, bins = 20;
+"cla-s02-mag-quad-04-b": lscdrift, l = 0.02872,&
+high_frequency_cutoff1 = 0.25, high_frequency_cutoff0 = 0.2, bins = 20;
+"cla-s02-mag-quad-04-k": kquad, n_kicks = 10, edge2_effects = 1,&
+edge1_effects = 1, l = 0.1007, k1 = -4.07613, synch_rad = 1, isr = 1;
+"cla-s02-mag-quad-04-a": lscdrift, l = 0.02802,&
+high_frequency_cutoff1 = 0.25, high_frequency_cutoff0 = 0.2, bins = 20;
+"cla-s02-drift-09": lscdrift, l = 0.02135, high_frequency_cutoff1 = 0.25,&
+high_frequency_cutoff0 = 0.2, bins = 20;
+"cla-c2v-mark-01": mark, fitpoint = 1;
+"cla-c2v-mag-dip-01-b": lscdrift, l = 0.1, high_frequency_cutoff1 = 0.25,&
+high_frequency_cutoff0 = 0.2, bins = 20;
+"cla-c2v-mag-dip-01-d": csrcsbend, hgap = 0.005, angle = 0.78539816,&
+n_kicks = 10, output_file = "C2V-MAG-DIP-01-D.CSR", fint = 0.4,&
+synch_rad = 1, l = 0.4000033, sg_halfwidth = 2, isr = 1, bins = 20;
+"cla-c2v-mag-dip-01-a": lscdrift, l = 0.1, high_frequency_cutoff1 = 0.25,&
+high_frequency_cutoff0 = 0.2, bins = 20;
+"cla-c2v-drift-01": lscdrift, l = 5.45323e-05, high_frequency_cutoff1 = 0.25,&
+high_frequency_cutoff0 = 0.2, bins = 20;
+"cla-c2v-mag-hvcor-01": kicker, isr = 1, edge_effects = 1, l = 0.21,&
+synch_rad = 1, order = 2;
+"cla-c2v-dia-bpm-01": moni, co_fitpoint = 1;
+"cla-c2v-mag-quad-01-b": lscdrift, l = 0.02252,&
+high_frequency_cutoff1 = 0.25, high_frequency_cutoff0 = 0.2, bins = 20;
+"cla-c2v-mag-quad-01-k": kquad, n_kicks = 10, edge2_effects = 1,&
+edge1_effects = 1, l = 0.1007, k1 = 55.9853, synch_rad = 1, isr = 1;
+"cla-c2v-mag-quad-01-a": lscdrift, l = 0.02252,&
+high_frequency_cutoff1 = 0.25, high_frequency_cutoff0 = 0.2, bins = 20;
+"cla-c2v-drift-02": lscdrift, l = 0.14426, high_frequency_cutoff1 = 0.25,&
+high_frequency_cutoff0 = 0.2, bins = 20;
+"cla-c2v-mag-quad-02-b": lscdrift, l = 0.02252,&
+high_frequency_cutoff1 = 0.25, high_frequency_cutoff0 = 0.2, bins = 20;
+"cla-c2v-mag-quad-02-k": kquad, n_kicks = 10, edge2_effects = 1,&
+edge1_effects = 1, l = 0.1007, k1 = -50.2792, synch_rad = 1, isr = 1;
+"cla-c2v-mag-quad-02-a": lscdrift, l = 0.02252,&
+high_frequency_cutoff1 = 0.25, high_frequency_cutoff0 = 0.2, bins = 20;
+"cla-c2v-drift-03": lscdrift, l = 0.14426, high_frequency_cutoff1 = 0.25,&
+high_frequency_cutoff0 = 0.2, bins = 20;
+"cla-c2v-mag-quad-03-b": lscdrift, l = 0.02252,&
+high_frequency_cutoff1 = 0.25, high_frequency_cutoff0 = 0.2, bins = 20;
+"cla-c2v-mag-quad-03-k": kquad, n_kicks = 10, edge2_effects = 1,&
+edge1_effects = 1, l = 0.1007, k1 = 55.9853, synch_rad = 1, isr = 1;
+"cla-c2v-mag-quad-03-a": lscdrift, l = 0.02252,&
+high_frequency_cutoff1 = 0.25, high_frequency_cutoff0 = 0.2, bins = 20;
+"cla-c2v-drift-04": lscdrift, l = 0.04502726615,&
+high_frequency_cutoff1 = 0.25, high_frequency_cutoff0 = 0.2, bins = 20;
+"cla-c2v-dia-scr-01-b": lscdrift, l = 0.043333,&
+high_frequency_cutoff1 = 0.25, high_frequency_cutoff0 = 0.2, bins = 20;
+"cla-c2v-dia-scr-01-w": watch, filename = "C2V-DIA-SCR-01.SDDS";
+"cla-c2v-dia-scr-01-a": lscdrift, l = 0.076667,&
+high_frequency_cutoff1 = 0.25, high_frequency_cutoff0 = 0.2, bins = 20;
+"cla-c2v-drift-05": lscdrift, l = 0.04502726615,&
+high_frequency_cutoff1 = 0.25, high_frequency_cutoff0 = 0.2, bins = 20;
+"cla-c2v-mag-dip-02-b": lscdrift, l = 0.1, high_frequency_cutoff1 = 0.25,&
+high_frequency_cutoff0 = 0.2, bins = 20;
+"cla-c2v-mag-dip-02-d": csrcsbend, hgap = 0.005, angle = -0.78539816,&
+n_kicks = 10, output_file = "CLA-C2V-MAG-DIP-02-D.CSR", fint = 0.4,&
+synch_rad = 1, l = 0.4000033, sg_halfwidth = 2, isr = 1, bins = 20;
+"cla-c2v-mag-dip-02-a": lscdrift, l = 0.1, high_frequency_cutoff1 = 0.25,&
+high_frequency_cutoff0 = 0.2, bins = 20;
+"ebt-inj-drift-01": lscdrift, l = 0.5, high_frequency_cutoff1 = 0.25,&
+high_frequency_cutoff0 = 0.2, bins = 20;
+"ebt-inj-mag-hvcor-06": kicker, isr = 1, edge_effects = 1, l = 0.064,&
+synch_rad = 1, order = 2;
+"ebt-inj-mag-quad-07": kquad, n_kicks = 20, edge2_effects = 1,&
+edge1_effects = 1, l = 0.1, k1 = 17.09451, synch_rad = 1, isr = 1;
+"ebt-inj-drift-02": lscdrift, l = 0.17, high_frequency_cutoff1 = 0.25,&
+high_frequency_cutoff0 = 0.2, bins = 20;
+"ebt-inj-mag-quad-08": kquad, n_kicks = 20, edge2_effects = 1,&
+edge1_effects = 1, l = 0.1, k1 = -17.868558, synch_rad = 1, isr = 1;
+"ebt-inj-drift-03": lscdrift, l = 1.007, high_frequency_cutoff1 = 0.25,&
+high_frequency_cutoff0 = 0.2, bins = 20;
+"ebt-inj-dia-scr-06": watch, filename = "EBT-INJ-DIA-SCR-06.SDDS";
+"ebt-inj-drift-04": lscdrift, l = 0.35, high_frequency_cutoff1 = 0.25,&
+high_frequency_cutoff0 = 0.2, bins = 20;
+"ebt-inj-dia-fcup-02": watch, filename = "EBT-INJ-DIA-FCUP-02.SDDS";
+"ebt-inj-drift-05": lscdrift, l = 0.2675, high_frequency_cutoff1 = 0.25,&
+high_frequency_cutoff0 = 0.2, bins = 20;
+"ebt-inj-mag-hvcor-07": kicker, isr = 1, edge_effects = 1, l = 0.1825,&
+synch_rad = 1, order = 2;
+"ebt-inj-mag-quad-09": kquad, n_kicks = 20, edge2_effects = 1,&
+edge1_effects = 1, l = 0.075, k1 = 4.146767, synch_rad = 1, isr = 1;
+"ebt-inj-dia-bpm-04": moni, co_fitpoint = 1, l = 0.243;
+"ebt-inj-drift-06": lscdrift, l = 1.432, high_frequency_cutoff1 = 0.25,&
+high_frequency_cutoff0 = 0.2, bins = 20;
+"ebt-inj-dia-scr-07": watch, filename = "EBT-INJ-DIA-SCR-07.SDDS";
+"ebt-inj-mag-hvcor-08": kicker, isr = 1, edge_effects = 1, l = 0.2,&
+synch_rad = 1, order = 2;
+"ebt-inj-drift-07": lscdrift, l = 0.202, high_frequency_cutoff1 = 0.25,&
+high_frequency_cutoff0 = 0.2, bins = 20;
+"ebt-inj-mag-quad-10": kquad, n_kicks = 20, edge2_effects = 1,&
+edge1_effects = 1, l = 0.075, k1 = -4.284699, synch_rad = 1, isr = 1;
+"ebt-inj-drift-08": lscdrift, l = 1.245, high_frequency_cutoff1 = 0.25,&
+high_frequency_cutoff0 = 0.2, bins = 20;
+"ebt-inj-dia-bpm-05": moni, co_fitpoint = 1, l = 0.2;
+"ebt-inj-drift-09": lscdrift, l = 0.628, high_frequency_cutoff1 = 0.25,&
+high_frequency_cutoff0 = 0.2, bins = 20;
+"ebt-inj-mag-quad-11": kquad, n_kicks = 20, edge2_effects = 1,&
+edge1_effects = 1, l = 0.075, k1 = 5.661824, synch_rad = 1, isr = 1;
+"ebt-inj-drift-10": lscdrift, l = 0.875, high_frequency_cutoff1 = 0.25,&
+high_frequency_cutoff0 = 0.2, bins = 20;
+"ebt-inj-dia-scr-08": watch, filename = "EBT-INJ-DIA-SCR-08.SDDS";
+"ebt-inj-mag-hvcor-09": kicker, isr = 1, edge_effects = 1, l = 0.1675,&
+synch_rad = 1, order = 2;
+"ebt-inj-mag-dip-01-dri": lscdrift, l = 0.4875,&
+high_frequency_cutoff1 = 0.25, high_frequency_cutoff0 = 0.2, bins = 20;
+"ebt-inj-drift-11": lscdrift, l = 0.895, high_frequency_cutoff1 = 0.25,&
+high_frequency_cutoff0 = 0.2, bins = 20;
+"ebt-inj-dia-ict-03": mark, fitpoint = 1;
+"ebt-inj-drift-12": lscdrift, l = 0.595, high_frequency_cutoff1 = 0.25,&
+high_frequency_cutoff0 = 0.2, bins = 20;
+"ebt-inj-mag-quad-15": kquad, n_kicks = 20, edge2_effects = 1,&
+edge1_effects = 1, l = 0.075, k1 = 4.073104, synch_rad = 1, isr = 1;
+"ebt-inj-drift-13": lscdrift, l = 0.435, high_frequency_cutoff1 = 0.25,&
+high_frequency_cutoff0 = 0.2, bins = 20;
+"ebt-inj-pss-shut-02": mark, fitpoint = 1;
+"ebt-inj-drift-14": lscdrift, l = 2.909, high_frequency_cutoff1 = 0.25,&
+high_frequency_cutoff0 = 0.2, bins = 20;
+"ebt-inj-dia-bpm-ba1": moni, co_fitpoint = 1, l = 0.235;
+"ebt-inj-dia-scr-ba1": watch, filename = "EBT-INJ-DIA-SCR-BA1.SDDS";
+"ebt-inj-drift-15": lscdrift, l = 0.991, high_frequency_cutoff1 = 0.25,&
+high_frequency_cutoff0 = 0.2, bins = 20;
+"ebt-inj-drift-16": lscdrift, l = 0.01, high_frequency_cutoff1 = 0.25,&
+high_frequency_cutoff0 = 0.2, bins = 20;
+"ebt-inj-mag-quad-16": kquad, n_kicks = 20, edge2_effects = 1,&
+edge1_effects = 1, l = 0.16, k1 = -9.132049, synch_rad = 1, isr = 1;
+"ebt-inj-drift-17": lscdrift, l = 0.14, high_frequency_cutoff1 = 0.25,&
+high_frequency_cutoff0 = 0.2, bins = 20;
+"ebt-inj-mag-quad-17": kquad, n_kicks = 20, edge2_effects = 1,&
+edge1_effects = 1, l = 0.16, k1 = 8.615056, synch_rad = 1, isr = 1;
+"ebt-inj-drift-18": lscdrift, l = 0.14, high_frequency_cutoff1 = 0.25,&
+high_frequency_cutoff0 = 0.2, bins = 20;
+"ebt-inj-mag-quad-18": kquad, n_kicks = 20, edge2_effects = 1,&
+edge1_effects = 1, l = 0.16, k1 = 1.543315, synch_rad = 1, isr = 1;
+"ebt-inj-drift-19": lscdrift, l = 0.34, high_frequency_cutoff1 = 0.25,&
+high_frequency_cutoff0 = 0.2, bins = 20;
+laserboxstart: mark, fitpoint = 1;
+"ebt-inj-drift-20": lscdrift, l = 0.65, high_frequency_cutoff1 = 0.25,&
+high_frequency_cutoff0 = 0.2, bins = 20;
+laserboxend: mark, fitpoint = 1;
+"ebt-inj-drift-21": lscdrift, l = 0.1, high_frequency_cutoff1 = 0.25,&
+high_frequency_cutoff0 = 0.2, bins = 20;
+coffinstart: mark, fitpoint = 1;
+"ebt-inj-drift-22": lscdrift, l = 1.05, high_frequency_cutoff1 = 0.25,&
+high_frequency_cutoff0 = 0.2, bins = 20;
+coffinfocus: mark, fitpoint = 1;
+"ebt-inj-drift-23": lscdrift, l = 1.31, high_frequency_cutoff1 = 0.25,&
+high_frequency_cutoff0 = 0.2, bins = 20;
+coffinend: mark, fitpoint = 1;
+"ebt-inj-drift-24": lscdrift, l = 0.39, high_frequency_cutoff1 = 0.25,&
+high_frequency_cutoff0 = 0.2, bins = 20;
+"ebt-inj-mag-quad-19": kquad, n_kicks = 20, edge2_effects = 1,&
+edge1_effects = 1, l = 0.16, k1 = 8.13884, synch_rad = 1, isr = 1;
+"ebt-inj-drift-25": lscdrift, l = 0.34, high_frequency_cutoff1 = 0.25,&
+high_frequency_cutoff0 = 0.2, bins = 20;
+"ebt-inj-mag-quad-20": kquad, n_kicks = 20, edge2_effects = 1,&
+edge1_effects = 1, l = 0.16, k1 = -5.425893, synch_rad = 1, isr = 1;
+l0001: Line=("cla-q", "cla-s01-aper", "cla-s01-gun", "cla-s01-mag-hvcor-01", &
+"cla-s01-vac-valv-01", "cla-s01-lsr-lbx-01", "cla-s01-dia-wcm-01", &
+"cla-s01-dia-bpm-01", "cla-s01-mag-hvcor-02", "cla-s01-dia-scr-01-b", &
+"cla-s01-dia-scr-01-w", "cla-s01-dia-scr-01-a", "cla-l01-aper", &
+"cla-l01-cav-b", "cla-l01-cav", "cla-l01-cav-a", "cla-s02-aper", &
+"cla-s02-mag-hvcor-01", "cla-s02-mag-quad-01-b", "cla-s02-mag-quad-01-k", &
+"cla-s02-mag-quad-01-a", "cla-s02-dia-bpm-01", "cla-s02-dia-bam-01", &
+"cla-s02-drift-01", "cla-s02-mag-quad-02-b", "cla-s02-mag-quad-02-k", &
+"cla-s02-mag-quad-02-a", "cla-s02-drift-02", "cla-s02-dia-scr-01-b", &
+"cla-s02-dia-scr-01-w", "cla-s02-dia-scr-01-a", "cla-s02-drift-03", &
+"cla-s02-mag-hvcor-02", "cla-s02-drift-04", "cla-s02-col-01", "cla-s02-aper", &
+"cla-s02-drift-05", "cla-s02-mag-hvcor-03", "cla-s02-drift-06", &
+"cla-s02-dia-scr-02-b")
+l0002: Line=("cla-s02-dia-scr-02-w", "cla-s02-dia-scr-02-a", &
+"cla-s02-drift-07", "cla-s02-mag-quad-03-b", "cla-s02-mag-quad-03-k", &
+"cla-s02-mag-quad-03-a", "cla-s02-drift-08", "cla-s02-mag-quad-04-b", &
+"cla-s02-mag-quad-04-k", "cla-s02-mag-quad-04-a", "cla-s02-drift-09", &
+"cla-c2v-mark-01", "cla-c2v-mag-dip-01-b", "cla-c2v-mag-dip-01-d", &
+"cla-c2v-mag-dip-01-a", "cla-c2v-drift-01", "cla-c2v-mag-hvcor-01", &
+"cla-c2v-dia-bpm-01", "cla-c2v-mag-quad-01-b", "cla-c2v-mag-quad-01-k", &
+"cla-c2v-mag-quad-01-a", "cla-c2v-drift-02", "cla-c2v-mag-quad-02-b", &
+"cla-c2v-mag-quad-02-k", "cla-c2v-mag-quad-02-a", "cla-c2v-drift-03", &
+"cla-c2v-mag-quad-03-b", "cla-c2v-mag-quad-03-k", "cla-c2v-mag-quad-03-a", &
+"cla-c2v-drift-04", "cla-c2v-dia-scr-01-b", "cla-c2v-dia-scr-01-w", &
+"cla-c2v-dia-scr-01-a", "cla-c2v-drift-05", "cla-c2v-mag-dip-02-b", &
+"cla-c2v-mag-dip-02-d", "cla-c2v-mag-dip-02-a", "ebt-inj-drift-01", &
+"ebt-inj-mag-hvcor-06", "ebt-inj-mag-quad-07")
+l0003: Line=("ebt-inj-drift-02", "ebt-inj-mag-quad-08", "ebt-inj-drift-03", &
+"ebt-inj-dia-scr-06", "ebt-inj-drift-04", "ebt-inj-dia-fcup-02", &
+"ebt-inj-drift-05", "ebt-inj-mag-hvcor-07", "ebt-inj-mag-quad-09", &
+"ebt-inj-dia-bpm-04", "ebt-inj-drift-06", "ebt-inj-dia-scr-07", &
+"ebt-inj-mag-hvcor-08", "ebt-inj-drift-07", "ebt-inj-mag-quad-10", &
+"ebt-inj-drift-08", "ebt-inj-dia-bpm-05", "ebt-inj-drift-09", &
+"ebt-inj-mag-quad-11", "ebt-inj-drift-10", "ebt-inj-dia-scr-08", &
+"ebt-inj-mag-hvcor-09", "ebt-inj-mag-dip-01-dri", "ebt-inj-drift-11", &
+"ebt-inj-dia-ict-03", "ebt-inj-drift-12", "ebt-inj-mag-quad-15", &
+"ebt-inj-drift-13", "ebt-inj-pss-shut-02", "ebt-inj-drift-14", &
+"ebt-inj-dia-bpm-ba1", "ebt-inj-dia-scr-ba1", "ebt-inj-drift-15", &
+"ebt-inj-drift-16", "ebt-inj-mag-quad-16", "ebt-inj-drift-17", &
+"ebt-inj-mag-quad-17", "ebt-inj-drift-18", "ebt-inj-mag-quad-18", &
+"ebt-inj-drift-19")
+l0004: Line=(laserboxstart, "ebt-inj-drift-20", laserboxend, &
+"ebt-inj-drift-21", coffinstart, "ebt-inj-drift-22", coffinfocus, &
+"ebt-inj-drift-23", coffinend, "ebt-inj-drift-24", "ebt-inj-mag-quad-19", &
+"ebt-inj-drift-25", "ebt-inj-mag-quad-20")
+cla-ebt: Line=(l0001, l0002, l0003, l0004)

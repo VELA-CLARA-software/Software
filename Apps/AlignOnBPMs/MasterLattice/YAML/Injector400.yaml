@@ -1,0 +1,129 @@
+elements:
+  CLA-HRG1-APER:
+    type: aperture
+    shape: rectangular
+    horizontal_size: 0.017
+    vertical_size: 0.017
+    position_end: [0, 0, 0]
+    position_start: [0, 0, 0]
+  CLA-HRG1-GUN-CAV:
+    type: cavity
+    length: 0.15
+    n_cells: 1.5
+    Structure_Type: 'StandingWave'
+    Controller_Name: GUN400
+    field_amplitude: 120000000.0
+    frequency: 2998500000.0
+    phase: -9
+    field_definition: $master_lattice_location$Data_Files/HRRG_1D_RF.dat
+    lsc_cutoff_high: [0, 0]
+    position_end: [0, 0, 0.15]
+    position_start: [0, 0, 0]
+    sub_elements:
+      CLA-HRG1-GUN-SOL:
+        type: solenoid
+        Controller_Name: SOL1
+        length: 0.0
+        field_amplitude: 0.345
+        field_definition: $master_lattice_location$Data_Files/HRRG_combined_sols_100mm_onaxis.dat
+        position_end: [0, 0, 0.15]
+        position_start: [0, 0, 0]
+  CLA-S01-APER:
+    type: aperture
+    shape: rectangular
+    horizontal_size: 0.017
+    vertical_size: 0.017
+    position_end: [0, 0, 0.32482]
+    position_start: [0, 0, 0.32482]
+  CLA-S01-MAG-HVCOR-01:
+    type: kicker
+    length: 0.03
+    sr_enable: true
+    isr_enable: true
+    Controller_Name: COR1
+    Online_Model_Name: C1-COR01
+    Horizontal_PV: CLA-S01-MAG-HCOR-01
+    Vertcal_PV: CLA-S01-MAG-VCOR-01
+    position_end: [0, 0, 0.35482]
+    position_start: [0, 0, 0.32482]
+  CLA-S01-DIA-WCM-01:
+    type: wall_current_monitor
+    length: 0.05
+    Controller_Name: WCM01
+    Online_Model_Name: C1-WCM01
+    PV: CLA-S01-DIA-WCM-01
+    position_end: [0, 0, 0.7277]
+    position_start: [0, 0, 0.6777]
+  CLA-S01-MAG-HVCOR-02:
+    type: kicker
+    length: 0.102
+    sr_enable: true
+    isr_enable: true
+    Controller_Name: COR2
+    Online_Model_Name: C1-COR02
+    Horizontal_PV: CLA-S01-MAG-HCOR-02
+    Vertcal_PV: CLA-S01-MAG-VCOR-02
+    position_end: [0, 0, 0.8297]
+    position_start: [0, 0, 0.7277]
+  CLA-S01-DIA-BPM-01:
+    type: beam_position_monitor
+    length: 0.108
+    Controller_Name: BPM01
+    Online_Model_Name: C1-BPM01
+    PV: CLA-S01-DIA-BPM-01
+    position_end: [0, 0, 0.9377]
+    position_start: [0, 0, 0.8297]
+  CLA-S01-DIA-SCR-01-W:
+    type: screen
+    output_filename: '"CLA-S01-DIA-SCR-01.SDDS"'
+    camera_PV: CLA-S01-DIA-CAM-01
+    buffer_start: [0, 0, 0.9377]
+    buffer_start_length: 0.043333
+    buffer_end_length: 0.076667
+    position_end: [0, 0, 0.981033]
+    position_start: [0, 0, 0.981033]
+  CLA-L01-APER:
+    type: aperture
+    shape: rectangular
+    horizontal_size: 0.01
+    vertical_size: 0.01
+    position_end: [0, 0, 1.0577]
+    position_start: [0, 0, 1.0577]
+  CLA-L01-CAV:
+    type: cavity
+    length: 2.03333
+    Structure_Type: 'TravellingWave'
+    cell_length: 0.0333333
+    n_cells: 61
+    field_amplitude: 21000000.0
+    frequency: 2998500000.0
+    phase: -16
+    longitudinal_wakefield_input: '"Sz5um10mm.sdds"'
+    transverse_wakefield_input: '"Sx5um10mm.sdds"'
+    field_definition: $master_lattice_location$Data_Files/TWS_S-DL.dat
+    lsc_enable: true
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    buffer_start: [0, 0, 1.0577]
+    buffer_start_length: 0.13587
+    buffer_end_length: 0.14457
+    Controller_Name: L01
+    Online_Model_Name: C1-L01
+    PV: CLA-L01-LRF-CTRL-01
+    position_end: [0, 0, 3.2269]
+    position_start: [0, 0, 1.19357]
+    sub_elements:
+      CLA-L01-CAV-SOL-01:
+        type: solenoid
+        length: 0
+        field_amplitude: 0.05
+        field_definition: $master_lattice_location$Data_Files/SwissFEL_linac_sols.dat
+        position_end: [0, 0, 2.2]
+        position_start: [0, 0, 1.70]
+      CLA-L01-CAV-SOL-02:
+        type: solenoid
+        length: 0
+        field_amplitude: -0.05
+        field_definition: $master_lattice_location$Data_Files/SwissFEL_linac_sols.dat
+        position_end: [0, 0, 3.2]
+        position_start: [0, 0, 2.70]

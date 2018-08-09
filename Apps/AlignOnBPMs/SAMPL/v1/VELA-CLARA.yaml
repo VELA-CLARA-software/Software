@@ -1,0 +1,546 @@
+groups:
+  V1: [EBT-INJ-MAG-HVCOR-01,
+       EBT-INJ-DIA-WCM-01,
+       EBT-INJ-DIA-BPM-01,
+       EBT-INJ-MAG-HVCOR-02,
+       EBT-INJ-DIA-YAG-01,
+       EBT-INJ-MAG-QUAD-01,
+       EBT-INJ-MAG-QUAD-02,
+       EBT-INJ-MAG-QUAD-03,
+       EBT-INJ-MAG-QUAD-04,
+       EBT-INJ-DIA-YAG-02,
+       EBT-INJ-MAG-HVCOR-03,
+       EBT-INJ-TDC-01,
+       EBT-INJ-MAG-HVCOR-04,
+       EBT-INJ-DIA-YAG-03,
+       EBT-INJ-DIA-BPM-02,
+       CLA-C2V-MAG-DIP-02]
+  V1-SP1: [EBT-INJ-MAG-HVCOR-01,
+             EBT-INJ-DIA-WCM-01,
+             EBT-INJ-DIA-BPM-01,
+             EBT-INJ-MAG-HVCOR-02,
+             EBT-INJ-DIA-YAG-01,
+             EBT-INJ-MAG-QUAD-01,
+             EBT-INJ-MAG-QUAD-02,
+             EBT-INJ-MAG-QUAD-03,
+             EBT-INJ-MAG-QUAD-04,
+             EBT-INJ-DIA-YAG-02,
+             EBT-INJ-MAG-HVCOR-03,
+             EBT-INJ-TDC-01,
+             EBT-INJ-MAG-HVCOR-04,
+             EBT-INJ-DIA-YAG-03,
+             EBT-INJ-DIA-BPM-02,
+             CLA-C2V-MAG-DIP-02,
+             EBT-INJ-DIA-BPM-03,
+             EBT-INJ-MAG-HVCOR-05,
+             EBT-INJ-MAG-QUAD-05,
+             EBT-INJ-MAG-QUAD-06,
+             EBT-INJ-DIA-SCR-04]
+  C1-SP1:   [CLA-S01-MAG-HVCOR-01,
+             CLA-S01-DIA-WCM-01,
+             CLA-S01-MAG-HVCOR-02,
+             CLA-S01-DIA-BPM-01,
+             CLA-S01-DIA-SCR-01,
+             CLA-L01-CAV,
+             CLA-S02-MAG-HVCOR-01,
+             CLA-S02-MAG-QUAD-01,
+             CLA-S02-DIA-BPM-01,
+             CLA-S02-DIA-BAM-01,
+             CLA-S02-MAG-QUAD-02,
+             CLA-S02-DIA-SCR-01,
+             CLA-S02-MAG-HVCOR-02,
+             #CLA-S02-MAG-HVCOR-03,
+             CLA-S02-DIA-SCR-02,
+             CLA-S02-MAG-QUAD-03,
+             CLA-S02-MAG-QUAD-04,
+             CLA-C2V-MAG-DIP-01,
+             CLA-C2V-MAG-HVCOR-01,
+             CLA-C2V-DIA-BPM-01,
+             CLA-C2V-MAG-QUAD-01,
+             CLA-C2V-MAG-QUAD-02,
+             CLA-C2V-MAG-QUAD-03,
+             CLA-C2V-DIA-SCR-01,
+             EBT-INJ-DIA-BPM-03,
+             EBT-INJ-MAG-HVCOR-05,
+             EBT-INJ-MAG-QUAD-05,
+             EBT-INJ-MAG-QUAD-06,
+             EBT-INJ-DIA-SCR-04]
+elements:
+#guns
+  CLA-GUN-10:
+    name: Gun10
+    omName: C1-GUN
+    pv: CLA-GUN-LRF-CTRL-01
+    type: Gun-10
+    length: 0.32482
+    solenoidMap1: adresss\to\find\field\map.csv
+    solenoidMap2: adresss\to\find\field\map.csv
+    global_position: [0,0,0.32482]
+    global_rotation: [0,0,0]
+  CLA-GUN-400:
+    name: Gun400
+    omName: C1-GUN-400
+    pv: CLA-GUN-LRF-CTRL-01
+    type: Gun-400
+    length: 0.32482
+    solenoidMap1: adresss\to\find\field\map.csv
+    solenoidMap2: adresss\to\find\field\map.csv
+    global_position: [0,0,0.32482]
+    global_rotation: [0,0,0]
+  EBT-GUN-10:
+    name: Gun10
+    omName: V1-GUN
+    pv: CLA-GUN-LRF-CTRL-01
+    type: Gun-10
+    length: 0.32482
+    solenoidMap1: adresss\to\find\field\map.csv
+    solenoidMap2: adresss\to\find\field\map.csv
+    global_position: [-1.25000003979828,0,0.32482+3.16179181039727]
+    global_rotation: [0,0,0]
+  EBT-GUN-400:
+    name: Gun400
+    omName: V1-GUN-400
+    pv: CLA-GUN-LRF-CTRL-01
+    type: Gun-400
+    length: 0.32482
+    solenoidMap1: adresss\to\find\field\map.csv
+    solenoidMap2: adresss\to\find\field\map.csv
+    global_position: [-1.25000003979828,0,0.32482+3.16179181039727]
+    global_rotation: [0,0,0]
+#RF cavities
+  CLA-L01-CAV:
+    name: L01
+    omName: C1-L01
+    pv: CLA-L01-LRF-CTRL-01
+    type: linac
+    sol1: CLA-L01-MAG-SOL-01
+    sol2: CLA-L01-MAG-SOL-02
+    solenoidMap1: adresss\to\find\field\map.csv
+    solenoidMap2: adresss\to\find\field\map.csv
+    length: 2.033333313
+    cell_length: 0.0333333
+    n_cells: 61
+    global_position: [0,0,3.226903313]
+    global_rotation: [0,0,0]
+#solenoids
+  CLA-LRG1-MAG-BSOL-01:
+      name: LRG-BSOL
+      omName: C1-LRRG-BSOL
+      pv: CLA-LRG1-MAG-BSOL-01
+      type: solenoid
+      solenoidMap: adresss\to\find\field\map.csv
+      length: 0.0
+      global_position: [0,0,0]
+      global_rotation: [0,0,0]
+  CLA-LRG1-MAG-SOL-01:
+      name: LRG-SOL
+      omName: C1-LRRG-SOL
+      pv: CLA-GUN-MAG-SOL-02
+      type: solenoid
+      solenoidMap: adresss\to\find\field\map.csv
+      length: 0.0
+      global_position: [0,0,0]
+      global_rotation: [0,0,0]
+  CLA-L01-MAG-SOL-01:
+      name: L01-SOL1
+      omName: C1-LINA01-SOL01
+      pv: CLA-L01-MAG-SOL-01
+      type: solenoid
+      solenoidMap: adresss\to\find\field\map.csv
+      length: 0.0
+      global_position: [0,0,0]
+      global_rotation: [0,0,0]
+  CLA-L01-MAG-SOL-02:
+      name: L01-SOL1
+      omName: C1-LINA01-SOL01
+      pv: CLA-L01-MAG-SOL-02
+      type: solenoid
+      solenoidMap: adresss\to\find\field\map.csv
+      length: 0.0
+      global_position: [0,0,0]
+      global_rotation: [0,0,0]
+#Dipoles
+  CLA-C2V-MAG-DIP-01:
+    name: DIP01
+    omName: CV-DIP01
+    pv: CLA-C2V-MAG-DIP-01
+    type: dipole
+    length: 0.4
+    angle: 45
+    global_position: [-0.149170521499632,0,6.18699981084099]
+    global_rotation: [0,0,0]
+    global_front: [0,0,5.82687031299999]
+  CLA-C2V-MAG-DIP-02:
+    name: DIP02
+    omName: CV-DIP03
+    pv: CLA-C2V-MAG-DIP-03
+    type: dipole
+    length: 0.4
+    angle: 45
+    global_position: [-1.25000003979828,0,7.437001308238277]
+    global_rotation: [0,0,0]
+    global_front: [0,0,7.07687181039727]
+#Quadrupoles
+  CLA-S02-MAG-QUAD-01:
+    name: S02-QUAD1
+    omName: C1-S02-QUAD01
+    pv: CLA-S02-MAG-QUAD-01
+    type: quadrupole
+    length: 0.1007
+    global_position: [0,0,3.57750031299999]
+    global_rotation: [0,0,0]
+  CLA-S02-MAG-QUAD-02:
+    name: S02-QUAD2
+    omName: C1-S02-QUAD02
+    pv: CLA-S02-MAG-QUAD-02
+    type: quadrupole
+    length: 0.1007
+    global_position: [0,0,3.97750031299999]
+    global_rotation: [0,0,0]
+  CLA-S02-MAG-QUAD-03:
+    name: S02-QUAD3
+    omName: C1-S02-QUAD03
+    pv: CLA-S02-MAG-QUAD-03
+    type: quadrupole
+    length: 0.1007
+    global_position: [0,0,5.27750031299999]
+    global_rotation: [0,0,0]
+  CLA-S02-MAG-QUAD-04:
+    name: S02-QUAD4
+    omName: C1-S02-QUAD04
+    pv: CLA-S02-MAG-QUAD-04
+    type: quadrupole
+    length: 0.1007
+    global_position: [0,0,5.67750031299999]
+    global_rotation: [0,0,0]
+  CLA-C2V-MAG-QUAD-01:
+    name: C2V-QUAD1
+    omName: CV-QUAD01
+    pv: CLA-C2V-MAG-QUAD-01
+    type: quadrupole
+    length: 0.1007
+    global_position: [-0.455541880363511,0,6.49337117178663]
+    global_rotation: [0,0,45]
+  CLA-C2V-MAG-QUAD-02:
+    name: C2V-QUAD2
+    omName: CV-QUAD02
+    pv: CLA-C2V-MAG-QUAD-02
+    type: quadrupole
+    length: 0.1007
+    global_position: [-0.660602846210926,0,6.69843213902742]
+    global_rotation: [0,0,45]
+  CLA-C2V-MAG-QUAD-03:
+    name: C2V-QUAD1
+    omName: CV-QUAD03
+    pv: CLA-C2V-MAG-QUAD-03
+    type: quadrupole
+    length: 0.1007
+    global_position: [-0.86566381205834,0,6.9034931062682]
+    global_rotation: [0,0,45]
+  EBT-INJ-MAG-QUAD-01:
+    name: QUAD01
+    omName: V1-QUAD01
+    pv: EBT-INJ-MAG-QUAD-01
+    type: quadrupole
+    length: 0.1
+    global_position: [-1.25000003979828,0,4.49679181039727]
+    global_rotation: [0,0,0]
+  EBT-INJ-MAG-QUAD-02:
+    name: QUAD02
+    omName: V1-QUAD02
+    pv: EBT-INJ-MAG-QUAD-02
+    type: quadrupole
+    length: 0.1
+    global_position: [-1.25000003979828,0,4.70679181039727]
+    global_rotation: [0,0,0]
+  EBT-INJ-MAG-QUAD-03:
+    name: QUAD03
+    omName: V1-QUAD03
+    pv: EBT-INJ-MAG-QUAD-03
+    type: quadrupole
+    length: 0.1
+    global_position: [-1.25000003979828,0,4.91679181039727]
+    global_rotation: [0,0,0]
+  EBT-INJ-MAG-QUAD-04:
+    name: QUAD04
+    omName: V1-QUAD04
+    pv: EBT-INJ-MAG-QUAD-04
+    type: quadrupole
+    length: 0.1
+    global_position: [-1.25000003979828,0,5.12679181039727]
+    global_rotation: [0,0,0]
+  EBT-INJ-MAG-QUAD-05:
+    name: QUAD05
+    omName: SP-QUAD05
+    pv: EBT-INJ-MAG-QUAD-05
+    type: quadrupole
+    length: 0.1
+    global_position: [-1.787640883426369,0,7.82547163300634]
+    global_rotation: [0,0,45]
+  EBT-INJ-MAG-QUAD-06:
+    name: QUAD06
+    omName: SP-QUAD06
+    pv: EBT-INJ-MAG-QUAD-06
+    type: quadrupole
+    length: 0.1
+    global_position: [-2.070483594940045,0,8.1083143464419]
+    global_rotation: [0,0,45]
+#Correctors
+  CLA-S01-MAG-HVCOR-01:
+    name: COR1
+    omName: C1-COR01
+    Hpv: CLA-S01-MAG-HCOR-01
+    Vpv: CLA-S01-MAG-VCOR-01
+    type: kicker
+    length: 0.03
+    global_position: [0,0,0.35482]
+    global_rotation: [0,0,0]
+  CLA-S01-MAG-HVCOR-02:
+    name: COR2
+    omName: C1-COR02
+    Hpv: CLA-S01-MAG-HCOR-02
+    Vpv: CLA-S01-MAG-VCOR-02
+    type: kicker
+    length: 0.102
+    global_position: [0,0,0.8297]
+    global_rotation: [0,0,0]
+  CLA-S02-MAG-HVCOR-01:
+    name: COR1
+    omName: C1-S02-COR01
+    Hpv: CLA-S02-MAG-HCOR-01
+    Vpv: CLA-S02-MAG-VCOR-01
+    type: kicker
+    length: 0.0766069999999999
+    global_position: [0,0,3.448080313]
+    global_rotation: [0,0,0]
+  CLA-S02-MAG-HVCOR-02:
+    name: COR2
+    omName: C1-S02-COR02
+    Hpv: CLA-S02-MAG-HCOR-02
+    Vpv: CLA-S02-MAG-VCOR-02
+    type: kicker
+    length: 0.03
+    global_position: [0,0,4.26807031299999]
+    global_rotation: [0,0,0]
+ # CLA-S02-MAG-HVCOR-03:
+#    name: COR3
+#    omName: C1-S02-COR03
+#    Hpv: CLA-S02-MAG-HCOR-03
+#    Vpv: CLA-S02-MAG-VCOR-03
+#    type: kicker
+#    length: 0.03
+#    global_position: [0,0,4.84556031299999]
+#    global_rotation: [0,0,0]
+  CLA-C2V-MAG-HVCOR-01:
+    name: COR1
+    omName: CV-COR01
+    Hpv: CLA-C2V-MAG-HCOR-01
+    Vpv: CLA-C2V-MAG-VCOR-01
+    type: kicker
+    length: 0.21
+    global_position: [-0.368412183081723,0,6.40624147391281]
+    global_rotation: [0,0,45]
+  EBT-INJ-MAG-HVCOR-01:
+    name: COR01
+    omName: V1-COR01
+    Hpv: EBT-INJ-MAG-HCOR-01
+    Vpv: EBT-INJ-MAG-VCOR-01
+    type: kicker
+    length: 0.05
+    global_position: [-1.25000003979828,0,3.61179181039727]
+    global_rotation: [0,0,0]
+  EBT-INJ-MAG-HVCOR-02:
+    name: COR02
+    omName: V1-COR02
+    Hpv: EBT-INJ-MAG-HCOR-02
+    Vpv: EBT-INJ-MAG-VCOR-02
+    type: kicker
+    length: 0.05
+    global_position: [-1.25000003979828,0,4.16179181039727]
+    global_rotation: [0,0,0]
+  EBT-INJ-MAG-HVCOR-03:
+    name: COR03
+    omName: V1-COR03
+    Hpv: EBT-INJ-MAG-HCOR-03
+    Vpv: EBT-INJ-MAG-VCOR-03
+    type: kicker
+    length: 0.05
+    global_position: [-1.25000003979828,0,5.63179181039727]
+    global_rotation: [0,0,0]
+  EBT-INJ-MAG-HVCOR-04:
+    name: COR04
+    omName: V1-COR04
+    Hpv: EBT-INJ-MAG-HCOR-04
+    Vpv: EBT-INJ-MAG-VCOR-04
+    type: kicker
+    length: 0.05
+    global_position: [-1.25000003979828,0,6.26479181039727]
+    global_rotation: [0,0,0]
+  EBT-INJ-MAG-HVCOR-05:
+    name: COR05
+    omName: SP-COR05
+    Hpv: EBT-INJ-MAG-HCOR-05
+    Vpv: EBT-INJ-MAG-VCOR-05
+    type: kicker
+    length: 0.059
+    global_position: [-1.627834751421143,0,7.66566549991525]
+    global_rotation: [0,0,45]
+#BPMs
+  CLA-S01-DIA-BPM-01:
+    name: BPM01
+    omName: C1-BPM01
+    pv: CLA-S01-DIA-BPM-01
+    type: bpm
+    length: 0.108
+    global_position: [0,0,0.9377]
+    global_rotation: [0,0,0]
+  CLA-S02-DIA-BPM-01:
+    name: BPM01
+    omName: C1-S01-BPM01
+    pv: CLA-S02-DIA-BPM-01
+    type: bpm
+    length: 0.04528
+    global_position: [0,0,3.62278031299999]
+    global_rotation: [0,0,0]
+  CLA-C2V-DIA-BPM-01:
+    name: BPM01
+    omName: CV-BPM01
+    pv: CLA-C2V-DIA-BPM-01
+    type: bpm
+    length: 0.00
+    #overlapping CLA-C2V-MAG-HVCOR-01 of which the length of the corrector is
+    #actually the bpm length but having a 0;ength corrector thows up problems
+    global_position: [-0.368412183081723,0,6.40624147391281]
+    global_rotation: [0,0,45]
+  EBT-INJ-DIA-BPM-01:
+    name: BPM01
+    omName: V1-BPM01
+    pv: EBT-INJ-DIA-BPMC-02
+    type: bpm
+    length: 0.05
+    global_position: [-1.25000003979828,0,4.06179181039727]
+    global_rotation: [0,0,0]
+  EBT-INJ-DIA-BPM-02:
+    name: BPM02
+    omName: V1-BPM02
+    pv: EBT-INJ-DIA-BPMC-04
+    type: bpm
+    length: 0.07
+    global_position: [-1.25000003979828,0,6.68079181039727]
+    global_rotation: [0,0,0]
+  EBT-INJ-DIA-BPM-03:
+    name: BPM03
+    omName: SP-BPM03
+    pv: EBT-INJ-DIA-BPMC-06
+    type: bpm
+    length: 0.0563
+    global_position: [-1.586115451472876,0,7.6239461996835]
+    global_rotation: [0,0,45]
+#Screens
+  CLA-S01-DIA-SCR-01:
+    name: YAG01
+    omName: C1-S01-YAG01
+    pv: CLA-S01-DIA-SCR-01
+    camPV: CLA-S01-DIA-CAM-01
+    type: screen
+    length: 0.0
+    global_position: [0,0,0.981032999999999]
+    global_rotation: [0,0,0]
+  CLA-S02-DIA-SCR-01:
+    name: YAG01
+    omName: C1-S02-YAG01
+    pv: CLA-S02-DIA-SCR-01
+    camPV: CLA-S02-DIA-CAM-01
+    type: screen
+    length: 0.0
+    global_position: [0,0,4.08983331299999]
+    global_rotation: [0,0,0]
+  CLA-S02-DIA-SCR-02:
+    name: YAG02
+    omName: C1-S02-YAG02
+    pv: CLA-S02-DIA-SCR-02
+    camPV: CLA-S02-DIA-CAM-02
+    type: screen
+    length: 0.0
+    global_position: [0,0,5.01083331299999]
+    global_rotation: [0,0,0]
+  CLA-C2V-DIA-SCR-01:
+    name: YAG01
+    omName: CV-YAG01
+    pv: CLA-C2V-DIA-SCR-01
+    camPV: CLA-C2V-DIA-CAM-01
+    type: screen
+    length: 0.0
+    global_position: [-0.9440679998864,0,6.98189729462901]
+    global_rotation: [0,0,0]
+  EBT-INJ-DIA-YAG-01:
+    name: YAG01
+    omName: V1-YAG01
+    pv: EBT-INJ-DIA-YAG-01
+    camPV: EBT-INJ-DIA-CAM-02:CAM
+    type: screen
+    length: 0.0
+    global_position: [-1.25000003979828,0,4.21179181039727]
+    global_rotation: [0,0,0]
+  EBT-INJ-DIA-YAG-02:
+    name: YAG02
+    omName: V1-YAG02
+    pv: EBT-INJ-DIA-YAG-02
+    camPV: EBT-INJ-DIA-CAM-03:CAM
+    type: screen
+    length: 0.0
+    global_position: [-1.25000003979828,0,5.30679181039727]
+    global_rotation: [0,0,0]
+  EBT-INJ-DIA-YAG-03:
+    name: YAG03
+    omName: V1-YAG03
+    pv: EBT-INJ-DIA-YAG-03
+    camPV: EBT-INJ-DIA-CAM-04:CAM
+    type: screen
+    length: 0.0
+    global_position: [-1.25000003979828,0,6.48479181039727]
+    global_rotation: [0,0,0]
+  EBT-INJ-DIA-SCR-04:
+    name: YAG04
+    omName: SP-YAG04
+    pv: EBT-INJ-DIA-YAG-04
+    camPV: EBT-INJ-DIA-CAM-05:CAM
+    type: screen
+    length: 0.0
+    global_position: [-2.78254012117572,0,8.82037087751593]
+    global_rotation: [0,0,45]
+#WCM
+  EBT-INJ-DIA-WCM-01:
+    name: WCM01
+    omName: V1-WCM01
+    pv: EBT-INJ-DIA-WCM-01
+    type: wcm
+    length: 0.0
+    global_position: [-1.25000003979828,0,3.86179181039727]
+    global_rotation: [0,0,0]
+  CLA-S01-DIA-WCM-01:
+    name: WCM01
+    omName: C1-WCM01
+    pv: CLA-S01-DIA-WCM-01
+    type: wcm
+    length: 0.05
+    global_position: [0,0,0.7277]
+    global_rotation: [0,0,0]
+#TDC
+  EBT-INJ-TDC-01:
+    name: TDC01
+    omName: V1-T
+    pv: EBT-INJ-TDC-01
+    type: tdc
+    length: 0.5
+    global_position: [-1.25000003979828,0,6.18179181039727]
+    global_rotation: [0,0,0]
+#BAM
+  CLA-S02-DIA-BAM-01:
+    name: BAM01
+    omName: C1-S01-BAM01
+    pv: CLA-S02-DIA-BAM-01
+    type: bam
+    length: 0.08
+    global_position: [0,0,3.70278031299999]
+    global_rotation: [0,0,0]

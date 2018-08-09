@@ -1,0 +1,194 @@
+{
+    "elements": {
+        "CLA-S05-APER": {
+            "type": "aperture",
+            "shape": "rectangular",
+            "horizontal_size": 0.017,
+            "vertical_size": 0.017,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                0,
+                0,
+                24.4222
+            ],
+            "position_start": [
+                0,
+                0,
+                24.4222
+            ]
+        },
+        "CLA-S05-MAG-QUAD-01": {
+            "type": "quadrupole",
+            "length": 0.162,
+            "k1": -0.781822,
+            "sr_enable": true,
+            "isr_enable": true,
+            "buffer_start": [
+                0,
+                0,
+                24.5322
+            ],
+            "buffer_start_length": 0.121,
+            "buffer_end_length": 0.0467,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                0,
+                0,
+                24.8152
+            ],
+            "position_start": [
+                0,
+                0,
+                24.6532
+            ]
+        },
+        "CLA-S05-MAG-HVCOR-01": {
+            "type": "kicker",
+            "length": 0.05,
+            "sr_enable": true,
+            "isr_enable": true,
+            "buffer_start": [
+                0,
+                0,
+                24.9119
+            ],
+            "buffer_start_length": 0.114,
+            "buffer_end_length": 0.025,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                0,
+                0,
+                25.0759
+            ],
+            "position_start": [
+                0,
+                0,
+                25.0259
+            ]
+        },
+        "CLA-S05-DIA-BPM-01": {
+            "type": "beam_position_monitor",
+            "length": 0.021,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                0,
+                0,
+                25.1361
+            ],
+            "position_start": [
+                0,
+                0,
+                25.1151
+            ]
+        },
+        "CLA-S05-DIA-SCR-01-W": {
+            "type": "screen",
+            "output_filename": "\"CLA-S05-DIA-SCR-01.SDDS\"",
+            "buffer_start": [
+                0,
+                0,
+                25.1361
+            ],
+            "buffer_start_length": 0.043273,
+            "buffer_end_length": 0.0767,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                0,
+                0,
+                25.1794
+            ],
+            "position_start": [
+                0,
+                0,
+                25.1794
+            ]
+        },
+        "CLA-S05-MAG-QUAD-02": {
+            "type": "quadrupole",
+            "length": 0.162,
+            "k1": 1.29238,
+            "sr_enable": true,
+            "isr_enable": true,
+            "buffer_start": [
+                0,
+                0,
+                25.3361
+            ],
+            "buffer_start_length": 0.067,
+            "buffer_end_length": 0.05,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                0,
+                0,
+                25.5651
+            ],
+            "position_start": [
+                0,
+                0,
+                25.4031
+            ]
+        },
+        "CLA-S05-DIA-BPM-02": {
+            "type": "beam_position_monitor",
+            "length": 0.21,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                0,
+                0,
+                25.8251
+            ],
+            "position_start": [
+                0,
+                0,
+                25.6151
+            ]
+        },
+        "CLA-S05-MARK-01": {
+            "type": "marker",
+            "fit_point": 1.0,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                0,
+                0,
+                25.8251
+            ],
+            "position_start": [
+                0,
+                0,
+                25.8251
+            ]
+        }
+    }
+}

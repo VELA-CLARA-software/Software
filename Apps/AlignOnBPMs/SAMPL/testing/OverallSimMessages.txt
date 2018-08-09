@@ -1,0 +1,41 @@
+/home/vmsim/Desktop/V2/ASTRA
+C1.VM-CLA-S01-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-BPM-01
+CV.VM-CLA-C2V-DIA-CAM-01
+C1.VM-CLA-S02-DIA-BPM-01
+SP.VM-EBT-INJ-DIA-BPMC-06
+C1.VM-CLA-S02-DIA-CAM-01
+C1.VM-CLA-S01-DIA-CAM-01
+SP.VM-EBT-INJ-DIA-CAM-05:CAM
+C1.VM-CLA-S02-DIA-CAM-02
+V1.in
+Running ASTRA for section V1...
+
+          File /home/vmsim/Desktop/V2/ASTRA/N not found
+          Program stops
+Renaming files...
+Setting EPICS values with ASTRA output...
+SP.in
+Running ASTRA for section SP...
+     finished simulation  11.10.2017     10:15
+     execution time:  1.17 sec                         
+     Goodbye.
+Renaming files...
+Setting EPICS values with ASTRA output...
+Junction doesn't exsit or this is the last file
+/home/vmsim/Desktop/V2/ASTRA
+V1.in
+Running ASTRA for section V1...
+
+          File /home/vmsim/Desktop/V2/ASTRA/N not found
+          Program stops
+Renaming files...
+Setting EPICS values with ASTRA output...
+SP.in
+Running ASTRA for section SP...
+     finished simulation  11.10.2017     10:16
+     execution time:  1.16 sec                         
+     Goodbye.
+Renaming files...
+Setting EPICS values with ASTRA output...
+Junction doesn't exsit or this is the last file

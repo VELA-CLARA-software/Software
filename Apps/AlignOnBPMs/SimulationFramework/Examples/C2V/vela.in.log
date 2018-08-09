@@ -1,0 +1,151 @@
+ --------------------------------------------------------------------------
+
+               Astra - A space charge tracking algorithm 
+                             Version 3.2              
+                         DESY,  Hamburg 2011          
+                          6. 4.2018  16:25
+
+     Parameter file is:  vela.in                                           
+     trial                                                                           
+
+ Initialize element settings:
+ --------------------------------------------------------------------------
+ Quadrupole:
+
+     quadrupole no.:        1         at =   0.7140     m
+     quadrupole no.:        2         at =   0.9840     m
+     quadrupole no.:        3         at =    2.879     m
+     quadrupole no.:        4         at =    5.031     m
+     quadrupole no.:        5         at =    7.179     m
+     quadrupole no.:        6         at =    10.27     m
+ --------------------------------------------------------------------------
+ Dipole:
+
+     horizontal dipole no.:   1
+
+          WARNING: Switch to relative file name convention
+
+ --------------------------------------------------------------------------
+     512 particles from file CLA-C2V-DIA-SCR-01-W.astra                        
+
+     Particles taken into account      N =        512
+     total charge                      Q =    -0.2500     nC
+     horizontal beam position          x =      306.0     mm
+     vertical beam position            y =     4.5793E-03 mm
+     longitudinal beam position        z =    -0.5168     m
+     horizontal beam size          sig x =     0.6645     mm
+     vertical beam size            sig y =     7.8708E-02 mm
+     longitudinal beam size        sig z =      1.722     mm
+     average kinetic energy            E =      34.75     MeV
+     energy spread                    dE =      178.4     keV
+     average momentum                  P =      35.26     MeV/c
+     transverse beam emittance     eps x =      85.38     pi mrad mm
+     correlated divergence         cor x =     0.6039     mrad 
+     transverse beam emittance     eps y =      1.118     pi mrad mm
+     correlated divergence         cor y =     -1.117     mrad
+     longitudinal beam emittance   eps z =      111.4     pi keV mm
+     correlated energy spread      cor z =     -166.2     keV
+     emittance ratio eps y/eps x         =      76.35    
+ --------------------------------------------------------------------------
+     Start auto phasing: 
+
+     Cavity phasing completed:
+     Cavity number   Energy gain [MeV]  at  Phase [deg]
+ --------------------------------------------------------------------------
+ on axis tracking of the reference particle:
+     initial position                  z =  -0.5169     m
+                                       x =    305.9     mm
+                                       y =   1.3195E-02 mm
+     initial momentum                  p =    35.27     MeV/c
+     global phase shift              phi =    0.000     deg
+     time step for integration        dt =   0.7000     ps
+ --------------------------------------------------------------------------
+ Online element settings:
+
+     field strength of dipole no.:   1     =   0.2310     T
+     gradient of quadrupole no.:   1     =    2.011     T/m
+     gradient of quadrupole no.:   2     =   -2.102     T/m
+     gradient of quadrupole no.:   3     =   0.4879     T/m
+     gradient of quadrupole no.:   4     =  -0.5041     T/m
+     gradient of quadrupole no.:   5     =   0.6661     T/m
+     gradient of quadrupole no.:   6     =   0.4792     T/m
+ --------------------------------------------------------------------------
+
+     particle reaches position         z =    10.75     m
+     time of flight is                 t =    37.92     ns
+     final momentum                    p =    35.27     MeV/c
+     final phase (cavity 1)      phi_end =    0.000     deg
+ --------------------------------------------------------------------------
+ off axis tracking of the reference particle: 
+     initial position                  z =  -0.5169     m
+                                       x =    306.6     mm
+                                       y =   9.1903E-02 mm
+
+     final position                    x =   -1.238     mm
+                                       y =  -0.4991     mm
+     divergence                    px/pz =    1.670     mrad
+                                   py/pz =  -0.1911     mrad
+ --------------------------------------------------------------------------
+ tracking of      512 particles :
+     tracking will stop at             z =    10.75     m
+
+     space charge forces are INCLUDED
+     3D FFT algorithm
+
+     final checkpoint at               z =    10.75     m
+     total number of iteration steps:         54311
+
+     **********************************************************************
+
+     Particles taken into account      N =        512
+     total charge                      Q =    -0.2500     nC
+     horizontal beam position          x =    -3.3324E-02 mm
+     vertical beam position            y =     5.0154E-02 mm
+     longitudinal beam position        z =      10.75     m
+     horizontal beam size          sig x =     0.9763     mm
+     vertical beam size            sig y =     0.9969     mm
+     longitudinal beam size        sig z =     0.8565     mm
+     average kinetic energy            E =      34.75     MeV
+     energy spread                    dE =      176.4     keV
+     average momentum                  P =      35.26     MeV/c
+     transverse beam emittance     eps x =      10.80     pi mrad mm
+     correlated divergence         cor x =     -2.208     mrad 
+     transverse beam emittance     eps y =      2.157     pi mrad mm
+     correlated divergence         cor y =     0.5129     mrad
+     longitudinal beam emittance   eps z =      19.39     pi keV mm
+     correlated energy spread      cor z =     -175.0     keV
+     emittance ratio eps y/eps x         =      5.007    
+
+     Particle Statistics: 
+
+
+     Total number of particles on stack     =        512
+     Electrons (total)                      =        512
+     particles at the cathode               =          0
+     active particles                       =        512
+     passive particles (lost out of bunch)  =          0
+     probe particles                        =          6
+     backward traveling particles           =          0
+     particles lost with z<Zmin             =          0
+     particles lost due to cathode field    =          0
+     particles lost on aperture             =          0
+
+     Tracking ended with     1 warning(s)
+
+
+     **********************************************************************
+
+     Emittance information saved to file    : vela.Xemit.001                
+     Emittance information saved to file    : vela.Yemit.001                
+     Emittance information saved to file    : vela.Zemit.001                
+     Ref. part. information saved to file   : vela.ref.001                  
+     Trajectories saved to file             : vela.track.001                
+     Phase-space distributions logged in    : vela.Log.001                  
+
+     **********************************************************************
+
+
+     finished simulation   6. 4.2018     16:27
+     execution time:  2 min  4.18 sec                  
+     Goodbye.
+ --------------------------------------------------------------------------

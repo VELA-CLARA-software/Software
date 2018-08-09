@@ -1,0 +1,64 @@
+{
+    "elements": {
+        "CLA-L4H-APER": {
+            "type": "aperture",
+            "shape": "rectangular",
+            "horizontal_size": 0.0041195,
+            "vertical_size": 0.0041195,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                0,
+                0,
+                23.4572
+            ],
+            "position_start": [
+                0,
+                0,
+                23.4572
+            ]
+        },
+        "CLA-L4H-CAV": {
+            "type": "cavity",
+            "length": 0.75,
+            "cell_length": 0.00833333,
+            "field_amplitude": 2.4e7,
+            "frequency": 1.1994e10,
+            "phase": 184,
+            "longitudinal_wakefield_input": "\"Sz20um25mmxband.sdds\"",
+            "transverse_wakefield_input": "\"Sx50um10mmxband.sdds\"",
+            "field_definition": "../TWS_X-DL.dat",
+            "lsc_enable": true,
+            "lsc_bins": 20.0,
+            "lsc_cutoff_high": [
+                0.2,
+                0.25
+            ],
+            "buffer_start": [
+                0,
+                0,
+                23.4572
+            ],
+            "buffer_start_length": 0.1075,
+            "buffer_end_length": 0.1075,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                0,
+                0,
+                24.3147
+            ],
+            "position_start": [
+                0,
+                0,
+                23.5647
+            ]
+        }
+    }
+}
