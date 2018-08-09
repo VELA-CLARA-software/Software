@@ -27,6 +27,7 @@ bpm_names = 'bpm_names'
 bpm_charge = 'bpm_charge'
 recalibrate_go = 'recalibrate_go'
 bpm_positions = 'bpm_positions'
+current_beamline = 'current_beamline'
 
 all_value_keys = [time_stamp,
                   calibration_type,
@@ -46,7 +47,8 @@ all_value_keys = [time_stamp,
                   bpm_names,
                   bpm_charge,
                   recalibrate_go,
-                  bpm_positions
+                  bpm_positions,
+                  current_beamline
                   ]
 
 class bpm_charge_plotter_data_base(QObject):
@@ -86,6 +88,7 @@ class bpm_charge_plotter_data_base(QObject):
     values[bpm_charge] = {}
     values[recalibrate_go] = False
     values[bpm_positions] = {}
+    values[current_beamline] = []
     # amp_pwr_mean_data = {}
 
     #logger
