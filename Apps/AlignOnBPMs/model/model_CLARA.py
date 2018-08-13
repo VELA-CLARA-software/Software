@@ -23,15 +23,16 @@ sys.path.append('C:\\Users\\djd63\\Desktop\\VA workshop\\OnlineModel-master\\Onl
 sys.path.append('C:\\Users\\djd63\\Desktop\\VA workshop\\Examples Scripts')
 #import SAMPL.v2_developing.sampl_noprint as sampl
 #sys.path.append('\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Software\\VELA_CLARA_PYDs\\bin\\stagetim')
-sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release')
-os.environ["PATH"] = os.environ["PATH"]+";\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release\\root_v5.34.34\\bin\\"
-
+#sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release')
+sys.path.append('C:\\Users\\djd63\\Desktop\\Release')
+#os.environ["PATH"] = os.environ["PATH"]+";\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release\\root_v5.34.34\\bin\\"
+#sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release\\root_v5.34.34\\bin\\')
 #import onlineModel
 import VELA_CLARA_Magnet_Control as mag
 import VELA_CLARA_BPM_Control as bpm
-import VELA_CLARA_LLRF_Control as llrf
-import VELA_CLARA_PILaser_Control as pil
-import VELA_CLARA_Camera_IA_Control as camIA
+#import VELA_CLARA_LLRF_Control as llrf
+#import VELA_CLARA_PILaser_Control as pil
+#import VELA_CLARA_Camera_IA_Control as camIA
 
 import momentumFunctions as momentumFunctions
 
@@ -62,12 +63,12 @@ class Model(QObject):
         self.magInit = mag.init()
         self.bpmInit = bpm.init()
         #self.bpmInit.setVerbose()
-        self.pilInit = pil.init()
-        self.llrfInit = llrf.init()
-        self.camInit = camIA.init()
+        #self.pilInit = pil.init()
+        #self.llrfInit = llrf.init()
+        #self.camInit = camIA.init()
         self.Vmagnets = self.magInit.physical_VELA_INJ_Magnet_Controller()
         self.Cmagnets = self.magInit.physical_CLARA_PH1_Magnet_Controller()
-        self.laser = self.pilInit.physical_PILaser_Controller()
+        #self.laser = self.pilInit.physical_PILaser_Controller()
         #self.Cbpms = self.bpmInit.physical_CLARA_PH1_BPM_Controller()
         self.Cbpms = self.bpmInit.physical_C2B_BPM_Controller()
 
