@@ -7,7 +7,8 @@ from scipy.optimize import curve_fit
 from scipy.interpolate import UnivariateSpline
 import random as r
 from functools import partial
-import machine
+sys.path.append("../../../")
+import Software.Procedures.Machine.machine as machine
 degree = physics.pi/180.0
 
 class dataArray(dict):
@@ -164,12 +165,12 @@ class Model(object):
 		self.resetAbortFinish()
 		self.cavity = 'Gun'
 		self.actuator = 'dipole'
-		self.nSamples = 3
+		self.nSamples = 10
 		self.minDipoleI = start
 		self.maxDipoleI = stop
 		self.dipoleIStep = 0.1
-		self.initialGuess = [0, 10, 0.3, 9]
-		self.getDataFunction = partial(self.machine.getBPMPosition, self.parameters['dispersive_bpm'])
+		self.initialGuess = [10, 1, 9]
+		self.getDataFunction = partial(self.machine.getBPMPosition, self.parameters['gun_dispersive_bpm'])
 		self.findDipoleCurrent()
 
 	def linacDipoleSet(self, no, start=70, stop=100):
@@ -180,7 +181,7 @@ class Model(object):
 		self.minDipoleI = start
 		self.maxDipoleI = stop
 		self.dipoleIStep = 1
-		self.initialGuess = [0, 10, 0.3, 89]
+		self.initialGuess = [10, 1, (stop+start)/2]
 		self.getDataFunction = partial(self.machine.getBPMPosition, self.parameters['linac_dispersive_bpm'][no])
 		self.findDipoleCurrent()
 
@@ -400,7 +401,7 @@ class Model(object):
 			time.sleep(self.sleepTime)
 			currphase = self.machine.getPhase(self.cavity)
 			data, stddata = self.getData()
-			if stddata > 0.0005:
+			if stddata > 0.05:
 				self.setDataArray(currphase, data, stddata)
 		if not self._abort:
 			self.fittingFunc()
@@ -413,20 +414,40 @@ class Model(object):
 		elif self.cavity == 'Linac1':
 			self.fittingLinac1Fine()
 
+	def cutDataGunFine(self):
+		"""Return all data where the charge is >= 25% of the maximum and is at least 10pC"""
+		allData = self.getDataArray(sortKey=lambda x: x[0])
+		cutData = [a for a in allData if a[-1] < 1]
+		return cutData
+
 	def fittingGunFine(self):
-		x, y, std = self.getDataArray(zipped=False, sortKey=lambda x: x[0])
+		data = self.cutDataGunFine()
+		x, y, std = zip(*data)
 		if (max(x) - min(x)) > (self.maxPhase - self.minPhase):
 			x = [a if a >= 0 else a+360 for a in x]
-		f = UnivariateSpline(x, y, w=std, k=5)
-		xnew = np.linspace(np.min(x), np.max(x), num=100, endpoint=True)
-		ynew = f(xnew)
-		crest_phase = xnew[np.argmin(ynew)]
-		xnew = [a if a <= 180 else a-360 for a in xnew]
+		# f = UnivariateSpline(x, y, w=std, k=5)
+		# xnew = np.linspace(np.min(x), np.max(x), num=100, endpoint=True)
+		# ynew = f(xnew)
+		# crest_phase = xnew[np.argmin(ynew)]
+		# xnew = [a if a <= 180 else a-360 for a in xnew]
+		# if crest_phase > 180:
+		# 	crest_phase -= 360
+		# if crest_phase < 180:
+		# 	crest_phase += 360
+		# self.setFitArray(xnew, ynew)
+		# self.setFinalPhase(crest_phase)
+		# self.printFinalPhase()
+		popt, pcov = curve_fit(self.fitting_equation_Linac1Fine, x, y, \
+			sigma=std,	p0=[0,10,self.approxcrest], bounds=[[-np.inf, -np.inf, min(x)], [np.inf, np.inf, max(x)]])
+
+		phase = np.array(x)
+		data = self.fitting_equation_Linac1Fine(phase, *popt)
+		self.setFitArray(phase, data)
+		crest_phase = ((180 + popt[2]) % 360) - 180
 		if crest_phase > 180:
 			crest_phase -= 360
 		if crest_phase < 180:
 			crest_phase += 360
-		self.setFitArray(xnew, ynew)
 		self.setFinalPhase(crest_phase)
 		self.printFinalPhase()
 
@@ -477,8 +498,9 @@ class Model(object):
 				newlist.append(pt)
 		return newlist
 
-	def fitting_equation_DipoleCurrent(self, x, a, b, c, crest):
-		return a + b * (np.sin(c * (x - crest)))
+	def fitting_equation_DipoleCurrent(self, x, b, c, crest):
+		# return 0 + b * (x - crest)
+		return b * (np.sin(c * (x - crest)))
 
 	def doFitDipoleCurrent(self):
 		cutData = self.cutDataDipoleCurrent()
@@ -489,10 +511,10 @@ class Model(object):
 			self.initialGuess[-1] = max(x)
 
 		popt, pcov = curve_fit(self.fitting_equation_DipoleCurrent, x, y, sigma=std, \
-		p0=self.initialGuess, bounds=([-np.inf, -np.inf, -np.inf, min(x)], [np.inf, np.inf, np.inf, max(x)]))
+		p0=self.initialGuess, bounds=([-np.inf, -np.inf, min(x)], [np.inf, np.inf, max(x)]))
 
 		self.setFitArray(np.array(xnew), self.fitting_equation_DipoleCurrent(xnew, *popt))
-		self.finalDipoleI = popt[3]
+		self.finalDipoleI = popt[-1]
 		self.setFinalDip(self.finalDipoleI)
 		while abs(self.machine.getDip() - self.finalDipoleI) > 0.2:
 			time.sleep(self.sleepTimeDipole)
