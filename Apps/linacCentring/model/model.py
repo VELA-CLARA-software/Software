@@ -7,7 +7,8 @@ from scipy.optimize import curve_fit
 from scipy.interpolate import UnivariateSpline
 import random as r
 from functools import partial
-import machine
+sys.path.append("../../../")
+import Software.Procedures.Machine.machine as machine
 degree = physics.pi/180.0
 import pandas as pd
 from collections import OrderedDict
@@ -71,6 +72,9 @@ class machineSetter(object):
 
 	def get(self, function, *args, **kwargs):
 		return getattr(self.machine,function)(*args, **kwargs)
+
+	def __getattr__(self, attr):
+		return getattr(self.machine, attr)
 
 class Model(object):
 
@@ -304,7 +308,7 @@ class Model(object):
 		labels = ['BPM'+str(i+1) for i in range(len(bpms[1]))]
 		df = pd.DataFrame(rawData)
 		df.columns = ['cx', 'cy'] + labels
-		df.to_csv(self.timestr+'_'+self.main+'_'+self.sub+'_'+str(self.linacLowerAmp)+'_'+str(self.linacUpperAmp)+'_Corr_'+str(corr)+'_rawDataBLM.csv', index=0)
+		df.to_csv(self.timestr+'_LinacCentring_'+self.main+'_'+self.sub+'_'+str(self.linacLowerAmp)+'_'+str(self.linacUpperAmp)+'_Corr_'+str(corr)+'_rawDataBLM.csv', index=0)
 
 ########### findRFCentre ###############
 
@@ -372,7 +376,7 @@ class Model(object):
 		labels = ['BPM'+str(i+1) for i in range(len(bpms[1]))]
 		df = pd.DataFrame(rawData)
 		df.columns = ['c1', 'c2'] + labels
-		df.to_csv(self.timestr+'_'+self.main+'_'+self.plane+'_'+str(self.linacLowerAmp)+'_'+str(self.linacUpperAmp)+'_Corr_'+str(corr)+'_rawData.csv', index=0)
+		df.to_csv(self.timestr+'_LinacCentring_'+self.main+'_'+self.plane+'_'+str(self.linacLowerAmp)+'_'+str(self.linacUpperAmp)+'_Corr_'+str(corr)+'_rawData.csv', index=0)
 
 ########### findRFCentre2D ###############
 
@@ -386,12 +390,12 @@ class Model(object):
 			Data is stored in self.experimentalData[self.main][self.sub]
 		"""
 		self.timestr = time.strftime("%Y%m%d-%H%M%S")
-		with open(self.timestr+'_'+self.main+'_'+self.plane+'_'+str(self.linacLowerAmp)+'A_'+str(self.linacUpperAmp)+'A_rawData_log.csv', 'w') as logfile:
+		with open(self.timestr+'_LinacCentring_'+self.main+'_'+self.plane+'_'+str(self.linacLowerAmp)+'A_'+str(self.linacUpperAmp)+'A_rawData_log.csv', 'w') as logfile:
 			self.resetDataArray()
 			self.data1 = {}
 			self.data2 = {}
 			self.rawData = OrderedDict({'x':[], 'y': [], 'z1':[], 'z2': [], 'diff': []})
-			self.machine.setLinac1Amplitude(self.linacLowerAmp)
+			# self.machine.setLinac1Amplitude(self.linacLowerAmp)
 			flip = -1
 			for c1 in np.arange(self.corrector1Min, self.corrector1Max+self.correctorStepSize, self.correctorStepSize):
 				self.machine.setCorr(self.corrector1, c1)
@@ -412,7 +416,7 @@ class Model(object):
 						logfile.write('data1,'+str(self.linacLowerAmp)+','+str(c1)+','+str(c2)+','+str(data1))
 					self.data1[c1][c2] = data1
 
-			self.machine.setLinac1Amplitude(self.linacUpperAmp)
+			# self.machine.setLinac1Amplitude(self.linacUpperAmp)
 			flip = -1
 			for c1 in np.arange(self.corrector1Min, self.corrector1Max+self.correctorStepSize, self.correctorStepSize):
 				self.machine.setCorr(self.corrector1, c1)
@@ -446,18 +450,28 @@ class Model(object):
 					self.setDataArray(c1, c2, diff)
 		if self.verbose:
 			self.saveLinacData2D()
-		# self.doFitRFCentre()
+		self.doFitRFCentre2D(c1, c2, diff)
 
+	def doFitRFCentre2D(self, c1, c2, diff):
+		c1, c2, diff = self.getDataArray(zipped=False)
+		# print data
+		data = zip(c1, c2, diff)
+		val, idx = min((val, idx) for (idx, val) in enumerate(diff))
+		print 'min = ', data[idx]
+		self.logger.emit('min = ' + str(data[idx]))
+		val, idx = max((val, idx) for (idx, val) in enumerate(diff))
+		print 'max = ', data[idx]
+		
 	def saveLinacData2D(self):
 		df = pd.DataFrame(self.rawData)
 		df.columns = ['x', 'y', 'z1', 'z2', 'diff']
-		df.to_csv(self.timestr+'_'+self.main+'_'+self.plane+'_'+str(self.linacLowerAmp)+'_'+str(self.linacUpperAmp)+'_rawData.csv', index=0)
+		df.to_csv(self.timestr+'_LinacCentring_'+self.main+'_'+self.plane+'_'+str(self.linacLowerAmp)+'_'+str(self.linacUpperAmp)+'_rawData.csv', index=0)
 
 ########### findSOLCentre ###############
 
 	def findSOLCentre(self):
 		self.timestr = time.strftime("%Y%m%d-%H%M%S")
-		with open(self.timestr+'_'+self.main+'_'+self.plane+'_'+str(self.solLowerAmp)+'A_'+str(self.solUpperAmp)+'A_rawData_log.csv', 'w') as logfile:
+		with open(self.timestr+'_SOLCentring_'+self.main+'_'+self.plane+'_'+str(self.solLowerAmp)+'A_'+str(self.solUpperAmp)+'A_rawData_log.csv', 'w') as logfile:
 			self.resetDataArray()
 			self.data1 = {}
 			self.data2 = {}
@@ -531,7 +545,7 @@ class Model(object):
 	def saveSOLData(self):
 		df = pd.DataFrame(self.rawData)
 		df.columns = ['x', 'y', 'z1','z2']
-		df.to_csv(self.timestr+'_'+self.main+'_'+self.plane+'_'+str(self.solLowerAmp)+'A_'+str(self.solUpperAmp)+'A_rawData.csv', index=0)
+		df.to_csv(self.timestr+'_SOLCentring_'+self.main+'_'+self.plane+'_'+str(self.solLowerAmp)+'A_'+str(self.solUpperAmp)+'A_rawData.csv', index=0)
 
 	def cutDataRFCentre(self):
 		"""Return all data where the charge is >= 25% of the maximum and is at least 10pC"""
@@ -542,8 +556,6 @@ class Model(object):
 		return cutData
 
 	def doFitRFCentre(self):
-		cutData = self.cutDataGunQuick()
-		x, y, std = zip(*cutData)
 		if max(x) - min(x) > 90:
 			x = [a if a >= 0 else a+360 for a in x]
 		crest_phase = (x[-1] + x[0]) / 2.0

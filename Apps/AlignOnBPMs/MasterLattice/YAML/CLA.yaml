@@ -1,0 +1,1443 @@
+elements:
+  CLA-LRG1-APER:
+    type: aperture
+    shape: rectangular
+    horizontal_size: 0.017
+    vertical_size: 0.017
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 0]
+    position_start: [0, 0, 0]
+  CLA-LRG1-GUN-CAV:
+    type: cavity
+    length: 0
+    field_amplitude: 70000000.0
+    frequency: 2997440000.0
+    phase: -16
+    field_definition: ../bas_gun.txt
+    lsc_cutoff_high: [0, 0]
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 0]
+    position_start: [0, 0, 0]
+  CLA-LRG1-GUN-SOL:
+    type: solenoid
+    length: 0
+    field_amplitude: 0.237
+    field_definition: ../bas_sol.txt
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 0]
+    position_start: [0, 0, 0]
+  CLA-S01-APER:
+    type: aperture
+    shape: rectangular
+    horizontal_size: 0.017
+    vertical_size: 0.017
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 0.32482]
+    position_start: [0, 0, 0.32482]
+  CLA-S01-MAG-HVCOR-01:
+    type: kicker
+    length: 0.03
+    sr_enable: true
+    isr_enable: true
+    Controller_Name: COR1
+    Online_Model_Name: C1-COR01
+    Horizontal_PV: CLA-S01-MAG-HCOR-01
+    Vertcal_PV: CLA-S01-MAG-VCOR-01
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 0.35482]
+    position_start: [0, 0, 0.32482]
+  CLA-S01-DIA-WCM-01:
+    type: wall_current_monitor
+    length: 0.05
+    Controller_Name: WCM01
+    Online_Model_Name: C1-WCM01
+    PV: CLA-S01-DIA-WCM-01
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 0.7277]
+    position_start: [0, 0, 0.6777]
+  CLA-S01-MAG-HVCOR-02:
+    type: kicker
+    length: 0.102
+    sr_enable: true
+    isr_enable: true
+    Controller_Name: COR2
+    Online_Model_Name: C1-COR02
+    Horizontal_PV: CLA-S01-MAG-HCOR-02
+    Vertcal_PV: CLA-S01-MAG-VCOR-02
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 0.8297]
+    position_start: [0, 0, 0.7277]
+  CLA-S01-DIA-BPM-01:
+    type: beam_position_monitor
+    length: 0.108
+    Controller_Name: BPM01
+    Online_Model_Name: C1-BPM01
+    PV: CLA-S01-DIA-BPM-01
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 0.9377]
+    position_start: [0, 0, 0.8297]
+  CLA-S01-DIA-SCR-01-W:
+    type: screen
+    output_filename: '"CLA-S01-DIA-SCR-01.SDDS"'
+    buffer_start: [0, 0, 0.9377]
+    buffer_start_length: 0.043333
+    buffer_end_length: 0.076667
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 0.981033]
+    position_start: [0, 0, 0.981033]
+  CLA-L01-APER:
+    type: aperture
+    shape: rectangular
+    horizontal_size: 0.01
+    vertical_size: 0.01
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 1.0577]
+    position_start: [0, 0, 1.0577]
+  CLA-L01-CAV:
+    type: cavity
+    length: 2.03333
+    cell_length: 0.0333333
+    field_amplitude: 21000000.0
+    frequency: 2998500000.0
+    phase: -16
+    longitudinal_wakefield_input: '"Sz5um10mm.sdds"'
+    transverse_wakefield_input: '"Sx5um10mm.sdds"'
+    field_definition: ../TWS_S-DL.dat
+    lsc_enable: true
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    buffer_start: [0, 0, 1.0577]
+    buffer_start_length: 0.13587
+    buffer_end_length: 0.14457
+    Controller_Name: L01
+    Online_Model_Name: C1-L01
+    PV: CLA-L01-LRF-CTRL-01
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 3.2269]
+    position_start: [0, 0, 1.19357]
+  CLA-S02-APER-01:
+    type: aperture
+    shape: rectangular
+    horizontal_size: 0.017
+    vertical_size: 0.017
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 3.37147]
+    position_start: [0, 0, 3.37147]
+  CLA-S02-MAG-HVCOR-01:
+    type: kicker
+    length: 0.076607
+    sr_enable: true
+    isr_enable: true
+    Controller_Name: COR1
+    Online_Model_Name: C1-S02-COR01
+    Horizontal_PV: CLA-S02-MAG-HCOR-01
+    Vertcal_PV: CLA-S02-MAG-VCOR-01
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 3.44808]
+    position_start: [0, 0, 3.37147]
+  CLA-S02-MAG-QUAD-01:
+    type: quadrupole
+    length: 0.1007
+    k1: -1.27474
+    sr_enable: true
+    isr_enable: true
+    buffer_start: [0, 0, 3.44808]
+    buffer_start_length: 0.02872
+    buffer_end_length: 0
+    Controller_Name: S02-QUAD1
+    Online_Model_Name: C1-S02-QUAD01
+    PV: CLA-S02-MAG-QUAD-01
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 3.5775]
+    position_start: [0, 0, 3.4768]
+  CLA-S02-DIA-BPM-01:
+    type: beam_position_monitor
+    length: 0.04528
+    Controller_Name: BPM01
+    Online_Model_Name: C1-S01-BPM01
+    PV: CLA-S02-DIA-BPM-01
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 3.62278]
+    position_start: [0, 0, 3.5775]
+  CLA-S02-MAG-QUAD-02:
+    type: quadrupole
+    length: 0.1007
+    k1: 0.383005
+    sr_enable: true
+    isr_enable: true
+    buffer_start: [0, 0, 3.84808]
+    buffer_start_length: 0.02872
+    buffer_end_length: 0.02802
+    Controller_Name: S02-QUAD2
+    Online_Model_Name: C1-S02-QUAD02
+    PV: CLA-S02-MAG-QUAD-02
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 3.9775]
+    position_start: [0, 0, 3.8768]
+  CLA-S02-DIA-SCR-01-W:
+    type: screen
+    output_filename: '"CLA-S02-DIA-SCR-01.SDDS"'
+    buffer_start: [0, 0, 4.0465]
+    buffer_start_length: 0.043333
+    buffer_end_length: 0.076667
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 4.08983]
+    position_start: [0, 0, 4.08983]
+  CLA-S02-MAG-HVCOR-02:
+    type: kicker
+    length: 0.03
+    sr_enable: true
+    isr_enable: true
+    Controller_Name: COR2
+    Online_Model_Name: C1-S02-COR02
+    Horizontal_PV: CLA-S02-MAG-HCOR-02
+    Vertcal_PV: CLA-S02-MAG-VCOR-02
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 4.26807]
+    position_start: [0, 0, 4.23807]
+  CLA-S02-COL-01:
+    type: collimator
+    length: 0.35
+    shape: elliptical
+    horizontal_size: 0.01
+    vertical_size: 0.01
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 4.69362]
+    position_start: [0, 0, 4.34362]
+  CLA-S02-APER-02:
+    type: aperture
+    shape: rectangular
+    horizontal_size: 0.017
+    vertical_size: 0.017
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 4.69362]
+    position_start: [0, 0, 4.69362]
+  CLA-S02-MAG-HVCOR-03:
+    type: kicker
+    length: 0.03
+    sr_enable: true
+    isr_enable: true
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 4.84556]
+    position_start: [0, 0, 4.81556]
+  CLA-S02-DIA-SCR-02-W:
+    type: screen
+    output_filename: '"CLA-S02-DIA-SCR-02.SDDS"'
+    buffer_start: [0, 0, 4.9675]
+    buffer_start_length: 0.043333
+    buffer_end_length: 0.076667
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 5.01083]
+    position_start: [0, 0, 5.01083]
+  CLA-S02-MAG-QUAD-03:
+    type: quadrupole
+    length: 0.1007
+    k1: 0.301148
+    sr_enable: true
+    isr_enable: true
+    buffer_start: [0, 0, 5.14808]
+    buffer_start_length: 0.02872
+    buffer_end_length: 0.02802
+    Controller_Name: S02-QUAD3
+    Online_Model_Name: C1-S02-QUAD03
+    PV: CLA-S02-MAG-QUAD-03
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 5.2775]
+    position_start: [0, 0, 5.1768]
+  CLA-S02-MAG-QUAD-04:
+    type: quadrupole
+    length: 0.1007
+    k1: 0.848595
+    sr_enable: true
+    isr_enable: true
+    buffer_start: [0, 0, 5.54808]
+    buffer_start_length: 0.02872
+    buffer_end_length: 0.02802
+    Controller_Name: S02-QUAD4
+    Online_Model_Name: C1-S02-QUAD04
+    PV: CLA-S02-MAG-QUAD-04
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 5.6775]
+    position_start: [0, 0, 5.5768]
+  CLA-S02-MAG-QUAD-05:
+    type: quadrupole
+    length: 0.1007
+    k1: 0.738042
+    sr_enable: true
+    isr_enable: true
+    buffer_start: [0, 0, 6.36123]
+    buffer_start_length: 0.02872
+    buffer_end_length: 0
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 6.49065]
+    position_start: [0, 0, 6.38995]
+  CLA-S02-DIA-BPM-02:
+    type: beam_position_monitor
+    length: 0.05135
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 6.542]
+    position_start: [0, 0, 6.49065]
+  CLA-S02-DIA-SCR-03-W:
+    type: screen
+    output_filename: '"CLA-S02-DIA-SCR-03.SDDS"'
+    buffer_start: [0, 0, 6.5501]
+    buffer_start_length: 0.033333
+    buffer_end_length: 0.076667
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 6.58343]
+    position_start: [0, 0, 6.58343]
+  CLA-S02-MAG-HVCOR-04:
+    type: kicker
+    length: 0.0574
+    sr_enable: true
+    isr_enable: true
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 6.7175]
+    position_start: [0, 0, 6.6601]
+  CLA-L02-APER:
+    type: aperture
+    shape: rectangular
+    horizontal_size: 0.01
+    vertical_size: 0.01
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 6.7485]
+    position_start: [0, 0, 6.7485]
+  CLA-L02-CAV:
+    type: cavity
+    length: 4.06667
+    cell_length: 0.0333333
+    field_amplitude: 30000000.0
+    frequency: 2998500000.0
+    phase: -23
+    longitudinal_wakefield_input: '"Sz5um10mm.sdds"'
+    transverse_wakefield_input: '"Sx5um10mm.sdds"'
+    field_definition: ../TWS_S-DL.dat
+    lsc_enable: true
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    buffer_start: [0, 0, 6.7485]
+    buffer_start_length: 0.040538
+    buffer_end_length: 0.0416666
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 10.8557]
+    position_start: [0, 0, 6.78904]
+  CLA-S03-APER:
+    type: aperture
+    shape: rectangular
+    horizontal_size: 0.017
+    vertical_size: 0.017
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 10.8974]
+    position_start: [0, 0, 10.8974]
+  CLA-S03-DIA-BPM-01:
+    type: beam_position_monitor
+    length: 0.21
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 11.2974]
+    position_start: [0, 0, 11.0874]
+  CLA-S03-MAG-QUAD-01:
+    type: quadrupole
+    length: 0.162
+    k1: -0.972061
+    sr_enable: true
+    isr_enable: true
+    buffer_start: [0, 0, 11.2974]
+    buffer_start_length: 0.088
+    buffer_end_length: 0.1
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 11.5474]
+    position_start: [0, 0, 11.3854]
+  CLA-S03-MAG-HVCOR-01:
+    type: kicker
+    length: 0.05
+    sr_enable: true
+    isr_enable: true
+    buffer_start: [0, 0, 11.7474]
+    buffer_start_length: 0.025
+    buffer_end_length: 0.025
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 11.8224]
+    position_start: [0, 0, 11.7724]
+  CLA-S03-DIA-SCR-01-W:
+    type: screen
+    output_filename: '"CLA-S03-DIA-SCR-01.SDDS"'
+    buffer_start: [0, 0, 11.8674]
+    buffer_start_length: 0.043333
+    buffer_end_length: 0.076667
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 11.9107]
+    position_start: [0, 0, 11.9107]
+  CLA-L03-APER:
+    type: aperture
+    shape: rectangular
+    horizontal_size: 0.01
+    vertical_size: 0.01
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 12.0502]
+    position_start: [0, 0, 12.0502]
+  CLA-L03-CAV:
+    type: cavity
+    length: 4.06667
+    cell_length: 0.0333333
+    field_amplitude: 18000000.0
+    frequency: 2998500000.0
+    phase: -12
+    longitudinal_wakefield_input: '"Sz5um10mm.sdds"'
+    transverse_wakefield_input: '"Sx5um10mm.sdds"'
+    field_definition: ../TWS_S-DL.dat
+    lsc_enable: true
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    buffer_start: [0, 0, 12.0502]
+    buffer_start_length: 0.041667
+    buffer_end_length: 0.0416666
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 16.1586]
+    position_start: [0, 0, 12.0919]
+  CLA-S04-APER:
+    type: aperture
+    shape: rectangular
+    horizontal_size: 0.017
+    vertical_size: 0.017
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 16.2002]
+    position_start: [0, 0, 16.2002]
+  CLA-S04-MARK-01:
+    type: marker
+    fit_point: 1.0
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 16.2002]
+    position_start: [0, 0, 16.2002]
+  CLA-S04-MAG-HVCOR-01:
+    type: kicker
+    length: 0.05
+    sr_enable: true
+    isr_enable: true
+    buffer_start: [0, 0, 16.3102]
+    buffer_start_length: 0.025
+    buffer_end_length: 0.01
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 16.3852]
+    position_start: [0, 0, 16.3352]
+  CLA-S04-MAG-QUAD-01:
+    type: quadrupole
+    length: 0.162
+    k1: 0.621798
+    sr_enable: true
+    isr_enable: true
+    buffer_start: [0, 0, 16.3952]
+    buffer_start_length: 0.023
+    buffer_end_length: 0.024
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 16.5802]
+    position_start: [0, 0, 16.4182]
+  CLA-S04-DIA-BPM-01:
+    type: beam_position_monitor
+    length: 0.21
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 16.8907]
+    position_start: [0, 0, 16.6807]
+  CLA-S04-MAG-QUAD-02:
+    type: quadrupole
+    length: 0.162
+    k1: 0.166334
+    sr_enable: true
+    isr_enable: true
+    buffer_start: [0, 0, 16.9152]
+    buffer_start_length: 0.023
+    buffer_end_length: 0.035
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 17.1002]
+    position_start: [0, 0, 16.9382]
+  CLA-S04-DIA-SCR-01-W:
+    type: screen
+    output_filename: '"CLA-S04-DIA-SCR-01.SDDS"'
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 17.3136]
+    position_start: [0, 0, 17.3136]
+  CLA-S04-MAG-QUAD-03:
+    type: quadrupole
+    length: 0.162
+    k1: -0.387754
+    sr_enable: true
+    isr_enable: true
+    buffer_start: [0, 0, 17.4152]
+    buffer_start_length: 0.023
+    buffer_end_length: 0.035
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 17.6002]
+    position_start: [0, 0, 17.4382]
+  CLA-S04-DIA-BPM-02:
+    type: beam_position_monitor
+    length: 0.21
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 17.8602]
+    position_start: [0, 0, 17.6502]
+  CLA-S04-MAG-QUAD-04:
+    type: quadrupole
+    length: 0.162
+    k1: -0.208383
+    sr_enable: true
+    isr_enable: true
+    buffer_start: [0, 0, 17.9202]
+    buffer_start_length: 0.018
+    buffer_end_length: 0.03
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 18.1002]
+    position_start: [0, 0, 17.9382]
+  CLA-S04-MAG-HVCOR-02:
+    type: kicker
+    length: 0.05
+    sr_enable: true
+    isr_enable: true
+    buffer_start: [0, 0, 18.3002]
+    buffer_start_length: 0.025
+    buffer_end_length: 0.025
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 18.3752]
+    position_start: [0, 0, 18.3252]
+  CLA-S04-DIA-SCR-02-W:
+    type: screen
+    output_filename: '"CLA-S04-DIA-SCR-02.SDDS"'
+    buffer_start: [0, 0, 18.4102]
+    buffer_start_length: 0.043333
+    buffer_end_length: 0.076667
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 18.4536]
+    position_start: [0, 0, 18.4536]
+  CLA-S04-MAG-DIP-01:
+    type: dipole
+    length: 0.1
+    angle: 0.0001
+    exit_edge_angle: 0.0001
+    half_gap: 0.005
+    edge_field_integral: 0.4
+    csr_bins: 20.0
+    sr_enable: true
+    isr_enable: true
+    csr_output_filename: '"CLA-S04-MAG-DIP-01.CSR"'
+    buffer_start: [0, 0, 18.5302]
+    buffer_start_length: 0.06
+    buffer_end_length: 0.05
+    global_rotation: [0, 0, 0]
+    position_end: [5.0e-06, 0, 18.6902]
+    position_start: [0, 0, 18.5902]
+  CLA-S04-MAG-DIP-02:
+    type: dipole
+    length: 0.1
+    angle: -0.0001
+    entrance_edge_angle: -0.0001
+    half_gap: 0.005
+    edge_field_integral: 0.4
+    csr_bins: 20.0
+    sr_enable: true
+    isr_enable: true
+    csr_output_filename: '"CLA-S04-MAG-DIP-02.CSR"'
+    buffer_start: [3.5e-05, 0, 18.9902]
+    buffer_start_length: 0.05
+    buffer_end_length: 0.05
+    global_rotation: [0, 0, 0.0001]
+    position_end: [4.5e-05, 0, 19.1402]
+    position_start: [4.0e-05, 0, 19.0402]
+  CLA-S04-DIA-SCR-03-W:
+    type: screen
+    output_filename: '"CLA-S04-DIA-SCR-03.SDDS"'
+    buffer_start: [4.5e-05, 0, 19.1902]
+    buffer_start_length: 0.043333
+    buffer_end_length: 0.076667
+    global_rotation: [0, 0, 0]
+    position_end: [4.5e-05, 0, 19.2336]
+    position_start: [4.5e-05, 0, 19.2336]
+  CLA-S04-MAG-HVCOR-03:
+    type: kicker
+    length: 0.05
+    sr_enable: true
+    isr_enable: true
+    buffer_start: [4.5e-05, 0, 19.3102]
+    buffer_start_length: 0.075
+    buffer_end_length: 0.05
+    global_rotation: [0, 0, 0]
+    position_end: [4.5e-05, 0, 19.4352]
+    position_start: [4.5e-05, 0, 19.3852]
+  CLA-S04-DIA-BPM-03:
+    type: beam_position_monitor
+    length: 0.035
+    global_rotation: [0, 0, 0]
+    position_end: [4.5e-05, 0, 19.5202]
+    position_start: [4.5e-05, 0, 19.4852]
+  CLA-S04-MAG-LASER0-M:
+    type: marker
+    fit_point: 1.0
+    global_rotation: [0, 0, 0]
+    position_end: [4.5e-05, 0, 19.8777]
+    position_start: [4.5e-05, 0, 19.8777]
+  CLA-S04-DIA-BPM-04:
+    type: beam_position_monitor
+    length: 0.21
+    global_rotation: [0, 0, 0]
+    position_end: [4.5e-05, 0, 20.4452]
+    position_start: [4.5e-05, 0, 20.2352]
+  CLA-S04-DIA-SCR-04-W:
+    type: screen
+    output_filename: '"CLA-S04-DIA-SCR-04.SDDS"'
+    buffer_start: [4.5e-05, 0, 20.4452]
+    buffer_start_length: 0.043333
+    buffer_end_length: 0.076667
+    global_rotation: [0, 0, 0]
+    position_end: [4.5e-05, 0, 20.4886]
+    position_start: [4.5e-05, 0, 20.4886]
+  CLA-S04-MAG-DIP-03:
+    type: dipole
+    length: 0.1
+    angle: -0.0001
+    exit_edge_angle: -0.0001
+    half_gap: 0.005
+    edge_field_integral: 0.4
+    csr_bins: 20.0
+    sr_enable: true
+    isr_enable: true
+    csr_output_filename: '"CLA-S04-MAG-DIP-03.CSR"'
+    buffer_start: [4.5e-05, 0, 20.5652]
+    buffer_start_length: 0.05
+    buffer_end_length: 0.05
+    global_rotation: [0, 0, 0]
+    position_end: [4.0e-05, 0, 20.7152]
+    position_start: [4.5e-05, 0, 20.6152]
+  CLA-S04-MAG-DIP-04:
+    type: dipole
+    length: 0.1
+    angle: 0.0001
+    entrance_edge_angle: 0.0001
+    half_gap: 0.005
+    edge_field_integral: 0.4
+    csr_bins: 20.0
+    sr_enable: true
+    isr_enable: true
+    csr_output_filename: '"CLA-S04-MAG-DIP-04.CSR"'
+    buffer_start: [1.0e-05, 0, 21.0152]
+    buffer_start_length: 0.05
+    buffer_end_length: 0.05
+    global_rotation: [0, 0, -0.0001]
+    position_end: [0, 0, 21.1652]
+    position_start: [5.0e-06, 0, 21.0652]
+  CLA-S04-DIA-SCR-05-W:
+    type: screen
+    output_filename: '"CLA-S04-DIA-SCR-05.SDDS"'
+    buffer_start: [0, 0, 21.2719]
+    buffer_start_length: 0.043333
+    buffer_end_length: 0.076667
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 21.3152]
+    position_start: [0, 0, 21.3152]
+  CLA-S04-MAG-QUAD-05:
+    type: quadrupole
+    length: 0.162
+    k1: 0.253635
+    sr_enable: true
+    isr_enable: true
+    buffer_start: [0, 0, 21.4352]
+    buffer_start_length: 0.018
+    buffer_end_length: 0.03
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 21.6152]
+    position_start: [0, 0, 21.4532]
+  CLA-S04-MAG-HVCOR-04:
+    type: kicker
+    length: 0.05
+    sr_enable: true
+    isr_enable: true
+    buffer_start: [0, 0, 21.6452]
+    buffer_start_length: 0.06
+    buffer_end_length: 0.025
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 21.7552]
+    position_start: [0, 0, 21.7052]
+  CLA-S04-MAG-QUAD-06:
+    type: quadrupole
+    length: 0.162
+    k1: 0.433247
+    sr_enable: true
+    isr_enable: true
+    buffer_start: [0, 0, 21.9352]
+    buffer_start_length: 0.018
+    buffer_end_length: 0.03
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 22.1152]
+    position_start: [0, 0, 21.9532]
+  CLA-S04-DIA-BPM-05:
+    type: beam_position_monitor
+    length: 0.21
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 22.4052]
+    position_start: [0, 0, 22.1952]
+  CLA-S04-MAG-QUAD-07:
+    type: quadrupole
+    length: 0.162
+    k1: 0.521807
+    sr_enable: true
+    isr_enable: true
+    buffer_start: [0, 0, 22.4052]
+    buffer_start_length: 0.048
+    buffer_end_length: 0.03
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 22.6152]
+    position_start: [0, 0, 22.4532]
+  CLA-S04-MAG-HVCOR-05:
+    type: kicker
+    length: 0.05
+    sr_enable: true
+    isr_enable: true
+    buffer_start: [0, 0, 22.7402]
+    buffer_start_length: 0.025
+    buffer_end_length: 0.025
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 22.8152]
+    position_start: [0, 0, 22.7652]
+  CLA-S04-MAG-QUAD-08:
+    type: quadrupole
+    length: 0.162
+    k1: -0.26879
+    sr_enable: true
+    isr_enable: true
+    buffer_start: [0, 0, 22.9452]
+    buffer_start_length: 0.018
+    buffer_end_length: 0.05
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 23.1252]
+    position_start: [0, 0, 22.9632]
+  CLA-S04-DIA-BPM-06:
+    type: beam_position_monitor
+    length: 0.21
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 23.3852]
+    position_start: [0, 0, 23.1752]
+  CLA-S04-MARK-02:
+    type: marker
+    fit_point: 1.0
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 23.4572]
+    position_start: [0, 0, 23.4572]
+  CLA-L4H-APER:
+    type: aperture
+    shape: rectangular
+    horizontal_size: 0.0041195
+    vertical_size: 0.0041195
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 23.4572]
+    position_start: [0, 0, 23.4572]
+  CLA-L4H-CAV:
+    type: cavity
+    length: 0.75
+    cell_length: 0.00833333
+    field_amplitude: 24000000.0
+    frequency: 11994000000.0
+    phase: 184
+    longitudinal_wakefield_input: '"Sz20um25mmxband.sdds"'
+    transverse_wakefield_input: '"Sx50um10mmxband.sdds"'
+    field_definition: ../TWS_X-DL.dat
+    lsc_enable: true
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    buffer_start: [0, 0, 23.4572]
+    buffer_start_length: 0.1075
+    buffer_end_length: 0.1075
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 24.3147]
+    position_start: [0, 0, 23.5647]
+  CLA-S05-APER:
+    type: aperture
+    shape: rectangular
+    horizontal_size: 0.017
+    vertical_size: 0.017
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 24.4222]
+    position_start: [0, 0, 24.4222]
+  CLA-S05-MAG-QUAD-01:
+    type: quadrupole
+    length: 0.162
+    k1: -0.781822
+    sr_enable: true
+    isr_enable: true
+    buffer_start: [0, 0, 24.5322]
+    buffer_start_length: 0.121
+    buffer_end_length: 0.0467
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 24.8152]
+    position_start: [0, 0, 24.6532]
+  CLA-S05-MAG-HVCOR-01:
+    type: kicker
+    length: 0.05
+    sr_enable: true
+    isr_enable: true
+    buffer_start: [0, 0, 24.9119]
+    buffer_start_length: 0.114
+    buffer_end_length: 0.025
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 25.0759]
+    position_start: [0, 0, 25.0259]
+  CLA-S05-DIA-BPM-01:
+    type: beam_position_monitor
+    length: 0.021
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 25.1361]
+    position_start: [0, 0, 25.1151]
+  CLA-S05-DIA-SCR-01-W:
+    type: screen
+    output_filename: '"CLA-S05-DIA-SCR-01.SDDS"'
+    buffer_start: [0, 0, 25.1361]
+    buffer_start_length: 0.043273
+    buffer_end_length: 0.0767
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 25.1794]
+    position_start: [0, 0, 25.1794]
+  CLA-S05-MAG-QUAD-02:
+    type: quadrupole
+    length: 0.162
+    k1: 1.29238
+    sr_enable: true
+    isr_enable: true
+    buffer_start: [0, 0, 25.3361]
+    buffer_start_length: 0.067
+    buffer_end_length: 0.05
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 25.5651]
+    position_start: [0, 0, 25.4031]
+  CLA-S05-DIA-BPM-02:
+    type: beam_position_monitor
+    length: 0.21
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 25.8251]
+    position_start: [0, 0, 25.6151]
+  CLA-S05-MARK-01:
+    type: marker
+    fit_point: 1.0
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 25.8251]
+    position_start: [0, 0, 25.8251]
+  CLA-VBC-MAG-DIP-01:
+    type: dipole
+    length: 0.200981
+    angle: -0.095
+    exit_edge_angle: angle
+    half_gap: 0.005
+    edge_field_integral: 0.4
+    csr_bins: 20.0
+    sr_enable: true
+    isr_enable: true
+    csr_output_filename: '"VBC-MAG-DIP-01.CSR"'
+    buffer_start: [0, 0, 25.9651]
+    buffer_start_length: 0.1
+    buffer_end_length: 0.100453
+    global_rotation: [0, 0, 0]
+    position_end: [-0.00953944, 0, 26.2658]
+    position_start: [0, 0, 26.0651]
+  CLA-VBC-MAG-DIP-02:
+    type: dipole
+    length: 0.200981
+    angle: 0.095
+    entrance_edge_angle: angle
+    half_gap: 0.005
+    edge_field_integral: 0.4
+    csr_bins: 20.0
+    sr_enable: true
+    isr_enable: true
+    csr_output_filename: '"VBC-MAG-DIP-02.CSR"'
+    buffer_start: [-0.142941, 0, 27.6658]
+    buffer_start_length: 0.100453
+    buffer_end_length: 0.1
+    global_rotation: [0, 0, -0.095]
+    position_end: [-0.162009, 0, 27.9664]
+    position_start: [-0.15247, 0, 27.7658]
+  CLA-VBC-MAG-VCOR-01:
+    type: kicker
+    length: 0.05
+    sr_enable: true
+    isr_enable: true
+    buffer_start: [-0.162009, 0, 28.1231]
+    buffer_start_length: 0.14
+    buffer_end_length: 0.0426
+    global_rotation: [0, 0, 0]
+    position_end: [-0.162009, 0, 28.3131]
+    position_start: [-0.162009, 0, 28.2631]
+  CLA-VBC-DIA-BPM-01:
+    type: beam_position_monitor
+    length: 0.0312
+    global_rotation: [0, 0, 0]
+    position_end: [-0.162009, 0, 28.3869]
+    position_start: [-0.162009, 0, 28.3557]
+  CLA-VBC-RCOL-01:
+    type: collimator
+    length: 0.48
+    shape: rectangular
+    horizontal_size: 0.01
+    vertical_size: 0.01
+    open_side: '"+x"'
+    global_rotation: [0, 0, 0]
+    position_end: [-0.162009, 0, 28.8793]
+    position_start: [-0.162009, 0, 28.3993]
+  CLA-VBC-DIA-SCR-01-W:
+    type: screen
+    output_filename: '"CLA-VBC-DIA-SCR-01.SDDS"'
+    buffer_start: [-0.162009, 0, 28.8793]
+    buffer_start_length: 0.025463
+    buffer_end_length: 0.076667
+    global_rotation: [0, 0, 0]
+    position_end: [-0.162009, 0, 28.9048]
+    position_start: [-0.162009, 0, 28.9048]
+  CLA-VBC-MAG-DIP-03:
+    type: dipole
+    length: 0.200981
+    angle: 0.095
+    exit_edge_angle: angle
+    half_gap: 0.005
+    edge_field_integral: 0.4
+    csr_bins: 20.0
+    sr_enable: true
+    isr_enable: true
+    csr_output_filename: '"VBC-MAG-DIP-03.CSR"'
+    buffer_start: [-0.162009, 0, 29.1664]
+    buffer_start_length: 0.1
+    buffer_end_length: 0.100453
+    global_rotation: [0, 0, 0]
+    position_end: [-0.15247, 0, 29.4671]
+    position_start: [-0.162009, 0, 29.2664]
+  CLA-VBC-MAG-DIP-04:
+    type: dipole
+    length: 0.200981
+    angle: -0.095
+    entrance_edge_angle: angle
+    half_gap: 0.005
+    edge_field_integral: 0.4
+    csr_bins: 20.0
+    sr_enable: true
+    isr_enable: true
+    csr_output_filename: '"VBC-MAG-DIP-04.CSR"'
+    buffer_start: [-0.0190681, 0, 30.8671]
+    buffer_start_length: 0.100453
+    global_rotation: [0, 0, 0.095]
+    position_end: [0, 0, 31.1678]
+    position_start: [-0.00953944, 0, 30.9671]
+  CLA-VBC-MARK-01:
+    type: marker
+    fit_point: 1.0
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 31.2678]
+    position_start: [0, 0, 31.2678]
+  CLA-S06-MARK-01:
+    type: marker
+    fit_point: 1.0
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 31.2678]
+    position_start: [0, 0, 31.2678]
+  CLA-S06-APER:
+    type: aperture
+    shape: rectangular
+    horizontal_size: 0.017
+    vertical_size: 0.017
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 31.2678]
+    position_start: [0, 0, 31.2678]
+  CLA-S06-MAG-HVCOR-01:
+    type: kicker
+    length: 0.05
+    sr_enable: true
+    isr_enable: true
+    buffer_start: [0, 0, 31.5578]
+    buffer_start_length: 0.025
+    buffer_end_length: 0.025
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 31.6328]
+    position_start: [0, 0, 31.5828]
+  CLA-S06-DIA-BPM-01:
+    type: beam_position_monitor
+    length: 0.02
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 31.6778]
+    position_start: [0, 0, 31.6578]
+  CLA-S06-MAG-QUAD-01:
+    type: quadrupole
+    length: 0.15
+    k1: 1.0505
+    sr_enable: true
+    isr_enable: true
+    buffer_start: [0, 0, 31.6778]
+    buffer_start_length: 0.1
+    buffer_end_length: 0.1
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 31.9278]
+    position_start: [0, 0, 31.7778]
+  CLA-S06-DIA-EOM-01:
+    type: monitor
+    length: 0.2885
+    fit_point: 1.0
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 32.5378]
+    position_start: [0, 0, 32.2493]
+  CLA-S06-MAG-QUAD-02:
+    type: quadrupole
+    length: 0.15
+    k1: -0.410839
+    sr_enable: true
+    isr_enable: true
+    buffer_start: [0, 0, 32.5378]
+    buffer_start_length: 0.1
+    buffer_end_length: 0.1
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 32.7878]
+    position_start: [0, 0, 32.6378]
+  CLA-S06-DIA-SCR-01-W:
+    type: screen
+    output_filename: '"CLA-S06-DIA-SCR-01.SDDS"'
+    buffer_start: [0, 0, 32.8878]
+    buffer_start_length: 0.043333
+    buffer_end_length: 0.076667
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 32.9311]
+    position_start: [0, 0, 32.9311]
+  CLA-S06-MAG-HVCOR-02:
+    type: kicker
+    length: 0.05
+    sr_enable: true
+    isr_enable: true
+    buffer_start: [0, 0, 33.775]
+    buffer_start_length: 0.043
+    buffer_end_length: 0.007
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 33.868]
+    position_start: [0, 0, 33.818]
+  CLA-S06-DIA-BPM-02:
+    type: beam_position_monitor
+    length: 0.025
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 33.9418]
+    position_start: [0, 0, 33.9168]
+  CLA-S06-DIA-SCR-02-W:
+    type: screen
+    output_filename: '"CLA-S06-DIA-SCR-02.SDDS"'
+    buffer_start: [0, 0, 33.9418]
+    buffer_start_length: 0.043333
+    buffer_end_length: 0.076667
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 33.9851]
+    position_start: [0, 0, 33.9851]
+  CLA-S06-MARK-02:
+    type: marker
+    fit_point: 1.0
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 34.118]
+    position_start: [0, 0, 34.118]
+  CLA-L04-APER:
+    type: aperture
+    shape: rectangular
+    horizontal_size: 0.01
+    vertical_size: 0.01
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 34.118]
+    position_start: [0, 0, 34.118]
+  CLA-L04-CAV:
+    type: cavity
+    length: 4.06667
+    cell_length: 0.0333333
+    field_amplitude: 26000000.0
+    frequency: 2998500000.0
+    phase: 3
+    longitudinal_wakefield_input: '"Sz5um10mm.sdds"'
+    transverse_wakefield_input: '"Sx5um10mm.sdds"'
+    field_definition: ../TWS_S-DL.dat
+    lsc_enable: true
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    buffer_start: [0, 0, 34.118]
+    buffer_start_length: 0.0416666
+    buffer_end_length: 0.0414916
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 38.2263]
+    position_start: [0, 0, 34.1596]
+  CLA-S07-APER-01:
+    type: aperture
+    shape: rectangular
+    horizontal_size: 0.017
+    vertical_size: 0.017
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 38.2678]
+    position_start: [0, 0, 38.2678]
+  CLA-S07-DIA-BPM-01:
+    type: beam_position_monitor
+    length: 0.21
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 38.4778]
+    position_start: [0, 0, 38.2678]
+  CLA-S07-MAG-HVCOR-01:
+    type: kicker
+    length: 0.05
+    sr_enable: true
+    isr_enable: true
+    buffer_start: [0, 0, 38.6028]
+    buffer_start_length: 0.025
+    buffer_end_length: 0.025
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 38.6778]
+    position_start: [0, 0, 38.6278]
+  CLA-S07-MAG-QUAD-01:
+    type: quadrupole
+    length: 0.15
+    k1: 2.41791
+    sr_enable: true
+    isr_enable: true
+    buffer_start: [0, 0, 38.7028]
+    buffer_start_length: 0.075
+    buffer_end_length: 0.1
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 38.9278]
+    position_start: [0, 0, 38.7778]
+  CLA-S07-MARK-01:
+    type: marker
+    fit_point: 1.0
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 39.0278]
+    position_start: [0, 0, 39.0278]
+  CLA-S07-MAG-QUAD-02:
+    type: quadrupole
+    length: 0.15
+    k1: -0.773553
+    sr_enable: true
+    isr_enable: true
+    buffer_start: [0, 0, 39.1278]
+    buffer_start_length: 0.1
+    buffer_end_length: 0.1
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 39.3778]
+    position_start: [0, 0, 39.2278]
+  CLA-S07-DIA-BPM-02:
+    type: beam_position_monitor
+    length: 0.21
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 39.6878]
+    position_start: [0, 0, 39.4778]
+  CLA-S07-MAG-HVCOR-02:
+    type: kicker
+    length: 0.05
+    sr_enable: true
+    isr_enable: true
+    buffer_start: [0, 0, 39.763]
+    buffer_start_length: 0.025
+    buffer_end_length: 0.025
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 39.838]
+    position_start: [0, 0, 39.788]
+  CLA-S07-DIA-SCR-01-W:
+    type: screen
+    output_filename: '"CLA-S07-DIA-SCR-01.SDDS"'
+    buffer_start: [0, 0, 39.8878]
+    buffer_start_length: 0.043333
+    buffer_end_length: 0.076667
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 39.9311]
+    position_start: [0, 0, 39.9311]
+  CLA-S07-TDC-01-APER:
+    type: aperture
+    shape: rectangular
+    horizontal_size: 0.005
+    vertical_size: 0.005
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 40.0078]
+    position_start: [0, 0, 40.0078]
+  CLA-S07-TDC-01-R:
+    type: rf_deflecting_cavity
+    length: 0.45
+    phase: 0.0
+    buffer_start: [0, 0, 40.0078]
+    buffer_start_length: 0.346666
+    buffer_end_length: 0.303334
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 40.8045]
+    position_start: [0, 0, 40.3545]
+  CLA-S07-APER-02:
+    type: aperture
+    shape: rectangular
+    horizontal_size: 0.017
+    vertical_size: 0.017
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 41.1078]
+    position_start: [0, 0, 41.1078]
+  CLA-S07-MAG-HVCOR-03:
+    type: kicker
+    length: 0.05
+    sr_enable: true
+    isr_enable: true
+    buffer_start: [0, 0, 41.1828]
+    buffer_start_length: 0.025
+    buffer_end_length: 0.025
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 41.2578]
+    position_start: [0, 0, 41.2078]
+  CLA-S07-DIA-BPM-03:
+    type: beam_position_monitor
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 41.3078]
+    position_start: [0, 0, 41.3078]
+  CLA-S07-MAG-QUAD-03:
+    type: quadrupole
+    length: 0.15
+    k1: -1.26982
+    sr_enable: true
+    isr_enable: true
+    buffer_start: [0, 0, 41.3078]
+    buffer_start_length: 0.1
+    buffer_end_length: 0.1
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 41.5578]
+    position_start: [0, 0, 41.4078]
+  CLA-S07-MAG-QUAD-04:
+    type: quadrupole
+    length: 0.15
+    k1: -1.12984
+    sr_enable: true
+    isr_enable: true
+    buffer_start: [0, 0, 42.0578]
+    buffer_start_length: 0.1
+    buffer_end_length: 0.1
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 42.3078]
+    position_start: [0, 0, 42.1578]
+  CLA-S07-DIA-BPM-04:
+    type: beam_position_monitor
+    length: 0.21
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 42.6178]
+    position_start: [0, 0, 42.4078]
+  CLA-S07-DIA-SCR-02-W:
+    type: screen
+    output_filename: '"CLA-S07-DIA-SCR-02.SDDS"'
+    buffer_start: [0, 0, 42.6178]
+    buffer_start_length: 0.043333
+    buffer_end_length: 0.076667
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 42.6611]
+    position_start: [0, 0, 42.6611]
+  CLA-S07-MAG-QUAD-05:
+    type: quadrupole
+    length: 0.15
+    k1: 1.0291
+    sr_enable: true
+    isr_enable: true
+    buffer_start: [0, 0, 42.7378]
+    buffer_start_length: 0.1
+    buffer_end_length: 0.1
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 42.9878]
+    position_start: [0, 0, 42.8378]
+  CLA-S07-MAG-HVCOR-04:
+    type: kicker
+    length: 0.05
+    sr_enable: true
+    isr_enable: true
+    buffer_start: [0, 0, 43.133]
+    buffer_start_length: 0.025
+    buffer_end_length: 0.017
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 43.208]
+    position_start: [0, 0, 43.158]
+  CLA-S07-DIA-CDR-01:
+    type: monitor
+    length: 0.3
+    fit_point: 1.0
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 43.525]
+    position_start: [0, 0, 43.225]
+  CLA-S07-MAG-QUAD-06:
+    type: quadrupole
+    length: 0.15
+    k1: 0.132193
+    sr_enable: true
+    isr_enable: true
+    buffer_start: [0, 0, 43.525]
+    buffer_start_length: 0.062792
+    buffer_end_length: 0.1
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 43.7378]
+    position_start: [0, 0, 43.5878]
+  CLA-S07-DCP-01:
+    type: collimator
+    length: 0.596
+    shape: elliptical
+    horizontal_size: 0.017
+    vertical_size: 0.017
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 44.5278]
+    position_start: [0, 0, 43.9318]
+  CLA-S07-APER-03:
+    type: aperture
+    shape: rectangular
+    horizontal_size: 0.017
+    vertical_size: 0.017
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 44.5278]
+    position_start: [0, 0, 44.5278]
+  CLA-S07-DIA-BPM-05:
+    type: beam_position_monitor
+    length: 0.21
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 44.7378]
+    position_start: [0, 0, 44.5278]
+  CLA-S07-MAG-QUAD-07:
+    type: quadrupole
+    length: 0.15
+    k1: -1.50181
+    sr_enable: true
+    isr_enable: true
+    buffer_start: [0, 0, 44.7378]
+    buffer_start_length: 0.1
+    buffer_end_length: 0.1
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 44.9878]
+    position_start: [0, 0, 44.8378]
+  CLA-S07-MAG-HVCOR-05:
+    type: kicker
+    length: 0.05
+    sr_enable: true
+    isr_enable: true
+    buffer_start: [0, 0, 45.0878]
+    buffer_start_length: 0.025
+    buffer_end_length: 0.025
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 45.1628]
+    position_start: [0, 0, 45.1128]
+  CLA-S07-MAG-HVCOR-06:
+    type: kicker
+    length: 0.05
+    sr_enable: true
+    isr_enable: true
+    buffer_start: [0, 0, 45.9478]
+    buffer_start_length: 0.025
+    buffer_end_length: 0.025
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 46.0228]
+    position_start: [0, 0, 45.9728]
+  CLA-S07-DIA-BPM-06:
+    type: beam_position_monitor
+    length: 0.05
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 46.2978]
+    position_start: [0, 0, 46.2478]
+  CLA-S07-DIA-SCR-03-W:
+    type: screen
+    output_filename: '"CLA-S07-DIA-SCR-03.SDDS"'
+    buffer_start: [0, 0, 46.3978]
+    buffer_start_length: 0.043333
+    buffer_end_length: 0.076667
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 46.4411]
+    position_start: [0, 0, 46.4411]
+  CLA-S07-MARK-02:
+    type: marker
+    fit_point: 1.0
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 46.5178]
+    position_start: [0, 0, 46.5178]
+  CLA-S07-MAG-QUAD-08:
+    type: quadrupole
+    length: 0.15
+    k1: -0.68422
+    sr_enable: true
+    isr_enable: true
+    buffer_start: [0, 0, 46.6178]
+    buffer_start_length: 0.1
+    buffer_end_length: 0.1
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 46.8678]
+    position_start: [0, 0, 46.7178]
+  CLA-S07-MAG-QUAD-09:
+    type: quadrupole
+    length: 0.162
+    k1: 0.57919
+    sr_enable: true
+    isr_enable: true
+    buffer_start: [0, 0, 47.1678]
+    buffer_start_length: 0.088
+    buffer_end_length: 0.1
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 47.4178]
+    position_start: [0, 0, 47.2558]
+  CLA-S07-DIA-BPM-07:
+    type: beam_position_monitor
+    length: 0.21
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 47.7278]
+    position_start: [0, 0, 47.5178]
+  CLA-S07-MAG-HVCOR-07:
+    type: kicker
+    length: 0.05
+    sr_enable: true
+    isr_enable: true
+    buffer_start: [0, 0, 47.7278]
+    buffer_start_length: 0.025
+    buffer_end_length: 0.025
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 47.8028]
+    position_start: [0, 0, 47.7528]
+  CLA-S07-DIA-SCR-04-W:
+    type: screen
+    output_filename: '"CLA-S07-DIA-SCR-04.SDDS"'
+    buffer_start: [0, 0, 47.8278]
+    buffer_start_length: 0.043333
+    buffer_end_length: 0.076667
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 47.8711]
+    position_start: [0, 0, 47.8711]
+  CLA-S07-MAG-QUAD-10:
+    type: quadrupole
+    length: 0.162
+    k1: -0.700207
+    sr_enable: true
+    isr_enable: true
+    buffer_start: [0, 0, 47.9478]
+    buffer_start_length: 0.088
+    buffer_end_length: 0.1
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 48.1978]
+    position_start: [0, 0, 48.0358]
+  CLA-S07-MAG-QUAD-11:
+    type: quadrupole
+    length: 0.162
+    k1: 4.27664
+    sr_enable: true
+    isr_enable: true
+    buffer_start: [0, 0, 48.4978]
+    buffer_start_length: 0.088
+    buffer_end_length: 0.1
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 48.7478]
+    position_start: [0, 0, 48.5858]
+  CLA-S07-DIA-BPM-08:
+    type: beam_position_monitor
+    length: 0.21
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 49.0578]
+    position_start: [0, 0, 48.8478]
+  CLA-S07-DIA-SCR-05-W:
+    type: screen
+    output_filename: '"CLA-S07-DIA-SCR-05.SDDS"'
+    buffer_start: [0, 0, 49.0578]
+    buffer_start_length: 0.043333
+    buffer_end_length: 0.076667
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 49.1011]
+    position_start: [0, 0, 49.1011]
+  CLA-S07-MAG-HVCOR-08:
+    type: kicker
+    length: 0.05
+    sr_enable: true
+    isr_enable: true
+    buffer_start: [0, 0, 49.1778]
+    buffer_start_length: 0.025
+    buffer_end_length: 0.025
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 49.2528]
+    position_start: [0, 0, 49.2028]
+  CLA-S07-MARK-03:
+    type: marker
+    fit_point: 1.0
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 49.2778]
+    position_start: [0, 0, 49.2778]

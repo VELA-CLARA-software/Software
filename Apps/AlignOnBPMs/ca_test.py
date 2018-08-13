@@ -22,14 +22,24 @@ os.environ["PATH"] = os.environ["PATH"]+";\\\\apclara1.dl.ac.uk\\ControlRoomApps
 
 #print 'VM-EBT-INJ-MAG-QUAD-01:SETI =', str(caget('VM-EBT-INJ-MAG-QUAD-01:SETI'))
 #print caget('VM-CLA-S02-MAG-QUAD-01:SETI',10.0)
-parameter = 'VM-CLA-S01-MAG-HCOR-01:SETI'
+parameter = 'CLA-S01-MAG-HCOR-01:SETI'
 print caget(parameter)
-parameter = 'VM-CLA-S01-MAG-VCOR-01:SETI'
+parameter = 'CLA-S01-MAG-VCOR-01:SETI'
 print caget(parameter)
-parameter = 'VM-CLA-S01-MAG-HCOR-02:SETI'
+parameter = 'CLA-S01-MAG-HCOR-02:SETI'
 print caget(parameter)
-parameter = 'VM-CLA-S01-MAG-VCOR-02:SETI'
+parameter = 'CLA-S01-MAG-VCOR-02:SETI'
 print caget(parameter)
+# parameter = 'VM-CLA-S01-MAG-HCOR-01:SETI'
+# print caget(parameter)
+# parameter = 'VM-CLA-S01-MAG-VCOR-01:SETI'
+# print caget(parameter)
+# parameter = 'VM-CLA-S01-MAG-HCOR-02:SETI'
+# print caget(parameter)
+# parameter = 'VM-CLA-S01-MAG-VCOR-02:SETI'
+# print caget(parameter)
+
+
 #caput(parameter,0.0)
 #print caget(parameter)
 

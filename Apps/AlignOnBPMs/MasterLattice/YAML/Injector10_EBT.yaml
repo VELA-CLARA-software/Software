@@ -1,0 +1,117 @@
+elements:
+  CLA-LRG1-APER:
+    type: aperture
+    shape: rectangular
+    horizontal_size: 0.017
+    vertical_size: 0.017
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 0]
+    position_start: [0, 0, 0]
+  CLA-LRG1-GUN-CAV:
+    type: cavity
+    length: 0
+    field_amplitude: 70000000.0
+    frequency: 2997440000.0
+    phase: -16
+    field_definition: ../bas_gun.txt
+    lsc_cutoff_high: [0, 0]
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 0]
+    position_start: [0, 0, 0]
+  CLA-LRG1-GUN-SOL:
+    type: solenoid
+    length: 0
+    field_amplitude: 0.237
+    field_definition: ../bas_sol.txt
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 0]
+    position_start: [0, 0, 0]
+  CLA-S01-APER:
+    type: aperture
+    shape: rectangular
+    horizontal_size: 0.017
+    vertical_size: 0.017
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 0.32482]
+    position_start: [0, 0, 0.32482]
+  CLA-S01-MAG-HVCOR-01:
+    type: kicker
+    length: 0.03
+    sr_enable: true
+    isr_enable: true
+    Controller_Name: COR1
+    Online_Model_Name: C1-COR01
+    Horizontal_PV: CLA-S01-MAG-HCOR-01
+    Vertcal_PV: CLA-S01-MAG-VCOR-01
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 0.35482]
+    position_start: [0, 0, 0.32482]
+  CLA-S01-DIA-WCM-01:
+    type: wall_current_monitor
+    length: 0.05
+    Controller_Name: WCM01
+    Online_Model_Name: C1-WCM01
+    PV: CLA-S01-DIA-WCM-01
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 0.7277]
+    position_start: [0, 0, 0.6777]
+  CLA-S01-MAG-HVCOR-02:
+    type: kicker
+    length: 0.102
+    sr_enable: true
+    isr_enable: true
+    Controller_Name: COR2
+    Online_Model_Name: C1-COR02
+    Horizontal_PV: CLA-S01-MAG-HCOR-02
+    Vertcal_PV: CLA-S01-MAG-VCOR-02
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 0.8297]
+    position_start: [0, 0, 0.7277]
+  CLA-S01-DIA-BPM-01:
+    type: beam_position_monitor
+    length: 0.108
+    Controller_Name: BPM01
+    Online_Model_Name: C1-BPM01
+    PV: CLA-S01-DIA-BPM-01
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 0.9377]
+    position_start: [0, 0, 0.8297]
+  CLA-S01-DIA-SCR-01-W:
+    type: screen
+    output_filename: '"CLA-S01-DIA-SCR-01.SDDS"'
+    buffer_start: [0, 0, 0.9377]
+    buffer_start_length: 0.043333
+    buffer_end_length: 0.076667
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 0.981033]
+    position_start: [0, 0, 0.981033]
+  CLA-L01-APER:
+    type: aperture
+    shape: rectangular
+    horizontal_size: 0.01
+    vertical_size: 0.01
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 1.0577]
+    position_start: [0, 0, 1.0577]
+  CLA-L01-CAV:
+    type: cavity
+    length: 2.03333
+    cell_length: 0.0333333
+    field_amplitude: 21000000.0
+    frequency: 2998500000.0
+    phase: -16
+    longitudinal_wakefield_input: '"Sz5um10mm.sdds"'
+    transverse_wakefield_input: '"Sx5um10mm.sdds"'
+    field_definition: ../TWS_S-DL.dat
+    lsc_enable: true
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    buffer_start: [0, 0, 1.0577]
+    buffer_start_length: 0.13587
+    buffer_end_length: 0.14457
+    Controller_Name: L01
+    Online_Model_Name: C1-L01
+    PV: CLA-L01-LRF-CTRL-01
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 3.2269]
+    position_start: [0, 0, 1.19357]

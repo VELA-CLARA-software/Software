@@ -1,0 +1,263 @@
+{
+    "elements": {
+        "CLA-C2V-MARK-01": {
+            "type": "marker",
+            "fit_point": 1.0,
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                0,
+                0,
+                5.72687
+            ],
+            "position_start": [
+                0,
+                0,
+                5.72687
+            ]
+        },
+        "CLA-C2V-MAG-DIP-01": {
+            "type": "dipole",
+            "length": 0.400003,
+            "angle": 0.785398,
+            "half_gap": 0.005,
+            "edge_field_integral": 0.4,
+            "csr_bins": 20.0,
+            "sr_enable": true,
+            "isr_enable": true,
+            "csr_output_filename": "\"C2V-MAG-DIP-01-D.CSR\"",
+            "buffer_start": [
+                0,
+                0,
+                5.72687
+            ],
+            "buffer_start_length": 0.1,
+            "buffer_end_length": 0.1,
+            "Controller_Name": "DIP01",
+            "Online_Model_Name": "CV-DIP01",
+            "PV": "CLA-C2V-MAG-DIP-01",
+            "global_rotation": [
+                0,
+                0,
+                0
+            ],
+            "position_end": [
+                -0.149171,
+                0,
+                6.187
+            ],
+            "position_start": [
+                0,
+                0,
+                5.82687
+            ]
+        },
+        "CLA-C2V-MAG-HVCOR-01": {
+            "type": "kicker",
+            "length": 0.21,
+            "sr_enable": true,
+            "isr_enable": true,
+            "Controller_Name": "COR1",
+            "Online_Model_Name": "CV-COR01",
+            "Horizontal_PV": "CLA-C2V-MAG-HCOR-01",
+            "Vertcal_PV": "CLA-C2V-MAG-VCOR-01",
+            "global_rotation": [
+                0,
+                0,
+                0.785398
+            ],
+            "position_end": [
+                -0.368412,
+                0,
+                6.40624
+            ],
+            "position_start": [
+                -0.21992,
+                0,
+                6.25775
+            ]
+        },
+        "CLA-C2V-DIA-BPM-01": {
+            "type": "beam_position_monitor",
+            "Controller_Name": "BPM01",
+            "Online_Model_Name": "CV-BPM01",
+            "PV": "CLA-C2V-DIA-BPM-01",
+            "global_rotation": [
+                0,
+                0,
+                0.785398
+            ],
+            "position_end": [
+                -0.368412,
+                0,
+                6.40624
+            ],
+            "position_start": [
+                -0.368412,
+                0,
+                6.40624
+            ]
+        },
+        "CLA-C2V-MAG-QUAD-01": {
+            "type": "quadrupole",
+            "length": 0.1007,
+            "k1": 55.9853,
+            "sr_enable": true,
+            "isr_enable": true,
+            "buffer_start": [
+                0.368412,
+                0,
+                6.40624
+            ],
+            "buffer_start_length": 0.02252,
+            "buffer_end_length": 0.02252,
+            "Controller_Name": "C2V-QUAD1",
+            "Online_Model_Name": "CV-QUAD01",
+            "PV": "CLA-C2V-MAG-QUAD-01",
+            "global_rotation": [
+                0,
+                0,
+                0.785398
+            ],
+            "position_end": [
+                -0.455542,
+                0,
+                6.49337
+            ],
+            "position_start": [
+                -0.384336,
+                0,
+                6.42217
+            ]
+        },
+        "CLA-C2V-MAG-QUAD-02": {
+            "type": "quadrupole",
+            "length": 0.1007,
+            "k1": -50.2792,
+            "sr_enable": true,
+            "isr_enable": true,
+            "buffer_start": [
+                0.573473,
+                0,
+                6.6113
+            ],
+            "buffer_start_length": 0.02252,
+            "buffer_end_length": 0.02252,
+            "Controller_Name": "C2V-QUAD2",
+            "Online_Model_Name": "CV-QUAD02",
+            "PV": "CLA-C2V-MAG-QUAD-02",
+            "global_rotation": [
+                0,
+                0,
+                0.785398
+            ],
+            "position_end": [
+                -0.660603,
+                0,
+                6.69843
+            ],
+            "position_start": [
+                -0.589397,
+                0,
+                6.62723
+            ]
+        },
+        "CLA-C2V-MAG-QUAD-03": {
+            "type": "quadrupole",
+            "length": 0.1007,
+            "k1": 55.9853,
+            "sr_enable": true,
+            "isr_enable": true,
+            "buffer_start": [
+                0.778534,
+                0,
+                6.81636
+            ],
+            "buffer_start_length": 0.02252,
+            "buffer_end_length": 0.02252,
+            "Controller_Name": "C2V-QUAD1",
+            "Online_Model_Name": "CV-QUAD03",
+            "PV": "CLA-C2V-MAG-QUAD-03",
+            "global_rotation": [
+                0,
+                0,
+                0.785398
+            ],
+            "position_end": [
+                -0.865664,
+                0,
+                6.90349
+            ],
+            "position_start": [
+                -0.794458,
+                0,
+                6.83229
+            ]
+        },
+        "CLA-C2V-DIA-SCR-01-W": {
+            "type": "screen",
+            "output_filename": "\"C2V-DIA-SCR-01.SDDS\"",
+            "buffer_start": [
+                0.913427,
+                0,
+                6.95126
+            ],
+            "buffer_start_length": 0.043333,
+            "buffer_end_length": 0.076667,
+            "global_rotation": [
+                0,
+                0,
+                0.785398
+            ],
+            "position_end": [
+                -0.944068,
+                0,
+                6.9819
+            ],
+            "position_start": [
+                -0.944068,
+                0,
+                6.9819
+            ]
+        },
+        "CLA-C2V-MAG-DIP-02": {
+            "type": "dipole",
+            "length": 0.400003,
+            "angle": -0.785398,
+            "half_gap": 0.005,
+            "edge_field_integral": 0.4,
+            "csr_bins": 20.0,
+            "sr_enable": true,
+            "isr_enable": true,
+            "csr_output_filename": "\"CLA-C2V-MAG-DIP-02-D.CSR\"",
+            "buffer_start": [
+                1.03012,
+                0,
+                7.06795
+            ],
+            "buffer_start_length": 0.1,
+            "buffer_end_length": 0.1,
+            "Controller_Name": "DIP02",
+            "Online_Model_Name": "CV-DIP03",
+            "PV": "CLA-C2V-MAG-DIP-03",
+            "global_rotation": [
+                0,
+                0,
+                0.785398
+            ],
+            "position_end": [
+                -1.25,
+                0,
+                7.49879
+            ],
+            "position_start": [
+                -1.10083,
+                0,
+                7.13866
+            ]
+        }
+    }
+}

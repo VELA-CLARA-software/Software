@@ -1,0 +1,81 @@
+&NEWRUN
+ Loop=False
+ Lprompt=False
+ Head='trial'
+ Run=1
+ Distribution='512-250pC.ini'
+ high_res=True
+ N_red=1
+ Track_All=True
+ Auto_Phase=True
+ Phase_Scan=False
+ check_ref_part=False
+ H_max=0.0007
+ H_min=0.0007
+/
+&OUTPUT
+ ZSTART=0
+ ZSTOP=3.37147
+ ZEMIT=1050
+ ZPHASE=1
+ REFS=True
+ EMITS=True
+ PHASES=True
+ TRACKS=True
+ Screen(1)=0.8297
+ Screen(2)=0.981033
+/
+&CHARGE
+ Loop=False
+ LSPCH=True
+ LSPCH3D=False
+ Lmirror=True
+ Nrad=8, Nlong_in=8
+ CELL_VAR=2
+ MIN_GRID=3.424657e-13
+ SMOOTH_X=2
+ SMOOTH_Y=2
+ SMOOTH_Z=2
+ MAX_SCALE=0.1
+ MAX_COUNT=100
+/
+&SCAN
+ Loop=False
+ LScan=False
+/
+&APERTURE
+ Loop=False
+ LApert=False
+/
+&CAVITY
+ Loop=False
+ LEField=True
+ FILE_EFieLD(1)='../../../MasterLattice/Data_Files/HRRG_1D_RF.dat', Nue(1)=2.9985,
+MaxE(1)=120.0, Phi(1)=-9, 
+C_pos(1)=0, C_xoff(1)=0, C_yoff(1)=0, C_smooth(1)=10
+ FILE_EFieLD(2)='../../../MasterLattice/Data_Files/TWS_S-DL.dat', Nue(2)=2.9985,
+MaxE(2)=21.0, Phi(2)=-16, 
+C_pos(2)=1.19357, C_xoff(2)=0, C_yoff(2)=0, C_smooth(2)=10, C_numb(2)=60
+
+/
+&SOLENOID
+ Loop=False
+ LBField=True
+ FILE_BFieLD(1)='../../../MasterLattice/Data_Files/HRRG_combined_sols_100mm_onaxis.dat',
+MaxB(1)=0.345,
+S_pos(1)=0, S_xoff(1)=0, S_yoff(1)=0, S_smooth(1)=10
+ FILE_BFieLD(2)='../../../MasterLattice/Data_Files/SwissFEL_linac_sols.dat',
+MaxB(2)=0.05,
+S_pos(2)=1.7, S_xoff(2)=0, S_yoff(2)=0, S_smooth(2)=10
+ FILE_BFieLD(3)='../../../MasterLattice/Data_Files/SwissFEL_linac_sols.dat',
+MaxB(3)=-0.05,
+S_pos(3)=2.7, S_xoff(3)=0, S_yoff(3)=0, S_smooth(3)=10
+/
+&QUADRUPOLE
+ Loop=False
+ LQuad=False
+/
+&DIPOLE
+ Loop=False
+ LDipole=False
+/

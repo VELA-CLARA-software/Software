@@ -70,7 +70,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         self.comboBox_2.setCurrentIndex(1)
-        self.comboBox.setCurrentIndex(0)
+        self.comboBox.setCurrentIndex(2)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):

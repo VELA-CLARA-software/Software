@@ -1,0 +1,20 @@
+ &INPUT
+  FNAME = '$filename$'
+  ADD=.F
+  IPart=$number_particles$
+  Species='electrons'
+  Probe=.True.
+  Noise_reduc=.F.
+  High_res=.T.
+  Cathode=.T.
+  Lprompt=F
+  Q_total=$charge$
+  Ref_zpos=0.
+  Ref_clock=0E-3
+  Dist_z='g', 
+  Ref_Ekin=0.
+  sig_clock=76E-6,
+  Dist_pz='i', LE=0.62E-03
+  Dist_x='radial',  sig_x=0.25
+  Dist_y='r' , sig_y=0.25
+ /

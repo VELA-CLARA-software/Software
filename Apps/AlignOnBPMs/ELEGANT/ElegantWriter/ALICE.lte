@@ -1,0 +1,359 @@
+AR1DIP01:CSBEND, l = 0.5, angle = 1.047198, e1 = 0, e2 = 0, k1 = 0, n_kicks = 10,&
+ integration_order = 4, EDGE_ORDER = 2;
+AR1DIP02:CSBEND, l = 0.5, angle = 1.047198, e1 = 0, e2 = 0, k1 = 0, n_kicks = 10,&
+ integration_order = 4, EDGE_ORDER = 2;
+AR1DIP03:CSBEND, l = 0.5, angle = 1.047198, e1 = 0, e2 = 0, k1 = 0, n_kicks = 10,&
+ integration_order = 4, EDGE_ORDER = 2;
+AR1EBPM01:MONI;
+AR1EBPM02:MONI;
+AR1EBPM03:MONI;
+AR1EBPM04:MONI;
+AR1EBPM05:MONI;
+AR1EBPM06:MONI;
+AR1OTR01:MARKER, fitpoint = 1;
+AR1OTR02:MARKER, fitpoint = 1;
+AR1QUAD01:KQUAD, l = 0.15, k1 = 10.374267, n_kicks = 20;
+AR1QUAD02:KQUAD, l = 0.15, k1 = -5.025472, n_kicks = 20;
+AR1QUAD03:KQUAD, l = 0.15, k1 = -4.541304, n_kicks = 20;
+AR1QUAD04:KQUAD, l = 0.15, k1 = 9.939325, n_kicks = 20;
+AR1SEXT01:KSEXT, l = 0.18, k2 = 0, n_kicks = 10;
+AR1SEXT02:KSEXT, l = 0.18, k2 = 0, n_kicks = 10;
+AR1VCOR01:KICKER, l = 0, HKICK = 0, VKICK = -0.000012;
+AR1VCOR02:KICKER, l = 0, HKICK = 0, VKICK = -0.000002;
+AR2DIP01:CSBEND, l = 0.5, angle = 1.047198, e1 = 0, e2 = 0, k1 = 0, n_kicks = 10,&
+ integration_order = 4, EDGE_ORDER = 2;
+AR2DIP02:CSBEND, l = 0.5, angle = 1.047198, e1 = 0, e2 = 0, k1 = 0, n_kicks = 10,&
+ integration_order = 4, EDGE_ORDER = 2;
+AR2DIP03:CSBEND, l = 0.5, angle = 1.047198, e1 = 0, e2 = 0, k1 = 0, n_kicks = 10,&
+ integration_order = 4, EDGE_ORDER = 2;
+AR2EBPM01:MONI;
+AR2EBPM02:MONI;
+AR2EBPM03:MONI;
+AR2EBPM04:MONI;
+AR2EBPM05:MONI;
+AR2EBPM06:MONI;
+AR2OTR01:MARKER, fitpoint = 1;
+AR2OTR02:MARKER, fitpoint = 1;
+AR2QUAD01:KQUAD, l = 0.15, k1 = 10.362873, n_kicks = 20;
+AR2QUAD02:KQUAD, l = 0.15, k1 = -7.652873, n_kicks = 20;
+AR2QUAD03:KQUAD, l = 0.15, k1 = -7.435111, n_kicks = 20;
+AR2QUAD04:KQUAD, l = 0.15, k1 = 11.377699, n_kicks = 20;
+AR2SEXT01:KSEXT, l = 0.18, k2 = 0, n_kicks = 10;
+AR2SEXT02:KSEXT, l = 0.18, k2 = 0, n_kicks = 10;
+AR2VCOR01:KICKER, l = 0, HKICK = 0, VKICK = 0.000028;
+AR2VCOR02:KICKER, l = 0, HKICK = 0, VKICK = 0.000017;
+DMPEBPM01:MONI;
+DMPFCUP01:MARKER, fitpoint = 1;
+DMPOTR01:MARKER, fitpoint = 1;
+DMPQUAD01:KQUAD, l = 0.15, k1 = 4.442704, n_kicks = 20;
+DMPQUAD02:KQUAD, l = 0.15, k1 = -13.69431, n_kicks = 20;
+DMPQUAD03:KQUAD, l = 0.15, k1 = 21.269936, n_kicks = 20;
+drift1:DRIFT, l = 0.225;
+drift10:DRIFT, l = 0.416;
+drift100:DRIFT, l = 0.592;
+drift101:DRIFT, l = 0.1654;
+drift102:DRIFT, l = 0.045;
+drift104:DRIFT, l = 0.2594;
+drift105:DRIFT, l = 0.254;
+drift106:DRIFT, l = 0.4495;
+drift107:DRIFT, l = 0.105;
+drift108:DRIFT, l = 0.105;
+drift109:DRIFT, l = 0.2454;
+drift11:DRIFT, l = 0.3851;
+drift110:DRIFT, l = 0.2146;
+drift111:DRIFT, l = 0.1704;
+drift112:DRIFT, l = 0.538;
+drift113:DRIFT, l = 0.182;
+drift114:DRIFT, l = 0.3705;
+drift115:DRIFT, l = 0.105;
+drift116:DRIFT, l = 0.105;
+drift117:DRIFT, l = 0.3705;
+drift118:DRIFT, l = 0.182;
+drift119:DRIFT, l = 0.538;
+drift12:DRIFT, l = 0.385;
+drift120:DRIFT, l = 0.2295;
+drift121:DRIFT, l = 0.1555;
+drift122:DRIFT, l = 0.2453;
+drift123:DRIFT, l = 0.105;
+drift124:DRIFT, l = 0.105;
+drift125:DRIFT, l = 0.4495;
+drift126:DRIFT, l = 0.304;
+drift127:DRIFT, l = 0.3902;
+drift128:DRIFT, l = 0.203;
+drift129:DRIFT, l = 0.045;
+drift13:DRIFT, l = 0.045;
+drift131:DRIFT, l = 0.2496;
+drift132:DRIFT, l = 0.2226;
+drift133:DRIFT, l = 0.224;
+drift134:DRIFT, l = 0.2976;
+drift135:DRIFT, l = 0.1658;
+drift136:DRIFT, l = 0.045;
+drift138:DRIFT, l = 0.28;
+drift139:DRIFT, l = 0.3406;
+drift140:DRIFT, l = 0.4617;
+drift141:DRIFT, l = 0.4617;
+drift142:DRIFT, l = 0.726;
+drift143:DRIFT, l = 0.284;
+drift145:DRIFT, l = 0.3171;
+drift146:DRIFT, l = 0.5675;
+drift147:DRIFT, l = 0.3126;
+drift148:DRIFT, l = 2.3963;
+drift149:DRIFT, l = 0.487;
+drift15:DRIFT, l = 0.266;
+drift150:DRIFT, l = 1.2625;
+drift151:DRIFT, l = 0.4065;
+drift152:DRIFT, l = 0.4;
+drift153:DRIFT, l = 0.4;
+drift154:DRIFT, l = 0.795;
+drift155:DRIFT, l = 0.203;
+drift16:DRIFT, l = 0.25;
+drift17:DRIFT, l = 0.25;
+drift18:DRIFT, l = 0.25;
+drift19:DRIFT, l = 0.258;
+drift2:DRIFT, l = 0.225;
+drift20:DRIFT, l = 1.008;
+drift21:DRIFT, l = 0.31;
+drift22:DRIFT, l = 0.69;
+drift23:DRIFT, l = 0.315;
+drift24:DRIFT, l = 0.045;
+drift26:DRIFT, l = 0.6402;
+drift27:DRIFT, l = 0.9999;
+drift28:DRIFT, l = 0.7296;
+drift29:DRIFT, l = 0.284;
+drift3:DRIFT, l = 0.221;
+drift31:DRIFT, l = 0.3171;
+drift32:DRIFT, l = 0.5675;
+drift33:DRIFT, l = 0.3126;
+drift34:DRIFT, l = 2.3963;
+drift35:DRIFT, l = 0.487;
+drift36:DRIFT, l = 0.4565;
+drift37:DRIFT, l = 0.4575;
+drift38:DRIFT, l = 0.2937;
+drift39:DRIFT, l = 0.3682;
+drift4:DRIFT, l = 0.045;
+drift40:DRIFT, l = 0.2778;
+drift41:DRIFT, l = 0.045;
+drift43:DRIFT, l = 0.1844;
+drift44:DRIFT, l = 1.4809;
+drift45:DRIFT, l = 0.3976;
+drift46:DRIFT, l = 0.2515;
+drift47:DRIFT, l = 0.4555;
+drift48:DRIFT, l = 0.105;
+drift49:DRIFT, l = 0.105;
+drift50:DRIFT, l = 0.2454;
+drift51:DRIFT, l = 0.2146;
+drift52:DRIFT, l = 0.1704;
+drift53:DRIFT, l = 0.538;
+drift54:DRIFT, l = 0.182;
+drift55:DRIFT, l = 0.3705;
+drift56:DRIFT, l = 0.105;
+drift57:DRIFT, l = 0.105;
+drift58:DRIFT, l = 0.3705;
+drift59:DRIFT, l = 0.182;
+drift6:DRIFT, l = 0.266;
+drift60:DRIFT, l = 0.538;
+drift61:DRIFT, l = 0.2295;
+drift62:DRIFT, l = 0.1555;
+drift63:DRIFT, l = 0.2453;
+drift64:DRIFT, l = 0.105;
+drift65:DRIFT, l = 0.105;
+drift66:DRIFT, l = 0.4495;
+drift67:DRIFT, l = 0.254;
+drift68:DRIFT, l = 0.3176;
+drift69:DRIFT, l = 0.1746;
+drift7:DRIFT, l = 0.3;
+drift70:DRIFT, l = 0.045;
+drift72:DRIFT, l = 4.0227;
+drift73:DRIFT, l = 0.254;
+drift74:DRIFT, l = 0.3176;
+drift75:DRIFT, l = 0.1746;
+drift76:DRIFT, l = 0.045;
+drift78:DRIFT, l = 2.126575;
+drift79:DRIFT, l = 0.71455;
+drift8:DRIFT, l = 0.255;
+drift80:DRIFT, l = 0.185575;
+drift81:DRIFT, l = 0.1066;
+drift82:DRIFT, l = 0.0001;
+drift83:DRIFT, l = 0.350475;
+drift84:DRIFT, l = 0.71385;
+drift85:DRIFT, l = 0.267875;
+drift86:DRIFT, l = 0.2284;
+drift87:DRIFT, l = 0.105;
+drift88:DRIFT, l = 0.045;
+drift9:DRIFT, l = 0.247;
+drift90:DRIFT, l = 0.6602;
+drift91:DRIFT, l = 0.1884;
+drift92:DRIFT, l = 0.045;
+drift94:DRIFT, l = 0.2333;
+drift95:DRIFT, l = 1.6117;
+drift96:DRIFT, l = 0.1884;
+drift97:DRIFT, l = 0.045;
+drift99:DRIFT, l = 0.2334;
+INJDIPOLE01:CSBEND, l = 0.2, angle = 0.523599, e1 = 0.261799, e2 = 0.261799, k1 = 0,&
+ n_kicks = 10, integration_order = 4, EDGE_ORDER = 2;
+INJDIPOLE02:CSBEND, l = 0.2, angle = 0.523599, e1 = 0.261799, e2 = 0.261799, k1 = 0,&
+ n_kicks = 10, integration_order = 4, EDGE_ORDER = 2;
+INJDIPOLE03:CSBEND, l = 0.2, angle = 0.349066, e1 = 0.174533, e2 = 0.174533, k1 = 0,&
+ n_kicks = 10, integration_order = 4, EDGE_ORDER = 2;
+INJEBPM03:MONI;
+INJEBPM04:MONI;
+INJEBPM05:MONI;
+INJHCOR03:KICKER, l = 0, HKICK = 0.000011, VKICK = 0;
+INJHCOR04:KICKER, l = 0, HKICK = -0.000049, VKICK = 0;
+INJHCOR05:KICKER, l = 0, HKICK = -0.000003, VKICK = 0;
+INJQUAD01:KQUAD, l = 0.15, k1 = -8.018196, n_kicks = 20;
+INJQUAD02:KQUAD, l = 0.15, k1 = 9.340543, n_kicks = 20;
+INJQUAD03:KQUAD, l = 0.15, k1 = 2.574449, n_kicks = 20;
+INJQUAD04:KQUAD, l = 0.15, k1 = -12.360509, n_kicks = 20;
+INJQUAD05:KQUAD, l = 0.15, k1 = 26.364349, n_kicks = 20;
+INJQUAD06:KQUAD, l = 0.15, k1 = 11.092736, n_kicks = 20;
+INJQUAD07:KQUAD, l = 0.15, k1 = -17.221884, n_kicks = 20;
+INJQUAD08:KQUAD, l = 0.15, k1 = 14.82536, n_kicks = 20;
+INJQUAD09:KQUAD, l = 0.15, k1 = 0, n_kicks = 20;
+INJQUAD10:KQUAD, l = 0.15, k1 = 12.143835, n_kicks = 20;
+INJQUAD11:KQUAD, l = 0.15, k1 = -8.55261, n_kicks = 20;
+INJQUAD12:KQUAD, l = 0.15, k1 = 7.668916, n_kicks = 20;
+INJVCOR03:KICKER, l = 0, HKICK = 0, VKICK = -0.000013;
+INJVCOR04:KICKER, l = 0, HKICK = 0, VKICK = 0.000012;
+INJVCOR05:KICKER, l = 0, HKICK = 0, VKICK = -0.000046;
+INJYAG02:MARKER, fitpoint = 1;
+INJYAG03:MARKER, fitpoint = 1;
+INJYAG04:MARKER, fitpoint = 1;
+ST1DIP01HIGH:CSBEND, l = 0.215, angle = 0.083111, e1 = 0, e2 = -0.265955, k1 = 0, n_kicks = 10,&
+ integration_order = 4, EDGE_ORDER = 2;
+ST1DIP01LOW:CSBEND, l = 0.215, angle = 0.349066, e1 = 0, e2 = 0, k1 = 0, n_kicks = 10,&
+ integration_order = 4, EDGE_ORDER = 2;
+ST1DIP02:CSBEND, l = 0.43, angle = -0.166222, e1 = -0.146275, e2 = -0.146275, k1 = 0,&
+ n_kicks = 10, integration_order = 4, EDGE_ORDER = 2;
+ST1DIP03:CSBEND, l = 0.215, angle = 0.083111, e1 = -0.265955, e2 = 0, k1 = 0, n_kicks = 10,&
+ integration_order = 4, EDGE_ORDER = 2;
+ST1EBPM01:MONI;
+ST1EBPM02:MONI;
+ST1HCOR01:KICKER, l = 0, HKICK = -0.000008, VKICK = 0;
+ST1HCOR02:KICKER, l = 0, HKICK = -0.000008, VKICK = 0;
+ST1OTR01:MARKER, fitpoint = 1;
+ST1OTR02HIGH:MARKER, fitpoint = 1;
+ST1OTR02LOW:MARKER, fitpoint = 1;
+ST1OTR03:MARKER, fitpoint = 1;
+ST1OTR04:MARKER, fitpoint = 1;
+ST1QUAD01:KQUAD, l = 0.1524, k1 = 1.355564, n_kicks = 20;
+ST1QUAD02:KQUAD, l = 0.1524, k1 = -3.174305, n_kicks = 20;
+ST1QUAD03:KQUAD, l = 0.1524, k1 = 7.206757, n_kicks = 20;
+ST1QUAD04:KQUAD, l = 0.1524, k1 = -5.888588, n_kicks = 20;
+ST1VCOR01:KICKER, l = 0, HKICK = 0, VKICK = 0.;
+ST1VCOR02:KICKER, l = 0, HKICK = 0, VKICK = -0.00002;
+ST2DIP01:CSBEND, l = 0.41025, angle = 0.375246, e1 = 0.187623, e2 = 0.187623, k1 = 0,&
+ n_kicks = 10, integration_order = 4, EDGE_ORDER = 2;
+ST2DIP02:CSBEND, l = 0.41025, angle = -0.375246, e1 = -0.187623, e2 = -0.187623, k1 = 0,&
+ n_kicks = 10, integration_order = 4, EDGE_ORDER = 2;
+ST2DIP03:CSBEND, l = 0.41025, angle = -0.375246, e1 = -0.187623, e2 = -0.187623, k1 = 0,&
+ n_kicks = 10, integration_order = 4, EDGE_ORDER = 2;
+ST2DIP04:CSBEND, l = 0.41025, angle = 0.375246, e1 = 0.187623, e2 = 0.187623, k1 = 0,&
+ n_kicks = 10, integration_order = 4, EDGE_ORDER = 2;
+ST2EBPM01:MONI;
+ST2EBPM02:MONI;
+ST2EBPM03:MONI;
+ST2EBPM04:MONI;
+ST2EBPM05:MONI;
+ST2HCOR01:KICKER, l = 0, HKICK = 0.000004, VKICK = 0;
+ST2HCOR02:KICKER, l = 0, HKICK = -0.000005, VKICK = 0;
+ST2HCOR04:KICKER, l = 0, HKICK = 0., VKICK = 0;
+ST2HCOR05:KICKER, l = 0, HKICK = 0.000024, VKICK = 0;
+ST2OTR01:MARKER, fitpoint = 1;
+ST2OTR02:MARKER, fitpoint = 1;
+ST2OTR03:MARKER, fitpoint = 1;
+ST2PLM01:DRIFT, l = 0.03;
+ST2QUAD01:KQUAD, l = 0.1524, k1 = -8.260402, n_kicks = 20;
+ST2QUAD02:KQUAD, l = 0.1524, k1 = 7.467859, n_kicks = 20;
+ST2QUAD03:KQUAD, l = 0.1524, k1 = -2.421262, n_kicks = 20;
+ST2QUAD04:KQUAD, l = 0.1524, k1 = 2.183494, n_kicks = 20;
+ST2QUAD05:KQUAD, l = 0.1524, k1 = 3.997394, n_kicks = 20;
+ST2QUAD06:KQUAD, l = 0.1524, k1 = -11.472906, n_kicks = 20;
+ST2QUAD07:KQUAD, l = 0.1524, k1 = 11.040432, n_kicks = 20;
+ST2VCOR01:KICKER, l = 0, HKICK = 0, VKICK = 0.000024;
+ST2VCOR02:KICKER, l = 0, HKICK = 0, VKICK = -0.000005;
+ST2VCOR03:KICKER, l = 0, HKICK = 0, VKICK = 0.000003;
+ST2VCOR04:KICKER, l = 0, HKICK = 0, VKICK = -0.000005;
+ST2VCOR05:KICKER, l = 0, HKICK = 0, VKICK = -0.000005;
+ST3EBPM01:MONI;
+ST3EBPM02:MONI;
+ST3HCOR01:KICKER, l = 0, HKICK = -0.000011, VKICK = 0;
+ST3HCOR02:KICKER, l = 0, HKICK = -0.000034, VKICK = 0;
+ST3OTR01:MARKER, fitpoint = 1;
+ST3QUAD01:KQUAD, l = 0.1524, k1 = 0.000079, n_kicks = 20;
+ST3QUAD02:KQUAD, l = 0.1524, k1 = -4.527683, n_kicks = 20;
+ST3QUAD03:KQUAD, l = 0.1524, k1 = 11.95969, n_kicks = 20;
+ST3QUAD04:KQUAD, l = 0.1524, k1 = -8.646388, n_kicks = 20;
+ST3VCOR01:KICKER, l = 0, HKICK = 0, VKICK = 0.000017;
+ST3VCOR02:KICKER, l = 0, HKICK = 0, VKICK = 0.000027;
+ST4DIP01:CSBEND, l = 0.215, angle = -0.083111, e1 = 0, e2 = 0.265955, k1 = 0, n_kicks = 10,&
+ integration_order = 4, EDGE_ORDER = 2;
+ST4DIP02:CSBEND, l = 0.43, angle = 0.166222, e1 = 0.146275, e2 = 0.146275, k1 = 0,&
+ n_kicks = 10, integration_order = 4, EDGE_ORDER = 2;
+ST4DIP03HIGH:CSBEND, l = 0.215, angle = -0.083111, e1 = 0.265955, e2 = 0, k1 = 0, n_kicks = 10,&
+ integration_order = 4, EDGE_ORDER = 2;
+ST4DIP03LOW:CSBEND, l = 0.215, angle = -0.349066, e1 = 0, e2 = 0, k1 = 0, n_kicks = 10,&
+ integration_order = 4, EDGE_ORDER = 2;
+ST4DUMP01:MARKER, fitpoint = 1;
+ST4EBPM01:MONI;
+ST4EBPM02:MONI;
+ST4HCOR01:KICKER, l = 0, HKICK = 0.000013, VKICK = 0;
+ST4HCOR02:KICKER, l = 0, HKICK = 0.000012, VKICK = 0;
+ST4OTR01:MARKER, fitpoint = 1;
+ST4OTR02:MARKER, fitpoint = 1;
+ST4QUAD01:KQUAD, l = 0.1524, k1 = -7.411324, n_kicks = 20;
+ST4QUAD02:KQUAD, l = 0.1524, k1 = 8.120487, n_kicks = 20;
+ST4QUAD03:KQUAD, l = 0.1524, k1 = -1.738929, n_kicks = 20;
+ST4QUAD04:KQUAD, l = 0.1524, k1 = 3.975535, n_kicks = 20;
+ST4QUAD05:KQUAD, l = 0.1524, k1 = -3.986067, n_kicks = 20;
+ST4VCOR01:KICKER, l = 0, HKICK = 0, VKICK = -0.000008;
+ST4VCOR02:KICKER, l = 0, HKICK = 0, VKICK = 0.000001;
+TCAVITY1A:RFCA, l = 1.0362, freq = 1300000000, VOLT = 9000000, END1_FOCUS = 0,&
+ END2_FOCUS = 0, N_KICKS = 10, BODY_FOCUS_MODEL = NONE;
+TCAVITY1D:RFCA, l = 1.0362, freq = 1300000000, VOLT = 9000000, END1_FOCUS = 0,&
+ END2_FOCUS = 0, N_KICKS = 10, BODY_FOCUS_MODEL = NONE;
+TCAVITY2A:RFCA, l = 1.0362, freq = 1300000000, VOLT = 9000000, END1_FOCUS = 0,&
+ END2_FOCUS = 0, N_KICKS = 10, BODY_FOCUS_MODEL = NONE;
+TCAVITY2D:RFCA, l = 1.0362, freq = 1300000000, VOLT = 9000000, END1_FOCUS = 0,&
+ END2_FOCUS = 0, N_KICKS = 10, BODY_FOCUS_MODEL = NONE;
+ERLPENGINEERING: Line = (INJQUAD01, drift1, INJYAG02, drift2, INJQUAD02, drift3, INJEBPM03,&
+ drift4, INJHCOR03, INJVCOR03, drift6, INJQUAD03, drift7, INJQUAD04, drift8,&
+ INJYAG03, drift9, INJDIPOLE01, drift10, INJQUAD05, drift11, INJDIPOLE02,&
+ drift12, INJEBPM04, drift13, INJHCOR04, INJVCOR04, drift15, INJQUAD06,&
+ drift16, INJQUAD07, drift17, INJQUAD08, drift18, INJQUAD09, drift19,&
+ INJDIPOLE03, drift20, INJQUAD10, drift21, INJYAG04, drift22, INJQUAD11,&
+ drift23, INJEBPM05, drift24, INJHCOR05, INJVCOR05, drift26, INJQUAD12,&
+ drift27, ST4DIP03LOW, drift28, ST1OTR01, drift29, ST1HCOR01, ST1VCOR01,&
+ drift31, ST1EBPM01, drift32, TCAVITY1A, drift33, TCAVITY2A, drift34,&
+ ST1OTR02HIGH, drift35, ST1DIP01HIGH, drift36, ST1DIP02, drift37, ST1DIP03,&
+ drift38, ST1QUAD01, drift39, ST1OTR03, drift40, ST1EBPM02, drift41, ST1HCOR02,&
+ ST1VCOR02, drift43, ST1QUAD02, drift44, ST1QUAD03, drift45, ST1QUAD04,&
+ drift46, ST1OTR04, drift47, AR1EBPM01, drift48, AR1DIP01, drift49, AR1EBPM02,&
+ drift50, AR1SEXT01, drift51, AR1OTR01, drift52, AR1QUAD01, drift53, AR1VCOR01,&
+ drift54, AR1QUAD02, drift55, AR1EBPM03, drift56, AR1DIP02, drift57, AR1EBPM04,&
+ drift58, AR1QUAD03, drift59, AR1VCOR02, drift60, AR1QUAD04, drift61, AR1OTR02,&
+ drift62, AR1SEXT02, drift63, AR1EBPM05, drift64, AR1DIP03, drift65, AR1EBPM06,&
+ drift66, ST2OTR01, drift67, ST2QUAD01, drift68, ST2QUAD02, drift69, ST2EBPM01,&
+ drift70, ST2HCOR01, ST2VCOR01, drift72, ST2OTR02, drift73, ST2QUAD03, drift74,&
+ ST2QUAD04, drift75, ST2EBPM02, drift76, ST2HCOR02, ST2VCOR02, drift78,&
+ ST2DIP01, drift79, ST2DIP02, drift80, ST2VCOR03, drift81, ST2OTR03, drift82,&
+ ST2EBPM03, drift83, ST2DIP03, drift84, ST2DIP04, drift85, ST2QUAD05, drift86,&
+ ST2PLM01, drift87, ST2EBPM04, drift88, ST2HCOR04, ST2VCOR04, drift90,&
+ ST2QUAD06, drift91, ST2EBPM05, drift92, ST2HCOR05, ST2VCOR05, drift94,&
+ ST2QUAD07, drift95, ST3QUAD01, drift96, ST3EBPM01, drift97, ST3HCOR01,&
+ ST3VCOR01, drift99, ST3QUAD02, drift100, ST3QUAD03, drift101, ST3EBPM02,&
+ drift102, ST3HCOR02, ST3VCOR02, drift104, ST3QUAD04, drift105, ST3OTR01,&
+ drift106, AR2EBPM01, drift107, AR2DIP01, drift108, AR2EBPM02, drift109,&
+ AR2SEXT01, drift110, AR2OTR01, drift111, AR2QUAD01, drift112, AR2VCOR01,&
+ drift113, AR2QUAD02, drift114, AR2EBPM03, drift115, AR2DIP02, drift116,&
+ AR2EBPM04, drift117, AR2QUAD03, drift118, AR2VCOR02, drift119, AR2QUAD04,&
+ drift120, AR2OTR02, drift121, AR2SEXT02, drift122, AR2EBPM05, drift123,&
+ AR2DIP03, drift124, AR2EBPM06, drift125, ST4OTR01, drift126, ST4QUAD01,&
+ drift127, ST4QUAD02, drift128, ST4EBPM01, drift129, ST4HCOR01, ST4VCOR01,&
+ drift131, ST4QUAD03, drift132, ST4DUMP01, drift133, ST4QUAD04, drift134,&
+ ST4QUAD05, drift135, ST4EBPM02, drift136, ST4HCOR02, ST4VCOR02, drift138,&
+ ST4OTR02, drift139, ST4DIP01, drift140, ST4DIP02, drift141, ST4DIP03HIGH,&
+ drift142, ST1OTR01, drift143, ST1HCOR01, ST1VCOR01, drift145, ST1EBPM01,&
+ drift146, TCAVITY1D, drift147, TCAVITY2D, drift148, ST1OTR02LOW, drift149,&
+ ST1DIP01LOW, drift150, DMPEBPM01, drift151, DMPQUAD01, drift152, DMPQUAD02,&
+ drift153, DMPQUAD03, drift154, DMPOTR01, drift155, DMPFCUP01)

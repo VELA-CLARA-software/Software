@@ -82,7 +82,7 @@ class controller_base(base):
 			base.logger.message('start_bpm_control created ' + str(base.config.bpm_config['BPM_AREA']) + ' object', True)
 			base.logger.message('Monitoring BPMs: ' + ' '.join(self.get_bpm_names()), True)
 			base.config.bpm_config['BPM_NAMES'] = self.get_bpm_names()
-			base.data.values[dat.machine_mode] = 'virtual'
+			# base.data.values[dat.machine_mode] = 'virtual'
 			base.data.values[dat.num_bpms] = len(base.config.bpm_config['BPM_NAMES'])
 			for i in base.config.bpm_config['BPM_NAMES']:
 				self.obj = base.bpm_control.getBPMDataObject(i)

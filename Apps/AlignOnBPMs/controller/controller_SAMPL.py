@@ -44,6 +44,10 @@ class Controller():
 		self.positionGraph_3.addItem(self.bg3)
 		self.positionGraph_4.addItem(self.bg4)
 		layout.nextRow()
+		self.label_1 = layout.addLabel('')
+		self.label_2 = layout.addLabel('')
+		self.label_3 = layout.addLabel('')
+		self.label_4 = layout.addLabel('')
 		'''1.2 Create place to diplay an image of a YAG screen'''
 		# yagImageBox = layout.addViewBox(lockAspect=True, colspan=2)
 		# self.YAGImage = pg.ImageItem(np.random.normal(size=(2560,2160)))
@@ -109,6 +113,10 @@ class Controller():
 		self.view.doubleSpinBox_V_3.valueChanged.connect(partial(self.model.steer_V,3))
 		self.view.doubleSpinBox_H_4.valueChanged.connect(partial(self.model.steer_H,4))
 		self.view.doubleSpinBox_V_4.valueChanged.connect(partial(self.model.steer_V,4))
+
+		self.view.pushButton_save.clicked.connect(self.model.save)
+		self.view.pushButton_save_2.clicked.connect(self.model.save_positions)
+		self.view.pushButton_load.clicked.connect(self.model.load)
 		#self.view.comboBox_1.currentIndexChanged.connect(self.model.combobox_bpm)
 		#self.view.doubleSpinBox.
 
@@ -127,14 +135,21 @@ class Controller():
 
 	def updateDisplays(self):
 		#print 'HERE WE ARE(updateDisplays)!!!!: BPM readout =', str(self.model.Cbpms.getXFromPV('C2V-BPM01'))
+
+		# SAMPL
 		self.model.func.simulate.run()
 		time.sleep(0.1)
 		QApplication.processEvents()
+
 		#self.displayMom.setText('MOMENTUM<br> Current: '+str(self.model.I)+' A<br>'+str(self.model.p)+' = MeV/c')
 		self.bg1.setOpts(x=self.xdict.keys(), height=[1*self.model.Cbpms.getXFromPV('S01-BPM01'),1*self.model.Cbpms.getYFromPV('S01-BPM01')], width=1)# replace the random generators with  bpm x read offs
 		self.bg2.setOpts(x=self.xdict.keys(), height=[1*self.model.Cbpms.getXFromPV('S02-BPM01'),1*self.model.Cbpms.getYFromPV('S02-BPM01')], width=1)
 		self.bg3.setOpts(x=self.xdict.keys(), height=[1*self.model.Cbpms.getXFromPV('S02-BPM02'),1*self.model.Cbpms.getYFromPV('S02-BPM02')], width=1)
 		self.bg4.setOpts(x=self.xdict.keys(), height=[1*self.model.Cbpms.getXFromPV('C2V-BPM01'),1*self.model.Cbpms.getYFromPV('C2V-BPM01')], width=1)
+		self.label_1.setText('x='+str(1*self.model.Cbpms.getXFromPV('S01-BPM01'))+' y='+str(1*self.model.Cbpms.getYFromPV('S01-BPM01')))
+		self.label_2.setText('x='+str(1*self.model.Cbpms.getXFromPV('S02-BPM01'))+' y='+str(1*self.model.Cbpms.getYFromPV('S02-BPM01')))
+		self.label_3.setText('x='+str(1*self.model.Cbpms.getXFromPV('S02-BPM02'))+' y='+str(1*self.model.Cbpms.getYFromPV('S02-BPM02')))
+		self.label_4.setText('x='+str(1*self.model.Cbpms.getXFromPV('C2V-BPM01'))+' y='+str(1*self.model.Cbpms.getYFromPV('C2V-BPM01')))
 		self.view.doubleSpinBox_H_1.setValue(self.model.get_H(1))
 		self.view.doubleSpinBox_V_1.setValue(self.model.get_V(1))
 		self.view.doubleSpinBox_H_2.setValue(self.model.get_H(2))

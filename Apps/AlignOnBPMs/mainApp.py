@@ -1,7 +1,7 @@
 import sys,os
 
-mode='virtual'
-#mode='physical'
+#mode='virtual'
+mode='physical'
 if mode=='virtual':
 	#os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
 	os.environ["EPICS_CA_ADDR_LIST"] = "10.10.0.12" #BE SPECIFIC.... YOUR I.P. FOR YOUR VM
@@ -15,11 +15,11 @@ from PyQt4 import QtGui, QtCore
 if mode=='virtual':
 	import model_CLARA_SAMPL as model
 	import controller.controller_SAMPL as controller
-	import view.view1_7 as view
+	import view.view1_8 as view
 elif mode=='physical':
 	import model_CLARA as model
 	import controller.controller as controller
-	import view.view1_2 as view
+	import view.view1_10 as view
 
 class App(QtCore.QObject):
 	def __init__(self, sys_argv):
