@@ -76,7 +76,7 @@ class magnetAppController(object):
 # \___ \  |  |  / __ \|  | \/|  |       \   /|  \  ___/\     /
 #/____  > |__| (____  /__|   |__|        \_/ |__|\___  >\/\_/
 #     \/            \/                               \/
-    # these functions handle the start view signals
+    # these functions handle the start view signals4
     # start view radio group 1
     def handle_machineAreaSignal(self,r):
          self.machineArea = r
@@ -212,9 +212,18 @@ class magnetAppController(object):
             else:
                 mags = activeMags
             if len(solmags) > 0:
-                self.localMagnetController.degauss(solmags,tozero)
+                self.localMagnetController.degauss(solmags, tozero)
             if len(mags) > 0:
-                self.localMagnetController.degauss(mags,tozero)
+                # hack to stop degaussing gun solenoids
+                try:
+                    mags.remove("LRG-SOL")
+                except:
+                    pass
+                try:
+                    mags.remove("LRG-BSOL")
+                except:
+                    pass
+                self.localMagnetController.degauss(mags, tozero)
 
 
     def handle_saveSettings(self):

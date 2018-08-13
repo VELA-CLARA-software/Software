@@ -28,9 +28,9 @@
 '''
 
 import sys,os
-
-os.environ['PATH']=os.environ['PATH']+';\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin' \
-                                      '\\Stage\\'
+sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\Stage\\')
+#os.environ['PATH']=os.environ['PATH']+';\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin' \
+#                                      '\\Stage\\'
 #os.environ['PATH']=os.environ['PATH']+';\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin
 # \\stage\\'
 #os.environ['PATH']=os.environ['PATH']+';\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin

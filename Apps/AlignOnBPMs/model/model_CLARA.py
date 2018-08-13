@@ -23,15 +23,16 @@ sys.path.append('C:\\Users\\djd63\\Desktop\\VA workshop\\OnlineModel-master\\Onl
 sys.path.append('C:\\Users\\djd63\\Desktop\\VA workshop\\Examples Scripts')
 #import SAMPL.v2_developing.sampl_noprint as sampl
 #sys.path.append('\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Software\\VELA_CLARA_PYDs\\bin\\stagetim')
-sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release')
-os.environ["PATH"] = os.environ["PATH"]+";\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release\\root_v5.34.34\\bin\\"
-
+#sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release')
+sys.path.append('C:\\Users\\djd63\\Desktop\\Release')
+#os.environ["PATH"] = os.environ["PATH"]+";\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release\\root_v5.34.34\\bin\\"
+#sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release\\root_v5.34.34\\bin\\')
 #import onlineModel
 import VELA_CLARA_Magnet_Control as mag
 import VELA_CLARA_BPM_Control as bpm
-import VELA_CLARA_LLRF_Control as llrf
-import VELA_CLARA_PILaser_Control as pil
-import VELA_CLARA_Camera_IA_Control as camIA
+#import VELA_CLARA_LLRF_Control as llrf
+#import VELA_CLARA_PILaser_Control as pil
+#import VELA_CLARA_Camera_IA_Control as camIA
 
 import momentumFunctions as momentumFunctions
 
@@ -61,17 +62,20 @@ class Model(QObject):
 
         self.magInit = mag.init()
         self.bpmInit = bpm.init()
-        self.pilInit = pil.init()
-        self.llrfInit = llrf.init()
-        self.camInit = camIA.init()
+        #self.bpmInit.setVerbose()
+        #self.pilInit = pil.init()
+        #self.llrfInit = llrf.init()
+        #self.camInit = camIA.init()
         self.Vmagnets = self.magInit.physical_VELA_INJ_Magnet_Controller()
         self.Cmagnets = self.magInit.physical_CLARA_PH1_Magnet_Controller()
-        self.laser = self.pilInit.physical_PILaser_Controller()
-        self.Cbpms = self.bpmInit.physical_CLARA_PH1_BPM_Controller()
+        #self.laser = self.pilInit.physical_PILaser_Controller()
+        #self.Cbpms = self.bpmInit.physical_CLARA_PH1_BPM_Controller()
+        self.Cbpms = self.bpmInit.physical_C2B_BPM_Controller()
+
         #print 'HERE WE ARE(model_CLARA)!!!!: BPM readout =', str(self.Cbpms.getXFromPV('C2V-BPM01'))
         #self.C2Vbpms = self.bpmInit.physical_CLARA_2_VELA_BPM_Controller()
-        self.gun = self.llrfInit.physical_CLARA_LRRG_LLRF_Controller()
-        self.LINAC01 = self.llrfInit.physical_L01_LLRF_Controller()
+        #self.gun = self.llrfInit.physical_CLARA_LRRG_LLRF_Controller()
+        #self.LINAC01 = self.llrfInit.physical_L01_LLRF_Controller()
         # self.Vmagnets = self.magInit.virtual_VELA_INJ_Magnet_Controller()
         # self.Cmagnets = self.magInit.virtual_CLARA_PH1_Magnet_Controller()
         # self.laser = self.pilInit.virtual_PILaser_Controller()
@@ -80,13 +84,13 @@ class Model(QObject):
         # #self.C2Vbpms = self.bpmInit.virtual_CLARA_2_VELA_BPM_Controller()
         # self.gun = self.llrfInit.virtual_CLARA_LRRG_LLRF_Controller()
         # self.LINAC01 = self.llrfInit.virtual_L01_LLRF_Controller()
-        self.Cmagnets.switchONpsu('DIP01')
-        self.Cmagnets.switchONpsu('S01-HCOR1')
-        self.Cmagnets.switchONpsu('S01-HCOR2')
-        self.Cmagnets.switchONpsu('S02-HCOR01')
-        self.Cmagnets.switchONpsu('S02-HCOR02')
-        self.Cmagnets.switchONpsu('S02-QUAD1')
-        self.Cmagnets.switchONpsu('S02-QUAD2')
+        #self.Cmagnets.switchONpsu('DIP01')
+        #self.Cmagnets.switchONpsu('S01-HCOR1')
+        #self.Cmagnets.switchONpsu('S01-HCOR2')
+        #self.Cmagnets.switchONpsu('S02-HCOR01')
+        #self.Cmagnets.switchONpsu('S02-HCOR02')
+        #self.Cmagnets.switchONpsu('S02-QUAD1')
+        #self.Cmagnets.switchONpsu('S02-QUAD2')
         # self.SAMPL = onlineModel.SAMPL(V_MAG_Ctrl=self.Vmagnets,
         #                                     C_S01_MAG_Ctrl=self.Cmagnets,
         #                                     C_S02_MAG_Ctrl=self.Cmagnets,
@@ -99,12 +103,12 @@ class Model(QObject):
         # self.SAMPL.stopElement = 'CV-YAG01'
         # self.SAMPL.initDistrib = 'temp-start.ini'
         # self.SAMPL.initCharge = 0.25
-        self.gun400 = self.llrfInit.virtual_VELA_HRRG_LLRF_Controller()
-        self.cameras = self.camInit.virtual_CLARA_Camera_IA_Controller()
+        #self.gun400 = self.llrfInit.virtual_VELA_HRRG_LLRF_Controller()
+        #self.cameras = self.camInit.virtual_CLARA_Camera_IA_Controller()
         #Setup Virtual Accelerators
         #Cmagnets.switchONpsu('DIP01')
         #cameras.setCamera('C2V-CAM-01')
-        self.selectedCamera = self.cameras.getSelectedIARef()
+        #self.selectedCamera = self.cameras.getSelectedIARef()
         # self.Cmagnets.setSI('DIP01',-91.6)
         # self.gun400.setAmpMVM(70)
         # self.gun400.setPhiDEG(-16)
@@ -330,6 +334,27 @@ class Model(QObject):
             #else:
             #    print 'Not confirmed momentum measurement'
 
+    def set(self):
+        for r in np.arange(0, 6, 1):
+            row = str(r+1)
+            #b = a[r].split()
+            #print b[0]
+            getattr(self.view, 'doubleSpinBox_x_'+row).setValue(1*self.Cbpms.getXFromPV(str(getattr(self.view, 'comboBox_'+row).currentText())))
+            getattr(self.view, 'doubleSpinBox_y_'+row).setValue(1*self.Cbpms.getYFromPV(str(getattr(self.view, 'comboBox_'+row).currentText())))
+            #getattr(self.view, 'doubleSpinBox_y_'+row).setValue(float(self.view.label_V_1.text()))
+            #getattr(self.view, 'doubleSpinBox_tol_'+row).setValue(float(b[2]))
+            #getattr(self.view, 'doubleSpinBox_step_'+row).setValue(float(b[3]))
+
+    def set_0(self):
+        for r in np.arange(0, 6, 1):
+            row = str(r+1)
+            #b = a[r].split()
+            #print b[0]
+            getattr(self.view, 'doubleSpinBox_x_'+row).setValue(0.0)
+            getattr(self.view, 'doubleSpinBox_y_'+row).setValue(0.0)
+            #getattr(self.view, 'doubleSpinBox_tol_'+row).setValue(float(b[2]))
+            #getattr(self.view, 'doubleSpinBox_step_'+row).setValue(float(b[3]))
+
     def save(self):
         #self.filename = QtGui.QFileDialog::getOpenFileName
         #print self.filename
@@ -337,7 +362,7 @@ class Model(QObject):
         print self.savefile
         row = 1
         open(self.savefile,'w').writelines(self.getall(row))
-        for row in np.arange(2,5,1):
+        for row in np.arange(2,7,1):
             open(self.savefile,'a').writelines(self.getall(row))
 
     def getall(self, row):
@@ -361,7 +386,7 @@ class Model(QObject):
         print self.savefile
         row = 1
         open(self.savefile,'w').writelines(self.getall2(row))
-        for row in np.arange(2,5,1):
+        for row in np.arange(2,7,1):
             open(self.savefile,'a').writelines(self.getall2(row))
 
     def getall2(self, row):

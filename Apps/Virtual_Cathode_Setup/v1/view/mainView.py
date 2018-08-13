@@ -33,6 +33,7 @@ from viewSource.Ui_mainView import Ui_mainView
 import numpy as np
 import pyqtgraph as pg
 import  model.data
+import inspect
 
 
 class mainView(QtGui.QMainWindow, Ui_mainView ):
@@ -59,7 +60,6 @@ class mainView(QtGui.QMainWindow, Ui_mainView ):
         self.pix_gridlines_checkBox.released.connect(self.handle_pix_gridlines_checkBox)
         self.mm_gridlines_checkBox.released.connect(self.handle_mm_gridlines_checkBox)
 
-
     def add_camera_image(self):
         '''
             Sets up the camera widget images ... first set some local constants
@@ -67,59 +67,93 @@ class mainView(QtGui.QMainWindow, Ui_mainView ):
             whole image, this is taken into account with x_pix_scale_factor
         '''
         self.xpix = self.data.values[model.data.num_pix_x]
-        self.ypix = self.data.values[model.data.num_pix_x]
+        print ('self.xpix ',self.xpix)
+        self.ypix = self.data.values[model.data.num_pix_y]
+        print ('self.ypix ',self.ypix)
+
         self.xpix_full = self.data.values[model.data.num_pix_x] * self.data.values[
             model.data.x_pix_scale_factor]
-        self.ypix_full = self.data.values[model.data.num_pix_y] *self.data.values[
+        self.ypix_full = self.data.values[model.data.num_pix_y] * self.data.values[
             model.data.y_pix_scale_factor]
         #
-        # vc_image is an ImageItem, the camera image data to plot
-        self.vc_image = pg.ImageItem(np.random.normal(size=(self.xpix, self.ypix)))  # MAGIC_NUM
-        self.vc_image.setOpts(axisOrder='row-major')
-        self.vc_image.scale(self.data.values[model.data.x_pix_scale_factor], self.data.values[
-            model.data.x_pix_scale_factor])
-        #
-        # the image is held in a plot item, the plot item is added to graphics_view
-        self.plot_item = self.graphics_view.addPlot()
-        #
-        # vc_image is added to the plot_item
-        self.plot_item.addItem(self.vc_image)
-        #
-        # the ViewBox for the plot_item controls some display parameters
-        self.vc_imageBox = self.plot_item.getViewBox()
-        self.vc_imageBox.setAspectLocked(True)
-        self.vc_imageBox.setLimits(xMin = 0, xMax = self.xpix_full, yMin = 0, yMax = self.ypix_full,
-                                   minXRange = 10, maxXRange = self.ypix_full, minYRange = 10,
-                                   maxYRange = self.ypix_full)
-        self.vc_imageBox.setRange(xRange=[0, self.xpix_full], yRange=[0, self.ypix_full])
-        #
-        # add in extra graphic items
-        # 1. Cross Hairs (with dummy initial values
-        self.v_cross_hair = self.plot_item.plot(x=[1000, 1000], y=[900,  1100], pen='g')
-        self.h_cross_hair = self.plot_item.plot(x=[900,  1100], y=[1000, 1000], pen='g')
-        #
-        # set up color scaling
+
+        print self.xpix_full
+        print self.xpix_full
+        print self.xpix_full
+        print
+        print self.ypix_full
+        print self.ypix_full
+        print self.ypix_full
+
+        self.vc_image = pg.ImageItem(np.random.normal(size=(self.xpix, self.ypix)))
+        self.vc_image.scale(self.data.values[model.data.x_pix_scale_factor],
+                            self.data.values[model.data.y_pix_scale_factor])
+        self.plot_item = self.graphics_view.addPlot(lockAspect=True)
+        #self.graphics_view.addWidget(monitor, 0, 2, 23, 3)
         STEPS = np.linspace(0, 1, 4)
         CLRS = ['k', 'r', 'y', 'w']
         a = np.array([pg.colorTuple(pg.Color(c)) for c in CLRS])
         clrmp = pg.ColorMap(STEPS, a)
         lut = clrmp.getLookupTable()
         self.vc_image.setLookupTable(lut)
-        #
-        # read ellipse (Region Of Interest)
-        print 'adding read_roi '
+        self.plot_item.setRange(xRange=[0, self.xpix_full],yRange=[0, self.ypix_full])
+        self.plot_item.addItem(self.vc_image)
+
+#
+#         #self.view_box = self.graphics_view.addViewBox()
+#         # vc_image is an ImageItem, the camera image data to plot
+#         self.vc_image = pg.ImageItem(np.random.normal(size=(self.xpix, self.ypix)))  # MAGIC_NUM
+#         self.vc_image.setImage(np.random.normal(size=(self.xpix, self.ypix)))  # MAGIC_NUM
+#         self.vc_image.setOpts(axisOrder='row-major')
+
+
+        # self.vc_image.scale(self.data.values[model.data.x_pix_scale_factor], self.data.values[
+        #    model.data.y_pix_scale_factor])
+#         #
+#         # the image is held in a plot item, the plot item is added to graphics_view
+#         self.plot_item = self.graphics_view.addViewBox()
+#         #
+#         # vc_image is added to the plot_item
+#         self.plot_item.addItem(self.vc_image)
+#         #
+#         # the ViewBox for the plot_item controls some display parameters
+#         self.vc_imageBox =  pg.ViewBox()
+#         self.vc_imageBox.addItem(self.vc_image)
+#
+#
+        self.plot_item.setAspectLocked(True)
+        self.plot_item.setLimits(xMin = 0, xMax = self.xpix_full, yMin = 0, yMax = self.ypix_full,
+                                    minXRange = 10, maxXRange = self.xpix_full, minYRange = 10,
+                                    maxYRange = self.ypix_full)
+        self.plot_item.setRange(xRange=[0, self.xpix_full], yRange=[0, self.ypix_full])
+#         #
+#         # add in extra graphic items
+#         # 1. Cross Hairs (with dummy initial values
+        self.v_cross_hair = self.plot_item.plot(x=[1000, 1000], y=[900,  1100], pen='g')
+        self.h_cross_hair = self.plot_item.plot(x=[900,  1100], y=[1000, 1000], pen='g')
+#         #
+#         # set up color scaling
+#         STEPS = np.linspace(0, 1, 4)
+#         CLRS = ['k', 'r', 'y', 'w']
+#         a = np.array([pg.colorTuple(pg.Color(c)) for c in CLRS])
+#         clrmp = pg.ColorMap(STEPS, a)
+#         lut = clrmp.getLookupTable()
+#         self.vc_image.setLookupTable(lut)
+#         #
+#         # read ellipse (Region Of Interest)
+#         print 'adding read_roi '
         self.read_roi = EllipseROI_NoHandle([0, 0], [500, 500], movable=False, pen='g')
         self.plot_item.addItem(self.read_roi)
-        #
-        # user roi, i.e the one that can be moved
-        print 'adding user_roi '
+#         #
+#         # user roi, i.e the one that can be moved
+#         print 'adding user_roi '
         self.user_roi = EllipseROI_OneHandle([0, 0], [500, 500], movable=False, pen='w')
         self.user_roi.sigHoverEvent.connect(self.user_roi_hashover)
         self.user_roi.addTranslateHandle([0,0.5])
         self.plot_item.addItem(self.user_roi)
         self.user_roi.sigRegionChangeFinished.connect(self.user_roiChanged)
-        #
-        # set the user (i.,e. changeable) ROI
+#         #
+#         # set the user (i.,e. changeable) ROI
         self.user_roiChanged()
 
 
@@ -150,8 +184,13 @@ class mainView(QtGui.QMainWindow, Ui_mainView ):
         self.user_roi.sigRegionChangeFinished.connect(self.user_roiChanged)
 
     def user_roiChanged(self):
+        '''
+            I think analysis x,y fro the VC are swopped .. ?
+        :return:
+        '''
+        print 'user_roiChanged called'
         x_rad, y_rad = 0.5 * self.user_roi.size()
-        x,y = self.user_roi.pos() + [x_rad,y_rad]
+        x,y = self.user_roi.pos() + [x_rad, y_rad]
         self.maskX_spinBox.setValue(x)
         self.maskY_spinBox.setValue(y)
         self.maskXRadius_spinBox.setValue(x_rad)
@@ -159,7 +198,7 @@ class mainView(QtGui.QMainWindow, Ui_mainView ):
         self.setMask_pushButton.click()
 
     def update_gui(self):
-        # we only need to update the read_ROI oncem so keep a flag for it
+        # we only need to update the read_ROI once so keep a flag for it
         not_updated_read_roi = True
         # there are no widgets associated with the cross-hairs so they are updated outside the mask
         self.update_crosshair()
@@ -200,6 +239,10 @@ class mainView(QtGui.QMainWindow, Ui_mainView ):
         self.set_ypos_pushButton.setEnabled(v)
 
     def update_crosshair(self):
+        '''
+            It seems that the x,y and y for analysis are mixed compared to x,y dimensions
+        :return:
+        '''
         x0 = self.data.values[model.data.x_pix]
         xmin = self.data.values[model.data.x_pix] - self.data.values[model.data.sig_x_pix]
         xmax = self.data.values[model.data.x_pix] + self.data.values[model.data.sig_x_pix]
@@ -245,12 +288,16 @@ class mainView(QtGui.QMainWindow, Ui_mainView ):
         print 'hover'
 
     def update_read_roi(self):
+        '''
+            I think the x and y analysis numebers are swopped for the VC
+        :return:
+        '''
         self.read_roi.setPos(QtCore.QPoint(self.data.values[model.data.mask_x_rbv] -
                                            self.data.values[model.data.mask_x_rad_rbv],
                                            self.data.values[model.data.mask_y_rbv] -
                                            self.data.values[model.data.mask_y_rad_rbv]))
         self.read_roi.setSize(QtCore.QPoint(2 * self.data.values[model.data.mask_x_rad_rbv],
-                                            2 * self.data.values[model.data.mask_y_rad_rbv]) )
+                                            2 * self.data.values[model.data.mask_y_rad_rbv]))
 
     def start_up(self):
         ''' here initilise the values to the current reads ... '''
@@ -262,8 +309,6 @@ class mainView(QtGui.QMainWindow, Ui_mainView ):
         self.maskY_spinBox.setRange(0,self.ypix_full)
         self.maskXRadius_spinBox.setRange(0,self.xpix_full)
         self.maskYRadius_spinBox.setRange(0,self.ypix_full)
-
-
 
         self.mirror_h_step_set_spinBox.setValue(self.data.values[model.data.H_step_read])
         self.mirror_v_step_set_spinBox.setValue(self.data.values[model.data.V_step_read])
@@ -316,7 +361,7 @@ class mainView(QtGui.QMainWindow, Ui_mainView ):
         widget.setText("%.3f" % self.data.values.get(value))
 
     def update_image(self, widget, value, dummy):
-        self.vc_image.setImage(self.data.values.get(value))
+        self.vc_image.setImage(image = self.data.values.get(value))
         self.vc_image.setLevels([self.spinBox_minLevel.value(),
                              self.spinBox_maxLevel.value()], update=True)
 
@@ -441,7 +486,6 @@ class mainView(QtGui.QMainWindow, Ui_mainView ):
         # self.widget_updatefunc[self.int_val_2] = [self.update_real]
         # self.widget_updatefunc[self.int_mean] = [self.update_real]
         # self.widget_updatefunc[self.int_sd] = [self.update_real]
-
 
     def closeEvent(self,event):
         self.closing.emit()

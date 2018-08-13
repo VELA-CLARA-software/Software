@@ -68,11 +68,10 @@ class controller(object):
             self.start_count += 1
         elif self.start_count == 5:
             print 'self.start_count == 5'
+            self.start_count += 1
             controller.model.update_values()
             self.view.start_up()
-            self.start_count += 1
         else:
-            print 'self.start_count > 5'
             self.timer.stop()
             self.timer = QtCore.QTimer()
             self.timer.setSingleShot(False)
@@ -83,7 +82,6 @@ class controller(object):
     def update(self):
         # we give the app a few ticks to init the hardware controllers before updating the mainView
         controller.model.update_values()
-        self.model.feedback(controller.view.feed_back_check.isChecked())
         controller.view.update_gui()
 
     def handle_collect_and_save_pushButton(self):
@@ -147,8 +145,10 @@ class controller(object):
         print 'handle_stepSize_spinBox'
 
     def handle_feed_back_check(self):
-        controller.view.feed_back_check.isChecked()
         print 'handle_feed_back_check'
+        print 'handle_feed_back_check'
+        print 'handle_feed_back_check'
+        controller.model.toggle_feedback(controller.view.feed_back_check.isChecked())
 
     def handle_spinBox_minLevel(self):
         print 'handle_spinBox_minLevel'
@@ -195,15 +195,6 @@ class controller(object):
 
     def handle_center_mask_pushButton(self):
         controller.model.center_mask()
-
-
-        def handle_setMask_pushButton(self):
-            controller.model.setMask(x=controller.view.maskX_spinBox.value(),
-                                     y=controller.view.maskY_spinBox.value(),
-                                     xRad=controller.view.maskXRadius_spinBox.value(),
-                                     yRad=controller.view.maskYRadius_spinBox.value()
-                                     )
-
 
 
     def connect_widgets(self):

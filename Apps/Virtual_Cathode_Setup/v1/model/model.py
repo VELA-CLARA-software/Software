@@ -34,7 +34,7 @@ import data
 
 class model():
     init = pil.init()
-    #init.setVerbose()
+    init.setVerbose()
     pil = init.physical_PILaser_Controller()
 
     # holds a copy of the data dictionary
@@ -90,9 +90,6 @@ class model():
         #     print 'COLLECTING AND SAVING'
         # else:
         #     print 'NOT COLLECTING AND SAVING'
-
-
-
         model.data.values[data.x_pix] = self.vc_data[0].x_pix
         model.data.values[data.y_pix] = self.vc_data[0].y_pix
         model.data.values[data.sig_x_pix] = self.vc_data[0].sig_x_pix
@@ -168,9 +165,14 @@ class model():
     def get_fast_image(self):
         if model.pil.isAcquiring_VC():
             if model.pil.takeFastImage_VC():
-                npData = np.array(  self.vc_image[0].data ).reshape(( self.vc_image[0].num_pix_x,
-                                                                self.vc_image[0].num_pix_y))
-                return np.flipud(npData)
+                # reshape works as: reshape(( n rows, m columns) )
+                npData = np.array(  self.vc_image[0].data ).reshape(( self.vc_image[0].num_pix_y,
+                                                                self.vc_image[0].num_pix_x))
+                # This needs to be checked,
+                # it matches the old imageviewer, but is this correct?? !!
+                return np.transpose(np.flipud(npData))
+            else:
+                print('failed to get image')
 
     def toggle_shutter(self):
         if self.shutter[0].state == shut.SHUTTER_STATE.CLOSED:
@@ -183,7 +185,11 @@ class model():
         model.pil.setStepSize(stepSize)
 
     def setMask(self, x, y, xRad, yRad):
-        model.pil.setMask_VC(x,y,xRad,yRad)
+        print('model setMask called',x, y, xRad, yRad)
+        model.pil.setMaskX_VC(x)
+        model.pil.setMaskY_VC(y)
+        model.pil.setMaskXrad_VC(xRad)
+        model.pil.setMaskYrad_VC(yRad)
 
     def useBkgrnd(self):
         if self.pil.isUsingBackground_VC():
@@ -227,24 +233,49 @@ class model():
         else:
             model.pil.useNPoint_VC(True)
 
-    def feedback(self,use):
+    def toggle_feedback(self,use):
+        print 'toggle_feedback'
         if use:
-            height = 2160#self.selectedCameraIA.IA.imageHeight
-            width = 2560#self.selectedCameraIA.IA.imageWidth
-            x  = self.vc_data[0].x_pix
-            y  = self.vc_data[0].y_pix
-            sX = self.vc_data[0].sig_x_pix
-            sY = self.vc_data[0].sig_y_pix
-            if x-5*sX > 0 and x+5*sX < width and y-5*sY > 0 and y+5*sY < height:
-                #print(x-sX)
-                #print(y-sY)
-                self.setMask(int(x),int(y),int(5*sX),int(5*sY))
+            print 'enable mask feedback'
+            model.pil.setMaskFeedBackOn_VC()
+        else:
+            print 'disable mask feedback'
+            model.pil.setMaskFeedBackOff_VC()
+
+
+            # height = 2160#self.selectedCameraIA.IA.imageHeight
+            # width = 2560#self.selectedCameraIA.IA.imageWidth
+            # x  = self.vc_data[0].x_pix
+            # y  = self.vc_data[0].y_pix
+            # sX = self.vc_data[0].sig_x_pix
+            # sY = self.vc_data[0].sig_y_pix
+            # if x-5*sX > 0 and x+5*sX < width and y-5*sY > 0 and y+5*sY < height:
+            #     #print(x-sX)
+            #     #print(y-sY)
+            #     self.setMask(int(x),int(y),int(5*sX),int(5*sY))
 
     def center_mask(self):
-
-
         x = model.data.values[data.mask_x_rbv] - model.data.values[data.mask_x_rad_rbv]
         y = model.data.values[data.mask_y_rbv] - model.data.values[model.data.mask_y_rad_rbv]
         xRad = 2 * model.data.values[data.mask_x_rad_rbv]
         yRad = 2 * model.data.values[data.mask_y_rad_rbv]
         self.setMask(x, y, xRad, yRad)
+
+    def setposition(self,setx, sety, delta=5, prec=0.1):
+        self.getposition()
+        # how much to move at a time?
+        move_amount = delta  # seems OK for a small step
+        precision = prec  # as a fraction of sigma x or y
+        print 'Moving to {:.3f}, {:.3f}'.format(setx, sety)
+        while abs(setx - self.lasx) > self.lassx * precision or abs(sety - self.lasy) > self.lassy * precision:
+            # Gotcha: a negative H move means the beam goes RIGHT, contrary to convention
+            h_step = math.copysign(move_amount, -(setx - self.lasx)) if abs(setx - self.lasx) > self.lassx * precision else 0
+            # Do a bigger step in y
+            v_step = 3 * math.copysign(move_amount, sety - self.lasy) if abs(sety - self.lasy) > self.lassy * precision else 0
+            # print 'Move amount: H {}, V {}'.format(h_step, v_step)
+            self.move_horiz(h_step)
+            self.move_vert(v_step)
+            self.getposition()
+            # print 'Position: {:.3f}, {:.3f}'.format(self.lasx, self.lasy)
+            # print('How far away?', abs(req_x - x), abs(req_y - y), sx / 3, sy / 3)
+        print 'Final position {:.3f}, {:.3f}'.format(self.lasx, self.lasy)

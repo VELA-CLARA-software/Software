@@ -76,8 +76,10 @@ class GUI_magnetAppMainView(QtGui.QMainWindow, Ui_magnetAppMainView):
                 degauss_count += 1
         if degauss_count > 0:
             self.selectedDegauss.setStyleSheet("background-color: red")
+            self.selectedDegaussToZero.setStyleSheet("background-color: red")
         else:
             self.selectedDegauss.setStyleSheet(self.degauss_default_style)
+            self.selectedDegaussToZero.setStyleSheet(self.degauss_default_style)
 
 
     # add magnet widgets to the main view - dips and sol in one column ....
