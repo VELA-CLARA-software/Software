@@ -118,7 +118,7 @@ class Model(object):
 
 	def degaussQuads(self):
 		quads = ['S02-QUAD01', 'S02-QUAD02', 'S02-QUAD03', 'S02-QUAD04', 'S02-QUAD05']
-		self.machine.degaussMagnet(quads, degaussToZero=True)
+		self.machine.setDegaussMagnet(quads, degaussToZero=True)
 		while self.machine.isMagnetDegaussing(quads):
 			time.sleep(0.1)
 

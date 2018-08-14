@@ -5,7 +5,7 @@ import inspect
 
 class Machine(object):
 
-	def __init__(self, machineType, lineType, gunType, controllers=['magnets', 'bpms', 'gunllrf', 'linac1llrf', 'charge']):
+	def __init__(self, machineType, lineType, gunType, controllers=['magnets', 'bpms', 'gunllrf', 'linac1llrf', 'charge', 'cameras']):
 		super(Machine, self).__init__()
 		self.machineType = machineType
 		self.lineType = lineType
@@ -71,7 +71,7 @@ class Machine(object):
 			if 'magnets' in self.controllers:
 				import VELA_CLARA_Magnet_Control as mag
 				self.magInit = mag.init()
-				self.magInit.setVerbose()
+				self.magInit.setQuiet()
 			if 'bpms' in self.controllers:
 				import VELA_CLARA_BPM_Control as bpm
 				self.bpmInit = bpm.init()
@@ -259,6 +259,7 @@ class Machine(object):
 		if self.machineType == 'None':
 			self.linac1AmpSp = amp
 		else:
+			# print 'setting L01 LLRF to ', amp
 			self.linac1llrf.setAmpFF(amp)
 
 	def getLinac1Amplitude(self):
@@ -269,13 +270,28 @@ class Machine(object):
 
 	def getBPMPosition(self, bpm, plane='X'):
 		if self.machineType == 'None':
-			value = np.random.random_sample()
+			value = 20*np.random.random_sample() - 10
 			return value
 		else:
 			if plane == 'Y':
 				return self.bpms.getYFromPV(bpm)
 			else:
 				return self.bpms.getXFromPV(bpm)
+
+	def getScreenPosition(self, screen, plane='X'):
+		if self.machineType == 'None':
+			value = 20*np.random.random_sample() - 10
+			return value
+		else:
+			# cam_control.startAcquiring(name)
+			if plane == 'Y':
+				yval = self.cameras.getY()
+				print 'yval = ', yval
+				return yval
+			else:
+				xval = self.cameras.getX()
+				print 'xval = ', xval
+				return xval
 
 	def setCorr(self, corr, I, tol=0.05):
 		# print 'setting dip01 = ', I
@@ -326,7 +342,7 @@ class Machine(object):
 		else:
 			return self.magnets.getSI('DIP01')
 
-	def degaussMagnet(self, name, degaussToZero=True):
+	def setDegaussMagnet(self, name, degaussToZero=True):
 		if not self.machineType == 'None':
 			if isinstance(name, (list, tuple)):
 				self.magnets.degauss(name, degaussToZero)
@@ -342,8 +358,8 @@ class Machine(object):
 		else:
 			return False
 
-	def degaussDIP(self):
-		self.degaussMagnet('DIP01')
+	def setDegaussDIP(self):
+		self.setDegaussMagnet('DIP01')
 
 	def isDIPDegaussing(self):
 		return self.isMagnetDegaussing('DIP01')
