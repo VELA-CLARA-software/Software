@@ -200,6 +200,12 @@ class magnetAppController(object):
 
     def handle_Degauss(self,tozero):
         if self.activeEPICS:
+            if tozero:
+                self.mainView.selectedDegaussToZero.setStyleSheet("background-color: orange")
+            else:
+                self.mainView.selectedDegauss.setStyleSheet("background-color: orange")
+            QtGui.QApplication.processEvents()
+
             activeMags = self.mainView.getActiveNames()
             solmags = []
             mags = []
