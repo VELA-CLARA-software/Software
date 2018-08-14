@@ -74,11 +74,8 @@
      <item>
       <widget class="QRadioButton" name="VELA_INJ">
        <property name="text">
-        <string>VELA  INJ Magnets</string>
+        <string>VELA INJECTOR</string>
        </property>
-       <attribute name="buttonGroup">
-        <string notr="true">machineAreaButtons</string>
-       </attribute>
       </widget>
      </item>
      <item>
@@ -102,9 +99,9 @@
       </spacer>
      </item>
     </layout>
-    <zorder>VELA_INJ</zorder>
     <zorder>verticalSpacer_2</zorder>
     <zorder>CLARA_2_BA1_BA2</zorder>
+    <zorder>VELA_INJ</zorder>
    </widget>
    <widget class="QGroupBox" name="modeSelection">
     <property name="geometry">

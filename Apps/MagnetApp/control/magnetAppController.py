@@ -200,37 +200,53 @@ class magnetAppController(object):
 
     def handle_Degauss(self,tozero):
         if self.activeEPICS:
-            if tozero:
-                self.mainView.selectedDegaussToZero.setStyleSheet("background-color: orange")
-            else:
-                self.mainView.selectedDegauss.setStyleSheet("background-color: orange")
+            self.mainView.selectedDegauss.setStyleSheet("background-color: red")
+            self.mainView.DEGAUSS_PREP = True
             QtGui.QApplication.processEvents()
 
             activeMags = self.mainView.getActiveNames()
-            solmags = []
-            mags = []
+            LOCAL_solmags = []
+            LOCAL_mags = []
             if self.machineArea == mag.MACHINE_AREA.VELA_INJ:
                 for magnet in activeMags:
                     if self.localMagnetController.isASol(magnet):
-                        solmags.append(magnet)
+                        LOCAL_solmags.append(magnet)
                     else:
-                        mags.append(magnet)
+                        LOCAL_mags.append(magnet)
             else:
-                mags = activeMags
-            if len(solmags) > 0:
-                self.localMagnetController.degauss(solmags, tozero)
-            if len(mags) > 0:
+                LOCAL_mags = activeMags
+            if len(LOCAL_solmags) > 0:
+                self.localMagnetController.degauss(LOCAL_solmags, tozero)
+
+
+            if len(LOCAL_mags) > 0:
+                for magnet_NAME in LOCAL_mags:
+                    print('DEGAUSSING ', magnet_NAME)
+
                 # hack to stop degaussing gun solenoids
                 try:
-                    mags.remove("LRG-SOL")
+                    LOCAL_mags.remove("LRG-SOL")
+                    print("LRG-SOL is a GUN solenoid , NOT degaussing")
                 except:
                     pass
                 try:
-                    mags.remove("LRG-BSOL")
+                    LOCAL_mags.remove("LRG-BSOL")
+                    print("LRG-BSOL is a GUN solenoid , NOT degaussing")
                 except:
                     pass
-                self.localMagnetController.degauss(mags, tozero)
+                # disable degaussing correctors
+                corr_list = []
+                for magnet in LOCAL_mags:
+                    if self.localMagnetController.isACor(magnet):
+                        print(magnet, ' as a corrector, NOT degaussing')
+                        corr_list.append(magnet)
 
+                LOCAL_mags = [e for e in LOCAL_mags if e not in corr_list]
+
+                if len(LOCAL_mags) > 0:
+                    self.localMagnetController.degauss(LOCAL_mags, tozero)
+                self.mainView.DEGAUSS_PREP = False
+                QtGui.QApplication.processEvents()
 
     def handle_saveSettings(self):
         # dburtSaveView filename is set by current time and date
