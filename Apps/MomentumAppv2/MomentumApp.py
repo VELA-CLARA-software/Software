@@ -15,11 +15,11 @@ from PyQt4 import QtGui, QtCore
 if mode=='virtual':
 	import model_CLARA_SAMPL as model
 	import controller.controller_SAMPL as controller
-	import view.view1_8 as view
+	import view.view1_2 as view
 elif mode=='physical':
 	import model_CLARA as model
 	import controller.controller as controller
-	import view.view1_11 as view
+	import view.view1_3 as view
 
 class App(QtCore.QObject):
 	def __init__(self, sys_argv):

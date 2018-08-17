@@ -517,105 +517,192 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
            <string>Run</string>
           </property>
           <layout class="QGridLayout" name="gridLayout">
-           <item row="5" column="9">
-            <widget class="QPushButton" name="pushButton_Align_x_5">
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_2">
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
              <property name="text">
-              <string>Align x</string>
-             </property>
-             <property name="checked">
-              <bool>false</bool>
+              <string>BPM</string>
              </property>
             </widget>
            </item>
-           <item row="5" column="8">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_step_5">
-             <property name="decimals">
-              <number>3</number>
+           <item row="0" column="1">
+            <widget class="QLabel" name="label_11">
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
              </property>
-             <property name="singleStep">
-              <double>0.100000000000000</double>
-             </property>
-             <property name="value">
-              <double>0.500000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="12">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_H_5">
-             <property name="keyboardTracking">
-              <bool>false</bool>
-             </property>
-             <property name="minimum">
-              <double>-150.000000000000000</double>
-             </property>
-             <property name="maximum">
-              <double>150.000000000000000</double>
-             </property>
-             <property name="singleStep">
-              <double>0.100000000000000</double>
-             </property>
-             <property name="value">
-              <double>0.000000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="6" column="12">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_H_6">
-             <property name="keyboardTracking">
-              <bool>false</bool>
-             </property>
-             <property name="minimum">
-              <double>-150.000000000000000</double>
-             </property>
-             <property name="maximum">
-              <double>150.000000000000000</double>
-             </property>
-             <property name="singleStep">
-              <double>0.100000000000000</double>
-             </property>
-             <property name="value">
-              <double>0.000000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="6" column="5">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_x_6">
-             <property name="minimum">
-              <double>-100.000000000000000</double>
-             </property>
-             <property name="maximum">
-              <double>100.000000000000000</double>
-             </property>
-             <property name="singleStep">
-              <double>0.100000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="6" column="8">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_step_6">
-             <property name="decimals">
-              <number>3</number>
-             </property>
-             <property name="singleStep">
-              <double>0.100000000000000</double>
-             </property>
-             <property name="value">
-              <double>0.500000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="6" column="9">
-            <widget class="QPushButton" name="pushButton_Align_x_6">
              <property name="text">
-              <string>Align x</string>
-             </property>
-             <property name="checked">
-              <bool>false</bool>
+              <string>H readout</string>
              </property>
             </widget>
            </item>
-           <item row="6" column="1">
-            <widget class="QLabel" name="label_H_6">
+           <item row="0" column="2">
+            <widget class="QLabel" name="label_12">
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>V readout</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="3">
+            <widget class="QLabel" name="label_3">
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>H corrector</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="4">
+            <widget class="QLabel" name="label_4">
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>V corrector</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="5">
+            <widget class="QLabel" name="label_5">
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>H target</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="6">
+            <widget class="QLabel" name="label_6">
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>V target</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="7">
+            <widget class="QLabel" name="label_7">
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>Tolerance</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="8">
+            <widget class="QLabel" name="label_10">
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>Initial step [A]</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="12">
+            <widget class="QLabel" name="label_8">
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>HCOR [A]</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="13">
+            <widget class="QLabel" name="label_15">
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>Set HCOR</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="14">
+            <widget class="QLabel" name="label_9">
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>VCOR [A]</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="15">
+            <widget class="QLabel" name="label_16">
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>Set VCOR</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QComboBox" name="comboBox_1">
+             <property name="editable">
+              <bool>false</bool>
+             </property>
+             <property name="maxVisibleItems">
+              <number>10</number>
+             </property>
+             <item>
+              <property name="text">
+               <string>S01-BPM01</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLabel" name="label_H_1">
              <property name="layoutDirection">
               <enum>Qt::LeftToRight</enum>
              </property>
@@ -630,28 +717,80 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
              </property>
             </widget>
            </item>
-           <item row="6" column="11">
-            <widget class="QPushButton" name="pushButton_Align_both_6">
-             <property name="text">
-              <string>Align both</string>
+           <item row="1" column="2">
+            <widget class="QLabel" name="label_V_1">
+             <property name="layoutDirection">
+              <enum>Qt::LeftToRight</enum>
              </property>
-             <property name="checked">
-              <bool>false</bool>
+             <property name="frameShape">
+              <enum>QFrame::WinPanel</enum>
+             </property>
+             <property name="text">
+              <string>TextLabel</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
              </property>
             </widget>
            </item>
-           <item row="6" column="10">
-            <widget class="QPushButton" name="pushButton_Align_y_6">
-             <property name="text">
-              <string>Align y</string>
-             </property>
-             <property name="checked">
+           <item row="1" column="3">
+            <widget class="QComboBox" name="comboBox_H_1">
+             <property name="editable">
               <bool>false</bool>
+             </property>
+             <property name="maxVisibleItems">
+              <number>10</number>
+             </property>
+             <item>
+              <property name="text">
+               <string>S01-HCOR1</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="1" column="4">
+            <widget class="QComboBox" name="comboBox_V_1">
+             <property name="editable">
+              <bool>false</bool>
+             </property>
+             <property name="maxVisibleItems">
+              <number>10</number>
+             </property>
+             <item>
+              <property name="text">
+               <string>S01-VCOR1</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="1" column="5">
+            <widget class="QDoubleSpinBox" name="doubleSpinBox_x_1">
+             <property name="minimum">
+              <double>-100.000000000000000</double>
+             </property>
+             <property name="maximum">
+              <double>100.000000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>0.100000000000000</double>
              </property>
             </widget>
            </item>
-           <item row="5" column="7">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_tol_5">
+           <item row="1" column="6">
+            <widget class="QDoubleSpinBox" name="doubleSpinBox_y_1">
+             <property name="minimum">
+              <double>-100.000000000000000</double>
+             </property>
+             <property name="maximum">
+              <double>100.000000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>0.100000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="7">
+            <widget class="QDoubleSpinBox" name="doubleSpinBox_tol_1">
              <property name="singleStep">
               <double>0.010000000000000</double>
              </property>
@@ -660,96 +799,41 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
              </property>
             </widget>
            </item>
-           <item row="6" column="13">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_V_6">
-             <property name="keyboardTracking">
-              <bool>false</bool>
-             </property>
-             <property name="minimum">
-              <double>-10.000000000000000</double>
-             </property>
-             <property name="maximum">
-              <double>10.000000000000000</double>
+           <item row="1" column="8">
+            <widget class="QDoubleSpinBox" name="doubleSpinBox_step_1">
+             <property name="decimals">
+              <number>3</number>
              </property>
              <property name="singleStep">
               <double>0.100000000000000</double>
              </property>
              <property name="value">
-              <double>0.000000000000000</double>
+              <double>0.500000000000000</double>
              </property>
             </widget>
            </item>
-           <item row="5" column="6">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_y_5">
-             <property name="minimum">
-              <double>-100.000000000000000</double>
+           <item row="1" column="9">
+            <widget class="QPushButton" name="pushButton_Align_x_1">
+             <property name="text">
+              <string>Align x</string>
              </property>
-             <property name="maximum">
-              <double>100.000000000000000</double>
-             </property>
-             <property name="singleStep">
-              <double>0.100000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="6" column="0">
-            <widget class="QComboBox" name="comboBox_6">
-             <property name="editable">
+             <property name="checked">
               <bool>false</bool>
              </property>
-             <property name="maxVisibleItems">
-              <number>10</number>
-             </property>
-             <item>
-              <property name="text">
-               <string>INJ-BPM05</string>
-              </property>
-             </item>
             </widget>
            </item>
-           <item row="5" column="5">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_x_5">
-             <property name="minimum">
-              <double>-100.000000000000000</double>
+           <item row="1" column="10">
+            <widget class="QPushButton" name="pushButton_Align_y_1">
+             <property name="text">
+              <string>Align y</string>
              </property>
-             <property name="maximum">
-              <double>100.000000000000000</double>
-             </property>
-             <property name="singleStep">
-              <double>0.100000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="6" column="6">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_y_6">
-             <property name="minimum">
-              <double>-100.000000000000000</double>
-             </property>
-             <property name="maximum">
-              <double>100.000000000000000</double>
-             </property>
-             <property name="singleStep">
-              <double>0.100000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="4">
-            <widget class="QComboBox" name="comboBox_V_5">
-             <property name="editable">
+             <property name="checked">
               <bool>false</bool>
              </property>
-             <property name="maxVisibleItems">
-              <number>10</number>
-             </property>
-             <item>
-              <property name="text">
-               <string>INJ-VCOR06</string>
-              </property>
-             </item>
             </widget>
            </item>
-           <item row="5" column="11">
-            <widget class="QPushButton" name="pushButton_Align_both_5">
+           <item row="1" column="11">
+            <widget class="QPushButton" name="pushButton_Align_both_1">
              <property name="text">
               <string>Align both</string>
              </property>
@@ -758,8 +842,8 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
              </property>
             </widget>
            </item>
-           <item row="6" column="2">
-            <widget class="QLabel" name="label_V_6">
+           <item row="1" column="12">
+            <widget class="QLabel" name="label_HC_1">
              <property name="layoutDirection">
               <enum>Qt::LeftToRight</enum>
              </property>
@@ -771,6 +855,591 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
              </property>
              <property name="alignment">
               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="13">
+            <widget class="QLineEdit" name="lineEdit_HC_1">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="14">
+            <widget class="QLabel" name="label_VC_1">
+             <property name="layoutDirection">
+              <enum>Qt::LeftToRight</enum>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::WinPanel</enum>
+             </property>
+             <property name="text">
+              <string>TextLabel</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="15">
+            <widget class="QLineEdit" name="lineEdit_VC_1">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QComboBox" name="comboBox_2">
+             <property name="editable">
+              <bool>false</bool>
+             </property>
+             <property name="maxVisibleItems">
+              <number>10</number>
+             </property>
+             <item>
+              <property name="text">
+               <string>S02-BPM01</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLabel" name="label_H_2">
+             <property name="layoutDirection">
+              <enum>Qt::LeftToRight</enum>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::WinPanel</enum>
+             </property>
+             <property name="text">
+              <string>TextLabel</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="2">
+            <widget class="QLabel" name="label_V_2">
+             <property name="layoutDirection">
+              <enum>Qt::LeftToRight</enum>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::WinPanel</enum>
+             </property>
+             <property name="text">
+              <string>TextLabel</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="3">
+            <widget class="QComboBox" name="comboBox_H_2">
+             <property name="editable">
+              <bool>false</bool>
+             </property>
+             <property name="maxVisibleItems">
+              <number>10</number>
+             </property>
+             <item>
+              <property name="text">
+               <string>S01-HCOR2</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>S01-HC0R1</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="2" column="4">
+            <widget class="QComboBox" name="comboBox_V_2">
+             <property name="editable">
+              <bool>false</bool>
+             </property>
+             <property name="maxVisibleItems">
+              <number>10</number>
+             </property>
+             <item>
+              <property name="text">
+               <string>S01-VCOR2</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>S01-VCOR1</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="2" column="5">
+            <widget class="QDoubleSpinBox" name="doubleSpinBox_x_2">
+             <property name="minimum">
+              <double>-100.000000000000000</double>
+             </property>
+             <property name="maximum">
+              <double>100.000000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>0.100000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="6">
+            <widget class="QDoubleSpinBox" name="doubleSpinBox_y_2">
+             <property name="minimum">
+              <double>-100.000000000000000</double>
+             </property>
+             <property name="maximum">
+              <double>100.000000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>0.100000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="7">
+            <widget class="QDoubleSpinBox" name="doubleSpinBox_tol_2">
+             <property name="singleStep">
+              <double>0.010000000000000</double>
+             </property>
+             <property name="value">
+              <double>0.100000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="8">
+            <widget class="QDoubleSpinBox" name="doubleSpinBox_step_2">
+             <property name="decimals">
+              <number>3</number>
+             </property>
+             <property name="singleStep">
+              <double>0.100000000000000</double>
+             </property>
+             <property name="value">
+              <double>0.500000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="9">
+            <widget class="QPushButton" name="pushButton_Align_x_2">
+             <property name="text">
+              <string>Align x</string>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="10">
+            <widget class="QPushButton" name="pushButton_Align_y_2">
+             <property name="text">
+              <string>Align y</string>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="11">
+            <widget class="QPushButton" name="pushButton_Align_both_2">
+             <property name="text">
+              <string>Align both</string>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="12">
+            <widget class="QLabel" name="label_HC_2">
+             <property name="layoutDirection">
+              <enum>Qt::LeftToRight</enum>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::WinPanel</enum>
+             </property>
+             <property name="text">
+              <string>TextLabel</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="13">
+            <widget class="QLineEdit" name="lineEdit_HC_2">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="14">
+            <widget class="QLabel" name="label_VC_2">
+             <property name="layoutDirection">
+              <enum>Qt::LeftToRight</enum>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::WinPanel</enum>
+             </property>
+             <property name="text">
+              <string>TextLabel</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="15">
+            <widget class="QLineEdit" name="lineEdit_VC_2">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QComboBox" name="comboBox_3">
+             <property name="editable">
+              <bool>false</bool>
+             </property>
+             <property name="maxVisibleItems">
+              <number>10</number>
+             </property>
+             <item>
+              <property name="text">
+               <string>S02-BPM02</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QLabel" name="label_H_3">
+             <property name="layoutDirection">
+              <enum>Qt::LeftToRight</enum>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::WinPanel</enum>
+             </property>
+             <property name="text">
+              <string>TextLabel</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="2">
+            <widget class="QLabel" name="label_V_3">
+             <property name="layoutDirection">
+              <enum>Qt::LeftToRight</enum>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::WinPanel</enum>
+             </property>
+             <property name="text">
+              <string>TextLabel</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="3">
+            <widget class="QComboBox" name="comboBox_H_3">
+             <property name="editable">
+              <bool>false</bool>
+             </property>
+             <property name="maxVisibleItems">
+              <number>10</number>
+             </property>
+             <item>
+              <property name="text">
+               <string>S02-HCOR2</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>S02-HCOR1</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="3" column="4">
+            <widget class="QComboBox" name="comboBox_V_3">
+             <property name="editable">
+              <bool>false</bool>
+             </property>
+             <property name="maxVisibleItems">
+              <number>10</number>
+             </property>
+             <item>
+              <property name="text">
+               <string>S02-VCOR2</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>S02-VCOR1</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="3" column="5">
+            <widget class="QDoubleSpinBox" name="doubleSpinBox_x_3">
+             <property name="minimum">
+              <double>-100.000000000000000</double>
+             </property>
+             <property name="maximum">
+              <double>100.000000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>0.100000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="6">
+            <widget class="QDoubleSpinBox" name="doubleSpinBox_y_3">
+             <property name="minimum">
+              <double>-100.000000000000000</double>
+             </property>
+             <property name="maximum">
+              <double>100.000000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>0.100000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="7">
+            <widget class="QDoubleSpinBox" name="doubleSpinBox_tol_3">
+             <property name="singleStep">
+              <double>0.010000000000000</double>
+             </property>
+             <property name="value">
+              <double>0.100000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="8">
+            <widget class="QDoubleSpinBox" name="doubleSpinBox_step_3">
+             <property name="decimals">
+              <number>3</number>
+             </property>
+             <property name="singleStep">
+              <double>0.100000000000000</double>
+             </property>
+             <property name="value">
+              <double>0.500000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="9">
+            <widget class="QPushButton" name="pushButton_Align_x_3">
+             <property name="text">
+              <string>Align x</string>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="10">
+            <widget class="QPushButton" name="pushButton_Align_y_3">
+             <property name="text">
+              <string>Align y</string>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="11">
+            <widget class="QPushButton" name="pushButton_Align_both_3">
+             <property name="text">
+              <string>Align both</string>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="12">
+            <widget class="QLabel" name="label_HC_3">
+             <property name="layoutDirection">
+              <enum>Qt::LeftToRight</enum>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::WinPanel</enum>
+             </property>
+             <property name="text">
+              <string>TextLabel</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="13">
+            <widget class="QLineEdit" name="lineEdit_HC_3">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="14">
+            <widget class="QLabel" name="label_VC_3">
+             <property name="layoutDirection">
+              <enum>Qt::LeftToRight</enum>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::WinPanel</enum>
+             </property>
+             <property name="text">
+              <string>TextLabel</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="15">
+            <widget class="QLineEdit" name="lineEdit_VC_3">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QComboBox" name="comboBox_4">
+             <property name="editable">
+              <bool>false</bool>
+             </property>
+             <property name="maxVisibleItems">
+              <number>10</number>
+             </property>
+             <item>
+              <property name="text">
+               <string>C2V-BPM01</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="4" column="1">
+            <widget class="QLabel" name="label_H_4">
+             <property name="layoutDirection">
+              <enum>Qt::LeftToRight</enum>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::WinPanel</enum>
+             </property>
+             <property name="text">
+              <string>TextLabel</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="2">
+            <widget class="QLabel" name="label_V_4">
+             <property name="layoutDirection">
+              <enum>Qt::LeftToRight</enum>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::WinPanel</enum>
+             </property>
+             <property name="text">
+              <string>TextLabel</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="3">
+            <widget class="QComboBox" name="comboBox_H_4">
+             <property name="editable">
+              <bool>false</bool>
+             </property>
+             <property name="maxVisibleItems">
+              <number>10</number>
+             </property>
+             <item>
+              <property name="text">
+               <string>S02-DIP01</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="4" column="4">
+            <widget class="QComboBox" name="comboBox_V_4">
+             <property name="editable">
+              <bool>false</bool>
+             </property>
+             <property name="maxVisibleItems">
+              <number>10</number>
+             </property>
+             <item>
+              <property name="text">
+               <string>S02-VCOR2</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="4" column="5">
+            <widget class="QDoubleSpinBox" name="doubleSpinBox_x_4">
+             <property name="minimum">
+              <double>-100.000000000000000</double>
+             </property>
+             <property name="maximum">
+              <double>100.000000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>0.100000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="6">
+            <widget class="QDoubleSpinBox" name="doubleSpinBox_y_4">
+             <property name="minimum">
+              <double>-100.000000000000000</double>
+             </property>
+             <property name="maximum">
+              <double>100.000000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>0.100000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="7">
+            <widget class="QDoubleSpinBox" name="doubleSpinBox_tol_4">
+             <property name="singleStep">
+              <double>0.010000000000000</double>
+             </property>
+             <property name="value">
+              <double>0.100000000000000</double>
              </property>
             </widget>
            </item>
@@ -787,8 +1456,90 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
              </property>
             </widget>
            </item>
-           <item row="5" column="3">
-            <widget class="QComboBox" name="comboBox_H_5">
+           <item row="4" column="9">
+            <widget class="QPushButton" name="pushButton_Align_x_4">
+             <property name="text">
+              <string>Align x</string>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="10">
+            <widget class="QPushButton" name="pushButton_Align_y_4">
+             <property name="text">
+              <string>Align y</string>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="11">
+            <widget class="QPushButton" name="pushButton_Align_both_4">
+             <property name="text">
+              <string>Align both</string>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="12">
+            <widget class="QLabel" name="label_HC_4">
+             <property name="layoutDirection">
+              <enum>Qt::LeftToRight</enum>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::WinPanel</enum>
+             </property>
+             <property name="text">
+              <string>TextLabel</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="13">
+            <widget class="QLineEdit" name="lineEdit_HC_4">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="14">
+            <widget class="QLabel" name="label_VC_4">
+             <property name="layoutDirection">
+              <enum>Qt::LeftToRight</enum>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::WinPanel</enum>
+             </property>
+             <property name="text">
+              <string>TextLabel</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="15">
+            <widget class="QLineEdit" name="lineEdit_VC_4">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="0">
+            <widget class="QComboBox" name="comboBox_5">
              <property name="editable">
               <bool>false</bool>
              </property>
@@ -797,18 +1548,24 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
              </property>
              <item>
               <property name="text">
-               <string>INJ-HCOR06</string>
+               <string>INJ-BPM04</string>
               </property>
              </item>
             </widget>
            </item>
-           <item row="5" column="10">
-            <widget class="QPushButton" name="pushButton_Align_y_5">
-             <property name="text">
-              <string>Align y</string>
+           <item row="5" column="1">
+            <widget class="QLabel" name="label_H_5">
+             <property name="layoutDirection">
+              <enum>Qt::LeftToRight</enum>
              </property>
-             <property name="checked">
-              <bool>false</bool>
+             <property name="frameShape">
+              <enum>QFrame::WinPanel</enum>
+             </property>
+             <property name="text">
+              <string>TextLabel</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
              </property>
             </widget>
            </item>
@@ -828,8 +1585,200 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
              </property>
             </widget>
            </item>
-           <item row="5" column="1">
-            <widget class="QLabel" name="label_H_5">
+           <item row="5" column="3">
+            <widget class="QComboBox" name="comboBox_H_5">
+             <property name="editable">
+              <bool>false</bool>
+             </property>
+             <property name="maxVisibleItems">
+              <number>10</number>
+             </property>
+             <item>
+              <property name="text">
+               <string>INJ-HCOR06</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="5" column="4">
+            <widget class="QComboBox" name="comboBox_V_5">
+             <property name="editable">
+              <bool>false</bool>
+             </property>
+             <property name="maxVisibleItems">
+              <number>10</number>
+             </property>
+             <item>
+              <property name="text">
+               <string>INJ-VCOR06</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="5" column="5">
+            <widget class="QDoubleSpinBox" name="doubleSpinBox_x_5">
+             <property name="minimum">
+              <double>-100.000000000000000</double>
+             </property>
+             <property name="maximum">
+              <double>100.000000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>0.100000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="6">
+            <widget class="QDoubleSpinBox" name="doubleSpinBox_y_5">
+             <property name="minimum">
+              <double>-100.000000000000000</double>
+             </property>
+             <property name="maximum">
+              <double>100.000000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>0.100000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="7">
+            <widget class="QDoubleSpinBox" name="doubleSpinBox_tol_5">
+             <property name="singleStep">
+              <double>0.010000000000000</double>
+             </property>
+             <property name="value">
+              <double>0.100000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="8">
+            <widget class="QDoubleSpinBox" name="doubleSpinBox_step_5">
+             <property name="decimals">
+              <number>3</number>
+             </property>
+             <property name="singleStep">
+              <double>0.100000000000000</double>
+             </property>
+             <property name="value">
+              <double>0.500000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="9">
+            <widget class="QPushButton" name="pushButton_Align_x_5">
+             <property name="text">
+              <string>Align x</string>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="10">
+            <widget class="QPushButton" name="pushButton_Align_y_5">
+             <property name="text">
+              <string>Align y</string>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="11">
+            <widget class="QPushButton" name="pushButton_Align_both_5">
+             <property name="text">
+              <string>Align both</string>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="12">
+            <widget class="QLabel" name="label_HC_5">
+             <property name="layoutDirection">
+              <enum>Qt::LeftToRight</enum>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::WinPanel</enum>
+             </property>
+             <property name="text">
+              <string>TextLabel</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="13">
+            <widget class="QLineEdit" name="lineEdit_HC_5">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="14">
+            <widget class="QLabel" name="label_VC_5">
+             <property name="layoutDirection">
+              <enum>Qt::LeftToRight</enum>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::WinPanel</enum>
+             </property>
+             <property name="text">
+              <string>TextLabel</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="15">
+            <widget class="QLineEdit" name="lineEdit_VC_5">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="0">
+            <widget class="QComboBox" name="comboBox_6">
+             <property name="editable">
+              <bool>false</bool>
+             </property>
+             <property name="maxVisibleItems">
+              <number>10</number>
+             </property>
+             <item>
+              <property name="text">
+               <string>INJ-BPM05</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="6" column="1">
+            <widget class="QLabel" name="label_H_6">
+             <property name="layoutDirection">
+              <enum>Qt::LeftToRight</enum>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::WinPanel</enum>
+             </property>
+             <property name="text">
+              <string>TextLabel</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="2">
+            <widget class="QLabel" name="label_V_6">
              <property name="layoutDirection">
               <enum>Qt::LeftToRight</enum>
              </property>
@@ -864,78 +1813,6 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
              </item>
             </widget>
            </item>
-           <item row="5" column="0">
-            <widget class="QComboBox" name="comboBox_5">
-             <property name="editable">
-              <bool>false</bool>
-             </property>
-             <property name="maxVisibleItems">
-              <number>10</number>
-             </property>
-             <item>
-              <property name="text">
-               <string>INJ-BPM04</string>
-              </property>
-             </item>
-            </widget>
-           </item>
-           <item row="5" column="13">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_V_5">
-             <property name="keyboardTracking">
-              <bool>false</bool>
-             </property>
-             <property name="minimum">
-              <double>-10.000000000000000</double>
-             </property>
-             <property name="maximum">
-              <double>10.000000000000000</double>
-             </property>
-             <property name="singleStep">
-              <double>0.100000000000000</double>
-             </property>
-             <property name="value">
-              <double>0.000000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="13">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_V_4">
-             <property name="keyboardTracking">
-              <bool>false</bool>
-             </property>
-             <property name="minimum">
-              <double>-10.000000000000000</double>
-             </property>
-             <property name="maximum">
-              <double>10.000000000000000</double>
-             </property>
-             <property name="singleStep">
-              <double>0.100000000000000</double>
-             </property>
-             <property name="value">
-              <double>0.000000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="12">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_H_4">
-             <property name="keyboardTracking">
-              <bool>false</bool>
-             </property>
-             <property name="minimum">
-              <double>-150.000000000000000</double>
-             </property>
-             <property name="maximum">
-              <double>150.000000000000000</double>
-             </property>
-             <property name="singleStep">
-              <double>0.100000000000000</double>
-             </property>
-             <property name="value">
-              <double>0.000000000000000</double>
-             </property>
-            </widget>
-           </item>
            <item row="6" column="4">
             <widget class="QComboBox" name="comboBox_V_6">
              <property name="editable">
@@ -956,23 +1833,29 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
              </item>
             </widget>
            </item>
-           <item row="4" column="11">
-            <widget class="QPushButton" name="pushButton_Align_both_4">
-             <property name="text">
-              <string>Align both</string>
+           <item row="6" column="5">
+            <widget class="QDoubleSpinBox" name="doubleSpinBox_x_6">
+             <property name="minimum">
+              <double>-100.000000000000000</double>
              </property>
-             <property name="checked">
-              <bool>false</bool>
+             <property name="maximum">
+              <double>100.000000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>0.100000000000000</double>
              </property>
             </widget>
            </item>
-           <item row="4" column="10">
-            <widget class="QPushButton" name="pushButton_Align_y_4">
-             <property name="text">
-              <string>Align y</string>
+           <item row="6" column="6">
+            <widget class="QDoubleSpinBox" name="doubleSpinBox_y_6">
+             <property name="minimum">
+              <double>-100.000000000000000</double>
              </property>
-             <property name="checked">
-              <bool>false</bool>
+             <property name="maximum">
+              <double>100.000000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>0.100000000000000</double>
              </property>
             </widget>
            </item>
@@ -986,200 +1869,8 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
              </property>
             </widget>
            </item>
-           <item row="4" column="9">
-            <widget class="QPushButton" name="pushButton_Align_x_4">
-             <property name="text">
-              <string>Align x</string>
-             </property>
-             <property name="checked">
-              <bool>false</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="7">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_tol_4">
-             <property name="singleStep">
-              <double>0.010000000000000</double>
-             </property>
-             <property name="value">
-              <double>0.100000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="11">
-            <widget class="QPushButton" name="pushButton_Align_both_1">
-             <property name="text">
-              <string>Align both</string>
-             </property>
-             <property name="checked">
-              <bool>false</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="7">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_tol_2">
-             <property name="singleStep">
-              <double>0.010000000000000</double>
-             </property>
-             <property name="value">
-              <double>0.100000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="9">
-            <widget class="QPushButton" name="pushButton_Align_x_2">
-             <property name="text">
-              <string>Align x</string>
-             </property>
-             <property name="checked">
-              <bool>false</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="3">
-            <widget class="QComboBox" name="comboBox_H_2">
-             <property name="editable">
-              <bool>false</bool>
-             </property>
-             <property name="maxVisibleItems">
-              <number>10</number>
-             </property>
-             <item>
-              <property name="text">
-               <string>S01-HCOR2</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>S01-HC0R1</string>
-              </property>
-             </item>
-            </widget>
-           </item>
-           <item row="4" column="0">
-            <widget class="QComboBox" name="comboBox_4">
-             <property name="editable">
-              <bool>false</bool>
-             </property>
-             <property name="maxVisibleItems">
-              <number>10</number>
-             </property>
-             <item>
-              <property name="text">
-               <string>C2V-BPM01</string>
-              </property>
-             </item>
-            </widget>
-           </item>
-           <item row="1" column="12">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_H_1">
-             <property name="keyboardTracking">
-              <bool>false</bool>
-             </property>
-             <property name="minimum">
-              <double>-10.000000000000000</double>
-             </property>
-             <property name="maximum">
-              <double>10.000000000000000</double>
-             </property>
-             <property name="singleStep">
-              <double>0.100000000000000</double>
-             </property>
-             <property name="value">
-              <double>0.000000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="11">
-            <widget class="QPushButton" name="pushButton_Align_both_3">
-             <property name="text">
-              <string>Align both</string>
-             </property>
-             <property name="checked">
-              <bool>false</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="6">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_y_2">
-             <property name="minimum">
-              <double>-100.000000000000000</double>
-             </property>
-             <property name="maximum">
-              <double>100.000000000000000</double>
-             </property>
-             <property name="singleStep">
-              <double>0.100000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="2">
-            <widget class="QLabel" name="label_V_4">
-             <property name="layoutDirection">
-              <enum>Qt::LeftToRight</enum>
-             </property>
-             <property name="frameShape">
-              <enum>QFrame::WinPanel</enum>
-             </property>
-             <property name="text">
-              <string>TextLabel</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="9">
-            <widget class="QPushButton" name="pushButton_Align_x_3">
-             <property name="text">
-              <string>Align x</string>
-             </property>
-             <property name="checked">
-              <bool>false</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="10">
-            <widget class="QPushButton" name="pushButton_Align_y_3">
-             <property name="text">
-              <string>Align y</string>
-             </property>
-             <property name="checked">
-              <bool>false</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="6">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_y_4">
-             <property name="minimum">
-              <double>-100.000000000000000</double>
-             </property>
-             <property name="maximum">
-              <double>100.000000000000000</double>
-             </property>
-             <property name="singleStep">
-              <double>0.100000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="1">
-            <widget class="QLabel" name="label_H_3">
-             <property name="layoutDirection">
-              <enum>Qt::LeftToRight</enum>
-             </property>
-             <property name="frameShape">
-              <enum>QFrame::WinPanel</enum>
-             </property>
-             <property name="text">
-              <string>TextLabel</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="8">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_step_3">
+           <item row="6" column="8">
+            <widget class="QDoubleSpinBox" name="doubleSpinBox_step_6">
              <property name="decimals">
               <number>3</number>
              </property>
@@ -1191,411 +1882,8 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
              </property>
             </widget>
            </item>
-           <item row="2" column="8">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_step_2">
-             <property name="decimals">
-              <number>3</number>
-             </property>
-             <property name="singleStep">
-              <double>0.100000000000000</double>
-             </property>
-             <property name="value">
-              <double>0.500000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="0">
-            <widget class="QComboBox" name="comboBox_3">
-             <property name="editable">
-              <bool>false</bool>
-             </property>
-             <property name="maxVisibleItems">
-              <number>10</number>
-             </property>
-             <item>
-              <property name="text">
-               <string>S02-BPM02</string>
-              </property>
-             </item>
-            </widget>
-           </item>
-           <item row="1" column="13">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_V_1">
-             <property name="keyboardTracking">
-              <bool>false</bool>
-             </property>
-             <property name="minimum">
-              <double>-10.000000000000000</double>
-             </property>
-             <property name="maximum">
-              <double>10.000000000000000</double>
-             </property>
-             <property name="singleStep">
-              <double>0.100000000000000</double>
-             </property>
-             <property name="value">
-              <double>0.000000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="13">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_V_3">
-             <property name="keyboardTracking">
-              <bool>false</bool>
-             </property>
-             <property name="minimum">
-              <double>-10.000000000000000</double>
-             </property>
-             <property name="maximum">
-              <double>10.000000000000000</double>
-             </property>
-             <property name="singleStep">
-              <double>0.100000000000000</double>
-             </property>
-             <property name="value">
-              <double>0.000000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="2">
-            <widget class="QLabel" name="label_V_3">
-             <property name="layoutDirection">
-              <enum>Qt::LeftToRight</enum>
-             </property>
-             <property name="frameShape">
-              <enum>QFrame::WinPanel</enum>
-             </property>
-             <property name="text">
-              <string>TextLabel</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="11">
-            <widget class="QPushButton" name="pushButton_Align_both_2">
-             <property name="text">
-              <string>Align both</string>
-             </property>
-             <property name="checked">
-              <bool>false</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="0">
-            <widget class="QComboBox" name="comboBox_2">
-             <property name="editable">
-              <bool>false</bool>
-             </property>
-             <property name="maxVisibleItems">
-              <number>10</number>
-             </property>
-             <item>
-              <property name="text">
-               <string>S02-BPM01</string>
-              </property>
-             </item>
-            </widget>
-           </item>
-           <item row="2" column="12">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_H_2">
-             <property name="keyboardTracking">
-              <bool>false</bool>
-             </property>
-             <property name="minimum">
-              <double>-10.000000000000000</double>
-             </property>
-             <property name="maximum">
-              <double>10.000000000000000</double>
-             </property>
-             <property name="singleStep">
-              <double>0.100000000000000</double>
-             </property>
-             <property name="value">
-              <double>0.000000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="4">
-            <widget class="QComboBox" name="comboBox_V_4">
-             <property name="editable">
-              <bool>false</bool>
-             </property>
-             <property name="maxVisibleItems">
-              <number>10</number>
-             </property>
-             <item>
-              <property name="text">
-               <string>S02-VCOR2</string>
-              </property>
-             </item>
-            </widget>
-           </item>
-           <item row="2" column="5">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_x_2">
-             <property name="minimum">
-              <double>-100.000000000000000</double>
-             </property>
-             <property name="maximum">
-              <double>100.000000000000000</double>
-             </property>
-             <property name="singleStep">
-              <double>0.100000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="3">
-            <widget class="QComboBox" name="comboBox_H_3">
-             <property name="editable">
-              <bool>false</bool>
-             </property>
-             <property name="maxVisibleItems">
-              <number>10</number>
-             </property>
-             <item>
-              <property name="text">
-               <string>S02-HCOR2</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>S02-HCOR1</string>
-              </property>
-             </item>
-            </widget>
-           </item>
-           <item row="3" column="12">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_H_3">
-             <property name="keyboardTracking">
-              <bool>false</bool>
-             </property>
-             <property name="minimum">
-              <double>-10.000000000000000</double>
-             </property>
-             <property name="maximum">
-              <double>10.000000000000000</double>
-             </property>
-             <property name="singleStep">
-              <double>0.100000000000000</double>
-             </property>
-             <property name="value">
-              <double>0.000000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="7">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_tol_3">
-             <property name="singleStep">
-              <double>0.010000000000000</double>
-             </property>
-             <property name="value">
-              <double>0.100000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="3">
-            <widget class="QComboBox" name="comboBox_H_4">
-             <property name="editable">
-              <bool>false</bool>
-             </property>
-             <property name="maxVisibleItems">
-              <number>10</number>
-             </property>
-             <item>
-              <property name="text">
-               <string>DIP01</string>
-              </property>
-             </item>
-            </widget>
-           </item>
-           <item row="2" column="10">
-            <widget class="QPushButton" name="pushButton_Align_y_2">
-             <property name="text">
-              <string>Align y</string>
-             </property>
-             <property name="checked">
-              <bool>false</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="6">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_y_3">
-             <property name="minimum">
-              <double>-100.000000000000000</double>
-             </property>
-             <property name="maximum">
-              <double>100.000000000000000</double>
-             </property>
-             <property name="singleStep">
-              <double>0.100000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="13">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_V_2">
-             <property name="keyboardTracking">
-              <bool>false</bool>
-             </property>
-             <property name="minimum">
-              <double>-10.000000000000000</double>
-             </property>
-             <property name="maximum">
-              <double>10.000000000000000</double>
-             </property>
-             <property name="singleStep">
-              <double>0.100000000000000</double>
-             </property>
-             <property name="value">
-              <double>0.000000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="4">
-            <widget class="QComboBox" name="comboBox_V_2">
-             <property name="editable">
-              <bool>false</bool>
-             </property>
-             <property name="maxVisibleItems">
-              <number>10</number>
-             </property>
-             <item>
-              <property name="text">
-               <string>S01-VCOR2</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>S01-VCOR1</string>
-              </property>
-             </item>
-            </widget>
-           </item>
-           <item row="2" column="2">
-            <widget class="QLabel" name="label_V_2">
-             <property name="layoutDirection">
-              <enum>Qt::LeftToRight</enum>
-             </property>
-             <property name="frameShape">
-              <enum>QFrame::WinPanel</enum>
-             </property>
-             <property name="text">
-              <string>TextLabel</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="1">
-            <widget class="QLabel" name="label_H_2">
-             <property name="layoutDirection">
-              <enum>Qt::LeftToRight</enum>
-             </property>
-             <property name="frameShape">
-              <enum>QFrame::WinPanel</enum>
-             </property>
-             <property name="text">
-              <string>TextLabel</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="5">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_x_4">
-             <property name="minimum">
-              <double>-100.000000000000000</double>
-             </property>
-             <property name="maximum">
-              <double>100.000000000000000</double>
-             </property>
-             <property name="singleStep">
-              <double>0.100000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="1">
-            <widget class="QLabel" name="label_H_4">
-             <property name="layoutDirection">
-              <enum>Qt::LeftToRight</enum>
-             </property>
-             <property name="frameShape">
-              <enum>QFrame::WinPanel</enum>
-             </property>
-             <property name="text">
-              <string>TextLabel</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="5">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_x_3">
-             <property name="minimum">
-              <double>-100.000000000000000</double>
-             </property>
-             <property name="maximum">
-              <double>100.000000000000000</double>
-             </property>
-             <property name="singleStep">
-              <double>0.100000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="4">
-            <widget class="QComboBox" name="comboBox_V_3">
-             <property name="editable">
-              <bool>false</bool>
-             </property>
-             <property name="maxVisibleItems">
-              <number>10</number>
-             </property>
-             <item>
-              <property name="text">
-               <string>S02-VCOR2</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>S02-VCOR1</string>
-              </property>
-             </item>
-            </widget>
-           </item>
-           <item row="0" column="6">
-            <widget class="QLabel" name="label_6">
-             <property name="font">
-              <font>
-               <weight>75</weight>
-               <bold>true</bold>
-              </font>
-             </property>
-             <property name="text">
-              <string>V target</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="2">
-            <widget class="QLabel" name="label_V_1">
-             <property name="layoutDirection">
-              <enum>Qt::LeftToRight</enum>
-             </property>
-             <property name="frameShape">
-              <enum>QFrame::WinPanel</enum>
-             </property>
-             <property name="text">
-              <string>TextLabel</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="9">
-            <widget class="QPushButton" name="pushButton_Align_x_1">
+           <item row="6" column="9">
+            <widget class="QPushButton" name="pushButton_Align_x_6">
              <property name="text">
               <string>Align x</string>
              </property>
@@ -1604,193 +1892,28 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
              </property>
             </widget>
            </item>
-           <item row="0" column="7">
-            <widget class="QLabel" name="label_7">
-             <property name="font">
-              <font>
-               <weight>75</weight>
-               <bold>true</bold>
-              </font>
-             </property>
+           <item row="6" column="10">
+            <widget class="QPushButton" name="pushButton_Align_y_6">
              <property name="text">
-              <string>Tolerance</string>
+              <string>Align y</string>
              </property>
-            </widget>
-           </item>
-           <item row="1" column="6">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_y_1">
-             <property name="minimum">
-              <double>-100.000000000000000</double>
-             </property>
-             <property name="maximum">
-              <double>100.000000000000000</double>
-             </property>
-             <property name="singleStep">
-              <double>0.100000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="13">
-            <widget class="QLabel" name="label_9">
-             <property name="font">
-              <font>
-               <weight>75</weight>
-               <bold>true</bold>
-              </font>
-             </property>
-             <property name="text">
-              <string>VCOR [A]</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="5">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_x_1">
-             <property name="minimum">
-              <double>-100.000000000000000</double>
-             </property>
-             <property name="maximum">
-              <double>100.000000000000000</double>
-             </property>
-             <property name="singleStep">
-              <double>0.100000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="12">
-            <widget class="QLabel" name="label_8">
-             <property name="font">
-              <font>
-               <weight>75</weight>
-               <bold>true</bold>
-              </font>
-             </property>
-             <property name="text">
-              <string>HCOR [A]</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="4">
-            <widget class="QComboBox" name="comboBox_V_1">
-             <property name="editable">
+             <property name="checked">
               <bool>false</bool>
              </property>
-             <property name="maxVisibleItems">
-              <number>10</number>
-             </property>
-             <item>
-              <property name="text">
-               <string>S01-VCOR1</string>
-              </property>
-             </item>
             </widget>
            </item>
-           <item row="0" column="5">
-            <widget class="QLabel" name="label_5">
-             <property name="font">
-              <font>
-               <weight>75</weight>
-               <bold>true</bold>
-              </font>
-             </property>
+           <item row="6" column="11">
+            <widget class="QPushButton" name="pushButton_Align_both_6">
              <property name="text">
-              <string>H target</string>
+              <string>Align both</string>
              </property>
-            </widget>
-           </item>
-           <item row="1" column="8">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_step_1">
-             <property name="decimals">
-              <number>3</number>
-             </property>
-             <property name="singleStep">
-              <double>0.100000000000000</double>
-             </property>
-             <property name="value">
-              <double>0.500000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="0">
-            <widget class="QLabel" name="label_2">
-             <property name="font">
-              <font>
-               <weight>75</weight>
-               <bold>true</bold>
-              </font>
-             </property>
-             <property name="text">
-              <string>BPM</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="3">
-            <widget class="QLabel" name="label_3">
-             <property name="font">
-              <font>
-               <weight>75</weight>
-               <bold>true</bold>
-              </font>
-             </property>
-             <property name="text">
-              <string>H corrector</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="0">
-            <widget class="QComboBox" name="comboBox_1">
-             <property name="editable">
+             <property name="checked">
               <bool>false</bool>
              </property>
-             <property name="maxVisibleItems">
-              <number>10</number>
-             </property>
-             <item>
-              <property name="text">
-               <string>S01-BPM01</string>
-              </property>
-             </item>
             </widget>
            </item>
-           <item row="1" column="3">
-            <widget class="QComboBox" name="comboBox_H_1">
-             <property name="editable">
-              <bool>false</bool>
-             </property>
-             <property name="maxVisibleItems">
-              <number>10</number>
-             </property>
-             <item>
-              <property name="text">
-               <string>S01-HCOR1</string>
-              </property>
-             </item>
-            </widget>
-           </item>
-           <item row="1" column="7">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_tol_1">
-             <property name="singleStep">
-              <double>0.010000000000000</double>
-             </property>
-             <property name="value">
-              <double>0.100000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="8">
-            <widget class="QLabel" name="label_10">
-             <property name="font">
-              <font>
-               <weight>75</weight>
-               <bold>true</bold>
-              </font>
-             </property>
-             <property name="text">
-              <string>Initial step [A]</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QLabel" name="label_H_1">
+           <item row="6" column="12">
+            <widget class="QLabel" name="label_HC_6">
              <property name="layoutDirection">
               <enum>Qt::LeftToRight</enum>
              </property>
@@ -1805,71 +1928,50 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
              </property>
             </widget>
            </item>
-           <item row="0" column="2">
-            <widget class="QLabel" name="label_12">
-             <property name="font">
-              <font>
-               <weight>75</weight>
-               <bold>true</bold>
-              </font>
-             </property>
-             <property name="text">
-              <string>V readout</string>
+           <item row="6" column="13">
+            <widget class="QLineEdit" name="lineEdit_HC_6">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
              </property>
             </widget>
            </item>
-           <item row="0" column="1">
-            <widget class="QLabel" name="label_11">
-             <property name="font">
-              <font>
-               <weight>75</weight>
-               <bold>true</bold>
-              </font>
+           <item row="6" column="14">
+            <widget class="QLabel" name="label_VC_6">
+             <property name="layoutDirection">
+              <enum>Qt::LeftToRight</enum>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::WinPanel</enum>
              </property>
              <property name="text">
-              <string>H readout</string>
+              <string>TextLabel</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
              </property>
             </widget>
            </item>
-           <item row="1" column="10">
-            <widget class="QPushButton" name="pushButton_Align_y_1">
-             <property name="text">
-              <string>Align y</string>
-             </property>
-             <property name="checked">
-              <bool>false</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="4">
-            <widget class="QLabel" name="label_4">
-             <property name="font">
-              <font>
-               <weight>75</weight>
-               <bold>true</bold>
-              </font>
-             </property>
-             <property name="text">
-              <string>V corrector</string>
+           <item row="6" column="15">
+            <widget class="QLineEdit" name="lineEdit_VC_6">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
              </property>
             </widget>
            </item>
-           <item row="8" column="11">
-            <widget class="QPushButton" name="pushButton_save_2">
-             <property name="font">
-              <font>
-               <pointsize>-1</pointsize>
-              </font>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">QPushButton{ background-color: rgb(0, 0, 0);}</string>
-             </property>
+           <item row="7" column="7">
+            <widget class="QLabel" name="label">
              <property name="text">
-              <string>Save positions</string>
+              <string/>
              </property>
             </widget>
            </item>
-           <item row="8" column="7" colspan="2">
+           <item row="8" column="8" colspan="2">
             <widget class="QPushButton" name="pushButton_set">
              <property name="font">
               <font>
@@ -1884,14 +1986,7 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
              </property>
             </widget>
            </item>
-           <item row="7" column="7">
-            <widget class="QLabel" name="label">
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
-           </item>
-           <item row="8" column="9" colspan="2">
+           <item row="8" column="10" colspan="2">
             <widget class="QPushButton" name="pushButton_set_0">
              <property name="font">
               <font>
@@ -1907,6 +2002,21 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
             </widget>
            </item>
            <item row="8" column="12" colspan="2">
+            <widget class="QPushButton" name="pushButton_save_2">
+             <property name="font">
+              <font>
+               <pointsize>-1</pointsize>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">QPushButton{ background-color: rgb(0, 0, 0);}</string>
+             </property>
+             <property name="text">
+              <string>Save positions</string>
+             </property>
+            </widget>
+           </item>
+           <item row="8" column="14" colspan="2">
             <widget class="QPushButton" name="pushButton_load">
              <property name="font">
               <font>

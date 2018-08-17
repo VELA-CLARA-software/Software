@@ -25,6 +25,7 @@ sys.path.append('C:\\Users\\djd63\\Desktop\\VA workshop\\Examples Scripts')
 #sys.path.append('\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Software\\VELA_CLARA_PYDs\\bin\\stagetim')
 #sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release')
 sys.path.append('C:\\Users\\djd63\\Desktop\\Release')
+#sys.path.append('C:\\Users\\djd63\\Documents\\GitHub\\Software\\Apps\\AlignOnBPMs\\model')
 #os.environ["PATH"] = os.environ["PATH"]+";\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release\\root_v5.34.34\\bin\\"
 #sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release\\root_v5.34.34\\bin\\')
 #import onlineModel
@@ -66,8 +67,10 @@ class Model(QObject):
         #self.pilInit = pil.init()
         #self.llrfInit = llrf.init()
         #self.camInit = camIA.init()
-        self.Vmagnets = self.magInit.physical_VELA_INJ_Magnet_Controller()
-        self.Cmagnets = self.magInit.physical_CLARA_PH1_Magnet_Controller()
+        #self.Vmagnets = self.magInit.physical_VELA_INJ_Magnet_Controller()
+        #self.Cmagnets = self.magInit.physical_CLARA_PH1_Magnet_Controller()
+        #self.Cmagnets = self.magInit.physical_CLARA_PH1_Magnet_Controller()
+        self.Cmagnets = self.magInit.physical_C2B_Magnet_Controller()
         #self.laser = self.pilInit.physical_PILaser_Controller()
         #self.Cbpms = self.bpmInit.physical_CLARA_PH1_BPM_Controller()
         self.Cbpms = self.bpmInit.physical_C2B_BPM_Controller()
@@ -129,6 +132,7 @@ class Model(QObject):
         # self.gun.setAmpMVM(65)
         # self.LINAC01.setAmpMVM(20)
         # self.func = momentumFunctions.Functions(OM=self.SAMPL)
+        self.func = momentumFunctions.Functions()
         print("Model Initialized")
 
     #Outline of Momentum Measurement Procedure
@@ -181,21 +185,36 @@ class Model(QObject):
     def combobox_bpm(self,text):
         print text
 
-    def steer_H(self, row):
-        row = str(row)
-        self.target = float(getattr(self.view, 'doubleSpinBox_H_'+row).value())
-        #self.targety = float(getattr(self.view, 'doubleSpinBox_V_'+row).value())
-        self.cor = str(getattr(self.view, 'comboBox_H_'+row).currentText())
-        #self.func.setCurrent(self.Cmagnets,self.cor,self.target)
-        self.Cmagnets.setSI(self.cor,self.target)
+    def steer_H(self, row, userinput):
+        #print 'steer_H', userinput
+        if userinput == True:
+            print '.....User H input.....'
+            row = str(row)
+            #self.target = float(getattr(self.view, 'doubleSpinBox_H_'+row).value())
+            self.target = float(getattr(self.view, 'lineEdit_HC_'+row).text())
+            #self.targety = float(getattr(self.view, 'doubleSpinBox_V_'+row).value())
+            self.cor = str(getattr(self.view, 'comboBox_H_'+row).currentText())
+            #self.func.setCurrent(self.Cmagnets,self.cor,self.target)
+            self.Cmagnets.setSI(self.cor,self.target)
+            time.sleep(0.5)
+        else:
+            print '.....Non-user H input.....'
+            pass
 
-    def steer_V(self, row):
-        row = str(row)
-        #self.targetx = float(getattr(self.view, 'doubleSpinBox_H_'+row).value())
-        self.target = float(getattr(self.view, 'doubleSpinBox_V_'+row).value())
-        self.cor = str(getattr(self.view, 'comboBox_V_'+row).currentText())
-        #self.func.setCurrent(self.Cmagnets,self.cor,self.target)
-        self.Cmagnets.setSI(self.cor,self.target)
+    def steer_V(self, row, userinput):
+        #print 'steer_V', userinput
+        if userinput == True:
+            print '.....User V input.....'
+            row = str(row)
+            #self.targetx = float(getattr(self.view, 'doubleSpinBox_H_'+row).value())
+            self.target = float(getattr(self.view, 'lineEdit_VC_'+row).text())
+            self.cor = str(getattr(self.view, 'comboBox_V_'+row).currentText())
+            #self.func.setCurrent(self.Cmagnets,self.cor,self.target)
+            self.Cmagnets.setSI(self.cor,self.target)
+            time.sleep(0.5)
+        else:
+            print '.....Non-user V input.....'
+            pass
 
     def get_H(self, row):
         row = str(row)

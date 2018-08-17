@@ -11,11 +11,15 @@ import cv2
 from epics import caget,caput
 from functools import partial
 class Controller():
-
+	#userinput=True
 	def __init__(self, view, model):
+		#global userinput
+		#userinput = False
 		'''define model and view'''
 		self.view = view
 		self.model = model
+		#userinput = True
+		#global userinput
 		#print 'HERE WE ARE(controller)!!!!: BPM readout =', str(model.Cbpms.getXFromPV('C2V-BPM01'))
 		'''1 Create Momentum Graphs'''
 		monitor = pg.GraphicsView()
@@ -45,18 +49,20 @@ class Controller():
 		self.positionGraph_5.setYRange(-15,15)
 		self.positionGraph_6.setYRange(-15,15)
 		width=0.9
-		self.bg1 = pg.BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=width, pen='b', brush='b')
-		self.bg1_target = pg.BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=1, pen='r', brush='r')
-		self.bg2 = pg.BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=width, pen='b', brush='b')
-		self.bg2_target = pg.BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=1, pen='r', brush='r')
-		self.bg3 = pg.BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=width, pen='b', brush='b')
-		self.bg3_target = pg.BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=1, pen='r', brush='r')
-		self.bg4 = pg.BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=width, pen='b', brush='b')
-		self.bg4_target = pg.BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=1, pen='r', brush='r')
-		self.bg5 = pg.BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=width, pen='b', brush='b')
-		self.bg5_target = pg.BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=1, pen='r', brush='r')
-		self.bg6 = pg.BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=width, pen='b', brush='b')
-		self.bg6_target = pg.BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=1, pen='r', brush='r')
+		barcolour1=(30,80,255)
+		barcolour2='r'
+		self.bg1 = pg.BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=width, pen=barcolour1, brush=barcolour1)
+		self.bg1_target = pg.BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=1, pen=barcolour2, brush=barcolour2)
+		self.bg2 = pg.BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=width, pen=barcolour1, brush=barcolour1)
+		self.bg2_target = pg.BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=1, pen=barcolour2, brush=barcolour2)
+		self.bg3 = pg.BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=width, pen=barcolour1, brush=barcolour1)
+		self.bg3_target = pg.BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=1, pen=barcolour2, brush=barcolour2)
+		self.bg4 = pg.BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=width, pen=barcolour1, brush=barcolour1)
+		self.bg4_target = pg.BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=1, pen=barcolour2, brush=barcolour2)
+		self.bg5 = pg.BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=width, pen=barcolour1, brush=barcolour1)
+		self.bg5_target = pg.BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=1, pen=barcolour2, brush=barcolour2)
+		self.bg6 = pg.BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=width, pen=barcolour1, brush=barcolour1)
+		self.bg6_target = pg.BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=1, pen=barcolour2, brush=barcolour2)
 		self.positionGraph_1.addItem(self.bg1_target)
 		self.positionGraph_2.addItem(self.bg2_target)
 		self.positionGraph_3.addItem(self.bg3_target)
@@ -137,23 +143,49 @@ class Controller():
 		self.view.pushButton_Align_y_6.clicked.connect(partial(self.model.Align_y, 6))
 		self.view.pushButton_Align_both_6.clicked.connect(partial(self.model.Align_both, 6))
 
-		self.view.doubleSpinBox_H_1.valueChanged.connect(partial(self.model.steer_H,1))
-		self.view.doubleSpinBox_V_1.valueChanged.connect(partial(self.model.steer_V,1))
-		self.view.doubleSpinBox_H_2.valueChanged.connect(partial(self.model.steer_H,2))
-		self.view.doubleSpinBox_V_2.valueChanged.connect(partial(self.model.steer_V,2))
-		self.view.doubleSpinBox_H_3.valueChanged.connect(partial(self.model.steer_H,3))
-		self.view.doubleSpinBox_V_3.valueChanged.connect(partial(self.model.steer_V,3))
-		self.view.doubleSpinBox_H_4.valueChanged.connect(partial(self.model.steer_H,4))
-		self.view.doubleSpinBox_V_4.valueChanged.connect(partial(self.model.steer_V,4))
-		self.view.doubleSpinBox_H_5.valueChanged.connect(partial(self.model.steer_H,5))
-		self.view.doubleSpinBox_V_5.valueChanged.connect(partial(self.model.steer_V,5))
-		self.view.doubleSpinBox_H_6.valueChanged.connect(partial(self.model.steer_H,6))
-		self.view.doubleSpinBox_V_6.valueChanged.connect(partial(self.model.steer_V,6))
+		self.view.lineEdit_HC_1.editingFinished.connect(partial(self.model.steer_H, 1, 1))
+		self.view.lineEdit_VC_1.editingFinished.connect(partial(self.model.steer_V, 1, 1))
+		self.view.lineEdit_HC_2.editingFinished.connect(partial(self.model.steer_H, 2, 1))
+		self.view.lineEdit_VC_2.editingFinished.connect(partial(self.model.steer_V, 2, 1))
+		self.view.lineEdit_HC_3.editingFinished.connect(partial(self.model.steer_H, 3, 1))
+		self.view.lineEdit_VC_3.editingFinished.connect(partial(self.model.steer_V, 3, 1))
+		self.view.lineEdit_HC_4.editingFinished.connect(partial(self.model.steer_H, 4, 1))
+		self.view.lineEdit_VC_4.editingFinished.connect(partial(self.model.steer_V, 4, 1))
+		self.view.lineEdit_HC_5.editingFinished.connect(partial(self.model.steer_H, 5, 1))
+		self.view.lineEdit_VC_5.editingFinished.connect(partial(self.model.steer_V, 5, 1))
+		self.view.lineEdit_HC_6.editingFinished.connect(partial(self.model.steer_H, 6, 1))
+		self.view.lineEdit_VC_6.editingFinished.connect(partial(self.model.steer_V, 6, 1))
+
+		# self.view.doubleSpinBox_H_1.setValue(self.model.get_H(1))
+		# self.view.doubleSpinBox_V_1.setValue(self.model.get_V(1))
+		# self.view.doubleSpinBox_H_2.setValue(self.model.get_H(2))
+		# self.view.doubleSpinBox_V_2.setValue(self.model.get_V(2))
+		# self.view.doubleSpinBox_H_3.setValue(self.model.get_H(3))
+		# self.view.doubleSpinBox_V_3.setValue(self.model.get_V(3))
+		# self.view.doubleSpinBox_H_4.setValue(self.model.get_H(4))
+		# self.view.doubleSpinBox_V_4.setValue(self.model.get_V(4))
+
+		# userinput = True
+		#
+		# self.view.doubleSpinBox_H_1.valueChanged.connect(partial(self.model.steer_H, 1, userinput))
+		# self.view.doubleSpinBox_V_1.valueChanged.connect(partial(self.model.steer_V, 1, userinput))
+		# self.view.doubleSpinBox_H_2.valueChanged.connect(partial(self.model.steer_H, 2, userinput))
+		# self.view.doubleSpinBox_V_2.valueChanged.connect(partial(self.model.steer_V, 2, userinput))
+		# self.view.doubleSpinBox_H_3.valueChanged.connect(partial(self.model.steer_H, 3, userinput))
+		# self.view.doubleSpinBox_V_3.valueChanged.connect(partial(self.model.steer_V, 3, userinput))
+		# self.view.doubleSpinBox_H_4.valueChanged.connect(partial(self.model.steer_H, 4, userinput))
+		# self.view.doubleSpinBox_V_4.valueChanged.connect(partial(self.model.steer_V, 4, userinput))
+		# self.view.doubleSpinBox_H_5.valueChanged.connect(partial(self.model.steer_H, 5, userinput))
+		# self.view.doubleSpinBox_V_5.valueChanged.connect(partial(self.model.steer_V, 5, userinput))
+		# self.view.doubleSpinBox_H_6.valueChanged.connect(partial(self.model.steer_H, 6, userinput))
+		# self.view.doubleSpinBox_V_6.valueChanged.connect(partial(self.model.steer_V, 6, userinput))
 
 		self.view.pushButton_set.clicked.connect(self.model.set)
 		self.view.pushButton_set_0.clicked.connect(self.model.set_0)
 		self.view.pushButton_save_2.clicked.connect(self.model.save_positions)
 		self.view.pushButton_load.clicked.connect(self.model.load)
+
+
 		#self.view.comboBox_1.currentIndexChanged.connect(self.model.combobox_bpm)
 		#self.view.doubleSpinBox.
 
@@ -171,6 +203,12 @@ class Controller():
 		#self.view.pushButton_Calc.clicked.connect(self.model.measureMomentumSpreadCalc)
 
 	def updateDisplays(self):
+		#global userinput
+		# if userinput == False:
+		# 	print 'HEREREREERE'
+		# 	print userinput
+		# 	self.view.doubleSpinBox_H_3.setValue(self.model.get_H(3))
+		# 	print userinput
 		#print 'HERE WE ARE(updateDisplays)!!!!: BPM readout =', str(self.model.Cbpms.getXFromPV('C2V-BPM01'))
 
 		# SAMPL
@@ -207,6 +245,19 @@ class Controller():
 		self.view.label_V_5.setNum(1*self.model.Cbpms.getYFromPV(str(getattr(self.view, 'comboBox_'+str(5)).currentText())))
 		self.view.label_H_6.setNum(1*self.model.Cbpms.getXFromPV(str(getattr(self.view, 'comboBox_'+str(6)).currentText())))
 		self.view.label_V_6.setNum(1*self.model.Cbpms.getYFromPV(str(getattr(self.view, 'comboBox_'+str(6)).currentText())))
+
+		self.view.label_HC_1.setNum(self.model.get_H(1))
+		self.view.label_VC_1.setNum(self.model.get_V(1))
+		self.view.label_HC_2.setNum(self.model.get_H(2))
+		self.view.label_VC_2.setNum(self.model.get_V(2))
+		self.view.label_HC_3.setNum(self.model.get_H(3))
+		self.view.label_VC_3.setNum(self.model.get_V(3))
+		self.view.label_HC_4.setNum(self.model.get_H(4))
+		self.view.label_VC_4.setNum(self.model.get_V(4))
+		self.view.label_HC_5.setNum(self.model.get_H(5))
+		self.view.label_VC_5.setNum(self.model.get_V(5))
+		self.view.label_HC_6.setNum(self.model.get_H(6))
+		self.view.label_VC_6.setNum(self.model.get_V(6))
 		#self.label_1.setText('x='+str(1*self.model.Cbpms.getXFromPV('S01-BPM01'))+' y='+str(1*self.model.Cbpms.getYFromPV('S01-BPM01')))
 		#self.label_2.setText('x='+str(1*self.model.Cbpms.getXFromPV('S02-BPM01'))+' y='+str(1*self.model.Cbpms.getYFromPV('S02-BPM01')))
 		#self.label_3.setText('x='+str(1*self.model.Cbpms.getXFromPV('S02-BPM02'))+' y='+str(1*self.model.Cbpms.getYFromPV('S02-BPM02')))
@@ -216,18 +267,111 @@ class Controller():
 		#self.label_2.setText('x=%+f, y=%+f' % (1*self.model.Cbpms.getXFromPV('S02-BPM01'), 1*self.model.Cbpms.getYFromPV('S02-BPM01')))
 		#self.label_3.setText('x=%+f, y=%+f' % (1*self.model.Cbpms.getXFromPV('S02-BPM02'), 1*self.model.Cbpms.getYFromPV('S02-BPM02')))
 		#self.label_4.setText('x=%+f, y=%+f' % (1*self.model.Cbpms.getXFromPV('C2V-BPM01'), 1*self.model.Cbpms.getYFromPV('C2V-BPM01')))
-		self.view.doubleSpinBox_H_1.setValue(self.model.get_H(1))
-		self.view.doubleSpinBox_V_1.setValue(self.model.get_V(1))
-		self.view.doubleSpinBox_H_2.setValue(self.model.get_H(2))
-		self.view.doubleSpinBox_V_2.setValue(self.model.get_V(2))
-		self.view.doubleSpinBox_H_3.setValue(self.model.get_H(3))
-		self.view.doubleSpinBox_V_3.setValue(self.model.get_V(3))
-		self.view.doubleSpinBox_H_4.setValue(self.model.get_H(4))
-		self.view.doubleSpinBox_V_4.setValue(self.model.get_V(4))
+		#userinput = True
+		#print self.view.doubleSpinBox_H_1.value(), self.model.get_H(1)
+		#print self.view.doubleSpinBox_V_1.value(), self.model.get_V(1)
+		#print self.view.doubleSpinBox_H_2.value(), self.model.get_H(2)
+		#print self.view.doubleSpinBox_V_2.value(), self.model.get_V(2)
+		#print self.view.doubleSpinBox_H_3.value(), self.model.get_H(3)
+		#print self.view.doubleSpinBox_V_3.value(), self.model.get_V(3)
+		#print self.view.doubleSpinBox_H_4.value(), self.model.get_H(4)
+		#print self.view.doubleSpinBox_V_4.value(), self.model.get_V(4)
+
+
+
+
+		# if self.view.doubleSpinBox_H_1.value()!=self.model.get_H(1):
+		# 	#self.view.doubleSpinBox_H_1.setValue(self.model.get_H(1))
+		# 	userinput=False
+		#
+		# if self.view.doubleSpinBox_V_1.value()!=self.model.get_V(1):
+		# 	#self.view.doubleSpinBox_V_1.setValue(self.model.get_V(1))
+		# 	userinput=False
+		# if self.view.doubleSpinBox_H_2.value()!=self.model.get_H(2):
+		# 	#self.view.doubleSpinBox_H_2.setValue(self.model.get_H(2))
+		# 	userinput=False
+		# if self.view.doubleSpinBox_V_2.value()!=self.model.get_V(2):
+		# 	#self.view.doubleSpinBox_V_2.setValue(self.model.get_V(2))
+		# 	userinput=False
+		#
+		# if self.view.doubleSpinBox_H_3.value()!=self.model.get_H(3):
+		# 	#print self.view.doubleSpinBox_H_3.value(), self.model.get_H(3)
+		# 	print 'here1---'
+		# 	#self.view.doubleSpinBox_H_3.setValue(self.model.get_H(3))
+		# 	userinput=False
+		# 	print self.view.doubleSpinBox_H_3.value(), self.model.get_H(3)
+
+			#time.sleep(1)
+			#print self.view.doubleSpinBox_H_3.value(), self.model.get_H(3)
+			#print 'here2---'
+		#if self.view.doubleSpinBox_V_3.value()!=self.model.get_V(3):
+		#	self.view.doubleSpinBox_V_3.setValue(self.model.get_V(3))
+		#	userinput=False
+
+		#if self.view.doubleSpinBox_H_4.value()!=self.model.get_H(4):
+			#print 'set dipole'
+			#print self.view.doubleSpinBox_H_4.value(), self.model.get_H(4),self.model.Cmagnets.getSI('DIP01')
+			#time.sleep(5)
+			#print self.view.doubleSpinBox_H_4.value(), self.model.get_H(4),self.model.Cmagnets.getSI('DIP01')
+			#self.view.doubleSpinBox_H_4.setValue(self.model.get_H(4))
+			#userinput=False
+		#if self.view.doubleSpinBox_V_4.value()!=self.model.get_V(4):
+		#	self.view.doubleSpinBox_V_4.setValue(self.model.get_V(4))
+		#	userinput=False
+		#print 'userinput=',userinput
+		# self.view.doubleSpinBox_H_1.valueChanged.connect(partial(self.model.steer_H, 1, userinput))
+		# self.view.doubleSpinBox_V_1.valueChanged.connect(partial(self.model.steer_V, 1, userinput))
+		# self.view.doubleSpinBox_H_2.valueChanged.connect(partial(self.model.steer_H, 2, userinput))
+		# self.view.doubleSpinBox_V_2.valueChanged.connect(partial(self.model.steer_V, 2, userinput))
+		#self.view.doubleSpinBox_H_3.valueChanged.connect(partial(self.model.steer_H, 3, userinput))
+		# self.view.doubleSpinBox_V_3.valueChanged.connect(partial(self.model.steer_V, 3, userinput))
+		# self.view.doubleSpinBox_H_4.valueChanged.connect(partial(self.model.steer_H, 4, userinput))
+		# self.view.doubleSpinBox_V_4.valueChanged.connect(partial(self.model.steer_V, 4, userinput))
+		# self.view.doubleSpinBox_H_5.valueChanged.connect(partial(self.model.steer_H, 5, userinput))
+		# self.view.doubleSpinBox_V_5.valueChanged.connect(partial(self.model.steer_V, 5, userinput))
+		# self.view.doubleSpinBox_H_6.valueChanged.connect(partial(self.model.steer_H, 6, userinput))
+		# self.view.doubleSpinBox_V_6.valueChanged.connect(partial(self.model.steer_V, 6, userinput))
+
+		# self.view.doubleSpinBox_H_1.setValue(self.model.get_H(1))
+		# self.view.doubleSpinBox_V_1.setValue(self.model.get_V(1))
+		# self.view.doubleSpinBox_H_2.setValue(self.model.get_H(2))
+		# self.view.doubleSpinBox_V_2.setValue(self.model.get_V(2))
+		#self.view.doubleSpinBox_H_3.setValue(self.model.get_H(3))
+		# self.view.doubleSpinBox_V_3.setValue(self.model.get_V(3))
+		# self.view.doubleSpinBox_H_4.setValue(self.model.get_H(4))
+		# self.view.doubleSpinBox_V_4.setValue(self.model.get_V(4))
+		# self.view.doubleSpinBox_H_5.setValue(self.model.get_H(5))
+		# self.view.doubleSpinBox_V_5.setValue(self.model.get_V(5))
+		# self.view.doubleSpinBox_H_6.setValue(self.model.get_H(6))
+		# self.view.doubleSpinBox_V_6.setValue(self.model.get_V(6))
+		#print 'by time.sleep'
+		#time.sleep(5)
+
+		#QApplication.processEvents()
+		#print userinput
+		#time.sleep(1)
+		#userinput = True
+		# self.view.doubleSpinBox_H_1.valueChanged.connect(partial(self.model.steer_H, 1, userinput))
+		# self.view.doubleSpinBox_V_1.valueChanged.connect(partial(self.model.steer_V, 1, userinput))
+		# self.view.doubleSpinBox_H_2.valueChanged.connect(partial(self.model.steer_H, 2, userinput))
+		# self.view.doubleSpinBox_V_2.valueChanged.connect(partial(self.model.steer_V, 2, userinput))
+		#self.view.doubleSpinBox_H_3.valueChanged.connect(partial(self.model.steer_H, 3, userinput))
+		# self.view.doubleSpinBox_V_3.valueChanged.connect(partial(self.model.steer_V, 3, userinput))
+		# self.view.doubleSpinBox_H_4.valueChanged.connect(partial(self.model.steer_H, 4, userinput))
+		# self.view.doubleSpinBox_V_4.valueChanged.connect(partial(self.model.steer_V, 4, userinput))
+		# self.view.doubleSpinBox_H_5.valueChanged.connect(partial(self.model.steer_H, 5, userinput))
+		# self.view.doubleSpinBox_V_5.valueChanged.connect(partial(self.model.steer_V, 5, userinput))
+		# self.view.doubleSpinBox_H_6.valueChanged.connect(partial(self.model.steer_H, 6, userinput))
+		# self.view.doubleSpinBox_V_6.valueChanged.connect(partial(self.model.steer_V, 6, userinput))
+		#print userinput
 		# self.dCurve.setData(x=self.model.dCurrents,y=self.model.dPositions)
 		# self.fCurve.setData(x=self.model.fCurrents,y=self.model.fPositions)
 		# self.displayDisp.setText('DISPERSION:<br>'+str(self.model.Dispersion)+' m/A')
 		# self.displayMom_S.setText('MOMENTUM SPREAD:<br>'+str(self.model.pSpread)+' MeV/c')
+
+
+
+
 	def refreshImage(self):
 		 #image = np.random.normal(size=(2560,2160))
 		 cap = cv2.VideoCapture("http://192.168.83.31:7080/MJPG1.mjpg")
