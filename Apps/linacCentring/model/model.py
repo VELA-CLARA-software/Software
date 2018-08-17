@@ -100,6 +100,8 @@ class Model(object):
 		self.data = []
 		self.calibrationPhase = {'Gun': None, 'Linac1': None}
 		self.parameters = self.baseMachine.initilise_parameters()
+		self.corrector1Fit = {}
+		self.corrector2Fit = {}
 		print("Model Initialized")
 
 	def setRunning(self):
@@ -179,9 +181,8 @@ class Model(object):
 		self.linacLowerAmp = ampLower
 		self.linacUpperAmp = ampUpper
 		self.nSamples = nSamples
-		self.bpms = [partial(self.machine.getBPMPosition, 'S01-BPM01'), \
-		partial(self.machine.getBPMPosition, 'S02-BPM01'), \
-		partial(self.machine.getBPMPosition, 'S02-BPM02')]
+		self.machine.cameras.startAcquiring('S02-YAG-02')
+		self.bpms = [partial(self.machine.getScreenPosition, 'S02-YAG-02', plane=self.plane)]
 		self.findRFCentre2D()
 
 	def linac1BLMScan(self, actuator, ampLower, ampUpper, nSamples):
@@ -241,6 +242,13 @@ class Model(object):
 		self.experimentalData[self.main]['calibrationCorr1'] = I
 		self.machine.set('setCorr', corr, I)
 
+	def reject_outliers(self, data):
+	    m = 2
+	    u = np.mean(data)
+	    s = np.std(data)
+	    filtered = [e for e in data if (u - 2 * s < e < u + 2 * s)]
+	    return filtered
+
 	def getData(self):
 		self.data = []
 		while len(self.data) < 2:
@@ -251,7 +259,14 @@ class Model(object):
 			self.data.append(self.getDataFunction())
 			time.sleep(self.sleepTime)
 		## This returns means in the form [bpm1, bpm2, bpm3...]
-		return np.array([np.mean(a) if np.std(a) > 0.01 else 20 for a in zip(*self.data)])
+		self.data = self.reject_outliers(zip(*self.data)[0])
+		# print self.data
+		# return np.array([np.mean(a) if np.std(a) > 0.01 else 20 for a in zip(*self.data)])
+		if len(self.data) > 3:
+			return np.mean(self.data)
+		else:
+			return 20
+		# return np.array([np.mean(a) if len(a) < 0.01 else 20 for a in zip(*self.data)])
 
 ########### findRFCentreBLM ###############
 
@@ -395,16 +410,22 @@ class Model(object):
 			self.data1 = {}
 			self.data2 = {}
 			self.rawData = OrderedDict({'x':[], 'y': [], 'z1':[], 'z2': [], 'diff': []})
-			# self.machine.setLinac1Amplitude(self.linacLowerAmp)
+			self.machine.setLinac1Amplitude(self.linacLowerAmp)
 			flip = -1
-			for c1 in np.arange(self.corrector1Min, self.corrector1Max+self.correctorStepSize, self.correctorStepSize):
+			c1list = np.arange(self.corrector1Min, self.corrector1Max+self.correctorStepSize, self.correctorStepSize)
+			c2list = np.arange(self.corrector2Min, (self.corrector2Max+self.correctorStepSize), self.correctorStepSize)
+
+			for c1 in c1list:
 				self.machine.setCorr(self.corrector1, c1)
 				self.data1[c1] = {}
 				flip = -1*flip
-				for c2 in np.arange(flip*self.corrector2Min, flip*(self.corrector2Max+self.correctorStepSize), flip*self.correctorStepSize):
+				for i, b in enumerate(c2list):
+					if flip < 1:
+						c2 = c2list[::-1][i]
+					else:
+						c2 = c2list[i]
 					self.machine.setCorr(self.corrector2, c2)
 					while abs(self.machine.getCorr(self.corrector1) - c1) > 0.05 or abs(self.machine.getCorr(self.corrector2) - c2) > 0.05:
-						print '0'
 						# print self.machine.get('getCorr', self.corrector1) , c1, self.machine.get('getCorr', self.corrector2) , c2
 						time.sleep(self.sleepTime)
 					if self._abort:
@@ -416,16 +437,19 @@ class Model(object):
 						logfile.write('data1,'+str(self.linacLowerAmp)+','+str(c1)+','+str(c2)+','+str(data1))
 					self.data1[c1][c2] = data1
 
-			# self.machine.setLinac1Amplitude(self.linacUpperAmp)
+			self.machine.setLinac1Amplitude(self.linacUpperAmp)
 			flip = -1
-			for c1 in np.arange(self.corrector1Min, self.corrector1Max+self.correctorStepSize, self.correctorStepSize):
+			for c1 in c1list:
 				self.machine.setCorr(self.corrector1, c1)
 				self.data2[c1] = {}
 				flip = -1*flip
-				for c2 in np.arange(flip*self.corrector2Min, flip*(self.corrector2Max+self.correctorStepSize), flip*self.correctorStepSize):
+				for i, b in enumerate(c2list):
+					if flip < 1:
+						c2 = c2list[::-1][i]
+					else:
+						c2 = c2list[i]
 					self.machine.setCorr(self.corrector2, c2)
 					while abs(self.machine.getCorr(self.corrector1) - c1) > 0.05 or abs(self.machine.getCorr(self.corrector2) - c2) > 0.05:
-						print '1'
 						time.sleep(self.sleepTime)
 					print 'linac = ', self.linacUpperAmp, '  c1 = ', c1, '  c2 = ', c2
 					data2 = self.getData()
@@ -434,16 +458,22 @@ class Model(object):
 					self.data2[c1][c2] = data2
 
 			flip = -1
-			for c1 in np.arange(self.corrector1Min, self.corrector1Max+self.correctorStepSize, self.correctorStepSize):
+			for c1 in c1list:
 				flip = -1*flip
-				for c2 in np.arange(flip*self.corrector2Min, flip*(self.corrector2Max+self.correctorStepSize), flip*self.correctorStepSize):
+				for i, b in enumerate(c2list):
+					if flip < 1:
+						c2 = c2list[::-1][i]
+					else:
+						c2 = c2list[i]
 					self.rawData['x'].append(c1)
 					self.rawData['y'].append(c2)
 					data1 = self.data1[c1][c2]
 					data2 = self.data2[c1][c2]
 					self.rawData['z1'].append(data1)
 					self.rawData['z2'].append(data2)
-					diff = np.mean(np.array([abs(a[1] - a[0]) if a[0] < 20 and a[1] < 20 else 20 for a in zip(data1,data2)]))
+					# diff = np.mean(np.array([abs(a[1] - a[0]) if a[0] < 20 and a[1] < 20 else 20 for a in zip(data1,data2)]))
+					# print data1, data2
+					diff = (data2 - data1)**2
 					self.rawData['diff'].append(diff)
 					if self.verbose:
 						logfile.write('diff,'+str(self.linacUpperAmp)+','+str(c1)+','+str(c2)+','+str(data1)+','+str(data2)+','+str(diff))
@@ -456,12 +486,23 @@ class Model(object):
 		c1, c2, diff = self.getDataArray(zipped=False)
 		# print data
 		data = zip(c1, c2, diff)
-		val, idx = min((val, idx) for (idx, val) in enumerate(diff))
-		print 'min = ', data[idx]
-		self.logger.emit('min = ' + str(data[idx]))
 		val, idx = max((val, idx) for (idx, val) in enumerate(diff))
-		print 'max = ', data[idx]
-		
+		print 'max parameters ['+"{0:.2f}".format(diff[idx])+']: ' + self.corrector1 + ' = ' + str(c1[idx]) + 'A   ' + self.corrector2 + ' = ' + str(c2[idx]) + 'A'
+		val, idx = min((val, idx) for (idx, val) in enumerate(diff))
+		printstr = 'min parameters [' + "{0:.2f}".format(diff[idx]) +']: ' + self.corrector1 + ' = ' + str(c1[idx]) + 'A   ' + self.corrector2 + ' = ' + str(c2[idx]) + 'A'
+		self.logger.emit(printstr)
+		print printstr
+		self.corrector1Fit[self.plane] = c1[idx]
+		self.corrector2Fit[self.plane] = c2[idx]
+
+	def setRFCentreFit(self):
+		if hasattr(self, 'corrector1Fit') and hasattr(self, 'corrector2Fit'):
+			if self.plane in self.corrector1Fit and self.plane in self.corrector2Fit:
+				self.machine.setCorr(self.corrector1, self.corrector1Fit[self.plane])
+				self.machine.setCorr(self.corrector2, self.corrector2Fit[self.plane])
+				while abs(self.machine.getCorr(self.corrector1) - self.corrector1Fit[self.plane]) > 0.05 or abs(self.machine.getCorr(self.corrector2) - self.corrector2Fit[self.plane]) > 0.05:
+					time.sleep(self.sleepTime)
+
 	def saveLinacData2D(self):
 		df = pd.DataFrame(self.rawData)
 		df.columns = ['x', 'y', 'z1', 'z2', 'diff']

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1040</width>
-    <height>699</height>
+    <height>818</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -57,20 +57,6 @@
         <string>Linac 1</string>
        </attribute>
        <layout class="QGridLayout" name="linacTabLayout">
-        <item row="0" column="1" rowspan="4">
-         <widget class="QGroupBox" name="groupBox_plotsLinac1">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-            <horstretch>1</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="title">
-           <string>Plots</string>
-          </property>
-          <layout class="QHBoxLayout" name="plotLayoutLinac1"/>
-         </widget>
-        </item>
         <item row="0" column="0">
          <widget class="QGroupBox" name="groupBox_4">
           <property name="sizePolicy">
@@ -117,13 +103,13 @@
               </size>
              </property>
              <property name="maximum">
-              <number>13000</number>
+              <number>17500</number>
              </property>
              <property name="singleStep">
               <number>100</number>
              </property>
              <property name="value">
-              <number>6500</number>
+              <number>10000</number>
              </property>
             </widget>
            </item>
@@ -143,13 +129,13 @@
               </size>
              </property>
              <property name="maximum">
-              <number>13000</number>
+              <number>17500</number>
              </property>
              <property name="singleStep">
               <number>100</number>
              </property>
              <property name="value">
-              <number>13000</number>
+              <number>17000</number>
              </property>
             </widget>
            </item>
@@ -182,6 +168,13 @@
              </property>
             </widget>
            </item>
+           <item>
+            <widget class="QPushButton" name="linac1SetRFCentreButton">
+             <property name="text">
+              <string>Set RF centre</string>
+             </property>
+            </widget>
+           </item>
           </layout>
          </widget>
         </item>
@@ -197,6 +190,22 @@
            </size>
           </property>
          </spacer>
+        </item>
+        <item row="0" column="1" rowspan="4">
+         <widget class="QTabWidget" name="tabWidget_plotsLinac1">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>1</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>500</height>
+           </size>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -215,20 +224,6 @@
         <string>Linac 1 BLM</string>
        </attribute>
        <layout class="QGridLayout" name="linac1BLMTabLayout">
-        <item row="0" column="1" rowspan="4">
-         <widget class="QGroupBox" name="groupBox_plotsLinac1BLM">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-            <horstretch>1</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="title">
-           <string>Plots</string>
-          </property>
-          <layout class="QHBoxLayout" name="plotLayoutLinac1BLM"/>
-         </widget>
-        </item>
         <item row="0" column="0">
          <widget class="QGroupBox" name="groupBox_4BLM">
           <property name="sizePolicy">
@@ -275,13 +270,13 @@
               </size>
              </property>
              <property name="maximum">
-              <number>13000</number>
+              <number>17500</number>
              </property>
              <property name="singleStep">
               <number>100</number>
              </property>
              <property name="value">
-              <number>6500</number>
+              <number>10000</number>
              </property>
             </widget>
            </item>
@@ -301,13 +296,13 @@
               </size>
              </property>
              <property name="maximum">
-              <number>13000</number>
+              <number>17500</number>
              </property>
              <property name="singleStep">
               <number>100</number>
              </property>
              <property name="value">
-              <number>13000</number>
+              <number>17000</number>
              </property>
             </widget>
            </item>
@@ -355,6 +350,16 @@
            </size>
           </property>
          </spacer>
+        </item>
+        <item row="0" column="1" rowspan="4">
+         <widget class="QTabWidget" name="tabWidget_plotsLinac1BLM">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>1</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -491,17 +496,13 @@
          </spacer>
         </item>
         <item row="0" column="1" rowspan="3">
-         <widget class="QGroupBox" name="groupBox_plotsSol1">
+         <widget class="QTabWidget" name="tabWidget_plotsSol1">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
             <horstretch>1</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
-          <property name="title">
-           <string>Plots</string>
-          </property>
-          <layout class="QHBoxLayout" name="plotLayoutSOL1"/>
          </widget>
         </item>
        </layout>
@@ -642,17 +643,13 @@
          </spacer>
         </item>
         <item row="0" column="1" rowspan="3">
-         <widget class="QGroupBox" name="groupBox_plotsSol2">
+         <widget class="QTabWidget" name="tabWidget_plotsSol2">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
             <horstretch>1</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
-          <property name="title">
-           <string>Plots</string>
-          </property>
-          <layout class="QHBoxLayout" name="plotLayoutSOL2"/>
          </widget>
         </item>
        </layout>
@@ -1026,6 +1023,12 @@
     </item>
     <item row="1" column="0">
      <widget class="QGroupBox" name="groupBox_3">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
         <widget class="QLabel" name="label_MODE">

@@ -50,6 +50,7 @@ class GUI_magnetAppMainView(QtGui.QMainWindow, Ui_magnetAppMainView):
         self.mainSelectAll.clicked.connect( self.activateAll )
         self.selectNone.clicked.connect( self.deActivateAll )
         self.degauss_default_style = self.selectedDegauss.styleSheet()
+        self.DEGAUSS_PREP = False
 
     def closeEvent(self,event):
         self.closing.emit()
@@ -74,10 +75,15 @@ class GUI_magnetAppMainView(QtGui.QMainWindow, Ui_magnetAppMainView):
             mag.updateMagWidget()
             if mag.isDegaussing:
                 degauss_count += 1
-        if degauss_count > 0:
+
+        if self.DEGAUSS_PREP:
             self.selectedDegauss.setStyleSheet("background-color: red")
+        elif degauss_count > 0:
+            self.selectedDegauss.setStyleSheet("background-color: red")
+            self.selectedDegaussToZero.setStyleSheet("background-color: red")
         else:
             self.selectedDegauss.setStyleSheet(self.degauss_default_style)
+            self.selectedDegaussToZero.setStyleSheet(self.degauss_default_style)
 
 
     # add magnet widgets to the main view - dips and sol in one column ....

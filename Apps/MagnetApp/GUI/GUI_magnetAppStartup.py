@@ -84,6 +84,13 @@ class GUI_magnetAppStartup(QtGui.QMainWindow, Ui_magnetAppStartup):
         if r.isChecked() == True:
             print self.radioAreaTo_ENUM[r.objectName()]
             self.machineAreaSignal.emit(self.radioAreaTo_ENUM[r.objectName()])
+        # wow this is bad ...
+        if r == self.VELA_INJ:
+            self.CLARA_2_BA1_BA2.setChecked(False)
+        if r == self.CLARA_2_BA1_BA2:
+            self.VELA_INJ.setChecked(False)
+
+
     def handle_modeRadio(self,r):
         if r.isChecked() == True:
             self.machineModeSignal.emit(self.radioModeTo_ENUM[r.objectName()])
