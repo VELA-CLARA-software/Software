@@ -62,6 +62,8 @@ class Model(QObject):
         self.fPositions=[]
         self.Dispersion=0.
         self.beamSigma=0.
+        self.dipole = str(self.view.comboBox_dipole.currentText())
+        #print self.dipole
 
         self.magInit = mag.init()
         self.bpmInit = bpm.init()
@@ -158,17 +160,101 @@ class Model(QObject):
         self.func = momentumFunctions.Functions(OM='')
         #print("Model Initialized")
 
+    def selectCurrent(self):
+        #self.p = self.func.calcMom(self.Cmagnets,'S02-DIP01',self.I)
+        self.predictedI = float(self.view.lineEdit_selectCurrent.text())
+        #self.view.label_predictMom.setText(self.predictedMomentum)
+        self.predictedMomentum = self.func.calcMom(self.Cmagnets,self.dipole,self.predictedI)
+
+    def selectMom(self):
+        #self.p = self.func.calcMom(self.Cmagnets,'S02-DIP01',self.I)
+        self.predictedMomentum = float(self.view.lineEdit_selectMom.text())
+        #self.view.label_predictMom.setText(self.predictedMomentum)
+        self.predictedI = self.func.mom2I(self.Cmagnets, self.dipole,self.predictedMomentum)
+
+    def useCurrent(self):
+        self.predictedI = self.Cmagnets.getSI(self.dipole)
+        self.predictedMomentum = self.func.calcMom(self.Cmagnets,self.dipole,self.predictedI)
+        #self.view.label_predictMom.setText(str(self.predictedMomentum))
+        #self.predictedI = self.func.mom2I(self.Cmagnets, 'S02-DIP01',self.predictedMomentum)
+
+    def useRF(self):
+        print 'This does nothing yet'
+
+
+
+    def roughGetCurrentRange(self):
+        self.roughMinI = self.predictedI/2
+        self.roughMaxI = 1.05*self.predictedI
+        self.view.lineEdit_roughCurrentMin.setText("%.2f" % self.roughMinI)
+        self.view.lineEdit_roughCurrentMax.setText("%.2f" % self.roughMaxI)
+
+    def roughGetRFRange(self):
+        self.roughMinRF = self.predictedRF/2
+        self.roughMaxRF = 1.05*self.predictedRF
+        self.view.lineEdit_roughRFMin.setText("%.2f" % self.roughMinRF)
+        self.view.lineEdit_roughRFMax.setText("%.2f" % self.roughMaxRF)
+
+    def fineGetCurrentRange(self):
+        self.fineMinI = 0.95*self.predictedI
+        self.fineMaxI = 1.05*self.predictedI
+        self.view.lineEdit_fineCurrentMin.setText("%.2f" % self.fineMinI)
+        self.view.lineEdit_fineCurrentMax.setText("%.2f" % self.fineMaxI)
+
+    def fineGetRFRange(self):
+        self.fineMinRF = 0.95*self.predictedRF
+        self.fineMaxRF = 1.05*self.predictedRF
+        self.view.lineEdit_fineRFMin.setText("%.2f" % self.fineMinRF)
+        self.view.lineEdit_fineRFMax.setText("%.2f" % self.fineMaxRF)
+
+    def fineGetCurrentRange_2(self):
+        self.fineMinI = 0.95*self.approxI
+        self.fineMaxI = 1.05*self.approxI
+        self.view.lineEdit_fineCurrentMin.setText("%.2f" % self.fineMinI)
+        self.view.lineEdit_fineCurrentMax.setText("%.2f" % self.fineMaxI)
+
+    def fineGetRFRange_2(self):
+        self.fineMinRF = 0.95*self.approxRF
+        self.fineMaxRF = 1.05*self.approxRF
+        self.view.lineEdit_fineRFMin.setText("%.2f" % self.fineMinRF)
+        self.view.lineEdit_fineRFMax.setText("%.2f" % self.fineMaxRF)
+
+    def setRoughMinI(self):
+        self.roughMinI = float(self.view.lineEdit_roughCurrentMin.text())
+
+    def setRoughMaxI(self):
+        self.roughMaxI = float(self.view.lineEdit_roughCurrentMax.text())
+
+    def setRoughMinRF(self):
+        self.roughMinRF = float(self.view.lineEdit_roughRFMin.text())
+
+    def setRoughMaxRF(self):
+        self.roughMaxRF = float(self.view.lineEdit_roughRFMax.text())
+
+    def setFineMinI(self):
+        self.fineMinI = float(self.view.lineEdit_fineCurrentMin.text())
+
+    def setFineMaxI(self):
+        self.fineMaxI = float(self.view.lineEdit_fineCurrentMax.text())
+
+    def setFineMinRF(self):
+        self.fineMinRF = float(self.view.lineEdit_fineRFMin.text())
+
+    def setFineMaxRF(self):
+        self.fineMaxRF = float(self.view.lineEdit_fineRFMax.text())
+
+
     #Outline of Momentum Measurement Procedure
-    def measureMomentumPrelim_1(self):
-        '''1. Preliminaries'''
-        #if self.view.checkBox_1.isChecked()==True:
-        print 'Read predicted momentum and calculate predicted current:'
-        self.predictedMomentum = float(self.view.lineEdit_predictMom.text())
-        print('Predicted Momentum: '+str(self.predictedMomentum))
-        self.predictedI = self.func.mom2I(self.Cmagnets,
-                                        'S02-DIP01',
-                                        self.predictedMomentum)
-        print('Predicted Current: '+str(self.predictedI))
+    # def measureMomentumPrelim_1(self):
+    #     '''1. Preliminaries'''
+    #     #if self.view.checkBox_1.isChecked()==True:
+    #     print 'Read predicted momentum and calculate predicted current:'
+    #     self.predictedMomentum = float(self.view.lineEdit_predictMom.text())
+    #     print('Predicted Momentum: '+str(self.predictedMomentum))
+    #     self.predictedI = self.func.mom2I(self.Cmagnets,
+    #                                     'S02-DIP01',
+    #                                     self.predictedMomentum)
+    #     print('Predicted Current: '+str(self.predictedI))
 
     def measureMomentumPrelim_2(self):
         print 'Close the laser shutters'
@@ -183,11 +269,11 @@ class Model(QObject):
         pass
         #do degaussing
         print 'Degaussing...'
-        self.Cmagnets.degauss('S02-DIP01',True)
+        self.Cmagnets.degauss(self.dipole,True)
         self.Cmagnets.degauss('S02-QUAD3',True)
         self.Cmagnets.degauss('S02-QUAD4',True)
         self.Cmagnets.degauss('S02-QUAD5',True)
-        while self.Cmagnets.isDegaussing('S02-DIP01') == True and self.Cmagnets.isDegaussing('S02-QUAD3') and self.Cmagnets.isDegaussing('S02-QUAD4') and self.Cmagnets.isDegaussing('S02-QUAD5'):
+        while self.Cmagnets.isDegaussing(self.dipole) == True and self.Cmagnets.isDegaussing('S02-QUAD3') and self.Cmagnets.isDegaussing('S02-QUAD4') and self.Cmagnets.isDegaussing('S02-QUAD5'):
             print 'still degaussing...'
             time.sleep(1)
 
@@ -283,23 +369,23 @@ class Model(QObject):
     def measureMomentumAlign_2(self):
         #raw_input('Insert S02-YAG-02, then press enter')
         # Insert YAG
-        print 'Insert S02-YAG-02 - have to do it yourself'
-        #screen = 'S02-SCR-02'
-        #print 'insert YAG'
-        #self.scrn.insertYAG(screen)
-        #print 'is screen in?', self.scrn.isYAGIn(screen)
-        #self.scrn.moveScreenOut(screen)
-        # if self.scrn.isYAGIn(screen) is False:
-        #     while True:
-        #         isscreenmoving1 = self.scrn.isScreenMoving(screen)
-        #         print 'Is screen moving?', isscreenmoving1
-        #         time.sleep(1)
-        #         isscreenmoving2 = self.scrn.isScreenMoving(screen)
-        #         if isscreenmoving2 is False and isscreenmoving1 is True:
-        #             print 'Finished Moving!'
-        #             break
-        # else:
-        #     pass
+        print 'Insert S02-YAG-02'# **change back to -02**'
+        screen = 'S02-SCR-02'
+        print 'insert YAG'
+        self.scrn.insertYAG(screen)
+        print 'is screen in?', self.scrn.isYAGIn(screen)
+        self.scrn.moveScreenOut(screen)
+        if self.scrn.isYAGIn(screen) is False:
+            while True:
+                isscreenmoving1 = self.scrn.isScreenMoving(screen)
+                print 'Is screen moving?', isscreenmoving1
+                time.sleep(1)
+                isscreenmoving2 = self.scrn.isScreenMoving(screen)
+                if isscreenmoving2 is False and isscreenmoving1 is True:
+                    print 'Finished Moving!'
+                    break
+        else:
+            pass
 
     def measureMomentumAlign_3(self):
         print 'Aligning on S02-YAG-02 with S02-HCOR-02'
@@ -307,7 +393,9 @@ class Model(QObject):
         #self.func.alignOnScreen(self.Cmagnets,'S02-HCOR1',self.camerasIA,'S02-CAM-01',13,0.5)
 
     def measureMomentumAlign_4(self):
-        print 'Retract S02-YAG-02 - have to do it yourself'
+        print 'Retract S02-YAG-02'# **change back to -02**'
+        screen = 'S02-SCR-02'
+        screens.moveScreenTo(screen,scrn.SCREEN_STATE.V_RETRACTED)
         #self.func.align(self.Cmagnets,'S02-VCOR2',self.Cbpms,'S02-BPM02',0.5)
         #align(self,hctrl,hcor, bctrl, bpm, tol, N=10):
         #self.func.align(self.Cmagnets,'VCOR02',self.Cbpms,'BPM02',0.000001)
@@ -319,16 +407,16 @@ class Model(QObject):
     def measureMomentumCentreC2V(self):
         '''3. Centre in Spec. Line'''
         #if self.view.checkBox_3.isChecked()==True:
-        self.I = self.func.bendBeam(self.Cmagnets,'S02-DIP01',
+        self.I = self.func.bendBeam(self.Cmagnets,self.dipole,
                                     self.Cbpms,'C2V-BPM01',
                                     'YAG01',
-                                     self.predictedI, 0.1)#0.00001                 # tol=0.0001 (metres)
+                                     self.fineMinI, self.fineMaxI, 0.1)#0.00001                 # tol=0.0001 (metres)
 
     def measureMomentumCalcMom(self):
         '''4. Convert Current to Momentum'''
         #if self.view.checkBox_4.isChecked()==True:
             #self.PL.info('4. Calculate Momentum')
-        self.p = self.func.calcMom(self.Cmagnets,'S02-DIP01',self.I)
+        self.p = self.func.calcMom(self.Cmagnets,self.dipole,self.I)
         print self.p
 
     #Outline of Momentum Spread Measurement Procedure
@@ -338,8 +426,8 @@ class Model(QObject):
             #if self.view.checkBox_1_s.isChecked()==True:
             """1. Checks"""
             #self.p=34.41
-            self.I=self.func.mom2I(self.Cmagnets,'S02-DIP01',self.p)
-            self.Cmagnets.setSI('S02-DIP01',self.I)
+            self.I=self.func.mom2I(self.Cmagnets,self.dipole,self.p)
+            self.Cmagnets.setSI(self.dipole,self.I)
             print 'measureMomentum(step 1), p = ', str(self.p)
 
     def measureMomentumSpreadMinBeta(self):
@@ -359,7 +447,7 @@ class Model(QObject):
         #self.func.minimizeBeta2(self.Cmagnets,'S02-QUAD4',
         #                        None,'VM-CLA-C2V-DIA-CAM-01',-1)
         #2.2 Set Dispersion Size on Spec Line
-        self.Cmagnets.setSI('S02-DIP01',self.I)
+        self.Cmagnets.setSI(self.dipole,self.I)
         #minimizeBeta(self,qctrl,quad,sctrl,screen,init_step,N=1):
 
     def measureMomentumSpreadSetDispSize(self):
@@ -384,7 +472,7 @@ class Model(QObject):
         #self.fPositions =
         # Don't know why the above didn't work, that's why it's returned to x then unpacked below
         x = self.func.findDispersion(self.Cmagnets,
-                                                'S02-DIP01',
+                                                self.dipole,
                                                 None,
                                                 'CLA-C2V-DIA-CAM-01',
                                                 self.I,10,0.1)

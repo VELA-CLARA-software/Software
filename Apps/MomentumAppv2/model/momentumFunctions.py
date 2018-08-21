@@ -163,10 +163,10 @@ class Functions(QObject):
         print('Aligned beam using ' + hcor + ' and ' + screen)
 
 
-    def bendBeam(self,dctrl,dipole,bctrl,bpm,screen, predictedI, tol, N=10):
+    def bendBeam(self,dctrl,dipole,bctrl,bpm,screen, IMin, IMax, tol, N=10):
         DIP = dctrl.getMagObjConstRef(dipole)                                    #create a reference to the dipole
-        step = predictedI/100                                                    #1% of predicted current
-        setI = 0.95*predictedI
+        step = (IMin+IMax)/100                                                    #1% of predicted current
+        setI = IMin#0.95*predictedI
         print ('95% of predicted current is: ',setI)
         dctrl.setSI(dipole,setI)
         time.sleep(1)
@@ -203,6 +203,8 @@ class Functions(QObject):
             time.sleep(0.1)
             if abs(x)<abs(x_old-x):                                                        #if the step size look like it is will over bend the beam, half it.
                 step = step*0.1
+            if dctrl.getSI(dipole) > IMax:
+                break
         print('Centered beam in Spectrometer line using ' + dipole + ' and ' + bpm)
         return dctrl.getSI(dipole)                                        #return the current at which beam has been centered
 
@@ -433,8 +435,8 @@ class Functions(QObject):
     def mom2I(self,dctrl,dipole,mom):
         D = dctrl.getMagObjConstRef(dipole)
         coeffs = list(D.fieldIntegralCoefficients)
-        print coeffs
-        print(1000000000*(mom*physics.pi*45)/(physics.c*180))
+        #print coeffs
+        #print(1000000000*(mom*physics.pi*45)/(physics.c*180))
         coeffs[-1] -= (D.magneticLength/400.0033)*(1000000000*(mom*physics.pi*45)/(physics.c*180))
         roots = np.roots(coeffs)
         current = roots[-1].real
