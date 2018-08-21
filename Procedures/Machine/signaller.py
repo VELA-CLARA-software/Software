@@ -27,20 +27,23 @@ class machineSignaller(QObject):
 		self.id = -1
 
 	def get(self, id, function, *args, **kwargs):
+		# while all([self.signalRecieved[i] for i in self.signalRecieved.keys()]) == False:
+		# 	time.sleep(0.01)
+		self.signalRecieved[id] = False
 		self.toMachine.emit(id, function, args, kwargs)
 		while self.signalRecieved[id] == False:
 			time.sleep(0.001)
 		return self.recievedSignal[id]
 
 	def fromMachine(self, id, response):
-		self.signalRecieved[id] = True
-		self.recievedSignal[id] = response
+		if id in self.signalRecieved:
+			self.recievedSignal[id] = response
+			self.signalRecieved[id] = True
 
 	def __getattr__(self, attr):
-		if 'set' in attr:
-			id = int(self.id) + 1
-			self.signalRecieved[id] = False
-			self.id += 1
-			return partial(self.get, id, attr)
-		else:
-			return getattr(self.machine, attr)
+		# if 'set' in attr:
+		id = int(self.id) + 1
+		self.id += 1
+		return partial(self.get, id, attr)
+		# else:
+			# return getattr(self.machine, attr)

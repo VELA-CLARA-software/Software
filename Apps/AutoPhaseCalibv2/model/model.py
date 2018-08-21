@@ -82,6 +82,7 @@ class Model(object):
 		self.gunType = gunType
 		self.newData = emitter()
 		self.logger = emitter()
+		self.progress = emitter()
 		if not self.machineType == 'None':
 			self.sleepTime = 0.1
 			self.sleepTimeDipole = 0.25
@@ -139,12 +140,13 @@ class Model(object):
 		self.getDataFunction = partial(self.machine.getBPMPosition, self.parameters['linac_rough_bpm'][no])
 		self.findingCrestLinacQuick()
 
-	def gunCresterFine(self, phiRange, phiSteps, nSamples):
+	def gunCresterFine(self, phiStart, phiRange, phiSteps, nSamples):
 		self.resetAbortFinish()
 		self.cavity = 'Gun'
 		self.actuator = 'fine'
 		self.stepSize = 5
 		self.nSamples = nSamples
+		self.phiStart = phiStart
 		self.phiRange = phiRange
 		self.phiSteps = phiSteps
 		self.getDataFunction = partial(self.machine.getBPMPosition, self.parameters['gun_dispersive_bpm'])
@@ -244,10 +246,16 @@ class Model(object):
 	def resetDataArray(self):
 		self.crestingData.resetData(self.cavity, self.actuator, ['xFit', 'yFit', 'xData', 'yData', 'yStd'])
 
-	def setDataArray(self, x, y, yStd):
+	def appendDataArray(self, x, y, yStd):
 		self.crestingData[self.cavity][self.actuator]['xData'].append(x)
 		self.crestingData[self.cavity][self.actuator]['yData'].append(y)
 		self.crestingData[self.cavity][self.actuator]['yStd'].append(yStd)
+		self.newData.emit()
+
+	def setDataArray(self, x, y, yStd):
+		self.crestingData[self.cavity][self.actuator]['xData'] = x
+		self.crestingData[self.cavity][self.actuator]['yData'] = y
+		self.crestingData[self.cavity][self.actuator]['yStd'] = yStd
 		self.newData.emit()
 
 	def setFitArray(self, x, y):
@@ -298,17 +306,23 @@ class Model(object):
 			time.sleep(self.sleepTime)
 		return [np.mean(self.data), np.std(self.data)] if np.std(self.data) > 0.001 else [20,0]
 
+	def rotate_list(self, l, n):
+		return l[n:] + l[:n]
+
 ########### findingCrestGunQuick ###############
 
 	def findingCrestQuick(self):
 		self.resetDataArray()
 		self.approxcrest = self.machine.getPhase(self.cavity)
-		for phase in np.arange(-180, 181, self.stepSize):
+		range = np.arange(-180, 181, self.stepSize)
+		for i,phase in enumerate(range):
+			self.progress.emit(100*i/len(range))
 			if self._abort or self._finished:
 				return
 			self.machine.setPhase(self.cavity, phase)
 			data, stddata = self.getData()
-			self.setDataArray(phase, data, stddata)
+			self.appendDataArray(phase, data, stddata)
+		self.progress.emit(100)
 
 	def findingCrestGunQuick(self):
 		self.startingPhase = self.machine.getPhase(self.cavity)
@@ -333,11 +347,12 @@ class Model(object):
 		x, y, std = zip(*cutData)
 		if max(x) - min(x) > 90:
 			x = [a if a >= 0 else a+360 for a in x]
-		#crest_phase = (x[-1] + x[0]) / 2.0
+			phase, data, stddata = self.getDataArray(zipped=False)
+			phase = np.array([a if a >= 0 else a+360 for a in phase])
+			self.setDataArray(phase, data, stddata)
 		crest_phase = np.mean(x)
 		if crest_phase > 180:
 			crest_phase -= 360
-		x = [a if a <= 180 else a-360 for a in x]
 		self.setFitArray(np.array(x), np.array(y))
 		self.setFinalPhase(crest_phase)
 		self.printFinalPhase()
@@ -370,6 +385,9 @@ class Model(object):
 			x, y, std = zip(*cutData)
 			if max(x) - min(x) > 180:
 				x = [a if a >= 0 else a+360 for a in x]
+				phase, data, stddata = self.getDataArray(zipped=False)
+				phase = np.array([a if a >= 0 else a+360 for a in phase])
+				self.setDataArray(phase, data, stddata)
 			crest_phase = np.mean(x)-180
 			if crest_phase > 180:
 				crest_phase -= 360
@@ -387,14 +405,12 @@ class Model(object):
 	def findingCrestFine(self):
 		self.startingPhase = self.machine.getPhase(self.cavity)
 		self.resetDataArray()
-		if self.calibrationPhase[self.cavity] is None:
-			self.approxcrest = self.machine.getPhase(self.cavity)
-		else:
-			self.approxcrest = self.calibrationPhase[self.cavity]
-		self.approxcrest = self.machine.getPhase(self.cavity)
+		self.approxcrest = self.phiStart
 		self.minPhase = self.approxcrest-self.phiRange
 		self.maxPhase = self.approxcrest+self.phiRange+self.phiSteps
-		for phase in np.arange(self.minPhase, self.maxPhase, self.phiSteps):
+		range = np.arange(self.minPhase, self.maxPhase, self.phiSteps)
+		for i, phase in enumerate(range):
+			self.progress.emit(100*i/len(range))
 			if self._abort or self._finished:
 				return
 			self.machine.setPhase(self.cavity, phase)
@@ -402,11 +418,12 @@ class Model(object):
 			currphase = self.machine.getPhase(self.cavity)
 			data, stddata = self.getData()
 			if stddata > 0.05:
-				self.setDataArray(currphase, data, stddata)
+				self.appendDataArray(currphase, data, stddata)
 		if not self._abort:
 			self.fittingFunc()
 		else:
-			 self.machine.setPhase(self.cavity, self.startingPhase)
+			self.machine.setPhase(self.cavity, self.startingPhase)
+		self.progress.emit(100)
 
 	def fittingFunc(self):
 		if self.cavity == 'Gun':
@@ -470,21 +487,23 @@ class Model(object):
 	def findDipoleCurrent(self):
 		self.startingDipole = self.machine.getDip()
 		self.resetDataArray()
-		for I in np.arange(self.minDipoleI, self.maxDipoleI, self.dipoleIStep):
-			# print 'setting I = ', I
+		range = np.arange(self.minDipoleI, self.maxDipoleI, self.dipoleIStep)
+		for i,I in enumerate(range):
+			self.progress.emit(100*i/len(range))
 			if self._abort or self._finished:
 				return
 			self.machine.setDip(I)
 			while abs(self.machine.getDip() - I) > 0.2:
 				time.sleep(self.sleepTimeDipole)
 			data, stddata = self.getData()
-			self.setDataArray(I, data, stddata)
+			self.appendDataArray(I, data, stddata)
 		if not self._abort:
 			self.doFitDipoleCurrent()
 		else:
 			 self.machine.setDip(self.startingDipole)
 			 while abs(self.machine.getDip() - self.startingDipole) > 0.2:
  				time.sleep(self.sleepTimeDipole)
+		self.progress.emit(100)
 
 	def cutDataDipoleCurrent(self):
 		allData = self.getDataArray()

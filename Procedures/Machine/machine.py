@@ -51,7 +51,7 @@ class Machine(object):
 			'''This is the place to get contollers'''
 			sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\Release')
 			os.environ["PATH"] = os.environ["PATH"]+";\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release\\root_v5.34.34\\bin\\"
-			import VELA_CLARA_Magnet_Control as mag
+			# import VELA_CLARA_Magnet_Control as mag
 			os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
 			os.environ["EPICS_CA_ADDR_LIST"] = "10.10.0.12"
 			os.environ["EPICS_CA_MAX_ARRAY_BYTES"] = "10000000"

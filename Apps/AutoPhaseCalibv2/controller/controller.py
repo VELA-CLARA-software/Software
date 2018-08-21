@@ -36,16 +36,19 @@ class plotWidgets(pg.GraphicsView):
 		self.mainPlot = {}
 		self.subPlots = {}
 		self.mainPlot['approx'] = self.layout.addPlot(title="Approximate Callibration")
+		self.mainPlot['approx'].showGrid(x=True, y=True)
 		self.mainPlot['approx'].setLabel('left', approximateText, approximateUnits)
 		self.mainPlot['approx'].setLabel('bottom', text='Phase', units='Degrees')
 		self.subPlots['approx'] = {}
 		self.layout.nextRow()
 		self.mainPlot['dipole'] = self.layout.addPlot(title="Dipole Current Set")
+		self.mainPlot['dipole'].showGrid(x=True, y=True)
 		self.mainPlot['dipole'].setLabel('left', text='X BPM Position', units='mm')
 		self.mainPlot['dipole'].setLabel('bottom', text='Dipole Current', units='Amps')
 		self.subPlots['dipole'] = {}
 		self.layout.nextRow()
 		self.mainPlot['fine'] = self.layout.addPlot(title="Callibration")
+		self.mainPlot['fine'].showGrid(x=True, y=True)
 		self.mainPlot['fine'].setLabel('left', text='X BPM Position', units='mm')
 		self.mainPlot['fine'].setLabel('bottom', text='Phase', units='Degrees')
 		self.subPlots['fine'] = {}
@@ -68,10 +71,33 @@ class plotWidgets(pg.GraphicsView):
 		except:
 			pass
 
+class updatingTimer(QThread):
+	def __init__(self, name, function, *args, **kwargs):
+		super(updatingTimer, self).__init__()
+		self.name = name
+		self.function = function
+		self.args = args
+		self.kwargs = kwargs
+
+	def run(self):
+		self.timer = QTimer()
+		self.timer.moveToThread(self)
+		self.timer.timeout.connect(self.update_monitor)
+		self.timer.start(250)
+		self.exec_()
+
+	def printer(self):
+		print 'here!'
+
+	def update_monitor(self):
+		val = self.function(*self.args, **self.kwargs)
+		self.name.setValue(val)
+
 class Controller(QObject):
 
 	newDataSignal = pyqtSignal()
 	loggerSignal = pyqtSignal(str)
+	progressSignal = pyqtSignal(int)
 
 	def __init__(self, view, model):
 		super(Controller, self).__init__()
@@ -80,6 +106,7 @@ class Controller(QObject):
 		self.model = model
 		self.model.logger = self.loggerSignal
 		self.model.newData = self.newDataSignal
+		self.model.progress = self.progressSignal
 		self.machineSignaller = machineSignaller(self.model.baseMachine)
 		self.machineReciever = machineReciever(self.model.baseMachine)
 		self.model.machine = self.machineSignaller
@@ -118,7 +145,7 @@ class Controller(QObject):
 		self.view.Gun_SetPhase_Button.clicked.connect(lambda : self.model.gunPhaser(gunPhaseSet=self.view.Gun_OffCrest_Phase_Set.value(), offset=True))
 		self.view.Gun_Momentum_Set.valueChanged[float].connect(self.updateGunDipoleSet)
 		self.view.Gun_Dipole_Set.valueChanged[float].connect(self.updateGunMomentumSet)
-
+		self.view.Gun_Fine_Update_Start_Button.clicked.connect(self.updateStartingGunPhaseCurrent)
 		# self.view.Linac1_TurnOn_Button.clicked.connect(self.model.turnOnLinac)
 		self.view.Linac1_LoadBURT_Button.clicked.connect(self.loadLinac1BURT)
 		self.view.Linac1_Rough_Button.clicked.connect(self.linac1CresterQuick)
@@ -127,6 +154,7 @@ class Controller(QObject):
 		self.view.Linac1_SetPhase_Button.clicked.connect(lambda : self.model.linac1Phaser(linac1PhaseSet=self.view.Linac1_OffCrest_Phase_Set.value(), offset=True))
 		self.view.Linac1_Momentum_Set.valueChanged[float].connect(self.updateLinac1DipoleSet)
 		self.view.Linac1_Dipole_Set.valueChanged[float].connect(self.updateLinac1MomentumSet)
+		self.view.Linac1_Fine_Update_Start_Button.clicked.connect(self.updateStartingLinac1PhaseCurrent)
 
 		self.view.Abort_Button.hide()
 		self.view.Abort_Button.clicked.connect(self.abortRunning)
@@ -136,6 +164,20 @@ class Controller(QObject):
 		self.view.actionSave_Calibation_Data.triggered.connect(self.saveData)
 
 		self.setLabel('MODE: '+self.model.machineType+' '+self.model.lineType+' with '+self.model.gunType+' gun')
+
+		self.progressSignal.connect(self.updateStartingGunPhaseCurrent)
+
+		self.monitors = {}
+		self.monitors['gun_phase'] = updatingTimer(self.view.Gun_Phase_Monitor, self.model.machine.getGunPhase)
+		self.monitors['gun_phase'].start()
+		self.monitors['gun_dipole'] = updatingTimer(self.view.Dipole_Monitor, self.model.machine.getDip)
+		self.monitors['gun_dipole'].start()
+		self.monitors['linac1_phase'] = updatingTimer(self.view.Linac1_Phase_Monitor, self.model.machine.getLinac1Phase)
+		self.monitors['linac1_phase'].start()
+
+	def closeEvent(self, event):
+		for t in self.monitors:
+			t.quit()
 
 	def loadBURT(self, function, button):
 		success = getattr(self.model,function)()
@@ -205,6 +247,7 @@ class Controller(QObject):
 		self.thread = GenericThread(self.model.gunWCMCrester, self.view.Gun_Rough_PointSeperation_Set.value(), self.view.Gun_Rough_NShots_Set.value())
 		self.newDataSignal.connect(self.updatePlot)
 		self.thread.finished.connect(self.enableButtons)
+		self.thread.finished.connect(self.updateStartingGunPhaseCalibration)
 		self.thread.finished.connect(self.autoSaveData)
 		self.thread.start()
 
@@ -215,6 +258,7 @@ class Controller(QObject):
 		self.thread = GenericThread(self.model.linacCresterQuick, 1, self.view.Linac1_Rough_PointSeperation_Set.value(), self.view.Linac1_Rough_NShots_Set.value())
 		self.newDataSignal.connect(self.updatePlot)
 		self.thread.finished.connect(self.enableButtons)
+		self.thread.finished.connect(self.updateStartingLinac1updateStartingLinac1PhaseCalibration)
 		self.thread.finished.connect(self.autoSaveData)
 		self.thread.start()
 
@@ -222,7 +266,7 @@ class Controller(QObject):
 		self.disableButtons()
 		self.cavity = 'Gun'
 		self.actuator = 'fine'
-		self.thread = GenericThread(self.model.gunCresterFine, self.view.Gun_Fine_Range_Set.value(), self.view.Gun_Fine_PointSeperation_Set.value(), self.view.Gun_Fine_NShots_Set.value())
+		self.thread = GenericThread(self.model.gunCresterFine, self.view.Gun_Fine_Range_Start.value(), self.view.Gun_Fine_Range_Set.value(), self.view.Gun_Fine_PointSeperation_Set.value(), self.view.Gun_Fine_NShots_Set.value())
 		self.newDataSignal.connect(self.updatePlot)
 		self.thread.finished.connect(self.enableButtons)
 		self.thread.finished.connect(self.autoSaveData)
@@ -259,6 +303,22 @@ class Controller(QObject):
 		self.thread.finished.connect(self.autoSaveData)
 		self.thread.finished.connect(lambda : self.view.Linac1_Dipole_Set.setValue(self.model.finalDipoleI))
 		self.thread.start()
+
+	def updateStartingGunPhaseCalibration(self):
+		self.view.Gun_Fine_Range_Start.setValue(self.model.crestingData['Gun']['calibrationPhase'])
+
+	def updateStartingGunPhaseCurrent(self):
+		self.view.Gun_Fine_Range_Start.setValue(self.model.machine.getGunPhase())
+
+	def updateStartingLinac1PhaseCalibration(self):
+		self.view.Linac1_Fine_Range_Start.setValue(self.model.crestingData['Linac1']['calibrationPhase'])
+
+	def updateStartingLinac1PhaseCurrent(self):
+		self.view.Linac1_Fine_Range_Start.setValue(self.model.machine.getLinac1Phase())
+
+
+	def updateProgress(self, progress):
+		self.view.Progress_Monitor.setValue(progress)
 
 	def setLabel(self, string):
 		logger.info(string)
