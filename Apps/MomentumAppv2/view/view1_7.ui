@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1400</width>
-    <height>957</height>
+    <height>1087</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -605,6 +605,12 @@ QLabel{ background-color: rgba(0,0,0,0%);}</string>
                 <height>16777215</height>
                </size>
               </property>
+              <property name="font">
+               <font>
+                <pointsize>-1</pointsize>
+                <strikeout>true</strikeout>
+               </font>
+              </property>
               <property name="text">
                <string>Estimate momentum from RF</string>
               </property>
@@ -717,7 +723,7 @@ QLabel{ background-color: rgba(0,0,0,0%);}</string>
              <x>10</x>
              <y>340</y>
              <width>581</width>
-             <height>491</height>
+             <height>621</height>
             </rect>
            </property>
            <property name="font">
@@ -891,111 +897,363 @@ QLabel{ background-color: rgba(0,0,0,0%);}
             <property name="title">
              <string>Align through dipole:</string>
             </property>
-            <layout class="QGridLayout" name="gridLayout_4">
-             <item row="0" column="0">
-              <widget class="QPushButton" name="pushButton_Align_1">
-               <property name="text">
-                <string>Align on S02-BPM-02 using S02-HCOR-02</string>
-               </property>
-               <property name="checked">
-                <bool>false</bool>
-               </property>
-              </widget>
-             </item>
-             <item row="3" column="0">
-              <widget class="QPushButton" name="pushButton_Align_4">
-               <property name="text">
-                <string>Retract S02-YAG-02</string>
-               </property>
-               <property name="checked">
-                <bool>false</bool>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="0">
-              <widget class="QPushButton" name="pushButton_Align_2">
-               <property name="text">
-                <string>Insert S02-YAG-02</string>
-               </property>
-               <property name="checked">
-                <bool>false</bool>
-               </property>
-              </widget>
-             </item>
-             <item row="4" column="0" colspan="2">
-              <widget class="QLabel" name="label_4">
-               <property name="text">
-                <string>^Repeat until aligned on both (what tolerance?)^</string>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="0">
-              <widget class="QPushButton" name="pushButton_Align_3">
-               <property name="text">
-                <string>Align on S02-YAG-02 using S02-HCOR-01</string>
-               </property>
-               <property name="checked">
-                <bool>false</bool>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="1">
-              <widget class="QPushButton" name="pushButton_Align_2_A">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="minimumSize">
-                <size>
-                 <width>140</width>
-                 <height>0</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>371</width>
-                 <height>16777215</height>
-                </size>
-               </property>
-               <property name="text">
-                <string>Switch to S02-CAM-02</string>
-               </property>
-               <property name="checked">
-                <bool>false</bool>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="2">
-              <widget class="QPushButton" name="pushButton_Align_2_B">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="minimumSize">
-                <size>
-                 <width>140</width>
-                 <height>0</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>371</width>
-                 <height>16777215</height>
-                </size>
-               </property>
-               <property name="text">
-                <string>Set mask</string>
-               </property>
-               <property name="checked">
-                <bool>false</bool>
-               </property>
-              </widget>
-             </item>
-            </layout>
+            <widget class="QPushButton" name="pushButton_Align_1">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>28</y>
+               <width>236</width>
+               <height>22</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Align on S02-BPM-02 using S02-HCOR-02</string>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
+            </widget>
+            <widget class="QPushButton" name="pushButton_Align_4">
+             <property name="geometry">
+              <rect>
+               <x>12</x>
+               <y>115</y>
+               <width>237</width>
+               <height>21</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Retract S02-YAG-02</string>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
+            </widget>
+            <widget class="QPushButton" name="pushButton_Align_2">
+             <property name="geometry">
+              <rect>
+               <x>12</x>
+               <y>57</y>
+               <width>131</width>
+               <height>22</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Insert S02-YAG-02</string>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
+            </widget>
+            <widget class="QLabel" name="label_4">
+             <property name="geometry">
+              <rect>
+               <x>12</x>
+               <y>143</y>
+               <width>283</width>
+               <height>16</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>^Repeat until aligned on both^</string>
+             </property>
+            </widget>
+            <widget class="QPushButton" name="pushButton_Align_3">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>86</y>
+               <width>237</width>
+               <height>22</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Align on S02-YAG-02 using S02-HCOR-01</string>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
+            </widget>
+            <widget class="QPushButton" name="pushButton_Align_2_A">
+             <property name="geometry">
+              <rect>
+               <x>150</x>
+               <y>57</y>
+               <width>140</width>
+               <height>22</height>
+              </rect>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>140</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>371</width>
+               <height>16777215</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Switch to S02-CAM-02</string>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
+            </widget>
+            <widget class="QPushButton" name="pushButton_Align_2_B">
+             <property name="geometry">
+              <rect>
+               <x>300</x>
+               <y>57</y>
+               <width>71</width>
+               <height>22</height>
+              </rect>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>371</width>
+               <height>16777215</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Set mask</string>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
+            </widget>
+            <widget class="QDoubleSpinBox" name="doubleSpinBox_x_1">
+             <property name="geometry">
+              <rect>
+               <x>330</x>
+               <y>30</y>
+               <width>61</width>
+               <height>20</height>
+              </rect>
+             </property>
+             <property name="minimum">
+              <double>-100.000000000000000</double>
+             </property>
+             <property name="maximum">
+              <double>100.000000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>0.100000000000000</double>
+             </property>
+            </widget>
+            <widget class="QLabel" name="label_12">
+             <property name="geometry">
+              <rect>
+               <x>400</x>
+               <y>30</y>
+               <width>31</width>
+               <height>16</height>
+              </rect>
+             </property>
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>Tol.</string>
+             </property>
+            </widget>
+            <widget class="QLabel" name="label_13">
+             <property name="geometry">
+              <rect>
+               <x>260</x>
+               <y>30</y>
+               <width>61</width>
+               <height>16</height>
+              </rect>
+             </property>
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>H target</string>
+             </property>
+            </widget>
+            <widget class="QDoubleSpinBox" name="doubleSpinBox_tol_1">
+             <property name="geometry">
+              <rect>
+               <x>430</x>
+               <y>30</y>
+               <width>51</width>
+               <height>20</height>
+              </rect>
+             </property>
+             <property name="singleStep">
+              <double>0.010000000000000</double>
+             </property>
+             <property name="value">
+              <double>0.100000000000000</double>
+             </property>
+            </widget>
+            <widget class="QDoubleSpinBox" name="doubleSpinBox_x_2">
+             <property name="geometry">
+              <rect>
+               <x>330</x>
+               <y>90</y>
+               <width>61</width>
+               <height>20</height>
+              </rect>
+             </property>
+             <property name="minimum">
+              <double>-100.000000000000000</double>
+             </property>
+             <property name="maximum">
+              <double>100.000000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>0.100000000000000</double>
+             </property>
+             <property name="value">
+              <double>13.000000000000000</double>
+             </property>
+            </widget>
+            <widget class="QLabel" name="label_14">
+             <property name="geometry">
+              <rect>
+               <x>260</x>
+               <y>90</y>
+               <width>61</width>
+               <height>16</height>
+              </rect>
+             </property>
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>H target</string>
+             </property>
+            </widget>
+            <widget class="QDoubleSpinBox" name="doubleSpinBox_tol_2">
+             <property name="geometry">
+              <rect>
+               <x>430</x>
+               <y>90</y>
+               <width>51</width>
+               <height>20</height>
+              </rect>
+             </property>
+             <property name="singleStep">
+              <double>0.010000000000000</double>
+             </property>
+             <property name="value">
+              <double>0.100000000000000</double>
+             </property>
+            </widget>
+            <widget class="QLabel" name="label_15">
+             <property name="geometry">
+              <rect>
+               <x>400</x>
+               <y>90</y>
+               <width>31</width>
+               <height>16</height>
+              </rect>
+             </property>
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>Tol.</string>
+             </property>
+            </widget>
+            <widget class="QLabel" name="label_16">
+             <property name="geometry">
+              <rect>
+               <x>490</x>
+               <y>10</y>
+               <width>71</width>
+               <height>16</height>
+              </rect>
+             </property>
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>H readout</string>
+             </property>
+            </widget>
+            <widget class="QLabel" name="label_H_1">
+             <property name="geometry">
+              <rect>
+               <x>490</x>
+               <y>30</y>
+               <width>61</width>
+               <height>22</height>
+              </rect>
+             </property>
+             <property name="layoutDirection">
+              <enum>Qt::LeftToRight</enum>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::WinPanel</enum>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+            <widget class="QLabel" name="label_H_2">
+             <property name="geometry">
+              <rect>
+               <x>490</x>
+               <y>90</y>
+               <width>61</width>
+               <height>22</height>
+              </rect>
+             </property>
+             <property name="layoutDirection">
+              <enum>Qt::LeftToRight</enum>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::WinPanel</enum>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+             </property>
+            </widget>
            </widget>
            <widget class="QGroupBox" name="groupBox_5">
             <property name="geometry">
@@ -1003,7 +1261,7 @@ QLabel{ background-color: rgba(0,0,0,0%);}
               <x>10</x>
               <y>340</y>
               <width>281</width>
-              <height>141</height>
+              <height>271</height>
              </rect>
             </property>
             <property name="font">
@@ -1069,7 +1327,7 @@ QLabel{ background-color: rgba(0,0,0,0%);}
               </rect>
              </property>
              <property name="text">
-              <string>Scan dipole to centre down spectometer line</string>
+              <string>Scan dipole to centre on C2V BPM</string>
              </property>
              <property name="checked">
               <bool>false</bool>
@@ -1101,6 +1359,169 @@ QLabel{ background-color: rgba(0,0,0,0%);}
               <bool>false</bool>
              </property>
             </widget>
+            <widget class="QPushButton" name="pushButton_fineCentreC2VCurrent_2">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>220</y>
+               <width>261</width>
+               <height>22</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Scan dipole to centre on C2V screen</string>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
+            </widget>
+            <widget class="QPushButton" name="pushButton_degaussC2V">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>160</y>
+               <width>140</width>
+               <height>22</height>
+              </rect>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>140</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>16777215</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Degauss C2V Q1/2/3</string>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
+            </widget>
+            <widget class="QPushButton" name="pushButton_camState2C2V">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>200</y>
+               <width>140</width>
+               <height>22</height>
+              </rect>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>140</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>371</width>
+               <height>16777215</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Switch to C2V-CAM-01</string>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
+            </widget>
+            <widget class="QPushButton" name="pushButton_insertC2VScreen">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>180</y>
+               <width>141</width>
+               <height>22</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Insert C2V-CAM-01</string>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
+            </widget>
+            <widget class="QPushButton" name="pushButton_retractC2VScreen">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>240</y>
+               <width>131</width>
+               <height>22</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Retract C2V-CAM-01</string>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
+            </widget>
+            <widget class="QPushButton" name="pushButton_Align_2_B_2">
+             <property name="geometry">
+              <rect>
+               <x>150</x>
+               <y>200</y>
+               <width>121</width>
+               <height>22</height>
+              </rect>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>100</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>371</width>
+               <height>16777215</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Set mask</string>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
+            </widget>
+            <widget class="QLabel" name="label_11">
+             <property name="geometry">
+              <rect>
+               <x>20</x>
+               <y>140</y>
+               <width>241</width>
+               <height>16</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>OR - use C2V screen for centering:</string>
+             </property>
+            </widget>
            </widget>
            <widget class="QGroupBox" name="groupBox_6">
             <property name="geometry">
@@ -1115,6 +1536,7 @@ QLabel{ background-color: rgba(0,0,0,0%);}
              <font>
               <weight>75</weight>
               <bold>true</bold>
+              <strikeout>true</strikeout>
              </font>
             </property>
             <property name="styleSheet">
@@ -1144,6 +1566,12 @@ QLabel{ background-color: rgba(0,0,0,0%);}
                <height>22</height>
               </rect>
              </property>
+             <property name="font">
+              <font>
+               <pointsize>-1</pointsize>
+               <strikeout>true</strikeout>
+              </font>
+             </property>
              <property name="text">
               <string>Get scan range from initial estimate</string>
              </property>
@@ -1170,6 +1598,11 @@ QLabel{ background-color: rgba(0,0,0,0%);}
                <height>21</height>
               </rect>
              </property>
+             <property name="font">
+              <font>
+               <strikeout>true</strikeout>
+              </font>
+             </property>
              <property name="text">
               <string>RF amp min/max:</string>
              </property>
@@ -1182,6 +1615,12 @@ QLabel{ background-color: rgba(0,0,0,0%);}
                <width>251</width>
                <height>22</height>
               </rect>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>-1</pointsize>
+               <strikeout>true</strikeout>
+              </font>
              </property>
              <property name="text">
               <string>Scan RF to centre down spectometer line</string>
@@ -1199,6 +1638,12 @@ QLabel{ background-color: rgba(0,0,0,0%);}
                <height>22</height>
               </rect>
              </property>
+             <property name="font">
+              <font>
+               <pointsize>-1</pointsize>
+               <strikeout>true</strikeout>
+              </font>
+             </property>
              <property name="text">
               <string>Get scan range from rough measurement</string>
              </property>
@@ -1211,11 +1656,16 @@ QLabel{ background-color: rgba(0,0,0,0%);}
           <widget class="QComboBox" name="comboBox_dipole">
            <property name="geometry">
             <rect>
-             <x>350</x>
+             <x>390</x>
              <y>20</y>
              <width>111</width>
              <height>22</height>
             </rect>
+           </property>
+           <property name="font">
+            <font>
+             <strikeout>true</strikeout>
+            </font>
            </property>
            <item>
             <property name="text">
@@ -1226,7 +1676,7 @@ QLabel{ background-color: rgba(0,0,0,0%);}
           <widget class="QLabel" name="label_I_3">
            <property name="geometry">
             <rect>
-             <x>268</x>
+             <x>308</x>
              <y>20</y>
              <width>81</width>
              <height>20</height>
@@ -1237,6 +1687,11 @@ QLabel{ background-color: rgba(0,0,0,0%);}
              <width>80</width>
              <height>0</height>
             </size>
+           </property>
+           <property name="font">
+            <font>
+             <strikeout>true</strikeout>
+            </font>
            </property>
            <property name="text">
             <string>Select dipole:</string>
@@ -1367,6 +1822,7 @@ QLabel{ background-color: rgba(0,0,0,0%);}
              <font>
               <weight>75</weight>
               <bold>true</bold>
+              <strikeout>true</strikeout>
              </font>
             </property>
             <property name="styleSheet">
@@ -1396,6 +1852,11 @@ QLabel{ background-color: rgba(0,0,0,0%);}
                <height>21</height>
               </rect>
              </property>
+             <property name="font">
+              <font>
+               <strikeout>true</strikeout>
+              </font>
+             </property>
              <property name="text">
               <string>RF amp min/max:</string>
              </property>
@@ -1408,6 +1869,12 @@ QLabel{ background-color: rgba(0,0,0,0%);}
                <width>251</width>
                <height>22</height>
               </rect>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>-1</pointsize>
+               <strikeout>true</strikeout>
+              </font>
              </property>
              <property name="text">
               <string>Scan RF to centre down spectometer line</string>
@@ -1435,6 +1902,12 @@ QLabel{ background-color: rgba(0,0,0,0%);}
                <height>22</height>
               </rect>
              </property>
+             <property name="font">
+              <font>
+               <pointsize>-1</pointsize>
+               <strikeout>true</strikeout>
+              </font>
+             </property>
              <property name="text">
               <string>Get scan range from initial estimate</string>
              </property>
@@ -1444,23 +1917,23 @@ QLabel{ background-color: rgba(0,0,0,0%);}
             </widget>
            </widget>
           </widget>
-          <widget class="QComboBox" name="comboBox_dipole_2">
+          <widget class="QComboBox" name="comboBox_selectRF">
            <property name="geometry">
             <rect>
              <x>132</x>
              <y>20</y>
-             <width>111</width>
+             <width>161</width>
              <height>22</height>
             </rect>
            </property>
            <item>
             <property name="text">
-             <string>Gun</string>
+             <string>Gun only</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>Linac (gun fixed)</string>
+             <string>Gun + Linac (gun fixed)</string>
             </property>
            </item>
           </widget>

@@ -10,7 +10,7 @@ print 'here1'
 import VELA_CLARA_Screen_Control as scrn
 print 'here2'
 #import VELA_CLARA_Shutter_Control as shut
-exit()
+#exit()
 #Init2 = shut.init()
 Init = scrn.init()
 #Init.setVerbose()
@@ -29,7 +29,7 @@ screens = Init.physical_C2B_Screen_Controller()
 
 time.sleep(2)
 print 'Is YAG in?'
-screen = 'S02-SCR-03'
+screen = 'S02-SCR-02'
 a = screens.isYAGIn(screen)
 print a
 
@@ -58,5 +58,17 @@ time.sleep(3)
 
 print 'Move it back out'
 #this gives an error:
+#exit()
 screens.moveScreenTo(screen,scrn.SCREEN_STATE.V_RETRACTED)
-time.sleep(5)
+#time.sleep(5)
+if screens.isYAGIn(screen) is True:
+    while True:
+        isscreenmoving1 = screens.isScreenMoving(screen)
+        print 'Is screen moving?', isscreenmoving1
+        time.sleep(1)
+        isscreenmoving2 = screens.isScreenMoving(screen)
+        if isscreenmoving2 is False and isscreenmoving1 is True:
+            print 'Finished Moving!'
+            break
+else:
+    pass
