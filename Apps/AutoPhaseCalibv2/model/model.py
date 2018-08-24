@@ -575,8 +575,8 @@ class Model(object):
 		return newlist
 
 	def fitting_equation_DipoleCurrent(self, x, b, c, crest):
-		return -6 + b * (x - crest)
-		# return b * (np.sin(c * (x - crest)))
+		# return -6 + b * (x - crest)
+		return b * (np.sin(c * (x - crest)))
 
 	def doFitDipoleCurrent(self):
 		cutData = self.cutDataDipoleCurrent()
@@ -587,7 +587,7 @@ class Model(object):
 			self.initialGuess[-1] = max(x)
 
 		popt, pcov = curve_fit(self.fitting_equation_DipoleCurrent, x, y, sigma=std, \
-		bounds=([-np.inf, -np.inf, min(x)], [np.inf, np.inf, max(x)]))
+		bounds=([0, -np.inf, min(x)], [max(y)-min(y), np.inf, max(x)]))
 
 		self.setFitArray(np.array(xnew), self.fitting_equation_DipoleCurrent(xnew, *popt))
 		self.finalDipoleI = popt[-1]
