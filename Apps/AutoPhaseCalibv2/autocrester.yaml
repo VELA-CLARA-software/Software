@@ -19,6 +19,6 @@ Linac1_Fine_NShots_Set: 10
 Linac1_Fine_PointSeperation_Set: 2.0
 Linac1_Fine_Range_Set: 10
 Linac1_OffCrest_Phase_Set: 0.0
-Linac1_Rough_Fit_Offset: 0
+Linac1_Rough_Fit_Offset: 18
 Linac1_Rough_NShots_Set: 3
-Linac1_Rough_PointSeperation_Set: 5.0
+Linac1_Rough_PointSeperation_Set: 10.0

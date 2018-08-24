@@ -243,11 +243,11 @@ class Model(object):
 		self.machine.set('setCorr', corr, I)
 
 	def reject_outliers(self, data):
-	    m = 2
-	    u = np.mean(data)
-	    s = np.std(data)
-	    filtered = [e for e in data if (u - 2 * s < e < u + 2 * s)]
-	    return filtered
+		m = 2
+		u = np.mean(data)
+		s = np.std(data)
+		filtered = [e for e in data if (u - 2 * s < e < u + 2 * s)]
+		return filtered
 
 	# def getData(self):
 	# 	self.data = []

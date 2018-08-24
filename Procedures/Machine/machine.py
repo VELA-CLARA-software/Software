@@ -302,14 +302,14 @@ class Machine(object):
 	# 		else:
 	# 			return float('nan')
 
-	def getBPMPosition(self, bpm, plane='X'):
+	def getBPMPosition(self, bpm, plane='X', ignoreNonLinear=True):
 		if self.machineType == 'None':
 			value = 20*np.random.random_sample() - 10
 			return value
 		else:
 			obj = self.getBPMDataObject(bpm)
 			# print obj.x, obj.y, obj.status
-			if obj.status == self.bpmstatus.GOOD:# or obj.status == self.bpmstatus.NONLINEAR:
+			if obj.status == self.bpmstatus.GOOD or (ignoreNonLinear is True and obj.status == self.bpmstatus.NONLINEAR):
 				if plane == 'Y':
 					return obj.y
 				else:
@@ -349,6 +349,9 @@ class Machine(object):
 		else:
 			# print 'setting ', corr, ' = ', I
 			print self.magnets.setSI(corr, I)
+			i = 0
+			while not self.magnets.isRIequalSI(corr):
+				time.sleep(0.1)
 		return True
 
 	def getCorr(self, corr):
@@ -389,7 +392,7 @@ class Machine(object):
 			i = 0
 			while not self.magnets.isRIequalSI(self.parameters['dipole']):
 				time.sleep(0.1)
-				print self.magnets.isRIequalSI(self.parameters['dipole']), self.getDip()
+				# print self.magnets.isRIequalSI(self.parameters['dipole']), self.getDip()
 		return True
 
 	def getDip(self):
@@ -429,6 +432,10 @@ class Machine(object):
 			self.magnets.setSI(name, I)
 		elif self.machineType == 'Physical':
 			self.magnets.setSI(name, I)
+			i = 0
+			while not self.magnets.isRIequalSI(name):
+				time.sleep(0.1)
+				# print self.magnets.isRIequalSI(name), self.getQuad(name)
 		return True
 
 	def getQuad(self, name):

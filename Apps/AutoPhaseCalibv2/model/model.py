@@ -141,7 +141,7 @@ class Model(object):
 		self.stepSize = stepSize
 		self.nSamples = nSamples
 		self.fitOffset = offset
-		self.getDataFunction = partial(self.machine.getBPMPosition, self.parameters['linac_rough_bpm'][no])
+		self.getDataFunction = partial(self.machine.getBPMPosition, self.parameters['linac_rough_bpm'][no], ignoreNonLinear=True)
 		self.findingCrestLinacQuick()
 
 	def gunCresterFine(self, phiStart, phiRange, phiSteps, nSamples):
@@ -413,7 +413,7 @@ class Model(object):
 
 	def cutDataLinacQuick(self):
 		allData = self.getDataArray()
-		cutData = [a for a in allData if a[1] == float('nan') or a[1] == 'nan' or a[2] == 0]
+		cutData = [a for a in allData if np.isnan(a[1])]
 		newlist = []
 		for i, pt in enumerate(cutData):
 			if i < (len(cutData)-1):
@@ -427,18 +427,21 @@ class Model(object):
 		try:
 			cutData = self.cutDataLinacQuick()
 			x, y, std = zip(*cutData)
-			if max(x) - min(x) > 180:
-				x = [a if a >= 0 else a+360 for a in x]
-				phase, data, stddata = self.getDataArray(zipped=False)
-				phase = np.array([a if a >= 0 else a+360 for a in phase])
-				self.setDataArray(phase, data, stddata)
-			crest_phase = np.mean(x)-180
+			x = [a+360 if a < 0 else a for a in x]
+			# if max(x) - min(x) > 180:
+			# 	x = [a if a >= 0 else a+360 for a in x]
+			# 	phase, data, stddata = self.getDataArray(zipped=False)
+			# 	phase = np.array([a if a >= 0 else a+360 for a in phase])
+			# 	self.setDataArray(phase, data, stddata)
+			# print 'x = ', x
+			# print 'mean(x) = ', np.mean(x)
+			crest_phase = np.mean(x) - 180 + self.fitOffset
 			if crest_phase > 180:
 				crest_phase -= 360
-			if crest_phase < 180:
-				crest_phase += 360
-			x = [a if a <= 180 else a-360 for a in x]
-			self.setFitArray(np.array(x), np.array(y))
+			# if crest_phase < 180:
+			# 	crest_phase += 360
+			# x = [a if a <= 180 else a-360 for a in x]
+			self.setFitArray(np.array([crest_phase,crest_phase]), np.array([-10,10]))
 			self.setFinalPhase(crest_phase)
 			self.printFinalPhase()
 		except Exception as e:
