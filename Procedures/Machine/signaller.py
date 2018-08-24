@@ -41,9 +41,9 @@ class machineSignaller(QObject):
 			self.signalRecieved[id] = True
 
 	def __getattr__(self, attr):
-		# if 'set' in attr:
-		id = int(self.id) + 1
-		self.id += 1
-		return partial(self.get, id, attr)
-		# else:
-			# return getattr(self.machine, attr)
+		if 'set' in attr or 'apply' in attr:
+			id = int(self.id) + 1
+			self.id += 1
+			return partial(self.get, id, attr)
+		else:
+			return getattr(self.machine, attr)

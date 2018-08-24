@@ -122,8 +122,8 @@ class Model(object):
 		print('1. Setting up Magnets')
 		self.setUpMagnets(self.parameters['magnets'])
 
-	def getDataFunction(self):
-		return [b() for b in self.bpms]
+	def getDataFunctiona(self):
+		self.bpms()
 
 	def sol1Scan(self, plane, ampLower, ampUpper, corr1Range, corr2Range, corrStep, nSamples):
 		self.main = 'L01-SOL1'
@@ -181,8 +181,8 @@ class Model(object):
 		self.linacLowerAmp = ampLower
 		self.linacUpperAmp = ampUpper
 		self.nSamples = nSamples
-		self.machine.cameras.startAcquiring('S02-YAG-02')
-		self.bpms = [partial(self.machine.getScreenPosition, 'S02-YAG-02', plane=self.plane)]
+		# self.machine.cameras.startAcquiring('S02-YAG-02')
+		self.getDataFunction = partial(self.machine.getBPMPosition, 'S02-BPM01', plane=self.plane)
 		self.findRFCentre2D()
 
 	def linac1BLMScan(self, actuator, ampLower, ampUpper, nSamples):
@@ -249,24 +249,35 @@ class Model(object):
 	    filtered = [e for e in data if (u - 2 * s < e < u + 2 * s)]
 	    return filtered
 
+	# def getData(self):
+	# 	self.data = []
+	# 	while len(self.data) < 2:
+	# 		self.data.append(self.getDataFunction())
+	# 		time.sleep(self.sleepTime)
+	# 	self.data = []
+	# 	while len(self.data) < self.nSamples:
+	# 		self.data.append(self.getDataFunction())
+	# 		time.sleep(self.sleepTime)
+	# 	## This returns means in the form [bpm1, bpm2, bpm3...]
+	# 	if len(self.data) > 3:
+	# 		return np.mean(self.data)
+	# 	else:
+	# 		return 20
+	# 	# return np.array([np.mean(a) if len(a) < 0.01 else 20 for a in zip(*self.data)])
+
 	def getData(self):
-		self.data = []
-		while len(self.data) < 2:
-			self.data.append(self.getDataFunction())
-			time.sleep(self.sleepTime)
+		# self.data = []
+		# while len(self.data) < 2:
+		# 	self.data.append(self.getDataFunction())
+		# 	time.sleep(self.sleepTime)
+		time.sleep(self.sleepTime)
 		self.data = []
 		while len(self.data) < self.nSamples:
 			self.data.append(self.getDataFunction())
 			time.sleep(self.sleepTime)
-		## This returns means in the form [bpm1, bpm2, bpm3...]
-		self.data = self.reject_outliers(zip(*self.data)[0])
-		# print self.data
-		# return np.array([np.mean(a) if np.std(a) > 0.01 else 20 for a in zip(*self.data)])
-		if len(self.data) > 3:
-			return np.mean(self.data)
-		else:
-			return 20
-		# return np.array([np.mean(a) if len(a) < 0.01 else 20 for a in zip(*self.data)])
+		self.data = [a for a in self.data if a is not float('nan')]
+		return np.array([np.mean(self.data), np.std(self.data)] if np.std(self.data) > 0.001 else [float('nan'),0])
+
 
 ########### findRFCentreBLM ###############
 
@@ -432,7 +443,8 @@ class Model(object):
 						self._abort = False
 						return 0
 					print 'linac = ', self.linacLowerAmp, '  c1 = ', c1, '  c2 = ', c2
-					data1 = self.getData()
+					data1 = self.getData()[0]
+					print 'data1 = ', data1
 					if self.verbose:
 						logfile.write('data1,'+str(self.linacLowerAmp)+','+str(c1)+','+str(c2)+','+str(data1))
 					self.data1[c1][c2] = data1
@@ -452,7 +464,8 @@ class Model(object):
 					while abs(self.machine.getCorr(self.corrector1) - c1) > 0.05 or abs(self.machine.getCorr(self.corrector2) - c2) > 0.05:
 						time.sleep(self.sleepTime)
 					print 'linac = ', self.linacUpperAmp, '  c1 = ', c1, '  c2 = ', c2
-					data2 = self.getData()
+					data2 = self.getData()[0]
+					print 'data2 = ', data2
 					if self.verbose:
 						logfile.write('data2,'+str(self.linacUpperAmp)+','+str(c1)+','+str(c2)+','+str(data2))
 					self.data2[c1][c2] = data2
@@ -474,6 +487,9 @@ class Model(object):
 					# diff = np.mean(np.array([abs(a[1] - a[0]) if a[0] < 20 and a[1] < 20 else 20 for a in zip(data1,data2)]))
 					# print data1, data2
 					diff = (data2 - data1)**2
+					if np.isnan(diff) or np.isnan(data1) or np.isnan(data2):
+						diff = 100
+					print 'diff = ', diff
 					self.rawData['diff'].append(diff)
 					if self.verbose:
 						logfile.write('diff,'+str(self.linacUpperAmp)+','+str(c1)+','+str(c2)+','+str(data1)+','+str(data2)+','+str(diff))
