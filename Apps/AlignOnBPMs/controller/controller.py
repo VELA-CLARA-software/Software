@@ -23,25 +23,39 @@ class Controller():
 		#print 'HERE WE ARE(controller)!!!!: BPM readout =', str(model.Cbpms.getXFromPV('C2V-BPM01'))
 		'''1 Create Momentum Graphs'''
 		monitor = pg.GraphicsView()
-		text = pg.TextItem('Some text')
+		#text = pg.TextItem('Some text')
 		layout = pg.GraphicsLayout(border=(100,100,100))
 		monitor.setCentralItem(layout)
-		monitor.addItem(text)
+		#monitor.addItem(text)
 		'''1.1 create graph for BPM Y and Y position monitoring'''
 		self.xdict = {0:'X', 1:'Y'}
+		self.xdict_Q = {0:'Q'}
 		#print self.xdict.keys()
-		self.positionGraph_1 = layout.addPlot(title="S01-BPM-01")
-		self.positionGraph_2 = layout.addPlot(title="S02-BPM-01")
-		self.positionGraph_3 = layout.addPlot(title="S02-BPM-02")
-		self.positionGraph_4 = layout.addPlot(title="C2V-BPM-01")
-		self.positionGraph_5 = layout.addPlot(title="INJ-BPM-04")
-		self.positionGraph_6 = layout.addPlot(title="INJ-BPM-05")
+		self.positionGraph_1 = layout.addPlot(title="S01-BPM01")
+		self.positionGraph_2 = layout.addPlot(title="S02-BPM01")
+		self.positionGraph_3 = layout.addPlot(title="S02-BPM02")
+		self.positionGraph_4 = layout.addPlot(title="C2V-BPM01")
+		self.positionGraph_5 = layout.addPlot(title="INJ-BPM04")
+		self.positionGraph_6 = layout.addPlot(title="INJ-BPM05")
+
+
 		self.positionGraph_1.axes['bottom']['item'].setTicks([self.xdict.items()])
 		self.positionGraph_2.axes['bottom']['item'].setTicks([self.xdict.items()])
 		self.positionGraph_3.axes['bottom']['item'].setTicks([self.xdict.items()])
 		self.positionGraph_4.axes['bottom']['item'].setTicks([self.xdict.items()])
 		self.positionGraph_5.axes['bottom']['item'].setTicks([self.xdict.items()])
 		self.positionGraph_6.axes['bottom']['item'].setTicks([self.xdict.items()])
+
+
+
+		self.positionGraph_1.setMouseEnabled(x=False, y=True)
+		self.positionGraph_2.setMouseEnabled(x=False, y=True)
+		self.positionGraph_3.setMouseEnabled(x=False, y=True)
+		self.positionGraph_4.setMouseEnabled(x=False, y=True)
+		self.positionGraph_5.setMouseEnabled(x=False, y=True)
+		self.positionGraph_6.setMouseEnabled(x=False, y=True)
+
+
 		self.positionGraph_1.setYRange(-15,15)
 		self.positionGraph_2.setYRange(-15,15)
 		self.positionGraph_3.setYRange(-15,15)
@@ -63,9 +77,14 @@ class Controller():
 		self.bg5_target = pg.BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=1, pen=barcolour2, brush=barcolour2)
 		self.bg6 = pg.BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=width, pen=barcolour1, brush=barcolour1)
 		self.bg6_target = pg.BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=1, pen=barcolour2, brush=barcolour2)
+
+
+
+
 		self.positionGraph_1.addItem(self.bg1_target)
 		self.positionGraph_2.addItem(self.bg2_target)
 		self.positionGraph_3.addItem(self.bg3_target)
+		#layout.nextRow()
 		self.positionGraph_4.addItem(self.bg4_target)
 		self.positionGraph_5.addItem(self.bg5_target)
 		self.positionGraph_6.addItem(self.bg6_target)
@@ -76,11 +95,26 @@ class Controller():
 		self.positionGraph_5.addItem(self.bg5)
 		self.positionGraph_6.addItem(self.bg6)
 
-		#layout.nextRow()
+		layout.nextRow()
+
 		#self.label_1 = layout.addLabel('')
 		#self.label_2 = layout.addLabel('')
 		#self.label_3 = layout.addLabel('')
 		#self.label_4 = layout.addLabel('')
+
+		self.bpm_list = ['S01-BPM01', 'S02-BPM01', 'S02-BPM02', 'C2V-BPM01', 'INJ-BPM04', 'INJ-BPM05']
+		for r, bpm_name in enumerate(self.bpm_list):
+			row = str(r+1)
+			setattr(self, 'positionGraph_'+row+'_Q', layout.addPlot(title=bpm_name))
+			getattr(self, 'positionGraph_'+row+'_Q').axes['bottom']['item'].setTicks([self.xdict_Q.items()])
+			getattr(self, 'positionGraph_'+row+'_Q').setMouseEnabled(x=False, y=True)
+			setattr(self, 'bg'+row+'_Q', pg.BarGraphItem(x=self.xdict_Q.keys(), height=[0.0], width=0.5))
+			getattr(self, 'positionGraph_'+row+'_Q').addItem(getattr(self, 'bg'+row+'_Q'))
+		#self.positionGraph_1_Q = layout.addPlot(title="S01-BPM-01")
+		#self.positionGraph_1_Q.axes['bottom']['item'].setTicks([self.xdict_Q.items()])
+		#self.positionGraph_1_Q.setMouseEnabled(x=False, y=True)
+		#self.bg1_Q = pg.BarGraphItem(x=self.xdict_Q.keys(), height=[0.0], width=1)
+		#self.positionGraph_1_Q.addItem(self.bg1_Q)
 		'''1.2 Create place to diplay an image of a YAG screen'''
 		# yagImageBox = layout.addViewBox(lockAspect=True, colspan=2)
 		# self.YAGImage = pg.ImageItem(np.random.normal(size=(2560,2160)))
@@ -231,6 +265,21 @@ class Controller():
 		self.bg5_target.setOpts(x=self.xdict.keys(), height=[getattr(self.view, 'doubleSpinBox_x_'+str(5)).value(), getattr(self.view, 'doubleSpinBox_y_'+str(5)).value()])
 		self.bg6.setOpts(x=self.xdict.keys(), height=[1*self.model.Cbpms.getXFromPV('INJ-BPM05'),1*self.model.Cbpms.getYFromPV('INJ-BPM05')])
 		self.bg6_target.setOpts(x=self.xdict.keys(), height=[getattr(self.view, 'doubleSpinBox_x_'+str(6)).value(), getattr(self.view, 'doubleSpinBox_y_'+str(6)).value()])
+
+		for r, bpm_name in enumerate(self.bpm_list):
+			row = str(r+1)
+			#print row, self.model.Cbpms.getBPMQBuffer(bpm_name), bpm_name
+			#time.sleep(1)
+			if len(self.model.Cbpms.getBPMQBuffer(bpm_name)) > 0:
+				getattr(self, 'bg'+row+'_Q').setOpts(x=self.xdict_Q.keys(), height=[np.mean(self.model.Cbpms.getBPMQBuffer(bpm_name))])
+			else:
+				getattr(self, 'bg'+row+'_Q').setOpts(x=self.xdict_Q.keys(), height=[0])
+		# self.bg1_Q.setOpts(x=self.xdict_Q.keys(), height=[np.mean(self.model.Cbpms.getBPMQBuffer('S01-BPM01'))])
+		# self.bg2_Q.setOpts(x=self.xdict_Q.keys(), height=[np.mean(self.model.Cbpms.getBPMQBuffer('S02-BPM01'))])
+		# self.bg3_Q.setOpts(x=self.xdict_Q.keys(), height=[np.mean(self.model.Cbpms.getBPMQBuffer('S02-BPM02'))])
+		# self.bg4_Q.setOpts(x=self.xdict_Q.keys(), height=[np.mean(self.model.Cbpms.getBPMQBuffer('C2V-BPM01'))])
+		#chargebufferfromfunc = bpmctrl.getBPMQBuffer(bpm_name)
+
 		#self.view.label_H_1.setNum(1*self.model.Cbpms.getXFromPV('S01-BPM01'))
 		#self.view.label_V_1.setNum(1*self.model.Cbpms.getYFromPV('S01-BPM01'))
 		self.view.label_H_1.setNum(1*self.model.Cbpms.getXFromPV(str(getattr(self.view, 'comboBox_'+str(1)).currentText())))

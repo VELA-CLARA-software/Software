@@ -4,6 +4,7 @@
 """Ingredients"""
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 from PyQt4.QtCore import QThread, QObject, pyqtSignal, QTimer
+from PyQt4.QtGui import QApplication
 from epics import caget,caput
 import os,sys
 import time
@@ -11,7 +12,9 @@ import scipy.constants as physics
 import math as m
 import random as r
 import numpy as np
-from numpy.polynomial import polynomial as P
+from functools import partial
+#from numpy.polynomial import polynomial as P
+#import subprocess
 #os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
 #os.environ["EPICS_CA_ADDR_LIST"] = "10.10.0.12"
 #os.environ["EPICS_CA_MAX_ARRAY_BYTES"] = "10000000"
@@ -22,9 +25,10 @@ from numpy.polynomial import polynomial as P
 #sys.path.append('C:\\Users\\djd63\\Desktop\\VA workshop\\Examples Scripts')
 #import SAMPL.v2_developing.sampl as sampl
 #sys.path.append('\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Software\\VELA_CLARA_PYDs\\bin\\stagetim')
-sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release')
+#sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release')
 #os.environ["PATH"] = os.environ["PATH"]+";\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release\\root_v5.34.34\\bin\\"
-#sys.path.append('C:\\Users\\djd63\\Desktop\\Release')
+sys.path.append('C:\\Users\\djd63\\Desktop\\Release')
+sys.path.append('C:\\Users\\djd63\\Documents\\GitHub\\Software\\Apps\\MomentumAppv2\\model')
 #sys.path.append('C:\\Users\\djd63\\Desktop\\Release\\root_v5.34.34\\bin\\')
 #import onlineModel
 import VELA_CLARA_Magnet_Control as mag
@@ -38,13 +42,16 @@ import VELA_CLARA_Camera_Control as cam
 import VELA_CLARA_Shutter_Control as shut
 
 import momentumFunctions
+#import bpm_recalibrate
+#import test
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 class Model(QObject):
     def __init__(self,app,view):
-        QThread.__init__(self)
+        super(Model, self).__init__()
+        #QThread.__init__(self)
         self.app = app
         self.view = view
         '''variables to hold important values'''
@@ -62,6 +69,8 @@ class Model(QObject):
         self.fPositions=[]
         self.Dispersion=0.
         self.beamSigma=0.
+        self.dipole = str(self.view.comboBox_dipole.currentText())
+        #print self.dipole
 
         self.magInit = mag.init()
         self.bpmInit = bpm.init()
@@ -82,8 +91,9 @@ class Model(QObject):
         self.gun = self.llrfInit.physical_CLARA_LRRG_LLRF_Controller()
         self.LINAC01 = self.llrfInit.physical_L01_LLRF_Controller()
         self.shut = self.shutInit.physical_PIL_Shutter_Controller()
-        self.scrn = self.scrnInit.physical_CLARA_PH1_Screen_Controller()
-
+        #self.scrn = self.scrnInit.physical_CLARA_PH1_Screen_Controller()
+        self.scrn = self.scrnInit.physical_C2B_Screen_Controller()
+        self.cam = self.camInit.physical_CLARA_Camera_Controller()
         # 23/7/18 all these should be on already really...
         #self.Cmagnets.switchONpsu('S02-DIP01')
         #self.Cmagnets.switchONpsu('S01-HCOR1')
@@ -121,7 +131,7 @@ class Model(QObject):
         #self.cameras = self.camdaqInit.physical_CLARA_Camera_DAQ_Controller()
         #self.camerasIA = self.camInit.physical_CLARA_Camera_IA_Controller()
         #self.camNames = list(self.cameras.getCameraNames())
-        self.cam = self.camInit.physical_CLARA_Camera_Controller()
+
         # camx1 = self.camerasIA.getSelectedIARef().IA.x
         # print  self.camerasIA.getSelectedIARef().IA
         #
@@ -155,46 +165,181 @@ class Model(QObject):
         #self.SAMPL.initDistribFile = '4k-250pC.ini'
         #self.gun.setAmpMVM(65)
         #self.LINAC01.setAmpMVM(20)
-        self.func = momentumFunctions.Functions(OM='')
+        #self.func = momentumFunctions.Functions(OM='')
+        self.func = momentumFunctions.Functions(self)
         #print("Model Initialized")
+        self.selectRF()
+
+    def selectRF(self):
+        if self.view.comboBox_selectRF.currentIndex() == 0:
+            self.predictedMomentum = 5.0
+            self.initialCurrentStep = 0.02
+            #self.view.label_predictMom.setText(self.predictedMomentum)
+            self.predictedI = self.func.mom2I(self.Cmagnets, self.dipole,self.predictedMomentum)
+            self.view.doubleSpinBox_p.setValue(float(self.predictedMomentum))
+            self.view.doubleSpinBox_I.setValue(float(self.predictedI))
+        elif self.view.comboBox_selectRF.currentIndex() == 1:
+            self.predictedMomentum = 35.0
+            self.initialCurrentStep = 0.1
+            #self.view.label_predictMom.setText(self.predictedMomentum)
+            self.predictedI = self.func.mom2I(self.Cmagnets, self.dipole,self.predictedMomentum)
+            self.view.doubleSpinBox_p.setValue(float(self.predictedMomentum))
+            self.view.doubleSpinBox_I.setValue(float(self.predictedI))
+
+    def selectCurrent(self):
+        #self.p = self.func.calcMom(self.Cmagnets,'S02-DIP01',self.I)
+        #self.predictedI = float(self.view.lineEdit_selectCurrent.text())
+        self.predictedI = float(self.view.doubleSpinBox_I.value())
+        #self.view.label_predictMom.setText(self.predictedMomentum)
+        self.predictedMomentum = self.func.calcMom(self.Cmagnets,self.dipole,self.predictedI)
+        self.view.doubleSpinBox_p.setValue(float(self.predictedMomentum))
+        self.view.doubleSpinBox_I.setValue(float(self.predictedI))
+
+    def selectMom(self):
+        #self.p = self.func.calcMom(self.Cmagnets,'S02-DIP01',self.I)
+        #self.predictedMomentum = float(self.view.lineEdit_selectMom.text())
+        self.predictedMomentum = float(self.view.doubleSpinBox_p.value())
+        #self.view.label_predictMom.setText(self.predictedMomentum)
+        self.predictedI = self.func.mom2I(self.Cmagnets, self.dipole,self.predictedMomentum)
+        self.view.doubleSpinBox_p.setValue(float(self.predictedMomentum))
+        self.view.doubleSpinBox_I.setValue(float(self.predictedI))
+
+    def useCurrent(self):
+        self.predictedI = self.Cmagnets.getSI(self.dipole)
+        self.predictedMomentum = self.func.calcMom(self.Cmagnets,self.dipole,self.predictedI)
+        self.view.doubleSpinBox_I.setValue(float(self.predictedI))
+        #self.view.label_predictMom.setText(str(self.predictedMomentum))
+        #self.predictedI = self.func.mom2I(self.Cmagnets, 'S02-DIP01',self.predictedMomentum)
+
+    def useRF(self):
+        print 'This does nothing yet'
+
+
+
+    def roughGetCurrentRange(self):
+        self.roughMinI = 0.8*self.predictedI
+        self.roughMaxI = 1.2*self.predictedI
+        self.view.lineEdit_roughCurrentMin.setText("%.2f" % self.roughMinI)
+        self.view.lineEdit_roughCurrentMax.setText("%.2f" % self.roughMaxI)
+
+    def roughGetRFRange(self):
+        self.roughMinRF = self.predictedRF/2
+        self.roughMaxRF = 1.05*self.predictedRF
+        self.view.lineEdit_roughRFMin.setText("%.2f" % self.roughMinRF)
+        self.view.lineEdit_roughRFMax.setText("%.2f" % self.roughMaxRF)
+
+    # def fineGetCurrentRange(self):
+    #     self.fineMinI = 0.95*self.predictedI
+    #     self.fineMaxI = 1.05*self.predictedI
+    #     self.view.lineEdit_fineCurrentMin.setText("%.2f" % self.fineMinI)
+    #     self.view.lineEdit_fineCurrentMax.setText("%.2f" % self.fineMaxI)
+    #
+    # def fineGetRFRange(self):
+    #     self.fineMinRF = 0.95*self.predictedRF
+    #     self.fineMaxRF = 1.05*self.predictedRF
+    #     self.view.lineEdit_fineRFMin.setText("%.2f" % self.fineMinRF)
+    #     self.view.lineEdit_fineRFMax.setText("%.2f" % self.fineMaxRF)
+
+    def fineGetCurrentRange_2(self):
+        self.fineMinI = 0.95*self.approxI
+        self.fineMaxI = 1.05*self.approxI
+        self.view.lineEdit_fineCurrentMin.setText("%.2f" % self.fineMinI)
+        self.view.lineEdit_fineCurrentMax.setText("%.2f" % self.fineMaxI)
+
+    def fineGetRFRange_2(self):
+        self.fineMinRF = 0.95*self.approxRF
+        self.fineMaxRF = 1.05*self.approxRF
+        self.view.lineEdit_fineRFMin.setText("%.2f" % self.fineMinRF)
+        self.view.lineEdit_fineRFMax.setText("%.2f" % self.fineMaxRF)
+
+    def setRoughMinI(self):
+        self.roughMinI = float(self.view.lineEdit_roughCurrentMin.text())
+
+    def setRoughMaxI(self):
+        self.roughMaxI = float(self.view.lineEdit_roughCurrentMax.text())
+
+    def setRoughMinRF(self):
+        self.roughMinRF = float(self.view.lineEdit_roughRFMin.text())
+
+    def setRoughMaxRF(self):
+        self.roughMaxRF = float(self.view.lineEdit_roughRFMax.text())
+
+    def setFineMinI(self):
+        self.fineMinI = float(self.view.lineEdit_fineCurrentMin.text())
+
+    def setFineMaxI(self):
+        self.fineMaxI = float(self.view.lineEdit_fineCurrentMax.text())
+
+    def setFineMinRF(self):
+        self.fineMinRF = float(self.view.lineEdit_fineRFMin.text())
+
+    def setFineMaxRF(self):
+        self.fineMaxRF = float(self.view.lineEdit_fineRFMax.text())
+
 
     #Outline of Momentum Measurement Procedure
-    def measureMomentumPrelim_1(self):
-        '''1. Preliminaries'''
-        #if self.view.checkBox_1.isChecked()==True:
-        print 'Read predicted momentum and calculate predicted current:'
-        self.predictedMomentum = float(self.view.lineEdit_predictMom.text())
-        print('Predicted Momentum: '+str(self.predictedMomentum))
-        self.predictedI = self.func.mom2I(self.Cmagnets,
-                                        'S02-DIP01',
-                                        self.predictedMomentum)
-        print('Predicted Current: '+str(self.predictedI))
+    # def measureMomentumPrelim_1(self):
+    #     '''1. Preliminaries'''
+    #     #if self.view.checkBox_1.isChecked()==True:
+    #     print 'Read predicted momentum and calculate predicted current:'
+    #     self.predictedMomentum = float(self.view.lineEdit_predictMom.text())
+    #     print('Predicted Momentum: '+str(self.predictedMomentum))
+    #     self.predictedI = self.func.mom2I(self.Cmagnets,
+    #                                     'S02-DIP01',
+    #                                     self.predictedMomentum)
+    #     print('Predicted Current: '+str(self.predictedI))
 
-    def measureMomentumPrelim_2(self):
-        print 'Close the laser shutters'
-        #self.shut.close('SHUT01')
-        self.shut.close('SHUT02')
+    def measureMomentumPrelim_1(self):
+        import bpm_recalibrate
+
+    # def measureMomentumPrelim_2(self):
+    #     print 'Close the laser shutters'
+    #     #self.shut.close('SHUT01')
+    #     self.shut.close('SHUT01')
+    #     self.shut.close('SHUT02')
 
         #print 'Setting C2V dipole to zero'
         #self.Cmagnets.setSI('S02-DIP01',0)
         #time.sleep(1)
 
     def measureMomentumPrelim_3(self):
-        pass
+        print 'Close the laser shutters'
+        #self.shut.close('SHUT01')
+        self.shut.close('SHUT01')
+        self.shut.close('SHUT02')
         #do degaussing
         print 'Degaussing...'
-        self.Cmagnets.degauss('S02-DIP01',True)
+        self.Cmagnets.degauss(self.dipole,True)
         self.Cmagnets.degauss('S02-QUAD3',True)
         self.Cmagnets.degauss('S02-QUAD4',True)
         self.Cmagnets.degauss('S02-QUAD5',True)
-        while self.Cmagnets.isDegaussing('S02-DIP01') == True and self.Cmagnets.isDegaussing('S02-QUAD3') and self.Cmagnets.isDegaussing('S02-QUAD4') and self.Cmagnets.isDegaussing('S02-QUAD5'):
+        while self.Cmagnets.isDegaussing(self.dipole) == False \
+        and self.Cmagnets.isDegaussing('S02-QUAD3') == False \
+        and self.Cmagnets.isDegaussing('S02-QUAD4') == False \
+        and self.Cmagnets.isDegaussing('S02-QUAD5') == False:
+            print 'waiting to start degaussing...'
+            time.sleep(1)
+        print 'started degaussing'
+        print 'Is degaussing?', self.Cmagnets.isDegaussing(self.dipole)
+        print 'Is degaussing?', self.Cmagnets.isDegaussing('S02-QUAD3')
+        print 'Is degaussing?', self.Cmagnets.isDegaussing('S02-QUAD4')
+        print 'Is degaussing?', self.Cmagnets.isDegaussing('S02-QUAD5')
+        while self.Cmagnets.isDegaussing(self.dipole) == True \
+        and self.Cmagnets.isDegaussing('S02-QUAD3') == True \
+        and self.Cmagnets.isDegaussing('S02-QUAD4') == True \
+        and self.Cmagnets.isDegaussing('S02-QUAD5') == True:
             print 'still degaussing...'
             time.sleep(1)
-
-    def measureMomentumPrelim_4(self):
         print 'Open the laser shutters'
         #self.shut.close('SHUT01')
+        self.shut.open('SHUT01')
         self.shut.open('SHUT02')
+
+    # def measureMomentumPrelim_4(self):
+    #     print 'Open the laser shutters'
+    #     #self.shut.close('SHUT01')
+    #     self.shut.open('SHUT01')
+    #     self.shut.open('SHUT02')
 
         #print 'Setting C2V dipole to zero'
         #self.Cmagnets.setSI('S02-DIP01',0)
@@ -207,8 +352,10 @@ class Model(QObject):
     def measureMomentumAlign_1(self):
         '''2. Align Beam through Dipole'''
         #if self.view.checkBox_2.isChecked()==True:
+        self.target1 = self.view.doubleSpinBox_tol_1.value()
+        self.tol1 = self.view.doubleSpinBox_tol_1.value()
         print 'Aligning on S02-BPM-02 with S02-HCOR-02'
-        self.func.align(self.Cmagnets,'S02-HCOR2',self.Cbpms,'S02-BPM02',0.5)
+        self.func.align(self.Cmagnets,'S02-HCOR2',self.Cbpms,'S02-BPM02', self.target1, self.tol1, self.initialCurrentStep)
         #self.func.align(self.Cmagnets,'S02-HCOR2',self.Cbpms,'S02-BPM02',0.5)
 
         #raw_input('Put in S02-YAG-02, then press enter')
@@ -216,24 +363,45 @@ class Model(QObject):
         #self.func.alignScreen(self.Cmagnets,'S02-HCOR1',self.camerasIA,'S02-CAM-01',13,0.5)
 
     def measureMomentumAlign_2_A(self):
-        pass
-        #15/8/18 reinstate this
-        print 'Switch to S02-CAM-02 - do it yourself for now'
-        #self.camNames.remove('VC')
-        #print names
+        #pass
+        #cameras.setCamera('C2V-CAM-01')
+        ##self.selectedCamera = self.cameras.getSelectedIARef()
 
-        #for name in self.camNames:
-        #    if self.cameras.isAcquiring(name):
-        #        self.cameras.setCamera(name)
-        #        self.cameras.stopAcquiring()
-        #        time.sleep(1)
+        #self.cameras = self.camdaqInit.physical_CLARA_Camera_DAQ_Controller()
+        #self.camerasIA = self.camInit.physical_CLARA_Camera_IA_Controller()
+        self.camNames = list(self.cam.getCameraNames())
+
+        # camx1 = self.camerasIA.getSelectedIARef().IA.x
+        # print  self.camerasIA.getSelectedIARef().IA
+        #
+        # print 'camx1', str(camx1)
+        # camy1 = self.camerasIA.getSelectedIARef().IA.y
+        # print 'camy1', str(camy1)
+        # camy1 = self.camerasIA.getSelectedIARef().IA.sigmaX
+        # print 'camy1', str(camy1)
+        # camy1 = self.camerasIA.getSelectedIARef().IA.sigmaY
+        # print 'camy1', str(camy1)
+        # camy1 = self.camerasIA.getSelectedIARef().IA.covXY
+        # print 'camy1', str(camy1)
+
+        #15/8/18 reinstate this
+        #print 'Switch to S02-CAM-02 - do it yourself for now'
+        #print self.camNames
+        self.camNames.remove('VIRTUAL_CATHODE')
+        #print self.camNames
+
+        for name in self.camNames:
+            if self.cam.isAcquiring(name):
+                #self.cam.setCamera(name)
+                self.cam.stopAcquiring(name)
+                time.sleep(1)
         #print name
-        #self.chosen_camera = 'S02-CAM-02'
-        #self.cameras.setCamera(self.chosen_camera)
-        #print '\n\n\n\n\n\nstart acquiring', self.chosen_camera
-        #self.cameras.startAcquiring()
+        self.chosen_camera = 'S02-CAM-02'
+        #self.cam.setCamera(self.chosen_camera)
+        print 'Start acquiring', self.chosen_camera
+        self.cam.startAcquiring(self.chosen_camera)
         #self.camerasIA.setCamera(self.chosen_camera)
-        #time.sleep(2)
+        time.sleep(1)
         #ia = self.camerasIA.getSelectedIARef().IA
         #for x in dir(ia):
         #    print x, getattr(ia, x)
@@ -253,10 +421,14 @@ class Model(QObject):
         print self.cam.getMaskYrad(screen)
         time.sleep(1)
         print 'setting new values (commented out)'
-        #self.cam.setMaskX(1050, screen)
-        #self.cam.setMaskY(1200, screen)
-        #self.cam.setMaskXrad(1180, screen)
-        #self.cam.setMaskYrad(1240, screen)
+        self.maskX = int(self.view.lineEdit_maskX.text())
+        self.maskY = int(self.view.lineEdit_maskY.text())
+        self.maskXRad = int(self.view.lineEdit_maskXRad.text())
+        self.maskYRad = int(self.view.lineEdit_maskYRad.text())
+        self.cam.setMaskX(self.maskX, screen)
+        self.cam.setMaskY(self.maskY, screen)
+        self.cam.setMaskXrad(self.maskXRad, screen)
+        self.cam.setMaskYrad(self.maskYRad, screen)
         time.sleep(1)
         print 'new values'
         print self.cam.getX(screen)
@@ -283,31 +455,55 @@ class Model(QObject):
     def measureMomentumAlign_2(self):
         #raw_input('Insert S02-YAG-02, then press enter')
         # Insert YAG
-        print 'Insert S02-YAG-02 - have to do it yourself'
-        #screen = 'S02-SCR-02'
-        #print 'insert YAG'
-        #self.scrn.insertYAG(screen)
-        #print 'is screen in?', self.scrn.isYAGIn(screen)
+        print 'Insert S02-YAG-02'# **change back to -02**'
+        screen = 'S02-SCR-02'
+        print 'insert YAG'
+        self.scrn.insertYAG(screen)
+        print 'is screen in?', self.scrn.isYAGIn(screen)
         #self.scrn.moveScreenOut(screen)
-        # if self.scrn.isYAGIn(screen) is False:
-        #     while True:
-        #         isscreenmoving1 = self.scrn.isScreenMoving(screen)
-        #         print 'Is screen moving?', isscreenmoving1
-        #         time.sleep(1)
-        #         isscreenmoving2 = self.scrn.isScreenMoving(screen)
-        #         if isscreenmoving2 is False and isscreenmoving1 is True:
-        #             print 'Finished Moving!'
-        #             break
-        # else:
-        #     pass
+        if self.scrn.isYAGIn(screen) is False:
+            while True:
+                isscreenmoving1 = self.scrn.isScreenMoving(screen)
+                print 'Is screen moving?', isscreenmoving1
+                QApplication.processEvents()
+                time.sleep(1)
+                isscreenmoving2 = self.scrn.isScreenMoving(screen)
+                if isscreenmoving2 is False and isscreenmoving1 is True:
+                    print 'Finished Moving!'
+                    break
+        else:
+            pass
 
     def measureMomentumAlign_3(self):
         print 'Aligning on S02-YAG-02 with S02-HCOR-02'
-        self.func.alignOnScreen(self.Cmagnets,'S02-HCOR1',self.cam,'S02-YAG02',13,0.5) #was 0.000001
+        self.target2 = self.view.doubleSpinBox_x_2.value()
+        self.tol2 = self.view.doubleSpinBox_tol_2.value()
+        #print 'testing...'
+        #print self.target2
+        #print self.tol2
+        #print self.initialCurrentStep
+        self.func.alignOnScreen(self.Cmagnets,'S02-HCOR1',self.cam,'S02-CAM-02',self.target2,self.tol2, self.initialCurrentStep) #was 0.000001
         #self.func.alignOnScreen(self.Cmagnets,'S02-HCOR1',self.camerasIA,'S02-CAM-01',13,0.5)
 
     def measureMomentumAlign_4(self):
-        print 'Retract S02-YAG-02 - have to do it yourself'
+        print 'Retract S02-YAG-02'# **change back to -02**'
+        screen = 'S02-SCR-02'
+        self.scrn.moveScreenTo(screen,scrn.SCREEN_STATE.V_RETRACTED)
+        #time.sleep(5)
+        if self.scrn.isYAGIn(screen) is True:
+            while True:
+                isscreenmoving1 = self.scrn.isScreenMoving(screen)
+                print 'Is screen moving?', isscreenmoving1
+                QApplication.processEvents()
+                time.sleep(1)
+                isscreenmoving2 = self.scrn.isScreenMoving(screen)
+                if isscreenmoving2 is False and isscreenmoving1 is True:
+                    print 'Finished Moving!'
+                    break
+        elif self.scrn.isYAGIn(screen) is False:
+            print 'Screen already out'
+        else:
+            print 'Error moving screen'
         #self.func.align(self.Cmagnets,'S02-VCOR2',self.Cbpms,'S02-BPM02',0.5)
         #align(self,hctrl,hcor, bctrl, bpm, tol, N=10):
         #self.func.align(self.Cmagnets,'VCOR02',self.Cbpms,'BPM02',0.000001)
@@ -319,17 +515,181 @@ class Model(QObject):
     def measureMomentumCentreC2V(self):
         '''3. Centre in Spec. Line'''
         #if self.view.checkBox_3.isChecked()==True:
-        self.I = self.func.bendBeam(self.Cmagnets,'S02-DIP01',
+        self.I = self.func.bendBeam(self.Cmagnets,self.dipole,
                                     self.Cbpms,'C2V-BPM01',
                                     'YAG01',
-                                     self.predictedI, 0.1)#0.00001                 # tol=0.0001 (metres)
+                                     self.fineMinI, self.fineMaxI, 0.1)#0.00001                 # tol=0.0001 (metres)
+        self.p = self.func.calcMom(self.Cmagnets,self.dipole,self.I)
+        print self.p
+
+    def measureMomentumCentreC2V_2(self):
+        '''3. Centre in Spec. Line using screen'''
+        #if self.view.checkBox_3.isChecked()==True:
+        self.I = self.func.bendBeamScreen(self.Cmagnets,self.dipole,
+                                    'C2V-CAM-01',
+                                     self.fineMinI, self.fineMaxI, 0.1)#0.00001                 # tol=0.0001 (metres)
+        self.p = self.func.calcMom(self.Cmagnets,self.dipole,self.I)
+        print self.p
+
+    def measureMomentumCentreC2VApprox(self):
+        '''3. Centre in Spec. Line'''
+        #if self.view.checkBox_3.isChecked()==True:
+        # self.tol3 = self.view.doubleSpinBox_tol_3.value()
+        # self.approxI = self.func.bendBeamApprox(self.Cmagnets,self.dipole,
+        #                             self.Cbpms,'C2V-BPM01',
+        #                             'YAG01',
+        #                              self.roughMinI, self.roughMaxI, self.tol3)#0.00001                 # tol=0.0001 (metres)
+        self.approxI = self.findDipoleCurrent()
+        self.approx_p = self.func.calcMom(self.Cmagnets,self.dipole,self.approxI)
+        print self.approx_p
+
+        #######################################################################
+        # based on AutoPhaseCalibv2 model 22/8/18
+    def findDipoleCurrent(self):
+        #self.startingDipole = self.machine.getDip()
+        self.Cmagnets.getSI(self.dipole)
+        self.sleepTimeDipole = 0.001
+        self.sleepTime = 0.001
+        # need to reset data array
+        #self.resetDataArray()
+        if self.view.comboBox_selectRF.currentIndex() == 0: # gun
+            self.dipoleIStep = 0.1
+            self.nSamples = 10
+            self.getDataFunction = partial(self.func.getBPMPosition, self.Cbpms,'C2V-BPM01')
+        elif self.view.comboBox_selectRF.currentIndex() == 1: # linac
+            self.dipoleIStep = 1
+            self.nSamples = 3
+            self.getDataFunction = partial(self.func.getBPMPosition, self.Cbpms,'C2V-BPM01')
+
+        range = np.arange(self.roughMinI, self.roughMaxI, self.dipoleIStep)
+        for i,I in enumerate(range):
+            #self.progress.emit(100*i/len(range))
+            #if self._abort or self._finished:
+            #    return
+            self.Cmagnets.setSI(self.dipole, I)
+            self.Cmagnets.getSI(self.dipole)
+            while abs(self.Cmagnets.getSI(self.dipole) - I) > 0.2:
+                time.sleep(self.sleepTimeDipole)
+                data, stddata = self.getData() # could replace getData->func.getBPMPosition with func.getXBPM
+            self.appendDataArray(I, data, stddata)
+
+        self.doFitDipoleCurrent() #need to add this in
+        self.machine.setDip(self.startingDipole)
+        while abs(self.machine.getDip() - self.startingDipole) > 0.2:
+            time.sleep(self.sleepTimeDipole)
+		#self.progress.emit(100)
+
+    def appendDataArray(self, x, y, yStd):
+        self.crestingData[self.cavity][self.actuator]['xData'].append(x)
+        self.crestingData[self.cavity][self.actuator]['yData'].append(y)
+        self.crestingData[self.cavity][self.actuator]['yStd'].append(yStd)
+		#self.newData.emit()
+
+    def getData(self):
+        # self.data = []
+        # while len(self.data) < 2:
+        # 	self.data.append(self.getDataFunction())
+        # 	time.sleep(self.sleepTime)
+        time.sleep(self.sleepTime)
+        self.data = []
+        while len(self.data) < self.nSamples:
+            self.data.append(self.getDataFunction())
+            time.sleep(self.sleepTime)
+        return [np.mean(self.data), np.std(self.data)] if np.std(self.data) > 0.001 else [20,0]
+
+    def abort(self):
+        self._abort = True
+
+    def finish(self):
+        self._finished = True
+
+    def resetAbortFinish(self):
+        self._abort = False
+        self._finished = False
+
+        #######################################################################
 
     def measureMomentumCalcMom(self):
+        # moved functionality into measureMomentumCentreC2V
         '''4. Convert Current to Momentum'''
         #if self.view.checkBox_4.isChecked()==True:
             #self.PL.info('4. Calculate Momentum')
-        self.p = self.func.calcMom(self.Cmagnets,'S02-DIP01',self.I)
+        self.p = self.func.calcMom(self.Cmagnets,self.dipole,self.I)
         print self.p
+
+
+    def degaussC2V(self):
+        pass
+        #do degaussing
+        print 'Degaussing...'
+        #self.Cmagnets.degauss(self.dipole,True)
+        self.Cmagnets.degauss('C2V-QUAD1',True)
+        self.Cmagnets.degauss('C2V-QUAD2',True)
+        self.Cmagnets.degauss('C2V-QUAD3',True)
+        while self.Cmagnets.isDegaussing('C2V-QUAD1') and self.Cmagnets.isDegaussing('C2V-QUAD2') and self.Cmagnets.isDegaussing('C2V-QUAD3'):
+            print 'still degaussing...'
+            time.sleep(1)
+
+    def insertC2VScreen(self):
+        #raw_input('Insert S02-YAG-02, then press enter')
+        # Insert YAG
+        print 'Insert C2V-YAG-01'# **change back to -02**'
+        screen = 'C2V-SCR-01'
+        #print 'insert YAG'
+        self.scrn.insertYAG(screen)
+        print 'is screen in?', self.scrn.isYAGIn(screen)
+        #self.scrn.moveScreenOut(screen)
+        if self.scrn.isYAGIn(screen) is False:
+            while True:
+                isscreenmoving1 = self.scrn.isScreenMoving(screen)
+                print 'Is screen moving?', isscreenmoving1
+                QApplication.processEvents()
+                time.sleep(1)
+                isscreenmoving2 = self.scrn.isScreenMoving(screen)
+                if isscreenmoving2 is False and isscreenmoving1 is True:
+                    print 'Finished Moving!'
+                    break
+        else:
+            pass
+
+    def camState2C2V(self):
+        self.camNames = list(self.cam.getCameraNames())
+        self.camNames.remove('VIRTUAL_CATHODE')
+        #print self.camNames
+
+        for name in self.camNames:
+            if self.cam.isAcquiring(name):
+                #self.cam.setCamera(name)
+                self.cam.stopAcquiring(name)
+                time.sleep(1)
+        #print name
+        self.chosen_camera = 'C2V-CAM-01'
+        #self.cam.setCamera(self.chosen_camera)
+        print 'Start acquiring', self.chosen_camera
+        self.cam.startAcquiring(self.chosen_camera)
+        #self.camerasIA.setCamera(self.chosen_camera)
+        time.sleep(1)
+        #ia = self.camerasIA.getSelectedIARef().IA
+        #for x in dir(ia):
+        #    print x, getattr(ia, x)
+
+    def retractC2VScreen(self):
+        print 'Retract C2V-YAG-01'# **change back to -02**'
+        screen = 'C2V-SCR-01'
+        self.scrn.moveScreenTo(screen,scrn.SCREEN_STATE.V_RETRACTED)
+        #time.sleep(5)
+        if self.scrn.isYAGIn(screen) is True:
+            while True:
+                isscreenmoving1 = self.scrn.isScreenMoving(screen)
+                print 'Is screen moving?', isscreenmoving1
+                QApplication.processEvents()
+                time.sleep(1)
+                isscreenmoving2 = self.scrn.isScreenMoving(screen)
+                if isscreenmoving2 is False and isscreenmoving1 is True:
+                    print 'Finished Moving!'
+                    break
+        else:
+            pass
 
     #Outline of Momentum Spread Measurement Procedure
     def measureMomentumSpreadChecks(self):
@@ -338,8 +698,8 @@ class Model(QObject):
             #if self.view.checkBox_1_s.isChecked()==True:
             """1. Checks"""
             #self.p=34.41
-            self.I=self.func.mom2I(self.Cmagnets,'S02-DIP01',self.p)
-            self.Cmagnets.setSI('S02-DIP01',self.I)
+            self.I=self.func.mom2I(self.Cmagnets,self.dipole,self.p)
+            self.Cmagnets.setSI(self.dipole,self.I)
             print 'measureMomentum(step 1), p = ', str(self.p)
 
     def measureMomentumSpreadMinBeta(self):
@@ -359,7 +719,7 @@ class Model(QObject):
         #self.func.minimizeBeta2(self.Cmagnets,'S02-QUAD4',
         #                        None,'VM-CLA-C2V-DIA-CAM-01',-1)
         #2.2 Set Dispersion Size on Spec Line
-        self.Cmagnets.setSI('S02-DIP01',self.I)
+        self.Cmagnets.setSI(self.dipole,self.I)
         #minimizeBeta(self,qctrl,quad,sctrl,screen,init_step,N=1):
 
     def measureMomentumSpreadSetDispSize(self):
@@ -384,7 +744,7 @@ class Model(QObject):
         #self.fPositions =
         # Don't know why the above didn't work, that's why it's returned to x then unpacked below
         x = self.func.findDispersion(self.Cmagnets,
-                                                'S02-DIP01',
+                                                self.dipole,
                                                 None,
                                                 'CLA-C2V-DIA-CAM-01',
                                                 self.I,10,0.1)
