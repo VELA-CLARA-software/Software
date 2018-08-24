@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1413</width>
-    <height>984</height>
+    <height>946</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -516,7 +516,7 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
              <x>10</x>
              <y>50</y>
              <width>661</width>
-             <height>121</height>
+             <height>91</height>
             </rect>
            </property>
            <property name="font">
@@ -532,153 +532,37 @@ QLabel{ background-color: rgba(0,0,0,0%);}</string>
            <property name="title">
             <string>Initial estimate (sets scan ranges for rough measurements):</string>
            </property>
-           <widget class="QLineEdit" name="lineEdit_selectMom">
-            <property name="geometry">
-             <rect>
-              <x>480</x>
-              <y>28</y>
-              <width>171</width>
-              <height>22</height>
-             </rect>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>22</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>0</string>
-            </property>
-           </widget>
-           <widget class="QLineEdit" name="lineEdit_selectCurrent">
-            <property name="geometry">
-             <rect>
-              <x>104</x>
-              <y>28</y>
-              <width>141</width>
-              <height>22</height>
-             </rect>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>22</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>0</string>
-            </property>
-           </widget>
            <widget class="QLabel" name="label">
             <property name="geometry">
              <rect>
-              <x>12</x>
-              <y>28</y>
+              <x>190</x>
+              <y>20</y>
               <width>85</width>
               <height>16</height>
              </rect>
             </property>
             <property name="text">
-             <string>Select current:</string>
-            </property>
-           </widget>
-           <widget class="QLabel" name="label_6">
-            <property name="geometry">
-             <rect>
-              <x>12</x>
-              <y>57</y>
-              <width>22</width>
-              <height>16</height>
-             </rect>
-            </property>
-            <property name="text">
-             <string>OR:</string>
+             <string>Dipole current</string>
             </property>
            </widget>
            <widget class="QLabel" name="label_2">
             <property name="geometry">
              <rect>
-              <x>370</x>
-              <y>28</y>
-              <width>109</width>
+              <x>330</x>
+              <y>20</y>
+              <width>71</width>
               <height>16</height>
              </rect>
             </property>
             <property name="text">
-             <string>Select momentum:</string>
+             <string>Momentum</string>
             </property>
-           </widget>
-           <widget class="QLabel" name="label_7">
-            <property name="geometry">
-             <rect>
-              <x>370</x>
-              <y>57</y>
-              <width>22</width>
-              <height>16</height>
-             </rect>
-            </property>
-            <property name="text">
-             <string>OR:</string>
-            </property>
-           </widget>
-           <widget class="QGroupBox" name="groupBox_7">
-            <property name="geometry">
-             <rect>
-              <x>280</x>
-              <y>18</y>
-              <width>77</width>
-              <height>41</height>
-             </rect>
-            </property>
-            <property name="title">
-             <string>I [A]</string>
-            </property>
-            <widget class="QLabel" name="label_predictI">
-             <property name="geometry">
-              <rect>
-               <x>10</x>
-               <y>20</y>
-               <width>61</width>
-               <height>22</height>
-              </rect>
-             </property>
-             <property name="text">
-              <string>0</string>
-             </property>
-            </widget>
-           </widget>
-           <widget class="QGroupBox" name="groupBox_2">
-            <property name="geometry">
-             <rect>
-              <x>280</x>
-              <y>68</y>
-              <width>77</width>
-              <height>41</height>
-             </rect>
-            </property>
-            <property name="title">
-             <string>p [MeV/c]</string>
-            </property>
-            <widget class="QLabel" name="label_predictMom">
-             <property name="geometry">
-              <rect>
-               <x>10</x>
-               <y>20</y>
-               <width>61</width>
-               <height>22</height>
-              </rect>
-             </property>
-             <property name="text">
-              <string>0</string>
-             </property>
-            </widget>
            </widget>
            <widget class="QPushButton" name="pushButton_useCurrent">
             <property name="geometry">
              <rect>
-              <x>104</x>
-              <y>57</y>
+              <x>30</x>
+              <y>40</y>
               <width>141</width>
               <height>22</height>
              </rect>
@@ -711,8 +595,8 @@ QLabel{ background-color: rgba(0,0,0,0%);}</string>
            <widget class="QPushButton" name="pushButton_useRF">
             <property name="geometry">
              <rect>
-              <x>477</x>
-              <y>57</y>
+              <x>430</x>
+              <y>40</y>
               <width>172</width>
               <height>22</height>
              </rect>
@@ -750,8 +634,8 @@ QLabel{ background-color: rgba(0,0,0,0%);}</string>
            <widget class="QLabel" name="label_I">
             <property name="geometry">
              <rect>
-              <x>12</x>
-              <y>86</y>
+              <x>30</x>
+              <y>60</y>
               <width>251</width>
               <height>16</height>
              </rect>
@@ -769,10 +653,10 @@ QLabel{ background-color: rgba(0,0,0,0%);}</string>
            <widget class="QLabel" name="label_RF">
             <property name="geometry">
              <rect>
-              <x>370</x>
-              <y>86</y>
-              <width>271</width>
-              <height>16</height>
+              <x>430</x>
+              <y>60</y>
+              <width>211</width>
+              <height>20</height>
              </rect>
             </property>
             <property name="minimumSize">
@@ -785,12 +669,64 @@ QLabel{ background-color: rgba(0,0,0,0%);}</string>
              <string>...</string>
             </property>
            </widget>
+           <widget class="QDoubleSpinBox" name="doubleSpinBox_I">
+            <property name="geometry">
+             <rect>
+              <x>180</x>
+              <y>40</y>
+              <width>111</width>
+              <height>22</height>
+             </rect>
+            </property>
+            <property name="suffix">
+             <string> A</string>
+            </property>
+           </widget>
+           <widget class="QDoubleSpinBox" name="doubleSpinBox_p">
+            <property name="geometry">
+             <rect>
+              <x>310</x>
+              <y>40</y>
+              <width>111</width>
+              <height>22</height>
+             </rect>
+            </property>
+            <property name="suffix">
+             <string> MeV/c</string>
+            </property>
+           </widget>
+           <widget class="QLabel" name="label_6">
+            <property name="geometry">
+             <rect>
+              <x>50</x>
+              <y>20</y>
+              <width>85</width>
+              <height>16</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+           <widget class="QLabel" name="label_7">
+            <property name="geometry">
+             <rect>
+              <x>440</x>
+              <y>20</y>
+              <width>85</width>
+              <height>16</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
           </widget>
           <widget class="QGroupBox" name="groupBox_9">
            <property name="geometry">
             <rect>
              <x>10</x>
-             <y>330</y>
+             <y>300</y>
              <width>661</width>
              <height>521</height>
             </rect>
@@ -857,34 +793,6 @@ QLabel{ background-color: rgba(0,0,0,0%);}
                </property>
               </widget>
              </item>
-             <item row="0" column="1">
-              <widget class="QPushButton" name="pushButton_Prelim_2">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="minimumSize">
-                <size>
-                 <width>140</width>
-                 <height>0</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>16777215</width>
-                 <height>16777215</height>
-                </size>
-               </property>
-               <property name="text">
-                <string>2. Close laser shutters</string>
-               </property>
-               <property name="checked">
-                <bool>false</bool>
-               </property>
-              </widget>
-             </item>
              <item row="1" column="0">
               <widget class="QPushButton" name="pushButton_Prelim_3">
                <property name="sizePolicy">
@@ -906,35 +814,7 @@ QLabel{ background-color: rgba(0,0,0,0%);}
                 </size>
                </property>
                <property name="text">
-                <string>3. Degauss to zero: S02-DIP01, QUAD-03,04,05</string>
-               </property>
-               <property name="checked">
-                <bool>false</bool>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="1">
-              <widget class="QPushButton" name="pushButton_Prelim_4">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="minimumSize">
-                <size>
-                 <width>140</width>
-                 <height>0</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>16777215</width>
-                 <height>16777215</height>
-                </size>
-               </property>
-               <property name="text">
-                <string>4. Open laser shutters</string>
+                <string>2. Degauss to zero: S02-DIP01, QUAD-03,04,05 (Closes laser shutters while degaussing)</string>
                </property>
                <property name="checked">
                 <bool>false</bool>
@@ -2127,7 +2007,7 @@ QLabel{ background-color: rgba(0,0,0,0%);}
            <property name="geometry">
             <rect>
              <x>10</x>
-             <y>180</y>
+             <y>150</y>
              <width>661</width>
              <height>141</height>
             </rect>

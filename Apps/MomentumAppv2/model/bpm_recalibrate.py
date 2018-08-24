@@ -1,3 +1,5 @@
+import os,sys
+sys.path.append('C:\\Users\\djd63\\Desktop\\Release')
 import VELA_CLARA_enums as vce
 import VELA_CLARA_BPM_Control as bpm
 import VELA_CLARA_Charge_Control as chg

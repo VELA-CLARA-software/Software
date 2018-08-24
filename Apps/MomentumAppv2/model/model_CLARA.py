@@ -12,6 +12,7 @@ import scipy.constants as physics
 import math as m
 import random as r
 import numpy as np
+from functools import partial
 #from numpy.polynomial import polynomial as P
 #import subprocess
 #os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
@@ -49,7 +50,8 @@ import momentumFunctions
 
 class Model(QObject):
     def __init__(self,app,view):
-        QThread.__init__(self)
+        super(Model, self).__init__()
+        #QThread.__init__(self)
         self.app = app
         self.view = view
         '''variables to hold important values'''
@@ -171,30 +173,41 @@ class Model(QObject):
     def selectRF(self):
         if self.view.comboBox_selectRF.currentIndex() == 0:
             self.predictedMomentum = 5.0
-            self.initialCurrentStep = 0.01
+            self.initialCurrentStep = 0.02
             #self.view.label_predictMom.setText(self.predictedMomentum)
             self.predictedI = self.func.mom2I(self.Cmagnets, self.dipole,self.predictedMomentum)
+            self.view.doubleSpinBox_p.setValue(float(self.predictedMomentum))
+            self.view.doubleSpinBox_I.setValue(float(self.predictedI))
         elif self.view.comboBox_selectRF.currentIndex() == 1:
             self.predictedMomentum = 35.0
             self.initialCurrentStep = 0.1
             #self.view.label_predictMom.setText(self.predictedMomentum)
             self.predictedI = self.func.mom2I(self.Cmagnets, self.dipole,self.predictedMomentum)
+            self.view.doubleSpinBox_p.setValue(float(self.predictedMomentum))
+            self.view.doubleSpinBox_I.setValue(float(self.predictedI))
 
     def selectCurrent(self):
         #self.p = self.func.calcMom(self.Cmagnets,'S02-DIP01',self.I)
-        self.predictedI = float(self.view.lineEdit_selectCurrent.text())
+        #self.predictedI = float(self.view.lineEdit_selectCurrent.text())
+        self.predictedI = float(self.view.doubleSpinBox_I.value())
         #self.view.label_predictMom.setText(self.predictedMomentum)
         self.predictedMomentum = self.func.calcMom(self.Cmagnets,self.dipole,self.predictedI)
+        self.view.doubleSpinBox_p.setValue(float(self.predictedMomentum))
+        self.view.doubleSpinBox_I.setValue(float(self.predictedI))
 
     def selectMom(self):
         #self.p = self.func.calcMom(self.Cmagnets,'S02-DIP01',self.I)
-        self.predictedMomentum = float(self.view.lineEdit_selectMom.text())
+        #self.predictedMomentum = float(self.view.lineEdit_selectMom.text())
+        self.predictedMomentum = float(self.view.doubleSpinBox_p.value())
         #self.view.label_predictMom.setText(self.predictedMomentum)
         self.predictedI = self.func.mom2I(self.Cmagnets, self.dipole,self.predictedMomentum)
+        self.view.doubleSpinBox_p.setValue(float(self.predictedMomentum))
+        self.view.doubleSpinBox_I.setValue(float(self.predictedI))
 
     def useCurrent(self):
         self.predictedI = self.Cmagnets.getSI(self.dipole)
         self.predictedMomentum = self.func.calcMom(self.Cmagnets,self.dipole,self.predictedI)
+        self.view.doubleSpinBox_I.setValue(float(self.predictedI))
         #self.view.label_predictMom.setText(str(self.predictedMomentum))
         #self.predictedI = self.func.mom2I(self.Cmagnets, 'S02-DIP01',self.predictedMomentum)
 
@@ -204,8 +217,8 @@ class Model(QObject):
 
 
     def roughGetCurrentRange(self):
-        self.roughMinI = 0.7*self.predictedI
-        self.roughMaxI = 1.3*self.predictedI
+        self.roughMinI = 0.8*self.predictedI
+        self.roughMaxI = 1.2*self.predictedI
         self.view.lineEdit_roughCurrentMin.setText("%.2f" % self.roughMinI)
         self.view.lineEdit_roughCurrentMax.setText("%.2f" % self.roughMaxI)
 
@@ -279,33 +292,54 @@ class Model(QObject):
     def measureMomentumPrelim_1(self):
         import bpm_recalibrate
 
-    def measureMomentumPrelim_2(self):
-        print 'Close the laser shutters'
-        #self.shut.close('SHUT01')
-        self.shut.close('SHUT01')
-        self.shut.close('SHUT02')
+    # def measureMomentumPrelim_2(self):
+    #     print 'Close the laser shutters'
+    #     #self.shut.close('SHUT01')
+    #     self.shut.close('SHUT01')
+    #     self.shut.close('SHUT02')
 
         #print 'Setting C2V dipole to zero'
         #self.Cmagnets.setSI('S02-DIP01',0)
         #time.sleep(1)
 
     def measureMomentumPrelim_3(self):
-        pass
+        print 'Close the laser shutters'
+        #self.shut.close('SHUT01')
+        self.shut.close('SHUT01')
+        self.shut.close('SHUT02')
         #do degaussing
         print 'Degaussing...'
         self.Cmagnets.degauss(self.dipole,True)
         self.Cmagnets.degauss('S02-QUAD3',True)
         self.Cmagnets.degauss('S02-QUAD4',True)
         self.Cmagnets.degauss('S02-QUAD5',True)
-        while self.Cmagnets.isDegaussing(self.dipole) == True and self.Cmagnets.isDegaussing('S02-QUAD3') and self.Cmagnets.isDegaussing('S02-QUAD4') and self.Cmagnets.isDegaussing('S02-QUAD5'):
+        while self.Cmagnets.isDegaussing(self.dipole) == False \
+        and self.Cmagnets.isDegaussing('S02-QUAD3') == False \
+        and self.Cmagnets.isDegaussing('S02-QUAD4') == False \
+        and self.Cmagnets.isDegaussing('S02-QUAD5') == False:
+            print 'waiting to start degaussing...'
+            time.sleep(1)
+        print 'started degaussing'
+        print 'Is degaussing?', self.Cmagnets.isDegaussing(self.dipole)
+        print 'Is degaussing?', self.Cmagnets.isDegaussing('S02-QUAD3')
+        print 'Is degaussing?', self.Cmagnets.isDegaussing('S02-QUAD4')
+        print 'Is degaussing?', self.Cmagnets.isDegaussing('S02-QUAD5')
+        while self.Cmagnets.isDegaussing(self.dipole) == True \
+        and self.Cmagnets.isDegaussing('S02-QUAD3') == True \
+        and self.Cmagnets.isDegaussing('S02-QUAD4') == True \
+        and self.Cmagnets.isDegaussing('S02-QUAD5') == True:
             print 'still degaussing...'
             time.sleep(1)
-
-    def measureMomentumPrelim_4(self):
         print 'Open the laser shutters'
         #self.shut.close('SHUT01')
         self.shut.open('SHUT01')
         self.shut.open('SHUT02')
+
+    # def measureMomentumPrelim_4(self):
+    #     print 'Open the laser shutters'
+    #     #self.shut.close('SHUT01')
+    #     self.shut.open('SHUT01')
+    #     self.shut.open('SHUT02')
 
         #print 'Setting C2V dipole to zero'
         #self.Cmagnets.setSI('S02-DIP01',0)
@@ -442,8 +476,12 @@ class Model(QObject):
 
     def measureMomentumAlign_3(self):
         print 'Aligning on S02-YAG-02 with S02-HCOR-02'
-        self.target2 = self.view.doubleSpinBox_tol_2.value()
+        self.target2 = self.view.doubleSpinBox_x_2.value()
         self.tol2 = self.view.doubleSpinBox_tol_2.value()
+        #print 'testing...'
+        #print self.target2
+        #print self.tol2
+        #print self.initialCurrentStep
         self.func.alignOnScreen(self.Cmagnets,'S02-HCOR1',self.cam,'S02-CAM-02',self.target2,self.tol2, self.initialCurrentStep) #was 0.000001
         #self.func.alignOnScreen(self.Cmagnets,'S02-HCOR1',self.camerasIA,'S02-CAM-01',13,0.5)
 
@@ -501,7 +539,7 @@ class Model(QObject):
         #                             self.Cbpms,'C2V-BPM01',
         #                             'YAG01',
         #                              self.roughMinI, self.roughMaxI, self.tol3)#0.00001                 # tol=0.0001 (metres)
-        self.approxI = findDipoleCurrent(self.roughMinI, self.roughMaxI)
+        self.approxI = self.findDipoleCurrent()
         self.approx_p = self.func.calcMom(self.Cmagnets,self.dipole,self.approxI)
         print self.approx_p
 
@@ -526,20 +564,19 @@ class Model(QObject):
         range = np.arange(self.roughMinI, self.roughMaxI, self.dipoleIStep)
         for i,I in enumerate(range):
             #self.progress.emit(100*i/len(range))
-            if self._abort or self._finished:
-                return
-                #self.machine.setDip(I)
+            #if self._abort or self._finished:
+            #    return
+            self.Cmagnets.setSI(self.dipole, I)
             self.Cmagnets.getSI(self.dipole)
             while abs(self.Cmagnets.getSI(self.dipole) - I) > 0.2:
                 time.sleep(self.sleepTimeDipole)
                 data, stddata = self.getData() # could replace getData->func.getBPMPosition with func.getXBPM
             self.appendDataArray(I, data, stddata)
-        if not self._abort:
-            self.doFitDipoleCurrent() #need to add this in
-        else:
-            self.machine.setDip(self.startingDipole)
-            while abs(self.machine.getDip() - self.startingDipole) > 0.2:
-                time.sleep(self.sleepTimeDipole)
+
+        self.doFitDipoleCurrent() #need to add this in
+        self.machine.setDip(self.startingDipole)
+        while abs(self.machine.getDip() - self.startingDipole) > 0.2:
+            time.sleep(self.sleepTimeDipole)
 		#self.progress.emit(100)
 
     def appendDataArray(self, x, y, yStd):

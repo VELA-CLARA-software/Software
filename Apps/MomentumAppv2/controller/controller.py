@@ -109,15 +109,17 @@ class Controller():
 		'''Connections to GUI Buttons'''
 		self.view.comboBox_selectRF.currentIndexChanged.connect(self.model.selectRF)
 
-		self.view.lineEdit_selectCurrent.editingFinished.connect(self.model.selectCurrent)
+		#self.view.lineEdit_selectCurrent.editingFinished.connect(self.model.selectCurrent)
+		self.view.doubleSpinBox_I.valueChanged.connect(self.model.selectCurrent)
 		self.view.pushButton_useCurrent.clicked.connect(self.model.useCurrent)
-		self.view.lineEdit_selectMom.editingFinished.connect(self.model.selectMom)
+		#self.view.lineEdit_selectMom.editingFinished.connect(self.model.selectMom)
+		self.view.doubleSpinBox_I.valueChanged.connect(self.model.selectMom)
 		self.view.pushButton_useRF.clicked.connect(self.model.useRF)
 
 		self.view.pushButton_Prelim_1.clicked.connect(self.model.measureMomentumPrelim_1)
-		self.view.pushButton_Prelim_2.clicked.connect(self.model.measureMomentumPrelim_2)
+		#self.view.pushButton_Prelim_2.clicked.connect(self.model.measureMomentumPrelim_2)
 		self.view.pushButton_Prelim_3.clicked.connect(self.model.measureMomentumPrelim_3)
-		self.view.pushButton_Prelim_4.clicked.connect(self.model.measureMomentumPrelim_4)#
+		#self.view.pushButton_Prelim_4.clicked.connect(self.model.measureMomentumPrelim_4)#
 		#self.view.pushButton_Prelim_5.clicked.connect(self.model.measureMomentumPrelim_5)
 
 		self.view.pushButton_Align_1.clicked.connect(self.model.measureMomentumAlign_1)
@@ -166,30 +168,35 @@ class Controller():
 
 
 	def updateDisplays(self):
-		print 'updateDisplays'
-		print os.system('caget CLA-S01-DIA-CAM-01:ANA:X_RBV')
+		#print 'updateDisplays'
+		#print os.system('caget CLA-S01-DIA-CAM-01:ANA:X_RBV')
+		#print 'uD1'
+		#print self.model.Cbpms.getXFromPV('S02-BPM01')
+		#print 'uD2'
 		#print 'HERE WE ARE(updateDisplays)!!!!: BPM readout =', str(self.model.Cbpms.getXFromPV('C2V-BPM01'))
 		#self.view.label_predictMom_2.setText('S02-DIP-01 = '+str(self.model.Cmagnets.getSI('S02-DIP01'))+' A')
-		# self.view.label_predictMom.setText(str(self.model.predictedMomentum))
-		# self.view.label_predictI.setText(str(self.model.predictedI))
+		#self.view.label_predictMom.setText(str(self.model.predictedMomentum))
+		#self.view.label_predictI.setText(str(self.model.predictedI))
+		#self.view.doubleSpinBox_p.setValue(float(self.model.predictedMomentum))
+		#self.view.doubleSpinBox_I.setValue(float(self.model.predictedI))
 		self.view.label_I.setText('('+self.model.dipole+' = '+str(self.model.Cmagnets.getSI(self.model.dipole))+' A)')
-		# self.view.label_RF.setText('(show relevant RF settings...)')
-		#
-		# self.displayMom.setText('MOMENTUM<br> Current: '+str(self.model.I)+' A<br>'+str(self.model.p)+' = MeV/c')
+		self.view.label_RF.setText('(show relevant RF settings...)')
+
+		self.displayMom.setText('MOMENTUM<br> Current: '+str(self.model.I)+' A<br>'+str(self.model.p)+' = MeV/c')
 		self.bg1.setOpts(x=self.xdict.keys(), height=[1*self.model.Cbpms.getXFromPV('S02-BPM01'),1*self.model.Cbpms.getYFromPV('S02-BPM01')], width=1)# replace the random generators with  bpm x read offs
-		# #self.bg2.setOpts(x=self.xdict.keys(), height=[1*self.model.camerasIA.getSelectedIARef().IA.x,1*self.model.camerasIA.getSelectedIARef().IA.y], width=1)
-		# #print self.model.cam.getX('S02-CAM-02')
-		# self.bg2.setOpts(x=self.xdict.keys(), height=[1*self.model.cam.getX('S02-CAM-02'),1*self.model.cam.getY('S02-CAM-02')], width=1)
-		# self.bg3.setOpts(x=self.xdict.keys(), height=[1*self.model.Cbpms.getXFromPV('S02-BPM02'),1*self.model.Cbpms.getYFromPV('S02-BPM02')], width=1)
-		# self.bg4.setOpts(x=self.xdict.keys(), height=[1*self.model.Cbpms.getXFromPV('C2V-BPM01'),1*self.model.Cbpms.getYFromPV('C2V-BPM01')], width=1)
-		# self.dCurve.setData(x=self.model.dCurrents,y=self.model.dPositions)
-		# self.fCurve.setData(x=self.model.fCurrents,y=self.model.fPositions)
-		# self.displayDisp.setText('DISPERSION:<br>'+str(self.model.Dispersion)+' m/A')
-		# self.displayMom_S.setText('MOMENTUM SPREAD:<br>'+str(self.model.pSpread)+' MeV/c')
-		#
-		# self.view.label_H_1.setNum(self.model.Cbpms.getXFromPV('S02-BPM02'))
-		# self.view.label_H_2.setNum(self.model.cam.getX('S02-CAM-02'))
-		# self.view.label_H_3.setNum(self.model.Cbpms.getXFromPV('C2V-BPM01'))
+		#self.bg2.setOpts(x=self.xdict.keys(), height=[1*self.model.camerasIA.getSelectedIARef().IA.x,1*self.model.camerasIA.getSelectedIARef().IA.y], width=1)
+		#print self.model.cam.getX('S02-CAM-02')
+		self.bg2.setOpts(x=self.xdict.keys(), height=[1*self.model.cam.getX('S02-CAM-02'),1*self.model.cam.getY('S02-CAM-02')], width=1)
+		self.bg3.setOpts(x=self.xdict.keys(), height=[1*self.model.Cbpms.getXFromPV('S02-BPM02'),1*self.model.Cbpms.getYFromPV('S02-BPM02')], width=1)
+		self.bg4.setOpts(x=self.xdict.keys(), height=[1*self.model.Cbpms.getXFromPV('C2V-BPM01'),1*self.model.Cbpms.getYFromPV('C2V-BPM01')], width=1)
+		self.dCurve.setData(x=self.model.dCurrents,y=self.model.dPositions)
+		self.fCurve.setData(x=self.model.fCurrents,y=self.model.fPositions)
+		self.displayDisp.setText('DISPERSION:<br>'+str(self.model.Dispersion)+' m/A')
+		self.displayMom_S.setText('MOMENTUM SPREAD:<br>'+str(self.model.pSpread)+' MeV/c')
+
+		self.view.label_H_1.setNum(self.model.Cbpms.getXFromPV('S02-BPM02'))
+		self.view.label_H_2.setNum(self.model.cam.getX('S02-CAM-02'))
+		self.view.label_H_3.setNum(self.model.Cbpms.getXFromPV('C2V-BPM01'))
 	# def refreshImage(self):
 	# 	 #image = np.random.normal(size=(2560,2160))
 	# 	 cap = cv2.VideoCapture("http://192.168.83.31:7080/MJPG1.mjpg")

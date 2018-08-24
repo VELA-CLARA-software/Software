@@ -27,6 +27,7 @@ class Functions(QObject):
 
     #def __init__(self, OM = dummyOM()):
     def __init__(self, model):
+        super(Functions, self).__init__()
         self.model = model
         #QThread.__init__(self)
         #self.simulate = OM
@@ -38,27 +39,23 @@ class Functions(QObject):
         ctrl.setSI(magnet,setI)
         #self.simulate.run()
 
-	def getBPMPosition(self, ctrl, bpm):
-		# if self.machineType == 'None':
-		# 	value = np.random.random_sample()
-		# 	return value
-		# else:
-		# 	# print 'BPM ', bpm, ' = ', self.bpm.getXFromPV(bpm)
-		return ctrl.getXFromPV(bpm)
+    def getBPMPosition(self, ctrl, bpm):
+        return ctrl.getXFromPV(bpm)
 
     def getXBPM(self,ctrl,bpm,N):
         x=[]
         for i in range(N):
             #21/8/18 changed getXFromPV to getX
             a = ctrl.getX(bpm)
-            if ctrl.getBPMStatus(bpm) == BPM_STATUS.GOOD:
+            if ctrl.getBPMStatus(bpm) != BPM_STATUS.BAD:
                 x.append(a)
                 print a
             else:
                 N-=1
                 print a, 'shot excluded'
             time.sleep(0.1)
-        return sum(x)/N
+        if N > 1:
+            return sum(x)/N
 
     def getYBPM(self,ctrl,bpm,N):
         x=[]
@@ -81,7 +78,7 @@ class Functions(QObject):
             print str(camera),', x = ', str(self.model.cam.getX(camera))
             #print str(camera),', x = ', str(caget(camera+':ANA:X_RBV'))
             x.append(self.model.cam.getX(camera))
-            time.sleep(0.1)
+            time.sleep(0.2)
         return sum(x)/N
 
     def getSigmaXScreen(self,ctrl,camera,N):
@@ -177,6 +174,7 @@ class Functions(QObject):
         COR = [hctrl.getMagObjConstRef(hcor)]                                        #create a reference to the corrector
         #x1= self.getXBPM(sctrl, screen, N)                                            #get the x position on the screen
         x1 = self.getXScreen(sctrl, screen, N)
+        time.sleep(1)
         I1 = COR[0].siWithPol                                                        #x1,x2,I1,I2 are point to determine a straight linear relationship (I=mx+c)
         print 'I1', str(I1)
         x2=x1
@@ -191,9 +189,10 @@ class Functions(QObject):
             initialStep = initstep
         print 'here2'
         self.stepCurrent(hctrl, hcor, initialStep)
-        time.sleep(2)
+        time.sleep(3)
         #self.simulate.run()                                                        #take inital step
         x2=self.getXScreen(sctrl, screen, N)
+        time.sleep(1)
         I2=COR[0].siWithPol
         print 'here3'
         print 'before while, x1:', str(x1), 'x2', str(x2), 'tol', str(tol)
@@ -204,15 +203,16 @@ class Functions(QObject):
             I_o = (I1*(x2-off)-I2*(x1-off))/(x2-x1)                                           # find the zero-crossing of straight line mde from positions at currents I1 and I2
             print('Predicted current intercept at '+str(I_o))
             hctrl.setSI(hcor,I_o)
-            time.sleep(2)
+            time.sleep(3)
             QApplication.processEvents()
             #self.simulate.run()                                                    # set magnet to intercept current
             x1=x2                                                                #Get rid of first set of position and current
             I1=I2
             I2=(I_o+I1)/2
+            #I2 = 0.1*I_o+0.9*I1
             x2=self.getXScreen(sctrl, screen, N)
             print('Current at'+str(x2))
-            time.sleep(0.1)
+            time.sleep(1)
         if count<10:
             print('Aligned beam using ' + hcor + ' and ' + screen)
         else:
