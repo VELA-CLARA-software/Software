@@ -446,3 +446,45 @@ class Machine(object):
 
 	def applyDBURT(self, dburt):
 		return self.magnets.applyDBURT(dburt)
+
+	def getLLRFTrace(self, controller, trace):
+		controller.startTraceMonitoring(trace)
+		time.sleep(0.1)
+		controller.stopTraceMonitoring(trace)
+		return controller.getTraceValues(trace)
+
+	def getKlystronForwardPowerTrace(self, cavity='Gun'):
+		if cavity == 'Gun':
+			return self.getLLRFTrace(self.gunllrf,'KLYSTRON_FORWARD_POWER')
+		elif cavity == 'Linac1':
+			return self.getLLRFTrace(self.linac1llrf,'KLYSTRON_FORWARD_POWER')
+
+	def getKlystronReversePowerTrace(self, cavity='Gun'):
+		if cavity == 'Gun':
+			return self.getLLRFTrace(self.gunllrf,'KLYSTRON_REVERSE_POWER')
+		elif cavity == 'Linac1':
+			return self.getLLRFTrace(self.linac1llrf,'KLYSTRON_REVERSE_POWER')
+
+	def getCavityForwardPowerTrace(self, cavity='Gun'):
+		if cavity == 'Gun':
+			return self.getLLRFTrace(self.gunllrf,'LRRG_CAVITY_FORWARD_POWER')
+		elif cavity == 'Linac1':
+			return self.getLLRFTrace(self.linac1llrf,'L01_CAVITY_FORWARD_POWER')
+
+	def getCavityReversePowerTrace(self, cavity='Gun'):
+		if cavity == 'Gun':
+			return self.getLLRFTrace(self.gunllrf,'LRRG_CAVITY_REVERSE_POWER')
+		elif cavity == 'Linac1':
+			return self.getLLRFTrace(self.linac1llrf,'L01_CAVITY_REVERSE_POWER')
+
+	def getGunRFTraces(self, dict=False):
+		rftraces = ['LRRG_CAVITY_FORWARD_POWER', 'LRRG_CAVITY_REVERSE_POWER', 'KLYSTRON_FORWARD_POWER', 'KLYSTRON_REVERSE_POWER']
+		controller = self.gunllrf
+		controller.startTraceMonitoring()
+		time.sleep(0.1)
+		controller.stopTraceMonitoring()
+		data = {t: controller.getTraceValues(t) for t in rftraces}
+		if dict:
+			return data
+		else:
+			return [data[t] for t in rftraces]

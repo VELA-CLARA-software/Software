@@ -14,6 +14,12 @@ import Software.Widgets.loggerWidget.loggerWidget as lw
 import logging
 logger = logging.getLogger(__name__)
 
+def merge_two_dicts(x, y):
+    """Given two dicts, merge them into a new dict as a shallow copy."""
+    z = x.copy()
+    z.update(y)
+    return z
+
 class GenericThread(QThread):
 	def __init__(self, function, *args, **kwargs):
 		QThread.__init__(self)
@@ -473,4 +479,7 @@ class Controller(QObject):
 						if t in self.model.crestingData[c]:
 							mydata = {a: np.array(self.model.crestingData[c][t][a]) for a in ['xData', 'yData', 'yStd']}
 							filename = dir+timestr+'_'+c+'_'+t+'_crestingData.h5'
+							if cavity = 'Gun':
+								rfdata = self.model.machine.getGunRFTraces(dict=True)
+								mydata = merge_two_dicts(mydata,rfdata)
 							save_dict_to_hdf5(mydata, filename)
