@@ -478,12 +478,24 @@ class Machine(object):
 			return self.getLLRFTrace(self.linac1llrf,'L01_CAVITY_REVERSE_POWER')
 
 	def getGunRFTraces(self, dict=False):
-		rftraces = ['LRRG_CAVITY_FORWARD_POWER', 'LRRG_CAVITY_REVERSE_POWER', 'KLYSTRON_FORWARD_POWER', 'KLYSTRON_REVERSE_POWER']
+		rftraces = ['LRRG_CAVITY_FORWARD_POWER', 'LRRG_CAVITY_REVERSE_POWER', 'LRRG_CAVITY_FORWARD_PHASE', 'KLYSTRON_FORWARD_POWER', 'KLYSTRON_REVERSE_POWER', 'KLYSTRON_FORWARD_PHASE']
 		controller = self.gunllrf
 		controller.startTraceMonitoring()
-		time.sleep(0.1)
+		time.sleep(0.25)
 		controller.stopTraceMonitoring()
-		data = {t: controller.getTraceValues(t) for t in rftraces}
+		data = {t: np.array(controller.getTraceValues(t)) for t in rftraces}
+		if dict:
+			return data
+		else:
+			return [data[t] for t in rftraces]
+
+	def getLinac1RFTraces(self, dict=False):
+		rftraces = ['L01_CAVITY_FORWARD_POWER', 'L01_CAVITY_REVERSE_POWER', 'L01_CAVITY_FORWARD_PHASE', 'KLYSTRON_FORWARD_POWER', 'KLYSTRON_REVERSE_POWER', 'KLYSTRON_FORWARD_PHASE']
+		controller = self.linac1llrf
+		controller.startTraceMonitoring()
+		time.sleep(0.25)
+		controller.stopTraceMonitoring()
+		data = {t: np.array(controller.getTraceValues(t)) for t in rftraces}
 		if dict:
 			return data
 		else:
