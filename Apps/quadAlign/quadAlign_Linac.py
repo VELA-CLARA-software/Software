@@ -29,7 +29,8 @@ def setVCorrectors(v1):
 def doQuadScan():
 	global h1, h2, v1,v2
 	for no in range(1,5):
-		ans = qa.quadAligner(no=no, stepSize=2, nSamples=10, start=0.0, end=10, momentum=float(momentum))
+        quad = 'S02-QUAD'+str(no)
+		ans = qa.quadAligner(quad=quad, bpm='S02-BPM02', stepSize=2, nSamples=10, start=0.0, end=10, momentum=float(momentum))
 		data.append([h1,h2,v1,v2,ans[0],ans[1],ans[2]])
 
 

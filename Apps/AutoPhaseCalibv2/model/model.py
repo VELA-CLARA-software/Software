@@ -8,8 +8,15 @@ from scipy.interpolate import UnivariateSpline
 import random as r
 from functools import partial
 sys.path.append("../../../")
+from Software.Utils.dict_to_h5 import *
 import Software.Procedures.Machine.machine as machine
 degree = physics.pi/180.0
+
+def merge_two_dicts(x, y):
+    """Given two dicts, merge them into a new dict as a shallow copy."""
+    z = x.copy()
+    z.update(y)
+    return z
 
 class dataArray(dict):
 
@@ -227,6 +234,38 @@ class Model(object):
 		self.initialGuess = [10, 1, (stop+start)/2]
 		self.getDataFunction = partial(self.machine.getBPMPosition, self.parameters['linac_dispersive_bpm'][no])
 		self.findDipoleCurrent()
+
+	def saveData(self, cavity=None, type=None, savetoworkfolder=True):
+		if not self.machineType == 'None':
+			if cavity is not None and not isinstance(cavity, (tuple, list)):
+				cavity = [cavity]
+			elif cavity is None:
+				cavity = ['Gun', 'Linac1']
+			if type is not None and not isinstance(type, (tuple, list)):
+				type = [type]
+			elif type is None:
+				type = ['approx', 'fine', 'dipole','screen']
+			timestr = time.strftime("%H%M%S")
+			dir = '\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Work\\'+time.strftime("%Y\\%m\\%d")+'\\' if savetoworkfolder else '.'
+			try:
+				os.makedirs(dir)
+			except OSError:
+				if not os.path.isdir(dir):
+					self.logger.emit('Error creating directory - saving to local directory')
+					dir = '.'
+			for c in cavity:
+				if c in self.crestingData:
+					for t in type:
+						if t in self.crestingData[c]:
+							mydata = {a: np.array(self.crestingData[c][t][a]) for a in ['xData', 'yData', 'yStd']}
+							filename = dir+timestr+'_'+c+'_'+t+'_crestingData.h5'
+							if c == 'Gun':
+								rfdata = self.machine.getGunRFTraces(dict=True)
+								mydata = merge_two_dicts(mydata,rfdata)
+							elif c == 'Linac1':
+								rfdata = self.machine.getLinac1RFTraces(dict=True)
+								mydata = merge_two_dicts(mydata,rfdata)
+							save_dict_to_hdf5(mydata, filename)
 
 	def gunPhaser(self, gunPhaseSet=0, offset=True):
 		if isinstance(self.crestingData['Gun']['calibrationPhase'],(float, int)) and isinstance(gunPhaseSet, (float, int)):

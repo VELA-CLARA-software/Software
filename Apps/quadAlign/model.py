@@ -93,21 +93,21 @@ class Model(object):
 		print("Model Initialized")
 
 
-	def quadAligner(self, no=1, stepSize=1, nSamples=4, start=0, end=10, momentum=35):
-		self.quad = 'S02-QUAD'+str(no)
+	def quadAligner(self, quad, bpm, stepSize=1, nSamples=4, start=0, end=10, momentum=35):
+		self.quad = quad#'S02-QUAD'+str(no)
+        self.bpm = bpm
 		self.momentum = momentum
 		self.quadLength = self.machine.magnets.getMagneticLength(self.quad)/1000.0
-		bpmpos = self.machine.bpms.getPosition('S02-BPM02')
+		bpmpos = self.machine.bpms.getPosition(self.bpm)
 		quadpos = self.machine.magnets.getPosition(self.quad)
 		self.driftLength = bpmpos-quadpos
 		# print bpmpos, quadpos, self.driftLength
 		self.actuator = 'alignment'
-		self.quadNo = no
 		self.stepSize = stepSize
 		self.nSamples = nSamples
 		self.startI = start
 		self.endI = end
-		self.dataFunction = [partial(self.machine.getBPMPosition, 'S02-BPM02'),partial(self.machine.getBPMPosition, 'S02-BPM02', plane='Y')]
+		self.dataFunction = [partial(self.machine.getBPMPosition, self.bpm),partial(self.machine.getBPMPosition, self.bpm, plane='Y')]
 		return self.doQuadAlignment()#
 
 	def getDataFunction(self):

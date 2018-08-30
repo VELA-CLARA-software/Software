@@ -9,6 +9,7 @@ import random as r
 from functools import partial
 sys.path.append("../../../")
 import Software.Procedures.Machine.machine as machine
+from Software.Utils.dict_to_h5 import *
 degree = physics.pi/180.0
 import pandas as pd
 from collections import OrderedDict
@@ -122,8 +123,8 @@ class Model(object):
 		print('1. Setting up Magnets')
 		self.setUpMagnets(self.parameters['magnets'])
 
-	def getDataFunctiona(self):
-		self.bpms()
+	def getDataFunction(self):
+		return [m() for m in self.monitors]
 
 	def sol1Scan(self, plane, ampLower, ampUpper, corr1Range, corr2Range, corrStep, nSamples):
 		self.main = 'L01-SOL1'
@@ -142,7 +143,7 @@ class Model(object):
 		self.solLowerAmp = ampLower
 		self.solUpperAmp = ampUpper
 		self.nSamples = nSamples
-		self.bpms = [partial(self.machine.getBPMPosition, 'S02-BPM01', plane)]
+		self.monitors = [partial(self.machine.getBPMPosition, 'S02-BPM01', plane)]
 		self.findSOLCentre()
 
 	def sol2Scan(self, plane, ampLower, ampUpper, corr1Range, corr2Range, corrStep, nSamples):
@@ -162,7 +163,7 @@ class Model(object):
 		self.solLowerAmp = ampLower
 		self.solUpperAmp = ampUpper
 		self.nSamples = nSamples
-		self.bpms = [partial(self.machine.getBPMPosition, 'S02-BPM01', plane), partial(self.machine.getBPMPosition, 'S02-BPM02', plane)]
+		self.monitors = [partial(self.machine.getBPMPosition, 'S02-BPM01', plane), partial(self.machine.getBPMPosition, 'S02-BPM02', plane)]
 		self.findSOLCentre()
 
 	def linac1Scan(self, actuator, plane, ampLower, ampUpper, corr1Range, corr2Range, corrStep, nSamples):
@@ -182,7 +183,7 @@ class Model(object):
 		self.linacUpperAmp = ampUpper
 		self.nSamples = nSamples
 		# self.machine.cameras.startAcquiring('S02-YAG-02')
-		self.getDataFunction = partial(self.machine.getBPMPosition, 'S02-BPM01', plane=self.plane)
+		self.monitors = [partial(self.machine.getBPMPosition, 'S02-BPM01', plane=self.plane), partial(self.machine.getBPMPosition, 'S02-BPM02', plane=self.plane)]
 		self.findRFCentre2D()
 
 	def linac1BLMScan(self, actuator, ampLower, ampUpper, nSamples):
@@ -202,7 +203,7 @@ class Model(object):
 		self.linacLowerAmp = ampLower
 		self.linacUpperAmp = ampUpper
 		self.nSamples = nSamples
-		self.bpms = [partial(self.machine.getBPMPosition, 'S02-BPM01', plane='X'), partial(self.machine.getBPMPosition, 'S02-BPM02', plane='X'), \
+		self.monitors = [partial(self.machine.getBPMPosition, 'S02-BPM01', plane='X'), partial(self.machine.getBPMPosition, 'S02-BPM02', plane='X'), \
 					 partial(self.machine.getBPMPosition, 'S02-BPM01', plane='Y'), partial(self.machine.getBPMPosition, 'S02-BPM02', plane='Y'), \
 					]
 		self.findRFCentreBLM()
@@ -275,8 +276,11 @@ class Model(object):
 		while len(self.data) < self.nSamples:
 			self.data.append(self.getDataFunction())
 			time.sleep(self.sleepTime)
-		self.data = [a for a in self.data if a is not float('nan')]
-		return np.array([np.mean(self.data), np.std(self.data)] if np.std(self.data) > 0.001 else [float('nan'),0])
+		# print 'self.data before zip = ', self.data
+		self.data = zip(*[[a for a in b if a is not float('nan')] for b in self.data])
+		# print 'self.data after zip = ', self.data
+		# print 'self.data final = ',
+		return np.array([[np.mean(a), np.std(a)] if np.std(a) > 0.001 else [float('nan'),0] for a in self.data])
 
 
 ########### findRFCentreBLM ###############
@@ -443,7 +447,7 @@ class Model(object):
 						self._abort = False
 						return 0
 					print 'linac = ', self.linacLowerAmp, '  c1 = ', c1, '  c2 = ', c2
-					data1 = self.getData()[0]
+					data1 = self.getData()[:,0]
 					print 'data1 = ', data1
 					if self.verbose:
 						logfile.write('data1,'+str(self.linacLowerAmp)+','+str(c1)+','+str(c2)+','+str(data1))
@@ -464,7 +468,7 @@ class Model(object):
 					while abs(self.machine.getCorr(self.corrector1) - c1) > 0.05 or abs(self.machine.getCorr(self.corrector2) - c2) > 0.05:
 						time.sleep(self.sleepTime)
 					print 'linac = ', self.linacUpperAmp, '  c1 = ', c1, '  c2 = ', c2
-					data2 = self.getData()[0]
+					data2 = self.getData()[:,0]
 					print 'data2 = ', data2
 					if self.verbose:
 						logfile.write('data2,'+str(self.linacUpperAmp)+','+str(c1)+','+str(c2)+','+str(data2))
@@ -486,22 +490,23 @@ class Model(object):
 					self.rawData['z2'].append(data2)
 					# diff = np.mean(np.array([abs(a[1] - a[0]) if a[0] < 20 and a[1] < 20 else 20 for a in zip(data1,data2)]))
 					# print data1, data2
-					diff = (data2 - data1)**2
-					if np.isnan(diff) or np.isnan(data1) or np.isnan(data2):
+					diff = np.array([(a-b)**2 for a,b in zip(data2, data1)])
+					if all(np.isnan(a) for a in diff):# or np.isnan(data1) or np.isnan(data2):
 						diff = 100
-					print 'diff = ', diff
+					# print 'diff = ', diff
 					self.rawData['diff'].append(diff)
 					if self.verbose:
 						logfile.write('diff,'+str(self.linacUpperAmp)+','+str(c1)+','+str(c2)+','+str(data1)+','+str(data2)+','+str(diff))
 					self.setDataArray(c1, c2, diff)
 		if self.verbose:
 			self.saveLinacData2D()
-		self.doFitRFCentre2D(c1, c2, diff)
+		self.doFitRFCentre2D()
 
-	def doFitRFCentre2D(self, c1, c2, diff):
+	def doFitRFCentre2D(self):
 		c1, c2, diff = self.getDataArray(zipped=False)
-		# print data
+		diff = [np.mean(a) for a in diff]
 		data = zip(c1, c2, diff)
+		print data
 		val, idx = max((val, idx) for (idx, val) in enumerate(diff))
 		print 'max parameters ['+"{0:.2f}".format(diff[idx])+']: ' + self.corrector1 + ' = ' + str(c1[idx]) + 'A   ' + self.corrector2 + ' = ' + str(c2[idx]) + 'A'
 		val, idx = min((val, idx) for (idx, val) in enumerate(diff))
@@ -522,7 +527,9 @@ class Model(object):
 	def saveLinacData2D(self):
 		df = pd.DataFrame(self.rawData)
 		df.columns = ['x', 'y', 'z1', 'z2', 'diff']
-		df.to_csv(self.timestr+'_LinacCentring_'+self.main+'_'+self.plane+'_'+str(self.linacLowerAmp)+'_'+str(self.linacUpperAmp)+'_rawData.csv', index=0)
+		filename = self.timestr+'_LinacCentring_'+self.main+'_'+self.plane+'_'+str(self.linacLowerAmp)+'_'+str(self.linacUpperAmp)+'_rawData'
+		df.to_csv(filename+'.csv', index=0)
+		save_dict_to_hdf5(self.rawData, filename+'.h5')
 
 ########### findSOLCentre ###############
 

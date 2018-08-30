@@ -8,7 +8,6 @@ import numpy as np
 import pyqtgraph as pg
 from  functools import partial
 sys.path.append("../../../")
-from Software.Utils.dict_to_h5 import *
 from Software.Procedures.Machine.signaller import machineReciever, machineSignaller
 import Software.Widgets.loggerWidget.loggerWidget as lw
 import logging
@@ -449,28 +448,5 @@ class Controller(QObject):
 			self.saveData(cavity=[self.cavity], type=[self.actuator])
 
 	def saveData(self, cavity=None, type=None):
-		if not self.model.machineType == 'None':
-			self.enableButtons()
-			if cavity is not None and not isinstance(cavity, (tuple, list)):
-				cavity = [cavity]
-			elif cavity is None:
-				cavity = ['Gun', 'Linac1']
-			if type is not None and not isinstance(type, (tuple, list)):
-				type = [type]
-			elif type is None:
-				type = ['approx', 'fine', 'dipole','screen']
-			timestr = time.strftime("%H%M%S")
-			dir = '\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Work\\'+time.strftime("%Y\\%m\\%d")+'\\' if self.view.actionSave_to_Work_Folder.isChecked() else '.'
-			try:
-				os.makedirs(dir)
-			except OSError:
-				if not os.path.isdir(dir):
-					self.loggerSignal.emit('Error creating directory - saving to local directory')
-					dir = '.'
-			for c in cavity:
-				if c in self.model.crestingData:
-					for t in type:
-						if t in self.model.crestingData[c]:
-							mydata = {a: np.array(self.model.crestingData[c][t][a]) for a in ['xData', 'yData', 'yStd']}
-							filename = dir+timestr+'_'+c+'_'+t+'_crestingData.h5'
-							save_dict_to_hdf5(mydata, filename)
+		self.enableButtons()
+		self.model.saveData(cavity=cavity, type=type, savetoworkfolder=self.view.actionSave_to_Work_Folder.isChecked())
