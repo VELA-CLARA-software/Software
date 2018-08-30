@@ -47,9 +47,10 @@ class Functions(QObject):
         for i in range(N):
             #21/8/18 changed getXFromPV to getX
             a = ctrl.getX(bpm)
-            if ctrl.getBPMStatus(bpm) != BPM_STATUS.BAD:
+            print ctrl.getBPMStatus(bpm)
+            if ctrl.getBPMStatus(bpm) == BPM_STATUS.GOOD:
                 x.append(a)
-                print a
+                print a, 'shot ok'
             else:
                 N-=1
                 print a, 'shot excluded'
@@ -148,21 +149,32 @@ class Functions(QObject):
         print 'here3'
         print 'before while, x1:', str(x1), 'x2', str(x2), 'tol', str(tol)
         count = 1
-        while(abs(x2-off)>tol) and count<10:                                                            # Algorithm loops until the current position is < the tolerance 'tol'
+        while (abs(x2-off)>tol) and count<10 and abs(x2-x1)>(tol/10):                                                            # Algorithm loops until the current position is < the tolerance 'tol'
             count+=1
-            print 'in while, x1:', str(x1), 'x2', str(x2), 'tol', str(tol)
-            I_o = (I1*(x2-off)-I2*(x1-off))/(x2-x1)                                            # find the zero-crossing of straight line mde from positions at currents I1 and I2
+            print 'in while, I1:', str(I1), 'x1', str(x1), 'I2', str(I2), 'x2', str(x2), 'tol', str(tol), 'diff', str(x2-off), 'off', off
+            time.sleep(0.1)
+            I_o = (I1*(x2-off)-I2*(x1-off))/(x2-x1)
+            if abs(I_o) > 5:
+                print 'Current over 5 A'
+                count = 10                                          # find the zero-crossing of straight line mde from positions at currents I1 and I2
             print('Predicted current intercept at '+str(I_o))
+            #I_o = (I_o+I_2)/2
+            I_o = (I_o+I2)/2
             hctrl.setSI(hcor,I_o)
-            time.sleep(1)
+            while (abs(hctrl.getSI(hcor) - I_o) > 0.005):
+                print 'Waiting for corrector, set=', I_o, 'read=', hctrl.getSI(hcor), 'diff=', abs(hctrl.getSI(hcor) - I_o)
+                time.sleep(0.01)
+            #time.sleep(1)
             QApplication.processEvents()
             #self.simulate.run()                                                    # set magnet to intercept current
             x1=x2                                                                #Get rid of first set of position and current
             I1=I2
-            I2=(I_o+I1)/2
+            I2=I_o#(I_o+I1)/2
             x2=self.getXBPM(bctrl, bpm, N)
-            print('Current at'+str(x2))
+            #print('Current at'+str(x2))
             time.sleep(0.1)
+            print 'Current at ', I2
+            time.sleep(1)
         if count<10:
             print('Aligned beam using ' + hcor + ' and ' + bpm)
         else:
@@ -201,6 +213,7 @@ class Functions(QObject):
             count+=1                                                            # Algorithm loops until the current position is < the tolerance 'tol'
             print 'in while, x1:', str(x1), 'x2', str(x2), 'tol', str(tol)
             I_o = (I1*(x2-off)-I2*(x1-off))/(x2-x1)                                           # find the zero-crossing of straight line mde from positions at currents I1 and I2
+            I_o = (I_o+I2)/2
             print('Predicted current intercept at '+str(I_o))
             hctrl.setSI(hcor,I_o)
             time.sleep(3)
@@ -208,7 +221,7 @@ class Functions(QObject):
             #self.simulate.run()                                                    # set magnet to intercept current
             x1=x2                                                                #Get rid of first set of position and current
             I1=I2
-            I2=(I_o+I1)/2
+            I2=I_o#(I_o+I1)/2
             #I2 = 0.1*I_o+0.9*I1
             x2=self.getXScreen(sctrl, screen, N)
             print('Current at'+str(x2))
@@ -272,9 +285,9 @@ class Functions(QObject):
 
     def bendBeam(self,dctrl,dipole,bctrl,bpm,screen, IMin, IMax, tol, N=10):
         DIP = dctrl.getMagObjConstRef(dipole)                                    #create a reference to the dipole
-        step = (IMin+IMax)/100                                                    #1% of predicted current
+        step = (IMin+IMax)/200                                                    #1% of predicted current
         setI = IMin#0.95*predictedI
-        print ('95% of predicted current is: ',setI)
+        #print ('95% of predicted current is: ',setI)
         dctrl.setSI(dipole,setI)
         time.sleep(2)
         print self.getXBPM(bctrl, bpm, N)
@@ -579,21 +592,25 @@ class Functions(QObject):
     '''The following has been altered to work with the online model (400.0033)'''
     def calcMomSpread(self,dctrl,dipole, Is, I):
         D = dctrl.getMagObjConstRef(dipole)
-        mom1= (400.0033/D.magneticLength)*(np.polyval(D.fieldIntegralCoefficients, abs(I-Is))*physics.c*180)/(45*physics.pi*1000000000)
-        mom2= (400.0033/D.magneticLength)*(np.polyval(D.fieldIntegralCoefficients, abs(Is+I))*physics.c*180)/(45*physics.pi*1000000000)
+        #mom1= (400.0033/D.magneticLength)*(np.polyval(D.fieldIntegralCoefficients, abs(I-Is))*physics.c*180)/(45*physics.pi*1000000000)
+        #mom2= (400.0033/D.magneticLength)*(np.polyval(D.fieldIntegralCoefficients, abs(Is+I))*physics.c*180)/(45*physics.pi*1000000000)
+        mom1= (np.polyval(D.fieldIntegralCoefficients, abs(I-Is))*physics.c*180)/(45*physics.pi*1000000000)
+        mom2= (np.polyval(D.fieldIntegralCoefficients, abs(Is+I))*physics.c*180)/(45*physics.pi*1000000000)
         print(mom1-mom2)/2
         return abs(mom1-mom2)/2
 
     def calcMom(self, dctrl,dipole, I):
         D = dctrl.getMagObjConstRef(dipole)
-        return (400.0033/D.magneticLength)*(np.polyval(D.fieldIntegralCoefficients, abs(I))*physics.c*180)/(45*physics.pi*1000000000)
+        #return (400.0033/D.magneticLength)*(np.polyval(D.fieldIntegralCoefficients, abs(I))*physics.c*180)/(45*physics.pi*1000000000)
+        return (np.polyval(D.fieldIntegralCoefficients, abs(I))*physics.c*180)/(45*physics.pi*1000000000)
 
     def mom2I(self,dctrl,dipole,mom):
         D = dctrl.getMagObjConstRef(dipole)
         coeffs = list(D.fieldIntegralCoefficients)
         #print coeffs
         #print(1000000000*(mom*physics.pi*45)/(physics.c*180))
-        coeffs[-1] -= (D.magneticLength/400.0033)*(1000000000*(mom*physics.pi*45)/(physics.c*180))
+        #coeffs[-1] -= (D.magneticLength/400.0033)*(1000000000*(mom*physics.pi*45)/(physics.c*180))
+        coeffs[-1] -= (1000000000*(mom*physics.pi*45)/(physics.c*180))
         roots = np.roots(coeffs)
         current = roots[-1].real
         return current

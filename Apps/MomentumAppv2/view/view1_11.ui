@@ -593,6 +593,9 @@ QLabel{ background-color: rgba(0,0,0,0%);}</string>
             </property>
            </widget>
            <widget class="QPushButton" name="pushButton_useRF">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="geometry">
              <rect>
               <x>430</x>
@@ -651,6 +654,9 @@ QLabel{ background-color: rgba(0,0,0,0%);}</string>
             </property>
            </widget>
            <widget class="QLabel" name="label_RF">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="geometry">
              <rect>
               <x>430</x>
@@ -765,34 +771,6 @@ QLabel{ background-color: rgba(0,0,0,0%);}
              <string>Preliminaries:</string>
             </property>
             <layout class="QGridLayout" name="gridLayout">
-             <item row="0" column="0">
-              <widget class="QPushButton" name="pushButton_Prelim_1">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="minimumSize">
-                <size>
-                 <width>140</width>
-                 <height>0</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>16777215</width>
-                 <height>16777215</height>
-                </size>
-               </property>
-               <property name="text">
-                <string>1. Recalibrate BPMs</string>
-               </property>
-               <property name="checked">
-                <bool>false</bool>
-               </property>
-              </widget>
-             </item>
              <item row="1" column="0">
               <widget class="QPushButton" name="pushButton_Prelim_3">
                <property name="sizePolicy">
@@ -815,6 +793,37 @@ QLabel{ background-color: rgba(0,0,0,0%);}
                </property>
                <property name="text">
                 <string>2. Degauss to zero: S02-DIP01, QUAD-03,04,05 (Closes laser shutters while degaussing)</string>
+               </property>
+               <property name="checked">
+                <bool>false</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QPushButton" name="pushButton_Prelim_1">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>140</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>1. Recalibrate BPMs</string>
                </property>
                <property name="checked">
                 <bool>false</bool>
@@ -1305,6 +1314,19 @@ QLabel{ background-color: rgba(0,0,0,0%);}
              </property>
              <property name="text">
               <string>^ Default targets are expected centres</string>
+             </property>
+            </widget>
+            <widget class="QLabel" name="label_24">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>100</y>
+               <width>261</width>
+               <height>16</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Check ImageCollector cross-hair is tracking</string>
              </property>
             </widget>
            </widget>
@@ -1854,6 +1876,9 @@ QLabel{ background-color: rgba(0,0,0,0%);}
             </widget>
            </widget>
            <widget class="QGroupBox" name="groupBox_6">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="geometry">
              <rect>
               <x>340</x>
@@ -1866,7 +1891,7 @@ QLabel{ background-color: rgba(0,0,0,0%);}
              <font>
               <weight>50</weight>
               <bold>false</bold>
-              <strikeout>true</strikeout>
+              <strikeout>false</strikeout>
              </font>
             </property>
             <property name="styleSheet">
@@ -1908,7 +1933,7 @@ QLabel{ background-color: rgba(0,0,0,0%);}
              </property>
              <property name="font">
               <font>
-               <strikeout>true</strikeout>
+               <strikeout>false</strikeout>
               </font>
              </property>
              <property name="text">
@@ -1960,6 +1985,9 @@ QLabel{ background-color: rgba(0,0,0,0%);}
            </widget>
           </widget>
           <widget class="QComboBox" name="comboBox_dipole">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="geometry">
             <rect>
              <x>440</x>
@@ -1970,7 +1998,7 @@ QLabel{ background-color: rgba(0,0,0,0%);}
            </property>
            <property name="font">
             <font>
-             <strikeout>true</strikeout>
+             <strikeout>false</strikeout>
             </font>
            </property>
            <item>
@@ -1980,6 +2008,9 @@ QLabel{ background-color: rgba(0,0,0,0%);}
            </item>
           </widget>
           <widget class="QLabel" name="label_I_3">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="geometry">
             <rect>
              <x>348</x>
@@ -1996,7 +2027,7 @@ QLabel{ background-color: rgba(0,0,0,0%);}
            </property>
            <property name="font">
             <font>
-             <strikeout>true</strikeout>
+             <strikeout>false</strikeout>
             </font>
            </property>
            <property name="text">
@@ -2116,6 +2147,9 @@ QLabel{ background-color: rgba(0,0,0,0%);}
             </widget>
            </widget>
            <widget class="QGroupBox" name="groupBox_11">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="geometry">
              <rect>
               <x>330</x>
@@ -2128,7 +2162,7 @@ QLabel{ background-color: rgba(0,0,0,0%);}
              <font>
               <weight>50</weight>
               <bold>false</bold>
-              <strikeout>true</strikeout>
+              <strikeout>false</strikeout>
              </font>
             </property>
             <property name="styleSheet">
@@ -2140,6 +2174,9 @@ QLabel{ background-color: rgba(0,0,0,0%);}
              <string>Set momentum:</string>
             </property>
             <widget class="QLineEdit" name="lineEdit_roughRFMax">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
              <property name="geometry">
               <rect>
                <x>250</x>
@@ -2150,6 +2187,9 @@ QLabel{ background-color: rgba(0,0,0,0%);}
              </property>
             </widget>
             <widget class="QLabel" name="label_8">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
              <property name="geometry">
               <rect>
                <x>10</x>
@@ -2160,7 +2200,7 @@ QLabel{ background-color: rgba(0,0,0,0%);}
              </property>
              <property name="font">
               <font>
-               <strikeout>true</strikeout>
+               <strikeout>false</strikeout>
               </font>
              </property>
              <property name="text">
@@ -2168,6 +2208,9 @@ QLabel{ background-color: rgba(0,0,0,0%);}
              </property>
             </widget>
             <widget class="QPushButton" name="pushButton_roughCentreC2VRF">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
              <property name="geometry">
               <rect>
                <x>10</x>
@@ -2189,6 +2232,9 @@ QLabel{ background-color: rgba(0,0,0,0%);}
              </property>
             </widget>
             <widget class="QLineEdit" name="lineEdit_roughRFMin">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
              <property name="geometry">
               <rect>
                <x>182</x>
@@ -2199,6 +2245,9 @@ QLabel{ background-color: rgba(0,0,0,0%);}
              </property>
             </widget>
             <widget class="QPushButton" name="pushButton_roughGetRFRange">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
              <property name="geometry">
               <rect>
                <x>10</x>

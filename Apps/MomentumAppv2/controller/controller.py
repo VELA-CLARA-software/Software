@@ -57,7 +57,7 @@ class Controller():
 		# self.YAGImage = pg.ImageItem(np.random.normal(size=(2560,2160)))
 		# yagImageBox.addItem(self.YAGImage)
 
-		self.scanGraph = layout.addPlot(title = 'Latest scan', colspan=3)
+		self.scanGraph = layout.addPlot(title = 'Latest scan', colspan=3, labels = {'left': 'BPM readout [mm]', 'bottom': 'Dipole current [A]'})
 		#x1=[0, 1, 2, 3]
 		#y1=[0, 1, 4, 9]
 		#self.sp = pg.ScatterPlotItem()
@@ -108,7 +108,7 @@ class Controller():
 
 		'''Connections to GUI Buttons'''
 		self.view.comboBox_selectRF.currentIndexChanged.connect(self.model.selectRF)
-
+		self.view.comboBox_selectRF.activated.connect(self.model.selectRF)
 		#self.view.lineEdit_selectCurrent.editingFinished.connect(self.model.selectCurrent)
 		self.view.doubleSpinBox_I.valueChanged.connect(self.model.selectCurrent)
 		self.view.pushButton_useCurrent.clicked.connect(self.model.useCurrent)
@@ -182,13 +182,16 @@ class Controller():
 		self.view.label_I.setText('('+self.model.dipole+' = '+str(self.model.Cmagnets.getSI(self.model.dipole))+' A)')
 		self.view.label_RF.setText('(show relevant RF settings...)')
 
-		self.displayMom.setText('MOMENTUM<br> Current: '+str(self.model.I)+' A<br>'+str(self.model.p)+' = MeV/c')
+		self.displayMom.setText('Approx. Momentum<br> Current: '+str(self.model.approxI)+' A<br>'+str(self.model.approx_p)+' = MeV/c<br><br>MOMENTUM<br> Current: '+str(self.model.I)+' A<br>'+str(self.model.p)+' = MeV/c')
 		self.bg1.setOpts(x=self.xdict.keys(), height=[1*self.model.Cbpms.getXFromPV('S02-BPM01'),1*self.model.Cbpms.getYFromPV('S02-BPM01')], width=1)# replace the random generators with  bpm x read offs
 		#self.bg2.setOpts(x=self.xdict.keys(), height=[1*self.model.camerasIA.getSelectedIARef().IA.x,1*self.model.camerasIA.getSelectedIARef().IA.y], width=1)
 		#print self.model.cam.getX('S02-CAM-02')
 		self.bg2.setOpts(x=self.xdict.keys(), height=[1*self.model.cam.getX('S02-CAM-02'),1*self.model.cam.getY('S02-CAM-02')], width=1)
 		self.bg3.setOpts(x=self.xdict.keys(), height=[1*self.model.Cbpms.getXFromPV('S02-BPM02'),1*self.model.Cbpms.getYFromPV('S02-BPM02')], width=1)
 		self.bg4.setOpts(x=self.xdict.keys(), height=[1*self.model.Cbpms.getXFromPV('C2V-BPM01'),1*self.model.Cbpms.getYFromPV('C2V-BPM01')], width=1)
+
+		self.sp.setData(self.model.dipCurrent, self.model.BPMPosition)
+		#self.sp.setData(x,y)
 		self.dCurve.setData(x=self.model.dCurrents,y=self.model.dPositions)
 		self.fCurve.setData(x=self.model.fCurrents,y=self.model.fPositions)
 		self.displayDisp.setText('DISPERSION:<br>'+str(self.model.Dispersion)+' m/A')
