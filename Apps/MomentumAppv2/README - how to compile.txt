@@ -1,0 +1,1 @@
+pyinstaller.exe --onefile --noconfirm MomentumApp.spec

@@ -533,15 +533,18 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
               <number>3</number>
              </property>
              <property name="singleStep">
-              <double>0.010000000000000</double>
+              <double>0.100000000000000</double>
              </property>
              <property name="value">
-              <double>0.010000000000000</double>
+              <double>0.500000000000000</double>
              </property>
             </widget>
            </item>
            <item row="5" column="12">
             <widget class="QDoubleSpinBox" name="doubleSpinBox_H_5">
+             <property name="keyboardTracking">
+              <bool>false</bool>
+             </property>
              <property name="minimum">
               <double>-150.000000000000000</double>
              </property>
@@ -558,6 +561,9 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
            </item>
            <item row="6" column="12">
             <widget class="QDoubleSpinBox" name="doubleSpinBox_H_6">
+             <property name="keyboardTracking">
+              <bool>false</bool>
+             </property>
              <property name="minimum">
               <double>-150.000000000000000</double>
              </property>
@@ -591,10 +597,10 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
               <number>3</number>
              </property>
              <property name="singleStep">
-              <double>0.010000000000000</double>
+              <double>0.100000000000000</double>
              </property>
              <property name="value">
-              <double>0.010000000000000</double>
+              <double>0.500000000000000</double>
              </property>
             </widget>
            </item>
@@ -656,6 +662,9 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
            </item>
            <item row="6" column="13">
             <widget class="QDoubleSpinBox" name="doubleSpinBox_V_6">
+             <property name="keyboardTracking">
+              <bool>false</bool>
+             </property>
              <property name="minimum">
               <double>-10.000000000000000</double>
              </property>
@@ -771,10 +780,10 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
               <number>3</number>
              </property>
              <property name="singleStep">
-              <double>0.010000000000000</double>
+              <double>0.100000000000000</double>
              </property>
              <property name="value">
-              <double>0.010000000000000</double>
+              <double>0.500000000000000</double>
              </property>
             </widget>
            </item>
@@ -872,6 +881,9 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
            </item>
            <item row="5" column="13">
             <widget class="QDoubleSpinBox" name="doubleSpinBox_V_5">
+             <property name="keyboardTracking">
+              <bool>false</bool>
+             </property>
              <property name="minimum">
               <double>-10.000000000000000</double>
              </property>
@@ -888,6 +900,9 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
            </item>
            <item row="4" column="13">
             <widget class="QDoubleSpinBox" name="doubleSpinBox_V_4">
+             <property name="keyboardTracking">
+              <bool>false</bool>
+             </property>
              <property name="minimum">
               <double>-10.000000000000000</double>
              </property>
@@ -904,6 +919,9 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
            </item>
            <item row="4" column="12">
             <widget class="QDoubleSpinBox" name="doubleSpinBox_H_4">
+             <property name="keyboardTracking">
+              <bool>false</bool>
+             </property>
              <property name="minimum">
               <double>-150.000000000000000</double>
              </property>
@@ -1055,6 +1073,9 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
            </item>
            <item row="1" column="12">
             <widget class="QDoubleSpinBox" name="doubleSpinBox_H_1">
+             <property name="keyboardTracking">
+              <bool>false</bool>
+             </property>
              <property name="minimum">
               <double>-10.000000000000000</double>
              </property>
@@ -1163,10 +1184,10 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
               <number>3</number>
              </property>
              <property name="singleStep">
-              <double>0.010000000000000</double>
+              <double>0.100000000000000</double>
              </property>
              <property name="value">
-              <double>0.010000000000000</double>
+              <double>0.500000000000000</double>
              </property>
             </widget>
            </item>
@@ -1176,10 +1197,10 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
               <number>3</number>
              </property>
              <property name="singleStep">
-              <double>0.010000000000000</double>
+              <double>0.100000000000000</double>
              </property>
              <property name="value">
-              <double>0.010000000000000</double>
+              <double>0.500000000000000</double>
              </property>
             </widget>
            </item>
@@ -1200,6 +1221,9 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
            </item>
            <item row="1" column="13">
             <widget class="QDoubleSpinBox" name="doubleSpinBox_V_1">
+             <property name="keyboardTracking">
+              <bool>false</bool>
+             </property>
              <property name="minimum">
               <double>-10.000000000000000</double>
              </property>
@@ -1216,6 +1240,9 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
            </item>
            <item row="3" column="13">
             <widget class="QDoubleSpinBox" name="doubleSpinBox_V_3">
+             <property name="keyboardTracking">
+              <bool>false</bool>
+             </property>
              <property name="minimum">
               <double>-10.000000000000000</double>
              </property>
@@ -1273,6 +1300,9 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
            </item>
            <item row="2" column="12">
             <widget class="QDoubleSpinBox" name="doubleSpinBox_H_2">
+             <property name="keyboardTracking">
+              <bool>false</bool>
+             </property>
              <property name="minimum">
               <double>-10.000000000000000</double>
              </property>
@@ -1337,6 +1367,9 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
            </item>
            <item row="3" column="12">
             <widget class="QDoubleSpinBox" name="doubleSpinBox_H_3">
+             <property name="keyboardTracking">
+              <bool>false</bool>
+             </property>
              <property name="minimum">
               <double>-10.000000000000000</double>
              </property>
@@ -1401,6 +1434,9 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
            </item>
            <item row="2" column="13">
             <widget class="QDoubleSpinBox" name="doubleSpinBox_V_2">
+             <property name="keyboardTracking">
+              <bool>false</bool>
+             </property>
              <property name="minimum">
               <double>-10.000000000000000</double>
              </property>
@@ -1667,10 +1703,10 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
               <number>3</number>
              </property>
              <property name="singleStep">
-              <double>0.010000000000000</double>
+              <double>0.100000000000000</double>
              </property>
              <property name="value">
-              <double>0.010000000000000</double>
+              <double>0.500000000000000</double>
              </property>
             </widget>
            </item>
@@ -1823,8 +1859,6 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
              <property name="font">
               <font>
                <pointsize>-1</pointsize>
-               <weight>75</weight>
-               <bold>true</bold>
               </font>
              </property>
              <property name="styleSheet">
@@ -1840,8 +1874,6 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
              <property name="font">
               <font>
                <pointsize>-1</pointsize>
-               <weight>75</weight>
-               <bold>true</bold>
               </font>
              </property>
              <property name="styleSheet">
@@ -1864,8 +1896,6 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
              <property name="font">
               <font>
                <pointsize>-1</pointsize>
-               <weight>75</weight>
-               <bold>true</bold>
               </font>
              </property>
              <property name="styleSheet">
@@ -1881,8 +1911,6 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
              <property name="font">
               <font>
                <pointsize>-1</pointsize>
-               <weight>75</weight>
-               <bold>true</bold>
               </font>
              </property>
              <property name="styleSheet">

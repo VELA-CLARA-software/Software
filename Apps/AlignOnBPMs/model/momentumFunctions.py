@@ -27,7 +27,10 @@ class Functions(QObject):
 
     def __init__(self, OM = dummyOM() ):
         QThread.__init__(self)
-        self.simulate = OM
+        #self.simulate = OM
+
+    def WCM(self):
+        return caget('CLA-S01-DIA-WCM-01:Q')
 
     def setCurrent(self,ctrl,magnet,val):
         MAG = ctrl.getMagObjConstRef(magnet)
@@ -35,7 +38,7 @@ class Functions(QObject):
         print('Stepping current to: '+str(setI))
         ctrl.setSI(magnet,setI)
         while ctrl.getSI(magnet) != setI:
-            print ctrl.getSI(magnet)
+            #print ctrl.getSI(magnet)
             #self.qctrl.setSI(self.quad, x)
             time.sleep(0.5)
 
@@ -53,15 +56,19 @@ class Functions(QObject):
     def getXBPM(self,ctrl,bpm,N):
         x=[]
         for i in range(N):
-            print bpm
+            print 'x = ', ctrl.getXFromPV(bpm)
             x.append(ctrl.getXFromPV(bpm))
+            #QApplication.processEvents()
+            time.sleep(0.05)
         return sum(x)/N
 
     def getYBPM(self,ctrl,bpm,N):
         x=[]
         for i in range(N):
-            print bpm
+            print 'y = ', ctrl.getXFromPV(bpm)
             x.append(ctrl.getYFromPV(bpm))
+            #QApplication.processEvents()
+            time.sleep(0.05)
         return sum(x)/N
 
     def getXScreen(self,ctrl,camera,N):
@@ -189,24 +196,85 @@ class Functions(QObject):
             x2=self.getYBPM(bctrl, bpm, N)
         I2=COR.siWithPol
         print 'x2 = ', x2, 'I2 = ', I2
-        while(abs(x2-off)>tol):                                                            # Algorithm loops until the current position is < the tolerance 'tol'
+        count = 0
+        while(abs(x2-off)>tol) and count<10:                                                            # Algorithm loops until the current position is < the tolerance 'tol'
+            count+=1
+            print 'start'
+            print I1, I2, x1, x2, off
             I_o = (I1*(x2-off)-I2*(x1-off))/(x2-x1)                                            # find the zero-crossing of straight line mde from positions at currents I1 and I2
             print('Predicted current intercept at '+str(I_o))
             hvctrl.setSI(hvcor,I_o)
             #self.simulate.run()
-            #time.sleep(2)
-            #QApplication.processEvents()                                                    # set magnet to intercept current
+            time.sleep(1)
+            QApplication.processEvents()                                                    # set magnet to intercept current
             x1=x2                                                                #Get rid of first set of position and current
             I1=I2
-            I2=I_o
+            I2=(I_o+I1)/2
             if xory == 'x':
                 x2=self.getXBPM(bctrl, bpm, N)
             else:
                 x2=self.getYBPM(bctrl, bpm, N)
             print('Current at'+str(x2))
             time.sleep(0.1)
-        print('Aligned beam using ' + hvcor + ' and ' + bpm)
+        if count<10:
+            print('Aligned beam using ' + hvcor + ' and ' + bpm)
+        else:
+            print 'Alignment failed'
 
+    def align4(self,hvctrl,hvcor, bctrl, bpm, off, tol, xory, initstep, N=10):
+        print 'In align3, in align3..', bpm, type(bpm), len(bpm)
+        print xory
+        COR = hvctrl.getMagObjConstRef(hvcor)                                        #create a reference to the corrector
+        if xory == 'x':
+            x1= self.getXBPM(bctrl, bpm, N)                                            #get the x position on the BPM
+        else:
+            x1= self.getYBPM(bctrl, bpm, N)
+        I1 = COR.siWithPol
+        print 'x1 = ', x1, 'I1 = ', I1 #x1,x2,I1,I2 are point to determine a straight linear relationship (I=mx+c)
+        x2=x1
+        I2=0
+        if (COR.riWithPol>0.0):                                                    #determine intial step
+            initialStep = -initstep
+        else:
+            initialStep = initstep
+        self.stepCurrent(hvctrl, hvcor, initialStep)
+        #self.simulate.run()
+        #time.sleep(2)
+        #QApplication.processEvents()                                                  #take inital step
+        if xory == 'x':
+            x2=self.getXBPM(bctrl, bpm, N)
+        else:
+            x2=self.getYBPM(bctrl, bpm, N)
+        I2=COR.siWithPol
+        print 'x2 = ', x2, 'I2 = ', I2
+        count = 0
+        while(abs(x2-off)>tol) and count<10 and abs(x2-x1)>(tol/10):                                                            # Algorithm loops until the current position is < the tolerance 'tol'
+            count+=1
+            #print 'start'
+            #print I1, I2, x1, x2, off
+            I_o = (I1*(x2-off)-I2*(x1-off))/(x2-x1)                                            # find the zero-crossing of straight line mde from positions at currents I1 and I2
+            print('Predicted current intercept at '+str(I_o))
+            I_o = (I_o+I2)/2
+            hvctrl.setSI(hvcor,I_o)
+            #self.simulate.run()
+            while (abs(hctrl.getSI(hcor) - I_o) > 0.005):
+                print 'Waiting for corrector, set=', I_o, 'read=', hctrl.getSI(hcor), 'diff=', abs(hctrl.getSI(hcor) - I_o)
+                time.sleep(0.01)
+            #time.sleep(1)
+            QApplication.processEvents()                                                    # set magnet to intercept current
+            x1=x2                                                                #Get rid of first set of position and current
+            I1=I2
+            I2=I_o#(I_o+I1)/2
+            if xory == 'x':
+                x2=self.getXBPM(bctrl, bpm, N)
+            else:
+                x2=self.getYBPM(bctrl, bpm, N)
+            print('Current at'+str(x2))
+            time.sleep(0.1)
+        if count<10:
+            print('Aligned beam using ' + hvcor + ' and ' + bpm)
+        else:
+            print 'Alignment failed'
 
     def bendBeam(self,dctrl,dipole,bctrl,bpm,screen, predictedI, tol, N=1):
         DIP = dctrl.getMagObjConstRef(dipole)                                    #create a reference to the dipole

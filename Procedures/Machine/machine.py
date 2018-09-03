@@ -1,9 +1,11 @@
-import sys,os
+import sys,os, time
 import random as r
 import numpy as np
 import inspect
 
 class Machine(object):
+
+	bpmDataObjects = {}
 
 	def __init__(self, machineType, lineType, gunType, controllers=['magnets', 'bpms', 'gunllrf', 'linac1llrf', 'charge', 'cameras']):
 		super(Machine, self).__init__()
@@ -33,9 +35,12 @@ class Machine(object):
 							'S02-HCOR1', 'S02-VCOR1', 'S02-HCOR2', 'S02-VCOR2',
 							'LRG-SOL', 'LRG-BSOL', 'DIP01']
 		self.parameters['gun_dispersive_bpm'] = 'C2V-BPM01'
+		self.parameters['gun_dispersive_screen'] = 'C2V-CAM-01'
 		self.parameters['linac_dispersive_bpm'] = {1: 'C2V-BPM01'}
+		self.parameters['linac_dispersive_screen'] = {1: 'C2V-CAM-01'}
 		self.parameters['linac_rough_bpm'] = {1: 'S02-BPM01'}
 		self.parameters['scope'] = 'WCM'
+		self.parameters['dipole'] = 'S02-DIP01'
 
 	def velaMethod(self):
 		print('vela Method')
@@ -51,7 +56,7 @@ class Machine(object):
 			'''This is the place to get contollers'''
 			sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\Release')
 			os.environ["PATH"] = os.environ["PATH"]+";\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release\\root_v5.34.34\\bin\\"
-			import VELA_CLARA_Magnet_Control as mag
+			# import VELA_CLARA_Magnet_Control as mag
 			os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
 			os.environ["EPICS_CA_ADDR_LIST"] = "10.10.0.12"
 			os.environ["EPICS_CA_MAX_ARRAY_BYTES"] = "10000000"
@@ -66,7 +71,7 @@ class Machine(object):
 			self.screens = None
 		else:
 			'''This is the place to get contollers'''
-			sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\Release')
+			sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release')
 			os.environ["PATH"] = os.environ["PATH"]+";\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release\\root_v5.34.34\\bin\\"
 			if 'magnets' in self.controllers:
 				import VELA_CLARA_Magnet_Control as mag
@@ -74,6 +79,8 @@ class Machine(object):
 				self.magInit.setQuiet()
 			if 'bpms' in self.controllers:
 				import VELA_CLARA_BPM_Control as bpm
+				from VELA_CLARA_BPM_Control import BPM_STATUS# as bpmstatus
+				self.bpmstatus = BPM_STATUS
 				self.bpmInit = bpm.init()
 				self.bpmInit.setQuiet()
 			if 'gunllrf' in self.controllers or 'linac1llrf' in self.controllers:
@@ -145,11 +152,11 @@ class Machine(object):
 						self.screens = self.screenInit.physical_VELA_INJ_Screen_Controller()
 				else:
 					if 'magnets' in self.controllers:
-						self.magnets = self.magInit.physical_CLARA_PH1_Magnet_Controller()
+						self.magnets = self.magInit.physical_C2B_Magnet_Controller()
 					if 'charge' in self.controllers:
 						self.scope = self.scopeInit.physical_CLARA_PH1_Charge_Controller()
 					if 'bpms' in self.controllers:
-						self.bpms = self.bpmInit.physical_CLARA_PH1_BPM_Controller()
+						self.bpms = self.bpmInit.physical_C2B_BPM_Controller()
 					if 'gunllrf' in self.controllers:
 						self.gunllrf = self.llrfInit.physical_CLARA_LRRG_LLRF_Controller()
 					if 'linac1llrf' in self.controllers:
@@ -187,6 +194,7 @@ class Machine(object):
 			self.setGunAmplitude(value)
 		elif cavity == 'Linac1':
 			self.setLinac1Amplitude(value)
+		return True
 
 	def getAmplitude(self, cavity):
 		if cavity == 'Gun':
@@ -199,6 +207,7 @@ class Machine(object):
 			self.setGunPhase(value)
 		elif cavity == 'Linac1':
 			self.setLinac1Phase(value)
+		return True
 
 	def getPhase(self, cavity):
 		if cavity == 'Gun':
@@ -217,6 +226,7 @@ class Machine(object):
 			self.gunPhiSp = phase
 		else:
 			self.gunllrf.setPhiSP(np.mod(180+phase,360)-180)
+		return True
 
 	def getGunPhase(self):
 		if self.machineType == 'None':
@@ -229,6 +239,7 @@ class Machine(object):
 			self.gunAmpSp = amp
 		else:
 			self.gunllrf.setAmpSP(amp)
+		return True
 
 	def getGunAmplitude(self):
 		if self.machineType == 'None':
@@ -248,6 +259,7 @@ class Machine(object):
 		else:
 			print 'setting L01 phase = ', np.mod(180+phase,360)-180
 			self.linac1llrf.setPhiSP(np.mod(180+phase,360)-180)
+		return True
 
 	def getLinac1Phase(self):
 		if self.machineType == 'None':
@@ -261,6 +273,7 @@ class Machine(object):
 		else:
 			# print 'setting L01 LLRF to ', amp
 			self.linac1llrf.setAmpFF(amp)
+		return True
 
 	def getLinac1Amplitude(self):
 		if self.machineType == 'None':
@@ -268,22 +281,58 @@ class Machine(object):
 		else:
 			return self.linac1llrf.getAmpSP()
 
-	def getBPMPosition(self, bpm, plane='X'):
+	def getBPMDataObject(self, bpm):
+		if bpm not in self.bpmDataObjects:
+			self.bpmDataObjects[bpm] = self.bpms.getBPMDataObject(bpm)
+		return self.bpmDataObjects[bpm]
+
+	# def getBPMBuffer(self, bpm, buffer=10, plane='X'):
+	# 	if self.machineType == 'None':
+	# 		value = [20*np.random.random_sample() - 10 for i in range(buffer)]
+	# 		return value
+	# 	else:
+	# 		obj = self.getBPMDataObject(bpm)
+	# 		obj.setBufferSize(buffer)
+	# 		if plane == 'Y':
+	# 			while not obj.isYBufferFull():
+	# 				time.sleep(0.001)
+	# 			return zip(obj.yBuffer, obj.statusBuffer)
+	# 		else:
+	# 			return obj.x
+	# 		else:
+	# 			return float('nan')
+
+	def getBPMPosition(self, bpm, plane='X', ignoreNonLinear=True):
 		if self.machineType == 'None':
 			value = 20*np.random.random_sample() - 10
 			return value
 		else:
-			if plane == 'Y':
-				return self.bpms.getYFromPV(bpm)
+			obj = self.getBPMDataObject(bpm)
+			# print obj.x, obj.y, obj.status
+			if obj.status == self.bpmstatus.GOOD or (ignoreNonLinear is True and obj.status == self.bpmstatus.NONLINEAR):
+				if plane == 'Y':
+					return obj.y
+				else:
+					return obj.x
 			else:
-				return self.bpms.getXFromPV(bpm)
+				return float('nan')
+
+	def getBPMPositionStatus(self, bpm, plane='X'):
+		if self.machineType == 'None':
+			value = 20*np.random.random_sample() - 10
+			return value, self.bpmstatus.GOOD
+		else:
+			obj = self.getBPMDataObject(bpm)
+			if plane == 'Y':
+				return obj.y, obj.status
+			else:
+				return obj.x, obj.status
 
 	def getScreenPosition(self, screen, plane='X'):
 		if self.machineType == 'None':
 			value = 20*np.random.random_sample() - 10
 			return value
 		else:
-			# cam_control.startAcquiring(name)
 			if plane == 'Y':
 				yval = self.cameras.getY()
 				print 'yval = ', yval
@@ -298,8 +347,12 @@ class Machine(object):
 		if self.machineType == 'None':
 			self.corrSI[corr] = I
 		else:
-			print 'setting ', corr, ' = ', I
+			# print 'setting ', corr, ' = ', I
 			print self.magnets.setSI(corr, I)
+			i = 0
+			while not self.magnets.isRIequalSI(corr):
+				time.sleep(0.1)
+		return True
 
 	def getCorr(self, corr):
 		if self.machineType == 'None':
@@ -313,6 +366,7 @@ class Machine(object):
 			self.solSI[sol] = I
 		elif self.machineType == 'Physical':
 			self.magnets.setSI(sol, I)
+		return True
 
 	def getSol(self, sol):
 		if self.machineType == 'None':
@@ -332,15 +386,20 @@ class Machine(object):
 		if self.machineType == 'None':
 			self.dipoleSI = I
 		elif self.machineType == 'Virtual':
-			self.magnets.setSI('DIP01', -1*I)
+			self.magnets.setSI(self.parameters['dipole'], -1*I)
 		elif self.machineType == 'Physical':
-			self.magnets.setSI('DIP01', I)
+			self.magnets.setSI(self.parameters['dipole'], I)
+			i = 0
+			while not self.magnets.isRIequalSI(self.parameters['dipole']):
+				time.sleep(0.1)
+				# print self.magnets.isRIequalSI(self.parameters['dipole']), self.getDip()
+		return True
 
 	def getDip(self):
 		if self.machineType == 'None':
 			return self.dipoleSI if hasattr(self, 'dipoleSI') else 0
 		else:
-			return self.magnets.getSI('DIP01')
+			return self.magnets.getSI(self.parameters['dipole'])
 
 	def setDegaussMagnet(self, name, degaussToZero=True):
 		if not self.machineType == 'None':
@@ -348,6 +407,7 @@ class Machine(object):
 				self.magnets.degauss(name, degaussToZero)
 			else:
 				self.magnets.degauss([name], degaussToZero)
+		return True
 
 	def isMagnetDegaussing(self, name):
 		if not self.machineType == 'None':
@@ -359,10 +419,11 @@ class Machine(object):
 			return False
 
 	def setDegaussDIP(self):
-		self.setDegaussMagnet('DIP01')
+		self.setDegaussMagnet(self.parameters['dipole'])
+		return True
 
 	def isDIPDegaussing(self):
-		return self.isMagnetDegaussing('DIP01')
+		return self.isMagnetDegaussing(self.parameters['dipole'])
 
 	def setQuad(self, name, I):
 		if self.machineType == 'None':
@@ -371,9 +432,71 @@ class Machine(object):
 			self.magnets.setSI(name, I)
 		elif self.machineType == 'Physical':
 			self.magnets.setSI(name, I)
+			i = 0
+			while not self.magnets.isRIequalSI(name):
+				time.sleep(0.1)
+				# print self.magnets.isRIequalSI(name), self.getQuad(name)
+		return True
 
 	def getQuad(self, name):
 		if self.machineType == 'None':
 			return self.quadSI[name] if hasattr(self, 'quadSI') and name in self.quadSI else 0
 		else:
 			return self.magnets.getSI(name)
+
+	def applyDBURT(self, dburt):
+		return self.magnets.applyDBURT(dburt)
+
+	def getLLRFTrace(self, controller, trace):
+		controller.startTraceMonitoring(trace)
+		time.sleep(0.1)
+		controller.stopTraceMonitoring(trace)
+		return controller.getTraceValues(trace)
+
+	def getKlystronForwardPowerTrace(self, cavity='Gun'):
+		if cavity == 'Gun':
+			return self.getLLRFTrace(self.gunllrf,'KLYSTRON_FORWARD_POWER')
+		elif cavity == 'Linac1':
+			return self.getLLRFTrace(self.linac1llrf,'KLYSTRON_FORWARD_POWER')
+
+	def getKlystronReversePowerTrace(self, cavity='Gun'):
+		if cavity == 'Gun':
+			return self.getLLRFTrace(self.gunllrf,'KLYSTRON_REVERSE_POWER')
+		elif cavity == 'Linac1':
+			return self.getLLRFTrace(self.linac1llrf,'KLYSTRON_REVERSE_POWER')
+
+	def getCavityForwardPowerTrace(self, cavity='Gun'):
+		if cavity == 'Gun':
+			return self.getLLRFTrace(self.gunllrf,'LRRG_CAVITY_FORWARD_POWER')
+		elif cavity == 'Linac1':
+			return self.getLLRFTrace(self.linac1llrf,'L01_CAVITY_FORWARD_POWER')
+
+	def getCavityReversePowerTrace(self, cavity='Gun'):
+		if cavity == 'Gun':
+			return self.getLLRFTrace(self.gunllrf,'LRRG_CAVITY_REVERSE_POWER')
+		elif cavity == 'Linac1':
+			return self.getLLRFTrace(self.linac1llrf,'L01_CAVITY_REVERSE_POWER')
+
+	def getGunRFTraces(self, dict=False):
+		rftraces = ['LRRG_CAVITY_FORWARD_POWER', 'LRRG_CAVITY_REVERSE_POWER', 'LRRG_CAVITY_FORWARD_PHASE', 'KLYSTRON_FORWARD_POWER', 'KLYSTRON_REVERSE_POWER', 'KLYSTRON_FORWARD_PHASE']
+		controller = self.gunllrf
+		controller.startTraceMonitoring()
+		time.sleep(0.25)
+		controller.stopTraceMonitoring()
+		data = {t: np.array(controller.getTraceValues(t)) for t in rftraces}
+		if dict:
+			return data
+		else:
+			return [data[t] for t in rftraces]
+
+	def getLinac1RFTraces(self, dict=False):
+		rftraces = ['L01_CAVITY_FORWARD_POWER', 'L01_CAVITY_REVERSE_POWER', 'L01_CAVITY_FORWARD_PHASE', 'KLYSTRON_FORWARD_POWER', 'KLYSTRON_REVERSE_POWER', 'KLYSTRON_FORWARD_PHASE']
+		controller = self.linac1llrf
+		controller.startTraceMonitoring()
+		time.sleep(0.25)
+		controller.stopTraceMonitoring()
+		data = {t: np.array(controller.getTraceValues(t)) for t in rftraces}
+		if dict:
+			return data
+		else:
+			return [data[t] for t in rftraces]
