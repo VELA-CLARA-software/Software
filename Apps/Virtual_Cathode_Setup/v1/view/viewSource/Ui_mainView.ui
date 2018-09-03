@@ -27,13 +27,13 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>../../icon.ico</normaloff>../../icon.ico</iconset>
+    <normaloff>C:/Users/djs56/icon.ico</normaloff>C:/Users/djs56/icon.ico</iconset>
   </property>
   <property name="unifiedTitleAndToolBarOnMac">
    <bool>false</bool>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QHBoxLayout" name="horizontalLayout_9" stretch="0,10">
+   <layout class="QHBoxLayout" name="horizontalLayout_9" stretch="0,0">
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="sizePolicy">
@@ -246,7 +246,11 @@
            </widget>
           </item>
           <item row="0" column="2">
-           <widget class="QDoubleSpinBox" name="mirror_h_step_set_spinBox"/>
+           <widget class="QDoubleSpinBox" name="mirror_h_step_set_spinBox">
+            <property name="maximum">
+             <double>100.000000000000000</double>
+            </property>
+           </widget>
           </item>
           <item row="0" column="3">
            <widget class="QPushButton" name="move_H_left_pushButton">
@@ -306,7 +310,11 @@
            </widget>
           </item>
           <item row="1" column="2">
-           <widget class="QDoubleSpinBox" name="mirror_v_step_set_spinBox"/>
+           <widget class="QDoubleSpinBox" name="mirror_v_step_set_spinBox">
+            <property name="maximum">
+             <double>100.000000000000000</double>
+            </property>
+           </widget>
           </item>
           <item row="1" column="3">
            <widget class="QPushButton" name="move_V_down_pushButton">
@@ -473,7 +481,7 @@
            </widget>
           </item>
           <item row="0" column="2">
-           <widget class="QDoubleSpinBox" name="intensity_spinBox">
+           <widget class="QDoubleSpinBox" name="energy_spinBox">
             <property name="buttonSymbols">
              <enum>QAbstractSpinBox::NoButtons</enum>
             </property>
@@ -486,7 +494,7 @@
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QLabel" name="int_val_2">
+           <widget class="QLabel" name="energy_val_2">
             <property name="font">
              <font>
               <pointsize>8</pointsize>
@@ -512,7 +520,7 @@
              </font>
             </property>
             <property name="text">
-             <string>Intensity:</string>
+             <string>Energy</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -571,24 +579,14 @@
             <property name="buttonSymbols">
              <enum>QAbstractSpinBox::NoButtons</enum>
             </property>
+            <property name="minimum">
+             <double>1.000000000000000</double>
+            </property>
             <property name="maximum">
              <double>10.000000000000000</double>
             </property>
             <property name="singleStep">
              <double>0.100000000000000</double>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="3">
-           <widget class="QPushButton" name="set_xpos_pushButton">
-            <property name="maximumSize">
-             <size>
-              <width>40</width>
-              <height>16777215</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>Set</string>
             </property>
            </widget>
           </item>
@@ -631,6 +629,9 @@
             <property name="buttonSymbols">
              <enum>QAbstractSpinBox::NoButtons</enum>
             </property>
+            <property name="minimum">
+             <double>1.000000000000000</double>
+            </property>
             <property name="maximum">
              <double>10.000000000000000</double>
             </property>
@@ -639,8 +640,8 @@
             </property>
            </widget>
           </item>
-          <item row="3" column="3">
-           <widget class="QPushButton" name="set_ypos_pushButton">
+          <item row="2" column="3" rowspan="2">
+           <widget class="QPushButton" name="set_pos_pushButton">
             <property name="maximumSize">
              <size>
               <width>40</width>
@@ -667,13 +668,6 @@
            <widget class="QPushButton" name="save_pushButton">
             <property name="text">
              <string>Save Settings</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="setPosition_pushButton">
-            <property name="text">
-             <string>Set X,Y Position</string>
             </property>
            </widget>
           </item>
@@ -717,7 +711,7 @@
                </font>
               </property>
               <property name="text">
-               <string>Intensity:</string>
+               <string>Energy </string>
               </property>
               <property name="alignment">
                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -865,7 +859,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="int_val">
+             <widget class="QLabel" name="energy_val">
               <property name="font">
                <font>
                 <pointsize>8</pointsize>
@@ -1058,7 +1052,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="int_mean">
+             <widget class="QLabel" name="energy_mean">
               <property name="minimumSize">
                <size>
                 <width>15</width>
@@ -1263,7 +1257,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="int_sd">
+             <widget class="QLabel" name="energy_sd">
               <property name="minimumSize">
                <size>
                 <width>15</width>
@@ -1895,14 +1889,7 @@
      </widget>
     </item>
     <item>
-     <layout class="QGridLayout" name="imageLayout">
-      <property name="verticalSpacing">
-       <number>14</number>
-      </property>
-      <item row="0" column="0">
-       <widget class="GraphicsLayoutWidget" name="graphics_view"/>
-      </item>
-     </layout>
+     <widget class="GraphicsLayoutWidget" name="graphicsView"/>
     </item>
    </layout>
   </widget>

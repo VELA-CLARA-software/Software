@@ -394,8 +394,8 @@ class magnetAppController(object):
             os.environ["EPICS_CA_SERVER_PORT"] = "6000"
 
         print(self.machineMode,self.machineArea)
-        self.localMagnetController = \
-            self.magInit.getMagnetController( self.machineMode, self.machineArea)
+        self.localMagnetController = self.magInit.getMagnetController( self.machineMode,
+                                                                        self.machineArea)
         if self.machineMode is not mag.MACHINE_MODE.OFFLINE:
             self.activeEPICS = True
 

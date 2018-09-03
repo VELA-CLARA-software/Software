@@ -73,14 +73,14 @@ sy_val = 'sy_val'
 cov_val = 'cov_val'
 avg_pix_val = 'avg_val'
 # intensity
-int_val = 'int_val'
 wcm_val = 'wcm_val'
+energy_val = 'energy_val'
 # analyse means (mm)
 x_mean = 'x_mean'
 y_mean = 'y_mean'
 sx_mean = 'sx_mean'
 sy_mean = 'sy_mean'
-int_mean = 'int_mean'
+energy_mean= 'energy_mean'
 wcm_mean = 'wcm_mean'
 cov_mean = 'cov_mean'
 avg_pix_mean = 'avg_mean'
@@ -89,7 +89,7 @@ x_sd = 'x_sd'
 y_sd = 'y_sd'
 sx_sd = 'sx_sd'
 sy_sd = 'sy_sd'
-int_sd = 'int_sd'
+energy_sd = 'energy_sd'
 wcm_sd = 'wcm_sd'
 cov_sd = 'cov_sd'
 avg_pix_sd = 'avg_pix_sd'
@@ -120,9 +120,9 @@ all_value_keys = [time_stamp, mask_x_rbv, mask_y_rbv, mask_x_rad_rbv, mask_y_rad
                   mask_x_user, mask_y_user, mask_x_rad_user, mask_y_rad_user, mask_feedback,
                   num_images, is_collecting_or_saving, last_filename, is_acquiring, min_level,
                   min_level_rbv, max_level, max_level_rbv, is_analysing, use_background,
-                  use_npoint, ana_step_size, x_val, y_val, sx_val, sy_val, int_val, wcm_val,
-                  cov_val, avg_pix_val, x_mean, y_mean, sx_mean, sy_mean, int_mean, wcm_mean,
-                  cov_mean, avg_pix_mean, x_sd, y_sd, sx_sd, sy_sd, int_sd, wcm_sd, cov_sd,
+                  use_npoint, ana_step_size, x_val, y_val, sx_val, sy_val, energy_val, wcm_val,
+                  cov_val, avg_pix_val, x_mean, y_mean, sx_mean, sy_mean, energy_mean, wcm_mean,
+                  cov_mean, avg_pix_mean, x_sd, y_sd, sx_sd, sy_sd, energy_sd, wcm_sd, cov_sd,
                   avg_pix_sd, x_buf, y_buf, sx_buf, sy_buf, i_buf, cov_buf, image, shutter_open,
                   x_pix, y_pix , sig_x_pix, sig_y_pix, last_save_dir, last_save_file,
                   last_save_path, num_pix_x, num_pix_y,x_pix_to_mm,y_pix_to_mm,image_save_dir_root]

@@ -167,16 +167,20 @@ class controller(object):
         controller.model.set_delta_hwp(-controller.view.hwp_set_spinBox.value())
 
     def handle_move_H_left_pushButton(self):
-        controller.model.move_H_mirror(controller.view.mirror_h_step_set_spinBox.value())
+        #print('handle_move_H_left_pushButton')
+        controller.model.move_left(controller.view.mirror_h_step_set_spinBox.value())
 
     def handle_move_H_right_pushButton(self):
-        controller.model.move_H_mirror(-controller.view.mirror_h_step_set_spinBox.value())
+        print('handle_move_H_right_pushButton')
+        controller.model.move_right(controller.view.mirror_h_step_set_spinBox.value())
 
     def handle_move_V_down_pushButton(self):
-        controller.model.move_V_mirror(-controller.view.mirror_v_step_set_spinBox.value())
+        #print('handle_move_V_down_pushButton')
+        controller.model.move_down(controller.view.mirror_v_step_set_spinBox.value())
 
     def handle_move_V_up_pushButton(self):
-        controller.model.move_V_mirror(controller.view.mirror_v_step_set_spinBox.value())
+        #print('handle_move_V_up_pushButton')
+        controller.model.move_up(controller.view.mirror_v_step_set_spinBox.value())
 
     def handle_open_path_push_button(self):
         f = '\\\\claraserv3'
@@ -196,13 +200,18 @@ class controller(object):
     def handle_center_mask_pushButton(self):
         controller.model.center_mask()
 
+    def handle_set_pos_pushButton(self):
+        controller.model.set_pos(self.view.xpos_spinBox.value(),
+                                   self.view.ypos_spinBox.value())
 
     def connect_widgets(self):
         print('connect_widgets')
         controller.view.copy_path_pushButton.clicked.connect(self.handle_copy_path_pushButton)
+        controller.view.set_pos_pushButton.clicked.connect(self.handle_set_pos_pushButton)
+
         controller.view.open_path_push_button.clicked.connect(self.handle_open_path_push_button)
         controller.view.collectAndSave_pushButton.clicked.connect(self.handle_collect_and_save_pushButton)
-        controller.view.setPosition_pushButton.clicked.connect(self.handle_setPosition_pushButton)
+        #controller.view.setPosition_pushButton.clicked.connect(self.handle_setPosition_pushButton)
         controller.view.setInt_pushButton.clicked.connect(
                 self.handle_setIntensity_pushButton)
         controller.view.setMask_pushButton.clicked.connect(self.handle_setMask_pushButton)
