@@ -607,7 +607,7 @@ class Model(QObject):
             self.getDataFunction = partial(self.func.getBPMPosition, self.Cbpms,'C2V-BPM01')
             #self.getDataFunction = partial(self.func.getXBPM, self.Cbpms,'C2V-BPM01', self.nSamples)
         elif self.view.comboBox_selectRF.currentIndex() == 1: # linac
-            self.dipoleIStep = 0.1
+            self.dipoleIStep = 1
             self.nSamples = 3
             self.getDataFunction = partial(self.func.getBPMPosition, self.Cbpms,'C2V-BPM01')
             #self.getDataFunction = partial(self.func.getXBPM, self.Cbpms,'C2V-BPM01', self.nSamples)

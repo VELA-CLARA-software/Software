@@ -174,7 +174,7 @@ class Functions(QObject):
             #print('Current at'+str(x2))
             time.sleep(0.1)
             print 'Current at ', I2
-            time.sleep(1)
+            time.sleep(0.1)
         if count<10:
             print('Aligned beam using ' + hcor + ' and ' + bpm)
         else:
