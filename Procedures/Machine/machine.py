@@ -6,6 +6,7 @@ import inspect
 class Machine(object):
 
 	bpmDataObjects = {}
+	screenDataObjects = {}
 
 	def __init__(self, machineType, lineType, gunType, controllers=['magnets', 'bpms', 'gunllrf', 'linac1llrf', 'charge', 'cameras']):
 		super(Machine, self).__init__()
@@ -315,6 +316,7 @@ class Machine(object):
 				else:
 					return obj.x
 			else:
+				# print 'bad! = ', obj.x, obj.y
 				return float('nan')
 
 	def getBPMPositionStatus(self, bpm, plane='X'):
@@ -328,19 +330,29 @@ class Machine(object):
 			else:
 				return obj.x, obj.status
 
-	def getScreenPosition(self, screen, plane='X'):
+	def getScreenDataObject(self, screen):
+		if screen not in self.screenDataObjects:
+			self.screenDataObjects[screen] = self.cameras.getAnalysisObj(screen)
+		return self.screenDataObjects[screen]
+
+	def getScreenPosition(self, screen, plane='X', intensitycutoff=103):
 		if self.machineType == 'None':
 			value = 20*np.random.random_sample() - 10
 			return value
 		else:
-			if plane == 'Y':
-				yval = self.cameras.getY()
-				print 'yval = ', yval
-				return yval
+			obj = self.getScreenDataObject(screen)
+			intensity = obj.avg_pix
+			if intensity > intensitycutoff:
+				if plane == 'Y':
+					yval = obj.y
+					print 'yval = ', yval
+					return yval
+				else:
+					xval =obj.x
+					print 'xval = ', xval
+					return xval
 			else:
-				xval = self.cameras.getX()
-				print 'xval = ', xval
-				return xval
+				return float('nan')
 
 	def setCorr(self, corr, I, tol=0.05):
 		# print 'setting dip01 = ', I

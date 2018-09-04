@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1040</width>
-    <height>906</height>
+    <height>930</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -23,11 +23,11 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>Phase Calibration</string>
+   <string>Autocrester v2</string>
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>../../../Resources/Icons/mountain-summit.png</normaloff>../../../Resources/Icons/mountain-summit.png</iconset>
+    <normaloff>crester.png</normaloff>crester.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="centralWidgetLayout">

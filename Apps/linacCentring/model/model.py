@@ -183,7 +183,8 @@ class Model(object):
 		self.linacUpperAmp = ampUpper
 		self.nSamples = nSamples
 		# self.machine.cameras.startAcquiring('S02-YAG-02')
-		self.monitors = [partial(self.machine.getBPMPosition, 'S02-BPM01', plane=self.plane), partial(self.machine.getBPMPosition, 'S02-BPM02', plane=self.plane)]
+		# self.monitors = [partial(self.machine.getBPMPosition, 'S02-BPM01', plane=self.plane), partial(self.machine.getBPMPosition, 'S02-BPM02', plane=self.plane)]
+		self.monitors = [partial(self.machine.getScreenPosition, 'S02-CAM-03', plane=self.plane, intensitycutoff=104)]
 		self.findRFCentre2D()
 
 	def linac1BLMScan(self, actuator, ampLower, ampUpper, nSamples):
@@ -280,7 +281,8 @@ class Model(object):
 		self.data = zip(*[[a for a in b if a is not float('nan')] for b in self.data])
 		# print 'self.data after zip = ', self.data
 		# print 'self.data final = ',
-		return np.array([[np.mean(a), np.std(a)] if np.std(a) > 0.001 else [float('nan'),0] for a in self.data])
+		print np.array([[np.mean(a), np.std(a)] if np.std(a) > 0.01 else [float('nan'),0] for a in self.data])
+		return np.array([[np.mean(a), np.std(a)] if np.std(a) > 0.01 else [float('nan'),0] for a in self.data])
 
 
 ########### findRFCentreBLM ###############
@@ -491,7 +493,7 @@ class Model(object):
 					# diff = np.mean(np.array([abs(a[1] - a[0]) if a[0] < 20 and a[1] < 20 else 20 for a in zip(data1,data2)]))
 					# print data1, data2
 					diff = np.array([(a-b)**2 for a,b in zip(data2, data1)])
-					if all(np.isnan(a) for a in diff):# or np.isnan(data1) or np.isnan(data2):
+					if any(np.isnan(a) for a in diff):# or np.isnan(data1) or np.isnan(data2):
 						diff = 100
 					# print 'diff = ', diff
 					self.rawData['diff'].append(diff)
@@ -499,7 +501,10 @@ class Model(object):
 						logfile.write('diff,'+str(self.linacUpperAmp)+','+str(c1)+','+str(c2)+','+str(data1)+','+str(data2)+','+str(diff))
 					self.setDataArray(c1, c2, diff)
 		if self.verbose:
-			self.saveLinacData2D()
+			try:
+				self.saveLinacData2D()
+			except:
+				pass
 		self.doFitRFCentre2D()
 
 	def doFitRFCentre2D(self):
@@ -529,7 +534,7 @@ class Model(object):
 		df.columns = ['x', 'y', 'z1', 'z2', 'diff']
 		filename = self.timestr+'_LinacCentring_'+self.main+'_'+self.plane+'_'+str(self.linacLowerAmp)+'_'+str(self.linacUpperAmp)+'_rawData'
 		df.to_csv(filename+'.csv', index=0)
-		save_dict_to_hdf5(self.rawData, filename+'.h5')
+		# save_dict_to_hdf5(self.rawData, filename+'.h5')
 
 ########### findSOLCentre ###############
 
