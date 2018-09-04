@@ -57,6 +57,9 @@ class Controller():
 		self.barcolour2_notLive=(90,30,20)
 		self.barcolour3_live=(140,140,140)
 		self.barcolour3_notLive=(50,50,50)
+
+		self.barcolourQ_live=(200,200,200)#self.barcolourQ=(60,255,100)
+		self.barcolourQ_notLive=(0,0,0)
 		for r, bpm_name in enumerate(self.bpm_list):
 			row = str(r+1)
 			setattr(self, 'positionGraph_'+row, layout.addPlot())
@@ -148,6 +151,9 @@ class Controller():
 			getattr(self, 'positionGraph_'+row+'_Q').setXRange(-0.7,0.7)
 			getattr(self, 'positionGraph_'+row+'_Q').setYRange(0,135)
 			setattr(self, 'bg'+row+'_Q', pg.BarGraphItem(x=self.xdict_Q.keys(), height=[0.0], width=0.5))
+			# line to add WCM bar chart
+			setattr(self, 'bg'+row+'_WCM', pg.BarGraphItem(x=self.xdict_Q.keys(), height=[0.0], width=0.52, pen=self.barcolourQ_notLive, brush=(0,0,0)))
+			getattr(self, 'positionGraph_'+row+'_Q').addItem(getattr(self, 'bg'+row+'_WCM'))
 			getattr(self, 'positionGraph_'+row+'_Q').addItem(getattr(self, 'bg'+row+'_Q'))
 		#self.positionGraph_1_Q = layout.addPlot(title="S01-BPM-01")
 		#self.positionGraph_1_Q.axes['bottom']['item'].setTicks([self.xdict_Q.items()])
@@ -260,6 +266,9 @@ class Controller():
 		self.view.pushButton_save_2.clicked.connect(self.model.save_positions)
 		self.view.pushButton_load.clicked.connect(self.model.load)
 
+		self.view.doubleSpinBox_tol_all.valueChanged.connect(self.model.setAllTol)
+		self.view.doubleSpinBox_step_all.valueChanged.connect(self.model.setAllInitStep)
+		# self.view.doubleSpinBox_V_6.valueChanged.connect(partial(self.model.steer_V, 6, userinput))
 
 		#self.view.comboBox_1.currentIndexChanged.connect(self.model.combobox_bpm)
 		#self.view.doubleSpinBox.
@@ -324,7 +333,11 @@ class Controller():
 		# self.bg5_target.setOpts(x=self.xdict.keys(), height=[getattr(self.view, 'doubleSpinBox_x_'+str(5)).value(), getattr(self.view, 'doubleSpinBox_y_'+str(5)).value()])
 		# self.bg6.setOpts(x=self.xdict.keys(), height=[1*self.model.Cbpms.getXFromPV('INJ-BPM05'),1*self.model.Cbpms.getYFromPV('INJ-BPM05')])
 		# self.bg6_target.setOpts(x=self.xdict.keys(), height=[getattr(self.view, 'doubleSpinBox_x_'+str(6)).value(), getattr(self.view, 'doubleSpinBox_y_'+str(6)).value()])
-
+		# Q_WCM = []
+		# for i in np.arange(0,2):
+		# 	Q_WCM.append(caget('CLA-S01-DIA-WCM-01:Q'))
+		# Q_WCM = np.mean(Q_WCM)
+		self.model.WCM()
 		# Update BPM charge bar charts
 		for r, bpm_name in enumerate(self.bpm_list):
 			row = str(r+1)
@@ -336,12 +349,15 @@ class Controller():
 			#time.sleep(0.5)
 			if len(self.model.Cbpms.getBPMQBuffer(bpm_name)) > 0 and str(self.model.Cbpms.getStatusBuffer(bpm_name)[-1]) == 'GOOD':
 				#print 'yes'
+				getattr(self, 'bg'+row+'_WCM').setOpts(x=self.xdict_Q.keys(), height=[np.mean(self.model.Q_WCM)])
 				getattr(self, 'bg'+row+'_Q').setOpts(x=self.xdict_Q.keys(), height=[np.mean(self.model.Cbpms.getBPMQBuffer(bpm_name))], pen=self.barcolour3_live, brush=self.barcolour3_live)
 				getattr(self, 'bg'+row).setOpts(pen=self.barcolour1_live, brush=self.barcolour1_live)
+				getattr(self, 'bg'+row+'_WCM').setOpts(pen=self.barcolourQ_live)
 			else:
 				#print 'no'
 				getattr(self, 'bg'+row+'_Q').setOpts(x=self.xdict_Q.keys(), height=[0], pen=self.barcolour3_live, brush=self.barcolour3_live)
 				getattr(self, 'bg'+row).setOpts(pen=self.barcolour1_notLive, brush=self.barcolour1_notLive)
+				getattr(self, 'bg'+row+'_WCM').setOpts(pen=self.barcolourQ_notLive)
 
 						# self.bg1_Q.setOpts(x=self.xdict_Q.keys(), height=[np.mean(self.model.Cbpms.getBPMQBuffer('S01-BPM01'))])
 		# self.bg2_Q.setOpts(x=self.xdict_Q.keys(), height=[np.mean(self.model.Cbpms.getBPMQBuffer('S02-BPM01'))])

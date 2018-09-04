@@ -19,7 +19,7 @@ if mode=='virtual':
 elif mode=='physical':
 	import model_CLARA as model
 	import controller.controller as controller
-	import view.view1_14 as view
+	import view.view1_15 as view
 
 class App(QtCore.QObject):
 	def __init__(self, sys_argv):

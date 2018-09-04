@@ -27,7 +27,7 @@ from functools import partial
 #sys.path.append('\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Software\\VELA_CLARA_PYDs\\bin\\stagetim')
 #sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release')
 #os.environ["PATH"] = os.environ["PATH"]+";\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release\\root_v5.34.34\\bin\\"
-sys.path.append('C:\\Users\\djd63\\Desktop\\Release')
+#sys.path.append('C:\\Users\\djd63\\Desktop\\Release')
 sys.path.append('C:\\Users\\djd63\\Documents\\GitHub\\Software\\Apps\\MomentumAppv2\\model')
 #sys.path.append('C:\\Users\\djd63\\Desktop\\Release\\root_v5.34.34\\bin\\')
 #import onlineModel
@@ -55,6 +55,8 @@ class Model(QObject):
         self.app = app
         self.view = view
         '''variables to hold important values'''
+        self.approx_p = 0                        #momentum
+        self.approxI = 0                        #current to bend momentum 45 degrees
         self.p = 0                        #momentum
         self.I = 0                        #current to bend momentum 45 degrees
         self.pSpread = 0                # momentum spread
@@ -85,7 +87,8 @@ class Model(QObject):
         #self.Cmagnets = self.magInit.physical_CLARA_PH1_Magnet_Controller()
         self.Cmagnets = self.magInit.physical_CB1_Magnet_Controller()
         self.laser = self.pilInit.physical_PILaser_Controller()
-        self.Cbpms = self.bpmInit.physical_CLARA_PH1_BPM_Controller()
+        #self.Cbpms = self.bpmInit.physical_CLARA_PH1_BPM_Controller()
+        self.Cbpms = self.bpmInit.physical_C2B_BPM_Controller()
         #print 'HERE WE ARE(model_CLARA)!!!!: BPM readout =', str(self.Cbpms.getXFromPV('C2V-BPM01'))
         #self.C2Vbpms = self.bpmInit.virtual_CLARA_2_VELA_BPM_Controller()
         self.gun = self.llrfInit.physical_CLARA_LRRG_LLRF_Controller()
@@ -167,6 +170,8 @@ class Model(QObject):
         #self.LINAC01.setAmpMVM(20)
         #self.func = momentumFunctions.Functions(OM='')
         self.func = momentumFunctions.Functions(self)
+        self.dipCurrent=[]
+        self.BPMPosition=[]
         #print("Model Initialized")
         self.selectRF()
 
@@ -241,8 +246,8 @@ class Model(QObject):
     #     self.view.lineEdit_fineRFMax.setText("%.2f" % self.fineMaxRF)
 
     def fineGetCurrentRange_2(self):
-        self.fineMinI = 0.95*self.approxI
-        self.fineMaxI = 1.05*self.approxI
+        #self.fineMinI = 0.95*self.approxI
+        #self.fineMaxI = 1.05*self.approxI
         self.view.lineEdit_fineCurrentMin.setText("%.2f" % self.fineMinI)
         self.view.lineEdit_fineCurrentMax.setText("%.2f" % self.fineMaxI)
 
@@ -313,22 +318,63 @@ class Model(QObject):
         self.Cmagnets.degauss('S02-QUAD3',True)
         self.Cmagnets.degauss('S02-QUAD4',True)
         self.Cmagnets.degauss('S02-QUAD5',True)
+        # while True:
+        #     print self.Cmagnets.isDegaussing(self.dipole), self.Cmagnets.isDegaussing('S02-QUAD3'), \
+        #     self.Cmagnets.isDegaussing('S02-QUAD4'), self.Cmagnets.isDegaussing('S02-QUAD5')
+        #     time.sleep(0.2)
+        while (self.Cmagnets.isDegaussing(self.dipole)==False) and (self.Cmagnets.isDegaussing('S02-QUAD3')==False)\
+        and (self.Cmagnets.isDegaussing('S02-QUAD4')==False) and (self.Cmagnets.isDegaussing('S02-QUAD5')==False):
+            print 'Waiting to start degaussing...'
+            print self.Cmagnets.isDegaussing(self.dipole), self.Cmagnets.isDegaussing('S02-QUAD3'), \
+            self.Cmagnets.isDegaussing('S02-QUAD4'), self.Cmagnets.isDegaussing('S02-QUAD5')
+            time.sleep(0.2)
+        while (self.Cmagnets.isDegaussing(self.dipole)==True) or (self.Cmagnets.isDegaussing('S02-QUAD3')==True)\
+        or (self.Cmagnets.isDegaussing('S02-QUAD4')==True) or (self.Cmagnets.isDegaussing('S02-QUAD5')==True):
+            print 'still degaussing...'
+            print self.Cmagnets.isDegaussing(self.dipole), self.Cmagnets.isDegaussing('S02-QUAD3'), \
+            self.Cmagnets.isDegaussing('S02-QUAD4'), self.Cmagnets.isDegaussing('S02-QUAD5')
+            time.sleep(0.2)
+        print 'Degaussing finished'
+        print 'Open the laser shutters'
+        #self.shut.close('SHUT01')
+        self.shut.open('SHUT01')
+        self.shut.open('SHUT02')
+
+    def measureMomentumPrelim_3_old(self):
+        print 'Close the laser shutters'
+        #self.shut.close('SHUT01')
+        self.shut.close('SHUT01')
+        self.shut.close('SHUT02')
+        #do degaussing
+        print 'Degaussing...'
+        self.Cmagnets.degauss(self.dipole,True)
+        self.Cmagnets.degauss('S02-QUAD3',True)
+        self.Cmagnets.degauss('S02-QUAD4',True)
+        self.Cmagnets.degauss('S02-QUAD5',True)
+        time.sleep(1)
         while self.Cmagnets.isDegaussing(self.dipole) == False \
         and self.Cmagnets.isDegaussing('S02-QUAD3') == False \
         and self.Cmagnets.isDegaussing('S02-QUAD4') == False \
         and self.Cmagnets.isDegaussing('S02-QUAD5') == False:
             print 'waiting to start degaussing...'
+            print self.Cmagnets.isDegaussing(self.dipole), self.Cmagnets.isDegaussing('S02-QUAD3'), \
+            self.Cmagnets.isDegaussing('S02-QUAD4'), self.Cmagnets.isDegaussing('S02-QUAD5')
             time.sleep(1)
         print 'started degaussing'
         print 'Is degaussing?', self.Cmagnets.isDegaussing(self.dipole)
         print 'Is degaussing?', self.Cmagnets.isDegaussing('S02-QUAD3')
         print 'Is degaussing?', self.Cmagnets.isDegaussing('S02-QUAD4')
         print 'Is degaussing?', self.Cmagnets.isDegaussing('S02-QUAD5')
+
         while self.Cmagnets.isDegaussing(self.dipole) == True \
         and self.Cmagnets.isDegaussing('S02-QUAD3') == True \
         and self.Cmagnets.isDegaussing('S02-QUAD4') == True \
-        and self.Cmagnets.isDegaussing('S02-QUAD5') == True:
+        and self.Cmagnets.isDegaussing('S02-QUAD5') == True\
+        and abs(self.Cmagnets.getSI(self.dipole)) > 0.1:
             print 'still degaussing...'
+            #print self.Cmagnets.isDegaussing(self.dipole), self.Cmagnets.isDegaussing('S02-QUAD3'), \
+            #self.Cmagnets.isDegaussing('S02-QUAD4'), self.Cmagnets.isDegaussing('S02-QUAD5')
+            print 'Dipole current = ', self.Cmagnets.getSI(self.dipole)
             time.sleep(1)
         print 'Open the laser shutters'
         #self.shut.close('SHUT01')
@@ -352,7 +398,7 @@ class Model(QObject):
     def measureMomentumAlign_1(self):
         '''2. Align Beam through Dipole'''
         #if self.view.checkBox_2.isChecked()==True:
-        self.target1 = self.view.doubleSpinBox_tol_1.value()
+        self.target1 = self.view.doubleSpinBox_x_1.value()
         self.tol1 = self.view.doubleSpinBox_tol_1.value()
         print 'Aligning on S02-BPM-02 with S02-HCOR-02'
         self.func.align(self.Cmagnets,'S02-HCOR2',self.Cbpms,'S02-BPM02', self.target1, self.tol1, self.initialCurrentStep)
@@ -488,7 +534,8 @@ class Model(QObject):
     def measureMomentumAlign_4(self):
         print 'Retract S02-YAG-02'# **change back to -02**'
         screen = 'S02-SCR-02'
-        self.scrn.moveScreenTo(screen,scrn.SCREEN_STATE.V_RETRACTED)
+        #self.scrn.moveScreenTo(screen,scrn.SCREEN_STATE.V_RETRACTED)
+        self.scrn.moveScreenTo(screen,scrn.SCREEN_STATE.V_RF)
         #time.sleep(5)
         if self.scrn.isYAGIn(screen) is True:
             while True:
@@ -541,25 +588,29 @@ class Model(QObject):
         #                              self.roughMinI, self.roughMaxI, self.tol3)#0.00001                 # tol=0.0001 (metres)
         self.approxI = self.findDipoleCurrent()
         self.approx_p = self.func.calcMom(self.Cmagnets,self.dipole,self.approxI)
-        print self.approx_p
+        #print self.approx_p
 
         #######################################################################
         # based on AutoPhaseCalibv2 model 22/8/18
     def findDipoleCurrent(self):
-        #self.startingDipole = self.machine.getDip()
+        self.dipCurrent = []
+        self.BPMPosition = []
+        self.startingDipole = self.Cmagnets.getSI(self.dipole)
         self.Cmagnets.getSI(self.dipole)
-        self.sleepTimeDipole = 0.001
-        self.sleepTime = 0.001
+        self.sleepTimeDipole = 0.1
+        self.sleepTime = 0.05
         # need to reset data array
         #self.resetDataArray()
         if self.view.comboBox_selectRF.currentIndex() == 0: # gun
             self.dipoleIStep = 0.1
             self.nSamples = 10
             self.getDataFunction = partial(self.func.getBPMPosition, self.Cbpms,'C2V-BPM01')
+            #self.getDataFunction = partial(self.func.getXBPM, self.Cbpms,'C2V-BPM01', self.nSamples)
         elif self.view.comboBox_selectRF.currentIndex() == 1: # linac
             self.dipoleIStep = 1
             self.nSamples = 3
             self.getDataFunction = partial(self.func.getBPMPosition, self.Cbpms,'C2V-BPM01')
+            #self.getDataFunction = partial(self.func.getXBPM, self.Cbpms,'C2V-BPM01', self.nSamples)
 
         range = np.arange(self.roughMinI, self.roughMaxI, self.dipoleIStep)
         for i,I in enumerate(range):
@@ -567,23 +618,46 @@ class Model(QObject):
             #if self._abort or self._finished:
             #    return
             self.Cmagnets.setSI(self.dipole, I)
-            self.Cmagnets.getSI(self.dipole)
-            while abs(self.Cmagnets.getSI(self.dipole) - I) > 0.2:
+            #self.Cmagnets.getSI(self.dipole)
+            while abs(self.Cmagnets.getSI(self.dipole) - I) > 0.05:
+                print 'Waiting for dipole, set=', I, 'read=', self.Cmagnets.getSI(self.dipole), 'diff=', abs(self.Cmagnets.getSI(self.dipole) - I)
                 time.sleep(self.sleepTimeDipole)
-                data, stddata = self.getData() # could replace getData->func.getBPMPosition with func.getXBPM
-            self.appendDataArray(I, data, stddata)
+            data, stddata = self.getData() # could replace getData->func.getBPMPosition with func.getXBPM
+            print 'data stddata', data, stddata
+            if data != 20:
+                self.dipCurrent.append(I)
+                self.BPMPosition.append(data)
+            QApplication.processEvents()
+            print 'I = ', I
+            #time.sleep(0.1)
+            #self.appendDataArray(I, data, stddata)
 
-        self.doFitDipoleCurrent() #need to add this in
-        self.machine.setDip(self.startingDipole)
-        while abs(self.machine.getDip() - self.startingDipole) > 0.2:
+        #self.doFitDipoleCurrent() #need to add this in
+        #self.machine.setDip(self.startingDipole)
+        # self.Cmagnets.setSI(self.dipole, self.startingDipole)
+        # while abs(self.Cmagnets.getSI(self.dipole) - self.startingDipole) > 0.2:
+        #     time.sleep(self.sleepTimeDipole)
+        arg_min = np.argmin(self.BPMPosition)
+        arg_max = np.argmax(self.BPMPosition)
+        #print 'argmax = ', arg_min, self.BPMPosition[arg_min], self.dipCurrent[arg_min]
+        #print 'argmax = ', arg_max, self.BPMPosition[arg_max], self.dipCurrent[arg_max]
+        self.fineMinI = self.dipCurrent[arg_min]
+        self.fineMaxI = self.dipCurrent[arg_max]
+        approxI =  (self.dipCurrent[arg_min]+self.dipCurrent[arg_max])/2
+        self.fineGetCurrentRange_2()
+        self.Cmagnets.setSI(self.dipole, approxI)
+        while abs(self.Cmagnets.getSI(self.dipole) - approxI) > 0.2:
             time.sleep(self.sleepTimeDipole)
+        return approxI
+
+
 		#self.progress.emit(100)
 
-    def appendDataArray(self, x, y, yStd):
-        self.crestingData[self.cavity][self.actuator]['xData'].append(x)
-        self.crestingData[self.cavity][self.actuator]['yData'].append(y)
-        self.crestingData[self.cavity][self.actuator]['yStd'].append(yStd)
-		#self.newData.emit()
+    # def appendDataArray(self, x, y, yStd):
+    #     self.crestingData[self.cavity][self.actuator]['xData'].append(x)
+    #     self.crestingData[self.cavity][self.actuator]['yData'].append(y)
+    #     self.crestingData[self.cavity][self.actuator]['yStd'].append(yStd)
+	# 	#self.newData.emit()
 
     def getData(self):
         # self.data = []
@@ -595,6 +669,7 @@ class Model(QObject):
         while len(self.data) < self.nSamples:
             self.data.append(self.getDataFunction())
             time.sleep(self.sleepTime)
+        #print 'ingetData', np.mean(self.data), np.std(self.data)
         return [np.mean(self.data), np.std(self.data)] if np.std(self.data) > 0.001 else [20,0]
 
     def abort(self):
