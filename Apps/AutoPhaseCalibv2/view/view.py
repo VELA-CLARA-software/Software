@@ -25,7 +25,7 @@ except AttributeError:
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
-        MainWindow.resize(1040, 906)
+        MainWindow.resize(1040, 930)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -33,7 +33,7 @@ class Ui_MainWindow(object):
         MainWindow.setSizePolicy(sizePolicy)
         MainWindow.setMaximumSize(QtCore.QSize(16777215, 16777215))
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8("../../../Resources/Icons/mountain-summit.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8("crester.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         MainWindow.setWindowIcon(icon)
         self.centralwidget = QtGui.QWidget(MainWindow)
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
@@ -831,7 +831,7 @@ class Ui_MainWindow(object):
         MainWindow.setTabOrder(self.checkBox_deguassC, self.checkBox_deguassS)
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(_translate("MainWindow", "Phase Calibration", None))
+        MainWindow.setWindowTitle(_translate("MainWindow", "Autocrester v2", None))
         self.groupBox.setTitle(_translate("MainWindow", "Status", None))
         self.label_MODE.setText(_translate("MainWindow", "Mode", None))
         self.Gun_Phase_Monitor.setSuffix(_translate("MainWindow", "°", None))

@@ -76,7 +76,7 @@ class Model(object):
 
 	def __init__(self, machineType='Physical', lineType='CLARA', gunType='10Hz'):
 		super(Model, self).__init__()
-		self.baseMachine = machine.Machine(machineType, lineType, gunType, controllers=['magnets', 'bpms'])
+		self.baseMachine = machine.Machine(machineType, lineType, gunType, controllers=['magnets', 'bpms', 'linac1llrf'])
 		self.machine = self.baseMachine#machineSetter(self.baseMachine)
 		self.machineType = machineType
 		self.lineType = lineType
@@ -93,22 +93,17 @@ class Model(object):
 		print("Model Initialized")
 
 
-	def quadAligner(self, quad, bpm, stepSize=1, nSamples=4, start=0, end=10, momentum=35):
-		self.quad = quad#'S02-QUAD'+str(no)
-		self.bpm = bpm
-		self.momentum = momentum
-		self.quadLength = self.machine.magnets.getMagneticLength(self.quad)/1000.0
-		bpmpos = self.machine.bpms.getPosition(self.bpm)
-		quadpos = self.machine.magnets.getPosition(self.quad)
-		self.driftLength = bpmpos-quadpos
-		# print bpmpos, quadpos, self.driftLength
-		self.actuator = 'alignment'
+	def measureDispersion(self, nSamples=4, start=12000, end=13000, stepSize=200, BA1=False):
+		self.bpms = ['INJ-BPM04', 'INJ-BPM05']
+		if BA1:
+			self.bpms = self.bpms + ['BA1-BPM01', 'BA1-BPM02', 'BA1-BPM03', 'BA1-BPM04']
+		self.actuator = 'dispersion'
 		self.stepSize = stepSize
 		self.nSamples = nSamples
-		self.startI = start
-		self.endI = end
-		self.dataFunction = [partial(self.machine.getBPMPosition, self.bpm),partial(self.machine.getBPMPosition, self.bpm, plane='Y')]
-		return self.doQuadAlignment()#
+		self.startSET = start
+		self.endSET = end
+		self.dataFunction = [partial(self.machine.getBPMPosition, bpm, plane='X') for bpm in self.bpms]
+		return self.doDispersionMeasurement()#
 
 	def getDataFunction(self):
 		return [b() for b in self.dataFunction]
@@ -119,44 +114,42 @@ class Model(object):
 		while len(self.data) < self.nSamples:
 			self.data.append(self.getDataFunction())
 			time.sleep(self.sleepTime)
+		print self.data
 		self.data = zip(*self.data)
 		self.data = [np.mean([a for a in b if not np.isnan(a)]) for b in self.data]
 		return self.data
 
-	def getK(self, magnetname, momentum):
-		current = self.machine.getQuad(magnetname)
-		magnet = self.machine.magnets.getMagObjConstRef(magnetname)
-		sign = np.copysign(1, current)
-		coeffs = np.append(magnet.fieldIntegralCoefficients[:-1] * sign, magnet.fieldIntegralCoefficients[-1])
-		int_strength = np.polyval(coeffs, abs(current))
-		effect = SPEED_OF_LIGHT * int_strength / momentum
-		k = 1000 * effect / magnet.magneticLength  # focusing term K
-		return k
+	def fitting_equation(self, x, a, b, c):
+		return a + b * x + c * x**2
 
-	def fitting_equation(self, x, a, b):
-		return a + b * x
-
-	def doQuadAlignment(self):
-		print 'Starting quadrupole ', self.quad
+	def doDispersionMeasurement(self):
+		print 'Starting measurement'
 		self.currentData = []
-		range = np.arange(self.startI, self.endI + self.stepSize, self.stepSize)
-		for i, current in enumerate(range):
-			self.machine.setQuad(self.quad, current)
-			time.sleep(0.5)
+		range = np.arange(self.startSET, self.endSET + self.stepSize, self.stepSize)
+		for i, set in enumerate(range):
+			self.machine.setLinac1Amplitude(set)
+			time.sleep(1)
 			data = self.getData()
-			k = self.getK(self.quad, self.momentum)
-			print 'I = ', current, ' k = ', k, ' xy = ', data
+			print 'SET = ', set, ' x = ', data
 			if not any([np.isnan(a) for a in data]):
-				self.currentData.append([k, data[0], data[1]])
-		self.machine.setQuad(self.quad, 0)
-		k, x, y = [np.array(a) for a in zip(*self.currentData)]
-		fitx = self.do_fit(k, x/1000.)
-		fity = self.do_fit(k, y/1000.)
-		offsetx = fitx / (self.driftLength * self.quadLength)
-		offsety = fity / (self.driftLength * self.quadLength)
-		print 'Quadrupole ', self.quad, ': dx = ', 1000.*offsetx, 'mm   dy=', 1000.*offsety,'mm'
-		return [self.quad, 1000.*offsetx, 1000.*offsety]
+				dataarray = [set]
+				dataarray = dataarray + data
+				self.currentData.append(dataarray)
+		self.machine.setLinac1Amplitude(13000)
+		self.currentData = np.array(self.currentData)
+		self.fits = {}
+		fits = []
+		for i,b in enumerate(self.bpms):
+			self.fits[b] = {}
+			x = self.currentData[:,0]
+			y = self.currentData[:, i+1]
+			xy = zip(x,y)
+			xy = [a for a in xy if not np.isnan(a[1])]
+			x,y = zip(*xy)
+			self.fits[b]['data'] = [x,y]
+			self.fits[b]['fit'] = self.do_fit(x,y)
+		return self.currentData, self.fits
 
 	def do_fit(self, x, y):
 		popt, pcov = curve_fit(self.fitting_equation, x, y)
-		return popt[1]
+		return popt

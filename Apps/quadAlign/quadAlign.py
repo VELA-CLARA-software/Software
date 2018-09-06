@@ -7,7 +7,8 @@ momentum = raw_input("What is your momentum in MeV/c? ")
 # sys.stdout = open(filename, "w")
 print 'Input momentum is ', momentum, 'MeV/c'
 
-
+timestr = time.strftime("%H%M%S")
+dir = '\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Work\\'+time.strftime("%Y\\%m\\%d")+'\\'
 with open(dir+timestr+'_'+'_QuadAlign.dat', 'a') as file:
 	for no in range(1,5):
 		quad = 'S02-QUAD'+str(no)
