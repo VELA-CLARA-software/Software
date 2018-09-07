@@ -22,10 +22,41 @@ class GenericThread(QThread):
 
     def run(self):
         self.object = self.function(*self.args, **self.kwargs)
-        print 'finished!'
+        # print 'finished!'
+
+class HAxisRF(pg.AxisItem):
+    def __init__(self, orientation=None, pen=None, linkView=None, parent=None, maxTickLength=-5, showValues=True):
+        super(HAxisRF, self).__init__(parent=parent, orientation=orientation, linkView=linkView)
+        self.setTickSpacing(major=20, minor=5)
+
+    def tickStrings(self, values, scale, spacing):
+        """Return the strings that should be placed next to ticks. This method is called
+        when redrawing the axis and is a good method to override in subclasses.
+        The method is called with a list of tick values, a scaling factor (see below), and the
+        spacing between ticks (this is required since, in some instances, there may be only
+        one tick and thus no other way to determine the tick spacing)
+
+        The scale argument is used when the axis label is displaying units which may have an SI scaling prefix.
+        When determining the text to display, use value*scale to correctly account for this prefix.
+        For example, if the axis label's units are set to 'V', then a tick value of 0.001 might
+        be accompanied by a scale value of 1000. This indicates that the label is displaying 'mV', and
+        thus the tick should display 0.001 * 1000 = 1.
+        """
+        if self.logMode:
+            return self.logTickStrings(values, scale, spacing)
+
+        places = max(0, np.ceil(-np.log10(spacing*scale)))
+        strings = []
+        for v in values:
+            vs = np.mod(v * scale + 180, 360) - 180
+            if abs(vs) < .001 or abs(vs) >= 10000:
+                vstr = "%g" % vs
+            else:
+                vstr = ("%%0.%df" % places) % vs
+            strings.append(vstr)
+        return strings
 
 class plotWidgets(pg.GraphicsView):
-
 
     def __init__(self, cavity, approximateText='Charge', approximateUnits='pC'):
         super(plotWidgets, self).__init__()
@@ -35,7 +66,8 @@ class plotWidgets(pg.GraphicsView):
         self.setCentralItem(self.layout)
         self.mainPlot = {}
         self.subPlots = {}
-        self.mainPlot['approx'] = self.layout.addPlot(title="Approximate Callibration")
+        haxisrfapprox = HAxisRF(orientation='bottom')
+        self.mainPlot['approx'] = self.layout.addPlot(title="Approximate Callibration", axisItems={'bottom': haxisrfapprox})
         self.mainPlot['approx'].showGrid(x=True, y=True)
         self.mainPlot['approx'].setLabel('left', approximateText, approximateUnits)
         self.mainPlot['approx'].setLabel('bottom', text='Phase', units='Degrees')
@@ -47,14 +79,16 @@ class plotWidgets(pg.GraphicsView):
         self.mainPlot['dipole'].setLabel('bottom', text='Dipole Current', units='Amps')
         self.subPlots['dipole'] = {}
         self.layout.nextRow()
-        self.mainPlot['fine'] = self.layout.addPlot(title="Fine BPM Callibration")
+        haxisrffine = HAxisRF(orientation='bottom')
+        self.mainPlot['fine'] = self.layout.addPlot(title="Fine BPM Callibration", axisItems={'bottom': haxisrffine})
         self.mainPlot['fine'].showGrid(x=True, y=True)
         self.mainPlot['fine'].setLabel('left', text='X BPM Position', units='mm')
         self.mainPlot['fine'].setLabel('bottom', text='Phase', units='Degrees')
         self.subPlots['fine'] = {}
         if self.cavity is not 'Gsun':
             self.layout.nextRow()
-            self.mainPlot['screen'] = self.layout.addPlot(title="Fine Screen Callibration")
+            haxisrfscreen = HAxisRF(orientation='bottom')
+            self.mainPlot['screen'] = self.layout.addPlot(title="Fine Screen Callibration", axisItems={'bottom': haxisrfscreen})
             self.mainPlot['screen'].showGrid(x=True, y=True)
             self.mainPlot['screen'].setLabel('left', text='X Screen Position', units='mm')
             self.mainPlot['screen'].setLabel('bottom', text='Phase', units='Degrees')
@@ -114,7 +148,7 @@ class Controller(QObject):
     progressSignal = pyqtSignal(int)
 
     defaults = {'Gun_Amp_Step_Set': 100,
-    'Gun_Amp_Set': 16280,
+    'Gun_Amp_Set': 16000,
     'Gun_Rough_NShots_Set': 3,
     'Gun_Rough_PointSeperation_Set': 5,
     'Gun_Rough_Fit_Offset': 10,
@@ -194,8 +228,8 @@ class Controller(QObject):
 
         self.log = lw.loggerWidget()
         self.log.setFilterLevel('Info')
-        sys.stdout = lw.redirectLogger(self.log, 'stdout')
-        sys.stderr = lw.redirectLogger(self.log, 'stderr')
+        # sys.stdout = lw.redirectLogger(self.log, 'stdout')
+        # sys.stderr = lw.redirectLogger(self.log, 'stderr')
 
         self.view.logTabLayout.addWidget(self.log)
         self.log.addLogger(logger)
@@ -203,11 +237,12 @@ class Controller(QObject):
         self.buttons = [self.view.setupMagnetsButton, self.view.Gun_LoadBURT_Button, self.view.Gun_EnergySet_Button,
         self.view.Gun_Rough_Button, self.view.Gun_Dipole_Button,self.view.Gun_Fine_Button, self.view.Gun_SetPhase_Button,
         self.view.Linac1_Rough_Button, self.view.Linac1_Dipole_Button, self.view.Linac1_Fine_Button, self.view.Linac1_SetPhase_Button,
-        self.view.Linac1_LoadBURT_Button, self.view.Linac1_EnergySet_Button, self.view.Linac1_Fine_Screen_Button, self.view.Gun_Fine_Screen_Button
+        self.view.Linac1_LoadBURT_Button, self.view.Linac1_EnergySet_Button, self.view.Linac1_Fine_Screen_Button, self.view.Gun_Fine_Screen_Button,
+        self.view.Linac1_TurnOn_Button, self.view.Gun_TurnOn_Button, self.view.Gun_Fine_Update_Start_Button, self.view.Linac1_Fine_Update_Start_Button
         ]
 
         # self.view.setupMagnetsButton.clicked.connect(self.model.magnetDegausser)
-        # self.view.Gun_TurnOn_Button.clicked.connect(self.model.turnOnGun)
+        self.view.Gun_TurnOn_Button.clicked.connect(self.gunRamp)
         self.view.Gun_LoadBURT_Button.clicked.connect(self.loadGunBURT)
         self.view.Gun_Rough_Button.clicked.connect(self.gunWCMCrester)
         self.view.Gun_Dipole_Button.clicked.connect(self.setDipoleCurrentForGun)
@@ -217,7 +252,8 @@ class Controller(QObject):
         self.view.Gun_Momentum_Set.valueChanged[float].connect(self.updateGunDipoleSet)
         self.view.Gun_Dipole_Set.valueChanged[float].connect(self.updateGunMomentumSet)
         self.view.Gun_Fine_Update_Start_Button.clicked.connect(self.updateStartingGunPhaseCurrent)
-        # self.view.Linac1_TurnOn_Button.clicked.connect(self.model.turnOnLinac)
+
+        self.view.Linac1_TurnOn_Button.clicked.connect(self.linac1Ramp)
         self.view.Linac1_LoadBURT_Button.clicked.connect(self.loadLinac1BURT)
         self.view.Linac1_Rough_Button.clicked.connect(self.linac1CresterQuick)
         self.view.Linac1_Dipole_Button.clicked.connect(self.setDipoleCurrentForLinac1)
@@ -247,10 +283,14 @@ class Controller(QObject):
         self.monitors = {}
         self.monitors['gun_phase'] = updatingTimer(self.view.Gun_Phase_Monitor, self.model.machine.getGunPhase)
         self.monitors['gun_phase'].start()
+        self.monitors['gun_amp'] = updatingTimer(self.view.Gun_Amp_Monitor, self.model.machine.getGunAmplitude)
+        self.monitors['gun_amp'].start()
         self.monitors['gun_dipole'] = updatingTimer(self.view.Dipole_Monitor, self.model.machine.getDip)
         self.monitors['gun_dipole'].start()
         self.monitors['linac1_phase'] = updatingTimer(self.view.Linac1_Phase_Monitor, self.model.machine.getLinac1Phase)
         self.monitors['linac1_phase'].start()
+        self.monitors['linac1_amp'] = updatingTimer(self.view.Linac1_Amp_Monitor, self.model.machine.getLinac1Amplitude)
+        self.monitors['linac1_amp'].start()
 
     def closeEvent(self, event):
         for t in self.monitors:
@@ -343,6 +383,22 @@ class Controller(QObject):
 
     def updatePlot(self):
         self.plots[self.cavity].newData(self.model.cavity, self.model.actuator, self.model.crestingData[self.model.cavity][self.model.actuator])
+
+    def gunRamp(self):
+        self.disableButtons()
+        self.cavity = 'Gun'
+        self.actuator = 'approx'
+        self.thread = GenericThread(self.model.turnOnGun, self.view.Gun_Amp_Set.value(), self.view.Gun_Amp_Step_Set.value())
+        self.thread.finished.connect(self.enableButtons)
+        self.thread.start()
+
+    def linac1Ramp(self):
+        self.disableButtons()
+        self.cavity = 'Linac1'
+        self.actuator = 'approx'
+        self.thread = GenericThread(self.model.turnOnLinac1, self.view.Linac1_Amp_Set.value(), self.view.Linac1_Amp_Step_Set.value())
+        self.thread.finished.connect(self.enableButtons)
+        self.thread.start()
 
     def gunWCMCrester(self):
         self.disableButtons()

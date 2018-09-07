@@ -131,6 +131,32 @@ class Model(object):
         else:
             return self.machine.applyDBURT('Linac1Crest.dburt')
 
+    def turnOnGun(self, max, step):
+        self.resetAbortFinish()
+        max = max if max <= 16000 else 16000
+        start = self.machine.getGunAmplitude()
+        range =  np.arange(start, max+1, step)
+        for i, set in enumerate(range):
+            self.progress.emit(100*i/len(range))
+            if self._abort or self._finished:
+                return
+            self.machine.setGunAmplitude(set)
+            time.sleep(1)
+        self.machine.setGunAmplitude(max)
+
+    def turnOnLinac1(self, max, step):
+        self.resetAbortFinish()
+        max = max if max <= 13500 else 13500
+        start = self.machine.getLinac1Amplitude()
+        range =  np.arange(start, max+1, step)
+        for i, set in enumerate(range):
+            self.progress.emit(100*i/len(range))
+            if self._abort or self._finished:
+                return
+            self.machine.setLinac1Amplitude(set)
+            time.sleep(1)
+        self.machine.setLinac1Amplitude(max)
+
     def gunWCMCrester(self, stepSize=5, nSamples=4, offset=10):
         self.resetAbortFinish()
         self.cavity = 'Gun'
@@ -371,7 +397,6 @@ class Model(object):
     def setFinalPhase(self, phase):
         phase = np.mod(180+phase,360)-180
         self.crestingData[self.cavity]['calibrationPhase'] = phase
-        print 'self.machineType = ', self.machineType
         if not self.machineType == 'None':
             self.getRFTraces()
 

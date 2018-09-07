@@ -31,10 +31,12 @@ class runMainApp(QtCore.QThread):
         self.args = sys_argv
 
     def start(self):
-        self.appObject = App(self.args)
+        global app
+        self.appObject = App(app, self.args)
 
 if __name__ == "__main__":
     import sys
+    global app
     app = QtGui.QApplication(sys.argv)
     MainWindow = QtGui.QMainWindow()
     launcher = launcherUI()
