@@ -1,0 +1,327 @@
+{
+    "bpm_data": {
+        "BA1-BPM01": {
+            "q": -999.999, 
+            "status": BAD, 
+            "x": -0.5619132859380277, 
+            "y": -1.8709295857389847
+        }, 
+        "BA1-BPM02": {
+            "q": -999.999, 
+            "status": BAD, 
+            "x": 1.5719399975729809, 
+            "y": -5.436339334453097
+        }, 
+        "BA1-BPM03": {
+            "q": -999.999, 
+            "status": BAD, 
+            "x": -13.406876488333852, 
+            "y": -4.314863706627854
+        }, 
+        "BA1-BPM04": {
+            "q": 49.70161535784246, 
+            "status": BAD, 
+            "x": 12.85956332002277, 
+            "y": -0.28431310190861314
+        }, 
+        "C2V-BPM01": {
+            "q": -999.999, 
+            "status": BAD, 
+            "x": -3.294445579228952, 
+            "y": 0.418120494412056
+        }, 
+        "INJ-BPM03": {
+            "q": -999.999, 
+            "status": BAD, 
+            "x": 9.076818596776667, 
+            "y": -1.9601743784011743
+        }, 
+        "INJ-BPM04": {
+            "q": -999.999, 
+            "status": BAD, 
+            "x": 0.4666509575643708, 
+            "y": 1.373442627310219
+        }, 
+        "INJ-BPM05": {
+            "q": -999.999, 
+            "status": BAD, 
+            "x": -0.7716519105497964, 
+            "y": 0.46229832992907904
+        }, 
+        "INJ-BPM06": {
+            "q": -999.999, 
+            "status": BAD, 
+            "x": NaN, 
+            "y": NaN
+        }, 
+        "S01-BPM01": {
+            "q": 64.91615220877388, 
+            "status": GOOD, 
+            "x": -0.3265694547866117, 
+            "y": -0.2215447246078534
+        }, 
+        "S02-BPM01": {
+            "q": 57.694659778679096, 
+            "status": GOOD, 
+            "x": -1.6440858795046973, 
+            "y": -2.2111107119979896
+        }, 
+        "S02-BPM02": {
+            "q": 77.8406974097415, 
+            "status": GOOD, 
+            "x": -1.919422594190742, 
+            "y": -1.7392397364144416
+        }
+    }, 
+    "chg_data": {
+        "S02-FCUP": 1.8013255056287136, 
+        "WCM": 64.86757295859378
+    }, 
+    "gun_data": {
+        "amp_mvm": 16000.0, 
+        "amp_sp": 16000.0, 
+        "phase_llrf": -146.5216562016007, 
+        "phase_sp": -146.5242382913294
+    }, 
+    "l01_data": {
+        "amp_mvm": 13000.0, 
+        "amp_sp": 13000.0, 
+        "phase_llrf": 13.378703145623364, 
+        "phase_sp": 13.378621489856364
+    }, 
+    "machine_area": CLARA_2_BA1_BA2, 
+    "machine_mode": PHYSICAL, 
+    "mag_data": {
+        "C2V-HCOR1": {
+            "psu_state": MAG_PSU_ON, 
+            "readi": 0.0
+        }, 
+        "C2V-QUAD1": {
+            "k": 0.12766288517212776, 
+            "psu_state": MAG_PSU_ON, 
+            "readi": 0.0
+        }, 
+        "C2V-QUAD2": {
+            "k": 0.14714344549036334, 
+            "psu_state": MAG_PSU_ON, 
+            "readi": 0.0
+        }, 
+        "C2V-QUAD3": {
+            "k": 0.12382335152710364, 
+            "psu_state": MAG_PSU_ON, 
+            "readi": 0.0
+        }, 
+        "C2V-VCOR1": {
+            "psu_state": MAG_PSU_ON, 
+            "readi": 0.0
+        }, 
+        "INJ-DIP01": {
+            "angle": 8.155935804915876, 
+            "psu_state": MAG_PSU_ON, 
+            "readi": 0.0
+        }, 
+        "INJ-DIP02": {
+            "angle": -19.34765931367269, 
+            "psu_state": MAG_PSU_ON, 
+            "readi": 0.0
+        }, 
+        "INJ-DIP03": {
+            "angle": 13.678827879623444, 
+            "psu_state": MAG_PSU_ON, 
+            "readi": 0.0
+        }, 
+        "INJ-HCOR05": {
+            "psu_state": MAG_PSU_ON, 
+            "readi": 0.0
+        }, 
+        "INJ-HCOR06": {
+            "psu_state": MAG_PSU_ON, 
+            "readi": 0.0
+        }, 
+        "INJ-HCOR07": {
+            "psu_state": MAG_PSU_ON, 
+            "readi": 0.0
+        }, 
+        "INJ-HCOR08": {
+            "psu_state": MAG_PSU_ON, 
+            "readi": 0.0
+        }, 
+        "INJ-HCOR09": {
+            "psu_state": MAG_PSU_ON, 
+            "readi": 0.0
+        }, 
+        "INJ-HCOR10": {
+            "psu_state": MAG_PSU_ON, 
+            "readi": 0.0
+        }, 
+        "INJ-HCOR11": {
+            "psu_state": MAG_PSU_ON, 
+            "readi": 0.0
+        }, 
+        "INJ-QUAD05": {
+            "k": 0.0094090366552537462, 
+            "psu_state": MAG_PSU_ON, 
+            "readi": 0.0
+        }, 
+        "INJ-QUAD06": {
+            "k": 0.017857929500444999, 
+            "psu_state": MAG_PSU_ON, 
+            "readi": 0.0
+        }, 
+        "INJ-QUAD07": {
+            "k": 0.01851292941991569, 
+            "psu_state": MAG_PSU_ON, 
+            "readi": 0.0
+        }, 
+        "INJ-QUAD08": {
+            "k": 0.013198378760155798, 
+            "psu_state": MAG_PSU_ON, 
+            "readi": 0.0
+        }, 
+        "INJ-QUAD09": {
+            "k": -0.02118218072294838, 
+            "psu_state": MAG_PSU_ON, 
+            "readi": 0.0
+        }, 
+        "INJ-QUAD10": {
+            "k": -0.027345239344279498, 
+            "psu_state": MAG_PSU_ON, 
+            "readi": 0.0
+        }, 
+        "INJ-QUAD11": {
+            "k": -0.029154054337731342, 
+            "psu_state": MAG_PSU_ON, 
+            "readi": 0.0
+        }, 
+        "INJ-QUAD12": {
+            "k": 0.0010841721775272316, 
+            "psu_state": MAG_PSU_ON, 
+            "readi": 0.0
+        }, 
+        "INJ-QUAD13": {
+            "k": 0.0098688850120551772, 
+            "psu_state": MAG_PSU_ON, 
+            "readi": 0.0
+        }, 
+        "INJ-QUAD14": {
+            "k": -0.36641092616443405, 
+            "psu_state": MAG_PSU_ON, 
+            "readi": 0.0
+        }, 
+        "INJ-QUAD15": {
+            "k": -0.022131319633676875, 
+            "psu_state": MAG_PSU_ON, 
+            "readi": 0.0
+        }, 
+        "INJ-VCOR05": {
+            "psu_state": MAG_PSU_ON, 
+            "readi": 0.0
+        }, 
+        "INJ-VCOR06": {
+            "psu_state": MAG_PSU_ON, 
+            "readi": 0.0
+        }, 
+        "INJ-VCOR07": {
+            "psu_state": MAG_PSU_ON, 
+            "readi": 0.0
+        }, 
+        "INJ-VCOR08": {
+            "psu_state": MAG_PSU_ON, 
+            "readi": 0.0
+        }, 
+        "INJ-VCOR09": {
+            "psu_state": MAG_PSU_ON, 
+            "readi": 0.0
+        }, 
+        "INJ-VCOR10": {
+            "psu_state": MAG_PSU_ON, 
+            "readi": 0.0
+        }, 
+        "INJ-VCOR11": {
+            "psu_state": MAG_PSU_ON, 
+            "readi": 0.0
+        }, 
+        "L01-SOL1": {
+            "larmor_angle": 0.0, 
+            "psu_state": MAG_PSU_ON, 
+            "readi": 0.0
+        }, 
+        "L01-SOL2": {
+            "larmor_angle": 0.0, 
+            "psu_state": MAG_PSU_ON, 
+            "readi": 0.0
+        }, 
+        "LRG-BSOL": {
+            "cathode_field": 0.080082366632596408, 
+            "psu_state": MAG_PSU_ON, 
+            "readi": -2.2
+        }, 
+        "LRG-SOL": {
+            "larmor_angle": -293.54448327220359, 
+            "psu_state": MAG_PSU_ON, 
+            "readi": -150.0
+        }, 
+        "S01-HCOR1": {
+            "psu_state": MAG_PSU_ON, 
+            "readi": 2.0
+        }, 
+        "S01-HCOR2": {
+            "psu_state": MAG_PSU_ON, 
+            "readi": -2.47
+        }, 
+        "S01-VCOR1": {
+            "psu_state": MAG_PSU_ON, 
+            "readi": -0.75
+        }, 
+        "S01-VCOR2": {
+            "psu_state": MAG_PSU_ON, 
+            "readi": 0.12
+        }, 
+        "S02-DIP01": {
+            "angle": 45.0, 
+            "psu_state": MAG_PSU_ON, 
+            "readi": 0.0
+        }, 
+        "S02-HCOR1": {
+            "psu_state": MAG_PSU_ON, 
+            "readi": -0.630375
+        }, 
+        "S02-HCOR2": {
+            "psu_state": MAG_PSU_ON, 
+            "readi": 0.469761
+        }, 
+        "S02-QUAD1": {
+            "k": 0.086005753329399026, 
+            "psu_state": MAG_PSU_ON, 
+            "readi": 0.0
+        }, 
+        "S02-QUAD2": {
+            "k": 0.086957913203637507, 
+            "psu_state": MAG_PSU_ON, 
+            "readi": 0.0
+        }, 
+        "S02-QUAD3": {
+            "k": 0.084174375297392023, 
+            "psu_state": MAG_PSU_ON, 
+            "readi": 0.0
+        }, 
+        "S02-QUAD4": {
+            "k": 0.083083732484267786, 
+            "psu_state": MAG_PSU_ON, 
+            "readi": 0.0
+        }, 
+        "S02-QUAD5": {
+            "k": 0.083083732484267966, 
+            "psu_state": MAG_PSU_ON, 
+            "readi": 0.0
+        }, 
+        "S02-VCOR1": {
+            "psu_state": MAG_PSU_ON, 
+            "readi": 0.35
+        }, 
+        "S02-VCOR2": {
+            "psu_state": MAG_PSU_ON, 
+            "readi": -0.0
+        }
+    }
+}
