@@ -7,9 +7,9 @@ SPEED_OF_LIGHT = constants.c / 1e6
 
 class MachineSnapshot(object):
 	def __init__(self, MAG_Ctrl=None, BPM_Ctrl=None, CHG_Ctrl=None,
-				 SCR_Ctrl=None, CAM_Ctrl=None, GUN_Ctrl=None,
-				 GUN_Type=None, L01_Ctrl=None, PIL_Ctrl=None,
-				 MACHINE_MODE=vce.MACHINE_MODE.PHYSICAL, MACHINE_AREA=vce.MACHINE_AREA.CLARA_2_BA1_BA2, messages=False):
+				 SCR_Ctrl=None, CAM_Ctrl=None, GUN_Ctrl=None, GUN_Crest=0.0,
+				 GUN_Type=None, L01_Ctrl=None, L01_Crest=0.0,
+				 PIL_Ctrl=None, MACHINE_MODE=vce.MACHINE_MODE.PHYSICAL, MACHINE_AREA=vce.MACHINE_AREA.CLARA_2_BA1_BA2, bufferSize=10, messages=False):
 
 
 		self.BPM_Ctrl = BPM_Ctrl
@@ -23,6 +23,9 @@ class MachineSnapshot(object):
 		self.PIL_Ctrl = PIL_Ctrl
 		self.MACHINE_MODE = MACHINE_MODE
 		self.MACHINE_AREA = MACHINE_AREA
+		self.bufferSize = bufferSize
+		self.GUN_Crest = GUN_Crest
+		self.L01_Crest = L01_Crest
 		self.bpm_data = {}
 		self.chg_data = {}
 		self.mag_data = {}
@@ -43,6 +46,11 @@ class MachineSnapshot(object):
 		self.mag_ctrl = self.checkMagnetController()
 		#self.pil_ctrl = self.checkPILaserController()
 		self.scr_ctrl = self.checkScreenController()
+		self.cam_ctrl.setBufferMaxCount(self.bufferSize)
+		self.bpm_ctrl.setBufferSize(self.bufferSize)
+		self.chg_ctrl.setBufferSize(self.bufferSize)
+		self.gun_ctrl.setNumBufferTraces(self.bufferSize)
+		self.l01_ctrl.setNumBufferTraces(self.bufferSize)
 		time.sleep(1)
 
 
@@ -173,32 +181,99 @@ class MachineSnapshot(object):
 
 	def getbpmdata(self):
 		self.bpm_names = self.bpm_ctrl.getBPMNames()
+		self.timenow = time.time()
 		for i in self.bpm_names:
 			self.bpm_data[i] = {}
 			self.bpm_data[i]["x"] = self.bpm_ctrl.getXFromPV(i)
 			self.bpm_data[i]["y"] = self.bpm_ctrl.getYFromPV(i)
 			self.bpm_data[i]["q"] = self.bpm_ctrl.getQ(i)
 			self.bpm_data[i]["status"] = self.bpm_ctrl.getBPMStatus(i)
+			self.bpm_data[i]['sa1'] = self.bpm_ctrl.getSA1(i)
+			self.bpm_data[i]['sa2'] = self.bpm_ctrl.getSA2(i)
+			self.bpm_data[i]['sd1'] = self.bpm_ctrl.getSD1(i)
+			self.bpm_data[i]['sd2'] = self.bpm_ctrl.getSD2(i)
+			# if self.bpm_ctrl.getBPMStatusStr(i) == "GOOD":
+			# 	while self.bpm_ctrl.isDataBufferNotFull(i):
+			# 		time.sleep(0.1)
+			self.bpm_data[i]['x_buffer'] = self.bpm_ctrl.getBPMXBuffer(i)
+			self.bpm_data[i]['y_buffer'] = self.bpm_ctrl.getBPMYBuffer(i)
+			self.bpm_data[i]['q_buffer'] = self.bpm_ctrl.getBPMQBuffer(i)
 		return self.bpm_data
 
 	def getchargedata(self):
 		self.chg_names = self.chg_ctrl.getChargeDiagnosticNames()
 		for i in self.chg_names:
-			self.chg_data[i] = self.chg_ctrl.getCharge(i)
+			self.chg_data[i] = {}
+			self.chg_data[i]['q'] = self.chg_ctrl.getCharge(i)
+			while self.chg_ctrl.isChargeBufferNotFull(i):
+				time.sleep(0.1)
+			self.chg_data[i]['q_buffer'] = self.chg_ctrl.getChargeBuffer(i)
 		return self.chg_data
 
 	def getgundata(self):
-		self.gun_data["amp_sp"] = self.gun_ctrl.getAmpSP()
-		self.gun_data["amp_mvm"] = self.gun_ctrl.getAmpMVM()
-		self.gun_data["phase_sp"] = self.gun_ctrl.getPhiSP()
-		self.gun_data["phase_llrf"] = self.gun_ctrl.getPhiLLRF()
+		self.gun_ctrl.setCrestPhiLLRF(self.GUN_Crest)
+		self.gun_obj = self.gun_ctrl.getLLRFObjConstRef()
+		self.gun_data["amp_sp"] = self.gun_obj.amp_sp
+		self.gun_data["amp_mvm"] = self.gun_obj.amp_MVM
+		self.gun_data["phase_sp"] = self.gun_obj.phi_sp
+		self.gun_data["phase_from_crest"] = self.gun_obj.phi_DEG
+		self.gun_data["crest"] = self.gun_obj.crestPhi
+		self.gun_data["name"] = self.gun_obj.name
+		self.gun_data["pulse_length"] = self.gun_obj.pulse_length
+		self.gun_data["pulse_offset"] = self.gun_obj.pulse_offset
+		self.gun_data["kly_fwd_power_av"] = self.gun_ctrl.getKlyFwdPowerAv()
+		self.gun_data["kly_rev_power_av"] = self.gun_ctrl.getKlyRevPowerAv()
+		self.gun_data["kly_fwd_phase_av"] = numpy.mean(self.gun_ctrl.getKlyFwdPhase())
+		self.gun_data["kly_rev_phase_av"] = numpy.mean(self.gun_ctrl.getKlyRevPhase())
+		self.gun_data["probe_power_av"] = self.gun_ctrl.getProbePowerAv()
+		self.gun_data["probe_phase_av"] = self.gun_ctrl.getProbePhaseAv()
+		self.gun_data["cav_fwd_power_av"] = self.gun_ctrl.getCavFwdPowerAv()
+		self.gun_data["cav_rev_power_av"] = self.gun_ctrl.getCavRevPowerAv()
+		self.gun_data["cav_fwd_phase_av"] = self.gun_ctrl.getCavFwdPhaseAv()
+		self.gun_data["cav_rev_phase_av"] = self.gun_ctrl.getCavRevPhaseAv()
+		'''self.gun_data["kly_fwd_power"] = self.gun_ctrl.getKlyFwdPower()
+		self.gun_data["kly_rev_power"] = self.gun_ctrl.getKlyRevPower()
+		self.gun_data["kly_fwd_phase"] = self.gun_ctrl.getKlyFwdPhase()
+		self.gun_data["kly_rev_phase"] = self.gun_ctrl.getKlyRevPhase()
+		self.gun_data["probe_power"] = self.gun_ctrl.getProbePower()
+		self.gun_data["probe_phase"] = self.gun_ctrl.getProbePhase()
+		self.gun_data["cav_fwd_power"] = self.gun_ctrl.getCavFwdPower()
+		self.gun_data["cav_rev_power"] = self.gun_ctrl.getCavRevPower()
+		self.gun_data["cav_fwd_phase"] = self.gun_ctrl.getCavFwdPhase()
+		self.gun_data["cav_rev_phase"] = self.gun_ctrl.getCavRevPhase()'''
 		return self.gun_data
 
 	def getl01data(self):
-		self.l01_data["amp_sp"] = self.l01_ctrl.getAmpSP()
-		self.l01_data["amp_mvm"] = self.l01_ctrl.getAmpMVM()
-		self.l01_data["phase_sp"] = self.l01_ctrl.getPhiSP()
-		self.l01_data["phase_llrf"] = self.l01_ctrl.getPhiLLRF()
+		self.l01_ctrl.setCrestPhiLLRF(self.L01_Crest)
+		self.l01_obj = self.l01_ctrl.getLLRFObjConstRef()
+		self.l01_data["amp_sp"] = self.l01_obj.amp_sp
+		self.l01_data["amp_mvm"] = self.l01_obj.amp_MVM
+		self.l01_data["phase_sp"] = self.l01_obj.phi_sp
+		self.l01_data["phase_from_crest"] = self.l01_obj.phi_DEG
+		self.l01_data["crest"] = self.l01_obj.crestPhi
+		self.l01_data["name"] = self.l01_obj.name
+		self.l01_data["pulse_length"] = self.l01_obj.pulse_length
+		self.l01_data["pulse_offset"] = self.l01_obj.pulse_offset
+		self.l01_data["kly_fwd_power_av"] = self.l01_ctrl.getKlyFwdPowerAv()
+		self.l01_data["kly_rev_power_av"] = self.l01_ctrl.getKlyRevPowerAv()
+		self.l01_data["kly_fwd_phase_av"] = numpy.mean(self.gun_ctrl.getKlyFwdPhase())
+		self.l01_data["kly_rev_phase_av"] = numpy.mean(self.gun_ctrl.getKlyRevPhase())
+		self.l01_data["probe_power_av"] = self.l01_ctrl.getProbePowerAv()
+		self.l01_data["probe_phase_av"] = self.l01_ctrl.getProbePhaseAv()
+		self.l01_data["cav_fwd_power_av"] = self.l01_ctrl.getCavFwdPowerAv()
+		self.l01_data["cav_rev_power_av"] = self.l01_ctrl.getCavRevPowerAv()
+		self.l01_data["cav_fwd_phase_av"] = self.l01_ctrl.getCavFwdPhaseAv()
+		self.l01_data["cav_rev_phase_av"] = self.l01_ctrl.getCavRevPhaseAv()
+		'''self.l01_data["kly_fwd_power"] = self.l01_ctrl.getKlyFwdPower()
+		self.l01_data["kly_rev_power"] = self.l01_ctrl.getKlyRevPower()
+		self.l01_data["kly_fwd_phase"] = self.l01_ctrl.getKlyFwdPhase()
+		self.l01_data["kly_rev_phase"] = self.l01_ctrl.getKlyRevPhase()
+		self.l01_data["probe_power"] = self.l01_ctrl.getProbePower()
+		self.l01_data["probe_phase"] = self.l01_ctrl.getProbePhase()
+		self.l01_data["cav_fwd_power"] = self.l01_ctrl.getCavFwdPower()
+		self.l01_data["cav_rev_power"] = self.l01_ctrl.getCavRevPower()
+		self.l01_data["cav_fwd_phase"] = self.l01_ctrl.getCavFwdPhase()
+		self.l01_data["cav_rev_phase"] = self.l01_ctrl.getCavRevPhase()'''
 		return self.l01_data
 
 	def getscreendata(self):
@@ -291,57 +366,51 @@ class MachineSnapshot(object):
 					  "cam_data" : self.cameradata }
 		return self.data
 
-	def writetojson(self, filename=None, directory=None):
+	def setfilename(self, filename=None, directory=None):
 		self.filename = filename
 		self.directory = directory
 		self.timestamp = time.time()
 		self.st = datetime.datetime.fromtimestamp(self.timestamp).strftime('%Y-%m-%d-%H-%M-%S')
 		self.now = datetime.datetime.now()
 		if self.directory == None:
-			self.year = str(self.now.year)
-			self.month = str(self.now.month)
-			self.day = str(self.now.day)
-			if len(self.month) == 1:
-				self.month = "0"+self.month
-			if len(self.day) == 1:
-				self.day= "0"+self.day
-			self.directory = "\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Work\\"+self.year+"\\"+self.month+"\\"+self.day+"\\"
+			self.directory = self.getdirectory()
 		os.chdir(self.directory)
-		self.json_data = self.getdata()
 		if self.filename == None:
-			self.filename = "snapshot-"
-		self.fullname = self.filename + self.st + ".json"
+			self.filename = "snapshot-" + self.st
+		return self.filename
+
+	def writetojson(self, filename=None, directory=None):
+		self.filename = self.setfilename(filename, directory)
+		self.json_data = self.getdata()
+		self.fullname = self.filename + ".json"
 		with open(self.fullname, 'w') as outfile:
 			outfile.write(json.dumps(self.json_data, indent=4, sort_keys=True))
 
 	def writetohdf5(self, filename=None, directory=None):
-		self.filename = filename
-		self.directory = directory
-		self.timestamp = time.time()
-		self.st = datetime.datetime.fromtimestamp(self.timestamp).strftime('%Y-%m-%d-%H-%M-%S')
-		self.now = datetime.datetime.now()
-		if self.directory == None:
-			self.year = str(self.now.year)
-			self.month = str(self.now.month)
-			self.day = str(self.now.day)
-			if len(self.month) == 1:
-				self.month = "0"+self.month
-			if len(self.day) == 1:
-				self.day= "0"+self.day
-			self.directory = "\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Work\\"+self.year+"\\"+self.month+"\\"+self.day+"\\"
-		os.chdir(self.directory)
+		self.filename = self.setfilename(filename, directory)
 		self.hdf5_data = self.getdata()
-		if self.filename == None:
-			self.filename = "snapshot-"
-		self.fullname = self.filename + self.st + ".hdf5"
+		self.fullname = self.filename + ".hdf5"
 		dict_to_h5.save_dict_to_hdf5(self.hdf5_data, self.fullname)
+
+	def getdirectory(self):
+		self.now = datetime.datetime.now()
+		self.year = str(self.now.year)
+		self.month = str(self.now.month)
+		self.day = str(self.now.day)
+		if len(self.month) == 1:
+			self.month = "0" + self.month
+		if len(self.day) == 1:
+			self.day = "0" + self.day
+		self.directory = "\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Work\\" + self.year + "\\" + self.month + "\\" + self.day + "\\"
+		os.chdir(self.directory)
+		return self.directory
 
 
 if __name__ == "__main__":
 	data = MachineSnapshot(MAG_Ctrl=None, BPM_Ctrl=None, CHG_Ctrl=None,
 				 SCR_Ctrl=None, CAM_Ctrl=None, GUN_Ctrl=None,
-				 GUN_Type=None, L01_Ctrl=None, PIL_Ctrl=None,
-				 MACHINE_MODE=vce.MACHINE_MODE.PHYSICAL, MACHINE_AREA=vce.MACHINE_AREA.CLARA_2_BA1_BA2, messages=False)
+				 GUN_Type=None, GUN_Crest=0.0, L01_Ctrl=None, L01_Crest=0.0,
+				PIL_Ctrl=None, MACHINE_MODE=vce.MACHINE_MODE.PHYSICAL, MACHINE_AREA=vce.MACHINE_AREA.CLARA_2_BA1_BA2, bufferSize=10, messages=False)
 	data.writetojson()
 	data.writetohdf5()
 	print "fin"
