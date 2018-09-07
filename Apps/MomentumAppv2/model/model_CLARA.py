@@ -72,6 +72,9 @@ class Model(QObject):
         self.Dispersion=0.
         self.beamSigma=0.
         self.dipole = str(self.view.comboBox_dipole.currentText())
+        self.cor1 = 'S02-HCOR1'
+        self.cor2 = 'S02-HCOR2'
+        self.bpm1 = 'S02-BPM02'
         #print self.dipole
 
         self.magInit = mag.init()
@@ -172,6 +175,10 @@ class Model(QObject):
         self.func = momentumFunctions.Functions(self)
         self.dipCurrent=[]
         self.BPMPosition=[]
+        self.dipCurrent2 = []
+        self.BPMPosition2 = []
+        self.dipCurrent3 = []
+        self.BPMPosition3 = []
         #print("Model Initialized")
         self.selectRF()
 
@@ -308,6 +315,8 @@ class Model(QObject):
         #time.sleep(1)
 
     def measureMomentumPrelim_3(self):
+        self.view.checkBox.setCheckable(False)
+        self.view.checkBox_2.setCheckable(False)
         print 'Close the laser shutters'
         #self.shut.close('SHUT01')
         self.shut.close('SHUT01')
@@ -396,12 +405,18 @@ class Model(QObject):
 
 
     def measureMomentumAlign_1(self):
+        self.view.checkBox.setCheckable(False)
+        self.view.checkBox_2.setCheckable(False)
         '''2. Align Beam through Dipole'''
         #if self.view.checkBox_2.isChecked()==True:
         self.target1 = self.view.doubleSpinBox_x_1.value()
         self.tol1 = self.view.doubleSpinBox_tol_1.value()
         print 'Aligning on S02-BPM-02 with S02-HCOR-02'
-        self.func.align(self.Cmagnets,'S02-HCOR2',self.Cbpms,'S02-BPM02', self.target1, self.tol1, self.initialCurrentStep)
+
+        if (self.Cbpms.getXFromPV('S02-BPM02')-self.view.doubleSpinBox_x_1.value()) < self.view.doubleSpinBox_tol_1.value():
+            self.func.align(self.Cmagnets,'S02-HCOR2',self.Cbpms,'S02-BPM02', self.target1, self.tol1, self.initialCurrentStep)
+        else:
+            print 'Already aligned'
         #self.func.align(self.Cmagnets,'S02-HCOR2',self.Cbpms,'S02-BPM02',0.5)
 
         #raw_input('Put in S02-YAG-02, then press enter')
@@ -521,6 +536,8 @@ class Model(QObject):
             pass
 
     def measureMomentumAlign_3(self):
+        self.view.checkBox.setCheckable(False)
+        self.view.checkBox_2.setCheckable(False)
         print 'Aligning on S02-YAG-02 with S02-HCOR-02'
         self.target2 = self.view.doubleSpinBox_x_2.value()
         self.tol2 = self.view.doubleSpinBox_tol_2.value()
@@ -528,10 +545,18 @@ class Model(QObject):
         #print self.target2
         #print self.tol2
         #print self.initialCurrentStep
-        self.func.alignOnScreen(self.Cmagnets,'S02-HCOR1',self.cam,'S02-CAM-02',self.target2,self.tol2, self.initialCurrentStep) #was 0.000001
+        if (self.cam.getX('S02-CAM-02')-self.view.doubleSpinBox_x_2.value()) < self.view.doubleSpinBox_tol_2.value():
+            self.func.alignOnScreen(self.Cmagnets,'S02-HCOR1',self.cam,'S02-CAM-02',self.target2,self.tol2, self.initialCurrentStep) #was 0.000001
+        else:
+            print 'Already aligned'
         #self.func.alignOnScreen(self.Cmagnets,'S02-HCOR1',self.camerasIA,'S02-CAM-01',13,0.5)
 
     def measureMomentumAlign_4(self):
+        if (self.cam.getX('S02-CAM-02')-self.view.doubleSpinBox_x_2.value()) < self.view.doubleSpinBox_tol_2.value():
+            self.view.checkBox.setCheckable(True)
+            self.view.checkBox.setChecked(True)
+            #self.view.checkBox.setCheckable(False)
+
         print 'Retract S02-YAG-02'# **change back to -02**'
         screen = 'S02-SCR-02'
         #self.scrn.moveScreenTo(screen,scrn.SCREEN_STATE.V_RETRACTED)
@@ -551,6 +576,11 @@ class Model(QObject):
             print 'Screen already out'
         else:
             print 'Error moving screen'
+
+        if (self.Cbpms.getXFromPV('S02-BPM02')-self.view.doubleSpinBox_x_1.value()) < self.view.doubleSpinBox_tol_1.value():
+            self.view.checkBox_2.setCheckable(True)
+            self.view.checkBox_2.setChecked(True)
+            #self.view.checkBox.setCheckable(False)
         #self.func.align(self.Cmagnets,'S02-VCOR2',self.Cbpms,'S02-BPM02',0.5)
         #align(self,hctrl,hcor, bctrl, bpm, tol, N=10):
         #self.func.align(self.Cmagnets,'VCOR02',self.Cbpms,'BPM02',0.000001)
@@ -593,10 +623,13 @@ class Model(QObject):
         #######################################################################
         # based on AutoPhaseCalibv2 model 22/8/18
     def findDipoleCurrent(self):
+        # initialise variables for the plots
+        # scan 1 - rough scan c2v dipole
         self.dipCurrent = []
         self.BPMPosition = []
-        self.startingDipole = self.Cmagnets.getSI(self.dipole)
-        self.Cmagnets.getSI(self.dipole)
+
+        #self.startingDipole = self.Cmagnets.getSI(self.dipole)
+        #self.Cmagnets.getSI(self.dipole)
         self.sleepTimeDipole = 0.1
         self.sleepTime = 0.05
         # need to reset data array
@@ -613,7 +646,10 @@ class Model(QObject):
             #self.getDataFunction = partial(self.func.getXBPM, self.Cbpms,'C2V-BPM01', self.nSamples)
 
         range = np.arange(self.roughMinI, self.roughMaxI, self.dipoleIStep)
+        # data_started = False
+        # len_data=[]
         for i,I in enumerate(range):
+            print 'I = ', I
             #self.progress.emit(100*i/len(range))
             #if self._abort or self._finished:
             #    return
@@ -621,14 +657,20 @@ class Model(QObject):
             #self.Cmagnets.getSI(self.dipole)
             while abs(self.Cmagnets.getSI(self.dipole) - I) > 0.05:
                 print 'Waiting for dipole, set=', I, 'read=', self.Cmagnets.getSI(self.dipole), 'diff=', abs(self.Cmagnets.getSI(self.dipole) - I)
+                QApplication.processEvents()
                 time.sleep(self.sleepTimeDipole)
             data, stddata = self.getData() # could replace getData->func.getBPMPosition with func.getXBPM
             print 'data stddata', data, stddata
             if data != 20:
                 self.dipCurrent.append(I)
                 self.BPMPosition.append(data)
+                #data_started = True
             QApplication.processEvents()
-            print 'I = ', I
+            #len_data.append(len(self.dipCurrent2))
+            # if data_started == True and len(self.dipCurrent) > 10 and len_data[-1] == len_data[-2] and len_data[-2] == len_data[-3]:
+            #     print 'breaking'
+            #     break
+
             #time.sleep(0.1)
             #self.appendDataArray(I, data, stddata)
 
@@ -637,16 +679,89 @@ class Model(QObject):
         # self.Cmagnets.setSI(self.dipole, self.startingDipole)
         # while abs(self.Cmagnets.getSI(self.dipole) - self.startingDipole) > 0.2:
         #     time.sleep(self.sleepTimeDipole)
-        arg_min = np.argmin(self.BPMPosition)
-        arg_max = np.argmax(self.BPMPosition)
-        #print 'argmax = ', arg_min, self.BPMPosition[arg_min], self.dipCurrent[arg_min]
-        #print 'argmax = ', arg_max, self.BPMPosition[arg_max], self.dipCurrent[arg_max]
-        self.fineMinI = self.dipCurrent[arg_min]
-        self.fineMaxI = self.dipCurrent[arg_max]
-        approxI =  (self.dipCurrent[arg_min]+self.dipCurrent[arg_max])/2
-        self.fineGetCurrentRange_2()
-        self.Cmagnets.setSI(self.dipole, approxI)
-        while abs(self.Cmagnets.getSI(self.dipole) - approxI) > 0.2:
+        if len(self.BPMPosition) > 1:
+            arg_min = np.argmin(self.BPMPosition)
+            arg_max = np.argmax(self.BPMPosition)
+            #print 'argmax = ', arg_min, self.BPMPosition[arg_min], self.dipCurrent[arg_min]
+            #print 'argmax = ', arg_max, self.BPMPosition[arg_max], self.dipCurrent[arg_max]
+            self.fineMinI = self.dipCurrent[arg_min]
+            self.fineMaxI = self.dipCurrent[arg_max]
+            approxI =  (self.dipCurrent[arg_min]+self.dipCurrent[arg_max])/2
+            self.fineGetCurrentRange_2()
+            self.Cmagnets.setSI(self.dipole, approxI)
+            while abs(self.Cmagnets.getSI(self.dipole) - approxI) > 0.2:
+                time.sleep(self.sleepTimeDipole)
+            return approxI
+        else:
+            print 'No signal found'
+            return 0
+
+    def measureMomentumAlign_1_A(self):
+        self.view.checkBox.setCheckable(False)
+        self.view.checkBox_2.setCheckable(False)
+        '''3. Centre in Spec. Line'''
+        self.approxIcor2 = self.findBPMSignal()
+        print self.approxIcor2
+        #self.approx_p = self.func.calcMom(self.Cmagnets,self.dipole,self.approxI)
+
+    def findBPMSignal(self):
+        # scan 2 - scan S02-HCOR2
+        self.dipCurrent2 = []
+        self.BPMPosition2 = []
+
+        #self.startingHCOR = self.Cmagnets.getSI(self.cor2)
+        #self.Cmagnets.getSI(self.dipole)
+        self.sleepTimeDipole = 0.1
+        self.sleepTime = 0.05
+
+        # if self.view.comboBox_selectRF.currentIndex() == 0: # gun
+        self.dipoleIStep = 0.2
+        self.nSamples = 3
+        self.getDataFunction = partial(self.func.getBPMPosition, self.Cbpms,'S02-BPM02')
+
+        range = np.arange(-3, 3, self.dipoleIStep)
+        data_started = False
+        # #len1 = 0
+        # #len2 = 0
+        len_data=[]
+        for i,I in enumerate(range):
+            #len1 = len2
+            print 'I = ', I
+            self.Cmagnets.setSI(self.cor2, I)
+
+            while abs(self.Cmagnets.getRI(self.cor2) - I) > 0.05:
+                print 'Waiting for corrector, set=', I, 'read=', self.Cmagnets.getRI(self.cor2), 'diff=', abs(self.Cmagnets.getRI(self.cor2) - I)
+                time.sleep(self.sleepTimeDipole)
+                QApplication.processEvents()
+            #print self.Cmagnets.getSI(self.cor2), self.Cmagnets.getRI(self.cor2)
+            data, stddata = self.getData()
+            print 'data stddata', data, stddata
+            if data != 20:
+                self.dipCurrent2.append(I)
+                self.BPMPosition2.append(data)
+                data_started = True
+            QApplication.processEvents()
+            print len(self.dipCurrent2)
+            len_data.append(len(self.dipCurrent2))
+            print len_data
+            if data_started == True and len(self.dipCurrent2) > 3 and len_data[-1] == len_data[-2] and len_data[-2] == len_data[-3]:
+                break
+
+
+        arg_min = np.argmin(self.BPMPosition2)
+        arg_max = np.argmax(self.BPMPosition2)
+
+        #self.fineMinI = self.dipCurrent[arg_min]
+        #self.fineMaxI = self.dipCurrent[arg_max]
+        #approxI =  (self.dipCurrent2[arg_min]+self.dipCurrent2[arg_max])/2
+        # find position nearest zero
+        centre = 0
+        print abs(np.array(self.BPMPosition2) - centre)
+        arg_centre = (np.abs(np.array(self.BPMPosition2) - centre)).argmin()
+        approxI = self.dipCurrent2[arg_centre]
+        #self.fineGetCurrentRange_2()
+        self.Cmagnets.setSI(self.cor2, approxI)
+        while abs(self.Cmagnets.getSI(self.cor2) - approxI) > 0.2:
             time.sleep(self.sleepTimeDipole)
         return approxI
 

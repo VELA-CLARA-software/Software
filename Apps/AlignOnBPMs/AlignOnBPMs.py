@@ -19,18 +19,18 @@ if mode=='virtual':
 elif mode=='physical':
 	import model_CLARA as model
 	import controller.controller as controller
-	import view.view1_15 as view
+	import view.view1_16 as view
 
 class App(QtCore.QObject):
 	def __init__(self, sys_argv):
 		super(App, self).__init__()
-		print'Well this is fun'
-		print view
+		#print'Well this is fun'
+		#print view
 		self.view = view.Ui_MainWindow()
 		self.MainWindow = QtGui.QMainWindow()
 		self.view.setupUi(self.MainWindow)
 		self.model = model.Model(self, self.view)
-		print 'Model done'
+		#print 'Model done'
 		self.controller = controller.Controller(self.view,self.model)
 		self.MainWindow.show()
 

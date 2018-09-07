@@ -26,20 +26,24 @@ class Controller():
 
 		'''1 Create Momentum Graphs'''
 		monitor = pg.GraphicsView()
-		#text = pg.TextItem('Some text')
+		#text = pg.TextItem('Blue = positions\n<br>')
 		#layout = pg.GraphicsLayout(border=(100,100,100))
 		layout = pg.GraphicsLayout()
 		monitor.setCentralItem(layout)
+		#monitor.addItem(text)
 
+		layout.nextRow()
+		#layout.addLabel('Some text')
 		for r, bpm_name in enumerate(self.bpm_list):
 			row = str(r+1)
-			setattr(self, 'label_'+row, layout.addLabel(bpm_name))
+			setattr(self, 'label_'+row, layout.addLabel(bpm_name, size='10pt', bold = False, color='FFF'))
 		layout.nextRow()
 
 		#self.label_1 = layout.addLabel('')
 		#self.label_2 = layout.addLabel('')
 		#self.label_3 = layout.addLabel('')
-		#self.label_4 = layout.addLabel('')		#monitor.addItem(text)
+		#self.label_4 = layout.addLabel('')		#
+		#monitor.addItem(text)
 
 
 		'''1.1 create graph for BPM Y and Y position monitoring'''
@@ -51,6 +55,8 @@ class Controller():
 		self.width2=1
 		self.barcolour1_live=(60,100,255)
 		self.barcolour1_notLive=(20,30,90)
+		self.barcolour1y_live=(60,255,100)
+		self.barcolour1y_notLive=(20,90,30)
 		#self.barcolour1_live=self.barcolour1_notLive
 		#self.barcolour2='r'
 		self.barcolour2_live=(255,100,60)
@@ -59,7 +65,7 @@ class Controller():
 		self.barcolour3_notLive=(50,50,50)
 
 		self.barcolourQ_live=(200,200,200)#self.barcolourQ=(60,255,100)
-		self.barcolourQ_notLive=(0,0,0)
+		self.barcolourQ_notLive=(80,80,80)
 		for r, bpm_name in enumerate(self.bpm_list):
 			row = str(r+1)
 			setattr(self, 'positionGraph_'+row, layout.addPlot())
@@ -68,9 +74,12 @@ class Controller():
 			getattr(self, 'positionGraph_'+row).setXRange(-0.7,1.7)
 			getattr(self, 'positionGraph_'+row).setYRange(-15,15)
 			setattr(self, 'bg'+row, pg.BarGraphItem(x=self.xdict.keys(), height=[0.0, 0.0], width=self.width1, pen=self.barcolour1_live, brush=self.barcolour1_live))
+			# add y as differet colour
+			setattr(self, 'bg'+row+'_y', pg.BarGraphItem(x=self.xdict.keys(), height=[0.0, 0.0], width=self.width1, pens=[None,self.barcolour1y_live], brushes=[None,self.barcolour1y_live]))
 			setattr(self, 'bg'+row+'_target', pg.BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=self.width2, pen=self.barcolour2_live, brush=self.barcolour2_live))
 			getattr(self, 'positionGraph_'+row).addItem(getattr(self, 'bg'+row+'_target'))
 			getattr(self, 'positionGraph_'+row).addItem(getattr(self, 'bg'+row))
+			getattr(self, 'positionGraph_'+row).addItem(getattr(self, 'bg'+row+'_y'))
 		# self.positionGraph_1 = layout.addPlot(title="S01-BPM01")
 		# self.positionGraph_2 = layout.addPlot(title="S02-BPM01")
 		# self.positionGraph_3 = layout.addPlot(title="S02-BPM02")
@@ -165,6 +174,8 @@ class Controller():
 		# self.YAGImage = pg.ImageItem(np.random.normal(size=(2560,2160)))
 		# yagImageBox.addItem(self.YAGImage)
 		# self.displayMom = layout.addLabel('MOMENTUM = MeV/c')
+		layout.nextRow()
+		layout.addLabel('Blue = x [mm], Green = y [mm], Red = position targets [mm], Grey = BPM charge [pC], White outline = WCM charge [pC]. All grey out when not live.', colspan=10, color='FFF')
 		self.view.horizontalLayout_4.addWidget(monitor)
 
 		'''2. Create Momentum Spread Graphs'''
@@ -268,6 +279,16 @@ class Controller():
 
 		self.view.doubleSpinBox_tol_all.valueChanged.connect(self.model.setAllTol)
 		self.view.doubleSpinBox_step_all.valueChanged.connect(self.model.setAllInitStep)
+
+		# connect current up/down buttons
+		for r, bpm_name in enumerate(self.bpm_list):
+			row = str(r+1)
+			getattr(self.view, 'pushButton_x_up_'+row).clicked.connect(partial(self.model.stepCurrent2, self.model.Cmagnets, 'x', 'up', row))
+			getattr(self.view, 'pushButton_x_down_'+row).clicked.connect(partial(self.model.stepCurrent2, self.model.Cmagnets, 'x', 'down', row))
+			getattr(self.view, 'pushButton_y_up_'+row).clicked.connect(partial(self.model.stepCurrent2, self.model.Cmagnets, 'y', 'up', row))
+			getattr(self.view, 'pushButton_y_down_'+row).clicked.connect(partial(self.model.stepCurrent2, self.model.Cmagnets, 'y', 'down', row))
+
+
 		# self.view.doubleSpinBox_V_6.valueChanged.connect(partial(self.model.steer_V, 6, userinput))
 
 		#self.view.comboBox_1.currentIndexChanged.connect(self.model.combobox_bpm)
@@ -307,11 +328,15 @@ class Controller():
 		#1*self.model.Cbpms.getYFromPV('S01-BPM01'), getattr(self.view, 'doubleSpinBox_y_'+str(1)).value()])# replace the random generators with  bpm x read offs
 
 		# Update BPM postion bar charts:
+		#print '--------'
+		#time.sleep(0.5)
 		for r, bpm_name in enumerate(self.bpm_list):
 			row = str(r+1)
 			getattr(self, 'bg'+row).setOpts(x=self.xdict.keys(), height=[1*self.model.Cbpms.getXFromPV(bpm_name),1*self.model.Cbpms.getYFromPV(bpm_name)])
+			getattr(self, 'bg'+row+'_y').setOpts(x=self.xdict.keys(), height=[0,1*self.model.Cbpms.getYFromPV(bpm_name)])
 			getattr(self, 'bg'+row+'_target').setOpts(x=self.xdict.keys(), height=[getattr(self.view, 'doubleSpinBox_x_'+row).value(), getattr(self.view, 'doubleSpinBox_y_'+row).value()])
 			liveTarget = getattr(self.model, 'liveTarget'+row)
+			#print liveTarget
 			getattr(self, 'positionGraph_'+row).setYRange(-self.model.posAxisBounds,self.model.posAxisBounds)
 			getattr(self, 'positionGraph_'+row+'_Q').setYRange(0,self.model.qAxisMax)
 			#print row, liveTarget, bpm_name
@@ -349,15 +374,18 @@ class Controller():
 			#time.sleep(0.5)
 			if len(self.model.Cbpms.getBPMQBuffer(bpm_name)) > 0 and str(self.model.Cbpms.getStatusBuffer(bpm_name)[-1]) == 'GOOD':
 				#print 'yes'
-				getattr(self, 'bg'+row+'_WCM').setOpts(x=self.xdict_Q.keys(), height=[np.mean(self.model.Q_WCM)])
+				getattr(self, 'bg'+row+'_WCM').setOpts(x=self.xdict_Q.keys(), height=[np.mean(self.model.Q_WCM)], pen=self.barcolourQ_live)
 				getattr(self, 'bg'+row+'_Q').setOpts(x=self.xdict_Q.keys(), height=[np.mean(self.model.Cbpms.getBPMQBuffer(bpm_name))], pen=self.barcolour3_live, brush=self.barcolour3_live)
 				getattr(self, 'bg'+row).setOpts(pen=self.barcolour1_live, brush=self.barcolour1_live)
-				getattr(self, 'bg'+row+'_WCM').setOpts(pen=self.barcolourQ_live)
+				getattr(self, 'bg'+row+'_y').setOpts(pens=[None, self.barcolour1y_live], brushes=[None, self.barcolour1y_live])
+				#getattr(self, 'bg'+row+'_WCM').setOpts(pen=self.barcolourQ_live)
 			else:
 				#print 'no'
-				getattr(self, 'bg'+row+'_Q').setOpts(x=self.xdict_Q.keys(), height=[0], pen=self.barcolour3_live, brush=self.barcolour3_live)
+				getattr(self, 'bg'+row+'_WCM').setOpts(x=self.xdict_Q.keys(), height=[np.mean(self.model.Q_WCM)], pen=self.barcolourQ_notLive)
+				getattr(self, 'bg'+row+'_Q').setOpts(x=self.xdict_Q.keys(), height=[0], pen=self.barcolourQ_notLive, brush=self.barcolourQ_notLive)
 				getattr(self, 'bg'+row).setOpts(pen=self.barcolour1_notLive, brush=self.barcolour1_notLive)
-				getattr(self, 'bg'+row+'_WCM').setOpts(pen=self.barcolourQ_notLive)
+				getattr(self, 'bg'+row+'_y').setOpts(pens=[None, self.barcolour1y_notLive], brushes=[None, self.barcolour1y_notLive])
+				#getattr(self, 'bg'+row+'_WCM').setOpts(pen=self.barcolourQ_notLive)
 
 						# self.bg1_Q.setOpts(x=self.xdict_Q.keys(), height=[np.mean(self.model.Cbpms.getBPMQBuffer('S01-BPM01'))])
 		# self.bg2_Q.setOpts(x=self.xdict_Q.keys(), height=[np.mean(self.model.Cbpms.getBPMQBuffer('S02-BPM01'))])
