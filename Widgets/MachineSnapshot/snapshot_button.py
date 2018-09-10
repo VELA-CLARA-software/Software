@@ -13,7 +13,7 @@ class snapshotButton(QtGui.QApplication):
         self.machinesnapshot = MachineSnapshot(MAG_Ctrl=None, BPM_Ctrl=None, CHG_Ctrl=None,
 				 SCR_Ctrl=None, CAM_Ctrl=None, GUN_Ctrl=None,
 				 GUN_Type=None, GUN_Crest=0.0, L01_Ctrl=None, L01_Crest=0.0,
-				PIL_Ctrl=None, MACHINE_MODE=vce.MACHINE_MODE.PHYSICAL, MACHINE_AREA=vce.MACHINE_AREA.CLARA_2_BA1_BA2, messages=False)
+				 PIL_Ctrl=None, MACHINE_MODE=vce.MACHINE_MODE.PHYSICAL, MACHINE_AREA=vce.MACHINE_AREA.CLARA_2_BA1_BA2, messages=False)
         self.directory = self.machinesnapshot.getdirectory()
         time.sleep(5)
 
