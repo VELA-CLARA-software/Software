@@ -340,6 +340,8 @@ class MachineSnapshot(object):
 				for i in self.trace_data[-1].value:
 					self.data_dict[trace].append(i)
 				self.data_dict[trace+'_time'] = self.trace_data[-1].time
+				self.data_dict[trace + '_mean_start'] = self.trace_mean_start
+				self.data_dict[trace+'_mean_end'] = self.trace_mean_end
 				self.data_dict[trace+'_AV'] = numpy.mean(self.trace_data[-1].value)
 				self.data_dict[trace + '_AV_buffer'] = []
 				for i in range(0,len(self.trace_data)-1):
@@ -485,7 +487,6 @@ class MachineSnapshot(object):
 					self.MAG_Ctrl.setSI(key, value['seti'].value)
 		return True
 
-
 	def setfilename(self, filename=None, directory=None):
 		self.filename = filename
 		self.directory = directory
@@ -515,14 +516,14 @@ class MachineSnapshot(object):
 			os.mkdir(self.directory)
 		os.chdir(self.directory)
 
-	def writetojson(self, filename=None, directory=None, data=None):
-		self.data = data
-		self.filename = self.setfilename(filename, directory)
-		if self.data == None:
-			self.data = [self.getdata()]
-		self.fullname = self.filename + ".json"
-		with open(self.fullname, 'w') as outfile:
-			outfile.write(json.dumps(self.data, indent=4, sort_keys=True))
+	# def writetojson(self, filename=None, directory=None, data=None):
+	# 	self.data = data
+	# 	self.filename = self.setfilename(filename, directory)
+	# 	if self.data == None:
+	# 		self.data = [self.getdata()]
+	# 	self.fullname = self.filename + ".json"
+	# 	with open(self.fullname, 'w') as outfile:
+	# 		outfile.write(json.dumps(self.data, indent=4, sort_keys=True))
 
 	def writetohdf5(self, filename=None, directory=None, data=None):
 		self.data = data
