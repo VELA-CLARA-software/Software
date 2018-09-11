@@ -35,6 +35,7 @@ class snapshotButton(QtGui.QApplication):
         elif self.snapshotgui.setAll.isChecked():
             self.machinesnapshot.writetojson()
             self.machinesnapshot.writetohdf5()
+        # self.machinesnapshot.setmagnets(filewithpath='\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Work\\2018\\09\\11\\snapshot-2018-09-11-22-07-34.json')
 
     def handle_filename(self,r):
         self.snapshotgui.getDirectoryLineEdit.setText("")
@@ -43,7 +44,7 @@ class snapshotButton(QtGui.QApplication):
         elif self.snapshotgui.setHDF5.isChecked():
             self.snapshotgui.getDirectoryLineEdit.setText(self.filename + ".hdf5")
         elif self.snapshotgui.setAll.isChecked():
-            self.snapshotgui.getDirectoryLineEdit.setText(self.filename + ".json;, " + self.filename + ".hdf5")
+            self.snapshotgui.getDirectoryLineEdit.setText(self.filename + ".json; " + self.filename + ".hdf5")
 
 if __name__ == '__main__':
     print "starting button"
