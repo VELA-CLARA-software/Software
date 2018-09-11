@@ -10,7 +10,8 @@ import os
 import sys
 import time
 from datetime import datetime
-from collections import OrderedDict, defaultdict
+from multiprocessing import Process, Queue, Pipe
+from threading import Thread
 sys.path.append(r'\\apclara1.dl.ac.uk\ControlRoomApps\Controllers\bin\Release')
 os.environ['PATH'] = os.environ['PATH'] + r';\\apclara1.dl.ac.uk\ControlRoomApps\Controllers\bin\stage\root_v5.34.34\bin'
 import VELA_CLARA_Camera_Control
@@ -35,6 +36,7 @@ image_path = [r'\\claraserv3', 'CameraImages']
 hdf5_image_folder = '\\'.join(image_path)
 # only show top-level dirs, and ones that consist entirely of digits (i.e. year/month/date)
 filter_regexp = '|'.join([d.replace('\\', '\\\\') for d in image_path]) + '|^\d+$'
+fire = [QtGui.qRgb(*QtGui.QColor(val).getRgb()[:3]) for val in colorcet.fire]
 
 image_credits = {
     'pause.png': 'https://www.flaticon.com/free-icon/pause-symbol_25696#term=pause&page=1&position=5',
@@ -44,10 +46,75 @@ image_credits = {
     'out.png': 'https://www.flaticon.com/free-icon/vision-off_94930#term=eye%20cross&page=1&position=4',
 }
 
+
+class Emitter(QtCore.QObject, Thread):
+    """Emit Qt signals from a child process to a mother process.
+    https://stackoverflow.com/questions/26746379/how-to-signal-slots-in-a-gui-from-a-different-process/30048847#30048847"""
+
+    def __init__(self, transport, parent=None):
+        QtCore.QObject.__init__(self, parent)
+        Thread.__init__(self)
+        self.transport = transport
+
+    def _emit(self, signature, args=None):
+        if args:
+            self.emit(QtCore.SIGNAL(signature), args)
+        else:
+            self.emit(QtCore.SIGNAL(signature))
+
+    def run(self):
+        while True:
+            try:
+                signature = self.transport.recv()
+            except EOFError:
+                break
+            else:
+                self._emit(*signature)
+
+
+class IconFetcher(Process):
+    """Fetch HDF5 data from a queue of filenames and crunch it into 32x32 icons in a background thread."""
+
+    def __init__(self, transport, queue, daemon=True):
+        Process.__init__(self)
+        self.daemon = daemon
+        self.transport = transport
+        self.data_from_mother = queue
+
+    def emit_to_mother(self, signature, args=None):
+        """Send a signal to the mother process so she can update the GUI."""
+        signature = (signature,)
+        if args:
+            signature += (args,)
+        self.transport.send(signature)
+
+    def run(self):
+        """Get the HDF5 data and turn it into icons. Spit them out one at a time."""
+        while True:
+            filename = self.data_from_mother.get()
+            file = h5py.File(str(filename))
+            dataset = file['Capture000001']
+            height, width = dataset.shape
+            step = max(height, width) / 32  # how many rows/cols to skip along
+            # Yes, I know they're really uint16 images, but they seem to show up OK doing this
+            icon_data = np.asarray(dataset[::step, ::step], 'uint8')
+            self.emit_to_mother('data(PyQt_PyObject)', (filename, icon_data, width / step, height / step))
+
+
 class ImageDirFilter(QtGui.QSortFilterProxyModel):
-    """This is a proxy model for a file system model that implements a 'natural sort' algorithm."""
+    """Proxy model for a file system model that implements a 'natural sort' algorithm,
+    and fetches thumbnails for HDF5 files in the background."""
     def __init__(self):
         super(ImageDirFilter, self).__init__()
+        self.icons = {}
+        self.indices = {}  # a lookup table for filename -> persistent index
+        self.data_to_child = Queue()
+        mother_pipe, child_pipe = Pipe()
+        self.emitter = Emitter(mother_pipe)
+        self.emitter.daemon = True
+        self.emitter.start()
+        IconFetcher(child_pipe, self.data_to_child).start()
+        self.connect(self.emitter, QtCore.SIGNAL('data(PyQt_PyObject)'), self.onIcon)
 
     def lessThan(self, left_index, right_index):
         """Implement 'natural sort' for folders without leading zeroes."""
@@ -58,6 +125,31 @@ class ImageDirFilter(QtGui.QSortFilterProxyModel):
             return int(left_str) < int(right_str)
         except ValueError:  # conversion to int failed
             return left_str < right_str
+
+    def onIcon(self, data):
+        """Received a new icon from the child process - update the GUI."""
+        path, icon_data, width, height = data
+        image = QtGui.QImage(icon_data, width, height, width, QtGui.QImage.Format_Indexed8)
+        image.setColorTable(fire)
+        self.icons[path] = QtGui.QIcon(QtGui.QPixmap(image))  # remember it so we don't fetch it again
+        index = QtCore.QModelIndex(self.indices[path])  # since dataChanged doesn't like persistent indices
+        self.dataChanged.emit(index, index)
+
+    def data(self, index, role=None):
+        """We've been asked for some data. If that's an icon, add it to the icon-fetching queue."""
+        if role == QtGui.QFileSystemModel.FileIconRole:
+            filename = index.data(QtGui.QFileSystemModel.FilePathRole).toString()
+            if filename in self.icons.keys():  # we already know about this
+                icon = self.icons[filename]
+                if icon is not None:  # already fetched it?
+                    return icon
+            elif filename.toLower().endsWith('.hdf5'):
+                self.icons[filename] = None  # to show we've already requested this one; don't add it to the queue twice
+                index = QtCore.QPersistentModelIndex(index)
+                self.indices[filename] = index
+                self.data_to_child.put(filename)  # add it to the queue
+                return QtCore.QVariant()  # a placeholder
+        return super(ImageDirFilter, self).data(index, role)  # pass the request to the superclass
 
 
 def pixmap(icon_name):
@@ -392,6 +484,7 @@ class Controller():
 
         # update the visible image files in the overlay treeview to show current camera only
         regexp = self.overlays_proxy.filterRegExp()
+        # regexp.setPattern(filter_regexp + r'|^.*\.hdf5$')  # for testing - show all images
         regexp.setPattern(filter_regexp + '|^' + camera_name + r'.*\.hdf5$')
         self.overlays_proxy.setFilterRegExp(regexp)
 

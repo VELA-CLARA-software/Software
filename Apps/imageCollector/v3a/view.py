@@ -230,6 +230,7 @@ class Ui_MainWindow(object):
         self.step_size_hbox.addWidget(self.stepSize_spinBox)
         self.left_panel.addLayout(self.step_size_hbox)
         self.overlay_checkbox = QtGui.QCheckBox(self.centralwidget)
+        self.overlay_checkbox.setEnabled(False)
         self.overlay_checkbox.setObjectName(_fromUtf8("overlay_checkbox"))
         self.left_panel.addWidget(self.overlay_checkbox)
         self.overlay_treeview = QtGui.QTreeView(self.centralwidget)
