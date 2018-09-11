@@ -115,17 +115,20 @@ class Controller():
         camera_names = self.cam_ctrl.getCameraNames()
         screen_names = self.cam_ctrl.getCameraScreenNames()
         self.cam_dict = dict((screen, camera) for screen, camera in zip(screen_names, camera_names))
-        item_names = ['S01-SCR-01', 'S02-SCR-01', 'S02-SCR-02', 'S02-SCR-03', 'C2V-SCR-01', 'INJ-YAG-04', 'INJ-YAG-05',
-                      'INJ-YAG-06', 'INJ-YAG-07', 'INJ-YAG-08', 'BA1-YAG-01', 'BA1-YAG-02']  # , 'BA2-YAG-01']
+        section_names = ['S01', 'S02', 'C2V', 'INJ', 'BA1']
+        # item_names = ['S01-SCR-01', 'S02-SCR-01', 'S02-SCR-02', 'S02-SCR-03', 'C2V-SCR-01', 'INJ-YAG-04', 'INJ-YAG-05',
+        #               'INJ-YAG-06', 'INJ-YAG-07', 'INJ-YAG-08', 'BA1-YAG-01', 'BA1-YAG-02']# , 'BA1-YAG-03']
         self.screens = QtGui.QStandardItemModel()
         view.cameras_treeview.viewport().setAutoFillBackground(False)
         view.cameras_treeview.setModel(self.screens)
         view.cameras_treeview.clicked.connect(self.changeCamera)
-        for section in OrderedDict((name[:3], None) for name in item_names):
+        print(screen_names)
+        for section in section_names:
             parent = QtGui.QStandardItem(section)
             parent.setFlags(QtCore.Qt.NoItemFlags)
-            for item in item_names:
-                if item.startswith(section):
+            for item in screen_names:
+                # For INJ, leave out the first three cameras
+                if item.startswith(section) and (item >= 'INJ-YAG-04' or section != 'INJ'):
                     child = QtGui.QStandardItem(item[4:])
                     child.setData(item)
                     parent.appendRow(child)
@@ -165,11 +168,6 @@ class Controller():
         view.stepSize_spinBox.valueChanged.connect(self.cam_ctrl.setStepSize)
         view.reset_averages_button.clicked.connect(self.resetAverages)
 
-        # Update GUI
-        self.timer = QtCore.QTimer()
-        self.timer.timeout.connect(self.update)
-        self.timer.start(100)
-
         # Create a nice-looking sample image
         x, y = np.meshgrid(np.arange(IMAGE_HEIGHT), np.arange(IMAGE_WIDTH))
         d = np.sqrt((x - IMAGE_HEIGHT / 2) ** 2 + (y - IMAGE_WIDTH / 2) ** 2)
@@ -206,6 +204,7 @@ class Controller():
         # show screen name, beam position and size as an overlay on the image
         self.title_label = pg.LabelItem('', color='#ffffff')
         self.title_label.setPos(50, 20)
+        self.title_label.setAttr('justify', 'left')  # otherwise text moves toward the centre when overlay removed
         # use a drop shadow so we can always see it
         shadow = QtGui.QGraphicsDropShadowEffect()
         shadow.setBlurRadius(0)
@@ -221,6 +220,18 @@ class Controller():
             index = view.colour_map_dropdown.findText('fire', QtCore.Qt.MatchExactly)
         view.colour_map_dropdown.setCurrentIndex(index)
         self.changeColourMap(map_name)
+
+        # Timer to update the screen image
+        self.image_update_timer = QtCore.QTimer()
+        self.image_update_timer.timeout.connect(self.updateImage)
+        self.image_update_timer.start(100)
+
+        # Timer to update the treeview - runs less often
+        self.gui_update_timer = QtCore.QTimer()
+        self.gui_update_timer.timeout.connect(self.updateGUI)
+        self.gui_update_timer.start(1000)
+        self.updateGUI()  # do it immediately
+
         view.statusbar.showMessage('Ready.')
 
     def mouseMoveOverTree(self, index):
@@ -283,6 +294,7 @@ class Controller():
                 conv = self.pix2mm() / (2 if is_full_image else 1)
                 self.OverlayImage.setRect(QtCore.QRect(0, 0, dims[1] * conv, dims[0] * conv))
                 if not self.OverlayImage in self.ImageBox.items:
+                    self.view.overlay_checkbox.setEnabled(True)
                     self.view.overlay_checkbox.setChecked(True)
             else:
                 self.view.overlay_checkbox.setChecked(False)
@@ -352,17 +364,20 @@ class Controller():
         self.view.max_level_spin.setEnabled(not checked)
         self.settings.setValue(self.cam_dict[self.getCurrentScreen()] + '/autoLevel', checked)
 
-    def changeCamera(self):
+    def changeCamera(self, start_acquire=True):
         """The current item in the list box was changed. Set the correct camera."""
         screen_name = self.getCurrentScreen()
         # convert to camera name
         camera_name = self.cam_dict[screen_name]
         self.camera_name = camera_name
         camera = self.cam_ctrl.getCameraObj(camera_name)
-        self.view.statusbar.showMessage('Switching to screen {} (camera {})'.format(screen_name, camera_name))
 
-        self.cam_ctrl.startAcquiring(camera_name)  # this will automatically stop all the other ones
-        self.cam_ctrl.startAnalysing(camera_name)
+        if start_acquire:
+            # If we click a different camera in the treeview, we want to start acquiring
+            # If the acquiring camera is changed externally, don't do this
+            self.view.statusbar.showMessage('Switching to screen {} (camera {})'.format(screen_name, camera_name))
+            self.cam_ctrl.startAcquiring(camera_name)  # this will automatically stop all the other ones
+            self.cam_ctrl.startAnalysing(camera_name)
 
         auto_level = self.settings.value(camera_name + '/autoLevel', False).toBool()
         self.view.auto_level_checkbox.setChecked(auto_level)
@@ -381,6 +396,7 @@ class Controller():
         self.overlays_proxy.setFilterRegExp(regexp)
 
     def getCurrentScreen(self):
+        """Get the name of the selected camera in the treeview."""
         index = self.view.cameras_treeview.currentIndex()
         screen = self.screens.itemFromIndex(index)
         screen_name = str(screen.data().toString())
@@ -389,14 +405,14 @@ class Controller():
     def updateROIFromMask(self):
         """The mask has changed - update the ROI."""
         mask = self.cam_ctrl.getMaskObj()
-        print('got mask obj', mask.mask_x, mask.mask_y, mask.mask_x_rad, mask.mask_y_rad)
+        # print('got mask obj', mask.mask_x, mask.mask_y, mask.mask_x_rad, mask.mask_y_rad)
         x = mask.mask_x - mask.mask_x_rad
         y = mask.mask_y - mask.mask_y_rad
         self.roi.blockSignals(True)  # don't update the mask recursively!
-        conv = self.pix2mm()
-        self.roi.setPos(QtCore.QPoint(x * conv, y * conv))
+        pix2mm = self.pix2mm()
+        self.roi.setPos(QtCore.QPoint(x * pix2mm, y * pix2mm))
         if mask.mask_x_rad > 0 and mask.mask_y_rad > 0:
-            self.roi.setSize(QtCore.QPoint(mask.mask_x_rad * 2 * conv, mask.mask_y_rad * 2 * conv))
+            self.roi.setSize(QtCore.QPoint(mask.mask_x_rad * 2 * pix2mm, mask.mask_y_rad * 2 * pix2mm))
         self.roi.blockSignals(False)
 
     def roiChanged(self):
@@ -424,55 +440,57 @@ class Controller():
     def toggleFeedBack(self, use):
         self.runFeedback = use
 
-    def update(self):
+    def updateGUI(self):
+        """Update the treeview to show which screens are in, and also the state of the current screen."""
         current_camera_name = None
-        cam_ctrl = self.cam_ctrl
-        camera_list = self.screens
-        for i in range(camera_list.rowCount()):
-            section = camera_list.item(i)
+        for i in range(self.screens.rowCount()):
+            section = self.screens.item(i)
             for j in range(section.rowCount()):
                 item = section.child(j)
                 name = str(item.data().toString())
+                is_acquiring = self.cam_ctrl.isAcquiring(name)
 
-                is_acquiring = cam_ctrl.isAcquiring(name)
-                conv = self.cam_ctrl.getCameraObj(name).screenName.replace('YAG', 'SCR')
-                screen_state = self.scr_ctrl.getScreenState(conv)
-                # screen_in = screen_state in (VELA_CLARA_Screen_Control.SCREEN_STATE.V_YAG, VELA_CLARA_Screen_Control.SCREEN_STATE.YAG)
-                screen_in = self.scr_ctrl.isScreenIn(conv)
-                # TODO: maybe more icons for other objects (collimator, slit, graticule etc)
-                item.setIcon(QtGui.QIcon(pixmap('in' if screen_in else 'out')))  # TODO: correct?
+                screen_name = self.cam_ctrl.getCameraObj(name).screenName.replace('YAG', 'SCR')
+                controllable = screen_name in self.scr_ctrl.getScreenNames()
+                if controllable:
+                    screen_in = self.scr_ctrl.isScreenIn(screen_name)
+                    # TODO: maybe more icons for other objects (collimator, slit, graticule etc)
+                    item.setIcon(QtGui.QIcon(pixmap('in' if screen_in else 'out')))
 
                 if is_acquiring:
                     index = self.screens.indexFromItem(item)
                     self.view.cameras_treeview.setCurrentIndex(index)
+                    self.changeCamera(start_acquire=False)
                     current_camera_name = name
-                    if self.scr_ctrl.isScreenMoving(conv):
-                        self.view.screen_progress.setFormat('%p%')
-                        pneumatic = self.scr_ctrl.isPneumatic(conv)
-                        state = VELA_CLARA_Screen_Control.SCREEN_STATE
-                        states = (state.V_RF, state.V_YAG) if pneumatic else (state.RETRACTED, state.YAG)
-                        out_pos, in_pos = (self.scr_ctrl.getDevicePosition(conv, state) for state in states)
-                        sign = np.copysign(1, in_pos - out_pos)  # in case out > in. We want 100% to be 'in', so out should be less
-                        self.view.screen_progress.setRange(sign * out_pos, sign * in_pos)
-                        self.view.screen_progress.setValue(sign * self.scr_ctrl.getACTPOS(conv))
-                    else:
-                        self.view.screen_progress.setFormat(str(screen_state))
-                        self.view.screen_progress.setValue(self.view.screen_progress.maximum() if screen_in else 0)
+                    self.view.screen_in_button.setEnabled(controllable)
+                    self.view.screen_out_button.setEnabled(controllable)
+                    if controllable:
+                        if self.scr_ctrl.isScreenMoving(screen_name):
+                            self.view.screen_progress.setFormat('%p%')
+                            pneumatic = self.scr_ctrl.isPneumatic(screen_name)
+                            state = VELA_CLARA_Screen_Control.SCREEN_STATE
+                            states = (state.V_RF, state.V_YAG) if pneumatic else (state.RETRACTED, state.YAG)
+                            out_pos, in_pos = (self.scr_ctrl.getDevicePosition(screen_name, state) for state in states)
+                            sign = np.copysign(1, in_pos - out_pos)  # in case out > in. We want 100% to be 'in', so out should be less
+                            self.view.screen_progress.setRange(sign * out_pos, sign * in_pos)
+                            self.view.screen_progress.setValue(sign * self.scr_ctrl.getACTPOS(screen_name))
+                        else:
+                            self.view.screen_progress.setFormat(str(self.scr_ctrl.getScreenState(screen_name)))
+                            self.view.screen_progress.setValue(self.view.screen_progress.maximum() if screen_in else 0)
 
         if current_camera_name is None:
             self.view.cameras_treeview.selectionModel().clearSelection()
-            return
 
-        # if current_camera_name != self.camera_name:
-        #     self.changeCamera()
+    def updateImage(self):
+        """Get an image from the controller and show it on the monitor, and update crosshairs and coordinates."""
+        screen_name = self.getCurrentScreen()
 
         # Set crosshairs
-        analysis = cam_ctrl.getAnalysisObj(current_camera_name)
-        x, y = analysis.x_mean, analysis.y_mean  # TODO: no 'y_pix_mean' !!
+        analysis = self.cam_ctrl.getAnalysisObj(screen_name)
+        x, y = analysis.x_mean, analysis.y_mean
         sigX, sigY = analysis.sig_x_mean, analysis.sig_y_mean
         self.vLineMLE_avg.setData(x=[x, x], y=[y - sigY, y + sigY])
         self.hLineMLE_avg.setData(x=[x - sigX, x + sigX], y=[y, y])
-        # print(analysis.x, analysis.y, analysis.x_pix, analysis.y_pix)
         x, y = analysis.x, analysis.y
         sigX, sigY = analysis.sig_x, analysis.sig_y
         data_ok = -999.999 not in (x, y, sigX, sigY)
@@ -481,49 +499,48 @@ class Controller():
         if data_ok:
             self.vLineMLE.setData(x=[x, x], y=[y - sigY, y + sigY])
             self.hLineMLE.setData(x=[x - sigX, x + sigX], y=[y, y])
-        label_text = '''<h1>{}</h1><h2 style="color: green;">Immediate</h2>
-                        <p style="color: green;"><b>Position</b>: {:.3f}, {:.3f} mm<br><b>Size (1 &sigma;)</b>: {:.3f}, {:.3f} mm<br>
-                        <b>Covariance XY</b>: {:.3f} mm<sup>2</sup><br><b>Average intensity</b>: {:.3f}</p>
-                        <h2 style="color: cyan;">Average ({})</h2>
-                        <p style="color: cyan;"><b>Position</b>: {:.3f}, {:.3f} mm<br><b>Size (1 &sigma;)</b>: {:.3f}, {:.3f} mm<br>
-                        <b>Covariance XY</b>: {:.3f} mm<sup>2</sup><br><b>Average intensity</b>: {:.3f}</p>'''
+        text = '''<h1>{screen_name}</h1><h2 style="color: green;">Immediate</h2>
+                        <p style="color: green;"><b>Position</b>: {analysis.x:.3f}, {analysis.y:.3f} mm<br>
+                        <b>Size (1 &sigma;)</b>: {analysis.sig_x:.3f}, {analysis.sig_y:.3f} mm<br>
+                        <b>Covariance XY</b>: {analysis.sig_xy:.3f} mm<sup>2</sup><br>
+                        <b>Average intensity</b>: {analysis.avg_pix:.3f}</p>
+                        <h2 style="color: cyan;">Average ({analysis.sig_x_n})</h2>
+                        <p style="color: cyan;"><b>Position</b>: {analysis.x_mean:.3f}, {analysis.y_mean:.3f} mm<br>
+                        <b>Size (1 &sigma;)</b>: {analysis.sig_x_mean:.3f}, {analysis.sig_y_mean:.3f} mm<br>
+                        <b>Covariance XY</b>: {analysis.sig_xy_mean:.3f} mm<sup>2</sup><br>
+                        <b>Average intensity</b>: {analysis.avg_pix_mean:.3f}</p>'''.format(**locals())
         if self.view.overlay_checkbox.isChecked():
             model = self.view.overlay_treeview.model()
             indices = self.view.overlay_treeview.selectionModel().selectedIndexes()
             source_index = model.mapToSource(indices[0])
             filename = str(model.sourceModel().filePath(source_index))
-            label_text += '\n<h2>Overlay</h2>\n<p>{}</p>'.format(filename[len(hdf5_image_folder)+1:])
+            text += '<h2>Overlay</h2><p>{}</p>'.format(filename[len(hdf5_image_folder)+1:])
 
-        self.title_label.setText(label_text.format(current_camera_name,
-                                                   analysis.x, analysis.y, analysis.sig_x,
-                                                   analysis.sig_y, analysis.sig_xy, analysis.avg_pix,
-                                                   analysis.sig_x_n,
-                                                   analysis.x_mean, analysis.y_mean, analysis.sig_x_mean,
-                                                   analysis.sig_y_mean, analysis.sig_xy_mean, analysis.avg_pix_mean
-                                                   ))
+        self.title_label.setText(text)
+        print self.title_label.width()
         # data = None  # for testing
         # pv_name = cam_ctrl.getCameraObj(current_camera_name).pvRoot + 'CAM2:ArrayData'
-        data = cam_ctrl.takeAndGetFastImage()
+        data = self.cam_ctrl.takeAndGetFastImage()
         # data = cam_ctrl.getImageObj().data
         # data = caget(pv_name)  # this seems a bit faster than takeAndGetFastImage()
         if data is not None:
-            leds_on = cam_ctrl.isClaraLEDOn() or cam_ctrl.isVelaLEDOn()
+            leds_on = self.cam_ctrl.isClaraLEDOn() or self.cam_ctrl.isVelaLEDOn()
             if self.view.auto_level_checkbox.isChecked() and not leds_on:
-                centile90 = np.percentile(data, 99.9)
-                self.view.max_level_spin.setValue(int(centile90))
+                # Set the maximum level so 0.1% of pixels are saturated
+                self.view.max_level_spin.setValue(int(np.percentile(data, 99.9)))
 
             dims = IMAGE_DIMS if len(data) == IMAGE_WIDTH * IMAGE_HEIGHT else IMAGE_DIMS_VELA
             npData = np.array(data).reshape(dims)
             self.Image.setImage(np.flip(np.transpose(npData), 1))
             max_level = self.view.max_level_spin.maximum() if leds_on else self.view.max_level_spin.value()
             self.Image.setLevels([0, max_level], update=True)
-            conv = self.pix2mm()
-            image_rect = QtCore.QRect(0, 0, dims[1] * conv, dims[0] * conv)
+            pix2mm = self.pix2mm()
+            image_rect = QtCore.QRect(0, 0, dims[1] * pix2mm, dims[0] * pix2mm)
             self.Image.setRect(image_rect)
 
-        if cam_ctrl.isCollecting(current_camera_name):  # TODO: correct?
+        if self.cam_ctrl.isCollecting(screen_name):  # TODO: correct?
             text = 'Kill'
-        elif cam_ctrl.isSaving(current_camera_name):
+        elif self.cam_ctrl.isSaving(screen_name):
             text = 'Writing'
         else:
             text = 'Save'

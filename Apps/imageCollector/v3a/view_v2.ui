@@ -392,6 +392,9 @@
       </item>
       <item>
        <widget class="QCheckBox" name="overlay_checkbox">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="text">
          <string>Overlay</string>
         </property>
