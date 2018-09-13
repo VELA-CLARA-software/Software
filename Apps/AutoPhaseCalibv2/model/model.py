@@ -120,13 +120,17 @@ class Model(object):
         self.setUpMagnets(self.parameters['magnets'])
 
     def loadGunBURT(self):
-        if self.machineType is 'None':
-            return True
+        self.logger.emit('Loading DBURT: GunCrest.dburt')
+        if self.machineType == 'None':
+            time.sleep(1)
+            return False
         else:
             return self.machine.applyDBURT('GunCrest.dburt')
 
     def loadLinac1BURT(self):
-        if self.machineType is 'None':
+        self.logger.emit('Loading DBURT: Linac1Crest.dburt')
+        if self.machineType == 'None':
+            time.sleep(3)
             return True
         else:
             return self.machine.applyDBURT('Linac1Crest.dburt')

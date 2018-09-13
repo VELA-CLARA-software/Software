@@ -14,6 +14,9 @@ import logging
 logger = logging.getLogger(__name__)
 
 class GenericThread(QThread):
+
+    result = pyqtSignal(object)
+
     def __init__(self, function, *args, **kwargs):
         QThread.__init__(self)
         self.function = function
@@ -21,8 +24,8 @@ class GenericThread(QThread):
         self.kwargs = kwargs
 
     def run(self):
-        self.object = self.function(*self.args, **self.kwargs)
-        # print 'finished!'
+        result = self.function(*self.args, **self.kwargs)
+        self.result.emit(result)
 
 class HAxisRF(pg.AxisItem):
     def __init__(self, orientation=None, pen=None, linkView=None, parent=None, maxTickLength=-5, showValues=True):
@@ -134,8 +137,6 @@ class updatingTimer(QThread):
         self.timer.start(50)
         self.exec_()
 
-    def printer(self):
-        print 'here!'
 
     def update_monitor(self):
         val = self.function(*self.args, **self.kwargs)
@@ -303,17 +304,23 @@ class Controller(QObject):
         self.model.linac1Phaser(linac1PhaseSet=self.view.Linac1_OffCrest_Phase_Set.value(), offset=True)
 
     def loadBURT(self, function, button):
-        # print 'function = ', getattr(self.model,function)
-        getattr(self.view,button).setStyleSheet("background-color: yellow")
-        success = getattr(self.model,function)()
+        self.disableButtons()
+        self.thread = GenericThread(getattr(self.model,function))
+        self.thread.finished.connect(self.enableButtons)
+        self.thread.started.connect(lambda: getattr(self.view,button).setStyleSheet("background-color: yellow"))
+        self.thread.result.connect(lambda x: self.loadedBurt(button, x))
+        self.thread.start()
+
+    def loadedBurt(self, button, success):
         if success:
+            self.loggerSignal.emit('Successfully applied DBURT!')
             getattr(self.view,button).setStyleSheet("background-color: green")
         else:
+            self.setLabel('FAILED to apply DBURT!','warning')
             getattr(self.view,button).setStyleSheet("background-color: red")
-        QTimer.singleShot(1000, lambda: getattr(self.view,button).setStyleSheet("background-color: None"))
+        QTimer.singleShot(10*1000, lambda: getattr(self.view,button).setStyleSheet("background-color: None"))
 
     def loadGunBURT(self):
-        # print 'loadGunBURT pressed'
         self.loadBURT('loadGunBURT','Gun_LoadBURT_Button')
 
     def loadLinac1BURT(self):
@@ -374,6 +381,7 @@ class Controller(QObject):
         self.view.Abort_Button.hide()
         self.view.Save_Data_Buttons.show()
         self.view.topbutton_widget.show()
+        QTimer.singleShot(10*1000, self.enableButtons) #timer in msec
 
     def abortRunning(self):
         self.model.abort()
@@ -499,8 +507,8 @@ class Controller(QObject):
     def updateProgress(self, progress):
         self.view.Progress_Monitor.setValue(progress)
 
-    def setLabel(self, string):
-        logger.info(string)
+    def setLabel(self, string, severity='info'):
+        getattr(logger,severity)(string)
         self.view.label_MODE.setText('Status: <font color="red">' + string + '</font>')
 
     def cancelSave(self):
