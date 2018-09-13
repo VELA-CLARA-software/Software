@@ -40,18 +40,18 @@
         </property>
         <property name="maximumSize">
          <size>
-          <width>161</width>
+          <width>160</width>
           <height>16777215</height>
          </size>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::NoFrame</enum>
         </property>
         <property name="editTriggers">
          <set>QAbstractItemView::NoEditTriggers</set>
         </property>
         <property name="indentation">
          <number>10</number>
-        </property>
-        <property name="rootIsDecorated">
-         <bool>false</bool>
         </property>
         <property name="headerHidden">
          <bool>true</bool>
@@ -160,12 +160,19 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>Colour map</string>
+           <string>Colours</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QComboBox" name="colour_map_dropdown"/>
+         <widget class="QComboBox" name="colour_map_dropdown">
+          <property name="minimumSize">
+           <size>
+            <width>100</width>
+            <height>0</height>
+           </size>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>
@@ -312,18 +319,22 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="resetBackground_pushButton">
-        <property name="text">
-         <string>Reset Background Image</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="useBackground_checkBox">
-        <property name="text">
-         <string>Use Background</string>
-        </property>
-       </widget>
+       <layout class="QHBoxLayout" name="background_hbox">
+        <item>
+         <widget class="QCheckBox" name="useBackground_checkBox">
+          <property name="text">
+           <string>Use Background</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QToolButton" name="resetBackground_pushButton">
+          <property name="text">
+           <string>Reset</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
       <item>
        <widget class="QCheckBox" name="useNPoint_checkBox">
@@ -347,7 +358,7 @@
        </widget>
       </item>
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <layout class="QHBoxLayout" name="step_size_hbox">
         <item>
          <widget class="QLabel" name="step_size_label">
           <property name="sizePolicy">
@@ -378,6 +389,41 @@
          </widget>
         </item>
        </layout>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="overlay_checkbox">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="text">
+         <string>Overlay</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QTreeView" name="overlay_treeview">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>160</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::NoFrame</enum>
+        </property>
+        <property name="indentation">
+         <number>10</number>
+        </property>
+        <property name="headerHidden">
+         <bool>true</bool>
+        </property>
+       </widget>
       </item>
      </layout>
     </item>
