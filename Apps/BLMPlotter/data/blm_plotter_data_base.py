@@ -2,6 +2,7 @@ from PyQt4.QtCore import QTimer
 from PyQt4.QtCore import QObject
 import datetime
 import numpy as np
+import collections
 import matplotlib.pyplot as plt
 from data.config_reader import config_reader
 
@@ -13,6 +14,8 @@ charge_name = 'charge_name'
 blm_names = 'bpm_names'
 blm_status = 'blm_status'
 blm_voltages = 'blm_voltages'
+blm_distance_start = 'blm_distance_start'
+blm_distance_end = 'blm_distance_end'
 charge_status = 'charge_status'
 scan_status = 'scan_status'
 charge_monitoring = 'charge_monitoring'
@@ -24,7 +27,12 @@ plots_done = 'plots_done'
 values_saved = 'values_saved'
 machine_mode = 'machine_mode'
 scan_log = 'scan_log'
+num_shots = 'num_shots'
+num_shots_request = 'num_shots_request'
 scan_type = 'scan_type'
+has_blm_data = 'has_blm_data'
+blm_num_values = 'blm_num_values'
+save_request = 'save_request'
 
 all_value_keys = [time_stamp,
                   bunch_charge,
@@ -39,11 +47,18 @@ all_value_keys = [time_stamp,
                   charge_values,
                   scan_status,
                   blm_voltages,
+                  blm_distance_start,
+                  blm_distance_end,
                   plots_done,
                   values_saved,
                   machine_mode,
                   scan_log,
-                  scan_type
+                  scan_type,
+                  num_shots,
+                  num_shots_request,
+                  has_blm_data,
+                  blm_num_values,
+                  save_request
                   ]
 
 class blm_plotter_data_base(QObject):
@@ -76,11 +91,18 @@ class blm_plotter_data_base(QObject):
     values[all_values_set] = False
     values[ready_to_go] = False
     values[charge_values] = []
+    values[blm_distance_start] = dummy_dbl
+    values[blm_distance_end] = dummy_dbl
     values[plots_done] = False
     values[values_saved] = False
     values[machine_mode] = dummy_str
     values[scan_log] = dummy_str
     values[scan_type] = dummy_str
+    values[num_shots] = 2
+    values[has_blm_data] = False
+    values[blm_num_values] = []
+    values[save_request] = False
+    values[num_shots_request] = False
     # amp_pwr_mean_data = {}
 
     #logger

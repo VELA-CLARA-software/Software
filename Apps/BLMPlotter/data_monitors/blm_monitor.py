@@ -2,7 +2,7 @@ from monitor import monitor
 from PyQt4.QtCore import QTimer
 import data.blm_plotter_data_base as dat
 import numpy, random
-import time
+import time, collections
 
 class blm_monitor(monitor):
     # whoami
@@ -23,13 +23,6 @@ class blm_monitor(monitor):
         self.run()
 
     def run(self):
-        # now we're ready to start the timer, (could be called from a function)
-        # item = [self.bunch_charge]
-        # if self.sanity_checks(item):
-        #     self.timer.start(self.update_time)
-        #     monitor.logger.message(self.my_name, ' STARTED running')
-        #     self.set_good()
-        # else:
         monitor.logger.message(self.my_name, ' running')
 
     def check_blm_is_monitoring(self):
@@ -40,9 +33,19 @@ class blm_monitor(monitor):
         # else:
         #     monitor.data.values[dat.blm_status] = False
         monitor.data.values[dat.blm_status] = True
+        monitor.data.values[dat.blm_distance_start] = 0.0
+        monitor.data.values[dat.blm_distance_end] = 1.0
+        monitor.data.values[dat.blm_names] = monitor.blm_control.getBLMNames()
 
     def update_blm_voltages(self):
-        self.check_blm_is_monitoring()
-        if monitor.data.values[dat.blm_status] and monitor.data.values[dat.charge_status]:
-            for i in monitor.data.values[dat.blm_names]:
-                monitor.data.values[dat.blm_voltages][i] = monitor.bpm_control.getBLMDataBuffer(i)[-1]
+        for i in monitor.data.values[dat.blm_names]:
+            monitor.data.values[dat.blm_voltages][i].append(numpy.random.rand(1,10)[0])
+            # monitor.data.values[dat.blm_voltages][i] = monitor.bpm_control.getBLMDataBuffer(i)[-1]
+        monitor.data.values[dat.has_blm_data] = True
+
+    def update_blm_distance(self):
+        monitor.data.values[dat.blm_distance_start] = 0
+        monitor.data.values[dat.blm_distance_end] = 1
+        monitor.data.values[dat.blm_num_values] = numpy.linspace(monitor.data.values[dat.blm_distance_start],monitor.data.values[dat.blm_distance_end],
+                                                                 len(monitor.data.values[dat.blm_voltages][monitor.data.values[dat.blm_names][0]][-1]))
+        monitor.data.values[dat.has_blm_data] = True

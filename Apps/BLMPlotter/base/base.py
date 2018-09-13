@@ -32,9 +32,10 @@ class base(object):
     charge_cont = VELA_CLARA_Charge_Control
     charge_init = VELA_CLARA_Charge_Control.init()
     charge_init.setVerbose()
-    #valve_init.setVerbose()
-    _scope_control = None
-    _scopeObj = None
+
+    _charge_control = None
+    _chargeObj = None
+    _charge_handler = None
 
     def __init__(self):
         pass
@@ -62,6 +63,14 @@ class base(object):
     @blm_handler.setter
     def blm_handler(self, value):
         base._blm_handler = value
+
+    @property
+    def charge_handler(self):
+        return base._charge_handler
+
+    @charge_handler.setter
+    def charge_handler(self, value):
+        base._charge_handler = value
 
     @property
     def charge_control(self):
