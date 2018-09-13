@@ -23,27 +23,22 @@ class snapshotButton(QtGui.QApplication):
         self.snapshotgui.getDirectoryLineEdit.setText(self.filename)
 
         self.snapshotgui.saveSnapshotButton.clicked.connect(self.handle_savefile)
-        self.snapshotgui.setJSON.clicked.connect(self.handle_filename)
+        # self.snapshotgui.setJSON.clicked.connect(self.handle_filename)
         self.snapshotgui.setHDF5.clicked.connect(self.handle_filename)
         self.snapshotgui.setAll.clicked.connect(self.handle_filename)
 
     def handle_savefile(self,r):
-        if self.snapshotgui.setJSON.isChecked():
-            self.machinesnapshot.writetojson()
-        elif self.snapshotgui.setHDF5.isChecked():
+        if self.snapshotgui.setHDF5.isChecked():
             self.machinesnapshot.writetohdf5()
         elif self.snapshotgui.setAll.isChecked():
-            self.machinesnapshot.writetojson()
             self.machinesnapshot.writetohdf5()
 
     def handle_filename(self,r):
         self.snapshotgui.getDirectoryLineEdit.setText("")
-        if self.snapshotgui.setJSON.isChecked():
-            self.snapshotgui.getDirectoryLineEdit.setText(self.filename + ".json")
-        elif self.snapshotgui.setHDF5.isChecked():
+        if self.snapshotgui.setHDF5.isChecked():
             self.snapshotgui.getDirectoryLineEdit.setText(self.filename + ".hdf5")
         elif self.snapshotgui.setAll.isChecked():
-            self.snapshotgui.getDirectoryLineEdit.setText(self.filename + ".json;, " + self.filename + ".hdf5")
+            self.snapshotgui.getDirectoryLineEdit.setText(self.filename + ".hdf5")
 
 if __name__ == '__main__':
     print "starting button"

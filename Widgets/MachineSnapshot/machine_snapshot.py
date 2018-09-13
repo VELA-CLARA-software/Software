@@ -10,8 +10,8 @@ class MachineSnapshot(object):
 				 SCR_Ctrl=None, CAM_Ctrl=None, GUN_Ctrl=None, GUN_Crest=0.0,
 				 GUN_Type=None, L01_Ctrl=None, L01_Crest=0.0,
 				 PIL_Ctrl=None, GUN_MOD_Ctrl = None, L01_MOD_Ctrl = None,
+				 GUN_Momentum=None, L01_Momentum=None,
 				 MACHINE_MODE=vce.MACHINE_MODE.PHYSICAL, MACHINE_AREA=vce.MACHINE_AREA.CLARA_2_BA1_BA2, bufferSize=10, messages=False):
-
 
 		self.BPM_Ctrl = BPM_Ctrl
 		self.CHG_Ctrl = CHG_Ctrl
@@ -29,6 +29,10 @@ class MachineSnapshot(object):
 		self.bufferSize = bufferSize
 		self.GUN_Crest = GUN_Crest
 		self.L01_Crest = L01_Crest
+		self.GUN_Momentum = GUN_Momentum
+		self.L01_Momentum = L01_Momentum
+		self.GUN_pos = 0.0
+		self.L01_pos = 1.19357 + 2.0
 		self.bpm_data = {}
 		self.chg_data = {}
 		self.mag_data = {}
@@ -59,6 +63,16 @@ class MachineSnapshot(object):
 		self.chg_ctrl.setBufferSize(self.bufferSize)
 		self.gun_ctrl.setNumBufferTraces(self.bufferSize)
 		self.l01_ctrl.setNumBufferTraces(self.bufferSize)
+		self.bpmdata = self.getbpmdata()
+		self.chargedata = self.getchargedata()
+		self.magnetdata = self.getmagnetdata()
+		# self.gunmoddata = self.getgunmodulatordata()
+		# self.l01moddata = self.getl01modulatordata()
+		self.screendata = self.getscreendata()
+		self.pildata = self.getpildata()
+		self.cameradata = self.getcameradata()
+		self.gundata = self.getgundata()
+		self.l01data = self.getl01data()
 		time.sleep(1)
 
 	def checkBPMController(self):
@@ -151,22 +165,35 @@ class MachineSnapshot(object):
 	def getmagnetdata(self):
 		self.mag_names = self.mag_ctrl.getMagnetNames()
 		self.dip_names = self.mag_ctrl.getDipNames()
-		for i in self.dip_names:
-			if i == "S02-DIP01":
-				self.dip_objs[i] = self.mag_ctrl.getMagObjConstRef(i)
-				self.sign = -1
-				self.current = self.dip_objs[i].readi
-				self.coeffs = numpy.append(self.dip_objs[i].fieldIntegralCoefficients[:-1], self.dip_objs[i].fieldIntegralCoefficients[-1])
-				self.int_strengthdip['L01'] = numpy.polyval(self.coeffs, abs(self.current))
-				self.angle = 45
-				self.momentum['L01'] = 0.001 * SPEED_OF_LIGHT * self.int_strengthdip['L01'] / numpy.radians(self.angle)
+		if self.GUN_Momentum == None:
+			self.momentum['GUN'] = 4.75 # MAGIC NUMBER!!!!!
+		else:
+			self.momentum['GUN'] = self.GUN_Momentum
+		if self.L01_Momentum == None:
+			for i in self.dip_names:
+				if i == "S02-DIP01":
+					self.dip_objs[i] = self.mag_ctrl.getMagObjConstRef(i)
+					self.sign = -1
+					self.current = self.dip_objs[i].readi
+					self.coeffs = numpy.append(self.dip_objs[i].fieldIntegralCoefficients[:-1], self.dip_objs[i].fieldIntegralCoefficients[-1])
+					self.int_strengthdip['L01'] = numpy.polyval(self.coeffs, abs(self.current))
+					self.angle = 45
+					self.momentum['L01'] = 0.001 * SPEED_OF_LIGHT * self.int_strengthdip['L01'] / numpy.radians(self.angle)
+		else:
+			self.momentum['L01'] = self.L01_Momentum
 		for i in self.mag_names:
 			self.mag_objs[i] = self.mag_ctrl.getMagObjConstRef(i)
 			self.mag_data[i] = {}
+			self.mag_data[i]['position'] = self.mag_objs[i].position
+			if self.mag_data[i]['position'] > self.L01_pos:
+				self.mom = self.momentum['L01']
+			elif self.mag_data[i]['position'] < self.L01_pos:
+				self.mom = self.momentum['GUN']
 			self.coeffs = numpy.append(self.mag_objs[i].fieldIntegralCoefficients[:-1], self.mag_objs[i].fieldIntegralCoefficients[-1])
 			self.int_strength = numpy.polyval(self.coeffs, abs(self.mag_objs[i].siWithPol))
-			self.effect = SPEED_OF_LIGHT * self.int_strength / self.momentum['L01']
+			self.effect = SPEED_OF_LIGHT * self.int_strength / self.mom
 			self.mag_data[i]["readi"] = self.mag_objs[i].readi
+			self.mag_data[i]["seti"] = self.mag_objs[i].siWithPol
 			# self.mag_data[i]["seti"] = self.mag_objs[i].siWithPol
 			self.mag_data[i]["psu_state"] = self.mag_objs[i].psuState
 			self.mag_type = str(self.mag_objs[i].magType)
@@ -192,7 +219,7 @@ class MachineSnapshot(object):
 				# For the solenoid, coefficients also refer to the momentum
 				# The 'K' value is the Larmor angle
 				self.I = self.mag_data[i]["readi"]
-				self.p = self.momentum['L01']
+				self.p = self.mom
 				self.k_coeffs = numpy.array(self.mag_objs[i].fieldIntegralCoefficients[:-4])
 				self.mag_data[i]['larmor_angle'] = numpy.dot(self.k_coeffs, [self.I, self.p*self.I, self.p**2*self.I, self.p**3*self.I, self.p**4*self.I])
 		return self.mag_data
@@ -249,27 +276,6 @@ class MachineSnapshot(object):
 		self.gun_data["pulse_offset"] = self.gun_obj.pulse_offset
 		# if self.gun_mod_data['main_state'] == "RF_ON":
 		self.getllrfdata(self.gun_obj, self.gun_ctrl, self.gun_data)
-		'''if True:
-			self.gun_data["kly_fwd_power_av"] = self.gun_ctrl.getKlyFwdPowerAv()
-			self.gun_data["kly_rev_power_av"] = self.gun_ctrl.getKlyRevPowerAv()
-			self.gun_data["kly_fwd_phase_av"] = numpy.mean(self.gun_ctrl.getKlyFwdPhase())
-			self.gun_data["kly_rev_phase_av"] = numpy.mean(self.gun_ctrl.getKlyRevPhase())
-			self.gun_data["probe_power_av"] = self.gun_ctrl.getProbePowerAv()
-			self.gun_data["probe_phase_av"] = self.gun_ctrl.getProbePhaseAv()
-			self.gun_data["cav_fwd_power_av"] = self.gun_ctrl.getCavFwdPowerAv()
-			self.gun_data["cav_rev_power_av"] = self.gun_ctrl.getCavRevPowerAv()
-			self.gun_data["cav_fwd_phase_av"] = self.gun_ctrl.getCavFwdPhaseAv()
-			self.gun_data["cav_rev_phase_av"] = self.gun_ctrl.getCavRevPhaseAv()
-			self.gun_data["kly_fwd_power"] = self.gun_ctrl.getKlyFwdPower()
-			self.gun_data["kly_rev_power"] = self.gun_ctrl.getKlyRevPower()
-			self.gun_data["kly_fwd_phase"] = self.gun_ctrl.getKlyFwdPhase()
-			self.gun_data["kly_rev_phase"] = self.gun_ctrl.getKlyRevPhase()
-			self.gun_data["probe_power"] = self.gun_ctrl.getProbePower()
-			self.gun_data["probe_phase"] = self.gun_ctrl.getProbePhase()
-			self.gun_data["cav_fwd_power"] = self.gun_ctrl.getCavFwdPower()
-			self.gun_data["cav_rev_power"] = self.gun_ctrl.getCavRevPower()
-			self.gun_data["cav_fwd_phase"] = self.gun_ctrl.getCavFwdPhase()
-			self.gun_data["cav_rev_phase"] = self.gun_ctrl.getCavRevPhase()'''
 		return self.gun_data
 
 	def getl01data(self):
@@ -282,28 +288,6 @@ class MachineSnapshot(object):
 		self.l01_data["crest"] = self.l01_obj.crestPhi
 		self.l01_data["name"] = self.l01_obj.name
 		self.getllrfdata(self.l01_obj,self.l01_ctrl,self.l01_data)
-		'''self.l01_data["pulse_length"] = self.l01_obj.pulse_length
-		self.l01_data["pulse_offset"] = self.l01_obj.pulse_offset
-		self.l01_data["kly_fwd_power_av"] = self.l01_ctrl.getKlyFwdPowerAv()
-		self.l01_data["kly_rev_power_av"] = self.l01_ctrl.getKlyRevPowerAv()
-		self.l01_data["kly_fwd_phase_av"] = numpy.mean(self.gun_ctrl.getKlyFwdPhase())
-		self.l01_data["kly_rev_phase_av"] = numpy.mean(self.gun_ctrl.getKlyRevPhase())
-		self.l01_data["probe_power_av"] = self.l01_ctrl.getProbePowerAv()
-		self.l01_data["probe_phase_av"] = self.l01_ctrl.getProbePhaseAv()
-		self.l01_data["cav_fwd_power_av"] = self.l01_ctrl.getCavFwdPowerAv()
-		self.l01_data["cav_rev_power_av"] = self.l01_ctrl.getCavRevPowerAv()
-		self.l01_data["cav_fwd_phase_av"] = self.l01_ctrl.getCavFwdPhaseAv()
-		self.l01_data["cav_rev_phase_av"] = self.l01_ctrl.getCavRevPhaseAv()
-		self.l01_data["kly_fwd_power"] = self.l01_ctrl.getKlyFwdPower()
-		self.l01_data["kly_rev_power"] = self.l01_ctrl.getKlyRevPower()
-		self.l01_data["kly_fwd_phase"] = self.l01_ctrl.getKlyFwdPhase()
-		self.l01_data["kly_rev_phase"] = self.l01_ctrl.getKlyRevPhase()
-		self.l01_data["probe_power"] = self.l01_ctrl.getProbePower()
-		self.l01_data["probe_phase"] = self.l01_ctrl.getProbePhase()
-		self.l01_data["cav_fwd_power"] = self.l01_ctrl.getCavFwdPower()
-		self.l01_data["cav_rev_power"] = self.l01_ctrl.getCavRevPower()
-		self.l01_data["cav_fwd_phase"] = self.l01_ctrl.getCavFwdPhase()
-		self.l01_data["cav_rev_phase"] = self.l01_ctrl.getCavRevPhase()'''
 		return self.l01_data
 
 	def getllrfdata(self, llrfobj, llrfctrl, data_dict):
@@ -323,6 +307,8 @@ class MachineSnapshot(object):
 										  "KLYSTRON_REVERSE_POWER", "L01_CAVITY_REVERSE_PHASE",
 										  "L01_CAVITY_FORWARD_PHASE", "L01_CAVITY_REVERSE_POWER",
 										  "L01_CAVITY_FORWARD_POWER", "L01_PROBE_PHASE", "L01_PROBE_POWER"]
+
+		self.data_dict['trace_names'] = self.all_traces_to_monitor
 
 		for trace in self.all_traces_to_monitor:
 			self.a = self.llrfctrl.startTraceMonitoring(trace)
@@ -345,8 +331,8 @@ class MachineSnapshot(object):
 			self.llrfctrl.setMeanStopIndex(trace, self.trace_mean_end)
 			while len(self.llrfobj.trace_data[trace].traces) < self.bufferSize:
 				print "sleep"
-				time.sleep(1)
-		time.sleep(2)
+				time.sleep(0.1)
+		# time.sleep(2)
 
 		for trace in self.all_traces_to_monitor:
 				self.trace_data = self.trace_data_const_ref.traces
@@ -354,6 +340,8 @@ class MachineSnapshot(object):
 				for i in self.trace_data[-1].value:
 					self.data_dict[trace].append(i)
 				self.data_dict[trace+'_time'] = self.trace_data[-1].time
+				self.data_dict[trace + '_mean_start'] = self.trace_mean_start
+				self.data_dict[trace+'_mean_end'] = self.trace_mean_end
 				self.data_dict[trace+'_AV'] = numpy.mean(self.trace_data[-1].value)
 				self.data_dict[trace + '_AV_buffer'] = []
 				for i in range(0,len(self.trace_data)-1):
@@ -474,6 +462,31 @@ class MachineSnapshot(object):
 		print "data saved"
 		return self.data
 
+	def setmagnets(self, filewithpath=None):
+		self.filewithpath = filewithpath
+		if self.filewithpath == None:
+			return False
+		else:
+			self.filename, self.file_extension = os.path.splitext(self.filewithpath)
+			if self.file_extension == '.json':
+				print self.filewithpath
+				with open(self.filewithpath) as f:
+					self.data = json.load(f)
+				# self.data = json.loads(self.filewithpath)
+				print "json"
+				self.magdata = self.data['mag_data']
+				for key, value in self.magdata.iteritems():
+					print key, value['seti']
+					#self.MAG_Ctrl.setSI(key, value['seti'])
+			elif self.file_extension == '.hdf5':
+				self.data = h5py.File(self.filewithpath,'r+')
+				print "hdf5"
+				self.magdata = self.data['mag_data']
+				for key, value in self.magdata.iteritems():
+					# print key, value['seti'].value
+					self.MAG_Ctrl.setSI(key, value['seti'].value)
+		return True
+
 	def setfilename(self, filename=None, directory=None):
 		self.filename = filename
 		self.directory = directory
@@ -487,18 +500,38 @@ class MachineSnapshot(object):
 			self.filename = "snapshot-" + self.st
 		return self.filename
 
-	def writetojson(self, filename=None, directory=None):
-		self.filename = self.setfilename(filename, directory)
-		self.json_data = self.getdata()
-		self.fullname = self.filename + ".json"
-		with open(self.fullname, 'w') as outfile:
-			outfile.write(json.dumps(self.json_data, indent=4, sort_keys=True))
+	def setdirectory(self, directory=None):
+		self.directory = directory
+		if self.directory == None:
+			self.now = datetime.datetime.now()
+			self.year = str(self.now.year)
+			self.month = str(self.now.month)
+			self.day = str(self.now.day)
+			if len(self.month) == 1:
+				self.month = "0" + self.month
+			if len(self.day) == 1:
+				self.day = "0" + self.day
+			self.directory = "\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Work\\" + self.year + "\\" + self.month + "\\" + self.day + "\\"
+		if not os.path.isdir(self.directory):
+			os.mkdir(self.directory)
+		os.chdir(self.directory)
 
-	def writetohdf5(self, filename=None, directory=None):
+	# def writetojson(self, filename=None, directory=None, data=None):
+	# 	self.data = data
+	# 	self.filename = self.setfilename(filename, directory)
+	# 	if self.data == None:
+	# 		self.data = [self.getdata()]
+	# 	self.fullname = self.filename + ".json"
+	# 	with open(self.fullname, 'w') as outfile:
+	# 		outfile.write(json.dumps(self.data, indent=4, sort_keys=True))
+
+	def writetohdf5(self, filename=None, directory=None, data=None):
+		self.data = data
 		self.filename = self.setfilename(filename, directory)
-		self.hdf5_data = self.getdata()
+		if self.data == None:
+			self.data = self.getdata()
 		self.fullname = self.filename + ".hdf5"
-		dict_to_h5.save_dict_to_hdf5(self.hdf5_data, self.fullname)
+		dict_to_h5.save_dict_to_hdf5(self.data, self.fullname)
 
 	def getdirectory(self):
 		self.now = datetime.datetime.now()
@@ -513,7 +546,6 @@ class MachineSnapshot(object):
 		if not os.path.isdir(self.directory):
 			os.mkdir(self.directory)
 		return self.directory
-
 
 if __name__ == "__main__":
 	data = MachineSnapshot(MAG_Ctrl=None, BPM_Ctrl=None, CHG_Ctrl=None,
