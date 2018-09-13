@@ -1,5 +1,6 @@
 import sys
 import os
+import multiprocessing
 
 os.environ['PATH'] = os.environ['PATH'] + r';\\apclara1.dl.ac.uk\ControlRoomApps\Controllers\bin\Release'
 #os.environ['PATH']=os.environ['PATH']+';\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin
@@ -25,5 +26,6 @@ class App(QtGui.QApplication):
 
 
 if __name__ == '__main__':
+    multiprocessing.freeze_support()
     app = App(sys.argv)
     sys.exit(app.exec_())
