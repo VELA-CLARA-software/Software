@@ -33,6 +33,10 @@ scan_type = 'scan_type'
 has_blm_data = 'has_blm_data'
 blm_num_values = 'blm_num_values'
 save_request = 'save_request'
+blm_buffer_full = 'blm_buffer_full'
+charge_buffer_full = 'charge_buffer_full'
+buffers_full = 'buffers_full'
+buffer_message = 'buffer_message'
 
 all_value_keys = [time_stamp,
                   bunch_charge,
@@ -58,7 +62,11 @@ all_value_keys = [time_stamp,
                   num_shots_request,
                   has_blm_data,
                   blm_num_values,
-                  save_request
+                  save_request,
+                  blm_buffer_full,
+                  charge_buffer_full,
+                  buffers_full,
+                  buffer_message
                   ]
 
 class blm_plotter_data_base(QObject):
@@ -103,6 +111,10 @@ class blm_plotter_data_base(QObject):
     values[blm_num_values] = []
     values[save_request] = False
     values[num_shots_request] = False
+    values[blm_buffer_full] = False
+    values[charge_buffer_full] = False
+    values[buffers_full] = False
+    values[buffer_message] = ""
     # amp_pwr_mean_data = {}
 
     #logger

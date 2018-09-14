@@ -58,6 +58,8 @@ class main_controller(controller_base):
                         controller_base.blm_handler.set_blm_buffer(controller_base.data.values[dat.num_shots])
                         controller_base.charge_handler.set_charge_buffer(controller_base.data.values[dat.num_shots])
                         controller_base.data.values[dat.num_shots_request] = False
+                        # while controller_base.data.values[dat.buffers_full] == False:
+                    self.check_buffers()
                     self.get_charge_values()
                     self.get_blm_values()
                     break
@@ -73,6 +75,7 @@ class main_controller(controller_base):
                              "blm_voltages": controller_base.data.values[dat.blm_voltages]}
                 self.writetohdf5(filename=self.blm_scan_log,data=self.data)
                 controller_base.data.values[dat.save_request] = False
+                controller_base.data.values[dat.buffer_message] = ""
 
     def writetohdf5(self, filename=None, data=None):
         self.data = data
@@ -98,6 +101,10 @@ class main_controller(controller_base):
     def get_charge_values(self):
         controller_base.data_monitor.charge_monitor.update_bunch_charge()
         QApplication.processEvents()
+
+    def check_buffers(self):
+        if controller_base.data_monitor.charge_monitor.check_buffer() == True and controller_base.data_monitor.blm_monitor.check_buffer() == True:
+            controller_base.data.values[dat.buffers_full] = True
 
     def clear_values(self):
         controller_base.data.values[dat.blm_voltages] = {}

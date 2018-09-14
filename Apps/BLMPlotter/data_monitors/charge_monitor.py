@@ -46,6 +46,12 @@ class charge_monitor(monitor):
         else:
             monitor.data.values[dat.charge_status] = False
 
+    def check_buffer(self):
+        if monitor.charge_control.isChargeBufferFull(monitor.config.charge_config['CHARGE_NAME']):
+            return True
+        else:
+            return False
+
     def update_bunch_charge(self):
         monitor.data.values[dat.charge_values] = []
         monitor.data.values[dat.charge_values] = monitor.charge_control.getChargeBuffer(monitor.config.charge_config['CHARGE_NAME'])
