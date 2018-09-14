@@ -27,21 +27,25 @@
 //*/
 '''
 import VELA_CLARA_PILaser_Control as pil
-import VELA_CLARA_Shutter_Control as shut
-import numpy as np
+#import numpy as np
 import data
-
+from numpy import array
+from numpy import reshape
+from numpy import transpose
+from numpy import flipud
+from numpy import random
+import time
 
 class model():
+    print 'model init'
     init = pil.init()
     init.setVerbose()
     pil = init.physical_PILaser_Controller()
 
     # holds a copy of the data dictionary
     data = data.data()
+    print 'model init 1'
 
-    initShut = shut.init()
-    shutter = initShut.physical_PIL_Shutter_Controller()
 
     def __init__(self):
         '''
@@ -49,7 +53,8 @@ class model():
             I normally hold these in a list, (maybe one day try holding them in a dictionary
             to see if that the code clearer?)
         '''
-        self.shutter  = [model.shutter.getShutterObjConstRef('SHUT01')]#MAGIC_STRING
+        self.shutter  = [model.pil.getShutterObjConstRef('SHUT01')]#MAGIC_STRING
+
         self.mirror   = [model.pil.getpilMirrorObjConstRef()]
         self.vc_data  = [model.pil.getVCDataObjConstRef()]
         self.vc_daq   = [model.pil.getClaraDAQObj_VC()]
@@ -65,13 +70,15 @@ class model():
         model.data.values[data.x_pix_scale_factor] = self.vc_image[0].x_pix_scale_factor
         model.data.values[data.x_pix_to_mm] = self.vc_image[0].x_pix_to_mm
         model.data.values[data.y_pix_to_mm] = self.vc_image[0].y_pix_to_mm
-        model.data.values[data.num_pix_x] = self.vc_image[0].num_pix_x
-        model.data.values[data.num_pix_y] = self.vc_image[0].num_pix_y
+        model.data.values[data.num_pix_x] =   self.vc_image[0].num_pix_x
+        model.data.values[data.num_pix_y] =   self.vc_image[0].num_pix_y
+        print 'model init complete'
 
     def reset_running_values(self):
         model.pil.clearRunningValues()
 
     def update_values(self):
+        #return 0
         '''
             set previous_values to values, then update values
             https://stackoverflow.com/questions/2465921/how-to-copy-a-dictionary-and-only-edit-the-copy
@@ -79,7 +86,7 @@ class model():
         for key, value in  model.data.values.iteritems():
             model.data.previous_values[key] = value
         '''
-            Get latest values from controllers adn put them in the data dict
+            Get latest values from controllers and put them in the data dict
         '''
         model.data.values[data.is_acquiring] = model.pil.isAcquiring_VC()
         model.data.values[data.is_analysing] = model.pil.isAnalysing_VC()
@@ -116,6 +123,7 @@ class model():
         model.data.values[data.cov_sd] = self.vc_data[0].sig_xy_sd
         model.data.values[data.avg_pix_sd] = self.vc_data[0].avg_pix_sd
 
+
         model.data.values[data.image]  = self.get_fast_image()
         model.data.values[data.mask_x_rbv] = self.vc_mask[0].mask_x
         model.data.values[data.mask_y_rbv] = self.vc_mask[0].mask_y
@@ -129,19 +137,22 @@ class model():
 
         model.data.values[data.ana_step_size] = self.vc_data[0].step_size
         #print('self.vc_data[0].step_size = ', self.vc_data[0].step_size)
-        if self.shutter[0].state == shut.SHUTTER_STATE.OPEN:
+        if self.shutter[0].state == pil.SHUTTER_STATE.OPEN:
             model.data.values[data.shutter_open] = True
         else:
             model.data.values[data.shutter_open] = False
 
+        model.data.values[data.energy_val] = self.pil_obj[0].energy
+
+        model.data.values[data.energy_mean] = self.pil_obj[0].energy_mean
+        model.data.values[data.energy_sd] = self.pil_obj[0].energy_sd
+
+
+
         model.data.values[data.wcm_val] = self.pil_obj[0].Q
         model.data.values[data.wcm_mean] = self.pil_obj[0].Q_mean
         model.data.values[data.wcm_sd] = self.pil_obj[0].Q_sd
-        #
-        # these don't exist yet, laser INTENSITY
-        model.data.values[data.int_val] = '-'
-        model.data.values[data.int_mean] = '-'
-        model.data.values[data.int_sd] = '-'
+
 
         model.data.values[data.H_step_read] = self.mirror[0].hStep
         model.data.values[data.V_step_read] = self.mirror[0].vStep
@@ -151,34 +162,60 @@ class model():
         model.data.values[data.last_save_path] =  model.data.values[data.last_save_dir] + '\\' + \
                                                   model.data.values[data.last_save_file]
 
-    def move_H_mirror(self,step):
-        model.pil.setHstep(step)
-        model.pil.moveH()
 
-    def move_V_mirror(self, step):
-        model.pil.setVstep(step)
-        model.pil.moveV()
+    def set_pos(self, x, y):
+        model.pil.setVCPos(x , y)
+
+    def set_y_pos(self, value):
+        setposition()
+
+    def move_left(self,step):
+        if model.pil.moveLeft(step):
+            pass
+        else:
+            print 'Error Moving Left'
+
+
+    def move_right(self, step):
+        if model.pil.moveRight(step):
+            pass
+        else:
+            print 'Error Moving Right'
+
+    def move_up(self,step):
+        if model.pil.moveUp(step):
+            pass
+        else:
+            print 'Error Moving Up'
+
+    def move_down(self, step):
+        if model.pil.moveDown(step):
+            pass
+        else:
+            print 'Error Moving Down'
+
 
     def set_delta_hwp(self, delta_value):
         model.pil.setHWP(self.pil_obj[0].HWP + delta_value)
 
     def get_fast_image(self):
+        #print 'get_fast_image'
         if model.pil.isAcquiring_VC():
-            if model.pil.takeFastImage_VC():
-                # reshape works as: reshape(( n rows, m columns) )
-                npData = np.array(  self.vc_image[0].data ).reshape(( self.vc_image[0].num_pix_y,
-                                                                self.vc_image[0].num_pix_x))
-                # This needs to be checked,
-                # it matches the old imageviewer, but is this correct?? !!
-                return np.transpose(np.flipud(npData))
-            else:
-                print('failed to get image')
+            #return random.normal(size=(self.vc_image[0].num_pix_y, self.vc_image[0].num_pix_y))
+            if model.pil.takeFastImage_VC():#getFastImage_VC():
+                #npData = array( self.vc_image[0].data ).reshape(( self.vc_image[0].num_pix_y,
+                #                                              self.vc_image[0].num_pix_x))
+                npData = array( self.vc_image[0].data).reshape(( self.vc_image[0].num_pix_y,
+                                                               self.vc_image[0].num_pix_x))
+                return flipud(npData)
+        else:
+            print('failed to get image')
 
     def toggle_shutter(self):
-        if self.shutter[0].state == shut.SHUTTER_STATE.CLOSED:
-            model.shutter.open('SHUT01')
-        elif self.shutter[0].state == shut.SHUTTER_STATE.OPEN:
-            model.shutter.close('SHUT01')
+        if self.shutter[0].state == pil.SHUTTER_STATE.CLOSED:
+            model.pil.open('SHUT01')# MAGIC
+        elif self.shutter[0].state == pil.SHUTTER_STATE.OPEN:
+            model.pil.close('SHUT01')# MAGIC
 
     def setStepSize(self, stepSize):
         print(stepSize)
@@ -243,22 +280,11 @@ class model():
             model.pil.setMaskFeedBackOff_VC()
 
 
-            # height = 2160#self.selectedCameraIA.IA.imageHeight
-            # width = 2560#self.selectedCameraIA.IA.imageWidth
-            # x  = self.vc_data[0].x_pix
-            # y  = self.vc_data[0].y_pix
-            # sX = self.vc_data[0].sig_x_pix
-            # sY = self.vc_data[0].sig_y_pix
-            # if x-5*sX > 0 and x+5*sX < width and y-5*sY > 0 and y+5*sY < height:
-            #     #print(x-sX)
-            #     #print(y-sY)
-            #     self.setMask(int(x),int(y),int(5*sX),int(5*sY))
-
     def center_mask(self):
-        x = model.data.values[data.mask_x_rbv] - model.data.values[data.mask_x_rad_rbv]
-        y = model.data.values[data.mask_y_rbv] - model.data.values[model.data.mask_y_rad_rbv]
-        xRad = 2 * model.data.values[data.mask_x_rad_rbv]
-        yRad = 2 * model.data.values[data.mask_y_rad_rbv]
+        x = model.data.values[data.num_pix_x]
+        y = model.data.values[data.num_pix_y]
+        xRad = 200
+        yRad = 200
         self.setMask(x, y, xRad, yRad)
 
     def setposition(self,setx, sety, delta=5, prec=0.1):

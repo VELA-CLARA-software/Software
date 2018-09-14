@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # DJS 2017
-# part of MagtnetApp
+# part of VIRTUAL_CATHDOE_INTERFACE
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
-from Ui_FileLoad import Ui_FileLoad
+from viewSource.Ui_FileLoad import Ui_FileLoad
 import datetime
 
 

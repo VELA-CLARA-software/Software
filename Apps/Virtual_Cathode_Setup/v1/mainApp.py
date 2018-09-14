@@ -26,22 +26,10 @@
 //
 //*/
 '''
-
+import vc_setup_globals as globals
+import time
 import sys,os
-sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\Stage\\')
-#os.environ['PATH']=os.environ['PATH']+';\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin' \
-#                                      '\\Stage\\'
-#os.environ['PATH']=os.environ['PATH']+';\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin
-# \\stage\\'
-#os.environ['PATH']=os.environ['PATH']+';\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin
-# \\Release\\root_v5.34.34\\bin\\'
-#sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\\model')
-#sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\\controller')
-#sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\\view')
-# for i in sys.path:
-#     print "hi"
-#     print i
-from PyQt4 import QtGui, QtCore
+from PyQt4 import QtGui
 from controller.controller import controller
 from model.model import model
 from view.mainView import mainView as view
@@ -50,13 +38,21 @@ from view.mainView import mainView as view
 class App(QtGui.QApplication):
     def __init__(self, sys_argv):
         QtGui.QWidget.__init__(self, sys_argv)
+        print 'create model'
         self.model = model()
+
+        #time.sleep(1000)
+
+        print 'creating view'
+        print 'creating view'
+        print 'creating view'
+
+        #time.sleep(20)
         self.view = view()
         print 'Creating Controller'
         self.control = controller(sys_argv, view = self.view, model= self.model)
         #self.view.show()
         print 'Running'
-
 
 if __name__ == '__main__':
     app = App(sys.argv)
