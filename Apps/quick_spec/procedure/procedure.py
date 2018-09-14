@@ -25,6 +25,7 @@
 import VELA_CLARA_Camera_Control as cam
 from numpy import array
 from numpy import flipud
+from numpy import fliplr
 from numpy import transpose
 from numpy import arange
 from numpy import add
@@ -52,6 +53,7 @@ class procedure(object):
     y_proj_rolling_sum = zeros(y_pix)
     y_proj_mean = []
     current_cam = 'UNKNOWN'
+    last_cam = 'n'
 
     def __init__(self):
         self.my_name = 'procedure'
@@ -67,12 +69,10 @@ class procedure(object):
 
     # called external to update states
     def update_image(self):
-        if procedure.cam_cont.isVelaCam():
-            procedure.x_pix = 1392
-            procedure.y_pix = 1040
-        else:
-            procedure.x_pix = 1280
-            procedure.y_pix = 1080
+        procedure.x_pix = procedure.cam_cont.getNumPixX()
+        procedure.y_pix = procedure.cam_cont.getNumPixY()
+
+        print('x_pix ',procedure.x_pix, ', y_pix ', procedure.x_pix)
 
         # print 'get_fast_image'
         if procedure.cam_cont.isAcquiring():
@@ -80,30 +80,33 @@ class procedure(object):
             if procedure.cam_cont.takeFastImage():  # getFastImage_VC():
                 # npData = array( self.vc_image[0].data ).reshape(( self.vc_image[0].num_pix_y,
                 #                                              self.vc_image[0].num_pix_x))
-                npData = array( procedure.cam_cont.getFastImage()).reshape(( procedure.x_pix,
-                                                                             procedure.y_pix))
+                npData = array( procedure.cam_cont.getFastImage()).reshape(( procedure.y_pix,
+                                                                             procedure.x_pix))
+                if len(npData) > 0:
 
-                self.count += 1
+                    self.count += 1
 
-                procedure.last_image = flipud(npData)
-
-
-                procedure.y_proj = procedure.last_image.sum(axis=0)
-                procedure.x_proj = transpose(procedure.last_image.sum(axis=1))
-
-                procedure.x_proj_rolling_sum = add(procedure.x_proj_rolling_sum, procedure.x_proj)
-                procedure.y_proj_rolling_sum = add(procedure.y_proj_rolling_sum, procedure.y_proj)
+                    procedure.last_image = fliplr( transpose(npData)  )
 
 
-                procedure.y_coords = range(procedure.y_pix)
+                    procedure.y_proj = procedure.last_image.sum(axis=0)
+                    procedure.x_proj = procedure.last_image.sum(axis=1)
 
-                procedure.x_proj_mean = true_divide(procedure.x_proj_rolling_sum, self.count)
-                procedure.y_proj_mean = true_divide(procedure.y_proj_rolling_sum, self.count)
+                    procedure.y_proj_rolling_sum = add(procedure.y_proj_rolling_sum, procedure.y_proj)
+                    procedure.x_proj_rolling_sum = add(procedure.x_proj_rolling_sum, procedure.x_proj)
+
+
+                    procedure.y_coords = range(procedure.y_pix)
+
+                    procedure.x_proj_mean = true_divide(procedure.x_proj_rolling_sum, self.count)
+                    procedure.y_proj_mean = true_divide(procedure.y_proj_rolling_sum, self.count)
 
         else:
             print('failed to get image')
 
-        #procedure.current_cam = procedure.cam_cont.getSelectedCam()
-
+        procedure.current_cam = procedure.cam_cont.getSelectedCamScrName()
+        if procedure.current_cam != procedure.last_cam:
+            self.reset()
+            procedure.last_cam = procedure.current_cam
 
 

@@ -23,9 +23,10 @@ class view(QMainWindow, Ui_mainView ):
         QWidget.__init__(self)
         self.my_name = 'view'
         self.setupUi(self)
-        self.setWindowIcon(QIcon('resources\\Valve_Status\\valve.ico'))
+        self.setWindowIcon(QIcon('resources\\quick_spec\\icon.ico'))
         #print(self.my_name + ', class initiliazed')
         self.plot_item = self.graphicsView.addPlot(lockAspect=True)
+        self.plot_item.hideAxis('left')
         #self.plot_item.setRange(xRange=[0, self.xpix_full], yRange=[0, self.ypix_full])
         self.plot_item.setAspectLocked(True)
 
@@ -62,3 +63,4 @@ class view(QMainWindow, Ui_mainView ):
             self.my_x_plot.setData( view.procedure.x_proj)
             self.my_y_plot.setData( y=procedure.y_coords ,x=view.procedure.y_proj )
 
+        self.cam_name_text.setText(procedure.current_cam)

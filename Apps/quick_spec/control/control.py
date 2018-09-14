@@ -45,8 +45,6 @@ class control(object):
         control.procedure.reset()
 
 
-
-
     def set_up_gui(self):
         # connect main buttons to functions
         # control.view.closeButton.clicked.connect(self.handle_close_all)
