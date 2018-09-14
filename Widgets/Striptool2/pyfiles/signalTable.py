@@ -12,7 +12,7 @@ except ImportError:
 import time
 import yaml
 import string as string
-import Software.Widgets.Striptool2.colours as colours
+import colours as colours
 from collections import OrderedDict
 
 _mapping_tag = yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG

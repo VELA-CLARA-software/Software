@@ -584,7 +584,7 @@ class Model(object):
         # self.setFinalPhase(crest_phase)
         # self.printFinalPhase()
         popt, pcov = curve_fit(self.fitting_equation_Linac1Fine, x, y, \
-            sigma=(1+(y-min(y))) * (1+abs(x-self.approxcrest))**0.5,    p0=[0,10,self.approxcrest], bounds=[[-np.inf, -np.inf, min(x)], [np.inf, np.inf, max(x)]])
+            sigma=(1+(y-min(y))) * (1+abs(x-self.approxcrest))**0.5,    p0=[0,10,self.approxcrest], bounds=[[-np.inf, 0, min(x)], [np.inf, np.inf, max(x)]])
 
         phase = np.array(x)
         phase = np.arange(min(x), max(x),(max(x)-min(x))/1000)
@@ -605,7 +605,7 @@ class Model(object):
     def fittingLinac1Fine(self):
         x, y, std = [np.array(a) for a in self.getDataArray(zipped=False)]
         popt, pcov = curve_fit(self.fitting_equation_Linac1Fine, x, y, \
-            sigma=(1+(y-min(y))) * (1+abs(x-self.approxcrest))**0.5,    p0=[0,10,self.approxcrest], bounds=[[-np.inf, -np.inf, min(x)], [np.inf, np.inf, max(x)]])
+            sigma=(1+(y-min(y))) * (1+abs(x-self.approxcrest))**0.5,    p0=[0,10,self.approxcrest], bounds=[[-np.inf, 0, min(x)], [np.inf, np.inf, max(x)]])
 
         # phase = np.array(x)
         phase = np.arange(min(x), max(x),(max(x)-min(x))/1000)

@@ -235,10 +235,10 @@ class Controller(QObject):
         self.view.logTabLayout.addWidget(self.log)
         self.log.addLogger(logger)
 
-        self.buttons = [self.view.setupMagnetsButton, self.view.Gun_LoadBURT_Button, self.view.Gun_EnergySet_Button,
-        self.view.Gun_Rough_Button, self.view.Gun_Dipole_Button,self.view.Gun_Fine_Button, self.view.Gun_SetPhase_Button,
-        self.view.Linac1_Rough_Button, self.view.Linac1_Dipole_Button, self.view.Linac1_Fine_Button, self.view.Linac1_SetPhase_Button,
-        self.view.Linac1_LoadBURT_Button, self.view.Linac1_EnergySet_Button, self.view.Linac1_Fine_Screen_Button, self.view.Gun_Fine_Screen_Button,
+        self.buttons = [self.view.setupMagnetsButton, self.view.Gun_LoadBURT_Button,
+        self.view.Gun_Rough_Button, self.view.Gun_Fine_Button, self.view.Gun_SetPhase_Button, self.view.Gun_Dipole_Button,
+        self.view.Linac1_Rough_Button, self.view.Linac1_Fine_Button, self.view.Linac1_SetPhase_Button, self.view.Linac1_Dipole_Button,
+        self.view.Linac1_LoadBURT_Button, self.view.Linac1_Fine_Screen_Button, self.view.Gun_Fine_Screen_Button,
         self.view.Linac1_TurnOn_Button, self.view.Gun_TurnOn_Button, self.view.Gun_Fine_Update_Start_Button, self.view.Linac1_Fine_Update_Start_Button
         ]
 
@@ -292,6 +292,10 @@ class Controller(QObject):
         self.monitors['linac1_phase'].start()
         self.monitors['linac1_amp'] = updatingTimer(self.view.Linac1_Amp_Monitor, self.model.machine.getLinac1Amplitude)
         self.monitors['linac1_amp'].start()
+
+        self.enableSaveTimer = QTimer()
+        self.enableSaveTimer.setSingleShot(True)
+        self.enableSaveTimer.timeout.connect(self.enableButtons)
 
     def closeEvent(self, event):
         for t in self.monitors:
@@ -369,6 +373,7 @@ class Controller(QObject):
         self.view.Save_Data_Buttons.hide()
         self.view.topbutton_widget.hide()
         self.view.Progress_Monitor.setValue(0)
+        self.enableSaveTimer.stop()
 
     def disableButtons(self):
         self.setButtonState(False)
@@ -381,7 +386,9 @@ class Controller(QObject):
         self.view.Abort_Button.hide()
         self.view.Save_Data_Buttons.show()
         self.view.topbutton_widget.show()
-        QTimer.singleShot(10*1000, self.enableButtons) #timer in msec
+        self.enableSaveTimer.start(10*1000) #timer in msec
+        # print self.enableSaveTimer.isActive()
+        # print self.enableSaveTimer
 
     def abortRunning(self):
         self.model.abort()
