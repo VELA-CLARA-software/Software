@@ -33,6 +33,10 @@ import view.mainView as view
 import model.model as model
 import model.data as data
 
+import view.fileLoad  as loadView
+import view.fileSave  as saveView
+
+
 
 class controller(object):
     model = None
@@ -61,6 +65,8 @@ class controller(object):
         self.cb = QtGui.QApplication.clipboard()
         self.cb.clear(mode = self.cb.Clipboard)
 
+        self.fileLoad  =  loadView.GUI_FileLoad()
+        self.fileSave  =  saveView.GUI_FileSave()
 
     def start_up_update(self):
         # we give the app a few ticks to init the hardware controllers before updating the mainView
@@ -101,9 +107,11 @@ class controller(object):
         print 'handle_setIntensity_pushButton'
 
     def handle_load_pushButton(self):
+        self.fileLoad.show()
         print 'handle_load_pushButton'
 
     def handle_save_pushButton(self):
+        self.fileSave.show()
         print 'handle_save_pushButton'
 
     def handle_resetMeanSD_pushButton(self):

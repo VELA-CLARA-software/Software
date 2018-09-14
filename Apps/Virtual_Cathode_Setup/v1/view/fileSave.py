@@ -3,9 +3,12 @@
 # DJS 2018
 #
 from PyQt4 import QtGui, QtCore
-from Ui_FileSave import Ui_FileSave
+from .viewSource.Ui_FileSave import Ui_FileSave
+# import os
+# os.chdir(os.path.dirname(__file__))
+#from .. import vc_setup_globals #as globals
+import vc_setup_globals #as globals
 import datetime
-import magnetAppGlobals as globals
 
 
 class GUI_FileSave(QtGui.QMainWindow, Ui_FileSave):

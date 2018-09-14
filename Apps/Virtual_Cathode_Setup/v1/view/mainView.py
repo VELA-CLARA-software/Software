@@ -29,6 +29,7 @@
 from PyQt4 import QtGui, QtCore
 from viewSource.ellipseROIoverloads import EllipseROI_OneHandle
 from viewSource.ellipseROIoverloads import EllipseROI_NoHandle
+from viewSource.ellipseROIoverloads import EllipseROI_NoHandle
 from viewSource.Ui_mainView import Ui_mainView
 from numpy import array
 from numpy import random
@@ -46,30 +47,24 @@ pg.setConfigOptions(imageAxisOrder='row-major')
 class mainView(QtGui.QMainWindow, Ui_mainView ):
     print('mainView')
     closing = QtCore.pyqtSignal()# custom close signal to send to controller
-
+    print 'mainView 2'
 
     def __init__(self):
-        print('mainView 2')
         QtGui.QWidget.__init__(self)
+        print 'mainView 3'
         '''
             The mainView has a copy of the data so it can update the GUI
         '''
-        print('mainView 3')
         self.data = model.data.data()
         #
         # startup
-        print('mainView 4')
+        print 'mainView 2'
+
         self.setupUi(self)
-        print('mainView 4a')
         self.setWindowTitle("VELA - CLARA Virtual Cathode Setup")
-        print('mainView 4b')
         #
         # the mainView holds a few dictionaries that are iterated over to update widgets
-        print('mainView 4c')
         self.set_widget_dicts()
-
-        print('mainView 5')
-
         '''Nominal Style for buttons'''
         self.collect_and_save_pushButton_default_style = self.collectAndSave_pushButton.styleSheet()
         #
@@ -77,8 +72,8 @@ class mainView(QtGui.QMainWindow, Ui_mainView ):
         self.pix_gridlines_checkBox.released.connect(self.handle_pix_gridlines_checkBox)
         self.mm_gridlines_checkBox.released.connect(self.handle_mm_gridlines_checkBox)
 
-        self.load_pushButton.setDisabled(True)
-        self.save_pushButton.setDisabled(True)
+        #self.load_pushButton.setDisabled(True)
+        #self.save_pushButton.setDisabled(True)
         self.setInt_pushButton.setDisabled(True)
         self.setWCM_pushButton.setDisabled(True)
         #self.set_xpos_pushButton.setDisabled(True)
@@ -145,7 +140,6 @@ class mainView(QtGui.QMainWindow, Ui_mainView ):
             self.l5 = self.plot_item.plot(x=[0, 1040], y=[1000,1000], pen='b')
             self.l6 = self.plot_item.plot(x=[0, 1040], y=[1500, 1500], pen='b')
 #ROI for mask can't go outside image'
-
 
     def handle_mm_gridlines_checkBox(self):
         print 'handle_mm_gridlines_checkBox'
@@ -341,6 +335,10 @@ class mainView(QtGui.QMainWindow, Ui_mainView ):
     def update_real(self, widget, value, dummy):
         widget.setText("%.3f" % self.data.values.get(value))
 
+    def update_real_10_to_6(self, widget, value, dummy):
+        widget.setText("%.3f" % (self.data.values.get(value) * 1000000))
+
+
     def update_image(self, widget, value, dummy):
         #print 'update_image'
         self.image_item.setImage(image = self.data.values.get(value))
@@ -464,11 +462,13 @@ class mainView(QtGui.QMainWindow, Ui_mainView ):
         self.widget_updatefunc[self.wcm_mean] = [self.update_real]
         self.widget_updatefunc[self.wcm_sd] = [self.update_real]
 
-        self.widget_updatefunc[self.energy_val] = [self.update_real]
-        self.widget_updatefunc[self.energy_val_2] = [self.update_real]
-        self.widget_updatefunc[self.energy_mean] = [self.update_real]
-        self.widget_updatefunc[self.energy_sd] = [self.update_real]
+        self.widget_updatefunc[self.energy_val] = [self.update_real_10_to_6]
+        self.widget_updatefunc[self.energy_val_2] = [self.update_real_10_to_6]
+        self.widget_updatefunc[self.energy_mean] = [self.update_real_10_to_6]
+        self.widget_updatefunc[self.energy_sd] = [self.update_real_10_to_6]
+
         self.widget_updatefunc[self.hwp_read] = [self.update_real]
+
         self.widget_updatefunc[self.last_filename] = [self.update_string]
         self.widget_updatefunc[self.last_directory] = [self.update_latest_dir]
 

@@ -1,14 +1,12 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 '''
 /*
 //              This file is part of VELA-CLARA-Software.                             //
 //------------------------------------------------------------------------------------//
-//    VELA-CLARA-Controllers is free software: you can redistribute it and/or modify  //
+//    VELA-CLARA-Software is free software: you can redistribute it and/or modify     //
 //    it under the terms of the GNU General Public License as published by            //
 //    the Free Software Foundation, either version 3 of the License, or               //
 //    (at your option) any later version.                                             //
-//    VELA-CLARA-Controllers is distributed in the hope that it will be useful,       //
+//    VELA-CLARA-Software is distributed in the hope that it will be useful,          //
 //    but WITHOUT ANY WARRANTY; without even the implied warranty of                  //
 //    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                   //
 //    GNU General Public License for more details.                                    //
@@ -17,42 +15,33 @@
 //    along with VELA-CLARA-Software.  If not, see <http://www.gnu.org/licenses/>.    //
 //
 //  Author:      DJS
-//  Last edit:   03-07-2018
-//  FileName:    controller.py
-//  Description: The controller for the virtual cathode operator application
-//
-//
+//  Last edit:   05-06-2018
+//  FileName:    mainApp.oy
+//  Description: Generic template for __main__ for general High Level Application
 //
 //
 //*/
 '''
-import vc_setup_globals as globals
-import time
-import sys,os
-from PyQt4 import QtGui
-from controller.controller import controller
-from model.model import model
-from view.mainView import mainView as view
+import sys
+sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\stage\\')
+# for i in sys.path:
+#     print i
+from PyQt4.QtGui import QApplication
+from PyQt4.QtGui import QWidget
+from control.control import control
+from procedure.procedure import procedure as procedure
+from view.view import view as view
 
 
-class App(QtGui.QApplication):
+class App(QApplication):
     def __init__(self, sys_argv):
-        QtGui.QWidget.__init__(self, sys_argv)
-        print 'create model'
-        self.model = model()
-
-        #time.sleep(1000)
-
-        print 'creating view'
-        print 'creating view'
-        print 'creating view'
-
-        #time.sleep(20)
+        QWidget.__init__(self, sys_argv)
+        self.procedure = procedure()
         self.view = view()
         print 'Creating Controller'
-        self.control = controller(sys_argv, view = self.view, model= self.model)
-        #self.view.show()
+        self.control = control(sys_argv, view = self.view, procedure= self.procedure)
         print 'Running'
+
 
 if __name__ == '__main__':
     app = App(sys.argv)

@@ -37,12 +37,14 @@ from numpy import random
 import time
 
 class model():
+    print 'model init'
     init = pil.init()
     init.setVerbose()
     pil = init.physical_PILaser_Controller()
 
     # holds a copy of the data dictionary
     data = data.data()
+    print 'model init 1'
 
 
     def __init__(self):
@@ -141,6 +143,7 @@ class model():
             model.data.values[data.shutter_open] = False
 
         model.data.values[data.energy_val] = self.pil_obj[0].energy
+
         model.data.values[data.energy_mean] = self.pil_obj[0].energy_mean
         model.data.values[data.energy_sd] = self.pil_obj[0].energy_sd
 
