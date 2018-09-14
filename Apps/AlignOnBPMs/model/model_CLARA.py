@@ -13,6 +13,7 @@ import math as m
 import random as r
 import numpy as np
 from numpy.polynomial import polynomial as P
+import datetime
 #os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
 #os.environ["EPICS_CA_ADDR_LIST"] = "10.10.0.12"
 #os.environ["EPICS_CA_MAX_ARRAY_BYTES"] = "10000000"
@@ -140,7 +141,34 @@ class Model(QObject):
         self.func = momentumFunctions.Functions()
         self.setPosAxisBounds()
         self.setQAxisMax()
-        print("Model Initialized")
+        #print("Model Initialized")
+
+    def stepCurrent2(self,ctrl,xory, upordown, row):
+        #print xory
+        #print upordown
+        #magnet = ''
+        #step = 0
+        if xory == 'x' and upordown == 'up':
+            #print '1'
+            magnet = str(getattr(self.view, 'comboBox_H_'+row).currentText())
+            step = float(getattr(self.view, 'doubleSpinBox_step_'+row).value())
+        elif xory == 'x' and upordown == 'down':
+            #print '2'
+            magnet = str(getattr(self.view, 'comboBox_H_'+row).currentText())
+            step = -float(getattr(self.view, 'doubleSpinBox_step_'+row).value())
+        elif xory == 'y' and upordown == 'up':
+            #print '3'
+            magnet = str(getattr(self.view, 'comboBox_V_'+row).currentText())
+            step = float(getattr(self.view, 'doubleSpinBox_step_'+row).value())
+        elif xory == 'y' and upordown == 'down':
+            #print '4'
+            magnet = str(getattr(self.view, 'comboBox_V_'+row).currentText())
+            step = -float(getattr(self.view, 'doubleSpinBox_step_'+row).value())
+        else:
+            print 'Invalid input'
+        self.func.stepCurrent(ctrl,magnet,step)
+        #print magnet
+        #print step
 
     #Outline of Momentum Measurement Procedure
     def setPosAxisBounds(self):
@@ -199,18 +227,23 @@ class Model(QObject):
     def Align(self, xory, row):
         row = str(row)
         self.bpm2align = str(getattr(self.view, 'comboBox_'+row).currentText())
-        print self.bpm2align
+        #print self.bpm2align
         self.targetx = float(getattr(self.view, 'doubleSpinBox_x_'+row).value())
         self.targety = float(getattr(self.view, 'doubleSpinBox_y_'+row).value())
         if xory == 'x':
             self.target = self.targetx
             self.cor = str(getattr(self.view, 'comboBox_H_'+row).currentText())
+            self.bpmVal = self.Cbpms.getXFromPV(self.bpm2align)
         else:
             self.target = self.targety
             self.cor = str(getattr(self.view, 'comboBox_V_'+row).currentText())
+            self.bpmVal = self.Cbpms.getYFromPV(self.bpm2align)
         self.tol = float(getattr(self.view, 'doubleSpinBox_tol_'+row).value())
         self.initstep = float(getattr(self.view, 'doubleSpinBox_step_'+row).value())
-        self.func.align4(self.Cmagnets,self.cor,self.Cbpms,self.bpm2align,self.target,self.tol,xory,self.initstep)
+        if abs(self.bpmVal) > self.tol:
+            self.func.align4(self.Cmagnets,self.cor,self.Cbpms,self.bpm2align,self.target,self.tol,xory,self.initstep)
+        else:
+            print 'Already aligned'
 
     def combobox_bpm(self,text):
         print text
@@ -218,7 +251,7 @@ class Model(QObject):
     def steer_H(self, row, userinput):
         #print 'steer_H', userinput
         if userinput == True:
-            print '.....User H input.....'
+            #print '.....User H input.....'
             row = str(row)
             #self.target = float(getattr(self.view, 'doubleSpinBox_H_'+row).value())
             self.target = float(getattr(self.view, 'lineEdit_HC_'+row).text())
@@ -228,13 +261,13 @@ class Model(QObject):
             self.Cmagnets.setSI(self.cor,self.target)
             time.sleep(0.5)
         else:
-            print '.....Non-user H input.....'
+            #print '.....Non-user H input.....'
             pass
 
     def steer_V(self, row, userinput):
         #print 'steer_V', userinput
         if userinput == True:
-            print '.....User V input.....'
+            #print '.....User V input.....'
             row = str(row)
             #self.targetx = float(getattr(self.view, 'doubleSpinBox_H_'+row).value())
             self.target = float(getattr(self.view, 'lineEdit_VC_'+row).text())
@@ -243,7 +276,7 @@ class Model(QObject):
             self.Cmagnets.setSI(self.cor,self.target)
             time.sleep(0.5)
         else:
-            print '.....Non-user V input.....'
+            #print '.....Non-user V input.....'
             pass
 
     def get_H(self, row):
@@ -388,14 +421,20 @@ class Model(QObject):
             row = str(r+1)
             #b = a[r].split()
             #print b[0]
+            #print self.Cbpms.getBPMXBuffer(str(getattr(self.view, 'comboBox_'+row).currentText()))
             if len(self.Cbpms.getBPMQBuffer(bpm_name)) > 0 and str(self.Cbpms.getStatusBuffer(bpm_name)[-1]) == 'GOOD':
-                getattr(self.view, 'doubleSpinBox_x_'+row).setValue(np.mean(self.Cbpms.getBPMXBuffer(str(getattr(self.view, 'comboBox_'+row).currentText()))))
-                getattr(self.view, 'doubleSpinBox_y_'+row).setValue(np.mean(self.Cbpms.getBPMYBuffer(str(getattr(self.view, 'comboBox_'+row).currentText()))))
+                # use buffer
+                #getattr(self.view, 'doubleSpinBox_x_'+row).setValue(np.mean(self.Cbpms.getBPMXBuffer(str(getattr(self.view, 'comboBox_'+row).currentText()))))
+                #getattr(self.view, 'doubleSpinBox_y_'+row).setValue(np.mean(self.Cbpms.getBPMYBuffer(str(getattr(self.view, 'comboBox_'+row).currentText()))))
+                #use live
+                getattr(self.view, 'doubleSpinBox_x_'+row).setValue(np.mean(self.Cbpms.getXFromPV(str(getattr(self.view, 'comboBox_'+row).currentText()))))
+                getattr(self.view, 'doubleSpinBox_y_'+row).setValue(np.mean(self.Cbpms.getYFromPV(str(getattr(self.view, 'comboBox_'+row).currentText()))))
                 setattr(self, 'liveTarget'+row, str(self.Cbpms.getStatusBuffer((str(getattr(self.view, 'comboBox_'+row).currentText())))[-1]))
             else:
                 getattr(self.view, 'doubleSpinBox_x_'+row).setValue(0)
                 getattr(self.view, 'doubleSpinBox_y_'+row).setValue(0)
-                setattr(self, 'liveTarget'+row, str(self.Cbpms.getStatusBuffer((str(getattr(self.view, 'comboBox_'+row).currentText())))[-1]))
+                setattr(self, 'liveTarget'+row, 'BAD')
+                #setattr(self, 'liveTarget'+row, str(self.Cbpms.getStatusBuffer((str(getattr(self.view, 'comboBox_'+row).currentText())))[-1]))
             # getattr(self.view, 'doubleSpinBox_x_'+row).setValue(1*self.Cbpms.getXFromPV(str(getattr(self.view, 'comboBox_'+row).currentText())))
             # getattr(self.view, 'doubleSpinBox_y_'+row).setValue(1*self.Cbpms.getYFromPV(str(getattr(self.view, 'comboBox_'+row).currentText())))
             # setattr(self, 'liveTarget'+row, str(self.Cbpms.getStatusBuffer((str(getattr(self.view, 'comboBox_'+row).currentText())))[-1]))
@@ -405,12 +444,18 @@ class Model(QObject):
             #getattr(self.view, 'doubleSpinBox_step_'+row).setValue(float(b[3]))
 
     def set_0(self):
-        for r in np.arange(0, 10, 1):
+        for r, bpm_name in enumerate(self.bpm_list):#np.arange(0, 10, 1):
             row = str(r+1)
             #b = a[r].split()
             #print b[0]
             getattr(self.view, 'doubleSpinBox_x_'+row).setValue(0.0)
             getattr(self.view, 'doubleSpinBox_y_'+row).setValue(0.0)
+            #setattr(self, 'liveTarget'+row, 0)
+            #if len(self.Cbpms.getBPMQBuffer(bpm_name)) > 0 and str(self.Cbpms.getStatusBuffer(bpm_name)[-1]) == 'GOOD':
+            setattr(self, 'liveTarget'+row, 'GOOD')
+            #else:
+                #setattr(self, 'liveTarget'+row, 'BAD')
+                #setattr(self, 'liveTarget'+row, str(self.Cbpms.getStatusBuffer((str(getattr(self.view, 'comboBox_'+row).currentText())))[-1]))
             #getattr(self.view, 'doubleSpinBox_tol_'+row).setValue(float(b[2]))
             #getattr(self.view, 'doubleSpinBox_step_'+row).setValue(float(b[3]))
 
@@ -444,7 +489,11 @@ class Model(QObject):
     def save_positions(self):
         #self.filename = QtGui.QFileDialog::getOpenFileName
         #print self.filename
-        self.savefile=QtGui.QFileDialog.getSaveFileName()
+        #QtGui.QFileDialog.saveAsDialog(this)
+        dateandtime=str(datetime.datetime.now().strftime('%Y-%m-%d_%H%M%S'))
+        #print dateandtime
+        #dateandtime=str(143434234)
+        self.savefile=QtGui.QFileDialog.getSaveFileName(None, '', '//apclara1/ControlRoomApps/Release/Data/BPMburts/'+dateandtime, '*.txt')
         print self.savefile
         #row = 1
         #open(self.savefile,'w').writelines(self.getall2(row))
@@ -462,16 +511,23 @@ class Model(QObject):
         # self.save_targetx = str(self.Cbpms.getXFromPV(str(getattr(self.view, 'comboBox_'+row).currentText())))
         # self.save_targety = str(self.Cbpms.getYFromPV(str(getattr(self.view, 'comboBox_'+row).currentText())))
         if len(self.Cbpms.getBPMQBuffer(bpm_name)) > 0 and str(self.Cbpms.getStatusBuffer(bpm_name)[-1]) == 'GOOD':
-            self.save_targetx = str(np.mean(self.Cbpms.getBPMXBuffer(str(getattr(self.view, 'comboBox_'+row).currentText()))))
-            self.save_targety = str(np.mean(self.Cbpms.getBPMYBuffer(str(getattr(self.view, 'comboBox_'+row).currentText()))))
+            # use buffer
+            #self.save_targetx = str(np.mean(self.Cbpms.getBPMXBuffer(str(getattr(self.view, 'comboBox_'+row).currentText()))))
+            #self.save_targety = str(np.mean(self.Cbpms.getBPMYBuffer(str(getattr(self.view, 'comboBox_'+row).currentText()))))
+            # use live
+            self.save_targetx = str(np.mean(self.Cbpms.getXFromPV(str(getattr(self.view, 'comboBox_'+row).currentText()))))
+            self.save_targety = str(np.mean(self.Cbpms.getYFromPV(str(getattr(self.view, 'comboBox_'+row).currentText()))))
+            self.save_isLive = str(self.Cbpms.getStatusBuffer((str(getattr(self.view, 'comboBox_'+row).currentText())))[-1])
         else:
             self.save_targetx = str(0)
             self.save_targety = str(0)
+            self.save_isLive = 'BAD'
+            #self.save_isLive = str(self.Cbpms.getStatusBuffer((str(getattr(self.view, 'comboBox_'+row).currentText())))[-1])
         #self.save_tol = str(getattr(self.view, 'doubleSpinBox_tol_'+row).value())
         #self.save_initstep = str(getattr(self.view, 'doubleSpinBox_step_'+row).value())
         #self.save_hcor = str(getattr(self.view, 'label_HC_'+row).text())
         #self.save_vcor = str(getattr(self.view, 'label_VC_'+row).text())
-        self.save_isLive = str(self.Cbpms.getStatusBuffer((str(getattr(self.view, 'comboBox_'+row).currentText())))[-1])
+        #self.save_isLive = str(self.Cbpms.getStatusBuffer((str(getattr(self.view, 'comboBox_'+row).currentText())))[-1])
         #items = [self.save_targetx, self.save_targety, self.save_tol, self.save_initstep, self.save_hcor, self.save_vcor, self.save_isLive]
         items = [self.save_targetx, self.save_targety, self.save_isLive]
         items = map(lambda x: x + ' ', items)
@@ -480,7 +536,7 @@ class Model(QObject):
         return items
 
     def load(self):
-        self.loadfile=QtGui.QFileDialog.getOpenFileName()
+        self.loadfile=QtGui.QFileDialog.getOpenFileName(None, '', '//apclara1/ControlRoomApps/Release/Data/BPMburts/', '*.txt')
         print self.loadfile
         #firstline = open(self.loadfile,'r').readline()
         #print firstline
@@ -495,7 +551,8 @@ class Model(QObject):
                 #print b[0]
                 getattr(self.view, 'doubleSpinBox_x_'+row).setValue(float(b[0]))
                 getattr(self.view, 'doubleSpinBox_y_'+row).setValue(float(b[1]))
-                setattr(self, 'tol'+row, b[2])
+                #setattr(self, 'tol'+row, b[2])
+                setattr(self, 'liveTarget'+row, b[2])
                 #getattr(self.view, 'doubleSpinBox_tol_'+row).setValue(float(b[2]))
                 #getattr(self.view, 'doubleSpinBox_step_'+row).setValue(float(b[3]))
                 # Commenting out setting correctors

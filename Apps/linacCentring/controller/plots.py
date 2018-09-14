@@ -76,7 +76,7 @@ class plotWidgets(QObject):
 					self.extent = [x.min(), x.max(), y.min(), y.max()]
 					plt.imshow(self.zi, vmin=0, vmax=max(z), origin='lower',
 	       					extent=self.extent)
-					plt.colorbar()
+					# plt.colorbar()
 					self.mainPlot[a][plane].draw()
 				except:
 					pass

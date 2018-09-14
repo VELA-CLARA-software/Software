@@ -10,6 +10,7 @@ import random as r
 import numpy as np
 from numpy.polynomial import polynomial as P
 import copy
+from VELA_CLARA_BPM_Control import BPM_STATUS
 
 
 class dummyOM():
@@ -35,25 +36,30 @@ class Functions(QObject):
     def setCurrent(self,ctrl,magnet,val):
         MAG = ctrl.getMagObjConstRef(magnet)
         setI = val#MAG.siWithPol + step
-        print('Stepping current to: '+str(setI))
+        #print('Stepping current to: '+str(setI))
         ctrl.setSI(magnet,setI)
         while ctrl.getSI(magnet) != setI:
             #print ctrl.getSI(magnet)
             #self.qctrl.setSI(self.quad, x)
-            time.sleep(0.5)
+            time.sleep(0.1)
 
     def stepCurrent(self,ctrl,magnet,step):
         MAG = ctrl.getMagObjConstRef(magnet)
         setI = MAG.siWithPol + step
-        print('Stepping current to: '+str(setI))
+        #print('Stepping current to: '+str(setI))
         ctrl.setSI(magnet,setI)
-        while ctrl.getSI(magnet) != setI:
-            print ctrl.getSI(magnet)
+        # while ctrl.getSI(magnet) != setI:
+        #     time.sleep(0.1)
+        while (abs(ctrl.getRI(magnet)-setI) > 0.05):
+            print 'Waiting for corrector, set=', setI, 'read=', ctrl.getRI(magnet), 'diff=', abs(ctrl.getRI(magnet) - setI)
+            QApplication.processEvents()
+            time.sleep(0.1)
+            #print ctrl.getSI(magnet)
             #self.qctrl.setSI(self.quad, x)
-            time.sleep(0.5)
+            #time.sleep(0.1)
         #self.simulate.run()
 
-    def getXBPM(self,ctrl,bpm,N):
+    def getXBPM_old(self,ctrl,bpm,N):
         x=[]
         for i in range(N):
             print 'x = ', ctrl.getXFromPV(bpm)
@@ -62,7 +68,7 @@ class Functions(QObject):
             time.sleep(0.05)
         return sum(x)/N
 
-    def getYBPM(self,ctrl,bpm,N):
+    def getYBPM_old(self,ctrl,bpm,N):
         x=[]
         for i in range(N):
             print 'y = ', ctrl.getXFromPV(bpm)
@@ -70,6 +76,41 @@ class Functions(QObject):
             #QApplication.processEvents()
             time.sleep(0.05)
         return sum(x)/N
+
+    def getXBPM(self,ctrl,bpm,N):
+        x=[]
+        for i in range(N):
+            #21/8/18 changed getXFromPV to getX
+            a = ctrl.getX(bpm)
+            #print ctrl.getBPMStatus(bpm)
+            if ctrl.getBPMStatus(bpm) == BPM_STATUS.GOOD:
+                x.append(a)
+                print a, 'shot ok'
+            else:
+                N-=1
+                print a, 'shot excluded'
+            time.sleep(0.1)
+        if N > 1:
+            return sum(x)/N
+        else:
+            print 'No good shots'
+
+    def getYBPM(self,ctrl,bpm,N):
+        x=[]
+        for i in range(N):
+            #21/8/18 changed getYFromPV to getY
+            a = ctrl.getY(bpm)
+            if ctrl.getBPMStatus(bpm) == BPM_STATUS.GOOD:
+                x.append(a)
+                print a, 'shot ok'
+            else:
+                N-=1
+                print a, 'shot excluded'
+            time.sleep(0.1)
+        if N > 1:
+            return sum(x)/N
+        else:
+            print 'No good shots'
 
     def getXScreen(self,ctrl,camera,N):
         x=[]
@@ -197,7 +238,7 @@ class Functions(QObject):
         I2=COR.siWithPol
         print 'x2 = ', x2, 'I2 = ', I2
         count = 0
-        while(abs(x2-off)>tol) and count<10:                                                            # Algorithm loops until the current position is < the tolerance 'tol'
+        while(abs(x2-off)>tol) and count<5:                                                            # Algorithm loops until the current position is < the tolerance 'tol'
             count+=1
             print 'start'
             print I1, I2, x1, x2, off
@@ -216,14 +257,14 @@ class Functions(QObject):
                 x2=self.getYBPM(bctrl, bpm, N)
             print('Current at'+str(x2))
             time.sleep(0.1)
-        if count<10:
+        if count<5:
             print('Aligned beam using ' + hvcor + ' and ' + bpm)
         else:
             print 'Alignment failed'
 
     def align4(self,hvctrl,hvcor, bctrl, bpm, off, tol, xory, initstep, N=10):
-        print 'In align3, in align3..', bpm, type(bpm), len(bpm)
-        print xory
+        #print 'In align3, in align3..', bpm, type(bpm), len(bpm)
+        #print xory
         COR = hvctrl.getMagObjConstRef(hvcor)                                        #create a reference to the corrector
         if xory == 'x':
             x1= self.getXBPM(bctrl, bpm, N)                                            #get the x position on the BPM
@@ -248,18 +289,28 @@ class Functions(QObject):
         I2=COR.siWithPol
         print 'x2 = ', x2, 'I2 = ', I2
         count = 0
-        while(abs(x2-off)>tol) and count<10 and abs(x2-x1)>(tol/10):                                                            # Algorithm loops until the current position is < the tolerance 'tol'
+        print 'Target = ', off, ', Readback = ', x2, ', abs(Diff) = ', abs(x2-off)
+
+        while(abs(x2-off)>tol) and count<5: #and abs(x2-x1)>(tol):                                                            # Algorithm loops until the current position is < the tolerance 'tol'
             count+=1
+            print 'Target = ', off, ', Readback = ', x2, ', abs(Diff) = ', abs(x2-off)
             #print 'start'
             #print I1, I2, x1, x2, off
             I_o = (I1*(x2-off)-I2*(x1-off))/(x2-x1)                                            # find the zero-crossing of straight line mde from positions at currents I1 and I2
             print('Predicted current intercept at '+str(I_o))
             I_o = (I_o+I2)/2
+            print('Setting current half way between previous and prediction '+str(I_o))
+            if I_o-I2 > 1:
+                I_o = I2 + 1
+                print('Step limited to < 1 A so going to '+str(I_o))
+            elif I_o-I2 < -1:
+                I_o = I2 - 1
+                print('Step limited to < 1 A so going to '+str(I_o))
             hvctrl.setSI(hvcor,I_o)
             #self.simulate.run()
-            while (abs(hctrl.getSI(hcor) - I_o) > 0.005):
-                print 'Waiting for corrector, set=', I_o, 'read=', hctrl.getSI(hcor), 'diff=', abs(hctrl.getSI(hcor) - I_o)
-                time.sleep(0.01)
+            while (abs(hvctrl.getRI(hvcor) - I_o) > 0.05):
+                print 'Waiting for corrector, set=', I_o, 'read=', hvctrl.getRI(hvcor), 'diff=', abs(hvctrl.getRI(hvcor) - I_o)
+                time.sleep(0.1)
             #time.sleep(1)
             QApplication.processEvents()                                                    # set magnet to intercept current
             x1=x2                                                                #Get rid of first set of position and current
@@ -269,9 +320,9 @@ class Functions(QObject):
                 x2=self.getXBPM(bctrl, bpm, N)
             else:
                 x2=self.getYBPM(bctrl, bpm, N)
-            print('Current at'+str(x2))
+            #print('Current at'+str(x2))
             time.sleep(0.1)
-        if count<10:
+        if count<5:
             print('Aligned beam using ' + hvcor + ' and ' + bpm)
         else:
             print 'Alignment failed'

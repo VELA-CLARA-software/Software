@@ -95,7 +95,7 @@ class Model(object):
 
 	def quadAligner(self, quad, bpm, stepSize=1, nSamples=4, start=0, end=10, momentum=35):
 		self.quad = quad#'S02-QUAD'+str(no)
-        self.bpm = bpm
+		self.bpm = bpm
 		self.momentum = momentum
 		self.quadLength = self.machine.magnets.getMagneticLength(self.quad)/1000.0
 		bpmpos = self.machine.bpms.getPosition(self.bpm)
@@ -146,7 +146,8 @@ class Model(object):
 			data = self.getData()
 			k = self.getK(self.quad, self.momentum)
 			print 'I = ', current, ' k = ', k, ' xy = ', data
-			self.currentData.append([k, data[0], data[1]])
+			if not any([np.isnan(a) for a in data]):
+				self.currentData.append([k, data[0], data[1]])
 		self.machine.setQuad(self.quad, 0)
 		k, x, y = [np.array(a) for a in zip(*self.currentData)]
 		fitx = self.do_fit(k, x/1000.)
