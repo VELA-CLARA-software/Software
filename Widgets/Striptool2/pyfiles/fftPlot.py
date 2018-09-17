@@ -1,6 +1,5 @@
 import sys, time, os, datetime, signal
 import pyqtgraph as pg
-import numpy as np
 from scipy import interpolate
 from scipy import signal as sp
 try:

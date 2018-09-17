@@ -177,9 +177,9 @@ class scrollingPlot(QWidget):
 
     def addSignal(self, name):
         name = str(name)
-        self.records[name]['scrollingplot'] = self.scrollingPlotPlot
+        self.records[name].scrollingplot = self.scrollingPlotPlot
         curve = self.scrollingPlotPlot.addCurve(name)
-        self.records[name]['curve'] = curve
+        self.records[name].curve = curve
 
     def removeSignal(self, name):
         # print 'removing signal = ', name
@@ -219,11 +219,11 @@ class scrollingPlot(QWidget):
                 lastplottime = round(time.time(),2)
                 self.timeOffset = lastplottime-self.lastplottime
                 for name in self.records:
-                    self.records[name]['curve'].clearCurve()
+                    self.records[name].curve.clearCurve()
                 self.scrollingPlotPlot.plot.vb.disableAutoRange(axis='x')
                 self.scrollingPlotPlot.plot.vb.translateBy(x=self.timeOffset)
                 for name in self.records:
-                    self.records[name]['curve'].drawCurve()
+                    self.records[name].curve.drawCurve()
                 self.timeChangeSignal.emit(self.timeOffset)
                 self.lastplottime = lastplottime
 
@@ -350,25 +350,25 @@ class scrollingPlotPlot(QWidget):
     def changeAxis(self, name, axisname):
         record = self.records
         axis, viewbox = self.namedaxes[axisname]
-        record[name]['viewbox'] = viewbox
-        record[name]['axis'] = axis
-        record[name]['logScale'] = axis.logMode
-        record[name]['curve'].changeViewbox(viewbox)
+        record[name].viewbox = viewbox
+        record[name].axis = axis
+        record[name].logScale = axis.logMode
+        record[name].curve.changeViewbox(viewbox)
 
     ''' Helper function to add a curve to the plot '''
     def addCurve(self, name):
         # Create New Axis
         record = self.records
-        if record[name]['axisname'] == None:
+        if record[name].axisname == None:
             axis, viewbox = self.createAxis(name=name, color=record[name]['pen'], logMode=record[name]['logScale'], verticalRange=record[name]['verticalRange'])
-            record[name]['axisname'] = name
-        elif record[name]['axisname'] in  self.namedaxes:
-            axis, viewbox = self.namedaxes[record[name]['axisname']]
+            record[name].axisname = name
+        elif record[name].axisname in  self.namedaxes:
+            axis, viewbox = self.namedaxes[record[name].axisname]
         else:
-            axis, viewbox = self.createAxis(name=record[name]['axisname'], color=record[name]['pen'], logMode=record[name]['logScale'],verticalRange=record[name]['verticalRange'])
-        record[name]['viewbox'] = viewbox
-        record[name]['axis'] = axis
-        axis.setLogMode(record[name]['logScale'])
+            axis, viewbox = self.createAxis(name=record[name].axisname., color=record[name].pen, logMode=record[name].logScale,verticalRange=record[name].verticalRange)
+        record[name].viewbox = viewbox
+        record[name].axis = axis
+        axis.setLogMode(record[name].logScale)
         # record[name]['logScale'] = axis.logMode
         self.threads[name] = QThread(self.scrollingPlot)
         self.workers[name] = curveRecordWorker(self, name)
@@ -381,8 +381,8 @@ class scrollingPlotPlot(QWidget):
         record = self.records
         name = str(name)
         # print 'removing stripplot signal = ', name
-        axisname = record[name]['axisname']
-        axis, viewbox = self.namedaxes[record[name]['axisname']]
+        axisname = record[name].axisname
+        axis, viewbox = self.namedaxes[record[name].axisname]
         self.threads[name].quit()
         self.plotWidget.ci.removeItem(axis)
         try:
@@ -417,31 +417,31 @@ class curve(QObject):
         self.plot = plot
         self.records = self.plot.records
         self.name = name
-        self.vb = self.records[name]['viewbox']
-        self.logMode = self.records[name]['logScale']
+        self.vb = self.records[name].viewbox
+        self.logMode = self.records[name].logScale
         # print 'self.logMode = ', self.logMode
         self.plot.yAxisScaled.connect(self.scaleYAxis)
         self.curve = pg.PlotDataItem(autoDownsample=True,clipToView=True)
-        self.curve.setPen(pg.mkPen(self.records[self.name]['pen']))
+        self.curve.setPen(pg.mkPen(self.records[self.name].pen))
         self.curve10 = pg.PlotDataItem(autoDownsample=True,clipToView=True)
-        self.curve10.setPen(pg.mkPen(**{'color': self.records[self.name]['pen'], 'dash': [2,2], 'width': 2}))
+        self.curve10.setPen(pg.mkPen(**{'color': self.records[self.name].pen, 'dash': [2,2], 'width': 2}))
         self.curve100 = pg.PlotDataItem(autoDownsample=True,clipToView=True)
-        self.curve100.setPen(pg.mkPen(**{'color': self.records[self.name]['pen'], 'dash': [2,2], 'width': 3}))
+        self.curve100.setPen(pg.mkPen(**{'color': self.records[self.name].pen, 'dash': [2,2], 'width': 3}))
         self.curve1000 = pg.PlotDataItem(autoDownsample=True,clipToView=True)
-        self.curve1000.setPen(pg.mkPen(**{'color': self.records[self.name]['pen'], 'dash': [3,3], 'width': 4}))
+        self.curve1000.setPen(pg.mkPen(**{'color': self.records[self.name].pen, 'dash': [3,3], 'width': 4}))
         self.vb.addItem(self.curve)
         self.vb.addItem(self.curve10)
         self.vb.addItem(self.curve100)
         self.vb.addItem(self.curve1000)
-        self.points = collections.deque(maxlen=self.records[name]['maxlength'])
-        self.points10 = collections.deque(maxlen=self.records[name]['maxlength'])
-        self.points100 = collections.deque(maxlen=self.records[name]['maxlength'])
-        self.points1000 = collections.deque(maxlen=self.records[name]['maxlength'])
+        self.points = collections.deque(maxlen=self.records[name].maxlength)
+        self.points10 = collections.deque(maxlen=self.records[name].maxlength)
+        self.points100 = collections.deque(maxlen=self.records[name].maxlength)
+        self.points1000 = collections.deque(maxlen=self.records[name].maxlength)
         self.visibility = {'curve': True, 'curve10': False, 'curve100': False, 'curve1000': False}
-        self.plot.records[name]['worker'].recordLatestValueSignal.connect(lambda x: self.updateData(x, self.points))
-        self.plot.records[name]['worker'].recordMean10Signal.connect(lambda x: self.updateData(x, self.points10))
-        self.plot.records[name]['worker'].recordMean100Signal.connect(lambda x: self.updateData(x, self.points100))
-        self.plot.records[name]['worker'].recordMean1000Signal.connect(lambda x: self.updateData(x, self.points1000))
+        self.plot.records[name].worker.recordLatestValueSignal.connect(lambda x: self.updateData(x, self.points))
+        self.plot.records[name].worker.recordMean10Signal.connect(lambda x: self.updateData(x, self.points10))
+        self.plot.records[name].worker.recordMean100Signal.connect(lambda x: self.updateData(x, self.points100))
+        self.plot.records[name].worker.recordMean1000Signal.connect(lambda x: self.updateData(x, self.points1000))
 
     def scaleYAxis(self, scale, pos):
         newpos = self.vb.state['viewRange'][1]
@@ -454,10 +454,10 @@ class curve(QObject):
             self.plot.scrollingPlot.timeChangeSignal.disconnect(self.updateTimeOffset)
         except:
             pass
-        self.plot.records[self.name]['worker'].recordLatestValueSignal.disconnect()
-        self.plot.records[self.name]['worker'].recordMean10Signal.disconnect()
-        self.plot.records[self.name]['worker'].recordMean100Signal.disconnect()
-        self.plot.records[self.name]['worker'].recordMean1000Signal.disconnect()
+        self.plot.records[self.name].worker.recordLatestValueSignal.disconnect()
+        self.plot.records[self.name].worker.recordMean10Signal.disconnect()
+        self.plot.records[self.name].worker.recordMean100Signal.disconnect()
+        self.plot.records[self.name].worker.recordMean1000Signal.disconnect()
 
     def setVisibility(self, linename, visible):
         self.visibility[linename] = visible
@@ -470,29 +470,29 @@ class curve(QObject):
                     getattr(self, k).setVisible(self.visibility[k])
         else:
             self.visibility[linename] = visible
-            if self.visibility['curve'] is True:
+            if self.visibility.curve is True:
                 getattr(self, linename).setVisible(visible)
 
 
     def changeViewbox(self, viewbox):
         name = self.name
-        self.vb = self.records[name]['viewbox']
+        self.vb = self.records[name].viewbox
         self.lineOn = False
 
     def clearCurve(self):
         pass
 
     def drawCurve(self):
-        self.redrawLines(self.points, self.curve, 'curve', {'color': self.records[self.name]['pen']})
-        self.redrawLines(self.points10, self.curve10, 'curve10', {'color': self.records[self.name]['pen'], 'dash': [2,2], 'width': 2})
-        self.redrawLines(self.points100, self.curve100, 'curve100', {'color': self.records[self.name]['pen'], 'dash': [2,2], 'width': 3})
-        self.redrawLines(self.points1000, self.curve1000, 'curve1000', {'color': self.records[self.name]['pen'], 'dash': [3,3], 'width': 4})
+        self.redrawLines(self.points, self.curve, 'curve', {'color': self.records[self.name].pen})
+        self.redrawLines(self.points10, self.curve10, 'curve10', {'color': self.records[self.name].pen, 'dash': [2,2], 'width': 2})
+        self.redrawLines(self.points100, self.curve100, 'curve100', {'color': self.records[self.name].pen, 'dash': [2,2], 'width': 3})
+        self.redrawLines(self.points1000, self.curve1000, 'curve1000', {'color': self.records[self.name].pen, 'dash': [3,3], 'width': 4})
 
     def setLogMode(self, mode):
         # print 'change log mode = ', self.records['signal2']['axis'].logMode
-        self.records[self.name]['logScale'] = mode
+        self.records[self.name].logScale = mode
         currentRange = self.vb.state['viewRange'][1]
-        self.plot.records[self.name]['axis'].setLogMode(mode)
+        self.plot.records[self.name].axis.setLogMode(mode)
         self.curve.setLogMode(False, mode)
         self.curve10.setLogMode(False, mode)
         self.curve100.setLogMode(False, mode)
@@ -522,10 +522,10 @@ class curve(QObject):
             curve.setData(np.array(points))
 
     def changePenColour(self):
-        self.curve.setPen(pg.mkPen(color=self.records[self.name]['pen']))
-        self.curve10.setPen(pg.mkPen(color=self.records[self.name]['pen'], dash=[1,1], width=2))
-        self.curve100.setPen(pg.mkPen(color=self.records[self.name]['pen'], dash=[2,2], width=3))
-        self.curve1000.setPen(pg.mkPen(color=self.records[self.name]['pen'], dash=[3,3], width=4))
+        self.curve.setPen(pg.mkPen(color=self.records[self.name].pen))
+        self.curve10.setPen(pg.mkPen(color=self.records[self.name].pen, dash=[1,1], width=2))
+        self.curve100.setPen(pg.mkPen(color=self.records[self.name].pen, dash=[2,2], width=3))
+        self.curve1000.setPen(pg.mkPen(color=self.records[self.name].pen, dash=[3,3], width=4))
 
     ''' This updates the curve points based on the plot type and using the data from the timefilter function '''
     def updateData(self, data, points):

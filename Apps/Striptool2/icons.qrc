@@ -1,0 +1,6 @@
+<RCC>
+  <qresource prefix="/" >
+    <file>striptool.png</file>
+    <file>striptool.ico</file>
+  </qresource>
+</RCC>

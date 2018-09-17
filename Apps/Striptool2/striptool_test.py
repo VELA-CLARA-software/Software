@@ -3,27 +3,9 @@ if getattr(sys, 'frozen', True):
     print 'Not frozen!'
     sys.path.append("../../Widgets/Striptool2")
 from PyQt4.QtCore import pyqtSignal, Qt
-from PyQt4.QtGui import QFileDialog, QWidget, QPushButton, QMainWindow, QApplication, QStyle, QAction, qApp, QStatusBar, QTabWidget, QHBoxLayout
-import pyqtgraph as pg
+from PyQt4.QtGui import QFileDialog, QWidget, QPushButton, QMainWindow, QApplication, QStyle, QAction, qApp, QStatusBar, QTabWidget, QHBoxLayout, QPixmap, QSplashScreen, QDesktopWidget, QIcon
+import icons
 from pyqtgraph.dockarea import *
-import generalPlot as generalplot
-import scrollingPlot as scrollingplot
-import signalTable as signaltable
-import numpy as np
-from splitterWithHandles import splitterWithHandles
-# import VELA_CLARA_Magnet_Control as vmag
-# maginit = vmag.init()
-# Vmagnets = maginit.physical_VELA_INJ_Magnet_Controller()
-# Cmagnets = maginit.physical_CLARA_PH1_Magnet_Controller()
-# import VELA_CLARA_BPM_Control as vbpmc
-# bpms = vbpmc.init()
-# import  VELA_CLARA_General_Monitor as vgen
-# general = vgen.init()
-''' Load loggerWidget library (comment out if not available) '''
-# sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\\..\\..\\loggerWidget\\')
-# import loggerWidget as lw
-# import logging
-# logger = logging.getLogger(__name__)
 
 seconds_per_unit = {"s": 1, "m": 60, "h": 3600, "d": 86400, "w": 604800}
 
@@ -269,10 +251,25 @@ class striptool_Demo(QMainWindow):
 
 def main():
    app = QApplication(sys.argv)
+   app_icon = QIcon(':/striptool.ico')
+   app.setWindowIcon(app_icon)
    # app.setStyle(QStyleFactory.create("plastique"))
+   splash_pix = QPixmap(':/striptool.png')
+   splash = QSplashScreen(QDesktopWidget().screen(), splash_pix)
+   splash.setWindowFlags(Qt.FramelessWindowHint)
+   splash.setEnabled(False)
+   splash.show()
+   splash.showMessage("<h1><font color='#6BBAFD'>Striptool Initialising...</font></h1>", Qt.AlignTop | Qt.AlignCenter, Qt.black)
+   global pg, generalplot, scrollingplot, signaltable, np, splitterWithHandles
+   import pyqtgraph as pg
+   import generalPlot as generalplot
+   import scrollingPlot as scrollingplot
+   import signalTable as signaltable
+   import numpy as np
+   from splitterWithHandles import splitterWithHandles
    ex = striptool_Demo()
    ex.show()
-   # ex.testSleep()
+   splash.finish(ex)
    sys.exit(app.exec_())
 
 if __name__ == '__main__':

@@ -148,17 +148,25 @@ class signalRecord(QObject):
 
     def __init__(self, records, name, pen, timer, maxlength, function, args=[], functionForm=None, functionArgument=None, logScale=False, verticalRange=None, verticalMeanSubtraction=False, axis=None):
         QObject.__init__(self)
-        self.records = records
+        records[name] = self
         self.name = name
         self.timer = timer
         self.signal = createSignalTimer(function, args=args)
-        self.records[name] = {'name': name, 'record': self, 'pen': pen, 'timer': timer, 'maxlength': maxlength, 'data': collections.deque(maxlen=maxlength),
-         'function': function, 'args': args, 'functionForm': functionForm, 'functionArgument': functionArgument,
-        'signal': self.signal, 'logScale': logScale, 'verticalRange': verticalRange,
-        'axisname': axis}
+        self.pen = pen
+        self.timer = timer
+        self.maxlength = maxlength
+        self.data = collections.deque(maxlen=maxlength)
+        self.function = function
+        self.args = args
+        self.functionForm = functionForm
+        self.functionArgument = functionArgument
+        self.signal = signal
+        self.logScale = logScale
+        self.verticalRange = verticalRange
+        self.axisname = axis
         self.thread = QThread()
         self.worker = recordWorker(self.records, self.signal, name)
-        self.records[name]['worker'] = self.worker
+        self.records[name].worker = self.worker
         self.worker.moveToThread(self.thread)
 
     def start(self):
@@ -166,7 +174,7 @@ class signalRecord(QObject):
         self.signal.startTimer(self.timer)
 
     def setLogMode(self, mode):
-        self.records[self.name]['logScale'] = mode
+        self.logScale = mode
 
     def setInterval(self, newinterval):
         self.signal.setInterval(newinterval)
