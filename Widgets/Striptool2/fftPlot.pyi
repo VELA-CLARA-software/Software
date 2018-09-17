@@ -13,7 +13,7 @@
 import PyQt5.QtWidgets
 import PyQt5.QtGui
 import PyQt4.QtCore
-import PyQt5.QtCore
+import numpy
 import signal
 import pyqtgraph
 import peakutils
@@ -23,6 +23,7 @@ import scipy
 import time
 import PyQt4.QtGui
 import os
+import PyQt5.QtCore
 import math
 
 # This is not Python source even if it looks so. Make it clear for
