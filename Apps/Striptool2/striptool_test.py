@@ -1,27 +1,22 @@
 import sys, time, os
-sys.path.append("../../../")
-from PyQt4.QtCore import pyqtSignal, Qt
-from PyQt4.QtGui import QFileDialog, QWidget, QPushButton, QMainWindow, QApplication, QStyle, QAction, qApp, QStatusBar, QTabWidget, QHBoxLayout
-import pyqtgraph as pg
+if getattr(sys, 'frozen', False):
+    print( 'frozen!')
+else:
+    print( 'Not frozen!')
+    sys.path.append("../../Widgets/Striptool2")
+# from PyQt4.QtCore import pyqtSignal, Qt
+# from PyQt4.QtGui import QFileDialog, QWidget, QPushButton, QMainWindow, QApplication, QStyle, QAction, qApp, QStatusBar, QTabWidget, QHBoxLayout, QPixmap, QSplashScreen, QDesktopWidget, QIcon
+try:
+    from PyQt4.QtCore import *
+    from PyQt4.QtGui import *
+    import qt4icons
+except ImportError:
+    print ('importing PyQt5')
+    from PyQt5.QtCore import *
+    from PyQt5.QtGui import *
+    from PyQt5.QtWidgets import *
+    import qt5icons
 from pyqtgraph.dockarea import *
-import Software.Widgets.Striptool2.generalPlot as generalplot
-import Software.Widgets.Striptool2.scrollingPlot as scrollingplot
-import Software.Widgets.Striptool2.signalTable as signaltable
-import numpy as np
-from Software.Widgets.Striptool2.splitterWithHandles import splitterWithHandles
-# import VELA_CLARA_Magnet_Control as vmag
-# maginit = vmag.init()
-# Vmagnets = maginit.physical_VELA_INJ_Magnet_Controller()
-# Cmagnets = maginit.physical_CLARA_PH1_Magnet_Controller()
-# import VELA_CLARA_BPM_Control as vbpmc
-# bpms = vbpmc.init()
-# import  VELA_CLARA_General_Monitor as vgen
-# general = vgen.init()
-''' Load loggerWidget library (comment out if not available) '''
-# sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\\..\\..\\loggerWidget\\')
-# import loggerWidget as lw
-# import logging
-# logger = logging.getLogger(__name__)
 
 seconds_per_unit = {"s": 1, "m": 60, "h": 3600, "d": 86400, "w": 604800}
 
@@ -102,8 +97,8 @@ class striptool_Demo(QMainWindow):
         ''' Add some signals to the striptool - note they call our signal generator at a frequency of 1/timer (100 Hz and 10 Hz in these cases).
             The 'pen' argument sets the color of the curves
                 - see <http://www.pyqtgraph.org/documentation/style.html>'''
-        self.generalplot.addSignal(name='signal1', pen='g', timer=1.0/50.0, function=self.createRandomSignal, args=[100,10,22])
-        self.generalplot.addSignal(name='signal2', pen='r', timer=1.0/10.0, function=self.createRandomSignal, args=[1e-8, 1e-9,4], logScale=False)
+        self.generalplot.addSignal(name='signal1', pen='g', timer=1.0/100.0, function=self.createRandomSignal, args=[100,10,2.3347])
+        self.generalplot.addSignal(name='signal2', pen='r', timer=1.0/10.0, function=self.createRandomSignal, args=[1e-8, 1e-9,4.005], logScale=False)
         # self.generalplot.addSignal(name='signal3', pen='b', timer=1.0/10.0, function=self.createRandomSignal, args=[1e4, 1e1, 2])
         # self.generalplot.addSignal(name='signal4', pen='c', timer=1.0/20.0, function=self.createRandomSignal, args=[1,0.5,7.8])
         # self.generalplot.addSignal(name='signal5', pen='m', timer=1.0/10.0, function=self.createRandomSignal, args=[3,2,0.87])
@@ -267,10 +262,26 @@ class striptool_Demo(QMainWindow):
 
 def main():
    app = QApplication(sys.argv)
+   app_icon = QIcon(':/striptool.ico')
+   app.setWindowIcon(app_icon)
    # app.setStyle(QStyleFactory.create("plastique"))
+   splash_pix = QPixmap(':/striptool.png')
+   splash = QSplashScreen(splash_pix)
+   print('here?')
+   splash.setWindowFlags(Qt.FramelessWindowHint)
+   splash.setEnabled(False)
+   splash.show()
+   splash.showMessage("<h1><font color='#6BBAFD'>Striptool Initialising...</font></h1>", Qt.AlignTop | Qt.AlignCenter, Qt.black)
+   global pg, generalplot, scrollingplot, signaltable, np, splitterWithHandles
+   import pyqtgraph as pg
+   import generalPlot as generalplot
+   import scrollingPlot as scrollingplot
+   import signalTable as signaltable
+   import numpy as np
+   from splitterWithHandles import splitterWithHandles
    ex = striptool_Demo()
    ex.show()
-   # ex.testSleep()
+   splash.finish(ex)
    sys.exit(app.exec_())
 
 if __name__ == '__main__':

@@ -10,68 +10,56 @@ except ImportError:
     from PyQt5.QtWidgets import *
 from threading import Thread, Event, Timer
 
-class HighPrecisionWallTime():
-    def __init__(self,):
-        self._wall_time_0 = time.time()
-        self._clock_0 = time.clock()
-
-    def time(self,):
-        dc = time.clock()-self._clock_0
-        return self._wall_time_0 + dc
-
-class repeatedTimer(QThread):
+class repeatedTimer(QObject):
 
     """Repeat `function` every `interval` seconds."""
 
     dataReady = pyqtSignal(list)
 
     def __init__(self, function, args=[]):
-        super(repeatedTimer, self).__init__()
+        QObject.__init__(self)
         self.function = function
         self.args = args
-        self.hptimer = HighPrecisionWallTime()
+        self.start = time.time()
+        self.start_accurate = time.clock()
+        self.event = Event()
+        self.thread = Thread(target=self._target)
+        self.thread.daemon = True
 
     def update(self):
         ''' call signal generating Function '''
         value = self.function(*self.args)
-        # currenttime = self.start + (time.clock() - self.start_accurate)
-        currenttime = self.start + (self.i * self.interval)
-        self.i += 1
-        if abs(self.hptimer.time() - currenttime) > 0.005:
-            print ('dt = ', abs(self.hptimer.time() - currenttime))
-            self.start = self.hptimer.time()
-            self.i = 1
-        if (time.time() - self.abstart) < 0.5:
-            pass
-        else:
-            currenttime = self.hptimer.time()
-            self.dataReady.emit([currenttime ,value])
+        currenttime = self.start + (time.clock() - self.start_accurate)
+        self.dataReady.emit([round(currenttime,4),value])
 
-    def run(self):
-        self.timer = QTimer()
-        try:
-            self.timer.setTimerType(Qt.PreciseTimer)
-        except:
-            pass
-        self.timer.timeout.connect(self.update)
-        self.abstart = self.start = self.hptimer.time()
-        self.timer.start(1000.*self.interval)
-        self.exec_()
+    def _target(self):
+        while not self.event.wait(self._time):
+            self.update()
+
+    @property
+    def _time(self):
+        if (self.interval) - ((time.time() - self.start) % self.interval) < 0.001:
+            return self.interval
+        else:
+            return (self.interval) - ((time.time() - self.start) % self.interval)
+
+    def stop(self):
+        self.event.set()
+        self.thread.join()
 
     def setInterval(self, interval):
         self.interval = interval
-        self.i = 1
 
 class createSignalTimer(QObject):
 
     def __init__(self, function, args=[]):
         # Initialize the signal as a QObject
-        super(createSignalTimer, self).__init__()
+        QObject.__init__(self)
         self.timer = repeatedTimer(function, args)
 
     def startTimer(self, interval=1):
         self.timer.setInterval(interval)
-        self.timer.start(QThread.HighestPriority)
+        self.timer.thread.start()
 
     def setInterval(self, interval):
         # self.timer.stop()
@@ -160,8 +148,7 @@ class signalRecord(QObject):
 
     def __init__(self, records, name, pen, timer, maxlength, function, args=[], functionForm=None, functionArgument=None, logScale=False, verticalRange=None, verticalMeanSubtraction=False, axis=None):
         QObject.__init__(self)
-        self.record = self
-        records[name] = self.record
+        records[name] = self
         self.name = name
         self.timer = timer
         self.signal = createSignalTimer(function, args=args)
@@ -173,19 +160,14 @@ class signalRecord(QObject):
         self.args = args
         self.functionForm = functionForm
         self.functionArgument = functionArgument
+        self.signal = signal
         self.logScale = logScale
         self.verticalRange = verticalRange
         self.axisname = axis
         self.thread = QThread()
-        self.worker = recordWorker(records, self.signal, name)
-        records[name].worker = self.worker
+        self.worker = recordWorker(self.records, self.signal, name)
+        self.records[name].worker = self.worker
         self.worker.moveToThread(self.thread)
-
-    def __getitem__(self, *args, **kwargs):
-        return getattr(self, *args, **kwargs)
-
-    def __setitem__(self, *args, **kwargs):
-        setattr(self, *args, **kwargs)
 
     def start(self):
         self.thread.start()

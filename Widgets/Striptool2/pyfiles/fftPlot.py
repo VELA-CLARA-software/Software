@@ -1,6 +1,5 @@
 import sys, time, os, datetime, signal
 import pyqtgraph as pg
-import numpy as np
 from scipy import interpolate
 from scipy import signal as sp
 try:
@@ -146,7 +145,6 @@ class fftPlotCurve(QObject):
         ## then use np.interp to resample before taking fft.
         # print 'length x = ', len(x)
         # dx = np.diff(x)
-        # print ('mean dx = ', round_sig(np.mean(dx),6), ' sigma = ', round_sig(np.std(dx),6), ' = ', round_sig(100*np.std(dx) / np.mean(dx),3),'%   min = ', np.min(dx), ' / max = ', np.max(dx))
         # uniform = not np.any(np.abs(dx-dx[0]) > (abs(dx[0]) / 100.))
         # starttime = time.clock()
         # if not uniform:
@@ -174,8 +172,8 @@ class fftPlotCurve(QObject):
             if len(data) > self.decimateScale:
                 data = data[-self.decimateScale:]
             x, y = zip(*data)
-            x, yf = self._fourierTransform(x, y)
-            y = yf/max(yf)
+            x, y = self._fourierTransform(x, y)
+            # y = y/max(y)
             self.plot.setData({'x': x, 'y': y}, pen=self.color)
             if len(self.plot.yDisp) > 0:
                 indexes = peakutils.indexes(self.plot.yDisp, thres=0.75, min_dist=10)
