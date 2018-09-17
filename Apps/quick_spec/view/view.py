@@ -45,22 +45,34 @@ class view(QMainWindow, Ui_mainView ):
                                  maxYRange=view.procedure.y_pix)
 
         self.x_proj_plot = self.x_proj.addPlot(lockAspect=True)
-        self.my_x_plot = self.x_proj_plot.plot()
+        self.x_curve1 = self.x_proj_plot.plot()
+        self.x_curve2 = self.x_proj_plot.plot(pen=1)
 
         self.y_proj_plot = self.y_proj.addPlot(lockAspect=True)
-        self.my_y_plot = self.y_proj_plot.plot()
+        self.y_curve1 = self.y_proj_plot.plot()
+        self.y_curve2 = self.y_proj_plot.plot(pen=1)
 
     def update_gui(self):
         # print 'update_image'
         self.image_item.setImage(image=view.procedure.last_image,autoDownsample=True)
 
         if self.average_cbox.isChecked():
-            print 'show average'
-            self.my_x_plot.setData( view.procedure.x_proj_mean )
-            self.my_y_plot.setData( y=procedure.y_coords ,x=view.procedure.y_proj_mean )
+            self.x_curve1.setData(view.procedure.x_proj_mean)
+            self.y_curve1.setData(y=procedure.y_coords, x=view.procedure.y_proj_mean)
         else:
-            print 'DO NOT show average'
-            self.my_x_plot.setData( view.procedure.x_proj)
-            self.my_y_plot.setData( y=procedure.y_coords ,x=view.procedure.y_proj )
+            self.x_curve1.setData(view.procedure.x_proj)
+            self.y_curve1.setData(y=procedure.y_coords, x=view.procedure.y_proj)
+
+        if procedure.ref_set:
+            self.x_curve2.setData(view.procedure.ref_x)
+            self.y_curve2.setData(y=procedure.y_coords, x=view.procedure.ref_y)
+            self.x_curve2.show()
+            self.y_curve2.show()
+
+        else:
+            self.x_curve2.hide()
+            self.y_curve2.hide()
 
         self.cam_name_text.setText(procedure.current_cam)
+
+
