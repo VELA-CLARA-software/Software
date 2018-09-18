@@ -32,26 +32,31 @@ class control(object):
         '''define model and view'''
         control.procedure = procedure
         control.view = view
-        self.set_up_gui()
         # update gui with this:
         self.start_gui_update()
         # show view
         self.view.show()
         print(self.my_name + ', class initiliazed')
-
         control.view.reset_mean_pushButton.released.connect(self.handle_reset_mean_pushButton)
+        control.view.setRef_button.released.connect(self.handle_set_ref_pushButton)
+        control.view.clearRef_button.released.connect(self.handle_clear_ref_pushButton)
+        control.view.average_cbox.clicked.connect(self.handle_average)
 
     def handle_reset_mean_pushButton(self):
         control.procedure.reset()
 
+    def handle_set_ref_pushButton(self):
+        control.procedure.set_ref(control.view.average_cbox.isChecked())
 
-    def set_up_gui(self):
-        # connect main buttons to functions
-        # control.view.closeButton.clicked.connect(self.handle_close_all)
-        # control.view.openButton.clicked.connect(self.handle_open_all)
-        # control.view.add_valves(control.procedure.valve_names)
-        # connect individual valve buttons to functions
-        pass
+    def handle_clear_ref_pushButton(self):
+        control.procedure.clear_ref()
+
+    def handle_average(self):
+        if control.view.average_cbox.isChecked():
+            control.procedure.use_average = True
+        else:
+            control.procedure.use_average = False
+        print 'handle_average use average = ' + str(control.procedure.use_average )
 
     def update_gui(self):
         '''
@@ -60,8 +65,6 @@ class control(object):
         control.procedure.update_image()
         control.view.update_gui()
         #print('update_gui')
-
-
 
     def start_gui_update(self):
         self.timer = QTimer()
