@@ -1,0 +1,19 @@
+S01:
+  CLA-S01-DIA-BPM-01:X:
+    timer: 10
+  CLA-S01-DIA-BPM-01:Y:
+    timer: 10
+S02:
+  CLA-S02-DIA-BPM-01:X:
+    timer: 10
+  CLA-S02-DIA-BPM-01:Y:
+    timer: 10
+  CLA-S02-DIA-BPM-02:X:
+    timer: 10
+  CLA-S02-DIA-BPM-02:Y:
+    timer: 10
+C2V:
+  CLA-C2V-DIA-BPM-01:X:
+    timer: 10
+  CLA-C2V-DIA-BPM-01:Y:
+    timer: 10

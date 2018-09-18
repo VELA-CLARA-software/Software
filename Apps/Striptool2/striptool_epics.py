@@ -2,13 +2,20 @@ import sys, time, os
 if getattr(sys, 'frozen', True):
     print 'Not frozen!'
     sys.path.append("../../Widgets/Striptool2")
-from PyQt4.QtCore import pyqtSignal, Qt
-from PyQt4.QtGui import QFileDialog, QWidget, QPushButton, QMainWindow, QApplication, QStyle, QAction, qApp, QStatusBar, QTabWidget, QHBoxLayout, QPixmap, QSplashScreen, QDesktopWidget, QIcon
+try:
+    from PyQt4.QtCore import *
+    from PyQt4.QtGui import *
+    import qt4icons
+except ImportError:
+    print ('importing PyQt5')
+    from PyQt5.QtCore import *
+    from PyQt5.QtGui import *
+    from PyQt5.QtWidgets import *
+    import qt5icons
 from pyqtgraph.dockarea import *
 import VELA_CLARA_Magnet_Control as vmag
 import VELA_CLARA_BPM_Control as vbpmc
 import  VELA_CLARA_General_Monitor as vgen
-import icons
 
 ''' Load loggerWidget library (comment out if not available) '''
 # sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\\..\\..\\loggerWidget\\')

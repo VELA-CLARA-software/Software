@@ -10,13 +10,13 @@
 # when you make software releases of the extension module that it
 # describes.
 
-import PyQt5.QtWidgets
+import tables
 import PyQt5.QtGui
 import PyQt4.QtCore
 import PyQt5.QtCore
+import PyQt5.QtWidgets
 import datetime
 import sys
-import threading
 import collections
 import time
 import PyQt4.QtGui
