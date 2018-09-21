@@ -15,56 +15,74 @@
 //    along with VELA-CLARA-Software.  If not, see <http://www.gnu.org/licenses/>.    //
 //
 //  Author:      DJS
-//  Last edit:   05-06-2018
-//  FileName:    mainApp.oy
-//  Description: Generic template for control class for general High Level Application
+//  Last edit:   21-09-2018
+//  FileName:    control.py
+//  Description: controller that coordinstes quick_spec gui and procedure, using data in data.py
 //
 //
 //*/
 '''
 from PyQt4.QtCore import QTimer
+import procedure as procedure
+import view as view
+import data
 
 class control(object):
     procedure = None
     view  = None
-    def __init__(self,sys_argv = None,view = None, procedure= None):
+    data = None
+
+    def __init__(self,sys_argv = None):
         self.my_name = 'control'
         '''define model and view'''
-        control.procedure = procedure
-        control.view = view
+        control.procedure = procedure.procedure()
+        control.view = view.view()
+        control.data = data.data()
         # update gui with this:
         self.start_gui_update()
         # show view
         self.view.show()
-        print(self.my_name + ', class initiliazed')
+        #
+        # connect GUI widgets
         control.view.reset_mean_pushButton.released.connect(self.handle_reset_mean_pushButton)
         control.view.setRef_button.released.connect(self.handle_set_ref_pushButton)
         control.view.clearRef_button.released.connect(self.handle_clear_ref_pushButton)
         control.view.average_cbox.clicked.connect(self.handle_average)
+        control.view.useROI_cbox.clicked.connect(self.handle_ROI)
+        control.view.useBackground_cbox.clicked.connect(self.handle_Back)
 
     def handle_reset_mean_pushButton(self):
         control.procedure.reset()
 
     def handle_set_ref_pushButton(self):
-        control.procedure.set_ref(control.view.average_cbox.isChecked())
+        control.data.values[data.y_ref] = control.data.values[data.y_proj]
+        control.data.values[data.x_ref] = control.data.values[data.x_proj]
+        control.data.values[data.has_ref] = True
 
     def handle_clear_ref_pushButton(self):
-        control.procedure.clear_ref()
+        control.data.values[data.has_ref] = False
+        control.data.values[data.ref_plotted] = False
+
+    def handle_Back(self):
+        control.data.values[data.sub_min] = control.view.useBackground_cbox.isChecked()
+
+    def handle_ROI(self):
+        control.procedure.reset()
+        control.data.values[data.use_ROI] = control.view.useROI_cbox.isChecked()
 
     def handle_average(self):
-        if control.view.average_cbox.isChecked():
-            control.procedure.use_average = True
-        else:
-            control.procedure.use_average = False
-        print 'handle_average use average = ' + str(control.procedure.use_average )
+        control.data.values[data.average] = control.view.average_cbox.isChecked()
 
     def update_gui(self):
-        '''
-            generic function that updates values from the procedure and then updates the gui
-        '''
-        control.procedure.update_image()
+        control.procedure.update_data()
+        if control.data.values[data.got_image]:
+            if control.data.values[data.use_ROI]:
+                control.procedure.update_projections(
+                        control.view.roi.getArrayRegion( control.data.values[data.image_data],
+                                                         control.view.image_item))
+            else:
+                control.procedure.update_projections(control.data.values[data.image_data])
         control.view.update_gui()
-        #print('update_gui')
 
     def start_gui_update(self):
         self.timer = QTimer()
