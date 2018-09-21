@@ -10,26 +10,26 @@
 # when you make software releases of the extension module that it
 # describes.
 
+import copy
 import tables
-import PyQt5.QtGui
-import PyQt4.QtGui
-import logging
-import numpy
-import PyQt4.QtCore
-import PyQt5.QtCore
+import datetime
+import scrollingPlot
 import signal
 import signalRecord
-import histogramPlot
-import scrollingPlot
-import fftPlot
-import datetime
-import PyQt5.QtWidgets
-import plotLegend
-import time
 import scatterPlot
-import copy
-import os
+import histogramPlot
 import xlsxwriter
+import PyQt5.QtGui
+import logging
+import PyQt4.QtCore
+import PyQt4.QtGui
+import os
+import plotLegend
+import fftPlot
+import numpy
+import time
+import PyQt5.QtCore
+import PyQt5.QtWidgets
 
 # This is not Python source even if it looks so. Make it clear for
 # now. This was decided by PEP 484 designers.

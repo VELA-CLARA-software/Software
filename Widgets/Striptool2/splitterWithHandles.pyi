@@ -10,11 +10,11 @@
 # when you make software releases of the extension module that it
 # describes.
 
-import PyQt5.QtWidgets
-import PyQt5.QtCore
 import PyQt5.QtGui
 import PyQt4.QtGui
 import PyQt4.QtCore
+import PyQt5.QtCore
+import PyQt5.QtWidgets
 
 # This is not Python source even if it looks so. Make it clear for
 # now. This was decided by PEP 484 designers.
