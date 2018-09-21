@@ -360,12 +360,12 @@ class scrollingPlotPlot(QWidget):
         # Create New Axis
         record = self.records
         if record[name].axisname == None:
-            axis, viewbox = self.createAxis(name=name, color=record[name]['pen'], logMode=record[name]['logScale'], verticalRange=record[name]['verticalRange'])
+            axis, viewbox = self.createAxis(name=name, color=record[name].pen, logMode=record[name].logScale, verticalRange=record[name].verticalRange)
             record[name].axisname = name
         elif record[name].axisname in  self.namedaxes:
             axis, viewbox = self.namedaxes[record[name].axisname]
         else:
-            axis, viewbox = self.createAxis(name=record[name].axisname., color=record[name].pen, logMode=record[name].logScale,verticalRange=record[name].verticalRange)
+            axis, viewbox = self.createAxis(name=record[name].axisname, color=record[name].pen, logMode=record[name].logScale,verticalRange=record[name].verticalRange)
         record[name].viewbox = viewbox
         record[name].axis = axis
         axis.setLogMode(record[name].logScale)

@@ -98,8 +98,12 @@ class generalPlot(QWidget):
             hour = str(hour) if hour >= 10 else '0' + str(hour)
             minute = str(minute) if minute >= 10 else '0' + str(minute)
             suggestedfilename = str(year)+'_'+str(month)+'_'+str(day)+'_'+str(hour)+str(minute)+'_striptool_data'
-            saveFileName = str(QFileDialog.getSaveFileName(self, 'Save Data', suggestedfilename,
-            filter="HDF5 files (*.h5);;XLSX files (*.xlsx);;CSV files (*.csv);; Binary Files (*.bin)", selectedFilter="HDF5 files (*.h5)"))
+            try:
+                saveFileName = str(QFileDialog.getSaveFileName(self, 'Save Data', suggestedfilename,
+                filter="HDF5 files (*.h5);;XLSX files (*.xlsx);;CSV files (*.csv);; Binary Files (*.bin)", selectedFilter="HDF5 files (*.h5)"))
+            except:
+                saveFileName = str(QFileDialog.getSaveFileName(self, 'Save Data', suggestedfilename,
+                filter="HDF5 files (*.h5);;XLSX files (*.xlsx);;CSV files (*.csv);; Binary Files (*.bin)", initialFilter="HDF5 files (*.h5)")[0])
         _, file_extension = os.path.splitext(saveFileName)
         if file_extension == '.csv' or file_extension == '.bin':
             self.saveDataCSVBin(saveFileName)

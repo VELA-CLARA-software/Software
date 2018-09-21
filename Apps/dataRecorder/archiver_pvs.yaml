@@ -1,0 +1,138 @@
+Gun:
+  GA1GHV01_volt_rdbk:
+    timer: 1
+
+A1_BPMs:
+    IA1BPA01_H:
+        timer: 1
+    IA1BPA01_V:
+        timer: 1
+    IA1BPA01_I:
+        timer: 1
+    IA1BPB01_H:
+        timer: 1
+    IA1BPB01_V:
+        timer: 1
+    IA1BPB01_I:
+        timer: 1
+
+A2_BPMs:
+    IA3BPC01_H:
+        timer: 1
+    IA3BPC01_V:
+        timer: 1
+    IA3BPC01_I:
+        timer: 1
+    IA3BPC02_H:
+        timer: 1
+    IA3BPC02_V:
+        timer: 1
+    IA3BPC02_I:
+        timer: 1
+    IA3BPC03_H:
+        timer: 1
+    IA3BPC03_V:
+        timer: 1
+    IA3BPC03_I:
+        timer: 1
+B1_BPMs:
+    IB1BPC01_H:
+        timer: 1
+    IB1BPC01_V:
+        timer: 1
+    IB1BPC01_I:
+        timer: 1
+    IB1BPC02_H:
+        timer: 1
+    IB1BPC02_V:
+        timer: 1
+    IB1BPC02_I:
+        timer: 1
+    IB1BPC03_H:
+        timer: 1
+    IB1BPC03_V:
+        timer: 1
+    IB1BPC03_I:
+        timer: 1
+B2_BPMs:
+    IB2BPC01_H:
+        timer: 1
+    IB2BPC01_V:
+        timer: 1
+    IB2BPC01_I:
+        timer: 1
+    IB2BPC02_H:
+        timer: 1
+    IB2BPC02_V:
+        timer: 1
+    IB2BPC02_I:
+        timer: 1
+    IB2BPC03_H:
+        timer: 1
+    IB2BPC03_V:
+        timer: 1
+    IB2BPC03_I:
+        timer: 1
+D1_BPMs:
+    ID1BPC01_H:
+        timer: 1
+    ID1BPC01_V:
+        timer: 1
+    ID1BPC01_I:
+        timer: 1
+MLC:
+    RD1CAV01_voltage:
+        timer: 1
+    RD1CAV01_relative_ph:
+        timer: 1
+    RD1CAV02_voltage:
+        timer: 1
+    RD1CAV02_relative_ph:
+        timer: 1
+    RD1CAV03_voltage:
+        timer: 1
+    RD1CAV03_relative_ph:
+        timer: 1
+    RD1CAV04_voltage:
+        timer: 1
+    RD1CAV04_relative_ph:
+        timer: 1
+    RD1CAV05_voltage:
+        timer: 1
+    RD1CAV05_relative_ph:
+        timer: 1
+    RD1CAV06_voltage:
+        timer: 1
+    RD1CAV06_relative_ph:
+        timer: 1
+S1:
+    MS1DPB01_rdbk:
+        timer: 1
+    MS1CRV01_rdbk:
+        timer: 1
+    MS1DIP02_rdbk:
+        timer: 1
+    MS1CRV02_rdbk:
+        timer: 1
+    MS1DIP03_rdbk:
+        timer: 1
+    MS1QUA03_rdbk:
+        timer: 1
+    MS1QUA04_rdbk:
+        timer: 1
+    MS1DIP04_rdbk:
+        timer: 1
+    MS1DIP05_rdbk:
+        timer: 1
+    MS1QUA05_rdbk:
+        timer: 1
+    MS1QUA06_rdbk:
+        timer: 1
+    MS1DIP06_rdbk:
+        timer: 1
+    MS1CRV03_rdbk:
+        timer: 1
+    MS1DIP07_rdbk:
+        timer: 1
+    MS1CRV04_rdbk:
+        timer: 1
