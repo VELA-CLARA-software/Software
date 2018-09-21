@@ -15,13 +15,16 @@
 //    along with VELA-CLARA-Software.  If not, see <http://www.gnu.org/licenses/>.    //
 //
 //  Author:      DJS
-//  Last edit:   05-06-2018
-//  FileName:    procedure.oy
-//  Description: Generic template for procedure class for High Level Application
-//               has simple interface (i.e. just an dictionary, and well-named functions)
-//
+//  Last edit:   21-09-2018
+//  FileName:    procedure.py
+//  Description: get camera images and calculate projections based on data passed in
+//               quite a few different options.
+//               Heavily dependant on data.py for options adn to write data to
 //*/
 '''
+import sys
+sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\Release\\')
+
 import VELA_CLARA_Camera_Control as cam
 from numpy import array
 from numpy import flipud
@@ -41,24 +44,6 @@ class procedure(object):
     init.setVerbose()
     cam_cont = init.physical_Camera_Controller()
 
-
-    x_proj = None
-    y_proj = None
-
-
-    # x_proj_rolling_sum = zeros(x_pix)
-    # x_proj_mean = []
-    # y_proj_rolling_sum = zeros(y_pix)
-    # y_proj_mean = []
-    # current_cam = 'UNKNOWN'
-    # last_cam = 'n'
-
-    # ref_y = None
-    # ref_x = None
-
-    # use_average = False
-
-    # ref_set = False
 
     def __init__(self):
         self.data = data.data()
@@ -123,7 +108,8 @@ class procedure(object):
             self.data.values[data.got_image] = False
 
     def update_projections(self,img_data):
-        # calc new proj
+        #
+        # omfg what a mess
 
         self.data.values[data.y_proj] = img_data.sum(axis=0)
         self.data.values[data.x_proj] = img_data.sum(axis=0)

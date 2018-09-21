@@ -17,20 +17,15 @@
 //  Author:      DJS
 //  Last edit:   05-06-2018
 //  FileName:    mainApp.oy
-//  Description: Generic template for __main__ for general High Level Application
+//  Description: quick_spec file to run
 //
 //
 //*/
 '''
 import sys
-sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\Release\\')
-# for i in sys.path:
-#     print i
 from PyQt4.QtGui import QApplication
 from PyQt4.QtGui import QWidget
 from src import control
-
-
 
 class App(QApplication):
     def __init__(self, sys_argv):

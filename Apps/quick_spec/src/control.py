@@ -15,9 +15,9 @@
 //    along with VELA-CLARA-Software.  If not, see <http://www.gnu.org/licenses/>.    //
 //
 //  Author:      DJS
-//  Last edit:   205-09-2018
-//  FileName:    control.oy
-//  Description: ....
+//  Last edit:   21-09-2018
+//  FileName:    control.py
+//  Description: controller that coordinstes quick_spec gui and procedure, using data in data.py
 //
 //
 //*/
@@ -38,16 +38,15 @@ class control(object):
         control.procedure = procedure.procedure()
         control.view = view.view()
         control.data = data.data()
-
         # update gui with this:
         self.start_gui_update()
         # show view
         self.view.show()
-        print(self.my_name + ', class initiliazed')
+        #
+        # connect GUI widgets
         control.view.reset_mean_pushButton.released.connect(self.handle_reset_mean_pushButton)
         control.view.setRef_button.released.connect(self.handle_set_ref_pushButton)
         control.view.clearRef_button.released.connect(self.handle_clear_ref_pushButton)
-
         control.view.average_cbox.clicked.connect(self.handle_average)
         control.view.useROI_cbox.clicked.connect(self.handle_ROI)
         control.view.useBackground_cbox.clicked.connect(self.handle_Back)
@@ -76,9 +75,7 @@ class control(object):
 
     def update_gui(self):
         control.procedure.update_data()
-
         if control.data.values[data.got_image]:
-
             if control.data.values[data.use_ROI]:
                 control.procedure.update_projections(
                         control.view.roi.getArrayRegion( control.data.values[data.image_data],
@@ -86,8 +83,6 @@ class control(object):
             else:
                 control.procedure.update_projections(control.data.values[data.image_data])
         control.view.update_gui()
-
-
 
     def start_gui_update(self):
         self.timer = QTimer()

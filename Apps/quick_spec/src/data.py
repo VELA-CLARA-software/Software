@@ -15,9 +15,9 @@
 //    along with VELA-CLARA-Software.  If not, see <http://www.gnu.org/licenses/>.    //
 //
 //  Author:      DJS
-//  Last edit:   20-09-2018
-//  FileName:    data.oy
-//  Description: ....
+//  Last edit:   21-09-2018
+//  FileName:    data.py
+//  Description: data dictionary and key definitions for quick_spec application
 //
 //
 //*/
