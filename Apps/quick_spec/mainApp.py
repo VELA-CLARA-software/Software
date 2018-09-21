@@ -23,25 +23,21 @@
 //*/
 '''
 import sys
-sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\stage\\')
+sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\Release\\')
 # for i in sys.path:
 #     print i
 from PyQt4.QtGui import QApplication
 from PyQt4.QtGui import QWidget
-from control.control import control
-from procedure.procedure import procedure as procedure
-from view.view import view as view
+from src import control
+
 
 
 class App(QApplication):
     def __init__(self, sys_argv):
         QWidget.__init__(self, sys_argv)
-        self.procedure = procedure()
-        self.view = view()
         print 'Creating Controller'
-        self.control = control(sys_argv, view = self.view, procedure= self.procedure)
+        self.control = control.control(sys_argv)
         print 'Running'
-
 
 if __name__ == '__main__':
     app = App(sys.argv)
