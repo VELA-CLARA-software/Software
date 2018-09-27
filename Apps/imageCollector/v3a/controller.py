@@ -34,7 +34,7 @@ IMAGE_WIDTH_VELA = 1392
 IMAGE_HEIGHT_VELA = 1040
 IMAGE_DIMS_VELA = (IMAGE_HEIGHT_VELA, IMAGE_WIDTH_VELA)
 image_path = [r'\\claraserv3', 'CameraImages']
-hdf5_image_folder = '\\'.join(image_path)
+hdf5_image_folder = os.path.join(*image_path)
 # only show top-level dirs, and ones that consist entirely of digits (i.e. year/month/date)
 filter_regexp = '|'.join([d.replace('\\', '\\\\') for d in image_path]) + '|^\d+$'
 fire = [QtGui.qRgb(*QtGui.QColor(val).getRgb()[:3]) for val in colorcet.fire]
@@ -388,7 +388,7 @@ class Controller():
                 self.OverlayImage.setImage(np.flip(np.transpose(data.reshape(dims)), 1))
                 max_level = np.percentile(data, 99.9)  # self.view.max_level_spin.maximum()
                 self.OverlayImage.setLevels([0, max_level], update=True)
-                conv = self.pix2mm() / (2 if is_full_image else 1)
+                conv = self.pix2mm()
                 self.OverlayImage.setRect(QtCore.QRect(0, 0, dims[1] * conv, dims[0] * conv))
                 if not self.OverlayImage in self.ImageBox.items:
                     self.view.overlay_checkbox.setEnabled(True)
@@ -402,6 +402,7 @@ class Controller():
         """Return the pixel-to-mm ratio for the current screen."""
         screen_name = self.getCurrentScreen()
         ratio = self.cam_ctrl.getPix2mm(screen_name)
+
         if ratio == -999.999:
             ratio = 0.01  # better default value!
         return ratio
@@ -506,11 +507,19 @@ class Controller():
         print('got mask obj', mask.mask_x, mask.mask_y, mask.mask_x_rad, mask.mask_y_rad)
         x = mask.mask_x - mask.mask_x_rad
         y = mask.mask_y - mask.mask_y_rad
-        self.roi.blockSignals(True)  # don't update the mask recursively!
+        # Show the ROI within the image bounds, even if the mask is outside them - makes it easier to grab and fix
+        img_height, img_width = IMAGE_DIMS_VELA if self.cam_ctrl.isVelaCam() else IMAGE_DIMS
         pix2mm = self.pix2mm()
-        self.roi.setPos(QtCore.QPoint(x * pix2mm, y * pix2mm))
-        if mask.mask_x_rad > 0 and mask.mask_y_rad > 0:
-            self.roi.setSize(QtCore.QPoint(mask.mask_x_rad * 2 * pix2mm, mask.mask_y_rad * 2 * pix2mm))
+        min_size = 100  # self.Image.pixelWidth()  # otherwise get div/0 errors when trying to set the ROI size
+        x_rad = np.clip(mask.mask_x_rad, min_size, img_width / 2)
+        y_rad = np.clip(mask.mask_y_rad, min_size, img_height / 2)
+        x = np.clip(x, 0, img_width - x_rad * 2)
+        y = np.clip(y, 0, img_height - y_rad * 2)
+        print(x, y, x_rad, y_rad)
+        self.roi.blockSignals(True)  # don't update the mask recursively!
+        self.roi.setPos(QtCore.QPoint(x * pix2mm, y * pix2mm), update=False)
+        self.roi.setSize(QtCore.QPoint(x_rad * 2 * pix2mm, y_rad * 2 * pix2mm), update=False)
+        self.roi.stateChanged()
         self.roi.blockSignals(False)
 
     def roiChanged(self):
@@ -557,8 +566,9 @@ class Controller():
 
                 if is_acquiring:
                     index = self.screens.indexFromItem(item)
-                    self.view.cameras_treeview.setCurrentIndex(index)
-                    self.changeCamera(start_acquire=False)
+                    if index != self.view.cameras_treeview.currentIndex():  # maybe it was changed outwith this GUI?
+                        self.view.cameras_treeview.setCurrentIndex(index)
+                        self.changeCamera(start_acquire=False)
                     current_camera_name = name
                     self.view.screen_in_button.setEnabled(controllable)
                     self.view.screen_out_button.setEnabled(controllable)
@@ -628,14 +638,23 @@ class Controller():
                 self.view.max_level_spin.setValue(int(np.percentile(data, 99.9)))
                 min_level = np.min(data)
 
-            dims = IMAGE_DIMS if len(data) == IMAGE_WIDTH * IMAGE_HEIGHT else IMAGE_DIMS_VELA
+            if self.cam_ctrl.isVelaCam():
+                dims = IMAGE_DIMS_VELA
+                size_factor = 1
+            else:  # CLARA cameras give us a cut-down image
+                dims = IMAGE_DIMS
+                size_factor = 2
             npData = np.array(data).reshape(dims)
             self.Image.setImage(np.flip(np.transpose(npData), 1))
             max_level = self.view.max_level_spin.maximum() if leds_on else self.view.max_level_spin.value()
             self.Image.setLevels([min_level, max_level], update=True)
-            pix2mm = self.pix2mm()
-            image_rect = QtCore.QRect(0, 0, dims[1] * pix2mm, dims[0] * pix2mm)
+            pix2mm = self.pix2mm() * size_factor
+            xMin, yMin = 0, 0
+            width, height = dims[1] * pix2mm, dims[0] * pix2mm
+            image_rect = QtCore.QRect(xMin, yMin, width, height)
             self.Image.setRect(image_rect)
+            # Ensure we can't zoom or pan away from the image. Only set xMin and yMax to avoid messing up the aspect ratio
+            self.ImageBox.setLimits(xMin=xMin, yMax=yMin+height)
 
         if self.cam_ctrl.isCollecting(screen_name):  # TODO: correct?
             text = 'Kill'
