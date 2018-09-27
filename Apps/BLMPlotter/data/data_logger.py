@@ -1,6 +1,6 @@
 from datetime import datetime
 import struct
-import os
+import os, time
 import pickle
 from data.config_reader import config_reader
 import numpy
@@ -78,8 +78,6 @@ class data_logger(object):
     def write_log(self, str):
         #write_str = datetime.now().isoformat('-').replace(":", "-").split('.', 1)[0] + ' ' + str + '\n'
         write_str = datetime.now().isoformat(' ') + ' ' + str + '\n'
-        with open(self.log_path,'a') as f:
-            f.write(write_str)
 
     def write_list(self, data, file):
         with open(file,'w') as f:
@@ -102,25 +100,16 @@ class data_logger(object):
             outfile.write('\n')
 
     def get_blm_scan_log(self):
-        self.scan_log_start = datetime.now()
-        self.scan_log_start_str = self.scan_log_start.isoformat('-').replace(":", "-").split('.', 1)[0]
-        self.scan_directory = self.log_directory + self.blm_name + '\\' + self.scan_type
-        if not os.path.isdir(self.blm_directory):
-            os.makedirs(self.blm_directory)
+        self.timestamp = time.time()
+        self.scan_log_start_str = datetime.fromtimestamp(self.timestamp).strftime('%Y-%m-%d-%H-%M-%S')
+        self.scan_directory = self.log_directory + '\\BLM_scans\\'
         if not os.path.isdir(self.scan_directory):
             os.makedirs(self.scan_directory)
-        self.blm_scan_log = self.scan_directory + '\\' + self.scan_log_start_str + ".json"
-        log = []
-        with open(self.blm_scan_log,"w+") as f:
-            lines = list(line for line in (l.strip() for l in f) if line)
-            for line in lines:
-                if '#' not in line:
-                    log.append([int(x) for x in line.split()])
-        self.header(self.my_name + ' get_blm_scan_log')
-        self.message('read blm_scan_log: ' + self.blm_scan_log)
-        for i in log:
-            self.message(map(str,i),True)
-        return 1
+            os.chdir(self.scan_directory)
+        self.blm_scan_log = self.scan_directory + self.scan_log_start_str + ".hdf5"
+        # for i in log:
+        #     self.message(map(str,i),True)
+        return self.blm_scan_log
 
     def start_data_logging(self):
         self.header(self.my_name + ' start_data_logging')
@@ -137,13 +126,6 @@ class data_logger(object):
         [names.append(x) for x,y in values.iteritems()]
         # names[names.index(dat.time_stamp)] =  dat.time_stamp +  ", (start = " + datetime.now().isoformat(' ') + ")"
         [types.append(str(type(y)))  for x,y in values.iteritems()]
-        try:
-            with open(self.log_path  + '.dat', 'ab') as f:
-                f.write(joiner.join(names)+ "\n")
-                f.write(joiner.join(types)+ "\n")
-                # f.write(struct.pack('<i', 245))
-        except:
-            pass
 
     def write_data(self,values):
         pass

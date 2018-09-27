@@ -51,7 +51,8 @@ class blm_plotter_gui(QMainWindow, Ui_MainWindow, base):
 		# self.append_pv_to_list()
 		self.add_charge_name()
 		# CONNECT BUTTONS TO FUNCTIONS
-		# self.calibrateButton.clicked.connect(self.handle_calibrate_button)
+		self.saveDataButton.clicked.connect(self.handle_save_data)
+		self.setNumShotsButton.clicked.connect(self.set_num_shots)
 		# self.attenuationButton.toggled.connect(lambda: self.handle_measure_type(self.attenuationButton))
 		# self.delayButton.toggled.connect(lambda: self.handle_measure_type(self.delayButton))
 		# # widgets are held in dict, with same keys as data
@@ -77,11 +78,24 @@ class blm_plotter_gui(QMainWindow, Ui_MainWindow, base):
 
 	def add_charge_name(self):
 		self.bunchChargeOutputWidget.clear()
-		self.charge_name = base.config.charge_config['CHARGE_NAME'][0]
 		self.diag_type = base.config.charge_config['CHARGE_NAME']
 		self.bunchChargeDiagTypeLabel.setText(str(self.diag_type))
 
+	def handle_save_data(self):
+		if self.data.values[dat.save_request] == False:
+			self.data.values[dat.save_request] = True
+			base.logger.message('Saving data...', True)
+		else:
+			base.logger.message('NOT ready to go, is everything set?', True)
+			self.messageLabel.setText('WARNING: NOT ready to go, is everything set?')
+
+	def set_num_shots(self):
+		self.data.values[dat.num_shots_request] = True
+		self.data.values[dat.num_shots] = int(self.numShotsOutputWidget.toPlainText())
+
 	def init_widget_dict(self, data):
+		if self.data.values[dat.save_request] == False:
+			self.saveDataButton.setEnabled(True)
 		# MANUALLY CONNECT THESE UP :/
 		# self.widget[dat.time_stamp] = self.time_stamp_outputwidget
 		self.widget[dat.bunch_charge] = self.bunchChargeOutputWidget
@@ -91,7 +105,7 @@ class blm_plotter_gui(QMainWindow, Ui_MainWindow, base):
 		# self.widget[dat.get_ra2] = self.get_ra2_outputwidget
 		# self.widget[dat.set_sa1_current] = self.set_sa1_current_outputwidget
 		# self.widget[dat.set_sa2_current] = self.set_sa2_current_outputwidget
-		# self.widget[dat.num_shots] = self.numShotsOutputWidget
+		self.widget[dat.num_shots] = self.numShotsOutputWidget
 		# self.widget[dat.bpm_u11] = self.bpm_u11_outputwidget
 		# self.widget[dat.bpm_u12] = self.bpm_u12_outputwidget
 		# self.widget[dat.bpm_u13] = self.bpm_u13_outputwidget
@@ -114,10 +128,9 @@ class blm_plotter_gui(QMainWindow, Ui_MainWindow, base):
 		# self.widget[dat.q_cal] = self.q_cal_outputwidget
 
 	def update_gui(self):
-		pass
-	# 	for key, val in self.widget.iteritems():
-	# 		if self.value_is_new(key, base.data.values[key]):
-	# 			self.update_widget(key, base.data.values[key], val)
+		for key, val in self.widget.iteritems():
+			if self.value_is_new(key, base.data.values[key]):
+				self.update_widget(key, base.data.values[key], val)
 	# 	if self.data.values[dat.plots_done] and not self.data.values[dat.values_saved]:
 	# 		if self.data.values[dat.calibration_type] == 'attenuation':
 	# 			base.logger.message("BPM name " + str(self.data.values[dat.bpm_name]), True)
@@ -150,8 +163,8 @@ class blm_plotter_gui(QMainWindow, Ui_MainWindow, base):
 			widget.setText('%i' % val)
 			self.clip_vals[key] = widget.text()
 		elif type(val) is int:
-			widget.setText('%i' % val)
-			self.clip_vals[key] = widget.text()
+			widget.setPlainText('%i' % val)
+			self.clip_vals[key] = widget.toPlainText()
 		elif type(val) is float:
 			widget.setText('%.3E' % val)
 			self.clip_vals[key] = widget.text()
@@ -173,135 +186,19 @@ class blm_plotter_gui(QMainWindow, Ui_MainWindow, base):
 		else:
 			return False
 
-	# def get_bpm_name(self):
-	# 	self.bpm_names_length = [self.comboBox.itemText(i) for i in range(self.comboBox.count())]
-	# 	if len(self.bpm_names_length) > 0:
-	# 		self.data.values[dat.bpm_name] = str(self.comboBox.currentText())
-	# 		self.bpm_name_set = True
-	# 		print self.data.values[dat.bpm_name]
-	# 		return True
-	# 	else:
-	# 		return False
-    #
-	# def get_start(self):
-	# 	self.set_start_text = self.lowerBoundOutputWidget.toPlainText()
-	# 	if len(self.set_start_text) > 0:
-	# 		self.data.values[dat.set_start] = long(self.set_start_text)
-	# 		self.set_start_set = True
-	# 		return True
-	# 	else:
-	# 		self.set_start_set = False
-	# 		return False
-    #
-	# def get_end(self):
-	# 	self.set_end_text = self.upperBoundOutputWidget.toPlainText()
-	# 	if len(self.set_end_text) > 0:
-	# 		self.data.values[dat.set_end] = long(self.set_end_text) + 1
-	# 		self.set_end_set = True
-	# 		return True
-	# 	else:
-	# 		self.set_end_set = False
-	# 		return False
-    #
-	# def get_num_shots(self):
-	# 	self.num_shots_text = self.numShotsOutputWidget.toPlainText()
-	# 	if len(self.num_shots_text) > 0:
-	# 		self.data.values[dat.num_shots] = int(self.num_shots_text)
-	# 		self.num_shots_set = True
-	# 		return True
-	# 	else:
-	# 		self.num_shots_set = False
-	# 		return False
-    #
-	# def is_measure_type_set(self):
-	# 	if self.data.values[dat.calibration_type] == 'attenuation':
-	# 		return True
-	# 	elif self.data.values[dat.calibration_type] == 'delay':
-	# 		return True
-	# 	else:
-	# 		return False
-    #
-	# def check_ready(self):
-	# 	if self.get_bpm_name() and self.get_start() and self.get_end() and self.get_num_shots() and self.is_measure_type_set():
-	# 		self.data.values[dat.all_values_set] = True
-	# 		if self.data.values[dat.charge_status]:
-	# 			self.data.values[dat.ready_to_go] = True
-    #
-	# # button functions
-	# def handle_calibrate_button(self):
-	# 	self.check_ready()
-	# 	self.data.values[dat.values_saved] = False
-	# 	if self.data.values[dat.ready_to_go]:
-	# 		self.calibrateButton.setEnabled(False)
-	# 		self.data.values[dat.plots_done] = False
-	# 		base.logger.message('Starting scan', True)
-	# 		self.messageLabel.setText('Starting scan')
-	# 	else:
-	# 		base.logger.message('NOT ready to go, is everything set?', True)
-	# 		self.messageLabel.setText('WARNING: NOT ready to go, is everything set?')
-    #
-	# def handle_measure_type(self, b):
-	# 	if b.text() == "Attenuation":
-	# 		if b.isChecked() == True:
-	# 			self.lowerBoundOutputWidget.setPlainText("2")
-	# 			self.upperBoundOutputWidget.setPlainText("20")
-	# 			self.data.values[dat.calibration_type] = 'attenuation'
-	# 	elif b.text() == "Delay":
-	# 		if b.isChecked() == True:
-	# 			self.lowerBoundOutputWidget.setPlainText("1")
-	# 			self.upperBoundOutputWidget.setPlainText("255")
-	# 			self.data.values[dat.calibration_type] = 'delay'
-    #
-	# def plot_bpm_vs_sa(self):
-	# 	self.messageLabel.setText('Scan complete')
-	# 	self.bpmxPlot.clear()
-	# 	self.bpmyPlot.clear()
-	# 	self.vbx = self.bpmxPlot.vb
-	# 	self.vbx.setYRange(min(self.data.values[dat.bpm_v11_v12_sum].values()),max(self.data.values[dat.bpm_v11_v12_sum].values()))
-	# 	self.xplot = self.bpmxPlot.plot(pen=mkPen('b',width=3), symbol='o')
-	# 	self.xplot.setData(range(self.data.values[dat.set_start],self.data.values[dat.set_end]),
-	# 					   self.data.values[dat.bpm_v11_v12_sum].values())
-	# 	self.vby = self.bpmyPlot.vb
-	# 	self.vby.setYRange(min(self.data.values[dat.bpm_v21_v22_sum].values()),max(self.data.values[dat.bpm_v21_v22_sum].values()))
-	# 	self.yplot = self.bpmyPlot.plot(pen=mkPen('b', width=3), symbol='o')
-	# 	self.yplot.setData(range(self.data.values[dat.set_start], self.data.values[dat.set_end]),
-	# 					   self.data.values[dat.bpm_v21_v22_sum].values())
-	# 	self.data.values[dat.plots_done] = True
-    #
-	# def plot_bpm_vs_sd(self):
-	# 	self.messageLabel.setText('Scan complete')
-	# 	self.bpmxPlot.clear()
-	# 	self.bpmyPlot.clear()
-	# 	self.vbx = self.bpmxPlot.vb
-	# 	if min(self.data.values[dat.dv1_dly1].values()) > min(self.data.values[dat.dv2_dly1].values()):
-	# 		self.xMin = min(self.data.values[dat.dv2_dly1].values())
-	# 	else:
-	# 		self.xMin = min(self.data.values[dat.dv1_dly1].values())
-	# 	if max(self.data.values[dat.dv1_dly1].values()) > max(self.data.values[dat.dv2_dly1].values()):
-	# 		self.xMax = max(self.data.values[dat.dv1_dly1].values())
-	# 	else:
-	# 		self.xMax = max(self.data.values[dat.dv2_dly1].values())
-	# 	self.vbx.setYRange(self.xMin,self.xMax)
-	# 	self.xplot = self.bpmxPlot.plot(pen=mkPen('b', width=3), symbol='o')
-	# 	self.xplot.setData(range(self.data.values[dat.set_start], self.data.values[dat.set_end]),
-	# 					   self.data.values[dat.dv1_dly1].values())
-	# 	self.xplot1 = self.bpmxPlot.plot(pen=mkPen('r', width=3), symbol='o')
-	# 	self.xplot1.setData(range(self.data.values[dat.set_start], self.data.values[dat.set_end]),
-	# 					   self.data.values[dat.dv2_dly1].values())
-	# 	self.vby = self.bpmyPlot.vb
-	# 	if min(self.data.values[dat.dv1_dly2].values()) > min(self.data.values[dat.dv2_dly2].values()):
-	# 		self.yMin = min(self.data.values[dat.dv2_dly2].values())
-	# 	else:
-	# 		self.yMin = min(self.data.values[dat.dv1_dly2].values())
-	# 	if max(self.data.values[dat.dv1_dly2].values()) > max(self.data.values[dat.dv2_dly2].values()):
-	# 		self.yMax = max(self.data.values[dat.dv1_dly2].values())
-	# 	else:
-	# 		self.yMax = max(self.data.values[dat.dv2_dly2].values())
-	# 	self.vby.setYRange(self.yMin,self.yMax)
-	# 	self.yplot = self.bpmyPlot.plot(pen=mkPen('b', width=3), symbol='o')
-	# 	self.yplot.setData(range(self.data.values[dat.set_start], self.data.values[dat.set_end]),
-	# 					   self.data.values[dat.dv1_dly2].values())
-	# 	self.yplot1 = self.bpmyPlot.plot(pen=mkPen('r', width=3), symbol='o')
-	# 	self.yplot1.setData(range(self.data.values[dat.set_start], self.data.values[dat.set_end]),
-	# 					   self.data.values[dat.dv2_dly2].values())
-	# 	self.data.values[dat.plots_done] = True
+	def plot_blm_values(self):
+		self.blmPlot.clear()
+		self.pen_vals = {self.data.values[dat.blm_names][0]:'b',
+						 self.data.values[dat.blm_names][1]:'r'}
+		self.vbx = self.blmPlot.vb
+		self.min_vals = []
+		self.max_vals = []
+		for i in self.data.values[dat.blm_names]:
+			self.min_vals.append(min(self.data.values[dat.blm_voltages][i][-1]))
+			self.max_vals.append(max(self.data.values[dat.blm_voltages][i][-1]))
+		for i in self.data.values[dat.blm_names]:
+			self.vbx.setYRange(min(self.min_vals),max(self.max_vals))
+			self.blmplot = self.blmPlot.plot(pen=mkPen(self.pen_vals[i],width=3))
+			self.blmplot.setData(self.data.values[dat.blm_num_values],
+							   self.data.values[dat.blm_voltages][i][-1])
+		self.data.values[dat.plots_done] = True

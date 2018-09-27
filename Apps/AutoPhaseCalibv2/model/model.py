@@ -1,4 +1,3 @@
-# from PyQt4.QtCore import QThread, QObject, pyqtSignal, QTimer
 import sys,os
 import time
 import scipy.constants as physics
@@ -120,13 +119,17 @@ class Model(object):
         self.setUpMagnets(self.parameters['magnets'])
 
     def loadGunBURT(self):
-        if self.machineType is 'None':
-            return True
+        self.logger.emit('Loading DBURT: GunCrest.dburt')
+        if self.machineType == 'None':
+            time.sleep(1)
+            return False
         else:
             return self.machine.applyDBURT('GunCrest.dburt')
 
     def loadLinac1BURT(self):
-        if self.machineType is 'None':
+        self.logger.emit('Loading DBURT: Linac1Crest.dburt')
+        if self.machineType == 'None':
+            time.sleep(3)
             return True
         else:
             return self.machine.applyDBURT('Linac1Crest.dburt')
@@ -580,7 +583,7 @@ class Model(object):
         # self.setFinalPhase(crest_phase)
         # self.printFinalPhase()
         popt, pcov = curve_fit(self.fitting_equation_Linac1Fine, x, y, \
-            sigma=(1+(y-min(y))) * (1+abs(x-self.approxcrest))**0.5,    p0=[0,10,self.approxcrest], bounds=[[-np.inf, -np.inf, min(x)], [np.inf, np.inf, max(x)]])
+            sigma=(1+(y-min(y))) * (1+abs(x-self.approxcrest))**0.5,    p0=[0,10,self.approxcrest], bounds=[[-np.inf, 0, min(x)], [np.inf, np.inf, max(x)]])
 
         phase = np.array(x)
         phase = np.arange(min(x), max(x),(max(x)-min(x))/1000)
@@ -601,7 +604,7 @@ class Model(object):
     def fittingLinac1Fine(self):
         x, y, std = [np.array(a) for a in self.getDataArray(zipped=False)]
         popt, pcov = curve_fit(self.fitting_equation_Linac1Fine, x, y, \
-            sigma=(1+(y-min(y))) * (1+abs(x-self.approxcrest))**0.5,    p0=[0,10,self.approxcrest], bounds=[[-np.inf, -np.inf, min(x)], [np.inf, np.inf, max(x)]])
+            sigma=(1+(y-min(y))) * (1+abs(x-self.approxcrest))**0.5,    p0=[0,10,self.approxcrest], bounds=[[-np.inf, 0, min(x)], [np.inf, np.inf, max(x)]])
 
         # phase = np.array(x)
         phase = np.arange(min(x), max(x),(max(x)-min(x))/1000)

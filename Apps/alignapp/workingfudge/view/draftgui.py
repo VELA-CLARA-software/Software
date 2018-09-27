@@ -19,7 +19,9 @@ class draftappgui(QtGui.QMainWindow, Ui_MainWindow):
 		# interpreting them later... meh
         #self.dorfalign.clicked.connect(self.falign)
         #print "Hello world frank1"
-        self.rfphi2box_4.setMaximum(999)	
+        self.rfphi2box_4.setMaximum(999)
+        # some default values
+        # self.vcxminbox.setValue(1.1)              
 		
     def falign(self):
 	    print "Hello world"

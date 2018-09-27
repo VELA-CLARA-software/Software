@@ -2,6 +2,7 @@ from VELA_CLARA_enums import MACHINE_MODE,MACHINE_AREA
 from data.config_reader import config_reader
 from data.data_logger import data_logger
 import blm_handler
+import charge_handler
 import datetime
 import data.blm_plotter_data_base as dat
 from data_monitors.data_monitoring import data_monitoring
@@ -16,6 +17,7 @@ class controller_base(base):
 	data_monitor = data_monitoring()
 
 	blm_handler = None
+	charge_handler = None
 
 	def __init__(self, argv, machine_mode=MACHINE_MODE.PHYSICAL, machine_area=MACHINE_AREA.CLARA_2_BA1_BA2):
 		#super(base, self).__init__()
@@ -39,12 +41,13 @@ class controller_base(base):
 		base.charge_control = base.charge_init.getChargeController(self.machine_mode,self.machine_area)
 		base.logger.message('Monitoring Charge: ' + ' ' + self.get_charge_names()[0], True)
 		base.config.charge_config['CHARGE_NAME'] = "WCM"
+		controller_base.charge_handler = charge_handler.charge_handler()
 
 	def start_blm_control(self):
 		base.blm_control = base.blm_init.getBLMController(self.machine_mode,self.machine_area)
 		base.logger.message('Monitoring BLMs: ' + ' '.join(self.get_blm_names()), True)
 		base.config.blm_config['BLM_NAMES'] = self.get_blm_names()
-		controller_base.bpm_handler = blm_handler.blm_handler()
+		controller_base.blm_handler = blm_handler.blm_handler()
 
 	def get_blm_names(self):
 		temp = []

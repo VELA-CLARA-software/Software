@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1139</width>
-    <height>932</height>
+    <height>959</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -132,34 +132,6 @@
           <property name="verticalSpacing">
            <number>2</number>
           </property>
-          <item row="2" column="0">
-           <widget class="QSpinBox" name="Gun_Amp_Monitor">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>70</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignCenter</set>
-            </property>
-            <property name="buttonSymbols">
-             <enum>QAbstractSpinBox::NoButtons</enum>
-            </property>
-            <property name="suffix">
-             <string> SET</string>
-            </property>
-            <property name="prefix">
-             <string/>
-            </property>
-            <property name="maximum">
-             <number>100000</number>
-            </property>
-           </widget>
-          </item>
           <item row="2" column="2">
            <widget class="QSpinBox" name="Linac1_Amp_Monitor">
             <property name="enabled">
@@ -171,6 +143,9 @@
               <height>0</height>
              </size>
             </property>
+            <property name="toolTip">
+             <string>Linac 1 AMP set</string>
+            </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
             </property>
@@ -188,93 +163,13 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="2" colspan="2">
-           <widget class="QLabel" name="label_30">
-            <property name="text">
-             <string>Linac1</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignCenter</set>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0" colspan="2">
-           <widget class="QLabel" name="label_27">
-            <property name="text">
-             <string>Gun</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignCenter</set>
-            </property>
-           </widget>
-          </item>
           <item row="2" column="5">
-           <widget class="QProgressBar" name="Progress_Monitor">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>70</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="value">
-             <number>0</number>
-            </property>
-            <property name="textVisible">
-             <bool>false</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="4">
-           <widget class="QLabel" name="label_31">
-            <property name="text">
-             <string>Dipole Current</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignCenter</set>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1">
-           <widget class="QDoubleSpinBox" name="Gun_Phase_Monitor">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>70</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignCenter</set>
-            </property>
-            <property name="readOnly">
-             <bool>true</bool>
-            </property>
-            <property name="buttonSymbols">
-             <enum>QAbstractSpinBox::NoButtons</enum>
-            </property>
-            <property name="suffix">
-             <string>°</string>
-            </property>
-            <property name="minimum">
-             <double>-180.000000000000000</double>
-            </property>
-            <property name="maximum">
-             <double>180.000000000000000</double>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="4">
            <widget class="QDoubleSpinBox" name="Dipole_Monitor">
             <property name="enabled">
              <bool>false</bool>
+            </property>
+            <property name="toolTip">
+             <string>C2V Dipole Current</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
@@ -296,8 +191,8 @@
             </property>
            </widget>
           </item>
-          <item row="2" column="3">
-           <widget class="QDoubleSpinBox" name="Linac1_Phase_Monitor">
+          <item row="2" column="1">
+           <widget class="QDoubleSpinBox" name="Gun_Phase_Monitor">
             <property name="enabled">
              <bool>false</bool>
             </property>
@@ -306,6 +201,9 @@
               <width>70</width>
               <height>0</height>
              </size>
+            </property>
+            <property name="toolTip">
+             <string>Gun PHASE set</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
@@ -328,12 +226,148 @@
            </widget>
           </item>
           <item row="1" column="5">
+           <widget class="QLabel" name="label_31">
+            <property name="text">
+             <string>Dipole Current</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="6">
+           <widget class="QProgressBar" name="Progress_Monitor">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>70</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="toolTip">
+             <string>Progress of the running scan</string>
+            </property>
+            <property name="value">
+             <number>0</number>
+            </property>
+            <property name="textVisible">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0" colspan="2">
+           <widget class="QLabel" name="label_27">
+            <property name="text">
+             <string>Gun</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="2" colspan="2">
+           <widget class="QLabel" name="label_30">
+            <property name="text">
+             <string>Linac1</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QSpinBox" name="Gun_Amp_Monitor">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>70</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="toolTip">
+             <string>Gun AMP set</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+            <property name="buttonSymbols">
+             <enum>QAbstractSpinBox::NoButtons</enum>
+            </property>
+            <property name="suffix">
+             <string> SET</string>
+            </property>
+            <property name="prefix">
+             <string/>
+            </property>
+            <property name="maximum">
+             <number>100000</number>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="3">
+           <widget class="QDoubleSpinBox" name="Linac1_Phase_Monitor">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>70</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="toolTip">
+             <string>Linac 1 PHASE set</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+            <property name="buttonSymbols">
+             <enum>QAbstractSpinBox::NoButtons</enum>
+            </property>
+            <property name="suffix">
+             <string>°</string>
+            </property>
+            <property name="minimum">
+             <double>-180.000000000000000</double>
+            </property>
+            <property name="maximum">
+             <double>180.000000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="6">
            <widget class="QLabel" name="label_32">
             <property name="text">
              <string>Progress</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="4">
+           <widget class="QPushButton" name="Linac1_Timing_Monitor">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="toolTip">
+             <string>Alter the linac timings (GREEN: Linacs timed with beam, RED: Linacs timed away from beam)</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="flat">
+             <bool>false</bool>
             </property>
            </widget>
           </item>
@@ -379,6 +413,9 @@
             <property name="enabled">
              <bool>true</bool>
             </property>
+            <property name="toolTip">
+             <string>Save/Discard cresting data to the work folder</string>
+            </property>
             <property name="styleSheet">
              <string notr="true"/>
             </property>
@@ -407,6 +444,9 @@
               <height>16777215</height>
              </size>
             </property>
+            <property name="toolTip">
+             <string>Stop the current scan and analyse</string>
+            </property>
             <property name="text">
              <string>Finish Scan</string>
             </property>
@@ -425,6 +465,9 @@
               <width>150</width>
               <height>16777215</height>
              </size>
+            </property>
+            <property name="toolTip">
+             <string>Abort the current scan</string>
             </property>
             <property name="autoFillBackground">
              <bool>false</bool>
@@ -465,7 +508,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="Gun_Tab">
        <attribute name="icon">
@@ -525,26 +568,44 @@
              <property name="title">
               <string>Gun Startup</string>
              </property>
-             <layout class="QFormLayout" name="formLayout_7">
-              <item row="2" column="0" colspan="2">
-               <widget class="QPushButton" name="Gun_TurnOn_Button">
-                <property name="enabled">
-                 <bool>true</bool>
-                </property>
-                <property name="font">
-                 <font>
-                  <strikeout>false</strikeout>
-                 </font>
+             <layout class="QGridLayout" name="gridLayout">
+              <item row="4" column="0">
+               <widget class="QLabel" name="label_33">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>0</height>
+                 </size>
                 </property>
                 <property name="text">
-                 <string>Ramp Up Gun</string>
-                </property>
-                <property name="flat">
-                 <bool>false</bool>
+                 <string>Set Linac Timing</string>
                 </property>
                </widget>
               </item>
-              <item row="1" column="0">
+              <item row="1" column="3">
+               <widget class="QSpinBox" name="Gun_Amp_Set">
+                <property name="toolTip">
+                 <string>Ramp amplitude</string>
+                </property>
+                <property name="maximum">
+                 <number>16000</number>
+                </property>
+                <property name="singleStep">
+                 <number>100</number>
+                </property>
+                <property name="value">
+                 <number>16000</number>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="0" colspan="3">
+               <widget class="QLabel" name="label_14">
+                <property name="text">
+                 <string>Ramp Rate</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0" colspan="3">
                <widget class="QLabel" name="label_13">
                 <property name="minimumSize">
                  <size>
@@ -557,28 +618,71 @@
                 </property>
                </widget>
               </item>
-              <item row="1" column="1">
-               <widget class="QSpinBox" name="Gun_Amp_Set">
-                <property name="maximum">
-                 <number>16000</number>
+              <item row="3" column="0" colspan="4">
+               <widget class="QPushButton" name="Gun_LoadBURT_Button">
+                <property name="toolTip">
+                 <string>Load the GunCrest DBURT</string>
                 </property>
-                <property name="singleStep">
-                 <number>100</number>
-                </property>
-                <property name="value">
-                 <number>16000</number>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="0">
-               <widget class="QLabel" name="label_14">
                 <property name="text">
-                 <string>Step Size</string>
+                 <string>Load BURT</string>
                 </property>
                </widget>
               </item>
-              <item row="0" column="1">
+              <item row="2" column="0" colspan="4">
+               <widget class="QPushButton" name="Gun_TurnOn_Button">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
+                <property name="font">
+                 <font>
+                  <strikeout>false</strikeout>
+                 </font>
+                </property>
+                <property name="toolTip">
+                 <string>Ramp Gun up to the maximum in steps</string>
+                </property>
+                <property name="text">
+                 <string>Ramp Up Gun</string>
+                </property>
+                <property name="flat">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="2" colspan="2">
+               <widget class="QPushButton" name="Gun_LinacTiming_Off_Button">
+                <property name="maximumSize">
+                 <size>
+                  <width>80</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="toolTip">
+                 <string>Alter the linac timings to allow cresting of the gun (RED: Linacs timed with beam, GREEN: Linacs timed away from beam)</string>
+                </property>
+                <property name="text">
+                 <string>Linacs Off</string>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="1">
+               <spacer name="horizontalSpacer_3">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="0" column="3">
                <widget class="QSpinBox" name="Gun_Amp_Step_Set">
+                <property name="toolTip">
+                 <string>Ramp Rate</string>
+                </property>
                 <property name="suffix">
                  <string>/sec</string>
                 </property>
@@ -590,13 +694,6 @@
                 </property>
                 <property name="value">
                  <number>500</number>
-                </property>
-               </widget>
-              </item>
-              <item row="3" column="0" colspan="2">
-               <widget class="QPushButton" name="Gun_LoadBURT_Button">
-                <property name="text">
-                 <string>Load BURT</string>
                 </property>
                </widget>
               </item>
@@ -633,6 +730,9 @@
               </item>
               <item row="0" column="1">
                <widget class="QSpinBox" name="Gun_Rough_NShots_Set">
+                <property name="toolTip">
+                 <string>How many WCM readings to average for each phase</string>
+                </property>
                 <property name="minimum">
                  <number>2</number>
                 </property>
@@ -650,6 +750,9 @@
               </item>
               <item row="1" column="1">
                <widget class="QDoubleSpinBox" name="Gun_Rough_PointSeperation_Set">
+                <property name="toolTip">
+                 <string>Phase seperation for the WCM scan</string>
+                </property>
                 <property name="suffix">
                  <string>°</string>
                 </property>
@@ -676,6 +779,9 @@
               </item>
               <item row="2" column="1">
                <widget class="QSpinBox" name="Gun_Rough_Fit_Offset">
+                <property name="toolTip">
+                 <string>Correction to the rough phase scan to find the Gun crest</string>
+                </property>
                 <property name="frame">
                  <bool>true</bool>
                 </property>
@@ -698,6 +804,9 @@
               </item>
               <item row="3" column="0" colspan="2">
                <widget class="QPushButton" name="Gun_Rough_Button">
+                <property name="toolTip">
+                 <string>Use the WCM to roughly find the Gun crest</string>
+                </property>
                 <property name="text">
                  <string>Approximately Find Crest with WCM</string>
                 </property>
@@ -743,6 +852,9 @@
               </item>
               <item row="0" column="1">
                <widget class="QDoubleSpinBox" name="Gun_Dipole_Start_Set">
+                <property name="toolTip">
+                 <string>Starting current for the C2V dipole</string>
+                </property>
                 <property name="suffix">
                  <string> A</string>
                 </property>
@@ -759,6 +871,9 @@
               </item>
               <item row="1" column="1">
                <widget class="QDoubleSpinBox" name="Gun_Dipole_End_Set">
+                <property name="toolTip">
+                 <string>Final current for the C2V dipole</string>
+                </property>
                 <property name="suffix">
                  <string> A</string>
                 </property>
@@ -781,6 +896,9 @@
                   <height>23</height>
                  </size>
                 </property>
+                <property name="toolTip">
+                 <string>Find the dipole current to center the beam in the C2V dipole</string>
+                </property>
                 <property name="text">
                  <string>Find Dipole Current</string>
                 </property>
@@ -795,6 +913,9 @@
               </item>
               <item row="2" column="1">
                <widget class="QDoubleSpinBox" name="Gun_Dipole_Step_Set">
+                <property name="toolTip">
+                 <string>Step size for the C2V dipole</string>
+                </property>
                 <property name="suffix">
                  <string> A</string>
                 </property>
@@ -829,6 +950,9 @@
              <layout class="QGridLayout" name="gridLayout_5">
               <item row="0" column="3">
                <widget class="QSpinBox" name="Gun_Fine_NShots_Set">
+                <property name="toolTip">
+                 <string>Number of BPM readings to average for the BPM phase scan</string>
+                </property>
                 <property name="minimum">
                  <number>1</number>
                 </property>
@@ -842,6 +966,9 @@
               </item>
               <item row="1" column="3">
                <widget class="QDoubleSpinBox" name="Gun_Fine_PointSeperation_Set">
+                <property name="toolTip">
+                 <string>Phase seperation for the BPM phase scan</string>
+                </property>
                 <property name="suffix">
                  <string>°</string>
                 </property>
@@ -861,6 +988,9 @@
               </item>
               <item row="2" column="3">
                <widget class="QSpinBox" name="Gun_Fine_Range_Set">
+                <property name="toolTip">
+                 <string>Range over which to scan for the BPM phase scan</string>
+                </property>
                 <property name="suffix">
                  <string>°</string>
                 </property>
@@ -885,6 +1015,9 @@
                   <width>0</width>
                   <height>23</height>
                  </size>
+                </property>
+                <property name="toolTip">
+                 <string>Accurately crest the Gun with the C2V BPM</string>
                 </property>
                 <property name="text">
                  <string>Fine Crest Gun with BPM</string>
@@ -938,6 +1071,9 @@
               </item>
               <item row="2" column="1">
                <widget class="QSpinBox" name="Gun_Fine_Range_Start">
+                <property name="toolTip">
+                 <string>Center point of the BPM phase scan</string>
+                </property>
                 <property name="suffix">
                  <string>°</string>
                 </property>
@@ -951,6 +1087,9 @@
               </item>
               <item row="2" column="0">
                <widget class="QPushButton" name="Gun_Fine_Update_Start_Button">
+                <property name="toolTip">
+                 <string>Press to set the center point of the phase scan to the current Gun phase</string>
+                </property>
                 <property name="styleSheet">
                  <string notr="true">Text-align:left</string>
                 </property>
@@ -969,6 +1108,9 @@
                   <width>0</width>
                   <height>23</height>
                  </size>
+                </property>
+                <property name="toolTip">
+                 <string>Accurately crest the Gun with the C2V Screen - Screen must be in!</string>
                 </property>
                 <property name="text">
                  <string>Fine Crest Gun with Screen</string>
@@ -995,6 +1137,9 @@
                 <property name="enabled">
                  <bool>true</bool>
                 </property>
+                <property name="toolTip">
+                 <string>C2V dipole current equivalent for the beam momentum</string>
+                </property>
                 <property name="suffix">
                  <string> A</string>
                 </property>
@@ -1016,6 +1161,9 @@
               </item>
               <item row="1" column="0">
                <widget class="QDoubleSpinBox" name="Gun_Momentum_Set">
+                <property name="toolTip">
+                 <string>Momentum equivalent for the C2V dipole current</string>
+                </property>
                 <property name="suffix">
                  <string> MeV/c</string>
                 </property>
@@ -1070,6 +1218,9 @@
               </item>
               <item row="1" column="0" colspan="2">
                <widget class="QPushButton" name="Gun_SetPhase_Button">
+                <property name="toolTip">
+                 <string>Set the final Gun phase as crest + Off-crest phase</string>
+                </property>
                 <property name="text">
                  <string>Set Gun Phase</string>
                 </property>
@@ -1080,6 +1231,9 @@
               </item>
               <item row="0" column="1">
                <widget class="QDoubleSpinBox" name="Gun_OffCrest_Phase_Set">
+                <property name="toolTip">
+                 <string>Phase offset from crest for the Gun</string>
+                </property>
                 <property name="suffix">
                  <string>°</string>
                 </property>
@@ -1170,21 +1324,30 @@
              <property name="title">
               <string>Linac Startup</string>
              </property>
-             <layout class="QFormLayout" name="formLayout_8">
-              <item row="2" column="0" colspan="2">
-               <widget class="QPushButton" name="Linac1_TurnOn_Button">
-                <property name="enabled">
-                 <bool>true</bool>
-                </property>
-                <property name="font">
-                 <font>
-                  <weight>50</weight>
-                  <bold>false</bold>
-                  <strikeout>false</strikeout>
-                 </font>
-                </property>
+             <layout class="QFormLayout" name="formLayout_2">
+              <item row="0" column="0">
+               <widget class="QLabel" name="label_16">
                 <property name="text">
-                 <string>Ramp Up Linac</string>
+                 <string>Ramp Rate</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QSpinBox" name="Linac1_Amp_Step_Set">
+                <property name="toolTip">
+                 <string>Ramp Rate</string>
+                </property>
+                <property name="suffix">
+                 <string>/sec</string>
+                </property>
+                <property name="maximum">
+                 <number>1000</number>
+                </property>
+                <property name="singleStep">
+                 <number>100</number>
+                </property>
+                <property name="value">
+                 <number>500</number>
                 </property>
                </widget>
               </item>
@@ -1203,6 +1366,9 @@
               </item>
               <item row="1" column="1">
                <widget class="QSpinBox" name="Linac1_Amp_Set">
+                <property name="toolTip">
+                 <string>Ramp amplitude</string>
+                </property>
                 <property name="maximum">
                  <number>13000</number>
                 </property>
@@ -1211,36 +1377,90 @@
                 </property>
                 <property name="value">
                  <number>13000</number>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="0">
-               <widget class="QLabel" name="label_16">
-                <property name="text">
-                 <string>Step Size</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="1">
-               <widget class="QSpinBox" name="Linac1_Amp_Step_Set">
-                <property name="suffix">
-                 <string>/sec</string>
-                </property>
-                <property name="maximum">
-                 <number>1000</number>
-                </property>
-                <property name="singleStep">
-                 <number>100</number>
-                </property>
-                <property name="value">
-                 <number>500</number>
                 </property>
                </widget>
               </item>
               <item row="3" column="0" colspan="2">
                <widget class="QPushButton" name="Linac1_LoadBURT_Button">
+                <property name="toolTip">
+                 <string>Load the LinacCrest DBURT</string>
+                </property>
                 <property name="text">
                  <string>Load BURT</string>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="0">
+               <widget class="QLabel" name="label_34">
+                <property name="text">
+                 <string>Set Linac 1 Timing</string>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="1">
+               <widget class="QWidget" name="widget_2" native="true">
+                <property name="maximumSize">
+                 <size>
+                  <width>69</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <layout class="QHBoxLayout" name="horizontalLayout_3">
+                 <property name="spacing">
+                  <number>0</number>
+                 </property>
+                 <property name="leftMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>0</number>
+                 </property>
+                 <item>
+                  <widget class="QPushButton" name="Linac1_LinacTiming_Off_Button">
+                   <property name="toolTip">
+                    <string>Alter the linac 1 timing to disallow cresting (RED: Linacs timed with beam, GREEN: Linacs timed away from beam)</string>
+                   </property>
+                   <property name="text">
+                    <string>Off</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="Linac1_LinacTiming_On_Button">
+                   <property name="toolTip">
+                    <string>Alter the linac 1 timing to allow cresting (GREEN: Linacs timed with beam, RED: Linacs timed away from beam)</string>
+                   </property>
+                   <property name="text">
+                    <string>On</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item row="2" column="0" colspan="2">
+               <widget class="QPushButton" name="Linac1_TurnOn_Button">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
+                <property name="font">
+                 <font>
+                  <weight>50</weight>
+                  <bold>false</bold>
+                  <strikeout>false</strikeout>
+                 </font>
+                </property>
+                <property name="toolTip">
+                 <string>Ramp Linac 1 up to the maximum in steps</string>
+                </property>
+                <property name="text">
+                 <string>Ramp Up Linac</string>
                 </property>
                </widget>
               </item>
@@ -1259,6 +1479,9 @@
               <string>Rough Crest</string>
              </property>
              <layout class="QFormLayout" name="formLayout_9">
+              <property name="fieldGrowthPolicy">
+               <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+              </property>
               <item row="0" column="0">
                <widget class="QLabel" name="label_6">
                 <property name="minimumSize">
@@ -1272,25 +1495,11 @@
                 </property>
                </widget>
               </item>
-              <item row="1" column="0">
-               <widget class="QLabel" name="label_17">
-                <property name="text">
-                 <string>Point Seperation</string>
-                </property>
-               </widget>
-              </item>
-              <item row="3" column="0" colspan="2">
-               <widget class="QPushButton" name="Linac1_Rough_Button">
-                <property name="text">
-                 <string>Approximately Find Crest with BPM</string>
-                </property>
-                <property name="checked">
-                 <bool>false</bool>
-                </property>
-               </widget>
-              </item>
               <item row="0" column="1">
                <widget class="QSpinBox" name="Linac1_Rough_NShots_Set">
+                <property name="toolTip">
+                 <string>How many BPM readings to average for each phase</string>
+                </property>
                 <property name="minimum">
                  <number>2</number>
                 </property>
@@ -1299,8 +1508,18 @@
                 </property>
                </widget>
               </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="label_17">
+                <property name="text">
+                 <string>Point Seperation</string>
+                </property>
+               </widget>
+              </item>
               <item row="1" column="1">
                <widget class="QDoubleSpinBox" name="Linac1_Rough_PointSeperation_Set">
+                <property name="toolTip">
+                 <string>Phase seperation for the rough BPM scan</string>
+                </property>
                 <property name="suffix">
                  <string>°</string>
                 </property>
@@ -1327,6 +1546,9 @@
               </item>
               <item row="2" column="1">
                <widget class="QSpinBox" name="Linac1_Rough_Fit_Offset">
+                <property name="toolTip">
+                 <string>Correction to the rough phase scan to find the Linac 1 crest</string>
+                </property>
                 <property name="suffix">
                  <string>°</string>
                 </property>
@@ -1335,6 +1557,19 @@
                 </property>
                 <property name="maximum">
                  <number>180</number>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="0" colspan="2">
+               <widget class="QPushButton" name="Linac1_Rough_Button">
+                <property name="toolTip">
+                 <string>Use the S02 BPM to roughly find the Linac 1 crest</string>
+                </property>
+                <property name="text">
+                 <string>Approximately Find Crest with BPM</string>
+                </property>
+                <property name="checked">
+                 <bool>false</bool>
                 </property>
                </widget>
               </item>
@@ -1375,6 +1610,9 @@
               </item>
               <item row="0" column="1">
                <widget class="QDoubleSpinBox" name="Linac1_Dipole_Start_Set">
+                <property name="toolTip">
+                 <string>Starting current for the C2V dipole</string>
+                </property>
                 <property name="suffix">
                  <string> A</string>
                 </property>
@@ -1391,6 +1629,9 @@
               </item>
               <item row="1" column="1">
                <widget class="QDoubleSpinBox" name="Linac1_Dipole_End_Set">
+                <property name="toolTip">
+                 <string>Final current for the C2V dipole</string>
+                </property>
                 <property name="suffix">
                  <string> A</string>
                 </property>
@@ -1407,6 +1648,9 @@
               </item>
               <item row="3" column="0" colspan="2">
                <widget class="QPushButton" name="Linac1_Dipole_Button">
+                <property name="toolTip">
+                 <string>Find the dipole current to center the beam in the C2V dipole</string>
+                </property>
                 <property name="text">
                  <string>Find Dipole Current</string>
                 </property>
@@ -1421,6 +1665,9 @@
               </item>
               <item row="2" column="1">
                <widget class="QDoubleSpinBox" name="Linac1_Dipole_Step_Set">
+                <property name="toolTip">
+                 <string>Step size for the C2V dipole</string>
+                </property>
                 <property name="suffix">
                  <string> A</string>
                 </property>
@@ -1452,6 +1699,9 @@
              <layout class="QGridLayout" name="gridLayout_6">
               <item row="1" column="3">
                <widget class="QDoubleSpinBox" name="Linac1_Fine_PointSeperation_Set">
+                <property name="toolTip">
+                 <string>Phase seperation for the C2V BPM phase scan</string>
+                </property>
                 <property name="suffix">
                  <string>°</string>
                 </property>
@@ -1471,6 +1721,9 @@
               </item>
               <item row="2" column="3">
                <widget class="QSpinBox" name="Linac1_Fine_Range_Set">
+                <property name="toolTip">
+                 <string>Range over which to scan for the C2V BPM phase scan</string>
+                </property>
                 <property name="suffix">
                  <string>°</string>
                 </property>
@@ -1481,6 +1734,9 @@
               </item>
               <item row="0" column="3">
                <widget class="QSpinBox" name="Linac1_Fine_NShots_Set">
+                <property name="toolTip">
+                 <string>Number of BPM readings to average for the C2V BPM phase scan</string>
+                </property>
                 <property name="maximum">
                  <number>100</number>
                 </property>
@@ -1513,6 +1769,9 @@
                   <height>23</height>
                  </size>
                 </property>
+                <property name="toolTip">
+                 <string>Accurately crest Linac 1 with the C2V BPM</string>
+                </property>
                 <property name="text">
                  <string>Fine Crest Linac with BPM</string>
                 </property>
@@ -1543,6 +1802,9 @@
               </item>
               <item row="2" column="1">
                <widget class="QSpinBox" name="Linac1_Fine_Range_Start">
+                <property name="toolTip">
+                 <string>Center point of the C2V BPM phase scan</string>
+                </property>
                 <property name="suffix">
                  <string>°</string>
                 </property>
@@ -1561,6 +1823,9 @@
                   <width>0</width>
                   <height>19</height>
                  </size>
+                </property>
+                <property name="toolTip">
+                 <string>Press to set the center point of the phase scan to the current Linac 1 phase</string>
                 </property>
                 <property name="layoutDirection">
                  <enum>Qt::LeftToRight</enum>
@@ -1583,6 +1848,9 @@
                   <width>0</width>
                   <height>23</height>
                  </size>
+                </property>
+                <property name="toolTip">
+                 <string>Accurately crest Linac 1 with the C2V Screen - Screen must be in!</string>
                 </property>
                 <property name="text">
                  <string>Fine Crest Linac with Screen</string>
@@ -1610,6 +1878,9 @@
                 <property name="enabled">
                  <bool>true</bool>
                 </property>
+                <property name="toolTip">
+                 <string>C2V dipole current equivalent for the beam momentum</string>
+                </property>
                 <property name="suffix">
                  <string> A</string>
                 </property>
@@ -1617,6 +1888,9 @@
               </item>
               <item row="1" column="0">
                <widget class="QDoubleSpinBox" name="Linac1_Momentum_Set">
+                <property name="toolTip">
+                 <string>Momentum equivalent for the C2V dipole current</string>
+                </property>
                 <property name="suffix">
                  <string> MeV/c</string>
                 </property>
@@ -1675,6 +1949,9 @@
               </item>
               <item row="1" column="0" colspan="2">
                <widget class="QPushButton" name="Linac1_SetPhase_Button">
+                <property name="toolTip">
+                 <string>Set the final Linac 1 phase as crest + Off-crest phase</string>
+                </property>
                 <property name="text">
                  <string>Set Linac Phase</string>
                 </property>
@@ -1685,6 +1962,9 @@
               </item>
               <item row="0" column="1">
                <widget class="QDoubleSpinBox" name="Linac1_OffCrest_Phase_Set">
+                <property name="toolTip">
+                 <string>Phase offset from crest for Linac 1</string>
+                </property>
                 <property name="suffix">
                  <string>°</string>
                 </property>
@@ -1931,10 +2211,72 @@
   </action>
  </widget>
  <tabstops>
+  <tabstop>Gun_Amp_Set</tabstop>
+  <tabstop>Gun_TurnOn_Button</tabstop>
+  <tabstop>Gun_LoadBURT_Button</tabstop>
+  <tabstop>Gun_LinacTiming_Off_Button</tabstop>
+  <tabstop>Gun_Rough_NShots_Set</tabstop>
+  <tabstop>Gun_Rough_PointSeperation_Set</tabstop>
+  <tabstop>Gun_Rough_Fit_Offset</tabstop>
+  <tabstop>Gun_Rough_Button</tabstop>
+  <tabstop>Gun_Dipole_Start_Set</tabstop>
+  <tabstop>Gun_Dipole_End_Set</tabstop>
+  <tabstop>Gun_Dipole_Step_Set</tabstop>
+  <tabstop>Gun_Dipole_Button</tabstop>
+  <tabstop>Gun_Fine_NShots_Set</tabstop>
+  <tabstop>Gun_Fine_PointSeperation_Set</tabstop>
+  <tabstop>Gun_Fine_Update_Start_Button</tabstop>
+  <tabstop>Gun_Fine_Range_Start</tabstop>
+  <tabstop>Gun_Fine_Range_Set</tabstop>
+  <tabstop>Gun_Fine_Button</tabstop>
+  <tabstop>Gun_Fine_Screen_Button</tabstop>
+  <tabstop>Gun_Momentum_Set</tabstop>
+  <tabstop>Gun_Dipole_Set</tabstop>
+  <tabstop>Gun_EnergySet_Button</tabstop>
+  <tabstop>Gun_OffCrest_Phase_Set</tabstop>
+  <tabstop>Gun_SetPhase_Button</tabstop>
+  <tabstop>Linac1_Amp_Step_Set</tabstop>
+  <tabstop>Linac1_Amp_Set</tabstop>
+  <tabstop>Linac1_TurnOn_Button</tabstop>
+  <tabstop>Linac1_LoadBURT_Button</tabstop>
+  <tabstop>Linac1_LinacTiming_Off_Button</tabstop>
+  <tabstop>Linac1_LinacTiming_On_Button</tabstop>
+  <tabstop>Linac1_Rough_NShots_Set</tabstop>
+  <tabstop>Linac1_Rough_PointSeperation_Set</tabstop>
+  <tabstop>Linac1_Rough_Fit_Offset</tabstop>
+  <tabstop>Linac1_Rough_Button</tabstop>
+  <tabstop>Linac1_Dipole_Start_Set</tabstop>
+  <tabstop>Linac1_Dipole_End_Set</tabstop>
+  <tabstop>Linac1_Dipole_Step_Set</tabstop>
+  <tabstop>Linac1_Dipole_Button</tabstop>
+  <tabstop>Linac1_Fine_NShots_Set</tabstop>
+  <tabstop>Linac1_Fine_PointSeperation_Set</tabstop>
+  <tabstop>Linac1_Fine_Update_Start_Button</tabstop>
+  <tabstop>Linac1_Fine_Range_Start</tabstop>
+  <tabstop>Linac1_Fine_Range_Set</tabstop>
+  <tabstop>Linac1_Fine_Button</tabstop>
+  <tabstop>Linac1_Fine_Screen_Button</tabstop>
+  <tabstop>Linac1_Momentum_Set</tabstop>
+  <tabstop>Linac1_Dipole_Set</tabstop>
+  <tabstop>Linac1_EnergySet_Button</tabstop>
+  <tabstop>Linac1_OffCrest_Phase_Set</tabstop>
+  <tabstop>Linac1_SetPhase_Button</tabstop>
+  <tabstop>Finish_Button</tabstop>
+  <tabstop>Abort_Button</tabstop>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>Dipole_Monitor</tabstop>
+  <tabstop>Gun_Phase_Monitor</tabstop>
   <tabstop>checkBox_deguassQ</tabstop>
   <tabstop>checkBox_deguassD</tabstop>
+  <tabstop>Linac1_Amp_Monitor</tabstop>
   <tabstop>checkBox_deguassC</tabstop>
+  <tabstop>checkBox_quadOff</tabstop>
+  <tabstop>checkBox_corrOff</tabstop>
+  <tabstop>setupMagnetsButton</tabstop>
+  <tabstop>Gun_Amp_Monitor</tabstop>
+  <tabstop>Linac1_Phase_Monitor</tabstop>
   <tabstop>checkBox_deguassS</tabstop>
+  <tabstop>Linac1_Timing_Monitor</tabstop>
  </tabstops>
  <resources/>
  <connections/>
