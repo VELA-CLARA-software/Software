@@ -112,7 +112,7 @@ class procedure(object):
         # omfg what a mess
 
         self.data.values[data.y_proj] = img_data.sum(axis=0)
-        self.data.values[data.x_proj] = img_data.sum(axis=0)
+        self.data.values[data.x_proj] = img_data.sum(axis=1)
 
         if self.data.values[data.average]:
 
