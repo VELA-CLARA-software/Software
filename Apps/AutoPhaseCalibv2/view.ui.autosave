@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1139</width>
-    <height>932</height>
+    <height>959</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -508,7 +508,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="Gun_Tab">
        <attribute name="icon">
@@ -605,25 +605,6 @@
                 </property>
                </widget>
               </item>
-              <item row="0" column="3">
-               <widget class="QSpinBox" name="Gun_Amp_Step_Set">
-                <property name="toolTip">
-                 <string>Ramp Rate</string>
-                </property>
-                <property name="suffix">
-                 <string>/sec</string>
-                </property>
-                <property name="maximum">
-                 <number>1000</number>
-                </property>
-                <property name="singleStep">
-                 <number>100</number>
-                </property>
-                <property name="value">
-                 <number>500</number>
-                </property>
-               </widget>
-              </item>
               <item row="1" column="0" colspan="3">
                <widget class="QLabel" name="label_13">
                 <property name="minimumSize">
@@ -696,6 +677,25 @@
                  </size>
                 </property>
                </spacer>
+              </item>
+              <item row="0" column="3">
+               <widget class="QSpinBox" name="Gun_Amp_Step_Set">
+                <property name="toolTip">
+                 <string>Ramp Rate</string>
+                </property>
+                <property name="suffix">
+                 <string>/sec</string>
+                </property>
+                <property name="maximum">
+                 <number>1000</number>
+                </property>
+                <property name="singleStep">
+                 <number>100</number>
+                </property>
+                <property name="value">
+                 <number>500</number>
+                </property>
+               </widget>
               </item>
              </layout>
             </widget>
@@ -2211,7 +2211,6 @@
   </action>
  </widget>
  <tabstops>
-  <tabstop>Gun_Amp_Step_Set</tabstop>
   <tabstop>Gun_Amp_Set</tabstop>
   <tabstop>Gun_TurnOn_Button</tabstop>
   <tabstop>Gun_LoadBURT_Button</tabstop>

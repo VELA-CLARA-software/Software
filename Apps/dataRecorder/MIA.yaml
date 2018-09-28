@@ -1,0 +1,71 @@
+Charge:
+  CLA-S01-DIA-WCM-01:Q:
+    timer: 10
+    name: 'WCM Charge'
+  CLA-LAS-DIA-EM-01:E:
+    timer: 10
+    name: 'Laser Energy'
+BPMs:
+  CLA-S01-DIA-BPM-01:X:
+    timer: 10
+    name: 'S01-BPM-01:X'
+  CLA-S01-DIA-BPM-01:Y:
+    timer: 10
+    name: 'S01-BPM-01:Y'
+  CLA-S02-DIA-BPM-01:X:
+    timer: 10
+    name: 'S02-BPM-01:X'
+  CLA-S02-DIA-BPM-01:Y:
+    timer: 10
+    name: 'S02-BPM-01:Y'
+  CLA-C2V-DIA-BPM-01:X:
+    timer: 10
+    name: 'C2V-BPM-01:X'
+  CLA-C2V-DIA-BPM-01:Y:
+    timer: 10
+    name: 'C2V-BPM-01:Y'
+Gun:
+  CLA-GUN-LRF-CTRL-01:ad1:ch1:power_remote.POWER:
+    arrayData: 1017
+    timer: 10
+    name: 'Gun Klystron FWD'
+  CLA-GUN-RF-LRRG-01:RT:
+    timer: 10
+    name: 'Gun Temperature'
+  CLA-GUN-LRF-CTRL-01:ad1:ch3:power_remote.POWER:
+    arrayData: 1017
+    timer: 10
+    name: 'Gun Cavity FWD'
+  CLA-GUN-LRF-CTRL-01:ad1:ch3:amp_phase.PHASE_REMOTE:
+    arrayData: 1017
+    timer: 10
+    name: 'Gun Cavity Phase'
+  CLA-GUN-LRF-CTRL-01:ad1:ch4:power_remote.POWER:
+    arrayData: 1017
+    timer: 10
+    name: 'Gun Cavity REV'
+Linac:
+  CLA-L01-LRF-CTRL-01:ad1:ch1:power_remote.POWER:
+    arrayData: 1017
+    timer: 10
+    name: 'Linac Klystron FWD'
+  CLA-L01-LRF-CTRL-01:ad1:ch3:power_remote.POWER:
+    arrayData: 1017
+    timer: 10
+    name: 'Linac Cavity FWD'
+  CLA-L01-LRF-CTRL-01:ad1:ch3:amp_phase.PHASE_REMOTE:
+    arrayData: 1017
+    timer: 10
+    name: 'Linac Cavity Phase'
+  CLA-L01-LRF-CTRL-01:ad1:ch4:power_remote.POWER:
+    arrayData: 1017
+    timer: 10
+    name: 'Linac Cavity REV'
+  CLA-L01-LRF-CTRL-01:ad1:ch6:power_remote.POWER:
+    arrayData: 1017
+    timer: 10
+    name: 'Linac Probe FWD'
+  CLA-L01-LRF-CTRL-01:ad1:ch6:amp_phase.PHASE_REMOTE:
+    arrayData: 1017
+    timer: 10
+    name: 'Linac Probe Phase'

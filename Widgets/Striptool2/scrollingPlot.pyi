@@ -10,20 +10,20 @@
 # when you make software releases of the extension module that it
 # describes.
 
-import PyQt5.QtWidgets
-import PyQt5.QtGui
-import colours
-import PyQt4.QtCore
-import numpy
+import math
 import pyqtgraph
+import colours
 import datetime
 import sys
 import collections
-import time
+import PyQt5.QtGui
+import PyQt4.QtCore
 import PyQt4.QtGui
 import os
+import numpy
+import time
 import PyQt5.QtCore
-import math
+import PyQt5.QtWidgets
 
 # This is not Python source even if it looks so. Make it clear for
 # now. This was decided by PEP 484 designers.

@@ -1,4 +1,3 @@
-# from PyQt4.QtCore import QThread, QObject, pyqtSignal, QTimer
 import sys,os
 import time
 import scipy.constants as physics
