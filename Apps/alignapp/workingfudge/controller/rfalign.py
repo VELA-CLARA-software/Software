@@ -1,5 +1,5 @@
 import numpy as np
-import os,sys
+import os,sys,time
 
 sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release')
 os.environ["PATH"] = os.environ["PATH"]+";\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release\\root_v5.34.34\\bin\\"
@@ -59,18 +59,23 @@ class gunrfaligner(object):
     def doscan(self):
         for x in self.xrange:
             for y in self.yrange:
+                time.sleep(1)
                 print 'VC position', x, y, '\n'
                 self.cam_control.startAcquiring('S01-CAM-01')
                 self.cam_control.collectAndSave('S01-CAM-01',1)
-            """
-#           caput('EBT-LAS-OPT-HWP-1:ROT:MABSS',135)
-            caput('EBT-LAS-OPT-HWP-2:ROT:MABS',120)
-            time.sleep(3)
-            mylasmove.setposition(x,y,5,0.05)
-            caput('EBT-LAS-OPT-HWP-2:ROT:MABS',80)  
-            time.sleep(3)
+                time.sleep(1)
+                print "THENAME ", self.cam_control.getClaraDAQObj('S01-CAM-01').latestFilename
+                
+##           caput('EBT-LAS-OPT-HWP-1:ROT:MABSS',135)
+##            caput('EBT-LAS-OPT-HWP-2:ROT:MABS',120)
+                time.sleep(3)
+            
+##            mylasmove.setposition(x,y,5,0.05)
+##            caput('EBT-LAS-OPT-HWP-2:ROT:MABS',80)  
+##            time.sleep(3)
         
-            raw_input("Press Enter to continue...")
+                raw_input("Press Enter to continue...")
+                """
             # get the VC image
             cameras.setCamera('VC')
             time.sleep(1)

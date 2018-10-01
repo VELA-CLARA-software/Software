@@ -49,13 +49,24 @@ class alignAppController(object):
         #self.localMagnetController = self.magInit.virtual_VELA_INJ_Magnet_Controller() 
         self.mygunalign = gunrfaligner(argv)
         self.startView.dorfalign.clicked.connect(self.falign)
+        # SOME DEFAULT VALUES FOR THE SCAN
+        self.startView.vcxminbox.setValue(1.3)   
+        self.startView.vcmaxxbox.setValue(3.3)   
+        self.startView.npxbox.setValue(2)   
+        self.startView.vcminybox.setValue(1.3)  
+        self.startView.vcmaxybox.setValue(2.3)  
+        self.startView.npybox.setValue(2)  
+        self.startView.rfphi1box.setValue(15)
+        self.startView.rfphi2box.setValue(30)
+        self.startView.rfphi2box_4.setValue(155)
+        
 		
     def falign(self):
         print "falign function"
         self.setparams()
 #        raw_input("ready to do scan? Press enter to continue")
         self.mygunalign.doscan()
-
+        
     def setparams(self):
         self.mygunalign.setscangrid(self.startView.vcxminbox.value(),
                                     self.startView.vcmaxxbox.value(),
@@ -67,4 +78,3 @@ class alignAppController(object):
                                     self.startView.rfphi2box.value())
         self.mygunalign.setsolval(self.startView.rfphi2box_4.value())
         self.mygunalign.printtheparams()
- 
