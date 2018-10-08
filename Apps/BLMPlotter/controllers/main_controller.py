@@ -46,7 +46,7 @@ class main_controller(controller_base):
 
         controller_base.data.values[dat.ready_to_go] = self.data_monitor.init_monitor_states()
         controller_base.blm_handler.set_blm_buffer(controller_base.data.values[dat.num_shots])
-        # controller_base.data_monitor.blm_monitor.check_blm_is_monitoring()
+        controller_base.data_monitor.blm_monitor.check_blm_is_monitoring()
         self.blm_scan_log = self.logger.get_blm_scan_log()
     #     #
         time.sleep(1)
@@ -71,8 +71,9 @@ class main_controller(controller_base):
 
             if controller_base.data.values[dat.save_request]:
                 self.blm_scan_log = self.logger.get_blm_scan_log()
+                self.get_blm_buffer()
                 self.data = {"chg_data": controller_base.data.values[dat.charge_values],
-                             "blm_voltages": controller_base.data.values[dat.blm_voltages]}
+                             "blm_voltages": controller_base.data.values[dat.blm_buffer]}
                 self.writetohdf5(filename=self.blm_scan_log,data=self.data)
                 controller_base.data.values[dat.save_request] = False
                 controller_base.data.values[dat.buffer_message] = ""
@@ -102,12 +103,20 @@ class main_controller(controller_base):
         controller_base.data_monitor.charge_monitor.update_bunch_charge()
         QApplication.processEvents()
 
+    def get_blm_buffer(self):
+        controller_base.data_monitor.blm_monitor.update_blm_buffer()
+        QApplication.processEvents()
+
     def check_buffers(self):
         if controller_base.data_monitor.charge_monitor.check_buffer() == True and controller_base.data_monitor.blm_monitor.check_buffer() == True:
             controller_base.data.values[dat.buffers_full] = True
 
     def clear_values(self):
         controller_base.data.values[dat.blm_voltages] = {}
+        for i in controller_base.data.values[dat.blm_waveform_pvs]:
+            controller_base.data.values[dat.blm_voltages][i] = []
+        for i in controller_base.data.values[dat.blm_time_pvs]:
+            controller_base.data.values[dat.blm_time][i] = []
         controller_base.data.values[dat.charge_values] = []
 
     # over load close

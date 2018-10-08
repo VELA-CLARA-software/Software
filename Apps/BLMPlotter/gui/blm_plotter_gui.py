@@ -188,17 +188,19 @@ class blm_plotter_gui(QMainWindow, Ui_MainWindow, base):
 
 	def plot_blm_values(self):
 		self.blmPlot.clear()
-		self.pen_vals = {self.data.values[dat.blm_names][0]:'b',
-						 self.data.values[dat.blm_names][1]:'r'}
+		self.pen_vals = ['b','r','y','g']
 		self.vbx = self.blmPlot.vb
 		self.min_vals = []
 		self.max_vals = []
-		for i in self.data.values[dat.blm_names]:
-			self.min_vals.append(min(self.data.values[dat.blm_voltages][i][-1]))
-			self.max_vals.append(max(self.data.values[dat.blm_voltages][i][-1]))
-		for i in self.data.values[dat.blm_names]:
+		self.j = 0
+		for i in self.data.values[dat.blm_waveform_pvs]:
+			self.min_vals.append(min(self.data.values[dat.blm_voltages][str(i)]))
+			self.max_vals.append(max(self.data.values[dat.blm_voltages][str(i)]))
+		for i, k in zip(self.data.values[dat.blm_waveform_pvs],self.data.values[dat.blm_time_pvs]):
 			self.vbx.setYRange(min(self.min_vals),max(self.max_vals))
-			self.blmplot = self.blmPlot.plot(pen=mkPen(self.pen_vals[i],width=3))
+			self.blmplot = self.blmPlot.plot(pen=mkPen(self.pen_vals[self.j],width=1))
+			# self.blmplot = self.blmPlot.plot()
 			self.blmplot.setData(self.data.values[dat.blm_num_values],
-							   self.data.values[dat.blm_voltages][i][-1])
+							   self.data.values[dat.blm_voltages][str(i)])
+			self.j = self.j+1
 		self.data.values[dat.plots_done] = True
