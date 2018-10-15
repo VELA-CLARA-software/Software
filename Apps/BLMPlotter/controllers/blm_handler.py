@@ -1,7 +1,7 @@
 from blm_handler_base import blm_handler_base
 import data.blm_plotter_data_base as dat
 import numpy, collections
-from scipy import signal
+from scipy import signal, constants
 from scipy.fftpack import fft, ifft
 from random import randint
 
@@ -66,3 +66,15 @@ class blm_handler(blm_handler_base):
     def set_filters(self):
         for i in blm_handler_base.data.values[dat.blm_waveform_pvs]:
             blm_handler_base.data.values[dat.blm_voltages][str(i)] = blm_handler_base.data.values[dat.blm_voltages][str(i)] * abs(blm_handler_base.data.values[dat.deconvolution_filter])
+
+    def calibrate_blm(self):
+        self.str_to_pv_1 = blm_handler_base.data.values[dat.str_to_pv][
+            blm_handler_base.data.values[dat.calibrate_channel_names][0]]
+        self.str_to_pv_2 = blm_handler_base.data.values[dat.str_to_pv][
+            blm_handler_base.data.values[dat.calibrate_channel_names][1]]
+        print blm_handler_base.data.values[dat.peak_voltages]
+        print blm_handler_base.data.values[dat.peak_voltages][self.str_to_pv_1][1]
+        print blm_handler_base.data.values[dat.peak_voltages][self.str_to_pv_2][1]
+        self.delta_t = blm_handler_base.data.values[dat.peak_voltages][self.str_to_pv_1][1] - blm_handler_base.data.values[dat.peak_voltages][self.str_to_pv_2][1]
+        blm_handler_base.data.values[dat.delta_x] = self.delta_t / blm_handler_base.data.values[dat.fibre_speed]
+        blm_handler_base.data.values[dat.calibration_time] = blm_handler_base.data.values[dat.delta_x] / constants.speed_of_light

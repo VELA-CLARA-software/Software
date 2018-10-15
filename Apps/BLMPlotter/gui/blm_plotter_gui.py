@@ -53,6 +53,7 @@ class blm_plotter_gui(QMainWindow, Ui_MainWindow, base):
 		# CONNECT BUTTONS TO FUNCTIONS
 		self.saveDataButton.clicked.connect(self.handle_save_data)
 		self.setNumShotsButton.clicked.connect(self.set_num_shots)
+		self.calibrateButton.clicked.connect(self.set_calibrate)
 		# self.attenuationButton.toggled.connect(lambda: self.handle_measure_type(self.attenuationButton))
 		# self.delayButton.toggled.connect(lambda: self.handle_measure_type(self.delayButton))
 		# # widgets are held in dict, with same keys as data
@@ -92,6 +93,10 @@ class blm_plotter_gui(QMainWindow, Ui_MainWindow, base):
 	def set_num_shots(self):
 		self.data.values[dat.num_shots_request] = True
 		self.data.values[dat.num_shots] = int(self.numShotsOutputWidget.toPlainText())
+
+	def set_calibrate(self):
+		self.data.values[dat.calibrate_request] = True
+		self.data.values[dat.calibrate_channel_names] = [str(self.channelNamesComboBox1.currentText()),str(self.channelNamesComboBox2.currentText())]
 
 	def init_widget_dict(self, data):
 		if self.data.values[dat.save_request] == False:
