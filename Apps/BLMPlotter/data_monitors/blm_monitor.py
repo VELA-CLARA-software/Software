@@ -37,18 +37,28 @@ class blm_monitor(monitor):
         monitor.data.values[dat.blm_distance_start] = 0.0
         monitor.data.values[dat.blm_distance_end] = 1.0
         monitor.data.values[dat.blm_names] = monitor.blm_control.getBLMNames()
+        monitor.data.values[dat.blm_pvs] = monitor.blm_control.getBLMPVs()
+        monitor.data.values[dat.blm_time_pvs] = monitor.blm_control.getBLMTimePVs()
+        monitor.data.values[dat.blm_waveform_pvs] = monitor.blm_control.getBLMWaveformPVs()
+        print monitor.data.values[dat.blm_waveform_pvs]
 
     def update_blm_voltages(self):
-        # PLACEHOLDER: CHANGE FOR BLM DATA ACQUISITION FUNCTION
-        for i in monitor.data.values[dat.blm_names]:
-            monitor.data.values[dat.blm_voltages][i].append(numpy.random.rand(1,10)[0])
+        for i, j in zip(monitor.data.values[dat.blm_waveform_pvs],monitor.data.values[dat.blm_time_pvs]):
+            monitor.data.values[dat.blm_voltages][str(i)] = monitor.blm_control.getBLMTrace(monitor.data.values[dat.blm_names][0], i)
+            monitor.data.values[dat.blm_time][str(j)] = monitor.blm_control.getBLMTrace(monitor.data.values[dat.blm_names][0], j)
+        monitor.data.values[dat.has_blm_data] = True
+
+    def update_blm_buffer(self):
+        for i, j in zip(monitor.data.values[dat.blm_waveform_pvs],monitor.data.values[dat.blm_time_pvs]):
+            monitor.data.values[dat.blm_buffer][str(i)] = monitor.blm_control.getBLMTraceBuffer(monitor.data.values[dat.blm_names][0], i)
+            print type(monitor.data.values[dat.blm_buffer].keys()[0])
         monitor.data.values[dat.has_blm_data] = True
 
     def update_blm_distance(self):
         monitor.data.values[dat.blm_distance_start] = 0
         monitor.data.values[dat.blm_distance_end] = 1
         monitor.data.values[dat.blm_num_values] = numpy.linspace(monitor.data.values[dat.blm_distance_start],monitor.data.values[dat.blm_distance_end],
-                                                                 len(monitor.data.values[dat.blm_voltages][monitor.data.values[dat.blm_names][0]][-1]))
+                                                                 len(monitor.data.values[dat.blm_voltages][str(monitor.data.values[dat.blm_waveform_pvs][0])]))
         monitor.data.values[dat.has_blm_data] = True
 
     def check_buffer(self):

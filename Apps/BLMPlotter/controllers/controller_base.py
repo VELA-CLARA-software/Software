@@ -44,7 +44,7 @@ class controller_base(base):
 		controller_base.charge_handler = charge_handler.charge_handler()
 
 	def start_blm_control(self):
-		base.blm_control = base.blm_init.getBLMController(self.machine_mode,self.machine_area)
+		base.blm_control = base.blm_init.physical_C2B_BLM_Controller()#(self.machine_mode,self.machine_area)
 		base.logger.message('Monitoring BLMs: ' + ' '.join(self.get_blm_names()), True)
 		base.config.blm_config['BLM_NAMES'] = self.get_blm_names()
 		controller_base.blm_handler = blm_handler.blm_handler()
