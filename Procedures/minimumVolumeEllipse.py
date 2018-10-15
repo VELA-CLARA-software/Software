@@ -158,14 +158,14 @@ if __name__ == "__main__":
     print (timeit.timeit(part, number=10))
 
     Q = P#np.array(remove_Hull(P, gaussian_fraction(1, len(P))))
-    (center, radii, rotation, hullP) = ET.getMinVolEllipse(Q, .01)
+    (center, radii, rotation, hullP) = ET.getMinVolEllipse(Q, .001)
 
     cov = np.cov(np.transpose(P))
     rmsemit = np.sqrt(np.linalg.det(cov))
     w, v = np.linalg.eig(cov)
 
-    print ('emittance = ', radii[0] * radii[1])
-    print ('rms emittance = ', rmsemit)
+    # print ('emittance = ', radii[0] * radii[1])
+    # print ('rms emittance = ', rmsemit)
     fig = plt.figure()
     ax = fig.add_subplot(111)
 
@@ -178,7 +178,11 @@ if __name__ == "__main__":
     P = np.array(P)
     ax.scatter(P[::int(np.ceil(len(P)/10000)),0], P[::int(np.ceil(len(P)/10000)),1], color='g', s=1)
     ax.scatter(hullP[:,0], hullP[:,1], color='r', s=10)
-
+    hull = scipy.spatial.ConvexHull(P)
+    print 'hull = ', hull
+    for simplex in hull.simplices:
+        print simplex
+        ax.plot(P[simplex, 0], P[simplex, 1], 'k-')
     plt.show()
     plt.close(fig)
     del fig
