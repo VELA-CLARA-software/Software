@@ -42,6 +42,13 @@ blm_buffer_full = 'blm_buffer_full'
 charge_buffer_full = 'charge_buffer_full'
 buffers_full = 'buffers_full'
 buffer_message = 'buffer_message'
+noise_data = 'noise_data'
+single_photon_data = 'single_photon_data'
+apply_filter = 'apply_filter'
+blackman_size = 'blackman_size'
+deconvolution_filter = 'deconvolution_filter'
+has_sparsified = 'has_sparsified'
+blm_object = 'blm_object'
 
 all_value_keys = [time_stamp,
                   bunch_charge,
@@ -76,7 +83,14 @@ all_value_keys = [time_stamp,
                   blm_buffer_full,
                   charge_buffer_full,
                   buffers_full,
-                  buffer_message
+                  buffer_message,
+                  noise_data,
+                  single_photon_data,
+                  apply_filter,
+                  blackman_size,
+                  deconvolution_filter,
+                  has_sparsified,
+                  blm_object
                   ]
 
 class blm_plotter_data_base(QObject):
@@ -130,6 +144,13 @@ class blm_plotter_data_base(QObject):
     values[charge_buffer_full] = False
     values[buffers_full] = False
     values[buffer_message] = ""
+    values[apply_filter] = False
+    values[noise_data] = []
+    values[single_photon_data] = []
+    values[blackman_size] = dummy_int
+    values[deconvolution_filter] = []
+    values[has_sparsified] = False
+    values[blm_object] = {}
     # amp_pwr_mean_data = {}
 
     #logger

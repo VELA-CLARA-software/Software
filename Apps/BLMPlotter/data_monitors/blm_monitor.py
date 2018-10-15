@@ -40,7 +40,6 @@ class blm_monitor(monitor):
         monitor.data.values[dat.blm_pvs] = monitor.blm_control.getBLMPVs()
         monitor.data.values[dat.blm_time_pvs] = monitor.blm_control.getBLMTimePVs()
         monitor.data.values[dat.blm_waveform_pvs] = monitor.blm_control.getBLMWaveformPVs()
-        print monitor.data.values[dat.blm_waveform_pvs]
 
     def update_blm_voltages(self):
         for i, j in zip(monitor.data.values[dat.blm_waveform_pvs],monitor.data.values[dat.blm_time_pvs]):
@@ -49,9 +48,8 @@ class blm_monitor(monitor):
         monitor.data.values[dat.has_blm_data] = True
 
     def update_blm_buffer(self):
-        for i, j in zip(monitor.data.values[dat.blm_waveform_pvs],monitor.data.values[dat.blm_time_pvs]):
+        for i in monitor.data.values[dat.blm_waveform_pvs]:
             monitor.data.values[dat.blm_buffer][str(i)] = monitor.blm_control.getBLMTraceBuffer(monitor.data.values[dat.blm_names][0], i)
-            print type(monitor.data.values[dat.blm_buffer].keys()[0])
         monitor.data.values[dat.has_blm_data] = True
 
     def update_blm_distance(self):

@@ -46,6 +46,8 @@ class main_controller(controller_base):
 
         controller_base.data.values[dat.ready_to_go] = self.data_monitor.init_monitor_states()
         controller_base.blm_handler.set_blm_buffer(controller_base.data.values[dat.num_shots])
+        controller_base.blm_handler.get_noise_data()
+        controller_base.blm_handler.get_single_photon_data()
         controller_base.data_monitor.blm_monitor.check_blm_is_monitoring()
         self.blm_scan_log = self.logger.get_blm_scan_log()
     #     #
@@ -59,9 +61,11 @@ class main_controller(controller_base):
                         controller_base.charge_handler.set_charge_buffer(controller_base.data.values[dat.num_shots])
                         controller_base.data.values[dat.num_shots_request] = False
                         # while controller_base.data.values[dat.buffers_full] == False:
+                    controller_base.data.values[dat.has_blm_data] = False
                     self.check_buffers()
                     self.get_charge_values()
                     self.get_blm_values()
+                    controller_base.data.values[dat.has_blm_data] = True
                     break
                 else:
                     QApplication.processEvents()
@@ -72,8 +76,15 @@ class main_controller(controller_base):
             if controller_base.data.values[dat.save_request]:
                 self.blm_scan_log = self.logger.get_blm_scan_log()
                 self.get_blm_buffer()
+                if controller_base.data.values[dat.apply_filter]:
+                    if not controller_base.data.values[dat.has_sparsified]:
+                        for i in controller_base.data.values[dat.blm_buffer]:
+                            for j in i:
+                                j = j * abs(controller_base.data.values[dat.deconvolution_filter])
                 self.data = {"chg_data": controller_base.data.values[dat.charge_values],
-                             "blm_voltages": controller_base.data.values[dat.blm_buffer]}
+                             "blm_voltages": controller_base.data.values[dat.blm_buffer],
+                             "filter_applied": controller_base.data.values[dat.apply_filter],
+                             "filter_size": controller_base.data.values[dat.blackman_size]}
                 self.writetohdf5(filename=self.blm_scan_log,data=self.data)
                 controller_base.data.values[dat.save_request] = False
                 controller_base.data.values[dat.buffer_message] = ""
@@ -97,6 +108,14 @@ class main_controller(controller_base):
     def get_blm_values(self):
         controller_base.data_monitor.blm_monitor.update_blm_voltages()
         controller_base.data_monitor.blm_monitor.update_blm_distance()
+        if controller_base.data.values[dat.apply_filter]:
+            if not controller_base.data.values[dat.has_sparsified]:
+                controller_base.data.values[dat.noise_data] = controller_base.blm_handler.sparsify_list(controller_base.data.values[dat.noise_data],
+                                                                                                        controller_base.data.values[dat.blm_voltages][str(controller_base.data.values[dat.blm_waveform_pvs][0])])
+                controller_base.data.values[dat.single_photon_data] = controller_base.blm_handler.sparsify_list(controller_base.data.values[dat.single_photon_data],
+                                                                                                                controller_base.data.values[dat.blm_voltages][str(controller_base.data.values[dat.blm_waveform_pvs][0])])
+            controller_base.blm_handler.deconvolution_filter()
+            controller_base.blm_handler.set_filters()
         QApplication.processEvents()
 
     def get_charge_values(self):

@@ -7,7 +7,7 @@ from gui_mainwindow import Ui_MainWindow
 import data.blm_plotter_data_base as dat
 from pyqtgraph import mkPen
 from base.base import base
-import numpy as np
+import numpy
 import pyqtgraph
 
 class blm_plotter_gui(QMainWindow, Ui_MainWindow, base):
@@ -99,63 +99,17 @@ class blm_plotter_gui(QMainWindow, Ui_MainWindow, base):
 		# MANUALLY CONNECT THESE UP :/
 		# self.widget[dat.time_stamp] = self.time_stamp_outputwidget
 		self.widget[dat.bunch_charge] = self.bunchChargeOutputWidget
-		# self.widget[dat.set_sa_start] = self.lowerATTBoundOutputWidget
-		# self.widget[dat.set_sa_end] = self.upperATTBoundOutputWidget
-		# self.widget[dat.get_ra1] = self.get_ra1_outputwidget
-		# self.widget[dat.get_ra2] = self.get_ra2_outputwidget
-		# self.widget[dat.set_sa1_current] = self.set_sa1_current_outputwidget
-		# self.widget[dat.set_sa2_current] = self.set_sa2_current_outputwidget
 		self.widget[dat.num_shots] = self.numShotsOutputWidget
-		# self.widget[dat.bpm_u11] = self.bpm_u11_outputwidget
-		# self.widget[dat.bpm_u12] = self.bpm_u12_outputwidget
-		# self.widget[dat.bpm_u13] = self.bpm_u13_outputwidget
-		# self.widget[dat.bpm_u13] = self.bpm_u13_outputwidget
-		# self.widget[dat.bpm_u14] = self.bpm_u14_outputwidget
-		# self.widget[dat.bpm_u21] = self.bpm_u21_outputwidget
-		# self.widget[dat.bpm_u22] = self.bpm_u22_outputwidget
-		# self.widget[dat.bpm_u23] = self.bpm_u23_outputwidget
-		# self.widget[dat.bpm_u24] = self.bpm_u24_outputwidget
-		# self.widget[dat.bpm_raw_data_mean_v11] = self.bpm_raw_data_mean_v11_outputwidget
-		# self.widget[dat.bpm_raw_data_mean_v12] = self.bpm_raw_data_mean_v12_outputwidget
-		# self.widget[dat.bpm_raw_data_mean_v21] = self.bpm_raw_data_mean_v21_outputwidget
-		# self.widget[dat.bpm_raw_data_mean_v22] = self.bpm_raw_data_mean_v22_outputwidget
-		# self.widget[dat.bpm_v11_v12_sum] = self.bpm_v11_v12_sum_outputwidget
-		# self.widget[dat.bpm_v21_v22_sum] = self.bpm_v21_v22_sum_outputwidget
-		# self.widget[dat.att_1_cal] = self.att_1_cal_outputwidget
-		# self.widget[dat.att_2_cal] = self.att_2_cal_outputwidget
-		# self.widget[dat.v_1_cal] = self.v_1_cal_outputwidget
-		# self.widget[dat.v_2_cal] = self.v_2_cal_outputwidget
-		# self.widget[dat.q_cal] = self.q_cal_outputwidget
 
 	def update_gui(self):
 		for key, val in self.widget.iteritems():
 			if self.value_is_new(key, base.data.values[key]):
 				self.update_widget(key, base.data.values[key], val)
-	# 	if self.data.values[dat.plots_done] and not self.data.values[dat.values_saved]:
-	# 		if self.data.values[dat.calibration_type] == 'attenuation':
-	# 			base.logger.message("BPM name " + str(self.data.values[dat.bpm_name]), True)
-	# 			base.logger.message("ATT1 Cal = " + str(self.data.values[dat.att_1_cal]), True)
-	# 			base.logger.message("ATT2 Cal = " + str(self.data.values[dat.att_2_cal]), True)
-	# 			base.logger.message("V1 Cal = " + str(self.data.values[dat.v_1_cal]), True)
-	# 			base.logger.message("V2 Cal = " + str(self.data.values[dat.v_2_cal]), True)
-	# 			base.logger.message("Q Cal = " + str(self.data.values[dat.q_cal]), True)
-	# 			self.newVals.setText("")
-	# 			self.newVals.setText("BPM name " + str(self.data.values[dat.bpm_name]) + "\n" +
-	# 									"ATT1 Cal = " + str(self.data.values[dat.att_1_cal]) + "\n" +
-	# 									"ATT2 Cal = " + str(self.data.values[dat.att_2_cal]) + "\n" +
-	# 									"V1 Cal = " + str(self.data.values[dat.v_1_cal]) + "\n" +
-	# 									"V2 Cal = " + str(self.data.values[dat.v_2_cal]) + "\n" +
-	# 									"Q Cal = " + str(self.data.values[dat.q_cal]))
-	# 		elif self.data.values[dat.calibration_type] == 'delay':
-	# 			base.logger.message("BPM name " + str(self.data.values[dat.bpm_name]), True)
-	# 			base.logger.message("New DLY1 = " + str(self.data.values[dat.new_dly_1]), True)
-	# 			base.logger.message("New DLY2 = " + str(self.data.values[dat.new_dly_2]), True)
-	# 			self.newVals.setText("")
-	# 			self.newVals.setText("BPM name " + str(self.data.values[dat.bpm_name]) + "\n" +
-	# 									"New DLY1 = " + str(self.data.values[dat.new_dly_1]) + "\n" +
-	# 									"New DLY2 = " + str(self.data.values[dat.new_dly_2]))
-	# 		self.data.values[dat.values_saved] = True
-	# 		self.calibrateButton.setEnabled(True)
+		if self.filterYesButton.isChecked():
+			self.data.values[dat.blackman_size] = int(self.filterSizeOutputWidget.toPlainText())
+			self.data.values[dat.apply_filter] = True
+		else:
+			self.data.values[dat.apply_filter] = False
 
 	# the outputwidget is update based on data type
 	def update_widget(self, key, val, widget):
@@ -170,7 +124,7 @@ class blm_plotter_gui(QMainWindow, Ui_MainWindow, base):
 			self.clip_vals[key] = widget.text()
 		elif type(val) is bool:
 			self.set_locked_enabled(widget, val, key)
-		elif type(val) is np.float64:
+		elif type(val) is numpy.float64:
 			widget.setText('%.3E' % val)
 			self.clip_vals[key] = widget.text()
 		elif type(val) is str:
@@ -199,8 +153,10 @@ class blm_plotter_gui(QMainWindow, Ui_MainWindow, base):
 		for i, k in zip(self.data.values[dat.blm_waveform_pvs],self.data.values[dat.blm_time_pvs]):
 			self.vbx.setYRange(min(self.min_vals),max(self.max_vals))
 			self.blmplot = self.blmPlot.plot(pen=mkPen(self.pen_vals[self.j],width=1))
-			# self.blmplot = self.blmPlot.plot()
-			self.blmplot.setData(self.data.values[dat.blm_num_values],
-							   self.data.values[dat.blm_voltages][str(i)])
+			self.blmdata = [self.data.values[dat.blm_time][str(k)][:-1],self.data.values[dat.blm_voltages][str(i)][:-1]]
+			# self.blmplot.setData(self.data.values[dat.blm_num_values],
+			# 				   self.data.values[dat.blm_voltages][str(i)])
+			self.blmplot.setData(x=self.blmdata[0],y=self.blmdata[1])
+			# self.blmplot.setData(self.blmdata)
 			self.j = self.j+1
 		self.data.values[dat.plots_done] = True

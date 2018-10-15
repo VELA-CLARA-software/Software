@@ -85,33 +85,6 @@ class bpm_calibration_gui(QMainWindow, Ui_MainWindow, base):
 		# MANUALLY CONNECT THESE UP :/
 		# self.widget[dat.time_stamp] = self.time_stamp_outputwidget
 		self.widget[dat.bunch_charge] = self.bunchChargeOutputWidget
-		# self.widget[dat.set_sa_start] = self.lowerATTBoundOutputWidget
-		# self.widget[dat.set_sa_end] = self.upperATTBoundOutputWidget
-		# self.widget[dat.get_ra1] = self.get_ra1_outputwidget
-		# self.widget[dat.get_ra2] = self.get_ra2_outputwidget
-		# self.widget[dat.set_sa1_current] = self.set_sa1_current_outputwidget
-		# self.widget[dat.set_sa2_current] = self.set_sa2_current_outputwidget
-		# self.widget[dat.num_shots] = self.numShotsOutputWidget
-		# self.widget[dat.bpm_u11] = self.bpm_u11_outputwidget
-		# self.widget[dat.bpm_u12] = self.bpm_u12_outputwidget
-		# self.widget[dat.bpm_u13] = self.bpm_u13_outputwidget
-		# self.widget[dat.bpm_u13] = self.bpm_u13_outputwidget
-		# self.widget[dat.bpm_u14] = self.bpm_u14_outputwidget
-		# self.widget[dat.bpm_u21] = self.bpm_u21_outputwidget
-		# self.widget[dat.bpm_u22] = self.bpm_u22_outputwidget
-		# self.widget[dat.bpm_u23] = self.bpm_u23_outputwidget
-		# self.widget[dat.bpm_u24] = self.bpm_u24_outputwidget
-		# self.widget[dat.bpm_raw_data_mean_v11] = self.bpm_raw_data_mean_v11_outputwidget
-		# self.widget[dat.bpm_raw_data_mean_v12] = self.bpm_raw_data_mean_v12_outputwidget
-		# self.widget[dat.bpm_raw_data_mean_v21] = self.bpm_raw_data_mean_v21_outputwidget
-		# self.widget[dat.bpm_raw_data_mean_v22] = self.bpm_raw_data_mean_v22_outputwidget
-		# self.widget[dat.bpm_v11_v12_sum] = self.bpm_v11_v12_sum_outputwidget
-		# self.widget[dat.bpm_v21_v22_sum] = self.bpm_v21_v22_sum_outputwidget
-		# self.widget[dat.att_1_cal] = self.att_1_cal_outputwidget
-		# self.widget[dat.att_2_cal] = self.att_2_cal_outputwidget
-		# self.widget[dat.v_1_cal] = self.v_1_cal_outputwidget
-		# self.widget[dat.v_2_cal] = self.v_2_cal_outputwidget
-		# self.widget[dat.q_cal] = self.q_cal_outputwidget
 
 	def update_gui(self):
 		for key, val in self.widget.iteritems():
