@@ -174,7 +174,7 @@ class picklePlotWidget(QWidget):
         #                     'trace_name',
         #                     ]
         try:
-            with open("HRRG.json", "r") as infile:
+            with open("October2018.json", "r") as infile:
                 self.plotorder = json.load(infile)
         except IOError:
             self.reloadSettings()
@@ -217,7 +217,7 @@ class picklePlotWidget(QWidget):
                         # print name
                         event[name] = {'name': name, 'type': 'data'}
                     pos = k[[i for i, j in enumerate(k) if j == '_'][-1]+1:]
-                    if 'NOT_SET' in data1[k.replace('name', 'EVID')]:
+                    if isinstance(data1[k.replace('name', 'EVID')], str) and 'NOT_SET' in data1[k.replace('name', 'EVID')]:
                         data1[k.replace('name', 'EVID')] = -1
                     event[name][str(pos)] = {
                                         'data': data1[k.replace('name', 'value')][:600],
@@ -225,10 +225,11 @@ class picklePlotWidget(QWidget):
                                         'time': data1[k.replace('name', 'time')],
                                         'pos': pos
                                         }
-                elif '_mask' in k:
+                elif 'lo_mask_' in k or 'hi_mask_' in k:
                     try:
                         trydict = {'name': k, 'type': 'mask', 'data': v[:600]}
                         event[k] = trydict
+                        # print 'mask = ', k
                     except:
                         print 'Error reading mask: ', k
                         event[k] = {'name': k, 'type': 'parameter', 'data': v}
@@ -282,14 +283,13 @@ class picklePlotWidget(QWidget):
                         self.plotWidget.addTab(graphicslayoutwidget, datalabel[1])
                 else:
                     datadict = alldata[datalabel]
-                    # print 'keys = ', datadict.keys()
                     if datadict['type'] == 'data':
                         j += 1
                         p = graphicslayoutwidget.addPlot(title=datalabel)
                         legendoffset = (-10,50)
                         legend = myLegend(offset=legendoffset)
                         legend.setParentItem(p)
-                        evids = [[int(i), float(datadict[str(i)][self.sortBy])] for i in datadict.keys() if 'eventID' in datadict[str(i)]]
+                        evids = [[int(i), datadict[i][self.sortBy]] for i in datadict.keys() if 'eventID' in datadict[i]]
                         evidorder =  zip(*sorted(evids, key=lambda x: x[1]))[0]
                         colorindex = -1
                         for i in evidorder:
@@ -299,7 +299,8 @@ class picklePlotWidget(QWidget):
                             plot = p.plot(x=x, y=y, pen=self.mkPen(0, colorindex))
                             if i < 6:
                                 if self.sortBy == 'time':
-                                    signaltime = datetime.datetime.fromtimestamp(datadict[str(i)]['time']).strftime('%H:%M:%S.%f')
+                                    # signaltime = datetime.datetime.fromtimestamp(datadict[str(i)]['time']).strftime('%H:%M:%S.%f')
+                                    signaltime = datadict[str(i)]['time']
                                     legend.addItem(plot, signaltime)
                                 else:
                                     legend.addItem(plot, str(datadict[str(i)][self.sortBy]))
@@ -307,19 +308,19 @@ class picklePlotWidget(QWidget):
                         newRange[1] += 0
                         p.vb.setXRange(*newRange, padding=0)
                         # p.autoRange(padding=0.3)
-                        if self.tracename == datalabel:
-                            p.setTitle('<b>'+datalabel+'</b>', color='r')
-                            yLO = alldata['lo_mask']['data']
-                            yHI = alldata['hi_mask']['data']
-                            maxpoint = max(max([x for x in yLO if not math.isinf(x)]), max([x for x in yHI if not math.isinf(x)]))
-                            self.plotMask(yLO, p, maxpoint, 'min')
-                            self.plotMask(yHI, p, maxpoint, 'max')
-                            if 'mask_floor' in alldata:
-                                self.floorLine.setValue(alldata['mask_floor']['data'])
-                                p.addItem(self.floorLine)
-                            if 'outside_mask_index' in alldata:
-                                self.outsideMaskLine.setValue(alldata['outside_mask_index']['data'])
-                                p.addItem(self.outsideMaskLine)
+                        # if self.tracename == datalabel:
+                        p.setTitle('<b>'+datalabel+'</b>', color='r')
+                        yLO = alldata['lo_mask_'+datalabel]['data']
+                        yHI = alldata['hi_mask_'+datalabel]['data']
+                        maxpoint = max(max([x for x in yLO if not math.isinf(x)]), max([x for x in yHI if not math.isinf(x)]))
+                        self.plotMask(yLO, p, maxpoint, 'min')
+                        self.plotMask(yHI, p, maxpoint, 'max')
+                        # if 'mask_floor' in alldata:
+                        #     self.floorLine.setValue(alldata['mask_floor']['data'])
+                        #     p.addItem(self.floorLine)
+                        # if 'outside_mask_index' in alldata:
+                        #     self.outsideMaskLine.setValue(alldata['outside_mask_index']['data'])
+                        #     p.addItem(self.outsideMaskLine)
                     elif datadict['type'] == 'parameter':
                         self.tableData.append([datalabel, alldata[datalabel]['data']])
         # print self.tableData
