@@ -30,9 +30,9 @@ class EllipsoidTool:
 
         """
 
-        hull = scipy.spatial.ConvexHull(P)
-        P = P[hull.vertices]
-        print len(P)
+        hull = scipy.spatial.ConvexHull(P).vertices
+        P = np.array(P)[hull]
+
 
         (N, d) = np.shape(P)
         d = float(d)
@@ -128,25 +128,44 @@ def ellipse(center, radii, rotation, color='b'):
     ell = center + vvab
     return Polygon(ell, True, alpha=0.4, color=color)
 
+def remove_Hull(P, desired_len):
+    desired_len = int(np.floor(desired_len))
+    Q = list(P)
+    while len(Q) > desired_len:
+        hull = sorted(scipy.spatial.ConvexHull(Q).vertices[:len(Q)-desired_len], reverse=True)
+        for s in hull:
+            del Q[s]
+    return Q
+
+def gaussian_fraction(s, n):
+    return n*(1 - np.exp(-1*(s**2)/2))
+
 if __name__ == "__main__":
     # make 100 random points
     from generateGaussianBeamDistribution import *
     from matplotlib.patches import Circle, Wedge, Polygon
     from mpl_toolkits.mplot3d import Axes3D
     import matplotlib.pyplot as plt
-
-    beam = generateGaussianBeamDistribution(n=1e6, twiss=[-5.,1.,0,1])
-    P = np.transpose([beam[:,0], beam[:,1]])
-    # find the ellipsoid
+    import timeit
+    from functools import partial
     ET = EllipsoidTool()
-    (center, radii, rotation, hullP) = ET.getMinVolEllipse(P, .001)
+
+    beam = generateGaussianBeamDistribution(n=1e3, twiss=[-5.,1.,0,1])
+    print '6D Volume = ', scipy.spatial.ConvexHull(beam).volume
+    P = np.transpose([beam[:,0], beam[:,1]])
+
+    part = partial(scipy.spatial.ConvexHull, P)
+    print (timeit.timeit(part, number=10))
+
+    Q = P#np.array(remove_Hull(P, gaussian_fraction(1, len(P))))
+    (center, radii, rotation, hullP) = ET.getMinVolEllipse(Q, .001)
 
     cov = np.cov(np.transpose(P))
     rmsemit = np.sqrt(np.linalg.det(cov))
     w, v = np.linalg.eig(cov)
 
-    print 'emittance = ', radii[0] * radii[1] / 3.14159, ' 1sigma ~= ', radii[0] * radii[1] / 3.14159 / (3**2)
-    print 'rms emittance = ', rmsemit
+    # print ('emittance = ', radii[0] * radii[1])
+    # print ('rms emittance = ', rmsemit)
     fig = plt.figure()
     ax = fig.add_subplot(111)
 
@@ -156,9 +175,14 @@ if __name__ == "__main__":
     # e.set_clip_box(ax.bbox)
 
     # plot points
+    P = np.array(P)
     ax.scatter(P[::int(np.ceil(len(P)/10000)),0], P[::int(np.ceil(len(P)/10000)),1], color='g', s=1)
     ax.scatter(hullP[:,0], hullP[:,1], color='r', s=10)
-
+    hull = scipy.spatial.ConvexHull(P)
+    print 'hull = ', hull
+    for simplex in hull.simplices:
+        print simplex
+        ax.plot(P[simplex, 0], P[simplex, 1], 'k-')
     plt.show()
     plt.close(fig)
     del fig

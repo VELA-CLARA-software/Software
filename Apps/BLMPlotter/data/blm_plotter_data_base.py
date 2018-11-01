@@ -5,17 +5,23 @@ import numpy as np
 import collections
 import matplotlib.pyplot as plt
 from data.config_reader import config_reader
+from scipy import constants
 
 
 # keys for all the data we monitor
 time_stamp = 'time_stamp'
 bunch_charge = 'bunch_charge'
 charge_name = 'charge_name'
-blm_names = 'bpm_names'
+blm_names = 'blm_names'
+blm_pvs = 'blm_pvs'
+blm_time_pvs = 'blm_time_pvs'
+blm_waveform_pvs = 'blm_waveform_pvs'
 blm_status = 'blm_status'
 blm_voltages = 'blm_voltages'
+blm_buffer = 'blm_buffer'
 blm_distance_start = 'blm_distance_start'
 blm_distance_end = 'blm_distance_end'
+blm_time = 'blm_time'
 charge_status = 'charge_status'
 scan_status = 'scan_status'
 charge_monitoring = 'charge_monitoring'
@@ -37,10 +43,27 @@ blm_buffer_full = 'blm_buffer_full'
 charge_buffer_full = 'charge_buffer_full'
 buffers_full = 'buffers_full'
 buffer_message = 'buffer_message'
+noise_data = 'noise_data'
+single_photon_data = 'single_photon_data'
+apply_filter = 'apply_filter'
+blackman_size = 'blackman_size'
+deconvolution_filter = 'deconvolution_filter'
+has_sparsified = 'has_sparsified'
+blm_object = 'blm_object'
+fibre_speed = 'fibre_speed'
+peak_voltages = 'peak_voltages'
+calibrate_request = 'calibrate_request'
+calibrate_channel_names = 'calibrate_channel_names'
+str_to_pv = 'str_to_pv'
+delta_x = 'delta_x'
+calibration_time = 'calibration_time'
 
 all_value_keys = [time_stamp,
                   bunch_charge,
                   blm_names,
+                  blm_pvs,
+                  blm_time_pvs,
+                  blm_waveform_pvs,
                   blm_status,
                   charge_name,
                   charge_status,
@@ -51,8 +74,10 @@ all_value_keys = [time_stamp,
                   charge_values,
                   scan_status,
                   blm_voltages,
+                  blm_buffer,
                   blm_distance_start,
                   blm_distance_end,
+                  blm_time,
                   plots_done,
                   values_saved,
                   machine_mode,
@@ -66,7 +91,21 @@ all_value_keys = [time_stamp,
                   blm_buffer_full,
                   charge_buffer_full,
                   buffers_full,
-                  buffer_message
+                  buffer_message,
+                  noise_data,
+                  single_photon_data,
+                  apply_filter,
+                  blackman_size,
+                  deconvolution_filter,
+                  has_sparsified,
+                  blm_object,
+                  fibre_speed,
+                  peak_voltages,
+                  calibrate_request,
+                  calibrate_channel_names,
+                  str_to_pv,
+                  delta_x,
+                  calibration_time
                   ]
 
 class blm_plotter_data_base(QObject):
@@ -90,8 +129,12 @@ class blm_plotter_data_base(QObject):
     values[time_stamp] = dummy_dbl
     values[bunch_charge] = dummy_dbl + 1
     values[blm_names] = []
+    values[blm_pvs] = []
+    values[blm_time_pvs] = []
+    values[blm_waveform_pvs] = []
     values[blm_status] = {}
     values[blm_voltages] = {}
+    values[blm_buffer] = {}
     values[charge_name] = dummy_str
     values[charge_status] = False
     values[scan_status] = 'dummy_str'
@@ -101,6 +144,7 @@ class blm_plotter_data_base(QObject):
     values[charge_values] = []
     values[blm_distance_start] = dummy_dbl
     values[blm_distance_end] = dummy_dbl
+    values[blm_time] = {}
     values[plots_done] = False
     values[values_saved] = False
     values[machine_mode] = dummy_str
@@ -115,6 +159,20 @@ class blm_plotter_data_base(QObject):
     values[charge_buffer_full] = False
     values[buffers_full] = False
     values[buffer_message] = ""
+    values[apply_filter] = False
+    values[noise_data] = []
+    values[single_photon_data] = []
+    values[blackman_size] = dummy_int
+    values[deconvolution_filter] = []
+    values[has_sparsified] = False
+    values[blm_object] = {}
+    values[fibre_speed] = constants.speed_of_light / 1.46
+    values[peak_voltages] = {}
+    values[calibrate_request] = False
+    values[calibrate_channel_names] = []
+    values[str_to_pv] = {}
+    values[delta_x] = dummy_dbl
+    values[calibration_time] = dummy_dbl
     # amp_pwr_mean_data = {}
 
     #logger

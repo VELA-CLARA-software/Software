@@ -20,7 +20,7 @@ def eMatrix(emittancelist, n):
     return [np.random.normal(0, np.sqrt(ex), size=n), np.random.normal(0, np.sqrt(ex), size=n), np.random.normal(0, np.sqrt(ey), size=n), \
              np.random.normal(0, np.sqrt(ey), size=n), np.random.normal(0, ct, size=n), np.random.normal(0, deltap, size=n)]
 
-def generateGaussianBeamDistribution(n=1, emittances=[1,1,0,1e-3], twiss=[0,1,0,1], dispersion=[0,0,0,0], coupling=[0,0,0,0]):
+def generateGaussianBeamDistribution(n=1, emittances=[1,1,1e-3,1e-3], twiss=[0,1,0,1], dispersion=[0,0,0,0], coupling=[0,0,0,0]):
     D = DispersionMatrix(dispersion)
     B = BetaMatrix(twiss[1], twiss[3])
     A = AlfaMatrix(twiss[0], twiss[2])
