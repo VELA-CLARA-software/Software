@@ -12,7 +12,7 @@ class blm_handler(blm_handler_base):
         blm_handler_base.__init__(self)
 
     def set_blm_buffer(self,value):
-        blm_handler_base.blm_control.setBufferSize(value)
+        blm_handler_base.blm_control.setBufferSize(int(value))
         blm_handler_base.logger.message('setting buffer = ' + str(value), True)
         for i in blm_handler_base.data.values[dat.blm_waveform_pvs]:
             blm_handler_base.data.values[dat.blm_voltages][i] = collections.deque(maxlen = value)

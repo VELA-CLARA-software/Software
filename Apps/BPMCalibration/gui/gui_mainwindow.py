@@ -176,7 +176,7 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(_translate("MainWindow", "BPM Calibration", None))
         self.calibrateButton.setText(_translate("MainWindow", "Calibrate BPMs", None))
         self.groupBox.setTitle(_translate("MainWindow", "New BPM Attenuation/Delay Values", None))
-        self.numShotsOutputWidget.setPlainText(_translate("MainWindow", "2", None))
+        self.numShotsOutputWidget.setPlainText(_translate("MainWindow", "10", None))
         self.numShotsLabel.setText(_translate("MainWindow", "# Shots", None))
         self.measureTypeGroupBox.setTitle(_translate("MainWindow", "Choose calibration type", None))
         self.attenuationButton.setText(_translate("MainWindow", "Attenuation", None))
