@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1139</width>
-    <height>932</height>
+    <height>961</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -578,11 +578,11 @@
                  </size>
                 </property>
                 <property name="text">
-                 <string>Set Linac Timing</string>
+                 <string>Set Linac Timing away from beam</string>
                 </property>
                </widget>
               </item>
-              <item row="1" column="3">
+              <item row="1" column="2">
                <widget class="QSpinBox" name="Gun_Amp_Set">
                 <property name="toolTip">
                  <string>Ramp amplitude</string>
@@ -598,37 +598,18 @@
                 </property>
                </widget>
               </item>
-              <item row="0" column="0" colspan="3">
+              <item row="0" column="0" colspan="2">
                <widget class="QLabel" name="label_14">
                 <property name="text">
                  <string>Ramp Rate</string>
                 </property>
                </widget>
               </item>
-              <item row="0" column="3">
-               <widget class="QSpinBox" name="Gun_Amp_Step_Set">
-                <property name="toolTip">
-                 <string>Ramp Rate</string>
-                </property>
-                <property name="suffix">
-                 <string>/sec</string>
-                </property>
-                <property name="maximum">
-                 <number>1000</number>
-                </property>
-                <property name="singleStep">
-                 <number>100</number>
-                </property>
-                <property name="value">
-                 <number>500</number>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="0" colspan="3">
+              <item row="1" column="0" colspan="2">
                <widget class="QLabel" name="label_13">
                 <property name="minimumSize">
                  <size>
-                  <width>150</width>
+                  <width>130</width>
                   <height>0</height>
                  </size>
                 </property>
@@ -637,7 +618,7 @@
                 </property>
                </widget>
               </item>
-              <item row="3" column="0" colspan="4">
+              <item row="3" column="0" colspan="3">
                <widget class="QPushButton" name="Gun_LoadBURT_Button">
                 <property name="toolTip">
                  <string>Load the GunCrest DBURT</string>
@@ -647,7 +628,7 @@
                 </property>
                </widget>
               </item>
-              <item row="2" column="0" colspan="4">
+              <item row="2" column="0" colspan="3">
                <widget class="QPushButton" name="Gun_TurnOn_Button">
                 <property name="enabled">
                  <bool>true</bool>
@@ -668,7 +649,7 @@
                 </property>
                </widget>
               </item>
-              <item row="4" column="2" colspan="2">
+              <item row="4" column="1" colspan="2">
                <widget class="QPushButton" name="Gun_LinacTiming_Off_Button">
                 <property name="maximumSize">
                  <size>
@@ -680,22 +661,28 @@
                  <string>Alter the linac timings to allow cresting of the gun (RED: Linacs timed with beam, GREEN: Linacs timed away from beam)</string>
                 </property>
                 <property name="text">
-                 <string>Linacs Off</string>
+                 <string>Set</string>
                 </property>
                </widget>
               </item>
-              <item row="4" column="1">
-               <spacer name="horizontalSpacer_3">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
+              <item row="0" column="2">
+               <widget class="QSpinBox" name="Gun_Amp_Step_Set">
+                <property name="toolTip">
+                 <string>Ramp Rate</string>
                 </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
+                <property name="suffix">
+                 <string>/sec</string>
                 </property>
-               </spacer>
+                <property name="maximum">
+                 <number>1000</number>
+                </property>
+                <property name="singleStep">
+                 <number>100</number>
+                </property>
+                <property name="value">
+                 <number>500</number>
+                </property>
+               </widget>
               </item>
              </layout>
             </widget>
@@ -1321,6 +1308,12 @@
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
+             <property name="minimumSize">
+              <size>
+               <width>150</width>
+               <height>0</height>
+              </size>
+             </property>
              <property name="title">
               <string>Linac Startup</string>
              </property>
@@ -1355,8 +1348,14 @@
                <widget class="QLabel" name="label_15">
                 <property name="minimumSize">
                  <size>
-                  <width>150</width>
+                  <width>142</width>
                   <height>0</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>130</width>
+                  <height>16777215</height>
                  </size>
                 </property>
                 <property name="text">
@@ -1370,13 +1369,33 @@
                  <string>Ramp amplitude</string>
                 </property>
                 <property name="maximum">
-                 <number>13000</number>
+                 <number>13400</number>
                 </property>
                 <property name="singleStep">
                  <number>100</number>
                 </property>
                 <property name="value">
-                 <number>13000</number>
+                 <number>13400</number>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0" colspan="2">
+               <widget class="QPushButton" name="Linac1_TurnOn_Button">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
+                <property name="font">
+                 <font>
+                  <weight>50</weight>
+                  <bold>false</bold>
+                  <strikeout>false</strikeout>
+                 </font>
+                </property>
+                <property name="toolTip">
+                 <string>Ramp Linac 1 up to the maximum in steps</string>
+                </property>
+                <property name="text">
+                 <string>Ramp Up Linac</string>
                 </property>
                </widget>
               </item>
@@ -1392,6 +1411,15 @@
               </item>
               <item row="4" column="0">
                <widget class="QLabel" name="label_34">
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="lineWidth">
+                 <number>1</number>
+                </property>
                 <property name="text">
                  <string>Set Linac 1 Timing</string>
                 </property>
@@ -1399,9 +1427,15 @@
               </item>
               <item row="4" column="1">
                <widget class="QWidget" name="widget_2" native="true">
+                <property name="minimumSize">
+                 <size>
+                  <width>73</width>
+                  <height>0</height>
+                 </size>
+                </property>
                 <property name="maximumSize">
                  <size>
-                  <width>69</width>
+                  <width>92</width>
                   <height>16777215</height>
                  </size>
                 </property>
@@ -1427,41 +1461,27 @@
                     <string>Alter the linac 1 timing to disallow cresting (RED: Linacs timed with beam, GREEN: Linacs timed away from beam)</string>
                    </property>
                    <property name="text">
-                    <string>Off</string>
+                    <string>Away</string>
                    </property>
                   </widget>
                  </item>
                  <item>
                   <widget class="QPushButton" name="Linac1_LinacTiming_On_Button">
+                   <property name="minimumSize">
+                    <size>
+                     <width>42</width>
+                     <height>0</height>
+                    </size>
+                   </property>
                    <property name="toolTip">
                     <string>Alter the linac 1 timing to allow cresting (GREEN: Linacs timed with beam, RED: Linacs timed away from beam)</string>
                    </property>
                    <property name="text">
-                    <string>On</string>
+                    <string>Normal</string>
                    </property>
                   </widget>
                  </item>
                 </layout>
-               </widget>
-              </item>
-              <item row="2" column="0" colspan="2">
-               <widget class="QPushButton" name="Linac1_TurnOn_Button">
-                <property name="enabled">
-                 <bool>true</bool>
-                </property>
-                <property name="font">
-                 <font>
-                  <weight>50</weight>
-                  <bold>false</bold>
-                  <strikeout>false</strikeout>
-                 </font>
-                </property>
-                <property name="toolTip">
-                 <string>Ramp Linac 1 up to the maximum in steps</string>
-                </property>
-                <property name="text">
-                 <string>Ramp Up Linac</string>
-                </property>
                </widget>
               </item>
              </layout>
@@ -2211,7 +2231,6 @@
   </action>
  </widget>
  <tabstops>
-  <tabstop>Gun_Amp_Step_Set</tabstop>
   <tabstop>Gun_Amp_Set</tabstop>
   <tabstop>Gun_TurnOn_Button</tabstop>
   <tabstop>Gun_LoadBURT_Button</tabstop>
