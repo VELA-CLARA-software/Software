@@ -53,6 +53,7 @@ class blm_plotter_gui(QMainWindow, Ui_MainWindow, base):
 		# CONNECT BUTTONS TO FUNCTIONS
 		self.saveDataButton.clicked.connect(self.handle_save_data)
 		self.setNumShotsButton.clicked.connect(self.set_num_shots)
+		self.rollingAverageButton.clicked.connect(self.set_rolling_average)
 		self.calibrateButton.clicked.connect(self.set_calibrate)
 		# self.attenuationButton.toggled.connect(lambda: self.handle_measure_type(self.attenuationButton))
 		# self.delayButton.toggled.connect(lambda: self.handle_measure_type(self.delayButton))
@@ -94,6 +95,13 @@ class blm_plotter_gui(QMainWindow, Ui_MainWindow, base):
 		self.data.values[dat.num_shots_request] = True
 		self.data.values[dat.num_shots] = int(self.numShotsOutputWidget.toPlainText())
 
+	def set_rolling_average(self):
+		if int(self.numShotsOutputWidget.toPlainText()) > 0:
+			self.data.values[dat.rolling_average] = int(self.rollingAverageOutputWidget.toPlainText())
+			for i, j in zip(self.data.values[dat.blm_waveform_pvs], self.data.values[dat.blm_time_pvs]):
+				self.data.values[dat.blm_voltage_average][str(i)] = [[]] * self.data.values[dat.rolling_average]
+				self.data.values[dat.blm_time_average][str(j)] = [[]] * self.data.values[dat.rolling_average]
+
 	def set_calibrate(self):
 		self.data.values[dat.calibrate_request] = True
 		self.data.values[dat.calibrate_channel_names] = [str(self.channelNamesComboBox1.currentText()),str(self.channelNamesComboBox2.currentText())]
@@ -110,6 +118,8 @@ class blm_plotter_gui(QMainWindow, Ui_MainWindow, base):
 		for key, val in self.widget.iteritems():
 			if self.value_is_new(key, base.data.values[key]):
 				self.update_widget(key, base.data.values[key], val)
+		else:
+			self.data.values[dat.rolling_average] = 0
 		if self.filterYesButton.isChecked():
 			self.data.values[dat.blackman_size] = int(self.filterSizeOutputWidget.toPlainText())
 			self.data.values[dat.apply_filter] = True

@@ -102,9 +102,11 @@ class data_logger(object):
     def get_blm_scan_log(self):
         self.timestamp = time.time()
         self.scan_log_start_str = datetime.fromtimestamp(self.timestamp).strftime('%Y-%m-%d-%H-%M-%S')
-        self.scan_directory = self.log_directory + '\\BLM_scans\\'
+        self.scan_directory = self.log_directory + '\\blm_scans\\'
+        self.calibration_directory = self.scan_directory + '\\calibration_data\\'
         if not os.path.isdir(self.scan_directory):
             os.makedirs(self.scan_directory)
+            os.makedirs(self.calibration_directory)
             os.chdir(self.scan_directory)
         self.blm_scan_log = self.scan_directory + self.scan_log_start_str + ".hdf5"
         # for i in log:

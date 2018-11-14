@@ -22,7 +22,7 @@ class blm_plotter(QtGui.QApplication):
 		# you need this init line here to instantiate a QTApplication
 		QtGui.QApplication.__init__(self, argv)
 		# Everything else is handled by a main _controller
-		self.controller = main_controller(argv, machine_mode=vce.MACHINE_MODE.PHYSICAL, machine_area=vce.MACHINE_AREA.CLARA_2_BA1_BA2)# , config_file='bpm_calibrate.config')
+		self.controller = main_controller(argv, machine_mode=vce.MACHINE_MODE.PHYSICAL, machine_area=vce.MACHINE_AREA.CLARA_2_BA1_BA2, blm_name="CLARABLM01")# , config_file='bpm_calibrate.config')
 
 
 if __name__ == '__main__':

@@ -1,6 +1,6 @@
 from monitor import monitor
 from PyQt4.QtCore import QTimer
-import data.bpm_calibrate_data_base as dat
+import data.blm_plotter_data_base as dat
 import numpy
 import time
 

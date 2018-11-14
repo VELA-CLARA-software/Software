@@ -17,10 +17,11 @@ class main_controller(controller_base):
     #
     # other attributes will be initiliased in base-class
 
-    def __init__(self, argv, machine_mode, machine_area):
+    def __init__(self, argv, machine_mode, machine_area, blm_name):
         controller_base.__init__(self,argv, machine_mode, machine_area)
         # start monitoring data
         self.data_monitor.start_monitors()
+        self.blm_name = blm_name
         # build the gui and pass in the data
         #
         # build the gui
@@ -43,7 +44,7 @@ class main_controller(controller_base):
 
     def main_loop(self):
         self.logger.header(self.my_name + ' BLM plotter GUI is entering main_loop !',True)
-
+        controller_base.data.values[dat.blm_name] = self.blm_name
         controller_base.data.values[dat.ready_to_go] = self.data_monitor.init_monitor_states()
         controller_base.blm_handler.set_blm_buffer(controller_base.data.values[dat.num_shots])
         controller_base.blm_handler.get_noise_data()
@@ -60,6 +61,7 @@ class main_controller(controller_base):
                         controller_base.blm_handler.set_blm_buffer(controller_base.data.values[dat.num_shots])
                         controller_base.charge_handler.set_charge_buffer(controller_base.data.values[dat.num_shots])
                         controller_base.data.values[dat.num_shots_request] = False
+                        time.sleep(0.1)
                         # while controller_base.data.values[dat.buffers_full] == False:
                     controller_base.data.values[dat.has_blm_data] = False
                     self.check_buffers()
@@ -77,7 +79,11 @@ class main_controller(controller_base):
                         self.data = {"calibrate_channel_names": controller_base.data.values[dat.calibrate_channel_names],
                                      "delta_x": controller_base.data.values[dat.delta_x],
                                      "calibration_time": controller_base.data.values[dat.calibration_time],
-                                     "blm_voltages": self.blm_voltages}
+                                     "blm_voltages": self.blm_voltages,
+                                     "chg_data": controller_base.data.values[dat.charge_values],
+                                     "filter_applied": controller_base.data.values[dat.apply_filter],
+                                     "filter_size": controller_base.data.values[dat.blackman_size]
+                                     }
                         self.writetohdf5(filename=self.calibratefilename([self.str_to_pv_1,self.str_to_pv_2]), data=self.data)
                         controller_base.data.values[dat.calibrate_request] = False
                     break
