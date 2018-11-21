@@ -63,6 +63,7 @@ rolling_average = 'rolling_average'
 blm_voltage_average = 'blm_voltage_average'
 blm_time_average = 'blm_time_average'
 shot_num = 'shot_num'
+time_stamps = 'time_stamps'
 
 all_value_keys = [time_stamp,
                   blm_name,
@@ -117,7 +118,8 @@ all_value_keys = [time_stamp,
                   rolling_average,
                   blm_voltage_average,
                   blm_time_average,
-                  shot_num
+                  shot_num,
+                  time_stamps
                   ]
 
 class blm_plotter_data_base(QObject):
@@ -140,6 +142,7 @@ class blm_plotter_data_base(QObject):
     [values.update({x: 0}) for x in all_value_keys]
     values[blm_name] = dummy_str
     values[time_stamp] = dummy_dbl
+    values[time_stamps] = {}
     values[bunch_charge] = dummy_dbl + 1
     values[blm_names] = []
     values[blm_pvs] = []

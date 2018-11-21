@@ -3,6 +3,7 @@ from PyQt4.QtCore import QTimer
 import data.blm_plotter_data_base as dat
 import numpy, random
 import time, collections
+from itertools import compress
 
 class blm_monitor(monitor):
     # whoami
@@ -53,30 +54,28 @@ class blm_monitor(monitor):
         for i, j in zip(monitor.data.values[dat.blm_waveform_pvs],monitor.data.values[dat.blm_time_pvs]):
             monitor.data.values[dat.blm_buffer][str(i)] = monitor.data.values[dat.blm_object].traceDataBuffer[i]
             monitor.data.values[dat.blm_time_buffer][str(j)] = monitor.data.values[dat.blm_object].traceDataBuffer[j]
-            monitor.data.values[dat.blm_voltages][str(i)] = list(monitor.data.values[dat.blm_buffer][str(i)][-1])
-            monitor.data.values[dat.blm_time][str(j)] = list(monitor.data.values[dat.blm_time_buffer][str(j)][-1])
+            monitor.data.values[dat.blm_voltages][str(i)] = numpy.asarray(monitor.data.values[dat.blm_buffer][str(i)][-1])
+            monitor.data.values[dat.blm_time][str(j)] = numpy.asarray(monitor.data.values[dat.blm_time_buffer][str(j)][-1]) * (299792458/(1.46*(1*(10**9))))
             if monitor.data.values[dat.rolling_average] > 1:
-                monitor.data.values[dat.blm_voltage_average][str(i)].append(monitor.data.values[dat.blm_voltages][str(i)])
-                monitor.data.values[dat.blm_time_average][str(j)].append(monitor.data.values[dat.blm_time][str(j)])
-                for k,l in zip(monitor.data.values[dat.blm_voltage_average][str(i)],monitor.data.values[dat.blm_time_average][str(j)]):
-                    if not k:
-                        monitor.data.values[dat.blm_voltage_average][str(i)].pop(0)
-                    if not l:
-                        monitor.data.values[dat.blm_time_average][str(j)].pop(0)
-                monitor.data.values[dat.blm_voltages][str(i)] = list(numpy.mean(monitor.data.values[dat.blm_voltage_average][str(i)],axis=0))
-                monitor.data.values[dat.blm_time][str(j)] = list(numpy.mean(monitor.data.values[dat.blm_time_average][str(j)],axis=0))
-                if monitor.data.values[dat.rolling_average] == len(monitor.data.values[dat.blm_voltage_average][str(i)]):
-                    monitor.data.values[dat.blm_voltage_average][str(i)].pop(0)
-                    monitor.data.values[dat.blm_time_average][str(j)].pop(0)
-            self.maxval = max(monitor.data.values[dat.blm_voltages][str(i)])
-            self.maxlocation = monitor.data.values[dat.blm_voltages][str(i)].index(self.maxval)
-            monitor.data.values[dat.peak_voltages][str(i)] = [self.maxval, self.maxlocation]
-        monitor.data.values[dat.has_blm_data] = True
+                monitor.data.values[dat.blm_voltages][str(i)] = list(numpy.mean(monitor.data.values[dat.blm_buffer][str(i)],axis=1))
+                monitor.data.values[dat.blm_time][str(j)] = list(numpy.mean(monitor.data.values[dat.blm_time_buffer][str(j)],axis=1))
+                # if monitor.data.values[dat.rolling_average] == len(monitor.data.values[dat.blm_voltage_average][str(i)]):
+                #     monitor.data.values[dat.blm_voltages][str(i)].pop(0)
+                #     monitor.data.values[dat.blm_time][str(j)].pop(0)
+            if len(monitor.data.values[dat.blm_voltages][str(i)]) > 0:
+                self.maxval = max(monitor.data.values[dat.blm_voltages][str(i)])
+                self.maxlocation = numpy.where(monitor.data.values[dat.blm_voltages][str(i)]==self.maxval)
+                monitor.data.values[dat.peak_voltages][str(i)] = [self.maxval, numpy.mean(self.maxlocation)]
+                monitor.data.values[dat.has_blm_data] = True
+            else:
+                monitor.data.values[dat.has_blm_data] = False
 
     def update_blm_buffer(self):
         for i, j in zip(monitor.data.values[dat.blm_waveform_pvs],monitor.data.values[dat.blm_time_pvs]):
             monitor.data.values[dat.blm_buffer][str(i)] = monitor.blm_control.getBLMTraceBuffer(monitor.data.values[dat.blm_names][0], i)
             monitor.data.values[dat.blm_buffer][str(j)] = monitor.blm_control.getBLMTraceBuffer(monitor.data.values[dat.blm_names][0], j)
+            monitor.data.values[dat.time_stamps][str(i)] = monitor.blm_control.getTimeStampsBuffer(monitor.data.values[dat.blm_names][0], i)
+            monitor.data.values[dat.time_stamps][str(j)] = monitor.blm_control.getTimeStampsBuffer(monitor.data.values[dat.blm_names][0], j)
         monitor.data.values[dat.has_blm_data] = True
 
     def update_blm_distance(self):

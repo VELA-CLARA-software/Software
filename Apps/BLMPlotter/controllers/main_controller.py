@@ -67,22 +67,25 @@ class main_controller(controller_base):
                     self.check_buffers()
                     self.get_charge_values()
                     self.get_blm_values()
-                    controller_base.data.values[dat.has_blm_data] = True
                     if controller_base.data.values[dat.calibrate_request]:
                         controller_base.blm_handler.calibrate_blm()
+                        self.get_blm_buffer()
                         self.str_to_pv_1 = controller_base.data.values[dat.str_to_pv][
                             controller_base.data.values[dat.calibrate_channel_names][0]]
                         self.str_to_pv_2 = controller_base.data.values[dat.str_to_pv][
                             controller_base.data.values[dat.calibrate_channel_names][1]]
                         self.blm_voltages = {self.str_to_pv_1: controller_base.data.values[dat.blm_voltages][self.str_to_pv_1],
                                              self.str_to_pv_2: controller_base.data.values[dat.blm_voltages][self.str_to_pv_2]}
+                        self.time_stamps = {self.str_to_pv_1: controller_base.data.values[dat.time_stamps][self.str_to_pv_1],
+                                             self.str_to_pv_2: controller_base.data.values[dat.time_stamps][self.str_to_pv_2]}
                         self.data = {"calibrate_channel_names": controller_base.data.values[dat.calibrate_channel_names],
                                      "delta_x": controller_base.data.values[dat.delta_x],
                                      "calibration_time": controller_base.data.values[dat.calibration_time],
                                      "blm_voltages": self.blm_voltages,
                                      "chg_data": controller_base.data.values[dat.charge_values],
                                      "filter_applied": controller_base.data.values[dat.apply_filter],
-                                     "filter_size": controller_base.data.values[dat.blackman_size]
+                                     "filter_size": controller_base.data.values[dat.blackman_size],
+                                     "time_stamps": self.time_stamps
                                      }
                         self.writetohdf5(filename=self.calibratefilename([self.str_to_pv_1,self.str_to_pv_2]), data=self.data)
                         controller_base.data.values[dat.calibrate_request] = False
@@ -94,20 +97,22 @@ class main_controller(controller_base):
                 self.gui.plot_blm_values()
 
             if controller_base.data.values[dat.save_request]:
-                self.blm_scan_log = self.logger.get_blm_scan_log()
+                self.blm_scan_log = self.logger.get_blm_scan_log()[0]
                 self.get_blm_buffer()
                 if controller_base.data.values[dat.apply_filter]:
-                    if not controller_base.data.values[dat.has_sparsified]:
-                        for i in controller_base.data.values[dat.blm_buffer]:
-                            for j in i:
-                                j = j * abs(controller_base.data.values[dat.deconvolution_filter])
+                    for i in controller_base.data.values[dat.blm_waveform_pvs]:
+                        controller_base.data.values[dat.blm_buffer][str(i)] = \
+                            controller_base.data.values[dat.blm_buffer][str(i)] * abs(
+                                controller_base.data.values[dat.deconvolution_filter])
                 self.data = {"chg_data": controller_base.data.values[dat.charge_values],
                              "blm_voltages": controller_base.data.values[dat.blm_buffer],
                              "filter_applied": controller_base.data.values[dat.apply_filter],
                              "filter_size": controller_base.data.values[dat.blackman_size],
                              "calibrate_channel_names": controller_base.data.values[dat.calibrate_channel_names],
                              "delta_x": controller_base.data.values[dat.delta_x],
-                             "calibration_time": controller_base.data.values[dat.calibration_time]}
+                             "calibration_time": controller_base.data.values[dat.calibration_time],
+                             "time_stamps": controller_base.data.values[dat.time_stamps]
+                             }
                 self.writetohdf5(filename=self.blm_scan_log,data=self.data)
                 controller_base.data.values[dat.save_request] = False
                 controller_base.data.values[dat.buffer_message] = ""
@@ -133,7 +138,7 @@ class main_controller(controller_base):
         self.timestamp = time.time()
         self.st = datetime.datetime.fromtimestamp(self.timestamp).strftime('%Y-%m-%d-%H-%M-%S')
         self.now = datetime.datetime.now()
-        self.filename = os.getcwd() + "\\calibration_data\\" + str(self.channelnames[0]) + "_" + str(self.channelnames[1]) + self.st + ".hdf5"
+        self.filename = self.logger.get_blm_scan_log()[1] + str(self.channelnames[0]) + "_" + str(self.channelnames[1]) + self.st + ".hdf5"
         return self.filename
 
     def get_blm_values(self):

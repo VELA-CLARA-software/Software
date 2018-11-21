@@ -56,7 +56,7 @@ class blm_handler(blm_handler_base):
         self.num_points = len(blm_handler_base.data.values[dat.noise_data])
         self.noise_ft = fft(blm_handler_base.data.values[dat.noise_data])
         self.single_photon_ft = fft(blm_handler_base.data.values[dat.single_photon_data])
-        self.wiener_filter = (abs(self.single_photon_ft)**2)/(abs(self.single_photon_ft)*2 + abs(self.noise_ft)*2)
+        self.wiener_filter = (abs(self.single_photon_ft)**2)/(abs(self.single_photon_ft)**2 + abs(self.noise_ft)**2)
 
         self.blackman_window = signal.blackman(blm_handler_base.data.values[dat.blackman_size])
         self.blackman_window_ft = fft(self.blackman_window,n=len(self.single_photon_ft))

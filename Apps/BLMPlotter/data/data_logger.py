@@ -111,7 +111,7 @@ class data_logger(object):
         self.blm_scan_log = self.scan_directory + self.scan_log_start_str + ".hdf5"
         # for i in log:
         #     self.message(map(str,i),True)
-        return self.blm_scan_log
+        return [self.blm_scan_log, self.calibration_directory]
 
     def start_data_logging(self):
         self.header(self.my_name + ' start_data_logging')
