@@ -1,0 +1,255 @@
+# depslib dependency file v1.0
+1540654749 source:d:\vela-clara_software\vela-clara-controllers\hardware\beampositionmonitor\beampositionmonitorcontroller.cpp
+	"beamPositionMonitorController.h"
+	<iostream>
+
+1540654749 d:\vela-clara_software\vela-clara-controllers\hardware\beampositionmonitor\beampositionmonitorcontroller.h
+	"beamPositionMonitorInterface.h"
+	"controller.h"
+	<string>
+	<vector>
+	<boost/python.hpp>
+	<boost/python/detail/wrap_python.hpp>
+	<boost/python.hpp>
+	<boost/python/def.hpp>
+	<boost/python/args.hpp>
+	<boost/python/class.hpp>
+	<boost/python/suite/indexing/vector_indexing_suite.hpp>
+	<boost/python/suite/indexing/map_indexing_suite.hpp>
+	<boost/python/return_value_policy.hpp>
+	<boost/python/overloads.hpp>
+	<boost/circular_buffer.hpp>
+
+1540654750 d:\vela-clara_software\vela-clara-controllers\hardware\beampositionmonitor\beampositionmonitorinterface.h
+	"interface.h"
+	"beamPositionMonitorStructs.h"
+	"beamPositionMonitorConfigReader.h"
+	"structs.h"
+	<vector>
+	<string>
+	<boost/circular_buffer.hpp>
+
+1540654749 source:d:\vela-clara_software\vela-clara-controllers\hardware\beampositionmonitor\beampositionmonitorinterface.cpp
+	"beamPositionMonitorInterface.h"
+	<iostream>
+	<sstream>
+	<chrono>
+	<numeric>
+	<thread>
+	<ctime>
+	<string>
+	<cstring>
+	<cmath>
+	<math.h>
+	<stdlib.h>
+	<epicsTime.h>
+	<boost/circular_buffer.hpp>
+
+1540654750 source:d:\vela-clara_software\vela-clara-controllers\hardware\controller.cpp
+	"controller.h"
+	<iostream>
+	<sstream>
+
+1540654750 d:\vela-clara_software\vela-clara-controllers\hardware\controller.h
+	"structs.h"
+	"baseObject.h"
+	<map>
+	<boost/python.hpp>
+	<boost/python/suite/indexing/vector_indexing_suite.hpp>
+	<boost/python/suite/indexing/map_indexing_suite.hpp>
+
+1541163588 source:d:\vela-clara_software\vela-clara-controllers\hardware\interface.cpp
+	"interface.h"
+	<iostream>
+	<sstream>
+	<chrono>
+
+1541163588 d:\vela-clara_software\vela-clara-controllers\hardware\interface.h
+	<cadef.h>
+	<iostream>
+	<map>
+	<chrono>
+	<thread>
+	"baseObject.h"
+	"structs.h"
+
+1541163588 source:d:\vela-clara_software\vela-clara-controllers\hardware\vcbase.cpp
+	"VCbase.h"
+	"configDefinitions.h"
+
+1540654749 d:\vela-clara_software\vela-clara-controllers\hardware\vcbase.h
+	"structs.h"
+	<iostream>
+	<string>
+	<map>
+	<utility>
+
+1540654751 source:d:\vela-clara_software\vela-clara-controllers\python modules\bpms\src\vcbpms.cpp
+	"VCBPMs.h"
+	<iostream>
+
+1540654750 d:\vela-clara_software\vela-clara-controllers\python modules\bpms\include\vcbpms.h
+	"beamPositionMonitorController.h"
+	"beamPositionMonitorStructs.h"
+	"VCheader.h"
+	"VCbase.h"
+	"configDefinitions.h"
+	<string>
+	<vector>
+	<map>
+	<utility>
+	<list>
+	<boost/python/detail/wrap_python.hpp>
+	<boost/config.hpp>
+	<boost/python.hpp>
+	<boost/python/class.hpp>
+	<boost/python/module.hpp>
+	<boost/python/def.hpp>
+	<boost/python/object/function.hpp>
+	<boost/python/suite/indexing/vector_indexing_suite.hpp>
+	<boost/python/suite/indexing/map_indexing_suite.hpp>
+	<boost/python/docstring_options.hpp>
+
+1541163590 source:d:\vela-clara_software\vela-clara-controllers\utilities\baseobject.cpp
+	"baseObject.h"
+	"configDefinitions.h"
+	<time.h>
+
+1541163590 d:\vela-clara_software\vela-clara-controllers\utilities\baseobject.h
+	<string>
+	<vector>
+	<sstream>
+	<cmath>
+	<algorithm>
+	<iostream>
+	<time.h>
+	<deque>
+	<boost/python.hpp>
+	<boost/python/detail/wrap_python.hpp>
+	<boost/python.hpp>
+	<boost/python/def.hpp>
+	<boost/python/slice.hpp>
+	<boost/python/args.hpp>
+	<boost/python/class.hpp>
+	<boost/python/suite/indexing/vector_indexing_suite.hpp>
+	<boost/python/suite/indexing/map_indexing_suite.hpp>
+	<boost/python/return_value_policy.hpp>
+	<boost/python/overloads.hpp>
+	<boost/python/stl_iterator.hpp>
+	<boost/circular_buffer.hpp>
+	<boost/python/numpy.hpp>
+
+1541163590 d:\vela-clara_software\vela-clara-controllers\utilities\configdefinitions.h
+	<string>
+	<vector>
+	<map>
+	<chrono>
+	<cadef.h>
+	<boost/python/def.hpp>
+
+1540654760 source:d:\vela-clara_software\vela-clara-controllers\utilities\beampositionmonitorconfigreader.cpp
+	"beamPositionMonitorConfigReader.h"
+	"configDefinitions.h"
+	"beamPositionMonitorStructs.h"
+	<iostream>
+	<vector>
+	<string>
+	<fstream>
+	<sstream>
+	<time.h>
+	<algorithm>
+	<ctype.h>
+
+1540654760 d:\vela-clara_software\vela-clara-controllers\utilities\beampositionmonitorconfigreader.h
+	<string>
+	<vector>
+	<map>
+	<iostream>
+	"configReader.h"
+	"beamPositionMonitorStructs.h"
+
+1540654760 d:\vela-clara_software\vela-clara-controllers\utilities\configreader.h
+	"configDefinitions.h"
+	"baseObject.h"
+	<string>
+	<sstream>
+	<vector>
+	<cadef.h>
+
+1540654760 source:d:\vela-clara_software\vela-clara-controllers\utilities\configreader.cpp
+	"configReader.h"
+	<iostream>
+	<time.h>
+	<algorithm>
+	<fstream>
+	"configDefinitions.h"
+	"structs.h"
+
+1531481128 source:d:\clara_commissioning\bpm_recalibrate\main.cpp
+	<iostream>
+	<string>
+	<chrono>
+	<vector>
+	<numeric>
+	<thread>
+	<qapplication.h>
+	<qpushbutton.h>
+	"beamPositionMonitorController.h"
+	"chargeController.h"
+
+1540654750 source:d:\vela-clara_software\vela-clara-controllers\hardware\charge\chargecontroller.cpp
+	"chargeController.h"
+
+1540654750 d:\vela-clara_software\vela-clara-controllers\hardware\charge\chargecontroller.h
+	"chargeInterface.h"
+	"controller.h"
+	<string>
+	<vector>
+	<map>
+	<boost/circular_buffer.hpp>
+
+1540654750 d:\vela-clara_software\vela-clara-controllers\hardware\charge\chargeinterface.h
+	"interface.h"
+	"chargeStructs.h"
+	"chargeConfigReader.h"
+	"structs.h"
+	<vector>
+	<string>
+	<boost/circular_buffer.hpp>
+
+1541163592 source:d:\vela-clara_software\vela-clara-controllers\hardware\charge\chargeinterface.cpp
+	"chargeInterface.h"
+	<iostream>
+	<sstream>
+	<chrono>
+	<thread>
+	<ctime>
+	<string>
+	<algorithm>
+	<numeric>
+	<cstring>
+	<typeinfo>
+	<stdlib.h>
+	<epicsTime.h>
+
+1540654760 source:d:\vela-clara_software\vela-clara-controllers\utilities\charge\chargeconfigreader.cpp
+	"chargeConfigReader.h"
+	"configDefinitions.h"
+	"chargeStructs.h"
+	<iostream>
+	<vector>
+	<string>
+	<fstream>
+	<sstream>
+	<time.h>
+	<algorithm>
+	<ctype.h>
+
+1540654760 d:\vela-clara_software\vela-clara-controllers\utilities\charge\chargeconfigreader.h
+	<string>
+	<vector>
+	<map>
+	<iostream>
+	"configReader.h"
+	"chargeStructs.h"
+

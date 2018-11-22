@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="bpm_recalibrate" />
+		<Option pch_mode="2" />
+		<Option compiler="ms_visual_c_2012" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/bpm_recalibrate" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="ms_visual_c_2012" />
+				<Compiler>
+					<Add option="/Zi" />
+					<Add option="/D_DEBUG" />
+					<Add option="/MDd" />
+				</Compiler>
+				<Linker>
+					<Add option="/DEBUG" />
+					<Add library="msvcrtd.lib" />
+					<Add library="msvcprtd.lib" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/bpm_recalibrate" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="ms_visual_c_2012" />
+				<Compiler>
+					<Add option="/MD" />
+					<Add option="/Ox" />
+					<Add option="/DNDEBUG" />
+				</Compiler>
+				<Linker>
+					<Add option="/INCREMENTAL:NO" />
+					<Add library="user32" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="/W3" />
+			<Add option="/EHsc" />
+		</Compiler>
+		<Unit filename="../../VELA-CLARA_software/VELA-CLARA-Controllers/Hardware/VCbase.cpp" />
+		<Unit filename="../../VELA-CLARA_software/VELA-CLARA-Controllers/Hardware/VCbase.h" />
+		<Unit filename="../../VELA-CLARA_software/VELA-CLARA-Controllers/Hardware/VCheader.h" />
+		<Unit filename="../../VELA-CLARA_software/VELA-CLARA-Controllers/Hardware/beamPositionMonitor/beamPositionMonitorController.cpp" />
+		<Unit filename="../../VELA-CLARA_software/VELA-CLARA-Controllers/Hardware/beamPositionMonitor/beamPositionMonitorController.h" />
+		<Unit filename="../../VELA-CLARA_software/VELA-CLARA-Controllers/Hardware/beamPositionMonitor/beamPositionMonitorInterface.cpp" />
+		<Unit filename="../../VELA-CLARA_software/VELA-CLARA-Controllers/Hardware/beamPositionMonitor/beamPositionMonitorInterface.h" />
+		<Unit filename="../../VELA-CLARA_software/VELA-CLARA-Controllers/Hardware/charge/chargeController.cpp" />
+		<Unit filename="../../VELA-CLARA_software/VELA-CLARA-Controllers/Hardware/charge/chargeController.h" />
+		<Unit filename="../../VELA-CLARA_software/VELA-CLARA-Controllers/Hardware/charge/chargeInterface.cpp" />
+		<Unit filename="../../VELA-CLARA_software/VELA-CLARA-Controllers/Hardware/charge/chargeInterface.h" />
+		<Unit filename="../../VELA-CLARA_software/VELA-CLARA-Controllers/Hardware/controller.cpp" />
+		<Unit filename="../../VELA-CLARA_software/VELA-CLARA-Controllers/Hardware/controller.h" />
+		<Unit filename="../../VELA-CLARA_software/VELA-CLARA-Controllers/Hardware/interface.cpp" />
+		<Unit filename="../../VELA-CLARA_software/VELA-CLARA-Controllers/Hardware/interface.h" />
+		<Unit filename="../../VELA-CLARA_software/VELA-CLARA-Controllers/Structs/beamPositionMonitorStructs.h" />
+		<Unit filename="../../VELA-CLARA_software/VELA-CLARA-Controllers/Structs/charge/chargeStructs.h" />
+		<Unit filename="../../VELA-CLARA_software/VELA-CLARA-Controllers/Structs/structs.h" />
+		<Unit filename="../../VELA-CLARA_software/VELA-CLARA-Controllers/Utilities/baseObject.cpp" />
+		<Unit filename="../../VELA-CLARA_software/VELA-CLARA-Controllers/Utilities/baseObject.h" />
+		<Unit filename="../../VELA-CLARA_software/VELA-CLARA-Controllers/Utilities/beamPositionMonitorConfigReader.cpp" />
+		<Unit filename="../../VELA-CLARA_software/VELA-CLARA-Controllers/Utilities/beamPositionMonitorConfigReader.h" />
+		<Unit filename="../../VELA-CLARA_software/VELA-CLARA-Controllers/Utilities/charge/chargeConfigReader.cpp" />
+		<Unit filename="../../VELA-CLARA_software/VELA-CLARA-Controllers/Utilities/charge/chargeConfigReader.h" />
+		<Unit filename="../../VELA-CLARA_software/VELA-CLARA-Controllers/Utilities/configDefinitions.h" />
+		<Unit filename="../../VELA-CLARA_software/VELA-CLARA-Controllers/Utilities/configReader.cpp" />
+		<Unit filename="../../VELA-CLARA_software/VELA-CLARA-Controllers/Utilities/configReader.h" />
+		<Unit filename="main.cpp" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

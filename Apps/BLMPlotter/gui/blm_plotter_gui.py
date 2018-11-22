@@ -53,6 +53,7 @@ class blm_plotter_gui(QMainWindow, Ui_MainWindow, base):
 		# CONNECT BUTTONS TO FUNCTIONS
 		self.saveDataButton.clicked.connect(self.handle_save_data)
 		self.setNumShotsButton.clicked.connect(self.set_num_shots)
+		self.rollingAverageButton.clicked.connect(self.set_rolling_average)
 		self.calibrateButton.clicked.connect(self.set_calibrate)
 		# self.attenuationButton.toggled.connect(lambda: self.handle_measure_type(self.attenuationButton))
 		# self.delayButton.toggled.connect(lambda: self.handle_measure_type(self.delayButton))
@@ -94,6 +95,13 @@ class blm_plotter_gui(QMainWindow, Ui_MainWindow, base):
 		self.data.values[dat.num_shots_request] = True
 		self.data.values[dat.num_shots] = int(self.numShotsOutputWidget.toPlainText())
 
+	def set_rolling_average(self):
+		if int(self.numShotsOutputWidget.toPlainText()) > 0:
+			self.data.values[dat.rolling_average] = int(self.numShotsOutputWidget.toPlainText())
+			for i, j in zip(self.data.values[dat.blm_waveform_pvs], self.data.values[dat.blm_time_pvs]):
+				self.data.values[dat.blm_voltage_average][str(i)] = [[]] * self.data.values[dat.rolling_average]
+				self.data.values[dat.blm_time_average][str(j)] = [[]] * self.data.values[dat.rolling_average]
+
 	def set_calibrate(self):
 		self.data.values[dat.calibrate_request] = True
 		self.data.values[dat.calibrate_channel_names] = [str(self.channelNamesComboBox1.currentText()),str(self.channelNamesComboBox2.currentText())]
@@ -110,6 +118,8 @@ class blm_plotter_gui(QMainWindow, Ui_MainWindow, base):
 		for key, val in self.widget.iteritems():
 			if self.value_is_new(key, base.data.values[key]):
 				self.update_widget(key, base.data.values[key], val)
+		else:
+			self.data.values[dat.rolling_average] = 0
 		if self.filterYesButton.isChecked():
 			self.data.values[dat.blackman_size] = int(self.filterSizeOutputWidget.toPlainText())
 			self.data.values[dat.apply_filter] = True
@@ -152,16 +162,18 @@ class blm_plotter_gui(QMainWindow, Ui_MainWindow, base):
 		self.min_vals = []
 		self.max_vals = []
 		self.j = 0
-		for i in self.data.values[dat.blm_waveform_pvs]:
-			self.min_vals.append(min(self.data.values[dat.blm_voltages][str(i)]))
-			self.max_vals.append(max(self.data.values[dat.blm_voltages][str(i)]))
-		for i, k in zip(self.data.values[dat.blm_waveform_pvs],self.data.values[dat.blm_time_pvs]):
-			self.vbx.setYRange(min(self.min_vals),max(self.max_vals))
-			self.blmplot = self.blmPlot.plot(pen=mkPen(self.pen_vals[self.j],width=1))
-			self.blmdata = [self.data.values[dat.blm_time][str(k)][:-1],self.data.values[dat.blm_voltages][str(i)][:-1]]
-			# self.blmplot.setData(self.data.values[dat.blm_num_values],
-			# 				   self.data.values[dat.blm_voltages][str(i)])
-			self.blmplot.setData(x=self.blmdata[0],y=self.blmdata[1])
-			# self.blmplot.setData(self.blmdata)
-			self.j = self.j+1
-		self.data.values[dat.plots_done] = True
+		if self.data.values[dat.has_blm_data]:
+			for i in self.data.values[dat.blm_waveform_pvs]:
+				self.min_vals.append(min(self.data.values[dat.blm_voltages][str(i)]))
+				self.max_vals.append(max(self.data.values[dat.blm_voltages][str(i)]))
+			for i, k, m in zip(self.data.values[dat.blm_waveform_pvs],self.data.values[dat.blm_time_pvs], self.checkboxes):
+				if m.isChecked():
+					self.vbx.setYRange(min(self.min_vals),max(self.max_vals))
+					self.blmplot = self.blmPlot.plot(pen=mkPen(self.pen_vals[self.j],width=1))
+					self.blmdata = [self.data.values[dat.blm_time][str(k)][:-1],self.data.values[dat.blm_voltages][str(i)][:-1]]
+					# self.blmplot.setData(self.data.values[dat.blm_num_values],
+					# 				   self.data.values[dat.blm_voltages][str(i)])
+					self.blmplot.setData(x=self.blmdata[0],y=self.blmdata[1])
+					# self.blmplot.setData(self.blmdata)
+					self.j = self.j+1
+			self.data.values[dat.plots_done] = True

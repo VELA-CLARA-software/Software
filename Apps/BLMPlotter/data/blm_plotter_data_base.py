@@ -9,6 +9,7 @@ from scipy import constants
 
 
 # keys for all the data we monitor
+blm_name = 'blm_name'
 time_stamp = 'time_stamp'
 bunch_charge = 'bunch_charge'
 charge_name = 'charge_name'
@@ -19,6 +20,7 @@ blm_waveform_pvs = 'blm_waveform_pvs'
 blm_status = 'blm_status'
 blm_voltages = 'blm_voltages'
 blm_buffer = 'blm_buffer'
+blm_time_buffer = 'blm_time_buffer'
 blm_distance_start = 'blm_distance_start'
 blm_distance_end = 'blm_distance_end'
 blm_time = 'blm_time'
@@ -57,8 +59,14 @@ calibrate_channel_names = 'calibrate_channel_names'
 str_to_pv = 'str_to_pv'
 delta_x = 'delta_x'
 calibration_time = 'calibration_time'
+rolling_average = 'rolling_average'
+blm_voltage_average = 'blm_voltage_average'
+blm_time_average = 'blm_time_average'
+shot_num = 'shot_num'
+time_stamps = 'time_stamps'
 
 all_value_keys = [time_stamp,
+                  blm_name,
                   bunch_charge,
                   blm_names,
                   blm_pvs,
@@ -75,6 +83,7 @@ all_value_keys = [time_stamp,
                   scan_status,
                   blm_voltages,
                   blm_buffer,
+                  blm_time_buffer,
                   blm_distance_start,
                   blm_distance_end,
                   blm_time,
@@ -105,7 +114,12 @@ all_value_keys = [time_stamp,
                   calibrate_channel_names,
                   str_to_pv,
                   delta_x,
-                  calibration_time
+                  calibration_time,
+                  rolling_average,
+                  blm_voltage_average,
+                  blm_time_average,
+                  shot_num,
+                  time_stamps
                   ]
 
 class blm_plotter_data_base(QObject):
@@ -126,7 +140,9 @@ class blm_plotter_data_base(QObject):
     dummy_int = int(-999)
     dummy_long = long(-999)
     [values.update({x: 0}) for x in all_value_keys]
+    values[blm_name] = dummy_str
     values[time_stamp] = dummy_dbl
+    values[time_stamps] = {}
     values[bunch_charge] = dummy_dbl + 1
     values[blm_names] = []
     values[blm_pvs] = []
@@ -135,6 +151,7 @@ class blm_plotter_data_base(QObject):
     values[blm_status] = {}
     values[blm_voltages] = {}
     values[blm_buffer] = {}
+    values[blm_time_buffer] = {}
     values[charge_name] = dummy_str
     values[charge_status] = False
     values[scan_status] = 'dummy_str'
@@ -173,6 +190,10 @@ class blm_plotter_data_base(QObject):
     values[str_to_pv] = {}
     values[delta_x] = dummy_dbl
     values[calibration_time] = dummy_dbl
+    values[rolling_average] = 1
+    values[shot_num] = 0
+    values[blm_voltage_average] = {}
+    values[blm_time_average] = {}
     # amp_pwr_mean_data = {}
 
     #logger

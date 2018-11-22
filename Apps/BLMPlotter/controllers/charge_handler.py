@@ -9,4 +9,4 @@ class charge_handler(charge_handler_base):
         charge_handler_base.__init__(self)
 
     def set_charge_buffer(self,value):
-        charge_handler_base.charge_control.setBufferSize(value)
+        charge_handler_base.charge_control.setBufferSize(int(value))
