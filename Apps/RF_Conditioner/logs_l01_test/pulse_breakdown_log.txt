@@ -1,0 +1,12 @@
+# header: write what you want on lines with #
+# Total ACTIVE Pulses, # breakdowns, amp_set, index (point on pulse / power curve ?) , pulse length
+# the init of this file should be 1 0 500 1 2500
+0 0 497 1 702
+1 0 498 2 702
+2 0 499 3 702
+3 0 500 4 702
+4 0 501 5 702
+5 0 502 6 702
+6 0 503 7 702
+6 0 502 6 702
+1886 0 502 6 702

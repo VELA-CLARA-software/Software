@@ -99,15 +99,14 @@ class rf_condition_data(dat.rf_condition_data_base):
 
             self.current_power = self.y_tofit[0]
             self.requested_power = self.current_power + pwr_w
-
-            self.predicted_sp = int((self.requested_power  - self.c) / self.m)
+            self.predicted_sp = int((self.requested_power - self.c)/self.m)
 
             #p =[predicted_sp, requested_power ]
             self.logger.header(self.my_name + ' get_new_set_point for power = ' ,True)
             self.logger.message('current sp/W   = ' + "%i"%self.x_tofit[0] + ", %.3E"%self.current_power, True)
             self.logger.message('predict sp/W   = ' + "%i"%self.predicted_sp +  ", %.3E"%self.requested_power, True)
-            self.logger.message('Delta SP/power = ' + str(self.predicted_sp-self.x_tofit[0]) \
-                                +str(self.requested_power - self.current_power), True)
+            self.logger.message('Delta SP/power = ' + str(self.predicted_sp - self.x_tofit[0]) \
+                                + str(self.requested_power - self.current_power), True)
             # plotting values
             self.x_plot = []
             self.y_plot = []
@@ -117,17 +116,18 @@ class rf_condition_data(dat.rf_condition_data_base):
             self.x_min = min(self.x_tofit)
             self.x_max = max(self.x_tofit)
             self.plot(self.x_plot, self.y_plot, self.m, self.c, self.x_min, self.x_max, [self.predicted_sp, self.requested_power ])
-
         else:
 #            self.logger.message('current sp/W = ' + str(self.current_power - self.previous_power) + ' ' + str(pwr_w),True)
             return None
 
 
-        # neatean up!
+    # neatean up!
     # neatean up!
     # neatean up!
     # neatean up!
     def get_new_set_point(self, pwr_win):
+
+        # this all needs changing ....
         self.previous_power = self.current_power
         x = np.array([i[0] for i in dat.rf_condition_data_base.sp_pwr_hist])
         y = np.array([i[1] for i in dat.rf_condition_data_base.sp_pwr_hist])
@@ -161,6 +161,11 @@ class rf_condition_data(dat.rf_condition_data_base):
             #
             self.current_power = np.mean(np.array([i[1] for i in current_power_data]))
 
+
+
+            ## numpy.polynomial.polynomial.polyfit(x, y, deg, rcond=None, full=False, w=weights)
+
+
             m, c = np.polyfit(x_tofit, y_tofit, 1)
             print(m,c,self.current_power,dat.rf_condition_data_base.values[dat.last_mean_power], pwr_w )
 
@@ -181,11 +186,16 @@ class rf_condition_data(dat.rf_condition_data_base):
             self.logger.message('current sp/W = ' + str(self.current_power - self.previous_power) + ' ' + str(pwr_w), True)
             return None
 
-
-
     def init_after_config_read(self):
         if self.llrf_config is not None:
             self.get_pulse_count_breakdown_log()
+            dat.rf_condition_data_base.amp_vs_kfpow_running_stat = self.logger.get_amp_power_log()
+            print 'get_amp_power_log results'
+            for key, value in dat.rf_condition_data_base.amp_vs_kfpow_running_stat.iteritems():
+                print key
+                print value
+
+
             self.values[dat.power_aim] = self.llrf_config['POWER_AIM']
             self.values[dat.pulse_length_start] = self.llrf_config['PULSE_LENGTH_START']
             self.values[dat.pulse_length_aim] = self.llrf_config['PULSE_LENGTH_AIM']
@@ -213,8 +223,6 @@ class rf_condition_data(dat.rf_condition_data_base):
         #     print i
         self.update_breakdown_stats()
 
-
-
     def update_breakdown_stats(self):
         self.values[dat.breakdown_count] = self.last_million_log[-1][1]
         self.values[dat.last_106_bd_count] = self.last_million_log[-1][1] - self.last_million_log[0][1]
@@ -233,7 +241,7 @@ class rf_condition_data(dat.rf_condition_data_base):
 
 
     def get_pulse_count_breakdown_log(self):
-        # this is waaay too complicated
+        # this is aaay too complicated
         pulse_break_down_log = self.logger.get_pulse_count_breakdown_log()
         # based on the log file we set active pulse count total,
         # the starting point is the one before the last entry

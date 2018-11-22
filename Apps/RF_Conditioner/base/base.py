@@ -57,6 +57,8 @@ class base(object):
 
     alarm_process = subprocess.Popen('pause', stdin=subprocess.PIPE, stdout=subprocess.PIPE, shell=True)
 
+
+
     def __init__(self):
         #self.alarm_process = subprocess.Popen('', stdin=subprocess.PIPE, stdout=subprocess.PIPE, shell=False)
         pass
@@ -148,7 +150,15 @@ class base(object):
     def is_probe_phase(self,str):
         return 'PROBE_PHASE' in str
 
+
+
+
+
+
+
+
     def alarm(self, alarm):
-        subprocess.call('espeak -ven+f5 ' + alarm)
+        pass
+        #subprocess.call('espeak -ven+f5 ' + alarm)
         #base.alarm_process.stdin.write('espeak -ven+f5 ' + alarm )
         # p = subprocess.Popen('espeak '+alarm, shell=True)

@@ -20,7 +20,8 @@ class data_logger(object):
     log_start_str = log_start.isoformat('-').replace(":", "-").split('.', 1)[0]
 
     def __init__(self):
-        pass
+        self.pulse_count_log = None
+        self.amp_power_log = None
 
     @property
     def log_config(self):
@@ -33,6 +34,8 @@ class data_logger(object):
         os.makedirs(self.log_directory)
         self.working_directory = self.log_directory + '\\'
         self.data_path = self.working_directory + self.log_config['DATA_LOG_FILENAME']  # MAGIC_STRING
+        self.amp_pwr_path = self.working_directory + self.log_config[
+            'AMP_POWER_LOG_FILENAME']  # MAGIC_STRING
         self.forward_file = self.working_directory + self._log_config['OUTSIDE_MASK_FORWARD_FILENAME']  #
         self.probe_file = self.working_directory + self._log_config['OUTSIDE_MASK_PROBE_FILENAME']  #
         self.reverse_file = self.working_directory + self._log_config['OUTSIDE_MASK_REVERSE_FILENAME']
@@ -78,9 +81,41 @@ class data_logger(object):
 
     def add_to_pulse_breakdown_log(self,x):
         towrite = " ".join(map(str, x))
-        self.message('Adding to pulse_breakdown_log =  ' + towrite, True)
+        self.message('Adding to pulse_breakdown_log: ' + towrite, True)
         with open(self.pulse_count_log,'a') as f:
             f.write( towrite + '\n')
+
+
+    def add_to_KFP_Running_stat_log(self, x):
+        towrite = " ".join(map(str, x))
+        #self.message('Adding to Klystron Forward Power Running Stat Log: ' + towrite, True)
+        with open(self.amp_power_log,'a') as f:
+            f.write( towrite + '\n')
+
+    def num(self, s):
+        try:
+            return int(s)
+        except ValueError:
+            return float(s)
+
+    def get_amp_power_log(self):
+        self.amp_power_log = data_logger.config.log_config['LOG_DIRECTORY']+ \
+                               data_logger.config.log_config['AMP_POWER_LOG_FILENAME']
+        r_dict ={}
+        with open(self.amp_power_log) as f:
+            lines = list(line for line in (l.strip() for l in f) if line)
+            for line in lines:
+                if '#' not in line:
+                    log = [self.num(x) for x in line.split()]
+                    r_dict[str(log[0])] = log[1:]
+                    print 'get_amp_power_log ' + str(log[0])
+                    print log[1:]
+
+
+        self.header(self.my_name + ' get_amp_power_log')
+        self.message('read get_amp_power_log: ' + self.amp_power_log)
+        return r_dict
+
 
     def get_pulse_count_breakdown_log(self):
         self.pulse_count_log = data_logger.config.log_config['LOG_DIRECTORY']+ \
@@ -158,6 +193,8 @@ class data_logger(object):
             #f.write(struct.pack('<?', val))
         elif type(val) is str:
             f.write(struct.pack('<i', -1))
+        elif type(val) is state:
+            f.write(struct.pack('<B', val))
         else:
             print(self.my_name + ' write_binary() error unknown type, ' + str(type(val)) )
         #print str(val) + '   ' + str(type(val))

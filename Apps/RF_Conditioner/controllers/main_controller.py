@@ -41,7 +41,26 @@ class main_controller(controller_base):
         QApplication.processEvents()
         #
         # number of pulses from pulse log
-        controller_base.llrf_control.addPulseCountOffset(self.data.values[dat.log_pulse_count])
+        controller_base.llrf_control.setActivePulseCount(self.data.values[dat.log_pulse_count])
+        #
+        # load the amp_set vs Kly_fwd_pow dictionary into c++
+        print 'for key, value in controller_base.data.amp_vs_kfpow_running_stat.iteritems()'
+        for key, value in controller_base.data.amp_vs_kfpow_running_stat.iteritems():
+            print key
+            print 'key type = ' + str(type(key))
+            print int(key)
+            print int(key),value[0],value[1],value[2]
+            print 'value[0] type = ' + str(type(value[0]))
+            print 'value[1] type = ' + str(type(value[1]))
+            print 'value[2] type = ' + str(type(value[2]))
+
+            controller_base.llrf_control.setKlyFwdPwrRSState(int(key),value[0],value[1],value[2])
+            #print value
+            #self.data.amp_vs_kfpow_running_stat
+        print 'fin'
+        controller_base.llrf_control.keepKlyFwdPwrRS()
+
+
         #
         # set pulse length
         controller_base.logger.message(self.my_name + ' setting pulse length to last previous log value = ' +\
@@ -89,9 +108,10 @@ class main_controller(controller_base):
         controller_base.llrf_handler.set_global_check_mask(True)
         #
         # this loop hangs the application if no RF power...
-        while controller_base.llrf_handler.mask_set == False:
-            controller_base.llrf_handler.set_mask()
-            self.set_last_mask_epoch()
+        # we don't do setting mask anymore ...
+        # while controller_base.llrf_handler.mask_set == False:
+        #     controller_base.llrf_handler.set_mask()
+        #     self.set_last_mask_epoch()
 
         # print some values
         controller_base.llrf_handler.get_lo_masks_max()
@@ -101,10 +121,7 @@ class main_controller(controller_base):
 
         controller_base.logger.header('ENTERING MAIN LOOP')
         while 1:
-            #start = timer()
-            # ...
-            # reset trigger
-            # only check masks when power is high enough
+
             if controller_base.llrfObj[0].kly_fwd_power_max > controller_base.config.llrf_config['KLY_PWR_FOR_ACTIVE_PULSE']:
                 pass
             #     controller_base.llrf_handler.force_new_mask()
@@ -184,6 +201,10 @@ class main_controller(controller_base):
 
     def ramp_up(self):
         self.data.add_to_pulse_breakdown_log(controller_base.llrfObj[0].amp_sp)
+
+
+
+
         new_amp = controller_base.data.get_new_set_point( controller_base.data.values[dat.next_power_increase]  )
         # move this in
         # new_amp = controller_base.data.get_new_set_point_DEV( controller_base.data.values[dat.next_power_increase]  )

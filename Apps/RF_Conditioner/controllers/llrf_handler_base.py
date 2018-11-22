@@ -19,19 +19,19 @@ class llrf_handler_base(base):
 		#base.__init__(self)
 		#self.num_buffer_traces = 40
 
-		self.timevector = base.llrfObj[0].time_vector.value
+		#self.timevector = base.llrfObj[0].time_vector.value
+		self.timevector = base.llrfObj[0].time_vector
 		#self.timevector_dt = self.timevector[1]-self.timevector[0]
 		base.config.llrf_config = base.config.llrf_config
 		self.start_trace_monitoring( base.config.llrf_config['TRACES_TO_SAVE'])#MAGIC_STRING
 		# must come after start_trace_monitoring
 		self.setup_trace_rolling_average()
 
-		base.llrf_control.setTracesToSaveOnBreakDown( base.config.llrf_config['TRACES_TO_SAVE'])#MAGIC_STRING
+		base.llrf_control.setTracesToSaveOnOutsideMaskEvent( base.config.llrf_config['TRACES_TO_SAVE'])#MAGIC_STRING
 
-		self.reverse_mask_dict = {}
-		self.forward_mask_dict = {}
-		self.probe_mask_dict = {}
-
+		# this is where the data for each mask, for each trace is held
+		# yes its a dict of dict,
+		self.all_mask_dict = {}
 		self.set_infinite_mask_end_by_power()
 
 	def set_infinite_mask_end_by_power(self):
@@ -61,63 +61,74 @@ class llrf_handler_base(base):
 		return success
 
 	def set_trace_masks(self):
-		if 'update_func' in self.forward_mask_dict:
-			if self.forward_mask_dict['update_func'](self.forward_mask_dict):
+		for key,value in self.all_mask_dict.iteritems():
+			if value['update_func'](value):
 				pass
 			else:
-				base.logger.message(self.forward_mask_dict['TRACE'] + 'ERROR SETTING MASK', True)
-
-		if 'update_func' in self.probe_mask_dict:
-			if self.probe_mask_dict['update_func'](self.probe_mask_dict):
-				pass
-			else:
-				base.logger.message(self.probe_mask_dict['TRACE'] + 'ERROR SETTING MASK', True)
-		# temp
-		if 'update_func' in self.reverse_mask_dict:
-			if self.reverse_mask_dict['update_func'](self.reverse_mask_dict):
-				pass
-			else:
-				base.logger.message(self.reverse_mask_dict['TRACE'] + 'ERROR SETTING MASK', True)
+				base.logger.message(key + 'ERROR SETTING MASK', True)
 
 	# more cancer but hopefully will be neatened up
 	def setup_outside_mask_trace_param(self):
+		# loop over each trace in 'BREAKDOWN_TRACES'
+		# these means we EXPECT TO FIND DATA FOR EACH TRACE
 		for trace in base.config.breakdown_config['BREAKDOWN_TRACES']:
-			if self.is_reverse(trace):
-				self.reverse_mask_dict.update({'TRACE':trace})
-				self.set_mask_dict(self.reverse_mask_dict,'R') # MEH !!!!!!! CANCER
-			elif self.is_probe(trace):
-				self.probe_mask_dict.update({'TRACE':trace})
-				self.set_mask_dict(self.probe_mask_dict,'P') # MEH !!!!!!! CANCER
-			elif self.is_forward(trace):
-				self.forward_mask_dict.update({'TRACE':trace})
-				self.set_mask_dict(self.forward_mask_dict,'F') # MEH !!!!!!! CANCER
+			# create a mask dictionary for each trace, held in all_mask_dict
+			shortname = base.llrf_control.shortLLRFTraceName(trace)
+			self.all_mask_dict[shortname] = {}
+			self.all_mask_dict[shortname]['TRACE'] = trace
+			self.set_mask_dict( self.all_mask_dict[shortname], shortname)
 
 
-	def set_mask_dict(self,dict,l):
-		dict.update({'AUTO': base.config.breakdown_config['C'+l+'P_AUTO_SET']})#MAGIC_STRING
-		if 'TIME' in base.config.breakdown_config['C'+l+'P_MASK_SET_TYPE']:#MAGIC_STRING
-			if 'PERCENT' in base.config.breakdown_config['C'+l+'P_MASK_TYPE']:#MAGIC_STRING
-				dict.update({'update_func': self.time_percent_mask })#MAGIC_STRING
-			elif 'ABSOLUTE' in base.config.breakdown_config['C'+l+'P_MASK_TYPE']:#MAGIC_STRING
-				dict.update({'update_func': self.time_absolute_mask })#MAGIC_STRING
-		elif 'INDEX' in base.config.breakdown_config['C'+l+'P_MASK_SET_TYPE']:#MAGIC_STRING
-			if 'PERCENT' in base.config.breakdown_config['C'+l+'P_MASK_TYPE']:#MAGIC_STRING
-				dict.update({'update_func': self.index_percent_mask})#MAGIC_STRING
-			elif 'ABSOLUTE' in base.config.breakdown_config['C'+l+'P_MASK_TYPE']:#MAGIC_STRING
-				dict.update({'update_func': self.index_absolute_mask})#MAGIC_STRING
-		dict.update({'S1': base.config.breakdown_config['C'+l+'P_S1']})#MAGIC_STRING
-		dict.update({'S2': base.config.breakdown_config['C'+l+'P_S2']})#MAGIC_STRING
-		dict.update({'S3': base.config.breakdown_config['C'+l+'P_S3']})#MAGIC_STRING
-		dict.update({'S4': base.config.breakdown_config['C'+l+'P_S4']})#MAGIC_STRING
-		dict.update({'LEVEL': base.config.breakdown_config['C'+l+'P_MASK_LEVEL']})#MAGIC_STRING
+	def get_breakdown_config_value(self, shortname, end_phrase):
+		''' Looks through each key and returns the value that has the same shortnam and end_phrase
+			We expect this function to NEVER return None if things are set-up correctly
+		'''
+		for key in base.config.breakdown_config.keys():
+			#print key
+			if shortname in key:
+				if end_phrase in key:
+					return base.config.breakdown_config[key]
+		print 'get_breakdown_config_param ERROR ' + shortname + ' ,' + end_phrase
+		return None
 
-		streak = base.config.breakdown_config['C'+l+'P_CHECK_STREAK']#MAGIC_STRING
-		floor = base.config.breakdown_config['C'+l+'P_MASK_FLOOR']#MAGIC_STRING
-		drop = base.config.breakdown_config['C'+l+'P_AMP_DROP']#MAGIC_STRING
-		drop_val = base.config.breakdown_config['C'+l+'P_AMP_DROP_VAL']#MAGIC_STRING
+	def set_mask_dict(self,dict, shortname):
 
-		string = [dict['TRACE'] + ', streak = ' + str(streak) + ', floor = ' + str(floor) \
-				  + ', drop = ' + str(drop) + ', drop_val= ' + str(drop_val) + ', update func = ' + str(dict['update_func']) ]
+		# create a dictionary from config data used to update the masks, for each trace
+
+		#dict.update({'AUTO': base.config.breakdown_config['C'+l+'P_AUTO_SET']})#MAGIC_STRING
+		dict.update({'AUTO': self.get_breakdown_config_value(shortname,'_AUTO_SET')})#MAGIC_STRING
+
+		# are we defining a mask in term of time or index??
+		#if 'TIME' in base.config.breakdown_config['C'+l+'P_MASK_SET_TYPE']:#MAGIC_STRING
+		if 'TIME' in self.get_breakdown_config_value(shortname,'_MASK_SET_TYPE'):#MAGIC_STRING
+			dict.update({'IS_TIME': True}) # MAGIC_STRING
+		elif 'INDEX' in self.get_breakdown_config_value(shortname,'_MASK_SET_TYPE'):  ## MAGIC_STRING
+			dict.update({'IS_TIME': False})  # MAGIC_STRING
+
+		# is a mask defined in terms of percentage or absolute value??
+		if 'PERCENT' in self.get_breakdown_config_value(shortname,'_MASK_TYPE'):#MAGIC_STRING
+			dict.update({'IS_PERCENT': True})  # MAGIC_STRING
+		elif 'ABSOLUTE' in self.get_breakdown_config_value(shortname,'_MASK_TYPE'):#MAGIC_STRING
+			dict.update({'IS_PERCENT': False})  # MAGIC_STRING
+
+		# which function to call to update masks (now always update_mask
+		dict.update({'update_func': self.update_mask})#MAGIC_STRING
+
+		# get the rest of the mask parameters # MAGIC_STRING !!!!!!!!!!
+		dict.update({'MASK_START': self.get_breakdown_config_value(shortname,'_MASK_START')})
+		dict.update({'MASK_END': self.get_breakdown_config_value(shortname,'_MASK_END')})
+		dict.update({'MASK_WINDOW_START': self.get_breakdown_config_value(shortname,'_MASK_WINDOW_START')})
+		dict.update({'MASK_WINDOW_END': self.get_breakdown_config_value(shortname,'_MASK_WINDOW_END')})
+		dict.update({'LEVEL': self.get_breakdown_config_value(shortname,'_MASK_LEVEL')})
+		dict.update({'FLOOR': self.get_breakdown_config_value(shortname,'_MASK_FLOOR')})
+		dict.update({'MASK_ABS_MIN': self.get_breakdown_config_value(shortname,'_MASK_ABS_MIN')})
+
+		streak = self.get_breakdown_config_value(shortname,'_CHECK_STREAK')#MAGIC_STRING
+		drop = self.get_breakdown_config_value(shortname,'_DROP_AMP')#MAGIC_STRING
+		drop_val = self.get_breakdown_config_value(shortname,'_AMP_DROP_VAL')
+
+		string = [dict['TRACE'] + ', streak = ' + str(streak)  + ', drop = ' + str(drop) + ', ' \
+		         'drop_val= ' + str(drop_val) + ', update func = ' + str(dict['update_func']) ]
 		base.logger.message(string, True)
 
 		if base.llrf_control.setNumContinuousOutsideMaskCount( dict['TRACE'], streak) == False:
@@ -125,20 +136,52 @@ class llrf_handler_base(base):
 		else:
 			base.logger.message('setNumContinuousOutsideMaskCount = True', True)
 
-		if base.llrf_control.setMaskFloor(dict['TRACE'], floor) == False:
-			base.logger.message(dict['TRACE'] + ' ERROR setMaskFloor = False', True)
-		else:
-			base.logger.message('setMaskFloor = True', True)
+		# if base.llrf_control.setMaskFloor(dict['TRACE'], floor) == False:
+		# 	base.logger.message(dict['TRACE'] + ' ERROR setMaskFloor = False', True)
+		# else:
+		# 	base.logger.message('setMaskFloor = True', True)
 
 		if base.llrf_control.setShouldCheckMask(dict['TRACE']) == False:
 			base.logger.message(dict['TRACE'] + ', setShouldCheckMask = False', True)
 		else:
 			base.logger.message(dict['TRACE'] + ', setShouldCheckMask = True', True)
 
-		if base.llrf_control.setDropAmpOnOutsideMaskDetection(dict['TRACE'], drop, drop_val) == False:
-			base.logger.message(dict['TRACE'] + ', setDropAmpOnOutsideMaskDetection = False', True)
+		if base.llrf_control.setDropAmpOnOutsideMaskEvent(dict['TRACE'], drop, drop_val) == False:
+			base.logger.message(dict['TRACE'] + ', setDropAmpOnOutsideMaskEvent = False', True)
 		else:
-			base.logger.message(dict['TRACE'] + ', setDropAmpOnOutsideMaskDetection = True', True)
+			base.logger.message(dict['TRACE'] + ', setDropAmpOnOutsideMaskEvent = True', True)
+
+	# setMaskParamatersTimes(const std::string& name, bool isPercent,
+	# double mask_value, double mask_floor, double mask_abs_min,
+	# double start, double end,
+	# double window_start, double window_end)
+#	if gun.setMaskParamatersTimes(cfpha, False, 50.0, 0.0, 0.0, 0.7, 2.0, 1.2, 1.45):
+
+	def update_mask(self,dict):
+		if dict['IS_TIME']:
+			if self.llrf_control.setMaskParamatersTimes(dict['TRACE'], dict['IS_PERCENT'],
+			                                            dict['LEVEL'], dict['FLOOR'],
+			                                            dict['MASK_ABS_MIN'], dict['MASK_START'],
+			                                            dict['MASK_END'],
+			                                            dict['MASK_WINDOW_START'],
+			                                            dict['MASK_WINDOW_END']):
+				base.logger.message(dict['TRACE'] + ', set time_percent_mask', True)
+				return True
+			else:
+				base.logger.message(dict['TRACE'] + ', Failed to set set time_percent_mask', True)
+				return False
+		else:
+			if self.llrf_control.setMaskParamatersIndices(dict['TRACE'], dict['IS_PERCENT'],
+			                                              dict['LEVEL'], dict['FLOOR'],
+			                                              dict['MASK_ABS_MIN'], dict['MASK_START'],
+			                                              dict['MASK_END'],
+			                                              dict['MASK_WINDOW_START'],
+			                                              dict['MASK_WINDOW_END']):
+				base.logger.message(dict['TRACE'] + ', set time_percent_mask', True)
+				return True
+			else:
+				base.logger.message(dict['TRACE'] + ', Failed to set set time_percent_mask', True)
+				return False
 
 	def time_percent_mask(self,dict):
 		if self.llrf_control.setPercentTimeMask(dict['S1'],dict['S2'],dict['S3'],dict['S4'],dict['LEVEL'],dict['TRACE']):
@@ -198,21 +241,25 @@ class llrf_handler_base(base):
 		base.llrf_control.setAllSCANToPassive()
 		base.logger.header(self.my_name + ' start_trace_monitoring', True)
 		if "error" not in trace_to_save:
-			for trace in trace_to_save:
-				if base.llrf_control.setTraceSCAN(trace, LLRF_SCAN.ZERO_POINT_ONE): # SHOULD BE INPUIT Parameter
-					base.logger.message(trace + ' SCAN set to LLRF_SCAN.ZERO_POINT_ONE', True) # SHOULD BE INPUIT Parameter
-				else:
-					base.logger.message(' ERROR trying to set LLRF_SCAN.ZERO_POINT_ONE SCAN for ' + trace, True)
+			base.llrf_control.setAllSCANToPassive()
 
-				a = base.llrf_control.startTraceMonitoring(trace)
-				base.llrf_control.setNumBufferTraces(trace, base.config.llrf_config['NUM_BUFFER_TRACES'])
-				if a:
-					base.logger.message('started monitoring ' + trace, True)
-					if 'POWER' in trace:  # MAGIC_STRING
-						self.power_traces.append(trace)
-						base.logger.message('added ' + self.power_traces[-1] + ' to power_traces. [should be' + trace + ']', True)
-				else:
-					base.logger.message(' ERROR trying to monitor ' + trace, True)
+			base.llrf_control.setAllTraceBufferSize(base.config.llrf_config['NUM_BUFFER_TRACES'])
+
+			# for trace in trace_to_save:
+			# 	if base.llrf_control.setTraceSCAN(trace, LLRF_SCAN.ZERO_POINT_ONE): # SHOULD BE INPUIT Parameter
+			# 		base.logger.message(trace + ' SCAN set to LLRF_SCAN.ZERO_POINT_ONE', True) # SHOULD BE INPUIT Parameter
+			# 	else:
+			# 		base.logger.message(' ERROR trying to set LLRF_SCAN.ZERO_POINT_ONE SCAN for ' + trace, True)
+            #
+			# 	#a = base.llrf_control.startTraceMonitoring(trace)
+			# 	base.llrf_control.setNumBufferTraces(trace,
+			# 	if a:
+			# 		base.logger.message('started monitoring ' + trace, True)
+			# 		if 'POWER' in trace:  # MAGIC_STRING
+			# 			self.power_traces.append(trace)
+			# 			base.logger.message('added ' + self.power_traces[-1] + ' to power_traces. [should be' + trace + ']', True)
+			# 	else:
+			# 		base.logger.message(' ERROR trying to monitor ' + trace, True)
 		else:
 			base.logger.message('!!! ERROR IN TRACES TO SAVE !!!', True)
 
@@ -221,17 +268,14 @@ class llrf_handler_base(base):
 		# the cavity trace need a mean
 		num_mean = 3  # MAGIC_NUM
 		for trace in base.config.breakdown_config['BREAKDOWN_TRACES']:
-			base.logger.message('starting rolling average for ' + trace, True)
+			sn = base.llrf_control.shortLLRFTraceName(trace)
+			base.logger.message('starting rolling average for ' + trace + ' (' + sn + ')', True)
 
-			if self.is_reverse(trace):
-				num_mean = base.config.breakdown_config['CRP_NUM_AVERAGE_TRACES']
-			elif self.is_forward(trace):
-				num_mean = base.config.breakdown_config['CFP_NUM_AVERAGE_TRACES']
-			elif self.is_probe(trace):
-				num_mean = base.config.breakdown_config['CPP_NUM_AVERAGE_TRACES']
+			# this needs updating cos its cnacer
+			num_mean = self.get_breakdown_config_value(base.llrf_control.shortLLRFTraceName(
+					trace),  "NUM_AVERAGE_TRACES")
 
-			base.llrf_control.clearRollingAverage(trace)
-			base.llrf_control.setNumRollingAverageTraces(trace, num_mean)
+			base.llrf_control.setTraceRollingAverageSize(trace, num_mean)
 			base.llrf_control.setInfiniteMasks(trace)
 			base.llrf_control.setShouldKeepRollingAverage(trace)
 			if base.llrfObj[0].trace_data[trace].keep_rolling_average:
@@ -276,6 +320,8 @@ class llrf_handler_base(base):
 			s = base.config.llrf_config[str(i) + '_MEAN_START']#MAGIC_STRING
 			if base.config.llrf_config.has_key(str(i) + '_MEAN_END'):#MAGIC_STRING
 				e = base.config.llrf_config[str(i) + '_MEAN_END']#MAGIC_STRING
+				print s
+				print e
 				return [s,e]
 		return False
 

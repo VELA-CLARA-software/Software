@@ -43,7 +43,7 @@ class rf_condition(QtGui.QApplication):
 		# you need this init line here to instantiate a QTApplication
 		QtGui.QApplication.__init__(self, argv)
 		# Everything else is handled by a main _controller
-		self.controller = main_controller(argv, config_file='test_LLRG.config')
+		self.controller = main_controller(argv, config_file='test_L01.config')
 
 
 if __name__ == '__main__':

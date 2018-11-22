@@ -19,6 +19,7 @@ import data.rf_condition_data_base as dat
 # other data  should be monitored in the dat aclass?
 from base.base import base
 import numpy as np
+import pyqtgraph as pg
 
 
 class gui_conditioning(QMainWindow, Ui_MainWindow, base):
@@ -28,8 +29,8 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
 	clip = clip_app.clipboard()
 	# global state
 	can_ramp = True
-	# constant colors
-	good = open = trig = 'green'
+	# constant colors for GUI update
+	good = open = rf_on = 'green'
 	bad = error = closed = 'red'
 	err = 'orange'
 	unknown = 'magenta'
@@ -54,6 +55,10 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
 		QMainWindow.__init__(self)
 		super(base, self).__init__()
 		self.setupUi(self)
+
+		self.set_plot()
+
+
 		# base.data.values  = base.data.values
 		self.data = base.data
 		# CONNECT BUTTONS TO FUNCTIONS
@@ -73,6 +78,22 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
 		self.timer.setSingleShot(False)
 		self.timer.timeout.connect(self.update_gui)
 		self.timer.start(base.config.gui_config['GUI_UPDATE_TIME'])
+
+
+	def set_plot(self):
+
+		self.plot_item = self.graphicsView.getPlotItem()
+
+		x = np.arange(10)
+		y = np.arange(10) % 3
+		top = np.linspace(1.0, 3.0, 10)
+		bottom = np.linspace(2, 0.5, 10)
+
+		self.plot_item.setWindowTitle('Amp SP vs KFPow')
+		self.err = pg.ErrorBarItem(x=x, y=y, top=top, bottom=bottom, beam=0.5)
+		self.plot_item.addItem(self.err)
+		self.plot_item.plot(x, y, symbol='o', pen={'color': 0.8, 'width': 2})
+
 
 	# custom close function
 	def closeEvent(self, event):
@@ -204,44 +225,39 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
 		else:
 			self.set_widget_color_text(widget, 'MAJOR_ERROR', self.major_error, status)
 
+
+	# these enums will need updating, especially as we introduce more RF structures ...
 	def set_mod_state(self, widget, val, status):
-		if val == GUN_MOD_STATE.Trig:
-			self.set_widget_color_text(widget, 'Trig', self.trig, status)
-		elif val == GUN_MOD_STATE.ERROR1:
-			self.set_widget_color_text(widget, 'ERROR1', self.error, status)
-		elif val == GUN_MOD_STATE.UNKNOWN1:
-			widget.setStyleSheet("QLabel { background-color : magenta; color : black; }")
-			widget.setText('UNKNOWN1')  # MAGIC_STRING
+		if val == GUN_MOD_STATE.RF_ON:
+			self.set_widget_color_text(widget, 'RF_ON', self.rf_on, status)
+		elif val == GUN_MOD_STATE.UNKNOWN_STATE:
+			self.set_widget_color_text(widget, 'UNKNOWN_STATE', self.unknown, status)
 		elif val == GUN_MOD_STATE.OFF:
-			widget.setStyleSheet("QLabel { background-color : red; color : black; }")
-			widget.setText('OFF')  # MAGIC_STRING
-		elif val == GUN_MOD_STATE.HV_Intrlock:
-			widget.setStyleSheet("QLabel { background-color : red; color : black; }")
-			widget.setText('HV_Intrlock')  # MAGIC_STRING
-		elif val == GUN_MOD_STATE.Standby_Request:
-			widget.setStyleSheet("QLabel { background-color : orange; color : black; }")
-			widget.setText('Standby_Request')  # MAGIC_STRING
-		elif val == GUN_MOD_STATE.Standby:
-			widget.setStyleSheet("QLabel { background-color : orange; color : black; }")
-			widget.setText('Standby')  # MAGIC_STRING
-		elif val == GUN_MOD_STATE.HV_Off_Requ:
-			widget.setStyleSheet("QLabel { background-color : magenta; color : black; }")
-			widget.setText('HV_Off_Requ')  # MAGIC_STRING
-		elif val == GUN_MOD_STATE.Trigger_Interl:
-			widget.setStyleSheet("QLabel { background-color : red; color : black; }")
-			widget.setText('Trigger_Interl')  # MAGIC_STRING
-		elif val == GUN_MOD_STATE.HV_Request:
-			widget.setStyleSheet("QLabel { background-color : orange; color : black; }")
-			widget.setText('HV_Request')  # MAGIC_STRING
-		elif val == GUN_MOD_STATE.HV_On:
-			widget.setStyleSheet("QLabel { background-color : orange; color : black; }")
-			widget.setText('HV_On')  # MAGIC_STRING
-		elif val == GUN_MOD_STATE.Trig_Off_Req:
-			widget.setStyleSheet("QLabel { background-color : magenta; color : black; }")
-			widget.setText('Trig_Off_Req')  # MAGIC_STRING
-		elif val == GUN_MOD_STATE.Trig_Request:
-			widget.setStyleSheet("QLabel { background-color : magenta; color : black; }")
-			widget.setText('Trig_Request')  # MAGIC_STRING
+			self.set_widget_color_text(widget, 'OFF', self.off, status)
+		elif val == GUN_MOD_STATE.OFF_REQUEST:
+			self.set_widget_color_text(widget, 'OFF_REQUEST', self.off, status)
+		elif val == GUN_MOD_STATE.HV_INTERLOCK:
+			self.set_widget_color_text(widget, 'HV_INTERLOCK', self.bad, status)
+		elif val == GUN_MOD_STATE.HV_OFF_REQUEST:
+			self.set_widget_color_text(widget, 'HV_OFF_REQUEST', self.timing, status)
+		elif val == GUN_MOD_STATE.HV_REQUEST:
+			self.set_widget_color_text(widget, 'HV_REQUEST', self.timing, status)
+		elif val == GUN_MOD_STATE.HV_ON:
+			self.set_widget_color_text(widget, 'HV_ON', self.timing, status)
+		elif val == GUN_MOD_STATE.STANDBY_REQUEST:
+			self.set_widget_color_text(widget, 'STANDBY_REQUEST', self.timing, status)
+		elif val == GUN_MOD_STATE.STANDBY:
+			self.set_widget_color_text(widget, 'STANDBY', self.err, status)
+		elif val == GUN_MOD_STATE.STANDYBY_INTERLOCK:
+			self.set_widget_color_text(widget, 'STANDYBY_INTERLOCK', self.bad, status)
+		elif val == GUN_MOD_STATE.RF_ON_REQUEST:
+			self.set_widget_color_text(widget, 'RF_ON_REQUEST', self.timing, status)
+		elif val == GUN_MOD_STATE.RF_OFF_REQUEST:
+			self.set_widget_color_text(widget, 'RF_OFF_REQUEST', self.timing, status)
+		elif val == GUN_MOD_STATE.RF_ON_INTERLOCK:
+			self.set_widget_color_text(widget, 'RF_ON_INTERLOCK', self.bad, status)
+		elif val == GUN_MOD_STATE.RF_ON:
+			self.set_widget_color_text(widget, 'RF_ON', self.err, status)
 		self.clip_vals[status] = str(widget.text())
 
 	def set_widget_color_text(self, widget, text, color, status):

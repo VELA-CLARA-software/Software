@@ -7,7 +7,7 @@ from VELA_CLARA_RF_Protection_Control import RF_GUN_PROT_STATUS
 from VELA_CLARA_LLRF_Control import LLRF_TYPE
 import datetime
 import numpy as np
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 from data.config_reader import config_reader
 
 
@@ -31,6 +31,19 @@ fwd_kly_pha = 'fwd_kly_pha'
 rev_kly_pha = 'rev_kly_pha'
 rev_cav_pha = 'rev_cav_pha'
 probe_pha = 'probe_pha'
+
+
+krpow = 'krpow'
+krpha = 'krpha'
+kfpow = 'kfpow'
+kfpha = 'kfpha'
+crpow = 'crpow'
+crpha = 'crpha'
+cppow = 'cppow'
+cppha = 'cppha'
+cfpow = 'cfpow'
+cfpha = 'cfpha'
+
 
 
 
@@ -179,7 +192,7 @@ class rf_condition_data_base(QObject):
     values[DC_spike_status] = STATE.UNKNOWN
     values[breakdown_status] = STATE.UNKNOWN
     values[rev_power_spike_count] = STATE.UNKNOWN
-    values[modulator_state] = GUN_MOD_STATE.UNKNOWN1
+    values[modulator_state] = GUN_MOD_STATE.UNKNOWN_STATE
     values[rfprot_state] = RF_GUN_PROT_STATUS.UNKNOWN
     values[llrf_output] = STATE.UNKNOWN
     values[llrf_ff_amp_locked] = STATE.UNKNOWN
@@ -207,6 +220,7 @@ class rf_condition_data_base(QObject):
     values[phase_end_mask_by_power_trace_2_time] = -1.0
 
     amp_pwr_mean_data = {}
+    amp_vs_kfpow_running_stat = {}
 
     #logger
     logger = None
@@ -216,27 +230,27 @@ class rf_condition_data_base(QObject):
     last_fwd_kly_pwr = None
     last_amp = None
 
+    #trace_shortnames = [krpow,krpha,kfpow,kfpha,crpow,crpha,cppow,cppha,cfpow,cfpha]
+
+
     def __init__(self):
         QObject.__init__(self)
         self.data_log_timer = QTimer()
         self.amp_pwr_log_timer = QTimer()
-        # matplot lib bplot set-up, plotting needs improving for speed...
-        plt.ion()
-        plt.show()
 
-    # @property
-    # def logger(self):
-    #     return rf_condition_data_base._logger
-    # @logger.setter
-    # def logger(self,value):
-    #     rf_condition_data_base._logger = value
+        # previous entry in kfp running stat, so we don't duplicate too mush in the file
+        self.last_kfp_running_stat_entry = None
+
+        # matplot lib bplot set-up, plotting needs improving for speed...
+        #plt.ion()
+        #plt.show()
 
     @property
     def llrf_config(self):
         return rf_condition_data_base._llrf_config
     @llrf_config.setter
     def llrf_config(self,value):
-        rf_condition_data_base._llrf_config= value
+        rf_condition_data_base._llrf_config = value
 
 
 
@@ -244,9 +258,10 @@ class rf_condition_data_base(QObject):
         self.logger.start_data_logging()
         self.data_log_timer.timeout.connect(self.data_log)
         self.data_log_timer.start(rf_condition_data_base.config.log_config['DATA_LOG_TIME'])
-
         self.amp_pwr_log_timer.timeout.connect(self.log_kly_fwd_power_vs_amp)
         self.amp_pwr_log_timer.start(rf_condition_data_base.config.log_config['AMP_PWR_LOG_TIME'])
+
+
 
 
     def timestamp(self):
@@ -272,8 +287,8 @@ class rf_condition_data_base(QObject):
         return self.values[event_pulse_count] >= self.values[required_pulses]
 
     # the main logging data file is binary(!)
-    # With the amount of data etc. i think this is the only practical way
-    # to save it, the header fo reach file with give types and names
+    # With the amount of data etc. I think this is the only practical way
+    # to save it, the header for each file with give types and names
     def data_log(self):
         self.timestamp()
         if self.should_write_header:
@@ -282,6 +297,16 @@ class rf_condition_data_base(QObject):
         self.logger.write_data(rf_condition_data_base.values)
 
     def log_kly_fwd_power_vs_amp(self):
+
+        next_log_entry = [rf_condition_data_base.values[amp_sp]] + \
+        rf_condition_data_base.amp_vs_kfpow_running_stat[str(rf_condition_data_base.values[amp_sp])]
+
+        if next_log_entry != self.last_kfp_running_stat_entry:
+            self.logger.add_to_KFP_Running_stat_log(next_log_entry)
+        self.last_kfp_running_stat_entry = next_log_entry
+
+
+
         if rf_condition_data_base.values[amp_sp] > 100:#MAGIC_NUMBER
             if self.kly_power_changed():
                 #rf_condition_data_base.kly_fwd_power_history.append( rf_condition_data_base.values[fwd_kly_pwr] )
