@@ -79,12 +79,6 @@ class controller_base(base):
 			logdata.append(''.join(['%s:%s, ' % (key, value) for (key, value) in item.iteritems()]))
 		base.logger.message(logdata, True)
 
-	def is_gun_type(self, type):
-		if type == LLRF_TYPE.CLARA_HRRG: return True
-		elif type == LLRF_TYPE.CLARA_LRRG: return True
-		elif type == LLRF_TYPE.VELA_HRRG: return True
-		elif type == LLRF_TYPE.VELA_LRRG: return True
-		else: return False
 
 	def start_rf_prot_control(self):
 		if self.is_gun_type(base.llrf_type):
@@ -118,8 +112,9 @@ class controller_base(base):
 			base.mod_control = base.mod_init.physical_GUN_MOD_Controller()
 			base.logger.message('start_mod_control created a gun modulator object',True)
 		elif base.llrf_type == LLRF_TYPE.L01:
-			base.mod_control = None
-			base.logger.message('start_mod_control can\'t create a linac modulator object',True)
+			base.mod_control = base.mod_init.physical_L01_MOD_Controller()
+			base.logger.message('start_mod_control created a L01  modulator object', True)
+			#base.logger.message('start_mod_control can\'t create a linac modulator object',True)
 		else:
 			base.logger.message('start_mod_control can\'t create a modulator, unknown llrf_type',True)
 

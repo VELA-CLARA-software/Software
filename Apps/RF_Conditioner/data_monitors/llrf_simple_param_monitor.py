@@ -1,5 +1,6 @@
 from monitor import monitor
 import data.rf_condition_data_base as dat
+from data.state import state
 from VELA_CLARA_LLRF_Control import TRIG
 
 class llrf_simple_param_monitor(monitor):
@@ -84,8 +85,10 @@ class llrf_simple_param_monitor(monitor):
         monitor.data.values[dat.llrf_output] = monitor.llrfObj[0].rf_output
         if monitor.llrfObj[0].rf_output != llrf_simple_param_monitor.old_rf_output:
             if monitor.llrfObj[0].rf_output:
+                #monitor.data.values[dat.breakdown_status] = state.GOOD
                 self.alarm('rf_on')
             else:
+                #monitor.data.values[dat.breakdown_status] = state.BAD
                 self.alarm('rf_off')
             llrf_simple_param_monitor.old_rf_output = monitor.llrfObj[0].rf_output
 

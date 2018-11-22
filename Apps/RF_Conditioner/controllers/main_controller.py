@@ -132,7 +132,6 @@ class main_controller(controller_base):
             QApplication.processEvents()
 
             # update main monitor states
-
             controller_base.data_monitor.update_states()
             #
             # # if new_bad drop SP
@@ -175,16 +174,23 @@ class main_controller(controller_base):
                         pass
                         #self.logger.message('MAIN LOOP allgood, pulse count good gui in pause ramp mode')
                 else:# not reached min count
+                    self.logger.message('MAIN LOOP all good, but pulse count low, ' +
+                                        str(controller_base.data.values[dat.event_pulse_count]) +
+                                        ' \ '+str(controller_base.data.values[dat.required_pulses]))
                     pass
-                    #self.logger.message('MAIN LOOP all good, but pulse count low, ' + str(values[dat.event_pulse_count]) +' \ '+ str(values[dat.required_pulses]))
-            else:# not allgood
+
+            else:
+                print "not all good"
                 pass
+            #raw_input()
             # end = timer()
             # print(end - start)
 
     def continue_ramp(self):
         self.logger.message('continue_ramp ' + str(controller_base.data.amp_sp_history[-1]))
         # apply the old settings
+        print ('continue_ramp',controller_base.data.amp_sp_history[-1])
+
         controller_base.llrf_handler.set_amp(controller_base.data.amp_sp_history[-1])
         self.data.add_to_pulse_breakdown_log(controller_base.llrfObj[0].amp_sp)
         #self.llrf_control.resetAverageTraces()

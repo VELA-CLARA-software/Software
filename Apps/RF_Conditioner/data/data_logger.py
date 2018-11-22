@@ -5,7 +5,7 @@ from VELA_CLARA_Vac_Valve_Control import VALVE_STATE
 from VELA_CLARA_RF_Protection_Control import RF_GUN_PROT_STATUS
 from VELA_CLARA_RF_Modulator_Control import GUN_MOD_STATE
 import os
-import pickle
+import cPickle as pkl
 from data.config_reader import config_reader
 import numpy
 import data.rf_condition_data_base as dat
@@ -219,6 +219,8 @@ class data_logger(object):
         self.message(self.my_name + ' pickle_dumping to ' + path,True)
         try:
             with open(path + '.pkl', 'wb') as f:
-                pickle.dump(obj, f, pickle.HIGHEST_PROTOCOL)
-        except:
-            pass
+                pkl.dump(obj, f, pkl.HIGHEST_PROTOCOL)
+        except Exception as e:
+            print(e)
+            self.message(self.my_name + ' EXCEPTION ' + str(e), True)
+            self.message(self.my_name + ' ERROR pickle_dumping to ' + path, True)

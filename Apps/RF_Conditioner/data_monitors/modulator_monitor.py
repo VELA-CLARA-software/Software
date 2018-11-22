@@ -15,7 +15,7 @@ class modulator_monitor(state_monitor):
     def __init__(self):
         state_monitor.__init__(self, update_time=state_monitor.config.mod_config['MOD_CHECK_TIME'])
         if state_monitor.mod_control:
-            self.mod = [state_monitor.mod_control.getGunObjConstRef()]
+            self.mod = [state_monitor.mod_control.getModObjConstRef()]
             self.start()
             self.set_success = True
         else:

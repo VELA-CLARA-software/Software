@@ -32,7 +32,7 @@ from VELA_CLARA_enums import STATE
 from PyQt4.QtCore import QTimer
 import data.rf_condition_data_base as dat
 from numpy import mean
-from data.state import state
+#from data.state import state
 
 
 class spike_monitor(monitor):
@@ -63,7 +63,7 @@ class spike_monitor(monitor):
                  decay_mode,
                  # change in signal value to eb a spike
                  spike_delta,
-                 # level to return to for state to go goo dagain
+                 # level to return to for state to go good again
                  spike_decay_level,
                  #m time taken
                  spike_decay_time,
@@ -158,7 +158,15 @@ class spike_monitor(monitor):
         if self.sanity_checks(item):
             self.timer.start(self.update_time)
             monitor.logger.message(self.my_name + ' STARTED running',True)
+            monitor.logger.message(self.my_name + ' ' + self.data_dict_state_key + ' ' + str(
+                    monitor.data.values[self.data_dict_state_key]) ,
+                                   True)
             self.set_good()
+
+            monitor.logger.message(self.my_name + ' ' + self.data_dict_state_key + ' ' + str(
+                    monitor.data.values[self.data_dict_state_key]) ,
+                                   True)
+
         else:
             monitor.logger.message(self.my_name + ' NOT STARTED running',True)
 
@@ -281,8 +289,14 @@ class spike_monitor(monitor):
     def dump_data(self):
         # increase count:
         self.spike_count += 1
-        new = monitor.llrf_control.dump_traces()
+        #trace_dump = monitor.llrf_control.getOneTraceData()
+
+
+        new = monitor.llrf_control.getOneTraceData()
         new.update({'vacuum': monitor.data.values[dat.vac_level]})
         new.update({'DC': monitor.data.values[dat.DC_level]})
         new.update({'SOL': monitor.data.values[dat.sol_value]})
         monitor.logger.pickle_file(self.my_name + '_' + str(self.spike_count), new)
+        print 'def dump_data(self): FIN'
+
+

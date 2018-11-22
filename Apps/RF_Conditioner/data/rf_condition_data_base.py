@@ -76,6 +76,7 @@ event_pulse_count = 'event_pulse_count'
 modulator_state = 'modulator_state'
 rfprot_state = 'rfprot_state'
 llrf_output = 'llrf_output'
+mod_output = 'mod_output'
 llrf_ff_amp_locked = 'llrf_ff_amp_locked'
 llrf_ff_ph_locked = 'llrf_ff_ph_locked'
 

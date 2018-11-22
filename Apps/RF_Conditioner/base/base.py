@@ -150,14 +150,20 @@ class base(object):
     def is_probe_phase(self,str):
         return 'PROBE_PHASE' in str
 
-
-
-
-
-
-
+    def is_gun_type(self, type):
+        if type == LLRF_TYPE.CLARA_HRRG:
+            return True
+        elif type == LLRF_TYPE.CLARA_LRRG:
+            return True
+        elif type == LLRF_TYPE.VELA_HRRG:
+            return True
+        elif type == LLRF_TYPE.VELA_LRRG:
+            return True
+        else:
+            return False
 
     def alarm(self, alarm):
+
         pass
         #subprocess.call('espeak -ven+f5 ' + alarm)
         #base.alarm_process.stdin.write('espeak -ven+f5 ' + alarm )
