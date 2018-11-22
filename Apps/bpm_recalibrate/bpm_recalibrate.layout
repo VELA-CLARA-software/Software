@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_layout_file>
+	<FileVersion major="1" minor="0" />
+	<ActiveTarget name="Release" />
+	<File name="..\..\VELA-CLARA_software\VELA-CLARA-Controllers\Utilities\beamPositionMonitorConfigReader.cpp" open="1" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="0" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="..\..\VELA-CLARA_software\VELA-CLARA-Controllers\Utilities\configDefinitions.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="4392" topLine="7" />
+		</Cursor>
+	</File>
+	<File name="main.cpp" open="1" top="1" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1626" topLine="34" />
+		</Cursor>
+	</File>
+	<File name="..\..\VELA-CLARA_software\VELA-CLARA-Controllers\Hardware\beamPositionMonitor\beamPositionMonitorController.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1217" topLine="21" />
+		</Cursor>
+	</File>
+	<File name="..\..\VELA-CLARA_software\VELA-CLARA-Controllers\Hardware\beamPositionMonitor\beamPositionMonitorInterface.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="9736" topLine="194" />
+		</Cursor>
+	</File>
+	<File name="..\..\VELA-CLARA_software\VELA-CLARA-Controllers\Hardware\beamPositionMonitor\beamPositionMonitorInterface.h" open="1" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1157" topLine="0" />
+		</Cursor>
+	</File>
+	<EditorTabsLayout layout="09eb3db05bf66d6e0000cbca00000003=*0;bpm_recalibrate:main.cpp@layout2|name=dummy;caption=;state=2098174;dir=3;layer=0;row=0;pos=0;prop=100000;bestw=831;besth=353;minw=831;minh=353;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1|name=09eb3db05bf66d6e0000cbca00000003;caption=;state=2098172;dir=5;layer=0;row=0;pos=0;prop=100000;bestw=200;besth=200;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1|dock_size(5,0,0)=202|" />
+</CodeBlocks_layout_file>
