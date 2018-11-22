@@ -28,7 +28,9 @@
 '''
 import time
 import sys,os
-sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\stage\\')
+#sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\stage\\')
+sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\Release\\')
+
 #os.environ['PATH']=os.environ['PATH']+';\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin' \
 #                                      '\\Release\\'
 #os.environ['PATH']=os.environ['PATH']+';\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin
@@ -60,10 +62,10 @@ class App(QtGui.QApplication):
         print 'creating view'
 
         #time.sleep(20)
-        #self.view = view()
+        self.view = view()
         print 'Creating Controller'
-        self.control = controller(sys_argv, model= self.model)
-        #self.control = controller(sys_argv, view = self.view, model= self.model)
+        #self.control = controller(sys_argv, model= self.model)
+        self.control = controller(sys_argv, view = self.view, model= self.model)
         #self.view.show()
         print 'Running'
 

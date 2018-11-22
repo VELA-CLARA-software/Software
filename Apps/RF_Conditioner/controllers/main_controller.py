@@ -121,19 +121,10 @@ class main_controller(controller_base):
 
         controller_base.logger.header('ENTERING MAIN LOOP')
         while 1:
-
+            # if no power then don't do anything
             if controller_base.llrfObj[0].kly_fwd_power_max > controller_base.config.llrf_config['KLY_PWR_FOR_ACTIVE_PULSE']:
                 pass
-            #     controller_base.llrf_handler.force_new_mask()
-            #     #controller_base.llrf_handler.set_mask()
-            #     controller_base.llrf_handler.set_global_check_mask(True)
-            #     #self.has_power_message(True)
-            #     if self.has_power == False:
-            #          controller_base.logger.message('main loop has power, ' + str(controller_base.llrfObj[0].kly_fwd_power_max ))
-            #          self.has_power = True
             else:
-                #controller_base.llrf_handler.set_global_check_mask(False)
-                #self.has_power_message(False)
                 if self.has_power:
                      controller_base.logger.message('main loop has NO power ' + str(controller_base.llrfObj[0].kly_fwd_power_max ),True)
                 self.has_power = False
