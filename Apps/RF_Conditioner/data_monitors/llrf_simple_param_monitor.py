@@ -113,8 +113,10 @@ class llrf_simple_param_monitor(monitor):
                 monitor.llrf_control.getMaskInfiniteEndByPowerTime( self.phase_trace_1 )
 
         # the latest running stats for this amp_set (from the c++)
-        monitor.data.amp_vs_kfpow_running_stat[str(monitor.data.values[dat.amp_sp])] = \
-            monitor.llrf_control.getKlyFwdPwrRSState( monitor.data.values[dat.amp_sp] )
+
+        if(monitor.llrf_control.isKeepingKlyFwdPwrRS()):
+            monitor.data.amp_vs_kfpow_running_stat[ monitor.data.values[dat.amp_sp] ] = \
+                monitor.llrf_control.getKlyFwdPwrRSState( monitor.data.values[dat.amp_sp] )
 
 
 
@@ -129,9 +131,9 @@ class llrf_simple_param_monitor(monitor):
             self.old_mean_values[trace] = llrf_simple_param_monitor.data.values[key]
 
             # i probably dont need to do this anymore as we're now doing it in the c++
-            if self.is_kly_forward_power(trace):
-                if self.old_mean_values[trace] > monitor.config.llrf_config['KLY_PWR_FOR_ACTIVE_PULSE']:
-                    self.update_amp_pwr_mean_dict(monitor.data.values[dat.amp_sp],self.old_mean_values[trace])
+            # if self.is_kly_forward_power(trace):
+            #     if self.old_mean_values[trace] > monitor.config.llrf_config['KLY_PWR_FOR_ACTIVE_PULSE']:
+            #         self.update_amp_pwr_mean_dict(monitor.data.values[dat.amp_sp],self.old_mean_values[trace])
 
 
 
@@ -143,16 +145,16 @@ class llrf_simple_param_monitor(monitor):
     # this needs to go into the c++ (!)
     # this needs to go into the c++ (!)
     # this needs to go into the c++ (!)
-    def update_amp_pwr_mean_dict(self,x,x2):
-        # amp_pwr_mean_data[amp_sp] { pwr_total,pwr_total_count, current_mean, max, min]
-        #print('called')
-        if x not in monitor.data.amp_pwr_mean_data:
-            monitor.data.amp_pwr_mean_data.update({x :[0,0,0,0,0]})
-            monitor.data.amp_pwr_mean_data[x][0] += x2
-            monitor.data.amp_pwr_mean_data[x][1] += 1
-            monitor.data.amp_pwr_mean_data[x][2] = float(monitor.data.amp_pwr_mean_data[x][0]) / float(monitor.data.amp_pwr_mean_data[x][1])
-        if monitor.data.amp_pwr_mean_data[x][3] > x:
-            monitor.data.amp_pwr_mean_data[x][3] = x
-        elif monitor.data.amp_pwr_mean_data[x][4] < x:
-            monitor.data.amp_pwr_mean_data[x][4] = x
-        monitor.data.values[dat.last_mean_power] = monitor.data.amp_pwr_mean_data[x][2]
+    # def update_amp_pwr_mean_dict(self,x,x2):
+    #     # amp_pwr_mean_data[amp_sp] { pwr_total,pwr_total_count, current_mean, max, min]
+    #     #print('called')
+    #     if x not in monitor.data.amp_pwr_mean_data:
+    #         monitor.data.amp_pwr_mean_data.update({x :[0,0,0,0,0]})
+    #         monitor.data.amp_pwr_mean_data[x][0] += x2
+    #         monitor.data.amp_pwr_mean_data[x][1] += 1
+    #         monitor.data.amp_pwr_mean_data[x][2] = float(monitor.data.amp_pwr_mean_data[x][0]) / float(monitor.data.amp_pwr_mean_data[x][1])
+    #     if monitor.data.amp_pwr_mean_data[x][3] > x:
+    #         monitor.data.amp_pwr_mean_data[x][3] = x
+    #     elif monitor.data.amp_pwr_mean_data[x][4] < x:
+    #         monitor.data.amp_pwr_mean_data[x][4] = x
+    #     monitor.data.values[dat.last_mean_power] = monitor.data.amp_pwr_mean_data[x][2]

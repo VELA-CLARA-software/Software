@@ -77,10 +77,13 @@ class llrf_handler_base(base):
 			self.all_mask_dict[shortname] = {}
 			self.all_mask_dict[shortname]['TRACE'] = trace
 			self.set_mask_dict( self.all_mask_dict[shortname], shortname)
-
+			if self.update_mask(self.all_mask_dict[shortname]):
+				print 'MMMMMAAAAAAAAAAAAAASSSSSSSSSSSSSKKKKKKKKKKKKKKKK'
+			else:
+				print 'ERRRRRRRRRRRRRRRRRRRRRRRRRR'
 
 	def get_breakdown_config_value(self, shortname, end_phrase):
-		''' Looks through each key and returns the value that has the same shortnam and end_phrase
+		''' Looks through each key and returns the value that has the same shortname and end_phrase
 			We expect this function to NEVER return None if things are set-up correctly
 		'''
 		for key in base.config.breakdown_config.keys():
@@ -92,6 +95,8 @@ class llrf_handler_base(base):
 		return None
 
 	def set_mask_dict(self,dict, shortname):
+
+		base.logger.message('set_mask_dict # + shortname', True)
 
 		# create a dictionary from config data used to update the masks, for each trace
 
@@ -136,11 +141,6 @@ class llrf_handler_base(base):
 		else:
 			base.logger.message('setNumContinuousOutsideMaskCount = True', True)
 
-		# if base.llrf_control.setMaskFloor(dict['TRACE'], floor) == False:
-		# 	base.logger.message(dict['TRACE'] + ' ERROR setMaskFloor = False', True)
-		# else:
-		# 	base.logger.message('setMaskFloor = True', True)
-
 		if base.llrf_control.setShouldCheckMask(dict['TRACE']) == False:
 			base.logger.message(dict['TRACE'] + ', setShouldCheckMask = False', True)
 		else:
@@ -171,6 +171,11 @@ class llrf_handler_base(base):
 				base.logger.message(dict['TRACE'] + ', Failed to set set time_percent_mask', True)
 				return False
 		else:
+
+			print [dict['TRACE'], dict['IS_PERCENT'],dict['LEVEL'], dict['FLOOR'],
+			  dict['MASK_ABS_MIN'], dict['MASK_START'],
+			dict['MASK_END'],dict['MASK_WINDOW_START'],dict['MASK_WINDOW_END']]
+
 			if self.llrf_control.setMaskParamatersIndices(dict['TRACE'], dict['IS_PERCENT'],
 			                                              dict['LEVEL'], dict['FLOOR'],
 			                                              dict['MASK_ABS_MIN'], dict['MASK_START'],
@@ -198,10 +203,8 @@ class llrf_handler_base(base):
 		else:
 			base.logger.message(dict['TRACE'] + ', Failed to set set time_absolute_mask', True)
 			return False
-		#print 'time_absolute_mask'
 
 	def index_percent_mask(self,dict):
-		#print 'index_percent_mask'
 		if self.llrf_control.setPercentMask(dict['S1'],dict['S2'],dict['S3'],dict['S4'],dict['LEVEL'],dict['TRACE']):
 			base.logger.message(dict['TRACE'] + ', set index_percent_mask', True)
 			return True
@@ -239,27 +242,10 @@ class llrf_handler_base(base):
 	def start_trace_monitoring(self,trace_to_save):
 		base.logger.header(self.my_name + ' setting all SCAN to passive', True)
 		base.llrf_control.setAllSCANToPassive()
-		base.logger.header(self.my_name + ' start_trace_monitoring', True)
+		base.logger.header(self.my_name + ' start_trace_monitoring()', True)
 		if "error" not in trace_to_save:
 			base.llrf_control.setAllSCANToPassive()
-
 			base.llrf_control.setAllTraceBufferSize(base.config.llrf_config['NUM_BUFFER_TRACES'])
-
-			# for trace in trace_to_save:
-			# 	if base.llrf_control.setTraceSCAN(trace, LLRF_SCAN.ZERO_POINT_ONE): # SHOULD BE INPUIT Parameter
-			# 		base.logger.message(trace + ' SCAN set to LLRF_SCAN.ZERO_POINT_ONE', True) # SHOULD BE INPUIT Parameter
-			# 	else:
-			# 		base.logger.message(' ERROR trying to set LLRF_SCAN.ZERO_POINT_ONE SCAN for ' + trace, True)
-            #
-			# 	#a = base.llrf_control.startTraceMonitoring(trace)
-			# 	base.llrf_control.setNumBufferTraces(trace,
-			# 	if a:
-			# 		base.logger.message('started monitoring ' + trace, True)
-			# 		if 'POWER' in trace:  # MAGIC_STRING
-			# 			self.power_traces.append(trace)
-			# 			base.logger.message('added ' + self.power_traces[-1] + ' to power_traces. [should be' + trace + ']', True)
-			# 	else:
-			# 		base.logger.message(' ERROR trying to monitor ' + trace, True)
 		else:
 			base.logger.message('!!! ERROR IN TRACES TO SAVE !!!', True)
 
@@ -320,12 +306,10 @@ class llrf_handler_base(base):
 			s = base.config.llrf_config[str(i) + '_MEAN_START']#MAGIC_STRING
 			if base.config.llrf_config.has_key(str(i) + '_MEAN_END'):#MAGIC_STRING
 				e = base.config.llrf_config[str(i) + '_MEAN_END']#MAGIC_STRING
-				print s
-				print e
 				return [s,e]
 		return False
 
 	def set_global_check_mask(self,val):
 		if base.llrfObj[0].check_mask != val:
 			base.llrf_control.setGlobalCheckMask(val)
-			base.logger.message('set_global_check_mask setGlobalCheckMask '+str(val),True)
+			base.logger.message('set_global_check_mask setGlobalCheckMask ' + str(val),True)

@@ -67,7 +67,7 @@ class data_monitoring(data_monitoring_base):
 	def update_states(self):
 		#print('update_state')
 		for key in self.monitor_funcs.keys():
-			print ('def update_states(self):  ',key)
+			#print ('def update_states(self):  ',key)
 			self.monitor_funcs[key]()
 
 	def new_bad(self):

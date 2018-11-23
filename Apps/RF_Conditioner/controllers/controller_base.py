@@ -35,24 +35,17 @@ class controller_base(base):
 		# read the config file
 		base.config.config_file = config_file
 		self.read_config()
-
+		#
 		# data logging
 		base.logger = base.logger
 
-	# # not sur ethese are used anymore
-	# def start_time(self):
-	# 	self.t_start = datetime.datetime.now()
-	# def seconds_since_start(self):
-	# 	return (datetime.datetime.now() - self.t_start).total_seconds()
-	# def seconds_elapsed(self,val):
-	# 	return self.seconds_since_start() >= val
 
 	# read config
 	def read_config(self):
 		print('read_config')
 		# read config
 		base.have_config = base.config.get_config()
-		# set llr_typ e(i.e. which cavity to value in reader
+		# set llr_type (i.e. which cavity to value in reader
 		# to continue this MUST NOT BE UNKNOWN
 		base.llrf_type = base.config.llrf_type
 		self.set_config()
@@ -86,7 +79,7 @@ class controller_base(base):
 			base.logger.message('start_rf_prot_control created a protection control  object',True)
 		elif base.llrf_type == LLRF_TYPE.L01:
 			# we don't have a linac protection controller yet ..
-			#self.prot_control = base.prot_init.physical_L01_Protection_Controller()
+			# self.prot_control = base.prot_init.physical_L01_Protection_Controller()
 			self.prot_control = None
 			base.logger.message('start_rf_prot_control did not create a protection control  object',True)
 		else:

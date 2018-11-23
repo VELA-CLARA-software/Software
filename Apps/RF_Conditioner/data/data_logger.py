@@ -107,11 +107,9 @@ class data_logger(object):
             for line in lines:
                 if '#' not in line:
                     log = [self.num(x) for x in line.split()]
-                    r_dict[str(log[0])] = log[1:]
+                    r_dict[log[0]] = log[1:]
                     print 'get_amp_power_log ' + str(log[0])
                     print log[1:]
-
-
         self.header(self.my_name + ' get_amp_power_log')
         self.message('read get_amp_power_log: ' + self.amp_power_log)
         return r_dict
@@ -135,9 +133,14 @@ class data_logger(object):
     def start_data_logging(self):
         self.header(self.my_name + ' start_data_logging')
         self.message([
-            'data_path     = ' + self.data_path,
-            'starting monitoring, update time = ' + str(self.log_config['DATA_LOG_TIME'])
+            'data_log path = ' + self.data_path,' starting monitoring, update time = ' + str(
+                    self.log_config['DATA_LOG_TIME'])
         ])
+        self.message([
+            'AMP_POWER_LOG  path = ' + self.amp_pwr_path,' starting monitoring, update time = ' +
+                                                      str(self.log_config['AMP_PWR_LOG_TIME'])
+        ])
+
 
     def write_data_log_header(self,values):
         print(self.my_name + ' writing data_log header to ' + self.data_path)

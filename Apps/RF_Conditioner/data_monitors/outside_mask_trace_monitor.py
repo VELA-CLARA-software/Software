@@ -55,8 +55,8 @@ class outside_mask_trace_monitor(monitor):
 		monitor.data.values[dat.pulse_count] = monitor.llrfObj[0].active_pulse_count
 		monitor.data.values[dat.event_pulse_count] = monitor.data.values[dat.pulse_count] - self.event_pulse_count_zero
 		monitor.data.values[dat.elapsed_time] = monitor.llrf_control.elapsedTime()
-		monitor.data.values[dat.num_outside_mask_traces] = monitor.llrfObj[0].num_outside_mask_traces
-		_count = monitor.llrfObj[0].num_outside_mask_traces
+		monitor.data.values[dat.num_outside_mask_traces] = monitor.llrfObj[0].omed_count
+		_count = monitor.llrfObj[0].omed_count
 
 		if _count > self.previous_outside_mask_trace_count:
 			monitor.logger.header(self.my_name + ' NEW OUTSIDE MASK TRACE DETECTED', True)
