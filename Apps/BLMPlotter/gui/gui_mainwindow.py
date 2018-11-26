@@ -15,7 +15,7 @@ import glob
 from PyQt4.QtCore import QObject, pyqtSignal, QThread, QTimer, QRectF, Qt
 from PyQt4.QtGui import * #QApplication, QMainWindow, QWidget, QPushButton, QVBoxLayout, QHBoxLayout, QComboBox, QTabWidget, QLineEdit, QFileDialog, QLabel, QAction, QPixmap, qApp, QStyle, QGroupBox, QSpinBox
 from pyqtgraph import LegendItem, mkPen, mkBrush, LabelItem, TableWidget, GraphicsLayoutWidget, setConfigOption, \
-setConfigOptions, InfiniteLine, ImageItem, GraphicsView, GraphicsLayout, GraphicsWindow, ViewBox, PlotDataItem, colorStr, mkColor
+setConfigOptions, InfiniteLine, ImageItem, GraphicsView, GraphicsLayout, GraphicsWindow, ViewBox, PlotDataItem, colorStr, mkColor, ScatterPlotItem
 from pyqtgraph.graphicsItems.LegendItem import ItemSample
 import argparse
 import imageio
@@ -49,6 +49,7 @@ class Ui_MainWindow(object):
         self.blmPlotWidget.setLayout(self.blmPlotLayout)
         self.blmPlotView = GraphicsView(self.blmPlotWidget, useOpenGL=True)
         self.blmPlotWidgetGraphicsLayout = GraphicsLayout()
+        # self.blmPlotWidgetGraphicsLayout = ScatterPlotItem()
         self.blmPlotView.setCentralItem(self.blmPlotWidgetGraphicsLayout)
         self.blmPlot = self.blmPlotWidgetGraphicsLayout.addPlot(title='blm')
         self.blmPlot.showGrid(x=True, y=True)
@@ -172,10 +173,10 @@ class Ui_MainWindow(object):
         self.filterYesButton.setText(_translate("MainWindow", "Filter", None))
         self.filterNoButton.setText(_translate("MainWindow", "No filter", None))
         self.filterSizeLabel.setText(_translate("MainWindow", "Filter size", None))
-        self.ch1CheckBox.setText(_translate("MainWindow", "CH1", None))
-        self.ch2CheckBox.setText(_translate("MainWindow", "CH2", None))
-        self.ch3CheckBox.setText(_translate("MainWindow", "CH3", None))
-        self.ch4CheckBox.setText(_translate("MainWindow", "CH4", None))
+        self.ch1CheckBox.setText(_translate("MainWindow", "CH1 (b)", None))
+        self.ch2CheckBox.setText(_translate("MainWindow", "CH2 (r)", None))
+        self.ch3CheckBox.setText(_translate("MainWindow", "CH3 (y)", None))
+        self.ch4CheckBox.setText(_translate("MainWindow", "CH4 (g)", None))
         # self.MainWindow.setTabText(self.MainWindow.indexOf(self.tab), _translate("MainWindow", "Settings", None))
         self.newFont = QtGui.QFont("Comic Sans", 20, QtGui.QFont.Bold)
 

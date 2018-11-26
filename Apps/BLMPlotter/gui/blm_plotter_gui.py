@@ -157,19 +157,28 @@ class blm_plotter_gui(QMainWindow, Ui_MainWindow, base):
 
 	def plot_blm_values(self):
 		self.blmPlot.clear()
-		self.pen_vals = ['b','r','y','g']
+		self.pen_vals = {self.data.values[dat.blm_waveform_pvs][0]:'b',
+						 self.data.values[dat.blm_waveform_pvs][1]:'r',
+						 self.data.values[dat.blm_waveform_pvs][2]:'y',
+						 self.data.values[dat.blm_waveform_pvs][3]:'g'}
 		self.vbx = self.blmPlot.vb
 		self.min_vals = []
 		self.max_vals = []
+		self.min_time = []
+		self.max_time = []
 		self.j = 0
 		if self.data.values[dat.has_blm_data]:
 			for i in self.data.values[dat.blm_waveform_pvs]:
 				self.min_vals.append(min(self.data.values[dat.blm_voltages][str(i)]))
 				self.max_vals.append(max(self.data.values[dat.blm_voltages][str(i)]))
+			for i in self.data.values[dat.blm_time_pvs]:
+				self.min_time.append(min(self.data.values[dat.blm_time][str(i)]))
+				self.max_time.append(max(self.data.values[dat.blm_time][str(i)]))
 			for i, k, m in zip(self.data.values[dat.blm_waveform_pvs],self.data.values[dat.blm_time_pvs], self.checkboxes):
+				self.vbx.setYRange(min(self.min_vals), max(self.max_vals))
+				self.vbx.setXRange(min(self.min_time), max(self.max_time))
 				if m.isChecked():
-					self.vbx.setYRange(min(self.min_vals),max(self.max_vals))
-					self.blmplot = self.blmPlot.plot(pen=mkPen(self.pen_vals[self.j],width=1))
+					self.blmplot = self.blmPlot.plot(pen=mkPen(self.pen_vals[i],width=1))
 					self.blmdata = [self.data.values[dat.blm_time][str(k)][:-1],self.data.values[dat.blm_voltages][str(i)][:-1]]
 					# self.blmplot.setData(self.data.values[dat.blm_num_values],
 					# 				   self.data.values[dat.blm_voltages][str(i)])
