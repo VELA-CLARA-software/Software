@@ -8,6 +8,7 @@ from PyQt4.QtCore import pyqtSignal
 from PyQt4.QtCore import QString
 from conditioning_gui import Ui_MainWindow
 from VELA_CLARA_RF_Modulator_Control import GUN_MOD_STATE
+from VELA_CLARA_RF_Modulator_Control import L01_MOD_STATE
 from VELA_CLARA_Vac_Valve_Control import VALVE_STATE
 from VELA_CLARA_RF_Protection_Control import RF_GUN_PROT_STATUS
 from VELA_CLARA_enums import STATE
@@ -19,6 +20,7 @@ import data.rf_condition_data_base as dat
 # other data  should be monitored in the dat aclass?
 from base.base import base
 import numpy as np
+import pyqtgraph as pg
 
 
 class gui_conditioning(QMainWindow, Ui_MainWindow, base):
@@ -28,9 +30,9 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
 	clip = clip_app.clipboard()
 	# global state
 	can_ramp = True
-	# constant colors
-	good = open = trig = 'green'
-	bad = error = closed = 'red'
+	# constant colors for GUI update
+	good = open = rf_on = 'green'
+	bad = error = closed = off = 'red'
 	err = 'orange'
 	unknown = 'magenta'
 	major_error = 'cyan'
@@ -54,6 +56,10 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
 		QMainWindow.__init__(self)
 		super(base, self).__init__()
 		self.setupUi(self)
+
+		self.set_plot()
+
+
 		# base.data.values  = base.data.values
 		self.data = base.data
 		# CONNECT BUTTONS TO FUNCTIONS
@@ -73,6 +79,51 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
 		self.timer.setSingleShot(False)
 		self.timer.timeout.connect(self.update_gui)
 		self.timer.start(base.config.gui_config['GUI_UPDATE_TIME'])
+
+
+	def set_plot(self):
+		self.plot_item = self.graphicsView.getPlotItem()
+		x = np.arange(10)
+		y = np.arange(10) % 3
+		top = np.linspace(1.0, 3.0, 10)
+		bottom = np.linspace(2, 0.5, 10)
+		self.plot_item.setWindowTitle('Amp SP vs KFPow')
+		self.err = pg.ErrorBarItem()
+		# self.err = pg.ErrorBarItem(x=x, y=y, top=top, bottom=bottom, beam=0.5)
+		# self.plot_item.addItem(self.err)
+		# self.plot_item.plot(x, y, symbol='o', pen={'color': 0.8, 'width': 2})
+
+	def update_plot(self):
+		data = base.data.amp_vs_kfpow_running_stat
+		x =  data.keys()
+		x.sort()
+		y = []
+		# this SHOULD be err = np.sqrt([data[i][2] / (data[i][0] -1 ) for i in x])
+		# but we ignore the minus 1 incase we get a div by zero
+		err = np.sqrt([data[i][2] / (data[i][0] ) for i in x])
+		#data =
+		for item in x:
+			y.append( data[item][1] )
+
+		self.err.setData(x = np.array(x),
+						 y = np.array(y),
+						 top= err,
+						 bottom=err,
+						 beam=0.5)
+		# do we need to clear ???
+		self.plot_item.clear()
+		self.plot_item.addItem(self.err)
+		self.plot_item.plot(x, y, symbol='+', pen={'color': 0.8, 'width': 1})
+		# add in straight line fits ...
+		self.plot_item.plot( [base.data.values[dat.x_min], base.data.values[dat.x_max] ],
+		                     [base.data.values[dat.y_min], base.data.values[dat.y_max]],
+		                     pen={'color': 'r', 'width': 2})
+
+		self.plot_item.plot( [base.data.values[dat.old_x_min], base.data.values[dat.old_x_max] ],
+		                     [base.data.values[dat.old_y_min], base.data.values[dat.old_y_max]],
+		                     pen={'color': 'y', 'width': 2})
+
+
 
 	# custom close function
 	def closeEvent(self, event):
@@ -132,7 +183,9 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
 		elif type(val) is STATE:
 			self.set_status(widget, val, key)
 		elif type(val) is GUN_MOD_STATE:
-			self.set_mod_state(widget, val, key)
+			self.set_gun_mod_state(widget, val, key)
+		elif type(val) is L01_MOD_STATE:
+			self.set_L01_mod_state(widget, val, key)
 		elif type(val) is VALVE_STATE:
 			self.set_valve(widget, val, key)
 		elif type(val) is bool:
@@ -204,44 +257,53 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
 		else:
 			self.set_widget_color_text(widget, 'MAJOR_ERROR', self.major_error, status)
 
-	def set_mod_state(self, widget, val, status):
-		if val == GUN_MOD_STATE.Trig:
-			self.set_widget_color_text(widget, 'Trig', self.trig, status)
-		elif val == GUN_MOD_STATE.ERROR1:
-			self.set_widget_color_text(widget, 'ERROR1', self.error, status)
-		elif val == GUN_MOD_STATE.UNKNOWN1:
-			widget.setStyleSheet("QLabel { background-color : magenta; color : black; }")
-			widget.setText('UNKNOWN1')  # MAGIC_STRING
+
+	# these enums will need updating, especially as we introduce more RF structures ...
+	def set_gun_mod_state(self, widget, val, status):
+		'''Replace all this cancer with a dictionary '''
+		if val == GUN_MOD_STATE.RF_ON:
+			self.set_widget_color_text(widget, 'RF_ON', self.rf_on, status)
+		elif val == GUN_MOD_STATE.UNKNOWN_STATE:
+			self.set_widget_color_text(widget, 'UNKNOWN_STATE', self.unknown, status)
 		elif val == GUN_MOD_STATE.OFF:
-			widget.setStyleSheet("QLabel { background-color : red; color : black; }")
-			widget.setText('OFF')  # MAGIC_STRING
-		elif val == GUN_MOD_STATE.HV_Intrlock:
-			widget.setStyleSheet("QLabel { background-color : red; color : black; }")
-			widget.setText('HV_Intrlock')  # MAGIC_STRING
-		elif val == GUN_MOD_STATE.Standby_Request:
-			widget.setStyleSheet("QLabel { background-color : orange; color : black; }")
-			widget.setText('Standby_Request')  # MAGIC_STRING
-		elif val == GUN_MOD_STATE.Standby:
-			widget.setStyleSheet("QLabel { background-color : orange; color : black; }")
-			widget.setText('Standby')  # MAGIC_STRING
-		elif val == GUN_MOD_STATE.HV_Off_Requ:
-			widget.setStyleSheet("QLabel { background-color : magenta; color : black; }")
-			widget.setText('HV_Off_Requ')  # MAGIC_STRING
-		elif val == GUN_MOD_STATE.Trigger_Interl:
-			widget.setStyleSheet("QLabel { background-color : red; color : black; }")
-			widget.setText('Trigger_Interl')  # MAGIC_STRING
-		elif val == GUN_MOD_STATE.HV_Request:
-			widget.setStyleSheet("QLabel { background-color : orange; color : black; }")
-			widget.setText('HV_Request')  # MAGIC_STRING
-		elif val == GUN_MOD_STATE.HV_On:
-			widget.setStyleSheet("QLabel { background-color : orange; color : black; }")
-			widget.setText('HV_On')  # MAGIC_STRING
-		elif val == GUN_MOD_STATE.Trig_Off_Req:
-			widget.setStyleSheet("QLabel { background-color : magenta; color : black; }")
-			widget.setText('Trig_Off_Req')  # MAGIC_STRING
-		elif val == GUN_MOD_STATE.Trig_Request:
-			widget.setStyleSheet("QLabel { background-color : magenta; color : black; }")
-			widget.setText('Trig_Request')  # MAGIC_STRING
+			self.set_widget_color_text(widget, 'OFF', self.off, status)
+		elif val == GUN_MOD_STATE.OFF_REQUEST:
+			self.set_widget_color_text(widget, 'OFF_REQUEST', self.off, status)
+		elif val == GUN_MOD_STATE.HV_INTERLOCK:
+			self.set_widget_color_text(widget, 'HV_INTERLOCK', self.bad, status)
+		elif val == GUN_MOD_STATE.HV_OFF_REQUEST:
+			self.set_widget_color_text(widget, 'HV_OFF_REQUEST', self.timing, status)
+		elif val == GUN_MOD_STATE.HV_REQUEST:
+			self.set_widget_color_text(widget, 'HV_REQUEST', self.timing, status)
+		elif val == GUN_MOD_STATE.HV_ON:
+			self.set_widget_color_text(widget, 'HV_ON', self.timing, status)
+		elif val == GUN_MOD_STATE.STANDBY_REQUEST:
+			self.set_widget_color_text(widget, 'STANDBY_REQUEST', self.timing, status)
+		elif val == GUN_MOD_STATE.STANDBY:
+			self.set_widget_color_text(widget, 'STANDBY', self.err, status)
+		elif val == GUN_MOD_STATE.STANDYBY_INTERLOCK:
+			self.set_widget_color_text(widget, 'STANDYBY_INTERLOCK', self.bad, status)
+		elif val == GUN_MOD_STATE.RF_ON_REQUEST:
+			self.set_widget_color_text(widget, 'RF_ON_REQUEST', self.timing, status)
+		elif val == GUN_MOD_STATE.RF_OFF_REQUEST:
+			self.set_widget_color_text(widget, 'RF_OFF_REQUEST', self.timing, status)
+		elif val == GUN_MOD_STATE.RF_ON_INTERLOCK:
+			self.set_widget_color_text(widget, 'RF_ON_INTERLOCK', self.bad, status)
+		self.clip_vals[status] = str(widget.text())
+
+	def set_L01_mod_state(self, widget, val, status):
+		if val == L01_MOD_STATE.STATE_UNKNOWN:
+			self.set_widget_color_text(widget, 'STATE_UNKNOWN', self.err, status)
+		elif val == L01_MOD_STATE.L01_OFF:
+			self.set_widget_color_text(widget, 'L01_OFF', self.rf_off, status)
+		elif val == L01_MOD_STATE.L01_STANDBY:
+			self.set_widget_color_text(widget, 'L01_STANDBY', self.rf_off, status)
+		elif val == L01_MOD_STATE.STATE_UNKNOWN:
+			self.set_widget_color_text(widget, 'STATE_UNKNOWN', self.err, status)
+		elif val == L01_MOD_STATE.L01_HV_ON:
+			self.set_widget_color_text(widget, 'L01_HV_ON', self.rf_off, status)
+		elif val == L01_MOD_STATE.L01_RF_ON:
+			self.set_widget_color_text(widget, 'L01_RF_ON', self.rf_on, status)
 		self.clip_vals[status] = str(widget.text())
 
 	def set_widget_color_text(self, widget, text, color, status):

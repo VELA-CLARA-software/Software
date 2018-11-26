@@ -100,6 +100,21 @@ class llrf_handler(llrf_handler_base):
     def set_amp_hp(self, val):
         llrf_handler_base.llrf_control.setAmpHP(val)
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    # NOT NEEDED ANYMORE ????
     # !NEATEN UP! !NEATEN UP! !NEATEN UP! !NEATEN UP! !NEATEN UP! !NEATEN UP! !NEATEN UP!
     def set_mask(self):
         if self.mask_set:

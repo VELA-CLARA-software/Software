@@ -40,7 +40,7 @@ class controller(object):
     def __init__(self,sys_argv = None,view = None, model= None):
         '''define model and view'''
         controller.model = model
-        #controller.view = view
+        controller.view = view
         #
         # connect widgest to functions
         # self.connect_widgets()
@@ -54,8 +54,8 @@ class controller(object):
         # self.timer.start(100)
         # #
         # # show the gui
-        # self.view.show()
-        # self.view.activateWindow()
+        self.view.show()
+        self.view.activateWindow()
         #
         # # a clipboad item fro copying paths to
         # self.cb = QtGui.QApplication.clipboard()

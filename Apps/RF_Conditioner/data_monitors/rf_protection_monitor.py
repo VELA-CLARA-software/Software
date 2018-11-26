@@ -10,11 +10,15 @@ class rf_protection_monitor(state_monitor):
     old_value = None
     def __init__(self):
         state_monitor.__init__(self, update_time=state_monitor.config.rfprot_config['RF_PROT_CHECK_TIME'])
-        self.prot_object = [state_monitor.prot_control.getRFProtObjConstRef(self.llrf_type_string())]
-        self.start()
-        self.set_success = True
+        if state_monitor.prot_control:
+            self.prot_object = [state_monitor.prot_control.getRFProtObjConstRef(self.llrf_type_string())]
+            self.start()
+            self.set_success = True
+        else:
+            self.set_success = False
 
 
     def check(self):
         #print('Checking rf protection state')
-        state_monitor.data.values[dat.rfprot_state] = self.prot_object[0].status
+        if self.set_success:
+            state_monitor.data.values[dat.rfprot_state] = self.prot_object[0].status

@@ -97,7 +97,7 @@ class blm_plotter_gui(QMainWindow, Ui_MainWindow, base):
 
 	def set_rolling_average(self):
 		if int(self.numShotsOutputWidget.toPlainText()) > 0:
-			self.data.values[dat.rolling_average] = int(self.rollingAverageOutputWidget.toPlainText())
+			self.data.values[dat.rolling_average] = int(self.numShotsOutputWidget.toPlainText())
 			for i, j in zip(self.data.values[dat.blm_waveform_pvs], self.data.values[dat.blm_time_pvs]):
 				self.data.values[dat.blm_voltage_average][str(i)] = [[]] * self.data.values[dat.rolling_average]
 				self.data.values[dat.blm_time_average][str(j)] = [[]] * self.data.values[dat.rolling_average]
@@ -162,16 +162,18 @@ class blm_plotter_gui(QMainWindow, Ui_MainWindow, base):
 		self.min_vals = []
 		self.max_vals = []
 		self.j = 0
-		for i in self.data.values[dat.blm_waveform_pvs]:
-			self.min_vals.append(min(self.data.values[dat.blm_voltages][str(i)]))
-			self.max_vals.append(max(self.data.values[dat.blm_voltages][str(i)]))
-		for i, k in zip(self.data.values[dat.blm_waveform_pvs],self.data.values[dat.blm_time_pvs]):
-			self.vbx.setYRange(min(self.min_vals),max(self.max_vals))
-			self.blmplot = self.blmPlot.plot(pen=mkPen(self.pen_vals[self.j],width=1))
-			self.blmdata = [self.data.values[dat.blm_time][str(k)][:-1],self.data.values[dat.blm_voltages][str(i)][:-1]]
-			# self.blmplot.setData(self.data.values[dat.blm_num_values],
-			# 				   self.data.values[dat.blm_voltages][str(i)])
-			self.blmplot.setData(x=self.blmdata[0],y=self.blmdata[1])
-			# self.blmplot.setData(self.blmdata)
-			self.j = self.j+1
-		self.data.values[dat.plots_done] = True
+		if self.data.values[dat.has_blm_data]:
+			for i in self.data.values[dat.blm_waveform_pvs]:
+				self.min_vals.append(min(self.data.values[dat.blm_voltages][str(i)]))
+				self.max_vals.append(max(self.data.values[dat.blm_voltages][str(i)]))
+			for i, k, m in zip(self.data.values[dat.blm_waveform_pvs],self.data.values[dat.blm_time_pvs], self.checkboxes):
+				if m.isChecked():
+					self.vbx.setYRange(min(self.min_vals),max(self.max_vals))
+					self.blmplot = self.blmPlot.plot(pen=mkPen(self.pen_vals[self.j],width=1))
+					self.blmdata = [self.data.values[dat.blm_time][str(k)][:-1],self.data.values[dat.blm_voltages][str(i)][:-1]]
+					# self.blmplot.setData(self.data.values[dat.blm_num_values],
+					# 				   self.data.values[dat.blm_voltages][str(i)])
+					self.blmplot.setData(x=self.blmdata[0],y=self.blmdata[1])
+					# self.blmplot.setData(self.blmdata)
+					self.j = self.j+1
+			self.data.values[dat.plots_done] = True

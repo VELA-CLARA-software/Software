@@ -14,13 +14,16 @@ class modulator_monitor(state_monitor):
     my_name = 'modulator_monitor'
     def __init__(self):
         state_monitor.__init__(self, update_time=state_monitor.config.mod_config['MOD_CHECK_TIME'])
-        self.mod = [state_monitor.mod_control.getGunObjConstRef()]
-        self.start()
-        self.set_success = True
+        if state_monitor.mod_control:
+            self.mod = [state_monitor.mod_control.getModObjConstRef()]
+            self.start()
+            self.set_success = True
+        else:
+            self.set_success = False
 
     def check(self):
-        #print('Checking mod state ' + str(self.mod[0].state))
-        state_monitor.data.values[dat.modulator_state] =  self.mod[0].state
+        if self.set_success:
+            state_monitor.data.values[dat.modulator_state] =  self.mod[0].state
 
 
 

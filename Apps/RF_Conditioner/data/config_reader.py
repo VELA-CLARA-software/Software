@@ -49,7 +49,7 @@ class config_reader(object):
     llrf_type = LLRF_TYPE.UNKNOWN_TYPE
 
     def __init__(self):
-        dummyy = 0
+        dummy = 0
 
     @property
     def config_file(self):
@@ -203,7 +203,9 @@ class config_reader(object):
     def log_param(self):
         string_param = ['LOG_FILENAME','LOG_DIRECTORY','DATA_LOG_FILENAME',
                         'OUTSIDE_MASK_FORWARD_FILENAME','OUTSIDE_MASK_REVERSE_FILENAME',
-                        'OUTSIDE_MASK_PROBE_FILENAME','PULSE_COUNT_BREAKDOWN_LOG_FILENAME'
+                        'OUTSIDE_MASK_PROBE_FILENAME','PULSE_COUNT_BREAKDOWN_LOG_FILENAME',
+                        'PULSE_COUNT_BREAKDOWN_LOG_FILENAME',
+                        'AMP_POWER_LOG_FILENAME'
                         ]
         int_param = ['DATA_LOG_TIME','AMP_PWR_LOG_TIME']
         config_reader.log_config = self.get_param_dict(string_param=string_param,int_param=int_param)
@@ -254,10 +256,10 @@ class config_reader(object):
                        '6_MEAN_START','6_MEAN_END',
                        '7_MEAN_START','7_MEAN_END',
                        '8_MEAN_START','8_MEAN_END',
-                       'KFP_MEAN_TIME_TO_AVERAGE_START','KFP_MEAN_TIME_TO_AVERAGE_END','KRP_MEAN_TIME_TO_AVERAGE_START',
-                       'KRP_MEAN_TIME_TO_AVERAGE_END','CFP_MEAN_TIME_TO_AVERAGE_START','CFP_MEAN_TIME_TO_AVERAGE_END',
-                       'CRP_MEAN_TIME_TO_AVERAGE_START','CRP_MEAN_TIME_TO_AVERAGE_END',
-                       'CPP_MEAN_TIME_TO_AVERAGE_START', 'CPP_MEAN_TIME_TO_AVERAGE_END'
+                       '9_MEAN_START','9_MEAN_END',
+                       '10_MEAN_START','10_MEAN_END',
+                       '11_MEAN_START','11_MEAN_END',
+                       '12_MEAN_START','12_MEAN_END'
                        ]
 
         config_reader.llrf_config = self.get_param_dict(string_param=string_param,int_param=int_param,
@@ -267,57 +269,198 @@ class config_reader(object):
         return config_reader.llrf_config
 
     def breakdown_param(self):
-        bool_param=['CRP_AUTO_SET','CFP_AUTO_SET','CPP_AUTO_SET','CRP_AMP_DROP','CFP_AMP_DROP','CPP_AMP_DROP']
+        bool_param=['CFPOW_AUTO_SET',
+                    'CRPOW_AUTO_SET',
+                    'CPPOW_AUTO_SET',
+                    'KFPOW_AUTO_SET',
+                    'KRPOW_AUTO_SET',
+                    'CFPHA_AUTO_SET',
+                    'CRPHA_AUTO_SET',
+                    'CPPHA_AUTO_SET',
+                    'KFPHA_AUTO_SET',
+                    'KRPHA_AUTO_SET',
+
+                    'CFPOW_DROP_AMP',
+                    'CRPOW_DROP_AMP',
+                    'CPPOW_DROP_AMP',
+                    'KFPOW_DROP_AMP',
+                    'KRPOW_DROP_AMP',
+                    'CFPHA_DROP_AMP',
+                    'CRPHA_DROP_AMP',
+                    'CPPHA_DROP_AMP',
+                    'KFPHA_DROP_AMP',
+                    'KRPHA_DROP_AMP'
+
+                    ]
+
         monitor_param = ['BREAKDOWN_TRACES']
         int_param=[
-            'CRP_MASK_LEVEL','CRP_CHECK_STREAK','CRP_MASK_FLOOR','CRP_NUM_AVERAGE_TRACES',
-            'CFP_MASK_LEVEL','CFP_CHECK_STREAK','CFP_MASK_FLOOR','CFP_NUM_AVERAGE_TRACES',
-            'CPP_MASK_LEVEL','CPP_CHECK_STREAK','CPP_MASK_FLOOR','CPP_NUM_AVERAGE_TRACES',
-            'CRP_AMP_DROP_VAL','CFP_AMP_DROP_VAL','CPP_AMP_DROP_VAL','OUTSIDE_MASK_CHECK_TIME','OUTSIDE_MASK_COOLDOWN_TIME'
+            'CFPOW_MASK_ABS_MIN',
+            'CRPOW_MASK_ABS_MIN',
+            'CPPOW_MASK_ABS_MIN',
+            'KFPOW_MASK_ABS_MIN',
+            'KRPOW_MASK_ABS_MIN',
+            'CFPHA_MASK_ABS_MIN',
+            'CRPHA_MASK_ABS_MIN',
+            'CPPHA_MASK_ABS_MIN',
+            'KFPHA_MASK_ABS_MIN',
+            'KRPHA_MASK_ABS_MIN',
+
+            'CFPOW_MASK_LEVEL',
+            'CRPOW_MASK_LEVEL',
+            'CPPOW_MASK_LEVEL',
+            'KFPOW_MASK_LEVEL',
+            'KRPOW_MASK_LEVEL',
+            'CFPHA_MASK_LEVEL',
+            'CRPHA_MASK_LEVEL',
+            'CPPHA_MASK_LEVEL',
+            'KFPHA_MASK_LEVEL',
+            'KRPHA_MASK_LEVEL',
+
+            'CFPOW_CHECK_STREAK',
+            'CRPOW_CHECK_STREAK',
+            'CPPOW_CHECK_STREAK',
+            'KFPOW_CHECK_STREAK',
+            'KRPOW_CHECK_STREAK',
+            'CFPHA_CHECK_STREAK',
+            'CRPHA_CHECK_STREAK',
+            'CPPHA_CHECK_STREAK',
+            'KFPHA_CHECK_STREAK',
+            'KRPHA_CHECK_STREAK',
+
+            'CFPOW_MASK_FLOOR',
+            'CRPOW_MASK_FLOOR',
+            'CPPOW_MASK_FLOOR',
+            'KFPOW_MASK_FLOOR',
+            'KRPOW_MASK_FLOOR',
+            'CFPHA_MASK_FLOOR',
+            'CRPHA_MASK_FLOOR',
+            'CPPHA_MASK_FLOOR',
+            'KFPHA_MASK_FLOOR',
+            'KRPHA_MASK_FLOOR',
+
+            'CFPOW_NUM_AVERAGE_TRACES',
+            'CRPOW_NUM_AVERAGE_TRACES',
+            'CPPOW_NUM_AVERAGE_TRACES',
+            'KFPOW_NUM_AVERAGE_TRACES',
+            'KRPOW_NUM_AVERAGE_TRACES',
+            'CFPHA_NUM_AVERAGE_TRACES',
+            'CRPHA_NUM_AVERAGE_TRACES',
+            'CPPHA_NUM_AVERAGE_TRACES',
+            'KFPHA_NUM_AVERAGE_TRACES',
+            'KRPHA_NUM_AVERAGE_TRACES',
+
+            'CRPOW_AMP_DROP_VALUE',
+            'CPPOW_AMP_DROP_VALUE',
+            'KFPOW_AMP_DROP_VALUE',
+            'KRPOW_AMP_DROP_VALUE',
+            'CRPHA_AMP_DROP_VALUE',
+            'CPPHA_AMP_DROP_VALUE',
+            'CFPOW_AMP_DROP_VALUE',
+            'KFPHA_AMP_DROP_VALUE',
+            'KRPHA_AMP_DROP_VALUE',
+
+            'OUTSIDE_MASK_CHECK_TIME','OUTSIDE_MASK_COOLDOWN_TIME'
             ]
 
-        float_param = ['CRP_MASK_END','CFP_MASK_END','CPP_MASK_END','CRP_S1', 'CRP_S2', 'CRP_S3', 'CRP_S4','CFP_S1',
-                       'CFP_S2', 'CFP_S3', 'CFP_S4','CPP_S1', 'CPP_S2', 'CPP_S3', 'CPP_S4','PHASE_MASK_BY_POWER_LEVEL_1','PHASE_MASK_BY_POWER_LEVEL_2']
 
 
-        string_param=['CRP_MASK_TYPE','CFP_MASK_TYPE','CPP_MASK_TYPE','CRP_MASK_SET_TYPE','CFP_MASK_SET_TYPE','CPP_MASK_SET_TYPE',
+        float_param = ['CFPOW_MASK_START',
+                       'CRPOW_MASK_START',
+                       'CPPOW_MASK_START',
+                       'KFPOW_MASK_START',
+                       'KRPOW_MASK_START',
+                       'CRPHA_MASK_START',
+                       'CPPHA_MASK_START',
+                       'KFPHA_MASK_START',
+                       'KRPHA_MASK_START',
+
+                       'CFPOW_MASK_END',
+                       'CRPOW_MASK_END',
+                       'CPPOW_MASK_END',
+                       'KFPOW_MASK_END',
+                       'KRPOW_MASK_END',
+                       'CFPHA_MASK_END',
+                       'CRPHA_MASK_END',
+                       'CPPHA_MASK_END',
+                       'KFPHA_MASK_END',
+                       'KRPHA_MASK_END',
+
+                       'CFPOW_MASK_WINDOW_START',
+                       'CRPOW_MASK_WINDOW_START',
+                       'CPPOW_MASK_WINDOW_START',
+                       'KFPOW_MASK_WINDOW_START',
+                       'KRPOW_MASK_WINDOW_START',
+                       'CFPHA_MASK_WINDOW_START',
+                       'CRPHA_MASK_WINDOW_START',
+                       'CPPHA_MASK_WINDOW_START',
+                       'KFPHA_MASK_WINDOW_START',
+                       'KRPHA_MASK_WINDOW_START',
+
+                       'CFPOW_MASK_WINDOW_END',
+                       'CRPOW_MASK_WINDOW_END',
+                       'CPPOW_MASK_WINDOW_END',
+                       'KFPOW_MASK_WINDOW_END',
+                       'KRPOW_MASK_WINDOW_END',
+                       'CFPHA_MASK_WINDOW_END',
+                       'CRPHA_MASK_WINDOW_END',
+                       'CPPHA_MASK_WINDOW_END',
+                       'KFPHA_MASK_WINDOW_END',
+                       'KRPHA_MASK_WINDOW_END',
+                       'PHASE_MASK_BY_POWER_LEVEL_1',
+                       'PHASE_MASK_BY_POWER_LEVEL_2']
+
+
+        string_param=['CFPOW_MASK_TYPE',
+                      'CRPOW_MASK_TYPE',
+                      'CPPOW_MASK_TYPE',
+                      'KFPOW_MASK_TYPE',
+                      'KRPOW_MASK_TYPE',
+                      'CFPHA_MASK_TYPE',
+                      'CRPHA_MASK_TYPE',
+                      'CPPHA_MASK_TYPE',
+                      'KFPHA_MASK_TYPE',
+                      'KRPHA_MASK_TYPE',
+
+                      'CFPOW_MASK_SET_TYPE',
+                      'CRPOW_MASK_SET_TYPE',
+                      'CPPOW_MASK_SET_TYPE',
+                      'KFPOW_MASK_SET_TYPE',
+                      'KRPOW_MASK_SET_TYPE',
+                      'CRPHA_MASK_SET_TYPE',
+                      'CPPHA_MASK_SET_TYPE',
+                      'KFPHA_MASK_SET_TYPE',
+                      'KRPHA_MASK_SET_TYPE',
                       'PHASE_MASK_BY_POWER_PHASE_TRACE_1','PHASE_MASK_BY_POWER_POWER_TRACE_1',
                       'PHASE_MASK_BY_POWER_PHASE_TRACE_2','PHASE_MASK_BY_POWER_POWER_TRACE_2'
                       ]
-        config_reader.breakdown_config = self.get_param_dict(int_param=int_param, bool_param=bool_param, monitor_param=monitor_param,float_param=float_param, string_param=string_param)
+        config_reader.breakdown_config = self.get_param_dict(int_param=int_param,
+                                                             bool_param=bool_param,
+                                                             monitor_param=monitor_param,
+                                                             float_param=float_param,
+                                                             string_param=string_param)
 
         # we do some more manual processing here:
         #cancer
-        if config_reader.breakdown_config.has_key('CRP_AUTO_SET'):
-            if config_reader.breakdown_config['CRP_AUTO_SET']:
-                pass
-            else:
-                if config_reader.breakdown_config.has_key('CRP_MASK_SET_TYPE'):
-                    if config_reader.breakdown_config['CRP_MASK_SET_TYPE'] == 'INDEX':
-                        config_reader.breakdown_config['CRP_S1'] = int(config_reader.breakdown_config['CRP_S1'])
-                        config_reader.breakdown_config['CRP_S2'] = int(config_reader.breakdown_config['CRP_S4'])
-                        config_reader.breakdown_config['CRP_S3'] = int(config_reader.breakdown_config['CRP_S4'])
-                        config_reader.breakdown_config['CRP_S4'] = int(config_reader.breakdown_config['CRP_S4'])
-        if config_reader.breakdown_config.has_key('CFP_AUTO_SET'):
-            if config_reader.breakdown_config['CFP_AUTO_SET']:
-                pass
-            else:
-                if config_reader.breakdown_config.has_key('CFP_MASK_SET_TYPE'):
-                    if config_reader.breakdown_config['CFP_MASK_SET_TYPE'] == 'INDEX':
-                        config_reader.breakdown_config['CFP_S1'] = int(config_reader.breakdown_config['CFP_S1'])
-                        config_reader.breakdown_config['CFP_S2'] = int(config_reader.breakdown_config['CFP_S4'])
-                        config_reader.breakdown_config['CFP_S3'] = int(config_reader.breakdown_config['CFP_S4'])
-                        config_reader.breakdown_config['CFP_S4'] = int(config_reader.breakdown_config['CFP_S4'])
-        if config_reader.breakdown_config.has_key('CPP_AUTO_SET'):
-            if config_reader.breakdown_config['CPP_AUTO_SET']:
-                pass
-            else:
-                if config_reader.breakdown_config.has_key('CPP_MASK_SET_TYPE'):
-                        if config_reader.breakdown_config['CPP_MASK_SET_TYPE'] == 'INDEX':
-                            config_reader.breakdown_config['CPP_S1'] = int(config_reader.breakdown_config['CPP_S1'])
-                            config_reader.breakdown_config['CPP_S2'] = int(config_reader.breakdown_config['CPP_S4'])
-                            config_reader.breakdown_config['CPP_S3'] = int(config_reader.breakdown_config['CPP_S4'])
-                            config_reader.breakdown_config['CPP_S4'] = int(config_reader.breakdown_config['CPP_S4'])
+
+
+        print 'all breakdown_config keys'
+        for key in config_reader.breakdown_config.keys():
+            print key
+
+
+        # this si re-casting the type to int for these paramters if CRP_MASK_SET_TYPE = INDEX
+        for key,value in config_reader.breakdown_config.iteritems():
+            if '_MASK_SET_TYPE' in key:
+                if value == 'INDEX':
+                    k = key[:5] + '_MASK_START'
+                    config_reader.breakdown_config[k] = int(config_reader.breakdown_config[k])
+                    k = key[:5] + '_MASK_END'
+                    config_reader.breakdown_config[k] = int(config_reader.breakdown_config[k])
+                    k = key[:5] + '_MASK_WINDOW_END'
+                    config_reader.breakdown_config[k] = int(config_reader.breakdown_config[k])
+                    k = key[:5] + '_MASK_WINDOW_START'
+                    config_reader.breakdown_config[k] = int(config_reader.breakdown_config[k])
         return config_reader.breakdown_config
 
     def mod_param(self):

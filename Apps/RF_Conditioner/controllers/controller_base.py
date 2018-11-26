@@ -35,24 +35,17 @@ class controller_base(base):
 		# read the config file
 		base.config.config_file = config_file
 		self.read_config()
-
+		#
 		# data logging
 		base.logger = base.logger
 
-	# # not sur ethese are used anymore
-	# def start_time(self):
-	# 	self.t_start = datetime.datetime.now()
-	# def seconds_since_start(self):
-	# 	return (datetime.datetime.now() - self.t_start).total_seconds()
-	# def seconds_elapsed(self,val):
-	# 	return self.seconds_since_start() >= val
 
 	# read config
 	def read_config(self):
 		print('read_config')
 		# read config
 		base.have_config = base.config.get_config()
-		# set llr_typ e(i.e. which cavity to value in reader
+		# set llr_type (i.e. which cavity to value in reader
 		# to continue this MUST NOT BE UNKNOWN
 		base.llrf_type = base.config.llrf_type
 		self.set_config()
@@ -79,18 +72,14 @@ class controller_base(base):
 			logdata.append(''.join(['%s:%s, ' % (key, value) for (key, value) in item.iteritems()]))
 		base.logger.message(logdata, True)
 
-	def is_gun_type(self, type):
-		if type == LLRF_TYPE.CLARA_HRRG: return True
-		elif type == LLRF_TYPE.CLARA_LRRG: return True
-		elif type == LLRF_TYPE.VELA_HRRG: return True
-		elif type == LLRF_TYPE.VELA_LRRG: return True
-		else: return False
 
 	def start_rf_prot_control(self):
 		if self.is_gun_type(base.llrf_type):
 			base.prot_control = base.prot_init.physical_Gun_Protection_Controller()
 			base.logger.message('start_rf_prot_control created a protection control  object',True)
 		elif base.llrf_type == LLRF_TYPE.L01:
+			# we don't have a linac protection controller yet ..
+			# self.prot_control = base.prot_init.physical_L01_Protection_Controller()
 			self.prot_control = None
 			base.logger.message('start_rf_prot_control did not create a protection control  object',True)
 		else:
@@ -102,7 +91,11 @@ class controller_base(base):
 		except:
 			a = MACHINE_AREA.UNKNOWN_AREA
 		if a is not MACHINE_AREA.UNKNOWN_AREA:
-			base.valve_control = base.valve_init.getVacValveController(MACHINE_MODE.PHYSICAL,a)
+			'''
+				THIS IS NOT WORKING CORRECTLY
+			'''
+			#base.valve_control = base.valve_init.getVacValveController(MACHINE_MODE.PHYSICAL,a)
+			base.valve_control = base.valve_init.physical_CLARA_PH1_Vac_Valve_Controller()
 			base.logger.message('start_vac_valve_control created ' + str(base.config.vac_valve_config['VAC_VALVE_AREA']) + ' object', True)
 		else:
 			base.logger.message('start_vac_valve_control UNKNOWN_MACHINE area cannot create vac-valve object', True)
@@ -112,8 +105,9 @@ class controller_base(base):
 			base.mod_control = base.mod_init.physical_GUN_MOD_Controller()
 			base.logger.message('start_mod_control created a gun modulator object',True)
 		elif base.llrf_type == LLRF_TYPE.L01:
-			base.mod_control = None
-			base.logger.message('start_mod_control can\'t create a linac modulator object',True)
+			base.mod_control = base.mod_init.physical_L01_MOD_Controller()
+			base.logger.message('start_mod_control created a L01  modulator object', True)
+			#base.logger.message('start_mod_control can\'t create a linac modulator object',True)
 		else:
 			base.logger.message('start_mod_control can\'t create a modulator, unknown llrf_type',True)
 
@@ -140,7 +134,7 @@ class controller_base(base):
 	def get_full_trace_name(self,traces):
 		temp = []
 		for trace in traces:
-			temp.append(base.llrf_control.fullCavityTraceName(trace))
+			temp.append(base.llrf_control.fullLLRFTraceName(trace))
 		return temp
 
 

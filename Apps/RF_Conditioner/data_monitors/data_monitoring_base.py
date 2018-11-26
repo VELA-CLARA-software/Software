@@ -53,8 +53,8 @@ class data_monitoring_base(base):
 	[is_monitoring.update({x: False}) for x in all_monitors]
 	# these monitors have no bearing on the conditioning main_loop
 	passive_monitors = [llrf_simple_monitoring,
-					cavity_temp_monitoring,
-					water_temp_monitoring,
+						cavity_temp_monitoring,
+						water_temp_monitoring,
 						sol_monitoring
 						]
 
@@ -205,7 +205,6 @@ class data_monitoring_base(base):
 				min_cooldown_time=base.config.breakdown_config['OUTSIDE_MASK_COOLDOWN_TIME']  # MAGIC_STRING
 			)  # MAGIC_STRING
 			data_monitoring_base.is_monitoring[dat.DC_spike_status] = data_monitoring_base.DC_monitor.set_success
-			data_monitoring_base.DC_monitor.my_name = 'DC_monitor'  # MAGIC_STRING
 		return data_monitoring_base.DC_monitor.set_success
 
 	def rfprot_monitor(self):
@@ -268,7 +267,6 @@ class data_monitoring_base(base):
 			)
 			data_monitoring_base.is_monitoring[data_monitoring_base.sol_monitoring] = self.sol_monitor.set_success
 		return data_monitoring_base.is_monitoring[data_monitoring_base.sol_monitoring]
-
 
 	def start_llrf_simple_param_monitor(self):
 		data_monitoring_base.llrf_simple_param_monitor = llrf_simple_param_monitor.llrf_simple_param_monitor()
