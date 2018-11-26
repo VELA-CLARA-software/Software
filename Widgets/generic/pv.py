@@ -1,8 +1,8 @@
 import time, copy, sys, math
 from epics import caget, caput, cainfo, PV
 import numpy as np
-sys.path.append("../../")
-import Procedures.qt as qt
+sys.path.append("../../../")
+import Software.Procedures.qt as qt
 from collections import deque, OrderedDict
 from six import string_types
 

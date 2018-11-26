@@ -490,17 +490,28 @@ class Model(object):
         else:
              self.machine.setPhase(self.cavity, self.startingPhase)
 
+    def longest(self, l):
+        if(not isinstance(l, list)): return(0)
+        return(max([len(l),] + [len(subl) for subl in l if isinstance(subl, list)] +
+            [self.longest(subl) for subl in l]))
+
     def cutDataLinacQuick(self):
         allData = self.getDataArray()
         cutData = [a for a in allData if np.isnan(a[1])]
+        alllist = []
         newlist = []
         for i, pt in enumerate(cutData):
             if i < (len(cutData)-1):
                 if not cutData[i+1][0] - pt[0] > 2*self.stepSize:
                     newlist.append(pt)
+                else:
+                    alllist.append(newlist)
+                    newlist = []
             elif i == (len(cutData)-1):
                 newlist.append(pt)
-        return newlist
+                alllist.append(newlist)
+        print 'alllist = ', alllist
+        return self.longest(alllist)
 
     def doFitLinacQuick(self):
         try:

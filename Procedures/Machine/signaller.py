@@ -1,6 +1,6 @@
 import sys
-sys.path.append("../../")
-import Procedures.qt as qt
+sys.path.append("../../../")
+import Software.Procedures.qt as qt
 from  functools import partial
 import time
 
