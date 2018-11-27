@@ -166,7 +166,12 @@ class blm_plotter_gui(QMainWindow, Ui_MainWindow, base):
 		self.max_vals = []
 		self.min_time = []
 		self.max_time = []
+		self.named = {self.data.values[dat.blm_waveform_pvs][0]:False,
+						 self.data.values[dat.blm_waveform_pvs][1]:False,
+						 self.data.values[dat.blm_waveform_pvs][2]:False,
+						 self.data.values[dat.blm_waveform_pvs][3]:False}
 		self.j = 0
+		self.blmPlot.addLegend()
 		if self.data.values[dat.has_blm_data]:
 			for i in self.data.values[dat.blm_waveform_pvs]:
 				self.min_vals.append(min(self.data.values[dat.blm_voltages][str(i)]))
@@ -174,15 +179,29 @@ class blm_plotter_gui(QMainWindow, Ui_MainWindow, base):
 			for i in self.data.values[dat.blm_time_pvs]:
 				self.min_time.append(min(self.data.values[dat.blm_time][str(i)]))
 				self.max_time.append(max(self.data.values[dat.blm_time][str(i)]))
+			self.vbx.setYRange(min(self.min_vals), max(self.max_vals))
+			self.vbx.setXRange(0, max(self.max_time))
 			for i, k, m in zip(self.data.values[dat.blm_waveform_pvs],self.data.values[dat.blm_time_pvs], self.checkboxes):
-				self.vbx.setYRange(min(self.min_vals), max(self.max_vals))
-				self.vbx.setXRange(min(self.min_time), max(self.max_time))
 				if m.isChecked():
-					self.blmplot = self.blmPlot.plot(pen=mkPen(self.pen_vals[i],width=1))
+					if not self.named[i]:
+						self.blmplot = self.blmPlot.plot(pen=mkPen(self.pen_vals[i],width=1),name=str(i)+" "+self.data.values[dat.fibre_config][i]+" "+self.data.values[dat.fibre_diameter][i])
+						self.named[i] = True
 					self.blmdata = [self.data.values[dat.blm_time][str(k)][:-1],self.data.values[dat.blm_voltages][str(i)][:-1]]
 					# self.blmplot.setData(self.data.values[dat.blm_num_values],
 					# 				   self.data.values[dat.blm_voltages][str(i)])
 					self.blmplot.setData(x=self.blmdata[0],y=self.blmdata[1])
 					# self.blmplot.setData(self.blmdata)
 					self.j = self.j+1
+				# else:
+				# 	if m.isChecked():
+				# 		self.blmplot = self.blmPlot.plot(pen=mkPen(self.pen_vals[i], width=1))
+				# 		self.blmdata = [numpy.gradient(self.data.values[dat.blm_voltages][str(i)][:-1])]#/numpy.diff(self.data.values[dat.blm_time][str(k)][:-1])]
+				# 		self.vbx.setYRange(min(self.blmdata[0]), max(self.blmdata[0]))
+				# 		self.vbx.setXRange(0, max(self.max_time))
+				# 		# self.blmplot.setData(self.data.values[dat.blm_num_values],
+				# 		# 				   self.data.values[dat.blm_voltages][str(i)])
+				# 		# self.blmplot.setData(x=self.blmdata[0], y=self.blmdata[1])
+				# 		self.blmplot.setData(x=self.data.values[dat.blm_time][str(k)][:-1],y=self.blmdata[0])
+				# 		self.j = self.j + 1
+
 			self.data.values[dat.plots_done] = True

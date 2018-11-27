@@ -9,6 +9,12 @@ import time
 from logs.dict_to_h5 import save_dict_to_hdf5
 import numpy, os, datetime
 from timeit import default_timer as timer
+print sys.path
+#sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..\\..\\..\\')))
+#print sys.path
+sys.path.append(os.path.abspath('../../../'))
+print sys.path
+from Software.Widgets.MachineSnapshot.machine_snapshot import MachineSnapshot
 
 
 class main_controller(controller_base):
@@ -29,6 +35,11 @@ class main_controller(controller_base):
         self.gui.closing.connect(self.connectCloseEvents)
         self.gui.show()
         self.gui.activateWindow()
+        # self.machinesnapshot = MachineSnapshot(MAG_Ctrl=None, BPM_Ctrl=None, CHG_Ctrl=None,
+        #                                        SCR_Ctrl=None, CAM_Ctrl=None, GUN_Ctrl=None,
+        #                                        GUN_Type=None, GUN_Crest=0.0, L01_Ctrl=None, L01_Crest=0.0,
+        #                                        PIL_Ctrl=None, MACHINE_MODE=machine_mode,
+        #                                        MACHINE_AREA=machine_area, messages=False)
         QApplication.processEvents()
 
         # set up main_loop main states

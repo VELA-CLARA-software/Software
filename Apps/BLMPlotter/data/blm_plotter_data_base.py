@@ -67,6 +67,9 @@ time_stamps = 'time_stamps'
 all_noise_data = 'all_noise_data'
 all_single_photon_data = 'all_single_photon_data'
 stream = 'stream'
+calibration_factors = 'calibration_factors'
+fibre_diameter = 'fibre_diameter'
+fibre_config = 'fibre_config'
 
 all_value_keys = [time_stamp,
                   blm_name,
@@ -125,7 +128,10 @@ all_value_keys = [time_stamp,
                   time_stamps,
                   all_noise_data,
                   all_single_photon_data,
-                  stream
+                  stream,
+                  calibration_factors,
+                  fibre_diameter,
+                  fibre_config
                   ]
 
 class blm_plotter_data_base(QObject):
@@ -203,6 +209,9 @@ class blm_plotter_data_base(QObject):
     values[all_noise_data] = {}
     values[all_single_photon_data] = {}
     values[stream] = {}
+    values[calibration_factors] = {}
+    values[fibre_diameter] = {}
+    values[fibre_config] = {}
     # amp_pwr_mean_data = {}
 
     #logger
