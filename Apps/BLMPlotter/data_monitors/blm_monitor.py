@@ -50,18 +50,18 @@ class blm_monitor(monitor):
                                            monitor.data.values[dat.blm_waveform_pvs][1]: "upstream",
                                            monitor.data.values[dat.blm_waveform_pvs][2]: "upstream",
                                            monitor.data.values[dat.blm_waveform_pvs][3]: "upstream"}
-        monitor.data.values[dat.fibre_config] = {monitor.data.values[dat.blm_waveform_pvs][0]: "CLA-SP1",
-                                           monitor.data.values[dat.blm_waveform_pvs][1]: "CLA-YAG10",
-                                           monitor.data.values[dat.blm_waveform_pvs][2]: "CLA-YAG10",
-                                           monitor.data.values[dat.blm_waveform_pvs][3]: "CLA-SP1"}
-        monitor.data.values[dat.fibre_diameter] = {monitor.data.values[dat.blm_waveform_pvs][0]: "600mm",
-                                                 monitor.data.values[dat.blm_waveform_pvs][1]: "600mm",
-                                                 monitor.data.values[dat.blm_waveform_pvs][2]: "400mm",
-                                                 monitor.data.values[dat.blm_waveform_pvs][3]: "400mm"}
-        monitor.data.values[dat.calibration_factors] = {monitor.data.values[dat.blm_waveform_pvs][0]: [0.117051, -4.93788],
-                                           monitor.data.values[dat.blm_waveform_pvs][1]: [0.118302, -5.17389],
-                                           monitor.data.values[dat.blm_waveform_pvs][2]: [0.12249, -5.7186],
-                                           monitor.data.values[dat.blm_waveform_pvs][3]: [0.12249, -5.7186]}
+        monitor.data.values[dat.fibre_config] = {str(monitor.data.values[dat.blm_waveform_pvs][0]): ["CLA-SP1","East"],
+                                                 str(monitor.data.values[dat.blm_waveform_pvs][1]): ["CLA-YAG10","North"],
+                                                 str(monitor.data.values[dat.blm_waveform_pvs][2]): ["CLA-YAG10","West"],
+                                                 str(monitor.data.values[dat.blm_waveform_pvs][3]): ["CLA-SP1","South"]}
+        monitor.data.values[dat.fibre_diameter] = {str(monitor.data.values[dat.blm_waveform_pvs][0]): "600mm",
+                                                   str(monitor.data.values[dat.blm_waveform_pvs][1]): "600mm",
+                                                   str(monitor.data.values[dat.blm_waveform_pvs][2]): "400mm",
+                                                   str(monitor.data.values[dat.blm_waveform_pvs][3]): "400mm"}
+        monitor.data.values[dat.calibration_factors] = {str(monitor.data.values[dat.blm_waveform_pvs][0]): [0.117051, -4.93788],
+                                                        str(monitor.data.values[dat.blm_waveform_pvs][1]): [0.118302, -5.17389],
+                                                        str(monitor.data.values[dat.blm_waveform_pvs][2]): [0.12249, -5.7186],
+                                                        str(monitor.data.values[dat.blm_waveform_pvs][3]): [0.118302, -5.4186]}
         monitor.data.values[dat.blm_object] = monitor.blm_control.getBLMTraceDataStruct(monitor.data.values[dat.blm_name])
         for i, j in zip(self.data.values[dat.blm_waveform_pvs], self.data.values[dat.blm_time_pvs]):
             self.data.values[dat.blm_voltage_average][str(i)] = [[]]
@@ -87,12 +87,12 @@ class blm_monitor(monitor):
                 # self.time3 = numpy.append(self.time2, [x + 200 for x in numpy.asarray(monitor.data.values[dat.blm_time_buffer][str(j)][-1][2:-2])])
                 self.res = 0.2
                 monitor.data.values[dat.blm_voltages][str(i)] = self.volt1[2:-2]
-                monitor.data.values[dat.blm_time][str(j)] = [x for x in ((self.time1[2:-2])*monitor.data.values[dat.calibration_factors][i][0] + monitor.data.values[dat.calibration_factors][i][1])]# * ((299792458 * self.res) / (self.cal * (1 * (10 ** 9)))))]
+                monitor.data.values[dat.blm_time][str(j)] = [x for x in ((self.time1[2:-2])*monitor.data.values[dat.calibration_factors][str(i)][0] + monitor.data.values[dat.calibration_factors][str(i)][1])]# * ((299792458 * self.res) / (self.cal * (1 * (10 ** 9)))))]
             else:
                 self.cal = abs(1 + 1.46) #* (1-1.46/(20*1.46))
                 self.res = 0.2
                 monitor.data.values[dat.blm_voltages][str(i)] = self.volt1[2:-2]
-                monitor.data.values[dat.blm_time][str(j)] = [x for x in ((self.time1[2:-2])*monitor.data.values[dat.calibration_factors][i][0] + monitor.data.values[dat.calibration_factors][i][1])]# * ((299792458*self.res)/(self.cal*(1*(10**9)))))]
+                monitor.data.values[dat.blm_time][str(j)] = [x for x in ((self.time1[2:-2])*monitor.data.values[dat.calibration_factors][str(i)][0] + monitor.data.values[dat.calibration_factors][str(i)][1])]# * ((299792458*self.res)/(self.cal*(1*(10**9)))))]
 
             # epics.caput('CLA-C09-TIM-EVR-01:Pul5-Delay-SP', 403.25)
             # time.sleep(0.1)
@@ -113,7 +113,12 @@ class blm_monitor(monitor):
     def update_blm_buffer(self):
         for i, j in zip(monitor.data.values[dat.blm_waveform_pvs],monitor.data.values[dat.blm_time_pvs]):
             monitor.data.values[dat.blm_buffer][str(i)] = monitor.blm_control.getBLMTraceBuffer(monitor.data.values[dat.blm_names][0], i)
-            monitor.data.values[dat.blm_buffer][str(j)] = monitor.blm_control.getBLMTraceBuffer(monitor.data.values[dat.blm_names][0], j)
+            # monitor.data.values[dat.blm_buffer][str(j)] = monitor.blm_control.getBLMTraceBuffer(monitor.data.values[dat.blm_names][0], j)
+            self.timeTraceBuffer = monitor.blm_control.getBLMTraceBuffer(monitor.data.values[dat.blm_names][0], j)
+            monitor.data.values[dat.blm_buffer][str(j)] = [[]] * len(self.timeTraceBuffer)
+            for k in range(0,len(self.timeTraceBuffer)):
+                monitor.data.values[dat.blm_buffer][str(j)][k] = [x for x in ((numpy.asarray(self.timeTraceBuffer[k])[2:-2]) * monitor.data.values[dat.calibration_factors][str(i)][0] +
+                         monitor.data.values[dat.calibration_factors][str(i)][1])]
             monitor.data.values[dat.time_stamps][str(i)] = monitor.blm_control.getTimeStampsBuffer(monitor.data.values[dat.blm_names][0], i)
             monitor.data.values[dat.time_stamps][str(j)] = monitor.blm_control.getTimeStampsBuffer(monitor.data.values[dat.blm_names][0], j)
         monitor.data.values[dat.has_blm_data] = True
