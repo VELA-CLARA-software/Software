@@ -99,11 +99,21 @@ class LaserTiming(object):
     def getWorkFolder(self):
         return '\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Work\\'+time.strftime("%Y\\%m\\%d")+'\\'
 
-    def turnOnForIntegratedCharge(self, q=2500):
+    def getFileName(self, q=None, n=None, pos=None, energy=None, comment=None):
+        filename = self.getWorkFolder()+self.getTimeStr()+'_VHEE_'
+        filename = filename + '_' + str(q)+'pC' if q is not None else filename
+        filename = filename + '_' + str(n)+'_Shots' if n is not None else filename
+        filename = filename + '_' + str(pos) + 'mm' if pos is not None else filename
+        filename = filename + '_' + str(energy) + 'MeV' if energy is not None else filename
+        filename = filename + '_' + str(comment) if comment is not None else filename
+        filename = filename +'.txt'
+        return filename
+
+    def turnOnForIntegratedCharge(self, q=2500, pos=None, energy=None, comment=None):
         while not self.isLaserOn == 1:
             self.turnOnLaserGating()
         print 'laser on ? = ', self.isLaserOn
-        filename = self.getWorkFolder()+self.getTimeStr()+'_VHEE.txt'
+        filename = self.getFileName(q=q, n=None, pos=pos, energy=energy, comment=comment)
         file = open(filename, 'w')
         sys.stdout = file
         print 'count, intWCMQ, intFCUPQ, intBPMQ'
@@ -133,11 +143,11 @@ class LaserTiming(object):
         self.turnOffLaserGating()
         return count
 
-    def turnOnForNPulse(self, n=1):
+    def turnOnForNPulse(self, n=1, pos=None, energy=None, comment=None):
         while not self.isLaserOn == 1:
             self.turnOnLaserGating()
         print 'laser on ? = ', self.isLaserOn
-        filename = self.getWorkFolder()+self.getTimeStr()+'_VHEE.txt'
+        filename = self.getFileName(q=None, n=n, pos=pos, energy=energy, comment=comment)
         file = open(filename, 'w')
         sys.stdout = file
         print 'count, intWCMQ, intFCUPQ, intBPMQ'
