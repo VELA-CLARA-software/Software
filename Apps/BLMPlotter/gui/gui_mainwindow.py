@@ -15,7 +15,7 @@ import glob
 from PyQt4.QtCore import QObject, pyqtSignal, QThread, QTimer, QRectF, Qt
 from PyQt4.QtGui import * #QApplication, QMainWindow, QWidget, QPushButton, QVBoxLayout, QHBoxLayout, QComboBox, QTabWidget, QLineEdit, QFileDialog, QLabel, QAction, QPixmap, qApp, QStyle, QGroupBox, QSpinBox
 from pyqtgraph import LegendItem, mkPen, mkBrush, LabelItem, TableWidget, GraphicsLayoutWidget, setConfigOption, \
-setConfigOptions, InfiniteLine, ImageItem, GraphicsView, GraphicsLayout, GraphicsWindow, ViewBox, PlotDataItem, colorStr, mkColor
+setConfigOptions, InfiniteLine, ImageItem, GraphicsView, GraphicsLayout, GraphicsWindow, ViewBox, PlotDataItem, colorStr, mkColor, ScatterPlotItem
 from pyqtgraph.graphicsItems.LegendItem import ItemSample
 import argparse
 import imageio
@@ -49,10 +49,19 @@ class Ui_MainWindow(object):
         self.blmPlotWidget.setLayout(self.blmPlotLayout)
         self.blmPlotView = GraphicsView(self.blmPlotWidget, useOpenGL=True)
         self.blmPlotWidgetGraphicsLayout = GraphicsLayout()
+        # self.blmPlotWidgetGraphicsLayout = ScatterPlotItem()
         self.blmPlotView.setCentralItem(self.blmPlotWidgetGraphicsLayout)
         self.blmPlot = self.blmPlotWidgetGraphicsLayout.addPlot(title='blm')
+        self.blmPlot.setLabel('left',text="Voltage (mV)")
+        self.blmPlot.setLabel('bottom', text="Distance (m)")
         self.blmPlot.showGrid(x=True, y=True)
         self.plotHBox.addWidget(self.blmPlotView)
+        self.figHBox = QtGui.QHBoxLayout(self.mainWidget)
+        self.figLabel = QtGui.QLabel()
+        self.figLabel.setPixmap(QtGui.QPixmap("Oblm_MAP.PNG"))
+        self.figLabel.setMinimumSize(QtCore.QSize(1000, 150))
+        self.figLabel.setMaximumSize(QtCore.QSize(1000, 150))
+        self.figHBox.addWidget(self.figLabel)
         self.radioButtonHBoxLayout = QtGui.QHBoxLayout()
         self.radioButtonHBoxLayout.setObjectName(_fromUtf8("radioButtonHBoxLayout"))
         self.filterHBoxLayout = QtGui.QHBoxLayout()
@@ -151,6 +160,7 @@ class Ui_MainWindow(object):
         self.saveDataButton.setMinimumSize(QtCore.QSize(100, 100))
         self.saveDataHBox.addWidget(self.saveDataButton)
         self.mainBox.addLayout(self.plotHBox)
+        self.mainBox.addLayout(self.figHBox)
         self.mainBox.addLayout(self.radioButtonHBoxLayout)
         self.mainBox.addLayout(self.numShotsHBox)
         self.mainBox.addLayout(self.bunchChargeHBox)
@@ -172,10 +182,10 @@ class Ui_MainWindow(object):
         self.filterYesButton.setText(_translate("MainWindow", "Filter", None))
         self.filterNoButton.setText(_translate("MainWindow", "No filter", None))
         self.filterSizeLabel.setText(_translate("MainWindow", "Filter size", None))
-        self.ch1CheckBox.setText(_translate("MainWindow", "CH1", None))
-        self.ch2CheckBox.setText(_translate("MainWindow", "CH2", None))
-        self.ch3CheckBox.setText(_translate("MainWindow", "CH3", None))
-        self.ch4CheckBox.setText(_translate("MainWindow", "CH4", None))
+        self.ch1CheckBox.setText(_translate("MainWindow", "CH1 (b)", None))
+        self.ch2CheckBox.setText(_translate("MainWindow", "CH2 (r)", None))
+        self.ch3CheckBox.setText(_translate("MainWindow", "CH3 (y)", None))
+        self.ch4CheckBox.setText(_translate("MainWindow", "CH4 (g)", None))
         # self.MainWindow.setTabText(self.MainWindow.indexOf(self.tab), _translate("MainWindow", "Settings", None))
         self.newFont = QtGui.QFont("Comic Sans", 20, QtGui.QFont.Bold)
 

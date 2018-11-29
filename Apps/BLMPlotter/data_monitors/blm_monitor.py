@@ -4,6 +4,7 @@ import data.blm_plotter_data_base as dat
 import numpy, random
 import time, collections
 from itertools import compress
+import epics
 
 class blm_monitor(monitor):
     # whoami
@@ -45,6 +46,22 @@ class blm_monitor(monitor):
                                               "CH2": str(monitor.data.values[dat.blm_waveform_pvs][1]),
                                               "CH3": str(monitor.data.values[dat.blm_waveform_pvs][2]),
                                               "CH4": str(monitor.data.values[dat.blm_waveform_pvs][3])}
+        monitor.data.values[dat.stream] = {monitor.data.values[dat.blm_waveform_pvs][0] : "upstream",
+                                           monitor.data.values[dat.blm_waveform_pvs][1]: "upstream",
+                                           monitor.data.values[dat.blm_waveform_pvs][2]: "upstream",
+                                           monitor.data.values[dat.blm_waveform_pvs][3]: "upstream"}
+        monitor.data.values[dat.fibre_config] = {monitor.data.values[dat.blm_waveform_pvs][0]: "CLA-SP1",
+                                           monitor.data.values[dat.blm_waveform_pvs][1]: "CLA-YAG10",
+                                           monitor.data.values[dat.blm_waveform_pvs][2]: "CLA-YAG10",
+                                           monitor.data.values[dat.blm_waveform_pvs][3]: "CLA-SP1"}
+        monitor.data.values[dat.fibre_diameter] = {monitor.data.values[dat.blm_waveform_pvs][0]: "600mm",
+                                                 monitor.data.values[dat.blm_waveform_pvs][1]: "600mm",
+                                                 monitor.data.values[dat.blm_waveform_pvs][2]: "400mm",
+                                                 monitor.data.values[dat.blm_waveform_pvs][3]: "400mm"}
+        monitor.data.values[dat.calibration_factors] = {monitor.data.values[dat.blm_waveform_pvs][0]: [0.117051, -4.93788],
+                                           monitor.data.values[dat.blm_waveform_pvs][1]: [0.118302, -5.17389],
+                                           monitor.data.values[dat.blm_waveform_pvs][2]: [0.12249, -5.7186],
+                                           monitor.data.values[dat.blm_waveform_pvs][3]: [0.12249, -5.7186]}
         monitor.data.values[dat.blm_object] = monitor.blm_control.getBLMTraceDataStruct(monitor.data.values[dat.blm_name])
         for i, j in zip(self.data.values[dat.blm_waveform_pvs], self.data.values[dat.blm_time_pvs]):
             self.data.values[dat.blm_voltage_average][str(i)] = [[]]
@@ -54,8 +71,31 @@ class blm_monitor(monitor):
         for i, j in zip(monitor.data.values[dat.blm_waveform_pvs],monitor.data.values[dat.blm_time_pvs]):
             monitor.data.values[dat.blm_buffer][str(i)] = monitor.data.values[dat.blm_object].traceDataBuffer[i]
             monitor.data.values[dat.blm_time_buffer][str(j)] = monitor.data.values[dat.blm_object].traceDataBuffer[j]
-            monitor.data.values[dat.blm_voltages][str(i)] = numpy.asarray(monitor.data.values[dat.blm_buffer][str(i)][-1])
-            monitor.data.values[dat.blm_time][str(j)] = numpy.asarray(monitor.data.values[dat.blm_time_buffer][str(j)][-1]) * (299792458/(1.46*(1*(10**9))))
+            # monitor.data.values[dat.blm_voltages][str(i)] = numpy.asarray(monitor.data.values[dat.blm_buffer][str(i)][-1])
+            self.volt1 = numpy.asarray(monitor.data.values[dat.blm_buffer][str(i)][-1])
+            self.time1 = numpy.asarray(monitor.data.values[dat.blm_time_buffer][str(j)][-1])
+            # self.res = monitor.data.values[dat.blm_time_buffer][str(j)][-1][1] - monitor.data.values[dat.blm_time_buffer][str(j)][-1][0]
+            if monitor.data.values[dat.stream][i] == "upstream":
+                self.cal = abs(1 + 1.46)
+                # epics.caput('CLA-C09-TIM-EVR-01:Pul5-Delay-SP',403.65)
+                # time.sleep(0.1)
+                # self.volt2 = numpy.append(self.volt1,numpy.asarray(monitor.data.values[dat.blm_buffer][str(i)][-1][2:-2]))
+                # self.time2 = numpy.append(self.time1,[x + 400 for x in numpy.asarray(monitor.data.values[dat.blm_time_buffer][str(j)][-1][2:-2])])
+                # epics.caput('CLA-C09-TIM-EVR-01:Pul5-Delay-SP', 403.45)
+                # time.sleep(0.1)
+                # self.volt3 = numpy.append(self.volt2, numpy.asarray(monitor.data.values[dat.blm_buffer][str(i)][-1][2:-2]))
+                # self.time3 = numpy.append(self.time2, [x + 200 for x in numpy.asarray(monitor.data.values[dat.blm_time_buffer][str(j)][-1][2:-2])])
+                self.res = 0.2
+                monitor.data.values[dat.blm_voltages][str(i)] = self.volt1[2:-2]
+                monitor.data.values[dat.blm_time][str(j)] = [x for x in ((self.time1[2:-2])*monitor.data.values[dat.calibration_factors][i][0] + monitor.data.values[dat.calibration_factors][i][1])]# * ((299792458 * self.res) / (self.cal * (1 * (10 ** 9)))))]
+            else:
+                self.cal = abs(1 + 1.46) #* (1-1.46/(20*1.46))
+                self.res = 0.2
+                monitor.data.values[dat.blm_voltages][str(i)] = self.volt1[2:-2]
+                monitor.data.values[dat.blm_time][str(j)] = [x for x in ((self.time1[2:-2])*monitor.data.values[dat.calibration_factors][i][0] + monitor.data.values[dat.calibration_factors][i][1])]# * ((299792458*self.res)/(self.cal*(1*(10**9)))))]
+
+            # epics.caput('CLA-C09-TIM-EVR-01:Pul5-Delay-SP', 403.25)
+            # time.sleep(0.1)
             if monitor.data.values[dat.rolling_average] > 1:
                 monitor.data.values[dat.blm_voltages][str(i)] = list(numpy.mean(monitor.data.values[dat.blm_buffer][str(i)],axis=1))
                 monitor.data.values[dat.blm_time][str(j)] = list(numpy.mean(monitor.data.values[dat.blm_time_buffer][str(j)],axis=1))

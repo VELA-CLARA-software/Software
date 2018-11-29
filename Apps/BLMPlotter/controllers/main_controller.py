@@ -9,6 +9,12 @@ import time
 from logs.dict_to_h5 import save_dict_to_hdf5
 import numpy, os, datetime
 from timeit import default_timer as timer
+print sys.path
+#sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..\\..\\..\\')))
+#print sys.path
+sys.path.append(os.path.abspath('../../../'))
+print sys.path
+from Software.Widgets.MachineSnapshot.machine_snapshot import MachineSnapshot
 
 
 class main_controller(controller_base):
@@ -29,6 +35,11 @@ class main_controller(controller_base):
         self.gui.closing.connect(self.connectCloseEvents)
         self.gui.show()
         self.gui.activateWindow()
+        # self.machinesnapshot = MachineSnapshot(MAG_Ctrl=None, BPM_Ctrl=None, CHG_Ctrl=None,
+        #                                        SCR_Ctrl=None, CAM_Ctrl=None, GUN_Ctrl=None,
+        #                                        GUN_Type=None, GUN_Crest=0.0, L01_Ctrl=None, L01_Crest=0.0,
+        #                                        PIL_Ctrl=None, MACHINE_MODE=machine_mode,
+        #                                        MACHINE_AREA=machine_area, messages=False)
         QApplication.processEvents()
 
         # set up main_loop main states
@@ -99,13 +110,18 @@ class main_controller(controller_base):
             if controller_base.data.values[dat.save_request]:
                 self.blm_scan_log = self.logger.get_blm_scan_log()[0]
                 self.get_blm_buffer()
+                self.voltages = {}
                 if controller_base.data.values[dat.apply_filter]:
                     for i in controller_base.data.values[dat.blm_waveform_pvs]:
-                        controller_base.data.values[dat.blm_buffer][str(i)] = \
-                            controller_base.data.values[dat.blm_buffer][str(i)] * abs(
+                        controller_base.data.values[dat.blm_voltages][str(i)] = \
+                            controller_base.data.values[dat.blm_voltages][str(i)] * abs(
                                 controller_base.data.values[dat.deconvolution_filter])
+                else:
+                    for i, j in zip(controller_base.data.values[dat.blm_waveform_pvs],controller_base.data.values[dat.blm_time_pvs]):
+                        self.voltages[str(i)] = controller_base.data.values[dat.blm_voltages][str(i)]
+                        self.voltages[str(j)] = controller_base.data.values[dat.blm_time][str(j)]
                 self.data = {"chg_data": controller_base.data.values[dat.charge_values],
-                             "blm_voltages": controller_base.data.values[dat.blm_buffer],
+                             "blm_voltages": controller_base.data.values[dat.blm_buffer],#self.voltages,
                              "filter_applied": controller_base.data.values[dat.apply_filter],
                              "filter_size": controller_base.data.values[dat.blackman_size],
                              "calibrate_channel_names": controller_base.data.values[dat.calibrate_channel_names],
@@ -145,13 +161,14 @@ class main_controller(controller_base):
         controller_base.data_monitor.blm_monitor.update_blm_voltages()
         controller_base.data_monitor.blm_monitor.update_blm_distance()
         if controller_base.data.values[dat.apply_filter]:
-            if not controller_base.data.values[dat.has_sparsified]:
-                controller_base.data.values[dat.noise_data] = controller_base.blm_handler.sparsify_list(controller_base.data.values[dat.noise_data],
-                                                                                                        controller_base.data.values[dat.blm_voltages][str(controller_base.data.values[dat.blm_waveform_pvs][0])])
-                controller_base.data.values[dat.single_photon_data] = controller_base.blm_handler.sparsify_list(controller_base.data.values[dat.single_photon_data],
-                                                                                                                controller_base.data.values[dat.blm_voltages][str(controller_base.data.values[dat.blm_waveform_pvs][0])])
-            controller_base.blm_handler.deconvolution_filter()
-            controller_base.blm_handler.set_filters()
+            for i in controller_base.data.values[dat.blm_waveform_pvs]:
+                if not controller_base.data.values[dat.has_sparsified]:
+                    controller_base.data.values[dat.noise_data] = controller_base.blm_handler.sparsify_list(controller_base.data.values[dat.all_noise_data][i],
+                                                                                                            controller_base.data.values[dat.blm_voltages][str(i)])
+                    controller_base.data.values[dat.single_photon_data] = controller_base.blm_handler.sparsify_list(controller_base.data.values[dat.all_single_photon_data][i],
+                                                                                                                    controller_base.data.values[dat.blm_voltages][str(i)])
+                controller_base.blm_handler.deconvolution_filter(controller_base.data.values[dat.noise_data],controller_base.data.values[dat.single_photon_data])
+                controller_base.blm_handler.set_filters()
         QApplication.processEvents()
 
     def get_charge_values(self):

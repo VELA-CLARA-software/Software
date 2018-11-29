@@ -27,6 +27,28 @@ class blm_handler(blm_handler_base):
                 self.row = x.split()
                 self.noise_data.append(float(self.row[1]))
         blm_handler_base.data.values[dat.noise_data] = self.noise_data
+        blm_handler_base.data.values[dat.all_noise_data][blm_handler_base.data.values[dat.blm_waveform_pvs][0]] = self.noise_data
+        with open( 'calibration_signals\\C28 december noise00000.dat' ) as f:
+            self.content = f.readlines()
+            for x in self.content:
+                self.row = x.split()
+                self.noise_data.append(float(self.row[1]))
+        blm_handler_base.data.values[dat.noise_data] = self.noise_data
+        blm_handler_base.data.values[dat.all_noise_data][blm_handler_base.data.values[dat.blm_waveform_pvs][1]] = self.noise_data
+        with open( 'calibration_signals\\C38 december noise00000.dat' ) as f:
+            self.content = f.readlines()
+            for x in self.content:
+                self.row = x.split()
+                self.noise_data.append(float(self.row[1]))
+        blm_handler_base.data.values[dat.noise_data] = self.noise_data
+        blm_handler_base.data.values[dat.all_noise_data][blm_handler_base.data.values[dat.blm_waveform_pvs][2]] = self.noise_data
+        with open( 'calibration_signals\\C48 december noise00000.dat' ) as f:
+            self.content = f.readlines()
+            for x in self.content:
+                self.row = x.split()
+                self.noise_data.append(float(self.row[1]))
+        blm_handler_base.data.values[dat.noise_data] = self.noise_data
+        blm_handler_base.data.values[dat.all_noise_data][blm_handler_base.data.values[dat.blm_waveform_pvs][3]] = self.noise_data
 
     def get_single_photon_data(self):
         self.single_photon_data = []
@@ -35,6 +57,27 @@ class blm_handler(blm_handler_base):
             for x in self.content:
                 self.row = x.split()
                 self.single_photon_data.append(float(self.row[1]))
+        blm_handler_base.data.values[dat.all_single_photon_data][blm_handler_base.data.values[dat.blm_waveform_pvs][0]] = self.single_photon_data
+        with open( 'calibration_signals\\C28 december 1 photon00000.dat' ) as f:
+            self.content = f.readlines()
+            for x in self.content:
+                self.row = x.split()
+                self.single_photon_data.append(float(self.row[1]))
+        blm_handler_base.data.values[dat.all_single_photon_data][blm_handler_base.data.values[dat.blm_waveform_pvs][1]] = self.single_photon_data
+        blm_handler_base.data.values[dat.single_photon_data] = self.single_photon_data
+        with open( 'calibration_signals\\C38 december 1 photon00000.dat' ) as f:
+            self.content = f.readlines()
+            for x in self.content:
+                self.row = x.split()
+                self.single_photon_data.append(float(self.row[1]))
+        blm_handler_base.data.values[dat.single_photon_data] = self.single_photon_data
+        blm_handler_base.data.values[dat.all_single_photon_data][blm_handler_base.data.values[dat.blm_waveform_pvs][2]] = self.single_photon_data
+        with open( 'calibration_signals\\C48 december 1 photon00000.dat' ) as f:
+            self.content = f.readlines()
+            for x in self.content:
+                self.row = x.split()
+                self.single_photon_data.append(float(self.row[1]))
+        blm_handler_base.data.values[dat.all_single_photon_data][blm_handler_base.data.values[dat.blm_waveform_pvs][3]] = self.single_photon_data
         blm_handler_base.data.values[dat.single_photon_data] = self.single_photon_data
 
     def sparsify_list(self,data1, data2):
@@ -52,10 +95,10 @@ class blm_handler(blm_handler_base):
             blm_handler_base.data.values[dat.has_sparsified] = True
             return self.data2
 
-    def deconvolution_filter(self):
-        self.num_points = len(blm_handler_base.data.values[dat.noise_data])
-        self.noise_ft = fft(blm_handler_base.data.values[dat.noise_data])
-        self.single_photon_ft = fft(blm_handler_base.data.values[dat.single_photon_data])
+    def deconvolution_filter(self, noise, single_photon):
+        self.num_points = len(noise)
+        self.noise_ft = fft(noise)
+        self.single_photon_ft = fft(single_photon)
         self.wiener_filter = (abs(self.single_photon_ft)**2)/(abs(self.single_photon_ft)**2 + abs(self.noise_ft)**2)
 
         self.blackman_window = signal.blackman(blm_handler_base.data.values[dat.blackman_size])
