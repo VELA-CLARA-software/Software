@@ -19,6 +19,18 @@ def loadBPMs():
     bpmInit.setQuiet()
     bpm = bpmInit.physical_C2B_BPM_Controller()
 
+class emitter(object):
+
+    def __init__(self, signal=None):
+        super(emitter, self).__init__()
+        self.signal = signal
+
+    def emit(self, *args, **kwargs):
+        if self.signal == 'print':
+            print args
+        elif self.signal is not None:
+            self.signal.emit(*args, **kwargs)
+
 class LaserTiming(object):
 
     pvNameLaser = 'CLA-C17-TIM-EVR-01:FrontUnivOut4-Ena-SP'
@@ -34,6 +46,7 @@ class LaserTiming(object):
     def __init__(self, bpms=False):
         super(LaserTiming, self).__init__()
         global bpm
+        self.app = None
         self.pvLaser = PVObject(self.pvNameLaser)
         self.pvNumberPulses = PVObject(self.pvSetNumberPulses)
         self.pvBurstMode = PVObject(self.pvSetBurstMode)
@@ -49,12 +62,15 @@ class LaserTiming(object):
             loadBPMs()
             self.bpms = bpm
         self.bpmDataObjects = {}
+        self.logger = emitter('print')
 
     def turnOnLaserGating(self):
-        return setattr(self.pvLaser, 'value', 1)
+        setattr(self.pvLaser, 'value', 1)
+        return self.pvLaser.value
 
     def turnOffLaserGating(self):
-        return setattr(self.pvLaser, 'value', 0)
+        setattr(self.pvLaser, 'value', 0)
+        return self.pvLaser.value
 
     def turnOnLaser(self):
         self.turnOnLaserGating()
@@ -64,7 +80,6 @@ class LaserTiming(object):
         self.turnOffLaserGating()
         return setattr(self.pvBurstMode, 'value', 1)
 
-    @property
     def isLaserOn(self):
         return self.pvLaser.value
 
@@ -109,10 +124,17 @@ class LaserTiming(object):
         filename = filename +'.txt'
         return filename
 
+    def printer(self, *args):
+        outstr = ''
+        for a in args:
+            outstr += str(a)+' '
+        return outstr
+
     def turnOnForIntegratedCharge(self, q=2500, pos=None, energy=None, comment=None):
-        while not self.isLaserOn == 1:
+        self.abort = False
+        while not self.isLaserOn() == 1:
             self.turnOnLaserGating()
-        print 'laser on ? = ', self.isLaserOn
+        time.sleep(0.075)
         filename = self.getFileName(q=q, n=None, pos=pos, energy=energy, comment=comment)
         file = open(filename, 'w')
         sys.stdout = file
@@ -124,7 +146,7 @@ class LaserTiming(object):
         intBPMQ = 0
         WCMlastvalue = BPMlastvalue = 0
         self.detectToggle = self.pvDetect.value
-        while intWCMQ < 0.99*q:
+        while intWCMQ < (q-5) and not self.abort:
             if not self.pvDetect.value == self.detectToggle:
                 time.sleep(0.075)
                 self.detectToggle = self.pvDetect.value
@@ -137,16 +159,21 @@ class LaserTiming(object):
                 sys.stdout = file
                 print count, intWCMQ, intFCUPQ, intBPMQ
                 sys.stdout = sys.__stdout__
-                print count, intWCMQ, intFCUPQ, intBPMQ, WCMvalue - WCMlastvalue, BPMvalue - BPMlastvalue
+                self.logger.emit(self.printer('Shot ',count, intWCMQ, intFCUPQ, intBPMQ, WCMvalue - WCMlastvalue, BPMvalue - BPMlastvalue))
                 WCMlastvalue = WCMvalue
                 BPMlastvalue = BPMvalue
+            else:
+                if self.app is not None:
+                    self.app.processEvents()
         self.turnOffLaserGating()
         return count
 
     def turnOnForNPulse(self, n=1, pos=None, energy=None, comment=None):
-        while not self.isLaserOn == 1:
+        self.abort = False
+        while not self.isLaserOn() == 1:
             self.turnOnLaserGating()
-        print 'laser on ? = ', self.isLaserOn
+        # print 'laser on ? = ', self.isLaserOn()
+        time.sleep(0.075)
         filename = self.getFileName(q=None, n=n, pos=pos, energy=energy, comment=comment)
         file = open(filename, 'w')
         sys.stdout = file
@@ -158,7 +185,7 @@ class LaserTiming(object):
         intBPMQ = 0
         WCMlastvalue = BPMlastvalue = 0
         self.detectToggle = self.pvDetect.value
-        while count < n:
+        while count < n and not self.abort:
             if not self.pvDetect.value == self.detectToggle:
                 time.sleep(0.075)
                 self.detectToggle = self.pvDetect.value
@@ -171,9 +198,12 @@ class LaserTiming(object):
                 sys.stdout = file
                 print count, intWCMQ, intFCUPQ, intBPMQ
                 sys.stdout = sys.__stdout__
-                print count, intWCMQ, intFCUPQ, intBPMQ, WCMvalue - WCMlastvalue, BPMvalue - BPMlastvalue
+                self.logger.emit(self.printer('Shot ',count, intWCMQ, intFCUPQ, intBPMQ, WCMvalue - WCMlastvalue, BPMvalue - BPMlastvalue))
                 WCMlastvalue = WCMvalue
                 BPMlastvalue = BPMvalue
+            else:
+                if self.app is not None:
+                    self.app.processEvents()
         self.turnOffLaserGating()
         return count
 
@@ -193,7 +223,7 @@ class LaserTiming(object):
                 self.detectToggle = self.pvDetect.value
                 count += 1
                 intQ += self.getWCMCharge()
-                print count, intQ
+                self.logger.emit(self.printer( count, intQ ))
             else:
                 time.sleep(0.02)
         return count
