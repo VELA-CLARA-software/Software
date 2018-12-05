@@ -243,6 +243,7 @@ class signalRecorderH5(QObject):
         _, file_extension = os.path.splitext(filename)
         if not file_extension in ['h5','hdf5']:
             filename = filename+".h5"
+        self.filename = filename
         self.h5file = tables.open_file(filename, mode = "a", title = filename)
         self.rootnode = self.h5file.get_node('/')
         if 'data' not in self.rootnode:

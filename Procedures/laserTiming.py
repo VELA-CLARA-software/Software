@@ -3,21 +3,21 @@ sys.path.append("../../")
 from Software.Widgets.generic.pv import *
 sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\Release')
 
-# import VELA_CLARA_BPM_Control as bpm
-# from VELA_CLARA_BPM_Control import BPM_STATUS# as bpmstatus
-# bpmstatus = BPM_STATUS
-# bpmInit = bpm.init()
-# bpmInit.setQuiet()
-# bpms = bpmInit.physical_C2B_BPM_Controller()
-
 def loadBPMs():
-    global bpmstatus, bpmInit, bpm
+    global bpm
     import VELA_CLARA_BPM_Control as bpm
     from VELA_CLARA_BPM_Control import BPM_STATUS# as bpmstatus
     bpmstatus = BPM_STATUS
     bpmInit = bpm.init()
     bpmInit.setQuiet()
     bpm = bpmInit.physical_C2B_BPM_Controller()
+
+def loadMagnets():
+    global magnets
+    import VELA_CLARA_Magnet_Control as mag
+    magInit = mag.init()
+    magInit.setQuiet()
+    magnets = magInit.physical_C2B_Magnet_Controller()
 
 class emitter(object):
 
@@ -31,7 +31,7 @@ class emitter(object):
         elif self.signal is not None:
             self.signal.emit(*args, **kwargs)
 
-class LaserTiming(object):
+class MLTest(object):
 
     pvNameLaser = 'CLA-C17-TIM-EVR-01:FrontUnivOut4-Ena-SP'
     pvSetNumberPulses = 'CLA-ACC-TIM-BRST-01:Burst-Count-SP'
@@ -47,21 +47,15 @@ class LaserTiming(object):
         super(LaserTiming, self).__init__()
         global bpm
         self.app = None
-        self.pvLaser = PVObject(self.pvNameLaser)
-        self.pvNumberPulses = PVObject(self.pvSetNumberPulses)
-        self.pvBurstMode = PVObject(self.pvSetBurstMode)
-        self.pvBurstStart = PVObject(self.pvStartBurstStart)
-        self.pvDetect = PVObject(self.pvNameDetect)
         self.pvWCMQ = PVObject(self.pvWCMQName)
         self.pvFCUPQ = PVObject(self.pvFCUPQName)
-        setattr(self.pvLaser, 'writeAccess', True)
-        setattr(self.pvNumberPulses, 'writeAccess', True)
-        setattr(self.pvBurstMode, 'writeAccess', True)
-        setattr(self.pvBurstStart, 'writeAccess', True)
         if bpms:
             loadBPMs()
             self.bpms = bpm
-        self.bpmDataObjects = {}
+            self.bpmDataObjects = {}
+        if magnets:
+            loadMagnets()
+            self.magnets = magnets
         self.logger = emitter('print')
 
     def turnOnLaserGating(self):
@@ -94,7 +88,7 @@ class LaserTiming(object):
         setattr(self.pvBurstStart, 'value', 0)
 
     def getWCMCharge(self):
-        return self.pvWCMQ.value
+        return self.pvWCMQ.value - 5 ## Measured DC offset 03/12/2018
 
     def getFCUPCharge(self):
         return self.pvFCUPQ.value
