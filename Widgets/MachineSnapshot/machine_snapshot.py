@@ -58,19 +58,19 @@ class MachineSnapshot(object):
 		# self.gun_mod_ctrl = self.checkModController()[0]
 		# self.l01_mod_ctrl = self.checkModController()[1]
 		self.scr_ctrl = self.checkScreenController()
-		self.cam_ctrl.setBufferMaxCount(self.bufferSize)
+		# self.cam_ctrl.setBufferMaxCount(self.bufferSize)
 		self.bpm_ctrl.setBufferSize(self.bufferSize)
 		self.chg_ctrl.setBufferSize(self.bufferSize)
-		self.gun_ctrl.setNumBufferTraces(self.bufferSize)
-		self.l01_ctrl.setNumBufferTraces(self.bufferSize)
+		# self.gun_ctrl.setNumBufferTraces(self.bufferSize)
+		# self.l01_ctrl.setNumBufferTraces(self.bufferSize)
 		self.bpmdata = self.getbpmdata()
 		self.chargedata = self.getchargedata()
 		self.magnetdata = self.getmagnetdata()
 		# self.gunmoddata = self.getgunmodulatordata()
 		# self.l01moddata = self.getl01modulatordata()
 		self.screendata = self.getscreendata()
-		self.pildata = self.getpildata()
-		self.cameradata = self.getcameradata()
+		# self.pildata = self.getpildata()
+		# self.cameradata = self.getcameradata()
 		self.gundata = self.getgundata()
 		self.l01data = self.getl01data()
 		time.sleep(1)
@@ -166,7 +166,7 @@ class MachineSnapshot(object):
 		self.mag_names = self.mag_ctrl.getMagnetNames()
 		self.dip_names = self.mag_ctrl.getDipNames()
 		if self.GUN_Momentum == None:
-			self.momentum['GUN'] = 4.75 # MAGIC NUMBER!!!!!
+			self.momentum['GUN'] = 4.63 # MAGIC NUMBER!!!!!
 		else:
 			self.momentum['GUN'] = self.GUN_Momentum
 		if self.L01_Momentum == None:
@@ -310,48 +310,51 @@ class MachineSnapshot(object):
 
 		self.data_dict['trace_names'] = self.all_traces_to_monitor
 
-		for trace in self.all_traces_to_monitor:
-			self.a = self.llrfctrl.startTraceMonitoring(trace)
-			self.llrfctrl.setNumRollingAverageTraces(trace, self.bufferSize)
-			self.llrfctrl.setKeepRollingAverage(trace, True)
+		# for trace in self.all_traces_to_monitor:
+			# self.a = self.llrfctrl.startTraceMonitoring(trace)
+			# self.llrfctrl.setNumRollingAverageTraces(trace, self.bufferSize)
+			# self.llrfctrl.setKeepRollingAverage(trace, True)
 
-		self.timevector = self.llrfobj.time_vector.value
-		self.pulse_end = self.timevector[self.llrfobj.pulse_latency] + self.llrfctrl.getPulseLength()
-		self.pulse_end_index = len([x for x in self.timevector if x <= self.pulse_end])
-		self.trace_mean_start = self.pulse_end_index - 50
-		self.trace_mean_end = self.pulse_end_index - 20
-		if self.trace_mean_start < 0:
-			self.trace_mean_start = 1
-		if self.trace_mean_end < 0:
-			self.trace_mean_end = 1017
+		# self.timevector = self.llrfobj.time_vector.value
+		# self.pulse_end = self.timevector[self.llrfobj.pulse_latency] + self.llrfctrl.getPulseLength()
+		# self.pulse_end_index = len([x for x in self.timevector if x <= self.pulse_end])
+		# self.trace_mean_start = self.pulse_end_index - 50
+		# self.trace_mean_end = self.pulse_end_index - 20
+		# if self.trace_mean_start < 0:
+		# 	self.trace_mean_start = 1
+		# if self.trace_mean_end < 0:
+		# 	self.trace_mean_end = 1017
 
-		for trace in self.all_traces_to_monitor:
-			self.trace_data_const_ref = self.llrfctrl.getTraceDataConstRef(trace)
-			self.llrfctrl.setMeanStartIndex(trace, self.trace_mean_start)
-			self.llrfctrl.setMeanStopIndex(trace, self.trace_mean_end)
-			while len(self.llrfobj.trace_data[trace].traces) < self.bufferSize:
-				print "sleep"
-				time.sleep(0.1)
-		# time.sleep(2)
-
-		for trace in self.all_traces_to_monitor:
-				self.trace_data = self.trace_data_const_ref.traces
-				self.data_dict[trace] = []
-				for i in self.trace_data[-1].value:
-					self.data_dict[trace].append(i)
-				self.data_dict[trace+'_time'] = self.trace_data[-1].time
-				self.data_dict[trace + '_mean_start'] = self.trace_mean_start
-				self.data_dict[trace+'_mean_end'] = self.trace_mean_end
-				self.data_dict[trace+'_AV'] = numpy.mean(self.trace_data[-1].value)
-				self.data_dict[trace + '_AV_buffer'] = []
-				for i in range(0,len(self.trace_data)-1):
-					self.data_dict[trace + '_AV_buffer'].append(numpy.mean(self.trace_data[i].value))
-		return True
+		# for trace in self.all_traces_to_monitor:
+		# 	self.trace_data_const_ref = self.llrfctrl.getTraceDataConstRef(trace)
+		# 	self.llrfctrl.setMeanStartIndex(trace, self.trace_mean_start)
+		# 	self.llrfctrl.setMeanStopIndex(trace, self.trace_mean_end)
+		# 	while len(self.llrfobj.trace_data[trace].traces) < self.bufferSize:
+		# 		print "sleep"
+		# 		time.sleep(0.1)
+		# # time.sleep(2)
+        #
+		# for trace in self.all_traces_to_monitor:
+		# 		self.trace_data = self.trace_data_const_ref.traces
+		# 		self.data_dict[trace] = []
+		# 		for i in self.trace_data[-1].value:
+		# 			self.data_dict[trace].append(i)
+		# 		self.data_dict[trace+'_time'] = self.trace_data[-1].time
+		# 		self.data_dict[trace + '_mean_start'] = self.trace_mean_start
+		# 		self.data_dict[trace+'_mean_end'] = self.trace_mean_end
+		# 		self.data_dict[trace+'_AV'] = numpy.mean(self.trace_data[-1].value)
+		# 		self.data_dict[trace + '_AV_buffer'] = []
+		# 		for i in range(0,len(self.trace_data)-1):
+		# 			self.data_dict[trace + '_AV_buffer'].append(numpy.mean(self.trace_data[i].value))
+		# return True
 
 	def getscreendata(self):
 		self.screen_names = self.scr_ctrl.getScreenNames()
 		for i in self.screen_names:
-			self.scr_data[i] = self.scr_ctrl.getScreenState(i)
+			self.scr_data[i] = {}
+			self.scr_data[i]['state'] = self.scr_ctrl.getScreenStateStr(i)
+			self.scr_data[i]['position'] = self.scr_ctrl.getPosition(i)
+			self.scr_data[i]['actpos'] = self.scr_ctrl.getACTPOS(i)
 		return self.scr_data
 
 	def getpildata(self):
