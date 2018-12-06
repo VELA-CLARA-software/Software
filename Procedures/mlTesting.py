@@ -3,6 +3,7 @@ from datetime import datetime
 import h5py
 sys.path.append("../../")
 from Software.Widgets.generic.pv import *
+import Software.Widgets.MachineSnapshot.machine_snapshot as snap
 sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\Release')
 
 IMAGE_WIDTH = 1080
@@ -39,6 +40,7 @@ import VELA_CLARA_Magnet_Control as mag
 magInit = mag.init()
 magInit.setQuiet()
 magnetsCtrl = magInit.physical_C2B_Magnet_Controller()
+time.sleep(0.01)
 
 class emitter(object):
 
@@ -83,9 +85,9 @@ class MLTest(object):
         if self.cam_ctrl.isAcquiring():
             # print 'we are acquiring!'
             # print ' collectAndSave = ', self.cam_ctrl.collectAndSave(numberOfImages)
-            if not self.cam_ctrl.collectAndSave(numberOfImages):
+            if True:#not self.cam_ctrl.collectAndSave(numberOfImages):
                 # collectAndSave doesn't work - implement it ourselves
-                print 'collect and save failed!'
+                # print 'collect and save failed!'
                 data = self.cam_ctrl.takeAndGetFastImage()
                 if self.cam_ctrl.isVelaCam():
                     dims = IMAGE_DIMS_VELA
@@ -139,7 +141,7 @@ class MLTest(object):
         return self.linac_ctrl.getAmpSP()
 
     def getSolAmplitude(self):
-        return self.magnet_ctrl.getRI('LRG-SOL')
+        return self.magnet_ctrl.getSI('LRG-SOL')
 
     def setSolAmplitude(self, I):
         self.magnet_ctrl.setSI('LRG-SOL', I)
@@ -224,19 +226,25 @@ class MLTest(object):
     def doSolScan(self):
         start = self.getSolAmplitude()
         print 'solSI start = ', start
-        # for val in np.arange(int(start)-50, int(start)+50, 2):
-        #     print 'solSI Amplitude = ', val
-        #     self.setSolAmplitude(val)
-        #     time.sleep(0.5)
-        #     self.collectAndSave('solAmp='+str(val))
-        # self.setSolAmplitude(start)
+        for val in np.arange(int(start)-50, int(start)+50, 2):
+            print 'solSI Amplitude = ', val
+            self.setSolAmplitude(val)
+            time.sleep(0.5)
+            self.collectAndSave('solAmp='+str(val))
+        self.setSolAmplitude(start)
 
 
 if __name__ == "__main__":
+    data = snap.MachineSnapshot(MAG_Ctrl=magnetsCtrl, BPM_Ctrl=bpmCtrl, CHG_Ctrl=None,
+                 SCR_Ctrl=None, CAM_Ctrl=camerasCtrl, GUN_Ctrl=gunllrf,
+                 GUN_Type=None, GUN_Crest=0.0, L01_Ctrl=linac1llrf, L01_Crest=0.0,
+                PIL_Ctrl=None, MACHINE_MODE=snap.vce.MACHINE_MODE.PHYSICAL, MACHINE_AREA=snap.vce.MACHINE_AREA.CLARA_2_BA1_BA2, bufferSize=10, messages=False)
+    # data.writetojson()
+    data.writetohdf5(directory='.')
     mltest = MLTest()
     # mltest.collectAndSave('Baseline_Image')
     # mltest.doLinacPhaseScan()
     # mltest.doLinacAmpScan()
     # mltest.doGunPhaseScan()
     # mltest.doGunAmpScan()
-    mltest.doSolScan()
+    print mltest.getSolAmplitude()

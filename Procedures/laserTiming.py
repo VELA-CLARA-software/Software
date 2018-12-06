@@ -1,23 +1,19 @@
 import sys, time, os
-sys.path.append("../../")
+sys.path.append('../../')
 from Software.Widgets.generic.pv import *
 sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\Release')
 
 def loadBPMs():
     global bpm
+    global bpmInit
+    global bpmstatus
     import VELA_CLARA_BPM_Control as bpm
-    from VELA_CLARA_BPM_Control import BPM_STATUS# as bpmstatus
+    from VELA_CLARA_BPM_Control import BPM_STATUS
     bpmstatus = BPM_STATUS
     bpmInit = bpm.init()
     bpmInit.setQuiet()
     bpm = bpmInit.physical_C2B_BPM_Controller()
 
-def loadMagnets():
-    global magnets
-    import VELA_CLARA_Magnet_Control as mag
-    magInit = mag.init()
-    magInit.setQuiet()
-    magnets = magInit.physical_C2B_Magnet_Controller()
 
 class emitter(object):
 
@@ -28,11 +24,13 @@ class emitter(object):
     def emit(self, *args, **kwargs):
         if self.signal == 'print':
             print args
-        elif self.signal is not None:
-            self.signal.emit(*args, **kwargs)
+        else:
+            if self.signal is not None:
+                self.signal.emit(*args, **kwargs)
+        return
 
-class MLTest(object):
 
+class LaserTiming(object):
     pvNameLaser = 'CLA-C17-TIM-EVR-01:FrontUnivOut4-Ena-SP'
     pvSetNumberPulses = 'CLA-ACC-TIM-BRST-01:Burst-Count-SP'
     pvStartBurstStart = 'CLA-ACC-TIM-BRST-01:Burst-Start-SP'
@@ -45,18 +43,24 @@ class MLTest(object):
 
     def __init__(self, bpms=False):
         super(LaserTiming, self).__init__()
-        global bpm
         self.app = None
+        self.pvLaser = PVObject(self.pvNameLaser)
+        self.pvNumberPulses = PVObject(self.pvSetNumberPulses)
+        self.pvBurstMode = PVObject(self.pvSetBurstMode)
+        self.pvBurstStart = PVObject(self.pvStartBurstStart)
+        self.pvDetect = PVObject(self.pvNameDetect)
         self.pvWCMQ = PVObject(self.pvWCMQName)
         self.pvFCUPQ = PVObject(self.pvFCUPQName)
+        setattr(self.pvLaser, 'writeAccess', True)
+        setattr(self.pvNumberPulses, 'writeAccess', True)
+        setattr(self.pvBurstMode, 'writeAccess', True)
+        setattr(self.pvBurstStart, 'writeAccess', True)
         if bpms:
             loadBPMs()
             self.bpms = bpm
-            self.bpmDataObjects = {}
-        if magnets:
-            loadMagnets()
-            self.magnets = magnets
+        self.bpmDataObjects = {}
         self.logger = emitter('print')
+        return
 
     def turnOnLaserGating(self):
         setattr(self.pvLaser, 'value', 1)
@@ -88,7 +92,7 @@ class MLTest(object):
         setattr(self.pvBurstStart, 'value', 0)
 
     def getWCMCharge(self):
-        return self.pvWCMQ.value - 5 ## Measured DC offset 03/12/2018
+        return self.pvWCMQ.value - 5
 
     def getFCUPCharge(self):
         return self.pvFCUPQ.value
@@ -103,31 +107,33 @@ class MLTest(object):
         return obj.q
 
     def getTimeStr(self):
-        return time.strftime("%H%M%S")
+        return time.strftime('%H%M%S')
 
     def getWorkFolder(self):
-        return '\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Work\\'+time.strftime("%Y\\%m\\%d")+'\\'
+        return '\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Work\\' + time.strftime('%Y\\%m\\%d') + '\\'
 
     def getFileName(self, q=None, n=None, pos=None, energy=None, comment=None):
-        filename = self.getWorkFolder()+self.getTimeStr()+'_VHEE_'
-        filename = filename + '_' + str(q)+'pC' if q is not None else filename
-        filename = filename + '_' + str(n)+'_Shots' if n is not None else filename
+        filename = self.getWorkFolder() + self.getTimeStr() + '_VHEE_'
+        filename = filename + '_' + str(q) + 'pC' if q is not None else filename
+        filename = filename + '_' + str(n) + '_Shots' if n is not None else filename
         filename = filename + '_' + str(pos) + 'mm' if pos is not None else filename
         filename = filename + '_' + str(energy) + 'MeV' if energy is not None else filename
         filename = filename + '_' + str(comment) if comment is not None else filename
-        filename = filename +'.txt'
+        filename = filename + '.txt'
         return filename
 
     def printer(self, *args):
         outstr = ''
         for a in args:
-            outstr += str(a)+' '
+            outstr += str(a) + ' '
+
         return outstr
 
     def turnOnForIntegratedCharge(self, q=2500, pos=None, energy=None, comment=None):
         self.abort = False
         while not self.isLaserOn() == 1:
             self.turnOnLaserGating()
+
         time.sleep(0.075)
         filename = self.getFileName(q=q, n=None, pos=pos, energy=energy, comment=comment)
         file = open(filename, 'w')
@@ -140,7 +146,7 @@ class MLTest(object):
         intBPMQ = 0
         WCMlastvalue = BPMlastvalue = 0
         self.detectToggle = self.pvDetect.value
-        while intWCMQ < (q-5) and not self.abort:
+        while intWCMQ < q - 5 and not self.abort:
             if not self.pvDetect.value == self.detectToggle:
                 time.sleep(0.075)
                 self.detectToggle = self.pvDetect.value
@@ -153,12 +159,12 @@ class MLTest(object):
                 sys.stdout = file
                 print count, intWCMQ, intFCUPQ, intBPMQ
                 sys.stdout = sys.__stdout__
-                self.logger.emit(self.printer('Shot ',count, intWCMQ, intFCUPQ, intBPMQ, WCMvalue - WCMlastvalue, BPMvalue - BPMlastvalue))
+                self.logger.emit(self.printer('Shot ', count, intWCMQ, intFCUPQ, intBPMQ, WCMvalue - WCMlastvalue, BPMvalue - BPMlastvalue))
                 WCMlastvalue = WCMvalue
                 BPMlastvalue = BPMvalue
-            else:
-                if self.app is not None:
-                    self.app.processEvents()
+            elif self.app is not None:
+                self.app.processEvents()
+
         self.turnOffLaserGating()
         return count
 
@@ -166,7 +172,7 @@ class MLTest(object):
         self.abort = False
         while not self.isLaserOn() == 1:
             self.turnOnLaserGating()
-        # print 'laser on ? = ', self.isLaserOn()
+
         time.sleep(0.075)
         filename = self.getFileName(q=None, n=n, pos=pos, energy=energy, comment=comment)
         file = open(filename, 'w')
@@ -192,12 +198,12 @@ class MLTest(object):
                 sys.stdout = file
                 print count, intWCMQ, intFCUPQ, intBPMQ
                 sys.stdout = sys.__stdout__
-                self.logger.emit(self.printer('Shot ',count, intWCMQ, intFCUPQ, intBPMQ, WCMvalue - WCMlastvalue, BPMvalue - BPMlastvalue))
+                self.logger.emit(self.printer('Shot ', count, intWCMQ, intFCUPQ, intBPMQ, WCMvalue - WCMlastvalue, BPMvalue - BPMlastvalue))
                 WCMlastvalue = WCMvalue
                 BPMlastvalue = BPMvalue
-            else:
-                if self.app is not None:
-                    self.app.processEvents()
+            elif self.app is not None:
+                self.app.processEvents()
+
         self.turnOffLaserGating()
         return count
 
@@ -217,7 +223,9 @@ class MLTest(object):
                 self.detectToggle = self.pvDetect.value
                 count += 1
                 intQ += self.getWCMCharge()
-                self.logger.emit(self.printer( count, intQ ))
+                self.logger.emit(self.printer(count, intQ))
             else:
                 time.sleep(0.02)
+
         return count
+        

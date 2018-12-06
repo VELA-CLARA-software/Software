@@ -250,10 +250,13 @@
                   <string> pC</string>
                  </property>
                  <property name="maximum">
-                  <number>1000000</number>
+                  <number>1000000000</number>
                  </property>
                  <property name="singleStep">
                   <number>10</number>
+                 </property>
+                 <property name="value">
+                  <number>0</number>
                  </property>
                 </widget>
                </item>
@@ -274,28 +277,6 @@
                 <widget class="QLabel" name="label_4">
                  <property name="text">
                   <string>Comment</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="1">
-                <widget class="QSpinBox" name="qMotorPositionSpinBox">
-                 <property name="minimumSize">
-                  <size>
-                   <width>80</width>
-                   <height>0</height>
-                  </size>
-                 </property>
-                 <property name="suffix">
-                  <string> mm</string>
-                 </property>
-                 <property name="maximum">
-                  <number>300</number>
-                 </property>
-                 <property name="singleStep">
-                  <number>10</number>
-                 </property>
-                 <property name="value">
-                  <number>300</number>
                  </property>
                 </widget>
                </item>
@@ -342,6 +323,28 @@
                    <width>300</width>
                    <height>0</height>
                   </size>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="1">
+                <widget class="QDoubleSpinBox" name="qMotorPositionDoubleSpinBox">
+                 <property name="minimumSize">
+                  <size>
+                   <width>80</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="suffix">
+                  <string> mm</string>
+                 </property>
+                 <property name="decimals">
+                  <number>1</number>
+                 </property>
+                 <property name="maximum">
+                  <double>300.000000000000000</double>
+                 </property>
+                 <property name="singleStep">
+                  <double>10.000000000000000</double>
                  </property>
                 </widget>
                </item>
