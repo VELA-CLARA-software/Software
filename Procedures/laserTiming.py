@@ -113,7 +113,15 @@ class LaserTiming(object):
         return '\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Work\\' + time.strftime('%Y\\%m\\%d') + '\\'
 
     def getFileName(self, q=None, n=None, pos=None, energy=None, comment=None):
-        filename = self.getWorkFolder() + self.getTimeStr() + '_VHEE_'
+        dir = self.getWorkFolder()
+        try:
+            if not os.path.isdir(dir):
+                os.makedirs(dir)
+        except OSError:
+            if not os.path.isdir(dir):
+                print('Error creating directory - saving to local directory')
+                dir = '.'
+        filename = dir + self.getTimeStr() + '_VHEE_'
         filename = filename + '_' + str(q) + 'pC' if q is not None else filename
         filename = filename + '_' + str(n) + '_Shots' if n is not None else filename
         filename = filename + '_' + str(pos) + 'mm' if pos is not None else filename
@@ -172,7 +180,6 @@ class LaserTiming(object):
         self.abort = False
         while not self.isLaserOn() == 1:
             self.turnOnLaserGating()
-
         time.sleep(0.075)
         filename = self.getFileName(q=None, n=n, pos=pos, energy=energy, comment=comment)
         file = open(filename, 'w')
@@ -228,4 +235,3 @@ class LaserTiming(object):
                 time.sleep(0.02)
 
         return count
-        
