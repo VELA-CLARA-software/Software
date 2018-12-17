@@ -15,6 +15,7 @@ from threading import Thread
 from collections import OrderedDict
 sys.path.append(r'\\apclara1.dl.ac.uk\ControlRoomApps\Controllers\bin\Release')
 os.environ['PATH'] = os.environ['PATH'] + r';\\apclara1.dl.ac.uk\ControlRoomApps\Controllers\bin\stage\root_v5.34.34\bin'
+from Widgets.MachineSnapshot.machine_snapshot import MachineSnapshot
 import VELA_CLARA_Camera_Control
 import VELA_CLARA_Screen_Control
 cam_init = VELA_CLARA_Camera_Control.init()
@@ -168,6 +169,7 @@ class Controller():
         """Set up GUI and connect to the controllers."""
         self.cam_ctrl = cam_init.physical_Camera_Controller()  # replaces DAQ and IA controllers
         self.scr_ctrl = scr_init.physical_C2B_Screen_Controller()
+        self.snapshot = MachineSnapshot(SCR_Ctrl=self.scr_ctrl, CAM_Ctrl=self.cam_ctrl)
 
         ini_filename = os.getcwd() + r'\resources\imageCollector\imageCollector.ini'
         self.settings = QtCore.QSettings(ini_filename, QtCore.QSettings.IniFormat)
@@ -742,6 +744,7 @@ class Controller():
                     file.create_dataset('Capture000001', data=self.Image.image)
                     # TODO: magnet/RF settings in attributes?
                     # TODO: save more than one image?
+                self.writeSnapshot()
                 self.updateBeamHighlighter()
             else:
                 # camera controller doesn't tell us the filename - we have to wait until it's created
@@ -754,6 +757,11 @@ class Controller():
         elif self.cam_ctrl.isCollectingOrSaving():
             self.camerasDAQ.killCollectAndSave()  # TODO: this isn't right any more
         # self.camerasDAQ.killCollectAndSaveJPG()
+
+    def writeSnapshot(self):
+        """Create machine snapshot and append it to the saved image file."""
+        self.snapshot.getData()
+        self.snapshot.writetohdf5(self.save_filename)
 
     def beamHighlightComplete(self):
         """'Done' button clicked after drawing a rectangle round the beam after saving."""
@@ -769,20 +777,28 @@ class Controller():
     def updateBeamHighlighter(self):
         """Called on a timer after 'save' clicked to get the most recent save filename."""
         if isinstance(self.save_filename, datetime):
-            timestamp = self.save_filename
-            # called from CLARA camera save - we don't know the filename yet - waiting for it to be saved
-            folder = hdf5_image_folder + timestamp.strftime(r'\%Y\%#m\%#d')
-            # get most recent filename from folder
+            if not self.imageFileSavedAfter(self.save_filename):
+                self.bh_timer.start(1000)  # wait another second
+                return
+        self.view.statusbar.showMessage('Saved to file ' + self.save_filename)
+        self.writeSnapshot()
+        self.setBeamHighlightVisible(True)
+
+    def imageFileSavedAfter(self, timestamp):
+        """Image file was saved asynchronously by the controller. Has it been created yet?"""
+        folder = hdf5_image_folder + timestamp.strftime(r'\%Y\%#m\%#d')
+        # get most recent filename from folder
+        file_saved = False
+        try:
             filename = max(os.listdir(folder), key=lambda f: os.path.getmtime(os.path.join(folder, f)))
             filename = os.path.join(folder, filename)
             # is it more recent than the timestamp we remembered?
-            if time.mktime(timestamp.timetuple()) > os.path.getmtime(filename):
-                self.bh_timer.start(1000)  # wait another second
-                return
-            else:
-                self.save_filename = filename
-        self.view.statusbar.showMessage('Saved to file ' + self.save_filename)
-        self.setBeamHighlightVisible(True)
+            file_saved = time.mktime(timestamp.timetuple()) <= os.path.getmtime(filename)
+        except OSError:  # file operation error - most probably 'folder does not exist'
+            pass
+        if file_saved:
+            self.save_filename = filename
+        return file_saved
 
     def resetAverages(self):
         """The 'reset averages' button was clicked."""
