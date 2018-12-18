@@ -100,7 +100,10 @@ class signalRecorder(QMainWindow):
         if args.filename == None:
             self.filename = os.path.basename(settings)
         else:
-            self.filename = args.filename
+            self.filename = os.path.splitext(args.filename)[0]
+        self.filename = os.path.splitext(self.filename)[0] + '.h5'
+        timestr = time.strftime("%H%M%S")
+        self.filename = timestr + '_' + self.filename
         self.sp = striptoolRecord.signalRecorderH5(self.folder+"/"+self.filename,flushtime=10)
         with open(settings, 'r') as stream:
             settings = yaml.load(stream)
@@ -134,6 +137,10 @@ class signalRecorder(QMainWindow):
 
     def checkFileName(self):
         if datetime.today().timetuple()[2] is not self.day:
+            self.sp.close()
+            self.sp.deleteLater()
+            self.initialiseRecorder(self.settings)
+        elif hasattr(self, 'filename') and os.path.getsize(self.filename)/(1024*1024.0) > 1:
             self.sp.close()
             self.sp.deleteLater()
             self.initialiseRecorder(self.settings)

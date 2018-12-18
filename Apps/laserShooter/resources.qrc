@@ -1,0 +1,8 @@
+<RCC>
+  <qresource>
+    <file alias='laserShooter.jpg'>laserShooter.jpg</file>
+  </qresource>
+  <qresource>
+    <file alias='laserShooter.png'>laserShooter.png</file>
+  </qresource>
+</RCC>

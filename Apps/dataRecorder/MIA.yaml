@@ -24,6 +24,10 @@ BPMs:
   CLA-C2V-DIA-BPM-01:Y:
     timer: 10
     name: 'C2V-BPM-01:Y'
+Magnet:
+  CLA-C2V-MAG-DIP-01:SETI:
+    timer: 1
+    name: 'C2V-MAG-DIP-01'
 Gun:
   CLA-GUN-LRF-CTRL-01:ad1:ch1:power_remote.POWER:
     arrayData: 1017
@@ -69,3 +73,11 @@ Linac:
     arrayData: 1017
     timer: 10
     name: 'Linac Probe Phase'
+  CLA-L01-LRF-CTRL-01:ad1:ch5:power_remote.POWER:
+    arrayData: 1017
+    timer: 10
+    name: 'Linac Load 1 FWD'
+  CLA-L01-LRF-CTRL-01:ad1:ch5:amp_phase.PHASE_REMOTE:
+    arrayData: 1017
+    timer: 10
+    name: 'Linac Load 1 Phase'

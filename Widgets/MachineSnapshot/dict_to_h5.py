@@ -5,7 +5,7 @@ def save_dict_to_hdf5(dic, filename):
     """
     ....
     """
-    with h5py.File(filename, 'w') as h5file:
+    with h5py.File(filename, 'a') as h5file:  # 'a': open as append, won't delete any data in pre-existing file
         recursively_save_dict_contents_to_group(h5file, '/', dic)
 
 def recursively_save_dict_contents_to_group(h5file, path, dic):

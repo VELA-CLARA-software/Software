@@ -55,12 +55,28 @@ class blm_plotter_gui(QMainWindow, Ui_MainWindow, base):
 		self.setNumShotsButton.clicked.connect(self.set_num_shots)
 		self.rollingAverageButton.clicked.connect(self.set_rolling_average)
 		self.calibrateButton.clicked.connect(self.set_calibrate)
-		# self.attenuationButton.toggled.connect(lambda: self.handle_measure_type(self.attenuationButton))
-		# self.delayButton.toggled.connect(lambda: self.handle_measure_type(self.delayButton))
 		# # widgets are held in dict, with same keys as data
 		self.init_widget_dict(base.data)
 		# # the clipboard has a string version of data
 		self.clip_vals = base.data.values.copy()
+		self.pen_vals = {self.data.values[dat.blm_waveform_pvs][0]: 'b',
+						 self.data.values[dat.blm_waveform_pvs][1]: 'r',
+						 self.data.values[dat.blm_waveform_pvs][2]: 'y',
+						 self.data.values[dat.blm_waveform_pvs][3]: 'g'}
+		self.named = {self.data.values[dat.blm_waveform_pvs][0]: False,
+					  self.data.values[dat.blm_waveform_pvs][1]: False,
+					  self.data.values[dat.blm_waveform_pvs][2]: False,
+					  self.data.values[dat.blm_waveform_pvs][3]: False}
+		self.j = 0
+		self.blmPlot.addLegend()
+		for i in self.data.values[dat.blm_waveform_pvs]:
+			if not self.named[i]:
+				self.blmplot = self.blmPlot.plot(pen=mkPen(self.pen_vals[i], width=1),
+												 name=str(i) + " " + self.data.values[dat.fibre_config][str(i)][
+													 0] + " " +
+													  self.data.values[dat.fibre_config][str(i)][1] + " " +
+													  self.data.values[dat.fibre_diameter][str(i)])
+				self.named[i] = True
 		# # init to paused
 		# update timer
 		self.timer = QTimer()
@@ -157,23 +173,39 @@ class blm_plotter_gui(QMainWindow, Ui_MainWindow, base):
 
 	def plot_blm_values(self):
 		self.blmPlot.clear()
-		self.pen_vals = ['b','r','y','g']
-		self.vbx = self.blmPlot.vb
-		self.min_vals = []
-		self.max_vals = []
-		self.j = 0
+		# self.min_vals = []
+		# self.max_vals = []
+		# self.min_time = []
+		# self.max_time = []
 		if self.data.values[dat.has_blm_data]:
-			for i in self.data.values[dat.blm_waveform_pvs]:
-				self.min_vals.append(min(self.data.values[dat.blm_voltages][str(i)]))
-				self.max_vals.append(max(self.data.values[dat.blm_voltages][str(i)]))
+			# for i in self.data.values[dat.blm_waveform_pvs]:
+			# 	self.min_vals.append(min(self.data.values[dat.blm_voltages][str(i)]))
+			# 	self.max_vals.append(max(self.data.values[dat.blm_voltages][str(i)]))
+			# for i in self.data.values[dat.blm_time_pvs]:
+			# 	self.min_time.append(min(self.data.values[dat.blm_time][str(i)]))
+			# 	self.max_time.append(max(self.data.values[dat.blm_time][str(i)]))
+			# self.vbx.setYRange(min(self.min_vals), max(self.max_vals))
+			# self.vbx.setXRange(0, max(self.max_time))
 			for i, k, m in zip(self.data.values[dat.blm_waveform_pvs],self.data.values[dat.blm_time_pvs], self.checkboxes):
 				if m.isChecked():
-					self.vbx.setYRange(min(self.min_vals),max(self.max_vals))
-					self.blmplot = self.blmPlot.plot(pen=mkPen(self.pen_vals[self.j],width=1))
+					self.blmplot = self.blmPlot.plot(pen=mkPen(self.pen_vals[i], width=1))
+					# self.named[i] = True
 					self.blmdata = [self.data.values[dat.blm_time][str(k)][:-1],self.data.values[dat.blm_voltages][str(i)][:-1]]
 					# self.blmplot.setData(self.data.values[dat.blm_num_values],
 					# 				   self.data.values[dat.blm_voltages][str(i)])
 					self.blmplot.setData(x=self.blmdata[0],y=self.blmdata[1])
 					# self.blmplot.setData(self.blmdata)
 					self.j = self.j+1
+				# else:
+				# 	if m.isChecked():
+				# 		self.blmplot = self.blmPlot.plot(pen=mkPen(self.pen_vals[i], width=1))
+				# 		self.blmdata = [numpy.gradient(self.data.values[dat.blm_voltages][str(i)][:-1])]#/numpy.diff(self.data.values[dat.blm_time][str(k)][:-1])]
+				# 		self.vbx.setYRange(min(self.blmdata[0]), max(self.blmdata[0]))
+				# 		self.vbx.setXRange(0, max(self.max_time))
+				# 		# self.blmplot.setData(self.data.values[dat.blm_num_values],
+				# 		# 				   self.data.values[dat.blm_voltages][str(i)])
+				# 		# self.blmplot.setData(x=self.blmdata[0], y=self.blmdata[1])
+				# 		self.blmplot.setData(x=self.data.values[dat.blm_time][str(k)][:-1],y=self.blmdata[0])
+				# 		self.j = self.j + 1
+
 			self.data.values[dat.plots_done] = True

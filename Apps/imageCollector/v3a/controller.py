@@ -15,6 +15,7 @@ from threading import Thread
 from collections import OrderedDict
 sys.path.append(r'\\apclara1.dl.ac.uk\ControlRoomApps\Controllers\bin\Release')
 os.environ['PATH'] = os.environ['PATH'] + r';\\apclara1.dl.ac.uk\ControlRoomApps\Controllers\bin\stage\root_v5.34.34\bin'
+from Widgets.MachineSnapshot.machine_snapshot import MachineSnapshot
 import VELA_CLARA_Camera_Control
 import VELA_CLARA_Screen_Control
 cam_init = VELA_CLARA_Camera_Control.init()
@@ -45,6 +46,8 @@ image_credits = {
     'eye.png': 'https://www.flaticon.com/free-icon/eye_159604#term=eye&page=1&position=5',
     'in.png': 'https://www.flaticon.com/free-icon/vision_94922#term=vision&page=1&position=2',
     'out.png': 'https://www.flaticon.com/free-icon/vision-off_94930#term=eye%20cross&page=1&position=4',
+    'camera.ico': 'https://www.flaticon.com/free-icon/camera_204286#term=camera&page=1&position=43',
+    'save.png': 'https://www.flaticon.com/free-icon/download-button_532#term=save&page=1&position=22'
 }
 
 
@@ -166,6 +169,7 @@ class Controller():
         """Set up GUI and connect to the controllers."""
         self.cam_ctrl = cam_init.physical_Camera_Controller()  # replaces DAQ and IA controllers
         self.scr_ctrl = scr_init.physical_C2B_Screen_Controller()
+        self.snapshot = MachineSnapshot(SCR_Ctrl=self.scr_ctrl, CAM_Ctrl=self.cam_ctrl)
 
         ini_filename = os.getcwd() + r'\resources\imageCollector\imageCollector.ini'
         self.settings = QtCore.QSettings(ini_filename, QtCore.QSettings.IniFormat)
@@ -309,6 +313,30 @@ class Controller():
         shadow.setOffset(1, 1)
         self.title_label.setGraphicsEffect(shadow)
         monitor.addItem(self.title_label)
+
+        # Create ROI for beam highlighting after save
+        self.bh_roi = pg.RectROI([5, 5], [1, 1], pen='g')
+        self.ImageBox.addItem(self.bh_roi)
+        # self.bh_roi.removeHandle(0)  # remove rotation handle
+        self.bh_label = pg.LabelItem('Image saved. Please highlight the location of the beam using the green rectangle.<br>This helps to provide training data for machine learning.', color='#ffffff')
+        self.bh_label.setPos(300, 20)
+        self.bh_label.setAttr('justify', 'center')  # otherwise text moves toward the centre when overlay removed
+        self.bh_label.setGraphicsEffect(shadow)
+        monitor.addItem(self.bh_label)
+        self.bh_timer = QtCore.QTimer()
+        self.bh_timer.timeout.connect(self.updateBeamHighlighter)
+        self.bh_timer.setSingleShot(True)
+        self.save_filename = ''
+
+        self.bh_done_button = QtGui.QPushButton('Done')
+        self.bh_done_button.setParent(monitor)
+        self.bh_done_button.move(300, 50)
+        self.bh_done_button.clicked.connect(self.beamHighlightComplete)
+        self.bh_cancel_button = QtGui.QPushButton('Cancel')
+        self.bh_cancel_button.setParent(monitor)
+        self.bh_cancel_button.move(380, 50)
+        self.bh_cancel_button.clicked.connect(lambda: self.setBeamHighlightVisible(False))
+        self.setBeamHighlightVisible(False)  # hide to begin with
 
         map_name = str(self.settings.value('colourMap', 'fire').toString())
         view.colour_map_dropdown.currentIndexChanged[QtCore.QString].connect(self.changeColourMap)
@@ -464,6 +492,7 @@ class Controller():
 
     def changeCamera(self, start_acquire=True):
         """The current item in the list box was changed. Set the correct camera."""
+        self.setBeamHighlightVisible(False)  # no point highlighting the beam on a different screen!
         screen_name = self.getCurrentScreen()
         # convert to camera name
         camera_name = self.cam_dict[screen_name]
@@ -577,7 +606,7 @@ class Controller():
                             self.view.screen_progress.setFormat('%p%')
                             pneumatic = self.scr_ctrl.isPneumatic(screen_name)
                             state = VELA_CLARA_Screen_Control.SCREEN_STATE
-                            states = (state.V_RF, state.V_YAG) if pneumatic else (state.RETRACTED, state.YAG)
+                            states = (state.V_RF, state.V_YAG) if pneumatic else (state.V_RETRACTED, state.V_YAG)
                             out_pos, in_pos = (self.scr_ctrl.getDevicePosition(screen_name, state) for state in states)
                             sign = np.copysign(1, in_pos - out_pos)  # in case out > in. We want 100% to be 'in', so out should be less
                             self.view.screen_progress.setRange(sign * out_pos, sign * in_pos)
@@ -595,27 +624,33 @@ class Controller():
 
         # Set crosshairs
         analysis = self.cam_ctrl.getAnalysisObj(screen_name)
-        x, y = analysis.x_mean, analysis.y_mean
-        sigX, sigY = analysis.sig_x_mean, analysis.sig_y_mean
-        self.vLineMLE_avg.setData(x=[x, x], y=[y - sigY, y + sigY])
-        self.hLineMLE_avg.setData(x=[x - sigX, x + sigX], y=[y, y])
+        ratio = self.pix2mm()
+        # 14/12/18: x and y seem to return in pixels again AAAAAARRGHHHHHHH
+        x_mean, y_mean = analysis.x_mean * ratio, analysis.y_mean * ratio
+        sigX_mean, sigY_mean = analysis.sig_x_mean * ratio, analysis.sig_y_mean * ratio
+        cov_mean = analysis.sig_xy_mean * ratio**2
+        self.vLineMLE_avg.setData(x=[x_mean, x_mean], y=[y_mean - sigY_mean, y_mean + sigY_mean])
+        self.hLineMLE_avg.setData(x=[x_mean - sigX_mean, x_mean + sigX_mean], y=[y_mean, y_mean])
         x, y = analysis.x, analysis.y
-        sigX, sigY = analysis.sig_x, analysis.sig_y
+        sigX, sigY, cov = analysis.sig_x, analysis.sig_y, analysis.sig_xy
         data_ok = -999.999 not in (x, y, sigX, sigY)
+        x, y = x * ratio, y * ratio
+        sigX, sigY = sigX * ratio, sigY * ratio
+        cov = cov * ratio**2
         self.hLineMLE.setVisible(data_ok)
         self.vLineMLE.setVisible(data_ok)
         if data_ok:
             self.vLineMLE.setData(x=[x, x], y=[y - sigY, y + sigY])
             self.hLineMLE.setData(x=[x - sigX, x + sigX], y=[y, y])
         text = '''<h1>{screen_name}</h1><h2 style="color: green;">Immediate</h2>
-                        <p style="color: green;"><b>Position</b>: {analysis.x:.3f}, {analysis.y:.3f} mm<br>
-                        <b>Size (1 &sigma;)</b>: {analysis.sig_x:.3f}, {analysis.sig_y:.3f} mm<br>
-                        <b>Covariance XY</b>: {analysis.sig_xy:.3f} mm<sup>2</sup><br>
+                        <p style="color: green;"><b>Position</b>: {x:.3f}, {y:.3f} mm<br>
+                        <b>Size (1 &sigma;)</b>: {sigX:.3f}, {sigY:.3f} mm<br>
+                        <b>Covariance XY</b>: {cov:.3f} mm<sup>2</sup><br>
                         <b>Average intensity</b>: {analysis.avg_pix:.3f}</p>
                         <h2 style="color: cyan;">Average ({analysis.sig_x_n})</h2>
-                        <p style="color: cyan;"><b>Position</b>: {analysis.x_mean:.3f}, {analysis.y_mean:.3f} mm<br>
-                        <b>Size (1 &sigma;)</b>: {analysis.sig_x_mean:.3f}, {analysis.sig_y_mean:.3f} mm<br>
-                        <b>Covariance XY</b>: {analysis.sig_xy_mean:.3f} mm<sup>2</sup><br>
+                        <p style="color: cyan;"><b>Position</b>: {x_mean:.3f}, {y_mean:.3f} mm<br>
+                        <b>Size (1 &sigma;)</b>: {sigX_mean:.3f}, {sigY_mean:.3f} mm<br>
+                        <b>Covariance XY</b>: {cov:.3f} mm<sup>2</sup><br>
                         <b>Average intensity</b>: {analysis.avg_pix_mean:.3f}</p>'''.format(**locals())
         if self.view.overlay_checkbox.isChecked():
             model = self.view.overlay_treeview.model()
@@ -685,26 +720,85 @@ class Controller():
     def collectAndSave(self):
         numberOfImages = self.view.numImages_spinBox.value()
         if self.cam_ctrl.isAcquiring():
-            if not self.cam_ctrl.collectAndSave(numberOfImages):
+            timestamp = datetime.now()
+            folder = hdf5_image_folder + timestamp.strftime(r'\%Y\%#m\%#d')  # omit leading zeros from month and day
+            success = self.cam_ctrl.collectAndSave(numberOfImages)
+            analysis = self.cam_ctrl.getAnalysisObj()
+            ratio = self.pix2mm()
+            x, y = analysis.x, analysis.y
+            sigX, sigY, cov = analysis.sig_x, analysis.sig_y, analysis.sig_xy
+            data_ok = -999.999 not in (x, y, sigX, sigY)
+            x, y = x * ratio, y * ratio
+            sigX, sigY = sigX * ratio, sigY * ratio
+            self.bh_roi.setPos(x - sigX, y - sigY)
+            self.bh_roi.setSize([2 * sigX, 2 * sigY])
+            if not success:
                 # collectAndSave doesn't work - implement it ourselves
-                timestamp = datetime.now()
-                folder = hdf5_image_folder + timestamp.strftime(r'\%Y\%#m\%#d')  # omit leading zeros from month and day
                 try:
                     os.makedirs(folder)
                 except OSError as e:
                     if e.errno != 17:  # dir already exists
                         raise
-                filename = r'{}\{}_{}_{}images.hdf5'.format(folder, self.getCurrentScreen(), timestamp.strftime('%Y-%#m-%#d_%#H-%#M-%#S'), numberOfImages)
-                with h5py.File(filename, 'w') as file:
+                self.save_filename = r'{}\{}_{}_{}images.hdf5'.format(folder, self.getCurrentScreen(), timestamp.strftime('%Y-%#m-%#d_%#H-%#M-%#S'), numberOfImages)
+                with h5py.File(self.save_filename, 'w') as file:
                     file.create_dataset('Capture000001', data=self.Image.image)
                     # TODO: magnet/RF settings in attributes?
                     # TODO: save more than one image?
+                self.writeSnapshot()
+                self.updateBeamHighlighter()
+            else:
+                # camera controller doesn't tell us the filename - we have to wait until it's created
+                self.save_filename = timestamp  # to tell us we're waiting for a file created after this
+                self.bh_timer.start(100 * numberOfImages + 500)  # hardcode 10 Hz for now, and give an extra 0.5s
 
             self.view.statusbar.showMessage('Saving {} images'.format(numberOfImages))
             # self.camerasDAQ.collectAndSaveJPG()
+
         elif self.cam_ctrl.isCollectingOrSaving():
             self.camerasDAQ.killCollectAndSave()  # TODO: this isn't right any more
         # self.camerasDAQ.killCollectAndSaveJPG()
+
+    def writeSnapshot(self):
+        """Create machine snapshot and append it to the saved image file."""
+        self.snapshot.getData()
+        self.snapshot.writetohdf5(self.save_filename)
+
+    def beamHighlightComplete(self):
+        """'Done' button clicked after drawing a rectangle round the beam after saving."""
+        with h5py.File(self.save_filename, 'a') as file:
+            file.create_dataset('beam_position', data=[self.bh_roi.pos(), self.bh_roi.size()])
+        self.view.statusbar.showMessage('User-defined beam position stored in file ' + self.save_filename)
+        self.setBeamHighlightVisible(False)  # hide prompt and buttons
+
+    def setBeamHighlightVisible(self, visible):
+        """Set visibility of beam highlight controls."""
+        [ctrl.setVisible(visible) for ctrl in (self.bh_label, self.bh_roi, self.bh_done_button, self.bh_cancel_button)]
+
+    def updateBeamHighlighter(self):
+        """Called on a timer after 'save' clicked to get the most recent save filename."""
+        if isinstance(self.save_filename, datetime):
+            if not self.imageFileSavedAfter(self.save_filename):
+                self.bh_timer.start(1000)  # wait another second
+                return
+        self.view.statusbar.showMessage('Saved to file ' + self.save_filename)
+        self.writeSnapshot()
+        self.setBeamHighlightVisible(True)
+
+    def imageFileSavedAfter(self, timestamp):
+        """Image file was saved asynchronously by the controller. Has it been created yet?"""
+        folder = hdf5_image_folder + timestamp.strftime(r'\%Y\%#m\%#d')
+        # get most recent filename from folder
+        file_saved = False
+        try:
+            filename = max(os.listdir(folder), key=lambda f: os.path.getmtime(os.path.join(folder, f)))
+            filename = os.path.join(folder, filename)
+            # is it more recent than the timestamp we remembered?
+            file_saved = time.mktime(timestamp.timetuple()) <= os.path.getmtime(filename)
+        except OSError:  # file operation error - most probably 'folder does not exist'
+            pass
+        if file_saved:
+            self.save_filename = filename
+        return file_saved
 
     def resetAverages(self):
         """The 'reset averages' button was clicked."""
