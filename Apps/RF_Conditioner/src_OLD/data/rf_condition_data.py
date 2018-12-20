@@ -195,8 +195,11 @@ class rf_condition_data(dat.rf_condition_data_base):
             predicted_sp = int((self.requested_power - c)/m)
 
 
-            self.logger.message('current   sp/W  = ' + str(current_sp)   + " / " + str(self.current_power), True)
-            self.logger.message('predict   sp/W  = ' + str(predicted_sp) + " / " + str(self.requested_power), True)
+            self.logger.message('current   sp/W  = ' + str(current_sp) + " / " + str(
+                    self.current_power), True)
+            self.logger.message('predict   sp/W  = ' + str(predicted_sp) + " / " + str(
+                    self.requested_power), True)
+
             self.logger.message('new delta sp/W  = ' + str(predicted_sp - current_sp) + " / " +
                                 str(self.requested_power-self.current_power) + ' (' + str(
                                         req_pwr_inc) +')',True)
@@ -216,9 +219,6 @@ class rf_condition_data(dat.rf_condition_data_base):
             self.logger.message('current sp/W  = ' + str(current_sp) + " / " + str(
                     self.current_power), True)
             return None
-        elif predicted_sp == current_sp:
-            self.logger.message('Predicted sp ==  current_sp, returning current_sp + 1', True)
-            return predicted_sp + 1
         else:
             return predicted_sp
 
