@@ -94,6 +94,7 @@ class llrf_simple_param_monitor(monitor):
 
         # amplitude set point
         monitor.data.values[dat.amp_sp] = int(monitor.llrfObj[0].amp_sp)
+        monitor.data.values[dat.phi_sp] = int(monitor.llrfObj[0].phi_sp)
 
         # LLRF trigger state
         if monitor.llrfObj[0].trig_source == TRIG.OFF:
@@ -102,7 +103,6 @@ class llrf_simple_param_monitor(monitor):
             monitor.data.values[dat.llrf_trigger] = False
         else:
             monitor.data.values[dat.llrf_trigger] = True
-
 
         # if setting phase trace end masks by value get those values...
         if monitor.data.values[dat.phase_mask_by_power_trace_1_set]:

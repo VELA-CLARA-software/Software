@@ -80,6 +80,7 @@ class main_controller(controller_base):
         QApplication.processEvents()
         #
         # start data recording
+        print("self.data.start_logging()")
         self.data.start_logging()
         QApplication.processEvents()
         #
@@ -142,7 +143,6 @@ class main_controller(controller_base):
             if now_time  - start_time > 1.5:
                 break
 
-
         controller_base.llrf_handler.set_global_check_mask(True)
 
         # start main loop
@@ -161,7 +161,6 @@ class main_controller(controller_base):
                 # controller_base.llrf_handler.print_mask_settings()
                 # controller_base.llrf_handler.print_rolling_average_mask_settings()
                 # start_time = now_time
-
 
             QApplication.processEvents()
             #

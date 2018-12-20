@@ -297,9 +297,11 @@ class llrf_handler_base(base):
 		base.llrf_control.setAllSCANToPassive()
 		base.logger.header(self.my_name + ' start_trace_monitoring()', True)
 		if "error" not in trace_to_save:
+			#print(1)
 			base.llrf_control.setAllSCANToPassive()
 			base.llrf_control.setAllTraceBufferSize(base.config.llrf_config['NUM_BUFFER_TRACES'])
 		else:
+			#print(2)
 			base.logger.message('!!! ERROR IN TRACES TO SAVE !!!', True)
 
 	def setup_trace_rolling_average(self):

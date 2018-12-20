@@ -44,6 +44,7 @@ class config_reader(object):
     rfprot_config = None
     gui_config = None
     sol_config = None
+    mon_config = None
 
     #
     llrf_type = LLRF_TYPE.UNKNOWN_TYPE
@@ -97,6 +98,7 @@ class config_reader(object):
         self.rfprot_param()
         self.gui_param()
         self.sol_parameter()
+        self.mon_parameter()
         print(config_reader.my_name + ' read input from ' + str(config_reader.config_file) )
 
         config_reader.all_config_data = [config_reader.vac_config,
@@ -110,7 +112,8 @@ class config_reader(object):
                                          config_reader.mod_config,
                                          config_reader.rfprot_config,
                                          config_reader.gui_config,
-                                         config_reader.sol_config]
+                                         config_reader.sol_config,
+                                         config_reader.mon_config]
         return self.sanity_checks()
 
     def sanity_checks(self):
@@ -198,7 +201,6 @@ class config_reader(object):
         config_reader.DC_config = self.get_param_dict(string_param=string_param,float_param=float_param,
                                                     int_param=int_param,bool_param=bool_param)
         return config_reader.DC_config
-
 
     def log_param(self):
         string_param = ['LOG_FILENAME','LOG_DIRECTORY','DATA_LOG_FILENAME',
@@ -493,6 +495,22 @@ class config_reader(object):
         int_param=['GUI_UPDATE_TIME']
         config_reader.gui_config = self.get_param_dict(int_param=int_param)
         return config_reader.gui_config
+
+
+    def mon_parameter(self):
+        ## this picks up any extra PVs that are logged to file, but NOT disdplayed to the GUI
+        ## its going to look fo rany keys that have the suffix '_GMON'
+        #
+        # Loop over each key in config_reader.config looking for _GMON
+        #
+        for key, value in config_reader.config.iteritems():
+            if key[-5:] == '_GMON':
+                if config_reader.mon_config == None:
+                    config_reader.mon_config = {}
+                config_reader.mon_config[ key[:-5] ] = value
+                print key[:-5]
+                print value
+        return config_reader.mon_config
 
     def settings(self):
         r ={}

@@ -18,8 +18,10 @@ class data_monitoring_base(base):
 	gen_mon = VELA_CLARA_General_Monitor.init()
 	# we can make some reasonable guesses as to what will be
 	# monitored from gen_mon
-	# every key from gen_mon will be stored here
+	# every key from gen_mon will be stored here (NOT NOW DEC 2018)
 	gen_mon_keys = {}
+	# HACKINGF THIS ON SHIFT... To ALLOW any number of user-defined PVS in the config
+	user_gen_mon_dict = {}
 	# we can make some reasonable guesses as to what will be included
 	vac_id = 'VAC_ID'
 	dc_id = 'DC_ID'
@@ -70,6 +72,7 @@ class data_monitoring_base(base):
 	rf_prot_monitor = None
 	vac_valve_monitor = None
 	sol_monitor = None
+	user_gen_monitor = None
 	def __init__(self):
 		base.__init__(self)
 
@@ -153,6 +156,15 @@ class data_monitoring_base(base):
 				self.logger.message('Not monitoring outside_masks No config data', True)
 		else:
 			self.logger.message('Not monitoring llrf No config data', True)
+
+		if bool(base.config.mon_config):
+			if self.start_general_monitoring():
+				self.logger.message('Monitoring llrf', True)
+			else:
+				self.logger.message('Not monitoring general parameters, start_general_monitoring '
+				                    'failed',True)
+		else:
+			self.logger.message('Not monitoring general parameters. No config data', True)
 
 
 	def start_vac_monitor(self):
@@ -278,6 +290,37 @@ class data_monitoring_base(base):
 		data_monitoring_base.is_monitoring[dat.breakdown_status] = data_monitoring_base.outside_mask_trace_monitor.set_success
 		data_monitoring_base.is_monitoring[dat.rev_power_spike_count] = data_monitoring_base.outside_mask_trace_monitor.set_success
 		return data_monitoring_base.outside_mask_trace_monitor.set_success
+
+	def start_general_monitoring(self):
+		failed_keys = []
+		success_data_dict_key= []
+		success_id_keys = []
+		for key,value in base.config.mon_config.iteritems():
+			id = self.gen_mon.connectPV(value)
+			if id != 'FAILED':
+				data_monitoring_base.user_gen_mon_dict[key] =  id
+				self.logger.message(self.my_name + ' Connected to PV = ' + str(value) + ' with ID = ' + str(id) + ' acquiring data',True)
+				#
+				# NOW ADD IT AS A KEY to the main data dictionary
+				data_monitoring_base.data.values[key] = None
+				success_data_dict_key.append( key  )
+				success_id_keys.append( id  )
+			else:
+				# add to failed keys
+				failed_keys.append(key)
+				self.logger.message(self.my_name + ' Failed to connect to PV = ' + str(value) + ' ID = ' + str(id) + ' NOT acquiring data',True)
+		# remove failed keys (probbaly not needed)
+		for k in failed_keys:
+			base.config.mon_config.pop(k, None)
+		## create a new value monitor and pass in keys and ids
+		data_monitoring_base.user_gen_monitor = value_monitor.value_monitor(
+				gen_mon = self.gen_mon,
+				id_key = success_id_keys,
+				data_dict_key = success_data_dict_key,
+				update_time = 1000,  # MAGIC_NUMBER
+				my_name = 'user_gen_monitoring'
+		)
+		#raw_input()
 
 	# connect to process variable pv
 	def connectPV(self, pvKey, pvValue):

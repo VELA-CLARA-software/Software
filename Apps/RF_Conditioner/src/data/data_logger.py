@@ -78,13 +78,11 @@ class data_logger(object):
             for item in data:
                 f.write("%s\n" % item)
 
-
     def add_to_pulse_breakdown_log(self,x):
         towrite = " ".join(map(str, x))
-        self.message('Adding to pulse_breakdown_log: ' + towrite, True)
+        #self.message('Adding to pulse_breakdown_log: ' + towrite, True)
         with open(self.pulse_count_log,'a') as f:
             f.write( towrite + '\n')
-
 
     def add_to_KFP_Running_stat_log(self, x):
         # WRITE TO amp_power_log but don't write an amp with zero pulses of data in it 
@@ -115,7 +113,6 @@ class data_logger(object):
         self.header(self.my_name + ' get_amp_power_log')
         self.message('read get_amp_power_log: ' + self.amp_power_log)
         return r_dict
-
 
     def get_pulse_count_breakdown_log(self):
         self.pulse_count_log = data_logger.config.log_config['LOG_DIRECTORY']+ \
@@ -221,17 +218,17 @@ class data_logger(object):
 
     # noinspection PyMethodMayBeStatic
     def pickle_dump(self, path, obj):
-        self.message(self.my_name + ' pickle_dumping to ' + path,True)
+        self.message(self.my_name + ' pickle_dumping to ' + path, True)
         try:
             with open(path + '.pkl', 'wb') as f:
                 pkl.dump(obj, f, pkl.HIGHEST_PROTOCOL)
+            # try wxf conversion
+            self.message(self.my_name + ' CONVERTING TO .wxf', True)
             self.pkl2wxf(path + '.pkl')
-
         except Exception as e:
             print(e)
             self.message(self.my_name + ' EXCEPTION ' + str(e), True)
             self.message(self.my_name + ' ERROR pickle_dumping to ' + path, True)
-
 
     def pkl2wxf(self,path):
         file = open(path, 'rb')

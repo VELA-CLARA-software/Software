@@ -521,3 +521,228 @@ next sp decrease     = 659
 next required pulses = 3000
 next power increase  = 1000.0
 next sp decrease     = 670
+2018-12-18 17:31:53.100000 Adding to pulse_breakdown_log: 77263 -30 689 27 3502
+2018-12-18 17:31:53.102000 *
+*** rf_condition_data executing  get_new_set_point() ***
+2018-12-18 17:31:53.105000 current   sp/W  = 689 / 28820
+2018-12-18 17:31:53.106000 predict   sp/W  = 699 / 29820
+2018-12-18 17:31:53.107000 new delta sp/W  = 10 / 1000 (1000.0)
+2018-12-18 17:31:53.109000 last delta sp/W  = 9 / 192
+2018-12-18 17:31:53.194000 set_amp = 699, took 0.0590766186416 time,  averages NOT reset, mask_set = False
+2018-12-18 17:31:53.194000 *
+*** rf_condition_data set_ramp_values ***
+2018-12-18 17:31:53.195000 current ramp index   = 28
+next required pulses = 3000
+next power increase  = 1000.0
+next sp decrease     = 680
+2018-12-18 17:32:24.554000 Adding to pulse_breakdown_log: 80266 -30 699 28 3502
+2018-12-18 17:32:24.556000 *
+*** rf_condition_data executing  get_new_set_point() ***
+2018-12-18 17:32:24.557000 current   sp/W  = 699 / 29596
+2018-12-18 17:32:24.558000 predict   sp/W  = 716 / 30596
+2018-12-18 17:32:24.559000 new delta sp/W  = 17 / 1000 (1000.0)
+2018-12-18 17:32:24.559000 last delta sp/W  = 10 / 776
+2018-12-18 17:32:24.599000 set_amp = 716, took 0.0206700865108 time,  averages NOT reset, mask_set = False
+2018-12-18 17:32:24.599000 *
+*** rf_condition_data set_ramp_values ***
+2018-12-18 17:32:24.600000 current ramp index   = 29
+next required pulses = 3000
+next power increase  = 1000.0
+next sp decrease     = 689
+2018-12-18 17:32:56.218000 Adding to pulse_breakdown_log: 83274 -30 716 29 3502
+2018-12-18 17:32:56.220000 *
+*** rf_condition_data executing  get_new_set_point() ***
+2018-12-18 17:32:56.222000 current   sp/W  = 716 / 30459
+2018-12-18 17:32:56.222000 predict   sp/W  = 734 / 31459
+2018-12-18 17:32:56.224000 new delta sp/W  = 18 / 1000 (1000.0)
+2018-12-18 17:32:56.225000 last delta sp/W  = 17 / 863
+2018-12-18 17:32:56.356000 set_amp = 734, took 0.0954442058393 time,  averages NOT reset, mask_set = False
+2018-12-18 17:32:56.357000 *
+*** rf_condition_data set_ramp_values ***
+2018-12-18 17:32:56.357000 current ramp index   = 30
+next required pulses = 3000
+next power increase  = 1000.0
+next sp decrease     = 699
+2018-12-18 17:33:30.526000 Adding to pulse_breakdown_log: 86282 -30 734 30 3502
+2018-12-18 17:33:30.527000 *
+*** rf_condition_data executing  get_new_set_point() ***
+2018-12-18 17:33:30.528000 current   sp/W  = 734 / 31852
+2018-12-18 17:33:30.529000 predict   sp/W  = 750 / 32852
+2018-12-18 17:33:30.530000 new delta sp/W  = 16 / 1000 (1000.0)
+2018-12-18 17:33:30.530000 last delta sp/W  = 18 / 1393
+2018-12-18 17:33:30.635000 set_amp = 750, took 0.0849506626938 time,  averages NOT reset, mask_set = False
+2018-12-18 17:33:30.637000 *
+*** rf_condition_data set_ramp_values ***
+2018-12-18 17:33:30.639000 current ramp index   = 31
+next required pulses = 3000
+next power increase  = 1000.0
+next sp decrease     = 716
+2018-12-18 17:34:04.817000 Adding to pulse_breakdown_log: 89284 -30 750 31 3502
+2018-12-18 17:34:04.818000 *
+*** rf_condition_data executing  get_new_set_point() ***
+2018-12-18 17:34:04.819000 current   sp/W  = 750 / 33441
+2018-12-18 17:34:04.820000 predict   sp/W  = 765 / 34441
+2018-12-18 17:34:04.821000 new delta sp/W  = 15 / 1000 (1000.0)
+2018-12-18 17:34:04.822000 last delta sp/W  = 16 / 1589
+2018-12-18 17:34:04.888000 set_amp = 765, took 0.0427178464424 time,  averages NOT reset, mask_set = False
+2018-12-18 17:34:04.889000 *
+*** rf_condition_data set_ramp_values ***
+2018-12-18 17:34:04.890000 current ramp index   = 32
+next required pulses = 3000
+next power increase  = 1000.0
+next sp decrease     = 734
+2018-12-18 17:34:37.250000 Adding to pulse_breakdown_log: 92290 -30 765 32 3502
+2018-12-18 17:34:37.253000 *
+*** rf_condition_data executing  get_new_set_point() ***
+2018-12-18 17:34:37.254000 current   sp/W  = 765 / 34502
+2018-12-18 17:34:37.255000 predict   sp/W  = 776 / 35502
+2018-12-18 17:34:37.256000 new delta sp/W  = 11 / 1000 (1000.0)
+2018-12-18 17:34:37.257000 last delta sp/W  = 15 / 1061
+2018-12-18 17:34:37.359000 set_amp = 776, took 0.0835328144624 time,  averages NOT reset, mask_set = False
+2018-12-18 17:34:37.361000 *
+*** rf_condition_data set_ramp_values ***
+2018-12-18 17:34:37.361000 current ramp index   = 33
+next required pulses = 3000
+next power increase  = 1000.0
+next sp decrease     = 750
+2018-12-18 17:35:09.137000 Adding to pulse_breakdown_log: 95298 -30 776 33 3502
+2018-12-18 17:35:09.140000 *
+*** rf_condition_data executing  get_new_set_point() ***
+2018-12-18 17:35:09.141000 current   sp/W  = 776 / 35584
+2018-12-18 17:35:09.142000 predict   sp/W  = 787 / 36584
+2018-12-18 17:35:09.143000 new delta sp/W  = 11 / 1000 (1000.0)
+2018-12-18 17:35:09.144000 last delta sp/W  = 11 / 1082
+2018-12-18 17:35:09.185000 set_amp = 787, took 0.0227210545625 time,  averages NOT reset, mask_set = False
+2018-12-18 17:35:09.186000 *
+*** rf_condition_data set_ramp_values ***
+2018-12-18 17:35:09.188000 current ramp index   = 34
+next required pulses = 3000
+next power increase  = 1000.0
+next sp decrease     = 765
+2018-12-18 17:35:40.714000 Adding to pulse_breakdown_log: 98305 -30 787 34 3502
+2018-12-18 17:35:40.716000 *
+*** rf_condition_data executing  get_new_set_point() ***
+2018-12-18 17:35:40.719000 current   sp/W  = 787 / 36502
+2018-12-18 17:35:40.720000 predict   sp/W  = 799 / 37502
+2018-12-18 17:35:40.720000 new delta sp/W  = 12 / 1000 (1000.0)
+2018-12-18 17:35:40.721000 last delta sp/W  = 11 / 918
+2018-12-18 17:35:40.826000 set_amp = 799, took 0.0694660591766 time,  averages NOT reset, mask_set = False
+2018-12-18 17:35:40.827000 *
+*** rf_condition_data set_ramp_values ***
+2018-12-18 17:35:40.828000 current ramp index   = 35
+next required pulses = 3000
+next power increase  = 1000.0
+next sp decrease     = 776
+2018-12-18 17:36:12.399000 Adding to pulse_breakdown_log: 101306 -30 799 35 3502
+2018-12-18 17:36:12.402000 *
+*** rf_condition_data executing  get_new_set_point() ***
+2018-12-18 17:36:12.405000 current   sp/W  = 799 / 37496
+2018-12-18 17:36:12.406000 predict   sp/W  = 810 / 38496
+2018-12-18 17:36:12.407000 new delta sp/W  = 11 / 1000 (1000.0)
+2018-12-18 17:36:12.407000 last delta sp/W  = 12 / 994
+2018-12-18 17:36:12.473000 set_amp = 810, took 0.0278936346972 time,  averages NOT reset, mask_set = False
+2018-12-18 17:36:12.474000 *
+*** rf_condition_data set_ramp_values ***
+2018-12-18 17:36:12.476000 current ramp index   = 36
+next required pulses = 3000
+next power increase  = 1000.0
+next sp decrease     = 787
+2018-12-18 17:36:43.303000 Adding to pulse_breakdown_log: 104314 -30 810 36 3502
+2018-12-18 17:36:43.306000 *
+*** rf_condition_data executing  get_new_set_point() ***
+2018-12-18 17:36:43.309000 current   sp/W  = 810 / 39281
+2018-12-18 17:36:43.310000 predict   sp/W  = 821 / 40281
+2018-12-18 17:36:43.312000 new delta sp/W  = 11 / 1000 (1000.0)
+2018-12-18 17:36:43.313000 last delta sp/W  = 11 / 1785
+2018-12-18 17:36:43.402000 set_amp = 821, took 0.057018612667 time,  averages NOT reset, mask_set = False
+2018-12-18 17:36:43.404000 *
+*** rf_condition_data set_ramp_values ***
+2018-12-18 17:36:43.404000 current ramp index   = 37
+next required pulses = 3000
+next power increase  = 1000.0
+next sp decrease     = 799
+2018-12-18 17:37:13.788000 Adding to pulse_breakdown_log: 107321 -30 821 37 3502
+2018-12-18 17:37:13.790000 *
+*** rf_condition_data executing  get_new_set_point() ***
+2018-12-18 17:37:13.792000 current   sp/W  = 821 / 40308
+2018-12-18 17:37:13.792000 predict   sp/W  = 829 / 41308
+2018-12-18 17:37:13.793000 new delta sp/W  = 8 / 1000 (1000.0)
+2018-12-18 17:37:13.794000 last delta sp/W  = 11 / 1027
+2018-12-18 17:37:13.840000 set_amp = 829, took 0.0183560760881 time,  averages NOT reset, mask_set = False
+2018-12-18 17:37:13.841000 *
+*** rf_condition_data set_ramp_values ***
+2018-12-18 17:37:13.842000 current ramp index   = 38
+next required pulses = 3000
+next power increase  = 1000.0
+next sp decrease     = 810
+2018-12-18 17:37:44.146000 Adding to pulse_breakdown_log: 110323 -30 829 38 3502
+2018-12-18 17:37:44.150000 *
+*** rf_condition_data executing  get_new_set_point() ***
+2018-12-18 17:37:44.152000 current   sp/W  = 829 / 41272
+2018-12-18 17:37:44.154000 predict   sp/W  = 836 / 42272
+2018-12-18 17:37:44.155000 new delta sp/W  = 7 / 1000 (1000.0)
+2018-12-18 17:37:44.157000 last delta sp/W  = 8 / 964
+2018-12-18 17:37:44.217000 set_amp = 836, took 0.0341635443215 time,  averages NOT reset, mask_set = False
+2018-12-18 17:37:44.218000 *
+*** rf_condition_data set_ramp_values ***
+2018-12-18 17:37:44.219000 current ramp index   = 39
+next required pulses = 3000
+next power increase  = 1000.0
+next sp decrease     = 821
+2018-12-18 17:38:14.618000 Adding to pulse_breakdown_log: 113328 -30 836 39 3502
+2018-12-18 17:38:14.622000 *
+*** rf_condition_data executing  get_new_set_point() ***
+2018-12-18 17:38:14.623000 current   sp/W  = 836 / 41536
+2018-12-18 17:38:14.623000 predict   sp/W  = 845 / 42536
+2018-12-18 17:38:14.624000 new delta sp/W  = 9 / 1000 (1000.0)
+2018-12-18 17:38:14.626000 last delta sp/W  = 7 / 264
+2018-12-18 17:38:14.691000 set_amp = 845, took 0.023082334608 time,  averages NOT reset, mask_set = False
+2018-12-18 17:38:14.692000 *
+*** rf_condition_data set_ramp_values ***
+2018-12-18 17:38:14.693000 current ramp index   = 40
+next required pulses = 3000
+next power increase  = 1000.0
+next sp decrease     = 829
+2018-12-18 17:38:45.631000 Adding to pulse_breakdown_log: 116332 -30 845 40 3502
+2018-12-18 17:38:45.633000 *
+*** rf_condition_data executing  get_new_set_point() ***
+2018-12-18 17:38:45.635000 current   sp/W  = 845 / 42473
+2018-12-18 17:38:45.636000 predict   sp/W  = 856 / 43473
+2018-12-18 17:38:45.637000 new delta sp/W  = 11 / 1000 (1000.0)
+2018-12-18 17:38:45.638000 last delta sp/W  = 9 / 938
+2018-12-18 17:38:45.708000 set_amp = 856, took 0.018819406017 time,  averages NOT reset, mask_set = False
+2018-12-18 17:38:45.709000 *
+*** rf_condition_data set_ramp_values ***
+2018-12-18 17:38:45.710000 current ramp index   = 41
+next required pulses = 3000
+next power increase  = 1000.0
+next sp decrease     = 836
+2018-12-18 17:39:17.191000 Adding to pulse_breakdown_log: 119335 -30 856 41 3502
+2018-12-18 17:39:17.194000 *
+*** rf_condition_data executing  get_new_set_point() ***
+2018-12-18 17:39:17.196000 current   sp/W  = 856 / 43720
+2018-12-18 17:39:17.198000 predict   sp/W  = 867 / 44720
+2018-12-18 17:39:17.199000 new delta sp/W  = 11 / 1000 (1000.0)
+2018-12-18 17:39:17.200000 last delta sp/W  = 11 / 1247
+2018-12-18 17:39:17.279000 set_amp = 867, took 0.0441823209135 time,  averages NOT reset, mask_set = False
+2018-12-18 17:39:17.280000 *
+*** rf_condition_data set_ramp_values ***
+2018-12-18 17:39:17.281000 current ramp index   = 42
+next required pulses = 3000
+next power increase  = 1000.0
+next sp decrease     = 845
+2018-12-18 17:39:47.985000 Adding to pulse_breakdown_log: 122336 -30 867 42 3502
+2018-12-18 17:39:47.987000 *
+*** rf_condition_data executing  get_new_set_point() ***
+2018-12-18 17:39:47.988000 current   sp/W  = 867 / 44838
+2018-12-18 17:39:47.989000 predict   sp/W  = 876 / 45838
+2018-12-18 17:39:47.990000 new delta sp/W  = 9 / 1000 (1000.0)
+2018-12-18 17:39:47.992000 last delta sp/W  = 11 / 1118
+2018-12-18 17:39:48.040000 set_amp = 876, took 0.0191909497003 time,  averages NOT reset, mask_set = False
+2018-12-18 17:39:48.042000 *
+*** rf_condition_data set_ramp_values ***
+2018-12-18 17:39:48.044000 current ramp index   = 43
+next required pulses = 3000
+next power increase  = 1000.0
+next sp decrease     = 856
+2018-12-18 17:40:02.446000 Adding to pulse_breakdown_log: 123625 -30 876 43 3502

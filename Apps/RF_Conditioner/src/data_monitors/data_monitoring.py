@@ -31,15 +31,14 @@ class data_monitoring(data_monitoring_base):
 	def init_monitor_states(self):
 		self.logger.header(self.my_name + ' init_monitor_states, setting up main monitors ')
 		if self.is_monitoring[dat.vac_spike_status]:
-			#self.main_monitor_states[dat.vac_spike_status] = state.INIT
+			self.main_monitor_states[dat.vac_spike_status] = state.INIT
 			#self.previous_main_monitor_states[dat.vac_spike_status] = state.UNKNOWN
 			self.monitor_funcs['VAC'] = self.vac
 			self.logger.message('adding vac_spike to main loop checks')
 		else:
 			self.logger.message('NOT adding vac_spike_status to main loop checks')
-
 		if self.is_monitoring[dat.DC_spike_status]:
-			#self.main_monitor_states[dat.DC_spike_status] = state.INIT
+			self.main_monitor_states[dat.DC_spike_status] = state.INIT
 			#self.previous_main_monitor_states[dat.DC_spike_status] = state.UNKNOWN
 			self.monitor_funcs['DC'] = self.DC
 			self.logger.message('adding DC_spike_status to main loop checks')
@@ -110,7 +109,6 @@ class data_monitoring(data_monitoring_base):
 		for key,value in self.main_monitor_states.iteritems():
 			print(key," ", state.statename[value])
 
-
 	def new_bad_is_not_outside_mask(self):
 		return self.main_monitor_states[dat.breakdown_status] != state.NEW_BAD
 
@@ -152,14 +150,11 @@ class data_monitoring(data_monitoring_base):
 			else:
 				self.main_monitor_states[dat.mod_output] = state.GOOD
 
-
 	def RF(self):
 		if self.data.values[dat.llrf_output]:
 			self.main_monitor_states[dat.llrf_output] = state.GOOD
 		else:
 			self.main_monitor_states[dat.llrf_output] = state.BAD
-
-
 
 	# its horrible atm but can be cleaned up later .. ?
 	def update_state(self,key):

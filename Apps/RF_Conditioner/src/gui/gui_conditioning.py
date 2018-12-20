@@ -134,7 +134,7 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
 		# this SHOULD be err = np.sqrt([data[i][2] / (data[i][0] -1 ) for i in x])
 		# but we ignore the minus 1 incase we get a div by zero
 
-		
+
 		ans = []
 		for i in x:
 			if data[i][0] == 0:

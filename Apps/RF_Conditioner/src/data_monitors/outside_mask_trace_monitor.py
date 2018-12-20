@@ -41,8 +41,6 @@ class outside_mask_trace_monitor(monitor):
 		self.data_to_collect = []
 		self.new_omed_data = False
 
-
-
 	def reset_event_pulse_count(self):
 		self.event_pulse_count_zero = monitor.data.values[dat.pulse_count]
 		monitor.data.values[dat.event_pulse_count] = 0
@@ -60,7 +58,6 @@ class outside_mask_trace_monitor(monitor):
 		monitor.data.values[dat.elapsed_time] = monitor.llrf_control.elapsedTime()
 		monitor.data.values[dat.num_outside_mask_traces] = monitor.llrfObj[0].omed_count
 		_count = monitor.llrfObj[0].omed_count
-
 		#
 		# CHECK IF TEHRE IS A NEW EVENT,
 		if _count > self.previous_outside_mask_trace_count:
@@ -96,7 +93,7 @@ class outside_mask_trace_monitor(monitor):
 		new.update({'SOL': monitor.data.values[dat.sol_value]})
 		#
 		# update breakdown count, will only work if all states are not bad
-		monitor.data.update_break_down_count(new["num_events"])#MAGIC_STRING
+		monitor.data.force_update_breakdown_count(new["num_events"])#MAGIC_STRING
 		monitor.logger.message(new['message'], True)
 		if self.is_forward(new['trace_name']):
 			self.forward_power_data.append(new)

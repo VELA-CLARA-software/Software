@@ -232,7 +232,6 @@ class rf_condition_data(dat.rf_condition_data_base):
                 print key
                 print value
 
-
             self.values[dat.power_aim] = self.llrf_config['POWER_AIM']
             self.values[dat.pulse_length_start] = self.llrf_config['PULSE_LENGTH_START']
             self.values[dat.pulse_length_aim] = self.llrf_config['PULSE_LENGTH_AIM']
@@ -274,6 +273,15 @@ class rf_condition_data(dat.rf_condition_data_base):
             float(self.values[dat.last_106_bd_count] * self.llrf_config['NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY']) \
             / \
             float(self.last_million_log[-1][0] - self.last_million_log[0][0])
+
+            print('update_breakdown_stats')
+            print(self.values[dat.last_106_bd_count])
+            print(self.llrf_config['NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY'])
+            print(float(self.values[dat.last_106_bd_count] * self.llrf_config['NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY']))
+            print(float(self.last_million_log[-1][0] - self.last_million_log[0][0]))
+            print(self.values[dat.breakdown_rate])
+
+
         self.values[dat.breakdown_rate_hi] = self.values[dat.breakdown_rate] > self.values[dat.breakdown_rate_aim]
 
 
@@ -370,6 +378,11 @@ class rf_condition_data(dat.rf_condition_data_base):
         print(self.my_name + ' power_increase = ' + str(a) + ' ' + str(self.ceiling(a,
                                                                                     self._llrf_config['LOW_POWER_INCREASE'])) )
         return self.ceiling(a, self._llrf_config['LOW_POWER_INCREASE'])
+
+
+
+
+
 
     # neaten up, do we have to redraw each time?
     def plot(self,x,y,m,c,x0,x1,predict):

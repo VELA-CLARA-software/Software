@@ -72,7 +72,6 @@ class controller_base(base):
 			logdata.append(''.join(['%s:%s, ' % (key, value) for (key, value) in item.iteritems()]))
 		base.logger.message(logdata, True)
 
-
 	def start_rf_prot_control(self):
 		if self.is_gun_type(base.llrf_type):
 			base.prot_control = base.prot_init.physical_Gun_Protection_Controller()

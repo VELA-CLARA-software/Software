@@ -98,6 +98,8 @@ sol_value = 'sol_value'
 
 amp_ff = 'amp_ff'
 amp_sp = 'amp_sp'
+phi_sp = 'phi_sp'
+interlock_state = 'interlock_state'
 
 
 #
@@ -148,6 +150,7 @@ all_value_keys = [rev_power_spike_count,
                   fwd_kly_pha,
                   rev_kly_pha,
                   rev_cav_pha,
+                  fwd_cav_pha,
                   probe_pha,
                   pulse_length,
                   rfprot_state,
@@ -284,6 +287,10 @@ class rf_condition_data_base(QObject):
         #
         # previous entry in kfp running stat, so we don't duplicate too much in the file
         self.last_kfp_running_stat_entry = None
+        #
+        # This i sa counter to update the pulse_break_down log with the data.log (bunary)
+        # its used to write the pulse_break_down less frequently than data.log
+        self.counter_add_to_pulse_breakdown_log = 0
 
     @property
     def llrf_config(self):
@@ -294,6 +301,7 @@ class rf_condition_data_base(QObject):
 
     def start_logging(self):
         self.logger.start_data_logging()
+        self.data_log()
         self.data_log_timer.timeout.connect(self.data_log)
         self.data_log_timer.start(rf_condition_data_base.config.log_config['DATA_LOG_TIME'])
         self.amp_pwr_log_timer.timeout.connect(self.log_kly_fwd_power_vs_amp)
@@ -308,18 +316,24 @@ class rf_condition_data_base(QObject):
         self.update_break_down_count(1)
 
     def update_break_down_count(self, count):
-        # if all status are not bad then add tpo breakdown count
+        # if all status are not bad then add to breakdown count
         if STATE.BAD not in [rf_condition_data_base.values[DC_spike_status],
                              rf_condition_data_base.values[DC_spike_status],
                              rf_condition_data_base.values[breakdown_status]
                              ]:
-            rf_condition_data_base.values[breakdown_count] += count
-            self.logger.message(self.my_name + ' increasing breakdown count = ' + str(rf_condition_data_base.values[breakdown_count]), True)
-            self.add_to_pulse_breakdown_log(rf_condition_data_base.amp_sp_history[-1] )
+            self.force_update_breakdown_count(count)
         else:
             self.logger.message(
                 self.my_name + ' NOT increasing breakdown count, already in cooldown, = ' + str(rf_condition_data_base.values[breakdown_count]),
                 True)
+
+    def force_update_breakdown_count(self, count):
+        rf_condition_data_base.values[breakdown_count] += count
+
+        self.logger.message(self.my_name + ' increasing breakdown count = ' + str(
+                rf_condition_data_base.values[breakdown_count]) +  ', at pulse count = ' +
+                            str(rf_condition_data_base.values[pulse_count]), True)
+        self.add_to_pulse_breakdown_log(rf_condition_data_base.amp_sp_history[-1])
 
     def reached_min_pulse_count_for_this_step(self):
         return self.values[event_pulse_count] >= self.values[required_pulses]
@@ -333,6 +347,32 @@ class rf_condition_data_base(QObject):
             self.logger.write_data_log_header(rf_condition_data_base.values)
             self.should_write_header = False
         self.logger.write_data(rf_condition_data_base.values)
+        if self.counter_add_to_pulse_breakdown_log % 10 == 0: ## MAGIC_
+            self.add_to_pulse_breakdown_log(rf_condition_data_base.values[amp_sp])
+            self.update_breakdown_stats()
+        self.counter_add_to_pulse_breakdown_log += 1
+
+    def update_breakdown_stats(self):
+        self.values[breakdown_count] = self.last_million_log[-1][1]
+        self.values[last_106_bd_count] = self.last_million_log[-1][1] - self.last_million_log[0][1]
+
+        if self.last_million_log[-1][0] > self.llrf_config['NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY']:
+            self.values[breakdown_rate] = self.values[last_106_bd_count]
+        else:
+            if self.last_million_log[-1][0] == 0:
+                self.values[breakdown_rate] = 0
+            else:
+                self.values[breakdown_rate] = \
+                    float(
+                        self.values[last_106_bd_count] * self.llrf_config['NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY']) \
+                    / \
+                    float(self.last_million_log[-1][0] - self.last_million_log[0][0])
+        self.values[breakdown_rate_hi] = self.values[breakdown_rate] > self.values[breakdown_rate_aim]
+        if self.values[breakdown_rate_hi]:
+            self.logger.message(self.my_name + ' update_breakdown_stats Breakdown Rate HI at pulse count = ' +
+                                str(rf_condition_data_base.values[pulse_count]), True)
+
+
 
     def log_kly_fwd_power_vs_amp(self):
         next_log_entry = [rf_condition_data_base.values[amp_sp]] + \
@@ -353,7 +393,6 @@ class rf_condition_data_base(QObject):
             if rf_condition_data_base.values[amp_sp] \
                     not in rf_condition_data_base.amp_sp_history:
                 rf_condition_data_base.amp_sp_history.append(rf_condition_data_base.values[amp_sp])
-
 
     def kly_power_changed(self):
         r = False
