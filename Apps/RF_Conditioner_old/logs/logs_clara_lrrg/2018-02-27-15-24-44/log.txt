@@ -1,0 +1,203 @@
+2018-02-27 15:24:44.942000 *
+*** main_controller creating HWC ***
+2018-02-27 15:24:50.626000 *
+*** llrf_handler setting all SCAN to passive***
+2018-02-27 15:24:50.631000 *
+*** llrf_handler start_trace_monitoring***
+2018-02-27 15:24:50.636000 KLYSTRON_FORWARD_PHASE SCAN set to LLRF_SCAN.ZERO_POINT_ONE
+2018-02-27 15:24:50.652000 started monitoring KLYSTRON_FORWARD_PHASE
+2018-02-27 15:24:50.653000 KLYSTRON_REVERSE_PHASE SCAN set to LLRF_SCAN.ZERO_POINT_ONE
+2018-02-27 15:24:50.667000 started monitoring KLYSTRON_REVERSE_PHASE
+2018-02-27 15:24:50.668000 KLYSTRON_FORWARD_POWER SCAN set to LLRF_SCAN.ZERO_POINT_ONE
+2018-02-27 15:24:50.683000 started monitoring KLYSTRON_FORWARD_POWER
+2018-02-27 15:24:50.684000 added KLYSTRON_FORWARD_POWER to power_traces. [should beKLYSTRON_FORWARD_POWER]
+2018-02-27 15:24:50.685000 KLYSTRON_REVERSE_POWER SCAN set to LLRF_SCAN.ZERO_POINT_ONE
+2018-02-27 15:24:50.700000 started monitoring KLYSTRON_REVERSE_POWER
+2018-02-27 15:24:50.700000 added KLYSTRON_REVERSE_POWER to power_traces. [should beKLYSTRON_REVERSE_POWER]
+2018-02-27 15:24:50.701000 LRRG_CAVITY_REVERSE_PHASE SCAN set to LLRF_SCAN.ZERO_POINT_ONE
+2018-02-27 15:24:50.717000 started monitoring LRRG_CAVITY_REVERSE_PHASE
+2018-02-27 15:24:50.718000 LRRG_CAVITY_FORWARD_PHASE SCAN set to LLRF_SCAN.ZERO_POINT_ONE
+2018-02-27 15:24:50.733000 started monitoring LRRG_CAVITY_FORWARD_PHASE
+2018-02-27 15:24:50.734000 LRRG_CAVITY_FORWARD_POWER SCAN set to LLRF_SCAN.ZERO_POINT_ONE
+2018-02-27 15:24:50.750000 started monitoring LRRG_CAVITY_FORWARD_POWER
+2018-02-27 15:24:50.751000 added LRRG_CAVITY_FORWARD_POWER to power_traces. [should beLRRG_CAVITY_FORWARD_POWER]
+2018-02-27 15:24:50.752000 LRRG_CAVITY_REVERSE_POWER SCAN set to LLRF_SCAN.ZERO_POINT_ONE
+2018-02-27 15:24:50.766000 started monitoring LRRG_CAVITY_REVERSE_POWER
+2018-02-27 15:24:50.767000 added LRRG_CAVITY_REVERSE_POWER to power_traces. [should beLRRG_CAVITY_REVERSE_POWER]
+2018-02-27 15:24:50.768000 *
+*** llrf_handler setup_trace_rolling_average***
+2018-02-27 15:24:50.769000 starting rolling average for LRRG_CAVITY_REVERSE_PHASE
+2018-02-27 15:24:50.770000 STARTED rolling average for LRRG_CAVITY_REVERSE_PHASE
+2018-02-27 15:24:50.774000 Set Infinite End Mask by Power 1, power trace = CAVITY_REVERSE_POWER, phase trace = CAVITY_REVERSE_PHASE, power level 5000.0 SUCCESS
+2018-02-27 15:24:50.775000 start_llrf_control created CLARA_LRRG, llrf_handler and got full trace names:
+2018-02-27 15:24:50.776000 TRACES TO SAVE: KLYSTRON_FORWARD_PHASE KLYSTRON_REVERSE_PHASE KLYSTRON_FORWARD_POWER KLYSTRON_REVERSE_POWER LRRG_CAVITY_REVERSE_PHASE LRRG_CAVITY_FORWARD_PHASE LRRG_CAVITY_FORWARD_POWER LRRG_CAVITY_REVERSE_POWER
+2018-02-27 15:24:50.776000 BREAKDOWN_TRACES:LRRG_CAVITY_REVERSE_PHASE
+2018-02-27 15:24:54.795000 start_mod_control created a gun modulator object
+2018-02-27 15:24:57.358000 start_vac_valve_control created CLARA_PH1 object
+2018-02-27 15:25:03.418000 start_rf_prot_control created a protection control  object
+2018-02-27 15:25:03.421000 *
+*** controller_base has read config***
+2018-02-27 15:25:03.441000 config file = test_LLRG.config
+dumping data to log
+VAC_SPIKE_DECAY_TIME:2000, VAC_CHECK_TIME:200, VAC_SHOULD_DROP_AMP:True, OUTSIDE_MASK_COOLDOWN_TIME:3000, VAC_PV:CLA-LRG1-VAC-IMG-01:P, VAC_MAX_AMP_DROP:7.0, VAC_SPIKE_DECAY_LEVEL:1.2, VAC_DECAY_MODE:LEVEL, VAC_MAX_LEVEL:5e-09, VAC_SPIKE_AMP_DROP:5.0, VAC_SPIKE_DELTA:4e-09, VAC_NUM_SAMPLES_TO_AVERAGE:7, 
+DC_SPIKE_DECAY_LEVEL:1.2, DC_PV:EBT-INJ-SCOPE-01:P1, DC_NUM_SAMPLES_TO_AVERAGE:5, DC_SPIKE_AMP_DROP:6.0, OUTSIDE_MASK_COOLDOWN_TIME:3000, DC_SHOULD_DROP_AMP:False, DC_CHECK_TIME:1000, DC_SPIKE_DELTA:0.015, DC_SPIKE_DECAY_TIME:2000, DC_DECAY_MODE:TIMED, 
+PULSE_COUNT_BREAKDOWN_LOG_FILENAME:pulse_breakdown_log.txt, OUTSIDE_MASK_FORWARD_FILENAME:outside_forward_log, OUTSIDE_MASK_REVERSE_FILENAME:outside_reverse_log, OUTSIDE_MASK_PROBE_FILENAME:outside_probe_log, LOG_DIRECTORY:C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\, AMP_PWR_LOG_TIME:50, DATA_LOG_TIME:1000, LOG_FILENAME:log.txt, DATA_LOG_FILENAME:data_log, 
+VAC_VALVE:S01-VALV-01, VAC_VALVE_AREA:CLARA_PH1, VAC_VALVE_CHECK_TIME:1000, 
+WATER_TEMPERATURE_CHECK_TIME:1000, WATER_TEMPERATURE_PV:CLA-GUN-RF-LRRG-01:RT, 
+CAVITY_TEMPERATURE_CHECK_TIME:1000, CAVITY_TEMPERATURE_PV:CLA-GUN-RF-LRRG-01:RT, 
+KRP_MEAN_TIME_TO_AVERAGE_START:2.0, KFP_MEAN_TIME_TO_AVERAGE_START:2.0, KFP_MEAN_TIME_TO_AVERAGE_END:2.4, DEFAULT_RF_INCREASE_LEVEL:10, CRP_MEAN_TIME_TO_AVERAGE_START:2.4, BREAKDOWN_RATE_AIM:100, TRACES_TO_SAVE:['KLYSTRON_FORWARD_PHASE', 'KLYSTRON_REVERSE_PHASE', 'KLYSTRON_FORWARD_POWER', 'KLYSTRON_REVERSE_POWER', 'LRRG_CAVITY_REVERSE_PHASE', 'LRRG_CAVITY_FORWARD_PHASE', 'LRRG_CAVITY_FORWARD_POWER', 'LRRG_CAVITY_REVERSE_POWER'], NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY:1000000, POWER_AIM:0.1, CFP_MEAN_TIME_TO_AVERAGE_START:2.3, LOW_POWER_INCREASE_RATE_LIMIT:1000000, DEFAULT_PULSE_COUNT:150, RF_INCREASE_LEVEL:0.001, CPP_MEAN_TIME_TO_AVERAGE_START:0.85, CPP_MEAN_TIME_TO_AVERAGE_END:0.98, LLRF_CHECK_TIME:50, RF_REPETITION_RATE:10, CRP_MEAN_TIME_TO_AVERAGE_END:2.6, KRP_MEAN_TIME_TO_AVERAGE_END:2.4, CFP_MEAN_TIME_TO_AVERAGE_END:2.5, PULSE_LENGTH_AIM:2500.0, RF_INCREASE_RATE:0.33333, EXTRA_TRACES_ON_BREAKDOWN:2, RF_STRUCTURE:CLARA_LRRG, NUM_BUFFER_TRACES:40, PULSE_LENGTH_START:100.0, PULSE_LENGTH_STEP:250.0, NORMAL_POWER_INCREASE:10000, LOW_POWER_INCREASE:1000, TIME_BETWEEN_RF_INCREASES:10, KLY_PWR_FOR_ACTIVE_PULSE:500.0, 
+CRP_MASK_FLOOR:0, CRP_AMP_DROP_VAL:2, CRP_S2:2.4, CFP_CHECK_STREAK:10, CFP_AMP_DROP_VAL:3, PHASE_MASK_BY_POWER_POWER_TRACE_1:CAVITY_REVERSE_POWER, CFP_MASK_END:2.0, BREAKDOWN_TRACES:['LRRG_CAVITY_REVERSE_PHASE'], CFP_MASK_LEVEL:35, CFP_MASK_FLOOR:5000, PHASE_MASK_BY_POWER_LEVEL_1:5000.0, CFP_AUTO_SET:False, CRP_MASK_END:4.8, CRP_NUM_AVERAGE_TRACES:2, CRP_S3:2.8, CRP_MASK_SET_TYPE:TIME, CRP_S1:0.73, CRP_AMP_DROP:True, OUTSIDE_MASK_COOLDOWN_TIME:3000, CRP_S4:4.8, PHASE_MASK_BY_POWER_PHASE_TRACE_1:CAVITY_REVERSE_PHASE, CFP_AMP_DROP:False, OUTSIDE_MASK_CHECK_TIME:100, CRP_MASK_LEVEL:35, CRP_CHECK_STREAK:2, CFP_S4:301, CFP_S3:301, CFP_S2:301, CFP_S1:63, CRP_AUTO_SET:False, CFP_MASK_TYPE:PERCENT, CFP_NUM_AVERAGE_TRACES:1, CFP_MASK_SET_TYPE:INDEX, CRP_MASK_TYPE:ABSOLUTE, 
+MOD_CHECK_TIME:1000, 
+RF_PROT_CHECK_TIME:1000, RF_STRUCTURE:CLARA_LRRG, 
+GUI_UPDATE_TIME:1000, 
+SOL_PV:CLA-GUN-MAG-SOL-02:READI, SOL_CHECK_TIME:1000, 
+2018-02-27 15:25:03.583000 *
+*** rf_condition_data pulse_count_breakdown_log ***
+2018-02-27 15:25:03.584000 log_pulse_count 1353808
+required_pulses 150
+breakdown_count 24
+log_amp_set 14740
+current_ramp_index 237
+pulse length = 1.998
+next_sp_decrease 14716
+2018-02-27 15:25:03.601000 *
+*** Last million pulses***
+2018-02-27 15:25:03.602000 Million pulses agao  = 353808
+2018-02-27 15:25:03.604000 Monitoring RF-PROTECTION
+2018-02-27 15:25:03.605000 Monitoring VAC-VALVE
+2018-02-27 15:25:03.606000 Monitoring MODULATOR
+2018-02-27 15:25:04.648000 data_monitoring Connected to PV = CLA-GUN-RF-LRRG-01:RT with ID = d0 acquiring data
+2018-02-27 15:25:04.653000 Monitoring CAVITY TEMPERATURE
+2018-02-27 15:25:05.700000 data_monitoring Connected to PV = CLA-GUN-RF-LRRG-01:RT with ID = d1 acquiring data
+2018-02-27 15:25:05.706000 Monitoring WATER TEMP
+2018-02-27 15:25:06.756000 data_monitoring Connected to PV = CLA-GUN-MAG-SOL-02:READI with ID = d2 acquiring data
+2018-02-27 15:25:06.758000 Monitoring SOLENOID READI
+2018-02-27 15:25:07.859000 data_monitoring Connected to PV = CLA-LRG1-VAC-IMG-01:P with ID = d3 acquiring data
+2018-02-27 15:25:07.863000 vac_spike_monitor will drop amp on spike detection
+2018-02-27 15:25:07.868000 vac_spike_monitor STARTED running
+2018-02-27 15:25:07.872000 Monitoring VACUUM
+2018-02-27 15:25:08.912000 data_monitoring Connected to PV = EBT-INJ-SCOPE-01:P1 with ID = d4 acquiring data
+2018-02-27 15:25:08.914000 dc_spike_monitor will NOT drop amp on spike detection
+2018-02-27 15:25:08.915000 dc_spike_monitor STARTED running
+2018-02-27 15:25:08.916000 Monitoring DC
+2018-02-27 15:25:08.919000 Monitoring llrf
+2018-02-27 15:25:08.920000 Monitoring outside_masks
+2018-02-27 15:25:08.950000 gui_conditioning has disabled ramping RF
+2018-02-27 15:25:09.191000 *
+*** llrf_handler set_mean_pwr_position***
+2018-02-27 15:25:09.195000 rf pulse end time = 2.44922462456, index = 262
+pulse_latency     = 50
+.getPulseLength() = 1.99899950975
+2018-02-27 15:25:09.200000 set_mean_pwr_position is looking for KLYSTRON_FORWARD_POWER
+2018-02-27 15:25:09.204000 KLYSTRON_FORWARD_POWER mean monitoring started
+2018-02-27 15:25:09.206000 trace_mean_start/end (us) = 2.0/2.4
+meantime = 0.4
+2018-02-27 15:25:09.207000 set_mean_pwr_position is looking for KLYSTRON_REVERSE_POWER
+2018-02-27 15:25:09.208000 KLYSTRON_REVERSE_POWER mean monitoring started
+2018-02-27 15:25:09.209000 trace_mean_start/end (us) = 2.0/2.4
+meantime = 0.4
+2018-02-27 15:25:09.210000 set_mean_pwr_position is looking for LRRG_CAVITY_FORWARD_POWER
+2018-02-27 15:25:09.211000 LRRG_CAVITY_FORWARD_POWER mean monitoring started
+2018-02-27 15:25:09.212000 trace_mean_start/end (us) = 2.3/2.5
+meantime = 0.2
+2018-02-27 15:25:09.212000 set_mean_pwr_position is looking for LRRG_CAVITY_REVERSE_POWER
+2018-02-27 15:25:09.214000 LRRG_CAVITY_REVERSE_POWER mean monitoring started
+2018-02-27 15:25:09.215000 trace_mean_start/end (us) = 2.4/2.6
+meantime = 0.2
+2018-02-27 15:25:09.216000 LRRG_CAVITY_REVERSE_PHASE, streak = 2, floor = 0, drop = True, drop_val= 2
+2018-02-27 15:25:09.217000 setNumContinuousOutsideMaskCount = True
+2018-02-27 15:25:09.218000 setMaskFloor = True
+2018-02-27 15:25:09.219000 LRRG_CAVITY_REVERSE_PHASE, setShouldCheckMask = True
+2018-02-27 15:25:09.220000 LRRG_CAVITY_REVERSE_PHASE, setDropAmpOnOutsideMaskDetection = True
+2018-02-27 15:25:09.227000 *
+*** main_controller The RF Conditioning is Preparing to Entering Main_Loop !***
+2018-02-27 15:25:10.238000 set_amp = 14740, took 0.00673052335743 time,  averages NOT reset, mask_set = False
+2018-02-27 15:25:10.242000 Adding to pulse_breakdown_log =  1353993 24 14740 237 1998
+2018-02-27 15:25:11.253000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 15:25:11.258000 llrf_handler cant set mask, NO AVERAGE Traces
+2018-02-27 15:25:11.449000 llrf_handler has set mask 
+2018-02-27 15:25:30.765000 gui_conditioning has enabled ramping RF
+2018-02-27 15:25:30.767000 Adding to pulse_breakdown_log =  1354209 24 14740 237 1998
+2018-02-27 15:25:30.769000 current sp/W = 8162055.7734 -1
+2018-02-27 15:25:30.778000 set_amp = 14750.0, took 0.00694077890149 time,  averages NOT reset, mask_set = False
+2018-02-27 15:25:30.781000 llrf_handler has set mask 
+2018-02-27 15:25:38.380000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 15:25:38.382000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 15:25:38.405000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 15:25:38.407000 rf_condition_data increasing breakdown count = 25
+2018-02-27 15:25:38.408000 Adding to pulse_breakdown_log =  1354286 25 14750 237 1998
+2018-02-27 15:25:38.410000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 0
+2018-02-27 15:25:38.626000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 252.238, 216.274 < 217.238 at i = 254 us = 2.37719, EVID NOT_SET, previous EVID = 175134135
+2018-02-27 15:25:38.627000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-15-24-44\outside_reverse_log1
+2018-02-27 15:25:38.706000 Saved outside_mask_data part = 0
+2018-02-27 15:25:41.422000 set_amp = 14750, took 0.00522501155379 time,  averages NOT reset, mask_set = False
+2018-02-27 15:25:41.423000 Adding to pulse_breakdown_log =  1354286 25 14750 237 1998
+2018-02-27 15:25:41.425000 llrf_handler cant set mask - kly fwd power low
+2018-02-27 15:25:41.426000 llrf_handler has set mask 
+2018-02-27 15:25:49.492000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 15:25:49.494000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 15:25:49.544000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 15:25:49.546000 rf_condition_data increasing breakdown count = 26
+2018-02-27 15:25:49.549000 Adding to pulse_breakdown_log =  1354366 26 14750 237 1998
+2018-02-27 15:25:49.551000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 1
+2018-02-27 15:25:49.766000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 250.748, 214.223 < 215.748 at i = 255 us = 2.38619, EVID NOT_SET, previous EVID = 175134247
+2018-02-27 15:25:49.767000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-15-24-44\outside_reverse_log2
+2018-02-27 15:25:49.860000 Saved outside_mask_data part = 1
+2018-02-27 15:25:52.563000 set_amp = 14750, took 0.00733225888938 time,  averages NOT reset, mask_set = False
+2018-02-27 15:25:52.564000 Adding to pulse_breakdown_log =  1354366 26 14750 237 1998
+2018-02-27 15:25:52.567000 llrf_handler cant set mask - kly fwd power low
+2018-02-27 15:25:52.568000 llrf_handler has set mask 
+2018-02-27 15:25:59.902000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 15:25:59.903000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 15:25:59.919000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 15:25:59.921000 rf_condition_data increasing breakdown count = 27
+2018-02-27 15:25:59.922000 Adding to pulse_breakdown_log =  1354438 27 14750 237 1998
+2018-02-27 15:25:59.923000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 2
+2018-02-27 15:26:00.028000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 15:26:00.030000 rf_condition_data NOT increasing breakdown count, already in cooldown, = 27
+2018-02-27 15:26:00.032000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 3
+2018-02-27 15:26:00.248000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 248.683, 212.168 < 213.683 at i = 256 us = 2.3952, EVID NOT_SET, previous EVID = 175134352
+2018-02-27 15:26:00.250000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-15-24-44\outside_reverse_log3
+2018-02-27 15:26:00.332000 Saved outside_mask_data part = 2
+2018-02-27 15:26:00.335000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 246.874, 150.521 < 211.874 at i = 84 us = 0.846423, EVID NOT_SET, previous EVID = 175134353
+2018-02-27 15:26:00.336000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-15-24-44\outside_reverse_log4
+2018-02-27 15:26:00.415000 Saved outside_mask_data part = 3
+2018-02-27 15:26:03.046000 set_amp = 14750, took 0.00686453560797 time,  averages NOT reset, mask_set = False
+2018-02-27 15:26:03.047000 Adding to pulse_breakdown_log =  1354438 27 14750 237 1998
+2018-02-27 15:26:03.050000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 15:26:03.051000 llrf_handler cant set mask - kly fwd power low
+2018-02-27 15:26:03.052000 llrf_handler has set mask 
+2018-02-27 15:26:08.513000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 15:26:08.515000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 15:26:08.545000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 15:26:08.548000 rf_condition_data increasing breakdown count = 28
+2018-02-27 15:26:08.550000 Adding to pulse_breakdown_log =  1354492 28 14750 237 1998
+2018-02-27 15:26:08.551000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 4
+2018-02-27 15:26:08.766000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 250.748, 215.466 < 215.748 at i = 255 us = 2.38619, EVID NOT_SET, previous EVID = 175134440
+2018-02-27 15:26:08.768000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-15-24-44\outside_reverse_log5
+2018-02-27 15:26:08.846000 Saved outside_mask_data part = 4
+2018-02-27 15:26:11.561000 set_amp = 14750, took 0.0044781205207 time,  averages NOT reset, mask_set = False
+2018-02-27 15:26:11.563000 Adding to pulse_breakdown_log =  1354492 28 14750 237 1998
+2018-02-27 15:26:11.566000 llrf_handler cant set mask - kly fwd power low
+2018-02-27 15:26:11.567000 llrf_handler has set mask 
+2018-02-27 15:26:17.723000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 15:26:17.724000 set_global_check_mask setGlobalCheckMask True
+2018-02-27 15:26:17.829000 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-27 15:26:17.832000 rf_condition_data increasing breakdown count = 29
+2018-02-27 15:26:17.833000 Adding to pulse_breakdown_log =  1354552 29 14750 237 1998
+2018-02-27 15:26:17.835000 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 5
+2018-02-27 15:26:17.941000 LRRG_CAVITY_REVERSE_PHASE LO MASK FAIL: current average = 248.473, 212.873 < 213.473 at i = 257 us = 2.4042, EVID NOT_SET, previous EVID = 175134533
+2018-02-27 15:26:17.942000 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-27-15-24-44\outside_reverse_log6
+2018-02-27 15:26:18.021000 Saved outside_mask_data part = 5
+2018-02-27 15:26:20.846000 set_amp = 14750, took 0.00750820495136 time,  averages NOT reset, mask_set = False
+2018-02-27 15:26:20.848000 Adding to pulse_breakdown_log =  1354552 29 14750 237 1998
+2018-02-27 15:26:20.851000 llrf_handler cant set mask - kly fwd power low
+2018-02-27 15:26:20.852000 llrf_handler has set mask 
+2018-02-27 15:26:21.574000 gui_conditioning has disabled ramping RF
+2018-02-27 15:26:23.695000 Adding to pulse_breakdown_log =  1354577 29 14750 237 1998

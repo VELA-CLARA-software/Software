@@ -24,7 +24,15 @@ class llrf_handler(llrf_handler_base):
             llrf_handler_base.llrf_control.trigExt()
 
     def set_pulse_length(self,value):
-        llrf_handler_base.llrf_control.setPulseLength(value)
+
+        print 'set_pulse_length'
+        print value
+        print value
+        print value
+        print value
+        print value
+
+        #llrf_handler_base.llrf_control.setPulseLength(value)
         # is the pulse length changes update the trace mean values n
         time.sleep(0.2)
         self.set_mean_pwr_position()
