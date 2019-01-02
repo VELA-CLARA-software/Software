@@ -319,9 +319,9 @@ class picklePlotWidget(QWidget):
                         # if 'mask_floor' in alldata:
                         #     self.floorLine.setValue(alldata['mask_floor']['data'])
                         #     p.addItem(self.floorLine)
-                        # if 'outside_mask_index' in alldata:
-                        #     self.outsideMaskLine.setValue(alldata['outside_mask_index']['data'])
-                        #     p.addItem(self.outsideMaskLine)
+                        if 'outside_mask_index' in alldata:
+                            self.outsideMaskLine.setValue(alldata['outside_mask_index']['data'])
+                            p.addItem(self.outsideMaskLine)
                     elif datadict['type'] == 'parameter':
                         self.tableData.append([datalabel, alldata[datalabel]['data']])
         # print self.tableData
