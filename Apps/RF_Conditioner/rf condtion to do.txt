@@ -1,7 +1,0 @@
-y,rolling average traces are based on good pulses, each trace needs seperate values vector
-y, infinite mask
-y, sort out reading in text log, delete high amp set
-neaten up strings everywhere
-y, make fit better using averages keep rolling averages
-when to save to pulse log?? 
-y, make index not increment during start up pulses to get first line of best fit
