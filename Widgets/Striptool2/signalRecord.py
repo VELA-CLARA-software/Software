@@ -53,6 +53,9 @@ class repeatedTimer(QThread):
         self.timer.timeout.connect(self.update)
         self.timer.start(1000.*self.interval)
 
+    def stop(self):
+        self.exit()
+
     def run(self):
         self.exec_()
 
@@ -239,9 +242,12 @@ class signalRecorderH5(QObject):
 
     def __init__(self, filename="test", flushtime=1):
         super(signalRecorderH5, self).__init__()
+        import warnings
+        warnings.filterwarnings('ignore', category=tables.NaturalNameWarning)
         self.records = {}
         _, file_extension = os.path.splitext(filename)
-        if not file_extension in ['h5','hdf5']:
+        print 'file_extension = ', file_extension
+        if not file_extension in ['.h5','.hdf5']:
             filename = filename+".h5"
         self.filename = filename
         self.h5file = tables.open_file(filename, mode = "a", title = filename)
@@ -264,7 +270,7 @@ class signalRecorderH5(QObject):
         else:
             recordData = recordData2D
         if not name in self.group:
-            print ('name = ', name)
+            # print ('name = ', name)
             table = self.h5file.create_table(self.group, name, recordData, name)
             self.tables[name] = table
             table.cols.time.create_csindex()
@@ -298,17 +304,20 @@ class signalRecorderH5(QObject):
         for t in self.tables:
             self.tables[t].flush()
 
-    def close(self):
-        try:
-            for n,r in self.records.iteritems():
-                r['record'].close()
-            self.flushTables()
-            self.h5file.close()
-        except:
-            pass
-
-    def closeEvent(self, event):
-        self.close()
+    # def close(self):
+    #     self.closeEvent()
+    #
+    # def closeEvent(self, *args, **kwargs):
+    #     print 'Closing H5 files'
+    #     self.timer.stop()
+    #     for n,r in self.records.iteritems():
+    #         r['record'].close()
+    #     try:
+    #         self.flushTables()
+    #         self.h5file.close()
+    #     except:
+    #         pass
+    #     return True
 
     def getDataTime(self, name='', start=None, stop=None, array=None):
         table = self.h5file.get_node('/data/'+name)

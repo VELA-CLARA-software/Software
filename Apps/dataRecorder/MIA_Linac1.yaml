@@ -1,0 +1,33 @@
+Linac:
+  CLA-L01-LRF-CTRL-01:ad1:ch1:power_remote.POWER:
+    arrayData: 1017
+    timer: 10
+    name: 'Linac Klystron FWD'
+  CLA-L01-LRF-CTRL-01:ad1:ch3:power_remote.POWER:
+    arrayData: 1017
+    timer: 10
+    name: 'Linac Cavity FWD'
+  CLA-L01-LRF-CTRL-01:ad1:ch3:amp_phase.PHASE_REMOTE:
+    arrayData: 1017
+    timer: 10
+    name: 'Linac Cavity Phase'
+  CLA-L01-LRF-CTRL-01:ad1:ch4:power_remote.POWER:
+    arrayData: 1017
+    timer: 10
+    name: 'Linac Cavity REV'
+  CLA-L01-LRF-CTRL-01:ad1:ch6:power_remote.POWER:
+    arrayData: 1017
+    timer: 10
+    name: 'Linac Probe FWD'
+  CLA-L01-LRF-CTRL-01:ad1:ch6:amp_phase.PHASE_REMOTE:
+    arrayData: 1017
+    timer: 10
+    name: 'Linac Probe Phase'
+  CLA-L01-LRF-CTRL-01:ad1:ch5:power_remote.POWER:
+    arrayData: 1017
+    timer: 10
+    name: 'Linac Load 1 FWD'
+  CLA-L01-LRF-CTRL-01:ad1:ch5:amp_phase.PHASE_REMOTE:
+    arrayData: 1017
+    timer: 10
+    name: 'Linac Load 1 Phase'
