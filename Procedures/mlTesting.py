@@ -186,7 +186,7 @@ class MLTest(object):
     def doLinacPhaseScan(self):
         start = self.getLinacPhase()
         print 'start = ', start
-        for val in np.arange(int(start)-25, int(start)+25, 1):
+        for val in np.arange(int(start)-25, int(start)+25+1, 1):
             print 'linac Phase = ', val
             self.setLinacPhase(val)
             time.sleep(0.5)
@@ -196,7 +196,7 @@ class MLTest(object):
     def doGunPhaseScan(self):
         start = self.getGunPhase()
         print 'gun start = ', start
-        for val in np.arange(int(start)-25, int(start)+25, 1):
+        for val in np.arange(int(start)-25, int(start)+25+1, 1):
             print 'gun Phase = ', val
             self.setGunPhase(val)
             time.sleep(0.5)
@@ -206,7 +206,7 @@ class MLTest(object):
     def doLinacAmpScan(self):
         start = self.getLinacAmplitude()
         print 'linac start = ', start
-        for val in np.arange(int(start)-10000, int(start), 200):
+        for val in np.arange(int(start)-10000, int(start)+1, 200):
             print 'linac Amplitude = ', val
             self.setLinacAmplitude(val)
             time.sleep(0.5)
@@ -216,7 +216,7 @@ class MLTest(object):
     def doGunAmpScan(self):
         start = self.getGunAmplitude()
         print 'gun start = ', start
-        for val in np.arange(int(start)-10000, int(start), 200):
+        for val in np.arange(int(start)-10000, int(start)+1, 200):
             print 'gun Amplitude = ', val
             self.setGunAmplitude(val)
             time.sleep(0.5)
@@ -226,7 +226,7 @@ class MLTest(object):
     def doSolScan(self):
         start = self.getSolAmplitude()
         print 'solSI start = ', start
-        for val in np.arange(int(start)-50, int(start)+50, 2):
+        for val in np.arange(int(start)-50, int(start)+50+1, 2):
             print 'solSI Amplitude = ', val
             self.setSolAmplitude(val)
             time.sleep(0.5)

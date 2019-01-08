@@ -2,49 +2,27 @@ import sys, time, os
 from datetime import datetime
 sys.path.append("../../Widgets/Striptool2")
 import signalRecord as striptoolRecord
-import tables as tables
-try:
-    from PyQt4.QtCore import *
-    from PyQt4.QtGui import *
-    from PyQt4.QtCore import QT_VERSION_STR
-    # print("Qt version:", int(QT_VERSION_STR[0]))
-    # import qt4icons
-except ImportError:
-    print ('importing PyQt5')
-    from PyQt5.QtCore import *
-    from PyQt5.QtGui import *
-    from PyQt5.QtWidgets import *
-    from PyQt5.QtCore import QT_VERSION_STR
-    # print("Qt version:", QT_VERSION_STR[1])
-    # import qt5icons
-import pyqtgraph as pg
-from pyqtgraph.parametertree import Parameter, ParameterTree, ParameterItem, registerParameterType
-import signal
 import yaml
-from epics import caget, caput, cainfo, PV
-import numpy as np
 sys.path.append("../../Widgets/")
+sys.path.append("../../../")
+import Software.Procedures.qt as qt
 from generic.pv import *
 import argparse
+import signal
 
 parser = argparse.ArgumentParser(description='Record EPICS data to HDF5 file')
 parser.add_argument('-f', '--filename', default=None, help='Set output filename', type=str)
 parser.add_argument('-d', '--directory', default=None, help='Set output directory', type=str)
+parser.add_argument('-c', '--comment', default=None, help='Set filename comment', type=str)
+parser.add_argument('-t', '--timeout', default=None, help='Set time to run', type=int)
+parser.add_argument('-g', '--gui', default=0, help='Show GUI', type=int)
 parser.add_argument('settings', metavar='settings file',
                    help='File containing the input settings')
 args = parser.parse_args()
 
-
-pg.setConfigOptions(antialias=True)
-pg.setConfigOption('background', 'w')
-pg.setConfigOption('foreground', 'k')
-
-def signal_term_handler(signal, frame):
-    sys.exit(0)
-
-signal.signal(signal.SIGINT, signal_term_handler)
-
-def currentWorkFolder(today=None,createdirectory=False):
+def currentWorkFolder(basedir=None,today=None,createdirectory=False):
+    if basedir is None:
+        basedir = os.path.dirname( os.path.abspath(__file__))
     if today is None:
         today = datetime.today()
     datetuple = today.timetuple()
@@ -53,60 +31,54 @@ def currentWorkFolder(today=None,createdirectory=False):
     day = str(day) if day >= 10 else '0' + str(day)
     hour = str(hour) if hour >= 10 else '0' + str(hour)
     minute = str(minute) if minute >= 10 else '0' + str(minute)
-    folder = os.path.dirname( os.path.abspath(__file__))+'/'+str(year)+'/'+str(month)+'/'+str(day)+'/'#+str(hour)+str(minute)
+    folder = basedir +'/'+str(year)+'/'+str(month)+'/'+str(day)+'/'#+str(hour)+str(minute)
     if not os.path.exists(folder) and createdirectory:
         os.makedirs(folder)
     return folder, datetuple[2]
 
-class signalPV(QObject):
-    def __init__(self, parent, pv, name, group, color=0, timer=1.0, arrayData=False):
+class signalPV(qt.QObject):
+    def __init__(self, parent):
         super(signalPV, self).__init__(parent = parent)
         self.parent = parent
+
+    def addSignal(self, pv, name, group, color=0, timer=1.0, arrayData=False):
         self.pv = pv
         self.name = name
         # try:
         self.pvlink = PVObject(self.pv)
-        self.parent.sp.addSignal(name=name, pen=pg.mkColor(color), timer=timer, function=self.pvlink.getValue, arrayData=arrayData)
-        self.parent.addParameterSignal(name, group)
+        if args.gui is not 0:
+            self.parent.sp.addSignal(name=name, pen=pg.mkColor(color), timer=timer, function=self.pvlink.getValue, arrayData=arrayData)
+        else:
+            self.parent.sp.addSignal(name=name, pen='', timer=timer, function=self.pvlink.getValue, arrayData=arrayData)
+        return name, group
         # except:
         #     print('Could not add signal: ', pv)
 
-class signalRecorder(QMainWindow):
+class recorderInstance(qt.QObject):
 
-    def __init__(self, settings=''):
-        super(signalRecorder, self).__init__()
-        ''' Create Parameter Tree'''
-        self.settings = settings
-        self.parameterTree = ParameterTree()
-        self.parameters = {}
-        self.widget = QWidget()
-        self.layout = QVBoxLayout()
-        self.layout.addWidget(self.parameterTree)
-        self.exitButton = QPushButton('Exit')
-        self.exitButton.clicked.connect(sys.exit)
-        self.layout.addWidget(self.exitButton)
-        self.widget.setLayout(self.layout)
-        self.setCentralWidget(self.widget)
+    def __init__(self):
+        super(recorderInstance, self).__init__()
         self.nPVs = 0
-        self.show()
-        self.initialiseRecorder(self.settings)
-        self.start()
-        self.windows = {}
 
-    def initialiseRecorder(self, settings):
-        self.folder, self.day = currentWorkFolder(createdirectory=True)
-        if not args.directory == None:
-            self.folder = args.directory
+    def initialiseRecorder(self):
+        self.folder, self.day = currentWorkFolder(basedir=args.directory, createdirectory=True)
         if args.filename == None:
-            self.filename = os.path.basename(settings)
+            self.filename = os.path.basename(args.settings)
         else:
             self.filename = os.path.splitext(args.filename)[0]
-        self.filename = os.path.splitext(self.filename)[0] + '.h5'
+        self.filename = os.path.splitext(self.filename)[0]
+        print self.filename
+        print args.comment
+        if args.comment is not None:
+            self.filename = self.filename + '_' + str(args.comment)
+        self.filename = self.filename + '.h5'
+        print self.filename
         timestr = time.strftime("%H%M%S")
         self.filename = timestr + '_' + self.filename
         self.sp = striptoolRecord.signalRecorderH5(self.folder+"/"+self.filename,flushtime=10)
-        with open(settings, 'r') as stream:
+        with open(args.settings, 'r') as stream:
             settings = yaml.load(stream)
+        namesgroups = []
         for types in settings:
             for name, pvs in settings[types].items():
                 # name = name.replace(' ','_').replace(':','$')
@@ -125,25 +97,74 @@ class signalRecorder(QMainWindow):
                 if 'suffix' in pvs:
                     for pv in pvs['suffix']:
                         self.nPVs += 1
-                        signalPV(self, name+':'+pv, display_name+'_'+pv, types, color=self.nPVs, timer=1.0/timer, arrayData=arrayData)
+                        signal = signalPV(self)
+                        name, group = signal.addSignal(name+':'+pv, display_name+'_'+pv, types, color=self.nPVs, timer=1.0/timer, arrayData=arrayData)
                 else:
                     self.nPVs += 1
-                    signalPV(self, name, display_name, types, color=self.nPVs, timer=1.0/timer, arrayData=arrayData)
+                    signal = signalPV(self)
+                    name, group = signal.addSignal(name, display_name, types, color=self.nPVs, timer=1.0/timer, arrayData=arrayData)
+                namesgroups.append([name, group])
+        return namesgroups
 
     def start(self):
-        self.timer = QTimer()
+        self.timer = qt.QTimer()
         self.timer.timeout.connect(self.checkFileName)
         self.timer.start(1000)
+        self.starttime = time.time()
 
     def checkFileName(self):
         if datetime.today().timetuple()[2] is not self.day:
             self.sp.close()
             self.sp.deleteLater()
-            self.initialiseRecorder(self.settings)
-        elif hasattr(self, 'filename') and os.path.getsize(self.filename)/(1024*1024.0) > 1:
+            self.initialiseRecorder()
+        elif hasattr(self, 'filename') and os.path.getsize(self.folder+'/'+self.filename)/(1024*1024.0) > 1024:
             self.sp.close()
             self.sp.deleteLater()
-            self.initialiseRecorder(self.settings)
+            self.initialiseRecorder()
+        elif args.timeout is not None:
+            if (time.time() - self.starttime) > args.timeout:
+                self.close()
+
+    # def close(self):
+    #     print 'Closing dataRecorder!'
+    #     self.timer.stop()
+    #     self.sp.close()
+    #     print 'Finished Closing!'
+    #     exit()
+    #
+    # def closeEvent(self, *args, **kwargs):
+    #     self.close()
+
+class signalRecorder(qt.QMainWindow):
+
+    def __init__(self, settings=''):
+        super(signalRecorder, self).__init__()
+        ''' Create Parameter Tree'''
+        self.settings = settings
+        self.parameterTree = ParameterTree()
+        self.parameters = {}
+        self.widget = qt.QWidget()
+        self.layout = qt.QVBoxLayout()
+        self.layout.addWidget(self.parameterTree)
+        self.exitButton = qt.QPushButton('Exit')
+        self.exitButton.clicked.connect(sys.exit)
+        self.layout.addWidget(self.exitButton)
+        self.widget.setLayout(self.layout)
+        self.setCentralWidget(self.widget)
+        self.show()
+        self.recorder = recorderInstance()
+        namesgroups = self.recorder.initialiseRecorder()
+        for ng in namesgroups:
+            self.addParameterSignal(*ng)
+        self.recorder.start()
+        self.windows = {}
+
+    # def close(self):
+    #     self.recorder.close()
+    #     exit()
+    #
+    # def closeEvent(self, e):
+    #     self.close()
 
     def contrasting_text_color(self, color):
         r, g, b, a = pg.colorTuple(pg.mkColor(color))
@@ -170,7 +191,7 @@ class signalRecorder(QMainWindow):
             parameter = Parameter.create(name='params', type='group', children=gparams)
             self.parameters[group] = parameter
             self.parameterTree.addParameters(parameter, showTop=False)
-            header = self.parameterTree.findItems(group,Qt.MatchContains | Qt.MatchRecursive)[0]
+            header = self.parameterTree.findItems(group,qt.Qt.MatchContains | qt.Qt.MatchRecursive)[0]
             header.setExpanded(False)
         else:
             parameter = self.parameters[group]
@@ -178,24 +199,24 @@ class signalRecorder(QMainWindow):
         if name not in param.names:
             p = param.addChildren(params)
         pChild = param.child(name)
-        self.sp.records[name]['worker'].nsamplesSignal.connect(lambda x : pChild.child('Samples').setValue(x))
-        self.sp.records[name]['worker'].recordMeanSignal.connect(lambda x : pChild.child('Mean').setValue(x))
-        self.sp.records[name]['worker'].recordStandardDeviationSignal.connect(lambda x : pChild.child('Standard Deviation').setValue(x))
-        self.sp.records[name]['worker'].recordMinSignal.connect(lambda x : pChild.child('Min').setValue(x))
-        self.sp.records[name]['worker'].recordMaxSignal.connect(lambda x : pChild.child('Max').setValue(x))
+        self.recorder.sp.records[name]['worker'].nsamplesSignal.connect(lambda x : pChild.child('Samples').setValue(x))
+        self.recorder.sp.records[name]['worker'].recordMeanSignal.connect(lambda x : pChild.child('Mean').setValue(x))
+        self.recorder.sp.records[name]['worker'].recordStandardDeviationSignal.connect(lambda x : pChild.child('Standard Deviation').setValue(x))
+        self.recorder.sp.records[name]['worker'].recordMinSignal.connect(lambda x : pChild.child('Min').setValue(x))
+        self.recorder.sp.records[name]['worker'].recordMaxSignal.connect(lambda x : pChild.child('Max').setValue(x))
         pChild.child('Plot').sigActivated.connect(lambda x: self.showPlot(name=str(name)))
-        header = self.parameterTree.findItems(name,Qt.MatchContains | Qt.MatchRecursive)[0]
+        header = self.parameterTree.findItems(name,qt.Qt.MatchContains | qt.Qt.MatchRecursive)[0]
         header.setExpanded(False)
-        header.setForeground(0,self.contrasting_text_color(self.sp.records[name]['pen']))
-        header.setBackground(0,pg.mkBrush(self.sp.records[name]['pen']))
+        header.setForeground(0,self.contrasting_text_color(self.recorder.sp.records[name]['pen']))
+        header.setBackground(0,pg.mkBrush(self.recorder.sp.records[name]['pen']))
 
     def showPlot(self, name):
         if not name in self.windows:
-            self.windows[name] = plotWindow(sp=self.sp, name=name)
+            self.windows[name] = plotWindow(sp=self.recorder.sp, name=name)
         else:
             self.windows[name].show()
 
-class plotWindow(QMainWindow):
+class plotWindow(qt.QMainWindow):
     def __init__(self, parent=None, sp=None, name=''):
         super(plotWindow, self).__init__(parent)
         self.setWindowTitle(name)
@@ -203,18 +224,18 @@ class plotWindow(QMainWindow):
         self.name = name
         self.plot = dataPlot(sp=self.sp, name=name)
         #self.signalProxy = pg.SignalProxy(self.plot.sigXRangeChanged, rateLimit=1, slot=self.update)
-        self.widget = QWidget()
-        self.layout = QGridLayout()
+        self.widget = qt.QWidget()
+        self.layout = qt.QGridLayout()
         self.widget.setLayout(self.layout)
         self.setCentralWidget(self.widget)
 
-        self.timer = QTimer()
+        self.timer = qt.QTimer()
         self.timer.timeout.connect(self.update)
 
-        self.updateButton = QPushButton('Update')
+        self.updateButton = qt.QPushButton('Update')
         self.updateButton.clicked.connect(self.update)
 
-        self.autoUpdateCheckBox = QCheckBox('Auto Update')
+        self.autoUpdateCheckBox = qt.QCheckBox('Auto Update')
         self.autoUpdateCheckBox.stateChanged.connect(self.autoUpdate)
 
         self.layout.addWidget(self.plot,1,0,3,3)
@@ -228,85 +249,124 @@ class plotWindow(QMainWindow):
             self.plot.update()
         #self.signalProxy = pg.SignalProxy(self.plot.sigXRangeChanged, rateLimit=1, slot=self.update)
 
-
     def autoUpdate(self):
         if self.autoUpdateCheckBox.isChecked() is True:
             self.timer.start(1000)
         else:
             self.timer.stop()
 
-class HAxisTime(pg.AxisItem):
-    def __init__(self, orientation=None, pen=None, linkView=None, parent=None, maxTickLength=-5, showValues=True):
-        super(HAxisTime, self).__init__(parent=parent, orientation=orientation, linkView=linkView)
-        self.dateTicksOn = True
-        self.autoscroll = True
+if args.gui is not 0:
+    import pyqtgraph as pg
+    from pyqtgraph.parametertree import Parameter, ParameterTree, ParameterItem, registerParameterType
+    pg.setConfigOptions(antialias=True)
+    pg.setConfigOption('background', 'w')
+    pg.setConfigOption('foreground', 'k')
 
-    def updateTimeOffset(self,time):
-        self.timeOffset = time
-        self.resizeEvent()
-        self.update()
+    class HAxisTime(pg.AxisItem):
+        def __init__(self, orientation=None, pen=None, linkView=None, parent=None, maxTickLength=-5, showValues=True):
+            super(HAxisTime, self).__init__(parent=parent, orientation=orientation, linkView=linkView)
+            self.dateTicksOn = True
+            self.autoscroll = True
 
-    def tickStrings(self, values, scale, spacing):
-        if not hasattr(self, 'fixedtimepoint'):
-            self.fixedtimepoint = round(time.time(),2)
-        if self.dateTicksOn:
-            if self.autoscroll:
-                reftime = round(time.time(),2)
-            else:
-                reftime = self.fixedtimepoint
-            try:
-                ticks = [time.strftime("%H:%M:%S", time.localtime(x)) for x in values]
-            except:
-                ticks = []
-            return ticks
-        else:
-            places = max(0, np.ceil(-np.log10(spacing*scale)))
-            strings = []
-            for v in values:
-                vs = v * scale
-                if abs(vs) < .001 or abs(vs) >= 10000:
-                    vstr = "%g" % vs
+        def updateTimeOffset(self,time):
+            self.timeOffset = time
+            self.resizeEvent()
+            self.update()
+
+        def tickStrings(self, values, scale, spacing):
+            if not hasattr(self, 'fixedtimepoint'):
+                self.fixedtimepoint = round(time.time(),2)
+            if self.dateTicksOn:
+                if self.autoscroll:
+                    reftime = round(time.time(),2)
                 else:
-                    vstr = ("%%0.%df" % places) % vs
-                strings.append(vstr)
-            return strings
+                    reftime = self.fixedtimepoint
+                try:
+                    ticks = [time.strftime("%H:%M:%S", time.localtime(x)) for x in values]
+                except:
+                    ticks = []
+                return ticks
+            else:
+                places = max(0, np.ceil(-np.log10(spacing*scale)))
+                strings = []
+                for v in values:
+                    vs = v * scale
+                    if abs(vs) < .001 or abs(vs) >= 10000:
+                        vstr = "%g" % vs
+                    else:
+                        vstr = ("%%0.%df" % places) % vs
+                    strings.append(vstr)
+                return strings
 
-class dataPlot(pg.PlotWidget):
-    def __init__(self, parent=None, sp=None, name=''):
-        super(dataPlot, self).__init__(parent, axisItems={'bottom': HAxisTime(orientation = 'bottom')})
-        self.sp = sp
-        self.name = name
-        self.plotItem = self.getPlotItem()
-        self.plotItem.setXRange(time.time()-100, time.time())
-        self.bpmPlot = self.plotItem.plot(symbol='+', symbolPen='r')
-        self.fittedPlot = self.plotItem.plot(pen='b')
-        self.plotItem.showGrid(x=True, y=True)
-        self.date_axis = self.getAxis('bottom')
-        # self.plotItem.
-        self.lastTime = time.time()
-        self.update()
+    class dataPlot(pg.PlotWidget):
+        def __init__(self, parent=None, sp=None, name=''):
+            super(dataPlot, self).__init__(parent, axisItems={'bottom': HAxisTime(orientation = 'bottom')})
+            self.sp = sp
+            self.name = name
+            self.plotItem = self.getPlotItem()
+            self.plotItem.setXRange(time.time()-100, time.time())
+            self.bpmPlot = self.plotItem.plot(symbol='+', symbolPen='r')
+            self.fittedPlot = self.plotItem.plot(pen='b')
+            self.plotItem.showGrid(x=True, y=True)
+            self.date_axis = self.getAxis('bottom')
+            # self.plotItem.
+            self.lastTime = time.time()
+            self.update()
 
-    def update(self):
-        start = -100
-        start = self.plotItem.viewRange()[0][0]
-        stop = -1
-        stop = self.plotItem.viewRange()[0][1]
-        self.data = np.array(self.sp.getDataTime(name=self.name, start=start, stop=stop))
-        if len(self.data) > 1:
-            self.bpmPlot.setData(self.data)
-            self.fittedPlot.setData(self.data)
-        self.plotItem.vb.translateBy(x=time.time() - self.lastTime)
-        #self.plotItem.setXRange(start+1, stop+1, padding=0)
-        self.lastTime = time.time()
+        def update(self):
+            start = -100
+            start = self.plotItem.viewRange()[0][0]
+            stop = -1
+            stop = self.plotItem.viewRange()[0][1]
+            self.data = np.array(self.sp.getDataTime(name=self.name, start=start, stop=stop))
+            if len(self.data) > 1:
+                self.bpmPlot.setData(self.data)
+                self.fittedPlot.setData(self.data)
+            self.plotItem.vb.translateBy(x=time.time() - self.lastTime)
+            #self.plotItem.setXRange(start+1, stop+1, padding=0)
+            self.lastTime = time.time()
+
+class commandLineInterface(qt.QObject):
+
+    def __init__(self):
+        super(commandLineInterface, self).__init__()
+
+    def updateOutput(self, output):
+        sys.stdout.write(output + '\r')
+        sys.stdout.flush()
+
+    def startTimer(self):
+        self.timer = qt.QTimer()
+        self.timer.timeout.connect(self.updateTime)
+        self.timer.start(1000)
+        self.starttime = time.time()
+
+    def updateTime(self):
+        # print 'Running for '+str(self.starttime - time.time())+' secs'.ljust(80)
+        self.updateOutput('Running for '+str(round(time.time() - self.starttime))+' secs'.ljust(80))
+
+    # def close(self):
+    #     self.timer.stop()
+    #     exit()
+    #
+    # def closeEvent(self, e):
+    #     self.close()
+
+def signal_term_handler(signal, frame):
+    app.exit()
+
+signal.signal(signal.SIGINT, signal_term_handler)
 
 if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    if len(sys.argv) > 1:
-        sr = signalRecorder(settings=sys.argv[1])
+    global app, sr, cli
+    if args.gui is not 0:
+        app = qt.QApplication(sys.argv)
+        sr = signalRecorder(settings=args)
     else:
-        settings = QFileDialog.getOpenFileName()
-        if int(QT_VERSION_STR[0]) > 4:
-            settings = settings[0]
-        settings = str(settings)
-        sr = signalRecorder(settings=settings)
+        app = qt.QCoreApplication(sys.argv)
+        sr = recorderInstance()
+        namesgroups = sr.initialiseRecorder()
+        sr.start()
+    cli = commandLineInterface()
+    cli.startTimer()
     sys.exit(app.exec_())
