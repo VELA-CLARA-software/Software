@@ -353,8 +353,23 @@ class llrf_handler_base(base):
 				if r != False:
 					if base.llrf_control.setMeanStartEndTime(r[0], r[1], trace):
 						base.logger.message(trace + ' mean monitoring started', True)
-						base.logger.message(['trace_mean_start/end (us) = ' + str(r[0]) + '/' + str(r[1]),
+						base.logger.message(['trace_mean_start/end Set Times (us) = ' + str(r[0]) +
+						                     '/' +
+						                     str(r[1]),
 											 'meantime = ' + str(r[1] - r[0])], True)
+
+						actual_start_index = base.llrf_control.getMeanStartIndex(trace)
+						actual_stop_index = base.llrf_control.getMeanStopIndex(trace)
+
+						actual_start_time = base.llrf_control.getTime(actual_start_index)
+						actual_stop_time = base.llrf_control.getTime(actual_stop_index)
+
+
+
+						base.logger.message(['trace_mean_start/end Read Times (us) = ' +
+						                     str(actual_start_time) + '/' + str(actual_stop_time),
+											 'meantime = ' + str(actual_stop_time - actual_start_time)], True)
+
 				else:
 					base.logger.message(trace + ' setting mean monitoring failed', True)
 		else:

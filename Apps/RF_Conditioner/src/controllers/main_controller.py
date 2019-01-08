@@ -33,6 +33,8 @@ class main_controller(controller_base):
         # more set-up after config read
         QApplication.processEvents()
         self.data.init_after_config_read()
+        # once we have parsed the the pulse_breakdown_log we need ot set the active pulse count!!!
+        controller_base.llrf_control.setActivePulseCount(self.data.values[dat.log_pulse_count])
         QApplication.processEvents()
         #
         # start monitoring data
@@ -57,20 +59,23 @@ class main_controller(controller_base):
         # load the amp_set vs Kly_fwd_pow dictionary into c++
         self.logger.header(self.my_name + ' Loading amp_set vs Kly_fwd_pow dictionary', True)
         for key, value in controller_base.data.amp_vs_kfpow_running_stat.iteritems():
-            print key
-            print 'key type = ' + str(type(key))
-            print key
-            print key,value[0],value[1],value[2]
-            print 'value[0] type = ' + str(type(value[0]))
-            print 'value[1] type = ' + str(type(value[1]))
-            print 'value[2] type = ' + str(type(value[2]))
-            self.logger.message('Data: '+str(key)+str(value[0])+str(value[1])+str(value[2]),True)
+            # print key
+            # print 'key type = ' + str(type(key))
+            # print key
+            # print key,value[0],value[1],value[2]
+            # print 'value[0] type = ' + str(type(value[0]))
+            # print 'value[1] type = ' + str(type(value[1]))
+            # print 'value[2] type = ' + str(type(value[2]))
+            self.logger.message('Data: ' + str(key)+' '+str(value[0])+' '+str(value[1])+' '+str(value[2]),True)
             controller_base.llrf_control.setKlyFwdPwrRSState(int(key),value[0],value[1],value[2])
-        #
-        # set pulse length
-        controller_base.logger.message(self.my_name + ' setting pulse length to last previous log value = ' +\
-              str(controller_base.config.llrf_config['PULSE_LENGTH_START']))
-        controller_base.llrf_handler.set_pulse_length(self.data.values[dat.log_pulse_length] )
+
+        self.logger.header(self.my_name + ' set_mean_pwr_position', True)
+        controller_base.llrf_handler.set_mean_pwr_position()
+        QApplication.processEvents()
+        # and mask positions!
+        self.logger.header(self.my_name + ' setup_outside_mask_trace_param', True)
+        controller_base.llrf_handler.setup_outside_mask_trace_param()
+        QApplication.processEvents()
         #
         #
         QApplication.processEvents()
@@ -80,9 +85,13 @@ class main_controller(controller_base):
         QApplication.processEvents()
         #
         # start data recording
-        print("self.data.start_logging()")
+        self.logger.header(self.my_name + ' start_logging', True)
         self.data.start_logging()
         QApplication.processEvents()
+
+        #
+        controller_base.logger.header('Show Plot')
+        self.gui.update_plot()
         #
         # everything now runs from  main_loop
         self.main_loop()
@@ -90,13 +99,16 @@ class main_controller(controller_base):
 
     def main_loop(self):
         self.logger.header(self.my_name + ' The RF Conditioning is Preparing to Entering Main_Loop !',True)
+
         # reset trigger
         controller_base.llrf_handler.enable_trigger()
         #
         self.llrf_control.setGlobalCheckMask(False)
+        #
         # this sets up main monitors, based on what was successfully connected
-        # they are,vac, dc, breakdown, rf_on, rf_mod , .. any more ?
+        # they are, vac, dc, breakdown, rf_on, rf_mod , .. any more ?
         self.data_monitor.init_monitor_states()
+
         #
         # remove this time.sleep(1) at your peril
         time.sleep(1)
@@ -181,6 +193,7 @@ class main_controller(controller_base):
                 else:
                     self.continue_ramp()
                 #controller_base.llrf_handler.enable_trigger()
+                self.logger.message('PYTHON MAIN LOOP: in state new_good_no_bad, setting Global Check Mask to TRUE',True)
                 controller_base.llrf_handler.set_global_check_mask(True)
 
 
@@ -199,7 +212,7 @@ class main_controller(controller_base):
                     if self.gui.can_ramp:
                         if controller_base.data.values[dat.breakdown_rate_hi]:
                             if self.has_not_shown_br_hi:
-                                self.logger.message('MAIN LOOP all good, but breakdown rate too high ' + str(controller_base.data.values[dat.breakdown_rate]))
+                                self.logger.message('MAIN LOOP all good, but breakdown rate too high: Rate = ' + str(controller_base.data.values[dat.breakdown_rate]))
                                 self.has_not_shown_br_hi = False
                         else:
                             self.ramp_up()

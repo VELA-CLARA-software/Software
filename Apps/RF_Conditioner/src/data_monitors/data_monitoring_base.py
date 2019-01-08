@@ -217,7 +217,7 @@ class data_monitoring_base(base):
 				min_cooldown_time=base.config.breakdown_config['OUTSIDE_MASK_COOLDOWN_TIME']  # MAGIC_STRING
 			)  # MAGIC_STRING
 			data_monitoring_base.is_monitoring[dat.DC_spike_status] = data_monitoring_base.DC_monitor.set_success
-		return data_monitoring_base.DC_monitor.set_success
+		return data_monitoring_base.is_monitoring[dat.DC_spike_status]
 
 	def rfprot_monitor(self):
 		data_monitoring_base.rf_prot_monitor = rf_protection_monitor.rf_protection_monitor()
@@ -299,10 +299,19 @@ class data_monitoring_base(base):
 			id = self.gen_mon.connectPV(value)
 			if id != 'FAILED':
 				data_monitoring_base.user_gen_mon_dict[key] =  id
-				self.logger.message(self.my_name + ' Connected to PV = ' + str(value) + ' with ID = ' + str(id) + ' acquiring data',True)
+				#
+				# get the current value so that the logging knows the correct type etc.
+				#
+				data_monitoring_base.data.values[key] = self.gen_mon.getValue(id)
+				#
+				# write message to log
+				#
+				self.logger.message(
+					self.my_name + ' Connected to PV = ' + str(value) + ' with ID = ' + str(id) + ' acquiring data, first value =  ' + str(data_monitoring_base.data.values[key]),
+					True)
 				#
 				# NOW ADD IT AS A KEY to the main data dictionary
-				data_monitoring_base.data.values[key] = None
+				#
 				success_data_dict_key.append( key  )
 				success_id_keys.append( id  )
 			else:
@@ -320,7 +329,6 @@ class data_monitoring_base(base):
 				update_time = 1000,  # MAGIC_NUMBER
 				my_name = 'user_gen_monitoring'
 		)
-		#raw_input()
 
 	# connect to process variable pv
 	def connectPV(self, pvKey, pvValue):

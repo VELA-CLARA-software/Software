@@ -244,7 +244,7 @@ class config_reader(object):
         int_param=['TIME_BETWEEN_RF_INCREASES','DEFAULT_RF_INCREASE_LEVEL','RF_REPETITION_RATE','BREAKDOWN_RATE_AIM',
                    'LLRF_CHECK_TIME','NORMAL_POWER_INCREASE','LOW_POWER_INCREASE','LOW_POWER_INCREASE_RATE_LIMIT'
                    ,'NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY','EXTRA_TRACES_ON_BREAKDOWN','NUM_BUFFER_TRACES',
-                   'DEFAULT_PULSE_COUNT'
+                   'DEFAULT_PULSE_COUNT','MAX_DELTA_AMP_SP'
                    ]
         string_param = []
         monitor_param=['TRACES_TO_SAVE','MEAN_TRACES']

@@ -29,36 +29,37 @@ class data_monitoring(data_monitoring_base):
 		#self.previous_main_monitor_states = data_monitoring.data.previous_main_monitor_states
 
 	def init_monitor_states(self):
-		self.logger.header(self.my_name + ' init_monitor_states, setting up main monitors ')
+		data_monitoring.logger.header(self.my_name + ' init_monitor_states, setting up main monitors ')
 		if self.is_monitoring[dat.vac_spike_status]:
-			self.main_monitor_states[dat.vac_spike_status] = state.INIT
+			self.main_monitor_states[dat.vac_spike_status] = state.GOOD
 			#self.previous_main_monitor_states[dat.vac_spike_status] = state.UNKNOWN
 			self.monitor_funcs['VAC'] = self.vac
-			self.logger.message('adding vac_spike to main loop checks')
+			data_monitoring.logger.message('adding vac_spike to main loop checks')
 		else:
-			self.logger.message('NOT adding vac_spike_status to main loop checks')
+			data_monitoring.logger.message('NOT adding vac_spike_status to main loop checks')
+
 		if self.is_monitoring[dat.DC_spike_status]:
-			self.main_monitor_states[dat.DC_spike_status] = state.INIT
+			self.main_monitor_states[dat.DC_spike_status] = state.GOOD
 			#self.previous_main_monitor_states[dat.DC_spike_status] = state.UNKNOWN
 			self.monitor_funcs['DC'] = self.DC
-			self.logger.message('adding DC_spike_status to main loop checks')
+			data_monitoring.logger.message('adding DC_spike_status to main loop checks')
 		else:
-			self.logger.message('NOT adding DC_spike to main loop checks')
+			data_monitoring.logger.message('NOT adding DC_spike to main loop checks')
 
 		if self.is_monitoring[dat.breakdown_status]:
-			self.logger.message('adding breakdown_status to main loop checks')
+			data_monitoring.logger.message('adding breakdown_status to main loop checks')
 			self.main_monitor_states[dat.breakdown_status] = state.INIT
 			#self.previous_main_monitor_states[dat.breakdown_status] = state.UNKNOWN
 			self.monitor_funcs['breakdown'] = self.breakdown
 		else:
-			self.logger.message('NOT adding breakdown_status to main loop checks')
+			data_monitoring.logger.message('NOT adding breakdown_status to main loop checks')
 		if self.is_monitoring[dat.modulator_state]:
-			self.logger.message('adding modulator to main loop checks')
+			data_monitoring.logger.message('adding modulator to main loop checks')
 			self.main_monitor_states[dat.mod_output] = state.INIT
 			#self.previous_main_monitor_states[dat.mod_output] = state.UNKNOWN
 			self.monitor_funcs['RF_Mod'] = self.RF_Mod
 		else:
-			self.logger.message('NOT adding modulator to main loop checks')
+			data_monitoring.logger.message('NOT adding modulator to main loop checks')
 		#
 		self.main_monitor_states[dat.llrf_output] = state.INIT
 		self.monitor_funcs['RF'] = self.RF
