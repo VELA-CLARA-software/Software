@@ -46,6 +46,8 @@ class main_controller(controller_base):
         # build the gui, atm, the gui gets built last, which means many init messages are not
         # displayed to the gui text box
         self.gui = gui_conditioning()
+        self.gui.shutdown_rf_button.clicked.connect(self.toggle_RF_output)
+
         #self.gui = main_controller.gui
         self.gui.closing.connect(self.connectCloseEvents)
         self.gui.gui_start_up()
@@ -96,6 +98,12 @@ class main_controller(controller_base):
         # everything now runs from  main_loop
         self.main_loop()
 
+    def toggle_RF_output(self):
+        if self.llrf_control.isRFOutput():
+            self.llrf_control.disableRFOutput()
+        else:
+            self.llrf_control.enableRFandLock()
+
 
     def main_loop(self):
         self.logger.header(self.my_name + ' The RF Conditioning is Preparing to Entering Main_Loop !',True)
@@ -130,7 +138,7 @@ class main_controller(controller_base):
             controller_base.logger.message('WARNING Expecting RF power by now, kly_fwd_power_max = '
                                            '' + \
                                            str(controller_base.llrfObj[0].kly_fwd_power_max),True)
-            raw_input()
+            #raw_input()
         else:
             controller_base.logger.message('Found RF power, kly_fwd_power_max = ' + \
                                            str(controller_base.llrfObj[0].kly_fwd_power_max),True)
@@ -174,11 +182,20 @@ class main_controller(controller_base):
                 # controller_base.llrf_handler.print_rolling_average_mask_settings()
                 # start_time = now_time
 
+
+
             QApplication.processEvents()
             #
             # update main monitor states
             controller_base.data_monitor.update_states()
-            #
+
+            if controller_base.data_monitor.is_pulse_length_bad():
+                pass
+                #print('pulse length is bad')
+                #self.llrf_control.disableRFOutput()
+            #else:
+                #print('pulse length is GOOD ')
+
             # # if new_bad drop SP
             if controller_base.data_monitor.new_bad():
                 # disable checking masks,(precautionary)

@@ -136,6 +136,8 @@ class llrf_simple_param_monitor(monitor):
 
 
 
+
+
     def get_mean_power(self,key,trace):
         v = monitor.llrfObj[0].trace_data[trace].mean
         #print "key = " + str(key) + ", " + trace + " mean value = " +  str(v)

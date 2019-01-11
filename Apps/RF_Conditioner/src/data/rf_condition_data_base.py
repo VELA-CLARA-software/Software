@@ -22,6 +22,7 @@ rev_power_spike_count = 'rev_power_spike_count'
 cav_temp = 'cav_temp'
 water_temp = 'water_temp'
 pulse_length = 'pulse_length'
+pulse_length_status = 'pulse_length_status'
 
 fwd_cav_pwr = 'fwd_cav_pwr'
 fwd_kly_pwr = 'fwd_kly_pwr'
@@ -201,7 +202,8 @@ all_value_keys = [rev_power_spike_count,
                   c,
                   m,
                   old_c,
-                  old_m
+                  old_m,
+                  pulse_length_status
                   ]
 
 class rf_condition_data_base(QObject):

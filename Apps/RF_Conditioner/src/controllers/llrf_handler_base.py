@@ -28,6 +28,7 @@ class llrf_handler_base(base):
 		self.setup_trace_rolling_average()
 
 		base.llrf_control.setTracesToSaveOnOutsideMaskEvent( base.config.llrf_config['TRACES_TO_SAVE'])#MAGIC_STRING
+		base.llrf_control.setTracesToSaveWhenDumpingCutOneTraceData( base.config.llrf_config['VAC_SPIKE_TRACES_TO_SAVE'])#MAGIC_STRING
 
 		# this is where the data for each mask, for each trace is held
 		# yes its a dict of dict,

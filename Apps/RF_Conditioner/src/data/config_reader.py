@@ -188,9 +188,10 @@ class config_reader(object):
         string_param = ['VAC_PV', 'VAC_DECAY_MODE']
         float_param = ['VAC_SPIKE_DECAY_LEVEL', 'VAC_SPIKE_DELTA','VAC_SPIKE_AMP_DROP','VAC_MAX_LEVEL','VAC_MAX_AMP_DROP']
         int_param = ['VAC_NUM_SAMPLES_TO_AVERAGE','VAC_SPIKE_DECAY_TIME','VAC_CHECK_TIME','OUTSIDE_MASK_COOLDOWN_TIME']
+        #monitor_param = ['VAC_SPIKE_TRACES_TO_SAVE']
         bool_param = ['VAC_SHOULD_DROP_AMP']
         config_reader.vac_config = self.get_param_dict(string_param=string_param,float_param=float_param,
-                                                    int_param=int_param,bool_param=bool_param)
+                                                    int_param=int_param, bool_param =bool_param )
         return config_reader.vac_config
 
     def DC_parameter(self):
@@ -217,8 +218,9 @@ class config_reader(object):
         string_param = ['VAC_VALVE']
         area_param = ['VAC_VALVE_AREA']
         int_param = ['VAC_VALVE_CHECK_TIME']
+        bool_param = ['KEEP_VALVE_OPEN']
         config_reader.vac_valve_config = self.get_param_dict(string_param=string_param,area_param=area_param,
-                                                       int_param=int_param)
+                                                       int_param=int_param, bool_param=bool_param)
         return config_reader.vac_valve_config
 
     def water_temp_parameter(self):
@@ -247,7 +249,7 @@ class config_reader(object):
                    'DEFAULT_PULSE_COUNT','MAX_DELTA_AMP_SP'
                    ]
         string_param = []
-        monitor_param=['TRACES_TO_SAVE','MEAN_TRACES']
+        monitor_param=['TRACES_TO_SAVE','MEAN_TRACES','VAC_SPIKE_TRACES_TO_SAVE']
         float_param = ['MEAN_TIME_TO_AVERAGE','RF_INCREASE_LEVEL','RF_INCREASE_RATE','POWER_AIM','PULSE_LENGTH_AIM',
                        'PULSE_LENGTH_STEP','PULSE_LENGTH_START','KLY_PWR_FOR_ACTIVE_PULSE',
                        '1_MEAN_START','1_MEAN_END',
@@ -292,10 +294,9 @@ class config_reader(object):
                     'CPPHA_DROP_AMP',
                     'KFPHA_DROP_AMP',
                     'KRPHA_DROP_AMP'
-
                     ]
 
-        monitor_param = ['BREAKDOWN_TRACES']
+        monitor_param = ['BREAKDOWN_TRACES','VAC_SPIKE_TRACES_TO_SAVE']
         int_param=[
             'CFPOW_MASK_ABS_MIN',
             'CRPOW_MASK_ABS_MIN',

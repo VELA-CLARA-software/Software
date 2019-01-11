@@ -64,6 +64,10 @@ class data_monitoring(data_monitoring_base):
 		self.main_monitor_states[dat.llrf_output] = state.INIT
 		self.monitor_funcs['RF'] = self.RF
 
+
+		# self.monitor_funcs['pulse_length'] = self.pulse_length
+		#self.main_monitor_states[dat.pulse_length_status] = state.INIT
+
 	def update_states(self):
 		#print('update_state')
 		for key in self.monitor_funcs.keys():
@@ -113,6 +117,11 @@ class data_monitoring(data_monitoring_base):
 	def new_bad_is_not_outside_mask(self):
 		return self.main_monitor_states[dat.breakdown_status] != state.NEW_BAD
 
+
+	def is_pulse_length_bad(self):
+		pass
+		#return self.main_monitor_states[dat.pulse_length_status] == state.BAD
+
 	def check_if_new_bad_is_vac_or_DC(self):
 		if self.vac_new_bad():
 			data_monitoring_base.logger.message('MAIN-LOOP New VAC BAD State', True)
@@ -156,6 +165,24 @@ class data_monitoring(data_monitoring_base):
 			self.main_monitor_states[dat.llrf_output] = state.GOOD
 		else:
 			self.main_monitor_states[dat.llrf_output] = state.BAD
+
+	def pulse_length(self):
+		pass
+		#print('pulse_length')
+		#print(self.data.values[dat.pulse_length_aim] - 0.01, self.data.values[dat.pulse_length], self.data.values[dat.pulse_length_aim] + 0.01)# MAGIC
+		# if self.data.values[dat.pulse_length_aim] - 0.01 < self.data.values[dat.pulse_length]:  # MAGIC
+		# 	print(self.data.values[dat.pulse_length_aim] - 0.01, ' < ', self.data.values[dat.pulse_length])
+		# 	if self.data.values[dat.pulse_length] < self.data.values[dat.pulse_length_aim] + 0.01: # MAGIC
+		# 		print(self.data.values[dat.pulse_length] , ' < ', self.data.values[dat.pulse_length_aim] + 0.0)
+        #
+		# 		self.main_monitor_states[dat.pulse_length_status] = state.GOOD
+		# 		#print('pulse_length GOOD')
+		# 	else:
+		# 		self.main_monitor_states[dat.pulse_length_status] = state.BAD
+		# 		#print('pulse_length BAD')
+		# else:
+		# 	self.main_monitor_states[dat.pulse_length_status] = state.BAD
+		# 	#print('pulse_length BAD')
 
 	# its horrible atm but can be cleaned up later .. ?
 	def update_state(self,key):

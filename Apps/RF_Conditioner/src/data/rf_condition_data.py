@@ -164,15 +164,16 @@ class rf_condition_data(dat.rf_condition_data_base):
 
             self.logger.message('last delta sp/W  = ' + str(current_sp - sp_to_fit[-2]) + " / " +
                                 str(self.current_power -self.previous_power),True)
-
-
         # WHAT TO RETURN
-        if predicted_sp is None:
+        if predicted_sp < current_sp:
+            self.logger.message('Predicted sp is less than current_sp! returning current_sp + 1' , True)
+            return current_sp + 1
+        elif predicted_sp is None:
             self.logger.message('Not Enough KFP data to fit, returning None',True)
             self.logger.message('current sp/W  = ' + str(current_sp) + " / " + str(
                     self.current_power), True)
             return None
-        elif m <=0:
+        elif m <= 0:
             self.logger.message('Predicted negative gradient, returning None',True)
             self.logger.message('current sp/W  = ' + str(current_sp) + " / " + str(
                     self.current_power), True)
@@ -187,7 +188,6 @@ class rf_condition_data(dat.rf_condition_data_base):
         else:
             return predicted_sp
 
-
     def init_after_config_read(self):
         if self.llrf_config is not None:
             self.get_pulse_count_breakdown_log()
@@ -198,9 +198,9 @@ class rf_condition_data(dat.rf_condition_data_base):
             #    print value
 
             self.values[dat.power_aim] = self.llrf_config['POWER_AIM']
-            self.values[dat.pulse_length_start] = self.llrf_config['PULSE_LENGTH_START']
+            ##elf.values[dat.pulse_length_start] = self.llrf_config['PULSE_LENGTH_START']
             self.values[dat.pulse_length_aim] = self.llrf_config['PULSE_LENGTH_AIM']
-            self.values[dat.pulse_length_step] = self.llrf_config['PULSE_LENGTH_STEP']
+            #self.values[dat.pulse_length_step] = self.llrf_config['PULSE_LENGTH_STEP']
             self.values[dat.breakdown_rate_aim] = self.llrf_config['BREAKDOWN_RATE_AIM']
             self.logger.header(self.my_name + ' init_after_config_read')
             self.logger.message([dat.pulse_length_start + ' ' +str(self.values[dat.pulse_length_start]),

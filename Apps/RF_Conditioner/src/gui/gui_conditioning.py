@@ -46,7 +46,6 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
 	# constant colors for GUI update
 	good = open = rf_on = 'green'
 	bad = error = closed = off = rf_off = 'red'
-	err = 'orange'
 	unknown = 'magenta'
 	major_error = 'cyan'
 	timing = 'yellow'
@@ -83,12 +82,16 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
 		self.shutdown_rf_button.clicked.connect(self.handle_shutdown_rf_button)
 		self.copy_to_clipboard_button.clicked.connect(self.handle_copy_to_clipboard_button)
 
+		# error bars when plotting
+		self.err = None
+
 
 	def gui_start_up(self):
-		self.set_plot()
+		self.set_plot_error_bars()
+
 		# base.data.values  = base.data.values
 		# widgets are held in dict, with same keys as data
-		self.init_widget_dict(base.data)
+		self.init_widget_dict()
 		# the clipboard has a string version of data
 		self.clip_vals = base.data.values.copy()
 		# init to paused
@@ -114,17 +117,19 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
 		self.textEdit.setTextCursor(cursor)
 		self.textEdit.ensureCursorVisible()
 
-	def set_plot(self):
+
+
+	def set_plot_error_bars(self):
 		self.plot_item = self.graphicsView.getPlotItem()
 		x = np.arange(10)
 		y = np.arange(10) % 3
 		top = np.linspace(1.0, 3.0, 10)
 		bottom = np.linspace(2, 0.5, 10)
 		self.plot_item.setWindowTitle('Amp SP vs KFPow')
-		self.err = pg.ErrorBarItem()
-		# self.err = pg.ErrorBarItem(x=x, y=y, top=top, bottom=bottom, beam=0.5)
-		# self.plot_item.addItem(self.err)
-		# self.plot_item.plot(x, y, symbol='o', pen={'color': 0.8, 'width': 2})
+		#self.err = pg.ErrorBarItem()
+		self.err = pg.ErrorBarItem(x=x, y=y, top=top, bottom=bottom, beam=0.5)
+		self.plot_item.addItem(self.err)
+		#self.plot_item.plot(x, y, symbol='o', pen={'color': 0.8, 'width': 2})
 
 	def update_plot(self):
 		data = base.data.amp_vs_kfpow_running_stat
@@ -133,8 +138,6 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
 		y = []
 		# this SHOULD be err = np.sqrt([data[i][2] / (data[i][0] -1 ) for i in x])
 		# but we ignore the minus 1 incase we get a div by zero
-
-
 		ans = []
 		for i in x:
 			if data[i][0] == 0:
@@ -207,6 +210,8 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
 		# meh
 		if key == dat.breakdown_rate_hi:
 			self.set_break_down_color(widget, val)
+		elif key == dat.llrf_output:
+			self.update_rf_output_button(widget, val, key)
 		elif widget == self.event_pulse_count_outputwidget:
 			widget.setText(('%i' % val) + ('/%i' % base.data.values[dat.required_pulses]))
 			self.clip_vals[key] = widget.text()
@@ -238,6 +243,19 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
 			widget.setText('%i' % -1)
 		else:
 			print 'update_widget error ' + str(val) + ' ' + str(type(val))
+
+	def update_rf_output_button(self,widget, val, key):
+		self.set_locked_enabled(widget,val, key)
+		if val:
+			self.shutdown_rf_button.setText("DISABLE RF OUTPUT")
+			self.shutdown_rf_button.setStyleSheet(
+			'QPushButton { background-color : ' + self.good + '; color : black; }')
+		else:
+			self.shutdown_rf_button.setText("ENABLE RF OUTPUT")
+			self.shutdown_rf_button.setStyleSheet(
+				'QPushButton { background-color : ' + self.bad + '; color : black; }')
+
+
 
 	# if a value is new we update the widget
 	def value_is_new(self, key, val):
@@ -303,48 +321,48 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
 	def set_gun_mod_state(self, widget, val, status):
 		'''Replace all this cancer with a dictionary '''
 		if val == GUN_MOD_STATE.RF_ON:
-			self.set_widget_color_text(widget, 'RF_ON', self.rf_on, status)
+			self.set_widget_color_text(widget, 'RF_ON', gui_conditioning.rf_on, status)
 		elif val == GUN_MOD_STATE.UNKNOWN_STATE:
-			self.set_widget_color_text(widget, 'UNKNOWN_STATE', self.unknown, status)
+			self.set_widget_color_text(widget, 'UNKNOWN_STATE', gui_conditioning.unknown, status)
 		elif val == GUN_MOD_STATE.OFF:
-			self.set_widget_color_text(widget, 'OFF', self.off, status)
+			self.set_widget_color_text(widget, 'OFF', gui_conditioning.off, status)
 		elif val == GUN_MOD_STATE.OFF_REQUEST:
-			self.set_widget_color_text(widget, 'OFF_REQUEST', self.off, status)
+			self.set_widget_color_text(widget, 'OFF_REQUEST', gui_conditioning.off, status)
 		elif val == GUN_MOD_STATE.HV_INTERLOCK:
-			self.set_widget_color_text(widget, 'HV_INTERLOCK', self.bad, status)
+			self.set_widget_color_text(widget, 'HV_INTERLOCK', gui_conditioning.bad, status)
 		elif val == GUN_MOD_STATE.HV_OFF_REQUEST:
-			self.set_widget_color_text(widget, 'HV_OFF_REQUEST', self.timing, status)
+			self.set_widget_color_text(widget, 'HV_OFF_REQUEST', gui_conditioning.timing, status)
 		elif val == GUN_MOD_STATE.HV_REQUEST:
-			self.set_widget_color_text(widget, 'HV_REQUEST', self.timing, status)
+			self.set_widget_color_text(widget, 'HV_REQUEST', gui_conditioning.timing, status)
 		elif val == GUN_MOD_STATE.HV_ON:
-			self.set_widget_color_text(widget, 'HV_ON', self.timing, status)
+			self.set_widget_color_text(widget, 'HV_ON', gui_conditioning.timing, status)
 		elif val == GUN_MOD_STATE.STANDBY_REQUEST:
-			self.set_widget_color_text(widget, 'STANDBY_REQUEST', self.timing, status)
+			self.set_widget_color_text(widget, 'STANDBY_REQUEST', gui_conditioning.timing, status)
 		elif val == GUN_MOD_STATE.STANDBY:
-			self.set_widget_color_text(widget, 'STANDBY', self.err, status)
+			self.set_widget_color_text(widget, 'STANDBY', gui_conditioning.error, status)
 		elif val == GUN_MOD_STATE.STANDYBY_INTERLOCK:
-			self.set_widget_color_text(widget, 'STANDYBY_INTERLOCK', self.bad, status)
+			self.set_widget_color_text(widget, 'STANDYBY_INTERLOCK', gui_conditioning.bad, status)
 		elif val == GUN_MOD_STATE.RF_ON_REQUEST:
-			self.set_widget_color_text(widget, 'RF_ON_REQUEST', self.timing, status)
+			self.set_widget_color_text(widget, 'RF_ON_REQUEST', gui_conditioning.timing, status)
 		elif val == GUN_MOD_STATE.RF_OFF_REQUEST:
-			self.set_widget_color_text(widget, 'RF_OFF_REQUEST', self.timing, status)
+			self.set_widget_color_text(widget, 'RF_OFF_REQUEST', gui_conditioning.timing, status)
 		elif val == GUN_MOD_STATE.RF_ON_INTERLOCK:
-			self.set_widget_color_text(widget, 'RF_ON_INTERLOCK', self.bad, status)
+			self.set_widget_color_text(widget, 'RF_ON_INTERLOCK', gui_conditioning.bad, status)
 		self.clip_vals[status] = str(widget.text())
 
 	def set_L01_mod_state(self, widget, val, status):
 		if val == L01_MOD_STATE.STATE_UNKNOWN:
-			self.set_widget_color_text(widget, 'STATE_UNKNOWN', self.err, status)
+			self.set_widget_color_text(widget, 'STATE_UNKNOWN', gui_conditioning.error, status)
 		elif val == L01_MOD_STATE.L01_OFF:
-			self.set_widget_color_text(widget, 'L01_OFF', self.rf_off, status)
+			self.set_widget_color_text(widget, 'L01_OFF', gui_conditioning.rf_off, status)
 		elif val == L01_MOD_STATE.L01_STANDBY:
-			self.set_widget_color_text(widget, 'L01_STANDBY', self.rf_off, status)
+			self.set_widget_color_text(widget, 'L01_STANDBY', gui_conditioning.rf_off, status)
 		elif val == L01_MOD_STATE.STATE_UNKNOWN:
-			self.set_widget_color_text(widget, 'STATE_UNKNOWN', self.err, status)
+			self.set_widget_color_text(widget, 'STATE_UNKNOWN', gui_conditioning.error, status)
 		elif val == L01_MOD_STATE.L01_HV_ON:
-			self.set_widget_color_text(widget, 'L01_HV_ON', self.rf_off, status)
+			self.set_widget_color_text(widget, 'L01_HV_ON', gui_conditioning.rf_off, status)
 		elif val == L01_MOD_STATE.L01_RF_ON:
-			self.set_widget_color_text(widget, 'L01_RF_ON', self.rf_on, status)
+			self.set_widget_color_text(widget, 'L01_RF_ON', gui_conditioning.rf_on, status)
 		self.clip_vals[status] = str(widget.text())
 
 	def set_widget_color_text(self, widget, text, color, status):
@@ -352,7 +370,7 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
 		widget.setText(text)  # MAGIC_STRING
 		self.clip_vals[status] = str(widget.text())
 
-	def init_widget_dict(self, data):
+	def init_widget_dict(self):
 		# MANUALLY CONNECT THESE UP :/
 		self.widget[dat.probe_pwr] = self.probe_power_outputwidget
 		self.widget[dat.vac_spike_status] = self.vac_spike_status_outputwidget
