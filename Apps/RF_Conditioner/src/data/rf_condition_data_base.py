@@ -7,6 +7,8 @@ from VELA_CLARA_RF_Protection_Control import RF_GUN_PROT_STATUS
 from VELA_CLARA_LLRF_Control import LLRF_TYPE
 import datetime
 import numpy as np
+# for beeps
+import winsound
 #import matplotlib.pyplot as plt
 from src.data.config_reader import config_reader
 
@@ -20,13 +22,14 @@ rev_power_spike_count = 'rev_power_spike_count'
 cav_temp = 'cav_temp'
 water_temp = 'water_temp'
 pulse_length = 'pulse_length'
+pulse_length_status = 'pulse_length_status'
 
 fwd_cav_pwr = 'fwd_cav_pwr'
-fwd_kly_pwr = 'fwd_kly_pha'
+fwd_kly_pwr = 'fwd_kly_pwr'
 rev_kly_pwr = 'rev_kly_pwr'
 rev_cav_pwr = 'rev_cav_pwr'
 probe_pwr = 'probe_pwr'
-fwd_cav_pha = 'fwd_cav_pwr'
+fwd_cav_pha = 'fwd_cav_pha'
 fwd_kly_pha = 'fwd_kly_pha'
 rev_kly_pha = 'rev_kly_pha'
 rev_cav_pha = 'rev_cav_pha'
@@ -43,8 +46,6 @@ cppow = 'cppow'
 cppha = 'cppha'
 cfpow = 'cfpow'
 cfpha = 'cfpha'
-
-
 
 
 vac_level = 'vac_level'
@@ -73,6 +74,7 @@ last_106_bd_count='last_106_bd_count'
 
 pulse_count = 'pulse_count'
 event_pulse_count = 'event_pulse_count'
+duplicate_pulse_count = 'duplicate_pulse_count'
 modulator_state = 'modulator_state'
 rfprot_state = 'rfprot_state'
 llrf_output = 'llrf_output'
@@ -87,6 +89,9 @@ pulse_length_start = 'pulse_length_start'
 
 required_pulses = 'required_pulses'
 next_power_increase = 'next_power_increase'
+
+max_sp_increase = 'max_sp_increase'
+
 next_sp_decrease = 'next_sp_decrease'
 
 log_pulse_length = 'log_pulse_length'
@@ -142,6 +147,7 @@ all_value_keys = [rev_power_spike_count,
                   breakdown_status,
                   breakdown_rate_hi,
                   breakdown_rate,
+                  max_sp_increase,
                   fwd_cav_pwr,
                   fwd_kly_pwr,
                   rev_kly_pwr,
@@ -160,6 +166,7 @@ all_value_keys = [rev_power_spike_count,
                   llrf_ff_ph_locked,
                   pulse_count,
                   event_pulse_count,
+                  duplicate_pulse_count,
                   water_temp,
                   vac_level,
                   cav_temp,
@@ -196,6 +203,7 @@ all_value_keys = [rev_power_spike_count,
                   m,
                   old_c,
                   old_m,
+                  pulse_length_status
                   ]
 
 class rf_condition_data_base(QObject):
@@ -246,6 +254,7 @@ class rf_condition_data_base(QObject):
     values[breakdown_count] = dummy +2
     values[pulse_count] = dummy + 13
     values[event_pulse_count] = dummy +14
+    values[duplicate_pulse_count] = dummy +14
     values[elapsed_time] = dummy + 15
     values[DC_level] = dummy + 16
     values[rev_power_spike_count] = 0
@@ -279,6 +288,8 @@ class rf_condition_data_base(QObject):
     last_fwd_kly_pwr = None
     last_amp = None
 
+    #THERE ARE 2 COPIES OF THE last_million_log , FIX THIS !!!!!!!!!!!
+    last_million_log = None
 
     def __init__(self):
         QObject.__init__(self)
@@ -312,13 +323,12 @@ class rf_condition_data_base(QObject):
         #print 'time = ' + str(ts.total_seconds())
         rf_condition_data_base.values[time_stamp] = ts.total_seconds()
 
-    def update_break_down_count(self):
-        self.update_break_down_count(1)
+
 
     def update_break_down_count(self, count):
         # if all status are not bad then add to breakdown count
         if STATE.BAD not in [rf_condition_data_base.values[DC_spike_status],
-                             rf_condition_data_base.values[DC_spike_status],
+                             rf_condition_data_base.values[vac_spike_status],
                              rf_condition_data_base.values[breakdown_status]
                              ]:
             self.force_update_breakdown_count(count)
@@ -333,7 +343,11 @@ class rf_condition_data_base(QObject):
         self.logger.message(self.my_name + ' increasing breakdown count = ' + str(
                 rf_condition_data_base.values[breakdown_count]) +  ', at pulse count = ' +
                             str(rf_condition_data_base.values[pulse_count]), True)
+        self.beep(count)
         self.add_to_pulse_breakdown_log(rf_condition_data_base.amp_sp_history[-1])
+
+    def beep(self, count):
+        winsound.Beep(2000,150)
 
     def reached_min_pulse_count_for_this_step(self):
         return self.values[event_pulse_count] >= self.values[required_pulses]
@@ -351,28 +365,6 @@ class rf_condition_data_base(QObject):
             self.add_to_pulse_breakdown_log(rf_condition_data_base.values[amp_sp])
             self.update_breakdown_stats()
         self.counter_add_to_pulse_breakdown_log += 1
-
-    def update_breakdown_stats(self):
-        self.values[breakdown_count] = self.last_million_log[-1][1]
-        self.values[last_106_bd_count] = self.last_million_log[-1][1] - self.last_million_log[0][1]
-
-        if self.last_million_log[-1][0] > self.llrf_config['NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY']:
-            self.values[breakdown_rate] = self.values[last_106_bd_count]
-        else:
-            if self.last_million_log[-1][0] == 0:
-                self.values[breakdown_rate] = 0
-            else:
-                self.values[breakdown_rate] = \
-                    float(
-                        self.values[last_106_bd_count] * self.llrf_config['NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY']) \
-                    / \
-                    float(self.last_million_log[-1][0] - self.last_million_log[0][0])
-        self.values[breakdown_rate_hi] = self.values[breakdown_rate] > self.values[breakdown_rate_aim]
-        if self.values[breakdown_rate_hi]:
-            self.logger.message(self.my_name + ' update_breakdown_stats Breakdown Rate HI at pulse count = ' +
-                                str(rf_condition_data_base.values[pulse_count]), True)
-
-
 
     def log_kly_fwd_power_vs_amp(self):
         next_log_entry = [rf_condition_data_base.values[amp_sp]] + \

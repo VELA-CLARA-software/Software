@@ -23,22 +23,6 @@ class llrf_handler(llrf_handler_base):
         if llrf_handler_base.llrfObj[0].trig_source == TRIG.OFF:
             llrf_handler_base.llrf_control.trigExt()
 
-    def set_pulse_length(self,value):
-
-        print 'set_pulse_length'
-        print value
-        print value
-        print value
-        print value
-        print value
-
-        #llrf_handler_base.llrf_control.setPulseLength(value)
-        # is the pulse length changes update the trace mean values n
-        time.sleep(0.2)
-        self.set_mean_pwr_position()
-        # and mask positions!
-        self.setup_outside_mask_trace_param()
-
     def stop_keep_average_trace(self):
         print('def stop_keep_average_trace')
 
@@ -111,18 +95,6 @@ class llrf_handler(llrf_handler_base):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
     # NOT NEEDED ANYMORE ????
     # !NEATEN UP! !NEATEN UP! !NEATEN UP! !NEATEN UP! !NEATEN UP! !NEATEN UP! !NEATEN UP!
     def set_mask(self):
@@ -155,7 +127,7 @@ class llrf_handler(llrf_handler_base):
                 self.mask_not_set_message = True
             self.mask_set = r
 
-
+    # NOT NEEDED ANYMORE ????
     def force_new_mask(self):
         if self.have_averages():
             # cancerous name, chnage !!!!!

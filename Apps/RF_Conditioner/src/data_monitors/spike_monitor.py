@@ -40,19 +40,19 @@ class spike_monitor(monitor):
     my_name = 'spike_monitor'
     # a history of the values when not in cooldown
     # (beware: during startup, all values are added to this list!)
-    _value_history = []
+    #_value_history = []
     # the latest signal value
-    _latest_value = -1
+    #_latest_value = -1
     # a counter indexing each unique signal reading
-    _reading_counter = -1
+    #_reading_counter = -1
     # is the monitor in cooldown or not?
-    _in_cooldown = False
+    #_in_cooldown = False
     # is the signal 'good'
-    _good = True
+    #_good = True
     # is the monitor connected to the passed PV ?
-    _connected = False
+    #_connected = False
     # the mean signal  level, dummy init value that is very high
-    _mean_level = 1
+    #_mean_level = 1
 
     def __init__(self,
                  # the general monitor, acquires data
@@ -103,6 +103,11 @@ class spike_monitor(monitor):
         # see config_reader and.or config file for keys / values
         self.max_level = max_level
         self.max_drop_amp = max_drop_amp
+
+        self._reading_counter = -1
+        self._latest_value = None # ???
+        self._mean_level   = None # ???
+        self._value_history = []
 
         if self.should_drop_amp:
             monitor.logger.message(self.my_name + ' will drop amp on spike detection',True)
@@ -193,29 +198,30 @@ class spike_monitor(monitor):
     def check_for_spike(self):
         #print 'check_for_spike'
         #print(self.my_name,' ',self._latest_value, self.spike_delta + self._mean_level)
-        if self._latest_value > self.spike_delta + self._mean_level:
-            #print('spike ',self._latest_value, self.spike_delta, self._latest_value-self._mean_level)
-            # this is the first place we can detect a spike, so drop amp here
-            if self.should_drop_amp:
-                if monitor.data.values[dat.breakdown_status] == STATE.GOOD:
-                    monitor.llrf_control.setAmpHP(self.amp_drop_value)
-            # dump_data
-            self.dump_data()
-            # start the cooldown
-            self.start_cooldown()
-            monitor.logger.header(self.my_name + ' new spike: ')
-            monitor.logger.message(str(self._latest_value) + ' > ' + str(self.spike_delta + self._mean_level) + ', mean = ' +str(self._mean_level),True)
-            self.alarm('spike')
-        else:
-            # if not a spike
-            #self.set_good()
-            # append self._latest_value to history buffer (_value_history)
-            self._value_history.append(self._latest_value)
-            # if buffer is too large, remove oldest value and calculate average
-            if len(self._value_history) > self._num_samples_to_average:
-                self._value_history.pop(0)
-                self._mean_level = mean(self._value_history)
-                #print('new mean = ',self._mean_level)
+        if self._mean_level != None:
+            if self._latest_value > self.spike_delta + self._mean_level:
+                print( self.my_name + ' spike ',self._latest_value, " ", self.spike_delta, " ", self._latest_value-self._mean_level)
+                # this is the first place we can detect a spike, so drop amp here
+                if self.should_drop_amp:
+                    if monitor.data.values[dat.breakdown_status] == STATE.GOOD:
+                        monitor.llrf_control.setAmpHP(self.amp_drop_value)
+                # dump_data
+                self.dump_data()
+                # start the cooldown
+                self.start_cooldown()
+                monitor.logger.header(self.my_name + ' new spike: ')
+                monitor.logger.message(str(self._latest_value) + ' > ' + str(self.spike_delta + self._mean_level) + ', mean = ' +str(self._mean_level),True)
+                self.alarm('spike')
+
+        self._value_history.append(self._latest_value)
+        # if buffer is too large, remove oldest value and calculate average
+        if len(self._value_history) > self._num_samples_to_average:
+            self._value_history.pop(0)
+            self._mean_level = sum(self._value_history)/self._num_samples_to_average
+
+            # print(self.my_name, ' new_value = ', self._latest_value, 'counter  = ',self._reading_counter,', new-mean = ',
+            #       self._latest_value - self._mean_level)
+
         # if self.max_level < self._latest_value:
         #     if monitor.data.values[dat.breakdown_status] == state.GOOD:
         #         monitor.llrf_control.setAmpHP(self.max_drop_value)
@@ -225,7 +231,7 @@ class spike_monitor(monitor):
         self.min_time_good = True
 
     def start_cooldown(self):
-        monitor.data.update_break_down_count()
+        monitor.data.update_break_down_count(1)
         #print 'start_cooldown called'
         self.in_cooldown = True
         self.min_time_good = False
@@ -273,8 +279,6 @@ class spike_monitor(monitor):
             monitor.data.values[self.data_dict_val_key] = self._latest_value
             # set new _reading_counter
             self._reading_counter = value.keys()[0]
-            #print('new_value = ', self._latest_value, 'counter  = ',self._reading_counter,' , ',
-            #      self._latest_value-self._mean_level)
             return True
         #else:
         #    self.connectPV(self.pv)

@@ -74,8 +74,6 @@ class outside_mask_trace_monitor(monitor):
 				self.new_omed_data = False
 		monitor.data.update_last_million_pulse_log()
 
-
-
 	def new_breakdown(self):
 		# set this state to bad
 		monitor.data.values[dat.breakdown_status] = state.BAD
@@ -83,8 +81,8 @@ class outside_mask_trace_monitor(monitor):
 		self.cooldown_timer.start(monitor.config.breakdown_config['OUTSIDE_MASK_COOLDOWN_TIME'])
 
 	def collect_data(self):
-		monitor.logger.header(self.my_name + ' collecting omed data')
-		monitor.logger.message('event_pulse_count_zero = ' + str(self.event_pulse_count_zero ))
+		monitor.logger.header(self.my_name + ' collecting omed data',True)
+		monitor.logger.message('event_pulse_count_zero = ' + str(self.event_pulse_count_zero ),True)
 		new = monitor.llrf_control.getOutsideMaskEventData()
 
 
@@ -93,15 +91,17 @@ class outside_mask_trace_monitor(monitor):
 		new.update({'SOL': monitor.data.values[dat.sol_value]})
 		#
 		# update breakdown count, will only work if all states are not bad
+
+		monitor.logger.header(self.my_name + ' adding ' + str(new["num_events"]) + ' EVENTS ', True)
+
 		monitor.data.force_update_breakdown_count(new["num_events"])#MAGIC_STRING
-		monitor.logger.message(new['message'], True)
+		monitor.logger.message("PYTHON OMED MESSAGE: " + new['message'], True)
 		if self.is_forward(new['trace_name']):
 			self.forward_power_data.append(new)
 			self.logger.dump_forward(new, len(self.forward_power_data))
 		elif self.is_reverse(new['trace_name']):
 			self.reverse_power_data.append(new)
 			self.logger.dump_reverse(new, len(self.reverse_power_data))
-			print'r dumped'
 		elif self.is_probe(new['trace_name']):
 			self.probe_power_data.append(new)
 			self.logger.dump_probe(new, len(self.probe_power_data))

@@ -18,8 +18,6 @@ class llrf_simple_param_monitor(monitor):
         for trace in monitor.config.llrf_config['MEAN_TRACES']:
             trace2 = monitor.llrf_control.fullLLRFTraceName(trace)
 
-            monitor.logger.message(self.my_name + ' adding ' + trace2 + ' to mean trace list',True)
-
             if self.is_cav_reverse_power(trace):
                 self.trace_mean_keys[trace2] = dat.rev_cav_pwr
 
@@ -28,6 +26,9 @@ class llrf_simple_param_monitor(monitor):
 
             elif self.is_kly_forward_power(trace):
                 self.trace_mean_keys[trace2] = dat.fwd_kly_pwr
+
+            elif self.is_kly_forward_phase(trace):
+                self.trace_mean_keys[trace2] = dat.fwd_kly_pha
 
             elif self.is_kly_reverse_power(trace):
                 self.trace_mean_keys[trace2] = dat.rev_kly_pwr
@@ -41,8 +42,6 @@ class llrf_simple_param_monitor(monitor):
             elif self.is_cav_forward_phase(trace):
                 self.trace_mean_keys[trace2] = dat.fwd_cav_pha
 
-            elif self.is_kly_forward_phase(trace):
-                self.trace_mean_keys[trace2] = dat.fwd_kly_pha
 
             elif self.is_kly_reverse_phase(trace):
                 self.trace_mean_keys[trace2] = dat.rev_kly_pha
@@ -52,12 +51,17 @@ class llrf_simple_param_monitor(monitor):
 
             self.old_mean_values[monitor.llrf_control.fullLLRFTraceName(trace)]  = 0
 
+            monitor.logger.message(self.my_name + ' adding ' + trace2 + ' to mean trace list  '
+                                   'trace_mean_keys[trace2] = ' + self.trace_mean_keys[trace2]
+                                   ,True)
+
+
         self.timer.timeout.connect(self.update_value)
         self.timer.start( monitor.config.llrf_config['LLRF_CHECK_TIME'])
         #self.timer.start( 1000 )
         self.set_success = True
 
-        # new feature, th esetting phase end index by remote...
+        # new feature, the setting phase end index by remote...
         if monitor.config.breakdown_config.has_key('PHASE_MASK_BY_POWER_PHASE_TRACE_1'):
             self.phase_trace_1 = monitor.config.breakdown_config['PHASE_MASK_BY_POWER_PHASE_TRACE_1']
         if monitor.config.breakdown_config.has_key('PHASE_MASK_BY_POWER_PHASE_TRACE_2'):
@@ -74,12 +78,13 @@ class llrf_simple_param_monitor(monitor):
         # get the mean power for each trace
         for trace, key  in self.trace_mean_keys.iteritems():
             self.get_mean_power(key, trace)
-        # pulse length
-        monitor.data.values[dat.pulse_length] = monitor.llrfObj[0].pulse_length
         #self.values[dat.pulse_length] = self.llrfObj[0].pulse_length
         # lock state
         monitor.data.values[dat.llrf_ff_amp_locked] =  monitor.llrfObj[0].ff_amp_lock_state
         monitor.data.values[dat.llrf_ff_ph_locked] = monitor.llrfObj[0].ff_ph_lock_state
+
+
+        monitor.data.values[dat.duplicate_pulse_count] = monitor.llrfObj[0].duplicate_pulse_count
 
         # is rf_ouput enabled
         monitor.data.values[dat.llrf_output] = monitor.llrfObj[0].rf_output
@@ -118,11 +123,24 @@ class llrf_simple_param_monitor(monitor):
             monitor.data.amp_vs_kfpow_running_stat[ monitor.data.values[dat.amp_sp] ] = \
                 monitor.llrf_control.getKlyFwdPwrRSState( monitor.data.values[dat.amp_sp] )
 
+        #
+        # pulse length
+        # THIS OLD WAY IS NOW BORKE,
+        # monitor.data.values[dat.pulse_length] = monitor.llrfObj[0].pulse_length
+        # Instead we now use the  getPulseShape vector and count the number of 1.0s
+
+        # pulse length
+
+        monitor.data.values[dat.pulse_length] = monitor.llrf_control.getPulseShape().count(1) * 0.009 # MAGUC THIS IS NOT EXACTLY CORRECT,
+
+
+
+
 
 
     def get_mean_power(self,key,trace):
         v = monitor.llrfObj[0].trace_data[trace].mean
-        #print trace + " mean value = " +  str(v)
+        #print "key = " + str(key) + ", " + trace + " mean value = " +  str(v)
         if  self.old_mean_values[trace] == v:
             pass
         else:

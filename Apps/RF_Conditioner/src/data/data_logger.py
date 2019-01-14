@@ -23,6 +23,12 @@ class data_logger(object):
         self.pulse_count_log = None
         self.amp_power_log = None
 
+        # these are file objecs that we write th edata to, we're going to keep them open all the time ?!?
+        self.log_file = None
+        self.pulse_count_log_file = None
+        self.amp_power_log_file = None
+        self.data_log_file = None
+
     @property
     def log_config(self):
         return data_logger._log_config
@@ -51,6 +57,9 @@ class data_logger(object):
             'log_path     = ' + self.log_path
         ])
 
+        # open log_file and LEAVE OPEN
+        self.log_file = open(self.log_path, 'a')
+
 
     def header(self, text, add_to_log = False):
         str = '*' + '\n' +'*** ' + text + '***'
@@ -68,29 +77,34 @@ class data_logger(object):
             self.write_log(str)
 
     def write_log(self, str):
-        #write_str = datetime.now().isoformat('-').replace(":", "-").split('.', 1)[0] + ' ' + str + '\n'
+        #print('write_log')
         write_str = datetime.now().isoformat(' ') + ' ' + str + '\n'
-        with open(self.log_path,'a') as f:
-            f.write(write_str)
-
-    def write_list(self, data, file):
-        with open(file,'w') as f:
-            for item in data:
-                f.write("%s\n" % item)
+        self.log_file.write(write_str)
+        self.log_file.flush()
+        # previously opened and closed files as we went ...
+        # with open(self.log_path,'a') as f:
+        #     f.write(write_str)
 
     def add_to_pulse_breakdown_log(self,x):
+        #print('add_to_pulse_breakdown_log')
         towrite = " ".join(map(str, x))
-        #self.message('Adding to pulse_breakdown_log: ' + towrite, True)
-        with open(self.pulse_count_log,'a') as f:
-            f.write( towrite + '\n')
+        self.pulse_count_log_file.write( towrite + '\n')
+        self.pulse_count_log_file.flush()
+        #previously opened and closed files as we went ...
+        # with open(self.pulse_count_log,'a') as f:
+        #     f.write( towrite + '\n')
 
     def add_to_KFP_Running_stat_log(self, x):
         # WRITE TO amp_power_log but don't write an amp with zero pulses of data in it 
         if x[1] != 0:
-            towrite = " ".join(map(str, x))
+            #towrite = " ".join(map(str, x))
             #self.message('Adding to Klystron Forward Power Running Stat Log: ' + towrite, True)
-            with open(self.amp_power_log,'a') as f:
-                f.write( towrite + '\n')
+            #print('add_to_KFP_Running_stat_log, ', self.amp_power_log_file,' '.join(map(str, x)))
+            self.amp_power_log_file.write( ' '.join(map(str, x)) + '\n')
+            self.amp_power_log_file.flush()
+            # previously opened and closed files as we went ...
+            # with open(self.amp_power_log,'a') as f:
+            #     f.write( towrite + '\n')
 
     def num(self, s):
         try:
@@ -102,16 +116,21 @@ class data_logger(object):
         self.amp_power_log = data_logger.config.log_config['LOG_DIRECTORY']+ \
                                data_logger.config.log_config['AMP_POWER_LOG_FILENAME']
         r_dict ={}
+
         with open(self.amp_power_log) as f:
             lines = list(line for line in (l.strip() for l in f) if line)
             for line in lines:
                 if '#' not in line:
                     log = [self.num(x) for x in line.split()]
                     r_dict[log[0]] = log[1:]
-                    print 'get_amp_power_log ' + str(log[0])
-                    print log[1:]
-        self.header(self.my_name + ' get_amp_power_log')
-        self.message('read get_amp_power_log: ' + self.amp_power_log)
+                    #print 'get_amp_power_log ' + str(log[0])
+                    #print log[1:]
+        #
+        # now open amp_power_log file for appending and LEAVE OPEN
+        self.amp_power_log_file = open(self.amp_power_log, 'a')
+        #
+        self.header(self.my_name + ' get_amp_power_log', True)
+        self.message('read get_amp_power_log: ' + self.amp_power_log, True)
         return r_dict
 
     def get_pulse_count_breakdown_log(self):
@@ -127,19 +146,19 @@ class data_logger(object):
         self.message('read pulse_count_log: ' + self.pulse_count_log)
         # for i in log:
         #     self.message(map(str,i),True)
+        #
+        ## now open pulse_count_log file for appending and LEAVE OPEN
+        self.pulse_count_log_file = open(self.pulse_count_log, 'a')
+
+
         return log
 
     def start_data_logging(self):
         self.header(self.my_name + ' start_data_logging')
-        self.message([
-            'data_log path = ' + self.data_path,' starting monitoring, update time = ' + str(
-                    self.log_config['DATA_LOG_TIME'])
-        ])
-        self.message([
-            'AMP_POWER_LOG  path = ' + self.amp_pwr_path,' starting monitoring, update time = ' +
-                                                      str(self.log_config['AMP_PWR_LOG_TIME'])
-        ])
-
+        self.message(['data_log path = ' + self.data_path,' starting monitoring, update time = ' +
+                      str(self.log_config['DATA_LOG_TIME'])])
+        self.message(['AMP_POWER_LOG  path = ' + self.amp_pwr_path,' starting monitoring, update time = ' +
+                      str(self.log_config['AMP_PWR_LOG_TIME'])])
 
     def write_data_log_header(self,values):
         print(self.my_name + ' writing data_log header to ' + self.data_path)
@@ -154,16 +173,22 @@ class data_logger(object):
                 f.write(joiner.join(names)+ "\n")
                 f.write(joiner.join(types)+ "\n")
                 # f.write(struct.pack('<i', 245))
+
+            self.data_path_file = open(self.data_path  + '.dat','ab')
         except:
             pass
 
     def write_data(self,values):
-        try:
-            with open(self.data_path + '.dat', 'ab') as f:
-                for val in values.itervalues():
-                    self.write_binary(f,val)
-        except:
-            pass
+        #print('write_data')
+        for val in values.itervalues():
+            self.write_binary( self.data_path_file, val)
+        self.data_path_file.flush()
+        # try:
+        #     with open(self.data_path + '.dat', 'ab') as f:
+        #         for val in values.itervalues():
+        #             self.write_binary(f,val)
+        # except:
+        #     pass
 
     def write_binary(self, f, val):
         if type(val) is long:
@@ -222,24 +247,22 @@ class data_logger(object):
         try:
             with open(path + '.pkl', 'wb') as f:
                 pkl.dump(obj, f, pkl.HIGHEST_PROTOCOL)
-            # try wxf conversion
-            self.message(self.my_name + ' CONVERTING TO .wxf', True)
-            self.pkl2wxf(path + '.pkl')
         except Exception as e:
             print(e)
             self.message(self.my_name + ' EXCEPTION ' + str(e), True)
             self.message(self.my_name + ' ERROR pickle_dumping to ' + path, True)
 
-    def pkl2wxf(self,path):
-        file = open(path, 'rb')
-        objs = []
-        while True:
-            try:
-                objs.append(pkl.load(file))
-            except EOFError:
-                break
-        file.close()
-        # print(objs)
-        path2 = path.replace(".pkl", "")
-        wxf.export(objs, path2 + '.wxf', target_format='wxf')
-
+    # don't bother with this, convert to wxf offline
+    # def pkl2wxf(self,path):
+    #     file = open(path, 'rb')
+    #     objs = []
+    #     while True:
+    #         try:
+    #             objs.append(pkl.load(file))
+    #         except EOFError:
+    #             break
+    #     file.close()
+    #     # print(objs)
+    #     path2 = path.replace(".pkl", "")
+    #     wxf.export(objs, path2 + '.wxf', target_format='wxf')
+    #

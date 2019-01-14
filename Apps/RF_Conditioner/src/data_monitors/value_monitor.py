@@ -30,19 +30,21 @@ class value_monitor(monitor):
         self.id = id_key
         # a timer to run check_signal automatically every self.update_time
         if isinstance(self.id, basestring):
+            monitor.logger.message(self.my_name + ' got single gen_mon ID', True)
             self.timer.timeout.connect(self.update_value)
             self.timer.start(update_time)
             self.set_success = True
 
         elif isinstance(self.id, list):
+            monitor.logger.message(self.my_name + ' got list of gen_mon IDs', True)
             self._latest_value = [-1]*len(self.id)
             self._reading_counter = [-1]*len(self.id)
             self.timer.timeout.connect(self.update_values)
             self.timer.start(update_time)
             self.set_success = True
 
-
     def update_value(self):
+        #monitor.logger.message(self.my_name + ' gen_mon update_value', True)
         # if self._connected:
         value = self.gen_monitor.getCounterAndValue(self.id)
         # test if value is a new value, i.e _reading_counter has increased
@@ -54,7 +56,6 @@ class value_monitor(monitor):
             # set new _reading_counter
             self._reading_counter = value.keys()[0]
             #print(self.my_name, ' new_value = ', self._latest_value, 'counter  = ',self._reading_counter)
-
 
     def update_values(self):
         for i, id in enumerate(self.id):

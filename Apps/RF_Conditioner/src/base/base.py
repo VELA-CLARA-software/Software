@@ -164,8 +164,7 @@ class base(object):
             return False
 
     def alarm(self, alarm):
-
         pass
-        #subprocess.call('espeak -ven+f5 ' + alarm)
-        #base.alarm_process.stdin.write('espeak -ven+f5 ' + alarm )
+        # subprocess.call('espeak -ven+f5 ' + alarm)
+        # base.alarm_process.stdin.write('espeak -ven+f5 ' + alarm )
         # p = subprocess.Popen('espeak '+alarm, shell=True)
