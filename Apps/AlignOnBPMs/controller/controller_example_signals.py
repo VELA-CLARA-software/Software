@@ -54,18 +54,18 @@ class Controller():
 		self.width1=0.9
 		self.width2=1
 		self.barcolour1_live=(60,100,255)
-		self.barcolour1_notLive=(20,30,90)
+		self.barcolour1_notLive=self.barcolour1_live
 		self.barcolour1y_live=(60,255,100)
-		self.barcolour1y_notLive=(20,90,30)
+		self.barcolour1y_notLive=self.barcolour1y_live
 		#self.barcolour1_live=self.barcolour1_notLive
 		#self.barcolour2='r'
 		self.barcolour2_live=(255,100,60)
-		self.barcolour2_notLive=(90,30,20)
+		self.barcolour2_notLive=self.barcolour2_live
 		self.barcolour3_live=(140,140,140)
-		self.barcolour3_notLive=(50,50,50)
+		self.barcolour3_notLive=self.barcolour3_live
 
 		self.barcolourQ_live=(200,200,200)#self.barcolourQ=(60,255,100)
-		self.barcolourQ_notLive=(80,80,80)
+		self.barcolourQ_notLive=self.barcolourQ_live
 		for r, bpm_name in enumerate(self.bpm_list):
 			row = str(r+1)
 			setattr(self, 'positionGraph_'+row, layout.addPlot())
@@ -332,8 +332,8 @@ class Controller():
 		#time.sleep(0.5)
 		for r, bpm_name in enumerate(self.bpm_list):
 			row = str(r+1)
-			getattr(self, 'bg'+row).setOpts(x=self.xdict.keys(), height=[1*self.model.Cbpms.getXFromPV(bpm_name),1*self.model.Cbpms.getYFromPV(bpm_name)])
-			getattr(self, 'bg'+row+'_y').setOpts(x=self.xdict.keys(), height=[0,1*self.model.Cbpms.getYFromPV(bpm_name)])
+			getattr(self, 'bg'+row).setOpts(x=self.xdict.keys(), height=[1*self.model.Cbpms.getXFromPV(bpm_name)+0.5*np.random.rand(),1*self.model.Cbpms.getYFromPV(bpm_name)])
+			getattr(self, 'bg'+row+'_y').setOpts(x=self.xdict.keys(), height=[0,1*self.model.Cbpms.getYFromPV(bpm_name)+0.5*np.random.rand()])
 			getattr(self, 'bg'+row+'_target').setOpts(x=self.xdict.keys(), height=[getattr(self.view, 'doubleSpinBox_x_'+row).value(), getattr(self.view, 'doubleSpinBox_y_'+row).value()])
 			liveTarget = getattr(self.model, 'liveTarget'+row)
 			#print liveTarget
@@ -374,15 +374,15 @@ class Controller():
 			#time.sleep(0.5)
 			if len(self.model.Cbpms.getBPMQBuffer(bpm_name)) > 0 and str(self.model.Cbpms.getStatusBuffer(bpm_name)[-1]) == 'GOOD':
 				#print 'yes'
-				getattr(self, 'bg'+row+'_WCM').setOpts(x=self.xdict_Q.keys(), height=[np.mean(self.model.Q_WCM)], pen=self.barcolourQ_live)
-				getattr(self, 'bg'+row+'_Q').setOpts(x=self.xdict_Q.keys(), height=[np.mean(self.model.Cbpms.getBPMQBuffer(bpm_name))], pen=self.barcolour3_live, brush=self.barcolour3_live)
+				getattr(self, 'bg'+row+'_WCM').setOpts(x=self.xdict_Q.keys(), height=[95], pen=self.barcolourQ_live)
+				getattr(self, 'bg'+row+'_Q').setOpts(x=self.xdict_Q.keys(), height=[95 - 5*np.random.rand()], pen=self.barcolourQ_live, brush=self.barcolourQ_live)
 				getattr(self, 'bg'+row).setOpts(pen=self.barcolour1_live, brush=self.barcolour1_live)
 				getattr(self, 'bg'+row+'_y').setOpts(pens=[None, self.barcolour1y_live], brushes=[None, self.barcolour1y_live])
 				#getattr(self, 'bg'+row+'_WCM').setOpts(pen=self.barcolourQ_live)
 			else:
 				#print 'no'
-				getattr(self, 'bg'+row+'_WCM').setOpts(x=self.xdict_Q.keys(), height=[np.mean(self.model.Q_WCM)], pen=self.barcolourQ_notLive)
-				getattr(self, 'bg'+row+'_Q').setOpts(x=self.xdict_Q.keys(), height=[0], pen=self.barcolourQ_notLive, brush=self.barcolourQ_notLive)
+				getattr(self, 'bg'+row+'_WCM').setOpts(x=self.xdict_Q.keys(), height=[95], pen=self.barcolourQ_notLive)
+				getattr(self, 'bg'+row+'_Q').setOpts(x=self.xdict_Q.keys(), height=[95 - 5*np.random.rand()], pen=self.barcolourQ_notLive, brush=self.barcolourQ_notLive)
 				getattr(self, 'bg'+row).setOpts(pen=self.barcolour1_notLive, brush=self.barcolour1_notLive)
 				getattr(self, 'bg'+row+'_y').setOpts(pens=[None, self.barcolour1y_notLive], brushes=[None, self.barcolour1y_notLive])
 				#getattr(self, 'bg'+row+'_WCM').setOpts(pen=self.barcolourQ_notLive)

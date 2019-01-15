@@ -40,34 +40,36 @@ class Controller():
 		self.positionGraph_2.setYRange(self.bgMin,self.bgMax)
 		self.positionGraph_3.setYRange(self.bgMin,self.bgMax)
 		self.positionGraph_4.setYRange(self.bgMin,self.bgMax)
-		barcolour1=(30,255,80)
+		#barcolour1=(30,255,80)
+		#barcolour2=(5,40,12)
+		barcolour1=(30,80,255)
 		barcolour2=(5,40,12)
 		barcolourt=(255,80,30)
 		barwidth = 0.85
 		barwidth2 = 1.0
 		#self.bg1 = pg.BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=1)
 		self.bg2 = pg.BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=barwidth, pen=barcolour1, brush=barcolour1)
-		self.bg2_target = pg.BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=barwidth2, pen=barcolourt, brush=barcolourt)
+		#self.bg2_target = pg.BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=barwidth2, pen=barcolourt, brush=barcolourt)
 		self.bg2_y = pg.BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=barwidth, pen=barcolour2, brush=barcolour2)
 		self.bg3 = pg.BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=barwidth, pen=barcolour1, brush=barcolour1)
-		self.bg3_target = pg.BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=barwidth2, pen=barcolourt, brush=barcolourt)
+		#self.bg3_target = pg.BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=barwidth2, pen=barcolourt, brush=barcolourt)
 		self.bg3_y = pg.BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=barwidth, pen=barcolour2, brush=barcolour2)
 		self.bg4 = pg.BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=barwidth, pen=barcolour1, brush=barcolour1)
-		self.bg4_target = pg.BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=barwidth2, pen=barcolourt, brush=barcolourt)
+		#self.bg4_target = pg.BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=barwidth2, pen=barcolourt, brush=barcolourt)
 		self.bg4_y = pg.BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=barwidth, pen=barcolour2, brush=barcolour2)
 		#self.positionGraph_1.setYRange(-1,1)
 		#self.positionGraph_2.setYRange(-1,1)
 		#self.positionGraph_3.setYRange(-1,1)
 		#self.positionGraph_1.addItem(self.bg1)
-		self.positionGraph_2.addItem(self.bg2_target)
+		#self.positionGraph_2.addItem(self.bg2_target)
 		self.positionGraph_2.addItem(self.bg2)
 		self.positionGraph_2.addItem(self.bg2_y)
 
-		self.positionGraph_3.addItem(self.bg3_target)
+		#self.positionGraph_3.addItem(self.bg3_target)
 		self.positionGraph_3.addItem(self.bg3)
 		self.positionGraph_3.addItem(self.bg3_y)
 
-		self.positionGraph_4.addItem(self.bg4_target)
+		#self.positionGraph_4.addItem(self.bg4_target)
 		self.positionGraph_4.addItem(self.bg4)
 		self.positionGraph_4.addItem(self.bg4_y)
 		layout.nextRow()
@@ -179,8 +181,8 @@ class Controller():
 		self.view.lineEdit_roughRFMax.editingFinished.connect(self.model.setRoughMaxRF)
 		self.view.lineEdit_fineCurrentMin.editingFinished.connect(self.model.setFineMinI)
 		self.view.lineEdit_fineCurrentMax.editingFinished.connect(self.model.setFineMaxI)
-		self.view.lineEdit_fineRFMin.editingFinished.connect(self.model.setFineMinRF)
-		self.view.lineEdit_fineRFMax.editingFinished.connect(self.model.setFineMaxRF)
+		#self.view.lineEdit_fineRFMin.editingFinished.connect(self.model.setFineMinRF)
+		#self.view.lineEdit_fineRFMax.editingFinished.connect(self.model.setFineMaxRF)
 
 		self.view.pushButton_roughCentreC2VCurrent.clicked.connect(self.model.measureMomentumCentreC2VApprox)
 		self.view.pushButton_fineCentreC2VCurrent.clicked.connect(self.model.measureMomentumCentreC2V)
@@ -217,6 +219,7 @@ class Controller():
 		#self.view.doubleSpinBox_p.setValue(float(self.model.predictedMomentum))
 		#self.view.doubleSpinBox_I.setValue(float(self.model.predictedI))
 		self.view.label_I.setText('('+self.model.dipole+' = '+str(self.model.Cmagnets.getSI(self.model.dipole))+' A)')
+		self.view.label_I_2.setText(self.model.dipole+' = '+str(self.model.Cmagnets.getSI(self.model.dipole))+' A')
 		self.view.label_RF.setText('(show relevant RF settings...)')
 
 		#self.displayMom.setText('Approx. Momentum<br> Current: '+str(self.model.approxI)+' A<br>'+str(self.model.approx_p)+' = MeV/c<br><br>MOMENTUM<br> Current: '+str(self.model.I)+' A<br>'+str(self.model.p)+' = MeV/c')
@@ -246,16 +249,26 @@ class Controller():
 		self.displayDisp.setText('DISPERSION:<br>'+str(self.model.Dispersion)+' m/A')
 		self.displayMom_S.setText('MOMENTUM SPREAD:<br>'+str(self.model.pSpread)+' MeV/c')
 
-		self.view.label_H_1.setNum(self.model.Cbpms.getXFromPV('S02-BPM02')-self.view.doubleSpinBox_x_1.value())
-
-
+		#self.view.label_H_1.setNum(self.model.Cbpms.getXFromPV('S02-BPM02')-self.view.doubleSpinBox_x_1.value())
+		if len(self.model.Cbpms.getBPMXPVBuffer('S02-BPM02')) > 0:
+			self.view.label_H_1.setNum(np.mean(self.model.Cbpms.getBPMXPVBuffer('S02-BPM02'))-self.view.doubleSpinBox_x_1.value())
+		else:
+			self.view.label_H_1.setNum(self.model.Cbpms.getXFromPV('S02-BPM02')-self.view.doubleSpinBox_x_1.value())
 
 		self.view.label_H_2.setNum(self.model.cam.getX('S02-CAM-02')-self.view.doubleSpinBox_x_2.value())
 		#if (self.cam.getX('S02-CAM-02')-self.view.doubleSpinBox_x_2.value()) < self.view.doubleSpinBox_tol_2.value():
 		#	self.view.label_H_2.setOpt()
 
-		self.view.label_H_3.setNum(self.model.Cbpms.getXFromPV('C2V-BPM01')-self.view.doubleSpinBox_x_3.value())
+		#self.view.label_H_3.setNum(self.model.Cbpms.getXFromPV('C2V-BPM01')-self.view.doubleSpinBox_x_3.value())
+		if len(self.model.Cbpms.getBPMXPVBuffer('C2V-BPM01')) > 0:
+			self.view.label_H_3.setNum(np.mean(self.model.Cbpms.getBPMXPVBuffer('C2V-BPM01'))-self.view.doubleSpinBox_x_3.value())
+		else:
+			self.view.label_H_3.setNum(self.model.Cbpms.getXFromPV('C2V-BPM01')-self.view.doubleSpinBox_x_3.value())
 
+		if len(self.model.Cbpms.getBPMXPVBuffer('C2V-BPM01')) > 0:
+			self.view.label_H_4.setNum(np.mean(self.model.Cbpms.getBPMXPVBuffer('C2V-BPM01'))-self.view.doubleSpinBox_x_4.value())
+		else:
+			self.view.label_H_4.setNum(self.model.Cbpms.getXFromPV('C2V-BPM01')-self.view.doubleSpinBox_x_4.value())
 	# def refreshImage(self):
 	# 	 #image = np.random.normal(size=(2560,2160))
 	# 	 cap = cv2.VideoCapture("http://192.168.83.31:7080/MJPG1.mjpg")
