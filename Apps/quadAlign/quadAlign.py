@@ -12,5 +12,5 @@ dir = '\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Work\\'+time.strft
 with open(dir+timestr+'_'+'_QuadAlign.dat', 'a') as file:
 	for no in range(1,5):
 		quad = 'S02-QUAD'+str(no)
-		result = qa.quadAligner(quad=quad, bpm='S02-BPM02', stepSize=1, nSamples=20, start=0.0, end=10, momentum=float(momentum))
+		result = qa.quadAligner(quad=quad, bpm='S02-BPM02', stepSize=1, nSamples=5, start=-5.0, end=5, momentum=float(momentum))
 		file.writelines('\t'.join(str(j) for j in i) + '\n' for i in [result])

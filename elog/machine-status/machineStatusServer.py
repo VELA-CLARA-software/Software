@@ -195,6 +195,12 @@ class MyHandler(http.server.BaseHTTPRequestHandler):
         #            # Serve a favicon (this doesn't work)
         #            content_type = "image/ico"
         #            output = open('Alice_Logo.ico', 'rb').read()
+        elif path == 'environ':
+            # show a list of environment variables
+            content_type = "text/html"
+            output = self.header.format(path + ' - ') + '<table><tr><th>Variable</th><th>Value</th></tr>' + \
+                ''.join(['<tr><td>{0}</td><td>{1}</td></tr>'.format(key, value) for key, value in sorted(os.environ.items())]) + \
+                '</table>' + self.footer
 
         else:
             # Default response

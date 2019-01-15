@@ -1,4 +1,3 @@
-# from PyQt4.QtCore import QThread, QObject, pyqtSignal, QTimer
 import sys,os
 import time
 import scipy.constants as physics
@@ -120,16 +119,46 @@ class Model(object):
         self.setUpMagnets(self.parameters['magnets'])
 
     def loadGunBURT(self):
-        if self.machineType is 'None':
-            return True
+        self.logger.emit('Loading DBURT: GunCrest.dburt')
+        if self.machineType == 'None':
+            time.sleep(1)
+            return False
         else:
             return self.machine.applyDBURT('GunCrest.dburt')
 
     def loadLinac1BURT(self):
-        if self.machineType is 'None':
+        self.logger.emit('Loading DBURT: Linac1Crest.dburt')
+        if self.machineType == 'None':
+            time.sleep(3)
             return True
         else:
             return self.machine.applyDBURT('Linac1Crest.dburt')
+
+    def turnOnGun(self, max, step):
+        self.resetAbortFinish()
+        max = max if max <= 16000 else 16000
+        start = self.machine.getGunAmplitude()
+        range =  np.arange(start, max+1, step)
+        for i, set in enumerate(range):
+            self.progress.emit(100*i/len(range))
+            if self._abort or self._finished:
+                return
+            self.machine.setGunAmplitude(set)
+            time.sleep(1)
+        self.machine.setGunAmplitude(max)
+
+    def turnOnLinac1(self, max, step):
+        self.resetAbortFinish()
+        max = max if max <= 13500 else 13500
+        start = self.machine.getLinac1Amplitude()
+        range =  np.arange(start, max+1, step)
+        for i, set in enumerate(range):
+            self.progress.emit(100*i/len(range))
+            if self._abort or self._finished:
+                return
+            self.machine.setLinac1Amplitude(set)
+            time.sleep(1)
+        self.machine.setLinac1Amplitude(max)
 
     def gunWCMCrester(self, stepSize=5, nSamples=4, offset=10):
         self.resetAbortFinish()
@@ -231,7 +260,7 @@ class Model(object):
         self.minDipoleI = start
         self.maxDipoleI = stop
         self.dipoleIStep = step
-        self.initialGuess = [10, 1, (stop+start)/2]
+        self.initialGuess = [10, 5, (stop+start)/2]
         self.getDataFunction = partial(self.machine.getBPMPosition, self.parameters['linac_dispersive_bpm'][no])
         self.findDipoleCurrent()
 
@@ -270,8 +299,8 @@ class Model(object):
 
     def gunPhaser(self, gunPhaseSet=0, offset=True):
         if isinstance(self.crestingData['Gun']['calibrationPhase'],(float, int)) and isinstance(gunPhaseSet, (float, int)):
-            print 'gunPhaseSet = ', gunPhaseSet
-            print 'offset = ', offset
+            # print 'gunPhaseSet = ', gunPhaseSet
+            # print 'offset = ', offset
             self.machine.setGunPhase(self.crestingData['Gun']['calibrationPhase'] + (gunPhaseSet if offset else 0))
 
     def linac1Phaser(self, linac1PhaseSet=0, offset=True):
@@ -369,9 +398,8 @@ class Model(object):
             return data
 
     def setFinalPhase(self, phase):
-        phase = np.mod(180+phase,360)-180
+        phase = np.round(np.mod(180+phase,360)-180, decimals=1)
         self.crestingData[self.cavity]['calibrationPhase'] = phase
-        print 'self.machineType = ', self.machineType
         if not self.machineType == 'None':
             self.getRFTraces()
 
@@ -448,6 +476,7 @@ class Model(object):
         if crest_phase > 180:
             crest_phase -= 360
         self.setFitArray(np.array(x), np.array(y))
+        crest_phase = np.round(crest_phase, decimals=1)
         self.setFinalPhase(crest_phase)
         self.printFinalPhase()
 
@@ -461,17 +490,28 @@ class Model(object):
         else:
              self.machine.setPhase(self.cavity, self.startingPhase)
 
+    def longest(self, l):
+        if(not isinstance(l, list)): return(0)
+        return(max([len(l),] + [len(subl) for subl in l if isinstance(subl, list)] +
+            [self.longest(subl) for subl in l]))
+
     def cutDataLinacQuick(self):
         allData = self.getDataArray()
         cutData = [a for a in allData if np.isnan(a[1])]
+        alllist = []
         newlist = []
         for i, pt in enumerate(cutData):
             if i < (len(cutData)-1):
                 if not cutData[i+1][0] - pt[0] > 2*self.stepSize:
                     newlist.append(pt)
+                else:
+                    alllist.append(newlist)
+                    newlist = []
             elif i == (len(cutData)-1):
                 newlist.append(pt)
-        return newlist
+                alllist.append(newlist)
+        print 'alllist = ', alllist
+        return self.longest(alllist)
 
     def doFitLinacQuick(self):
         try:
@@ -492,6 +532,7 @@ class Model(object):
             #     crest_phase += 360
             # x = [a if a <= 180 else a-360 for a in x]
             self.setFitArray(np.array([crest_phase,crest_phase]), np.array([-10,10]))
+            crest_phase = np.round(crest_phase, decimals=1)
             self.setFinalPhase(crest_phase)
             self.printFinalPhase()
         except Exception as e:
@@ -527,7 +568,7 @@ class Model(object):
 
     def fittingFunc(self):
         if self.cavity == 'Gun':
-            self.fittingGunFine()
+            self.fittingLinac1Fine()
         elif self.cavity == 'Linac1':
             self.fittingLinac1Fine()
 
@@ -542,20 +583,8 @@ class Model(object):
         x, y, std = [np.array(a) for a in zip(*data)]
         if (max(x) - min(x)) > (self.maxPhase - self.minPhase):
             x = np.array([a if a >= 0 else a+360 for a in x])
-        # f = UnivariateSpline(x, y, w=std, k=5)
-        # xnew = np.linspace(np.min(x), np.max(x), num=100, endpoint=True)
-        # ynew = f(xnew)
-        # crest_phase = xnew[np.argmin(ynew)]
-        # xnew = [a if a <= 180 else a-360 for a in xnew]
-        # if crest_phase > 180:
-        #     crest_phase -= 360
-        # if crest_phase < 180:
-        #     crest_phase += 360
-        # self.setFitArray(xnew, ynew)
-        # self.setFinalPhase(crest_phase)
-        # self.printFinalPhase()
         popt, pcov = curve_fit(self.fitting_equation_Linac1Fine, x, y, \
-            sigma=(1+(y-min(y))) * (1+abs(x-self.approxcrest))**0.5,    p0=[0,10,self.approxcrest], bounds=[[-np.inf, -np.inf, min(x)], [np.inf, np.inf, max(x)]])
+            sigma=(1+(y-min(y))) * (1+abs(x-self.approxcrest))**0.5,    p0=[0,10,self.approxcrest], bounds=[[-np.inf, 0, min(x)], [np.inf, np.inf, max(x)]])
 
         phase = np.array(x)
         phase = np.arange(min(x), max(x),(max(x)-min(x))/1000)
@@ -566,6 +595,7 @@ class Model(object):
             crest_phase -= 360
         if crest_phase < 180:
             crest_phase += 360
+        crest_phase = np.round(crest_phase, decimals=1)
         self.setFinalPhase(crest_phase)
         self.printFinalPhase()
 
@@ -576,13 +606,19 @@ class Model(object):
     def fittingLinac1Fine(self):
         x, y, std = [np.array(a) for a in self.getDataArray(zipped=False)]
         popt, pcov = curve_fit(self.fitting_equation_Linac1Fine, x, y, \
-            sigma=(1+(y-min(y))) * (1+abs(x-self.approxcrest))**0.5,    p0=[0,10,self.approxcrest], bounds=[[-np.inf, -np.inf, min(x)], [np.inf, np.inf, max(x)]])
+            sigma=(1+(y-min(y))) * (1+abs(x-self.approxcrest))**0.5,    p0=[0,10,self.approxcrest], bounds=[[-np.inf, 0, min(x)], [np.inf, np.inf, max(x)]])
 
         # phase = np.array(x)
         phase = np.arange(min(x), max(x),(max(x)-min(x))/1000)
         data = self.fitting_equation_Linac1Fine(phase, *popt)
         self.setFitArray(phase, data)
-        self.setFinalPhase(((180 + popt[2]) % 360) - 180)
+        crest_phase = ((180 + popt[2]) % 360) - 180
+        if crest_phase > 180:
+            crest_phase -= 360
+        if crest_phase < 180:
+            crest_phase += 360
+        crest_phase = np.round(crest_phase, decimals=1)
+        self.setFinalPhase(crest_phase)
         self.printFinalPhase()
 
 ########### findingDipoleCurrent ###############
@@ -640,7 +676,7 @@ class Model(object):
         bounds=([0, -np.inf, min(x)], [max(y)-min(y), np.inf, max(x)]))
 
         self.setFitArray(np.array(xnew), self.fitting_equation_DipoleCurrent(xnew, *popt))
-        self.finalDipoleI = popt[-1]
+        self.finalDipoleI = np.round(popt[-1], decimals=2)
         self.setFinalDip(self.finalDipoleI)
         while abs(self.machine.getDip() - self.finalDipoleI) > 0.2:
             time.sleep(self.sleepTimeDipole)

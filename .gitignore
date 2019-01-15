@@ -14,4 +14,4 @@ magnet-table/src/pip-delete-this-directory.txt
 Apps/imageCollector/v3/pyinstaller-build.bat
 Apps/MomentumApp/controller/controller.py
 Apps/MomentumApp/controller/controller.py
-Apps/linacCentring/controller/controller.py
+*.h5

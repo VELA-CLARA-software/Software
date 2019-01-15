@@ -8,28 +8,50 @@ import controller.controller as controller
 import view.view as view
 import images_qr
 import numpy as np
+import time
+
+class GenericThread(QtCore.QThread):
+    def __init__(self, function, *args, **kwargs):
+        QtCore.QThread.__init__(self)
+        self.function = function
+        self.args = args
+        self.kwargs = kwargs
+
+    def run(self):
+        self.object = self.function(*self.args, **self.kwargs)
+
+class mySplashScreen(QtGui.QSplashScreen):
+    def __init__(self, *args, **kwargs):
+        super(mySplashScreen, self).__init__(*args, **kwargs)
+
+    def mousePressEvent(self, event):
+        print 'mousepress'
 
 class App(QtCore.QObject):
-    def __init__(self, sys_argv):
+    def __init__(self, app, sys_argv):
         super(App, self).__init__()
         self.view = view.Ui_MainWindow()
         self.MainWindow = QtGui.QMainWindow()
         self.view.setupUi(self.MainWindow)
-        self.MainWindow.setWindowIcon(QtGui.QIcon(':/crester.png'))
-        splash_pix = QtGui.QPixmap(':/crester.png')
-        splash = QtGui.QSplashScreen(splash_pix, QtCore.Qt.WindowStaysOnTopHint)
-        splash.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.FramelessWindowHint)
-        splash.setEnabled(False)
-        splash.show()
-        splash.showMessage("<h1><font color='#6BBAFD'>Autocrester Initialising...</font></h1>", QtCore.Qt.AlignTop | QtCore.Qt.AlignCenter, QtCore.Qt.black)
+        self.MainWindow.setWindowIcon(QtGui.QIcon(':/crester.jpg'))
+        splash_pix = QtGui.QPixmap(':/crester.jpg')
+        self.splash = QtGui.QSplashScreen(QtGui.QDesktopWidget().screen(), splash_pix)
+        self.splash.setWindowFlags(QtCore.Qt.FramelessWindowHint)
+        self.splash.setEnabled(False)
+        self.splash.show()
+        self.splash.showMessage("<h1><font color='#6BBAFD'>Autocrester Initialising...</font></h1>", QtCore.Qt.AlignTop | QtCore.Qt.AlignCenter, QtCore.Qt.black)
         self.machineType, self.lineType, self.gunType = sys_argv[1],sys_argv[2],sys_argv[3]
+        app.processEvents()
         self.model = model.Model(self.machineType, self.lineType, self.gunType)
+        app.processEvents()
         self.controller = controller.Controller(self.view, self.model)
         self.MainWindow.show()
-        splash.finish(self.MainWindow)
+        self.splash.finish(self.MainWindow)
+
+    def setupModel(self):
+        self.model = model.Model(self.machineType, self.lineType, self.gunType)
 
 if __name__ == '__main__':
-
     app = QtGui.QApplication(sys.argv)
-    appObject = App(sys.argv)
+    appObject = App(app, sys.argv)
     sys.exit(app.exec_())

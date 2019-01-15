@@ -1,0 +1,17 @@
+Gun:
+  CLA-GUN-LRF-CTRL-01:ad1:ch1:power_remote.POWER:
+    arrayData: 1017
+    timer: 10
+    name: 'Gun Klystron FWD'
+  CLA-GUN-LRF-CTRL-01:ad1:ch3:power_remote.POWER:
+    arrayData: 1017
+    timer: 10
+    name: 'Gun Cavity FWD'
+  CLA-GUN-LRF-CTRL-01:ad1:ch3:amp_phase.PHASE_REMOTE:
+    arrayData: 1017
+    timer: 10
+    name: 'Gun Cavity Phase'
+  CLA-GUN-LRF-CTRL-01:ad1:ch4:power_remote.POWER:
+    arrayData: 1017
+    timer: 10
+    name: 'Gun Cavity REV'

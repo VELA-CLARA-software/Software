@@ -177,7 +177,7 @@ def getColour(label):
     return colournames[label.lower()]
 
 class QPlainTextEditLogger(logging.Handler):
-    def __init__(self, tableWidget, model):
+    def __init__(self, tableWidget, model, filter):
         super(QPlainTextEditLogger, self).__init__()
         self.tableWidget = tableWidget
         self.debugColour = 'gray'
@@ -188,14 +188,9 @@ class QPlainTextEditLogger(logging.Handler):
         self.dateColumnWidth = 160
         self.levelColumnWidth = 120
         self.logColumnWidth = 80
-        self.logLength = 50
+        self.logLength = 5000
         self.model = model
-
-    def emit(self, record, *args, **kwargs):
-        while self.model.rowCount() >= self.logLength:
-            self.model.removeRow(-1)
-        newRowNumber = 0#self.model.rowCount()
-        self.model.insertRow(newRowNumber)
+        self.parent_filter = filter
         self.tableWidget.setShowGrid(True)
         self.model.setColumnCount(4)
         # self.tableWidget.horizontalHeader().setVisible(False)
@@ -205,6 +200,12 @@ class QPlainTextEditLogger(logging.Handler):
         self.tableWidget.setColumnWidth(2,self.logColumnWidth)
         self.tableWidget.horizontalHeader().setStretchLastSection(True)
         self.tableWidget.setWordWrap(True)
+
+    def emit(self, record, *args, **kwargs):
+        while self.model.rowCount() >= self.logLength:
+            self.model.removeRow(-1)
+        newRowNumber = 0#self.model.rowCount()
+        self.model.insertRow(newRowNumber)
         msg = self.format(record)
         color = ''
         bold = False
@@ -239,6 +240,7 @@ class QPlainTextEditLogger(logging.Handler):
             standarditem.setForeground(QColor(color))
             self.model.setItem(newRowNumber,i, standarditem)
             # self.model.setData(self.model.index(newRowNumber,i), Qt.blue, Qt.BackgroundRole)
+        self.parent_filter.reset()
 
 class zmqPublishLogger(QObject):
     def __init__(self, logger=None, *args, **kwargs):
@@ -339,7 +341,7 @@ class loggerWidget(QWidget):
         saveButton.clicked.connect(self.saveLog)
         layout.addWidget(self.tablewidget,1,0,10,5)
         layout.addWidget(saveButton,0,3,1,1)
-        self.logTextBox = QPlainTextEditLogger(self.tablewidget, self.model)
+        self.logTextBox = QPlainTextEditLogger(self.tablewidget, self.model, self.filter_proxy_model)
         self.setLayout(layout)
         if(logger != None):
             if(isinstance(logger, list)):

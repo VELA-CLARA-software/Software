@@ -1,13 +1,8 @@
 import time, copy, sys, math
 from epics import caget, caput, cainfo, PV
 import numpy as np
-try:
-    from PyQt4.QtCore import *
-    from PyQt4.QtGui import *
-except ImportError:
-    from PyQt5.QtCore import *
-    from PyQt5.QtGui import *
-    from PyQt5.QtWidgets import *
+sys.path.append("../../../")
+import Software.Procedures.qt as qt
 from collections import deque, OrderedDict
 from six import string_types
 
@@ -16,9 +11,9 @@ def tablePrint(**kwargs):
     for k, v in kwargs.items():
         print ("{:<8} {:<15}".format(k, v))
 
-class PVObject(QObject):
+class PVObject(qt.QObject):
 
-    newValue = pyqtSignal(float, 'PyQt_PyObject', str)
+    newValue = qt.pyqtSignal(float, 'PyQt_PyObject', str)
     # newValue = pyqtSignal(float, list)
     # newValue = pyqtSignal(float, np.ndarray)
 
@@ -82,7 +77,7 @@ class PVObject(QObject):
 
 class PVWaveform(PVObject):
 
-    newValue = pyqtSignal(float, list)
+    newValue = qt.pyqtSignal(float, list)
     length = 100
 
     def __init__(self, pv, readback=None, length=None, parent=None):

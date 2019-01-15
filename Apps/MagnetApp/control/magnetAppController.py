@@ -218,7 +218,6 @@ class magnetAppController(object):
             if len(LOCAL_solmags) > 0:
                 self.localMagnetController.degauss(LOCAL_solmags, tozero)
 
-
             if len(LOCAL_mags) > 0:
                 for magnet_NAME in LOCAL_mags:
                     print('DEGAUSSING ', magnet_NAME)
@@ -240,13 +239,22 @@ class magnetAppController(object):
                     if self.localMagnetController.isACor(magnet):
                         print(magnet, ' as a corrector, NOT degaussing')
                         corr_list.append(magnet)
-
                 LOCAL_mags = [e for e in LOCAL_mags if e not in corr_list]
+
+                # disable degaussing BA1 magnets
+                BA1_list = []
+                for magnet in LOCAL_mags:
+                    if 'BA1' in magnet:
+                        print(magnet, ' as a BA1 magnet, NOT degaussing')
+                        BA1_list.append(magnet)
+                LOCAL_mags = [e for e in LOCAL_mags if e not in BA1_list]
+
 
                 if len(LOCAL_mags) > 0:
                     self.localMagnetController.degauss(LOCAL_mags, tozero)
                 self.mainView.DEGAUSS_PREP = False
                 QtGui.QApplication.processEvents()
+
 
     def handle_saveSettings(self):
         # dburtSaveView filename is set by current time and date
@@ -394,8 +402,8 @@ class magnetAppController(object):
             os.environ["EPICS_CA_SERVER_PORT"] = "6000"
 
         print(self.machineMode,self.machineArea)
-        self.localMagnetController = \
-            self.magInit.getMagnetController( self.machineMode, self.machineArea)
+        self.localMagnetController = self.magInit.getMagnetController( self.machineMode,
+                                                                        self.machineArea)
         if self.machineMode is not mag.MACHINE_MODE.OFFLINE:
             self.activeEPICS = True
 

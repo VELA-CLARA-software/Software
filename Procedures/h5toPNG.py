@@ -42,7 +42,7 @@ def converth5toPNG(bitdepth, indir='.', outdir='./output/'):
         saveImageAsPNG(f.replace('.hdf5','.'+args.extension).replace(indir,outdir), readH5File(f), numpybitdepth, divisor)
 
 def saveImageAsPNG(filename, imageData, bitdepth, divisor):
-    imsave(filename, (imageData/divisor).astype(bitdepth))
+    imsave(filename, (imageData*divisor).astype(bitdepth))
 
 def readH5File(filename):
     with h5py.File(filename, 'r') as f:

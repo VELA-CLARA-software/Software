@@ -1,5 +1,5 @@
-Gun_Amp_Set: 16280
-Gun_Amp_Step_Set: 100
+Gun_Amp_Set: 16000
+Gun_Amp_Step_Set: 500
 Gun_Dipole_End_Set: 8.9
 Gun_Dipole_Start_Set: 7.0
 Gun_Dipole_Step_Set: 0.1
@@ -10,8 +10,8 @@ Gun_OffCrest_Phase_Set: 0.0
 Gun_Rough_Fit_Offset: 10
 Gun_Rough_NShots_Set: 3
 Gun_Rough_PointSeperation_Set: 5.0
-Linac1_Amp_Set: 13000
-Linac1_Amp_Step_Set: 100
+Linac1_Amp_Set: 13400
+Linac1_Amp_Step_Set: 500
 Linac1_Dipole_End_Set: 90.0
 Linac1_Dipole_Start_Set: 60.0
 Linac1_Dipole_Step_Set: 1.0

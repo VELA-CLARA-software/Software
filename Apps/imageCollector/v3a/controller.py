@@ -3,14 +3,19 @@ from PyQt4 import QtGui
 import webbrowser
 import pyqtgraph as pg
 import colorcet  # for nice colour maps
-from epics import caget, caput
+# from epics import caget, caput
 import numpy as np
+import h5py
 import os
 import sys
+import time
 from datetime import datetime
+from multiprocessing import Process, Queue, Pipe
+from threading import Thread
 from collections import OrderedDict
 sys.path.append(r'\\apclara1.dl.ac.uk\ControlRoomApps\Controllers\bin\Release')
 os.environ['PATH'] = os.environ['PATH'] + r';\\apclara1.dl.ac.uk\ControlRoomApps\Controllers\bin\stage\root_v5.34.34\bin'
+from Widgets.MachineSnapshot.machine_snapshot import MachineSnapshot
 import VELA_CLARA_Camera_Control
 import VELA_CLARA_Screen_Control
 cam_init = VELA_CLARA_Camera_Control.init()
@@ -22,7 +27,18 @@ os.environ["EPICS_CA_MAX_ARRAY_BYTES"] = "10000000"
 
 IMAGE_WIDTH = 1080
 IMAGE_HEIGHT = 1280
-IMAGE_DIMS = (IMAGE_WIDTH, IMAGE_HEIGHT)
+IMAGE_DIMS = (IMAGE_HEIGHT, IMAGE_WIDTH)
+IMAGE_WIDTH_FULL = IMAGE_WIDTH * 2
+IMAGE_HEIGHT_FULL = IMAGE_HEIGHT * 2
+IMAGE_DIMS_FULL = (IMAGE_HEIGHT_FULL, IMAGE_WIDTH_FULL)
+IMAGE_WIDTH_VELA = 1392
+IMAGE_HEIGHT_VELA = 1040
+IMAGE_DIMS_VELA = (IMAGE_HEIGHT_VELA, IMAGE_WIDTH_VELA)
+image_path = [r'\\claraserv3', 'CameraImages']
+hdf5_image_folder = os.path.join(*image_path)
+# only show top-level dirs, and ones that consist entirely of digits (i.e. year/month/date)
+filter_regexp = '|'.join([d.replace('\\', '\\\\') for d in image_path]) + '|^\d+$'
+fire = [QtGui.qRgb(*QtGui.QColor(val).getRgb()[:3]) for val in colorcet.fire]
 
 image_credits = {
     'pause.png': 'https://www.flaticon.com/free-icon/pause-symbol_25696#term=pause&page=1&position=5',
@@ -30,11 +46,117 @@ image_credits = {
     'eye.png': 'https://www.flaticon.com/free-icon/eye_159604#term=eye&page=1&position=5',
     'in.png': 'https://www.flaticon.com/free-icon/vision_94922#term=vision&page=1&position=2',
     'out.png': 'https://www.flaticon.com/free-icon/vision-off_94930#term=eye%20cross&page=1&position=4',
+    'camera.ico': 'https://www.flaticon.com/free-icon/camera_204286#term=camera&page=1&position=43',
+    'save.png': 'https://www.flaticon.com/free-icon/download-button_532#term=save&page=1&position=22'
 }
 
-# hardcode this here since it isn't exposed by the controller interface yet
-# Taken from the config file camera.config
-pix2mm = {'S01-CAM-01': 0.0134, 'S02-CAM-01': 0.0207, 'S02-CAM-02': 0.0122, 'S02-CAM-03': 0.0181, 'C2V-CAM-01': 0.0179}
+
+class Emitter(QtCore.QObject, Thread):
+    """Emit Qt signals from a child process to a mother process.
+    https://stackoverflow.com/questions/26746379/how-to-signal-slots-in-a-gui-from-a-different-process/30048847#30048847"""
+
+    def __init__(self, transport, parent=None):
+        QtCore.QObject.__init__(self, parent)
+        Thread.__init__(self)
+        self.transport = transport
+
+    def _emit(self, signature, args=None):
+        if args:
+            self.emit(QtCore.SIGNAL(signature), args)
+        else:
+            self.emit(QtCore.SIGNAL(signature))
+
+    def run(self):
+        while True:
+            try:
+                signature = self.transport.recv()
+            except EOFError:
+                break
+            else:
+                self._emit(*signature)
+
+
+class IconFetcher(Process):
+    """Fetch HDF5 data from a queue of filenames and crunch it into 32x32 icons in a background thread."""
+
+    def __init__(self, transport, queue, daemon=True):
+        Process.__init__(self)
+        self.daemon = daemon
+        self.transport = transport
+        self.data_from_mother = queue
+
+    def emit_to_mother(self, signature, args=None):
+        """Send a signal to the mother process so she can update the GUI."""
+        signature = (signature,)
+        if args:
+            signature += (args,)
+        self.transport.send(signature)
+
+    def run(self):
+        """Get the HDF5 data and turn it into icons. Spit them out one at a time."""
+        while True:
+            filename = self.data_from_mother.get()
+            with h5py.File(str(filename)) as file:
+                dataset = file['Capture000001']
+                height, width = dataset.shape
+                step = max(height, width) / 32  # how many rows/cols to skip along
+                data = dataset[::step, ::step]
+                # Compress the range to (0, 255) for an 8-bit icon
+                min_val = np.min(data)
+                subtracted = data - min_val
+                factor = np.percentile(subtracted, 95) / 256  # 5% of pixels are saturated
+                icon_data = np.asarray(np.clip(subtracted / factor, 0, 255), 'uint8')
+            self.emit_to_mother('data(PyQt_PyObject)', (filename, icon_data, width / step, height / step))
+
+
+class ImageDirFilter(QtGui.QSortFilterProxyModel):
+    """Proxy model for a file system model that implements a 'natural sort' algorithm,
+    and fetches thumbnails for HDF5 files in the background."""
+    def __init__(self):
+        super(ImageDirFilter, self).__init__()
+        self.icons = {}
+        self.indices = {}  # a lookup table for filename -> persistent index
+        self.data_to_child = Queue()
+        mother_pipe, child_pipe = Pipe()
+        self.emitter = Emitter(mother_pipe)
+        self.emitter.daemon = True
+        self.emitter.start()
+        IconFetcher(child_pipe, self.data_to_child).start()
+        self.connect(self.emitter, QtCore.SIGNAL('data(PyQt_PyObject)'), self.onIcon)
+
+    def lessThan(self, left_index, right_index):
+        """Implement 'natural sort' for folders without leading zeroes."""
+        model = self.sourceModel()
+        left_str = str(model.data(left_index).toString())
+        right_str = str(model.data(right_index).toString())
+        try:
+            return int(left_str) < int(right_str)
+        except ValueError:  # conversion to int failed
+            return left_str < right_str
+
+    def onIcon(self, data):
+        """Received a new icon from the child process - update the GUI."""
+        path, icon_data, width, height = data
+        image = QtGui.QImage(icon_data, width, height, width, QtGui.QImage.Format_Indexed8)
+        image.setColorTable(fire)
+        self.icons[path] = QtGui.QIcon(QtGui.QPixmap(image))  # remember it so we don't fetch it again
+        index = QtCore.QModelIndex(self.indices[path])  # since dataChanged doesn't like persistent indices
+        self.dataChanged.emit(index, index)
+
+    def data(self, index, role=None):
+        """We've been asked for some data. If that's an icon, add it to the icon-fetching queue."""
+        if role == QtGui.QFileSystemModel.FileIconRole:
+            filename = index.data(QtGui.QFileSystemModel.FilePathRole).toString()
+            if filename in self.icons.keys():  # we already know about this
+                icon = self.icons[filename]
+                if icon is not None:  # already fetched it?
+                    return icon
+            elif filename.toLower().endsWith('.hdf5'):
+                self.icons[filename] = None  # to show we've already requested this one; don't add it to the queue twice
+                self.indices[filename] = QtCore.QPersistentModelIndex(index)
+                self.data_to_child.put(filename)  # add it to the queue
+                return QtCore.QVariant()  # a placeholder
+        return super(ImageDirFilter, self).data(index, role)  # pass the request to the superclass
 
 
 def pixmap(icon_name):
@@ -47,12 +169,13 @@ class Controller():
         """Set up GUI and connect to the controllers."""
         self.cam_ctrl = cam_init.physical_Camera_Controller()  # replaces DAQ and IA controllers
         self.scr_ctrl = scr_init.physical_C2B_Screen_Controller()
+        self.snapshot = MachineSnapshot(SCR_Ctrl=self.scr_ctrl, CAM_Ctrl=self.cam_ctrl)
 
         ini_filename = os.getcwd() + r'\resources\imageCollector\imageCollector.ini'
         self.settings = QtCore.QSettings(ini_filename, QtCore.QSettings.IniFormat)
 
         monitor = view.monitor  #pg.GraphicsView()
-        layout = pg.GraphicsLayout(border=(100, 100, 100))
+        layout = pg.GraphicsLayout()
         monitor.setCentralItem(layout)
         self.view = view
         # self.model = model
@@ -91,49 +214,84 @@ class Controller():
         view.resetBackground_pushButton.clicked.connect(self.cam_ctrl.setBackground)
         camera_names = self.cam_ctrl.getCameraNames()
         screen_names = self.cam_ctrl.getCameraScreenNames()
-        self.cam_dict = dict((screen, camera) for screen, camera in zip(screen_names, camera_names))
-        item_names = ['S01-SCR-01', 'S02-SCR-01', 'S02-SCR-02', 'S02-SCR-03', 'C2V-SCR-01', 'INJ-YAG-04', 'INJ-YAG-05',
-                      'INJ-YAG-06', 'INJ-YAG-07', 'INJ-YAG-08', 'BA1-YAG-01', 'BA1-YAG-02']  # , 'BA2-YAG-01']
+        # Remove any that don't actually have a camera looking at them
+        screens_with_cameras = self.scr_ctrl.getNamesOfScreensWithCameras()
+        self.cam_dict = OrderedDict((scr, cam) for scr, cam in zip(screen_names, camera_names) if scr in screens_with_cameras or scr.startswith('BA1-COFF'))
+        section_names = ['S01', 'S02', 'C2V', 'INJ', 'BA1']
+        # item_names = ['S01-SCR-01', 'S02-SCR-01', 'S02-SCR-02', 'S02-SCR-03', 'C2V-SCR-01', 'INJ-YAG-04', 'INJ-YAG-05',
+        #               'INJ-YAG-06', 'INJ-YAG-07', 'INJ-YAG-08', 'BA1-YAG-01', 'BA1-YAG-02']# , 'BA1-YAG-03']
         self.screens = QtGui.QStandardItemModel()
+        view.cameras_treeview.viewport().setAutoFillBackground(False)
         view.cameras_treeview.setModel(self.screens)
         view.cameras_treeview.clicked.connect(self.changeCamera)
-        for section in OrderedDict((name[:3], None) for name in item_names):
+        print(self.cam_dict)
+        for section in section_names:
             parent = QtGui.QStandardItem(section)
             parent.setFlags(QtCore.Qt.NoItemFlags)
-            for item in item_names:
+            for item in self.cam_dict.keys():
                 if item.startswith(section):
                     child = QtGui.QStandardItem(item[4:])
                     child.setData(item)
                     parent.appendRow(child)
             self.screens.appendRow(parent)
+
+        view.overlay_checkbox.stateChanged.connect(self.displayOverlay)
+        view.overlay_treeview.viewport().setAutoFillBackground(False)
+        self.overlays = QtGui.QFileSystemModel()
+        self.overlays.directoryLoaded.connect(self.folderLoaded)  # expands tree to day entries initially
+        self.overlays.setRootPath(hdf5_image_folder)
+        self.overlays.setReadOnly(True)
+        self.overlays.setFilter(QtCore.QDir.AllDirs | QtCore.QDir.Files | QtCore.QDir.NoDotAndDotDot)
+        self.overlays.setNameFilterDisables(False)  # hide entries that don't pass the filter
+
+        # use a proxy to do advanced filtering (numeric-only dir entries, and only HD5 files)
+        self.overlays_proxy = ImageDirFilter()
+        self.overlays_proxy.setSourceModel(self.overlays)
+        view.overlay_treeview.setModel(self.overlays_proxy)
+        self.view.overlay_treeview.selectionModel().selectionChanged.connect(self.overlaySelectionChanged)
+        self.view.overlay_treeview.setMouseTracking(True)
+        self.view.overlay_treeview.entered.connect(self.mouseMoveOverTree)
+        self.tooltip_checker = QtCore.QTimer()
+        self.tooltip_checker.timeout.connect(self.keepToolTipShown)
+
+        view.overlay_treeview.setRootIndex(self.overlays_proxy.mapFromSource(self.overlays.index(hdf5_image_folder)))
+        self.overlays_proxy.setFilterRegExp(QtCore.QRegExp(filter_regexp, QtCore.Qt.CaseInsensitive))
+        self.overlays_proxy.sort(0, QtCore.Qt.DescendingOrder)
+        [self.view.overlay_treeview.hideColumn(i) for i in range(1, self.overlays.columnCount())]  # only show names
+
         view.cameras_treeview.expandAll()
         view.useBackground_checkBox.stateChanged.connect(self.cam_ctrl.useBackground)
+        view.useNPoint_checkBox.setVisible(False)  # TODO: maybe remove?
         view.useNPoint_checkBox.stateChanged.connect(self.cam_ctrl.useNPoint)
         view.feedback_checkbox.stateChanged.connect(self.toggleFeedBack)
+        view.stepSize_spinBox.setVisible(False)
+        view.step_size_label.setVisible(False)
         view.stepSize_spinBox.valueChanged.connect(self.cam_ctrl.setStepSize)
         view.reset_averages_button.clicked.connect(self.resetAverages)
 
-        # Update GUI
-        self.timer = QtCore.QTimer()
-        self.timer.timeout.connect(self.update)
-        self.timer.start(100)
-
-        #self.ImageBox = layout.addViewBox(lockAspect=True, colspan=2)
-        # data = np.random.normal(size=(IMAGE_HEIGHT, IMAGE_WIDTH))
+        # Create a nice-looking sample image
         x, y = np.meshgrid(np.arange(IMAGE_HEIGHT), np.arange(IMAGE_WIDTH))
         d = np.sqrt((x - IMAGE_HEIGHT / 2) ** 2 + (y - IMAGE_WIDTH / 2) ** 2)
         h = 2**16 - 1
         sigma = 100
         data = h * np.exp(-(d**2) / (2 * sigma**2))
         self.Image = pg.ImageItem(data)
-        # self.Image.setRect(QtCore.QRect(0, 0, 100, 100))
-        # self.Image.scale(0.0134, 0.0134)
-        self.ImageBox = layout.addPlot()
+        # Scale it to a reasonable size
+        self.Image.scale(0.0134, 0.0134)
 
-        # self.ImageBox.setRange(xRange=[0, IMAGE_HEIGHT * 2], yRange=[0, IMAGE_WIDTH * 2])
+        # Make an overlay image too
+        self.OverlayImage = pg.ImageItem(data)
+        self.OverlayImage.scale(0.0134, 0.0134)
+        self.OverlayImage.setOpacity(0.5)
+
+        self.ImageBox = layout.addPlot()
+        # Ensure that auto-ranging adds no padding to the image - maximise the size on our screen
+        self.ImageBox.getViewBox().suggestPadding = lambda axis: 0.001
         self.ImageBox.addItem(self.Image)
-        self.roi = pg.EllipseROI([0, 0], [500, 500])#, movable=False)
-        self.roi.addTranslateHandle([0.5, 0.5])  # centre of ellipse
+
+        # Create the ROI for the mask
+        self.roi = pg.EllipseROI([0, 0], [1, 1])#, movable=False)
+        # self.roi.addTranslateHandle([0.5, 0.5])  # centre of ellipse
         self.ImageBox.addItem(self.roi)
         self.roi.removeHandle(0)  # remove rotation handle
         self.roi.sigRegionChangeFinished.connect(self.roiChanged)
@@ -147,6 +305,7 @@ class Controller():
         # show screen name, beam position and size as an overlay on the image
         self.title_label = pg.LabelItem('', color='#ffffff')
         self.title_label.setPos(50, 20)
+        self.title_label.setAttr('justify', 'left')  # otherwise text moves toward the centre when overlay removed
         # use a drop shadow so we can always see it
         shadow = QtGui.QGraphicsDropShadowEffect()
         shadow.setBlurRadius(0)
@@ -155,6 +314,30 @@ class Controller():
         self.title_label.setGraphicsEffect(shadow)
         monitor.addItem(self.title_label)
 
+        # Create ROI for beam highlighting after save
+        self.bh_roi = pg.RectROI([5, 5], [1, 1], pen='g')
+        self.ImageBox.addItem(self.bh_roi)
+        # self.bh_roi.removeHandle(0)  # remove rotation handle
+        self.bh_label = pg.LabelItem('Image saved. Please highlight the location of the beam using the green rectangle.<br>This helps to provide training data for machine learning.', color='#ffffff')
+        self.bh_label.setPos(300, 20)
+        self.bh_label.setAttr('justify', 'center')  # otherwise text moves toward the centre when overlay removed
+        self.bh_label.setGraphicsEffect(shadow)
+        monitor.addItem(self.bh_label)
+        self.bh_timer = QtCore.QTimer()
+        self.bh_timer.timeout.connect(self.updateBeamHighlighter)
+        self.bh_timer.setSingleShot(True)
+        self.save_filename = ''
+
+        self.bh_done_button = QtGui.QPushButton('Done')
+        self.bh_done_button.setParent(monitor)
+        self.bh_done_button.move(300, 50)
+        self.bh_done_button.clicked.connect(self.beamHighlightComplete)
+        self.bh_cancel_button = QtGui.QPushButton('Cancel')
+        self.bh_cancel_button.setParent(monitor)
+        self.bh_cancel_button.move(380, 50)
+        self.bh_cancel_button.clicked.connect(lambda: self.setBeamHighlightVisible(False))
+        self.setBeamHighlightVisible(False)  # hide to begin with
+
         map_name = str(self.settings.value('colourMap', 'fire').toString())
         view.colour_map_dropdown.currentIndexChanged[QtCore.QString].connect(self.changeColourMap)
         index = view.colour_map_dropdown.findText(map_name, QtCore.Qt.MatchExactly)
@@ -162,7 +345,95 @@ class Controller():
             index = view.colour_map_dropdown.findText('fire', QtCore.Qt.MatchExactly)
         view.colour_map_dropdown.setCurrentIndex(index)
         self.changeColourMap(map_name)
+
+        # Timer to update the screen image
+        self.image_update_timer = QtCore.QTimer()
+        self.image_update_timer.timeout.connect(self.updateImage)
+        self.image_update_timer.start(100)
+
+        # Timer to update the treeview - runs less often
+        self.gui_update_timer = QtCore.QTimer()
+        self.gui_update_timer.timeout.connect(self.updateGUI)
+        self.gui_update_timer.start(1000)
+        self.updateGUI()  # do it immediately
+
         view.statusbar.showMessage('Ready.')
+
+    def mouseMoveOverTree(self, index):
+        """Most image filenames are too long to show in our little treeview. Show a persistent tooltip when the mouse
+        hovers over them, so we can read the filenames."""
+        treeview = self.view.overlay_treeview
+        model = treeview.model()
+        rect = treeview.visualRect(index)  # space occupied by the item we're hovering over
+        source_index = model.mapToSource(index)
+        filename = model.sourceModel().fileName(source_index)
+        item_text_width = QtGui.QFontMetrics(treeview.font()).width(filename)
+        if item_text_width > rect.width():  # need to show a tooltip if item size is more than viewport size
+            self.make_tooltip = lambda: QtGui.QToolTip.showText(
+                treeview.mapToGlobal(QtCore.QPoint(rect.left() + 18, rect.top() - rect.height() - 2)), filename, treeview)
+            self.make_tooltip()
+            # The tip often disappears immediately for some reason. So keep calling the function to create it for 5 seconds
+            self.tooltip_start_time = time.time()
+            self.tooltip_checker.start(100)
+        else:  # we're over an item that doesn't need a tooltip - turn off any we might have shown previously
+            self.tooltip_checker.stop()
+            QtGui.QToolTip.hideText()
+
+    def keepToolTipShown(self):
+        """Function to keep the treeview tooltip shown for up to 5 seconds."""
+        if time.time() - self.tooltip_start_time < 5:
+            self.make_tooltip()
+        else:
+            self.tooltip_checker.stop()
+
+    def folderLoaded(self, folder_name):
+        """A folder has been loaded in the overlay treeview - keep trying until all depth-2 folders (days) are loaded."""
+        depth = folder_name[len(hdf5_image_folder):].count('/')
+        if depth < 2:
+            self.view.overlay_treeview.expandToDepth(2)
+        else:
+            self.overlays.directoryLoaded.disconnect()  # now stop!
+
+    def displayOverlay(self, checked):
+        """Show or hide the overlay image."""
+        if checked and not self.OverlayImage in self.ImageBox.items:
+            self.ImageBox.addItem(self.OverlayImage)
+        elif not checked:
+            self.ImageBox.removeItem(self.OverlayImage)
+
+    def overlaySelectionChanged(self, selection):
+        """An overlay image has been selected - update the overlay in the GUI."""
+        indices = selection.indexes()
+        if len(indices) > 0:
+            model = self.view.overlay_treeview.model()
+            source_index = model.mapToSource(indices[0])
+            filename = str(model.sourceModel().filePath(source_index))
+            if filename.lower().endswith('.hdf5'):
+                file = h5py.File(filename)
+                data = np.array(file['Capture000001'])
+                is_full_image = data.size == IMAGE_WIDTH_FULL * IMAGE_HEIGHT_FULL
+                dims = IMAGE_DIMS_FULL if is_full_image else IMAGE_DIMS_VELA
+                self.OverlayImage.setImage(np.flip(np.transpose(data.reshape(dims)), 1))
+                max_level = np.percentile(data, 99.9)  # self.view.max_level_spin.maximum()
+                self.OverlayImage.setLevels([0, max_level], update=True)
+                conv = self.pix2mm()
+                self.OverlayImage.setRect(QtCore.QRect(0, 0, dims[1] * conv, dims[0] * conv))
+                if not self.OverlayImage in self.ImageBox.items:
+                    self.view.overlay_checkbox.setEnabled(True)
+                    self.view.overlay_checkbox.setChecked(True)
+            else:
+                self.view.overlay_checkbox.setChecked(False)
+        else:
+            self.view.overlay_checkbox.setChecked(False)
+
+    def pix2mm(self):
+        """Return the pixel-to-mm ratio for the current screen."""
+        screen_name = self.getCurrentScreen()
+        ratio = self.cam_ctrl.getPix2mm(screen_name)
+
+        if ratio == -999.999:
+            ratio = 0.01  # better default value!
+        return ratio
 
     def moveScreenIn(self):
         """The In button was clicked. Move the current screen in."""
@@ -175,7 +446,7 @@ class Controller():
     def moveScreen(self, move_in):
         """Move the current screen in or out."""
         camera_name = self.getCurrentScreen()
-        screen_name = self.cam_ctrl.getCameraObj(camera_name).screenName.replace('YAG', 'SCR')
+        screen_name = self.cam_ctrl.getCameraObj(camera_name).screenName  # .replace('YAG', 'SCR')
         if move_in:
             self.view.statusbar.showMessage('Moving screen {} IN'.format(screen_name))
             self.scr_ctrl.insertYAG(screen_name)
@@ -187,20 +458,22 @@ class Controller():
 
     def setLEDs(self, is_on):
         """The LEDs checkbox has been clicked - turn them on or off."""
-        # TODO: Duncan to add this to controller 28/8
-        status = 'On' if is_on else 'Off'
-        self.view.statusbar.showMessage('Switching LEDs {}'.format(status.upper()))
-        pv_name = 'CLA-LAS-DIA-LED-01:' + (status)
-        # simulate pressing button!
-        caput(pv_name, 1)
-        caput(pv_name, 0)
+        self.view.statusbar.showMessage('Switching LEDs {}'.format('ON' if is_on else 'OFF'))
+        if is_on:
+            self.cam_ctrl.claraLEDOn()
+            self.cam_ctrl.velaLEDOn()
+        else:
+            self.cam_ctrl.claraLEDOff()
+            self.cam_ctrl.velaLEDOff()
 
     def changeColourMap(self, map_name):
         """A colour map has been selected from the dropdown box. Set the image colour map."""
         colour_list_hex = getattr(colorcet, str(map_name))
         colour_list = np.array([pg.colorTuple(pg.mkColor(code)) for code in colour_list_hex])
         colour_map = pg.ColorMap(np.linspace(0, 1, len(colour_list_hex)), colour_list)
-        self.Image.setLookupTable(colour_map.getLookupTable())
+        lookup_table = colour_map.getLookupTable()
+        self.Image.setLookupTable(lookup_table)
+        self.OverlayImage.setLookupTable(lookup_table)
         self.settings.setValue('colourMap', map_name)
 
     def maxLevelChanged(self, value):
@@ -215,32 +488,43 @@ class Controller():
         """The "auto level" checkbox was clicked."""
         self.view.max_level_slider.setEnabled(not checked)
         self.view.max_level_spin.setEnabled(not checked)
-        self.settings.setValue(self.camera_name + '/autoLevel', checked)
+        self.settings.setValue(self.cam_dict[self.getCurrentScreen()] + '/autoLevel', checked)
 
-    def changeCamera(self):
+    def changeCamera(self, start_acquire=True):
         """The current item in the list box was changed. Set the correct camera."""
+        self.setBeamHighlightVisible(False)  # no point highlighting the beam on a different screen!
         screen_name = self.getCurrentScreen()
         # convert to camera name
         camera_name = self.cam_dict[screen_name]
         self.camera_name = camera_name
         camera = self.cam_ctrl.getCameraObj(camera_name)
-        self.view.statusbar.showMessage('Switching to screen {} (camera {})'.format(screen_name, camera_name))
 
-        self.cam_ctrl.startAcquiring(camera_name)  # this will automatically stop all the other ones
-        self.cam_ctrl.startAnalysing(camera_name)
+        if start_acquire:
+            # If we click a different camera in the treeview, we want to start acquiring
+            # If the acquiring camera is changed externally, don't do this
+            self.view.statusbar.showMessage('Switching to screen {} (camera {})'.format(screen_name, camera_name))
+            self.cam_ctrl.startAcquiring(camera_name)  # this will automatically stop all the other ones
+            self.cam_ctrl.startAnalysing(camera_name)
 
         auto_level = self.settings.value(camera_name + '/autoLevel', False).toBool()
         self.view.auto_level_checkbox.setChecked(auto_level)
         if not auto_level:
             level, ok = self.settings.value(camera_name + '/maxLevel', 1023).toInt()
             self.view.max_level_spin.setValue(level)
-        self.view.numImages_spinBox.setMaximum(camera.daq.maxShots)
+        self.view.numImages_spinBox.setMaximum(max(camera.daq.maxShots, 1))
         self.view.useBackground_checkBox.setChecked(camera.state.use_background)
         self.view.useNPoint_checkBox.setChecked(camera.state.use_npoint)
 
         self.updateROIFromMask()
 
+        # update the visible image files in the overlay treeview to show current camera only
+        regexp = self.overlays_proxy.filterRegExp()
+        # regexp.setPattern(filter_regexp + r'|^.*\.hdf5$')  # for testing - show all images
+        regexp.setPattern(filter_regexp + '|^' + camera_name + r'.*\.hdf5$')
+        self.overlays_proxy.setFilterRegExp(regexp)
+
     def getCurrentScreen(self):
+        """Get the name of the selected camera in the treeview."""
         index = self.view.cameras_treeview.currentIndex()
         screen = self.screens.itemFromIndex(index)
         screen_name = str(screen.data().toString())
@@ -248,30 +532,42 @@ class Controller():
 
     def updateROIFromMask(self):
         """The mask has changed - update the ROI."""
-        mask =  self.cam_ctrl.getMaskObj()
+        mask = self.cam_ctrl.getMaskObj()
         print('got mask obj', mask.mask_x, mask.mask_y, mask.mask_x_rad, mask.mask_y_rad)
         x = mask.mask_x - mask.mask_x_rad
         y = mask.mask_y - mask.mask_y_rad
+        # Show the ROI within the image bounds, even if the mask is outside them - makes it easier to grab and fix
+        img_height, img_width = IMAGE_DIMS_VELA if self.cam_ctrl.isVelaCam() else IMAGE_DIMS
+        pix2mm = self.pix2mm()
+        min_size = 100  # self.Image.pixelWidth()  # otherwise get div/0 errors when trying to set the ROI size
+        x_rad = np.clip(mask.mask_x_rad, min_size, img_width / 2)
+        y_rad = np.clip(mask.mask_y_rad, min_size, img_height / 2)
+        x = np.clip(x, 0, img_width - x_rad * 2)
+        y = np.clip(y, 0, img_height - y_rad * 2)
+        print(x, y, x_rad, y_rad)
         self.roi.blockSignals(True)  # don't update the mask recursively!
-        self.roi.setPos(QtCore.QPoint(x, y))
-        if mask.mask_x_rad > 0 and mask.mask_y_rad > 0:
-            self.roi.setSize(QtCore.QPoint(mask.mask_x_rad * 2, mask.mask_y_rad * 2))
+        self.roi.setPos(QtCore.QPoint(x * pix2mm, y * pix2mm), update=False)
+        self.roi.setSize(QtCore.QPoint(x_rad * 2 * pix2mm, y_rad * 2 * pix2mm), update=False)
+        self.roi.stateChanged()
         self.roi.blockSignals(False)
 
     def roiChanged(self):
         """The ROI ellipse has been altered by dragging the handles. Update the mask accordingly."""
-        pos, size = self.roi.pos(), self.roi.size()
+        pos, size = self.roi.pos(), self.roi.size()  # in mm
+        conv = self.pix2mm()
         x, y = pos.x(), pos.y()
-        w, h = size.x(), size.y()
-        centre_x, centre_y = int(round(x + w / 2)), int(round(y + h / 2))
-        x_rad, y_rad = int(round(w / 2)), int(round(h / 2))
-        self.view.statusbar.showMessage('Setting mask: centre ({}, {}), radius ({}, {})'.format(centre_x, centre_y, x_rad, y_rad))
-        print('Setting mask: centre ({}, {}), radius ({}, {})'.format(centre_x, centre_y, x_rad, y_rad))
-        self.cam_ctrl.setMask(centre_x, centre_y, x_rad, y_rad)
+        x_rad, y_rad = size.x() / 2, size.y() / 2
+        centre_x, centre_y = x + x_rad, y + y_rad
+        status = 'Setting mask: centre ({:.3f}, {:.3f}), radius ({:.3f}, {:.3f})'
+        dims = [centre_x, centre_y, x_rad, y_rad]
+        self.view.statusbar.showMessage(status.format(*dims))
+        set_dims = [int(d / conv) for d in dims]
+        print(set_dims)
+        self.cam_ctrl.setMask(*set_dims)
 
     def openImageDir(self):
         """Open an Explorer window at the location of the saved images."""
-        folder = datetime.today().strftime(r'\\claraserv3\CameraImages\%Y\%#m\%#d')  # omit leading zeros from month and day
+        folder = hdf5_image_folder + datetime.today().strftime(r'\%Y\%#m\%#d')  # omit leading zeros from month and day
         # go up in the folder structure until we hit a folder that exists!
         while not os.path.exists(folder):
             folder, file = os.path.split(folder)
@@ -280,90 +576,124 @@ class Controller():
     def toggleFeedBack(self, use):
         self.runFeedback = use
 
-    def update(self):
+    def updateGUI(self):
+        """Update the treeview to show which screens are in, and also the state of the current screen."""
         current_camera_name = None
-        cam_ctrl = self.cam_ctrl
-        camera_list = self.screens
-        for i in range(camera_list.rowCount()):
-            section = camera_list.item(i)
+        for i in range(self.screens.rowCount()):
+            section = self.screens.item(i)
             for j in range(section.rowCount()):
                 item = section.child(j)
                 name = str(item.data().toString())
+                is_acquiring = self.cam_ctrl.isAcquiring(name)
 
-                is_acquiring = cam_ctrl.isAcquiring(name)
                 screen_name = self.cam_ctrl.getCameraObj(name).screenName.replace('YAG', 'SCR')
-                screen_state = self.scr_ctrl.getScreenState(screen_name)
-                # screen_in = screen_state in (VELA_CLARA_Screen_Control.SCREEN_STATE.V_YAG, VELA_CLARA_Screen_Control.SCREEN_STATE.YAG)
-                screen_in = self.scr_ctrl.isScreenIn(screen_name)
-                # TODO: maybe more icons for other objects (collimator, slit, graticule etc)
-                item.setIcon(QtGui.QIcon(pixmap('in' if screen_in else 'out')))  # TODO: correct?
+                controllable = screen_name in self.scr_ctrl.getScreenNames()
+                if controllable:
+                    screen_in = self.scr_ctrl.isScreenIn(screen_name)
+                    # TODO: maybe more icons for other objects (collimator, slit, graticule etc)
+                    item.setIcon(QtGui.QIcon(pixmap('in' if screen_in else 'out')))
 
                 if is_acquiring:
                     index = self.screens.indexFromItem(item)
-                    self.view.cameras_treeview.setCurrentIndex(index)
+                    if index != self.view.cameras_treeview.currentIndex():  # maybe it was changed outwith this GUI?
+                        self.view.cameras_treeview.setCurrentIndex(index)
+                        self.changeCamera(start_acquire=False)
                     current_camera_name = name
-                    if self.scr_ctrl.isScreenMoving(screen_name):
-                        self.view.screen_progress.setFormat('%p%')
-                        pneumatic = self.scr_ctrl.isPneumatic(screen_name)
-                        state = VELA_CLARA_Screen_Control.SCREEN_STATE
-                        states = (state.V_RF, state.V_YAG) if pneumatic else (state.RETRACTED, state.YAG)
-                        out_pos, in_pos = (self.scr_ctrl.getDevicePosition(screen_name, state) for state in states)
-                        sign = np.copysign(1, in_pos - out_pos)  # in case out > in. We want 100% to be 'in', so out should be less
-                        self.view.screen_progress.setRange(sign * out_pos, sign * in_pos)
-                        self.view.screen_progress.setValue(sign * self.scr_ctrl.getACTPOS(screen_name))
-                    else:
-                        self.view.screen_progress.setFormat(str(screen_state))
-                        self.view.screen_progress.setValue(self.view.screen_progress.maximum() if screen_in else 0)
+                    self.view.screen_in_button.setEnabled(controllable)
+                    self.view.screen_out_button.setEnabled(controllable)
+                    if controllable:
+                        if self.scr_ctrl.isScreenMoving(screen_name):
+                            self.view.screen_progress.setFormat('%p%')
+                            pneumatic = self.scr_ctrl.isPneumatic(screen_name)
+                            state = VELA_CLARA_Screen_Control.SCREEN_STATE
+                            states = (state.V_RF, state.V_YAG) if pneumatic else (state.V_RETRACTED, state.V_YAG)
+                            out_pos, in_pos = (self.scr_ctrl.getDevicePosition(screen_name, state) for state in states)
+                            sign = np.copysign(1, in_pos - out_pos)  # in case out > in. We want 100% to be 'in', so out should be less
+                            self.view.screen_progress.setRange(sign * out_pos, sign * in_pos)
+                            self.view.screen_progress.setValue(sign * self.scr_ctrl.getACTPOS(screen_name))
+                        else:
+                            self.view.screen_progress.setFormat(str(self.scr_ctrl.getScreenState(screen_name)))
+                            self.view.screen_progress.setValue(self.view.screen_progress.maximum() if screen_in else 0)
 
         if current_camera_name is None:
             self.view.cameras_treeview.selectionModel().clearSelection()
-            return
+
+    def updateImage(self):
+        """Get an image from the controller and show it on the monitor, and update crosshairs and coordinates."""
+        screen_name = self.getCurrentScreen()
 
         # Set crosshairs
-        analysis = cam_ctrl.getAnalysisObj(current_camera_name)
-        x, y = analysis.x_pix_mean, analysis.y_pix  # TODO: no 'y_pix_mean' !!
-        sigX, sigY = analysis.sig_x_pix_mean, analysis.sig_y_pix_mean
-        self.vLineMLE_avg.setData(x=[x, x], y=[y - sigY, y + sigY])
-        self.hLineMLE_avg.setData(x=[x - sigX, x + sigX], y=[y, y])
-        x, y = analysis.x_pix, analysis.y_pix
-        sigX, sigY = analysis.sig_x_pix, analysis.sig_y_pix
-        self.vLineMLE.setData(x=[x, x], y=[y - sigY, y + sigY])
-        self.hLineMLE.setData(x=[x - sigX, x + sigX], y=[y, y])
-        #labels
-        label_text = '''<h1>{}</h1>
-                        <h2 style="color: green;">Immediate</h2>
-                        <p style="color: green;"><b>Position</b>: {:.3f}, {:.3f} mm<br><b>Size (1 &sigma;)</b>: {:.3f}, {:.3f} mm<br>
-                        <b>Covariance XY</b>: {:.3f} mm<sup>2</sup><br><b>Average intensity</b>: {:.3f}</p>
-                        <h2 style="color: cyan;">Average ({})</h2>
-                        <p style="color: cyan;"><b>Position</b>: {:.3f}, {:.3f} mm<br><b>Size (1 &sigma;)</b>: {:.3f}, {:.3f} mm<br>
-                        <b>Covariance XY</b>: {:.3f} mm<sup>2</sup><br><b>Average intensity</b>: {:.3f}</p>'''
-        self.title_label.setText(label_text.format(current_camera_name,
-                                                   analysis.x, analysis.y, analysis.sig_x,
-                                                   analysis.sig_y, analysis.sig_xy, analysis.avg_pix,
-                                                   analysis.sig_x_n,
-                                                   analysis.x_mean, analysis.y_mean, analysis.sig_x_mean,
-                                                   analysis.sig_y_mean, analysis.sig_xy_mean, analysis.avg_pix_mean
-                                                   ))
-        data = cam_ctrl.takeAndGetFastImage()
-        # data = cam_ctrl.getImageObj().data
-        # data = caget(cam_ctrl.getCameraObj(current_camera_name).pvRoot + 'CAM2:ArrayData')
-        leds_on = caget('CLA-LAS-DIA-LED-01:Sta') == 1  # TODO: check this really works
-        if self.view.auto_level_checkbox.isChecked() and not leds_on:
-            centile90 = np.percentile(data, 99.9)
-            self.view.max_level_spin.setValue(int(centile90))
+        analysis = self.cam_ctrl.getAnalysisObj(screen_name)
+        ratio = self.pix2mm()
+        # 14/12/18: x and y seem to return in pixels again AAAAAARRGHHHHHHH
+        x_mean, y_mean = analysis.x_mean * ratio, analysis.y_mean * ratio
+        sigX_mean, sigY_mean = analysis.sig_x_mean * ratio, analysis.sig_y_mean * ratio
+        cov_mean = analysis.sig_xy_mean * ratio**2
+        self.vLineMLE_avg.setData(x=[x_mean, x_mean], y=[y_mean - sigY_mean, y_mean + sigY_mean])
+        self.hLineMLE_avg.setData(x=[x_mean - sigX_mean, x_mean + sigX_mean], y=[y_mean, y_mean])
+        x, y = analysis.x, analysis.y
+        sigX, sigY, cov = analysis.sig_x, analysis.sig_y, analysis.sig_xy
+        data_ok = -999.999 not in (x, y, sigX, sigY)
+        x, y = x * ratio, y * ratio
+        sigX, sigY = sigX * ratio, sigY * ratio
+        cov = cov * ratio**2
+        self.hLineMLE.setVisible(data_ok)
+        self.vLineMLE.setVisible(data_ok)
+        if data_ok:
+            self.vLineMLE.setData(x=[x, x], y=[y - sigY, y + sigY])
+            self.hLineMLE.setData(x=[x - sigX, x + sigX], y=[y, y])
+        text = '''<h1>{screen_name}</h1><h2 style="color: green;">Immediate</h2>
+                        <p style="color: green;"><b>Position</b>: {x:.3f}, {y:.3f} mm<br>
+                        <b>Size (1 &sigma;)</b>: {sigX:.3f}, {sigY:.3f} mm<br>
+                        <b>Covariance XY</b>: {cov:.3f} mm<sup>2</sup><br>
+                        <b>Average intensity</b>: {analysis.avg_pix:.3f}</p>
+                        <h2 style="color: cyan;">Average ({analysis.sig_x_n})</h2>
+                        <p style="color: cyan;"><b>Position</b>: {x_mean:.3f}, {y_mean:.3f} mm<br>
+                        <b>Size (1 &sigma;)</b>: {sigX_mean:.3f}, {sigY_mean:.3f} mm<br>
+                        <b>Covariance XY</b>: {cov:.3f} mm<sup>2</sup><br>
+                        <b>Average intensity</b>: {analysis.avg_pix_mean:.3f}</p>'''.format(**locals())
+        if self.view.overlay_checkbox.isChecked():
+            model = self.view.overlay_treeview.model()
+            indices = self.view.overlay_treeview.selectionModel().selectedIndexes()
+            source_index = model.mapToSource(indices[0])
+            filename = str(model.sourceModel().filePath(source_index))
+            text += '<h2>Overlay</h2><p>{}</p>'.format(filename[len(hdf5_image_folder)+1:])
 
-        if data is not None and len(data) == IMAGE_HEIGHT * IMAGE_WIDTH:
-            npData = np.array(data).reshape((IMAGE_HEIGHT, IMAGE_WIDTH))
+        self.title_label.setText(text)
+        # data = None  # for testing
+        # pv_name = cam_ctrl.getCameraObj(current_camera_name).pvRoot + 'CAM2:ArrayData'
+        data = self.cam_ctrl.takeAndGetFastImage()
+        # data = cam_ctrl.getImageObj().data
+        # data = caget(pv_name)  # this seems a bit faster than takeAndGetFastImage()
+        if data is not None:
+            leds_on = False #self.cam_ctrl.isClaraLEDOn() or self.cam_ctrl.isVelaLEDOn()
+            min_level = 0
+            if self.view.auto_level_checkbox.isChecked() and not leds_on:
+                # Set the maximum level so 0.1% of pixels are saturated
+                self.view.max_level_spin.setValue(int(np.percentile(data, 99.9)))
+                min_level = np.min(data)
+
+            if self.cam_ctrl.isVelaCam():
+                dims = IMAGE_DIMS_VELA
+                size_factor = 1
+            else:  # CLARA cameras give us a cut-down image
+                dims = IMAGE_DIMS
+                size_factor = 2
+            npData = np.array(data).reshape(dims)
             self.Image.setImage(np.flip(np.transpose(npData), 1))
             max_level = self.view.max_level_spin.maximum() if leds_on else self.view.max_level_spin.value()
-            self.Image.setLevels([0, max_level], update=True)
-            # image_rect = QtCore.QRect(0, 0, IMAGE_WIDTH * pix2mm[current_camera_name],
-            #                           IMAGE_HEIGHT * pix2mm[current_camera_name])
-            # self.Image.setRect(image_rect)
+            self.Image.setLevels([min_level, max_level], update=True)
+            pix2mm = self.pix2mm() * size_factor
+            xMin, yMin = 0, 0
+            width, height = dims[1] * pix2mm, dims[0] * pix2mm
+            image_rect = QtCore.QRect(xMin, yMin, width, height)
+            self.Image.setRect(image_rect)
+            # Ensure we can't zoom or pan away from the image. Only set xMin and yMax to avoid messing up the aspect ratio
+            self.ImageBox.setLimits(xMin=xMin, yMax=yMin+height)
 
-        if cam_ctrl.isCollecting(current_camera_name):  # TODO: correct?
+        if self.cam_ctrl.isCollecting(screen_name):  # TODO: correct?
             text = 'Kill'
-        elif cam_ctrl.isSaving(current_camera_name):
+        elif self.cam_ctrl.isSaving(screen_name):
             text = 'Writing'
         else:
             text = 'Save'
@@ -390,12 +720,85 @@ class Controller():
     def collectAndSave(self):
         numberOfImages = self.view.numImages_spinBox.value()
         if self.cam_ctrl.isAcquiring():
-            self.cam_ctrl.collectAndSave(numberOfImages)
+            timestamp = datetime.now()
+            folder = hdf5_image_folder + timestamp.strftime(r'\%Y\%#m\%#d')  # omit leading zeros from month and day
+            success = self.cam_ctrl.collectAndSave(numberOfImages)
+            analysis = self.cam_ctrl.getAnalysisObj()
+            ratio = self.pix2mm()
+            x, y = analysis.x, analysis.y
+            sigX, sigY, cov = analysis.sig_x, analysis.sig_y, analysis.sig_xy
+            data_ok = -999.999 not in (x, y, sigX, sigY)
+            x, y = x * ratio, y * ratio
+            sigX, sigY = sigX * ratio, sigY * ratio
+            self.bh_roi.setPos(x - sigX, y - sigY)
+            self.bh_roi.setSize([2 * sigX, 2 * sigY])
+            if not success:
+                # collectAndSave doesn't work - implement it ourselves
+                try:
+                    os.makedirs(folder)
+                except OSError as e:
+                    if e.errno != 17:  # dir already exists
+                        raise
+                self.save_filename = r'{}\{}_{}_{}images.hdf5'.format(folder, self.getCurrentScreen(), timestamp.strftime('%Y-%#m-%#d_%#H-%#M-%#S'), numberOfImages)
+                with h5py.File(self.save_filename, 'w') as file:
+                    file.create_dataset('Capture000001', data=self.Image.image)
+                    # TODO: magnet/RF settings in attributes?
+                    # TODO: save more than one image?
+                self.writeSnapshot()
+                self.updateBeamHighlighter()
+            else:
+                # camera controller doesn't tell us the filename - we have to wait until it's created
+                self.save_filename = timestamp  # to tell us we're waiting for a file created after this
+                self.bh_timer.start(100 * numberOfImages + 500)  # hardcode 10 Hz for now, and give an extra 0.5s
+
             self.view.statusbar.showMessage('Saving {} images'.format(numberOfImages))
             # self.camerasDAQ.collectAndSaveJPG()
+
         elif self.cam_ctrl.isCollectingOrSaving():
             self.camerasDAQ.killCollectAndSave()  # TODO: this isn't right any more
         # self.camerasDAQ.killCollectAndSaveJPG()
+
+    def writeSnapshot(self):
+        """Create machine snapshot and append it to the saved image file."""
+        self.snapshot.getData()
+        self.snapshot.writetohdf5(self.save_filename)
+
+    def beamHighlightComplete(self):
+        """'Done' button clicked after drawing a rectangle round the beam after saving."""
+        with h5py.File(self.save_filename, 'a') as file:
+            file.create_dataset('beam_position', data=[self.bh_roi.pos(), self.bh_roi.size()])
+        self.view.statusbar.showMessage('User-defined beam position stored in file ' + self.save_filename)
+        self.setBeamHighlightVisible(False)  # hide prompt and buttons
+
+    def setBeamHighlightVisible(self, visible):
+        """Set visibility of beam highlight controls."""
+        [ctrl.setVisible(visible) for ctrl in (self.bh_label, self.bh_roi, self.bh_done_button, self.bh_cancel_button)]
+
+    def updateBeamHighlighter(self):
+        """Called on a timer after 'save' clicked to get the most recent save filename."""
+        if isinstance(self.save_filename, datetime):
+            if not self.imageFileSavedAfter(self.save_filename):
+                self.bh_timer.start(1000)  # wait another second
+                return
+        self.view.statusbar.showMessage('Saved to file ' + self.save_filename)
+        self.writeSnapshot()
+        self.setBeamHighlightVisible(True)
+
+    def imageFileSavedAfter(self, timestamp):
+        """Image file was saved asynchronously by the controller. Has it been created yet?"""
+        folder = hdf5_image_folder + timestamp.strftime(r'\%Y\%#m\%#d')
+        # get most recent filename from folder
+        file_saved = False
+        try:
+            filename = max(os.listdir(folder), key=lambda f: os.path.getmtime(os.path.join(folder, f)))
+            filename = os.path.join(folder, filename)
+            # is it more recent than the timestamp we remembered?
+            file_saved = time.mktime(timestamp.timetuple()) <= os.path.getmtime(filename)
+        except OSError:  # file operation error - most probably 'folder does not exist'
+            pass
+        if file_saved:
+            self.save_filename = filename
+        return file_saved
 
     def resetAverages(self):
         """The 'reset averages' button was clicked."""

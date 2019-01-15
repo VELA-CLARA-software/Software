@@ -1,0 +1,5 @@
+# Running Stats of the Klystron Forward Power vs amp set
+# num_pulses should NEVER be zero 
+# HEADER
+# amp_sp, num_pulses (with beam), rolling mean, rolling variance * (num_pulses -1); 
+# 

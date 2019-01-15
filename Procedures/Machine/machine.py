@@ -56,14 +56,6 @@ class Machine(object):
 			print 'No controllers!'
 			'''This is the place to get contollers'''
 			sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\Release')
-			os.environ["PATH"] = os.environ["PATH"]+";\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release\\root_v5.34.34\\bin\\"
-			# import VELA_CLARA_Magnet_Control as mag
-			os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
-			os.environ["EPICS_CA_ADDR_LIST"] = "10.10.0.12"
-			os.environ["EPICS_CA_MAX_ARRAY_BYTES"] = "10000000"
-			os.environ["EPICS_CA_SERVER_PORT"]="6000"
-			# self.magInit = mag.init()
-			# self.magInit.setQuiet()
 			self.magnets = None
 			self.bpms = None
 			self.gunllrf = None
@@ -73,7 +65,7 @@ class Machine(object):
 		else:
 			'''This is the place to get contollers'''
 			sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release')
-			os.environ["PATH"] = os.environ["PATH"]+";\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release\\root_v5.34.34\\bin\\"
+			# os.environ["PATH"] = os.environ["PATH"]+";\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release\\root_v5.34.34\\bin\\"
 			if 'magnets' in self.controllers:
 				import VELA_CLARA_Magnet_Control as mag
 				self.magInit = mag.init()
@@ -122,7 +114,7 @@ class Machine(object):
 						self.screens = self.screenInit.virtual_VELA_INJ_Screen_Controller()
 				else:
 					if 'magnets' in self.controllers:
-						self.magnets = self.magInit.virtual_CLARA_PH1_Magnet_Controller()
+						self.magnets = self.magInit.virtual_C2B_Magnet_Controller()
 					if 'charge' in self.controllers:
 						self.scope = self.scopeInit.virtual_CLARA_PH1_Charge_Controller()
 					if 'bpms' in self.controllers:
