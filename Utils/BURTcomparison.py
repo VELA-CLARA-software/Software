@@ -1,12 +1,15 @@
 import sys
+import argparse
 
 # Prints differences between two BURT files
 # run as python BURTcomparison.py filename1 filename2
 # primarily it's to compare on/off setting and set values
 # it can also compare read values but will print out loads...
-printreaddiffs = 0 # set !=0 to compare read diffs
-file1 = sys.argv[1]
-file2 = sys.argv[2]
+
+parser = argparse.ArgumentParser(description='Prints differences between two BURT files')
+parser.add_argument('file1')
+parser.add_argument('file2')
+parser.add_argument('-r','--readdiffs', default=0, type=int)
 
 def readfile(file):
     dict = {}
@@ -21,15 +24,25 @@ def readfile(file):
             dict[content_split[0]] = [content_split[1], content_split[2], content_split[3].strip()]
     return dict
 
-# read both BURT files into dicts
-burt1_dict = readfile(file1)
-burt2_dict = readfile(file2)
+def main():
+    args = parser.parse_args()
+    printreaddiffs = args.readdiffs # set !=0 to compare read diffs
+    print 'printreaddiffs = ', args.readdiffs
+    file1 = args.file1
+    file2 = args.file2
 
-# compare the two dictionaries and print any differences
-for key, value in sorted(burt1_dict.items()):
-    if burt1_dict[key][0] != burt2_dict[key][0]:
-        print 'ON/OFF DIFFERENCE:', key, burt1_dict[key][0], '', burt2_dict[key][0]
-    if burt1_dict[key][1] != burt2_dict[key][1]:
-        print 'SET VALUE DIFFERENCE:', key, burt1_dict[key][1], '', burt2_dict[key][1]
-    if printreaddiffs != 0 and burt1_dict[key][2] != burt2_dict[key][2]:
-        print 'READ VALUE DIFFERENCE:', key, burt1_dict[key][2], '', burt2_dict[key][2]
+    # read both BURT files into dicts
+    burt1_dict = readfile(file1)
+    burt2_dict = readfile(file2)
+
+    # compare the two dictionaries and print any differences
+    for key, value in sorted(burt1_dict.items()):
+        if burt1_dict[key][0] != burt2_dict[key][0]:
+            print 'ON/OFF DIFFERENCE:', key, burt1_dict[key][0], '', burt2_dict[key][0]
+        if burt1_dict[key][1] != burt2_dict[key][1]:
+            print 'SET VALUE DIFFERENCE:', key, burt1_dict[key][1], '', burt2_dict[key][1]
+        if printreaddiffs and burt1_dict[key][2] != burt2_dict[key][2]:
+            print 'READ VALUE DIFFERENCE:', key, burt1_dict[key][2], '', burt2_dict[key][2]
+
+if __name__ == '__main__':
+   main()
