@@ -1,4 +1,4 @@
-import sys, os
+import sys
 import scipy.constants as physics
 import numpy as np
 import math
@@ -14,12 +14,14 @@ class getMagnetProperties(object):
             self.machine = spmm.Machine(machineType, lineType, gunType, controllers=['magnets'])
         else:
             self.machine = machine
-        self.loadDBURT(filename)
+        if filename is not None:
+            self.loadDBURT(filename)
         self.momentum = self.calculateMomentumFromDipole('S02-DIP01')
 
     def loadDBURT(self, filename=None):
         if filename is not None:
             self.machine.magnets.getDBURT(filename)
+            self.momentum = self.calculateMomentumFromDipole('S02-DIP01')
 
     def getS(self, magnetname):
         magnet = self.machine.magnets.getMagObjConstRef(magnetname)
@@ -27,9 +29,11 @@ class getMagnetProperties(object):
 
     def getK(self, magnetname, current=None):
         """Perform the calculation of K value (or bend angle)."""
+        # print 'magnetname = ', magnetname
         magnet = self.machine.magnets.getMagObjConstRef(magnetname)
         if current is None:
             current = magnet.SI
+        # print 'current = ', current
         mag_type = str(magnet.magType)
         # Get the integrated strength, based on an excitation curve
         # This is in T.mm for dipoles, T for quads, T/m for sextupoles
@@ -64,6 +68,7 @@ class getMagnetProperties(object):
     def calculateMomentumFromDipole(self, magnetname):
         magnet = self.machine.magnets.getMagObjConstRef(magnetname)
         current = magnet.SI
+        print 'dipole current = ', current
         sign = np.copysign(1, current)
         coeffs = np.append(magnet.fieldIntegralCoefficients[:-1] * sign, magnet.fieldIntegralCoefficients[-1])
         int_strength = np.polyval(coeffs, abs(current))
