@@ -3,6 +3,8 @@ import pyqtgraph as pg
 import numpy as np
 import VELA_CLARA_Camera_Control as cam
 import time
+import sys
+sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\Release\\')
 # initialise etc.
 camInit = cam.init()
 cameras = camInit.physical_CLARA_Camera_Controller()
@@ -19,15 +21,27 @@ print names
 for name in names:
     if cameras.isAcquiring(name):
         print name
+        #cameras.takeFastImage(name)
+        #print cameras.getNumPixX()
+        #print cameras.getNumPixY()
+        #print cameras.isAcquiring()
+        #print cameras.isAcquiring('CAM02')
+
+        cameras.takeFastImage()
+        time.sleep(1)
+        print cameras.takeFastImage()
+
+        #print cameras.getX()
         #cameras.collectAndSave(1, name)
         #print 'it worked?'
         #cameras.takeAndGetFastImage(name)
         #cameras.setCamera(name)
-        cameras.stopAcquiring()
-        time.sleep(1)
+        #cameras.stopAcquiring()
+        time.sleep(0.1)
 print 'here'
-cameras.startAcquiring('C2V-CAM-01')
-time.sleep(1)
+#cameras.startAcquiring('C2V-CAM-01')
+#time.sleep(1)
+exit()
 
 for name in names:
     if cameras.isAcquiring(name):
