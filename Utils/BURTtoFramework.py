@@ -1,4 +1,6 @@
 import sys
+import argparse
+import os
 import scipy.constants as physics
 import numpy as np
 import math
@@ -7,6 +9,10 @@ import Software.Procedures.Machine.machine as spmm
 degree = physics.pi/180.0
 SPEED_OF_LIGHT = physics.constants.c / 1e6
 
+
+parser = argparse.ArgumentParser(description='Converts DBURT to framework')
+parser.add_argument('filename')
+
 class getMagnetProperties(object):
     def __init__(self, filename=None, machine=None, machineType='Physical', lineType='CLARA', gunType='10Hz'):
         super(getMagnetProperties, self).__init__()
@@ -14,27 +20,31 @@ class getMagnetProperties(object):
             self.machine = spmm.Machine(machineType, lineType, gunType, controllers=['magnets'])
         else:
             self.machine = machine
-        if filename is not None:
-            self.loadDBURT(filename)
+        self.loadDBURT(filename)
         self.momentum = self.calculateMomentumFromDipole('S02-DIP01')
 
     def loadDBURT(self, filename=None):
-        if filename is not None:
-            self.machine.magnets.getDBURT(filename)
-            self.momentum = self.calculateMomentumFromDipole('S02-DIP01')
-
-    def getS(self, magnetname):
-        magnet = self.machine.magnets.getMagObjConstRef(magnetname)
-        return magnet.position
+        dict = {}
+        # read in entire file
+        with open(filename) as burt_file:
+            content = burt_file.readlines()
+        # look for the lines with required format and add to dict
+        # [assumed to be those with 4 data points, when split by colon]
+        for i, line in enumerate(content):
+            content_split = line.split(':')
+            if len(content_split) == 4:
+                stripstring = '\n\r\w;'
+                dict[content_split[0]] = [content_split[1].strip(stripstring), content_split[2].strip(stripstring), content_split[3].strip(stripstring)]
+        self.BURTdict = dict
+        return dict
 
     def getK(self, magnetname, current=None):
         """Perform the calculation of K value (or bend angle)."""
-        # print 'magnetname = ', magnetname
-        magnet = self.machine.magnets.getMagObjConstRef(magnetname)
         if current is None:
-            current = magnet.SI
+            current = float(self.BURTdict[magnetname][1])
         # print 'current = ', current
-        mag_type = str(magnet.magType)
+        magnet = self.machine.magnets.getMagObjConstRef(magnetname)
+        mag_type = str(magnetname)
         # Get the integrated strength, based on an excitation curve
         # This is in T.mm for dipoles, T for quads, T/m for sextupoles
         # Note that excitation curves are defined with positive current,
@@ -47,15 +57,15 @@ class getMagnetProperties(object):
         # effect = np.copysign(SPEED_OF_LIGHT * int_strength / momentum, current)
         effect = SPEED_OF_LIGHT * int_strength / self.momentum
         # Depending on the magnet type, convert to meaningful units
-        if mag_type == 'DIP':
+        if 'DIP' in mag_type:
             # Get deflection in degrees
             # int_strength was in T.mm so we divide by 1000
             k = effect / 1000
-        elif mag_type in ('QUAD', 'SEXT'):
+        elif 'QUAD' in mag_type or 'SEXT' in mag_type:
             k = 1000 * effect / magnet.magneticLength  # focusing term K
-        elif mag_type in ('HCOR', 'VCOR'):
+        elif 'HCOR' in mag_type or 'VCOR' in mag_type:
             k = effect/1000  # deflection in mrad
-        elif mag_type == 'SOL': # solenoids
+        elif 'SOL' in mag_type: # solenoids
             # Getting peak B field
             sign = np.copysign(1, current)
             coeffs = np.append(magnet.fieldIntegralCoefficients[-4:-1] * sign, magnet.fieldIntegralCoefficients[-1])
@@ -68,7 +78,6 @@ class getMagnetProperties(object):
     def calculateMomentumFromDipole(self, magnetname):
         magnet = self.machine.magnets.getMagObjConstRef(magnetname)
         current = magnet.SI
-        print 'dipole current = ', current
         sign = np.copysign(1, current)
         coeffs = np.append(magnet.fieldIntegralCoefficients[:-1] * sign, magnet.fieldIntegralCoefficients[-1])
         int_strength = np.polyval(coeffs, abs(current))
@@ -76,54 +85,34 @@ class getMagnetProperties(object):
         return 1e-6*0.001 * physics.c * int_strength / np.radians(angle)
 
     def getMagnetParameterType(self, magnetname):
-        magnet = self.machine.magnets.getMagObjConstRef(magnetname)
-        mag_type = str(magnet.magType)
-        if mag_type == 'DIP':
+        mag_type = str(magnetname)
+        if 'DIP' in mag_type:
             param = 'angle'
-        elif mag_type == 'QUAD':
+        elif 'QUAD' in mag_type:
             param = 'k1'
-        elif mag_type == 'SEXT':
+        elif 'SEXT' in mag_type:
             param = 'k2'
-        elif mag_type in ('HCOR', 'VCOR'):
+        elif 'HCOR' in mag_type or 'VCOR' in mag_type:
             param = 'angle'
-        elif mag_type == 'SOL': # solenoids
+        elif 'SOL' in mag_type: # solenoids
             param = 'field_amplitude'
         else:
             param = None
         return param
 
-    def getMagnetName(self, magnetname):
-        magnet = self.machine.magnets.getMagObjConstRef(magnetname)
-        return magnet.pvRoot[:magnet.pvRoot.find(':')]
-
-    def getMagnetControllerNames(self):
-        return self.machine.magnets.getMagnetNames()
-
     def getMagnetNames(self):
-        magnetcontrollernames = self.getMagnetControllerNames()
-        return [self.getMagnetName(m) for m in magnetcontrollernames]
+        return self.BURTdict.keys()
 
     def getNamesK(self):
-        magnetcontrollernames = self.getMagnetControllerNames()
         names = self.getMagnetNames()
-        data = [[self.getMagnetName(m), self.getMagnetParameterType(m), self.getK(m), self.getS(m)] for m in magnetcontrollernames]
-        return zip(*zip(*list(sorted(data,key=lambda l:l[-1])))[:-1])
+        data = [[self.getMagnetName(m), self.getMagnetParameterType(m), self.getK(m)] for m in names]
+        return data
 
 if __name__ == "__main__":
-    magprop = getMagnetProperties('CLARA_2_BA1_BA2_2018-11-20-1951.dburt')
+    args = parser.parse_args()
+    magprop = getMagnetProperties(args.filename)
     # magprop.momentum = 31.5
     print magprop.momentum
     print magprop.getK('C2V-QUAD1')
     print magprop.getK('C2V-QUAD2')
     print magprop.getK('C2V-QUAD3')
-    with open('CLARA_2_BA1_BA2_2018-11-20-1951.'+str(np.round(magprop.momentum,decimals=2))+'.txt', 'w') as f:
-        for item in magprop.getNamesK():
-            for d in item:
-                f.write("%s\t" % d)
-            f.write("\n")
-    magprop.momentum = 31.5
-    with open('CLARA_2_BA1_BA2_2018-11-20-1951.31.5MeV.txt', 'w') as f:
-        for item in magprop.getNamesK():
-            for d in item:
-                f.write("%s\t" % d)
-            f.write("\n")
