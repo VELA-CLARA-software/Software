@@ -7,11 +7,11 @@
     <x>0</x>
     <y>0</y>
     <width>211</width>
-    <height>646</height>
+    <height>435</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Cam State</string>
+   <string>Screen State</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -27,14 +27,14 @@
           </size>
          </property>
          <property name="text">
-          <string>STOP ALL</string>
+          <string>ALL OUT</string>
          </property>
         </widget>
        </item>
        <item>
         <widget class="QGroupBox" name="groupBox">
          <property name="title">
-          <string>Cameras (by Screen Name)</string>
+          <string>Screen</string>
          </property>
         </widget>
        </item>

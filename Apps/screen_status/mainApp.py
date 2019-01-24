@@ -24,8 +24,8 @@
 '''
 import sys,os
 
-#sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\Release\\')
 sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\Release\\')
+#sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\stage\\')
 
 # for i in sys.path:
 #     print i
