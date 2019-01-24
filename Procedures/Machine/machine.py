@@ -114,7 +114,7 @@ class Machine(object):
 						self.screens = self.screenInit.virtual_VELA_INJ_Screen_Controller()
 				else:
 					if 'magnets' in self.controllers:
-						self.magnets = self.magInit.virtual_CLARA_PH1_Magnet_Controller()
+						self.magnets = self.magInit.virtual_C2B_Magnet_Controller()
 					if 'charge' in self.controllers:
 						self.scope = self.scopeInit.virtual_CLARA_PH1_Charge_Controller()
 					if 'bpms' in self.controllers:
