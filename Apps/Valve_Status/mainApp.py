@@ -16,7 +16,7 @@
 //
 //  Author:      DJS
 //  Last edit:   05-06-2018
-//  FileName:    mainApp.oy
+//  FileName:    mainApp.py
 //  Description: Generic template for __main__ for general High Level Application
 //
 //
