@@ -46,7 +46,6 @@ class main_controller(controller_base):
         # build the gui, atm, the gui gets built last, which means many init messages are not
         # displayed to the gui text box
         self.gui = gui_conditioning()
-        self.gui.shutdown_rf_button.clicked.connect(self.toggle_RF_output)
 
         #self.gui = main_controller.gui
         self.gui.closing.connect(self.connectCloseEvents)
@@ -96,14 +95,16 @@ class main_controller(controller_base):
         self.gui.update_plot()
         #
         # everything now runs from  main_loop
+        #
+        self.gui.llrf_enable_button.clicked.connect(self.toggle_RF_output)
+        #
         self.main_loop()
 
     def toggle_RF_output(self):
-        if self.llrf_control.isRFOutput():
-            self.llrf_control.disableRFOutput()
+        if self.gui.can_rf_output:
+            self.llrf_control.enable_llrf()
         else:
-            self.llrf_control.enableRFandLock()
-
+            self.llrf_control.disableRFOutput()
 
     def main_loop(self):
         self.logger.header(self.my_name + ' The RF Conditioning is Preparing to Entering Main_Loop !',True)
@@ -143,18 +144,6 @@ class main_controller(controller_base):
             controller_base.logger.message('Found RF power, kly_fwd_power_max = ' + \
                                            str(controller_base.llrfObj[0].kly_fwd_power_max),True)
 
-        #controller_base.llrf_handler.print_mask_settings()
-        #controller_base.llrf_handler.print_rolling_average_mask_settings()
-
-        #
-        # print some values
-        #controller_base.llrf_handler.get_lo_masks_max()
-        #controller_base.llrf_handler.get_hi_masks_max()
-        #controller_base.llrf_handler.print_mask_settings()
-        #controller_base.llrf_handler.print_rolling_average_mask_settings()
-        #self.logger.pickle_file(str(-1),
-        #                        controller_base.llrf_handler.get_mask_rolling_average_dict())
-
         # get some good masks
         start_time = time.clock()
         controller_base.llrf_handler.clear_all_rolling_average()
@@ -172,29 +161,16 @@ class main_controller(controller_base):
         #counter = 0
         controller_base.data.values[dat.event_pulse_count] = 0
         while 1:
-        #     now_time = time.clock()
-        #     if now_time  - start_time > 10:
-        #         self.logger.pickle_file(  str(counter),
-        #                 controller_base.llrf_handler.get_mask_rolling_average_dict() )
-        #         counter += 1
-                # controller_base.llrf_handler.get_mask_rolling_average_dict()
-                # controller_base.llrf_handler.print_mask_settings()
-                # controller_base.llrf_handler.print_rolling_average_mask_settings()
-                # start_time = now_time
-
-
-
             QApplication.processEvents()
+
             #
             # update main monitor states
-            controller_base.data_monitor.update_states()
 
-            if controller_base.data_monitor.is_pulse_length_bad():
-                pass
-                #print('pulse length is bad')
-                #self.llrf_control.disableRFOutput()
-            #else:
-                #print('pulse length is GOOD ')
+            # update states, main_monitor_states, AND enable_RF_monitor_states, if any of the enable_RF_monitor_states
+            # are bad then controller_base.data_monitor.main_monitor_states[dat.can_rf_output]
+            # will go bad
+            controller_base.data_monitor.update_states()
+            controller_base.data_monitor.update_enable_LLRF_state(gui_enable_rf = self.gui.can_rf_output)
 
             # # if new_bad drop SP
             if controller_base.data_monitor.new_bad():
@@ -202,6 +178,10 @@ class main_controller(controller_base):
                 # controller_base.llrf_handler.set_global_check_mask(False)
                 # check if spike was vac or DC
                 controller_base.data_monitor.check_if_new_bad_is_vac_or_DC()
+
+            elif controller_base.data_monitor.enable_RF_bad():
+                controller_base.llrf_handler.enable_llrf()
+
 
             elif controller_base.data_monitor.new_good_no_bad():
                 # start checking masks again
@@ -288,11 +268,14 @@ class main_controller(controller_base):
         self.data_monitor.outside_mask_trace_monitor.reset_event_pulse_count()
 
     def ramp_down(self):
+        controller_base.llrf_handler.enable_llrf()
         controller_base.llrf_handler.set_amp(controller_base.data.values[dat.next_sp_decrease])
         self.data.add_to_pulse_breakdown_log(controller_base.llrfObj[0].amp_sp)
         self.data_monitor.outside_mask_trace_monitor.reset_event_pulse_count()
         # reset values RENAME
         self.data.move_down_ramp_curve()
+
+
 
 
     # over load close

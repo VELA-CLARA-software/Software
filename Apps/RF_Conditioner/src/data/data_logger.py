@@ -1,15 +1,19 @@
 from datetime import  datetime
 import struct
-from VELA_CLARA_enums import STATE
+#from VELA_CLARA_enums import STATE
 from VELA_CLARA_Vac_Valve_Control import VALVE_STATE
 from VELA_CLARA_RF_Protection_Control import RF_GUN_PROT_STATUS
 from VELA_CLARA_RF_Modulator_Control import GUN_MOD_STATE
+from VELA_CLARA_LLRF_Control import TRIG
+from VELA_CLARA_LLRF_Control import INTERLOCK_STATE
+from src.data.state import state
 import os
 import cPickle as pkl
 from src.data.config_reader import config_reader
 import numpy
 import src.data.rf_condition_data_base as dat
 import wolframclient.serializers as wxf
+from src.data.state import state
 
 class data_logger(object):
     my_name = 'data_logger'
@@ -22,7 +26,6 @@ class data_logger(object):
     def __init__(self):
         self.pulse_count_log = None
         self.amp_power_log = None
-
         # these are file objecs that we write th edata to, we're going to keep them open all the time ?!?
         self.log_file = None
         self.pulse_count_log_file = None
@@ -203,15 +206,19 @@ class data_logger(object):
         elif type(val) is RF_GUN_PROT_STATUS:
             f.write(struct.pack('<B', val))
             #print struct.calcsize('<B')
-        elif type(val) is STATE:
-            f.write(struct.pack('<B', val))
-            #print struct.calcsize('<B')
         elif type(val) is GUN_MOD_STATE:
             f.write(struct.pack('<B', val))
             #print struct.calcsize('<B')
         elif type(val) is VALVE_STATE:
             f.write(struct.pack('<B', val))
             #print struct.calcsize('<B')
+        elif type(val) is TRIG:
+            f.write(struct.pack('<B', val))
+            #print struct.calcsize('<B')
+        elif type(val) is INTERLOCK_STATE:
+            f.write(struct.pack('<B', val))
+            #print struct.calcsize('<B')
+
         elif type(val) is bool:
             f.write(struct.pack('<?', val))
             #print struct.calcsize('<?')

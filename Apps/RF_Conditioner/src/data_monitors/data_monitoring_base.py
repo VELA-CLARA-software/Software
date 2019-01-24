@@ -59,7 +59,6 @@ class data_monitoring_base(base):
 						water_temp_monitoring,
 						sol_monitoring
 						]
-
 	#
 	#all poossible monitors
 	vacuum_monitor = None

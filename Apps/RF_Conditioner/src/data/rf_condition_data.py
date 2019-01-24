@@ -10,9 +10,15 @@ class rf_condition_data(dat.rf_condition_data_base):
     #
     # these are just monitors that are working
     # they are used for the main_loop
-    # they are VAC,DC,BREAKDOWN,BREAKDOWN_RATE,RF
+    # they are VAC,DC,BREAKDOWN,BREAKDOWN_RATE
     main_monitor_states = {}
     previous_main_monitor_states = {}
+
+    # the items required for enable RF
+    # RF_MOD, RF_PROT, LLRF
+    # (pulse , rf output, interloack, trigger, amp_locked, phase_locked ...)
+    enable_RF_monitor_states = {}
+
     # settings from config file
     power_increase_1= None
     power_increase_2= None
@@ -200,13 +206,25 @@ class rf_condition_data(dat.rf_condition_data_base):
             self.values[dat.power_aim] = self.llrf_config['POWER_AIM']
             ##elf.values[dat.pulse_length_start] = self.llrf_config['PULSE_LENGTH_START']
             self.values[dat.pulse_length_aim] = self.llrf_config['PULSE_LENGTH_AIM']
+            self.values[dat.pulse_length_aim_error] = self.llrf_config['PULSE_LENGTH_AIM_ERROR']
+
+            self.values[dat.pulse_length_min] = self.llrf_config['PULSE_LENGTH_AIM'] - self.llrf_config['PULSE_LENGTH_AIM_ERROR']
+            self.values[dat.pulse_length_max] = self.llrf_config['PULSE_LENGTH_AIM'] + self.llrf_config['PULSE_LENGTH_AIM_ERROR']
+
+
             #self.values[dat.pulse_length_step] = self.llrf_config['PULSE_LENGTH_STEP']
             self.values[dat.breakdown_rate_aim] = self.llrf_config['BREAKDOWN_RATE_AIM']
+
+            self.values[dat.llrf_DAQ_rep_rate_aim] = self.llrf_config['RF_REPETITION_RATE']
+            self.values[dat.llrf_DAQ_rep_rate_max] = self.llrf_config['RF_REPETITION_RATE'] + self.llrf_config['RF_REPETITION_RATE_ERROR']
+            self.values[dat.llrf_DAQ_rep_rate_min] = self.llrf_config['RF_REPETITION_RATE'] - \
+                                                     self.llrf_config['RF_REPETITION_RATE_ERROR']
             self.logger.header(self.my_name + ' init_after_config_read')
-            self.logger.message([dat.pulse_length_start + ' ' +str(self.values[dat.pulse_length_start]),
-            dat.pulse_length_aim + ' ' + str(self.values[dat.pulse_length_aim]),
-            dat.pulse_length_step + ' ' + str(self.values[dat.pulse_length_step]),
-            dat.breakdown_rate_aim + ' ' + str(self.values[dat.breakdown_rate_aim])])
+            self.logger.message([dat.pulse_length_aim + ' ' + str(self.values[dat.pulse_length_aim]),
+            dat.pulse_length_aim_error + ' ' + str(self.values[dat.pulse_length_aim_error]),
+            dat.pulse_length_min + ' ' + str(self.values[dat.pulse_length_min]),
+            dat.pulse_length_max + ' ' + str(self.values[dat.pulse_length_max])
+                                 ])
 
 
     def update_last_million_pulse_log(self):
@@ -222,8 +240,6 @@ class rf_condition_data(dat.rf_condition_data_base):
         #                     str( self.values[dat.breakdown_count]) + ' ' +
         #                     str(self.values[dat.current_ramp_index]) + ' ' +
         #                     str(self.values[dat.pulse_length]),True)
-
-
         while dat.rf_condition_data_base.last_million_log[-1][0] - dat.rf_condition_data_base.last_million_log[0][0] \
                 > \
               self.llrf_config['NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY']:
@@ -255,6 +271,7 @@ class rf_condition_data(dat.rf_condition_data_base):
 
         # set is breakdwon rate hi
         self.values[dat.breakdown_rate_hi] = self.values[dat.breakdown_rate] > self.values[dat.breakdown_rate_aim]
+
 
         if old_last_106_bd_count != self.values[dat.last_106_bd_count]:
             self.logger.header(' NEW last_106_bd_count ', True)

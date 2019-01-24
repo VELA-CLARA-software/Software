@@ -11,17 +11,17 @@ from VELA_CLARA_RF_Modulator_Control import GUN_MOD_STATE
 from VELA_CLARA_RF_Modulator_Control import L01_MOD_STATE
 from VELA_CLARA_Vac_Valve_Control import VALVE_STATE
 from VELA_CLARA_RF_Protection_Control import RF_GUN_PROT_STATUS
-from VELA_CLARA_enums import STATE
+#from VELA_CLARA_enums import STATE
 from VELA_CLARA_LLRF_Control import LLRF_TYPE
 import src.data.rf_condition_data_base as dat
+from src.data.state import state
 # ok - so gui should get a object ref
 # and then update as appropriate!
 # every time
-# other data  should be monitored in the dat aclass?
+# other data  should be monitored in the dat aclass?write_binary()
 from src.base.base import base
 import numpy as np
 import pyqtgraph as pg
-
 
 from PyQt4.QtGui import QPixmap
 from PyQt4.QtCore import QObject
@@ -43,12 +43,14 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
 	clip = clip_app.clipboard()
 	# global state
 	can_ramp = True
+	can_rf_output = True
 	# constant colors for GUI update
 	good = open = rf_on = 'green'
-	bad = error = closed = off = rf_off = 'red'
+	bad = error = closed = off = rf_off = interlock = 'red'
 	unknown = 'magenta'
 	major_error = 'cyan'
 	timing = 'yellow'
+	init = 'orange'
 
 	# custom close signal to send to controller
 	closing = pyqtSignal()
@@ -81,9 +83,12 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
 		self.start_pause_ramp_button.clicked.connect(self.handle_start_pause_ramp_button)
 		self.shutdown_rf_button.clicked.connect(self.handle_shutdown_rf_button)
 		self.copy_to_clipboard_button.clicked.connect(self.handle_copy_to_clipboard_button)
+		self.llrf_enable_button.clicked.connect(self.handle_can_rf_output)
 
 		# error bars when plotting
 		self.err = None
+
+		self.handle_can_rf_output()
 
 
 	def gui_start_up(self):
@@ -116,8 +121,6 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
 		cursor.insertText(text)
 		self.textEdit.setTextCursor(cursor)
 		self.textEdit.ensureCursorVisible()
-
-
 
 	def set_plot_error_bars(self):
 		self.plot_item = self.graphicsView.getPlotItem()
@@ -167,14 +170,13 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
 		                     [base.data.values[dat.old_y_min], base.data.values[dat.old_y_max]],
 		                     pen={'color': 'y', 'width': 2})
 
-
-
 	# custom close function
 	def closeEvent(self, event):
 		self.closing.emit()
 
 	# button functions
 	def handle_start_pause_ramp_button(self):
+		print("handle_start_pause_ramp_button")
 		if self.can_ramp:
 			self.can_ramp = False
 			# print self.my_name + ' is pausing RF conditioning'
@@ -188,6 +190,19 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
 			self.start_pause_ramp_button.setStyleSheet(
 				'QPushButton { background-color : ' + self.good + '; color : black; }')
 			base.logger.message(self.my_name + ' has enabled ramping RF', True)
+
+	def handle_can_rf_output(self):
+		if self.can_rf_output:
+			self.can_rf_output = False
+			print("can_rf_output = false")
+			self.llrf_enable_button.setText("ENABLE RF OUTPUT")
+			self.llrf_enable_button.setStyleSheet('QPushButton { background-color : ' + self.bad + '; color : black; }')
+		else:
+			self.can_rf_output = True
+			print("can_rf_output = True")
+			self.llrf_enable_button.setText("DISABLE RF OUTPUT")
+			self.llrf_enable_button.setStyleSheet('QPushButton { background-color : ' + self.good + '; color : black; }')
+
 
 	def handle_shutdown_rf_button(self):
 		print 'handle_shutdown_rf_button'
@@ -209,9 +224,23 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
 		# print(type(val),key,widget.objectName())
 		# meh
 		if key == dat.breakdown_rate_hi:
-			self.set_break_down_color(widget, val)
-		elif key == dat.llrf_output:
-			self.update_rf_output_button(widget, val, key)
+			self.set_widget_color(widget, not val)
+
+		elif key == dat.pulse_length_status:
+			self.set_widget_color(widget, val)
+		elif key == dat.llrf_interlock_status:
+			self.set_widget_color_text( widget, val)
+		elif key == dat.llrf_trigger_status:
+			self.set_widget_color_text( widget, val)
+
+		elif key == dat.vac_spike_status:
+			self.set_widget_color_text( widget, val)
+		elif key == dat.DC_spike_status:
+			self.set_widget_color_text( widget, val)
+
+
+		elif key == dat.llrf_output_status:
+			self.set_widget_color_text(widget, val)
 		elif widget == self.event_pulse_count_outputwidget:
 			widget.setText(('%i' % val) + ('/%i' % base.data.values[dat.required_pulses]))
 			self.clip_vals[key] = widget.text()
@@ -219,23 +248,22 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
 			widget.setText('%i' % val)
 			self.clip_vals[key] = widget.text()
 		elif type(val) is int:
+			print(key,' is a int')
 			widget.setText('%i' % val)
 			self.clip_vals[key] = widget.text()
 		elif type(val) is float:
 			widget.setText('%.3E' % val)
 			self.clip_vals[key] = widget.text()
 		elif type(val) is RF_GUN_PROT_STATUS:
-			self.set_RF_prot(widget, val, key)
-		elif type(val) is STATE:
-			self.set_status(widget, val, key)
+			self.set_RF_prot(widget, val)
 		elif type(val) is GUN_MOD_STATE:
 			self.set_gun_mod_state(widget, val, key)
 		elif type(val) is L01_MOD_STATE:
 			self.set_L01_mod_state(widget, val, key)
 		elif type(val) is VALVE_STATE:
-			self.set_valve(widget, val, key)
+			self.set_valve(widget, val)
 		elif type(val) is bool:
-			self.set_locked_enabled(widget, val, key)
+			self.set_widget_color_text(widget, val)
 		elif type(val) is np.float64:
 			widget.setText('%.3E' % val)
 			self.clip_vals[key] = widget.text()
@@ -244,8 +272,12 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
 		else:
 			print 'update_widget error ' + str(val) + ' ' + str(type(val))
 
-	def update_rf_output_button(self,widget, val, key):
-		self.set_locked_enabled(widget,val, key)
+
+
+
+
+	def update_rf_output_button(self,widget, val):
+		self.set_widget_color_text(widget,val)
 		if val:
 			self.shutdown_rf_button.setText("DISABLE RF OUTPUT")
 			self.shutdown_rf_button.setStyleSheet(
@@ -272,82 +304,143 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
 			widget.setStyleSheet('QLabel { background-color : ' + self.good + '; color : black; }')
 
 	# functions to update colors in widgets
-	def set_status(self, widget, val, status):
-		if val == STATE.UNKNOWN:
-			self.set_widget_color_text(widget, 'UNKNOWN', self.unknown, status)
-		elif val == STATE.GOOD:
-			self.set_widget_color_text(widget, 'GOOD', self.good, status)
-		elif val == STATE.BAD:
-			self.set_widget_color_text(widget, 'BAD', self.bad, status)
-		elif val == STATE.ERR:
-			self.set_widget_color_text(widget, 'ERR', self.err, status)
-		else:
-			self.set_widget_color_text(widget, 'MAJOR_ERROR', self.major_error, status)
+	# def set_status(self, widget, val, status):
+	# 	if val == state.UNKNOWN:
+	# 		self.set_widget_color_text(widget, 'UNKNOWN', self.unknown, status)
+	# 	elif val == state.GOOD:
+	# 		self.set_widget_color_text(widget, 'GOOD', self.good, status)
+	# 	elif val == state.BAD:
+	# 		self.set_widget_color_text(widget, 'BAD', self.bad, status)
+	# 	elif val == state.INIT:
+	# 		self.set_widget_color_text(widget, 'INIT', self.init, status)
+	# 	else:
+	# 		self.set_widget_color_text(widget, 'MAJOR_ERROR', self.major_error, status)
 
-	def set_locked_enabled(self, widget, val, status):
-		if val == True:
-			self.set_widget_color_text(widget, 'GOOD', self.good, status)
+	def set_widget_color_text(self, widget, val):
+		self.set_widget_color(widget, val)
+		self.set_widget_text(widget, val)  # MAGIC_STRING
+		#self.clip_vals[status] = str(widget.text())
+
+
+	def set_widget_text(self, widget, val):
+		if val == state.GOOD:
+			widget.setText('GOOD')
+		elif val == state.BAD:
+			widget.setText('BAD')
+		elif val == state.INIT:
+			widget.setText('INIT')
+		elif val == state.UNKNOWN:
+			widget.setText('UNKNOWN')
+		elif val == True:
+			widget.setText('GOOD')
 		elif val == False:
-			self.set_widget_color_text(widget, 'BAD', self.bad, status)
+			widget.setText('BAD')
+		elif val == state.TIMING:
+			widget.setText('TIMING')
 		else:
-			self.set_widget_color_text(widget, 'MAJOR_ERROR', self.major_error, status)
+			widget.setText('UNKNOWN')
 
-	def set_valve(self, widget, val, status):
+
+	def set_widget_color(self, widget, val):
+		if val == state.GOOD:
+			widget.setStyleSheet('QLabel { background-color : ' + self.good + '; color : black; }')
+		elif val == state.BAD:
+			widget.setStyleSheet('QLabel { background-color : ' + self.bad + '; color : black; }')
+		elif val == state.INIT:
+			widget.setStyleSheet('QLabel { background-color : ' + self.init + '; color : black; }')
+		elif val == state.UNKNOWN:
+			widget.setStyleSheet('QLabel { background-color : ' + self.unknown + '; color : black; }')
+		elif val == state.INTERLOCK:
+			widget.setStyleSheet('QLabel { background-color : ' + self.interlock + '; color : black; }')
+		elif val == True:
+			widget.setStyleSheet('QLabel { background-color : ' + self.good + '; color : black; }')
+		elif val == False:
+			widget.setStyleSheet('QLabel { background-color : ' + self.bad + '; color : black; }')
+		elif val == state.TIMING:
+			widget.setStyleSheet('QLabel { background-color : ' + self.timing + '; color : black; }')
+		else:
+			widget.setStyleSheet('QLabel { background-color : ' + self.unknown + '; color : black; }')
+
+
+	def set_locked_enabled(self, widget, val):
+		self.set_widget_color_text(widget, val)
+
+
+	def set_valve(self, widget, val):
 		if val == VALVE_STATE.VALVE_OPEN:
-			self.set_widget_color_text(widget, 'OPEN', self.open, status)
+			self.set_widget_color(widget, state.GOOD)
+			widget.setText('OPEN')
 		elif val == VALVE_STATE.VALVE_CLOSED:
-			self.set_widget_color_text(widget, 'CLOSED', self.closed, status)
+			self.set_widget_color(widget, state.BAD)
+			widget.setText('CLOSED')
 		elif val == VALVE_STATE.VALVE_TIMING:
-			self.set_widget_color_text(widget, 'TIMING', self.timing, status)
+			self.set_widget_color_text(widget, state.TIMING)
+			widget.setText('TIMING')
 		elif val == VALVE_STATE.VALVE_ERROR:
-			self.set_widget_color_text(widget, 'ERROR', self.error, status)
+			self.set_widget_color_text(widget, state.ERROR)
 		else:
-			self.set_widget_color_text(widget, 'MAJOR_ERROR', self.major_error, status)
+			self.set_widget_color_text(widget, state.ERROR)
 
-	def set_RF_prot(self, widget, val, status):
+	def set_RF_prot(self, widget, val):
 		if val == RF_GUN_PROT_STATUS.GOOD:
-			self.set_widget_color_text(widget, 'GOOD', self.good, status)
+			self.set_widget_color_text(widget, state.GOOD)
 		elif val == RF_GUN_PROT_STATUS.BAD:
-			self.set_widget_color_text(widget, 'BAD', self.bad, status)
+			self.set_widget_color_text(widget, state.BAD)
 		elif val == RF_GUN_PROT_STATUS.ERROR:
-			self.set_widget_color_text(widget, 'ERROR', self.error, status)
+			self.set_widget_color_text(widget, state.ERROR)
 		elif val == RF_GUN_PROT_STATUS.UNKNOWN:
-			self.set_widget_color_text(widget, 'UNKNOWN', self.unknown, status)
+			self.set_widget_color_text(widget, state.UNKNOWN)
 		else:
-			self.set_widget_color_text(widget, 'MAJOR_ERROR', self.major_error, status)
-
+			self.set_widget_color_text(widget, state.ERROR)
 
 	# these enums will need updating, especially as we introduce more RF structures ...
 	def set_gun_mod_state(self, widget, val, status):
 		'''Replace all this cancer with a dictionary '''
 		if val == GUN_MOD_STATE.RF_ON:
-			self.set_widget_color_text(widget, 'RF_ON', gui_conditioning.rf_on, status)
+			self.set_widget_color(widget, state.GOOD )
+			widget.setText('RF_ON')
 		elif val == GUN_MOD_STATE.UNKNOWN_STATE:
-			self.set_widget_color_text(widget, 'UNKNOWN_STATE', gui_conditioning.unknown, status)
+			self.set_widget_color(widget,state.UNKNOWN)
+			widget.setText('RF_ON')
 		elif val == GUN_MOD_STATE.OFF:
-			self.set_widget_color_text(widget, 'OFF', gui_conditioning.off, status)
+			self.set_widget_color(widget, state.BAD)
+			widget.setText('OFF')
 		elif val == GUN_MOD_STATE.OFF_REQUEST:
-			self.set_widget_color_text(widget, 'OFF_REQUEST', gui_conditioning.off, status)
+			self.set_widget_color(widget, state.TIMING)
+			widget.setText('OFF_REQUEST')
 		elif val == GUN_MOD_STATE.HV_INTERLOCK:
-			self.set_widget_color_text(widget, 'HV_INTERLOCK', gui_conditioning.bad, status)
+			self.set_widget_color(widget, state.INTERLOCK)
+			widget.setText('HV_INTERLOCK')
 		elif val == GUN_MOD_STATE.HV_OFF_REQUEST:
-			self.set_widget_color_text(widget, 'HV_OFF_REQUEST', gui_conditioning.timing, status)
+			self.set_widget_color(widget, state.TIMING)
+			widget.setText('HV_OFF_REQUEST')
 		elif val == GUN_MOD_STATE.HV_REQUEST:
-			self.set_widget_color_text(widget, 'HV_REQUEST', gui_conditioning.timing, status)
+			self.set_widget_color(widget, state.TIMING)
+			widget.setText('HV_REQUEST')
 		elif val == GUN_MOD_STATE.HV_ON:
-			self.set_widget_color_text(widget, 'HV_ON', gui_conditioning.timing, status)
+			self.set_widget_color(widget, state.INIT)
+			widget.setText('HV_ON')
 		elif val == GUN_MOD_STATE.STANDBY_REQUEST:
-			self.set_widget_color_text(widget, 'STANDBY_REQUEST', gui_conditioning.timing, status)
+			self.set_widget_color(widget, state.TIMING)
+			widget.setText('STANDBY_REQUEST')
 		elif val == GUN_MOD_STATE.STANDBY:
-			self.set_widget_color_text(widget, 'STANDBY', gui_conditioning.error, status)
+			self.set_widget_color(widget, 'STANDBY', gui_conditioning.error, status)
+			widget.setText('STANDBY')
 		elif val == GUN_MOD_STATE.STANDYBY_INTERLOCK:
-			self.set_widget_color_text(widget, 'STANDYBY_INTERLOCK', gui_conditioning.bad, status)
+			self.set_widget_color(widget, 'STANDYBY_INTERLOCK', gui_conditioning.bad, status)
+			widget.setText('STANDYBY_INTERLOCK')
 		elif val == GUN_MOD_STATE.RF_ON_REQUEST:
-			self.set_widget_color_text(widget, 'RF_ON_REQUEST', gui_conditioning.timing, status)
+			self.set_widget_color(widget, state.TIMING)
+			widget.setText('RF_ON_REQUEST')
 		elif val == GUN_MOD_STATE.RF_OFF_REQUEST:
-			self.set_widget_color_text(widget, 'RF_OFF_REQUEST', gui_conditioning.timing, status)
+			self.set_widget_color(widget, state.TIMING)
+			widget.setText('RF_OFF_REQUEST')
 		elif val == GUN_MOD_STATE.RF_ON_INTERLOCK:
-			self.set_widget_color_text(widget, 'RF_ON_INTERLOCK', gui_conditioning.bad, status)
+			self.set_widget_color(widget, state.INTERLOCK)
+			widget.setText('RF_ON_INTERLOCK')
+		else:
+			self.set_widget_color_text(widget, state.ERROR)
+			widget.setText('ERROR')
 		self.clip_vals[status] = str(widget.text())
 
 	def set_L01_mod_state(self, widget, val, status):
@@ -365,21 +458,13 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
 			self.set_widget_color_text(widget, 'L01_RF_ON', gui_conditioning.rf_on, status)
 		self.clip_vals[status] = str(widget.text())
 
-	def set_widget_color_text(self, widget, text, color, status):
-		widget.setStyleSheet('QLabel { background-color : ' + color + '; color : black; }')
-		widget.setText(text)  # MAGIC_STRING
-		self.clip_vals[status] = str(widget.text())
+
+
+
 
 	def init_widget_dict(self):
 		# MANUALLY CONNECT THESE UP :/
 		self.widget[dat.probe_pwr] = self.probe_power_outputwidget
-		self.widget[dat.vac_spike_status] = self.vac_spike_status_outputwidget
-		self.widget[dat.DC_spike_status] = self.DC_spike_status_outputwidget
-		self.widget[dat.modulator_state] = self.mod_state_outputwidget
-		self.widget[dat.rfprot_state] = self.RF_protection_outputwidget
-		self.widget[dat.llrf_output] = self.llrf_output_outputwidget
-		self.widget[dat.llrf_ff_amp_locked] = self.llrf_ff_amp_locked_outputwidget
-		self.widget[dat.llrf_ff_ph_locked] = self.llrf_ff_ph_locked_outputwidget
 		self.widget[dat.vac_level] = self.vac_level_outputwidget
 		self.widget[dat.cav_temp] = self.cav_temp_outputwidget
 		self.widget[dat.water_temp] = self.water_temp_outputwidget
@@ -392,23 +477,46 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
 		self.widget[dat.breakdown_rate] = self.measured_breakdown_rate_outputwidget
 		self.widget[dat.breakdown_count] = self.breakdown_count_outputwidget
 		self.widget[dat.pulse_count] = self.pulse_count_outputwidget
-		self.widget[dat.rev_power_spike_count] = self.rev_power_spike_status_outputwidget
-		self.widget[dat.vac_valve_status] = self.vac_valve_status_outputwidget
+		#self.widget[dat.rev_power_spike_count] = self.rev_power_spike_status_outputwidget
 		self.widget[dat.amp_sp] = self.amp_set_outputwidget
 		self.widget[dat.DC_level] = self.dc_level_outputwidget
 		self.widget[dat.event_pulse_count] = self.event_pulse_count_outputwidget
-		self.widget[dat.pulse_length_aim] = self.pulse_length_aim_outputwidget
-		self.widget[dat.power_aim] = self.power_aim_outputwidget
+		#self.widget[dat.pulse_length_aim] = self.pulse_length_aim_outputwidget
+		#self.widget[dat.power_aim] = self.power_aim_outputwidget
 		self.widget[dat.breakdown_rate_aim] = self.breakdown_rate_limit_outputwidget
 		self.widget[dat.breakdown_rate_hi] = self.measured_breakdown_rate_outputwidget
 		self.widget[dat.last_106_bd_count] = self.last_106_count_outputwidget
-		self.widget[dat.llrf_trigger] = self.llrf_trigger_outputwidget
 		self.widget[dat.last_mean_power] = self.last_setpoint_power_outputwidget
 		self.widget[dat.next_power_increase] = self.next_power_increase_outputwidget
 		self.widget[dat.next_sp_decrease] = self.next_sp_decrease_outputwidget
 		self.widget[dat.current_ramp_index] = self.current_index_outputwidget
 		self.widget[dat.sol_value] = self.sol_outputwidget
 		self.widget[dat.duplicate_pulse_count] = self.duplicate_count_outputwidget
+
+		# states
+		self.widget[dat.modulator_state] = self.mod_state_outputwidget
+		self.widget[dat.rfprot_state] = self.RF_protection_outputwidget
+		# states
+		self.widget[dat.llrf_interlock_status] = self.llrf_interlock_outputwidget
+		self.widget[dat.llrf_trigger_status] = self.llrf_trigger_outputwidget
+		# pulse length is a state AND a number
+
+		self.widget[dat.pulse_length] = self.pulse_length_outputwidget
+		self.widget[dat.pulse_length_status] = self.pulse_length_outputwidget
+
+		self.widget[dat.llrf_interlock_status] = self.llrf_interlock_outputwidget
+
+
+		self.widget[dat.llrf_output_status] = self.llrf_output_outputwidget
+
+		self.widget[dat.llrf_ff_amp_locked] = self.llrf_ff_amp_locked_outputwidget
+		self.widget[dat.llrf_ff_ph_locked] = self.llrf_ff_ph_locked_outputwidget
+		self.widget[dat.DC_spike_status] = self.DC_spike_status_outputwidget
+		self.widget[dat.vac_spike_status] = self.vac_spike_status_outputwidget
+		self.widget[dat.vac_valve_status] = self.vac_valve_status_outputwidget
+		self.widget[dat.llrf_DAQ_rep_rate] = self.trace_rep_rate_outpuwidget
+
+
 
 
 	def plot_amp_sp_pwr(self):

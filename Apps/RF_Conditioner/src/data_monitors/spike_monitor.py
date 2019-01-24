@@ -28,11 +28,10 @@
 #
 # base-class
 from monitor import monitor
-from VELA_CLARA_enums import STATE
+from src.data.state import state
 from PyQt4.QtCore import QTimer
 import src.data.rf_condition_data_base as dat
 from numpy import mean
-#from data.state import state
 
 
 class spike_monitor(monitor):
@@ -153,7 +152,7 @@ class spike_monitor(monitor):
             self._num_samples_to_average = None
 
         # initialise data to state unknown
-        monitor.data.values[self.data_dict_state_key] = STATE.UNKNOWN
+        monitor.data.values[self.data_dict_state_key] = state.UNKNOWN
         # now we're ready to start
         self.run()
 
@@ -203,13 +202,13 @@ class spike_monitor(monitor):
                 print( self.my_name + ' spike ',self._latest_value, " ", self.spike_delta, " ", self._latest_value-self._mean_level)
                 # this is the first place we can detect a spike, so drop amp here
                 if self.should_drop_amp:
-                    if monitor.data.values[dat.breakdown_status] == STATE.GOOD:
+                    if monitor.data.values[dat.breakdown_status] == state.GOOD:
                         monitor.llrf_control.setAmpHP(self.amp_drop_value)
                 # dump_data
                 self.dump_data()
                 # start the cooldown
                 self.start_cooldown()
-                monitor.logger.header(self.my_name + ' new spike: ')
+                monitor.logger.header(self.my_name + ' new spike: ',True)
                 monitor.logger.message(str(self._latest_value) + ' > ' + str(self.spike_delta + self._mean_level) + ', mean = ' +str(self._mean_level),True)
                 self.alarm('spike')
 
@@ -285,16 +284,16 @@ class spike_monitor(monitor):
         return False
 
     def set_bad(self):
-        monitor.data.values[self.data_dict_state_key] = STATE.BAD
+        monitor.data.values[self.data_dict_state_key] = state.BAD
 
     def set_good(self):
-        monitor.data.values[self.data_dict_state_key] = STATE.GOOD
+        monitor.data.values[self.data_dict_state_key] = state.GOOD
 
     def dump_data(self):
         # increase count:
         self.spike_count += 1
         #trace_dump = monitor.llrf_control.getOneTraceData()
-        new = monitor.llrf_control.getOneTraceData()
+        new = monitor.llrf_control.getCutOneTraceData()
         new.update({'vacuum': monitor.data.values[dat.vac_level]})
         new.update({'DC': monitor.data.values[dat.DC_level]})
         new.update({'SOL': monitor.data.values[dat.sol_value]})

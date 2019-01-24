@@ -296,7 +296,6 @@ class llrf_handler_base(base):
 	def start_trace_monitoring(self,trace_to_save):
 		base.logger.header(self.my_name + ' setting all SCAN to passive', True)
 		base.llrf_control.setAllSCANToPassive()
-		base.logger.header(self.my_name + ' start_trace_monitoring()', True)
 		if "error" not in trace_to_save:
 			#print(1)
 			base.llrf_control.setAllSCANToPassive()
@@ -304,6 +303,13 @@ class llrf_handler_base(base):
 		else:
 			#print(2)
 			base.logger.message('!!! ERROR IN TRACES TO SAVE !!!', True)
+
+		base.logger.header(self.my_name + ' setting One Record SCAN to IO/intr', True)
+		base.llrf_control.resetTORSCANToIOIntr()
+
+		base.logger.header(self.my_name + ' setting One Record ACWM to event', True)
+		base.llrf_control.setTORACQMEvent()
+
 
 	def setup_trace_rolling_average(self):
 		base.logger.header(self.my_name + ' setup_trace_rolling_average', True)

@@ -1,6 +1,7 @@
 from PyQt4.QtCore import QTimer
 from PyQt4.QtCore import QObject
-from VELA_CLARA_enums import STATE
+
+from src.data.state import state
 from VELA_CLARA_RF_Modulator_Control import GUN_MOD_STATE
 from VELA_CLARA_Vac_Valve_Control import VALVE_STATE
 from VELA_CLARA_RF_Protection_Control import RF_GUN_PROT_STATUS
@@ -21,8 +22,6 @@ DC_spike_status = 'DC_spike_status'
 rev_power_spike_count = 'rev_power_spike_count'
 cav_temp = 'cav_temp'
 water_temp = 'water_temp'
-pulse_length = 'pulse_length'
-pulse_length_status = 'pulse_length_status'
 
 fwd_cav_pwr = 'fwd_cav_pwr'
 fwd_kly_pwr = 'fwd_kly_pwr'
@@ -75,17 +74,44 @@ last_106_bd_count='last_106_bd_count'
 pulse_count = 'pulse_count'
 event_pulse_count = 'event_pulse_count'
 duplicate_pulse_count = 'duplicate_pulse_count'
-modulator_state = 'modulator_state'
+
+# Hold RF ON handle scontrolling these, we just monitor
 rfprot_state = 'rfprot_state'
-llrf_output = 'llrf_output'
-mod_output = 'mod_output'
+modulator_state = 'modulator_state'
+mod_output_status = 'mod_output_status'
+
+can_rf_output = 'can_rf_output'
+
+llrf_interlock = 'llrf_interlock' # The read value from EPICS
+llrf_interlock_status = 'llrf_interlock_state' # the apps internal state, good, new_bad etc
+
+
+llrf_trigger = 'llrf_trigger'
+llrf_trigger_status = 'llrf_trigger_status'
+
+pulse_length = 'pulse_length'
+pulse_length_status = 'pulse_length_status' # the apps internal state, good, new_bad etc
+
+llrf_output = 'llrf_output' # RF Output on LLRF panel
+llrf_output_status = 'llrf_output_status' # the apps internal state, good, new_bad etc
+
 llrf_ff_amp_locked = 'llrf_ff_amp_locked'
-llrf_ff_ph_locked = 'llrf_ff_ph_locked'
+llrf_ff_amp_locked_status = 'llrf_ff_amp_locked_status' # the apps internal state, good, new_bad etc
+llrf_ff_ph_locked  = 'llrf_ff_ph_locked'
+llrf_ff_ph_locked_status  = 'llrf_ff_ph_locked_status' # the apps internal state, good, new_bad etc
+
+llrf_DAQ_rep_rate = 'llrf_DAQ_rep_rate'
+llrf_DAQ_rep_rate_aim = 'llrf_DAQ_rep_rate_aim'
+llrf_DAQ_rep_rate_status = 'llrf_DAQ_rep_rate_aim'
+llrf_DAQ_rep_rate_max = 'llrf_DAQ_rep_rate_max'
+llrf_DAQ_rep_rate_min = 'llrf_DAQ_rep_rate_min'
+
 
 power_aim = 'power_aim'
 pulse_length_aim = 'pulse_length_aim'
-pulse_length_step = 'pulse_length_step'
-pulse_length_start = 'pulse_length_start'
+pulse_length_aim_error = 'pulse_length_aim_error'
+pulse_length_min = 'pulse_length_min'
+pulse_length_max = 'pulse_length_max'
 
 required_pulses = 'required_pulses'
 next_power_increase = 'next_power_increase'
@@ -96,7 +122,6 @@ next_sp_decrease = 'next_sp_decrease'
 
 log_pulse_length = 'log_pulse_length'
 
-llrf_trigger = 'llrf_trigger'
 
 last_mean_power = 'last_mean_power'
 sol_value = 'sol_value'
@@ -104,8 +129,10 @@ sol_value = 'sol_value'
 amp_ff = 'amp_ff'
 amp_sp = 'amp_sp'
 phi_sp = 'phi_sp'
-interlock_state = 'interlock_state'
 
+
+TOR_ACQM = 'TOR_ACQM'
+TOR_SCAN = 'TOR_SCAN'
 
 #
 # plot straight line fit values, old and current
@@ -172,17 +199,31 @@ all_value_keys = [rev_power_spike_count,
                   cav_temp,
                   time_stamp,
                   log_pulse_count,
+                  llrf_DAQ_rep_rate,
+                  llrf_DAQ_rep_rate_status,
+                  llrf_DAQ_rep_rate_aim,
+                  llrf_DAQ_rep_rate_max,
+                  llrf_DAQ_rep_rate_min,
 #                  log_breakdown_count,
                   log_amp_set,
                   current_ramp_index,
                   power_aim,
                   pulse_length_aim,
-                  pulse_length_step,
-                  pulse_length_start,
+                  pulse_length_aim_error,
+                  pulse_length_min,
+                  pulse_length_max,
+
                   amp_sp,
                   last_106_bd_count,
                   log_pulse_length,
-                  llrf_trigger,
+
+                  llrf_trigger_status,
+                  llrf_interlock_status,
+                  llrf_output_status,
+                  llrf_ff_amp_locked_status,
+                  llrf_ff_ph_locked_status,
+                  pulse_length_status,
+
                   next_sp_decrease,
                   last_mean_power,
                   next_power_increase,
@@ -203,6 +244,8 @@ all_value_keys = [rev_power_spike_count,
                   m,
                   old_c,
                   old_m,
+                  TOR_ACQM,
+                  TOR_SCAN,
                   pulse_length_status
                   ]
 
@@ -232,14 +275,22 @@ class rf_condition_data_base(QObject):
     values = {}
     [values.update({x: 0}) for x in all_value_keys]
     values[vac_valve_status] = VALVE_STATE.VALVE_ERROR
-    values[vac_spike_status] = STATE.UNKNOWN
-    values[DC_spike_status] = STATE.UNKNOWN
-    values[breakdown_status] = STATE.UNKNOWN
-    values[rev_power_spike_count] = STATE.UNKNOWN
+    #values[rev_power_spike_count] = STATE.UNKNOWN
+
     values[modulator_state] = GUN_MOD_STATE.UNKNOWN_STATE
     values[rfprot_state] = RF_GUN_PROT_STATUS.UNKNOWN
-    values[llrf_output] = STATE.UNKNOWN
-    values[llrf_ff_amp_locked] = STATE.UNKNOWN
+
+    values[vac_spike_status] = state.UNKNOWN
+    values[DC_spike_status] = state.UNKNOWN
+    values[breakdown_status] = state.UNKNOWN
+    values[llrf_output_status] = state.UNKNOWN
+    values[llrf_trigger_status] = state.UNKNOWN
+    values[llrf_interlock_status] = state.UNKNOWN
+    values[llrf_ff_amp_locked] = state.UNKNOWN
+    values[llrf_ff_ph_locked] = state.UNKNOWN
+
+
+
     dummy = -999.0
     values[cav_temp] = dummy
     values[water_temp] = dummy + 1
@@ -327,7 +378,7 @@ class rf_condition_data_base(QObject):
 
     def update_break_down_count(self, count):
         # if all status are not bad then add to breakdown count
-        if STATE.BAD not in [rf_condition_data_base.values[DC_spike_status],
+        if state.BAD not in [rf_condition_data_base.values[DC_spike_status],
                              rf_condition_data_base.values[vac_spike_status],
                              rf_condition_data_base.values[breakdown_status]
                              ]:

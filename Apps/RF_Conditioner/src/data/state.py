@@ -9,5 +9,9 @@ class state(Enum):
     INIT = 3
     NEW_BAD = 4
     NEW_GOOD = 5
+    TIMING = 6
+    ERROR = 7
+    INTERLOCK = 8
 
-    statename = { 0: 'BAD', 1: 'GOOD', 2:'UNKNOWN',3:'INIT',4:'NEW_BAD',5:'NEW_GOOD'}
+    statename = { BAD: 'BAD', GOOD: 'GOOD', UNKNOWN:'UNKNOWN', INIT:'INIT', NEW_BAD:'NEW_BAD',NEW_GOOD:'NEW_GOOD',
+                  TIMING:'TIMING', ERROR: 'ERROR', INTERLOCK:'INTERLOCK' }

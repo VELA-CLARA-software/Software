@@ -1,9 +1,8 @@
 # llrf_handler.py
 from llrf_handler_base import llrf_handler_base
 from VELA_CLARA_LLRF_Control import TRIG
-import time
+from time import sleep
 from timeit import default_timer as timer
-from VELA_CLARA_LLRF_Control import LLRF_SCAN
 
 
 class llrf_handler(llrf_handler_base):
@@ -87,6 +86,27 @@ class llrf_handler(llrf_handler_base):
         #self.start_trace_average_no_reset(True)
         # for trace in llrf_handler_base.config.breakdown_config['BREAKDOWN_TRACES']:#MAGIC_STRING:
         #     llrf_handler_base.llrf_control.setTraceSCAN(trace, LLRF_SCAN.ZERO_POINT_ONE) # SHOULD BE INPUIT Parameter
+
+
+    def enable_llrf(self):
+        # go through each possible LLRF paramter (except HOLD_RF_ON_COM mod / protection parmaters
+        # and try and reset them
+        llrf_handler_base.logger.message('enable_llrf trying to enable LLRF parmeters ', True)
+        #
+        llrf_handler_base.llrf_control.set_amp(0)
+        #
+        sleep(0.02)
+        llrf_handler_base.llrf_control.setInterlockNonActive()
+        #
+        sleep(0.02)
+        llrf_handler_base.llrf_control.trigExt()
+        #
+        sleep(0.02)
+        llrf_handler_base.llrf_control.enableRFandLock()
+
+
+    def disableRFOutput(self):
+        llrf_handler_base.llrf_control.disableRFOutput()
 
 
 

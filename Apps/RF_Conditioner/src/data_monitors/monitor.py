@@ -8,7 +8,7 @@ from VELA_CLARA_LLRF_Control import LLRF_TYPE
 # of something - so after instantiation you must call start on it (!)
 # you should overload cooldown_function in the child class
 import numbers
-from VELA_CLARA_enums import STATE
+#from VELA_CLARA_enums import STATE
 from src.base.base import base
 
 
