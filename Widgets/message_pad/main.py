@@ -1,32 +1,73 @@
-# Message Pad widget testing
-# Version Jan 2019
-# DJS
-# rf_ccondition owns all other objects and does nothing else
-#An attmept to make a message pad that echos stdout to an overloaded QT widget
-
+'''
+/*
+//              This file is part of VELA-CLARA-Software.                             //
+//------------------------------------------------------------------------------------//
+//    VELA-CLARA-Software is free software: you can redistribute it and/or modify     //
+//    it under the terms of the GNU General Public License as published by            //
+//    the Free Software Foundation, either version 3 of the License, or               //
+//    (at your option) any later version.                                             //
+//    VELA-CLARA-Software is distributed in the hope that it will be useful,          //
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of                  //
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                   //
+//    GNU General Public License for more details.                                    //
+//                                                                                    //
+//    You should have received a copy of the GNU General Public License               //
+//    along with VELA-CLARA-Software.  If not, see <http://www.gnu.org/licenses/>.    //
+//
+//  Author:      DJS
+//  Last edit:   05-06-2018
+//  FileName:    main.py
+//  Description: Generic template for __main__ for general High Level Application
+//
+//
+//*/
+'''
+'''******** Import modules *********'''
+'''
+the sys module is used to add to the PATH environment variable and to enable arguments to be 
+passed to the application on start-up 
+'''
 import sys
+# Add the release folder to the path to get latest HWC
+# this must be added BEFORE any HWC modules are important (including child scripts)
+sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\Release')
+for i in sys.path:
+    print i
 
-sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\Realse')
-
-from PyQt4 import QtGui
+''' 
+QApplication is the top-level class we create, 
+'''
+from PyQt4.QtGui import QApplication
+'''
+Import the controller class, everything 
+'''
 from src.controller.controller import controller
 
+sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\Release')
+for i in sys.path:
+    print i
 
-class main_application(QtGui.QApplication):
+class main_application(QApplication):
+	'''
+		Simple class to own the main controller
+		Everything else is crated is amanged controller
+	'''
 	def __init__(self, argv):
 		#
-		# you need this init line here to instantiate a QTApplication
-		QtGui.QApplication.__init__(self, argv)
+		# you need this init line here to instantiate a QApplication
+		QApplication.__init__(self, argv)
 		#
-		# only run if a config file was passed
-		if len(argv) == 2:
-			#
-			# Everything is handled by a main _controller
-			self.controller = controller(argv)
+		# Everything is handled by a controller
+		self.controller = controller(argv)
 
 
 if __name__ == '__main__':
-	print('Starting Application')
+	APPLICATION_NAME = "Demonstration Application"
+	print('Starting ' + APPLICATION_NAME)
+	''' 
+		sys.argv are the parameters passed from the command line
+		e.g to run this you might type python 
+	'''
 	app = main_application(sys.argv)
 	sys.exit(app.exec_())
 

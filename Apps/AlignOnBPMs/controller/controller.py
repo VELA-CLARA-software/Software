@@ -402,8 +402,8 @@ class Controller():
 			getattr(self.view, 'label_H_'+row).setNum(1*self.model.Cbpms.getXFromPV(str(getattr(self.view, 'comboBox_'+row).currentText())))
 			getattr(self.view, 'label_V_'+row).setNum(1*self.model.Cbpms.getYFromPV(str(getattr(self.view, 'comboBox_'+row).currentText())))
 			if len(self.model.Cbpms.getBPMQBuffer(bpm_name)) > 0 and str(self.model.Cbpms.getStatusBuffer(bpm_name)[-1]) == 'GOOD':
-				getattr(self.view, 'label_V_av_'+row).setNum(np.mean(1*self.model.Cbpms.getBPMYBuffer(str(getattr(self.view, 'comboBox_'+row).currentText()))))
-				getattr(self.view, 'label_H_av_'+row).setNum(np.mean(1*self.model.Cbpms.getBPMXBuffer(str(getattr(self.view, 'comboBox_'+row).currentText()))))
+				getattr(self.view, 'label_V_av_'+row).setNum(np.mean(1*self.model.Cbpms.getBPMYPVBuffer(str(getattr(self.view, 'comboBox_'+row).currentText()))))
+				getattr(self.view, 'label_H_av_'+row).setNum(np.mean(1*self.model.Cbpms.getBPMXPVBuffer(str(getattr(self.view, 'comboBox_'+row).currentText()))))
 			else:
 				getattr(self.view, 'label_V_av_'+row).setText('')
 				getattr(self.view, 'label_V_av_'+row).setText('')

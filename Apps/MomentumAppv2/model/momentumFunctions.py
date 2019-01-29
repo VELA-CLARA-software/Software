@@ -548,7 +548,7 @@ class Functions(QObject):
         time.sleep(1)
 
         #set dipole current to 95% of centering current
-        setI = 0.98*centering_I
+        setI = 0.99*centering_I
         print setI
         for a in reversed(np.linspace(setI,centering_I, 10)): #slowly set offset to allow image collector to keep up
             print 'Moving to starting position (0.98*I_0)'
@@ -561,7 +561,8 @@ class Functions(QObject):
         #while(I/I_old-1>leveloff_threshold):
         #self.stepCurrent(dipole,step)
         currents[0] = DIP.siWithPol
-        positions[0] = self.getXScreen(sctrl,screen,N)
+        #positions[0] = self.getXScreen(sctrl,screen,N)
+        positions[0] = self.model.cam.getX('C2V-CAM-01')
         print centering_I
         print currents[0]
         print points-1
@@ -571,13 +572,15 @@ class Functions(QObject):
             print 'i', str(i)
             print 'I_diff', str(I_diff)
             self.stepCurrent(dctrl, dipole, I_diff)
-            time.sleep(2)
+            time.sleep(3)
             currents[i] = DIP.siWithPol
-            positions[i] = self.getXScreen(sctrl,screen,N)
+            #positions[i] = self.getXScreen(sctrl,screen,N)
+            positions[i] = self.model.cam.getX('C2V-CAM-01')
             dCurrents=currents
             dPositions= positions
             if i==(points-1)/2:
-                sX = self.getSigmaXScreen(sctrl,screen,N)
+                #sX = self.getSigmaXScreen(sctrl,screen,N)
+                sX = self.model.cam.getSigX('C2V-CAM-01')
 
         c, stats = P.polyfit(currents,positions,1,full=True)
         fCurrents=[0.90*centering_I,1.1*centering_I]

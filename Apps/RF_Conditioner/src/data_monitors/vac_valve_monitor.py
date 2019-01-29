@@ -20,15 +20,7 @@ class vac_valve_monitor(state_monitor):
 
         self.valve_obj = [self.local_valve_control.getVacValveObjConstRef( self.valve_name )]# MAGIC
         self.keep_valve_open = state_monitor.config.vac_valve_config['KEEP_VALVE_OPEN']# MAGIC
-
-        print("self.keep_valve_open  = ",self.keep_valve_open )
-        print("self.keep_valve_open  = ",self.keep_valve_open )
-        print("self.keep_valve_open  = ",self.keep_valve_open )
-        print("self.keep_valve_open  = ",self.keep_valve_open )
-        print("self.keep_valve_open  = ",self.keep_valve_open )
-
         #self.local_valve_control.openVacValve(self.valve_name)
-
         self.start()
         self.set_success = True
 

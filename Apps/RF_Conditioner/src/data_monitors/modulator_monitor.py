@@ -25,4 +25,5 @@ class modulator_monitor(state_monitor):
         if self.set_success:
             state_monitor.data.values[dat.modulator_state] =  self.mod[0].state
 
+            #if state_monitor.data.values[dat.modulator_state] !=
 

@@ -25,7 +25,7 @@ except AttributeError:
 class Ui_CamState(object):
     def setupUi(self, CamState):
         CamState.setObjectName(_fromUtf8("CamState"))
-        CamState.resize(211, 646)
+        CamState.resize(211, 435)
         self.centralwidget = QtGui.QWidget(CamState)
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
         self.verticalLayout = QtGui.QVBoxLayout(self.centralwidget)
@@ -48,7 +48,7 @@ class Ui_CamState(object):
         QtCore.QMetaObject.connectSlotsByName(CamState)
 
     def retranslateUi(self, CamState):
-        CamState.setWindowTitle(_translate("CamState", "Cam State", None))
+        CamState.setWindowTitle(_translate("CamState", "Screen State", None))
         self.stopButton.setText(_translate("CamState", "ALL OUT", None))
-        self.groupBox.setTitle(_translate("CamState", "Cameras (by Screen Name)", None))
+        self.groupBox.setTitle(_translate("CamState", "Screen", None))
 

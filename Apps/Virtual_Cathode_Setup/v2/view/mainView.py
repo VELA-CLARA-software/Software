@@ -519,7 +519,7 @@ class mainView(QtGui.QMainWindow, Ui_mainView ):
         a = array([pg.colorTuple(pg.Color(c)) for c in CLRS])
         clrmp = pg.ColorMap(STEPS, a)
         lut = clrmp.getLookupTable()
-        self.vc_image.setLookupTable(lut)
+        self.vc_image.setLookupTable(lut)background-color
         self.plot_item.setRange(xRange=[0, self.xpix_full], yRange=[0, self.ypix_full])
         self.plot_item.addItem(self.vc_image)
 

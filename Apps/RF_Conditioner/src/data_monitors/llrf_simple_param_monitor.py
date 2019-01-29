@@ -2,6 +2,7 @@ from monitor import monitor
 import src.data.rf_condition_data_base as dat
 from src.data.state import state
 from VELA_CLARA_LLRF_Control import TRIG
+from VELA_CLARA_LLRF_Control import INTERLOCK_STATE
 
 class llrf_simple_param_monitor(monitor):
     my_name = 'llrf_simple_param_monitor'
@@ -68,6 +69,9 @@ class llrf_simple_param_monitor(monitor):
             self.phase_trace_2 = monitor.config.breakdown_config['PHASE_MASK_BY_POWER_PHASE_TRACE_2']
 
 
+
+
+
         ## WARNING
         # min kyl fwd power to enable incrementing the pulse RF counter
         monitor.llrf_control.setActivePulsePowerLimit(monitor.config.llrf_config['KLY_PWR_FOR_ACTIVE_PULSE'])
@@ -78,36 +82,96 @@ class llrf_simple_param_monitor(monitor):
         # get the mean power for each trace
         for trace, key  in self.trace_mean_keys.iteritems():
             self.get_mean_power(key, trace)
-        #self.values[dat.pulse_length] = self.llrfObj[0].pulse_length
-        # lock state
+
+        #
+        # UPDATE LLRF values that are REQUIRED TO BE ABLE TO RAMP
+        #
+        monitor.data.values[dat.llrf_interlock] = monitor.llrfObj[0].interlock_state
+        if monitor.data.values[dat.llrf_interlock] == INTERLOCK_STATE.NON_ACTIVE:
+            monitor.data.values[dat.llrf_interlock_status] = state.GOOD
+        else:
+            monitor.data.values[dat.llrf_interlock_status] = state.BAD
+        #
+        #
+        monitor.data.values[dat.llrf_trigger] = monitor.llrfObj[0].trig_source
+        if monitor.data.values[dat.llrf_trigger] == TRIG.OFF:
+            monitor.data.values[dat.llrf_trigger_status] = state.BAD
+        elif monitor.data.values[dat.llrf_trigger] == TRIG.UNKNOWN_TRIG:
+            monitor.data.values[dat.llrf_trigger_status] = state.BAD
+        else:
+            monitor.data.values[dat.llrf_trigger_status] = state.GOOD
+        #
+        # pulse length
+        # THIS OLD WAY IS NOW BROKE, we use an RF RAMP table Instead we now use the  getPulseShape vector and count the number of 1.0s (SketchyAF)
+        # pulse length
+        monitor.data.values[dat.pulse_length] = monitor.llrf_control.getPulseShape().count(1) * 0.009 # MAGIC THIS IS NOT EXACTLY CORRECT,
+        if monitor.data.values[dat.pulse_length] < monitor.data.values[dat.pulse_length_min]:
+            monitor.data.values[dat.pulse_length_status] = state.BAD
+        elif monitor.data.values[dat.pulse_length] > monitor.data.values[dat.pulse_length_max]:
+            monitor.data.values[dat.pulse_length_status] = state.BAD
+        else:
+            monitor.data.values[dat.pulse_length_status] = state.GOOD
+
+        monitor.data.values[dat.llrf_output] = monitor.llrfObj[0].rf_output
+        if monitor.data.values[dat.llrf_output]:
+            monitor.data.values[dat.llrf_output_status] = state.GOOD
+        else:
+            monitor.data.values[dat.llrf_output_status] = state.BAD
+
+        #
+        #
         monitor.data.values[dat.llrf_ff_amp_locked] =  monitor.llrfObj[0].ff_amp_lock_state
-        monitor.data.values[dat.llrf_ff_ph_locked] = monitor.llrfObj[0].ff_ph_lock_state
+        if monitor.data.values[dat.llrf_ff_amp_locked]:
+            monitor.data.values[dat.llrf_ff_amp_locked_status] = state.GOOD
+        else:
+            monitor.data.values[dat.llrf_ff_amp_locked_status] = state.BAD
+        #
+        monitor.data.values[dat.llrf_ff_ph_locked] =  monitor.llrfObj[0].ff_ph_lock_state
+        if monitor.data.values[dat.llrf_ff_ph_locked]:
+            monitor.data.values[dat.llrf_ff_ph_locked_status] = state.GOOD
+        else:
+            monitor.data.values[dat.llrf_ff_ph_locked_status] = state.BAD
+
+        ##
+
+        monitor.data.values[dat.llrf_DAQ_rep_rate] = monitor.llrfObj[0].trace_rep_rate
+
+        if monitor.data.values[dat.llrf_DAQ_rep_rate] < monitor.data.values[
+            dat.llrf_DAQ_rep_rate_min]:
+            monitor.data.values[dat.llrf_DAQ_rep_rate_status] = state.BAD
+        elif monitor.data.values[dat.llrf_DAQ_rep_rate] < monitor.data.values[
+            dat.llrf_DAQ_rep_rate_min]:
+            monitor.data.values[dat.llrf_DAQ_rep_rate_status] = state.BAD
+        else:
+            monitor.data.values[dat.llrf_DAQ_rep_rate_status] = state.GOOD
+
+
+
+
+        if monitor.llrfObj[0].rf_output != llrf_simple_param_monitor.old_rf_output:
+            if monitor.llrfObj[0].rf_output:
+                self.alarm('rf_on')
+            else:
+                self.alarm('rf_off')
+            llrf_simple_param_monitor.old_rf_output = monitor.llrfObj[0].rf_output
+
+
+
+
 
 
         monitor.data.values[dat.duplicate_pulse_count] = monitor.llrfObj[0].duplicate_pulse_count
 
         # is rf_ouput enabled
-        monitor.data.values[dat.llrf_output] = monitor.llrfObj[0].rf_output
-        if monitor.llrfObj[0].rf_output != llrf_simple_param_monitor.old_rf_output:
-            if monitor.llrfObj[0].rf_output:
-                #monitor.data.values[dat.breakdown_status] = state.GOOD
-                self.alarm('rf_on')
-            else:
-                #monitor.data.values[dat.breakdown_status] = state.BAD
-                self.alarm('rf_off')
-            llrf_simple_param_monitor.old_rf_output = monitor.llrfObj[0].rf_output
+
 
         # amplitude set point
         monitor.data.values[dat.amp_sp] = int(monitor.llrfObj[0].amp_sp)
         monitor.data.values[dat.phi_sp] = int(monitor.llrfObj[0].phi_sp)
 
+
         # LLRF trigger state
-        if monitor.llrfObj[0].trig_source == TRIG.OFF:
-            monitor.data.values[dat.llrf_trigger] = False
-        elif monitor.llrfObj[0].trig_source == TRIG.UNKNOWN_TRIG:
-            monitor.data.values[dat.llrf_trigger] = False
-        else:
-            monitor.data.values[dat.llrf_trigger] = True
+
 
         # if setting phase trace end masks by value get those values...
         if monitor.data.values[dat.phase_mask_by_power_trace_1_set]:
@@ -123,15 +187,9 @@ class llrf_simple_param_monitor(monitor):
             monitor.data.amp_vs_kfpow_running_stat[ monitor.data.values[dat.amp_sp] ] = \
                 monitor.llrf_control.getKlyFwdPwrRSState( monitor.data.values[dat.amp_sp] )
 
-        #
-        # pulse length
-        # THIS OLD WAY IS NOW BORKE,
-        # monitor.data.values[dat.pulse_length] = monitor.llrfObj[0].pulse_length
-        # Instead we now use the  getPulseShape vector and count the number of 1.0s
 
-        # pulse length
-
-        monitor.data.values[dat.pulse_length] = monitor.llrf_control.getPulseShape().count(1) * 0.009 # MAGUC THIS IS NOT EXACTLY CORRECT,
+        monitor.data.values[dat.TOR_ACQM] = monitor.llrf_control.getTORACQM()
+        monitor.data.values[dat.TOR_SCAN] = monitor.llrf_control.getTORSCAN()
 
 
 
