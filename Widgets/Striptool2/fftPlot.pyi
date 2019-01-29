@@ -6,25 +6,21 @@
 # standalone mode usage of the created library will need it.
 
 # In the future, this will also contain type information for values
-# in the module, so IDEs will use this. Therfore please include it
+# in the module, so IDEs will use this. Therefore please include it
 # when you make software releases of the extension module that it
 # describes.
 
-import math
+import Software.Procedures.qt
+import numpy
+import signal
 import pyqtgraph
-import scipy
+import peakutils
 import datetime
 import sys
-import signal
-import peakutils
-import PyQt5.QtGui
-import PyQt4.QtCore
-import PyQt4.QtGui
-import os
-import numpy
+import scipy
 import time
-import PyQt5.QtCore
-import PyQt5.QtWidgets
+import os
+import math
 
 # This is not Python source even if it looks so. Make it clear for
 # now. This was decided by PEP 484 designers.

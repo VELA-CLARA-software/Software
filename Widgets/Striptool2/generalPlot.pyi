@@ -6,30 +6,27 @@
 # standalone mode usage of the created library will need it.
 
 # In the future, this will also contain type information for values
-# in the module, so IDEs will use this. Therfore please include it
+# in the module, so IDEs will use this. Therefore please include it
 # when you make software releases of the extension module that it
 # describes.
 
-import copy
 import tables
-import datetime
+import logging
 import scrollingPlot
+import Software.Procedures.qt
+import numpy
 import signal
 import signalRecord
-import scatterPlot
 import histogramPlot
-import xlsxwriter
-import PyQt5.QtGui
-import logging
-import PyQt4.QtCore
-import PyQt4.QtGui
-import os
-import plotLegend
 import fftPlot
-import numpy
+import datetime
+import sys
+import plotLegend
 import time
-import PyQt5.QtCore
-import PyQt5.QtWidgets
+import scatterPlot
+import copy
+import os
+import xlsxwriter
 
 # This is not Python source even if it looks so. Make it clear for
 # now. This was decided by PEP 484 designers.

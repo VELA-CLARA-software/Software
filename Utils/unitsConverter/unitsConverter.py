@@ -1,50 +1,29 @@
-import os, sys
-import scipy.constants as physics
-import numpy as np
-import math
-sys.path.append("../../../")
-import Software.Utils.getQuadK as quadK
-from infi.systray import SysTrayIcon
-degree = physics.pi/180.0
-SPEED_OF_LIGHT = physics.constants.c / 1e6
-import cherrypy
+import zmq
+import json
 
-magprop = quadK.getMagnetProperties()
+class zmqClient(object):
+    def __init__(self, port=5556, host='apws24.dl.ac.uk'):
+        super(zmqClient, self).__init__()
+        self.context = zmq.Context()
+        self.socket = self.context.socket(zmq.REQ)
+        self.socket.linger = 0
+        self.socket.connect ("tcp://%s:%s" % (host, port))
 
-class Root(object):
-    @cherrypy.expose
-    def magnet(self, name=None, DBURT=None, momentum=None, current=None, *args, **kwargs):
-        if DBURT is not None:
-            magprop.loadDBURT(str(DBURT))
-        if momentum is not None:
-            if isinstance(momentum,(str, unicode)):
-                magprop.momentum = magprop.calculateMomentumFromDipole(str(momentum))
-            else:
-                magprop.momentum = float(momentum)
-        if name is not None:
-            if current is not None:
-                return str(magprop.getK(str(name), float(current)))
-            else:
-                return str(magprop.getK(str(name)))
+    def request(self, **kwargs):
+        self.socket.send_pyobj(kwargs)
+        message = json.loads(self.socket.recv())
+        # print "Received reply ", kwargs, "[", message, "]"
+        return message
 
-    @cherrypy.expose
-    @cherrypy.tools.json_out()
-    def getNamesK(self, DBURT=None, momentum=None, *args, **kwargs):
-        if DBURT is not None:
-            magprop.loadDBURT(str(DBURT))
-        if momentum is not None:
-            magprop.momentum = float(momentum)
-        namesK = magprop.getNamesK()
-        return namesK
+    def magnet(self, **kwargs):
+        return self.request(type='magnet', **kwargs)
 
-def on_quit_callback(args):
-    cherrypy.engine.exit()
+    def getNamesK(self, **kwargs):
+        return self.request(type='getNamesK', **kwargs)
 
 if __name__ == "__main__":
-    icon = 'unitsConverter.ico'
-    hover_text = "unitsConverter"
-    menu_options = ()
-    systray = SysTrayIcon(icon, hover_text, menu_options,on_quit=on_quit_callback)
-    systray.start()
-    cherrypy.server.socket_host = '0.0.0.0'
-    cherrypy.quickstart(Root())
+    client = zmqClient()
+    print client.magnet(name='S02-DIP01', DBURT='CLARA_2_BA1_BA2_2018-11-20-1951.dburt')
+    # print client.getNamesK(DBURT='CLARA_2_BA1_BA2_2018-11-20-1951.dburt')
+    # print client.magnet(name='S02-DIP01')
+    # print client.getNamesK()

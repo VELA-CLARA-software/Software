@@ -3,13 +3,8 @@ import pyqtgraph as pg
 import numpy as np
 from scipy import interpolate
 from scipy import signal as sp
-try:
-    from PyQt4.QtCore import *
-    from PyQt4.QtGui import *
-except ImportError:
-    from PyQt5.QtCore import *
-    from PyQt5.QtGui import *
-    from PyQt5.QtWidgets import *
+sys.path.append("../../../")
+import Software.Procedures.qt as qt
 import peakutils
 # logger = logging.getLogger(__name__)
 
@@ -24,8 +19,8 @@ def round_sig(x, sig=4):
 #                               threading.current_thread().ident))
 
 
-class fftPlot(QWidget):
-    fftSelectionChanged = pyqtSignal('QString')
+class fftPlot(qt.QWidget):
+    fftSelectionChanged = qt.pyqtSignal('QString')
 
     def __init__(self, generalplot, parent=None, plotRateBar=False):
         super(fftPlot, self).__init__(parent)
@@ -33,8 +28,8 @@ class fftPlot(QWidget):
         self.paused = False
         self.plotrate = 5
         ''' create the fftPlot as a grid layout '''
-        self.layout = QVBoxLayout()
-        self.plotThread = QTimer()
+        self.layout = qt.QVBoxLayout()
+        self.plotThread = qt.QTimer()
         self.generalPlot = generalplot
         self.records = self.generalPlot.records
         ''' Create generalPlot object '''
@@ -58,12 +53,12 @@ class fftPlot(QWidget):
         self.generalPlot.signalRemoved.connect(self.removeCurve)
 
     def setupPlotRateSlider(self):
-        self.plotRateLayout = QHBoxLayout()
-        self.plotRateLabel = QLabel()
+        self.plotRateLayout = qt.QHBoxLayout()
+        self.plotRateLabel = qt.QLabel()
         self.plotRateLabel.setText('Plot Update Rate ['+str(self.plotrate)+' Hz]:')
-        self.plotRateLabel.setAlignment(Qt.AlignCenter)
-        self.plotRateSlider = QSlider()
-        self.plotRateSlider.setOrientation(Qt.Horizontal)
+        self.plotRateLabel.setAlignment(qt.Qt.AlignCenter)
+        self.plotRateSlider =qt.QSlider()
+        self.plotRateSlider.setOrientation(qt.Qt.Horizontal)
         self.plotRateSlider.setInvertedAppearance(False)
         self.plotRateSlider.setInvertedControls(False)
         self.plotRateSlider.setMinimum(1)
@@ -112,9 +107,9 @@ class fftPlot(QWidget):
         elif value:
             self.addCurve(name)
 
-class fftPlotCurve(QObject):
+class fftPlotCurve(qt.QObject):
 
-    statusChanged = pyqtSignal(str)
+    statusChanged = qt.pyqtSignal(str)
 
     def __init__(self, fftplot, records, parent = None):
         super(fftPlotCurve, self).__init__(parent=parent)

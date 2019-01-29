@@ -1,14 +1,10 @@
 import sys, time, os, datetime, signal
+import numpy as np
 import pyqtgraph as pg
-# from pyqtgraph.Qt import QtGui, QtCore
-try:
-    from PyQt4.QtCore import *
-    from PyQt4.QtGui import *
-except ImportError:
-    from PyQt5.QtCore import *
-    from PyQt5.QtGui import *
-    from PyQt5.QtWidgets import *
+sys.path.append("../../../")
+import Software.Procedures.qt as qt
 from bisect import bisect_left
+from scipy.stats import pearsonr
 # logger = logging.getLogger(__name__)
 
 signal.signal(signal.SIGINT, signal.SIG_DFL)
@@ -18,8 +14,8 @@ signal.signal(signal.SIGINT, signal.SIG_DFL)
 #     print('%-25s: %s, %s,' % (caller, threading.current_thread().name,
 #                               threading.current_thread().ident))
 
-class scatterPlot(QWidget):
-    scatterSelectionChanged = pyqtSignal('QString', 'QString')
+class scatterPlot(qt.QWidget):
+    scatterSelectionChanged = qt.pyqtSignal('QString', 'QString', int)
 
     def __init__(self, generalplot, parent=None, plotRateBar=False):
         super(scatterPlot, self).__init__(parent)
@@ -27,8 +23,8 @@ class scatterPlot(QWidget):
         self.paused = False
         self.plotrate = 1
         ''' create the scatterPlot as a grid layout '''
-        self.scatterPlot = QVBoxLayout()
-        self.plotThread = QTimer()
+        self.scatterPlot = qt.QVBoxLayout()
+        self.plotThread = qt.QTimer()
         self.generalPlot = generalplot
         self.records = self.generalPlot.records
         ''' Create generalPlot object '''
@@ -53,12 +49,12 @@ class scatterPlot(QWidget):
         self.updateSelectionBar()
 
     def setupPlotRateSlider(self):
-        self.plotRateLayout = QHBoxLayout()
-        self.plotRateLabel = QLabel()
+        self.plotRateLayout = qt.QHBoxLayout()
+        self.plotRateLabel = qt.QLabel()
         self.plotRateLabel.setText('Plot Update Rate ['+str(self.plotrate)+' Hz]:')
-        self.plotRateLabel.setAlignment(Qt.AlignCenter)
-        self.plotRateSlider = QSlider()
-        self.plotRateSlider.setOrientation(Qt.Horizontal)
+        self.plotRateLabel.setAlignment(qt.Qt.AlignCenter)
+        self.plotRateSlider = qt.QSlider()
+        self.plotRateSlider.setOrientation(qt.Qt.Horizontal)
         self.plotRateSlider.setInvertedAppearance(False)
         self.plotRateSlider.setInvertedControls(False)
         self.plotRateSlider.setMinimum(1)
@@ -69,12 +65,12 @@ class scatterPlot(QWidget):
         self.plotRateLayout.addWidget(self.plotRateSlider)
 
     def setupSelectionBar(self):
-        spacer = QSpacerItem(100, 20)
-        self.combobox1 = QComboBox()
+        spacer = qt.QSpacerItem(25, 20)
+        self.combobox1 = qt.QComboBox()
         self.combobox1.setMaximumWidth(200)
         self.combobox1.setMinimumWidth(100)
         self.combobox1.currentIndexChanged.connect(self.selectionBarChanged)
-        self.combobox2 = QComboBox()
+        self.combobox2 = qt.QComboBox()
         self.combobox2.setMaximumWidth(200)
         self.combobox2.setMinimumWidth(100)
         self.combobox2.currentIndexChanged.connect(self.selectionBarChanged)
@@ -83,15 +79,33 @@ class scatterPlot(QWidget):
             self.combobox2.addItem(name)
         self.combobox1.setCurrentIndex(0)
         self.combobox2.setCurrentIndex(1)
-        self.selectionBarLayout = QHBoxLayout()
+        self.resetButton = qt.QPushButton('Clear')
+        self.resetButton.clicked.connect(self.resetButtonPushed)
+        self.offsetSpinBox = qt.QSpinBox()
+        self.offsetSpinBox.setMinimum(-100)
+        self.offsetSpinBox.setMaximum(100)
+        self.offsetSpinBox.setSingleStep(1)
+        self.offsetSpinBoxLabel = qt.QPushButton('Offset')
+        self.offsetSpinBoxLabel.setFlat(True)
+        self.offsetSpinBoxLabel.clicked.connect(lambda x: self.offsetSpinBox.setValue(0))
+        self.offsetSpinBoxWidget = qt.QWidget()
+        self.offsetSpinBoxWidgetLayout = qt.QHBoxLayout()
+        self.offsetSpinBoxWidgetLayout.addWidget(self.offsetSpinBoxLabel)
+        self.offsetSpinBoxWidgetLayout.addWidget(self.offsetSpinBox)
+        self.offsetSpinBox.valueChanged.connect(self.selectionBarChanged)
+        self.selectionBarLayout = qt.QHBoxLayout()
         self.selectionBarLayout.addSpacerItem(spacer)
         self.selectionBarLayout.addWidget(self.combobox1)
         self.selectionBarLayout.addSpacerItem(spacer)
         self.selectionBarLayout.addWidget(self.combobox2)
         self.selectionBarLayout.addSpacerItem(spacer)
+        self.selectionBarLayout.addWidget(self.resetButton)
+        self.selectionBarLayout.addSpacerItem(spacer)
+        self.selectionBarLayout.addLayout(self.offsetSpinBoxWidgetLayout)
+        self.selectionBarLayout.addSpacerItem(spacer)
 
     def selectionBarChanged(self, index):
-        self.scatterSelectionChanged.emit(self.combobox1.currentText(), self.combobox2.currentText())
+        self.scatterSelectionChanged.emit(self.combobox1.currentText(), self.combobox2.currentText(), self.offsetSpinBox.value())
         self.plotWidget.update()
 
     def updateSelectionBar(self):
@@ -135,6 +149,9 @@ class scatterPlot(QWidget):
         self.paused = value
         self.plotWidget.togglePause(self.paused)
 
+    def resetButtonPushed(self):
+        self.plotWidget.setCutoff()
+
 def takeClosestPosition(xvalues, myList, myNumber):
     """
     Assumes myList is sorted. Returns closest value to myNumber.
@@ -155,7 +172,7 @@ def takeClosestPosition(xvalues, myList, myNumber):
 
 class scatterPlotPlot(pg.PlotWidget):
 
-    statusChanged = pyqtSignal(str)
+    statusChanged = qt.pyqtSignal(str)
 
     def __init__(self, scatterplot, parent = None):
         super(scatterPlotPlot, self).__init__(parent=parent)
@@ -178,6 +195,7 @@ class scatterPlotPlot(pg.PlotWidget):
         self.scatterPlot.sigClicked.connect(self.printPoints)
         self.data1 = []
         self.data2 = []
+        self.cutoff = 0
 
     def printPoints(self,scatterPlot, points):
         point = points[0]
@@ -185,9 +203,10 @@ class scatterPlotPlot(pg.PlotWidget):
         print(text)
         self.statusChanged.emit(text)
 
-    def setSelectionIndex(self, x, y):
+    def setSelectionIndex(self, x, y, offset):
         self.selectionNameX = str(x)
         self.selectionNameY = str(y)
+        self.selectionOffset = int(offset)
         if self.selectionNameX in self.records and self.selectionNameY in self.records:
             self.signalDelayTime1 =  self.records[self.selectionNameX]['timer']
             self.signalDelayTime2 =  self.records[self.selectionNameY]['timer']
@@ -211,15 +230,21 @@ class scatterPlotPlot(pg.PlotWidget):
         self.plotWidget.show()
 
     def createPlot(self, label1, label2, color):
-        name = label1+' vs '+label2
+        self.titleBaseName = label1+' vs '+label2
         self.plot.setLabel('bottom',label1)
         self.plot.setLabel('left',label2)
-        self.plot.setTitle(name)
+        self.plot.setTitle(self.titleBaseName)
         self.plot.showGrid(x=True, y=True)
         self.plot.enableAutoRange()
 
     def removePlot(self, name):
         self.plotWidget.removeItem(self.plotWidget.getItem(0,0))
+
+    def setCutoff(self):
+        self.cutoff = time.time()
+
+    def rotate(self, l, x):
+      return l[-x:] + l[:-x]
 
     def update(self):
         start = time.time()
@@ -227,12 +252,16 @@ class scatterPlotPlot(pg.PlotWidget):
             self.doingPlot  = True
             # self.plot.disableAutoRange()
             data1 = list(self.data1)
-            # if len(data1) > self.decimateScale:
-            #     del data1[:len(data1)-self.decimateScale]
+            if len(data1) > self.decimateScale:
+                del data1[:len(data1)-self.decimateScale]
             data2 = list(self.data2)
-            # if len(data2) > self.decimateScale:
-            #     del data2[:len(data2)-self.decimateScale]
+            if len(data2) > self.decimateScale:
+                del data2[:len(data2)-self.decimateScale]
             if len(data1) > 1 and len(data2) > 1:
+                cutpos = takeClosestPosition(next(iter(zip(*data1))), data1, self.cutoff)
+                del data1[:cutpos[0]]
+                cutpos = takeClosestPosition(next(iter(zip(*data2))), data2, self.cutoff)
+                del data2[:cutpos[0]]
                 if data1[0][0] < data2[0][0]:
                     ans = takeClosestPosition(next(iter(zip(*data1))), data1, data2[0][0])
                     starttime = ans[1]
@@ -247,6 +276,19 @@ class scatterPlotPlot(pg.PlotWidget):
                     startpos1 = startpos2 = 0
                 del data1[:startpos1]
                 del data2[:startpos2]
+                if self.signalDelayTime1 != self.signalDelayTime2:
+                    if self.signalDelayTime1 > self.signalDelayTime2:
+                        tmpdata1 = zip(*data1)[0]
+                        data1 = [takeClosestPosition(tmpdata1, data1, timeval[0])[1] for timeval in data2]
+                    else:
+                        tmpdata2 = zip(*data2)[0]
+                        data2 = [takeClosestPosition(tmpdata2, data2, timeval[0])[1] for timeval in data1]
+                if self.selectionOffset > 0:
+                    data1 = self.rotate(data1, self.selectionOffset)
+                if self.selectionOffset < 0:
+                    data2 = self.rotate(data2, abs(self.selectionOffset))
+                del data1[:abs(self.selectionOffset)]
+                del data2[:abs(self.selectionOffset)]
                 if len(data1) > len(data2):
                     del data1[len(data2) - len(data1):]
                 elif len(data2) > len(data1):
@@ -256,10 +298,9 @@ class scatterPlotPlot(pg.PlotWidget):
                     x=list(x)
                     x2,y = zip(*data2)
                     y=list(y)
-                    if len(x) > self.decimateScale:
-                        # xy = zip(x,y)
-                        del x[:len(x)-self.decimateScale]
-                        del y[:len(y)-self.decimateScale]
+                    start = time.time()
+                    pr = pearsonr(x,y)
                     self.scatterPlot.setData(x, y, pxMode=True, pen=None)
+                    self.plot.setTitle(self.titleBaseName + ' (pr='+str(np.round(pr[0], decimals=3))+')')
             self.doingPlot = False
         # self.plot.enableAutoRange()

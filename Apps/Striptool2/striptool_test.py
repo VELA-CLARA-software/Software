@@ -4,28 +4,18 @@ if getattr(sys, 'frozen', False):
 else:
     print( 'Not frozen!')
     sys.path.append("../../Widgets/Striptool2")
-# from PyQt4.QtCore import pyqtSignal, Qt
-# from PyQt4.QtGui import QFileDialog, QWidget, QPushButton, QMainWindow, QApplication, QStyle, QAction, qApp, QStatusBar, QTabWidget, QHBoxLayout, QPixmap, QSplashScreen, QDesktopWidget, QIcon
-try:
-    from PyQt4.QtCore import *
-    from PyQt4.QtGui import *
-    import qt4icons
-except ImportError:
-    print ('importing PyQt5')
-    from PyQt5.QtCore import *
-    from PyQt5.QtGui import *
-    from PyQt5.QtWidgets import *
-    import qt5icons
-from pyqtgraph.dockarea import *
+sys.path.append("../../../")
+import Software.Procedures.qt as qt
+from pyqtgraph.dockarea import DockArea, Dock
 
 seconds_per_unit = {"s": 1, "m": 60, "h": 3600, "d": 86400, "w": 604800}
 
 def convert_to_seconds(s):
     return int(s[:-1]) * seconds_per_unit[s[-1]]
 
-class timeButton(QPushButton):
+class timeButton(qt.QPushButton):
 
-    timeButtonPushed = pyqtSignal('int')
+    timeButtonPushed = qt.pyqtSignal('int')
 
     def __init__(self, label):
         super(timeButton, self).__init__()
@@ -35,22 +25,25 @@ class timeButton(QPushButton):
     def buttonPushed(self):
         self.timeButtonPushed.emit(convert_to_seconds(str(self.text())))
 
-class striptool_Demo(QMainWindow):
+class striptool_Demo(qt.QMainWindow):
     def __init__(self, parent = None):
         super(striptool_Demo, self).__init__(parent)
+        self.lastT = {}
+        self.lastT[0] = time.clock()
+        self.lastT[10] = time.clock()
 
         stdicon = self.style().standardIcon
-        style = QStyle
-        exitAction = QAction('&Exit', self)
+        style = qt.QStyle
+        exitAction = qt.QAction('&Exit', self)
         exitAction.setShortcut('Ctrl+Q')
         exitAction.setStatusTip('Exit application')
-        exitAction.triggered.connect(qApp.quit)
+        exitAction.triggered.connect(qt.qApp.quit)
 
-        scatterPlotAction = QAction('+Scatter', self)
+        scatterPlotAction = qt.QAction('+Scatter', self)
         scatterPlotAction.setStatusTip('Add Scatter Plot')
         scatterPlotAction.triggered.connect(self.addScatterPlot)
 
-        fftPlotAction = QAction('+FFT', self)
+        fftPlotAction = qt.QAction('+FFT', self)
         fftPlotAction.setStatusTip('Add FFT Plot')
         fftPlotAction.triggered.connect(self.addFFTPlot)
 
@@ -75,12 +68,12 @@ class striptool_Demo(QMainWindow):
         self.legend = self.generalplot.legend()
         self.signaltable = signaltable.signalTable(parent=self.generalplot)#, VELAMagnetController=Vmagnets, CLARAMagnetController=Cmagnets, BPMController=bpms, GeneralController=general)
 
-        reloadSettingsAction = QAction('Reload Settings', self)
+        reloadSettingsAction = qt.QAction('Reload Settings', self)
         reloadSettingsAction.setStatusTip('Reload Settings YAML File')
         reloadSettingsAction.triggered.connect(self.signaltable.reloadSettings)
         fileMenu.addAction(reloadSettingsAction)
 
-        saveAllDataAction = QAction('Save Data', self)
+        saveAllDataAction = qt.QAction('Save Data', self)
         saveAllDataAction.setStatusTip('Save All Data')
         saveAllDataAction.triggered.connect(self.generalplot.saveAllData)
         fileMenu.addAction(saveAllDataAction)
@@ -97,8 +90,8 @@ class striptool_Demo(QMainWindow):
         ''' Add some signals to the striptool - note they call our signal generator at a frequency of 1/timer (100 Hz and 10 Hz in these cases).
             The 'pen' argument sets the color of the curves
                 - see <http://www.pyqtgraph.org/documentation/style.html>'''
-        self.generalplot.addSignal(name='signal1', pen='g', timer=1.0/50.0, function=self.createRandomSignal, args=[100,10,2.3347])
-        self.generalplot.addSignal(name='signal2', pen='r', timer=1.0/10.0, function=self.createRandomSignal, args=[1e-8, 1e-9,4.005], logScale=False)
+        self.generalplot.addSignal(name='signal1', pen='g', timer=1.0/10.0, function=self.createRandomSignal, args=[0,2,0.5])
+        self.generalplot.addSignal(name='signal2', pen='r', timer=1.0/10.0, function=self.createRandomSignal, args=[10,0.4,0.5, 2], logScale=False)
         # self.generalplot.addSignal(name='signal3', pen='b', timer=1.0/10.0, function=self.createRandomSignal, args=[1e4, 1e1, 2])
         # self.generalplot.addSignal(name='signal4', pen='c', timer=1.0/20.0, function=self.createRandomSignal, args=[1,0.5,7.8])
         # self.generalplot.addSignal(name='signal5', pen='m', timer=1.0/10.0, function=self.createRandomSignal, args=[3,2,0.87])
@@ -123,7 +116,7 @@ class striptool_Demo(QMainWindow):
         ''' Here we create a tab layout widget, and put the 3 stripplots into a grid layout in one of the tabs
             In the second tab we put the first stripplot. NB: the stripplot "sp" can only exist in one place at a time!
         '''
-        self.tab = QTabWidget()
+        self.tab = qt.QTabWidget()
         self.area = DockArea()
         d1 = Dock("Scrolling Plot")
         d2 = Dock("Plot Legend")
@@ -143,7 +136,7 @@ class striptool_Demo(QMainWindow):
 
         ''' Make QSPlitter '''
         self.plotLayout = splitterWithHandles()
-        self.plotLayout.setOrientation(Qt.Vertical)
+        self.plotLayout.setOrientation(qt.Qt.Vertical)
         self.plotLayout.addWidget(self.signaltable)
         self.plotLayout.addWidget(self.area)
         self.timeButtonList = []
@@ -152,8 +145,8 @@ class striptool_Demo(QMainWindow):
         self.timeButton600 = self.createTimeButton('10m')
         self.timeButton6000 = self.createTimeButton('100m')
         self.timeButton60000 = self.createTimeButton('1000m')
-        self.timeButtonWidget = QWidget()
-        self.timeButtonLayout = QHBoxLayout()
+        self.timeButtonWidget = qt.QWidget()
+        self.timeButtonLayout = qt.QHBoxLayout()
         self.timeButtonLayout.addWidget(self.timeButton10)
         self.timeButtonLayout.addWidget(self.timeButton60)
         self.timeButtonLayout.addWidget(self.timeButton600)
@@ -181,7 +174,7 @@ class striptool_Demo(QMainWindow):
         self.generalplot.start()
         self.scrollingplot.start(100)
         self.fftplot.start()
-        # self.scatterplot.start()
+        self.scatterplot.start()
         self.histogramplot.start()
 
         ''' modify the plot scale to 10 secs '''
@@ -195,10 +188,12 @@ class striptool_Demo(QMainWindow):
         The signal should have peaks at 5 Hz and 10 Hz, which should be seen on the FFT plot assuming the
         sample rate is high enough
     '''
-    def createRandomSignal(self, mean=0, sigma=1, freq=1.682, t=None):
+    def createRandomSignal(self, mean=0, sigma=1, freq=1.682, offset=0, t=None):
         if t == None:
-            t = time.time()
-        signalValue = mean+sigma*np.sin(2*freq*np.pi*t+0.05)+0.5*np.random.normal(mean, sigma)#+np.sin(1.384*2*np.pi*t-0.1)+0.5*np.random.normal(mean, sigma)
+            t = time.clock()
+        signalValue = mean+sigma*np.sin(2*freq*np.pi*(t + offset))#+0.1*np.random.normal(mean, sigma)#+np.sin(1.384*2*np.pi*t-0.1)+0.5*np.random.normal(mean, sigma)
+        signalValue = t - self.lastT[mean] - 0.1
+        self.lastT[mean] = t
         return signalValue
 
     def addScatterPlot(self):
@@ -253,7 +248,7 @@ class striptool_Demo(QMainWindow):
             self.sp.setPlotScale((i+1)*60)
             self.sp2.setPlotScale((i+1)*60)
             self.sp3.setPlotScale((i+1)*60)
-            QtTest.QTest.qWait(1000*60)
+            qt.QtTest.QTest.qWait(1000*60)
         exit()
 
     def closeEvent(self, event):
@@ -261,17 +256,17 @@ class striptool_Demo(QMainWindow):
             plot.close()
 
 def main():
-   app = QApplication(sys.argv)
-   app_icon = QIcon(':/striptool.ico')
+   app = qt.QApplication(sys.argv)
+   app_icon = qt.QIcon(':/striptool.ico')
    app.setWindowIcon(app_icon)
    # app.setStyle(QStyleFactory.create("plastique"))
-   splash_pix = QPixmap(':/striptool.png')
-   splash = QSplashScreen(splash_pix)
+   splash_pix = qt.QPixmap(':/striptool.png')
+   splash = qt.QSplashScreen(splash_pix)
    print('here?')
-   splash.setWindowFlags(Qt.FramelessWindowHint)
+   splash.setWindowFlags(qt.Qt.FramelessWindowHint)
    splash.setEnabled(False)
    splash.show()
-   splash.showMessage("<h1><font color='#6BBAFD'>Striptool Initialising...</font></h1>", Qt.AlignTop | Qt.AlignCenter, Qt.black)
+   splash.showMessage("<h1><font color='#6BBAFD'>Striptool Initialising...</font></h1>", qt.Qt.AlignTop | qt.Qt.AlignCenter, qt.Qt.black)
    global pg, generalplot, scrollingplot, signaltable, np, splitterWithHandles
    import pyqtgraph as pg
    import generalPlot as generalplot

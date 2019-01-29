@@ -1,15 +1,9 @@
-import time, signal, copy
+import time, signal, copy, sys
 import os
 import xlsxwriter
 import datetime as dt
-try:
-    from PyQt4.QtCore import *
-    from PyQt4.QtGui import *
-except ImportError:
-    from PyQt5.QtCore import *
-    from PyQt5.QtGui import *
-    from PyQt5.QtWidgets import *
-# import PyQt4.QtGui
+sys.path.append("../../../")
+import Software.Procedures.qt as qt
 import logging
 import tables as tables
 import signalRecord as signalRecord
@@ -40,10 +34,10 @@ class CustomException(Exception):
     def __str__(self):
         return repr(self.parameter)
 
-class generalPlot(QWidget):
+class generalPlot(qt.QWidget):
 
-    signalAdded = pyqtSignal(str)
-    signalRemoved = pyqtSignal(str)
+    signalAdded = qt.pyqtSignal(str)
+    signalRemoved = qt.pyqtSignal(str)
 
     def __init__(self, parent = None):
         super(generalPlot, self).__init__(parent)
@@ -73,7 +67,7 @@ class generalPlot(QWidget):
     def removeSignal(self,name):
         self.records[name]['record'].close()
         self.signalRemoved.emit(str(name))
-        QTimer.singleShot(0, lambda: self.removeRecord(name))
+        qt.QTimer.singleShot(0, lambda: self.removeRecord(name))
         logger.info('Signal '+name+' removed!')
 
     def setDecimateLength(self, value=5000):
@@ -99,10 +93,10 @@ class generalPlot(QWidget):
             minute = str(minute) if minute >= 10 else '0' + str(minute)
             suggestedfilename = str(year)+'_'+str(month)+'_'+str(day)+'_'+str(hour)+str(minute)+'_striptool_data'
             try:
-                saveFileName = str(QFileDialog.getSaveFileName(self, 'Save Data', suggestedfilename,
+                saveFileName = str(qt.QFileDialog.getSaveFileName(self, 'Save Data', suggestedfilename,
                 filter="HDF5 files (*.h5);;XLSX files (*.xlsx);;CSV files (*.csv);; Binary Files (*.bin)", selectedFilter="HDF5 files (*.h5)"))
             except:
-                saveFileName = str(QFileDialog.getSaveFileName(self, 'Save Data', suggestedfilename,
+                saveFileName = str(qt.QFileDialog.getSaveFileName(self, 'Save Data', suggestedfilename,
                 filter="HDF5 files (*.h5);;XLSX files (*.xlsx);;CSV files (*.csv);; Binary Files (*.bin)", initialFilter="HDF5 files (*.h5)")[0])
         _, file_extension = os.path.splitext(saveFileName)
         if file_extension == '.csv' or file_extension == '.bin':
@@ -125,7 +119,7 @@ class generalPlot(QWidget):
         hour = str(hour) if hour >= 10 else '0' + str(hour)
         minute = str(minute) if minute >= 10 else '0' + str(minute)
         suggestedfilename = str(year)+'_'+str(month)+'_'+str(day)+'_'+str(hour)+str(minute)+'_'+name
-        saveFileName = str(QFileDialog.getSaveFileName(self, 'Save Data', suggestedfilename,
+        saveFileName = str(qt.QFileDialog.getSaveFileName(self, 'Save Data', suggestedfilename,
         filter="HDF5 files (*.h5);;XLSX files (*.xlsx);;CSV files (*.csv);; Binary Files (*.bin)", selectedFilter="HDF5 files (*.h5)"))
         _, file_extension = os.path.splitext(saveFileName)
         if file_extension == '.csv' or file_extension == '.bin':

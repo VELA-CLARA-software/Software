@@ -1,13 +1,7 @@
 import sys, time, os, datetime, signal
 import pyqtgraph as pg
-from pyqtgraph.Qt import QtGui, QtCore
-try:
-    from PyQt4.QtCore import *
-    from PyQt4.QtGui import *
-except ImportError:
-    from PyQt5.QtCore import *
-    from PyQt5.QtGui import *
-    from PyQt5.QtWidgets import *
+sys.path.append("../../../")
+import Software.Procedures.qt as qt
 # import peakutils
 import numpy as np
 # logger = logging.getLogger(__name__)
@@ -20,7 +14,7 @@ signal.signal(signal.SIGINT, signal.SIG_DFL)
 #                               threading.current_thread().ident))
 
 
-class histogramPlot(QtGui.QWidget):
+class histogramPlot(qt.QWidget):
 
     def __init__(self, generalplot, parent=None, plotRateBar=False):
         super(histogramPlot, self).__init__(parent)
@@ -28,8 +22,8 @@ class histogramPlot(QtGui.QWidget):
         self.paused = False
         self.plotrate = 1
         ''' create the histogramPlot as a grid layout '''
-        self.layout = QtGui.QVBoxLayout()
-        self.plotThread = QtCore.QTimer()
+        self.layout = qt.QVBoxLayout()
+        self.plotThread = qt.QTimer()
         self.generalPlot = generalplot
         self.records = self.generalPlot.records
         ''' Create generalPlot object '''
@@ -57,32 +51,32 @@ class histogramPlot(QtGui.QWidget):
         self.generalPlot.signalRemoved.connect(self.removeCurve)
 
     def setupOptionsBox(self):
-        self.subtractMeanLayout = QtGui.QHBoxLayout()
-        self.subtractMeanLabel = QtGui.QLabel()
+        self.subtractMeanLayout = qt.QHBoxLayout()
+        self.subtractMeanLabel = qt.QLabel()
         self.subtractMeanLabel.setText('Subtract Means')
-        self.subtractMeanLabel.setAlignment(QtCore.Qt.AlignCenter)
-        self.subtractMeanCheckbox = QtGui.QCheckBox()
+        self.subtractMeanLabel.setAlignment(qt.Qt.AlignCenter)
+        self.subtractMeanCheckbox = qt.QCheckBox()
         self.subtractMeanCheckbox.setChecked(False)
         self.subtractMeanCheckbox.stateChanged.connect(self.setSubtractMeans)
         self.subtractMeanLayout.addWidget(self.subtractMeanLabel)
         self.subtractMeanLayout.addWidget(self.subtractMeanCheckbox)
-        self.normaliseLayout = QtGui.QHBoxLayout()
-        self.normaliseLabel = QtGui.QLabel()
+        self.normaliseLayout = qt.QHBoxLayout()
+        self.normaliseLabel = qt.QLabel()
         self.normaliseLabel.setText('Normalise')
-        self.normaliseLabel.setAlignment(QtCore.Qt.AlignCenter)
-        self.normaliseCheckbox = QtGui.QCheckBox()
+        self.normaliseLabel.setAlignment(qt.Qt.AlignCenter)
+        self.normaliseCheckbox = qt.QCheckBox()
         self.normaliseCheckbox.setChecked(False)
         self.normaliseCheckbox.stateChanged.connect(self.setNormalise)
         self.normaliseLayout.addWidget(self.normaliseLabel)
         self.normaliseLayout.addWidget(self.normaliseCheckbox)
 
     def setupPlotRateSlider(self):
-        self.plotRateLayout = QtGui.QHBoxLayout()
-        self.plotRateLabel = QtGui.QLabel()
+        self.plotRateLayout = qt.QHBoxLayout()
+        self.plotRateLabel = qt.QLabel()
         self.plotRateLabel.setText('Plot Update Rate ['+str(self.plotrate)+' Hz]:')
-        self.plotRateLabel.setAlignment(QtCore.Qt.AlignCenter)
-        self.plotRateSlider = QtGui.QSlider()
-        self.plotRateSlider.setOrientation(QtCore.Qt.Horizontal)
+        self.plotRateLabel.setAlignment(qt.Qt.AlignCenter)
+        self.plotRateSlider = qt.QSlider()
+        self.plotRateSlider.setOrientation(qt.Qt.Horizontal)
         self.plotRateSlider.setInvertedAppearance(False)
         self.plotRateSlider.setInvertedControls(False)
         self.plotRateSlider.setMinimum(1)
@@ -136,9 +130,9 @@ class histogramPlot(QtGui.QWidget):
         elif value == True:
             self.addCurve(name)
 
-class histogramPlotCurve(QtCore.QObject):
+class histogramPlotCurve(qt.QObject):
 
-    statusChanged = QtCore.pyqtSignal(str)
+    statusChanged = qt.pyqtSignal(str)
 
     def __init__(self, histogramplot, records, parent = None):
         super(histogramPlotCurve, self).__init__(parent=parent)

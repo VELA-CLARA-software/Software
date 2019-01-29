@@ -57,7 +57,8 @@ class updatingTimer(qt.QThread):
 class Controller(qt.QObject):
 
     newDataSignal = qt.pyqtSignal()
-    loggerSignal = qt.pyqtSignal(str)
+    # loggerSignal = qt.pyqtSignal(str)
+    loggerSignal = qt.pyqtSignal(['QString'], ['QString','QString'])
     progressSignal = qt.pyqtSignal(int)
 
     defaults = {'Gun_Amp_Step_Set': 100,
@@ -122,7 +123,8 @@ class Controller(qt.QObject):
         self.model.machine = self.machineSignaller
         self.machineSignaller.toMachine.connect(self.machineReciever.toMachine)
         self.machineReciever.fromMachine.connect(self.machineSignaller.fromMachine)
-        self.loggerSignal.connect(self.setLabel)
+        self.loggerSignal[str].connect(self.setLabel)
+        self.loggerSignal[str, str].connect(self.setLabel)
         self.plots = {}
 
         '''Plots'''
@@ -226,11 +228,13 @@ class Controller(qt.QObject):
 
     def setGunPhaseOffset(self):
         self.model.gunPhaser(gunPhaseSet=self.view.Gun_OffCrest_Phase_Set.value(), offset=True)
+        time.sleep(0.5)
         pm = '' if self.view.Gun_OffCrest_Phase_Set.value() < 0 else '+'
         self.loggerSignal.emit('Set '+pm+str(self.view.Gun_OffCrest_Phase_Set.value())+'deg to '+self.cavity+' = '+str(self.model.machine.getPhase(self.cavity)))
 
     def setLinac1PhaseOffset(self):
         self.model.linac1Phaser(linac1PhaseSet=self.view.Linac1_OffCrest_Phase_Set.value(), offset=True)
+        time.sleep(0.5)
         pm = '' if self.view.Linac1_OffCrest_Phase_Set.value() < 0 else '+'
         self.loggerSignal.emit('Set '+pm+str(self.view.Linac1_OffCrest_Phase_Set.value())+'deg to '+self.cavity+' = '+str(self.model.machine.getPhase(self.cavity)))
 
@@ -466,11 +470,11 @@ class Controller(qt.QObject):
         self.view.Progress_Monitor.setValue(progress)
 
     def setLabel(self, string, severity='info'):
-        getattr(logger,severity)(string)
+        getattr(logger, str(severity))(string)
         self.view.label_MODE.setText('Status: <font color="red">' + string + '</font>')
 
     def cancelSave(self):
-        if self.actuator == 'Dipole':
+        if self.actuator == 'dipole':
             self.model.machine.setDip(self.model.startingDipole)
         else:
             self.model.machine.setPhase(self.cavity, self.model.approxcrest)

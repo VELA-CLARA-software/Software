@@ -2,26 +2,52 @@ import sys
 import scipy.constants as physics
 import numpy as np
 import math
+import time
 sys.path.append("../../")
 import Software.Procedures.Machine.machine as spmm
+from Software.Procedures.Machine.machine import Bunch as Bunch
 degree = physics.pi/180.0
 SPEED_OF_LIGHT = physics.constants.c / 1e6
+
+class localMachine(dict):
+
+    def __init__(self, magref):
+        super(localMachine, self).__init__()
+        global globalMachine
+        self.magRef = magref
+        self.magnets = Bunch()
+        self.magnets.getMagObjConstRef = self.getMagnet
+        for name, psu, si in zip(self.magRef.magNames, self.magRef.psuStates, self.magRef.siValues):
+            self[name] = Bunch()
+            self[name].SI = si
+            self[name].getMagPSUState = psu
+            self[name].name = name
+            self[name].position = globalMachine.magnets.getMagObjConstRef(name).position
+            self[name].fieldIntegralCoefficients = globalMachine.magnets.getMagObjConstRef(name).fieldIntegralCoefficients
+
+    def getMagnet(self, magnetName):
+        return self[magnetName]
 
 class getMagnetProperties(object):
     def __init__(self, filename=None, machine=None, machineType='Physical', lineType='CLARA', gunType='10Hz'):
         super(getMagnetProperties, self).__init__()
+        global globalMachine
         if machine is None:
-            self.machine = spmm.Machine(machineType, lineType, gunType, controllers=['magnets'])
+            globalMachine = spmm.Machine(machineType, lineType, gunType, controllers=['magnets'])
         else:
-            self.machine = machine
+            globalMachine = machine
         if filename is not None:
-            self.loadDBURT(filename)
-        self.momentum = self.calculateMomentumFromDipole('S02-DIP01')
+            self.getDBURT(filename)
+        else:
+            self.machine = globalMachine
 
-    def loadDBURT(self, filename=None):
-        if filename is not None:
-            self.machine.magnets.getDBURT(filename)
-            self.momentum = self.calculateMomentumFromDipole('S02-DIP01')
+    def getDBURT(self, DBURT):
+        print 'loading DBURT ', DBURT
+        self.magRef = globalMachine.magnets.getDBURT(DBURT)
+        self.machine = localMachine(self.magRef)
+
+    def getMachine(self):
+        self.machine = globalMachine
 
     def getS(self, magnetname):
         magnet = self.machine.magnets.getMagObjConstRef(magnetname)
@@ -29,7 +55,6 @@ class getMagnetProperties(object):
 
     def getK(self, magnetname, current=None):
         """Perform the calculation of K value (or bend angle)."""
-        # print 'magnetname = ', magnetname
         magnet = self.machine.magnets.getMagObjConstRef(magnetname)
         if current is None:
             current = magnet.SI
@@ -63,12 +88,12 @@ class getMagnetProperties(object):
             k = int_strength / magnet.magneticLength
         else:
             k = 0
-        return k
+        return current, k
 
-    def calculateMomentumFromDipole(self, magnetname):
+    def calculateMomentumFromDipole(self, magnetname, current=None):
         magnet = self.machine.magnets.getMagObjConstRef(magnetname)
-        current = magnet.SI
-        print 'dipole current = ', current
+        if current is None:
+            current = magnet.SI
         sign = np.copysign(1, current)
         coeffs = np.append(magnet.fieldIntegralCoefficients[:-1] * sign, magnet.fieldIntegralCoefficients[-1])
         int_strength = np.polyval(coeffs, abs(current))
@@ -111,6 +136,10 @@ class getMagnetProperties(object):
 
 if __name__ == "__main__":
     magprop = getMagnetProperties('CLARA_2_BA1_BA2_2018-11-20-1951.dburt')
+    en1 = magprop.calculateMomentumFromDipole('BA1-DIP01', 56.485)
+    en2 = magprop.calculateMomentumFromDipole('BA1-DIP01', 57.765)
+    print 'energy1 = ', en1, '  energy2 = ', en2, '   diff = ', en2-en1
+    exit()
     # magprop.momentum = 31.5
     print magprop.momentum
     print magprop.getK('C2V-QUAD1')
