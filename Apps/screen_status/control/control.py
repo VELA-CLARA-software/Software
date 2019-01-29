@@ -87,34 +87,43 @@ class control(object):
         s = control.view.sender()
         scr = str(s.objectName())
         self.last_scr = scr
-        print(scr, " Context Menu" )
-        devices = control.procedure.get_screen_devices(scr)
+
         popMenu = QMenu(s)
-        for device in devices:
-            print("Added device ",device)
-            a = QAction(device, control.view.screens[scr])
-            a.setObjectName(device)
-            print("TEST ", a.objectName())
+
+        if scr in self.gui_enabled_moving:
+            a = QAction('CANCEL_MOVING', control.view.screens[scr])
+            a.setObjectName('CANCEL_MOVING')
             popMenu.addAction(a)
-            #x = popMenu.addAction(QAction(device, self.contextMenuChoice))
-            #x.connect(self.contextMenuChoice(x.text()))
-        #'popMenu.exec_(button.mapToGlobal())
+        else:
+            print(scr, " Context Menu" )
+            devices = control.procedure.get_screen_devices(scr)
+            for device in devices:
+                print("Added device ",device)
+                a = QAction(device, control.view.screens[scr])
+                a.setObjectName(device)
+                print("TEST ", a.objectName())
+                popMenu.addAction(a)
+                #x = popMenu.addAction(QAction(device, self.contextMenuChoice))
+                #x.connect(self.contextMenuChoice(x.text()))
+            #'popMenu.exec_(button.mapToGlobal())
         popMenu.triggered.connect(self.contextMenuChoice)
         popMenu.setStyleSheet("background-color: gray")
         popMenu.exec_(s.mapToGlobal(point))
 
     def contextMenuChoice(self, passed):
-        scr = self.last_scr
         device = str(passed.objectName())
-        control.procedure.move_screen_to(scr,device)
-        self.gui_enabled_moving.append(scr)
+        if device == 'CANCEL_MOVING':
+            self.gui_enabled_moving.remove(self.last_scr)
+        else:
+            control.procedure.move_screen_to(self.last_scr,device)
+            self.gui_enabled_moving.append(self.last_scr)
 
 
     def handle_screen_in(self):
         control.procedure.screen_in()
 
     def handle_all_out(self):
-        control.procedure.screen_in()
+        control.procedure.all_out()
 
     def handle_in_out(self):
         sender = control.view.sender()
@@ -124,7 +133,7 @@ class control(object):
         self.timer = QTimer()
         self.timer.setSingleShot(False)
         self.timer.timeout.connect(self.update_gui)
-        self.timer.start(1000)
+        self.timer.start(100)
 
     def update_gui(self):
         '''
@@ -136,11 +145,11 @@ class control(object):
         # magic && cancer
         to_delete = []
         for item in self.gui_enabled_moving:
-            print("Checking gui clicked for ", item)
+            #print("Checking gui clicked for ", item)
             if control.procedure.is_moving(item):
                 to_delete.append(item)
-            else:
-                control.procedure.states[item] = 'CLICKED'
+            elif control.procedure.set_state_equal_read_state(item):
+                to_delete.append(item)
         for item in to_delete:
             self.gui_enabled_moving.remove(item)
 

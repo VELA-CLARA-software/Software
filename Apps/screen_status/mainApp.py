@@ -23,13 +23,9 @@
 //*/
 '''
 import sys,os
-
 sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\Release\\')
-#sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\stage\\')
-
 # for i in sys.path:
 #     print i
-
 from PyQt4 import QtGui, QtCore
 from control.control import control
 from procedure.procedure import procedure
@@ -44,7 +40,6 @@ class App(QtGui.QApplication):
         print 'Creating Controller'
         self.control = control(sys_argv, view = self.view, procedure= self.procedure)
         print 'Running'
-
 
 if __name__ == '__main__':
     app = App(sys.argv)

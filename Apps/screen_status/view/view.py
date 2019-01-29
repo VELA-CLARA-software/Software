@@ -73,27 +73,53 @@ class view(QMainWindow, Ui_CamState ):
             self.update_widget(view.screens[name],state)
 
     def update_widget(self,widget,state):
-        if state == SCREEN_STATE.RETRACTED:
+
+
+        if state == SCREEN_STATE.V_MAX:#1
+            widget.setStyleSheet("background-color: magenta")
+            widget.setText( widget.objectName() + ' V-MAX' )
+        elif state == SCREEN_STATE.H_MAX:#2
+            widget.setStyleSheet("background-color: magenta")
+            widget.setText( widget.objectName() + ' H -MAX' )
+        elif state == SCREEN_STATE.V_MIRROR:#3
+            widget.setStyleSheet("background-color: light gray")
+            widget.setText( widget.objectName() + ' V-MIRROR' )
+        elif state == SCREEN_STATE.V_GRAT:#4
+            widget.setStyleSheet("background-color: cyan")
+            widget.setText( widget.objectName() + ' V-GRATICULE' )
+
+
+        elif state == SCREEN_STATE.YAG:#5
             widget.setStyleSheet("background-color: green")
-            widget.setText( widget.objectName() + ' SCREEN-OUT' )
-        elif state == SCREEN_STATE.V_RETRACTED:
+            widget.setText( widget.objectName() + ' YAG' )
+        elif state == SCREEN_STATE.V_YAG:#6
             widget.setStyleSheet("background-color: green")
-            widget.setText( widget.objectName() + ' SCREEN-OUT' )
-        elif state == SCREEN_STATE.H_RETRACTED:
-            widget.setStyleSheet("background-color: green")
-            widget.setText( widget.objectName() + ' SCREEN-OUT' )
-        elif state == SCREEN_STATE.YAG:
-            widget.setStyleSheet("background-color: red")
-            widget.setText( widget.objectName() + ' SCREEN-IN' )
-        elif state == SCREEN_STATE.V_YAG:
-            widget.setStyleSheet("background-color: red")
-            widget.setText( widget.objectName()+ ' SCREEN-IN' )
+            widget.setText( widget.objectName()+ ' YAG' )
+
         elif state == SCREEN_STATE.V_RF:
-            widget.setStyleSheet("background-color: green")
+            widget.setStyleSheet("background-color: red")
             widget.setText( widget.objectName() + ' RF' )
+
         elif state == SCREEN_STATE.SCREEN_MOVING:
             widget.setStyleSheet("background-color: yellow")
             widget.setText( widget.objectName() + ' MOVING' )
+
+        elif state == SCREEN_STATE.V_COL:
+            widget.setStyleSheet("background-color: orange")
+            widget.setText( widget.objectName() + ' V-COL' )
+
+
+        elif state == SCREEN_STATE.H_RETRACTED:
+            widget.setStyleSheet("background-color: magenta")
+            widget.setText( widget.objectName() + ' H-RETRACTED' )
+        elif state == SCREEN_STATE.V_RETRACTED:
+            widget.setStyleSheet("background-color: magenta")
+            widget.setText( widget.objectName() + ' V-RETRACTED' )
+        elif state == SCREEN_STATE.RETRACTED:
+            widget.setStyleSheet("background-color: red")
+            widget.setText( widget.objectName() + ' RETRACTED (RF)' )
+
+
         elif state == SCREEN_STATE.V_SLIT_1:
             widget.setStyleSheet("background-color: orange")
             widget.setText( widget.objectName() + ' SLIT' )
@@ -106,6 +132,15 @@ class view(QMainWindow, Ui_CamState ):
         elif state == SCREEN_STATE.H_SLIT_3:
             widget.setStyleSheet("background-color: orange")
             widget.setText( widget.objectName() + ' SLIT' )
+        elif state == SCREEN_STATE.H_APT_1:
+            widget.setStyleSheet("background-color: orange")
+            widget.setText( widget.objectName() + ' H_APT_1' )
+        elif state == SCREEN_STATE.H_APT_2:
+            widget.setStyleSheet("background-color: orange")
+            widget.setText( widget.objectName() + ' H_APT_2' )
+        elif state == SCREEN_STATE.H_APT_3:
+            widget.setStyleSheet("background-color: orange")
+            widget.setText( widget.objectName() + ' H_APT_3' )
 
         elif state == 'CLICKED':
             widget.setStyleSheet("background-color: purple")

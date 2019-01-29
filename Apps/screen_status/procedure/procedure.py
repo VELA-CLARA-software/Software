@@ -30,7 +30,7 @@ class procedure(object):
     # initDAQ = daq.init()
     scrInit = scr.init()
     scrInit.setVerbose()
-    scrInit.setQuiet()
+    #scrInit.setQuiet()
 
     sc = scrInit.physical_Screen_Controller()
 
@@ -67,6 +67,8 @@ class procedure(object):
     m['H_APT_1'          ] = SCREEN_STATE.H_APT_1
     m['H_APT_2'          ] = SCREEN_STATE.H_APT_2
     m['H_APT_3'          ] = SCREEN_STATE.H_APT_3
+    m['YAG'          ] = SCREEN_STATE.YAG
+    m['RETRACTED'          ] = SCREEN_STATE.RETRACTED
 
 
     def __init__(self):
@@ -100,11 +102,26 @@ class procedure(object):
     def update_states(self):
         for name in procedure.scr_names:
             procedure.states[name] = procedure.scr_state_refs[name].screenState
-            # check for moving:
-            # if procedure.sc.isScreenMoving(name):
-            #     procedure.states[name] = scr.DRIVER_STATE.H_DRIVER_MOVING
-           # print name + ' state = ' + str(procedure.states[name])
+            set_state = procedure.scr_state_refs[name].screenSetState
+            if set_state != procedure.states[name]:
+                #print(name,set_state,procedure.states[name])
+                if procedure.states[name] != self.m['SCREEN_MOVING'    ]:
+                    procedure.states[name] = 'CLICKED'
         procedure.previous_states = procedure.states
+
+    def set_state_equal_read_state(self, name):
+        return procedure.scr_state_refs[name].screenSetState == procedure.scr_state_refs[
+            name].screenState
+
+    def set_state_NOT_equal_read_state(self, name):
+        return procedure.scr_state_refs[name].screenSetState != procedure.scr_state_refs[
+            name].screenState
+
+
+    #
+    def all_out(self):
+        for name in procedure.scr_names:
+            self.screen_out(name)
 
     # called external, toggle open or close
     def in_out(self,name):
@@ -128,12 +145,8 @@ class procedure(object):
         else:
             procedure.sc.moveScreenOut(name)
 
-    # called external, close all valves
-    def all_out(self):
-        for name in procedure.scr_names:
-            self.stop(name)
-
     def move_screen_to(self, scr, state):
-        print("move_screen_to passed, ",scr, state, procedure.m[state])
-        #procedure.sc.moveScreenTo( scr,  procedure.m[state])
-        procedure.sc.moveScreenTo( scr,  )
+        if procedure.scr_state_refs[scr].screenSetState != state:
+            print("move_screen_to passed, ",scr, state, procedure.m[state])
+            #procedure.sc.moveScreenTo( scr,  procedure.m[state])1
+            procedure.sc.moveScreenTo( scr, procedure.m[state] )
