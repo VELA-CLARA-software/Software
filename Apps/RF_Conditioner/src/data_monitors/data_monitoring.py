@@ -12,6 +12,7 @@ from data_monitoring_base import data_monitoring_base
 from src.data.state import state
 from VELA_CLARA_RF_Modulator_Control import GUN_MOD_STATE
 from VELA_CLARA_RF_Modulator_Control import L01_MOD_STATE
+from VELA_CLARA_RF_Protection_Control import RF_GUN_PROT_STATUS
 
 
 
@@ -90,15 +91,30 @@ class data_monitoring(data_monitoring_base):
 
 	def update_enable_LLRF_state(self, gui_enable_rf):
 		''' checks everything to enable RF power '''
-		self.main_monitor_states[dat.can_rf_output] = state.BAD
+		#self.main_monitor_states[dat.can_rf_output] = state.BAD
+		self.data.values[dat.can_rf_output] = state.BAD
 		if gui_enable_rf:
+
+			# probably don;t need to copy this data  ...
+			self.enable_RF_monitor_states[dat.llrf_interlock_status] = self.data.values[dat.llrf_interlock_status]
+			self.enable_RF_monitor_states[dat.llrf_trigger_status] = self.data.values[dat.llrf_trigger_status]
+			self.enable_RF_monitor_states[dat.pulse_length_status] = self.data.values[dat.pulse_length_status]
+			self.enable_RF_monitor_states[dat.llrf_output_status] = self.data.values[dat.llrf_output_status]
+			self.enable_RF_monitor_states[dat.llrf_ff_amp_locked_status] = self.data.values[dat.llrf_ff_amp_locked_status]
+			self.enable_RF_monitor_states[dat.llrf_ff_ph_locked_status] = self.data.values[dat.llrf_ff_ph_locked_status]
+			self.enable_RF_monitor_states[dat.llrf_DAQ_rep_rate_status] = self.data.values[dat.llrf_DAQ_rep_rate_status]
+
 			if all(value == state.GOOD for value in self.enable_RF_monitor_states.values()):
-				self.main_monitor_states[dat.can_rf_output] = state.GOOD
+				#self.main_monitor_states[dat.can_rf_output] = state.GOOD
+				self.data.values[dat.can_rf_output] = state.GOOD
 		# now update the state
+
+
 		self.update_state(dat.can_rf_output)
 
 	def enable_RF_bad(self):
-		return state.BAD in self.enable_RF_monitor_states.values()
+		#return state.BAD in self.enable_RF_monitor_states.values()
+		return self.data.values[dat.can_rf_output] == state.BAD
 
 	def update_states(self ):
 		''' updates main_monitor_states using function sdefined in self.monitor_funcs'''
@@ -193,7 +209,10 @@ class data_monitoring(data_monitoring_base):
 		# 		self.main_monitor_states[dat.mod_output_status] = state.GOOD
 
 	def RF_Prot(self):
-		self.update_state(dat.rfprot_state)
+		if self.data.values[dat.rfprot_state] == RF_GUN_PROT_STATUS.GOOD:
+			self.enable_RF_monitor_states[dat.rfprot_state] = state.GOOD
+		else:
+			self.enable_RF_monitor_states[dat.rfprot_state] = state.BAD
 
 	def is_bad_or_new_bad(self, key):
 		if self.main_monitor_states[key] == state.NEW_BAD:

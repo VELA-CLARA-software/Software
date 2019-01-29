@@ -57,63 +57,95 @@ class llrf_handler(llrf_handler_base):
         #llrf_handler_base.llrf_control.trigOff()
         # for trace in llrf_handler_base.config.breakdown_config['BREAKDOWN_TRACES']:#MAGIC_STRING:
         #     llrf_handler_base.llrf_control.setTraceSCAN(trace, LLRF_SCAN.PASSIVE)  # SHOULD BE INPUT Parameter
-        llrf_handler_base.llrf_control.setAmpSP(val)
-        self.mask_set = False
-        start = timer()
-        end = start
-        success = True
-        while llrf_handler_base.llrfObj[0].amp_sp != val:
-            end = timer()
-            if start - end > 3.0:#MAGIC_NUMBER
-                success = False
-                break
-        if success:
-            llrf_handler_base.logger.message('set_amp = ' + str(val) + ', took ' + str(end - start)+\
-                                         ' time,  averages NOT reset, mask_set = False', True)
-        else:
-            llrf_handler_base.logger.message('set_amp = ' + str(val) + ', FAILED to set amp in less than 3 seconds '
-                                                                       'averages NOT reset, mask_set = False', True)
-
-        #llrf_handler_base.llrf_control.trigExt()
-        # start = timer()
-        # end = start
-        # while llrf_handler_base.llrfObj[0].trig_source != TRIG.EXTERNAL:
-        #     end = timer()
-        #     if start - end > 3.0:#MAGIC_NUMBER
-        #         success = False
-        #         break
-        # traces get added to the average when they pass the mask
-        #self.start_trace_average_no_reset(True)
-        # for trace in llrf_handler_base.config.breakdown_config['BREAKDOWN_TRACES']:#MAGIC_STRING:
-        #     llrf_handler_base.llrf_control.setTraceSCAN(trace, LLRF_SCAN.ZERO_POINT_ONE) # SHOULD BE INPUIT Parameter
-
+        if val != llrf_handler_base.llrfObj[0].amp_sp:
+            llrf_handler_base.llrf_control.setAmpSP(val)
+            self.mask_set = False
+            start = timer()
+            end = start
+            success = True
+            while llrf_handler_base.llrfObj[0].amp_sp != val:
+                end = timer()
+                if start - end > 3.0:#MAGIC_NUMBER
+                    success = False
+                    break
+            if success:
+                llrf_handler_base.logger.message('set_amp = ' + str(val) + ', took ' + str(end - start)+\
+                                             ' time,  averages NOT reset, mask_set = False', True)
+            else:
+                llrf_handler_base.logger.message('set_amp = ' + str(val) + ', FAILED to set amp in less than 3 seconds '
+                                                                           'averages NOT reset, mask_set = False', True)
 
     def enable_llrf(self):
         # go through each possible LLRF paramter (except HOLD_RF_ON_COM mod / protection parmaters
         # and try and reset them
-        llrf_handler_base.logger.message('enable_llrf trying to enable LLRF parmeters ', True)
+        #llrf_handler_base.logger.message('enable_llrf trying to enable LLRF parmeters ', True)
         #
-        llrf_handler_base.llrf_control.set_amp(0)
+        #print('enable RF is setting amp_sp = 0')
+        self.set_amp(0)
         #
-        sleep(0.02)
-        llrf_handler_base.llrf_control.setInterlockNonActive()
+        #print("llrf_handler_base.llrf_control.isInterlockActive() = ", llrf_handler_base.llrf_control.isInterlockActive())
+        if llrf_handler_base.llrf_control.isInterlockActive():
+            #print('Interlock active')
+            llrf_handler_base.llrf_control.setInterlockNonActive()
+            sleep(0.02)
+        else:
+            pass
+            #print('interlock not active')
         #
-        sleep(0.02)
-        llrf_handler_base.llrf_control.trigExt()
+
+
+        #print("llrf_handler_base.llrf_control.isTrigExternal() = ", llrf_handler_base.llrf_control.isTrigExternal())
+        if llrf_handler_base.llrf_control.isTrigExternal():
+            pass
+            #print('TRIG IS IN EXTERNAL')
+        else:
+            #print('trigExt')
+            llrf_handler_base.llrf_control.trigExt()
+            sleep(0.02)
         #
-        sleep(0.02)
-        llrf_handler_base.llrf_control.enableRFandLock()
+
+        # if llrf_handler_base.llrf_control.isTrigExternal():
+        #     print('lockPhaseFF')
+        #     llrf_handler_base.llrf_control.trigExt()
+        #     sleep(0.02)
+        # else:
+        #     print('TRIG IS IN EXTERNAL')
+
+        #print("llrf_handler_base.llrf_control.isRFOutput() = ", llrf_handler_base.llrf_control.isRFOutput())
+
+        if llrf_handler_base.llrf_control.isRFOutput():
+            #print('RF OUTPUT IS GOOD')
+            pass
+        else:
+            #print('enableRFOutput')
+            llrf_handler_base.llrf_control.enableRFOutput()
+            sleep(0.02)
+
+
+        #print("llrf_handler_base.llrf_control.isAmpFFLocked() = ", llrf_handler_base.llrf_control.isAmpFFLocked())
+        if llrf_handler_base.llrf_control.isAmpFFLocked():
+            #print('AMP FF LOCKED')
+            pass
+        else:
+            #print('lockPhaseFF')
+            llrf_handler_base.llrf_control.lockAmpFF()
+            sleep(0.02)
+
+        #print("llrf_handler_base.llrf_control.isPhaseFFLocked() = ", llrf_handler_base.llrf_control.isPhaseFFLocked())
+        if llrf_handler_base.llrf_control.isPhaseFFLocked():
+            #print('PHASE FF LOCKED')
+            pass
+        else:
+            #print('lockPhaseFF')
+            llrf_handler_base.llrf_control.lockPhaseFF()
+            sleep(0.02)
 
 
     def disableRFOutput(self):
         llrf_handler_base.llrf_control.disableRFOutput()
 
-
-
     def set_amp_hp(self, val):
         llrf_handler_base.llrf_control.setAmpHP(val)
-
-
 
     # NOT NEEDED ANYMORE ????
     # !NEATEN UP! !NEATEN UP! !NEATEN UP! !NEATEN UP! !NEATEN UP! !NEATEN UP! !NEATEN UP!

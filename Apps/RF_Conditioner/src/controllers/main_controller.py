@@ -102,7 +102,8 @@ class main_controller(controller_base):
 
     def toggle_RF_output(self):
         if self.gui.can_rf_output:
-            self.llrf_control.enable_llrf()
+            print("toggle_RF_output(), gui.can_rf_output, so calling enable_llrf ")
+            controller_base.llrf_handler.enable_llrf()
         else:
             self.llrf_control.disableRFOutput()
 
@@ -121,6 +122,14 @@ class main_controller(controller_base):
         #
         # remove this time.sleep(1) at your peril
         time.sleep(1)
+
+        # RESET TH EEVNT PULSE COUNT TO ZERO 
+        self.data_monitor.outside_mask_trace_monitor.reset_event_pulse_count()
+
+        #  enable the RF
+        self.toggle_RF_output()
+
+
         # pulse_breakdown has chosen start values, so continue, see get_pulse_count_breakdown_log()
         self.continue_ramp()
         #
@@ -174,28 +183,32 @@ class main_controller(controller_base):
 
             # # if new_bad drop SP
             if controller_base.data_monitor.new_bad():
+                self.logger.message('PYTHON MAIN LOOP: in state new_bad', True)
                 # disable checking masks,(precautionary)
-                # controller_base.llrf_handler.set_global_check_mask(False)
+                # controller_base.llrf_handler.set_global_check_mask(False)all
                 # check if spike was vac or DC
                 controller_base.data_monitor.check_if_new_bad_is_vac_or_DC()
 
             elif controller_base.data_monitor.enable_RF_bad():
-                controller_base.llrf_handler.enable_llrf()
+                if self.gui.can_rf_output:
+                    #self.logger.message('PYTHON MAIN LOOP: in state enable_RF_bad, gui.can_rf_output = True, calling enable_llrf', True)
+                    controller_base.llrf_handler.enable_llrf()
 
 
             elif controller_base.data_monitor.new_good_no_bad():
-                # start checking masks again
-                if controller_base.data.values[dat.breakdown_rate_hi]:
-                    self.ramp_down()
-                else:
-                    self.continue_ramp()
-                #controller_base.llrf_handler.enable_trigger()
+                self.logger.message('PYTHON MAIN LOOP: in state new_good_no_bad',True)
+
+                # This switch may get set when manually disabling then enabling rf via the GUI button
+                # WE now always ramp down when coming back from an off state ((do wwe wnat that when manually disableing RF???)
+                self.ramp_down()
+
                 self.logger.message('PYTHON MAIN LOOP: in state new_good_no_bad, setting Global Check Mask to TRUE',True)
                 controller_base.llrf_handler.set_global_check_mask(True)
 
 
             # if everything is good carry on increasing
             elif controller_base.data_monitor.all_good():
+                #self.logger.message('PYTHON MAIN LOOP: in state all_good', True)
                 # set new mask, if changed power
                 #controller_base.llrf_handler.set_mask()
 
@@ -209,7 +222,8 @@ class main_controller(controller_base):
                     if self.gui.can_ramp:
                         if controller_base.data.values[dat.breakdown_rate_hi]:
                             if self.has_not_shown_br_hi:
-                                self.logger.message('MAIN LOOP all good, but breakdown rate too high: Rate = ' + str(controller_base.data.values[dat.breakdown_rate]))
+                                self.logger.message('MAIN :'
+                                                    'continue ramp LOOP all good, but breakdown rate too high: Rate = ' + str(controller_base.data.values[dat.breakdown_rate]))
                                 self.has_not_shown_br_hi = False
                         else:
                             self.ramp_up()
@@ -221,9 +235,11 @@ class main_controller(controller_base):
                     # self.logger.message('MAIN LOOP all good, but pulse count low, ' +
                     #                     str(controller_base.data.values[dat.event_pulse_count]) +
                     #                     ' \ '+str(controller_base.data.values[dat.required_pulses]))
+                    self.continue_ramp()
                     pass
 
             else:
+                #self.logger.message('PYTHON MAIN LOOP: in state PASS', True)
                 #print "not all good"
                 pass
             #raw_input()
@@ -232,17 +248,18 @@ class main_controller(controller_base):
 
     def continue_ramp(self):
 
-        ## this bit will be broke
-        ##
+        if controller_base.llrfObj[0].amp_sp != controller_base.data.amp_sp_history[-1]:
+                    ## this bit will be broke
+            ##
 
-        self.logger.message('continue_ramp ' + str(controller_base.data.amp_sp_history[-1]))
-        # apply the old settings
-        print ('continue_ramp',controller_base.data.amp_sp_history[-1])
+            self.logger.message('continue_ramp ' + str(controller_base.data.amp_sp_history[-1]))
+            # apply the old settings
+            print ('continue_ramp',controller_base.data.amp_sp_history[-1])
 
-        controller_base.llrf_handler.set_amp(controller_base.data.amp_sp_history[-1])
-        self.data.add_to_pulse_breakdown_log(controller_base.llrfObj[0].amp_sp)
-        #self.llrf_control.resetAverageTraces()
-        self.data_monitor.outside_mask_trace_monitor.reset_event_pulse_count()
+            controller_base.llrf_handler.set_amp(controller_base.data.amp_sp_history[-1])
+            self.data.add_to_pulse_breakdown_log(controller_base.llrfObj[0].amp_sp)
+            #self.llrf_control.resetAverageTraces()
+            #self.data_monitor.outside_mask_trace_monitor.reset_event_pulse_count()
 
     def ramp_up(self):
 
@@ -268,6 +285,7 @@ class main_controller(controller_base):
         self.data_monitor.outside_mask_trace_monitor.reset_event_pulse_count()
 
     def ramp_down(self):
+        self.logger.message('ramp_down(): calling enable_llrf', True)
         controller_base.llrf_handler.enable_llrf()
         controller_base.llrf_handler.set_amp(controller_base.data.values[dat.next_sp_decrease])
         self.data.add_to_pulse_breakdown_log(controller_base.llrfObj[0].amp_sp)

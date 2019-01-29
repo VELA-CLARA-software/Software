@@ -139,14 +139,15 @@ class llrf_simple_param_monitor(monitor):
         if monitor.data.values[dat.llrf_DAQ_rep_rate] < monitor.data.values[
             dat.llrf_DAQ_rep_rate_min]:
             monitor.data.values[dat.llrf_DAQ_rep_rate_status] = state.BAD
+            print('llrf_DAQ_rep_rate_status = BAD')
+
         elif monitor.data.values[dat.llrf_DAQ_rep_rate] < monitor.data.values[
             dat.llrf_DAQ_rep_rate_min]:
             monitor.data.values[dat.llrf_DAQ_rep_rate_status] = state.BAD
+            print('llrf_DAQ_rep_rate_status = BAD')
+
         else:
             monitor.data.values[dat.llrf_DAQ_rep_rate_status] = state.GOOD
-
-
-
 
         if monitor.llrfObj[0].rf_output != llrf_simple_param_monitor.old_rf_output:
             if monitor.llrfObj[0].rf_output:

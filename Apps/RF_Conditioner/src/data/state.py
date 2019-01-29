@@ -12,6 +12,7 @@ class state(Enum):
     TIMING = 6
     ERROR = 7
     INTERLOCK = 8
+    STANDBY = 9
 
     statename = { BAD: 'BAD', GOOD: 'GOOD', UNKNOWN:'UNKNOWN', INIT:'INIT', NEW_BAD:'NEW_BAD',NEW_GOOD:'NEW_GOOD',
-                  TIMING:'TIMING', ERROR: 'ERROR', INTERLOCK:'INTERLOCK' }
+                  TIMING:'TIMING', ERROR: 'ERROR', INTERLOCK:'INTERLOCK', STANDBY:'STANDBY' }

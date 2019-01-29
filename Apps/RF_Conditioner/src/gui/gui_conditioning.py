@@ -43,7 +43,7 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
 	clip = clip_app.clipboard()
 	# global state
 	can_ramp = True
-	can_rf_output = True
+	can_rf_output = False
 	# constant colors for GUI update
 	good = open = rf_on = 'green'
 	bad = error = closed = off = rf_off = interlock = 'red'
@@ -51,6 +51,8 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
 	major_error = 'cyan'
 	timing = 'yellow'
 	init = 'orange'
+	standby = 'purple'
+
 
 	# custom close signal to send to controller
 	closing = pyqtSignal()
@@ -81,7 +83,7 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
 		self.data = base.data
 		# CONNECT BUTTONS TO FUNCTIONS
 		self.start_pause_ramp_button.clicked.connect(self.handle_start_pause_ramp_button)
-		self.shutdown_rf_button.clicked.connect(self.handle_shutdown_rf_button)
+		self.llrf_enable_button.clicked.connect(self.handle_llrf_enable_button)
 		self.copy_to_clipboard_button.clicked.connect(self.handle_copy_to_clipboard_button)
 		self.llrf_enable_button.clicked.connect(self.handle_can_rf_output)
 
@@ -204,8 +206,8 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
 			self.llrf_enable_button.setStyleSheet('QPushButton { background-color : ' + self.good + '; color : black; }')
 
 
-	def handle_shutdown_rf_button(self):
-		print 'handle_shutdown_rf_button'
+	def handle_llrf_enable_button(self):
+		print 'handle_llrf_enable_button'
 
 	def handle_copy_to_clipboard_button(self):
 		string = ''
@@ -238,6 +240,9 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
 		elif key == dat.DC_spike_status:
 			self.set_widget_color_text( widget, val)
 
+		elif key == dat.llrf_DAQ_rep_rate_status:
+			self.set_widget_color(widget, val)
+
 
 		elif key == dat.llrf_output_status:
 			self.set_widget_color_text(widget, val)
@@ -248,7 +253,7 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
 			widget.setText('%i' % val)
 			self.clip_vals[key] = widget.text()
 		elif type(val) is int:
-			print(key,' is a int')
+			#print(key,' is a int')
 			widget.setText('%i' % val)
 			self.clip_vals[key] = widget.text()
 		elif type(val) is float:
@@ -279,12 +284,12 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
 	def update_rf_output_button(self,widget, val):
 		self.set_widget_color_text(widget,val)
 		if val:
-			self.shutdown_rf_button.setText("DISABLE RF OUTPUT")
-			self.shutdown_rf_button.setStyleSheet(
+			self.llrf_enable_button.setText("DISABLE RF OUTPUT")
+			self.llrf_enable_button.setStyleSheet(
 			'QPushButton { background-color : ' + self.good + '; color : black; }')
 		else:
-			self.shutdown_rf_button.setText("ENABLE RF OUTPUT")
-			self.shutdown_rf_button.setStyleSheet(
+			self.llrf_enable_button.setText("ENABLE RF OUTPUT")
+			self.llrf_enable_button.setStyleSheet(
 				'QPushButton { background-color : ' + self.bad + '; color : black; }')
 
 
@@ -337,6 +342,8 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
 			widget.setText('BAD')
 		elif val == state.TIMING:
 			widget.setText('TIMING')
+		elif val == state.STANDBY:
+			widget.setText('STANDBY')
 		else:
 			widget.setText('UNKNOWN')
 
@@ -358,6 +365,8 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
 			widget.setStyleSheet('QLabel { background-color : ' + self.bad + '; color : black; }')
 		elif val == state.TIMING:
 			widget.setStyleSheet('QLabel { background-color : ' + self.timing + '; color : black; }')
+		elif val == state.STANDBY:
+			widget.setStyleSheet('QLabel { background-color : ' + self.standby + '; color : black; }')
 		else:
 			widget.setStyleSheet('QLabel { background-color : ' + self.unknown + '; color : black; }')
 
@@ -424,10 +433,10 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
 			self.set_widget_color(widget, state.TIMING)
 			widget.setText('STANDBY_REQUEST')
 		elif val == GUN_MOD_STATE.STANDBY:
-			self.set_widget_color(widget, 'STANDBY', gui_conditioning.error, status)
+			self.set_widget_color(widget, state.STANDBY)
 			widget.setText('STANDBY')
 		elif val == GUN_MOD_STATE.STANDYBY_INTERLOCK:
-			self.set_widget_color(widget, 'STANDYBY_INTERLOCK', gui_conditioning.bad, status)
+			self.set_widget_color(widget, state.INTERLOCK)
 			widget.setText('STANDYBY_INTERLOCK')
 		elif val == GUN_MOD_STATE.RF_ON_REQUEST:
 			self.set_widget_color(widget, state.TIMING)
@@ -515,6 +524,7 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
 		self.widget[dat.vac_spike_status] = self.vac_spike_status_outputwidget
 		self.widget[dat.vac_valve_status] = self.vac_valve_status_outputwidget
 		self.widget[dat.llrf_DAQ_rep_rate] = self.trace_rep_rate_outpuwidget
+		self.widget[dat.llrf_DAQ_rep_rate_status] = self.trace_rep_rate_outpuwidget
 
 
 
