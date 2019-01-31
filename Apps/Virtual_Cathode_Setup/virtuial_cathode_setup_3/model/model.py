@@ -53,7 +53,7 @@ class model():
         '''
             Get some object references. These are used to update values in data dict
             I normally hold these in a list, (maybe one day try holding them in a dictionary
-            to see if that the code clearer?)
+            to see if that makes the code clearer?)
         '''
         self.shutter  = [model.shutter.getShutterObjConstRef('SHUT01')]#MAGIC_STRING
         self.mirror   = [model.pil.getpilMirrorObjConstRef()]
@@ -87,7 +87,7 @@ class model():
         for key, value in  model.data.values.iteritems():
             model.data.previous_values[key] = value
         '''
-            Get latest values from controllers adn put them in the data dict
+            Get latest values from controllers and put them in the data dict
         '''
         model.data.values[data.is_acquiring] = model.pil.isAcquiring_VC()
         model.data.values[data.is_analysing] = model.pil.isAnalysing_VC()

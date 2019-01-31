@@ -3,8 +3,7 @@ from llrf_handler_base import llrf_handler_base
 from VELA_CLARA_LLRF_Control import TRIG
 from time import sleep
 from timeit import default_timer as timer
-import src.data.rf_condition_data_base as dat
-from src.data.state import state
+
 
 class llrf_handler(llrf_handler_base):
     #whoami
@@ -18,9 +17,6 @@ class llrf_handler(llrf_handler_base):
         self.kly_fwd_pwr_data = []
         self.mask_set = False
         self.mask_not_set_message = True
-
-        self.set_iointr_counter = 0
-
 
     def enable_trigger(self):
         if llrf_handler_base.llrfObj[0].trig_source == TRIG.OFF:
@@ -85,7 +81,7 @@ class llrf_handler(llrf_handler_base):
         #llrf_handler_base.logger.message('enable_llrf trying to enable LLRF parmeters ', True)
         #
         #print('enable RF is setting amp_sp = 0')
-
+        self.set_amp(0)
         #
         #print("llrf_handler_base.llrf_control.isInterlockActive() = ", llrf_handler_base.llrf_control.isInterlockActive())
         if llrf_handler_base.llrf_control.isInterlockActive():
@@ -96,6 +92,8 @@ class llrf_handler(llrf_handler_base):
             pass
             #print('interlock not active')
         #
+
+
         #print("llrf_handler_base.llrf_control.isTrigExternal() = ", llrf_handler_base.llrf_control.isTrigExternal())
         if llrf_handler_base.llrf_control.isTrigExternal():
             pass
@@ -105,6 +103,13 @@ class llrf_handler(llrf_handler_base):
             llrf_handler_base.llrf_control.trigExt()
             sleep(0.02)
         #
+
+        # if llrf_handler_base.llrf_control.isTrigExternal():
+        #     print('lockPhaseFF')
+        #     llrf_handler_base.llrf_control.trigExt()
+        #     sleep(0.02)
+        # else:
+        #     print('TRIG IS IN EXTERNAL')
 
         #print("llrf_handler_base.llrf_control.isRFOutput() = ", llrf_handler_base.llrf_control.isRFOutput())
 
@@ -134,24 +139,6 @@ class llrf_handler(llrf_handler_base):
             #print('lockPhaseFF')
             llrf_handler_base.llrf_control.lockPhaseFF()
             sleep(0.02)
-
-        # this is sketchy AF
-
-    def reset_daq_freg(self):
-        if llrf_handler_base.data.values[dat.llrf_DAQ_rep_rate_status]  == state.BAD:
-            # for a
-            if llrf_handler_base.llrfObj[0].amp_sp != 0:
-                print("reset_daq_freg set_amp(0)")
-                self.set_amp(0)
-            self.set_iointr_counter += 1
-            #print('reset_daq_freg = ', self.set_iointr_counter)
-            if self.set_iointr_counter == 100000:
-                print('self.set_iointr_counter == 10000')
-                llrf_handler_base.llrf_control.resetTORSCANToIOIntr()
-                sleep(0.02)
-                llrf_handler_base.llrf_control.setTORACQMEvent()
-                self.set_iointr_counter = 0
-
 
 
     def disableRFOutput(self):

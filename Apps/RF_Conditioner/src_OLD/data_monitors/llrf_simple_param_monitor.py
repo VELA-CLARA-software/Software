@@ -139,24 +139,15 @@ class llrf_simple_param_monitor(monitor):
         if monitor.data.values[dat.llrf_DAQ_rep_rate] < monitor.data.values[
             dat.llrf_DAQ_rep_rate_min]:
             monitor.data.values[dat.llrf_DAQ_rep_rate_status] = state.BAD
-            #print('llrf_DAQ_rep_rate_status is LO therefore, = BAD')
+            print('llrf_DAQ_rep_rate_status = BAD')
 
-        elif monitor.data.values[dat.llrf_DAQ_rep_rate] > monitor.data.values[
-            dat.llrf_DAQ_rep_rate_max]:
+        elif monitor.data.values[dat.llrf_DAQ_rep_rate] < monitor.data.values[
+            dat.llrf_DAQ_rep_rate_min]:
             monitor.data.values[dat.llrf_DAQ_rep_rate_status] = state.BAD
-            #print('llrf_DAQ_rep_rate_status is HI therefore, = BAD')
+            print('llrf_DAQ_rep_rate_status = BAD')
+
         else:
             monitor.data.values[dat.llrf_DAQ_rep_rate_status] = state.GOOD
-
-        # keep a memory of th eprevvious state, adn compare
-        # we use a NEW_GOOD to enable to switch on teh RF at the previous set amp
-        # ofc this could be tidied up loads and loads ...
-        if  monitor.data.values[dat.llrf_DAQ_rep_rate_status_previous] == state.BAD:
-            if monitor.data.values[dat.llrf_DAQ_rep_rate_status] == state.GOOD:
-                monitor.data.values[dat.llrf_DAQ_rep_rate_status] = state.NEW_GOOD
-
-        monitor.data.values[dat.llrf_DAQ_rep_rate_status_previous] = monitor.data.values[dat.llrf_DAQ_rep_rate_status]
-
 
         if monitor.llrfObj[0].rf_output != llrf_simple_param_monitor.old_rf_output:
             if monitor.llrfObj[0].rf_output:
@@ -164,6 +155,10 @@ class llrf_simple_param_monitor(monitor):
             else:
                 self.alarm('rf_off')
             llrf_simple_param_monitor.old_rf_output = monitor.llrfObj[0].rf_output
+
+
+
+
 
 
         monitor.data.values[dat.duplicate_pulse_count] = monitor.llrfObj[0].duplicate_pulse_count

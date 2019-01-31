@@ -52,7 +52,7 @@ class data_monitoring(data_monitoring_base):
 			data_monitoring.logger.message('NOT adding DC_spike to main loop checks', True)
 		if self.is_monitoring[dat.breakdown_status]:
 			data_monitoring.logger.message('adding breakdown_status to main loop checks', True)
-			self.main_monitor_states[dat.breakdown_status] = state.GOOD
+			self.main_monitor_states[dat.breakdown_status] = state.INIT
 			#self.previous_main_monitor_states[dat.breakdown_status] = state.UNKNOWN
 			self.monitor_funcs['breakdown'] = self.breakdown
 		else:
@@ -80,19 +80,18 @@ class data_monitoring(data_monitoring_base):
 		#
 		# CAN RF output is a combination of all LLRF states AND the gui llrf_enable_button  state
 		# it is update dby its own funciton, which is passed in the state of the GUI button
-		#self.main_monitor_states[dat.can_rf_output] = state.INIT
+		self.main_monitor_states[dat.can_rf_output] = state.INIT
 		self.enable_RF_monitor_states[dat.llrf_interlock_status] = state.INIT
 		self.enable_RF_monitor_states[dat.llrf_trigger_status] = state.INIT
 		self.enable_RF_monitor_states[dat.pulse_length_status] = state.INIT
 		self.enable_RF_monitor_states[dat.llrf_output_status] = state.INIT
 		self.enable_RF_monitor_states[dat.llrf_ff_amp_locked_status] = state.INIT
 		self.enable_RF_monitor_states[dat.llrf_ff_ph_locked_status] = state.INIT
-		#self.enable_RF_monitor_states[dat.llrf_DAQ_rep_rate_status] = state.INIT
+		self.enable_RF_monitor_states[dat.llrf_DAQ_rep_rate_status] = state.INIT
 
 	def update_enable_LLRF_state(self, gui_enable_rf):
 		''' checks everything to enable RF power '''
 		#self.main_monitor_states[dat.can_rf_output] = state.BAD
-		#print('update_enable_LLRF_state,', gui_enable_rf)
 		self.data.values[dat.can_rf_output] = state.BAD
 		if gui_enable_rf:
 
@@ -103,24 +102,15 @@ class data_monitoring(data_monitoring_base):
 			self.enable_RF_monitor_states[dat.llrf_output_status] = self.data.values[dat.llrf_output_status]
 			self.enable_RF_monitor_states[dat.llrf_ff_amp_locked_status] = self.data.values[dat.llrf_ff_amp_locked_status]
 			self.enable_RF_monitor_states[dat.llrf_ff_ph_locked_status] = self.data.values[dat.llrf_ff_ph_locked_status]
+			self.enable_RF_monitor_states[dat.llrf_DAQ_rep_rate_status] = self.data.values[dat.llrf_DAQ_rep_rate_status]
 
 			if all(value == state.GOOD for value in self.enable_RF_monitor_states.values()):
-				self.data.values[dat.can_rf_output] = state.GOOD
 				#self.main_monitor_states[dat.can_rf_output] = state.GOOD
-				#print('self.data.values[dat.can_rf_output] = state.GOOD')
-
-		else:
-			pass
-			#print('gui_enable_rf = FALSE')
+				self.data.values[dat.can_rf_output] = state.GOOD
 		# now update the state
 
-		#self.update_state(dat.can_rf_output)
 
-	def daq_freq_bad(self):
-		return self.data.values[dat.llrf_DAQ_rep_rate_status] == state.BAD
-
-	def daq_freq_new_good(self):
-		return self.data.values[dat.llrf_DAQ_rep_rate_status] == state.NEW_GOOD
+		self.update_state(dat.can_rf_output)
 
 	def enable_RF_bad(self):
 		#return state.BAD in self.enable_RF_monitor_states.values()
