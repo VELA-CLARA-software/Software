@@ -1,22 +1,21 @@
 import sys, time, os, datetime, math
 import collections
 import tables as tables
-# from pyqtgraph.Qt import QtGui, QtCore
-try:
-    from PyQt4.QtCore import *
-    from PyQt4.QtGui import *
-except ImportError:
-    from PyQt5.QtCore import *
-    from PyQt5.QtGui import *
-    from PyQt5.QtWidgets import *
+sys.path.append("../../../")
+import Software.Procedures.qt as qt
 
-class HighPrecisionWallTime(QObject):
+class HighPrecisionWallTime(qt.QObject):
     def __init__(self, parent=None):
         super(HighPrecisionWallTime, self).__init__(parent)
         self.start()
 
     def time(self,):
         dc = time.clock()-self._clock_0
+        if dc > 60:
+            # print 'reset'
+            self._wall_time_0 = time.time()
+            self._clock_0 = time.clock()
+            dc = 0
         return self._wall_time_0 + dc
 
     def elapsed(self):
@@ -26,11 +25,11 @@ class HighPrecisionWallTime(QObject):
         self._wall_time_0 = time.time()
         self._clock_0 = time.clock()
 
-class repeatedTimer(QThread):
+class repeatedTimer(qt.QThread):
 
     """Repeat `function` every `interval` seconds."""
 
-    dataReady = pyqtSignal(list)
+    dataReady = qt.pyqtSignal(list)
 
     def __init__(self, function, args=[]):
         super(repeatedTimer, self).__init__()
@@ -40,18 +39,24 @@ class repeatedTimer(QThread):
 
     def update(self):
         ''' call signal generating Function '''
-        value = self.function(*self.args)
-        currenttime = self.starttime + self.stopwatch.elapsed()/1000.
-        self.dataReady.emit([currenttime,value])
+        if (self.stopwatch.elapsed()) < 0.0001:
+            pass
+        else:
+            value = self.function(*self.args)
+            currenttime = self.stopwatch.time()
+            self.dataReady.emit([currenttime,value])
 
     def startTimer(self):
-        self.timer = QTimer(self)
+        self.timer = qt.QTimer(self)
+        self.stopwatch = HighPrecisionWallTime(self)
         try:
-            self.timer.setTimerType(Qt.PreciseTimer)
+            self.timer.setTimerType(qt.Qt.PreciseTimer)
         except:
             pass
         self.timer.timeout.connect(self.update)
+        self.abstart = time.time()
         self.timer.start(1000.*self.interval)
+        self.stopwatch.start()
 
     def run(self):
         self.exec_()
@@ -60,54 +65,32 @@ class repeatedTimer(QThread):
         self.interval = 1*interval
         self.i = 1
 
-    def setTimers(self, starttime, stopwatch):
-        self.starttime = starttime
-        self.stopwatch = stopwatch
-
-class createSignalTimer(QObject):
+class createSignalTimer(qt.QObject):
 
     def __init__(self, function, args=[]):
         # Initialize the signal as a QObject
         super(createSignalTimer, self).__init__()
         self.timer = repeatedTimer(function, args)
-        self.stopwatch = QTime()
-        self.resetwatchTimer = QTimer(self)
-        self.resetwatchTimer.timeout.connect(self.resetwatch)
-        self.resetwatchTimer.start(1*1000)
-
-    def resetwatch(self):
-        if abs((time.time() - self.starttime) % self.interval) > self.interval/10.0:
-            # print ('resetting stopwatch!  ', abs((time.time() - self.starttime) % self.interval))
-            self.starttime = time.time()
-            self.timer.starttime = self.starttime
-            self.stopwatch.restart()
-        else:
-            pass
-            # print 'timer difference = ', abs((time.time() - self.starttime) % self.interval)
 
     def startTimer(self, interval=1):
-        self.interval = interval
-        self.starttime = time.time()
-        self.stopwatch.start()
         self.timer.setInterval(interval)
-        self.timer.setTimers(self.starttime, self.stopwatch)
-        self.timer.start(QThread.TimeCriticalPriority)
+        self.timer.start(qt.QThread.TimeCriticalPriority)
 
     def setInterval(self, interval):
-        self.interval = interval
+        # self.timer.stop()
         self.startTimer(interval)
 
-class recordWorker(QObject):
+class recordWorker(qt.QObject):
 
-    recordLatestValueSignal = pyqtSignal(list)
-    recordMeanSignal = pyqtSignal(float)
-    recordMean10Signal = pyqtSignal(list)
-    recordMean100Signal = pyqtSignal(list)
-    recordMean1000Signal = pyqtSignal(list)
-    recordStandardDeviationSignal = pyqtSignal(float)
-    recordMinSignal = pyqtSignal(float)
-    recordMaxSignal = pyqtSignal(float)
-    nsamplesSignal = pyqtSignal(int)
+    recordLatestValueSignal = qt.pyqtSignal(list)
+    recordMeanSignal = qt.pyqtSignal(float)
+    recordMean10Signal = qt.pyqtSignal(list)
+    recordMean100Signal = qt.pyqtSignal(list)
+    recordMean1000Signal = qt.pyqtSignal(list)
+    recordStandardDeviationSignal = qt.pyqtSignal(float)
+    recordMinSignal = qt.pyqtSignal(float)
+    recordMaxSignal = qt.pyqtSignal(float)
+    nsamplesSignal = qt.pyqtSignal(int)
 
     def calculate_mean(self, numbers):
         return float(sum(numbers)) /  max(len(numbers), 1)
@@ -123,32 +106,31 @@ class recordWorker(QObject):
         self.buffer100 = collections.deque(maxlen=100)
         self.buffer10 = collections.deque(maxlen=10)
         self.resetStatistics(True)
-        self.timer = QTimer()
+        self.timer = qt.QTimer()
         self.timer.timeout.connect(self.emitStatistics)
         self.timer.start(1000)
 
-    @pyqtSlot(list)
+    @qt.pyqtSlot(list)
     def updateRecord(self, value):
         self.buffer.append(value)
         self.recordLatestValueSignal.emit(value)
         time, val = value
+        self.buffer10.append(val)
+        self.buffer100.append(val)
+        self.buffer1000.append(val)
         self.length += 1
         self.nsamplesSignal.emit(self.length)
-        if isinstance(val, (int, float)):
-            self.buffer10.append(val)
-            self.buffer100.append(val)
-            self.buffer1000.append(val)
-            self.sum_x1 += val
-            self.sum_x2 += val**2
-            if val < self.min:
-                self.min = float(val)
-                self.recordMinSignal.emit(val)
-            if val > self.max:
-                self.max = float(val)
-                self.recordMaxSignal.emit(val)
-            self.recordMean10Signal.emit([time,self.calculate_mean(self.buffer10)])
-            self.recordMean100Signal.emit([time,self.calculate_mean(self.buffer100)])
-            self.recordMean1000Signal.emit([time,self.calculate_mean(self.buffer1000)])
+        self.sum_x1 += val
+        self.sum_x2 += val**2
+        if val < self.min:
+            self.min = float(val)
+            self.recordMinSignal.emit(val)
+        if val > self.max:
+            self.max = float(val)
+            self.recordMaxSignal.emit(val)
+        self.recordMean10Signal.emit([time,self.calculate_mean(self.buffer10)])
+        self.recordMean100Signal.emit([time,self.calculate_mean(self.buffer100)])
+        self.recordMean1000Signal.emit([time,self.calculate_mean(self.buffer1000)])
 
     def emitStatistics(self):
         length = self.length
@@ -179,10 +161,10 @@ class recordWorker(QObject):
             # self.buffer100.clear()
             # self.buffer1000.clear()
 
-class signalRecord(QObject):
+class signalRecord(qt.QObject):
 
     def __init__(self, records, name, pen, timer, maxlength, function, args=[], functionForm=None, functionArgument=None, logScale=False, verticalRange=None, verticalMeanSubtraction=False, axis=None):
-        QObject.__init__(self)
+        qt.QObject.__init__(self)
         self.record = self
         records[name] = self.record
         self.name = name
@@ -199,7 +181,7 @@ class signalRecord(QObject):
         self.logScale = logScale
         self.verticalRange = verticalRange
         self.axisname = axis
-        self.thread = QThread()
+        self.thread = qt.QThread()
         self.worker = recordWorker(records, self.signal, name)
         records[name].worker = self.worker
         self.worker.moveToThread(self.thread)
@@ -228,14 +210,11 @@ class signalRecord(QObject):
         self.thread.quit()
         self.thread.wait()
 
-class recordData2D(tables.IsDescription):
+class recordData(tables.IsDescription):
     time  = tables.Float64Col()     # double (double-precision)
     value  = tables.Float64Col()
 
-class TooLongError(ValueError):
-    pass
-
-class signalRecorderH5(QObject):
+class signalRecorderH5(qt.QObject):
 
     def __init__(self, filename="test", flushtime=1):
         super(signalRecorderH5, self).__init__()
@@ -243,7 +222,6 @@ class signalRecorderH5(QObject):
         _, file_extension = os.path.splitext(filename)
         if not file_extension in ['h5','hdf5']:
             filename = filename+".h5"
-        self.filename = filename
         self.h5file = tables.open_file(filename, mode = "a", title = filename)
         self.rootnode = self.h5file.get_node('/')
         if 'data' not in self.rootnode:
@@ -253,18 +231,13 @@ class signalRecorderH5(QObject):
             # print self.group
         self.tables = {}
         self.rows = []
-        self.timer = QTimer()
+        self.timer = qt.QTimer()
         self.timer.timeout.connect(self.flushTables)
         self.timer.start(1000*flushtime)
 
-    def addSignal(self, name='', pen='', timer=1, arrayData=False, maxlength=100, function=None, arg=[], **kwargs):
+    def addSignal(self, name='', pen='', timer=1, maxlength=100, function=None, arg=[], **kwargs):
         sigrec = signalRecord(records=self.records, name=name, pen=pen, timer=timer, maxlength=maxlength, function=function, **kwargs)
-        if arrayData is not False:
-            recordData = {'time': tables.Float64Col(), 'value': tables.Float64Col(shape=(arrayData,))}
-        else:
-            recordData = recordData2D
         if not name in self.group:
-            print ('name = ', name)
             table = self.h5file.create_table(self.group, name, recordData, name)
             self.tables[name] = table
             table.cols.time.create_csindex()
@@ -274,23 +247,11 @@ class signalRecorderH5(QObject):
             sigrec.worker.nsamples = table.nrows
         row = table.row
         self.rows.append(row)
-        self.records[name]['signal'].timer.dataReady.connect(lambda x: self.addData(table, row, x, arrayData))
+        self.records[name]['signal'].timer.dataReady.connect(lambda x: self.addData(table, row,x))
         sigrec.start()
 
-    def pad(self, seq, target_length, padding=0):
-        length = len(seq)
-        if length > target_length:
-            return seq[:target_length]
-        else:
-            seq.extend([padding] * (target_length - length))
-            return seq
-
-    def addData(self, table, row, x, arrayData=False):
-        if arrayData is not False:
-            row['time'] = x[0]
-            row['value'] = self.pad(list(x[1]),arrayData)
-        else:
-            row['time'], row['value'] = x
+    def addData(self, table, row, x):
+        row['time'], row['value'] = x
         row.append()
         #table.flush()
 
@@ -299,13 +260,10 @@ class signalRecorderH5(QObject):
             self.tables[t].flush()
 
     def close(self):
-        try:
-            for n,r in self.records.iteritems():
-                r['record'].close()
-            self.flushTables()
-            self.h5file.close()
-        except:
-            pass
+        for n,r in self.records.iteritems():
+            r['record'].close()
+        self.flushTables()
+        self.h5file.close()
 
     def closeEvent(self, event):
         self.close()

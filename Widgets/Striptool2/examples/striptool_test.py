@@ -1,6 +1,6 @@
 import sys, time, os
 # sys.path.append(".")
-sys.path.append("../../../")
+sys.path.append(os.path.abspath("../../../../"))
 try:
     from PyQt4.QtCore import *
     from PyQt4.QtGui import *
@@ -10,13 +10,13 @@ except ImportError:
     from PyQt5.QtWidgets import *
 import pyqtgraph as pg
 from pyqtgraph.dockarea import *
-import Widgets.Striptool2.generalPlot as generalplot
-import Widgets.Striptool2.scrollingPlot as scrollingplot
-import Widgets.Striptool2.signalTable as signaltable
+import Software.Widgets.Striptool2.generalPlot as generalplot
+import Software.Widgets.Striptool2.scrollingPlot as scrollingplot
+import Software.Widgets.Striptool2.signalTable as signaltable
 import numpy as np
-from  Widgets.Striptool2.splitterWithHandles import *
+from  Software.Widgets.Striptool2.splitterWithHandles import *
 ''' Load loggerWidget library (comment out if not available) '''
-import Widgets.loggerWidget.loggerWidget as lw
+import Software.Widgets.loggerWidget.loggerWidget as lw
 import logging
 logger = logging.getLogger(__name__)
 

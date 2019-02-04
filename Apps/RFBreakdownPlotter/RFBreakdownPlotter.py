@@ -11,6 +11,7 @@ import json
 
 parser = argparse.ArgumentParser(description='Monitor a directory for RF breakdown traces')
 parser.add_argument('-d', '--directory', default='.')
+parser.add_argument('-s', '--settings', default='October2018.json')
 
 class myLegend(LegendItem):
     def __init__(self, size=None, offset=None, background=(255,255,255,255)):
@@ -75,7 +76,7 @@ tableau20 = [(255,0,0), (0,153,255), (0,172,0), (237,69, 201), (247,173,25)]
 Qtableau20 = [QColor(i,j,k) for (i,j,k) in tableau20]
 
 class pickleGUI(QMainWindow):
-    def __init__(self, parent = None, directory='.'):
+    def __init__(self, parent = None, args={}):
         super(pickleGUI, self).__init__(parent)
         global app
         self.resize(1800,900)
@@ -88,7 +89,7 @@ class pickleGUI(QMainWindow):
         self.worker.moveToThread(self.thread)
 
         self.tab = QTabWidget()
-        self.picklePlot = picklePlotWidget(directory)
+        self.picklePlot = picklePlotWidget(args)
 
         self.picklePlot.updateFileSelectionBox()
         self.worker.fileadded.connect(self.picklePlot.updateFileSelectionBox)
@@ -116,9 +117,9 @@ class pickleGUI(QMainWindow):
 
 class picklePlotWidget(QWidget):
 
-    def __init__(self, directory='.', **kwargs):
+    def __init__(self, args={}, **kwargs):
         super(picklePlotWidget, self).__init__(**kwargs)
-        self.directory = directory
+        self.directory = args.directory
         self.plotWidget = QTabWidget()
         self.layout = QVBoxLayout()
         self.setLayout(self.layout)
@@ -174,7 +175,7 @@ class picklePlotWidget(QWidget):
         #                     'trace_name',
         #                     ]
         try:
-            with open("October2018.json", "r") as infile:
+            with open(args.settings, "r") as infile:
                 self.plotorder = json.load(infile)
         except IOError:
             self.reloadSettings()
@@ -318,9 +319,9 @@ class picklePlotWidget(QWidget):
                         # if 'mask_floor' in alldata:
                         #     self.floorLine.setValue(alldata['mask_floor']['data'])
                         #     p.addItem(self.floorLine)
-                        # if 'outside_mask_index' in alldata:
-                        #     self.outsideMaskLine.setValue(alldata['outside_mask_index']['data'])
-                        #     p.addItem(self.outsideMaskLine)
+                        if 'outside_mask_index' in alldata:
+                            self.outsideMaskLine.setValue(alldata['outside_mask_index']['data'])
+                            p.addItem(self.outsideMaskLine)
                     elif datadict['type'] == 'parameter':
                         self.tableData.append([datalabel, alldata[datalabel]['data']])
         # print self.tableData
@@ -357,7 +358,7 @@ def main():
     setConfigOption('background', 'w')
     setConfigOption('foreground', 'k')
     # app.setStyle(QStyleFactory.create("plastique"))
-    ex = pickleGUI(directory=args.directory)
+    ex = pickleGUI(args=args)
     ex.show()
     sys.exit(app.exec_())
 

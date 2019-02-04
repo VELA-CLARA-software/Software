@@ -1,27 +1,21 @@
 import pyqtgraph as pg
-from pyqtgraph.Qt import QtGui, QtCore
 import sys, time, os, datetime, sip
-try:
-    from PyQt4.QtCore import *
-    from PyQt4.QtGui import *
-except ImportError:
-    from PyQt5.QtCore import *
-    from PyQt5.QtGui import *
-    from PyQt5.QtWidgets import *
+sys.path.append("../../../")
+import Software.Procedures.qt as qt
 import pyqtgraph.parametertree.parameterTypes as pTypes
 from pyqtgraph.parametertree import Parameter, ParameterTree, ParameterItem, registerParameterType
 
-class plotLegend(QWidget):
+class plotLegend(qt.QWidget):
 
-    pausePlottingSignal = pyqtSignal(bool)
+    pausePlottingSignal = qt.pyqtSignal(bool)
 
     def __init__(self, generalplot):
         super(plotLegend, self).__init__()
         self.tree = plotLegendTree(generalplot)
-        self.layout = QVBoxLayout()
+        self.layout = qt.QVBoxLayout()
         self.layout.addWidget(self.tree)
-        self.buttonLayout = QHBoxLayout()
-        self.pauseButton = QPushButton('Pause')
+        self.buttonLayout = qt.QHBoxLayout()
+        self.pauseButton = qt.QPushButton('Pause')
         self.pauseButton.setCheckable(True)
         self.pauseButton.clicked.connect(self.pauseButtonClicked)
         self.buttonLayout.addWidget(self.pauseButton)
@@ -38,16 +32,16 @@ class plotLegend(QWidget):
 
 class plotLegendTree(ParameterTree):
 
-    fftselectionchange = pyqtSignal('QString',bool)
-    histogramplotselectionchange = pyqtSignal('QString',bool)
-    axisselectionchanged = pyqtSignal('QString')
-    legendselectionchanged = pyqtSignal(list)
-    savecurve = pyqtSignal(str)
+    fftselectionchange = qt.pyqtSignal('QString',bool)
+    histogramplotselectionchange = qt.pyqtSignal('QString',bool)
+    axisselectionchanged = qt.pyqtSignal('QString')
+    legendselectionchanged = qt.pyqtSignal(list)
+    savecurve = qt.pyqtSignal(str)
 
     def __init__(self, generalplot):
         super(plotLegendTree, self).__init__(generalplot)
         ''' Create Parameter Tree'''
-        self.setSelectionMode(QAbstractItemView.ExtendedSelection)
+        self.setSelectionMode(qt.QAbstractItemView.ExtendedSelection)
         self.selectionModel().selectionChanged.connect(self.enableSelectedAxis)
         self.selectionModel().selectionChanged.connect(self.emitSelectedAxis)
         self.parameters = {}
@@ -244,7 +238,7 @@ class plotLegendTree(ParameterTree):
         pChild.child('Options').child('AxisAutoScale').sigValueChanged.connect(lambda x: self.records[name]['viewbox'].enableAutoRange(y=x.value()))
         pChild.child('Save_Curve').sigActivated.connect(lambda x: self.savecurve.emit(str(name)))
 
-        header = self.findItems(name,Qt.MatchContains | Qt.MatchRecursive)[0]
+        header = self.findItems(name,qt.Qt.MatchContains | qt.Qt.MatchRecursive)[0]
         header.setSelected(False)
         header.setExpanded(False)
         header.setForeground(0,self.contrasting_text_color(self.records[name]['pen']))
@@ -324,7 +318,7 @@ class MenuBox(pg.GraphicsObject):
 
     # All graphics items must have paint() and boundingRect() defined.
     def boundingRect(self):
-        return QRectF(0, 0, 10, 10)
+        return qt.RectF(0, 0, 10, 10)
 
     def paint(self, p, *args):
         p.setPen(self.pen)
@@ -333,7 +327,7 @@ class MenuBox(pg.GraphicsObject):
 
     # On right-click, raise the context menu
     def mouseClickEvent(self, ev):
-        if ev.button() == Qt.RightButton:
+        if ev.button() == qt.t.RightButton:
             if self.raiseContextMenu(ev):
                 ev.accept()
 
@@ -345,29 +339,29 @@ class MenuBox(pg.GraphicsObject):
         menu = self.scene().addParentContextMenus(self, menu, ev)
 
         pos = ev.screenPos()
-        menu.popup(QPoint(pos.x(), pos.y()))
+        menu.popup(qt.Point(pos.x(), pos.y()))
         return True
 
     # This method will be called when this item's _children_ want to raise
     # a context menu that includes their parents' menus.
     def getContextMenus(self, event=None):
         if self.menu is None:
-            self.menu = QMenu()
+            self.menu = qt.Menu()
             self.menu.setTitle(self.name+ " options..")
 
-            green = QAction("Turn green", self.menu)
+            green = qt.Action("Turn green", self.menu)
             green.triggered.connect(self.setGreen)
             self.menu.addAction(green)
             self.menu.green = green
 
-            blue = QAction("Turn blue", self.menu)
+            blue = qt.Action("Turn blue", self.menu)
             blue.triggered.connect(self.setBlue)
             self.menu.addAction(blue)
             self.menu.green = blue
 
-            alpha = QWidgetAction(self.menu)
-            alphaSlider = QSlider()
-            alphaSlider.setOrientation(Qt.Horizontal)
+            alpha = qt.WidgetAction(self.menu)
+            alphaSlider = qt.Slider()
+            alphaSlider.setOrientation(qt.t.Horizontal)
             alphaSlider.setMaximum(255)
             alphaSlider.setValue(255)
             alphaSlider.valueChanged.connect(self.setAlpha)

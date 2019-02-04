@@ -412,8 +412,9 @@ class Model(QObject):
         self.target1 = self.view.doubleSpinBox_x_1.value()
         self.tol1 = self.view.doubleSpinBox_tol_1.value()
         print 'Aligning on S02-BPM-02 with S02-HCOR-02'
-
-        if (self.Cbpms.getXFromPV('S02-BPM02')-self.view.doubleSpinBox_x_1.value()) < self.view.doubleSpinBox_tol_1.value():
+        #print 'Delta x = ', self.Cbpms.getXFromPV('S02-BPM02')-self.view.doubleSpinBox_x_1.value()
+        #print 'Tolerance = ', self.view.doubleSpinBox_tol_1.value()
+        if (self.Cbpms.getXFromPV('S02-BPM02')-self.view.doubleSpinBox_x_1.value()) > self.view.doubleSpinBox_tol_1.value():
             self.func.align(self.Cmagnets,'S02-HCOR2',self.Cbpms,'S02-BPM02', self.target1, self.tol1, self.initialCurrentStep)
         else:
             print 'Already aligned'
@@ -481,11 +482,12 @@ class Model(QObject):
         print self.cam.getMaskXrad(screen)
         print self.cam.getMaskYrad(screen)
         time.sleep(1)
-        print 'setting new values (commented out)'
+        print 'setting new values'# (commented out)'
         self.maskX = int(self.view.lineEdit_maskX.text())
         self.maskY = int(self.view.lineEdit_maskY.text())
         self.maskXRad = int(self.view.lineEdit_maskXRad.text())
         self.maskYRad = int(self.view.lineEdit_maskYRad.text())
+        #print 'here', self.view.lineEdit_maskXRad.text()
         self.cam.setMaskX(self.maskX, screen)
         self.cam.setMaskY(self.maskY, screen)
         self.cam.setMaskXrad(self.maskXRad, screen)
@@ -519,10 +521,12 @@ class Model(QObject):
         print 'Insert S02-YAG-02'# **change back to -02**'
         screen = 'S02-SCR-02'
         print 'insert YAG'
-        self.scrn.insertYAG(screen)
-        print 'is screen in?', self.scrn.isYAGIn(screen)
+        #self.scrn.insertYAG(screen)
+        print 'is screen in?', self.scrn.getScreenState(screen)#self.scrn.isYAGIn(screen)
         #self.scrn.moveScreenOut(screen)
-        if self.scrn.isYAGIn(screen) is False:
+        #if self.scrn.isYAGIn(screen) is False:
+        if str(self.scrn.getScreenState(screen)) != 'V_YAG':
+            self.scrn.moveScreenTo(screen,scrn.SCREEN_STATE.V_YAG)
             while True:
                 isscreenmoving1 = self.scrn.isScreenMoving(screen)
                 print 'Is screen moving?', isscreenmoving1
@@ -545,7 +549,7 @@ class Model(QObject):
         #print self.target2
         #print self.tol2
         #print self.initialCurrentStep
-        if (self.cam.getX('S02-CAM-02')-self.view.doubleSpinBox_x_2.value()) < self.view.doubleSpinBox_tol_2.value():
+        if (self.cam.getX('S02-CAM-02')-self.view.doubleSpinBox_x_2.value()) > self.view.doubleSpinBox_tol_2.value():
             self.func.alignOnScreen(self.Cmagnets,'S02-HCOR1',self.cam,'S02-CAM-02',self.target2,self.tol2, self.initialCurrentStep) #was 0.000001
         else:
             print 'Already aligned'
@@ -560,9 +564,13 @@ class Model(QObject):
         print 'Retract S02-YAG-02'# **change back to -02**'
         screen = 'S02-SCR-02'
         #self.scrn.moveScreenTo(screen,scrn.SCREEN_STATE.V_RETRACTED)
-        self.scrn.moveScreenTo(screen,scrn.SCREEN_STATE.V_RF)
+
         #time.sleep(5)
-        if self.scrn.isYAGIn(screen) is True:
+        #if self.scrn.isYAGIn(screen) is True:
+        print 'is screen in?', self.scrn.getScreenState(screen)
+        if str(self.scrn.getScreenState(screen)) == 'V_YAG':
+            print 'YAG is in'
+            self.scrn.moveScreenTo(screen,scrn.SCREEN_STATE.V_RF)
             while True:
                 isscreenmoving1 = self.scrn.isScreenMoving(screen)
                 print 'Is screen moving?', isscreenmoving1
@@ -572,10 +580,10 @@ class Model(QObject):
                 if isscreenmoving2 is False and isscreenmoving1 is True:
                     print 'Finished Moving!'
                     break
-        elif self.scrn.isYAGIn(screen) is False:
-            print 'Screen already out'
-        else:
-            print 'Error moving screen'
+        elif str(self.scrn.getScreenState(screen)) == 'V_RF':
+            print 'YAG already out, RF cage is in'
+        #else:
+        #    print 'Error moving screen'
 
         if (self.Cbpms.getXFromPV('S02-BPM02')-self.view.doubleSpinBox_x_1.value()) < self.view.doubleSpinBox_tol_1.value():
             self.view.checkBox_2.setCheckable(True)
@@ -715,8 +723,8 @@ class Model(QObject):
         self.sleepTime = 0.05
 
         # if self.view.comboBox_selectRF.currentIndex() == 0: # gun
-        self.dipoleIStep = 0.2
-        self.nSamples = 3
+        self.dipoleIStep = 0.1
+        self.nSamples = 5
         self.getDataFunction = partial(self.func.getBPMPosition, self.Cbpms,'S02-BPM02')
 
         range = np.arange(-3, 3, self.dipoleIStep)

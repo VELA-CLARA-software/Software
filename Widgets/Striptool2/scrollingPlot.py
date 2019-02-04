@@ -1,15 +1,9 @@
 import sys, time, os, datetime, math
 import pyqtgraph as pg
-# from pyqtgraph.Qt import QtGui, QtCore
 import collections
 import numpy as np
-try:
-    from PyQt4.QtCore import *
-    from PyQt4.QtGui import *
-except ImportError:
-    from PyQt5.QtCore import *
-    from PyQt5.QtGui import *
-    from PyQt5.QtWidgets import *
+sys.path.append("../../../")
+import Software.Procedures.qt as qt
 import colours as colours
 
 ''' This class is a PyQtGraph axis which modifies the data points from "seconds before the current time" into Hours:Mins:Secs format.
@@ -80,7 +74,7 @@ class MenuBox(pg.GraphicsObject):
 
     # All graphics items must have paint() and boundingRect() defined.
     def boundingRect(self):
-        return QRectF(0, 0, 10, 10)
+        return qt.QRectF(0, 0, 10, 10)
 
     def paint(self, p, *args):
         p.setPen(self.pen)
@@ -89,7 +83,7 @@ class MenuBox(pg.GraphicsObject):
 
     # On right-click, raise the context menu
     def mouseClickEvent(self, ev):
-        if ev.button() == Qt.RightButton:
+        if ev.button() == qt.Qt.RightButton:
             if self.raiseContextMenu(ev):
                 ev.accept()
 
@@ -101,29 +95,29 @@ class MenuBox(pg.GraphicsObject):
         menu = self.scene().addParentContextMenus(self, menu, ev)
 
         pos = ev.screenPos()
-        menu.popup(QPoint(pos.x(), pos.y()))
+        menu.popup(qt.Qt.QPoint(pos.x(), pos.y()))
         return True
 
     # This method will be called when this item's _children_ want to raise
     # a context menu that includes their parents' menus.
     def getContextMenus(self, event=None):
         if self.menu is None:
-            self.menu = QMenu()
+            self.menu = qt.QMenu()
             self.menu.setTitle(self.name+ " options..")
 
-            green = QAction("Turn green", self.menu)
+            green = qt.QAction("Turn green", self.menu)
             green.triggered.connect(self.setGreen)
             self.menu.addAction(green)
             self.menu.green = green
 
-            blue = QAction("Turn blue", self.menu)
+            blue = qt.QAction("Turn blue", self.menu)
             blue.triggered.connect(self.setBlue)
             self.menu.addAction(blue)
             self.menu.green = blue
 
-            alpha = QWidgetAction(self.menu)
-            alphaSlider = QSlider()
-            alphaSlider.setOrientation(Qt.Horizontal)
+            alpha = qt.QWidgetAction(self.menu)
+            alphaSlider = qt.QSlider()
+            alphaSlider.setOrientation(qt.Qt.Horizontal)
             alphaSlider.setMaximum(255)
             alphaSlider.setValue(255)
             alphaSlider.valueChanged.connect(self.setAlpha)
@@ -146,10 +140,10 @@ class MenuBox(pg.GraphicsObject):
     def setAlpha(self, a):
         self.setOpacity(a/255.)
 
-class scrollingPlot(QWidget):
+class scrollingPlot(qt.QWidget):
 
-    doCurveUpdate = pyqtSignal()
-    timeChangeSignal = pyqtSignal('float')
+    doCurveUpdate = qt.pyqtSignal()
+    timeChangeSignal = qt.pyqtSignal('float')
 
     def __init__(self, generalplot, parent=None, plotRateBar=False, color=0):
         super(scrollingPlot, self).__init__(parent)
@@ -157,8 +151,8 @@ class scrollingPlot(QWidget):
         self.paused = False
         self.plotrate = 1
         ''' create the scatterPlot as a grid layout '''
-        self.scrollingPlot = QVBoxLayout()
-        self.plotThread = QTimer()
+        self.scrollingPlot = qt.QVBoxLayout()
+        self.plotThread = qt.QTimer()
         self.paused = False
         self.generalPlot = generalplot
         self.records = self.generalPlot.records
@@ -186,12 +180,12 @@ class scrollingPlot(QWidget):
         self.scrollingPlotPlot.removeCurve(name)
 
     def setupPlotRateSlider(self):
-        self.plotRateLayout = QHBoxLayout()
-        self.plotRateLabel = QLabel()
+        self.plotRateLayout = qt.QHBoxLayout()
+        self.plotRateLabel = qt.QLabel()
         self.plotRateLabel.setText('Plot Update Rate ['+str(self.plotrate)+' Hz]:')
-        self.plotRateLabel.setAlignment(Qt.AlignCenter)
-        self.plotRateSlider = QSlider()
-        self.plotRateSlider.setOrientation(Qt.Horizontal)
+        self.plotRateLabel.setAlignment(qt.Qt.AlignCenter)
+        self.plotRateSlider = qt.QSlider()
+        self.plotRateSlider.setOrientation(qt.Qt.Horizontal)
         self.plotRateSlider.setInvertedAppearance(False)
         self.plotRateSlider.setInvertedControls(False)
         self.plotRateSlider.setMinimum(1)
@@ -242,11 +236,11 @@ class scrollingPlot(QWidget):
     def setYRange(self, min, max):
         self.scrollingPlotPlot.setYRange(min, max)
 
-class scrollingPlotPlot(QWidget):
+class scrollingPlotPlot(qt.QWidget):
 
-    plotUpdated = pyqtSignal()
-    newaxis = pyqtSignal()
-    yAxisScaled = pyqtSignal(float, float)
+    plotUpdated = qt.pyqtSignal()
+    newaxis = qt.pyqtSignal()
+    yAxisScaled = qt.pyqtSignal(float, float)
 
     def __init__(self, scrollingplot, parent = None):
         super(scrollingPlotPlot, self).__init__(parent=parent)
@@ -370,7 +364,7 @@ class scrollingPlotPlot(QWidget):
         record[name].axis = axis
         axis.setLogMode(record[name].logScale)
         # record[name]['logScale'] = axis.logMode
-        self.threads[name] = QThread(self.scrollingPlot)
+        self.threads[name] = qt.QThread(self.scrollingPlot)
         self.workers[name] = curveRecordWorker(self, name)
         self.workers[name].moveToThread(self.threads[name])
         self.threads[name].start()
@@ -405,15 +399,15 @@ class scrollingPlotPlot(QWidget):
             if not i in rowsfilled:
                 return i
 
-class curveRecordWorker(QObject):
+class curveRecordWorker(qt.QObject):
     def __init__(self, plot, name):
-        QObject.__init__(self)
+        qt.QObject.__init__(self)
         self.curve = curve(plot, name)
 
 ''' This is the curve class which enables plotting on a plotting object. Making it a class eases control of the different options for multiple curves'''
-class curve(QObject):
+class curve(qt.QObject):
     def __init__(self, plot, name):
-        QObject.__init__(self)
+        qt.QObject.__init__(self)
         self.plot = plot
         self.records = self.plot.records
         self.name = name

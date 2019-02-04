@@ -490,11 +490,6 @@ class Model(object):
         else:
              self.machine.setPhase(self.cavity, self.startingPhase)
 
-    def longest(self, l):
-        if(not isinstance(l, list)): return(0)
-        return(max([len(l),] + [len(subl) for subl in l if isinstance(subl, list)] +
-            [self.longest(subl) for subl in l]))
-
     def cutDataLinacQuick(self):
         allData = self.getDataArray()
         cutData = [a for a in allData if np.isnan(a[1])]
@@ -510,27 +505,21 @@ class Model(object):
             elif i == (len(cutData)-1):
                 newlist.append(pt)
                 alllist.append(newlist)
-        print 'alllist = ', alllist
-        return self.longest(alllist)
+        # print 'alllist = ', alllist
+        if len(alllist) < 1:
+            self.logger[str, str].emit('Error in fitting! Is the linac on?', 'warning')
+        return max(alllist, key=len)
 
     def doFitLinacQuick(self):
         try:
             cutData = self.cutDataLinacQuick()
             x, y, std = zip(*cutData)
-            x = [a+360 if a < 0 else a for a in x]
-            # if max(x) - min(x) > 180:
-            #     x = [a if a >= 0 else a+360 for a in x]
-            #     phase, data, stddata = self.getDataArray(zipped=False)
-            #     phase = np.array([a if a >= 0 else a+360 for a in phase])
-            #     self.setDataArray(phase, data, stddata)
-            # print 'x = ', x
-            # print 'mean(x) = ', np.mean(x)
             crest_phase = np.mean(x) - 180 + self.fitOffset
             if crest_phase > 180:
                 crest_phase -= 360
-            # if crest_phase < 180:
-            #     crest_phase += 360
-            # x = [a if a <= 180 else a-360 for a in x]
+            if crest_phase < -180:
+                crest_phase += 360
+            crest_phase = np.round(crest_phase, decimals=1)
             self.setFitArray(np.array([crest_phase,crest_phase]), np.array([-10,10]))
             crest_phase = np.round(crest_phase, decimals=1)
             self.setFinalPhase(crest_phase)

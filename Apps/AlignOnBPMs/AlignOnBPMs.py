@@ -19,6 +19,7 @@ if mode=='virtual':
 elif mode=='physical':
 	import model_CLARA as model
 	import controller.controller as controller
+	#import controller.controller_example_signals as controller
 	import view.view1_16 as view
 
 class App(QtCore.QObject):

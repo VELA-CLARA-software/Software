@@ -7,10 +7,17 @@ from PyQt4.QtGui import QMainWindow
 from PyQt4.QtGui import QIcon
 from PyQt4.QtGui import QVBoxLayout
 from PyQt4.QtGui import QPushButton
+from PyQt4.QtGui import QMenu
+from PyQt4.QtGui import QAction
+
+
+from  PyQt4 import QtCore
 
 from viewSource.Ui_view import Ui_CamState
 from procedure.procedure import procedure
 from VELA_CLARA_Screen_Control import SCREEN_STATE
+
+from operator import itemgetter
 
 class view(QMainWindow, Ui_CamState ):
     # custom close signal to send to controller
@@ -27,11 +34,28 @@ class view(QMainWindow, Ui_CamState ):
         QWidget.__init__(self)
         self.my_name = 'view'
         self.setupUi(self)
-        self.setWindowIcon(QIcon('resources\\cam_status\\moview.ico'))
+        self.setWindowIcon(QIcon('resources\\screen_status\\screen_status_icon.ico'))
 
-    def add_cams(self,names):
+    def add_screens(self,names):
         self.vbox = QVBoxLayout()
+        # Order the anmes
+        # this type of ordering should be pushed down to the HWC
+        canon_order = ['LRG','S01','L01','S02','C2V','INJ','BA1','BA2']
+        order = []
         for name in names:
+            i = 0
+            for area in canon_order:
+                if area in name:
+                    order.append([i,name])
+                else:
+                    i += 1
+        orderd_names =  [x[1] for x in sorted(order, key=itemgetter(0))]
+        # print("ORDER")
+        # for n in orderd_names:
+        #     print n
+        #
+
+        for name in orderd_names:
             view.screens[name] = QPushButton(self.widget)
             view.screens[name].setObjectName(name)
             view.screens[name].setText(name)
@@ -39,36 +63,93 @@ class view(QMainWindow, Ui_CamState ):
         self.vbox.addStretch(1)
         self.groupBox.setLayout(self.vbox)
 
+    def add_context(self, name):
+        view.screens[name].setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+       # create context menu
+
+
     def update_gui(self):
         for name, state in view.data.iteritems():
             self.update_widget(view.screens[name],state)
 
     def update_widget(self,widget,state):
-        if state == SCREEN_STATE.RETRACTED:
+
+
+        if state == SCREEN_STATE.V_MAX:#1
+            widget.setStyleSheet("background-color: magenta")
+            widget.setText( widget.objectName() + ' V-MAX' )
+        elif state == SCREEN_STATE.H_MAX:#2
+            widget.setStyleSheet("background-color: magenta")
+            widget.setText( widget.objectName() + ' H -MAX' )
+        elif state == SCREEN_STATE.V_MIRROR:#3
+            widget.setStyleSheet("background-color: light gray")
+            widget.setText( widget.objectName() + ' V-MIRROR' )
+        elif state == SCREEN_STATE.V_GRAT:#4
+            widget.setStyleSheet("background-color: cyan")
+            widget.setText( widget.objectName() + ' V-GRATICULE' )
+
+
+        elif state == SCREEN_STATE.YAG:#5
             widget.setStyleSheet("background-color: green")
-            widget.setText( widget.objectName() + ' SCREEN-OUT' )
-        elif state == SCREEN_STATE.V_RETRACTED:
+            widget.setText( widget.objectName() + ' YAG' )
+        elif state == SCREEN_STATE.V_YAG:#6
             widget.setStyleSheet("background-color: green")
-            widget.setText( widget.objectName() + ' SCREEN-OUT' )
-        elif state == SCREEN_STATE.H_RETRACTED:
-            widget.setStyleSheet("background-color: green")
-            widget.setText( widget.objectName() + ' SCREEN-OUT' )
-        elif state == SCREEN_STATE.YAG:
-            widget.setStyleSheet("background-color: red")
-            widget.setText( widget.objectName() + ' SCREEN-IN' )
-        elif state == SCREEN_STATE.V_YAG:
-            widget.setStyleSheet("background-color: red")
-            widget.setText( widget.objectName()+ ' SCREEN-IN' )
+            widget.setText( widget.objectName()+ ' YAG' )
+
         elif state == SCREEN_STATE.V_RF:
-            widget.setStyleSheet("background-color: green")
+            widget.setStyleSheet("background-color: red")
             widget.setText( widget.objectName() + ' RF' )
+
         elif state == SCREEN_STATE.SCREEN_MOVING:
             widget.setStyleSheet("background-color: yellow")
             widget.setText( widget.objectName() + ' MOVING' )
 
-        elif state == 'CLICKED':
+        elif state == SCREEN_STATE.V_COL:
             widget.setStyleSheet("background-color: orange")
+            widget.setText( widget.objectName() + ' V-COL' )
+
+
+        elif state == SCREEN_STATE.H_RETRACTED:
+            widget.setStyleSheet("background-color: magenta")
+            widget.setText( widget.objectName() + ' H-RETRACTED' )
+        elif state == SCREEN_STATE.V_RETRACTED:
+            widget.setStyleSheet("background-color: magenta")
+            widget.setText( widget.objectName() + ' V-RETRACTED' )
+        elif state == SCREEN_STATE.RETRACTED:
+            widget.setStyleSheet("background-color: red")
+            widget.setText( widget.objectName() + ' RETRACTED (RF)' )
+
+
+        elif state == SCREEN_STATE.V_SLIT_1:
+            widget.setStyleSheet("background-color: orange")
+            widget.setText( widget.objectName() + ' SLIT' )
+        elif state == SCREEN_STATE.H_SLIT_1:
+            widget.setStyleSheet("background-color: orange")
+            widget.setText( widget.objectName() + ' SLIT' )
+        elif state == SCREEN_STATE.H_SLIT_2:
+            widget.setStyleSheet("background-color: orange")
+            widget.setText( widget.objectName() + ' SLIT' )
+        elif state == SCREEN_STATE.H_SLIT_3:
+            widget.setStyleSheet("background-color: orange")
+            widget.setText( widget.objectName() + ' SLIT' )
+        elif state == SCREEN_STATE.H_APT_1:
+            widget.setStyleSheet("background-color: orange")
+            widget.setText( widget.objectName() + ' H_APT_1' )
+        elif state == SCREEN_STATE.H_APT_2:
+            widget.setStyleSheet("background-color: orange")
+            widget.setText( widget.objectName() + ' H_APT_2' )
+        elif state == SCREEN_STATE.H_APT_3:
+            widget.setStyleSheet("background-color: orange")
+            widget.setText( widget.objectName() + ' H_APT_3' )
+
+        elif state == 'CLICKED':
+            widget.setStyleSheet("background-color: purple")
             widget.setText( widget.objectName() + ' CLICKED' )
+
+
+        # elif state == 'CLICKED':
+        #     widget.setStyleSheet("background-color: orange")
+        #     widget.setText( widget.objectName() + ' CLICKED' )
         else:
             widget.setStyleSheet("background-color: magenta")
             widget.setText( widget.objectName() + ' ERRRR' )

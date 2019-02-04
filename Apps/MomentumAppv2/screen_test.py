@@ -27,12 +27,29 @@ screens = Init.physical_C2B_Screen_Controller()
 #cont = init.physical_C2B_Screen_Controller()
 #screens = Init.physical_CLARA_PH1_Screen_Controller()
 
-time.sleep(2)
+time.sleep(0.1)
 print 'Is YAG in?'
 screen = 'S02-SCR-02'
 a = screens.isYAGIn(screen)
 print a
 
+print 'Screen state'
+print screens.getScreenState(screen)
+
+print 'Is screen in?'
+print screens.isScreenIn(screen)
+
+print 'Is clear for beam?'
+print screens.isClearForBeam(screen)
+
+print 'Is Mover?'
+print screens.isMover(screen)
+
+#screens.isScreenInState(screen)
+
+#screens.moveScreenTo(screen,scrn.SCREEN_STATE.V_YAG)
+
+exit()
 # Insert YAG
 screens.insertYAG(screen)
 if screens.isYAGIn(screen) is False:
