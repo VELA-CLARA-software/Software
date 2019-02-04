@@ -3,7 +3,7 @@ from PyQt4 import QtGui
 import webbrowser
 import pyqtgraph as pg
 import colorcet  # for nice colour maps
-# from epics import caget, caput
+from epics import caget, caput
 import numpy as np
 import h5py
 import os
@@ -12,8 +12,9 @@ import time
 from datetime import datetime
 from multiprocessing import Process, Queue, Pipe
 from threading import Thread
-from collections import OrderedDict
+from collections import OrderedDict, deque
 sys.path.append(r'\\apclara1.dl.ac.uk\ControlRoomApps\Controllers\bin\Release')
+# sys.path.append(r'..\..\..') # \Widgets\MachineSnapshot')
 os.environ['PATH'] = os.environ['PATH'] + r';\\apclara1.dl.ac.uk\ControlRoomApps\Controllers\bin\stage\root_v5.34.34\bin'
 from Widgets.MachineSnapshot.machine_snapshot import MachineSnapshot
 import VELA_CLARA_Camera_Control
@@ -23,7 +24,7 @@ scr_init = VELA_CLARA_Screen_Control.init()
 
 os.environ["EPICS_CA_ADDR_LIST"] = "192.168.83.255"
 os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
-os.environ["EPICS_CA_MAX_ARRAY_BYTES"] = "10000000"
+os.environ["EPICS_CA_MAX_ARRAY_BYTES"] = str(2**26)
 
 IMAGE_WIDTH = 1080
 IMAGE_HEIGHT = 1280
@@ -285,6 +286,7 @@ class Controller():
         self.OverlayImage.setOpacity(0.5)
 
         self.ImageBox = layout.addPlot()
+        # self.ImageBox._setProxyOptions(deferGetattr=True)  # speeds up access to RemoteGraphicsView
         # Ensure that auto-ranging adds no padding to the image - maximise the size on our screen
         self.ImageBox.getViewBox().suggestPadding = lambda axis: 0.001
         self.ImageBox.addItem(self.Image)
@@ -347,8 +349,12 @@ class Controller():
         self.changeColourMap(map_name)
 
         # Timer to update the screen image
+        self.np_data = None
         self.image_update_timer = QtCore.QTimer()
         self.image_update_timer.timeout.connect(self.updateImage)
+        self.fps_counter = deque()
+        self.fps_display = QtGui.QLabel('')
+        view.statusbar.addPermanentWidget(self.fps_display)
         self.image_update_timer.start(100)
 
         # Timer to update the treeview - runs less often
@@ -660,25 +666,36 @@ class Controller():
             text += '<h2>Overlay</h2><p>{}</p>'.format(filename[len(hdf5_image_folder)+1:])
 
         self.title_label.setText(text)
+        # now = datetime.now()
         # data = None  # for testing
-        # pv_name = cam_ctrl.getCameraObj(current_camera_name).pvRoot + 'CAM2:ArrayData'
-        data = self.cam_ctrl.takeAndGetFastImage()
+        suffix = 'CAM1:ArrayData'  # if self.cam_ctrl.isVelaCam() else 'CAM2:ArrayData'
+        pv_name = self.cam_ctrl.getCameraObj(screen_name).pvRoot + suffix
+        # data = self.cam_ctrl.takeAndGetFastImage()
         # data = cam_ctrl.getImageObj().data
-        # data = caget(pv_name)  # this seems a bit faster than takeAndGetFastImage()
+        t0 = datetime.now()
+        data = caget(pv_name, timeout=0.1)  # this seems a bit faster than takeAndGetFastImage()
+        t1 = datetime.now()
+        # print(datetime.now() - now)
         if data is not None:
             leds_on = False #self.cam_ctrl.isClaraLEDOn() or self.cam_ctrl.isVelaLEDOn()
             min_level = 0
             if self.view.auto_level_checkbox.isChecked() and not leds_on:
                 # Set the maximum level so 0.1% of pixels are saturated
-                self.view.max_level_spin.setValue(int(np.percentile(data, 99.9)))
+                self.view.max_level_spin.setValue(int(np.percentile(data[::4], 99.9)))
                 min_level = np.min(data)
+            t2 = datetime.now()
 
-            if self.cam_ctrl.isVelaCam():
-                dims = IMAGE_DIMS_VELA
-                size_factor = 1
-            else:  # CLARA cameras give us a cut-down image
+            if len(data) == IMAGE_HEIGHT * IMAGE_WIDTH:
                 dims = IMAGE_DIMS
                 size_factor = 2
+            elif len(data) == IMAGE_HEIGHT_VELA * IMAGE_WIDTH_VELA:
+                dims = IMAGE_DIMS_VELA
+                size_factor = 1
+            elif len(data) == IMAGE_HEIGHT_FULL * IMAGE_WIDTH_FULL:
+                dims = IMAGE_DIMS_FULL
+                size_factor = 1
+            else:
+                return
             npData = np.array(data).reshape(dims)
             self.Image.setImage(np.flip(np.transpose(npData), 1))
             max_level = self.view.max_level_spin.maximum() if leds_on else self.view.max_level_spin.value()
@@ -690,6 +707,7 @@ class Controller():
             self.Image.setRect(image_rect)
             # Ensure we can't zoom or pan away from the image. Only set xMin and yMax to avoid messing up the aspect ratio
             self.ImageBox.setLimits(xMin=xMin, yMax=yMin+height)
+            # print t1 - t0, t2 - t1
 
         if self.cam_ctrl.isCollecting(screen_name):  # TODO: correct?
             text = 'Kill'
@@ -698,6 +716,14 @@ class Controller():
         else:
             text = 'Save'
         self.view.save_pushButton.setText(text)
+
+        # Update fps display
+        now = datetime.now()
+        self.fps_counter.append(now)
+        frames = len(self.fps_counter)
+        if frames >= 10:
+            dt = now - self.fps_counter.popleft()
+            self.fps_display.setText('{:.1f} fps'.format(frames / dt.total_seconds()))
 
         self.counter += 1
         if self.runFeedback and self.counter >= 1:
@@ -741,7 +767,7 @@ class Controller():
                         raise
                 self.save_filename = r'{}\{}_{}_{}images.hdf5'.format(folder, self.getCurrentScreen(), timestamp.strftime('%Y-%#m-%#d_%#H-%#M-%#S'), numberOfImages)
                 with h5py.File(self.save_filename, 'w') as file:
-                    file.create_dataset('Capture000001', data=self.Image.image)
+                    file.create_dataset('Capture000001', data=np.array(self.Image.image, dtype='uint16'))
                     # TODO: magnet/RF settings in attributes?
                     # TODO: save more than one image?
                 self.writeSnapshot()
