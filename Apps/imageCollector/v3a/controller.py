@@ -48,7 +48,8 @@ image_credits = {
     'in.png': 'https://www.flaticon.com/free-icon/vision_94922#term=vision&page=1&position=2',
     'out.png': 'https://www.flaticon.com/free-icon/vision-off_94930#term=eye%20cross&page=1&position=4',
     'camera.ico': 'https://www.flaticon.com/free-icon/camera_204286#term=camera&page=1&position=43',
-    'save.png': 'https://www.flaticon.com/free-icon/download-button_532#term=save&page=1&position=22'
+    'save.png': 'https://www.flaticon.com/free-icon/download-button_532#term=save&page=1&position=22',
+    'console.png': 'https://www.flaticon.com/free-icon/console_31775#term=computer%20console&page=1&position=5',
 }
 
 
@@ -179,6 +180,8 @@ class Controller():
         layout = pg.GraphicsLayout()
         monitor.setCentralItem(layout)
         self.view = view
+        sys.stdout.setWidget(self.view.console)
+        sys.stderr.setWidget(self.view.console)
         # self.model = model
         self.runFeedback = False
         self.counter = 0
@@ -304,6 +307,17 @@ class Controller():
         self.vLineMLE_avg = self.ImageBox.plot(x=[1000, 1000], y=[900, 1100], pen='c')
         self.hLineMLE_avg = self.ImageBox.plot(x=[900, 1100], y=[1000, 1000], pen='c')
 
+        # button to show/hide console
+        self.console_toggle_button = QtGui.QToolButton()
+        self.console_toggle_button.setIcon(QtGui.QIcon(pixmap('console')))
+        self.console_toggle_button.clicked.connect(self.toggleConsole)
+        self.console_toggle_button.setToolTip('Toggle visibility of console')
+        proxy = QtGui.QGraphicsProxyWidget()
+        proxy.setWidget(self.console_toggle_button)
+        layout.addItem(proxy)
+        vis = self.settings.value('showConsole', True).toBool()
+        self.view.console.setVisible(vis)
+
         # show screen name, beam position and size as an overlay on the image
         self.title_label = pg.LabelItem('', color='#ffffff')
         self.title_label.setPos(50, 20)
@@ -364,6 +378,15 @@ class Controller():
         self.updateGUI()  # do it immediately
 
         view.statusbar.showMessage('Ready.')
+
+    def toggleConsole(self):
+        visible = not self.view.console.isVisible()
+        to_add = self.view.console.width() * (1 if visible else -1)
+        window = self.view.centralwidget.parent()
+        self.view.console.setVisible(visible)
+        if not window.isMaximized():
+            window.resize(window.width() + to_add, window.height())
+        self.settings.setValue('showConsole', visible)
 
     def mouseMoveOverTree(self, index):
         """Most image filenames are too long to show in our little treeview. Show a persistent tooltip when the mouse
