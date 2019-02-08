@@ -7,23 +7,16 @@ import Software.Procedures.qt as qt
 class HighPrecisionWallTime(qt.QObject):
     def __init__(self, parent=None):
         super(HighPrecisionWallTime, self).__init__(parent)
-        self.start()
+        self.timer = qt.QElapsedTimer()
 
     def time(self,):
-        dc = time.clock()-self._clock_0
-        if dc > 60:
-            # print 'reset'
-            self._wall_time_0 = time.time()
-            self._clock_0 = time.clock()
-            dc = 0
+        dc = self.timer.elapsed()/1000.
+        # print ('dc = ', dc)
         return self._wall_time_0 + dc
-
-    def elapsed(self):
-        return time.clock()-self._clock_0
 
     def start(self):
         self._wall_time_0 = time.time()
-        self._clock_0 = time.clock()
+        self.timer.start()
 
 class repeatedTimer(qt.QThread):
 
@@ -39,12 +32,9 @@ class repeatedTimer(qt.QThread):
 
     def update(self):
         ''' call signal generating Function '''
-        if (self.stopwatch.elapsed()) < 0.0001:
-            pass
-        else:
-            value = self.function(*self.args)
-            currenttime = self.stopwatch.time()
-            self.dataReady.emit([currenttime,value])
+        value = self.function(*self.args)
+        currenttime = self.stopwatch.time()
+        self.dataReady.emit([currenttime,value])
 
     def startTimer(self):
         self.timer = qt.QTimer(self)
@@ -65,6 +55,9 @@ class repeatedTimer(qt.QThread):
         self.interval = 1*interval
         self.i = 1
 
+    def stop(self):
+        self._isRunning = False
+
 class createSignalTimer(qt.QObject):
 
     def __init__(self, function, args=[]):
@@ -75,6 +68,7 @@ class createSignalTimer(qt.QObject):
     def startTimer(self, interval=1):
         self.timer.setInterval(interval)
         self.timer.start(qt.QThread.TimeCriticalPriority)
+        self.timer.setPriority(qt.QThread.TimeCriticalPriority)
 
     def setInterval(self, interval):
         # self.timer.stop()
@@ -193,7 +187,7 @@ class signalRecord(qt.QObject):
         setattr(self, *args, **kwargs)
 
     def start(self):
-        self.thread.start()
+        self.thread.start(qt.QThread.TimeCriticalPriority)
         self.signal.startTimer(self.timer)
 
     def setLogMode(self, mode):

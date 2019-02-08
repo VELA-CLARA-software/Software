@@ -1,6 +1,6 @@
 import sys, time, os
 if getattr(sys, 'frozen', True):
-    print 'Frozen!'
+    print( 'Frozen!')
     sys.path.append("../../Widgets/Striptool2")
 sys.path.append("../../../")
 import Software.Procedures.qt as qt

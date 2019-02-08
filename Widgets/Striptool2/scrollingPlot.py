@@ -436,6 +436,7 @@ class curve(qt.QObject):
         self.plot.records[name].worker.recordMean10Signal.connect(lambda x: self.updateData(x, self.points10))
         self.plot.records[name].worker.recordMean100Signal.connect(lambda x: self.updateData(x, self.points100))
         self.plot.records[name].worker.recordMean1000Signal.connect(lambda x: self.updateData(x, self.points1000))
+        self.drawCurve()
 
     def scaleYAxis(self, scale, pos):
         newpos = self.vb.state['viewRange'][1]
@@ -523,6 +524,10 @@ class curve(qt.QObject):
 
     ''' This updates the curve points based on the plot type and using the data from the timefilter function '''
     def updateData(self, data, points):
-        val = data[1] #if not self.records[self.name]['logScale'] else math.log(data[1],10)
-        newpoint = (data[0], val)
+        # if hasattr(self, 'lastVal'):
+        #     val = data[0] - self.lastVal #if not self.records[self.name]['logScale'] else math.log(data[1],10)
+        # else:
+        #     val = 0
+        # self.lastVal = data[0]
+        newpoint = data#(data[0], val)
         points.append(newpoint)

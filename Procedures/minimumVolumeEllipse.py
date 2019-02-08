@@ -151,7 +151,7 @@ if __name__ == "__main__":
     ET = EllipsoidTool()
 
     beam = generateGaussianBeamDistribution(n=1e3, twiss=[-5.,1.,0,1])
-    print '6D Volume = ', scipy.spatial.ConvexHull(beam).volume
+    print( '6D Volume = ', scipy.spatial.ConvexHull(beam).volume)
     P = np.transpose([beam[:,0], beam[:,1]])
 
     part = partial(scipy.spatial.ConvexHull, P)
@@ -179,9 +179,9 @@ if __name__ == "__main__":
     ax.scatter(P[::int(np.ceil(len(P)/10000)),0], P[::int(np.ceil(len(P)/10000)),1], color='g', s=1)
     ax.scatter(hullP[:,0], hullP[:,1], color='r', s=10)
     hull = scipy.spatial.ConvexHull(P)
-    print 'hull = ', hull
+    print( 'hull = ', hull)
     for simplex in hull.simplices:
-        print simplex
+        print( simplex)
         ax.plot(P[simplex, 0], P[simplex, 1], 'k-')
     plt.show()
     plt.close(fig)

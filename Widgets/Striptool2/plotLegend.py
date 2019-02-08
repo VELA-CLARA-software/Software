@@ -163,8 +163,8 @@ class plotLegendTree(ParameterTree):
         self.records[name]['viewbox'].sigStateChanged.disconnect()
         try:
             self.generalPlot.removeSignal(str(name))
-        except:
-            pass
+        except Exception as e:
+            print 'Exception in signal removal: ', e
         finally:
             for i in range(self.topLevelItemCount()):
                 item = self.topLevelItem(i)
