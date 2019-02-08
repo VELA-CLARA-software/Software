@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'Ui_mainView_DEV.ui'
+# Form implementation generated from reading ui file 'Ui_mainView.ui'
 #
 # Created by: PyQt4 UI code generator 4.11.4
 #
@@ -728,31 +728,18 @@ class Ui_mainView(object):
         self.line_7.setFrameShadow(QtGui.QFrame.Sunken)
         self.line_7.setObjectName(_fromUtf8("line_7"))
         self.verticalLayout_3.addWidget(self.line_7)
-        self.opencloseShut1_pushButton = QtGui.QPushButton(self.tab)
-        self.opencloseShut1_pushButton.setObjectName(_fromUtf8("opencloseShut1_pushButton"))
-        self.verticalLayout_3.addWidget(self.opencloseShut1_pushButton)
-        self.opencloseShut2_pushButton = QtGui.QPushButton(self.tab)
-        self.opencloseShut2_pushButton.setObjectName(_fromUtf8("opencloseShut2_pushButton"))
-        self.verticalLayout_3.addWidget(self.opencloseShut2_pushButton)
-        self.horizontalLayout_12 = QtGui.QHBoxLayout()
-        self.horizontalLayout_12.setObjectName(_fromUtf8("horizontalLayout_12"))
-        self.pix_gridlines_checkBox_2 = QtGui.QCheckBox(self.tab)
-        self.pix_gridlines_checkBox_2.setObjectName(_fromUtf8("pix_gridlines_checkBox_2"))
-        self.horizontalLayout_12.addWidget(self.pix_gridlines_checkBox_2)
-        self.mm_gridlines_checkBox_2 = QtGui.QCheckBox(self.tab)
-        self.mm_gridlines_checkBox_2.setObjectName(_fromUtf8("mm_gridlines_checkBox_2"))
-        self.horizontalLayout_12.addWidget(self.mm_gridlines_checkBox_2)
-        self.verticalLayout_3.addLayout(self.horizontalLayout_12)
+        self.opencloseShut_pushButton = QtGui.QPushButton(self.tab)
+        self.opencloseShut_pushButton.setObjectName(_fromUtf8("opencloseShut_pushButton"))
+        self.verticalLayout_3.addWidget(self.opencloseShut_pushButton)
         spacerItem = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
         self.verticalLayout_3.addItem(spacerItem)
         self.collectAndSave_pushButton.raise_()
-        self.opencloseShut1_pushButton.raise_()
+        self.opencloseShut_pushButton.raise_()
         self.line.raise_()
         self.line_2.raise_()
         self.line_7.raise_()
         self.resetMeanSD_pushButton.raise_()
         self.line_8.raise_()
-        self.opencloseShut2_pushButton.raise_()
         self.tabWidget.addTab(self.tab, _fromUtf8(""))
         self.tab_2 = QtGui.QWidget()
         self.tab_2.setObjectName(_fromUtf8("tab_2"))
@@ -948,7 +935,7 @@ class Ui_mainView(object):
         self.imageLayout = QtGui.QGridLayout()
         self.imageLayout.setVerticalSpacing(14)
         self.imageLayout.setObjectName(_fromUtf8("imageLayout"))
-        self.graphicsView = ImageView(self.centralwidget)
+        self.graphicsView = QtGui.QGraphicsView(self.centralwidget)
         self.graphicsView.setObjectName(_fromUtf8("graphicsView"))
         self.imageLayout.addWidget(self.graphicsView, 0, 0, 1, 1)
         self.horizontalLayout_9.addLayout(self.imageLayout)
@@ -1034,10 +1021,7 @@ class Ui_mainView(object):
         self.sy_sd.setText(_translate("mainView", "-", None))
         self.cov_sd.setText(_translate("mainView", "-", None))
         self.resetMeanSD_pushButton.setText(_translate("mainView", "Reset Means and SD", None))
-        self.opencloseShut1_pushButton.setText(_translate("mainView", "Open / Close Shutter", None))
-        self.opencloseShut2_pushButton.setText(_translate("mainView", "PushButton", None))
-        self.pix_gridlines_checkBox_2.setText(_translate("mainView", "Pixel Grid-Lines", None))
-        self.mm_gridlines_checkBox_2.setText(_translate("mainView", "mm Grid-Lines", None))
+        self.opencloseShut_pushButton.setText(_translate("mainView", "Open / Close Shutter", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("mainView", "Main", None))
         self.analyse_pushButton.setText(_translate("mainView", "Analyse", None))
         self.resetBackground_pushButton.setText(_translate("mainView", "Reset Background Image", None))
@@ -1066,4 +1050,3 @@ class Ui_mainView(object):
         self.mm_gridlines_checkBox.setText(_translate("mainView", "mm Grid-Lines", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("mainView", "Analysis Settings", None))
 
-from pyqtgraph import ImageView
