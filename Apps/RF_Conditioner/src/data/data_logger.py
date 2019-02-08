@@ -59,10 +59,8 @@ class data_logger(object):
             'reverse_file = ' + self.reverse_file,
             'log_path     = ' + self.log_path
         ])
-
         # open log_file and LEAVE OPEN
         self.log_file = open(self.log_path, 'a')
-
 
     def header(self, text, add_to_log = False):
         str = '*' + '\n' +'*** ' + text + '***'
@@ -152,8 +150,6 @@ class data_logger(object):
         #
         ## now open pulse_count_log file for appending and LEAVE OPEN
         self.pulse_count_log_file = open(self.pulse_count_log, 'a')
-
-
         return log
 
     def start_data_logging(self):

@@ -103,6 +103,7 @@ llrf_ff_ph_locked_status  = 'llrf_ff_ph_locked_status' # the apps internal state
 llrf_DAQ_rep_rate = 'llrf_DAQ_rep_rate'
 llrf_DAQ_rep_rate_aim = 'llrf_DAQ_rep_rate_aim'
 llrf_DAQ_rep_rate_status = 'llrf_DAQ_rep_rate_aim'
+llrf_DAQ_rep_rate_status_previous = 'llrf_DAQ_rep_rate_status_previous'
 llrf_DAQ_rep_rate_max = 'llrf_DAQ_rep_rate_max'
 llrf_DAQ_rep_rate_min = 'llrf_DAQ_rep_rate_min'
 
@@ -201,6 +202,7 @@ all_value_keys = [rev_power_spike_count,
                   log_pulse_count,
                   llrf_DAQ_rep_rate,
                   llrf_DAQ_rep_rate_status,
+                  llrf_DAQ_rep_rate_status_previous,
                   llrf_DAQ_rep_rate_aim,
                   llrf_DAQ_rep_rate_max,
                   llrf_DAQ_rep_rate_min,
