@@ -29,8 +29,8 @@ class striptool_Demo(qt.QMainWindow):
     def __init__(self, parent = None):
         super(striptool_Demo, self).__init__(parent)
         self.lastT = {}
-        self.lastT[0] = time.clock()
-        self.lastT[10] = time.clock()
+        # self.lastT[0] = time.clock()
+        # self.lastT[10] = time.clock()
 
         stdicon = self.style().standardIcon
         style = qt.QStyle
@@ -172,10 +172,10 @@ class striptool_Demo(qt.QMainWindow):
 
         ''' This starts the plotting timer (by default at 1 Hz) '''
         self.generalplot.start()
-        self.scrollingplot.start(100)
-        self.fftplot.start()
-        self.scatterplot.start()
-        self.histogramplot.start()
+        self.scrollingplot.start(1000)
+        self.fftplot.start(1000)
+        self.scatterplot.start(1000)
+        self.histogramplot.start(1000)
 
         ''' modify the plot scale to 10 secs '''
         self.scrollingplot.setPlotScale(60)
@@ -191,6 +191,8 @@ class striptool_Demo(qt.QMainWindow):
     def createRandomSignal(self, mean=0, sigma=1, freq=1.682, offset=0, t=None):
         if t == None:
             t = time.clock()
+        if not mean in self.lastT:
+            self.lastT[mean] = t
         signalValue = mean+sigma*np.sin(2*freq*np.pi*(t + offset))#+0.1*np.random.normal(mean, sigma)#+np.sin(1.384*2*np.pi*t-0.1)+0.5*np.random.normal(mean, sigma)
         signalValue = t - self.lastT[mean] - 0.1
         self.lastT[mean] = t

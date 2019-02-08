@@ -100,6 +100,9 @@ class getMagnetProperties(object):
         angle = 45  # reset to 45
         return 1e-6*0.001 * physics.c * int_strength / np.radians(angle)
 
+    def calculateMomentaFromDipole(self, magnetname, currents=[]):
+        return [self.calculateMomentumFromDipole(magnetname, I) for I in currents]
+
     def getMagnetParameterType(self, magnetname):
         magnet = self.machine.magnets.getMagObjConstRef(magnetname)
         mag_type = str(magnet.magType)

@@ -61,6 +61,7 @@ class llrf_handler(llrf_handler_base):
         #llrf_handler_base.llrf_control.trigOff()
         # for trace in llrf_handler_base.config.breakdown_config['BREAKDOWN_TRACES']:#MAGIC_STRING:
         #     llrf_handler_base.llrf_control.setTraceSCAN(trace, LLRF_SCAN.PASSIVE)  # SHOULD BE INPUT Parameter
+        success = False
         if val != llrf_handler_base.llrfObj[0].amp_sp:
             llrf_handler_base.llrf_control.setAmpSP(val)
             self.mask_set = False
@@ -73,11 +74,13 @@ class llrf_handler(llrf_handler_base):
                     success = False
                     break
             if success:
-                llrf_handler_base.logger.message('set_amp = ' + str(val) + ', took ' + str(end - start)+\
+                llrf_handler_base.logger.message('set_amp() = ' + str(val) + ', took ' + str(end - start)+\
                                              ' time,  averages NOT reset, mask_set = False', True)
             else:
-                llrf_handler_base.logger.message('set_amp = ' + str(val) + ', FAILED to set amp in less than 3 seconds '
+                llrf_handler_base.logger.message('set_amp() = ' + str(val) + ', FAILED to set amp in less than 3 seconds '
                                                                            'averages NOT reset, mask_set = False', True)
+        return success
+
 
     def enable_llrf(self):
         # go through each possible LLRF paramter (except HOLD_RF_ON_COM mod / protection parmaters

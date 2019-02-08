@@ -161,21 +161,56 @@ class data_logger(object):
 
     def write_data_log_header(self,values):
         print(self.my_name + ' writing data_log header to ' + self.data_path)
+
         joiner = '\t'
         names = []
         types = []
-        [names.append(x) for x,y in values.iteritems()]
-        names[names.index(dat.time_stamp)] =  dat.time_stamp +  ", (start = " + datetime.now().isoformat(' ') + ")"
-        [types.append(str(type(y)))  for x,y in values.iteritems()]
+
+        counter  = 0
+        name_index = 0
+
+        for key, value in values.iteritems():
+            print key
+            print str(type(value))
+            names.append(key)
+            types.append(str(type(value)))
+            if key == dat.time_stamp:
+                print('name index = ',counter)
+                name_index = counter
+            counter += 1
+
+
+
+        #[names.append(x) for x,y in values.iteritems()]
+        names[name_index] =  dat.time_stamp +  ", (start = " + datetime.now().isoformat(' ') + ")"
+        #names[names.index(dat.time_stamp)] =  dat.time_stamp +  ", (start = " + datetime.now().isoformat(' ') + ")"
+        #[types.append(str(type(y)))  for x,y in values.iteritems()]
+        #
+        # create the data_log file and write the plaintext header
+
+
+        #print joiner.join(names)
+        #print joiner.join(types)
+
+
         try:
             with open(self.data_path  + '.dat', 'ab') as f:
                 f.write(joiner.join(names)+ "\n")
                 f.write(joiner.join(types)+ "\n")
                 # f.write(struct.pack('<i', 245))
-
+        except Exception as e:
+            print(e)
+            print(self.my_name + ' MAJOR ERROR CAN NOT CREATE data_log.dat, FILE = ' + self.data_path)
+            raw_input()
+        #
+        # now try and open the file and leave open for appending data to
+        try:
             self.data_path_file = open(self.data_path  + '.dat','ab')
-        except:
-            pass
+            print( 'data_path_file set correctly ', self.data_path_file )
+        except Exception as e:
+            print(e)
+            print(self.my_name + ' MAJOR ERROR CAN NOT OPEN LOG FILES: ' + self.data_path)
+            raw_input()
 
     def write_data(self,values):
         #print('write_data')

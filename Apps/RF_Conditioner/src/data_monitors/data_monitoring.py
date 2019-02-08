@@ -87,6 +87,8 @@ class data_monitoring(data_monitoring_base):
 		self.enable_RF_monitor_states[dat.llrf_output_status] = state.INIT
 		self.enable_RF_monitor_states[dat.llrf_ff_amp_locked_status] = state.INIT
 		self.enable_RF_monitor_states[dat.llrf_ff_ph_locked_status] = state.INIT
+		# add can_rf_output to main monitor states, so it can go new bad and
+
 		#self.enable_RF_monitor_states[dat.llrf_DAQ_rep_rate_status] = state.INIT
 
 	def update_enable_LLRF_state(self, gui_enable_rf):
@@ -106,7 +108,19 @@ class data_monitoring(data_monitoring_base):
 
 			if all(value == state.GOOD for value in self.enable_RF_monitor_states.values()):
 				self.data.values[dat.can_rf_output] = state.GOOD
-				#self.main_monitor_states[dat.can_rf_output] = state.GOOD
+
+			if self.data.values[dat.can_rf_output_OLD] == state.GOOD:
+				if self.data.values[dat.can_rf_output] == state.BAD:
+					self.data.values[dat.can_rf_output] = state.NEW_BAD
+					#print('Print RF OUTPUT IN NEW BAD')
+
+			if self.data.values[dat.can_rf_output_OLD] == state.BAD:
+				if self.data.values[dat.can_rf_output] == state.GOOD:
+					self.data.values[dat.can_rf_output] = state.NEW_GOOD
+					#print('Print RF OUTPUT IN NEW GOOD')
+
+			self.data.values[dat.can_rf_output_OLD] = self.data.values[dat.can_rf_output]
+
 				#print('self.data.values[dat.can_rf_output] = state.GOOD')
 
 		else:
@@ -124,7 +138,11 @@ class data_monitoring(data_monitoring_base):
 
 	def enable_RF_bad(self):
 		#return state.BAD in self.enable_RF_monitor_states.values()
-		return self.data.values[dat.can_rf_output] == state.BAD
+		if self.data.values[dat.can_rf_output] == state.BAD:
+			return True
+		if self.data.values[dat.can_rf_output] == state.NEW_BAD:
+			return True
+
 
 	def update_states(self ):
 		''' updates main_monitor_states using function sdefined in self.monitor_funcs'''
@@ -137,8 +155,13 @@ class data_monitoring(data_monitoring_base):
 		return state.NEW_BAD in self.main_monitor_states.values()
 
 	def new_good_no_bad(self):
+		if self.enable_RF_bad():
+			return False
 		if self.no_bad():
-			return state.NEW_GOOD in self.main_monitor_states.values()
+			if state.NEW_GOOD in self.main_monitor_states.values():
+				return True
+			if self.data.values[dat.can_rf_output] == state.NEW_GOOD:
+				return True
 		return False
 
 	def no_bad(self):

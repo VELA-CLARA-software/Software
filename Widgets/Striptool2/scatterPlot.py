@@ -133,7 +133,10 @@ class scatterPlot(qt.QWidget):
         self.plotRateLabel.setText('Plot Update Rate [' + str(self.plotrate) + ' Hz]:')
         self.plotThread.setInterval(1000 * 1 / value)
 
-    def start(self, timer=1000):
+    def start(self, timer=1000, offset=500):
+        if not hasattr(self, 'slept'):
+            time.sleep(offset/1000.)
+            self.slept = True
         self.plotUpdate()
         self.plotThread.start(timer)
         self.plotThread.timeout.connect(self.plotUpdate)

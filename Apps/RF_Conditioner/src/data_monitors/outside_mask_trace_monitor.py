@@ -25,14 +25,6 @@ class outside_mask_trace_monitor(monitor):
 	def __init__(self):
 		# init base-ccaget lass
 		monitor.__init__(self,timed_cooldown=True)
-		# breakdown param
-		#self.breakdown_config = outside_mask_trace_monitor.config.breakdown_config
-
-		# log traces to monitor
-		# str=[]
-		# for trace in monitor.config.llrf_config['TRACES_TO_SAVE']:
-		# 	str.append(self.my_name + ' has ' + trace)
-		# monitor.logger.message(str,True)
 
 		self.timer.timeout.connect(self.update_value)
 		self.timer.start(monitor.config.breakdown_config['OUTSIDE_MASK_CHECK_TIME'])

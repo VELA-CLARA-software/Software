@@ -5,6 +5,7 @@ import datetime as dt
 sys.path.append("../../../")
 import Software.Procedures.qt as qt
 import logging
+logging.basicConfig()
 import tables as tables
 import signalRecord as signalRecord
 import scrollingPlot as scrollingplot
@@ -67,7 +68,7 @@ class generalPlot(qt.QWidget):
     def removeSignal(self,name):
         self.records[name]['record'].close()
         self.signalRemoved.emit(str(name))
-        qt.QTimer.singleShot(0, lambda: self.removeRecord(name))
+        qt.QTimer.singleShot(0.1, lambda: self.removeRecord(name))
         logger.info('Signal '+name+' removed!')
 
     def setDecimateLength(self, value=5000):

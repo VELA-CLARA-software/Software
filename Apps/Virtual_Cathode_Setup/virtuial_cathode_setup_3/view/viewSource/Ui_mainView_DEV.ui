@@ -1458,11 +1458,36 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="opencloseShut_pushButton">
+         <widget class="QPushButton" name="opencloseShut1_pushButton">
           <property name="text">
            <string>Open / Close Shutter</string>
           </property>
          </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="opencloseShut2_pushButton">
+          <property name="text">
+           <string>PushButton</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_12">
+          <item>
+           <widget class="QCheckBox" name="pix_gridlines_checkBox_2">
+            <property name="text">
+             <string>Pixel Grid-Lines</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="mm_gridlines_checkBox_2">
+            <property name="text">
+             <string>mm Grid-Lines</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
         <item>
          <spacer name="verticalSpacer_2">
@@ -1479,7 +1504,7 @@
         </item>
        </layout>
        <zorder>collectAndSave_pushButton</zorder>
-       <zorder>opencloseShut_pushButton</zorder>
+       <zorder>opencloseShut1_pushButton</zorder>
        <zorder>line</zorder>
        <zorder>line_2</zorder>
        <zorder>line_7</zorder>
@@ -1489,6 +1514,8 @@
        <zorder></zorder>
        <zorder></zorder>
        <zorder>verticalSpacer_2</zorder>
+       <zorder>opencloseShut2_pushButton</zorder>
+       <zorder>layoutWidget</zorder>
       </widget>
       <widget class="QWidget" name="tab_2">
        <attribute name="title">

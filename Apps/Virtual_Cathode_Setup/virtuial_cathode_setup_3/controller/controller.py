@@ -47,11 +47,11 @@ class controller(object):
         # #
         # # The app updates states, values and the gui via a timer
         # # to allow some time for start-up we have a counter
-        # self.start_count = 0
-        # self.timer = QtCore.QTimer()
-        # self.timer.setSingleShot(False)
-        # self.timer.timeout.connect(self.start_up_update)
-        # self.timer.start(100)
+        self.start_count = 0
+        self.timer = QtCore.QTimer()
+        self.timer.setSingleShot(False)
+        self.timer.timeout.connect(self.start_up_update)
+        self.timer.start(100)
         # #
         # # show the gui
         self.view.show()
@@ -80,8 +80,10 @@ class controller(object):
 
 
     def update(self):
+        print("controller calling update_values")
         # we give the app a few ticks to init the hardware controllers before updating the mainView
         controller.model.update_values()
+        print("controller calling update_gui")
         controller.view.update_gui()
 
     def handle_collect_and_save_pushButton(self):
@@ -146,8 +148,6 @@ class controller(object):
 
     def handle_feed_back_check(self):
         print 'handle_feed_back_check'
-        print 'handle_feed_back_check'
-        print 'handle_feed_back_check'
         controller.model.toggle_feedback(controller.view.feed_back_check.isChecked())
 
     def handle_spinBox_minLevel(self):
@@ -156,7 +156,11 @@ class controller(object):
     def handle_spinBox_maxLevel(self):
         print 'handle_spinBox_maxLevel'
 
-    def handle_opencloseShut_pushButton(self):
+    def handle_opencloseShut1_pushButton(self):
+        controller.model.toggle_shutter()
+        print 'handle_opencloseShut_pushButton'
+
+    def handle_opencloseShut2_pushButton(self):
         controller.model.toggle_shutter()
         print 'handle_opencloseShut_pushButton'
 
@@ -229,7 +233,10 @@ class controller(object):
         controller.view.stepSize_spinBox.valueChanged.connect(self.handle_stepSize_spinBox)
         controller.view.spinBox_minLevel.valueChanged.connect(self.handle_spinBox_minLevel)
         controller.view.spinBox_maxLevel.valueChanged.connect(self.handle_spinBox_maxLevel)
-        controller.view.opencloseShut_pushButton.clicked.connect(self.handle_opencloseShut_pushButton)
+        controller.view.opencloseShut1_pushButton.clicked.connect(
+                self.handle_opencloseShut1_pushButton)
+        controller.view.opencloseShut2_pushButton.clicked.connect(
+                self.handle_opencloseShut2_pushButton)
         controller.view.hwp_down_pushButton.clicked.connect(self.handle_hwp_down_pushButton)
         controller.view.hwp_up_pushButton.clicked.connect(self.handle_hwp_up_pushButton)
         controller.view.move_H_left_pushButton.clicked.connect(self.handle_move_H_left_pushButton)
