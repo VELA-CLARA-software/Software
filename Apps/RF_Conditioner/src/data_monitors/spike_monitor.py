@@ -82,9 +82,12 @@ class spike_monitor(monitor):
                  my_name = 'spike_monitor',
                  # minimum cooldown time for level decay
                  min_cooldown_time = 7000,
-                 # max_level above which cool down
-                 max_level = 1,
-                 max_drop_amp = 7
+                 # max_level above which to disable ramping
+                 max_level = None,
+                 max_drop_amp = 7,
+
+                 data_dict_val_limit_status_key = None
+
                  ):
         # init base-class
         monitor.__init__(self)
@@ -95,6 +98,9 @@ class spike_monitor(monitor):
         self.data_dict_state_key = data_dict_state_key
         self.id = id_key
         self.should_drop_amp = should_drop_amp
+
+        self.data_dict_val_limit_status_key = data_dict_val_limit_status_key
+
         # a general_monitor HWC
         self.gen_monitor = gen_mon
         # how many spikes have there been?
@@ -150,6 +156,19 @@ class spike_monitor(monitor):
             self._num_samples_to_average = num_samples_to_average
         except:
             self._num_samples_to_average = None
+
+        # set-up if we are disabling ramping based on  passed level
+        self.check_level_is_hi = False
+        try:
+            if self.max_level:
+                if self.data_dict_val_limit_status_key:
+                    self.check_level_is_hi = True
+        except:
+            self.check_level_is_hi = False
+        #
+        # flag to set whether to show a message that all is good (used when returning from level is bad)
+        self.show_good_level_message = False
+        self.show_bad_level_message = True
 
         # initialise data to state unknown
         monitor.data.values[self.data_dict_state_key] = state.UNKNOWN
@@ -210,7 +229,7 @@ class spike_monitor(monitor):
                 self.start_cooldown()
                 monitor.logger.header(self.my_name + ' new spike: ',True)
                 monitor.logger.message(str(self._latest_value) + ' > ' + str(self.spike_delta + self._mean_level) + ', mean = ' +str(self._mean_level),True)
-                self.alarm('spike')
+                #self.alarm('spike')
 
         self._value_history.append(self._latest_value)
         # if buffer is too large, remove oldest value and calculate average
@@ -230,7 +249,11 @@ class spike_monitor(monitor):
         self.min_time_good = True
 
     def start_cooldown(self):
-        monitor.data.update_break_down_count(1)
+
+        # CHANGE WHEN WE WANT TO INCLUEDE DC!!!!
+        # I have commented this out fro now, but in th eFUTURE we'll DEBUG
+        # monitor.data.update_break_down_count(1)
+
         #print 'start_cooldown called'
         self.in_cooldown = True
         self.min_time_good = False
@@ -276,6 +299,26 @@ class spike_monitor(monitor):
             # update _latest_value
             self._latest_value = value.values()[0]
             monitor.data.values[self.data_dict_val_key] = self._latest_value
+
+            # check if level is too hi
+            if self.check_level_is_hi:
+                if self._latest_value > self.max_level:
+                    monitor.data.values[self.data_dict_val_limit_status_key] = state.BAD
+
+                    if self.show_bad_level_message:
+                        monitor.logger.message(self.my_name + ' level hi, ' + str(self._latest_value) + ' > ' + str(self.max_level), True)
+                        self.show_good_level_message = True
+                        self.show_bad_level_message = False
+
+                else:
+                    monitor.data.values[self.data_dict_val_limit_status_key] = state.GOOD
+
+                    if self.show_good_level_message:
+                        monitor.logger.message(self.my_name + ' level good|, ' + str(self._latest_value) + ' < ' + str(self.max_level), True)
+                        self.show_good_level_message = False
+                        self.show_bad_level_message = True
+
+
             # set new _reading_counter
             self._reading_counter = value.keys()[0]
             return True

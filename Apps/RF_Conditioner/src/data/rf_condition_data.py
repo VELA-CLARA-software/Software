@@ -43,6 +43,7 @@ class rf_condition_data(dat.rf_condition_data_base):
         self.move_ramp_index(-1)
 
     def clear_last_sp_history(self):
+        print('clear_last_sp_history')
         if len(dat.rf_condition_data_base.amp_sp_history) > 1:
             # delete last entry from amp_history
             dat.rf_condition_data_base.amp_sp_history = dat.rf_condition_data_base.amp_sp_history[:-1]
@@ -55,7 +56,7 @@ class rf_condition_data(dat.rf_condition_data_base):
                      if key > dat.rf_condition_data_base.amp_sp_history[-1]}
 
     def move_ramp_index(self,val):
-        print('move_ramp_index')
+        self.logger.header('move_ramp_index()', True)
         self.values[dat.current_ramp_index] += val
         if self.values[dat.current_ramp_index] < 0:
             self.values[dat.current_ramp_index] = 0
@@ -66,6 +67,10 @@ class rf_condition_data(dat.rf_condition_data_base):
     def set_ramp_values(self):
         dat.rf_condition_data_base.values[dat.required_pulses] = ramp[dat.rf_condition_data_base.values[dat.current_ramp_index]][0]
         dat.rf_condition_data_base.values[dat.next_power_increase] = float(ramp[dat.rf_condition_data_base.values[dat.current_ramp_index]][1])
+
+
+        # force th enumber of pulses to next step to be 500, DEBUG TESTING MODE ONLY!!!!!!!
+        #dat.rf_condition_data_base.values[dat.required_pulses] = 1000
 
         self.set_next_sp_decrease()
 
@@ -84,6 +89,8 @@ class rf_condition_data(dat.rf_condition_data_base):
             dat.rf_condition_data_base.values[dat.next_sp_decrease] = dat.rf_condition_data_base.amp_sp_history[0]
         self.logger.message('Changed next_sp_decrease from ' + str(a) + ' to ' + str(dat.rf_condition_data_base.values[dat.next_sp_decrease]))
 
+
+
     def get_new_sp(self):
         return self.get_new_set_point( self.get_next_power())
 #
@@ -93,10 +100,10 @@ class rf_condition_data(dat.rf_condition_data_base):
         current_sp = dat.rf_condition_data_base.values[dat.amp_sp]
         previous_sp = sorted(i for i in data.keys() if i <= current_sp)
 
-        if len(previous_sp) > 4:
-            print ('get_previous_set_points found at least 4 vlaues in set-point history',
-                   previous_sp[-4:])
-            return previous_sp[-4:]
+        if len(previous_sp) > self.llrf_config['NUM_SET_POINTS_TO_FIT']:
+            print ('get_previous_set_points found at least ' + str(self.llrf_config['NUM_SET_POINTS_TO_FIT']) + ' values in set-point history',
+                   previous_sp[-self.llrf_config['NUM_SET_POINTS_TO_FIT']:])
+            return previous_sp[-self.llrf_config['NUM_SET_POINTS_TO_FIT']:]
 
         #print ('get_previous_set_points',previous_sp)
         return previous_sp
@@ -120,7 +127,7 @@ class rf_condition_data(dat.rf_condition_data_base):
         if len(sp_to_fit) > 1:
             self.previous_power = int(kfpowdata[sp_to_fit[-2]][1])
 
-        if len(sp_to_fit) == 4:
+        if len(sp_to_fit) == self.llrf_config['NUM_SET_POINTS_TO_FIT']: # MAGIC_STRING,
             # store previous values for Straight Line Fit
             values[dat.old_c] = values[dat.c]
             values[dat.old_m] = values[dat.m]
@@ -173,24 +180,23 @@ class rf_condition_data(dat.rf_condition_data_base):
         # WHAT TO RETURN
         if predicted_sp < current_sp:
             self.logger.message('Predicted sp is less than current_sp! returning current_sp + 1' , True)
-            return current_sp + 1
+            return current_sp + self.llrf_config['DEFAULT_RF_INCREASE_LEVEL']
+        elif predicted_sp - current_sp > self.llrf_config['MAX_DELTA_AMP_SP']:# MAGIC_STRING
+            self.logger.message('Predicted SP increase too high returning '+str(self.llrf_config['MAX_DELTA_AMP_SP']) ,True)
+            return current_sp + self.llrf_config['MAX_DELTA_AMP_SP']
+
         elif predicted_sp is None:
-            self.logger.message('Not Enough KFP data to fit, returning None',True)
-            self.logger.message('current sp/W  = ' + str(current_sp) + " / " + str(
-                    self.current_power), True)
-            return None
+            self.logger.message('Not Enough KFP data to fit, returning current_sp + 1',True)
+            self.logger.message('current sp/W  = '+str(current_sp)+" / "+str(self.current_power), True)
+            return current_sp + self.llrf_config['DEFAULT_RF_INCREASE_LEVEL']
         elif m <= 0:
-            self.logger.message('Predicted negative gradient, returning None',True)
+            self.logger.message('Predicted negative gradient, returning current_sp + 1',True)
             self.logger.message('current sp/W  = ' + str(current_sp) + " / " + str(
                     self.current_power), True)
-            return current_sp + 1
+            return current_sp + self.llrf_config['DEFAULT_RF_INCREASE_LEVEL']
         elif predicted_sp == current_sp:
-            self.logger.message('Predicted sp ==  current_sp, returning current_sp + 1', True)
-            return predicted_sp + 1
-        elif predicted_sp - current_sp > self.llrf_config['KLY_PWR_FOR_ACTIVE_PULSE']:
-            self.logger.message('Predicted SP increase too high returning ' + str(
-                    self.llrf_config['KLY_PWR_FOR_ACTIVE_PULSE']) ,True)
-            return self.llrf_config['KLY_PWR_FOR_ACTIVE_PULSE']
+            self.logger.message('Predicted sp == current_sp, returning current_sp + 1', True)
+            return predicted_sp + self.llrf_config['DEFAULT_RF_INCREASE_LEVEL']
         else:
             return predicted_sp
 
@@ -225,6 +231,8 @@ class rf_condition_data(dat.rf_condition_data_base):
             dat.pulse_length_min + ' ' + str(self.values[dat.pulse_length_min]),
             dat.pulse_length_max + ' ' + str(self.values[dat.pulse_length_max])
                                  ])
+
+
 
 
     def update_last_million_pulse_log(self):

@@ -247,7 +247,7 @@ class config_reader(object):
                    'RF_REPETITION_RATE_ERROR','BREAKDOWN_RATE_AIM', 'LLRF_CHECK_TIME',
                    'NORMAL_POWER_INCREASE','LOW_POWER_INCREASE','LOW_POWER_INCREASE_RATE_LIMIT'
                    ,'NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY','EXTRA_TRACES_ON_BREAKDOWN',
-                   'NUM_BUFFER_TRACES','DEFAULT_PULSE_COUNT','MAX_DELTA_AMP_SP'
+                   'NUM_BUFFER_TRACES','DEFAULT_PULSE_COUNT','MAX_DELTA_AMP_SP','NUM_SET_POINTS_TO_FIT'
                    ]
         string_param = []
         monitor_param=['TRACES_TO_SAVE','MEAN_TRACES','VAC_SPIKE_TRACES_TO_SAVE']

@@ -23,10 +23,14 @@ class monitor(QObject,base):
                  update_time=100,
                  cooldown_time=5000,
                  timed_cooldown=False,
-                 level_cooldown=True
+                 level_cooldown=True,
+                 no_cooldown=False
             ):
         QObject.__init__(self)
         base.__init__(self)
+        self.timed_cooldown = None
+        self.level_cooldown = None
+        self.no_cooldown = None
         self.update_time = update_time
         self.cool_down_time = cooldown_time
         self.timer = QTimer()
@@ -39,16 +43,26 @@ class monitor(QObject,base):
             self.set_timed_cooldown()
         if level_cooldown:
             self.set_level_cooldown()
+        if no_cooldown:
+            self.set_no_cooldown()
+
 
     # a timed cooldown will set not ibnn_cooldown = false a set time after an event
     def set_timed_cooldown(self):
         self.timed_cooldown = True
         self.level_cooldown = False
+        self.no_cooldown = False
 
     # a timed cooldown will set not ibnn_cooldown = false a set time after an event
     def set_level_cooldown(self):
         self.timed_cooldown = False
         self.level_cooldown = True
+        self.no_cooldown = False
+
+    def set_no_cooldown(self):
+        self.timed_cooldown = False
+        self.level_cooldown = True
+        self.no_cooldown = False
 
     # you should probably overload this in child class
     def cooldown_function(self):
@@ -56,10 +70,12 @@ class monitor(QObject,base):
         self.incool_down = False
 
     def set_cooldown_mode(self,mode):
-        if mode == 'LEVEL':
+        if mode == 'LEVEL':#MAGIC_STRING
             self.set_level_cooldown()
-        elif mode == 'TIMED':
+        elif mode == 'TIMED':#MAGIC_STRING
             self.set_timed_cooldown()
+        elif mode == 'LEVEL_NO_SPIKE':#MAGIC_STRING
+            self.set_no_cooldown()
         else:
             self.set_level_cooldown()
 

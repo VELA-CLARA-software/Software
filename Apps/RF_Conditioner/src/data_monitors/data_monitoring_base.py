@@ -10,6 +10,7 @@ import llrf_simple_param_monitor
 import src.data.rf_condition_data_base as dat
 from src.base.base import base
 
+
 class data_monitoring_base(base):
 	#whomai
 	my_name = 'data_monitoring_base'
@@ -188,7 +189,10 @@ class data_monitoring_base(base):
 				my_name='vac_spike_monitor',
                 min_cooldown_time=base.config.breakdown_config['OUTSIDE_MASK_COOLDOWN_TIME'], # MAGIC_STRING
 				max_level=base.config.vac_config['VAC_MAX_LEVEL'], # MAGIC_STRING
-				max_drop_amp=base.config.vac_config['VAC_MAX_AMP_DROP'] # MAGIC_STRING
+				max_drop_amp=base.config.vac_config['VAC_MAX_AMP_DROP'], # MAGIC_STRING
+
+				data_dict_val_limit_status_key = dat.vac_val_limit_status
+
 			)  # MAGIC_STRING
 			data_monitoring_base.is_monitoring[dat.vac_spike_status] = data_monitoring_base.vacuum_monitor.set_success
 		return data_monitoring_base.vacuum_monitor.set_success

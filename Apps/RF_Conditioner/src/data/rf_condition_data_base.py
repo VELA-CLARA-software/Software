@@ -80,10 +80,11 @@ rfprot_state = 'rfprot_state'
 modulator_state = 'modulator_state'
 mod_output_status = 'mod_output_status'
 
+can_rf_output_OLD = 'can_rf_output_OLD'
 can_rf_output = 'can_rf_output'
 
 llrf_interlock = 'llrf_interlock' # The read value from EPICS
-llrf_interlock_status = 'llrf_interlock_state' # the apps internal state, good, new_bad etc
+llrf_interlock_status = 'llrf_interlock_status' # the apps internal state, good, new_bad etc
 
 
 llrf_trigger = 'llrf_trigger'
@@ -102,7 +103,7 @@ llrf_ff_ph_locked_status  = 'llrf_ff_ph_locked_status' # the apps internal state
 
 llrf_DAQ_rep_rate = 'llrf_DAQ_rep_rate'
 llrf_DAQ_rep_rate_aim = 'llrf_DAQ_rep_rate_aim'
-llrf_DAQ_rep_rate_status = 'llrf_DAQ_rep_rate_aim'
+llrf_DAQ_rep_rate_status = 'llrf_DAQ_rep_rate_status'
 llrf_DAQ_rep_rate_status_previous = 'llrf_DAQ_rep_rate_status_previous'
 llrf_DAQ_rep_rate_max = 'llrf_DAQ_rep_rate_max'
 llrf_DAQ_rep_rate_min = 'llrf_DAQ_rep_rate_min'
@@ -150,9 +151,12 @@ m = 'm'
 old_c = 'old_c'
 old_m = 'old_m'
 
+latest_ramp_up_sp = 'latest_ramp_up_sp'
+
+latest_ramp_up_sp_key = 'latest_ramp_up_sp_key'
 
 
-
+vac_val_limit_status = 'vac_val_limit'
 
 
 
@@ -207,6 +211,8 @@ all_value_keys = [rev_power_spike_count,
                   llrf_DAQ_rep_rate_max,
                   llrf_DAQ_rep_rate_min,
 #                  log_breakdown_count,
+                  vac_val_limit_status,
+                  can_rf_output_OLD,
                   log_amp_set,
                   current_ramp_index,
                   power_aim,
@@ -214,13 +220,17 @@ all_value_keys = [rev_power_spike_count,
                   pulse_length_aim_error,
                   pulse_length_min,
                   pulse_length_max,
-
+                  latest_ramp_up_sp_key,
                   amp_sp,
+                  phi_sp,
+
                   last_106_bd_count,
                   log_pulse_length,
 
+                  llrf_trigger,
                   llrf_trigger_status,
                   llrf_interlock_status,
+                  llrf_interlock,
                   llrf_output_status,
                   llrf_ff_amp_locked_status,
                   llrf_ff_ph_locked_status,
@@ -251,9 +261,15 @@ all_value_keys = [rev_power_spike_count,
                   pulse_length_status
                   ]
 
+
+
+
 class rf_condition_data_base(QObject):
     # whoami
     my_name = 'rf_condition_data'
+
+    # initialise values for all the data,
+
     # we know there will be some LLRF involved
     llrf_type = LLRF_TYPE.UNKNOWN_TYPE
 
@@ -273,9 +289,13 @@ class rf_condition_data_base(QObject):
     previous_power = 0
     current_power = 0
 
+    latest_ramp_up_sp = 0
+
 
     values = {}
     [values.update({x: 0}) for x in all_value_keys]
+
+
     values[vac_valve_status] = VALVE_STATE.VALVE_ERROR
     #values[rev_power_spike_count] = STATE.UNKNOWN
 
@@ -290,12 +310,23 @@ class rf_condition_data_base(QObject):
     values[llrf_interlock_status] = state.UNKNOWN
     values[llrf_ff_amp_locked] = state.UNKNOWN
     values[llrf_ff_ph_locked] = state.UNKNOWN
+    values[can_rf_output_OLD] = state.UNKNOWN
 
+#sss
 
+    values[latest_ramp_up_sp_key] = 0
+
+    values[vac_val_limit_status] = state.GOOD
 
     dummy = -999.0
+
+
+
     values[cav_temp] = dummy
     values[water_temp] = dummy + 1
+
+
+
     values[pulse_length] = dummy + 2
     values[rev_kly_pwr] = dummy + 5
     values[rev_cav_pwr] = dummy + 6
@@ -303,6 +334,10 @@ class rf_condition_data_base(QObject):
     values[vac_level] = dummy
     values[breakdown_rate_aim] = dummy + 10
     values[breakdown_rate_hi] = False
+
+
+
+
     values[breakdown_rate] = dummy + 11
     values[breakdown_count] = dummy +2
     values[pulse_count] = dummy + 13
@@ -316,6 +351,9 @@ class rf_condition_data_base(QObject):
     values[phase_mask_by_power_trace_2_set] = False
     values[phase_end_mask_by_power_trace_1_time] = -1.0
     values[phase_end_mask_by_power_trace_2_time] = -1.0
+
+
+
 
     values[old_x_min] = 0
     values[old_y_min] = 0
@@ -355,6 +393,9 @@ class rf_condition_data_base(QObject):
         # This i sa counter to update the pulse_break_down log with the data.log (bunary)
         # its used to write the pulse_break_down less frequently than data.log
         self.counter_add_to_pulse_breakdown_log = 0
+
+
+
 
     @property
     def llrf_config(self):
@@ -400,7 +441,7 @@ class rf_condition_data_base(QObject):
         self.add_to_pulse_breakdown_log(rf_condition_data_base.amp_sp_history[-1])
 
     def beep(self, count):
-        winsound.Beep(2000,150)
+        winsound.Beep(2000,150)## MAGIC_NUMBER
 
     def reached_min_pulse_count_for_this_step(self):
         return self.values[event_pulse_count] >= self.values[required_pulses]
@@ -414,10 +455,10 @@ class rf_condition_data_base(QObject):
             self.logger.write_data_log_header(rf_condition_data_base.values)
             self.should_write_header = False
         self.logger.write_data(rf_condition_data_base.values)
-        if self.counter_add_to_pulse_breakdown_log % 10 == 0: ## MAGIC_
+        if self.counter_add_to_pulse_breakdown_log % 10 == 0: ## MAGIC_NUMBER
             self.add_to_pulse_breakdown_log(rf_condition_data_base.values[amp_sp])
             self.update_breakdown_stats()
-        self.counter_add_to_pulse_breakdown_log += 1
+        self.counter_add_to_pulse_breakdown_log += 1## MAGIC_NUMBER
 
     def log_kly_fwd_power_vs_amp(self):
         next_log_entry = [rf_condition_data_base.values[amp_sp]] + \
@@ -447,7 +488,7 @@ class rf_condition_data_base(QObject):
         return r
 
     def add_to_pulse_breakdown_log(self,amp):
-        if amp > 100:
+        if amp > 100:#MAGIC_NUMBER
             self.logger.add_to_pulse_breakdown_log(
                 [rf_condition_data_base.values[pulse_count],
                  rf_condition_data_base.values[breakdown_count],

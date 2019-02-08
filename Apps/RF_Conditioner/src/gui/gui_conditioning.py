@@ -228,6 +228,10 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
 		if key == dat.breakdown_rate_hi:
 			self.set_widget_color(widget, not val)
 
+		elif key == dat.vac_val_limit_status:
+			self.set_widget_color(widget, val)
+
+
 		elif key == dat.pulse_length_status:
 			self.set_widget_color(widget, val)
 		elif key == dat.llrf_interlock_status:
@@ -525,6 +529,9 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
 		self.widget[dat.vac_valve_status] = self.vac_valve_status_outputwidget
 		self.widget[dat.llrf_DAQ_rep_rate] = self.trace_rep_rate_outpuwidget
 		self.widget[dat.llrf_DAQ_rep_rate_status] = self.trace_rep_rate_outpuwidget
+
+		self.widget[dat.vac_val_limit_status] = self.vac_level_outputwidget
+
 
 
 
