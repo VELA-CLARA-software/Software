@@ -34,8 +34,8 @@ os.environ["EPICS_CA_ADDR_LIST"] = "192.168.83.255"
 os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
 os.environ["EPICS_CA_MAX_ARRAY_BYTES"] = str(2**26)
 
-IMAGE_WIDTH = 1080  # for CLARA cameras
-IMAGE_HEIGHT = 1280  # for CLARA cameras
+IMAGE_WIDTH = 2160 / 2  # for CLARA cameras
+IMAGE_HEIGHT = 2560 / 2  # for CLARA cameras
 IMAGE_DIMS = (IMAGE_HEIGHT, IMAGE_WIDTH)
 IMAGE_WIDTH_VELA = 1392
 IMAGE_HEIGHT_VELA = 1040
@@ -66,7 +66,7 @@ class RollingBuffer(object):
             try:
                 self.data_buffer = np.zeros((self.buffer_len, self.img_width * self.img_height), 'int32')
                 break
-            except MemoryError:
+            except (MemoryError, ValueError):
                 self.buffer_len -= 1
                 print "Out of memory. Retrying with buffer size", self.buffer_len
         self.time_buffer = [None] * self.buffer_len
@@ -75,7 +75,7 @@ class RollingBuffer(object):
 
     def callback(self, **kwargs):
         self.data_buffer[self.buffer_pos] = kwargs['value']
-        timestamp = datetime.fromtimestamp(kwargs['timestamp'])
+        timestamp = datetime.now()
         self.time_buffer[self.buffer_pos] = timestamp
         self.buffer_pos = (self.buffer_pos + 1) % self.buffer_len
         if self.buffer_pos % 10 == 0:
@@ -83,7 +83,7 @@ class RollingBuffer(object):
             sys.stdout.flush()
 
     def start(self):
-        suffix = 'CAM1:ArrayData'  # if self.cam_ctrl.isVelaCam() else 'CAM2:ArrayData'
+        suffix = 'CAM1:ArrayData' if cam_ctrl.isVelaCam(self.screen_name) else 'CAM2:ArrayData'
         pv_name = cam_ctrl.getCameraObj(self.screen_name).pvRoot + suffix
         camdata = PV(pv_name, auto_monitor=True, callback=self.callback)
 
@@ -150,13 +150,17 @@ class RollingBuffer(object):
                         bar.update(i)
                 self.process.stdin.close()
 
-    def __del__(self):
-        self.process.wait()
+    def close(self):
+        if self.process:
+            self.process.wait()
 
 
 if __name__ == '__main__':
     while True:
         image_buffer = RollingBuffer()
-        image_buffer.start()
+        try:
+            image_buffer.start()
+        except:
+            image_buffer.close()
 
 
