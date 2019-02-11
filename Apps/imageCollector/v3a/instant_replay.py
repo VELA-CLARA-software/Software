@@ -8,6 +8,8 @@ import click
 import ffmpeg  # ffmpeg-python
 import colorcet
 from collections import OrderedDict
+from time import sleep
+import msvcrt
 sys.path.append(r'\\apclara1.dl.ac.uk\ControlRoomApps\Controllers\bin\Release')
 # sys.path.append(r'..\..\..') # \Widgets\MachineSnapshot')
 os.environ['PATH'] = os.environ['PATH'] + r';\\apclara1.dl.ac.uk\ControlRoomApps\Controllers\bin\stage\root_v5.34.34\bin'
@@ -45,7 +47,7 @@ fire = np.array([list(int(h[i:i + 2], 16) for i in (1, 3, 5)) for h in colorcet.
 
 
 def status_msg(timestamp):
-    return '[{}] Acquiring images into rolling buffer. Press ENTER to stop.'.format(timestamp.strftime('%H:%M:%S'))
+    return '[{}] Acquiring images into rolling buffer. Press Ctrl-C to stop.'.format(timestamp.strftime('%H:%M:%S'))
 
 
 class RollingBuffer(object):
@@ -85,11 +87,18 @@ class RollingBuffer(object):
     def start(self):
         suffix = 'CAM1:ArrayData' if cam_ctrl.isVelaCam(self.screen_name) else 'CAM2:ArrayData'
         pv_name = cam_ctrl.getCameraObj(self.screen_name).pvRoot + suffix
-        camdata = PV(pv_name, auto_monitor=True, callback=self.callback)
+        camdata = PV(pv_name)  # , auto_monitor=True, callback=self.callback)
 
-        # Wait for ENTER to be pressed
-        raw_input(status_msg(datetime.now()))
-        camdata.clear_callbacks()  # stop updating buffer
+        # Wait for Ctrl-C to be pressed
+        sys.stdout.write('\r' + status_msg(datetime.now()))
+        while True:
+            t0 = datetime.now()
+            try:
+                self.callback(value=camdata.get())
+                sleep(max(0.0, 0.1 - (datetime.now() - t0).total_seconds()))  # try to maintain 10 Hz
+            except KeyboardInterrupt:
+                break
+        # camdata.clear_callbacks()  # stop updating buffer
 
         t0 = self.time_buffer[self.buffer_pos]
         prev_pos = (self.buffer_pos - 1) % self.buffer_len
@@ -99,8 +108,10 @@ class RollingBuffer(object):
             t0 = self.time_buffer[self.buffer_pos]
         t1 = self.time_buffer[prev_pos]
         dt = t1 - t0
-        print dt.total_seconds(), 'seconds of images captured,', self.buffer_len, 'frames'
+        print '\n', dt.total_seconds(), 'seconds of images captured,', self.buffer_len, 'frames'
 
+        while msvcrt.kbhit():
+            msvcrt.getch()
         prompt = 'Save as [h]df5, [m]ovie, [b]oth, or [n]either'
         save_type = click.prompt(prompt, type=click.Choice(['h', 'm', 'b', 'n']), default='m')
         if save_type != 'n':
@@ -160,7 +171,7 @@ if __name__ == '__main__':
         image_buffer = RollingBuffer()
         try:
             image_buffer.start()
-        except:
+        except click.exceptions.Abort:
             image_buffer.close()
 
 
