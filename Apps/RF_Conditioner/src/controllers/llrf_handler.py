@@ -5,6 +5,7 @@ from time import sleep
 from timeit import default_timer as timer
 import src.data.rf_condition_data_base as dat
 from src.data.state import state
+import inspect
 
 class llrf_handler(llrf_handler_base):
     #whoami
@@ -20,6 +21,13 @@ class llrf_handler(llrf_handler_base):
         self.mask_not_set_message = True
 
         self.set_iointr_counter = 0
+
+        self.should_show_llrf_interlock_active = True
+        self.should_show_llrf_trig_external = True
+        self.should_show_llrf_rf_output = True
+        self.should_show_llrf_amp_ff_locked = True
+        self.should_show_llrf_pha_ff_locked = True
+        self.should_show_reset_daq_freg = True
 
 
     def enable_trigger(self):
@@ -57,7 +65,10 @@ class llrf_handler(llrf_handler_base):
     def clear_all_rolling_average(self):
         llrf_handler_base.llrf_control.clearAllRollingAverage()
 
-    def set_amp(self, val):
+    def set_amp(self, val1):
+        val = float(val1)
+        llrf_handler_base.logger.message('set_amp(' + str(val) + ') called from ' + str(inspect.stack()[1][3]), True)
+
         #llrf_handler_base.llrf_control.trigOff()
         # for trace in llrf_handler_base.config.breakdown_config['BREAKDOWN_TRACES']:#MAGIC_STRING:
         #     llrf_handler_base.llrf_control.setTraceSCAN(trace, LLRF_SCAN.PASSIVE)  # SHOULD BE INPUT Parameter
@@ -74,86 +85,129 @@ class llrf_handler(llrf_handler_base):
                     success = False
                     break
             if success:
-                llrf_handler_base.logger.message('set_amp() = ' + str(val) + ', took ' + str(end - start)+\
+                llrf_handler_base.logger.message('set_amp(' + str(val) + '), took ' + str(end - start)+\
                                              ' time,  averages NOT reset, mask_set = False', True)
             else:
-                llrf_handler_base.logger.message('set_amp() = ' + str(val) + ', FAILED to set amp in less than 3 seconds '
+                llrf_handler_base.logger.message('set_amp(' + str(val) + '), FAILED to set amp in less than 3 seconds '
                                                                            'averages NOT reset, mask_set = False', True)
+
+        self.set_last_sp_above_100()
+
         return success
+
+
+    def set_last_sp_above_100(self):
+        llrf_handler_base.data.values[dat.amp_sp] = llrf_handler_base.llrfObj[0].amp_sp
+        if llrf_handler_base.llrfObj[0].amp_sp > 100: #MAGIC_NUMBER
+            llrf_handler_base.data.values[dat.last_sp_above_100] =  llrf_handler_base.llrfObj[0].amp_sp
+            llrf_handler_base.logger.message('last_sp_above_100 = ' + str(llrf_handler_base.data.values[dat.last_sp_above_100]), True)
+
 
 
     def enable_llrf(self):
         # go through each possible LLRF paramter (except HOLD_RF_ON_COM mod / protection parmaters
         # and try and reset them
-        #llrf_handler_base.logger.message('enable_llrf trying to enable LLRF parmeters ', True)
+        # cancer cancer cancer
         #
-        #print('enable RF is setting amp_sp = 0')
-
-        #
-        #print("llrf_handler_base.llrf_control.isInterlockActive() = ", llrf_handler_base.llrf_control.isInterlockActive())
         if llrf_handler_base.llrf_control.isInterlockActive():
-            #print('Interlock active')
+
+            if self.should_show_llrf_interlock_active:
+                llrf_handler_base.logger.message('enable_llrf, isInterlockActive = True, attempting setInterlockNonActive()', True)
+                self.should_show_llrf_interlock_active = False
+            # try and reset
             llrf_handler_base.llrf_control.setInterlockNonActive()
+            # meh
             sleep(0.02)
         else:
-            pass
-            #print('interlock not active')
+            if self.should_show_llrf_interlock_active == False:
+                llrf_handler_base.logger.message('enable_llrf, isInterlockActive = False', True)
+                self.should_show_llrf_interlock_active = True
         #
         #print("llrf_handler_base.llrf_control.isTrigExternal() = ", llrf_handler_base.llrf_control.isTrigExternal())
         if llrf_handler_base.llrf_control.isTrigExternal():
-            pass
-            #print('TRIG IS IN EXTERNAL')
+            if self.should_show_llrf_trig_external == False:
+                llrf_handler_base.logger.message('enable_llrf, isTrigExternal = True', True)
+                self.should_show_llrf_trig_external = True
         else:
-            #print('trigExt')
+            if self.should_show_llrf_trig_external:
+                llrf_handler_base.logger.message('enable_llrf, isTrigExternal = False, attempting trigExt()', True)
+                self.should_show_llrf_trig_external = False
+            # try and reset
             llrf_handler_base.llrf_control.trigExt()
+            # meh
             sleep(0.02)
         #
-
-        #print("llrf_handler_base.llrf_control.isRFOutput() = ", llrf_handler_base.llrf_control.isRFOutput())
-
+        #
         if llrf_handler_base.llrf_control.isRFOutput():
-            #print('RF OUTPUT IS GOOD')
-            pass
+            if self.should_show_llrf_rf_output == False:
+                llrf_handler_base.logger.message('enable_llrf, isRFOutput = True', True)
+                self.should_show_llrf_rf_output = True
         else:
-            #print('enableRFOutput')
+            if self.should_show_llrf_rf_output:
+                llrf_handler_base.logger.message('enable_llrf, isRFOutput = False, attempting enableRFOutput()', True)
+                self.should_show_llrf_rf_output = False
+            # reset
             llrf_handler_base.llrf_control.enableRFOutput()
+            # meh
             sleep(0.02)
-
-
-        #print("llrf_handler_base.llrf_control.isAmpFFLocked() = ", llrf_handler_base.llrf_control.isAmpFFLocked())
+        #
+        #
         if llrf_handler_base.llrf_control.isAmpFFLocked():
-            #print('AMP FF LOCKED')
-            pass
+            if self.should_show_llrf_amp_ff_locked == False:
+                llrf_handler_base.logger.message('enable_llrf, isAmpFFLocked = True', True)
+                self.should_show_llrf_rf_output = True
         else:
-            #print('lockPhaseFF')
+            if self.should_show_llrf_amp_ff_locked:
+                llrf_handler_base.logger.message('enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()', True)
+                self.should_show_llrf_rf_output = False
+            # reset
             llrf_handler_base.llrf_control.lockAmpFF()
+            # meh
             sleep(0.02)
-
-        #print("llrf_handler_base.llrf_control.isPhaseFFLocked() = ", llrf_handler_base.llrf_control.isPhaseFFLocked())
+        #
+        #should_show_llrf_pha_ff_locked
         if llrf_handler_base.llrf_control.isPhaseFFLocked():
-            #print('PHASE FF LOCKED')
-            pass
+            if self.should_show_llrf_pha_ff_locked == False:
+                llrf_handler_base.logger.message('enable_llrf, isPhaseFFLocked = True', True)
+                self.should_show_llrf_pha_ff_locked = True
         else:
-            #print('lockPhaseFF')
+            if self.should_show_llrf_pha_ff_locked:
+                llrf_handler_base.logger.message('enable_llrf, isPhaseFFLocked = False, attempting lockPhaseFF()', True)
+                self.should_show_llrf_pha_ff_locked = False
             llrf_handler_base.llrf_control.lockPhaseFF()
             sleep(0.02)
 
         # this is sketchy AF
 
+    def update_amp_vs_kfpow_running_stat(self):
+        llrf_handler_base.data.amp_vs_kfpow_running_stat[llrf_handler_base.data.values[dat.amp_sp]] = \
+            llrf_handler_base.llrf_control.getKlyFwdPwrRSState(int(llrf_handler_base.data.values[dat.amp_sp]))
+
     def reset_daq_freg(self):
         if llrf_handler_base.data.values[dat.llrf_DAQ_rep_rate_status]  == state.BAD:
+
+            if self.should_show_reset_daq_freg:
+                llrf_handler_base.logger.message('reset_daq_freg, llrf_DAQ_rep_rate_status == BAD', True)
+                self.should_show_reset_daq_freg = False
+
             # for a
             if llrf_handler_base.llrfObj[0].amp_sp != 0:
-                print("reset_daq_freg set_amp(0)")
+                llrf_handler_base.logger.message('reset_daq_freg forcing set_amp(0)', True)
                 self.set_amp(0)
             self.set_iointr_counter += 1
             #print('reset_daq_freg = ', self.set_iointr_counter)
-            if self.set_iointr_counter == 100000:
-                print('self.set_iointr_counter == 10000')
+            if self.set_iointr_counter == 100000: # MAGIC_NUMBER
+                llrf_handler_base.logger.message('reset_daq_freg, set_iointr_counter = 100000', True)
+
                 llrf_handler_base.llrf_control.resetTORSCANToIOIntr()
                 sleep(0.02)
                 llrf_handler_base.llrf_control.setTORACQMEvent()
                 self.set_iointr_counter = 0
+        else:
+            if self.should_show_reset_daq_freg == False:
+                llrf_handler_base.logger.message('reset_daq_freg, llrf_DAQ_rep_rate_status != BAD', True)
+                self.should_show_reset_daq_freg = True
+
 
 
 

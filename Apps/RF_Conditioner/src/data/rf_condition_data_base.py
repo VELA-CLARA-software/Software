@@ -118,9 +118,6 @@ pulse_length_max = 'pulse_length_max'
 required_pulses = 'required_pulses'
 next_power_increase = 'next_power_increase'
 
-max_sp_increase = 'max_sp_increase'
-
-next_sp_decrease = 'next_sp_decrease'
 
 log_pulse_length = 'log_pulse_length'
 
@@ -151,9 +148,13 @@ m = 'm'
 old_c = 'old_c'
 old_m = 'old_m'
 
-latest_ramp_up_sp = 'latest_ramp_up_sp'
+#latest_ramp_up_sp = 'latest_ramp_up_sp'
+last_sp_above_100 = 'last_sp_above_100'
+max_sp_increase = 'max_sp_increase'
+next_sp_decrease = 'next_sp_decrease'
 
-latest_ramp_up_sp_key = 'latest_ramp_up_sp_key'
+
+#latest_ramp_up_sp_key = 'latest_ramp_up_sp_key'
 
 
 vac_val_limit_status = 'vac_val_limit'
@@ -213,6 +214,7 @@ all_value_keys = [rev_power_spike_count,
 #                  log_breakdown_count,
                   vac_val_limit_status,
                   can_rf_output_OLD,
+                  can_rf_output,
                   log_amp_set,
                   current_ramp_index,
                   power_aim,
@@ -220,7 +222,10 @@ all_value_keys = [rev_power_spike_count,
                   pulse_length_aim_error,
                   pulse_length_min,
                   pulse_length_max,
-                  latest_ramp_up_sp_key,
+
+                  #latest_ramp_up_sp,
+                  last_sp_above_100,
+
                   amp_sp,
                   phi_sp,
 
@@ -289,7 +294,7 @@ class rf_condition_data_base(QObject):
     previous_power = 0
     current_power = 0
 
-    latest_ramp_up_sp = 0
+    #latest_ramp_up_sp = 0
 
 
     values = {}
@@ -314,38 +319,39 @@ class rf_condition_data_base(QObject):
 
 #sss
 
-    values[latest_ramp_up_sp_key] = 0
+    values[last_sp_above_100] = 0
+    #values[latest_ramp_up_sp] = 0
 
     values[vac_val_limit_status] = state.GOOD
 
-    dummy = -999.0
+    dummy_float = -999.0
+    dummy_int = -999.0
+    dummy_bool = -999.0
 
 
 
-    values[cav_temp] = dummy
-    values[water_temp] = dummy + 1
+    values[cav_temp] = dummy_float
+    values[water_temp] = dummy_float + 1
 
 
 
-    values[pulse_length] = dummy + 2
-    values[rev_kly_pwr] = dummy + 5
-    values[rev_cav_pwr] = dummy + 6
-    values[probe_pwr] = dummy + 7
-    values[vac_level] = dummy
-    values[breakdown_rate_aim] = dummy + 10
-    values[breakdown_rate_hi] = False
+    values[pulse_length] = dummy_float + 2
+    values[rev_kly_pwr] = dummy_float + 5
+    values[rev_cav_pwr] = dummy_float + 6
+    values[probe_pwr] = dummy_float + 7
+    values[vac_level] = dummy_float
+    values[breakdown_rate_aim] = dummy_int
+    values[breakdown_rate_hi] = dummy_bool
 
 
-
-
-    values[breakdown_rate] = dummy + 11
-    values[breakdown_count] = dummy +2
-    values[pulse_count] = dummy + 13
-    values[event_pulse_count] = dummy +14
-    values[duplicate_pulse_count] = dummy +14
-    values[elapsed_time] = dummy + 15
-    values[DC_level] = dummy + 16
-    values[rev_power_spike_count] = 0
+    values[breakdown_rate] = dummy_int+ 11
+    values[breakdown_count] = dummy_int +2
+    values[pulse_count] = dummy_int + 13
+    values[event_pulse_count] = dummy_int +14
+    values[duplicate_pulse_count] = dummy_int +14
+    values[elapsed_time] = dummy_int + 15
+    values[DC_level] = dummy_float + 16
+    values[rev_power_spike_count] = dummy_int
     values[next_power_increase] = -1
     values[phase_mask_by_power_trace_1_set] = False
     values[phase_mask_by_power_trace_2_set] = False
@@ -355,18 +361,18 @@ class rf_condition_data_base(QObject):
 
 
 
-    values[old_x_min] = 0
-    values[old_y_min] = 0
-    values[old_x_max] = 0
-    values[old_y_max] = 0
-    values[old_m] = 0
-    values[old_c] = 0
-    values[x_min] = 0
-    values[x_max] = 0
-    values[y_min] = 0
-    values[x_max] = 0
-    values[m] = 0
-    values[c] = 0
+    values[old_x_min] = dummy_float
+    values[old_y_min] = dummy_float
+    values[old_x_max] = dummy_float
+    values[old_y_max] = dummy_float
+    values[old_m] = dummy_float
+    values[old_c] = dummy_float
+    values[x_min] = dummy_float
+    values[x_max] = dummy_float
+    values[y_min] = dummy_float
+    values[x_max] = dummy_float
+    values[m] = dummy_float
+    values[c] = dummy_float
 
     amp_pwr_mean_data = {}
     amp_vs_kfpow_running_stat = {}
@@ -438,7 +444,7 @@ class rf_condition_data_base(QObject):
                 rf_condition_data_base.values[breakdown_count]) +  ', at pulse count = ' +
                             str(rf_condition_data_base.values[pulse_count]), True)
         self.beep(count)
-        self.add_to_pulse_breakdown_log(rf_condition_data_base.amp_sp_history[-1])
+        #self.add_to_pulse_breakdown_log(rf_condition_data_base.amp_sp_history[-1])
 
     def beep(self, count):
         winsound.Beep(2000,150)## MAGIC_NUMBER
@@ -461,8 +467,11 @@ class rf_condition_data_base(QObject):
         self.counter_add_to_pulse_breakdown_log += 1## MAGIC_NUMBER
 
     def log_kly_fwd_power_vs_amp(self):
-        next_log_entry = [rf_condition_data_base.values[amp_sp]] + \
-        rf_condition_data_base.amp_vs_kfpow_running_stat[rf_condition_data_base.values[amp_sp]]
+
+        next_log_entry = self.last_kfp_running_stat_entry
+        if rf_condition_data_base.values[amp_sp] in rf_condition_data_base.amp_vs_kfpow_running_stat.keys():
+            next_log_entry = [rf_condition_data_base.values[amp_sp]] + \
+            rf_condition_data_base.amp_vs_kfpow_running_stat[rf_condition_data_base.values[amp_sp]]
 
         if next_log_entry != self.last_kfp_running_stat_entry:
             self.logger.add_to_KFP_Running_stat_log(next_log_entry)
@@ -476,9 +485,9 @@ class rf_condition_data_base(QObject):
                     #self.update_amp_pwr_mean_dict(rf_condition_data_base.values[amp_sp],
                     #                               rf_condition_data_base.values[fwd_kly_pwr])
             # cancer
-            if rf_condition_data_base.values[amp_sp] \
-                    not in rf_condition_data_base.amp_sp_history:
+            if rf_condition_data_base.values[amp_sp] not in rf_condition_data_base.amp_sp_history:
                 rf_condition_data_base.amp_sp_history.append(rf_condition_data_base.values[amp_sp])
+                self.logger.message('New amp_sp_history value = ' + str(rf_condition_data_base.values[amp_sp]), True)
 
     def kly_power_changed(self):
         r = False
