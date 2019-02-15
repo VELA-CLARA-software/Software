@@ -33,7 +33,7 @@ class GUI_FileSave(QtGui.QMainWindow, Ui_FileSave):
                         '{:02d}'.format(self.now.minute)+ \
                         '.dburt'
         self.file_name_entry.setText(self.filename)
-        #print 'SAVE FIILENAME = ' + self.filename
+        ##print 'SAVE FIILENAME = ' + self.filename
 
     def getComboBoxEntries(self):
         self.keywords = str(self.areaCombo.currentText()) + '\t' +\

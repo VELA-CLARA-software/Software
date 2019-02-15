@@ -1919,7 +1919,7 @@
        <number>14</number>
       </property>
       <item row="0" column="0">
-       <widget class="ImageView" name="graphics_view">
+       <widget class="GraphicsView" name="graphics_view">
         <property name="toolTip">
          <string extracomment="Green ROI - Mask set, White  ROI MaskRead"/>
         </property>
@@ -1932,7 +1932,7 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>ImageView</class>
+   <class>GraphicsView</class>
    <extends>QGraphicsView</extends>
    <header>pyqtgraph</header>
   </customwidget>

@@ -14,7 +14,7 @@ class GUI_magnetAppStartup(QtGui.QMainWindow, Ui_magnetAppStartup):
     machineAreaSignal = QtCore.pyqtSignal(MACHINE_AREA)
     machineModeSignal = QtCore.pyqtSignal(MACHINE_MODE)
     def __init__(self):
-        print 'create startup window'
+        #print 'create startup window'
         QtGui.QWidget.__init__(self)
         self.setupUi(self)
         # I can't find a *good* way to get the toggled radio button, apart from emitting signals and
@@ -82,7 +82,7 @@ class GUI_magnetAppStartup(QtGui.QMainWindow, Ui_magnetAppStartup):
     # this is then set as a variable in the  magnetAppController
     def handle_areaRadio(self,r):
         if r.isChecked() == True:
-            print self.radioAreaTo_ENUM[r.objectName()]
+            #print self.radioAreaTo_ENUM[r.objectName()]
             self.machineAreaSignal.emit(self.radioAreaTo_ENUM[r.objectName()])
     def handle_modeRadio(self,r):
         if r.isChecked() == True:

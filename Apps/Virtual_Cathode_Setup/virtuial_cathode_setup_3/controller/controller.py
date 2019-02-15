@@ -67,7 +67,6 @@ class controller(object):
         if self.start_count < 5:
             self.start_count += 1
         elif self.start_count == 5:
-            print 'self.start_count == 5'
             self.start_count += 1
             controller.model.update_values()
             self.view.start_up()
@@ -80,10 +79,8 @@ class controller(object):
 
 
     def update(self):
-        print("controller calling update_values")
         # we give the app a few ticks to init the hardware controllers before updating the mainView
         controller.model.update_values()
-        print("controller calling update_gui")
         controller.view.update_gui()
 
     def handle_collect_and_save_pushButton(self):
@@ -109,45 +106,45 @@ class controller(object):
         print 'handle_save_pushButton'
 
     def handle_resetMeanSD_pushButton(self):
-        controller.model.reset_running_values()
+        controller.model.reset_running_stats()
 
     def handle_analyse_pushButton(self):
-        print 'handle_analyse_pushButton'
+        #print 'handle_analyse_pushButton'
         controller.model.analyse()
 
     def handle_reset_background_pushButton(self):
         controller.model.set_background()
-        print 'handle_reset_background_pushButton'
+        #print 'handle_reset_background_pushButton'
 
     def handle_useBackground_pushButton(self):
         controller.model.use_background()
-        print 'handle_useBackground_checkBox'
+        #print 'handle_useBackground_checkBox'
 
     def handle_use_npoint_pushButton(self):
         controller.model.use_npoint()
-        print 'handle_use_npoint_checkBox'
+        #print 'handle_use_npoint_checkBox'
 
     def handle_acquire_pushButton(self):
         controller.model.acquire()
-        print 'handle_acquire_pushButton'
+        #print 'handle_acquire_pushButton'
 
     def handle_numImages_spinBox(self):
         print 'handle_numImages_spinBox'
 
     def handle_stepSize_spinBox(self):
         controller.model.setStepSize(controller.view.stepSize_spinBox.value())
-        print 'handle_stepSize_spinBox'
+        #print 'handle_stepSize_spinBox'
 
     def handle_autoLevel_pushButton(self):
         controller.view.autoSetLevel()
-        print 'handle_stepSize_spinBox'
+        #print 'handle_stepSize_spinBox'
 
     def handle_setLevel_pushButton(self):
         controller.view.setLevel()
-        print 'handle_stepSize_spinBox'
+        #print 'handle_stepSize_spinBox'
 
     def handle_feed_back_check(self):
-        print 'handle_feed_back_check'
+        #print 'handle_feed_back_check'
         controller.model.toggle_feedback(controller.view.feed_back_check.isChecked())
 
     def handle_spinBox_minLevel(self):
@@ -158,11 +155,11 @@ class controller(object):
 
     def handle_opencloseShut1_pushButton(self):
         controller.model.toggle_shutter()
-        print 'handle_opencloseShut_pushButton'
+        #print 'handle_opencloseShut_pushButton'
 
     def handle_opencloseShut2_pushButton(self):
         controller.model.toggle_shutter()
-        print 'handle_opencloseShut_pushButton'
+        #print 'handle_opencloseShut_pushButton'
 
     def handle_hwp_up_pushButton(self):
         controller.model.set_delta_hwp(controller.view.hwp_set_spinBox.value())
@@ -211,7 +208,7 @@ class controller(object):
 
 
     def connect_widgets(self):
-        print('connect_widgets')
+        #print('connect_widgets')
         controller.view.copy_path_pushButton.clicked.connect(self.handle_copy_path_pushButton)
         controller.view.set_xpos_pushButton.clicked.connect(self.handle_set_xpos_pushButton)
         controller.view.set_ypos_pushButton.clicked.connect(self.handle_set_ypos_pushButton)

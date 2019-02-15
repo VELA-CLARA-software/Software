@@ -948,7 +948,7 @@ class Ui_mainView(object):
         self.imageLayout = QtGui.QGridLayout()
         self.imageLayout.setVerticalSpacing(14)
         self.imageLayout.setObjectName(_fromUtf8("imageLayout"))
-        self.graphics_view = ImageView(self.centralwidget)
+        self.graphics_view = GraphicsView(self.centralwidget)
         self.graphics_view.setToolTip(_fromUtf8(""))
         self.graphics_view.setObjectName(_fromUtf8("graphics_view"))
         self.imageLayout.addWidget(self.graphics_view, 0, 0, 1, 1)
@@ -957,7 +957,7 @@ class Ui_mainView(object):
         mainView.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(mainView)
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(mainView)
         mainView.setTabOrder(self.analyse_pushButton, self.resetBackground_pushButton)
         mainView.setTabOrder(self.resetBackground_pushButton, self.maskX_spinBox)
@@ -1067,4 +1067,4 @@ class Ui_mainView(object):
         self.mm_gridlines_checkBox.setText(_translate("mainView", "mm Grid-Lines", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("mainView", "Analysis Settings", None))
 
-from pyqtgraph import ImageView
+from pyqtgraph import GraphicsView

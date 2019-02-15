@@ -71,39 +71,39 @@ class GUI_FileLoad(QDialog, Ui_FileLoad):
                 "<font color='green'>!!Success!! CLARA did not accept all settings :)  </font>")
 
     def handle_fileLoadSelect(self):
-        print 'handle_fileLoadSelect'
+        #print 'handle_fileLoadSelect'
 
     def handle_fileDirectoryChanged(self):
-        print 'watcher handle_fileDirectoryChanged'
-        print 'self.selectedDirPath  = ' + str(self.selectedDirPath)
+        #print 'watcher handle_fileDirectoryChanged'
+        #print 'self.selectedDirPath  = ' + str(self.selectedDirPath)
         self.dburtpathIndex = self.filesModel.setRootPath(self.selectedDirPath)
         self.listView.setRootIndex(self.dburtpathIndex)
 
     def handle_directoryLoaded(self):
-        print 'handle_directoryLoaded'
+        #print 'handle_directoryLoaded'
 
     def handle_filesLoaded(self):
-        print 'handle_filesLoaded'
+        #print 'handle_filesLoaded'
         index = self.filesModel.index(self.filesModel.rowCount(),0)
         self.listView.scrollTo(index, QAbstractItemView.PositionAtCenter)
 
     def on_treeView_clicked(self, index):
-        print("on_treeView_clicked")
+        #print("on_treeView_clicked")
         self.indexItem = self.dirModel.index(index.row(), 0, index.parent())
         self.dburtFile = str(self.dirModel.fileName(self.indexItem))
         self.selectedDirPath = self.dirModel.filePath(self.indexItem)
-        print 'self.selectedDirPath ' + str(self.selectedDirPath)
+        #print 'self.selectedDirPath ' + str(self.selectedDirPath)
         self.rootPathIndex = self.filesModel.setRootPath(self.selectedDirPath)
         self.listView.setRootIndex(self.rootPathIndex)
         self.watcher.removePaths(self.watcher.directories())
-        print 'Watching ' + str(self.selectedDirPath)
+        #print 'Watching ' + str(self.selectedDirPath)
         self.watcher.addPath(QString(self.selectedDirPath))
 
     def on_listView_clicked(self, index):
         indexItem = self.filesModel.index(index.row(), 0, index.parent())
         self.selectedFile = str(self.filesModel.fileName(indexItem))
         self.selectedFilePath = self.selectedDirPath + self.selectedFile
-        print 'on_listView_clicked = ' + self.selectedFilePath
+        #print 'on_listView_clicked = ' + self.selectedFilePath
 
     def handle_magRadio(self, r):
         if r.isChecked() == True:
@@ -112,7 +112,7 @@ class GUI_FileLoad(QDialog, Ui_FileLoad):
     # This window only dies when the entire app closes
     # top do this we call hide()
     def closeEvent(self, evnt):
-        print 'GUI_FileLoad  close event called'
+        #print 'GUI_FileLoad  close event called'
         if self.canWindowClose:
             super(GUI_FileLoad, self).closeEvent(evnt)
         else:
@@ -125,7 +125,7 @@ class GUI_FileLoad(QDialog, Ui_FileLoad):
     def handle_fileLoadView(self):
         if self.selectedFilePath != "":
             textWindow = QPlainTextEdit()
-            print 'opening file'
+            #print 'opening file'
             fileText = open(self.selectedFilePath).read()
             textWindow.setPlainText(fileText)
             textWindow.resize(500, 700)
@@ -143,5 +143,5 @@ class GUI_FileLoad(QDialog, Ui_FileLoad):
 
             self.textWindowList[-1].show()
         else:
-            print "can't open file "
+            #print "can't open file "
 
