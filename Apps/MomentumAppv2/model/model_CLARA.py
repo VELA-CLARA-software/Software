@@ -198,23 +198,34 @@ class Model(QObject):
             self.view.doubleSpinBox_p.setValue(float(self.predictedMomentum))
             self.view.doubleSpinBox_I.setValue(float(self.predictedI))
 
-    def selectCurrent(self):
+    def selectCurrent(self, I):
+        try:
+            self.view.doubleSpinBox_p.valueChanged.disconnect(self.selectMom)
+        except:
+            pass
         #self.p = self.func.calcMom(self.Cmagnets,'S02-DIP01',self.I)
         #self.predictedI = float(self.view.lineEdit_selectCurrent.text())
-        self.predictedI = float(self.view.doubleSpinBox_I.value())
+        self.predictedI = I#float(self.view.doubleSpinBox_I.value())
         #self.view.label_predictMom.setText(self.predictedMomentum)
         self.predictedMomentum = self.func.calcMom(self.Cmagnets,self.dipole,self.predictedI)
         self.view.doubleSpinBox_p.setValue(float(self.predictedMomentum))
-        self.view.doubleSpinBox_I.setValue(float(self.predictedI))
+        #self.view.doubleSpinBox_I.setValue(float(self.predictedI))
+        self.view.doubleSpinBox_p.valueChanged.connect(self.selectMom)
 
-    def selectMom(self):
+
+    def selectMom(self, p):
+        try:
+            self.view.doubleSpinBox_I.valueChanged.disconnect(self.selectCurrent)
+        except:
+            pass
         #self.p = self.func.calcMom(self.Cmagnets,'S02-DIP01',self.I)
         #self.predictedMomentum = float(self.view.lineEdit_selectMom.text())
-        self.predictedMomentum = float(self.view.doubleSpinBox_p.value())
+        self.predictedMomentum = p#float(self.view.doubleSpinBox_p.value())
         #self.view.label_predictMom.setText(self.predictedMomentum)
         self.predictedI = self.func.mom2I(self.Cmagnets, self.dipole,self.predictedMomentum)
-        self.view.doubleSpinBox_p.setValue(float(self.predictedMomentum))
+        #self.view.doubleSpinBox_p.setValue(float(self.predictedMomentum))
         self.view.doubleSpinBox_I.setValue(float(self.predictedI))
+        self.view.doubleSpinBox_I.valueChanged.connect(self.selectCurrent)
 
     def useCurrent(self):
         self.predictedI = self.Cmagnets.getSI(self.dipole)

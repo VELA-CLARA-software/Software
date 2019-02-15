@@ -100,7 +100,9 @@ class main_controller(controller_base):
                              "dv1_dly1": self.data.values[dat.dv1_dly1],
                              "dv2_dly1": self.data.values[dat.dv2_dly1],
                              "dv1_dly2": self.data.values[dat.dv1_dly2],
-                             "dv2_dly2": self.data.values[dat.dv2_dly2]}
+                             "dv2_dly2": self.data.values[dat.dv2_dly2],
+                             "ra1": self.data.values[dat.get_ra1],
+                             "ra2": self.data.values[dat.get_ra2]}
                 self.logger.add_to_bpm_scan_json(self.json_data)
 
             controller_base.data.values[dat.ready_to_go] = False
