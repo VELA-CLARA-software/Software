@@ -169,19 +169,19 @@ class controller(QtGui.QApplication):
         self.model.set_delta_hwp(self.view.hwp_set_spinBox.value())
 
     def handle_hwp_down_pushButton(self):
-        self.model.set_delta_hwp(-self.view.hwp_set_spinBox.value())
+        self.model.set_delta_hwp(self.view.hwp_set_spinBox.value())
 
-    def handle_move_H_left_pushButton(self):
-        self.model.move_H_mirror(self.view.mirror_h_step_set_spinBox.value())
+    def handle_move_left_pushButton(self):
+        self.model.move_left(self.view.mirror_h_step_set_spinBox.value())
 
-    def handle_move_H_right_pushButton(self):
-        self.model.move_H_mirror(-self.view.mirror_h_step_set_spinBox.value())
+    def handle_move_right_pushButton(self):
+        self.model.move_right(self.view.mirror_h_step_set_spinBox.value())
 
-    def handle_move_V_down_pushButton(self):
-        self.model.move_V_mirror(-self.view.mirror_v_step_set_spinBox.value())
+    def handle_move_down_pushButton(self):
+        self.model.move_down(self.view.mirror_v_step_set_spinBox.value())
 
-    def handle_move_V_up_pushButton(self):
-        self.model.move_V_mirror(self.view.mirror_v_step_set_spinBox.value())
+    def handle_move_up_pushButton(self):
+        self.model.move_up(self.view.mirror_v_step_set_spinBox.value())
 
     def handle_open_path_push_button(self):
         f = '\\\\claraserv3'
@@ -201,26 +201,17 @@ class controller(QtGui.QApplication):
     def handle_center_mask_pushButton(self):
         self.model.center_mask()
 
-    def handle_set_xpos_pushButton(self):
-        self.model.set_x_pos(self.view.xpos_spinBox.value(),
-                                   self.view.mirror_h_step_set_spinBox.value())
-
-    def handle_set_ypos_pushButton(self):
-        self.model.set_y_pos(self.view.ypos_spinBox.value(),
-                                   self.view.mirror_v_step_set_spinBox.value())
-
-
+    def handle_set_pos_pushButton(self):
+        self.model.set_pos(self.view.ypos_spinBox.value(),
+                           self.view.mirror_v_step_set_spinBox.value())
 
     def connect_widgets(self):
         #print('connect_widgets')
         self.view.copy_path_pushButton.clicked.connect(self.handle_copy_path_pushButton)
-        self.view.set_xpos_pushButton.clicked.connect(self.handle_set_xpos_pushButton)
-        self.view.set_ypos_pushButton.clicked.connect(self.handle_set_ypos_pushButton)
+        self.view.set_pos_pushButton.clicked.connect(self.handle_set_pos_pushButton)
         self.view.open_path_push_button.clicked.connect(self.handle_open_path_push_button)
         self.view.collectAndSave_pushButton.clicked.connect(self.handle_collect_and_save_pushButton)
-        #self.view.setPosition_pushButton.clicked.connect(self.handle_setPosition_pushButton)
-        self.view.setInt_pushButton.clicked.connect(
-                self.handle_setIntensity_pushButton)
+        self.view.setInt_pushButton.clicked.connect(self.handle_setIntensity_pushButton)
         self.view.setMask_pushButton.clicked.connect(self.handle_setMask_pushButton)
         self.view.load_pushButton.clicked.connect(self.handle_load_pushButton)
         self.view.save_pushButton.clicked.connect(self.handle_save_pushButton)
@@ -235,35 +226,26 @@ class controller(QtGui.QApplication):
         self.view.spinBox_minLevel.valueChanged.connect(self.handle_spinBox_minLevel)
         self.view.spinBox_maxLevel.valueChanged.connect(self.handle_spinBox_maxLevel)
 
-
-
-
         self.view.opencloseShut1_pushButton.clicked.connect(
                 self.handle_opencloseShut1_pushButton)
         self.view.opencloseShut2_pushButton.clicked.connect(
                 self.handle_opencloseShut2_pushButton)
 
-
-
         self.view.hwp_down_pushButton.clicked.connect(self.handle_hwp_down_pushButton)
         self.view.hwp_up_pushButton.clicked.connect(self.handle_hwp_up_pushButton)
-        self.view.move_H_left_pushButton.clicked.connect(self.handle_move_H_left_pushButton)
-        self.view.move_H_right_pushButton.clicked.connect(
-                self.handle_move_H_right_pushButton)
-        self.view.move_V_up_pushButton.clicked.connect(self.handle_move_V_up_pushButton)
-        self.view.move_V_down_pushButton.clicked.connect(
-                self.handle_move_V_down_pushButton)
-
+        self.view.move_left_pushButton.clicked.connect(self.handle_move_left_pushButton)
+        self.view.move_right_pushButton.clicked.connect(
+                self.handle_move_right_pushButton)
+        self.view.move_up_pushButton.clicked.connect(self.handle_move_up_pushButton)
+        self.view.move_down_pushButton.clicked.connect(
+                self.handle_move_down_pushButton)
 
         self.view.useNPoint_pushButton.clicked.connect(self.handle_use_npoint_pushButton)
-        self.view.useBackground_pushButton.clicked.connect(
-                self.handle_useBackground_pushButton)
+        self.view.useBackground_pushButton.clicked.connect(self.handle_useBackground_pushButton)
 
-        self.view.autoLevel_pushButton.clicked.connect(
-                self.handle_autoLevel_pushButton)
+        self.view.autoLevel_pushButton.clicked.connect(self.handle_autoLevel_pushButton)
 
-        self.view.center_mask_pushButton.clicked.connect(
-                self.handle_center_mask_pushButton)
+        self.view.center_mask_pushButton.clicked.connect(self.handle_center_mask_pushButton)
 
 
 

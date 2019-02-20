@@ -79,8 +79,7 @@ class mainView(QtGui.QMainWindow, Ui_mainView ):
         self.save_pushButton.setDisabled(True)
         self.setInt_pushButton.setDisabled(True)
         self.setWCM_pushButton.setDisabled(True)
-        self.set_xpos_pushButton.setDisabled(True)
-        self.set_ypos_pushButton.setDisabled(True)
+        self.set_pos_pushButton.setDisabled(True)
 
     def handle_pix_gridlines_checkBox(self):
         ''
@@ -181,15 +180,17 @@ class mainView(QtGui.QMainWindow, Ui_mainView ):
         # get the shutter states ( updated in model.update_shutter_state )
         # then decide what widgets to disable / enable
         if self.data.values.get(self.data.shutter1_open) & self.data.values.get(self.data.shutter2_open):
-            self.move_H_left_pushButton.setEnabled(True)
-            self.move_H_right_pushButton.setEnabled(True)
-            self.move_V_down_pushButton.setEnabled(True)
-            self.move_V_up_pushButton.setEnabled(True)
+            self.move_left_pushButton.setEnabled(True)
+            self.move_right_pushButton.setEnabled(True)
+            self.move_down_pushButton.setEnabled(True)
+            self.move_up_pushButton.setEnabled(True)
+            #self.set_pos_pushButton.setEnabled(True)
         else:
-            self.move_H_left_pushButton.setEnabled(False)
-            self.move_H_right_pushButton.setEnabled(False)
-            self.move_V_down_pushButton.setEnabled(False)
-            self.move_V_up_pushButton.setEnabled(False)
+            self.move_left_pushButton.setEnabled(False)
+            self.move_right_pushButton.setEnabled(False)
+            self.move_down_pushButton.setEnabled(False)
+            self.move_up_pushButton.setEnabled(False)
+            #self.set_pos_pushButton.setEnabled(False)
 
     def update_crosshair(self):
         '''

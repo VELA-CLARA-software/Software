@@ -196,13 +196,21 @@ class model():
             self.values[self.data.shutter2_open] = False
 
 
-    def move_H_mirror(self,step):
-        model.pil.setHstep(step)
-        model.pil.moveH()
+    def move_left(self, step):
+        model.pil.moveLeft(step)
 
-    def move_V_mirror(self, step):
-        model.pil.setVstep(step)
-        model.pil.moveV()
+    def move_right(self, step):
+        model.pil.moveRight(step)
+
+    def move_up(self, step):
+        model.pil.moveUp(step)
+
+    def move_down(self, step):
+        model.pil.moveDown(step)
+
+    def set_pos(self,x,y):
+        model.pil.setVCPos(x,y)
+
 
     def set_delta_hwp(self, delta_value):
         model.pil.setHWP(self.pil_obj[0].HWP + delta_value)
