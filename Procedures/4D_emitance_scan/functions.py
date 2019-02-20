@@ -32,25 +32,25 @@ print('Getting PIL controller COMPLETE')
 
 print('Getting Magnet controller')
 maginit = mag.init()
-#maginit.setVerbose()
+maginit.setVerbose()
 mag_control = maginit.physical_CLARA_PH1_Magnet_Controller()
 print('Getting Magnet controller COMPLETE')
 
-# print('Getting Camera controller')
-# initCam = cam.init()
-# #initCam.setVerbose()
-# cam_control = initCam.physical_Camera_Controller()
-# print('Getting Camera controller COMPLETE')
-
 print('Getting Camera controller')
-initScr = scr.init()
+initCam = cam.init()
 #initCam.setVerbose()
+cam_control = initCam.physical_Camera_Controller()
+print('Getting Camera controller COMPLETE')
+
+print('Getting Screen controller')
+initScr = scr.init()
+initCam.setVerbose()
 scr_control = initScr.physical_Screen_Controller()
 print('Getting Camera controller COMPLETE')
 
 
 
-def set_magnets_and_wait(mag_names, mag_values, tolerance, timeout = 30):
+def set_magnets_and_wait(mag_names, mag_values, tolerance, timeout = 100):
     ''' assume dict is keys = mag_names, and values = si_value'''
     # set magnets
     global mag_control
@@ -89,21 +89,39 @@ def set_magnets_and_wait(mag_names, mag_values, tolerance, timeout = 30):
     # return not timeout
 
 
+def get_image(cam, num_images):
+    if cam_controller.startAcquiringMultiCam(cam):
+        print(cam, ' sent acquiring success')
+    else:
+        print(cam, ' sent acquiring failure')
+    time.sleep(0.5)
+    sent_save = False
+    if cam_controller.isAcquiring(cam):
+        if cam_controller.collectAndSave(cam, num_images):
+            sent_save = True
+            print(cam, " saving images yay")
+        else:
+            print(cam, ' saving images nay')
+            sent_save = False
+    if sent_save:
+        while cam_controller.isCollectingOrSaving(cam):
+            print(cam, ' iscollecting and saving')
+        print(cam, ' collecting and savedto ', cam_controller.getLatestFilename(cam))
+    else:
+        print('ERROR ', cam, ' could not save image')
 
 def open_shutter1():
     s = 'SHUT01' # MAGIC_STRING
     pil_control.openAndWait(s, 10) #MAGIC_NUMBER timout time
     return True
 
-
-
-
 def close_shutter1():
     s = 'SHUT01' # MAGIC_STRING
     pil_control.closeAndWait(s,10) #
     return True
 
-
+def getQ():
+    return pil_control.getQ()
 
 def screen_in(screen, timeout):
     print('Moving ',screen, ' YAG IN')
@@ -121,7 +139,28 @@ def screen_in(screen, timeout):
     return has_timed_out
 
 
-def rf_cage_in(screen, timeout):
+def set_magnets(mag_names, mag_values):
+    ''' assume dict is keys = mag_names, and values = si_value'''
+    # set magnets
+    #global mag_control
+    print('set_magnets_and_wait called, ')
+    if len(mag_names) != len(mag_values):
+        print('len(mag_names) != len(mag_values), ERROR ')
+        return False
+    else:
+        mag_control.setSI( mag_names, mag_values)
+
+
+def is_ri_steady(magnet, tol):
+    ri_data = []
+    while len(ri_data) < 5:
+        ri_data.append(mag_control.getRI(magnet))
+        time.sleep(0.11)
+    print ri_data
+
+
+
+def rf_cage_in_and_wait(screen, timeout):
     print('Moving ', screen,' RF_CAGE IN')
     t0 = time.time()
     scr_control.moveScreenTo(screen, scr.SCREEN_STATE.V_RF)
@@ -138,11 +177,9 @@ def rf_cage_in(screen, timeout):
     print('Moving RF_CAGE,' + screen + ' IN  took (s) ', time.time() - t0)
     return has_timed_out
 
-
-def degauss(magnets):
+def degauss_and_wait(magnets):
     print('Degaussing ,', magnets)
     mag_control.degauss(magnets, True)
-
     t0 = time.time()
     time.sleep(2)
     while 1:
@@ -159,4 +196,48 @@ def degauss(magnets):
     print('Degaussing took (s) ', time.time() - t0)
     return True
 
+def degauss(magnets):
+    print('Degaussing ,', magnets)
+    mag_control.degauss(magnets, True)
+
+def screens_in(screens):
+    for screen in screens:
+        scr_control.insertYAG(screen)
+
+
+def wait_for_degaussing(magnets):
+    while 1:
+        isdeglist =[False] * len(magnets)
+        for i, magnet in enumerate(magnets):
+            if mag_control.isDegaussing(magnet):
+                print(magnet,' is degaussing')
+                isdeglist[i] = True
+            else:
+                print(magnet, ' is NOT degaussing')
+        if not any(isdeglist):
+            break
+        time.sleep(2)
+    print('Degaussing Finished ')
+    return True
+
+
+
+def wait_for_screen_in(screens, timeout = 100):
+    waittime = time.time() + timeout
+    has_timed_out = False
+    all_screens_in = False
+    while 1:
+        for screen in screens:
+            if scr_control.isScreenIn(screen):
+                all_screens_in = True
+            else:
+                all_screens_in = False
+                break
+        if all_screens_in:
+            break
+        if time.time() > waittime:
+            has_timed_out = True
+            break
+    print('wait_for_screen_in ' + screens + ' IN  took (s) ', time.time() - t0)
+    return has_timed_out
 
