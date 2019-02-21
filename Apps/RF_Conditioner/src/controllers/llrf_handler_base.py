@@ -25,9 +25,6 @@ class llrf_handler_base(base):
 		base.config.llrf_config = base.config.llrf_config
 
 
-		for key, value in base.data.values.iteritems():
-			print key
-		raw_input()
 		self.start_trace_monitoring( base.config.llrf_config['TRACES_TO_SAVE'])#MAGIC_STRING
 
 
@@ -309,6 +306,12 @@ class llrf_handler_base(base):
 			#print(1)
 			base.llrf_control.setAllSCANToPassive()
 			base.llrf_control.setAllTraceBufferSize(base.config.llrf_config['NUM_BUFFER_TRACES'])
+
+			# ADDING IN THIS SO THAT ARCHIVING OF KFPow and CPPow can happen using cursor
+
+			base.llrf_control.setPowerRemoteTraceSCAN10sec('KLYSTRON_FORWARD_POWER')
+			base.llrf_control.setPowerRemoteTraceSCAN10sec('CAVITY_PROBE_POWER')
+
 		else:
 			#print(2)
 			base.logger.message('!!! ERROR IN TRACES TO SAVE !!!', True)

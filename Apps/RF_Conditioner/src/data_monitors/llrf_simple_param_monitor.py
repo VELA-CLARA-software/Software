@@ -79,6 +79,10 @@ class llrf_simple_param_monitor(monitor):
         monitor.llrf_control.setNumExtraTracesOnOutsideMaskEvent(monitor.config.llrf_config['EXTRA_TRACES_ON_BREAKDOWN'])
 
     def update_value(self):
+        #
+        # send keep alive pulse
+        monitor.llrf_control.keepAlive()
+
         # get the mean power for each trace
         for trace, key  in self.trace_mean_keys.iteritems():
             self.get_mean_power(key, trace)
@@ -190,16 +194,15 @@ class llrf_simple_param_monitor(monitor):
         # the latest running stats for this amp_set (from the c++)
 
         if(monitor.llrf_control.isKeepingKlyFwdPwrRS()):
-            monitor.data.amp_vs_kfpow_running_stat[ monitor.data.values[dat.amp_sp] ] = \
-                monitor.llrf_control.getKlyFwdPwrRSState( monitor.data.values[dat.amp_sp] )
-
+            self.update_amp_vs_kfpow_running_stat()
 
         monitor.data.values[dat.TOR_ACQM] = monitor.llrf_control.getTORACQM()
         monitor.data.values[dat.TOR_SCAN] = monitor.llrf_control.getTORSCAN()
 
 
-
-
+    def update_amp_vs_kfpow_running_stat(self):
+        monitor.data.amp_vs_kfpow_running_stat[monitor.data.values[dat.amp_sp]] = \
+            monitor.llrf_control.getKlyFwdPwrRSState(monitor.data.values[dat.amp_sp])
 
 
     def get_mean_power(self,key,trace):
