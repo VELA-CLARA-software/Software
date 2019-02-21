@@ -218,7 +218,7 @@ port = 27643
 server = StoppableServer(('', port), MyHandler)
 
 certfile = '/etc/pki/tls/certs/apsv2-dl-ac-uk.crt'
-keyfile = '/home/bjs54/apsv2-dl-ac-uk.key'
+keyfile = '/etc/pki/tls/private/apsv2-dl-ac-uk.key'
 try:
     server.socket = ssl.wrap_socket(server.socket, keyfile=keyfile, certfile=certfile, server_side=True)
     protocol = 'https'
