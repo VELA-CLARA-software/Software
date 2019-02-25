@@ -10,7 +10,6 @@ import llrf_simple_param_monitor
 import src.data.rf_condition_data_base as dat
 from src.base.base import base
 
-
 class data_monitoring_base(base):
 	#whomai
 	my_name = 'data_monitoring_base'

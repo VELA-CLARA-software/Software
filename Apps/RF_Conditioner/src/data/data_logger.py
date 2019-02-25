@@ -63,7 +63,7 @@ class data_logger(object):
         self.log_file = open(self.log_path, 'a')
 
     def header(self, text, add_to_log = False):
-        str = '*' + '\n' +'*** ' + text + '***'
+        str = '\n\t\t\t' + '**** ' + text + ' ****'
         print(str)
         if add_to_log:
             self.write_log(str)
@@ -161,10 +161,12 @@ class data_logger(object):
 
     def write_data_log_header(self,values):
         print(self.my_name + ' writing data_log header to ' + self.data_path)
-
         joiner = '\t'
         names = []
         types = []
+
+
+        # the below is major cancer created during debuggin'  a bin-types error
 
         counter  = 0
         name_index = 0
@@ -178,20 +180,12 @@ class data_logger(object):
                 print('name index = ',counter)
                 name_index = counter
             counter += 1
-
-
-
         #[names.append(x) for x,y in values.iteritems()]
         names[name_index] =  dat.time_stamp +  ", (start = " + datetime.now().isoformat(' ') + ")"
         #names[names.index(dat.time_stamp)] =  dat.time_stamp +  ", (start = " + datetime.now().isoformat(' ') + ")"
         #[types.append(str(type(y)))  for x,y in values.iteritems()]
         #
         # create the data_log file and write the plaintext header
-
-
-        #print joiner.join(names)
-        #print joiner.join(types)
-
 
         try:
             with open(self.data_path  + '.dat', 'ab') as f:
@@ -200,21 +194,24 @@ class data_logger(object):
                 # f.write(struct.pack('<i', 245))
         except Exception as e:
             print(e)
-            print(self.my_name + ' MAJOR ERROR CAN NOT CREATE data_log.dat, FILE = ' + self.data_path)
+            self.message([self.my_name + ' MAJOR ERROR CAN NOT CREATE data_log.dat, FILE =  ' + str(self.data_path)], True)
             raw_input()
         #
         # now try and open the file and leave open for appending data to
         try:
             self.data_path_file = open(self.data_path  + '.dat','ab')
-            print( 'data_path_file set correctly ', self.data_path_file )
+            self.message(['data_path_file set correctly ' + str(self.data_path_file)], True )
         except Exception as e:
             print(e)
-            print(self.my_name + ' MAJOR ERROR CAN NOT OPEN LOG FILES: ' + self.data_path)
+            self.message([self.my_name + ' MAJOR ERROR CAN NOT OPEN LOG FILES: ' + str(self.data_path)], True )
+
             raw_input()
 
     def write_data(self,values):
         #print('write_data')
-        for val in values.itervalues():
+        #for val in values.itervalues():# itervalues means just iterater over the values in the dict
+        i = 0
+        for key, val in values.iteritems():# itervalues means just iterater over the values in the dict
             self.write_binary( self.data_path_file, val)
         self.data_path_file.flush()
         # try:

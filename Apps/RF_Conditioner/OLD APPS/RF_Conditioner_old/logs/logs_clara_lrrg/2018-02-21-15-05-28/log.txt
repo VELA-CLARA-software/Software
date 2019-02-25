@@ -1,0 +1,608 @@
+2018-02-21-15-05-30 *
+*** main_controller creating HWC ***
+2018-02-21-15-05-32 *
+*** llrf_handler setting all SCAN to passive***
+2018-02-21-15-05-32 *
+*** llrf_handler start_trace_monitoring***
+2018-02-21-15-05-32 KLYSTRON_FORWARD_PHASE SCAN set to LLRF_SCAN.ZERO_POINT_ONE
+2018-02-21-15-05-32 started monitoring KLYSTRON_FORWARD_PHASE
+2018-02-21-15-05-32 KLYSTRON_REVERSE_PHASE SCAN set to LLRF_SCAN.ZERO_POINT_ONE
+2018-02-21-15-05-32 started monitoring KLYSTRON_REVERSE_PHASE
+2018-02-21-15-05-32 KLYSTRON_FORWARD_POWER SCAN set to LLRF_SCAN.ZERO_POINT_ONE
+2018-02-21-15-05-32 started monitoring KLYSTRON_FORWARD_POWER
+2018-02-21-15-05-32 added KLYSTRON_FORWARD_POWER to power_traces
+2018-02-21-15-05-32 KLYSTRON_REVERSE_POWER SCAN set to LLRF_SCAN.ZERO_POINT_ONE
+2018-02-21-15-05-32 started monitoring KLYSTRON_REVERSE_POWER
+2018-02-21-15-05-32 added KLYSTRON_REVERSE_POWER to power_traces
+2018-02-21-15-05-32 LRRG_CAVITY_REVERSE_PHASE SCAN set to LLRF_SCAN.ZERO_POINT_ONE
+2018-02-21-15-05-32 started monitoring LRRG_CAVITY_REVERSE_PHASE
+2018-02-21-15-05-32 LRRG_CAVITY_FORWARD_PHASE SCAN set to LLRF_SCAN.ZERO_POINT_ONE
+2018-02-21-15-05-32 started monitoring LRRG_CAVITY_FORWARD_PHASE
+2018-02-21-15-05-32 LRRG_CAVITY_FORWARD_POWER SCAN set to LLRF_SCAN.ZERO_POINT_ONE
+2018-02-21-15-05-32 started monitoring LRRG_CAVITY_FORWARD_POWER
+2018-02-21-15-05-32 added LRRG_CAVITY_FORWARD_POWER to power_traces
+2018-02-21-15-05-32 LRRG_CAVITY_REVERSE_POWER SCAN set to LLRF_SCAN.ZERO_POINT_ONE
+2018-02-21-15-05-32 started monitoring LRRG_CAVITY_REVERSE_POWER
+2018-02-21-15-05-32 added LRRG_CAVITY_REVERSE_POWER to power_traces
+2018-02-21-15-05-32 *
+*** llrf_handler setup_trace_rolling_average***
+2018-02-21-15-05-32 starting rolling average for LRRG_CAVITY_REVERSE_PHASE
+2018-02-21-15-05-32 STARTED rolling average for LRRG_CAVITY_REVERSE_PHASE
+2018-02-21-15-05-32 start_llrf_control created CLARA_LRRG, llrf_handler and got full trace names:
+2018-02-21-15-05-32 TRACES TO SAVE: KLYSTRON_FORWARD_PHASE KLYSTRON_REVERSE_PHASE KLYSTRON_FORWARD_POWER KLYSTRON_REVERSE_POWER LRRG_CAVITY_REVERSE_PHASE LRRG_CAVITY_FORWARD_PHASE LRRG_CAVITY_FORWARD_POWER LRRG_CAVITY_REVERSE_POWER
+2018-02-21-15-05-32 BREAKDOWN_TRACES:LRRG_CAVITY_REVERSE_PHASE
+2018-02-21-15-05-36 start_mod_control created a gun modulator object
+2018-02-21-15-05-38 start_vac_valve_control created CLARA_PH1 object
+2018-02-21-15-05-44 start_rf_prot_control created a protection control  object
+2018-02-21-15-05-44 *
+*** controller_base has read config***
+2018-02-21-15-05-44 config file = test_LLRG.config
+dumping data to log
+VAC_CHECK_TIME:200, VAC_SPIKE_DECAY_TIME:2000, VAC_DECAY_MODE:LEVEL, VAC_SHOULD_DROP_AMP:True, VAC_SPIKE_AMP_DROP:5.0, OUTSIDE_MASK_COOLDOWN_TIME:5000, VAC_PV:CLA-LRG1-VAC-IMG-01:P, VAC_SPIKE_DECAY_LEVEL:1.2, VAC_SPIKE_DELTA:5e-09, VAC_NUM_SAMPLES_TO_AVERAGE:7, 
+DC_SPIKE_DECAY_LEVEL:1.2, DC_PV:EBT-INJ-SCOPE-01:P1, DC_NUM_SAMPLES_TO_AVERAGE:5, DC_SPIKE_AMP_DROP:6.0, OUTSIDE_MASK_COOLDOWN_TIME:5000, DC_SHOULD_DROP_AMP:False, DC_CHECK_TIME:1000, DC_SPIKE_DELTA:0.015, DC_SPIKE_DECAY_TIME:2000, DC_DECAY_MODE:TIMED, 
+PULSE_COUNT_BREAKDOWN_LOG_FILENAME:pulse_breakdown_log.txt, OUTSIDE_MASK_FORWARD_FILENAME:outside_forward_log, OUTSIDE_MASK_REVERSE_FILENAME:outside_reverse_log, OUTSIDE_MASK_PROBE_FILENAME:outside_probe_log, LOG_DIRECTORY:C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\, AMP_PWR_LOG_TIME:50, DATA_LOG_TIME:1000, LOG_FILENAME:log.txt, DATA_LOG_FILENAME:data_log, 
+VAC_VALVE:S01-VALV-01, VAC_VALVE_AREA:CLARA_PH1, VAC_VALVE_CHECK_TIME:1000, 
+WATER_TEMPERATURE_CHECK_TIME:1000, WATER_TEMPERATURE_PV:CLA-GUN-RF-LRRG-01:RT, 
+CAVITY_TEMPERATURE_CHECK_TIME:1000, CAVITY_TEMPERATURE_PV:CLA-GUN-RF-LRRG-01:RT, 
+KRP_MEAN_TIME_TO_AVERAGE_START:0.8, KFP_MEAN_TIME_TO_AVERAGE_START:0.8, KFP_MEAN_TIME_TO_AVERAGE_END:0.92, DEFAULT_RF_INCREASE_LEVEL:10, CRP_MEAN_TIME_TO_AVERAGE_START:1.19, BREAKDOWN_RATE_AIM:100, TRACES_TO_SAVE:['KLYSTRON_FORWARD_PHASE', 'KLYSTRON_REVERSE_PHASE', 'KLYSTRON_FORWARD_POWER', 'KLYSTRON_REVERSE_POWER', 'LRRG_CAVITY_REVERSE_PHASE', 'LRRG_CAVITY_FORWARD_PHASE', 'LRRG_CAVITY_FORWARD_POWER', 'LRRG_CAVITY_REVERSE_POWER'], NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY:1000000, POWER_AIM:0.1, CFP_MEAN_TIME_TO_AVERAGE_START:0.8, LOW_POWER_INCREASE_RATE_LIMIT:1000000, DEFAULT_PULSE_COUNT:150, RF_INCREASE_LEVEL:0.001, CPP_MEAN_TIME_TO_AVERAGE_START:0.85, CPP_MEAN_TIME_TO_AVERAGE_END:0.98, LLRF_CHECK_TIME:50, RF_REPETITION_RATE:100, CRP_MEAN_TIME_TO_AVERAGE_END:1.21, KRP_MEAN_TIME_TO_AVERAGE_END:0.92, CFP_MEAN_TIME_TO_AVERAGE_END:0.92, PULSE_LENGTH_AIM:2500.0, RF_INCREASE_RATE:0.33333, EXTRA_TRACES_ON_BREAKDOWN:2, RF_STRUCTURE:CLARA_LRRG, NUM_BUFFER_TRACES:40, PULSE_LENGTH_START:100.0, PULSE_LENGTH_STEP:250.0, NORMAL_POWER_INCREASE:10000, LOW_POWER_INCREASE:1000, TIME_BETWEEN_RF_INCREASES:10, KLY_PWR_FOR_ACTIVE_PULSE:500.0, 
+CRP_MASK_FLOOR:0, CRP_AMP_DROP_VAL:2, CRP_S2:2.2, CFP_CHECK_STREAK:10, CFP_AMP_DROP_VAL:3, CFP_MASK_END:2.0, BREAKDOWN_TRACES:['LRRG_CAVITY_REVERSE_PHASE'], CFP_MASK_LEVEL:35, CFP_MASK_FLOOR:5000, CFP_AUTO_SET:False, CRP_MASK_END:2.0, CRP_NUM_AVERAGE_TRACES:2, CRP_S3:2.23, CRP_MASK_SET_TYPE:TIME, CRP_S1:0.7, CRP_AMP_DROP:True, OUTSIDE_MASK_COOLDOWN_TIME:5000, CRP_S4:2.25, CFP_AMP_DROP:False, OUTSIDE_MASK_CHECK_TIME:100, CRP_MASK_LEVEL:20, CRP_CHECK_STREAK:10, CFP_S4:301, CFP_S3:301, CFP_S2:301, CFP_S1:63, CRP_AUTO_SET:False, CFP_MASK_TYPE:PERCENT, CFP_NUM_AVERAGE_TRACES:1, CFP_MASK_SET_TYPE:INDEX, CRP_MASK_TYPE:ABSOLUTE, 
+MOD_CHECK_TIME:1000, 
+RF_PROT_CHECK_TIME:1000, RF_STRUCTURE:CLARA_LRRG, 
+GUI_UPDATE_TIME:1000, 
+SOL_PV:CLA-GUN-MAG-SOL-02:READI, SOL_CHECK_TIME:1000, 
+2018-02-21-15-05-45 *
+*** rf_condition_data pulse_count_breakdown_log ***
+2018-02-21-15-05-45 log_pulse_count 273299
+required_pulses 150
+breakdown_count -50
+log_amp_set 6196
+current_ramp_index 187
+pulse length = 0.504
+next_sp_decrease 6166
+2018-02-21-15-05-45 *
+*** Last million pulses***
+2018-02-21-15-05-45 Million pulses agao  = -726701
+2018-02-21-15-05-45 Monitoring RF-PROTECTION
+2018-02-21-15-05-45 Monitoring VAC-VALVE
+2018-02-21-15-05-45 Monitoring MODULATOR
+2018-02-21-15-05-46 data_monitoring Connected to PV = CLA-GUN-RF-LRRG-01:RT with ID = d0 acquiring data
+2018-02-21-15-05-46 Monitoring CAVITY TEMPERATURE
+2018-02-21-15-05-47 data_monitoring Connected to PV = CLA-GUN-RF-LRRG-01:RT with ID = d1 acquiring data
+2018-02-21-15-05-47 Monitoring WATER TEMP
+2018-02-21-15-05-48 data_monitoring Connected to PV = CLA-GUN-MAG-SOL-02:READI with ID = d2 acquiring data
+2018-02-21-15-05-48 Monitoring SOLENOID READI
+2018-02-21-15-05-49 data_monitoring Connected to PV = CLA-LRG1-VAC-IMG-01:P with ID = d3 acquiring data
+2018-02-21-15-05-49 vac_spike_monitor will drop amp on spike detection
+2018-02-21-15-05-49 vac_spike_monitor STARTED running
+2018-02-21-15-05-49 Monitoring VACUUM
+2018-02-21-15-05-50 data_monitoring Connected to PV = EBT-INJ-SCOPE-01:P1 with ID = d4 acquiring data
+2018-02-21-15-05-50 dc_spike_monitor will NOT drop amp on spike detection
+2018-02-21-15-05-50 dc_spike_monitor STARTED running
+2018-02-21-15-05-50 Monitoring DC
+2018-02-21-15-05-50 Monitoring llrf
+2018-02-21-15-05-50 Monitoring outside_masks
+2018-02-21-15-05-50 gui_conditioning has disabled ramping RF
+2018-02-21-15-05-50 *
+*** llrf_handler set_mean_pwr_position***
+2018-02-21-15-05-50 rf pulse end time = 0.954477243394, index = 96
+pulse_latency     = 50
+.getPulseLength() = 0.504252128586
+2018-02-21-15-05-50 LRRG_CAVITY_REVERSE_PHASE, streak = 10, floor = 0, drop = True, drop_val= 2
+2018-02-21-15-05-50 setNumContinuousOutsideMaskCount = True
+2018-02-21-15-05-50 setMaskFloor = True
+2018-02-21-15-05-50 LRRG_CAVITY_REVERSE_PHASE, setShouldCheckMask = True
+2018-02-21-15-05-50 LRRG_CAVITY_REVERSE_PHASE, setDropAmpOnOutsideMaskDetection = True
+2018-02-21-15-05-50 *
+*** main_controller The RF Conditioning is Preparing to Entering Main_Loop !***
+2018-02-21-15-05-51 set_amp = 6196, took 0.00726921155051time,  averages NOT reset, mask_set = False
+2018-02-21-15-05-51 Adding to pulse_breakdown_log =  273481 -50 6196 187 504
+2018-02-21-15-05-52 setGlobalCheckMask True
+2018-02-21-15-05-57 gui_conditioning has enabled ramping RF
+2018-02-21-15-06-06 Adding to pulse_breakdown_log =  273631 -50 6196 187 504
+2018-02-21-15-06-06 current sp/W = 2424007.94317 STARTUP
+2018-02-21-15-06-06 set_amp = 6206.0, took 0.00544494413126time,  averages NOT reset, mask_set = False
+2018-02-21-15-06-22 Adding to pulse_breakdown_log =  273781 -50 6206 187 504
+2018-02-21-15-06-22 current sp/W = 8003.88351714 STARTUP
+2018-02-21-15-06-22 set_amp = 6216.0, took 0.0153149317212time,  averages NOT reset, mask_set = False
+2018-02-21-15-06-36 Adding to pulse_breakdown_log =  273931 -50 6216 187 504
+2018-02-21-15-06-36 current sp/W = 7784.98184593 STARTUP
+2018-02-21-15-06-36 set_amp = 6226.0, took 0.00744545085593time,  averages NOT reset, mask_set = False
+2018-02-21-15-06-51 Adding to pulse_breakdown_log =  274081 -50 6226 187 504
+2018-02-21-15-06-51 *
+*** rf_condition_data get_new_set_point New SP***
+2018-02-21-15-06-51 current sp/W   = 6.226E+03, 2.447E+06
+2018-02-21-15-06-51 predict sp/W   = 6.251E+03, 2.467E+06
+2018-02-21-15-06-51 currentx/request = 7016.20328103 20000.0
+2018-02-21-15-06-52 set_amp = 6251, took 0.00393972557106time,  averages NOT reset, mask_set = False
+2018-02-21-15-06-52 *
+*** rf_condition_data set_ramp_values ***
+2018-02-21-15-06-52 current ramp index   = 187
+next required pulses = 2000
+next power increase  = 20000.0
+next sp decrease     = 6216
+2018-02-21-15-10-12 Adding to pulse_breakdown_log =  276084 -50 6251 187 504
+2018-02-21-15-10-12 *
+*** rf_condition_data get_new_set_point New SP***
+2018-02-21-15-10-12 current sp/W   = 6.251E+03, 2.461E+06
+2018-02-21-15-10-12 predict sp/W   = 6.283E+03, 2.481E+06
+2018-02-21-15-10-12 currentx/request = 13703.2149699 20000.0
+2018-02-21-15-10-12 set_amp = 6283, took 0.00682054909242time,  averages NOT reset, mask_set = False
+2018-02-21-15-10-12 *
+*** rf_condition_data set_ramp_values ***
+2018-02-21-15-10-12 current ramp index   = 187
+next required pulses = 2000
+next power increase  = 20000.0
+next sp decrease     = 6226
+2018-02-21-15-13-32 Adding to pulse_breakdown_log =  278090 -50 6283 187 504
+2018-02-21-15-13-33 *
+*** rf_condition_data get_new_set_point New SP***
+2018-02-21-15-13-34 current sp/W   = 6.283E+03, 2.484E+06
+2018-02-21-15-13-34 predict sp/W   = 6.311E+03, 2.504E+06
+2018-02-21-15-13-34 currentx/request = 23963.871441 20000.0
+2018-02-21-15-13-34 set_amp = 6311, took 0.0293507355718time,  averages NOT reset, mask_set = False
+2018-02-21-15-13-34 *
+*** rf_condition_data set_ramp_values ***
+2018-02-21-15-13-34 current ramp index   = 187
+next required pulses = 2000
+next power increase  = 20000.0
+next sp decrease     = 6251
+2018-02-21-15-16-54 Adding to pulse_breakdown_log =  280104 -50 6311 187 504
+2018-02-21-15-16-56 *
+*** rf_condition_data get_new_set_point New SP***
+2018-02-21-15-16-56 current sp/W   = 6.311E+03, 2.505E+06
+2018-02-21-15-16-56 predict sp/W   = 6.338E+03, 2.525E+06
+2018-02-21-15-16-56 currentx/request = 20754.9789971 20000.0
+2018-02-21-15-16-56 set_amp = 6338, took 0.0062237986989time,  averages NOT reset, mask_set = False
+2018-02-21-15-16-56 *
+*** rf_condition_data set_ramp_values ***
+2018-02-21-15-16-56 current ramp index   = 187
+next required pulses = 2000
+next power increase  = 20000.0
+next sp decrease     = 6283
+2018-02-21-15-20-16 Adding to pulse_breakdown_log =  282130 -50 6338 187 504
+2018-02-21-15-20-20 *
+*** rf_condition_data get_new_set_point New SP***
+2018-02-21-15-20-20 current sp/W   = 6.338E+03, 2.524E+06
+2018-02-21-15-20-20 predict sp/W   = 6.364E+03, 2.544E+06
+2018-02-21-15-20-20 currentx/request = 18832.9024526 20000.0
+2018-02-21-15-20-20 set_amp = 6364, took 0.00778795918995time,  averages NOT reset, mask_set = False
+2018-02-21-15-20-20 *
+*** rf_condition_data set_ramp_values ***
+2018-02-21-15-20-20 current ramp index   = 187
+next required pulses = 2000
+next power increase  = 20000.0
+next sp decrease     = 6311
+2018-02-21-15-20-20 setGlobalCheckMask True
+2018-02-21-15-20-21 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-21-15-20-21 rf_condition_data increasing breakdown count = -49
+2018-02-21-15-20-21 Adding to pulse_breakdown_log =  282171 -49 6364 187 504
+2018-02-21-15-20-21 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 0
+2018-02-21-15-20-21 setGlobalCheckMask True
+2018-02-21-15-20-21 setGlobalCheckMask True
+2018-02-21-15-20-21 setGlobalCheckMask True
+2018-02-21-15-20-21 setGlobalCheckMask False
+2018-02-21-15-20-21 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-21-15-20-21 rf_condition_data NOT increasing breakdown count, already in cooldown, = -49
+2018-02-21-15-20-21 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 1
+2018-02-21-15-20-21 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-21-15-05-28\outside_reverse_log1
+2018-02-21-15-20-21 Saved outside_mask_data part = 1
+2018-02-21-15-20-26 set_amp = 6364, took 0.00535462515279time,  averages NOT reset, mask_set = False
+2018-02-21-15-20-26 Adding to pulse_breakdown_log =  282172 -49 6364 187 504
+2018-02-21-15-20-26 setGlobalCheckMask True
+2018-02-21-15-20-26 setGlobalCheckMask False
+2018-02-21-15-20-26 setGlobalCheckMask True
+2018-02-21-15-23-46 Adding to pulse_breakdown_log =  284172 -49 6364 187 504
+2018-02-21-15-23-50 *
+*** rf_condition_data get_new_set_point New SP***
+2018-02-21-15-23-50 current sp/W   = 6.364E+03, 2.542E+06
+2018-02-21-15-23-50 predict sp/W   = 6.391E+03, 2.562E+06
+2018-02-21-15-23-50 currentx/request = 17978.2411085 20000.0
+2018-02-21-15-23-50 set_amp = 6391, took 0.00371949975033time,  averages NOT reset, mask_set = False
+2018-02-21-15-23-50 *
+*** rf_condition_data set_ramp_values ***
+2018-02-21-15-23-50 current ramp index   = 187
+next required pulses = 2000
+next power increase  = 20000.0
+next sp decrease     = 6338
+2018-02-21-15-27-10 Adding to pulse_breakdown_log =  286213 -49 6391 187 504
+2018-02-21-15-27-14 *
+*** rf_condition_data get_new_set_point New SP***
+2018-02-21-15-27-14 current sp/W   = 6.391E+03, 2.562E+06
+2018-02-21-15-27-14 predict sp/W   = 6.419E+03, 2.582E+06
+2018-02-21-15-27-14 currentx/request = 20251.1522635 20000.0
+2018-02-21-15-27-14 set_amp = 6419, took 0.00630033523589time,  averages NOT reset, mask_set = False
+2018-02-21-15-27-14 *
+*** rf_condition_data set_ramp_values ***
+2018-02-21-15-27-14 current ramp index   = 187
+next required pulses = 2000
+next power increase  = 20000.0
+next sp decrease     = 6364
+2018-02-21-15-30-34 Adding to pulse_breakdown_log =  288253 -49 6419 187 504
+2018-02-21-15-30-38 *
+*** rf_condition_data get_new_set_point New SP***
+2018-02-21-15-30-38 current sp/W   = 6.419E+03, 2.579E+06
+2018-02-21-15-30-38 predict sp/W   = 6.446E+03, 2.599E+06
+2018-02-21-15-30-38 currentx/request = 16290.578115 20000.0
+2018-02-21-15-30-38 set_amp = 6446, took 0.00666425034092time,  averages NOT reset, mask_set = False
+2018-02-21-15-30-38 *
+*** rf_condition_data set_ramp_values ***
+2018-02-21-15-30-38 current ramp index   = 187
+next required pulses = 2000
+next power increase  = 20000.0
+next sp decrease     = 6391
+2018-02-21-15-33-58 Adding to pulse_breakdown_log =  290293 -49 6446 187 504
+2018-02-21-15-34-02 *
+*** rf_condition_data get_new_set_point New SP***
+2018-02-21-15-34-02 current sp/W   = 6.446E+03, 2.601E+06
+2018-02-21-15-34-02 predict sp/W   = 6.475E+03, 2.621E+06
+2018-02-21-15-34-02 currentx/request = 22049.1089456 20000.0
+2018-02-21-15-34-02 set_amp = 6475, took 0.0133287939248time,  averages NOT reset, mask_set = False
+2018-02-21-15-34-02 *
+*** rf_condition_data set_ramp_values ***
+2018-02-21-15-34-02 current ramp index   = 187
+next required pulses = 2000
+next power increase  = 20000.0
+next sp decrease     = 6419
+2018-02-21-15-37-22 Adding to pulse_breakdown_log =  292333 -49 6475 187 504
+2018-02-21-15-37-26 *
+*** rf_condition_data get_new_set_point New SP***
+2018-02-21-15-37-26 current sp/W   = 6.475E+03, 2.618E+06
+2018-02-21-15-37-26 predict sp/W   = 6.503E+03, 2.638E+06
+2018-02-21-15-37-26 currentx/request = 17541.2180868 20000.0
+2018-02-21-15-37-26 set_amp = 6503, took 0.00834453523248time,  averages NOT reset, mask_set = False
+2018-02-21-15-37-26 *
+*** rf_condition_data set_ramp_values ***
+2018-02-21-15-37-26 current ramp index   = 187
+next required pulses = 2000
+next power increase  = 20000.0
+next sp decrease     = 6446
+2018-02-21-15-40-46 Adding to pulse_breakdown_log =  294375 -49 6503 187 504
+2018-02-21-15-40-50 *
+*** rf_condition_data get_new_set_point New SP***
+2018-02-21-15-40-50 current sp/W   = 6.503E+03, 2.640E+06
+2018-02-21-15-40-50 predict sp/W   = 6.531E+03, 2.660E+06
+2018-02-21-15-40-50 currentx/request = 21396.0987175 20000.0
+2018-02-21-15-40-50 set_amp = 6531, took 0.00730352103255time,  averages NOT reset, mask_set = False
+2018-02-21-15-40-50 *
+*** rf_condition_data set_ramp_values ***
+2018-02-21-15-40-50 current ramp index   = 187
+next required pulses = 2000
+next power increase  = 20000.0
+next sp decrease     = 6475
+2018-02-21-15-44-11 Adding to pulse_breakdown_log =  296417 -49 6531 187 504
+2018-02-21-15-44-14 *
+*** rf_condition_data get_new_set_point New SP***
+2018-02-21-15-44-14 current sp/W   = 6.531E+03, 2.655E+06
+2018-02-21-15-44-14 predict sp/W   = 6.560E+03, 2.675E+06
+2018-02-21-15-44-14 currentx/request = 15454.3357222 20000.0
+2018-02-21-15-44-15 set_amp = 6560, took 0.00789557953112time,  averages NOT reset, mask_set = False
+2018-02-21-15-44-15 *
+*** rf_condition_data set_ramp_values ***
+2018-02-21-15-44-15 current ramp index   = 187
+next required pulses = 2000
+next power increase  = 20000.0
+next sp decrease     = 6503
+2018-02-21-15-47-35 Adding to pulse_breakdown_log =  298459 -49 6560 187 504
+2018-02-21-15-47-39 *
+*** rf_condition_data get_new_set_point New SP***
+2018-02-21-15-47-39 current sp/W   = 6.560E+03, 2.666E+06
+2018-02-21-15-47-39 predict sp/W   = 6.590E+03, 2.686E+06
+2018-02-21-15-47-39 currentx/request = 11145.4232623 20000.0
+2018-02-21-15-47-39 set_amp = 6590, took 0.0114834129781time,  averages NOT reset, mask_set = False
+2018-02-21-15-47-39 *
+*** rf_condition_data set_ramp_values ***
+2018-02-21-15-47-39 current ramp index   = 187
+next required pulses = 2000
+next power increase  = 20000.0
+next sp decrease     = 6531
+2018-02-21-15-50-59 Adding to pulse_breakdown_log =  300500 -49 6590 187 504
+2018-02-21-15-51-03 *
+*** rf_condition_data get_new_set_point New SP***
+2018-02-21-15-51-03 current sp/W   = 6.590E+03, 2.692E+06
+2018-02-21-15-51-03 predict sp/W   = 6.629E+03, 2.712E+06
+2018-02-21-15-51-03 currentx/request = 26239.9423356 20000.0
+2018-02-21-15-51-03 set_amp = 6629, took 0.00539714545084time,  averages NOT reset, mask_set = False
+2018-02-21-15-51-03 *
+*** rf_condition_data set_ramp_values ***
+2018-02-21-15-51-03 current ramp index   = 187
+next required pulses = 2000
+next power increase  = 20000.0
+next sp decrease     = 6560
+2018-02-21-15-54-23 Adding to pulse_breakdown_log =  302542 -49 6629 187 504
+2018-02-21-15-54-27 *
+*** rf_condition_data get_new_set_point New SP***
+2018-02-21-15-54-27 current sp/W   = 6.629E+03, 2.715E+06
+2018-02-21-15-54-27 predict sp/W   = 6.660E+03, 2.735E+06
+2018-02-21-15-54-27 currentx/request = 22838.7703514 20000.0
+2018-02-21-15-54-27 set_amp = 6660, took 0.00718651690113time,  averages NOT reset, mask_set = False
+2018-02-21-15-54-27 *
+*** rf_condition_data set_ramp_values ***
+2018-02-21-15-54-27 current ramp index   = 187
+next required pulses = 2000
+next power increase  = 20000.0
+next sp decrease     = 6590
+2018-02-21-15-57-47 Adding to pulse_breakdown_log =  304585 -49 6660 187 504
+2018-02-21-15-57-51 *
+*** rf_condition_data get_new_set_point New SP***
+2018-02-21-15-57-51 current sp/W   = 6.660E+03, 2.746E+06
+2018-02-21-15-57-51 predict sp/W   = 6.689E+03, 2.766E+06
+2018-02-21-15-57-51 currentx/request = 30575.7105793 20000.0
+2018-02-21-15-57-52 set_amp = 6689, took 0.00642496369619time,  averages NOT reset, mask_set = False
+2018-02-21-15-57-52 *
+*** rf_condition_data set_ramp_values ***
+2018-02-21-15-57-52 current ramp index   = 187
+next required pulses = 2000
+next power increase  = 20000.0
+next sp decrease     = 6629
+2018-02-21-16-01-12 Adding to pulse_breakdown_log =  306628 -49 6689 187 504
+2018-02-21-16-01-16 *
+*** rf_condition_data get_new_set_point New SP***
+2018-02-21-16-01-16 current sp/W   = 6.689E+03, 2.765E+06
+2018-02-21-16-01-16 predict sp/W   = 6.715E+03, 2.785E+06
+2018-02-21-16-01-16 currentx/request = 19305.86621 20000.0
+2018-02-21-16-01-16 set_amp = 6715, took 0.00676981797778time,  averages NOT reset, mask_set = False
+2018-02-21-16-01-16 *
+*** rf_condition_data set_ramp_values ***
+2018-02-21-16-01-16 current ramp index   = 187
+next required pulses = 2000
+next power increase  = 20000.0
+next sp decrease     = 6660
+2018-02-21-16-04-36 Adding to pulse_breakdown_log =  308670 -49 6715 187 504
+2018-02-21-16-04-40 *
+*** rf_condition_data get_new_set_point New SP***
+2018-02-21-16-04-40 current sp/W   = 6.715E+03, 2.777E+06
+2018-02-21-16-04-40 predict sp/W   = 6.737E+03, 2.797E+06
+2018-02-21-16-04-40 currentx/request = 12280.3594219 20000.0
+2018-02-21-16-04-40 set_amp = 6737, took 0.00421596088836time,  averages NOT reset, mask_set = False
+2018-02-21-16-04-40 *
+*** rf_condition_data set_ramp_values ***
+2018-02-21-16-04-40 current ramp index   = 187
+next required pulses = 2000
+next power increase  = 20000.0
+next sp decrease     = 6689
+2018-02-21-16-08-00 Adding to pulse_breakdown_log =  310712 -49 6737 187 504
+2018-02-21-16-08-04 *
+*** rf_condition_data get_new_set_point New SP***
+2018-02-21-16-08-04 current sp/W   = 6.737E+03, 2.800E+06
+2018-02-21-16-08-04 predict sp/W   = 6.771E+03, 2.820E+06
+2018-02-21-16-08-04 currentx/request = 23069.6442013 20000.0
+2018-02-21-16-08-04 set_amp = 6771, took 0.00595430798057time,  averages NOT reset, mask_set = False
+2018-02-21-16-08-04 *
+*** rf_condition_data set_ramp_values ***
+2018-02-21-16-08-04 current ramp index   = 187
+next required pulses = 2000
+next power increase  = 20000.0
+next sp decrease     = 6715
+2018-02-21-16-11-24 Adding to pulse_breakdown_log =  312753 -49 6771 187 504
+2018-02-21-16-11-28 *
+*** rf_condition_data get_new_set_point New SP***
+2018-02-21-16-11-28 current sp/W   = 6.771E+03, 2.819E+06
+2018-02-21-16-11-28 predict sp/W   = 6.798E+03, 2.839E+06
+2018-02-21-16-11-28 currentx/request = 18292.9066725 20000.0
+2018-02-21-16-11-28 set_amp = 6798, took 0.0075492590322time,  averages NOT reset, mask_set = False
+2018-02-21-16-11-28 *
+*** rf_condition_data set_ramp_values ***
+2018-02-21-16-11-28 current ramp index   = 187
+next required pulses = 2000
+next power increase  = 20000.0
+next sp decrease     = 6737
+2018-02-21-16-14-48 Adding to pulse_breakdown_log =  314795 -49 6798 187 504
+2018-02-21-16-14-52 *
+*** rf_condition_data get_new_set_point New SP***
+2018-02-21-16-14-52 current sp/W   = 6.798E+03, 2.841E+06
+2018-02-21-16-14-52 predict sp/W   = 6.825E+03, 2.861E+06
+2018-02-21-16-14-52 currentx/request = 22057.2292726 20000.0
+2018-02-21-16-14-53 set_amp = 6825, took 0.00736656837125time,  averages NOT reset, mask_set = False
+2018-02-21-16-14-53 *
+*** rf_condition_data set_ramp_values ***
+2018-02-21-16-14-53 current ramp index   = 187
+next required pulses = 2000
+next power increase  = 20000.0
+next sp decrease     = 6771
+2018-02-21-16-18-13 Adding to pulse_breakdown_log =  316838 -49 6825 187 504
+2018-02-21-16-18-17 *
+*** rf_condition_data get_new_set_point New SP***
+2018-02-21-16-18-17 current sp/W   = 6.825E+03, 2.861E+06
+2018-02-21-16-18-17 predict sp/W   = 6.855E+03, 2.881E+06
+2018-02-21-16-18-17 currentx/request = 19673.8633147 20000.0
+2018-02-21-16-18-17 set_amp = 6855, took 0.0078293065144time,  averages NOT reset, mask_set = False
+2018-02-21-16-18-17 *
+*** rf_condition_data set_ramp_values ***
+2018-02-21-16-18-17 current ramp index   = 187
+next required pulses = 2000
+next power increase  = 20000.0
+next sp decrease     = 6798
+2018-02-21-16-21-37 Adding to pulse_breakdown_log =  318881 -49 6855 187 504
+2018-02-21-16-21-41 *
+*** rf_condition_data get_new_set_point New SP***
+2018-02-21-16-21-41 current sp/W   = 6.855E+03, 2.878E+06
+2018-02-21-16-21-41 predict sp/W   = 6.880E+03, 2.898E+06
+2018-02-21-16-21-41 currentx/request = 17283.6108028 20000.0
+2018-02-21-16-21-41 set_amp = 6880, took 0.00490566945155time,  averages NOT reset, mask_set = False
+2018-02-21-16-21-41 *
+*** rf_condition_data set_ramp_values ***
+2018-02-21-16-21-41 current ramp index   = 187
+next required pulses = 2000
+next power increase  = 20000.0
+next sp decrease     = 6825
+2018-02-21-16-25-01 Adding to pulse_breakdown_log =  320924 -49 6880 187 504
+2018-02-21-16-25-05 *
+*** rf_condition_data get_new_set_point New SP***
+2018-02-21-16-25-05 current sp/W   = 6.880E+03, 2.904E+06
+2018-02-21-16-25-05 predict sp/W   = 6.910E+03, 2.924E+06
+2018-02-21-16-25-05 currentx/request = 25900.2082622 20000.0
+2018-02-21-16-25-06 set_amp = 6910, took 0.0153882425802time,  averages NOT reset, mask_set = False
+2018-02-21-16-25-06 *
+*** rf_condition_data set_ramp_values ***
+2018-02-21-16-25-06 current ramp index   = 187
+next required pulses = 2000
+next power increase  = 20000.0
+next sp decrease     = 6855
+2018-02-21-16-28-26 Adding to pulse_breakdown_log =  322966 -49 6910 187 504
+2018-02-21-16-28-29 *
+*** rf_condition_data get_new_set_point New SP***
+2018-02-21-16-28-29 current sp/W   = 6.910E+03, 2.925E+06
+2018-02-21-16-28-29 predict sp/W   = 6.935E+03, 2.945E+06
+2018-02-21-16-28-29 currentx/request = 21352.7342269 20000.0
+2018-02-21-16-28-30 set_amp = 6935, took 0.00809527831188time,  averages NOT reset, mask_set = False
+2018-02-21-16-28-30 *
+*** rf_condition_data set_ramp_values ***
+2018-02-21-16-28-30 current ramp index   = 187
+next required pulses = 2000
+next power increase  = 20000.0
+next sp decrease     = 6880
+2018-02-21-16-31-50 Adding to pulse_breakdown_log =  325009 -49 6935 187 504
+2018-02-21-16-31-54 *
+*** rf_condition_data get_new_set_point New SP***
+2018-02-21-16-31-54 current sp/W   = 6.935E+03, 2.941E+06
+2018-02-21-16-31-54 predict sp/W   = 6.957E+03, 2.961E+06
+2018-02-21-16-31-54 currentx/request = 15966.4640607 20000.0
+2018-02-21-16-31-54 set_amp = 6957, took 0.00778883892053time,  averages NOT reset, mask_set = False
+2018-02-21-16-31-54 *
+*** rf_condition_data set_ramp_values ***
+2018-02-21-16-31-54 current ramp index   = 187
+next required pulses = 2000
+next power increase  = 20000.0
+next sp decrease     = 6910
+2018-02-21-16-35-14 Adding to pulse_breakdown_log =  327052 -49 6957 187 504
+2018-02-21-16-35-18 *
+*** rf_condition_data get_new_set_point New SP***
+2018-02-21-16-35-18 current sp/W   = 6.957E+03, 2.959E+06
+2018-02-21-16-35-18 predict sp/W   = 6.986E+03, 2.979E+06
+2018-02-21-16-35-18 currentx/request = 17949.4923353 20000.0
+2018-02-21-16-35-18 set_amp = 6986, took 0.00538834814779time,  averages NOT reset, mask_set = False
+2018-02-21-16-35-18 *
+*** rf_condition_data set_ramp_values ***
+2018-02-21-16-35-18 current ramp index   = 187
+next required pulses = 2000
+next power increase  = 20000.0
+next sp decrease     = 6935
+2018-02-21-16-35-19 setGlobalCheckMask True
+2018-02-21-16-35-19 setGlobalCheckMask True
+2018-02-21-16-35-19 setGlobalCheckMask False
+2018-02-21-16-35-19 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-21-16-35-19 rf_condition_data increasing breakdown count = -48
+2018-02-21-16-35-19 Adding to pulse_breakdown_log =  327095 -48 6957 187 504
+2018-02-21-16-35-19 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 2
+2018-02-21-16-35-19 setGlobalCheckMask True
+2018-02-21-16-35-19 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-21-15-05-28\outside_reverse_log2
+2018-02-21-16-35-19 Saved outside_mask_data part = 2
+2018-02-21-16-35-19 *
+*** outside_mask_trace_monitor NEW OUTSIDE MASK TRACE DETECTED***
+2018-02-21-16-35-19 rf_condition_data NOT increasing breakdown count, already in cooldown, = -48
+2018-02-21-16-35-19 new outside_mask_trace = LRRG_CAVITY_REVERSE_PHASE, count = 3
+2018-02-21-16-35-19 data_logger pickle_dumping to C:\Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\2018-02-21-15-05-28\outside_reverse_log3
+2018-02-21-16-35-19 Saved outside_mask_data part = 3
+2018-02-21-16-35-24 set_amp = 6986, took 0.00735513187738time,  averages NOT reset, mask_set = False
+2018-02-21-16-35-24 Adding to pulse_breakdown_log =  327097 -48 6986 187 504
+2018-02-21-16-35-24 setGlobalCheckMask True
+2018-02-21-16-35-24 setGlobalCheckMask False
+2018-02-21-16-35-24 setGlobalCheckMask True
+2018-02-21-16-38-44 Adding to pulse_breakdown_log =  329097 -48 6986 187 504
+2018-02-21-16-38-48 *
+*** rf_condition_data get_new_set_point New SP***
+2018-02-21-16-38-48 current sp/W   = 6.986E+03, 2.978E+06
+2018-02-21-16-38-48 predict sp/W   = 7.013E+03, 2.998E+06
+2018-02-21-16-38-48 currentx/request = 19394.34894 20000.0
+2018-02-21-16-38-48 set_amp = 7013, took 0.00895975996264time,  averages NOT reset, mask_set = False
+2018-02-21-16-38-48 *
+*** rf_condition_data set_ramp_values ***
+2018-02-21-16-38-48 current ramp index   = 187
+next required pulses = 2000
+next power increase  = 20000.0
+next sp decrease     = 6957
+2018-02-21-16-42-08 Adding to pulse_breakdown_log =  331139 -48 7013 187 504
+2018-02-21-16-42-12 *
+*** rf_condition_data get_new_set_point New SP***
+2018-02-21-16-42-12 current sp/W   = 7.013E+03, 3.002E+06
+2018-02-21-16-42-12 predict sp/W   = 7.040E+03, 3.022E+06
+2018-02-21-16-42-12 currentx/request = 23586.9738032 20000.0
+2018-02-21-16-42-12 set_amp = 7040, took 0.00415144733233time,  averages NOT reset, mask_set = False
+2018-02-21-16-42-12 *
+*** rf_condition_data set_ramp_values ***
+2018-02-21-16-42-12 current ramp index   = 187
+next required pulses = 2000
+next power increase  = 20000.0
+next sp decrease     = 6986
+2018-02-21-16-45-32 Adding to pulse_breakdown_log =  333181 -48 7040 187 504
+2018-02-21-16-45-36 *
+*** rf_condition_data get_new_set_point New SP***
+2018-02-21-16-45-36 current sp/W   = 7.040E+03, 3.016E+06
+2018-02-21-16-45-36 predict sp/W   = 7.065E+03, 3.036E+06
+2018-02-21-16-45-36 currentx/request = 14541.1457621 20000.0
+2018-02-21-16-45-37 set_amp = 7065, took 0.00384500794098time,  averages NOT reset, mask_set = False
+2018-02-21-16-45-37 *
+*** rf_condition_data set_ramp_values ***
+2018-02-21-16-45-37 current ramp index   = 187
+next required pulses = 2000
+next power increase  = 20000.0
+next sp decrease     = 7013
+2018-02-21-16-48-57 Adding to pulse_breakdown_log =  335223 -48 7065 187 504
+2018-02-21-16-49-01 *
+*** rf_condition_data get_new_set_point New SP***
+2018-02-21-16-49-01 current sp/W   = 7.065E+03, 3.034E+06
+2018-02-21-16-49-01 predict sp/W   = 7.093E+03, 3.054E+06
+2018-02-21-16-49-01 currentx/request = 17945.3094245 20000.0
+2018-02-21-16-49-01 set_amp = 7093, took 0.00888293018215time,  averages NOT reset, mask_set = False
+2018-02-21-16-49-01 *
+*** rf_condition_data set_ramp_values ***
+2018-02-21-16-49-01 current ramp index   = 187
+next required pulses = 2000
+next power increase  = 20000.0
+next sp decrease     = 7040
+2018-02-21-16-52-21 Adding to pulse_breakdown_log =  337266 -48 7093 187 504
+2018-02-21-16-52-25 *
+*** rf_condition_data get_new_set_point New SP***
+2018-02-21-16-52-25 current sp/W   = 7.093E+03, 3.057E+06
+2018-02-21-16-52-25 predict sp/W   = 7.124E+03, 3.077E+06
+2018-02-21-16-52-25 currentx/request = 22478.4116857 20000.0
+2018-02-21-16-52-25 set_amp = 7124, took 0.00614344999758time,  averages NOT reset, mask_set = False
+2018-02-21-16-52-25 *
+*** rf_condition_data set_ramp_values ***
+2018-02-21-16-52-25 current ramp index   = 187
+next required pulses = 2000
+next power increase  = 20000.0
+next sp decrease     = 7065
+2018-02-21-16-55-45 Adding to pulse_breakdown_log =  339310 -48 7124 187 504
+2018-02-21-16-55-49 *
+*** rf_condition_data get_new_set_point New SP***
+2018-02-21-16-55-49 current sp/W   = 7.124E+03, 3.076E+06
+2018-02-21-16-55-49 predict sp/W   = 7.150E+03, 3.096E+06
+2018-02-21-16-55-49 currentx/request = 19120.0701987 20000.0
+2018-02-21-16-55-50 set_amp = 7150, took 0.00704400059112time,  averages NOT reset, mask_set = False
+2018-02-21-16-55-50 *
+*** rf_condition_data set_ramp_values ***
+2018-02-21-16-55-50 current ramp index   = 187
+next required pulses = 2000
+next power increase  = 20000.0
+next sp decrease     = 7093
+2018-02-21-16-59-10 Adding to pulse_breakdown_log =  341356 -48 7150 187 504
+2018-02-21-16-59-14 *
+*** rf_condition_data get_new_set_point New SP***
+2018-02-21-16-59-14 current sp/W   = 7.150E+03, 3.100E+06
+2018-02-21-16-59-14 predict sp/W   = 7.178E+03, 3.120E+06
+2018-02-21-16-59-14 currentx/request = 24185.7384181 20000.0
+2018-02-21-16-59-14 set_amp = 7178, took 0.00792519711831time,  averages NOT reset, mask_set = False
+2018-02-21-16-59-14 *
+*** rf_condition_data set_ramp_values ***
+2018-02-21-16-59-14 current ramp index   = 187
+next required pulses = 2000
+next power increase  = 20000.0
+next sp decrease     = 7124
+2018-02-21-17-02-34 Adding to pulse_breakdown_log =  343400 -48 7178 187 504
+2018-02-21-17-02-38 *
+*** rf_condition_data get_new_set_point New SP***
+2018-02-21-17-02-38 current sp/W   = 7.178E+03, 3.121E+06
+2018-02-21-17-02-38 predict sp/W   = 7.204E+03, 3.141E+06
+2018-02-21-17-02-38 currentx/request = 21017.0988312 20000.0
+2018-02-21-17-02-39 set_amp = 7204, took 0.01698729904time,  averages NOT reset, mask_set = False
+2018-02-21-17-02-39 *
+*** rf_condition_data set_ramp_values ***
+2018-02-21-17-02-39 current ramp index   = 187
+next required pulses = 2000
+next power increase  = 20000.0
+next sp decrease     = 7150
+2018-02-21-17-05-10 Adding to pulse_breakdown_log =  344959 -48 7204 187 504

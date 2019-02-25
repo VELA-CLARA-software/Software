@@ -1,0 +1,6 @@
+2018-12-18 12:31:13.223000 *
+*** main_controller creating HWC ***
+2018-12-18 12:31:15.438000 *
+*** llrf_handler setting all SCAN to passive***
+2018-12-18 12:31:15.440000 *
+*** llrf_handler start_trace_monitoring()***
