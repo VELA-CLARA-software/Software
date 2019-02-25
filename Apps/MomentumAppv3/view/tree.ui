@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1139</width>
+    <height>747</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QTreeWidget" name="treeWidget">
+    <property name="geometry">
+     <rect>
+      <x>11</x>
+      <y>11</y>
+      <width>331</width>
+      <height>681</height>
+     </rect>
+    </property>
+    <column>
+     <property name="text">
+      <string/>
+     </property>
+    </column>
+    <item>
+     <property name="text">
+      <string>Estimate momentum</string>
+     </property>
+     <item>
+      <property name="text">
+       <string>Rough measure momentum</string>
+      </property>
+      <item>
+       <property name="text">
+        <string>Fine measure/set momentum</string>
+       </property>
+       <item>
+        <property name="text">
+         <string>Measure momentum spread</string>
+        </property>
+       </item>
+      </item>
+     </item>
+    </item>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1139</width>
+     <height>26</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
