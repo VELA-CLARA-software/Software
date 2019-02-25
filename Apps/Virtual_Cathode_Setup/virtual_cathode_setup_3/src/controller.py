@@ -45,6 +45,8 @@ class controller(QtGui.QApplication):
         self.model = model()
         self.view = mainView()
         self.passed_arg = sys_argv
+
+        self.view.closing.connect(self.handle_close_down)
         #
         # connect widgest to functions
         self.connect_widgets()
@@ -65,6 +67,16 @@ class controller(QtGui.QApplication):
         # self.cb = QtGui.QApplication.clipboard()
         # self.cb.clear(mode = self.cb.Clipboard)
 
+    def handle_close_down(self):
+        self.timer.stop()
+        print('controller closing')
+        del self.model.init
+        print("goodbye 1")
+        del self.model.initShut
+        print("goodbye 2")
+
+
+        #del self.model.shutter
 
     def start_up_update(self):
         # we give the app a few ticks to init the hardware controllers before updating the mainView
@@ -76,11 +88,10 @@ class controller(QtGui.QApplication):
             self.view.start_up()
         else:
             self.timer.stop()
-            self.timer = QtCore.QTimer()
+            #self.timer = QtCore.QTimer()
             self.timer.setSingleShot(False)
             self.timer.timeout.connect(self.update)
             self.timer.start(100)
-
 
     def update(self):
         # we give the app a few ticks to init the hardware controllers before updating the mainView
@@ -95,10 +106,10 @@ class controller(QtGui.QApplication):
 
     def handle_setMask_pushButton(self):
         self.model.setMask( x = self.view.maskX_spinBox.value(),
-                                  y = self.view.maskY_spinBox.value(),
-                                  xRad = self.view.maskXRadius_spinBox.value(),
-                                  yRad = self.view.maskYRadius_spinBox.value()
-                                  )
+                            y = self.view.maskY_spinBox.value(),
+                            xRad = self.view.maskXRadius_spinBox.value(),
+                            yRad = self.view.maskYRadius_spinBox.value()
+                          )
 
     def handle_setIntensity_pushButton(self):
         print 'handle_setIntensity_pushButton'
@@ -169,7 +180,7 @@ class controller(QtGui.QApplication):
         self.model.set_delta_hwp(self.view.hwp_set_spinBox.value())
 
     def handle_hwp_down_pushButton(self):
-        self.model.set_delta_hwp(self.view.hwp_set_spinBox.value())
+        self.model.set_delta_hwp(-self.view.hwp_set_spinBox.value())
 
     def handle_move_left_pushButton(self):
         self.model.move_left(self.view.mirror_h_step_set_spinBox.value())
@@ -202,8 +213,8 @@ class controller(QtGui.QApplication):
         self.model.center_mask()
 
     def handle_set_pos_pushButton(self):
-        self.model.set_pos(self.view.ypos_spinBox.value(),
-                           self.view.mirror_v_step_set_spinBox.value())
+        self.model.set_pos(self.view.xpos_spinBox.value(),
+                           self.view.ypos_spinBox.value())
 
     def connect_widgets(self):
         #print('connect_widgets')

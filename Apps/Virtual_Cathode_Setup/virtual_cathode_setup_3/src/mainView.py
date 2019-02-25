@@ -79,7 +79,7 @@ class mainView(QtGui.QMainWindow, Ui_mainView ):
         self.save_pushButton.setDisabled(True)
         self.setInt_pushButton.setDisabled(True)
         self.setWCM_pushButton.setDisabled(True)
-        self.set_pos_pushButton.setDisabled(True)
+        #self.set_pos_pushButton.setDisabled(True)
 
     def handle_pix_gridlines_checkBox(self):
         ''
@@ -194,7 +194,7 @@ class mainView(QtGui.QMainWindow, Ui_mainView ):
 
     def update_crosshair(self):
         '''
-            It seems that the x,y and y for analysis are mixed compared to x,y dimensions
+            It seems that the x,y and y for analyhwp_down_pushButtonsis are mixed compared to x,y dimensions
         :return:
         '''
         x0 = self.data.values[self.data.x_pix]
@@ -453,6 +453,7 @@ class mainView(QtGui.QMainWindow, Ui_mainView ):
         # self.widget_updatefunc[self.int_sd] = [self.update_real]
 
     def closeEvent(self,event):
+        print("closeEvent called")
         self.closing.emit()
 
     def add_camera_image(self):
