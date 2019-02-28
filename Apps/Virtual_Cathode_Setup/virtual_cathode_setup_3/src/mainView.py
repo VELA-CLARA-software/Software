@@ -31,11 +31,14 @@ sys.path.append('.')
 # sys.path.append('C:\\Python27\\Lib\\site-packages\\PyQt4')
 # sys.path.append('C:\\Python27\\Scripts')
 # sys.path.append('C:\\Python27\\DLLs')
+print('creating controller')
+
 from model import model
 from PyQt4 import QtCore
 from PyQt4 import QtGui
 from PyQt4 import Qt
 from PyQt4 import QtGui, QtCore
+
 from viewSource.ellipseROIoverloads import EllipseROI_OneHandle
 from viewSource.ellipseROIoverloads import EllipseROI_NoHandle
 from viewSource.Ui_mainView import Ui_mainView
@@ -153,7 +156,7 @@ class mainView(QtGui.QMainWindow, Ui_mainView ):
 
         ##print('update widget loop')
         for key, value in self.widget_to_dataname.iteritems():
-            ##print('update widget ', value, key)
+            #print('update widget ', value, key)
             if self.new_value(value):
                 if self.is_mask_read(key):
                     if not_updated_read_roi:
@@ -184,13 +187,13 @@ class mainView(QtGui.QMainWindow, Ui_mainView ):
             self.move_right_pushButton.setEnabled(True)
             self.move_down_pushButton.setEnabled(True)
             self.move_up_pushButton.setEnabled(True)
-            #self.set_pos_pushButton.setEnabled(True)
+            self.set_pos_pushButton.setEnabled(False)
         else:
             self.move_left_pushButton.setEnabled(False)
             self.move_right_pushButton.setEnabled(False)
             self.move_down_pushButton.setEnabled(False)
             self.move_up_pushButton.setEnabled(False)
-            #self.set_pos_pushButton.setEnabled(False)
+            self.set_pos_pushButton.setEnabled(False)
 
     def update_crosshair(self):
         '''
@@ -333,6 +336,15 @@ class mainView(QtGui.QMainWindow, Ui_mainView ):
                 self.data.values.get(value)
             widget.setText(QtCore.QString(s))
 
+    def update_set_pos_button(self):
+        if data.values[data.is_setting_pos]:
+            self.set_pos_pushButton.setEnabled(False)
+            self.set_button_color(self.set_pos_pushButton,'red')
+        else:
+            self.set_pos_pushButton.setEnabled(False)
+            self.set_button_color(self.set_pos_pushButton,'green')
+
+
     def set_widget_dicts(self):
         '''
             create dict. with all widgets to update, keyed by their values in 'data'
@@ -381,9 +393,14 @@ class mainView(QtGui.QMainWindow, Ui_mainView ):
         self.widget_to_dataname[self.wcm_val_2] = data.wcm_val
         self.widget_to_dataname[self.wcm_mean] = data.wcm_mean
         self.widget_to_dataname[self.wcm_sd] = data.wcm_sd
+        self.widget_to_dataname[self.int_val] = data.int_val#'[self.update_real]
+        self.widget_to_dataname[self.int_mean] = data.int_mean#[self.update_real]
+        self.widget_to_dataname[self.int_sd] = data.int_sd#[self.update_real]
         self.widget_to_dataname[self.hwp_read] = data.hwp_read
         self.widget_to_dataname[self.last_filename] = data.last_save_file
         self.widget_to_dataname[self.last_directory] = data.last_save_dir
+        self.widget_to_dataname[self.last_directory] = data.last_save_dir
+        self.widget_to_dataname[self.set_pos_pushButton] = data.is_setting_pos
         # the below don't exist yet
         # self.widget_to_dataname[self.int_val] = data.int_val
         # self.widget_to_dataname[self.int_val_2] = data.int_val
@@ -443,9 +460,16 @@ class mainView(QtGui.QMainWindow, Ui_mainView ):
         self.widget_updatefunc[self.wcm_val_2] = [self.update_real]
         self.widget_updatefunc[self.wcm_mean] = [self.update_real]
         self.widget_updatefunc[self.wcm_sd] = [self.update_real]
+
+        self.widget_updatefunc[self.int_val] = [self.update_real]
+        self.widget_updatefunc[self.int_mean] = [self.update_real]
+        self.widget_updatefunc[self.int_sd] = [self.update_real]
+
+
         self.widget_updatefunc[self.hwp_read] = [self.update_real]
         self.widget_updatefunc[self.last_filename] = [self.update_string]
         self.widget_updatefunc[self.last_directory] = [self.update_latest_dir]
+        self.widget_updatefunc[self.set_pos_pushButton] =  [self.update_set_pos_button]
         # the below don't exist yet
         # self.widget_updatefunc[self.int_val] = [self.update_real]
         # self.widget_updatefunc[self.int_val_2] = [self.update_real]
