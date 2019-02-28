@@ -15,24 +15,35 @@
 //    along with VELA-CLARA-Software.  If not, see <http://www.gnu.org/licenses/>.    //
 //
 //  Author:      DJS
-//  Last edit:   05-06-2018
-//  FileName:    mainApp.oy
-//  Description: Generic template for __main__ for general High Level Application
+//  Last edit:   26-02-2019
+//  FileName:    data.py
+//  Description: screen_stats data
 //
 //
 //*/
 '''
-import sys
-from PyQt4 import QtGui, QtCore
-from src.control import control
 
-class App(QtGui.QApplication):
-    def __init__(self, sys_argv):
-        QtGui.QWidget.__init__(self, sys_argv)
-        print 'Creating Controller'
-        self.control = control(sys_argv)
-        print 'Running'
 
-if __name__ == '__main__':
-    app = App(sys.argv)
-    sys.exit(app.exec_())
+class data(object):
+
+    # all screen names
+    screen_names = []
+
+    # this list will be used by the view to update states
+    states = {}
+    previous_states = {}
+
+    # references to each screen object, from which to read th estate
+    screen_state_refs = {}
+    devices = {}
+    state_string_to_state = {}
+
+    def __init__(self):
+        object.__init__(self)
+        self.my_name = "data"
+
+    def hello(self):
+        print(self.my_name+ ' says hello')
+
+
+

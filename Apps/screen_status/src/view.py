@@ -1,6 +1,29 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# DJS 2017
+'''
+/*
+//              This file is part of VELA-CLARA-Software.                             //
+//------------------------------------------------------------------------------------//
+//    VELA-CLARA-Software is free software: you can redistribute it and/or modify     //
+//    it under the terms of the GNU General Public License as published by            //
+//    the Free Software Foundation, either version 3 of the License, or               //
+//    (at your option) any later version.                                             //
+//    VELA-CLARA-Software is distributed in the hope that it will be useful,          //
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of                  //
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                   //
+//    GNU General Public License for more details.                                    //
+//                                                                                    //
+//    You should have received a copy of the GNU General Public License               //
+//    along with VELA-CLARA-Software.  If not, see <http://www.gnu.org/licenses/>.    //
+//
+//  Author:      DJS
+//  Last edit:   05-06-2018
+//  FileName:    view.oy
+//  Description: Screen Status GUI
+//
+//
+//*/
+'''
 #from PyQt4 import QtGui, QtCore
 from PyQt4.QtGui import QWidget
 from PyQt4.QtGui import QMainWindow
@@ -9,26 +32,22 @@ from PyQt4.QtGui import QVBoxLayout
 from PyQt4.QtGui import QPushButton
 from PyQt4.QtGui import QMenu
 from PyQt4.QtGui import QAction
-
-
-from  PyQt4 import QtCore
-
-from viewSource.Ui_view import Ui_CamState
-from procedure.procedure import procedure
+from PyQt4 import QtCore
+# view source, as generated in QT designer
+from viewSource.Ui_screen_status_view import Ui_screen_status_view
+# We need the SCREEN.STATE enum
+import sys,os
+sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\Release\\')
 from VELA_CLARA_Screen_Control import SCREEN_STATE
-
+import data as data
 from operator import itemgetter
 
-class view(QMainWindow, Ui_CamState ):
+class view(QMainWindow, Ui_screen_status_view ):
     # custom close signal to send to controller
     # closing = QtCore.pyqtSignal()
 
-    # dictionary for each camera
-    screens = {}
-
-    # create a procedure object to access static data
-    procedure = procedure()
-    data = procedure.states
+    # static data class
+    data = data.data()
 
     def __init__(self):
         QWidget.__init__(self)
@@ -36,13 +55,25 @@ class view(QMainWindow, Ui_CamState ):
         self.setupUi(self)
         self.setWindowIcon(QIcon('resources\\screen_status\\screen_status_icon.ico'))
 
-    def add_screens(self,names):
+        # ref. to static data class, to help others with readability
+        self.data = view.data
+
+        print('gui __init__ ', self.data.screen_names)
+        #raw_input()
+        self.screens = {}
+
+    def add_screens(self):
+        print('add_screens ', self.data.screen_names)
+
+
+
         self.vbox = QVBoxLayout()
         # Order the anmes
         # this type of ordering should be pushed down to the HWC
         canon_order = ['LRG','S01','L01','S02','C2V','INJ','BA1','BA2']
         order = []
-        for name in names:
+        for name in self.data.screen_names:
+            print('name = ', name)
             i = 0
             for area in canon_order:
                 if area in name:
@@ -50,27 +81,26 @@ class view(QMainWindow, Ui_CamState ):
                 else:
                     i += 1
         orderd_names =  [x[1] for x in sorted(order, key=itemgetter(0))]
-        # print("ORDER")
-        # for n in orderd_names:
-        #     print n
-        #
+        print("ORDER")
+        for n in orderd_names:
+            print n
+
 
         for name in orderd_names:
-            view.screens[name] = QPushButton(self.widget)
-            view.screens[name].setObjectName(name)
-            view.screens[name].setText(name)
-            self.vbox.addWidget(view.screens[name])
+            self.screens[name] = QPushButton(self.widget)
+            self.screens[name].setObjectName(name)
+            self.screens[name].setText(name)
+            self.vbox.addWidget(self.screens[name])
         self.vbox.addStretch(1)
         self.groupBox.setLayout(self.vbox)
 
     def add_context(self, name):
-        view.screens[name].setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+        self.screens[name].setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
        # create context menu
 
-
     def update_gui(self):
-        for name, state in view.data.iteritems():
-            self.update_widget(view.screens[name],state)
+        for name, state in self.data.states.iteritems():
+            self.update_widget(self.screens[name],state)
 
     def update_widget(self,widget,state):
 
