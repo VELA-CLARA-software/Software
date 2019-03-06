@@ -13,7 +13,7 @@ class plotWidgets(pg.GraphicsView):
         self.setCentralItem(self.layout)
         self.mainPlot = {}
         self.subPlots = {}
-        self.mainPlot['BPM'] = self.layout.addPlot(title="BPM Callibration")
+        self.mainPlot['BPM'] = self.layout.addPlot(title=self.sensor+" Callibration")
         self.mainPlot['BPM'].showGrid(x=True, y=True)
         self.mainPlot['BPM'].setLabel('left', 'BPM Reading', 'mm')
         self.mainPlot['BPM'].setLabel('bottom', text='Corrector', units='Amps')

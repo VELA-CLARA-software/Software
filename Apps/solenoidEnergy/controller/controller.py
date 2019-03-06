@@ -79,9 +79,12 @@ class Controller(QObject):
         self.plots = {}
 
         '''Plots'''
-        # Gun
+        # BPMs
         self.plots['BPM'] = plotWidgets('BPM')
         self.view.BPM_Plots_Layout.addWidget(self.plots['BPM'])
+        # Screens
+        self.plots['Screen'] = plotWidgets('Screen')
+        self.view.Screen_Plots_Layout.addWidget(self.plots['Screen'])
 
         self.buttons = [
         self.view.HCORRButton, self.view.VCORRButton,
@@ -195,32 +198,42 @@ class Controller(QObject):
         self.updateAverageMomentum()
 
     def updateNegativeMomentum(self):
-        self.view.negativeMomentumBox.setValue(self.model.solenoidData['negative']['energy'])
+        self.view.negativeMomentumBox.setValue(self.model.solenoidData[self.model.sensorName]['negative']['energy'])
         self.updateAverageMomentum()
 
     def updatePositiveMomentum(self):
-        self.view.positiveMomentumBox.setValue(self.model.solenoidData['positive']['energy'])
+        self.view.positiveMomentumBox.setValue(self.model.solenoidData[self.model.sensorName]['positive']['energy'])
         self.updateAverageMomentum()
 
     def updateAverageMomentum(self):
-        if 'positive' in self.model.solenoidData and self.model.solenoidData['positive']['energy'] > 0:
-            if 'negative' in self.model.solenoidData and self.model.solenoidData['negative']['energy'] > 0:
-                self.view.meanMomentumBox.setValue(np.mean([self.model.solenoidData['negative']['energy'], self.model.solenoidData['positive']['energy']]))
+        data = self.model.solenoidData[self.model.sensorName]
+        if 'positive' in data and data['positive']['energy'] > 0:
+            if 'negative' in data and data['negative']['energy'] > 0:
+                self.view.meanMomentumBox.setValue(np.mean([data['negative']['energy'], data['positive']['energy']]))
             else:
-                self.view.meanMomentumBox.setValue(self.model.solenoidData['positive']['energy'])
-        elif 'negative' in self.model.solenoidData and  self.model.solenoidData['negative']['energy'] > 0:
-            self.view.meanMomentumBox.setValue(self.model.solenoidData['negative']['energy'])
+                self.view.meanMomentumBox.setValue(data['positive']['energy'])
+        elif 'negative' in data and  data['negative']['energy'] > 0:
+            self.view.meanMomentumBox.setValue(data['negative']['energy'])
+
+    def runThread(self, func, sensor, sensorName):
+        self.thread = GenericThread(func, self.view.HCORRStartValue.value(), self.view.HCORRRange.value(),
+                                    self.view.VCORRStartValue.value(), self.view.VCORRRange.value(), self.view.NSteps.value(),
+                                    solenoid1Inegative=self.view.Sol1CurrentNegative.value(), solenoid1Ipositive=self.view.Sol1CurrentPositive.value(),
+                                    solenoid2Inegative=self.view.Sol2CurrentNegative.value(), solenoid2Ipositive=self.view.Sol2CurrentPositive.value(),
+                                    sensor=sensor, sensorName=sensorName)
+        self.thread.finished.connect(self.enableButtons)
+        self.thread.finished.connect(self.saveData)
 
     def runScan(self):
         self.disableButtons()
         self.sensor = 'BPM'
         self.newDataSignal.connect(self.updatePlot)
-        # self.model.clearDataArray()
-        self.thread = GenericThread(self.model.bpmSol1Scan, self.view.HCORRStartValue.value(), self.view.HCORRRange.value(),
-                                    self.view.VCORRStartValue.value(), self.view.VCORRRange.value(), self.view.NSteps.value(),
-                                    solenoidInegative=self.view.SolCurrent1.value(), solenoidIpositive=self.view.SolCurrent2.value())
-        self.thread.finished.connect(self.enableButtons)
-        self.thread.finished.connect(self.saveData)
+        if str(self.view.tabWidget.tabText(self.view.tabWidget.currentIndex())) == 'BPM Scan':
+            self.sensorName = str(self.view.BPMCombo.currentText())
+        else:
+            self.sensorName = str(self.view.ScreenCombo.currentText())
+        print 'self.sensorName = ', self.sensorName
+        self.runThread(self.model.bpmSol1Scan, self.sensor, self.sensorName)
         self.thread.finished.connect(self.updatePositiveNegativeMomentum)
         self.thread.start()
 
@@ -229,11 +242,7 @@ class Controller(QObject):
         self.sensor = 'BPM'
         self.newDataSignal.connect(self.updatePlot)
         # self.model.clearDataArray()
-        self.thread = GenericThread(self.model.bpmSol1Negative, self.view.HCORRStartValue.value(), self.view.HCORRRange.value(),
-                                    self.view.VCORRStartValue.value(), self.view.VCORRRange.value(), self.view.NSteps.value(),
-                                    solenoidInegative=self.view.SolCurrent1.value(), solenoidIpositive=self.view.SolCurrent2.value())
-        self.thread.finished.connect(self.enableButtons)
-        self.thread.finished.connect(self.saveData)
+        self.runThread(self.model.bpmSol1Negative)
         self.thread.finished.connect(self.updateNegativeMomentum)
         self.thread.start()
 
@@ -242,11 +251,7 @@ class Controller(QObject):
         self.sensor = 'BPM'
         self.newDataSignal.connect(self.updatePlot)
         # self.model.clearDataArray()
-        self.thread = GenericThread(self.model.bpmSol1Positive, self.view.HCORRStartValue.value(), self.view.HCORRRange.value(),
-                                    self.view.VCORRStartValue.value(), self.view.VCORRRange.value(), self.view.NSteps.value(),
-                                    solenoidInegative=self.view.SolCurrent1.value(), solenoidIpositive=self.view.SolCurrent2.value())
-        self.thread.finished.connect(self.enableButtons)
-        self.thread.finished.connect(self.saveData)
+        self.runThread(self.model.bpmSol1Positive)
         self.thread.finished.connect(self.updatePositiveMomentum)
         self.thread.start()
 

@@ -13,39 +13,45 @@ class dataArray(dict):
     def __init__(self, *args, **kwargs):
         super(dataArray, self).__init__(*args, **kwargs)
 
-    def checkDataArray(self, cavity, actuator, type):
-        cavity = str(cavity)
+    def checkDataArray(self, sensorName, polarity, actuator, type):
+        sensor = str(sensorName)
+        polarity = str(polarity)
         actuator = str(actuator)
         type = str(type)
-        if not cavity in self:
-            self[cavity] = {}
-        if not actuator in self[cavity]:
-            self[cavity][actuator] = {}
-        if not type in self[cavity][actuator]:
-            self[cavity][actuator][type] = []
+        if not sensor in self:
+            self[sensor] = {}
+        if not polarity in self[sensor]:
+            self[sensor][polarity] = {}
+        if not actuator in self[sensor][polarity]:
+            self[sensor][polarity][actuator] = {}
+        if not type in self[sensor][polarity][actuator]:
+            self[sensor][polarity][actuator][type] = []
 
-    def resetData(self, cavity, actuator, type):
-        cavity = str(cavity)
+    def resetData(self, sensorName, polarity, actuator, type):
+        sensor = str(sensorName)
+        polarity = str(polarity)
         actuator = str(actuator)
         for t in type:
-            self.checkDataArray(cavity, actuator, t)
-            self[cavity][actuator][t] = []
+            self.checkDataArray(sensor, polarity, actuator, t)
+            # self[sensor][polarity][actuator][t] = []
 
-    def setData(self, cavity, actuator, type, data):
-        cavity = str(cavity)
+    def setData(self, sensorName, polarity, actuator, type, data):
+        sensor = str(sensorName)
+        polarity = str(polarity)
         actuator = str(actuator)
         for t, d in zip(type, data):
             t = str(t)
-            self.checkDataArray(cavity, actuator, t)
-            self[cavity][actuator][t] = d
+            self.checkDataArray(sensor, polarity, actuator, t)
+            self[sensor][polarity][actuator][t] = d
 
-    def appendData(self, cavity, actuator, type, data):
-        cavity = str(cavity)
+    def appendData(self, sensorName, polarity, actuator, type, data):
+        sensor = str(sensorName)
+        polarity = str(polarity)
         actuator = str(actuator)
         for t, d in zip(type, data):
             t = str(t)
-            self.checkDataArray(cavity, actuator, t)
-            self[cavity][actuator][t].append(d)
+            self.checkDataArray(sensor, polarity, actuator, t)
+            self[sensor][polarity][actuator][t].append(d)
 
 class emitter(object):
 
@@ -124,24 +130,27 @@ class Model(object):
         self.bpmSol1Positive(*args, **kwargs)
         if self.machineType == 'None':
             self.load_data_file()
-            self.calculate_Momentum()
+        self.calculate_Momentum()
 
     def bpmSol1Negative(self, *args, **kwargs):
         self.polarity = 'negative'
-        self.bpmSol1(solenoidI=kwargs['solenoidInegative'], *args, **kwargs)
+        self.bpmSol1(solenoid1I=kwargs['solenoid1Inegative'], solenoid2I=kwargs['solenoid2Inegative'], *args, **kwargs)
         self.calculate_Momentum()
 
     def bpmSol1Positive(self, *args, **kwargs):
         self.polarity = 'positive'
-        self.bpmSol1(solenoidI=kwargs['solenoidIpositive'], *args, **kwargs)
+        self.bpmSol1(solenoid1I=kwargs['solenoid1Ipositive'], solenoid2I=kwargs['solenoid2Ipositive'], *args, **kwargs)
         self.calculate_Momentum()
 
-    def bpmSol1(self, startx=0, rangex=1, starty=0, rangey=1, steps=11, solenoidI=50, **kwargs):
+    def bpmSol1(self, startx=0, rangex=1, starty=0, rangey=1, steps=11, solenoid1I=50, solenoid2I=50, sensor='BPM', sensorName='S02-BPM01', **kwargs):
         self.resetAbortFinish()
-        self.sensor = 'BPM'
+        self.sensor = sensor
+        self.sensorName = sensorName
         self.actuator = 'S01-HCOR2'
-        self.solenoid = 'L01-SOL1'
-        self.solenoidI = solenoidI
+        self.solenoid1 = 'L01-SOL1'
+        self.solenoid2 = 'L01-SOL2'
+        self.solenoid1I = solenoid1I
+        self.solenoid2I = solenoid2I
         self.range = rangex
         self.nSteps = steps
         self.startI = startx
@@ -154,16 +163,16 @@ class Model(object):
         self.startI = starty
         self.bpmSolEnergy()
 
-    def resetDataArray(self, polarity, actuator):
-        self.solenoidData.resetData(polarity, actuator, ['energy', 'xData', 'yData', 'yStd', 'xStd', 'I'])
+    def resetDataArray(self, sensorName, polarity, actuator):
+        self.solenoidData.resetData(sensorName, polarity, actuator, ['energy', 'xData', 'yData', 'yStd', 'xStd', 'I'])
 
-    def appendDataArray(self, I, x, y, xStd, yStd, sensor, polarity, actuator):
-        self.solenoidData[polarity][actuator]['I'].append(I)
-        self.solenoidData[polarity][actuator]['xData'].append(x)
-        self.solenoidData[polarity][actuator]['yData'].append(y)
-        self.solenoidData[polarity][actuator]['xStd'].append(yStd)
-        self.solenoidData[polarity][actuator]['yStd'].append(yStd)
-        self.newData.emit(str(sensor), str(polarity), str(actuator), self.solenoidData[polarity][actuator])
+    def appendDataArray(self, I, x, y, xStd, yStd, sensor, sensorName, polarity, actuator):
+        self.solenoidData[sensorName][polarity][actuator]['I'].append(I)
+        self.solenoidData[sensorName][polarity][actuator]['xData'].append(x)
+        self.solenoidData[sensorName][polarity][actuator]['yData'].append(y)
+        self.solenoidData[sensorName][polarity][actuator]['xStd'].append(yStd)
+        self.solenoidData[sensorName][polarity][actuator]['yStd'].append(yStd)
+        self.newData.emit(str(sensor), str(polarity), str(actuator), self.solenoidData[sensorName][polarity][actuator])
 
     def getData(self):
         if not self.machineType == 'None':
@@ -193,14 +202,17 @@ class Model(object):
 ########### bpmSolEnergy ###############
 
     def bpmSolEnergy(self):
-        self.resetDataArray(self.polarity, self.actuator)
-        self.solenoidData[self.polarity]['value'] = self.solenoidI
-        print 'Setting ', self.solenoid, ' to ', self.solenoidI,'A'
-        self.machine.setSol(self.solenoid, self.solenoidI)
-        self.solenoidData[self.actuator] = {}
-        self.solenoidData[self.actuator]['startI'] = self.startI
-        self.solenoidData[self.actuator]['range'] = self.range
-        self.solenoidData[self.actuator]['nSteps'] = self.nSteps
+        self.resetDataArray(self.sensorName, self.polarity, self.actuator)
+        self.solenoidData[self.sensorName][self.polarity]['value1'] = self.solenoid1I
+        self.solenoidData[self.sensorName][self.polarity]['value2'] = self.solenoid2I
+        print 'Setting ', self.solenoid1, ' to ', self.solenoid1I,'A'
+        print 'Setting ', self.solenoid2, ' to ', self.solenoid2I,'A'
+        self.machine.setSol(self.solenoid1, self.solenoid1I)
+        self.machine.setSol(self.solenoid2, self.solenoid2I)
+        self.solenoidData[self.sensorName][self.actuator] = {}
+        self.solenoidData[self.sensorName][self.actuator]['startI'] = self.startI
+        self.solenoidData[self.sensorName][self.actuator]['range'] = self.range
+        self.solenoidData[self.sensorName][self.actuator]['nSteps'] = self.nSteps
         range = np.arange(self.startI - self.range, self.startI + self.range + 1e-6, 2*self.range / self.nSteps)
         for i,I in enumerate(range):
             I = np.round(I, decimals=3)
@@ -215,7 +227,7 @@ class Model(object):
             data, stddata = self.getData()
             x,y = data
             stdx, stdy = stddata
-            self.appendDataArray(I, x, y, stdx, stdy, self.sensor, self.polarity, self.actuator)
+            self.appendDataArray(I, x, y, stdx, stdy, self.sensor, self.sensorName, self.polarity, self.actuator)
         self.machine.setCorr(self.actuator, self.startI)
         self.progress.emit(100)
 
@@ -223,34 +235,35 @@ class Model(object):
         slope, intercept, r_value, p_value, std_err = stats.linregress(x,y)
         return np.arctan(slope)
 
-    def calculate_B(self, I):
-        return 0.00012171419 + 0.00037651102 * I
+    def calculate_B(self, I1, I2):
+        return 0.00012171419 + 0.00037651102 * I1 + 0.00012171419 + 0.00037651102 * I2
 
-    def calculate_p(self, I, theta):
-        return constants.c * self.calculate_B(I) / (2.0 * theta) / 1e6
+    def calculate_p(self, I1, I2, theta):
+        return constants.c * self.calculate_B(I1, I2) / (2.0 * theta) / 1e6
 
-    def fit_data(self, I, x, y):
+    def fit_data(self, I1, I2, x, y):
         theta = self.calculate_theta(x,y)
-        return self.calculate_p(I, theta)
+        return self.calculate_p(I1, I2, theta)
 
     def calculate_Momentum(self):
         energies = []
-        if 'positive' in self.solenoidData and len(self.solenoidData['positive']['S01-VCOR2']['yData']) > 1:
-            p1 = self.fit_data(self.solenoidData['positive']['value'], self.solenoidData['positive']['S01-VCOR2']['yData'], self.solenoidData['positive']['S01-VCOR2']['xData'])
-            p2 = -1*self.fit_data(self.solenoidData['positive']['value'], self.solenoidData['positive']['S01-HCOR2']['xData'], self.solenoidData['positive']['S01-HCOR2']['yData'])
-            self.solenoidData['positive']['energy'] = np.mean([p1, p2])
+        data = self.solenoidData[self.sensorName]
+        if 'positive' in data and len(data['positive']['S01-VCOR2']['yData']) > 1:
+            p1 = self.fit_data(data['positive']['value1'], data['positive']['value2'], data['positive']['S01-VCOR2']['yData'], data['positive']['S01-VCOR2']['xData'])
+            p2 = -1*self.fit_data(data['positive']['value1'],data['positive']['value2'], data['positive']['S01-HCOR2']['xData'], data['positive']['S01-HCOR2']['yData'])
+            data['positive']['energy'] = np.mean([p1, p2])
             energies.append(p1)
             energies.append(p2)
-        if 'negative' in self.solenoidData and len(self.solenoidData['negative']['S01-VCOR2']['yData']) > 1:
-            n1 = self.fit_data(self.solenoidData['negative']['value'], self.solenoidData['negative']['S01-VCOR2']['yData'], self.solenoidData['negative']['S01-VCOR2']['xData'])
-            n2 = -1*self.fit_data(self.solenoidData['negative']['value'], self.solenoidData['negative']['S01-HCOR2']['xData'], self.solenoidData['negative']['S01-HCOR2']['yData'])
-            self.solenoidData['negative']['energy'] = np.mean([n1, n2])
+        if 'negative' in data and len(data['negative']['S01-VCOR2']['yData']) > 1:
+            n1 = self.fit_data(data['negative']['value1'], data['negative']['value2'], data['negative']['S01-VCOR2']['yData'], data['negative']['S01-VCOR2']['xData'])
+            n2 = -1*self.fit_data(data['negative']['value1'], data['negative']['value2'], data['negative']['S01-HCOR2']['xData'], data['negative']['S01-HCOR2']['yData'])
+            data['negative']['energy'] = np.mean([n1, n2])
             energies.append(n1)
             energies.append(n2)
         return np.mean(energies)
 
 ################################# LOAD DATA ##############################
     def load_data_file(self):
-        self.solenoidData = h5dict.load_dict_from_hdf5(r"\\fed.cclrc.ac.uk\Org\NLab\ASTeC\Projects\VELA\Work\2019\03\04\124620_SolenoidEnergyScan.h5")
+        self.solenoidData = h5dict.load_dict_from_hdf5(r"C:\Users\jkj62\Documents\GitHub\Software\Apps\solenoidEnergy\124620_SolenoidEnergyScan.h5")
         self.solenoidData = dataArray(self.solenoidData)
         print self.calculate_Momentum()

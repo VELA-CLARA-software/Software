@@ -458,6 +458,48 @@ class Machine(object):
         else:
             return self.magnets.getSI(name)
 
+    def set_rf_cage_in_and_wait(self, screen, timeout = 90):
+        # message('rf_cage_in_and_wait: Passed ' + screen)
+        self.screens.moveScreenTo(screen, scr.SCREEN_STATE.V_RF)
+        waittime = time.time() + timeout
+        while 1:
+            if self.screens.isScreenInState(screen, scr.SCREEN_STATE.V_RF):
+                return True
+            if time.time() > waittime:
+                message('!!!ERROR!!! rf_cage_in_and_wait timed out', header=true)
+                return False
+
+    def screens_in(self, screens):
+        # message('screens_in: Passed ' + ",".join(screens))
+        for screen in screens:
+            if self.screens.isScreenIn(screen):
+                #message('screens_in: ' + str(screen) + ' is already in.')
+                pass
+            else:
+                #message('screens_in: move ' + str(screen) + ' in')
+                self.screens.insertYAG(screen)
+
+    def set_wait_for_screens_in(self, screens, timeout = 90):
+        # message('wait_for_screen_in: Passed ' + ",".join(screens))
+        # global scr_control
+        waittime = time.time() + timeout
+        while 1:
+            all_screens_in = True
+            for screen in screens:
+                if self.screens.isScreenIn(screen):
+                    pass
+                else:
+                    all_screens_in = False
+                    break
+            if all_screens_in:
+                break
+            if time.time() > waittime:
+                message('!!!ERROR!!! wait_for_screen_in timed out', header=true)
+                all_screens_in = False
+                break
+            time.sleep(2)
+        return all_screens_in
+
     def applyDBURT(self, dburt):
         return self.magnets.applyDBURT(dburt)
 
