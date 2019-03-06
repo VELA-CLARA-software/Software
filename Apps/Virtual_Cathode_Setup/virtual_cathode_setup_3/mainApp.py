@@ -41,8 +41,13 @@ class App(QtGui.QApplication):
         # sys.exit(app.exec_())
         QtGui.QApplication.__init__(self, sys_argv)
         # QtGui.QWidget.__init__(self, sys_argv)
+        print('creating controller')
         self.control = controller(sys_argv)
 
 if __name__ == '__main__':
+    print('creating controller')
+
     app = App(sys.argv)
+    print('creating controller')
+
     sys.exit(app.exec_())

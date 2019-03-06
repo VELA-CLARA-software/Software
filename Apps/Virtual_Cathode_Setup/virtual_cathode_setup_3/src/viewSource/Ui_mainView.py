@@ -994,7 +994,7 @@ class Ui_mainView(object):
         self.set_pos_pushButton.setText(_translate("mainView", "Set", None))
         self.load_pushButton.setText(_translate("mainView", "Load Settings", None))
         self.save_pushButton.setText(_translate("mainView", "Save Settings", None))
-        self.avPixIntensity_label_12.setText(_translate("mainView", "Intensity:", None))
+        self.avPixIntensity_label_12.setText(_translate("mainView", "Laser", None))
         self.avPixIntensity_label_13.setText(_translate("mainView", "WCM:", None))
         self.avPixIntensity_label_5.setText(_translate("mainView", "Pixel Avg:", None))
         self.label_15.setText(_translate("mainView", "X:", None))

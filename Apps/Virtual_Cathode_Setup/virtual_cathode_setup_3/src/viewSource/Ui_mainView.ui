@@ -703,7 +703,7 @@
                </font>
               </property>
               <property name="text">
-               <string>Intensity:</string>
+               <string>Laser</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>

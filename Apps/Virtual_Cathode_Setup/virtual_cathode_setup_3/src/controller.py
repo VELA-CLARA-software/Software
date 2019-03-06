@@ -26,21 +26,27 @@
 //
 //*/
 '''
+
 import sys
 # meh  https://stackoverflow.com/questions/11953618/pyinstaller-importerror-no-module-named-pyinstaller
 sys.path.append('.')
 # sys.path.append('C:\\Python27\\Lib\\site-packages\\PyQt4')
 # sys.path.append('C:\\Python27\\Scripts')
 # sys.path.append('C:\\Python27\\DLLs')
+
 from mainView import mainView
+
 from model import model
 from PyQt4 import QtCore
 from PyQt4 import QtGui
 from PyQt4 import Qt
 
+
 class controller(QtGui.QApplication):
     def __init__(self, sys_argv = None):
         QtGui.QApplication.__init__(self, sys_argv)
+
+
         '''define model and view'''
         self.model = model()
         self.view = mainView()
@@ -87,11 +93,12 @@ class controller(QtGui.QApplication):
             self.model.update_values()
             self.view.start_up()
         else:
+            print("Starting main timer")
             self.timer.stop()
-            #self.timer = QtCore.QTimer()
-            self.timer.setSingleShot(False)
-            self.timer.timeout.connect(self.update)
-            self.timer.start(100)
+            self.timer2 = QtCore.QTimer()
+            self.timer2.setSingleShot(False)
+            self.timer2.timeout.connect(self.update)
+            self.timer2.start(100)
 
     def update(self):
         # we give the app a few ticks to init the hardware controllers before updating the mainView

@@ -157,11 +157,16 @@ class model():
         self.values[self.data.wcm_sd] = self.pil_obj[0].Q_sd
 
         # these are flakey  laser INTENSITY
-        self.values[self.data.int_val] = '-'
-        self.values[self.data.int_mean] = '-'
-        self.values[self.data.int_sd] = '-'
+        self.values[self.data.int_val] = self.pil_obj[0].energy * 1000000
+        self.values[self.data.int_mean] = self.pil_obj[0].energy_mean * 1000000
+        self.values[self.data.int_sd] = self.pil_obj[0].energy_sd * 1000000
 
+        #print('take image START')
         self.values[self.data.image]  = self.get_fast_image()
+        self.values[self.data.is_setting_pos]  = self.pil.isSettingPos()
+        #print('take image FIN')
+
+
         self.values[self.data.min_level_rbv] = amin(self.values[self.data.image])
         self.values[self.data.max_level_rbv] = amax(self.values[self.data.image])
 
@@ -217,11 +222,16 @@ class model():
     def get_fast_image(self):
         if self.pil.isAcquiring_VC():
             # DEBUG
+            print('take image 1')
             self.pil.takeFastImage_VC()#getFastImage_VC():
+
+            print('take image 2')
+
             npData = array(  self.vc_image[0].data ).reshape(( self.vc_image[0].num_pix_y,
                                                                 self.vc_image[0].num_pix_x))
               #  never works :((((
               #  npData = array(self.vc_image[0].data2D)
+            print('return image')
             return flipud(npData)
         else:
             print('failed to get image')
