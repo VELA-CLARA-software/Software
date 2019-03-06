@@ -226,6 +226,7 @@ class Controller(QObject):
 
     def runScan(self):
         self.disableButtons()
+        self.model.clearDataArray()
         self.sensor = 'BPM'
         self.newDataSignal.connect(self.updatePlot)
         if str(self.view.tabWidget.tabText(self.view.tabWidget.currentIndex())) == 'BPM Scan':

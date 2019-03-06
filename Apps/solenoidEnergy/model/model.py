@@ -207,6 +207,8 @@ class Model(object):
         self.solenoidData[self.sensorName][self.polarity]['value2'] = self.solenoid2I
         print 'Setting ', self.solenoid1, ' to ', self.solenoid1I,'A'
         print 'Setting ', self.solenoid2, ' to ', self.solenoid2I,'A'
+        self.machine.setSol(self.solenoid1, self.solenoid1I, tol=300)
+        self.machine.setSol(self.solenoid2, self.solenoid2I, tol=300)
         self.machine.setSol(self.solenoid1, self.solenoid1I)
         self.machine.setSol(self.solenoid2, self.solenoid2I)
         self.solenoidData[self.sensorName][self.actuator] = {}
@@ -264,6 +266,7 @@ class Model(object):
 
 ################################# LOAD DATA ##############################
     def load_data_file(self):
-        self.solenoidData = h5dict.load_dict_from_hdf5(r"C:\Users\jkj62\Documents\GitHub\Software\Apps\solenoidEnergy\124620_SolenoidEnergyScan.h5")
-        self.solenoidData = dataArray(self.solenoidData)
-        print self.calculate_Momentum()
+        pass
+        # self.solenoidData = h5dict.load_dict_from_hdf5(r"C:\Users\jkj62\Documents\GitHub\Software\Apps\solenoidEnergy\124620_SolenoidEnergyScan.h5")
+        # self.solenoidData = dataArray(self.solenoidData)
+        # print self.calculate_Momentum()
