@@ -360,7 +360,7 @@ class Machine(object):
             # print 'setting ', corr, ' = ', I
             print self.magnets.setSI(corr, I)
             i = 0
-            while not self.magnets.isRIequalSI(corr):
+            while abs(self.getCorr(corr) - I) > tol:
                 time.sleep(0.1)
         return True
 
@@ -376,6 +376,10 @@ class Machine(object):
             self.solSI[sol] = I
         elif self.machineType == 'Physical':
             self.magnets.setSI(sol, I)
+            time.sleep(0.1)
+            while abs(self.getSol(sol) - I) > tol:
+                # print self.getSol(sol), I, abs(self.getSol(sol) - I)
+                time.sleep(0.1)
         return True
 
     def getSol(self, sol):

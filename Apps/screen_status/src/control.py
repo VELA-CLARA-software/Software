@@ -24,23 +24,26 @@
 '''
 from PyQt4.QtCore import QTimer
 
-import view.view as view
-import procedure.procedure as procedure
+import view as view
+import procedure as procedure
+import data as data
 from PyQt4.QtGui import QMenu
 from PyQt4.QtGui import QAction
 
 
 class control(object):
-    procedure = None
-    view  = None
     # we don;t need to pass these things in !!
-    def __init__(self,sys_argv = None,view = None, procedure= None):
+    def __init__(self,sys_argv = None):
         self.my_name = 'control'
+        self.sys_argv = sys_argv
         '''define model and view'''
-        control.procedure = procedure
-        control.view = view
+        self.data = data.data()
+        self.procedure = procedure.procedure()
+
+        self.view = view.view()
 
 
+        #raw_input()
 
         # update gui with this:
         print('controller, starting timer')
@@ -64,42 +67,38 @@ class control(object):
 
     def set_up_gui(self):
         # connect main buttons to functions
-        control.view.stopButton.clicked.connect(self.handle_all_out)
-        control.view.add_screens(control.procedure.scr_names)
+        self.view.allout_Button.clicked.connect(self.handle_all_out)
+        self.view.checkDevices_Button.clicked.connect(self.handle_checkDevices_Button)
+        self.view.add_screens()
 
-        # for name in control.procedure.scr_names:
-        #     control.view.add_context(name, control.procedure.get_screen_devices(name))
+        # for name in self.procedure.scr_names:
+        #     self.view.add_context(name, self.procedure.get_screen_devices(name))
             #self.button.customContextMenuRequested.connect(self.on_context_menu)
 
         # connect individual valve buttons to functions
-        for name, widget in control.view.screens.iteritems():
+        for name, widget in self.view.screens.iteritems():
             widget.clicked.connect(self.handle_in_out)
-            control.view.add_context(name)
+            self.view.add_context(name)
             widget.customContextMenuRequested.connect(self.on_context_menu)
 
 
-            # button =
-            #                                                                        str(
-            #                                                                                widget.objectName())))
-
-
     def on_context_menu(self, point):
-        s = control.view.sender()
+        s = self.view.sender()
         scr = str(s.objectName())
         self.last_scr = scr
 
         popMenu = QMenu(s)
 
         if scr in self.gui_enabled_moving:
-            a = QAction('CANCEL_MOVING', control.view.screens[scr])
+            a = QAction('CANCEL_MOVING', self.view.screens[scr])
             a.setObjectName('CANCEL_MOVING')
             popMenu.addAction(a)
         else:
             print(scr, " Context Menu" )
-            devices = control.procedure.get_screen_devices(scr)
+            devices = self.procedure.get_screen_devices(scr)
             for device in devices:
                 print("Added device ",device)
-                a = QAction(device, control.view.screens[scr])
+                a = QAction(device, self.view.screens[scr])
                 a.setObjectName(device)
                 print("TEST ", a.objectName())
                 popMenu.addAction(a)
@@ -115,19 +114,23 @@ class control(object):
         if device == 'CANCEL_MOVING':
             self.gui_enabled_moving.remove(self.last_scr)
         else:
-            control.procedure.move_screen_to(self.last_scr,device)
+            self.procedure.move_screen_to(self.last_scr,device)
             self.gui_enabled_moving.append(self.last_scr)
 
 
+    def handle_checkDevices_Button(self):
+        self.procedure.make_read_equal_set_all()
+
+
     def handle_screen_in(self):
-        control.procedure.screen_in()
+        self.procedure.screen_in()
 
     def handle_all_out(self):
-        control.procedure.all_out()
+        self.procedure.all_out()
 
     def handle_in_out(self):
-        sender = control.view.sender()
-        control.procedure.in_out(str(sender.objectName()))
+        sender = self.view.sender()
+        self.procedure.in_out(str(sender.objectName()))
 
     def start_gui_update(self):
         self.timer = QTimer()
@@ -139,16 +142,16 @@ class control(object):
         '''
             generic function that updates values from the procedure and then updates the gui
         '''
-        control.procedure.update_states()
+        self.procedure.update_states()
 
         # check states with self.gui_enabled_moving
         # magic && cancer
         to_delete = []
         for item in self.gui_enabled_moving:
             #print("Checking gui clicked for ", item)
-            if control.procedure.is_moving(item):
+            if self.procedure.is_moving(item):
                 to_delete.append(item)
-            elif control.procedure.set_state_equal_read_state(item):
+            elif self.procedure.set_state_equal_read_state(item):
                 to_delete.append(item)
         for item in to_delete:
             self.gui_enabled_moving.remove(item)
@@ -159,7 +162,7 @@ class control(object):
 
 
 
-        control.view.update_gui()
+        self.view.update_gui()
         #print('update_gui')
 
 
