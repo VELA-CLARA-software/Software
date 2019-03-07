@@ -208,7 +208,7 @@ class Controller():
                 view.colour_map_dropdown.addItem(QtGui.QIcon(icon), name)
 
         view.auto_level_checkbox.stateChanged.connect(self.autoLevelClicked)
-        view.max_level_slider.valueChanged.connect(lambda val: view.max_level_spin.setValue(2 ** val - 1))
+        view.max_level_slider.valueChanged.connect(lambda val: view.max_level_spin.setValue(2 ** (val / 5.0) - 1))
         view.max_level_spin.valueChanged.connect(self.maxLevelChanged)
         # view.acquire_pushButton.clicked.connect(self.model.acquire)
         self.camera_name = None
@@ -515,7 +515,7 @@ class Controller():
     def maxLevelChanged(self, value):
         """The maximum level spinbox has been changed. Update the slider to an approximate position."""
         self.view.max_level_slider.blockSignals(True)  # otherwise we get a feedback loop!
-        self.view.max_level_slider.setValue(int(np.round(np.log2(value + 1))))
+        self.view.max_level_slider.setValue(int(np.round(np.log2(value + 1) * 5)))
         self.view.max_level_slider.blockSignals(False)
         if not self.view.auto_level_checkbox.isChecked():
             self.settings.setValue(self.camera_name + '/maxLevel', value)

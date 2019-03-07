@@ -137,7 +137,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.max_level_slider.sizePolicy().hasHeightForWidth())
         self.max_level_slider.setSizePolicy(sizePolicy)
         self.max_level_slider.setMinimum(1)
-        self.max_level_slider.setMaximum(16)
+        self.max_level_slider.setMaximum(80)
         self.max_level_slider.setProperty("value", 10)
         self.max_level_slider.setOrientation(QtCore.Qt.Horizontal)
         self.max_level_slider.setObjectName(_fromUtf8("max_level_slider"))
