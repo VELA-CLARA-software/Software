@@ -19,11 +19,11 @@ import Software.Utils.dict_to_h5 as h5dict
 
 work_folder = r'\\fed.cclrc.ac.uk\Org\NLab\ASTeC\Projects\VELA\Work'
 data = {}
-data['corrector'] = 'CLA-C2V-MAG-VCOR-01'
+data['corrector'] = 'CLA-C2V-MAG-HCOR-01'
 data['Undulator_Current'] = 120
 scan_pv = epics.PV(data['corrector'] + ':SETI')
 start_value = scan_pv.get()
-min_val, max_val = -5.0, 5.0
+min_val, max_val = -1.2, 3.7
 step = 0.2
 scope_url = 'http://148.79.170.74/data/comm.html?command=:MEASU:MEAS1:VAL?'  # asks for the value of measurement 1
 wait_time = 6.4  # if scope averaging is enabled, need to wait before asking for a measurement
@@ -46,7 +46,7 @@ for i, current in enumerate(scan_range):
     signal_array.append([current, signal])
     print current, signal
 
-print('Scan complete. Restoring {pv_name} to {start_value:.3f} {units}.'.format(pv_name=data['corrector'], **locals()))
+print('Scan complete. Restoring {pv_name} to {start_value:.3f} {units}.'.format(pv_name=data['corrector'], units=scan_pv.units, **locals()))
 scan_pv.put(start_value)  # restore the original value
 data['data'] = signal_array  # store 2d array in HDF5 file - each row is (current, signal) pair
 timestr = time.strftime("%H%M%S")
