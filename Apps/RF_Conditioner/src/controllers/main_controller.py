@@ -25,8 +25,6 @@ class main_controller(controller_base):
         # timer to keep gui going durign startup
         # update timer does nothin gnow
         self.start_up_update()
-
-
         #
         # set base class llrf_types
         controller_base.data.llrf_type = self.llrf_type
@@ -42,10 +40,7 @@ class main_controller(controller_base):
         # start monitoring data
         QApplication.processEvents()
 
-
-
         self.data_monitor.start_monitors()
-
 
         QApplication.processEvents()
         # build the gui and pass in the data
@@ -53,8 +48,6 @@ class main_controller(controller_base):
         # build the gui, atm, the gui gets built last, which means many init messages are not
         # displayed to the gui text box
         self.gui = gui_conditioning()
-
-
 
         #self.gui = main_controller.gui
         self.gui.closing.connect(self.connectCloseEvents)
@@ -151,8 +144,13 @@ class main_controller(controller_base):
 
         # continu eon the last but entry from the pusle_breakdown_log
         # pulse_breakdown has chosen start values, so continue, see get_pulse_count_breakdown_log()
-        print('controller_base.data.amp_sp_history[-1] = ', controller_base.data.amp_sp_history[-1])
+
+        #
         controller_base.llrf_handler.set_amp(controller_base.data.amp_sp_history[-1])
+
+
+        #controller_base.data.values[dat.latest_ramp_up_sp] = controller_base.data.amp_sp_history[-1]
+
         # enforced pause
         #time.sleep(1)
         # start trace averaging, power should be on by now
@@ -200,8 +198,6 @@ class main_controller(controller_base):
                 #
                 # for key,value in controller_base.data_monitor.main_monitor_states.iteritems():
                 #     print(key,value)
-
-
                 # disable checking masks,(precautionary)
                 # controller_base.llrf_handler.set_global_check_mask(False)all
                 # check if spike was vac or DC
@@ -228,9 +224,12 @@ class main_controller(controller_base):
                 #]self.logger.message('PYTHON MAIN LOOP: in state new_good_no_bad',True)
                 # This switch may get set when manually disabling then enabling rf via the GUI button
                 # WE now always ramp down when coming back from an off state ((do we want that when manually disableing RF???)
+
+                # SHOULD THE SEE BEFORE RAMPDOWN???  DEBUG DEBUG
+                controller_base.llrf_handler.set_global_check_mask(True)
                 self.ramp_down()
                 #self.logger.message('PYTHON MAIN LOOP: in state new_good_no_bad, setting Global Check Mask to TRUE',True)
-                controller_base.llrf_handler.set_global_check_mask(True)
+                #controller_base.llrf_handler.set_global_check_mask(True)
 
             # if everything is good carry on increasing
             elif controller_base.data_monitor.all_good():
@@ -248,8 +247,8 @@ class main_controller(controller_base):
                     if self.gui.can_ramp:
                         if controller_base.data.values[dat.breakdown_rate_hi]:
                             if self.has_not_shown_br_hi:
-                                self.logger.message('MAIN :'
-                                                    'continue ramp LOOP all good, but breakdown rate too high: Rate = ' + str(controller_base.data.values[dat.breakdown_rate]))
+                                self.logger.message('MAIN: continue ramp LOOP all good, but breakdown rate too high: '
+                                                    'Rate = ' + str(controller_base.data.values[dat.breakdown_rate]))
                                 self.has_not_shown_br_hi = False
                         elif controller_base.data.values[dat.vac_val_limit_status] == state.BAD:
                             pass
@@ -272,68 +271,107 @@ class main_controller(controller_base):
             #raw_input()
             # end = timer()
             # print(end - start)
-
             #print(controller_base.llrfObj[0].amp_sp, controller_base.data.amp_sp_history[-1])
 
     def continue_ramp_from_DAQ_freq_error(self):
-        #
-        #thsi is causing it to go back down again ....
-        controller_base.llrf_handler.set_amp(controller_base.data.values[dat.latest_ramp_up_sp])
-        self.data.log_kly_fwd_power_vs_amp()
+        self.logger.header(' continue ramp from DAQ freq error ', True)
+        controller_base.llrf_handler.set_amp(controller_base.data.values[dat.last_sp_above_100])
 
+        self.data.log_kly_fwd_power_vs_amp()
 
     def continue_ramp(self):
-        #
-        #this is causing it to go back down again ....
-        #controller_base.llrf_handler.set_amp(controller_base.data.amp_sp_history[-1])
         self.data.log_kly_fwd_power_vs_amp()
-            #self.llrf_control.resetAverageTraces()
-            #self.data_monitor.outside_mask_trace_monitor.reset_event_pulse_count()
-
 
     def ramp_up(self):
-        self.logger.header('ramp_up()', True)
+        self.logger.header(' Ramp Up ', True)
+        setpoint_before_ramp = controller_base.llrfObj[0].amp_sp
+        if setpoint_before_ramp < 100:
+            self.logger.message('!!WARNING!! Current setpoint before Ramp Up = ' + str(setpoint_before_ramp) +
+                                ' suspect a breakdown has very recently occurred! ', True)
+        #
+        # Add
         self.data.add_to_pulse_breakdown_log(controller_base.llrfObj[0].amp_sp)
 
+        # GET NEW SET_POINT
         # new amp always returns a value!!
-        new_amp = controller_base.data.get_new_set_point( controller_base.data.values[dat.next_power_increase]  )
+        new_amp = controller_base.data.get_new_set_point(controller_base.data.values[dat.next_power_increase])
 
+        #
+        # set new_amp
         if controller_base.llrf_handler.set_amp(new_amp):
-            controller_base.data.values[dat.latest_ramp_up_sp] = new_amp
+            pass
         else:
-            # we failed to set the requested ampliture .... erm.... not sure what to do ????
+            # we failed to set the requested amplitude .... erm.... not sure what to do ????
             pass
 
-        # log data
-        self.data.add_to_pulse_breakdown_log(new_amp)
-        # move up curve (when belwo ~1MW
+        #
+        # log data at the new setpoint MUST BE BEFORE  move_up_ramp_curve()
+        #
+        controller_base.llrf_handler.update_amp_vs_kfpow_running_stat()
+        self.data.log_kly_fwd_power_vs_amp()
+        #
+        # move up curve (when below ~1MW
+        ''' !!! also calls set_next_sp_decrease !!!'''
         controller_base.data.move_up_ramp_curve()
-
+        #
+        '''Sanity Check '''
+        if setpoint_before_ramp != controller_base.data.values[dat.next_sp_decrease]:
+            self.logger.message('!!! Warning Unexpected next_sp_decrease ' + str(setpoint_before_ramp) +
+                                ' != ' + str(controller_base.data.values[dat.next_sp_decrease]), True)
+        #
         # update the plot with new values
         self.gui.update_plot()
         QApplication.processEvents()
-
-
+        #
         # reset active pulse counters
         self.data_monitor.outside_mask_trace_monitor.reset_event_pulse_count()
-
-        # log some more data
-        self.data.log_kly_fwd_power_vs_amp()
-
-        self.logger.message('ramp_up FINISHED, current sp =  ' + str(controller_base.llrfObj[0].amp_sp),True)
-
+        #
+        self.logger.message('ramp_up FINISHED, we went from ' + str(setpoint_before_ramp) + ' to ' +  str(new_amp),True)
 
 
     def ramp_down(self):
-        self.logger.message('ramp_down, current sp =  ' + str(controller_base.llrfObj[0].amp_sp),True)
-        controller_base.llrf_handler.enable_llrf()
-        controller_base.llrf_handler.set_amp(controller_base.data.values[dat.next_sp_decrease])
-        self.data.add_to_pulse_breakdown_log(controller_base.llrfObj[0].amp_sp)
+        self.logger.header(' Ramp Down ', True)
+
+        setpoint_before_ramp = controller_base.llrfObj[0].amp_sp
+
+        next_step = 0
+
+        if setpoint_before_ramp < 100:
+            pass
+        else:
+            self.logger.message('!!WARNING!! Current setpoint before Ramp Down = ' + str(setpoint_before_ramp) +
+                                ' This might be high if we are here due to a breakdown .... ! ', True)
+
+
+        if controller_base.data.values[dat.last_106_bd_count] > 30: # MAGIC_NUMBER
+            self.logger.message(str(controller_base.data.values[dat.last_106_bd_count]) +
+                                ' is Too many breakdowns in last million setting sp = 0, and disabling ramping', True)
+            controller_base.llrf_handler.set_amp(0) # MAGIC_NUMBER
+            self.gui.can_ramp = False
+
+        elif controller_base.data.values[dat.last_106_bd_count] > 10: # MAGIC_NUMBER
+            # force a known step-down if breakdown rate is high
+
+            next_step = controller_base.data.values[dat.last_sp_above_100]  - 20.0
+            if controller_base.data.values[dat.next_sp_decrease] < next_step:
+                next_step = controller_base.data.values[dat.next_sp_decrease]
+            elif next_step < 0:
+                next_step = 0
+            self.logger.message('> 10 breakdowns in last million, ramp down to = ' + str(next_step), True)
+
+        else:
+            controller_base.llrf_handler.enable_llrf()
+            next_step = controller_base.data.values[dat.next_sp_decrease]
+
+        controller_base.llrf_handler.set_amp(next_step) # MAGIC_NUMBER
+
+
         self.data_monitor.outside_mask_trace_monitor.reset_event_pulse_count()
         # reset values RENAME
         self.data.move_down_ramp_curve()
-        self.logger.message('ramp_down FINISHED, current sp =  ' + str(controller_base.llrfObj[0].amp_sp), True)
+        self.data.add_to_pulse_breakdown_log(controller_base.llrfObj[0].amp_sp)
 
+        self.logger.message('ramp_down FINISHED, we went from ' + str(setpoint_before_ramp) + ' to ' +  str(next_step),True)
 
 
 

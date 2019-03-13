@@ -136,7 +136,6 @@ class controller_base(base):
 					base.config.breakdown_config[ 'BREAKDOWN_TRACES'])
 			base.config.llrf_config['MEAN_TRACES'] = self.get_full_trace_name(
 					base.config.llrf_config['MEAN_TRACES'])
-
 			controller_base.llrf_handler= llrf_handler.llrf_handler()
 			base.logger.message('start_llrf_control created ' + str(base.llrf_type) +
 			                    ', llrf_handler and got full trace names:',True)
@@ -144,6 +143,12 @@ class controller_base(base):
 				                                                 'TRACES_TO_SAVE']), True)
 			base.logger.message('BREAKDOWN_TRACES:' + ' '.join(base.config.breakdown_config[
 				                                                   'BREAKDOWN_TRACES']), True)
+
+			base.logger.message('Setting Keep alive to TRUE', True)
+			base.llrf_control.setAmpSP(5) # MAGIC_NUMBER
+			base.llrf_control.setKeepAlive(True)
+			base.llrf_control.keepAlive()
+			base.logger.message('Checking canKeepAlive = ' + str(   base.llrf_control.canKeepAlive() ) , True)
 		else:
 			base.llrf_control = None
 			base.logger.message('start_llrf_control can\'t create a llrf_control unknown '

@@ -314,7 +314,7 @@ class spike_monitor(monitor):
                     monitor.data.values[self.data_dict_val_limit_status_key] = state.GOOD
 
                     if self.show_good_level_message:
-                        monitor.logger.message(self.my_name + ' level good|, ' + str(self._latest_value) + ' < ' + str(self.max_level), True)
+                        monitor.logger.message(self.my_name + ' level good, ' + str(self._latest_value) + ' < ' + str(self.max_level), True)
                         self.show_good_level_message = False
                         self.show_bad_level_message = True
 
