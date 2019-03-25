@@ -27,7 +27,7 @@ import VELA_CLARA_LLRF_Control as rf
 rfinit = rf.init()
 therf = rfinit.physical_CLARA_LRRG_LLRF_Controller()
 
-import VELA_CLARA_BPM_Control as bpm
+import VELA_CLARA_BPM_Control as bpm 
 bpminit = bpm.init()
 bpminit.setVerbose()
 bpms = bpminit.physical_CLARA_PH1_BPM_Controller()
@@ -39,35 +39,31 @@ charge = monini.connectPV('CLA-S01-DIA-WCM-01:Q')
 lasE = monini.connectPV('CLA-LAS-DIA-EM-01:E')
 vcsump = monini.connectPV('CLA-VCA-DIA-CAM-01:ANA:Intensity_RBV')
 
-print("Loading in Class Definition")
-
 #exit()
 
 class chargescanner(QtCore.QObject):
 
     changedval = pyqtSignal(float, float, float, float)
-
     # lo, hi and the min and max values of the area on the VC to scan
     # values are mm from bottom left of the VC imagecollector
     # nx,y is number of points to stop and measure charge at in x,y
-    xlo = 3
-    xhi = 7
+    xlo = 4
+    xhi = 8
     ylo = 3
     yhi = 7
     nx = 12
     ny = 12
-#    xlo = 6
-#    xhi = 7
-#    ylo = 6
-#    yhi = 7
+#    xlo = 5
+#    xhi = 6
+#    ylo = 5
+#    yhi = 6
 #    nx = 2
-#    ny = 2
-
+#    ny = 2	
     xrange = np.linspace(xlo,xhi,nx)
     yrange = np.linspace(ylo,yhi,ny)
 
     
-    def doscan(self):
+    def doscan(self): 
         print self.xrange
         print self.yrange
         print therf.getPhiDEG()
@@ -88,9 +84,6 @@ class chargescanner(QtCore.QObject):
         print 'the wcm reading at each point will be recorded in the file qscan.txt'
         print 'which is created whereever you run this script from'
 
-        lasEnow = []
-        chargenow = []
-        vcsumpnow = []
         f = open('qscan'+str(timestr)+'.txt','a')
 
 #exit()
@@ -103,19 +96,19 @@ class chargescanner(QtCore.QObject):
         for x in self.xrange:
             if ix % 2 == 0:
                 dumyrange = self.yrange
-                print 'going up', dumyrange
+                print 'going up', dumyrange 
             else:
-                dumyrange = self.yrange[::-1]
-                print 'going up', dumyrange
-            ix = ix + 1
+                dumyrange = self.yrange[::-1] 
+                print 'going up', dumyrange 
+            ix = ix + 1            
             for y in dumyrange:
                 print x, y, '\n'
-
+               
                 a = pil_control.setVCPos(x,y)
-                # monitor  this paramter to know when ity has finished
+                # monitor  this paramter to know when ity has finished 
                 set_pos_succes = False
 #        exit()
-
+		
                 while 1:
                     set_pos_state = pil_control.getSetVCPosState()
                     print 'success status', set_pos_state
@@ -129,36 +122,11 @@ class chargescanner(QtCore.QObject):
 #        exit()
 #        mylasmove.setposition(x,y,5,0.1)
 #                raw_input("Press Enter to continue...")
-                
-                for l in range(20):
-                    chargenow.append(monini.getValue(charge))
-                    time.sleep(0.1)                
-             
-                
-                if not lasE == 'FAILED':
-                    for l in range(20):
-                        lasEnow.append(monini.getValue(lasE))
-                        time.sleep(0.1)
-                else:
-                    lasEnow.append(-999.0)
-                lasenowmean = np.mean(lasEnow)
-                lasenowsdev = np.std(lasEnow)
-                chargenowmean = np.mean(chargenow)    
-                chargenowsdev = np.std(chargenow)
-                
-                for l in range(20):
-                    vcsumpnow.append(monini.getValue(vcsump))
-                    time.sleep(0.1)
-                    
-                vcsumpnowmean = np.mean(vcsumpnow)
-                vcsumpnowsdev = np.std(vcsumpnow)
-                
-
-                f.write('RF phase '+str(therf.getPhiDEG())+' vcx '+str(x)+' vcy '+str(y)+' charge '+str(chargenowmean)+' charge err '+str(chargenowsdev)+' laserE '+str(lasenowmean)+' lase_Eerr '+str(lasenowsdev)+' VC intens '+str(vcsumpnowmean)+' VCintens err '+str(vcsumpnowsdev)+'\n')
+                chargenow = monini.getValue(charge)
+                lasEnow = monini.getValue(lasE)
+                vcsumpnow = monini.getValue(vcsump)
+                f.write('RF phase '+str(therf.getPhiDEG())+' vcx '+str(x)+' vcy '+str(y)+' charge '+str(chargenow)+' laserE '+str(lasEnow)+' VCintens '+str(vcsumpnow)+'\n')
                 f.flush()
-                self.changedval.emit(x,y,chargenowmean,lasenowmean)
-                del lasEnow[:]
-                del chargenow[:]
-                del vcsumpnow[:]
-
+                self.changedval.emit(x,y,chargenow,lasEnow)
+		
         f.close()
