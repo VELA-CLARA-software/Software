@@ -1,8 +1,9 @@
 from PyQt4 import QtGui, QtCore
 from PyQt4.QtCore import pyqtSignal
 from PyQt4.QtCore import pyqtSlot
+from PyQt4.QtGui import QImage
 import sys,os
-import view
+import testview as view
 import numpy as np
 import pyqtgraph as pg
 import scanner
@@ -53,10 +54,20 @@ class App(QtGui.QApplication):
         self.dataplot = self.view.graphicsView.addPlot(title="My Data")        
         self.dataplot.addItem(self.s3)
         self.dataplot.addLegend()
+        
+        self.view.label.setPixmap(QtGui.QPixmap("legend2.png").scaled(300,300))
+        
+        self.view.textBrowser.append("Scan Log Commencing:");
+        
+        
+#        self.textbox = self.textBrowser
        
 #        self.mygenerator.changedval.connect(self.get_data_vals)
         self.myscanner.changedval.connect(self.get_data_values)    
-           
+        self.myscanner.changedlogtxt.connect(self.get_text_output)    
+ 
+    
+ 
  
         self.MainWindow.show()
         self.processEvents() # otherwise gui window will freeze/hang during data collection
@@ -79,6 +90,11 @@ class App(QtGui.QApplication):
         self.s3.addPoints(myspot)
         print "Hiya", arg1, arg2, arg3, revarg3, arg4
         self.processEvents()
+        
+    @pyqtSlot(str)
+    def get_text_output(self, arg1):
+        self.view.textBrowser.append(arg1)
+        self.processEvents() 
         
 if __name__ == '__main__':
     app = App(sys.argv)

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'untitled_2.ui'
+# Form implementation generated from reading ui file 'untitled_4.ui'
 #
 # Created by: PyQt4 UI code generator 4.11.4
 #
@@ -25,18 +25,26 @@ except AttributeError:
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
-        MainWindow.resize(800, 600)
+        MainWindow.resize(920, 694)
         self.centralwidget = QtGui.QWidget(MainWindow)
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
         self.pushButton = QtGui.QPushButton(self.centralwidget)
-        self.pushButton.setGeometry(QtCore.QRect(40, 20, 75, 23))
+        self.pushButton.setGeometry(QtCore.QRect(40, 20, 131, 101))
         self.pushButton.setObjectName(_fromUtf8("pushButton"))
         self.graphicsView = GraphicsLayoutWidget(self.centralwidget)
-        self.graphicsView.setGeometry(QtCore.QRect(250, 100, 461, 361))
+        self.graphicsView.setGeometry(QtCore.QRect(390, 20, 461, 361))
         self.graphicsView.setObjectName(_fromUtf8("graphicsView"))
+        self.textBrowser = QtGui.QTextBrowser(self.centralwidget)
+        self.textBrowser.setGeometry(QtCore.QRect(390, 410, 451, 171))
+        self.textBrowser.setObjectName(_fromUtf8("textBrowser"))
+        self.label = QtGui.QLabel(self.centralwidget)
+#        self.label.setGeometry(QtCore.QRect(270, 40, 91, 351))
+        self.label.setGeometry(QtCore.QRect(150, 20, 250, 400))
+        self.label.setText(_fromUtf8(""))
+        self.label.setObjectName(_fromUtf8("label"))
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 21))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 920, 21))
         self.menubar.setObjectName(_fromUtf8("menubar"))
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtGui.QStatusBar(MainWindow)
