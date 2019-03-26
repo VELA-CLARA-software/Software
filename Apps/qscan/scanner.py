@@ -36,7 +36,11 @@ import VELA_CLARA_General_Monitor as mon
 monini = mon.init()
 
 charge = monini.connectPV('CLA-S01-DIA-WCM-01:Q')
-lasE = monini.connectPV('CLA-LAS-DIA-EM-01:E')
+
+lasE = monini.connectPV('CLA-LAS-DIA-EM-01:E') # laser pulse E from diode next to ophir
+
+lasEc = monini.connectPV('CLA-LAS-DIA-EM-02:E') # laser pulse E from diode in cathode position
+
 vcsump = monini.connectPV('CLA-VCA-DIA-CAM-01:ANA:Intensity_RBV')
 
 print("Loading in Class Definition")
@@ -89,6 +93,7 @@ class chargescanner(QtCore.QObject):
         print 'which is created whereever you run this script from'
 
         lasEnow = []
+        lasEcnow = []
         chargenow = []
         vcsumpnow = []
         f = open('qscan'+str(timestr)+'.txt','a')
@@ -141,8 +146,18 @@ class chargescanner(QtCore.QObject):
                         time.sleep(0.1)
                 else:
                     lasEnow.append(-999.0)
+                    
+                if not lasEc == 'FAILED':
+                    for l in range(20):
+                        lasEcnow.append(monini.getValue(lasEc))
+                        time.sleep(0.1)
+                else:
+                    lasEcnow.append(-999.0)        
+                
                 lasenowmean = np.mean(lasEnow)
                 lasenowsdev = np.std(lasEnow)
+                lasecnowmean = np.mean(lasEcnow)
+                lasecnowsdev = np.std(lasEcnow)
                 chargenowmean = np.mean(chargenow)    
                 chargenowsdev = np.std(chargenow)
                 
@@ -154,10 +169,11 @@ class chargescanner(QtCore.QObject):
                 vcsumpnowsdev = np.std(vcsumpnow)
                 
 
-                f.write('RF phase '+str(therf.getPhiDEG())+' vcx '+str(x)+' vcy '+str(y)+' charge '+str(chargenowmean)+' charge err '+str(chargenowsdev)+' laserE '+str(lasenowmean)+' lase_Eerr '+str(lasenowsdev)+' VC intens '+str(vcsumpnowmean)+' VCintens err '+str(vcsumpnowsdev)+'\n')
+                f.write('RF phase '+str(therf.getPhiDEG())+' vcx '+str(x)+' vcy '+str(y)+' charge '+str(chargenowmean)+' charge err '+str(chargenowsdev)+' laserE '+str(lasenowmean)+' lase_Eerr '+str(lasenowsdev)+' VC intens '+str(vcsumpnowmean)+' VCintens err '+str(vcsumpnowsdev)+' las E cath '+str(lasecnowmean)+' las E cath err '+str(lasecnowsdev)+'\n')
                 f.flush()
                 self.changedval.emit(x,y,chargenowmean,lasenowmean)
                 del lasEnow[:]
+                del lasEcnow[:]
                 del chargenow[:]
                 del vcsumpnow[:]
 
