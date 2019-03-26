@@ -171,6 +171,9 @@ class chargescanner(QtCore.QObject):
 
                 f.write('RF phase '+str(therf.getPhiDEG())+' vcx '+str(x)+' vcy '+str(y)+' charge '+str(chargenowmean)+' charge err '+str(chargenowsdev)+' laserE '+str(lasenowmean)+' lase_Eerr '+str(lasenowsdev)+' VC intens '+str(vcsumpnowmean)+' VCintens err '+str(vcsumpnowsdev)+' las E cath '+str(lasecnowmean)+' las E cath err '+str(lasecnowsdev)+'\n')
                 f.flush()
+                
+                pil_control.collectAndSave(1)
+                time.sleep(2)
                 self.changedval.emit(x,y,chargenowmean,lasenowmean)
                 del lasEnow[:]
                 del lasEcnow[:]

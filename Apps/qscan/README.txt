@@ -9,3 +9,7 @@ This is the exact set of files used for doing the laser virtual cathode scans  w
 26th March 2019, 11:30
 !!!!PLEASE NOTE:  UNTESTED!!!!!.
 Added monitoring of second photodiode at cathode position CLA-LAS-DIA-EM-02:E for laser/mirror/cathode studies. 
+
+26th March 2019, 12:00
+!!!!PLEASE NOTE:  UNTESTED!!!!!.
+Trivial modification to previous version to save VC images at each grid point in the scan.
