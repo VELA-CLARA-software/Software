@@ -6,6 +6,20 @@ import view
 import numpy as np
 
 sys.path.append("\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\stage\\")
+# or should this be sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release')
+
+# needed for CLARA screens/cams
+os.environ["PATH"] = os.environ["PATH"]+";\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release\\root_v5.34.34\\bin\\"
+
+
+import VELA_CLARA_Camera_Control as cam
+cam_init = cam.init()
+cam_init.setVerbose()
+cam_control = cam_init.physical_Camera_Controller()
+
+# check which camera will be used for cathode position it might not be CAM01
+cam_control.startAcquiring('CAM01')
+
 #
 #for item in sys.path:
 #	print item
@@ -174,6 +188,10 @@ class chargescanner(QtCore.QObject):
                 
                 pil_control.collectAndSave(1)
                 time.sleep(2)
+                
+                cam_control.collectAndSave(1)
+                time.sleep(2)
+                
                 self.changedval.emit(x,y,chargenowmean,lasenowmean)
                 del lasEnow[:]
                 del lasEcnow[:]

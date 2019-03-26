@@ -13,3 +13,7 @@ Added monitoring of second photodiode at cathode position CLA-LAS-DIA-EM-02:E fo
 26th March 2019, 12:00
 !!!!PLEASE NOTE:  UNTESTED!!!!!.
 Trivial modification to previous version to save VC images at each grid point in the scan.
+
+26th March 2019, ~13:00
+!!!!PLEASE NOTE:  UNTESTED and likely needs debugging!!!!.
+Added saving of an addition CLARA camera image at each VC gridpoint. This camera will be placed at the cathode position. It is highly likely that this version will need debugging. 
