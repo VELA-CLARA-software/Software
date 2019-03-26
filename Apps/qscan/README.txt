@@ -17,3 +17,11 @@ Trivial modification to previous version to save VC images at each grid point in
 26th March 2019, ~13:00
 !!!!PLEASE NOTE:  UNTESTED and likely needs debugging!!!!.
 Added saving of an addition CLARA camera image at each VC gridpoint. This camera will be placed at the cathode position. It is highly likely that this version will need debugging. 
+
+26th March 2019, ~18:00
+!!!!PLEASE NOTE:  UNTESTED and likely needs debugging!!!!.
+Added mathematica notebook to plot scan data. But did not update this README file
+
+26th March 2019, ~18:05
+!!!!PLEASE NOTE:  UNTESTED and likely needs debugging!!!!.
+Updated the README file. 
