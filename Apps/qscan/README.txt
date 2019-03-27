@@ -25,3 +25,6 @@ Added mathematica notebook to plot scan data. But did not update this README fil
 26th March 2019, ~18:05
 !!!!PLEASE NOTE:  UNTESTED and likely needs debugging!!!!.
 Updated the README file. 
+
+27th March 2019, ~1500
+First time used succesfully. Tested the changes of the previous versions by doing a scan with cathode removed and photodiode in place. Seemed to work OK  
