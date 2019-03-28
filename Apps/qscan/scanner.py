@@ -18,7 +18,7 @@ cam_init.setVerbose()
 cam_control = cam_init.physical_Camera_Controller()
 
 # check which camera will be used for cathode position it might not be CAM01
-cam_control.startAcquiring('CAM01')
+cam_control.startAcquiring('S01-CAM-01')
 
 #
 #for item in sys.path:
@@ -72,8 +72,8 @@ class chargescanner(QtCore.QObject):
     xhi = 7
     ylo = 3
     yhi = 7
-    nx = 12
-    ny = 12
+    nx = 6
+    ny = 6
 #    xlo = 6
 #    xhi = 7
 #    ylo = 6
@@ -151,20 +151,20 @@ class chargescanner(QtCore.QObject):
                 
                 for l in range(20):
                     chargenow.append(monini.getValue(charge))
-                    time.sleep(0.1)                
+                    time.sleep(0.11)                
              
                 
                 if not lasE == 'FAILED':
                     for l in range(20):
                         lasEnow.append(monini.getValue(lasE))
-                        time.sleep(0.1)
+                        time.sleep(0.11)
                 else:
                     lasEnow.append(-999.0)
                     
                 if not lasEc == 'FAILED':
                     for l in range(20):
                         lasEcnow.append(monini.getValue(lasEc))
-                        time.sleep(0.1)
+                        time.sleep(0.11)
                 else:
                     lasEcnow.append(-999.0)        
                 
@@ -177,7 +177,7 @@ class chargescanner(QtCore.QObject):
                 
                 for l in range(20):
                     vcsumpnow.append(monini.getValue(vcsump))
-                    time.sleep(0.1)
+                    time.sleep(0.11)
                     
                 vcsumpnowmean = np.mean(vcsumpnow)
                 vcsumpnowsdev = np.std(vcsumpnow)

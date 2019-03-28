@@ -28,3 +28,6 @@ Updated the README file.
 
 27th March 2019, ~1500
 First time used succesfully. Tested the changes of the previous versions by doing a scan with cathode removed and photodiode in place. Seemed to work OK  
+
+28th March 2019, ~0030
+Just saving a version of the code used at the end of the day on 27th March, also added the MMA notebook used to plot results.  
