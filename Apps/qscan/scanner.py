@@ -51,9 +51,12 @@ monini = mon.init()
 
 charge = monini.connectPV('CLA-S01-DIA-WCM-01:Q')
 
-lasE = monini.connectPV('CLA-LAS-DIA-EM-01:E') # laser pulse E from diode next to ophir
+#lasE = monini.connectPV('CLA-LAS-DIA-EM-01:E') # laser pulse E from diode next to ophir
+lasE = monini.connectPV('EBT-B03-IOC-CS-04:FMC_2_CH_0_SUM_out')
 
-lasEc = monini.connectPV('CLA-LAS-DIA-EM-02:E') # laser pulse E from diode in cathode position
+
+#lasEc = monini.connectPV('CLA-LAS-DIA-EM-02:E') # laser pulse E from diode in cathode position
+lasEc = monini.connectPV('EBT-B03-IOC-CS-04:FMC_2_CH_2_SUM_out') # measure of energy with gives linear respose to laser energy, LA-LAS-DIA-EM-02:E doesn't
 
 vcsump = monini.connectPV('CLA-VCA-DIA-CAM-01:ANA:Intensity_RBV')
 
@@ -68,12 +71,12 @@ class chargescanner(QtCore.QObject):
     # lo, hi and the min and max values of the area on the VC to scan
     # values are mm from bottom left of the VC imagecollector
     # nx,y is number of points to stop and measure charge at in x,y
-    xlo = 3
-    xhi = 7
-    ylo = 3
-    yhi = 7
-    nx = 6
-    ny = 6
+    xlo = 1
+    xhi = 8.5
+    ylo = 2
+    yhi = 10
+    nx = 16
+    ny = 17
 #    xlo = 6
 #    xhi = 7
 #    ylo = 6
@@ -151,23 +154,22 @@ class chargescanner(QtCore.QObject):
                 
                 for l in range(20):
                     chargenow.append(monini.getValue(charge))
-                    time.sleep(0.11)                
-             
-                
-                if not lasE == 'FAILED':
-                    for l in range(20):
-                        lasEnow.append(monini.getValue(lasE))
-                        time.sleep(0.11)
-                else:
-                    lasEnow.append(-999.0)
-                    
-                if not lasEc == 'FAILED':
-                    for l in range(20):
-                        lasEcnow.append(monini.getValue(lasEc))
-                        time.sleep(0.11)
-                else:
-                    lasEcnow.append(-999.0)        
-                
+                    lasEnow.append(monini.getValue(lasE))
+                    lasEcnow.append(monini.getValue(lasEc))
+                    vcsumpnow.append(monini.getValue(vcsump))
+                    time.sleep(0.11)
+#                if not lasE == 'FAILED':
+#                    for l in range(20):
+#                        lasEnow.append(monini.getValue(lasE))
+#                        time.sleep(0.11)
+#                else:
+#                    lasEnow.append(-999.0)
+#                if not lasEc == 'FAILED':
+#                    for l in range(20):
+#                        lasEcnow.append(monini.getValue(lasEc))
+#                        time.sleep(0.11)
+#                else:
+#                    lasEcnow.append(-999.0)
                 lasenowmean = np.mean(lasEnow)
                 lasenowsdev = np.std(lasEnow)
                 lasecnowmean = np.mean(lasEcnow)
@@ -175,9 +177,9 @@ class chargescanner(QtCore.QObject):
                 chargenowmean = np.mean(chargenow)    
                 chargenowsdev = np.std(chargenow)
                 
-                for l in range(20):
-                    vcsumpnow.append(monini.getValue(vcsump))
-                    time.sleep(0.11)
+#                for l in range(20):
+#                    vcsumpnow.append(monini.getValue(vcsump))
+#                    time.sleep(0.11)
                     
                 vcsumpnowmean = np.mean(vcsumpnow)
                 vcsumpnowsdev = np.std(vcsumpnow)
@@ -186,11 +188,11 @@ class chargescanner(QtCore.QObject):
                 f.write('RF phase '+str(therf.getPhiDEG())+' vcx '+str(x)+' vcy '+str(y)+' charge '+str(chargenowmean)+' charge err '+str(chargenowsdev)+' laserE '+str(lasenowmean)+' lase_Eerr '+str(lasenowsdev)+' VC intens '+str(vcsumpnowmean)+' VCintens err '+str(vcsumpnowsdev)+' las E cath '+str(lasecnowmean)+' las E cath err '+str(lasecnowsdev)+'\n')
                 f.flush()
                 
-                pil_control.collectAndSave(1)
+                pil_control.collectAndSave(10)
                 time.sleep(2)
                 
-                cam_control.collectAndSave(1)
-                time.sleep(2)
+#                cam_control.collectAndSave(1)
+#                time.sleep(2)
                 
                 self.changedval.emit(x,y,chargenowmean,lasenowmean)
                 del lasEnow[:]

@@ -31,3 +31,6 @@ First time used succesfully. Tested the changes of the previous versions by doin
 
 28th March 2019, ~0030
 Just saving a version of the code used at the end of the day on 27th March, also added the MMA notebook used to plot results.  
+
+28th March 2019, ~2150
+Saving a version of the code + MMA used at the end of the day on 28th March. Changes from 27th March included different way of reading the laser photodiode signals and thus different PVs for these. Also change to get means/stdevs within same loop to speed up. And scan ranges changed slightly.   
