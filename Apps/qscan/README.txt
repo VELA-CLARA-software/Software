@@ -34,3 +34,8 @@ Just saving a version of the code used at the end of the day on 27th March, also
 
 28th March 2019, ~2150
 Saving a version of the code + MMA used at the end of the day on 28th March. Changes from 27th March included different way of reading the laser photodiode signals and thus different PVs for these. Also change to get means/stdevs within same loop to speed up. And scan ranges changed slightly.   
+
+4th April 2019, ~1530
+After 28th March, there were more scans on 29th March. On this day, the photodiode at the cathode was moved to allow a large scan range to all fit on the photodiode (on previous days we'd fallen off the edge of the photodiode). In the morning of 29th there were two scans with this new photodiode position at 1051 and 1153. THEN THE NEW light box mirror put in place. Everything was still at air pressure. One scan was completed at 1404 with the new light box mirror. 
+
+

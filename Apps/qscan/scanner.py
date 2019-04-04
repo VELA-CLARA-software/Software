@@ -71,12 +71,20 @@ class chargescanner(QtCore.QObject):
     # lo, hi and the min and max values of the area on the VC to scan
     # values are mm from bottom left of the VC imagecollector
     # nx,y is number of points to stop and measure charge at in x,y
+#    xlo = 1
+#    xhi = 8.5
+#    ylo = 2
+#    yhi = 10
+#    nx = 16
+#    ny = 17
+
     xlo = 1
     xhi = 8.5
     ylo = 2
     yhi = 10
     nx = 16
     ny = 17
+
 #    xlo = 6
 #    xhi = 7
 #    ylo = 6
@@ -188,7 +196,7 @@ class chargescanner(QtCore.QObject):
                 f.write('RF phase '+str(therf.getPhiDEG())+' vcx '+str(x)+' vcy '+str(y)+' charge '+str(chargenowmean)+' charge err '+str(chargenowsdev)+' laserE '+str(lasenowmean)+' lase_Eerr '+str(lasenowsdev)+' VC intens '+str(vcsumpnowmean)+' VCintens err '+str(vcsumpnowsdev)+' las E cath '+str(lasecnowmean)+' las E cath err '+str(lasecnowsdev)+'\n')
                 f.flush()
                 
-                pil_control.collectAndSave(10)
+                pil_control.collectAndSave(1)
                 time.sleep(2)
                 
 #                cam_control.collectAndSave(1)
