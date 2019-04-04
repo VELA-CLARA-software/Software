@@ -8,4 +8,15 @@ The getWCMevts.py file is to be run in the CLARA work folder where the HRRG cond
 
 where the "log.txt" file is created by the conditiong script. It contains the times of each conditioning 'event'. 
 
-The getWCMevts.py script reads the log.txt file, gets the timestamp of the 'event', and uses this timestamp to pull the WCM trace data from the EPICS archive. It plots and saves the WCM trace (as pngs) at that timestamp, and also saves the trace data in ascii format to wcmevents.txt. It creates a WCM folder and puts the plots and wcmevents.txt file in it.   
+The getWCMevts.py script reads the log.txt file, gets the timestamp of the 'event' (to the microsecond), and uses this timestamp to pull the WCM trace data from the EPICS archive.
+
+For each event timestamp, the following WCM trace data is extracted from the archive:
+-the trace 0.01 seconds BEFORE the timestamp, 
+-the trace AT the timestamp
+-the trace 0.01 seconds AFTER the timestamp, 
+
+(0.01 seconds becuase the gun was conditioned at 100 Hz)
+
+The traces are saved both as plots (with titles which indicate the timestamp) and as also ascii format to wcmevents.txt. 
+
+It creates a WCM folder and puts the plots and wcmevents.txt file in it.   
