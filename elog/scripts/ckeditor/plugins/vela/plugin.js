@@ -7,7 +7,7 @@
 if (window.location.pathname.includes('/VELA/')) {
     machineAreas = ['Gun', 'Linac1', 'Straight 2', 'C2V', 'VELA Straight 2', 'BA1', 'BA1 Motors'];
 } else if (window.location.pathname.includes('/SRF+Lab+(ESS)/')) {
-    machineAreas = []; // SRF-specific area names go here
+    machineAreas = ['ESS Cryostat', 'ESS LLRF']; // SRF-specific area names go here
 } else {
     machineAreas = [];
 }
