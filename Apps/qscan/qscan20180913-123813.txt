@@ -1,0 +1,4 @@
+RF phase 155.739255823 vcx 5.5 vcy 4.5 charge 81.7562331771 laserE None
+RF phase 155.739255823 vcx 5.5 vcy 4.6 charge 61.9027331716 laserE None
+RF phase 155.739255823 vcx 5.6 vcy 4.5 charge 59.4567756704 laserE None
+RF phase 155.739255823 vcx 5.6 vcy 4.6 charge 61.7851357651 laserE None
