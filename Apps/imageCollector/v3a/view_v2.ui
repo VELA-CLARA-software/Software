@@ -179,7 +179,7 @@
       <item>
        <layout class="QHBoxLayout" name="level_auto_hbox">
         <item>
-         <widget class="QLabel" name="label_3">
+         <widget class="QLabel" name="max_level_label">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
             <horstretch>0</horstretch>
@@ -217,7 +217,7 @@
            <number>1</number>
           </property>
           <property name="maximum">
-           <number>16</number>
+           <number>80</number>
           </property>
           <property name="value">
            <number>10</number>

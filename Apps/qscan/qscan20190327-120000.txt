@@ -1,0 +1,4 @@
+RF phase 0.0 vcx 3.0 vcy 3.0 charge 2.00712430732 charge err 0.637203485836 laserE 4.44485043374e-06 lase_Eerr 5.1478212787e-08 VC intens 719388670.85 VCintens err 569624.621935 las E cath 33114.65 las E cath err 25.0704507339
+RF phase 0.0 vcx 3.0 vcy 7.0 charge 1.94264557926 charge err 0.634993999237 laserE 4.24205397564e-06 lase_Eerr 3.05885094769e-08 VC intens 721472744.5 VCintens err 412073.834822 las E cath 48969.15 las E cath err 153.631141049
+RF phase 0.0 vcx 7.0 vcy 7.0 charge 1.91969936658 charge err 0.625533762695 laserE 4.34794418876e-06 lase_Eerr 2.28207221378e-08 VC intens 719534917.85 VCintens err 774311.769496 las E cath 44023.45 las E cath err 222.227467924
+RF phase 0.0 vcx 7.0 vcy 3.0 charge 2.03470757255 charge err 0.607829587442 laserE 4.37928756814e-06 lase_Eerr 4.46508531234e-08 VC intens 718755969.7 VCintens err 588268.823419 las E cath 33235.6 las E cath err 17.1534253139

@@ -35,6 +35,9 @@ class StdRedirector(object):
         else:  # save up text for when a text widget becomes available
             self.text_log += string
 
+    def flush(self):
+        self.stdout.flush()
+
 
 class App(QtGui.QApplication):
     def __init__(self, sys_argv):
