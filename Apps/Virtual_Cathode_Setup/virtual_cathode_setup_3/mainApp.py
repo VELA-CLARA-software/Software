@@ -37,17 +37,13 @@ from PyQt4 import QtGui
 from src.controller import controller
 
 class App(QtGui.QApplication):
+    # use sys_argv to pass in arguments
     def __init__(self, sys_argv):
-        # sys.exit(app.exec_())
         QtGui.QApplication.__init__(self, sys_argv)
-        # QtGui.QWidget.__init__(self, sys_argv)
-        print('creating controller')
         self.control = controller(sys_argv)
+        self.control.view.setWindowIcon(QtGui.QIcon(
+                'resources\\Virtual_Cathode_App\\Virtual_Cathode_App.ico'))
 
 if __name__ == '__main__':
-    print('creating controller')
-
     app = App(sys.argv)
-    print('creating controller')
-
     sys.exit(app.exec_())

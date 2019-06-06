@@ -41,7 +41,8 @@ from PyQt4 import QtGui, QtCore
 
 from viewSource.ellipseROIoverloads import EllipseROI_OneHandle
 from viewSource.ellipseROIoverloads import EllipseROI_NoHandle
-from viewSource.Ui_mainView import Ui_mainView
+#from viewSource.Ui_mainView import Ui_mainView
+from viewSource.Ui_virtual_cathode_app import Ui_mainView
 from numpy import array
 from numpy import random
 from numpy import linspace
@@ -319,7 +320,7 @@ class mainView(QtGui.QMainWindow, Ui_mainView ):
         widget.setText("%i" % self.data.values.get(value))
 
     def update_real(self, widget, value, dummy):
-        widget.setText("%.3f" % self.data.values.get(value))
+        widget.setText("%.2f" % self.data.values.get(value))
 
     def update_image(self, widget, value, dummy):
         self.vc_image.setImage(image = self.data.values.get(value),autoDownsample=True)
@@ -401,6 +402,7 @@ class mainView(QtGui.QMainWindow, Ui_mainView ):
         self.widget_to_dataname[self.last_directory] = data.last_save_dir
         self.widget_to_dataname[self.last_directory] = data.last_save_dir
         self.widget_to_dataname[self.set_pos_pushButton] = data.is_setting_pos
+        self.widget_to_dataname[self.rs_buffer_size] = data.rs_buffer_size
         # the below don't exist yet
         # self.widget_to_dataname[self.int_val] = data.int_val
         # self.widget_to_dataname[self.int_val_2] = data.int_val
@@ -470,6 +472,11 @@ class mainView(QtGui.QMainWindow, Ui_mainView ):
         self.widget_updatefunc[self.last_filename] = [self.update_string]
         self.widget_updatefunc[self.last_directory] = [self.update_latest_dir]
         self.widget_updatefunc[self.set_pos_pushButton] =  [self.update_set_pos_button]
+
+        self.widget_updatefunc[self.set_pos_pushButton] =  [self.update_set_pos_button]
+        self.widget_updatefunc[self.rs_buffer_size] =  [self.update_int]
+
+
         # the below don't exist yet
         # self.widget_updatefunc[self.int_val] = [self.update_real]
         # self.widget_updatefunc[self.int_val_2] = [self.update_real]

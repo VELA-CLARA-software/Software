@@ -78,7 +78,7 @@ class controller(QtGui.QApplication):
         print('controller closing')
         del self.model.init
         print("goodbye 1")
-        del self.model.initShut
+#        del self.model.initShut
         print("goodbye 2")
 
 
