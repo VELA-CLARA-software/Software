@@ -228,6 +228,7 @@ class mainView(QtGui.QMainWindow, Ui_mainView ):
             self.set_button_color(key, false_color)
             key.setText(false_text)
 
+
     def set_button_color(self,widget,col=""):
         if col == "green":
             widget.setStyleSheet("color: white; background-color: QLinearGradient( x1: 0, y1: 0, "
