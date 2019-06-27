@@ -1,9 +1,0 @@
-2018-12-18 16:26:22.085000 *
-*** main_controller creating HWC ***
-2018-12-18 16:26:24.195000 *
-*** llrf_handler setting all SCAN to passive***
-2018-12-18 16:26:24.197000 *
-*** llrf_handler start_trace_monitoring()***
-2018-12-18 16:26:24.261000 *
-*** llrf_handler setup_trace_rolling_average***
-2018-12-18 16:26:24.262000 starting rolling average for HRRG_CAVITY_REVERSE_PHASE (CRPHA)
