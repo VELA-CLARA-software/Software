@@ -4,14 +4,25 @@ creat an app
 
 create a main_controller
 
-read the config file
+create config
+	read the config file
+	parse the config file, and 1st sanity check of entires
 
-parse the config file, and 1st sanity check of entires
+create rf_conditioning_data_logger
+	check / create directories for log files
+		working_directory
+			AMP_POWER_LOG_FILENAME
+			PULSE_COUNT_BREAKDOWN_LOG_FILENAME
+				- sub_directory for this run (directory name = time and date of creation)
+	check / create directories text log files
+		AMP_POWER_LOG_FILENAME  exists
+		PULSE_COUNT_BREAKDOWN_LOG_FILENAME exists
+		start log.txt 	
+		parse AMP_POWER_LOG_FILENAME 
+		parse PULSE_COUNT_BREAKDOWN_LOG_FILENAME 
 
-start data logging 
+Creat CATAP Hardware Modules
 
-Create the directories and log files,
-working_directory:
-	AMP_POWER_LOG_FILENAME
-	PULSE_COUNT_BREAKDOWN_LOG_FILENAME
-	- sub_directory for this run (directory name time and date of creation)
+
+
+

@@ -63,8 +63,18 @@ class main_controller(object):
         #
 
 
-        #
-        # set then read the config file
+
+
+
+
+
+
+
+
+
+
+
+
 
     def quit_app(self, message=""):
         print(message)
