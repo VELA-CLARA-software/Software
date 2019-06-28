@@ -36,15 +36,18 @@
 #import time
 #import os
 
+from src.controllers.hardware_control_hub import hardware_control_hub
 from src.data import config
-from src.data import rf_conditioning_data_logger
+from src.data import rf_conditioning_logger
+from src.data import rf_conditioning_data
 
 
 #class main_controller(controller_base):
 class main_controller(object):
     #
     # other attributes will be initialised in base-class
-    def __init__(self, argv, config_file):
+    def __init__(self, argv, config_file, debug = False):
+        self.debug = debug
         # args passed in from command line
         self.argv = argv
         # whoami
@@ -56,11 +59,18 @@ class main_controller(object):
         self.get_config(config_file)
         print(self.my_name + ', got Config, starting Logging\n')
         #
-        # start logging
-        self.logger = rf_conditioning_data_logger.rf_conditioning_data_logger()
+        # start logging, sets up main text file logging, and logs the config
+        self.logger = rf_conditioning_logger.rf_conditioning_logger(debug=self.debug)
+        self.logger.setup_text_log_files()
+        self.logger.log_config()
         #
-        # Log the config File
+        self.data = rf_conditioning_data.rf_conditioning_data(debug=self.debug)
+        self.data.setup_pulse_count_breakdown_log()
+
         #
+        #
+        # self.hardware = hardware_control_hub()
+        # self.hardware.initialise()
 
 
 

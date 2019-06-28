@@ -6,7 +6,7 @@ from VELA_CLARA_LLRF_Control import LLRF_TYPE
 # import VELA_CLARA_RF_Modulator_Control
 # import VELA_CLARA_RF_Protection_Control
 from src.data.config import config_reader
-from src.data.data_logger import data_logger
+from src.data.logger import logger
 import llrf_handler
 import datetime
 from src.data_monitors.data_monitoring import data_monitoring

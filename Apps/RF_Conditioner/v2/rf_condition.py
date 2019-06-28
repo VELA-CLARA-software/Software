@@ -29,10 +29,10 @@ class rf_condition(QtGui.QApplication):
 		QtGui.QApplication.__init__(self, argv)
 		#
 		# only run if a config file was passed
-		if len(argv) == 2:
+		if len(argv) == 3:
 			#
 			# Everything is handled by a main _controller
-			self.controller = main_controller(argv, config_file=argv[1])
+			self.controller = main_controller(argv, config_file=argv[1], debug=argv[2] )
 
 
 if __name__ == '__main__':

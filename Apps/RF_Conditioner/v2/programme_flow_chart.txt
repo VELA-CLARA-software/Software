@@ -8,7 +8,7 @@ create config
 	read the config file
 	parse the config file, and 1st sanity check of entires
 
-create rf_conditioning_data_logger
+create rf_conditioning_logger
 	check / create directories for log files
 		working_directory
 			AMP_POWER_LOG_FILENAME
@@ -21,7 +21,9 @@ create rf_conditioning_data_logger
 		parse AMP_POWER_LOG_FILENAME 
 		parse PULSE_COUNT_BREAKDOWN_LOG_FILENAME 
 
-Creat CATAP Hardware Modules
+Create Data class (?)
+
+Create CATAP Hardware Modules
 
 
 

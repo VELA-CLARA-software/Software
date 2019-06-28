@@ -18,7 +18,7 @@
 //
 //  Author:      DJS
 //  Last edit:   243-06-2019
-//  FileName:    rf_conditioning_data_logger.py
+//  FileName:    rf_conditioning_logger.py
 //  Description: Holds a data logger and knows how to write data specifically for RF
 //               conditioning
 //*/
@@ -29,7 +29,7 @@ from datetime import datetime
 import os
 import cPickle as pkl
 from src.data.config import config
-from src.data.data_logger import data_logger
+from src.data.logger import logger
 import numpy
 # import src.data.rf_condition_data_base as dat
 # import wolframclient.serializers as wxf
@@ -38,39 +38,70 @@ import sys
 import traceback
 
 
-class rf_conditioning_data_logger(data_logger):
+class rf_conditioning_logger(logger):
     '''
-    inherits from data_logger
+    inherits from logger
     knows about all the craziness required for logging RF conditioning data
     this class should only be for the RF conditioning app
-    data_logger, should be, and is intended to be, more generic and useable elsewhere
-    rf_conditioning_data_logger knows about these files:
+    logger, should be, and is intended to be, more generic and useable elsewhere
+    rf_conditioning_logger knows about these files:
         OUTSIDE_MASK_FORWARD_FILENAME =>  WHERETO PUT OUTSIDE FORWARD EVENTS
         OUTSIDE_MASK_REVERSE_FILENAME =>  WHERETO PUT OUTSIDE REVERSE EVENTS
         OUTSIDE_MASK_PROBE_FILENAME   =>  WHERETO PUT OUTSIDE PROBE EVENTS
         PULSE_COUNT_BREAKDOWN_LOG_FILENAME =>  History of pulse number / breakdown count
         AMP_POWER_LOG_FILENAME  =>  History of amp setpoint and KFPOW values
-    the base-class data_logger handles the text log and binary data log
+    the base-class logger handles the text log and binary data log
+
+    rf_conditioning_logger.debug is a flag that when true, the working directory is not
+    created anew, with the current timestamp, instead all files go in config.LOG_DIRECTORY
     '''
+    debug = False
 
-    def __init__(self):
-        data_logger.__init__(self)
-        self.my_name = 'rf_conditioning_data_logger'
+    _pulse_count_log_file = None
+    _pulse_count_log_file_obj = None
 
-        # has a config reader to get the config parameters to pass to data_logger
+    _amp_power_log_file_obj = None
+    _amp_power_log_file = None
+
+
+    def __init__(self, debug=False):
+        logger.__init__(self)
+        # debug = True sets the working directory directory to not be timestamped,
+        # folder, to make
+        rf_conditioning_logger.debug = debug
+        self.my_name = 'rf_conditioning_logger'
+
+        # has a config reader to get the config parameters to pass to logger
         # WE ASSUME THE CONFIG HAS BEEN PARSED CORRECTLY!
         self.config = config()
         self.config_data = self.config.raw_config_data
-        #
-        # first setup / check the text log files
-        self.setup_text_log_files()
-        #
-        self.log_config()
+
+    def get_pulse_count_breakdown_log(self):
+        '''
+        read the pulse_breakdown_count log file and put the contents in log
+        create a file object _pulse_count_log_file_obj to use for appending new data
+        :return: log (nested list of pulse_breakdown_log entries
+        '''
+        self.message_header(self.my_name + ' get pulse_count_breakdown_log',add_to_text_log=True,
+                            show_time_stamp=False)
+        self.message('FileName =  ' + rf_conditioning_logger._pulse_count_log_file ,
+                     add_to_text_log=True, show_time_stamp=True)
+        log = []
+        with open(rf_conditioning_logger._pulse_count_log_file) as f:
+            lines = list(line for line in (l.strip() for l in f) if line)
+            for line in lines:
+                if '#' not in line:
+                    log.append([int(x) for x in line.split()])
+        self.message('Read pulse_count_breakdown_log', add_to_text_log=True, show_time_stamp=True)
+        rf_conditioning_logger._pulse_count_log_file_obj = open(
+            rf_conditioning_logger._pulse_count_log_file, 'a')
+        return log
+
 
     def setup_text_log_files(self):
         """
         Creates the working directories, data file objects for writing the various
-        rf_conditioning data files
+        rf_conditioning data files, only call this once per applciation
         :return:
         """
         self.set_log_directories()
@@ -79,22 +110,27 @@ class rf_conditioning_data_logger(data_logger):
     def set_log_directories(self):
         """
         creates the log directories and checks they are all ok
-        :return:
+        :return: nothing
         """
         # the log directory is given by the config file
-        data_logger.log_directory = self.config_data[config.LOG_DIRECTORY]
-        data_logger.working_directory = self.config_data[config.LOG_DIRECTORY]
-        # individual text and binary logs are kept in a subdirectory of working directory
-        data_logger.text_log_directory = os.path.join(data_logger.working_directory,
-                                                      data_logger.log_start_str)
-        data_logger.binary_log_directory = os.path.join(data_logger.working_directory,
-                                                        data_logger.log_start_str)
-        # make a directory for text and binary log
-        try:
-            os.makedirs(str(data_logger.text_log_directory))
-        except:
-            self.message("Error creating log directory = " + str(data_logger.text_log_directory))
-            raise
+        logger.log_directory = self.config_data[config.LOG_DIRECTORY]
+        logger.working_directory = self.config_data[config.LOG_DIRECTORY]
+        # if in debug mode all files go in  working_directory
+        if rf_conditioning_logger.debug:
+            logger.text_log_directory = logger.working_directory
+            logger.binary_log_directory = logger.working_directory
+        else:
+            # individual text and binary logs are kept in a subdirectory of working directory
+            logger.text_log_directory = os.path.join(logger.working_directory,
+                                                          logger.log_start_str)
+            logger.binary_log_directory = os.path.join(logger.working_directory,
+                                                            logger.log_start_str)
+            # make a directory for text and binary log
+            try:
+                os.makedirs(str(logger.text_log_directory))
+            except:
+                self.message("Error creating log directory = " + str(logger.text_log_directory))
+                raise
 
     def set_text_log_files(self):
         """
@@ -108,22 +144,31 @@ class rf_conditioning_data_logger(data_logger):
         """
         try:
             # Raise exception if PULSE_COUNT_BREAKDOWN_LOG_FILENAME can't be found where expected
-            pulse_count_file = os.path.join(data_logger.working_directory,self.config_data[
+            rf_conditioning_logger._pulse_count_log_file = os.path.join(logger.working_directory,
+                                                                        self.config_data[
                 config.PULSE_COUNT_BREAKDOWN_LOG_FILENAME])
-            if not os.path.exists(pulse_count_file):
-                err = pulse_count_file
+            if not os.path.exists(rf_conditioning_logger._pulse_count_log_file):
+                err = rf_conditioning_logger._pulse_count_log_file
                 raise
-            else:
-                self.pulse_count_log_file_obj = open(pulse_count_file,'a')
+            # else:
+            #     rf_conditioning_logger._pulse_count_log_file_obj = open(pulse_count_file,'a')
+            #     print rf_conditioning_logger._pulse_count_log_file_obj
+            #     print rf_conditioning_logger._pulse_count_log_file_obj
+            #     print rf_conditioning_logger._pulse_count_log_file_obj
+            #     print rf_conditioning_logger._pulse_count_log_file_obj
 
             # Raise exception if AMP_POWER_LOG_FILENAME can't be found where expected
-            amp_power_file = os.path.join(data_logger.working_directory,self.config_data[
+            rf_conditioning_logger._amp_power_file = os.path.join(logger.working_directory,
+                                                                 self.config_data[
                 config.AMP_POWER_LOG_FILENAME])
-            if not os.path.exists(amp_power_file):
-                err = amp_power_file
+            if not os.path.exists(rf_conditioning_logger._amp_power_file):
+                err = rf_conditioning_logger._amp_power_file
                 raise Exception
-            else:
-                self.amp_power_log_file_obj = open(amp_power_file,'a')
+            # else:
+            #     rf_conditioning_logger._amp_power_log_file_obj = open(amp_power_file,'a')
+            #     print rf_conditioning_logger._amp_power_log_file_obj
+            #     print rf_conditioning_logger._amp_power_log_file_obj
+            #     print rf_conditioning_logger._amp_power_log_file_obj
 
         except Exception:
             print >> sys.stderr, "FileError No such file", err
@@ -131,9 +176,9 @@ class rf_conditioning_data_logger(data_logger):
         # start the text log
         self.open_text_log_file(self.config_data[config.TEXT_LOG_FILENAME])
 
-        print rf_conditioning_data_logger.text_log_header
-        self.write_text_log(rf_conditioning_data_logger.text_log_header,show_time_stamp=False)
-        self.message_header("Log Started " + data_logger.log_start_str, add_to_text_log = True,
+        print rf_conditioning_logger.text_log_header
+        self.write_text_log(rf_conditioning_logger.text_log_header,show_time_stamp=False)
+        self.message_header("Log Started " + logger.log_start_str, add_to_text_log = True,
                             show_time_stamp = False)
 
 
@@ -172,8 +217,8 @@ class rf_conditioning_data_logger(data_logger):
 
     # @log_config.setter
     # def log_config(self, value):
-    #     data_logger._log_config = value
-    #     self.log_directory = data_logger.config.log_config['LOG_DIRECTORY'] + self.log_start_str
+    #     logger._log_config = value
+    #     self.log_directory = logger.config.log_config['LOG_DIRECTORY'] + self.log_start_str
     #     os.makedirs(self.log_directory)
     #     self.working_directory = self.log_directory + '\\'
     #     self.data_path = self.working_directory + self.log_config[
@@ -222,8 +267,8 @@ class rf_conditioning_data_logger(data_logger):
             return float(s)
 
     def get_amp_power_log(self):
-        self.amp_power_log = data_logger.config.log_config['LOG_DIRECTORY'] + \
-                             data_logger.config.log_config['AMP_POWER_LOG_FILENAME']
+        self.amp_power_log = logger.config.log_config['LOG_DIRECTORY'] + \
+                             logger.config.log_config['AMP_POWER_LOG_FILENAME']
         r_dict = {}
 
         with open(self.amp_power_log) as f:
@@ -242,23 +287,7 @@ class rf_conditioning_data_logger(data_logger):
         self.message('read get_amp_power_log: ' + self.amp_power_log, True)
         return r_dict
 
-    def get_pulse_count_breakdown_log(self):
-        self.pulse_count_log = data_logger.config.log_config['LOG_DIRECTORY'] + \
-                               data_logger.config.log_config['PULSE_COUNT_BREAKDOWN_LOG_FILENAME']
-        log = []
-        with open(self.pulse_count_log) as f:
-            lines = list(line for line in (l.strip() for l in f) if line)
-            for line in lines:
-                if '#' not in line:
-                    log.append([int(x) for x in line.split()])
-        self.header(self.my_name + ' get_pulse_count_breakdown_log')
-        self.message('read pulse_count_log: ' + self.pulse_count_log)
-        # for i in log:
-        #     self.message(map(str,i),True)
-        #
-        ## now open pulse_count_log file for appending and LEAVE OPEN
-        self.pulse_count_log_file = open(self.pulse_count_log, 'a')
-        return log
+
 
     # noinspection PyMethodMayBeStatic
     def pickle_file(self, file_name, obj):

@@ -19,7 +19,7 @@
 //  Author:      DJS
 //  Last edit:   03-07-2018
 //  FileName:    main_controller.py
-//  Description: The data_logger, a generic logging class, designed to be application independent
+//  Description: The logger, a generic logging class, designed to be application independent
 //               that can log text message data binary data, and TODO:ASCII data
 //
 //*/
@@ -29,7 +29,7 @@ import struct
 #from VELA_CLARA_enums import STATE
 # this should import all the possible enums that might be logged from CATAP
 from VELA_CLARA_Vac_Valve_Control import VALVE_STATE
-from VELA_CLARA_RF_Protection_Control import RF_GUN_PROT_STATUS
+from VELA_CLARA_RF_Protection_Control import RF_PROT_STATUS
 from VELA_CLARA_RF_Modulator_Control import GUN_MOD_STATE
 from VELA_CLARA_LLRF_Control import TRIG
 from VELA_CLARA_LLRF_Control import INTERLOCK_STATE
@@ -40,7 +40,7 @@ import numpy
 from src.data.state import state
 from textwrap import fill
 
-class data_logger(object):
+class logger(object):
     '''
     This class handles all the data logging, it is designed to be generic, requires a handler class
     to own it adn call its metyhods.
@@ -50,6 +50,8 @@ class data_logger(object):
     binary log:  binary_log_file
     plaintext_log: binary_log_file
     TODO: For writing binary It does need to know about all the CATAP enums ...
+    TODO: static class methods? 'You should really consider creating a static method whenever a
+          method does not make substantial use of the instance (self)'
     '''
     # a timestamp, can be used to create a new directory with this timesatmp
     log_start = datetime.now()
@@ -82,14 +84,14 @@ class data_logger(object):
     # map of python type to struct type https://docs.python.org/2/library/struct.html
     # little endian basic types
     # str IS NOT WElL DEFINED IN THIS !
-    _python_type_to_bintype = {long: '<l', int: '<i', float: '<f', RF_GUN_PROT_STATUS: '<B',
+    _python_type_to_bintype = {long: '<l', int: '<i', float: '<f', RF_PROT_STATUS: '<B',
                               GUN_MOD_STATE: '<B', VALVE_STATE: '<B', TRIG: '<B',state: '<B',
                               INTERLOCK_STATE: '<B', bool: '<?', numpy.float64: '<d',
                               # BE CAREFUL WiTH str, THE BELOW IS CLEARLY GARBAGE
                               str: '<i'}
 
     def __init__(self):
-        self.my_name = 'data_logger'
+        self.my_name = 'logger'
 
     def message(self,text, add_to_text_log = False, show_time_stamp = True):
         '''
@@ -103,7 +105,7 @@ class data_logger(object):
         elif all(isinstance(item, basestring) for item in text):
             str = '\n'.join(text)
         else:
-            str = "ERROR data_logger.message was not passed a string "
+            str = "ERROR logger.message was not passed a string "
         print(str)
         if add_to_text_log:
             self.write_text_log(str, show_time_stamp = show_time_stamp)
@@ -115,8 +117,8 @@ class data_logger(object):
         :param add_to_text_log: should the header be added to the text_log_file
         :return:
         """
-        self.message('\n' + '{:*^79}'.format(' ' + text + ' '), add_to_text_log = add_to_text_log,
-                     show_time_stamp = show_time_stamp)
+        self.message('\n' + '{:*^79}'.format(' ' + text + ' ') + '\n', add_to_text_log =
+        add_to_text_log, show_time_stamp = show_time_stamp)
 
     def write_text_log(self, str, show_time_stamp = True):
         """
@@ -130,51 +132,51 @@ class data_logger(object):
         write_str = str + '\n'
         if show_time_stamp:
             write_str = datetime.now().isoformat(' ') + ' ' + write_str
-        if data_logger._text_log_file_obj:
-            data_logger._text_log_file_obj.write(write_str)
-            data_logger._text_log_file_obj.flush()
+        if logger._text_log_file_obj:
+            logger._text_log_file_obj.write(write_str)
+            logger._text_log_file_obj.flush()
             # previously opened and closed files as we went ...
             # with open(self.log_path,'a') as f:
             #     f.write(write_str)
         else:
-            print(self.my_name + " ERROR Writing to log, data_logger._text_log_file_obj is None")
+            print(self.my_name + " ERROR Writing to log, logger._text_log_file_obj is None")
 
     def write_binary_log(self,values):
         type_list = []
         for key, val in values.iteritems():# itervalues means just iterate over the values in the dict
             type_list.append(self.write_binary(val))
-        data_logger._binary_log_file_obj.flush()
-        if type_list != data_logger._binary_header_types:
+        logger._binary_log_file_obj.flush()
+        if type_list != logger._binary_header_types:
             self.message(self.my_name+" Warning, Binary Log File, data types have changed",True)
 
     def write_binary(self, val):
         """
         This writes val to fileobjetc f, it needs to know how to convert all data types to
-        struct_format, using data_logger._python_type_to_bintype
+        struct_format, using logger._python_type_to_bintype
         https://docs.python.org/2/library/struct.html
-        TODO: write more cases for data_logger._python_type_to_bintype
+        TODO: write more cases for logger._python_type_to_bintype
         use a dictionary
         :param val: data to write to file_object
         :return: the type of val (used for error checking)
         """
         val_type = type(val)
-        struct_format = data_logger._python_type_to_bintype.get(val_type,None)
+        struct_format = logger._python_type_to_bintype.get(val_type,None)
         if struct_format:
-            data_logger._binary_log_file_obj.write(struct.pack(struct_format, val))
+            logger._binary_log_file_obj.write(struct.pack(struct_format, val))
         return val_type
 
     def write_bin_data(self, values):
         # check length of dictionary has not changed!
         written_types = []
-        if len(values) == data_logger._binary_header_length:
+        if len(values) == logger._binary_header_length:
             for key, val in values.iteritems():
                 written_types.append(self.write_binary(val))
         else:
             self.message(["ERROR write_bin_data passed data of incorrect length! ",
-                          str(len(values)),"!=",data_logger._binary_header_length] ,True)
+                          str(len(values)),"!=",logger._binary_header_length] ,True)
             raw_input()
-        data_logger._binary_log_file_obj.flush()
-        if written_types != data_logger._binary_header_types:
+        logger._binary_log_file_obj.flush()
+        if written_types != logger._binary_header_types:
             self.message("ERROR write_bin_data passed data of incorrect types! ",True)
             raw_input()
 
@@ -193,8 +195,8 @@ class data_logger(object):
         '''
         # these static variables save the data written to the header, this is so it can be
         # cross-checked against further
-        data_logger._binary_header_length = 0
-        data_logger._binary_header_types = []
+        logger._binary_header_length = 0
+        logger._binary_header_types = []
         header_names = []
         header_types_str = []
 
@@ -206,68 +208,68 @@ class data_logger(object):
                 header_names.append('time_stamp, (start = ' + datetime.now().isoformat(' ') + ')')
             else:
                 header_names.append(key)
-            data_logger._binary_header_length += 1
-            data_logger._binary_header_types.append(value_type)
+            logger._binary_header_length += 1
+            logger._binary_header_types.append(value_type)
             header_types_str.append(value_type_str)
 
         # create the data_log file and write the plaintext header, raise exception if fail
         try:
             joiner = '\t'
-            if data_logger._binary_log_file_obj:
+            if logger._binary_log_file_obj:
                 head_names = joiner.join(header_names)+"\n"
                 head_types = joiner.join(header_types_str)+"\n"
-                data_logger._binary_log_file_obj.write(head_names)
-                data_logger._binary_log_file_obj.write(head_types)
+                logger._binary_log_file_obj.write(head_names)
+                logger._binary_log_file_obj.write(head_types)
                 self.message(["binary log file added ",head_names,head_types ],True)
             else:
-                raise ValueError('data_logger _binary_log_file_obj not defined')
+                raise ValueError('logger _binary_log_file_obj not defined')
         except Exception:
             raise
 
     def open_text_log_file(self, text_TEXT_LOG_FILENAME):
-        data_logger.text_log_file = text_TEXT_LOG_FILENAME
+        logger.text_log_file = text_TEXT_LOG_FILENAME
         try:
-            if data_logger.text_log_directory:
-                if data_logger.text_log_file:
-                    fp = os.path.join(data_logger.text_log_directory, data_logger.text_log_file)
-                    data_logger._text_log_file_obj = open(fp, 'a')
+            if logger.text_log_directory:
+                if logger.text_log_file:
+                    fp = os.path.join(logger.text_log_directory, logger.text_log_file)
+                    logger._text_log_file_obj = open(fp, 'a')
                 else:
-                    raise ValueError('data_logger _text_log_file not defined')
+                    raise ValueError('logger _text_log_file not defined')
             else:
-                raise ValueError('data_logger _text_log_directory not defined')
+                raise ValueError('logger _text_log_directory not defined')
         except Exception:
             raise
 
     def open_binary_log_file(self, binary_TEXT_LOG_FILENAME):
-        data_logger.binary_log_file = binary_TEXT_LOG_FILENAME
+        logger.binary_log_file = binary_TEXT_LOG_FILENAME
         try:
-            if data_logger.binary_log_directory:
-                if data_logger.binary_log_file:
-                    fp = os.path.join(data_logger.binary_log_directory,data_logger.binary_log_file)
-                    data_logger._binary_log_file_obj = open(fp, 'a')
+            if logger.binary_log_directory:
+                if logger.binary_log_file:
+                    fp = os.path.join(logger.binary_log_directory,logger.binary_log_file)
+                    logger._binary_log_file_obj = open(fp, 'a')
                 else:
-                    raise ValueError('data_logger _binary_log_file not defined')
+                    raise ValueError('logger _binary_log_file not defined')
             else:
-                raise ValueError('data_logger _binary_log_directory not defined')
+                raise ValueError('logger _binary_log_directory not defined')
         except Exception:
             raise
     # not implemented yet
     def open_ascii_log_file(self):
         try:
-            if data_logger.ascii_log_directory:
-                if data_logger.ascii_log_file:
-                    fp = os.path.join(data_logger.ascii_log_directory,data_logger.ascii_log_file)
-                    data_logger._text_log_file_obj = open(fp, 'a')
+            if logger.ascii_log_directory:
+                if logger.ascii_log_file:
+                    fp = os.path.join(logger.ascii_log_directory,logger.ascii_log_file)
+                    logger._text_log_file_obj = open(fp, 'a')
                 else:
-                    raise ValueError('data_logger _ascii_log_file not defined')
+                    raise ValueError('logger _ascii_log_file not defined')
             else:
-                raise ValueError('data_logger _ascii_log_directory not defined')
+                raise ValueError('logger _ascii_log_directory not defined')
         except Exception:
             raise
 
     # noinspection PyMethodMayBeStatic
     def pickle_file(self, file_name, obj):
-        path = data_logger.working_directory + file_name
+        path = logger.working_directory + file_name
         self.pickle_dump(path,obj)
 
     # noinspection PyMethodMayBeStatic
@@ -288,40 +290,40 @@ class data_logger(object):
     # '''
     # @property
     # def text_log_file(self):
-    #     return data_logger._text_log_file
+    #     return logger._text_log_file
     #
     # @text_log_file.setter
     # def text_log_file(self, value):
-    #     data_logger._text_log_file = value
+    #     logger._text_log_file = value
     #
     # @property
     # def binary_log_file(self):
-    #     return data_logger._binary_log_file
+    #     return logger._binary_log_file
     #
     # @binary_log_file.setter
     # def binary_log_file(self, value):
-    #     data_logger._binary_log_file = value
+    #     logger._binary_log_file = value
     #
     # @property
     # def ascii_log_file(self):
-    #     return data_logger._ascii_log_file
+    #     return logger._ascii_log_file
     #
     # @ascii_log_file.setter
     # def ascii_log_file(self, value):
-    #     data_logger._ascii_log_file = value
+    #     logger._ascii_log_file = value
     #
     #
     # @property
     # def working_directory(self):
-    #     return data_logger._working_directory
+    #     return logger._working_directory
     #
     # @working_directory.setter
     # def working_directory(self, value):
-    #     data_logger._working_directory = value
+    #     logger._working_directory = value
     #
     # @property
     # def text_log_directory(self):
-    #     return data_logger._text_log_directory
+    #     return logger._text_log_directory
     #
     # @text_log_directory.setter
     # def text_log_directory(self, value):
@@ -333,23 +335,23 @@ class data_logger(object):
     #     print("text_log_directory sdetter")
     #     print("text_log_directory sdetter")
     #     print("text_log_directory sdetter")
-    #     data_logger._text_log_directory = value
+    #     logger._text_log_directory = value
     #
     # @property
     # def binary_log_directory(self):
-    #     return data_logger._binary_log_directory
+    #     return logger._binary_log_directory
     #
     # @binary_log_directory.setter
     # def binary_log_directory(self, value):
-    #     data_logger._binary_log_directory = value
+    #     logger._binary_log_directory = value
     #
     # @property
     # def ascii_log_directory(self):
-    #     return data_logger._ascii_log_directory
+    #     return logger._ascii_log_directory
     #
     # @ascii_log_directory.setter
     # def ascii_log_directory(self, value):
-    #     data_logger._ascii_log_directory = value
+    #     logger._ascii_log_directory = value
 
 
 
