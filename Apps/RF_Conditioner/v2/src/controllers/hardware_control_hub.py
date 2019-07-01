@@ -27,117 +27,178 @@
 
 from VELA_CLARA_enums import MACHINE_MODE
 from VELA_CLARA_enums import MACHINE_AREA
+from VELA_CLARA_enums import CONTROLLER_TYPE
 from VELA_CLARA_LLRF_Control import LLRF_TYPE
 import VELA_CLARA_LLRF_Control
 import VELA_CLARA_Vac_Valve_Control
 import VELA_CLARA_RF_Modulator_Control
 import VELA_CLARA_RF_Protection_Control
 import VELA_CLARA_Magnet_Control
+import VELA_CLARA_General_Monitor
 import subprocess
-
+from collections import defaultdict
 
 from src.data import config
 from src.data import rf_conditioning_logger
 
 
-
-
-
-
-
 class hardware_control_hub(object):
-
-
-    # init LLRF Hardware Controllers
+    """
+    This class creates and holds all the CATAP objects
+    These are held in static variables that can be passed to where-ever they are needed
+    This class's funcitons all look very similar and so they could be a lot fo refactor ing to
+    once hardware Objects are created this class does nothing else
+    """
+    # we create static objects for init, control (and sometimes object constant references)
+    # these objects live here and will be passed ot other classes as needed
     #
     # vaccum valves
-    valve_init = None
+    valve_init = VELA_CLARA_Vac_Valve_Control.init()
+    valve_init.setQuiet()
     valve_control = None
-    #
-    mod_init = None
+    # RF modualtor
+    mod_init = VELA_CLARA_RF_Modulator_Control.init()
+    mod_init.setQuiet()
     mod_control = None
-    #
+    mod_obj = None
     # RF protection
-    prot_init = None
+    prot_init = VELA_CLARA_RF_Protection_Control.init()
+    prot_init.setQuiet()
     prot_control = None
-
-    llrf_init = None
+    prot_succes = False
+    # llrf
+    llrf_init = VELA_CLARA_LLRF_Control.init()
+    llrf_init.setQuiet()
     llrf_control = None
-
-    mag_init = None
+    llrf_obj = None
+    # magnets
+    mag_init = VELA_CLARA_Magnet_Control.init()
+    mag_init.setQuiet()
     mag_control = None
+    # general monitoring
+    gen_mon = VELA_CLARA_General_Monitor.init()
+    gen_mon_keys = {}
+    user_gen_mon_dict = {}
 
-    alarm_process = subprocess.Popen('pause', stdin=subprocess.PIPE, stdout=subprocess.PIPE, shell=True)
+    # dictionary to keep state of each controller (for sanity checks etc)
+    have_controller = {CONTROLLER_TYPE.VAC_VALVES: False, CONTROLLER_TYPE.RF_PROT: False,
+        CONTROLLER_TYPE.MAGNET: False, CONTROLLER_TYPE.RF_MOD: False, CONTROLLER_TYPE.LLRF: False,
+        CONTROLLER_TYPE.GENERAL_MONITOR: True}
+
+    # TODO: move into an app utilities space
+    is_gun_type = {LLRF_TYPE.CLARA_HRRG: True, LLRF_TYPE.CLARA_LRRG: True,
+                   LLRF_TYPE.VELA_HRRG: True, LLRF_TYPE.VELA_LRRG: True}
+    is_gun_type = defaultdict(lambda: MACHINE_AREA.UNKNOWN_AREA, is_gun_type)
 
     def __init__(self):
-        # config and logging
+        self.my_name = 'hardware_control_hub'
+        # owns a config and logging class
         self.config = config.config()
         self.config_data = self.config.raw_config_data
         self.logger = rf_conditioning_logger.rf_conditioning_logger()
 
-
-    def initialise(self):
-        # RF protection
+        self.logger.message_header(self.my_name + ' Starting CATAP Hardware Interfaces',
+                                   add_to_text_log=True,show_time_stamp=False)
         self.start_RF_protection()
-
-
-        hardware_control_hub.llrf_init = VELA_CLARA_LLRF_Control.init()
-        hardware_control_hub.llrf_init.setVerbose()
-        # init LLRF Hardware Controllers
-        # llrf_init.setQuiet()
-        # _llrf_control = None  # LLRF HWC
-        # _llrfObj = None  # LLRF HWC
-        # _llrf_handler = None
-        # #
-        # other attributes that need default values
-        # they are used in function below
-        # config file read successfully
-        #
-        # vaccume valves
-        hardware_control_hub.valve_init = VELA_CLARA_Vac_Valve_Control.init()
-        hardware_control_hub.valve_init.setQuiet()
-        # valve_init.setVerbose()
-        #
-        hardware_control_hub.mod_init = VELA_CLARA_RF_Modulator_Control.init()
-        hardware_control_hub.mod_init.setQuiet()
-        # mod_init.setVerbose()
-        #
-
-        #
-        # Magnets
-        hardware_control_hub.mag_init = VELA_CLARA_Magnet_Control.init()
-        hardware_control_hub.mag_init.setQuiet()
-
+        self.start_magnet_control()
+        self.start_valve_control()
+        self.start_mod_control()
+        self.start_llrf_control()
 
     def start_RF_protection(self):
+        '''
+        Creates the requested RF Protection control object
+        '''
         rf_structure = self.config_data[self.config.RF_STRUCTURE]
-        hardware_control_hub.prot_init = VELA_CLARA_RF_Protection_Control.init()
-        hardware_control_hub.prot_init.setQuiet()
-        '''Creates the requested RF Protection control object '''
-        if self.is_gun_type(rf_structure ):
-            hardware_control_hub.prot_control = hardware_control_hub.prot_init.physical_Gun_Protection_Controller()
-            self.logger.message('start_RF_protection created a GUN protection control object', True)
-        elif rf_structure  == LLRF_TYPE.L01:
-            #
-            # we don't have a linac protection controller yet ..
-            self.prot_control = hardware_control_hub.prot_init.physical_L01_Protection_Controller()
-            #self.prot_control = None
-            self.logger.message('start_rf_prot_control did not create a L01 protection '
-                                'control  object', True)
+        # alias for shorter lines
+        hch = hardware_control_hub
+        message = 'start_RF_protection() '
+        if self.is_gun_type[rf_structure]:
+            hch.prot_control = hch.prot_init.physical_Gun_Protection_Controller()
+            hch.have_controller[CONTROLLER_TYPE.RF_PROT] = True
+            message += ' successfully created a GUN protection control object'
+        elif rf_structure == LLRF_TYPE.L01:
+            # THE Linac protection controller IS NOT YET TESTED
+            hch.prot_control = hch.prot_init.physical_L01_Protection_Controller()
+            hch.have_controller[CONTROLLER_TYPE.RF_PROT] = True
+            message += ' successfully created a L01 protection control  object'
         else:
-            self.logger.message('Unknown LLRF TYPE passed create protection control object',
-                                True)
+            message = ' FAILED to create a RF Protection object'
+        self.logger.message(message, add_to_text_log=True, show_time_stamp=True)
 
-
-
-    def is_gun_type(self, type):
-        if type == LLRF_TYPE.CLARA_HRRG:
-            return True
-        elif type == LLRF_TYPE.CLARA_LRRG:
-            return True
-        elif type == LLRF_TYPE.VELA_HRRG:
-            return True
-        elif type == LLRF_TYPE.VELA_LRRG:
-            return True
+    def start_magnet_control(self):
+        '''
+        Creates the requested Magnet Control object
+        '''
+        # alias for shorter lines
+        hch = hardware_control_hub
+        machine_area = self.config_data[self.config.MAGNET_MACHINE_AREA]
+        message = 'start_mod_control() '
+        if machine_area == MACHINE_AREA.VELA_INJ:  # MAGIC_STRING
+            hch.mag_control = hch.mag_init.physical_CLARA_Ph1_Magnet_Controller()
+            hch.have_controller[CONTROLLER_TYPE.MAGNET] = True
+            message += ' successfully created a CLARA_PH1 magnet control object'
+        elif machine_area == MACHINE_AREA.CLARA_PH1:  # MAGIC_STRING
+            hch.mag_control = hch.mag_init.physical_VELA_INJ_Magnet_Controller()
+            hch.have_controller[CONTROLLER_TYPE.MAGNET] = True
+            message += ' successfully created a VELA_INJ magnet control object'
         else:
-            return False
+            message = ' FAILED to create a magnet Control object'
+        self.logger.message(message, add_to_text_log=True, show_time_stamp=True)
+
+    def start_valve_control(self):
+        '''
+        Creates the requested Valve Control object
+        '''
+        machine_area = self.config_data[self.config.VAC_VALVE_AREA]
+        # alias for shorter lines
+        hch = hardware_control_hub
+        message = 'start_mod_control() '
+        if machine_area == MACHINE_AREA.CLARA_PH1:
+            hch.mag_control = hch.valve_init.physical_CLARA_PH1_Vac_Valve_Controller()
+            hch.have_controller[CONTROLLER_TYPE.VAC_VALVES] = True
+            message = ' successfully created a CLARA_PH1 valve control object'
+        elif machine_area == MACHINE_AREA.VELA_INJ:
+            hch.mag_control = hch.valve_init.physical_VELA_INJ_Vac_Valve_Controller()
+            hch.have_controller[CONTROLLER_TYPE.VAC_VALVES] = True
+            message = ' successfully created a VELA_INJ valve control object'
+        else:
+            message = ' FAILED to create a valve Control object'
+        self.logger.message(message, add_to_text_log=True, show_time_stamp=True)
+
+    def start_mod_control(self):
+        '''
+        Creates the requested Modulator Control object
+        '''
+        # alias for shorter lines
+        hch = hardware_control_hub
+        message = 'start_mod_control() '
+        if hch.is_gun_type[self.config_data[self.config.RF_STRUCTURE]]:
+            hch.mod_control = hch.mod_init.physical_GUN_MOD_Controller()
+            hch.have_controller[CONTROLLER_TYPE.RF_MOD] = True
+            message = ' successfully created a ' + str(
+                self.config_data[self.config.RF_STRUCTURE]) + ' modulator control object'
+        elif self.config_data[self.config.RF_STRUCTURE] == LLRF_TYPE.L01:
+            hch.mod_control = hch.mod_init.physical_L01_MOD_Controller()
+            hch.have_controller[CONTROLLER_TYPE.RF_MOD] = True
+            message = ' successfully created a L01 modulator control object'
+        else:
+            message = ' FAILED to create a modulator Control object'
+        self.logger.message(message, add_to_text_log=True, show_time_stamp=True)
+
+    def start_llrf_control(self):
+        '''
+        Creates the requested LLRF Control object
+        '''
+        # alias for shorter lines
+        hch = hardware_control_hub
+        rf_structure = self.config_data[self.config.RF_STRUCTURE]
+        message = 'start_llrf_control() '
+        if rf_structure == LLRF_TYPE.UNKNOWN_TYPE:
+            message += ' FAILED to create a LLRF  Control object'
+        else:
+            hch.llrf_control = hch.llrf_init.getLLRFController(MACHINE_MODE.PHYSICAL, rf_structure)
+            hch.llrf_obj = [hch.llrf_control.getLLRFObjConstRef()]
+            hch.have_controller[CONTROLLER_TYPE.LLRF] = True
+            message += ' successfully created a ' + str(rf_structure) + ' LLRF control object'
+        self.logger.message(message, add_to_text_log=True, show_time_stamp=True)

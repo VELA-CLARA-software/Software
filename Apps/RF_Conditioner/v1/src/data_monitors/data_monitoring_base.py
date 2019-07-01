@@ -28,7 +28,7 @@ class data_monitoring_base(base):
 	mod_id = 'MOD_ID'
 	cavity_temp_id = 'CAVITY_TEMP_ID'
 	water_temp_id = 'WATER_TEMP_ID'
-	sol_id = 'WATER_TEMP_ID'
+	sol_id = 'sol_id'
 	all_id = [vac_id, dc_id, mod_id, cavity_temp_id, water_temp_id,sol_id]
 	[gen_mon_keys.update({x: None}) for x in all_id]
 	# explicit flags for possible monitors & monitors states

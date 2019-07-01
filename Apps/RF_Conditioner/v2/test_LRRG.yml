@@ -363,7 +363,8 @@ DATA_TEXT_LOG_FILENAME:  data_log # general data
 DATA_LOG_TIME:  1000 # millseconds between logging data
 AMP_PWR_LOG_TIME:  50 # ms between logging data
 PULSE_COUNT_BREAKDOWN_LOG_FILENAME:  pulse_breakdown_log.txt #history of (periodic) pulse count and (all) breakdown events, used to provide continuity for day-to-day running
-AMP_POWER_LOG_FILENAME:  amp_power_log.txt
+#KFPOW_AMPSP_RUNNING_STATS_LOG_FILENAME:  amp_power_log.txt
+KFPOW_AMPSP_RUNNING_STATS_LOG_FILENAME:  amp_power_log.txt
 
 ## Vacuum parameters
 VAC_PV:  CLA-LRG1-VAC-IMG-01:P
@@ -406,7 +407,7 @@ DC_SHOULD_DROP_AMP:  false # BOOL
 DC_SPIKE_DROP_AMP:  6 #; INTEGER amp_sp to set if vacuum spike
 
 
-##Temperature PVs
+##Temperature PVs TODO: WHAT IF WE WANT MORE THAN ONE OF THESE??? HOW WILL THEY BE DISPALYED IN THE GUI?
 CAVITY_TEMPERATURE_PV:  CLA-GUN-RF-LRRG-01:RT
 CAVITY_TEMPERATURE_CHECK_TIME:  1000 #;ms between getting new value
 WATER_TEMPERATURE_PV:  CLA-GUN-RF-LRRG-01:RT

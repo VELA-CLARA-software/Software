@@ -64,23 +64,12 @@ class main_controller(object):
         self.logger.setup_text_log_files()
         self.logger.log_config()
         #
+        # create a data object
         self.data = rf_conditioning_data.rf_conditioning_data(debug=self.debug)
-        self.data.setup_pulse_count_breakdown_log()
-
+        self.data.initialise()
         #
-        #
-        # self.hardware = hardware_control_hub()
-        # self.hardware.initialise()
-
-
-
-
-
-
-
-
-
-
+        # CATAP hardware controllers, these live here and are passed to where they are needed
+        self.hardware = hardware_control_hub()
 
 
 

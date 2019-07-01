@@ -1,29 +1,45 @@
+Programme FLOW
 
-
-creat an app
+creat an App
 
 create a main_controller
+main_controller init:
+	create config
+		read the config file
+		parse the config file, and 1st sanity check of entries
 
-create config
-	read the config file
-	parse the config file, and 1st sanity check of entires
+	create rf_conditioning_logger
+		check / create directories for log files
+			if in debug mode all =log files get pu tin working directory (this helps A LOT when you keep re-running the code)
+			working_directory:
+				KFPOW_AMPSP_RUNNING_STATS_LOG_FILENAME
+				PULSE_COUNT_BREAKDOWN_LOG_FILENAME
+					- sub_directory for this run (directory name = time and date of creation)
+						text_log 
+						binary_data_log 
+						breakdwon events pickle dumps
+		check / create directories text log files
+			KFPOW_AMPSP_RUNNING_STATS_LOG_FILENAME  exists
+			PULSE_COUNT_BREAKDOWN_LOG_FILENAME exists
+			start log.txt 	# DESCRIBE WHAT THIS FILE IS
 
-create rf_conditioning_logger
-	check / create directories for log files
-		working_directory
-			AMP_POWER_LOG_FILENAME
-			PULSE_COUNT_BREAKDOWN_LOG_FILENAME
-				- sub_directory for this run (directory name = time and date of creation)
-	check / create directories text log files
-		AMP_POWER_LOG_FILENAME  exists
-		PULSE_COUNT_BREAKDOWN_LOG_FILENAME exists
-		start log.txt 	
-		parse AMP_POWER_LOG_FILENAME 
-		parse PULSE_COUNT_BREAKDOWN_LOG_FILENAME 
+	Create Data class 
+		add default values from config to data.values, values is the dicgtionary where all the data is stored 
 
-Create Data class (?)
+		parse KFPOW_AMPSP_RUNNING_STATS_LOG_FILENAME # DESCRIBE WHAT THIS FILE IS
+			rf_conditioning_logger does this
+			File is a log of: # amp_sp, num_pulses (with beam), rolling mean, rolling variance * (num_pulses -1);
+			for each amp_sp the programme has taken data at. 
+			This log file is appneded to during running, so can become large, on first parsing, we discard old values
+			WARNING the Klystron warm-up time means that we can get noisey values 
+		parse PULSE_COUNT_BREAKDOWN_LOG_FILENAME  # DESCRIBE WHAT THIS FILE IS
+			rf_conditioning_logger does this
+			This is the log of num_pulse breakdowns, from whcih the breakdwon rate is calculated 
+			The formatting of processing of this file is cancerous atm. 
+			TODO: maybe we use fitting to move down in power steps as well as up? 
 
-Create CATAP Hardware Modules
+	Create hardware_control_hub
+		create CATAP Hardware Modules
 
 
 

@@ -36,7 +36,7 @@ import numpy
 # from src.data.state import state
 import sys
 import traceback
-
+import collections
 
 class rf_conditioning_logger(logger):
     '''
@@ -49,7 +49,7 @@ class rf_conditioning_logger(logger):
         OUTSIDE_MASK_REVERSE_FILENAME =>  WHERETO PUT OUTSIDE REVERSE EVENTS
         OUTSIDE_MASK_PROBE_FILENAME   =>  WHERETO PUT OUTSIDE PROBE EVENTS
         PULSE_COUNT_BREAKDOWN_LOG_FILENAME =>  History of pulse number / breakdown count
-        AMP_POWER_LOG_FILENAME  =>  History of amp setpoint and KFPOW values
+        KFPOW_AMPSP_RUNNING_STATS_LOG_FILENAME  =>  History of amp setpoint and KFPOW values
     the base-class logger handles the text log and binary data log
 
     rf_conditioning_logger.debug is a flag that when true, the working directory is not
@@ -60,8 +60,8 @@ class rf_conditioning_logger(logger):
     _pulse_count_log_file = None
     _pulse_count_log_file_obj = None
 
-    _amp_power_log_file_obj = None
-    _amp_power_log_file = None
+    _kfow_running_stats_log_file_obj = None
+    _kfow_running_stats_log_file = None
 
 
     def __init__(self, debug=False):
@@ -75,6 +75,68 @@ class rf_conditioning_logger(logger):
         # WE ASSUME THE CONFIG HAS BEEN PARSED CORRECTLY!
         self.config = config()
         self.config_data = self.config.raw_config_data
+
+    def get_kfpow_running_stat_log(self):
+        '''
+        This reads the _kfow_running_stats_log_file. During conditioning this file is updated,
+        new running stats values replaces old ones for the same amp_sp. This makes the
+        _kfow_running_stats_log_file continually grow in size. It can become overly large. To
+        minimize this size we can create a new version of the file after parsing the old version
+        :return: a dictionary of amp_sp keys and KFPow running stat values
+        '''
+        r_dict = {}
+        self.message_header('get_kfpow_running_stat_log', show_time_stamp=False,
+                            add_to_text_log=True)
+        self.message('kfpow_running_stat_log filename = '
+                     ''+rf_conditioning_logger._kfow_running_stats_log_file,show_time_stamp=True,
+                     add_to_text_log=True)
+        with open(rf_conditioning_logger._kfow_running_stats_log_file) as f:
+            lines = list(line for line in (l.strip() for l in f) if line)
+            got_header = False
+            header_string = ''
+            for line in lines:
+                if got_header:
+                    if '#' not in line:
+                        log = [self.num(x) for x in line.split()]
+                        r_dict[log[0]] = log[1:]
+                        # print 'get_amp_power_log ' + str(log[0])  # print
+                        # log[1:]
+                else:
+                    if '#' in line:
+                        header_string += line + '\n'
+                    else:
+                        log = [self.num(x) for x in line.split()]
+                        r_dict[log[0]] = log[1:]
+                        got_header = True
+        # write the dictionary to file only the latest values for each amp_sp  will be kept
+        # also write the data in order of ascending amp_sp
+        ordered_r_dict = collections.OrderedDict(sorted(r_dict.items()))
+        with open(rf_conditioning_logger._kfow_running_stats_log_file, 'w') as f:
+            f.write(header_string)
+            for key,value in ordered_r_dict.iteritems():
+                # str(key) + ' '.join(map(str, value)) + '\n'
+                f.write(str(key)+' '+' '.join(map(str, value))+'\n')
+        self.message('get_kfpow_running_stat_log complete',show_time_stamp=False,
+                     add_to_text_log=True)
+
+        # now open amp_power_log file for appending and LEAVE OPEN
+        rf_conditioning_logger._kfow_running_stats_log_file_obj = open(
+            rf_conditioning_logger._kfow_running_stats_log_file, 'a')
+
+        return r_dict
+
+    def num(self, s):
+        try:
+            return int(s)
+        except ValueError:
+            return float(s)
+
+    def add_to_kfpow_running_stat_log(self, x):
+        # WRITE TO kfpow_running_stat_log but don't write an amp with zero pulses of data in it
+        if x[1] != 0:
+            self._kfow_running_stats_log_file_obj.write(' '.join(map(str, x)) + '\n')
+            self._kfow_running_stats_log_file_obj.flush()  # previously opened and closed files as we went ...
+
 
     def get_pulse_count_breakdown_log(self):
         '''
@@ -97,11 +159,22 @@ class rf_conditioning_logger(logger):
             rf_conditioning_logger._pulse_count_log_file, 'a')
         return log
 
+    #def add_to_pulse_breakdown_log(self, x):
+    def add_to_pulse_count_breakdown_log(self, new_values):
+        """
+        update the _pulse_count_log_file with latest numbers
+        :param new_values: A LIST OF NUMBERS ! that are converted to a string and written to
+        _pulse_count_log_file_obj
+        :return:
+        """
+        rf_conditioning_logger._pulse_count_log_file_obj.write(" ".join(map(str, new_values))+'\n')
+        rf_conditioning_logger._pulse_count_log_file_obj.flush()
+
 
     def setup_text_log_files(self):
         """
         Creates the working directories, data file objects for writing the various
-        rf_conditioning data files, only call this once per applciation
+        rf_conditioning text data files, only call this once per application
         :return:
         """
         self.set_log_directories()
@@ -121,10 +194,9 @@ class rf_conditioning_logger(logger):
             logger.binary_log_directory = logger.working_directory
         else:
             # individual text and binary logs are kept in a subdirectory of working directory
-            logger.text_log_directory = os.path.join(logger.working_directory,
-                                                          logger.log_start_str)
+            logger.text_log_directory = os.path.join(logger.working_directory, logger.log_start_str)
             logger.binary_log_directory = os.path.join(logger.working_directory,
-                                                            logger.log_start_str)
+                                                       logger.log_start_str)
             # make a directory for text and binary log
             try:
                 os.makedirs(str(logger.text_log_directory))
@@ -136,51 +208,38 @@ class rf_conditioning_logger(logger):
         """
         open / check the following log files:
             PULSE_COUNT_BREAKDOWN_LOG_FILENAME
-            AMP_POWER_LOG_FILENAME
+            KFPOW_AMPSP_RUNNING_STATS_LOG_FILENAME
             TEXT_LOG_FILENAME
             write header to TEXT_LOG_FILENAME,
             write config to TEXT_LOG_FILENAME
         :return:
         """
+        # local alias to make lines shorter
+        rcl = rf_conditioning_logger
         try:
             # Raise exception if PULSE_COUNT_BREAKDOWN_LOG_FILENAME can't be found where expected
-            rf_conditioning_logger._pulse_count_log_file = os.path.join(logger.working_directory,
-                                                                        self.config_data[
+            rcl._pulse_count_log_file = os.path.join(logger.working_directory, self.config_data[
                 config.PULSE_COUNT_BREAKDOWN_LOG_FILENAME])
             if not os.path.exists(rf_conditioning_logger._pulse_count_log_file):
-                err = rf_conditioning_logger._pulse_count_log_file
+                err = rcl._pulse_count_log_file
                 raise
-            # else:
-            #     rf_conditioning_logger._pulse_count_log_file_obj = open(pulse_count_file,'a')
-            #     print rf_conditioning_logger._pulse_count_log_file_obj
-            #     print rf_conditioning_logger._pulse_count_log_file_obj
-            #     print rf_conditioning_logger._pulse_count_log_file_obj
-            #     print rf_conditioning_logger._pulse_count_log_file_obj
-
-            # Raise exception if AMP_POWER_LOG_FILENAME can't be found where expected
-            rf_conditioning_logger._amp_power_file = os.path.join(logger.working_directory,
-                                                                 self.config_data[
-                config.AMP_POWER_LOG_FILENAME])
-            if not os.path.exists(rf_conditioning_logger._amp_power_file):
-                err = rf_conditioning_logger._amp_power_file
+            # Raise exception if KFPOW_AMPSP_RUNNING_STATS_LOG_FILENAME can't be found where expected
+            rcl._kfow_running_stats_log_file = os.path.join(logger.working_directory,
+                                                            self.config_data[
+                                                                config.KFPOW_AMPSP_RUNNING_STATS_LOG_FILENAME])
+            if not os.path.exists(rcl._kfow_running_stats_log_file):
+                err = rcl._kfow_running_stats_log_file
                 raise Exception
-            # else:
-            #     rf_conditioning_logger._amp_power_log_file_obj = open(amp_power_file,'a')
-            #     print rf_conditioning_logger._amp_power_log_file_obj
-            #     print rf_conditioning_logger._amp_power_log_file_obj
-            #     print rf_conditioning_logger._amp_power_log_file_obj
-
         except Exception:
             print >> sys.stderr, "FileError No such file", err
             raise
         # start the text log
         self.open_text_log_file(self.config_data[config.TEXT_LOG_FILENAME])
 
-        print rf_conditioning_logger.text_log_header
-        self.write_text_log(rf_conditioning_logger.text_log_header,show_time_stamp=False)
-        self.message_header("Log Started " + logger.log_start_str, add_to_text_log = True,
-                            show_time_stamp = False)
-
+        print rcl.text_log_header
+        self.write_text_log(rcl.text_log_header,show_time_stamp=False)
+        self.message_header("Log Started " + logger.log_start_str, add_to_text_log=True,
+                            show_time_stamp=False)
 
     def log_config(self):
         """
@@ -224,7 +283,7 @@ class rf_conditioning_logger(logger):
     #     self.data_path = self.working_directory + self.log_config[
     #         'DATA_TEXT_LOG_FILENAME']  # MAGIC_STRING
     #     self.amp_pwr_path = self.working_directory + self.log_config[
-    #         'AMP_POWER_LOG_FILENAME']  # MAGIC_STRING
+    #         'KFPOW_AMPSP_RUNNING_STATS_LOG_FILENAME']  # MAGIC_STRING
     #     self.forward_file = self.working_directory + self._log_config[
     #         'OUTSIDE_MASK_FORWARD_FILENAME']  #
     #     self.probe_file = self.working_directory + self._log_config[
@@ -241,51 +300,7 @@ class rf_conditioning_logger(logger):
     #     # open log_file and LEAVE OPEN
     #     self.log_file = open(self.log_path, 'a')
 
-    def add_to_pulse_breakdown_log(self, x):
-        # print('add_to_pulse_breakdown_log')
-        towrite = " ".join(map(str, x))
-        self.pulse_count_log_file.write(towrite + '\n')
-        self.pulse_count_log_file.flush()  # previously opened and closed files as we went ...  #
-        # with open(self.pulse_count_log,'a') as f:  #     f.write( towrite + '\n')
 
-    def add_to_KFP_Running_stat_log(self, x):
-        # WRITE TO amp_power_log but don't write an amp with zero pulses of data in it
-        if x[1] != 0:
-            # towrite = " ".join(map(str, x))
-            # self.message('Adding to Klystron Forward Power Running Stat Log: ' + towrite,
-            # True)
-            # print('add_to_KFP_Running_stat_log, ', self.amp_power_log_file,' '.join(map(
-            # str, x)))
-            self.amp_power_log_file.write(' '.join(map(str, x)) + '\n')
-            self.amp_power_log_file.flush()  # previously opened and closed files as we went ...
-            # with open(self.amp_power_log,'a') as f:  #     f.write( towrite + '\n')
-
-    def num(self, s):
-        try:
-            return int(s)
-        except ValueError:
-            return float(s)
-
-    def get_amp_power_log(self):
-        self.amp_power_log = logger.config.log_config['LOG_DIRECTORY'] + \
-                             logger.config.log_config['AMP_POWER_LOG_FILENAME']
-        r_dict = {}
-
-        with open(self.amp_power_log) as f:
-            lines = list(line for line in (l.strip() for l in f) if line)
-            for line in lines:
-                if '#' not in line:
-                    log = [self.num(x) for x in line.split()]
-                    r_dict[log[0]] = log[
-                                     1:]  # print 'get_amp_power_log ' + str(log[0])  # print
-                    # log[1:]
-        #
-        # now open amp_power_log file for appending and LEAVE OPEN
-        self.amp_power_log_file = open(self.amp_power_log, 'a')
-        #
-        self.header(self.my_name + ' get_amp_power_log', True)
-        self.message('read get_amp_power_log: ' + self.amp_power_log, True)
-        return r_dict
 
 
 
