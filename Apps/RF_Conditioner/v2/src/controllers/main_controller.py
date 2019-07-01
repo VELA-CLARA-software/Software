@@ -40,6 +40,8 @@ from src.controllers.hardware_control_hub import hardware_control_hub
 from src.data import config
 from src.data import rf_conditioning_logger
 from src.data import rf_conditioning_data
+from src.data import rf_conditioning_data
+from src.monitors import monitor_hub
 
 
 #class main_controller(controller_base):
@@ -71,7 +73,9 @@ class main_controller(object):
         # CATAP hardware controllers, these live here and are passed to where they are needed
         self.hardware = hardware_control_hub()
 
-
+        #
+        # CATAP hardware controllers, these live here and are passed to where they are needed
+        self.monitor = monitor_hub()
 
 
 
