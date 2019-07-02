@@ -57,6 +57,10 @@ class rf_conditioning_data(object):
     # log of last million pulses including:
     current_power = 0
 
+
+    """
+    NOT SURE IF DEBUG DOES ANYTHING
+    """
     debug = False
     def __init__(self, debug = False):
         rf_conditioning_data.debug = debug
@@ -83,22 +87,17 @@ class rf_conditioning_data(object):
         v[rcd.llrf_DAQ_rep_rate_min] = cd[config.RF_REPETITION_RATE] - cd[
             config.RF_REPETITION_RATE_ERROR]
 
-        #self.ramp_max_index = len(ramp) -1
-
-
-
     def setup_pulse_count_breakdown_log(self):
         """
         this is way too complicated ... but its processing the data in two ways,
-        once by amp_setpioint and once by pusle count, it generates to main lists:
-        1) dat.rf_condition_data_base.amp_sp_history
+        once by amp_setpoint and once by pusle count, it generates to main lists:
+        1) rf_condition_data.amp_sp_history
               Sorted by amp_setpoint
               Used to define how to ramp up adn down
-        2) dat.rf_condition_data_base.last_million_log
+        2) rf_condition_data.last_million_log
               Sorted by pulse count
               used to define the Breakdown Rate etc.
         if I read through the comments, i can basically work out what is going on
-        :return:
         """
         # TODO: we should use fitting to move down in power steps instead of next_sp_decrease in
         #  the same way we move up in power steps
@@ -167,12 +166,17 @@ class rf_conditioning_data(object):
         # and what amp_setpoint to use in fitting when ramping-up
         # write this list to the main log
         rcd.amp_sp_history = [int(i[2]) for i in ampSP_sorted_pulse_break_down_log]
-        self.logger.message_header(self.my_name + ' amp SP history on startup ',
-                                   add_to_text_log=True, show_time_stamp=True)
-        to_write = []
-        for value in rcd.amp_sp_history:
-            to_write.append(str(value))
-        message(','.join(to_write), add_to_text_log=True, show_time_stamp=False)
+
+
+        """ PRINT rf_condition_data amp SP history on startup"""
+        # self.logger.message(self.my_name + ' amp SP history on startup ',
+        #                            add_to_text_log=True, show_time_stamp=True)
+        # to_write = []
+        # for value in rcd.amp_sp_history:
+        #     to_write.append(str(value))
+        # message(','.join(to_write), add_to_text_log=True, show_time_stamp=False)
+
+
         #
         # The next amp_setpoint to set
         self.values[rcd.log_amp_set] = rcd.amp_sp_history[-1]
@@ -190,8 +194,7 @@ class rf_conditioning_data(object):
         self.values[rcd.required_pulses] = self.config_data['DEFAULT_PULSE_COUNT']
         #
         # Write to log
-        self.logger.message_header(self.my_name + ' has processed the pulse_count_breakdown_log ',
-                                   add_to_text_log=True, show_time_stamp=False)
+        message(self.my_name+' has processed the pulse_count_breakdown_log ')
         message([rcd.log_pulse_count + ' ' + str(self.values[rcd.log_pulse_count]),
                  rcd.required_pulses + ' ' + str(self.values[rcd.required_pulses]),
                  rcd.breakdown_count + ' ' + str(self.values[rcd.breakdown_count]),
@@ -199,8 +202,7 @@ class rf_conditioning_data(object):
                  rcd.current_ramp_index + ' ' + str(self.values[rcd.current_ramp_index]),
                  # hmmm what to do about pulse length chaing
                  # 'pulse length = ' + str(self._llrf_config['PULSE_LENGTH_START']),
-                 rcd.next_sp_decrease + ' ' + str(self.values[rcd.next_sp_decrease])],
-                add_to_text_log=True, show_time_stamp=False)
+                 rcd.next_sp_decrease + ' ' + str(self.values[rcd.next_sp_decrease])], )
         #
         # Setting the last 10^6 breakdown last_106_bd_count
         #
@@ -215,39 +217,38 @@ class rf_conditioning_data(object):
         rcd.last_million_log = [x for x in pulse_break_down_log if x[0] >= one_million_pulses_ago]
         #
         # write last_million_log to log
-        self.logger.message_header('Last million pulses', add_to_text_log=True,
-                                   show_time_stamp=False)
-        for value in rcd.last_million_log:
-            str1 = ', '.join(str(e) for e in value)
-            message(str1, add_to_text_log=True, show_time_stamp=False)
-        message('One Million pulses ago  = ' + str(one_million_pulses_ago), add_to_text_log=True,
-                show_time_stamp=False)
+
+        """ PRINT lAST MILLION PULSES """
+        # message('Last million pulses', add_to_text_log=True,show_time_stamp=False)
+        # for value in rcd.last_million_log:
+        #     str1 = ', '.join(str(e) for e in value)
+        #     message(str1, add_to_text_log=True, show_time_stamp=False)
+
+        message('One Million pulses ago  = ' + str(one_million_pulses_ago))
         first_entry = ' , '.join(str(x) for x in rcd.last_million_log[0])
         last_entry = ' , '.join(str(x) for x in rcd.last_million_log[-1])
-        message('last_million_log[ 0] = ' + first_entry, add_to_text_log=True,
-                show_time_stamp=False)
-        message('last_million_log[-1] = ' + last_entry, add_to_text_log=True, show_time_stamp=False)
+        message('last_million_log[ 0] = '+first_entry)
+        message('last_million_log[-1] = '+last_entry)
         #
         # sanity check
         #
         sanity_passed = True
         if rcd.last_million_log[-1][1] != self.values[rcd.breakdown_count]:
-            message('Error in breakdown count', add_to_text_log=True, show_time_stamp=False)
+            message('Error in breakdown count')
             sanity_passed = False
         if rcd.last_million_log[-1][0] != self.values[rcd.log_pulse_count]:
-            message('Error in pulse_count', add_to_text_log=True, show_time_stamp=False)
+            message('Error in pulse_count')
             sanity_passed = False
         if sanity_passed:
-            message('Getting the pulse_breakdown_log passed sanity check', add_to_text_log=True,
-                    show_time_stamp=False)
+            message('Getting the pulse_breakdown_log passed sanity check')
         else:
-            message('!!WARNING!! When getting the pulse_breakdown_log we failed a sanity check!!',
-                add_to_text_log=True, show_time_stamp=False)
+            message('!!WARNING!! When getting the pulse_breakdown_log we failed a sanity check!!')
 
         #
         # Now we are free to update the breakdown stats !!
-        #
-        self.update_breakdown_stats()
+        '''MAYBE DON'T CALL THIS HERE YET!!! ????'''
+        message("update_breakdown_stats here ????????????????????")
+        #self.update_breakdown_stats()
 
     def update_breakdown_stats(self):
         '''
@@ -287,7 +288,8 @@ class rf_conditioning_data(object):
 
             message('Last million pulse count => ' + str(rcd.last_million_log[-1][0]) + ' - ' + str(
                 rcd.last_million_log[0][0]) + ' = ' + str(
-                rcd.last_million_log[-1][0] - rcd.last_million_log[0][0]), True)
+                rcd.last_million_log[-1][0] - rcd.last_million_log[0][0]), add_to_text_log=True,
+                    show_time_stamp=False)
             message(
                 'Last million breakdown_count => ' + str(rcd.last_million_log[-1][1]) + ' - ' + str(
                     rcd.last_million_log[0][1]) + ' = ' + str(self.values[rcd.last_106_bd_count]),

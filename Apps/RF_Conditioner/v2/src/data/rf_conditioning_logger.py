@@ -38,6 +38,8 @@ import sys
 import traceback
 import collections
 
+
+
 class rf_conditioning_logger(logger):
     '''
     inherits from logger
@@ -85,11 +87,9 @@ class rf_conditioning_logger(logger):
         :return: a dictionary of amp_sp keys and KFPow running stat values
         '''
         r_dict = {}
-        self.message_header('get_kfpow_running_stat_log', show_time_stamp=False,
-                            add_to_text_log=True)
+        self.message('get_kfpow_running_stat_log')
         self.message('kfpow_running_stat_log filename = '
-                     ''+rf_conditioning_logger._kfow_running_stats_log_file,show_time_stamp=True,
-                     add_to_text_log=True)
+                     '' + rf_conditioning_logger._kfow_running_stats_log_file)
         with open(rf_conditioning_logger._kfow_running_stats_log_file) as f:
             lines = list(line for line in (l.strip() for l in f) if line)
             got_header = False
@@ -144,17 +144,15 @@ class rf_conditioning_logger(logger):
         create a file object _pulse_count_log_file_obj to use for appending new data
         :return: log (nested list of pulse_breakdown_log entries
         '''
-        self.message_header(self.my_name + ' get pulse_count_breakdown_log',add_to_text_log=True,
-                            show_time_stamp=False)
-        self.message('FileName =  ' + rf_conditioning_logger._pulse_count_log_file ,
-                     add_to_text_log=True, show_time_stamp=True)
+        self.message(self.my_name + ' get pulse_count_breakdown_log', show_time_stamp=False)
+        self.message('FileName = ' + rf_conditioning_logger._pulse_count_log_file)
         log = []
         with open(rf_conditioning_logger._pulse_count_log_file) as f:
             lines = list(line for line in (l.strip() for l in f) if line)
             for line in lines:
                 if '#' not in line:
                     log.append([int(x) for x in line.split()])
-        self.message('Read pulse_count_breakdown_log', add_to_text_log=True, show_time_stamp=True)
+        self.message('Read pulse_count_breakdown_log')
         rf_conditioning_logger._pulse_count_log_file_obj = open(
             rf_conditioning_logger._pulse_count_log_file, 'a')
         return log
@@ -165,7 +163,6 @@ class rf_conditioning_logger(logger):
         update the _pulse_count_log_file with latest numbers
         :param new_values: A LIST OF NUMBERS ! that are converted to a string and written to
         _pulse_count_log_file_obj
-        :return:
         """
         rf_conditioning_logger._pulse_count_log_file_obj.write(" ".join(map(str, new_values))+'\n')
         rf_conditioning_logger._pulse_count_log_file_obj.flush()
@@ -175,7 +172,6 @@ class rf_conditioning_logger(logger):
         """
         Creates the working directories, data file objects for writing the various
         rf_conditioning text data files, only call this once per application
-        :return:
         """
         self.set_log_directories()
         self.set_text_log_files()
@@ -212,7 +208,6 @@ class rf_conditioning_logger(logger):
             TEXT_LOG_FILENAME
             write header to TEXT_LOG_FILENAME,
             write config to TEXT_LOG_FILENAME
-        :return:
         """
         # local alias to make lines shorter
         rcl = rf_conditioning_logger
@@ -237,16 +232,15 @@ class rf_conditioning_logger(logger):
         self.open_text_log_file(self.config_data[config.TEXT_LOG_FILENAME])
 
         print rcl.text_log_header
-        self.write_text_log(rcl.text_log_header,show_time_stamp=False)
+        self.write_text_log(rcl.text_log_header)
         self.message_header("Log Started " + logger.log_start_str, add_to_text_log=True,
                             show_time_stamp=False)
 
     def log_config(self):
         """
         dumps the parsed configuration settings to the log file
-        :return:
         """
-        self.message_header("Configuration", True)
+        self.message_header("Configuration", add_to_text_log=True, show_time_stamp=False)
         logdata = ['config file = ' + self.config_data[config.CONFIG_FILE], 'dumping parsed '
                                                                             'config data to text '
                                                                             'log']
@@ -255,7 +249,7 @@ class rf_conditioning_logger(logger):
             s += ''.join('%s: %s, ' % (key, value))
             #logdata.append(''.join('%s: %s, ' % (key, value)))
         logdata.append(s)
-        self.message(logdata, add_to_text_log = True, show_time_stamp = False)
+        self.message(logdata)
 
 
 
@@ -335,14 +329,14 @@ class rf_conditioning_logger(logger):
     def dump_probe(self, obj, index):
         self.pickle_dump(path=self.probe_file + str(index), obj=obj)
 
-
-
     text_log_header = \
-    "*******************************************************************************\n"\
-    "******** __         __    _  _  ___       _   ___  ___   __         __ ********\n"\
-    "******** \ \  ___  / /   | \| |/ _ \     /_\ | _ \/ __|  \ \  ___  / / ********\n"\
-    "********  \ \/ _ \/ /    | .` | (_) |   / _ \|   / (__    \ \/ _ \/ /  ********\n"\
-    "********   \_\___/_/     |_|\_|\___/   /_/ \_\_|_\\\\___|    \_\___/_/   ********\n"\
-    "********                                                               ********"
-
-
+        "****************************************************************************************************\n" \
+                      "******************* __         __    _  _  ___       _   ___  ___   __     " \
+        "    __ ******************\n" \
+                      "******************* \ \  ___  / /   | \| |/ _ \     /_\ | _ \/ __|  \ \  " \
+        "___  / / ******************\n" \
+                      "*******************  \ \/ _ \/ /    | .` | (_) |   / _ \|   / (__    \ \/ " \
+        "_ \/ /  ******************\n" \
+                      "*******************   \_\___/_/     |_|\_|\___/   /_/ \_\_|_\\\\___|    " \
+        "\_\___/_/   ******************\n" \
+                      "*******************                                                               ******************"

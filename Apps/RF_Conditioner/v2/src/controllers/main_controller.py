@@ -32,16 +32,21 @@
 #from src.gui.gui_conditioning import gui_conditioning
 #import src.data.rf_condition_data_base as dat
 #from src.data.state import state
-#import sys
-#import time
-#import os
+import sys
+import time
+import os
 
+print('main_controller: import hardware_control_hub')
 from src.controllers.hardware_control_hub import hardware_control_hub
-from src.data import config
-from src.data import rf_conditioning_logger
-from src.data import rf_conditioning_data
-from src.data import rf_conditioning_data
-from src.monitors import monitor_hub
+print('main_controller: import config')
+from src.data.config import config
+print('main_controller: import rf_conditioning_logger')
+from src.data.rf_conditioning_logger import rf_conditioning_logger
+print('main_controller: import rf_conditioning_data')
+from src.data.rf_conditioning_data import rf_conditioning_data
+print('main_controller: import monitor_hub')
+from src.monitors.monitor_hub import monitor_hub
+
 
 
 #class main_controller(controller_base):
@@ -57,25 +62,37 @@ class main_controller(object):
         #
         # Create config reader, and get configuration
         print(self.my_name + ', attempting to read config: ' + config_file)
-        self.config = config.config()
+        self.config = config()
         self.get_config(config_file)
         print(self.my_name + ', got Config, starting Logging\n')
         #
         # start logging, sets up main text file logging, and logs the config
-        self.logger = rf_conditioning_logger.rf_conditioning_logger(debug=self.debug)
+        self.logger = rf_conditioning_logger(debug=self.debug)
         self.logger.setup_text_log_files()
         self.logger.log_config()
         #
         # create a data object
-        self.data = rf_conditioning_data.rf_conditioning_data(debug=self.debug)
+        self.logger.message_header(self.my_name + ' Create rf_conditioning_data object',
+                                   add_to_text_log=True,
+                                   show_time_stamp=True)
+        self.data = rf_conditioning_data(debug=self.debug)
         self.data.initialise()
         #
         # CATAP hardware controllers, these live here and are passed to where they are needed
+        # self.hardware.start_up() actually creates the objects, this should only be done once,
+        # here!
+        self.logger.message_header(self.my_name + ' Create hardware_control_hub object',
+                                   add_to_text_log=True,show_time_stamp=True)
         self.hardware = hardware_control_hub()
+        self.hardware.start_up()
 
         #
         # CATAP hardware controllers, these live here and are passed to where they are needed
+        self.logger.message_header(self.my_name + ' Create monitor_hub object',
+                                   add_to_text_log=True,show_time_stamp=True)
         self.monitor = monitor_hub()
+        self.monitor.start_monitors()
+
 
 
 

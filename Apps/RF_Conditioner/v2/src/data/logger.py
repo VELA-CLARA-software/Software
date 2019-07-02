@@ -90,48 +90,83 @@ class logger(object):
                               # BE CAREFUL WiTH str, THE BELOW IS CLEARLY GARBAGE
                               str: '<i'}
 
+    # width of config file text without timestamp
+    config_width = 100
+    stars = '\n' + '*'*config_width + '\n'
+    header_format_string = '{:*^' + str(config_width) + '}'
+
+    # paramters for showing message or adding to text log
+    _show_time_stamp = False
+    _add_to_text_log = True
+
     def __init__(self):
         self.my_name = 'logger'
 
-    def message(self,text, add_to_text_log = False, show_time_stamp = True):
-        '''
-        messaging function, print to screen message, adn maybe write to log file
-        :param text: string or list of strings to message / write to text_log_file
-        :param add_to_text_log: flag
-        :return:
-        '''
-        if isinstance(text, basestring):
-            str = text
-        elif all(isinstance(item, basestring) for item in text):
-            str = '\n'.join(text)
-        else:
-            str = "ERROR logger.message was not passed a string "
-        print(str)
-        if add_to_text_log:
-            self.write_text_log(str, show_time_stamp = show_time_stamp)
 
-    def message_header(self, text, add_to_text_log = False, show_time_stamp = False):
+
+    def update_timestamp_textlog(self,**kwargs):
+        if 'add_to_text_log' in kwargs:
+            logger._add_to_text_log = kwargs['add_to_text_log']
+        if 'show_time_stamp' in kwargs:
+            logger._show_time_stamp = kwargs['show_time_stamp']
+
+
+    def message_header(self, text, **kwargs):
         """
         a header is a specially formatted entry in the text log
         :param text: The text used to create the header
         :param add_to_text_log: should the header be added to the text_log_file
         :return:
         """
-        self.message('\n' + '{:*^79}'.format(' ' + text + ' ') + '\n', add_to_text_log =
-        add_to_text_log, show_time_stamp = show_time_stamp)
+        self.update_timestamp_textlog(**kwargs)
+        str = logger.stars + logger.header_format_string.format(' ' + text + ' ') + logger.stars
+        self.message(str,**kwargs)
+        #self.message('\n' + '{:*^79}'.format(' ' + text + ' ') + '\n', add_to_text_log =
+        #add_to_text_log, show_time_stamp = show_time_stamp)
 
-    def write_text_log(self, str, show_time_stamp = True):
+
+        #self.write_text_log(str, show_time_stamp=show_time_stamp)
+
+    def message(self,text, **kwargs):
+        '''
+        messaging function, print to screen message, adn maybe write to log file
+        :param text: string or list of strings to message / write to text_log_file
+        :param add_to_text_log: flag
+        :return:
+        '''
+        self.update_timestamp_textlog(**kwargs)
+
+        # fill is from textwrap  https://docs.python.org/3/library/textwrap.html
+        if isinstance(text, basestring):
+            str = fill(text, width=logger.config_width)
+        elif all(isinstance(item, basestring) for item in text):
+            # CANCER
+            str = '\n'.join(text)
+            str2 = []
+            for item in str.splitlines():
+                str2.append(fill(item, width=logger.config_width))
+            str = '\n'.join(str2)
+        else:
+            str = "ERROR logger.message was not passed a string "
+        if logger._show_time_stamp:
+            str = '\n' + datetime.now().isoformat(' ') + '\n' + str
+        print(str)
+        if logger._add_to_text_log:
+            self.write_text_log(str)
+
+    #def write_text_log(self, str, show_time_stamp = True):
+    def write_text_log(self, str):
         """
         write str, prepended with date-time,  to the log file, NO EXCEPTION Handling here,
-        just a quick check to see if the file object exists. I choose this becaus ei thought
-        exception handling would be slower and reallistically (HAH!), if you've got this far then
+        just a quick check to see if the file object exists. I choose this because i thought
+        exception handling would be slower and realistically (HAH!), if you've got this far then
         everything should be ok
         :param str: string to write to file
         :return: none
         """
         write_str = str + '\n'
-        if show_time_stamp:
-            write_str = datetime.now().isoformat(' ') + ' ' + write_str
+        # if show_time_stamp:
+        #     write_str = datetime.now().isoformat(' ') + ' ' + write_str
         if logger._text_log_file_obj:
             logger._text_log_file_obj.write(write_str)
             logger._text_log_file_obj.flush()
@@ -232,7 +267,7 @@ class logger(object):
             if logger.text_log_directory:
                 if logger.text_log_file:
                     fp = os.path.join(logger.text_log_directory, logger.text_log_file)
-                    logger._text_log_file_obj = open(fp, 'a')
+                    logger._text_log_file_obj = open(fp, 'w')
                 else:
                     raise ValueError('logger _text_log_file not defined')
             else:

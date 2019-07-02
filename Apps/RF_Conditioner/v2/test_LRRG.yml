@@ -430,8 +430,9 @@ SOL_WOBBLE_OSCILLATION_POINTS: 0  # INTEGER, how many points to wobble solenoid 
 ## vac_valve, MACHINE_AREA
 VAC_VALVE_AREA:  CLARA_PH1 # STRING
 # value must match name of valve in CATAP to monitor, WHAT IF THERE IS MORE THAN ONE VALVE??? 
-VAC_VALVE:      # a list of strings
-  - S01-VALV-01  
+VAC_VALVE: S01-VALV-01
+#VAC_VALVE:      # a list of strings ??? TODO
+#  - S01-VALV-01  
 VAC_VALVE_CHECK_TIME:  1000 # ms between getting new value!!!!
 KEEP_VALVE_OPEN:  true # should the valve be kept open or not?  
 

@@ -29,6 +29,7 @@ from collections import defaultdict
 # CATAP 2.0 is probably going to put all these into a general enum name space to be included first
 from VELA_CLARA_enums import MACHINE_AREA
 from VELA_CLARA_LLRF_Control import LLRF_TYPE
+from VELA_CLARA_RF_Protection_Control import RF_PROT_TYPE
 import sys
 
 
@@ -59,6 +60,17 @@ class config(object):
                      "VELA_HRRG": LLRF_TYPE.VELA_HRRG, "VELA_LRRG": LLRF_TYPE.VELA_LRRG,
                      "L01": LLRF_TYPE.L01 }
     get_llrf_type = defaultdict(lambda: LLRF_TYPE.UNKNOWN_TYPE, get_llrf_type)
+
+    # TODO:  maybe put these in a generic utilities space
+    get_rf_prot_type = {"CLARA_HRRG": RF_PROT_TYPE.CLARA_HRRG,
+                        "CLARA_LRRG": RF_PROT_TYPE.CLARA_LRRG, "VELA_HRRG": RF_PROT_TYPE.VELA_HRRG,
+                        "VELA_LRRG": RF_PROT_TYPE.VELA_LRRG, "L01": RF_PROT_TYPE.L01,
+                        LLRF_TYPE.CLARA_HRRG: RF_PROT_TYPE.CLARA_HRRG,
+                        LLRF_TYPE.CLARA_LRRG: RF_PROT_TYPE.CLARA_HRRG,
+                        LLRF_TYPE.VELA_HRRG: RF_PROT_TYPE.VELA_HRRG,
+                        LLRF_TYPE.VELA_LRRG: RF_PROT_TYPE.VELA_LRRG,
+                        LLRF_TYPE.L01: RF_PROT_TYPE.L01}
+    get_rf_prot_type = defaultdict(lambda: RF_PROT_TYPE.NOT_KNOWN, get_rf_prot_type)
 
     get_machine_area = {'S01': MACHINE_AREA.CLARA_S01, 'VELA_INJ': MACHINE_AREA.VELA_INJ,
         'ALL_VELA_CLARA': MACHINE_AREA.ALL_VELA_CLARA, 'CLARA_PH1': MACHINE_AREA.CLARA_PH1, }

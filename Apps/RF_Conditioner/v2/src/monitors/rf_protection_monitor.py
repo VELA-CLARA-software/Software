@@ -18,57 +18,34 @@
 //
 //  Author:      DJS
 //  Last edit:   01-07-2019
-//  FileName:    vac_valve_monitor.py
-//  Description: checks the state of the RF Vac Valve for the RF_STRUCTURE being conditioned
+//  FileName:    rf_protection_monitor.py
+//  Description: checks the state of the RF protectino fro the RF_STRUCTURE being conditioned
 //
 //*/
 """
 from state_monitor import state_monitor
 from VELA_CLARA_enums import CONTROLLER_TYPE
-from VELA_CLARA_Vac_Valve_Control import VALVE_STATE
-import src.data.rf_condition_data_base as dat
+
 # At the moment its a very small simple class,
 # we may increase what it can do (i.e. reset the protection)
 # at a later date
 #
-class vac_valve_monitor(state_monitor):
+class rf_protection_monitor(state_monitor):
     # whoami
-    my_name = 'vac_valve_monitor'
-
+    my_name = 'rf_protection_monitor'
+    old_value = None
     def __init__(self):
-        state_monitor.__init__(self)
         #
-        self.update_time = self.config_data[self.config.VAC_VALVE_CHECK_TIME]
-        # memory of previous value for alarm
-        self.old_value = None
-        # create a local copy of relevant config data
-        self.keep_valve_open = self.config_data[self.config.KEEP_VALVE_OPEN]
-        if self.hardware.have_controller[CONTROLLER_TYPE.VAC_VALVES]:
+        state_monitor.__init__(self)
+        self.update_time = self.config_data[self.config.RF_PROT_CHECK_TIME]
+        if self.hardware.have_controller[CONTROLLER_TYPE.RF_PROT]:
             self.set_success = True
             self.start()
         else:
             self.set_success = False
 
 
-
     def check(self):
-        #print 'checkng valve state'
-        self.data.values[self.data.vac_valve_status] = self.hardware.valve_obj[0].vacValveState
-
-        if self.old_value != self.data.values[self.data.vac_valve_status]:
-            if self.hardware.valve_obj[0].vacValveState == VALVE_STATE.VALVE_OPEN:
-                self.alarm('valve open')
-            elif self.hardware.valve_obj[0].vacValveState == VALVE_STATE.VALVE_CLOSED:
-                self.alarm('valve closed')
-            # update old value if value has changed
-            self.old_value = self.data.values[self.data.vac_valve_status]
-
-
-        # if self.keep_valve_open:
-        #     if self.hardware.valve_obj[0].vacValveState == VALVE_STATE.VALVE_CLOSED:
-        #         self.hardware.valve_control.openVacValve(self.valve_name)
-
-
-
-
-
+        if self.set_success:
+            self.data.values[self.data.rfprot_state] = self.hardware.prot_object[0].status
+            #print('RF prot',self.data.values[self.data.rfprot_state])

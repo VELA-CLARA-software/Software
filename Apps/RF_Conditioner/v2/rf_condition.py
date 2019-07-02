@@ -19,6 +19,7 @@ sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\stage')
 
 from PyQt4 import QtGui
 import VELA_CLARA_enums
+print('import main_controller')
 from src.controllers.main_controller import main_controller
 
 

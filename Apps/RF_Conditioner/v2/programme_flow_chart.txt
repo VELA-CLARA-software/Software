@@ -38,9 +38,16 @@ main_controller init:
 			The formatting of processing of this file is cancerous atm. 
 			TODO: maybe we use fitting to move down in power steps as well as up? 
 
-	Create hardware_control_hub
+	Create hardware_control_hub (this owns all CATAP objects, to be passed where they are needed)
 		create CATAP Hardware Modules
-
-
+			self.start_RF_protection()
+			self.start_magnet_control()
+			self.start_valve_control()
+			self.start_mod_control()
+			self.start_llrf_control()
+			and fill have_controller,  a dictionary of {controller_type : successfully created }
+			
+	Create data_monitoring (a class to hold all the main data_monitoring objects, vac, simple_llrf, vac_valve, modulator, gen_mon)
+		start_nmonitors()
 
 
