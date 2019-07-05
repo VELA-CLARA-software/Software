@@ -309,14 +309,16 @@ class logger(object):
 
     # noinspection PyMethodMayBeStatic
     def pickle_dump(self, path, obj):
-        self.message(self.my_name + ' pickle_dumping to ' + path, True)
+        self.message(__name__+' pickle_dumping '+path, add_to_text_log=True,show_time_stamp=True)
         try:
             with open(path + '.pkl', 'wb') as f:
                 pkl.dump(obj, f, pkl.HIGHEST_PROTOCOL)
         except Exception as e:
             print(e)
-            self.message(self.my_name + ' EXCEPTION ' + str(e), True)
-            self.message(self.my_name + ' ERROR pickle_dumping to ' + path, True)
+            self.message(__name__+' EXCEPTION '+str(e), add_to_text_log=True,
+                         show_time_stamp=True)
+            self.message(__name__+' ERROR pickle_dumping to '+path, add_to_text_log=True,
+                         show_time_stamp=True)
 
 
     # '''

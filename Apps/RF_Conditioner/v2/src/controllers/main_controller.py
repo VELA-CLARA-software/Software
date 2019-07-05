@@ -57,14 +57,12 @@ class main_controller(object):
         self.debug = debug
         # args passed in from command line
         self.argv = argv
-        # whoami
-        self.my_name = 'main_controller'
         #
         # Create config reader, and get configuration
-        print(self.my_name + ', attempting to read config: ' + config_file)
+        print(__name__ + ', attempting to read config: ' + config_file)
         self.config = config()
         self.get_config(config_file)
-        print(self.my_name + ', got Config, starting Logging\n')
+        print(__name__ + ', got Config, starting Logging\n')
         #
         # start logging, sets up main text file logging, and logs the config
         self.logger = rf_conditioning_logger(debug=self.debug)
@@ -72,23 +70,22 @@ class main_controller(object):
         self.logger.log_config()
         #
         # create a data object
-        self.logger.message_header(self.my_name + ' Create rf_conditioning_data object',
-                                   add_to_text_log=True,
-                                   show_time_stamp=True)
+        self.logger.message_header(__name__ + ', create rf_conditioning_data object',
+                                   add_to_text_log=True, show_time_stamp=True)
         self.data = rf_conditioning_data(debug=self.debug)
         self.data.initialise()
         #
         # CATAP hardware controllers, these live here and are passed to where they are needed
         # self.hardware.start_up() actually creates the objects, this should only be done once,
         # here!
-        self.logger.message_header(self.my_name + ' Create hardware_control_hub object',
+        self.logger.message_header(__name__ + ', create hardware_control_hub object',
                                    add_to_text_log=True,show_time_stamp=True)
         self.hardware = hardware_control_hub()
         self.hardware.start_up()
 
         #
         # CATAP hardware controllers, these live here and are passed to where they are needed
-        self.logger.message_header(self.my_name + ' Create monitor_hub object',
+        self.logger.message_header(__name__ + ', create monitor_hub object',
                                    add_to_text_log=True,show_time_stamp=True)
         self.monitor = monitor_hub()
         self.monitor.start_monitors()
@@ -351,7 +348,7 @@ class main_controller(object):
     #                                 'Rate = ' + str(
     #                                     controller_base.data.values[dat.breakdown_rate]))
     #                             self.has_not_shown_br_hi = False
-    #                     elif controller_base.data.values[dat.vac_val_limit_status] == state.BAD:
+    #                     elif controller_base.data.values[dat.vac_hi_limit_status] == state.BAD:
     #                         pass
     #                     else:
     #                         self.ramp_up()

@@ -23,20 +23,20 @@
 //
 //*/
 """
-from state_monitor import state_monitor
+from monitor import monitor
 from VELA_CLARA_enums import CONTROLLER_TYPE
 
 # At the moment its a very small simple class,
 # we may increase what it can do (i.e. reset the protection)
 # at a later date
 #
-class rf_protection_monitor(state_monitor):
+class rf_protection_monitor(monitor):
     # whoami
     my_name = 'rf_protection_monitor'
     old_value = None
     def __init__(self):
         #
-        state_monitor.__init__(self)
+        monitor.__init__(self)
         self.update_time = self.config_data[self.config.RF_PROT_CHECK_TIME]
         if self.hardware.have_controller[CONTROLLER_TYPE.RF_PROT]:
             self.set_success = True

@@ -157,7 +157,7 @@
 # #latest_ramp_up_sp_key = 'latest_ramp_up_sp_key'
 #
 #
-# vac_val_limit_status = 'vac_val_limit'
+# vac_hi_limit_status = 'vac_val_limit'
 #
 #
 #
@@ -212,7 +212,7 @@
 #                   llrf_DAQ_rep_rate_max,
 #                   llrf_DAQ_rep_rate_min,
 # #                  log_breakdown_count,
-#                   vac_val_limit_status,
+#                   vac_hi_limit_status,
 #                   can_rf_output_OLD,
 #                   can_rf_output,
 #                   log_amp_set,
@@ -322,7 +322,7 @@
 #     values[last_sp_above_100] = 0
 #     #values[latest_ramp_up_sp] = 0
 #
-#     values[vac_val_limit_status] = state.GOOD
+#     values[vac_hi_limit_status] = state.GOOD
 #
 #     dummy_float = -999.0
 #     dummy_int = -999.0

@@ -208,6 +208,9 @@ class hardware_control_hub(object):
             message = ' successfully created a L01 modulator control object'
         else:
             message = ' FAILED to create a modulator Control object'
+        # get a modulator object if we have a controller
+        if hch.have_controller[CONTROLLER_TYPE.RF_MOD]:
+            hch.mod_obj = [hch.mod_control.getModObjConstRef()]
         self.logger.message(message)
 
     def start_llrf_control(self):
@@ -226,3 +229,31 @@ class hardware_control_hub(object):
             hch.have_controller[CONTROLLER_TYPE.LLRF] = True
             message += ' successfully created a ' + str(rf_structure) + ' LLRF control object'
         self.logger.message(message)
+
+    def connectPV(self, pvKey, pvValue):
+        """
+        connect to process variable using the general monitor,
+        if connected add an item in gen_mon_keys, with key=pvKey and value = id (where id is the
+        string returned by the gen_mon)
+        return connecetd successfully or not
+
+        :param pvKey:
+        :param pvValue:
+        :return:
+        """
+        connected = False
+        if pvValue is not None:
+            id = hardware_control_hub.gen_mon.connectPV(pvValue)
+            if id != 'FAILED': # MAGIC_STRING
+                connected = True
+                self.logger.message(
+                    self.my_name + ' Connected to PV = ' + str(pvValue) + ' with ID = ' + str(
+                        id) + ' acquiring data', True)
+                self.gen_mon_keys[pvKey] = id
+            else:
+                self.logger.message(
+                    self.my_name + ' Failed to connect to PV = ' + str(pvValue) + ' ID = ' + str(
+                        id) + ' NOT acquiring data', True)
+        else:
+            self.logger.message(self.my_name + 'connectPV passed empty PV')
+        return connected

@@ -1050,7 +1050,7 @@ class rf_conditioning_data(object):
     #latest_ramp_up_sp_key = 'latest_ramp_up_sp_key'
 
 
-    vac_val_limit_status = 'vac_val_limit'
+    vac_hi_limit_status = 'vac_hi_limit_status'
 
 
 
@@ -1104,7 +1104,7 @@ class rf_conditioning_data(object):
                       llrf_DAQ_rep_rate_aim,
                       llrf_DAQ_rep_rate_max,
                       llrf_DAQ_rep_rate_min,
-                      vac_val_limit_status,
+                      vac_hi_limit_status,
                       can_rf_output_OLD,
                       can_rf_output,
                       log_amp_set,
@@ -1203,7 +1203,7 @@ class rf_conditioning_data(object):
     values[last_sp_above_100] = 0
     #values[latest_ramp_up_sp] = 0
 
-    values[vac_val_limit_status] = state.GOOD
+    values[vac_hi_limit_status] = state.GOOD
 
     dummy_float = -999.0
     dummy_int = -999.0

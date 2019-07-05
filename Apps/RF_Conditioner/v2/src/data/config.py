@@ -193,15 +193,22 @@ class config(object):
         else:
             return "error"
 
-    def get_traces_to_monitor(self, traces_to_monitor):
-        # print 'get_traces_to_monitor'
-        traces = []
-        for trace in traces_to_monitor.split(','):
-            if "CAVITY" in trace and "PROBE" not in trace:  # MAGIC_STRING
-                traces.append(self.which_cavity(trace))
-            else:
-                traces.append(trace)  # print('NEW TRACE To Monitor',traces[-1])
-        return traces
+    """not used since """
+    # def get_traces_to_monitor(self, traces_to_monitor):
+    #     """
+    #     Since we updated the LLRF and now have all traces in a single array (PV) we now always
+    #     monitor everything
+    #     :param traces_to_monitor: Trace specified in config file
+    #     :return: the CATAP name of the traces to monitor
+    #     """
+    #     # print 'get_traces_to_monitor'
+    #     traces = []
+    #     for trace in traces_to_monitor.split(','):
+    #         if "CAVITY" in trace and "PROBE" not in trace:  # MAGIC_STRING
+    #             traces.append(self.which_cavity(trace))
+    #         else:
+    #             traces.append(trace)  # print('NEW TRACE To Monitor',traces[-1])
+    #     return traces
 
     def sanity_checks(self):
         """
@@ -255,7 +262,8 @@ class config(object):
     # They are defined at the bottom of the file to keep them out the way
     #
     ## Config File Keyword Defintitions
-    OUTSIDE_MASK_COOLDOWN_TIME = 'OUTSIDE_MASK_COOLDOWN_TIME'
+    MINIMUM_COOLDOWN_TIME = 'MINIMUM_COOLDOWN_TIME'
+
     # vacuum keywords
     VAC_NUM_SAMPLES_TO_AVERAGE = 'VAC_NUM_SAMPLES_TO_AVERAGE'
     VAC_SPIKE_DECAY_LEVEL = 'VAC_SPIKE_DECAY_LEVEL'
@@ -271,7 +279,7 @@ class config(object):
     vac_keywords = [VAC_NUM_SAMPLES_TO_AVERAGE, VAC_SPIKE_DECAY_LEVEL, VAC_SPIKE_DECAY_TIME,
                     VAC_SHOULD_DROP_AMP, VAC_SPIKE_DROP_AMP,  # VAC_MAX_AMP_DROP,
                     VAC_SPIKE_DELTA, VAC_CHECK_TIME, VAC_DECAY_MODE, VAC_MAX_LEVEL, VAC_PV,
-                    OUTSIDE_MASK_COOLDOWN_TIME]
+                    MINIMUM_COOLDOWN_TIME]
 
     DC_PV = 'DC_PV'
     DC_DECAY_MODE = 'DC_DECAY_MODE'
@@ -281,7 +289,7 @@ class config(object):
     DC_NUM_SAMPLES_TO_AVERAGE = 'DC_NUM_SAMPLES_TO_AVERAGE'
     DC_SPIKE_DECAY_TIME = 'DC_SPIKE_DECAY_TIME'
     DC_CHECK_TIME = 'DC_CHECK_TIME'
-    OUTSIDE_MASK_COOLDOWN_TIME = 'OUTSIDE_MASK_COOLDOWN_TIME'
+    #OUTSIDE_MASK_COOLDOWN_TIME = 'OUTSIDE_MASK_COOLDOWN_TIME'
     DC_SHOULD_DROP_AMP = 'DC_SHOULD_DROP_AMP'
     dc_keywords = [DC_PV, DC_DECAY_MODE, DC_SPIKE_DECAY_LEVEL, DC_SPIKE_DELTA, DC_SPIKE_DROP_AMP,
                    DC_NUM_SAMPLES_TO_AVERAGE, DC_SPIKE_DECAY_TIME, DC_CHECK_TIME,
@@ -400,6 +408,9 @@ class config(object):
                      # NORMAL_POWER_INCREASE
                      ]
     #
+
+    #OUTSIDE_MASK_COOLDOWN_TIME = 'OUTSIDE_MASK_COOLDOWN_TIME'
+
     # breakdown keywords
     CFPOW_AUTO_SET = 'CFPOW_AUTO_SET'
     CRPOW_AUTO_SET = 'CRPOW_AUTO_SET'
@@ -484,7 +495,7 @@ class config(object):
     KFPHA_DROP_AMP_VALUE = 'KFPHA_DROP_AMP_VALUE'
     KRPHA_DROP_AMP_VALUE = 'KRPHA_DROP_AMP_VALUE'
     OUTSIDE_MASK_CHECK_TIME = 'OUTSIDE_MASK_CHECK_TIME'
-    OUTSIDE_MASK_COOLDOWN_TIME = 'OUTSIDE_MASK_COOLDOWN_TIME'
+    #OUTSIDE_MASK_COOLDOWN_TIME = 'OUTSIDE_MASK_COOLDOWN_TIME'
     CFPOW_MASK_START = 'CFPOW_MASK_START'
     CRPOW_MASK_START = 'CRPOW_MASK_START'
     CPPOW_MASK_START = 'CPPOW_MASK_START'

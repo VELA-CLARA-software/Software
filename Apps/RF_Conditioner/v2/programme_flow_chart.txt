@@ -47,7 +47,11 @@ main_controller init:
 			self.start_llrf_control()
 			and fill have_controller,  a dictionary of {controller_type : successfully created }
 			
-	Create data_monitoring (a class to hold all the main data_monitoring objects, vac, simple_llrf, vac_valve, modulator, gen_mon)
-		start_nmonitors()
+	Create monitor_hub (a class to hold all the main data_monitoring objects, vac, simple_llrf, vac_valve, modulator, gen_mon)
+        self.start_rfprot_monitor()
+        self.start_vac_valve()
+        self.start_modulator_monitor()
+        self.start_llrf_monitor()
+		start 
 
 

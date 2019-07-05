@@ -43,27 +43,34 @@ from src.data.config import config
 print('monitor_hub: import rf_conditioning_logger')
 from src.data.rf_conditioning_logger import rf_conditioning_logger
 print('monitor_hub: import vac_valve_monitor')
-import vac_valve_monitor
+from vac_valve_monitor import vac_valve_monitor
 print('monitor_hub: import modulator_monitor')
 import modulator_monitor
 print('monitor_hub: import rf_protection_monitor')
-import rf_protection_monitor
-print('monitor_hub: import llrf_simple_param_monitor')
-import llrf_simple_param_monitor
-print('monitor_hub: import rf_conditioning_data')
+from rf_protection_monitor import rf_protection_monitor
+print('monitor_hub: import llrf_monitor')
+from llrf_monitor import llrf_monitor
+print('monitor_hub: import llrf_monitor')
+from modulator_monitor import modulator_monitor
+print('monitor_hub: import vac_monitor')
+from vac_monitor import vac_monitor
+print('monitor_hub: import vac_monitor')
 from src.data.rf_conditioning_data import rf_conditioning_data
+
 
 class monitor_hub(object):
     """
     This class creates and holds all the data monitoring classes
     RF Protection Monitor
+
+    There seems like a lot of repeated code for each function ....
     """
     vacuum_monitor = None
     DC_monitor = None
     modulator_monitor = None
     cavity_temp_monitor = None
     outside_mask_trace_monitor = None
-    llrf_simple_param_monitor = None
+    llrf_monitor = None
     water_temp_monitor = None
     rf_prot_monitor = None
     vac_valve_monitor = None
@@ -71,7 +78,24 @@ class monitor_hub(object):
     user_gen_monitor = None
 
     # state of each possible data monitor
-    is_monitoring = {}
+
+    is_vac_monitoring = 'is_vac_monitoring'
+    is_DC_monitoring = 'is_DC_monitoring'
+    is_modulator_monitoring = 'is_modulator_monitoring'
+    is_cavity_temp_monitoring = 'is_cavity_temp_monitoring'
+    is_outside_mask_trace_monitoring = 'is_outside_mask_trace_monitoring'
+    is_llrf_monitoring = 'is_llrf_monitoring'
+    is_water_temp_monitoring = 'is_water_temp_monitoring'
+    is_rf_prot_monitoring = 'is_rf_prot_monitoring'
+    is_vac_valve_monitor = 'is_vac_valve_monitor'
+    is_sol_monitoring = 'is_sol_monitoring'
+    is_user_gen_monitoring = 'is_user_gen_monitoring'
+
+    is_monitoring = {is_vac_monitoring: False, is_DC_monitoring: False,
+        is_modulator_monitoring: False, is_cavity_temp_monitoring: False,
+        is_outside_mask_trace_monitoring: False, is_llrf_monitoring: False,
+        is_water_temp_monitoring: False, is_rf_prot_monitoring: False, is_vac_valve_monitor: False,
+        is_sol_monitoring: False, is_user_gen_monitoring: False}
 
     def __init__(self):
         self.my_name = 'data_monitoring'
@@ -83,29 +107,73 @@ class monitor_hub(object):
         self.data = rf_conditioning_data()
 
     def start_monitors(self):
-        self.logger.message(self.my_name + ' Starting Data Monitoring',add_to_text_log=True,
+        self.logger.message(__name__ + ' Starting Data Monitoring',add_to_text_log=True,
                             show_time_stamp=False)
         self.start_rfprot_monitor()
         self.start_vac_valve()
+        self.start_modulator_monitor()
+        self.start_llrf_monitor()
+
+    def start_modulator_monitor(self):
+        '''
+
+        :return:
+        '''
+        mh = monitor_hub
+        self.logger.message(__name__ + ' start_modulator_monitor()')
+        mh.modulator_monitor = modulator_monitor()
+        mh.is_monitoring[mh.is_modulator_monitoring] = mh.modulator_monitor.set_success
+        message = 'start_rfprot_monitor '
+        if mh.is_monitoring[mh.is_modulator_monitoring]:
+            message += ' successfully started RF Modulator Monitoring'
+        else:
+            message += ' FAILED to start RF Modulator Monitoring'
+        self.logger.message(message)
 
     def start_rfprot_monitor(self):
-        self.logger.message(self.my_name + ' rfprot_monitor()')
-        monitor_hub.rf_prot_monitor = rf_protection_monitor.rf_protection_monitor()
-        monitor_hub.is_monitoring[self.data.rfprot_state] = monitor_hub.rf_prot_monitor.set_success
+        mh = monitor_hub
+        self.logger.message(__name__ + ' start_rfprot_monitor()')
+        mh.rf_prot_monitor = rf_protection_monitor()
+        mh.is_monitoring[mh.is_rf_prot_monitoring] = mh.rf_prot_monitor.set_success
         message = 'start_rfprot_monitor '
-        if monitor_hub.is_monitoring[self.data.rfprot_state]:
+        if mh.is_monitoring[mh.is_rf_prot_monitoring]:
             message += ' successfully started RF Protection Monitoring'
         else:
             message += ' FAILED to start RF Protection Monitoring'
         self.logger.message(message)
 
     def start_vac_valve(self):
-        self.logger.message(self.my_name + ' start_vac_valve()')
-        monitor_hub.vac_valve_monitor = vac_valve_monitor.vac_valve_monitor()
-        monitor_hub.is_monitoring[self.data.rfprot_state] = monitor_hub.rf_prot_monitor.set_success
+        mh = monitor_hub
+        self.logger.message(__name__ + ' start_vac_valve()')
+        mh.vac_valve_monitor = vac_valve_monitor()
+        mh.is_monitoring[mh.is_vac_valve_monitor] = mh.rf_prot_monitor.set_success
         message = 'start_vac_valve '
-        if monitor_hub.is_monitoring[self.data.rfprot_state]:
+        if mh.is_monitoring[mh.is_vac_valve_monitor]:
             message += ' successfully started Vac Valve Monitoring'
         else:
             message += ' FAILED to start Vac Valve Monitoring'
+        self.logger.message(message)
+
+    def start_llrf_monitor(self):
+        mh = monitor_hub
+        self.logger.message(__name__ + ' start_llrf_monitor()')
+        mh.llrf_monitor = llrf_monitor()
+        mh.is_monitoring[mh.is_llrf_monitoring] = mh.rf_prot_monitor.set_success
+        message = 'start_llrf_monitor '
+        if mh.is_monitoring[mh.is_llrf_monitoring]:
+            message += ' successfully started LLRF Monitoring'
+        else:
+            message += ' FAILED to start LLRF Monitoring'
+        self.logger.message(message)
+
+    def vac_monitor(self):
+        mh = monitor_hub
+        self.logger.message(__name__ + ' vac_monitor()')
+        mh.vac_monitor = vac_monitor()
+        mh.is_monitoring[mh.is_vac_monitoring] = mh.vac_monitor.set_success
+        message = 'start_rfprot_monitor '
+        if mh.is_monitoring[mh.is_vac_monitoring]:
+            message += ' successfully started Vacuum Monitoring'
+        else:
+            message += ' FAILED to start Vacuum  Monitoring'
         self.logger.message(message)

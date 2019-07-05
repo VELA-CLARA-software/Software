@@ -35,9 +35,38 @@ from src.controllers.hardware_control_hub import hardware_control_hub
 import numbers
 
 
-class state_monitor(QObject):
-    my_name = 'state_monitor'
-
+class monitor(QObject):
+    """
+    # DJS Sept 2017
+        #
+        # spike monitor
+        #
+        #
+        # inherits from monitor base class
+        # It relies on timers to automatically get new signal values
+        # process them, then sets a flag in the passed stat_dict
+        # when the state of the signal changes
+        # from 'good' to 'bad'
+        # these states are always tied to the state of the cooldown through the
+        # property 'in_cooldown' and only emitted when the cooldown state changes
+        #
+        # Assuming connecting the interface to a pv has worked:
+        # it has a timer that gets and checks the signal signal
+        # a spike is defined as:
+        # self._latest_value > self.spike_delta + self._mean_level
+        # if the signal has not spiked, it appends the new value to
+        # value_history and sets _mean_level
+        # if the signal 'spikes'  it sets 'bad' and the
+        # object enters a cooldown state
+        # there are two cooldown states: 'timed' and 'level'
+        # 'timed' waits cooldown_time ms and then sets 'good'
+        # 'level' emits good when the vacuum returns
+        # to spike_decay_level*_mean_level then sets 'good'
+        # after cooldown the monitor returns to checking new signal values
+        # for a spike and updating the history buffer and mean
+        #
+        # base-class
+    """
     def __init__(self,
                  update_time=100,
                  cooldown_time=5000,
@@ -50,7 +79,9 @@ class state_monitor(QObject):
         self.no_cooldown = no_cooldown
         self.update_time = update_time
         self.cool_down_time = cooldown_time
-        self.timer = QTimer()
+        # this class has a number of timers:
+        self.timer = QTimer()          # used for getting data
+        self.cooldown_timer = QTimer() # used for a TIMED cooldown
         # owns a config and logging class
         self.config = config.config()
         self.config_data = self.config.raw_config_data
@@ -59,9 +90,16 @@ class state_monitor(QObject):
 
         # the data class
         self.data = rf_conditioning_data()
-
+        self.values = self.data.values
         # CATAP hardware controllers, these live here and are passed to where they are needed
         self.hardware = hardware_control_hub()
+        #
+        if timed_cooldown:
+            self.set_timed_cooldown()
+        if level_cooldown:
+            self.set_level_cooldown()
+        if no_cooldown:
+            self.set_no_cooldown()
 
     def alarm(self, alarm):
         print('alarm ' + alarm)
@@ -76,7 +114,7 @@ class state_monitor(QObject):
 
     def start(self):
         self.check()
-        print(self.my_name + ' starting monitoring, update time = ' + str(self.update_time))
+        print(__name__ + ' starting monitoring, update time = ' + str(self.update_time))
         self.timer.timeout.connect(self.check)
         self.timer.start(self.update_time)
 
@@ -99,7 +137,7 @@ class state_monitor(QObject):
 
     # you should probably overload this in child class
     def cooldown_function(self):
-        self.logger.message(self.my_name + 'monitor function called, cool down ended')
+        self.logger.message(__name__ + ' monitor function called, cool down ended')
         self.incool_down = False
 
     def set_cooldown_mode(self, mode):
@@ -116,7 +154,7 @@ class state_monitor(QObject):
         i = 0
         for item in items:
             if not isinstance(item, numbers.Real):
-                self.logger.message(self.my_name, ' item ', i, ' failed sanity check', True)
+                self.logger.message(__name__ + ' item {}  failed sanity check'.format(i))
                 i += 1
                 self.set_success = False
         return self.set_success

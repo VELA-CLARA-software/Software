@@ -63,6 +63,9 @@ MAX_DELTA_AMP_SP :  50 #; maximum setpoint increase allowed, no matter what the 
 
 NUM_SET_POINTS_TO_FIT:  20 # how many setpoints to fit when predicted then next setpoint
 
+
+MINIMUM_COOLDOWN_TIME: 3000 # INTEGER, minimum time in ms that a state (Vac spike, outside mask event) can be BAD for 
+
 #POWER_AIM= 0.1; MW watts
 #PULSE_LENGTH_START=100; ns !! NOT us
 #PULSE_LENGTH_AIM= 2500; ns  !! NOT us
@@ -380,7 +383,7 @@ VAC_NUM_SAMPLES_TO_AVERAGE:  7 # integer, numer of samples over which to calcual
 VAC_CHECK_TIME:  200 #; ms between vacuum level checks, we think this is the faatest they go at
 VAC_SHOULD_DROP_AMP:  true #; amp_sp to set if vacuum spike
 VAC_SPIKE_DROP_AMP:  5 #; amp_sp to set if vacuum spike
-VAC_MAX_LEVEL:  0.000000005 #5e-9;
+VAC_MAX_LEVEL:  0.000000005 #5e-9; If vacuum level goes  above this, disable ramping 
 VAC_SPIKE_TRACES_TO_SAVE:  
   - KLYSTRON_FORWARD_PHASE
   - KLYSTRON_REVERSE_PHASE
