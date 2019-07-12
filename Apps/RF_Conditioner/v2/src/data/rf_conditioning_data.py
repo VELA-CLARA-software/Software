@@ -310,10 +310,44 @@ class rf_conditioning_data(object):
                         self.values[rcd.breakdown_rate_aim]), add_to_text_log=True,
                     show_time_stamp=False)
 
+    def update_last_million_pulse_log(self):
+        """
+        Every time we check te numebr of pulses / breakdown counts we update the last million log
+        """
+        # local alias for shorter lines
+        rcd = rf_conditioning_data
 
+        # add the next set of values to the last_million_log
+        rcd.last_million_log.append(
+            [self.values[rcd.pulse_count], self.values[rcd.breakdown_count],
+                self.values[rcd.current_ramp_index], self.values[rcd.pulse_length]])
 
+        # remove entries that are mor ethan 1 millino pulses ago
+        # TODO should we hardcode in the million pulses??? or have it  as a config parameters,
+        #  and rename everything that references 1 million???? MAYBE CALL IT
+        #  recent_breakdown_history, recent_bd_history >>> ?
+        #
+        while rcd.last_million_log[-1][0] - rcd.last_million_log[0][0] > self.config_data[
+            config.NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY]:
+            rcd.last_million_log.pop(0)
 
+        # update all the breakdown stats based on the last millino log
+        self.update_breakdown_stats()  # raw_input()
 
+    def add_to_pulse_breakdown_log(self, amp):
+        """
+        update the _pulse_count_log_file with latest numbers
+        AMP is passed, as values dict, may not have the exact lastest value
+        (e.g. after a ramp up or ramp down)
+        :param amp: the amp_set point to write to file
+        """
+        rcd = rf_conditioning_data
+        if amp > 100:  # MAGIC_NUMBER
+            self.logger.add_to_pulse_count_breakdown_log(
+                [rcd.values[rcd.pulse_count], rcd.values[rcd.breakdown_count], int(amp),
+                    int(rcd.values[rcd.current_ramp_index]),
+                    int(rcd.values[rcd.pulse_length] * 1000)  # MAGIC_NUMBER UNITS
+                ])
 
     def initialise(self):
         """
@@ -913,8 +947,13 @@ class rf_conditioning_data(object):
     vac_spike_status = 'vac_spike_status'
     DC_spike_status = 'DC_spike_status'
     rev_power_spike_count = 'rev_power_spike_count'
-    cav_temp = 'cav_temp'
-    water_temp = 'water_temp'
+
+
+    # THERE are N water temps that aredefined at run time!!!
+    # THESE GET ADDED BY THE water_temperature_monitor
+    #cav_temp = 'cav_temp'
+    #water_temp = 'water_temp'
+    # sol_value = 'sol_value'
 
 
     # Mean Values of Traces # TODO: CHANGE THIS NAMES TO MORE CANONICAL ONES
@@ -1016,7 +1055,6 @@ class rf_conditioning_data(object):
 
 
     last_mean_power = 'last_mean_power'
-    sol_value = 'sol_value'
 
     amp_ff = 'amp_ff'
     amp_sp = 'amp_sp'
@@ -1093,9 +1131,7 @@ class rf_conditioning_data(object):
                       pulse_count,
                       event_pulse_count,
                       duplicate_pulse_count,
-                      water_temp,
                       vac_level,
-                      cav_temp,
                       time_stamp,
                       log_pulse_count,
                       llrf_DAQ_rep_rate,
@@ -1135,7 +1171,6 @@ class rf_conditioning_data(object):
                       next_sp_decrease,
                       last_mean_power,
                       next_power_increase,
-                      sol_value,
                       phase_mask_by_power_trace_1_set,
                       phase_mask_by_power_trace_2_set,
                       phase_end_mask_by_power_trace_1_time,
@@ -1211,8 +1246,6 @@ class rf_conditioning_data(object):
 
 
 
-    values[cav_temp] = dummy_float
-    values[water_temp] = dummy_float + 1
 
 
 

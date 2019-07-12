@@ -24,38 +24,47 @@
 //
 //*/
 '''
-
-# from VELA_CLARA_enums import MACHINE_MODE
-# from VELA_CLARA_enums import MACHINE_AREA
-# from VELA_CLARA_enums import CONTROLLER_TYPE
-# from VELA_CLARA_LLRF_Control import LLRF_TYPE
-# import VELA_CLARA_LLRF_Control
-# import VELA_CLARA_Vac_Valve_Control
-# import VELA_CLARA_RF_Modulator_Control
-# import VELA_CLARA_RF_Protection_Control
-# import VELA_CLARA_Magnet_Control
-# import VELA_CLARA_General_Monitor
-import subprocess
+import sys
 from collections import defaultdict
 
 print('monitor_hub: import config')
 from src.data.config import config
+
 print('monitor_hub: import rf_conditioning_logger')
 from src.data.rf_conditioning_logger import rf_conditioning_logger
+
 print('monitor_hub: import vac_valve_monitor')
 from vac_valve_monitor import vac_valve_monitor
+
 print('monitor_hub: import modulator_monitor')
 import modulator_monitor
+
 print('monitor_hub: import rf_protection_monitor')
 from rf_protection_monitor import rf_protection_monitor
+
 print('monitor_hub: import llrf_monitor')
 from llrf_monitor import llrf_monitor
+
 print('monitor_hub: import llrf_monitor')
 from modulator_monitor import modulator_monitor
+
 print('monitor_hub: import vac_monitor')
 from vac_monitor import vac_monitor
+
 print('monitor_hub: import vac_monitor')
 from src.data.rf_conditioning_data import rf_conditioning_data
+
+print('monitor_hub: import outside_mask_trace_monitor')
+from src.monitors.outside_mask_trace_monitor import outside_mask_trace_monitor
+
+print('monitor_hub: import water_temperature_monitor')
+from src.monitors.water_temperature_monitor import water_temperature_monitor
+
+print('monitor_hub: import cavity_temperature_monitor')
+from src.monitors.cavity_temperature_monitor import cavity_temperature_monitor
+
+print('monitor_hub: import cavity_temperature_monitor')
+from src.monitors.solenoid_monitor import solenoid_monitor
 
 
 class monitor_hub(object):
@@ -69,7 +78,7 @@ class monitor_hub(object):
     DC_monitor = None
     modulator_monitor = None
     cavity_temp_monitor = None
-    outside_mask_trace_monitor = None
+    outside_mask_monitor = None
     llrf_monitor = None
     water_temp_monitor = None
     rf_prot_monitor = None
@@ -80,25 +89,23 @@ class monitor_hub(object):
     # state of each possible data monitor
 
     is_vac_monitoring = 'is_vac_monitoring'
-    is_DC_monitoring = 'is_DC_monitoring'
+    # is_DC_monitoring = 'is_DC_monitoring'
     is_modulator_monitoring = 'is_modulator_monitoring'
     is_cavity_temp_monitoring = 'is_cavity_temp_monitoring'
-    is_outside_mask_trace_monitoring = 'is_outside_mask_trace_monitoring'
+    is_outside_mask_monitoring = 'is_outside_mask_monitoring'
     is_llrf_monitoring = 'is_llrf_monitoring'
     is_water_temp_monitoring = 'is_water_temp_monitoring'
     is_rf_prot_monitoring = 'is_rf_prot_monitoring'
     is_vac_valve_monitor = 'is_vac_valve_monitor'
     is_sol_monitoring = 'is_sol_monitoring'
-    is_user_gen_monitoring = 'is_user_gen_monitoring'
 
-    is_monitoring = {is_vac_monitoring: False, is_DC_monitoring: False,
-        is_modulator_monitoring: False, is_cavity_temp_monitoring: False,
-        is_outside_mask_trace_monitoring: False, is_llrf_monitoring: False,
-        is_water_temp_monitoring: False, is_rf_prot_monitoring: False, is_vac_valve_monitor: False,
-        is_sol_monitoring: False, is_user_gen_monitoring: False}
+    is_monitoring = {is_vac_monitoring: False,  # is_DC_monitoring: False,
+                     is_modulator_monitoring: False, is_cavity_temp_monitoring: False,
+                     is_outside_mask_monitoring: False, is_llrf_monitoring: False,
+                     is_water_temp_monitoring: False, is_rf_prot_monitoring: False,
+                     is_vac_valve_monitor: False, is_sol_monitoring: False}
 
     def __init__(self):
-        self.my_name = 'data_monitoring'
         # owns a config and logging class
         self.config = config()
         self.config_data = self.config.raw_config_data
@@ -107,12 +114,31 @@ class monitor_hub(object):
         self.data = rf_conditioning_data()
 
     def start_monitors(self):
-        self.logger.message(__name__ + ' Starting Data Monitoring',add_to_text_log=True,
+        self.logger.message(__name__ + ' Starting Data Monitoring', add_to_text_log=True,
                             show_time_stamp=False)
         self.start_rfprot_monitor()
         self.start_vac_valve()
         self.start_modulator_monitor()
         self.start_llrf_monitor()
+        self.start_vac_monitor()
+        self.start_vac_monitor()
+        self.start_outside_mask_monitor()
+        self.start_water_temperature_monitor()
+        self.start_cavity_temperature_monitor()
+        self.start_solenoid_monitoring()
+
+        self.logger.message(__name__+' Sanity Check', add_to_text_log=True,show_time_stamp=False)
+        for key, value in monitor_hub.is_monitoring.iteritems():
+            try:
+                if value:
+                    self.logger.message(key + ' = True')
+                else:
+                    err = "Monitor Error " + key + " Failed to start monitoring"
+                    raise Exception
+            except Exception:
+                print >> sys.stderr, err
+                self.logger.message([err])
+                raise
 
     def start_modulator_monitor(self):
         '''
@@ -125,9 +151,9 @@ class monitor_hub(object):
         mh.is_monitoring[mh.is_modulator_monitoring] = mh.modulator_monitor.set_success
         message = 'start_rfprot_monitor '
         if mh.is_monitoring[mh.is_modulator_monitoring]:
-            message += ' successfully started RF Modulator Monitoring'
+            message += 'successfully started RF Modulator Monitoring'
         else:
-            message += ' FAILED to start RF Modulator Monitoring'
+            message += 'FAILED to start RF Modulator Monitoring'
         self.logger.message(message)
 
     def start_rfprot_monitor(self):
@@ -137,9 +163,9 @@ class monitor_hub(object):
         mh.is_monitoring[mh.is_rf_prot_monitoring] = mh.rf_prot_monitor.set_success
         message = 'start_rfprot_monitor '
         if mh.is_monitoring[mh.is_rf_prot_monitoring]:
-            message += ' successfully started RF Protection Monitoring'
+            message += 'successfully started RF Protection Monitoring'
         else:
-            message += ' FAILED to start RF Protection Monitoring'
+            message += 'FAILED to start RF Protection Monitoring'
         self.logger.message(message)
 
     def start_vac_valve(self):
@@ -149,9 +175,9 @@ class monitor_hub(object):
         mh.is_monitoring[mh.is_vac_valve_monitor] = mh.rf_prot_monitor.set_success
         message = 'start_vac_valve '
         if mh.is_monitoring[mh.is_vac_valve_monitor]:
-            message += ' successfully started Vac Valve Monitoring'
+            message += 'successfully started Vac Valve Monitoring'
         else:
-            message += ' FAILED to start Vac Valve Monitoring'
+            message += 'FAILED to start Vac Valve Monitoring'
         self.logger.message(message)
 
     def start_llrf_monitor(self):
@@ -166,14 +192,62 @@ class monitor_hub(object):
             message += ' FAILED to start LLRF Monitoring'
         self.logger.message(message)
 
-    def vac_monitor(self):
+    def start_vac_monitor(self):
         mh = monitor_hub
         self.logger.message(__name__ + ' vac_monitor()')
         mh.vac_monitor = vac_monitor()
         mh.is_monitoring[mh.is_vac_monitoring] = mh.vac_monitor.set_success
-        message = 'start_rfprot_monitor '
+        message = 'start_vac_monitor '
         if mh.is_monitoring[mh.is_vac_monitoring]:
-            message += ' successfully started Vacuum Monitoring'
+            message += 'successfully started Vacuum Monitoring'
         else:
-            message += ' FAILED to start Vacuum  Monitoring'
+            message += 'FAILED to start Vacuum Monitoring'
+        self.logger.message(message)
+
+    def start_outside_mask_monitor(self):
+        mh = monitor_hub
+        self.logger.message(__name__ + ' start_outside_mask_monitor()')
+        mh.outside_mask_monitor = outside_mask_trace_monitor()
+        mh.is_monitoring[mh.is_outside_mask_monitoring] = mh.outside_mask_monitor.set_success
+        message = 'start_outside_mask_monitor '
+        if mh.is_monitoring[mh.is_outside_mask_monitoring]:
+            message += 'successfully started Outside Mask Monitoring'
+        else:
+            message += 'FAILED to start Outside Mask Monitoring'
+        self.logger.message(message)
+
+    def start_water_temperature_monitor(self):
+        mh = monitor_hub
+        self.logger.message(__name__ + ' start_water_temperature_monitor()')
+        mh.water_temp_monitor = water_temperature_monitor()
+        mh.is_monitoring[mh.is_water_temp_monitoring] = mh.water_temp_monitor.set_success
+        message = 'start_water_temperature_monitor '
+        if mh.is_monitoring[mh.is_water_temp_monitoring]:
+            message += 'successfully started Water Temperature Monitoring '
+        else:
+            message += 'FAILED to start Water Temperature Monitoring'
+        self.logger.message(message)
+
+    def start_cavity_temperature_monitor(self):
+        mh = monitor_hub
+        self.logger.message(__name__ + ' start_cavity_temperature_monitor()')
+        mh.cavity_temp_monitor = cavity_temperature_monitor()
+        mh.is_monitoring[mh.is_cavity_temp_monitoring] = mh.cavity_temp_monitor.set_success
+        message = 'start_cavity_temperature_monitor '
+        if mh.is_monitoring[mh.is_cavity_temp_monitoring]:
+            message += 'successfully started Cavity Temperature Monitoring '
+        else:
+            message += 'FAILED to start Cavity Temperature Monitoring'
+        self.logger.message(message)
+
+    def start_solenoid_monitoring(self):
+        mh = monitor_hub
+        self.logger.message(__name__ + ' start_solenoid_monitoring()')
+        mh.sol_monitor = solenoid_monitor()
+        mh.is_monitoring[mh.is_sol_monitoring] = mh.sol_monitor.set_success
+        message = 'start_solenoid_monitoring '
+        if mh.is_monitoring[mh.is_sol_monitoring]:
+            message += 'successfully started Solenoid Monitoring '
+        else:
+            message += 'FAILED to start Solenoid Monitoring'
         self.logger.message(message)

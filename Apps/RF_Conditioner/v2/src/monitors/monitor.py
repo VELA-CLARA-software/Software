@@ -90,7 +90,7 @@ class monitor(QObject):
 
         # the data class
         self.data = rf_conditioning_data()
-        self.values = self.data.values
+        self.values = rf_conditioning_data.values
         # CATAP hardware controllers, these live here and are passed to where they are needed
         self.hardware = hardware_control_hub()
         #
@@ -100,6 +100,9 @@ class monitor(QObject):
             self.set_level_cooldown()
         if no_cooldown:
             self.set_no_cooldown()
+
+        # flag for general state of the monitor, eg True if initialised and passed sanity checks
+        self.set_success = False
 
     def alarm(self, alarm):
         print('alarm ' + alarm)
@@ -151,6 +154,13 @@ class monitor(QObject):
             self.set_level_cooldown()
 
     def sanity_checks(self, items):
+        """
+        general a sanity checking funciton that just checks if items are numbers
+        :param items: objects to check
+        :return: tru if all ojects are numbers ...
+        """
+        self.set_success = True # dangerous setting this to true temporarily >> ?? (in generla it
+        # must be)
         i = 0
         for item in items:
             if not isinstance(item, numbers.Real):

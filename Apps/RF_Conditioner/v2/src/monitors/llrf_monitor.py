@@ -303,7 +303,7 @@ class llrf_monitor(monitor):
             #         self.update_amp_pwr_mean_dict(monitor.data.values[dat.amp_sp],self.old_mean_values[trace])
 
 
-    ''' The below were made as funciton in case i had to use them elsewhere, then perhaps they 
+    ''' The below were made as function in case i had to use them elsewhere, then perhaps they
     could go in a utiliites space, so far they are only used here'''
     def is_kly_forward_power(self,str):
         return 'KLYSTRON_FORWARD_POWER' in str

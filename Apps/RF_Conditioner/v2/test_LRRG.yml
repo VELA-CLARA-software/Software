@@ -50,7 +50,7 @@
 ## CFPOW => "CAVITY_FORWARD_POWER"
 ## CFPHA => "CAVITY_FORWARD_PHASE"
 ## 
-##  The name of the RF structure, as used in CATAP
+#  The name of the RF structure, as used in CATAP
 RF_STRUCTURE:  L01 # STRING
 
 ## main param
@@ -384,6 +384,7 @@ VAC_CHECK_TIME:  200 #; ms between vacuum level checks, we think this is the faa
 VAC_SHOULD_DROP_AMP:  true #; amp_sp to set if vacuum spike
 VAC_SPIKE_DROP_AMP:  5 #; amp_sp to set if vacuum spike
 VAC_MAX_LEVEL:  0.000000005 #5e-9; If vacuum level goes  above this, disable ramping 
+WHEN_VAC_HI_DISABLE_RAMP: true #BOOL, flag for whether to disable ramping when vac_level is above VAC_MAX_LEVEL
 VAC_SPIKE_TRACES_TO_SAVE:  
   - KLYSTRON_FORWARD_PHASE
   - KLYSTRON_REVERSE_PHASE
@@ -411,17 +412,21 @@ DC_SPIKE_DROP_AMP:  6 #; INTEGER amp_sp to set if vacuum spike
 
 
 ##Temperature PVs TODO: WHAT IF WE WANT MORE THAN ONE OF THESE??? HOW WILL THEY BE DISPALYED IN THE GUI?
-CAVITY_TEMPERATURE_PV:  CLA-GUN-RF-LRRG-01:RT
+CAVITY_TEMPERATURE_PV_COUNT: 1 # INTEGER to give number of water temperatures we are monitoring, 
+CAVITY_TEMPERATURE_PV: [CLA-GUN-RF-LRRG-01:RT]
 CAVITY_TEMPERATURE_CHECK_TIME:  1000 #;ms between getting new value
-WATER_TEMPERATURE_PV:  CLA-GUN-RF-LRRG-01:RT
-WATER_TEMPERATURE_CHECK_TIME:  1000 #;ms between getting new value
+
+# (WATER_TEMPERATURE_PV_COUNT MUST match the number of entries in WATER_TEMPERATURE_PV
+WATER_TEMPERATURE_PV_COUNT: 2 # INTEGER to give number of water temperatures we are monitoring, WATER_TEMPERATURE_PV:  
+WATER_TEMPERATURE_PV: [CLA-GUN-RF-LRRG-01:RT, CLA-GUN-RF-LRRG-02:RT]
+WATER_TEMPERATURE_CHECK_TIME:  1000 # INTEGER ms between getting new values
 
 ## solenoid, THIS HAS TO CHANGE FROM APRIL 2019, as fo rthe linac we have two solenoids!! 
 MAGNET_MACHINE_AREA: CLARA_PH1 # STRING
-SOL_NAMES:  # a list of strings
-  - L01-SOL1
-  - L01-SOL2
+SOL_COUNT: 2 # a list of strings
+SOL_NAMES: [L01-SOL1, L01-SOL2] # a list of strings
 SOL_CHECK_TIME:  1000 # INTEGER ms
+
 SHOULD_SOL_WOBBLE:  false
 SOL_WOBBLE_HI:  0.0
 SOL_WOBBLE_LO:  0.0

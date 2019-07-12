@@ -52,9 +52,7 @@ class hardware_control_hub(object):
     # these objects live here and will be passed ot other classes as needed
     #
     # vaccum valves
-    print('import VELA_CLARA_Vac_Valve_Control')
-    valve_init = VELA_CLARA_Vac_Valve_Control.init()
-    valve_init.setQuiet()
+
     valve_control = None
     # RF modualtor
     print('import VELA_CLARA_RF_Modulator_Control')
@@ -102,6 +100,11 @@ class hardware_control_hub(object):
         self.config = config.config()
         self.config_data = self.config.raw_config_data
         self.logger = rf_conditioning_logger.rf_conditioning_logger()
+
+        print('import VELA_CLARA_Vac_Valve_Control')
+        self.valve_init = VELA_CLARA_Vac_Valve_Control.init()
+        self.valve_init.setQuiet()
+
 
 
     def start_up(self):
@@ -157,13 +160,13 @@ class hardware_control_hub(object):
         if machine_area == MACHINE_AREA.VELA_INJ:  # MAGIC_STRING
             hch.mag_control = hch.mag_init.physical_CLARA_Ph1_Magnet_Controller()
             hch.have_controller[CONTROLLER_TYPE.MAGNET] = True
-            message += ' successfully created a CLARA_PH1 magnet control object'
+            message += 'successfully created a CLARA_PH1 magnet control object'
         elif machine_area == MACHINE_AREA.CLARA_PH1:  # MAGIC_STRING
             hch.mag_control = hch.mag_init.physical_VELA_INJ_Magnet_Controller()
             hch.have_controller[CONTROLLER_TYPE.MAGNET] = True
-            message += ' successfully created a VELA_INJ magnet control object'
+            message += 'successfully created a VELA_INJ magnet control object'
         else:
-            message = ' FAILED to create a magnet Control object'
+            message = 'FAILED to create a magnet Control object'
         self.logger.message(message)
 
     def start_valve_control(self):
@@ -176,15 +179,17 @@ class hardware_control_hub(object):
         hch = hardware_control_hub
         message = 'start_mod_control() '
         if machine_area == MACHINE_AREA.CLARA_PH1:
-            hch.valve_control = hch.valve_init.physical_CLARA_PH1_Vac_Valve_Controller()
+            #hch.valve_control = hch.valve_init.physical_CLARA_PH1_Vac_Valve_Controller()
+            hch.valve_control = self.valve_init.physical_CLARA_PH1_Vac_Valve_Controller()
             hch.have_controller[CONTROLLER_TYPE.VAC_VALVES] = True
-            message = ' successfully created a CLARA_PH1 valve control object'
+            message += 'successfully created a CLARA_PH1 valve control object'
         elif machine_area == MACHINE_AREA.VELA_INJ:
-            hch.valve_control = hch.valve_init.physical_VELA_INJ_Vac_Valve_Controller()
+            #hch.valve_control = hch.valve_init.physical_VELA_INJ_Vac_Valve_Controller()
+            hch.valve_control = self.valve_init.physical_VELA_INJ_Vac_Valve_Controller()
             hch.have_controller[CONTROLLER_TYPE.VAC_VALVES] = True
-            message = ' successfully created a VELA_INJ valve control object'
+            message += 'successfully created a VELA_INJ valve control object'
         else:
-            message = ' FAILED to create a valve Control object'
+            message += 'FAILED to create a valve Control object'
         if hch.have_controller[CONTROLLER_TYPE.VAC_VALVES]:
             hch.valve_obj = [hch.valve_control.getVacValveObjConstRef(valve)]
 
@@ -200,14 +205,14 @@ class hardware_control_hub(object):
         if hch.is_gun_type[self.config_data[self.config.RF_STRUCTURE]]:
             hch.mod_control = hch.mod_init.physical_GUN_MOD_Controller()
             hch.have_controller[CONTROLLER_TYPE.RF_MOD] = True
-            message = ' successfully created a ' + str(
+            message += 'successfully created a ' + str(
                 self.config_data[self.config.RF_STRUCTURE]) + ' modulator control object'
         elif self.config_data[self.config.RF_STRUCTURE] == LLRF_TYPE.L01:
             hch.mod_control = hch.mod_init.physical_L01_MOD_Controller()
             hch.have_controller[CONTROLLER_TYPE.RF_MOD] = True
-            message = ' successfully created a L01 modulator control object'
+            message += 'successfully created a L01 modulator control object'
         else:
-            message = ' FAILED to create a modulator Control object'
+            message += 'FAILED to create a modulator Control object'
         # get a modulator object if we have a controller
         if hch.have_controller[CONTROLLER_TYPE.RF_MOD]:
             hch.mod_obj = [hch.mod_control.getModObjConstRef()]
@@ -222,12 +227,12 @@ class hardware_control_hub(object):
         rf_structure = self.config_data[self.config.RF_STRUCTURE]
         message = 'start_llrf_control() '
         if rf_structure == LLRF_TYPE.UNKNOWN_TYPE:
-            message += ' FAILED to create a LLRF  Control object'
+            message += 'FAILED to create a LLRF  Control object'
         else:
             hch.llrf_control = hch.llrf_init.getLLRFController(MACHINE_MODE.PHYSICAL, rf_structure)
             hch.llrf_obj = [hch.llrf_control.getLLRFObjConstRef()]
             hch.have_controller[CONTROLLER_TYPE.LLRF] = True
-            message += ' successfully created a ' + str(rf_structure) + ' LLRF control object'
+            message += 'successfully created a ' + str(rf_structure) + ' LLRF control object'
         self.logger.message(message)
 
     def connectPV(self, pvKey, pvValue):
@@ -237,23 +242,22 @@ class hardware_control_hub(object):
         string returned by the gen_mon)
         return connecetd successfully or not
 
-        :param pvKey:
-        :param pvValue:
+        :param pvKey: (string)  the key that you want to use fro this PV in  gen_mon_keys
+        :param pvValue: (string) The actual PVyou want to connetc to
         :return:
         """
         connected = False
         if pvValue is not None:
             id = hardware_control_hub.gen_mon.connectPV(pvValue)
-            if id != 'FAILED': # MAGIC_STRING
+            m = 'PV = {} with ID = {}, '.format(pvValue, id)
+            if id != 'FAILED': # MAGIC_STRING then gen_mon returns this if it fails to connect
                 connected = True
-                self.logger.message(
-                    self.my_name + ' Connected to PV = ' + str(pvValue) + ' with ID = ' + str(
-                        id) + ' acquiring data', True)
+                return_message = __name__ + ' connected, ' + m + ' acquiring data'
                 self.gen_mon_keys[pvKey] = id
             else:
-                self.logger.message(
-                    self.my_name + ' Failed to connect to PV = ' + str(pvValue) + ' ID = ' + str(
-                        id) + ' NOT acquiring data', True)
+                return_message = __name__ + ' Failed to connect, ' + m + ' NOT acquiring data'
         else:
-            self.logger.message(self.my_name + 'connectPV passed empty PV')
+            return_message = __name__ + ' connectPV() passed empty PV'
+        self.logger.message(return_message, add_to_text_log=True, show_time_stamp=True)
         return connected
+

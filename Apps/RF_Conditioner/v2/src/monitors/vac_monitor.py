@@ -54,9 +54,9 @@ class vac_monitor(monitor):
         self.spike_decay_time = self.config_data[self.config.VAC_SPIKE_DECAY_TIME]
         self.num_samples_to_average = self.config_data[self.config.VAC_NUM_SAMPLES_TO_AVERAGE]
         self.should_drop_amp = self.config_data[self.config.VAC_SHOULD_DROP_AMP]
-        self.amp_drop_value = self.config_data[self.config.VAC_SPIKE_AMP_DROP]
+        self.amp_drop_value = self.config_data[self.config.VAC_SPIKE_DROP_AMP]
         self.max_level = self.config_data[self.config.VAC_MAX_LEVEL]
-
+        self.should_check_level_is_hi = self.config_data[self.config.WHEN_VAC_HI_DISABLE_RAMP]
         # Count how many spikes we have detected:
         self.spike_count = 0
 
@@ -73,9 +73,9 @@ class vac_monitor(monitor):
 
         # These are the relevant keys for the data dictionary
         # Key for the vacuum level
-        self.data_dict_val_key = self.data.vac_level
+        #self.data_dict_val_key = self.data.vac_level
         # Key for the state of the vacuum (spike or not spike)
-        self.data_dict_state_key = self.data.vac_spike_status
+        #self.data_dict_state_key = self.data.vac_spike_status
 
         """some variables  for the vacuum data"""
         self._reading_counter = -1  # counter for latest value acquired from control system
@@ -83,18 +83,17 @@ class vac_monitor(monitor):
         self._mean_level = None     # current mean of _value_history
         self._value_history = []    # list of previous values used to calculate the rolling mean
 
-        # check if we should drop amp on a spike
+        # Log message if we should/should not  drop RF amp on a spike
         if self.should_drop_amp:
-            self.logger.message(__name__ + ' will drop amp on spike detection',True)
+            adm = __name__ + ' will drop amp on spike detection'
         else:
-            self.logger.message(__name__ + ' will NOT drop amp on spike detection',True)
+            adm = __name__ + ' will NOT drop amp on spike detection'
+        self.logger.message(adm,add_to_text_log=True, show_time_stamp=False)
 
         # set cool-down mode based on config, default will be LEVEL (monitor base class function)
         self.set_cooldown_mode(self.config_data[self.config.VAC_DECAY_MODE])
 
-        # a timer to run check_signal automatically every self.update_time
-        # this gets the vacuum data and checks it, it's the "main loop" for this class
-        self.timer.timeout.connect(self.check_signal)
+
 
         # A timer for TIME cooldowns, (not generally sued for vacuum) the spike  detcetin will
         # start the timer, when the timer runs out it calls self.cooldown_function
@@ -108,32 +107,16 @@ class vac_monitor(monitor):
         self.min_cooldown_timer.timeout.connect(self.min_cooldown_finished)
         self.min_time_good = True
 
-        # the amount above baseline (self._mean_level) that triggers a vacuum spike event
-        try:
-            self.spike_delta = self.config_data[self.config.VAC_SPIKE_DELTA]
-        except:
-            self.spike_delta = None
-        # factor applied to _mean_level to set the "recovered from spike" value
-        # we're setting a recovery based on vacuum level not time here
-        # this is for 'level' cool-down mode
-        try:
-            self.spike_decay_level = self.config_data[self.config.VAC_SPIKE_DECAY_LEVEL]
-        except:
-            self.spike_decay_level = 1.1
-
-
-        # set-up if we are disabling ramping based on  passed level
-        self.should_check_level_is_hi = False
-        try:
-            if self.max_level:
-                if self.data_dict_val_limit_status_key:
-                    self.should_check_level_is_hi = True
-        except:
-            self.should_check_level_is_hi = False
-
+        # a timer to run check_signal automatically every self.update_time
+        # this gets the vacuum data and checks it, it's the "main loop" for this class
+        # if we pass snaity checks this timer is started
+        self.timer.timeout.connect(self.check_signal)
 
         # initialise data to state unknown
         self.data.values[self.data.vac_spike_status] = state.UNKNOWN
+        # initial state is not in cooldown
+        self._in_cooldown = False
+
         # now we're ready to start run-this
         self.run()
 
@@ -144,14 +127,15 @@ class vac_monitor(monitor):
 
         """
         m = self.logger.message
-        dssk = self.data.vac_spike_status
+        vss = self.data.vac_spike_status
+        # check these items are all numbers
         item = [self.spike_delta, self.spike_decay_level, self.cool_down_time]
         if self.sanity_checks(item):
             self.timer.start(self.config_data[self.config.VAC_CHECK_TIME])
             m(__name__ + ' STARTED running')
-            m(__name__ + ' ' + self.data_dict_state_key + ' = ' + str(self.values[dssk]))
+            m(__name__ + ' ' + vss + ' = ' + str(self.values[vss]))
             self.set_good()
-            m(__name__ + ' ' + self.data_dict_state_key + ' = ' + str(self.values[dssk]))
+            m(__name__ + ' ' + vss + ' = ' + str(self.values[vss]))
         else:
             m(__name__ + ' NOT STARTED running')
 
@@ -168,10 +152,7 @@ class vac_monitor(monitor):
                 check for high vacuum level
         """
         if self.update_value():              # if we get a new value
-
             self.update_mean_value()
-
-
             if self._in_cooldown:            # if in cool-down,
                 self.check_has_cooled_down() # check to see if we should stay in cool-down
             else:
@@ -191,7 +172,6 @@ class vac_monitor(monitor):
             self._value_history.pop(0)
             self._mean_level = sum(self._value_history)/self.num_samples_to_average
 
-
     def update_value(self):
         """
         This function tried to get the latest value from the gen_mon,
@@ -200,14 +180,14 @@ class vac_monitor(monitor):
         :return: is the value new or not?
         """
         # v is a dict of {counter : value }
-        v = self.gen_monitor.getCounterAndValue(self.id)
+        v = self.gen_mon.getCounterAndValue(self.id)
         # the gen_monitor will just pass back the last value it has
         # value is a new value if counter has increased since last check
         if v.keys()[0] != self._reading_counter: # value must be new
             # update _latest_value
             self._latest_value = v.values()[0]
             # update main data dictionary
-            self.data.values[self.data_dict_val_key] = self._latest_value
+            self.data.values[self.data.vac_level] = self._latest_value
             # set new _reading_counter
             self._reading_counter = v.keys()[0]
             # return True, we got a new value

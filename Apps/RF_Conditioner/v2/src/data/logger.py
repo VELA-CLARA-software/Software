@@ -40,6 +40,10 @@ import numpy
 from src.data.state import state
 from textwrap import fill
 
+
+
+
+
 class logger(object):
     '''
     This class handles all the data logging, it is designed to be generic, requires a handler class
@@ -52,6 +56,12 @@ class logger(object):
     TODO: For writing binary It does need to know about all the CATAP enums ...
     TODO: static class methods? 'You should really consider creating a static method whenever a
           method does not make substantial use of the instance (self)'
+
+    This class is a use case for Python's double-underscore name mangling ... meh
+    https://stackoverflow.com/questions/7841812/inheritance-and-base-class-method-call-python
+    classes that inherit from it need axccess to message, message_header, but they may also want
+    to overload it, for example when re-directing print statements to a gui,
+    this is th ereson for the __do_message and all that
     '''
     # a timestamp, can be used to create a new directory with this timesatmp
     log_start = datetime.now()
@@ -90,17 +100,31 @@ class logger(object):
                               # BE CAREFUL WiTH str, THE BELOW IS CLEARLY GARBAGE
                               str: '<i'}
 
-    # width of config file text without timestamp
-    config_width = 100
-    stars = '\n' + '*'*config_width + '\n'
-    header_format_string = '{:*^' + str(config_width) + '}'
+    # width of config file text without timestamp (in characters!)
+    _column_width = 60
+    stars = '\n' + '*'*_column_width + '\n'
+    header_format_string = '{:*^' + str(_column_width) + '}'
 
     # paramters for showing message or adding to text log
     _show_time_stamp = False
     _add_to_text_log = True
 
-    def __init__(self):
-        self.my_name = 'logger'
+    def __init__(self, column_width=None):
+        if column_width:
+            self.column_width = column_width
+
+
+
+    # get and set the config file
+    @property
+    def column_width(self):
+        return logger._column_width
+
+    @column_width.setter
+    def column_width(self, value):
+        logger._config_file = value
+        stars = '\n' + '*' * logger._column_width + '\n'
+        header_format_string = '{:*^' + str(logger._column_width) + '}'
 
 
 
@@ -110,41 +134,60 @@ class logger(object):
         if 'show_time_stamp' in kwargs:
             logger._show_time_stamp = kwargs['show_time_stamp']
 
+    def message(self,text, **kwargs):
+        """
+        To allow overloads in derived class use the double underscore name-mangling convention
+        https://stackoverflow.com/questions/7841812/inheritance-and-base-class-method-call-python
+        :param text:  text to print / log, diplay to GUI
+        :param kwargs: add_to_text_log=True/False, show_time_stamp=True/False
+        """
+        self.__do_message(text, **kwargs)
 
-    def message_header(self, text, **kwargs):
+    def message_header(self,text, **kwargs):
+        """
+        To allow overloads in derived class use the double underscore name-mangling convention
+        https://stackoverflow.com/questions/7841812/inheritance-and-base-class-method-call-python
+        :param text:  text to print / log, diplay to GUI
+        :param kwargs: add_to_text_log=True/False, show_time_stamp=True/False
+        """
+        self.__do_message_header(text, **kwargs)
+
+    def do_message_header(self, text, **kwargs):
         """
         a header is a specially formatted entry in the text log
-        :param text: The text used to create the header
-        :param add_to_text_log: should the header be added to the text_log_file
+        :param text:  text to print / log, diplay to GUI
+        :param kwargs: add_to_text_log=True/False, show_time_stamp=True/False
         :return:
         """
         self.update_timestamp_textlog(**kwargs)
         str = logger.stars + logger.header_format_string.format(' ' + text + ' ') + logger.stars
-        self.message(str,**kwargs)
+        self.__do_message(str,**kwargs)
         #self.message('\n' + '{:*^79}'.format(' ' + text + ' ') + '\n', add_to_text_log =
         #add_to_text_log, show_time_stamp = show_time_stamp)
-
+    __do_message_header = do_message_header
 
         #self.write_text_log(str, show_time_stamp=show_time_stamp)
 
-    def message(self,text, **kwargs):
+
+
+    def do_message(self,text, **kwargs):
         '''
         messaging function, print to screen message, adn maybe write to log file
-        :param text: string or list of strings to message / write to text_log_file
-        :param add_to_text_log: flag
+        :param text:  text to print / log, diplay to GUI
+        :param kwargs: add_to_text_log=True/False, show_time_stamp=True/False
         :return:
         '''
         self.update_timestamp_textlog(**kwargs)
 
         # fill is from textwrap  https://docs.python.org/3/library/textwrap.html
         if isinstance(text, basestring):
-            str = fill(text, width=logger.config_width)
+            str = fill(text, width=logger._column_width)
         elif all(isinstance(item, basestring) for item in text):
             # CANCER
             str = '\n'.join(text)
             str2 = []
             for item in str.splitlines():
-                str2.append(fill(item, width=logger.config_width))
+                str2.append(fill(item, width=logger._column_width))
             str = '\n'.join(str2)
         else:
             str = "ERROR logger.message was not passed a string "
@@ -153,6 +196,8 @@ class logger(object):
         print(str)
         if logger._add_to_text_log:
             self.write_text_log(str)
+    __do_message = do_message
+
 
     #def write_text_log(self, str, show_time_stamp = True):
     def write_text_log(self, str):
@@ -174,7 +219,7 @@ class logger(object):
             # with open(self.log_path,'a') as f:
             #     f.write(write_str)
         else:
-            print(self.my_name + " ERROR Writing to log, logger._text_log_file_obj is None")
+            print(self.__name__ + " ERROR Writing to log, logger._text_log_file_obj is None")
 
     def write_binary_log(self,values):
         type_list = []
@@ -182,7 +227,7 @@ class logger(object):
             type_list.append(self.write_binary(val))
         logger._binary_log_file_obj.flush()
         if type_list != logger._binary_header_types:
-            self.message(self.my_name+" Warning, Binary Log File, data types have changed",True)
+            self.message(self.__name__+" Warning, Binary Log File, data types have changed")
 
     def write_binary(self, val):
         """

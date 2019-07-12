@@ -17,7 +17,7 @@
 //    along with VELA-CLARA-Software.  If not, see <http://www.gnu.org/licenses/>.    //
 //
 //  Author:      DJS
-//  Last edit:   03-07-2018
+//  Last edit:   03-07-2019
 //  FileName:    main_controller.py
 //  Description: The main_controller, holds all objects adn passes data/messsages betwen them
 //
@@ -47,25 +47,50 @@ from src.data.rf_conditioning_data import rf_conditioning_data
 print('main_controller: import monitor_hub')
 from src.monitors.monitor_hub import monitor_hub
 
+from src.view.rf_condition_view import rf_condition_view
+
+from PyQt4.QtGui import QApplication
 
 
 #class main_controller(controller_base):
 class main_controller(object):
+
+
     #
     # other attributes will be initialised in base-class
     def __init__(self, argv, config_file, debug = False):
         self.debug = debug
         # args passed in from command line
         self.argv = argv
+
+        # pop the view so we can display startup message
+        #
+        print("GUI")
+        self.view = rf_condition_view()
+
+
+
+        print("GUI SHOW")
+        self.view.show()
+        print("GUI PROC")
+        QApplication.processEvents()
+        print("GUI FIN")
         #
         # Create config reader, and get configuration
         print(__name__ + ', attempting to read config: ' + config_file)
         self.config = config()
         self.get_config(config_file)
         print(__name__ + ', got Config, starting Logging\n')
+
+
+        self.view.config = self.config
+        self.view.start_gui_update()
+
+
         #
+
         # start logging, sets up main text file logging, and logs the config
-        self.logger = rf_conditioning_logger(debug=self.debug)
+        self.logger = rf_conditioning_logger(debug=self.debug,column_width=60)
         self.logger.setup_text_log_files()
         self.logger.log_config()
         #
@@ -74,6 +99,10 @@ class main_controller(object):
                                    add_to_text_log=True, show_time_stamp=True)
         self.data = rf_conditioning_data(debug=self.debug)
         self.data.initialise()
+
+        self.view.data = self.data
+        self.view.values = self.data.values
+        self.view.start_gui_update()
         #
         # CATAP hardware controllers, these live here and are passed to where they are needed
         # self.hardware.start_up() actually creates the objects, this should only be done once,

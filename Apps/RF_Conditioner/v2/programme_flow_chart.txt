@@ -51,7 +51,15 @@ main_controller init:
         self.start_rfprot_monitor()
         self.start_vac_valve()
         self.start_modulator_monitor()
-        self.start_llrf_monitor()
-		start 
-
+        self.start_llrf_monitor() 
+			SIMPLE LLRF parameters
+		self.start_vac_monitor() 
+			monitors vacuum level, looks for spikes and if vac level is above limit 
+		self.outside_mask_trace_monitor()
+			updates, active_pulse_count, event_pulse_count, elapsed_time, num_outside_mask_traces
+			if a new OME has been detected it gets the data and pickle_dumps it to file
+			update_last_million_pulse_log() (rf_conditioning_data member function)
+        self.start_water_temperature_monitor()
+        self.start_cavity_temperature_monitor()
+        self.start_solenoid_monitoring()
 

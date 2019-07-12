@@ -261,6 +261,18 @@ class config(object):
     # The below variableas are static,
     # They are defined at the bottom of the file to keep them out the way
     #
+
+    """
+    
+    The Config FILE Must contian the same keyowrds that are given below
+    Adding extra keywords is easy. When adding new keywords i recommend you add them  I recommend 
+    
+    """
+
+    # TODO: get rid of all the sperate configs and just have one mega-config for all
+
+
+
     ## Config File Keyword Defintitions
     MINIMUM_COOLDOWN_TIME = 'MINIMUM_COOLDOWN_TIME'
 
@@ -270,13 +282,14 @@ class config(object):
     VAC_SPIKE_DECAY_TIME = 'VAC_SPIKE_DECAY_TIME'
     VAC_SHOULD_DROP_AMP = 'VAC_SHOULD_DROP_AMP'
     VAC_SPIKE_DROP_AMP = 'VAC_SPIKE_DROP_AMP'
-    # VAC_MAX_AMP_DROP = 'VAC_MAX_AMP_DROP'
+    WHEN_VAC_HI_DISABLE_RAMP = 'WHEN_VAC_HI_DISABLE_RAMP'
     VAC_SPIKE_DELTA = 'VAC_SPIKE_DELTA'
     VAC_DECAY_MODE = 'VAC_DECAY_MODE'
     VAC_CHECK_TIME = 'VAC_CHECK_TIME'
     VAC_MAX_LEVEL = 'VAC_MAX_LEVEL'
     VAC_PV = 'VAC_PV'
-    vac_keywords = [VAC_NUM_SAMPLES_TO_AVERAGE, VAC_SPIKE_DECAY_LEVEL, VAC_SPIKE_DECAY_TIME,
+    vac_keywords = [WHEN_VAC_HI_DISABLE_RAMP,VAC_NUM_SAMPLES_TO_AVERAGE, VAC_SPIKE_DECAY_LEVEL,
+                    VAC_SPIKE_DECAY_TIME,
                     VAC_SHOULD_DROP_AMP, VAC_SPIKE_DROP_AMP,  # VAC_MAX_AMP_DROP,
                     VAC_SPIKE_DELTA, VAC_CHECK_TIME, VAC_DECAY_MODE, VAC_MAX_LEVEL, VAC_PV,
                     MINIMUM_COOLDOWN_TIME]
@@ -293,7 +306,7 @@ class config(object):
     DC_SHOULD_DROP_AMP = 'DC_SHOULD_DROP_AMP'
     dc_keywords = [DC_PV, DC_DECAY_MODE, DC_SPIKE_DECAY_LEVEL, DC_SPIKE_DELTA, DC_SPIKE_DROP_AMP,
                    DC_NUM_SAMPLES_TO_AVERAGE, DC_SPIKE_DECAY_TIME, DC_CHECK_TIME,
-                   OUTSIDE_MASK_COOLDOWN_TIME, DC_SHOULD_DROP_AMP]
+                    DC_SHOULD_DROP_AMP]
 
     # data-logging parameters
     CONFIG_FILE = 'CONFIG_FILE'
@@ -321,25 +334,30 @@ class config(object):
     vac_valve_keywords = [VAC_VALVE, VAC_VALVE_AREA, VAC_VALVE_CHECK_TIME, KEEP_VALVE_OPEN]
     #
     # water temp keywords
+    WATER_TEMPERATURE_PV_COUNT = 'WATER_TEMPERATURE_PV_COUNT'
     WATER_TEMPERATURE_PV = 'WATER_TEMPERATURE_PV'
     WATER_TEMPERATURE_CHECK_TIME = 'WATER_TEMPERATURE_CHECK_TIME'
-    water_temp_keywords = [WATER_TEMPERATURE_PV, WATER_TEMPERATURE_CHECK_TIME]
+    water_temp_keywords = [WATER_TEMPERATURE_PV, WATER_TEMPERATURE_CHECK_TIME,
+                           WATER_TEMPERATURE_PV_COUNT]
     #
     # cavity temp keywords
+    CAVITY_TEMPERATURE_PV_COUNT = 'CAVITY_TEMPERATURE_PV_COUNT'
     CAVITY_TEMPERATURE_PV = 'CAVITY_TEMPERATURE_PV'
     CAVITY_TEMPERATURE_CHECK_TIME = 'CAVITY_TEMPERATURE_CHECK_TIME'
-    cavity_temp_keywords = [CAVITY_TEMPERATURE_PV, CAVITY_TEMPERATURE_CHECK_TIME]
+    cavity_temp_keywords = [CAVITY_TEMPERATURE_PV, CAVITY_TEMPERATURE_CHECK_TIME,
+                            CAVITY_TEMPERATURE_PV_COUNT ]
     #
     # solenoid keywords
     MAGNET_MACHINE_AREA = 'MAGNET_MACHINE_AREA'
     SOL_NAMES = 'SOL_NAMES'
+    SOL_COUNT = 'SOL_COUNT'
     SOL_CHECK_TIME = 'SOL_CHECK_TIME'
     SHOULD_SOL_WOBBLE = 'SHOULD_SOL_WOBBLE'
     SOL_WOBBLE_HI = 'SOL_WOBBLE_HI'
     SOL_WOBBLE_LO = 'SOL_WOBBLE_LO'
     SOL_WOBBLE_OSCILLATION_TIME = 'SOL_WOBBLE_OSCILLATION_TIME'
     solenoid_keywords = [MAGNET_MACHINE_AREA, SOL_NAMES, SOL_CHECK_TIME, SHOULD_SOL_WOBBLE,
-                         SOL_WOBBLE_HI, SOL_WOBBLE_LO,
+                         SOL_WOBBLE_HI, SOL_WOBBLE_LO,SOL_COUNT,
                          SOL_WOBBLE_OSCILLATION_TIME]
     #
     # llrf keywords
@@ -568,6 +586,8 @@ class config(object):
     CRPHA_PHASE_MASK_BY_POWER_LEVEL = 'CRPHA_PHASE_MASK_BY_POWER_LEVEL'
     CFPHA_PHASE_MASK_BY_POWER_LEVEL = 'CFPHA_PHASE_MASK_BY_POWER_LEVEL'
     CPPHA_PHASE_MASK_BY_POWER_LEVEL = 'CPPHA_PHASE_MASK_BY_POWER_LEVEL'
+
+    OUTSIDE_MASK_COOLDOWN_TIME= 'OUTSIDE_MASK_COOLDOWN_TIME'
 
     breakdown_keywords = [CFPOW_AUTO_SET, CRPOW_AUTO_SET, CPPOW_AUTO_SET, KFPOW_AUTO_SET,
                           KRPOW_AUTO_SET, CFPHA_AUTO_SET, CRPHA_AUTO_SET, CPPHA_AUTO_SET,
