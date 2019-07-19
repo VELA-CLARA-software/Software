@@ -8,7 +8,7 @@ import os
 import numpy as np
 import pyqtgraph as pg
 import model.model as modelFunctions
-import pyqtgraph.opengl as gl
+import pyqtgraph.opengl as gl # fro 3d weiwing, requires PyOpenGL
 import threads
 from decimal import *
 
