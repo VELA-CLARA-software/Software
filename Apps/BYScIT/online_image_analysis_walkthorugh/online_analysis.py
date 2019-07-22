@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-/*
 //              This file is part of VELA-CLARA-Software.                             //
 //------------------------------------------------------------------------------------//
 //    VELA-CLARA-Software is free software: you can redistribute it and/or modify     //
@@ -19,12 +18,18 @@
 //  Author:      DJS
 //  Last edit:   19-07-2019
 //  FileName:    online_analysis.py
-//  Description: walkt hrough of the online analaysis procedure
-//
-//
-//
-//
-*/
+//  Description: walk through of the online analaysis procedure
+                 History (notes in .\docs:
+                 2014/2105 Duncan Scott developed main procedure  2 notes:
+                    Calculating Beam Sizes From Screen Images on VELA
+                    Covariance Matrices of VELA Beam Distributions
+                 2015/2016 Duncan Scott & Matt Toplis develop procedures, consider errors,
+                 1 note and Mathematica notebook
+                    Method of Estimating Beam Size from VELA Screen Images.doc
+                    Method of Estimating Beam Size from VELA Screen Images.nb
+                 2016-2018 Tim Price writes c++ version of procedure, plus works with James
+                 Wilson on providing 'online analysis through control system.' For c++ see fitter
+                 class in TP CamerIA module in github
 """
 from __future__ import division # force python division t use floats !!!
 import h5py
@@ -65,13 +70,10 @@ def get_first_hdf5_image(path, filename):
 """
 beam_image = get_first_hdf5_image(image_path,beam_image_1)
 back_image = get_first_hdf5_image(image_path,back_image_1)
-
 #
-
-
 """
     The mask is an ellipse, defined by it's centre position and its radius in x/y
-    In this implmentation the mask IS NOT rotated with respect to the horizontal direction
+    In this implementation the mask IS NOT rotated with respect to the horizontal direction
 """
 mask_horizontal_center = 1000
 mask_vertical_center   = 900
