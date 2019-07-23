@@ -166,15 +166,11 @@ vertical_projection_1 = beam_image_cut_2.sum(axis=1)
 
 """
     NPOINT SCALING (of the MASK)
-    "This method assumes that the first and last ten points in both the x and y directions fro
+    "This method assumes that the first and last ten points in both the x and y directions for
     the image are "background" and contain no beam or dark current signals."
     NPOINT scaling is going to scale the MASK by a constant to minimise the effect of the
     elliptical mask (i.e instead of 1 for inside the ellipse it's going to be L,
     where L is an "optimised" value)
-
-
-    root-mean-square difference between mask_1 and the data, (of the first and last 10 points for
-    each projections)
 """
 "First take the first and last ten points in x and y from the projection of the DATA "
 "and last ten points in x and y from the projection of the MASK "
@@ -224,20 +220,70 @@ vertical_projection_2 = beam_image_cut_3.sum(axis=1)
     the 2nd moment is the square root of the variance of the distribution (or the beam width)
     TODO: add in the "covariance moment"    
 """
-def get_first_second_moments(data):
+# def get_first_second_moments(data):
+#     """
+#     This function gets the first and second moments (about the mean) for a 1D list
+#     :param data:
+#     :return:
+#     """
+#     data_indices = np.arange(len(data))
+#     normalisation = np.sum(data)  # sum of data
+#     moment_1 = np.dot(data_indices, data) / normalisation
+#     moment_2 = np.sqrt(np.dot((data_indices - moment_1) ** 2, data) / normalisation)
+#     return [moment_1, moment_2]
+
+
+"""
+    Now Lets' calculate the covariance matrix of our scaled data (THIS is equivalent to the first 
+    and second moments about the mean, plus the x-y covariance) 
+    the 1st moment can be thought of as the "balance" point, or centre of mass, mean position or 
+    expecetd position
+    the 2nd moment is the variance of the distribution (and when square rooted can eb thought of 
+    as the beam width, or rms value of the distribution)
+    TODO: add in the "covariance matrix"    
+"""
+def get_covariance_matrix(data):
     """
-    This funciton get sth efirts and second moments (about the mean) fro a 1D list
-    :param data:
+    Calculate the expected x,y values and the covariance matrix for the input 2d array
+    The calculation can be simplified to some dot (inner) products of the data (!!!FLATTEND to
+    1D!!) with  the row / column index from the 2d data
+    First the correct indices for each data point are found.
+    Then we take the inner product of these with the data (in 1D)
+    :param data: 2d array of input data (the image we are using)
     :return:
     """
-    data_indices = np.arange(len(data))
-    normalisation = np.sum(data)  # sum of data
-    moment_1 = np.dot(data_indices, data) / normalisation
-    moment_2 = np.sqrt(np.dot((data_indices - moment_1) ** 2, data) / normalisation)
-    return [moment_1, moment_2]
+    # ID version of data
+    data_1D = data.flatten() # Data as 1D list
+    data_1D_Sum = np.sum(data_1D)  # sum of data, for normalisation
 
-horizontal_moments = get_first_second_moments(horizontal_projection_2)
-vertical_moments = get_first_second_moments(vertical_projection_2)
+
+    temp_index = [] # this is the row that each element of data (in 1D) has
+    for i in range(0, len(data)):
+        temp_index.append( [i]* len(data[0]) )
+    row_index = np.array(temp_index).flatten()
+
+
+    temp_index = [] # this is the column that each element of data (in 1D) has
+    for i in range(0, len(data)):
+        temp_index.append( range(0, len(data[0])) )
+    column_index = np.array(temp_index).flatten()
+
+
+    mu_x = np.dot(column_index, data_1D) / data_1D_Sum # Expected X position
+    mu_y = np.dot(row_index, data_1D) / data_1D_Sum # Expected X position
+
+    variance_x = np.dot((column_index - mu_x) ** 2, data_1D)  / data_1D_Sum
+    variance_y = np.dot((row_index - mu_y) ** 2, data_1D)  / data_1D_Sum
+    covariance_xy = np.dot((column_index - mu_x)*(row_index - mu_y) , data_1D)  / data_1D_Sum
+
+    # the square-root of the x and and y variance is the rms, standard deviation, or BEAM WIDTH
+
+    return  [mu_x,mu_y, np.sqrt(variance_x), np.sqrt(variance_y), covariance_xy]
+
+
+[mu_x, mu_y, sigma_x, sigma_y, cov_xy ] = get_covariance_matrix(beam_image_cut_3)
+
+
 
 # Plot overlays to show ellipse and bounding box
 # ELLIPSE
@@ -271,17 +317,17 @@ mask_boundingbox_art = Rectangle(
 """
 
 # for the cropped image
-hpos = horizontal_moments[0]
-hwidth = horizontal_moments[1] / 2.0
-vpos = vertical_moments[0]
-vwidth = vertical_moments[1] / 2.0
+hpos = mu_x
+hwidth = sigma_x / 2.0
+vpos = mu_y
+vwidth = sigma_y / 2.0
 
 x_cross_hair = [[hpos - hwidth, hpos + hwidth], [vpos, vpos]]
 y_cross_hair = [[hpos, hpos], [vpos - vwidth, vpos + vwidth]]
 
 # for the FULL image the centre position changes, not the width
-hpos_f = horizontal_moments[0] + (mask_horizontal_center - mask_horizontal_radius)
-vpos_f = vertical_moments[0] + (mask_vertical_center - mask_vertical_radius)
+hpos_f = mu_x + (mask_horizontal_center - mask_horizontal_radius)
+vpos_f = mu_y + (mask_vertical_center - mask_vertical_radius)
 
 x_cross_hair_f = [[hpos_f - hwidth, hpos_f + hwidth], [vpos_f, vpos_f]]
 y_cross_hair_f = [[hpos_f, hpos_f], [vpos_f - vwidth, vpos_f + vwidth]]
