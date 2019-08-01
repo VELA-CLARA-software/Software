@@ -24,6 +24,7 @@
 //
 //*/
 '''
+
 from datetime import datetime
 import struct
 #from VELA_CLARA_enums import STATE
@@ -94,14 +95,14 @@ class logger(object):
     # map of python type to struct type https://docs.python.org/2/library/struct.html
     # little endian basic types
     # str IS NOT WElL DEFINED IN THIS !
-    _python_type_to_bintype = {long: '<l', int: '<i', float: '<f', RF_PROT_STATUS: '<B',
-                              GUN_MOD_STATE: '<B', VALVE_STATE: '<B', TRIG: '<B',state: '<B',
+    _python_type_to_bintype = {long: '<q', int: '<i', float: '<f', RF_PROT_STATUS: '<B',
+                              GUN_MOD_STATE: '<B', VALVE_STATE: '<B', TRIG: '<B', state: '<B',
                               INTERLOCK_STATE: '<B', bool: '<?', numpy.float64: '<d',
                               # BE CAREFUL WiTH str, THE BELOW IS CLEARLY GARBAGE
                               str: '<i'}
 
     # width of config file text without timestamp (in characters!)
-    _column_width = 60
+    _column_width = 80
     stars = '\n' + '*'*_column_width + '\n'
     header_format_string = '{:*^' + str(_column_width) + '}'
 
@@ -113,8 +114,6 @@ class logger(object):
         if column_width:
             self.column_width = column_width
 
-
-
     # get and set the config file
     @property
     def column_width(self):
@@ -123,9 +122,8 @@ class logger(object):
     @column_width.setter
     def column_width(self, value):
         logger._config_file = value
-        stars = '\n' + '*' * logger._column_width + '\n'
-        header_format_string = '{:*^' + str(logger._column_width) + '}'
-
+        logger.stars = '\n' + '*' * logger._column_width + '\n'
+        logger.header_format_string = '{:*^' + str(logger._column_width) + '}'
 
 
     def update_timestamp_textlog(self,**kwargs):
@@ -162,12 +160,7 @@ class logger(object):
         self.update_timestamp_textlog(**kwargs)
         str = logger.stars + logger.header_format_string.format(' ' + text + ' ') + logger.stars
         self.__do_message(str,**kwargs)
-        #self.message('\n' + '{:*^79}'.format(' ' + text + ' ') + '\n', add_to_text_log =
-        #add_to_text_log, show_time_stamp = show_time_stamp)
     __do_message_header = do_message_header
-
-        #self.write_text_log(str, show_time_stamp=show_time_stamp)
-
 
 
     def do_message(self,text, **kwargs):
@@ -222,6 +215,22 @@ class logger(object):
             print(self.__name__ + " ERROR Writing to log, logger._text_log_file_obj is None")
 
     def write_binary_log(self,values):
+        '''
+        Actually write the binary data, element by element. Top ensure the fidelity of the log
+        file, we check that the number of elements and their type HAS NOT CHANGED since the
+        plaintext header to th efile was written. IF it has throw some warning messages
+        :param values:  dictionary of values to log,
+        '''
+        written_types = [] # local copy of tyeps actually written
+        if len(values) == logger._binary_header_length:
+            for key, val in values.iteritems():
+                self.message("key =  " + key)
+                written_types.append(self.write_binary(val))
+        else:
+            self.message(["ERROR write_bin_data passed data of incorrect length! ",
+                          str(len(values)),"!=",logger._binary_header_length])
+            raw_input()
+
         type_list = []
         for key, val in values.iteritems():# itervalues means just iterate over the values in the dict
             type_list.append(self.write_binary(val))
@@ -231,7 +240,7 @@ class logger(object):
 
     def write_binary(self, val):
         """
-        This writes val to fileobjetc f, it needs to know how to convert all data types to
+        This writes val to fileobject f, it needs to know how to convert all data types to
         struct_format, using logger._python_type_to_bintype
         https://docs.python.org/2/library/struct.html
         TODO: write more cases for logger._python_type_to_bintype
@@ -240,25 +249,25 @@ class logger(object):
         :return: the type of val (used for error checking)
         """
         val_type = type(val)
-        struct_format = logger._python_type_to_bintype.get(val_type,None)
-        if struct_format:
-            logger._binary_log_file_obj.write(struct.pack(struct_format, val))
-        return val_type
+        self.message("val_type = " + str(val_type ))
 
-    def write_bin_data(self, values):
-        # check length of dictionary has not changed!
-        written_types = []
-        if len(values) == logger._binary_header_length:
-            for key, val in values.iteritems():
-                written_types.append(self.write_binary(val))
+
+        # for Python enums (used for the r general state of things) we need to convert th eENUm
+        # to a number
+        if val_type is state:
+            logger._binary_log_file_obj.write(struct.pack('<B', val.value))
         else:
-            self.message(["ERROR write_bin_data passed data of incorrect length! ",
-                          str(len(values)),"!=",logger._binary_header_length] ,True)
-            raw_input()
-        logger._binary_log_file_obj.flush()
-        if written_types != logger._binary_header_types:
-            self.message("ERROR write_bin_data passed data of incorrect types! ",True)
-            raw_input()
+            struct_format = logger._python_type_to_bintype.get(val_type, None)
+
+            if struct_format:
+                self.message("struct_format = " + str(struct_format))
+                self.message("val =  = " + str(val))
+                logger._binary_log_file_obj.write(struct.pack(struct_format, val))
+            else:
+                self.message("ERROR write_binary passed data of None type. THIS SHOULD NOT HAPPEN! ")
+                raw_input()
+
+        return val_type
 
     def write_binary_log_header(self, data_to_log):
         '''
@@ -274,33 +283,39 @@ class logger(object):
         :return:
         '''
         # these static variables save the data written to the header, this is so it can be
-        # cross-checked against further
-        logger._binary_header_length = 0
-        logger._binary_header_types = []
+        # cross-checked against, in further calls to  write_binary()
+
+        logger._binary_header_length = len(data_to_log)  # the number of entries in data_to_log
+        logger._binary_header_types = []  # the type of each entry in data_to_log (filled below)
         header_names = []
         header_types_str = []
 
-        # iterate over data_to_log, and add to lists of
+        # iterate over data_to_log, and get types for each entry
         for key, value in data_to_log.iteritems():
-            value_type = type(value)
-            value_type_str = str(value_type)
+            value_type = type(value)         # The type of the value being written
+            value_type_str = str(value_type) # the type converted to string
+            ''' There is 1 notable exception, we write a time_stamp data type as the time and 
+            date this funcitno is called '''
             if key == 'time_stamp':  # MAGIC_STRING
                 header_names.append('time_stamp, (start = ' + datetime.now().isoformat(' ') + ')')
             else:
                 header_names.append(key)
-            logger._binary_header_length += 1
             logger._binary_header_types.append(value_type)
             header_types_str.append(value_type_str)
 
         # create the data_log file and write the plaintext header, raise exception if fail
         try:
+            # Create rwo strings fro the first two lines of the file, the 1st is tab separated
+            # data names, the 2nd is tab separated data types
             joiner = '\t'
             if logger._binary_log_file_obj:
+
                 head_names = joiner.join(header_names)+"\n"
                 head_types = joiner.join(header_types_str)+"\n"
                 logger._binary_log_file_obj.write(head_names)
                 logger._binary_log_file_obj.write(head_types)
-                self.message(["binary log file added ",head_names,head_types ],True)
+                self.message(["binary log file added ",head_names,head_types ],
+                             show_time_stamp=False)
             else:
                 raise ValueError('logger _binary_log_file_obj not defined')
         except Exception:

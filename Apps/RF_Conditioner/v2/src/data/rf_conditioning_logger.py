@@ -38,6 +38,7 @@ import sys
 import traceback
 import collections
 from PyQt4.QtGui import QApplication
+from PyQt4.QtCore import QTimer
 
 class rf_conditioning_logger(logger):
     '''
@@ -46,16 +47,14 @@ class rf_conditioning_logger(logger):
     this class should only be for the RF conditioning app
     logger, should be, and is intended to be, more generic and useable elsewhere
     rf_conditioning_logger knows about these files:
-        OUTSIDE_MASK_FORWARD_FILENAME =>  WHERETO PUT OUTSIDE FORWARD EVENTS
-        OUTSIDE_MASK_REVERSE_FILENAME =>  WHERETO PUT OUTSIDE REVERSE EVENTS
-        OUTSIDE_MASK_PROBE_FILENAME   =>  WHERETO PUT OUTSIDE PROBE EVENTS
+        OUTSIDE_MASK_FORWARD_FILENAME =>  WHERE TO PUT OUTSIDE FORWARD EVENTS
+        OUTSIDE_MASK_REVERSE_FILENAME =>  WHERE TO PUT OUTSIDE REVERSE EVENTS
+        OUTSIDE_MASK_PROBE_FILENAME   =>  WHERE TO PUT OUTSIDE PROBE EVENTS
         PULSE_COUNT_BREAKDOWN_LOG_FILENAME =>  History of pulse number / breakdown count
         KFPOW_AMPSP_RUNNING_STATS_LOG_FILENAME  =>  History of amp setpoint and KFPOW values
     the base-class logger handles the text log and binary data log
-
     rf_conditioning_logger.debug is a flag that when true, the working directory is not
     created anew, with the current timestamp, instead all files go in config.LOG_DIRECTORY
-
     This class overloads the message and message_header function from the base logger class
     This is so that we can call QApplication.processEvents(), and keep logger free of QT imports
 
@@ -68,7 +67,7 @@ class rf_conditioning_logger(logger):
     _kfow_running_stats_log_file_obj = None
     _kfow_running_stats_log_file = None
 
-    def __init__(self, debug=False, column_width=60):
+    def __init__(self, debug=False, column_width=80):
         logger.__init__(self,column_width)
         # debug = True sets the working directory directory to not be timestamped,
         # folder, to make
@@ -79,6 +78,54 @@ class rf_conditioning_logger(logger):
         # WE ASSUME THE CONFIG HAS BEEN PARSED CORRECTLY!
         self.config = config()
         self.config_data = self.config.raw_config_data
+
+        self.data_log_timer = QTimer() # A thread to write the binary log
+
+        self.values = None
+
+    def set_data_values(self, values):
+        '''
+        Data Values is the main data values dictionary that is logged to a bianry file
+        :param values:
+        :return:
+        '''
+        self.values = values
+
+
+    def start_binary_data_logging(self, values):
+        '''
+        set local self.values to values and  Start the binary data log,
+        :param values: main data values dictionary that is logged to a binary file
+        rf_condition_data.values[]
+        '''
+        self.values = values
+        self.data_log_timer = QTimer()
+        self.open_binary_log_file( self.config_data[self.config.BINARY_DATA_LOG_FILENAME] )
+
+        self.message_header(__name__ + ' start_binary_data_logging ', show_time_stamp=True)
+
+        ''' Write the plaintext header to the log file '''
+        self.write_binary_log_header(self.values)
+        self.log_binary_data()
+        self.data_log_timer.timeout.connect(self.log_binary_data)
+        self.data_log_timer.start(self.config.BINARY_DATA_LOG_TIME)
+
+    def log_binary_data(self):
+        '''
+        Calls logger write_binary_log
+        This function is generally called in a new thread controlled by a Qtimer
+        '''
+        self.write_binary_log(self.values)
+
+    # NNeds re-writing
+    def start_data_logging(self):
+        self.header(self.my_name + ' start_data_logging')
+        self.message(['data_log path = ' + self.data_path,
+                      ' starting monitoring, update time = ' + str(
+                          self.log_config['DATA_LOG_TIME'])])
+        self.message(['AMP_POWER_LOG  path = ' + self.amp_pwr_path,
+                      ' starting monitoring, update time = ' + str(
+                          self.log_config['AMP_PWR_LOG_TIME'])])
 
 
     def num(self, s):
@@ -288,20 +335,6 @@ class rf_conditioning_logger(logger):
 
     def start_text_log(self):
         pass
-
-    def start_binary_log(self):
-        pass
-
-    ''' not yet Used '''
-
-    def start_data_logging(self):
-        self.header(self.my_name + ' start_data_logging')
-        self.message(['data_log path = ' + self.data_path,
-                      ' starting monitoring, update time = ' + str(
-                          self.log_config['DATA_LOG_TIME'])])
-        self.message(['AMP_POWER_LOG  path = ' + self.amp_pwr_path,
-                      ' starting monitoring, update time = ' + str(
-                          self.log_config['AMP_PWR_LOG_TIME'])])
 
     def message(self, text, **kwargs):
         """

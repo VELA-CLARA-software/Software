@@ -4,10 +4,15 @@ creat an App
 
 create a main_controller
 main_controller init:
+	
+	create the GUI
+		This is so that message can get snet to GUI straight away, 
+		This GUI is not yet doing proper updates
+	
 	create config
 		read the config file
 		parse the config file, and 1st sanity check of entries
-
+	
 	create rf_conditioning_logger
 		check / create directories for log files
 			if in debug mode all =log files get pu tin working directory (this helps A LOT when you keep re-running the code)
@@ -63,3 +68,4 @@ main_controller init:
         self.start_cavity_temperature_monitor()
         self.start_solenoid_monitoring()
 
+	

@@ -48,6 +48,7 @@ class solenoid_monitor(monitor):
                 self.sol_objects[solenoid] = self.hardware.mag_control.getMagObjConstRef(solenoid)
                 # add entry to data dictionary
                 self.values[solenoid] = None
+                self.update()
             self.set_success = True
         # The timer runs update_values
         self.timer.timeout.connect(self.update)
@@ -58,4 +59,11 @@ class solenoid_monitor(monitor):
         gets the latest values from the gen_mon and adds them to the rf_condition_data.values dict
         """
         for key in self.sol_objects.keys():
+
+            self.logger.message("Looking for solenoid  = " + key)
+
             self.values[key] = self.sol_objects[key].SI
+
+            if self.values[key] is None:
+                print ("WEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEERRR")
+                raw_input()

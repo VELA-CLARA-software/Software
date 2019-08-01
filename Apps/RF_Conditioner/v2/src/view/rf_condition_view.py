@@ -44,6 +44,10 @@ from PyQt4.QtGui import QTextCursor
 from PyQt4.QtCore import QTimer
 
 class OutLog:
+
+    initial_stdout = sys.stdout
+
+
     def __init__(self, edit, out=None, color=None):
         """(edit, out=None, color=None) -> can write stdout, stderr to a
         QTextEdit.
@@ -57,7 +61,7 @@ class OutLog:
 
     def write(self, m):
         """
-        here we are provigin a new "write" method for the stdout
+        here we are providing a new "write" method for the stdout
         https://docs.python.org/2/library/sys.html#module-sys
         sys.stdin
         sys.stdout
@@ -70,7 +74,7 @@ class OutLog:
         object is acceptable as long as it has a write() method that takes a string argument. (
         Changing these objects doesn’t affect the standard I/O streams of processes executed by
         os.popen(), os.system() or the exec*() family of functions in the os module.)
-        :param m:
+        :param m: the string to be written
         :return:
         """
         if self.color:
@@ -83,18 +87,21 @@ class OutLog:
         if self.out:
             self.out.write(m)
 
+        # also write message to the initial standard out
+        OutLog.initial_stdout.write(m)
 
-#class main_controller(controller_base):
+
+    #class main_controller(controller_base):
 class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
     pass
 
         #
     # other attributes will be initialised in base-class
-    def __init__(self):
+    def __init__(self, columnwidth = 80):
         QMainWindow.__init__(self)
         Ui_rf_condition_mainWindow.__init__(self)
         self.setupUi(self)
-        self.message_pad.setLineWrapColumnOrWidth(60)
+        self.message_pad.setLineWrapColumnOrWidth(columnwidth )
 
         self.config = None
         self.data = None

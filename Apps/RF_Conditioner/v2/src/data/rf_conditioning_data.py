@@ -20,7 +20,7 @@
 //  Last edit:   03-07-2018
 //  FileName:    rf_conditioning_data.py
 //  Description: rf_condition_data, the main data class for RF Conditioning, all main classes own
-//               one of these to access all data,
+//               one of these to access all data, THIS COULD BE HELD IN A MODULE NOT A CLASS???
 //
 //*/
 '''
@@ -40,7 +40,7 @@ from src.data.state import state
 
 class rf_conditioning_data(object):
     # whoami
-    my_name = 'rf_condition_data'
+
     #
     # these are just monitors that are working
     # they are used for the main_loop
@@ -194,7 +194,7 @@ class rf_conditioning_data(object):
         self.values[rcd.required_pulses] = self.config_data['DEFAULT_PULSE_COUNT']
         #
         # Write to log
-        message(self.my_name+' has processed the pulse_count_breakdown_log ')
+        message(__name__ + ' has processed the pulse_count_breakdown_log ')
         message([rcd.log_pulse_count + ' ' + str(self.values[rcd.log_pulse_count]),
                  rcd.required_pulses + ' ' + str(self.values[rcd.required_pulses]),
                  rcd.breakdown_count + ' ' + str(self.values[rcd.breakdown_count]),
@@ -937,17 +937,61 @@ class rf_conditioning_data(object):
 #     else:
 #         self.logger.message('Not adding to pulse_breakdown_log, amp = ' + str(amp), True)
 
+    @staticmethod
+    def add_data_key( key, initial_value = None):
+        '''
+        Function that adds a key to the main data dictionaries, we do this so that we are less
+        likely to forget to add a new key
+        :param key: new key to be added
+        :param initial_value: an intial value for the key, THIS SHOULD BE None, or, when debugging
+        of the correct type
+        '''
+        rf_conditioning_data.all_value_keys.append( key )
+        rf_conditioning_data.values[key] = initial_value
 
+
+    ''' 
+        The values dictionary. 
+        The main data dictionary for the application almost everything goes in here, 
+         apart from minor things like GUI flags, data from the config file
+    
+        THIS IS WHERE ALL THE MAIN DATA FOR RF CONDITIONING APPLICATION LIVES
+        It is used by almost every class, to get and set data
+    
+        In order to not have mistakes, define a value then add it to the values dictionary, 
+        Then give the values dictionary an initial value THAT IS OF THE EXPECTED TYPE FOR THE  
+        REAL DATA.  
+        WHEN NOT DEBUGGING: We set the values of the dictionary to be None, this is so that when 
+        we start writing then to file we can check they are being updated as expected. 
+    '''
+
+    dummy_float = -9999.9999
+    dummy_int   = -9999999
+    dummy_state = state.UNKNOWN
+
+    values = {} # A list of the keys for values
+    all_value_keys= []  # A list of the keys for values
 
 
     # keys for all the data we monitor
     time_stamp = 'time_stamp'
+    all_value_keys.append(time_stamp)
+    values[time_stamp] = dummy_float # CHECK TYPE
 
     # STATUS PF MAIN MONITORS
     vac_spike_status = 'vac_spike_status'
-    DC_spike_status = 'DC_spike_status'
-    rev_power_spike_count = 'rev_power_spike_count'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = dummy_state
 
+
+    DC_spike_status = 'DC_spike_status'
+    all_value_keys.append(DC_spike_status)
+    values[DC_spike_status] = dummy_state
+
+
+    rev_power_spike_count = 'rev_power_spike_count'
+    all_value_keys.append(rev_power_spike_count)
+    values[rev_power_spike_count] = dummy_int
 
     # THERE are N water temps that aredefined at run time!!!
     # THESE GET ADDED BY THE water_temperature_monitor
@@ -958,239 +1002,394 @@ class rf_conditioning_data(object):
 
     # Mean Values of Traces # TODO: CHANGE THIS NAMES TO MORE CANONICAL ONES
     fwd_cav_pwr = 'fwd_cav_pwr'
+    all_value_keys.append(fwd_cav_pwr)
+    values[fwd_cav_pwr] = dummy_float
+
+
     fwd_kly_pwr = 'fwd_kly_pwr'
+    all_value_keys.append(fwd_kly_pwr)
+    values[fwd_kly_pwr] = dummy_float
+
+
     rev_kly_pwr = 'rev_kly_pwr'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = dummy_float
+
+
     rev_cav_pwr = 'rev_cav_pwr'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = dummy_float
+
     probe_pwr = 'probe_pwr'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = dummy_float
+
     fwd_cav_pha = 'fwd_cav_pha'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = dummy_float
+
     fwd_kly_pha = 'fwd_kly_pha'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = dummy_float
+
     rev_kly_pha = 'rev_kly_pha'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = dummy_float
+
     rev_cav_pha = 'rev_cav_pha'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = dummy_float
+
     probe_pha = 'probe_pha'
-    krpow = 'krpow'
-    krpha = 'krpha'
-    kfpow = 'kfpow'
-    kfpha = 'kfpha'
-    crpow = 'crpow'
-    crpha = 'crpha'
-    cppow = 'cppow'
-    cppha = 'cppha'
-    cfpow = 'cfpow'
-    cfpha = 'cfpha'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = dummy_float
+
+    # WHAT ARE THESE USED FOR????????????????????
+    # krpow = 'krpow'
+    # all_value_keys.append(krpow)
+    # values[krpow] = dummy_float
+    #
+    # krpha = 'krpha'
+    # all_value_keys.append(krpha)
+    # values[krpha] = dummy_float
+    #
+    # kfpow = 'kfpow'
+    # all_value_keys.append(kfpow)
+    # values[kfpow] = dummy_float
+    #
+    # kfpha = 'kfpha'
+    # all_value_keys.append(kfpha)
+    # values[kfpha] = dummy_float
+    #
+    # crpow = 'crpow'
+    # all_value_keys.append(crpow)
+    # values[crpow] = dummy_float
+    #
+    # crpha = 'crpha'
+    # all_value_keys.append(crpha)
+    # values[crpha] = dummy_float
+    #
+    # cppow = 'cppow'
+    # all_value_keys.append(cppow)
+    # values[cppow] = dummy_float
+    #
+    # cppha = 'cppha'
+    # all_value_keys.append(cppha)
+    # values[cppha] = dummy_float
+    #
+    # cfpow = 'cfpow'
+    # all_value_keys.append(cfpow)
+    # values[cfpow] = dummy_float
+    #
+    # cfpha = 'cfpha'
+    # all_value_keys.append(cfpha)
+    # values[cfpha] = dummy_float
+
 
 
     vac_level = 'vac_level'
+    all_value_keys.append(vac_level)
+    values[vac_level] = dummy_float
+
     DC_level = 'DC_level'
+    all_value_keys.append(DC_level)
+    values[DC_level] = dummy_float
+
     vac_valve_status = 'vac_valve_status'
+    all_value_keys.append(vac_valve_status)
+    values[vac_valve_status] = state.UNKNOWN
+
     num_outside_mask_traces = 'num_outside_mask_traces'
+    all_value_keys.append(num_outside_mask_traces)
+    values[num_outside_mask_traces] = dummy_int
 
     probe_outside_mask_count = 'probe_outside_mask_count'
+    all_value_keys.append(probe_outside_mask_count)
+    values[probe_outside_mask_count] = dummy_int
+
     forward_outside_mask_count = 'probe_outside_mask_count'
+    all_value_keys.append(forward_outside_mask_count)
+    values[forward_outside_mask_count] = dummy_int
+
     reverse_outside_mask_count = 'reverse_outside_mask_count'
+    all_value_keys.append(reverse_outside_mask_count)
+    values[reverse_outside_mask_count] = dummy_int
 
     breakdown_status = 'breakdown_status'
+    all_value_keys.append(breakdown_status)
+    values[breakdown_status] = dummy_int
+
     breakdown_rate_aim = 'breakdown_rate_aim'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = dummy_int
 
     # these are values from the pulse_breakdown_log
     log_pulse_count = 'log_pulse_count'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = dummy_int
     #log_breakdown_count = 'log_breakdown_count'
     log_amp_set = 'log_amp_set'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = dummy_int
+
     current_ramp_index = 'current_ramp_index'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = dummy_int
 
     breakdown_count = 'breakdown_count'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = state.UNKNOWN
+
     elapsed_time = 'elapsed_time'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = state.UNKNOWN
+
     breakdown_rate = 'breakdown_rate'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = state.UNKNOWN
+
     breakdown_rate_hi= 'breakdown_rate_hi'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = state.UNKNOWN
+
     last_106_bd_count='last_106_bd_count'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = state.UNKNOWN
 
     pulse_count = 'pulse_count'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = state.UNKNOWN
+
     event_pulse_count = 'event_pulse_count'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = state.UNKNOWN
+
     duplicate_pulse_count = 'duplicate_pulse_count'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = state.UNKNOWN
 
     # Hold RF ON handle scontrolling these, we just monitor
     rfprot_state = 'rfprot_state'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = state.UNKNOWN
+
     modulator_state = 'modulator_state'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = state.UNKNOWN
+
     mod_output_status = 'mod_output_status'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = state.UNKNOWN
 
     can_rf_output_OLD = 'can_rf_output_OLD'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = state.UNKNOWN
+
     can_rf_output = 'can_rf_output'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = state.UNKNOWN
 
     llrf_interlock = 'llrf_interlock' # The read value from EPICS
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = state.UNKNOWN
+
     llrf_interlock_status = 'llrf_interlock_status' # the apps internal state, good, new_bad etc
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = state.UNKNOWN
 
 
     llrf_trigger = 'llrf_trigger'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = state.UNKNOWN
+
     llrf_trigger_status = 'llrf_trigger_status'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = state.UNKNOWN
 
     pulse_length = 'pulse_length'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = state.UNKNOWN
+
     pulse_length_status = 'pulse_length_status' # the apps internal state, good, new_bad etc
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = state.UNKNOWN
 
     llrf_output = 'llrf_output' # RF Output on LLRF panel
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = state.UNKNOWN
+
     llrf_output_status = 'llrf_output_status' # the apps internal state, good, new_bad etc
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = state.UNKNOWN
 
     llrf_ff_amp_locked = 'llrf_ff_amp_locked'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = state.UNKNOWN
+
     llrf_ff_amp_locked_status = 'llrf_ff_amp_locked_status' # the apps internal state, good, new_bad etc
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = state.UNKNOWN
+
     llrf_ff_ph_locked  = 'llrf_ff_ph_locked'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = state.UNKNOWN
+
     llrf_ff_ph_locked_status  = 'llrf_ff_ph_locked_status' # the apps internal state, good, new_bad etc
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = state.UNKNOWN
 
     llrf_DAQ_rep_rate = 'llrf_DAQ_rep_rate'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = state.UNKNOWN
+
     llrf_DAQ_rep_rate_aim = 'llrf_DAQ_rep_rate_aim'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = state.UNKNOWN
+
     llrf_DAQ_rep_rate_status = 'llrf_DAQ_rep_rate_status'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = state.UNKNOWN
+
     llrf_DAQ_rep_rate_status_previous = 'llrf_DAQ_rep_rate_status_previous'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = state.UNKNOWN
+
     llrf_DAQ_rep_rate_max = 'llrf_DAQ_rep_rate_max'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = state.UNKNOWN
+
     llrf_DAQ_rep_rate_min = 'llrf_DAQ_rep_rate_min'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = state.UNKNOWN
 
-
-    #power_aim = 'power_aim'
-    #pulse_length_aim = 'pulse_length_aim'
-    #pulse_length_aim_error = 'pulse_length_aim_error'
-    #pulse_length_min = 'pulse_length_min'
-    #pulse_length_max = 'pulse_length_max'
 
     required_pulses = 'required_pulses'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = state.UNKNOWN
+
     next_power_increase = 'next_power_increase'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = state.UNKNOWN
 
 
     log_pulse_length = 'log_pulse_length'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = state.UNKNOWN
 
 
     last_mean_power = 'last_mean_power'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = state.UNKNOWN
 
     amp_ff = 'amp_ff'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = state.UNKNOWN
+
     amp_sp = 'amp_sp'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = state.UNKNOWN
+
     phi_sp = 'phi_sp'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = state.UNKNOWN
 
 
     TOR_ACQM = 'TOR_ACQM'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = state.UNKNOWN
+
     TOR_SCAN = 'TOR_SCAN'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = state.UNKNOWN
 
     #
     # plot straight line fit values, old and current
     x_min = 'x_min'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = state.UNKNOWN
+
     x_max = 'x_max'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = state.UNKNOWN
+
     old_x_min = 'old_x_min'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = state.UNKNOWN
+
     old_x_max = 'old_x_max'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = state.UNKNOWN
+
     y_min = 'y_min'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = state.UNKNOWN
+
     y_max = 'y_max'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = state.UNKNOWN
+
     old_y_min = 'old_y_min'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = state.UNKNOWN
+
     old_y_max = 'old_y_max'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = state.UNKNOWN
+
     c = 'c'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = state.UNKNOWN
+
     m = 'm'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = state.UNKNOWN
+
     old_c = 'old_c'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = state.UNKNOWN
+
     old_m = 'old_m'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = state.UNKNOWN
+
 
     #latest_ramp_up_sp = 'latest_ramp_up_sp'
     last_sp_above_100 = 'last_sp_above_100'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = state.UNKNOWN
+
     max_sp_increase = 'max_sp_increase'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = state.UNKNOWN
+
     next_sp_decrease = 'next_sp_decrease'
-
-
-    #latest_ramp_up_sp_key = 'latest_ramp_up_sp_key'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = state.UNKNOWN
 
 
     vac_hi_limit_status = 'vac_hi_limit_status'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = state.UNKNOWN
 
 
 
     # meh ...
     phase_mask_by_power_trace_1_set = 'phase_mask_by_power_trace_1_set'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = state.UNKNOWN
+
     phase_mask_by_power_trace_2_set = 'phase_mask_by_power_trace_2_set'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = state.UNKNOWN
 
     phase_end_mask_by_power_trace_1_time = 'phase_end_mask_by_power_trace_1_time'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = state.UNKNOWN
+
     phase_end_mask_by_power_trace_2_time = 'phase_end_mask_by_power_trace_2_time'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = state.UNKNOWN
 
-    all_value_keys = [rev_power_spike_count,
-                      num_outside_mask_traces,
-                      breakdown_rate_aim,
-                      vac_spike_status,
-                      vac_valve_status,
-                      DC_spike_status,
-                      DC_level,
-                      modulator_state,
-                      breakdown_count,
-                      breakdown_status,
-                      breakdown_rate_hi,
-                      breakdown_rate,
-                      max_sp_increase,
-                      fwd_cav_pwr,
-                      fwd_kly_pwr,
-                      rev_kly_pwr,
-                      rev_cav_pwr,
-                      probe_pwr,
-                      fwd_kly_pha,
-                      rev_kly_pha,
-                      rev_cav_pha,
-                      fwd_cav_pha,
-                      probe_pha,
-                      pulse_length,
-                      rfprot_state,
-                      llrf_output,
-                      elapsed_time,
-                      llrf_ff_amp_locked,
-                      llrf_ff_ph_locked,
-                      pulse_count,
-                      event_pulse_count,
-                      duplicate_pulse_count,
-                      vac_level,
-                      time_stamp,
-                      log_pulse_count,
-                      llrf_DAQ_rep_rate,
-                      llrf_DAQ_rep_rate_status,
-                      llrf_DAQ_rep_rate_status_previous,
-                      llrf_DAQ_rep_rate_aim,
-                      llrf_DAQ_rep_rate_max,
-                      llrf_DAQ_rep_rate_min,
-                      vac_hi_limit_status,
-                      can_rf_output_OLD,
-                      can_rf_output,
-                      log_amp_set,
-                      current_ramp_index,
-                      #power_aim,
-                      #pulse_length_aim,
-                      #pulse_length_aim_error,
-                      #pulse_length_min,
-                      #pulse_length_max,
-
-                      last_sp_above_100,
-
-                      amp_sp,
-                      phi_sp,
-
-                      last_106_bd_count,
-                      log_pulse_length,
-
-                      llrf_trigger,
-                      llrf_trigger_status,
-                      llrf_interlock_status,
-                      llrf_interlock,
-                      llrf_output_status,
-                      llrf_ff_amp_locked_status,
-                      llrf_ff_ph_locked_status,
-                      pulse_length_status,
-
-                      next_sp_decrease,
-                      last_mean_power,
-                      next_power_increase,
-                      phase_mask_by_power_trace_1_set,
-                      phase_mask_by_power_trace_2_set,
-                      phase_end_mask_by_power_trace_1_time,
-                      phase_end_mask_by_power_trace_2_time,
-                      x_min,
-                      x_max,
-                      old_x_min,
-                      old_x_max,
-                      y_min,
-                      y_max,
-                      old_y_min,
-                      old_y_max,
-                      c,
-                      m,
-                      old_c,
-                      old_m,
-                      TOR_ACQM,
-                      TOR_SCAN,
-                      pulse_length_status
-                          ]
 
  # we know there will be some LLRF involved
     #llrf_type = LLRF_TYPE.UNKNOWN_TYPE

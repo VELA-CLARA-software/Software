@@ -28,7 +28,7 @@ class outlogger(object):
         self.piper, self.pipew = os.pipe()
         print('self.pipe = ', self.pipew)
         #self.pipew.write = self.write()
-	
+
     def write(self, m):
         #os.write(self.pipew,m)
         #print a
@@ -52,25 +52,25 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         Ui_rf_condition_mainWindow.__init__(self)
         self.setupUi(self)
 
-	
+
 
 
         print('222')
-        #os.dup2(sio.pipew,  sys.stdout.fileno()) 
-        print('333')		
+        #os.dup2(sio.pipew,  sys.stdout.fileno())
+        print('333')
         # stdout_fd = sys.stdout.fileno()
         # stdout_fde = sys.stderr.fileno()
 
         prevOutFd = os.dup(1)
         prevInFd = os.dup(0)
         prevErrFd = os.dup(2)
-		
+
         #sys.stdout = outlogger(self.message_pad)
-		
+
         #fileno()
-		
+
         print("PYTHON STANDARD OUT")
-		
+
 		#sys.stdout = OutLog(self.message_pad, os.dup(1))
         # sys.stdout = OutLog(self.message_pad, os.dup(2))
 
@@ -91,20 +91,20 @@ class rf_condition(QApplication):
 		self.view = rf_condition_view()
 		self.view.show()
 
-        print('111')		
+        print('111')
         sys.stdout = outlogger(self.view.message_pad)
 
-		QApplication.processEvents()		
+		QApplication.processEvents()
 		self.llrf_init = VELA_CLARA_LLRF_Control.init()
 		self.llrf_init.setQuiet()
 		self.llrf_control = self.llrf_init.getLLRFController(MACHINE_MODE.PHYSICAL, LLRF_TYPE.L01)
-		
+
 		sys.stdout.flush()
 
-		
+
 		#raise Exception("sdddddddddddddddddddddddddddddddddddddddd"	)
-		
-		
+
+
 if __name__ == '__main__':
     print('Starting rf_condition Application')
     app = rf_condition(sys.argv)
@@ -138,8 +138,6 @@ def stdout_redirector(stream):
         yield
     finally:
         sys.stdout = old_stdout
-
-
 
 
 
@@ -252,7 +250,7 @@ print('Got stdout: "{0}"'.format(f.getvalue()))
             # self.out.write(m)
         # QApplication.processEvents()
 
-			
+
 # from PyQt4.QtGui import QMainWindow
 # from PyQt4.QtGui import QColor
 # from src.view.rf_condition_view_base import Ui_rf_condition_mainWindow
@@ -277,15 +275,15 @@ print('Got stdout: "{0}"'.format(f.getvalue()))
         # # # os.dup2(sys.stderr, stdout_fd)
         # sys.stdout = OutLog(self.message_pad )
         # #sys.stderr = OutLog(self.message_pad, color = QColor(255,0,0))
-		
-		
+
+
         # fileno(sys.stdout)
-		
+
         # print("PYTHON STANDARD OUT")
-		
+
 		# #sys.stdout = OutLog(self.message_pad, os.dup(1))
         # # sys.stdout = OutLog(self.message_pad, os.dup(2))
-		
+
 # from PyQt4.QtGui import QApplication
 # class rf_condition(QApplication):
     # def __init__(self, argv):
@@ -297,16 +295,16 @@ print('Got stdout: "{0}"'.format(f.getvalue()))
 
 		# self.view = rf_condition_view()
 		# self.view.show()
-		# QApplication.processEvents()		
+		# QApplication.processEvents()
 
 		# self.llrf_init = VELA_CLARA_LLRF_Control.init()
 		# self.llrf_init.setQuiet()
 
 		# self.llrf_control = self.llrf_init.getLLRFController(MACHINE_MODE.PHYSICAL, LLRF_TYPE.L01)
-		
+
 		# #raise Exception("sdddddddddddddddddddddddddddddddddddddddd"	)
-		
-		
+
+
 # if __name__ == '__main__':
     # print('Starting rf_condition Application')
     # app = rf_condition(sys.argv)

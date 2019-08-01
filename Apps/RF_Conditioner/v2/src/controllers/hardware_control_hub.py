@@ -242,7 +242,7 @@ class hardware_control_hub(object):
         string returned by the gen_mon)
         return connecetd successfully or not
 
-        :param pvKey: (string)  the key that you want to use fro this PV in  gen_mon_keys
+        :param pvKey: (string)  the key that you want to use for this PV in  gen_mon_keys
         :param pvValue: (string) The actual PVyou want to connetc to
         :return:
         """

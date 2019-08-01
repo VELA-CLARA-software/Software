@@ -65,16 +65,9 @@ class main_controller(object):
 
         # pop the view so we can display startup message
         #
-        print("GUI")
         self.view = rf_condition_view()
-
-
-
-        print("GUI SHOW")
         self.view.show()
-        print("GUI PROC")
         QApplication.processEvents()
-        print("GUI FIN")
         #
         # Create config reader, and get configuration
         print(__name__ + ', attempting to read config: ' + config_file)
@@ -83,14 +76,14 @@ class main_controller(object):
         print(__name__ + ', got Config, starting Logging\n')
 
 
+        # Set the config for the GUI
         self.view.config = self.config
         self.view.start_gui_update()
-
 
         #
 
         # start logging, sets up main text file logging, and logs the config
-        self.logger = rf_conditioning_logger(debug=self.debug,column_width=60)
+        self.logger = rf_conditioning_logger(debug=self.debug,column_width=80)
         self.logger.setup_text_log_files()
         self.logger.log_config()
         #
@@ -118,6 +111,10 @@ class main_controller(object):
                                    add_to_text_log=True,show_time_stamp=True)
         self.monitor = monitor_hub()
         self.monitor.start_monitors()
+
+        #
+        # Start Data Logging
+        self.logger.start_binary_data_logging(self.data.values)
 
 
 
