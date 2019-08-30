@@ -186,7 +186,7 @@ beam_fn = os.path.join(working_directory, str(image_file_information[image_files
 back_fn = os.path.join(working_directory, str(image_file_information[image_files][0, 1][0]))
 
 image_to_fit = get_image_data_to_fit(beam_fn, back_fn)
-print image_to_fit[0]
+print(image_to_fit[0])
 
 # Now we fit a normal distribution to the projections of the image_to_fit
 # we call the projections sum_rows and sum_cols to make our axes obvious
