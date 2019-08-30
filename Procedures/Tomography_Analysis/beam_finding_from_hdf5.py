@@ -7,90 +7,7 @@ from scipy.io import loadmat
 from scipy import exp
 
 
-
-
-working_directory='\\\\fed.cclrc.ac.uk\\org\\NLab\\ASTeC\\Projects\\VELA\\Work\\2019\\03\\04' \
-                  '\\10pC degaussing, sol -125.0'
-
-
-
-image_file_info_path = os.path.join(working_directory, 'ImageFileInformation.mat')
-
-image_file_information = loadmat( image_file_info_path  )
-
-
-
-# The image files have this key
-image_files = 'Image_and_background_filenames_at_observation_point'
-# and we can get the data and background
-print image_file_information[image_files][0,0][0]
-print image_file_information[image_files][0,1][0]
-
-beam_fn = os.path.join(working_directory, str(image_file_information[image_files][0,0][0]) )
-back_fn = os.path.join(working_directory, str(image_file_information[image_files][0,1][0]) )
-
-
-print beam_fn
-print back_fn
-
-
-beam_image = h5py.File(beam_fn ,'r+')
-back_image = h5py.File(back_fn ,'r+')
-
-# all images have this string in their 'group' (key)
-image_tag = 'Capture'
-
-
-beam_keys = [x for x in beam_image.keys() if image_tag in x ]
-back_keys = [x for x in back_image.keys() if image_tag in x ]
-
-# get background data
-# THIS IS A REAL GOTCHA, HDF5 AND MATLAB ARE SPECIFYING THE TYPE OF THE DATA WE ARE READING IN AS
-# UNSIGNED INTEGER, YOU MUST CHANGE THE TYPE TO INT, OR WHEN WE DO SUBTRACTION LATER THINGS GO
-# WRONG  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-back_data = np.array(back_image[back_keys[0]][()],dtype=np.float32)
-if len(back_keys) > 1:
-    for index in range(1,len(back_keys)):
-        back_data += np.array(back_image[back_keys[index]][()])
-    back_data /= len(back_keys)
-
-
-beam_images = []
-
-
-for index in beam_keys:
-    # subtract background image
-
-    data = np.array(beam_image[index][()],dtype=np.float32)
-
-    temp = np.array( np.subtract(data, back_data) )
-
-    # print("back = ",back_data[0])
-    # print("data = ",data[0])
-    # print("temp = ",temp[0])
-
-    # slice first 50 columns out, as this is where the time stamp is imprinted in the image
-    beam_images.append( temp[...,49:] )
-
-# gaussian fit to projections
-
-
-
-sum_cols = []
-sum_rows = []
-
-for image in beam_images[0:1]:
-    print( image[0])
-
-
-    # print image.shape
-    sum_cols = image.sum(axis=0).tolist()
-    sum_rows = image.sum(axis=1).tolist()
-    print(sum_cols)
-    print(sum_rows)
-
-
-
+# function defintiions here ...
 def get_first_second_moments(data):
     """
     This function gets the first and second moments (about the mean) for a 1D list
@@ -132,60 +49,115 @@ def fit_normal(data):
     return popt
 
 
-def plot_normal_fit(data, popt):
-    x = np.array(range(len(data)), dtype=np.float32)
-    y = np.array(data, dtype=np.float32)
-    plt.plot(x,y,'b+:',label='data')
-    plt.plot(x,normal_dist(x,*popt),'ro:',label='fit')
-    plt.legend()
-    plt.title('Fig. 3 - Fit for Time Constant')
-    plt.xlabel('Time (s)')
-    plt.ylabel('Voltage (V)')
+def plot_normal_fit(data1, popt1, data2, popt2):
+    fig = plt.figure(figsize=(17, 8))
+    ax = fig.add_subplot(121)
+    ay = fig.add_subplot(122)
+    x1 = np.array(range(len(data1)), dtype=np.float32)
+    y1 = np.array(data1, dtype=np.float32)
+
+    x2 = np.array(range(len(data2)), dtype=np.float32)
+    y2 = np.array(data2, dtype=np.float32)
+
+    ax.plot(x1,y1,'b+:',label='data')
+    ax.plot(x1,normal_dist(x1,*popt1),'ro:',label='fit')
+    ay.plot(x2,y2,'b+:',label='data')
+    ay.plot(x2,normal_dist(x2,*popt2),'ro:',label='fit')
+    ax.legend()
+    plt.xlabel('X (PIXEL)')
+    plt.ylabel('y (PIXEL)')
     plt.show()
 
 
-fit = fit_normal(sum_cols)
-plot_normal_fit(sum_cols,fit)
+def get_image_data_to_fit(beam_fn, back_fn):
+    '''
+    takes two input files and produces the "average" image from those files
+    :param beam_fn: full path to beam image file
+    :param back_fn:  fukll path to background image file
+    :return: the average beam image MINUS the average background image
+    '''
 
-print len(beam_images)
+    print("Beam Image file = ", beam_fn)
+    print("Background file = ", back_fn)
+
+    beam_image = h5py.File(beam_fn, 'r+')
+    back_image = h5py.File(back_fn, 'r+')
+
+    # all images in the hdf5 file have this string in their 'group' (key)
+    image_tag = 'Capture'
+    # get all keys that have image_tag in them
+    beam_keys = [x for x in beam_image.keys() if image_tag in x ]
+    back_keys = [x for x in back_image.keys() if image_tag in x ]
+    # now we can find an average of all the beam / background images
+    # get the first beam image
+    print "getting beam images"
+    beam_0 = np.array(back_image[back_keys[0]][()],dtype=np.float32)
+    for image in beam_keys[1:]:
+        temp = np.array(beam_image[image][()],dtype=np.float32)
+        beam_0 = np.add(temp, beam_0)
+        print beam_0[0]
+    print("len(beam_keys)",len(beam_keys))
+    beam_0 = np.true_divide(beam_0, len(beam_keys))
+    print beam_0[0]
+
+    print "getting back images"
+    back_0 = np.array(back_image[back_keys[0]][()],dtype=np.float32)
+    for image in back_keys[1:]:
+        temp = np.array(back_image[image][()],dtype=np.float32)
+        back_0 = np.add(temp, back_0)
+        print back_0[0]
+    back_0 = np.true_divide(back_0 , len(back_keys))
+    print back_0[0]
+
+    beam_image = np.subtract(beam_0,back_0)
+    # slice first 50 columns out, as this is where the time stamp is imprinted in the image
+    return beam_image  [..., 49:]
 
 
 
+# Some inputs
 
-print np.sum(beam_images) / len(beam_images)
+# where are the raw image files we want to analyse?
+working_directory='\\\\fed.cclrc.ac.uk\\org\\NLab\\ASTeC\\Projects\\VELA\\Work\\2019\\03\\04' \
+                  '\\10pC degaussing, sol -125.0'
 
-# print back_data
-#
-#
-# print beam_keys
-# print back_keys
-#
-# # this gets the numerical array ( try swopping [()] for .value fro )
-# print('beam data ')
-# print beam_image[ beam_keys[0] ][()]
-# print('back data ')
-#
-# print back_image[ back_keys[0] ][()]
-
-image_file_data = []
+# ImageFileInformation contains a list fo which beam image goes with which background image
+image_file_info_path = os.path.join(working_directory, 'ImageFileInformation.mat')
 
 
-# for key, value in image_file_information.iteritems():
-#     print key
-#     if key == image_files:
-#
-#         for item in value:
-#             print item
+# get the image file information (beam images and background)
+image_file_information = loadmat(image_file_info_path)
+# The image files have this key
+image_files = 'Image_and_background_filenames_at_observation_point'
+
+# there can be multiple beam images and multiple background images
+# we sum all teh images, find an average, then subtract the background from the beam
 
 
+# filenames for the data to read
+beam_fn = os.path.join(working_directory, str(image_file_information[image_files][0,0][0]) )
+back_fn = os.path.join(working_directory, str(image_file_information[image_files][0,1][0]) )
 
 
+image_to_fit = get_image_data_to_fit( beam_fn, back_fn)
+print image_to_fit[0]
 
-# image_files= []
-# for file in os.listdir(working_directory):
-#     if file.endswith(".hdf5"):
-#         image_files.append(file)
-#
-# f1 = h5py.File( os.path.join(working_directory, image_files[0]),'r+')
+# Now we fit a normal distribution to the projections of the image_to_fit
+# we call the projections sum_rows and sum_cols to make our axes obvious
+
+sum_cols = image_to_fit.sum(axis=0).tolist()
+sum_rows = image_to_fit.sum(axis=1).tolist()
 
 
+fit_cols = fit_normal(sum_cols)
+fit_rows = fit_normal(sum_rows)
+
+plot_normal_fit(sum_cols,fit_cols, sum_rows,fit_rows)
+
+
+# now we can crop the data about the centre of each gaussian
+
+final_image_size = 1200 # pixels
+
+
+raw_input()
