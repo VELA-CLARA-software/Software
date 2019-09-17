@@ -2,6 +2,7 @@
 clear
 
 %datadir       = '../Data BuckingCoil/BCCurrent-1';
+% this directory must match where  CLARA tomography
 datadir      = 'Data 2019-03-04 10pC degaussing sol -125.0';
 %--------------------------------------------------------------------------
 % Set parameters for the analysis and specify directory for the results
