@@ -29,6 +29,7 @@ load([datadir '/' configfile]);
 nx           = size(indxx,2);
 ny           = size(indxy,2);
 
+
 Beta_x_y_at_reconstruction_point  = [betax betay];
 Alpha_x_y_at_reconstruction_point = [alphax alphay];
 
@@ -124,7 +125,22 @@ toc
 xprojection = zeros(nx*psresn,1);
 yprojection = zeros(ny*psresn,1);
 
+% disp("psresn = ");
+% disp(psresn);
+% disp("ny = ");
+% disp(ny);
+% disp("xprojection = ");
+% disp(xprojection);
+% disp("yprojection = ");
+% disp(yprojection);
+
+
+
 dfindxx     = zeros(2,nx*psresn^2);
+
+disp('size(dfindxx) = ')
+disp(size(dfindxx))
+
 dfcntrx     = 1;
 
 dfindxy     = zeros(2,ny*psresn^2);
@@ -138,33 +154,53 @@ disp('Setting up the equations...'); pause(0.01)
 
 tic
 
+disp("psresn = ");
+disp(psresn);
+
+disp("ctroffset = ");
+disp(ctroffset);
+
 for n = 1:nx
     
+%     disp("n = ");
+%     disp(n);
+    
     indx   = indxx(n);
+
+%     disp("indx = ");
+%     disp(indx);
     
     % Set the phase advance
     
     cosmux = cos(PhaseAdvance_x_y(indx,1));
     sinmux = sin(PhaseAdvance_x_y(indx,1));
 
+    disp("PhaseAdvance_x_y(indx,1) = ");
+    disp(PhaseAdvance_x_y(indx,1));
+    disp(cosmux);
+    
     % Find the indices of the non-zero values of the matrix relating the
     % projected distribution at YAG02 to the phase space distribution at YAG01
     
     for xindx1 = 1:psresn
         for pxindx1 = 1:psresn
             xindx0  = round(cosmux*(xindx1 - ctroffset) - sinmux*(pxindx1 - ctroffset) + ctroffset);
+            
+%             disp('xindx0 = ')
+%             disp(xindx0)
+            
             if xindx0>0 && xindx0<=psresn
                 pxindx0 = round(sinmux*(xindx1 - ctroffset) + cosmux*(pxindx1 - ctroffset) + ctroffset);
                 if pxindx0>0 && pxindx0<=psresn
-
+                   
+                    %disp([(n-1)*psresn + xindx1; (xindx0-1)*psresn + pxindx0])
                     dfindxx(:,dfcntrx) = [(n-1)*psresn + xindx1; (xindx0-1)*psresn + pxindx0];
+                    
                     dfcntrx = dfcntrx + 1;
-
                 end
             end
         end
     end
-    
     % Construct the vector of image pixels
     % why not normalised?
 %     nrm = sum(sum(imagearray{indx}));
@@ -172,6 +208,11 @@ for n = 1:nx
     xprojection(((n-1)*psresn+1):n*psresn) = sum(imagearray{indx},2); %/nrm;
     
 end
+disp('dfindxx(1:10,) = ')
+disp(dfindxx(1:2,1:100))
+pause(121212)
+
+
 
 for n = 1:ny
     
