@@ -125,8 +125,10 @@ toc
 xprojection = zeros(nx*psresn,1);
 yprojection = zeros(ny*psresn,1);
 
-% disp("psresn = ");
-% disp(psresn);
+disp("size(xprojection) = ");
+disp(size(xprojection));
+disp("size(yprojection) = ");
+disp(size(yprojection));
 % disp("ny = ");
 % disp(ny);
 % disp("xprojection = ");
@@ -204,8 +206,14 @@ for n = 1:nx
     % Construct the vector of image pixels
     % why not normalised?
 %     nrm = sum(sum(imagearray{indx}));
-
+    
+    % sum(imagearray{indx},2);
     xprojection(((n-1)*psresn+1):n*psresn) = sum(imagearray{indx},2); %/nrm;
+    
+    disp('((n-1)*psresn+1):n*psresn ');
+    disp(((n-1)*psresn+1));
+    disp(n*psresn)
+    pause(121212)
     
 end
 disp('dfindxx(1:10,) = ')
