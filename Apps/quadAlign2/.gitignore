@@ -1,0 +1,7 @@
+*build
+*dist
+*.spec
+*.pyc
+*.pyd
+.idea
+*.csv

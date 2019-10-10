@@ -41,16 +41,16 @@ class histogramPlot(qt.QWidget):
         self.setupOptionsBox()
         self.subtractMeans = False
         self.normalise = False
-        self.layout.addLayout(self.subtractMeanLayout)
-        self.layout.addLayout(self.normaliseLayout)
         if plotRateBar:
             self.setupPlotRateSlider()
             self.layout.addLayout(self.plotRateLayout)
+        self.layout.addLayout(self.optionsBoxLayout)
         self.setLayout(self.layout)
         # logger.debug('histogramPlot initiated!')
         self.generalPlot.signalRemoved.connect(self.removeCurve)
 
     def setupOptionsBox(self):
+        self.optionsBoxLayout = qt.QGridLayout()
         self.subtractMeanLayout = qt.QHBoxLayout()
         self.subtractMeanLabel = qt.QLabel()
         self.subtractMeanLabel.setText('Subtract Means')
@@ -69,6 +69,22 @@ class histogramPlot(qt.QWidget):
         self.normaliseCheckbox.stateChanged.connect(self.setNormalise)
         self.normaliseLayout.addWidget(self.normaliseLabel)
         self.normaliseLayout.addWidget(self.normaliseCheckbox)
+        self.optionsBoxLayout.addLayout(self.subtractMeanLayout, 0,0,1,1)
+        self.optionsBoxLayout.addLayout(self.normaliseLayout, 1,0,1,1)
+
+        self.nbinsLayout = qt.QVBoxLayout()
+        self.nbinsLabel = qt.QLabel()
+        self.nbinsLabel.setText('No. Bins')
+        self.nbinsLabel.setAlignment(qt.Qt.AlignCenter)
+        self.nbinsSpinBox = qt.QSpinBox()
+        self.nbinsSpinBox.setValue(10)
+        self.nbinsSpinBox.setMinimum(3)
+        self.nbinsSpinBox.setMaximum(100)
+        self.nbinsSpinBox.setSingleStep(1)
+        self.nbinsSpinBox.valueChanged[int].connect(self.setNumberOfBins)
+        self.nbinsLayout.addWidget(self.nbinsLabel)
+        self.nbinsLayout.addWidget(self.nbinsSpinBox)
+        self.optionsBoxLayout.addLayout(self.nbinsLayout, 0,1,2,1)
 
     def setupPlotRateSlider(self):
         self.plotRateLayout = qt.QHBoxLayout()
@@ -133,6 +149,10 @@ class histogramPlot(qt.QWidget):
         elif value == True:
             self.addCurve(name)
 
+    def setNumberOfBins(self, nbins):
+        for plot in self.histogramPlotCurves.itervalues():
+            plot.setNumberOfBins(nbins)
+
 class histogramPlotCurve(qt.QObject):
 
     statusChanged = qt.pyqtSignal(str)
@@ -150,6 +170,9 @@ class histogramPlotCurve(qt.QObject):
         self.numberBins = 10
         self.decimateScale = 1000
         self.plot = self.histogramplot.plot()
+
+    def setNumberOfBins(self, nbins):
+        self.numberBins = int(nbins)
 
     def togglePause(self, value):
         self.paused = value

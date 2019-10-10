@@ -3,7 +3,7 @@ from PyQt4 import QtGui
 import webbrowser
 import pyqtgraph as pg
 import colorcet  # for nice colour maps
-from epics import caget, caput
+import epics
 import numpy as np
 import h5py
 import os
@@ -39,7 +39,7 @@ image_path = [r'\\claraserv3', 'CameraImages']
 hdf5_image_folder = os.path.join(*image_path)
 # only show top-level dirs, and ones that consist entirely of digits (i.e. year/month/date)
 filter_regexp = '|'.join([d.replace('\\', '\\\\') for d in image_path]) + '|^\d+$'
-fire = [QtGui.qRgb(*QtGui.QColor(val).getRgb()[:3]) for val in colorcet.fire]
+fire = np.array([list(int(h[i:i + 2], 16) for i in (1, 3, 5)) for h in colorcet.fire], dtype='uint8')
 
 image_credits = {
     'pause.png': 'https://www.flaticon.com/free-icon/pause-symbol_25696#term=pause&page=1&position=5',
@@ -116,6 +116,7 @@ class ImageDirFilter(QtGui.QSortFilterProxyModel):
     and fetches thumbnails for HDF5 files in the background."""
     def __init__(self):
         super(ImageDirFilter, self).__init__()
+        self.colour_map = [QtGui.qRgb(*QtGui.QColor(val).getRgb()[:3]) for val in colorcet.fire]
         self.icons = {}
         self.indices = {}  # a lookup table for filename -> persistent index
         self.data_to_child = Queue()
@@ -140,7 +141,7 @@ class ImageDirFilter(QtGui.QSortFilterProxyModel):
         """Received a new icon from the child process - update the GUI."""
         path, icon_data, width, height = data
         image = QtGui.QImage(icon_data, width, height, width, QtGui.QImage.Format_Indexed8)
-        image.setColorTable(fire)
+        image.setColorTable(self.colour_map)
         self.icons[path] = QtGui.QIcon(QtGui.QPixmap(image))  # remember it so we don't fetch it again
         index = QtCore.QModelIndex(self.indices[path])  # since dataChanged doesn't like persistent indices
         self.dataChanged.emit(index, index)
@@ -199,14 +200,15 @@ class Controller():
             if isinstance(colour_map, list):
                 icon.fill(QtGui.QColor(colour_map[0]))
                 painter = QtGui.QPainter(icon)
-                for j in range(32):
-                    painter.setPen(QtGui.QColor(colour_map[j * 256 / 32]))
-                    painter.drawLine(j, 0, j, 31)
+                for j in range(64):
+                    painter.setPen(QtGui.QColor(colour_map[j * 256 / 64]))
+                    x, y = (j, 0) if j < 32 else (31, j - 31)
+                    painter.drawLine(x, y, y, x)
                 painter.end()
                 view.colour_map_dropdown.addItem(QtGui.QIcon(icon), name)
 
         view.auto_level_checkbox.stateChanged.connect(self.autoLevelClicked)
-        view.max_level_slider.valueChanged.connect(lambda val: view.max_level_spin.setValue(2 ** val - 1))
+        view.max_level_slider.valueChanged.connect(lambda val: view.max_level_spin.setValue(2 ** (val / 5.0) - 1))
         view.max_level_spin.valueChanged.connect(self.maxLevelChanged)
         # view.acquire_pushButton.clicked.connect(self.model.acquire)
         self.camera_name = None
@@ -220,7 +222,7 @@ class Controller():
         screen_names = self.cam_ctrl.getCameraScreenNames()
         # Remove any that don't actually have a camera looking at them
         screens_with_cameras = self.scr_ctrl.getNamesOfScreensWithCameras()
-        self.cam_dict = OrderedDict((scr, cam) for scr, cam in zip(screen_names, camera_names) if scr in screens_with_cameras or scr.startswith('BA1-COFF'))
+        self.cam_dict = OrderedDict((scr, cam) for scr, cam in zip(screen_names, camera_names))  # if scr in screens_with_cameras or scr.startswith('BA1-COFF'))
         section_names = ['S01', 'S02', 'C2V', 'INJ', 'BA1']
         # item_names = ['S01-SCR-01', 'S02-SCR-01', 'S02-SCR-02', 'S02-SCR-03', 'C2V-SCR-01', 'INJ-YAG-04', 'INJ-YAG-05',
         #               'INJ-YAG-06', 'INJ-YAG-07', 'INJ-YAG-08', 'BA1-YAG-01', 'BA1-YAG-02']# , 'BA1-YAG-03']
@@ -228,7 +230,8 @@ class Controller():
         view.cameras_treeview.viewport().setAutoFillBackground(False)
         view.cameras_treeview.setModel(self.screens)
         view.cameras_treeview.clicked.connect(self.changeCamera)
-        print(self.cam_dict)
+        self.channel_id = {}
+        suffix = 'CAM1:ArrayData'  # if self.cam_ctrl.isVelaCam() else 'CAM2:ArrayData'
         for section in section_names:
             parent = QtGui.QStandardItem(section)
             parent.setFlags(QtCore.Qt.NoItemFlags)
@@ -237,6 +240,10 @@ class Controller():
                     child = QtGui.QStandardItem(item[4:])
                     child.setData(item)
                     parent.appendRow(child)
+                    # pv_name = self.cam_ctrl.getCameraObj(item).pvRoot + suffix
+                    # print(pv_name)
+                    # self.channel_id[item] = epics.PV(pv_name).chid
+                    # epics.ca.get(self.channel_id[item], wait=False, timeout=30)
             self.screens.appendRow(parent)
 
         view.overlay_checkbox.stateChanged.connect(self.displayOverlay)
@@ -508,7 +515,7 @@ class Controller():
     def maxLevelChanged(self, value):
         """The maximum level spinbox has been changed. Update the slider to an approximate position."""
         self.view.max_level_slider.blockSignals(True)  # otherwise we get a feedback loop!
-        self.view.max_level_slider.setValue(int(np.round(np.log2(value + 1))))
+        self.view.max_level_slider.setValue(int(np.round(np.log2(value + 1) * 5)))
         self.view.max_level_slider.blockSignals(False)
         if not self.view.auto_level_checkbox.isChecked():
             self.settings.setValue(self.camera_name + '/maxLevel', value)
@@ -562,7 +569,7 @@ class Controller():
     def updateROIFromMask(self):
         """The mask has changed - update the ROI."""
         mask = self.cam_ctrl.getMaskObj()
-        print('got mask obj', mask.mask_x, mask.mask_y, mask.mask_x_rad, mask.mask_y_rad)
+        # print('got mask obj', mask.mask_x, mask.mask_y, mask.mask_x_rad, mask.mask_y_rad)
         x = mask.mask_x - mask.mask_x_rad
         y = mask.mask_y - mask.mask_y_rad
         # Show the ROI within the image bounds, even if the mask is outside them - makes it easier to grab and fix
@@ -573,7 +580,7 @@ class Controller():
         y_rad = np.clip(mask.mask_y_rad, min_size, img_height / 2)
         x = np.clip(x, 0, img_width - x_rad * 2)
         y = np.clip(y, 0, img_height - y_rad * 2)
-        print(x, y, x_rad, y_rad)
+        # print(x, y, x_rad, y_rad)
         self.roi.blockSignals(True)  # don't update the mask recursively!
         self.roi.setPos(QtCore.QPoint(x * pix2mm, y * pix2mm), update=False)
         self.roi.setSize(QtCore.QPoint(x_rad * 2 * pix2mm, y_rad * 2 * pix2mm), update=False)
@@ -624,7 +631,8 @@ class Controller():
 
                 if is_acquiring:
                     index = self.screens.indexFromItem(item)
-                    if index != self.view.cameras_treeview.currentIndex():  # maybe it was changed outwith this GUI?
+                    # maybe it was changed outwith this GUI?
+                    if index.internalId() != self.view.cameras_treeview.currentIndex().internalId():
                         self.view.cameras_treeview.setCurrentIndex(index)
                         self.changeCamera(start_acquire=False)
                     current_camera_name = name
@@ -693,12 +701,14 @@ class Controller():
         # data = None  # for testing
         suffix = 'CAM1:ArrayData'  # if self.cam_ctrl.isVelaCam() else 'CAM2:ArrayData'
         pv_name = self.cam_ctrl.getCameraObj(screen_name).pvRoot + suffix
-        # data = self.cam_ctrl.takeAndGetFastImage()
+        data = self.cam_ctrl.takeAndGetFastImage()
         # data = cam_ctrl.getImageObj().data
         t0 = datetime.now()
-        data = caget(pv_name, timeout=0.1)  # this seems a bit faster than takeAndGetFastImage()
+        # data = epics.ca.get_complete(self.channel_id[screen_name])
+        # epics.ca.get(self.channel_id[screen_name], wait=False)
+        # data = epics.caget(pv_name, timeout=0.1)  # this seems a bit faster than takeAndGetFastImage()
         t1 = datetime.now()
-        # print(datetime.now() - now)
+        # print(t1 - t0)
         if data is not None:
             leds_on = False #self.cam_ctrl.isClaraLEDOn() or self.cam_ctrl.isVelaLEDOn()
             min_level = 0
@@ -769,8 +779,6 @@ class Controller():
     def collectAndSave(self):
         numberOfImages = self.view.numImages_spinBox.value()
         if self.cam_ctrl.isAcquiring():
-            timestamp = datetime.now()
-            folder = hdf5_image_folder + timestamp.strftime(r'\%Y\%#m\%#d')  # omit leading zeros from month and day
             success = self.cam_ctrl.collectAndSave(numberOfImages)
             analysis = self.cam_ctrl.getAnalysisObj()
             ratio = self.pix2mm()
@@ -781,16 +789,12 @@ class Controller():
             sigX, sigY = sigX * ratio, sigY * ratio
             self.bh_roi.setPos(x - sigX, y - sigY)
             self.bh_roi.setSize([2 * sigX, 2 * sigY])
+            timestamp = datetime.now()
             if not success:
                 # collectAndSave doesn't work - implement it ourselves
-                try:
-                    os.makedirs(folder)
-                except OSError as e:
-                    if e.errno != 17:  # dir already exists
-                        raise
-                self.save_filename = r'{}\{}_{}_{}images.hdf5'.format(folder, self.getCurrentScreen(), timestamp.strftime('%Y-%#m-%#d_%#H-%#M-%#S'), numberOfImages)
-                with h5py.File(self.save_filename, 'w') as file:
-                    file.create_dataset('Capture000001', data=np.array(self.Image.image, dtype='uint16'))
+                self.save_filename = self.makeSaveFilename(numberOfImages, timestamp)
+                with h5py.File(self.save_filename, 'w') as h5file:
+                    h5file.create_dataset('Capture000001', data=np.array(self.Image.image, dtype='uint16'))
                     # TODO: magnet/RF settings in attributes?
                     # TODO: save more than one image?
                 self.writeSnapshot()
@@ -806,6 +810,17 @@ class Controller():
         elif self.cam_ctrl.isCollectingOrSaving():
             self.camerasDAQ.killCollectAndSave()  # TODO: this isn't right any more
         # self.camerasDAQ.killCollectAndSaveJPG()
+
+    def makeSaveFilename(self, numberOfImages, timestamp, extension='hdf5'):
+        """Generate a filename based on a timestamp, and create the folder if it doesn't exist."""
+        folder = hdf5_image_folder + timestamp.strftime(r'\%Y\%#m\%#d')  # omit leading zeros from month and day
+        try:
+            os.makedirs(folder)
+        except OSError as e:
+            if e.errno != 17:  # dir already exists
+                raise
+        return r'{}\{}_{}_{}images.{}'.format(folder, self.getCurrentScreen(),
+                                              timestamp.strftime('%Y-%#m-%#d_%#H-%#M-%#S'), numberOfImages, extension)
 
     def writeSnapshot(self):
         """Create machine snapshot and append it to the saved image file."""

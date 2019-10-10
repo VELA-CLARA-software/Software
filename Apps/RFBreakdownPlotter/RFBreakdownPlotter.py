@@ -84,17 +84,17 @@ class pickleGUI(QMainWindow):
         self.layout = QHBoxLayout()
         self.centralWidget.setLayout(self.layout)
 
-        self.thread = QThread()
-        self.worker = watchWorker()
-        self.worker.moveToThread(self.thread)
+        # self.thread = QThread()
+        # self.worker = watchWorker()
+        # self.worker.moveToThread(self.thread)
 
         self.tab = QTabWidget()
         self.picklePlot = picklePlotWidget(args)
 
         self.picklePlot.updateFileSelectionBox()
-        self.worker.fileadded.connect(self.picklePlot.updateFileSelectionBox)
-        self.worker.fileremoved.connect(self.picklePlot.updateFileSelectionBox)
-        self.picklePlot.loadPickle()
+        # self.worker.fileadded.connect(self.picklePlot.updateFileSelectionBox)
+        # self.worker.fileremoved.connect(self.picklePlot.updateFileSelectionBox)
+        # self.picklePlot.loadPickle()
 
         self.layout.addWidget(self.picklePlot)
 
@@ -161,7 +161,7 @@ class picklePlotWidget(QWidget):
         self.sortByCombo.currentIndexChanged.connect(self.setSortBy)
 
         self.floorLine = InfiniteLine(angle=0, pen='k')
-        self.outsideMaskLine = InfiniteLine(angle=90, pen='k')
+        self.outsideMaskLine = InfiniteLine(angle=90, pen=mkPen(color='k', width=3))
         #
         # self.plotorder = [ ['new_tab', 'Power'],
         #                     'KLYSTRON_FORWARD_POWER', 'KLYSTRON_REVERSE_POWER',
@@ -195,20 +195,24 @@ class picklePlotWidget(QWidget):
     def mkPen(self, colorindex, index):
         color = Qtableau20[index % len(Qtableau20)]
         if index == 0:
-            pen = mkPen(color=color, width=3)
+            pen = mkPen(color=color)
         else:
-            pen = mkPen(color=color, width=2, dash=[1,1])
+            pen = mkPen(color=color)#, dash=[1,1])
         return pen
 
     def loadPickle(self):
+        print 'loading Pickle!'
         self.data = []
         self.tracename = ''
         filename = str(self.fileCombo.currentText())
         if filename is not '':
             # print 'filename = ', filename
+            start = time.time()
             pkl_file = open(filename, 'rb')
             data1 = pickle.load(pkl_file)
             pkl_file.close()
+            # exit()
+            print 'pickle load time = ', time.time() - start
             event = {}
             reject_strings = ['time', 'EVID', 'value']
             for k, v in data1.iteritems():
@@ -220,12 +224,21 @@ class picklePlotWidget(QWidget):
                     pos = k[[i for i, j in enumerate(k) if j == '_'][-1]+1:]
                     if isinstance(data1[k.replace('name', 'EVID')], str) and 'NOT_SET' in data1[k.replace('name', 'EVID')]:
                         data1[k.replace('name', 'EVID')] = -1
-                    event[name][str(pos)] = {
-                                        'data': data1[k.replace('name', 'value')][:600],
-                                        'eventID': data1[k.replace('name', 'EVID')],
-                                        'time': data1[k.replace('name', 'time')],
-                                        'pos': pos
-                                        }
+
+                    if k.replace('name', 'value') in data1.keys():
+                        event[name][str(pos)] = {
+                                            'data': data1[k.replace('name', 'value')][:600],
+                                            'eventID': data1[k.replace('name', 'EVID')],
+                                            'time': data1[k.replace('name', 'time')],
+                                            'pos': pos
+                                            }
+                    elif k.replace('name', 'data') in data1.keys():
+                        event[name][str(pos)] = {
+                                            'data': data1[k.replace('name', 'data')][:600],
+                                            'eventID': data1[k.replace('name', 'EVID')],
+                                            'time': data1[k.replace('name', 'time')],
+                                            'pos': pos
+                                            }
                 elif 'lo_mask_' in k or 'hi_mask_' in k:
                     try:
                         trydict = {'name': k, 'type': 'mask', 'data': v[:600]}
@@ -241,19 +254,25 @@ class picklePlotWidget(QWidget):
                     if k not in self.plotorder:
                         self.plotorder.append(k)
             self.data = event
+            print 'all pickle load time = ', time.time() - start
             self.updatePlot()
 
     def changeDirectory(self):
+        print 'changing directory!'
         self.directory = str(QFileDialog.getExistingDirectory(self, "Select Directory", self.directory, QFileDialog.ShowDirsOnly))
         self.folderLineEdit.setText(self.directory)
         self.updateFileSelectionBox()
 
     def updateFileSelectionBox(self, modifiedFile=None):
+        print 'updating file selection!'
+        self.setUpdatesEnabled(False)
+        starttime =  time.time()
         fileComboIndex = self.fileCombo.currentIndex()
         self.fileCombo.clear()
         self.fileCombo.currentIndexChanged.disconnect(self.loadPickle)
         i = -1
-        for file in glob.glob(self.directory+"/*.pkl"):
+        globans = glob.glob(self.directory+"/*.pkl")
+        for file in globans:
             i += 1
             self.fileCombo.addItem(str(file))
             if str(file) == str(modifiedFile):
@@ -262,8 +281,11 @@ class picklePlotWidget(QWidget):
             self.fileCombo.setCurrentIndex(0)
         self.fileCombo.currentIndexChanged.connect(self.loadPickle)
         self.loadPickle()
+        self.setUpdatesEnabled(True)
+        print 'plot time = ', time.time() - starttime
 
     def updatePlot(self):
+        print 'Updating Plot!'
         starttime =  time.time()
         self.setUpdatesEnabled(False)
         self.plotWidget.clear()
@@ -298,7 +320,7 @@ class picklePlotWidget(QWidget):
                             y = datadict[str(i)]['data']
                             x = range(len(y))
                             plot = p.plot(x=x, y=y, pen=self.mkPen(0, colorindex))
-                            if i < 6:
+                            if i < 5:
                                 if self.sortBy == 'time':
                                     # signaltime = datetime.datetime.fromtimestamp(datadict[str(i)]['time']).strftime('%H:%M:%S.%f')
                                     signaltime = datadict[str(i)]['time']
@@ -322,14 +344,16 @@ class picklePlotWidget(QWidget):
                         if 'outside_mask_index' in alldata:
                             self.outsideMaskLine.setValue(alldata['outside_mask_index']['data'])
                             p.addItem(self.outsideMaskLine)
-                    elif datadict['type'] == 'parameter':
-                        self.tableData.append([datalabel, alldata[datalabel]['data']])
+                    # elif datadict['type'] == 'parameter':
+                    #     self.tableData.append([datalabel, alldata[datalabel]['data']])
         # print self.tableData
-        w.setData(self.tableData)
+        # w.setData(self.tableData)
         self.setUpdatesEnabled(True)
-
+        print 'plot time = ', time.time() - starttime
 
     def plotMask(self, y, p, filllevel, minmax):
+        print 'Updating Mask!'
+        starttime =  time.time()
         x = range(len(y))
         xy = zip(x, y)
         xy = [list(grp) for k, grp in groupby(xy, lambda x: math.isinf(x[1]))]
@@ -349,6 +373,7 @@ class picklePlotWidget(QWidget):
                     p.plot(x=list(x), y=list(y), pen=None, fillLevel=0, brush=mkBrush((211,211,211,128)))
                 else:
                     p.plot(x=list(x), y=list(y), pen=None, fillLevel=1.5*filllevel, brush=mkBrush((211,211,211,128)))
+        print 'mask time = ', time.time() - starttime
 
 def main():
     global app

@@ -27,22 +27,26 @@
 //*/
 '''
 import sys
-# meh  https://stackoverflow.com/questions/11953618/pyinstaller-importerror-no-module-named-pyinstaller
-sys.path.append('.')
-# sys.path.append('C:\\Python27\\Lib\\site-packages\\PyQt4')
-# sys.path.append('C:\\Python27\\Scripts')
-# sys.path.append('C:\\Python27\\DLLs')
-import time
-from PyQt4 import QtGui
-from src.controller import controller
 
-class App(QtGui.QApplication):
-    def __init__(self, sys_argv):
-        # sys.exit(app.exec_())
-        QtGui.QApplication.__init__(self, sys_argv)
-        # QtGui.QWidget.__init__(self, sys_argv)
-        self.control = controller(sys_argv)
+print "hi"
 
-if __name__ == '__main__':
-    app = App(sys.argv)
-    sys.exit(app.exec_())
+# # meh  https://stackoverflow.com/questions/11953618/pyinstaller-importerror-no-module-named-pyinstaller
+# sys.path.append('.')
+# # sys.path.append('C:\\Python27\\Lib\\site-packages\\PyQt4')
+# # sys.path.append('C:\\Python27\\Scripts')
+# # sys.path.append('C:\\Python27\\DLLs')
+# import time
+# from PyQt4 import QtGui
+# from src.controller import controller
+#
+# class App(QtGui.QApplication):
+#     # use sys_argv to pass in arguments
+#     def __init__(self, sys_argv):
+#         QtGui.QApplication.__init__(self, sys_argv)
+#         self.control = controller(sys_argv)
+#         self.control.view.setWindowIcon(QtGui.QIcon(
+#                 'resources\\Virtual_Cathode_App\\Virtual_Cathode_App.ico'))
+#
+# if __name__ == '__main__':
+#     app = App(sys.argv)
+#     sys.exit(app.exec_())

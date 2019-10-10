@@ -80,6 +80,9 @@ class view(QMainWindow, Ui_mainView ):
         # update main image
         self.image_item.setImage(image=view.data.values[data.image_data],autoDownsample=True)
 
+        self.image_item.setLevels([self.min_level_spinbox.value(),
+                                   self.max_level_spinbox.value()], update=True)
+
         # projection ycoords
         y_coords = range(len(view.data.values[data.y_proj]))
 

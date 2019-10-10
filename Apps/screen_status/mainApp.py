@@ -22,23 +22,15 @@
 //
 //*/
 '''
-import sys,os
-sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\Release\\')
-# for i in sys.path:
-#     print i
+import sys
 from PyQt4 import QtGui, QtCore
-from control.control import control
-from procedure.procedure import procedure
-from view.view import view as view
-
+from src.control import control
 
 class App(QtGui.QApplication):
     def __init__(self, sys_argv):
         QtGui.QWidget.__init__(self, sys_argv)
-        self.procedure = procedure()
-        self.view = view()
         print 'Creating Controller'
-        self.control = control(sys_argv, view = self.view, procedure= self.procedure)
+        self.control = control(sys_argv)
         print 'Running'
 
 if __name__ == '__main__':

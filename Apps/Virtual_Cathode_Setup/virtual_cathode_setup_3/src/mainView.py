@@ -31,14 +31,18 @@ sys.path.append('.')
 # sys.path.append('C:\\Python27\\Lib\\site-packages\\PyQt4')
 # sys.path.append('C:\\Python27\\Scripts')
 # sys.path.append('C:\\Python27\\DLLs')
+print('creating controller')
+
 from model import model
 from PyQt4 import QtCore
 from PyQt4 import QtGui
 from PyQt4 import Qt
 from PyQt4 import QtGui, QtCore
+
 from viewSource.ellipseROIoverloads import EllipseROI_OneHandle
 from viewSource.ellipseROIoverloads import EllipseROI_NoHandle
-from viewSource.Ui_mainView import Ui_mainView
+#from viewSource.Ui_mainView import Ui_mainView
+from viewSource.Ui_virtual_cathode_app import Ui_mainView
 from numpy import array
 from numpy import random
 from numpy import linspace
@@ -79,7 +83,7 @@ class mainView(QtGui.QMainWindow, Ui_mainView ):
         self.save_pushButton.setDisabled(True)
         self.setInt_pushButton.setDisabled(True)
         self.setWCM_pushButton.setDisabled(True)
-        self.set_pos_pushButton.setDisabled(True)
+        #self.set_pos_pushButton.setDisabled(True)
 
     def handle_pix_gridlines_checkBox(self):
         ''
@@ -153,7 +157,7 @@ class mainView(QtGui.QMainWindow, Ui_mainView ):
 
         ##print('update widget loop')
         for key, value in self.widget_to_dataname.iteritems():
-            ##print('update widget ', value, key)
+            #print('update widget ', value, key)
             if self.new_value(value):
                 if self.is_mask_read(key):
                     if not_updated_read_roi:
@@ -184,17 +188,17 @@ class mainView(QtGui.QMainWindow, Ui_mainView ):
             self.move_right_pushButton.setEnabled(True)
             self.move_down_pushButton.setEnabled(True)
             self.move_up_pushButton.setEnabled(True)
-            #self.set_pos_pushButton.setEnabled(True)
+            self.set_pos_pushButton.setEnabled(False)
         else:
             self.move_left_pushButton.setEnabled(False)
             self.move_right_pushButton.setEnabled(False)
             self.move_down_pushButton.setEnabled(False)
             self.move_up_pushButton.setEnabled(False)
-            #self.set_pos_pushButton.setEnabled(False)
+            self.set_pos_pushButton.setEnabled(False)
 
     def update_crosshair(self):
         '''
-            It seems that the x,y and y for analysis are mixed compared to x,y dimensions
+            It seems that the x,y and y for analyhwp_down_pushButtonsis are mixed compared to x,y dimensions
         :return:
         '''
         x0 = self.data.values[self.data.x_pix]
@@ -223,6 +227,7 @@ class mainView(QtGui.QMainWindow, Ui_mainView ):
         else:
             self.set_button_color(key, false_color)
             key.setText(false_text)
+
 
     def set_button_color(self,widget,col=""):
         if col == "green":
@@ -316,7 +321,7 @@ class mainView(QtGui.QMainWindow, Ui_mainView ):
         widget.setText("%i" % self.data.values.get(value))
 
     def update_real(self, widget, value, dummy):
-        widget.setText("%.3f" % self.data.values.get(value))
+        widget.setText("%.2f" % self.data.values.get(value))
 
     def update_image(self, widget, value, dummy):
         self.vc_image.setImage(image = self.data.values.get(value),autoDownsample=True)
@@ -332,6 +337,15 @@ class mainView(QtGui.QMainWindow, Ui_mainView ):
             s = self.data.values.get(self.data.image_save_dir_root) + '\\' + \
                 self.data.values.get(value)
             widget.setText(QtCore.QString(s))
+
+    def update_set_pos_button(self):
+        if data.values[data.is_setting_pos]:
+            self.set_pos_pushButton.setEnabled(False)
+            self.set_button_color(self.set_pos_pushButton,'red')
+        else:
+            self.set_pos_pushButton.setEnabled(False)
+            self.set_button_color(self.set_pos_pushButton,'green')
+
 
     def set_widget_dicts(self):
         '''
@@ -381,9 +395,15 @@ class mainView(QtGui.QMainWindow, Ui_mainView ):
         self.widget_to_dataname[self.wcm_val_2] = data.wcm_val
         self.widget_to_dataname[self.wcm_mean] = data.wcm_mean
         self.widget_to_dataname[self.wcm_sd] = data.wcm_sd
+        self.widget_to_dataname[self.int_val] = data.int_val#'[self.update_real]
+        self.widget_to_dataname[self.int_mean] = data.int_mean#[self.update_real]
+        self.widget_to_dataname[self.int_sd] = data.int_sd#[self.update_real]
         self.widget_to_dataname[self.hwp_read] = data.hwp_read
         self.widget_to_dataname[self.last_filename] = data.last_save_file
         self.widget_to_dataname[self.last_directory] = data.last_save_dir
+        self.widget_to_dataname[self.last_directory] = data.last_save_dir
+        self.widget_to_dataname[self.set_pos_pushButton] = data.is_setting_pos
+        self.widget_to_dataname[self.rs_buffer_size] = data.rs_buffer_size
         # the below don't exist yet
         # self.widget_to_dataname[self.int_val] = data.int_val
         # self.widget_to_dataname[self.int_val_2] = data.int_val
@@ -443,9 +463,21 @@ class mainView(QtGui.QMainWindow, Ui_mainView ):
         self.widget_updatefunc[self.wcm_val_2] = [self.update_real]
         self.widget_updatefunc[self.wcm_mean] = [self.update_real]
         self.widget_updatefunc[self.wcm_sd] = [self.update_real]
+
+        self.widget_updatefunc[self.int_val] = [self.update_real]
+        self.widget_updatefunc[self.int_mean] = [self.update_real]
+        self.widget_updatefunc[self.int_sd] = [self.update_real]
+
+
         self.widget_updatefunc[self.hwp_read] = [self.update_real]
         self.widget_updatefunc[self.last_filename] = [self.update_string]
         self.widget_updatefunc[self.last_directory] = [self.update_latest_dir]
+        self.widget_updatefunc[self.set_pos_pushButton] =  [self.update_set_pos_button]
+
+        self.widget_updatefunc[self.set_pos_pushButton] =  [self.update_set_pos_button]
+        self.widget_updatefunc[self.rs_buffer_size] =  [self.update_int]
+
+
         # the below don't exist yet
         # self.widget_updatefunc[self.int_val] = [self.update_real]
         # self.widget_updatefunc[self.int_val_2] = [self.update_real]
@@ -453,6 +485,7 @@ class mainView(QtGui.QMainWindow, Ui_mainView ):
         # self.widget_updatefunc[self.int_sd] = [self.update_real]
 
     def closeEvent(self,event):
+        print("closeEvent called")
         self.closing.emit()
 
     def add_camera_image(self):
