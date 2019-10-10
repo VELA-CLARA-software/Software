@@ -48,10 +48,13 @@ p_fine_set = 'p_fine_set'
 
 fine_set_step = 'fine_set_step'
 
+I_scan_centre = 'I_scan_centre'
+p_scan_centre = 'p_scan_centre'
+
 # list of all keys to use in data dict
 all_value_keys = [I_c, p_c, I_predict, p_predict, I_rough, p_rough,  I_rough_set, p_rough_set,
                     rough_step, rough_set_step, I_fine, p_fine,  I_fine_set, p_fine_set, fine_set_step,
-                    ]
+                    I_scan_centre, p_scan_centre]
 
 class data(object):
     # dictionary of all data
