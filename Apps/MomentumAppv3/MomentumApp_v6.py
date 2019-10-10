@@ -5,6 +5,9 @@ import model.model as model
 import data.data as data
 import sys
 
+# 
+sys.path.append('../../../../Controllers/bin/Release')
+
 class Stream(QtCore.QObject):
     newText = QtCore.pyqtSignal(str)
 

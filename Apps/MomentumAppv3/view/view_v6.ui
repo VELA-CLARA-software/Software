@@ -101,7 +101,7 @@
           <string notr="true"/>
          </property>
          <property name="currentIndex">
-          <number>3</number>
+          <number>0</number>
          </property>
          <widget class="QWidget" name="page_7">
           <property name="geometry">
@@ -303,7 +303,7 @@ Otherwise use either magnet or RF settings to predict the momentum</string>
            <item row="0" column="0">
             <widget class="QTabWidget" name="tabWidget">
              <property name="currentIndex">
-              <number>1</number>
+              <number>0</number>
              </property>
              <widget class="QWidget" name="tab">
               <attribute name="title">
@@ -318,10 +318,10 @@ Otherwise scan dipole to find C2V BPM signal, then do centering</string>
                  </property>
                 </widget>
                </item>
-               <item row="2" column="0">
+               <item row="1" column="0">
                 <widget class="QToolBox" name="toolBox_2">
                  <property name="currentIndex">
-                  <number>1</number>
+                  <number>0</number>
                  </property>
                  <widget class="QWidget" name="page_5">
                   <property name="geometry">
@@ -571,7 +571,7 @@ Otherwise scan dipole to find C2V BPM signal, then do centering</string>
                   <attribute name="label">
                    <string>Scan dipole to find beam on C2V BPM</string>
                   </attribute>
-                  <layout class="QGridLayout" name="gridLayout_14">
+                  <layout class="QGridLayout" name="gridLayout_10">
                    <item row="0" column="0">
                     <layout class="QGridLayout" name="gridLayout_12">
                      <item row="0" column="0">
@@ -623,18 +623,52 @@ Otherwise scan dipole to find C2V BPM signal, then do centering</string>
                        </property>
                       </widget>
                      </item>
-                     <item row="1" column="1" colspan="3">
-                      <spacer name="horizontalSpacer">
-                       <property name="orientation">
-                        <enum>Qt::Horizontal</enum>
+                     <item row="1" column="1">
+                      <widget class="QLabel" name="label_42">
+                       <property name="font">
+                        <font>
+                         <weight>75</weight>
+                         <bold>true</bold>
+                        </font>
                        </property>
-                       <property name="sizeHint" stdset="0">
+                       <property name="text">
+                        <string>Set value [A]</string>
+                       </property>
+                       <property name="alignment">
+                        <set>Qt::AlignCenter</set>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="1" column="2" colspan="2">
+                      <widget class="QLabel" name="label_dipole_set_2">
+                       <property name="enabled">
+                        <bool>false</bool>
+                       </property>
+                       <property name="minimumSize">
                         <size>
-                         <width>40</width>
-                         <height>20</height>
+                         <width>100</width>
+                         <height>0</height>
                         </size>
                        </property>
-                      </spacer>
+                       <property name="maximumSize">
+                        <size>
+                         <width>16777215</width>
+                         <height>16777215</height>
+                        </size>
+                       </property>
+                       <property name="layoutDirection">
+                        <enum>Qt::LeftToRight</enum>
+                       </property>
+                       <property name="frameShape">
+                        <enum>QFrame::WinPanel</enum>
+                       </property>
+                       <property name="text">
+                        <string/>
+                       </property>
+                       <property name="alignment">
+                        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                       </property>
+                      </widget>
                      </item>
                     </layout>
                    </item>
@@ -981,17 +1015,7 @@ Set RF amplitude to centre on C2V</string>
                     </layout>
                    </item>
                   </layout>
-                  <zorder>pushButton_select_linac</zorder>
-                  <zorder>label_18</zorder>
-                  <zorder>doubleSpinBox_p_rough_set</zorder>
-                  <zorder>pushButton_select_gun</zorder>
-                  <zorder>pushButton_set_I_rough</zorder>
-                  <zorder>label_I_rough</zorder>
                   <zorder>groupBox_4</zorder>
-                  <zorder>doubleSpinBox_I_2</zorder>
-                  <zorder>label_27</zorder>
-                  <zorder>label_I_rough</zorder>
-                  <zorder>label_28</zorder>
                   <zorder>verticalSpacer_5</zorder>
                  </widget>
                  <widget class="QWidget" name="page_9">
@@ -1006,6 +1030,18 @@ Set RF amplitude to centre on C2V</string>
                   <attribute name="label">
                    <string>Scan RF to find beam on C2V BPM</string>
                   </attribute>
+                  <layout class="QGridLayout" name="gridLayout_9">
+                   <item row="0" column="0">
+                    <widget class="QLabel" name="label_11">
+                     <property name="text">
+                      <string>Not implemented this feature</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
                  </widget>
                 </widget>
                </item>
@@ -1039,112 +1075,50 @@ Need to align beam through dipole for both fine measure and fine set</string>
            <item row="4" column="0">
             <widget class="QTabWidget" name="tabWidget_2">
              <property name="currentIndex">
-              <number>2</number>
+              <number>0</number>
              </property>
              <widget class="QWidget" name="tab_9">
               <attribute name="title">
                <string>Align through dipole</string>
               </attribute>
               <layout class="QGridLayout" name="gridLayout_8">
-               <item row="7" column="0" colspan="2">
-                <layout class="QHBoxLayout" name="horizontalLayout_7">
-                 <item>
-                  <widget class="QLabel" name="label_24">
-                   <property name="font">
-                    <font>
-                     <weight>75</weight>
-                     <bold>true</bold>
-                    </font>
-                   </property>
-                   <property name="text">
-                    <string>Target</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QDoubleSpinBox" name="doubleSpinBox_x_2">
-                   <property name="suffix">
-                    <string> mm</string>
-                   </property>
-                   <property name="minimum">
-                    <double>-100.000000000000000</double>
-                   </property>
-                   <property name="maximum">
-                    <double>100.000000000000000</double>
-                   </property>
-                   <property name="singleStep">
-                    <double>0.100000000000000</double>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLabel" name="label_25">
-                   <property name="font">
-                    <font>
-                     <weight>75</weight>
-                     <bold>true</bold>
-                    </font>
-                   </property>
-                   <property name="text">
-                    <string>Tol.</string>
-                   </property>
-                   <property name="alignment">
-                    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QDoubleSpinBox" name="doubleSpinBox_tol_2">
-                   <property name="suffix">
-                    <string> mm</string>
-                   </property>
-                   <property name="singleStep">
-                    <double>0.100000000000000</double>
-                   </property>
-                   <property name="value">
-                    <double>0.500000000000000</double>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLabel" name="label_26">
-                   <property name="font">
-                    <font>
-                     <weight>75</weight>
-                     <bold>true</bold>
-                    </font>
-                   </property>
-                   <property name="text">
-                    <string>Δx</string>
-                   </property>
-                   <property name="alignment">
-                    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLabel" name="label_H_2">
-                   <property name="minimumSize">
-                    <size>
-                     <width>70</width>
-                     <height>0</height>
-                    </size>
-                   </property>
-                   <property name="layoutDirection">
-                    <enum>Qt::LeftToRight</enum>
-                   </property>
-                   <property name="frameShape">
-                    <enum>QFrame::WinPanel</enum>
-                   </property>
-                   <property name="text">
-                    <string/>
-                   </property>
-                   <property name="alignment">
-                    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
+               <item row="0" column="0" colspan="2">
+                <widget class="QPushButton" name="pushButton_degauss">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>378</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>1. Degauss to zero: S02-DIP01, Q-03,04,05</string>
+                 </property>
+                 <property name="checked">
+                  <bool>false</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0" colspan="2">
+                <widget class="QPushButton" name="pushButton_Align_1">
+                 <property name="text">
+                  <string>2. Align on S02-BPM02 using S02-HCOR02</string>
+                 </property>
+                 <property name="checked">
+                  <bool>false</bool>
+                 </property>
+                </widget>
                </item>
                <item row="2" column="0" colspan="2">
                 <layout class="QHBoxLayout" name="horizontalLayout_6">
@@ -1163,6 +1137,9 @@ Need to align beam through dipole for both fine measure and fine set</string>
                  </item>
                  <item>
                   <widget class="QDoubleSpinBox" name="doubleSpinBox_x_1">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
                    <property name="suffix">
                     <string> mm</string>
                    </property>
@@ -1195,6 +1172,9 @@ Need to align beam through dipole for both fine measure and fine set</string>
                  </item>
                  <item>
                   <widget class="QDoubleSpinBox" name="doubleSpinBox_tol_1">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
                    <property name="suffix">
                     <string> mm</string>
                    </property>
@@ -1246,182 +1226,116 @@ Need to align beam through dipole for both fine measure and fine set</string>
                  </item>
                 </layout>
                </item>
-               <item row="1" column="0" colspan="2">
-                <layout class="QHBoxLayout" name="horizontalLayout_8">
+               <item row="3" column="0">
+                <layout class="QVBoxLayout" name="verticalLayout">
                  <item>
-                  <widget class="QPushButton" name="pushButton_Align_1">
-                   <property name="text">
-                    <string>2. Align on S02-BPM02 using S02-HCOR02</string>
-                   </property>
-                   <property name="checked">
-                    <bool>false</bool>
-                   </property>
-                  </widget>
+                  <layout class="QHBoxLayout" name="horizontalLayout_8">
+                   <item>
+                    <widget class="QLabel" name="label_35">
+                     <property name="text">
+                      <string>Step size</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QDoubleSpinBox" name="doubleSpinBox_step_4">
+                     <property name="suffix">
+                      <string> A</string>
+                     </property>
+                     <property name="decimals">
+                      <number>2</number>
+                     </property>
+                     <property name="singleStep">
+                      <double>0.100000000000000</double>
+                     </property>
+                     <property name="value">
+                      <double>0.200000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
                  </item>
                  <item>
-                  <widget class="QPushButton" name="pushButton_x_up_6">
-                   <property name="minimumSize">
-                    <size>
-                     <width>20</width>
-                     <height>12</height>
-                    </size>
-                   </property>
-                   <property name="maximumSize">
-                    <size>
-                     <width>20</width>
-                     <height>16777215</height>
-                    </size>
-                   </property>
-                   <property name="font">
-                    <font>
-                     <family>MS Shell Dlg 2</family>
-                     <pointsize>5</pointsize>
-                     <weight>9</weight>
-                     <italic>false</italic>
-                     <bold>false</bold>
-                    </font>
-                   </property>
-                   <property name="styleSheet">
-                    <string notr="true">QPushButton{ color: rgb(0, 0, 0);font: 75 5pt &quot;MS Shell Dlg 2&quot;;}
+                  <layout class="QHBoxLayout" name="horizontalLayout_9">
+                   <item>
+                    <widget class="QLabel" name="label_36">
+                     <property name="text">
+                      <string>Step current</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QPushButton" name="pushButton_x_up_6">
+                     <property name="minimumSize">
+                      <size>
+                       <width>20</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>20</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <family>MS Shell Dlg 2</family>
+                       <pointsize>5</pointsize>
+                       <weight>9</weight>
+                       <italic>false</italic>
+                       <bold>false</bold>
+                      </font>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">QPushButton{ color: rgb(0, 0, 0);font: 75 5pt &quot;MS Shell Dlg 2&quot;;}
 </string>
-                   </property>
-                   <property name="text">
-                    <string>▲</string>
-                   </property>
-                   <property name="autoDefault">
-                    <bool>false</bool>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="pushButton_x_down_6">
-                   <property name="minimumSize">
-                    <size>
-                     <width>20</width>
-                     <height>12</height>
-                    </size>
-                   </property>
-                   <property name="maximumSize">
-                    <size>
-                     <width>20</width>
-                     <height>16777215</height>
-                    </size>
-                   </property>
-                   <property name="font">
-                    <font>
-                     <family>MS Shell Dlg 2</family>
-                     <pointsize>5</pointsize>
-                     <weight>9</weight>
-                     <italic>false</italic>
-                     <bold>false</bold>
-                    </font>
-                   </property>
-                   <property name="styleSheet">
-                    <string notr="true">QPushButton{ color: rgb(0, 0, 0);font: 75 5pt &quot;MS Shell Dlg 2&quot;;}</string>
-                   </property>
-                   <property name="text">
-                    <string>▼</string>
-                   </property>
-                  </widget>
+                     </property>
+                     <property name="text">
+                      <string>▲</string>
+                     </property>
+                     <property name="autoDefault">
+                      <bool>false</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QPushButton" name="pushButton_x_down_6">
+                     <property name="minimumSize">
+                      <size>
+                       <width>20</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>20</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <family>MS Shell Dlg 2</family>
+                       <pointsize>5</pointsize>
+                       <weight>9</weight>
+                       <italic>false</italic>
+                       <bold>false</bold>
+                      </font>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">QPushButton{ color: rgb(0, 0, 0);font: 75 5pt &quot;MS Shell Dlg 2&quot;;}</string>
+                     </property>
+                     <property name="text">
+                      <string>▼</string>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
                  </item>
                 </layout>
-               </item>
-               <item row="6" column="0" colspan="2">
-                <layout class="QHBoxLayout" name="horizontalLayout_9">
-                 <item>
-                  <widget class="QPushButton" name="pushButton_Align_3">
-                   <property name="text">
-                    <string>4. Align on S02-YAG02 using S02-HCOR01</string>
-                   </property>
-                   <property name="checked">
-                    <bool>false</bool>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="pushButton_x_up_5">
-                   <property name="minimumSize">
-                    <size>
-                     <width>20</width>
-                     <height>12</height>
-                    </size>
-                   </property>
-                   <property name="maximumSize">
-                    <size>
-                     <width>20</width>
-                     <height>16777215</height>
-                    </size>
-                   </property>
-                   <property name="font">
-                    <font>
-                     <family>MS Shell Dlg 2</family>
-                     <pointsize>5</pointsize>
-                     <weight>9</weight>
-                     <italic>false</italic>
-                     <bold>false</bold>
-                    </font>
-                   </property>
-                   <property name="styleSheet">
-                    <string notr="true">QPushButton{ color: rgb(0, 0, 0);font: 75 5pt &quot;MS Shell Dlg 2&quot;;}
-</string>
-                   </property>
-                   <property name="text">
-                    <string>▲</string>
-                   </property>
-                   <property name="autoDefault">
-                    <bool>false</bool>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="pushButton_x_down_5">
-                   <property name="minimumSize">
-                    <size>
-                     <width>20</width>
-                     <height>12</height>
-                    </size>
-                   </property>
-                   <property name="maximumSize">
-                    <size>
-                     <width>20</width>
-                     <height>16777215</height>
-                    </size>
-                   </property>
-                   <property name="font">
-                    <font>
-                     <family>MS Shell Dlg 2</family>
-                     <pointsize>5</pointsize>
-                     <weight>9</weight>
-                     <italic>false</italic>
-                     <bold>false</bold>
-                    </font>
-                   </property>
-                   <property name="styleSheet">
-                    <string notr="true">QPushButton{ color: rgb(0, 0, 0);font: 75 5pt &quot;MS Shell Dlg 2&quot;;}</string>
-                   </property>
-                   <property name="text">
-                    <string>▼</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item row="6" column="2" rowspan="4">
-                <widget class="QGroupBox" name="groupBox_6">
-                 <property name="minimumSize">
-                  <size>
-                   <width>230</width>
-                   <height>0</height>
-                  </size>
-                 </property>
-                 <property name="title">
-                  <string>S02-YAG02</string>
-                 </property>
-                 <layout class="QHBoxLayout" name="horizontalLayout_4"/>
-                </widget>
                </item>
                <item row="3" column="1">
-                <widget class="QCheckBox" name="checkBox_3">
+                <widget class="QCheckBox" name="checkBox">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -1454,83 +1368,6 @@ Need to align beam through dipole for both fine measure and fine set</string>
                  </property>
                 </widget>
                </item>
-               <item row="9" column="1">
-                <spacer name="verticalSpacer_4">
-                 <property name="orientation">
-                  <enum>Qt::Vertical</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>20</width>
-                   <height>78</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-               <item row="0" column="0" colspan="2">
-                <widget class="QPushButton" name="pushButton_Prelim_3">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="minimumSize">
-                  <size>
-                   <width>0</width>
-                   <height>0</height>
-                  </size>
-                 </property>
-                 <property name="maximumSize">
-                  <size>
-                   <width>378</width>
-                   <height>16777215</height>
-                  </size>
-                 </property>
-                 <property name="text">
-                  <string>1. Degauss to zero: S02-DIP01, Q-03,04,05</string>
-                 </property>
-                 <property name="checked">
-                  <bool>false</bool>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="2" rowspan="4">
-                <widget class="QGroupBox" name="groupBox_5">
-                 <property name="minimumSize">
-                  <size>
-                   <width>230</width>
-                   <height>0</height>
-                  </size>
-                 </property>
-                 <property name="title">
-                  <string>S02-BPM02</string>
-                 </property>
-                 <layout class="QHBoxLayout" name="horizontalLayout_5"/>
-                </widget>
-               </item>
-               <item row="11" column="0" colspan="2">
-                <widget class="QPushButton" name="pushButton_Align_4">
-                 <property name="minimumSize">
-                  <size>
-                   <width>0</width>
-                   <height>0</height>
-                  </size>
-                 </property>
-                 <property name="maximumSize">
-                  <size>
-                   <width>378</width>
-                   <height>16777215</height>
-                  </size>
-                 </property>
-                 <property name="text">
-                  <string>5. Retract S02-YAG02 and test alignment</string>
-                 </property>
-                 <property name="checked">
-                  <bool>false</bool>
-                 </property>
-                </widget>
-               </item>
                <item row="4" column="0">
                 <spacer name="verticalSpacer_3">
                  <property name="orientation">
@@ -1539,35 +1376,237 @@ Need to align beam through dipole for both fine measure and fine set</string>
                  <property name="sizeHint" stdset="0">
                   <size>
                    <width>20</width>
-                   <height>65</height>
+                   <height>46</height>
                   </size>
                  </property>
                 </spacer>
                </item>
-               <item row="5" column="0" colspan="2">
-                <widget class="QPushButton" name="pushButton_Align_2">
-                 <property name="minimumSize">
-                  <size>
-                   <width>0</width>
-                   <height>0</height>
-                  </size>
-                 </property>
-                 <property name="maximumSize">
-                  <size>
-                   <width>378</width>
-                   <height>16777215</height>
-                  </size>
-                 </property>
+               <item row="6" column="0" colspan="2">
+                <widget class="QPushButton" name="pushButton_Align_3">
                  <property name="text">
-                  <string>3. Insert S02-YAG02</string>
+                  <string>4. Align on S02-YAG02 using S02-HCOR01</string>
                  </property>
                  <property name="checked">
                   <bool>false</bool>
                  </property>
                 </widget>
                </item>
-               <item row="8" column="0" colspan="2">
-                <widget class="QCheckBox" name="checkBox_5">
+               <item row="7" column="0" colspan="2">
+                <layout class="QHBoxLayout" name="horizontalLayout_7">
+                 <item>
+                  <widget class="QLabel" name="label_24">
+                   <property name="font">
+                    <font>
+                     <weight>75</weight>
+                     <bold>true</bold>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>Target</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QDoubleSpinBox" name="doubleSpinBox_x_2">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="suffix">
+                    <string> mm</string>
+                   </property>
+                   <property name="minimum">
+                    <double>-100.000000000000000</double>
+                   </property>
+                   <property name="maximum">
+                    <double>100.000000000000000</double>
+                   </property>
+                   <property name="singleStep">
+                    <double>0.100000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="label_25">
+                   <property name="font">
+                    <font>
+                     <weight>75</weight>
+                     <bold>true</bold>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>Tol.</string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QDoubleSpinBox" name="doubleSpinBox_tol_2">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="suffix">
+                    <string> mm</string>
+                   </property>
+                   <property name="singleStep">
+                    <double>0.100000000000000</double>
+                   </property>
+                   <property name="value">
+                    <double>0.500000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="label_26">
+                   <property name="font">
+                    <font>
+                     <weight>75</weight>
+                     <bold>true</bold>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>Δx</string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="label_H_2">
+                   <property name="minimumSize">
+                    <size>
+                     <width>70</width>
+                     <height>0</height>
+                    </size>
+                   </property>
+                   <property name="layoutDirection">
+                    <enum>Qt::LeftToRight</enum>
+                   </property>
+                   <property name="frameShape">
+                    <enum>QFrame::WinPanel</enum>
+                   </property>
+                   <property name="text">
+                    <string/>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item row="8" column="0">
+                <layout class="QVBoxLayout" name="verticalLayout_2">
+                 <item>
+                  <layout class="QHBoxLayout" name="horizontalLayout_13">
+                   <item>
+                    <widget class="QLabel" name="label_37">
+                     <property name="text">
+                      <string>Step size</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QDoubleSpinBox" name="doubleSpinBox_step_5">
+                     <property name="suffix">
+                      <string> A</string>
+                     </property>
+                     <property name="decimals">
+                      <number>2</number>
+                     </property>
+                     <property name="singleStep">
+                      <double>0.100000000000000</double>
+                     </property>
+                     <property name="value">
+                      <double>0.200000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                 <item>
+                  <layout class="QHBoxLayout" name="horizontalLayout_14">
+                   <item>
+                    <widget class="QLabel" name="label_41">
+                     <property name="text">
+                      <string>Step current</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QPushButton" name="pushButton_x_up_7">
+                     <property name="minimumSize">
+                      <size>
+                       <width>20</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>20</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <family>MS Shell Dlg 2</family>
+                       <pointsize>5</pointsize>
+                       <weight>9</weight>
+                       <italic>false</italic>
+                       <bold>false</bold>
+                      </font>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">QPushButton{ color: rgb(0, 0, 0);font: 75 5pt &quot;MS Shell Dlg 2&quot;;}
+</string>
+                     </property>
+                     <property name="text">
+                      <string>▲</string>
+                     </property>
+                     <property name="autoDefault">
+                      <bool>false</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QPushButton" name="pushButton_x_down_7">
+                     <property name="minimumSize">
+                      <size>
+                       <width>20</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>20</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <family>MS Shell Dlg 2</family>
+                       <pointsize>5</pointsize>
+                       <weight>9</weight>
+                       <italic>false</italic>
+                       <bold>false</bold>
+                      </font>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">QPushButton{ color: rgb(0, 0, 0);font: 75 5pt &quot;MS Shell Dlg 2&quot;;}</string>
+                     </property>
+                     <property name="text">
+                      <string>▼</string>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                </layout>
+               </item>
+               <item row="8" column="1">
+                <widget class="QCheckBox" name="checkBox_2">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -1600,8 +1639,43 @@ Need to align beam through dipole for both fine measure and fine set</string>
                  </property>
                 </widget>
                </item>
-               <item row="11" column="2">
-                <widget class="QCheckBox" name="checkBox_4">
+               <item row="9" column="0">
+                <spacer name="verticalSpacer_4">
+                 <property name="orientation">
+                  <enum>Qt::Vertical</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>20</width>
+                   <height>45</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item row="10" column="0" colspan="2">
+                <widget class="QPushButton" name="pushButton_Align_4">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>378</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>5. Retract S02-YAG02 and test alignment</string>
+                 </property>
+                 <property name="checked">
+                  <bool>false</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="10" column="2">
+                <widget class="QCheckBox" name="checkBox_3">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -1634,30 +1708,71 @@ Need to align beam through dipole for both fine measure and fine set</string>
                  </property>
                 </widget>
                </item>
+               <item row="1" column="2" rowspan="4">
+                <widget class="QGroupBox" name="groupBox_5">
+                 <property name="minimumSize">
+                  <size>
+                   <width>230</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="title">
+                  <string>S02-BPM02</string>
+                 </property>
+                 <layout class="QHBoxLayout" name="horizontalLayout_5"/>
+                </widget>
+               </item>
+               <item row="6" column="2" rowspan="4">
+                <widget class="QGroupBox" name="groupBox_6">
+                 <property name="minimumSize">
+                  <size>
+                   <width>230</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="title">
+                  <string>S02-YAG02</string>
+                 </property>
+                 <layout class="QHBoxLayout" name="horizontalLayout_4"/>
+                </widget>
+               </item>
+               <item row="5" column="0" colspan="2">
+                <widget class="QPushButton" name="pushButton_InsertYAG">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>378</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>3. Insert S02-YAG02</string>
+                 </property>
+                 <property name="checked">
+                  <bool>false</bool>
+                 </property>
+                </widget>
+               </item>
               </layout>
-              <zorder>pushButton_Align_3</zorder>
-              <zorder>pushButton_Align_1</zorder>
-              <zorder>pushButton_Prelim_3</zorder>
-              <zorder>pushButton_Align_2</zorder>
+              <zorder>pushButton_degauss</zorder>
+              <zorder>pushButton_InsertYAG</zorder>
               <zorder>pushButton_Align_4</zorder>
               <zorder>groupBox_5</zorder>
               <zorder>groupBox_6</zorder>
-              <zorder>pushButton_x_down_5</zorder>
-              <zorder>pushButton_x_up_5</zorder>
-              <zorder>doubleSpinBox_x_1</zorder>
-              <zorder>doubleSpinBox_tol_1</zorder>
-              <zorder>label_22</zorder>
-              <zorder>label_12</zorder>
-              <zorder>label_H_1</zorder>
-              <zorder>label_23</zorder>
-              <zorder>layoutWidget</zorder>
-              <zorder>verticalSpacer_4</zorder>
+              <zorder>checkBox</zorder>
+              <zorder>checkBox_2</zorder>
               <zorder>checkBox_3</zorder>
+              <zorder>doubleSpinBox_step_4</zorder>
+              <zorder>label_35</zorder>
+              <zorder>label_36</zorder>
+              <zorder>layoutWidget</zorder>
               <zorder>verticalSpacer_3</zorder>
-              <zorder>checkBox_5</zorder>
-              <zorder>pushButton_x_up_6</zorder>
-              <zorder>pushButton_x_down_6</zorder>
-              <zorder>checkBox_4</zorder>
+              <zorder>verticalSpacer_4</zorder>
              </widget>
              <widget class="QWidget" name="tab_3">
               <attribute name="title">
@@ -1732,6 +1847,9 @@ Need to align beam through dipole for both fine measure and fine set</string>
                  </item>
                  <item row="1" column="1">
                   <widget class="QDoubleSpinBox" name="doubleSpinBox_x_3">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
                    <property name="maximumSize">
                     <size>
                      <width>75</width>
@@ -1773,6 +1891,9 @@ Need to align beam through dipole for both fine measure and fine set</string>
                  </item>
                  <item row="1" column="3">
                   <widget class="QDoubleSpinBox" name="doubleSpinBox_tol_3">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
                    <property name="maximumSize">
                     <size>
                      <width>75</width>
@@ -1909,7 +2030,7 @@ Need to align beam through dipole for both fine measure and fine set</string>
                   </widget>
                  </item>
                  <item row="3" column="1" colspan="2">
-                  <widget class="QPushButton" name="pushButton_set_I_rough_2">
+                  <widget class="QPushButton" name="pushButton_set_I_fine">
                    <property name="text">
                     <string>Set Current</string>
                    </property>
@@ -2198,10 +2319,13 @@ Need to align beam through dipole for both fine measure and fine set</string>
            </property>
           </widget>
           <widget class="QPushButton" name="pushButton_MinBeta">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="geometry">
             <rect>
              <x>10</x>
-             <y>142</y>
+             <y>70</y>
              <width>235</width>
              <height>22</height>
             </rect>
@@ -2217,23 +2341,26 @@ Need to align beam through dipole for both fine measure and fine set</string>
            <property name="geometry">
             <rect>
              <x>10</x>
-             <y>454</y>
+             <y>540</y>
              <width>235</width>
              <height>22</height>
             </rect>
            </property>
            <property name="text">
-            <string>4. Calculate Momentum Spread</string>
+            <string>5. Calculate Momentum Spread</string>
            </property>
            <property name="checked">
             <bool>false</bool>
            </property>
           </widget>
           <widget class="QPushButton" name="pushButton_SetDispSize">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="geometry">
             <rect>
              <x>10</x>
-             <y>246</y>
+             <y>100</y>
              <width>235</width>
              <height>22</height>
             </rect>
@@ -2243,6 +2370,9 @@ Need to align beam through dipole for both fine measure and fine set</string>
            </property>
           </widget>
           <widget class="QPushButton" name="pushButton_Checks">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="geometry">
             <rect>
              <x>10</x>
@@ -2262,17 +2392,31 @@ Need to align beam through dipole for both fine measure and fine set</string>
            <property name="geometry">
             <rect>
              <x>10</x>
-             <y>350</y>
+             <y>130</y>
              <width>235</width>
              <height>22</height>
             </rect>
            </property>
            <property name="text">
-            <string>3. Calculate Dispersion</string>
+            <string>4. Calculate Dispersion</string>
            </property>
            <property name="checked">
             <bool>false</bool>
            </property>
+          </widget>
+          <widget class="QGroupBox" name="groupBox_9">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>160</y>
+             <width>651</width>
+             <height>361</height>
+            </rect>
+           </property>
+           <property name="title">
+            <string>GroupBox</string>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_15"/>
           </widget>
          </widget>
         </widget>
