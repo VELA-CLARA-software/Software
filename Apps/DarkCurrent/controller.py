@@ -10,6 +10,7 @@ from PyQt4 import QtGui, QtCore
 import time, traceback, sys, csv
 import yaml
 import pyqtgraph as pg
+from datetime import date
 
 import view_6 as view
 import model_6 as model
@@ -163,7 +164,6 @@ class controller(object):
         with open(path_yaml,'r') as yamlfile:
             cur_yaml = yaml.safe_load(yamlfile)
             cur_yaml.extend(new_dict_file)
-            print(cur_yaml)
         
         with open(path_yaml,'w') as yamlfile:
             yaml.safe_dump(cur_yaml, yamlfile)
@@ -209,12 +209,10 @@ class controller(object):
             self.myspot.append({'pos': (sol, bsol), 'size': 0.5, 'pen': {'color': 'w', 'width': 2}, 'brush':pg.intColor(charge_norm, hues=11, values=1, maxValue=255, minValue=150, maxHue=320, minHue=600, sat=255, alpha=255)}) 
         self.graph.s3.addPoints(self.myspot)
 
-from datetime import date
-today = date.today()
-
 # dd/mm/YY
-current_date = today.strftime("%d%m%Y")
+today = date.today()
+current_date = int(today.strftime("%d%m%Y"))
 
 # choosing where to save the YAML file 
-path_yaml = (r'C:\Users\qqi63789\Documents\VirtualAccelerator\app6\yaml_%d.yaml' % 111019)      
+path_yaml = (r'C:\Users\qqi63789\OneDrive - Science and Technology Facilities Council\VirtualAccelerator\app6\yaml_%d.yaml' % current_date)      
 c = controller(view, model)
