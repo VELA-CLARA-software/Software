@@ -56,7 +56,7 @@ class Worker(QRunnable):
 
     '''
 
-    def __init__(self, fn1, fn2, arg1, arg2, arg3, out1, out2, *args, **kwargs):
+    def __init__(self, fn1, fn2, arg1, arg2, arg3, *args, **kwargs):
         super(Worker, self).__init__()
 
         # Store constructor arguments (re-used for processing)
@@ -65,8 +65,6 @@ class Worker(QRunnable):
         self.arg3 = arg3
         self.fn1 = fn1
         self.fn2 = fn2
-        self.out1 = out1
-        self.out2 = out2
         self.args = args
         self.kwargs = kwargs
         self.signals = WorkerSignals()    
@@ -84,7 +82,7 @@ class Worker(QRunnable):
         
         # Retrieve args/kwargs here; and fire processing using them
         try:
-            result_fn = self.fn1(self.fn2, self.arg1, self.arg2, self.arg3, self.out1, self.out2, *self.args, **self.kwargs)
+            result_fn = self.fn1(self.fn2, self.arg1, self.arg2, self.arg3, *self.args, **self.kwargs)
         except:
             traceback.print_exc()
             exctype, value = sys.exc_info()[:2]
@@ -101,15 +99,6 @@ class controller(object):
     counter_runs = 0
     
     def __init__(self, view, model):
-         # button function
-        #self.buttonBox.accepted.connect(self.Dialog.accept)
-        #self.view = view
-        #self.model = model
-        
-        #self.v = self.view.MainWindow()
-        
-        print 'YESSSSS'
-        
         app = QApplication([])
         self.window = view.MainWindow()
         self.output = view.classprogress()
@@ -121,19 +110,15 @@ class controller(object):
         self.window.buttonBox.clicked.connect(self.okClicked)
         #self.window.buttonBox.rejected.connect(self.window.Dialog.reject)
         
-        #self.window.buttonBox_2.accepted.connect(self.window.Dialog.accept)
+        self.window.buttonBox_2.accepted.connect(self.window.Dialog.accept)
         self.window.buttonBox_2.clicked.connect(self.close_window)
-        #self.window.buttonBox_2.rejected.connect(self.window.Dialog.reject)
-        
-        print 'NOOOOOOO'
+        self.window.buttonBox_2.rejected.connect(self.window.Dialog.reject)
         
         app.exec_()
-        
-        
-        #self.window.Dialog.show()
 
     def okClicked(self):
         """cannot take any other imput than self. It's basically a slot """
+        
         #opening the live output GUI
         self.output.show()
         
@@ -144,22 +129,24 @@ class controller(object):
         sol_val = [self.window.min_sol.value(), self.window.step_sol.value(), self.window.max_sol.value()]
         bsol_val = [self.window.min_bsol.value(), self.window.step_bsol.value(), self.window.max_bsol.value()]
         rf_val = [self.window.min_rf.value(), self.window.step_rf.value(), self.window.max_rf.value()]
-        #self.Dialog.close()
+        #self.close_window()
+        
         self.create_logfile()
+        
         self.threadpool = QtCore.QThreadPool.globalInstance()
         print("Multithreading with maximum %d threads" % self.threadpool.maxThreadCount())
         self.fn_worker(self.model.loop, self.model.set_sol, sol_val, bsol_val, rf_val)
         
     def create_logfile(self):
+        dict_file = []
+        with open(path_yaml,'w') as file:
+            document = yaml.safe_dump(dict_file, file)
+
 #        with open(path_csv, 'w') as f :
 #            fieldnames = ['SOL', 'BSOL', 'CHARGE', 'HCOR01', 'VCOR01', 'RF amp']  
 #            thewriter = csv.DictWriter(f, fieldnames = fieldnames)
 #            thewriter.writeheader()
-        
-        dict_file = []
-        with open(path_yaml,'w') as file:
-            document = yaml.safe_dump(dict_file, file)
-    
+   
     def close_window(self):
         self.window.Dialog.close()
         sys.exit()    
@@ -167,33 +154,27 @@ class controller(object):
     def progress_fn(self, n):
         print("%d%% done" % n)
         self.output.progress_bar(n)
-
-#    def execute_this_fn(self, progress_callback, result_callback):
-#        for n in range(0, 5):
-#            time.sleep(1)
-#            progress_callback.emit(n*100/4)
-#        return 7,7,7
         
     def print_output(self, s, t, u, v, w, x):
-        #print s, t, u
-        #self.output.retranslateUi(s,t)
         self.counter_runs += 1
         self.add_point(s,t,u)
-#        with open(path_csv, 'ab') as f:
-#            thewriter = csv.writer(f)
-#            thewriter.writerow([s, t, u, v, w, x])
-        new_dict_file = [{'run%d' % self.counter_runs: {'parameters': {'sol_strength': s,'bsol_strength': t,'charge': u,'HCOR01': v,'VCOR01': w,'RF_amplitude': x}}}]
+        
+        new_dict_file = [{'run%d' % self.counter_runs: {'parameters': {'sol_strength': s,'bsol_strength': t,'charge': u,'HCOR01': v,'VCOR01': w,'RF_amplitude': x}}}]         # remember to save the path to the photo in your yaml file
         with open(path_yaml,'r') as yamlfile:
-            cur_yaml = yaml.safe_load(yamlfile) # Note the safe_load
+            cur_yaml = yaml.safe_load(yamlfile)
             cur_yaml.extend(new_dict_file)
             print(cur_yaml)
-
+        
         with open(path_yaml,'w') as yamlfile:
-            yaml.safe_dump(cur_yaml, yamlfile) # Also note the safe_dump
+            yaml.safe_dump(cur_yaml, yamlfile)
         
         print 'Data saved'
         print '\n'
-    
+
+#        with open(path_csv, 'ab') as f:
+#            thewriter = csv.writer(f)
+#            thewriter.writerow([s, t, u, v, w, x])
+   
     def update_text_fn(self, sol, bsol, rf):
         self.output.retranslateUi(sol, bsol, rf)
         
@@ -202,20 +183,14 @@ class controller(object):
         self.output.finished()
  
     def fn_worker(self, fn_loop, fn_sweep, sol_val, bsol_val, rf_val):
-        # Pass the function to execute
-#        sol_val = [-1,2,1] 
-#        bsol_val = [-1,2,1] 
-#        rf_val = [70,1,70]                                                  # closing the window so it doesn't give a 'not responding' error
-        
-        #model.classmachine()
-        #self.model_machine.check_if_ON()
-        
-        worker = Worker(fn_loop, fn_sweep, sol_val, bsol_val, rf_val, self.output.retranslateUi, self.output.progress_bar) # Any other args, kwargs are passed to the run function
-        #worker = Worker(self.execute_this_fn)
+        # Pass the function to execute        
+        worker = Worker(fn_loop, fn_sweep, sol_val, bsol_val, rf_val) # Any other args, kwargs are passed to the run function
+
         worker.signals.result.connect(self.print_output)
         worker.signals.finished.connect(self.thread_complete)
         worker.signals.progress.connect(self.progress_fn)
         worker.signals.current_val.connect(self.update_text_fn)
+        
         # Execute
         self.threadpool.start(worker) 
     
@@ -231,12 +206,15 @@ class controller(object):
             self.myspot.append({'pos': (sol, bsol), 'size': 0.5, 'pen': {'color': 'w', 'width': 2}, 'brush': 'r'})
         else:
             charge_norm = (charge-min_charge)*10/(max_charge-min_charge)
-            self.myspot.append({'pos': (sol, bsol), 'size': 0.5, 'pen': {'color': 'w', 'width': 2}, 'brush':pg.intColor(charge_norm, hues=11, values=1, maxValue=255, minValue=150, maxHue=360, minHue=600, sat=255, alpha=255)}) 
+            self.myspot.append({'pos': (sol, bsol), 'size': 0.5, 'pen': {'color': 'w', 'width': 2}, 'brush':pg.intColor(charge_norm, hues=11, values=1, maxValue=255, minValue=150, maxHue=320, minHue=600, sat=255, alpha=255)}) 
         self.graph.s3.addPoints(self.myspot)
-#m = classmachine()
-#        m.check_if_ON()
-#app = QApplication([])
-#window = MainWindow()
-#app.exec_()
-path_yaml = (r'C:\Users\qqi63789\Documents\VirtualAccelerator\app6\yaml_6.yaml')      
+
+from datetime import date
+today = date.today()
+
+# dd/mm/YY
+current_date = today.strftime("%d%m%Y")
+
+# choosing where to save the YAML file 
+path_yaml = (r'C:\Users\qqi63789\Documents\VirtualAccelerator\app6\yaml_%d.yaml' % 111019)      
 c = controller(view, model)

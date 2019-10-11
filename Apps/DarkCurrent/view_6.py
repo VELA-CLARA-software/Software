@@ -235,12 +235,14 @@ class MainWindow(object):
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"> Note: SOL range +/- 300 A; BSOL range +/-8 A</p></body></html>"))
             
     def recurring_timer(self):
+        '''Timer in my window '''
         self.counter +=1
         self.l.setText("Counter: %d" % self.counter)
  
 #=========================================================================================================================================================================       
 class classprogress(object):
-    """ Window with life updates + progress bar """
+    """ Window with live updates + progress bar """
+    
     def __init__(self):
         self.Dialog = QtGui.QDialog()
         self.Dialog.setObjectName("Dialog")
@@ -353,8 +355,7 @@ class classprogress(object):
 
 #=========================================================================================================================================================================       
 class graph(object):
-    
-    myspot = []
+    '''Window with a graph'''
     
     def __init__(self):
         self.MainWindow = QtGui.QMainWindow()
@@ -376,16 +377,20 @@ class graph(object):
 
         self.retranslateUi()
 
+        # creating a plot
         self.dataplot = pg.PlotItem(labels = {'left': ('BSOL [A]'), 'bottom': ('SOL [A]')}, title = 'Charge')
         self.graphicsView.addItem(self.dataplot)
+        
+        # adding a colour scale legend
         self.colour_scale = pg.GradientLegend(size=(
                 10,40), offset=(350, 20))
         self.colour_scale.setIntColorScale(-100,-18)
         self.colour_scale.setLabels({'':0, '':1})
         self.colour_scale.scale(1,1)  
         self.dataplot.addItem(self.colour_scale)
-
-        self.s3 = pg.ScatterPlotItem(pxMode=False)   ## Set pxMode=False to allow spots to transform with the view
+        
+        # Set pxMode=False to allow spots to transform with the view
+        self.s3 = pg.ScatterPlotItem(pxMode=False)   
         self.dataplot.addItem(self.s3)
         
         QtCore.QMetaObject.connectSlotsByName(self.MainWindow)
@@ -396,29 +401,3 @@ class graph(object):
     def retranslateUi(self):
         _translate = QtCore.QCoreApplication.translate
         self.MainWindow.setWindowTitle(_translate("Graph", "Graph", None))
-        
-#    def add_point(self, sol, bsol, charge):
-#        min_charge = 0
-#        max_charge = 200
-#        
-#        if charge <= min_charge:
-#            self.myspot.append({'pos': (sol, bsol), 'size': 0.5, 'pen': {'color': 'w', 'width': 2}, 'brush': 'b'})
-#        elif charge >= max_charge:
-#            self.myspot.append({'pos': (sol, bsol), 'size': 0.5, 'pen': {'color': 'w', 'width': 2}, 'brush': 'r'})
-#        else:
-#            charge_norm = (charge-min_charge)*10/(max_charge-min_charge)
-#            self.myspot.append({'pos': (sol, bsol), 'size': 0.5, 'pen': {'color': 'w', 'width': 2}, 'brush':pg.intColor(charge_norm, hues=11, values=1, maxValue=255, minValue=150, maxHue=360, minHue=600, sat=255, alpha=255)}) 
-#        self.s3.addPoints(self.myspot)
-###
-#if __name__ == "__main__":
-#    import sys
-#    app = QtGui.QApplication(sys.argv)
-#    #p = classprogress()
-#    #p.retranslateUi(1,1,70)
-#    #p.show()
-#    g = graph()
-#    g.show()
-#    for i in range(25):
-#        g.add_point(1,i,(i-5)*15)
-#    app.exec_()
-
