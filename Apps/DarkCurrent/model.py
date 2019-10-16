@@ -7,6 +7,7 @@ Created on Wed Sep 18 11:22:21 2019
 import os, sys, time
 from PyQt4 import QtCore
 import numpy as np
+import datetime
 
 os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
 os.environ["EPICS_CA_ADDR_LIST"] = "10.10.0.12"
@@ -28,11 +29,11 @@ class classmachine(QtCore.QObject):
             print 'SOL is now ON:    ', mag_control.getMagPSUState('SOL')
         else: 
             print 'SOL was already ON:', mag_control.getMagPSUState('SOL')
-        if str(mag_control.getMagPSUState('QUAD01')) == 'MAG_PSU_OFF' or str(mag_control.getMagPSUState('QUAD01')) == 'MAG_PSU_ERROR' or str(mag_control.getMagPSUState('QUAD01')) == 'MAG_PSU_NONE':
-            mag_control.switchONpsu('QUAD01')
-            print 'BSOL is now ON:    ', mag_control.getMagPSUState('QUAD01')
+        if str(mag_control.getMagPSUState('BSOL')) == 'MAG_PSU_OFF' or str(mag_control.getMagPSUState('BSOL')) == 'MAG_PSU_ERROR' or str(mag_control.getMagPSUState('BSOL')) == 'MAG_PSU_NONE':
+            mag_control.switchONpsu('BSOL')
+            print 'BSOL is now ON:    ', mag_control.getMagPSUState('BSOL')
         else:
-            print 'BSOL was already ON:', mag_control.getMagPSUState('QUAD01')
+            print 'BSOL was already ON:', mag_control.getMagPSUState('BSOL')
         if str(mag_control.getMagPSUState('HCOR01')) == 'MAG_PSU_OFF' or str(mag_control.getMagPSUState('HCOR01')) == 'MAG_PSU_ERROR' or str(mag_control.getMagPSUState('HCOR01')) == 'MAG_PSU_NONE':
             mag_control.switchONpsu('HCOR01')
             print 'HCOR01 is now ON:    ', mag_control.getMagPSUState('HCOR01')
@@ -51,7 +52,7 @@ class classmachine(QtCore.QObject):
         
         #setting rf amp
         rf_control.setAmpMVM(rf)
-        while rf_control.getAmpMVM() != rf:                                                                # on a PHYSICAL machine add tolerance- beacuse it will never give an accurate value
+        while abs(rf_control.getAmpMVM() - rf) > 0.1:                                                                # on a PHYSICAL machine add tolerance- beacuse it will never give an accurate value
             print 'Setting RF Amplitude...'
             time.sleep(1)
         rf_val = rf_control.getAmpMVM()
@@ -62,40 +63,54 @@ class classmachine(QtCore.QObject):
         print 'Settings: SOL=', sol, 'BSOL=', bsol
         print '\n'
         mag_control.setSI('SOL', sol)
-        mag_control.setSI('QUAD01', bsol)                                                                   # remember to change to BSOL on a PHYSICAL machine
+        mag_control.setSI('BSOL', bsol)                                                                   # remember to change to BSOL on a PHYSICAL machine
         print 'SOL', 'BSOL'
-        while abs(mag_control.getRI('SOL') - sol) > 0.1 or  abs(mag_control.getRI('QUAD01') - bsol) > 0.1:                        # for a PHYSICAL machine added tolerance- beacuse it will never give an accurate value; within 0.1A
-            print mag_control.getRI('SOL'), mag_control.getRI('QUAD01')
+        while abs(mag_control.getRI('SOL') - sol) > 0.1 or  abs(mag_control.getRI('BSOL') - bsol) > 0.1:                        # for a PHYSICAL machine added tolerance- beacuse it will never give an accurate value; within 0.1A
+            print mag_control.getRI('SOL'), mag_control.getRI('BSOL')
             time.sleep(1)
         print 'Finished!'
         print '\n'
         print 'New SOL = ', mag_control.getRI('SOL')
-        print 'New BSOL = ', mag_control.getRI('QUAD01')
+        print 'New BSOL = ', mag_control.getRI('BSOL')
         
         # getting value from the WCM 
         chargenow = np.random.random()*500                                                                   # for now use a random number
         #chargenow = charge_control.getWCMCharge()
         print 'Charge = ', chargenow
         
-        # getting an image from a camera
-        mycam = 'S01-CAM-01'
-        cam_control.startAcquiring(mycam)                                                                    
-        while cam_control.isAcquiring(mycam):
-            print 'Camera aquiring...'
-            time.sleep(2)
-        else:
-            print "CAMERA NOT ACQUIRING"
-            
         # getting the HCOR01 and VCOR01 values
         hcor01_val = mag_control.getRI('HCOR01')
         vcor01_val = mag_control.getRI('VCOR01')
         
         print 'HCOR01 = ', hcor01_val
         print 'VCOR01 = ', vcor01_val
-         
+        
+        # getting an image from a camera
+        mycam = 'S01-CAM-01'
+        cam_control.startAcquiring(mycam)                                                                    
+        while cam_control.isAcquiring(mycam):
+            print 'Camera aquiring...'
+            time.sleep(1)
+            cam_control.collectAndSave(1)
+            time.sleep(1)
+            
+            #saving images in a specific location
+            now = datetime.datetime.now()
+            nowiso = now.isoformat('-').replace(":", "-").split('.', 1)[0]
+            os.system('copy \\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Work\\2017\\CurrentCamera\\S01-CAM-01_001.bin \\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Work\\2018\\01\\fjtest\\'+str(nowiso)+'_'+str(mycam)+'_SOL'+str(int(sol))+'_BSOL'+str(int(bsol))+'_KLYS'+str(round(rf_val,2))+'MW_'+'S01VCR1_'+str(round(vcor01_val,2))+'_S01HCR1_'+str(round(hcor01_val,2))+'.bin')
+            path = str('\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Work\\2018\\01\\fjtest\\'+str(nowiso)+'_'+str(mycam)+'_SOL'+str(int(sol))+'_BSOL'+str(int(bsol))+'_RFAmp'+str(round(rf_val,2))+'MWm_'+'S01VCR1_'+str(round(vcor01_val,2))+'_S01HCR1_'+str(round(hcor01_val,2))+'.bin')
+            cam_control.stopAcquiring()
+        else:
+            print "CAMERA NOT ACQUIRING"
+        
+        #for now using a placeholder path because virtual cameras don't really work so only else is read
+        now_test = datetime.datetime.now()
+        nowiso_test = now_test.isoformat('-').replace(":", "-").split('.', 1)[0]
+        path_test = '\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Work\\2018\\01\\fjtest\\'+str(nowiso_test)+'_'+str(mycam)+'_SOL'+str(int(sol))+'_BSOL'+str(int(bsol))+'_RFAmp'+str(round(rf_val,2))+'MWm_'+'S01VCR1_'+str(round(vcor01_val,2))+'_S01HCR1_'+str(round(hcor01_val,2))+'.bin'
+        
         print 'Saving data...'
-
-        return sol, bsol, chargenow, hcor01_val, vcor01_val, rf_val
+        
+        return sol, bsol, chargenow, hcor01_val, vcor01_val, rf_val, path_test
     
     def loop(self, function, sol, bsol, rf, progress_callback, result_callback, current_val_callback):
         '''Loop function'''
@@ -171,6 +186,6 @@ class classmachine(QtCore.QObject):
                     current_val_callback.emit(sol_val, bsol_val, rf_val)
                     
                     result_sweep = function(mag_control, cam_control, charge_control, rf_control, sol_val,bsol_val, rf_val)
-                    result_callback.emit(result_sweep[0], result_sweep[1], result_sweep[2], result_sweep[3], result_sweep[4], result_sweep[5])
+                    result_callback.emit(result_sweep[0], result_sweep[1], result_sweep[2], result_sweep[3], result_sweep[4], result_sweep[5], result_sweep[6])
                     
         return 'CONGRATS!'

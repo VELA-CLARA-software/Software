@@ -12,8 +12,8 @@ import yaml
 import pyqtgraph as pg
 from datetime import date
 
-import view_6 as view
-import model_6 as model
+import view as view
+import model as model
 
 #=========================================================================================================================================================================
 class WorkerSignals(QObject):
@@ -37,7 +37,7 @@ class WorkerSignals(QObject):
     '''
     finished = pyqtSignal()
     error = pyqtSignal(tuple)
-    result = pyqtSignal(float, float, float, float, float, float)
+    result = pyqtSignal(float, float, float, float, float, float, str)
     result_fn = pyqtSignal(object)
     progress = pyqtSignal(float)
     current_val = pyqtSignal(float, float, float)
@@ -156,11 +156,11 @@ class controller(object):
         print("%d%% done" % n)
         self.output.progress_bar(n)
         
-    def print_output(self, s, t, u, v, w, x):
+    def print_output(self, s, t, u, v, w, x, y):
         self.counter_runs += 1
         self.add_point(s,t,u)
         
-        new_dict_file = [{'run%d' % self.counter_runs: {'parameters': {'sol_strength': s,'bsol_strength': t,'charge': u,'HCOR01': v,'VCOR01': w,'RF_amplitude': x}}}]         # remember to save the path to the photo in your yaml file
+        new_dict_file = [{'run%d' % self.counter_runs: {'parameters': {'sol_strength': s,'bsol_strength': t,'charge': u,'HCOR01': v,'VCOR01': w,'RF_amplitude': x, 'Image path': str(y)}}}]         # remember to save the path to the photo in your yaml file
         with open(path_yaml,'r') as yamlfile:
             cur_yaml = yaml.safe_load(yamlfile)
             cur_yaml.extend(new_dict_file)
