@@ -660,7 +660,7 @@ class Window(QtGui.QMainWindow):
             strength = int_strength / magnet.ref.magneticLength if magnet.ref.magneticLength else 0
             if mag_type == 'QUAD' or mag_type[1:] == 'COR':
                 strength *= 1000  # convert to mT for correctors, T/m for quads
-            online_text = online_text_format.format(**locals()) if magnet_on else \
+            online_text = online_text_format.format(**locals()) if (magnet_on or offline) else \
                 '<a href="{}/{}/on">Switch magnet ON</a>'.format(magnet.section.id, magnet.ref.name)
             if mag_type == 'DIP':
                 online_text += '<br><b>Section momentum</b>: {:.3f} MeV/c'.format(magnet.section.momentum_spin.value())

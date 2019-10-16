@@ -1,5 +1,6 @@
 from PyQt4 import QtCore
 import pyqtgraph as pg
+import time
 #from functools import partial
 #import time
 #from PyQt4.QtGui import QApplication
@@ -10,6 +11,8 @@ class Controller():
         self.model = model
         self.data = data
         self.C2Vbpm = self.model.C2Vbpm
+        self.S02bpm = self.model.S02bpm
+        self.S02cam = self.model.S02cam
 
         # Converter
         self.view.doubleSpinBox_I.valueChanged[float].connect(self.model.changeBox_p)
@@ -29,6 +32,15 @@ class Controller():
         self.view.pushButton_get_p_rough.clicked.connect(self.model.get_p_rough)
         self.view.pushButton_roughGetCurrentRange.clicked.connect(self.model.roughGetCurrentRange)
 
+        self.view.pushButton_x_up_1.clicked.connect(self.model.dipole_current_up)
+        self.view.pushButton_x_down_1.clicked.connect(self.model.dipole_current_down)
+
+        self.view.doubleSpinBox_roughIMin.valueChanged[float].connect(self.model.roughIMin)
+        self.view.doubleSpinBox_roughIMax.valueChanged[float].connect(self.model.roughIMax)
+        self.view.doubleSpinBox_roughIStep.valueChanged[float].connect(self.model.roughIStep)
+
+        self.view.pushButton_roughCentreC2VCurrent.clicked.connect(self.model.measureMomentumCentreC2VApprox)
+
         # Rough set
         self.view.doubleSpinBox_p_rough_set.valueChanged[float].connect(self.model.p_rough_set)
 
@@ -36,10 +48,56 @@ class Controller():
         self.view.doubleSpinBox_step_2.setValue(self.data.values['rough_set_step'])
         self.view.doubleSpinBox_step_2.valueChanged[float].connect(self.model.setRoughSetStep)
 
+        self.view.pushButton_set_I_rough.clicked.connect(self.model.set_I_rough)
+
         self.view.pushButton_select_gun.clicked.connect(self.model.select_gun)
         self.view.pushButton_select_linac.clicked.connect(self.model.select_linac)
+
+        self.view.pushButton_x_up_2.clicked.connect(self.model.RF_amplitude_up)
+        self.view.pushButton_x_down_2.clicked.connect(self.model.RF_amplitude_down)
+
         # Align
-        self.view.pushButton_Align_2.clicked.connect(self.model.measureMomentumAlign_2)
+        self.view.pushButton_degauss.clicked.connect(self.model.degauss)
+        self.view.pushButton_Align_1.clicked.connect(self.model.measureMomentumAlign_1)
+        self.view.pushButton_InsertYAG.clicked.connect(self.model.insertYAG)
+
+        self.data.values['fine_step2'] = 0.1
+        self.view.doubleSpinBox_step_4.setValue(self.data.values['fine_step2'])
+        self.view.doubleSpinBox_step_4.valueChanged[float].connect(self.model.setFineStep2)
+        self.view.pushButton_x_up_6.clicked.connect(self.model.cor2_current_up)
+        self.view.pushButton_x_down_6.clicked.connect(self.model.cor2_current_down)
+
+        self.data.values['target1'] = 0.0
+        self.data.values['target1_y'] = 0.0
+        self.view.doubleSpinBox_x_1.setValue(self.data.values['target1'])
+        self.data.values['tol1'] = 0.5
+        self.view.doubleSpinBox_tol_1.setValue(self.data.values['tol1'])
+
+        self.data.values['target2'] = 13.0#6.4
+        self.data.values['target2_y'] = 15.0
+        self.view.doubleSpinBox_x_2.setValue(self.data.values['target2'])
+        self.data.values['tol2'] = 0.5
+        self.view.doubleSpinBox_tol_2.setValue(self.data.values['tol2'])
+
+        self.view.pushButton_Align_3.clicked.connect(self.model.measureMomentumAlign_3)
+        self.view.pushButton_Align_4.clicked.connect(self.model.retractYAG)
+
+
+        self.data.values['fine_step1'] = 0.1
+        self.view.doubleSpinBox_step_5.setValue(self.data.values['fine_step1'])
+        self.view.doubleSpinBox_step_5.valueChanged[float].connect(self.model.setFineStep1)
+        self.view.pushButton_x_up_7.clicked.connect(self.model.cor1_current_up)
+        self.view.pushButton_x_down_7.clicked.connect(self.model.cor1_current_down)
+
+        # Fine measure
+        self.view.pushButton_fineGetCurrentRange_2.clicked.connect(self.model.fineGetCurrentRange_2)
+        self.view.pushButton_fineCentreC2VCurrent.clicked.connect(self.model.measureMomentumCentreC2V)
+
+        self.data.values['target3'] = 0.0
+        self.data.values['target3_y'] = 0.0
+        self.view.doubleSpinBox_x_3.setValue(self.data.values['target3'])
+        self.data.values['tol3'] = 0.5
+        self.view.doubleSpinBox_tol_3.setValue(self.data.values['tol3'])
 
         # Fine set
         self.view.doubleSpinBox_p_fine_set.valueChanged[float].connect(self.model.p_fine_set)
@@ -48,8 +106,17 @@ class Controller():
         self.view.doubleSpinBox_step_3.setValue(self.data.values['fine_set_step'])
         self.view.doubleSpinBox_step_3.valueChanged[float].connect(self.model.setFineSetStep)
 
+        self.view.pushButton_set_I_fine.clicked.connect(self.model.set_I_fine)
+
         self.view.pushButton_select_gun_2.clicked.connect(self.model.select_gun_fine)
         self.view.pushButton_select_linac_2.clicked.connect(self.model.select_linac_fine)
+
+        self.view.pushButton_x_up_3.clicked.connect(self.model.RF_amplitude_up_fine)
+        self.view.pushButton_x_down_3.clicked.connect(self.model.RF_amplitude_down_fine)
+
+        # Momentum spread
+        self.view.pushButton_CalcDisp.clicked.connect(self.model.measureMomentumSpreadCalcDisp)
+        self.view.pushButton_Calc.clicked.connect(self.model.measureMomentumSpreadCalc)
 
         '''Threads for updating graphs and labels'''
         self.timer = QtCore.QTimer()
@@ -119,7 +186,7 @@ class Controller():
         self.bg3_y = pg.BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=barwidth, pen=barcolour2, brush=barcolour2)
         self.positionGraph_3.addItem(self.bg3)
         self.positionGraph_3.addItem(self.bg3_y)
-        self.view.horizontalLayout_4.addWidget(monitor_3)
+        self.view.horizontalLayout_5.addWidget(monitor_3)
 
         '''fine measure align - S02 YAG plot'''
         monitor_4 = pg.GraphicsView()
@@ -133,7 +200,7 @@ class Controller():
         self.bg4_y = pg.BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=barwidth, pen=barcolour2, brush=barcolour2)
         self.positionGraph_4.addItem(self.bg4)
         self.positionGraph_4.addItem(self.bg4_y)
-        self.view.horizontalLayout_5.addWidget(monitor_4)
+        self.view.horizontalLayout_4.addWidget(monitor_4)
 
         '''fine measure - C2V BPM plot'''
         monitor_5 = pg.GraphicsView()
@@ -163,6 +230,19 @@ class Controller():
         self.positionGraph_6.addItem(self.bg6_y)
         self.view.horizontalLayout_11.addWidget(monitor_6)
 
+        '''2. Create Momentum Spread Graphs'''
+        monitor_s = pg.GraphicsView()
+        layout_s = pg.GraphicsLayout(border=(100,100,100))
+        monitor_s.setCentralItem(layout_s)
+        self.dispersionGraph  = layout_s.addPlot(title="Dispersion")
+        self.dCurve = self.dispersionGraph.plot(pen = 'y')
+        self.fCurve = self.dispersionGraph.plot(pen = 'r')
+        self.displayDisp = layout_s.addLabel('DISPERSION = pixels per Ampere')
+        layout_s.nextRow()
+        self.profileGraph  = layout_s.addPlot(title="Fit to YAG Profile")
+        self.displayMom_S = layout_s.addLabel('Momentum Spread =  MeV/c')
+        self.view.horizontalLayout_15.addWidget(monitor_s)
+
 
     def updateDisplays(self):
         self.view.label_I.setText(
@@ -174,7 +254,7 @@ class Controller():
             )
 
         self.view.label_dipole_set.setText(str(self.model.Cmagnets.getSI(self.model.dipole)))
-
+        self.view.label_dipole_set_2.setText(str(self.model.Cmagnets.getSI(self.model.dipole)))
         # rough set
         self.view.label_I_rough.setText(str(self.model.Cmagnets.getSI(self.model.dipole)))
 
@@ -186,6 +266,13 @@ class Controller():
         except:
             self.view.label_RF_rough.setText('Mode not set')
 
+        # align
+        self.view.label_H_1.setText(str(self.model.Cbpms.getXFromPV(self.S02bpm)- self.data.values['target1'])+' mm')
+        self.view.label_H_2.setText(str(self.model.cam.getX(self.S02cam)- self.data.values['target2'])+' mm')
+
+        # fine measure
+        self.view.label_H_3.setText(str(self.model.Cbpms.getXFromPV(self.C2Vbpm)- self.data.values['target3'])+' mm')
+
         # fine set
         self.view.label_I_fine.setText(str(self.model.Cmagnets.getSI(self.model.dipole)))
 
@@ -195,19 +282,60 @@ class Controller():
             elif self.data.values['RFmode_fine'] == 'Linac':
                 self.view.label_RF_fine.setText(str(self.model.linac1.getAmpSP()))
         except:
-            self.view.label_RF_rough.setText('Mode not set')
+            self.view.label_RF_fine.setText('Mode not set')
+
+
+        # check boxes
+        if abs(self.model.Cbpms.getXFromPV(self.S02bpm) - self.data.values['target1']) < self.data.values['tol1']:
+            self.view.checkBox.setCheckState(True)
+            #print self.model.Cbpms.getXFromPV(self.S02bpm), self.data.values['target1'], abs(self.model.Cbpms.getXFromPV(self.S02bpm) - self.data.values['target1']), self.data.values['tol1']
+            #print 'true'
+            #time.sleep(0.5)
+        else:
+            self.view.checkBox.setCheckState(False)
+            #print self.model.Cbpms.getXFromPV(self.S02bpm), self.data.values['target1'], abs(self.model.Cbpms.getXFromPV(self.S02bpm) - self.data.values['target1']), self.data.values['tol1']
+            #print 'false'
+            #time.sleep(0.5)
+
+        if abs(self.model.cam.getX(self.S02cam) - self.data.values['target2']) < self.data.values['tol2']:
+            self.view.checkBox_2.setCheckState(True)
+        else:
+            self.view.checkBox_2.setCheckState(False)
+
+        # if (abs(self.model.Cbpms.getXFromPV(self.S02bpm) - self.data.values['target1']) < self.data.values['tol1']) and (abs(self.model.cam.getX(self.S02cam) - self.data.values['target2']) < self.data.values['tol2']):
+        #     self.view.checkBox_3.setCheckState(True)
+        # else:
+        #     self.view.checkBox_3.setCheckState(False)
+        if abs(self.model.Cbpms.getXFromPV(self.S02bpm) - self.data.values['target1']) < self.data.values['tol1']:
+            self.view.checkBox_3.setCheckState(True)
+        else:
+            self.view.checkBox_3.setCheckState(False)
 
 
         # plots
+        # rough measure - C2V BPM plot
         self.bg1.setOpts(x=self.xdict.keys(), height=[1*self.model.Cbpms.getXFromPV(self.C2Vbpm),0])
         self.bg1_y.setOpts(x=self.xdict.keys(), height=[0,1*self.model.Cbpms.getYFromPV(self.C2Vbpm)])
+        # rough set - C2V BPM plot
         self.bg2.setOpts(x=self.xdict.keys(), height=[1*self.model.Cbpms.getXFromPV(self.C2Vbpm),0])
         self.bg2_y.setOpts(x=self.xdict.keys(), height=[0,1*self.model.Cbpms.getYFromPV(self.C2Vbpm)])
-        self.bg3.setOpts(x=self.xdict.keys(), height=[1*self.model.Cbpms.getXFromPV(self.C2Vbpm),0])
-        self.bg3_y.setOpts(x=self.xdict.keys(), height=[0,1*self.model.Cbpms.getYFromPV(self.C2Vbpm)])
-        self.bg4.setOpts(x=self.xdict.keys(), height=[1*self.model.Cbpms.getXFromPV(self.C2Vbpm),0])
-        self.bg4_y.setOpts(x=self.xdict.keys(), height=[0,1*self.model.Cbpms.getYFromPV(self.C2Vbpm)])
+        # S02 BPM plot
+        self.bg3.setOpts(x=self.xdict.keys(), height=[1*self.model.Cbpms.getXFromPV(self.S02bpm) - self.data.values['target1'],0])
+        self.bg3_y.setOpts(x=self.xdict.keys(), height=[0,1*self.model.Cbpms.getYFromPV(self.S02bpm)- self.data.values['target1_y']])
+        #self.bg3.setOpts(x=self.xdict.keys(), height=[1*self.model.Cbpms.getXFromPV(self.S02bpm)- self.data.values['target1'],0])
+        #self.bg3_y.setOpts(x=self.xdict.keys(), height=[0,1*self.model.Cbpms.getYFromPV(self.S02bpm)- self.data.values['target1_y']])
+        # S02 YAG plot
+        self.bg4.setOpts(x=self.xdict.keys(), height=[1*self.model.cam.getX(self.S02cam) - self.data.values['target2'],0])
+        self.bg4_y.setOpts(x=self.xdict.keys(), height=[0,1*self.model.cam.getY(self.S02cam) - self.data.values['target2_y']])
+        # fine measure - C2V BPM plot
         self.bg5.setOpts(x=self.xdict.keys(), height=[1*self.model.Cbpms.getXFromPV(self.C2Vbpm),0])
         self.bg5_y.setOpts(x=self.xdict.keys(), height=[0,1*self.model.Cbpms.getYFromPV(self.C2Vbpm)])
+        # fine set - C2V BPM plot
         self.bg6.setOpts(x=self.xdict.keys(), height=[1*self.model.Cbpms.getXFromPV(self.C2Vbpm),0])
         self.bg6_y.setOpts(x=self.xdict.keys(), height=[0,1*self.model.Cbpms.getYFromPV(self.C2Vbpm)])
+
+        self.sp.setData(self.model.dipCurrent, self.model.BPMPosition)
+        self.dCurve.setData(x=self.model.dCurrents,y=self.model.dPositions)
+        self.fCurve.setData(x=self.model.fCurrents,y=self.model.fPositions)
+        self.displayDisp.setText('DISPERSION:<br>'+str(self.model.Dispersion)+' m/A')
+        self.displayMom_S.setText('MOMENTUM SPREAD:<br>'+str(self.model.pSpread)+' MeV/c')

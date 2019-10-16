@@ -7,8 +7,8 @@ import pyqtgraph as pg
 sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\\..\\..\\..\\Widgets\\loggerWidget\\')
 #import loggerWidget as lw
 import random as r
-import cv2
-from epics import caget,caput
+#import cv2
+#from epics import caget,caput
 from functools import partial
 class Controller():
 	#userinput=True
