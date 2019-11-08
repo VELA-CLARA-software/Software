@@ -118,6 +118,8 @@ for n = 1:nmax
     
 end
 
+hdf5write('C:\Users\djs56\GitHub\Software\Procedures\Tomography_Analysis\Image Scaling\matlab_imagearray.h5','/data',imagearray);
+
 toc
 
 % Set up variables for the tomography analysis
@@ -129,6 +131,8 @@ disp("size(xprojection) = ");
 disp(size(xprojection));
 disp("size(yprojection) = ");
 disp(size(yprojection));
+
+
 % disp("ny = ");
 % disp(ny);
 % disp("xprojection = ");
@@ -140,6 +144,11 @@ disp(size(yprojection));
 
 dfindxx     = zeros(2,nx*psresn^2);
 
+disp('size(dfindxx) = ');
+disp( size(dfindxx) );
+disp('dfindxx[1] = ');
+disp(dfindxx(1));
+
 disp('size(dfindxx) = ')
 disp(size(dfindxx))
 
@@ -147,6 +156,7 @@ dfcntrx     = 1;
 
 dfindxy     = zeros(2,ny*psresn^2);
 dfcntry     = 1;
+
 
 ctroffset   = (psresn+1)/2;
 
@@ -162,24 +172,22 @@ disp(psresn);
 disp("ctroffset = ");
 disp(ctroffset);
 
+
+disp("main loop x");
 for n = 1:nx
     
 %     disp("n = ");
 %     disp(n);
-    
     indx   = indxx(n);
-
 %     disp("indx = ");
 %     disp(indx);
-    
     % Set the phase advance
-    
     cosmux = cos(PhaseAdvance_x_y(indx,1));
     sinmux = sin(PhaseAdvance_x_y(indx,1));
 
-    disp("PhaseAdvance_x_y(indx,1) = ");
-    disp(PhaseAdvance_x_y(indx,1));
-    disp(cosmux);
+    %disp("PhaseAdvance_x_y(indx,1) = ");
+    %disp(PhaseAdvance_x_y(indx,1));
+    %disp(cosmux);
     
     % Find the indices of the non-zero values of the matrix relating the
     % projected distribution at YAG02 to the phase space distribution at YAG01
@@ -187,16 +195,24 @@ for n = 1:nx
     for xindx1 = 1:psresn
         for pxindx1 = 1:psresn
             xindx0  = round(cosmux*(xindx1 - ctroffset) - sinmux*(pxindx1 - ctroffset) + ctroffset);
-            
-%             disp('xindx0 = ')
-%             disp(xindx0)
-            
             if xindx0>0 && xindx0<=psresn
                 pxindx0 = round(sinmux*(xindx1 - ctroffset) + cosmux*(pxindx1 - ctroffset) + ctroffset);
                 if pxindx0>0 && pxindx0<=psresn
                    
-                    %disp([(n-1)*psresn + xindx1; (xindx0-1)*psresn + pxindx0])
+                    % set column dfcntrx in dfindxx
                     dfindxx(:,dfcntrx) = [(n-1)*psresn + xindx1; (xindx0-1)*psresn + pxindx0];
+                    
+                    %disp("n = ");
+                    %disp(n);
+                    %disp( "dfindxx(:,dfcntrx) = ")
+                    %disp( dfindxx(:,dfcntrx) )
+                    %disp("(n-1)*psresn + xindx1 = ");
+                    %disp( (n-1)*psresn + xindx1 )
+                    %disp("(xindx0-1)*psresn + pxindx0 = ");
+                    %disp( (xindx0-1)*psresn + pxindx0 )
+                    %disp( "[(n-1)*psresn + xindx1; (xindx0-1)*psresn + pxindx0] = " )
+                    %disp( [(n-1)*psresn + xindx1; (xindx0-1)*psresn + pxindx0] )
+                    %pause(121212);
                     
                     dfcntrx = dfcntrx + 1;
                 end
@@ -207,19 +223,22 @@ for n = 1:nx
     % why not normalised?
 %     nrm = sum(sum(imagearray{indx}));
     
+    %disp((n-1)*psresn+1);
+    disp(dfcntrx);
+    % pause(12344);
     % sum(imagearray{indx},2);
     xprojection(((n-1)*psresn+1):n*psresn) = sum(imagearray{indx},2); %/nrm;
-    
-    disp('((n-1)*psresn+1):n*psresn ');
-    disp(((n-1)*psresn+1));
-    disp(n*psresn)
-    pause(121212)
-    
-end
-disp('dfindxx(1:10,) = ')
-disp(dfindxx(1:2,1:100))
-pause(121212)
 
+end
+
+
+
+
+disp('xprojection() = ');
+disp(xprojection(1));
+disp(xprojection(1000));
+disp('Final dfcntrx = ');
+disp(dfcntrx);
 
 
 for n = 1:ny
@@ -257,14 +276,72 @@ for n = 1:ny
     
 end
 
+disp("yprojection() = ");
+disp(yprojection(1));
+disp(yprojection(1000));
+%disp("pause(1233);");
+%pause(1233);
+
+
 % Finally, construct the (sparse) matrix relating the projected
 % distribution at YAG02 to the phase space distribution at YAG01
 
+disp(' size(dfindxx) = ');
+disp(size(dfindxx));
+disp('1 dfindxx() = ');
+
+disp(dfindxx(1));
+disp(dfindxx(2));
+disp(dfindxx(1:10));
+
 dfindxx = dfindxx(:,1:dfcntrx-1);
+disp('2 dfindxx() = ');
+disp(' size(dfindxx) = ');
+disp(size(dfindxx));
+disp(dfindxx(1:10));
+
+%disp("dfindxx(1,:) = ")
+
+
+disp("dfullx size = ");
+disp(nx*psresn);
+disp(psresn^2);
+disp("size(dfindxx(1,:))");
+disp(size(dfindxx(1,:)));
+disp("size(dfindxx(2,:))");
+disp(size(dfindxx(2,:)));
+disp("size(ones(1,dfcntrx-1))");
+disp(size(ones(1,dfcntrx-1)));
+%pause(20);
+%disp(ones(1,dfcntrx-1));
+
 dfullx  = sparse(dfindxx(1,:),dfindxx(2,:),ones(1,dfcntrx-1),nx*psresn,psresn^2);
+%pause(12344);
+
+
+disp('dfullx() = ');
+disp(size(dfullx));
+disp(size(dfindxx(1,:)));
+disp(size(dfindxx(2,:)));
+disp(size(ones(1,dfcntrx-1)));
+disp(nx*psresn);
+disp(psresn^2);
+disp(dfullx(1:10));
+%save('dfullx_test.mat', 'dfullx');
+%save('xprojection.mat', 'xprojection');
+
+
+disp("rsltdir ");
+disp(rsltdir);
+save([rsltdir '/dfindxx.mat'],'dfindxx');
 
 dfindxy = dfindxy(:,1:dfcntry-1);
+disp('dfindxy() = ');
+disp(dfindxy(1:10));
+disp(dfindxy(1000:1010));
 dfully  = sparse(dfindxy(1,:),dfindxy(2,:),ones(1,dfcntry-1),ny*psresn,psresn^2);
+
+
 
 toc
 
@@ -275,7 +352,13 @@ disp('Solving the equations...'); pause(0.01)
 
 tic
 
-rhovectorx = lsqr(dfullx,xprojection,1e-6,400);
+[rhovectorx ,flag] = lsqr(dfullx,xprojection,1e-6,400);
+
+disp('flag = ')
+disp(flag) 
+%pause(12344)
+
+
 rhovectory = lsqr(dfully,yprojection,1e-6,400);
 
 toc
