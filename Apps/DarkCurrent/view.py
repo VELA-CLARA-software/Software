@@ -6,11 +6,13 @@ Created on Mon Oct  7 10:35:48 2019
 """
 
 from PyQt4 import QtGui, QtCore
+from PyQt4.QtGui import *
+from PyQt4.QtCore import *
 import pyqtgraph as pg
 from pyqtgraph import GraphicsLayoutWidget
 
 #=========================================================================================================================================================================
-class MainWindow(object):
+class MainWindow(QMainWindow):
     '''The main GUI where user specifies 
         the sol, bsol and rf values'''
     
@@ -22,7 +24,7 @@ class MainWindow(object):
         self.Dialog = QtGui.QDialog()
         self.Dialog.setObjectName("Dialog")
         self.Dialog.resize(390, 316)
-        
+
         self.buttonBox_2 = QtGui.QDialogButtonBox(self.Dialog)
         self.buttonBox = QtGui.QDialogButtonBox(self.Dialog)
         
@@ -74,8 +76,8 @@ class MainWindow(object):
         
         # maximum bsol- input
         max_bsol = self.spinBox_4 = QtGui.QSpinBox(self.gridLayoutWidget)
-        max_bsol.setMinimum(-8)
-        max_bsol.setMaximum(8)
+        max_bsol.setMinimum(-300)
+        max_bsol.setMaximum(300)
         max_bsol.setProperty("value", 1)
         max_bsol.setObjectName("max_bsol")
         self.gridLayout.addWidget(max_bsol, 2, 3, 1, 1)
@@ -110,8 +112,8 @@ class MainWindow(object):
         
         # minimum bsol- input
         min_bsol = self.spinBox_3 = QtGui.QSpinBox(self.gridLayoutWidget)
-        min_bsol.setMinimum(-8)
-        min_bsol.setMaximum(8)
+        min_bsol.setMinimum(-300)
+        min_bsol.setMaximum(300)
         min_bsol.setProperty("value", -1)
         min_bsol.setObjectName("min_bsol")
         self.gridLayout.addWidget(min_bsol, 2, 1, 1, 1)
@@ -208,10 +210,9 @@ class MainWindow(object):
         self.timer.setInterval(1000)
         self.timer.timeout.connect(self.recurring_timer)
         self.timer.start()
-    
+        
         self.Dialog.show()
-        
-        
+         
     def retranslateUi(self):
         _translate = QtCore.QCoreApplication.translate
         self.Dialog.setWindowTitle(_translate("Dialog", "Dark Current Measurement"))
@@ -237,7 +238,7 @@ class MainWindow(object):
     def recurring_timer(self):
         '''Timer in my window '''
         self.counter +=1
-        self.l.setText("Counter: %d" % self.counter)
+        self.l.setText("Counter: %d" % self.counter)        
  
 #=========================================================================================================================================================================       
 class classprogress(object):
