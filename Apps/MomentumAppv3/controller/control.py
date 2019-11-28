@@ -58,6 +58,7 @@ class Controller():
 
         # Align
         self.view.pushButton_degauss.clicked.connect(self.model.degauss)
+        self.view.pushButton_degauss_2.clicked.connect(self.model.degauss_2)
         self.view.pushButton_Align_1.clicked.connect(self.model.measureMomentumAlign_1)
         self.view.pushButton_InsertYAG.clicked.connect(self.model.insertYAG)
 
