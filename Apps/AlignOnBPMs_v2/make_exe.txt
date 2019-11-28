@@ -1,0 +1,3 @@
+pyinstaller --onefile --noconfirm --windowed -p=C:\Users\djd63\Documents\GitHub\Software\Apps\AlignOnBPMs_v2\controller -p=C:\Users\djd63\Documents\GitHub\Software\Apps\AlignOnBPMs_v2\model -p=C:\Users\djd63\Documents\GitHub\Software\Apps\AlignOnBPMs_v2\view AlignOnBPMs.py
+
+pyinstaller --onefile --noconfirm -i alignonbpms_rhr_icon.ico -p=C:\Users\djd63\Documents\GitHub\Software\Apps\AlignOnBPMs_v2\controller -p=C:\Users\djd63\Documents\GitHub\Software\Apps\AlignOnBPMs_v2\model -p=C:\Users\djd63\Documents\GitHub\Software\Apps\AlignOnBPMs_v2\view --exclude matplotlib AlignOnBPMs.py
