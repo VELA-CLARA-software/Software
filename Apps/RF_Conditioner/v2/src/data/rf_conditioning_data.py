@@ -37,7 +37,6 @@ from ramp import *
 from src.data.state import state
 
 
-
 class rf_conditioning_data(object):
     # whoami
 
@@ -52,7 +51,6 @@ class rf_conditioning_data(object):
     # RF_MOD, RF_PROT, LLRF
     # (pulse , rf output, interlock, trigger, amp_locked, phase_locked ...)
     enable_RF_monitor_states = {}
-
 
     # log of last million pulses including:
     current_power = 0
@@ -69,7 +67,7 @@ class rf_conditioning_data(object):
         self.config_data = self.config.raw_config_data
         # alias for data dictionary
         self.values = rf_conditioning_data.values
-        # we can staright away set some value from config_data
+        # we can straight  away set some value from config_data
         self.set_values_from_config()
         #
         # logging
@@ -188,7 +186,11 @@ class rf_conditioning_data(object):
         # table)
         self.values[rcd.log_pulse_length] = float(ampSP_sorted_pulse_break_down_log[-1][4]) / float(
             1000.0)  # warning UNIT
+
+
+        # TODO I don't tihnk this is used and doesn;t make sense to me now
         self.config_data['PULSE_LENGTH_START'] = self.values[rcd.log_pulse_length]
+
         #
         # set the number of pulses required at this step to the default, updated later
         self.values[rcd.required_pulses] = self.config_data['DEFAULT_PULSE_COUNT']
@@ -370,6 +372,1436 @@ class rf_conditioning_data(object):
         # self.values[rcd.pulse_length_aim_error] = cd['PULSE_LENGTH_AIM_ERROR']
         # self.values[rcd.pulse_length_min] = cd['PULSE_LENGTH_AIM'] - cd['PULSE_LENGTH_AIM_ERROR']
         # self.values[rcd.pulse_length_max] = cd['PULSE_LENGTH_AIM'] + cd['PULSE_LENGTH_AIM_ERROR']
+
+
+
+
+    ''' 
+        The values dictionary. 
+        The main data dictionary for the application almost everything goes in here, 
+         apart from minor things like GUI flags, data from the config file
+    
+        THIS IS WHERE ALL THE MAIN DATA FOR RF CONDITIONING APPLICATION LIVES
+        It is used by almost every class, to get and set data
+    
+        In order to not have mistakes, define a value then add it to the values dictionary, 
+        Then give the values dictionary an initial value THAT IS OF THE EXPECTED TYPE FOR THE  
+        REAL DATA.  
+        WHEN NOT DEBUGGING: We set the values of the dictionary to be None, this is so that when 
+        we start writing then to file we can check they are being updated as expected. 
+    '''
+
+    dummy_float = -9999.9999
+    dummy_int   = -9999999
+    dummy_state = state.UNKNOWN
+
+    values = {} # A list of the keys for values
+    all_value_keys = []  # A list of the keys for values
+
+    # keys for all the data we monitor
+    time_stamp = 'time_stamp'
+    all_value_keys.append(time_stamp)
+    values[time_stamp] = dummy_float # CHECK TYPE
+
+    # STATUS PF MAIN MONITORS
+    vac_spike_status = 'vac_spike_status'
+    all_value_keys.append(vac_spike_status)
+    values[vac_spike_status] = dummy_state
+
+    DC_spike_status = 'DC_spike_status'
+    all_value_keys.append(DC_spike_status)
+    values[DC_spike_status] = dummy_state
+
+    rev_power_spike_count = 'rev_power_spike_count'
+    all_value_keys.append(rev_power_spike_count)
+    values[rev_power_spike_count] = dummy_int
+
+    # THERE are N water temps that are defined at run time!!!
+    # THESE GET ADDED BY THE water_temperature_monitor
+
+    cav_temp_gui = 'cav_temp_gui'
+    water_temp_gui = 'water_temp_gui'
+    all_value_keys.append(water_temp_gui)
+    values[water_temp_gui] = dummy_float
+    all_value_keys.append(cav_temp_gui)
+    values[cav_temp_gui] = dummy_float
+
+    pulses_to_next_ramp = 'pulses_to_next_ramp'
+    all_value_keys.append(pulses_to_next_ramp)
+    values[pulses_to_next_ramp] = dummy_int
+
+
+    sol_value = 'sol_value'
+    all_value_keys.append(sol_value)
+    values[sol_value] = dummy_float
+
+    # Mean Values of Traces # TODO: CHANGE THIS NAMES TO MORE CANONICAL ONES
+    cav_temp = 'cav_temp'
+    all_value_keys.append(cav_temp)
+    values[cav_temp] = dummy_float
+
+    # Mean Values of Traces # TODO: CHANGE THIS NAMES TO MORE CANONICAL ONES
+    fwd_cav_pwr = 'fwd_cav_pwr'
+    all_value_keys.append(fwd_cav_pwr)
+    values[fwd_cav_pwr] = dummy_float
+
+    fwd_kly_pwr = 'fwd_kly_pwr'
+    all_value_keys.append(fwd_kly_pwr)
+    values[fwd_kly_pwr] = dummy_float
+
+    rev_kly_pwr = 'rev_kly_pwr'
+    all_value_keys.append(vac_spike_status)
+    values[rev_kly_pwr] = dummy_float
+
+    rev_cav_pwr = 'rev_cav_pwr'
+    all_value_keys.append(vac_spike_status)
+    values[rev_cav_pwr] = dummy_float
+
+    probe_pwr = 'probe_pwr'
+    all_value_keys.append(vac_spike_status)
+    values[probe_pwr] = dummy_float
+
+    fwd_cav_pha = 'fwd_cav_pha'
+    all_value_keys.append(vac_spike_status)
+    values[fwd_cav_pha] = dummy_float
+
+    fwd_kly_pha = 'fwd_kly_pha'
+    all_value_keys.append(vac_spike_status)
+    values[fwd_kly_pha] = dummy_float
+
+    rev_kly_pha = 'rev_kly_pha'
+    all_value_keys.append(vac_spike_status)
+    values[rev_kly_pha] = dummy_float
+
+    rev_cav_pha = 'rev_cav_pha'
+    all_value_keys.append(vac_spike_status)
+    values[rev_cav_pha] = dummy_float
+
+    probe_pha = 'probe_pha'
+    all_value_keys.append(vac_spike_status)
+    values[probe_pha] = dummy_float
+
+    vac_level = 'vac_level'
+    all_value_keys.append(vac_level)
+    values[vac_level] = dummy_float
+
+    DC_level = 'DC_level'
+    all_value_keys.append(DC_level)
+    values[DC_level] = dummy_float
+
+    vac_valve_status = 'vac_valve_status'
+    all_value_keys.append(vac_valve_status)
+    values[vac_valve_status] = state.UNKNOWN
+
+    num_outside_mask_traces = 'num_outside_mask_traces'
+    all_value_keys.append(num_outside_mask_traces)
+    values[num_outside_mask_traces] = dummy_int
+
+    probe_outside_mask_count = 'probe_outside_mask_count'
+    all_value_keys.append(probe_outside_mask_count)
+    values[probe_outside_mask_count] = dummy_int
+
+    forward_outside_mask_count = 'probe_outside_mask_count'
+    all_value_keys.append(forward_outside_mask_count)
+    values[forward_outside_mask_count] = dummy_int
+
+    reverse_outside_mask_count = 'reverse_outside_mask_count'
+    all_value_keys.append(reverse_outside_mask_count)
+    values[reverse_outside_mask_count] = dummy_int
+
+    breakdown_status = 'breakdown_status'
+    all_value_keys.append(breakdown_status)
+    values[breakdown_status] = dummy_int
+
+    breakdown_rate_aim = 'breakdown_rate_aim'
+    all_value_keys.append(breakdown_rate_aim)
+    values[breakdown_rate_aim] = dummy_int
+
+    # these are values from the pulse_breakdown_log
+    log_pulse_count = 'log_pulse_count'
+    all_value_keys.append(log_pulse_count)
+    values[log_pulse_count] = dummy_int
+    #log_breakdown_count = 'log_breakdown_count'
+    log_amp_set = 'log_amp_set'
+    all_value_keys.append(log_amp_set)
+    values[log_amp_set] = dummy_int
+
+    current_ramp_index = 'current_ramp_index'
+    all_value_keys.append(current_ramp_index)
+    values[current_ramp_index] = dummy_int
+
+    breakdown_count = 'breakdown_count'
+    all_value_keys.append(breakdown_count)
+    values[breakdown_count] = state.UNKNOWN
+
+    elapsed_time = 'elapsed_time'
+    all_value_keys.append(elapsed_time)
+    values[elapsed_time] = state.UNKNOWN
+
+    breakdown_rate = 'breakdown_rate'
+    all_value_keys.append(breakdown_rate)
+    values[breakdown_rate] = state.UNKNOWN
+
+    breakdown_rate_hi= 'breakdown_rate_hi'
+    all_value_keys.append(breakdown_rate_hi)
+    values[breakdown_rate_hi] = state.UNKNOWN
+
+    last_106_bd_count='last_106_bd_count'
+    all_value_keys.append(last_106_bd_count)
+    values[last_106_bd_count] = dummy_int
+
+    pulse_count = 'pulse_count'
+    all_value_keys.append(pulse_count)
+    values[pulse_count] = dummy_int
+
+    event_pulse_count = 'event_pulse_count'
+    all_value_keys.append(event_pulse_count)
+    values[event_pulse_count] = dummy_int
+
+    duplicate_pulse_count = 'duplicate_pulse_count'
+    all_value_keys.append(duplicate_pulse_count)
+    values[duplicate_pulse_count] = dummy_int
+
+    # Hold RF ON handle scontrolling these, we just monitor
+    rfprot_state = 'rfprot_state'
+    all_value_keys.append(rfprot_state)
+    values[rfprot_state] = state.UNKNOWN
+
+    modulator_state = 'modulator_state'
+    all_value_keys.append(modulator_state)
+    values[modulator_state] = state.UNKNOWN
+
+    mod_output_status = 'mod_output_status'
+    all_value_keys.append(mod_output_status)
+    values[mod_output_status] = state.UNKNOWN
+
+    can_rf_output_OLD = 'can_rf_output_OLD'
+    all_value_keys.append(can_rf_output_OLD)
+    values[can_rf_output_OLD] = state.UNKNOWN
+
+    can_rf_output = 'can_rf_output'
+    all_value_keys.append(can_rf_output)
+    values[can_rf_output] = state.UNKNOWN
+
+    # This i sthe "general interloac" and should be re-named to reflect this
+    llrf_interlock = 'llrf_interlock' # The read value from EPICS
+    all_value_keys.append(llrf_interlock)
+    values[llrf_interlock] = state.UNKNOWN
+
+    llrf_interlock_status = 'llrf_interlock_status' # the apps internal state, good, new_bad etc
+    all_value_keys.append(llrf_interlock_status)
+    values[llrf_interlock_status] = state.UNKNOWN
+
+    # the state of the "Trace interlocks" these are where you can specify a power that disables LLRF
+    llrf_trace_interlock = 'llrf_trace_interlock' # The read value from EPICS
+    all_value_keys.append(llrf_trace_interlock)
+    values[llrf_trace_interlock] = state.UNKNOWN
+
+
+    llrf_trigger = 'llrf_trigger'
+    all_value_keys.append(llrf_trigger)
+    values[llrf_trigger] = state.UNKNOWN
+
+    llrf_trigger_status = 'llrf_trigger_status'
+    all_value_keys.append(llrf_trigger_status)
+    values[llrf_trigger_status] = state.UNKNOWN
+
+    pulse_length = 'pulse_length'
+    all_value_keys.append(pulse_length)
+    values[pulse_length] = dummy_float
+
+    pulse_length_error = 'pulse_length_error'
+    all_value_keys.append(pulse_length_error)
+    values[pulse_length_error] = dummy_float
+
+    pulse_length_status = 'pulse_length_status' # the apps internal state, good, new_bad etc
+    all_value_keys.append(pulse_length_status)
+    values[pulse_length_status] = state.UNKNOWN
+
+    llrf_output = 'llrf_output' # RF Output on LLRF panel
+    all_value_keys.append(llrf_output)
+    values[llrf_output] = state.UNKNOWN
+
+    llrf_output_status = 'llrf_output_status' # the apps internal state, good, new_bad etc
+    all_value_keys.append(llrf_output_status)
+    values[llrf_output_status] = state.UNKNOWN
+
+    llrf_ff_amp_locked = 'llrf_ff_amp_locked'
+    all_value_keys.append(llrf_ff_amp_locked)
+    values[llrf_ff_amp_locked] = state.UNKNOWN
+
+    llrf_ff_amp_locked_status = 'llrf_ff_amp_locked_status' # the apps internal state, good, new_bad etc
+    all_value_keys.append(llrf_ff_amp_locked_status)
+    values[llrf_ff_amp_locked_status] = state.UNKNOWN
+
+    llrf_ff_ph_locked  = 'llrf_ff_ph_locked'
+    all_value_keys.append(llrf_ff_ph_locked)
+    values[llrf_ff_ph_locked] = state.UNKNOWN
+
+    llrf_ff_ph_locked_status  = 'llrf_ff_ph_locked_status' # the apps internal state, good, new_bad etc
+    all_value_keys.append(llrf_ff_ph_locked_status)
+    values[llrf_ff_ph_locked_status] = state.UNKNOWN
+
+    llrf_DAQ_rep_rate = 'llrf_DAQ_rep_rate'
+    all_value_keys.append(llrf_DAQ_rep_rate)
+    values[llrf_DAQ_rep_rate] = dummy_float
+
+    llrf_DAQ_rep_rate_aim = 'llrf_DAQ_rep_rate_aim'
+    all_value_keys.append(llrf_DAQ_rep_rate_aim)
+    values[llrf_DAQ_rep_rate_aim] = dummy_float
+
+    llrf_DAQ_rep_rate_status = 'llrf_DAQ_rep_rate_status'
+    all_value_keys.append(llrf_DAQ_rep_rate_status)
+    values[llrf_DAQ_rep_rate_status] = state.UNKNOWN
+
+    llrf_DAQ_rep_rate_status_previous = 'llrf_DAQ_rep_rate_status_previous'
+    all_value_keys.append(llrf_DAQ_rep_rate_status_previous)
+    values[llrf_DAQ_rep_rate_status_previous] = state.UNKNOWN
+
+    llrf_DAQ_rep_rate_max = 'llrf_DAQ_rep_rate_max'
+    all_value_keys.append(llrf_DAQ_rep_rate_max)
+    values[llrf_DAQ_rep_rate_max] = state.UNKNOWN
+
+    llrf_DAQ_rep_rate_min = 'llrf_DAQ_rep_rate_min'
+    all_value_keys.append(llrf_DAQ_rep_rate_min)
+    values[llrf_DAQ_rep_rate_min] = dummy_float
+
+    required_pulses = 'required_pulses'
+    all_value_keys.append(required_pulses)
+    values[required_pulses] = state.UNKNOWN
+
+    next_power_increase = 'next_power_increase'
+    all_value_keys.append(next_power_increase)
+    values[next_power_increase] = state.UNKNOWN
+
+    log_pulse_length = 'log_pulse_length'
+    all_value_keys.append(log_pulse_length)
+    values[log_pulse_length] = state.UNKNOWN
+
+    last_mean_power = 'last_mean_power'
+    all_value_keys.append(last_mean_power)
+    values[last_mean_power] = state.UNKNOWN
+
+    amp_ff = 'amp_ff'
+    all_value_keys.append(amp_ff)
+    values[amp_ff] = state.UNKNOWN
+
+    amp_sp = 'amp_sp'
+    all_value_keys.append(amp_sp)
+    values[amp_sp] = state.UNKNOWN
+
+    phi_sp = 'phi_sp'
+    all_value_keys.append(phi_sp)
+    values[phi_sp] = state.UNKNOWN
+
+    catap_max_amp = 'catap_max_amp'
+    all_value_keys.append(catap_max_amp)
+    values[catap_max_amp] = dummy_float
+
+    # We set a flag to tell us if we have reached the limit of CATAP "hardcoded" maxampSP value
+    catap_max_amp_can_ramp_status = 'catap_max_amp_can_ramp_status'
+    all_value_keys.append(catap_max_amp_can_ramp_status)
+    values[catap_max_amp_can_ramp_status] = True
+
+    TOR_ACQM = 'TOR_ACQM'
+    all_value_keys.append(TOR_ACQM)
+    values[TOR_ACQM] = state.UNKNOWN
+
+    TOR_SCAN = 'TOR_SCAN'
+    all_value_keys.append(TOR_SCAN)
+    values[TOR_SCAN] = state.UNKNOWN
+
+    #
+    # plot straight line fit values, old and current
+    x_min = 'x_min'
+    all_value_keys.append(x_min)
+    values[x_min] = dummy_float
+
+    x_max = 'x_max'
+    all_value_keys.append(x_max)
+    values[x_max] = dummy_float
+
+    old_x_min = 'old_x_min'
+    all_value_keys.append(old_x_min)
+    values[old_x_min] = dummy_float
+
+    old_x_max = 'old_x_max'
+    all_value_keys.append(old_x_max)
+    values[old_x_max] = dummy_float
+
+    y_min = 'y_min'
+    all_value_keys.append(y_min)
+    values[y_min] = dummy_float
+
+    y_max = 'y_max'
+    all_value_keys.append(y_max)
+    values[y_max] = dummy_float
+
+    old_y_min = 'old_y_min'
+    all_value_keys.append(old_y_min)
+    values[old_y_min] = dummy_float
+
+    old_y_max = 'old_y_max'
+    all_value_keys.append(old_y_max)
+    values[old_y_max] = dummy_float
+
+    c = 'c'
+    all_value_keys.append(c)
+    values[c] = dummy_float
+
+    m = 'm'
+    all_value_keys.append(m)
+    values[m] = dummy_float
+
+    old_c = 'old_c'
+    all_value_keys.append(old_c)
+    values[old_c] = dummy_float
+
+    old_m = 'old_m'
+    all_value_keys.append(old_m)
+    values[old_m] = dummy_float
+
+
+    #latest_ramp_up_sp = 'latest_ramp_up_sp'
+    last_sp_above_100 = 'last_sp_above_100'
+    all_value_keys.append(last_sp_above_100)
+    values[last_sp_above_100] = dummy_float
+
+    max_sp_increase = 'max_sp_increase'
+    all_value_keys.append(max_sp_increase)
+    values[max_sp_increase] = dummy_float
+
+    next_sp_decrease = 'next_sp_decrease'
+    all_value_keys.append(next_sp_decrease)
+    values[next_sp_decrease] = dummy_float
+
+
+
+    vac_level_can_ramp = 'vac_level_can_ramp' # Flag which is T if we can ramp and f if we cna't base don current vac level
+    all_value_keys.append(vac_level_can_ramp )
+    values[vac_level_can_ramp ] = False
+
+
+
+
+    # we know there will be some LLRF involved
+    #llrf_type = LLRF_TYPE.UNKNOWN_TYPE
+
+    # config
+    # for logging
+    log_param = None
+    path = None
+    time = None
+    log_start = None
+    should_write_header = True
+
+    kly_fwd_power_history = []
+    amp_sp_history = []
+    sp_pwr_hist = []
+    # fitting parameters
+    previous_power = 0
+
+
+
+
+
+
+
+
+    #latest_ramp_up_sp = 0
+
+
+    # values = {}  # EXPLAIN THIS
+    #
+    # [values.update({x: 0}) for x in all_value_keys]
+
+    #
+    # values[vac_valve_status] = VALVE_STATE.VALVE_ERROR
+    # #values[rev_power_spike_count] = STATE.UNKNOWN
+    #
+    # values[modulator_state] = GUN_MOD_STATE.UNKNOWN_STATE
+    # values[rfprot_state] = RF_PROT_STATUS.UNKNOWN
+    #
+    # values[vac_spike_status] = state.UNKNOWN
+    # values[DC_spike_status] = state.UNKNOWN
+    # values[breakdown_status] = state.UNKNOWN
+    # values[llrf_output_status] = state.UNKNOWN
+    # values[llrf_trigger_status] = state.UNKNOWN
+    # values[llrf_interlock_status] = state.UNKNOWN
+    # values[llrf_ff_amp_locked] = state.UNKNOWN
+    # values[llrf_ff_ph_locked] = state.UNKNOWN
+    # values[can_rf_output_OLD] = state.UNKNOWN
+
+#sss
+    #
+    # values[last_sp_above_100] = 0
+    # #values[latest_ramp_up_sp] = 0
+    #
+    # values[vac_level_can_ramp] = state.GOOD
+
+    # dummy_float = -999.0
+    # dummy_int = -999.0
+    # dummy_bool = -999.0
+
+
+
+
+    #
+    #
+    # values[pulse_length] = dummy_float + 2
+    # values[rev_kly_pwr] = dummy_float + 5
+    # values[rev_cav_pwr] = dummy_float + 6
+    # values[probe_pwr] = dummy_float + 7
+    # values[vac_level] = dummy_float
+    # values[breakdown_rate_aim] = dummy_int
+    # values[breakdown_rate_hi] = dummy_bool
+    #
+    #
+    # values[breakdown_rate] = dummy_int+ 11
+    # values[breakdown_count] = dummy_int +2
+    # values[pulse_count] = dummy_int + 13
+    # values[event_pulse_count] = dummy_int +14
+    # values[duplicate_pulse_count] = dummy_int +14
+    # values[elapsed_time] = dummy_int + 15
+    # values[DC_level] = dummy_float + 16
+    # values[rev_power_spike_count] = dummy_int
+    # values[next_power_increase] = -1
+    # values[phase_mask_by_power_trace_1_set] = False
+    # values[phase_mask_by_power_trace_2_set] = False
+    # values[phase_end_mask_by_power_trace_1_time] = -1.0
+    # values[phase_end_mask_by_power_trace_2_time] = -1.0
+    #
+    #
+    #
+    #
+    # values[old_x_min] = dummy_float
+    # values[old_y_min] = dummy_float
+    # values[old_x_max] = dummy_float
+    # values[old_y_max] = dummy_float
+    # values[old_m] = dummy_float
+    # values[old_c] = dummy_float
+    # values[x_min] = dummy_float
+    # values[x_max] = dummy_float
+    # values[y_min] = dummy_float
+    # values[x_max] = dummy_float
+    # values[m] = dummy_float
+    # values[c] = dummy_float
+    #
+    # amp_pwr_mean_data = {} # EXPLAIN THIS
+    # amp_vs_kfpow_running_stat = {} # EXPLAIN THIS
+    #
+    # #logger
+    # logger = None
+    # _llrf_config = None
+    # _log_config = None
+    #
+    # last_fwd_kly_pwr = None
+    # last_amp = None
+    #
+    # #THERE ARE 2 COPIES OF THE last_million_log , FIX THIS !!!!!!!!!!!
+    # last_million_log = None
+
+
+    '''Expert Values '''
+
+    expert_value_keys = []
+    expert_values = {}
+
+    vac_pv_val = "vac_pv_val"
+    expert_value_keys.append(vac_pv_val)
+    expert_values[vac_pv_val] = "STRING"
+
+    vac_decay_mode_val                   = "vac_decay_mode_val"
+    expert_value_keys.append(vac_decay_mode_val)
+    expert_values[vac_decay_mode_val] = "STRING"
+
+    vac_decay_level                      = "vac_decay_level"
+    expert_value_keys.append(vac_decay_level)
+    expert_values[vac_decay_level] = dummy_float
+
+    vac_decay_time_val                   = "vac_decay_time_val"
+    expert_value_keys.append(vac_decay_time_val)
+    expert_values[vac_decay_time_val] = dummy_int
+
+    vac_drop_amp                         = "vac_drop_amp"
+    expert_value_keys.append(vac_drop_amp)
+    expert_values[vac_drop_amp] = dummy_int
+
+    vac_hi_pressure                      = "vac_hi_pressure"
+    expert_value_keys.append(vac_hi_pressure)
+    expert_values[vac_hi_pressure] = dummy_float
+
+    vac_spike_delta_val                  = "vac_spike_delta_val"
+    expert_value_keys.append(vac_spike_delta_val)
+    expert_values[vac_spike_delta_val] = dummy_float
+
+    vac_num_samples_to_average_val       = "vac_num_samples_to_average_val"
+    expert_value_keys.append(vac_num_samples_to_average_val)
+    expert_values[vac_num_samples_to_average_val] = "STRING"
+
+    vac_drop_amp_val                     = "vac_drop_amp_val"
+    expert_value_keys.append(vac_drop_amp_val)
+    expert_values[vac_drop_amp_val] = "STRING"
+
+    ramp_when_hi                         = "ramp_when_hi"
+    expert_value_keys.append(ramp_when_hi)
+    expert_values[ramp_when_hi] = "STRING"
+
+    vac_decay_mode                       = "vac_decay_mode"
+    expert_value_keys.append(vac_decay_mode)
+    expert_values[vac_decay_mode] = "STRING"
+
+    vac_decay_level_val                  = "vac_decay_level_val"
+    expert_value_keys.append(vac_decay_level_val)
+    expert_values[vac_decay_level_val] = "STRING"
+
+    vac_hi_pressure_val                  = "vac_hi_pressure_val"
+    expert_value_keys.append(vac_hi_pressure_val)
+    expert_values[vac_hi_pressure_val] = "STRING"
+
+    ramp_when_hi_val                     = "ramp_when_hi_val"
+    expert_value_keys.append(ramp_when_hi_val)
+    expert_values[ramp_when_hi_val] = "STRING"
+
+    vac_spike_check_time_val             = "vac_spike_check_time_val"
+    expert_value_keys.append(vac_spike_check_time_val)
+    expert_values[vac_spike_check_time_val] = "STRING"
+
+    vac_spike_check_time                 = "vac_spike_check_time"
+    expert_value_keys.append(vac_spike_check_time)
+    expert_values[vac_spike_check_time] = "STRING"
+
+    is_breakdown_monitor_kf_pow          = "is_breakdown_monitor_kf_pow"
+    expert_value_keys.append(is_breakdown_monitor_kf_pow)
+    expert_values[is_breakdown_monitor_kf_pow] = False
+
+    is_breakdown_monitor_kr_pow          = "is_breakdown_monitor_kr_pow"
+    expert_value_keys.append(is_breakdown_monitor_kr_pow)
+    expert_values[is_breakdown_monitor_kr_pow] = False
+
+    is_breakdown_monitor_cf_pow          = "is_breakdown_monitor_cf_pow"
+    expert_value_keys.append(is_breakdown_monitor_cf_pow)
+    expert_values[is_breakdown_monitor_cf_pow] = False
+
+    is_breakdown_monitor_cr_pow          = "is_breakdown_monitor_cr_pow"
+    expert_value_keys.append(is_breakdown_monitor_cr_pow)
+    expert_values[is_breakdown_monitor_cr_pow] = False
+
+    is_breakdown_monitor_cp_pow          = "is_breakdown_monitor_cp_pow"
+    expert_value_keys.append(is_breakdown_monitor_cp_pow)
+    expert_values[is_breakdown_monitor_cp_pow] = False
+
+    is_breakdown_monitor_kf_pha          = "is_breakdown_monitor_kf_pha"
+    expert_value_keys.append(is_breakdown_monitor_kf_pha)
+    expert_values[is_breakdown_monitor_kf_pha] = False
+
+    is_breakdown_monitor_kr_pha          = "is_breakdown_monitor_kr_pha"
+    expert_value_keys.append(is_breakdown_monitor_kr_pha)
+    expert_values[is_breakdown_monitor_kr_pha] = False
+
+    is_breakdown_monitor_cf_pha          = "is_breakdown_monitor_cf_pha"
+    expert_value_keys.append(is_breakdown_monitor_cf_pha)
+    expert_values[is_breakdown_monitor_cf_pha] = False
+
+    is_breakdown_monitor_cr_pha          = "is_breakdown_monitor_cr_pha"
+    expert_value_keys.append(is_breakdown_monitor_cr_pha)
+    expert_values[is_breakdown_monitor_cr_pha] = False
+
+    is_breakdown_monitor_cp_pha          = "is_breakdown_monitor_cp_pha"
+    expert_value_keys.append(is_breakdown_monitor_cp_pha)
+    expert_values[is_breakdown_monitor_cp_pha] = False
+
+    mean_start_kf_pow                    = "mean_start_kf_pow"
+    expert_value_keys.append(mean_start_kf_pow)
+    expert_values[mean_start_kf_pow] = "STRING"
+
+    mean_start_kr_pow                    = "mean_start_kr_pow"
+    expert_value_keys.append(mean_start_kr_pow)
+    expert_values[mean_start_kr_pow] = "STRING"
+
+    mean_start_cf_pow                    = "mean_start_cf_pow"
+    expert_value_keys.append(mean_start_cf_pow)
+    expert_values[mean_start_cf_pow] = "STRING"
+
+    mean_start_cr_pow                    = "mean_start_cr_pow"
+    expert_value_keys.append(mean_start_cr_pow)
+    expert_values[mean_start_cr_pow] = "STRING"
+
+    mean_start_cp_pow                    = "mean_start_cp_pow"
+    expert_value_keys.append(mean_start_cp_pow)
+    expert_values[mean_start_cp_pow] = "STRING"
+
+    mean_start_kf_pha                    = "mean_start_kf_pha"
+    expert_value_keys.append(mean_start_kf_pha)
+    expert_values[mean_start_kf_pha] = "STRING"
+
+    mean_start_kr_pha                    = "mean_start_kr_pha"
+    expert_value_keys.append(vac_pv_val)
+    expert_values[vac_pv_val] = "STRING"
+
+    mean_start_cf_pha                    = "mean_start_cf_pha"
+    expert_value_keys.append(mean_start_cf_pha)
+    expert_values[mean_start_cf_pha] = "STRING"
+
+    mean_start_cr_pha                    = "mean_start_cr_pha"
+    expert_value_keys.append(mean_start_cr_pha)
+    expert_values[mean_start_cr_pha] = "STRING"
+
+    mean_start_cp_pha                    = "mean_start_cp_pha"
+    expert_value_keys.append(mean_start_cp_pha)
+    expert_values[mean_start_cp_pha] = "STRING"
+
+    mean_end_kf_pow                      = "mean_end_kf_pow"
+    expert_value_keys.append(mean_end_kf_pow)
+    expert_values[mean_end_kf_pow] = "STRING"
+
+    mean_end_kr_pow                      = "mean_end_kr_pow"
+    expert_value_keys.append(mean_end_kr_pow)
+    expert_values[mean_end_kr_pow] = "STRING"
+
+    mean_end_cf_pow                      = "mean_end_cf_pow"
+    expert_value_keys.append(mean_end_cf_pow)
+    expert_values[mean_end_cf_pow] = "STRING"
+
+    mean_end_cr_pow                      = "mean_end_cr_pow"
+    expert_value_keys.append(mean_end_cr_pow)
+    expert_values[mean_end_cr_pow] = "STRING"
+
+    mean_end_cp_pow                      = "mean_end_cp_pow"
+    expert_value_keys.append(mean_end_cp_pow)
+    expert_values[mean_end_cp_pow] = "STRING"
+
+    mean_end_kf_pha                      = "mean_end_kf_pha"
+    expert_value_keys.append(mean_end_kf_pha)
+    expert_values[mean_end_kf_pha] = "STRING"
+
+    mean_end_kr_pha                      = "mean_end_kr_pha"
+    expert_value_keys.append(mean_end_kr_pha)
+    expert_values[mean_end_kr_pha] = "STRING"
+
+    expert_value_keys.append(vac_pv_val)
+    expert_values[vac_pv_val] = "STRING"
+
+    mean_end_cf_pha                      = "mean_end_cf_pha"
+    expert_value_keys.append(mean_end_cf_pha)
+    expert_values[mean_end_cf_pha] = "STRING"
+
+    mean_end_cr_pha                      = "mean_end_cr_pha"
+    expert_value_keys.append(mean_end_cr_pha)
+    expert_values[mean_end_cr_pha] = "STRING"
+
+    mean_end_cp_pha                      = "mean_end_cp_pha"
+    expert_value_keys.append(mean_end_cp_pha)
+    expert_values[mean_end_cp_pha] = "STRING"
+
+    mask_unit_kf_pow                     = "mask_unit_kf_pow"
+    expert_value_keys.append(mask_unit_kf_pow)
+    expert_values[mask_unit_kf_pow] = "STRING"
+
+    mask_unit_kr_pow                     = "mask_unit_kr_pow"
+    expert_value_keys.append(mask_unit_kr_pow)
+    expert_values[mask_unit_kr_pow] = "STRING"
+
+    mask_unit_cf_pow                     = "mask_unit_cf_pow"
+    expert_value_keys.append(mask_unit_cf_pow)
+    expert_values[mask_unit_cf_pow] = "STRING"
+
+    mask_unit_cr_pow                     = "mask_unit_cr_pow"
+    expert_value_keys.append(mask_unit_cr_pow)
+    expert_values[mask_unit_cr_pow] = "STRING"
+
+    mask_unit_cp_pow                     = "mask_unit_cp_pow"
+    expert_value_keys.append(mask_unit_cp_pow)
+    expert_values[mask_unit_cp_pow] = "STRING"
+
+    mask_unit_kf_pha                     = "mask_unit_kf_pha"
+    expert_value_keys.append(mask_unit_kf_pha)
+    expert_values[mask_unit_kf_pha] = "STRING"
+
+    mask_unit_kr_pha                     = "mask_unit_kr_pha"
+    expert_value_keys.append(mask_unit_kr_pha)
+    expert_values[mask_unit_kr_pha] = "STRING"
+
+    mask_unit_cf_pha                     = "mask_unit_cf_pha"
+    expert_value_keys.append(mask_unit_cf_pha)
+    expert_values[mask_unit_cf_pha] = "STRING"
+
+    mask_unit_cr_pha                     = "mask_unit_cr_pha"
+    expert_value_keys.append(mask_unit_cr_pha)
+    expert_values[mask_unit_cr_pha] = "STRING"
+
+    mask_unit_cp_pha                     = "mask_unit_cp_pha"
+    expert_value_keys.append(mask_unit_cp_pha)
+    expert_values[mask_unit_cp_pha] = "STRING"
+
+    mask_start_kf_pow                    = "mask_start_kf_pow"
+    expert_value_keys.append(mask_start_kf_pow)
+    expert_values[mask_start_kf_pow] = "STRING"
+
+    mask_start_kr_pow                    = "mask_start_kr_pow"
+    expert_value_keys.append(mask_start_kr_pow)
+    expert_values[mask_start_kr_pow] = "STRING"
+
+    mask_start_cf_pow                    = "mask_start_cf_pow"
+    expert_value_keys.append(mask_start_cf_pow)
+    expert_values[mask_start_cf_pow] = "STRING"
+
+    mask_start_cr_pow                    = "mask_start_cr_pow"
+    expert_value_keys.append(mask_start_cr_pow)
+    expert_values[mask_start_cr_pow] = "STRING"
+
+    mask_start_cp_pow                    = "mask_start_cp_pow"
+    expert_value_keys.append(mask_start_cp_pow)
+    expert_values[mask_start_cp_pow] = "STRING"
+
+    mask_start_kf_pha                    = "mask_start_kf_pha"
+    expert_value_keys.append(mask_start_kf_pha)
+    expert_values[mask_start_kf_pha] = "STRING"
+
+    mask_start_kr_pha                    = "mask_start_kr_pha"
+    expert_value_keys.append(mask_start_kr_pha)
+    expert_values[mask_start_kr_pha] = "STRING"
+
+    mask_start_cf_pha                    = "mask_start_cf_pha"
+    expert_value_keys.append(mask_start_cf_pha)
+    expert_values[mask_start_cf_pha] = "STRING"
+
+    mask_start_cr_pha                    = "mask_start_cr_pha"
+    expert_value_keys.append(mask_start_cr_pha)
+    expert_values[mask_start_cr_pha] = "STRING"
+
+    mask_start_cp_pha                    = "mask_start_cp_pha"
+    expert_value_keys.append(mask_start_cp_pha)
+    expert_values[mask_start_cp_pha] = "STRING"
+
+    mask_end_kf_pow                      = "mask_end_kf_pow"
+    expert_value_keys.append(mask_end_kf_pow)
+    expert_values[mask_end_kf_pow] = "STRING"
+
+    mask_end_kr_pow                      = "mask_end_kr_pow"
+    expert_value_keys.append(mask_end_kr_pow)
+    expert_values[mask_end_kr_pow] = "STRING"
+
+    mask_end_cf_pow                      = "mask_end_cf_pow"
+    expert_value_keys.append(mask_end_cf_pow)
+    expert_values[mask_end_cf_pow] = "STRING"
+
+    mask_end_cr_pow                      = "mask_end_cr_pow"
+    expert_value_keys.append(mask_end_cr_pow)
+    expert_values[mask_end_cr_pow] = "STRING"
+
+    mask_end_cp_pow                      = "mask_end_cp_pow"
+    expert_value_keys.append(mask_end_cp_pow)
+    expert_values[mask_end_cp_pow] = "STRING"
+
+    mask_end_kf_pha                      = "mask_end_kf_pha"
+    expert_value_keys.append(mask_end_kf_pha)
+    expert_values[mask_end_kf_pha] = "STRING"
+
+    mask_end_kr_pha                      = "mask_end_kr_pha"
+    expert_value_keys.append(mask_end_kr_pha)
+    expert_values[mask_end_kr_pha] = "STRING"
+
+    mask_end_cf_pha                      = "mask_end_cf_pha"
+    expert_value_keys.append(mask_end_cf_pha)
+    expert_values[mask_end_cf_pha] = "STRING"
+
+    mask_end_cr_pha                      = "mask_end_cr_pha"
+    expert_value_keys.append(mask_end_cr_pha)
+    expert_values[mask_end_cr_pha] = "STRING"
+
+    mask_end_cp_pha                      = "mask_end_cp_pha"
+    expert_value_keys.append(mask_end_cp_pha)
+    expert_values[mask_end_cp_pha] = "STRING"
+
+    mask_window_start_kf_pow             = "mask_window_start_kf_pow"
+    expert_value_keys.append(mask_window_start_kf_pow)
+    expert_values[mask_window_start_kf_pow] = "STRING"
+
+    mask_window_start_kr_pow             = "mask_window_start_kr_pow"
+    expert_value_keys.append(mask_window_start_kr_pow)
+    expert_values[mask_window_start_kr_pow] = "STRING"
+
+    mask_window_start_cf_pow             = "mask_window_start_cf_pow"
+    expert_value_keys.append(mask_window_start_cf_pow)
+    expert_values[mask_window_start_cf_pow] = "STRING"
+
+    mask_window_start_cr_pow             = "mask_window_start_cr_pow"
+    expert_value_keys.append(mask_window_start_cr_pow)
+    expert_values[mask_window_start_cr_pow] = "STRING"
+
+    mask_window_start_cp_pow             = "mask_window_start_cp_pow"
+    expert_value_keys.append(mask_window_start_cp_pow)
+    expert_values[mask_window_start_cp_pow] = "STRING"
+
+    mask_window_start_kf_pha             = "mask_window_start_kf_pha"
+    expert_value_keys.append(mask_window_start_kf_pha)
+    expert_values[mask_window_start_kf_pha] = "STRING"
+
+    mask_window_start_kr_pha             = "mask_window_start_kr_pha"
+    expert_value_keys.append(mask_window_start_kr_pha)
+    expert_values[mask_window_start_kr_pha] = "STRING"
+
+    mask_window_start_cf_pha             = "mask_window_start_cf_pha"
+    expert_value_keys.append(mask_window_start_cf_pha)
+    expert_values[mask_window_start_cf_pha] = "STRING"
+
+    mask_window_start_cr_pha             = "mask_window_start_cr_pha"
+    expert_value_keys.append(mask_window_start_cr_pha)
+    expert_values[mask_window_start_cr_pha] = "STRING"
+
+    mask_window_start_cp_pha             = "mask_window_start_cp_pha"
+    expert_value_keys.append(mask_window_start_cp_pha)
+    expert_values[mask_window_start_cp_pha] = "STRING"
+
+    mask_window_end_kf_pow               = "mask_window_end_kf_pow"
+    expert_value_keys.append(mask_window_end_kf_pow)
+    expert_values[mask_window_end_kf_pow] = "STRING"
+
+    mask_window_end_kr_pow               = "mask_window_end_kr_pow"
+    expert_value_keys.append(mask_window_end_kr_pow)
+    expert_values[mask_window_end_kr_pow] = "STRING"
+
+    mask_window_end_cf_pow               = "mask_window_end_cf_pow"
+    expert_value_keys.append(mask_window_end_cf_pow)
+    expert_values[mask_window_end_cf_pow] = "STRING"
+
+    mask_window_end_cr_pow               = "mask_window_end_cr_pow"
+    expert_value_keys.append(mask_window_end_cr_pow)
+    expert_values[mask_window_end_cr_pow] = "STRING"
+
+    mask_window_end_cp_pow               = "mask_window_end_cp_pow"
+    expert_value_keys.append(mask_window_end_cp_pow)
+    expert_values[mask_window_end_cp_pow] = "STRING"
+
+    mask_window_end_kf_pha               = "mask_window_end_kf_pha"
+    expert_value_keys.append(mask_window_end_kf_pha)
+    expert_values[mask_window_end_kf_pha] = "STRING"
+
+    mask_window_end_kr_pha               = "mask_window_end_kr_pha"
+    expert_value_keys.append(mask_window_end_kr_pha)
+    expert_values[mask_window_end_kr_pha] = "STRING"
+
+    mask_window_end_cf_pha               = "mask_window_end_cf_pha"
+    expert_value_keys.append(mask_window_end_cf_pha)
+    expert_values[mask_window_end_cf_pha] = "STRING"
+
+    mask_window_end_cr_pha               = "mask_window_end_cr_pha"
+    expert_value_keys.append(mask_window_end_cr_pha)
+    expert_values[mask_window_end_cr_pha] = "STRING"
+
+    mask_window_end_cp_pha               = "mask_window_end_cp_pha"
+    expert_value_keys.append(vac_pv_val)
+    expert_values[vac_pv_val] = "STRING"
+
+    mask_min_kf_pow                      = "mask_min_kf_pow"
+    expert_value_keys.append(mask_min_kf_pow)
+    expert_values[mask_min_kf_pow] = "STRING"
+
+    mask_min_kr_pow                      = "mask_min_kr_pow"
+    expert_value_keys.append(mask_min_kr_pow)
+    expert_values[mask_min_kr_pow] = "STRING"
+
+    mask_min_cf_pow                      = "mask_min_cf_pow"
+    expert_value_keys.append(mask_min_cf_pow)
+    expert_values[mask_min_cf_pow] = "STRING"
+
+    mask_min_cr_pow                      = "mask_min_cr_pow"
+    expert_value_keys.append(mask_min_cr_pow)
+    expert_values[mask_min_cr_pow] = "STRING"
+
+    mask_min_cp_pow                      = "mask_min_cp_pow"
+    expert_value_keys.append(mask_min_cp_pow)
+    expert_values[mask_min_cp_pow] = "STRING"
+
+    mask_min_kf_pha                      = "mask_min_kf_pha"
+    expert_value_keys.append(mask_min_kf_pha)
+    expert_values[mask_min_kf_pha] = "STRING"
+
+    mask_min_kr_pha                      = "mask_min_kr_pha"
+    expert_value_keys.append(mask_min_kr_pha)
+    expert_values[mask_min_kr_pha] = "STRING"
+
+    mask_min_cf_pha                      = "mask_min_cf_pha"
+    expert_value_keys.append(mask_min_cf_pha)
+    expert_values[mask_min_cf_pha] = "STRING"
+
+    mask_min_cr_pha                      = "mask_min_cr_pha"
+    expert_value_keys.append(mask_min_cr_pha)
+    expert_values[mask_min_cr_pha] = "STRING"
+
+    mask_min_cp_pha                      = "mask_min_cp_pha"
+    expert_value_keys.append(mask_min_cp_pha)
+    expert_values[mask_min_cp_pha] = "STRING"
+
+    num_averages_kf_pow                  = "num_averages_kf_pow"
+    expert_value_keys.append(num_averages_kf_pow)
+    expert_values[num_averages_kf_pow] = "STRING"
+
+    num_averages_kr_pow                  = "num_averages_kr_pow"
+    expert_value_keys.append(num_averages_kr_pow)
+    expert_values[num_averages_kr_pow] = "STRING"
+
+    num_averages_cf_pow                  = "num_averages_cf_pow"
+    expert_value_keys.append(num_averages_cf_pow)
+    expert_values[num_averages_cf_pow] = "STRING"
+
+    num_averages_cr_pow                  = "num_averages_cr_pow"
+    expert_value_keys.append(num_averages_cr_pow)
+    expert_values[num_averages_cr_pow] = "STRING"
+
+    num_averages_cp_pow                  = "num_averages_cp_pow"
+    expert_value_keys.append(num_averages_cp_pow)
+    expert_values[num_averages_cp_pow] = "STRING"
+
+    num_averages_kf_pha                  = "num_averages_kf_pha"
+    expert_value_keys.append(num_averages_kf_pha)
+    expert_values[num_averages_kf_pha] = "STRING"
+
+    num_averages_kr_pha                  = "num_averages_kr_pha"
+    expert_value_keys.append(num_averages_kr_pha)
+    expert_values[num_averages_kr_pha] = "STRING"
+
+    num_averages_cf_pha                  = "num_averages_cf_pha"
+    expert_value_keys.append(num_averages_cf_pha)
+    expert_values[num_averages_cf_pha] = "STRING"
+
+    num_averages_cr_pha                  = "num_averages_cr_pha"
+    expert_value_keys.append(num_averages_cr_pha)
+    expert_values[num_averages_cr_pha] = "STRING"
+
+    num_averages_cp_pha                  = "num_averages_cp_pha"
+    expert_value_keys.append(num_averages_cp_pha)
+    expert_values[num_averages_cp_pha] = "STRING"
+
+    mask_auto_set_kf_pow                 = "mask_auto_set_kf_pow"
+    expert_value_keys.append(mask_auto_set_kf_pow)
+    expert_values[mask_auto_set_kf_pow] = "STRING"
+
+    mask_auto_set_kr_pow                 = "mask_auto_set_kr_pow"
+    expert_value_keys.append(mask_auto_set_kr_pow)
+    expert_values[mask_auto_set_kr_pow] = "STRING"
+
+    mask_auto_set_cf_pow                 = "mask_auto_set_cf_pow"
+    expert_value_keys.append(mask_auto_set_cf_pow)
+    expert_values[mask_auto_set_cf_pow] = "STRING"
+
+    mask_auto_set_cr_pow                 = "mask_auto_set_cr_pow"
+    expert_value_keys.append(mask_auto_set_cr_pow)
+    expert_values[mask_auto_set_cr_pow] = "STRING"
+
+    mask_auto_set_cp_pow                 = "mask_auto_set_cp_pow"
+    expert_value_keys.append(mask_auto_set_cp_pow)
+    expert_values[mask_auto_set_cp_pow] = "STRING"
+
+    mask_auto_set_kf_pha                 = "mask_auto_set_kf_pha"
+    expert_value_keys.append(mask_auto_set_kf_pha)
+    expert_values[mask_auto_set_kf_pha] = "STRING"
+
+    mask_auto_set_kr_pha                 = "mask_auto_set_kr_pha"
+    expert_value_keys.append(mask_auto_set_kr_pha)
+    expert_values[mask_auto_set_kr_pha] = "STRING"
+
+    mask_auto_set_cf_pha                 = "mask_auto_set_cf_pha"
+    expert_value_keys.append(mask_auto_set_cf_pha)
+    expert_values[mask_auto_set_cf_pha] = "STRING"
+
+    mask_auto_set_cr_pha                 = "mask_auto_set_cr_pha"
+    expert_value_keys.append(mask_auto_set_cr_pha)
+    expert_values[mask_auto_set_cr_pha] = "STRING"
+
+    mask_auto_set_cp_pha                 = "mask_auto_set_cp_pha"
+    expert_value_keys.append(mask_auto_set_cp_pha)
+    expert_values[mask_auto_set_cp_pha] = "STRING"
+
+    mask_type_kf_pow                     = "mask_type_kf_pow"
+    expert_value_keys.append(mask_type_kf_pow)
+    expert_values[mask_type_kf_pow] = "STRING"
+
+    mask_type_kr_pow                     = "mask_type_kr_pow"
+    expert_value_keys.append(mask_type_kr_pow)
+    expert_values[mask_type_kr_pow] = "STRING"
+
+    mask_type_cf_pow                     = "mask_type_cf_pow"
+    expert_value_keys.append(mask_type_cf_pow)
+    expert_values[mask_type_cf_pow] = "STRING"
+
+    mask_type_cr_pow                     = "mask_type_cr_pow"
+    expert_value_keys.append(mask_type_cr_pow)
+    expert_values[mask_type_cr_pow] = "STRING"
+
+    mask_type_cp_pow                     = "mask_type_cp_pow"
+    expert_value_keys.append(mask_type_cp_pow)
+    expert_values[mask_type_cp_pow] = "STRING"
+
+    mask_type_kf_pha                     = "mask_type_kf_pha"
+    expert_value_keys.append(mask_type_kf_pha)
+    expert_values[mask_type_kf_pha] = "STRING"
+
+    mask_type_kr_pha                     = "mask_type_kr_pha"
+    expert_value_keys.append(mask_type_kr_pha)
+    expert_values[mask_type_kr_pha] = "STRING"
+
+    mask_type_cf_pha                     = "mask_type_cf_pha"
+    expert_value_keys.append(mask_type_cf_pha)
+    expert_values[mask_type_cf_pha] = "STRING"
+
+    mask_type_cr_pha                     = "mask_type_cr_pha"
+    expert_value_keys.append(mask_type_cr_pha)
+    expert_values[mask_type_cr_pha] = "STRING"
+
+    mask_type_cp_pha                     = "mask_type_cp_pha"
+    expert_value_keys.append(mask_type_cp_pha)
+    expert_values[mask_type_cp_pha] = "STRING"
+
+    mask_level_kf_pow                    = "mask_level_kf_pow"
+    expert_value_keys.append(mask_level_kf_pow)
+    expert_values[mask_level_kf_pow] = "STRING"
+
+    mask_level_kr_pow                    = "mask_level_kr_pow"
+    expert_value_keys.append(mask_level_kr_pow)
+    expert_values[mask_level_kr_pow] = "STRING"
+
+    mask_level_cf_pow                    = "mask_level_cf_pow"
+    expert_value_keys.append(mask_level_cf_pow)
+    expert_values[mask_level_cf_pow] = "STRING"
+
+    mask_level_cr_pow                    = "mask_level_cr_pow"
+    expert_value_keys.append(mask_level_cr_pow)
+    expert_values[mask_level_cr_pow] = "STRING"
+
+    mask_level_cp_pow                    = "mask_level_cp_pow"
+    expert_value_keys.append(mask_level_cp_pow)
+    expert_values[mask_level_cp_pow] = "STRING"
+
+    mask_level_kf_pha                    = "mask_level_kf_pha"
+    expert_value_keys.append(mask_level_kf_pha)
+    expert_values[mask_level_kf_pha] = "STRING"
+
+    mask_level_kr_pha                    = "mask_level_kr_pha"
+    expert_value_keys.append(mask_level_kr_pha)
+    expert_values[mask_level_kr_pha] = "STRING"
+
+    mask_level_cf_pha                    = "mask_level_cf_pha"
+    expert_value_keys.append(mask_level_cf_pha)
+    expert_values[mask_level_cf_pha] = "STRING"
+
+    mask_level_cr_pha                    = "mask_level_cr_pha"
+    expert_value_keys.append(mask_level_cr_pha)
+    expert_values[mask_level_cr_pha] = "STRING"
+
+    mask_level_cp_pha                    = "mask_level_cp_pha"
+    expert_value_keys.append(mask_level_cp_pha)
+    expert_values[mask_level_cp_pha] = "STRING"
+
+    mask_end_by_power_kf_pow             = "mask_end_by_power_kf_pow"
+    expert_value_keys.append(mask_end_by_power_kf_pow)
+    expert_values[mask_end_by_power_kf_pow] = "STRING"
+
+    mask_end_by_power_kr_pow             = "mask_end_by_power_kr_pow"
+    expert_value_keys.append(mask_end_by_power_kr_pow)
+    expert_values[mask_end_by_power_kr_pow] = "STRING"
+
+    mask_end_by_power_cf_pow             = "mask_end_by_power_cf_pow"
+    expert_value_keys.append(mask_end_by_power_cf_pow)
+    expert_values[mask_end_by_power_cf_pow] = "STRING"
+
+    mask_end_by_power_cr_pow             = "mask_end_by_power_cr_pow"
+    expert_value_keys.append(mask_end_by_power_cr_pow)
+    expert_values[mask_end_by_power_cr_pow] = "STRING"
+
+    mask_end_by_power_cp_pow             = "mask_end_by_power_cp_pow"
+    expert_value_keys.append(mask_end_by_power_cp_pow)
+    expert_values[mask_end_by_power_cp_pow] = "STRING"
+
+    mask_end_by_power_kf_pha             = "mask_end_by_power_kf_pha"
+    expert_value_keys.append(mask_end_by_power_kf_pha)
+    expert_values[mask_end_by_power_kf_pha] = "STRING"
+
+    mask_end_by_power_kr_pha             = "mask_end_by_power_kr_pha"
+    expert_value_keys.append(mask_end_by_power_kr_pha)
+    expert_values[mask_end_by_power_kr_pha] = "STRING"
+
+    mask_end_by_power_cf_pha             = "mask_end_by_power_cf_pha"
+    expert_value_keys.append(mask_end_by_power_cf_pha)
+    expert_values[mask_end_by_power_cf_pha] = "STRING"
+
+    mask_end_by_power_cr_pha             = "mask_end_by_power_cr_pha"
+    expert_value_keys.append(mask_end_by_power_cr_pha)
+    expert_values[mask_end_by_power_cr_pha] = "STRING"
+
+    mask_end_by_power_cp_pha             = "mask_end_by_power_cp_pha"
+    expert_value_keys.append(mask_end_by_power_cp_pha)
+    expert_values[mask_end_by_power_cp_pha] = "STRING"
+
+    mask_end_power_kf_pow                = "mask_end_power_kf_pow"
+    expert_value_keys.append(mask_end_power_kf_pow)
+    expert_values[mask_end_power_kf_pow] = "STRING"
+
+    mask_end_power_kr_pow                = "mask_end_power_kr_pow"
+    expert_value_keys.append(mask_end_power_kr_pow)
+    expert_values[mask_end_power_kr_pow] = "STRING"
+
+    mask_end_power_cf_pow                = "mask_end_power_cf_pow"
+    expert_value_keys.append(mask_end_power_cf_pow)
+    expert_values[mask_end_power_cf_pow] = "STRING"
+
+
+    mask_end_power_cr_pow                = "mask_end_power_cr_pow"
+    expert_value_keys.append(mask_end_power_cr_pow)
+    expert_values[mask_end_power_cr_pow] = "STRING"
+
+
+    mask_end_power_cp_pow                = "mask_end_power_cp_pow"
+    expert_value_keys.append(mask_end_power_cp_pow)
+    expert_values[mask_end_power_cp_pow] = "STRING"
+
+    mask_end_power_kf_pha                = "mask_end_power_kf_pha"
+    expert_value_keys.append(mask_end_power_kf_pha)
+    expert_values[mask_end_power_kf_pha] = "STRING"
+
+    mask_end_power_kr_pha                = "mask_end_power_kr_pha"
+    expert_value_keys.append(mask_end_power_kr_pha)
+    expert_values[mask_end_power_kr_pha] = "STRING"
+
+    mask_end_power_cf_pha                = "mask_end_power_cf_pha"
+    expert_value_keys.append(mask_end_power_cf_pha)
+    expert_values[mask_end_power_cf_pha] = "STRING"
+
+    mask_end_power_cr_pha                = "mask_end_power_cr_pha"
+    expert_value_keys.append(mask_end_power_cr_pha)
+    expert_values[mask_end_power_cr_pha] = "STRING"
+
+    mask_end_power_cp_pha                = "mask_end_power_cp_pha"
+    expert_value_keys.append(mask_end_power_cp_pha)
+    expert_values[mask_end_power_cp_pha] = "STRING"
+
+    saved_on_breakdown_event_kf_pow      = "saved_on_breakdown_event_kf_pow"
+    expert_value_keys.append(saved_on_breakdown_event_kf_pow)
+    expert_values[saved_on_breakdown_event_kf_pow] = "STRING"
+
+    saved_on_breakdown_event_kr_pow      = "saved_on_breakdown_event_kr_pow"
+    expert_value_keys.append(saved_on_breakdown_event_kr_pow)
+    expert_values[saved_on_breakdown_event_kr_pow] = "STRING"
+
+    saved_on_breakdown_event_cf_pow      = "saved_on_breakdown_event_cf_pow"
+    expert_value_keys.append(saved_on_breakdown_event_cf_pow)
+    expert_values[saved_on_breakdown_event_cf_pow] = "STRING"
+
+    saved_on_breakdown_event_cr_pow      = "saved_on_breakdown_event_cr_pow"
+    expert_value_keys.append(saved_on_breakdown_event_cr_pow)
+    expert_values[saved_on_breakdown_event_cr_pow] = "STRING"
+
+    saved_on_breakdown_event_cp_pow      = "saved_on_breakdown_event_cp_pow"
+    expert_value_keys.append(saved_on_breakdown_event_cp_pow)
+    expert_values[saved_on_breakdown_event_cp_pow] = "STRING"
+
+    saved_on_breakdown_event_kf_pha      = "saved_on_breakdown_event_kf_pha"
+    expert_value_keys.append(saved_on_breakdown_event_kf_pha)
+    expert_values[saved_on_breakdown_event_kf_pha] = "STRING"
+
+    saved_on_breakdown_event_kr_pha      = "saved_on_breakdown_event_kr_pha"
+    expert_value_keys.append(saved_on_breakdown_event_kr_pha)
+    expert_values[saved_on_breakdown_event_kr_pha] = "STRING"
+
+    saved_on_breakdown_event_cf_pha      = "saved_on_breakdown_event_cf_pha"
+    expert_value_keys.append(saved_on_breakdown_event_cf_pha)
+    expert_values[saved_on_breakdown_event_cf_pha] = "STRING"
+
+    saved_on_breakdown_event_cr_pha      = "saved_on_breakdown_event_cr_pha"
+    expert_value_keys.append(saved_on_breakdown_event_cr_pha)
+    expert_values[saved_on_breakdown_event_cr_pha] = "STRING"
+
+    saved_on_breakdown_event_cp_pha      = "saved_on_breakdown_event_cp_pha"
+    expert_value_keys.append(saved_on_breakdown_event_cp_pha)
+    expert_values[saved_on_breakdown_event_cp_pha] = "STRING"
+
+    saved_on_vac_spike_kf_pow            = "saved_on_vac_spike_kf_pow"
+    expert_value_keys.append(saved_on_vac_spike_kf_pow)
+    expert_values[saved_on_vac_spike_kf_pow] = "STRING"
+
+    saved_on_vac_spike_kr_pow            = "saved_on_vac_spike_kr_pow"
+    expert_value_keys.append(saved_on_vac_spike_kr_pow)
+    expert_values[saved_on_vac_spike_kr_pow] = "STRING"
+
+    saved_on_vac_spike_cf_pow            = "saved_on_vac_spike_cf_pow"
+    expert_value_keys.append(saved_on_vac_spike_cf_pow)
+    expert_values[saved_on_vac_spike_cf_pow] = "STRING"
+
+    saved_on_vac_spike_cr_pow            = "saved_on_vac_spike_cr_pow"
+    expert_value_keys.append(saved_on_vac_spike_cr_pow)
+    expert_values[saved_on_vac_spike_cr_pow] = "STRING"
+
+    saved_on_vac_spike_cp_pow            = "saved_on_vac_spike_cp_pow"
+    expert_value_keys.append(saved_on_vac_spike_cp_pow)
+    expert_values[saved_on_vac_spike_cp_pow] = "STRING"
+
+    saved_on_vac_spike_kf_pha            = "saved_on_vac_spike_kf_pha"
+    expert_value_keys.append(saved_on_vac_spike_kf_pha)
+    expert_values[saved_on_vac_spike_kf_pha] = "STRING"
+
+    saved_on_vac_spike_kr_pha            = "saved_on_vac_spike_kr_pha"
+    expert_value_keys.append(saved_on_vac_spike_kr_pha)
+    expert_values[saved_on_vac_spike_kr_pha] = "STRING"
+
+    saved_on_vac_spike_cf_pha            = "saved_on_vac_spike_cf_pha"
+    expert_value_keys.append(saved_on_vac_spike_cf_pha)
+    expert_values[saved_on_vac_spike_cf_pha] = "STRING"
+
+    saved_on_vac_spike_cr_pha            = "saved_on_vac_spike_cr_pha"
+    expert_value_keys.append(saved_on_vac_spike_cr_pha)
+    expert_values[saved_on_vac_spike_cr_pha] = "STRING"
+
+    saved_on_vac_spike_cp_pha            = "saved_on_vac_spike_cp_pha"
+    expert_value_keys.append(saved_on_vac_spike_cp_pha)
+    expert_values[saved_on_vac_spike_cp_pha] = "STRING"
+
+    drop_amplitude_kf_pow                = "drop_amplitude_kf_pow"
+    expert_value_keys.append(drop_amplitude_kf_pow)
+    expert_values[drop_amplitude_kf_pow] = "STRING"
+
+    drop_amplitude_kr_pow                = "drop_amplitude_kr_pow"
+    expert_value_keys.append(drop_amplitude_kr_pow)
+    expert_values[drop_amplitude_kr_pow] = "STRING"
+
+    drop_amplitude_cf_pow                = "drop_amplitude_cf_pow"
+    expert_value_keys.append(drop_amplitude_cf_pow)
+    expert_values[drop_amplitude_cf_pow] = "STRING"
+
+    drop_amplitude_cr_pow                = "drop_amplitude_cr_pow"
+    expert_value_keys.append(drop_amplitude_cr_pow)
+    expert_values[drop_amplitude_cr_pow] = "STRING"
+
+
+    drop_amplitude_cp_pow                = "drop_amplitude_cp_pow"
+    expert_value_keys.append(drop_amplitude_cp_pow)
+    expert_values[drop_amplitude_cp_pow] = "STRING"
+
+    drop_amplitude_kf_pha                = "drop_amplitude_kf_pha"
+    expert_value_keys.append(drop_amplitude_kf_pha)
+    expert_values[drop_amplitude_kf_pha] = "STRING"
+
+    drop_amplitude_kr_pha                = "drop_amplitude_kr_pha"
+    expert_value_keys.append(drop_amplitude_kr_pha)
+    expert_values[drop_amplitude_kr_pha] = "STRING"
+
+    drop_amplitude_cf_pha                = "drop_amplitude_cf_pha"
+    expert_value_keys.append(drop_amplitude_cf_pha)
+    expert_values[drop_amplitude_cf_pha] = "STRING"
+
+    drop_amplitude_cr_pha                = "drop_amplitude_cr_pha"
+    expert_value_keys.append(drop_amplitude_cr_pha)
+    expert_values[drop_amplitude_cr_pha] = "STRING"
+
+    drop_amplitude_cp_pha                = "drop_amplitude_cp_pha"
+    expert_value_keys.append(drop_amplitude_cp_pha)
+    expert_values[drop_amplitude_cp_pha] = "STRING"
+
+    streak_kf_pow                        = "streak_kf_pow"
+    expert_value_keys.append(streak_kf_pow)
+    expert_values[streak_kf_pow] = "STRING"
+
+    streak_kr_pow                        = "streak_kr_pow"
+    expert_value_keys.append(streak_kr_pow)
+    expert_values[streak_kr_pow] = "STRING"
+
+    streak_cf_pow                        = "streak_cf_pow"
+    expert_value_keys.append(streak_cf_pow)
+    expert_values[streak_cf_pow] = "STRING"
+
+    streak_cr_pow                        = "streak_cr_pow"
+    expert_value_keys.append(streak_cr_pow)
+    expert_values[streak_cr_pow] = "STRING"
+
+    streak_cp_pow                        = "streak_cp_pow"
+    expert_value_keys.append(streak_cp_pow)
+    expert_values[streak_cp_pow] = "STRING"
+
+    streak_kf_pha                        = "streak_kf_pha"
+    expert_value_keys.append(streak_kf_pha)
+    expert_values[streak_kf_pha] = "STRING"
+
+    streak_kr_pha                        = "streak_kr_pha"
+    expert_value_keys.append(streak_kr_pha)
+    expert_values[streak_kr_pha] = "STRING"
+
+    streak_cf_pha                        = "streak_cf_pha"
+    expert_value_keys.append(streak_cf_pha)
+    expert_values[streak_cf_pha] = "STRING"
+
+    streak_cr_pha                        = "streak_cr_pha"
+    expert_value_keys.append(streak_cr_pha)
+    expert_values[streak_cr_pha] = "STRING"
+
+    streak_cp_pha                        = "streak_cp_pha"
+    expert_value_keys.append(streak_cp_pha)
+    expert_values[streak_cp_pha] = "STRING"
+
+    breakdown_rate_aim_val               = "breakdown_rate_aim_val"
+    expert_value_keys.append(breakdown_rate_aim_val)
+    expert_values[breakdown_rate_aim_val] = "STRING"
+
+    expected_daq_rep_rate_val            = "expected_daq_rep_rate_val"
+    expert_value_keys.append(expected_daq_rep_rate_val)
+    expert_values[expected_daq_rep_rate_val] = "STRING"
+
+    daq_rep_rate_error_val               = "daq_rep_rate_error_val"
+    expert_value_keys.append(daq_rep_rate_error_val)
+    expert_values[daq_rep_rate_error_val] = "STRING"
+
+    number_of_pulses_in_history_val      = "number_of_pulses_in_history_val"
+    expert_value_keys.append(number_of_pulses_in_history_val)
+    expert_values[number_of_pulses_in_history_val] = "STRING"
+
+    trace_buffer_size_val                = "trace_buffer_size_val"
+    expert_value_keys.append(trace_buffer_size_val)
+    expert_values[trace_buffer_size_val] = "STRING"
+
+    default_pulse_count_val              = "default_pulse_count_val"
+    expert_value_keys.append(default_pulse_count_val)
+    expert_values[default_pulse_count_val] = "STRING"
+
+    default_amp_increase_val             = "default_amp_increase_val"
+    expert_value_keys.append(default_amp_increase_val)
+    expert_values[default_amp_increase_val] = "STRING"
+
+    max_amp_increase_val                 = "max_amp_increase_val"
+    expert_value_keys.append(max_amp_increase_val)
+    expert_values[max_amp_increase_val] = "STRING"
+
+    num_fit_points_val                   = "num_fit_points_val"
+    expert_value_keys.append(num_fit_points_val)
+    expert_values[num_fit_points_val] = "STRING"
+
+    active_power_val                     = "active_power_val"
+    expert_value_keys.append(active_power_val)
+    expert_values[active_power_val] = dummy_float
+
+    num_future_traces_val                = "num_future_traces_val"
+    expert_value_keys.append(num_future_traces_val)
+    expert_values[num_future_traces_val] = dummy_int
+
+    keep_valve_open_val                  = "keep_valve_open_val"
+    expert_value_keys.append(keep_valve_open_val)
+    expert_values[keep_valve_open_val] = True
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -937,566 +2369,31 @@ class rf_conditioning_data(object):
 #     else:
 #         self.logger.message('Not adding to pulse_breakdown_log, amp = ' + str(amp), True)
 
-    @staticmethod
-    def add_data_key( key, initial_value = None):
-        '''
-        Function that adds a key to the main data dictionaries, we do this so that we are less
-        likely to forget to add a new key
-        :param key: new key to be added
-        :param initial_value: an intial value for the key, THIS SHOULD BE None, or, when debugging
-        of the correct type
-        '''
-        rf_conditioning_data.all_value_keys.append( key )
-        rf_conditioning_data.values[key] = initial_value
-
-
-    ''' 
-        The values dictionary. 
-        The main data dictionary for the application almost everything goes in here, 
-         apart from minor things like GUI flags, data from the config file
-    
-        THIS IS WHERE ALL THE MAIN DATA FOR RF CONDITIONING APPLICATION LIVES
-        It is used by almost every class, to get and set data
-    
-        In order to not have mistakes, define a value then add it to the values dictionary, 
-        Then give the values dictionary an initial value THAT IS OF THE EXPECTED TYPE FOR THE  
-        REAL DATA.  
-        WHEN NOT DEBUGGING: We set the values of the dictionary to be None, this is so that when 
-        we start writing then to file we can check they are being updated as expected. 
-    '''
-
-    dummy_float = -9999.9999
-    dummy_int   = -9999999
-    dummy_state = state.UNKNOWN
-
-    values = {} # A list of the keys for values
-    all_value_keys= []  # A list of the keys for values
-
-
-    # keys for all the data we monitor
-    time_stamp = 'time_stamp'
-    all_value_keys.append(time_stamp)
-    values[time_stamp] = dummy_float # CHECK TYPE
-
-    # STATUS PF MAIN MONITORS
-    vac_spike_status = 'vac_spike_status'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = dummy_state
-
-
-    DC_spike_status = 'DC_spike_status'
-    all_value_keys.append(DC_spike_status)
-    values[DC_spike_status] = dummy_state
-
-
-    rev_power_spike_count = 'rev_power_spike_count'
-    all_value_keys.append(rev_power_spike_count)
-    values[rev_power_spike_count] = dummy_int
-
-    # THERE are N water temps that aredefined at run time!!!
-    # THESE GET ADDED BY THE water_temperature_monitor
-    #cav_temp = 'cav_temp'
-    #water_temp = 'water_temp'
-    # sol_value = 'sol_value'
-
-
-    # Mean Values of Traces # TODO: CHANGE THIS NAMES TO MORE CANONICAL ONES
-    fwd_cav_pwr = 'fwd_cav_pwr'
-    all_value_keys.append(fwd_cav_pwr)
-    values[fwd_cav_pwr] = dummy_float
-
-
-    fwd_kly_pwr = 'fwd_kly_pwr'
-    all_value_keys.append(fwd_kly_pwr)
-    values[fwd_kly_pwr] = dummy_float
-
-
-    rev_kly_pwr = 'rev_kly_pwr'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = dummy_float
-
-
-    rev_cav_pwr = 'rev_cav_pwr'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = dummy_float
-
-    probe_pwr = 'probe_pwr'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = dummy_float
-
-    fwd_cav_pha = 'fwd_cav_pha'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = dummy_float
-
-    fwd_kly_pha = 'fwd_kly_pha'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = dummy_float
-
-    rev_kly_pha = 'rev_kly_pha'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = dummy_float
-
-    rev_cav_pha = 'rev_cav_pha'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = dummy_float
-
-    probe_pha = 'probe_pha'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = dummy_float
-
-    # WHAT ARE THESE USED FOR????????????????????
-    # krpow = 'krpow'
-    # all_value_keys.append(krpow)
-    # values[krpow] = dummy_float
-    #
-    # krpha = 'krpha'
-    # all_value_keys.append(krpha)
-    # values[krpha] = dummy_float
-    #
-    # kfpow = 'kfpow'
-    # all_value_keys.append(kfpow)
-    # values[kfpow] = dummy_float
-    #
-    # kfpha = 'kfpha'
-    # all_value_keys.append(kfpha)
-    # values[kfpha] = dummy_float
-    #
-    # crpow = 'crpow'
-    # all_value_keys.append(crpow)
-    # values[crpow] = dummy_float
-    #
-    # crpha = 'crpha'
-    # all_value_keys.append(crpha)
-    # values[crpha] = dummy_float
-    #
-    # cppow = 'cppow'
-    # all_value_keys.append(cppow)
-    # values[cppow] = dummy_float
-    #
-    # cppha = 'cppha'
-    # all_value_keys.append(cppha)
-    # values[cppha] = dummy_float
-    #
-    # cfpow = 'cfpow'
-    # all_value_keys.append(cfpow)
-    # values[cfpow] = dummy_float
-    #
-    # cfpha = 'cfpha'
-    # all_value_keys.append(cfpha)
-    # values[cfpha] = dummy_float
-
-
-
-    vac_level = 'vac_level'
-    all_value_keys.append(vac_level)
-    values[vac_level] = dummy_float
-
-    DC_level = 'DC_level'
-    all_value_keys.append(DC_level)
-    values[DC_level] = dummy_float
-
-    vac_valve_status = 'vac_valve_status'
-    all_value_keys.append(vac_valve_status)
-    values[vac_valve_status] = state.UNKNOWN
-
-    num_outside_mask_traces = 'num_outside_mask_traces'
-    all_value_keys.append(num_outside_mask_traces)
-    values[num_outside_mask_traces] = dummy_int
-
-    probe_outside_mask_count = 'probe_outside_mask_count'
-    all_value_keys.append(probe_outside_mask_count)
-    values[probe_outside_mask_count] = dummy_int
-
-    forward_outside_mask_count = 'probe_outside_mask_count'
-    all_value_keys.append(forward_outside_mask_count)
-    values[forward_outside_mask_count] = dummy_int
-
-    reverse_outside_mask_count = 'reverse_outside_mask_count'
-    all_value_keys.append(reverse_outside_mask_count)
-    values[reverse_outside_mask_count] = dummy_int
-
-    breakdown_status = 'breakdown_status'
-    all_value_keys.append(breakdown_status)
-    values[breakdown_status] = dummy_int
-
-    breakdown_rate_aim = 'breakdown_rate_aim'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = dummy_int
-
-    # these are values from the pulse_breakdown_log
-    log_pulse_count = 'log_pulse_count'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = dummy_int
-    #log_breakdown_count = 'log_breakdown_count'
-    log_amp_set = 'log_amp_set'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = dummy_int
-
-    current_ramp_index = 'current_ramp_index'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = dummy_int
-
-    breakdown_count = 'breakdown_count'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = state.UNKNOWN
-
-    elapsed_time = 'elapsed_time'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = state.UNKNOWN
-
-    breakdown_rate = 'breakdown_rate'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = state.UNKNOWN
-
-    breakdown_rate_hi= 'breakdown_rate_hi'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = state.UNKNOWN
-
-    last_106_bd_count='last_106_bd_count'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = state.UNKNOWN
-
-    pulse_count = 'pulse_count'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = state.UNKNOWN
-
-    event_pulse_count = 'event_pulse_count'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = state.UNKNOWN
-
-    duplicate_pulse_count = 'duplicate_pulse_count'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = state.UNKNOWN
-
-    # Hold RF ON handle scontrolling these, we just monitor
-    rfprot_state = 'rfprot_state'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = state.UNKNOWN
-
-    modulator_state = 'modulator_state'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = state.UNKNOWN
-
-    mod_output_status = 'mod_output_status'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = state.UNKNOWN
-
-    can_rf_output_OLD = 'can_rf_output_OLD'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = state.UNKNOWN
-
-    can_rf_output = 'can_rf_output'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = state.UNKNOWN
-
-    llrf_interlock = 'llrf_interlock' # The read value from EPICS
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = state.UNKNOWN
-
-    llrf_interlock_status = 'llrf_interlock_status' # the apps internal state, good, new_bad etc
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = state.UNKNOWN
-
-
-    llrf_trigger = 'llrf_trigger'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = state.UNKNOWN
-
-    llrf_trigger_status = 'llrf_trigger_status'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = state.UNKNOWN
-
-    pulse_length = 'pulse_length'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = state.UNKNOWN
-
-    pulse_length_status = 'pulse_length_status' # the apps internal state, good, new_bad etc
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = state.UNKNOWN
-
-    llrf_output = 'llrf_output' # RF Output on LLRF panel
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = state.UNKNOWN
-
-    llrf_output_status = 'llrf_output_status' # the apps internal state, good, new_bad etc
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = state.UNKNOWN
-
-    llrf_ff_amp_locked = 'llrf_ff_amp_locked'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = state.UNKNOWN
-
-    llrf_ff_amp_locked_status = 'llrf_ff_amp_locked_status' # the apps internal state, good, new_bad etc
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = state.UNKNOWN
-
-    llrf_ff_ph_locked  = 'llrf_ff_ph_locked'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = state.UNKNOWN
-
-    llrf_ff_ph_locked_status  = 'llrf_ff_ph_locked_status' # the apps internal state, good, new_bad etc
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = state.UNKNOWN
-
-    llrf_DAQ_rep_rate = 'llrf_DAQ_rep_rate'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = state.UNKNOWN
-
-    llrf_DAQ_rep_rate_aim = 'llrf_DAQ_rep_rate_aim'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = state.UNKNOWN
-
-    llrf_DAQ_rep_rate_status = 'llrf_DAQ_rep_rate_status'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = state.UNKNOWN
-
-    llrf_DAQ_rep_rate_status_previous = 'llrf_DAQ_rep_rate_status_previous'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = state.UNKNOWN
-
-    llrf_DAQ_rep_rate_max = 'llrf_DAQ_rep_rate_max'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = state.UNKNOWN
-
-    llrf_DAQ_rep_rate_min = 'llrf_DAQ_rep_rate_min'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = state.UNKNOWN
-
-
-    required_pulses = 'required_pulses'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = state.UNKNOWN
-
-    next_power_increase = 'next_power_increase'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = state.UNKNOWN
-
-
-    log_pulse_length = 'log_pulse_length'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = state.UNKNOWN
-
-
-    last_mean_power = 'last_mean_power'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = state.UNKNOWN
-
-    amp_ff = 'amp_ff'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = state.UNKNOWN
-
-    amp_sp = 'amp_sp'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = state.UNKNOWN
-
-    phi_sp = 'phi_sp'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = state.UNKNOWN
-
-
-    TOR_ACQM = 'TOR_ACQM'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = state.UNKNOWN
-
-    TOR_SCAN = 'TOR_SCAN'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = state.UNKNOWN
-
-    #
-    # plot straight line fit values, old and current
-    x_min = 'x_min'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = state.UNKNOWN
-
-    x_max = 'x_max'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = state.UNKNOWN
-
-    old_x_min = 'old_x_min'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = state.UNKNOWN
-
-    old_x_max = 'old_x_max'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = state.UNKNOWN
-
-    y_min = 'y_min'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = state.UNKNOWN
-
-    y_max = 'y_max'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = state.UNKNOWN
-
-    old_y_min = 'old_y_min'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = state.UNKNOWN
-
-    old_y_max = 'old_y_max'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = state.UNKNOWN
-
-    c = 'c'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = state.UNKNOWN
-
-    m = 'm'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = state.UNKNOWN
-
-    old_c = 'old_c'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = state.UNKNOWN
-
-    old_m = 'old_m'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = state.UNKNOWN
-
-
-    #latest_ramp_up_sp = 'latest_ramp_up_sp'
-    last_sp_above_100 = 'last_sp_above_100'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = state.UNKNOWN
-
-    max_sp_increase = 'max_sp_increase'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = state.UNKNOWN
-
-    next_sp_decrease = 'next_sp_decrease'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = state.UNKNOWN
-
-
-    vac_hi_limit_status = 'vac_hi_limit_status'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = state.UNKNOWN
-
-
+    # @staticmethod
+    # def add_data_key( key, initial_value = None):
+    #     '''
+    #     Function that adds a key to the main data dictionaries, we do this so that we are less
+    #     likely to forget to add a new key
+    #     :param key: new key to be added
+    #     :param initial_value: an intial value for the key, THIS SHOULD BE None, or, when debugging
+    #     of the correct type
+    #     '''
+    #     rf_conditioning_data.all_value_keys.append( key )
+    #     rf_conditioning_data.values[key] = initial_value
 
     # meh ...
-    phase_mask_by_power_trace_1_set = 'phase_mask_by_power_trace_1_set'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = state.UNKNOWN
-
-    phase_mask_by_power_trace_2_set = 'phase_mask_by_power_trace_2_set'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = state.UNKNOWN
-
-    phase_end_mask_by_power_trace_1_time = 'phase_end_mask_by_power_trace_1_time'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = state.UNKNOWN
-
-    phase_end_mask_by_power_trace_2_time = 'phase_end_mask_by_power_trace_2_time'
-    all_value_keys.append(vac_spike_status)
-    values[vac_spike_status] = state.UNKNOWN
-
-
- # we know there will be some LLRF involved
-    #llrf_type = LLRF_TYPE.UNKNOWN_TYPE
-
-    # config
-    # for logging
-    log_param = None
-    path = None
-    time = None
-    log_start = None
-    should_write_header = True
-
-    kly_fwd_power_history = []
-    amp_sp_history = []
-    sp_pwr_hist =[]
-    # fitting parameters
-    previous_power = 0
-
-    #latest_ramp_up_sp = 0
-
-
-    values = {}  # EXPLAIN THIS
-
-    [values.update({x: 0}) for x in all_value_keys]
-
-
-    values[vac_valve_status] = VALVE_STATE.VALVE_ERROR
-    #values[rev_power_spike_count] = STATE.UNKNOWN
-
-    values[modulator_state] = GUN_MOD_STATE.UNKNOWN_STATE
-    values[rfprot_state] = RF_PROT_STATUS.UNKNOWN
-
-    values[vac_spike_status] = state.UNKNOWN
-    values[DC_spike_status] = state.UNKNOWN
-    values[breakdown_status] = state.UNKNOWN
-    values[llrf_output_status] = state.UNKNOWN
-    values[llrf_trigger_status] = state.UNKNOWN
-    values[llrf_interlock_status] = state.UNKNOWN
-    values[llrf_ff_amp_locked] = state.UNKNOWN
-    values[llrf_ff_ph_locked] = state.UNKNOWN
-    values[can_rf_output_OLD] = state.UNKNOWN
-
-#sss
-
-    values[last_sp_above_100] = 0
-    #values[latest_ramp_up_sp] = 0
-
-    values[vac_hi_limit_status] = state.GOOD
-
-    dummy_float = -999.0
-    dummy_int = -999.0
-    dummy_bool = -999.0
-
-
-
-
-
-
-    values[pulse_length] = dummy_float + 2
-    values[rev_kly_pwr] = dummy_float + 5
-    values[rev_cav_pwr] = dummy_float + 6
-    values[probe_pwr] = dummy_float + 7
-    values[vac_level] = dummy_float
-    values[breakdown_rate_aim] = dummy_int
-    values[breakdown_rate_hi] = dummy_bool
-
-
-    values[breakdown_rate] = dummy_int+ 11
-    values[breakdown_count] = dummy_int +2
-    values[pulse_count] = dummy_int + 13
-    values[event_pulse_count] = dummy_int +14
-    values[duplicate_pulse_count] = dummy_int +14
-    values[elapsed_time] = dummy_int + 15
-    values[DC_level] = dummy_float + 16
-    values[rev_power_spike_count] = dummy_int
-    values[next_power_increase] = -1
-    values[phase_mask_by_power_trace_1_set] = False
-    values[phase_mask_by_power_trace_2_set] = False
-    values[phase_end_mask_by_power_trace_1_time] = -1.0
-    values[phase_end_mask_by_power_trace_2_time] = -1.0
-
-
-
-
-    values[old_x_min] = dummy_float
-    values[old_y_min] = dummy_float
-    values[old_x_max] = dummy_float
-    values[old_y_max] = dummy_float
-    values[old_m] = dummy_float
-    values[old_c] = dummy_float
-    values[x_min] = dummy_float
-    values[x_max] = dummy_float
-    values[y_min] = dummy_float
-    values[x_max] = dummy_float
-    values[m] = dummy_float
-    values[c] = dummy_float
-
-    amp_pwr_mean_data = {} # EXPLAIN THIS
-    amp_vs_kfpow_running_stat = {} # EXPLAIN THIS
-
-    #logger
-    logger = None
-    _llrf_config = None
-    _log_config = None
-
-    last_fwd_kly_pwr = None
-    last_amp = None
-
-    #THERE ARE 2 COPIES OF THE last_million_log , FIX THIS !!!!!!!!!!!
-    last_million_log = None
+    # phase_mask_by_power_trace_1_set = 'phase_mask_by_power_trace_1_set'
+    # all_value_keys.append(phase_mask_by_power_trace_1_set)
+    # values[phase_mask_by_power_trace_1_set] = False
+    #
+    # phase_mask_by_power_trace_2_set = 'phase_mask_by_power_trace_2_set'
+    # all_value_keys.append(phase_mask_by_power_trace_2_set)
+    # values[phase_mask_by_power_trace_2_set] = False
+    #
+    # phase_end_mask_by_power_trace_1_time = 'phase_end_mask_by_power_trace_1_time'
+    # all_value_keys.append(phase_end_mask_by_power_trace_1_time)
+    # values[phase_end_mask_by_power_trace_1_time] = bool
+    #
+    # phase_end_mask_by_power_trace_2_time = 'phase_end_mask_by_power_trace_2_time'
+    # all_value_keys.append(phase_end_mask_by_power_trace_2_time)
+    # values[phase_end_mask_by_power_trace_2_time] = state.UNKNOWN

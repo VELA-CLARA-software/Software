@@ -58,15 +58,25 @@ class main_controller(object):
 
     #
     # other attributes will be initialised in base-class
-    def __init__(self, argv, config_file, debug = False):
-        self.debug = debug
+    #
+    # We are going to have multiple debug modes so that you can set it from the command line,
+    # hardcoded in to the source code, etc, PLUS in the config file
+    def __init__(self, argv, config_file, debug=True, debug2=True):
+
+        self.debug = True
+        if debug == False:
+            if debug2 == False:
+                self.debug = False
+
         # args passed in from command line
         self.argv = argv
 
-        # pop the view so we can display startup message
+        # pop the view so we can display startup messages
         #
         self.view = rf_condition_view()
         self.view.show()
+
+
         QApplication.processEvents()
         #
         # Create config reader, and get configuration
@@ -75,17 +85,16 @@ class main_controller(object):
         self.get_config(config_file)
         print(__name__ + ', got Config, starting Logging\n')
 
-
         # Set the config for the GUI
         self.view.config = self.config
         self.view.start_gui_update()
 
         #
-
         # start logging, sets up main text file logging, and logs the config
-        self.logger = rf_conditioning_logger(debug=self.debug,column_width=80)
+        self.logger = rf_conditioning_logger(debug=self.debug, column_width=80)
         self.logger.setup_text_log_files()
         self.logger.log_config()
+
         #
         # create a data object
         self.logger.message_header(__name__ + ', create rf_conditioning_data object',
@@ -99,24 +108,45 @@ class main_controller(object):
         #
         # CATAP hardware controllers, these live here and are passed to where they are needed
         # self.hardware.start_up() actually creates the objects, this should only be done once,
-        # here!
+        # here! so that we don't create multiple controllers
         self.logger.message_header(__name__ + ', create hardware_control_hub object',
                                    add_to_text_log=True,show_time_stamp=True)
         self.hardware = hardware_control_hub()
         self.hardware.start_up()
 
+
         #
         # CATAP hardware controllers, these live here and are passed to where they are needed
         self.logger.message_header(__name__ + ', create monitor_hub object',
                                    add_to_text_log=True,show_time_stamp=True)
-        self.monitor = monitor_hub()
-        self.monitor.start_monitors()
+        self.monitor_hub = monitor_hub()
+        self.monitor_hub.start_monitors()
 
+
+        # connect buttons
+
+        self.view.update_expert_values_button.clicked.connect(self.update_expert_values) # MUST
+        # BE CONNECTED AFTER MONITOR_HUB is created
+
+
+
+
+
+        #print("manual pause here!!!")
+        #raw_input()
         #
         # Start Data Logging
         self.logger.start_binary_data_logging(self.data.values)
 
+        self.main_loop()
 
+    def main_loop(self):
+        self.logger.message_header(
+            __name__ + ' The RF Conditioning is Preparing to Entering Main_Loop !',
+            add_to_text_log=True, show_time_stamp=True)
+
+        while 1:
+            QApplication.processEvents()
 
 
     def quit_app(self, message=""):
@@ -127,6 +157,32 @@ class main_controller(object):
     def get_config(self, config_file):
         self.config.config_file = config_file
         self.config.read_config()
+
+    def update_expert_values(self):
+        # get all teh expert values from the various places that want them
+        print("self.update_expert_values called")
+        self.monitor_hub.llrf_monitor.update_expert_values()
+        # update the gui with the latest values
+        self.view.update_expert_values()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     #
@@ -374,7 +430,7 @@ class main_controller(object):
     #                                 'Rate = ' + str(
     #                                     controller_base.data.values[dat.breakdown_rate]))
     #                             self.has_not_shown_br_hi = False
-    #                     elif controller_base.data.values[dat.vac_hi_limit_status] == state.BAD:
+    #                     elif controller_base.data.values[dat.vac_level_can_ramp] == state.BAD:
     #                         pass
     #                     else:
     #                         self.ramp_up()

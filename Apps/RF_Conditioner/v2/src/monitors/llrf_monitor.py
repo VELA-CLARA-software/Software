@@ -25,7 +25,7 @@
 //*/
 '''
 from monitor import monitor
-import src.data.rf_condition_data_base as dat
+import src.data.rf_conditioning_data as rf_conditioning_data
 from src.data.state import state
 from VELA_CLARA_LLRF_Control import TRIG
 from VELA_CLARA_LLRF_Control import INTERLOCK_STATE
@@ -59,6 +59,12 @@ class llrf_monitor(monitor):
         self.set_success = True
 
         self.old_rf_output = None
+
+        # reference to the values dictionaries
+        self.data = rf_conditioning_data.rf_conditioning_data()
+        self.values = self.data.values
+        self.expert_values = self.data.expert_values
+
 
         # new feature, the setting phase end index by remote...
         # if self.llrf_control.config.breakdown_config.has_key('PHASE_MASK_BY_POWER_PHASE_TRACE_1'):
@@ -121,12 +127,15 @@ class llrf_monitor(monitor):
         The states can be the LLRF state, and/or a derived state (good bad, NEW_Good, NEW_BAD etc)
         required for the control of the main conditioning loop
         """
+        #print("update_value LLRF clalled")
         #
         ''' send keep alive pulse'''
-        self.llrf_control.keepAlive()
+        # NO - do this on a seperate timeer!
+        #self.llrf_control.keepAlive()
 
         ''' get the mean value for each trace '''
-        for trace, key  in self.trace_mean_keys.iteritems():
+        for trace, key in self.trace_mean_keys.iteritems():
+            #print("Get mean power for ", trace)
             self.get_mean_power(key, trace)
 
         ''' UPDATE LLRF values that are REQUIRED TO BE ABLE TO RAMP '''
@@ -146,11 +155,18 @@ class llrf_monitor(monitor):
         self.values[self.data.TOR_SCAN] = self.llrf_control.getTORSCAN()
         self.values[self.data.duplicate_pulse_count] = self.llrf_obj[0].duplicate_pulse_count
 
+        self.values[self.data.llrf_trace_interlock] = self.llrf_control.areLLRFTraceInterlocksGood()
+
+
+        # CATAP max amp setpoint value
+        # This number CANNOT CHANGE WHILE RUNNING !!
+        self.values[self.data.catap_max_amp] = self.llrf_control.getMaxAmpSP()
+
 
         ''' the latest running stats for this amp_set (from the c++) '''
         ## THIS GETS UPDATED TOO FREQUENTLY
-        if(self.llrf_control.isKeepingKlyFwdPwrRS()):
-            self.update_amp_vs_kfpow_running_stat()
+        # if(self.llrf_control.isKeepingKlyFwdPwrRS()):
+        #     self.update_amp_vs_kfpow_running_stat()
 
         #
         """WARNING"""
@@ -184,7 +200,6 @@ class llrf_monitor(monitor):
 
         elif self.values[DAQ_rep_rate] > self.values[self.data.llrf_DAQ_rep_rate_max]:
             self.values[DAQ_rep_rate_status] = state.BAD
-
         else:
             self.values[self.data.llrf_DAQ_rep_rate_status] = state.GOOD
 
@@ -195,23 +210,24 @@ class llrf_monitor(monitor):
 
     def update_pulse_length(self):
         '''
-        HOW DO WE ACTUALLY DEFEIN PULSE LENGTH!!!!!!!!!!!!
-
+        HOW DO WE ACTUALLY DEFINE PULSE LENGTH!!!!!!!!!!!!
+        This funcitno is not used yet, we don't change pulse length
         :return:
         '''
         #
+
         # pulse length
         # THIS OLD WAY IS NOW BROKE, we use an RF RAMP table Instead we now use the  getPulseShape vector and count the number of 1.0s (SketchyAF)
         # pulse length
         self.values[self.data.pulse_length] = self.llrf_control.getPulseShape().count(1) * 0.009
         #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         # MAGIC THIS IS NOT EXACTLY CORRECT,
-        # if self.values[self.data.pulse_length] < self.values[self.data.pulse_length_min]:
-        #     self.values[self.data.pulse_length_status] = state.BAD
-        # elif self.values[self.data.pulse_length] > self.values[self.data.pulse_length_max]:
-        #     self.values[self.data.pulse_length_status] = state.BAD
-        # else:
-        #     self.values[self.data.pulse_length_status] = state.GOOD
+        if self.values[self.data.pulse_length] < self.values[self.data.pulse_length_min]:
+            self.values[self.data.pulse_length_status] = state.BAD
+        elif self.values[self.data.pulse_length] > self.values[self.data.pulse_length_max]:
+            self.values[self.data.pulse_length_status] = state.BAD
+        else:
+            self.values[self.data.pulse_length_status] = state.GOOD
 
     def update_interlock_state(self):
         '''
@@ -261,7 +277,7 @@ class llrf_monitor(monitor):
         '''
 
         '''
-        self.values[self.data.llrf_ff_amp_locked] =  self.llrf_obj[0].ff_amp_lock_state
+        self.values[self.data.llrf_ff_amp_locked] = self.llrf_obj[0].ff_amp_lock_state
         if self.values[self.data.llrf_ff_amp_locked]:
             self.values[self.data.llrf_ff_amp_locked_status] = state.GOOD
         else:
@@ -282,7 +298,6 @@ class llrf_monitor(monitor):
         self.amp_vs_kfpow_running_stat[self.values[self.data.amp_sp]] = \
             self.llrf_control.getKlyFwdPwrRSState(self.values[self.data.amp_sp])
 
-
     def get_mean_power(self,key,trace):
         """
         get the mean reading for trace-trace and append it to values dict with key=key
@@ -301,7 +316,6 @@ class llrf_monitor(monitor):
             # if self.is_kly_forward_power(trace):
             #     if self.old_mean_values[trace] > monitor.config.llrf_config['KLY_PWR_FOR_ACTIVE_PULSE']:
             #         self.update_amp_pwr_mean_dict(monitor.data.values[dat.amp_sp],self.old_mean_values[trace])
-
 
     ''' The below were made as function in case i had to use them elsewhere, then perhaps they
     could go in a utiliites space, so far they are only used here'''
@@ -336,7 +350,26 @@ class llrf_monitor(monitor):
         return 'PROBE_PHASE' in str
 
 
-    # THIS IS THE NEW WAY TO GET POWER DATA
+    def update_expert_values(self):
+        '''
+        The "expert_panel" parameters are only updated when the button is clicked and this
+        function is  called. They are all stored in expert_values dict
+        :return:
+        '''
+        # DUMMY
+        self.expert_values[self.data.is_breakdown_monitor_kf_pow] = False
+        self.expert_values[self.data.is_breakdown_monitor_kr_pow] = False
+        self.expert_values[self.data.is_breakdown_monitor_cf_pow] = False
+        self.expert_values[self.data.is_breakdown_monitor_cr_pow] = False
+        self.expert_values[self.data.is_breakdown_monitor_cp_pow] = False
+        self.expert_values[self.data.is_breakdown_monitor_kf_pha] = False
+        self.expert_values[self.data.is_breakdown_monitor_kr_pha] = False
+        self.expert_values[self.data.is_breakdown_monitor_cf_pha] = False
+        self.expert_values[self.data.is_breakdown_monitor_cr_pha] = False
+        self.expert_values[self.data.is_breakdown_monitor_cp_pha] = False
+
+
+        # THIS IS THE NEW WAY TO GET POWER DATA
     # we should check the value has changed !
     # this needs to go into the c++ (!)
     # this needs to go into the c++ (!)

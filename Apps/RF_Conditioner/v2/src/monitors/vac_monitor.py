@@ -42,8 +42,8 @@ class vac_monitor(monitor):
     an amount set in the config then a BAD state is set, which the conditioning_main_loop
     responds to. The state goes back to GOOD either when a time limit has passed, or,
     more commonly, the vacuum level returns below the limit
-    If the vacuum level gets above VAC_MAX_LEVEL  vac_hi_limit_status is set to BAD,
-    when the vacuum level is <= VAC_MAX_LEVEL vac_hi_limit_status is set to GOOD
+    If the vacuum level gets above VAC_MAX_LEVEL  vac_level_can_ramp is set to BAD,
+    when the vacuum level is <= VAC_MAX_LEVEL vac_level_can_ramp is set to GOOD
     """
     def __init__(self,):
         monitor.__init__(self)
@@ -109,7 +109,7 @@ class vac_monitor(monitor):
 
         # a timer to run check_signal automatically every self.update_time
         # this gets the vacuum data and checks it, it's the "main loop" for this class
-        # if we pass snaity checks this timer is started
+        # if we pass sanity checks this timer is started
         self.timer.timeout.connect(self.check_signal)
 
         # initialise data to state unknown
@@ -123,7 +123,7 @@ class vac_monitor(monitor):
     def run(self):
         """
         This function actually starts the main timer that gets data
-        call this fucntion when ready to start checking vacuum
+        call this function when ready to start checking vacuum
 
         """
         m = self.logger.message
@@ -197,23 +197,20 @@ class vac_monitor(monitor):
 
     def check_if_level_is_hi(self):
         """
-        If the vacuum goes above self.max_level, we set vac_hi_limit_status to BAD, else it is
-        GOOD. We also message the log each time the state changes
+        If the vacuum goes above self.max_level, we set vac_level_can_ramp to FALSE, else it is
+        TRUE. We also message the log each time the state changes
         :return:
         """
-        old_state = self.data.values[self.data.vac_hi_limit_status]
+        old_state = self.data.values[self.data.vac_level_can_ramp]
         if self._latest_value > self.max_level:  # if level is hi
-            self.data.values[self.data.vac_hi_limit_status] = state.BAD  # Set BAD status
-
-            if old_state == state.GOOD: # If state changed write message
-                m = __name__ + ' level hi, {} > {} '.format(self._latest_value,self.max_level)
+            self.data.values[self.data.vac_level_can_ramp] = False  # Set BAD status
+            if old_state: # If state changed write message
+                m = __name__ + ' level hi, {} > {} '.format(self._latest_value, self.max_level)
                 self.logger.message(m, add_to_text_log=True, show_time_stamp=True)
-
         else: # else level is NOT hi
-            self.data.values[self.data.vac_hi_limit_status] = state.GOOD
-
-            if old_state == state.BAD: # If state changed write message
-                m = __name__ + ' level ok, {} < {} '.format(self._latest_value,self.max_level)
+            self.data.values[self.data.vac_level_can_ramp] = True
+            if not old_state: # If state changed write message
+                m = __name__ + ' level ok, {} < {} '.format(self._latest_value, self.max_level)
                 self.logger.message(m, add_to_text_log=True, show_time_stamp=True)
 
     def check_has_cooled_down(self):
@@ -237,7 +234,7 @@ class vac_monitor(monitor):
         """
         if self._mean_level is not None: # If we have a mean value
             # check for a spike
-            if self._latest_value > self.spike_delta + self._mean_level:
+            if self._latest_value >= self.spike_delta + self._mean_level:
                 # this is the first place we can detect a vacuum spike,
                 # so drop amp here if we are in a GOOD state
                 if self.should_drop_amp:
@@ -246,7 +243,7 @@ class vac_monitor(monitor):
                 self.spike_count += 1
                 m = __name__ + ' NEW vacuum spike, #{}: '.format(self.spike_count)
                 m += "{} > {} + {}.".format(self._latest_value, self.spike_delta, self._mean_level)
-                self.logger.header(m, add_to_text_log=True, show_time_stamp=True)
+                self.logger.message_header(m, add_to_text_log=True, show_time_stamp=True)
                 self.dump_data()
                 self.start_cooldown()
 

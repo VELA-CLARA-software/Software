@@ -70,8 +70,6 @@ from src.monitors.solenoid_monitor import solenoid_monitor
 class monitor_hub(object):
     """
     This class creates and holds all the data monitoring classes
-    RF Protection Monitor
-
     There seems like a lot of repeated code for each function ....
     """
     vacuum_monitor = None
@@ -118,6 +116,8 @@ class monitor_hub(object):
                             show_time_stamp=False)
         self.start_rfprot_monitor()
         self.start_vac_valve()
+
+
         self.start_modulator_monitor()
         self.start_llrf_monitor()
         self.start_vac_monitor()
