@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-Created on Mon Oct  7 10:40:30 2019
+Created on Mon Oct 14 15:38:57 2019
 
 @author: qqi63789
 """
+
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 from PyQt4 import QtGui, QtCore
@@ -12,8 +13,8 @@ import yaml
 import pyqtgraph as pg
 from datetime import date
 
-import view as view
-import model as model
+import view
+import model
 
 #=========================================================================================================================================================================
 class WorkerSignals(QObject):
@@ -95,48 +96,68 @@ class Worker(QRunnable):
 
 #=========================================================================================================================================================================
 class controller(object):
-    
     myspot = []
     counter_runs = 0
     
     def __init__(self, view, model):
+        # you create your app
         app = QApplication([])
-        self.window = view.MainWindow()
+            
+        self.gui = view.MainWindow()
         self.output = view.classprogress()
         self.model = model.classmachine()
         self.graph = view.graph()
         
-        
-        #self.window.buttonBox.accepted.connect(self.window.Dialog.accept)
-        self.window.buttonBox.clicked.connect(self.okClicked)
-        #self.window.buttonBox.rejected.connect(self.window.Dialog.reject)
-        
-        self.window.buttonBox_2.accepted.connect(self.window.Dialog.accept)
-        self.window.buttonBox_2.clicked.connect(self.close_window)
-        self.window.buttonBox_2.rejected.connect(self.window.Dialog.reject)
-        
-        app.exec_()
+        self.gui.buttonBox.clicked.connect(self.okClicked)
+        self.gui.buttonBox_2.clicked.connect(self.gui.close)
+        self.gui.closeEvent = self.closeEvent
 
+        # you execute your app
+        app.exec_()
+    
     def okClicked(self):
-        """cannot take any other imput than self. It's basically a slot """
-        
         #opening the live output GUI
+        self.gui.buttonBox.deleteLater()
+        
         self.output.show()
         
-        if self.window.step_rf.value()==1:
+        if self.gui.step_rf.value()==1:
             self.graph.show()
         
         # creating arrays with my variables that I'll then feed to my function
-        sol_val = [self.window.min_sol.value(), self.window.step_sol.value(), self.window.max_sol.value()]
-        bsol_val = [self.window.min_bsol.value(), self.window.step_bsol.value(), self.window.max_bsol.value()]
-        rf_val = [self.window.min_rf.value(), self.window.step_rf.value(), self.window.max_rf.value()]
-        #self.close_window()
-        
+        sol_val = [self.gui.min_sol.value(), self.gui.step_sol.value(), self.gui.max_sol.value()]
+        bsol_val = [self.gui.min_bsol.value(), self.gui.step_bsol.value(), self.gui.max_bsol.value()]
+        rf_val = [self.gui.min_rf.value(), self.gui.step_rf.value(), self.gui.max_rf.value()]
+
         self.create_logfile()
+
+        self.fn_worker(self.model.loop, self.model.set_sol, sol_val, bsol_val, rf_val)    
+       
+    def closeEvent(self, event):
+        #print("event")
+        reply = QtGui.QMessageBox.question(self.gui, 'Message',
+            "Are you sure to quit?", QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
+
+        if reply == QtGui.QMessageBox.Yes:
+            event.accept()
+            sys.exit()
+        else:
+            event.ignore()
+            
+    def fn_worker(self, function1, function2, arg1, arg2, arg3):
+        # create global instance of QThreadPool
+        self.threadpool = QThreadPool()
         
-        self.threadpool = QtCore.QThreadPool.globalInstance()
-        print("Multithreading with maximum %d threads" % self.threadpool.maxThreadCount())
-        self.fn_worker(self.model.loop, self.model.set_sol, sol_val, bsol_val, rf_val)
+        # Pass the function to execute
+        worker = Worker(function1, function2, arg1, arg2, arg3) # Any other args, kwargs are passed to the run function
+        
+        worker.signals.result.connect(self.print_output)
+        worker.signals.finished.connect(self.thread_complete)
+        worker.signals.progress.connect(self.progress_fn)
+        worker.signals.current_val.connect(self.update_text_fn)
+        
+        # Execute
+        self.threadpool.start(worker) 
         
     def create_logfile(self):
         dict_file = []
@@ -147,11 +168,7 @@ class controller(object):
 #            fieldnames = ['SOL', 'BSOL', 'CHARGE', 'HCOR01', 'VCOR01', 'RF amp']  
 #            thewriter = csv.DictWriter(f, fieldnames = fieldnames)
 #            thewriter.writeheader()
-   
-    def close_window(self):
-        self.window.Dialog.close()
-        sys.exit()    
-        
+            
     def progress_fn(self, n):
         print("%d%% done" % n)
         self.output.progress_bar(n)
@@ -181,19 +198,8 @@ class controller(object):
     def thread_complete(self):
         print("THREAD COMPLETE!")
         self.output.finished()
- 
-    def fn_worker(self, fn_loop, fn_sweep, sol_val, bsol_val, rf_val):
-        # Pass the function to execute        
-        worker = Worker(fn_loop, fn_sweep, sol_val, bsol_val, rf_val) # Any other args, kwargs are passed to the run function
 
-        worker.signals.result.connect(self.print_output)
-        worker.signals.finished.connect(self.thread_complete)
-        worker.signals.progress.connect(self.progress_fn)
-        worker.signals.current_val.connect(self.update_text_fn)
         
-        # Execute
-        self.threadpool.start(worker) 
-    
     def add_point(self, sol, bsol, charge):
         
         # range of charge that you want to resolve
@@ -214,5 +220,6 @@ today = date.today()
 current_date = int(today.strftime("%d%m%Y"))
 
 # choosing where to save the YAML file 
-path_yaml = (r'C:\Users\qqi63789\OneDrive - Science and Technology Facilities Council\VirtualAccelerator\app6\yaml_%d.yaml' % current_date)      
-c = controller(view, model)
+path_yaml = (r'C:\Users\qqi63789\OneDrive - Science and Technology Facilities Council\VirtualAccelerator\app7\yaml_%d.yaml' % current_date)     
+
+c = controller(view,model)        

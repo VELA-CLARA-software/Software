@@ -343,6 +343,24 @@ class Model(QObject):
         self.shut.open(self.shut1)
         self.shut.open(self.shut2)
 
+    def degauss_2(self):
+        print 'Close the laser shutters'
+        self.shut.close(self.shut1)
+        self.shut.close(self.shut2)
+        #do degaussing
+        print 'Degaussing...'
+        self.Cmagnets.degauss(self.dipole,True)
+        while (self.Cmagnets.isDegaussing(self.dipole)==False):
+            print 'Waiting to start degaussing...'
+            time.sleep(0.2)
+        while (self.Cmagnets.isDegaussing(self.dipole)==True):
+            print 'still degaussing...'
+            time.sleep(0.2)
+        print 'Degaussing finished'
+        print 'Open the laser shutters'
+        self.shut.open(self.shut1)
+        self.shut.open(self.shut2)
+
     def measureMomentumAlign_1(self):
         #self.view.checkBox.setCheckable(False)
         #self.view.checkBox_2.setCheckable(False)

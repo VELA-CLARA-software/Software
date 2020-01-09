@@ -2,7 +2,7 @@ from PyQt4 import QtGui, QtCore
 import sys
 sys.path.append('../model/')
 import controller.control as controller
-import view.view_v6 as view
+import view.view_v7 as view
 import model.model as model
 import data.data as data
 

@@ -75,7 +75,7 @@ class classmachine(QtCore.QObject):
         
         # getting value from the WCM 
         chargenow = np.random.random()*500                                                                   # for now use a random number
-        #chargenow = charge_control.getWCMCharge()
+        #chargenow = self.getWCMCharge(charge_control)
         print 'Charge = ', chargenow
         
         # getting the HCOR01 and VCOR01 values
@@ -84,7 +84,7 @@ class classmachine(QtCore.QObject):
         
         print 'HCOR01 = ', hcor01_val
         print 'VCOR01 = ', vcor01_val
-        
+         
         # getting an image from a camera
         mycam = 'S01-CAM-01'
         cam_control.startAcquiring(mycam)                                                                    
@@ -102,19 +102,22 @@ class classmachine(QtCore.QObject):
             cam_control.stopAcquiring()
         else:
             print "CAMERA NOT ACQUIRING"
-        
+            
         #for now using a placeholder path because virtual cameras don't really work so only else is read
         now_test = datetime.datetime.now()
         nowiso_test = now_test.isoformat('-').replace(":", "-").split('.', 1)[0]
         path_test = '\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Work\\2018\\01\\fjtest\\'+str(nowiso_test)+'_'+str(mycam)+'_SOL'+str(int(sol))+'_BSOL'+str(int(bsol))+'_RFAmp'+str(round(rf_val,2))+'MWm_'+'S01VCR1_'+str(round(vcor01_val,2))+'_S01HCR1_'+str(round(hcor01_val,2))+'.bin'
         
         print 'Saving data...'
-        
+
         return sol, bsol, chargenow, hcor01_val, vcor01_val, rf_val, path_test
     
     def loop(self, function, sol, bsol, rf, progress_callback, result_callback, current_val_callback):
         '''Loop function'''
-    
+
+        #define number of shots that you want to have in a buffer
+        number_of_shots = 10
+        
         #starting sol values
         sol_start = sol[0]
         bsol_start = bsol[0]
@@ -128,7 +131,6 @@ class classmachine(QtCore.QObject):
         import VELA_CLARA_Magnet_Control as magx
         import VELA_CLARA_General_Monitor as monx
         import VELA_CLARA_Camera_Control as camx
-        import VELA_CLARA_Charge_Control as chargex
         import VELA_CLARA_LLRF_Control as rfx
 
         
@@ -142,13 +144,13 @@ class classmachine(QtCore.QObject):
         cam_init.setVerbose()
         
         # initialize the WCM
-        #mon_init = monx.init()
-        #charge = mon_init.connectPV('VM-CLA-S01-DIA-WCM-01:Q')
-        
-        # initialize the charge                         
-        charge_init = chargex.init()
-        charge_control = charge_init.virtual_Charge_Controller()
-        
+        charge_control = monx.init()
+        charge_control.setVerbose()
+        self.id = charge_control.connectPV('CLA-C09-IOC-CS-04:FMC_1_ADC_4_READ')
+        charge_control.setBufferSize(self.id, number_of_shots)
+        #comment out later v
+        print("Connected with id = ", charge_control)
+
         # initialize the rf ccontroller
         rfinit = rfx.init()
         rf_control = rfinit.virtual_CLARA_LRRG_LLRF_Controller()
@@ -189,3 +191,36 @@ class classmachine(QtCore.QObject):
                     result_callback.emit(result_sweep[0], result_sweep[1], result_sweep[2], result_sweep[3], result_sweep[4], result_sweep[5], result_sweep[6])
                     
         return 'CONGRATS!'
+    
+    def getWCMCharge(self, charge_control):
+        charge_control.clearBuffer(self.id)
+        while charge_control.isBufferFull(self.id) == False:
+               time.sleep(1)
+               print("Buffer not full")
+        points = charge_control.getBuffer(self.id)
+        charge = self.chargeCalc(points)
+        print('#############################################################')
+        print('Charge:', charge)
+        for key,value in points.iteritems():
+            if len(value) > 0:
+                print(key, value[0:2])
+            else:
+                print(key, value)
+        return charge
+        
+    def chargeCalc(self, array_dict):                                               # check if you have the right scaling factors for the old electronics
+        
+        array= np.copy(array_dict.values())
+        with np.nditer(array, op_flags=['readwrite']) as it:
+            for x in it:
+                if x<0 :
+                    x[...]=((x+2**16+1)*3.006381547039116e-05-0.984556575250828)*0.140              
+                else:
+                    x[...]=(x*3.006381547039116e-05-0.984556575250828)*0.140
+        
+        # charge in pico coulombs for each shot
+        array = array*(1/(240e03))*1e12
+        avrg_array = np.mean(array, axis=0)
+        charge = sum(avrg_array)
+        
+        return charge

@@ -2,8 +2,8 @@ from PyQt4 import QtGui, QtCore
 from PyQt4.QtGui import QApplication
 import sys,os
 import time
-import numpy as np
-import pyqtgraph as pg
+from numpy import mean
+from pyqtgraph import GraphicsView, GraphicsLayout, BarGraphItem
 sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\\..\\..\\..\\Widgets\\loggerWidget\\')
 #import loggerWidget as lw
 import random as r
@@ -25,10 +25,10 @@ class Controller():
 		#'INJ-BPM04', 'INJ-BPM05', 'BA1-BPM01', 'BA1-BPM02', 'BA1-BPM03', 'BA1-BPM04']
 
 		'''1 Create Momentum Graphs'''
-		monitor = pg.GraphicsView()
-		#text = pg.TextItem('Blue = positions\n<br>')
-		#layout = pg.GraphicsLayout(border=(100,100,100))
-		layout = pg.GraphicsLayout()
+		monitor = GraphicsView()
+		#text = TextItem('Blue = positions\n<br>')
+		#layout = GraphicsLayout(border=(100,100,100))
+		layout = GraphicsLayout()
 		monitor.setCentralItem(layout)
 		#monitor.addItem(text)
 
@@ -73,10 +73,10 @@ class Controller():
 			getattr(self, 'positionGraph_'+row).setMouseEnabled(x=False, y=True)
 			getattr(self, 'positionGraph_'+row).setXRange(-0.7,1.7)
 			getattr(self, 'positionGraph_'+row).setYRange(-15,15)
-			setattr(self, 'bg'+row, pg.BarGraphItem(x=self.xdict.keys(), height=[0.0, 0.0], width=self.width1, pen=self.barcolour1_live, brush=self.barcolour1_live))
+			setattr(self, 'bg'+row, BarGraphItem(x=self.xdict.keys(), height=[0.0, 0.0], width=self.width1, pen=self.barcolour1_live, brush=self.barcolour1_live))
 			# add y as differet colour
-			setattr(self, 'bg'+row+'_y', pg.BarGraphItem(x=self.xdict.keys(), height=[0.0, 0.0], width=self.width1, pens=[None,self.barcolour1y_live], brushes=[None,self.barcolour1y_live]))
-			setattr(self, 'bg'+row+'_target', pg.BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=self.width2, pen=self.barcolour2_live, brush=self.barcolour2_live))
+			setattr(self, 'bg'+row+'_y', BarGraphItem(x=self.xdict.keys(), height=[0.0, 0.0], width=self.width1, pens=[None,self.barcolour1y_live], brushes=[None,self.barcolour1y_live]))
+			setattr(self, 'bg'+row+'_target', BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=self.width2, pen=self.barcolour2_live, brush=self.barcolour2_live))
 			getattr(self, 'positionGraph_'+row).addItem(getattr(self, 'bg'+row+'_target'))
 			getattr(self, 'positionGraph_'+row).addItem(getattr(self, 'bg'+row))
 			getattr(self, 'positionGraph_'+row).addItem(getattr(self, 'bg'+row+'_y'))
@@ -114,18 +114,18 @@ class Controller():
 		# width=0.9
 		# barcolour1=(30,80,255)
 		# barcolour2='r'
-		# self.bg1 = pg.BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=width, pen=barcolour1, brush=barcolour1)
-		# self.bg1_target = pg.BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=1, pen=barcolour2, brush=barcolour2)
-		# self.bg2 = pg.BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=width, pen=barcolour1, brush=barcolour1)
-		# self.bg2_target = pg.BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=1, pen=barcolour2, brush=barcolour2)
-		# self.bg3 = pg.BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=width, pen=barcolour1, brush=barcolour1)
-		# self.bg3_target = pg.BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=1, pen=barcolour2, brush=barcolour2)
-		# self.bg4 = pg.BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=width, pen=barcolour1, brush=barcolour1)
-		# self.bg4_target = pg.BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=1, pen=barcolour2, brush=barcolour2)
-		# self.bg5 = pg.BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=width, pen=barcolour1, brush=barcolour1)
-		# self.bg5_target = pg.BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=1, pen=barcolour2, brush=barcolour2)
-		# self.bg6 = pg.BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=width, pen=barcolour1, brush=barcolour1)
-		# self.bg6_target = pg.BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=1, pen=barcolour2, brush=barcolour2)
+		# self.bg1 = BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=width, pen=barcolour1, brush=barcolour1)
+		# self.bg1_target = BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=1, pen=barcolour2, brush=barcolour2)
+		# self.bg2 = BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=width, pen=barcolour1, brush=barcolour1)
+		# self.bg2_target = BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=1, pen=barcolour2, brush=barcolour2)
+		# self.bg3 = BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=width, pen=barcolour1, brush=barcolour1)
+		# self.bg3_target = BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=1, pen=barcolour2, brush=barcolour2)
+		# self.bg4 = BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=width, pen=barcolour1, brush=barcolour1)
+		# self.bg4_target = BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=1, pen=barcolour2, brush=barcolour2)
+		# self.bg5 = BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=width, pen=barcolour1, brush=barcolour1)
+		# self.bg5_target = BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=1, pen=barcolour2, brush=barcolour2)
+		# self.bg6 = BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=width, pen=barcolour1, brush=barcolour1)
+		# self.bg6_target = BarGraphItem(x=self.xdict.keys(), height=[0.0,0.0], width=1, pen=barcolour2, brush=barcolour2)
 
 
 
@@ -159,19 +159,19 @@ class Controller():
 			getattr(self, 'positionGraph_'+row+'_Q').setMouseEnabled(x=False, y=True)
 			getattr(self, 'positionGraph_'+row+'_Q').setXRange(-0.7,0.7)
 			getattr(self, 'positionGraph_'+row+'_Q').setYRange(0,135)
-			setattr(self, 'bg'+row+'_Q', pg.BarGraphItem(x=self.xdict_Q.keys(), height=[0.0], width=0.5))
+			setattr(self, 'bg'+row+'_Q', BarGraphItem(x=self.xdict_Q.keys(), height=[0.0], width=0.5))
 			# line to add WCM bar chart
-			setattr(self, 'bg'+row+'_WCM', pg.BarGraphItem(x=self.xdict_Q.keys(), height=[0.0], width=0.52, pen=self.barcolourQ_notLive, brush=(0,0,0)))
+			setattr(self, 'bg'+row+'_WCM', BarGraphItem(x=self.xdict_Q.keys(), height=[0.0], width=0.52, pen=self.barcolourQ_notLive, brush=(0,0,0)))
 			getattr(self, 'positionGraph_'+row+'_Q').addItem(getattr(self, 'bg'+row+'_WCM'))
 			getattr(self, 'positionGraph_'+row+'_Q').addItem(getattr(self, 'bg'+row+'_Q'))
 		#self.positionGraph_1_Q = layout.addPlot(title="S01-BPM-01")
 		#self.positionGraph_1_Q.axes['bottom']['item'].setTicks([self.xdict_Q.items()])
 		#self.positionGraph_1_Q.setMouseEnabled(x=False, y=True)
-		#self.bg1_Q = pg.BarGraphItem(x=self.xdict_Q.keys(), height=[0.0], width=1)
+		#self.bg1_Q = BarGraphItem(x=self.xdict_Q.keys(), height=[0.0], width=1)
 		#self.positionGraph_1_Q.addItem(self.bg1_Q)
 		'''1.2 Create place to diplay an image of a YAG screen'''
 		# yagImageBox = layout.addViewBox(lockAspect=True, colspan=2)
-		# self.YAGImage = pg.ImageItem(np.random.normal(size=(2560,2160)))
+		# self.YAGImage = ImageItem(random.normal(size=(2560,2160)))
 		# yagImageBox.addItem(self.YAGImage)
 		# self.displayMom = layout.addLabel('MOMENTUM = MeV/c')
 		layout.nextRow()
@@ -179,8 +179,8 @@ class Controller():
 		self.view.horizontalLayout_4.addWidget(monitor)
 
 		'''2. Create Momentum Spread Graphs'''
-		# monitor_s = pg.GraphicsView()
-		# layout_s = pg.GraphicsLayout(border=(100,100,100))
+		# monitor_s = GraphicsView()
+		# layout_s = GraphicsLayout(border=(100,100,100))
 		# monitor_s.setCentralItem(layout_s)
 		# self.dispersionGraph  = layout_s.addPlot(title="Dispersion")
 		# self.dCurve = self.dispersionGraph.plot(pen = 'y')
@@ -283,10 +283,10 @@ class Controller():
 		# connect current up/down buttons
 		for r, bpm_name in enumerate(self.bpm_list):
 			row = str(r+1)
-			getattr(self.view, 'pushButton_x_up_'+row).clicked.connect(partial(self.model.stepCurrent2, self.model.Cmagnets, 'x', 'up', row))
-			getattr(self.view, 'pushButton_x_down_'+row).clicked.connect(partial(self.model.stepCurrent2, self.model.Cmagnets, 'x', 'down', row))
-			getattr(self.view, 'pushButton_y_up_'+row).clicked.connect(partial(self.model.stepCurrent2, self.model.Cmagnets, 'y', 'up', row))
-			getattr(self.view, 'pushButton_y_down_'+row).clicked.connect(partial(self.model.stepCurrent2, self.model.Cmagnets, 'y', 'down', row))
+			#getattr(self.view, 'pushButton_x_up_'+row).clicked.connect(partial(self.model.stepCurrent2, self.model.Cmagnets, 'x', 'up', row))
+			#getattr(self.view, 'pushButton_x_down_'+row).clicked.connect(partial(self.model.stepCurrent2, self.model.Cmagnets, 'x', 'down', row))
+			#getattr(self.view, 'pushButton_y_up_'+row).clicked.connect(partial(self.model.stepCurrent2, self.model.Cmagnets, 'y', 'up', row))
+			#getattr(self.view, 'pushButton_y_down_'+row).clicked.connect(partial(self.model.stepCurrent2, self.model.Cmagnets, 'y', 'down', row))
 
 
 		# self.view.doubleSpinBox_V_6.valueChanged.connect(partial(self.model.steer_V, 6, userinput))
@@ -359,12 +359,12 @@ class Controller():
 		# self.bg6.setOpts(x=self.xdict.keys(), height=[1*self.model.Cbpms.getXFromPV('INJ-BPM05'),1*self.model.Cbpms.getYFromPV('INJ-BPM05')])
 		# self.bg6_target.setOpts(x=self.xdict.keys(), height=[getattr(self.view, 'doubleSpinBox_x_'+str(6)).value(), getattr(self.view, 'doubleSpinBox_y_'+str(6)).value()])
 		# Q_WCM = []
-		# for i in np.arange(0,2):
+		# for i in arange(0,2):
 		# 	Q_WCM.append(caget('CLA-S01-DIA-WCM-01:Q'))
-		# Q_WCM = np.mean(Q_WCM)
+		# Q_WCM = mean(Q_WCM)
 
 		try:
-			self.model.WCM()
+			self.model.WCM(self.model.Ccharge)
 		except:
 			pass
 
@@ -380,17 +380,17 @@ class Controller():
 			if len(self.model.Cbpms.getBPMQBuffer(bpm_name)) > 0 and str(self.model.Cbpms.getStatusBuffer(bpm_name)[-1]) == 'GOOD':
 				#print 'yes'
 				try:
-					getattr(self, 'bg'+row+'_WCM').setOpts(x=self.xdict_Q.keys(), height=[np.mean(self.model.Q_WCM)], pen=self.barcolourQ_live)
+					getattr(self, 'bg'+row+'_WCM').setOpts(x=self.xdict_Q.keys(), height=[mean(self.model.Q_WCM)], pen=self.barcolourQ_live)
 				except:
 					getattr(self, 'bg'+row+'_WCM').setOpts(x=self.xdict_Q.keys(), height=[0], pen=self.barcolourQ_live)
-				getattr(self, 'bg'+row+'_Q').setOpts(x=self.xdict_Q.keys(), height=[np.mean(self.model.Cbpms.getBPMQBuffer(bpm_name))], pen=self.barcolour3_live, brush=self.barcolour3_live)
+				getattr(self, 'bg'+row+'_Q').setOpts(x=self.xdict_Q.keys(), height=[mean(self.model.Cbpms.getBPMQBuffer(bpm_name))], pen=self.barcolour3_live, brush=self.barcolour3_live)
 				getattr(self, 'bg'+row).setOpts(pen=self.barcolour1_live, brush=self.barcolour1_live)
 				getattr(self, 'bg'+row+'_y').setOpts(pens=[None, self.barcolour1y_live], brushes=[None, self.barcolour1y_live])
 				#getattr(self, 'bg'+row+'_WCM').setOpts(pen=self.barcolourQ_live)
 			else:
 				#print 'no'
 				try:
-					getattr(self, 'bg'+row+'_WCM').setOpts(x=self.xdict_Q.keys(), height=[np.mean(self.model.Q_WCM)], pen=self.barcolourQ_notLive)
+					getattr(self, 'bg'+row+'_WCM').setOpts(x=self.xdict_Q.keys(), height=[mean(self.model.Q_WCM)], pen=self.barcolourQ_notLive)
 				except:
 					getattr(self, 'bg'+row+'_WCM').setOpts(x=self.xdict_Q.keys(), height=[0], pen=self.barcolourQ_notLive)
 				getattr(self, 'bg'+row+'_Q').setOpts(x=self.xdict_Q.keys(), height=[0], pen=self.barcolourQ_notLive, brush=self.barcolourQ_notLive)
@@ -398,10 +398,10 @@ class Controller():
 				getattr(self, 'bg'+row+'_y').setOpts(pens=[None, self.barcolour1y_notLive], brushes=[None, self.barcolour1y_notLive])
 				#getattr(self, 'bg'+row+'_WCM').setOpts(pen=self.barcolourQ_notLive)
 
-						# self.bg1_Q.setOpts(x=self.xdict_Q.keys(), height=[np.mean(self.model.Cbpms.getBPMQBuffer('S01-BPM01'))])
-		# self.bg2_Q.setOpts(x=self.xdict_Q.keys(), height=[np.mean(self.model.Cbpms.getBPMQBuffer('S02-BPM01'))])
-		# self.bg3_Q.setOpts(x=self.xdict_Q.keys(), height=[np.mean(self.model.Cbpms.getBPMQBuffer('S02-BPM02'))])
-		# self.bg4_Q.setOpts(x=self.xdict_Q.keys(), height=[np.mean(self.model.Cbpms.getBPMQBuffer('C2V-BPM01'))])
+						# self.bg1_Q.setOpts(x=self.xdict_Q.keys(), height=[mean(self.model.Cbpms.getBPMQBuffer('S01-BPM01'))])
+		# self.bg2_Q.setOpts(x=self.xdict_Q.keys(), height=[mean(self.model.Cbpms.getBPMQBuffer('S02-BPM01'))])
+		# self.bg3_Q.setOpts(x=self.xdict_Q.keys(), height=[mean(self.model.Cbpms.getBPMQBuffer('S02-BPM02'))])
+		# self.bg4_Q.setOpts(x=self.xdict_Q.keys(), height=[mean(self.model.Cbpms.getBPMQBuffer('C2V-BPM01'))])
 		#chargebufferfromfunc = bpmctrl.getBPMQBuffer(bpm_name)
 
 		#self.view.label_H_1.setNum(1*self.model.Cbpms.getXFromPV('S01-BPM01'))
@@ -413,8 +413,8 @@ class Controller():
 			getattr(self.view, 'label_H_'+row).setNum(1*self.model.Cbpms.getXFromPV(str(getattr(self.view, 'comboBox_'+row).currentText())))
 			getattr(self.view, 'label_V_'+row).setNum(1*self.model.Cbpms.getYFromPV(str(getattr(self.view, 'comboBox_'+row).currentText())))
 			if len(self.model.Cbpms.getBPMQBuffer(bpm_name)) > 0 and str(self.model.Cbpms.getStatusBuffer(bpm_name)[-1]) == 'GOOD':
-				getattr(self.view, 'label_V_av_'+row).setNum(np.mean(1*self.model.Cbpms.getBPMYPVBuffer(str(getattr(self.view, 'comboBox_'+row).currentText()))))
-				getattr(self.view, 'label_H_av_'+row).setNum(np.mean(1*self.model.Cbpms.getBPMXPVBuffer(str(getattr(self.view, 'comboBox_'+row).currentText()))))
+				getattr(self.view, 'label_V_av_'+row).setNum(mean(1*self.model.Cbpms.getBPMYPVBuffer(str(getattr(self.view, 'comboBox_'+row).currentText()))))
+				getattr(self.view, 'label_H_av_'+row).setNum(mean(1*self.model.Cbpms.getBPMXPVBuffer(str(getattr(self.view, 'comboBox_'+row).currentText()))))
 			else:
 				getattr(self.view, 'label_V_av_'+row).setText('')
 				getattr(self.view, 'label_V_av_'+row).setText('')
