@@ -46,7 +46,6 @@ print('main_controller: import rf_conditioning_data')
 from src.data.rf_conditioning_data import rf_conditioning_data
 print('main_controller: import monitor_hub')
 from src.monitors.monitor_hub import monitor_hub
-
 from src.view.rf_condition_view import rf_condition_view
 
 from PyQt4.QtGui import QApplication
@@ -114,6 +113,8 @@ class main_controller(object):
         self.hardware = hardware_control_hub()
         self.hardware.start_up()
 
+        self.hardware.llrf_controller.set_trace_mean_positions()
+
 
         #
         # CATAP hardware controllers, these live here and are passed to where they are needed
@@ -161,9 +162,9 @@ class main_controller(object):
     def update_expert_values(self):
         # get all teh expert values from the various places that want them
         print("self.update_expert_values called")
-        self.monitor_hub.llrf_monitor.update_expert_values()
+        self.monitor_hub.llrf_monitor.get_llrf_expert_values()
         # update the gui with the latest values
-        self.view.update_expert_values()
+        self.view.update_expert_values_in_gui()
 
 
 

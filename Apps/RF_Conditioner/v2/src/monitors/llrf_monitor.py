@@ -211,7 +211,7 @@ class llrf_monitor(monitor):
     def update_pulse_length(self):
         '''
         HOW DO WE ACTUALLY DEFINE PULSE LENGTH!!!!!!!!!!!!
-        This funcitno is not used yet, we don't change pulse length
+
         :return:
         '''
         #
@@ -219,6 +219,9 @@ class llrf_monitor(monitor):
         # pulse length
         # THIS OLD WAY IS NOW BROKE, we use an RF RAMP table Instead we now use the  getPulseShape vector and count the number of 1.0s (SketchyAF)
         # pulse length
+
+        # TODO: Is thsi the same method for the lianc and the gun ???
+
         self.values[self.data.pulse_length] = self.llrf_control.getPulseShape().count(1) * 0.009
         #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         # MAGIC THIS IS NOT EXACTLY CORRECT,
@@ -350,23 +353,128 @@ class llrf_monitor(monitor):
         return 'PROBE_PHASE' in str
 
 
-    def update_expert_values(self):
+    def get_llrf_expert_values(self):
         '''
         The "expert_panel" parameters are only updated when the button is clicked and this
         function is  called. They are all stored in expert_values dict
         :return:
         '''
         # DUMMY
-        self.expert_values[self.data.is_breakdown_monitor_kf_pow] = False
-        self.expert_values[self.data.is_breakdown_monitor_kr_pow] = False
-        self.expert_values[self.data.is_breakdown_monitor_cf_pow] = False
-        self.expert_values[self.data.is_breakdown_monitor_cr_pow] = False
-        self.expert_values[self.data.is_breakdown_monitor_cp_pow] = False
-        self.expert_values[self.data.is_breakdown_monitor_kf_pha] = False
-        self.expert_values[self.data.is_breakdown_monitor_kr_pha] = False
-        self.expert_values[self.data.is_breakdown_monitor_cf_pha] = False
-        self.expert_values[self.data.is_breakdown_monitor_cr_pha] = False
-        self.expert_values[self.data.is_breakdown_monitor_cp_pha] = False
+        # get Trace info
+        # for trace in  self.llrf_control.getTraceNames():
+        #     print("Getting Expert values for ", trace)
+
+        ev = self.expert_values
+
+        trace = 'KLYSTRON_FORWARD_POWER'
+        ev[self.data.mask_level_kf_pow] = self.llrf_control.getMaskValue(trace)
+        ev[self.data.mask_start_kf_pow] = self.llrf_control.getMaskStartIndex(trace)
+        ev[self.data.mask_end_kf_pow] = self.llrf_control.getMaskEndIndex(trace)
+        ev[self.data.mask_min_kf_pow] = self.llrf_control.getMaskFloor(trace)
+        ev[self.data.mask_window_start_kf_pow] = self.llrf_control.getMaskWindowStartIndex(trace)
+        ev[self.data.mask_window_end_kf_pow] = self.llrf_control.getMaskWindowEndIndex(trace)
+        ev[self.data.streak_kf_pow] = self.llrf_control.getNumContinuousOutsideMaskCount(trace)
+
+
+        trace = 'CAVITY_FORWARD_POWER'
+        ev[self.data.mask_level_cf_pow] = self.llrf_control.getMaskValue(trace)
+        ev[self.data.mask_start_cf_pow] = self.llrf_control.getMaskStartIndex(trace)
+        ev[self.data.mask_end_cf_pow] = self.llrf_control.getMaskEndIndex(trace)
+        ev[self.data.mask_min_cf_pow] = self.llrf_control.getMaskFloor(trace)
+        ev[self.data.mask_window_start_cf_pow] = self.llrf_control.getMaskWindowStartIndex(trace)
+        ev[self.data.mask_window_end_cf_pow] = self.llrf_control.getMaskWindowEndIndex(trace)
+        ev[self.data.streak_cf_pow] = self.llrf_control.getNumContinuousOutsideMaskCount(trace)
+
+        trace = 'CAVITY_REVERSE_POWER'
+        ev[self.data.mask_level_cr_pow] = self.llrf_control.getMaskValue(trace)
+        ev[self.data.mask_start_cr_pow] = self.llrf_control.getMaskStartIndex(trace)
+        ev[self.data.mask_end_cr_pow] = self.llrf_control.getMaskEndIndex(trace)
+        ev[self.data.mask_min_cr_pow] = self.llrf_control.getMaskFloor(trace)
+        ev[self.data.mask_window_start_cr_pow] = self.llrf_control.getMaskWindowStartIndex(trace)
+        ev[self.data.mask_window_end_cr_pow] = self.llrf_control.getMaskWindowEndIndex(trace)
+        ev[self.data.streak_cr_pow] = self.llrf_control.getNumContinuousOutsideMaskCount(trace)
+
+        trace = 'CAVITY_PROBE_POWER'
+        ev[self.data.mask_level_cp_pow] = self.llrf_control.getMaskValue(trace)
+        ev[self.data.mask_start_cp_pow] = self.llrf_control.getMaskStartIndex(trace)
+        ev[self.data.mask_end_cp_pow] = self.llrf_control.getMaskEndIndex(trace)
+        ev[self.data.mask_min_cp_pow] = self.llrf_control.getMaskFloor(trace)
+        ev[self.data.mask_window_start_cp_pow] = self.llrf_control.getMaskWindowStartIndex(trace)
+        ev[self.data.mask_window_end_cp_pow] = self.llrf_control.getMaskWindowEndIndex(trace)
+        ev[self.data.streak_cp_pow] = self.llrf_control.getNumContinuousOutsideMaskCount(trace)
+
+
+        trace = 'KLYSTRON_FORWARD_PHASE'
+        ev[self.data.mask_level_kf_pha] = self.llrf_control.getMaskValue(trace)
+        ev[self.data.mask_start_kf_pha] = self.llrf_control.getMaskStartIndex(trace)
+        ev[self.data.mask_end_kf_pha] = self.llrf_control.getMaskEndIndex(trace)
+        ev[self.data.mask_min_kf_pha] = self.llrf_control.getMaskFloor(trace)
+        ev[self.data.mask_window_start_kf_pha] = self.llrf_control.getMaskWindowStartIndex(trace)
+        ev[self.data.mask_window_end_kf_pha] = self.llrf_control.getMaskWindowEndIndex(trace)
+        ev[self.data.streak_kf_pha] = self.llrf_control.getNumContinuousOutsideMaskCount(trace)
+
+
+        trace = 'CAVITY_FORWARD_PHASE'
+        ev[self.data.mask_level_cf_pha] = self.llrf_control.getMaskValue(trace)
+        ev[self.data.mask_start_cf_pha] = self.llrf_control.getMaskStartIndex(trace)
+        ev[self.data.mask_end_cf_pha] = self.llrf_control.getMaskEndIndex(trace)
+        ev[self.data.mask_min_cf_pha] = self.llrf_control.getMaskFloor(trace)
+        ev[self.data.mask_window_start_cf_pha] = self.llrf_control.getMaskWindowStartIndex(trace)
+        ev[self.data.mask_window_end_cf_pha] = self.llrf_control.getMaskWindowEndIndex(trace)
+        ev[self.data.streak_cf_pha] = self.llrf_control.getNumContinuousOutsideMaskCount(trace)
+
+        trace = 'CAVITY_REVERSE_PHASE'
+        ev[self.data.mask_level_cr_pha] = self.llrf_control.getMaskValue(trace)
+        ev[self.data.mask_start_cr_pha] = self.llrf_control.getMaskStartIndex(trace)
+        ev[self.data.mask_end_cr_pha] = self.llrf_control.getMaskEndIndex(trace)
+        ev[self.data.mask_min_cr_pha] = self.llrf_control.getMaskFloor(trace)
+        ev[self.data.mask_window_start_cr_pha] = self.llrf_control.getMaskWindowStartIndex(trace)
+        ev[self.data.mask_window_end_cr_pha] = self.llrf_control.getMaskWindowEndIndex(trace)
+        ev[self.data.streak_cr_pha] = self.llrf_control.getNumContinuousOutsideMaskCount(trace)
+
+        trace = 'CAVITY_PROBE_PHASE'
+        ev[self.data.mask_level_cp_pha] = self.llrf_control.getMaskValue(trace)
+        ev[self.data.mask_start_cp_pha] = self.llrf_control.getMaskStartIndex(trace)
+        ev[self.data.mask_end_cp_pha] = self.llrf_control.getMaskEndIndex(trace)
+        ev[self.data.mask_min_cp_pha] = self.llrf_control.getMaskFloor(trace)
+        ev[self.data.mask_window_start_cp_pha] = self.llrf_control.getMaskWindowStartIndex(trace)
+        ev[self.data.mask_window_end_cp_pha] = self.llrf_control.getMaskWindowEndIndex(trace)
+        ev[self.data.streak_cp_pha] = self.llrf_control.getNumContinuousOutsideMaskCount(trace)
+
+
+        print(
+        self.data.mask_level_cp_pha,  ev[self.data.mask_level_cp_pha],
+        self.data.mask_start_cp_pha ,  ev[self.data.mask_start_cp_pha] ,
+        self.data.mask_end_cp_pha   ,  ev[self.data.mask_end_cp_pha]   ,
+        self.data.mask_min_cp_pha   ,  ev[self.data.mask_min_cp_pha]   ,
+        self.data.mask_window_start_cp_pha,  ev[self.data.mask_window_start_cp_pha],
+        self.data.mask_window_end_cp_pha ,  ev[self.data.mask_window_end_cp_pha] ,
+        self.data.streak_cp_pha ,  ev[self.data.streak_cp_pha]
+        )
+
+
+
+        # bool isGlobalCheckMask()const;
+        # bool isPercentMask(const std::string& name)const;
+        # bool isAbsoluteMask(const std::string& name)const;
+        # bool isCheckingMask(const std::string& name)const;
+        # bool isNotCheckingMask(const std::string& name)const;
+        # bool isCheckingMask(const llrfStructs::LLRF_PV_TYPE pv)const;
+        # bool isNotCheckingMask(const llrfStructs::LLRF_PV_TYPE pv)const;
+
+
+
+        #
+        # self.expert_values[self.data.is_breakdown_monitor_kf_pow] = False
+        # self.expert_values[self.data.is_breakdown_monitor_kr_pow] = False
+        # self.expert_values[self.data.is_breakdown_monitor_cf_pow] = False
+        # self.expert_values[self.data.is_breakdown_monitor_cr_pow] = False
+        # self.expert_values[self.data.is_breakdown_monitor_cp_pow] = False
+        # self.expert_values[self.data.is_breakdown_monitor_kf_pha] = False
+        # self.expert_values[self.data.is_breakdown_monitor_kr_pha] = False
+        # self.expert_values[self.data.is_breakdown_monitor_cf_pha] = False
+        # self.expert_values[self.data.is_breakdown_monitor_cr_pha] = False
+        # self.expert_values[self.data.is_breakdown_monitor_cp_pha] = False
 
 
         # THIS IS THE NEW WAY TO GET POWER DATA

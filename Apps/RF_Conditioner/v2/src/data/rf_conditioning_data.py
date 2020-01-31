@@ -74,6 +74,14 @@ class rf_conditioning_data(object):
         self.logger = rf_conditioning_logger()
 
     def set_values_from_config(self):
+        """
+        In this function we copy values from the config to the values
+        We can also set values that need to be derived from config-data
+        generally the values dict should contain values that can change,
+        The config can be passed around classes to get config values where they are needed
+        This is a rule-of-thumb and i expect things to get hacked in as we learn more
+        :return:
+        """
         # alias for shorter lines
         rcd = rf_conditioning_data
         cd = self.config_data
@@ -84,6 +92,15 @@ class rf_conditioning_data(object):
             config.RF_REPETITION_RATE_ERROR]
         v[rcd.llrf_DAQ_rep_rate_min] = cd[config.RF_REPETITION_RATE] - cd[
             config.RF_REPETITION_RATE_ERROR]
+
+        ## set the pusle length min adn max ranges
+        v[rcd.expected_pulse_length] = cd[config.PULSE_LENGTH]
+        v[rcd.pulse_length_min] = cd[config.PULSE_LENGTH] + cd[
+            config.PULSE_LENGTH_ERROR]
+        v[rcd.pulse_length_max] = cd[config.PULSE_LENGTH] - cd[
+            config.PULSE_LENGTH_ERROR]
+
+
 
     def setup_pulse_count_breakdown_log(self):
         """
@@ -606,13 +623,22 @@ class rf_conditioning_data(object):
     all_value_keys.append(llrf_trigger_status)
     values[llrf_trigger_status] = state.UNKNOWN
 
+    ## PULSE LENGTH
     pulse_length = 'pulse_length'
     all_value_keys.append(pulse_length)
     values[pulse_length] = dummy_float
 
-    pulse_length_error = 'pulse_length_error'
-    all_value_keys.append(pulse_length_error)
-    values[pulse_length_error] = dummy_float
+    expected_pulse_length = 'expected_pulse_length'
+    all_value_keys.append(expected_pulse_length)
+    values[expected_pulse_length] = dummy_float
+
+    pulse_length_min = 'pulse_length_min'
+    all_value_keys.append(pulse_length_min)
+    values[pulse_length_min] = dummy_float
+
+    pulse_length_max = 'pulse_length_max'
+    all_value_keys.append(pulse_length_max)
+    values[pulse_length_max] = dummy_float
 
     pulse_length_status = 'pulse_length_status' # the apps internal state, good, new_bad etc
     all_value_keys.append(pulse_length_status)
@@ -1094,45 +1120,45 @@ class rf_conditioning_data(object):
     expert_value_keys.append(mean_end_cp_pha)
     expert_values[mean_end_cp_pha] = "STRING"
 
-    mask_unit_kf_pow                     = "mask_unit_kf_pow"
-    expert_value_keys.append(mask_unit_kf_pow)
-    expert_values[mask_unit_kf_pow] = "STRING"
+    mask_units_kf_pow                     = "mask_units_kf_pow"
+    expert_value_keys.append(mask_units_kf_pow)
+    expert_values[mask_units_kf_pow] = "STRING"
 
-    mask_unit_kr_pow                     = "mask_unit_kr_pow"
-    expert_value_keys.append(mask_unit_kr_pow)
-    expert_values[mask_unit_kr_pow] = "STRING"
+    mask_units_kr_pow                     = "mask_units_kr_pow"
+    expert_value_keys.append(mask_units_kr_pow)
+    expert_values[mask_units_kr_pow] = "STRING"
 
-    mask_unit_cf_pow                     = "mask_unit_cf_pow"
-    expert_value_keys.append(mask_unit_cf_pow)
-    expert_values[mask_unit_cf_pow] = "STRING"
+    mask_units_cf_pow                     = "mask_units_cf_pow"
+    expert_value_keys.append(mask_units_cf_pow)
+    expert_values[mask_units_cf_pow] = "STRING"
 
-    mask_unit_cr_pow                     = "mask_unit_cr_pow"
-    expert_value_keys.append(mask_unit_cr_pow)
-    expert_values[mask_unit_cr_pow] = "STRING"
+    mask_units_cr_pow                     = "mask_units_cr_pow"
+    expert_value_keys.append(mask_units_cr_pow)
+    expert_values[mask_units_cr_pow] = "STRING"
 
-    mask_unit_cp_pow                     = "mask_unit_cp_pow"
-    expert_value_keys.append(mask_unit_cp_pow)
-    expert_values[mask_unit_cp_pow] = "STRING"
+    mask_units_cp_pow                     = "mask_units_cp_pow"
+    expert_value_keys.append(mask_units_cp_pow)
+    expert_values[mask_units_cp_pow] = "STRING"
 
-    mask_unit_kf_pha                     = "mask_unit_kf_pha"
-    expert_value_keys.append(mask_unit_kf_pha)
-    expert_values[mask_unit_kf_pha] = "STRING"
+    mask_units_kf_pha                     = "mask_units_kf_pha"
+    expert_value_keys.append(mask_units_kf_pha)
+    expert_values[mask_units_kf_pha] = "STRING"
 
-    mask_unit_kr_pha                     = "mask_unit_kr_pha"
-    expert_value_keys.append(mask_unit_kr_pha)
-    expert_values[mask_unit_kr_pha] = "STRING"
+    mask_units_kr_pha                     = "mask_units_kr_pha"
+    expert_value_keys.append(mask_units_kr_pha)
+    expert_values[mask_units_kr_pha] = "STRING"
 
-    mask_unit_cf_pha                     = "mask_unit_cf_pha"
-    expert_value_keys.append(mask_unit_cf_pha)
-    expert_values[mask_unit_cf_pha] = "STRING"
+    mask_units_cf_pha                     = "mask_units_cf_pha"
+    expert_value_keys.append(mask_units_cf_pha)
+    expert_values[mask_units_cf_pha] = "STRING"
 
-    mask_unit_cr_pha                     = "mask_unit_cr_pha"
-    expert_value_keys.append(mask_unit_cr_pha)
-    expert_values[mask_unit_cr_pha] = "STRING"
+    mask_units_cr_pha                     = "mask_units_cr_pha"
+    expert_value_keys.append(mask_units_cr_pha)
+    expert_values[mask_units_cr_pha] = "STRING"
 
-    mask_unit_cp_pha                     = "mask_unit_cp_pha"
-    expert_value_keys.append(mask_unit_cp_pha)
-    expert_values[mask_unit_cp_pha] = "STRING"
+    mask_units_cp_pha                     = "mask_units_cp_pha"
+    expert_value_keys.append(mask_units_cp_pha)
+    expert_values[mask_units_cp_pha] = "STRING"
 
     mask_start_kf_pow                    = "mask_start_kf_pow"
     expert_value_keys.append(mask_start_kf_pow)
@@ -1494,45 +1520,112 @@ class rf_conditioning_data(object):
     expert_value_keys.append(mask_level_cp_pha)
     expert_values[mask_level_cp_pha] = "STRING"
 
-    mask_end_by_power_kf_pow             = "mask_end_by_power_kf_pow"
-    expert_value_keys.append(mask_end_by_power_kf_pow)
-    expert_values[mask_end_by_power_kf_pow] = "STRING"
 
-    mask_end_by_power_kr_pow             = "mask_end_by_power_kr_pow"
-    expert_value_keys.append(mask_end_by_power_kr_pow)
-    expert_values[mask_end_by_power_kr_pow] = "STRING"
 
-    mask_end_by_power_cf_pow             = "mask_end_by_power_cf_pow"
-    expert_value_keys.append(mask_end_by_power_cf_pow)
-    expert_values[mask_end_by_power_cf_pow] = "STRING"
 
-    mask_end_by_power_cr_pow             = "mask_end_by_power_cr_pow"
-    expert_value_keys.append(mask_end_by_power_cr_pow)
-    expert_values[mask_end_by_power_cr_pow] = "STRING"
+    drop_amplitude_kf_pow                      = "drop_amplitude_kf_pow"
+    expert_value_keys.append(drop_amplitude_kf_pow)
+    expert_values[drop_amplitude_kf_pow] = "STRING"
 
-    mask_end_by_power_cp_pow             = "mask_end_by_power_cp_pow"
-    expert_value_keys.append(mask_end_by_power_cp_pow)
-    expert_values[mask_end_by_power_cp_pow] = "STRING"
+    drop_amplitude_kr_pow                      = "drop_amplitude_kr_pow"
+    expert_value_keys.append(drop_amplitude_kr_pow)
+    expert_values[drop_amplitude_kr_pow] = "STRING"
 
-    mask_end_by_power_kf_pha             = "mask_end_by_power_kf_pha"
-    expert_value_keys.append(mask_end_by_power_kf_pha)
-    expert_values[mask_end_by_power_kf_pha] = "STRING"
+    drop_amplitude_cf_pow                      = "drop_amplitude_cf_pow"
+    expert_value_keys.append(drop_amplitude_cf_pow)
+    expert_values[drop_amplitude_cf_pow] = "STRING"
 
-    mask_end_by_power_kr_pha             = "mask_end_by_power_kr_pha"
-    expert_value_keys.append(mask_end_by_power_kr_pha)
-    expert_values[mask_end_by_power_kr_pha] = "STRING"
+    drop_amplitude_cr_pow                      = "drop_amplitude_cr_pow"
+    expert_value_keys.append(drop_amplitude_cr_pow)
+    expert_values[drop_amplitude_cr_pow] = "STRING"
 
-    mask_end_by_power_cf_pha             = "mask_end_by_power_cf_pha"
-    expert_value_keys.append(mask_end_by_power_cf_pha)
-    expert_values[mask_end_by_power_cf_pha] = "STRING"
+    drop_amplitude_cp_pow                      = "drop_amplitude_cp_pow"
+    expert_value_keys.append(drop_amplitude_cp_pow)
+    expert_values[drop_amplitude_cp_pow] = "STRING"
 
-    mask_end_by_power_cr_pha             = "mask_end_by_power_cr_pha"
-    expert_value_keys.append(mask_end_by_power_cr_pha)
-    expert_values[mask_end_by_power_cr_pha] = "STRING"
+    drop_amplitude_kf_pha                      = "drop_amplitude_kf_pha"
+    expert_value_keys.append(drop_amplitude_kf_pha)
+    expert_values[drop_amplitude_kf_pha] = "STRING"
 
-    mask_end_by_power_cp_pha             = "mask_end_by_power_cp_pha"
-    expert_value_keys.append(mask_end_by_power_cp_pha)
-    expert_values[mask_end_by_power_cp_pha] = "STRING"
+    drop_amplitude_kr_pha                      = "drop_amplitude_kr_pha"
+    expert_value_keys.append(drop_amplitude_kr_pha)
+    expert_values[drop_amplitude_kr_pha] = "STRING"
+
+    drop_amplitude_cf_pha                      = "drop_amplitude_cf_pha"
+    expert_value_keys.append(drop_amplitude_cf_pha)
+    expert_values[drop_amplitude_cf_pha] = "STRING"
+
+    drop_amplitude_cr_pha                      = "drop_amplitude_cr_pha"
+    expert_value_keys.append(drop_amplitude_cr_pha)
+    expert_values[drop_amplitude_cr_pha] = "STRING"
+
+    drop_amplitude_cp_pha                      = "drop_amplitude_cp_pha"
+    expert_value_keys.append(drop_amplitude_cp_pha)
+    expert_values[drop_amplitude_cp_pha] = "STRING"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    phase_end_by_power_kf_pow             = "phase_end_by_power_kf_pow"
+    expert_value_keys.append(phase_end_by_power_kf_pow)
+    expert_values[phase_end_by_power_kf_pow] = "STRING"
+
+    phase_end_by_power_kr_pow             = "phase_end_by_power_kr_pow"
+    expert_value_keys.append(phase_end_by_power_kr_pow)
+    expert_values[phase_end_by_power_kr_pow] = "STRING"
+
+    phase_end_by_power_cf_pow             = "phase_end_by_power_cf_pow"
+    expert_value_keys.append(phase_end_by_power_cf_pow)
+    expert_values[phase_end_by_power_cf_pow] = "STRING"
+
+    phase_end_by_power_cr_pow             = "phase_end_by_power_cr_pow"
+    expert_value_keys.append(phase_end_by_power_cr_pow)
+    expert_values[phase_end_by_power_cr_pow] = "STRING"
+
+    phase_end_by_power_cp_pow             = "phase_end_by_power_cp_pow"
+    expert_value_keys.append(phase_end_by_power_cp_pow)
+    expert_values[phase_end_by_power_cp_pow] = "STRING"
+
+    phase_end_by_power_kf_pha             = "phase_end_by_power_kf_pha"
+    expert_value_keys.append(phase_end_by_power_kf_pha)
+    expert_values[phase_end_by_power_kf_pha] = "STRING"
+
+    phase_end_by_power_kr_pha             = "phase_end_by_power_kr_pha"
+    expert_value_keys.append(phase_end_by_power_kr_pha)
+    expert_values[phase_end_by_power_kr_pha] = "STRING"
+
+    phase_end_by_power_cf_pha             = "phase_end_by_power_cf_pha"
+    expert_value_keys.append(phase_end_by_power_cf_pha)
+    expert_values[phase_end_by_power_cf_pha] = "STRING"
+
+    phase_end_by_power_cr_pha             = "phase_end_by_power_cr_pha"
+    expert_value_keys.append(phase_end_by_power_cr_pha)
+    expert_values[phase_end_by_power_cr_pha] = "STRING"
+
+    phase_end_by_power_cp_pha             = "phase_end_by_power_cp_pha"
+    expert_value_keys.append(phase_end_by_power_cp_pha)
+    expert_values[phase_end_by_power_cp_pha] = "STRING"
+
+
+
+
+
+
+
+
 
     mask_end_power_kf_pow                = "mask_end_power_kf_pow"
     expert_value_keys.append(mask_end_power_kf_pow)
@@ -1546,11 +1639,9 @@ class rf_conditioning_data(object):
     expert_value_keys.append(mask_end_power_cf_pow)
     expert_values[mask_end_power_cf_pow] = "STRING"
 
-
     mask_end_power_cr_pow                = "mask_end_power_cr_pow"
     expert_value_keys.append(mask_end_power_cr_pow)
     expert_values[mask_end_power_cr_pow] = "STRING"
-
 
     mask_end_power_cp_pow                = "mask_end_power_cp_pow"
     expert_value_keys.append(mask_end_power_cp_pow)
@@ -1575,6 +1666,10 @@ class rf_conditioning_data(object):
     mask_end_power_cp_pha                = "mask_end_power_cp_pha"
     expert_value_keys.append(mask_end_power_cp_pha)
     expert_values[mask_end_power_cp_pha] = "STRING"
+
+
+
+
 
     saved_on_breakdown_event_kf_pow      = "saved_on_breakdown_event_kf_pow"
     expert_value_keys.append(saved_on_breakdown_event_kf_pow)
@@ -1656,46 +1751,46 @@ class rf_conditioning_data(object):
     expert_value_keys.append(saved_on_vac_spike_cp_pha)
     expert_values[saved_on_vac_spike_cp_pha] = "STRING"
 
-    drop_amplitude_kf_pow                = "drop_amplitude_kf_pow"
-    expert_value_keys.append(drop_amplitude_kf_pow)
-    expert_values[drop_amplitude_kf_pow] = "STRING"
+    drop_amp_on_bd_kf_pow                = "drop_amp_on_bd_kf_pow"
+    expert_value_keys.append(drop_amp_on_bd_kf_pow)
+    expert_values[drop_amp_on_bd_kf_pow] = "STRING"
 
-    drop_amplitude_kr_pow                = "drop_amplitude_kr_pow"
-    expert_value_keys.append(drop_amplitude_kr_pow)
-    expert_values[drop_amplitude_kr_pow] = "STRING"
+    drop_amp_on_bd_kr_pow                = "drop_amp_on_bd_kr_pow"
+    expert_value_keys.append(drop_amp_on_bd_kr_pow)
+    expert_values[drop_amp_on_bd_kr_pow] = "STRING"
 
-    drop_amplitude_cf_pow                = "drop_amplitude_cf_pow"
-    expert_value_keys.append(drop_amplitude_cf_pow)
-    expert_values[drop_amplitude_cf_pow] = "STRING"
+    drop_amp_on_bd_cf_pow                = "drop_amp_on_bd_cf_pow"
+    expert_value_keys.append(drop_amp_on_bd_cf_pow)
+    expert_values[drop_amp_on_bd_cf_pow] = "STRING"
 
-    drop_amplitude_cr_pow                = "drop_amplitude_cr_pow"
-    expert_value_keys.append(drop_amplitude_cr_pow)
-    expert_values[drop_amplitude_cr_pow] = "STRING"
+    drop_amp_on_bd_cr_pow                = "drop_amp_on_bd_cr_pow"
+    expert_value_keys.append(drop_amp_on_bd_cr_pow)
+    expert_values[drop_amp_on_bd_cr_pow] = "STRING"
 
 
-    drop_amplitude_cp_pow                = "drop_amplitude_cp_pow"
-    expert_value_keys.append(drop_amplitude_cp_pow)
-    expert_values[drop_amplitude_cp_pow] = "STRING"
+    drop_amp_on_bd_cp_pow                = "drop_amp_on_bd_cp_pow"
+    expert_value_keys.append(drop_amp_on_bd_cp_pow)
+    expert_values[drop_amp_on_bd_cp_pow] = "STRING"
 
-    drop_amplitude_kf_pha                = "drop_amplitude_kf_pha"
-    expert_value_keys.append(drop_amplitude_kf_pha)
-    expert_values[drop_amplitude_kf_pha] = "STRING"
+    drop_amp_on_bd_kf_pha                = "drop_amp_on_bd_kf_pha"
+    expert_value_keys.append(drop_amp_on_bd_kf_pha)
+    expert_values[drop_amp_on_bd_kf_pha] = "STRING"
 
-    drop_amplitude_kr_pha                = "drop_amplitude_kr_pha"
-    expert_value_keys.append(drop_amplitude_kr_pha)
-    expert_values[drop_amplitude_kr_pha] = "STRING"
+    drop_amp_on_bd_kr_pha                = "drop_amp_on_bd_kr_pha"
+    expert_value_keys.append(drop_amp_on_bd_kr_pha)
+    expert_values[drop_amp_on_bd_kr_pha] = "STRING"
 
-    drop_amplitude_cf_pha                = "drop_amplitude_cf_pha"
-    expert_value_keys.append(drop_amplitude_cf_pha)
-    expert_values[drop_amplitude_cf_pha] = "STRING"
+    drop_amp_on_bd_cf_pha                = "drop_amp_on_bd_cf_pha"
+    expert_value_keys.append(drop_amp_on_bd_cf_pha)
+    expert_values[drop_amp_on_bd_cf_pha] = "STRING"
 
-    drop_amplitude_cr_pha                = "drop_amplitude_cr_pha"
-    expert_value_keys.append(drop_amplitude_cr_pha)
-    expert_values[drop_amplitude_cr_pha] = "STRING"
+    drop_amp_on_bd_cr_pha                = "drop_amp_on_bd_cr_pha"
+    expert_value_keys.append(drop_amp_on_bd_cr_pha)
+    expert_values[drop_amp_on_bd_cr_pha] = "STRING"
 
-    drop_amplitude_cp_pha                = "drop_amplitude_cp_pha"
-    expert_value_keys.append(drop_amplitude_cp_pha)
-    expert_values[drop_amplitude_cp_pha] = "STRING"
+    drop_amp_on_bd_cp_pha                = "drop_amp_on_bd_cp_pha"
+    expert_value_keys.append(drop_amp_on_bd_cp_pha)
+    expert_values[drop_amp_on_bd_cp_pha] = "STRING"
 
     streak_kf_pow                        = "streak_kf_pow"
     expert_value_keys.append(streak_kf_pow)
@@ -1786,7 +1881,29 @@ class rf_conditioning_data(object):
     expert_values[keep_valve_open_val] = True
 
 
+    keep_valve_open_valves_val = "keep_valve_open_valves_val"
+    expert_value_keys.append(keep_valve_open_valves_val)
+    expert_values[keep_valve_open_valves_val] = True
 
+    default_pulse_count_val = "default_pulse_count_val"
+    expert_value_keys.append(default_pulse_count_val)
+    expert_values[default_pulse_count_val] = True
+
+    min_cool_down_time_val = "min_cool_down_time_val"
+    expert_value_keys.append(min_cool_down_time_val)
+    expert_values[min_cool_down_time_val] = True
+
+    trace_buffer_size_val = "trace_buffer_size_val"
+    expert_value_keys.append(trace_buffer_size_val)
+    expert_values[trace_buffer_size_val] = True
+
+    default_amp_increase_val = "default_amp_increase_val"
+    expert_value_keys.append(default_amp_increase_val)
+    expert_values[default_amp_increase_val] = True
+
+    max_amp_increase_val = "max_amp_increase_val"
+    expert_value_keys.append(max_amp_increase_val)
+    expert_values[max_amp_increase_val] = True
 
 
 

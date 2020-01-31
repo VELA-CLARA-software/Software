@@ -141,12 +141,21 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         self.expert_values = self.data.expert_values
         self.set_up_expert_widgets()
 
+        # connect checkBOx for exper mode active
+        self.edit_mode_checkbox.stateChanged.connect(self.handle_edit_mode)
+
         # self.init_widget_dict()
 
         self.timer = QTimer()
         self.timer.setSingleShot(False)
         self.timer.timeout.connect(self.update_gui)
         self.timer.start(self.config.raw_config_data[self.config.GUI_UPDATE_TIME])
+
+    def handle_edit_mode(self):
+        print("handle_edit_mode")
+        for key, value in self.expert_widget.iteritems():
+            print(key)
+            value.setEnabled( self.edit_mode_checkbox.isChecked() )
 
     # main update gui function, loop over all widgets, and if values is new update gui with new
     # value
@@ -380,7 +389,7 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
 
         # self.widget[self.data.vac_level_can_ramp] = self.vac_level_outputwidget
 
-    def update_expert_values(self):
+    def update_expert_values_in_gui(self):
         """
         update the exper_values panels
         :return: none
@@ -388,31 +397,40 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         # loop over each widghet in
         for key, widget in self.expert_widget.iteritems():
             if key in self.expert_values:
-                self.update_expert_widget(key=key, val=self.expert_values[key], widget=widget)
+                if isinstance(widget, QComboBox):
+                    pass
+                else:
+                    print("Updating ", key, " with values = ", self.expert_values[key])
+                    self.update_expert_widget(key=key, val=self.expert_values[key], widget=widget)
 
     def update_expert_widget(self, key, val, widget):
-        if key is self.data.is_breakdown_monitor_kf_pow:
-            self.set_widget_color_text(widget, val)
-        elif key is self.data.is_breakdown_monitor_kr_pow:
-            self.set_widget_color_text(widget, val)
-        elif key is self.data.is_breakdown_monitor_cf_pow:
-            self.set_widget_color_text(widget, val)
-        elif key is self.data.is_breakdown_monitor_cr_pow:
-            self.set_widget_color_text(widget, val)
-        elif key is self.data.is_breakdown_monitor_cp_pow:
-            self.set_widget_color_text(widget, val)
-        elif key is self.data.is_breakdown_monitor_kf_pha:
-            self.set_widget_color_text(widget, val)
-        elif key is self.data.is_breakdown_monitor_kr_pha:
-            self.set_widget_color_text(widget, val)
-        elif key is self.data.is_breakdown_monitor_cf_pha:
-            self.set_widget_color_text(widget, val)
-        elif key is self.data.is_breakdown_monitor_cr_pha:
-            self.set_widget_color_text(widget, val)
-        elif key is self.data.is_breakdown_monitor_cp_pha:
-            self.set_widget_color_text(widget, val)
-        else:
-            pass
+
+        if isinstance(widget, QLineEdit):
+            widget.setText(str(val))
+
+        #
+        # if key is self.data.is_breakdown_monitor_kf_pow:
+        #     self.set_widget_color_text(widget, val)
+        # elif key is self.data.is_breakdown_monitor_kr_pow:
+        #     self.set_widget_color_text(widget, val)
+        # elif key is self.data.is_breakdown_monitor_cf_pow:
+        #     self.set_widget_color_text(widget, val)
+        # elif key is self.data.is_breakdown_monitor_cr_pow:
+        #     self.set_widget_color_text(widget, val)
+        # elif key is self.data.is_breakdown_monitor_cp_pow:
+        #     self.set_widget_color_text(widget, val)
+        # elif key is self.data.is_breakdown_monitor_kf_pha:
+        #     self.set_widget_color_text(widget, val)
+        # elif key is self.data.is_breakdown_monitor_kr_pha:
+        #     self.set_widget_color_text(widget, val)
+        # elif key is self.data.is_breakdown_monitor_cf_pha:
+        #     self.set_widget_color_text(widget, val)
+        # elif key is self.data.is_breakdown_monitor_cr_pha:
+        #     self.set_widget_color_text(widget, val)
+        # elif key is self.data.is_breakdown_monitor_cp_pha:
+        #     self.set_widget_color_text(widget, val)
+        # else:
+        #     pass
 
     def set_widget_color_text(self, widget, val):
         self.set_widget_color(widget, val)
@@ -487,23 +505,23 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
     def set_up_expert_widgets(self):
         # The value IS THE SAME as the key for the expert_values data dictionary, by doing this
         # we can link the two together
-        # self.expert_widget[self.data.vac_pv_val] = self.vac_pv_val
-        # self.expert_widget[self.data.vac_decay_mode_val] = self.vac_decay_mode_val
-        # self.expert_widget[self.data.vac_decay_level] = self.vac_decay_level
-        # self.expert_widget[self.data.vac_decay_time_val] = self.vac_decay_time_val
-        # self.expert_widget[self.data.vac_drop_amp] = self.vac_drop_amp
-        # self.expert_widget[self.data.vac_hi_pressure] = self.vac_hi_pressure
-        # self.expert_widget[self.data.vac_spike_delta_val] = self.vac_spike_delta_val
-        # self.expert_widget[
-        #     self.data.vac_num_samples_to_average_val] = self.vac_num_samples_to_average_val
-        # self.expert_widget[self.data.vac_drop_amp_val] = self.vac_drop_amp_val
-        # self.expert_widget[self.data.ramp_when_hi] = self.ramp_when_hi
-        # self.expert_widget[self.data.vac_decay_mode] = self.vac_decay_mode
-        # self.expert_widget[self.data.vac_decay_level_val] = self.vac_decay_level_val
-        # self.expert_widget[self.data.vac_hi_pressure_val] = self.vac_hi_pressure_val
-        # self.expert_widget[self.data.ramp_when_hi_val] = self.ramp_when_hi_val
-        # self.expert_widget[self.data.vac_spike_check_time_val] = self.vac_spike_check_time_val
-        # self.expert_widget[self.data.vac_spike_check_time] = self.vac_spike_check_time
+        self.expert_widget[self.data.vac_pv_val] = self.vac_pv_val
+        self.expert_widget[self.data.vac_decay_mode_val] = self.vac_decay_mode_val
+        self.expert_widget[self.data.vac_decay_time_val] = self.vac_decay_time_val
+        self.expert_widget[self.data.vac_decay_level] = self.vac_decay_level
+        self.expert_widget[self.data.vac_drop_amp] = self.vac_drop_amp
+        self.expert_widget[self.data.vac_hi_pressure] = self.vac_hi_pressure
+        self.expert_widget[self.data.vac_spike_delta_val] = self.vac_spike_delta_val
+        self.expert_widget[
+             self.data.vac_num_samples_to_average_val] = self.vac_num_samples_to_average_val
+        self.expert_widget[self.data.vac_drop_amp_val] = self.vac_drop_amp_val
+        self.expert_widget[self.data.ramp_when_hi] = self.ramp_when_hi
+        self.expert_widget[self.data.vac_decay_mode] = self.vac_decay_mode
+        self.expert_widget[self.data.vac_decay_level_val] = self.vac_decay_level_val
+        self.expert_widget[self.data.vac_hi_pressure_val] = self.vac_hi_pressure_val
+        self.expert_widget[self.data.ramp_when_hi_val] = self.ramp_when_hi_val
+        self.expert_widget[self.data.vac_spike_check_time_val] = self.vac_spike_check_time_val
+        self.expert_widget[self.data.vac_spike_check_time] = self.vac_spike_check_time
         self.expert_widget[self.data.is_breakdown_monitor_kf_pow] = self.is_breakdown_monitor_kf_pow
         self.expert_widget[self.data.is_breakdown_monitor_kr_pow] = self.is_breakdown_monitor_kr_pow
         self.expert_widget[self.data.is_breakdown_monitor_cf_pow] = self.is_breakdown_monitor_cf_pow
@@ -515,126 +533,130 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         self.expert_widget[self.data.is_breakdown_monitor_cr_pha] = self.is_breakdown_monitor_cr_pha
         self.expert_widget[
             self.data.is_breakdown_monitor_cp_pha] = self.is_breakdown_monitor_cp_pha  #
-        # self.expert_widget[self.data.mean_start_kf_pow] = self.mean_start_kf_pow  #
-        # self.expert_widget[self.data.mean_start_kr_pow] = self.mean_start_kr_pow  #
-        # self.expert_widget[self.data.mean_start_cf_pow] = self.mean_start_cf_pow  #
-        # self.expert_widget[self.data.mean_start_cf_pow] = self.mean_start_cf_pow  #
-        # self.expert_widget[self.data.mean_start_cp_pow] = self.mean_start_cp_pow  #
-        # self.expert_widget[self.data.mean_start_kf_pha] = self.mean_start_kf_pha  #
-        # self.expert_widget[self.data.mean_start_kr_pha] = self.mean_start_kr_pha  #
-        # self.expert_widget[self.data.mean_start_cf_pha] = self.mean_start_cf_pha  #
-        # self.expert_widget[self.data.mean_start_cr_pha] = self.mean_start_cr_pha  #
-        # self.expert_widget[self.data.mean_start_cp_pha] = self.mean_start_cp_pha  #
-        # self.expert_widget[self.data.mean_end_kf_pow] = self.mean_end_kf_pow  #
-        # self.expert_widget[self.data.mean_end_kr_pow] = self.mean_end_kr_pow  #
-        # self.expert_widget[self.data.mean_end_cf_pow] = self.mean_end_cf_pow  #
-        # self.expert_widget[self.data.mean_end_cf_pow] = self.mean_end_cf_pow  #
-        # self.expert_widget[self.data.mean_end_cp_pow] = self.mean_end_cp_pow  #
-        # self.expert_widget[self.data.mean_end_kf_pha] = self.mean_end_kf_pha  #
-        # self.expert_widget[self.data.mean_end_kr_pha] = self.mean_end_kr_pha  #
-        # self.expert_widget[self.data.mean_end_cf_pha] = self.mean_end_cf_pha  #
-        # self.expert_widget[self.data.mean_end_cr_pha] = self.mean_end_cr_pha  #
-        # self.expert_widget[self.data.mean_end_cp_pha] = self.mean_end_cp_pha  #
-        # self.expert_widget[self.data.mask_unit_kf_pow] = self.mask_unit_kf_pow  #
-        # self.expert_widget[self.data.mask_unit_kr_pow] = self.mask_unit_kr_pow  #
-        # self.expert_widget[self.data.mask_unit_cf_pow] = self.mask_unit_cf_pow  #
-        # self.expert_widget[self.data.mask_unit_cf_pow] = self.mask_unit_cf_pow  #
-        # self.expert_widget[self.data.mask_unit_cp_pow] = self.mask_unit_cp_pow  #
-        # self.expert_widget[self.data.mask_unit_kf_pha] = self.mask_unit_kf_pha  #
-        # self.expert_widget[self.data.mask_unit_kr_pha] = self.mask_unit_kr_pha  #
-        # self.expert_widget[self.data.mask_unit_cf_pha] = self.mask_unit_cf_pha  #
-        # self.expert_widget[self.data.mask_unit_cr_pha] = self.mask_unit_cr_pha  #
-        # self.expert_widget[self.data.mask_unit_cp_pha] = self.mask_unit_cp_pha  #
-        # self.expert_widget[self.data.mask_start_kf_pow] = self.mask_start_kf_pow  #
-        # self.expert_widget[self.data.mask_start_kr_pow] = self.mask_start_kr_pow  #
-        # self.expert_widget[self.data.mask_start_cf_pow] = self.mask_start_cf_pow  #
-        # self.expert_widget[self.data.mask_start_cf_pow] = self.mask_start_cf_pow  #
-        # self.expert_widget[self.data.mask_start_cp_pow] = self.mask_start_cp_pow  #
-        # self.expert_widget[self.data.mask_start_kf_pha] = self.mask_start_kf_pha  #
-        # self.expert_widget[self.data.mask_start_kr_pha] = self.mask_start_kr_pha  #
-        # self.expert_widget[self.data.mask_start_cf_pha] = self.mask_start_cf_pha  #
-        # self.expert_widget[self.data.mask_start_cr_pha] = self.mask_start_cr_pha  #
-        # self.expert_widget[self.data.mask_start_cp_pha] = self.mask_start_cp_pha  #
-        # self.expert_widget[self.data.mask_end_kf_pow] = self.mask_end_kf_pow  #
-        # self.expert_widget[self.data.mask_end_kr_pow] = self.mask_end_kr_pow  #
-        # self.expert_widget[self.data.mask_end_cf_pow] = self.mask_end_cf_pow  #
-        # self.expert_widget[self.data.mask_end_cf_pow] = self.mask_end_cf_pow  #
-        # self.expert_widget[self.data.mask_end_cp_pow] = self.mask_end_cp_pow  #
-        # self.expert_widget[self.data.mask_end_kr_pha] = self.mask_end_kr_pha  #
-        # self.expert_widget[self.data.mask_end_kf_pha] = self.mask_end_kf_pha  #
-        # self.expert_widget[self.data.mask_end_cf_pha] = self.mask_end_cf_pha  #
-        # self.expert_widget[self.data.mask_end_cr_pha] = self.mask_end_cr_pha  #
-        # self.expert_widget[self.data.mask_end_cp_pha] = self.mask_end_cp_pha  #
-        # self.expert_widget[self.data.mask_window_start_kf_pow] = self.mask_window_start_kf_pow
-        # self.expert_widget[self.data.mask_window_start_kr_pow] = self.mask_window_start_kr_pow
-        # self.expert_widget[self.data.mask_window_start_cf_pow] = self.mask_window_start_cf_pow
-        # self.expert_widget[self.data.mask_window_start_cf_pow] = self.mask_window_start_cf_pow
-        # self.expert_widget[self.data.mask_window_start_cp_pow] = self.mask_window_start_cp_pow
-        # self.expert_widget[self.data.mask_window_start_kf_pha] = self.mask_window_start_kf_pha
-        # self.expert_widget[self.data.mask_window_start_kr_pha] = self.mask_window_start_kr_pha
-        # self.expert_widget[self.data.mask_window_start_cf_pha] = self.mask_window_start_cf_pha
-        # self.expert_widget[self.data.mask_window_start_cr_pha] = self.mask_window_start_cr_pha
-        # self.expert_widget[self.data.mask_window_start_cp_pha] = self.mask_window_start_cp_pha
-        # self.expert_widget[self.data.mask_window_end_kf_pow] = self.mask_window_end_kf_pow  #
-        # self.expert_widget[self.data.mask_window_end_kr_pow] = self.mask_window_end_kr_pow  #
-        # self.expert_widget[self.data.mask_window_end_cf_pow] = self.mask_window_end_cf_pow  #
-        # self.expert_widget[self.data.mask_window_end_cf_pow] = self.mask_window_end_cf_pow  #
-        # self.expert_widget[self.data.mask_window_end_cp_pow] = self.mask_window_end_cp_pow  #
-        # self.expert_widget[self.data.mask_window_end_kf_pha] = self.mask_window_end_kf_pha  #
-        # self.expert_widget[self.data.mask_window_end_kr_pha] = self.mask_window_end_kr_pha  #
-        # self.expert_widget[self.data.mask_window_end_cf_pha] = self.mask_window_end_cf_pha  #
-        # self.expert_widget[self.data.mask_window_end_cr_pha] = self.mask_window_end_cr_pha  #
-        # self.expert_widget[self.data.mask_window_end_cp_pha] = self.mask_window_end_cp_pha  #
-        # self.expert_widget[self.data.mask_min_kf_pow] = self.mask_min_kf_pow  #
-        # self.expert_widget[self.data.mask_min_kr_pow] = self.mask_min_kr_pow  #
-        # self.expert_widget[self.data.mask_min_cf_pow] = self.mask_min_cf_pow  #
-        # self.expert_widget[self.data.mask_min_cf_pow] = self.mask_min_cf_pow  #
-        # self.expert_widget[self.data.mask_min_cp_pow] = self.mask_min_cp_pow  #
-        # self.expert_widget[self.data.mask_min_kf_pha] = self.mask_min_kf_pha  #
-        # self.expert_widget[self.data.mask_min_kr_pha] = self.mask_min_kr_pha  #
-        # self.expert_widget[self.data.mask_min_cf_pha] = self.mask_min_cf_pha  #
-        # self.expert_widget[self.data.mask_min_cr_pha] = self.mask_min_cr_pha  #
-        # self.expert_widget[self.data.mask_min_cp_pha] = self.mask_min_cp_pha  #
-        # self.expert_widget[self.data.num_averages_kf_pow] = self.num_averages_kf_pow  #
-        # self.expert_widget[self.data.num_averages_kr_pow] = self.num_averages_kr_pow  #
-        # self.expert_widget[self.data.num_averages_cf_pow] = self.num_averages_cf_pow  #
-        # self.expert_widget[self.data.num_averages_cf_pow] = self.num_averages_cf_pow  #
-        # self.expert_widget[self.data.num_averages_cp_pow] = self.num_averages_cp_pow  #
-        # self.expert_widget[self.data.num_averages_kf_pha] = self.num_averages_kf_pha  #
-        # self.expert_widget[self.data.num_averages_kr_pha] = self.num_averages_kr_pha  #
-        # self.expert_widget[self.data.num_averages_cf_pha] = self.num_averages_cf_pha  #
-        # self.expert_widget[self.data.num_averages_cr_pha] = self.num_averages_cr_pha  #
-        # self.expert_widget[self.data.num_averages_cp_pha] = self.num_averages_cp_pha  #
-        # self.expert_widget[self.data.mask_auto_set_kf_pow] = self.mask_auto_set_kf_pow  #
-        # self.expert_widget[self.data.mask_auto_set_kr_pow] = self.mask_auto_set_kr_pow  #
-        # self.expert_widget[self.data.mask_auto_set_cf_pow] = self.mask_auto_set_cf_pow  #
-        # self.expert_widget[self.data.mask_auto_set_cf_pow] = self.mask_auto_set_cf_pow  #
-        # self.expert_widget[self.data.mask_auto_set_cp_pow] = self.mask_auto_set_cp_pow  #
-        # self.expert_widget[self.data.mask_auto_set_kf_pha] = self.mask_auto_set_kf_pha  #
-        # self.expert_widget[self.data.mask_auto_set_kr_pha] = self.mask_auto_set_kr_pha  #
-        # self.expert_widget[self.data.mask_auto_set_cf_pha] = self.mask_auto_set_cf_pha  #
-        # self.expert_widget[self.data.mask_auto_set_cr_pha] = self.mask_auto_set_cr_pha  #
-        # self.expert_widget[self.data.mask_auto_set_cp_pha] = self.mask_auto_set_cp_pha  #
-        # self.expert_widget[self.data.mask_type_kf_pow] = self.mask_type_kf_pow  #
-        # self.expert_widget[self.data.mask_type_kr_pow] = self.mask_type_kr_pow  #
-        # self.expert_widget[self.data.mask_type_cf_pow] = self.mask_type_cf_pow  #
-        # self.expert_widget[self.data.mask_type_cf_pow] = self.mask_type_cf_pow  #
-        # self.expert_widget[self.data.mask_type_cp_pow] = self.mask_type_cp_pow  #
-        # self.expert_widget[self.data.mask_type_kf_pha] = self.mask_type_kf_pha  #
-        # self.expert_widget[self.data.mask_type_kr_pha] = self.mask_type_kr_pha  #
-        # self.expert_widget[self.data.mask_type_cf_pha] = self.mask_type_cf_pha  #
-        # self.expert_widget[self.data.mask_type_cr_pha] = self.mask_type_cr_pha  #
-        # self.expert_widget[self.data.mask_type_cp_pha] = self.mask_type_cp_pha  #
-        # self.expert_widget[self.data.mask_level_kf_pow] = self.mask_level_kf_pow  #
-        # self.expert_widget[self.data.mask_level_kr_pow] = self.mask_level_kr_pow  #
-        # self.expert_widget[self.data.mask_level_cf_pow] = self.mask_level_cf_pow  #
-        # self.expert_widget[self.data.mask_level_cf_pow] = self.mask_level_cf_pow  #
-        # self.expert_widget[self.data.mask_level_cp_pow] = self.mask_level_cp_pow  #
-        # self.expert_widget[self.data.mask_level_kf_pha] = self.mask_level_kf_pha  #
-        # self.expert_widget[self.data.mask_level_kr_pha] = self.mask_level_kr_pha  #
-        # self.expert_widget[self.data.mask_level_cf_pha] = self.mask_level_cf_pha  #
-        # self.expert_widget[self.data.mask_level_cr_pha] = self.mask_level_cr_pha  #
-        # self.expert_widget[self.data.mask_level_cp_pha] = self.mask_level_cp_pha  #
+        self.expert_widget[self.data.mean_start_kf_pow] = self.mean_start_kf_pow  #
+        self.expert_widget[self.data.mean_start_kr_pow] = self.mean_start_kr_pow  #
+        self.expert_widget[self.data.mean_start_cf_pow] = self.mean_start_cf_pow  #
+        self.expert_widget[self.data.mean_start_cr_pow] = self.mean_start_cr_pow  #
+        self.expert_widget[self.data.mean_start_cp_pow] = self.mean_start_cp_pow  #
+        self.expert_widget[self.data.mean_start_kf_pha] = self.mean_start_kf_pha  #
+        self.expert_widget[self.data.mean_start_kr_pha] = self.mean_start_kr_pha  #
+        self.expert_widget[self.data.mean_start_cf_pha] = self.mean_start_cf_pha  #
+        self.expert_widget[self.data.mean_start_cr_pha] = self.mean_start_cr_pha  #
+        self.expert_widget[self.data.mean_start_cp_pha] = self.mean_start_cp_pha  #
+        self.expert_widget[self.data.mean_end_kf_pow] = self.mean_end_kf_pow  #
+        self.expert_widget[self.data.mean_end_kr_pow] = self.mean_end_kr_pow  #
+        self.expert_widget[self.data.mean_end_cf_pow] = self.mean_end_cf_pow  #
+        self.expert_widget[self.data.mean_end_cr_pow] = self.mean_end_cr_pow  #
+        self.expert_widget[self.data.mean_end_cp_pow] = self.mean_end_cp_pow  #
+        self.expert_widget[self.data.mean_end_kf_pha] = self.mean_end_kf_pha  #
+        self.expert_widget[self.data.mean_end_kr_pha] = self.mean_end_kr_pha  #
+        self.expert_widget[self.data.mean_end_cf_pha] = self.mean_end_cf_pha  #
+        self.expert_widget[self.data.mean_end_cr_pha] = self.mean_end_cr_pha  #
+        self.expert_widget[self.data.mean_end_cp_pha] = self.mean_end_cp_pha  #
+
+        self.expert_widget[self.data.mask_units_kf_pow] = self.mask_units_kf_pow  #
+        self.expert_widget[self.data.mask_units_kr_pow] = self.mask_units_kr_pow  #
+        self.expert_widget[self.data.mask_units_cf_pow] = self.mask_units_cf_pow  #
+        self.expert_widget[self.data.mask_units_cr_pow] = self.mask_units_cr_pow  #
+        self.expert_widget[self.data.mask_units_cp_pow] = self.mask_units_cp_pow  #
+        self.expert_widget[self.data.mask_units_kf_pha] = self.mask_units_kf_pha  #
+        self.expert_widget[self.data.mask_units_kr_pha] = self.mask_units_kr_pha  #
+        self.expert_widget[self.data.mask_units_cf_pha] = self.mask_units_cf_pha  #
+        self.expert_widget[self.data.mask_units_cr_pha] = self.mask_units_cr_pha  #
+        self.expert_widget[self.data.mask_units_cp_pha] = self.mask_units_cp_pha  #
+
+        self.expert_widget[self.data.mask_start_kf_pow] = self.mask_start_kf_pow  #
+        self.expert_widget[self.data.mask_start_kr_pow] = self.mask_start_kr_pow  #
+        self.expert_widget[self.data.mask_start_cf_pow] = self.mask_start_cf_pow  #
+        self.expert_widget[self.data.mask_start_cr_pow] = self.mask_start_cr_pow  #
+        self.expert_widget[self.data.mask_start_cp_pow] = self.mask_start_cp_pow  #
+        self.expert_widget[self.data.mask_start_kf_pha] = self.mask_start_kf_pha  #
+        self.expert_widget[self.data.mask_start_kr_pha] = self.mask_start_kr_pha  #
+        self.expert_widget[self.data.mask_start_cf_pha] = self.mask_start_cf_pha  #
+        self.expert_widget[self.data.mask_start_cr_pha] = self.mask_start_cr_pha  #
+        self.expert_widget[self.data.mask_start_cp_pha] = self.mask_start_cp_pha  #
+        self.expert_widget[self.data.mask_end_kf_pow] = self.mask_end_kf_pow  #
+        self.expert_widget[self.data.mask_end_kr_pow] = self.mask_end_kr_pow  #
+        self.expert_widget[self.data.mask_end_cf_pow] = self.mask_end_cf_pow  #
+        self.expert_widget[self.data.mask_end_cr_pow] = self.mask_end_cr_pow  #
+        self.expert_widget[self.data.mask_end_cp_pow] = self.mask_end_cp_pow  #
+        self.expert_widget[self.data.mask_end_kr_pha] = self.mask_end_kr_pha  #
+        self.expert_widget[self.data.mask_end_kf_pha] = self.mask_end_kf_pha  #
+        self.expert_widget[self.data.mask_end_cf_pha] = self.mask_end_cf_pha  #
+        self.expert_widget[self.data.mask_end_cr_pha] = self.mask_end_cr_pha  #
+        self.expert_widget[self.data.mask_end_cp_pha] = self.mask_end_cp_pha  #
+        self.expert_widget[self.data.mask_window_start_kf_pow] = self.mask_window_start_kf_pow
+        self.expert_widget[self.data.mask_window_start_kr_pow] = self.mask_window_start_kr_pow
+        self.expert_widget[self.data.mask_window_start_cf_pow] = self.mask_window_start_cf_pow
+        self.expert_widget[self.data.mask_window_start_cr_pow] = self.mask_window_start_cr_pow
+        self.expert_widget[self.data.mask_window_start_cp_pow] = self.mask_window_start_cp_pow
+        self.expert_widget[self.data.mask_window_start_kf_pha] = self.mask_window_start_kf_pha
+        self.expert_widget[self.data.mask_window_start_kr_pha] = self.mask_window_start_kr_pha
+        self.expert_widget[self.data.mask_window_start_cf_pha] = self.mask_window_start_cf_pha
+        self.expert_widget[self.data.mask_window_start_cr_pha] = self.mask_window_start_cr_pha
+        self.expert_widget[self.data.mask_window_start_cp_pha] = self.mask_window_start_cp_pha
+        self.expert_widget[self.data.mask_window_end_kf_pow] = self.mask_window_end_kf_pow  #
+        self.expert_widget[self.data.mask_window_end_kr_pow] = self.mask_window_end_kr_pow  #
+        self.expert_widget[self.data.mask_window_end_cf_pow] = self.mask_window_end_cf_pow  #
+        self.expert_widget[self.data.mask_window_end_cr_pow] = self.mask_window_end_cr_pow  #
+        self.expert_widget[self.data.mask_window_end_cp_pow] = self.mask_window_end_cp_pow  #
+        self.expert_widget[self.data.mask_window_end_kf_pha] = self.mask_window_end_kf_pha  #
+        self.expert_widget[self.data.mask_window_end_kr_pha] = self.mask_window_end_kr_pha  #
+        self.expert_widget[self.data.mask_window_end_cf_pha] = self.mask_window_end_cf_pha  #
+        self.expert_widget[self.data.mask_window_end_cr_pha] = self.mask_window_end_cr_pha  #
+        self.expert_widget[self.data.mask_window_end_cp_pha] = self.mask_window_end_cp_pha  #
+        self.expert_widget[self.data.mask_min_kf_pow] = self.mask_min_kf_pow  #
+        self.expert_widget[self.data.mask_min_kr_pow] = self.mask_min_kr_pow  #
+        self.expert_widget[self.data.mask_min_cf_pow] = self.mask_min_cf_pow  #
+        self.expert_widget[self.data.mask_min_cr_pow] = self.mask_min_cr_pow  #
+        self.expert_widget[self.data.mask_min_cp_pow] = self.mask_min_cp_pow  #
+        self.expert_widget[self.data.mask_min_kf_pha] = self.mask_min_kf_pha  #
+        self.expert_widget[self.data.mask_min_kr_pha] = self.mask_min_kr_pha  #
+        self.expert_widget[self.data.mask_min_cf_pha] = self.mask_min_cf_pha  #
+        self.expert_widget[self.data.mask_min_cr_pha] = self.mask_min_cr_pha  #
+        self.expert_widget[self.data.mask_min_cp_pha] = self.mask_min_cp_pha  #
+        self.expert_widget[self.data.num_averages_kf_pow] = self.num_averages_kf_pow  #
+        self.expert_widget[self.data.num_averages_kr_pow] = self.num_averages_kr_pow  #
+        self.expert_widget[self.data.num_averages_cf_pow] = self.num_averages_cf_pow  #
+        self.expert_widget[self.data.num_averages_cr_pow] = self.num_averages_cr_pow  #
+        self.expert_widget[self.data.num_averages_cp_pow] = self.num_averages_cp_pow  #
+        self.expert_widget[self.data.num_averages_kf_pha] = self.num_averages_kf_pha  #
+        self.expert_widget[self.data.num_averages_kr_pha] = self.num_averages_kr_pha  #
+        self.expert_widget[self.data.num_averages_cf_pha] = self.num_averages_cf_pha  #
+        self.expert_widget[self.data.num_averages_cr_pha] = self.num_averages_cr_pha  #
+        self.expert_widget[self.data.num_averages_cp_pha] = self.num_averages_cp_pha  #
+        self.expert_widget[self.data.mask_auto_set_kf_pow] = self.mask_auto_set_kf_pow  #
+        self.expert_widget[self.data.mask_auto_set_kr_pow] = self.mask_auto_set_kr_pow  #
+        self.expert_widget[self.data.mask_auto_set_cf_pow] = self.mask_auto_set_cf_pow  #
+        self.expert_widget[self.data.mask_auto_set_cr_pow] = self.mask_auto_set_cr_pow  #
+        self.expert_widget[self.data.mask_auto_set_cp_pow] = self.mask_auto_set_cp_pow  #
+        self.expert_widget[self.data.mask_auto_set_kf_pha] = self.mask_auto_set_kf_pha  #
+        self.expert_widget[self.data.mask_auto_set_kr_pha] = self.mask_auto_set_kr_pha  #
+        self.expert_widget[self.data.mask_auto_set_cf_pha] = self.mask_auto_set_cf_pha  #
+        self.expert_widget[self.data.mask_auto_set_cr_pha] = self.mask_auto_set_cr_pha  #
+        self.expert_widget[self.data.mask_auto_set_cp_pha] = self.mask_auto_set_cp_pha  #
+
+        self.expert_widget[self.data.mask_type_kr_pow] = self.mask_type_kr_pow  #
+        self.expert_widget[self.data.mask_type_kf_pow] = self.mask_type_kf_pow  #
+        self.expert_widget[self.data.mask_type_cf_pow] = self.mask_type_cf_pow  #
+        self.expert_widget[self.data.mask_type_cr_pow] = self.mask_type_cr_pow  #
+        self.expert_widget[self.data.mask_type_cp_pow] = self.mask_type_cp_pow  #
+        self.expert_widget[self.data.mask_type_kf_pha] = self.mask_type_kf_pha  #
+        self.expert_widget[self.data.mask_type_kr_pha] = self.mask_type_kr_pha  #
+        self.expert_widget[self.data.mask_type_cf_pha] = self.mask_type_cf_pha  #
+        self.expert_widget[self.data.mask_type_cr_pha] = self.mask_type_cr_pha  #
+        self.expert_widget[self.data.mask_type_cp_pha] = self.mask_type_cp_pha  #
+
+        self.expert_widget[self.data.mask_level_kf_pow] = self.mask_level_kf_pow  #
+        self.expert_widget[self.data.mask_level_kr_pow] = self.mask_level_kr_pow  #
+        self.expert_widget[self.data.mask_level_cf_pow] = self.mask_level_cf_pow  #
+        self.expert_widget[self.data.mask_level_cr_pow] = self.mask_level_cr_pow  #
+        self.expert_widget[self.data.mask_level_cp_pow] = self.mask_level_cp_pow  #
+        self.expert_widget[self.data.mask_level_kf_pha] = self.mask_level_kf_pha  #
+        self.expert_widget[self.data.mask_level_kr_pha] = self.mask_level_kr_pha  #
+        self.expert_widget[self.data.mask_level_cf_pha] = self.mask_level_cf_pha  #
+        self.expert_widget[self.data.mask_level_cr_pha] = self.mask_level_cr_pha  #
+        self.expert_widget[self.data.mask_level_cp_pha] = self.mask_level_cp_pha  #
         # self.expert_widget[self.data.mask_end_by_power_kf_pow] = self.mask_end_by_power_kf_pow
         # self.expert_widget[self.data.mask_end_by_power_kr_pow] = self.mask_end_by_power_kr_pow
         # self.expert_widget[self.data.mask_end_by_power_cf_pow] = self.mask_end_by_power_cf_pow
@@ -645,18 +667,135 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         # self.expert_widget[self.data.mask_end_by_power_cf_pha] = self.mask_end_by_power_cf_pha
         # self.expert_widget[self.data.mask_end_by_power_cr_pha] = self.mask_end_by_power_cr_pha
         # self.expert_widget[self.data.mask_end_by_power_cp_pha] = self.mask_end_by_power_cp_pha
-        # self.expert_widget[self.data.mask_end_power_kf_pow] = self.mask_end_power_kf_pow  #
-        # self.expert_widget[self.data.mask_end_power_kr_pow] = self.mask_end_power_kr_pow  #
-        # self.expert_widget[self.data.mask_end_power_cf_pow] = self.mask_end_power_cf_pow  #
-        # self.expert_widget[self.data.mask_end_power_cf_pow] = self.mask_end_power_cf_pow  #
-        # self.expert_widget[self.data.mask_end_power_cp_pow] = self.mask_end_power_cp_pow  #
-        # self.expert_widget[self.data.mask_end_power_kf_pha] = self.mask_end_power_kf_pha  #
-        # self.expert_widget[self.data.mask_end_power_kr_pha] = self.mask_end_power_kr_pha  #
-        # self.expert_widget[self.data.mask_end_power_cf_pha] = self.mask_end_power_cf_pha  #
-        # self.expert_widget[self.data.mask_end_power_cr_pha] = self.mask_end_power_cr_pha  #
-        # self.expert_widget[self.data.mask_end_power_cp_pha] = self.mask_end_power_cp_pha  #
+        self.expert_widget[self.data.mask_end_power_kf_pow] = self.mask_end_power_kf_pow  #
+        self.expert_widget[self.data.mask_end_power_kr_pow] = self.mask_end_power_kr_pow  #
+        self.expert_widget[self.data.mask_end_power_cf_pow] = self.mask_end_power_cf_pow  #
+        self.expert_widget[self.data.mask_end_power_cr_pow] = self.mask_end_power_cr_pow  #
+        self.expert_widget[self.data.mask_end_power_cp_pow] = self.mask_end_power_cp_pow  #
+        self.expert_widget[self.data.mask_end_power_kf_pha] = self.mask_end_power_kf_pha  #
+        self.expert_widget[self.data.mask_end_power_kr_pha] = self.mask_end_power_kr_pha  #
+        self.expert_widget[self.data.mask_end_power_cf_pha] = self.mask_end_power_cf_pha  #
+        self.expert_widget[self.data.mask_end_power_cr_pha] = self.mask_end_power_cr_pha  #
+        self.expert_widget[self.data.mask_end_power_cp_pha] = self.mask_end_power_cp_pha  #
+
+        # self.expert_widget[self.data.drop_amplitude_kf_pow] = self.drop_amplitude_kf_pow  #
+        # self.expert_widget[self.data.drop_amplitude_kr_pow] = self.drop_amplitude_kr_pow  #
+        # self.expert_widget[self.data.drop_amplitude_cf_pow] = self.drop_amplitude_cf_pow  #
+        # self.expert_widget[self.data.drop_amplitude_cf_pow] = self.drop_amplitude_cf_pow  #
+        # self.expert_widget[self.data.drop_amplitude_cp_pow] = self.drop_amplitude_cp_pow  #
+        # self.expert_widget[self.data.drop_amplitude_kf_pha] = self.drop_amplitude_kf_pha  #
+        # self.expert_widget[self.data.drop_amplitude_kr_pha] = self.drop_amplitude_kr_pha  #
+        # self.expert_widget[self.data.drop_amplitude_cf_pha] = self.drop_amplitude_cf_pha  #
+        # self.expert_widget[self.data.drop_amplitude_cr_pha] = self.drop_amplitude_cr_pha  #
+        # self.expert_widget[self.data.drop_amplitude_cp_pha] = self.drop_amplitude_cp_pha  #
+
+        self.expert_widget[self.data.streak_kf_pow] = self.streak_kf_pow
+        self.expert_widget[self.data.streak_kr_pow] = self.streak_kr_pow
+        self.expert_widget[self.data.streak_cf_pow] = self.streak_cf_pow
+        self.expert_widget[self.data.streak_cr_pow] = self.streak_cr_pow
+        self.expert_widget[self.data.streak_cp_pow] = self.streak_cp_pow
+        self.expert_widget[self.data.streak_kf_pha] = self.streak_kf_pha
+        self.expert_widget[self.data.streak_kr_pha] = self.streak_kr_pha
+        self.expert_widget[self.data.streak_cf_pha] = self.streak_cf_pha
+        self.expert_widget[self.data.streak_cr_pha] = self.streak_cr_pha
+        self.expert_widget[self.data.streak_cp_pha] = self.streak_cp_pha
+
+        self.expert_widget[self.data.saved_on_breakdown_event_kf_pow] = self.saved_on_breakdown_event_kf_pow
+        self.expert_widget[self.data.saved_on_breakdown_event_kr_pow] = self.saved_on_breakdown_event_kr_pow
+        self.expert_widget[self.data.saved_on_breakdown_event_cf_pow] = self.saved_on_breakdown_event_cf_pow
+        self.expert_widget[self.data.saved_on_breakdown_event_cr_pow] = self.saved_on_breakdown_event_cr_pow
+        self.expert_widget[self.data.saved_on_breakdown_event_cp_pow] = self.saved_on_breakdown_event_cp_pow
+        self.expert_widget[self.data.saved_on_breakdown_event_kf_pha] = self.saved_on_breakdown_event_kf_pha
+        self.expert_widget[self.data.saved_on_breakdown_event_kr_pha] = self.saved_on_breakdown_event_kr_pha
+        self.expert_widget[self.data.saved_on_breakdown_event_cf_pha] = self.saved_on_breakdown_event_cf_pha
+        self.expert_widget[self.data.saved_on_breakdown_event_cr_pha] = self.saved_on_breakdown_event_cr_pha
+        self.expert_widget[self.data.saved_on_breakdown_event_cp_pha] = self.saved_on_breakdown_event_cp_pha
+
+        self.expert_widget[self.data.saved_on_vac_spike_kf_pow] = self.saved_on_vac_spike_kf_pow
+        self.expert_widget[self.data.saved_on_vac_spike_kr_pow] = self.saved_on_vac_spike_kr_pow
+        self.expert_widget[self.data.saved_on_vac_spike_cf_pow] = self.saved_on_vac_spike_cf_pow
+        self.expert_widget[self.data.saved_on_vac_spike_cr_pow] = self.saved_on_vac_spike_cr_pow
+        self.expert_widget[self.data.saved_on_vac_spike_cp_pow] = self.saved_on_vac_spike_cp_pow
+        self.expert_widget[self.data.saved_on_vac_spike_kf_pha] = self.saved_on_vac_spike_kf_pha
+        self.expert_widget[self.data.saved_on_vac_spike_kr_pha] = self.saved_on_vac_spike_kr_pha
+        self.expert_widget[self.data.saved_on_vac_spike_cf_pha] = self.saved_on_vac_spike_cf_pha
+        self.expert_widget[self.data.saved_on_vac_spike_cr_pha] = self.saved_on_vac_spike_cr_pha
+        self.expert_widget[self.data.saved_on_vac_spike_cp_pha] = self.saved_on_vac_spike_cp_pha
+
+
+        self.expert_widget[self.data.drop_amp_on_bd_kf_pow] = self.drop_amp_on_bd_kf_pow
+        self.expert_widget[self.data.drop_amp_on_bd_kr_pow] = self.drop_amp_on_bd_kr_pow
+        self.expert_widget[self.data.drop_amp_on_bd_cf_pow] = self.drop_amp_on_bd_cf_pow
+        self.expert_widget[self.data.drop_amp_on_bd_cr_pow] = self.drop_amp_on_bd_cr_pow
+        self.expert_widget[self.data.drop_amp_on_bd_cp_pow] = self.drop_amp_on_bd_cp_pow
+        self.expert_widget[self.data.drop_amp_on_bd_kf_pha] = self.drop_amp_on_bd_kf_pha
+        self.expert_widget[self.data.drop_amp_on_bd_kr_pha] = self.drop_amp_on_bd_kr_pha
+        self.expert_widget[self.data.drop_amp_on_bd_cf_pha] = self.drop_amp_on_bd_cf_pha
+        self.expert_widget[self.data.drop_amp_on_bd_cr_pha] = self.drop_amp_on_bd_cr_pha
+        self.expert_widget[self.data.drop_amp_on_bd_cp_pha] = self.drop_amp_on_bd_cp_pha
+
+
+        self.expert_widget[self.data.phase_end_by_power_kf_pow] = self.phase_end_by_power_kf_pow
+        self.expert_widget[self.data.phase_end_by_power_kr_pow] = self.phase_end_by_power_kr_pow
+        self.expert_widget[self.data.phase_end_by_power_cf_pow] = self.phase_end_by_power_cf_pow
+        self.expert_widget[self.data.phase_end_by_power_cr_pow] = self.phase_end_by_power_cr_pow
+        self.expert_widget[self.data.phase_end_by_power_cp_pow] = self.phase_end_by_power_cp_pow
+        self.expert_widget[self.data.phase_end_by_power_kf_pha] = self.phase_end_by_power_kf_pha
+        self.expert_widget[self.data.phase_end_by_power_kr_pha] = self.phase_end_by_power_kr_pha
+        self.expert_widget[self.data.phase_end_by_power_cf_pha] = self.phase_end_by_power_cf_pha
+        self.expert_widget[self.data.phase_end_by_power_cr_pha] = self.phase_end_by_power_cr_pha
+        self.expert_widget[self.data.phase_end_by_power_cp_pha] = self.phase_end_by_power_cp_pha
+
+        # self.expert_widget[self.data.phase_end_by_power_kf_pow] = self.phase_end_by_power_kf_pow
+        # self.expert_widget[self.data.phase_end_by_power_kr_pow] = self.phase_end_by_power_kr_pow
+        # self.expert_widget[self.data.phase_end_by_power_cf_pow] = self.phase_end_by_power_cf_pow
+        # self.expert_widget[self.data.phase_end_by_power_cr_pow] = self.phase_end_by_power_cr_pow
+        # self.expert_widget[self.data.phase_end_by_power_cp_pow] = self.phase_end_by_power_cp_pow
+        # self.expert_widget[self.data.phase_end_by_power_kf_pha] = self.phase_end_by_power_kf_pha
+        # self.expert_widget[self.data.phase_end_by_power_kr_pha] = self.phase_end_by_power_kr_pha
+        # self.expert_widget[self.data.phase_end_by_power_cf_pha] = self.phase_end_by_power_cf_pha
+        # self.expert_widget[self.data.phase_end_by_power_cr_pha] = self.phase_end_by_power_cr_pha
+        # self.expert_widget[self.data.phase_end_by_power_cp_pha] = self.phase_end_by_power_cp_pha
+
+        self.expert_widget[self.data.drop_amplitude_kf_pow] = self.drop_amplitude_kf_pow
+        self.expert_widget[self.data.drop_amplitude_kr_pow] = self.drop_amplitude_kr_pow
+        self.expert_widget[self.data.drop_amplitude_cf_pow] = self.drop_amplitude_cf_pow
+        self.expert_widget[self.data.drop_amplitude_cr_pow] = self.drop_amplitude_cr_pow
+        self.expert_widget[self.data.drop_amplitude_cp_pow] = self.drop_amplitude_cp_pow
+        self.expert_widget[self.data.drop_amplitude_kf_pha] = self.drop_amplitude_kf_pha
+        self.expert_widget[self.data.drop_amplitude_kr_pha] = self.drop_amplitude_kr_pha
+        self.expert_widget[self.data.drop_amplitude_cf_pha] = self.drop_amplitude_cf_pha
+        self.expert_widget[self.data.drop_amplitude_cr_pha] = self.drop_amplitude_cr_pha
+        self.expert_widget[self.data.drop_amplitude_cp_pha] = self.drop_amplitude_cp_pha
+
+
+
+        self.expert_widget[self.data.num_future_traces_val] = self.num_future_traces_val
+        self.expert_widget[self.data.active_power_val] = self.active_power_val
+        self.expert_widget[self.data.keep_valve_open_valves_val] = self.keep_valve_open_valves_val
+        self.expert_widget[self.data.keep_valve_open_val] = self.keep_valve_open_val
+        self.expert_widget[self.data.breakdown_rate_aim_val] = self.breakdown_rate_aim_val
+        self.expert_widget[self.data.number_of_pulses_in_history_val] = self.number_of_pulses_in_history_val
+        self.expert_widget[self.data.expected_daq_rep_rate_val] = self.expected_daq_rep_rate_val
+        self.expert_widget[self.data.daq_rep_rate_error_val] = self.daq_rep_rate_error_val
+        self.expert_widget[self.data.min_cool_down_time_val] = self.min_cool_down_time_val
+        self.expert_widget[self.data.trace_buffer_size_val] = self.trace_buffer_size_val
+        self.expert_widget[self.data.default_pulse_count_val] = self.default_pulse_count_val
+        self.expert_widget[self.data.default_amp_increase_val] = self.default_amp_increase_val
+        self.expert_widget[self.data.max_amp_increase_val] = self.max_amp_increase_val
+        self.expert_widget[self.data.num_fit_points_val] = self.num_fit_points_val
+
+
+
+
+
+
+        # self.expert_widget[
+        #
+        #
         # self.expert_widget[  #     self.data.saved_on_breakdown_event_kf_pow] =
-        # self.saved_on_breakdown_event_kf_pow  # self.expert_widget[  #
+        # self.saved_on_breakdown_event_kf_pow
+        # # self.expert_widget[  #
         # self.data.saved_on_breakdown_event_kr_pow] = self.saved_on_breakdown_event_kr_pow  #
         # self.expert_widget[  #     self.data.saved_on_breakdown_event_cf_pow] =
         # self.saved_on_breakdown_event_cf_pow  # self.expert_widget[  #
@@ -685,17 +824,6 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         # self.expert_widget[self.data.saved_on_vac_spike_cr_pha] =
         # self.saved_on_vac_spike_cr_pha  # self.expert_widget[
         # self.data.saved_on_vac_spike_cp_pha] = self.saved_on_vac_spike_cp_pha  #
-        # self.expert_widget[self.data.drop_amplitude_kf_pow] = self.drop_amplitude_kf_pow  #
-        # self.expert_widget[self.data.drop_amplitude_kr_pow] = self.drop_amplitude_kr_pow  #
-        # self.expert_widget[self.data.drop_amplitude_cf_pow] = self.drop_amplitude_cf_pow  #
-        # self.expert_widget[self.data.drop_amplitude_cf_pow] = self.drop_amplitude_cf_pow  #
-        # self.expert_widget[self.data.drop_amplitude_cp_pow] = self.drop_amplitude_cp_pow  #
-        # self.expert_widget[self.data.drop_amplitude_kf_pha] = self.drop_amplitude_kf_pha  #
-        # self.expert_widget[self.data.drop_amplitude_kr_pha] = self.drop_amplitude_kr_pha  #
-        # self.expert_widget[self.data.drop_amplitude_cf_pha] = self.drop_amplitude_cf_pha  #
-        # self.expert_widget[self.data.drop_amplitude_cr_pha] = self.drop_amplitude_cr_pha  #
-        # self.expert_widget[self.data.drop_amplitude_cp_pha] = self.drop_amplitude_cp_pha  #
-        # self.expert_widget[self.data.streak_kf_pow] = self.streak_kf_pow  # self.expert_widget[
         # self.data.streak_kr_pow] = self.streak_kr_pow  # self.expert_widget[
         # self.data.streak_cf_pow] = self.streak_cf_pow  # self.expert_widget[
         # self.data.streak_cf_pow] = self.streak_cf_pow  # self.expert_widget[

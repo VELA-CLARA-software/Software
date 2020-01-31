@@ -75,13 +75,17 @@ MINIMUM_COOLDOWN_TIME: 3000 # INTEGER, minimum time in ms that a state (Vac spik
 
 #POWER_AIM= 0.1; MW watts
 #PULSE_LENGTH_START=100; ns !! NOT us
-PULSE_LENGTH_AIM   : 2500 #; ns  !! NOT us
+PULSE_LENGTH   : 2500 #; ns  !! NOT us
 PULSE_LENGTH_ERROR : 50 #; ns  !! NOT us
 #PULSE_LENGTH_STEP= 250; ns !! NOT us
 
-BREAKDOWN_RATE_AIM:  100 # per million active pulses 
-RF_REPETITION_RATE:  10 # INTEGER Hertz
-RF_REPETITION_RATE_ERROR:  10 #difference in Hertz from RF_REPETITION_RATE that is acceptable 
+
+RF_REPETITION_RATE:  50 # INTEGER Hertz
+RF_REPETITION_RATE_ERROR:  3 #difference in Hertz from RF_REPETITION_RATE that is acceptable
+
+
+BREAKDOWN_RATE_AIM:  100 # per million active pulses
+
 LLRF_CHECK_TIME:  50 # INTEGER ms to check main llrf parameters
 
 #RF_INCREASE_RATE=0.33333; Watts per second aim (approx)
@@ -93,7 +97,7 @@ NUM_BUFFER_TRACES:  500 # number of traces in history, dumped on vac-spike
 
 ## Traces to calculate a mean value for 
 ## currently only 1 mean calc per trace is allowed
-## ONLY The traces in this list will have a mean value calcualted
+## ONLY The traces in this list will have a mean value calculated
 ## regardless of the time definitions below  
 MEAN_TRACES:  
   - KLYSTRON_FORWARD_POWER
@@ -110,41 +114,35 @@ MEAN_TRACES:
 ## ATM: MUST BE SET BY HAND FOR EACH PULSE LENGTH, using RF traces, 
 # only a human can decide over which range to calculate and average 
 ## KLYSTRON_FORWARD_POWER 
-KFPOW_MEAN_START:  2.3 
-KFPOW_MEAN_END:  2.8 
+KFPOW_MEAN_START:  2.3 # must be in us
+KFPOW_MEAN_END:  2.8  # must be in us
 ## KLYSTRON_REVERSE_POWER
-KRPOW_MEAN_START:  2.5 
-KRPOW_MEAN_END:  3.0
-## KLYSTRON_FORWARD_PHASE 
-KFPOW_MEAN_START:  0.0 
-KFPOW_MEAN_END:  2.0 
-## KLYSTRON_REVERSE_PHASE
-KRPOW_MEAN_START:  0.0 
-KRPOW_MEAN_END:  2.0
+KRPOW_MEAN_START:  2.5  # must be in us
+KRPOW_MEAN_END:  3.0 # must be in us
 ## CAVITY_FORWARD_POWER
-CFPOW_MEAN_START:  2.9 
-CFPOW_MEAN_END:  3.1 
+CFPOW_MEAN_START:  2.9  # must be in us
+CFPOW_MEAN_END:  3.1  # must be in us
 ## CAVITY_REVERSE_POWER
-CRPOW_MEAN_START:  2.9 
-CRPOW_MEAN_END:  3.1 
+CRPOW_MEAN_START:  2.9  # must be in us
+CRPOW_MEAN_END:  3.1 # must be in us
 ## KLYSTRON_FORWARD_PHASE 
-KFPHA_MEAN_START:  2.3 
-KFPHA_MEAN_END:  2.8 
+KFPHA_MEAN_START:  2.3 # must be in us
+KFPHA_MEAN_END:  2.75 # must be in us
 ## KLYSTRON_REVERSE_POWER
-KRPHA_MEAN_START:  2.5 
-KRPHA_MEAN_END:  3.0
+KRPHA_MEAN_START:  2.5 # must be in us
+KRPHA_MEAN_END:  3.0 # must be in us
 ## CAVITY_FORWARD_PHASE
-CFPHA_MEAN_START:  0.0
-CFPHA_MEAN_END:  2.0 
+CFPHA_MEAN_START:  0.0 # must be in us
+CFPHA_MEAN_END:  2.0  # must be in us
 ## CAVITY_REVERSE_PHASE
-CRPHA_MEAN_START:  2.8 
-CRPHA_MEAN_END:  3.0 
+CRPHA_MEAN_START:  2.8  # must be in us
+CRPHA_MEAN_END:  3.0 # must be in us
 ## CAVITY_PROBE_POWER
-CPPOW_MEAN_START:  0.0 
-CPPOW_MEAN_END:  2.0 
+CPPOW_MEAN_START:  0.0  # must be in us
+CPPOW_MEAN_END:  2.0  # must be in us
 ## CAVITY_PROBE_PHASE
-CPPHA_MEAN_START:  0.0 
-CPPHA_MEAN_END:  2.0 
+CPPHA_MEAN_START:  0.0 # must be in us
+CPPHA_MEAN_END:  2.0  # must be in us
 
 ## breakdown / outside_mask traces
 ##BREAKDOWN_TRACES=CAVITY_FORWARD_POWER,CAVITY_REVERSE_POWER;

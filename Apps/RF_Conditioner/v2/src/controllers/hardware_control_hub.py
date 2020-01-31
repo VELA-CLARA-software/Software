@@ -40,6 +40,8 @@ from collections import defaultdict
 from src.data import config
 from src.data import rf_conditioning_logger
 
+import llrf_control
+
 
 class hardware_control_hub(object):
     """
@@ -52,9 +54,6 @@ class hardware_control_hub(object):
     # we create static objects for init, control (and sometimes object constant references)
     # these objects live here and will be passed ot other classes as needed
     #
-    # vaccum valves
-
-    valve_control = None
     # RF modualtor
     print('import VELA_CLARA_RF_Modulator_Control')
     mod_init = VELA_CLARA_RF_Modulator_Control.init()
@@ -85,6 +84,12 @@ class hardware_control_hub(object):
     gen_mon_keys = {}
     user_gen_mon_dict = {}
 
+    # vaccum valves
+    print('import VELA_CLARA_Vac_Valve_Control')
+    valve_init = VELA_CLARA_Vac_Valve_Control.init()
+    valve_init.setQuiet()
+    valve_control = None
+
     # dictionary to keep state of each controller (for sanity checks etc)
     have_controller = {CONTROLLER_TYPE.VAC_VALVES: False, CONTROLLER_TYPE.RF_PROT: False,
         CONTROLLER_TYPE.MAGNET: False, CONTROLLER_TYPE.RF_MOD: False, CONTROLLER_TYPE.LLRF: False,
@@ -105,10 +110,6 @@ class hardware_control_hub(object):
         self.config = config.config()
         self.config_data = self.config.raw_config_data
         self.logger = rf_conditioning_logger.rf_conditioning_logger()
-
-        print('import VELA_CLARA_Vac_Valve_Control')
-        self.valve_init = VELA_CLARA_Vac_Valve_Control.init()
-        self.valve_init.setQuiet()
 
 
 
@@ -184,12 +185,12 @@ class hardware_control_hub(object):
         message = 'start_mod_control() '
         if machine_area == MACHINE_AREA.CLARA_PH1:
             #hch.valve_control = hch.valve_init.physical_CLARA_PH1_Vac_Valve_Controller()
-            hch.valve_control = self.valve_init.physical_CLARA_PH1_Vac_Valve_Controller()
+            hch.valve_control = hch.valve_init.physical_CLARA_PH1_Vac_Valve_Controller()
             hch.have_controller[CONTROLLER_TYPE.VAC_VALVES] = True
             message += 'successfully created a CLARA_PH1 valve control object'
         elif machine_area == MACHINE_AREA.VELA_INJ:
             #hch.valve_control = hch.valve_init.physical_VELA_INJ_Vac_Valve_Controller()
-            hch.valve_control = self.valve_init.physical_VELA_INJ_Vac_Valve_Controller()
+            hch.valve_control = hch.valve_init.physical_VELA_INJ_Vac_Valve_Controller()
             hch.have_controller[CONTROLLER_TYPE.VAC_VALVES] = True
             message += 'successfully created a VELA_INJ valve control object'
         else:
@@ -237,6 +238,10 @@ class hardware_control_hub(object):
             hch.have_controller[CONTROLLER_TYPE.LLRF] = True
             message += 'successfully created a ' + str(rf_structure) + ' LLRF control object'
         self.logger.message(message)
+
+        self.llrf_controller = llrf_control.llrf_control()
+
+
 
     def connectPV(self, pvKey, pvValue):
         """
