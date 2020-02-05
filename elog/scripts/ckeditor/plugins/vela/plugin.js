@@ -5,7 +5,7 @@
 
 // add buttons for machine status (specific to particular logbooks)
 if (window.location.pathname.includes('/VELA/')) {
-    machineAreas = ['Gun', 'Linac1', 'Straight 2', 'C2V', 'VELA Straight 2', 'BA1', 'BA1 Motors'];
+    machineAreas = ['Gun', 'Linac1', 'Straight 2', 'C2V', 'VELA Straight 2', 'BA1', 'BA1 Motors', 'Snapshot'];
 } else if (window.location.pathname.includes('/SRF+Lab+(ESS)/')) {
     machineAreas = ['ESS Cryostat', 'ESS LLRF']; // SRF-specific area names go here
 } else {

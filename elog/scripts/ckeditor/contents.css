@@ -200,8 +200,8 @@ table.ess-cryostat {background: #f4f8fc;}
 table.ess-cryostat th {background: #deeaf6;}
 table.ess-llrf {background: #fdf6f1;}
 table.ess-llrf th {background: #ffe4d5;}
-table.st4 {background: #e6e1cf;}
-table.st4 th {background: #e6cf73;}
+table.snapshot {background: #e6e1cf;}
+table.snapshot th {background: #e6cf73;}
 table.rf {background: #bfffff;}
 table.rf th {background: #009999;}
 table.rfsliders {background: #e6ffff;}
