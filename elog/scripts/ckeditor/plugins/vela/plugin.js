@@ -39,8 +39,9 @@ CKEDITOR.plugins.add( 'vela', {
 				var ckbody = new CKEDITOR.dom.element(body);
 				var p = new CKEDITOR.dom.element( 'p' );
 				var strong = new CKEDITOR.dom.element( 'strong' );
-				strong.appendText(timestamp + ' ');
+				strong.appendText(timestamp);
 				strong.appendTo( p );
+				p.appendText(' ');
 				p.appendTo(ckbody);
 
 				// move cursor to end
