@@ -29,7 +29,7 @@ from monitor import monitor
 
 class cavity_temperature_monitor(monitor):
     def __init__(self):
-        # init base-ccaget lass
+        # init base-class
         monitor.__init__(self)
         # the gen mon keys will get stored here
         self._cavity_temp_keys = []
@@ -44,10 +44,17 @@ class cavity_temperature_monitor(monitor):
         # TODO: this is a sanity check and should go in the config class
         if len(pv_list) == self.config_data[self.config.CAVITY_TEMPERATURE_PV_COUNT]:
             for i, pv in enumerate(pv_list):
-                key = 'WATER_TEMP_ID_{}'.format(i)  # MAGIC_STRING  The key for the gen_mon keys
+                key = 'CAVITY_TEMP_ID_{}'.format(i)  # MAGIC_STRING  The key for the gen_mon
+                # keys
+                self.logger.message_header("Connecting to Cavity Temp PVs", show_time_stamp=False,
+                                           add_to_text_log=True)
+
                 if self.hardware.connectPV(pvKey=key, pvValue=pv):
                     self._cavity_temp_keys.append(key)
-                    self.values[key] = None
+                    self.values[key] = self.data.dummy_float
+                    self.logger.message("Connected to " + pv + ' id = ' + key)
+                else:
+                    self.logger.message("!!!ERROR!!! Failed to connect to " + pv)
 
         if len(self._cavity_temp_keys) == len(pv_list):
             # The timer runs update_values
@@ -59,5 +66,8 @@ class cavity_temperature_monitor(monitor):
         """
         gets the latest values from the gen_mon and adds them to the rf_condition_data.values dict
         """
-        for key in self._cavity_temp_keys:
-            self.values[key] = self.hardware.gen_mon.getValue(key)
+        for i, key  in enumerate(self._cavity_temp_keys):
+            self.values[key] = self.hardware.gen_mon.getValue(self.hardware.gen_mon_keys[
+                                                                  key])  # print("Cavity Temp Monitor, key = ",key,"  value = ", self.values[key])
+            if i == 0:
+                self.values[self.data.cav_temp_gui] = self.values[key]

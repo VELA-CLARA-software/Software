@@ -40,20 +40,20 @@ from collections import defaultdict
 from src.data import config
 from src.data import rf_conditioning_logger
 
+import llrf_control
+
 
 class hardware_control_hub(object):
     """
     This class creates and holds all the CATAP objects
     These are held in static variables that can be passed to where-ever they are needed
-    This class's funcitons all look very similar and so they could be a lot fo refactor ing to
+    This class's functions all look very similar and so there could be a lot of refactoring
+    We should probably only creaet th econtroller we need, based on the config (?)
     once hardware Objects are created this class does nothing else
     """
     # we create static objects for init, control (and sometimes object constant references)
     # these objects live here and will be passed ot other classes as needed
     #
-    # vaccum valves
-
-    valve_control = None
     # RF modualtor
     print('import VELA_CLARA_RF_Modulator_Control')
     mod_init = VELA_CLARA_RF_Modulator_Control.init()
@@ -84,15 +84,25 @@ class hardware_control_hub(object):
     gen_mon_keys = {}
     user_gen_mon_dict = {}
 
+    # vaccum valves
+    print('import VELA_CLARA_Vac_Valve_Control')
+    valve_init = VELA_CLARA_Vac_Valve_Control.init()
+    valve_init.setQuiet()
+    valve_control = None
+
     # dictionary to keep state of each controller (for sanity checks etc)
     have_controller = {CONTROLLER_TYPE.VAC_VALVES: False, CONTROLLER_TYPE.RF_PROT: False,
         CONTROLLER_TYPE.MAGNET: False, CONTROLLER_TYPE.RF_MOD: False, CONTROLLER_TYPE.LLRF: False,
         CONTROLLER_TYPE.GENERAL_MONITOR: True}
 
+    # a convenience dictionary as we have multiple 'names' for the gun LLRF_TYPE
     # TODO: move into an app utilities space
-    is_gun_type = {LLRF_TYPE.CLARA_HRRG: True, LLRF_TYPE.CLARA_LRRG: True,
-                   LLRF_TYPE.VELA_HRRG: True, LLRF_TYPE.VELA_LRRG: True}
-    is_gun_type = defaultdict(lambda: MACHINE_AREA.UNKNOWN_AREA, is_gun_type)
+    # all these types are still the gun, otherwise this dict. should return false
+    is_gun_type = defaultdict(lambda: False)
+    is_gun_type[LLRF_TYPE.CLARA_HRRG] = True
+    is_gun_type[LLRF_TYPE.CLARA_LRRG] = True
+    is_gun_type[LLRF_TYPE.VELA_HRRG] = True
+    is_gun_type[LLRF_TYPE.VELA_LRRG] = True
 
     def __init__(self):
         self.my_name = 'hardware_control_hub'
@@ -101,15 +111,11 @@ class hardware_control_hub(object):
         self.config_data = self.config.raw_config_data
         self.logger = rf_conditioning_logger.rf_conditioning_logger()
 
-        print('import VELA_CLARA_Vac_Valve_Control')
-        self.valve_init = VELA_CLARA_Vac_Valve_Control.init()
-        self.valve_init.setQuiet()
-
 
 
     def start_up(self):
         """
-        This NEEDS to be a serpete function. Many clases create one of these objects but the
+        This NEEDS to be a seperate function. Many classes create one of these objects but the
         hardware controls should only be created ONCE! The main_controller will call this
         function, then every other class just creates a hardware_control_hub to have access to
         the controllers (or objects)
@@ -131,22 +137,21 @@ class hardware_control_hub(object):
         rf_prot_type = self.config.get_rf_prot_type[self.config_data[self.config.RF_STRUCTURE]]
         # alias for shorter lines
         hch = hardware_control_hub
-        message = 'start_RF_protection() '
+        message = 'start_RF_protection(), structure = ' + str(rf_structure) + ', rf_prot_type = ' + str(rf_prot_type)
         if self.is_gun_type[rf_structure]:
             hch.prot_control = hch.prot_init.physical_Gun_Protection_Controller()
             hch.have_controller[CONTROLLER_TYPE.RF_PROT] = True
-            message += ' successfully created a GUN protection control object'
+            message += ', successfully created a GUN protection control object'
         elif rf_structure == LLRF_TYPE.L01:
             # THE Linac protection controller IS NOT YET TESTED
             hch.prot_control = hch.prot_init.physical_L01_Protection_Controller()
             hch.have_controller[CONTROLLER_TYPE.RF_PROT] = True
-            message += ' successfully created a L01 protection control  object'
+            message += ', successfully created a L01 protection control  object'
         else:
-            message = ' FAILED to create a RF Protection object'
+            message += ', FAILED to create a RF Protection object'
         # get an protection object if we have a controller
         if hch.have_controller[CONTROLLER_TYPE.RF_PROT]:
             hch.prot_object = [hch.prot_control.getRFProtObjConstRef(rf_prot_type)]
-
         self.logger.message(message)
 
     def start_magnet_control(self):
@@ -180,19 +185,18 @@ class hardware_control_hub(object):
         message = 'start_mod_control() '
         if machine_area == MACHINE_AREA.CLARA_PH1:
             #hch.valve_control = hch.valve_init.physical_CLARA_PH1_Vac_Valve_Controller()
-            hch.valve_control = self.valve_init.physical_CLARA_PH1_Vac_Valve_Controller()
+            hch.valve_control = hch.valve_init.physical_CLARA_PH1_Vac_Valve_Controller()
             hch.have_controller[CONTROLLER_TYPE.VAC_VALVES] = True
             message += 'successfully created a CLARA_PH1 valve control object'
         elif machine_area == MACHINE_AREA.VELA_INJ:
             #hch.valve_control = hch.valve_init.physical_VELA_INJ_Vac_Valve_Controller()
-            hch.valve_control = self.valve_init.physical_VELA_INJ_Vac_Valve_Controller()
+            hch.valve_control = hch.valve_init.physical_VELA_INJ_Vac_Valve_Controller()
             hch.have_controller[CONTROLLER_TYPE.VAC_VALVES] = True
             message += 'successfully created a VELA_INJ valve control object'
         else:
             message += 'FAILED to create a valve Control object'
         if hch.have_controller[CONTROLLER_TYPE.VAC_VALVES]:
             hch.valve_obj = [hch.valve_control.getVacValveObjConstRef(valve)]
-
         self.logger.message(message)
 
     def start_mod_control(self):
@@ -227,7 +231,7 @@ class hardware_control_hub(object):
         rf_structure = self.config_data[self.config.RF_STRUCTURE]
         message = 'start_llrf_control() '
         if rf_structure == LLRF_TYPE.UNKNOWN_TYPE:
-            message += 'FAILED to create a LLRF  Control object'
+            message += 'FAILED to create a LLRF Control object'
         else:
             hch.llrf_control = hch.llrf_init.getLLRFController(MACHINE_MODE.PHYSICAL, rf_structure)
             hch.llrf_obj = [hch.llrf_control.getLLRFObjConstRef()]
@@ -235,15 +239,19 @@ class hardware_control_hub(object):
             message += 'successfully created a ' + str(rf_structure) + ' LLRF control object'
         self.logger.message(message)
 
+        self.llrf_controller = llrf_control.llrf_control()
+
+
+
     def connectPV(self, pvKey, pvValue):
         """
         connect to process variable using the general monitor,
         if connected add an item in gen_mon_keys, with key=pvKey and value = id (where id is the
         string returned by the gen_mon)
-        return connecetd successfully or not
+        return connected successfully or not
 
         :param pvKey: (string)  the key that you want to use for this PV in  gen_mon_keys
-        :param pvValue: (string) The actual PVyou want to connetc to
+        :param pvValue: (string) The actual PV you want to connect to
         :return:
         """
         connected = False

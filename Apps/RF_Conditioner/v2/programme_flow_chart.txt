@@ -6,7 +6,7 @@ create a main_controller
 main_controller init:
 	
 	create the GUI
-		This is so that message can get snet to GUI straight away, 
+		This is so that message can get sent to GUI straight away, 
 		This GUI is not yet doing proper updates
 	
 	create config

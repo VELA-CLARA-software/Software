@@ -228,7 +228,7 @@ class rf_condition_data(dat.rf_condition_data_base):
             ##elf.values[dat.pulse_length_start] = self.llrf_config['PULSE_LENGTH_START']
             self.values[dat.pulse_length_aim] = self.llrf_config['PULSE_LENGTH_AIM']
             self.values[dat.pulse_length_aim_error] = self.llrf_config['PULSE_LENGTH_AIM_ERROR']
-
+            VAC_SPIKE_TRACES_TO_SAVE
             self.values[dat.pulse_length_min] = self.llrf_config['PULSE_LENGTH_AIM'] - self.llrf_config['PULSE_LENGTH_AIM_ERROR']
             self.values[dat.pulse_length_max] = self.llrf_config['PULSE_LENGTH_AIM'] + self.llrf_config['PULSE_LENGTH_AIM_ERROR']
 
