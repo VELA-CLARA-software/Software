@@ -16,6 +16,7 @@ claraIcon = 'resources\\magnetApp\\CLARA5.bmp'
 # \\VELA_CLARA_PYDs\\bin\\stage\\')
 #sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\Release\\')
 sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\stage\\')
+#sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\Release\\')
 # not sure we need a log and need to include JKJ logger widget if we do ??
 logfile='magnetAppLog.log'
 
