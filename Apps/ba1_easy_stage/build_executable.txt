@@ -4,7 +4,7 @@
 # run this from the commnand line, 
 # should compile in all libraries that have 
 # a path defined in the python source code
-pyinstaller -F -n  "magnetApp" magnetApp.py 
+pyinstaller -F -n  "ba1_easy_stages" main.pyw  --distpath "\\apclara1\ControlRoomApps\Stage\ba1_easy_stage"
 
 # WITH ICON
 # pyinstaller -F -w --icon=.\resources\magnetApp\magpic.ico -n "magnetApp" magnetApp.pyw

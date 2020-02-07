@@ -34,16 +34,14 @@ QApplication is the top-level class we create,
 '''
 from PyQt4.QtGui import QApplication
 '''
-Import the controller class, everything 
+Import the controller class, everything specific to this app starts from there 
 '''
 from src.controller import controller
-
 
 
 class main_application(QApplication):
 	'''
 		Simple class to own the main controller
-		Everything else is crated is amanged controller
 	'''
 	def __init__(self, argv):
 		#
@@ -55,11 +53,12 @@ class main_application(QApplication):
 
 
 if __name__ == '__main__':
-	APPLICATION_NAME = "Demonstration Application"
+	APPLICATION_NAME = "BA1 Easy Stage"
 	print('Starting ' + APPLICATION_NAME)
 	''' 
-		sys.argv are the paramters passed from the command line
-		e.g to run this you might type python 
+		sys.argv are the parameters passed from the command line
+		e.g to run this whilst passing in a config file you might type:   
+		python -config "path/to.myconfig/config.txt" 
 	'''
 	app = main_application(sys.argv)
 	sys.exit(app.exec_())
