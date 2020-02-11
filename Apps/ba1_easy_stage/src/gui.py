@@ -31,6 +31,7 @@ from PyQt4.QtGui import QDoubleSpinBox
 from PyQt4.QtGui import QComboBox
 from PyQt4.QtGui import QPushButton
 from PyQt4.QtGui import QPalette
+from PyQt4.QtGui import QIcon
 
 
 class gui(QMainWindow, Ui_mainWindow):  # do we ''need'' to inhereit from a main windOw?
@@ -41,6 +42,7 @@ class gui(QMainWindow, Ui_mainWindow):  # do we ''need'' to inhereit from a main
     def __init__(self):
         # init base class
         QMainWindow.__init__(self)
+        self.setWindowIcon(QIcon('resources\\ba1_easy_stage\\stage.ico'))
 
         # for setting colors of widgets define some hex-color-codes
         self.white = "#ffffff"
