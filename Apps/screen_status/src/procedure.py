@@ -25,8 +25,11 @@
 import sys,os
 sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\Release\\')
 from VELA_CLARA_Screen_Control import SCREEN_STATE
+from VELA_CLARA_Screen_Control import SCREEN_TYPE
 import VELA_CLARA_Screen_Control as scr
+import VELA_CLARA_Camera_Control as cam
 import data as data
+import time
 
 class procedure(object):
     # keep this static, there can be only 1
@@ -35,28 +38,44 @@ class procedure(object):
     #scrInit.setQuiet()
     sc = scrInit.physical_Screen_Controller()
 
+
+    camInit = cam.init()
+    camInit.setQuiet()
+    cc = camInit.physical_Camera_Controller()
+
+    screen_state_refs = {}
+
+
     data = data.data()
 
     #devices = {}
-    #m = {}
-    # m['SCREEN_MOVING'    ] = SCREEN_STATE.SCREEN_MOVING
-    # m['V_RETRACTED'      ] = SCREEN_STATE.V_RETRACTED
-    # m['V_MAX'            ] = SCREEN_STATE.V_MAX
-    # m['V_MIRROR'         ] = SCREEN_STATE.V_MIRROR
-    # m['V_YAG'            ] = SCREEN_STATE.V_YAG
-    # m['V_GRAT'           ] = SCREEN_STATE.V_GRAT
-    # m['V_SLIT_1'         ] = SCREEN_STATE.V_SLIT_1
-    # m['V_RF'             ] = SCREEN_STATE.V_RF
-    # m['V_COL'            ] = SCREEN_STATE.V_COL
-    # m['H_RETRACTED'      ] = SCREEN_STATE.H_RETRACTED
-    # m['H_SLIT_1'         ] = SCREEN_STATE.H_SLIT_1
-    # m['H_SLIT_2'         ] = SCREEN_STATE.H_SLIT_2
-    # m['H_SLIT_3'         ] = SCREEN_STATE.H_SLIT_3
-    # m['H_APT_1'          ] = SCREEN_STATE.H_APT_1
-    # m['H_APT_2'          ] = SCREEN_STATE.H_APT_2
-    # m['H_APT_3'          ] = SCREEN_STATE.H_APT_3
-    # m['YAG'          ] = SCREEN_STATE.YAG
-    # m['RETRACTED'          ] = SCREEN_STATE.RETRACTED
+    states = {}
+    states['SCREEN_MOVING'    ] = SCREEN_STATE.SCREEN_MOVING
+    states['V_RETRACTED'      ] = SCREEN_STATE.V_RETRACTED
+    states['V_MAX'            ] = SCREEN_STATE.V_MAX
+    states['V_MIRROR'         ] = SCREEN_STATE.V_MIRROR
+    states['V_YAG'            ] = SCREEN_STATE.V_YAG
+    states['V_GRAT'           ] = SCREEN_STATE.V_GRAT
+    states['V_SLIT_1'         ] = SCREEN_STATE.V_SLIT_1
+    states['V_RF'             ] = SCREEN_STATE.V_RF
+    states['V_COL'            ] = SCREEN_STATE.V_COL
+    states['H_RETRACTED'      ] = SCREEN_STATE.H_RETRACTED
+    states['H_SLIT_1'         ] = SCREEN_STATE.H_SLIT_1
+    states['H_SLIT_2'         ] = SCREEN_STATE.H_SLIT_2
+    states['H_SLIT_3'         ] = SCREEN_STATE.H_SLIT_3
+    states['H_APT_1'          ] = SCREEN_STATE.H_APT_1
+    states['H_APT_2'          ] = SCREEN_STATE.H_APT_2
+    states['H_APT_3'          ] = SCREEN_STATE.H_APT_3
+    states['YAG'          ] = SCREEN_STATE.YAG
+    states['RETRACTED'          ] = SCREEN_STATE.RETRACTED
+
+
+    # The control system takes an appreciable amount of time before a diagnostic station starts moving
+    # therefore we will keep a record fo when buttons are clicked,
+    # this will be used to set a "clicked" state to the gui, so that operators do not get impatient and click
+    # multiple times, we will also set a time_when_clicked so that we can disable the clicked state
+    move_attmepted = {}
+
 
 
     def __init__(self):
@@ -68,36 +87,49 @@ class procedure(object):
         self.inititialize_values()
 
         # map of scren state enum to string verion of enum
-        temp = procedure.sc.get_SCREEN_STATE_Definition()
+        #temp = procedure.sc.get_SCREEN_STATE_Definition()
         # we need to reverse this
         self.screen_state_map ={}
-        for key, value in temp.iteritems():
+        for key, value in procedure.sc.get_SCREEN_STATE_Definition().iteritems():
             print("screen_state_map adding ", value, key)
             self.screen_state_map[value] = key
 
 
+    def clara_led_on(self):
+        procedure.cc.claraLEDOn()
+
+    def clara_led_off(self):
+        procedure.cc.claraLEDOff()
+
+    def vela_led_on(self):
+        procedure.cc.velaLEDOn()
+
+    def vela_led_off(self):
+        procedure.cc.velaLEDOff()
+
     def inititialize_values(self):
         # get names
         self.data.screen_names = procedure.sc.getScreenNames()
-        self.data.screen_state_refs = {}
+        procedure.screen_state_refs = {}
         for name in self.data.screen_names:
             print('Adding ', name)
             # get valve-obj references
-            self.data.screen_state_refs[name] = procedure.sc.getScreenObject(name)
+            procedure.screen_state_refs[name] = procedure.sc.getScreenObject(name)
             # get devices for each stage
             self.data.devices[name] = [str(x) for x in procedure.sc.getAvailableDevices(name)]
 
             print(name, ' has these devices: ', self.data.devices[name])
+            self.data.move_attempted[name] = [False, time.time()]
+
+            self.data.v_enabled[name] = procedure.sc.isVEnabled(name)
+            self.data.h_enabled[name] = procedure.sc.isHEnabled(name)
 
         # we have a map of SCREEN_STATE to string
+        # state_string_to_state = {v: k for k, v in procedure.sc.get_SCREEN_STATE_Definition().
+        #         iteritems()}
 
-        state_string_to_state = {v: k for k, v in procedure.sc.get_SCREEN_STATE_Definition().
-                iteritems()}
-
-    # def get_screen_device_map(self):
-    #     for name in procedure.scr_names:
-    #         procedure.devices[name] = [str(x) for x in procedure.sc.getAvailableDevices(name)]
-    #         print(name, ' has ', procedure.devices[name])
+    def set_move_attempted(self, name):
+        self.data.move_attempted[name] = [True, time.time()]
 
     def get_screen_devices(self, scr_name):
         #return [str(x) for x in procedure.sc.getAvailableDevices(scr_name)]
@@ -110,39 +142,52 @@ class procedure(object):
     # called external to update states
     def update_states(self):
         for name in self.data.screen_names:
-            self.data.states[name] = self.data.screen_state_refs[name].screenState
-            set_state = self.data.screen_state_refs[name].screenSetState
-            if set_state != self.data.states[name]:
-                pass
+            self.data.states[name] = procedure.screen_state_refs[name].screenState
+
+
+            self.data.v_enabled[name] = procedure.sc.isVEnabled(name)
+
+            if procedure.screen_state_refs[name].screenType is SCREEN_TYPE.CLARA_HV_MOVER:
+                self.data.h_enabled[name] = procedure.sc.isHEnabled(name)
+            else:
+                self.data.h_enabled[name] = False
+
+            #set_state = procedure.screen_state_refs[name].screenSetState
+            # if set_state != self.data.states[name]:
+            #     pass
                 #print(name,set_state,procedure.states[name])
                 # if self.data.states[name] != self.m['SCREEN_MOVING'    ]:
                 #     self.data.states[name] = 'CLICKED'
             self.data.previous_states = self.data.states
 
+            self.data.clara_led_state = procedure.cc.isClaraLEDOn()
+            self.data.vela_led_state = procedure.cc.isVelaLEDOn()
+
+
+
     def make_read_equal_set_all(self):
         procedure.sc.makeSetEqualReadAll()
 
     def set_state_equal_read_state(self, name):
-        return procedure.screen_state_refs[name].screenSetState == procedure.screen_state_refs[
-            name].screenState
+        return procedure.screen_state_refs[name].screenSetState == procedure.screen_state_refs[name].screenState
 
     def set_state_NOT_equal_read_state(self, name):
-        return procedure.screen_state_refs[name].screenSetState != procedure.screen_state_refs[
-            name].screenState
+        return rocedure.screen_state_refs[name].screenSetState != procedure.screen_state_refs[name].screenState
 
     #
     def all_out(self):
-        for name in procedure.scr_names:
+        for name in self.data.screen_names:
+            self.set_move_attempted(name)
             self.screen_out(name)
 
     # called external, toggle open or close
     def in_out(self,name):
         procedure.states[name] = 'CLICKED'
         if procedure.sc.isClearForBeam(name):
-            print(name+' is clear for beam, move screen in?')
+            print(name+' is clear for beam, moving screen in')
             self.screen_in(name)
         else:
-            print(name+' is NOT clear for beam, move screen OUT?')
+            print(name+' is NOT clear for beam, moving screen OUT')
             self.screen_out(name)
 
     # called external, open name
@@ -159,6 +204,14 @@ class procedure(object):
 
     def move_screen_to(self, scr, state):
         if procedure.screen_state_refs[scr].screenSetState != state:
-            print("move_screen_to passed, ",scr, state, procedure.m[state])
+            #print("move_screen_to passed, ",scr, state, procedure.states[state])
             #procedure.sc.moveScreenTo( scr,  procedure.m[state])1
-            procedure.sc.moveScreenTo( scr, procedure.m[state] )
+            procedure.sc.moveScreenTo( scr, procedure.states[state] )
+
+
+
+
+    # def get_screen_device_map(self):
+    #     for name in procedure.scr_names:
+    #         procedure.devices[name] = [str(x) for x in procedure.sc.getAvailableDevices(name)]
+    #         print(name, ' has ', procedure.devices[name])

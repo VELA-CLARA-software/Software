@@ -1,4 +1,4 @@
-'''
+"""
 /*
 //              This file is part of VELA-CLARA-Software.                             //
 //------------------------------------------------------------------------------------//
@@ -17,34 +17,29 @@
 //  Author:      DJS
 //  Last edit:   05-06-2018
 //  FileName:    mainApp.oy
-//  Description: Generic template for control class for general High Level Application
+//  Description: control for screen_state app
 //
 //
 //*/
-'''
+"""
 from PyQt4.QtCore import QTimer
-
 import view as view
 import procedure as procedure
 import data as data
 from PyQt4.QtGui import QMenu
 from PyQt4.QtGui import QAction
+import time
 
 
 class control(object):
     # we don;t need to pass these things in !!
     def __init__(self,sys_argv = None):
-        self.my_name = 'control'
         self.sys_argv = sys_argv
         '''define model and view'''
         self.data = data.data()
         self.procedure = procedure.procedure()
-
         self.view = view.view()
-
-
         #raw_input()
-
         # update gui with this:
         print('controller, starting timer')
         self.timer = QTimer()
@@ -59,7 +54,7 @@ class control(object):
         self.start_gui_update()
         # show view
         self.view.show()
-        print(self.my_name + ', class initiliazed')
+        print(__name__, ' class initiliazed')
         self.last_scr = ''
 
         self.gui_enabled_moving = []
@@ -69,6 +64,8 @@ class control(object):
         # connect main buttons to functions
         self.view.allout_Button.clicked.connect(self.handle_all_out)
         self.view.checkDevices_Button.clicked.connect(self.handle_checkDevices_Button)
+        self.view.clara_led_button.clicked.connect(self.handle_clara_led)
+        self.view.vela_led_button.clicked.connect(self.handle_vela_led)
         self.view.add_screens()
 
         # for name in self.procedure.scr_names:
@@ -114,8 +111,24 @@ class control(object):
         if device == 'CANCEL_MOVING':
             self.gui_enabled_moving.remove(self.last_scr)
         else:
+            self.data.move_attempted[self.last_scr] = [True, time.time()]
+            print("self.data.move_attempted[ ", self.last_scr, True)
             self.procedure.move_screen_to(self.last_scr,device)
             self.gui_enabled_moving.append(self.last_scr)
+
+
+
+    def handle_clara_led(self):
+        if self.data.clara_led_state:
+            self.procedure.clara_led_off()
+        else:
+            self.procedure.clara_led_on()
+
+    def handle_vela_led(self):
+        if self.data.vela_led_state:
+            self.procedure.vela_led_off()
+        else:
+            self.procedure.vela_led_on()
 
 
     def handle_checkDevices_Button(self):
@@ -130,7 +143,11 @@ class control(object):
 
     def handle_in_out(self):
         sender = self.view.sender()
-        self.procedure.in_out(str(sender.objectName()))
+        screen = str(sender.objectName())
+        self.data.move_attempted[screen] = [True, time.time()]
+        #print("self.data.move_attempted[ ", screen, True)
+        self.procedure.in_out(screen)
+
 
     def start_gui_update(self):
         self.timer = QTimer()
@@ -144,6 +161,14 @@ class control(object):
         '''
         self.procedure.update_states()
 
+        # iterate over each screen and check when the last time an attempt to move the screen was amde
+        for key, value in self.data.move_attempted.iteritems():
+            if time.time() - value[1] > self.data.move_attempt_wait_time:
+                #print(time.time(), value[1] , self.data.move_attempt_wait_time)
+                self.data.move_attempted[key] = [False, time.time()]
+
+
+
         # check states with self.gui_enabled_moving
         # magic && cancer
         to_delete = []
@@ -155,11 +180,6 @@ class control(object):
                 to_delete.append(item)
         for item in to_delete:
             self.gui_enabled_moving.remove(item)
-
-
-
-
-
 
 
         self.view.update_gui()

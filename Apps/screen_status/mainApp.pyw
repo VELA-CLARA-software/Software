@@ -15,51 +15,24 @@
 //    along with VELA-CLARA-Software.  If not, see <http://www.gnu.org/licenses/>.    //
 //
 //  Author:      DJS
-//  Last edit:   26-02-2019
-//  FileName:    data.py
-//  Description: screen_stats data
+//  Last edit:   05-06-2018
+//  FileName:    mainApp.oy
+//  Description: scre_status app, simple way to move screens in/out following correct procedure
 //
 //
 //*/
 '''
+import sys
+from PyQt4 import QtGui, QtCore
+from src.control import control
 
+class App(QtGui.QApplication):
+    def __init__(self, sys_argv):
+        QtGui.QWidget.__init__(self, sys_argv)
+        print 'Creating Controller'
+        self.control = control(sys_argv)
+        print 'Running'
 
-class data(object):
-
-    # all screen names
-    screen_names = []
-
-    # this list will be used by the view to update states
-    states = {}
-    previous_states = {}
-
-    # references to each screen object, from which to read th estate
-    devices = {}
-    state_string_to_state = {}
-
-
-
-    # The control system takes an appreciable amount of time before a diagnostic station starts moving
-    # therefore we will keep a record fo when buttons are clicked,
-    # this will be used to set a "clicked" state to the gui, so that operators do not get impatient and click
-    # multiple times, we will also set a time_when_clicked so that we can disable the clicked state
-    move_attempt_wait_time = 8
-    move_attempted = {}
-
-    # THE ONLY (?) way to know that a screen has FINISHED moving is to check that both the H and V drives are not
-    # enabled (but what about pnuematic screens???)
-    v_enabled = {}
-    h_enabled = {}
-
-    clara_led_state = False
-    vela_led_state = False
-
-    def __init__(self):
-        object.__init__(self)
-
-
-    def hello(self):
-        print(__name,' says hello')
-
-
-
+if __name__ == '__main__':
+    app = App(sys.argv)
+    sys.exit(app.exec_())
