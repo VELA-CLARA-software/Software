@@ -37,7 +37,7 @@ from PyQt4 import QtCore
 from viewSource.Ui_screen_status_view import Ui_screen_status_view
 # We need the SCREEN.STATE enum
 import sys,os
-sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\Release\\')
+sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release\\')
 from VELA_CLARA_Screen_Control import SCREEN_STATE
 import data as data
 from operator import itemgetter
@@ -53,7 +53,7 @@ class view(QMainWindow, Ui_screen_status_view ):
         QWidget.__init__(self)
         self.my_name = 'view'
         self.setupUi(self)
-        self.setWindowIcon(QIcon('resources\\screen_status\\screen_status_icon.ico'))
+        self.setWindowIcon(QIcon('.\\resources\\screen_status\\screen_status_icon.ico'))
 
         # ref. to static data class, to help others with readability
         self.data = view.data
@@ -64,9 +64,6 @@ class view(QMainWindow, Ui_screen_status_view ):
 
     def add_screens(self):
         print('add_screens ', self.data.screen_names)
-
-
-
         self.vbox = QVBoxLayout()
         # Order the anmes
         # this type of ordering should be pushed down to the HWC
@@ -81,9 +78,9 @@ class view(QMainWindow, Ui_screen_status_view ):
                 else:
                     i += 1
         orderd_names =  [x[1] for x in sorted(order, key=itemgetter(0))]
-        print("ORDER")
-        for n in orderd_names:
-            print n
+        # print("ORDER")
+        # for n in orderd_names:
+        #     print n
 
 
         for name in orderd_names:
@@ -98,14 +95,69 @@ class view(QMainWindow, Ui_screen_status_view ):
         self.screens[name].setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
        # create context menu
 
+
+    def set_clara_led_is_on(self):
+        self.clara_led_button.setStyleSheet("background-color: green")
+        self.clara_led_button.setText('SWITCH CLARA LED OFF')
+
+
+    def set_clara_led_is_off(self):
+        self.clara_led_button.setStyleSheet("background-color: red")
+        self.clara_led_button.setText('SWITCH CLARA LED ON')
+
+    def set_vela_led_is_on(self):
+        self.vela_led_button.setStyleSheet("background-color: green")
+        self.vela_led_button.setText('SWITCH VELA LED OFF')
+
+    def set_vela_led_is_off(self):
+        self.vela_led_button.setStyleSheet("background-color: red")
+        self.vela_led_button.setText('SWITCH VELA LED ON')
+
     def update_gui(self):
         for name, state in self.data.states.iteritems():
-            self.update_widget(self.screens[name],state)
+            if self.data.move_attempted[name][0]:
+                self.set_clicked(self.screens[name])
+            # the order we check things matters for how the GUI looks
+            elif self.data.v_enabled[name]:
+                self.set_moving(self.screens[name])
+                #print(name," v is enabled")
+            elif self.data.h_enabled[name]:
+                self.set_moving(self.screens[name])
+                #print(name, " h is enabled")
+            else:
+                self.update_widget(self.screens[name], state)
+
+
+    def set_clicked(self, widget):
+        widget.setStyleSheet("background-color: purple")
+        widget.setText(widget.objectName() + ' CLICKED')
+
+
+    def set_moving(self, widget):
+        widget.setStyleSheet("background-color: yellow")
+        widget.setText(widget.objectName() + ' MOVING')
+
 
     def update_widget(self,widget,state):
 
 
-        if state == SCREEN_STATE.V_MAX:#1
+        if self.data.clara_led_state:
+            self.set_clara_led_is_on()
+        else:
+            self.set_clara_led_is_off()
+
+        if self.data.vela_led_state:
+            self.set_vela_led_is_on()
+        else:
+            self.set_vela_led_is_off()
+
+        # now we have to handle the horrible case of clicked, but not yet moving
+        # and not got to where we want to ...
+
+        if state == SCREEN_STATE.SCREEN_MOVING:
+            widget.setStyleSheet("background-color: yellow")
+            widget.setText( widget.objectName() + ' MOVING' )
+        elif state == SCREEN_STATE.V_MAX:#1
             widget.setStyleSheet("background-color: magenta")
             widget.setText( widget.objectName() + ' V-MAX' )
         elif state == SCREEN_STATE.H_MAX:#2
@@ -117,28 +169,18 @@ class view(QMainWindow, Ui_screen_status_view ):
         elif state == SCREEN_STATE.V_GRAT:#4
             widget.setStyleSheet("background-color: cyan")
             widget.setText( widget.objectName() + ' V-GRATICULE' )
-
-
         elif state == SCREEN_STATE.YAG:#5
             widget.setStyleSheet("background-color: green")
             widget.setText( widget.objectName() + ' YAG' )
         elif state == SCREEN_STATE.V_YAG:#6
             widget.setStyleSheet("background-color: green")
             widget.setText( widget.objectName()+ ' YAG' )
-
         elif state == SCREEN_STATE.V_RF:
             widget.setStyleSheet("background-color: red")
             widget.setText( widget.objectName() + ' RF' )
-
-        elif state == SCREEN_STATE.SCREEN_MOVING:
-            widget.setStyleSheet("background-color: yellow")
-            widget.setText( widget.objectName() + ' MOVING' )
-
         elif state == SCREEN_STATE.V_COL:
             widget.setStyleSheet("background-color: orange")
             widget.setText( widget.objectName() + ' V-COL' )
-
-
         elif state == SCREEN_STATE.H_RETRACTED:
             widget.setStyleSheet("background-color: magenta")
             widget.setText( widget.objectName() + ' H-RETRACTED' )
@@ -148,8 +190,6 @@ class view(QMainWindow, Ui_screen_status_view ):
         elif state == SCREEN_STATE.RETRACTED:
             widget.setStyleSheet("background-color: red")
             widget.setText( widget.objectName() + ' RETRACTED (RF)' )
-
-
         elif state == SCREEN_STATE.V_SLIT_1:
             widget.setStyleSheet("background-color: orange")
             widget.setText( widget.objectName() + ' SLIT' )
@@ -171,18 +211,24 @@ class view(QMainWindow, Ui_screen_status_view ):
         elif state == SCREEN_STATE.H_APT_3:
             widget.setStyleSheet("background-color: orange")
             widget.setText( widget.objectName() + ' H_APT_3' )
+        else:
+            widget.setStyleSheet("background-color: magenta")
+            widget.setText( widget.objectName() + ' ERRRR' )
 
-        elif state == 'CLICKED':
-            widget.setStyleSheet("background-color: purple")
-            widget.setText( widget.objectName() + ' CLICKED' )
+        # if state == 'CLICKED':
+        #     widget.setStyleSheet("background-color: purple")
+        #     widget.setText( widget.objectName() + ' CLICKED' )
+
+
+
+
+
 
 
         # elif state == 'CLICKED':
         #     widget.setStyleSheet("background-color: orange")
         #     widget.setText( widget.objectName() + ' CLICKED' )
-        else:
-            widget.setStyleSheet("background-color: magenta")
-            widget.setText( widget.objectName() + ' ERRRR' )
+
         #
         # .value("H_RETRACTED",     screenStructs::SCREEN_STATE::H_RETRACTED)
         # .value("H_SLIT_1",        screenStructs::SCREEN_STATE::H_SLIT_1)
