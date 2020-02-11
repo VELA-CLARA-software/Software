@@ -139,8 +139,8 @@ class MyHandler(http.server.BaseHTTPRequestHandler):
                 pv_val = pv.get() if pv.connected else float('nan')
 
                 # handle special cases
-                # convert frequencies from Hz to MHz
-                if param in ('REBECA-LLRF`IN_FREQ', 'REBECA-LLRF`OUT_FREQ'):
+                # convert frequencies from Hz to MHz, and powers from W to MW
+                if param in ('REBECA-LLRF`IN_FREQ', 'REBECA-LLRF`OUT_FREQ') or param.endswith('`power_remote_s¬POWER'):
                     pv_val /= 1e6
                 # report a nicely formatted value for the train length
                 # in micro- or nanoseconds

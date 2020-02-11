@@ -5,7 +5,7 @@
 
 // add buttons for machine status (specific to particular logbooks)
 if (window.location.pathname.includes('/VELA/')) {
-    machineAreas = ['Gun', 'Linac1', 'Straight 2', 'C2V', 'VELA Straight 2', 'BA1', 'BA1 Motors'];
+    machineAreas = ['Gun', 'Linac1', 'Straight 2', 'C2V', 'VELA Straight 2', 'BA1', 'BA1 Motors', 'Snapshot'];
 } else if (window.location.pathname.includes('/SRF+Lab+(ESS)/')) {
     machineAreas = ['ESS Cryostat', 'ESS LLRF']; // SRF-specific area names go here
 } else {
@@ -39,8 +39,9 @@ CKEDITOR.plugins.add( 'vela', {
 				var ckbody = new CKEDITOR.dom.element(body);
 				var p = new CKEDITOR.dom.element( 'p' );
 				var strong = new CKEDITOR.dom.element( 'strong' );
-				strong.appendText(timestamp + ' ');
+				strong.appendText(timestamp);
 				strong.appendTo( p );
+				p.appendText(' ');
 				p.appendTo(ckbody);
 
 				// move cursor to end
