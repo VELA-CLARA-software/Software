@@ -98,6 +98,7 @@ class Model(object):
         self.parameters = self.baseMachine.initilise_parameters()
         self.data = []
         self.calibrationPhase = {'Gun': None, 'Linac1': None}
+        self.settings = {'Gun_Amp_Set': 71000, 'Linac1_Amp_Set': 41000}
         print("Model Initialized")
 
     def abort(self):
@@ -136,7 +137,7 @@ class Model(object):
 
     def turnOnGun(self, max, step):
         self.resetAbortFinish()
-        max = max if max <= 16000 else 16000
+        max = max if max <= self.settings['Gun_Amp_Set'] else self.settings['Gun_Amp_Set']
         start = self.machine.getGunAmplitude()
         range =  np.arange(start, max+1, step)
         for i, set in enumerate(range):
@@ -149,7 +150,7 @@ class Model(object):
 
     def turnOnLinac1(self, max, step):
         self.resetAbortFinish()
-        max = max if max <= 13500 else 13500
+        max = max if max <= self.settings['Linac1_Amp_Set'] else self.settings['Linac1_Amp_Set']
         start = self.machine.getLinac1Amplitude()
         range =  np.arange(start, max+1, step)
         for i, set in enumerate(range):
@@ -423,9 +424,9 @@ class Model(object):
         while len(self.data) < self.nSamples:
             self.data.append(self.getDataFunction())
             time.sleep(self.sleepTime)
-        # print 'before = ', self.data
+        print 'before = ', self.data
         self.data = [a for a in self.data if not np.isnan(a)]
-        # print 'after = ', self.data
+        print 'after = ', self.data
         return [np.mean(self.data), np.std(self.data)] if np.std(self.data) > 0.001 else [float('nan'),0]
 
     def rotate_list(self, l, n):

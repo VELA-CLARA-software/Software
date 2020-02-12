@@ -1,8 +1,9 @@
 import sys, time, os, datetime, math
 import collections
-import tables as tables
+# import tables as tables
 sys.path.append("../../../")
 import Software.Procedures.qt as qt
+import csv
 
 class HighPrecisionWallTime(qt.QObject):
     def __init__(self, parent=None):
@@ -203,79 +204,108 @@ class signalRecord(qt.QObject):
         self.stop()
         self.thread.quit()
         self.thread.wait()
+#
+# class recordData(tables.IsDescription):
+#     time  = tables.Float64Col()     # double (double-precision)
+#     value  = tables.Float64Col()
+#
+# class signalRecorderH5(qt.QObject):
+#
+#     def __init__(self, filename="test", flushtime=1):
+#         super(signalRecorderH5, self).__init__()
+#         self.records = {}
+#         _, file_extension = os.path.splitext(filename)
+#         if not file_extension in ['h5','hdf5']:
+#             filename = filename+".h5"
+#         self.h5file = tables.open_file(filename, mode = "a", title = filename)
+#         self.rootnode = self.h5file.get_node('/')
+#         if 'data' not in self.rootnode:
+#             self.group = self.h5file.create_group('/', 'data', 'Saved Data')
+#         else:
+#             self.group = self.h5file.get_node('/data')
+#             # print self.group
+#         self.tables = {}
+#         self.rows = []
+#         self.timer = qt.QTimer()
+#         self.timer.timeout.connect(self.flushTables)
+#         self.timer.start(1000*flushtime)
+#
+#     def addSignal(self, name='', pen='', timer=1, maxlength=100, function=None, arg=[], **kwargs):
+#         sigrec = signalRecord(records=self.records, name=name, pen=pen, timer=timer, maxlength=maxlength, function=function, **kwargs)
+#         if not name in self.group:
+#             table = self.h5file.create_table(self.group, name, recordData, name)
+#             self.tables[name] = table
+#             table.cols.time.create_csindex()
+#         else:
+#             table = self.h5file.get_node('/data/'+name)
+#             self.tables[name] = table
+#             sigrec.worker.nsamples = table.nrows
+#         row = table.row
+#         self.rows.append(row)
+#         self.records[name]['signal'].timer.dataReady.connect(lambda x: self.addData(table, row,x))
+#         sigrec.start()
+#
+#     def addData(self, table, row, x):
+#         row['time'], row['value'] = x
+#         row.append()
+#         #table.flush()
+#
+#     def flushTables(self):
+#         for t in self.tables:
+#             self.tables[t].flush()
+#
+#     def close(self):
+#         for n,r in self.records.iteritems():
+#             r['record'].close()
+#         self.flushTables()
+#         self.h5file.close()
+#
+#     def closeEvent(self, event):
+#         self.close()
+#
+#     def getDataTime(self, name='', start=None, stop=None, array=None):
+#         table = self.h5file.get_node('/data/'+name)
+#         start = -100 if start is None else start
+#         start = time.time() + start if start < 0 else start
+#         stop =  -1 if stop is None else stop
+#         stop = time.time() + stop if stop < 0 else stop
+#         data = [[row['time'], row['value']] for row in table.itersorted('time') if (start < row['time'] < stop)]
+#         return data
+#
+#     def getDataSlice(self, name='', start=None, stop=None, array=None):
+#         table = self.h5file.get_node('/data/'+name)
+#         start = -100 if start is None else start
+#         start = table.nrows + start if start < 0 else start
+#         stop =  -1 if stop is None else stop
+#         stop = table.nrows + stop + 1 if stop < 0 else stop
+#         data = [[row['time'], row['value']] for row in table.itersorted('time', start=start, stop=stop)]
+#         return data
 
-class recordData(tables.IsDescription):
-    time  = tables.Float64Col()     # double (double-precision)
-    value  = tables.Float64Col()
+class signalRecorderCSV(qt.QObject):
 
-class signalRecorderH5(qt.QObject):
-
-    def __init__(self, filename="test", flushtime=1):
-        super(signalRecorderH5, self).__init__()
+    def __init__(self, filename="test", flushtime=60):
+        super(signalRecorderCSV, self).__init__()
         self.records = {}
-        _, file_extension = os.path.splitext(filename)
-        if not file_extension in ['h5','hdf5']:
-            filename = filename+".h5"
-        self.h5file = tables.open_file(filename, mode = "a", title = filename)
-        self.rootnode = self.h5file.get_node('/')
-        if 'data' not in self.rootnode:
-            self.group = self.h5file.create_group('/', 'data', 'Saved Data')
-        else:
-            self.group = self.h5file.get_node('/data')
-            # print self.group
-        self.tables = {}
-        self.rows = []
-        self.timer = qt.QTimer()
-        self.timer.timeout.connect(self.flushTables)
-        self.timer.start(1000*flushtime)
+        self.open_file(filename)
+
+    def open_file(self, filename):
+        self.basefilename, file_extension = os.path.splitext(filename)
+        print 'Opening file ', self.basefilename + '.csv'
+        self.file = open(self.basefilename + '.csv',"wb", 1)
+        self.writer = csv.writer(self.file, delimiter=',', quotechar='"')
 
     def addSignal(self, name='', pen='', timer=1, maxlength=100, function=None, arg=[], **kwargs):
         sigrec = signalRecord(records=self.records, name=name, pen=pen, timer=timer, maxlength=maxlength, function=function, **kwargs)
-        if not name in self.group:
-            table = self.h5file.create_table(self.group, name, recordData, name)
-            self.tables[name] = table
-            table.cols.time.create_csindex()
-        else:
-            table = self.h5file.get_node('/data/'+name)
-            self.tables[name] = table
-            sigrec.worker.nsamples = table.nrows
-        row = table.row
-        self.rows.append(row)
-        self.records[name]['signal'].timer.dataReady.connect(lambda x: self.addData(table, row,x))
+        # self.openfiles.append(file)
+        # self.writers.append(wrtr)
+        self.records[name]['signal'].timer.dataReady.connect(lambda x: self.addData([name] + x))
         sigrec.start()
 
-    def addData(self, table, row, x):
-        row['time'], row['value'] = x
-        row.append()
-        #table.flush()
-
-    def flushTables(self):
-        for t in self.tables:
-            self.tables[t].flush()
+    def addData(self, row):
+        self.writer.writerow(row)
 
     def close(self):
-        for n,r in self.records.iteritems():
-            r['record'].close()
-        self.flushTables()
-        self.h5file.close()
+        self.file.close()
 
     def closeEvent(self, event):
         self.close()
-
-    def getDataTime(self, name='', start=None, stop=None, array=None):
-        table = self.h5file.get_node('/data/'+name)
-        start = -100 if start is None else start
-        start = time.time() + start if start < 0 else start
-        stop =  -1 if stop is None else stop
-        stop = time.time() + stop if stop < 0 else stop
-        data = [[row['time'], row['value']] for row in table.itersorted('time') if (start < row['time'] < stop)]
-        return data
-
-    def getDataSlice(self, name='', start=None, stop=None, array=None):
-        table = self.h5file.get_node('/data/'+name)
-        start = -100 if start is None else start
-        start = table.nrows + start if start < 0 else start
-        stop =  -1 if stop is None else stop
-        stop = table.nrows + stop + 1 if stop < 0 else stop
-        data = [[row['time'], row['value']] for row in table.itersorted('time', start=start, stop=stop)]
-        return data

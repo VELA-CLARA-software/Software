@@ -3,11 +3,13 @@ if getattr(sys, 'frozen', True):
     print( 'Frozen!')
     sys.path.append("../../Widgets/Striptool2")
 sys.path.append("../../../")
+sys.path.append("\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\Release")
 import Software.Procedures.qt as qt
 from pyqtgraph.dockarea import DockArea, Dock
 import VELA_CLARA_Magnet_Control as vmag
 import VELA_CLARA_BPM_Control as vbpmc
 import  VELA_CLARA_General_Monitor as vgen
+import  VELA_CLARA_LLRF_Control as vllrf
 
 ''' Load loggerWidget library (comment out if not available) '''
 # sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\\..\\..\\loggerWidget\\')
@@ -75,6 +77,8 @@ class striptool_Demo(qt.QMainWindow):
         CLARAMagnetController=Cmagnets,
         VELABPMController=Vbpms,
         CLARABPMController=Cbpms,
+        LRRGRFController=LRRGllrf,
+        L01RFController=L01llrf,
         GeneralController=general)
 
         reloadSettingsAction = qt.QAction('Reload Settings', self)
@@ -244,11 +248,14 @@ def main():
     from splitterWithHandles import splitterWithHandles
     maginit = vmag.init()
     bpms = vbpmc.init()
-    global Vmagnets, Cmagnets, Vbpms, Cbpms, general
+    llrf = vllrf.init()
+    global Vmagnets, Cmagnets, Vbpms, Cbpms, L01llrf, LRRGllrf, general
     Vmagnets = maginit.physical_VELA_INJ_Magnet_Controller()
     Cmagnets = maginit.physical_CLARA_PH1_Magnet_Controller()
     Vbpms = bpms.physical_VELA_INJ_BPM_Controller()
     Cbpms = bpms.physical_CLARA_PH1_BPM_Controller()
+    L01llrf = llrf.physical_L01_LLRF_Controller()
+    LRRGllrf = llrf.physical_LRRG_LLRF_Controller()
     general = vgen.init()
     ex = striptool_Demo()
     ex.show()
