@@ -104,6 +104,8 @@ class Controller(qt.QObject):
     def apply_config(self):
         for w in self.settings:
             getattr(self.view, w).setValue(self.settings[w])
+            if w in self.model.settings:
+                self.model.settings[w] = self.settings[w]
 
     def apply_defaults(self):
         for w in self.defaults:

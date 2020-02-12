@@ -508,7 +508,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="Gun_Tab">
        <attribute name="icon">
@@ -545,16 +545,7 @@
            <property name="spacing">
             <number>0</number>
            </property>
-           <property name="leftMargin">
-            <number>0</number>
-           </property>
-           <property name="topMargin">
-            <number>0</number>
-           </property>
-           <property name="rightMargin">
-            <number>0</number>
-           </property>
-           <property name="bottomMargin">
+           <property name="margin">
             <number>0</number>
            </property>
            <item>
@@ -588,13 +579,13 @@
                  <string>Ramp amplitude</string>
                 </property>
                 <property name="maximum">
-                 <number>16000</number>
+                 <number>71000</number>
                 </property>
                 <property name="singleStep">
                  <number>100</number>
                 </property>
                 <property name="value">
-                 <number>16000</number>
+                 <number>71000</number>
                 </property>
                </widget>
               </item>
@@ -1288,16 +1279,7 @@
            <property name="spacing">
             <number>0</number>
            </property>
-           <property name="leftMargin">
-            <number>0</number>
-           </property>
-           <property name="topMargin">
-            <number>0</number>
-           </property>
-           <property name="rightMargin">
-            <number>0</number>
-           </property>
-           <property name="bottomMargin">
+           <property name="margin">
             <number>0</number>
            </property>
            <item>
@@ -1369,13 +1351,13 @@
                  <string>Ramp amplitude</string>
                 </property>
                 <property name="maximum">
-                 <number>13400</number>
+                 <number>42500</number>
                 </property>
                 <property name="singleStep">
                  <number>100</number>
                 </property>
                 <property name="value">
-                 <number>13400</number>
+                 <number>40000</number>
                 </property>
                </widget>
               </item>
@@ -1443,16 +1425,7 @@
                  <property name="spacing">
                   <number>0</number>
                  </property>
-                 <property name="leftMargin">
-                  <number>0</number>
-                 </property>
-                 <property name="topMargin">
-                  <number>0</number>
-                 </property>
-                 <property name="rightMargin">
-                  <number>0</number>
-                 </property>
-                 <property name="bottomMargin">
+                 <property name="margin">
                   <number>0</number>
                  </property>
                  <item>
