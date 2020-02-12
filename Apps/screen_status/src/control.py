@@ -33,9 +33,13 @@ import time
 
 class control(object):
     # we don;t need to pass these things in !!
+
     def __init__(self,sys_argv = None):
         self.sys_argv = sys_argv
         '''define model and view'''
+
+
+
         self.data = data.data()
         self.procedure = procedure.procedure()
         self.view = view.view()

@@ -41,6 +41,7 @@ sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Relea
 from VELA_CLARA_Screen_Control import SCREEN_STATE
 import data as data
 from operator import itemgetter
+import ctypes
 
 class view(QMainWindow, Ui_screen_status_view ):
     # custom close signal to send to controller
@@ -51,7 +52,9 @@ class view(QMainWindow, Ui_screen_status_view ):
 
     def __init__(self):
         QWidget.__init__(self)
-        self.my_name = 'view'
+
+
+
         self.setupUi(self)
         self.setWindowIcon(QIcon('.\\resources\\screen_status\\screen_status_icon.ico'))
 
