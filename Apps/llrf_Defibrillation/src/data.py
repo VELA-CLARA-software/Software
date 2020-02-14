@@ -15,29 +15,43 @@
 //    along with VELA-CLARA-Software.  If not, see <http://www.gnu.org/licenses/>.    //
 //
 //  Author:      DJS
-//  Last edit:   05-06-2018
-//  FileName:    mainApp.oy
-//  Description: screen_status app, simple way to move screens in/out following correct procedure
+//  Last edit:   11-01-2019
+//  FileName:    data.py
+//  Description: template for class for gui_source class in generic High Level Application
 //
 //
 //*/
 '''
-import sys
-from PyQt4 import QtGui, QtCore
-from src.control import control
-import ctypes
 
-class App(QtGui.QApplication):
-    # https://stackoverflow.com/questions/1551605/how-to-set-applications-taskbar-icon-in-windows-7/1552105#1552105
-    myappid = u'CLARA.screen_status.1'  # arbitrary string
-    ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
 
-    def __init__(self, sys_argv):
-        QtGui.QWidget.__init__(self, sys_argv)
-        print 'Creating Controller'
-        self.control = control(sys_argv)
-        print 'Running'
 
-if __name__ == '__main__':
-    app = App(sys.argv)
-    sys.exit(app.exec_())
+
+
+class data(object):
+
+    gun_keep_alive_value = "gun_keep_alive_value"
+    linac_keep_alive_value = "linac_keep_alive_value"
+
+    old_gun_keep_alive_value = "old_gun_keep_alive_value"
+    old_linac_keep_alive_value = "old_linac_keep_alive_value"
+
+
+    should_keep_linac_alive = "should_keep_linac_alive"
+    should_keep_gun_alive = "should_keep_gun_alive"
+
+    values = {}
+
+    values[gun_keep_alive_value] = 0
+    values[linac_keep_alive_value] = 0
+    values[old_gun_keep_alive_value] = 0
+    values[old_linac_keep_alive_value] = 0
+    values[should_keep_linac_alive] = False
+    values[should_keep_gun_alive] = False
+
+
+    def __init__(self):
+        # super(base, self).__init__()
+        object.__init__(self)
+        pass
+
+
