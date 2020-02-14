@@ -349,11 +349,11 @@ class Model(object):
         self.magnets.setSI(dipole,current)
 
     def printFinalPhase(self):
-        print self.cavity+' '+self.actuator+' fit = '+str(self.crestingData[self.cavity]['calibrationPhase'])
+        print(self.cavity+' '+self.actuator+' fit = '+str(self.crestingData[self.cavity]['calibrationPhase']))
         self.logger.emit(self.cavity+' '+self.actuator+' fit = '+str(self.crestingData[self.cavity]['calibrationPhase']))
 
     def printFinalDip(self):
-        print self.cavity+' '+self.actuator+' fit = '+str(self.crestingData[self.cavity]['calibrationDip'])
+        print(self.cavity+' '+self.actuator+' fit = '+str(self.crestingData[self.cavity]['calibrationDip']))
         self.logger.emit(self.cavity+' '+self.actuator+' fit = '+str(self.crestingData[self.cavity]['calibrationDip']))
 
     def resetDataArray(self):
@@ -424,9 +424,9 @@ class Model(object):
         while len(self.data) < self.nSamples:
             self.data.append(self.getDataFunction())
             time.sleep(self.sleepTime)
-        print 'before = ', self.data
+        print('before = ', self.data)
         self.data = [a for a in self.data if not np.isnan(a)]
-        print 'after = ', self.data
+        print('after = ', self.data)
         return [np.mean(self.data), np.std(self.data)] if np.std(self.data) > 0.001 else [float('nan'),0]
 
     def rotate_list(self, l, n):
