@@ -1167,7 +1167,7 @@ class Ui_virtual_cathode_view(object):
         self.wcm_label.setText(_translate("virtual_cathode_view", "WCM:", None))
         self.wcm_val.setText(_translate("virtual_cathode_view", "-", None))
         self.wcm_mean.setText(_translate("virtual_cathode_view", "-", None))
-        self.avPixIntensity_label.setText(_translate("virtual_cathode_view", "Pixel Avg:", None))
+        self.avPixIntensity_label.setText(_translate("virtual_cathode_view", "Pix Avg", None))
         self.avg_pix_val.setText(_translate("virtual_cathode_view", "-", None))
         self.avg_pix_mean.setText(_translate("virtual_cathode_view", "-", None))
         self.avg_pix_sd.setText(_translate("virtual_cathode_view", "-", None))

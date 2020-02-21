@@ -37,8 +37,6 @@ class data(object):
     devices = {}
     state_string_to_state = {}
 
-
-
     # The control system takes an appreciable amount of time before a diagnostic station starts moving
     # therefore we will keep a record fo when buttons are clicked,
     # this will be used to set a "clicked" state to the gui, so that operators do not get impatient and click

@@ -1049,7 +1049,7 @@
                 </font>
                </property>
                <property name="text">
-                <string>Pixel Avg:</string>
+                <string>Pix Avg</string>
                </property>
                <property name="scaledContents">
                 <bool>true</bool>

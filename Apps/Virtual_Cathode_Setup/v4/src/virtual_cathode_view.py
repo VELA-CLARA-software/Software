@@ -146,7 +146,7 @@ class virtual_cathode_view(QtGui.QMainWindow, Ui_virtual_cathode_view):
         not_updated_read_roi = True
         # there are no widgets associated with the cross-hairs so they are updated outside the mask
         self.update_crosshair()
-        self.set_disabled_buttons_on_closed_shutter()
+        self.set_disabled_buttons_on_closed_shutter_or_low_pixel_avg()
 
         ##print('update widget loop')
         for key, value in self.widget_to_dataname.iteritems():
@@ -160,6 +160,15 @@ class virtual_cathode_view(QtGui.QMainWindow, Ui_virtual_cathode_view):
                 self.widget_updatefunc[key][0](key, value, self.widget_updatefunc[
                     key])  # except:  #    print('ERROR in updating ', key, value)
 
+        if self.model_data.values[self.model_data.avg_pix_beam_level] <  self.model_data.values[
+            self.model_data.avg_pix_mean]:
+            self.avg_pix_val.setStyleSheet("background-color: #ffffff")
+        else:
+            self.avg_pix_val.setStyleSheet("background-color: #ff5733")
+
+
+
+
     def new_value(self, value):
         '''
             test to see if a value in the values dict is different to the value in previous_values
@@ -172,22 +181,32 @@ class virtual_cathode_view(QtGui.QMainWindow, Ui_virtual_cathode_view):
             return True
         return self.model_data.values.get(value) != self.model_data.previous_values.get(value)
 
-    def set_disabled_buttons_on_closed_shutter(self):
+    def set_disabled_buttons_on_closed_shutter_or_low_pixel_avg(self):
+        should_enable = False
+        if self.model_data.values.get(self.model_data.shutter1_open):
+            if self.model_data.values.get(self.model_data.shutter2_open):
+                if self.model_data.values[self.model_data.avg_pix_beam_level] <  self.model_data.values[self.model_data.avg_pix_mean]:
+                    should_enable = True
+        self.move_left_pushButton.setEnabled(should_enable)
+        self.move_right_pushButton.setEnabled(should_enable)
+        self.move_down_pushButton.setEnabled(should_enable)
+        self.move_up_pushButton.setEnabled(should_enable)
+        self.set_pos_pushButton.setEnabled(should_enable)
         # get the shutter states ( updated in model.update_shutter_state )
         # then decide what widgets to disable / enable
-        if self.model_data.values.get(self.model_data.shutter1_open) & self.model_data.values.get(
-                self.model_data.shutter2_open):
-            self.move_left_pushButton.setEnabled(True)
-            self.move_right_pushButton.setEnabled(True)
-            self.move_down_pushButton.setEnabled(True)
-            self.move_up_pushButton.setEnabled(True)
-            self.set_pos_pushButton.setEnabled(False)
-        else:
-            self.move_left_pushButton.setEnabled(False)
-            self.move_right_pushButton.setEnabled(False)
-            self.move_down_pushButton.setEnabled(False)
-            self.move_up_pushButton.setEnabled(False)
-            self.set_pos_pushButton.setEnabled(False)
+        # if self.model_data.values.get(self.model_data.shutter1_open) & self.model_data.values.get(
+        #         self.model_data.shutter2_open):
+        #     self.move_left_pushButton.setEnabled(True)
+        #     self.move_right_pushButton.setEnabled(True)
+        #     self.move_down_pushButton.setEnabled(True)
+        #     self.move_up_pushButton.setEnabled(True)
+        #     self.set_pos_pushButton.setEnabled(False)
+        # else:
+        #     self.move_left_pushButton.setEnabled(False)
+        #     self.move_right_pushButton.setEnabled(False)
+        #     self.move_down_pushButton.setEnabled(False)
+        #     self.move_up_pushButton.setEnabled(False)
+        #     self.set_pos_pushButton.setEnabled(False)
 
     def update_crosshair(self):
         '''
@@ -323,8 +342,7 @@ class virtual_cathode_view(QtGui.QMainWindow, Ui_virtual_cathode_view):
 
     def update_image(self, widget, value, dummy):
         self.vc_image.setImage(image=self.model_data.values.get(value), autoDownsample=True)
-        self.vc_image.setLevels([self.spinBox_minLevel.value(), self.spinBox_maxLevel.value()],
-                                update=True)
+        self.vc_image.setLevels([self.spinBox_minLevel.value(), self.spinBox_maxLevel.value()], update=True)
 
     def update_string(self, widget, value, dummy):
         if self.model_data.values.get(value) != 'UNKNOWN':  # MAGIC_STRING

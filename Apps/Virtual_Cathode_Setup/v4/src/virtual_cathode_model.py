@@ -96,6 +96,8 @@ class virtual_cathode_model():
         '''
             Some constants
         '''
+        self.values[self.data.avg_pix_beam_level] = self.vc_data.avg_pix_beam_level
+
         self.values[self.data.y_pix_scale_factor] = self.vc_image.y_pix_scale_factor
         self.values[self.data.x_pix_scale_factor] = self.vc_image.x_pix_scale_factor
         self.values[self.data.x_pix_to_mm] = self.vc_image.x_pix_to_mm
@@ -164,9 +166,9 @@ class virtual_cathode_model():
 #        self.values[self.data.wcm_buffer_full] = self.pil_obj.Q_full
 
         # these are flakey  laser INTENSITY
-        self.values[self.data.int_val] = self.pil_obj.energy * 1000000
-        self.values[self.data.int_mean] = self.pil_obj.energy_mean * 1000000
-        self.values[self.data.int_sd] = self.pil_obj.energy_sd * 1000000
+        self.values[self.data.int_val] = self.pil_obj.energy
+        self.values[self.data.int_mean] = self.pil_obj.energy_mean
+        self.values[self.data.int_sd] = self.pil_obj.energy_sd
  #       self.values[self.data.laser_buffer_full] = self.pil_obj.energy_full
 
         #print('take image START')
@@ -183,6 +185,7 @@ class virtual_cathode_model():
         self.values[self.data.mask_x_rad_rbv] = self.vc_mask.mask_x_rad
         self.values[self.data.mask_y_rad_rbv] = self.vc_mask.mask_y_rad
         self.values[self.data.use_background] = self.vc_state.use_background
+
 
         self.values[self.data.use_npoint] = self.vc_state.use_npoint
         self.values[self.data.ana_step_size] = self.vc_data.step_size
