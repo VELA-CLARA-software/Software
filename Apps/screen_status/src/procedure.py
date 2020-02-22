@@ -186,11 +186,11 @@ class procedure(object):
         print("in_out ", name)
         procedure.states[name] = 'CLICKED'
         if procedure.sc.isYAGIn(name):
-            print("try self.screen_in(name)")
+            print("try self.screen_out(name)")
             self.screen_out(name)
         else:
             self.screen_in(name)
-            print("try self.screen_out(name)")
+            print("try self.screen_in(name)")
 
         #
         # if procedure.sc.isClearForBeam(name):
@@ -210,7 +210,7 @@ class procedure(object):
         dev = procedure.sc.getAvailableDevices(name)
         if scr.SCREEN_STATE.V_RF in dev:
             print("move_screen_to, scr.SCREEN_STATE.V_RF")
-            self.move_screen_to(name, scr.SCREEN_STATE.V_RF)
+            self.move_screen_to(name, 'V_RF')
             #procedure.sc.moveScreenTo(name, scr.SCREEN_STATE.V_RF)
         else:
             print("moveScreenOut")
@@ -219,9 +219,9 @@ class procedure(object):
     def move_screen_to(self, scr, state):
         if procedure.screen_state_refs[scr].screenSetState != state:
             #print("move_screen_to passed, ",scr, state, procedure.states[state])
-            #procedure.sc.moveScreenTo( scr,  procedure.m[state])1
-            print(procedure.states[state])
-            procedure.sc.moveScreenTo( scr, procedure.states[state] )
+            procedure.sc.moveScreenTo( scr,  procedure.states[state])
+            print(state)
+            #procedure.sc.moveScreenTo( scr, state )
 
 
 
