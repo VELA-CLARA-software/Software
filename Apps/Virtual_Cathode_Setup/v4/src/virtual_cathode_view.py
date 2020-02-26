@@ -160,8 +160,15 @@ class virtual_cathode_view(QtGui.QMainWindow, Ui_virtual_cathode_view):
                 self.widget_updatefunc[key][0](key, value, self.widget_updatefunc[
                     key])  # except:  #    print('ERROR in updating ', key, value)
 
-        if self.model_data.values[self.model_data.avg_pix_beam_level] <  self.model_data.values[
-            self.model_data.avg_pix_mean]:
+        print(self.model_data.values[self.model_data.avg_pix_mean])
+        print(self.model_data.values[self.model_data.avg_pix_beam_level])
+        print(self.model_data.values[self.model_data.avg_pix_mean])
+        print(self.model_data.values[self.model_data.avg_pix_beam_level])
+        print(self.model_data.values[self.model_data.avg_pix_mean])
+        print(self.model_data.values[self.model_data.avg_pix_beam_level])
+
+        if self.model_data.values[self.model_data.avg_pix_beam_level] < self.model_data.values[
+            self.model_data.avg_pix_val]:
             self.avg_pix_val.setStyleSheet("background-color: #ffffff")
         else:
             self.avg_pix_val.setStyleSheet("background-color: #ff5733")
@@ -185,7 +192,7 @@ class virtual_cathode_view(QtGui.QMainWindow, Ui_virtual_cathode_view):
         should_enable = False
         if self.model_data.values.get(self.model_data.shutter1_open):
             if self.model_data.values.get(self.model_data.shutter2_open):
-                if self.model_data.values[self.model_data.avg_pix_beam_level] <  self.model_data.values[self.model_data.avg_pix_mean]:
+                if self.model_data.values[self.model_data.avg_pix_beam_level] <  self.model_data.values[self.model_data.avg_pix_val]:
                     should_enable = True
         self.move_left_pushButton.setEnabled(should_enable)
         self.move_right_pushButton.setEnabled(should_enable)
