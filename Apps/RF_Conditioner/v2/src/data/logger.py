@@ -32,6 +32,7 @@ import struct
 from VELA_CLARA_Vac_Valve_Control import VALVE_STATE
 from VELA_CLARA_RF_Protection_Control import RF_PROT_STATUS
 from VELA_CLARA_RF_Modulator_Control import GUN_MOD_STATE
+from VELA_CLARA_RF_Modulator_Control import L01_MOD_STATE
 from VELA_CLARA_LLRF_Control import TRIG
 from VELA_CLARA_LLRF_Control import INTERLOCK_STATE
 import os
@@ -94,8 +95,12 @@ class logger(object):
 
     # map of python type to struct type https://docs.python.org/2/library/struct.html
     # little endian basic types
-    # str IS NOT WElL DEFINED IN THIS !
+    # str IS NOT WELL DEFINED IN THIS !
+    # RF_PROT_STATUS and similar enums from our bespoke CATAP controller, SHOULD ALWAYS BE A <B,
+    # THINK VERY CAREFULLY about changin this!!!! You have be warned
+    # ALL CATAP types and simple types need ot be defined here!!
     _python_type_to_bintype = {long: '<q', int: '<i', float: '<f', RF_PROT_STATUS: '<B',
+                               L01_MOD_STATE: '<B',
                               GUN_MOD_STATE: '<B', VALVE_STATE: '<B', TRIG: '<B', state: '<B',
                               INTERLOCK_STATE: '<B', bool: '<?', numpy.float64: '<d',
                               # BE CAREFUL WiTH str, THE BELOW IS CLEARLY GARBAGE
@@ -216,27 +221,38 @@ class logger(object):
 
     def write_binary_log(self,values):
         '''
-        Actually write the binary data, element by element. Top ensure the fidelity of the log
+        Actually write the binary data, element by element. To ensure the fidelity of the log
         file, we check that the number of elements and their type HAS NOT CHANGED since the
-        plaintext header to th efile was written. IF it has throw some warning messages
+        plaintext header to the file was written. IF it has throw some warning messages
         :param values:  dictionary of values to log,
         '''
-        written_types = [] # local copy of tyeps actually written
+        written_types = [] # local copy of types actually written
         if len(values) == logger._binary_header_length:
             for key, val in values.iteritems():
-                self.message("key =  " + key)
+                #self.message("key =  " + key)
                 written_types.append(self.write_binary(val))
         else:
-            self.message(["ERROR write_bin_data passed data of incorrect length! ",
+            self.message(["!!!ERROR!!! write_bin_data passed data of incorrect length! ",
                           str(len(values)),"!=",logger._binary_header_length])
             raw_input()
 
         type_list = []
         for key, val in values.iteritems():# itervalues means just iterate over the values in the dict
-            type_list.append(self.write_binary(val))
+            rt = self.write_binary(val)
+            if rt == False:
+                self.message("!!!ERROR!!! " + key + ", binary log value is NONE-TYPE binary log "
+                                                     "corrupt ")
+                self.message(" VALUE WAS " + str(val))
+                self.message(" TYPE  WAS " + str(type(val)))
+                raw_input()
+            else:
+                type_list.append(rt)
         logger._binary_log_file_obj.flush()
         if type_list != logger._binary_header_types:
-            self.message(self.__name__+" Warning, Binary Log File, data types have changed")
+            self.message(__name__+" Warning, Binary Log File, data types have changed")
+
+
+
 
     def write_binary(self, val):
         """
@@ -249,23 +265,24 @@ class logger(object):
         :return: the type of val (used for error checking)
         """
         val_type = type(val)
-        self.message("val_type = " + str(val_type ))
-
-
+        # self.message("val_type = " + str(val_type))
         # for Python enums (used for the r general state of things) we need to convert th eENUm
         # to a number
         if val_type is state:
-            logger._binary_log_file_obj.write(struct.pack('<B', val.value))
+            # self.message("struct_format = <B")
+            # self.message("val =  = " + str(val))
+            # We use val.value below to get the numerical value of the enum object !!!!!!!
+            logger._binary_log_file_obj.write(struct.pack('<B', val.value ))
         else:
             struct_format = logger._python_type_to_bintype.get(val_type, None)
 
             if struct_format:
-                self.message("struct_format = " + str(struct_format))
-                self.message("val =  = " + str(val))
+                #self.message("struct_format = " + str(struct_format))
+                #self.message("val =  = " + str(val))
                 logger._binary_log_file_obj.write(struct.pack(struct_format, val))
             else:
                 self.message("ERROR write_binary passed data of None type. THIS SHOULD NOT HAPPEN! ")
-                raw_input()
+                return False
 
         return val_type
 
@@ -309,7 +326,6 @@ class logger(object):
             # data names, the 2nd is tab separated data types
             joiner = '\t'
             if logger._binary_log_file_obj:
-
                 head_names = joiner.join(header_names)+"\n"
                 head_types = joiner.join(header_types_str)+"\n"
                 logger._binary_log_file_obj.write(head_names)

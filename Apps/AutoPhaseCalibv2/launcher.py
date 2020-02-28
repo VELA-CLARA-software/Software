@@ -1,16 +1,10 @@
-# -*- coding: utf-8 -*-
-
-# Form implementation generated from reading ui file 'launcher.ui'
-#
-# Created by: PyQt4 UI code generator 4.11.4
-#
-# WARNING! All changes made in this file will be lost!
 import os,sys
-from PyQt4 import QtCore, QtGui
+sys.path.append("../../../")
+import Software.Procedures.qt as qt
 from mainApp import *
 from launcherUI import *
 
-class launcherUI(QtCore.QObject):
+class launcherUI(qt.QObject):
     def __init__(self, *sys_argv):
         super(launcherUI, self).__init__()
         self.ui = Ui_MainWindow()
@@ -25,7 +19,7 @@ class launcherUI(QtCore.QObject):
         self.workerThread.finished.connect(MainWindow.show)
         self.workerThread.start()
 
-class runMainApp(QtCore.QThread):
+class runMainApp(qt.QThread):
     def __init__(self, *sys_argv):
         super(runMainApp, self).__init__()
         self.args = sys_argv
@@ -37,8 +31,8 @@ class runMainApp(QtCore.QThread):
 if __name__ == "__main__":
     import sys
     global app
-    app = QtGui.QApplication(sys.argv)
-    MainWindow = QtGui.QMainWindow()
+    app = qt.QApplication(sys.argv)
+    MainWindow = qt.QMainWindow()
     launcher = launcherUI()
     MainWindow.show()
     sys.exit(app.exec_())

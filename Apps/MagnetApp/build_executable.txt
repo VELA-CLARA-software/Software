@@ -6,6 +6,11 @@
 # a path defined in the python source code
 pyinstaller -F -n  "magnetApp" magnetApp.py 
 
+# WITH ICON
+# pyinstaller -F -w --icon=.\resources\magnetApp\magpic.ico -n "magnetApp" magnetApp.pyw
+
+# to new dist folders
+# --distpath "\\apclara1\ControlRoomApps\Stage\magnetApp"
 
 # include relative paths in python file you run, e.g. 
 import sys

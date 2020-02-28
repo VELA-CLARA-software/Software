@@ -61,9 +61,9 @@ class vac_valve_monitor(monitor):
             # update old value if value has changed
             self.old_value = self.data.values[self.data.vac_valve_status]
 
-        # if self.keep_valve_open:
-        #     if self.hardware.valve_obj[0].vacValveState == VALVE_STATE.VALVE_CLOSED:
-        #         self.hardware.valve_control.openVacValve(self.valve_name)
+        if self.keep_valve_open:
+            if self.hardware.valve_obj[0].vacValveState == VALVE_STATE.VALVE_CLOSED:
+                self.hardware.valve_control.openVacValve(self.valve_name)
 
 
 

@@ -60,7 +60,7 @@ class solenoid_monitor(monitor):
         """
         for key in self.sol_objects.keys():
 
-            self.logger.message("Looking for solenoid  = " + key)
+            #self.logger.message("Looking for solenoid  = " + key)
 
             self.values[key] = self.sol_objects[key].SI
 

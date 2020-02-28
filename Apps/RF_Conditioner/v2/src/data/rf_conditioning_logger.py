@@ -108,7 +108,7 @@ class rf_conditioning_logger(logger):
         self.write_binary_log_header(self.values)
         self.log_binary_data()
         self.data_log_timer.timeout.connect(self.log_binary_data)
-        self.data_log_timer.start(self.config.BINARY_DATA_LOG_TIME)
+        self.data_log_timer.start( self.config_data[self.config.BINARY_DATA_LOG_TIME] )
 
     def log_binary_data(self):
         '''
@@ -197,9 +197,7 @@ class rf_conditioning_logger(logger):
                 if got_header:
                     if '#' not in line:
                         log = [self.num(x) for x in line.split()]
-                        r_dict[log[0]] = log[
-                                         1:]  # print 'get_amp_power_log ' + str(log[0])  # print
-                        # log[1:]
+                        r_dict[log[0]] = log[1:]  # print 'get_amp_power_log ' + str(log[0])
                 else:
                     if '#' in line:
                         header_string += line + '\n'

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>214</width>
-    <height>494</height>
+    <height>332</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -35,6 +35,20 @@
         <widget class="QPushButton" name="checkDevices_Button">
          <property name="text">
           <string>Check Devices</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="clara_led_button">
+         <property name="text">
+          <string>CLARA- LED</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="vela_led_button">
+         <property name="text">
+          <string>VELA-LED</string>
          </property>
         </widget>
        </item>

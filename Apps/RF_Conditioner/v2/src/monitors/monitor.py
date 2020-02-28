@@ -92,9 +92,6 @@ class monitor(QObject):
         self.data = rf_conditioning_data()
         self.values = rf_conditioning_data.values
 
-
-
-
         # CATAP hardware controllers, these live here and are passed to where they are needed
         self.hardware = hardware_control_hub()
         #

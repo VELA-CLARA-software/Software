@@ -34,16 +34,30 @@ class data(object):
     previous_states = {}
 
     # references to each screen object, from which to read th estate
-    screen_state_refs = {}
     devices = {}
     state_string_to_state = {}
 
+    # The control system takes an appreciable amount of time before a diagnostic station starts moving
+    # therefore we will keep a record fo when buttons are clicked,
+    # this will be used to set a "clicked" state to the gui, so that operators do not get impatient and click
+    # multiple times, we will also set a time_when_clicked so that we can disable the clicked state
+    move_attempt_wait_time = 8
+    move_attempted = {}
+
+    # THE ONLY (?) way to know that a screen has FINISHED moving is to check that both the H and V drives are not
+    # enabled (but what about pnuematic screens???)
+    v_enabled = {}
+    h_enabled = {}
+
+    clara_led_state = False
+    vela_led_state = False
+
     def __init__(self):
         object.__init__(self)
-        self.my_name = "data"
+
 
     def hello(self):
-        print(self.my_name+ ' says hello')
+        print(__name,' says hello')
 
 
 

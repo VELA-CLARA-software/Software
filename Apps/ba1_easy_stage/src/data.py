@@ -27,19 +27,73 @@
 
 
 class data(object):
-    stage_names = 'stage_names'
-    stage_positions = 'stage_positions'
-    stage_read_equal_set = 'stage_read_equal_set'
-    stage_set_positions = 'stage_set_positions'
+    '''
+    data is grouped into different types, each with own dict within a dict
+
+    '''
+
+    # labels for dictionaries for different data-=sets
+
+    stage_numbers = 'stage_numbers' #The stages have numbers, defined in config, makes book-keeping easier
+    stage_names = 'stage_names' # The stages have numbers, defined in config, makes book-keeping easier
     stage_devices = 'stage_devices'
+    read_device = 'read_device'
+    set_device = 'set_device'
+    move_to_dev = 'move_to_dev'
+    read_pos = 'read_pos'
+    is_moving = 'is_moving'
+    old_read_pos = 'old_read_pos' #Memory of old vals to decide if stages are moving and  how to updat
+    # widgets
+    # etc.
+    set_pos = 'set_pos'
+    new_set_pos = 'new_set_pos'
 
+    precision = 'precision'
+
+    move_to_set = 'move_to_set'
+    min_pos = 'min_pos'
+    max_pos = 'max_pos'
+    stage_read_equal_set = 'stage_read_equal_set'
+    active_stage_numbers = 'active_stage_numbers'
+
+    clear_for_beam_value = 'clear_for_beam_value'
+    is_clear_for_beam = 'is_clear_for_beam'
+
+    # WE'VE
+    CLEAR_FOR_BEAM = 'CLEAR_FOR_BEAM'
+
+
+    # all values go in here
     values = {}
-    values[stage_names] = []
-    values[stage_positions] = {}
-    values[stage_set_positions] = {}
-    values[stage_read_equal_set] = {}
+    # for each value type go in the dictionary
     values[stage_devices] = {}
+    values[stage_numbers] = {}
+    values[stage_names] = {}
 
+    values[read_device] = {}
+    values[set_device] = {}
+
+    #values[move_to_dev] = {}
+    values[set_pos] = {}
+    values[new_set_pos] = {}
+
+    #
+    values[min_pos] = {}
+    values[max_pos] = {}
+    values[precision] = {}
+
+    # we get the read position, keep a copy of teh old od read position, and use these to set an is_moving flag,
+    # is_moving is used by the GUI
+    values[read_pos] = {}
+    values[old_read_pos] = {}
+    values[is_moving] = {}
+
+    values[clear_for_beam_value] = {}
+    values[is_clear_for_beam] = {}
+
+    stage_number_to_name = {}
+
+    values[active_stage_numbers] = []
 
 
     def __init__(self):

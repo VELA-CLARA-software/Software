@@ -780,7 +780,7 @@
                 </font>
                </property>
                <property name="text">
-                <string>sigma</string>
+                <string>rms</string>
                </property>
                <property name="scaledContents">
                 <bool>true</bool>
@@ -794,7 +794,7 @@
               <widget class="QLabel" name="laser_int_label">
                <property name="minimumSize">
                 <size>
-                 <width>40</width>
+                 <width>50</width>
                  <height>0</height>
                 </size>
                </property>
@@ -931,7 +931,7 @@
               <widget class="QLabel" name="wcm_label">
                <property name="minimumSize">
                 <size>
-                 <width>40</width>
+                 <width>50</width>
                  <height>0</height>
                 </size>
                </property>
@@ -1031,7 +1031,7 @@
               <widget class="QLabel" name="avPixIntensity_label">
                <property name="minimumSize">
                 <size>
-                 <width>40</width>
+                 <width>50</width>
                  <height>0</height>
                 </size>
                </property>
@@ -1049,7 +1049,7 @@
                 </font>
                </property>
                <property name="text">
-                <string>Pixel Avg:</string>
+                <string>Pix Avg</string>
                </property>
                <property name="scaledContents">
                 <bool>true</bool>
@@ -1159,7 +1159,7 @@
               <widget class="QLabel" name="label_15">
                <property name="minimumSize">
                 <size>
-                 <width>40</width>
+                 <width>50</width>
                  <height>0</height>
                 </size>
                </property>
@@ -1177,7 +1177,7 @@
                 </font>
                </property>
                <property name="text">
-                <string>X:</string>
+                <string>X (pix):</string>
                </property>
                <property name="scaledContents">
                 <bool>true</bool>
@@ -1287,7 +1287,7 @@
               <widget class="QLabel" name="label_16">
                <property name="minimumSize">
                 <size>
-                 <width>40</width>
+                 <width>50</width>
                  <height>0</height>
                 </size>
                </property>
@@ -1305,7 +1305,7 @@
                 </font>
                </property>
                <property name="text">
-                <string>Y:</string>
+                <string>Y(pix):</string>
                </property>
                <property name="scaledContents">
                 <bool>true</bool>
@@ -1415,7 +1415,7 @@
               <widget class="QLabel" name="label_17">
                <property name="minimumSize">
                 <size>
-                 <width>40</width>
+                 <width>50</width>
                  <height>0</height>
                 </size>
                </property>
@@ -1433,7 +1433,7 @@
                 </font>
                </property>
                <property name="text">
-                <string>Sig X:</string>
+                <string>Sig X(pix):</string>
                </property>
                <property name="scaledContents">
                 <bool>true</bool>
@@ -1543,7 +1543,7 @@
               <widget class="QLabel" name="label_18">
                <property name="minimumSize">
                 <size>
-                 <width>40</width>
+                 <width>50</width>
                  <height>0</height>
                 </size>
                </property>
@@ -1561,7 +1561,7 @@
                 </font>
                </property>
                <property name="text">
-                <string>Sig Y:</string>
+                <string>Sig Y(pix):</string>
                </property>
                <property name="scaledContents">
                 <bool>true</bool>
@@ -1671,7 +1671,7 @@
               <widget class="QLabel" name="label_19">
                <property name="minimumSize">
                 <size>
-                 <width>40</width>
+                 <width>50</width>
                  <height>0</height>
                 </size>
                </property>
@@ -1689,7 +1689,7 @@
                 </font>
                </property>
                <property name="text">
-                <string>Cov XY: </string>
+                <string>Cov XY(pix^2): </string>
                </property>
                <property name="scaledContents">
                 <bool>true</bool>

@@ -1,4 +1,4 @@
-'''
+"""
 /*
 //              This file is part of VELA-CLARA-Software.                             //
 //------------------------------------------------------------------------------------//
@@ -15,70 +15,68 @@
 //    along with VELA-CLARA-Software.  If not, see <http://www.gnu.org/licenses/>.    //
 //
 //  Author:      DJS
-//  Last edit:   11-01-2019
+//  Last edit:   07-02-2020
 //  FileName:    controller.py
-//  Description: template for class for controller in generic High Level Application
+//  Description: Controller for BA1 easy stage app
 //
 //
 //*/
-'''
-
+"""
 from PyQt4 import QtCore
 from src.data import data
 from src.procedure import procedure
 from src.gui import gui
 
 
-
-class controller(object):# inherit of an python object
+class controller(object):  # inherit of an python object
+    """
+        This is the main controller that handles all objects, adn signals for the app
+    """
     def __init__(self, argv):
         object.__init__(self)
-        self.my_name = "controller"
         self.argv = argv
-        print('controller created with these arguments: ',self.argv)
-        # create the main objects used in this design
+        print(__name__,' created with these arguments: ', self.argv)
+        # create the main objects used in this design, FIRST data
         self.data = data()
+        # second procedure
         self.procedure = procedure()
+        # Then the GUI
         self.gui = gui()
-        self.hello()
-        self.gui.show_gui()
+        self.gui.setWindowTitle('BA1 Easy Stage')
         self.connect_gui_widgets()
+        self.gui.show()
+        self.gui.activateWindow()
 
+
+        # Then the gui update timer
         self.start_count = 0
         self.timer = QtCore.QTimer()
         self.timer.setSingleShot(False)
         self.timer.timeout.connect(self.update_gui)
-        self.timer.start(100)
+        self.timer.start(500)
 
     def connect_gui_widgets(self):
-        for key, value in self.gui.move_buttons.iteritems():
-            print('connect_gui_widgets ', key, value)
-            key.clicked.connect(self.move)
-            key.setDisabled(True)
-        for key, value in self.gui.dev_move_buttons.iteritems():
-            key.clicked.connect(self.move_to_device)
-            #key.clicked.connect(self.move_to_device)
-            print('connect_gui_widgets 2 ', key, value)
+        for stage_name, widget in self.gui.new_set_pos.iteritems():
+            # connect to a lambda, so we can pass the stage_name at the same time,
+            # this pattern binds the stage_name on this lambda
+            # https://www.mfitzp.com/article/qt-transmit-extra-data-with-signals/
+            # !!WARNINBG!! there are subtleties in how you name the objects either side of the equals sign,
+            widget.valueChanged.connect(lambda checked, stage_name=stage_name: self.move(stage_name=stage_name))
+        for stage_name, widget in self.gui.move_to_dev.iteritems():
+            widget.clicked.connect(lambda checked, stage_name=stage_name: self.move_to_device(stage_name))
 
-    def move(self):
-        stage = self.gui.move_buttons[self.gui.sender()]
-        position = self.gui.set_labels[stage].value()
-        print('move ', stage, position)
-        #self.proccedure.move(self.gui.move_buttons[self.gui.sender()])
+        self.gui.clear_for_beam_button.clicked.connect(self.set_clear_for_beam)
 
+    def set_clear_for_beam(self):
+        self.procedure.set_clear_for_beam()
 
-    def move_to_device(self):
-        stage = self.gui.dev_move_buttons[self.gui.sender()]
-        device = str(self.gui.device_labels[stage].currentText())
-        print('move_to_device',stage,  device)
-        self.procedure.move_device(stage,device)
+    def move(self, stage_name):
+        print("move", stage_name, self.gui.new_set_pos[stage_name].value())
+        self.procedure.move(stage_name, self.gui.new_set_pos[stage_name].value())
 
-    def hello(self):
-        print(self.my_name+ ' says hello')
-        self.data.hello()
-        self.procedure.hello()
-        self.gui.hello()
-
+    def move_to_device(self, stage_name):
+        device = str(self.gui.device_stage[stage_name].currentText())
+        self.procedure.move_device(stage_name, device)
 
     def update_gui(self):
         self.procedure.update_values()

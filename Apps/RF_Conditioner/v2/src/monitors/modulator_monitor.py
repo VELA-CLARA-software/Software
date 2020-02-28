@@ -26,7 +26,8 @@
 '''
 from monitor import monitor
 from VELA_CLARA_enums import CONTROLLER_TYPE
-from VELA_CLARA_Vac_Valve_Control import VALVE_STATE
+from VELA_CLARA_RF_Modulator_Control import L01_MOD_STATE
+from VELA_CLARA_RF_Modulator_Control import GUN_MOD_STATE
 
 class modulator_monitor(monitor):
     """
@@ -48,5 +49,7 @@ class modulator_monitor(monitor):
             self.set_success = False
 
     def check(self):
-        self.data.values[self.data.modulator_state] = self.mod[0].state
+        self.data.values[self.data.modulator_state] = self.mod[0].main_state
+        # print("self.data.values[self.data.modulator_state] = ", self.data.values[
+        #     self.data.modulator_state] )
 

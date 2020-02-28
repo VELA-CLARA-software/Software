@@ -57,9 +57,10 @@ class Machine(object):
 
     def setUpCtrls(self):
         if self.machineType == 'None':
-            print 'No controllers!'
+            print('No controllers!')
             '''This is the place to get contollers'''
-            sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\Release')
+            # sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\Release')
+            # sys.path.append(r"\\apclara1.dl.ac.uk\ControlRoomApps\Controllers\bin\stage\Python3_x64")
             self.magnets = None
             self.bpms = None
             self.gunllrf = None
@@ -68,9 +69,12 @@ class Machine(object):
             self.screens = None
         else:
             '''This is the place to get contollers'''
-            sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release')
+            # sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release')
+            # sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\stage\\Python3_x64\\')
+            sys.path.append('C:\\Python38\\Python3_x64\\')
             # os.environ["PATH"] = os.environ["PATH"]+";\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release\\root_v5.34.34\\bin\\"
             if 'magnets' in self.controllers:
+                print('#### CREATING MAGNET CONTROLLER ###')
                 import VELA_CLARA_Magnet_Control as mag
                 from VELA_CLARA_Magnet_Control import MAG_PSU_STATE
                 self.magInit = mag.init()
@@ -134,7 +138,7 @@ class Machine(object):
                     if 'screens' in self.controllers:
                         self.screens = self.screenInit.virtual_CLARA_PH1_Screen_Controller()
             elif self.machineType == 'Physical':
-                print 'PHYSICAL CONTROLLERS!'
+                print('PHYSICAL CONTROLLERS!')
                 if self.lineType == 'VELA':
                     if 'magnets' in self.controllers:
                         self.magnets = self.magInit.physical_VELA_INJ_Magnet_Controller()
@@ -188,7 +192,7 @@ class Machine(object):
         # self.SAMPL.initDistribFile = '4k-250pC.ini'
 
     def setAmplitude(self, cavity, value):
-        print cavity, value
+        print(cavity, value)
         if cavity == 'Gun':
             self.setGunAmplitude(value)
         elif cavity == 'Linac1':
@@ -256,7 +260,7 @@ class Machine(object):
         if self.machineType == 'None':
             self.linac1PhiSp = phase
         else:
-            print 'setting L01 phase = ', np.mod(180+phase,360)-180
+            print('setting L01 phase = ', np.mod(180+phase,360)-180)
             self.linac1llrf.setPhiSP(np.mod(180+phase,360)-180)
         return True
 
@@ -343,11 +347,11 @@ class Machine(object):
             if intensity > intensitycutoff:
                 if plane == 'Y':
                     yval = obj.y
-                    print 'yval = ', yval
+                    print('yval = ', yval)
                     return yval
                 else:
                     xval =obj.x
-                    print 'xval = ', xval
+                    print('xval = ', xval)
                     return xval
             else:
                 return float('nan')
@@ -358,7 +362,7 @@ class Machine(object):
             self.corrSI[corr] = I
         else:
             # print 'setting ', corr, ' = ', I
-            print self.magnets.setSI(corr, I)
+            print(self.magnets.setSI(corr, I))
             i = 0
             while abs(self.getCorr(corr) - I) > tol:
                 time.sleep(0.1)
