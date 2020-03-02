@@ -6,7 +6,7 @@ import sys, os
 sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\stage\\Python3_x64')
 #import VELA_CLARA_enums
 #import VELA_CLARA_PILaser_Control
-import VELA_CLARA_Magnet_Control
+#import VELA_CLARA_Magnet_Control
 import VELA_CLARA_LLRF_Control
 
 class base(object):
@@ -38,9 +38,9 @@ class base(object):
     _llrfObj = None
     _llrf_handler = None
 
-    mag_cont = VELA_CLARA_Magnet_Control
-    mag_init = VELA_CLARA_Magnet_Control.init()
-    mag_init.setVerbose()
+    mag_cont = 1#VELA_CLARA_Magnet_Control
+    mag_init = 1#VELA_CLARA_Magnet_Control.init()
+    #mag_init.setVerbose()
 
     _mag_control = None
     _magObj = None

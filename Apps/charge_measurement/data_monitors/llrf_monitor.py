@@ -3,6 +3,8 @@ from PyQt5.QtCore import QTimer
 import data.charge_measurement_data_base as dat
 import numpy
 import time
+import requests
+import json
 
 class llrf_monitor(monitor):
     # whoami
@@ -21,12 +23,14 @@ class llrf_monitor(monitor):
 
         self.check_llrf_is_monitoring()
         self.timer = QTimer()
-        self.timer.timeout.connect(self.update_rf_values)
+        #self.timer.timeout.connect(self.update_rf_values)
 
         self.set_success = True
-        self.timer.start(self.update_time)
+        #self.timer.start(self.update_time)
 
         self.run()
+        self.kly_pwr_pv = "CLA-GUN-LRF-CTRL-01:ad1:ch1:Power:Wnd:Avg"
+        self.kly_sp_pv = "CLA-GUN-LRF-CTRL-01:vm:dsp:sp_amp:amplitude"
 
     def run(self):
         # now we're ready to start the timer, (could be called from a function)
@@ -38,6 +42,30 @@ class llrf_monitor(monitor):
         # else:
         monitor.logger.message(self.my_name, ' NOT STARTED running')
 
+    def update_rf_values(self, pv, time_from, time_to, hwp):
+        self.kly_fwd_url = "http://claraserv2.dl.ac.uk:17668/retrieval/data/getData.json?pv=" + self.kly_pwr_pv + "&from=" + time_from + "&to=" + time_to
+        self.kly_sp_url = "http://claraserv2.dl.ac.uk:17668/retrieval/data/getData.json?pv=" + self.kly_sp_pv + "&from=" + time_from + "&to=" + time_to
+        self.klyfwdr = requests.get(self.kly_fwd_url)
+        self.klyfwddata = self.klyfwdr.json()
+        self.klyfwdevent = []
+        self.klyfwdtimestamp = []
+        for i in range(len(self.klyfwddata[0]["data"])):
+            self.klyfwdevent.append(self.klyfwddata[0]["data"][i]["val"])
+            self.klyfwdtimestamp.append(
+                float(str(self.klyfwddata[0]["data"][i]["secs"]) + "." + str(self.klyfwddata[0]["data"][i]["nanos"])))
+        self.klyspr = requests.get(self.kly_sp_url)
+        self.klyspdata = self.klyspr.json()
+        self.klyspevent = []
+        self.klysptimestamp = []
+        for i in range(len(self.klyspdata[0]["data"])):
+            self.klyspevent.append(self.klyspdata[0]["data"][i]["val"])
+            self.klysptimestamp.append(
+                float(str(self.klyspdata[0]["data"][i]["secs"]) + "." + str(self.klyspdata[0]["data"][i]["nanos"])))
+        monitor.data.values[dat.bsol_time_stamp][hwp] = self.klysptimestamp
+        monitor.data.values[dat.sol_time_stamp][hwp] = self.klysptimestamp
+        monitor.data.values[dat.bsol_values][hwp] = self.klyspevent
+        monitor.data.values[dat.sol_values][hwp] = self.klyspevent
+
     def check_llrf_is_monitoring(self):
         pass
         # charge_buffer = monitor.charge_control.getChargeBuffer(monitor.config.charge_config['CHARGE_DIAG_TYPE'])
@@ -46,9 +74,3 @@ class llrf_monitor(monitor):
         #         monitor.data.values[dat.charge_status] = True
         # else:
         #     monitor.data.values[dat.charge_status] = False
-
-    def update_rf_values(self):
-        pass
-        # monitor.data.values[dat.charge_values] = []
-        # monitor.data.values[dat.charge_values] = monitor.charge_control.getChargeBuffer(monitor.config.charge_config['CHARGE_DIAG_TYPE'])
-        # monitor.data.values[dat.bunch_charge] = numpy.mean(monitor.data.values[dat.charge_values])

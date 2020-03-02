@@ -161,3 +161,10 @@ plt.ylabel("WCM (pC)")
 plt.xlabel("Ophir (uJ)")
 plt.savefig("charge_"+datetime.datetime.now().strftime("%Y_%m_%d_%H_%M_%S")+".png")
 plt.show()
+year = str(datetime.datetime.now().year)
+month = datetime.datetime.now().strftime('%m')
+day = datetime.datetime.now().strftime('%d')
+scandir =  "\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Work\\"+self.year+"\\"+self.month+"\\"+self.day
+if not os.path.isdir(self.scandir):
+	os.makedirs(scandir)
+plt.savefig(scandir+"\\charge_"+datetime.datetime.now().strftime("%Y_%m_%d_%H_%M_%S")+".png")

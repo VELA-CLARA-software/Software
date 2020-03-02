@@ -1,6 +1,7 @@
 from datetime import  datetime
 import struct
 import os
+import shutil
 import pickle
 from data.config_reader import config_reader
 import numpy
@@ -78,7 +79,7 @@ class data_logger(object):
     def add_to_scan_log(self,x):
         towrite = " ".join(map(str, x))
         self.message('Adding to scan log =  ' + towrite, True)
-        with open(self.bpm_scan_log,'a') as f:
+        with open(self.scan_log,'a') as f:
             f.write( towrite + '\n')
 
     def add_to_scan_yaml(self,d):
@@ -89,8 +90,13 @@ class data_logger(object):
         with open(self.scan_log, 'a') as outfile:
             outfile.write(json.dumps(d, indent=4, sort_keys=True))
             outfile.write('\n')
+            file = outfile
+        if os.path.split(os.getcwd())[1] != "Charge_Measurements":
+            shutil.copyfile(file.name,
+                            "\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Work\\Measurements\\Charge_Measurements\\" + os.path.split(file.name)[1])
+        return file.name
 
-    def get_bpm_scan_log(self):
+    def get_scan_log(self):
         self.scan_log_start = datetime.now()
         self.scan_log_start_str = self.scan_log_start.isoformat('-').replace(":", "-").split('.', 1)[0]
         self.directory = data_logger.config.log_config['LOG_DIRECTORY'] + self.pil_name

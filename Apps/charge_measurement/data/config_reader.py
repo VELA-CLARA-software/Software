@@ -155,17 +155,17 @@ class config_reader(object):
         string_param = ['LLRF_NAME']
         area_param = ['LLRF_AREA']
         int_param = ['LLRF_CHECK_TIME']
-        mode_param = ['LLRF_MODE']
+        mode_param = ['LLRF_MODE','MACHINE_MODE']
         type_param = ['LLRF_TYPE']
         config_reader.llrf_config = self.get_param_dict(string_param=string_param, area_param=area_param,
                                                         int_param=int_param, mode_param=mode_param, type_param=type_param)
         return config_reader.llrf_config
 
     def mag_parameter(self):
-        string_param = ['MAG_NAME','MAG_TYPE']
-        area_param = ['MAG_AREA']
+        string_param = ['BSOL_NAME','SOL_NAME']
+        area_param = ['MACHINE_AREA']
         int_param = ['MAG_CHECK_TIME']
-        mode_param = ['MAG_MODE']
+        mode_param = ['MACHINE_MODE']
         config_reader.mag_config = self.get_param_dict(string_param=string_param, area_param=area_param,
                                                          int_param=int_param,mode_param=mode_param)
         return config_reader.mag_config

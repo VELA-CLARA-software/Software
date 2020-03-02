@@ -19,6 +19,10 @@ vc_x_pix_time_stamp = 'vc_x_pix_time_stamp'
 vc_y_pix_time_stamp = 'vc_y_pix_time_stamp'
 vc_sig_x_pix_time_stamp = 'vc_sig_x_pix_time_stamp'
 vc_sig_y_pix_time_stamp = 'vc_sig_y_pix_time_stamp'
+gun_fwd_pwr_time_stamp = 'gun_fwd_pwr_time_stamp'
+gun_fwd_pha_time_stamp = 'gun_fwd_pha_time_stamp'
+kly_fwd_pwr_time_stamp = 'kly_fwd_pwr_time_stamp'
+kly_sp_time_stamp = 'kly_sp_time_stamp'
 measurement_type = 'measurement_type'
 bunch_charge = 'bunch_charge'
 pil_name = 'pil_name'
@@ -28,6 +32,9 @@ llrf_status = 'llrf_status'
 mag_names = 'mag_names'
 mag_status = 'mag_status'
 scan_status = 'scan_status'
+pil_object = 'pil_object'
+llrf_object = 'llrf_object'
+mag_objects = 'mag_objects'
 pil_monitoring = 'pil_monitoring'
 llrf_monitoring = 'llrf_monitoring'
 mag_monitoring = 'mag_monitoring'
@@ -38,6 +45,8 @@ ophir_values = 'ophir_values'
 hwp_values = 'hwp_values'
 sol_values = 'sol_values'
 bsol_values = 'bsol_values'
+kly_fwd_pwr_values = 'kly_fwd_pwr_values'
+kly_sp_values = 'kly_sp_values'
 gun_fwd_pwr_mean_values = 'gun_fwd_pwr_mean_values'
 gun_fwd_pha_mean_values = 'gun_fwd_pha_mean_values'
 gun_fwd_pwr_traces = 'gun_fwd_pwr_traces'
@@ -47,6 +56,8 @@ vc_x_pix_values = 'vc_x_pix_values'
 vc_y_pix_values = 'vc_y_pix_values'
 vc_sig_x_pix_values = 'vc_sig_x_pix_values'
 vc_sig_y_pix_values = 'vc_sig_y_pix_values'
+bsol_time_stamp = 'bsol_time_stamp'
+sol_time_stamp = 'sol_time_stamp'
 set_hwp_start = 'set_hwp_start'
 set_hwp_end = 'set_hwp_end'
 num_steps = 'num_steps'
@@ -61,11 +72,16 @@ ophir_range_sp = 'ophir_range_sp'
 ophir_acquire_start = 'ophir_acquire_start'
 ophir_acquire_stop = 'ophir_acquire_stop'
 ophir_overrange = 'ophir_overrange'
+data_written = 'data_written'
+file_names = 'file_names'
+progress_bar = 'progress_bar'
 
 all_value_keys = [comments,
 time_stamp,
 charge_time_stamp,
 ophir_time_stamp,
+kly_fwd_pwr_time_stamp,
+kly_sp_time_stamp,
 gun_fwd_pwr_mean_time_stamp,
 gun_fwd_pha_mean_time_stamp,
 vc_intensity_time_stamp,
@@ -73,6 +89,8 @@ vc_x_pix_time_stamp,
 vc_y_pix_time_stamp,
 vc_sig_x_pix_time_stamp,
 vc_sig_y_pix_time_stamp,
+bsol_time_stamp,
+sol_time_stamp,
 measurement_type,
 bunch_charge,
 pil_name,
@@ -82,6 +100,9 @@ llrf_status,
 mag_names,
 mag_status,
 scan_status,
+pil_object,
+llrf_object,
+mag_objects,
 pil_monitoring,
 llrf_monitoring,
 mag_monitoring,
@@ -92,6 +113,8 @@ ophir_values,
 hwp_values,
 sol_values,
 bsol_values,
+kly_fwd_pwr_values,
+kly_sp_values,
 gun_fwd_pwr_mean_values,
 gun_fwd_pha_mean_values,
 gun_fwd_pwr_traces,
@@ -115,7 +138,10 @@ scan_type,
 ophir_range_sp,
 ophir_acquire_start,
 ophir_acquire_stop,
-ophir_overrange
+ophir_overrange,
+data_written,
+file_names,
+progress_bar
 ]
 
 class charge_measurement_data_base(QObject):
@@ -140,6 +166,8 @@ class charge_measurement_data_base(QObject):
     values[time_stamp] = {}
     values[charge_time_stamp] = {}
     values[ophir_time_stamp] = {}
+    values[kly_fwd_pwr_time_stamp] = {}
+    values[kly_sp_time_stamp] = {}
     values[gun_fwd_pwr_mean_time_stamp] = {}
     values[gun_fwd_pha_mean_time_stamp] = {}
     values[vc_intensity_time_stamp] = {}
@@ -147,7 +175,12 @@ class charge_measurement_data_base(QObject):
     values[vc_y_pix_time_stamp] = {}
     values[vc_sig_x_pix_time_stamp] = {}
     values[vc_sig_y_pix_time_stamp] = {}
+    values[bsol_time_stamp] = {}
+    values[sol_time_stamp] = {}
     values[measurement_type] = dummy_str
+    values[pil_object] = {}
+    values[llrf_object] = {}
+    values[mag_objects] = {}
     values[pil_status] = False
     values[llrf_status] = False
     values[mag_status] = False
@@ -166,6 +199,8 @@ class charge_measurement_data_base(QObject):
     values[hwp_values] = []
     values[sol_values] = {}
     values[bsol_values] = {}
+    values[kly_fwd_pwr_values] = {}
+    values[kly_sp_values] = {}
     values[gun_fwd_pwr_mean_values] = {}
     values[gun_fwd_pha_mean_values] = {}
     values[gun_fwd_pwr_traces] = [[] for i in range(8)]
@@ -190,6 +225,9 @@ class charge_measurement_data_base(QObject):
     values[machine_mode] = dummy_str
     values[scan_log] = dummy_str
     values[scan_type] = dummy_str
+    values[data_written] = False
+    values[file_names] = []
+    values[progress_bar] = {}
     # amp_pwr_mean_data = {}
 
     #logger
