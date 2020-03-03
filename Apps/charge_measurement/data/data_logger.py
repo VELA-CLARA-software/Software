@@ -2,7 +2,6 @@ from datetime import  datetime
 import struct
 import os
 import shutil
-import pickle
 from data.config_reader import config_reader
 import numpy
 import data.charge_measurement_data_base as dat
@@ -182,27 +181,3 @@ class data_logger(object):
         else:
             print(self.my_name + ' write_binary() error unknown type, ' + str(type(val)) )
         #print str(val) + '   ' + str(type(val))
-
-
-    def dump_forward(self, obj, index):
-        self.pickle_dump(path=self.forward_file + str(index), obj=obj)
-
-    def dump_reverse(self, obj, index):
-        self.pickle_dump(path=self.reverse_file + str(index), obj=obj)
-
-    def dump_probe(self, obj, index):
-        self.pickle_dump(path=self.probe_file + str(index), obj=obj)
-
-    # noinspection PyMethodMayBeStatic
-    def pickle_file(self, file_name, obj):
-        path = self.working_directory + file_name
-        self.pickle_dump(path,obj)
-
-    # noinspection PyMethodMayBeStatic
-    def pickle_dump(self, path, obj):
-        self.message(self.my_name + ' pickle_dumping to ' + path,True)
-        try:
-            with open(path + '.pkl', 'wb') as f:
-                pickle.dump(obj, f, pickle.HIGHEST_PROTOCOL)
-        except:
-            pass

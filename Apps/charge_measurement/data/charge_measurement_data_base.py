@@ -2,7 +2,7 @@ from PyQt5.QtCore import QTimer
 from PyQt5.QtCore import QObject
 import datetime
 import numpy as np
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 from data.config_reader import config_reader
 
 
@@ -251,8 +251,8 @@ class charge_measurement_data_base(QObject):
         self.data_log_timer = QTimer()
         # self.amp_pwr_log_timer = QTimer()
         # matplot lib bplot set-up, plotting needs improving for speed...
-        plt.ion()
-        plt.show()
+        # plt.ion()
+        # plt.show()
 
     @property
     def logger(self):
