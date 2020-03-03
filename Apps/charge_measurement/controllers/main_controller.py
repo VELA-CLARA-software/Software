@@ -10,6 +10,7 @@ import sys
 import time
 import numpy
 import datetime
+import pyqtgraph.exporters
 from timeit import default_timer as timer
 
 
@@ -96,30 +97,31 @@ class main_controller(controller_base):
                                       "kly_sp_values": self.data.values[dat.kly_sp_values],
                                       "kly_fwd_pwr_values": self.data.values[dat.kly_fwd_pwr_values],
                                       "kly_sp_time_stamp": self.data.values[dat.kly_sp_time_stamp],
-                                      "kly_fwd_pwr_time_stamp": self.data.values[dat.kly_fwd_pwr_time_stamp]
+                                      "kly_fwd_pwr_time_stamp": self.data.values[dat.kly_fwd_pwr_time_stamp],
+                                      "off_crest_phase": self.data.values[dat.off_crest_phase_dict]
                                       }
                     if not controller_base.data.values[dat.data_written]:
                         self.filename = self.logger.add_to_scan_json(self.json_data)
                         controller_base.data.values[dat.file_names].append(self.filename)
                         controller_base.data.values[dat.data_written] = True
-                        self.exporter = pyqtgraph.exporters.ImageExporter(self.plot.plotItem)
-                        self.exporter.export(os.path.split(file.name)[1]+".png")
-                        self.exporter.export("\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Work\\Measurements\\Charge_Measurements\\"+os.path.split(file.name)[1]+".png")
-                        self.year = str(datetime.datetime.now().year)
-                        self.month = datetime.datetime.now().strftime('%m')
-                        self.day = datetime.datetime.now().strftime('%d')
-                        self.scandir =  "\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Work\\"+self.year+"\\"+self.month+"\\"+self.day
-                        if not os.path.isdir(self.scandir):
-                            os.makedirs(self.scandir)
-                        self.exporter.export(self.scandir+os.path.split(file.name)[1]+".png")
+                        # self.exporter = pyqtgraph.exporters.ImageExporter(self.gui.plot)
+                        # self.exporter.export(str(os.path.split(self.filename)[1])[0:-5]+".png")
+                        # self.exporter.export("\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Work\\Measurements\\Charge_Measurements\\"+os.path.split(self.filename)[1]+".png")
+                        # self.year = str(datetime.datetime.now().year)
+                        # self.month = datetime.datetime.now().strftime('%m')
+                        # self.day = datetime.datetime.now().strftime('%d')
+                        # self.scandir =  "\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Work\\"+self.year+"\\"+self.month+"\\"+self.day
+                        # if not os.path.isdir(self.scandir):
+                        #     os.makedirs(self.scandir)
+                        # self.exporter.export(self.scandir+os.path.split(self.filename)[1]+".png")
                 controller_base.data.values[dat.plots_done] = False
 
     def set_hwp_and_record(self):
         if controller_base.data.values[dat.ready_to_go]:
             self.logger.message('entering set_hwp_and_record', True)
-            # controller_base.pil_handler.set_laser_energy_range(3)
-            # controller_base.pil_handler.set_pil_buffer(controller_base.data.values[dat.num_shots])
-            # controller_base.llrf_handler.set_llrf_buffer(controller_base.data.values[dat.num_shots])
+            self.laser_energy_range = controller_base.pil_handler.set_laser_energy_range(3)
+            #controller_base.pil_handler.set_pil_buffer(controller_base.data.values[dat.num_shots])
+            #controller_base.llrf_handler.set_llrf_buffer(controller_base.data.values[dat.num_shots])
             for i in numpy.linspace(controller_base.data.values[dat.set_hwp_start], controller_base.data.values[dat.set_hwp_end],
                                     controller_base.data.values[dat.num_steps]):
                 self.logger.message('Setting HWP to '+str(i), True)
@@ -129,6 +131,9 @@ class main_controller(controller_base):
                 time.sleep(1)
                 if controller_base.data_monitor.pil_monitor.check_set_equals_read():
                     # controller_base.data_monitor.bpm_monitor.update_bpm_raw_data()
+                    while controller_base.pil_handler.get_laser_energy_overrange():
+                        self.range = controller_base.pil_handler.get_laser_energy_range()
+                        self.laser_energy_range = controller_base.pil_handler.set_laser_energy_range(self.range-1)
                     time.sleep(1)
                     QApplication.processEvents()
                     self.time_from = datetime.datetime.now().isoformat() + "Z"
@@ -136,7 +141,7 @@ class main_controller(controller_base):
                     self.time_flo = datetime.datetime.now() + datetime.timedelta(seconds=controller_base.data.values[dat.num_shots]/10)
                     while datetime.datetime.now() < self.time_flo:
                         QApplication.processEvents()
-                        time.sleep(0.1)
+                        #time.sleep(0.1)
                     controller_base.data_monitor.pil_monitor.read_from_archiver("pv",self.time_from,self.time_to,i)
                     controller_base.data_monitor.mag_monitor.update_mag_values("pv",self.time_from,self.time_to,i)
                     controller_base.data_monitor.llrf_monitor.update_rf_values("pv",self.time_from,self.time_to,i)
@@ -166,6 +171,7 @@ class main_controller(controller_base):
         controller_base.data.values[dat.vc_y_pix_time_stamp] = {}
         controller_base.data.values[dat.vc_sig_x_pix_time_stamp] = {}
         controller_base.data.values[dat.vc_sig_y_pix_time_stamp] = {}
+        controller_base.data.values[dat.off_crest_phase_dict] = {}
 
     # over load close
     def connectCloseEvents(self):

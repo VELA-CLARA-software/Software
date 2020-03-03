@@ -1,9 +1,8 @@
-from PyQt4.QtGui import QMainWindow
-from PyQt4.QtCore import QTimer
-from PyQt4.QtGui import QApplication
-from PyQt4.QtCore import pyqtSignal
-from PyQt4.QtCore import QString
-from gui_mainwindow import Ui_MainWindow
+from PyQt5.QtWidgets import QMainWindow
+from PyQt5.QtCore import QTimer
+from PyQt5.QtWidgets import QApplication
+from PyQt5.QtCore import pyqtSignal
+from gui.gui_mainwindow import Ui_MainWindow
 import data.bpm_calibrate_data_base as dat
 from pyqtgraph import mkPen
 from base.base import base
@@ -36,7 +35,7 @@ class bpm_calibration_gui(QMainWindow, Ui_MainWindow, base):
 	# [update_via_controller.update({x: False}) for x in dat.all_value_keys]
 	widget = {}
 	previous_values = {}
-	[previous_values.update({x: None}) for x in dat.all_value_keys]
+	#[previous_values.update({x: None}) for x in dat.all_value_keys]
 
 	#
 
@@ -60,9 +59,9 @@ class bpm_calibration_gui(QMainWindow, Ui_MainWindow, base):
 		self.clip_vals = base.data.values.copy()
 		# # init to paused
 		# update timer
-		self.timer = QTimer()
-		self.timer.timeout.connect(self.update_gui)
-		self.timer.start(base.config.gui_config['GUI_UPDATE_TIME'])
+		#self.timer = QTimer()
+		#self.timer.timeout.connect(self.update_gui)
+		#self.timer.start(base.config.gui_config['GUI_UPDATE_TIME'])
         #
 	# custom close function
 	def closeEvent(self, event):
@@ -135,7 +134,7 @@ class bpm_calibration_gui(QMainWindow, Ui_MainWindow, base):
 		elif type(val) is str:
 			widget.setText('%i' % -1)
 		else:
-			print 'update_widget error ' + str(val) + ' ' + str(type(val))
+			print('update_widget error ' + str(val) + ' ' + str(type(val)))
 
 	# if a value is new we update the widget
 	def value_is_new(self, key, val):
@@ -150,7 +149,7 @@ class bpm_calibration_gui(QMainWindow, Ui_MainWindow, base):
 		if len(self.bpm_names_length) > 0:
 			self.data.values[dat.bpm_name] = str(self.comboBox.currentText())
 			self.bpm_name_set = True
-			print self.data.values[dat.bpm_name]
+			print(self.data.values[dat.bpm_name])
 			return True
 		else:
 			return False

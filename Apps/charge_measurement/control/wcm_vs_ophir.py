@@ -46,6 +46,18 @@ vcsigxvalues = {}
 vcsigyvalues = {}
 gunsolvalues = {}
 gunbsolvalues = {}
+klyspvalues = {}
+klyfwdvalues = {}
+wcmtimestampvalues = {}
+ophirtimestampvalues = {}
+vcxtimestampvalues = {}
+vcytimestampvalues = {}
+vcsigxtimestampvalues = {}
+vcsigytimestampvalues = {}
+gunsoltimestampvalues = {}
+gunbsoltimestampvalues = {}
+klysptimestampvalues = {}
+klyfwdtimestampvalues = {}
 epics.caput(laser_energy_start_stop_pv,0)
 epics.caput(laser_energy_range_pv,3)
 epics.caput(laser_energy_start_stop_pv,1)
@@ -71,46 +83,78 @@ for a in hwp_pv_range:
 	vc_sig_y_url="http://claraserv2.dl.ac.uk:17668/retrieval/data/getData.json?pv="+vc_sig_y_pv_name+"&from="+time_from+"&to="+time_to
 	gun_bsol_readi_url="http://claraserv2.dl.ac.uk:17668/retrieval/data/getData.json?pv="+gun_bsol_readi_pv_name+"&from="+time_from+"&to="+time_to
 	gun_sol_readi_url="http://claraserv2.dl.ac.uk:17668/retrieval/data/getData.json?pv="+gun_sol_readi_pv_name+"&from="+time_from+"&to="+time_to
+	kly_fwd_url = "http://claraserv2.dl.ac.uk:17668/retrieval/data/getData.json?pv=" + kly_pwr_pv + "&from=" + time_from + "&to=" + time_to
+	kly_sp_url = "http://claraserv2.dl.ac.uk:17668/retrieval/data/getData.json?pv=" + kly_sp_pv + "&from=" + time_from + "&to=" + time_to
 	wcmr = requests.get(wcm_url)
 	wcmdata=wcmr.json()
 	wcmevent = []
+	wcmtimestamp = []
 	for i in range(len(wcmdata[0]["data"])):
 		wcmevent.append(wcmdata[0]["data"][i]["val"])
+		wcmtimestamp.append(float(str(wcmdata[0]["data"][i]["secs"]) + "." + str(wcmdata[0]["data"][i]["nanos"])))
 	ophirr = requests.get(ophir_url)
 	ophirdata=ophirr.json()
 	ophirevent = []
+	ophirtimestamp = []
 	for i in range(0,len(ophirdata[0]["data"])):
 		ophirevent.append(ophirdata[0]["data"][i]["val"])
+		ophirtimestamp.append(float(str(ophirdata[0]["data"][i]["secs"]) + "." + str(ophirdata[0]["data"][i]["nanos"])))
 	vcxr = requests.get(vc_x_url)
 	vcxdata=vcxr.json()
 	vcxevent = []
+	vcxtimestamp = []
 	for i in range(0,len(vcxdata[0]["data"])):
 		vcxevent.append(vcxdata[0]["data"][i]["val"])
+		vcxtimestamp.append(float(str(vcxdata[0]["data"][i]["secs"]) + "." + str(vcxdata[0]["data"][i]["nanos"])))
 	vcyr = requests.get(vc_y_url)
 	vcydata=vcyr.json()
 	vcyevent = []
+	vcytimestamp = []
 	for i in range(0,len(vcydata[0]["data"])):
 		vcyevent.append(vcydata[0]["data"][i]["val"])
+		vcytimestamp.append(float(str(vcydata[0]["data"][i]["secs"]) + "." + str(vcydata[0]["data"][i]["nanos"])))
 	vcsigxr = requests.get(vc_sig_x_url)
 	vcsigxdata=vcsigxr.json()
 	vcsigxevent = []
+	vcsigxtimestamp = []
 	for i in range(0,len(vcsigxdata[0]["data"])):
 		vcsigxevent.append(vcsigxdata[0]["data"][i]["val"])
+		vcsigxtimestamp.append(float(str(vcsigxdata[0]["data"][i]["secs"]) + "." + str(vcsigxdata[0]["data"][i]["nanos"])))
 	vcsigyr = requests.get(vc_sig_y_url)
 	vcsigydata=vcsigyr.json()
 	vcsigyevent = []
+	vcsigytimestamp = []
 	for i in range(0,len(vcsigydata[0]["data"])):
 		vcsigyevent.append(vcsigydata[0]["data"][i]["val"])
+		vcsigytimestamp.append(float(str(vcsigydata[0]["data"][i]["secs"]) + "." + str(vcsigydata[0]["data"][i]["nanos"])))
 	gunbsolr = requests.get(gun_bsol_readi_url)
 	gunbsoldata=gunbsolr.json()
 	gunbsolevent = []
+	gunbsoltimestamp = []
 	for i in range(0,len(gunbsoldata[0]["data"])):
 		gunbsolevent.append(gunbsoldata[0]["data"][i]["val"])
+		gunsolbtimestamp.append(float(str(gunbsoldata[0]["data"][i]["secs"]) + "." + str(gunbsoldata[0]["data"][i]["nanos"])))
 	gunsolr = requests.get(gun_sol_readi_url)
 	gunsoldata=gunsolr.json()
 	gunsolevent = []
+	gunsoltimestamp = []
 	for i in range(0,len(gunsoldata[0]["data"])):
 		gunsolevent.append(gunsoldata[0]["data"][i]["val"])
+		gunsoltimestamp.append(float(str(gunsoldata[0]["data"][i]["secs"]) + "." + str(gunsoldata[0]["data"][i]["nanos"])))
+	klyfwdr = requests.get(kly_fwd_url)
+	klyfwddata = klyfwdr.json()
+	klyfwdevent = []
+	klyfwdtimestamp = []
+	for i in range(len(klyfwddata[0]["data"])):
+		klyfwdevent.append(klyfwddata[0]["data"][i]["val"])
+		klyfwdtimestamp.append(float(str(klyfwddata[0]["data"][i]["secs"]) + "." + str(klyfwddata[0]["data"][i]["nanos"])))
+	klyspr = requests.get(kly_sp_url)
+	klyspdata = klyspr.json()
+	klyspevent = []
+	klysptimestamp = []
+	for i in range(len(klyspdata[0]["data"])):
+		klyspevent.append(klyspdata[0]["data"][i]["val"])
+		klysptimestamp.append(float(str(klyspdata[0]["data"][i]["secs"]) + "." + str(klyspdata[0]["data"][i]["nanos"])))
 	wcmvalues[a] = wcmevent
 	ophirvalues[a] = ophirevent
 	vcxvalues[a] = vcxevent
@@ -119,6 +163,18 @@ for a in hwp_pv_range:
 	vcsigyvalues[a] = vcsigyevent
 	gunsolvalues[a] = gunsolevent
 	gunbsolvalues[a] = gunbsolevent
+	klyspvalues[a] = klyspevent
+	klyfwdvalues[a] = klyfwdevent
+	wcmtimestampvalues[a] = wcmtimestamp
+	ophirtimestampvalues[a] = ophirtimestamp
+	vcxtimestampvalues[a] = vcxtimestamp
+	vcytimestampvalues[a] = vcytimestamp
+	vcsigxtimestampvalues[a] = vcsigxtimestamp
+	vcsigytimestampvalues[a] = vcsigytimestamp
+	gunsoltimestampvalues[a] = gunsoltimestamp
+	gunbsoltimestampvalues[a] = gunbsoltimestamp
+	klysptimestampvalues[a] = klysptimestamp
+	klyfwdtimestampvalues[a] = klyfwdtimestamp
 	print("wcm mean (pC) = " + numpy.mean(wcmevent))
 	print("ophir mean (uJ) = " + numpy.mean(ophirevent))
 
@@ -131,7 +187,19 @@ json_data = {"hwp" : hwp_pv_range.tolist(),
 			 "vcsigxdata" : vcsigxvalues,
 			 "vcsigydata" : vcsigyvalues,
 			 "gunsoldata" : gunsolvalues,
-			 "gunbsoldata" : gunbsolvalues}
+			 "gunbsoldata" : gunbsolvalues,
+			 "klyspdata" : klyspvalues,
+			 "klyfwddata" : klyfwdvalues,
+			 "wcmtimestamp" : wcmtimestamp,
+			 "ophirtimestamp" : ophirtimestamp,
+			 "vcxtimestamp" : vcxtimestamp,
+			 "vcytimestamp" : vcytimestamp,
+			 "vcsigxtimestamp" : vcsigxtimestamp,
+			 "vcsigytimestamp" : vcsigytimestamp,
+			 "gunsoltimestamp" : gunsoltimestamp,
+			 "gunbsoltimestamp" : gunbsoltimestamp,
+			 "klysptimestamp" : klysptimestamp,
+			 "klyfwdtimestamp" : klyfwdtimestamp}
 #WRITE TO FILE
 with open("wcm_vs_ophir"+datetime.datetime.now().strftime("%Y_%m_%d_%H_%M_%S")+".json", 'w') as outfile:
 	outfile.write(json.dumps(json_data,indent=4, sort_keys=True))
@@ -164,7 +232,7 @@ plt.show()
 year = str(datetime.datetime.now().year)
 month = datetime.datetime.now().strftime('%m')
 day = datetime.datetime.now().strftime('%d')
-scandir =  "\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Work\\"+self.year+"\\"+self.month+"\\"+self.day
-if not os.path.isdir(self.scandir):
+scandir =  "\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Work\\"+year+"\\"+month+"\\"+day
+if not os.path.isdir(scandir):
 	os.makedirs(scandir)
 plt.savefig(scandir+"\\charge_"+datetime.datetime.now().strftime("%Y_%m_%d_%H_%M_%S")+".png")

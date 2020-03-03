@@ -5,6 +5,7 @@ import numpy
 import time
 import requests
 import json
+import epics
 
 class llrf_monitor(monitor):
     # whoami
@@ -31,6 +32,7 @@ class llrf_monitor(monitor):
         self.run()
         self.kly_pwr_pv = "CLA-GUN-LRF-CTRL-01:ad1:ch1:Power:Wnd:Avg"
         self.kly_sp_pv = "CLA-GUN-LRF-CTRL-01:vm:dsp:sp_amp:amplitude"
+        self.gun_phase_pv = "CLA-GUN-LRF-CTRL-01:vm:dsp:sp_ph:phase"
 
     def run(self):
         # now we're ready to start the timer, (could be called from a function)
@@ -61,10 +63,12 @@ class llrf_monitor(monitor):
             self.klyspevent.append(self.klyspdata[0]["data"][i]["val"])
             self.klysptimestamp.append(
                 float(str(self.klyspdata[0]["data"][i]["secs"]) + "." + str(self.klyspdata[0]["data"][i]["nanos"])))
-        monitor.data.values[dat.bsol_time_stamp][hwp] = self.klysptimestamp
-        monitor.data.values[dat.sol_time_stamp][hwp] = self.klysptimestamp
-        monitor.data.values[dat.bsol_values][hwp] = self.klyspevent
-        monitor.data.values[dat.sol_values][hwp] = self.klyspevent
+        monitor.data.values[dat.kly_fwd_pwr_time_stamp][hwp] = self.klyfwdtimestamp
+        monitor.data.values[dat.kly_sp_time_stamp][hwp] = self.klysptimestamp
+        monitor.data.values[dat.kly_fwd_pwr_values][hwp] = self.klyfwdevent
+        monitor.data.values[dat.kly_sp_values][hwp] = self.klyspevent
+        self.off_crest_phase = epics.caget(self.gun_phase_pv) - monitor.data.values[dat.off_crest_phase]
+        monitor.data.values[dat.off_crest_phase_dict][hwp] = self.off_crest_phase
 
     def check_llrf_is_monitoring(self):
         pass

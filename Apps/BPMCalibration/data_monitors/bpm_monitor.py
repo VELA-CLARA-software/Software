@@ -1,5 +1,5 @@
-from monitor import monitor
-from PyQt4.QtCore import QTimer
+from data_monitors.monitor import monitor
+from PyQt5.QtCore import QTimer
 import data.bpm_calibrate_data_base as dat
 import numpy, random
 import time

@@ -149,44 +149,36 @@ class charge_measurement_gui(QMainWindow, Ui_MainWindow, base):
 			return False
 
 	def get_start(self):
-		self.set_start_text = self.lowerBoundOutputWidget.toPlainText()
-		if len(self.set_start_text) > 0:
-			self.data.values[dat.set_hwp_start] = float(self.set_start_text)
-			self.set_start_set = True
-			return True
-		else:
-			self.set_start_set = False
-			return False
+		self.set_start_text = self.lowerBoundOutputWidget.value()
+		self.data.values[dat.set_hwp_start] = float(self.set_start_text)
+		self.set_start_set = True
+		return True
 
 	def get_end(self):
-		self.set_end_text = self.upperBoundOutputWidget.toPlainText()
-		if len(self.set_end_text) > 0:
-			self.data.values[dat.set_hwp_end] = float(self.set_end_text) + 1
-			self.set_end_set = True
-			return True
-		else:
-			self.set_end_set = False
-			return False
+		self.set_end_text = self.upperBoundOutputWidget.value()
+		self.data.values[dat.set_hwp_end] = float(self.set_end_text) + 1
+		self.set_end_set = True
+		return True
 
 	def get_num_steps(self):
-		self.num_steps_text = self.numStepsOutputWidget.toPlainText()
-		if len(self.num_steps_text) > 0:
-			self.data.values[dat.num_steps] = int(self.num_steps_text)
-			self.num_steps_set = True
-			return True
-		else:
-			self.num_shots_set = False
-			return False
+		self.num_steps_text = self.numStepsOutputWidget.value()
+		self.data.values[dat.num_steps] = int(self.num_steps_text)
+		self.num_steps_set = True
+		return True
 
 	def get_num_shots(self):
-		self.num_shots_text = self.numShotsOutputWidget.toPlainText()
-		if len(self.num_shots_text) > 0:
-			self.data.values[dat.num_shots] = int(self.num_shots_text)
-			self.num_shots_set = True
-			return True
-		else:
-			self.num_shots_set = False
-			return False
+		self.num_shots_text = self.numShotsOutputWidget.value()
+		print(self.num_shots_text)
+		self.data.values[dat.num_shots] = int(self.num_shots_text)
+		self.num_shots_set = True
+		return True
+
+	def get_off_crest_phase(self):
+		self.off_crest_phase_text = self.offCrestPhaseOutputWidget.value()
+		print(self.off_crest_phase_text)
+		self.data.values[dat.off_crest_phase] = int(self.off_crest_phase_text)
+		self.off_crest_phase_set = True
+		return True
 
 	def is_measure_type_set(self):
 		if self.data.values[dat.calibration_type] == 'attenuation':
@@ -197,7 +189,7 @@ class charge_measurement_gui(QMainWindow, Ui_MainWindow, base):
 			return False
 
 	def check_ready(self):
-		if self.get_start() and self.get_end() and self.get_num_shots() and self.get_num_steps():
+		if self.get_start() and self.get_end() and self.get_num_shots() and self.get_num_steps() and self.get_off_crest_phase():
 		# 	base.logger.message('Starting scan', True)
 		# 	self.data.values[dat.all_values_set] = True
 		# 	self.data.values[dat.charge_status] = True

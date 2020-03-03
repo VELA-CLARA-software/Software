@@ -17,10 +17,18 @@ class pil_handler(pil_handler_base):
         self.hwp_pv_name = "EBT-LAS-OPT-HWP-2:ROT:MABS"
         self.hwp_get_pv_name = "EBT-LAS-OPT-HWP-2:ROT:RPOS"
 
-    def set_laser_energy_range(self,value):
+    def set_laser_energy_range(self, value):
         epics.caput(self.laser_energy_start_stop_pv, 0)
         epics.caput(self.laser_energy_range_pv, value)
         epics.caput(self.laser_energy_start_stop_pv, 1)
+        return value
+
+    def get_laser_energy_overrange(self):
+        return epics.caget(self.laser_energy_overrange_pv)
+
+    def get_laser_energy_range(self):
+        self.value = epics.caget(self.laser_energy_range_pv)
+        return self.value
 
     def set_pil_buffer(self,value):
         pass
@@ -28,10 +36,9 @@ class pil_handler(pil_handler_base):
         # pil_handler_base.logger.message('setting PIL buffer = ' + str(value), True)
 
     def set_hwp(self,value):
-        pass
-        # epics.caput(self.hwp_pv_name, value)
-        # if value - 0.5 < epics.caget(self.hwp_get_pv_name) < value + 0.5:
-        #     time.sleep(2)
+        epics.caput(self.hwp_pv_name, value)
+        if value - 0.5 < epics.caget(self.hwp_get_pv_name) < value + 0.5:
+            time.sleep(2)
 
     def set_sa1(self,pv,value):
         pass

@@ -75,6 +75,8 @@ ophir_overrange = 'ophir_overrange'
 data_written = 'data_written'
 file_names = 'file_names'
 progress_bar = 'progress_bar'
+off_crest_phase = 'off_crest_phase'
+off_crest_phase_dict = 'off_crest_phase_dict'
 
 all_value_keys = [comments,
 time_stamp,
@@ -141,7 +143,9 @@ ophir_acquire_stop,
 ophir_overrange,
 data_written,
 file_names,
-progress_bar
+progress_bar,
+off_crest_phase,
+off_crest_phase_dict
 ]
 
 class charge_measurement_data_base(QObject):
@@ -228,6 +232,8 @@ class charge_measurement_data_base(QObject):
     values[data_written] = False
     values[file_names] = []
     values[progress_bar] = {}
+    values[off_crest_phase] = dummy_dbl
+    values[off_crest_phase_dict] = {}
     # amp_pwr_mean_data = {}
 
     #logger
