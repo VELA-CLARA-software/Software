@@ -67,8 +67,8 @@ class llrf_monitor(monitor):
         monitor.data.values[dat.kly_sp_time_stamp][hwp] = self.klysptimestamp
         monitor.data.values[dat.kly_fwd_pwr_values][hwp] = self.klyfwdevent
         monitor.data.values[dat.kly_sp_values][hwp] = self.klyspevent
-        self.off_crest_phase = epics.caget(self.gun_phase_pv) - monitor.data.values[dat.off_crest_phase]
-        monitor.data.values[dat.off_crest_phase_dict][hwp] = self.off_crest_phase
+        #self.off_crest_phase = epics.caget(self.gun_phase_pv) - monitor.data.values[dat.off_crest_phase]
+        monitor.data.values[dat.off_crest_phase_dict][hwp] = monitor.data.values[dat.off_crest_phase]
 
     def check_llrf_is_monitoring(self):
         pass

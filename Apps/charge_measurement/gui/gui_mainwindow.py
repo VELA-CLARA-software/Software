@@ -212,6 +212,7 @@ class Ui_MainWindow(object):
         self.chargePlotWidget = QWidget()
         self.chargePlotLayout = QVBoxLayout()
         self.chargePlotWidget.setLayout(self.chargePlotLayout)
+        pyqtgraph.setConfigOption('background', 'w')
         self.chargePlotView = GraphicsView(self.chargePlotWidget,useOpenGL=True)
         self.chargePlotWidgetGraphicsLayout = GraphicsLayout()
         self.chargePlotView.setCentralItem(self.chargePlotWidgetGraphicsLayout)

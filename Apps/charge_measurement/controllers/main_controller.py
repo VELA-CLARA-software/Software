@@ -10,6 +10,7 @@ import sys
 import time
 import numpy
 import datetime
+import shutil
 import pyqtgraph.exporters
 from timeit import default_timer as timer
 
@@ -113,6 +114,7 @@ class main_controller(controller_base):
                         # self.scandir =  "\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Work\\"+self.year+"\\"+self.month+"\\"+self.day
                         # if not os.path.isdir(self.scandir):
                         #     os.makedirs(self.scandir)
+                        # shutil.copyfile(self.filename,self.scandir)
                         # self.exporter.export(self.scandir+os.path.split(self.filename)[1]+".png")
                 controller_base.data.values[dat.plots_done] = False
 
@@ -125,26 +127,28 @@ class main_controller(controller_base):
             for i in numpy.linspace(controller_base.data.values[dat.set_hwp_start], controller_base.data.values[dat.set_hwp_end],
                                     controller_base.data.values[dat.num_steps]):
                 self.logger.message('Setting HWP to '+str(i), True)
-                controller_base.data.values[dat.progress_bar]['scan_progress'].setValue(i/controller_base.data.values[dat.num_steps])
+                self.gui.progressBar.setValue(i/controller_base.data.values[dat.num_steps])
                 controller_base.pil_handler.set_hwp(i)
                 controller_base.data.values[dat.hwp_values].append(i)
                 time.sleep(1)
                 if controller_base.data_monitor.pil_monitor.check_set_equals_read():
-                    # controller_base.data_monitor.bpm_monitor.update_bpm_raw_data()
                     while controller_base.pil_handler.get_laser_energy_overrange():
                         self.range = controller_base.pil_handler.get_laser_energy_range()
                         self.laser_energy_range = controller_base.pil_handler.set_laser_energy_range(self.range-1)
-                    time.sleep(1)
+                time.sleep(1)
+                QApplication.processEvents()
+                self.time_from = datetime.datetime.now().isoformat() + "Z"
+                self.time_to = (datetime.datetime.now() + datetime.timedelta(seconds=controller_base.data.values[dat.num_shots]/10)).isoformat() + "Z"
+                self.time_flo = datetime.datetime.now() + datetime.timedelta(seconds=controller_base.data.values[dat.num_shots]/10)
+                while datetime.datetime.now() < self.time_flo:
                     QApplication.processEvents()
-                    self.time_from = datetime.datetime.now().isoformat() + "Z"
-                    self.time_to = (datetime.datetime.now() + datetime.timedelta(seconds=controller_base.data.values[dat.num_shots]/10)).isoformat() + "Z"
-                    self.time_flo = datetime.datetime.now() + datetime.timedelta(seconds=controller_base.data.values[dat.num_shots]/10)
-                    while datetime.datetime.now() < self.time_flo:
-                        QApplication.processEvents()
-                        #time.sleep(0.1)
-                    controller_base.data_monitor.pil_monitor.read_from_archiver("pv",self.time_from,self.time_to,i)
-                    controller_base.data_monitor.mag_monitor.update_mag_values("pv",self.time_from,self.time_to,i)
-                    controller_base.data_monitor.llrf_monitor.update_rf_values("pv",self.time_from,self.time_to,i)
+                    time.sleep(0.1)
+                controller_base.data_monitor.pil_monitor.read_from_archiver("pv",self.time_from,self.time_to,i)
+                controller_base.data_monitor.mag_monitor.update_mag_values("pv",self.time_from,self.time_to,i)
+                controller_base.data_monitor.llrf_monitor.update_rf_values("pv",self.time_from,self.time_to,i)
+                # controller_base.data.values[dat.charge_values][i] = numpy.random.rand(10).tolist()
+                # controller_base.data.values[dat.ophir_values][i] = numpy.random.rand(10).tolist()
+                self.gui.update_plot()
 
     def clear_values(self):
         controller_base.data.values[dat.charge_values] = {}

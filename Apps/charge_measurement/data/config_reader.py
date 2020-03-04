@@ -171,7 +171,7 @@ class config_reader(object):
         return config_reader.mag_config
 
     def log_param(self):
-        string_param = ['LOG_FILENAME', 'LOG_DIRECTORY', 'DATA_LOG_FILENAME']
+        string_param = ['LOG_FILENAME', 'LOG_DIRECTORY', 'DATA_LOG_FILENAME', 'FILE_DIRECTORY', 'SUMMARY_FILE']
         int_param = ['DATA_LOG_TIME']
         config_reader.log_config = self.get_param_dict(string_param=string_param, int_param=int_param)
         return config_reader.log_config

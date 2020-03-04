@@ -180,6 +180,13 @@ class charge_measurement_gui(QMainWindow, Ui_MainWindow, base):
 		self.off_crest_phase_set = True
 		return True
 
+	def get_comments(self):
+		self.comments_text = self.newVals.toPlainText()
+		print(self.comments_text)
+		self.data.values[dat.comments] = str(self.comments_text)
+		self.comments_set = True
+		return True
+
 	def is_measure_type_set(self):
 		if self.data.values[dat.calibration_type] == 'attenuation':
 			return True
@@ -189,7 +196,7 @@ class charge_measurement_gui(QMainWindow, Ui_MainWindow, base):
 			return False
 
 	def check_ready(self):
-		if self.get_start() and self.get_end() and self.get_num_shots() and self.get_num_steps() and self.get_off_crest_phase():
+		if self.get_start() and self.get_end() and self.get_num_shots() and self.get_num_steps() and self.get_off_crest_phase() and self.get_comments():
 		# 	base.logger.message('Starting scan', True)
 		# 	self.data.values[dat.all_values_set] = True
 		# 	self.data.values[dat.charge_status] = True
@@ -210,25 +217,53 @@ class charge_measurement_gui(QMainWindow, Ui_MainWindow, base):
 			base.logger.message('NOT ready to go, is everything set?', True)
 			self.messageLabel.setText('WARNING: NOT ready to go, is everything set?')
 
+	def update_plot(self):
+		self.messageLabel.setText('Scan complete')
+		self.chargePlot.clear()
+		self.ophirmean = []
+		self.wcmmean = []
+		self.ophirstderr = []
+		self.wcmstderr = []
+		for j, k in zip(self.data.values[dat.ophir_values], self.data.values[dat.charge_values]):
+			self.ophirmean.append(numpy.mean(self.data.values[dat.ophir_values][j]))
+			self.wcmmean.append(numpy.mean(self.data.values[dat.charge_values][k]))
+			self.ophirstderr.append(numpy.std(self.data.values[dat.ophir_values][j])/(500*numpy.sqrt(len(self.data.values[dat.ophir_values][j]))))
+			self.wcmstderr.append(numpy.std(self.data.values[dat.charge_values][k])/(500*numpy.sqrt(len(self.data.values[dat.charge_values][j]))))
+		self.vbx = self.chargePlot.vb
+		self.vbx.setYRange(min(self.wcmmean)-10,max(self.wcmmean)+10)
+		self.plot = self.chargePlot.plot(pen=mkPen('b',width=1), symbol='o')
+		self.plot.setData(x=self.ophirmean,
+						  y=self.wcmmean,
+						  top=self.ophirstderr,
+						  bottom=self.ophirstderr,
+						  left=self.wcmstderr,
+						  height=self.ophirstderr
+						  )
+
 	def plot_wcm_vs_ophir(self):
 		self.messageLabel.setText('Scan complete')
 		self.chargePlot.clear()
 		self.ophirmean = []
 		self.wcmmean = []
-		self.ophirstddev = []
-		self.wcmstddev = []
+		self.ophirstderr = []
+		self.wcmstderr = []
 		for j, k in zip(self.data.values[dat.ophir_values], self.data.values[dat.charge_values]):
 			self.ophirmean.append(numpy.mean(self.data.values[dat.ophir_values][j]))
 			self.wcmmean.append(numpy.mean(self.data.values[dat.charge_values][k]))
-			self.ophirstddev.append(numpy.std(self.data.values[dat.ophir_values][j]))
-			self.wcmstddev.append(numpy.std(self.data.values[dat.charge_values][k]))
+			self.ophirstderr.append(numpy.std(self.data.values[dat.ophir_values][j]) / (
+						500 * numpy.sqrt(len(self.data.values[dat.ophir_values][j]))))
+			self.wcmstderr.append(numpy.std(self.data.values[dat.charge_values][k]) / (
+						500 * numpy.sqrt(len(self.data.values[dat.charge_values][j]))))
 		self.vbx = self.chargePlot.vb
-		self.vbx.setYRange(0,max(self.wcmmean)+25)
-		self.plot = self.chargePlot.plot(pen=mkPen('b',width=1), symbol='o')
+		self.vbx.setYRange(min(self.wcmmean)-10,max(self.wcmmean)+10)
+		self.plot = self.chargePlot.plot(pen=mkPen('b', width=1), symbol='o')
 		self.plot.setData(x=self.ophirmean,
 						  y=self.wcmmean,
-						  height=self.wcmstddev,
-						  width=self.ophirstddev)
+						  top=self.ophirstderr,
+						  bottom=self.ophirstderr,
+						  left=self.wcmstderr,
+						  height=self.ophirstderr
+						  )
 		self.data.values[dat.plots_done] = True
 		self.scanButton.setEnabled(True)
 		self.data.values[dat.ready_to_go] = False

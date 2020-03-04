@@ -1,5 +1,6 @@
 import os
-import sys
+import sys, os
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
 parent_dir_path = os.path.abspath(os.path.join(dir_path, os.pardir))

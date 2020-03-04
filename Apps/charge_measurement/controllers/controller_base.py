@@ -1,6 +1,8 @@
-from VELA_CLARA_LLRF_Control import MACHINE_MODE,MACHINE_AREA,LLRF_TYPE
+import sys, os
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from data.config_reader import config_reader
 from data.data_logger import data_logger
+from VELA_CLARA_LLRF_Control import MACHINE_MODE,MACHINE_AREA,LLRF_TYPE
 from controllers.pil_handler import pil_handler
 from controllers.llrf_handler import llrf_handler
 from controllers.mag_handler import mag_handler
