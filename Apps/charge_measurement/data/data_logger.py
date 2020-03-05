@@ -167,17 +167,24 @@ class data_logger(object):
         self.solmeanall = numpy.mean(self.solmean)
         self.offcrestmeanall = numpy.mean(self.offcrestmean)
         self.x, self.y = self.ophirmeanall, self.wcmmeanall
-        self.m, self.c = numpy.around(numpy.polyfit(self.x, self.y, 1), 2)
+        try:
+            self.m, self.c = numpy.around(numpy.polyfit(self.x, self.y, 1), 2)
+        except:
+            self.m, self.c = 0, 0
         self.fit = self.m
         self.cross = self.c
         self.QE = numpy.around(4.66e-6 * self.m / 15.4, 6)
         self.qeall = self.QE
         self.new_row_data = ['', filename, self.cross, self.fit, self.qeall]
+        d["fit"] = self.m
+        d["cross"] = self.m
+        d["qe"] = self.QE * 10**(5)
+        d["kly_fwd_mean_all"] = self.klyfwdmeanall
         self.rb = xlrd.open_workbook(data_logger.config.log_config['SUMMARY_FILE'])
         self.df = pandas.DataFrame({'':[''],
                                     'filename': [os.path.basename(filename)],
                                     'charge_cross_zero': [self.cross],
-                                    'fit': [self.cross],
+                                    'fit': [self.fit],
                                     'qe_effective': [self.qeall],
                                     'kly_fwd_mean': [self.klyfwdmeanall],
                                     'kly_fwd_stderr': [self.klyfwdstderrall],

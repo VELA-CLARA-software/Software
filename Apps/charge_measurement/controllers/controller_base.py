@@ -71,6 +71,9 @@ class controller_base(base):
 		# if a is not MACHINE_AREA.UNKNOWN_AREA:
 		# base.pil_control = base.pil_init.getPILaserController(a)
 		# base.scope_control = base.scope_init.physical_VELA_INJ_Scope_Controller()
+		base.pil_factory = base.hardware_factory.getLaserFactory()
+		base.hwp_control = base.pil_factory.getLaser(base.config.pil_config['HWP_NAME'])
+		base.las_em_control = base.pil_factory.getLaser(base.config.pil_config['LAS_EM_NAME'])
 		base.logger.message('start_pil_control created PIL object', True)
 		base.logger.message('Monitoring PIL', True)
 		# base.config.charge_config['CHARGE_NAME'] = self.get_charge_names()

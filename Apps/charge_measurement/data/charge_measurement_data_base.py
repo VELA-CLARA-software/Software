@@ -77,6 +77,10 @@ file_names = 'file_names'
 progress_bar = 'progress_bar'
 off_crest_phase = 'off_crest_phase'
 off_crest_phase_dict = 'off_crest_phase_dict'
+fit = 'fit'
+cross = 'cross'
+qe = 'qe'
+kly_fwd_mean_all = 'kly_fwd_mean_all'
 
 all_value_keys = [comments,
 time_stamp,
@@ -145,7 +149,11 @@ data_written,
 file_names,
 progress_bar,
 off_crest_phase,
-off_crest_phase_dict
+off_crest_phase_dict,
+fit,
+cross,
+qe,
+kly_fwd_mean_all
 ]
 
 class charge_measurement_data_base(QObject):
@@ -234,6 +242,10 @@ class charge_measurement_data_base(QObject):
     values[progress_bar] = {}
     values[off_crest_phase] = dummy_dbl
     values[off_crest_phase_dict] = {}
+    values[fit] = dummy_dbl
+    values[cross] = dummy_dbl
+    values[qe] = dummy_dbl
+    values[kly_fwd_mean_all] = dummy_dbl
     # amp_pwr_mean_data = {}
 
     #logger

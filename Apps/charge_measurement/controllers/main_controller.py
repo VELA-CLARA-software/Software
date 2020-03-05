@@ -105,6 +105,9 @@ class main_controller(controller_base):
                         self.filename = self.logger.add_to_scan_json(self.json_data)
                         controller_base.data.values[dat.file_names].append(self.filename)
                         controller_base.data.values[dat.data_written] = True
+                        # self.gui.legend.addItem(self.gui.plot, "fit = "+ self.data.values[dat.fit] + " x + " + self.data.values[dat.cross] +
+                        #                              "; QE = " + self.data.values[dat.qe] + "; kly_fwd_pwr = " +
+                        #                              self.data.values[dat.kly_fwd_mean_all])
                         # self.exporter = pyqtgraph.exporters.ImageExporter(self.gui.plot)
                         # self.exporter.export(str(os.path.split(self.filename)[1])[0:-5]+".png")
                         # self.exporter.export("\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Work\\Measurements\\Charge_Measurements\\"+os.path.split(self.filename)[1]+".png")
@@ -124,10 +127,14 @@ class main_controller(controller_base):
             self.laser_energy_range = controller_base.pil_handler.set_laser_energy_range(3)
             #controller_base.pil_handler.set_pil_buffer(controller_base.data.values[dat.num_shots])
             #controller_base.llrf_handler.set_llrf_buffer(controller_base.data.values[dat.num_shots])
+            self.stepprog = (controller_base.data.values[dat.set_hwp_end]-controller_base.data.values[dat.set_hwp_start])/controller_base.data.values[dat.num_steps]
+            self.stepspace = numpy.linspace(0,100,self.stepprog*100)
+            self.iterate = 0
             for i in numpy.linspace(controller_base.data.values[dat.set_hwp_start], controller_base.data.values[dat.set_hwp_end],
                                     controller_base.data.values[dat.num_steps]):
                 self.logger.message('Setting HWP to '+str(i), True)
-                self.gui.progressBar.setValue(i/controller_base.data.values[dat.num_steps])
+                self.gui.progressBar.setValue(self.stepspace[self.iterate])
+                self.iterate +=1
                 controller_base.pil_handler.set_hwp(i)
                 controller_base.data.values[dat.hwp_values].append(i)
                 time.sleep(1)

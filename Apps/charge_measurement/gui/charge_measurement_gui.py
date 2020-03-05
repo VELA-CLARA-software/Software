@@ -156,7 +156,7 @@ class charge_measurement_gui(QMainWindow, Ui_MainWindow, base):
 
 	def get_end(self):
 		self.set_end_text = self.upperBoundOutputWidget.value()
-		self.data.values[dat.set_hwp_end] = float(self.set_end_text) + 1
+		self.data.values[dat.set_hwp_end] = float(self.set_end_text)
 		self.set_end_set = True
 		return True
 
@@ -218,7 +218,7 @@ class charge_measurement_gui(QMainWindow, Ui_MainWindow, base):
 			self.messageLabel.setText('WARNING: NOT ready to go, is everything set?')
 
 	def update_plot(self):
-		self.messageLabel.setText('Scan complete')
+		self.messageLabel.setText('Scanning')
 		self.chargePlot.clear()
 		self.ophirmean = []
 		self.wcmmean = []
@@ -232,6 +232,8 @@ class charge_measurement_gui(QMainWindow, Ui_MainWindow, base):
 		self.vbx = self.chargePlot.vb
 		self.vbx.setYRange(min(self.wcmmean)-10,max(self.wcmmean)+10)
 		self.plot = self.chargePlot.plot(pen=mkPen('b',width=1), symbol='o')
+		self.legend = pyqtgraph.LegendItem()
+		self.legend.setParentItem(self.plot)
 		self.plot.setData(x=self.ophirmean,
 						  y=self.wcmmean,
 						  top=self.ophirstderr,

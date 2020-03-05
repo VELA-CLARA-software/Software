@@ -2,7 +2,6 @@ from controllers.pil_handler_base import pil_handler_base
 import data.charge_measurement_data_base as dat
 import numpy
 import datetime
-import epics
 import time
 import requests
 
@@ -18,16 +17,16 @@ class pil_handler(pil_handler_base):
         self.hwp_get_pv_name = "EBT-LAS-OPT-HWP-2:ROT:RPOS"
 
     def set_laser_energy_range(self, value):
-        epics.caput(self.laser_energy_start_stop_pv, 0)
-        epics.caput(self.laser_energy_range_pv, value)
-        epics.caput(self.laser_energy_start_stop_pv, 1)
+        pil_handler_base.las_em_control.setStop()
+        pil_handler_base.las_em_control.setRange(value)
+        pil_handler_base.las_em_control.setStart()
         return value
 
     def get_laser_energy_overrange(self):
-        return epics.caget(self.laser_energy_overrange_pv)
+        return pil_handler_base.las_em_control.getOverRange()
 
     def get_laser_energy_range(self):
-        self.value = epics.caget(self.laser_energy_range_pv)
+        self.value = pil_handler_base.las_em_control.getRange()
         return self.value
 
     def set_pil_buffer(self,value):
@@ -36,9 +35,9 @@ class pil_handler(pil_handler_base):
         # pil_handler_base.logger.message('setting PIL buffer = ' + str(value), True)
 
     def set_hwp(self,value):
-        epics.caput(self.hwp_pv_name, value)
-        if value - 0.5 < epics.caget(self.hwp_get_pv_name) < value + 0.5:
-            time.sleep(2)
+        pil_handler_base.hwp_control.setHWP(value)
+        if value - 0.1 < pil_handler_base.hwp_control.getHWPRead() < value + 0.1:
+            time.sleep(0.2)
 
     def set_sa1(self,pv,value):
         pass

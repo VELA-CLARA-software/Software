@@ -143,7 +143,7 @@ class config_reader(object):
         return r
 
     def pil_parameter(self):
-        string_param = ['PIL_NAME']
+        string_param = ['PIL_NAME','LAS_EM_NAME','HWP_NAME']
         area_param = ['PIL_AREA']
         mode_param = ['PIL_MODE']
         int_param = ['PIL_CHECK_TIME']

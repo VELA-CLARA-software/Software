@@ -1,18 +1,11 @@
 import os
 import sys, os
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-dir_path = os.path.dirname(os.path.realpath(__file__))
-
-parent_dir_path = os.path.abspath(os.path.join(dir_path, os.pardir))
-
-sys.path.insert(0, parent_dir_path)
 sys.path.append(os.path.join(sys.path[0],'base'))
 sys.path.append(os.path.join(sys.path[0],'controllers'))
 sys.path.append(os.path.join(sys.path[0],'data'))
 sys.path.append(os.path.join(sys.path[0],'data_monitors'))
 sys.path.append(os.path.join(sys.path[0],'gui'))
 sys.path.append(os.path.join(sys.path[0],'logs'))
-sys.path.append(dir_path)
 # if os.environ['COMPUTERNAME'] == "ASTECDELL10":
 # 	print 'port'
 # 	sys.path.append(os.getcwd())
