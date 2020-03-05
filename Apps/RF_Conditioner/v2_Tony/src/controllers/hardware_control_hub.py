@@ -111,8 +111,6 @@ class hardware_control_hub(object):
         self.config_data = self.config.raw_config_data
         self.logger = rf_conditioning_logger.rf_conditioning_logger()
 
-
-
     def start_up(self):
         """
         This NEEDS to be a seperate function. Many classes create one of these objects but the

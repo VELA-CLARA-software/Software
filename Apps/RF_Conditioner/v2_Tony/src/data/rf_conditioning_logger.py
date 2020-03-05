@@ -127,6 +127,22 @@ class rf_conditioning_logger(logger):
                       ' starting monitoring, update time = ' + str(
                           self.log_config['AMP_PWR_LOG_TIME'])])
 
+    # START##########################################################################################
+    #TODO AJG: rewrite 'start_data_logging' function and replace:
+    # ***This is probaly referring to 'log_config' function defined below***
+    # self.log_config['DATA_LOG_TIME'])]) with self.ALL_config['DATA_LOG_TIME'])]) and
+    # self.log_config['AMP_PWR_LOG_TIME'])]) with self.ALL_config['AMP_PWR_LOG_TIME'])])
+
+    def start_data_logging_ALL(self):
+        self.header(self.my_name + ' start_data_logging')
+        self.message(['data_log path = ' + self.data_path,
+                      ' starting monitoring, update time = ' + str(
+                          self.ALL_config['DATA_LOG_TIME'])])
+        self.message(['AMP_POWER_LOG  path = ' + self.amp_pwr_path,
+                      ' starting monitoring, update time = ' + str(
+                          self.ALL_config['AMP_PWR_LOG_TIME'])])
+
+    # END###########################################################################################
 
     def num(self, s):
         try:

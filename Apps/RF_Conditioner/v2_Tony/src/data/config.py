@@ -135,16 +135,16 @@ class config(object):
         config.monitor_config = self.split_raw_config(config.gmonitor_keywords)
 
         #START##########################################################################################
-        # TODO AJG: 
+        # TODO AJG:
 
-        config.ALL = self.raw_config(config.keywords_RAW)
+        config.ALL_Config = self.raw_config(config.keywords_RAW)
         #END###########################################################################################
 
         # run final sanity checks and return result
         return self.sanity_checks()
 
     #START##########################################################################################
-    # TODO AJG:
+    # TODO AJG: Probaly don't need this as 'config.raw_config_data[word]' already exists!
 
     def raw_config(self, keywords):
         '''

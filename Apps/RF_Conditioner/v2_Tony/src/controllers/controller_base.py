@@ -123,6 +123,35 @@ class controller_base(base):
 		else:
 			base.logger.message('start_vac_valve_control failed to create vac-valve object', True)
 
+	# START##########################################################################################
+	# TODO AJG: Redefine 'start_vac_valve_control' function with 'start_vac_valve_control_ALL'
+	#  replacing 'a = base.config.vac_valve_config['VAC_VALVE_AREA']# MAGIC_STRING'
+	#  with a = base.config.ALL_config['VAC_VALVE_AREA']# MAGIC_STRING
+	#  and base.config.vac_valve_config['VAC_VALVE_AREA']) + ' object', True)
+	#  with base.config.ALL_config['VAC_VALVE_AREA']) + ' object', True)
+
+	def start_vac_valve_control_ALL(self):
+		'''Creates the requested Vac Valve control object '''
+		# if the vac valve area is specified in the config file ...
+		try:
+			a = base.config.ALL_config['VAC_VALVE_AREA']# MAGIC_STRING
+		except:
+			a = MACHINE_AREA.UNKNOWN_AREA
+		# create the desired vac-valve controller
+		if a == MACHINE_AREA.ALL_VELA_CLARA:
+			base.valve_control = base.valve_init.physical_Vac_Valve_Controller()
+		elif a == MACHINE_AREA.CLARA_PH1:
+			base.valve_control = base.valve_init.physical_CLARA_PH1_Vac_Valve_Controller()
+		# sanity check
+		if base.valve_control is not None:
+			base.logger.message('start_vac_valve_control created ' + str(
+					base.config.ALL_config['VAC_VALVE_AREA']) + ' object', True)
+		else:
+			base.logger.message('start_vac_valve_control failed to create vac-valve object', True)
+
+
+	# END###########################################################################################
+
 	def start_mod_control(self):
 		'''Creates the requested Modulatro Control object '''
 		if self.is_gun_type(base.llrf_type):
