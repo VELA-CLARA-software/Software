@@ -5,8 +5,8 @@ from data.charge_measurement_data import charge_measurement_data
 import sys, os
 sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\stage\\Python3_x64')
 #import VELA_CLARA_enums
-#import VELA_CLARA_PILaser_Control
-import VELA_CLARA_Magnet_Control
+import CATAP
+#import VELA_CLARA_Magnet_Control
 import VELA_CLARA_LLRF_Control
 
 class base(object):
@@ -22,9 +22,20 @@ class base(object):
     data.logger = logger
     config.logger = logger
     # init LLRF Hardware Controllers
+
+    hardware_factory = CATAP.HardwareFactory(CATAP.STATE.PHYSICAL)
+
     pil_cont = 1#VELA_CLARA_PILaser_Control
     pil_init = 1#VELA_CLARA_PILaser_Control.init()
     #pil_init.setVerbose()
+
+    _pil_factory = None
+    _pilFactoryObj = None
+
+    _hwp_control = None
+    _hwpObj = None
+    _las_em_control = None
+    _lasEMObj = None
 
     _pil_control = None
     _pilObj = None
@@ -38,9 +49,9 @@ class base(object):
     _llrfObj = None
     _llrf_handler = None
 
-    mag_cont = VELA_CLARA_Magnet_Control
-    mag_init = VELA_CLARA_Magnet_Control.init()
-    mag_init.setVerbose()
+    mag_cont = 1#VELA_CLARA_Magnet_Control
+    mag_init = 1#VELA_CLARA_Magnet_Control.init()
+    #mag_init.setVerbose()
 
     _mag_control = None
     _magObj = None
@@ -48,6 +59,42 @@ class base(object):
 
     def __init__(self):
         pass
+
+    @property
+    def pil_factory(self):
+        return base._pil_factory
+
+    @pil_factory.setter
+    def pil_factory(self, value):
+        base._pil_factory = value
+
+    @property
+    def pilFactoryObj(self):
+        return base._pilFactoryObj
+
+    @property
+    def hwp_control(self):
+        return base._hwp_control
+
+    @hwp_control.setter
+    def hwp_control(self, value):
+        base._hwp_control = value
+
+    @property
+    def hwpObj(self):
+        return base._hwpObj
+
+    @property
+    def las_em_control(self):
+        return base._las_em_control
+
+    @las_em_control.setter
+    def las_em_control(self, value):
+        base._las_em_control = value
+
+    @property
+    def lasEMObj(self):
+        return base._lasEMObj
 
     @property
     def pil_control(self):

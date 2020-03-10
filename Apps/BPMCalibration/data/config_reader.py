@@ -57,7 +57,7 @@ class config_reader(object):
             content = [x.split(self.equals) for x in content]
             # select non-empty pairs
             content = [s for s in content if s[0] and s[1]]
-            print content
+            print(content)
             [config_reader.config.update({x[0]: x[1]}) for x in content]
         # try:
         #     config_reader.machine_mode = self.get_machine_mode(config_reader.config['MACHINE_MODE'])

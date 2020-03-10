@@ -1,5 +1,5 @@
-from PyQt4.QtCore import QTimer
-from PyQt4.QtCore import QObject
+from PyQt5.QtCore import QTimer
+from PyQt5.QtCore import QObject
 import datetime
 import numpy as np
 import matplotlib.pyplot as plt
@@ -147,8 +147,8 @@ class bpm_calibrate_data_base(QObject):
     dummy_dbl = -999.0
     dummy_str = "dummy_str"
     dummy_int = int(-999)
-    dummy_long = long(-999)
-    [values.update({x: 0}) for x in all_value_keys]
+    dummy_long = int(-999)
+    #[values.update({x: 0}) for x in all_value_keys]
     values[time_stamp] = dummy_dbl
     values[calibration_type] = dummy_str
     values[bunch_charge] = dummy_dbl + 1

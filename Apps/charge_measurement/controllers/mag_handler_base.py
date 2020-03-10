@@ -10,6 +10,6 @@ class mag_handler_base(base):
 		#base.__init__(self)
 		#self.num_buffer_traces = 40
 
-		base.config.mag_config = base.config.bpm_config
+		base.config.mag_config = base.config.mag_config
 
 		self.mag_data_values_dict = {}

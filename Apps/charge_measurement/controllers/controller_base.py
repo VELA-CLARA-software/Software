@@ -1,9 +1,11 @@
-from VELA_CLARA_LLRF_Control import MACHINE_MODE,MACHINE_AREA,LLRF_TYPE
+import sys, os
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from data.config_reader import config_reader
 from data.data_logger import data_logger
-import controllers.pil_handler
-import controllers.llrf_handler
-import controllers.mag_handler
+from VELA_CLARA_LLRF_Control import MACHINE_MODE,MACHINE_AREA,LLRF_TYPE
+from controllers.pil_handler import pil_handler
+from controllers.llrf_handler import llrf_handler
+from controllers.mag_handler import mag_handler
 import datetime
 import data.charge_measurement_data_base as dat
 from data_monitors.data_monitoring import data_monitoring
@@ -69,43 +71,46 @@ class controller_base(base):
 		# if a is not MACHINE_AREA.UNKNOWN_AREA:
 		# base.pil_control = base.pil_init.getPILaserController(a)
 		# base.scope_control = base.scope_init.physical_VELA_INJ_Scope_Controller()
+		base.pil_factory = base.hardware_factory.getLaserFactory()
+		base.hwp_control = base.pil_factory.getLaser(base.config.pil_config['HWP_NAME'])
+		base.las_em_control = base.pil_factory.getLaser(base.config.pil_config['LAS_EM_NAME'])
 		base.logger.message('start_pil_control created PIL object', True)
 		base.logger.message('Monitoring PIL', True)
 		# base.config.charge_config['CHARGE_NAME'] = self.get_charge_names()
+		controller_base.pil_handler = pil_handler()
 
 	def start_llrf_control(self):
 		try:
 			a = base.config.llrf_config['LLRF_TYPE']  # MAGIC_STRING
 		except:
-			a = LLRF_TYPE.UNKNOWN_AREA
-		if a is not MACHINE_AREA.UNKNOWN_TYPE:
+			a = LLRF_TYPE.UNKNOWN_TYPE
+		if a is not MACHINE_AREA.UNKNOWN_AREA:
 			b = base.config.llrf_config['MACHINE_MODE']
-			base.llrf_control = base.llrf_init.getLLRFController(b, a)
-			# base.bpm_control = base.bpm_init.virtual_CLARA_PH1_BPM_Controller()
-			base.logger.message('start_llrf_control created ' + str(base.config.llrf_config['LLRF_AREA']) + ' object',
+			base.llrf_control = base.llrf_init.getLLRFController(MACHINE_MODE.PHYSICAL, a)
+			base.logger.message('start_llrf_control created ' + str(base.config.llrf_config['LLRF_TYPE']) + ' object',
 								True)
-			base.logger.message('Monitoring LLRF: ' + ' '.join(self.get_llrf_names()), True)
-			base.config.llrf_config['LLRF_NAME'] = self.get_llrf_names()
+			base.data.values[dat.llrf_object]["CLARA_LRRG"] = base.llrf_control.getLLRFObjConstRef()
+			base.logger.message('Monitoring LLRF', True)
+			base.config.llrf_config['LLRF_NAME'] = base.data.values[dat.llrf_object]["CLARA_LRRG"].name
 			base.data.values[dat.machine_mode] = 'physical'
-			controller_base.llrf_handler = llrf_handler.llrf_handler()
+			controller_base.llrf_handler = llrf_handler()
 		else:
 			base.logger.message('start_llrf_control UNKNOWN_MACHINE area cannot create llrf object', True)
 
 	def start_mag_control(self):
 		try:
-			a = base.config.mag_config['MAG_AREA']# MAGIC_STRING
+			a = base.config.mag_config['MACHINE_AREA']# MAGIC_STRING
 		except:
 			a = MACHINE_AREA.UNKNOWN_AREA
 		if a is not MACHINE_AREA.UNKNOWN_AREA:
-			b = base.config.mag_config['LLRF_MODE']
-			base.mag_control = base.mag_init.getMagnetController(b,a)
-			# base.bpm_control = base.bpm_init.virtual_CLARA_PH1_BPM_Controller()
-			base.logger.message('start_mag_control created ' + str(base.config.mag_config['MAG_AREA']) + ' object', True)
-			base.logger.message('Monitoring magnets: ' + ' '.join(self.get_mag_names()), True)
-			base.config.mag_config['SOL_NAME'] = self.get_mag_names()
-			base.config.mag_config['BSOL_NAME'] = self.get_mag_names()
+			b = base.config.mag_config['MACHINE_MODE']
+			#base.mag_control = base.mag_init.getMagnetController(b,a)
+			base.logger.message('start_mag_control created ' + str(base.config.mag_config['MACHINE_AREA']) + ' object', True)
+			#base.logger.message('Monitoring magnets: ' + ' '.join(self.get_mag_names()), True)
+			#base.config.mag_config['SOL_NAME'] = self.get_mag_names()
+			#base.config.mag_config['BSOL_NAME'] = self.get_mag_names()
 			base.data.values[dat.machine_mode] = 'physical'
-			controller_base.mag_handler = mag_handler.mag_handler()
+			controller_base.mag_handler = mag_handler()
 		else:
 			base.logger.message('start_mag_control UNKNOWN_MACHINE area cannot create mag object', True)
 

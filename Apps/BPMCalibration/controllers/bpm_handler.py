@@ -1,4 +1,4 @@
-from bpm_handler_base import bpm_handler_base
+from controllers.bpm_handler_base import bpm_handler_base
 import data.bpm_calibrate_data_base as dat
 import numpy
 
@@ -70,8 +70,8 @@ class bpm_handler(bpm_handler_base):
                                                                                                       dat.bpm_raw_data_mean_v21] +
                                                                                                                     bpm_handler_base.data.values[
                                                                                                       dat.bpm_raw_data_mean_v22]) / 2
-            print bpm_handler_base.data.values[dat.bpm_v11_v12_sum][bpm_handler_base.data.values[dat.set_sa1_current]]
-            print bpm_handler_base.data.values[dat.bpm_v21_v22_sum][bpm_handler_base.data.values[dat.set_sa2_current]]
+            print(bpm_handler_base.data.values[dat.bpm_v11_v12_sum][bpm_handler_base.data.values[dat.set_sa1_current]])
+            print(bpm_handler_base.data.values[dat.bpm_v21_v22_sum][bpm_handler_base.data.values[dat.set_sa2_current]])
 
     def scan_dly1(self, dly_1):
         self.set_dly_1(bpm_handler_base.data.values[dat.bpm_name],dly_1)
@@ -105,14 +105,14 @@ class bpm_handler(bpm_handler_base):
         bpm_handler_base.data.values[dat.dv2_dly1][dly_1] = numpy.mean(bpm_handler_base.data.values[dat.bpm_u12])
         bpm_handler_base.data.values[dat.dv1_dly2][dly_1] = numpy.mean(bpm_handler_base.data.values[dat.bpm_u21])
         bpm_handler_base.data.values[dat.dv2_dly2][dly_1] = numpy.mean(bpm_handler_base.data.values[dat.bpm_u22])
-        print bpm_handler_base.data.values[dat.dv1_dly1][dly_1]
-        print bpm_handler_base.data.values[dat.dv1_dly2][dly_1]
-        print bpm_handler_base.data.values[dat.dv2_dly1][dly_1]
-        print bpm_handler_base.data.values[dat.dv2_dly2][dly_1]
+        print(bpm_handler_base.data.values[dat.dv1_dly1][dly_1])
+        print(bpm_handler_base.data.values[dat.dv1_dly2][dly_1])
+        print(bpm_handler_base.data.values[dat.dv2_dly1][dly_1])
+        print(bpm_handler_base.data.values[dat.dv2_dly2][dly_1])
 
     def find_min_dly_1(self):
-        print bpm_handler_base.data.values[dat.dv1_dly1].values()
-        print bpm_handler_base.data.values[dat.dv2_dly1].values()
+        print(bpm_handler_base.data.values[dat.dv1_dly1].values())
+        print(bpm_handler_base.data.values[dat.dv2_dly1].values())
         self.x1 = bpm_handler_base.data.values[dat.dv1_dly1].values()
         self.x2 = bpm_handler_base.data.values[dat.dv2_dly1].values()
         self.minval1 = min(self.x1)
@@ -138,8 +138,8 @@ class bpm_handler(bpm_handler_base):
                 numpy.mean(bpm_handler_base.data.values[dat.bpm_u11]) + numpy.mean(bpm_handler_base.data.values[dat.bpm_u12]))
 
     def find_min_dly_2(self):
-        print bpm_handler_base.data.values[dat.dv1_dly2].values()
-        print bpm_handler_base.data.values[dat.dv2_dly2].values()
+        print(bpm_handler_base.data.values[dat.dv1_dly2].values())
+        print(bpm_handler_base.data.values[dat.dv2_dly2].values())
         self.x1 = bpm_handler_base.data.values[dat.dv1_dly2].values()
         self.x2 = bpm_handler_base.data.values[dat.dv2_dly2].values()
         self.minval1 = min(self.x1)

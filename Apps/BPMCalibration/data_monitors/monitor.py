@@ -1,5 +1,5 @@
-from PyQt4.QtCore import QTimer
-from PyQt4.QtCore import QObject
+from PyQt5.QtCore import QTimer
+from PyQt5.QtCore import QObject
 import numbers
 from base.base import base
 

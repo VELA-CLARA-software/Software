@@ -6,7 +6,7 @@ from gui.gui_mainwindow import Ui_MainWindow
 import data.charge_measurement_data_base as dat
 from pyqtgraph import mkPen
 from base.base import base
-import numpy as np
+import numpy
 import pyqtgraph
 
 class charge_measurement_gui(QMainWindow, Ui_MainWindow, base):
@@ -21,6 +21,7 @@ class charge_measurement_gui(QMainWindow, Ui_MainWindow, base):
 	set_ophir_end_set = False
 	set_ophir_step_set = False
 	num_shots_set = False
+	num_steps_set = False
 	# constant colors
 	good = open = trig = 'green'
 	bad = error = closed = 'red'
@@ -50,13 +51,12 @@ class charge_measurement_gui(QMainWindow, Ui_MainWindow, base):
 		# self.data = base.data
 #		self.add_charge_name()
 		# CONNECT BUTTONS TO FUNCTIONS
-		# self.scanButton.clicked.connect(self.handle_scan_button)
-		# self.attenuationButton.toggled.connect(lambda: self.handle_measure_type(self.attenuationButton))
-		# self.delayButton.toggled.connect(lambda: self.handle_measure_type(self.delayButton))
+		self.scanButton.clicked.connect(self.handle_scan_button)
 		# # widgets are held in dict, with same keys as data
-		# self.init_widget_dict(base.data)
+		self.init_widget_dict(base.data)
 		# # the clipboard has a string version of data
-		# self.clip_vals = base.data.values.copy()
+		self.clip_vals = base.data.values.copy()
+		self.data.values[dat.progress_bar]['scan_progress'] = self.progressBar
 		# # init to paused
 		# update timer
 		# self.timer = QTimer()
@@ -79,7 +79,7 @@ class charge_measurement_gui(QMainWindow, Ui_MainWindow, base):
 		self.widget[dat.bunch_charge] = self.bunchChargeOutputWidget
 
 	def update_gui(self):
-		for key, val in self.widget.iteritems():
+		for key, val in self.widget.items():
 			if self.value_is_new(key, base.data.values[key]):
 				self.update_widget(key, base.data.values[key], val)
 		if self.data.values[dat.plots_done] and not self.data.values[dat.values_saved]:
@@ -121,7 +121,7 @@ class charge_measurement_gui(QMainWindow, Ui_MainWindow, base):
 			self.clip_vals[key] = widget.text()
 		elif type(val) is bool:
 			self.set_locked_enabled(widget, val, key)
-		elif type(val) is np.float64:
+		elif type(val) is numpy.float64:
 			widget.setText('%.3E' % val)
 			self.clip_vals[key] = widget.text()
 		elif type(val) is str:
@@ -149,34 +149,43 @@ class charge_measurement_gui(QMainWindow, Ui_MainWindow, base):
 			return False
 
 	def get_start(self):
-		self.set_start_text = self.lowerBoundOutputWidget.toPlainText()
-		if len(self.set_start_text) > 0:
-			self.data.values[dat.set_start] = long(self.set_start_text)
-			self.set_start_set = True
-			return True
-		else:
-			self.set_start_set = False
-			return False
+		self.set_start_text = self.lowerBoundOutputWidget.value()
+		self.data.values[dat.set_hwp_start] = float(self.set_start_text)
+		self.set_start_set = True
+		return True
 
 	def get_end(self):
-		self.set_end_text = self.upperBoundOutputWidget.toPlainText()
-		if len(self.set_end_text) > 0:
-			self.data.values[dat.set_end] = long(self.set_end_text) + 1
-			self.set_end_set = True
-			return True
-		else:
-			self.set_end_set = False
-			return False
+		self.set_end_text = self.upperBoundOutputWidget.value()
+		self.data.values[dat.set_hwp_end] = float(self.set_end_text)
+		self.set_end_set = True
+		return True
+
+	def get_num_steps(self):
+		self.num_steps_text = self.numStepsOutputWidget.value()
+		self.data.values[dat.num_steps] = int(self.num_steps_text)
+		self.num_steps_set = True
+		return True
 
 	def get_num_shots(self):
-		self.num_shots_text = self.numShotsOutputWidget.toPlainText()
-		if len(self.num_shots_text) > 0:
-			self.data.values[dat.num_shots] = int(self.num_shots_text)
-			self.num_shots_set = True
-			return True
-		else:
-			self.num_shots_set = False
-			return False
+		self.num_shots_text = self.numShotsOutputWidget.value()
+		print(self.num_shots_text)
+		self.data.values[dat.num_shots] = int(self.num_shots_text)
+		self.num_shots_set = True
+		return True
+
+	def get_off_crest_phase(self):
+		self.off_crest_phase_text = self.offCrestPhaseOutputWidget.value()
+		print(self.off_crest_phase_text)
+		self.data.values[dat.off_crest_phase] = int(self.off_crest_phase_text)
+		self.off_crest_phase_set = True
+		return True
+
+	def get_comments(self):
+		self.comments_text = self.newVals.toPlainText()
+		print(self.comments_text)
+		self.data.values[dat.comments] = str(self.comments_text)
+		self.comments_set = True
+		return True
 
 	def is_measure_type_set(self):
 		if self.data.values[dat.calibration_type] == 'attenuation':
@@ -187,86 +196,78 @@ class charge_measurement_gui(QMainWindow, Ui_MainWindow, base):
 			return False
 
 	def check_ready(self):
-		if self.get_bpm_name() and self.get_start() and self.get_end() and self.get_num_shots() and self.is_measure_type_set():
-			self.data.values[dat.all_values_set] = True
-			if self.data.values[dat.charge_status]:
-				self.data.values[dat.ready_to_go] = True
+		if self.get_start() and self.get_end() and self.get_num_shots() and self.get_num_steps() and self.get_off_crest_phase() and self.get_comments():
+		# 	base.logger.message('Starting scan', True)
+		# 	self.data.values[dat.all_values_set] = True
+		# 	self.data.values[dat.charge_status] = True
+		# 	if self.data.values[dat.charge_status]:
+			self.data.values[dat.ready_to_go] = True
 
 	# button functions
 	def handle_scan_button(self):
 		self.check_ready()
+		self.progressBar.reset
 		self.data.values[dat.values_saved] = False
 		if self.data.values[dat.ready_to_go]:
-			self.calibrateButton.setEnabled(False)
+			self.scanButton.setEnabled(False)
 			self.data.values[dat.plots_done] = False
-			base.logger.message('Starting scan', True)
 			self.messageLabel.setText('Starting scan')
+			base.logger.message('Starting scan', True)
 		else:
 			base.logger.message('NOT ready to go, is everything set?', True)
 			self.messageLabel.setText('WARNING: NOT ready to go, is everything set?')
 
-	def handle_measure_type(self, b):
-		if b.text() == "Attenuation":
-			if b.isChecked() == True:
-				self.lowerBoundOutputWidget.setPlainText("2")
-				self.upperBoundOutputWidget.setPlainText("20")
-				self.data.values[dat.calibration_type] = 'attenuation'
-		elif b.text() == "Delay":
-			if b.isChecked() == True:
-				self.lowerBoundOutputWidget.setPlainText("1")
-				self.upperBoundOutputWidget.setPlainText("255")
-				self.data.values[dat.calibration_type] = 'delay'
+	def update_plot(self):
+		self.messageLabel.setText('Scanning')
+		self.chargePlot.clear()
+		self.ophirmean = []
+		self.wcmmean = []
+		self.ophirstderr = []
+		self.wcmstderr = []
+		for j, k in zip(self.data.values[dat.ophir_values], self.data.values[dat.charge_values]):
+			self.ophirmean.append(numpy.mean(self.data.values[dat.ophir_values][j]))
+			self.wcmmean.append(numpy.mean(self.data.values[dat.charge_values][k]))
+			self.ophirstderr.append(numpy.std(self.data.values[dat.ophir_values][j])/(500*numpy.sqrt(len(self.data.values[dat.ophir_values][j]))))
+			self.wcmstderr.append(numpy.std(self.data.values[dat.charge_values][k])/(500*numpy.sqrt(len(self.data.values[dat.charge_values][j]))))
+		self.vbx = self.chargePlot.vb
+		self.vbx.setYRange(min(self.wcmmean)-10,max(self.wcmmean)+10)
+		self.plot = self.chargePlot.plot(pen=mkPen('b',width=1), symbol='o')
+		self.legend = pyqtgraph.LegendItem()
+		self.legend.setParentItem(self.plot)
+		self.plot.setData(x=self.ophirmean,
+						  y=self.wcmmean,
+						  top=self.ophirstderr,
+						  bottom=self.ophirstderr,
+						  left=self.wcmstderr,
+						  height=self.ophirstderr
+						  )
 
-	def plot_bpm_vs_sa(self):
+	def plot_wcm_vs_ophir(self):
 		self.messageLabel.setText('Scan complete')
-		self.bpmxPlot.clear()
-		self.bpmyPlot.clear()
-		self.vbx = self.bpmxPlot.vb
-		self.vbx.setYRange(min(self.data.values[dat.bpm_v11_v12_sum].values()),max(self.data.values[dat.bpm_v11_v12_sum].values()))
-		self.xplot = self.bpmxPlot.plot(pen=mkPen('b',width=3), symbol='o')
-		self.xplot.setData(range(self.data.values[dat.set_start],self.data.values[dat.set_end]),
-						   self.data.values[dat.bpm_v11_v12_sum].values())
-		self.vby = self.bpmyPlot.vb
-		self.vby.setYRange(min(self.data.values[dat.bpm_v21_v22_sum].values()),max(self.data.values[dat.bpm_v21_v22_sum].values()))
-		self.yplot = self.bpmyPlot.plot(pen=mkPen('b', width=3), symbol='o')
-		self.yplot.setData(range(self.data.values[dat.set_start], self.data.values[dat.set_end]),
-						   self.data.values[dat.bpm_v21_v22_sum].values())
+		self.chargePlot.clear()
+		self.ophirmean = []
+		self.wcmmean = []
+		self.ophirstderr = []
+		self.wcmstderr = []
+		for j, k in zip(self.data.values[dat.ophir_values], self.data.values[dat.charge_values]):
+			self.ophirmean.append(numpy.mean(self.data.values[dat.ophir_values][j]))
+			self.wcmmean.append(numpy.mean(self.data.values[dat.charge_values][k]))
+			self.ophirstderr.append(numpy.std(self.data.values[dat.ophir_values][j]) / (
+						500 * numpy.sqrt(len(self.data.values[dat.ophir_values][j]))))
+			self.wcmstderr.append(numpy.std(self.data.values[dat.charge_values][k]) / (
+						500 * numpy.sqrt(len(self.data.values[dat.charge_values][j]))))
+		self.vbx = self.chargePlot.vb
+		self.vbx.setYRange(min(self.wcmmean)-10,max(self.wcmmean)+10)
+		self.plot = self.chargePlot.plot(pen=mkPen('b', width=1), symbol='o')
+		self.plot.setData(x=self.ophirmean,
+						  y=self.wcmmean,
+						  top=self.ophirstderr,
+						  bottom=self.ophirstderr,
+						  left=self.wcmstderr,
+						  height=self.ophirstderr
+						  )
 		self.data.values[dat.plots_done] = True
-
-	def plot_bpm_vs_sd(self):
+		self.scanButton.setEnabled(True)
+		self.data.values[dat.ready_to_go] = False
 		self.messageLabel.setText('Scan complete')
-		self.bpmxPlot.clear()
-		self.bpmyPlot.clear()
-		self.vbx = self.bpmxPlot.vb
-		if min(self.data.values[dat.dv1_dly1].values()) > min(self.data.values[dat.dv2_dly1].values()):
-			self.xMin = min(self.data.values[dat.dv2_dly1].values())
-		else:
-			self.xMin = min(self.data.values[dat.dv1_dly1].values())
-		if max(self.data.values[dat.dv1_dly1].values()) > max(self.data.values[dat.dv2_dly1].values()):
-			self.xMax = max(self.data.values[dat.dv1_dly1].values())
-		else:
-			self.xMax = max(self.data.values[dat.dv2_dly1].values())
-		self.vbx.setYRange(self.xMin,self.xMax)
-		self.xplot = self.bpmxPlot.plot(pen=mkPen('b', width=3), symbol='o')
-		self.xplot.setData(range(self.data.values[dat.set_start], self.data.values[dat.set_end]),
-						   self.data.values[dat.dv1_dly1].values())
-		self.xplot1 = self.bpmxPlot.plot(pen=mkPen('r', width=3), symbol='o')
-		self.xplot1.setData(range(self.data.values[dat.set_start], self.data.values[dat.set_end]),
-						   self.data.values[dat.dv2_dly1].values())
-		self.vby = self.bpmyPlot.vb
-		if min(self.data.values[dat.dv1_dly2].values()) > min(self.data.values[dat.dv2_dly2].values()):
-			self.yMin = min(self.data.values[dat.dv2_dly2].values())
-		else:
-			self.yMin = min(self.data.values[dat.dv1_dly2].values())
-		if max(self.data.values[dat.dv1_dly2].values()) > max(self.data.values[dat.dv2_dly2].values()):
-			self.yMax = max(self.data.values[dat.dv1_dly2].values())
-		else:
-			self.yMax = max(self.data.values[dat.dv2_dly2].values())
-		self.vby.setYRange(self.yMin,self.yMax)
-		self.yplot = self.bpmyPlot.plot(pen=mkPen('b', width=3), symbol='o')
-		self.yplot.setData(range(self.data.values[dat.set_start], self.data.values[dat.set_end]),
-						   self.data.values[dat.dv1_dly2].values())
-		self.yplot1 = self.bpmyPlot.plot(pen=mkPen('r', width=3), symbol='o')
-		self.yplot1.setData(range(self.data.values[dat.set_start], self.data.values[dat.set_end]),
-						   self.data.values[dat.dv2_dly2].values())
-		self.data.values[dat.plots_done] = True
+		return self.plot
