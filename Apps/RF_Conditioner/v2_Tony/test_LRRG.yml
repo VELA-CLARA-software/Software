@@ -359,15 +359,12 @@ KFPHA_PHASE_MASK_BY_POWER_TRACE:  false #
 KFPHA_PHASE_MASK_BY_POWER_LEVEL:  5000.0 # Watts, set the end of the phase mask to be at the index for this  (going from late to early in th epulse)
 
 
-
-
-
 ## output
 TEXT_LOG_FILENAME:  log.txt # general messages
 #LOG_DIRECTORY:  D:  \VELA\GIT Projects\Software\Apps\RF_Conditioner\logs_l01_test\
 ##LOG_DIRECTORY:   "C:  \Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\"; breakdown data
 ##LOG_DIRECTORY:   "D:  \VELA\GIT Projects\Software\Apps\RF_Conditioner\logs_clara_lrrg\"; breakdown data
-LOG_DIRECTORY: C:\Users\djs56\GitHub\Software\Apps\RF_Conditioner\v2\logs
+LOG_DIRECTORY: C:\Users\zup98752\PycharmProjects\Software\Apps\RF_Conditioner\v2_Tony\logs
 OUTSIDE_MASK_FORWARD_FILENAME:  outside_forward_log
 OUTSIDE_MASK_REVERSE_FILENAME:  outside_reverse_log
 OUTSIDE_MASK_PROBE_FILENAME:  outside_probe_log;
@@ -387,6 +384,12 @@ VAC_SPIKE_DELTA:  0.000000004 # 4e-9
 # a lvel decay means wait until the desitred level is reached after an event, before setting the "vacuum_good" state
 # a timed decay will wait the set amount of tim ebefore setting "vacuum_good" 
 VAC_DECAY_MODE:  LEVEL
+# TODO AJG: Added VAC_ROLLING_SUM_NUM_SAMPLES below with :  10 as a guess
+VAC_ROLLING_SUM_NUM_SAMPLES:  10
+# TODO AJG: Added PULSE_LENGTH below with :  2.5 as a guess (not sure of units)
+PULSE_LENGTH: 2.5
+# TODO AJG: Added PULSE_LENGTH_ERROR below with :  0.1 as a guess (not sure of units)
+PULSE_LENGTH_ERROR:  0.1
 VAC_SPIKE_DECAY_LEVEL:  1.2 # float, the level is a factor applied to the previous mean value, above which the vac_alarm stays bad
 VAC_SPIKE_DECAY_TIME:  2000 # ms
 VAC_NUM_SAMPLES_TO_AVERAGE:  7 # integer, numer of samples over which to calcualte the rolling mean

@@ -371,7 +371,7 @@ TEXT_LOG_FILENAME:  log.txt # general messages
 #LOG_DIRECTORY:  D:  \VELA\GIT Projects\Software\Apps\RF_Conditioner\logs_l01_test\
 ##LOG_DIRECTORY:   "C:  \Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\"; breakdown data
 ##LOG_DIRECTORY:   "D:  \VELA\GIT Projects\Software\Apps\RF_Conditioner\logs_clara_lrrg\"; breakdown data
-LOG_DIRECTORY: C:\Users\djs56\GitHub\Software\Apps\RF_Conditioner\v2\logs
+LOG_DIRECTORY: C:\Users\zup98752\PycharmProjects\Software\Apps\RF_Conditioner\v2_Tony\logs
 OUTSIDE_MASK_FORWARD_FILENAME:  outside_forward_log
 OUTSIDE_MASK_REVERSE_FILENAME:  outside_reverse_log
 OUTSIDE_MASK_PROBE_FILENAME:  outside_probe_log;

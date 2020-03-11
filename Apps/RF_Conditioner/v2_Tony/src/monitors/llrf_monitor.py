@@ -304,7 +304,7 @@ class llrf_monitor(monitor):
     def get_mean_power(self,key,trace):
         """
         get the mean reading for trace-trace and append it to values dict with key=key
-        :param key: key fro values dictionary, where to put the data
+        :param key: key for values dictionary, where to put the data
         :param trace: trace identifier, which trace to get data for
         """
         v = self.llrf_obj[0].trace_data[trace].mean

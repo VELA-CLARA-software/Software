@@ -17,11 +17,11 @@ src.controllers.main_controller, got Config, starting Logging
 ****************************************************************************************************
 ****************************************** Configuration *******************************************
 ****************************************************************************************************
-config file = C:\Users\djs56\GitHub\Software\Apps\RF_Conditioner\v2\test_LRRG.yml
+config file = C:\Users\zup98752\PycharmProjects\Software\Apps\RF_Conditioner\v2_Tony\test_LRRG.yml
 dumping parsed config data to text log
-CONFIG_FILE: C:\Users\djs56\GitHub\Software\Apps\RF_Conditioner\v2\test_LRRG.yml,
+CONFIG_FILE: C:\Users\zup98752\PycharmProjects\Software\Apps\RF_Conditioner\v2_Tony\test_LRRG.yml,
 CFPOW_MASK_WINDOW_END: 302, LOG_DIRECTORY:
-C:\Users\djs56\GitHub\Software\Apps\RF_Conditioner\v2\logs, KRPOW_MASK_FLOOR: 0.0,
+C:\Users\zup98752\PycharmProjects\Software\Apps\RF_Conditioner\v2_Tony\logs, KRPOW_MASK_FLOOR: 0.0,
 CPPOW_MASK_WINDOW_END: 3.4, BREAKDOWN_TRACES: CAVITY_REVERSE_PHASE, KFPOW_MASK_SET_TYPE: TIME,
 CFPHA_MEAN_END: 0.0, KFPHA_MASK_LEVEL: 35, CPPHA_MASK_TYPE: ABSOLUTE, CAVITY_TEMPERATURE_PV: ['CLA-
 GUN-RF-LRRG-01:RT'], CRPHA_CHECK_STREAK: 2, VAC_SPIKE_DECAY_LEVEL: 1.2, VAC_SPIKE_DELTA: 4e-09,

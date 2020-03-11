@@ -294,6 +294,9 @@ class rf_conditioning_logger(logger):
             rcl._pulse_count_log_file = os.path.join(logger.working_directory, self.config_data[
                 config.PULSE_COUNT_BREAKDOWN_LOG_FILENAME])
             if not os.path.exists(rf_conditioning_logger._pulse_count_log_file):
+                print 'os.path = ', os.path
+                print 'sys.path = ', sys.path
+                print 'logger.working_directory = ', logger.working_directory
                 err = rcl._pulse_count_log_file
                 raise
             # Raise exception if KFPOW_AMPSP_RUNNING_STATS_LOG_FILENAME can't be found where

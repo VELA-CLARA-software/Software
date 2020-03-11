@@ -1,0 +1,27 @@
+05/03/2020
+
+pushd \\apclara1.dl.ac.uk\ControlRoomApps\Controllers\bin\Release
+
+c:\Python27\python.exe pllrf_test.py
+
+set these environment variables
+
+EPICS_CA_ADDR_LIST=192.168.83.255
+EPICS_CA_MAX_ARRAY_BYTES=100000000
+
+
+10/03/2020
+
+Hi Tony, these function should help you get the trace mean values:
+
+        double getCutMean(const std::string&name)const;
+        double getKlyFwdPwrCutMean()const;
+        double getKlyFwdPhaCutMean()const;
+        double getKlyRevPwrCutMean()const;
+        double getKlyRevPhaCutMean()const;
+        double getCavFwdPwrCutMean()const;
+        double getCavFwdPhaCutMean()const;
+        double getCavRevPwrCutMean()const;
+        double getCavRevPhaCutMean()const;
+        double getProbePwrCutMean()const;
+        double getProbePhaCutMean()const;
