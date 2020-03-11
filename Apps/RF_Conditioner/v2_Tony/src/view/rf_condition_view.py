@@ -164,6 +164,7 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         # Call various update functions for each widget / group of widgets
         self.update_mean_power_widgets()
 
+
         # vac level, and can we ramp due to vac
         self.update_vac_level()
 
@@ -204,7 +205,10 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         # technically, these are defined at run time, as there cna be more than one PV to record,
         # this is a bit of a hack to get some numbers into the GUI
         self.cav_temp_outputwidget.setText('{:0=4.2f}'.format(self.values[
-                                                                  self.data.cav_temp_gui]))  # We
+                                                                  self.data.cav_temp_gui]))
+        #print 'self.values[ self.data.cav_temp_gui] = ', self.values[ self.data.cav_temp_gui]
+
+        # We
         # don't have a a water anymore ... .  # self.water_temp_outputwidget.setText(  #     '{
         # :0=4.2f}'.format(self.values[self.data.water_temp_gui]))
 
@@ -331,8 +335,17 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         self.set_power_text(self.fwd_kly_power_outputwidget, self.values[self.data.fwd_kly_pwr])
         self.set_power_text(self.rev_kly_power_outputwidget, self.values[self.data.rev_kly_pwr])
 
+        #TODO AJG: try this as text is not setting otherwise:
+        #self.fwd_kly_power_outputwidget.setText('{:0=4.2f}'.format(self.values[self.data.fwd_kly_pwr] * 0.000001))
+        #print 'self.values[self.data.fwd_kly_pwr] = ', self.values[self.data.fwd_kly_pwr]
+
+        #TODO AJG: The problem here was that the Main Panel on the GUI was updating but only displaying the 1st two decimal places
     def set_power_text(self, widget, value):
-        widget.setText('{:0=4.2f} e6'.format(value * 0.000001))
+        #widget.setText('{:0=4.2f} e6'.format(value * 0.000001))
+        widget.setText('{:0=4.2f}'.format(value))
+
+
+
 
     def init_widget_dict(self):
         """
@@ -403,10 +416,73 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
                     print("Updating ", key, " with values = ", self.expert_values[key])
                     self.update_expert_widget(key=key, val=self.expert_values[key], widget=widget)
 
-    def update_expert_widget(self, key, val, widget):
+    #TODO AJG: added this function (copied from gui.conditioning.py)
+    def update_expert_values(self):
+        """
+        update the exper_values panels
+        :return: none
+        """
+        # loop over each widghet in
+        for key, value in self.expert_widget.iteritems():
+            #print 'expert_widget:'
+            #print key, value
+            self.update_expert_widget(key, self.expert_values[key], value)
 
+    def update_expert_widget(self, key, val, widget):
+        #print 'Button clicked'
         if isinstance(widget, QLineEdit):
             widget.setText(str(val))
+        #TODO AJG: added the following 3 conditions:
+        if isinstance(widget, QComboBox):
+            pass
+        if key == 'mean_start_kr_pha':
+            pass
+        else:
+            widget.setText(str(val))
+            # TODO AJG: need to loop this... just testing connections for now + not assigned properly:
+            self.expert_widget[self.data.mean_start_kf_pow].setText(str(self.config.raw_config_data['KFPOW_MEAN_START']))
+            self.expert_widget[self.data.mean_start_kr_pow].setText(str(self.config.raw_config_data['KRPOW_MEAN_START']))
+            self.expert_widget[self.data.mean_start_cf_pow].setText(str(self.config.raw_config_data['CFPOW_MEAN_START']))
+            self.expert_widget[self.data.mean_start_cr_pow].setText(str(self.config.raw_config_data['CRPOW_MEAN_START']))
+            self.expert_widget[self.data.mean_start_cp_pow].setText(str(self.config.raw_config_data['CPPOW_MEAN_START']))
+            self.expert_widget[self.data.mean_start_kf_pha].setText(str(self.config.raw_config_data['KFPHA_MEAN_START']))
+            self.expert_widget[self.data.mean_start_kr_pha].setText(str(self.config.raw_config_data['KFPOW_MEAN_START']))
+            self.expert_widget[self.data.mean_start_cf_pha].setText(str(self.config.raw_config_data['KFPOW_MEAN_START']))
+            self.expert_widget[self.data.mean_start_cr_pha].setText(str(self.config.raw_config_data['KFPOW_MEAN_START']))
+            self.expert_widget[self.data.mean_start_cp_pha].setText(str(self.config.raw_config_data['KFPOW_MEAN_START']))
+            self.expert_widget[self.data.mean_end_kf_pow].setText(str(self.config.raw_config_data['KFPOW_MEAN_END']))
+            self.expert_widget[self.data.mean_end_kr_pow].setText(str(self.config.raw_config_data['KRPOW_MEAN_END']))
+            self.expert_widget[self.data.mean_end_cf_pow].setText(str(self.config.raw_config_data['CFPOW_MEAN_END']))
+            self.expert_widget[self.data.mean_end_cr_pow].setText(str(self.config.raw_config_data['CRPOW_MEAN_START']))
+            self.expert_widget[self.data.mean_end_cp_pow].setText(str(self.config.raw_config_data['KFPOW_MEAN_START']))
+            self.expert_widget[self.data.mean_end_kf_pha].setText(str(self.config.raw_config_data['KFPHA_MEAN_END']))
+            self.expert_widget[self.data.mean_end_kr_pha].setText(str(self.config.raw_config_data['KFPOW_MEAN_START']))
+            self.expert_widget[self.data.mean_end_cf_pha].setText(str(self.config.raw_config_data['KFPOW_MEAN_START']))
+            self.expert_widget[self.data.mean_end_cr_pha].setText(str(self.config.raw_config_data['KFPOW_MEAN_START']))
+            self.expert_widget[self.data.mean_end_cp_pha].setText(str(self.config.raw_config_data['KFPOW_MEAN_START']))
+            '''
+                KFPOW_MEAN_START = 'KFPOW_MEAN_START'
+            KFPOW_MEAN_END = 'KFPOW_MEAN_END'
+            KRPOW_MEAN_START = 'KRPOW_MEAN_START'
+            KRPOW_MEAN_END = 'KRPOW_MEAN_END'
+            KFPHA_MEAN_START = 'KFPHA_MEAN_START'
+            KFPHA_MEAN_END = 'KFPHA_MEAN_END'
+            KRPHA_MEAN_START = 'KRPHA_MEAN_START'
+            KRPHA_MEAN_END = 'KRPHA_MEAN_END'
+            CFPOW_MEAN_START = 'CFPOW_MEAN_START'
+            CFPOW_MEAN_END = 'CFPOW_MEAN_END'
+            CPPOW_MEAN_START = 'CPPOW_MEAN_START'
+            CPPOW_MEAN_END = 'CPPOW_MEAN_END'
+            CRPOW_MEAN_START = 'CRPOW_MEAN_START'
+            CRPOW_MEAN_END = 'CRPOW_MEAN_END'
+            CFPHA_MEAN_START = 'CFPHA_MEAN_START'
+            CFPHA_MEAN_END = 'CFPHA_MEAN_END'
+            CRPHA_MEAN_START = 'CRPHA_MEAN_START'
+            CRPHA_MEAN_END = 'CRPHA_MEAN_END'
+            CPPHA_MEAN_START = 'CPPHA_MEAN_START'
+            CPPHA_MEAN_END = 'CPPHA_MEAN_END'
+            '''
+
 
         #
         # if key is self.data.is_breakdown_monitor_kf_pow:

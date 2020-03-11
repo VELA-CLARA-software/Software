@@ -237,6 +237,8 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
 	# main update gui function, loop over all widgets, and if values is new update gui with new value
 	def update_gui(self):
 		for key, val in self.widget.iteritems():
+			#if key == 'fwd_kly_pwr':
+			print key, val
 			if self.value_is_new(key, self.values[key]):
 				self.update_widget(key, self.values[key], val)
 
@@ -602,6 +604,8 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
 		"""
 		# loop over each widghet in
 		for key, value in self.expert_widget.iteritems():
+			print 'expert_widget:'
+			print key, value
 			self.update_expert_widget(key, self.expert_values[key], value )
 
 

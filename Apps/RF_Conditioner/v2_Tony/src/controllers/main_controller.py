@@ -165,6 +165,9 @@ class main_controller(object):
         self.monitor_hub.llrf_monitor.get_llrf_expert_values()
         # update the gui with the latest values
         self.view.update_expert_values_in_gui()
+        #TODO AJG: add ing this in to try to connect to GUI
+        #self.view.update_expert_values()
+
 
 
 
