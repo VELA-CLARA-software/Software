@@ -77,6 +77,8 @@ class controller_base(base):
 		base.logger.message('start_pil_control created PIL object', True)
 		base.logger.message('Monitoring PIL', True)
 		# base.config.charge_config['CHARGE_NAME'] = self.get_charge_names()
+		base.cam_control = base.cam_init.physical_CLARA_VC_Camera_Controller()
+		base.logger.message('start_cam_control created VC object', True)
 		controller_base.pil_handler = pil_handler()
 
 	def start_llrf_control(self):

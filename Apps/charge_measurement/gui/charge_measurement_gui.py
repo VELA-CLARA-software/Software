@@ -168,14 +168,12 @@ class charge_measurement_gui(QMainWindow, Ui_MainWindow, base):
 
 	def get_num_shots(self):
 		self.num_shots_text = self.numShotsOutputWidget.value()
-		print(self.num_shots_text)
 		self.data.values[dat.num_shots] = int(self.num_shots_text)
 		self.num_shots_set = True
 		return True
 
 	def get_off_crest_phase(self):
 		self.off_crest_phase_text = self.offCrestPhaseOutputWidget.value()
-		print(self.off_crest_phase_text)
 		self.data.values[dat.off_crest_phase] = int(self.off_crest_phase_text)
 		self.off_crest_phase_set = True
 		return True
@@ -206,16 +204,25 @@ class charge_measurement_gui(QMainWindow, Ui_MainWindow, base):
 	# button functions
 	def handle_scan_button(self):
 		self.check_ready()
-		self.progressBar.reset
+		self.progressBar.setValue(0)
 		self.data.values[dat.values_saved] = False
 		if self.data.values[dat.ready_to_go]:
-			self.scanButton.setEnabled(False)
+			self.scanButton.setText("Cancel")
 			self.data.values[dat.plots_done] = False
 			self.messageLabel.setText('Starting scan')
+			self.resultsLabel.setText("")
 			base.logger.message('Starting scan', True)
+		elif self.data.values[dat.scan_status] == 'scanning':
+			self.data.values[dat.cancel] = True
+			self.scanButton.setText("Scan laser attenuator")
+			self.plot.clear()
 		else:
 			base.logger.message('NOT ready to go, is everything set?', True)
 			self.messageLabel.setText('WARNING: NOT ready to go, is everything set?')
+
+	def set_results_label(self, fit, cross, qe):
+		self.resultsLabel.setText(
+			"fit = " + str(fit) + "x + " + str(cross) + "\n QE = " + str(qe) + " E-05")
 
 	def update_plot(self):
 		self.messageLabel.setText('Scanning')
@@ -270,4 +277,5 @@ class charge_measurement_gui(QMainWindow, Ui_MainWindow, base):
 		self.scanButton.setEnabled(True)
 		self.data.values[dat.ready_to_go] = False
 		self.messageLabel.setText('Scan complete')
+		self.scanButton.setText("Scan laser attenuator")
 		return self.plot

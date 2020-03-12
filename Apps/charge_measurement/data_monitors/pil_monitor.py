@@ -37,6 +37,7 @@ class pil_monitor(monitor):
         #     monitor.logger.message(self.my_name, ' STARTED running')
         #     self.set_good()
         # else:
+        monitor.cam_control.startAcquireAndAnalysis_VC()
         monitor.logger.message(self.my_name, ' running')
 
     def check_set_equals_read(self):
@@ -105,24 +106,10 @@ class pil_monitor(monitor):
         monitor.data.values[dat.vc_sig_x_pix_time_stamp][hwp] = self.vcsigxtimestamp
         monitor.data.values[dat.vc_sig_y_pix_time_stamp][hwp] = self.vcsigytimestamp
 
-    def check_sa_equals_ra(self):
-        r = False
-        # if (monitor.data.values[dat.get_ra1] == monitor.data.values[dat.
-        #         set_sa1_current]
-        #     and monitor.data.values[dat.get_ra2] == monitor.data.values[dat.
-        #                 set_sa2_current]):
-        #     r = True
-        # else:
-        #     # r = True
-        #     monitor.data.values[dat.set_sa1_current] = monitor.data.values[dat.set_sa1_current] + 1
-        #     monitor.data.values[dat.set_sa2_current] = monitor.data.values[dat.set_sa2_current] + 1
-        #     self.logger.message('SA1 ' + str(monitor.data.values[dat.
-        #                         set_sa1_current]) + ' != RA1 ' + str(monitor.data.values[
-        #                             dat.get_ra1]), True)
-        #     self.logger.message('or SA2 ' + str(monitor.data.values[dat.
-        #                         set_sa2_current]) + ' != RA2 ' + str(monitor.data.values[
-        #                             dat.get_ra2]), True)
-        return r
+    def save_vc_image(self, i):
+        monitor.cam_control.collectAndSave_VC(1)
+        monitor.data.values[dat.vc_image_name][i] = monitor.cam_control.getLatestFilename_VC()
+        monitor.data.values[dat.vc_image_directory][i] = monitor.cam_control.getLatestDirectory_VC()
 
     def update_bpm_delays(self):
         pass

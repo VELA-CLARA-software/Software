@@ -6,7 +6,7 @@ import sys, os
 sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\stage\\Python3_x64')
 #import VELA_CLARA_enums
 import CATAP
-#import VELA_CLARA_Magnet_Control
+import VELA_CLARA_Camera_Control
 import VELA_CLARA_LLRF_Control
 
 class base(object):
@@ -25,9 +25,13 @@ class base(object):
 
     hardware_factory = CATAP.HardwareFactory(CATAP.STATE.PHYSICAL)
 
-    pil_cont = 1#VELA_CLARA_PILaser_Control
-    pil_init = 1#VELA_CLARA_PILaser_Control.init()
-    #pil_init.setVerbose()
+    pil_cont = 1  # VELA_CLARA_PILaser_Control
+    pil_init = 1  # VELA_CLARA_PILaser_Control.init()
+    # pil_init.setVerbose()
+
+    cam_cont = VELA_CLARA_Camera_Control
+    cam_init = VELA_CLARA_Camera_Control.init()
+    cam_init.setVerbose()
 
     _pil_factory = None
     _pilFactoryObj = None
@@ -40,6 +44,10 @@ class base(object):
     _pil_control = None
     _pilObj = None
     _pil_handler = None
+
+    _cam_control = None
+    _camObj = None
+    _cam_handler = None
     #
     llrf_cont = VELA_CLARA_LLRF_Control
     llrf_init = VELA_CLARA_LLRF_Control.init()
@@ -101,7 +109,7 @@ class base(object):
         return base._pil_control
 
     @pil_control.setter
-    def pil_control(self,value):
+    def pil_control(self, value):
         base._pil_control = value
 
     @property
@@ -119,6 +127,30 @@ class base(object):
     @pil_handler.setter
     def pil_handler(self, value):
         base._pil_handler = value
+
+    @property
+    def cam_control(self):
+        return base._cam_control
+
+    @cam_control.setter
+    def cam_control(self, value):
+        base._cam_control = value
+
+    @property
+    def camObj(self):
+        return base._camObj
+
+    @camObj.setter
+    def camObj(self, value):
+        base._camObj = value
+
+    @property
+    def cam_handler(self):
+        return base._cam_handler
+
+    @cam_handler.setter
+    def cam_handler(self, value):
+        base._cam_handler = value
 
     @property
     def llrf_control(self):

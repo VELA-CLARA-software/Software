@@ -69,6 +69,22 @@ class llrf_monitor(monitor):
         monitor.data.values[dat.kly_sp_values][hwp] = self.klyspevent
         #self.off_crest_phase = epics.caget(self.gun_phase_pv) - monitor.data.values[dat.off_crest_phase]
         monitor.data.values[dat.off_crest_phase_dict][hwp] = monitor.data.values[dat.off_crest_phase]
+        monitor.data.values[dat.kly_fwd_pwr_traces][hwp] = monitor.llrf_control.getTraceDataBuffer(
+            monitor.config.llrf_config['TRACES_TO_SAVE'][0])
+        monitor.data.values[dat.kly_fwd_pha_traces][hwp] = monitor.llrf_control.getTraceDataBuffer(
+            monitor.config.llrf_config['TRACES_TO_SAVE'][1])
+        monitor.data.values[dat.gun_fwd_pwr_traces][hwp] = monitor.llrf_control.getTraceDataBuffer(
+            monitor.config.llrf_config['TRACES_TO_SAVE'][2])
+        monitor.data.values[dat.gun_fwd_pha_traces][hwp] = monitor.llrf_control.getTraceDataBuffer(
+            monitor.config.llrf_config['TRACES_TO_SAVE'][3])
+        monitor.data.values[dat.kly_fwd_pwr_trace_mean][hwp] = monitor.llrf_control.getKlyFwdPwrCutMean(
+            monitor.config.llrf_config['TRACES_TO_SAVE'][0])
+        monitor.data.values[dat.kly_fwd_pha_trace_mean][hwp] = monitor.llrf_control.getKlyFwdPhaCutMean(
+            monitor.config.llrf_config['TRACES_TO_SAVE'][1])
+        monitor.data.values[dat.gun_fwd_pwr_trace_mean][hwp] = monitor.llrf_control.getCavFwdPwrCutMean(
+            monitor.config.llrf_config['TRACES_TO_SAVE'][2])
+        monitor.data.values[dat.gun_fwd_pha_trace_mean][hwp] = monitor.llrf_control.getCavFwdPhaCutMean(
+            monitor.config.llrf_config['TRACES_TO_SAVE'][3])
 
     def check_llrf_is_monitoring(self):
         pass

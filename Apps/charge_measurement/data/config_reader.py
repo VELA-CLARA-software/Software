@@ -8,6 +8,7 @@ class config_reader(object):
     end_of_entry = ';'
     string_literal = '"'
     equals = '='
+    comma = ','
     # parsed config data
     config = {}
 
@@ -96,9 +97,14 @@ class config_reader(object):
     # //mfw Cancer below\\
     # //we must assume value type\\
     def get_param_dict(self, string_param=[], float_param=[], int_param=[], area_param=[], type_param=[], bool_param=[],
-                       monitor_param=[],channel_param=[],diag_param=[],mode_param=[]):
+                       monitor_param=[],channel_param=[],diag_param=[],mode_param=[],list_param=[]):
         r = {}
         for item in string_param:
+            try:
+                r.update({item: config_reader.config[item]})
+            except:
+                print(self.my_name, " FAILED to Find, ", item)
+        for item in list_param:
             try:
                 r.update({item: config_reader.config[item]})
             except:
@@ -154,11 +160,14 @@ class config_reader(object):
     def llrf_parameter(self):
         string_param = ['LLRF_NAME']
         area_param = ['LLRF_AREA']
-        int_param = ['LLRF_CHECK_TIME']
+        int_param = ['LLRF_CHECK_TIME','NUM_BUFFER_TRACES']
         mode_param = ['LLRF_MODE','MACHINE_MODE']
         type_param = ['LLRF_TYPE']
+        list_param = ['TRACES_TO_SAVE','MEAN_TRACES']
+        float_param = ['1_MEAN_START','1_MEAN_END','2_MEAN_START','2_MEAN_END','3_MEAN_START','3_MEAN_END','4_MEAN_START','4_MEAN_END']
         config_reader.llrf_config = self.get_param_dict(string_param=string_param, area_param=area_param,
-                                                        int_param=int_param, mode_param=mode_param, type_param=type_param)
+                                                        int_param=int_param, mode_param=mode_param, type_param=type_param,
+                                                        list_param=list_param, float_param=float_param)
         return config_reader.llrf_config
 
     def mag_parameter(self):
