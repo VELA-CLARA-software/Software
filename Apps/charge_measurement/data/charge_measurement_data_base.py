@@ -22,6 +22,8 @@ vc_sig_y_pix_time_stamp = 'vc_sig_y_pix_time_stamp'
 gun_fwd_pwr_time_stamp = 'gun_fwd_pwr_time_stamp'
 gun_fwd_pha_time_stamp = 'gun_fwd_pha_time_stamp'
 kly_fwd_pwr_time_stamp = 'kly_fwd_pwr_time_stamp'
+kly_fwd_pwr_trace_mean = 'gun_fwd_pwr_trace_mean'
+kly_fwd_pha_trace_mean = 'gun_fwd_pha_trace_mean'
 kly_sp_time_stamp = 'kly_sp_time_stamp'
 measurement_type = 'measurement_type'
 bunch_charge = 'bunch_charge'
@@ -51,6 +53,8 @@ gun_fwd_pwr_mean_values = 'gun_fwd_pwr_mean_values'
 gun_fwd_pha_mean_values = 'gun_fwd_pha_mean_values'
 gun_fwd_pwr_traces = 'gun_fwd_pwr_traces'
 gun_fwd_pha_traces = 'gun_fwd_pha_traces'
+gun_fwd_pwr_trace_mean = 'gun_fwd_pwr_trace_mean'
+gun_fwd_pha_trace_mean = 'gun_fwd_pha_trace_mean'
 vc_intensity_values = 'vc_intensity_values'
 vc_x_pix_values = 'vc_x_pix_values'
 vc_y_pix_values = 'vc_y_pix_values'
@@ -81,6 +85,9 @@ fit = 'fit'
 cross = 'cross'
 qe = 'qe'
 kly_fwd_mean_all = 'kly_fwd_mean_all'
+cancel = 'cancel'
+vc_image_directory = 'vc_image_directory'
+vc_image_name = 'vc_image_name'
 
 all_value_keys = [comments,
 time_stamp,
@@ -153,7 +160,10 @@ off_crest_phase_dict,
 fit,
 cross,
 qe,
-kly_fwd_mean_all
+kly_fwd_mean_all,
+cancel,
+vc_image_directory,
+vc_image_name
 ]
 
 class charge_measurement_data_base(QObject):
@@ -246,6 +256,9 @@ class charge_measurement_data_base(QObject):
     values[cross] = dummy_dbl
     values[qe] = dummy_dbl
     values[kly_fwd_mean_all] = dummy_dbl
+    values[cancel] = False
+    values[vc_image_directory] = []
+    values[vc_image_name] = []
     # amp_pwr_mean_data = {}
 
     #logger

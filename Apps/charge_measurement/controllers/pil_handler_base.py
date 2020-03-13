@@ -14,5 +14,4 @@ class pil_handler_base(base):
 		# self.timevector = base.bpmObj[0].time_vector.value
 		base.config.pil_config = base.config.pil_config
 		# self.start_trace_monitoring( base.config.bpm_config['TRACES_TO_SAVE'])#MAGIC_STRING
-
 		self.pil_data_values_dict = {}

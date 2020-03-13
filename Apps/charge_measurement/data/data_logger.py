@@ -94,7 +94,7 @@ class data_logger(object):
             outfile.write(json.dumps(d, indent=4, sort_keys=True))
             outfile.write('\n')
             file = outfile
-        self.write_to_excel(d, file.name)
+        self.m, self.cross, self.qe = self.write_to_excel(d, file.name)
         shutil.copy(file.name, data_logger.config.log_config['FILE_DIRECTORY'])
         self.year = str(datetime.now().year)
         self.month = datetime.now().strftime('%m')
@@ -103,7 +103,7 @@ class data_logger(object):
         if not os.path.isdir(self.scandir):
             os.makedirs(self.scandir)
         shutil.copy(file.name, self.scandir)
-        return file.name
+        return self.m, self.cross, self.qe, file.name
 
     def write_to_excel(self, d, filename):
         self.wcmmean = []
@@ -177,7 +177,7 @@ class data_logger(object):
         self.qeall = self.QE
         self.new_row_data = ['', filename, self.cross, self.fit, self.qeall]
         d["fit"] = self.m
-        d["cross"] = self.m
+        d["cross"] = self.c
         d["qe"] = self.QE * 10**(5)
         d["kly_fwd_mean_all"] = self.klyfwdmeanall
         self.rb = xlrd.open_workbook(data_logger.config.log_config['SUMMARY_FILE'])
@@ -209,6 +209,7 @@ class data_logger(object):
         self.df.to_excel(self.writer, index=False, header=False, startrow=len(self.reader) + 1)
         # write out the new sheet
         self.writer.close()
+        return self.m, self.c, self.QE * 10**(5)
 
     def get_scan_log(self):
         self.scan_log_start = datetime.now()
@@ -219,7 +220,7 @@ class data_logger(object):
             os.makedirs(self.directory)
         if not os.path.isdir(self.scan_directory):
             os.makedirs(self.scan_directory)
-        self.scan_log = self.scan_directory + '\\' + self.scan_log_start_str + ".json"
+        self.scan_log = self.scan_directory + '\\wcm_vs_ophir_' + self.scan_log_start_str + ".json"
         log = []
         with open(self.scan_log,"w+") as f:
             lines = list(line for line in (l.strip() for l in f) if line)

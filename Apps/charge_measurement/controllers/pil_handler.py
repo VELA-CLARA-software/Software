@@ -18,7 +18,9 @@ class pil_handler(pil_handler_base):
 
     def set_laser_energy_range(self, value):
         pil_handler_base.las_em_control.setStop()
-        pil_handler_base.las_em_control.setRange(value)
+        time.sleep(0.5)
+        pil_handler_base.las_em_control.setRange(int(value))
+        time.sleep(0.5)
         pil_handler_base.las_em_control.setStart()
         return value
 
@@ -38,22 +40,3 @@ class pil_handler(pil_handler_base):
         pil_handler_base.hwp_control.setHWP(value)
         if value - 0.1 < pil_handler_base.hwp_control.getHWPRead() < value + 0.1:
             time.sleep(0.2)
-
-    def set_sa1(self,pv,value):
-        pass
-        # bpm_handler_base.bpm_control.setSA1(pv,value)
-        # bpm_handler_base.data.values[dat.set_sa1_current] = value
-        # bpm_handler_base.logger.message('setting SA1 = ' + str(value) + ' for ' + pv, True)
-
-    def set_sa2(self,pv,value):
-        pass
-        # bpm_handler_base.bpm_control.setSA2(pv,value)
-        # bpm_handler_base.data.values[dat.set_sa2_current] = value
-        # bpm_handler_base.logger.message('setting SA2 = ' + str(value) + ' for ' + pv, True)
-
-    def read_attenuation(self, pv):
-        pass
-        # bpm_handler_base.data.values[dat.get_ra1] = bpm_handler_base.bpm_control.getRA1(pv)
-        # bpm_handler_base.data.values[dat.get_ra2] = bpm_handler_base.bpm_control.getRA2(pv)
-        # bpm_handler_base.logger.message('RA1 = ' + str(bpm_handler_base.data.values[dat.get_ra1]) + ' for ' + pv, True)
-        # bpm_handler_base.logger.message('RA2 = ' + str(bpm_handler_base.data.values[dat.get_ra2]) + ' for ' + pv, True)
