@@ -34,6 +34,7 @@ class llrf_monitor(monitor):
         self.kly_sp_pv = "CLA-GUN-LRF-CTRL-01:vm:dsp:sp_amp:amplitude"
         self.gun_phase_pv = "CLA-GUN-LRF-CTRL-01:vm:dsp:sp_ph:phase"
 
+
     def run(self):
         # now we're ready to start the timer, (could be called from a function)
         # item = [self.bunch_charge]
@@ -42,7 +43,25 @@ class llrf_monitor(monitor):
         #     monitor.logger.message(self.my_name, ' STARTED running')
         #     self.set_good()
         # else:
-        monitor.logger.message(self.my_name, ' NOT STARTED running')
+        monitor.logger.message(self.my_name, ' STARTED running')
+        self.switch_data_base_to_rf_trace_names = {}
+        self.switch_data_base_to_rf_trace_mean = {}
+        self.switch_data_base_to_rf_trace_names.update(
+            {'KLYSTRON_FORWARD_POWER': dat.kly_fwd_pwr_traces})
+        self.switch_data_base_to_rf_trace_names.update(
+            {'KLYSTRON_FORWARD_PHASE': dat.kly_fwd_pha_traces})
+        self.switch_data_base_to_rf_trace_names.update(
+            {'LRRG_CAVITY_FORWARD_POWER': dat.gun_fwd_pwr_traces})
+        self.switch_data_base_to_rf_trace_names.update(
+            {'LRRG_CAVITY_FORWARD_PHASE': dat.gun_fwd_pha_traces})
+        self.switch_data_base_to_rf_trace_mean.update(
+            {'KLYSTRON_FORWARD_POWER': dat.kly_fwd_pwr_trace_mean})
+        self.switch_data_base_to_rf_trace_mean.update(
+            {'KLYSTRON_FORWARD_PHASE': dat.kly_fwd_pha_trace_mean})
+        self.switch_data_base_to_rf_trace_mean.update(
+            {'LRRG_CAVITY_FORWARD_POWER': dat.gun_fwd_pwr_trace_mean})
+        self.switch_data_base_to_rf_trace_mean.update(
+            {'LRRG_CAVITY_FORWARD_PHASE': dat.gun_fwd_pha_trace_mean})
 
     def update_rf_values(self, pv, time_from, time_to, hwp):
         self.kly_fwd_url = "http://claraserv2.dl.ac.uk:17668/retrieval/data/getData.json?pv=" + self.kly_pwr_pv + "&from=" + time_from + "&to=" + time_to
@@ -69,22 +88,12 @@ class llrf_monitor(monitor):
         monitor.data.values[dat.kly_sp_values][hwp] = self.klyspevent
         #self.off_crest_phase = epics.caget(self.gun_phase_pv) - monitor.data.values[dat.off_crest_phase]
         monitor.data.values[dat.off_crest_phase_dict][hwp] = monitor.data.values[dat.off_crest_phase]
-        monitor.data.values[dat.kly_fwd_pwr_traces][hwp] = monitor.llrf_control.getTraceDataBuffer(
-            monitor.config.llrf_config['TRACES_TO_SAVE'][0])
-        monitor.data.values[dat.kly_fwd_pha_traces][hwp] = monitor.llrf_control.getTraceDataBuffer(
-            monitor.config.llrf_config['TRACES_TO_SAVE'][1])
-        monitor.data.values[dat.gun_fwd_pwr_traces][hwp] = monitor.llrf_control.getTraceDataBuffer(
-            monitor.config.llrf_config['TRACES_TO_SAVE'][2])
-        monitor.data.values[dat.gun_fwd_pha_traces][hwp] = monitor.llrf_control.getTraceDataBuffer(
-            monitor.config.llrf_config['TRACES_TO_SAVE'][3])
-        monitor.data.values[dat.kly_fwd_pwr_trace_mean][hwp] = monitor.llrf_control.getKlyFwdPwrCutMean(
-            monitor.config.llrf_config['TRACES_TO_SAVE'][0])
-        monitor.data.values[dat.kly_fwd_pha_trace_mean][hwp] = monitor.llrf_control.getKlyFwdPhaCutMean(
-            monitor.config.llrf_config['TRACES_TO_SAVE'][1])
-        monitor.data.values[dat.gun_fwd_pwr_trace_mean][hwp] = monitor.llrf_control.getCavFwdPwrCutMean(
-            monitor.config.llrf_config['TRACES_TO_SAVE'][2])
-        monitor.data.values[dat.gun_fwd_pha_trace_mean][hwp] = monitor.llrf_control.getCavFwdPhaCutMean(
-            monitor.config.llrf_config['TRACES_TO_SAVE'][3])
+        for i in monitor.config.llrf_config['TRACES_TO_SAVE']:
+            # hashable = frozenset(monitor.data.values[self.switch_data_base_to_rf_trace_names[i]][hwp].items())
+            monitor.data.values[self.switch_data_base_to_rf_trace_names[i]][hwp] = monitor.llrf_control.getTraceDataBuffer(i)
+            # for key, value in hashable:
+            #     monitor.data.values[self.switch_data_base_to_rf_trace_names[i]][hwp].update({key:value})
+            monitor.data.values[self.switch_data_base_to_rf_trace_mean[i]][hwp] = monitor.llrf_control.getCutMean(i)
 
     def check_llrf_is_monitoring(self):
         pass

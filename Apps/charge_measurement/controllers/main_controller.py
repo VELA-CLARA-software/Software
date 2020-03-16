@@ -61,7 +61,9 @@ class main_controller(controller_base):
                 controller_base.data.values[dat.scan_status] = 'scanning'
                 controller_base.data.values[dat.measurement_type] = "wcm_vs_ophir"
                 if controller_base.data.values[dat.measurement_type] == 'wcm_vs_ophir':
+                    controller_base.llrf_handler.enable_rf_output()
                     self.set_hwp_and_record()
+                    controller_base.llrf_handler.disable_rf_output()
                     controller_base.data.values[dat.scan_status] = 'complete'
             else:
                 QApplication.processEvents()
@@ -85,14 +87,10 @@ class main_controller(controller_base):
                                   "vc_sig_y_pix_time_stamp": self.data.values[dat.vc_sig_y_pix_time_stamp],
                                   "charge_values": self.data.values[dat.charge_values],
                                   "ophir_values": self.data.values[dat.ophir_values],
-                                  "gun_fwd_pwr_mean_values": self.data.values[dat.gun_fwd_pwr_mean_values],
-                                  "gun_fwd_pha_mean_values": self.data.values[dat.gun_fwd_pha_mean_values],
                                   "gun_fwd_pwr_trace_mean": self.data.values[dat.gun_fwd_pwr_trace_mean],
                                   "gun_fwd_pha_trace_mean": self.data.values[dat.gun_fwd_pha_trace_mean],
                                   "gun_fwd_pwr_traces": self.data.values[dat.gun_fwd_pwr_traces],
                                   "gun_fwd_pha_traces": self.data.values[dat.gun_fwd_pha_traces],
-                                  "kly_fwd_pwr_mean_values": self.data.values[dat.kly_fwd_pwr_mean_values],
-                                  "kly_fwd_pha_mean_values": self.data.values[dat.kly_fwd_pha_mean_values],
                                   "kly_fwd_pwr_trace_mean": self.data.values[dat.kly_fwd_pwr_trace_mean],
                                   "kly_fwd_pha_trace_mean": self.data.values[dat.kly_fwd_pha_trace_mean],
                                   "kly_fwd_pwr_traces": self.data.values[dat.kly_fwd_pwr_traces],
@@ -139,12 +137,14 @@ class main_controller(controller_base):
     def set_hwp_and_record(self):
         if controller_base.data.values[dat.ready_to_go]:
             self.logger.message('entering set_hwp_and_record', True)
-            #self.laser_energy_range = controller_base.pil_handler.set_laser_energy_range(3)
-            #controller_base.pil_handler.set_pil_buffer(controller_base.data.values[dat.num_shots])
+            self.laser_energy_range = controller_base.pil_handler.set_laser_energy_range(3)
+            controller_base.pil_handler.set_pil_buffer(controller_base.data.values[dat.num_shots])
+            controller_base.llrf_handler.enable_rf_output()
             controller_base.llrf_handler.set_llrf_buffer(controller_base.data.values[dat.num_shots])
             self.stepprog = (controller_base.data.values[dat.set_hwp_end]-controller_base.data.values[dat.set_hwp_start])/controller_base.data.values[dat.num_steps]
             self.stepspace = numpy.linspace(0,self.stepprog,controller_base.data.values[dat.num_steps])
             self.iterate = 0
+            self.hwp_start = controller_base.pil_handler.get_hwp()
             self.has_been_overrange = False
             for i in numpy.linspace(controller_base.data.values[dat.set_hwp_start], controller_base.data.values[dat.set_hwp_end],
                                     controller_base.data.values[dat.num_steps]):
@@ -156,16 +156,16 @@ class main_controller(controller_base):
                 self.gui.progressBar.setValue(self.stepspace[self.iterate]*100)
                 self.iterate +=1
                 controller_base.data.values[dat.hwp_values].append(i)
-                #controller_base.pil_handler.set_hwp(i)
-                # time.sleep(1)
-                # if controller_base.data_monitor.pil_monitor.check_set_equals_read():
-                #     if controller_base.pil_handler.get_laser_energy_overrange():
-                #         time.sleep(0.5)
-                #         self.range = controller_base.pil_handler.get_laser_energy_range()
-                #         time.sleep(0.5)
-                #         self.laser_energy_range = controller_base.pil_handler.set_laser_energy_range(self.range-1)
-                #         time.sleep(0.5)
-                #         self.has_been_overrange = True
+                controller_base.pil_handler.set_hwp(i)
+                time.sleep(1)
+                if controller_base.data_monitor.pil_monitor.check_set_equals_read():
+                    if controller_base.pil_handler.get_laser_energy_overrange():
+                        time.sleep(0.5)
+                        self.range = controller_base.pil_handler.get_laser_energy_range()
+                        time.sleep(0.5)
+                        self.laser_energy_range = controller_base.pil_handler.set_laser_energy_range(self.range-1)
+                        time.sleep(0.5)
+                        self.has_been_overrange = True
                 time.sleep(1)
                 QApplication.processEvents()
                 if not self.has_been_overrange:
@@ -186,20 +186,18 @@ class main_controller(controller_base):
                 else:
                     self.has_been_overrange = False
             self.gui.progressBar.setValue(100)
+            controller_base.llrf_handler.disable_rf_output()
+            controller_base.pil_handler.set_hwp(self.hwp_start)
 
     def clear_values(self):
         controller_base.data.values[dat.charge_values] = {}
         controller_base.data.values[dat.ophir_values] = {}
         controller_base.data.values[dat.kly_fwd_pwr_values] = {}
         controller_base.data.values[dat.kly_sp_values] = {}
-        controller_base.data.values[dat.gun_fwd_pwr_mean_values] = {}
-        controller_base.data.values[dat.gun_fwd_pha_mean_values] = {}
         controller_base.data.values[dat.gun_fwd_pwr_trace_mean] = {}
         controller_base.data.values[dat.gun_fwd_pha_trace_mean] = {}
         controller_base.data.values[dat.gun_fwd_pwr_traces] = {}
         controller_base.data.values[dat.gun_fwd_pha_traces] = {}
-        controller_base.data.values[dat.kly_fwd_pwr_mean_values] = {}
-        controller_base.data.values[dat.kly_fwd_pha_mean_values] = {}
         controller_base.data.values[dat.kly_fwd_pwr_trace_mean] = {}
         controller_base.data.values[dat.kly_fwd_pha_trace_mean] = {}
         controller_base.data.values[dat.kly_fwd_pwr_traces] = {}

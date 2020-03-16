@@ -106,7 +106,7 @@ class config_reader(object):
                 print(self.my_name, " FAILED to Find, ", item)
         for item in list_param:
             try:
-                r.update({item: config_reader.config[item]})
+                r.update({item: config_reader.config[item].split(self.comma)})
             except:
                 print(self.my_name, " FAILED to Find, ", item)
         for item in int_param:

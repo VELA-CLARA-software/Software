@@ -9,8 +9,16 @@ class llrf_handler(llrf_handler_base):
         llrf_handler_base.__init__(self)
 
     def set_llrf_buffer(self, value):
-        llrf_handler_base.llrf_control.setBufferSize(value)
+        llrf_handler_base.llrf_control.setAllTraceBufferSize(value)
         llrf_handler_base.logger.message('setting llrf buffer = ' + str(value), True)
+
+    def enable_rf_output(self):
+        llrf_handler_base.llrf_control.enableRFOutput()
+        llrf_handler_base.logger.message('enabling rf output', True)
+
+    def disable_rf_output(self):
+        llrf_handler_base.llrf_control.disableRFOutput()
+        llrf_handler_base.logger.message('enabling rf output', True)
 
     def get_gun_fwd_pwr_mean_vals(self,value):
         pass

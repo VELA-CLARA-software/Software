@@ -22,8 +22,6 @@ vc_sig_y_pix_time_stamp = 'vc_sig_y_pix_time_stamp'
 gun_fwd_pwr_time_stamp = 'gun_fwd_pwr_time_stamp'
 gun_fwd_pha_time_stamp = 'gun_fwd_pha_time_stamp'
 kly_fwd_pwr_time_stamp = 'kly_fwd_pwr_time_stamp'
-kly_fwd_pwr_trace_mean = 'gun_fwd_pwr_trace_mean'
-kly_fwd_pha_trace_mean = 'gun_fwd_pha_trace_mean'
 kly_sp_time_stamp = 'kly_sp_time_stamp'
 measurement_type = 'measurement_type'
 bunch_charge = 'bunch_charge'
@@ -55,6 +53,10 @@ gun_fwd_pwr_traces = 'gun_fwd_pwr_traces'
 gun_fwd_pha_traces = 'gun_fwd_pha_traces'
 gun_fwd_pwr_trace_mean = 'gun_fwd_pwr_trace_mean'
 gun_fwd_pha_trace_mean = 'gun_fwd_pha_trace_mean'
+kly_fwd_pwr_trace_mean = 'kly_fwd_pwr_trace_mean'
+kly_fwd_pha_trace_mean = 'kly_fwd_pha_trace_mean'
+kly_fwd_pwr_traces = 'kly_fwd_pwr_traces'
+kly_fwd_pha_traces = 'kly_fwd_pha_traces'
 vc_intensity_values = 'vc_intensity_values'
 vc_x_pix_values = 'vc_x_pix_values'
 vc_y_pix_values = 'vc_y_pix_values'
@@ -132,6 +134,12 @@ gun_fwd_pwr_mean_values,
 gun_fwd_pha_mean_values,
 gun_fwd_pwr_traces,
 gun_fwd_pha_traces,
+gun_fwd_pwr_trace_mean,
+gun_fwd_pha_trace_mean,
+kly_fwd_pwr_traces,
+kly_fwd_pha_traces,
+kly_fwd_pwr_trace_mean,
+kly_fwd_pha_trace_mean,
 vc_intensity_values,
 vc_x_pix_values,
 vc_y_pix_values,
@@ -225,8 +233,14 @@ class charge_measurement_data_base(QObject):
     values[kly_sp_values] = {}
     values[gun_fwd_pwr_mean_values] = {}
     values[gun_fwd_pha_mean_values] = {}
-    values[gun_fwd_pwr_traces] = [[] for i in range(8)]
-    values[gun_fwd_pwr_traces] = [[] for i in range(8)]
+    values[gun_fwd_pwr_traces] = {}
+    values[gun_fwd_pha_traces] = {}
+    values[gun_fwd_pwr_trace_mean] = {}
+    values[gun_fwd_pha_trace_mean] = {}
+    values[kly_fwd_pwr_traces] = {}
+    values[kly_fwd_pha_traces] = {}
+    values[kly_fwd_pwr_trace_mean] = {}
+    values[kly_fwd_pha_trace_mean] = {}
     values[vc_intensity_values] = {}
     values[vc_x_pix_values] = {}
     values[vc_y_pix_values] = {}

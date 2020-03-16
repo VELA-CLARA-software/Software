@@ -22,6 +22,7 @@ class llrf_handler_base(base):
 		#self.setup_trace_rolling_average()
 
 		self.llrf_data_values_dict = {}
+		self.start_trace_monitoring()
 
 	def get_mask_rolling_average_dict(self):
 		r = {}
