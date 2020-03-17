@@ -164,9 +164,9 @@ class model():
 #        self.values[self.data.wcm_buffer_full] = self.pil_obj.Q_full
 
         # these are flakey  laser INTENSITY
-        self.values[self.data.int_val] = self.pil_obj.energy * 1000000
-        self.values[self.data.int_mean] = self.pil_obj.energy_mean * 1000000
-        self.values[self.data.int_sd] = self.pil_obj.energy_sd * 1000000
+        self.values[self.data.int_val] = self.pil_obj.energy
+        self.values[self.data.int_mean] = self.pil_obj.energy_mean
+        self.values[self.data.int_sd] = self.pil_obj.energy_sd 
  #       self.values[self.data.laser_buffer_full] = self.pil_obj.energy_full
 
         #print('take image START')

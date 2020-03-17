@@ -24,6 +24,7 @@
 '''
 import sys,os
 sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\Release\\')
+
 from VELA_CLARA_Screen_Control import SCREEN_STATE
 from VELA_CLARA_Screen_Control import SCREEN_TYPE
 import VELA_CLARA_Screen_Control as scr
@@ -50,24 +51,24 @@ class procedure(object):
 
     #devices = {}
     states = {}
-    states['SCREEN_MOVING'    ] = SCREEN_STATE.SCREEN_MOVING
-    states['V_RETRACTED'      ] = SCREEN_STATE.V_RETRACTED
-    states['V_MAX'            ] = SCREEN_STATE.V_MAX
-    states['V_MIRROR'         ] = SCREEN_STATE.V_MIRROR
-    states['V_YAG'            ] = SCREEN_STATE.V_YAG
-    states['V_GRAT'           ] = SCREEN_STATE.V_GRAT
-    states['V_SLIT_1'         ] = SCREEN_STATE.V_SLIT_1
-    states['V_RF'             ] = SCREEN_STATE.V_RF
-    states['V_COL'            ] = SCREEN_STATE.V_COL
-    states['H_RETRACTED'      ] = SCREEN_STATE.H_RETRACTED
-    states['H_SLIT_1'         ] = SCREEN_STATE.H_SLIT_1
-    states['H_SLIT_2'         ] = SCREEN_STATE.H_SLIT_2
-    states['H_SLIT_3'         ] = SCREEN_STATE.H_SLIT_3
-    states['H_APT_1'          ] = SCREEN_STATE.H_APT_1
-    states['H_APT_2'          ] = SCREEN_STATE.H_APT_2
-    states['H_APT_3'          ] = SCREEN_STATE.H_APT_3
-    states['YAG'          ] = SCREEN_STATE.YAG
-    states['RETRACTED'          ] = SCREEN_STATE.RETRACTED
+    states['SCREEN_MOVING'    ] = scr.SCREEN_STATE.SCREEN_MOVING
+    states['V_RETRACTED'      ] = scr.SCREEN_STATE.V_RETRACTED
+    states['V_MAX'            ] = scr.SCREEN_STATE.V_MAX
+    states['V_MIRROR'         ] = scr.SCREEN_STATE.V_MIRROR
+    states['V_YAG'            ] = scr.SCREEN_STATE.V_YAG
+    states['V_GRAT'           ] = scr.SCREEN_STATE.V_GRAT
+    states['V_SLIT_1'         ] = scr.SCREEN_STATE.V_SLIT_1
+    states['V_RF'             ] = scr.SCREEN_STATE.V_RF
+    states['V_COL'            ] = scr.SCREEN_STATE.V_COL
+    states['H_RETRACTED'      ] = scr.SCREEN_STATE.H_RETRACTED
+    states['H_SLIT_1'         ] = scr.SCREEN_STATE.H_SLIT_1
+    states['H_SLIT_2'         ] = scr.SCREEN_STATE.H_SLIT_2
+    states['H_SLIT_3'         ] = scr.SCREEN_STATE.H_SLIT_3
+    states['H_APT_1'          ] = scr.SCREEN_STATE.H_APT_1
+    states['H_APT_2'          ] = scr.SCREEN_STATE.H_APT_2
+    states['H_APT_3'          ] = scr.SCREEN_STATE.H_APT_3
+    states['YAG'          ] = scr.SCREEN_STATE.YAG
+    states['RETRACTED'          ] = scr.SCREEN_STATE.RETRACTED
 
 
     # The control system takes an appreciable amount of time before a diagnostic station starts moving
@@ -182,31 +183,45 @@ class procedure(object):
 
     # called external, toggle open or close
     def in_out(self,name):
+        print("in_out ", name)
         procedure.states[name] = 'CLICKED'
-        if procedure.sc.isClearForBeam(name):
-            print(name+' is clear for beam, moving screen in')
-            self.screen_in(name)
-        else:
-            print(name+' is NOT clear for beam, moving screen OUT')
+        if procedure.sc.isYAGIn(name):
+            print("try self.screen_out(name)")
             self.screen_out(name)
+        else:
+            self.screen_in(name)
+            print("try self.screen_in(name)")
+
+        #
+        # if procedure.sc.isClearForBeam(name):
+        #     print(name+' is clear for beam, moving screen in')
+        #     self.screen_in(name)
+        # else:
+        #     print(name+' is NOT clear for beam, moving screen OUT')
+        #     self.screen_out(name)
 
     # called external, open name
     def screen_in(self,name):
+        print("procedure screen_in ")
         procedure.sc.insertYAG(name)
 
     # called external, close name
     def screen_out(self, name):
         dev = procedure.sc.getAvailableDevices(name)
         if scr.SCREEN_STATE.V_RF in dev:
-            procedure.sc.moveScreenTo(name, scr.SCREEN_STATE.V_RF)
+            print("move_screen_to, scr.SCREEN_STATE.V_RF")
+            self.move_screen_to(name, 'V_RF')
+            #procedure.sc.moveScreenTo(name, scr.SCREEN_STATE.V_RF)
         else:
+            print("moveScreenOut")
             procedure.sc.moveScreenOut(name)
 
     def move_screen_to(self, scr, state):
         if procedure.screen_state_refs[scr].screenSetState != state:
             #print("move_screen_to passed, ",scr, state, procedure.states[state])
-            #procedure.sc.moveScreenTo( scr,  procedure.m[state])1
-            procedure.sc.moveScreenTo( scr, procedure.states[state] )
+            procedure.sc.moveScreenTo( scr,  procedure.states[state])
+            print(state)
+            #procedure.sc.moveScreenTo( scr, state )
 
 
 

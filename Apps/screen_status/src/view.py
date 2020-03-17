@@ -53,7 +53,8 @@ class view(QMainWindow, Ui_screen_status_view ):
     def __init__(self):
         QWidget.__init__(self)
 
-
+        self.red = "#ff5733"
+        self.green = "#75ff33"
 
         self.setupUi(self)
         self.setWindowIcon(QIcon('.\\resources\\screen_status\\screen_status_icon.ico'))
@@ -100,20 +101,20 @@ class view(QMainWindow, Ui_screen_status_view ):
 
 
     def set_clara_led_is_on(self):
-        self.clara_led_button.setStyleSheet("background-color: green")
+        self.clara_led_button.setStyleSheet("background-color: " + self.green)
         self.clara_led_button.setText('SWITCH CLARA LED OFF')
 
 
     def set_clara_led_is_off(self):
-        self.clara_led_button.setStyleSheet("background-color: red")
+        self.clara_led_button.setStyleSheet("background-color: " + self.red)
         self.clara_led_button.setText('SWITCH CLARA LED ON')
 
     def set_vela_led_is_on(self):
-        self.vela_led_button.setStyleSheet("background-color: green")
+        self.vela_led_button.setStyleSheet("background-color: " + self.green)
         self.vela_led_button.setText('SWITCH VELA LED OFF')
 
     def set_vela_led_is_off(self):
-        self.vela_led_button.setStyleSheet("background-color: red")
+        self.vela_led_button.setStyleSheet("background-color: " + self.red)
         self.vela_led_button.setText('SWITCH VELA LED ON')
 
     def update_gui(self):
@@ -173,13 +174,13 @@ class view(QMainWindow, Ui_screen_status_view ):
             widget.setStyleSheet("background-color: cyan")
             widget.setText( widget.objectName() + ' V-GRATICULE' )
         elif state == SCREEN_STATE.YAG:#5
-            widget.setStyleSheet("background-color: green")
+            widget.setStyleSheet("background-color: " + self.green)
             widget.setText( widget.objectName() + ' YAG' )
         elif state == SCREEN_STATE.V_YAG:#6
-            widget.setStyleSheet("background-color: green")
+            widget.setStyleSheet("background-color: " + self.green)
             widget.setText( widget.objectName()+ ' YAG' )
         elif state == SCREEN_STATE.V_RF:
-            widget.setStyleSheet("background-color: red")
+            widget.setStyleSheet("background-color: " + self.red)
             widget.setText( widget.objectName() + ' RF' )
         elif state == SCREEN_STATE.V_COL:
             widget.setStyleSheet("background-color: orange")
@@ -191,7 +192,7 @@ class view(QMainWindow, Ui_screen_status_view ):
             widget.setStyleSheet("background-color: magenta")
             widget.setText( widget.objectName() + ' V-RETRACTED' )
         elif state == SCREEN_STATE.RETRACTED:
-            widget.setStyleSheet("background-color: red")
+            widget.setStyleSheet("background-color: " + self.red)
             widget.setText( widget.objectName() + ' RETRACTED (RF)' )
         elif state == SCREEN_STATE.V_SLIT_1:
             widget.setStyleSheet("background-color: orange")

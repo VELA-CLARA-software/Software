@@ -138,9 +138,9 @@ class control(object):
     def handle_checkDevices_Button(self):
         self.procedure.make_read_equal_set_all()
 
-
-    def handle_screen_in(self):
-        self.procedure.screen_in()
+    #
+    # def handle_screen_in(self):
+    #     self.procedure.screen_in()
 
     def handle_all_out(self):
         self.procedure.all_out()
@@ -149,7 +149,7 @@ class control(object):
         sender = self.view.sender()
         screen = str(sender.objectName())
         self.data.move_attempted[screen] = [True, time.time()]
-        #print("self.data.move_attempted[ ", screen, True)
+        print("self.data.move_attempted[ ", screen, True)
         self.procedure.in_out(screen)
 
 
