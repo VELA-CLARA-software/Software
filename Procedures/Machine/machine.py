@@ -2,6 +2,8 @@ import sys,os, time
 import random as r
 import numpy as np
 import inspect
+sys.path.append("../../")
+from Software.Widgets.generic.pv import *
 
 class Bunch:
     def __init__(self, **kwds):
@@ -12,19 +14,46 @@ class Machine(object):
     bpmDataObjects = {}
     screenDataObjects = {}
 
-    def __init__(self, machineType, lineType, gunType, controllers=['magnets', 'bpms', 'gunllrf', 'linac1llrf', 'charge', 'cameras']):
+    def __init__(self, machineType, lineType, gunType, controllers=['magnets', 'bpms', 'gunllrf', 'linac1llrf', 'charge', 'general']):
         super(Machine, self).__init__()
         self.machineType = machineType
         self.lineType = lineType
         self.gunType = gunType
         self.controllers = controllers
+        self.pvids = {}
         self.setUpCtrls()
         if self.machineType == 'Virtual':
             self.virtualSetUp()
         self.corrSI = {}
         self.solSI = {}
         self.quadSI = {}
-        self.parameters={}
+        self.parameters = {}
+        if self.machineType == 'None':
+            self.linac1PhiSp = 0
+            self.gunPhiSp = 0
+            self.linac1AmpSp = 35000
+            self.gunAmpSp = 71000
+        print('SELF.MACHINETYPE = ', self.machineType)
+
+    # LINAC PID PVs
+    #setpoint CLA-L01-LRF-CTRL-01:PHAA:PID.VAL
+    #integral CLA-L01-LRF-CTRL-01:PHAA:PID.KI
+    # Scan Passive CLA-L01-LRF-CTRL-01:PHAA:PID.SCAN  0=passive, 9=.1second
+    #input value = CLA-L01-LRF-CTRL-01:PHAA:PID:IP.OVAL.OVAL
+
+    def addPV(self, pv):
+        if not pv in self.pvids:
+            self.pvids[pv] = PVObject(pv)
+            setattr(self.pvids[pv], 'writeAccess', True)
+        return self.pvids[pv]
+
+    def getPVValue(self, pv):
+        pvid = self.addPV(pv)
+        return pvid.value
+
+    def setPVValue(self, pv, value):
+        pvid = self.addPV(pv)
+        pvid.value = value
 
     def initilise_parameters(self):
         if self.lineType=='VELA':
@@ -67,11 +96,13 @@ class Machine(object):
             self.linac1llrf = None
             self.cameras = None
             self.screens = None
+            self.generalPV = None
+            sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release')
         else:
             '''This is the place to get contollers'''
-            # sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release')
+            sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release')
             # sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\stage\\Python3_x64\\')
-            sys.path.append('C:\\Python38\\Python3_x64\\')
+            # sys.path.append('C:\\Python38\\Python3_x64\\')
             # os.environ["PATH"] = os.environ["PATH"]+";\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release\\root_v5.34.34\\bin\\"
             if 'magnets' in self.controllers:
                 print('#### CREATING MAGNET CONTROLLER ###')
@@ -192,7 +223,6 @@ class Machine(object):
         # self.SAMPL.initDistribFile = '4k-250pC.ini'
 
     def setAmplitude(self, cavity, value):
-        print(cavity, value)
         if cavity == 'Gun':
             self.setGunAmplitude(value)
         elif cavity == 'Linac1':
@@ -210,6 +240,8 @@ class Machine(object):
             self.setGunPhase(value)
         elif cavity == 'Linac1':
             self.setLinac1Phase(value)
+        elif cavity == 'Linac1PID':
+            self.setLinac1PhasePID(value)
         return True
 
     def getPhase(self, cavity):
@@ -217,6 +249,8 @@ class Machine(object):
             return self.getGunPhase()
         elif cavity == 'Linac1':
             return self.getLinac1Phase()
+        elif cavity == 'Linac1PID':
+            return self.getLinac1PhasePID()
 
     def getKlystronForwardPower(self, cavity):
         if cavity == 'Gun':
@@ -257,10 +291,10 @@ class Machine(object):
         return self.linac1llrf.getKlyFwdPower()
 
     def setLinac1Phase(self, phase):
+        print('setting L01 phase = ', np.mod(180+phase,360)-180)
         if self.machineType == 'None':
             self.linac1PhiSp = phase
         else:
-            print('setting L01 phase = ', np.mod(180+phase,360)-180)
             self.linac1llrf.setPhiSP(np.mod(180+phase,360)-180)
         return True
 
@@ -269,6 +303,20 @@ class Machine(object):
             return self.linac1PhiSp if hasattr(self, 'linac1PhiSp') else 0
         else:
             return self.linac1llrf.getPhiSP()
+
+    def setLinac1PhasePID(self, phase):
+        print('setting L01 PID phase = ', np.mod(180+phase,360)-180)
+        if self.machineType == 'None':
+            self.linac1PhiSpPID = phase
+        else:
+            self.setPVValue('CLA-L01-LRF-CTRL-01:PHAA:PID.VAL',np.mod(180+phase,360)-180)
+        return True
+
+    def getLinac1PhasePID(self):
+        if self.machineType == 'None':
+            return self.linac1PhiSp if hasattr(self, 'linac1PhiSp') else 0
+        else:
+            return self.getPVValue('CLA-L01-LRF-CTRL-01:PHAA:PID.VAL')
 
     def setLinac1Amplitude(self, amp):
         if self.machineType == 'None':
@@ -280,8 +328,10 @@ class Machine(object):
 
     def getLinac1Amplitude(self):
         if self.machineType == 'None':
-            return self.linac1AmpSp if hasattr(self, 'linac1AmpSp') else 0
+            # print('linac1amplitude thinks we have NONE')
+            return self.linac1AmpSp if hasattr(self, 'linac1AmpSp') else (35000 + 200*np.random.random_sample())
         else:
+            # print('linac1amplitude retuns ', self.linac1llrf.getAmpSP())
             return self.linac1llrf.getAmpSP()
 
     def getBPMDataObject(self, bpm):
@@ -307,7 +357,10 @@ class Machine(object):
 
     def getBPMPosition(self, bpm, plane='X', ignoreNonLinear=True):
         if self.machineType == 'None':
-            value = 20*np.random.random_sample() - 10
+            if bpm == 'C2V':
+                value = ((30.0 * (self.getLinac1Amplitude() / 35000.0)*np.cos(2*np.pi*self.linac1PhiSp/360.0) + 5.5)/35.5 - 1.0) * 0.368 * 1e3 + (np.random.normal(0, 0.25))
+            else:
+                value = 20*np.random.random_sample() - 10
             return value
         else:
             obj = self.getBPMDataObject(bpm)
@@ -362,7 +415,7 @@ class Machine(object):
             self.corrSI[corr] = I
         else:
             # print 'setting ', corr, ' = ', I
-            print(self.magnets.setSI(corr, I))
+            # print(self.magnets.setSI(corr, I))
             i = 0
             while abs(self.getCorr(corr) - I) > tol:
                 time.sleep(0.1)
@@ -392,12 +445,48 @@ class Machine(object):
         else:
             return self.magnets.getRI(sol)
 
+    def find_nearest(self, array, value, index=None):
+        subarray = np.asarray(array)
+        if index is not None:
+            subarray = subarray[:,index]
+        idx = (np.abs(subarray - value)).argmin()
+        return array[idx]
+
     def getWCMCharge(self, scope):
         if self.machineType == 'None':
-            value = 50*np.random.random_sample()
-            return value
+            wcm_data = [[-180., 28.6424], [-175., 2.46292], [-170., 2.20253], [-165., \
+                        2.24572], [-160., 2.01522], [-155., 2.07588], [-150., 2.44336], \
+                        [-145., 2.13366], [-140., 2.11193], [-135., 2.73996], [-130., \
+                        2.36129], [-125., 2.17099], [-120., 2.00984], [-115., 2.38705], \
+                        [-110., 2.26005], [-105., 2.27442], [-100., 2.58211], [-95., \
+                        2.09984], [-90., 2.53373], [-85., 2.80215], [-80., 2.24464], [-75., \
+                        2.61765], [-70., 2.0823], [-65., 2.37115], [-60., 2.30828], [-55., \
+                        2.33715], [-50., 1.96732], [-45., 2.15005], [-40., 16.9568], [-35., \
+                        17.6342], [-30., 9.06696], [-25., 16.265], [-20., 32.2283], [-15., \
+                        55.3548], [-10., 86.4586], [-5., 88.9817], \
+                        [0., 95.6413], [5., 97.305], [10., 88.4177], [15., 95.8377], [20., \
+                        88.8731], [25., 89.314], [30., 86.6351], [35., 81.5596], [40., \
+                        90.3007], [45., 83.7862], [50., 75.3683], [55., 72.0417], [60., \
+                        67.2645], [65., 56.998], [70., 53.0433], [75., 42.0769], [80., \
+                        12.8871], [85., 5.48364], [90., 2.31569], [95., 2.3861], [100., \
+                        2.07611], [105., 2.31879], [110., 1.93854], [115., 3.23816], [120., \
+                        2.53554], [125., 2.37526], [130., 2.14535], [135., 2.57182], [140., \
+                        2.57941], [145., 2.50883], [150., 2.14922], [155., 2.75157], [160., \
+                        2.32648], [165., 2.25095], [170., 2.46884], [175., 1.95332], [180., \
+                        2.24331]]
+            value = self.find_nearest(wcm_data, self.gunPhiSp, 0)[1]
+            # value = 100
+            return  np.random.normal(0, 5) + value
         else:
             return self.scope.getCharge(scope)
+
+    def getCTRSignal(self):
+        if self.machineType == 'aNone':
+            value = 700 - (1 + (300 * np.sqrt(np.abs(self.linac1PhiSp + 12)))**0.5)
+            return (value + np.random.normal(0,2)) * 1e-3
+        else:
+            return self.getPVValue('EBT-BA1-DIA-BCM-01:PK-PK')
+            # return self.scope.getCTRSignal()
 
     def setDip(self, I):
         # print 'setting dip01 = ', I

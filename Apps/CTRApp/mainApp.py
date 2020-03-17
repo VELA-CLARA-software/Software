@@ -38,20 +38,18 @@ class App(qt.QObject):
         self.view = view.Ui_MainWindow()
         self.MainWindow = qt.QMainWindow()
         self.view.setupUi(self.MainWindow)
-        self.MainWindow.setWindowIcon(qt.QIcon(':/crester.jpg'))
-        splash_pix = qt.QPixmap(':/crester.jpg')
+        self.MainWindow.setWindowIcon(qt.QIcon(':/ctr.png'))
+        splash_pix = qt.QPixmap(':/ctr.png')
         self.splash = qt.QSplashScreen(splash_pix)
         self.splash.setWindowFlags(qt.Qt.FramelessWindowHint)
         self.splash.setEnabled(False)
         self.splash.show()
-        self.splash.showMessage("<h1><font color='#6BBAFD'>Autocrester Initialising...</font></h1>", qt.Qt.AlignTop | qt.Qt.AlignCenter, qt.Qt.black)
-        self.machineType, self.lineType, self.gunType = sys_argv[1],sys_argv[2],sys_argv[3]
+        self.splash.showMessage("<h1><font color='#6BBAFD'>CTRApp Initialising...</font></h1>", qt.Qt.AlignTop | qt.Qt.AlignCenter, qt.Qt.black)
+        self.machineType, self.lineType, self.gunType = ['Physical', 'CLARA', '10Hz']
         app.processEvents()
-        if not self.machineType == 'aNone':
-            self.Linac01Timing = linacTiming.Linac01Timing()
         self.model = model.Model(self.machineType, self.lineType, self.gunType)
         app.processEvents()
-        self.controller = controller.Controller(self.view, self.model, self.Linac01Timing)
+        self.controller = controller.Controller(self.view, self.model)
         self.MainWindow.show()
         self.splash.finish(self.MainWindow)
 

@@ -10,6 +10,7 @@ import logging
 import os
 # import rpyc
 import zmq, time
+import socket
 # import threading
 # from threading import Thread, Event, Timer
 from logging.handlers import RotatingFileHandler
@@ -346,7 +347,7 @@ class loggerWidget(QWidget):
         layout.addWidget(saveButton,0,3,1,1)
         self.logTextBox = QPlainTextEditLogger(self.tablewidget, self.model, self.filter_proxy_model)
         if self.autosave:
-            formatter = logging.Formatter(fmt='%(asctime)s %(levelname)-8s %(message)s',
+            formatter = logging.Formatter(fmt='%(asctime)s %(levelname)-8s ' + socket.gethostname() + ' %(message)s',
                                   datefmt='%Y-%m-%d %H:%M:%S')
             self.fileLogger = RotatingFileHandler(self.logdirectory+'/'+self.appname+'_log.txt', maxBytes=1048576, backupCount=1)
             self.fileLogger.setFormatter(formatter)
@@ -357,7 +358,7 @@ class loggerWidget(QWidget):
                     self.addLogger(log)
             else:
                 self.addLogger(logger)
-        self.logTextBox.setFormatter(logging.Formatter(' %(asctime)s - %(name)s - %(levelno)s - %(message)s'))
+        self.logTextBox.setFormatter(logging.Formatter('%(asctime)s %(levelname)-8s ' + socket.gethostname() + ' %(message)s'))
         self.addLogger(widgetLogger)
         if networkLogger:
             self.networkLogThread = networkLogThread()

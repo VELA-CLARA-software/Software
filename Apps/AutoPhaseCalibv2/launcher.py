@@ -2,7 +2,10 @@ import os,sys
 sys.path.append("../../../")
 import Software.Procedures.qt as qt
 from mainApp import *
-from launcherUI import *
+# if (float(qt.QT_VERSION_STR.split('.')[0]) < 5.0):
+from launcherUI_4 import *
+# else:
+    # from launcherUI import *
 
 class launcherUI(qt.QObject):
     def __init__(self, *sys_argv):

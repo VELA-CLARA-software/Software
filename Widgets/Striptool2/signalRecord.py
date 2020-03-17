@@ -85,10 +85,15 @@ class recordWorker(qt.QObject):
     recordStandardDeviationSignal = qt.pyqtSignal(float)
     recordMinSignal = qt.pyqtSignal(float)
     recordMaxSignal = qt.pyqtSignal(float)
+    recordRangeSignal = qt.pyqtSignal(float)
     nsamplesSignal = qt.pyqtSignal(int)
 
     def calculate_mean(self, numbers):
-        return float(sum(numbers)) /  max(len(numbers), 1)
+        return float(sum(numbers)) /  float(max(len(numbers), 1))
+
+    def calculate_mean_data_time(self, numbers):
+        time, data = zip(*numbers)
+        return self.calculate_mean(time), self.calculate_mean(data)
 
     def __init__(self, records, signal, name):
         super(recordWorker, self).__init__()
@@ -98,8 +103,11 @@ class recordWorker(qt.QObject):
         self.signal.timer.dataReady.connect(self.updateRecord)
         self.buffer = self.records[self.name]['data']
         self.buffer1000 = collections.deque(maxlen=1000)
+        self.data1000 = self.records[self.name]['dataMean1000']
         self.buffer100 = collections.deque(maxlen=100)
+        self.data100 = self.records[self.name]['dataMean100']
         self.buffer10 = collections.deque(maxlen=10)
+        self.data10 = self.records[self.name]['dataMean10']
         self.resetStatistics(True)
         self.timer = qt.QTimer()
         self.timer.timeout.connect(self.emitStatistics)
@@ -110,9 +118,9 @@ class recordWorker(qt.QObject):
         self.buffer.append(value)
         self.recordLatestValueSignal.emit(value)
         time, val = value
-        self.buffer10.append(val)
-        self.buffer100.append(val)
-        self.buffer1000.append(val)
+        self.buffer10.append(value)
+        self.buffer100.append(value)
+        self.buffer1000.append(value)
         self.length += 1
         self.nsamplesSignal.emit(self.length)
         self.sum_x1 += val
@@ -120,12 +128,20 @@ class recordWorker(qt.QObject):
         if val < self.min:
             self.min = float(val)
             self.recordMinSignal.emit(val)
+            self.recordRangeSignal.emit(self.max - self.min)
         if val > self.max:
             self.max = float(val)
             self.recordMaxSignal.emit(val)
-        self.recordMean10Signal.emit([time,self.calculate_mean(self.buffer10)])
-        self.recordMean100Signal.emit([time,self.calculate_mean(self.buffer100)])
-        self.recordMean1000Signal.emit([time,self.calculate_mean(self.buffer1000)])
+            self.recordRangeSignal.emit(self.max - self.min)
+        time, mean = self.calculate_mean_data_time(self.buffer10)
+        self.recordMean10Signal.emit([time, mean])
+        self.data10.append([time, mean])
+        time, mean = self.calculate_mean_data_time(self.buffer100)
+        self.recordMean100Signal.emit([time, mean])
+        self.data100.append([time, mean])
+        time, mean = self.calculate_mean_data_time(self.buffer1000)
+        self.recordMean1000Signal.emit([time, mean])
+        self.data1000.append([time, mean])
 
     def emitStatistics(self):
         length = self.length
@@ -169,6 +185,9 @@ class signalRecord(qt.QObject):
         self.timer = timer
         self.maxlength = maxlength
         self.data = collections.deque(maxlen=maxlength)
+        self.dataMean10 = collections.deque(maxlen=int(maxlength/10))
+        self.dataMean100 = collections.deque(maxlen=int(maxlength/100))
+        self.dataMean1000 = collections.deque(maxlen=int(maxlength/1000))
         self.function = function
         self.args = args
         self.functionForm = functionForm
@@ -290,7 +309,7 @@ class signalRecorderCSV(qt.QObject):
 
     def open_file(self, filename):
         self.basefilename, file_extension = os.path.splitext(filename)
-        print 'Opening file ', self.basefilename + '.csv'
+        print('Opening file ', self.basefilename + '.csv')
         self.file = open(self.basefilename + '.csv',"wb", 1)
         self.writer = csv.writer(self.file, delimiter=',', quotechar='"')
 
@@ -303,6 +322,39 @@ class signalRecorderCSV(qt.QObject):
 
     def addData(self, row):
         self.writer.writerow(row)
+
+    def close(self):
+        self.file.close()
+
+    def closeEvent(self, event):
+        self.close()
+
+import logging
+from logging.handlers import RotatingFileHandler
+signalLogger = logging.getLogger(__name__)
+signalLogger.setLevel(logging.DEBUG)
+
+class signalRecorderLog(qt.QObject):
+
+    def __init__(self, filename="test", flushtime=60, maxBytes=10485760, backupCount=1000):
+        super(signalRecorderLog, self).__init__()
+        self.records = {}
+        formatter = logging.Formatter(fmt='%(asctime)s %(message)s')#,
+#                              datefmt='%Y-%m-%d %H:%M:%S,uuu')
+        print('Opening logger at ', filename)
+        self.fileLogger = RotatingFileHandler(filename, maxBytes=maxBytes, backupCount=backupCount)
+        self.fileLogger.setFormatter(formatter)
+        signalLogger.addHandler(self.fileLogger)
+
+    def addSignal(self, name='', pen='', timer=1, maxlength=100, function=None, arg=[], **kwargs):
+        sigrec = signalRecord(records=self.records, name=name, pen=pen, timer=timer, maxlength=maxlength, function=function, **kwargs)
+        # self.openfiles.append(file)
+        # self.writers.append(wrtr)
+        self.records[name]['signal'].timer.dataReady.connect(lambda x: self.addData([name] + x))
+        sigrec.start()
+
+    def addData(self, row):
+        signalLogger.info(" ".join([str(a) for a in row]))
 
     def close(self):
         self.file.close()

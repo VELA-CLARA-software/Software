@@ -54,6 +54,7 @@ class plotLegendTree(ParameterTree):
         self.proxySTD = {}
         self.proxyMin = {}
         self.proxyMax = {}
+        self.proxyRange = {}
         self.proxyMean10 = {}
         self.proxyMean100 = {}
         self.proxyMean1000 = {}
@@ -185,9 +186,7 @@ class plotLegendTree(ParameterTree):
                     {'name': 'Standard Deviation', 'type': 'float', 'readonly': True},
                     {'name': 'Max', 'type': 'float', 'readonly': True},
                     {'name': 'Min', 'type': 'float', 'readonly': True},
-                    {'name': 'Mean10', 'title': 'Moving Average 10 Shots', 'type': 'bool', 'value': False},
-                    {'name': 'Mean100', 'title': 'Moving Average 100 Shots', 'type': 'bool', 'value': False},
-                    {'name': 'Mean1000', 'title': 'Moving Average 1000 Shots', 'type': 'bool', 'value': False},
+                    {'name': 'Range', 'type': 'float', 'readonly': True},
                     {'name': 'ClearStats', 'title': 'Clear Statistics', 'type': 'action', 'tip': "Reset Statistics"},
                 ]},
                 {'name': 'Options', 'type': 'group', 'removable': False, 'expanded': False, 'children': [
@@ -201,10 +200,13 @@ class plotLegendTree(ParameterTree):
                     ]},
                     {'name': 'Log_Mode', 'title': 'Log Mode', 'type': 'bool', 'value': self.records[name]['logScale'], 'tip': "Set Log mode scaling"},
                     {'name': 'Show_Axis', 'title': 'Show Axis?', 'type': 'bool', 'value': False, 'tip': "Show or Remove the Axis"},
-                    {'name': 'Show_Plot', 'title': 'Show Plot?', 'type': 'bool', 'value': True, 'tip': "Show or Remove the plot lines"},
                     {'name': 'FFT_Plot', 'title': 'Plot FFT', 'type': 'bool', 'value': False, 'tip': "Show or Remove the FFT Plot"},
                     {'name': 'Histogram_Plot', 'title': 'Plot Histogram', 'type': 'bool', 'value': False, 'tip': "Show or Remove the Histogram Plot"},
                 ]},
+                {'name': 'Show_Plot', 'title': 'Show Plot?', 'type': 'bool', 'value': True, 'tip': "Show or Remove the plot lines"},
+                {'name': 'Mean10', 'title': 'Moving Average 10 Shots', 'type': 'bool', 'value': False},
+                {'name': 'Mean100', 'title': 'Moving Average 100 Shots', 'type': 'bool', 'value': False},
+                {'name': 'Mean1000', 'title': 'Moving Average 1000 Shots', 'type': 'bool', 'value': False},
                 {'name': 'Save_Curve', 'type': 'action', 'tip': "Save Curve Data"},
             ]}
         ]
@@ -218,9 +220,10 @@ class plotLegendTree(ParameterTree):
         self.proxySTD[name] = pg.SignalProxy(self.records[name]['worker'].recordStandardDeviationSignal, rateLimit=1, slot=lambda x: pChild.child('Statistics').child('Standard Deviation').setValue(x[0]))
         self.proxyMin[name] = pg.SignalProxy(self.records[name]['worker'].recordMinSignal, rateLimit=1, slot=lambda x: pChild.child('Statistics').child('Min').setValue(x[0]))
         self.proxyMax[name] = pg.SignalProxy(self.records[name]['worker'].recordMaxSignal, rateLimit=1, slot=lambda x: pChild.child('Statistics').child('Max').setValue(x[0]))
-        pChild.child('Statistics').child('Mean10').sigValueChanged.connect(lambda x: self.records[name]['curve'].setVisibility('curve10', x.value()))
-        pChild.child('Statistics').child('Mean100').sigValueChanged.connect(lambda x: self.records[name]['curve'].setVisibility('curve100', x.value()))
-        pChild.child('Statistics').child('Mean1000').sigValueChanged.connect(lambda x: self.records[name]['curve'].setVisibility('curve1000', x.value()))
+        self.proxyRange[name] = pg.SignalProxy(self.records[name]['worker'].recordRangeSignal, rateLimit=1, slot=lambda x: pChild.child('Statistics').child('Range').setValue(x[0]))
+        pChild.child('Mean10').sigValueChanged.connect(lambda x: self.records[name]['curve'].setVisibility('curve10', x.value()))
+        pChild.child('Mean100').sigValueChanged.connect(lambda x: self.records[name]['curve'].setVisibility('curve100', x.value()))
+        pChild.child('Mean1000').sigValueChanged.connect(lambda x: self.records[name]['curve'].setVisibility('curve1000', x.value()))
         pChild.child('Statistics').child('ClearStats').sigActivated.connect(lambda x: self.records[name]['worker'].resetStatistics(True))
         # self.setupAxisList(name, pChild)
         pChild.child('Options').child('Show_Axis').sigValueChanged.connect(lambda x: self.records[name]['axis'].setVisible(x.value()))
@@ -231,7 +234,7 @@ class plotLegendTree(ParameterTree):
         self.records[name]['viewbox'].sigStateChanged.connect(lambda x: self.vbRangeChanged(x, pChild))
 
         pChild.child('Options').child('Log_Mode').sigValueChanged.connect(lambda x: self.records[name]['curve'].setLogMode(x.value()))
-        pChild.child('Options').child('Show_Plot').sigValueChanged.connect(lambda x: self.records[name]['curve'].setVisibility('curve', x.value()))
+        pChild.child('Show_Plot').sigValueChanged.connect(lambda x: self.records[name]['curve'].setVisibility('curve', x.value()))
         pChild.child('Options').child('FFT_Plot').sigValueChanged.connect(lambda x: self.fftselectionchange.emit(name, x.value()))
         pChild.child('Options').child('Histogram_Plot').sigValueChanged.connect(lambda x: self.histogramplotselectionchange.emit(name, x.value()))
         self.records[name]['viewbox'].sigStateChanged.connect(lambda x: pChild.child('Options').child('AxisAutoScale').setValue(x.state['autoRange'][1]))

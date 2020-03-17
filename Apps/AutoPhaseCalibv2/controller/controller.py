@@ -8,6 +8,7 @@ from  functools import partial
 import Software.Procedures.qt as qt
 from Software.Procedures.Machine.signaller import machineReciever, machineSignaller
 import Software.Widgets.loggerWidget.loggerWidget as lw
+
 import logging
 logger = logging.getLogger(__name__)
 
@@ -156,7 +157,7 @@ class Controller(qt.QObject):
         self.view.Linac1_Rough_Button, self.view.Linac1_Fine_Button, self.view.Linac1_SetPhase_Button, self.view.Linac1_Dipole_Button,
         self.view.Linac1_LoadBURT_Button, self.view.Linac1_Fine_Screen_Button, self.view.Gun_Fine_Screen_Button,
         self.view.Linac1_TurnOn_Button, self.view.Gun_TurnOn_Button, self.view.Gun_Fine_Update_Start_Button, self.view.Linac1_Fine_Update_Start_Button,
-        self.view.Gun_LinacTiming_Off_Button, self.view.Linac1_LinacTiming_On_Button, self.view.Linac1_LinacTiming_Off_Button
+        self.view.Gun_LinacTiming_Off_Button, self.view.Linac1_LinacTiming_On_Button, self.view.Linac1_LinacTiming_Off_Button, self.view.L01_PID_Checkbox
         ]
 
         # self.view.setupMagnetsButton.clicked.connect(self.model.magnetDegausser)
@@ -199,7 +200,7 @@ class Controller(qt.QObject):
         self.view.Save_Data_Buttons.rejected.connect(self.cancelSave)
         self.view.actionSave_Calibation_Data.triggered.connect(self.saveData)
 
-        self.setLabel('MODE: '+self.model.machineType+' '+self.model.lineType+' with '+self.model.gunType+' gun')
+        self.setLabel('Mode: '+self.model.machineType+' '+self.model.lineType+' with '+self.model.gunType+' gun')
 
         self.progressSignal.connect(self.updateProgress)
 
@@ -359,7 +360,8 @@ class Controller(qt.QObject):
         self.model.finish()
 
     def updatePlot(self):
-        self.plots[self.cavity].newData(self.model.cavity, self.model.actuator, self.model.crestingData[self.model.cavity][self.model.actuator])
+        # print('Plot Update Called! - ', self.model.cavity, self.model.actuator)
+        self.plots[self.cavity].newData(self.cavity, self.model.actuator, self.model.crestingData[self.model.cavity][self.model.actuator])
 
     def gunRamp(self):
         self.disableButtons()
@@ -410,7 +412,9 @@ class Controller(qt.QObject):
         self.disableButtons()
         self.cavity = 'Linac1'
         self.actuator = 'fine'
-        self.thread = GenericThread(self.model.linacCresterFine, 1, self.view.Linac1_Fine_Range_Start.value(), self.view.Linac1_Fine_Range_Set.value(), self.view.Linac1_Fine_PointSeperation_Set.value(), self.view.Linac1_Fine_NShots_Set.value())
+        self.thread = GenericThread(self.model.linacCresterFine, 1, self.view.Linac1_Fine_Range_Start.value(),
+                                    self.view.Linac1_Fine_Range_Set.value(), self.view.Linac1_Fine_PointSeperation_Set.value(),
+                                    self.view.Linac1_Fine_NShots_Set.value(), PID=self.view.L01_PID_Checkbox.isChecked())
         self.newDataSignal.connect(self.updatePlot)
         self.thread.finished.connect(self.enableSaveButtons)
         self.thread.start()

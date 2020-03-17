@@ -5,6 +5,7 @@ sys.path.append("../../../")
 import Software.Procedures.qt as qt
 from bisect import bisect_left
 from scipy.stats import pearsonr
+from collections import deque
 # logger = logging.getLogger(__name__)
 
 signal.signal(signal.SIGINT, signal.SIG_DFL)
@@ -82,8 +83,8 @@ class scatterPlot(qt.QWidget):
         self.resetButton = qt.QPushButton('Clear')
         self.resetButton.clicked.connect(self.resetButtonPushed)
         self.offsetSpinBox = qt.QSpinBox()
-        self.offsetSpinBox.setMinimum(-100)
-        self.offsetSpinBox.setMaximum(100)
+        self.offsetSpinBox.setMinimum(-1000000)
+        self.offsetSpinBox.setMaximum(1000000)
         self.offsetSpinBox.setSingleStep(1)
         self.offsetSpinBoxLabel = qt.QPushButton('Offset')
         self.offsetSpinBoxLabel.setFlat(True)
@@ -114,10 +115,12 @@ class scatterPlot(qt.QWidget):
         allnames = []
         for name in sorted(self.records):
             if not str(name) == str(self.removedname):
-                allnames.append(name)
-                if self.combobox1.findText(name) == -1:
-                    self.combobox1.addItem(name)
-                    self.combobox2.addItem(name)
+                for append in ['','Mean10', 'Mean100', 'Mean1000']:
+                    newname = name+append
+                    allnames.append(newname)
+                    if self.combobox1.findText(newname) == -1:
+                        self.combobox1.addItem(newname)
+                        self.combobox2.addItem(newname)
         for index in range(self.combobox1.count()):
             if not self.combobox1.itemText(index) in allnames:
                 self.combobox1.removeItem(index)
@@ -127,6 +130,7 @@ class scatterPlot(qt.QWidget):
                     self.combobox1.setCurrentIndex(index)
                 if self.combobox2.itemText(index) == combobox2text:
                     self.combobox2.setCurrentIndex(index)
+        self.removedname = ''
 
     def setPlotRate(self, value):
         self.plotrate = value
@@ -190,7 +194,7 @@ class scatterPlotPlot(pg.PlotWidget):
         self.paused = False
         self.selectionNameX = 0
         self.selectionNameY = 0
-        self.decimateScale = 5000
+        self.decimateScale = 32768
         self.scatterplot.scatterSelectionChanged.connect(self.setSelectionIndex)
         self.plot = self.plotWidget.addPlot(row=0, col=0)
         self.scatterPlot = pg.ScatterPlotItem(size=5, pen=pg.mkPen(None))
@@ -206,15 +210,35 @@ class scatterPlotPlot(pg.PlotWidget):
         print(text)
         self.statusChanged.emit(text)
 
+    def isSelectionInRecords(self, selection):
+        if 'Mean1000' in selection:
+            selection = selection.replace('Mean1000','')
+        elif 'Mean100' in selection:
+            selection = selection.replace('Mean100','')
+        elif 'Mean10' in selection:
+            selection = selection.replace('Mean10','')
+        return selection in self.records
+
+    def getDataIfMean(self, selection):
+        recordname = 'data'
+        if 'Mean1000' in selection:
+            selection = selection.replace('Mean1000','')
+            recordname = 'dataMean1000'
+        elif 'Mean100' in selection:
+            selection = selection.replace('Mean100','')
+            recordname = 'dataMean100'
+        elif 'Mean10' in selection:
+            selection = selection.replace('Mean10','')
+            recordname = 'dataMean10'
+        return self.records[selection]['timer'], self.records[selection][recordname]
+
     def setSelectionIndex(self, x, y, offset):
         self.selectionNameX = str(x)
         self.selectionNameY = str(y)
         self.selectionOffset = int(offset)
-        if self.selectionNameX in self.records and self.selectionNameY in self.records:
-            self.signalDelayTime1 =  self.records[self.selectionNameX]['timer']
-            self.signalDelayTime2 =  self.records[self.selectionNameY]['timer']
-            self.data1 = self.records[self.selectionNameX]['data']
-            self.data2 = self.records[self.selectionNameY]['data']
+        if self.isSelectionInRecords(self.selectionNameX) and self.isSelectionInRecords(self.selectionNameY):
+            self.signalDelayTime1, self.data1 = self.getDataIfMean(self.selectionNameX)
+            self.signalDelayTime2, self.data2 = self.getDataIfMean(self.selectionNameY)
             self.createPlot(self.selectionNameX, self.selectionNameY, self.color)
         else:
             self.data1 = []
@@ -224,10 +248,6 @@ class scatterPlotPlot(pg.PlotWidget):
 
     def togglePause(self, value):
         self.paused = value
-
-    def getPlotData(self, record):
-        plotData = list(record['data'])
-        return plotData
 
     def show(self):
         self.plotWidget.show()
@@ -280,18 +300,32 @@ class scatterPlotPlot(pg.PlotWidget):
                 del data1[:startpos1]
                 del data2[:startpos2]
                 if self.signalDelayTime1 != self.signalDelayTime2:
-                    if self.signalDelayTime1 > self.signalDelayTime2:
+                    if self.signalDelayTime1 < self.signalDelayTime2:
                         tmpdata1 = zip(*data1)[0]
                         data1 = [takeClosestPosition(tmpdata1, data1, timeval[0])[1] for timeval in data2]
                     else:
                         tmpdata2 = zip(*data2)[0]
                         data2 = [takeClosestPosition(tmpdata2, data2, timeval[0])[1] for timeval in data1]
+                    # if self.signalDelayTime1 > self.signalDelayTime2:
+                    #     ratio = int(self.signalDelayTime1 / self.signalDelayTime2)
+                    #     print('ratio = ', ratio)
+                    #     data1 = list(reversed(list(reversed(data1))[0::ratio]))
+                    # else:
+                    #     ratio = int(self.signalDelayTime2 / self.signalDelayTime1)
+                    #     print('ratio = ', ratio)
+                    #     data2 = list(reversed(list(reversed(data2))[0::ratio]))
                 if self.selectionOffset > 0:
-                    data1 = self.rotate(data1, self.selectionOffset)
+                    del data1[-abs(self.selectionOffset):]
+                    del data2[:abs(self.selectionOffset)]
                 if self.selectionOffset < 0:
-                    data2 = self.rotate(data2, abs(self.selectionOffset))
-                del data1[:abs(self.selectionOffset)]
-                del data2[:abs(self.selectionOffset)]
+                    del data2[-abs(self.selectionOffset):]
+                    del data1[:abs(self.selectionOffset)]
+                # if self.selectionOffset < 0:
+                #     data2d = deque(data2)
+                #     data2d.rotate(self.selectionOffset)
+                #     data2 = list(data2d)
+                # del data1[:abs(self.selectionOffset)]
+                # del data2[:abs(self.selectionOffset)]
                 if len(data1) > len(data2):
                     del data1[len(data2) - len(data1):]
                 elif len(data2) > len(data1):
@@ -303,7 +337,10 @@ class scatterPlotPlot(pg.PlotWidget):
                     y=list(y)
                     start = time.time()
                     pr = pearsonr(x,y)
-                    self.scatterPlot.setData(x, y, pxMode=True, pen=None)
+                    try:
+                        self.scatterPlot.setData(x, y, pxMode=True, pen=None)
+                    except:
+                        pass
                     self.plot.setTitle(self.titleBaseName + ' (pr='+str(np.round(pr[0], decimals=3))+')')
             self.doingPlot = False
         # self.plot.enableAutoRange()

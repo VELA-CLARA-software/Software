@@ -11,6 +11,11 @@ import VELA_CLARA_BPM_Control as vbpmc
 import  VELA_CLARA_General_Monitor as vgen
 import  VELA_CLARA_LLRF_Control as vllrf
 
+import argparse
+parser = argparse.ArgumentParser(description='Striptool')
+parser.add_argument('settings', type=str, default=None,
+                    help='Location of the YAML settings filename')
+
 ''' Load loggerWidget library (comment out if not available) '''
 # sys.path.append(str(os.path.dirname(os.path.abspath(__file__)))+'\\..\\..\\loggerWidget\\')
 # import loggerWidget as lw
@@ -34,9 +39,9 @@ class timeButton(qt.QPushButton):
     def buttonPushed(self):
         self.timeButtonPushed.emit(convert_to_seconds(str(self.text())))
 
-class striptool_Demo(qt.QMainWindow):
-    def __init__(self, parent = None):
-        super(striptool_Demo, self).__init__(parent)
+class striptool_Epics(qt.QMainWindow):
+    def __init__(self, settings=None, parent=None):
+        super(striptool_Epics, self).__init__(parent)
 
         stdicon = self.style().standardIcon
         style = qt.QStyle
@@ -53,7 +58,7 @@ class striptool_Demo(qt.QMainWindow):
         fftPlotAction.setStatusTip('Add FFT Plot')
         fftPlotAction.triggered.connect(self.addFFTPlot)
 
-        self.setWindowTitle("striptool_Demo")
+        self.setWindowTitle("Striptool")
         menubar = self.menuBar()
         fileMenu = menubar.addMenu('&File')
 
@@ -79,7 +84,8 @@ class striptool_Demo(qt.QMainWindow):
         CLARABPMController=Cbpms,
         LRRGRFController=LRRGllrf,
         L01RFController=L01llrf,
-        GeneralController=general)
+        GeneralController=general,
+        settings=settings)
 
         reloadSettingsAction = qt.QAction('Reload Settings', self)
         reloadSettingsAction.setStatusTip('Reload Settings YAML File')
@@ -229,6 +235,7 @@ class striptool_Demo(qt.QMainWindow):
             plot.close()
 
 def main():
+    args = parser.parse_args()
     app = qt.QApplication(sys.argv)
     app_icon = qt.QIcon(':/striptool.ico')
     app.setWindowIcon(app_icon)
@@ -255,9 +262,9 @@ def main():
     Vbpms = bpms.physical_VELA_INJ_BPM_Controller()
     Cbpms = bpms.physical_CLARA_PH1_BPM_Controller()
     L01llrf = llrf.physical_L01_LLRF_Controller()
-    LRRGllrf = llrf.physical_LRRG_LLRF_Controller()
+    LRRGllrf = llrf.physical_CLARA_LRRG_LLRF_Controller()
     general = vgen.init()
-    ex = striptool_Demo()
+    ex = striptool_Epics(args.settings)
     ex.show()
     splash.finish(ex)
     sys.exit(app.exec_())
