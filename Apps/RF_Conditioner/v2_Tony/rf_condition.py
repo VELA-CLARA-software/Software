@@ -32,7 +32,8 @@ from PyQt4 import QtGui
 # It is being read correctly from <open file '\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers
 # \\bin\\stage\\VELA_CLARA_enums.pyd', mode 'rb' at 0x000000000307A420>
 # It is having trouble reading the 'VELA_CLARA_enums.pyd file'.
-
+import platform
+print 'platform.architecture()[0] = ', platform.architecture()[0]
 import imp
 DLLFail = imp.find_module("rf_condition_view_base")
 print DLLFail
@@ -42,24 +43,21 @@ print DLLFail
 
 
 from rf_condition_view_base import Ui_rf_condition_mainWindow
-from VELA_CLARA_RF_Modulator_Control import GUN_MOD_STATE
-from VELA_CLARA_RF_Modulator_Control import L01_MOD_STATE
-from VELA_CLARA_Vac_Valve_Control import VALVE_STATE
+
+
 from VELA_CLARA_RF_Protection_Control import RF_PROT_STATUS
 ##
 from VELA_CLARA_enums import MACHINE_AREA
 from VELA_CLARA_LLRF_Control import LLRF_TYPE
 from VELA_CLARA_RF_Protection_Control import RF_PROT_TYPE
+from VELA_CLARA_RF_Modulator_Control import GUN_MOD_STATE
+from VELA_CLARA_RF_Modulator_Control import L01_MOD_STATE
+from VELA_CLARA_Vac_Valve_Control import VALVE_STATE
 #######################################
-
 import VELA_CLARA_enums
 
 print('import main_controller')
 from src.controllers.main_controller import main_controller
-
-
-
-
 
 class rf_condition(QtGui.QApplication):
     DEBUG_MODE = True
@@ -79,10 +77,6 @@ if __name__ == '__main__':
     print('Starting rf_condition Application')
     app = rf_condition(sys.argv)
     sys.exit(app.exec_())
-
-
-
-
 
 
 # from PyQt4.QtGui import *
