@@ -33,6 +33,8 @@ class main_controller(controller_base):
         #
         # more set-up after config read
         QApplication.processEvents()
+        #print('Running Helloooo')
+        self.logger.message('Running Helloooo',True)
         self.data.init_after_config_read()
         # once we have parsed the the pulse_breakdown_log we need ot set the active pulse count!!!
         controller_base.llrf_control.setActivePulseCount(self.data.values[dat.log_pulse_count])
@@ -64,13 +66,13 @@ class main_controller(controller_base):
         # load the amp_set vs Kly_fwd_pow dictionary into c++
         self.logger.header(self.my_name + ' Loading amp_set vs Kly_fwd_pow dictionary', True)
         for key, value in controller_base.data.amp_vs_kfpow_running_stat.iteritems():
-            # print key
-            # print 'key type = ' + str(type(key))
-            # print key
-            # print key,value[0],value[1],value[2]
-            # print 'value[0] type = ' + str(type(value[0]))
-            # print 'value[1] type = ' + str(type(value[1]))
-            # print 'value[2] type = ' + str(type(value[2]))
+            #print key
+            #print 'key type = ' + str(type(key))
+            #print key
+            #print key,value[0],value[1],value[2]
+            #print 'value[0] type = ' + str(type(value[0]))
+            #print 'value[1] type = ' + str(type(value[1]))
+            #print 'value[2] type = ' + str(type(value[2]))
             self.logger.message(
                 'Data: ' + str(key) + ' ' + str(value[0]) + ' ' + str(value[1]) + ' ' + str(
                     value[2]), True)

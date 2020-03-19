@@ -27,7 +27,9 @@ from PyQt4.QtGui import QPixmap
 from PyQt4.QtCore import QObject
 from PyQt4.QtGui import QTextCursor
 from PyQt4.QtGui import QIcon
+#import llrf_handler_base
 import sys
+
 
 
 # redirecting std.out, works but slows the gui responsiveness, so needs more investigating
@@ -134,9 +136,23 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
 		#self.err = pg.ErrorBarItem()
 		self.err = pg.ErrorBarItem(x=x, y=y, top=top, bottom=bottom, beam=0.5)
 		self.plot_item.addItem(self.err)
-		#self.plot_item.plot(x, y, symbol='o', pen={'color': 0.8, 'width': 2})
+		self.plot_item.plot(x, y, symbol='o', pen={'color': 0.8, 'width': 2})
+
+	def set_plot_error_bars_binned(self, x, y, err):
+		self.plot_item = self.graphicsView.getPlotItem()
+		#self.plot_item.setWindowTitle('Amp SP vs KFPow')
+		#self.err = pg.ErrorBarItem()
+		self.err = pg.ErrorBarItem(x=x, y=y, top=err, bottom=err, beam=0.5)
+		self.plot_item.addItem(self.err)
+		self.plot_item.plot(x, y, symbol='o', pen={'color': 0.8, 'width': 2})
+
 
 	def update_plot(self):
+
+		#data = llrf_handler_base.data.amp_vs_kfpow_running_stat[llrf_handler_base.data.values[dat.amp_sp]]
+
+		#x = data[0]
+		'''
 		data = base.data.amp_vs_kfpow_running_stat
 
 		# TODO: update with amp_vs_kfpow_running_stat_binned
@@ -157,15 +173,46 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
 		for item in x:
 			y.append( data[item][1] )
 
-		self.err.setData(x = np.array(x),
-						 y = np.array(y),
-						 top= err,
-						 bottom=err,
-						 beam=0.5)
+		self.err.setData(x=np.array(x), y=np.array(y), top=err, bottom=err, beam=0.5)
+
+		'''
+
+
+		x = np.array(base.data.values[dat.Initial_Bin_List][0])
+		y = np.array(base.data.values[dat.Initial_Bin_List][1])
+		bedges = np.array(base.data.values[dat.Initial_Bin_List][2])
+		bin_pop = np.array(base.data.values[dat.Initial_Bin_List][3])
+		data_binned = base.data.values[dat.Initial_Bin_List][4]
+
+		err = []
+		for i in range(len(data_binned)):
+			#print err[i]
+			if len(data_binned[i]) == 0:
+				err.append(0.0)
+			else:
+				err.append(np.std(data_binned[i]))
+
+		err = np.array(err)
+		print 'err[10] = ', err[10]
+
+
+
 		# do we need to clear ???
 		self.plot_item.clear()
-		self.plot_item.addItem(self.err)
+
+		# plot data points
 		self.plot_item.plot(x, y, symbol='+', pen={'color': 0.8, 'width': 1})
+
+		# plot error bars
+		#self.err = pg.ErrorBarItem(x=np.array(x), y=np.array(y), top=err, bottom=err, beam=0.5)
+		#self.plot_item.addItem(self.err)
+		#self.err.setData(x=np.array(x), y=np.array(y), top=err, bottom=err, beam=0.5)
+		self.set_plot_error_bars_binned(x, y, err)
+
+
+		#self.plot_item.plot(x=np.array(x), y=np.array(y), top=err, bottom=err, beam=0.5)
+
+
 		# add in straight line fits ...
 		self.plot_item.plot( [base.data.values[dat.x_min], base.data.values[dat.x_max] ],
 		                     [base.data.values[dat.y_min], base.data.values[dat.y_max]],
@@ -174,6 +221,11 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
 		self.plot_item.plot( [base.data.values[dat.old_x_min], base.data.values[dat.old_x_max] ],
 		                     [base.data.values[dat.old_y_min], base.data.values[dat.old_y_max]],
 		                     pen={'color': 'y', 'width': 2})
+
+
+
+
+
 
 	# custom close function
 	def closeEvent(self, event):
@@ -271,7 +323,7 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
 		elif type(val) is GUN_MOD_STATE:
 			self.set_gun_mod_state(widget, val, key)
 		elif type(val) is L01_MOD_STATE:
-			self.set_L01_mod_state(widget, val, key)
+			self.set_L01_mod_state(widget, val)
 		elif type(val) is VALVE_STATE:
 			self.set_valve(widget, val)
 		elif type(val) is bool:
@@ -459,20 +511,22 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
 			widget.setText('ERROR')
 		self.clip_vals[status] = str(widget.text())
 
-	def set_L01_mod_state(self, widget, val, status):
+	def set_L01_mod_state(self, widget, val):
 		if val == L01_MOD_STATE.STATE_UNKNOWN:
-			self.set_widget_color_text(widget, 'STATE_UNKNOWN', gui_conditioning.error, status)
+			self.set_widget_color_text(widget, state.UNKNOWN)
+			widget.setText('STATE_UNKNOWN')
 		elif val == L01_MOD_STATE.L01_OFF:
-			self.set_widget_color_text(widget, 'L01_OFF', gui_conditioning.rf_off, status)
+			self.set_widget_color_text(widget, state.BAD)
+			widget.setText('L01_OFF')
 		elif val == L01_MOD_STATE.L01_STANDBY:
-			self.set_widget_color_text(widget, 'L01_STANDBY', gui_conditioning.rf_off, status)
-		elif val == L01_MOD_STATE.STATE_UNKNOWN:
-			self.set_widget_color_text(widget, 'STATE_UNKNOWN', gui_conditioning.error, status)
+			self.set_widget_color_text(widget, state.STANDBY)
+			widget.setText('L01_STANDBY')
 		elif val == L01_MOD_STATE.L01_HV_ON:
-			self.set_widget_color_text(widget, 'L01_HV_ON', gui_conditioning.rf_off, status)
+			self.set_widget_color_text(widget, state.INIT)
+			widget.setText('L01_HV_ON')
 		elif val == L01_MOD_STATE.L01_RF_ON:
-			self.set_widget_color_text(widget, 'L01_RF_ON', gui_conditioning.rf_on, status)
-		self.clip_vals[status] = str(widget.text())
+			self.set_widget_color_text(widget, state.GOOD)
+			widget.setText('L01_RF_ON')  # self.clip_vals[status] = str(widget.text())
 
 
 

@@ -25,7 +25,8 @@
 //*/
 '''
 from monitor import monitor
-from VELA_CLARA_enums import CONTROLLER_TYPE
+from VELA_CLARA_enums import *
+#from VELA_CLARA_enums import CONTROLLER_TYPE
 from VELA_CLARA_RF_Modulator_Control import L01_MOD_STATE
 from VELA_CLARA_RF_Modulator_Control import GUN_MOD_STATE
 

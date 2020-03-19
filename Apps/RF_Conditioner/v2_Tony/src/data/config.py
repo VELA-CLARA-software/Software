@@ -27,7 +27,8 @@ import yaml
 from collections import defaultdict
 # Future warning:
 # CATAP 2.0 is probably going to put all these into a general enum name space to be included first
-from VELA_CLARA_enums import MACHINE_AREA
+from VELA_CLARA_enums import *
+#from VELA_CLARA_enums import MACHINE_AREA
 from VELA_CLARA_LLRF_Control import LLRF_TYPE
 from VELA_CLARA_RF_Protection_Control import RF_PROT_TYPE
 import sys

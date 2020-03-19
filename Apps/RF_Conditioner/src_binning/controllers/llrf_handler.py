@@ -6,6 +6,8 @@ from timeit import default_timer as timer
 import src.data.rf_condition_data_base as dat
 from src.data.state import state
 import inspect
+import numpy as np
+import src.data.rf_condition_data_base as rfcdb
 
 class llrf_handler(llrf_handler_base):
     #whoami
@@ -180,12 +182,47 @@ class llrf_handler(llrf_handler_base):
 
         # this is sketchy AF
 
+    def DynamicBin(self,X, bin_mean, bedges, bin_pop, newdata):
+        for i in range(int(len(bin_mean))):
+            if newdata[0] >= bedges[i] and newdata[0] < bedges[i + 1]:
+                bin_pop[i] += 1
+                bin_mean[i] = ((bin_mean[i] * bin_pop[i]) + newdata[1]) / (bin_pop[i] + 1.0)
+                print('DynamicBin Working')
+            else:
+                continue
+
+        return X, bin_mean, bedges, bin_pop
+
     def update_amp_vs_kfpow_running_stat(self):
         llrf_handler_base.data.amp_vs_kfpow_running_stat[llrf_handler_base.data.values[dat.amp_sp]] = \
             llrf_handler_base.llrf_control.getKlyFwdPwrRSState(int(llrf_handler_base.data.values[dat.amp_sp]))
 
-        # TODO: we need to add in updating the "dynamic" amp_vs_kfpow_running_stat_binned
+        
+        # newdata = [llrf_handler_base.data.amp_vs_kfpow_running_stat[llrf_handler_base.data.values[dat.amp_sp][0]],
+        #            llrf_handler_base.data.amp_vs_kfpow_running_stat[llrf_handler_base.data.values[dat.amp_sp]][1]]
 
+        #print('newdata = ',[llrf_handler_base.data.amp_vs_kfpow_running_stat[llrf_handler_base.data.values[dat.amp_sp]]])
+
+        # X = llrf_handler_base.data.values[dat.Initial_Bin_List][0]
+        # bin_mean =llrf_handler_base.data.values[dat.Initial_Bin_List][1]
+        # bedges = llrf_handler_base.data.values[dat.Initial_Bin_List][2]
+        # bin_pop = llrf_handler_base.data.values[dat.Initial_Bin_List][3]
+        #
+        # print('X = ', X)
+        # print('bin_mean = ', bin_mean)
+        # print('bedges = ', bedges)
+        # print('bin_pop = ', bin_pop)
+        #
+        # X, bin_mean, bedges, bin_pop = self.DynamicBin(X, bin_mean, bedges, bin_pop, newdata)
+        #
+        # llrf_handler_base.data.values[dat.Initial_Bin_List] =[ X, bin_mean, np.zeros(X.shape)]
+        #
+        # llrf_handler_base.data.amp_vs_kfpow_running_stat[llrf_handler_base.data.values[dat.amp_sp]] =[X, bin_mean,
+        # llrf_handler_base.data.amp_vs_kfpow_running_stat[llrf_handler_base.data.values[dat.amp_sp]][2]]
+        #
+        # # TODO: we need to add in updating the "dynamic" amp_vs_kfpow_running_stat_binned
+
+        
 
     def reset_daq_freg(self):
         if llrf_handler_base.data.values[dat.llrf_DAQ_rep_rate_status]  == state.BAD:

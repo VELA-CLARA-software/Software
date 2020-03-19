@@ -3,6 +3,7 @@ from math import sqrt
 import matplotlib.pyplot as plt
 import rf_condition_data_base as dat
 from ramp import *
+#from scipy.stats import binned_statistic
 
 
 class rf_condition_data(dat.rf_condition_data_base):
@@ -107,12 +108,28 @@ class rf_condition_data(dat.rf_condition_data_base):
 
     def get_previous_set_points(self):
 
-        # TODO: here we cna probably return the last NUM_SET_POINTS_TO_FIT from amp_vs_kfpow_running_stat_binned
+        current_sp = dat.rf_condition_data_base.values[dat.amp_sp]
 
+        bindata = dat.rf_condition_data_base.values[dat.Initial_Bin_List]
+
+        xvals = bindata[0]
+        previous_sp = sorted(i for i in xvals if i <= current_sp)
+
+        yvals = bindata[1][0:len(previous_sp)]
+
+        print("BINNED VALS")
+        print(previous_sp)
+        print(yvals)
+
+        return [ np.array(previous_sp) ,  np.array(yvals) ]
+
+
+
+        # OLD METHOD USING DJS AMP_PWER LOG
+        # TODO: here we cna probably return the last NUM_SET_POINTS_TO_FIT from amp_vs_kfpow_running_stat_binned
         data = dat.rf_condition_data_base.amp_vs_kfpow_running_stat
         current_sp = dat.rf_condition_data_base.values[dat.amp_sp]
         previous_sp = sorted(i for i in data.keys() if i <= current_sp)
-
         if len(previous_sp) > self.llrf_config['NUM_SET_POINTS_TO_FIT']:
             print ('get_previous_set_points found at least ' + str(self.llrf_config['NUM_SET_POINTS_TO_FIT']) + ' values in set-point history',
                    previous_sp[-self.llrf_config['NUM_SET_POINTS_TO_FIT']:])
@@ -132,81 +149,132 @@ class rf_condition_data(dat.rf_condition_data_base):
         current_sp =  values[dat.amp_sp]
         #
         # we have to get the 3 set-points less than the current one (if they exist)
-        sp_to_fit = self.get_previous_set_points()
+
+        #print(sp_to_fit)
+
+        #raw_input()
 
         self.current_power = int(kfpowdata[current_sp][1])
         self.requested_power = int(self.current_power + req_pwr_inc)
 
-        if len(sp_to_fit) > 1:
-            self.previous_power = int(kfpowdata[sp_to_fit[-2]][1])
+        ### NEW BINNED DATA FIT
 
-        if len(sp_to_fit) == self.llrf_config['NUM_SET_POINTS_TO_FIT']: # MAGIC_STRING,
-            # store previous values for Straight Line Fit
-            values[dat.old_c] = values[dat.c]
-            values[dat.old_m] = values[dat.m]
-            values[dat.old_x_max] = values[dat.x_max]
-            values[dat.old_x_min] = values[dat.x_min]
-            values[dat.old_y_max] = values[dat.y_max]
-            values[dat.old_y_min] = values[dat.y_min]
-            #
-            # fit with np.polyfit, weighted
-            x_tofit = np.array(sp_to_fit)
-            y_tofit = np.array([data[i][1] for i in sp_to_fit])
+        [x_tofit, y_tofit]  = self.get_previous_set_points()
 
-            #print('fitting data x_tofit = ', x_tofit)
-            #print('fitting data y_tofit = ', y_tofit)
+        values[dat.old_c] = values[dat.c]
+        values[dat.old_m] = values[dat.m]
+        values[dat.old_x_max] = values[dat.x_max]
+        values[dat.old_x_min] = values[dat.x_min]
+        values[dat.old_y_max] = values[dat.y_max]
+        values[dat.old_y_min] = values[dat.y_min]
+        #
+        # fit with np.polyfit, weighted
+        m, c = np.polyfit(x_tofit, y_tofit, 1, rcond=None, full=False)
 
-            # we store the variances of the KFP, fitting requires sigmas
-            # this SHOULD be err = np.sqrt([data[i][2] / (data[i][0] -1 ) for i in x])
-            # but we ignore the minus 1 incase we get a div by zero
+        # get next values for Straight Line Fit
+        values[dat.x_max] = x_tofit[-1]
+        values[dat.x_min] = x_tofit[0]
+        # get next values for Straight Line Fit
+        values[dat.y_max] = m * x_tofit[-1] + c
+        values[dat.y_min] = m * x_tofit[0] + c
+        values[dat.c] = c
+        values[dat.m] = m
 
-            # WE HAVE NOTICED SOMETIMES ERR-TOFIT TRIES TO PERFORM A DIVIDE BY ZERO
-            # TEHREFORE CHECK FOR THIS
-            # OLD METHOD
-            # err_tofit = np.sqrt([ data[i][2] / (data[i][0] ) for i in sp_to_fit])
-            weight_tofit = []
-            for sp in sp_to_fit:
-                if data[sp][2] == 0.0:
-                    weight_tofit.append(0.0000001)
-                elif data[sp][2] == 0:
-                    weight_tofit.append(0.0000001)
-                else:
-                    #err_tofit.append( sqrt( float(data[sp][2]) / float(data[sp][0]) )  )
-                    weight_tofit.append( sqrt( 1.0 / float(data[sp][2]) )  )
-                print "weighttofit=", weight_tofit
+        predicted_sp = int((self.requested_power - c) / m)
+        # print(m,c,self.current_power,values[dat.last_mean_power], req_pwr_inc )
 
-            #err_tofit = np.ravel(err_tofit)
-            weight_tofit = np.array(weight_tofit)
-            print "weighttofit to go into polyfit function = ", weight_tofit
-            m, c = np.polyfit(x_tofit, y_tofit, 1, rcond=None, full=False, w=weight_tofit)
+        self.logger.message('x Points to fit = ' + np.array_str(x_tofit, max_line_width=500), True)
+        self.logger.message('y Points to fit = ' + np.array_str(y_tofit, max_line_width=500), True)
+        self.logger.message('Fit m , c = ' + str(m) + ", " + str(c), True)
 
+        self.logger.message(
+            'current   sp/W  = ' + str(current_sp) + " / " + str(self.current_power), True)
+        self.logger.message(
+            'predict   sp/W  = ' + str(predicted_sp) + " / " + str(self.requested_power), True)
+        self.logger.message('new delta sp/W  = ' + str(predicted_sp - current_sp) + " / " + str(
+            self.requested_power - self.current_power) + ' (' + str(req_pwr_inc) + ')', True)
 
-            # get next values for Straight Line Fit
-            values[dat.x_max] = sp_to_fit[-1]
-            values[dat.x_min] = sp_to_fit[0]
-            # get next values for Straight Line Fit
-            values[dat.y_max] = m * sp_to_fit[-1] + c
-            values[dat.y_min] = m * sp_to_fit[0] + c
-            values[dat.c] = c
-            values[dat.m] = m
+        self.logger.message('last delta sp/W  = ' + str(current_sp - x_tofit[-2]) + " / " + str(
+            self.current_power - self.previous_power), True)
 
-            predicted_sp = int((self.requested_power - c)/m)
-            #print(m,c,self.current_power,values[dat.last_mean_power], req_pwr_inc )
-
-            self.logger.message('x Points to fit = ' + np.array_str(x_tofit, max_line_width =500), True)
-            self.logger.message('y Points to fit = ' + np.array_str(y_tofit, max_line_width =500), True)
-            self.logger.message('y Points errors = ' + np.array_str(weight_tofit, max_line_width =500), True)
-            self.logger.message('Fit m , c = ' + str(m) + ", " +  str(c), True)
-
-            self.logger.message('current   sp/W  = ' + str(current_sp)   + " / " + str(self.current_power), True)
-            self.logger.message('predict   sp/W  = ' + str(predicted_sp) + " / " + str(self.requested_power), True)
-            self.logger.message('new delta sp/W  = ' + str(predicted_sp - current_sp) + " / " +
-                                str(self.requested_power-self.current_power) + ' (' + str(
-                                        req_pwr_inc) +')',True)
-
-            self.logger.message('last delta sp/W  = ' + str(current_sp - sp_to_fit[-2]) + " / " +
-                                str(self.current_power -self.previous_power),True)
-        # WHAT TO RETURN
+        #
+        #
+        # # OLD
+        #
+        # #sp_to_fit = self.get_previous_set_points()
+        # self.current_power = int(kfpowdata[current_sp][1])
+        # self.requested_power = int(self.current_power + req_pwr_inc)
+        #
+        # if len(sp_to_fit) > 1:
+        #     self.previous_power = int(kfpowdata[sp_to_fit[-2]][1])
+        #
+        # if len(sp_to_fit) == self.llrf_config['NUM_SET_POINTS_TO_FIT']: # MAGIC_STRING,
+        #     # store previous values for Straight Line Fit
+        #     values[dat.old_c] = values[dat.c]
+        #     values[dat.old_m] = values[dat.m]
+        #     values[dat.old_x_max] = values[dat.x_max]
+        #     values[dat.old_x_min] = values[dat.x_min]
+        #     values[dat.old_y_max] = values[dat.y_max]
+        #     values[dat.old_y_min] = values[dat.y_min]
+        #     #
+        #     # fit with np.polyfit, weighted
+        #     x_tofit = np.array(sp_to_fit)
+        #     y_tofit = np.array([data[i][1] for i in sp_to_fit])
+        #
+        #     #print('fitting data x_tofit = ', x_tofit)
+        #     #print('fitting data y_tofit = ', y_tofit)
+        #
+        #     # we store the variances of the KFP, fitting requires sigmas
+        #     # this SHOULD be err = np.sqrt([data[i][2] / (data[i][0] -1 ) for i in x])
+        #     # but we ignore the minus 1 incase we get a div by zero
+        #
+        #     # WE HAVE NOTICED SOMETIMES ERR-TOFIT TRIES TO PERFORM A DIVIDE BY ZERO
+        #     # TEHREFORE CHECK FOR THIS
+        #     # OLD METHOD
+        #     # err_tofit = np.sqrt([ data[i][2] / (data[i][0] ) for i in sp_to_fit])
+        #     weight_tofit = []
+        #     for sp in sp_to_fit:
+        #         if data[sp][2] == 0.0:
+        #             weight_tofit.append(0.0000001)
+        #         elif data[sp][2] == 0:
+        #             weight_tofit.append(0.0000001)
+        #         else:
+        #             #err_tofit.append( sqrt( float(data[sp][2]) / float(data[sp][0]) )  )
+        #             weight_tofit.append( sqrt( 1.0 / float(data[sp][2]) )  )
+        #         print "weighttofit=", weight_tofit
+        #
+        #     #err_tofit = np.ravel(err_tofit)
+        #     weight_tofit = np.array(weight_tofit)
+        #     print "weighttofit to go into polyfit function = ", weight_tofit
+        #     m, c = np.polyfit(x_tofit, y_tofit, 1, rcond=None, full=False, w=weight_tofit)
+        #
+        #
+        #     # get next values for Straight Line Fit
+        #     values[dat.x_max] = sp_to_fit[-1]
+        #     values[dat.x_min] = sp_to_fit[0]
+        #     # get next values for Straight Line Fit
+        #     values[dat.y_max] = m * sp_to_fit[-1] + c
+        #     values[dat.y_min] = m * sp_to_fit[0] + c
+        #     values[dat.c] = c
+        #     values[dat.m] = m
+        #
+        #     predicted_sp = int((self.requested_power - c)/m)
+        #     #print(m,c,self.current_power,values[dat.last_mean_power], req_pwr_inc )
+        #
+        #     self.logger.message('x Points to fit = ' + np.array_str(x_tofit, max_line_width =500), True)
+        #     self.logger.message('y Points to fit = ' + np.array_str(y_tofit, max_line_width =500), True)
+        #     self.logger.message('y Points errors = ' + np.array_str(weight_tofit, max_line_width =500), True)
+        #     self.logger.message('Fit m , c = ' + str(m) + ", " +  str(c), True)
+        #
+        #     self.logger.message('current   sp/W  = ' + str(current_sp)   + " / " + str(self.current_power), True)
+        #     self.logger.message('predict   sp/W  = ' + str(predicted_sp) + " / " + str(self.requested_power), True)
+        #     self.logger.message('new delta sp/W  = ' + str(predicted_sp - current_sp) + " / " +
+        #                         str(self.requested_power-self.current_power) + ' (' + str(
+        #                                 req_pwr_inc) +')',True)
+        #
+        #     self.logger.message('last delta sp/W  = ' + str(current_sp - sp_to_fit[-2]) + " / " +
+        #                         str(self.current_power -self.previous_power),True)
+        # # WHAT TO RETURN
 
         return_value = 0
         if predicted_sp < current_sp:
@@ -235,19 +303,90 @@ class rf_condition_data(dat.rf_condition_data_base):
         self.logger.message('get_new_set_point, returning ' + str(return_value), True)
         return return_value
 
+    def InitialBin(self,x, y, bin_width, max_amp, max_pow):
+
+        xprime = [x[i] for i in range(len(x) - 1) if x[i] != x[i + 1]]
+        xprime.append(max_amp)
+        xprime.insert(0, 0)
+        yprime = [y[i] for i in range(len(x) - 1) if x[i] != x[i + 1]]
+        yprime.append(max_pow)
+        yprime.insert(0, 0.0)
+
+        bedges = [i * bin_width for i in range(int(xprime[-1] + (2 * int(bin_width))) / int(bin_width))]
+        bin_mean = np.zeros(len(bedges) - 1)
+        bin_pop = np.zeros(len(bedges) - 1)
+        keyList = [i for i in range(len(bedges) - 1)]
+        data_binned = {}
+        for i in keyList:
+            data_binned[i] = []
+
+        for i in range(0, len(xprime)):
+            for j in range(0, len(bin_mean)):
+                if xprime[i] >= bedges[j] and xprime[i] < bedges[j + 1]:
+                    print('bin_mean[j] = ',bin_mean[j])
+                    print('bin_pop[j] = ', bin_pop[j])
+                    print('yprime[i] = ', yprime[i])
+                    print('((bin_mean[j] * bin_pop[j]) + (yprime[i])) / (bin_pop[j] + 1.0) = ', ((bin_mean[j] * bin_pop[j]) + (yprime[i])) / (bin_pop[j] + 1.0))
+                    bin_mean[j] = ((bin_mean[j] * bin_pop[j]) + (yprime[i])) / (bin_pop[j] + 1.0)
+                    bin_pop[j] += 1.0
+                    data_binned[j].append(xprime[i])
+
+        X = [k + bin_width / 2.0 for k in bedges[:-1]]
+
+        return X, bin_mean, bedges, bin_pop, data_binned
+
     def init_after_config_read(self):
+        #print('Helloooo!')
         if self.llrf_config is not None:
+            print('HERE!!!!')
+            for key,value in self.llrf_config.iteritems():
+
+                print key, value
             self.get_pulse_count_breakdown_log()
-
-
 
             dat.rf_condition_data_base.amp_vs_kfpow_running_stat = self.logger.get_amp_power_log()
             #print 'get_amp_power_log results'
-            #for key, value in dat.rf_condition_data_base.amp_vs_kfpow_running_stat.iteritems():
-            #    print key
-            #    print value
 
-            # TODO run this data through the inital_bin funciton to create amp_vs_kfpow_running_stat_binned
+            amp = []
+            pow = []
+
+            for key, value in dat.rf_condition_data_base.amp_vs_kfpow_running_stat.iteritems():
+                amp.append(key)
+                pow.append(value[1])
+
+            print('amp = ', amp)
+            print('pow = ', pow)
+
+
+            # load in the values from the config,
+
+            max_amp = self.llrf_config['BINNED_STATS_MAX_AMP']
+            max_pow = self.llrf_config['BINNED_STATS_MAX_POW']
+            bin_width = self.llrf_config['BINNED_STATS_BIN_WIDTH']
+
+            # visual check #########################################################
+
+            X, bin_mean, bedges, bin_pop, data_binned  = self.InitialBin(amp, pow, bin_width,
+                                                                        max_amp,
+                                                               max_pow)
+            plt.scatter(amp, pow, marker='.', s=1, c='k', label='Data')
+            plt.scatter(X, bin_mean, marker='x', s=25, c='r', label='Binned Mean')
+            plt.xlabel('Set Point')
+            plt.ylabel('Power (MW)')
+            plt.legend()
+            plt.grid(True)
+            plt.savefig('C:\Users\dlerlp\Desktop\InitialBin.png')
+            plt.close('all')
+
+            #######################################################################
+
+            # TODO run this data through the inital_bin function to create
+            #  amp_vs_kfpow_running_stat_binned
+
+            self.values[dat.Initial_Bin_List] = [X, bin_mean, bedges, bin_pop, data_binned]
+            print('self.values[dat.Initial_Bin_List] = ', self.values[dat.Initial_Bin_List])
+
+            #raw_input()
 
             self.values[dat.power_aim] = self.llrf_config['POWER_AIM']
             ##elf.values[dat.pulse_length_start] = self.llrf_config['PULSE_LENGTH_START']
@@ -372,6 +511,7 @@ class rf_condition_data(dat.rf_condition_data_base):
         #
         # get the pulse_break_down_log entries from file
         pulse_break_down_log = self.logger.get_pulse_count_breakdown_log()
+        print(pulse_break_down_log)
         #
         # based on the log file we set active pulse count total,
         # the starting point is the one before the last entry  (WHY???? DJS Jan 2019)
@@ -415,12 +555,14 @@ class rf_condition_data(dat.rf_condition_data_base):
                 pass
             else:
                 ampSP_sorted_pulse_break_down_log.append(i)
+                print('i = ', i)
             last_i = i
         #
         #
         # next we must insert the data in to the main data values dictionary
         #
         # set the ramp index
+        print('ampSP_sorted_pulse_break_down_log = ', ampSP_sorted_pulse_break_down_log)
         self.values[dat.current_ramp_index] = ampSP_sorted_pulse_break_down_log[-1][3]
         #
         # amp_setpoint history history, THIS is used to decide where to ramp down,

@@ -3805,4 +3805,5 @@ class Ui_rf_condition_mainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.expert_tab), _translate("rf_condition_mainWindow", "Expert Panel", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("rf_condition_mainWindow", "Breakdown Panel", None))
 
-from pyqtgraph import PlotWidget
+#TODO AJG: commented this out for the time being:
+#from pyqtgraph import PlotWidget

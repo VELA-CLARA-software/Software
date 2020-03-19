@@ -216,9 +216,15 @@ class llrf_simple_param_monitor(monitor):
     def update_amp_vs_kfpow_running_stat(self):
         monitor.data.amp_vs_kfpow_running_stat[monitor.data.values[dat.amp_sp]] = \
             monitor.llrf_control.getKlyFwdPwrRSState(monitor.data.values[dat.amp_sp])
+
+        #print('monitor.llrf_control.getKlyFwdPwrRSState(monitor.data.values[dat.amp_sp]) = ',
+        # monitor.llrf_control.getKlyFwdPwrRSState(monitor.data.values[dat.amp_sp]))
+
         # TODO we need to update amp_vs_kfpow_running_stat_binned with the latest "values"
         #
-
+    def update_amp_vs_kfpow_running_stat_binned(self):
+        monitor.data.amp_vs_kfpow_running_stat_binned[monitor.data.values[dat.Initial_Bin_List]] = \
+            monitor.llrf_control.getKlyFwdPwrRSState(monitor.data.values[dat.Binned_amp_sp])
 
     def get_mean_power(self,key,trace):
         #print("get_mean_power, passwed key for trace = ", trace)

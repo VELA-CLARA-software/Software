@@ -24,7 +24,8 @@
 //*/
 """
 from monitor import monitor
-from VELA_CLARA_enums import CONTROLLER_TYPE
+from VELA_CLARA_enums import *
+#from VELA_CLARA_enums import CONTROLLER_TYPE
 
 # At the moment its a very small simple class,
 # At a later date  we may increase what it can do (i.e. gain the ability  to reset the protection)

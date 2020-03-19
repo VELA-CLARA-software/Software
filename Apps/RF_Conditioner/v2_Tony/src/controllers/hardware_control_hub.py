@@ -24,9 +24,10 @@
 //
 //*/
 '''
-from VELA_CLARA_enums import MACHINE_MODE
-from VELA_CLARA_enums import MACHINE_AREA
-from VELA_CLARA_enums import CONTROLLER_TYPE
+from VELA_CLARA_enums import *
+#from VELA_CLARA_enums import MACHINE_MODE
+#from VELA_CLARA_enums import MACHINE_AREA
+#from VELA_CLARA_enums import CONTROLLER_TYPE
 from VELA_CLARA_LLRF_Control import LLRF_TYPE
 import VELA_CLARA_LLRF_Control
 import VELA_CLARA_Vac_Valve_Control
@@ -36,10 +37,8 @@ import VELA_CLARA_Magnet_Control
 import VELA_CLARA_General_Monitor
 import subprocess
 from collections import defaultdict
-
 from src.data import config
 from src.data import rf_conditioning_logger
-
 import llrf_control
 
 

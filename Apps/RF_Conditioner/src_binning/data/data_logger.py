@@ -133,6 +133,7 @@ class data_logger(object):
         #
         self.header(self.my_name + ' get_amp_power_log', True)
         self.message('read get_amp_power_log: ' + self.amp_power_log, True)
+        print('r_dict = ', r_dict)
         return r_dict
 
     def get_pulse_count_breakdown_log(self):
@@ -260,6 +261,8 @@ class data_logger(object):
             f.write(struct.pack('<B', val))
         elif type(val) is L01_MOD_STATE:
             f.write(struct.pack('<B', val))
+        elif type(val) is tuple:
+            pass
         else:
             print(self.my_name + ' write_binary() error unknown type, ' + str(type(val)) )
         #print str(val) + '   ' + str(type(val))

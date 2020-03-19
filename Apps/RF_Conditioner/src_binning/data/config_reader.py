@@ -175,8 +175,8 @@ class config_reader(object):
                 r.update({item: self.get_traces_to_monitor(config_reader.config[item])})
             except:
                 print(self.my_name, " FAILED to Find, ", item)
-        # for k, v in r.iteritems():
-        #     print k, v
+        for k, v in r.iteritems():
+             print k, v
         return r
     # neater but not type for values
     # def get_vac_parameter_NO_TYPE(self):
@@ -250,11 +250,18 @@ class config_reader(object):
                    'RF_REPETITION_RATE_ERROR','BREAKDOWN_RATE_AIM', 'LLRF_CHECK_TIME',
                    'NORMAL_POWER_INCREASE','LOW_POWER_INCREASE','LOW_POWER_INCREASE_RATE_LIMIT'
                    ,'NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY','EXTRA_TRACES_ON_BREAKDOWN',
-                   'NUM_BUFFER_TRACES','DEFAULT_PULSE_COUNT','MAX_DELTA_AMP_SP','NUM_SET_POINTS_TO_FIT'
-                   ]
+                   'NUM_BUFFER_TRACES','DEFAULT_PULSE_COUNT','MAX_DELTA_AMP_SP',
+                   'NUM_SET_POINTS_TO_FIT',
+                   'BINNED_STATS_MAX_AMP',
+                   'BINNED_STATS_BIN_WIDTH']
+
+
+
         string_param = []
         monitor_param=['TRACES_TO_SAVE','MEAN_TRACES','VAC_SPIKE_TRACES_TO_SAVE']
-        float_param = ['MEAN_TIME_TO_AVERAGE','RF_INCREASE_LEVEL','RF_INCREASE_RATE','POWER_AIM','PULSE_LENGTH_AIM',
+        float_param = ['BINNED_STATS_MAX_POW',
+
+            'MEAN_TIME_TO_AVERAGE','RF_INCREASE_LEVEL','RF_INCREASE_RATE','POWER_AIM','PULSE_LENGTH_AIM',
                        'PULSE_LENGTH_AIM_ERROR','KLY_PWR_FOR_ACTIVE_PULSE',
                        '1_MEAN_START','1_MEAN_END',
                        '2_MEAN_START','2_MEAN_END',
@@ -274,6 +281,10 @@ class config_reader(object):
                                    type_param=type_param,monitor_param=monitor_param,
                                    float_param=float_param
                                    )
+
+        for key,value in config_reader.llrf_config.iteritems():
+            print key,value
+
         return config_reader.llrf_config
 
     def breakdown_param(self):

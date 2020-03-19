@@ -19,7 +19,7 @@
 ## key:  value  ## At least one space character after the colon IS MANDATORY
 ## To denote a list of values, define name of list, then colon, 
 ## add each element by starting on a newline with two spaces dash one space,  
-## The two spaces dash one sapce is MANDATORY!!! 
+## The two spaces dash one space is MANDATORY!!!
 ## entries are interpreted as strings UNLESS they are a number, 
 ## numbers will be interpreted as numbers 
 ## MYLIST:  
@@ -488,6 +488,12 @@ PID_proportional_gain_GMON :  CLA-GUN-H2O-PID-02:PROP:RB
 PID_integral_gain_GMON :  CLA-GUN-H2O-PID-02:INTG:RB
 PID_derivative_gain_GMON :  CLA-GUN-H2O-PID-02:DERI:RB
 PID_autotune_state_GMON :  CLA-GUN-H2O-PID-02:ATUNE:RB
+
+## Binning of amp-power log:
+
+BIN_WIDTH: 100  ## Width of each bin in amp set points
+MAX_AMP:  100000.0  ## x-coordinate, amp set points
+MAX_POW:  10000000  ## y-coordinate, Watts
 
 
 

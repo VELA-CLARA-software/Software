@@ -168,6 +168,18 @@ phase_mask_by_power_trace_2_set = 'phase_mask_by_power_trace_2_set'
 phase_end_mask_by_power_trace_1_time = 'phase_end_mask_by_power_trace_1_time'
 phase_end_mask_by_power_trace_2_time = 'phase_end_mask_by_power_trace_2_time'
 
+Initial_Bin_List = 'Initial_Bin_List'
+Binned_amp_sp = 'Binned_amp_sp'
+
+
+binned_stats_min_amp = "BINNED_STATS_MIN_AMP"
+binned_stats_max_amp = "binned_stats_max_amp"
+binned_stats_max_pow = "BINNED_STATS_MAX_POW"  # MW  (we need to make sure if we get more
+# power thna this the script does not crash)
+binned_stats_min_pow = "BINNED_STATS_MIN_POW"   # MW
+binned_stats_bin_width = "BINNED_STATS_BIN_WIDTH" # In amp-sets point units
+
+
 all_value_keys = [rev_power_spike_count,
                   num_outside_mask_traces,
                   breakdown_rate_aim,
@@ -223,6 +235,9 @@ all_value_keys = [rev_power_spike_count,
                   pulse_length_min,
                   pulse_length_max,
 
+
+
+
                   #latest_ramp_up_sp,
                   last_sp_above_100,
 
@@ -263,7 +278,9 @@ all_value_keys = [rev_power_spike_count,
                   old_m,
                   TOR_ACQM,
                   TOR_SCAN,
-                  pulse_length_status
+                  pulse_length_status,
+                  Initial_Bin_List,
+                  Binned_amp_sp
                   ]
 
 
@@ -468,6 +485,19 @@ class rf_condition_data_base(QObject):
             self.update_breakdown_stats()
         self.counter_add_to_pulse_breakdown_log += 1## MAGIC_NUMBER
 
+
+    def DynamicBin(self,X, bin_mean, bedges, bin_pop, newdata, data_binned):
+        for i in range(int(len(bin_mean))):
+            if newdata[0] >= bedges[i] and newdata[0] < bedges[i + 1]:
+                bin_pop[i] += 1
+                bin_mean[i] = ((bin_mean[i] * bin_pop[i]) + newdata[1]) / (bin_pop[i] + 1.0)
+                data_binned[i].append(newdata[1])
+                #print('DynamicBin Working')
+            else:
+                continue
+
+        return X, bin_mean, bedges, bin_pop, data_binned
+
     def log_kly_fwd_power_vs_amp(self):
 
         next_log_entry = self.last_kfp_running_stat_entry
@@ -490,6 +520,40 @@ class rf_condition_data_base(QObject):
             if rf_condition_data_base.values[amp_sp] not in rf_condition_data_base.amp_sp_history:
                 rf_condition_data_base.amp_sp_history.append(rf_condition_data_base.values[amp_sp])
                 self.logger.message('New amp_sp_history value = ' + str(rf_condition_data_base.values[amp_sp]), True)
+
+
+
+        print(next_log_entry)
+        print("333")
+
+        # newdata = [rf_condition_data_base.amp_vs_kfpow_running_stat[rf_condition_data_base.values[amp_sp]],
+        #            rf_condition_data_base.amp_vs_kfpow_running_stat[rf_condition_data_base.values[amp_sp]][1]]
+
+        newdata = [next_log_entry[0] , next_log_entry[2]]
+
+        #print('newdata = ',[llrf_handler_base.data.amp_vs_kfpow_running_stat[llrf_handler_base.data.values[dat.amp_sp]]])
+
+        X = rf_condition_data_base.values[Initial_Bin_List][0]
+        bin_mean =rf_condition_data_base.values[Initial_Bin_List][1]
+        bedges = rf_condition_data_base.values[Initial_Bin_List][2]
+        bin_pop = rf_condition_data_base.values[Initial_Bin_List][3]
+        data_binned = rf_condition_data_base.values[Initial_Bin_List][4]
+
+        # print('X = ', X)
+        # print('bin_mean = ', bin_mean)
+        # print('bedges = ', bedges)
+        # print('bin_pop = ', bin_pop)
+
+        X, bin_mean, bedges, bin_pop, data_binned = self.DynamicBin(X, bin_mean, bedges, bin_pop,
+                                                                    newdata, data_binned)
+
+        rf_condition_data_base.values[Initial_Bin_List] =[ X, bin_mean, bedges, bin_pop, data_binned]
+
+        # rf_condition_data_base.amp_vs_kfpow_running_stat[rf_condition_data_base.values[amp_sp]] =[X, bin_mean,
+        # np.ones( len(X)) ]
+
+
+
 
     def kly_power_changed(self):
         r = False
