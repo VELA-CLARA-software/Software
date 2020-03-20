@@ -56,7 +56,7 @@
 MODE: DEBUG
 
 #  The name of the RF structure, as used in CATAP
-RF_STRUCTURE: L01 # STRING
+RF_STRUCTURE: L01 # STRING (L01)
 
 
 
@@ -491,9 +491,9 @@ PID_autotune_state_GMON :  CLA-GUN-H2O-PID-02:ATUNE:RB
 
 ## Binning of amp-power log:
 
-BIN_WIDTH: 100  ## Width of each bin in amp set points
-MAX_AMP:  100000.0  ## x-coordinate, amp set points
-MAX_POW:  10000000  ## y-coordinate, Watts
+BIN_WIDTH: 200  ## Width of each bin in amp set points, the lower the number, the more bins will result
+MAX_AMP:  10000  ## x-coordinate, amp set points
+MAX_POW:  4000000.0  ## y-coordinate, Watts
 
 
 

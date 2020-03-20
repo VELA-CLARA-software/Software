@@ -28,7 +28,7 @@ from collections import defaultdict
 # Future warning:
 # CATAP 2.0 is probably going to put all these into a general enum name space to be included first
 from VELA_CLARA_enums import *
-#from VELA_CLARA_enums import MACHINE_AREA
+from VELA_CLARA_enums import MACHINE_AREA
 from VELA_CLARA_LLRF_Control import LLRF_TYPE
 from VELA_CLARA_RF_Protection_Control import RF_PROT_TYPE
 import sys
@@ -286,9 +286,7 @@ class config(object):
                 raise
 
 
-
-
-        # CHECK TH EVERACITY OF THE CONFIG FILE - SOMEHOW
+        # CHECK THE VERACITY OF THE CONFIG FILE - SOMEHOW
 
         # WE ONLY CHECK THE
 
@@ -1116,6 +1114,12 @@ class config(object):
     # gui
     GUI_UPDATE_TIME = 'GUI_UPDATE_TIME'
 
+    #TODO RESOLVED AJG: added the binning keywords from config.yaml
+    # and to the 'keywords_RAW' list
+    MAX_AMP = 'MAX_AMP'
+    BIN_WIDTH = 'BIN_WIDTH'
+    MAX_POW = 'MAX_POW'
+
     gmonitor_keywords = [GMON_SUFFIX]
 
     keywords_RAW = [WHEN_VAC_HI_DISABLE_RAMP,VAC_NUM_SAMPLES_TO_AVERAGE, VAC_SPIKE_DECAY_LEVEL,
@@ -1205,6 +1209,9 @@ class config(object):
                     CPPHA_PHASE_MASK_BY_POWER_TRACE, KFPHA_PHASE_MASK_BY_POWER_LEVEL,
                     KRPHA_PHASE_MASK_BY_POWER_LEVEL, CRPHA_PHASE_MASK_BY_POWER_LEVEL,
                     CFPHA_PHASE_MASK_BY_POWER_LEVEL, CPPHA_PHASE_MASK_BY_POWER_LEVEL,
-                    MODULATOR_CHECK_TIME, RF_PROT_CHECK_TIME, RF_STRUCTURE, GMON_SUFFIX, GUI_UPDATE_TIME]
+                    MODULATOR_CHECK_TIME, RF_PROT_CHECK_TIME, RF_STRUCTURE, GMON_SUFFIX, GUI_UPDATE_TIME,
+                    MAX_AMP, BIN_WIDTH, MAX_POW]
+
+
 
     #END###########################################################################################

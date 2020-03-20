@@ -41,16 +41,13 @@ from VELA_CLARA_RF_Modulator_Control import GUN_MOD_STATE
 from VELA_CLARA_RF_Modulator_Control import L01_MOD_STATE
 from VELA_CLARA_Vac_Valve_Control import VALVE_STATE
 from VELA_CLARA_RF_Protection_Control import RF_PROT_STATUS
-
 from src.data.rf_conditioning_data import rf_conditioning_data
 from src.data.state import state
 from PyQt4.QtGui import *
-
 from PyQt4.QtGui import QPixmap
 from PyQt4.QtGui import QTextCursor
 from PyQt4.QtCore import QTimer
 from numpy import float64
-
 
 class OutLog:
     initial_stdout = sys.stdout

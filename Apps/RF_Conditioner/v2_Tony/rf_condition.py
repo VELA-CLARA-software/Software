@@ -16,53 +16,41 @@ from src.controllers.output_redirection import *
 
 #TODO AJG: use'\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\stage' not'
 # \\\\apclara1\\ControlRoomApps\\Controllers\\bin\\stage'
-
 #sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\stage')
+
 #TODO AJG: I had to append this (below)on to the sys.path... it couldn't find it in stePackages
 sys.path.append('C:\\Users\\zup98752\\PycharmProjects\\Software\\Apps\\RF_Conditioner\\v2_Tony\\src\\view')
 sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\release')
+
 #Checking sys.path members
-print 'os.path = ', os.path
-print 'sys.path = ', sys.path
+#print 'os.path = ', os.path
+#print 'sys.path = ', sys.path
 
 
-#TODO AJG: Getting "ImportError: DLL load failed: %1 is not a valid Win32 application."
+#TODO RESOLVED AJG: Getting "ImportError: DLL load failed: %1 is not a valid Win32 application."
 # trying to resolve below....
 # It is being read correctly from <open file '\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers
 # \\bin\\stage\\VELA_CLARA_enums.pyd', mode 'rb' at 0x000000000307A420>
 # It is having trouble reading the 'VELA_CLARA_enums.pyd file'.
+# The RESOLUTION was to completely uninstall python, delete the python27 folder
+# and reinstall python and all modules.
+import VELA_CLARA_enums
+from VELA_CLARA_enums import *
+from VELA_CLARA_enums import MACHINE_MODE
+
 import platform
 print 'platform.architecture()[0] = ', platform.architecture()[0]
 import imp
 DLLFail = imp.find_module("VELA_CLARA_enums")
 print 'importing module from:', DLLFail
-
 from PyQt4 import QtGui
 from VELA_CLARA_RF_Protection_Control import RF_PROT_STATUS
-import VELA_CLARA_enums
 from VELA_CLARA_LLRF_Control import LLRF_TYPE
 from VELA_CLARA_RF_Protection_Control import RF_PROT_TYPE
 from VELA_CLARA_RF_Modulator_Control import GUN_MOD_STATE
 from VELA_CLARA_RF_Modulator_Control import L01_MOD_STATE
 from VELA_CLARA_Vac_Valve_Control import VALVE_STATE
-## problems:
 from rf_condition_view_base import Ui_rf_condition_mainWindow
-#TODO AJG: commented this out for the time being:
-# the error was : "ImportError: cannot import name MACHINE_AREA"
-# trying to look into VELA_CLARA_enums:
-import VELA_CLARA_enums
-#help(VELA_CLARA_enums)
-#dir(VELA_CLARA_enums)
-#from VELA_CLARA_enums.MACHINE_AREA import MACHINE_AREA
-#import VELA_CLARA_enums.MACHINE_MODE
-
-#print VELA_CLARA_enums.__doc__
-#help(VELA_CLARA_enums.MACHINE_MODE)
-#TODO AJG: using 'from VELA_CLARA_enums import *' for now
-from VELA_CLARA_enums import *
-#from VELA_CLARA_LLRF_Control import LLRF_TYPE
-
-#import VELA_CLARA_LLRF_Control.LLRF_TYPE
 
 #######################################
 
@@ -77,6 +65,7 @@ class rf_condition(QtGui.QApplication):
         QtGui.QApplication.__init__(self, argv)
         #
         # only run if a config file was passed
+        print 'len(argv) = ', len(argv)
         if len(argv) == 3:
             #
             # Everything is handled by a main _controller
@@ -84,7 +73,8 @@ class rf_condition(QtGui.QApplication):
                                               debug2=rf_condition.DEBUG_MODE)
 
 if __name__ == '__main__':
-    print('Starting rf_condition Application')
+
+    print('Starting rf_condition Application (rf_condition.py)')
     app = rf_condition(sys.argv)
     sys.exit(app.exec_())
 

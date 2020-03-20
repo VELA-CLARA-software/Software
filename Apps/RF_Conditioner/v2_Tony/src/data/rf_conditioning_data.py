@@ -26,8 +26,8 @@
 '''
 
 import numpy as np
-import matplotlib.pyplot as plt
-from  config import config
+from matplotlib import pyplot as plt
+from config import config
 from rf_conditioning_logger import rf_conditioning_logger
 from VELA_CLARA_RF_Modulator_Control import GUN_MOD_STATE
 from VELA_CLARA_Vac_Valve_Control import VALVE_STATE
@@ -114,9 +114,9 @@ class rf_conditioning_data(object):
               used to define the Breakdown Rate etc.
         if I read through the comments, i can basically work out what is going on
         """
-        # TODO: we should use fitting to move down in power steps instead of next_sp_decrease in
+        # TODO AJG: we should use fitting to move down in power steps instead of next_sp_decrease in
         #  the same way we move up in power steps
-        # TODO: the ramp index should continue to increment, even when it as above the total
+        # TODO AJG: the ramp index should continue to increment, even when it as above the total
         #  number of ramp points, then we know how many steps we have actually gone up / down
 
         # local alias for shorter lines
@@ -382,6 +382,55 @@ class rf_conditioning_data(object):
         #
         # amp_vs_kfpow_running_stat dictionary
         rcd.amp_vs_kfpow_running_stat = self.logger.get_kfpow_running_stat_log()
+
+        #TODO AJG: bin the amp-power data here after being read in
+        print 'rcd.amp_vs_kfpow_running_stat[0] = ', rcd.amp_vs_kfpow_running_stat[0]
+        print 'rcd.amp_vs_kfpow_running_stat[0][0] = ', rcd.amp_vs_kfpow_running_stat[0][0]
+        print 'len(rcd.amp_vs_kfpow_running_stat) = ', len(rcd.amp_vs_kfpow_running_stat)
+
+        #TODO AJG: cycle over 'rcd.amp_vs_kfpow_running_stat' and append ...
+        # [0] = amp
+        # [1] = power
+        # [2] = rolling variance * (num_pulses -1)  .....I think!
+        AMP_preBin = []
+        POW_preBin = []
+        for ap in rcd.amp_vs_kfpow_running_stat:
+            #print 'ap = ', ap
+            if ap == [1, 2428422.90007, 0.0]:
+                print 'ap[0] = ', ap[0]
+
+            AMP_preBin.append(ap)
+            POW_preBin.append(rcd.amp_vs_kfpow_running_stat[ap][1])
+
+        bin_width = self.config.raw_config_data['BIN_WIDTH']
+        max_amp = self.config.raw_config_data['MAX_AMP']
+        max_pow = self.config.raw_config_data['MAX_POW']
+
+        print 'len(AMP_preBin) = ', len(AMP_preBin)
+        print 'len(POW_preBin) = ', len(POW_preBin)
+        print 'bin_width = ', bin_width
+        print 'max_amp = ', max_amp
+        print 'max_pow = ', max_pow
+
+        X, bin_mean, bedges, bin_pop, data_binned = self.logger.initial_bin(AMP_preBin,
+                                            POW_preBin, bin_width, max_amp, max_pow)
+
+        #TODO AJG: need to return initial_bin as a dictionary NOT a list:
+        rcd.amp_vs_kfpow_binned = [X, bin_mean, bedges, bin_pop, data_binned]
+
+        #TODO AJG: diagnostic plot saved to work folder:
+
+        bin_plots_path = r'\\fed.cclrc.ac.uk\Org\NLab\ASTeC\Projects\VELA\Work\test\RF_Cond_binning_dev'
+        plt.scatter(AMP_preBin, POW_preBin, c='k', s=1.0, marker='.', label='Data', zorder=1)
+        plt.scatter(X, bin_mean, c='r', s=35, marker='x', label='Binned Mean', zorder=0)
+        #plt.errorbar(X, bin_mean, yerr=ERR, xerr=0, fmt='none', ecolor='red', elinewidth=1.0, capsize=2.0, capthick=1.0)
+        plt.xlabel('Set Point')
+        plt.ylabel('Power (MW)')
+        plt.legend()
+        plt.grid(True)
+        plt.savefig(bin_plots_path + r'\Binning_Plot_test.png')
+        plt.close('all')
+
         #
         # set some values from teh config, DO all of them here???
         ##elf.values[dat.pulse_length_start] = self.llrf_config['PULSE_LENGTH_START']
