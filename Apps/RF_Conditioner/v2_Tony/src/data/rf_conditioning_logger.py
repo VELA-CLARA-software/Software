@@ -199,7 +199,7 @@ class rf_conditioning_logger(logger):
         return log
 
     # TODO AJG: define function to bin amp-power data after amp-power log is read in.
-    # Need to make sure bin_width, max_amp & max_pow are defined in the config.yml
+    #  Need to make sure bin_width, max_amp & max_pow are defined in the config.yml
 
     def initial_bin(self,x, y, bin_width, max_amp, max_pow):
 
@@ -215,6 +215,14 @@ class rf_conditioning_logger(logger):
         bin_pop = np.zeros(len(bedges) - 1)
         bin_error = np.zeros(len(bedges) - 1)
         keyList = [i for i in range(len(bedges) - 1)]
+
+        #TODO haveall data in bins as a list of lists rather than dictionary.
+        # NB the method below does not work yet
+        '''
+        from itertools import repeat
+        data_binned = [[] for i in repeat(None, len(bedges) - 1)]
+        '''
+
         data_binned = {}
         for i in keyList:
             data_binned[i] = []

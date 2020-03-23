@@ -151,13 +151,15 @@ class main_controller(object):
             QApplication.processEvents()
 
         #TODO AJG: list flags to check, from v1 to start with
-        #How do we switch back on?
-        #Full power? fast ramp? conditional re-starts?
+        # How do we switch back on?
+        # Full power? fast ramp? conditional re-starts?
         # Maintenance while off due to breakdown/vac spike - rationalise logs, save data, Check all file objects are good (non-existant pipe problem)
         # move up/down ramp curve - down especially (with binned data)
-        #InitialBin when reading in the amp-power log - move up down ramp with these
+        # InitialBin when reading in the amp-power log - move up down ramp with these
         # mask ceiling?
-        # start power set on GUI splash screen with 'start at this power set point'
+        # start power set on GUI splash screen with 'start at this power set point'.
+        # Get new amp-pwr data point
+
 
 
     def quit_app(self, message=""):

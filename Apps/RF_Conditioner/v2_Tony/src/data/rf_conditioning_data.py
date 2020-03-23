@@ -409,24 +409,60 @@ class rf_conditioning_data(object):
         print 'max_amp = ', max_amp
         print 'max_pow = ', max_pow
 
-        X, bin_mean, bedges, bin_pop, data_binned , bin_error = self.logger.initial_bin(AMP_preBin,
+        BIN_X, BIN_mean, BIN_edges, BIN_pop, BIN_data, BIN_error = self.logger.initial_bin(AMP_preBin,
                                             POW_preBin, bin_width, max_amp, max_pow)
 
-        #TODO AJG: need to return initial_bin as a dictionary NOT a list:
-        rcd.amp_vs_kfpow_binned = [X, bin_mean, bedges, bin_pop, data_binned , bin_error]
+        print 'len(X) = ', len(BIN_X)
+        print 'len(bin_mean) = ', len(BIN_mean)
 
         #TODO AJG: diagnostic plot saved to work folder:
 
         bin_plots_path = r'\\fed.cclrc.ac.uk\Org\NLab\ASTeC\Projects\VELA\Work\test\RF_Cond_binning_dev'
         plt.scatter(AMP_preBin, POW_preBin, c='k', s=1.0, marker='.', label='Data', zorder=1)
-        plt.scatter(X, bin_mean, c='r', s=25, marker='x', label='Binned Mean', zorder=0)
-        plt.errorbar(X, bin_mean, yerr=bin_error, xerr=0, fmt='none', ecolor='red', elinewidth=0.5, capsize=2.0, capthick=0.5)
+        plt.scatter(BIN_X, BIN_mean, c='r', s=25, marker='x', label='Binned Mean', zorder=0)
+        plt.errorbar(BIN_X, BIN_mean, yerr=BIN_error, xerr=0, fmt='none', ecolor='red', elinewidth=0.5, capsize=2.0, capthick=0.5)
         plt.xlabel('Set Point')
         plt.ylabel('Power (MW)')
         plt.legend()
         plt.grid(True)
         plt.savefig(bin_plots_path + r'\Binning_Plot_test.png')
         plt.close('all')
+
+        # TODO AJG: (need to return initial_bin as a dictionary NOT a list)??
+        # and create the key, val in rf_conditioning_data.values
+        # & rf_conditioning_data.all_value_keys:
+
+        X_binned = 'X_binned'  # the apps internal state, good, new_bad etc
+        rf_conditioning_data.all_value_keys.append(X_binned)
+        rf_conditioning_data.values[X_binned] = BIN_X
+
+        bin_mean = 'bin_mean'  # the apps internal state, good, new_bad etc
+        rf_conditioning_data.all_value_keys.append(BIN_mean)
+        rf_conditioning_data.values[bin_mean] = bin_mean
+
+        bin_edges = 'bin_edges'  # the apps internal state, good, new_bad etc
+        rf_conditioning_data.all_value_keys.append(bin_edges)
+        rf_conditioning_data.values[bin_edges] = BIN_edges
+
+        bin_pop = 'bin_pop'  # the apps internal state, good, new_bad etc
+        rf_conditioning_data.all_value_keys.append(bin_pop)
+        rf_conditioning_data.values[bin_pop] = BIN_pop
+
+        #TODO AJG: leaving this dictionary out for now:
+        '''
+        data_binned = 'data_binned'  # the apps internal state, good, new_bad etc
+        rf_conditioning_data.all_value_keys.append(data_binned)
+        rf_conditioning_data.values[data_binned] = BIN_data
+        '''
+
+        # TODO AJG: it seems that the binary logger can't handle the composite data below:
+        '''
+        rcd.amp_vs_kfpow_binned = [X, bin_mean, bedges, bin_pop, data_binned, bin_error]
+
+        amp_vs_kfpow_binned = 'amp_vs_kfpow_binned'  # the apps internal state, good, new_bad etc
+        rf_conditioning_data.all_value_keys.append(amp_vs_kfpow_binned)
+        rf_conditioning_data.values[amp_vs_kfpow_binned] = [X, bin_mean, bedges, bin_pop, data_binned , bin_error]
+        '''
 
         #
         # set some values from teh config, DO all of them here???
