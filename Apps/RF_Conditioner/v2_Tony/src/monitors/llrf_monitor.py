@@ -297,6 +297,9 @@ class llrf_monitor(monitor):
         else:
             self.values[self.data.llrf_ff_ph_locked_status] = state.BAD
 
+    # TODO AJG: update "rcd.amp_vs_kfpow_binned" with new amp set point and <kfp>
+    #  using "dynamic_bin" function and re-store in "rcd.amp_vs_kfpow_binned"
+
     def update_amp_vs_kfpow_running_stat(self):
         self.amp_vs_kfpow_running_stat[self.values[self.data.amp_sp]] = \
             self.llrf_control.getKlyFwdPwrRSState(self.values[self.data.amp_sp])

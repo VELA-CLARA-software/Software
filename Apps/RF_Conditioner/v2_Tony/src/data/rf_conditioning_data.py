@@ -384,23 +384,20 @@ class rf_conditioning_data(object):
         rcd.amp_vs_kfpow_running_stat = self.logger.get_kfpow_running_stat_log()
 
         #TODO AJG: bin the amp-power data here after being read in
-        print 'rcd.amp_vs_kfpow_running_stat[0] = ', rcd.amp_vs_kfpow_running_stat[0]
-        print 'rcd.amp_vs_kfpow_running_stat[0][0] = ', rcd.amp_vs_kfpow_running_stat[0][0]
-        print 'len(rcd.amp_vs_kfpow_running_stat) = ', len(rcd.amp_vs_kfpow_running_stat)
+        #print 'rcd.amp_vs_kfpow_running_stat[0] = ', rcd.amp_vs_kfpow_running_stat[0]
+        #print 'rcd.amp_vs_kfpow_running_stat[0][0] = ', rcd.amp_vs_kfpow_running_stat[0][0]
+        #print 'len(rcd.amp_vs_kfpow_running_stat) = ', len(rcd.amp_vs_kfpow_running_stat)
 
         #TODO AJG: cycle over 'rcd.amp_vs_kfpow_running_stat' and append ...
-        # [0] = amp
-        # [1] = power
+        # key = amp **
+        # [0] = num_pulses (with beam)
+        # [1] = power **
         # [2] = rolling variance * (num_pulses -1)  .....I think!
         AMP_preBin = []
         POW_preBin = []
-        for ap in rcd.amp_vs_kfpow_running_stat:
-            #print 'ap = ', ap
-            if ap == [1, 2428422.90007, 0.0]:
-                print 'ap[0] = ', ap[0]
-
-            AMP_preBin.append(ap)
-            POW_preBin.append(rcd.amp_vs_kfpow_running_stat[ap][1])
+        for key in rcd.amp_vs_kfpow_running_stat:
+            AMP_preBin.append(key)
+            POW_preBin.append(rcd.amp_vs_kfpow_running_stat[key][1])
 
         bin_width = self.config.raw_config_data['BIN_WIDTH']
         max_amp = self.config.raw_config_data['MAX_AMP']
@@ -412,18 +409,18 @@ class rf_conditioning_data(object):
         print 'max_amp = ', max_amp
         print 'max_pow = ', max_pow
 
-        X, bin_mean, bedges, bin_pop, data_binned = self.logger.initial_bin(AMP_preBin,
+        X, bin_mean, bedges, bin_pop, data_binned , bin_error = self.logger.initial_bin(AMP_preBin,
                                             POW_preBin, bin_width, max_amp, max_pow)
 
         #TODO AJG: need to return initial_bin as a dictionary NOT a list:
-        rcd.amp_vs_kfpow_binned = [X, bin_mean, bedges, bin_pop, data_binned]
+        rcd.amp_vs_kfpow_binned = [X, bin_mean, bedges, bin_pop, data_binned , bin_error]
 
         #TODO AJG: diagnostic plot saved to work folder:
 
         bin_plots_path = r'\\fed.cclrc.ac.uk\Org\NLab\ASTeC\Projects\VELA\Work\test\RF_Cond_binning_dev'
         plt.scatter(AMP_preBin, POW_preBin, c='k', s=1.0, marker='.', label='Data', zorder=1)
-        plt.scatter(X, bin_mean, c='r', s=35, marker='x', label='Binned Mean', zorder=0)
-        #plt.errorbar(X, bin_mean, yerr=ERR, xerr=0, fmt='none', ecolor='red', elinewidth=1.0, capsize=2.0, capthick=1.0)
+        plt.scatter(X, bin_mean, c='r', s=25, marker='x', label='Binned Mean', zorder=0)
+        plt.errorbar(X, bin_mean, yerr=bin_error, xerr=0, fmt='none', ecolor='red', elinewidth=0.5, capsize=2.0, capthick=0.5)
         plt.xlabel('Set Point')
         plt.ylabel('Power (MW)')
         plt.legend()

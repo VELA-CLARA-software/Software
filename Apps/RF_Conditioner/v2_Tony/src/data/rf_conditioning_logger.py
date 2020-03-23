@@ -178,9 +178,6 @@ class rf_conditioning_logger(logger):
 
 
 
-
-
-
     def get_pulse_count_breakdown_log(self):
 
         '''
@@ -216,6 +213,7 @@ class rf_conditioning_logger(logger):
         bedges = [i * bin_width for i in range(int(xprime[-1] + (2 * int(bin_width))) / int(bin_width))]
         bin_mean = np.zeros(len(bedges) - 1)
         bin_pop = np.zeros(len(bedges) - 1)
+        bin_error = np.zeros(len(bedges) - 1)
         keyList = [i for i in range(len(bedges) - 1)]
         data_binned = {}
         for i in keyList:
@@ -231,10 +229,11 @@ class rf_conditioning_logger(logger):
                     bin_mean[j] = ((bin_mean[j] * bin_pop[j]) + (yprime[i])) / (bin_pop[j] + 1.0)
                     bin_pop[j] += 1.0
                     data_binned[j].append(xprime[i])
+                    bin_error[j] = np.std(data_binned[j])
 
         X = [k + bin_width / 2.0 for k in bedges[:-1]]
 
-        return X, bin_mean, bedges, bin_pop, data_binned
+        return X, bin_mean, bedges, bin_pop, data_binned, bin_error
 
     def get_kfpow_running_stat_log(self):
         '''

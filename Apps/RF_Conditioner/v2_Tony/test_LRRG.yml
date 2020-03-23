@@ -489,7 +489,7 @@ PID_integral_gain_GMON :  CLA-GUN-H2O-PID-02:INTG:RB
 PID_derivative_gain_GMON :  CLA-GUN-H2O-PID-02:DERI:RB
 PID_autotune_state_GMON :  CLA-GUN-H2O-PID-02:ATUNE:RB
 
-## Binning of amp-power log:
+## TODO RESOLVED AJG: Binning of amp-power log:
 
 BIN_WIDTH: 200  ## Width of each bin in amp set points, the lower the number, the more bins will result
 MAX_AMP:  10000  ## x-coordinate, amp set points
