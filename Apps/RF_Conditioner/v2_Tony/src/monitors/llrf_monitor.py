@@ -212,12 +212,12 @@ class llrf_monitor(monitor):
             pass
         else:
             newdata = [new_amp, new_kfp]
-            X = self.rf_conditioning_data.X_binned
-            bin_mean = self.rf_conditioning_data.bin_mean
-            bedges = self.rf_conditioning_data.bin_edges
-            bin_pop = self.rf_conditioning_data.bin_pop
-            #data_binned = self.rf_conditioning_data.amp_vs_kfpow_binned[4]
-            #bin_error = self.rf_conditioning_data.amp_vs_kfpow_binned[5]
+            X = self.rf_conditioning_data.amp_vs_kfpow_binned[0]
+            bin_mean = self.rf_conditioning_data.amp_vs_kfpow_binned[1]
+            bedges = self.rf_conditioning_data.amp_vs_kfpow_binned[2]
+            bin_pop = self.rf_conditioning_data.amp_vs_kfpow_binned[3]
+            data_binned = self.rf_conditioning_data.amp_vs_kfpow_binned[4]
+            bin_error = self.rf_conditioning_data.amp_vs_kfpow_binned[5]
 
             print 'bin_pop = ', bin_pop
 

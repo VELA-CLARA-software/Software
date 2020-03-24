@@ -412,6 +412,8 @@ class rf_conditioning_data(object):
         BIN_X, BIN_mean, BIN_edges, BIN_pop, BIN_data, BIN_error = self.logger.initial_bin(AMP_preBin,
                                             POW_preBin, bin_width, max_amp, max_pow)
 
+        amp_vs_kfpow_binned = [BIN_X, BIN_mean, BIN_edges, BIN_pop, BIN_data, BIN_error]
+
         print 'len(X) = ', len(BIN_X)
         print 'len(bin_mean) = ', len(BIN_mean)
 
@@ -431,7 +433,7 @@ class rf_conditioning_data(object):
         # TODO AJG: (need to return initial_bin as a dictionary NOT a list)??
         # and create the key, val in rf_conditioning_data.values
         # & rf_conditioning_data.all_value_keys:
-
+        '''
         X_binned = 'X_binned'  # the apps internal state, good, new_bad etc
         rf_conditioning_data.all_value_keys.append(X_binned)
         rf_conditioning_data.values[X_binned] = BIN_X
@@ -447,7 +449,7 @@ class rf_conditioning_data(object):
         bin_pop = 'bin_pop'  # the apps internal state, good, new_bad etc
         rf_conditioning_data.all_value_keys.append(bin_pop)
         rf_conditioning_data.values[bin_pop] = BIN_pop
-
+        '''
         #TODO AJG: leaving this dictionary out for now:
         '''
         data_binned = 'data_binned'  # the apps internal state, good, new_bad etc

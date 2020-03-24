@@ -212,6 +212,9 @@ class hardware_control_hub(object):
             hch.mod_control = hch.mod_init.physical_L01_MOD_Controller()
             hch.have_controller[CONTROLLER_TYPE.RF_MOD] = True
             message += 'successfully created a L01 modulator control object'
+
+
+
         else:
             message += 'FAILED to create a modulator Control object'
         # get a modulator object if we have a controller

@@ -57,9 +57,27 @@ from rf_condition_view_base import Ui_rf_condition_mainWindow
 print('import main_controller')
 from src.controllers.main_controller import main_controller
 
+
 class rf_condition(QtGui.QApplication):
     DEBUG_MODE = True
     def __init__(self, argv):
+
+        '''
+        # TODO AJG: trying to get more details about why python is crashing
+        #  with "Process finished with exit code -1073741819 (0xC0000005)"
+        #  as suggested online
+        sys._excepthook = sys.excepthook
+
+        def my_exception_hook(exctype, value, traceback):
+            # Print the error and traceback
+            print(exctype, value, traceback)
+            # Call the normal Exception hook after
+            sys._excepthook(exctype, value, traceback)
+            sys.exit(1)
+
+        # Set the exception hook to our wrapping function
+        sys.excepthook = my_exception_hook
+        '''
         #
         # you need this init line here to instantiate a QTApplication
         QtGui.QApplication.__init__(self, argv)
@@ -76,7 +94,22 @@ if __name__ == '__main__':
 
     print('Starting rf_condition Application (rf_condition.py)')
     app = rf_condition(sys.argv)
+
+    '''
+    # TODO AJG: Second part of trying to get more details about why python is crashing
+    # with "Process finished with exit code -1073741819 (0xC0000005)"
+    # as suggested online:
+
+    try:
+        sys.exit(app.exec_())
+    except:
+        print("Exiting")
+    '''
     sys.exit(app.exec_())
+
+
+
+
 
 
 # from PyQt4.QtGui import *
