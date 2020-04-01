@@ -16,27 +16,74 @@ from src.controllers.output_redirection import *
 
 #TODO AJG: use'\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\stage' not'
 # \\\\apclara1\\ControlRoomApps\\Controllers\\bin\\stage'
+#sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\stage')
 
-sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\stage')
+#TODO AJG: I had to append this (below)on to the sys.path... it couldn't find it in stePackages
+sys.path.append('C:\\Users\\zup98752\\PycharmProjects\\Software\\Apps\\RF_Conditioner\\v2_Tony\\src\\view')
+sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\release')
 
-from PyQt4 import QtGui
+#Checking sys.path members
+#print 'os.path = ', os.path
+#print 'sys.path = ', sys.path
+
+
+#TODO RESOLVED AJG: Getting "ImportError: DLL load failed: %1 is not a valid Win32 application."
+# trying to resolve below....
+# It is being read correctly from <open file '\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers
+# \\bin\\stage\\VELA_CLARA_enums.pyd', mode 'rb' at 0x000000000307A420>
+# It is having trouble reading the 'VELA_CLARA_enums.pyd file'.
+# The RESOLUTION was to completely uninstall python, delete the python27 folder
+# and reinstall python and all modules.
 import VELA_CLARA_enums
+from VELA_CLARA_enums import *
+from VELA_CLARA_enums import MACHINE_MODE
+
+import platform
+print 'platform.architecture()[0] = ', platform.architecture()[0]
+import imp
+DLLFail = imp.find_module("VELA_CLARA_enums")
+print 'importing module from:', DLLFail
+from PyQt4 import QtGui
+from VELA_CLARA_RF_Protection_Control import RF_PROT_STATUS
+from VELA_CLARA_LLRF_Control import LLRF_TYPE
+from VELA_CLARA_RF_Protection_Control import RF_PROT_TYPE
+from VELA_CLARA_RF_Modulator_Control import GUN_MOD_STATE
+from VELA_CLARA_RF_Modulator_Control import L01_MOD_STATE
+from VELA_CLARA_Vac_Valve_Control import VALVE_STATE
+from rf_condition_view_base import Ui_rf_condition_mainWindow
+
+#######################################
 
 print('import main_controller')
 from src.controllers.main_controller import main_controller
 
 
-
-
-
 class rf_condition(QtGui.QApplication):
     DEBUG_MODE = True
     def __init__(self, argv):
+
+        '''
+        # TODO AJG: trying to get more details about why python is crashing
+        #  with "Process finished with exit code -1073741819 (0xC0000005)"
+        #  as suggested online
+        sys._excepthook = sys.excepthook
+
+        def my_exception_hook(exctype, value, traceback):
+            # Print the error and traceback
+            print(exctype, value, traceback)
+            # Call the normal Exception hook after
+            sys._excepthook(exctype, value, traceback)
+            sys.exit(1)
+
+        # Set the exception hook to our wrapping function
+        sys.excepthook = my_exception_hook
+        '''
         #
         # you need this init line here to instantiate a QTApplication
         QtGui.QApplication.__init__(self, argv)
         #
         # only run if a config file was passed
+        print 'len(argv) = ', len(argv)
         if len(argv) == 3:
             #
             # Everything is handled by a main _controller
@@ -44,8 +91,20 @@ class rf_condition(QtGui.QApplication):
                                               debug2=rf_condition.DEBUG_MODE)
 
 if __name__ == '__main__':
-    print('Starting rf_condition Application')
+
+    print('Starting rf_condition Application (rf_condition.py)')
     app = rf_condition(sys.argv)
+
+    '''
+    # TODO AJG: Second part of trying to get more details about why python is crashing
+    # with "Process finished with exit code -1073741819 (0xC0000005)"
+    # as suggested online:
+
+    try:
+        sys.exit(app.exec_())
+    except:
+        print("Exiting")
+    '''
     sys.exit(app.exec_())
 
 

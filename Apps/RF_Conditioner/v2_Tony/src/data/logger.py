@@ -312,11 +312,18 @@ class logger(object):
             value_type = type(value)         # The type of the value being written
             value_type_str = str(value_type) # the type converted to string
             ''' There is 1 notable exception, we write a time_stamp data type as the time and 
-            date this funcitno is called '''
+            date this function is called '''
             if key == 'time_stamp':  # MAGIC_STRING
                 header_names.append('time_stamp, (start = ' + datetime.now().isoformat(' ') + ')')
+                # TODO AJG: This is a fudge! I need to write this to binary,
+                #  just passing for now
+            if key == 'X_bin':
+                print 'X_bin key = ', key
+                print 'X_bin value = ', value
+                print 'X_bin type_str =', str(value_type)
             else:
                 header_names.append(key)
+
             logger._binary_header_types.append(value_type)
             header_types_str.append(value_type_str)
 

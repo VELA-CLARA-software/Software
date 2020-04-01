@@ -24,6 +24,7 @@
 //
 //*/
 '''
+from VELA_CLARA_enums import *
 from VELA_CLARA_enums import MACHINE_MODE
 from VELA_CLARA_enums import MACHINE_AREA
 from VELA_CLARA_enums import CONTROLLER_TYPE
@@ -36,10 +37,8 @@ import VELA_CLARA_Magnet_Control
 import VELA_CLARA_General_Monitor
 import subprocess
 from collections import defaultdict
-
 from src.data import config
 from src.data import rf_conditioning_logger
-
 import llrf_control
 
 
@@ -213,6 +212,9 @@ class hardware_control_hub(object):
             hch.mod_control = hch.mod_init.physical_L01_MOD_Controller()
             hch.have_controller[CONTROLLER_TYPE.RF_MOD] = True
             message += 'successfully created a L01 modulator control object'
+
+
+
         else:
             message += 'FAILED to create a modulator Control object'
         # get a modulator object if we have a controller

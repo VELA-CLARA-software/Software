@@ -29,6 +29,7 @@ import src.data.rf_conditioning_data as rf_conditioning_data
 from src.data.state import state
 from VELA_CLARA_LLRF_Control import TRIG
 from VELA_CLARA_LLRF_Control import INTERLOCK_STATE
+from matplotlib import pyplot as plt
 
 class llrf_monitor(monitor):
     """
@@ -80,6 +81,11 @@ class llrf_monitor(monitor):
         #; number extra traces to save after an out_side_mask_trace is detected
  #       monitor.llrf_control.setNumExtraTracesOnOutsideMaskEvent(monitor.config.llrf_config[
     #       'EXTRA_TRACES_ON_BREAKDOWN'])
+
+        # TODO AJG: create a list off all amp_sp in chronological order to see if an new one has been set.
+        #  This probably isn't necessary, but am doing it for now (23/03/2020)
+        OLD_AMP_SPs = []
+        self.timer.timeout.connect(self.update_binned_data)
 
     def set_mean_dictionaries(self):
         # manually set up dicts to monitor trace 'means'
@@ -150,6 +156,10 @@ class llrf_monitor(monitor):
 
         ''' update simple values '''
         self.values[self.data.amp_sp] = int(self.llrf_obj[0].amp_sp)
+        # TODO AJG checking new amp set point(~16Hz):
+        #from datetime import datetime
+        #print datetime.today().strftime('%Y-%m-%d-%H:%M:%S')
+        #print 'int(self.llrf_obj[0].amp_sp) = ', int(self.llrf_obj[0].amp_sp)
         self.values[self.data.phi_sp] = int(self.llrf_obj[0].phi_sp)
         self.values[self.data.TOR_ACQM] = self.llrf_control.getTORACQM()
         self.values[self.data.TOR_SCAN] = self.llrf_control.getTORSCAN()
@@ -163,10 +173,11 @@ class llrf_monitor(monitor):
         self.values[self.data.catap_max_amp] = self.llrf_control.getMaxAmpSP()
 
 
-        ''' the latest running stats for this amp_set (from the c++) '''
-        ## THIS GETS UPDATED TOO FREQUENTLY
-        # if(self.llrf_control.isKeepingKlyFwdPwrRS()):
-        #     self.update_amp_vs_kfpow_running_stat()
+
+        # THIS GETS UPDATED TOO FREQUENTLY
+        #if(self.llrf_control.isKeepingKlyFwdPwrRS()):
+            #self.update_amp_vs_kfpow_running_stat()
+
 
         #
         """WARNING"""
@@ -178,6 +189,69 @@ class llrf_monitor(monitor):
         #     self.values[self.data.phase_end_mask_by_power_trace_2_time] = \
         #         monitor.llrf_control.getMaskInfiniteEndByPowerTime( self.phase_trace_1 )
 
+    # TODO AJG: get the latest kfp & amp_sp and if it is different to the old amp_sp value
+    #  invoke the "dynamic_bin" function and update "rcd.amp_vs_kfpow_binned"
+
+    def update_binned_data(self, OLD_AMP_SPs):
+
+
+        new_amp = int(self.llrf_obj[0].amp_sp)
+        old_amp = OLD_AMP_SPs[-1]
+
+        OLD_AMP_SPs.append(old_amp)
+
+        new_kfp = self.llrf_obj[0].trace_data['KLYSTRON_FORWARD_POWER'].mean
+        old_kfp = self.old_mean_values['KLYSTRON_FORWARD_POWER']
+
+        print 'new_kfp = ', new_kfp
+        print 'old_kfp = ', old_kfp
+        print 'old_amp = ', new_amp
+        print 'old_amp = ', old_kfp
+
+        if old_amp == new_amp:
+            pass
+        else:
+            newdata = [new_amp, new_kfp]
+            X = self.rf_conditioning_data.amp_vs_kfpow_binned[0]
+            bin_mean = self.rf_conditioning_data.amp_vs_kfpow_binned[1]
+            bedges = self.rf_conditioning_data.amp_vs_kfpow_binned[2]
+            bin_pop = self.rf_conditioning_data.amp_vs_kfpow_binned[3]
+            data_binned = self.rf_conditioning_data.amp_vs_kfpow_binned[4]
+            bin_error = self.rf_conditioning_data.amp_vs_kfpow_binned[5]
+
+            print 'bin_pop = ', bin_pop
+
+            BIN_X_dyn, BIN_mean, BIN_edges, BIN_pop, BIN_data =\
+                self.dynamic_bin(self, X, bin_mean, bedges, bin_pop, newdata)
+
+            bin_plots_path = r'\\fed.cclrc.ac.uk\Org\NLab\ASTeC\Projects\VELA\Work\test\RF_Cond_binning_dev'
+            plt.scatter(newdata[0], newdata[0], c='g', s=35, marker='x', label='Data', zorder=1)
+            plt.scatter(BIN_X_dyn, BIN_mean, c='r', s=25, marker='x', label='Binned Mean', zorder=0)
+            #plt.errorbar(BIN_X, BIN_mean, yerr=BIN_error, xerr=0, fmt='none', ecolor='red', elinewidth=0.5, capsize=2.0,
+            #             capthick=0.5)
+            plt.xlabel('Set Point')
+            plt.ylabel('Power (MW)')
+            plt.legend()
+            plt.grid(True)
+            plt.savefig(bin_plots_path + r'\Dynamic_Binning_Plot.png')
+            plt.close('all')
+
+            return BIN_X_dyn, BIN_mean, BIN_edges, BIN_pop, BIN_data
+
+
+    # TODO AJG: define "dynamic_bin" to update binned data every time the amp_sp changes
+
+    def dynamic_bin(self,X, bin_mean, bedges, bin_pop, newdata, data_binned):
+        for i in range(int(len(bin_mean))):
+            if newdata[0] >= bedges[i] and newdata[0] < bedges[i + 1]:
+                bin_pop[i] += 1
+                bin_mean[i] = ((bin_mean[i] * bin_pop[i]) + newdata[1]) / (bin_pop[i] + 1.0)
+                data_binned[i].append(newdata[1])
+                #print('DynamicBin Working')
+            else:
+                continue
+
+        return X, bin_mean, bedges, bin_pop, data_binned
 
     def update_daq_rep_rate(self):
         ''' DATA ACQUISIATION REP RATE
@@ -297,17 +371,26 @@ class llrf_monitor(monitor):
         else:
             self.values[self.data.llrf_ff_ph_locked_status] = state.BAD
 
+    # TODO AJG: update "rcd.amp_vs_kfpow_binned" with new amp set point and <kfp>
+    #  using "dynamic_bin" function and re-store in "rcd.amp_vs_kfpow_binned"
+
     def update_amp_vs_kfpow_running_stat(self):
+        # TODO AJG: check the latest kfp value
+        #print 'self.llrf_control.getKlyFwdPwrRSState(self.values[self.data.amp_sp]) = ',
+        #self.llrf_control.getKlyFwdPwrRSState(self.values[self.data.amp_sp])
+
         self.amp_vs_kfpow_running_stat[self.values[self.data.amp_sp]] = \
             self.llrf_control.getKlyFwdPwrRSState(self.values[self.data.amp_sp])
 
     def get_mean_power(self,key,trace):
+
         """
         get the mean reading for trace-trace and append it to values dict with key=key
         :param key: key for values dictionary, where to put the data
         :param trace: trace identifier, which trace to get data for
         """
         v = self.llrf_obj[0].trace_data[trace].mean
+
         #print "key = " + str(key) + ", " + trace + " mean value = " +  str(v)
         if  self.old_mean_values[trace] == v:
             pass
