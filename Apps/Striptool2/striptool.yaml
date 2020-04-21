@@ -55,3 +55,12 @@ magnets:
     PVs:
       X: ['self.CLARAbpms', getXFromPV]
       Y: ['self.CLARAbpms', getYFromPV]
+   Water Temperatures:
+    Names: [
+    ['CLA-L01-H2O-TT-09:RT', 'L01 Water'],
+    ['CLA-GUN-RF-LRRG-01:RT', 'Gun Water 01'],
+    ['CLA-GUN-RF-LRRG-03:RT', 'Gun Water 03'],
+    ['CLA-GUN-RF-LRRG-04:RT', 'Gun Water 04'],
+    ]
+    PVs:
+        RI: 'custom'

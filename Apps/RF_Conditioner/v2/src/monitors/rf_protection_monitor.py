@@ -27,8 +27,7 @@ from monitor import monitor
 from VELA_CLARA_enums import CONTROLLER_TYPE
 
 # At the moment its a very small simple class,
-# we may increase what it can do (i.e. reset the protection)
-# at a later date
+# At a later date  we may increase what it can do (i.e. gain the ability  to reset the protection)
 #
 class rf_protection_monitor(monitor):
     # whoami
@@ -44,8 +43,7 @@ class rf_protection_monitor(monitor):
         else:
             self.set_success = False
 
-
     def check(self):
         if self.set_success:
             self.data.values[self.data.rfprot_state] = self.hardware.prot_object[0].status
-            #print('RF prot',self.data.values[self.data.rfprot_state])
+            #print('RF prot VALUE = ', self.data.values[self.data.rfprot_state])

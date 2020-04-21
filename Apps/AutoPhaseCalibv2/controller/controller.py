@@ -1,14 +1,14 @@
 import sys
 import os
 import time
-import yaml
-from plots import *
-from  functools import partial
+import ruamel.yaml
 sys.path.append("../../../")
+from Software.Apps.AutoPhaseCalibv2.controller.plots import *
+from  functools import partial
 import Software.Procedures.qt as qt
 from Software.Procedures.Machine.signaller import machineReciever, machineSignaller
 import Software.Widgets.loggerWidget.loggerWidget as lw
-import Software.Procedures.linacTiming as linacTiming
+
 import logging
 logger = logging.getLogger(__name__)
 
@@ -91,7 +91,7 @@ class Controller(qt.QObject):
         for w in self.defaults:
             self.settings[w] = getattr(self.view, w).value()
         with open('autocrester.yaml', 'w') as stream:
-            print yaml.dump(self.settings, stream, default_flow_style=False)
+            yaml.dump(self.settings, stream, default_flow_style=False)
 
     def load_config(self):
         try:
@@ -104,16 +104,19 @@ class Controller(qt.QObject):
     def apply_config(self):
         for w in self.settings:
             getattr(self.view, w).setValue(self.settings[w])
+            if w in self.model.settings:
+                self.model.settings[w] = self.settings[w]
 
     def apply_defaults(self):
         for w in self.defaults:
             getattr(self.view, w).setValue(self.defaults[w])
 
-    def __init__(self, view, model):
+    def __init__(self, view, model, L01timing=None):
         super(Controller, self).__init__()
         '''define model and view'''
         self.view = view
         self.model = model
+        self.Linac01Timing = L01timing
         self.load_config()
         self.model.logger = self.loggerSignal
         self.model.newData = self.newDataSignal
@@ -141,7 +144,7 @@ class Controller(qt.QObject):
         self.view.actionSave_Defaults.triggered.connect(self.save_config)
         self.view.actionApply_Default_Settings.triggered.connect(self.apply_defaults)
 
-        self.log = lw.loggerWidget()
+        self.log = lw.loggerWidget(autosave=True, logdirectory='\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Software\\Application_Logs\\Autocrester\\', appname='AutoCrester')
         self.log.setFilterLevel('Info')
         # sys.stdout = lw.redirectLogger(self.log, 'stdout')
         # sys.stderr = lw.redirectLogger(self.log, 'stderr')
@@ -154,7 +157,7 @@ class Controller(qt.QObject):
         self.view.Linac1_Rough_Button, self.view.Linac1_Fine_Button, self.view.Linac1_SetPhase_Button, self.view.Linac1_Dipole_Button,
         self.view.Linac1_LoadBURT_Button, self.view.Linac1_Fine_Screen_Button, self.view.Gun_Fine_Screen_Button,
         self.view.Linac1_TurnOn_Button, self.view.Gun_TurnOn_Button, self.view.Gun_Fine_Update_Start_Button, self.view.Linac1_Fine_Update_Start_Button,
-        self.view.Gun_LinacTiming_Off_Button, self.view.Linac1_LinacTiming_On_Button, self.view.Linac1_LinacTiming_Off_Button
+        self.view.Gun_LinacTiming_Off_Button, self.view.Linac1_LinacTiming_On_Button, self.view.Linac1_LinacTiming_Off_Button, self.view.L01_PID_Checkbox
         ]
 
         # self.view.setupMagnetsButton.clicked.connect(self.model.magnetDegausser)
@@ -197,7 +200,7 @@ class Controller(qt.QObject):
         self.view.Save_Data_Buttons.rejected.connect(self.cancelSave)
         self.view.actionSave_Calibation_Data.triggered.connect(self.saveData)
 
-        self.setLabel('MODE: '+self.model.machineType+' '+self.model.lineType+' with '+self.model.gunType+' gun')
+        self.setLabel('Mode: '+self.model.machineType+' '+self.model.lineType+' with '+self.model.gunType+' gun')
 
         self.progressSignal.connect(self.updateProgress)
 
@@ -213,8 +216,8 @@ class Controller(qt.QObject):
         self.monitors['linac1_amp'] = updatingTimer(self.view.Linac1_Amp_Monitor, 'widget', 100, self.model.machine.getLinac1Amplitude)
         self.monitors['linac1_amp'].start()
 
-        if not self.model.machineType == 'None':
-            self.Linac01Timing = linacTiming.Linac01Timing()
+        if not self.model.machineType == 'aNone':
+            # self.Linac01Timing = linacTiming.Linac01Timing()
             self.monitors['linac1_timing'] = updatingTimer(self.Linac1_Timing_Monitor, 'function', 250, self.Linac01Timing.isLinacOn)
             self.monitors['linac1_timing'].start()
 
@@ -357,7 +360,8 @@ class Controller(qt.QObject):
         self.model.finish()
 
     def updatePlot(self):
-        self.plots[self.cavity].newData(self.model.cavity, self.model.actuator, self.model.crestingData[self.model.cavity][self.model.actuator])
+        # print('Plot Update Called! - ', self.model.cavity, self.model.actuator)
+        self.plots[self.cavity].newData(self.cavity, self.model.actuator, self.model.crestingData[self.model.cavity][self.model.actuator])
 
     def gunRamp(self):
         self.disableButtons()
@@ -408,7 +412,9 @@ class Controller(qt.QObject):
         self.disableButtons()
         self.cavity = 'Linac1'
         self.actuator = 'fine'
-        self.thread = GenericThread(self.model.linacCresterFine, 1, self.view.Linac1_Fine_Range_Start.value(), self.view.Linac1_Fine_Range_Set.value(), self.view.Linac1_Fine_PointSeperation_Set.value(), self.view.Linac1_Fine_NShots_Set.value())
+        self.thread = GenericThread(self.model.linacCresterFine, 1, self.view.Linac1_Fine_Range_Start.value(),
+                                    self.view.Linac1_Fine_Range_Set.value(), self.view.Linac1_Fine_PointSeperation_Set.value(),
+                                    self.view.Linac1_Fine_NShots_Set.value(), PID=self.view.L01_PID_Checkbox.isChecked())
         self.newDataSignal.connect(self.updatePlot)
         self.thread.finished.connect(self.enableSaveButtons)
         self.thread.start()

@@ -1,7 +1,7 @@
 # THE main_controller
 # holds everything
-from PyQt4.QtGui import QApplication
-from controller_base import controller_base
+from PyQt5.QtWidgets import QApplication
+from controllers.controller_base import controller_base
 from gui.bpm_calibration_gui import bpm_calibration_gui
 import data.bpm_calibrate_data_base as dat
 import sys
@@ -134,7 +134,7 @@ class main_controller(controller_base):
             controller_base.bpm_handler.find_min_dly_1()
             controller_base.bpm_handler.find_min_dly_2()
         else:
-            print "not ready!!!!"
+            print("not ready!!!!")
 
     # def set_delays_and_record(self):
     #     if controller_base.data.values[dat.ready_to_go]:

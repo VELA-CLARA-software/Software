@@ -4,9 +4,9 @@ import xlsxwriter
 import datetime as dt
 sys.path.append("../../../")
 import Software.Procedures.qt as qt
+import Software.Utils.dict_to_h5 as dict_to_h5
 import logging
 logging.basicConfig()
-import tables as tables
 import signalRecord as signalRecord
 import scrollingPlot as scrollingplot
 import scatterPlot as scatterplot
@@ -15,10 +15,6 @@ import histogramPlot as histogramplot
 import plotLegend as plotlegend
 import numpy as np
 logger = logging.getLogger(__name__)
-
-class recordData(tables.IsDescription):
-    time  = tables.Float64Col()     # double (double-precision)
-    value  = tables.Float64Col()
 
 signal.signal(signal.SIGINT, signal.SIG_DFL)
 
@@ -81,7 +77,7 @@ class generalPlot(qt.QWidget):
 
     def formatCurveData(self, name):
         # return [(str(time.strftime('%Y/%m/%d', time.localtime(x[0]))),str(datetime.datetime.fromtimestamp(x[0]).strftime('%H:%M:%S.%f')),x[1]) for x in self.records[name]['data']]
-        return copy.copy(self.records[name]['data'])
+        return list(copy.copy(self.records[name]['data']))
 
     def saveAllData(self,saveFileName=False):
         if not saveFileName:
@@ -102,7 +98,7 @@ class generalPlot(qt.QWidget):
         _, file_extension = os.path.splitext(saveFileName)
         if file_extension == '.csv' or file_extension == '.bin':
             self.saveDataCSVBin(saveFileName)
-        if file_extension == '.xlsx':
+        elif file_extension == '.xlsx':
             self.saveDataXLSX(saveFileName)
         else:
             if not file_extension in ['.h5','.hdf5']:
@@ -136,21 +132,15 @@ class generalPlot(qt.QWidget):
 
     def saveDataH5(self, saveFileName, name=False):
         print ('saveFileName = ', saveFileName)
-        self.h5file = tables.open_file(saveFileName, mode = "w", title = saveFileName)
-        self.rootnode = self.h5file.get_node('/')
-        self.group = self.h5file.create_group('/', 'data', 'Saved Data')
+        data_dict = {}
         if not name:
             records = self.records
         else:
             records = [name]
         for name in records:
             saveData = self.formatCurveData(name)
-            table = self.h5file.create_table(self.group, name, recordData, name)
-            row = table.row
-            for x in saveData:
-                row['time'], row['value'] = x
-                row.append()
-        self.h5file.close()
+            data_dict[name] = saveData
+        dict_to_h5.save_dict_to_hdf5(data_dict, saveFileName)
 
     def saveDataXLSX(self, saveFileName, name=False):
         workbook = xlsxwriter.Workbook(saveFileName)
@@ -162,6 +152,9 @@ class generalPlot(qt.QWidget):
             records = [name]
         for name in records:
             saveData = self.formatCurveData(name)
+            name = name.replace(':', '')
+            if len(name) > 30:
+                name = name[:30]
             worksheet = workbook.add_worksheet(name)
             # Start from the first cell. Rows and columns are zero indexed.
             row = 0
@@ -179,7 +172,8 @@ class generalPlot(qt.QWidget):
         for name in self.records:
             if self.records[name]['parent'] == self:
                 filename, file_extension = os.path.splitext(saveFileName)
-                saveFileName2 = filename + '_' + self.records[name]['name'] + file_extension
+                replaced_name = self.records[name]['name'].replace(':', '')
+                saveFileName2 = filename + '_' + replaced_name + file_extension
                 self.saveCurveCSVBin(saveFileName2, self.records[name]['name'])
 
     def saveCurveCSVBin(self, saveFileName, name=False):

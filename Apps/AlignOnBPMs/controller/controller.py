@@ -362,7 +362,12 @@ class Controller():
 		# for i in np.arange(0,2):
 		# 	Q_WCM.append(caget('CLA-S01-DIA-WCM-01:Q'))
 		# Q_WCM = np.mean(Q_WCM)
-		self.model.WCM()
+
+		try:
+			self.model.WCM()
+		except:
+			pass
+
 		# Update BPM charge bar charts
 		for r, bpm_name in enumerate(self.bpm_list):
 			row = str(r+1)
@@ -374,14 +379,20 @@ class Controller():
 			#time.sleep(0.5)
 			if len(self.model.Cbpms.getBPMQBuffer(bpm_name)) > 0 and str(self.model.Cbpms.getStatusBuffer(bpm_name)[-1]) == 'GOOD':
 				#print 'yes'
-				getattr(self, 'bg'+row+'_WCM').setOpts(x=self.xdict_Q.keys(), height=[np.mean(self.model.Q_WCM)], pen=self.barcolourQ_live)
+				try:
+					getattr(self, 'bg'+row+'_WCM').setOpts(x=self.xdict_Q.keys(), height=[np.mean(self.model.Q_WCM)], pen=self.barcolourQ_live)
+				except:
+					getattr(self, 'bg'+row+'_WCM').setOpts(x=self.xdict_Q.keys(), height=[0], pen=self.barcolourQ_live)
 				getattr(self, 'bg'+row+'_Q').setOpts(x=self.xdict_Q.keys(), height=[np.mean(self.model.Cbpms.getBPMQBuffer(bpm_name))], pen=self.barcolour3_live, brush=self.barcolour3_live)
 				getattr(self, 'bg'+row).setOpts(pen=self.barcolour1_live, brush=self.barcolour1_live)
 				getattr(self, 'bg'+row+'_y').setOpts(pens=[None, self.barcolour1y_live], brushes=[None, self.barcolour1y_live])
 				#getattr(self, 'bg'+row+'_WCM').setOpts(pen=self.barcolourQ_live)
 			else:
 				#print 'no'
-				getattr(self, 'bg'+row+'_WCM').setOpts(x=self.xdict_Q.keys(), height=[np.mean(self.model.Q_WCM)], pen=self.barcolourQ_notLive)
+				try:
+					getattr(self, 'bg'+row+'_WCM').setOpts(x=self.xdict_Q.keys(), height=[np.mean(self.model.Q_WCM)], pen=self.barcolourQ_notLive)
+				except:
+					getattr(self, 'bg'+row+'_WCM').setOpts(x=self.xdict_Q.keys(), height=[0], pen=self.barcolourQ_notLive)
 				getattr(self, 'bg'+row+'_Q').setOpts(x=self.xdict_Q.keys(), height=[0], pen=self.barcolourQ_notLive, brush=self.barcolourQ_notLive)
 				getattr(self, 'bg'+row).setOpts(pen=self.barcolour1_notLive, brush=self.barcolour1_notLive)
 				getattr(self, 'bg'+row+'_y').setOpts(pens=[None, self.barcolour1y_notLive], brushes=[None, self.barcolour1y_notLive])

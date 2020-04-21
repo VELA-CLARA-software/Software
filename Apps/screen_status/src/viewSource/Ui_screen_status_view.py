@@ -25,7 +25,7 @@ except AttributeError:
 class Ui_screen_status_view(object):
     def setupUi(self, screen_status_view):
         screen_status_view.setObjectName(_fromUtf8("screen_status_view"))
-        screen_status_view.resize(214, 494)
+        screen_status_view.resize(214, 332)
         self.centralwidget = QtGui.QWidget(screen_status_view)
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
         self.verticalLayout = QtGui.QVBoxLayout(self.centralwidget)
@@ -41,6 +41,12 @@ class Ui_screen_status_view(object):
         self.checkDevices_Button = QtGui.QPushButton(self.widget)
         self.checkDevices_Button.setObjectName(_fromUtf8("checkDevices_Button"))
         self.verticalLayout_2.addWidget(self.checkDevices_Button)
+        self.clara_led_button = QtGui.QPushButton(self.widget)
+        self.clara_led_button.setObjectName(_fromUtf8("clara_led_button"))
+        self.verticalLayout_2.addWidget(self.clara_led_button)
+        self.vela_led_button = QtGui.QPushButton(self.widget)
+        self.vela_led_button.setObjectName(_fromUtf8("vela_led_button"))
+        self.verticalLayout_2.addWidget(self.vela_led_button)
         self.groupBox = QtGui.QGroupBox(self.widget)
         self.groupBox.setObjectName(_fromUtf8("groupBox"))
         self.verticalLayout_2.addWidget(self.groupBox)
@@ -54,5 +60,7 @@ class Ui_screen_status_view(object):
         screen_status_view.setWindowTitle(_translate("screen_status_view", "Screen State", None))
         self.allout_Button.setText(_translate("screen_status_view", "ALL OUT", None))
         self.checkDevices_Button.setText(_translate("screen_status_view", "Check Devices", None))
+        self.clara_led_button.setText(_translate("screen_status_view", "CLARA- LED", None))
+        self.vela_led_button.setText(_translate("screen_status_view", "VELA-LED", None))
         self.groupBox.setTitle(_translate("screen_status_view", "Screen", None))
 

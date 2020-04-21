@@ -1,7 +1,7 @@
 from VELA_CLARA_BPM_Control import MACHINE_MODE,MACHINE_AREA
 from data.config_reader import config_reader
 from data.data_logger import data_logger
-import bpm_handler
+from controllers.bpm_handler import bpm_handler
 import datetime
 import data.bpm_calibrate_data_base as dat
 from data_monitors.data_monitoring import data_monitoring
@@ -52,7 +52,7 @@ class controller_base(base):
 		logdata = ['config file = ' + base.config.config_file,
 		'dumping data to log']
 		for item in base.config.all_config_data:
-			logdata.append(''.join(['%s:%s, ' % (key, value) for (key, value) in item.iteritems()]))
+			logdata.append(''.join(['%s:%s, ' % (key, value) for (key, value) in item.items()]))
 		base.logger.message(logdata, True)
 
 	def start_charge_control(self):
@@ -83,7 +83,7 @@ class controller_base(base):
 			base.logger.message('Monitoring BPMs: ' + ' '.join(self.get_bpm_names()), True)
 			base.config.bpm_config['BPM_NAMES'] = self.get_bpm_names()
 			base.data.values[dat.machine_mode] = 'virtual'
-			controller_base.bpm_handler = bpm_handler.bpm_handler()
+			controller_base.bpm_handler = bpm_handler()
 		else:
 			base.logger.message('start_bpm_control UNKNOWN_MACHINE area cannot create bpm object', True)
 

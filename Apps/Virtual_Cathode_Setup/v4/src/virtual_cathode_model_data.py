@@ -107,6 +107,7 @@ class model_data(object):
 	wcm_sd = 'wcm_sd'
 	cov_sd = 'cov_sd'
 	avg_pix_sd = 'avg_pix_sd'
+	avg_pix_beam_level = 'avg_pix_beam_level'
 	# analyse buffers (not used)
 	x_buf = 'x_buf'
 	y_buf = 'y_buf'
@@ -154,6 +155,7 @@ class model_data(object):
 	vc_mask = 'vc_mask'
 	pil_mirror = 'pil_mirror'
 
+
 	# list of all keys to use in data dict
 	all_value_keys = [time_stamp, mask_x_rbv, mask_y_rbv, mask_x_rad_rbv, mask_y_rad_rbv,
 	                  mask_x_user, mask_y_user, mask_x_rad_user, mask_y_rad_user, mask_feedback,
@@ -169,7 +171,7 @@ class model_data(object):
 	                  y_pix_to_mm, image_save_dir_root, rs_buffer_size, laser_buffer_full,
 	                  wcm_buffer_full, pixel_avg_buffer_full, x_buffer_full, y_buffer_full,
 	                  y_buffer_full, sig_x_buffer_full, sig_y_buffer_full, cov_xy_buffer_full,
-	                  shutter_names]
+	                  shutter_names,avg_pix_beam_level]
 	#
 	# values is the main dictionary for all the data
 	values = {}

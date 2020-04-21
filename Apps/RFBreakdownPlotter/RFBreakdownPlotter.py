@@ -215,6 +215,7 @@ class picklePlotWidget(QWidget):
             print 'pickle load time = ', time.time() - start
             event = {}
             reject_strings = ['time', 'EVID', 'value']
+            print 'data1 keys = ', sorted(data1.keys())
             for k, v in data1.iteritems():
                 if 'name_' in k:
                     name = v
@@ -255,6 +256,7 @@ class picklePlotWidget(QWidget):
                         self.plotorder.append(k)
             self.data = event
             print 'all pickle load time = ', time.time() - start
+            # print event.keys()
             self.updatePlot()
 
     def changeDirectory(self):
@@ -306,6 +308,7 @@ class picklePlotWidget(QWidget):
                         self.plotWidget.addTab(graphicslayoutwidget, datalabel[1])
                 else:
                     datadict = alldata[datalabel]
+                    print datadict['name'], datadict['type']
                     if datadict['type'] == 'data':
                         j += 1
                         p = graphicslayoutwidget.addPlot(title=datalabel)

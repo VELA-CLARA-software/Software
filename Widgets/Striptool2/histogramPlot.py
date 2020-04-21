@@ -1,8 +1,8 @@
-import sys, time, os, datetime, signal
+import sys, time, os, datetime, signal, copy
 import pyqtgraph as pg
 sys.path.append("../../../")
 import Software.Procedures.qt as qt
-# import peakutils
+from bisect import bisect_left
 import numpy as np
 # logger = logging.getLogger(__name__)
 
@@ -82,9 +82,13 @@ class histogramPlot(qt.QWidget):
         self.nbinsSpinBox.setMaximum(100)
         self.nbinsSpinBox.setSingleStep(1)
         self.nbinsSpinBox.valueChanged[int].connect(self.setNumberOfBins)
+        self.nbinsSpinBox.setMaximumWidth(75)
         self.nbinsLayout.addWidget(self.nbinsLabel)
         self.nbinsLayout.addWidget(self.nbinsSpinBox)
+        self.resetButton = qt.QPushButton('Clear')
+        self.resetButton.clicked.connect(self.clearHistogram)
         self.optionsBoxLayout.addLayout(self.nbinsLayout, 0,1,2,1)
+        self.optionsBoxLayout.addWidget(self.resetButton, 3,0,1,2)
 
     def setupPlotRateSlider(self):
         self.plotRateLayout = qt.QHBoxLayout()
@@ -107,6 +111,10 @@ class histogramPlot(qt.QWidget):
 
     def setNormalise(self, value):
         self.normalise = value
+
+    def clearHistogram(self):
+        for plot in self.histogramPlotCurves.itervalues():
+            plot.setCutTime(time.time())
 
     def setPlotRate(self, value):
         self.plotrate = value
@@ -161,15 +169,19 @@ class histogramPlotCurve(qt.QObject):
         super(histogramPlotCurve, self).__init__(parent=parent)
         self.parent=parent
         self.histogramplot = histogramplot
+        self.records = records
         self.recordspen = records['pen']
-        self.data = records['data']
         self.mean = records['worker'].mean
         self.stddev = records['worker'].stddeviation
         self.doingPlot = False
         self.paused = False
         self.numberBins = 10
-        self.decimateScale = 1000
+        self.decimateScale = 2**14
+        self.cutTime = 0
         self.plot = self.histogramplot.plot()
+
+    def setCutTime(self, t):
+        self.cutTime = t
 
     def setNumberOfBins(self, nbins):
         self.numberBins = int(nbins)
@@ -185,23 +197,28 @@ class histogramPlotCurve(qt.QObject):
 
     def update(self):
         start = time.time()
-        if not self.paused and not self.doingPlot and hasattr(self,'data') and len(self.data) > 1:
+        data = list(copy.copy(self.records['data']))
+        if not self.paused and not self.doingPlot and len(data) > 1:
             self.doingPlot  = True
-            data = list(self.data)
             if len(data) > self.decimateScale:
                 del data[:len(data)-self.decimateScale]
             x, y = zip(*data)
-            y2,x2 = np.histogram(y, bins=self.numberBins)
-            if self.parent.subtractMeans:
-                x2 = x2 - np.mean(x2)
-            if self.parent.normalise:
-                mean = np.mean(x2)
-                x2 = x2 - mean
-                x2 = x2 / np.std(x2)
-                x2 = x2 + mean
-            r,g,b,a = pg.colorTuple(pg.mkColor(self.recordspen))
-            self.pencolor = pg.mkColor(r,g,b,255)
-            self.brushcolor = pg.mkColor(r,g,b,64)
-            self.plot.setData({'x': x2, 'y': y2}, pen=self.pencolor, stepMode=True, fillLevel=0, fillBrush=self.brushcolor)
+            pos = bisect_left(x, self.cutTime)
+            if pos > 0:
+                del data[:pos]
+            if len(data) > 0:
+                x, y = zip(*data)
+                y2,x2 = np.histogram(y, bins=self.numberBins)
+                if self.parent.subtractMeans:
+                    x2 = x2 - np.mean(x2)
+                if self.parent.normalise:
+                    mean = np.mean(x2)
+                    x2 = x2 - mean
+                    x2 = x2 / np.std(x2)
+                    x2 = x2 + mean
+                r,g,b,a = pg.colorTuple(pg.mkColor(self.recordspen))
+                self.pencolor = pg.mkColor(r,g,b,255)
+                self.brushcolor = pg.mkColor(r,g,b,64)
+                self.plot.setData({'x': x2, 'y': y2}, pen=self.pencolor, stepMode=True, fillLevel=0, fillBrush=self.brushcolor)
         self.doingPlot = False
         # self.histogramPlot.enableAutoRange()

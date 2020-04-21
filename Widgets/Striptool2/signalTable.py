@@ -170,10 +170,11 @@ class signalTable(qt.QWidget):
     signalRateChanged = qt.pyqtSignal('PyQt_PyObject', 'PyQt_PyObject')
     colourPickerButtonPushed = qt.pyqtSignal('PyQt_PyObject')
 
-    def __init__(self, parent = None, VELAMagnetController=None, CLARAMagnetController=None, VELABPMController=None, CLARABPMController=None, GeneralController=None):
+    def __init__(self, parent = None, VELAMagnetController=None, CLARAMagnetController=None, VELABPMController=None, CLARABPMController=None, LRRGRFController=None,  L01RFController=None, GeneralController=None, settings=None):
         super(signalTable, self).__init__(parent)
         self.setMaximumHeight(100)
-        self.stream = open('striptool.yaml', 'r')
+        self.settings_filename = 'striptool.yaml' if settings is None else settings
+        self.stream = open(self.settings_filename, 'r')
         self.settings = yaml.load(self.stream)
         self.stream.close()
         self.magnetnames = self.settings['magnets']
@@ -183,6 +184,8 @@ class signalTable(qt.QWidget):
         self.CLARAMagnets = CLARAMagnetController
         self.VELAbpms = VELABPMController
         self.CLARAbpms = CLARABPMController
+        self.L01RF = L01RFController
+        self.LRRGRF = LRRGRFController
         self.general = GeneralController
         self.stripTool = parent
         self.rowNumber = 0
@@ -208,7 +211,7 @@ class signalTable(qt.QWidget):
         self.pvids = []
 
     def reloadSettings(self):
-        self.stream = open('striptool.yaml', 'r')
+        self.stream = open(self.settings_filename, 'r')
         self.settings = yaml.load(self.stream)
         self.stream.close()
         self.magnetnames = self.settings['magnets']

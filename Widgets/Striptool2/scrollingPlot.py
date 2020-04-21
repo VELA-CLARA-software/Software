@@ -456,17 +456,17 @@ class curve(qt.QObject):
 
     def setVisibility(self, linename, visible):
         self.visibility[linename] = visible
-        if linename is 'curve':
-            if visible is False:
-                for k in self.visibility.keys():
-                    getattr(self, k).setVisible(False)
-            else:
-                for k,v in self.visibility.iteritems():
-                    getattr(self, k).setVisible(self.visibility[k])
-        else:
+        # if linename is 'curve':
+        #     if visible is False:
+        #         for k in self.visibility.keys():
+        #             getattr(self, k).setVisible(False)
+        #     else:
+        #         for k,v in self.visibility.iteritems():
+        #             getattr(self, k).setVisible(self.visibility[k])
+        # else:
+        if linename in self.visibility:
             self.visibility[linename] = visible
-            if self.visibility.curve is True:
-                getattr(self, linename).setVisible(visible)
+            getattr(self, linename).setVisible(visible)
 
 
     def changeViewbox(self, viewbox):

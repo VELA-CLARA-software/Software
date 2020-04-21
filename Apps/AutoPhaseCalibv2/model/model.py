@@ -98,6 +98,7 @@ class Model(object):
         self.parameters = self.baseMachine.initilise_parameters()
         self.data = []
         self.calibrationPhase = {'Gun': None, 'Linac1': None}
+        self.settings = {'Gun_Amp_Set': 71000, 'Linac1_Amp_Set': 41000}
         print("Model Initialized")
 
     def abort(self):
@@ -136,7 +137,7 @@ class Model(object):
 
     def turnOnGun(self, max, step):
         self.resetAbortFinish()
-        max = max if max <= 16000 else 16000
+        max = max if max <= self.settings['Gun_Amp_Set'] else self.settings['Gun_Amp_Set']
         start = self.machine.getGunAmplitude()
         range =  np.arange(start, max+1, step)
         for i, set in enumerate(range):
@@ -149,7 +150,7 @@ class Model(object):
 
     def turnOnLinac1(self, max, step):
         self.resetAbortFinish()
-        max = max if max <= 13500 else 13500
+        max = max if max <= self.settings['Linac1_Amp_Set'] else self.settings['Linac1_Amp_Set']
         start = self.machine.getLinac1Amplitude()
         range =  np.arange(start, max+1, step)
         for i, set in enumerate(range):
@@ -193,9 +194,12 @@ class Model(object):
         self.sleepTimeFine = 0.1
         self.findingCrestFine()
 
-    def linacCresterFine(self, no, phiStart, phiRange, phiSteps, nSamples):
+    def linacCresterFine(self, no, phiStart, phiRange, phiSteps, nSamples, PID=False):
         self.resetAbortFinish()
-        self.cavity = 'Linac'+str(no)
+        if PID:
+            self.cavity = 'Linac'+str(no)+'PID'
+        else:
+            self.cavity = 'Linac'+str(no)
         self.actuator = 'fine'
         self.stepSize = 5
         self.phiStart = phiStart
@@ -265,7 +269,7 @@ class Model(object):
         self.findDipoleCurrent()
 
     def saveData(self, cavity=None, type=None, savetoworkfolder=True):
-        if not self.machineType == 'None':
+        if not self.machineType == 'aNone':
             if cavity is not None and not isinstance(cavity, (tuple, list)):
                 cavity = [cavity]
             elif cavity is None:
@@ -287,8 +291,9 @@ class Model(object):
                     for t in type:
                         if t in self.crestingData[c]:
                             mydata = {a: np.array(self.crestingData[c][t][a]) for a in ['xData', 'yData', 'yStd']}
+                            mydata['calibrationPhase'] = self.crestingData[c]['calibrationPhase']
                             filename = dir+timestr+'_'+c+'_'+t+'_crestingData.h5'
-                            mydata = merge_two_dicts(mydata,self.RFTraces)
+                            # mydata = merge_two_dicts(mydata,self.RFTraces)
                             save_dict_to_hdf5(mydata, filename)
 
     def getRFTraces(self):
@@ -348,11 +353,11 @@ class Model(object):
         self.magnets.setSI(dipole,current)
 
     def printFinalPhase(self):
-        print self.cavity+' '+self.actuator+' fit = '+str(self.crestingData[self.cavity]['calibrationPhase'])
+        print(self.cavity+' '+self.actuator+' fit = '+str(self.crestingData[self.cavity]['calibrationPhase']))
         self.logger.emit(self.cavity+' '+self.actuator+' fit = '+str(self.crestingData[self.cavity]['calibrationPhase']))
 
     def printFinalDip(self):
-        print self.cavity+' '+self.actuator+' fit = '+str(self.crestingData[self.cavity]['calibrationDip'])
+        print(self.cavity+' '+self.actuator+' fit = '+str(self.crestingData[self.cavity]['calibrationDip']))
         self.logger.emit(self.cavity+' '+self.actuator+' fit = '+str(self.crestingData[self.cavity]['calibrationDip']))
 
     def resetDataArray(self):
@@ -423,9 +428,9 @@ class Model(object):
         while len(self.data) < self.nSamples:
             self.data.append(self.getDataFunction())
             time.sleep(self.sleepTime)
-        # print 'before = ', self.data
+        # print('before = ', self.data)
         self.data = [a for a in self.data if not np.isnan(a)]
-        # print 'after = ', self.data
+        # print('after = ', [np.mean(self.data), np.std(self.data)] if np.std(self.data) > 0.001 else [float('nan'),0])
         return [np.mean(self.data), np.std(self.data)] if np.std(self.data) > 0.001 else [float('nan'),0]
 
     def rotate_list(self, l, n):
@@ -462,12 +467,28 @@ class Model(object):
         allData = self.getDataArray()
         max_charge = max(self.getDataArray('yData'))
         cutData = [a for a in allData if a[1] > max_charge / 4 and a[1] > 10]
-        return cutData
+        alllist = []
+        newlist = []
+        for i, pt in enumerate(cutData):
+            if i < (len(cutData)-1):
+                if not cutData[i+1][0] - pt[0] > 2*self.stepSize:
+                    newlist.append(pt)
+                else:
+                    alllist.append(newlist)
+                    newlist = []
+            elif i == (len(cutData)-1):
+                newlist.append(pt)
+                alllist.append(newlist)
+        # print 'alllist = ', alllist
+        if len(alllist) < 1:
+            self.logger[str, str].emit('Error in fitting! Is the gun on?', 'warning')
+        return max(alllist, key=len)
 
     def doFitGunQuick(self):
         cutData = self.cutDataGunQuick()
         x, y, std = zip(*cutData)
-        if max(x) - min(x) > 90:
+        if max(x) - min(x) > 180:
+            print('####  Gun Quick Scan range > 90  ####')
             x = [a if a >= 0 else a+360 for a in x]
             phase, data, stddata = self.getDataArray(zipped=False)
             phase = np.array([a if a >= 0 else a+360 for a in phase])
@@ -552,7 +573,7 @@ class Model(object):
             time.sleep(self.sleepTimeFine)
             currphase = phase#self.machine.getPhase(self.cavity)
             data, stddata = self.getData()
-            if stddata > 0.05:
+            if stddata > 0.01:
                 self.appendDataArray(currphase, data, stddata)
 
     def fittingFunc(self):

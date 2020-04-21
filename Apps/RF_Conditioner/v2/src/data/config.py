@@ -38,7 +38,7 @@ class config(object):
     This class reads in the configuration file(yaml) and then puts the information in various
     static dictionaries for each hardware type, these dictionaries are used by the different
     classes in the programme to configure conditioning
-    It fairly obvious, non-stanrd thigns are:
+    It fairly obvious, non-standard things are:
     the general_monitoring parameters, defined at run-time, so have to be searached for
     The traces to monitor are checked for "full names" as used in CATAP
     moar static variables are defined at the end of this class definition
@@ -91,7 +91,7 @@ class config(object):
 
     def read_config(self):
         '''
-        reeads in the config file and places items in static config dictionary
+        reads in the config file and places items in static config dictionary
         :return: success or failure
         '''
         try:
@@ -129,6 +129,7 @@ class config(object):
         config.rfprot_config = self.split_raw_config(config.rfprot_keywords)
         config.gui_config = self.split_raw_config(config.gui_keywords)
         config.sol_config = self.split_raw_config(config.solenoid_keywords)
+
         # general monitor parameters are unknown at run time, we must search for them
         self.find_general_monitor_parameter()
         config.monitor_config = self.split_raw_config(config.gmonitor_keywords)
@@ -142,6 +143,7 @@ class config(object):
         :return: new dictionary with keywords in config that match passed keywords or None
         '''
         return_dictionary = {}
+        # Check if the KEYWORDS DEFINED IN THIS CLASS EXIST IN THE CONFIG
         try:
             for word in keywords:
                 if word in config.raw_config_data:
@@ -158,11 +160,11 @@ class config(object):
 
     def find_general_monitor_parameter(self):
         """
-        this picks up any extra PVs that are logged to file, but NOT disdplayed to the GUI its
+        this picks up any extra PVs that are logged to file, but NOT displayed to the MAIN GUI it's
         going to look for any keys in the config that have the suffix given by the value for
         keyword = 'GMON_SUFFIX'  (TYPICALLY THIS SHOULD BE '_GMON', but i made it a variable)
         GMON_SUFFIX is one of the few hardcoded keywords that does not need to be used in the
-        config file.
+        config file. IF NO GMON is configured, we need to know that
         :return: no return
         """
         # get the suffix, and iterate over all keywords in raw_config_data, looking for a matching
@@ -213,8 +215,8 @@ class config(object):
     def sanity_checks(self):
         """
         perform any sanity checks on the config data here, failing sanity checks should terminate
-        the applciation
-        Man this is uglyaf must be a more elegant way to refactor this cancer
+        the application
+        his is uglyaf must be a more elegant way to refactor this cancer
         :return: config.have_config
         """
         # print all data (pass to logger)
@@ -250,6 +252,59 @@ class config(object):
         except Exception:
                 raise
 
+
+
+
+        # CHECK TH EVERACITY OF THE CONFIG FILE - SOMEHOW
+
+        # WE ONLY CHECK THE
+
+        num_keywords_found = len(config.DC_config) + \
+        len(config.log_config) + \
+        len(config.vac_config) + \
+        len(config.vac_valve_config ) + \
+        len(config.water_temp_config ) + \
+        len(config.cavity_temp_config)  +\
+        len(config.llrf_config ) + \
+        len(config.breakdown_config) +\
+        len(config.mod_config ) + \
+        len(config.rfprot_config)  +\
+        len(config.gui_config)  + \
+        len(config.sol_config)  + \
+        len(config.monitor_config)
+
+        print(num_keywords_found, len(config.raw_config_data))
+
+        # HERE we check if the keywords in the config file are as expected
+        bad_keys = []
+        for key in config.raw_config_data.keys():
+            print("Checking: ",key)
+            # If the key is Defined in all_config_keywords good,
+            if key in config.all_config_keywords:
+                print(key, " expected")
+            # If the key is a _GMON key, then good (these are designed to be configurable from
+            # the config file
+            elif "_GMON" in key:
+                print(key, " pass")
+            # otherwise there MUST be an ERROR so stop
+            else:
+                bad_keys.append(key)
+
+        # try:
+        #     if len(bad_keys) == 0:
+        #         pass
+        #     else:
+        #         bad_key_string = ", ".join(bad_keys)
+        #         raise NameError("!!ERROR!! Unexpected key(s) found in config file (",
+        #                         config.config_file, "), KEY(S) = " + bad_key_string)
+        # except Exception:
+        #     raise
+
+
+
+
+
+
         # TODO:  add in more exceptions for cross checking data-types
 
         #
@@ -257,20 +312,25 @@ class config(object):
         config.have_config = True
         return config.have_config
 
+    # TODO: we KNOW all the possible values that keywords can take and should check them
 
-    # The below variableas are static,
+    # The below variables are static,
     # They are defined at the bottom of the file to keep them out the way
     #
 
     """
-    
-    The Config FILE Must contian the same keyowrds that are given below
-    Adding extra keywords is easy. When adding new keywords i recommend you add them  I recommend 
+    The Config FILE MUST contain the same keywords that are given below
+    Adding extra keywords is easy, but must happen 
+    them
     
     """
 
     # TODO: get rid of all the sperate configs and just have one mega-config for all
 
+
+    # a global MODE that can be set to DEBUG or OPERTAIONAL
+
+    MODE = 'MODE'
 
 
     ## Config File Keyword Defintitions
@@ -278,6 +338,7 @@ class config(object):
 
     # vacuum keywords
     VAC_NUM_SAMPLES_TO_AVERAGE = 'VAC_NUM_SAMPLES_TO_AVERAGE'
+    VAC_ROLLING_SUM_NUM_SAMPLES = 'VAC_ROLLING_SUM_NUM_SAMPLES'
     VAC_SPIKE_DECAY_LEVEL = 'VAC_SPIKE_DECAY_LEVEL'
     VAC_SPIKE_DECAY_TIME = 'VAC_SPIKE_DECAY_TIME'
     VAC_SHOULD_DROP_AMP = 'VAC_SHOULD_DROP_AMP'
@@ -289,7 +350,7 @@ class config(object):
     VAC_MAX_LEVEL = 'VAC_MAX_LEVEL'
     VAC_PV = 'VAC_PV'
     vac_keywords = [WHEN_VAC_HI_DISABLE_RAMP,VAC_NUM_SAMPLES_TO_AVERAGE, VAC_SPIKE_DECAY_LEVEL,
-                    VAC_SPIKE_DECAY_TIME,
+                    VAC_SPIKE_DECAY_TIME,VAC_ROLLING_SUM_NUM_SAMPLES,
                     VAC_SHOULD_DROP_AMP, VAC_SPIKE_DROP_AMP,  # VAC_MAX_AMP_DROP,
                     VAC_SPIKE_DELTA, VAC_CHECK_TIME, VAC_DECAY_MODE, VAC_MAX_LEVEL, VAC_PV,
                     MINIMUM_COOLDOWN_TIME]
@@ -325,6 +386,9 @@ class config(object):
                     OUTSIDE_MASK_REVERSE_FILENAME, OUTSIDE_MASK_PROBE_FILENAME,
                     PULSE_COUNT_BREAKDOWN_LOG_FILENAME, PULSE_COUNT_BREAKDOWN_LOG_FILENAME,
                     KFPOW_AMPSP_RUNNING_STATS_LOG_FILENAME, BINARY_DATA_LOG_TIME, AMP_PWR_LOG_TIME]
+
+
+
     #
     # vac_valve_parameter(self):
     VAC_VALVE = 'VAC_VALVE'
@@ -332,6 +396,10 @@ class config(object):
     VAC_VALVE_CHECK_TIME = 'VAC_VALVE_CHECK_TIME'
     KEEP_VALVE_OPEN = 'KEEP_VALVE_OPEN'
     vac_valve_keywords = [VAC_VALVE, VAC_VALVE_AREA, VAC_VALVE_CHECK_TIME, KEEP_VALVE_OPEN]
+
+
+
+
     #
     # water temp keywords
     WATER_TEMPERATURE_PV_COUNT = 'WATER_TEMPERATURE_PV_COUNT'
@@ -356,9 +424,10 @@ class config(object):
     SOL_WOBBLE_HI = 'SOL_WOBBLE_HI'
     SOL_WOBBLE_LO = 'SOL_WOBBLE_LO'
     SOL_WOBBLE_OSCILLATION_TIME = 'SOL_WOBBLE_OSCILLATION_TIME'
+    SOL_WOBBLE_OSCILLATION_POINTS = 'SOL_WOBBLE_OSCILLATION_POINTS'
     solenoid_keywords = [MAGNET_MACHINE_AREA, SOL_NAMES, SOL_CHECK_TIME, SHOULD_SOL_WOBBLE,
                          SOL_WOBBLE_HI, SOL_WOBBLE_LO,SOL_COUNT,
-                         SOL_WOBBLE_OSCILLATION_TIME]
+                         SOL_WOBBLE_OSCILLATION_TIME,SOL_WOBBLE_OSCILLATION_POINTS]
     #
     # llrf keywords
     RF_STRUCTURE = 'RF_STRUCTURE'
@@ -384,8 +453,8 @@ class config(object):
     # RF_INCREASE_LEVEL = 'RF_INCREASE_LEVEL'
     # RF_INCREASE_RATE = 'RF_INCREASE_RATE'
     # POWER_AIM = 'POWER_AIM'
-    PULSE_LENGTH_AIM = 'PULSE_LENGTH_AIM'
-    PULSE_LENGTH_AIM_ERROR = 'PULSE_LENGTH_AIM_ERROR'
+    PULSE_LENGTH = 'PULSE_LENGTH'
+    PULSE_LENGTH_ERROR = 'PULSE_LENGTH_ERROR'
     KLY_PWR_FOR_ACTIVE_PULSE = 'KLY_PWR_FOR_ACTIVE_PULSE'
     KFPOW_MEAN_START = 'KFPOW_MEAN_START'
     KFPOW_MEAN_END = 'KFPOW_MEAN_END'
@@ -397,6 +466,10 @@ class config(object):
     KRPHA_MEAN_END = 'KRPHA_MEAN_END'
     CFPOW_MEAN_START = 'CFPOW_MEAN_START'
     CFPOW_MEAN_END = 'CFPOW_MEAN_END'
+
+    CPPOW_MEAN_START = 'CPPOW_MEAN_START'
+    CPPOW_MEAN_END = 'CPPOW_MEAN_END'
+
     CRPOW_MEAN_START = 'CRPOW_MEAN_START'
     CRPOW_MEAN_END = 'CRPOW_MEAN_END'
     CFPHA_MEAN_START = 'CFPHA_MEAN_START'
@@ -416,16 +489,23 @@ class config(object):
                      # RF_INCREASE_LEVEL,
                      # RF_INCREASE_RATE,
                      # POWER_AIM,
-                     # PULSE_LENGTH_AIM,
-                     # PULSE_LENGTH_AIM_ERROR,
+
+                     # THESE WILL BE USED FOR CHECKING THE PULSE LENGTH, AND, MAYBE ONE DAY
+                     # CHANGING IT AUTOMATICALLY
+                     PULSE_LENGTH,
+                     PULSE_LENGTH_ERROR,
+
                      KLY_PWR_FOR_ACTIVE_PULSE, KFPOW_MEAN_START, KFPOW_MEAN_END, KRPOW_MEAN_START,
                      KRPOW_MEAN_END, KFPHA_MEAN_START, KFPHA_MEAN_END, KRPHA_MEAN_START,
                      KRPHA_MEAN_END, CFPOW_MEAN_START, CFPOW_MEAN_END, CRPOW_MEAN_START,
                      CRPOW_MEAN_END, CFPHA_MEAN_START, CFPHA_MEAN_END, CRPHA_MEAN_START,
-                     CRPHA_MEAN_END, CPPHA_MEAN_START, CPPHA_MEAN_END  # TIME_BETWEEN_RF_INCREASES
+                     CRPHA_MEAN_END, CPPHA_MEAN_START, CPPHA_MEAN_END,  # TIME_BETWEEN_RF_INCREASES
+                     CPPOW_MEAN_START, CPPOW_MEAN_END
                      # NORMAL_POWER_INCREASE
                      ]
     #
+
+
 
     #OUTSIDE_MASK_COOLDOWN_TIME = 'OUTSIDE_MASK_COOLDOWN_TIME'
 
@@ -514,6 +594,7 @@ class config(object):
     KRPHA_DROP_AMP_VALUE = 'KRPHA_DROP_AMP_VALUE'
     OUTSIDE_MASK_CHECK_TIME = 'OUTSIDE_MASK_CHECK_TIME'
     #OUTSIDE_MASK_COOLDOWN_TIME = 'OUTSIDE_MASK_COOLDOWN_TIME'
+
     CFPOW_MASK_START = 'CFPOW_MASK_START'
     CRPOW_MASK_START = 'CRPOW_MASK_START'
     CPPOW_MASK_START = 'CPPOW_MASK_START'
@@ -638,6 +719,8 @@ class config(object):
                           CPPHA_PHASE_MASK_BY_POWER_TRACE, KFPHA_PHASE_MASK_BY_POWER_LEVEL,
                           KRPHA_PHASE_MASK_BY_POWER_LEVEL, CRPHA_PHASE_MASK_BY_POWER_LEVEL,
                           CFPHA_PHASE_MASK_BY_POWER_LEVEL, CPPHA_PHASE_MASK_BY_POWER_LEVEL]
+
+
     #
     # modulator
     MODULATOR_CHECK_TIME = 'MODULATOR_CHECK_TIME'
@@ -701,3 +784,13 @@ class config(object):
                   MONITOR_CONFIG: monitor_config,  # 12
                   RFPROT_CONFIG: rfprot_config  # 13
                   }
+
+    # ALL THE CONFIG KEYWORDS MUST BE IN THIS LIST (OR BE  GEN_MON KEYWORD)
+    # OTHERWISE TEH PROGRAMM WILL NOT START PROPERLY
+    all_config_keywords = [MODE]
+    for item in [llrf_keywords, vac_keywords, dc_keywords, log_keywords,
+                           vac_valve_keywords, water_temp_keywords, cavity_temp_keywords,
+                           solenoid_keywords, breakdown_keywords, modulator_keywords,
+                 rfprot_keywords, gui_keywords]:
+        for key in item:
+            all_config_keywords.append(key)
