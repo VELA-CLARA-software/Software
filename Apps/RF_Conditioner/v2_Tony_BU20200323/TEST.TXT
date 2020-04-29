@@ -1,0 +1,3 @@
+redirected: python print
+redirected: libc _write
+redirected: libc printf

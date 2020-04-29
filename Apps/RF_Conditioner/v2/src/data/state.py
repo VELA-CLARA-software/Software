@@ -24,11 +24,11 @@
 //
 //*/
 '''
-from enum import Enum, unique
+#from enum import Enum, unique
+import enum
 
-
-@unique
-class state(Enum):
+@enum.unique()
+class state(enum.Enum):
     '''
         flags states for different monitors
     '''

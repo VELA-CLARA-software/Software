@@ -7,7 +7,6 @@ from src.data import rf_conditioning_logger
 from src.data.rf_conditioning_data import rf_conditioning_data
 import hardware_control_hub
 
-
 class llrf_control(object):
 	"""
 	This class is for controlling the LLRF,

@@ -1,11 +1,6 @@
-
-
-
-
-
 import VELA_CLARA_Vac_Valve_Control
-
-
+import sys, os
+from PyQt4 import QtGui
 class OutLog:
     def __init__(self, edit, out=None, color=None):
         """(edit, out=None, color=None) -> can write stdout, stderr to a

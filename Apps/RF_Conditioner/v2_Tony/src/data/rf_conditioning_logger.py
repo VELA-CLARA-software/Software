@@ -26,7 +26,12 @@
 # from VELA_CLARA_enums import STATE
 from datetime import datetime
 # from src.data.state import state
-import cPickle as pkl, os, numpy as np, sys, traceback, collections
+import cPickle as pkl
+import os
+import numpy as np
+import sys
+import traceback
+import collections
 from src.data.config import config
 from src.data.logger import logger
 
@@ -171,45 +176,10 @@ class rf_conditioning_logger(logger):
             " ".join(map(str, new_values)) + '\n')
         rf_conditioning_logger._pulse_count_log_file_obj.flush()
 
-    #TODO AJG: define function to bin amp-power data after amp-power log is read in.
-    # Need to make sure bin_width, max_amp & max_pow are defined in the config.yml
 
-
-    def InitialBin(self,x, y, bin_width, max_amp, max_pow):
-
-        xprime = [x[i] for i in range(len(x) - 1) if x[i] != x[i + 1]]
-        xprime.append(max_amp)
-        xprime.insert(0, 0)
-        yprime = [y[i] for i in range(len(x) - 1) if x[i] != x[i + 1]]
-        yprime.append(max_pow)
-        yprime.insert(0, 0.0)
-
-        bedges = [i * bin_width for i in range(int(xprime[-1] + (2 * int(bin_width))) / int(bin_width))]
-        bin_mean = np.zeros(len(bedges) - 1)
-        bin_pop = np.zeros(len(bedges) - 1)
-        keyList = [i for i in range(len(bedges) - 1)]
-        data_binned = {}
-        for i in keyList:
-            data_binned[i] = []
-
-        for i in range(0, len(xprime)):
-            for j in range(0, len(bin_mean)):
-                if xprime[i] >= bedges[j] and xprime[i] < bedges[j + 1]:
-                    print('bin_mean[j] = ',bin_mean[j])
-                    print('bin_pop[j] = ', bin_pop[j])
-                    print('yprime[i] = ', yprime[i])
-                    print('((bin_mean[j] * bin_pop[j]) + (yprime[i])) / (bin_pop[j] + 1.0) = ', ((bin_mean[j] * bin_pop[j]) + (yprime[i])) / (bin_pop[j] + 1.0))
-                    bin_mean[j] = ((bin_mean[j] * bin_pop[j]) + (yprime[i])) / (bin_pop[j] + 1.0)
-                    bin_pop[j] += 1.0
-                    data_binned[j].append(xprime[i])
-
-        X = [k + bin_width / 2.0 for k in bedges[:-1]]
-
-        return X, bin_mean, bedges, bin_pop, data_binned
 
     def get_pulse_count_breakdown_log(self):
-        #TODO AJG: define initial_bin function here
-        # and bin amp-power data after reading it in
+
         '''
         read the pulse_breakdown_count log file and put the contents in log
         create a file object _pulse_count_log_file_obj to use for appending new data
@@ -227,6 +197,51 @@ class rf_conditioning_logger(logger):
         rf_conditioning_logger._pulse_count_log_file_obj = open(
             rf_conditioning_logger._pulse_count_log_file, 'a')
         return log
+
+    # TODO AJG: define function to bin amp-power data after amp-power log is read in.
+    #  Need to make sure bin_width, max_amp & max_pow are defined in the config.yml
+
+    def initial_bin(self,x, y, bin_width, max_amp, max_pow):
+
+        xprime = [x[i] for i in range(len(x) - 1) if x[i] != x[i + 1]]
+        xprime.append(max_amp)
+        xprime.insert(0, 0)
+        yprime = [y[i] for i in range(len(x) - 1) if x[i] != x[i + 1]]
+        yprime.append(max_pow)
+        yprime.insert(0, 0.0)
+
+        bedges = [i * bin_width for i in range(int(xprime[-1] + (2 * int(bin_width))) / int(bin_width))]
+        bin_mean = np.zeros(len(bedges) - 1)
+        bin_pop = np.zeros(len(bedges) - 1)
+        bin_error = np.zeros(len(bedges) - 1)
+        keyList = [i for i in range(len(bedges) - 1)]
+
+        #TODO haveall data in bins as a list of lists rather than dictionary.
+        # NB the method below does not work yet
+        '''
+        from itertools import repeat
+        data_binned = [[] for i in repeat(None, len(bedges) - 1)]
+        '''
+
+        data_binned = {}
+        for i in keyList:
+            data_binned[i] = []
+
+        for i in range(0, len(xprime)):
+            for j in range(0, len(bin_mean)):
+                if xprime[i] >= bedges[j] and xprime[i] < bedges[j + 1]:
+                    #print('bin_mean[j] = ',bin_mean[j])
+                    #print('bin_pop[j] = ', bin_pop[j])
+                    #print('yprime[i] = ', yprime[i])
+                    #print('((bin_mean[j] * bin_pop[j]) + (yprime[i])) / (bin_pop[j] + 1.0) = ', ((bin_mean[j] * bin_pop[j]) + (yprime[i])) / (bin_pop[j] + 1.0))
+                    bin_mean[j] = ((bin_mean[j] * bin_pop[j]) + (yprime[i])) / (bin_pop[j] + 1.0)
+                    bin_pop[j] += 1.0
+                    data_binned[j].append(xprime[i])
+                    bin_error[j] = np.std(data_binned[j])
+
+        X = [k + bin_width / 2.0 for k in bedges[:-1]]
+
+        return X, bin_mean, bedges, bin_pop, data_binned, bin_error
 
     def get_kfpow_running_stat_log(self):
         '''
@@ -270,6 +285,7 @@ class rf_conditioning_logger(logger):
         # now open amp_power_log file for appending and LEAVE OPEN
         rf_conditioning_logger._kfow_running_stats_log_file_obj = open(
             rf_conditioning_logger._kfow_running_stats_log_file, 'a')
+
         return r_dict
 
     def setup_text_log_files(self):
@@ -333,7 +349,7 @@ class rf_conditioning_logger(logger):
                 print 'sys.path = ', sys.path
                 print 'logger.working_directory = ', logger.working_directory
                 err = rcl._pulse_count_log_file
-                raise
+                raise Exception
             # Raise exception if KFPOW_AMPSP_RUNNING_STATS_LOG_FILENAME can't be found where
             # expected
             rcl._kfow_running_stats_log_file = os.path.join(logger.working_directory,

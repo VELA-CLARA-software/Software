@@ -2,9 +2,9 @@ import sys
 import os
 sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\stage')
 from VELA_CLARA_enums import *
-#from VELA_CLARA_enums import MACHINE_MODE
-#from VELA_CLARA_enums import MACHINE_AREA
-#from VELA_CLARA_enums import CONTROLLER_TYPE
+from VELA_CLARA_enums import MACHINE_MODE
+from VELA_CLARA_enums import MACHINE_AREA
+from VELA_CLARA_enums import CONTROLLER_TYPE
 from VELA_CLARA_LLRF_Control import LLRF_TYPE
 import VELA_CLARA_LLRF_Control
 from PyQt4.QtGui import QMainWindow
