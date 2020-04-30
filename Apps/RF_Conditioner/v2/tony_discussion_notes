@@ -1,0 +1,35 @@
+for monitor cooldowns,
+i think we should have a minimmum time off + level (might be in as min cooldown time???)
+add in a vac pressure limit that forces RF off 
+
+statistics on preformance, i.e do we get a vac number every  200 ms?? 
+
+
+moving up and down the power curve, needs some attention, 
+
+what to do if we get multiple breakdowns, we drop teh power "too much" and 
+good traces are now outisde the mask??? 
+* we need a reset masks and start again??
+* fast power ramp from low power
+
+
+write new config file from expert mode panel after expert changes to config. 
+how to load a different config on startup? 
+
+
+splash screen asking which config to load?
+load config files from gui?
+
+
+all config in one dictionary that everything sees
+
+
+update the gui widgets, coudl be cleaned up abit, but make it work first
+
+
+
+next time logging, hardware control hub, monitor hub
+
+
+try adn run fro tony computer
+start checking which configs are being use (split should not be used, raw used instead)
