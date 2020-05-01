@@ -101,6 +101,8 @@ class main_controller(object):
         self.data = rf_conditioning_data(debug=self.debug)
         self.data.initialise()
 
+
+        # should thios happen here, or in the view?
         self.view.data = self.data
         self.view.values = self.data.values
         self.view.start_gui_update()

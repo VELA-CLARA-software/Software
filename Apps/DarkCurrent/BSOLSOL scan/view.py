@@ -1,18 +1,15 @@
-# -*- coding: utf-8 -*-
 """
-Created on Mon Oct  7 10:35:48 2019
+Script for the GUI for the SOL BSOL scan App
 
-@author: qqi63789
+@author: MFurmaniak
 """
 
 from PyQt4 import QtGui, QtCore
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
 import pyqtgraph as pg
 from pyqtgraph import GraphicsLayoutWidget
 
 #=========================================================================================================================================================================
-class MainWindow(QMainWindow):
+class MainWindow(object):
     '''The main GUI where user specifies 
         the sol, bsol and rf values'''
     
@@ -24,7 +21,7 @@ class MainWindow(QMainWindow):
         self.Dialog = QtGui.QDialog()
         self.Dialog.setObjectName("Dialog")
         self.Dialog.resize(390, 316)
-
+        
         self.buttonBox_2 = QtGui.QDialogButtonBox(self.Dialog)
         self.buttonBox = QtGui.QDialogButtonBox(self.Dialog)
         
@@ -69,16 +66,16 @@ class MainWindow(QMainWindow):
         min_sol = self.spinBox = QtGui.QSpinBox(self.gridLayoutWidget)
         min_sol.setMinimum(-300)
         min_sol.setMaximum(300)
-        min_sol.setProperty("value", -1)
+        min_sol.setProperty("value", 100)
         min_sol.setObjectName("min_sol")
         self.gridLayout.addWidget(min_sol, 1, 1, 1, 1)
         self.min_sol = min_sol                                                 #defining a global variable in the class
         
         # maximum bsol- input
         max_bsol = self.spinBox_4 = QtGui.QSpinBox(self.gridLayoutWidget)
-        max_bsol.setMinimum(-300)
-        max_bsol.setMaximum(300)
-        max_bsol.setProperty("value", 1)
+        max_bsol.setMinimum(-250)
+        max_bsol.setMaximum(250)
+        max_bsol.setProperty("value", -100)
         max_bsol.setObjectName("max_bsol")
         self.gridLayout.addWidget(max_bsol, 2, 3, 1, 1)
         self.max_bsol = max_bsol
@@ -87,7 +84,7 @@ class MainWindow(QMainWindow):
         step_bsol = self.spinBox_6 = QtGui.QSpinBox(self.gridLayoutWidget)
         step_bsol.setMinimum(1)
         step_bsol.setMaximum(17)
-        step_bsol.setProperty("value", 2)
+        step_bsol.setProperty("value", 1)
         step_bsol.setObjectName("step_bsol")
         self.gridLayout.addWidget(step_bsol, 2, 2, 1, 1)
         self.step_bsol = step_bsol
@@ -96,7 +93,7 @@ class MainWindow(QMainWindow):
         max_sol = self.spinBox_2 = QtGui.QSpinBox(self.gridLayoutWidget)
         max_sol.setMinimum(-300)
         max_sol.setMaximum(300)
-        max_sol.setProperty("value", 1)
+        max_sol.setProperty("value", 100)
         max_sol.setObjectName("max_sol")
         self.gridLayout.addWidget(max_sol, 1, 3, 1, 1)
         self.max_sol = max_sol
@@ -105,16 +102,16 @@ class MainWindow(QMainWindow):
         step_sol = self.spinBox_5 = QtGui.QSpinBox(self.gridLayoutWidget)
         step_sol.setMinimum(1)
         step_sol.setMaximum(601)
-        step_sol.setProperty("value", 2)
+        step_sol.setProperty("value", 1)
         step_sol.setObjectName("step_sol")
         self.gridLayout.addWidget(step_sol, 1, 2, 1, 1)
         self.step_sol = step_sol
         
         # minimum bsol- input
         min_bsol = self.spinBox_3 = QtGui.QSpinBox(self.gridLayoutWidget)
-        min_bsol.setMinimum(-300)
-        min_bsol.setMaximum(300)
-        min_bsol.setProperty("value", -1)
+        min_bsol.setMinimum(-250)
+        min_bsol.setMaximum(250)
+        min_bsol.setProperty("value", -100)
         min_bsol.setObjectName("min_bsol")
         self.gridLayout.addWidget(min_bsol, 2, 1, 1, 1)
         self.min_bsol = min_bsol
@@ -122,8 +119,8 @@ class MainWindow(QMainWindow):
         # minimum rf amplitude- input
         min_rf = self.spinBox_7 = QtGui.QSpinBox(self.gridLayoutWidget)
         min_rf.setMinimum(1)
-        min_rf.setMaximum(100)
-        min_rf.setProperty("value", 70)
+        min_rf.setMaximum(100000)
+        min_rf.setProperty("value", 63900)
         min_rf.setObjectName("min_rf")
         self.gridLayout.addWidget(min_rf, 3, 1, 1, 1)
         self.min_rf = min_rf
@@ -140,8 +137,8 @@ class MainWindow(QMainWindow):
         # maximum rf amplitude- input
         max_rf = self.spinBox_9 = QtGui.QSpinBox(self.gridLayoutWidget)
         max_rf.setMinimum(1)
-        max_rf.setMaximum(100)
-        max_rf.setProperty("value", 70)
+        max_rf.setMaximum(100000)
+        max_rf.setProperty("value", 63900)
         max_rf.setObjectName("max_rf")
         self.gridLayout.addWidget(max_rf, 3, 3, 1, 1)
         self.max_rf = max_rf
@@ -210,9 +207,10 @@ class MainWindow(QMainWindow):
         self.timer.setInterval(1000)
         self.timer.timeout.connect(self.recurring_timer)
         self.timer.start()
-        
+    
         self.Dialog.show()
-         
+        
+        
     def retranslateUi(self):
         _translate = QtCore.QCoreApplication.translate
         self.Dialog.setWindowTitle(_translate("Dialog", "Dark Current Measurement"))
@@ -224,21 +222,21 @@ class MainWindow(QMainWindow):
         self.label_3.setText(_translate("Dialog", "Max"))
         self.label_5.setText(_translate("Dialog", "SOL"))
         self.label_2.setText(_translate("Dialog", "Min"))
-        self.label_7.setText(_translate("Dialog", "RF Amp"))
+        self.label_7.setText(_translate("Dialog", "RF SP"))
         self.label_8.setText(_translate("Dialog", "A"))
         self.label_9.setText(_translate("Dialog", "A"))
-        self.label_10.setText(_translate("Dialog", "MV/m"))
+        self.label_10.setText(_translate("Dialog", "-"))
         self.textBrowser.setHtml(_translate("Dialog", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
-"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Pick the SOL, BSOL and RF amplitude values.</p>\n"
-"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"> Note: SOL range +/- 300 A; BSOL range +/-8 A</p></body></html>"))
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Pick the SOL, BSOL and RF Set Point values.</p>\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"> Note: If # of samples=1 the app takes the min value</p></body></html>"))
             
     def recurring_timer(self):
         '''Timer in my window '''
         self.counter +=1
-        self.l.setText("Counter: %d" % self.counter)        
+        self.l.setText("Counter: %d" % self.counter)
  
 #=========================================================================================================================================================================       
 class classprogress(object):
@@ -333,19 +331,32 @@ class classprogress(object):
         self.label_7.setObjectName("label_7")
         self.gridLayout.addWidget(self.label_7, 2, 1, 1, 1)
         
+        self.translateUi()
+        
     def show(self):
         self.Dialog.show()
-
-    def retranslateUi(self, sol, bsol, rf):
+    
+    def translateUi(self):
         _translate = QtCore.QCoreApplication.translate
         self.Dialog.setWindowTitle(_translate("Dialog", "Live", None))
-        self.label.setText(_translate("Dialog", "SOL:", None))
-        self.label_4.setText(_translate("Dialog", "%d A" % bsol, None))
-        self.label_2.setText(_translate("Dialog", "BSOL:", None))
-        self.label_3.setText(_translate("Dialog","%d A" % sol, None))
+        self.label.setText(_translate("Dialog", "CHARGE:", None))
+        self.label_4.setText(_translate("Dialog", "--- A" , None))
+        self.label_2.setText(_translate("Dialog", "SOL/BSOL:", None))
+        self.label_3.setText(_translate("Dialog","--- pC", None))
         self.label_5.setText(_translate("Dialog",'Loading...', None))
         self.label_6.setText(_translate("Dialog", "RF:", None))
-        self.label_7.setText(_translate("Dialog", "%d MV/m" % rf, None))
+        self.label_7.setText(_translate("Dialog", "--- MW", None))
+    
+    def retranslateUi(self, charge, sol, bsol, rf):
+        _translate = QtCore.QCoreApplication.translate
+        self.Dialog.setWindowTitle(_translate("Dialog", "Live", None))
+        self.label.setText(_translate("Dialog", "CHARGE:", None))
+        self.label_4.setText(_translate("Dialog", "%0.2f/%0.2f A" % (sol,bsol), None))
+        self.label_2.setText(_translate("Dialog", "SOL/BSOL:", None))
+        self.label_3.setText(_translate("Dialog","%d pC" % charge, None))
+        self.label_5.setText(_translate("Dialog",'Loading...', None))
+        self.label_6.setText(_translate("Dialog", "RF:", None))
+        self.label_7.setText(_translate("Dialog", "%0.2f MW" % rf, None))
     
     def finished(self):
         _translate = QtCore.QCoreApplication.translate
@@ -402,3 +413,9 @@ class graph(object):
     def retranslateUi(self):
         _translate = QtCore.QCoreApplication.translate
         self.MainWindow.setWindowTitle(_translate("Graph", "Graph", None))
+
+import sys        
+if __name__ == "__main__":
+    app = QtGui.QApplication(sys.argv)
+    main_window =MainWindow()
+    sys.exit(app.exec_())

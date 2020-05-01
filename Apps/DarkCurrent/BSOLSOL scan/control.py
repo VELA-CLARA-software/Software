@@ -1,20 +1,32 @@
-# -*- coding: utf-8 -*-
 """
-Created on Mon Oct 14 15:38:57 2019
+Script controlling the GUIs and using the model to take measurements
 
-@author: qqi63789
+UPDATED 03.03.2020
+
+@author: MFurmaniak
 """
-
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 from PyQt4 import QtGui, QtCore
 import time, traceback, sys, csv
 import yaml
+from datetime import datetime
 import pyqtgraph as pg
-from datetime import date
 
 import view
 import model
+
+# creating folders with measurements
+today = datetime.now()
+year = today.strftime("%Y")
+month = today.strftime("%m")
+day = today.strftime("%d")
+dirName= 'Measurements/'+year+'/'+month+'/'+day
+if not os.path.exists(dirName):
+    os.makedirs(dirName)
+    print("Directory " , dirName ,  " Created ")
+else:    
+    print("Directory " , dirName ,  " already exists")
 
 #=========================================================================================================================================================================
 class WorkerSignals(QObject):
@@ -38,7 +50,7 @@ class WorkerSignals(QObject):
     '''
     finished = pyqtSignal()
     error = pyqtSignal(tuple)
-    result = pyqtSignal(float, float, float, float, float, float, str)
+    result = pyqtSignal(float, float, float, float, float, float, float)
     result_fn = pyqtSignal(object)
     progress = pyqtSignal(float)
     current_val = pyqtSignal(float, float, float)
@@ -96,68 +108,48 @@ class Worker(QRunnable):
 
 #=========================================================================================================================================================================
 class controller(object):
+    
     myspot = []
     counter_runs = 0
     
     def __init__(self, view, model):
-        # you create your app
         app = QApplication([])
-            
-        self.gui = view.MainWindow()
+        self.window = view.MainWindow()
         self.output = view.classprogress()
         self.model = model.classmachine()
         self.graph = view.graph()
         
-        self.gui.buttonBox.clicked.connect(self.okClicked)
-        self.gui.buttonBox_2.clicked.connect(self.gui.close)
-        self.gui.closeEvent = self.closeEvent
-
-        # you execute your app
-        app.exec_()
-    
-    def okClicked(self):
-        #opening the live output GUI
-        self.gui.buttonBox.deleteLater()
         
+        #self.window.buttonBox.accepted.connect(self.window.Dialog.accept)
+        self.window.buttonBox.clicked.connect(self.okClicked)
+        #self.window.buttonBox.rejected.connect(self.window.Dialog.reject)
+        
+        self.window.buttonBox_2.accepted.connect(self.window.Dialog.accept)
+        self.window.buttonBox_2.clicked.connect(self.close_window)
+        self.window.buttonBox_2.rejected.connect(self.window.Dialog.reject)
+        
+        app.exec_()
+
+    def okClicked(self):
+        """cannot take any other imput than self. It's basically a slot """
+        
+        #opening the live output GUI
         self.output.show()
         
-        if self.gui.step_rf.value()==1:
+        if self.window.step_rf.value()==1:
             self.graph.show()
         
         # creating arrays with my variables that I'll then feed to my function
-        sol_val = [self.gui.min_sol.value(), self.gui.step_sol.value(), self.gui.max_sol.value()]
-        bsol_val = [self.gui.min_bsol.value(), self.gui.step_bsol.value(), self.gui.max_bsol.value()]
-        rf_val = [self.gui.min_rf.value(), self.gui.step_rf.value(), self.gui.max_rf.value()]
-
+        sol_val = [self.window.min_sol.value(), self.window.step_sol.value(), self.window.max_sol.value()]
+        bsol_val = [self.window.min_bsol.value(), self.window.step_bsol.value(), self.window.max_bsol.value()]
+        rf_val = [self.window.min_rf.value(), self.window.step_rf.value(), self.window.max_rf.value()]
+        #self.close_window()
+        
         self.create_logfile()
-
-        self.fn_worker(self.model.loop, self.model.set_sol, sol_val, bsol_val, rf_val)    
-       
-    def closeEvent(self, event):
-        #print("event")
-        reply = QtGui.QMessageBox.question(self.gui, 'Message',
-            "Are you sure to quit?", QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
-
-        if reply == QtGui.QMessageBox.Yes:
-            event.accept()
-            sys.exit()
-        else:
-            event.ignore()
-            
-    def fn_worker(self, function1, function2, arg1, arg2, arg3):
-        # create global instance of QThreadPool
-        self.threadpool = QThreadPool()
         
-        # Pass the function to execute
-        worker = Worker(function1, function2, arg1, arg2, arg3) # Any other args, kwargs are passed to the run function
-        
-        worker.signals.result.connect(self.print_output)
-        worker.signals.finished.connect(self.thread_complete)
-        worker.signals.progress.connect(self.progress_fn)
-        worker.signals.current_val.connect(self.update_text_fn)
-        
-        # Execute
-        self.threadpool.start(worker) 
+        self.threadpool = QtCore.QThreadPool.globalInstance()
+        print("Multithreading with maximum %d threads" % self.threadpool.maxThreadCount())
+        self.fn_worker(self.model.loop, self.model.set_sol, sol_val, bsol_val, rf_val)
         
     def create_logfile(self):
         dict_file = []
@@ -168,7 +160,11 @@ class controller(object):
 #            fieldnames = ['SOL', 'BSOL', 'CHARGE', 'HCOR01', 'VCOR01', 'RF amp']  
 #            thewriter = csv.DictWriter(f, fieldnames = fieldnames)
 #            thewriter.writeheader()
-            
+   
+    def close_window(self):
+        self.window.Dialog.close()
+        sys.exit()    
+        
     def progress_fn(self, n):
         print("%d%% done" % n)
         self.output.progress_bar(n)
@@ -177,10 +173,11 @@ class controller(object):
         self.counter_runs += 1
         self.add_point(s,t,u)
         
-        new_dict_file = [{'run%d' % self.counter_runs: {'parameters': {'sol_strength': s,'bsol_strength': t,'charge': u,'HCOR01': v,'VCOR01': w,'RF_amplitude': x, 'Image path': str(y)}}}]         # remember to save the path to the photo in your yaml file
+        new_dict_file = [{'run%d' % self.counter_runs: {'parameters': {'Sol_strength': s,'Bsol_strength': t,'Charge': u,'HCOR01': v,'VCOR01': w,'RF_FF': x, 'RF_Avrg_Pwr':y}}}]         # remember to save the path to the photo in your yaml file
         with open(path_yaml,'r') as yamlfile:
             cur_yaml = yaml.safe_load(yamlfile)
             cur_yaml.extend(new_dict_file)
+            print(cur_yaml)
         
         with open(path_yaml,'w') as yamlfile:
             yaml.safe_dump(cur_yaml, yamlfile)
@@ -192,19 +189,30 @@ class controller(object):
 #            thewriter = csv.writer(f)
 #            thewriter.writerow([s, t, u, v, w, x])
    
-    def update_text_fn(self, sol, bsol, rf):
-        self.output.retranslateUi(sol, bsol, rf)
+    def update_text_fn(self, charge, sol, bsol, rf):
+        self.output.retranslateUi(charge, sol, bsol, rf)
         
     def thread_complete(self):
         print("THREAD COMPLETE!")
         self.output.finished()
+ 
+    def fn_worker(self, fn_loop, fn_sweep, sol_val, bsol_val, rf_val):
+        # Pass the function to execute        
+        worker = Worker(fn_loop, fn_sweep, sol_val, bsol_val, rf_val) # Any other args, kwargs are passed to the run function
 
+        worker.signals.result.connect(self.print_output)
+        worker.signals.finished.connect(self.thread_complete)
+        worker.signals.progress.connect(self.progress_fn)
+        worker.signals.current_val.connect(self.update_text_fn)
         
+        # Execute
+        self.threadpool.start(worker) 
+    
     def add_point(self, sol, bsol, charge):
         
         # range of charge that you want to resolve
-        min_charge = 0
-        max_charge = 500
+        min_charge = 100
+        max_charge = 4000
         
         if charge <= min_charge:
             self.myspot.append({'pos': (sol, bsol), 'size': 0.5, 'pen': {'color': 'w', 'width': 2}, 'brush': 'b'})
@@ -215,11 +223,11 @@ class controller(object):
             self.myspot.append({'pos': (sol, bsol), 'size': 0.5, 'pen': {'color': 'w', 'width': 2}, 'brush':pg.intColor(charge_norm, hues=11, values=1, maxValue=255, minValue=150, maxHue=320, minHue=600, sat=255, alpha=255)}) 
         self.graph.s3.addPoints(self.myspot)
 
+today = datetime.now()
+
 # dd/mm/YY
-today = date.today()
-current_date = int(today.strftime("%d%m%Y"))
+current_date = today.strftime("%d%m%Y_%H-%M-%S")
 
 # choosing where to save the YAML file 
-path_yaml = (r'C:\Users\qqi63789\OneDrive - Science and Technology Facilities Council\VirtualAccelerator\app7\yaml_%d.yaml' % current_date)     
-
-c = controller(view,model)        
+path_yaml = (r''+dirName+'/logfile_'+current_date+'.yaml')      
+c = controller(view, model)
