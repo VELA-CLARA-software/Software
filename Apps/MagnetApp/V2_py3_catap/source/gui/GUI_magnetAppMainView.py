@@ -2,15 +2,18 @@
 # -*- coding: utf-8 -*-
 # DJS 2017
 # part of MagtnetApp
-from PyQt4 import QtGui, QtCore
-from Ui_magnetAppMainView import Ui_magnetAppMainView
-from GUI_magnetWidget import GUI_magnetWidget
+#from PyQt4 import QtGui, QtCore
+from PyQt5 import QtCore, QtGui, QtWidgets
+from .ui_source.Ui_magnetAppMainView import Ui_magnetAppMainView
+from  .GUI_magnetWidget import GUI_magnetWidget
+
 import magnetAppGlobals as globals
 
-class GUI_magnetAppMainView(QtGui.QMainWindow, Ui_magnetAppMainView):
+class GUI_magnetAppMainView(QtWidgets.QMainWindow, Ui_magnetAppMainView):
     closing = QtCore.pyqtSignal()# custom close signal to send to controller
     def __init__(self):
-        QtGui.QWidget.__init__(self)
+        QtWidgets.QWidget.__init__(self)
+        self.setupUi(self)
         # startup crap
         self.setupUi(self)
         self.setWindowTitle("VELA - CLARA Magnet App")
@@ -38,6 +41,8 @@ class GUI_magnetAppMainView(QtGui.QMainWindow, Ui_magnetAppMainView):
         self.currentCorRow  = -1
         self.currentQuadCol = 0
         self.currentCorCol  = 0
+
+
         # simple signals don't need to go back to the master controller
         self.dipSelectAll.clicked.connect ( lambda:self.activateMags(self.dipWidgets,True  ))
         self.solSelectNone.clicked.connect( lambda:self.activateMags(self.solWidgets,False ))
@@ -116,16 +121,18 @@ class GUI_magnetAppMainView(QtGui.QMainWindow, Ui_magnetAppMainView):
                                     self.currentCorRow, self.currentCorCol)
         self.currentCorCol += 1
         self.corCount += 1
+
+
     # after adding magnet widgets add in a spacer to make things look a bit neater
     def mainResize(self):
-        self.solFrameLayout.addItem(QtGui.QSpacerItem(20,40,QtGui.QSizePolicy.Minimum,
-                                    QtGui.QSizePolicy.Expanding))
-        self.dipFrameLayout.addItem(QtGui.QSpacerItem(20,40,QtGui.QSizePolicy.Minimum,
-                                    QtGui.QSizePolicy.Expanding))
-        self.quadFrameLayout.addItem(QtGui.QSpacerItem(20,40,QtGui.QSizePolicy.Minimum,
-                                     QtGui.QSizePolicy.Expanding))
-        self.corFrameLayout.addItem(QtGui.QSpacerItem(20,40,QtGui.QSizePolicy.Minimum,
-                                    QtGui.QSizePolicy.Expanding))
+        self.solFrameLayout.addItem(QtWidgets.QSpacerItem(20,40,QtWidgets.QSizePolicy.Minimum,
+                                    QtWidgets.QSizePolicy.Expanding))
+        self.dipFrameLayout.addItem(QtWidgets.QSpacerItem(20,40,QtWidgets.QSizePolicy.Minimum,
+                                    QtWidgets.QSizePolicy.Expanding))
+        self.quadFrameLayout.addItem(QtWidgets.QSpacerItem(20,40,QtWidgets.QSizePolicy.Minimum,
+                                     QtWidgets.QSizePolicy.Expanding))
+        self.corFrameLayout.addItem(QtWidgets.QSpacerItem(20,40,QtWidgets.QSizePolicy.Minimum,
+                                    QtWidgets.QSizePolicy.Expanding))
     # set check boxes true or false
     def activateMags(self,magnets,value):
         for mag  in magnets.values():

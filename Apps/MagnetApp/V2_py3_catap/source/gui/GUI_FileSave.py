@@ -45,10 +45,12 @@ class GUI_FileSave(QMainWindow, Ui_FileSave):
         self.cancelButton_2.clicked.connect(self.handle_fileSaveCancel)
         self.canWindowClose = False
 
+        self.path_name_entry.setText(globals.dburtLocation2)
+
+
     def setFileName(self):
         self.now = datetime.datetime.now()
-        self.filename = globals.dburtLocation2 + \
-                        self.controller_type + "_" + \
+        self.filename = self.controller_type + "_" + \
                         str(self.now.year)  + '-' + \
                         '{:02d}'.format(self.now.month) + '-' + \
                         '{:02d}'.format(self.now.day  ) + '-' + \
@@ -58,12 +60,12 @@ class GUI_FileSave(QMainWindow, Ui_FileSave):
         self.file_name_entry.setText(self.filename)
         #print 'SAVE FIILENAME = ' + self.filename
 
-    def getComboBoxEntries(self):
-        self.keywords = str(self.areaCombo.currentText()) + '\t' +\
-                        str(self.comboBox1.currentText()) + '\t' +\
-                        str(self.comboBox2.currentText()) + '\t' +\
-                        str(self.comboBox3.currentText()) + '\t'
-        return self.keywords
+    # def getComboBoxEntries(self):
+    #     self.keywords = str(self.areaCombo.currentText()) + '\t' +\
+    #                     str(self.comboBox1.currentText()) + '\t' +\
+    #                     str(self.comboBox2.currentText()) + '\t' +\
+    #                     str(self.comboBox3.currentText()) + '\t'
+    #     return self.keywords
     # this event is inherited and we overload it so the GUI_FileSave
     # is never deleted, (until we call close on the entire program)
     def closeEvent(self, evnt):
@@ -76,12 +78,12 @@ class GUI_FileSave(QMainWindow, Ui_FileSave):
     def handle_fileSaveCancel(self):
         self.hide()
     # when we decide keywords we'll add more here...
-    def addComboKeywords(self,controller_type):
-        list1 = [
-            self.tr(controller_type),
-            self.tr('AREA   51'),
-            self.tr('Cheyenne ')]
-        self.areaCombo.addItems(list1)
+    # def addComboKeywords(self,controller_type):
+    #     list1 = [
+    #         self.tr(controller_type),
+    #         self.tr('AREA   51'),
+    #         self.tr('Cheyenne ')]
+    #     self.areaCombo.addItems(list1)
 
 
 

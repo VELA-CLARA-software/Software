@@ -2,46 +2,51 @@
 # -*- coding: utf-8 -*-
 # DJS 2017
 # part of MagtnetApp
-from PyQt4 import QtCore
-from PyQt4.QtCore import Qt
-from PyQt4.QtCore import QEvent
-from PyQt4.QtGui import *
-from Ui_magnetWidget import Ui_magnetWidget
+from PyQt5 import QtCore, QtGui, QtWidgets
+from .ui_source.Ui_magnetWidget import Ui_magnetWidget
 import sys
+import os
 
-# this class needs to know the magnet enums
-from VELA_CLARA_Magnet_Control import MAG_PSU_STATE
-from VELA_CLARA_Magnet_Control import MAG_TYPE
-from VELA_CLARA_Magnet_Control import MAG_REV_TYPE
+catap_path = os.path.join('C:\\Users', 'djs56', 'Documents', 'catapillar-build',
+                          'PythonInterface','Release')
+sys.path.append(catap_path)
+resource_path = os.path.join('resources','magnetApp')
+sys.path.append(os.path.join(sys.path[0],resource_path))
+from CATAP import TYPE
+from CATAP import STATE
 
-class MyPopup(QWidget):
-    def __init__(self):
-        QWidget.__init__(self)
-
-    def paintEvent(self, e):
-        dc = QPainter(self)
-        dc.drawLine(0, 0, 100, 100)
-        dc.drawLine(100, 0, 0, 100)
+from PyQt5 import QtGui, QtCore, QtWidgets
 
 
-class GUI_magnetWidget(QMainWindow, Ui_magnetWidget):
+# class MyPopup(QWidget):
+#     def __init__(self):
+#         QWidget.__init__(self)
+#
+#     def paintEvent(self, e):
+#         dc = QPainter(self)
+#         dc.drawLine(0, 0, 100, 100)
+#         dc.drawLine(100, 0, 0, 100)
+
+
+class GUI_magnetWidget(QtWidgets.QMainWindow, Ui_magnetWidget):
     # we know there will be many instances of this class,
     # so lets try and be more efficent with our memory
     # class variables (sort of static),
     # we only need one copy for each instance of this class
-    psuStateColors = {MAG_PSU_STATE.MAG_PSU_OFF   : "background-color: red",
-                      MAG_PSU_STATE.MAG_PSU_ON    : "background-color: green",
+    psuStateColors = {STATE.OFF   : "background-color: red",
+                      STATE.ON    : "background-color: green",
                       # Lost in new magnet scheme
                       #MAG_PSU_STATE.MAG_PSU_TIMING: "background-color: yellow",
-                      MAG_PSU_STATE.MAG_PSU_ERROR : "background-color: magenta",
-                      MAG_PSU_STATE.MAG_PSU_NONE  : "background-color: black"}
+                      STATE.ERR : "background-color: magenta"
+        #,STATE.MAG_PSU_NONE  : "background-color: black"
+                      }
     # the meter is *1000 to give 3 decimal places precision
     riMeterScalefactor = 1000  # MAGIC_NUMBER
 
     has_focus = None
 
     def __init__(self):
-        QWidget.__init__(self)
+        QtWidgets.QMainWindow.__init__(self)
         self.setupUi(self)
         # holds the reference to the c++ Magnet Object Data,
         # this ***MUST*** be in a list otherwise the reference won't update
@@ -57,7 +62,7 @@ class GUI_magnetWidget(QMainWindow, Ui_magnetWidget):
         self.SIValue.setDecimals(3)
         # custom context menu
         # https://wiki.python.org/moin/PyQt/Handling%20context%20menus
-        self.SIValue.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.SIValue.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
         self.SIValue.customContextMenuRequested.connect(self.showMenu)
 
         self.Mag_PSU_State_Button.clicked.connect(self.psu_pressed)
@@ -65,14 +70,14 @@ class GUI_magnetWidget(QMainWindow, Ui_magnetWidget):
         self.SI_default_style_sheet = self.SIValue.styleSheet()
         self.SIValue.installEventFilter(self)
 
-        self.menu = QTableWidget(1,2)
-        self.menu.setItem(0, 0, QTableWidgetItem("SI Step"))
+        self.menu = QtWidgets.QTableWidget(1,2)
+        self.menu.setItem(0, 0, QtWidgets.QTableWidgetItem("SI Step"))
         #
         self.isDegaussing = None
 
 
     def showMenu(self,position):
-        print 'show menu'
+        print('show menu')
         # self.menu.setItem(0, 1, QTableWidgetItem(self.SIValue.singleStep()))
         #
         # self.menu.move(self.SIValue.mapToGlobal(position))
@@ -92,9 +97,8 @@ class GUI_magnetWidget(QMainWindow, Ui_magnetWidget):
         #      print("setSI step")
 
     def eventFilter(self, qobject, qevent):
-        if isinstance(qobject , QDoubleSpinBox):
-            if isinstance(qevent, QFocusEvent):
-
+        if isinstance(qobject , QtWidgets.QDoubleSpinBox):
+            if isinstance(qevent, QtGui.QFocusEvent):
                  if qevent.gotFocus():
                     self.has_focus = True
                     print('gotFocus')
@@ -116,16 +120,24 @@ class GUI_magnetWidget(QMainWindow, Ui_magnetWidget):
     # called after the magnet
     def setDefaultOptions(self):
         #self.name.setText(self.magRef[0].name)
-        self.name.setText( "\n".join(self.magRef[0].name.split("-")))
-        rimin =  self.magRef[0].minI * GUI_magnetWidget.riMeterScalefactor
-        rimax =  self.magRef[0].maxI * GUI_magnetWidget.riMeterScalefactor
+
+        # the long name is too long, so remove MAG, EBT and CLA
+        long_name = self.magRef[0].name.split("-")
+        long_name.remove("MAG")
+        if "EBT" in long_name:
+            long_name.remove("EBT")
+        if "CLA" in long_name:
+            long_name.remove("CLA")
+        short_name = "-".join(long_name)
+        self.name.setText(short_name)
+
+        rimin =  self.magRef[0].min_i * GUI_magnetWidget.riMeterScalefactor
+        rimax =  self.magRef[0].max_i * GUI_magnetWidget.riMeterScalefactor
         self.RIMeter.setRange(rimin, rimax)
 
     #active magnets are those with the check box checked
     def setActiveState(self):
         self.isActive = self.mag_Active.isChecked()
-
-
     # we use the reference to the magnet object contained in the list self.magRef to get the
     # latest magnet object values to update the gui with
     def updateMagWidget(self):
@@ -133,22 +145,26 @@ class GUI_magnetWidget(QMainWindow, Ui_magnetWidget):
         if self.has_focus:
             pass
         else:
-            self.SIValue.setValue(self.magRef[0].siWithPol)
-        self.updatePSUButton(self.magRef[0].psuState, self.Mag_PSU_State_Button)
+            self.SIValue.setValue( self.magRef[0].getSETI() )
+
+        # if self.magRef[0].name == "EBT-INJ-MAG-DIP-02":
+        #     print("psu_state = ", self.magRef[0].psu_state)
+
+        self.updatePSUButton(self.magRef[0].psu_state, self.Mag_PSU_State_Button)
         # if self.magRef[0].revType == MAG_REV_TYPE.NR:
         #     self.updatePSUButton(self.magRef[0].nPSU.psuState, self.PSU_N_State_Button)
         #     self.updatePSUButton(self.magRef[0].rPSU.psuState, self.PSU_R_State_Button)
-        self.RIMeter.setValue(self.magRef[0].riWithPol * self.riMeterScalefactor)
-        self.Mag_PSU_State_Button.setText("{:.3f}".format(self.magRef[0].riWithPol))
-        self.isDegaussing = self.magRef[0].isDegaussing
+        self.RIMeter.setValue(self.magRef[0].READI * self.riMeterScalefactor)
+        self.Mag_PSU_State_Button.setText("{:.3f}".format(self.magRef[0].READI))
+        self.isDegaussing = self.magRef[0].is_degaussing
 
 
     def psu_pressed(self):
-        print 'psu pressed'
-        if self.magRef[0].psuState == MAG_PSU_STATE.MAG_PSU_ON:
-            self.magRef[0].PSU = MAG_PSU_STATE.MAG_PSU_OFF
-        elif self.magRef[0].psuState == MAG_PSU_STATE.MAG_PSU_OFF:
-            self.magRef[0].PSU = MAG_PSU_STATE.MAG_PSU_ON
+        print('psu pressed')
+        if self.magRef[0].psu_state == STATE.ON:
+            self.magRef[0].psu_state = STATE.OFF
+        elif self.magRef[0].psu_state == STATE.OFF:
+            self.magRef[0].psu_state = STATE.ON
 
     # set the PSU button colors based on their state
     # CANCER, but it's been refactored out and i'm leaving this here to remind

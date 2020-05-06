@@ -98,7 +98,7 @@ class GUI_magnetAppStartup(QtWidgets.QMainWindow, Ui_magnetAppStartup):
             self.VELA_INJ.objectName(): TYPE.VELA,
             #self.CLARA_PHASE_1.objectName(): MACHINE_AREA.CLARA_PH1,
             #self.CLARA_2_BA1.objectName(): MACHINE_AREA.CLARA_2_BA1,
-            self.CLARA_2_BA1_BA2.objectName(): TYPE.CLARA_2_BA1
+            self.CLARA_2_BA1_BA2.objectName(): TYPE.CLARA_2_BA1_BA2
             #self.CLARA_2_VELA.objectName(): MACHINE_AREA.CLARA_2_VELA
         }
 

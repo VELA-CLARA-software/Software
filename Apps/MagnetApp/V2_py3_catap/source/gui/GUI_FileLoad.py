@@ -24,7 +24,14 @@
 # part of MagtnetApp
 from PyQt5.QtWidgets import QDialog
 from PyQt5.QtWidgets import QFileSystemModel
+from PyQt5.QtWidgets import QAbstractItemView
+from PyQt5.QtWidgets import QPlainTextEdit
 from PyQt5.QtCore import QDir
+from PyQt5.QtCore import QFileSystemWatcher
+from PyQt5.QtGui import QFont
+from PyQt5.QtGui import QFontMetrics
+from PyQt5.QtGui import QTextCursor
+from PyQt5.QtGui import QIcon
 from .ui_source.Ui_FileLoad import Ui_FileLoad
 import datetime
 
@@ -37,9 +44,9 @@ class GUI_FileLoad(QDialog, Ui_FileLoad):
         self.canWindowClose = False
         #self.root = QDir(root)
         self.root = root
-        self.root = "//fed.cclrc.ac.uk/org/NLab/ASTeC/Projects/VELA/"
-        self.snapshots = "//fed.cclrc.ac.uk/org/NLab/ASTeC/Projects/VELA/Snapshots"
-        self.dburtpath = "//fed.cclrc.ac.uk/org/NLab/ASTeC/Projects/VELA/Snapshots/DBURT/"
+        #self.root = "//fed.cclrc.ac.uk/org/NLab/ASTeC/Projects/VELA/"
+        #self.snapshots = "//fed.cclrc.ac.uk/org/NLab/ASTeC/Projects/VELA/Snapshots"
+        #self.dburtpath = "//fed.cclrc.ac.uk/org/NLab/ASTeC/Projects/VELA/Snapshots/DBURT/"
         self.quadMagnets.toggled.connect(lambda: self.handle_magRadio(self.quadMagnets))
         self.corrMagnets.toggled.connect(lambda: self.handle_magRadio(self.corrMagnets))
         self.allMagnets.toggled.connect(lambda: self.handle_magRadio(self.allMagnets))
@@ -54,15 +61,15 @@ class GUI_FileLoad(QDialog, Ui_FileLoad):
         self.treeView.hideColumn(2)
         self.treeView.setColumnWidth(0,250)
         self.treeView.setColumnWidth(3,250)
-        self.treeView.setCurrentIndex(self.dirModel.index(self.dburtpath))
-        snapshotindex = self.dirModel.index(self.snapshots)
+        self.treeView.setCurrentIndex(self.dirModel.index(self.root))
+        snapshotindex = self.dirModel.index(self.root)
         #self.treeView.expand(self.dirModel.index(self.dburtpath))
         self.treeView.setExpanded(snapshotindex, True)
         self.treeView.scrollTo(snapshotindex, QAbstractItemView.PositionAtCenter)
 
         self.filesModel = QFileSystemModel()
         self.filesModel.setFilter(QDir.NoDotAndDotDot|QDir.Files)
-        self.dburtpathIndex = self.filesModel.setRootPath(self.dburtpath)
+        self.dburtpathIndex = self.filesModel.setRootPath(self.root)
         self.listView.setModel(self.filesModel)
         self.listView.setRootIndex(self.dburtpathIndex)
         self.dirModel.directoryLoaded.connect(self.handle_directoryLoaded)
@@ -72,11 +79,11 @@ class GUI_FileLoad(QDialog, Ui_FileLoad):
         #self.selectButton.clicked.connect(self.handle_fileLoadSelect)
         #self.on_treeView_clicked(self.dirModel.index(self.dburtpath))
         self.viewButton.clicked.connect(self.handle_fileLoadView)
-        self.selectedDirPath = self.dburtpath
+        self.selectedDirPath = self.root
         self.selectedFile = ""
         self.selectedFilePath = ""
         self.watcher = QFileSystemWatcher()
-        self.watcher.addPath(self.dburtpath)
+        self.watcher.addPath(self.root)
         self.watcher.directoryChanged.connect(self.handle_fileDirectoryChanged)
 #        self.selectedDirPathselectedDirPath
         #self.dirModel.dataChanged[QModelIndex,QModelIndex].connect(self.handle_fileDirectoryChanged2)
@@ -142,13 +149,14 @@ class GUI_FileLoad(QDialog, Ui_FileLoad):
         self.listView.setRootIndex(self.rootPathIndex)
         self.watcher.removePaths(self.watcher.directories())
         print( 'Watching ' + str(self.selectedDirPath))
-        self.watcher.addPath(QString(self.selectedDirPath))
+        self.watcher.addPath(self.selectedDirPath)
 
     def on_listView_clicked(self, index):
         indexItem = self.filesModel.index(index.row(), 0, index.parent())
         self.selectedFile = str(self.filesModel.fileName(indexItem))
-        self.selectedFilePath = self.selectedDirPath + self.selectedFile
-        print('on_listView_clicked = ' + self.selectedFilePath)
+        self.selectedFilePath = self.selectedDirPath
+        print('on_listView_clicked selectedFilePath = ' + self.selectedFilePath)
+        print('on_listView_clicked selectedFile = ' + self.selectedFile)
 
     def handle_magRadio(self, r):
         if r.isChecked() == True:
@@ -171,7 +179,7 @@ class GUI_FileLoad(QDialog, Ui_FileLoad):
         if self.selectedFilePath != "":
             textWindow = QPlainTextEdit()
             print( 'opening file')
-            fileText = open(self.selectedFilePath).read()
+            fileText = open(self.selectedFilePath + self.selectedFile).read()
             textWindow.setPlainText(fileText)
             textWindow.resize(500, 700)
             textWindow.selectAll()
