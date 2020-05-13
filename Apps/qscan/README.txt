@@ -38,4 +38,9 @@ Saving a version of the code + MMA used at the end of the day on 28th March. Cha
 4th April 2019, ~1530
 After 28th March, there were more scans on 29th March. On this day, the photodiode at the cathode was moved to allow a large scan range to all fit on the photodiode (on previous days we'd fallen off the edge of the photodiode). In the morning of 29th there were two scans with this new photodiode position at 1051 and 1153. THEN THE NEW light box mirror put in place. Everything was still at air pressure. One scan was completed at 1404 with the new light box mirror. 
 
-
+13th May 2020
+code from previous version semi-upgraded to python3/pqt5 and placed in directory \pre2020code. 
+main app files/functions now from from 25th March 2019 - more advanced GUI, with color legend and message box   
+Contains syntax for getting LLRF traces getting.
+Writes results to workfolder.
+No data/app history from 2019/20 gun upgrade is saved to the github repo. They stay on sever at \\apclara1.dl.ac.uk\ControlRoomApps\Stage\Software\Apps\qscan. 
