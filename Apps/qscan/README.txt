@@ -44,3 +44,7 @@ main app files/functions now from from 25th March 2019 - more advanced GUI, with
 Contains syntax for getting LLRF traces getting.
 Writes results to workfolder.
 No data/app history from 2019/20 gun upgrade is saved to the github repo. They stay on sever at \\apclara1.dl.ac.uk\ControlRoomApps\Stage\Software\Apps\qscan. 
+
+13th May 2020
+added code (courtesy of Duncan) to get scan information all through PI laser controller.
+

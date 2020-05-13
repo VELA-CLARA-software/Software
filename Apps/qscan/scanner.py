@@ -14,12 +14,12 @@ sys.path.append("\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\stage
 #for item in sys.path:
 #	print item
 
-#0#import VELA_CLARA_PILaser_Control as pil
+import VELA_CLARA_PILaser_Control as pil
 import time
 
-#0#pil_init = pil.init()
+pil_init = pil.init()
 #pil_init.setVerbose()
-#0#pil_control = pil_init.physical_PILaser_Controller()
+pil_control = pil_init.physical_PILaser_Controller()
 
 #import lasmover as lm
 import math as ma
@@ -106,12 +106,45 @@ class chargescanner(QtCore.QObject):
         f = open(filename,'a')
 		
 #        f = open('qscan'+str(timestr)+'.txt','a')
-
 #exit()
 #0#        pil_control.setMaskFeedBackOn_VC()
-
         #xrange = [5.5]
         #yrange = [4.5]
+		
+
+		# next section of code to access data from PI Contoller (code c/o Duncan)
+        # from this we can get individual peices of hardware, let's store them in a dictionary called hardware
+        hardware = {}
+        # VC camera image object object
+        vc_image = "vc_image"
+        hardware[vc_image] = pil_control.getImageObj()
+        # to access the vc_image object just call: hardware[vc_image]
+        # image data / anmalaysis 
+        vc_image_data= "vc_image_data"
+        hardware[vc_image_data] = pil_control.getVCDataObjConstRef()
+        # the VC camera
+        vc_cam= "vc_cam"
+        hardware[vc_cam] = pil_control.getCameraObj()
+        # laser mirror object 
+        mirror = "mirror"
+        # the PI laser object (from here you can get Q, laser energy ...)
+        pil = "pil"
+        hardware[pil] = pil_control.getPILObjConstRef()
+        #number of shots:
+        num_shots_to_average = 12
+        pil_control.setAllRSBufferSize(num_shots_to_average)
+        # Check the buffer size for the Q
+        print("getRSBufferSize = ",hardware[pil].max_buffer_count)
+
+        # some constants, (probably should save once for each run )
+        x_pix_scale_factor = hardware[vc_image].x_pix_scale_factor
+        y_pix_scale_factor = hardware[vc_image].y_pix_scale_factor
+        x_pix_to_mm = hardware[vc_image].x_pix_to_mm
+        y_pix_to_mm = hardware[vc_image].y_pix_to_mm
+        num_pix_x = hardware[vc_image].num_pix_x
+        num_pix_y =  hardware[vc_image].num_pix_y
+        # ++ others?? 
+
 
         ix = 0
         chargebest = 0
@@ -144,12 +177,46 @@ class chargescanner(QtCore.QObject):
 #        exit()
 #        mylasmove.setposition(x,y,5,0.1)
 #                raw_input("Press Enter to continue...")0
+
+# get the qscan quantities at this point (c.o Duncan for the code)
+                # set next-position 
+                # when at next position 
+                print("At next_positoin, getting some data")	
+                pil_control.clearRunningValues()
+                # wait for buffer to fill, we will just check against the Q buffer
+                while hardware[pil].Q_full == False: # suggest for pil_control, we could do with a isRFBufferNOTFull function(!)
+                    print("Waiting for running stat buffer to fill, ", hardware[pil].Q_n)
+                    time.sleep(0.5)
+                print("Buffer Is Full, ",hardware[pil].Q_n," getting data")
+                # mean and (standard deviation) sd for Q
+                Q_mean = hardware[pil].Q_mean
+                Q_sd = hardware[pil].Q_sd
+                # mean and sd for energy
+                energy_mean = hardware[pil].energy_mean
+                energy_sd = hardware[pil].energy_sd
+                # laser x position mean and sd 
+                x_pix_mean = hardware[vc_image_data].x_pix_mean	
+                x_pix_sd = hardware[vc_image_data].x_pix_sd	
+                # laser y position mean and sd 
+                y_pix_mean = hardware[vc_image_data].y_pix_mean	
+                y_pix_sd = hardware[vc_image_data].y_pix_sd	
+                # laser x width mean and sd 
+                sig_x_pix_mean = hardware[vc_image_data].sig_x_pix_mean	
+                sig_x_pix_sd = hardware[vc_image_data].sig_x_pix_sd	
+                # y position mean and sd 
+                sig_y_pix_mean = hardware[vc_image_data].sig_y_pix_mean	
+                sig_y_pix_sd = hardware[vc_image_data].sig_y_pix_sd	
+
+
+
+
                 chargenow = 1.1
 #                chargenow = monini.getValue(charge)
                 lasEnow = 1.1 
 #                lasEnow = monini.getValue(lasE)
                 vcsumpnow = monini.getValue(vcsump)
-                f.write('RF phase '+str(therf.getPhiDEG())+' vcx '+str(x)+' vcy '+str(y)+' charge '+str(chargenow)+' laserE '+str(lasEnow)+' VCintens '+str(vcsumpnow)+'\n')
+                f.write('str(x)+' '+str(x_pix_mean)+' '+str(x_pix_sd)+' '+str(y)+' '+str(y_pix_mean)+' '+str(y_pix_sd)+' '+str(Q_mean)+' '+str(Q_sd)+' ' '+'str(Q_mean)+' '+str(Q_sd)')
+#                f.write('RF phase '+str(therf.getPhiDEG())+' vcx '+str(x)+' vcy '+str(y)+' charge '+str(chargenow)+' laserE '+str(lasEnow)+' VCintens '+str(vcsumpnow)+'\n')
                 f.flush()
                 self.changedval.emit(x,y,chargenow,lasEnow)
                 iterstring = "hello string signal"
