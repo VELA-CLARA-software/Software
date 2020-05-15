@@ -69,19 +69,10 @@ class chargescanner(QtCore.QObject):
     xrange = np.linspace(xlo,xhi,nx)
     yrange = np.linspace(ylo,yhi,ny)
 
-    def setxrange(self,dumxlo,dumxhi,dumnx):
-        self.xrange = np.linspace(dumxlo,dumxhi,dumnx)  
-	
-    def setyrange(self,dumylo,dumyhi,dumyx):
-        self.yrange = np.linspace(dumylo,dumyhi,dumny)
-	
-    def doscan(self,xxlo,xxhi,xxn,yylo,yyhi,yyn):
-		
-        self.xrange = np.linspace(xxlo,xxhi,xxn)
-        self.yrange = np.linspace(yylo,yyhi,yyn)
-		
-        print('IN DOSCAN',self.xrange)
-        print('IN DOSCAN',self.yrange)
+    
+    def doscan(self): 
+        print(self.xrange)
+        print(self.yrange)
         print(therf.getPhiDEG())
 
         print('***********************************************************')

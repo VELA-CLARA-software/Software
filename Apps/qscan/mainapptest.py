@@ -47,7 +47,20 @@ class App(QtGui.QApplication):
         self.mygenerator = testclassforsignals()
         self.view.pushButton.clicked.connect(self.mygenerator.generate)  
         self.myscanner = scanner.chargescanner()
-        self.view.pushButton.clicked.connect(self.myscanner.doscan)  
+#        print("****TEST********",self.view.doubleSpinBox.value())
+#        self.myscanner.setxrange(self.view.doubleSpinBox.value(),self.view.doubleSpinBox_2.value(),int(self.view.doubleSpinBox_3.value()))
+#        self.myscanner.setxrange(self.view.doubleSpinBox_4.value(),self.view.doubleSpinBox_5.value(),int(self.view.doubleSpinBox_6.value()))
+#        self.view.pushButton.clicked.connect(self.myscanner.doscan)
+#        theval = self.view.doubleSpinBox.value()
+#        self.view.pushButton.clicked.connect(lambda: self.myscanner.doscan(float(theval)))  		
+        self.view.pushButton.clicked.connect(\
+		   lambda: self.myscanner.doscan(\
+              self.view.doubleSpinBox.value(),\
+			  self.view.doubleSpinBox_2.value(),\
+			  int(self.view.doubleSpinBox_3.value()),\
+			  self.view.doubleSpinBox_6.value(),\
+			  self.view.doubleSpinBox_4.value(),\
+			  int(self.view.doubleSpinBox_5.value()) ) )  
 # add a plot to the window
         self.s3 = pg.ScatterPlotItem(pxMode=False)   ## Set pxMode=False to allow spots to transform with the view
         
@@ -59,7 +72,13 @@ class App(QtGui.QApplication):
         
         self.view.textBrowser.append("Scan Log Commencing:");
         
-        
+#        print("THIS!!!!!!!!",self.view.doubleSpinBox_5.value())
+		
+#		self.myscanner.setxmin(self.view.doubleSpinBox_5.value())
+		
+		
+#        exit()
+		
 #        self.textbox = self.textBrowser
        
 #        self.mygenerator.changedval.connect(self.get_data_vals)

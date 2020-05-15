@@ -48,3 +48,5 @@ No data/app history from 2019/20 gun upgrade is saved to the github repo. They s
 13th May 2020
 added code (courtesy of Duncan) to get scan information all through PI laser controller.
 
+15th May 2020
+Scan parameters inputs added to GUI as spin boxes. 
