@@ -52,36 +52,54 @@ therf2 = rfinit.getLLRFController(rf.MACHINE_MODE.PHYSICAL,rf.LLRF_TYPE.CLARA_LR
 
 #exit()
 
-class chargescanner(QtCore.QObject):
-
+class chargescanner(QtCore.QObject):    
     changedval = pyqtSignal(float, float, float, float)
     changedlogtxt = pyqtSignal(str)
-    
+
+    def __init__(self):
     # lo, hi and the min and max values of the area on the VC to scan
     # values are mm from bottom left of the VC imagecollector
     # nx,y is number of points to stop and measure charge at in x,y
-    xlo = 3
-    xhi = 7
-    ylo = 3
-    yhi = 7
-    nx = 3
-    ny = 3
-    xrange = np.linspace(xlo,xhi,nx)
-    yrange = np.linspace(ylo,yhi,ny)
+#        self.changedval = pyqtSignal(float, float, float, float)
+#        self.changedlogtxt = pyqtSignal(str)
+        self.xlo = 3
+        self.xhi = 7
+        self.ylo = 3
+        self.yhi = 7
+        self.nx = 3
+        self.ny = 3
 
-    def setxrange(self,dumxlo,dumxhi,dumnx):
-        self.xrange = np.linspace(dumxlo,dumxhi,dumnx)  
+    def setxmin(self,dumxlo):
+        self.xlo = 	dumxlo
 	
-    def setyrange(self,dumylo,dumyhi,dumyx):
-        self.yrange = np.linspace(dumylo,dumyhi,dumny)
+    def setxmax(self,dumxhi):
+        self.xhi = 	dumxhi
+		
+    def setnx(self,dumnx):
+        self.nx = dumnx
+
+    def setxmin(self,dumxlo):
+        self.xlo = 	dumxlo
 	
-    def doscan(self,xxlo,xxhi,xxn,yylo,yyhi,yyn):
+    def setxmax(self,dumxhi):
+        self.xhi = 	dumxhi
 		
-        self.xrange = np.linspace(xxlo,xxhi,xxn)
-        self.yrange = np.linspace(yylo,yyhi,yyn)
+    def setnx(self,dumnx):
+        self.nx = dumnx
+
 		
-        print('IN DOSCAN',self.xrange)
-        print('IN DOSCAN',self.yrange)
+    def doscan(self,xxlo,xxhi,nnx,yylo,yyhi,nny):
+        self.setxmin(xxlo)
+        self.setxmax(xxhi)
+        self.setxmin(nnx)
+        self.setxmin(yylo)
+        self.setxmin(yyhi)
+        self.setxmin(nny)		
+        self.xrange = np.linspace(self.xlo,self.xhi,self.nx)
+        self.yrange = np.linspace(self.ylo,self.yhi,self.ny)
+        	
+        print(self.xrange)
+        print(self.yrange)
         print(therf.getPhiDEG())
 
         print('***********************************************************')

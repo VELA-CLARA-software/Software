@@ -13,7 +13,11 @@ from src.controllers.output_redirection import *
 # if os.environ['COMPUTERNAME'] == "DJS56PORT2":
 # 	sys.path.append(os.getcwd())
 # else:
+<<<<<<< HEAD
 sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\stage')
+=======
+>>>>>>> parent of 8dd1763... push old stuff ...  :(
+sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\stage')
 
 from PyQt4 import QtGui
 import VELA_CLARA_enums

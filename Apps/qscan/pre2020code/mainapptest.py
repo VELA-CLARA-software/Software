@@ -1,9 +1,8 @@
 from PyQt5 import QtGui, QtCore
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtCore import pyqtSlot
-from PyQt5.QtGui import QImage
 import sys,os
-import testview as view
+import view
 import numpy as np
 import pyqtgraph as pg
 import scanner
@@ -47,46 +46,17 @@ class App(QtGui.QApplication):
         self.mygenerator = testclassforsignals()
         self.view.pushButton.clicked.connect(self.mygenerator.generate)  
         self.myscanner = scanner.chargescanner()
-#        print("****TEST********",self.view.doubleSpinBox.value())
-#        self.myscanner.setxrange(self.view.doubleSpinBox.value(),self.view.doubleSpinBox_2.value(),int(self.view.doubleSpinBox_3.value()))
-#        self.myscanner.setxrange(self.view.doubleSpinBox_4.value(),self.view.doubleSpinBox_5.value(),int(self.view.doubleSpinBox_6.value()))
-#        self.view.pushButton.clicked.connect(self.myscanner.doscan)
-#        theval = self.view.doubleSpinBox.value()
-#        self.view.pushButton.clicked.connect(lambda: self.myscanner.doscan(float(theval)))  		
-        self.view.pushButton.clicked.connect(\
-		   lambda: self.myscanner.doscan(\
-              self.view.doubleSpinBox.value(),\
-			  self.view.doubleSpinBox_2.value(),\
-			  int(self.view.doubleSpinBox_3.value()),\
-			  self.view.doubleSpinBox_6.value(),\
-			  self.view.doubleSpinBox_4.value(),\
-			  int(self.view.doubleSpinBox_5.value()) ) )  
+        self.view.pushButton.clicked.connect(self.myscanner.doscan)  
 # add a plot to the window
         self.s3 = pg.ScatterPlotItem(pxMode=False)   ## Set pxMode=False to allow spots to transform with the view
         
         self.dataplot = self.view.graphicsView.addPlot(title="My Data")        
         self.dataplot.addItem(self.s3)
         self.dataplot.addLegend()
-        
-        self.view.label.setPixmap(QtGui.QPixmap("legend2.png").scaled(300,300))
-        
-        self.view.textBrowser.append("Scan Log Commencing:");
-        
-#        print("THIS!!!!!!!!",self.view.doubleSpinBox_5.value())
-		
-#		self.myscanner.setxmin(self.view.doubleSpinBox_5.value())
-		
-		
-#        exit()
-		
-#        self.textbox = self.textBrowser
        
 #        self.mygenerator.changedval.connect(self.get_data_vals)
         self.myscanner.changedval.connect(self.get_data_values)    
-        self.myscanner.changedlogtxt.connect(self.get_text_output)    
- 
-    
- 
+           
  
         self.MainWindow.show()
         self.processEvents() # otherwise gui window will freeze/hang during data collection
@@ -99,7 +69,7 @@ class App(QtGui.QApplication):
         revarg3 =  300 - 70 - ch
         myspot.append({'pos': (arg1, arg2), 'size': 0.5, 'pen': {'color': 'w', 'width': 2}, 'brush':pg.intColor(revarg3, 300)}) 
         self.s3.addPoints(myspot)
-        print9("Hiya", arg1, arg2, arg3, revarg3) 
+        print("Hiya", arg1, arg2, arg3, revarg3) 
  
     @pyqtSlot(float, float, float,float)
     def get_data_values(self,arg1,arg2,arg3,arg4):
@@ -109,11 +79,6 @@ class App(QtGui.QApplication):
         self.s3.addPoints(myspot)
         print("Hiya", arg1, arg2, arg3, revarg3, arg4)
         self.processEvents()
-        
-    @pyqtSlot(str)
-    def get_text_output(self, arg1):
-        self.view.textBrowser.append(arg1)
-        self.processEvents() 
         
 if __name__ == '__main__':
     app = App(sys.argv)

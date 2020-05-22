@@ -400,7 +400,6 @@ class magnetAppController(object):
         #print os.environ["EPICS_CA_ADDR_LIST"]
         if self.machineMode == mag.MACHINE_MODE.VIRTUAL:
             os.environ["EPICS_CA_SERVER_PORT"] = "6000"
-            os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
 
         print(self.machineMode,self.machineArea)
         self.localMagnetController = self.magInit.getMagnetController( self.machineMode,
