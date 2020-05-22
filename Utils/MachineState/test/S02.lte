@@ -1,0 +1,71 @@
+START: charge, total = 2.5000000000001403e-10;
+CLA-S02-APER-01: rcol, l = 0, x_max = 0.017, y_max = 0.017;
+CLA-S02-MAG-HVCOR-01: kicker, l = 0.076607, isr = 1, synch_rad = 1;
+drift1: csrdrift, l = 0.014730000000000132, csr = 1, use_stupakov = 1,&
+dz = 0.01, lsc_bins = 200, lsc_high_frequency_cutoff0 = -1,&
+lsc_high_frequency_cutoff1 = -1, lsc_low_frequency_cutoff0 = -1,&
+lsc_low_frequency_cutoff1 = -1;
+CLA-S02-MAG-QUAD-01: kquad, l = 0.12868478212775, n_kicks = 20,&
+synch_rad = 1, isr = 1, k1 = 13.91144438664387;
+drift2: csrdrift, l = 0.01601000000000008, csr = 1, use_stupakov = 1,&
+dz = 0.01, lsc_bins = 200, lsc_high_frequency_cutoff0 = -1,&
+lsc_high_frequency_cutoff1 = -1, lsc_low_frequency_cutoff0 = -1,&
+lsc_low_frequency_cutoff1 = -1;
+CLA-S02-DIA-BPM-01: moni, l = 0.04528;
+drift3: csrdrift, l = 0.21096000000000004, csr = 1, use_stupakov = 1,&
+dz = 0.01, lsc_bins = 200, lsc_high_frequency_cutoff0 = -1,&
+lsc_high_frequency_cutoff1 = -1, lsc_low_frequency_cutoff0 = -1,&
+lsc_low_frequency_cutoff1 = -1;
+CLA-S02-MAG-QUAD-02: kquad, l = 0.126817, n_kicks = 20, synch_rad = 1,&
+isr = 1, k1 = -12.938086494694515;
+drift4: csrdrift, l = 0.09927000000000019, csr = 1, use_stupakov = 1,&
+dz = 0.01, lsc_bins = 200, lsc_high_frequency_cutoff0 = -1,&
+lsc_high_frequency_cutoff1 = -1, lsc_low_frequency_cutoff0 = -1,&
+lsc_low_frequency_cutoff1 = -1;
+CLA-S02-DIA-SCR-01-W: watch, filename = "CLA-S02-DIA-SCR-01.SDDS";
+drift5: csrdrift, l = 0.14823999999999948, csr = 1, use_stupakov = 1,&
+dz = 0.01, lsc_bins = 200, lsc_high_frequency_cutoff0 = -1,&
+lsc_high_frequency_cutoff1 = -1, lsc_low_frequency_cutoff0 = -1,&
+lsc_low_frequency_cutoff1 = -1;
+CLA-S02-MAG-HVCOR-02: kicker, l = 0.03, isr = 1, synch_rad = 1;
+drift6: csrdrift, l = 0.07554999999999978, csr = 1, use_stupakov = 1,&
+dz = 0.01, lsc_bins = 200, lsc_high_frequency_cutoff0 = -1,&
+lsc_high_frequency_cutoff1 = -1, lsc_low_frequency_cutoff0 = -1,&
+lsc_low_frequency_cutoff1 = -1;
+CLA-S02-COL-01: ecol, l = 0.35, x_max = 0.01, y_max = 0.01;
+CLA-S02-APER-02: rcol, l = 0, x_max = 0.017, y_max = 0.017;
+drift7: csrdrift, l = 0.1219399999999995, csr = 1, use_stupakov = 1,&
+dz = 0.01, lsc_bins = 200, lsc_high_frequency_cutoff0 = -1,&
+lsc_high_frequency_cutoff1 = -1, lsc_low_frequency_cutoff0 = -1,&
+lsc_low_frequency_cutoff1 = -1;
+CLA-S02-MAG-HVCOR-03: kicker, l = 0.03, isr = 1, synch_rad = 1;
+drift8: csrdrift, l = 0.16527000000000047, csr = 1, use_stupakov = 1,&
+dz = 0.01, lsc_bins = 200, lsc_high_frequency_cutoff0 = -1,&
+lsc_high_frequency_cutoff1 = -1, lsc_low_frequency_cutoff0 = -1,&
+lsc_low_frequency_cutoff1 = -1;
+CLA-S02-DIA-SCR-02-W: watch, filename = "CLA-S02-DIA-SCR-02.SDDS";
+drift9: csrdrift, l = 0.1526999999999994, csr = 1, use_stupakov = 1,&
+dz = 0.01, lsc_bins = 200, lsc_high_frequency_cutoff0 = -1,&
+lsc_high_frequency_cutoff1 = -1, lsc_low_frequency_cutoff0 = -1,&
+lsc_low_frequency_cutoff1 = -1;
+CLA-S02-MAG-QUAD-03: kquad, l = 0.127242, n_kicks = 20, synch_rad = 1,&
+isr = 1, k1 = 17.957154843769704;
+drift10: csrdrift, l = 0.27266999999999975, csr = 1, use_stupakov = 1,&
+dz = 0.01, lsc_bins = 200, lsc_high_frequency_cutoff0 = -1,&
+lsc_high_frequency_cutoff1 = -1, lsc_low_frequency_cutoff0 = -1,&
+lsc_low_frequency_cutoff1 = -1;
+CLA-S02-MAG-QUAD-04: kquad, l = 0.127422, n_kicks = 20, synch_rad = 1,&
+isr = 1, k1 = -10.739957951583369;
+drift11: csrdrift, l = 0.03523000000000032, csr = 1, use_stupakov = 1,&
+dz = 0.01, lsc_bins = 200, lsc_high_frequency_cutoff0 = -1,&
+lsc_high_frequency_cutoff1 = -1, lsc_low_frequency_cutoff0 = -1,&
+lsc_low_frequency_cutoff1 = -1;
+CLA-C2V-MARK-01: watch, filename = CLA-C2V-MARK-01.sdds;
+end: watch, filename = CLA-C2V-MARK-01.SDDS;
+S02: Line=(START, CLA-S02-APER-01, CLA-S02-MAG-HVCOR-01, &
+drift1, CLA-S02-MAG-QUAD-01, drift2, CLA-S02-DIA-BPM-01, &
+drift3, CLA-S02-MAG-QUAD-02, drift4, CLA-S02-DIA-SCR-01-W, &
+drift5, CLA-S02-MAG-HVCOR-02, drift6, CLA-S02-COL-01, &
+CLA-S02-APER-02, drift7, CLA-S02-MAG-HVCOR-03, drift8, &
+CLA-S02-DIA-SCR-02-W, drift9, CLA-S02-MAG-QUAD-03, drift10, &
+CLA-S02-MAG-QUAD-04, drift11, CLA-C2V-MARK-01, END )

@@ -1,182 +1,415 @@
-CLA-C2V-DIA-SCR-01:
-  state: !!python/object/new:CATAP.STATE
-  - 25
-CLA-C2V-MAG-DIP-01:
-  READI: 0.0
-CLA-C2V-MAG-DIP-02:
-  READI: 0.0
-CLA-C2V-MAG-HCOR-01:
-  READI: 0.0
-CLA-C2V-MAG-QUAD-01:
-  READI: 0.0
-CLA-C2V-MAG-QUAD-02:
-  READI: 0.0
-CLA-C2V-MAG-QUAD-03:
-  READI: 0.0
-CLA-C2V-MAG-VCOR-01:
-  READI: 0.0
-CLA-GUN-MAG-SOL-02:
-  READI: 0.0
-CLA-L01-MAG-SOL-01:
-  READI: 0.0
-CLA-L01-MAG-SOL-02:
-  READI: 0.0
-CLA-LRG1-MAG-SOL-01:
-  READI: 2.2250738585072014e-308
-CLA-S01-DIA-BPM-01:
-  q: 0.0
-  resolution: 0.0
-  x: 1.0
-  y: 0.0
-CLA-S01-DIA-SCR-01:
-  state: !!python/object/new:CATAP.STATE
-  - 25
-CLA-S01-DIA-WCM-01:
-  q: 150.0
-CLA-S01-MAG-HCOR-01:
-  READI: 0.0
-CLA-S01-MAG-HCOR-02:
-  READI: 0.0
-CLA-S01-MAG-VCOR-01:
-  READI: 0.0
-CLA-S01-MAG-VCOR-02:
-  READI: 0.0
-CLA-S02-DIA-BPM-01:
-  q: 0.0
-  resolution: 0.0
-  x: 0.0
-  y: 0.0
-CLA-S02-DIA-FCUP-01:
-  q: 150.0
-CLA-S02-DIA-SCR-01:
-  state: !!python/object/new:CATAP.STATE
-  - 25
-CLA-S02-DIA-SCR-02:
-  state: !!python/object/new:CATAP.STATE
-  - 25
-CLA-S02-DIA-SCR-03:
-  state: !!python/object/new:CATAP.STATE
-  - 25
-CLA-S02-MAG-HCOR-01:
-  READI: 0.0
-CLA-S02-MAG-HCOR-02:
-  READI: 0.0
-CLA-S02-MAG-HCOR-03:
-  READI: 2.2250738585072014e-308
-CLA-S02-MAG-QUAD-01:
-  READI: 0.0
-CLA-S02-MAG-QUAD-02:
-  READI: 0.0
-CLA-S02-MAG-QUAD-03:
-  READI: 0.0
-CLA-S02-MAG-QUAD-04:
-  READI: 0.0
-CLA-S02-MAG-QUAD-05:
-  READI: 0.0
-CLA-S02-MAG-VCOR-01:
-  READI: 0.0
-CLA-S02-MAG-VCOR-02:
-  READI: 0.0
-CLA-S02-MAG-VCOR-03:
-  READI: 2.2250738585072014e-308
-EBT-BA1-DIA-FCUP-01:
-  q: 150.0
-EBT-BA1-MAG-DIP-01:
-  READI: 0.0
-EBT-BA1-MAG-HCOR-01:
-  READI: 0.0
-EBT-BA1-MAG-HCOR-02:
-  READI: 0.0
-EBT-BA1-MAG-HCOR-03:
-  READI: 0.0
-EBT-BA1-MAG-QUAD-01:
-  READI: 0.0
-EBT-BA1-MAG-QUAD-02:
-  READI: 0.0
-EBT-BA1-MAG-QUAD-03:
-  READI: 0.0
-EBT-BA1-MAG-QUAD-04:
-  READI: 0.0
-EBT-BA1-MAG-QUAD-05:
-  READI: 0.0
-EBT-BA1-MAG-QUAD-06:
-  READI: 0.0
-EBT-BA1-MAG-QUAD-07:
-  READI: 0.0
-EBT-BA1-MAG-VCOR-01:
-  READI: 0.0
-EBT-BA1-MAG-VCOR-02:
-  READI: 0.0
-EBT-BA1-MAG-VCOR-03:
-  READI: 0.0
-EBT-BA1-MAG-VCOR-04:
-  READI: 0.0
-EBT-INJ-DIA-YAG-05:
-  state: !!python/object/new:CATAP.STATE
-  - 33
-EBT-INJ-DIA-YAG-06:
-  state: !!python/object/new:CATAP.STATE
-  - 33
-EBT-INJ-DIA-YAG-07:
-  state: !!python/object/new:CATAP.STATE
-  - 33
-EBT-INJ-DIA-YAG-08:
-  state: !!python/object/new:CATAP.STATE
-  - 33
-EBT-INJ-DIA-YAG-09:
-  state: !!python/object/new:CATAP.STATE
-  - 33
-EBT-INJ-MAG-DIP-02:
-  READI: 0.0
-EBT-INJ-MAG-DIP-03:
-  READI: 0.0
-EBT-INJ-MAG-HCOR-05:
-  READI: 0.0
-EBT-INJ-MAG-HCOR-06:
-  READI: 0.0
-EBT-INJ-MAG-HCOR-07:
-  READI: 0.0
-EBT-INJ-MAG-HCOR-08:
-  READI: 0.0
-EBT-INJ-MAG-HCOR-09:
-  READI: 0.0
-EBT-INJ-MAG-HCOR-10:
-  READI: 0.0
-EBT-INJ-MAG-HCOR-11:
-  READI: 0.0
-EBT-INJ-MAG-QUAD-05:
-  READI: 0.0
-EBT-INJ-MAG-QUAD-06:
-  READI: 0.0
-EBT-INJ-MAG-QUAD-07:
-  READI: 0.0
-EBT-INJ-MAG-QUAD-08:
-  READI: 0.0
-EBT-INJ-MAG-QUAD-09:
-  READI: 0.0
-EBT-INJ-MAG-QUAD-10:
-  READI: 0.0
-EBT-INJ-MAG-QUAD-11:
-  READI: 0.0
-EBT-INJ-MAG-QUAD-12:
-  READI: 0.0
-EBT-INJ-MAG-QUAD-13:
-  READI: 0.0
-EBT-INJ-MAG-QUAD-14:
-  READI: 0.0
-EBT-INJ-MAG-QUAD-15:
-  READI: 0.0
-EBT-INJ-MAG-VCOR-05:
-  READI: 0.0
-EBT-INJ-MAG-VCOR-06:
-  READI: 0.0
-EBT-INJ-MAG-VCOR-07:
-  READI: 0.0
-EBT-INJ-MAG-VCOR-08:
-  READI: 0.0
-EBT-INJ-MAG-VCOR-09:
-  READI: 0.0
-EBT-INJ-MAG-VCOR-10:
-  READI: 0.0
-EBT-INJ-MAG-VCOR-11:
-  READI: 0.0
+BA1:
+  EBT-BA1-DIA-FCUP-01:
+    q: 150.0
+    type: charge
+  EBT-BA1-MAG-DIP-01:
+    READI: 0.0
+    k1l: 0.0
+    type: DIP
+  EBT-BA1-MAG-HCOR-01:
+    READI: 0.0
+    k1l: 0.0
+    type: "\x05"
+  EBT-BA1-MAG-HCOR-02:
+    READI: 0.0
+    k1l: 0.0
+    type: "\x05"
+  EBT-BA1-MAG-HCOR-03:
+    READI: 0.0
+    k1l: 0.0
+    type: "\x05"
+  EBT-BA1-MAG-QUAD-01:
+    READI: 0.0
+    k1l: 0.0
+    type: QUAD
+  EBT-BA1-MAG-QUAD-02:
+    READI: 0.0
+    k1l: 0.0
+    type: QUAD
+  EBT-BA1-MAG-QUAD-03:
+    READI: 0.0
+    k1l: 0.0
+    type: QUAD
+  EBT-BA1-MAG-QUAD-04:
+    READI: 0.0
+    k1l: 0.0
+    type: QUAD
+  EBT-BA1-MAG-QUAD-05:
+    READI: 0.0
+    k1l: 0.0
+    type: QUAD
+  EBT-BA1-MAG-QUAD-06:
+    READI: 0.0
+    k1l: 0.0
+    type: QUAD
+  EBT-BA1-MAG-QUAD-07:
+    READI: 0.0
+    k1l: 0.0
+    type: QUAD
+  EBT-BA1-MAG-VCOR-01:
+    READI: 0.0
+    k1l: 0.0
+    type: "\x05"
+  EBT-BA1-MAG-VCOR-02:
+    READI: 0.0
+    k1l: 0.0
+    type: "\x05"
+  EBT-BA1-MAG-VCOR-03:
+    READI: 0.0
+    k1l: 0.0
+    type: "\x05"
+  EBT-BA1-MAG-VCOR-04:
+    READI: 0.0
+    k1l: 0.0
+    type: "\x05"
+C2V:
+  CLA-C2V-DIA-SCR-01:
+    type: screen
+  CLA-C2V-MAG-DIP-01:
+    READI: 0.0
+    k1l: 0.0
+    type: DIP
+  CLA-C2V-MAG-DIP-02:
+    READI: 0.0
+    k1l: 0.0
+    type: DIP
+  CLA-C2V-MAG-HCOR-01:
+    READI: 0.0
+    k1l: 0.0
+    type: "\x06"
+  CLA-C2V-MAG-QUAD-01:
+    READI: 0.0
+    k1l: 0.0
+    type: QUAD
+  CLA-C2V-MAG-QUAD-02:
+    READI: 0.0
+    k1l: 0.0
+    type: QUAD
+  CLA-C2V-MAG-QUAD-03:
+    READI: 0.0
+    k1l: 0.0
+    type: QUAD
+  CLA-C2V-MAG-VCOR-01:
+    READI: 0.0
+    k1l: 0.0
+    type: "\x05"
+INJ:
+  CLA-GUN-MAG-SOL-02:
+    READI: 0.0
+    field_amplitude: 0.255
+    simframe_alias: CLA-LRG1-MAG-SOL-01
+    type: SOL
+  CLA-LRG1-MAG-SOL-01:
+    READI: 2.2250738585072014e-308
+    k1l: 2.2250738585072014e-308
+    field_amplitude: 0.0125
+    simframe_alias: CLA-LRG1-MAG-BSOL-01
+    type: BSOL
+  EBT-INJ-DIA-YAG-05:
+    type: screen
+  EBT-INJ-DIA-YAG-06:
+    type: screen
+  EBT-INJ-DIA-YAG-07:
+    type: screen
+  EBT-INJ-DIA-YAG-08:
+    type: screen
+  EBT-INJ-DIA-YAG-09:
+    type: screen
+  EBT-INJ-MAG-DIP-02:
+    READI: 0.0
+    k1l: 0.0
+    type: DIP
+  EBT-INJ-MAG-DIP-03:
+    READI: 0.0
+    k1l: 0.0
+    type: DIP
+  EBT-INJ-MAG-HCOR-05:
+    READI: 0.0
+    k1l: 0.0
+    type: "\x06"
+  EBT-INJ-MAG-HCOR-06:
+    READI: 0.0
+    k1l: 0.0
+    type: "\x06"
+  EBT-INJ-MAG-HCOR-07:
+    READI: 0.0
+    k1l: 0.0
+    type: "\x06"
+  EBT-INJ-MAG-HCOR-08:
+    READI: 0.0
+    k1l: 0.0
+    type: "\x06"
+  EBT-INJ-MAG-HCOR-09:
+    READI: 0.0
+    k1l: 0.0
+    type: "\x06"
+  EBT-INJ-MAG-HCOR-10:
+    READI: 0.0
+    k1l: 0.0
+    type: "\x06"
+  EBT-INJ-MAG-HCOR-11:
+    READI: 0.0
+    k1l: 0.0
+    type: "\x06"
+  EBT-INJ-MAG-QUAD-05:
+    READI: 0.0
+    k1l: 0.0
+    type: QUAD
+  EBT-INJ-MAG-QUAD-06:
+    READI: 0.0
+    k1l: 0.0
+    type: QUAD
+  EBT-INJ-MAG-QUAD-07:
+    READI: 0.0
+    k1l: 0.0
+    type: QUAD
+  EBT-INJ-MAG-QUAD-08:
+    READI: 0.0
+    k1l: 0.0
+    type: QUAD
+  EBT-INJ-MAG-QUAD-09:
+    READI: 0.0
+    k1l: 0.0
+    type: QUAD
+  EBT-INJ-MAG-QUAD-10:
+    READI: 0.0
+    k1l: 0.0
+    type: QUAD
+  EBT-INJ-MAG-QUAD-11:
+    READI: 0.0
+    k1l: 0.0
+    type: QUAD
+  EBT-INJ-MAG-QUAD-12:
+    READI: 0.0
+    k1l: 0.0
+    type: QUAD
+  EBT-INJ-MAG-QUAD-13:
+    READI: 0.0
+    k1l: 0.0
+    type: QUAD
+  EBT-INJ-MAG-QUAD-14:
+    READI: 0.0
+    k1l: 0.0
+    type: QUAD
+  EBT-INJ-MAG-QUAD-15:
+    READI: 0.0
+    k1l: 0.0
+    type: QUAD
+  EBT-INJ-MAG-VCOR-05:
+    READI: 0.0
+    k1l: 0.0
+    type: "\x05"
+  EBT-INJ-MAG-VCOR-06:
+    READI: 0.0
+    k1l: 0.0
+    type: "\x05"
+  EBT-INJ-MAG-VCOR-07:
+    READI: 0.0
+    k1l: 0.0
+    type: "\x05"
+  EBT-INJ-MAG-VCOR-08:
+    READI: 0.0
+    k1l: 0.0
+    type: "\x05"
+  EBT-INJ-MAG-VCOR-09:
+    READI: 0.0
+    k1l: 0.0
+    type: "\x05"
+  EBT-INJ-MAG-VCOR-10:
+    READI: 0.0
+    k1l: 0.0
+    type: "\x05"
+  EBT-INJ-MAG-VCOR-11:
+    READI: 0.0
+    k1l: 0.0
+    type: "\x05"
+  'VM-CLA-GUN-LRF-CTRL-01:':
+    CAVITY_FORWARD_PHASE: -999.999
+    CAVITY_FORWARD_POWER: -999.999
+    energy_gain: 0.39230750000000003
+    field_amplitude: 70000000.0
+    phase: -16
+    simframe_alias: CLA-LRG1-GUN-CAV
+    type: LLRF
+L01:
+  CLA-L01-MAG-SOL-01:
+    READI: 0.0
+    field_amplitude: 0.05
+    type: SOL
+  CLA-L01-MAG-SOL-02:
+    READI: 0.0
+    field_amplitude: 0.05
+    type: SOL
+  L01:
+    CAVITY_FORWARD_PHASE: -999.999
+    CAVITY_FORWARD_POWER: -999.999
+    energy_gain: 0.007904429138147802
+    field_amplitude: 21000000.0
+    phase: 1
+    simframe_alias: CLA-L01-CAV
+    type: LLRF
+S01:
+  CLA-S01-DIA-BPM-01:
+    q: 0.0
+    resolution: 0.0
+    type: bpm
+    x: 0.0
+    y: 0.0
+  CLA-S01-DIA-SCR-01:
+    type: screen
+  CLA-S01-DIA-WCM-01:
+    q: 150.0
+    type: charge
+  CLA-S01-MAG-HCOR-01:
+    READI: 0.0
+    k1l: 0.0
+    type: "\x06"
+  CLA-S01-MAG-HCOR-02:
+    READI: 0.0
+    k1l: 0.0
+    type: "\x06"
+  CLA-S01-MAG-VCOR-01:
+    READI: 0.0
+    k1l: 0.0
+    type: "\x05"
+  CLA-S01-MAG-VCOR-02:
+    READI: 0.0
+    k1l: 0.0
+    type: "\x05"
+S02:
+  CLA-S02-DIA-BPM-01:
+    q: 0.0
+    resolution: 0.0
+    type: bpm
+    x: 0.0
+    y: 0.0
+  CLA-S02-DIA-FCUP-01:
+    q: 150.0
+    type: charge
+  CLA-S02-DIA-SCR-01:
+    type: screen
+  CLA-S02-DIA-SCR-02:
+    type: screen
+  CLA-S02-DIA-SCR-03:
+    type: screen
+  CLA-S02-MAG-HCOR-01:
+    READI: 0.0
+    k1l: 0.0
+    type: "\x06"
+  CLA-S02-MAG-HCOR-02:
+    READI: 0.0
+    k1l: 0.0
+    type: "\x06"
+  CLA-S02-MAG-HCOR-03:
+    READI: 2.2250738585072014e-308
+    k1l: 2.2250738585072014e-308
+    type: "\x06"
+  CLA-S02-MAG-QUAD-01:
+    READI: 0.0
+    k1l: 0.0
+    type: QUAD
+  CLA-S02-MAG-QUAD-02:
+    READI: 0.0
+    k1l: 0.0
+    type: QUAD
+  CLA-S02-MAG-QUAD-03:
+    READI: 0.0
+    k1l: 0.0
+    type: QUAD
+  CLA-S02-MAG-QUAD-04:
+    READI: 0.0
+    k1l: 0.0
+    type: QUAD
+  CLA-S02-MAG-QUAD-05:
+    READI: 0.0
+    k1l: 0.0
+    type: QUAD
+  CLA-S02-MAG-VCOR-01:
+    READI: 0.0
+    k1l: 0.0
+    type: "\x06"
+  CLA-S02-MAG-VCOR-02:
+    READI: 0.0
+    k1l: 0.0
+    type: "\x06"
+  CLA-S02-MAG-VCOR-03:
+    READI: 2.2250738585072014e-308
+    k1l: 2.2250738585072014e-308
+    type: "\x06"
+generator:
+  charge:
+    PV: CLA-S01-DIA-WCM-01
+    PV_suffixes: Q
+    catap_type: charge
+    type: generator
+    value: 0.25
+  dist_x:
+    catap_type: pil
+    type: generator
+    value: 2DGaussian
+  dist_y:
+    catap_type: pil
+    type: generator
+    value: 2DGaussian
+  dist_z:
+    catap_type: pil
+    type: generator
+    value: g
+  number_of_particles:
+    type: generator
+    value: 51
+  sig_clock:
+    catap_type: pil
+    type: generator
+    value: 0.00085
+  sig_x:
+    catap_type: pil
+    type: generator
+    value: 0.25
+  sig_y:
+    catap_type: pil
+    type: generator
+    value: 0.25
+  spot_size:
+    catap_type: pil
+    type: generator
+    value: 0.25
+simulation:
+  astra_run_number:
+    astra_run_number: 101
+    type: generator
+  bsol_tracking: true
+  csr:
+    BA1: true
+    C2V: true
+    S02: true
+    VELA: true
+  csr_bins:
+    BA1: 200
+    C2V: 200
+    S02: 200
+    VELA: 200
+  directory: ./test/
+  final_lattice: S02
+  injector_space_charge: true
+  lsc:
+    BA1: true
+    C2V: true
+    S02: true
+    VELA: true
+  lsc_bins:
+    BA1: 200
+    C2V: 200
+    S02: 200
+    VELA: 200
+  rest_of_line_space_charge: true
+  space_charge:
+    type: generator
+    value: false
+  starting_lattice: Generator
+  track: false
+  tracking_code:
+    BA1: Elegant
+    C2V: Elegant
+    S02: Elegant
+    VELA: Elegant

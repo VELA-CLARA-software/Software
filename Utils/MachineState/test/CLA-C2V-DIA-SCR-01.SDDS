@@ -1,0 +1,29 @@
+SDDS1
+!# little-endian
+&description text="watch-point phase space--input: C2V.ele  lattice: C2V.lte", contents="watch-point phase space", &end
+&parameter name=Step, description="Simulation step", type=long, &end
+&parameter name=pCentral, symbol="p$bcen$n", units="m$be$nc", description="Reference beta*gamma", type=double, &end
+&parameter name=Charge, units=C, description="Bunch charge before sampling", type=double, &end
+&parameter name=Particles, description="Number of particles before sampling", type=long, &end
+&parameter name=IDSlotsPerBunch, description="Number of particle ID slots reserved to a bunch", type=long, &end
+&parameter name=SVNVersion, description="SVN version number", type=string, fixed_value=26112M, &end
+&parameter name=SampledCharge, units=C, description="Sampled charge", type=double, &end
+&parameter name=SampledParticles, description="Sampled number of particles", type=long, &end
+&parameter name=Pass, type=long, &end
+&parameter name=PassLength, units=m, type=double, &end
+&parameter name=PassCentralTime, units=s, type=double, &end
+&parameter name=ElapsedTime, units=s, type=double, &end
+&parameter name=ElapsedCoreTime, units=s, type=double, &end
+&parameter name=MemoryUsage, units=kB, type=long, &end
+&parameter name=s, units=m, type=double, &end
+&parameter name=Description, format_string=%s, type=string, fixed_value="", &end
+&parameter name=PreviousElementName, format_string=%s, type=string, fixed_value=DRIFT6, &end
+&column name=x, units=m, type=double,  &end
+&column name=xp, type=double,  &end
+&column name=y, units=m, type=double,  &end
+&column name=yp, type=double,  &end
+&column name=t, units=s, type=double,  &end
+&column name=p, units="m$be$nc", type=double,  &end
+&column name=dt, units=s, type=double,  &end
+&column name=particleID, type=long,  &end
+&data mode=binary, &end
