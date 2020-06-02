@@ -1,9 +1,9 @@
 import os, sys
 import numpy
+import time
 sys.path.append(os.path.abspath(__file__+'/../../CATAP-build/PythonInterface/Debug'))
 sys.path.append('\\apclara1\ControlRoomApps\Controllers\bin\stage\Python3_x64')
-import CATAP
-import VELA_CLARA_LLRF_Control as llrf
+import CATAP.HardwareFactory
 import unit_conversion
 import aliases
 
@@ -52,8 +52,8 @@ class GetDataFromCATAP(object):
 		self.gunEndTime = 1.4  # MAGIC NUMBER
 		self.linacStartTimes = {}
 		self.linacEndTimes = {}
-		self.guntraces = ["CAVITY_FORWARD_POWER", "CAVITY_FORWARD_PHASE"]
-		self.linactraces = ["CAVITY_FORWARD_POWER", "CAVITY_FORWARD_PHASE"]
+		self.guntraces = ['CAVITY_FORWARD_POWER']#, "CAVITY_FORWARD_PHASE"]
+		self.linactraces = ['CAVITY_FORWARD_POWER']#, "CAVITY_FORWARD_PHASE"]
 		self.gunDataSet = False
 		self.linacDataSet = {}
 		self.gunEnergyGain = 0.0
@@ -76,34 +76,44 @@ class GetDataFromCATAP(object):
 				  server_port="6000",
 				  max_array_bytes="1000000"):
 		# setup environment
-		if mode == CATAP.STATE.VIRTUAL:
+		if mode == CATAP.HardwareFactory.STATE.VIRTUAL:
 			os.environ["EPICS_CA_ADDR_LIST"]=addr_list
 			os.environ["EPICS_CA_AUTO_ADDR_LIST"]=auto_addr_list
 			os.environ["EPICS_CA_SERVER_PORT"]=server_port
 			os.environ["EPICS_CA_MAX_ARRAY_BYTES"]=max_array_bytes
 		# get factories / controllers
-		self.hf = CATAP.HardwareFactory(mode)
+		self.hf = CATAP.HardwareFactory.HardwareFactory(mode)
 		self.hf.debugMessagesOff()
+		self.gun_llrf_type = CATAP.HardwareFactory.TYPE.LRRG_GUN
+		self.gunFac = self.hf.getLLRFFactory(self.gun_llrf_type)
+		# time.sleep(5)
+		# print("here1")
+		self.l01_llrf_type = CATAP.HardwareFactory.TYPE.L01
+		self.l01Fac = self.hf.getLLRFFactory(self.l01_llrf_type)
 		self.chargeFac = self.hf.getChargeFactory()
+		# time.sleep(5)
 		self.bpmFac = self.hf.getBPMFactory()
+		# time.sleep(5)
 		self.scrFac = self.hf.getScreenFactory()
+		# time.sleep(5)
 		self.magFac = self.hf.getMagnetFactory()
-		#self.gunFac = hf.getGUN()
-		#self.l01Fac = hf.getl01()
-		#self.pilFac = hf.getPILa()
-		#self.camFac = hf.getcam()
-		self.lrfInit = llrf.init()
-		self.lrfInit.setVerbose()
+		# time.sleep(5)
 
-		self.linacnames.update({"L01": llrf.LLRF_TYPE.L01})
-		self.linacCont = {}
-		self.CATAPmodeToVCControllermode.update({CATAP.STATE.VIRTUAL: llrf.MACHINE_MODE.VIRTUAL})
-		self.CATAPmodeToVCControllermode.update({CATAP.STATE.PHYSICAL: llrf.MACHINE_MODE.PHYSICAL})
+		# #self.gunFac = hf.getGUN()
+		# #self.l01Fac = hf.getl01()
+		# #self.pilFac = hf.getPILa()
+		# #self.camFac = hf.getcam()
+		self.gunname = "LRRG_GUN"
+		# time.sleep(1)
+		self.linacnames.update({"L01": self.l01_llrf_type})
+		self.linacFac = {}
+		# self.CATAPmodeToVCControllermode.update({CATAP.HardwareFactory.STATE.VIRTUAL: llrf.MACHINE_MODE.VIRTUAL})
+		# self.CATAPmodeToVCControllermode.update({CATAP.HardwareFactory.STATE.PHYSICAL: llrf.MACHINE_MODE.PHYSICAL})
 
-		self.gunCont = self.lrfInit.getLLRFController(self.CATAPmodeToVCControllermode[mode], llrf.LLRF_TYPE.CLARA_LRRG)
+		# self.gunCont = self.lrfInit.getLLRFController(self.CATAPmodeToVCControllermode[mode], llrf.LLRF_TYPE.CLARA_LRRG)
 		self.setGunStartEndTime(self.gunStartTime, self.gunEndTime)
 		for key, value in self.linacnames.items():
-			self.linacCont.update({key: self.lrfInit.getLLRFController(self.CATAPmodeToVCControllermode[mode], value)})
+			self.linacFac.update({key: self.hf.getLLRFFactory(value)})
 			self.linacStartTimes.update({key: 0.1}) # MAGIC NUMBER
 			self.linacEndTimes.update({key: 1.0}) # MAGIC NUMBER
 			self.setLinacStartEndTime(key, self.linacStartTimes[key], self.linacEndTimes[key])
@@ -157,13 +167,13 @@ class GetDataFromCATAP(object):
 		self.allDataDict.update({"Screen": self.screenDict})
 
 	def setGunLLRFDict(self):
-		self.gunLLRFObj = self.gunCont.getLLRFObjConstRef()
-		self.allDataDict.update({"LLRFGun": self.gunLLRFObj})
+		self.gunLLRFObj = self.gunFac.getLLRF('LRRG_GUN')
+		self.allDataDict.update({"LRRG_GUN": self.gunLLRFObj})
 
 	def setLinacLLRFDict(self):
 		self.linacLLRFObj = {}
 		for key, value in self.linacnames.items():
-			self.linacLLRFObj[key] = self.linacCont[key].getLLRFObjConstRef()
+			self.linacLLRFObj[key] = self.linacFac[key].getLLRF(key)
 			self.linacdata.update({key: {}})
 			self.allDataDict.update({key: self.linacLLRFObj[key]})
 
@@ -204,7 +214,7 @@ class GetDataFromCATAP(object):
 	def getScreenData(self,name):
 		if self.dictsSet:
 			self.screendata[name] = {}
-			# self.screendata[name]['state'] = self.screenDict[name].screenState
+			self.screendata[name]['state'] = str(self.screenDict[name].screenState)
 			self.screendata[name]['type'] = "screen"
 			self.alldata[self.getMachineAreaString(name)].update({name: self.screendata[name]})
 		else:
@@ -215,18 +225,23 @@ class GetDataFromCATAP(object):
 		if self.dictsSet:
 			self.magnetdata[name] = {}
 			self.magnetdata[name]['READI'] = self.magDict[name].READI
+			self.magnetdata[name]['SETI'] = self.magDict[name].getSETI()
 			self.magnetdata[name]['type'] = self.magDict[name].magnet_type
 			self.energy_at_magnet = 0
-			self.magnetdata[name]['k1l'] = self.magDict[name].READI # PLACEHOLDER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-			# for key, value in energy.items():
-			# 	if key < self.magnetdata[name]['position']:
-			# 		self.energy_at_magnet += value
-			# self.unitConversion.currentToK(self.magDict[name].magnet_type,
-			#  								 self.magDict[name].READI,
-			# 								 self.magDict[name].field_integral_coefficients,
-			# 								 self.magDict[name].magnetic_length,
-			# 								 self.energy_at_magnet,
-			# 								 self.magnetdata[name])
+			if "GUN" in name or "LRG1" in name:
+				self.energy_at_magnet = energy[self.gun_position]
+			else:
+				for key, value in energy.items():
+					if key < self.magDict[name].position:
+						self.energy_at_magnet += value
+			if self.energy_at_magnet == 0:
+				self.energy_at_magnet = energy[self.linac_position['L01']]
+			self.unitConversion.currentToK(self.magDict[name].magnet_type,
+			 								 self.magDict[name].READI,
+											 self.magDict[name].field_integral_coefficients,
+											 self.magDict[name].magnetic_length,
+											 self.energy_at_magnet,
+											 self.magnetdata[name])
 			self.alldata[self.getMachineAreaString(name)].update({name: self.magnetdata[name]})
 		else:
 			self.setAllDicts()
@@ -236,30 +251,37 @@ class GetDataFromCATAP(object):
 		self.gunStartTime = start_time
 		self.gunEndTime = end_time
 		for trace in self.guntraces:
-			self.gunCont.setMeanStartEndTime(start_time, end_time, trace)
+			self.gunFac.setMeanStartEndTime(self.gunname, trace, start_time, end_time)
 
 	def setLinacStartEndTime(self, name, start_time, end_time):
 		for trace in self.linactraces:
 			self.linacStartTimes[name] = start_time
 			self.linacEndTimes[name] = end_time
-			self.linacCont[name].setMeanStartEndTime(start_time, end_time, trace)
+			self.linacFac[name].setMeanStartEndTime(name, trace, start_time, end_time)
 
 	def getGunLLRFData(self):
 		if self.dictsSet:
 			for trace in self.guntraces:
-				self.gundata.update({trace: self.gunCont.getMean(trace)})
+				self.gundata.update({trace: self.gunFac.getCutMean(self.gunname, trace)})
 				self.gundata.update({trace: self.gundata[trace]})
-			self.getenergy = self.unitConversion.getEnergyGain(self.gunLLRFObj.name,
-																self.gundata["CAVITY_FORWARD_POWER"],
-																self.gundata["CAVITY_FORWARD_PHASE"],
-																self.gunLLRFObj.pulse_length,
+			self.gunLLRFObj.setAmpMW(10 * 10 ** 6)
+			self.pulse_length = 2.5
+			self.getenergy = self.unitConversion.getEnergyGain(self.gunname,
+																self.gunLLRFObj.getAmpMW(),
+																self.gunLLRFObj.getPhiDEG(),
+															    self.pulse_length,
 																self.gun_length)
 			#self.gundata.update({"phase": self.gundata["CAVITY_FORWARD_POWER"]})
-			self.gundata.update({"phase": 1})
+			self.gundata.update({"phase": self.gunLLRFObj.getPhiDEG()})
+			self.gundata.update({"amplitude_MW": self.gunLLRFObj.getAmpMW()})
+			self.gundata.update({"amplitude": self.gunLLRFObj.getAmp()})
 			self.gundata.update({"energy_gain": float(self.getenergy[0])})
 			self.gundata.update({"field_amplitude": self.getenergy[1]})
 			self.gundata.update({"type": 'cavity'})
-			self.alldata[self.getMachineAreaString(self.gunLLRFObj.pvRoot)].update({self.gunLLRFObj.pvRoot: self.gundata})
+			self.gundata.update({"length": self.gun_length})
+			self.gundata.update({"pulse_length": self.pulse_length})
+			self.gundata.update({"catap_alias": self.gunname})
+			self.alldata[self.getMachineAreaString(self.gunname)].update({self.gunname: self.gundata})
 			self.gunDataSet = True
 		else:
 			self.setAllDicts()
@@ -268,20 +290,25 @@ class GetDataFromCATAP(object):
 	def getLinacLLRFData(self, linac_name):
 		if self.dictsSet:
 			for trace in self.linactraces:
-				self.linacdata[linac_name].update({trace: self.linacCont[linac_name].getMean(trace)})
+				self.linacdata[linac_name].update({trace: self.linacFac[linac_name].getCutMean(linac_name, trace)})
 				self.linacdata[linac_name].update({trace: self.linacdata[linac_name][trace]})
-			self.getenergy = self.unitConversion.getEnergyGain(self.linacLLRFObj[linac_name].name,
-																#self.linacdata[linac_name]["CAVITY_FORWARD_POWER"],
-																					   1,
-																#self.linacdata[linac_name]["CAVITY_FORWARD_PHASE"],
-																					   1,
-																self.linacLLRFObj[linac_name].pulse_length,
+			self.linacLLRFObj[linac_name].setAmpMW(20 * 10 ** 6)
+			self.pulse_length = 0.75
+			self.getenergy = self.unitConversion.getEnergyGain(linac_name,
+																self.linacLLRFObj[linac_name].getAmpMW(),
+																self.linacLLRFObj[linac_name].getPhiDEG(),
+															    0.75,
 																self.linac_length[linac_name])
 			#self.linacdata[linac_name].update({"phase":self.linacdata[linac_name]["CAVITY_FORWARD_PHASE"]})
-			self.linacdata[linac_name].update({"phase":1})
+			self.linacdata[linac_name].update({"phase": self.linacLLRFObj[linac_name].getPhiDEG()})
+			self.linacdata[linac_name].update({"amplitude_MW": self.linacLLRFObj[linac_name].getAmpMW()})
+			self.linacdata[linac_name].update({"amplitude": self.linacLLRFObj[linac_name].getAmp()})
 			self.linacdata[linac_name].update({"energy_gain": float(self.getenergy[0])})
 			self.linacdata[linac_name].update({"field_amplitude": self.getenergy[1]})
 			self.linacdata[linac_name].update({"type": 'LLRF'})
+			self.linacdata[linac_name].update({"length": self.linac_length[linac_name]})
+			self.linacdata[linac_name].update({"pulse_length": self.pulse_length})
+			self.linacdata[linac_name].update({"catap_alias": linac_name})
 			self.alldata[self.getMachineAreaString(linac_name)].update({linac_name: self.linacdata[linac_name]})
 			self.linacDataSet.update({linac_name: True})
 
@@ -303,7 +330,7 @@ class GetDataFromCATAP(object):
 			self.energy.update({self.gun_position: self.gundata['energy_gain']})
 			for i in self.linacnames.keys():
 				self.getLinacLLRFData(i)
-				self.energy.update({self.linac_position[i]: self.linacEnergyGain[i]})
+				self.energy.update({self.linac_position[i]: self.linacdata[i]['energy_gain']})
 			for i in self.bpmnames:
 				self.getBPMData(i)
 			for i in self.magnames:
@@ -323,8 +350,8 @@ class GetDataFromCATAP(object):
 	def checkType(self, datadict):
 		for i in datadict.keys():
 			for j in self.type_alias.keys():
-				if datadict[i]['type'] == self.type_alias[j]:
-					datadict[i]['type'] = j
+				if datadict[i]['type'] == j:
+					datadict[i].update({'type': self.type_alias[j]})
 
 	def getSimFrameAlias(self, datadict):
 		for i in datadict.keys():

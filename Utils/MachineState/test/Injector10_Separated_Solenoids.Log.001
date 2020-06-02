@@ -4993,12 +4993,12 @@
  STAT    = 188*F, T, F, T, F, T, F, T, F, T, F, T, F, T, F, T, F, 198*T
  /
  End of Input deck
- Random Seed =   2000920121
+ Random Seed =    831882678
 laser.astra                     0.0000D+00  0.1590D+00  F
-Injector10_Separated_Solenoids.0088.001                  8.8361D-01  0.0000D+00  F
-Injector10_Separated_Solenoids.0098.001                  9.8095D-01  8.7966D-06  F
+Injector10_Separated_Solenoids.0088.001                  8.8360D-01  0.0000D+00  F
+Injector10_Separated_Solenoids.0098.001                  9.8094D-01  8.7947D-06  F
 Injector10_Separated_Solenoids.0337.001                  3.3715D+00 -3.1997D-05  F
 
-     execution started:   22. 5.2020     11:52
-     execution finished:  22. 5.2020     11:53
-     execution time:  1 min 12.39 sec                  
+     execution started:   22. 5.2020     12:53
+     execution finished:  22. 5.2020     12:55
+     execution time:  1 min 12.80 sec                  

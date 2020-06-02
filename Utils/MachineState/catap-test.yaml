@@ -4,280 +4,411 @@ BA1:
     type: charge
   EBT-BA1-MAG-DIP-01:
     READI: 0.0
-    k1l: 0.0
-    type: DIP
+    SETI: 0.0
+    angle: 0.0
+    type: dipole
   EBT-BA1-MAG-HCOR-01:
     READI: 0.0
-    k1l: 0.0
-    type: "\x05"
+    SETI: 0.0
+    angle: 0.0
+    type: kicker
   EBT-BA1-MAG-HCOR-02:
     READI: 0.0
-    k1l: 0.0
-    type: "\x05"
+    SETI: 0.0
+    angle: 0.0
+    type: kicker
   EBT-BA1-MAG-HCOR-03:
     READI: 0.0
-    k1l: 0.0
-    type: "\x05"
+    SETI: 0.0
+    angle: 0.0
+    type: kicker
   EBT-BA1-MAG-QUAD-01:
     READI: 0.0
-    k1l: 0.0
-    type: QUAD
+    SETI: 0.0
+    k1l: -2.1194815611495815e-06
+    type: quadrupole
   EBT-BA1-MAG-QUAD-02:
     READI: 0.0
-    k1l: 0.0
-    type: QUAD
+    SETI: 0.0
+    k1l: -1.8160103804440132e-06
+    type: quadrupole
   EBT-BA1-MAG-QUAD-03:
     READI: 0.0
-    k1l: 0.0
-    type: QUAD
+    SETI: 0.0
+    k1l: -2.195349440441927e-06
+    type: quadrupole
   EBT-BA1-MAG-QUAD-04:
     READI: 0.0
-    k1l: 0.0
-    type: QUAD
+    SETI: 0.0
+    k1l: 8.760633550033392e-05
+    type: quadrupole
   EBT-BA1-MAG-QUAD-05:
     READI: 0.0
-    k1l: 0.0
-    type: QUAD
+    SETI: 0.0
+    k1l: 0.00017902901812022538
+    type: quadrupole
   EBT-BA1-MAG-QUAD-06:
     READI: 0.0
-    k1l: 0.0
-    type: QUAD
+    SETI: 0.0
+    k1l: -3.8248263726995846e-05
+    type: quadrupole
   EBT-BA1-MAG-QUAD-07:
     READI: 0.0
-    k1l: 0.0
-    type: QUAD
+    SETI: 0.0
+    k1l: -1.221230643850203e-05
+    type: quadrupole
   EBT-BA1-MAG-VCOR-01:
     READI: 0.0
-    k1l: 0.0
-    type: "\x05"
+    SETI: 0.0
+    angle: 0.0
+    type: kicker
   EBT-BA1-MAG-VCOR-02:
     READI: 0.0
-    k1l: 0.0
-    type: "\x05"
+    SETI: 0.0
+    angle: 0.0
+    type: kicker
   EBT-BA1-MAG-VCOR-03:
     READI: 0.0
-    k1l: 0.0
-    type: "\x05"
+    SETI: 0.0
+    angle: 0.0
+    type: kicker
   EBT-BA1-MAG-VCOR-04:
     READI: 0.0
-    k1l: 0.0
-    type: "\x05"
+    SETI: 0.0
+    angle: 0.0
+    type: kicker
 C2V:
-  CLA-C2V-DIA-SCR-01:
-    type: screen
-  CLA-C2V-MAG-DIP-01:
-    READI: 0.0
-    k1l: 0.0
-    type: DIP
-  CLA-C2V-MAG-DIP-02:
-    READI: 0.0
-    k1l: 0.0
-    type: DIP
-  CLA-C2V-MAG-HCOR-01:
-    READI: 0.0
-    k1l: 0.0
-    type: "\x06"
-  CLA-C2V-MAG-QUAD-01:
-    READI: 0.0
-    k1l: 0.0
-    type: QUAD
-  CLA-C2V-MAG-QUAD-02:
-    READI: 0.0
-    k1l: 0.0
-    type: QUAD
-  CLA-C2V-MAG-QUAD-03:
-    READI: 0.0
-    k1l: 0.0
-    type: QUAD
-  CLA-C2V-MAG-VCOR-01:
-    READI: 0.0
-    k1l: 0.0
-    type: "\x05"
-INJ:
-  CLA-GUN-MAG-SOL-02:
-    READI: 0.0
-    field_amplitude: 0.255
-    simframe_alias: CLA-LRG1-MAG-SOL-01
-    type: SOL
-  CLA-LRG1-MAG-SOL-01:
-    READI: 2.2250738585072014e-308
-    k1l: 2.2250738585072014e-308
-    field_amplitude: 0.0125
-    simframe_alias: CLA-LRG1-MAG-BSOL-01
-    type: BSOL
-  EBT-INJ-DIA-YAG-05:
-    type: screen
-  EBT-INJ-DIA-YAG-06:
-    type: screen
-  EBT-INJ-DIA-YAG-07:
-    type: screen
-  EBT-INJ-DIA-YAG-08:
-    type: screen
-  EBT-INJ-DIA-YAG-09:
-    type: screen
-  EBT-INJ-MAG-DIP-02:
-    READI: 0.0
-    k1l: 0.0
-    type: DIP
-  EBT-INJ-MAG-DIP-03:
-    READI: 0.0
-    k1l: 0.0
-    type: DIP
-  EBT-INJ-MAG-HCOR-05:
-    READI: 0.0
-    k1l: 0.0
-    type: "\x06"
-  EBT-INJ-MAG-HCOR-06:
-    READI: 0.0
-    k1l: 0.0
-    type: "\x06"
-  EBT-INJ-MAG-HCOR-07:
-    READI: 0.0
-    k1l: 0.0
-    type: "\x06"
-  EBT-INJ-MAG-HCOR-08:
-    READI: 0.0
-    k1l: 0.0
-    type: "\x06"
-  EBT-INJ-MAG-HCOR-09:
-    READI: 0.0
-    k1l: 0.0
-    type: "\x06"
-  EBT-INJ-MAG-HCOR-10:
-    READI: 0.0
-    k1l: 0.0
-    type: "\x06"
-  EBT-INJ-MAG-HCOR-11:
-    READI: 0.0
-    k1l: 0.0
-    type: "\x06"
-  EBT-INJ-MAG-QUAD-05:
-    READI: 0.0
-    k1l: 0.0
-    type: QUAD
-  EBT-INJ-MAG-QUAD-06:
-    READI: 0.0
-    k1l: 0.0
-    type: QUAD
-  EBT-INJ-MAG-QUAD-07:
-    READI: 0.0
-    k1l: 0.0
-    type: QUAD
-  EBT-INJ-MAG-QUAD-08:
-    READI: 0.0
-    k1l: 0.0
-    type: QUAD
-  EBT-INJ-MAG-QUAD-09:
-    READI: 0.0
-    k1l: 0.0
-    type: QUAD
-  EBT-INJ-MAG-QUAD-10:
-    READI: 0.0
-    k1l: 0.0
-    type: QUAD
-  EBT-INJ-MAG-QUAD-11:
-    READI: 0.0
-    k1l: 0.0
-    type: QUAD
-  EBT-INJ-MAG-QUAD-12:
-    READI: 0.0
-    k1l: 0.0
-    type: QUAD
-  EBT-INJ-MAG-QUAD-13:
-    READI: 0.0
-    k1l: 0.0
-    type: QUAD
-  EBT-INJ-MAG-QUAD-14:
-    READI: 0.0
-    k1l: 0.0
-    type: QUAD
-  EBT-INJ-MAG-QUAD-15:
-    READI: 0.0
-    k1l: 0.0
-    type: QUAD
-  EBT-INJ-MAG-VCOR-05:
-    READI: 0.0
-    k1l: 0.0
-    type: "\x05"
-  EBT-INJ-MAG-VCOR-06:
-    READI: 0.0
-    k1l: 0.0
-    type: "\x05"
-  EBT-INJ-MAG-VCOR-07:
-    READI: 0.0
-    k1l: 0.0
-    type: "\x05"
-  EBT-INJ-MAG-VCOR-08:
-    READI: 0.0
-    k1l: 0.0
-    type: "\x05"
-  EBT-INJ-MAG-VCOR-09:
-    READI: 0.0
-    k1l: 0.0
-    type: "\x05"
-  EBT-INJ-MAG-VCOR-10:
-    READI: 0.0
-    k1l: 0.0
-    type: "\x05"
-  EBT-INJ-MAG-VCOR-11:
-    READI: 0.0
-    k1l: 0.0
-    type: "\x05"
-  'VM-CLA-GUN-LRF-CTRL-01:':
-    CAVITY_FORWARD_PHASE: -999.999
-    CAVITY_FORWARD_POWER: -999.999
-    energy_gain: 0.39230750000000003
-    field_amplitude: 70000000.0
-    phase: -16
-    simframe_alias: CLA-LRG1-GUN-CAV
-    type: LLRF
-L01:
-  CLA-L01-MAG-SOL-01:
-    READI: 0.0
-    field_amplitude: 0.05
-    type: SOL
-  CLA-L01-MAG-SOL-02:
-    READI: 0.0
-    field_amplitude: 0.05
-    type: SOL
-  L01:
-    CAVITY_FORWARD_PHASE: -999.999
-    CAVITY_FORWARD_POWER: -999.999
-    energy_gain: 0.007904429138147802
-    field_amplitude: 21000000.0
-    phase: 1
-    simframe_alias: CLA-L01-CAV
-    type: LLRF
-S01:
-  CLA-S01-DIA-BPM-01:
+  CLA-C2V-DIA-BPM-01:
     q: 0.0
     resolution: 0.0
     type: bpm
     x: 0.0
     y: 0.0
+  CLA-C2V-DIA-SCR-01:
+    state: VRETRACTED
+    type: screen
+  CLA-C2V-MAG-DIP-01:
+    READI: 0.0
+    SETI: 0.0
+    angle: 4.4632414591750084e-07
+    type: dipole
+  CLA-C2V-MAG-DIP-02:
+    READI: 0.0
+    SETI: 0.0
+    angle: 1.637339525529996e-05
+    type: dipole
+  CLA-C2V-MAG-HCOR-01:
+    READI: 0.0
+    SETI: 0.0
+    angle: 0.02502450823943394
+    type: kicker
+  CLA-C2V-MAG-QUAD-01:
+    READI: 0.0
+    SETI: 0.0
+    k1l: 8.413464655483374e-07
+    type: quadrupole
+  CLA-C2V-MAG-QUAD-02:
+    READI: 0.0
+    SETI: 0.0
+    k1l: 9.697307199615331e-07
+    type: quadrupole
+  CLA-C2V-MAG-QUAD-03:
+    READI: 0.0
+    SETI: 0.0
+    k1l: 8.16042509209433e-07
+    type: quadrupole
+  CLA-C2V-MAG-VCOR-01:
+    READI: 0.0
+    SETI: 0.0
+    angle: 0.02557248985585391
+    type: kicker
+INJ:
+  CLA-GUN-MAG-SOL-02:
+    READI: 0.0
+    SETI: 0.0
+    field_amplitude: 0.0
+    simframe_alias: CLA-LRG1-MAG-SOL-01
+    type: solenoid
+  CLA-LRG1-MAG-SOL-01:
+    READI: 2.2250738585072014e-308
+    SETI: 2.2250738585072014e-308
+    field_amplitude: -7.82087182469406e-309
+    simframe_alias: CLA-LRG1-MAG-BSOL-01
+    type: solenoid
+  EBT-INJ-DIA-BPM-02:
+    q: 0.0
+    resolution: 0.0
+    type: bpm
+    x: 0.0
+    y: 0.0
+  EBT-INJ-DIA-BPM-03:
+    q: 0.0
+    resolution: 0.0
+    type: bpm
+    x: 0.0
+    y: 0.0
+  EBT-INJ-DIA-BPM-04:
+    q: 0.0
+    resolution: 0.0
+    type: bpm
+    x: 0.0
+    y: 0.0
+  EBT-INJ-DIA-BPM-05:
+    q: 0.0
+    resolution: 0.0
+    type: bpm
+    x: 0.0
+    y: 0.0
+  EBT-INJ-DIA-BPM-06:
+    q: 0.0
+    resolution: 0.0
+    type: bpm
+    x: 0.0
+    y: 0.0
+  EBT-INJ-DIA-BPM-10:
+    q: 0.0
+    resolution: 0.0
+    type: bpm
+    x: 0.0
+    y: 0.0
+  EBT-INJ-DIA-BPM-12:
+    q: 0.0
+    resolution: 0.0
+    type: bpm
+    x: 0.0
+    y: 0.0
+  EBT-INJ-DIA-BPM-14:
+    q: 0.0
+    resolution: 0.0
+    type: bpm
+    x: 0.0
+    y: 0.0
+  EBT-INJ-DIA-YAG-05:
+    state: RETRACTED
+    type: screen
+  EBT-INJ-DIA-YAG-06:
+    state: RETRACTED
+    type: screen
+  EBT-INJ-DIA-YAG-07:
+    state: RETRACTED
+    type: screen
+  EBT-INJ-DIA-YAG-08:
+    state: RETRACTED
+    type: screen
+  EBT-INJ-DIA-YAG-09:
+    state: RETRACTED
+    type: screen
+  EBT-INJ-MAG-DIP-02:
+    READI: 0.0
+    SETI: 0.0
+    angle: -3.884126789338508e-05
+    type: dipole
+  EBT-INJ-MAG-DIP-03:
+    READI: 0.0
+    SETI: 0.0
+    angle: 2.746084213170226e-05
+    type: dipole
+  EBT-INJ-MAG-HCOR-05:
+    READI: 0.0
+    SETI: 0.0
+    angle: 0.0
+    type: kicker
+  EBT-INJ-MAG-HCOR-06:
+    READI: 0.0
+    SETI: 0.0
+    angle: 0.0
+    type: kicker
+  EBT-INJ-MAG-HCOR-07:
+    READI: 0.0
+    SETI: 0.0
+    angle: 0.0
+    type: kicker
+  EBT-INJ-MAG-HCOR-08:
+    READI: 0.0
+    SETI: 0.0
+    angle: 0.0
+    type: kicker
+  EBT-INJ-MAG-HCOR-09:
+    READI: 0.0
+    SETI: 0.0
+    angle: 0.0
+    type: kicker
+  EBT-INJ-MAG-HCOR-10:
+    READI: 0.0
+    SETI: 0.0
+    angle: 0.0
+    type: kicker
+  EBT-INJ-MAG-HCOR-11:
+    READI: 0.0
+    SETI: 0.0
+    angle: 0.0
+    type: kicker
+  EBT-INJ-MAG-QUAD-05:
+    READI: 0.0
+    SETI: 0.0
+    k1l: 6.200909137381762e-08
+    type: quadrupole
+  EBT-INJ-MAG-QUAD-06:
+    READI: 0.0
+    SETI: 0.0
+    k1l: 1.1769048328768149e-07
+    type: quadrupole
+  EBT-INJ-MAG-QUAD-07:
+    READI: 0.0
+    SETI: 0.0
+    k1l: 1.2200717758218453e-07
+    type: quadrupole
+  EBT-INJ-MAG-QUAD-08:
+    READI: 0.0
+    SETI: 0.0
+    k1l: 8.698228844918601e-08
+    type: quadrupole
+  EBT-INJ-MAG-QUAD-09:
+    READI: 0.0
+    SETI: 0.0
+    k1l: -1.3959854986457782e-07
+    type: quadrupole
+  EBT-INJ-MAG-QUAD-10:
+    READI: 0.0
+    SETI: 0.0
+    k1l: -1.8021543676327152e-07
+    type: quadrupole
+  EBT-INJ-MAG-QUAD-11:
+    READI: 0.0
+    SETI: 0.0
+    k1l: -1.9213620206021344e-07
+    type: quadrupole
+  EBT-INJ-MAG-QUAD-12:
+    READI: 0.0
+    SETI: 0.0
+    k1l: 7.145103341603133e-09
+    type: quadrupole
+  EBT-INJ-MAG-QUAD-13:
+    READI: 0.0
+    SETI: 0.0
+    k1l: 6.503966623956502e-08
+    type: quadrupole
+  EBT-INJ-MAG-QUAD-14:
+    READI: 0.0
+    SETI: 0.0
+    k1l: -2.4147860259492133e-06
+    type: quadrupole
+  EBT-INJ-MAG-QUAD-15:
+    READI: 0.0
+    SETI: 0.0
+    k1l: -1.458537435182942e-07
+    type: quadrupole
+  EBT-INJ-MAG-VCOR-05:
+    READI: 0.0
+    SETI: 0.0
+    angle: 0.0
+    type: kicker
+  EBT-INJ-MAG-VCOR-06:
+    READI: 0.0
+    SETI: 0.0
+    angle: 0.0
+    type: kicker
+  EBT-INJ-MAG-VCOR-07:
+    READI: 0.0
+    SETI: 0.0
+    angle: 0.0
+    type: kicker
+  EBT-INJ-MAG-VCOR-08:
+    READI: 0.0
+    SETI: 0.0
+    angle: 0.0
+    type: kicker
+  EBT-INJ-MAG-VCOR-09:
+    READI: 0.0
+    SETI: 0.0
+    angle: 0.0
+    type: kicker
+  EBT-INJ-MAG-VCOR-10:
+    READI: 0.0
+    SETI: 0.0
+    angle: 0.0
+    type: kicker
+  EBT-INJ-MAG-VCOR-11:
+    READI: 0.0
+    SETI: 0.0
+    angle: 0.0
+    type: kicker
+  LRRG_GUN:
+    CAVITY_FORWARD_POWER: 2.2250738585072014e-308
+    amplitude: 0.0
+    amplitude_MW: 10000000.0
+    catap_alias: LRRG_GUN
+    energy_gain: 4.980143366450753
+    field_amplitude: 77.33141873370735
+    length: 0.17
+    phase: 0.0
+    pulse_length: 2.5
+    simframe_alias: CLA-LRG1-GUN-CAV
+    type: cavity
+L01:
+  CLA-L01-MAG-SOL-01:
+    READI: 0.0
+    SETI: 0.0
+    field_amplitude: 0.00016743862994521205
+    type: solenoid
+  CLA-L01-MAG-SOL-02:
+    READI: 0.0
+    SETI: 0.0
+    field_amplitude: 0.00016743862994521205
+    type: solenoid
+  L01:
+    CAVITY_FORWARD_POWER: 2.2250738585072014e-308
+    amplitude: 0.0
+    amplitude_MW: 20000000.0
+    catap_alias: L01
+    energy_gain: 35.349681752457116
+    field_amplitude: 17.387939868399958
+    length: 2.033
+    phase: 0.0
+    pulse_length: 0.75
+    simframe_alias: CLA-L01-CAV
+    type: cavity
+S01:
+  CLA-S01-DIA-BPM-01:
+    q: 0.0
+    resolution: 0.0
+    type: bpm
+    x: 8.44530761919159e-05
+    y: 5.16569903294063e-05
   CLA-S01-DIA-SCR-01:
+    state: VRETRACTED
     type: screen
   CLA-S01-DIA-WCM-01:
     q: 150.0
     type: charge
   CLA-S01-MAG-HCOR-01:
     READI: 0.0
-    k1l: 0.0
-    type: "\x06"
+    SETI: 0.0
+    angle: 0.2133174726510768
+    type: kicker
   CLA-S01-MAG-HCOR-02:
     READI: 0.0
-    k1l: 0.0
-    type: "\x06"
+    SETI: 0.0
+    angle: 0.0
+    type: kicker
   CLA-S01-MAG-VCOR-01:
     READI: 0.0
-    k1l: 0.0
-    type: "\x05"
+    SETI: 0.0
+    angle: 0.20910076644699244
+    type: kicker
   CLA-S01-MAG-VCOR-02:
     READI: 0.0
-    k1l: 0.0
-    type: "\x05"
+    SETI: 0.0
+    angle: 0.0
+    type: kicker
 S02:
   CLA-S02-DIA-BPM-01:
+    q: 0.0
+    resolution: 0.0
+    type: bpm
+    x: 0.0
+    y: 0.0
+  CLA-S02-DIA-BPM-02:
     q: 0.0
     resolution: 0.0
     type: bpm
@@ -287,55 +418,69 @@ S02:
     q: 150.0
     type: charge
   CLA-S02-DIA-SCR-01:
+    state: VRETRACTED
     type: screen
   CLA-S02-DIA-SCR-02:
+    state: VRETRACTED
     type: screen
   CLA-S02-DIA-SCR-03:
+    state: VRETRACTED
     type: screen
   CLA-S02-MAG-HCOR-01:
     READI: 0.0
-    k1l: 0.0
-    type: "\x06"
+    SETI: 0.0
+    angle: 0.06460969706653685
+    type: kicker
   CLA-S02-MAG-HCOR-02:
     READI: 0.0
-    k1l: 0.0
-    type: "\x06"
+    SETI: 0.0
+    angle: 0.06460969706653685
+    type: kicker
   CLA-S02-MAG-HCOR-03:
     READI: 2.2250738585072014e-308
-    k1l: 2.2250738585072014e-308
-    type: "\x06"
+    SETI: 2.2250738585072014e-308
+    angle: 0.06460969706653685
+    type: kicker
   CLA-S02-MAG-QUAD-01:
     READI: 0.0
-    k1l: 0.0
-    type: QUAD
+    SETI: 0.0
+    k1l: 5.668103097485814e-07
+    type: quadrupole
   CLA-S02-MAG-QUAD-02:
     READI: 0.0
-    k1l: 0.0
-    type: QUAD
+    SETI: 0.0
+    k1l: 5.730854045565072e-07
+    type: quadrupole
   CLA-S02-MAG-QUAD-03:
     READI: 0.0
-    k1l: 0.0
-    type: QUAD
+    SETI: 0.0
+    k1l: 5.547408396737037e-07
+    type: quadrupole
   CLA-S02-MAG-QUAD-04:
     READI: 0.0
-    k1l: 0.0
-    type: QUAD
+    SETI: 0.0
+    k1l: 5.475530864509139e-07
+    type: quadrupole
   CLA-S02-MAG-QUAD-05:
     READI: 0.0
-    k1l: 0.0
-    type: QUAD
+    SETI: 0.0
+    k1l: 5.475530996681399e-07
+    type: quadrupole
   CLA-S02-MAG-VCOR-01:
     READI: 0.0
-    k1l: 0.0
-    type: "\x06"
+    SETI: 0.0
+    angle: 0.06460969706653685
+    type: kicker
   CLA-S02-MAG-VCOR-02:
     READI: 0.0
-    k1l: 0.0
-    type: "\x06"
+    SETI: 0.0
+    angle: 0.06460969706653685
+    type: kicker
   CLA-S02-MAG-VCOR-03:
     READI: 2.2250738585072014e-308
-    k1l: 2.2250738585072014e-308
-    type: "\x06"
+    SETI: 2.2250738585072014e-308
+    angle: 0.06460969706653685
+    type: kicker
 generator:
   charge:
     PV: CLA-S01-DIA-WCM-01
@@ -378,7 +523,7 @@ simulation:
   astra_run_number:
     astra_run_number: 101
     type: generator
-  bsol_tracking: true
+  bsol_tracking: false
   csr:
     BA1: true
     C2V: true

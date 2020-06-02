@@ -44,6 +44,9 @@ class MachineState(object):
     def getFramework(self):
         return self.getDataFromSimFrame.getFramework()
 
+    def getBeamDistributionsFromSimFrame(self, directory):
+        return self.getDataFromSimFrame.getAllBeamFiles(directory)
+
     def writeMachineStateToCATAP(self, mode, datadict, directory):
         if not self.CATAPInitialised:
             self.getDataFromCATAP.initCATAP(mode)

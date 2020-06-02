@@ -219,7 +219,6 @@ class GetDataFromSimFrame(object):
 			self.rf_values[cavity['objectname']].update({'PV': cavity['PV_root']})
 			for key, value in cavity['sub_elements'].items():
 				if value['type'] == "solenoid":
-					print(key)
 					self.rf_values.update({key: {}})
 					self.rf_values[key].update({'type': 'solenoid'})
 					self.rf_values[key].update({'cavity': cavity['objectname']})
@@ -280,10 +279,31 @@ class GetDataFromSimFrame(object):
 			if file.endswith(".hdf5"):
 				self.beam.read_HDF5_beam_file(os.path.join(directory, file))
 				self.beamdata = {}
+				self.beamdata.update({'filename': os.path.join(directory, file)})
 				self.beamdata.update({'x': {}})
 				self.beamdata['x'].update({'mean': numpy.mean(getattr(self.beam, 'x'))})
+				self.beamdata['x'].update({'dist': getattr(self.beam, 'x')})
 				self.beamdata.update({'y': {}})
 				self.beamdata['y'].update({'mean': numpy.mean(getattr(self.beam, 'y'))})
+				self.beamdata['y'].update({'dist': getattr(self.beam, 'y')})
+				self.beamdata.update({'z': {}})
+				self.beamdata['z'].update({'mean': numpy.mean(getattr(self.beam, 'z'))})
+				self.beamdata['z'].update({'dist': getattr(self.beam, 'z')})
+				self.beamdata.update({'px': {}})
+				self.beamdata['px'].update({'mean': numpy.mean(getattr(self.beam, 'px'))})
+				self.beamdata['px'].update({'dist': getattr(self.beam, 'px')})
+				self.beamdata.update({'py': {}})
+				self.beamdata['py'].update({'mean': numpy.mean(getattr(self.beam, 'py'))})
+				self.beamdata['py'].update({'dist': getattr(self.beam, 'py')})
+				self.beamdata.update({'pz': {}})
+				self.beamdata['pz'].update({'mean': numpy.mean(getattr(self.beam, 'pz'))})
+				self.beamdata['pz'].update({'dist': getattr(self.beam, 'pz')})
+				self.beamdata.update({'t': {}})
+				self.beamdata['t'].update({'mean': numpy.mean(getattr(self.beam, 't'))})
+				self.beamdata['t'].update({'dist': getattr(self.beam, 't')})
+				# self.beamdata.update({'q': {}})
+				# self.beamdata['q'].update({'total': (-1) * (10 ** 12) * numpy.sum(getattr(self.beam, 'charge'))})
+				# self.beamdata['q'].update({'dist': (-1) * (10 ** 12) * getattr(self.beam, 'charge')})
 				self.separator = '.'
 				self.pvname = file.split(self.separator, 1)[0]
 				self.allbeamfiles.update({self.pvname: self.beamdata})

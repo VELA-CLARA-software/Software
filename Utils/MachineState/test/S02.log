@@ -1,4 +1,4 @@
-Running elegant at Fri May 22 11:53:53 2020
+Running elegant at Fri May 22 12:55:04 2020
 
 This is elegant 2019.1.1, Apr  1 2019, by M. Borland, J. Calvey, M. Carla', N. Carmignani, M. Ehrlichman, L. Emery, W. Guo, R. Lindberg, V. Sajaev, R. Soliday, Y.-P. Sun, C.-X. Wang, Y. Wang, Y. Wu, and A. Xiao.
 =====================================================================================
@@ -33,7 +33,7 @@ statistics:    ET:     00:00:00 CP:    0.00 BIO:0 DIO:0 PF:0 MEM:0
     random_number_seed = 987654321,
     correction_iterations = 1,
     echo_lattice = 0,
-    p_central = 7.029913996751829e+01,
+    p_central = 6.883735646245496e+01,
     p_central_mev = 0.000000000000000e+00,
     always_change_p0 = 1,
     load_balancing_on = 0,
@@ -66,12 +66,12 @@ statistics:    ET:     00:00:00 CP:    0.00 BIO:0 DIO:0 PF:0 MEM:0
     final_values_only = 0,
     statistics = 1,
     radiation_integrals = 1,
-    beta_x = 1.973374037617847e+01,
-    alpha_x = 2.212665350937268e+00,
+    beta_x = 4.982528245122982e-02,
+    alpha_x = 1.514444714909511e-02,
     eta_x = 0.000000000000000e+00,
     etap_x = 0.000000000000000e+00,
-    beta_y = 1.761500954226821e+01,
-    alpha_y = 1.901104032542644e+00,
+    beta_y = 3.256163059754354e-02,
+    alpha_y = -2.939176491908530e-03,
     eta_y = 0.000000000000000e+00,
     etap_y = 0.000000000000000e+00,
     reference_file = {NULL},
@@ -95,17 +95,17 @@ final Twiss parameters (chromaticity valid for fully second-order calculation on
          beta          alpha           nu           eta          eta'       dnu/d(dp/p)   dbeta/(dp/p)     accept.
           m                          1/2pi           m                         1/2pi            m          mm-mrad
 --------------------------------------------------------------------------------------------------------------------
-  x:  8.429088e+00  1.146135e+01  4.917814e-01  0.000000e+00  0.000000e+00 -2.240306e-02  1.587851e+01  8.202580e+00
-ave:  1.480359e+01  2.377961e+00                0.000000e+00  0.000000e+00
-min:  5.630010e-02 -3.838000e+01                0.000000e+00  0.000000e+00
-max:  4.015601e+01  5.301428e+01                0.000000e+00  0.000000e+00
-  y:  4.424759e+00  4.575273e+00  3.579330e-02  0.000000e+00  0.000000e+00 -2.251496e-01  6.215930e+01  3.438771e+00
-ave:  1.982640e+01  2.795044e+00                0.000000e+00  0.000000e+00
-min:  4.090988e+00 -4.734304e+01                0.000000e+00  0.000000e+00
-max:  4.577951e+01  2.632575e+01                0.000000e+00  0.000000e+00
-x acceptance limited to 8.202580e-06 by CLA-S02-COL-01 ending at 1.322149e+00 m
-y acceptance limited to 3.438771e-06 by DRIFT6 ending at 9.721488e-01 m
-statistics:    ET:     00:00:00 CP:    0.02 BIO:0 DIO:0 PF:0 MEM:0
+  x:  8.924637e+00  3.256219e+01  2.592855e-01  0.000000e+00  0.000000e+00 -2.115910e-02  6.528533e+01  1.965977e+00
+ave:  3.675198e+01 -2.003471e+00                0.000000e+00  0.000000e+00
+min:  4.982528e-02 -6.880044e+01                0.000000e+00  0.000000e+00
+max:  1.056278e+02  1.600311e+02                0.000000e+00  0.000000e+00
+  y:  1.190658e+02  5.503727e+00  2.476870e-01  0.000000e+00  0.000000e+00 -8.367077e-03  2.002530e+02  4.569038e+00
+ave:  2.938333e+01 -2.523379e+01                0.000000e+00  0.000000e+00
+min:  3.256163e-02 -1.413920e+02                0.000000e+00  0.000000e+00
+max:  1.194539e+02  5.512985e+00                0.000000e+00  0.000000e+00
+x acceptance limited to 1.965977e-06 by CLA-S02-COL-01 ending at 1.322149e+00 m
+y acceptance limited to 4.569038e-06 by CLA-S02-COL-01 ending at 1.322149e+00 m
+statistics:    ET:     00:00:00 CP:    0.03 BIO:0 DIO:0 PF:0 MEM:0
 &floor_coordinates
     filename = %s.flr,
     X0 = 0.000000000000000e+00,
@@ -119,7 +119,7 @@ statistics:    ET:     00:00:00 CP:    0.02 BIO:0 DIO:0 PF:0 MEM:0
     magnet_centers = 0,
     store_vertices = 0,
 &end
-statistics:    ET:     00:00:00 CP:    0.02 BIO:0 DIO:0 PF:0 MEM:0
+statistics:    ET:     00:00:00 CP:    0.03 BIO:0 DIO:0 PF:0 MEM:0
 &matrix_output
     printout = {NULL},
     printout_order = 1,
@@ -135,7 +135,7 @@ statistics:    ET:     00:00:00 CP:    0.02 BIO:0 DIO:0 PF:0 MEM:0
     SDDS_output_match = {NULL},
 &end
 warning: 5 elements had no matrix
-statistics:    ET:     00:00:00 CP:    0.02 BIO:0 DIO:0 PF:0 MEM:0
+statistics:    ET:     00:00:00 CP:    0.04 BIO:0 DIO:0 PF:0 MEM:0
 &sdds_beam
     input = CLA-S02-APER-01.sdds,
     input_list = {NULL},
@@ -161,7 +161,7 @@ statistics:    ET:     00:00:00 CP:    0.02 BIO:0 DIO:0 PF:0 MEM:0
     duplicate_stagger[0] = 0.000000000000000e+00, 0.000000000000000e+00, 0.000000000000000e+00, 0.000000000000000e+00, 
         0.000000000000000e+00, 0.000000000000000e+00,
 &end
-statistics:    ET:     00:00:00 CP:    0.02 BIO:0 DIO:0 PF:0 MEM:0
+statistics:    ET:     00:00:00 CP:    0.04 BIO:0 DIO:0 PF:0 MEM:0
 &track
     center_on_orbit = 0,
     center_momentum_also = 1,
@@ -176,30 +176,31 @@ statistics:    ET:     00:00:00 CP:    0.02 BIO:0 DIO:0 PF:0 MEM:0
     interrupt_file = %s.interrupt,
 &end
 tracking step 1
-22 May 20 11:53:53: Starting to read beam from SDDS file.
+22 May 20 12:55:04: Starting to read beam from SDDS file.
 File CLA-S02-APER-01.sdds opened and checked.
 Read page 1 from file
 0 particle ID slots per bunch
 51 rows in page 1
 File CLA-S02-APER-01.sdds was used up and closed.
-22 May 20 11:53:53: Done reading beam from SDDS file.
+22 May 20 12:55:04: Done reading beam from SDDS file.
 a total of 51 data points were read
 
 tracking 51 particles
-22 May 20 11:53:53: This step establishes energy profile vs s (fiducial beam).
-22 May 20 11:53:53: Rf phases/references reset.
-51 particles transmitted, total effort of 51 particle-turns
-4080 multipole kicks done
+22 May 20 12:55:04: This step establishes energy profile vs s (fiducial beam).
+22 May 20 12:55:04: Rf phases/references reset.
+Warning: particle acquired undefined slopes when integrating through kick multipole
+50 particles transmitted, total effort of 50 particle-turns
+4020 multipole kicks done
 
 Dumping centroid data...done.
 Dumping sigma data...done.
 Post-tracking output completed.
-Tracking step completed   ET:     00:00:00 CP:    0.04 BIO:0 DIO:0 PF:0 MEM:0
+Tracking step completed   ET:     00:00:00 CP:    0.05 BIO:0 DIO:0 PF:0 MEM:0
 
 
 Finished tracking.
 End of input data encountered.
-statistics:    ET:     00:00:00 CP:    0.04 BIO:0 DIO:0 PF:0 MEM:0
+statistics:    ET:     00:00:00 CP:    0.05 BIO:0 DIO:0 PF:0 MEM:0
 =====================================================================================
 Thanks for using elegant.  Please cite the following reference in your publications:
   M. Borland, "elegant: A Flexible SDDS-Compliant Code for Accelerator Simulation,"
