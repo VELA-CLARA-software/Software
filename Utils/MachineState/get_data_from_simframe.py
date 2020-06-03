@@ -190,6 +190,7 @@ class GetDataFromSimFrame(object):
 			self.quad_values[quad['objectname']].update({'magnetic_length': quad['length']})
 			self.quad_values[quad['objectname']].update({'PV_suffixes': "SETI"})
 			self.quad_values[quad['objectname']].update({'PV': quad['objectname']})
+			self.quad_values[quad['objectname']].update({'psu_state': 'ON'})
 		for dip in self.Framework.getElementType('dipole'):
 			self.dip_values.update({dip['objectname']: {}})
 			self.dip_values[dip['objectname']].update({'type': dip['objecttype']})
@@ -198,6 +199,7 @@ class GetDataFromSimFrame(object):
 			self.dip_values[dip['objectname']].update({'magnetic_length': dip['length']})
 			self.dip_values[dip['objectname']].update({'PV_suffixes': "SETI"})
 			self.dip_values[dip['objectname']].update({'PV': dip['objectname']})
+			self.dip_values[dip['objectname']].update({'psu_state': 'ON'})
 		for cor in self.Framework.getElementType('kicker'):
 			self.cor_values.update({cor['objectname']: {}})
 			self.cor_values[cor['objectname']].update({'type': cor['objecttype']})
@@ -207,6 +209,7 @@ class GetDataFromSimFrame(object):
 			self.cor_values[cor['objectname']].update({'PV_suffixes': "SETI"})
 			self.cor_values[cor['objectname']].update({'Horizontal_PV': cor['Horizontal_PV']})
 			self.cor_values[cor['objectname']].update({'Vertical_PV': cor['Vertical_PV']})
+			self.cor_values[cor['objectname']].update({'psu_state': 'ON'})
 		for cavity in self.Framework.getElementType('cavity'):
 			self.rf_values.update({cavity['objectname']: {}})
 			self.rf_values[cavity['objectname']].update({'type': cavity['objecttype']})
@@ -227,6 +230,7 @@ class GetDataFromSimFrame(object):
 					self.rf_values[key].update({'field_integral_coefficients': value['field_integral_coefficients']})
 					self.rf_values[key].update({'PV_suffixes': "SETI"})
 					self.rf_values[key].update({'PV': key})
+					self.rf_values[key].update({'psu_state': 'ON'})
 		self.charge_values.update({'charge': {}})
 		self.charge_values['charge'].update({'type': 'generator'})
 		self.charge_values['charge'].update({'catap_type': 'charge'})

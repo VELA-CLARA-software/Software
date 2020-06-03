@@ -9,6 +9,7 @@ class WriteDataToCATAP(object):
         self.my_name = "WriteDataToCATAP"
         self.unitConversion = unit_conversion.UnitConversion()
         self.diagnosticTypes = ['bpm', 'charge', 'camera', 'pil']
+        self.magnettypes = ['quadrupole', 'solenoid', 'kicker', 'dipole']
 
     def writeMachineStateToCATAP(self, mode, datadict, allbeamfiles, catap):
         for key, value in datadict.items():
@@ -43,7 +44,44 @@ class WriteDataToCATAP(object):
                                 forward_power = 9.9 * 10 ** 6
                         catap[key].setAmpMW(forward_power)
                         catap[key].setPhiDEG(phase)
-            # if value['type'] == "magnet":
-            #     datadict[key]['READI'] = value['READI']
+                    if value['type'] in self.magnettypes:
+                        self.combined_kicker = False
+                        if value['psu_state'] == "ON":
+                            catap[key].switchOn()
+                        if value['type'] == 'solenoid':
+                            strength = value['field_amplitude']
+                        elif value['type'] == 'dipole':
+                            strength = value['angle']
+                        elif (value['type'] == 'kicker'):
+                            if ('Horizontal_PV' in value.keys()):
+                                vstrength = value['vangle']
+                                hstrength = value['hangle']
+                                self.combined_kicker = True
+                            else:
+                                strength = value['angle']
+                        elif value['type'] == 'quadrupole':
+                            strength = value['k1l']
+                        if self.combined_kicker:
+                            vcurrent = self.unitConversion.kToCurrent(value['type'],
+                                                                      vstrength,
+                                                                      catap[value[
+                                                                          'Vertical_PV']].field_integral_coefficients,
+                                                                      catap[value['Vertical_PV']].magnetic_length,
+                                                                      value['energy'])
+                            hcurrent = self.unitConversion.kToCurrent(value['type'],
+                                                                      hstrength,
+                                                                      catap[value[
+                                                                          'Horizontal_PV']].field_integral_coefficients,
+                                                                      catap[value['Horizontal_PV']].magnetic_length,
+                                                                      value['energy'])
+                            catap['Magnet'][value['Horizontal_PV']].SETI(hcurrent)
+                            catap['Magnet'][value['Vertical_PV']].SETI(vcurrent)
+                        else:
+                            current = self.unitConversion.kToCurrent(value['type'],
+                                                                     strength,
+                                                                     value['field_integral_coefficients'],
+                                                                     value['magnetic_length'],
+                                                                     value['energy'])
+                            catap['Magnet'][key].SETI(current)
             # if value['type'] == "screen":
             #     datadict[key].state = value['state']

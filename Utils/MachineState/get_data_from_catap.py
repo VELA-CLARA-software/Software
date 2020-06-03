@@ -227,6 +227,9 @@ class GetDataFromCATAP(object):
 			self.magnetdata[name]['READI'] = self.magDict[name].READI
 			self.magnetdata[name]['SETI'] = self.magDict[name].getSETI()
 			self.magnetdata[name]['type'] = self.magDict[name].magnet_type
+			self.magnetdata[name]['psu_state'] = str(self.magDict[name].psu_state)
+			self.magnetdata[name]['field_integral_coefficients'] = self.magDict[name].field_integral_coefficients
+			self.magnetdata[name]['magnetic_length'] = self.magDict[name].magnetic_length
 			self.energy_at_magnet = 0
 			if "GUN" in name or "LRG1" in name:
 				self.energy_at_magnet = energy[self.gun_position]
@@ -242,6 +245,7 @@ class GetDataFromCATAP(object):
 											 self.magDict[name].magnetic_length,
 											 self.energy_at_magnet,
 											 self.magnetdata[name])
+			self.magnetdata[name]['energy'] = self.energy_at_magnet
 			self.alldata[self.getMachineAreaString(name)].update({name: self.magnetdata[name]})
 		else:
 			self.setAllDicts()

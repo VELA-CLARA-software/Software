@@ -32,15 +32,16 @@ class UnitConversion(object):
 	def currentToK(self, mag_type, current, field_integral_coefficients, magnetic_length, energy, magdict):
 		if (mag_type == 'QUAD') or (mag_type == 'quadrupole'):
 			self.coeffs = numpy.append(field_integral_coefficients[:-1] * int(self.sign),
-								field_integral_coefficients[-1])
+									   field_integral_coefficients[-1])
 			self.int_strength = numpy.polyval(self.coeffs, abs(current))
 			self.effect = (scipy.constants.speed_of_light / 1e6) * self.int_strength / energy
 			# self.update_widgets_with_values("lattice:" + key + ":k1l", effect / value['magnetic_length'])
-			self.k1l = self.effect / (magnetic_length * 1000)
+			self.k1l = 1000 * self.effect / (magnetic_length)
 			magdict['k1l'] = float(self.k1l)
 		elif (mag_type == 'SOL') or (mag_type == 'solenoid'):
 			self.sign = numpy.copysign(1, current)
-			self.coeffs = numpy.append(field_integral_coefficients[-4:-1] * int(self.sign), field_integral_coefficients[-1])
+			self.coeffs = numpy.append(field_integral_coefficients[-4:-1] * int(self.sign),
+									   field_integral_coefficients[-1])
 			self.int_strength = numpy.polyval(self.coeffs, abs(current))
 			self.field_amplitude = self.int_strength / magnetic_length
 			magdict['field_amplitude'] = float(self.field_amplitude)
@@ -59,6 +60,55 @@ class UnitConversion(object):
 			self.effect = (scipy.constants.speed_of_light / 1e6) * self.int_strength / energy
 			self.angle = numpy.radians(self.effect / 1000)
 			magdict['angle'] = float(self.angle)
+			
+	def kToCurrent(self, mag_type, k, field_integral_coefficients, magnetic_length, energy):
+		if (mag_type == 'QUAD') or (mag_type == 'quadrupole'):
+			self.effect = k * magnetic_length / 1000
+			self.int_strength = self.effect * energy / (scipy.constants.speed_of_light / 1e6)
+			self.sign = int(numpy.copysign(1, self.int_strength - field_integral_coefficients[-1]))
+			fic1 = [x * int(self.sign) for x in field_integral_coefficients[:-1]]
+			self.coeffs = numpy.append(fic1, field_integral_coefficients[-1])
+			self.coeffs[-1] -= self.int_strength  # Need to find roots of polynomial, i.e. a1*x + a0 - y = 0
+			self.roots = numpy.roots(self.coeffs)
+			self.current = numpy.copysign(self.roots[-1].real,
+										  self.sign)  # last root is always x value (#TODO: can prove this?)
+			return self.current
+		elif (mag_type == 'SOL') or (mag_type == 'solenoid'):
+			self.int_strength = k * magnetic_length
+			self.sign = int(numpy.copysign(1, self.int_strength - field_integral_coefficients[-1]))
+			fic1 = [x * int(self.sign) for x in field_integral_coefficients[-4:-1]]
+			self.coeffs = numpy.append(fic1, field_integral_coefficients[-1])
+			self.coeffs[-1] -= self.int_strength  # Need to find roots of polynomial, i.e. a1*x + a0 - y = 0
+			self.roots = numpy.roots(self.coeffs)
+			self.current = numpy.copysign(self.roots[-1].real,
+										  self.sign)  # last root is always x value (#TODO: can prove this?)
+			return self.current
+		elif (mag_type == 'HCOR') or (mag_type == 'VCOR') or (mag_type == 'kicker'):
+			self.effect = k
+			self.int_strength = self.effect * energy / (scipy.constants.speed_of_light / 1e6)
+			if field_integral_coefficients[0] == 0:
+				return 0
+			self.sign = int(numpy.copysign(1, self.int_strength - field_integral_coefficients[-1]))
+			fic1 = [x * int(self.sign) for x in field_integral_coefficients[:-1]]
+			self.coeffs = numpy.append(fic1, [field_integral_coefficients[-1]])
+			self.coeffs[-1] -= self.int_strength  # Need to find roots of polynomial, i.e. a1*x + a0 - y = 0
+			self.roots = numpy.roots(self.coeffs)
+			self.current = numpy.copysign(self.roots[-1].real,
+										  self.sign)  # last root is always x value (#TODO: can prove this?)
+			return self.current
+		elif (mag_type == 'DIP') or (mag_type == 'dipole'):
+			self.effect = numpy.radians(k) * 1000
+			self.int_strength = self.effect * energy / (scipy.constants.speed_of_light / 1e6)
+			if field_integral_coefficients[0] == 0:
+				return 0
+			self.sign = numpy.copysign(1, self.int_strength - field_integral_coefficients[-1])
+			fic1 = [x * int(self.sign) for x in field_integral_coefficients[:-1]]
+			self.coeffs = numpy.append(fic1, [field_integral_coefficients[-1]])
+			self.coeffs[-1] -= self.int_strength  # Need to find roots of polynomial, i.e. a1*x + a0 - y = 0
+			self.roots = numpy.roots(self.coeffs)
+			self.current = numpy.copysign(self.roots[-1].real,
+										  self.sign)  # last root is always x value (#TODO: can prove this?)
+			return self.current
 
 	def getEnergyFromRF(self, forward_power, phase, pulse_length, cavity=None):
 		if cavity == "LRRG_GUN":
@@ -72,9 +122,6 @@ class UnitConversion(object):
 
 	def getPowerFromEnergy(self, energy_gain, phase, pulse_length, cavity=None):
 		if (cavity == "LRRG_GUN") or ("GUN" in cavity):
-			print(energy_gain)
-			print(phase)
-			print(pulse_length)
 			w1 = ((energy_gain - 0.377) / 1.81689) ** 2
 			w2 = 1 / (1 - math.exp(-1.54427 * pulse_length))
 			w3 = 1 / numpy.cos(phase)
@@ -87,7 +134,6 @@ class UnitConversion(object):
 			b4 = -0.0331869
 			b5 = 1 / (6.05422 * (10 ** -7))
 			bestcase = ((b1 * b2 * b3) - b4) * b5
-			print(numpy.mean([bestcase,worstcase]))
 			return numpy.mean([bestcase, worstcase])
 		elif (cavity == "L01") or ("L01" in cavity):
 			return (1e12 * (energy_gain ** 2)/(6.248 * 1e7))
