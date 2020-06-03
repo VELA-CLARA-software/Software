@@ -1,1 +1,0 @@
-RF phase -132.98090348 vcx 6.0 vcy 4.0 charge 72.2945191393 laserE 4.325461074e-06

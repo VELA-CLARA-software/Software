@@ -1,0 +1,134 @@
+ --------------------------------------------------------------------------
+
+               Astra - A space charge tracking algorithm 
+                             Version 3.0              
+                         DESY,  Hamburg 2011          
+                         21. 5.2020  12:19
+
+     Parameter file is:  injector10.in                                     
+     trial                                                                           
+
+ Initialize element settings:
+ --------------------------------------------------------------------------
+ WAKE:
+
+ --------------------------------------------------------------------------
+ Cavity:
+
+     Reading cavity field data from:      ../../../../OnlineModel/MasterLattice/Data_Files/bas_gun.txt                    
+     field smoothing is applied
+     Cavity Frequency               f =    2.997     GHz
+     maximum gradient                     7.0000E+07 MV/m
+     at                                   0.1003     m
+     estimated average gradient           2.4623E+07 MV/m
+     nominal phase                         16.00     deg
+
+     Reading cavity field data from:      ../../../../OnlineModel/MasterLattice/Data_Files/TWS_S-DL.dat                   
+     field smoothing is applied
+     Cavity Frequency               f =    2.998     GHz
+     beta = 1 traveling wave structure
+     TW Cell Length                        3.3333E-02 m
+     Number of Cells                        60
+     Phase Advance/Cell                     120.0     deg
+     TW Section starts at                   1.194     m
+     TW Section ends at                     3.293     m
+     Max E-field                           2.1000E+07 MV/m
+     at                                     1.243     m
+     nominal phase                          0.000     deg
+
+ --------------------------------------------------------------------------
+ Solenoid:
+
+     Reading solenoid field data from:    ../../../../OnlineModel/MasterLattice/Data_Files/Measured_Main_Solenoid_2019.txt
+     field smoothing is applied
+     maximum Bz field                      0.2550     T
+     at                                    8.6000E-02 m
+     integral Bz squared                   6.3606E-03 T^2m
+
+     Reading solenoid field data from:    ../../../../OnlineModel/MasterLattice/Data_Files/Measured_Bucking_Solenoid_2019.
+     field smoothing is applied
+     maximum Bz field                     -7.9453E-02 T
+     at                                     0.000     m
+     integral Bz squared                   1.4668E-04 T^2m
+
+     solenoids number:   1 and   2 overlap
+     Reading solenoid field data from:    ../../../../OnlineModel/MasterLattice/Data_Files/SwissFEL_linac_sols.dat        
+     field smoothing is applied
+     maximum Bz field                      5.0000E-02 T
+     at                                     1.700     m
+     integral Bz squared                   1.6003E-03 T^2m
+
+     Reading solenoid field data from:    ../../../../OnlineModel/MasterLattice/Data_Files/SwissFEL_linac_sols.dat        
+     field smoothing is applied
+     maximum Bz field                     -5.0000E-02 T
+     at                                     2.700     m
+     integral Bz squared                   1.6003E-03 T^2m
+
+     solenoids number:   3 and   4 overlap
+ --------------------------------------------------------------------------
+ Dipole:
+
+ --------------------------------------------------------------------------
+      51 particles from file laser.astra                                       
+
+
+     Cathode located at:               z =      0.000     m
+     Particles taken into account      N =         51
+     total charge                      Q =    -7.0000E-11 nC
+     horizontal beam position          x =     3.2811E-03 mm
+     vertical beam position            y =    -2.1695E-03 mm
+     longitudinal beam position        z =      0.000     m
+     horizontal beam size          sig x =     0.1999     mm
+     vertical beam size            sig y =     0.2302     mm
+     longitudinal beam size        sig z =      0.000     mm
+     total emission time               t =     1.4397E-06 ns
+     rms emission time             sig t =     3.3324E-07 ns
+     average kinetic energy            E =     8.7744E-07 MeV
+     energy spread                    dE =     2.0170E-04 keV
+     average momentum                  P =     9.4697E-04 MeV/c
+     transverse beam emittance     eps x =     0.2251     pi mrad mm
+     correlated divergence         cor x =      10.05     mrad 
+     transverse beam emittance     eps y =     0.2250     pi mrad mm
+     correlated divergence         cor y =     -3.594     mrad
+     longitudinal beam emittance   eps z =      0.000     pi keV mm
+     correlated energy spread      cor z =      0.000     keV
+     emittance ratio eps y/eps x         =      1.000    
+
+     WARNING: Bz is not zero at the cathode,
+     estimated emittance contribution: 
+     eps x =   1.5301E-03 pi mrad mm
+     eps y =   2.0299E-03 pi mrad mm
+
+ --------------------------------------------------------------------------
+     Start auto phasing: 
+     Scan cavity number  :   1
+        6 unstable trajectories out of   50
+     Scan cavity number  :   2
+        5 unstable trajectories out of   50
+
+     Cavity phasing completed:
+     Cavity number   Energy gain [MeV]  at  Phase [deg]
+           1            4.5573E+06           260.62    
+           2            3.1194E+07           113.08    
+ --------------------------------------------------------------------------
+ on axis tracking of the reference particle:
+     initial position                  z =    0.000     m
+                                       x =    0.000     mm
+                                       y =    0.000     mm
+     initial momentum                  p =   7.9602E-04 MeV/c
+     global phase shift              phi =    0.000     deg
+     time step for integration        dt =   0.1000     ps
+ --------------------------------------------------------------------------
+ Online element settings:
+
+ --------------------------------------------------------------------------
+
+     particle reaches position         z =    3.371     m
+     time of flight is                 t =    11.25     ns
+     final momentum                    p =   3.5575E+07 MeV/c
+     final phase (cavity 1)      phi_end =    276.6     deg
+ --------------------------------------------------------------------------
+ off axis tracking of the reference particle: 
+     initial position                  z =    0.000     m
+                                       x =   0.1999     mm
+                                       y =   0.2302     mm

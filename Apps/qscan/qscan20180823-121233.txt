@@ -1,2 +1,0 @@
-RF phase -145.997055031 vcx 3.0 vcy 2.0 charge 1.19467924069
-RF phase -145.997055031 vcx 3.0 vcy 3.0 charge 1.51921814349
