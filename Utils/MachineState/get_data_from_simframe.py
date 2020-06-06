@@ -6,6 +6,8 @@ import SimulationFramework.Framework as Fw
 import SimulationFramework.Modules.read_beam_file as read_beam_file
 import SimulationFramework.Modules.read_twiss_file as read_twiss_file
 sys.path.append(os.path.realpath(__file__)+'/../../../../')
+import unit_conversion
+import aliases
 
 class GetDataFromSimFrame(object):
 
@@ -38,6 +40,9 @@ class GetDataFromSimFrame(object):
 		self.allbeamfiles = {}
 		self.beam = read_beam_file.beam()
 		self.twiss = read_twiss_file.twiss()
+		self.unitConversion = unit_conversion.UnitConversion()
+		self.alias_names = aliases.alias_names
+		self.type_alias = aliases.type_alias
 		self.my_name = "GetDataFromSimFrame"
 
 	def setSimulationDictDefaults(self, datadict):
@@ -191,6 +196,7 @@ class GetDataFromSimFrame(object):
 			self.quad_values[quad['objectname']].update({'PV_suffixes': "SETI"})
 			self.quad_values[quad['objectname']].update({'PV': quad['objectname']})
 			self.quad_values[quad['objectname']].update({'psu_state': 'ON'})
+			self.quad_values[quad['objectname']].update({'position': quad['position_start'][2]})
 		for dip in self.Framework.getElementType('dipole'):
 			self.dip_values.update({dip['objectname']: {}})
 			self.dip_values[dip['objectname']].update({'type': dip['objecttype']})
@@ -200,6 +206,7 @@ class GetDataFromSimFrame(object):
 			self.dip_values[dip['objectname']].update({'PV_suffixes': "SETI"})
 			self.dip_values[dip['objectname']].update({'PV': dip['objectname']})
 			self.dip_values[dip['objectname']].update({'psu_state': 'ON'})
+			self.dip_values[dip['objectname']].update({'position': dip['position_start'][2]})
 		for cor in self.Framework.getElementType('kicker'):
 			self.cor_values.update({cor['objectname']: {}})
 			self.cor_values[cor['objectname']].update({'type': cor['objecttype']})
@@ -210,6 +217,7 @@ class GetDataFromSimFrame(object):
 			self.cor_values[cor['objectname']].update({'Horizontal_PV': cor['Horizontal_PV']})
 			self.cor_values[cor['objectname']].update({'Vertical_PV': cor['Vertical_PV']})
 			self.cor_values[cor['objectname']].update({'psu_state': 'ON'})
+			self.cor_values[cor['objectname']].update({'position': cor['position_start'][2]})
 		for cavity in self.Framework.getElementType('cavity'):
 			self.rf_values.update({cavity['objectname']: {}})
 			self.rf_values[cavity['objectname']].update({'type': cavity['objecttype']})
@@ -220,17 +228,29 @@ class GetDataFromSimFrame(object):
 			self.rf_values[cavity['objectname']].update({'field_amplitude': cavity['field_amplitude']})
 			self.rf_values[cavity['objectname']].update({'PV_suffixes': cavity['PV_suffixes']})
 			self.rf_values[cavity['objectname']].update({'PV': cavity['PV_root']})
+			self.rf_values[cavity['objectname']].update({'position': cavity['position_start'][2]})
+			self.rf_values[cavity['objectname']].update({'catap_alias': self.alias_names[cavity['objectname']]})
 			for key, value in cavity['sub_elements'].items():
 				if value['type'] == "solenoid":
 					self.rf_values.update({key: {}})
 					self.rf_values[key].update({'type': 'solenoid'})
 					self.rf_values[key].update({'cavity': cavity['objectname']})
-					self.rf_values[key].update({'field_amplitude': value['field_amplitude']})
+					if isinstance(value['field_amplitude'], str):
+						famp1 = value['field_amplitude'][1:-2].split('*')
+						fampmod = float(numpy.prod([float(i) for i in famp1]))
+						self.rf_values[key].update({'field_amplitude': fampmod})
+					else:
+						self.rf_values[key].update({'field_amplitude': value['field_amplitude']})
 					self.rf_values[key].update({'magnetic_length': value['length']})
 					self.rf_values[key].update({'field_integral_coefficients': value['field_integral_coefficients']})
 					self.rf_values[key].update({'PV_suffixes': "SETI"})
 					self.rf_values[key].update({'PV': key})
 					self.rf_values[key].update({'psu_state': 'ON'})
+					self.rf_values[key].update({'position': cavity['position_start'][2]})
+					if "BSOL" in key:
+						self.rf_values[key].update({'bsol': True})
+					else:
+						self.rf_values[key].update({'bsol': False})
 		self.charge_values.update({'charge': {}})
 		self.charge_values['charge'].update({'type': 'generator'})
 		self.charge_values['charge'].update({'catap_type': 'charge'})
@@ -305,9 +325,9 @@ class GetDataFromSimFrame(object):
 				self.beamdata.update({'t': {}})
 				self.beamdata['t'].update({'mean': numpy.mean(getattr(self.beam, 't'))})
 				self.beamdata['t'].update({'dist': getattr(self.beam, 't')})
-				# self.beamdata.update({'q': {}})
-				# self.beamdata['q'].update({'total': (-1) * (10 ** 12) * numpy.sum(getattr(self.beam, 'charge'))})
-				# self.beamdata['q'].update({'dist': (-1) * (10 ** 12) * getattr(self.beam, 'charge')})
+				self.beamdata.update({'q': {}})
+				self.beamdata['q'].update({'total': (-1) * (10 ** 12) * numpy.sum(getattr(self.beam, 'charge'))})
+				self.beamdata['q'].update({'dist': (-1) * (10 ** 12) * getattr(self.beam, 'charge')})
 				self.separator = '.'
 				self.pvname = file.split(self.separator, 1)[0]
 				self.allbeamfiles.update({self.pvname: self.beamdata})

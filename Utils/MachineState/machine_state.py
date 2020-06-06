@@ -5,6 +5,7 @@ import get_data_from_catap
 import get_data_from_simframe
 import write_data_to_catap
 import write_data_to_simframe
+import unit_conversion
 
 class MachineState(object):
 
@@ -14,6 +15,8 @@ class MachineState(object):
         self.getDataFromCATAP = get_data_from_catap.GetDataFromCATAP()
         self.getDataFromSimFrame = get_data_from_simframe.GetDataFromSimFrame()
         self.writeDataToCATAP = write_data_to_catap.WriteDataToCATAP()
+        self.writeDataToSimFrame = write_data_to_simframe.WriteDataToSimFrame()
+        self.unitConversion = unit_conversion.UnitConversion()
         self.pvAlias = {}
         self.CATAPInitialised = False
         self.SimFrameInitialised = False
@@ -53,11 +56,12 @@ class MachineState(object):
             self.CATAPInitialised = True
         self.allDicts = self.getDataFromCATAP.setAllDicts()
         self.allbeamfiles = self.getDataFromSimFrame.getAllBeamFiles(directory)
+        self.writeDataToSimFrame.getLLRFEnergyGain(datadict)
+        self.energy = self.writeDataToSimFrame.getEnergyDict()
         for i in datadict.keys():
-            self.writeDataToCATAP.writeMachineStateToCATAP(mode, datadict[i], self.allbeamfiles, self.allDicts)
+            self.writeDataToCATAP.writeMachineStateToCATAP(mode, datadict[i], self.allbeamfiles, self.allDicts, self.energy)
 
     def writeMachineStateToSimFrame(self, directory, framework, lattice, datadict=None, type=None, mode=None, run=False):
-        self.writeDataToSimFrame = write_data_to_simframe.WriteDataToSimFrame()
         self.getMachineStateFromSimFrame(directory, lattice)
         if datadict is not None:
             self.datadict = datadict

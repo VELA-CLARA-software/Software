@@ -3,8 +3,11 @@ BA1:
     PV: EBT-BA1-MAG-DIP-01
     PV_suffixes: SETI
     angle: 1.0472
-    field_integral_coefficients: null
+    field_integral_coefficients:
+    - 0.0
     magnetic_length: 0.500037
+    position: 28.5538
+    psu_state: ON
     type: dipole
   EBT-BA1-MAG-QUAD-01:
     PV: EBT-BA1-MAG-QUAD-01
@@ -14,6 +17,8 @@ BA1:
     - -0.0176
     k1l: -0.26073294653351364
     magnetic_length: 0.16
+    position: 22.3898
+    psu_state: ON
     type: quadrupole
   EBT-BA1-MAG-QUAD-02:
     PV: EBT-BA1-MAG-QUAD-02
@@ -23,6 +28,8 @@ BA1:
     - -0.01508
     k1l: -0.9516625759490311
     magnetic_length: 0.16
+    position: 22.7898
+    psu_state: ON
     type: quadrupole
   EBT-BA1-MAG-QUAD-03:
     PV: EBT-BA1-MAG-QUAD-03
@@ -32,6 +39,8 @@ BA1:
     - -0.01823
     k1l: 1.2270249450337767
     magnetic_length: 0.16
+    position: 23.1848
+    psu_state: ON
     type: quadrupole
   EBT-BA1-MAG-QUAD-04:
     PV: EBT-BA1-MAG-QUAD-04
@@ -41,6 +50,8 @@ BA1:
     - -0.01033
     k1l: 1.1374710985669274
     magnetic_length: 0.16
+    position: 27.0298
+    psu_state: ON
     type: quadrupole
   EBT-BA1-MAG-QUAD-05:
     PV: EBT-BA1-MAG-QUAD-05
@@ -50,6 +61,8 @@ BA1:
     - -0.02111
     k1l: 0.038188155183286554
     magnetic_length: 0.16
+    position: 27.4628
+    psu_state: ON
     type: quadrupole
   EBT-BA1-MAG-QUAD-06:
     PV: EBT-BA1-MAG-QUAD-06
@@ -59,6 +72,8 @@ BA1:
     - 0.00451
     k1l: -1.3227126094830322
     magnetic_length: 0.16
+    position: 27.8958
+    psu_state: ON
     type: quadrupole
   EBT-BA1-MAG-QUAD-07:
     PV: EBT-BA1-MAG-QUAD-07
@@ -68,29 +83,45 @@ BA1:
     - 0.00144
     k1l: 1.360338937783752
     magnetic_length: 0.3
+    position: 29.1538
+    psu_state: ON
     type: quadrupole
 C2V:
   CLA-C2V-MAG-DIP-01:
     PV: CLA-C2V-MAG-DIP-01
     PV_suffixes: SETI
     angle: 0.785398
-    field_integral_coefficients: null
+    field_integral_coefficients:
+    - 0.142064204721245
+    - 0.00344016005203196
     magnetic_length: 0.399216
+    position: 5.82728
+    psu_state: ON
     type: dipole
   CLA-C2V-MAG-DIP-02:
     PV: CLA-C2V-MAG-DIP-02
     PV_suffixes: SETI
     angle: -0.785398
-    field_integral_coefficients: null
+    field_integral_coefficients:
+    - -9.5201e-07
+    - 0.000151557
+    - 0.894506059
+    - 0.126202232
     magnetic_length: 0.397752
+    position: 7.1395
+    psu_state: ON
     type: dipole
   CLA-C2V-MAG-HVCOR-01:
     Horizontal_PV: CLA-C2V-MAG-HCOR-01
     PV_suffixes: SETI
-    Vertical_PV: null
+    Vertical_PV: CLA-C2V-MAG-VCOR-01
     angle: 0
-    field_integral_coefficients: null
+    field_integral_coefficients:
+    - 0.139019971762932
+    - 0.00336644233663128
     magnetic_length: 0.21
+    position: 6.25775
+    psu_state: ON
     type: kicker
   CLA-C2V-MAG-QUAD-01:
     PV: CLA-C2V-MAG-QUAD-01
@@ -104,6 +135,8 @@ C2V:
     - 0.0137593271780352
     k1l: 5.7572751421298305
     magnetic_length: 0.121567
+    position: 6.41479
+    psu_state: ON
     type: quadrupole
   CLA-C2V-MAG-QUAD-02:
     PV: CLA-C2V-MAG-QUAD-02
@@ -117,6 +150,8 @@ C2V:
     - 0.0158516912403471
     k1l: -4.696861959661223
     magnetic_length: 0.121512
+    position: 6.61987
+    psu_state: ON
     type: quadrupole
   CLA-C2V-MAG-QUAD-03:
     PV: CLA-C2V-MAG-QUAD-03
@@ -130,6 +165,8 @@ C2V:
     - 0.013343693771224
     k1l: 5.7572751421298305
     magnetic_length: 0.121551
+    position: 6.82492
+    psu_state: ON
     type: quadrupole
 INJ:
   CLA-LRG1-GUN-CAV:
@@ -137,17 +174,20 @@ INJ:
     PV_suffixes:
       field_amplitude: ad1:ch3:power_remote_s.POWER
       phase: vm:dsp:sp_ph:phase
+    catap_alias: LRRG_GUN
     controller_name: GUN10
     field_amplitude: 70000000.0
     length: 0.17
     phase: -16
+    position: 0
     pv_root_alias: CLA-GUN-LRF-CTRL-01
     type: cavity
   CLA-LRG1-MAG-BSOL-01:
     PV: CLA-LRG1-MAG-BSOL-01
     PV_suffixes: SETI
+    bsol: true
     cavity: CLA-LRG1-GUN-CAV
-    field_amplitude: $-0.3462 * 0.9 * 0.255$
+    field_amplitude: -0.077895
     field_integral_coefficients:
     - 0.000513431
     - -1.27695e-07
@@ -166,10 +206,13 @@ INJ:
     - -4.393602393
     - 0.0
     magnetic_length: 0.0125
+    position: 0
+    psu_state: ON
     type: solenoid
   CLA-LRG1-MAG-SOL-01:
     PV: CLA-LRG1-MAG-SOL-01
     PV_suffixes: SETI
+    bsol: false
     cavity: CLA-LRG1-GUN-CAV
     field_amplitude: 0.255
     field_integral_coefficients:
@@ -183,38 +226,48 @@ INJ:
     - 0.167819191
     - 0.0
     magnetic_length: 0.1395
+    position: 0
+    psu_state: ON
     type: solenoid
   EBT-INJ-MAG-HVCOR-06:
-    Horizontal_PV: null
+    Horizontal_PV: EBT-INJ-MAG-HCOR-06
     PV_suffixes: SETI
-    Vertical_PV: null
+    Vertical_PV: EBT-INJ-MAG-VCOR-06
     angle: 0
     field_integral_coefficients: null
     magnetic_length: 0.064
+    position: 8.09879
+    psu_state: ON
     type: kicker
   EBT-INJ-MAG-HVCOR-07:
-    Horizontal_PV: null
+    Horizontal_PV: EBT-INJ-MAG-HCOR-07
     PV_suffixes: SETI
-    Vertical_PV: null
+    Vertical_PV: EBT-INJ-MAG-VCOR-07
     angle: 0
     field_integral_coefficients: null
     magnetic_length: 0.1825
+    position: 10.1573
+    psu_state: ON
     type: kicker
   EBT-INJ-MAG-HVCOR-08:
-    Horizontal_PV: null
+    Horizontal_PV: EBT-INJ-MAG-HCOR-08
     PV_suffixes: SETI
-    Vertical_PV: null
+    Vertical_PV: EBT-INJ-MAG-VCOR-08
     angle: 0
     field_integral_coefficients: null
     magnetic_length: 0.2
+    position: 12.0898
+    psu_state: ON
     type: kicker
   EBT-INJ-MAG-HVCOR-09:
-    Horizontal_PV: null
+    Horizontal_PV: EBT-INJ-MAG-HCOR-09
     PV_suffixes: SETI
-    Vertical_PV: null
+    Vertical_PV: EBT-INJ-MAG-VCOR-09
     angle: 0
     field_integral_coefficients: null
     magnetic_length: 0.1675
+    position: 15.5898
+    psu_state: ON
     type: kicker
   EBT-INJ-MAG-QUAD-07:
     PV: EBT-INJ-MAG-QUAD-07
@@ -226,6 +279,8 @@ INJ:
     - 0.00205656183129602
     k1l: 1.653747009525063
     magnetic_length: 0.1253
+    position: 8.15014
+    psu_state: ON
     type: quadrupole
   EBT-INJ-MAG-QUAD-08:
     PV: EBT-INJ-MAG-QUAD-08
@@ -237,6 +292,8 @@ INJ:
     - 0.00146589509380893
     k1l: -1.597658628810405
     magnetic_length: 0.125276
+    position: 8.42015
+    psu_state: ON
     type: quadrupole
   EBT-INJ-MAG-QUAD-09:
     PV: EBT-INJ-MAG-QUAD-09
@@ -246,6 +303,8 @@ INJ:
     - -0.00132252769474545
     k1l: 0.3920095459041216
     magnetic_length: 0.0704236
+    position: 10.3421
+    psu_state: ON
     type: quadrupole
   EBT-INJ-MAG-QUAD-10:
     PV: EBT-INJ-MAG-QUAD-10
@@ -255,6 +314,8 @@ INJ:
     - -0.00170732356716569
     k1l: -0.3922879907823872
     magnetic_length: 0.0704236
+    position: 12.4941
+    psu_state: ON
     type: quadrupole
   EBT-INJ-MAG-QUAD-11:
     PV: EBT-INJ-MAG-QUAD-11
@@ -264,6 +325,8 @@ INJ:
     - -0.00182025848896622
     k1l: 0.16851104048712628
     magnetic_length: 0.0704236
+    position: 14.6421
+    psu_state: ON
     type: quadrupole
   EBT-INJ-MAG-QUAD-15:
     PV: EBT-INJ-MAG-QUAD-15
@@ -273,6 +336,8 @@ INJ:
     - -0.001381788
     k1l: 0.12208077087083297
     magnetic_length: 0.0704236
+    position: 17.7371
+    psu_state: ON
     type: quadrupole
 L01:
   CLA-L01-CAV:
@@ -280,15 +345,18 @@ L01:
     PV_suffixes:
       field_amplitude: ad1:ch3:power_remote_s.POWER
       phase: vm:dsp:sp_ph:phase
+    catap_alias: L01
     controller_name: L01
     field_amplitude: 21000000.0
     length: 2.0333300000000003
     phase: 0
+    position: 1.19357
     pv_root_alias: CLA-L01-LRF-CTRL-01
     type: cavity
   CLA-L01-MAG-SOL-01:
     PV: CLA-L01-MAG-SOL-01
     PV_suffixes: SETI
+    bsol: false
     cavity: CLA-L01-CAV
     field_amplitude: 0.05
     field_integral_coefficients:
@@ -302,10 +370,13 @@ L01:
     - 0.37651102
     - 0.12171419
     magnetic_length: 0.726918205128205
+    position: 1.19357
+    psu_state: ON
     type: solenoid
   CLA-L01-MAG-SOL-02:
     PV: CLA-L01-MAG-SOL-02
     PV_suffixes: SETI
+    bsol: false
     cavity: CLA-L01-CAV
     field_amplitude: -0.05
     field_integral_coefficients:
@@ -319,48 +390,60 @@ L01:
     - 0.37651102
     - 0.12171419
     magnetic_length: 0.726918205128205
+    position: 1.19357
+    psu_state: ON
     type: solenoid
 S01:
   CLA-S01-MAG-HVCOR-01:
     Horizontal_PV: CLA-S01-MAG-HCOR-01
     PV_suffixes: SETI
-    Vertical_PV: null
+    Vertical_PV: CLA-S01-MAG-VCOR-01
     angle: 0
     field_integral_coefficients: null
     magnetic_length: 0.03
+    position: 0.32482
+    psu_state: ON
     type: kicker
   CLA-S01-MAG-HVCOR-02:
     Horizontal_PV: CLA-S01-MAG-HCOR-02
     PV_suffixes: SETI
-    Vertical_PV: null
+    Vertical_PV: CLA-S01-MAG-VCOR-02
     angle: 0
     field_integral_coefficients: null
     magnetic_length: 0.102
+    position: 0.7277
+    psu_state: ON
     type: kicker
 S02:
   CLA-S02-MAG-HVCOR-01:
     Horizontal_PV: CLA-S02-MAG-HCOR-01
     PV_suffixes: SETI
-    Vertical_PV: null
+    Vertical_PV: CLA-S02-MAG-VCOR-01
     angle: 0
     field_integral_coefficients: null
     magnetic_length: 0.076607
+    position: 3.37147
+    psu_state: ON
     type: kicker
   CLA-S02-MAG-HVCOR-02:
     Horizontal_PV: CLA-S02-MAG-HCOR-02
     PV_suffixes: SETI
-    Vertical_PV: null
+    Vertical_PV: CLA-S02-MAG-VCOR-02
     angle: 0
     field_integral_coefficients: null
     magnetic_length: 0.03
+    position: 4.23807
+    psu_state: ON
     type: kicker
   CLA-S02-MAG-HVCOR-03:
-    Horizontal_PV: null
+    Horizontal_PV: CLA-S02-MAG-HCOR-03
     PV_suffixes: SETI
-    Vertical_PV: null
+    Vertical_PV: CLA-S02-MAG-VCOR-03
     angle: 0
     field_integral_coefficients: null
     magnetic_length: 0.03
+    position: 4.81556
+    psu_state: ON
     type: kicker
   CLA-S02-MAG-QUAD-01:
     PV: CLA-S02-MAG-QUAD-01
@@ -374,6 +457,8 @@ S02:
     - 0.00981229429460256
     k1l: 1.7901911899775773
     magnetic_length: 0.12868478212775
+    position: 3.46281
+    psu_state: ON
     type: quadrupole
   CLA-S02-MAG-QUAD-02:
     PV: CLA-S02-MAG-QUAD-02
@@ -387,6 +472,8 @@ S02:
     - 0.00977695097574923
     k1l: -1.6407693149976745
     magnetic_length: 0.126817
+    position: 3.86374
+    psu_state: ON
     type: quadrupole
   CLA-S02-MAG-QUAD-03:
     PV: CLA-S02-MAG-QUAD-03
@@ -400,6 +487,8 @@ S02:
     - 0.00949568371388574
     k1l: 2.2849042966309447
     magnetic_length: 0.127242
+    position: 5.16353
+    psu_state: ON
     type: quadrupole
   CLA-S02-MAG-QUAD-04:
     PV: CLA-S02-MAG-QUAD-04
@@ -413,6 +502,8 @@ S02:
     - 0.00938588316008555
     k1l: -1.3685069221066561
     magnetic_length: 0.127422
+    position: 5.56344
+    psu_state: ON
     type: quadrupole
 VELA: {}
 generator:

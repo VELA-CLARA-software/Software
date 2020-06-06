@@ -92,8 +92,12 @@ CLA-C2V-MARK-02:
   lsc_enable: true
   sr_enable: true
   transverse_wakefield_enable: true
+CLA-L01-CAV:
+  field_amplitude: 21000000000000.0
+CLA-LRG1-GUN-CAV:
+  field_amplitude: 70000000000000.0
 CLA-LRG1-MAG-BSOL-01:
-  field_amplitude: 0.0794529
+  field_amplitude: -0.026967249000000002
 CLA-S02-APER-01:
   csr_bins: 200
   csr_enable: true
