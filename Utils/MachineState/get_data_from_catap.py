@@ -18,6 +18,7 @@ class GetDataFromCATAP(object):
 		self.unitConversion = unit_conversion.UnitConversion()
 		self.alias_names = aliases.alias_names
 		self.type_alias = aliases.type_alias
+		self.screen_alias = aliases.screen_alias
 		self.energy = {}
 		self.magDict = {}
 		self.gunRFDict = {}
@@ -45,7 +46,8 @@ class GetDataFromCATAP(object):
 		self.alldata.update({"S02": {}})
 		self.alldata.update({"C2V": {}})
 		self.alldata.update({"BA1": {}})
-		self.alldataset = {}
+		self.alldata.update({"VCA": {}})
+		self.alldataset = False
 
 		self.linacnames = {}
 		self.gunStartTime = 1.0 # MAGIC NUMBER
@@ -86,31 +88,19 @@ class GetDataFromCATAP(object):
 		self.hf.debugMessagesOff()
 		self.gun_llrf_type = CATAP.HardwareFactory.TYPE.LRRG_GUN
 		self.gunFac = self.hf.getLLRFFactory(self.gun_llrf_type)
-		# time.sleep(5)
-		# print("here1")
 		self.l01_llrf_type = CATAP.HardwareFactory.TYPE.L01
 		self.l01Fac = self.hf.getLLRFFactory(self.l01_llrf_type)
 		self.chargeFac = self.hf.getChargeFactory()
-		# time.sleep(5)
 		self.bpmFac = self.hf.getBPMFactory()
-		# time.sleep(5)
 		self.scrFac = self.hf.getScreenFactory()
-		# time.sleep(5)
 		self.magFac = self.hf.getMagnetFactory()
-		# time.sleep(5)
+		self.camFac = self.hf.getCameraFactory()
 
-		# #self.gunFac = hf.getGUN()
-		# #self.l01Fac = hf.getl01()
 		# #self.pilFac = hf.getPILa()
 		# #self.camFac = hf.getcam()
 		self.gunname = "LRRG_GUN"
-		# time.sleep(1)
 		self.linacnames.update({"L01": self.l01_llrf_type})
 		self.linacFac = {}
-		# self.CATAPmodeToVCControllermode.update({CATAP.HardwareFactory.STATE.VIRTUAL: llrf.MACHINE_MODE.VIRTUAL})
-		# self.CATAPmodeToVCControllermode.update({CATAP.HardwareFactory.STATE.PHYSICAL: llrf.MACHINE_MODE.PHYSICAL})
-
-		# self.gunCont = self.lrfInit.getLLRFController(self.CATAPmodeToVCControllermode[mode], llrf.LLRF_TYPE.CLARA_LRRG)
 		self.setGunStartEndTime(self.gunStartTime, self.gunEndTime)
 		for key, value in self.linacnames.items():
 			self.linacFac.update({key: self.hf.getLLRFFactory(value)})
@@ -134,7 +124,8 @@ class GetDataFromCATAP(object):
 			return "C2V"
 		elif "BA1" in name:
 			return "BA1"
-
+		elif "VCA" in name:
+			return "VCA"
 
 	def setBPMDict(self):
 		self.bpmnames = self.bpmFac.getAllBPMNames()
@@ -155,9 +146,15 @@ class GetDataFromCATAP(object):
 		self.allDataDict.update({"Charge": self.chargeDict})
 
 	def setCameraDict(self):
-		self.camnames = self.camFac.getAllCameraNames()
+		self.camnames = self.camFac.getCameraNames()
 		for i in self.camnames:
 			self.cameraDict[i] = self.camFac.getCamera(i)
+			if i == "CLA-VCA-DIA-CAM-01":
+				self.cameraDict[i].setX(0)
+				self.cameraDict[i].setY(0)
+				self.cameraDict[i].setSigX(0.35)
+				self.cameraDict[i].setSigY(0.35)
+				self.cameraDict[i].setSigXY(0.35)
 		self.allDataDict.update({"Camera": self.cameraDict})
 
 	def setScreenDict(self):
@@ -181,7 +178,7 @@ class GetDataFromCATAP(object):
 		self.setBPMDict()
 		self.setMagDict()
 		self.setChargeDict()
-		# self.setCameraDict()
+		self.setCameraDict()
 		self.setScreenDict()
 		self.setGunLLRFDict()
 		self.setLinacLLRFDict()
@@ -200,6 +197,32 @@ class GetDataFromCATAP(object):
 		else:
 			self.setAllDicts()
 			self.getBPMData(name)
+
+	def getCameraData(self,name):
+		if self.dictsSet:
+			self.cameradata[name] = {}
+			self.cameradata[name]['x_pix'] = self.cameraDict[name].getXPix()
+			self.cameradata[name]['y_pix'] = self.cameraDict[name].getYPix()
+			# self.cameradata[name]['xy_pix'] = self.cameraDict[name].getXYPix()
+			self.cameradata[name]['x_mm'] = self.cameraDict[name].getXmm()
+			self.cameradata[name]['y_mm'] = self.cameraDict[name].getYmm()
+			# self.cameradata[name]['xy_mm'] = self.cameraDict[name].getXYmm()
+			self.cameradata[name]['x_pix_sig'] = self.cameraDict[name].getSigXPix()
+			self.cameradata[name]['y_pix_sig'] = self.cameraDict[name].getSigYPix()
+			# self.cameradata[name]['xy_pix_sig'] = self.cameraDict[name].getSigXYPix()
+			self.cameradata[name]['x_mm_sig'] = self.cameraDict[name].getSigXmm()
+			self.cameradata[name]['y_mm_sig'] = self.cameraDict[name].getSigYmm()
+			# self.cameradata[name]['xy_mm_sig'] = self.cameraDict[name].getSigXYmm()
+			self.cameradata[name]['sum_intensity'] = self.cameraDict[name].getSumIntensity()
+			self.cameradata[name]['avg_intensity'] = self.cameraDict[name].getAvgIntensity()
+			self.cameradata[name]['screen'] = self.cameraDict[name].getScreen()
+			if self.cameradata[name]['screen'] in self.screen_alias.keys():
+				self.cameradata[name].update({'screen': self.screen_alias[self.cameradata[name]['screen']]})
+			self.cameradata[name]['type'] = "camera"
+			self.alldata[self.getMachineAreaString(name)].update({name: self.cameradata[name]})
+		else:
+			self.setAllDicts()
+			self.getCameraData(name)
 		
 	def getChargeData(self,name):
 		if self.dictsSet:
@@ -239,7 +262,7 @@ class GetDataFromCATAP(object):
 						self.energy_at_magnet += value
 			if self.energy_at_magnet == 0:
 				self.energy_at_magnet = energy[self.linac_position['L01']]
-			self.unitConversion.currentToK(self.magDict[name].getMagnetType(),
+			self.unitConversion.currentToK(self.magnetdata[name]['type'],
 			 								 self.magDict[name].READI,
 											 self.magDict[name].getFieldIntegralCoefficients(),
 											 self.magDict[name].magnetic_length,
@@ -310,7 +333,7 @@ class GetDataFromCATAP(object):
 			self.linacdata[linac_name].update({"amplitude": self.linacLLRFObj[linac_name].getAmp()})
 			self.linacdata[linac_name].update({"energy_gain": float(self.getenergy[0])})
 			self.linacdata[linac_name].update({"field_amplitude": self.getenergy[1]})
-			self.linacdata[linac_name].update({"type": 'LLRF'})
+			self.linacdata[linac_name].update({"type": 'cavity'})
 			self.linacdata[linac_name].update({"length": self.linac_length[linac_name]})
 			self.linacdata[linac_name].update({"pulse_length": self.pulse_length})
 			self.linacdata[linac_name].update({"catap_alias": linac_name})
@@ -344,13 +367,28 @@ class GetDataFromCATAP(object):
 				self.getChargeData(i)
 			for i in self.screennames:
 				self.getScreenData(i)
+			for i in self.camnames:
+				self.getCameraData(i)
 			for i in self.alldata.keys():
 				self.checkType(self.alldata[i])
 				self.getSimFrameAlias(self.alldata[i])
 		else:
 			self.setAllDicts()
 			self.getAllData()
+		self.alldataset = True
 		return self.alldata
+
+	def getVCObject(self):
+		if not self.alldataset:
+			self.getAllData()
+		else:
+			return self.alldata['VCA']['CLA-VCA-DIA-CAM-01']
+
+	def getWCMObject(self):
+		if not self.alldataset:
+			self.getAllData()
+		else:
+			return self.alldata['S01']['CLA-S01-DIA-WCM-01']
 
 	def checkType(self, datadict):
 		for i in datadict.keys():

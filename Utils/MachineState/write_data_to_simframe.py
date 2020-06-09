@@ -2,19 +2,19 @@ import os
 import time
 import unit_conversion
 import aliases
-
+import numpy
 class WriteDataToSimFrame(object):
 
     def __init__(self):
         object.__init__(self)
         self.my_name = "WriteDataToSimFrame"
-        self.lattices = ['BA1', 'INJ', 'S01', 'S02', 'L01', 'C2V']
         self.unitConversion = unit_conversion.UnitConversion()
         self.energy = {}
         self.gun_pulse_length = self.unitConversion.getDefaultGunPulseLength()
         self.l01_pulse_length = self.unitConversion.getDefaultL01PulseLength()
         self.gun_position = self.unitConversion.getGunPosition()
         self.l01_position = self.unitConversion.getL01Position()
+        self.lattices = self.unitConversion.getLattices()
 
     def updateFrameworkElements(self, framework, inputdict):
         for section in self.lattices:
@@ -65,17 +65,18 @@ class WriteDataToSimFrame(object):
             framework.defineCSRTrackCommand(scaling=int(inputdict['generator']['number_of_particles']['value']))
             framework.define_gpt_command(scaling=int(inputdict['generator']['number_of_particles']['value']))
 
-        self.updateFrameworkElements(framework, inputdict)
         if inputdict['simulation']['bsol_tracking']:
             famp = float(framework['CLA-LRG1-MAG-SOL-01']['field_amplitude'])
             framework.modifyElement('CLA-LRG1-MAG-BSOL-01', 'field_amplitude', float(0.3462 * 0.9 * famp))
         if scan==True and type is not None:
             print(inputdict[dictname][pv])
         framework.generator.number_of_particles = int(inputdict['generator']['number_of_particles']['value'])
-        framework.generator.charge = 1e-9*float(inputdict['generator']['charge']['value'])
+        framework.generator.charge = float(inputdict['generator']['charge']['value'])
         framework.generator.sig_clock = float(inputdict['generator']['sig_clock']['value']) / (2354.82)
         framework.generator.sig_x = inputdict['generator']['sig_x']['value']
         framework.generator.sig_y = inputdict['generator']['sig_y']['value']
+        framework.generator.spot_size = float(numpy.mean([inputdict['generator']['sig_x']['value'],inputdict['generator']['sig_y']['value']]))
+        self.updateFrameworkElements(framework, inputdict)
 
     def runScript(self, framework, inputdict, modify=False, track=False):
         self.update_tracking_codes(framework, inputdict)

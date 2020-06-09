@@ -13,6 +13,7 @@ class WriteDataToCATAP(object):
         self.magnettypes = ['quadrupole', 'solenoid', 'kicker', 'dipole']
         self.lattices = ['BA1', 'INJ', 'S01', 'S02', 'L01', 'C2V']
         self.bsol_alias = aliases.bsol_alias
+        self.screen_alias = aliases.screen_alias
         self.gun_pulse_length = 2.5
         self.linac_pulse_length = 0.75
         self.unitConversion = unit_conversion.UnitConversion()
@@ -48,6 +49,18 @@ class WriteDataToCATAP(object):
             # if value['type'] in self.diagnosticTypes:
             if isinstance(value, dict):
                 if 'type' in value.keys():
+                    if value['type'] == 'camera':
+                        if (value['screen'] in allbeamfiles.keys()):
+                            datadict[key]['x'] = allbeamfiles[value['screen']]['x']['mean']
+                            datadict[key]['y'] = allbeamfiles[value['screen']]['y']['mean']
+                            datadict[key]['x_dist'] = allbeamfiles[value['screen']]['x']['dist']
+                            datadict[key]['y_dist'] = allbeamfiles[value['screen']]['y']['dist']
+                            datadict[key]['x_sigma'] = allbeamfiles[value['screen']]['x']['sigma']
+                            datadict[key]['y_sigma'] = allbeamfiles[value['screen']]['y']['sigma']
+                            catap['Camera'][key].setX(datadict[key]['x'])
+                            catap['Camera'][key].setY(datadict[key]['y'])
+                            catap['Camera'][key].setSigX(datadict[key]['x_sigma'])
+                            catap['Camera'][key].setSigY(datadict[key]['y_sigma'])
                     if value['type'] == 'bpm':
                         if key in allbeamfiles.keys():
                             datadict[key]['x'] = allbeamfiles[key]['x']['mean']
@@ -57,9 +70,6 @@ class WriteDataToCATAP(object):
                             self.q = allbeamfiles[key]['q']['total']
                             self.writeCharge(self.q, catap)
                             self.charge_written = True
-                    if value['type'] == 'charge':
-                        datadict[key]['q'] = allbeamfiles[key]['q']
-                        catap['Charge'][key].q = datadict[key]['q']
                     if value['type'] == 'cavity':
                         phase = value['phase']
                         field_amplitude = value['field_amplitude']
@@ -120,8 +130,9 @@ class WriteDataToCATAP(object):
                                                                      value['field_integral_coefficients'],
                                                                      value['magnetic_length'],
                                                                      value['energy'])
-                            if (value['type'] == 'solenoid') and (value['bsol']):
-                                catap['Magnet'][self.bsol_alias[key]].SETI(current)
+                            if 'bsol' in value.keys():
+                                if value['bsol']:
+                                    catap['Magnet'][self.bsol_alias[key]].SETI(current)
                             else:
                                 catap['Magnet'][key].SETI(current)
             # if value['type'] == "screen":

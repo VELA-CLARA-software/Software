@@ -34,6 +34,7 @@ class GetDataFromSimFrame(object):
 		self.allDataDict.update({"C2V": {}})
 		self.allDataDict.update({"BA1": {}})
 		self.allDataDict.update({"VELA": {}})
+		self.allDataDict.update({"VCA": {}})
 		self.allDataDict.update({"simulation": {}})
 		self.allDataDict.update({"generator": {}})
 		self.setSimulationDictDefaults(self.allDataDict)
@@ -45,7 +46,7 @@ class GetDataFromSimFrame(object):
 		self.type_alias = aliases.type_alias
 		self.my_name = "GetDataFromSimFrame"
 
-	def setSimulationDictDefaults(self, datadict):
+	def setSimulationDictDefaults(self, datadict, vc_object=None, wcm_object=None):
 		datadict.update({"generator": {}})
 		datadict['generator'].update({'dist_x': {}})
 		datadict['generator']['dist_x'].update({'type': 'generator'})
@@ -84,6 +85,13 @@ class GetDataFromSimFrame(object):
 		datadict['generator'].update({'number_of_particles': {}})
 		datadict['generator']['number_of_particles'].update({'type': 'generator'})
 		datadict['generator']['number_of_particles'].update({'value': 51})
+		if vc_object is not None:
+			datadict['generator']['sig_x'].update({'value': vc_object['x_mm_sig']})
+			datadict['generator']['sig_y'].update({'value': vc_object['y_mm_sig']})
+			datadict['generator']['spot_size'].update({'value': float(numpy.mean([vc_object['x_mm_sig'],
+																			vc_object['y_mm_sig']]))})
+		if wcm_object is not None:
+			datadict['generator']['charge'].update({'value': wcm_object['q']})
 
 		datadict.update({"simulation": {}})
 		datadict['simulation'].update({'astra_run_number': {}})
@@ -303,31 +311,47 @@ class GetDataFromSimFrame(object):
 			if file.endswith(".hdf5"):
 				self.beam.read_HDF5_beam_file(os.path.join(directory, file))
 				self.beamdata = {}
-				self.beamdata.update({'filename': os.path.join(directory, file)})
+				self.beamdata.update({'filename': os.path.abspath(file)})
+				if "SCR" in file:
+					self.beamdata.update({'type': 'screen'})
+				elif "BPM" in file:
+					self.beamdata.update({'type': 'bpm'})
+				elif "laser" in file:
+					self.beamdata.update({'type': 'generator'})
+				else:
+					self.beamdata.update({'type': "blank"})
 				self.beamdata.update({'x': {}})
-				self.beamdata['x'].update({'mean': numpy.mean(getattr(self.beam, 'x'))})
+				self.beamdata['x'].update({'mean': float(numpy.mean(getattr(self.beam, 'x')))})
 				self.beamdata['x'].update({'dist': getattr(self.beam, 'x')})
+				self.beamdata['x'].update({'sigma': float(self.unitConversion.gaussianFit(self.beamdata['x']['dist'])[1])})
 				self.beamdata.update({'y': {}})
-				self.beamdata['y'].update({'mean': numpy.mean(getattr(self.beam, 'y'))})
+				self.beamdata['y'].update({'mean': float(numpy.mean(getattr(self.beam, 'y')))})
 				self.beamdata['y'].update({'dist': getattr(self.beam, 'y')})
+				self.beamdata['y'].update({'sigma': float(self.unitConversion.gaussianFit(self.beamdata['y']['dist'])[1])})
 				self.beamdata.update({'z': {}})
-				self.beamdata['z'].update({'mean': numpy.mean(getattr(self.beam, 'z'))})
+				self.beamdata['z'].update({'mean': float(numpy.mean(getattr(self.beam, 'z')))})
 				self.beamdata['z'].update({'dist': getattr(self.beam, 'z')})
+				self.beamdata['z'].update({'sigma': float(self.unitConversion.gaussianFit(self.beamdata['z']['dist'])[1])})
 				self.beamdata.update({'px': {}})
-				self.beamdata['px'].update({'mean': numpy.mean(getattr(self.beam, 'px'))})
-				self.beamdata['px'].update({'dist': getattr(self.beam, 'px')})
+				self.beamdata['px'].update({'mean': float(numpy.mean(getattr(self.beam, 'cpx')))})
+				self.beamdata['px'].update({'dist': getattr(self.beam, 'cpx')})
+				self.beamdata['px'].update({'sigma': float(self.unitConversion.gaussianFit(self.beamdata['px']['dist'])[1])})
 				self.beamdata.update({'py': {}})
-				self.beamdata['py'].update({'mean': numpy.mean(getattr(self.beam, 'py'))})
-				self.beamdata['py'].update({'dist': getattr(self.beam, 'py')})
+				self.beamdata['py'].update({'mean': float(numpy.mean(getattr(self.beam, 'cpy')))})
+				self.beamdata['py'].update({'dist': getattr(self.beam, 'cpy')})
+				self.beamdata['py'].update({'sigma': float(self.unitConversion.gaussianFit(self.beamdata['py']['dist'])[1])})
 				self.beamdata.update({'pz': {}})
-				self.beamdata['pz'].update({'mean': numpy.mean(getattr(self.beam, 'pz'))})
-				self.beamdata['pz'].update({'dist': getattr(self.beam, 'pz')})
+				self.beamdata['pz'].update({'mean': float(numpy.mean(getattr(self.beam, 'cpz')))})
+				self.beamdata['pz'].update({'dist': getattr(self.beam, 'cpz')})
+				self.beamdata['pz'].update({'sigma': float(self.unitConversion.gaussianFit(self.beamdata['pz']['dist'])[1])})
 				self.beamdata.update({'t': {}})
-				self.beamdata['t'].update({'mean': numpy.mean(getattr(self.beam, 't'))})
+				self.beamdata['t'].update({'mean': float(numpy.mean(getattr(self.beam, 't')))})
 				self.beamdata['t'].update({'dist': getattr(self.beam, 't')})
+				self.beamdata['t'].update({'sigma': float(self.unitConversion.gaussianFit(self.beamdata['t']['dist'])[1])})
 				self.beamdata.update({'q': {}})
-				self.beamdata['q'].update({'total': (-1) * (10 ** 12) * numpy.sum(getattr(self.beam, 'charge'))})
+				self.beamdata['q'].update({'total': float((-1) * (10 ** 12) * numpy.sum(getattr(self.beam, 'charge')))})
 				self.beamdata['q'].update({'dist': (-1) * (10 ** 12) * getattr(self.beam, 'charge')})
+				self.beamdata['q'].update({'sigma': float(self.unitConversion.gaussianFit(self.beamdata['q']['dist'])[1])})
 				self.separator = '.'
 				self.pvname = file.split(self.separator, 1)[0]
 				self.allbeamfiles.update({self.pvname: self.beamdata})

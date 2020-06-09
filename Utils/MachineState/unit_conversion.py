@@ -1,5 +1,6 @@
 import numpy
 import scipy.constants
+import scipy.stats
 import math
 import aliases
 
@@ -11,7 +12,7 @@ class UnitConversion(object):
 		self.alias_names = aliases.alias_names
 		self.type_alias = aliases.type_alias
 		speed_of_light = scipy.constants.speed_of_light / 1e6
-		self.lattices = ['BA1', 'INJ', 'S01', 'S02', 'L01', 'C2V']
+		self.lattices = ['BA1', 'INJ', 'S01', 'S02', 'L01', 'C2V', 'VCA']
 		self.gun_pulse_length = 2.5
 		self.linac_pulse_length = 0.75
 		self.energy = {}
@@ -54,39 +55,39 @@ class UnitConversion(object):
 			return self.forward_power
 
 	def currentToK(self, mag_type, current, field_integral_coefficients, magnetic_length, energy, magdict):
-		if (mag_type == 'QUAD') or (mag_type == 'quadrupole') or (self.type_alias[mag_type] == "quadrupole"):
+		if (mag_type == 'QUAD') or (mag_type == 'quadrupole'):
 			self.coeffs = numpy.append(field_integral_coefficients[:-1] * int(self.sign),
 									   field_integral_coefficients[-1])
 			self.int_strength = numpy.polyval(self.coeffs, abs(current))
 			self.effect = (scipy.constants.speed_of_light / 1e6) * self.int_strength / energy
 			# self.update_widgets_with_values("lattice:" + key + ":k1l", effect / value['magnetic_length'])
 			self.k1l = 1000 * self.effect / (magnetic_length)
-			magdict['k1l'] = float(self.k1l)
-		elif (mag_type == 'SOL') or (mag_type == 'solenoid') or (self.type_alias[mag_type] == "solenoid"):
+			magdict.update({'k1l': float(self.k1l)})
+		elif (mag_type == 'SOL') or (mag_type == 'solenoid'):
 			self.sign = numpy.copysign(1, current)
 			self.coeffs = numpy.append(field_integral_coefficients[-4:-1] * int(self.sign),
 									   field_integral_coefficients[-1])
 			self.int_strength = numpy.polyval(self.coeffs, abs(current))
 			self.field_amplitude = self.int_strength / magnetic_length
-			magdict['field_amplitude'] = float(self.field_amplitude)
-		elif (mag_type == 'HCOR') or (mag_type == 'VCOR') or (mag_type == 'kicker') or (self.type_alias[mag_type] == "kicker"):
+			magdict.update({'field_amplitude': float(self.field_amplitude)})
+		elif (mag_type == 'HCOR') or (mag_type == 'VCOR') or (mag_type == 'kicker'):
 			self.sign = numpy.copysign(1, current)
 			self.coeffs = numpy.append(field_integral_coefficients[:-1] * int(self.sign),
 									   field_integral_coefficients[-1])
 			self.int_strength = numpy.polyval(self.coeffs, abs(current))
 			self.effect = (scipy.constants.speed_of_light / 1e6) * self.int_strength / energy
-			magdict['angle'] = float(self.effect)
-		elif (mag_type == 'DIP') or (mag_type == 'dipole') or (self.type_alias[mag_type] == "dipole"):
+			magdict.update({'angle': float(self.effect)})
+		elif (mag_type == 'DIP') or (mag_type == 'dipole'):
 			self.sign = numpy.copysign(1, current)
 			self.coeffs = numpy.append(field_integral_coefficients[:-1] * int(self.sign),
 									   field_integral_coefficients[-1])
 			self.int_strength = numpy.polyval(self.coeffs, abs(current))
 			self.effect = (scipy.constants.speed_of_light / 1e6) * self.int_strength / energy
 			self.angle = numpy.radians(self.effect / 1000)
-			magdict['angle'] = float(self.angle)
-			
+			magdict.update({'angle': float(self.angle)})
+
 	def kToCurrent(self, mag_type, k, field_integral_coefficients, magnetic_length, energy):
-		if (mag_type == 'QUAD') or (mag_type == 'quadrupole') or (self.type_alias[mag_type] == "quadrupole"):
+		if (mag_type == 'QUAD') or (mag_type == 'quadrupole'):
 			self.effect = k * magnetic_length / 1000
 			self.int_strength = self.effect * energy / (scipy.constants.speed_of_light / 1e6)
 			self.sign = int(numpy.copysign(1, self.int_strength - field_integral_coefficients[-1]))
@@ -97,7 +98,7 @@ class UnitConversion(object):
 			self.current = numpy.copysign(self.roots[-1].real,
 										  self.sign)  # last root is always x value (#TODO: can prove this?)
 			return self.current
-		elif (mag_type == 'SOL') or (mag_type == 'solenoid') or (self.type_alias[mag_type] == "solenoid"):
+		elif (mag_type == 'SOL') or (mag_type == 'solenoid'):
 			self.int_strength = k * magnetic_length
 			self.sign = int(numpy.copysign(1, self.int_strength - field_integral_coefficients[-1]))
 			fic1 = [x * int(self.sign) for x in field_integral_coefficients[-4:-1]]
@@ -107,7 +108,7 @@ class UnitConversion(object):
 			self.current = numpy.copysign(self.roots[-1].real,
 										  self.sign)  # last root is always x value (#TODO: can prove this?)
 			return self.current
-		elif (mag_type == 'HCOR') or (mag_type == 'VCOR') or (mag_type == 'kicker') or (self.type_alias[mag_type] == "kicker"):
+		elif (mag_type == 'HCOR') or (mag_type == 'VCOR') or (mag_type == 'kicker'):
 			self.effect = k
 			self.int_strength = self.effect * energy / (scipy.constants.speed_of_light / 1e6)
 			if field_integral_coefficients[0] == 0:
@@ -120,7 +121,7 @@ class UnitConversion(object):
 			self.current = numpy.copysign(self.roots[-1].real,
 										  self.sign)  # last root is always x value (#TODO: can prove this?)
 			return self.current
-		elif (mag_type == 'DIP') or (mag_type == 'dipole') or (self.type_alias[mag_type] == "dipole"):
+		elif (mag_type == 'DIP') or (mag_type == 'dipole'):
 			self.effect = numpy.radians(k) * 1000
 			self.int_strength = self.effect * energy / (scipy.constants.speed_of_light / 1e6)
 			if field_integral_coefficients[0] == 0:
@@ -161,3 +162,7 @@ class UnitConversion(object):
 			return numpy.mean([bestcase, worstcase])
 		elif (cavity == "L01") or ("L01" in cavity):
 			return (1e12 * (energy_gain ** 2)/(6.248 * 1e7))
+
+	def gaussianFit(self, data):
+		mu, std = scipy.stats.norm.fit(data)
+		return [mu, std]

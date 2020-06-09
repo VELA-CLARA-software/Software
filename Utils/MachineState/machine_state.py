@@ -6,6 +6,7 @@ import get_data_from_simframe
 import write_data_to_catap
 import write_data_to_simframe
 import unit_conversion
+import aliases
 
 class MachineState(object):
 
@@ -17,9 +18,12 @@ class MachineState(object):
         self.writeDataToCATAP = write_data_to_catap.WriteDataToCATAP()
         self.writeDataToSimFrame = write_data_to_simframe.WriteDataToSimFrame()
         self.unitConversion = unit_conversion.UnitConversion()
+        self.screen_to_camera = aliases.screen_to_camera
+        self.lattices = self.unitConversion.getLattices()
         self.pvAlias = {}
         self.CATAPInitialised = False
         self.SimFrameInitialised = False
+        self.simulation_defaults_set = False
 
     def initialiseCATAP(self, mode):
         if not self.CATAPInitialised:
@@ -34,7 +38,12 @@ class MachineState(object):
             self.CATAPInitialised = True
         self.allDicts = self.getDataFromCATAP.setAllDicts()
         self.allData = self.getDataFromCATAP.getAllData()
-        self.getDataFromSimFrame.setSimulationDictDefaults(self.allData)
+        self.vc_object = self.getDataFromCATAP.getVCObject()
+        self.wcm_object = self.getDataFromCATAP.getWCMObject()
+        self.getDataFromSimFrame.setSimulationDictDefaults(self.allData,
+                                                           vc_object=self.vc_object,
+                                                           wcm_object=self.wcm_object)
+        self.simulation_defaults_set = True
         return self.allData
 
     def getMachineStateFromSimFrame(self, directory, lattice):
@@ -43,6 +52,7 @@ class MachineState(object):
             self.getDataFromSimFrame.loadLattice(lattice)
             self.SimFrameInitialised = True
         self.getDataFromSimFrame.getRunData()
+        return self.getDataFromSimFrame.getAllBeamFiles(directory)
 
     def getFramework(self):
         return self.getDataFromSimFrame.getFramework()
@@ -74,12 +84,62 @@ class MachineState(object):
             self.writeDataToSimFrame.modifyFramework(framework, self.datadict)
         if run == True:
             self.writeDataToSimFrame.runScript(framework, self.datadict, track=True)
+            self.allbeamfiles = self.getDataFromSimFrame.getAllBeamFiles(directory)
+            for i in self.allbeamfiles.keys():
+                for j in self.lattices:
+                    if (self.allbeamfiles[i]['type'] == 'screen') and (i in self.datadict[j].keys()):
+                        self.datadict[j][self.screen_to_camera[i]].update({'x_mm': self.allbeamfiles[i]['x']['mean']})
+                        self.datadict[j][self.screen_to_camera[i]].update({'y_mm': self.allbeamfiles[i]['y']['mean']})
+                        self.datadict[j][self.screen_to_camera[i]].update({'x_mm_sig': self.allbeamfiles[i]['x']['sigma']})
+                        self.datadict[j][self.screen_to_camera[i]].update({'y_mm_sig': self.allbeamfiles[i]['y']['sigma']})
+                        self.datadict[j][self.screen_to_camera[i]].update({'x_mean': self.allbeamfiles[i]['x']['mean']})
+                        self.datadict[j][self.screen_to_camera[i]].update({'y_mean': self.allbeamfiles[i]['y']['mean']})
+                        self.datadict[j][self.screen_to_camera[i]].update({'z_mean': self.allbeamfiles[i]['z']['mean']})
+                        self.datadict[j][self.screen_to_camera[i]].update(
+                            {'px_mean': self.allbeamfiles[i]['px']['mean']})
+                        self.datadict[j][self.screen_to_camera[i]].update(
+                            {'py_mean': self.allbeamfiles[i]['py']['mean']})
+                        self.datadict[j][self.screen_to_camera[i]].update(
+                            {'pz_mean': self.allbeamfiles[i]['pz']['mean']})
+                        self.datadict[j][self.screen_to_camera[i]].update({'t_mean': self.allbeamfiles[i]['t']['mean']})
+                        self.datadict[j][self.screen_to_camera[i]].update({'x_sigma': self.allbeamfiles[i]['x']['sigma']})
+                        self.datadict[j][self.screen_to_camera[i]].update({'y_sigma': self.allbeamfiles[i]['y']['sigma']})
+                        self.datadict[j][self.screen_to_camera[i]].update({'z_sigma': self.allbeamfiles[i]['z']['sigma']})
+                        self.datadict[j][self.screen_to_camera[i]].update(
+                            {'px_sigma': self.allbeamfiles[i]['px']['sigma']})
+                        self.datadict[j][self.screen_to_camera[i]].update(
+                            {'py_sigma': self.allbeamfiles[i]['py']['sigma']})
+                        self.datadict[j][self.screen_to_camera[i]].update(
+                            {'pz_sigma': self.allbeamfiles[i]['pz']['sigma']})
+                        self.datadict[j][self.screen_to_camera[i]].update({'t_sigma': self.allbeamfiles[i]['t']['sigma']})
+                        self.datadict[j][self.screen_to_camera[i]].update({'filename': self.allbeamfiles[i]['filename']})
+                    elif (self.allbeamfiles[i]['type'] == 'bpm') and (i in self.datadict[j].keys()):
+                        self.datadict[j][i].update({'x': self.allbeamfiles[i]['x']['mean']})
+                        self.datadict[j][i].update({'y': self.allbeamfiles[i]['y']['mean']})
+                        self.datadict[j][i].update({'filename': self.allbeamfiles[i]['filename']})
+        return self.datadict
 
     def getSimFrameDataDict(self):
         return self.getDataFromSimFrame.getDataDict()
 
     def initialiseSimFrameData(self):
         return self.getDataFromSimFrame.initialiseData()
+
+    def updateLatticeStart(self, inputdict, start):
+        if (self.simulation_defaults_set) or (self.SimFrameInitialised):
+            inputdict['simulation']['starting_lattice'] = start
+            return True
+        else:
+            print("Simulation defaults not initialised!!!!")
+            return False
+
+    def updateLatticeEnd(self, inputdict, end):
+        if (self.simulation_defaults_set) or (self.SimFrameInitialised):
+            inputdict['simulation']['final_lattice'] = end
+            return True
+        else:
+            print("Simulation defaults not initialised!!!!")
+            return False
 
     def setPVAliases(self, mode):
         if not self.CATAPInitialised:

@@ -9,6 +9,29 @@ alias_names = {"CLA-L01-LRF-CTRL-01": "CLA-L01-CAV",
                "CLA-LRG1-GUN-CAV": "LRRG_GUN",
                "CLA-LRG1-MAG-BSOL-01": "CLA-LRG1-MAG-SOL-01"}
 
+screen_alias = {"S01-SCR-01": "CLA-S01-DIA-SCR-01",
+                "S02-SCR-01": "CLA-S02-DIA-SCR-01",
+                "S02-SCR-02": "CLA-S02-DIA-SCR-02",
+                "S02-SCR-03": "CLA-S02-DIA-SCR-03",
+                "C2V-SCR-01": "CLA-C2V-DIA-SCR-01",
+                "INJ-SCR-04": "EBT-INJ-DIA-YAG-04",
+                "INJ-SCR-05": "EBT-INJ-DIA-YAG-05",
+                "INJ-SCR-06": "EBT-INJ-DIA-YAG-06",
+                "INJ-SCR-07": "EBT-INJ-DIA-YAG-07",
+                "INJ-SCR-08": "EBT-INJ-DIA-YAG-08",
+                "INJ-SCR-09": "EBT-INJ-DIA-YAG-09"}
+
+screen_to_camera = {"CLA-S01-DIA-SCR-01": "CLA-S01-DIA-CAM-01",
+                    "CLA-S02-DIA-SCR-01": "CLA-S02-DIA-CAM-01",
+                    "CLA-S02-DIA-SCR-02": "CLA-S02-DIA-CAM-02",
+                    "CLA-S02-DIA-SCR-03": "CLA-S02-DIA-CAM-03",
+                    "CLA-C2V-DIA-SCR-01": "CLA-C2V-DIA-CAM-01",
+                    "EBT-INJ-DIA-YAG-04": "EBT-INJ-DIA-CAM-05",
+                    "EBT-INJ-DIA-YAG-05": "EBT-INJ-DIA-CAM-06",
+                    "EBT-INJ-DIA-YAG-06": "EBT-INJ-DIA-CAM-07",
+                    "EBT-INJ-DIA-YAG-07": "EBT-INJ-DIA-CAM-08",
+                    "EBT-INJ-DIA-YAG-08": "EBT-INJ-DIA-CAM-09"}
+
 bsol_alias = {"CLA-LRG1-MAG-BSOL-01": "CLA-LRG1-MAG-SOL-01"}
 
 type_alias = {TYPE.QUADRUPOLE: "quadrupole",
