@@ -81,7 +81,7 @@ class GetDataFromSimFrame(object):
 		datadict['generator']['charge'].update({'catap_type': 'charge'})
 		datadict['generator']['charge'].update({'PV': 'CLA-S01-DIA-WCM-01'})
 		datadict['generator']['charge'].update({'PV_suffixes': 'Q'})
-		datadict['generator']['charge'].update({'value': 0.25})
+		datadict['generator']['charge'].update({'value': 250})
 		datadict['generator'].update({'number_of_particles': {}})
 		datadict['generator']['number_of_particles'].update({'type': 'generator'})
 		datadict['generator']['number_of_particles'].update({'value': 51})

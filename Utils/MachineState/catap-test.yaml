@@ -1,6 +1,6 @@
 BA1:
   EBT-BA1-DIA-FCUP-01:
-    q: 250.000000000014
+    q: 99.99999999997499
     type: charge
   EBT-BA1-MAG-DIP-01:
     READI: 0.0
@@ -250,8 +250,8 @@ C2V:
     type: kicker
 INJ:
   CLA-GUN-MAG-SOL-02:
-    READI: 0.0
-    SETI: 0.0
+    READI: -10.0
+    SETI: -10.0
     energy: 4.980143366450753
     field_amplitude: 0.0
     field_integral_coefficients:
@@ -266,7 +266,7 @@ INJ:
     - 0.0
     magnetic_length: 139.5
     position: 0.12700000405311584
-    psu_state: OFF
+    psu_state: ON
     simframe_alias: CLA-LRG1-MAG-SOL-01
     type: solenoid
   CLA-LRG1-MAG-SOL-01:
@@ -951,8 +951,8 @@ S01:
     q: 0.0
     resolution: 0.0
     type: bpm
-    x: -0.00018979625096883176
-    y: -1.3644930282054637e-05
+    x: 0.00013954762103051573
+    y: 0.00024275606206730012
   CLA-S01-DIA-CAM-01:
     avg_intensity: 0.0
     screen: CLA-S01-DIA-SCR-01
@@ -970,7 +970,7 @@ S01:
     state: VRETRACTED
     type: screen
   CLA-S01-DIA-WCM-01:
-    q: 250.000000000014
+    q: 100.0
     type: charge
   CLA-S01-MAG-HCOR-01:
     READI: 0.0
@@ -1067,7 +1067,7 @@ S02:
     y_pix: 2.2250738585072014e-308
     y_pix_sig: 2.2250738585072014e-308
   CLA-S02-DIA-FCUP-01:
-    q: 250.000000000014
+    q: 99.99999999997499
     type: charge
   CLA-S02-DIA-SCR-01:
     state: VRETRACTED
@@ -1250,7 +1250,7 @@ generator:
     PV_suffixes: Q
     catap_type: charge
     type: generator
-    value: 250.000000000014
+    value: 100.0
   dist_x:
     catap_type: pil
     type: generator

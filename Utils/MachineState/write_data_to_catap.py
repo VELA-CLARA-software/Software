@@ -3,6 +3,7 @@ import numpy
 import unit_conversion
 import aliases
 
+# Class for writing machine state data to CATAP
 class WriteDataToCATAP(object):
 
     def __init__(self):
@@ -21,6 +22,8 @@ class WriteDataToCATAP(object):
         self.gun_position = 0.17  # MAGIC NUMBER (BUT IT WON'T CHANGE)
         self.l01_position = 3.2269  # MAGIC NUMBER (BUT IT WON'T CHANGE)
 
+    # Calculates the energy at all of the magnets in inputdict based on a dictionary of energy values
+    # See WriteDataToSimFrame.getLLRFEnergyGain() and WriteDataToSimFrame.getEnergyDict()
     def getEnergyAtMagnet(self, inputdict, energy):
         for key, value in inputdict.items():
             if isinstance(inputdict[key], dict):
@@ -37,11 +40,19 @@ class WriteDataToCATAP(object):
                             self.energy_at_magnet = energy[self.l01_position]
                         inputdict[key].update({'energy': self.energy_at_magnet})
 
+    # Write the charge value to all CATAP charge PVs. The simulation does not incorporate beam loss,
+    # so the charge is the same everywhere
     def writeCharge(self, q, catap):
         if not self.charge_written:
             for key in catap['Charge'].keys():
                 catap['Charge'][key].q = q
 
+    # Main function for writing data from SimFrame to CATAP.
+    # Inputs: mode: CATAP STATE: physical or virtual
+    #         datadict: the machine state file w/ simulation inputs/outputs  (see MachineState.parseParameterInputFile())
+    #         allbeamfiles: simulated beam distributions at screens (see WriteDataToSimFrame.getAllBeamFiles())
+    #         catap: main CATAP dict with all hardware objects (see getDataFromCATAP.setAllDicts())
+    #         energy: energy dictionary (see WriteDataToSimFrame.getEnergyDict())
     def writeMachineStateToCATAP(self, mode, datadict, allbeamfiles, catap, energy):
         self.charge_written = False
         self.getEnergyAtMagnet(datadict, energy)

@@ -9,13 +9,13 @@ machinestate = machine_state.MachineState()
 
 mode = CATAP.HardwareFactory.STATE.VIRTUAL
 
-# machinestate.initialiseCATAP(mode)
-# print(1)
-# time.sleep(1)
-# catapdata = machinestate.getMachineStateFromCATAP(mode)
-# time.sleep(1)
-# print(2)
-# machinestate.exportParameterValuesToYAMLFile("catap-test.yaml",catapdata)
+machinestate.initialiseCATAP(mode)
+print(1)
+time.sleep(1)
+catapdata = machinestate.getMachineStateFromCATAP(mode)
+time.sleep(1)
+print(2)
+machinestate.exportParameterValuesToYAMLFile("catap-test.yaml",catapdata)
 # #
 machinestate.getMachineStateFromSimFrame('test','Lattices/CLA10-BA1_OM.def')
 # # # print(1)
@@ -34,6 +34,6 @@ simframefileupdate = machinestate.writeMachineStateToSimFrame('test', framework,
 #
 machinestate.exportParameterValuesToYAMLFile("simframe-test.yaml",simframefileupdate)
 
-# machinestatefile = machinestate.parseParameterInputFile("simframe-test.yaml")
-#
-# machinestate.writeMachineStateToCATAP(mode, machinestatefile, os.path.join(os.getcwd(), 'test'))
+machinestatefile = machinestate.parseParameterInputFile("simframe-test.yaml")
+
+machinestate.writeMachineStateToCATAP(mode, machinestatefile, os.path.join(os.getcwd(), 'test'))

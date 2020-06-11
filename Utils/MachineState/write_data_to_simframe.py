@@ -71,8 +71,9 @@ class WriteDataToSimFrame(object):
         if scan==True and type is not None:
             print(inputdict[dictname][pv])
         framework.generator.number_of_particles = int(inputdict['generator']['number_of_particles']['value'])
-        framework.generator.charge = float(inputdict['generator']['charge']['value'])
-        framework.generator.sig_clock = float(inputdict['generator']['sig_clock']['value']) / (2354.82)
+        framework.generator.charge = float(inputdict['generator']['charge']['value'] * 1e-12)
+        framework.generator.sig_clock = float(inputdict['generator']['sig_clock']['value'])
+        # framework.generator.sig_clock = float(inputdict['generator']['sig_clock']['value']) / (2354.82)
         framework.generator.sig_x = inputdict['generator']['sig_x']['value']
         framework.generator.sig_y = inputdict['generator']['sig_y']['value']
         framework.generator.spot_size = float(numpy.mean([inputdict['generator']['sig_x']['value'],inputdict['generator']['sig_y']['value']]))
@@ -131,7 +132,7 @@ class WriteDataToSimFrame(object):
             self.energy_at_magnet = energy[self.gun_position]
         else:
             for key, value in energy.items():
-                if key < self.magDict[name].position:
+                if key < inputdict[name].position:
                     self.energy_at_magnet += value
         if self.energy_at_magnet == 0:
-            self.energy_at_magnet = energy[self.linac_position['L01']]
+            self.energy_at_magnet = energy[self.l01_position]

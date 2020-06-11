@@ -1,6 +1,6 @@
 BA1:
   EBT-BA1-DIA-FCUP-01:
-    q: 250.000000000014
+    q: 99.99999999997499
     type: charge
   EBT-BA1-MAG-DIP-01:
     READI: 0.0
@@ -250,8 +250,8 @@ C2V:
     type: kicker
 INJ:
   CLA-GUN-MAG-SOL-02:
-    READI: 0.0
-    SETI: 0.0
+    READI: -10.0
+    SETI: -10.0
     energy: 4.980143366450753
     field_amplitude: 0.0
     field_integral_coefficients:
@@ -266,7 +266,7 @@ INJ:
     - 0.0
     magnetic_length: 139.5
     position: 0.12700000405311584
-    psu_state: OFF
+    psu_state: ON
     simframe_alias: CLA-LRG1-MAG-SOL-01
     type: solenoid
   CLA-LRG1-MAG-SOL-01:
@@ -952,41 +952,41 @@ S01:
     q: 0.0
     resolution: 0.0
     type: bpm
-    x: -0.00018979625096883176
-    y: -1.3644930282054637e-05
+    x: 0.0001271434247011333
+    y: -6.144516410819041e-05
   CLA-S01-DIA-CAM-01:
     avg_intensity: 0.0
     filename: E:\VELA-CLARA-software\Software\Utils\MachineState\CLA-S01-DIA-SCR-01.hdf5
-    px_mean: -1074.8159188225045
-    px_sigma: 60330.488729447556
-    py_mean: 13.5424030569063
-    py_sigma: 51818.02392609723
-    pz_mean: 5521427.8487193035
-    pz_sigma: 34753.68796057
+    px_mean: 737.808043551943
+    px_sigma: 31952.969048019877
+    py_mean: -361.0868822830757
+    py_sigma: 29564.368670852855
+    pz_mean: 5523178.523539376
+    pz_sigma: 20683.17866335127
     screen: CLA-S01-DIA-SCR-01
     sum_intensity: 0.0
-    t_mean: 2.9874743008197025e-12
-    t_sigma: 2.1214833107389275e-12
+    t_mean: 1.1839251890199487e-13
+    t_sigma: 1.1636483431349402e-12
     type: camera
-    x_mean: -0.0002097762020993162
-    x_mm: -0.0002097762020993162
-    x_mm_sig: 0.011177201365421875
+    x_mean: 0.00013991452709366287
+    x_mm: 0.00013991452709366287
+    x_mm_sig: 0.005959447893760566
     x_pix: 2.2250738585072014e-308
     x_pix_sig: 2.2250738585072014e-308
-    x_sigma: 0.011177201365421875
-    y_mean: -1.4580756099760836e-05
-    y_mm: -1.4580756099760836e-05
-    y_mm_sig: 0.009601778738167695
+    x_sigma: 0.005959447893760566
+    y_mean: -6.769444072355526e-05
+    y_mm: -6.769444072355526e-05
+    y_mm_sig: 0.005520069362193958
     y_pix: 2.2250738585072014e-308
     y_pix_sig: 2.2250738585072014e-308
-    y_sigma: 0.009601778738167695
-    z_mean: 0.9809597314434125
-    z_sigma: 0.0006332082987840916
+    y_sigma: 0.005520069362193958
+    z_mean: 0.9809618621432825
+    z_sigma: 0.0003473597162933428
   CLA-S01-DIA-SCR-01:
     state: VRETRACTED
     type: screen
   CLA-S01-DIA-WCM-01:
-    q: 250.000000000014
+    q: 100.0
     type: charge
   CLA-S01-MAG-HCOR-01:
     READI: 0.0
@@ -1046,59 +1046,59 @@ S02:
   CLA-S02-DIA-CAM-01:
     avg_intensity: 0.0
     filename: E:\VELA-CLARA-software\Software\Utils\MachineState\CLA-S02-DIA-SCR-01.hdf5
-    px_mean: 6735.903401794535
-    px_sigma: 286162.17842869775
-    py_mean: -13157.676079089055
-    py_sigma: 391791.2590591379
-    pz_mean: 31270153.388278842
-    pz_sigma: 99485.51597837395
+    px_mean: -3698.7000357801603
+    px_sigma: 157814.85316419363
+    py_mean: -2899.9463974389423
+    py_sigma: 228102.83848138372
+    pz_mean: 31324570.26999417
+    pz_sigma: 37023.36914812551
     screen: CLA-S02-DIA-SCR-01
     sum_intensity: 0.0
-    t_mean: 2.3998707203763645e-09
-    t_sigma: 2.249600049574647e-12
+    t_mean: 2.3966930204797827e-09
+    t_sigma: 1.2109813442323831e-12
     type: camera
-    x_mean: -0.00014901142459815058
-    x_mm: -0.00014901142459815058
-    x_mm_sig: 0.0067444591227422855
+    x_mean: 8.741840428850099e-05
+    x_mm: 8.741840428850099e-05
+    x_mm_sig: 0.003715472019003844
     x_pix: 2.2250738585072014e-308
     x_pix_sig: 2.2250738585072014e-308
-    x_sigma: 0.0067444591227422855
-    y_mean: -0.0004523043884253249
-    y_mm: -0.0004523043884253249
-    y_mm_sig: 0.013231403246723589
+    x_sigma: 0.003715472019003844
+    y_mean: -9.72411241067036e-05
+    y_mm: -9.72411241067036e-05
+    y_mm_sig: 0.007689902170854545
     y_pix: 2.2250738585072014e-308
     y_pix_sig: 2.2250738585072014e-308
-    y_sigma: 0.013231403246723589
-    z_mean: 4.0898299973385335
-    z_sigma: 0.0006742698526757136
+    y_sigma: 0.007689902170854545
+    z_mean: 4.089830000727675
+    z_sigma: 0.00036298475076641665
   CLA-S02-DIA-CAM-02:
     avg_intensity: 0.0
     filename: E:\VELA-CLARA-software\Software\Utils\MachineState\CLA-S02-DIA-SCR-02.hdf5
-    px_mean: 103387.00949228053
-    px_sigma: 257234.58034673624
-    py_mean: 1737.284315025359
-    py_sigma: 115801.43980035782
-    pz_mean: 31266066.282127243
-    pz_sigma: 121355.22316600091
+    px_mean: -6976.180477316337
+    px_sigma: 159691.6215337333
+    py_mean: 73.98913067859293
+    py_sigma: 109612.37616265097
+    pz_mean: 31324450.669446945
+    pz_sigma: 40826.60071620808
     screen: CLA-S02-DIA-SCR-02
     sum_intensity: 0.0
-    t_mean: 5.472401084102084e-09
-    t_sigma: 2.7803985671625583e-12
+    t_mean: 5.469219013970386e-09
+    t_sigma: 1.3150633211505912e-12
     type: camera
-    x_mean: 0.0006542707850701677
-    x_mm: 0.0006542707850701677
-    x_mm_sig: 0.0015037066687869556
+    x_mean: -3.8475767173525506e-05
+    x_mm: -3.8475767173525506e-05
+    x_mm_sig: 0.0009343622542275501
     x_pix: 2.2250738585072014e-308
     x_pix_sig: 2.2250738585072014e-308
-    x_sigma: 0.0015037066687869556
-    y_mean: 0.0001226737057171796
-    y_mm: 0.0001226737057171796
-    y_mm_sig: 0.007324920969109235
+    x_sigma: 0.0009343622542275501
+    y_mean: 5.0270580268640106e-06
+    y_mm: 5.0270580268640106e-06
+    y_mm_sig: 0.006915660657043558
     y_pix: 2.2250738585072014e-308
     y_pix_sig: 2.2250738585072014e-308
-    y_sigma: 0.007324920969109235
-    z_mean: 5.010830003003809
-    z_sigma: 0.0008334025246668009
+    y_sigma: 0.006915660657043558
+    z_mean: 5.010829999338579
+    z_sigma: 0.0003941881329365834
   CLA-S02-DIA-CAM-03:
     avg_intensity: 0.0
     screen: CLA-S02-DIA-SCR-03
@@ -1113,7 +1113,7 @@ S02:
     y_pix: 2.2250738585072014e-308
     y_pix_sig: 2.2250738585072014e-308
   CLA-S02-DIA-FCUP-01:
-    q: 250.000000000014
+    q: 99.99999999997499
     type: charge
   CLA-S02-DIA-SCR-01:
     state: VRETRACTED
@@ -1296,7 +1296,7 @@ generator:
     PV_suffixes: Q
     catap_type: charge
     type: generator
-    value: 250.000000000014
+    value: 100.0
   dist_x:
     catap_type: pil
     type: generator
