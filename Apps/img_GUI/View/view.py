@@ -199,12 +199,10 @@ class Ui_MainWindow(object):
         self.tabWidget.setCurrentIndex(1)
         self.IMGPlotting_tab = QtWidgets.QWidget()
         self.IMGPlotting_tab.setObjectName("IMGPlotting_tab")
-        self.graphicsView = QtWidgets.QGraphicsView(self.IMGPlotting_tab)
-        self.graphicsView.setGeometry(QtCore.QRect(20, 20, 1221, 681))
-        self.graphicsView.setObjectName("graphicsView")
-        self.tabWidget.addTab(self.IMGPlotting_tab, "")
-        self.scene = QtWidgets.QGraphicsScene(self.IMGPlotting_tab)
-        self.graphicsView.setObjectName("graphicsView")
+
+        self.PlotLayoutWidget = QtWidgets.QGridLayout(self.IMGPlotting_tab)
+        self.PlotLayoutWidget.setGeometry(QtCore.QRect(10, 0, 1291, 144))
+        self.PlotLayoutWidget.setObjectName("PlotLayoutWidget")
         self.tabWidget.addTab(self.IMGPlotting_tab, "")
         self.tabWidget.setCurrentIndex(2)
 

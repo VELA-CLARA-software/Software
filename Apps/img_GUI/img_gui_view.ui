@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="IMGPressure_tab">
      <attribute name="title">
@@ -365,15 +365,16 @@
      <attribute name="title">
       <string>Pressure Plots</string>
      </attribute>
-     <widget class="QGraphicsView" name="graphicsView">
+     <widget class="QWidget" name="gridLayoutWidget_4">
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>20</y>
-        <width>1221</width>
-        <height>681</height>
+        <y>10</y>
+        <width>1231</width>
+        <height>691</height>
        </rect>
       </property>
+      <layout class="QGridLayout" name="PlotLayoutWidget"/>
      </widget>
     </widget>
    </widget>

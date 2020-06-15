@@ -63,11 +63,12 @@ class Model(object):
         setattr(self, 'img_pressures', img_factory.getAllIMGPressure())
 
     def plotting_img_pressures(self, ax, time_pressure):
-        color = [plt.cm.viridis(i) for i in  np.linspace(0, 1, len(self.img_pressures.keys()))]
+        if ax.get_legend() is not None:
+            ax.get_legend().remove()
+        color = [plt.cm.viridis(i) for i in np.linspace(0, 1, len(self.img_pressures.keys()))]
         marker = itertools.cycle(('o', 's'))
-        for i_key, (key,value) in enumerate(self.img_pressures.items()):
+        for i_key, (key, value) in enumerate(self.img_pressures.items()):
             ax.plot(time_pressure, float(value), \
                     linestyle='', marker=next(marker), color=color[i_key], \
                     label=key)
         return ax
-
