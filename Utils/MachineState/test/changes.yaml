@@ -47,6 +47,7 @@ CLA-C2V-MAG-QUAD-01:
   csr_enable: true
   current_bins: 0
   isr_enable: true
+  k1l: 0.8413464655483374
   longitudinal_wakefield_enable: true
   lsc_bins: 200
   lsc_enable: true
@@ -57,6 +58,7 @@ CLA-C2V-MAG-QUAD-02:
   csr_enable: true
   current_bins: 0
   isr_enable: true
+  k1l: 0.9697307199615329
   longitudinal_wakefield_enable: true
   lsc_bins: 200
   lsc_enable: true
@@ -67,6 +69,7 @@ CLA-C2V-MAG-QUAD-03:
   csr_enable: true
   current_bins: 0
   isr_enable: true
+  k1l: 0.816042509209433
   longitudinal_wakefield_enable: true
   lsc_bins: 200
   lsc_enable: true
@@ -92,8 +95,17 @@ CLA-C2V-MARK-02:
   lsc_enable: true
   sr_enable: true
   transverse_wakefield_enable: true
-CLA-LRG1-MAG-BSOL-01:
-  field_amplitude: 0.0794529
+CLA-L01-CAV:
+  field_amplitude: 17387939.86839996
+CLA-L01-MAG-SOL-01:
+  field_amplitude: 0.00016743862994521205
+CLA-L01-MAG-SOL-02:
+  field_amplitude: 0.00016743862994521205
+CLA-LRG1-GUN-CAV:
+  field_amplitude: 77331418.73370735
+  phase: 0.0
+CLA-LRG1-MAG-SOL-01:
+  field_amplitude: 0.0
 CLA-S02-APER-01:
   csr_bins: 200
   csr_enable: true
@@ -183,6 +195,7 @@ CLA-S02-MAG-QUAD-01:
   csr_enable: true
   current_bins: 0
   isr_enable: true
+  k1l: 0.5668103097485814
   longitudinal_wakefield_enable: true
   lsc_bins: 200
   lsc_enable: true
@@ -193,6 +206,7 @@ CLA-S02-MAG-QUAD-02:
   csr_enable: true
   current_bins: 0
   isr_enable: true
+  k1l: 0.5730854045565072
   longitudinal_wakefield_enable: true
   lsc_bins: 200
   lsc_enable: true
@@ -203,6 +217,7 @@ CLA-S02-MAG-QUAD-03:
   csr_enable: true
   current_bins: 0
   isr_enable: true
+  k1l: 0.5547408396737038
   longitudinal_wakefield_enable: true
   lsc_bins: 200
   lsc_enable: true
@@ -213,6 +228,7 @@ CLA-S02-MAG-QUAD-04:
   csr_enable: true
   current_bins: 0
   isr_enable: true
+  k1l: 0.5475530864509138
   longitudinal_wakefield_enable: true
   lsc_bins: 200
   lsc_enable: true
@@ -323,6 +339,7 @@ EBT-BA1-MAG-QUAD-01:
   csr_enable: true
   current_bins: 0
   isr_enable: true
+  k1l: -2.119481561149582
   longitudinal_wakefield_enable: true
   lsc_bins: 200
   lsc_enable: true
@@ -333,6 +350,7 @@ EBT-BA1-MAG-QUAD-02:
   csr_enable: true
   current_bins: 0
   isr_enable: true
+  k1l: -1.8160103804440133
   longitudinal_wakefield_enable: true
   lsc_bins: 200
   lsc_enable: true
@@ -343,6 +361,7 @@ EBT-BA1-MAG-QUAD-03:
   csr_enable: true
   current_bins: 0
   isr_enable: true
+  k1l: -2.195349440441927
   longitudinal_wakefield_enable: true
   lsc_bins: 200
   lsc_enable: true
@@ -353,6 +372,7 @@ EBT-BA1-MAG-QUAD-04:
   csr_enable: true
   current_bins: 0
   isr_enable: true
+  k1l: 87.60633550033393
   longitudinal_wakefield_enable: true
   lsc_bins: 200
   lsc_enable: true
@@ -363,6 +383,7 @@ EBT-BA1-MAG-QUAD-05:
   csr_enable: true
   current_bins: 0
   isr_enable: true
+  k1l: 179.02901812022537
   longitudinal_wakefield_enable: true
   lsc_bins: 200
   lsc_enable: true
@@ -373,11 +394,14 @@ EBT-BA1-MAG-QUAD-06:
   csr_enable: true
   current_bins: 0
   isr_enable: true
+  k1l: -38.248263726995845
   longitudinal_wakefield_enable: true
   lsc_bins: 200
   lsc_enable: true
   sr_enable: true
   transverse_wakefield_enable: true
+EBT-BA1-MAG-QUAD-07:
+  k1l: -12.21230643850203
 EBT-INJ-DIA-BPM-04:
   csr_bins: 200
   csr_enable: true
@@ -505,6 +529,7 @@ EBT-INJ-MAG-QUAD-07:
   csr_enable: true
   current_bins: 0
   isr_enable: true
+  k1l: 0.12200717758218455
   longitudinal_wakefield_enable: true
   lsc_bins: 200
   lsc_enable: true
@@ -515,6 +540,7 @@ EBT-INJ-MAG-QUAD-08:
   csr_enable: true
   current_bins: 0
   isr_enable: true
+  k1l: 0.08698228844918601
   longitudinal_wakefield_enable: true
   lsc_bins: 200
   lsc_enable: true
@@ -525,6 +551,7 @@ EBT-INJ-MAG-QUAD-09:
   csr_enable: true
   current_bins: 0
   isr_enable: true
+  k1l: -0.13959854986457781
   longitudinal_wakefield_enable: true
   lsc_bins: 200
   lsc_enable: true
@@ -535,6 +562,7 @@ EBT-INJ-MAG-QUAD-10:
   csr_enable: true
   current_bins: 0
   isr_enable: true
+  k1l: -0.1802154367632715
   longitudinal_wakefield_enable: true
   lsc_bins: 200
   lsc_enable: true
@@ -545,6 +573,7 @@ EBT-INJ-MAG-QUAD-11:
   csr_enable: true
   current_bins: 0
   isr_enable: true
+  k1l: -0.19213620206021345
   longitudinal_wakefield_enable: true
   lsc_bins: 200
   lsc_enable: true
@@ -555,6 +584,7 @@ EBT-INJ-MAG-QUAD-15:
   csr_enable: true
   current_bins: 0
   isr_enable: true
+  k1l: -0.1458537435182942
   longitudinal_wakefield_enable: true
   lsc_bins: 200
   lsc_enable: true

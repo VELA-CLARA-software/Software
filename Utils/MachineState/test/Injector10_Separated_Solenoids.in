@@ -55,14 +55,14 @@ lerror = True
 LEField = True
 C_pos(1) = 0, 
 FILE_EFieLD(1) = '../../../../OnlineModel/MasterLattice/Data_Files/bas_gun.txt', 
-Nue(1) = 2.99744, MaxE(1) = 70.0, Phi(1) = 16, C_smooth(1) = 10, 
-C_xoff(1) = 0, C_yoff(1) = 0, C_xrot(1) = 0, C_yrot(1) = 0, 
-C_zrot(1) = 0
+Nue(1) = 2.99744, MaxE(1) = 77.33141873370735, Phi(1) = -0.0, 
+C_smooth(1) = 10, C_xoff(1) = 0, C_yoff(1) = 0, C_xrot(1) = 0, 
+C_yrot(1) = 0, C_zrot(1) = 0
 C_pos(2) = 1.19357, 
 FILE_EFieLD(2) = '../../../../OnlineModel/MasterLattice/Data_Files/TWS_S-DL.dat', 
-C_numb(2) = 60, Nue(2) = 2.9985, MaxE(2) = 21.0, Phi(2) = 0, 
-C_smooth(2) = 10, C_xoff(2) = 0, C_yoff(2) = 0, C_xrot(2) = 0, 
-C_yrot(2) = 0, C_zrot(2) = 0
+C_numb(2) = 60, Nue(2) = 2.9985, MaxE(2) = 17.387939868399958, 
+Phi(2) = -0.0, C_smooth(2) = 10, C_xoff(2) = 0, C_yoff(2) = 0, 
+C_xrot(2) = 0, C_yrot(2) = 0, C_zrot(2) = 0
 
 /
 &WAKE
@@ -485,20 +485,20 @@ Wk_sub(60) = 4, Wk_scaling(60) = 1
 LBField = True
 S_pos(1) = 0, 
 FILE_BFieLD(1) = '../../../../OnlineModel/MasterLattice/Data_Files/Measured_Main_Solenoid_2019.txt', 
-MaxB(1) = 0.255, S_smooth(1) = 10, S_xoff(1) = 0, S_yoff(1) = 0, 
+MaxB(1) = 0.0, S_smooth(1) = 10, S_xoff(1) = 0, S_yoff(1) = 0, 
 S_xrot(1) = 0, S_yrot(1) = 0
 S_pos(2) = 0, 
 FILE_BFieLD(2) = '../../../../OnlineModel/MasterLattice/Data_Files/Measured_Bucking_Solenoid_2019.txt', 
-MaxB(2) = 0.0794529, S_smooth(2) = 10, S_xoff(2) = 0, S_yoff(2) = 0, 
+MaxB(2) = -0.0794529, S_smooth(2) = 10, S_xoff(2) = 0, S_yoff(2) = 0, 
 S_xrot(2) = 0, S_yrot(2) = 0
 S_pos(3) = 1.7, 
 FILE_BFieLD(3) = '../../../../OnlineModel/MasterLattice/Data_Files/SwissFEL_linac_sols.dat', 
-MaxB(3) = 0.05, S_smooth(3) = 10, S_xoff(3) = 0, S_yoff(3) = 0, 
-S_xrot(3) = 0, S_yrot(3) = 0
+MaxB(3) = 0.00016743862994521205, S_smooth(3) = 10, S_xoff(3) = 0, 
+S_yoff(3) = 0, S_xrot(3) = 0, S_yrot(3) = 0
 S_pos(4) = 2.7, 
 FILE_BFieLD(4) = '../../../../OnlineModel/MasterLattice/Data_Files/SwissFEL_linac_sols.dat', 
-MaxB(4) = -0.05, S_smooth(4) = 10, S_xoff(4) = 0, S_yoff(4) = 0, 
-S_xrot(4) = 0, S_yrot(4) = 0
+MaxB(4) = 0.00016743862994521205, S_smooth(4) = 10, S_xoff(4) = 0, 
+S_yoff(4) = 0, S_xrot(4) = 0, S_yrot(4) = 0
 
 /
 &QUADRUPOLE

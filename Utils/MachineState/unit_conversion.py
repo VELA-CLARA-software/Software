@@ -1,13 +1,38 @@
 import numpy
 import scipy.constants
+import scipy.stats
 import math
+import aliases
 
 class UnitConversion(object):
 
 	def __init__(self):
 		object.__init__(self)
 		self.my_name = "UnitConversion"
+		self.alias_names = aliases.alias_names
+		self.type_alias = aliases.type_alias
 		speed_of_light = scipy.constants.speed_of_light / 1e6
+		self.lattices = ['BA1', 'INJ', 'S01', 'S02', 'L01', 'C2V', 'VCA']
+		self.gun_pulse_length = 2.5
+		self.linac_pulse_length = 0.75
+		self.energy = {}
+		self.gun_position = 0.17  # MAGIC NUMBER (BUT IT WON'T CHANGE)
+		self.l01_position = 3.2269  # MAGIC NUMBER (BUT IT WON'T CHANGE)
+
+	def getLattices(self):
+		return self.lattices
+
+	def getDefaultGunPulseLength(self):
+		return self.gun_pulse_length
+
+	def getDefaultL01PulseLength(self):
+		return self.linac_pulse_length
+
+	def getGunPosition(self):
+		return self.gun_position
+
+	def getL01Position(self):
+		return self.l01_position
 
 	def getEnergyGain(self, rf_type, forward_power, phase, pulse_length, cavity_length):
 		if (rf_type == "LRRG_GUN") or ("GUN" in rf_type):
@@ -37,21 +62,21 @@ class UnitConversion(object):
 			self.effect = (scipy.constants.speed_of_light / 1e6) * self.int_strength / energy
 			# self.update_widgets_with_values("lattice:" + key + ":k1l", effect / value['magnetic_length'])
 			self.k1l = 1000 * self.effect / (magnetic_length)
-			magdict['k1l'] = float(self.k1l)
+			magdict.update({'k1l': float(self.k1l)})
 		elif (mag_type == 'SOL') or (mag_type == 'solenoid'):
 			self.sign = numpy.copysign(1, current)
 			self.coeffs = numpy.append(field_integral_coefficients[-4:-1] * int(self.sign),
 									   field_integral_coefficients[-1])
 			self.int_strength = numpy.polyval(self.coeffs, abs(current))
 			self.field_amplitude = self.int_strength / magnetic_length
-			magdict['field_amplitude'] = float(self.field_amplitude)
+			magdict.update({'field_amplitude': float(self.field_amplitude)})
 		elif (mag_type == 'HCOR') or (mag_type == 'VCOR') or (mag_type == 'kicker'):
 			self.sign = numpy.copysign(1, current)
 			self.coeffs = numpy.append(field_integral_coefficients[:-1] * int(self.sign),
 									   field_integral_coefficients[-1])
 			self.int_strength = numpy.polyval(self.coeffs, abs(current))
 			self.effect = (scipy.constants.speed_of_light / 1e6) * self.int_strength / energy
-			magdict['angle'] = float(self.effect)
+			magdict.update({'angle': float(self.effect)})
 		elif (mag_type == 'DIP') or (mag_type == 'dipole'):
 			self.sign = numpy.copysign(1, current)
 			self.coeffs = numpy.append(field_integral_coefficients[:-1] * int(self.sign),
@@ -59,8 +84,8 @@ class UnitConversion(object):
 			self.int_strength = numpy.polyval(self.coeffs, abs(current))
 			self.effect = (scipy.constants.speed_of_light / 1e6) * self.int_strength / energy
 			self.angle = numpy.radians(self.effect / 1000)
-			magdict['angle'] = float(self.angle)
-			
+			magdict.update({'angle': float(self.angle)})
+
 	def kToCurrent(self, mag_type, k, field_integral_coefficients, magnetic_length, energy):
 		if (mag_type == 'QUAD') or (mag_type == 'quadrupole'):
 			self.effect = k * magnetic_length / 1000
@@ -111,13 +136,13 @@ class UnitConversion(object):
 			return self.current
 
 	def getEnergyFromRF(self, forward_power, phase, pulse_length, cavity=None):
-		if cavity == "LRRG_GUN":
+		if (cavity == "LRRG_GUN") or ("GUN" in cavity):
 			bestcase = 0.407615 + 1.94185 * (((1 - math.exp(-1.54427 * pulse_length)) * (
-					0.0331869 + 6.05422 * 10 ** -7 * forward_power)) * numpy.cos(phase)) ** 0.5
+					0.0331869 + 6.05422 * 10 ** -7 * forward_power)) * abs(numpy.cos(phase))) ** 0.5
 			worstcase = 0.377 + 1.81689 * (((1 - math.exp(-1.54427 * pulse_length)) * (
-					0.0331869 + 6.05422 * 10 ** -7 * forward_power)) * numpy.cos(phase)) ** 0.5
+					0.0331869 + 6.05422 * 10 ** -7 * forward_power)) * abs(numpy.cos(phase))) ** 0.5
 			return numpy.mean([bestcase, worstcase])
-		elif cavity == "L01":
+		elif (cavity == "L01") or ("L01" in cavity):
 			return (numpy.sqrt(forward_power * 6.248 * 1e7) * 1e-6)
 
 	def getPowerFromEnergy(self, energy_gain, phase, pulse_length, cavity=None):
@@ -137,3 +162,7 @@ class UnitConversion(object):
 			return numpy.mean([bestcase, worstcase])
 		elif (cavity == "L01") or ("L01" in cavity):
 			return (1e12 * (energy_gain ** 2)/(6.248 * 1e7))
+
+	def gaussianFit(self, data):
+		mu, std = scipy.stats.norm.fit(data)
+		return [mu, std]
