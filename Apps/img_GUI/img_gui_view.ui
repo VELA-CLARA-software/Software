@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1331</width>
+    <height>807</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QTabWidget" name="tabWidget">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>1311</width>
+      <height>761</height>
+     </rect>
+    </property>
+    <property name="currentIndex">
+     <number>0</number>
+    </property>
+    <widget class="QWidget" name="IMGPressure_tab">
+     <attribute name="title">
+      <string>Pressure IMGs</string>
+     </attribute>
+     <widget class="QWidget" name="gridLayoutWidget">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>0</y>
+        <width>1291</width>
+        <height>144</height>
+       </rect>
+      </property>
+      <layout class="QGridLayout" name="IMGTitleLayout">
+       <item row="0" column="0">
+        <widget class="QLabel" name="IMGTitleLabel">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>                                                                    Pressures for all different IMGs
+</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="gridLayoutWidget_2">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>650</y>
+        <width>1291</width>
+        <height>81</height>
+       </rect>
+      </property>
+      <layout class="QGridLayout" name="IMGButtonGridLayout">
+       <item row="0" column="2">
+        <widget class="QPushButton" name="IMGpushButton">
+         <property name="text">
+          <string>OK</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLabel" name="IMGButtonLabel">
+         <property name="font">
+          <font>
+           <family>Franklin Gothic Book</family>
+           <pointsize>14</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Retrieve pressures from all IMGs</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QCheckBox" name="IMGVirtual_checkBox">
+         <property name="font">
+          <font>
+           <family>Mongolian Baiti</family>
+           <pointsize>14</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string> Virtual </string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="gridLayoutWidget_3">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>160</y>
+        <width>1297</width>
+        <height>457</height>
+       </rect>
+      </property>
+      <layout class="QGridLayout" name="IMGPressuregridLayout">
+       <item row="2" column="1">
+        <widget class="QLCDNumber" name="IMG03_lcdNumber">
+         <property name="smallDecimalPoint">
+          <bool>true</bool>
+         </property>
+         <property name="intValue" stdset="0">
+          <number>0</number>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="2">
+        <widget class="QLabel" name="IMG08_label">
+         <property name="font">
+          <font>
+           <family>MS UI Gothic</family>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>EBT-INJ-VAC_IMG-08</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="IMG03_label">
+         <property name="font">
+          <font>
+           <family>MS UI Gothic</family>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>EBT-INJ-VAC_IMG-03</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="IMG04_label">
+         <property name="font">
+          <font>
+           <family>MS UI Gothic</family>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>EBT-INJ-VAC_IMG-04</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="4">
+        <widget class="QLabel" name="IMG10_label">
+         <property name="font">
+          <font>
+           <family>MS UI Gothic</family>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>EBT-INJ-VAC_IMG-10</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="IMG01_label">
+         <property name="font">
+          <font>
+           <family>MS UI Gothic</family>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>EBT-INJ-VAC_IMG-01</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="2">
+        <widget class="QLabel" name="IMG07_label">
+         <property name="font">
+          <font>
+           <family>MS UI Gothic</family>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>EBT-INJ-VAC_IMG-07</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="IMG02_label">
+         <property name="font">
+          <font>
+           <family>MS UI Gothic</family>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>EBT-INJ-VAC_IMG-02</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="4">
+        <widget class="QLabel" name="IMG09_label">
+         <property name="font">
+          <font>
+           <family>MS UI Gothic</family>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>EBT-INJ-VAC_IMG-09</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="2">
+        <widget class="QLabel" name="IMG05_label">
+         <property name="font">
+          <font>
+           <family>MS UI Gothic</family>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>EBT-INJ-VAC_IMG-05</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="3">
+        <widget class="QLCDNumber" name="IMG08_lcdNumber">
+         <property name="smallDecimalPoint">
+          <bool>true</bool>
+         </property>
+         <property name="intValue" stdset="0">
+          <number>0</number>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="2">
+        <widget class="QLabel" name="IMG06_label">
+         <property name="font">
+          <font>
+           <family>MS UI Gothic</family>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>EBT-INJ-VAC_IMG-06</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="4">
+        <widget class="QLabel" name="IMG11_label">
+         <property name="font">
+          <font>
+           <family>MS UI Gothic</family>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>EBT-INJ-VAC_IMG-11</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="3">
+        <widget class="QLCDNumber" name="IMG07_lcdNumber">
+         <property name="smallDecimalPoint">
+          <bool>true</bool>
+         </property>
+         <property name="intValue" stdset="0">
+          <number>0</number>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QLCDNumber" name="IMG04_lcdNumber">
+         <property name="smallDecimalPoint">
+          <bool>true</bool>
+         </property>
+         <property name="intValue" stdset="0">
+          <number>0</number>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="3">
+        <widget class="QLCDNumber" name="IMG06_lcdNumber">
+         <property name="smallDecimalPoint">
+          <bool>true</bool>
+         </property>
+         <property name="intValue" stdset="0">
+          <number>0</number>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="3">
+        <widget class="QLCDNumber" name="IMG05_lcdNumber">
+         <property name="smallDecimalPoint">
+          <bool>true</bool>
+         </property>
+         <property name="intValue" stdset="0">
+          <number>0</number>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLCDNumber" name="IMG01_lcdNumber"/>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLCDNumber" name="IMG02_lcdNumber">
+         <property name="smallDecimalPoint">
+          <bool>true</bool>
+         </property>
+         <property name="intValue" stdset="0">
+          <number>0</number>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="5">
+        <widget class="QLCDNumber" name="IMG09_lcdNumber">
+         <property name="smallDecimalPoint">
+          <bool>true</bool>
+         </property>
+         <property name="intValue" stdset="0">
+          <number>0</number>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="5">
+        <widget class="QLCDNumber" name="IMG10_lcdNumber">
+         <property name="smallDecimalPoint">
+          <bool>true</bool>
+         </property>
+         <property name="intValue" stdset="0">
+          <number>0</number>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="5">
+        <widget class="QLCDNumber" name="IMG11_lcdNumber">
+         <property name="smallDecimalPoint">
+          <bool>true</bool>
+         </property>
+         <property name="intValue" stdset="0">
+          <number>0</number>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="IMGPlotting_tab">
+     <attribute name="title">
+      <string>Pressure Plots</string>
+     </attribute>
+     <widget class="QGraphicsView" name="graphicsView">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>20</y>
+        <width>1221</width>
+        <height>681</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1331</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuIMG_Pressure_retriever">
+    <property name="title">
+     <string>IMG Pressure retriever</string>
+    </property>
+   </widget>
+   <addaction name="menuIMG_Pressure_retriever"/>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
