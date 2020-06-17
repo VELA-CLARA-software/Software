@@ -75,7 +75,6 @@ for pv_root in pv_roots:
         else:
             all_pvs.append(vm_prefix + pv_root + pv_suffx)
 
-all_pvs = all_pvs[:2000]
 all_pv_len = len(all_pvs)
 print("all_pv_len = ", all_pv_len)
 
