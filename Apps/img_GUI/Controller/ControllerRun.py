@@ -19,6 +19,17 @@ class MplCanvas(FigureCanvasQTAgg):
         fig = Figure(figsize=(width, height), dpi=dpi)
         self.axes = fig.add_subplot(111)
         super(MplCanvas, self).__init__(fig)
+        self.axes.grid('on', color=[0,0,1])
+        self.axes.set_xlabel('Time (s)', fontsize=13, color = [0,0,1])
+        self.axes.set_ylabel('Pressure', fontsize=13, color =[0,0,1])
+        self.axes.tick_params(which='both', colors=[0,0,1], labelcolor=[0,0,1])
+
+    def legend_plotting(self):
+        if self.axes.get_legend() is not None:
+            leg = self.axes.legend(loc=9, handlelength=0, \
+                                    bbox_to_anchor=(0.5, 1.4))
+            for line, text in zip(leg.get_lines(), leg.get_texts()):
+                text.set_color(line.get_color())
 
 
 class GenericThread(QThread):
@@ -31,6 +42,8 @@ class GenericThread(QThread):
         self.function = function
         self.args = args
         self.kwargs = kwargs
+        self.iterations = 100
+        self.iterations_before = 0
         self.timerThread = TimerThread(self)
 
     def __del__(self):
@@ -46,12 +59,11 @@ class GenericThread(QThread):
         time_zero = time.time()
         self.timerThread.start(time_zero)
 
-        iterations = 50
-        while iterations:
+        while self.iterations:
+            self.iterations_before = self.iterations
             self.signal.emit()
             self.object = self.function(*self.args, **self.kwargs)
-            self.time_interval = time.time() - time_zero
-            iterations -= 1
+            self.iterations -= 1
 
 
 class TimerThread(QThread):
@@ -81,6 +93,8 @@ class ControllerRun(QObject):
         self.model = model
         self.view = view
         self.canvas = MplCanvas(self, width=5, height=4, dpi=100)
+        self.time = time.time()
+
         self.timer = QTimer()
         self.timer.start(1000)
 
@@ -117,7 +131,6 @@ class ControllerRun(QObject):
     def filling_in_lcd_boxes_with_pressures(self):
         for (keys, lcd) in self.imgs_tot.items():
             lcd.display(self.model.img_pressures[keys])
-            #
 
     def disable_run_button(self):
         self.view.IMGpushButton.setEnabled(False)
@@ -129,14 +142,18 @@ class ControllerRun(QObject):
 
     def plot_pressures(self, time_pressure):
         self.canvas.axes = self.model.plotting_img_pressures(self.canvas.axes, time_pressure)
+        self.canvas.legend_plotting()
+
         # toolbar = NavigationToolbar(sc, self)
 
     def set_plot_to_scene(self):
-        self.view.scene.add_widget(self.canvas)
-        self.view.graphicsView.setScene(self.view.scene)
+        toolbar = NavigationToolbar(self.canvas, self.view.tabWidget)
+        self.view.PlotLayoutWidget.addWidget(toolbar)
+        self.view.PlotLayoutWidget.addWidget(self.canvas)
+        self.canvas.draw()
 
     def plotting_sequence(self, time_pressure):
-        self.plot_pressure(time_pressure)
+        self.plot_pressures(time_pressure)
         self.set_plot_to_scene()
 
     def vm_setup_and_getting_pressure(self):
@@ -145,10 +162,7 @@ class ControllerRun(QObject):
         self.model.get_img_pressures_from_img_factories()
         print(self.model.img_pressures)
         self.filling_in_lcd_boxes_with_pressures()
-        #if self.view.tabWidget.currentIndex == 1:
-
-        #else:
-        #    self.plotting_sequence()
+        self.plotting_sequence(float(time.time()-self.time))
 
     def app_sequence(self):
         self.thread = GenericThread(self.vm_setup_and_getting_pressure)
