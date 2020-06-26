@@ -94,6 +94,8 @@ class GetDataFromCATAP(object):
 		self.bpmFac = self.hf.getBPMFactory()
 		self.scrFac = self.hf.getScreenFactory()
 		self.magFac = self.hf.getMagnetFactory()
+		if mode == CATAP.HardwareFactory.STATE.VIRTUAL:
+			self.magFac.switchOnAll()
 		self.camFac = self.hf.getCameraFactory()
 
 		# #self.pilFac = hf.getPILa()
@@ -252,7 +254,7 @@ class GetDataFromCATAP(object):
 			self.magnetdata[name]['type'] = self.type_alias[self.magDict[name].getMagnetType()]
 			self.magnetdata[name]['psu_state'] = str(self.magDict[name].psu_state)
 			self.magnetdata[name]['field_integral_coefficients'] = self.magDict[name].getFieldIntegralCoefficients()
-			self.magnetdata[name]['magnetic_length'] = self.magDict[name].getMagneticLength()
+			self.magnetdata[name]['magnetic_length'] = self.magDict[name].getMagneticLength() * 0.001
 			self.energy_at_magnet = 0
 			if "GUN" in name or "LRG1" in name:
 				self.energy_at_magnet = energy[self.gun_position]
@@ -292,7 +294,6 @@ class GetDataFromCATAP(object):
 			for trace in self.guntraces:
 				self.gundata.update({trace: self.gunFac.getCutMean(self.gunname, trace)})
 				self.gundata.update({trace: self.gundata[trace]})
-			self.gunLLRFObj.setAmpMW(10 * 10 ** 6)
 			self.pulse_length = 2.5
 			self.getenergy = self.unitConversion.getEnergyGain(self.gunname,
 																self.gunLLRFObj.getAmpMW(),
@@ -320,7 +321,6 @@ class GetDataFromCATAP(object):
 			for trace in self.linactraces:
 				self.linacdata[linac_name].update({trace: self.linacFac[linac_name].getCutMean(linac_name, trace)})
 				self.linacdata[linac_name].update({trace: self.linacdata[linac_name][trace]})
-			self.linacLLRFObj[linac_name].setAmpMW(20 * 10 ** 6)
 			self.pulse_length = 0.75
 			self.getenergy = self.unitConversion.getEnergyGain(linac_name,
 																self.linacLLRFObj[linac_name].getAmpMW(),
@@ -351,6 +351,9 @@ class GetDataFromCATAP(object):
 	def setLinacEnergyGain(self, name):
 		if self.linacDataSet[name]:
 			self.linacEnergyGain[name] = 1
+
+	def getEnergyDict(self):
+		return self.energy
 
 	def getAllData(self):
 		if self.dictsSet:
@@ -393,8 +396,10 @@ class GetDataFromCATAP(object):
 	def checkType(self, datadict):
 		for i in datadict.keys():
 			for j in self.type_alias.keys():
-				if datadict[i]['type'] == j:
-					datadict[i].update({'type': self.type_alias[j]})
+				if isinstance(datadict[i],dict):
+					if 'type' in datadict[i].keys():
+						if datadict[i]['type'] == j:
+							datadict[i].update({'type': self.type_alias[j]})
 
 	def getSimFrameAlias(self, datadict):
 		for i in datadict.keys():

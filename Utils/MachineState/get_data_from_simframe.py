@@ -44,6 +44,7 @@ class GetDataFromSimFrame(object):
 		self.unitConversion = unit_conversion.UnitConversion()
 		self.alias_names = aliases.alias_names
 		self.type_alias = aliases.type_alias
+		self.screen_alias = aliases.screen_to_camera
 		self.my_name = "GetDataFromSimFrame"
 
 	def setSimulationDictDefaults(self, datadict, vc_object=None, wcm_object=None):
@@ -161,6 +162,10 @@ class GetDataFromSimFrame(object):
 		 self.lattices]
 		[[self.allDataDict[l].update({key: value}) for key, value in self.quad_values.items() if l in key] for l in
 		 self.lattices]
+		[[self.allDataDict[l].update({key: value}) for key, value in self.screen_values.items() if l in key] for l in
+		 self.lattices]
+		[[self.allDataDict[l].update({key: value}) for key, value in self.camera_values.items() if l in key] for l in
+		 self.lattices]
 		[self.allDataDict['INJ'].update({key: value}) for key, value in self.rf_values.items() if 'LRG1' in key]
 		[self.allDataDict['L01'].update({key: value}) for key, value in self.rf_values.items() if 'L01' in key]
 		[self.allDataDict['generator'].update({key: value}) for key, value in self.laser_values.items()]
@@ -186,6 +191,7 @@ class GetDataFromSimFrame(object):
 		self.dip_values = {}
 		self.cor_values = {}
 		self.screen_values = {}
+		self.camera_values = {}
 		self.solenoid_values = {}
 		self.charge_values = {}
 		self.laser_values = {}
@@ -195,6 +201,13 @@ class GetDataFromSimFrame(object):
 		self.astra_run_number = {}
 		self.tracking_code = {}
 
+		for scr in self.Framework.getElementType('screen'):
+			self.screen_values.update({scr['objectname']: {}})
+			self.screen_values[scr['objectname']].update({'type': scr['objecttype']})
+			if scr['objectname'] in self.screen_alias.keys():
+				self.screen_values[scr['objectname']].update({'camera': scr['camera_PV']})
+				self.camera_values.update({self.screen_alias[scr['objectname']]: {}})
+				self.camera_values[self.screen_alias[scr['objectname']]].update({'screen': scr['objectname']})
 		for quad in self.Framework.getElementType('quadrupole'):
 			self.quad_values.update({quad['objectname']: {}})
 			self.quad_values[quad['objectname']].update({'type': quad['objecttype']})

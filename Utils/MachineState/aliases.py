@@ -3,11 +3,11 @@ from CATAP.HardwareFactory import TYPE
 alias_names = {"CLA-L01-LRF-CTRL-01": "CLA-L01-CAV",
                "L01": "CLA-L01-CAV",
                "LRRG_GUN": "CLA-LRG1-GUN-CAV",
-               "CLA-GUN-MAG-SOL-02": "CLA-LRG1-MAG-SOL-01",
-               "CLA-LRG1-MAG-SOL-01": "CLA-GUN-MAG-SOL-02",
+               #"CLA-GUN-MAG-SOL-02": "CLA-LRG1-MAG-SOL-01",
+               #"CLA-LRG1-MAG-SOL-01": "CLA-GUN-MAG-SOL-02",
                "CLA-L01-CAV": "L01",
-               "CLA-LRG1-GUN-CAV": "LRRG_GUN",
-               "CLA-LRG1-MAG-BSOL-01": "CLA-LRG1-MAG-SOL-01"}
+               "CLA-LRG1-GUN-CAV": "LRRG_GUN"}
+               #"CLA-LRG1-MAG-BSOL-01": "CLA-LRG1-MAG-SOL-01"}
 
 screen_alias = {"S01-SCR-01": "CLA-S01-DIA-SCR-01",
                 "S02-SCR-01": "CLA-S02-DIA-SCR-01",
@@ -47,3 +47,5 @@ type_alias = {TYPE.QUADRUPOLE: "quadrupole",
               TYPE.VALVE: "valve",
               TYPE.CHARGE: "charge",
               TYPE.IMG_TYPE: "img"}
+
+gun_kly_fwd_power_max = 9.9 * 10 ** 6
