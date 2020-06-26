@@ -12,8 +12,8 @@ catap_path = os.path.join('C:\\Users', 'djs56', 'Documents', 'catapillar-build',
 sys.path.append(catap_path)
 resource_path = os.path.join('resources','magnetApp')
 sys.path.append(os.path.join(sys.path[0],resource_path))
-from CATAP import TYPE
-from CATAP import STATE
+from CATAP.GlobalTypes import TYPE
+from CATAP.GlobalStates import STATE
 
 from PyQt5 import QtGui, QtCore, QtWidgets
 

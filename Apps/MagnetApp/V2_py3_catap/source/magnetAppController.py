@@ -42,9 +42,13 @@ for item in sys.path:
 
 
 
-from CATAP import TYPE
-from CATAP import STATE
-from CATAP import *
+from CATAP.GlobalTypes import TYPE
+from CATAP.GlobalStates import STATE
+from CATAP.HardwareFactory import *
+
+
+print(TYPE.LLRF_TYPE)
+
 # import VELA_CLARA_Magnet_Control as mag
 import magnetAppGlobals as globals
 # from PyQt4 import QtGui, QtCore
@@ -156,6 +160,7 @@ class magnetAppController(object):
             self.startView.waitMessageLabel.setText(
                 "<font color='red'>ERROR: You must select a Machine Area and Mode first</font>")
             self.startView.waitMessageLabel.update()
+        print("FIN")
     # quit from start-up-screen
     def handle_startviewcancelbutton(self):
         QtCore.QCoreApplication.instance().quit()
@@ -480,6 +485,7 @@ class magnetAppController(object):
     def launchPythonMagnetController(self):
         print("macheinMode = ", self.machineMode)
         if self.machineMode == STATE.VIRTUAL:
+            print("Applying Virtual EPCIS environment variables ")
             os.environ["EPICS_CA_SERVER_PORT"] = "6000"
             os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
             os.environ['EPICS_CA_ADDR_LIST'] = "10.10.0.12"
