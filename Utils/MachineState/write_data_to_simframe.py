@@ -28,7 +28,7 @@ class WriteDataToSimFrame(object):
                         if inputdict[section][key]['type'] == 'quadrupole':
                             framework.modifyElement(self.keymod, 'k1l', float(value['k1l']))
                         elif inputdict[section][key]['type'] == 'cavity':
-                            framework.modifyElement(self.keymod, 'field_amplitude', 1e6*float(value['field_amplitude']))
+                            framework.modifyElement(self.keymod, 'field_amplitude', float(value['field_amplitude']))
                             framework.modifyElement(self.keymod, 'phase', value['phase'])
                         elif inputdict[section][key]['type'] == 'solenoid':
                             if 'BSOL' in key:
