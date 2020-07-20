@@ -1,16 +1,14 @@
-from paramiko import *
 import itertools
-from cycler import cycler
 import numpy as np
 import os
 import sys
 import matplotlib.pyplot as plt
-import shutil
 from copy import deepcopy
 from paramiko import *
 import subprocess
-
-sys.path.append(os.path.join(os.path.dirname(os.getcwd()), 'catapillar-build', 'PythonInterface', 'Release'))
+from collections import OrderedDict
+sys.path.append(os.path.join(os.getcwd(), '..', '..', '..',
+                             'catapillar-build', 'PythonInterface', 'Release'))
 from CATAP.HardwareFactory import *
 from CATAP.IMG import *
 
@@ -25,8 +23,8 @@ class Model(object):
         self.my_name = 'model'
 
         self.client = SSHClient()
-        self.state = STATE.VIRTUAL
-        self.img_pressures = {}
+        self.__state = ''
+        self.__img_pressures = OrderedDict()
 
     @property
     def img_pressures(self):
@@ -42,12 +40,7 @@ class Model(object):
 
     @state.setter
     def state(self, state_new):
-        if state_new == 'virtual':
-            self.__state = STATE.VIRTUAL
-        elif state_new == 'physical':
-            self.__state = STATE.PHYSICAL
-        else:
-            self.__state = STATE.ERROR
+        self.__state = deepcopy(state_new)
 
     def setup_vm(self):
         subprocess.call('ping ' + self.ip)
@@ -56,19 +49,28 @@ class Model(object):
         stdin, stdout, stderr = self.client.exec_command('screen -ls')
 
     def get_img_pressures_from_img_factories(self):
-        hw_factory = HardwareFactory(self.state)
-        hw_factory.messagesOff()
-        hw_factory.debugMessagesOff()
-        img_factory = hw_factory.getIMGFactory()
-        setattr(self, 'img_pressures', img_factory.getAllIMGPressure())
+        for img_name in self.img_factory.getAllIMGNames():
+            img_object = self.img_factory.getIMG(img_name)
+            self.img_pressures.update({img_name: img_object.getIMGPressure()})
 
-    def plotting_img_pressures(self, ax, time_pressure):
+    def plotting_img_pressures(self, ax, time_pressure, i_iteration):
         if ax.get_legend() is not None:
             ax.get_legend().remove()
-        color = [plt.cm.viridis(i) for i in np.linspace(0, 1, len(self.img_pressures.keys()))]
+        color = [plt.cm.winter(i) for i in np.linspace(0, 1, len(self.img_pressures.keys()))]
         marker = itertools.cycle(('o', 's'))
-        for i_key, (key, value) in enumerate(self.img_pressures.items()):
-            ax.plot(time_pressure, float(value), \
-                    linestyle='', marker=next(marker), color=color[i_key], \
-                    label=key)
+        if i_iteration > 1:
+            for i_key, (key, value) in enumerate(self.img_pressures.items()):
+                ax.plot(time_pressure, float(value),
+                        linestyle='', marker=next(marker), color=color[i_key])
+        elif i_iteration:
+            for i_key, (key, value) in enumerate(self.img_pressures.items()):
+                ax.plot(time_pressure, float(value),
+                        linestyle='', marker=next(marker), color=color[i_key],
+                        label=key[key.find('IMG-'):])
+            leg = ax.legend(loc=0, handlelength=0, ncol=2,
+                            bbox_to_anchor=(1.1, 1.0))
+            print(leg.get_texts())
+            for line, text in zip(leg.get_lines(), leg.get_texts()):
+                text.set_color(line.get_color())
+            leg.set_title('EBT-INJ-VAC-IMG')
         return ax
