@@ -61,7 +61,7 @@ class main_controller(object):
     # We are going to have multiple debug modes so that you can set it from the command line,
     # hardcoded in to the source code, etc, PLUS in the config file
     def __init__(self, argv, config_file, debug=True, debug2=True):
-
+        print(__name__, " init ")
         self.debug = True
         if debug == False:
             if debug2 == False:
@@ -100,6 +100,7 @@ class main_controller(object):
                                    add_to_text_log=True, show_time_stamp=True)
         self.data = rf_conditioning_data(debug=self.debug)
         self.data.initialise()
+        self.values = self.data.values
 
 
         # should thios happen here, or in the view?
@@ -116,6 +117,9 @@ class main_controller(object):
         self.hardware.start_up()
 
         self.hardware.llrf_controller.set_trace_mean_positions()
+        # SET TRACE SCAN Paramaters
+        self.hardware.llrf_controller.set_trace_SCAN()
+
 
 
         #
@@ -132,24 +136,269 @@ class main_controller(object):
         # BE CONNECTED AFTER MONITOR_HUB is created
 
 
-
-
-
         #print("manual pause here!!!")
         #raw_input()
         #
         # Start Data Logging
         self.logger.start_binary_data_logging(self.data.values)
-
         self.main_loop()
 
     def main_loop(self):
+        self.values[rf_conditioning_data.required_pulses] = self.config.raw_config_data[
+            'DEFAULT_PULSE_COUNT']
+
+
+        '''
+            check states and apply power (need RFR)
+            start averaging
+            start checking OMED
+
+            check all the relevant states and set a combined state
+            update_enable_LLRF_state() sets a flag for "can_rf_output"
+
+            update the main_monitor states
+            more flags for the state of each main monitor that can cause a switch off
+
+            if new_bad() (in monitors vac, and BD (
+                print / log a message
+
+            elif enable_RF_bad(): # checks can_rf_output
+                if user gui buttons enable RF:
+                    enable RF
+
+            elif daq_freq_bad:
+                reset daq_freq_bad
+            elif daq_freq_new_good
+                reset daq_freq states to good
+
+            elif new_good:
+                ramp_down()
+
+            elif all_good
+
+                if reached_min_pulse_count_for_this_step()
+
+                    if gui_can_ramp()
+
+                        if breakdown_rate_low
+                            print a message
+
+                        elif vac_level_hi:
+                            print a message
+
+                        else:
+                            ramp_up()
+                else:
+
+                    continue (do some logging)
+        '''
         self.logger.message_header(
             __name__ + ' The RF Conditioning is Preparing to Entering Main_Loop !',
             add_to_text_log=True, show_time_stamp=True)
 
+
+
+        self.hardware.llrf_control.keepKlyFwdPwrRS()
+        self.hardware.llrf_controller.enable_trigger()
+
+        #  enable the RF
+        self.hardware.llrf_controller.enable_llrf()
+
+
+        # continue on the last but entry from the pusle_breakdown_log
+        # pulse_breakdown has chosen start values, so continue, see get_pulse_count_breakdown_log()
+        #
+
+        print(self.data.amp_sp_history[-1])
+
+        # This needs to be the RELATIVELY-FAST-RAMP FUNCTiION
+        self.hardware.llrf_controller.set_amp( self.data.amp_sp_history[-1] )
+        #self.hardware.llrf_control.set_amp( self.data.amp_sp_history[-1] )
+
+
         while 1:
             QApplication.processEvents()
+            # check all the relevant states and set a combined state
+            # update_enable_LLRF_state() sets a flag for "can_rf_output"
+
+            # update the main_monitor states
+            # more flags for the state of each main monitor that can cause a switch off
+
+            # if new_bad() (in monitors vac, and BD (
+            # print / log a message
+            #
+            # elif enable_RF_bad(): # checks can_rf_output
+            #     if user gui buttons enable RF:
+            # enable RF
+            #
+            # elif daq_freq_bad:
+            # reset daq_freq_bad
+            # elif daq_freq_new_good
+            # reset daq_freq states to good
+            #
+            # elif new_good:
+            # ramp_down()
+            #
+            # elif all_good
+            time.sleep(2)
+
+            if self.reached_min_pulse_count_for_this_step():
+                if self.values[rf_conditioning_data.gui_can_ramp]:
+                    if  self.values[rf_conditioning_data.vac_level_can_ramp]:
+                        if self.values[rf_conditioning_data.breakdown_rate_low]:
+                            self.ramp_up() # TODO better name??, ramp_up from a normal stae
+                        else:
+                            print("can;t ramp BD rate  hi")
+                    else:
+                        print("can;t ramp vac level hi")
+                else:
+                    print("main loop can't ramp: GUI DISABLED RAMPING")
+            else:
+                # continue (do some logging)
+                print("do some logging")
+                self.monitor_hub.llrf_monitor.update_amp_vs_kfpow_running_stat()
+
+
+    def ramp_up(self):
+        self.logger.message_header(' Ramp Up ')
+
+        setpoint_before_ramp =  self.hardware.llrf_obj[0].amp_sp
+        if setpoint_before_ramp < 100:
+            self.logger.message('!!WARNING!! Current setpoint before Ramp Up = ' + str(
+                setpoint_before_ramp) + ' suspect a breakdown has very recently occurred! ')
+        #
+        # update pulse breakdown log
+        self.data.add_to_pulse_breakdown_log(self.hardware.llrf_obj[0].amp_sp)
+
+        # GET NEW SET_POINT
+        # new amp always returns a value!!
+
+
+        new_amp = self.data.get_new_set_point(  10000 ) # value from ramp.py and ramp_index
+
+        # #
+        # # set new_amp
+        # if controller_base.llrf_handler.set_amp(new_amp):
+        #     pass
+        # else:
+        #     # we failed to set the requested amplitude .... erm.... not sure what to do ????
+        #     pass
+        #
+        # #
+        # # log data at the new setpoint MUST BE BEFORE  move_up_ramp_curve()
+        # #
+        # controller_base.llrf_handler.update_amp_vs_kfpow_running_stat()
+        # self.data.log_kly_fwd_power_vs_amp()
+        # #
+        # # move up curve (when below ~1MW
+        # ''' !!! also calls set_next_sp_decrease !!!'''
+        # controller_base.data.move_up_ramp_curve()
+        # #
+        # '''Sanity Check '''
+        # if setpoint_before_ramp != controller_base.data.values[dat.next_sp_decrease]:
+        #     self.logger.message('!!! Warning Unexpected next_sp_decrease ' + str(
+        #         setpoint_before_ramp) + ' != ' + str(
+        #         controller_base.data.values[dat.next_sp_decrease]), True)
+        # #
+        # # update the plot with new values
+        # self.gui.update_plot()
+        # QApplication.processEvents()
+        # #
+        # # reset active pulse counters
+        # self.data_monitor.outside_mask_trace_monitor.reset_event_pulse_count()
+        # #
+        # self.logger.message(
+        #     'ramp_up FINISHED, we went from ' + str(setpoint_before_ramp) + ' to ' + str(new_amp),
+        #     True)
+
+
+
+
+    def reached_min_pulse_count_for_this_step(self):
+        return self.values[rf_conditioning_data.event_pulse_count] >= self.values[rf_conditioning_data.required_pulses]
+
+    def toggle_RF_output(self):
+        ''' this function should be connected to the GUI enable / diasable LLRF, but MUST be run
+        AFTER rf_conditioning_data.gui_can_rf_output is changed to the requested value '''
+        if self.values[rf_conditioning_data.gui_can_rf_output]:
+            print("toggle_RF_output(), gui.can_rf_output, so calling enable_llrf ")
+            self.hardware.llrf_controller.enable_llrf()
+        else:
+            self.hardware.llrf_controller.disableRFOutput()
+
+#
+#
+# '''
+#         # reset trigger
+#         controller_base.llrf_handler.enable_trigger()
+#         #
+#         self.llrf_control.setGlobalCheckMask(False)
+#         #
+#         # this sets up main monitors, based on what was successfully connected
+#         # they are, vac, dc, breakdown, rf_on, rf_mod , .. any more ?
+#         self.data_monitor.init_monitor_states()
+#
+#         #
+#         # remove this time.sleep(1) at your peril
+#         time.sleep(1)
+#         #
+#         # RESET TH EEVNT PULSE COUNT TO ZERO
+#         self.data_monitor.outside_mask_trace_monitor.reset_event_pulse_count()
+#
+#         #  enable the RF
+#         self.toggle_RF_output()
+#
+#         controller_base.data_monitor.update_states()
+#         controller_base.data_monitor.update_enable_LLRF_state(gui_enable_rf=self.gui.can_rf_output)
+#
+#         #
+#         # This enables keeping the amp_sp vs KFP map in c++
+#         #
+#         # remove this time.sleep(1) at your peril
+#         controller_base.llrf_control.keepKlyFwdPwrRS()
+#
+#         # continu eon the last but entry from the pusle_breakdown_log
+#         # pulse_breakdown has chosen start values, so continue, see get_pulse_count_breakdown_log()
+#
+#         #
+#         controller_base.llrf_handler.set_amp(controller_base.data.amp_sp_history[-1])
+#
+#         # controller_base.data.values[dat.latest_ramp_up_sp] =
+#         # controller_base.data.amp_sp_history[-1]
+#
+#         # enforced pause
+#         # time.sleep(1)
+#         # start trace averaging, power should be on by now
+#         controller_base.llrf_handler.start_trace_average()
+#         if controller_base.llrfObj[0].kly_fwd_power_max < controller_base.config.llrf_config[
+#             'KLY_PWR_FOR_ACTIVE_PULSE']:
+#             controller_base.logger.message('WARNING Expecting RF power by now, kly_fwd_power_max '
+#                                            '= '
+#                                            '' + str(controller_base.llrfObj[0].kly_fwd_power_max),
+#                                            True)  # raw_input()
+#         else:
+#             controller_base.logger.message('Found RF power, kly_fwd_power_max = ' + str(
+#                 controller_base.llrfObj[0].kly_fwd_power_max), True)
+#
+#         # get some good masks
+#         start_time = time.clock()
+#         controller_base.llrf_handler.clear_all_rolling_average()
+#         while 1:
+#             now_time = time.clock()
+#             if now_time - start_time > 1.5:
+#                 break
+#
+#         controller_base.llrf_handler.set_global_check_mask(True)
+#
+#         # start main loop
+#         controller_base.logger.header('***** ENTERING MAIN LOOP *****')
+#
+#         # start_time  = time.clock()
+#         # counter = 0
+#         controller_base.data.values[dat.event_pulse_count] = 0
+# '''
+
+
 
 
     def quit_app(self, message=""):
@@ -425,7 +674,7 @@ class main_controller(object):
     #             if controller_base.data.reached_min_pulse_count_for_this_step():  # check this
     #                 # number in the look up
     #                 if self.gui.can_ramp:
-    #                     if controller_base.data.values[dat.breakdown_rate_hi]:
+    #                     if controller_base.data.values[dat.breakdown_rate_low]:
     #                         if self.has_not_shown_br_hi:
     #                             self.logger.message(
     #                                 'MAIN: continue ramp LOOP all good, but breakdown rate too '

@@ -56,6 +56,8 @@ class rf_conditioning_data(object):
     current_power = 0
 
 
+    amp_vs_kfpow_running_stat = None
+
     """
     NOT SURE IF DEBUG DOES ANYTHING
     """
@@ -267,7 +269,7 @@ class rf_conditioning_data(object):
         # Now we are free to update the breakdown stats !!
         '''MAYBE DON'T CALL THIS HERE YET!!! ????'''
         message("update_breakdown_stats here ????????????????????")
-        #self.update_breakdown_stats()
+        self.update_breakdown_stats()
 
     def update_breakdown_stats(self):
         '''
@@ -296,7 +298,7 @@ class rf_conditioning_data(object):
                     rcd.last_million_log[-1][0] - rcd.last_million_log[0][0])
 
         # set is breakdwon rate hi
-        self.values[rcd.breakdown_rate_hi] = self.values[rcd.breakdown_rate] > self.values[
+        self.values[rcd.breakdown_rate_low] = self.values[rcd.breakdown_rate] <= self.values[
             rcd.breakdown_rate_aim]
 
         if old_last_106_bd_count != self.values[rcd.last_106_bd_count]:
@@ -314,20 +316,17 @@ class rf_conditioning_data(object):
                     rcd.last_million_log[0][1]) + ' = ' + str(self.values[rcd.last_106_bd_count]),
                 add_to_text_log=True, show_time_stamp=False)
 
-            if self.values[rcd.breakdown_rate_hi]:
+            if self.values[rcd.breakdown_rate_low]:
+                message(
+                    'Breakdown rate Low: ' + str(self.values[rcd.breakdown_rate]) + ' <= ' + str(
+                        self.values[rcd.breakdown_rate_aim]), add_to_text_log=True,
+                    show_time_stamp=False)
+            else:
                 message(
                     'Breakdown rate High: ' + str(self.values[rcd.breakdown_rate]) + ' > ' + str(
                         self.values[rcd.breakdown_rate_aim]), add_to_text_log=True,
                     show_time_stamp=False)
-
                 # ESTIMATE THE NUMBER OF PULSES BEFORE WE GO GOOD AGAIN
-
-
-            else:
-                message(
-                    'Breakdown rate good: ' + str(self.values[rcd.breakdown_rate]) + ' <= ' + str(
-                        self.values[rcd.breakdown_rate_aim]), add_to_text_log=True,
-                    show_time_stamp=False)
 
     def update_last_million_pulse_log(self):
         """
@@ -390,6 +389,268 @@ class rf_conditioning_data(object):
         # self.values[rcd.pulse_length_min] = cd['PULSE_LENGTH_AIM'] - cd['PULSE_LENGTH_AIM_ERROR']
         # self.values[rcd.pulse_length_max] = cd['PULSE_LENGTH_AIM'] + cd['PULSE_LENGTH_AIM_ERROR']
 
+        #  Binning data
+        # BIN_data = 'BIN_data'
+        # bin_keys.append(BIN_data)
+        # binned_amp_vs_kfpow[BIN_data] = dummy_float
+        # TODO: AT SOMe POINT WE NEED TO INCLUDE ERRORS IN THE BIN VALUE, BUT THIS NEEDS TO BE
+        #  DONE 'PROPERLY' USING THE FULL PULSE COUNTS
+        # BIN_error = 'BIN_error'
+        # bin_keys.append(BIN_error)
+        # binned_amp_vs_kfpow[BIN_error] = dummy_float
+
+        #TODO AJG: bin the amp-power data here after being read in
+        #print 'rcd.amp_vs_kfpow_running_stat[0] = ', rcd.amp_vs_kfpow_running_stat[0]
+        #print 'rcd.amp_vs_kfpow_running_stat[0][0] = ', rcd.amp_vs_kfpow_running_stat[0][0]
+        #print 'len(rcd.amp_vs_kfpow_running_stat) = ', len(rcd.amp_vs_kfpow_running_stat)
+
+        #TODO AJG: cycle over 'rcd.amp_vs_kfpow_running_stat' and append ...
+        # key = amp **
+        # [0] = num_pulses (with beam)
+        # [1] = power **
+        # [2] = rolling variance * (num_pulses -1)  .....I think!
+        AMP_preBin = []
+        POW_preBin = []
+        for key in rcd.amp_vs_kfpow_running_stat:
+            AMP_preBin.append(key)
+            POW_preBin.append(rcd.amp_vs_kfpow_running_stat[key][1])
+
+        bin_width = self.config.raw_config_data['BIN_WIDTH']
+        max_amp = self.config.raw_config_data['MAX_AMP']
+        max_pow = self.config.raw_config_data['MAX_POW']
+
+        print 'len(AMP_preBin) = ', len(AMP_preBin)
+        print 'len(POW_preBin) = ', len(POW_preBin)
+        print 'bin_width = ', bin_width
+        print 'max_amp = ', max_amp
+        print 'max_pow = ', max_pow
+
+        bin_X, bin_mean, bin_edges, bin_pop, bin_data, bin_error = self.logger.initial_bin(
+            AMP_preBin,
+            POW_preBin, bin_width, max_amp, max_pow)
+
+
+        rcd.binned_amp_vs_kfpow['BIN_X'] = bin_X
+        rcd.binned_amp_vs_kfpow['BIN_mean'] = bin_mean
+        rcd.binned_amp_vs_kfpow['BIN_edges'] = bin_edges
+        rcd.binned_amp_vs_kfpow['BIN_pop'] = bin_pop
+        # binned_amp_vs_kfpow[BIN_data] = bin_data
+        # binned_amp_vs_kfpow[BIN_error] = bin_error
+
+        #TODO AJG: diagnostic plot saved to work folder:
+
+        bin_plots_path = r'C:\Users\dlerlp\Documents\RF_Conditioning_20200720'
+        POW_preBin_MW = [i/10**6 for i in POW_preBin]
+        plt.scatter(AMP_preBin, POW_preBin_MW, c='k', s=1.0, marker='.', label='Data', zorder=1)
+        plt.scatter(bin_X, bin_mean, c='r', s=25, marker='x', label='Binned Mean', zorder=0)
+        #plt.errorbar(bin_X, bin_mean, yerrbin_error, xerr=0, fmt='none', ecolor='red',
+        # elinewidth=0.5, capsize=2.0, capthick=0.5)
+        plt.xlabel('Set Point')
+        plt.ylabel('Power (MW)')
+        plt.legend()
+        plt.grid(True)
+        plt.savefig(bin_plots_path + r'\Binning_Plot_test.png')
+        plt.close('all')
+
+    def update_binned_data(self):
+        '''
+        This function reads in the latest amp_sp - kfpow values as well as the output from
+        initial_bin() or the previous dynamic_bin().
+
+        Finds the relevant bin for the new amp_sp value and updates BIN_pop & BIN_mean in that bin.
+        updates the binning dictionary with new values.
+        '''
+
+        # TODO: how often do we update the binned data, and do we just use the current
+        #  amp_setpoint data or do we re-bin all the data ???
+        # TODO Lets update the binned data with amp_vs_kfpow_running_stat
+        # TODO it seems like there maybe a 'cleaner' way to do this
+
+        #new_amp = int(self.amp_vs_kfpow_running_stat[self.values[self.data.amp_sp]])
+        new_amp = int(self.values[rf_conditioning_data.amp_sp])
+        new_kfp = rf_conditioning_data.amp_vs_kfpow_running_stat[self.values[rf_conditioning_data.amp_sp]]
+
+        newdata = [new_amp, new_kfp]
+        X = rf_conditioning_data.binned_amp_vs_kfpow['BIN_X']
+        bin_mean = rf_conditioning_data.binned_amp_vs_kfpow['BIN_mean']
+        bedges = rf_conditioning_data.binned_amp_vs_kfpow['BIN_edges']
+        bin_pop = rf_conditioning_data.binned_amp_vs_kfpow['BIN_pop']
+
+        for i in range(int(len(bin_mean))):
+            if newdata[0] >= bedges[i] and newdata[0] < bedges[i + 1]:
+                bin_pop[i] += 1
+                bin_mean[i] = ((bin_mean[i] * bin_pop[i]) + newdata[1]) / (bin_pop[i] + 1.0)
+                print('dynamic_bin() Working')
+                print('bin_count = {}').format(i)
+                break
+            else:
+                pass
+
+        rf_conditioning_data.binned_amp_vs_kfpow['BIN_mean'] = bin_mean
+        rf_conditioning_data.binned_amp_vs_kfpow['BIN_pop'] = bin_pop
+
+        '''
+        bin_plots_path = r'C:\Users\dlerlp\Documents\RF_Conditioning_20200720'
+        plt.scatter(newdata[0], newdata[0], c='g', s=35, marker='x', label='Data', zorder=1)
+        plt.scatter(BIN_X_dyn, BIN_mean, c='r', s=25, marker='x', label='Binned Mean', zorder=0)
+        plt.xlabel('Set Point')
+        plt.ylabel('Power (MW)')
+        plt.legend()
+        plt.grid(True)
+        plt.savefig(bin_plots_path + r'\Dynamic_Binning_Plot.png')
+        plt.close('all')
+        '''
+
+    def get_new_set_point(self, req_pwr_inc):
+
+        # update the binned data dictionary with the latest mean kfpow and ampset
+
+        self.update_binned_data()
+
+        # then take 4 points in binned data  below current set_point
+
+        current_amp_sp = int(self.values[rf_conditioning_data.amp_sp])
+        requested_power = int(self.current_power + req_pwr_inc)
+
+        binned_amp_sps = self.binned_amp_vs_kfpow['BIN_X']
+        binned_mean_kfpow = self.binned_amp_vs_kfpow['BIN_mean']
+
+        idx_to_fit = [i for i in range(len(binned_amp_sps)) if binned_amp_sps[i] <= current_amp_sp]
+        if len(idx_to_fit) < self.config.raw_config_data['NUM_SET_POINTS_TO_FIT']:
+
+            predicted_sp = current_amp_sp + self.config.raw_config_data['DEFAULT_RF_INCREASE_LEVEL']
+        else:
+
+            self.values[rf_conditioning_data.old_c] = self.values[rf_conditioning_data.c]
+            self.values[rf_conditioning_data.old_m] = self.values[rf_conditioning_data.m]
+            self.values[rf_conditioning_data.old_x_max] = self.values[rf_conditioning_data.x_max]
+            self.values[rf_conditioning_data.old_x_min] = self.values[rf_conditioning_data.x_min]
+            self.values[rf_conditioning_data.old_y_max] = self.values[rf_conditioning_data.y_max]
+            self.values[rf_conditioning_data.old_y_min] = self.values[rf_conditioning_data.y_min]
+            #
+            # fit with np.polyfit, weighted
+            x_tofit = np.array(binned_amp_sps[idx_to_fit[-5]:idx_to_fit[-1]])
+            y_tofit = np.array(binned_mean_kfpow[idx_to_fit[-5]:idx_to_fit[-1]])
+
+
+
+            # then fit to get new set-point
+
+            err_tofit = 1.0/np.var(y_tofit)
+
+            m, c = np.polyfit(x_tofit, y_tofit, 1, rcond=None, full=False, w=err_tofit)  # [0][1]
+
+
+
+            predicted_sp = int((self.requested_power - c)/m)
+
+            print 'm = {}\nc = {}\nPredicted SP = {}'.format(m,c, predicted_sp)
+
+        return predicted_sp
+
+        # if there are not 4 data point return  default value
+
+        # if step size is too big return default value etc ...
+
+            # predicted_sp = None
+            # m = 0
+            # #self.logger.message_header( __name__ + ' running  get_new_set_point() ')
+            # # ref  to values dictionary
+            # values = self.values
+            # # ref to amp_vs_kfpow_running_stat
+            # kfpowdata = self.values.amp_vs_kfpow_running_stat
+            # current_sp =  s[self.data.amp_sp]
+            #
+            # #
+            # # we have to get the 3 set-points less than the current one (if they exist)
+            # sp_to_fit = self.get_previous_set_points()
+            #
+            # self.current_power = int(kfpowdata[current_sp][1])
+            # self.requested_power = int(self.current_power + req_pwr_inc)
+            #
+            # if len(sp_to_fit) > 1:
+            #     self.previous_power = int(kfpowdata[sp_to_fit[-2]][1])
+            #
+            # if len(sp_to_fit) == self.llrf_config['NUM_SET_POINTS_TO_FIT']: # MAGIC_STRING,
+            #     # store previous values for Straight Line Fit
+            #     values[dat.old_c] = values[dat.c]
+            #     values[dat.old_m] = values[dat.m]
+            #     values[dat.old_x_max] = values[dat.x_max]
+            #     values[dat.old_x_min] = values[dat.x_min]
+            #     values[dat.old_y_max] = values[dat.y_max]
+            #     values[dat.old_y_min] = values[dat.y_min]
+            #     #
+            #     # fit with np.polyfit, weighted
+            #     x_tofit = np.array(sp_to_fit)
+            #     y_tofit = np.array([data[i][1] for i in sp_to_fit])
+            #
+            #     #print('fitting data x_tofit = ', x_tofit)
+            #     #print('fitting data y_tofit = ', y_tofit)
+            #
+            #     # we store the variances of the KFP, fitting requires sigmas
+            #     # this SHOULD be err = np.sqrt([data[i][2] / (data[i][0] -1 ) for i in x])
+            #     # but we ignore the minus 1 incase we get a div by zero
+            #
+            #     err_tofit = np.sqrt([ data[i][2] / (data[i][0] ) for i in sp_to_fit])
+            #
+            #     m, c = np.polyfit(x_tofit, y_tofit, 1, rcond=None, full=False, w=err_tofit)
+            #
+            #
+            #     # get next values for Straight Line Fit
+            #     values[dat.x_max] = sp_to_fit[-1]
+            #     values[dat.x_min] = sp_to_fit[0]
+            #     # get next values for Straight Line Fit
+            #     values[dat.y_max] = m * sp_to_fit[-1] + c
+            #     values[dat.y_min] = m * sp_to_fit[0] + c
+            #     values[dat.c] = c
+            #     values[dat.m] = m
+                #
+                # predicted_sp = int((self.requested_power - c)/m)
+                # #print(m,c,self.current_power,values[dat.last_mean_power], req_pwr_inc )
+                #
+                # self.logger.message('x Points to fit = ' + np.array_str(x_tofit, max_line_width =500), True)
+                # self.logger.message('new delta sp/W  = ' + str(predicted_sp - current_sp) + " / " +
+                #                     str(self.requested_power-self.current_power) + ' (' + str(
+                #     req_pwr_inc) +')',True)
+                #
+                # self.logger.message('last delta sp/W  = ' + str(current_sp - sp_to_fit[-2]) + " / " +
+                #                     str(self.current_power -self.previous_power),True)                self.logger.message('y Points to fit = ' + np.array_str(y_tofit, max_line_width =500), True)
+                # self.logger.message('y Points errors = ' + np.array_str(err_tofit, max_line_width =500), True)
+                # self.logger.message('Fit m , c = ' + str(m) + ", " +  str(c), True)
+                #
+                # self.logger.message('current   sp/W  = ' + str(current_sp)   + " / " + str(self.current_power), True)
+                # self.logger.message('predict   sp/W  = ' + str(predicted_sp) + " / " + str(self.requested_power), True)
+    '''Bining dictionary'''
+
+    dummy_float = -9999.9999
+    dummy_int   = -9999999
+    dummy_state = state.UNKNOWN
+
+    binned_amp_vs_kfpow = {} # A list of the keys for values
+    bin_keys = []  # A list of the keys for values
+
+    '''  This is a list of teh amp_sp value at the center of each bin '''
+    BIN_X = 'BIN_X'
+    bin_keys.append(BIN_X)
+    binned_amp_vs_kfpow[BIN_X] = [dummy_float]
+
+    ''' this a list of the mean kfpow for each bin  '''
+    BIN_mean = 'BIN_mean'
+    bin_keys.append(BIN_mean)
+    binned_amp_vs_kfpow[BIN_mean] = dummy_float
+
+    ''' This is a list of the  amp_sp edges for each bin edge (plus the right had bin)  '''
+    BIN_edges = 'BIN_edges'
+    bin_keys.append(BIN_edges)
+    binned_amp_vs_kfpow[BIN_edges] = dummy_float
+
+    ''' This is hpow mnay data points are in each bin '''
+    BIN_pop = 'BIN_pop'
+    bin_keys.append(BIN_pop)
+    binned_amp_vs_kfpow[BIN_pop] = dummy_float
+
+
+
 
 
 
@@ -408,12 +669,10 @@ class rf_conditioning_data(object):
         we start writing then to file we can check they are being updated as expected. 
     '''
 
-    dummy_float = -9999.9999
-    dummy_int   = -9999999
-    dummy_state = state.UNKNOWN
 
     values = {} # A list of the keys for values
     all_value_keys = []  # A list of the keys for values
+
 
     # keys for all the data we monitor
     time_stamp = 'time_stamp'
@@ -559,9 +818,9 @@ class rf_conditioning_data(object):
     all_value_keys.append(breakdown_rate)
     values[breakdown_rate] = state.UNKNOWN
 
-    breakdown_rate_hi= 'breakdown_rate_hi'
-    all_value_keys.append(breakdown_rate_hi)
-    values[breakdown_rate_hi] = state.UNKNOWN
+    breakdown_rate_low= 'breakdown_rate_low'
+    all_value_keys.append(breakdown_rate_low)
+    values[breakdown_rate_low] = state.UNKNOWN
 
     last_106_bd_count='last_106_bd_count'
     all_value_keys.append(last_106_bd_count)
@@ -708,13 +967,18 @@ class rf_conditioning_data(object):
     all_value_keys.append(last_mean_power)
     values[last_mean_power] = state.UNKNOWN
 
+    gui_can_rf_output = 'gui_can_rf_output'
+    all_value_keys.append(gui_can_rf_output)
+    values[gui_can_rf_output] = True
+
+
     amp_ff = 'amp_ff'
     all_value_keys.append(amp_ff)
-    values[amp_ff] = state.UNKNOWN
+    values[amp_ff] = dummy_int
 
     amp_sp = 'amp_sp'
     all_value_keys.append(amp_sp)
-    values[amp_sp] = state.UNKNOWN
+    values[amp_sp] = dummy_int
 
     phi_sp = 'phi_sp'
     all_value_keys.append(phi_sp)
@@ -807,7 +1071,10 @@ class rf_conditioning_data(object):
     all_value_keys.append(vac_level_can_ramp )
     values[vac_level_can_ramp ] = False
 
-
+    gui_can_ramp = 'gui_can_ramp' # Flag which is T if we can ramp and f if we
+    # cna't base don current vac level
+    all_value_keys.append(gui_can_ramp )
+    values[gui_can_ramp ] = False
 
 
     # we know there will be some LLRF involved
@@ -880,7 +1147,7 @@ class rf_conditioning_data(object):
     # values[probe_pwr] = dummy_float + 7
     # values[vac_level] = dummy_float
     # values[breakdown_rate_aim] = dummy_int
-    # values[breakdown_rate_hi] = dummy_bool
+    # values[breakdown_rate_low] = dummy_bool
     #
     #
     # values[breakdown_rate] = dummy_int+ 11

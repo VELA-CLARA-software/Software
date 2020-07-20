@@ -133,6 +133,40 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         # dict for widgets to simplfy updating values
         self.widget = {}
         self.expert_widget = {}
+        self.llrf_enable_button.clicked.connect(self.handle_llrf_enable_button)
+        self.llrf_enable_button.setStyleSheet('QPushButton { background-color : ' + self.good + '; '
+                                                                                             'color : black; }')
+        self.llrf_enable_button.setText('RF Enabled')
+
+
+        # initialise gui_can_ramp_button to "RAMP DISABLED"
+        self.can_ramp_button.clicked.connect(self.handle_can_ramp_button)
+        self.can_ramp_button.setStyleSheet('QPushButton { background-color : ' + self.bad + '; color : black; }')
+        self.can_ramp_button.setText('RAMP Disabled')
+
+    def handle_can_ramp_button(self):
+        if self.values[rf_conditioning_data.gui_can_ramp]:
+            self.values[rf_conditioning_data.gui_can_ramp] = False
+            self.can_ramp_button.setStyleSheet('QPushButton { background-color : ' + self.bad + '; color : black; }')
+            self.can_ramp_button.setText('RAMP Disabled')
+        else:
+            self.values[rf_conditioning_data.gui_can_ramp] = True
+            self.can_ramp_button.setStyleSheet('QPushButton { background-color : ' + self.good +
+                                               '; color : black; }')
+
+            self.can_ramp_button.setText('RAMP Enabled')
+
+
+    def handle_llrf_enable_button(self):
+        if self.values[rf_conditioning_data.gui_can_rf_output]:
+            self.values[rf_conditioning_data.gui_can_rf_output] = False
+            self.llrf_enable_button.setStyleSheet('QPushButton { background-color : ' + self.bad + '; color : black; }')
+            self.llrf_enable_button.setText('RF Disabled')
+        else:
+            self.values[rf_conditioning_data.gui_can_rf_output] = True
+            self.llrf_enable_button.setStyleSheet('QPushButton { background-color : ' + self.good +
+                                               '; color : black; }')
+            self.llrf_enable_button.setText('RF Enabled')
 
     def start_gui_update(self):
         # reference to the values dictionary
@@ -186,6 +220,14 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
 
         self.update_DAQ_rep_rate()
 
+        self.update_all_counters()
+
+        self.update_amp_sp()
+
+    def update_amp_sp(self):
+        self.amp_set_outputwidget.setText(
+            '{}'.format(self.values[self.data.amp_sp]))
+
     def update_DAQ_rep_rate(self):
         self.trace_rep_rate_outpuwidget.setText(
             '{:0=4.2f}'.format(self.values[self.data.llrf_DAQ_rep_rate]))
@@ -212,7 +254,7 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
     def update_widget(self, key, val, widget):
         print("update_widget() called,", type(val), key, widget.objectName())
         # meh
-        if key == self.data.breakdown_rate_hi:
+        if key == self.data.breakdown_rate_low:
             self.set_widget_color(widget, not val)
         elif key == self.data.vac_decay_level:
             self.set_widget_color(widget, val)
@@ -291,9 +333,11 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
 
     def update_vac_level(self):
         self.vac_level_outputwidget.setText(
-            '{:0=4.2f} e-9'.format(self.values[self.data.vac_level]))
+            '{}'.format(self.values[self.data.vac_level]))
         self.set_widget_color(self.vac_level_outputwidget,
                               self.values[self.data.vac_level_can_ramp])
+
+        #print 'Update vac GUI with {}'.format(self.values[self.data.vac_level])
 
     def update_status_flags(self):
 
@@ -366,7 +410,7 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         # self.dc_level_outputwidget  # self.widget[self.data.event_pulse_count] =
         # self.event_pulse_count_outputwidget  #  # # we're going to do BD rate aim on teh same
         # widget as the measured BD rate  # #self.widget[self.data.breakdown_rate_aim] =
-        # self.breakdown_rate_limit_outputwidget  # self.widget[self.data.breakdown_rate_hi] =
+        # self.breakdown_rate_limit_outputwidget  # self.widget[self.data.breakdown_rate_low] =
         # self.measured_breakdown_rate_outputwidget  # #self.widget[self.data.last_106_bd_count]
         # = self.last_106_count_outputwidget  #  # #self.widget[self.data.last_mean_power] =
         # self.last_setpoint_power_outputwidget  #  # #self.widget[self.data.next_power_increase]
@@ -388,6 +432,29 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         # self.widget[self.data.llrf_DAQ_rep_rate_status] = self.trace_rep_rate_outpuwidget
 
         # self.widget[self.data.vac_level_can_ramp] = self.vac_level_outputwidget
+
+    def update_all_counters(self):
+        self.pulse_count_outputwidget.setText(
+            '{}'.format(self.values[self.data.pulse_count]))
+
+        self.event_pulse_count_outputwidget.setText(
+            '{} / {}'.format(self.values[self.data.event_pulse_count], self.values[self.data.required_pulses] ))
+
+        ''' HOW MNAY PULES TO NEXT RAMP (INLCDUGIN BD RATE BEING GOOD ETC, SO COULD BE  thousands'''
+        self.pulses_to_next_ramp_outputwidget.setText(
+            '{}'.format(self.values[self.data.pulses_to_next_ramp]))
+
+        self.breakdown_count_outputwidget.setText(
+            '{}'.format(self.values[self.data.breakdown_count]))
+
+        self.last_106_count_outputwidget.setText(
+            '{}'.format(self.values[self.data.last_106_bd_count]))
+
+        self.set_widget_color(self.last_106_count_outputwidget, self.values[self.data.breakdown_rate_low])
+
+        self.measured_breakdown_rate_outputwidget.setText(
+            '{}'.format(self.values[self.data.breakdown_rate]))
+
 
     def update_expert_values_in_gui(self):
         """

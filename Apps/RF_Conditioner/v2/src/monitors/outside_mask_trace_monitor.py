@@ -95,6 +95,7 @@ class outside_mask_trace_monitor(monitor):
         self.values[self.data.breakdown_status] = state.GOOD
 
     def update_value(self):
+
         """
         This is the main update function, it handles the pulse-counting and OMED-counting
         """
@@ -103,6 +104,10 @@ class outside_mask_trace_monitor(monitor):
         # the number of pulses since last 'event' (actually includes since last ramp, so re-name)
         self.values[self.data.event_pulse_count] = self.values[self.data.pulse_count] - \
                                               self.event_pulse_count_zero
+
+       # print 'Pulse count = {}\nEvent pulse count = {}'.format(self.values[
+        # self.data.pulse_count], self.values[self.data.event_pulse_count])
+
         # elapsed time since we started
         self.values[self.data.elapsed_time] = self.llrf_control.elapsedTime()
         # Number of Outside Mask Events Detected (OMED) by CATAP llrf

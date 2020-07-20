@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+              #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
 /*
@@ -171,6 +171,7 @@ class vac_monitor(monitor):
         if len(self._value_history) > self.num_samples_to_average:
             self._value_history.pop(0)
             self._mean_level = sum(self._value_history)/self.num_samples_to_average
+            #print 'New Vacuum mean level = {}'.format(self._mean_level)
 
     def update_value(self):
         """

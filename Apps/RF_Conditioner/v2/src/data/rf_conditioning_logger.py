@@ -35,6 +35,7 @@ import numpy
 # import wolframclient.serializers as wxf
 # from src.data.state import state
 import sys
+import numpy as np
 import traceback
 import collections
 from PyQt4.QtGui import QApplication
@@ -82,6 +83,42 @@ class rf_conditioning_logger(logger):
         self.data_log_timer = QTimer() # A thread to write the binary log
 
         self.values = None
+
+    # TODO AJG: define function to bin amp-power data after amp-power log is read in.
+    #  Need to make sure bin_width, max_amp & max_pow are defined in the config.yml
+
+    def initial_bin(self, x, y, bin_width, max_amp, max_pow):
+        # TODO: Might need to fold in info about how many pulses per amp set point have occurred
+        #  as this might affect error /std/variance calcs.
+        xprime = [x[i] for i in range(len(x) - 1) if x[i] != x[i + 1]]
+        xprime.append(max_amp)
+        xprime.insert(0, 0)
+        yprime = [y[i] for i in range(len(x) - 1) if x[i] != x[i + 1]]
+        yprime.append(max_pow)
+        yprime.insert(0, 0.0)
+
+        bedges = [i * bin_width for i in range(int(xprime[-1] + (2 * int(bin_width))) / int(bin_width))]
+        bin_mean = np.zeros(len(bedges) - 1)
+        bin_pop = np.zeros(len(bedges) - 1)
+        bin_error = np.zeros(len(bedges) - 1)
+        keyList = [i for i in range(len(bedges) - 1)]
+        #TODO have all data in bins as a list of lists rather than dictionary.
+        data_binned = {}
+        for i in keyList:
+            data_binned[i] = []
+        for i in range(0, len(xprime)):
+            for j in range(0, len(bin_mean)):
+                if xprime[i] >= bedges[j] and xprime[i] < bedges[j + 1]:
+                    #print('bin_mean[j] = ',bin_mean[j])
+                    #print('bin_pop[j] = ', bin_pop[j])
+                    #print('yprime[i] = ', yprime[i])
+                    #print('((bin_mean[j] * bin_pop[j]) + (yprime[i])) / (bin_pop[j] + 1.0) = ', ((bin_mean[j] * bin_pop[j]) + (yprime[i])) / (bin_pop[j] + 1.0))
+                    bin_mean[j] = ((bin_mean[j] * bin_pop[j]) + (yprime[i])) / (bin_pop[j] + 1.0)
+                    bin_pop[j] += 1.0
+                    data_binned[j].append(xprime[i])
+                    bin_error[j] = np.std(data_binned[j])
+        X = [k + bin_width / 2.0 for k in bedges[:-1]]
+        return X, bin_mean, bedges, bin_pop, data_binned, bin_error
 
     def set_data_values(self, values):
         '''

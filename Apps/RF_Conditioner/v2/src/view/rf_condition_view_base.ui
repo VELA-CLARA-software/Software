@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1209</width>
-    <height>861</height>
+    <height>869</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,7 +18,7 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="main_tab">
        <attribute name="title">
@@ -35,7 +35,7 @@
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_4">
          <item>
-          <widget class="QPushButton" name="start_pause_ramp_button_3">
+          <widget class="QPushButton" name="can_ramp_button">
            <property name="minimumSize">
             <size>
              <width>111</width>
@@ -54,7 +54,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="llrf_enable_button_3">
+          <widget class="QPushButton" name="llrf_enable_button">
            <property name="minimumSize">
             <size>
              <width>111</width>
