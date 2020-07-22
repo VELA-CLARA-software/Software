@@ -26,7 +26,7 @@
 from monitor import monitor
 from src.data.state import state
 from PyQt4.QtCore import QTimer
-import src.data.rf_condition_data_base as dat
+#import src.data.rf_condition_data_base as dat
 from numpy import mean
 
 

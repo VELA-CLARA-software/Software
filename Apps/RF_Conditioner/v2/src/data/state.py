@@ -43,6 +43,16 @@ class state(Enum):
     INTERLOCK = 8
     STANDBY = 9
 
-    statename = { BAD: 'BAD', GOOD: 'GOOD', UNKNOWN:'UNKNOWN', INIT:'INIT', NEW_BAD:'NEW_BAD',NEW_GOOD:'NEW_GOOD',
-                  TIMING:'TIMING', ERROR: 'ERROR', INTERLOCK:'INTERLOCK', STANDBY:'STANDBY'}
+    statename = {BAD: 'BAD', GOOD: 'GOOD', UNKNOWN: 'UNKNOWN', INIT: 'INIT', NEW_BAD: 'NEW_BAD', NEW_GOOD: 'NEW_GOOD', TIMING: 'TIMING',
+                 ERROR: 'ERROR', INTERLOCK: 'INTERLOCK', STANDBY: 'STANDBY'}
 
+@unique
+class ramp_method(Enum):
+    '''
+        flags states for different monitors
+    '''
+    UNKNOWN = 0
+    DEFAULT = 1
+    FIT = 2
+    # others include: but the new sp  was too big, etc ...
+    statename = {UNKNOWN: 'UNKNOWN', DEFAULT: 'DEFAULT', FIT: 'FIT'}

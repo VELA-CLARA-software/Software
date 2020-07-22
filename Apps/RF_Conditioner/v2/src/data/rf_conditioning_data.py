@@ -27,7 +27,7 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
-from  config import config
+from config import config
 from rf_conditioning_logger import rf_conditioning_logger
 from VELA_CLARA_RF_Modulator_Control import GUN_MOD_STATE
 from VELA_CLARA_Vac_Valve_Control import VALVE_STATE
@@ -35,6 +35,8 @@ from VELA_CLARA_RF_Protection_Control import RF_PROT_STATUS
 from VELA_CLARA_LLRF_Control import LLRF_TYPE
 from ramp import *
 from src.data.state import state
+from src.data.state import ramp_method
+from numpy import float64 as np_float64
 
 
 class rf_conditioning_data(object):
@@ -55,14 +57,16 @@ class rf_conditioning_data(object):
     # log of last million pulses including:
     current_power = 0
 
-
     amp_vs_kfpow_running_stat = None
+
+    last_fwd_kly_pwr = None
 
     """
     NOT SURE IF DEBUG DOES ANYTHING
     """
     debug = False
-    def __init__(self, debug = False):
+
+    def __init__(self, debug=False):
         rf_conditioning_data.debug = debug
         # config
         self.config = config()
@@ -74,6 +78,51 @@ class rf_conditioning_data(object):
         #
         # logging
         self.logger = rf_conditioning_logger()
+        #
+        # previous entry in kfp running stat, so we don't duplicate too much in the file
+        self.last_kfp_running_stat_entry = None
+
+        self.ramp_max_index = len(ramp) - 1
+
+    def move_up_ramp_curve(self):
+        self.move_ramp_index(1)
+
+    def move_down_ramp_curve(self):
+        # self.clear_last_sp_history(), warnign, we tryign to remove this for V2, but while that happens we might break things ...
+        self.move_ramp_index(-1)
+
+    def move_ramp_index(self, val):
+        self.logger.message_header('move_ramp_index')
+        self.values[rf_conditioning_data.current_ramp_index] += val
+        if self.values[rf_conditioning_data.current_ramp_index] < 0:
+            self.values[rf_conditioning_data.current_ramp_index] = 0
+        # WARNING WE DON'T DO THE BELOW, WE KEEP THE RAMP INDEX INCREMENTING, ONLY RESET TO THE NUMBER OF RAMP POINTS WHEN WE LOOK UP THE NEXT SETTING
+        # elif self.values[rf_conditioning_data.current_ramp_index] > self.ramp_max_index:
+        #     self.values[rf_conditioning_data.current_ramp_index] = self.ramp_max_index
+        self.set_ramp_values()
+
+    def set_ramp_values(self):
+        rcd = rf_conditioning_data
+        rcd.values[rcd.required_pulses] = ramp[rcd.values[rcd.current_ramp_index]][0]
+        rcd.values[rcd.last_power_increase] = rcd.values[rcd.next_power_increase]
+        rcd.values[rcd.next_power_increase] = float(ramp[rcd.values[rcd.current_ramp_index]][1])
+        self.logger.message_header(__name__ + ' set_ramp_values ')
+
+        self.logger.message(
+            'current ramp index   = {}\n  next required pulses = {}\n next power increase  =  {}'.format(rcd.values[rcd.current_ramp_index],
+                                                                                                         rcd.values[rcd.required_pulses], rcd.values[
+                                                                                                             rcd.next_power_increase]))  #  #
+        # self.logger.message(['current ramp index   = {}'.format(rcd.values[rcd.current_ramp_index]),  #                      'next required
+        # pulses =  {}'.format(rcd.values[rcd.required_pulses]),  #                      'next power increase  =  {}'.format(rcd.values[
+        # rcd.next_power_increase])  # 'next sp decrease     = ' + str(  #                      dat.rf_condition_data_base.values[
+        # dat.next_sp_decrease])],True)
+
+    def reset_event_pulse_count(self):
+        rcd = rf_conditioning_data
+        rcd.values[rcd.event_pulse_count_zero] = rcd.values[rcd.pulse_count]
+        rcd.values[rcd.event_pulse_count] = 0
+        self.logger.message_header(__name__ + ' reset_event_pulse_count')
+        self.logger.message('new event_pulse_count_zero = {}'.format(rcd.values[rcd.event_pulse_count_zero]))
 
     def set_values_from_config(self):
         """
@@ -90,42 +139,70 @@ class rf_conditioning_data(object):
         v = self.values
         v[rcd.breakdown_rate_aim] = cd[config.BREAKDOWN_RATE_AIM]
         v[rcd.llrf_DAQ_rep_rate_aim] = cd[config.RF_REPETITION_RATE]
-        v[rcd.llrf_DAQ_rep_rate_max] = cd[config.RF_REPETITION_RATE] + cd[
-            config.RF_REPETITION_RATE_ERROR]
-        v[rcd.llrf_DAQ_rep_rate_min] = cd[config.RF_REPETITION_RATE] - cd[
-            config.RF_REPETITION_RATE_ERROR]
+        v[rcd.llrf_DAQ_rep_rate_max] = cd[config.RF_REPETITION_RATE] + cd[config.RF_REPETITION_RATE_ERROR]
+        v[rcd.llrf_DAQ_rep_rate_min] = cd[config.RF_REPETITION_RATE] - cd[config.RF_REPETITION_RATE_ERROR]
 
         ## set the pusle length min adn max ranges
         v[rcd.expected_pulse_length] = cd[config.PULSE_LENGTH]
-        v[rcd.pulse_length_min] = cd[config.PULSE_LENGTH] + cd[
-            config.PULSE_LENGTH_ERROR]
-        v[rcd.pulse_length_max] = cd[config.PULSE_LENGTH] - cd[
-            config.PULSE_LENGTH_ERROR]
+        v[rcd.pulse_length_min] = cd[config.PULSE_LENGTH] + cd[config.PULSE_LENGTH_ERROR]
+        v[rcd.pulse_length_max] = cd[config.PULSE_LENGTH] - cd[config.PULSE_LENGTH_ERROR]
 
+    def log_kly_fwd_power_vs_amp(self):
+        '''
+            update the KFP running stats log file, with some checking to only update the file if we have new data
+        '''
+        rcd = rf_conditioning_data
+        next_log_entry = self.last_kfp_running_stat_entry
+        if rcd.values[rcd.amp_sp] in rcd.amp_vs_kfpow_running_stat.keys():
+            next_log_entry = [rcd.values[rcd.amp_sp]] + rcd.amp_vs_kfpow_running_stat[rcd.values[rcd.amp_sp]]
+        # if the numbers have changed since the last time we ran this function then write to text log
+        if next_log_entry != self.last_kfp_running_stat_entry:
+            self.logger.add_to_kfpow_running_stat_log(next_log_entry)
+        self.last_kfp_running_stat_entry = next_log_entry
 
+        ''' This past is updating the amp_sp_history, howeverr for verison 2 i con't think we need it  '''
+        if rcd.values[rcd.amp_sp] > 100.0:  # MAGIC_NUMBER so we don't log low settings due to BD events
+            if self.kly_power_changed():
+                if rcd.values[rcd.fwd_kly_pwr] > self.config.raw_config_data['KLY_PWR_FOR_ACTIVE_PULSE']:
+                    rcd.sp_pwr_hist.append([rcd.values[rcd.amp_sp], rcd.values[rcd.fwd_kly_pwr]])
+            # cancer
+            if rcd.values[rcd.amp_sp] not in rcd.amp_sp_history:
+                rcd.amp_sp_history.append(rcd.values[rcd.amp_sp])
+                self.logger.message('New amp_sp_history value = ' + str(rcd.values[rcd.amp_sp]))
+
+    def kly_power_changed(self):
+        '''
+            this is checking to see if the current kfpow is different to the last time this function was called
+            We do this because the LLRF can get in a state were it continuously sends out the same data (due to ACQM and SCAN settings)
+        '''
+        rcd = rf_conditioning_data
+        r = False
+        if rcd.last_fwd_kly_pwr != rcd.values[rcd.fwd_kly_pwr]:
+            r = True
+        rcd.last_fwd_kly_pwr = rcd.values[rcd.fwd_kly_pwr]
+        return r
 
     def setup_pulse_count_breakdown_log(self):
         """
         this is way too complicated ... but its processing the data in two ways,
-        once by amp_setpoint and once by pusle count, it generates to main lists:
+        once by amp_setpoint and once by pulse count, it generates to main lists:
         1) rf_condition_data.amp_sp_history
               Sorted by amp_setpoint
-              Used to define how to ramp up adn down
+              Used to define how to ramp up and down
         2) rf_condition_data.last_million_log
               Sorted by pulse count
               used to define the Breakdown Rate etc.
         if I read through the comments, i can basically work out what is going on
         """
-        # TODO: we should use fitting to move down in power steps instead of next_sp_decrease in
-        #  the same way we move up in power steps
-        # TODO: the ramp index should continue to increment, even when it as above the total
-        #  number of ramp points, then we know how many steps we have actually gone up / down
+        # TODO: we should use fitting to move down in power steps instead of next_sp_decrease in the same way we move up in power steps
+        # TODO: the ramp index should continue to increment, even when it as above the total number of ramp points, then we know how many steps we
+        #  have actually gone up / down
 
         # local alias for shorter lines
         rcd = rf_conditioning_data
         message = self.logger.message
         #
-        # get the pulse_break_down_log entries from file
+        # get the pulse_break_down_log entries from file (this is just the raw entries from the file )
         pulse_break_down_log = self.logger.get_pulse_count_breakdown_log()
         #
         # based on the log file we set active pulse count total,
@@ -134,19 +211,45 @@ class rf_conditioning_data(object):
         # FIRST:
         # save the last entry, log_pulse_count and breakdown count
         # keep this seperate as pulse_count will get overwritten!!
-        #
+        # TODO use small helper functions to get pulse-count, amp_sp, bd, from an entry, so we don't make mistakes  with indexes
         self.values[rcd.log_pulse_count] = int(pulse_break_down_log[-1][0])
+
+        # we **can** set these here,
+        self.values[rcd.pulse_count] = self.values[rcd.log_pulse_count]
+        self.values[rcd.event_pulse_count_zero] = self.values[rcd.log_pulse_count]
+        self.values[rcd.event_pulse_count] = 0
+
+
         self.values[rcd.breakdown_count] = int(pulse_break_down_log[-1][1])
+
         #
-        # first amp is the second to last one in log file (WHY???? DJS Jan 2019,
-        # maybe we should ramp to this value on startup)
+        # next we must insert the data in to the main data values dictionary
+        # set the ramp index
+        self.values[rcd.current_ramp_index] = int(pulse_break_down_log[-1][3])
+        self.set_ramp_values()
+
+        #
+        # pulse length (logged but not used as pulse_length is now defined by the pulse shaping
+        # table)
+        self.values[rcd.log_pulse_length] = float(int(pulse_break_down_log[-1][3])) / float(1000.0)  # warning UNIT
+
+        # TODO I don't think this is used and doesn't make sense to me now
+        self.config_data['PULSE_LENGTH_START'] = self.values[rcd.log_pulse_length]
+
+        #
+        # The Frist amp_setpoint to set on start-up
+        self.values[rcd.log_amp_set] =  int(pulse_break_down_log[-1][2])
+
+        # TODO djs: i don't think we need the below, (apart from to get some numbers out), this data should be ratinoalises (cut to just what we
+        #  need ) which is when a BD event happened, and the last point we were at
+        # first amp_sp to use is the is the  last one in log file ( IT USED TO BE THE  2nd to last one)
         # remove values greater than than last_amp_sp_in_file
-        #
         last_amp_sp_in_file = int(pulse_break_down_log[-1][2])
         indices_to_remove = []
         index_to_remove = 0
         for entry in pulse_break_down_log:
-            if entry[2] >= last_amp_sp_in_file:
+            #if entry[2] >= last_amp_sp_in_file:
+            if entry[2] > last_amp_sp_in_file:
                 indices_to_remove.append(index_to_remove)
             index_to_remove += 1
         #
@@ -163,27 +266,21 @@ class rf_conditioning_data(object):
         # make another list, ampSP_sorted_pulse_break_down_log, this has NO Setpoints = the final
         # sp in sorted_pulse_break_down_log_1
         # the final entry in sorted_pulse_break_down_log_1 is the sp point with highest pulse count
-        ampSP_sorted_pulse_break_down_log = []
-        last_i = sorted_pulse_break_down_log_1[-1]
-        #
-        #
-        for i in sorted_pulse_break_down_log_1:
-            if last_i[2] == i[2]:
-                pass
-            else:
-                ampSP_sorted_pulse_break_down_log.append(i)
-            last_i = i
-        #
-        # next we must insert the data in to the main data values dictionary
-        #
-        # set the ramp index
-        self.values[rcd.current_ramp_index] = ampSP_sorted_pulse_break_down_log[-1][3]
+        # ampSP_sorted_pulse_break_down_log = []
+        # last_i = sorted_pulse_break_down_log_1[-1]
+        # #
+        # #
+        # for i in sorted_pulse_break_down_log_1:
+        #     if last_i[2] == i[2]:
+        #         pass
+        #     else:
+        #         ampSP_sorted_pulse_break_down_log.append(i)
+        #     last_i = i
         #
         # amp_setpoint history history, THIS is used to decide where to ramp down,
         # and what amp_setpoint to use in fitting when ramping-up
         # write this list to the main log
-        rcd.amp_sp_history = [int(i[2]) for i in ampSP_sorted_pulse_break_down_log]
-
+        #rcd.amp_sp_history = [int(i[2]) for i in ampSP_sorted_pulse_break_down_log]
 
         """ PRINT rf_condition_data amp SP history on startup"""
         # self.logger.message(self.my_name + ' amp SP history on startup ',
@@ -195,20 +292,8 @@ class rf_conditioning_data(object):
 
 
         #
-        # The next amp_setpoint to set
-        self.values[rcd.log_amp_set] = rcd.amp_sp_history[-1]
-        #
         # the next amp_setpoint on ramp_down
-        self.values[rcd.next_sp_decrease] = rcd.amp_sp_history[-2]
-        #
-        # pulse length (logged but not used as pulse_length is now defined by the pulse shaping
-        # table)
-        self.values[rcd.log_pulse_length] = float(ampSP_sorted_pulse_break_down_log[-1][4]) / float(
-            1000.0)  # warning UNIT
-
-
-        # TODO I don't tihnk this is used and doesn;t make sense to me now
-        self.config_data['PULSE_LENGTH_START'] = self.values[rcd.log_pulse_length]
+        #self.values[rcd.next_sp_decrease] = rcd.amp_sp_history[-2]  # TODO purge 'next_sp_decrease' from entire code
 
         #
         # set the number of pulses required at this step to the default, updated later
@@ -216,12 +301,9 @@ class rf_conditioning_data(object):
         #
         # Write to log
         message(__name__ + ' has processed the pulse_count_breakdown_log ')
-        message([rcd.log_pulse_count + ' ' + str(self.values[rcd.log_pulse_count]),
-                 rcd.required_pulses + ' ' + str(self.values[rcd.required_pulses]),
-                 rcd.breakdown_count + ' ' + str(self.values[rcd.breakdown_count]),
-                 rcd.log_amp_set + ' ' + str(self.values[rcd.log_amp_set]),
-                 rcd.current_ramp_index + ' ' + str(self.values[rcd.current_ramp_index]),
-                 # hmmm what to do about pulse length chaing
+        message([rcd.log_pulse_count + ' ' + str(self.values[rcd.log_pulse_count]), rcd.required_pulses + ' ' + str(self.values[rcd.required_pulses]),
+                 rcd.breakdown_count + ' ' + str(self.values[rcd.breakdown_count]), rcd.log_amp_set + ' ' + str(self.values[rcd.log_amp_set]),
+                 rcd.current_ramp_index + ' ' + str(self.values[rcd.current_ramp_index]), # hmmm what to do about pulse length chaing
                  # 'pulse length = ' + str(self._llrf_config['PULSE_LENGTH_START']),
                  rcd.next_sp_decrease + ' ' + str(self.values[rcd.next_sp_decrease])], )
         #
@@ -233,8 +315,7 @@ class rf_conditioning_data(object):
         # !!! (remember above we deleted the last entry in pulse_break_down_log to  generate
         # amp_sp_history         !!!
         pulse_break_down_log = self.logger.get_pulse_count_breakdown_log()
-        one_million_pulses_ago = self.values[rcd.log_pulse_count] - self.config_data[
-            'NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY']
+        one_million_pulses_ago = self.values[rcd.log_pulse_count] - self.config_data['NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY']
         rcd.last_million_log = [x for x in pulse_break_down_log if x[0] >= one_million_pulses_ago]
         #
         # write last_million_log to log
@@ -248,8 +329,8 @@ class rf_conditioning_data(object):
         message('One Million pulses ago  = ' + str(one_million_pulses_ago))
         first_entry = ' , '.join(str(x) for x in rcd.last_million_log[0])
         last_entry = ' , '.join(str(x) for x in rcd.last_million_log[-1])
-        message('last_million_log[ 0] = '+first_entry)
-        message('last_million_log[-1] = '+last_entry)
+        message('last_million_log[ 0] = ' + first_entry)
+        message('last_million_log[-1] = ' + last_entry)
         #
         # sanity check
         #
@@ -282,8 +363,7 @@ class rf_conditioning_data(object):
 
         old_last_106_bd_count = self.values[rcd.last_106_bd_count]
         self.values[rcd.breakdown_count] = rcd.last_million_log[-1][1]
-        self.values[rcd.last_106_bd_count] = rcd.last_million_log[-1][1] - rcd.last_million_log[0][
-            1]
+        self.values[rcd.last_106_bd_count] = rcd.last_million_log[-1][1] - rcd.last_million_log[0][1]
         # if we have more than 1 million pulses its easy
         if rcd.last_million_log[-1][0] > self.config_data['NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY']:
             self.values[rcd.breakdown_rate] = self.values[rcd.last_106_bd_count]
@@ -293,40 +373,27 @@ class rf_conditioning_data(object):
             else:
                 # !!!!!!!!!! THIS EQUATION MAY NOT BE CORRECT !!!!!!!!!!!!!!
                 self.values[rcd.breakdown_rate] = float(
-                    self.values[rcd.last_106_bd_count] * self.config_data[
-                        'NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY']) / float(
+                    self.values[rcd.last_106_bd_count] * self.config_data['NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY']) / float(
                     rcd.last_million_log[-1][0] - rcd.last_million_log[0][0])
 
         # set is breakdwon rate hi
-        self.values[rcd.breakdown_rate_low] = self.values[rcd.breakdown_rate] <= self.values[
-            rcd.breakdown_rate_aim]
+        self.values[rcd.breakdown_rate_low] = self.values[rcd.breakdown_rate] <= self.values[rcd.breakdown_rate_aim]
 
         if old_last_106_bd_count != self.values[rcd.last_106_bd_count]:
-            self.logger.message_header(' NEW last_106_bd_count ', add_to_text_log=True,
-                                       show_time_stamp=False)
-            message('Total breakdown_count = ' + str(rcd.last_million_log[-1][1]),
-                    add_to_text_log=True, show_time_stamp=False)
+            self.logger.message_header(' NEW last_106_bd_count ', add_to_text_log=True, show_time_stamp=False)
+            message('Total breakdown_count = ' + str(rcd.last_million_log[-1][1]), add_to_text_log=True, show_time_stamp=False)
 
-            message('Last million pulse count => ' + str(rcd.last_million_log[-1][0]) + ' - ' + str(
-                rcd.last_million_log[0][0]) + ' = ' + str(
-                rcd.last_million_log[-1][0] - rcd.last_million_log[0][0]), add_to_text_log=True,
-                    show_time_stamp=False)
-            message(
-                'Last million breakdown_count => ' + str(rcd.last_million_log[-1][1]) + ' - ' + str(
-                    rcd.last_million_log[0][1]) + ' = ' + str(self.values[rcd.last_106_bd_count]),
-                add_to_text_log=True, show_time_stamp=False)
+            message('Last million pulse count => ' + str(rcd.last_million_log[-1][0]) + ' - ' + str(rcd.last_million_log[0][0]) + ' = ' + str(
+                rcd.last_million_log[-1][0] - rcd.last_million_log[0][0]), add_to_text_log=True, show_time_stamp=False)
+            message('Last million breakdown_count => ' + str(rcd.last_million_log[-1][1]) + ' - ' + str(rcd.last_million_log[0][1]) + ' = ' + str(
+                self.values[rcd.last_106_bd_count]), add_to_text_log=True, show_time_stamp=False)
 
             if self.values[rcd.breakdown_rate_low]:
-                message(
-                    'Breakdown rate Low: ' + str(self.values[rcd.breakdown_rate]) + ' <= ' + str(
-                        self.values[rcd.breakdown_rate_aim]), add_to_text_log=True,
-                    show_time_stamp=False)
+                message('Breakdown rate Low: ' + str(self.values[rcd.breakdown_rate]) + ' <= ' + str(self.values[rcd.breakdown_rate_aim]),
+                    add_to_text_log=True, show_time_stamp=False)
             else:
-                message(
-                    'Breakdown rate High: ' + str(self.values[rcd.breakdown_rate]) + ' > ' + str(
-                        self.values[rcd.breakdown_rate_aim]), add_to_text_log=True,
-                    show_time_stamp=False)
-                # ESTIMATE THE NUMBER OF PULSES BEFORE WE GO GOOD AGAIN
+                message('Breakdown rate High: ' + str(self.values[rcd.breakdown_rate]) + ' > ' + str(self.values[rcd.breakdown_rate_aim]),
+                    add_to_text_log=True, show_time_stamp=False)  # ESTIMATE THE NUMBER OF PULSES BEFORE WE GO GOOD AGAIN
 
     def update_last_million_pulse_log(self):
         """
@@ -337,16 +404,14 @@ class rf_conditioning_data(object):
 
         # add the next set of values to the last_million_log
         rcd.last_million_log.append(
-            [self.values[rcd.pulse_count], self.values[rcd.breakdown_count],
-                self.values[rcd.current_ramp_index], self.values[rcd.pulse_length]])
+            [self.values[rcd.pulse_count], self.values[rcd.breakdown_count], self.values[rcd.current_ramp_index], self.values[rcd.pulse_length]])
 
         # remove entries that are mor ethan 1 millino pulses ago
         # TODO should we hardcode in the million pulses??? or have it  as a config parameters,
         #  and rename everything that references 1 million???? MAYBE CALL IT
         #  recent_breakdown_history, recent_bd_history >>> ?
         #
-        while rcd.last_million_log[-1][0] - rcd.last_million_log[0][0] > self.config_data[
-            config.NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY]:
+        while rcd.last_million_log[-1][0] - rcd.last_million_log[0][0] > self.config_data[config.NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY]:
             rcd.last_million_log.pop(0)
 
         # update all the breakdown stats based on the last millino log
@@ -362,10 +427,9 @@ class rf_conditioning_data(object):
         rcd = rf_conditioning_data
         if amp > 100:  # MAGIC_NUMBER
             self.logger.add_to_pulse_count_breakdown_log(
-                [rcd.values[rcd.pulse_count], rcd.values[rcd.breakdown_count], int(amp),
-                    int(rcd.values[rcd.current_ramp_index]),
-                    int(rcd.values[rcd.pulse_length] * 1000)  # MAGIC_NUMBER UNITS
-                ])
+                [rcd.values[rcd.pulse_count], rcd.values[rcd.breakdown_count], int(amp), int(rcd.values[rcd.current_ramp_index]),
+                 int(rcd.values[rcd.pulse_length] * 1000)  # MAGIC_NUMBER UNITS
+                 ])
 
     def initialise(self):
         """
@@ -399,51 +463,35 @@ class rf_conditioning_data(object):
         # bin_keys.append(BIN_error)
         # binned_amp_vs_kfpow[BIN_error] = dummy_float
 
-        #TODO AJG: bin the amp-power data here after being read in
-        #print 'rcd.amp_vs_kfpow_running_stat[0] = ', rcd.amp_vs_kfpow_running_stat[0]
-        #print 'rcd.amp_vs_kfpow_running_stat[0][0] = ', rcd.amp_vs_kfpow_running_stat[0][0]
-        #print 'len(rcd.amp_vs_kfpow_running_stat) = ', len(rcd.amp_vs_kfpow_running_stat)
+        # TODO AJG: bin the amp-power data here after being read in
+        # print 'rcd.amp_vs_kfpow_running_stat[0] = ', rcd.amp_vs_kfpow_running_stat[0]
+        # print 'rcd.amp_vs_kfpow_running_stat[0][0] = ', rcd.amp_vs_kfpow_running_stat[0][0]
+        # print 'len(rcd.amp_vs_kfpow_running_stat) = ', len(rcd.amp_vs_kfpow_running_stat)
 
-        #TODO AJG: cycle over 'rcd.amp_vs_kfpow_running_stat' and append ...
+        # TODO AJG: cycle over 'rcd.amp_vs_kfpow_running_stat' and append ...
         # key = amp **
         # [0] = num_pulses (with beam)
         # [1] = power **
         # [2] = rolling variance * (num_pulses -1)  .....I think!
-        AMP_preBin = []
-        POW_preBin = []
-        for key in rcd.amp_vs_kfpow_running_stat:
-            AMP_preBin.append(key)
-            POW_preBin.append(rcd.amp_vs_kfpow_running_stat[key][1])
 
-        bin_width = self.config.raw_config_data['BIN_WIDTH']
-        max_amp = self.config.raw_config_data['MAX_AMP']
-        max_pow = self.config.raw_config_data['MAX_POW']
 
-        print 'len(AMP_preBin) = ', len(AMP_preBin)
-        print 'len(POW_preBin) = ', len(POW_preBin)
-        print 'bin_width = ', bin_width
-        print 'max_amp = ', max_amp
-        print 'max_pow = ', max_pow
-
-        bin_X, bin_mean, bin_edges, bin_pop, bin_data, bin_error = self.logger.initial_bin(
-            AMP_preBin,
-            POW_preBin, bin_width, max_amp, max_pow)
-
+        bin_X, bin_mean, bin_edges, bin_pop, bin_data, bin_std, bin_pulses = self.initial_bin()
 
         rcd.binned_amp_vs_kfpow['BIN_X'] = bin_X
         rcd.binned_amp_vs_kfpow['BIN_mean'] = bin_mean
         rcd.binned_amp_vs_kfpow['BIN_edges'] = bin_edges
         rcd.binned_amp_vs_kfpow['BIN_pop'] = bin_pop
+        rcd.binned_amp_vs_kfpow['BIN_pulses'] = bin_pulses
         # binned_amp_vs_kfpow[BIN_data] = bin_data
         # binned_amp_vs_kfpow[BIN_error] = bin_error
 
-        #TODO AJG: diagnostic plot saved to work folder:
-
+        # TODO AJG: diagnostic plot saved to work folder:
+        '''
         bin_plots_path = r'C:\Users\dlerlp\Documents\RF_Conditioning_20200720'
-        POW_preBin_MW = [i/10**6 for i in POW_preBin]
+        POW_preBin_MW = [i / 10 ** 6 for i in POW_preBin]
         plt.scatter(AMP_preBin, POW_preBin_MW, c='k', s=1.0, marker='.', label='Data', zorder=1)
         plt.scatter(bin_X, bin_mean, c='r', s=25, marker='x', label='Binned Mean', zorder=0)
-        #plt.errorbar(bin_X, bin_mean, yerrbin_error, xerr=0, fmt='none', ecolor='red',
+        # plt.errorbar(bin_X, bin_mean, yerrbin_error, xerr=0, fmt='none', ecolor='red',
         # elinewidth=0.5, capsize=2.0, capthick=0.5)
         plt.xlabel('Set Point')
         plt.ylabel('Power (MW)')
@@ -451,6 +499,84 @@ class rf_conditioning_data(object):
         plt.grid(True)
         plt.savefig(bin_plots_path + r'\Binning_Plot_test.png')
         plt.close('all')
+        '''
+
+    def initial_bin(self):
+
+        '''This reads in the data from the amp_power log and bins all available data.
+        The power values are already mean so need multiplying by the # of pulses, summing then dividing by the total number of pulses
+        to get the genuine mean.
+        '''
+
+        rcd = rf_conditioning_data
+
+        # cycle through amp_vs_kfpow_running_stat to populate amp_sp, kfpwr and number-of-pulses lists
+        x = amp_sp_raw = []
+        num_pulses_prebin = []
+        y = mean_kfpwr_raw = []
+
+        for key in rcd.amp_vs_kfpow_running_stat.keys():
+            amp_sp_raw.append(key)
+            num_pulses_prebin.append(rcd.amp_vs_kfpow_running_stat[key][0])
+            mean_kfpwr_raw.append(rcd.amp_vs_kfpow_running_stat[key][1])
+            #print("init_bin set_up data = ", amp_sp_raw[-1], num_pulses_prebin[-1], mean_kfpwr_raw[-1])
+
+        #print('mean_kfpwr_raw = {}'.format(mean_kfpwr_raw))
+
+        # Call in config parameters
+        bin_width = self.config.raw_config_data['BIN_WIDTH']
+        max_pow = self.config.raw_config_data['MAX_POW']
+        min_amp = self.config.raw_config_data['MIN_AMP']
+        max_amp = self.config.raw_config_data['MAX_AMP']
+
+        # append max_amp & max_pow to list of amp & power. This is done so bins can be created ahead of the current amp_sp/kfpwr data point.
+        #x = [x[i] for i in range(len(x) - 1) if x[i] != x[i + 1]]
+        x.append(max_amp)
+        #y = [y[i] for i in range(len(x) - 1) if x[i] != x[i + 1]]
+        y.append(max_pow)
+
+        # Create list of bin edges starting at min_amp and ending at max_amp (max_amp now last element of x list)
+        bedges = np.arange(int(min_amp), int(x[-1]), bin_width).tolist()  # Not happy with np.arange.tolist() but it works!?!
+
+        # create arrays of zeros of length len(bedges)-1 ready to be populated by the main calculator
+        bin_pulses = np.zeros(len(bedges) - 1)
+        bin_mean =  np.zeros(len(bedges) - 1)
+        bin_pop = np.zeros(len(bedges) - 1)
+        bin_std = np.zeros(len(bedges) - 1)
+        bin_pulses = np.zeros(len(bedges) - 1)
+
+        # Create dictionary of empty lists ready to be populated by all the raw kfpwr data sorted by bins where the bin index is the dict key
+        keyList = [i for i in range(len(bedges) - 1)]
+        data_binned = {}
+        for i in keyList:
+            data_binned[i] = []
+
+        # MAIN CALCULATOR: cycle over data and assign it to bins
+        for i in range(0, len(x)):
+            for j in range(0, len(bin_mean)):
+                if x[i] >= bedges[j] and x[i] < bedges[j + 1]:
+                    # multiply the number of pulses by the mean kfpowr to get the product (used in MEAN_EQN)
+                    bin_pulse_x_mean =  num_pulses_prebin[i] * y[i]
+                    # Define the new total number of pulses in the bin (used in MEAN_EQN)
+                    bin_pulses_new = (bin_pulses[j] +  num_pulses_prebin[i])
+                    # MEAN_EQN:
+                    bin_mean[j] = ((bin_mean[j] * bin_pulses[j]) + (bin_pulse_x_mean)) / bin_pulses_new
+                    # Update the total number of pulses in the bin with new value
+                    bin_pulses[j] = bin_pulses_new
+                    # Add one to bin population
+                    bin_pop[j] += 1.0
+                    # Add datapoint to data_binned dictionary
+                    data_binned[j].append(y[i])
+                    # Calculate the standard deviation of the data in each bin (needs to be weighted properly)
+                    bin_std[j] = np.std(data_binned[j])
+
+        # Create a list of mid-bin amp set point values for use with the GUI plotter
+        X = [k + bin_width / 2.0 for k in bedges[:-1]]
+
+        #print('X = {}\nbin_mean = {}\nbin_pulses = {}\nbin_pop = {}\ndata_binned = {}\nbin_error = {}'.format(X[0:10], bin_mean[0:10],
+        # bin_pulses[0:10], bin_pop[0:10],data_binned, bin_std[0:10]))
+
+        return X, bin_mean, bedges, bin_pop, data_binned, bin_std, bin_pulses
 
     def update_binned_data(self):
         '''
@@ -466,28 +592,46 @@ class rf_conditioning_data(object):
         # TODO Lets update the binned data with amp_vs_kfpow_running_stat
         # TODO it seems like there maybe a 'cleaner' way to do this
 
-        #new_amp = int(self.amp_vs_kfpow_running_stat[self.values[self.data.amp_sp]])
-        new_amp = int(self.values[rf_conditioning_data.amp_sp])
-        new_kfp = rf_conditioning_data.amp_vs_kfpow_running_stat[self.values[rf_conditioning_data.amp_sp]]
+        # new_amp = int(self.amp_vs_kfpow_running_stat[self.values[self.data.amp_sp]])
 
-        newdata = [new_amp, new_kfp]
-        X = rf_conditioning_data.binned_amp_vs_kfpow['BIN_X']
+        # Acquire latest amp_sp, mean_kfpwr & number of pulses at amp_sp:
+        new_kfp_pulses_list = rf_conditioning_data.amp_vs_kfpow_running_stat[self.values[rf_conditioning_data.amp_sp]]
+        new_amp = self.values[rf_conditioning_data.amp_sp]
+        new_kfp = new_kfp_pulses_list[1]
+        new_pulses = new_kfp_pulses_list[0]
+
+        # Collate new data into newdata list
+        newdata = [new_amp, new_kfp, new_pulses]
+        print('new_kfp_list = {}\ntype(new_kfp_list) = {}'.format(new_kfp_pulses_list, type(new_kfp_pulses_list)))
+
+        # Call in data from binned_amp_vs_kfpow distionary already populated by initial_bin() ind subsequently here.
         bin_mean = rf_conditioning_data.binned_amp_vs_kfpow['BIN_mean']
         bedges = rf_conditioning_data.binned_amp_vs_kfpow['BIN_edges']
         bin_pop = rf_conditioning_data.binned_amp_vs_kfpow['BIN_pop']
+        bin_pulses = rf_conditioning_data.binned_amp_vs_kfpow['BIN_pulses']
 
+        # Cycle through bin edges until the x-axis (amp_sp) data sits between current and next bin edge.
         for i in range(int(len(bin_mean))):
             if newdata[0] >= bedges[i] and newdata[0] < bedges[i + 1]:
-                bin_pop[i] += 1
-                bin_mean[i] = ((bin_mean[i] * bin_pop[i]) + newdata[1]) / (bin_pop[i] + 1.0)
-                print('dynamic_bin() Working')
-                print('bin_count = {}').format(i)
+                # multiply the number of pulses by the mean kfpowr to get the product (used in MEAN_EQN)
+                bin_pulse_x_mean =  newdata[1] * newdata[2]
+                # Define the new total number of pulses in the bin (used in MEAN_EQN)
+                bin_pulses_new = (bin_pulses[i] + newdata[2])
+                # MEAN_EQN:
+                bin_mean[i] = ((bin_mean[i] * bin_pulses[i]) + (bin_pulse_x_mean)) / bin_pulses_new
+                # Update the total number of pulses in the bin with new value
+                bin_pulses[i] = bin_pulses_new
+                # Add one to bin population
+                bin_pop[i] += 1.0
+                # Once found no need to continue, so break.
                 break
             else:
                 pass
 
+        # Update dictionary with new values
         rf_conditioning_data.binned_amp_vs_kfpow['BIN_mean'] = bin_mean
         rf_conditioning_data.binned_amp_vs_kfpow['BIN_pop'] = bin_pop
+        rf_conditioning_data.binned_amp_vs_kfpow['BIN_pulses'] = bin_pulses
 
         '''
         bin_plots_path = r'C:\Users\dlerlp\Documents\RF_Conditioning_20200720'
@@ -502,131 +646,168 @@ class rf_conditioning_data(object):
         '''
 
     def get_new_set_point(self, req_pwr_inc):
-
+        # TODO on each start-up do we want to do a few default increases regardless of how much saved data there is, and should we compare the power
+        #  at these default increase to the saved amp_sp vs KFPow data ?
         # update the binned data dictionary with the latest mean kfpow and ampset
-
         self.update_binned_data()
-
         # then take 4 points in binned data  below current set_point
-
         current_amp_sp = int(self.values[rf_conditioning_data.amp_sp])
-        requested_power = int(self.current_power + req_pwr_inc)
-
+        current_power = rf_conditioning_data.amp_vs_kfpow_running_stat[current_amp_sp][1]
+        requested_power = int(current_power + req_pwr_inc)
+        print('current_power = {}\nreq_pwr_inc = {}\ncurrent_ramp_index = {}'.format(current_power, req_pwr_inc, rf_conditioning_data.values[
+            rf_conditioning_data.current_ramp_index]))
         binned_amp_sps = self.binned_amp_vs_kfpow['BIN_X']
         binned_mean_kfpow = self.binned_amp_vs_kfpow['BIN_mean']
 
         idx_to_fit = [i for i in range(len(binned_amp_sps)) if binned_amp_sps[i] <= current_amp_sp]
-        if len(idx_to_fit) < self.config.raw_config_data['NUM_SET_POINTS_TO_FIT']:
-
+        print('idx_to_fit = {}\nlen(idx_to_fit) = {}'.format(idx_to_fit, len(idx_to_fit)))
+        if len(idx_to_fit) < self.config.raw_config_data['NUM_SET_POINTS_TO_FIT'] + 1:
             predicted_sp = current_amp_sp + self.config.raw_config_data['DEFAULT_RF_INCREASE_LEVEL']
-        else:
+            self.values[rf_conditioning_data.last_ramp_method] = ramp_method.DEFAULT
+            print('Not enough non-zero buns to fit to. Current number of non-zero bins = {}'.format(len(idx_to_fit)))
 
+        else:
+            print("We have enough binned data fitting, len(idx_to_fit) = {}".format(len(idx_to_fit)))
             self.values[rf_conditioning_data.old_c] = self.values[rf_conditioning_data.c]
             self.values[rf_conditioning_data.old_m] = self.values[rf_conditioning_data.m]
-            self.values[rf_conditioning_data.old_x_max] = self.values[rf_conditioning_data.x_max]
             self.values[rf_conditioning_data.old_x_min] = self.values[rf_conditioning_data.x_min]
             self.values[rf_conditioning_data.old_y_max] = self.values[rf_conditioning_data.y_max]
             self.values[rf_conditioning_data.old_y_min] = self.values[rf_conditioning_data.y_min]
-            #
+            self.values[rf_conditioning_data.old_x_max] = self.values[rf_conditioning_data.x_max]
+
             # fit with np.polyfit, weighted
+
             x_tofit = np.array(binned_amp_sps[idx_to_fit[-5]:idx_to_fit[-1]])
             y_tofit = np.array(binned_mean_kfpow[idx_to_fit[-5]:idx_to_fit[-1]])
+            print('x_tofit = {}\ny_tofit = {}'.format(x_tofit, y_tofit))
+
+            if 0.0 in y_tofit:
+                self.values[rf_conditioning_data.last_ramp_method] = ramp_method.DEFAULT
+                predicted_sp = current_amp_sp + self.config.raw_config_data['DEFAULT_RF_INCREASE_LEVEL']
+                print('Klystron Forward Power = 0.0 in at least one of the fitting bins\ny_tofit = {}'.format(y_tofit))
+                print('Ramping using default value of {} from {} to {}'.format(self.config.raw_config_data['DEFAULT_RF_INCREASE_LEVEL'],
+                        current_amp_sp, current_amp_sp + self.config.raw_config_data['DEFAULT_RF_INCREASE_LEVEL'] ))
+            else:
+                print('No non-zero Klystron Forward Power values in bins to fit, initiating fit....')
+                # then fit to get new set-point
+                # err_tofit = 1.0/np.var(y_tofit) TODO sort out errors
+                p = np.polyfit(x_tofit, y_tofit, 1, rcond=None, full=False)  # , w=np.array(err_tofit))  # [0][1]
+                print(type(p))
+                print(p)
+                m = p[0]
+                c = p[1]
+
+                predicted_sp = int((requested_power - c) / m)
+                print 'm = {}\nc = {}\nPredicted SP = {}'.format(m, c, predicted_sp)
+
+                self.values[rf_conditioning_data.last_ramp_method] = ramp_method.FIT
+
+                self.values[rf_conditioning_data.x_min] = min(x_tofit)
+                self.values[rf_conditioning_data.x_max] = max(x_tofit)
+                self.values[rf_conditioning_data.y_min] = min(y_tofit)
+                self.values[rf_conditioning_data.y_max] = max(y_tofit)
+                self.values[rf_conditioning_data.c] = c
+                self.values[rf_conditioning_data.m] = m
+
+                print(
+                'From rf_cond_data:\nmin(x_tofit) = {}\nmax(x_tofit) = {}\nmin(y_tofit) = {}\nmax(y_tofit) = {}\nc = {}\nm = {}\nPredicted SP = {}'.format(min(x_tofit),
+                    max(x_tofit), min(y_tofit), max(y_tofit), c, m, predicted_sp))
+
+                if m <= 0:
+                    self.logger.message('Predicted negative gradient, returning current_sp + {}'.format(self.config.raw_config_data[
+                                                                                                            'DEFAULT_RF_INCREASE_LEVEL']))
+                    self.logger.message('current sp/W  = {} / {}'.format(current_amp_sp, current_power))
+        #     return_value = current_sp + self.llrf_config['DEFAULT_RF_INCREASE_LEVEL']
+
+        return_value =  predicted_sp
+
+        if predicted_sp - current_amp_sp > self.config.raw_config_data['MAX_DELTA_AMP_SP']:# MAGIC_STRING
+            print()
+            self.logger.message('Amp set point returned from fit > than MAX_DELTA_AMP_SP ({} > {})\nUsing default amp set point increase of +{} instead'.format(
+                predicted_sp - current_amp_sp, self.config.raw_config_data['MAX_DELTA_AMP_SP'], self.config.raw_config_data['DEFAULT_RF_INCREASE_LEVEL']))
+
+            return_value = current_amp_sp + self.config.raw_config_data['DEFAULT_RF_INCREASE_LEVEL']
+
+        elif predicted_sp < current_amp_sp:
+             self.logger.message('Predicted sp is less than current_sp! returning current_sp + {}'.format(self.config.raw_config_data['DEFAULT_RF_INCREASE_LEVEL']))
+             return_value = current_amp_sp + self.config.raw_config_data['DEFAULT_RF_INCREASE_LEVEL']
+
+        elif predicted_sp == current_amp_sp:
+             self.logger.message('Predicted sp == current_sp, returning current_sp + {}'.format(self.config.raw_config_data[
+                                                                                                    'DEFAULT_RF_INCREASE_LEVEL']))
+             return_value = predicted_sp + self.config.raw_config_data['DEFAULT_RF_INCREASE_LEVEL']
+
+        else:
+             return_value = predicted_sp
 
 
+        return return_value
 
-            # then fit to get new set-point
-
-            err_tofit = 1.0/np.var(y_tofit)
-
-            m, c = np.polyfit(x_tofit, y_tofit, 1, rcond=None, full=False, w=err_tofit)  # [0][1]
-
-
-
-            predicted_sp = int((self.requested_power - c)/m)
-
-            print 'm = {}\nc = {}\nPredicted SP = {}'.format(m,c, predicted_sp)
-
-        return predicted_sp
+        # TODO this logic needs ot be included to catch @weird@ cases
+        # return_value = 0
+        # if predicted_sp < current_sp:
+        #     self.logger.message('Predicted sp is less than current_sp! returning current_sp + ' + str(self.llrf_config['DEFAULT_RF_INCREASE_LEVEL']) , True)
+        #     return_value = current_sp + self.llrf_config['DEFAULT_RF_INCREASE_LEVEL']
+        #
+        # elif m <= 0:
+        #     self.logger.message('Predicted negative gradient, returning current_sp + ' + str(self.llrf_config['DEFAULT_RF_INCREASE_LEVEL']),True)
+        #     self.logger.message('current sp/W  = ' + str(current_sp) + " / " + str(self.current_power), True)
+        #     return_value = current_sp + self.llrf_config['DEFAULT_RF_INCREASE_LEVEL']
+        #
+        # elif predicted_sp - current_sp > self.llrf_config['MAX_DELTA_AMP_SP']:# MAGIC_STRING
+        #     self.logger.message('Predicted SP > ' + str(self.llrf_config['MAX_DELTA_AMP_SP']) + ', too high, returning current_sp + ' + str(self.llrf_config['MAX_DELTA_AMP_SP']) ,True)
+        #     return_value = current_sp + self.llrf_config['MAX_DELTA_AMP_SP']
+        #
+        # elif predicted_sp == current_sp:
+        #     self.logger.message('Predicted sp == current_sp, returning current_sp + ' + str(self.llrf_config['DEFAULT_RF_INCREASE_LEVEL']),True)
+        #     return_value = predicted_sp + self.llrf_config['DEFAULT_RF_INCREASE_LEVEL']
+        #
+        # elif predicted_sp is None:
+        #     self.logger.message('Not Enough KFP data to fit, returning current_sp + ' + str(self.llrf_config['DEFAULT_RF_INCREASE_LEVEL']), True)
+        #     self.logger.message('current sp/W  = ' + str(current_sp) + " / " + str(self.current_power), True)
+        #     return_value = current_sp + self.llrf_config['DEFAULT_RF_INCREASE_LEVEL']
+        # else:
+        #     return_value = predicted_sp
+        # self.logger.message('get_new_set_point, returning ' + str(return_value), True)
+        # return return_value
 
         # if there are not 4 data point return  default value
 
         # if step size is too big return default value etc ...
 
-            # predicted_sp = None
-            # m = 0
-            # #self.logger.message_header( __name__ + ' running  get_new_set_point() ')
-            # # ref  to values dictionary
-            # values = self.values
-            # # ref to amp_vs_kfpow_running_stat
-            # kfpowdata = self.values.amp_vs_kfpow_running_stat
-            # current_sp =  s[self.data.amp_sp]
-            #
-            # #
-            # # we have to get the 3 set-points less than the current one (if they exist)
-            # sp_to_fit = self.get_previous_set_points()
-            #
-            # self.current_power = int(kfpowdata[current_sp][1])
-            # self.requested_power = int(self.current_power + req_pwr_inc)
-            #
-            # if len(sp_to_fit) > 1:
-            #     self.previous_power = int(kfpowdata[sp_to_fit[-2]][1])
-            #
-            # if len(sp_to_fit) == self.llrf_config['NUM_SET_POINTS_TO_FIT']: # MAGIC_STRING,
-            #     # store previous values for Straight Line Fit
-            #     values[dat.old_c] = values[dat.c]
-            #     values[dat.old_m] = values[dat.m]
-            #     values[dat.old_x_max] = values[dat.x_max]
-            #     values[dat.old_x_min] = values[dat.x_min]
-            #     values[dat.old_y_max] = values[dat.y_max]
-            #     values[dat.old_y_min] = values[dat.y_min]
-            #     #
-            #     # fit with np.polyfit, weighted
-            #     x_tofit = np.array(sp_to_fit)
-            #     y_tofit = np.array([data[i][1] for i in sp_to_fit])
-            #
-            #     #print('fitting data x_tofit = ', x_tofit)
-            #     #print('fitting data y_tofit = ', y_tofit)
-            #
-            #     # we store the variances of the KFP, fitting requires sigmas
-            #     # this SHOULD be err = np.sqrt([data[i][2] / (data[i][0] -1 ) for i in x])
-            #     # but we ignore the minus 1 incase we get a div by zero
-            #
-            #     err_tofit = np.sqrt([ data[i][2] / (data[i][0] ) for i in sp_to_fit])
-            #
-            #     m, c = np.polyfit(x_tofit, y_tofit, 1, rcond=None, full=False, w=err_tofit)
-            #
-            #
-            #     # get next values for Straight Line Fit
-            #     values[dat.x_max] = sp_to_fit[-1]
-            #     values[dat.x_min] = sp_to_fit[0]
-            #     # get next values for Straight Line Fit
-            #     values[dat.y_max] = m * sp_to_fit[-1] + c
-            #     values[dat.y_min] = m * sp_to_fit[0] + c
-            #     values[dat.c] = c
-            #     values[dat.m] = m
-                #
-                # predicted_sp = int((self.requested_power - c)/m)
-                # #print(m,c,self.current_power,values[dat.last_mean_power], req_pwr_inc )
-                #
-                # self.logger.message('x Points to fit = ' + np.array_str(x_tofit, max_line_width =500), True)
-                # self.logger.message('new delta sp/W  = ' + str(predicted_sp - current_sp) + " / " +
-                #                     str(self.requested_power-self.current_power) + ' (' + str(
-                #     req_pwr_inc) +')',True)
-                #
-                # self.logger.message('last delta sp/W  = ' + str(current_sp - sp_to_fit[-2]) + " / " +
-                #                     str(self.current_power -self.previous_power),True)                self.logger.message('y Points to fit = ' + np.array_str(y_tofit, max_line_width =500), True)
-                # self.logger.message('y Points errors = ' + np.array_str(err_tofit, max_line_width =500), True)
-                # self.logger.message('Fit m , c = ' + str(m) + ", " +  str(c), True)
-                #
-                # self.logger.message('current   sp/W  = ' + str(current_sp)   + " / " + str(self.current_power), True)
-                # self.logger.message('predict   sp/W  = ' + str(predicted_sp) + " / " + str(self.requested_power), True)
+        # predicted_sp = None  # m = 0  # #self.logger.message_header( __name__ + ' running  get_new_set_point() ')  # # ref  to values dictionary
+        # values = self.values  # # ref to amp_vs_kfpow_running_stat  # kfpowdata = self.values.amp_vs_kfpow_running_stat  # current_sp =  s[
+        # self.data.amp_sp]  #  # #  # # we have to get the 3 set-points less than the current one (if they exist)  # sp_to_fit =
+        # self.get_previous_set_points()  #  # self.current_power = int(kfpowdata[current_sp][1])  # self.requested_power = int(self.current_power
+        # + req_pwr_inc)  #  # if len(sp_to_fit) > 1:  #     self.previous_power = int(kfpowdata[sp_to_fit[-2]][1])  #  # if len(sp_to_fit) ==
+        # self.llrf_config['NUM_SET_POINTS_TO_FIT']: # MAGIC_STRING,  #     # store previous values for Straight Line Fit  #     values[dat.old_c]
+        # = values[dat.c]  #     values[dat.old_m] = values[dat.m]  #     values[dat.old_x_max] = values[dat.x_max]  #     values[dat.old_x_min] =
+        # values[dat.x_min]  #     values[dat.old_y_max] = values[dat.y_max]  #     values[dat.old_y_min] = values[dat.y_min]  #     #  #     # fit
+        # with np.polyfit, weighted  #     x_tofit = np.array(sp_to_fit)  #     y_tofit = np.array([data[i][1] for i in sp_to_fit])  #  #
+        # #print('fitting data x_tofit = ', x_tofit)  #     #print('fitting data y_tofit = ', y_tofit)  #  #     # we store the variances of the
+        # KFP, fitting requires sigmas  #     # this SHOULD be err = np.sqrt([data[i][2] / (data[i][0] -1 ) for i in x])  #     # but we ignore the
+        # minus 1 incase we get a div by zero  #  #     err_tofit = np.sqrt([ data[i][2] / (data[i][0] ) for i in sp_to_fit])  #  #     m,
+        # c = np.polyfit(x_tofit, y_tofit, 1, rcond=None, full=False, w=err_tofit)  #  #  #     # get next values for Straight Line Fit  #
+        # values[dat.x_max] = sp_to_fit[-1]  #     values[dat.x_min] = sp_to_fit[0]  #     # get next values for Straight Line Fit  #     values[
+        # dat.y_max] = m * sp_to_fit[-1] + c  #     values[dat.y_min] = m * sp_to_fit[0] + c  #     values[dat.c] = c  #     values[dat.m] = m  #
+        # predicted_sp = int((self.requested_power - c)/m)  # #print(m,c,self.current_power,values[dat.last_mean_power], req_pwr_inc )  #  #
+        # self.logger.message('x Points to fit = ' + np.array_str(x_tofit, max_line_width =500), True)  # self.logger.message('new delta sp/W  = '
+        # + str(predicted_sp - current_sp) + " / " +  #                     str(self.requested_power-self.current_power) + ' (' + str(  #
+        # req_pwr_inc) +')',True)  #  # self.logger.message('last delta sp/W  = ' + str(current_sp - sp_to_fit[-2]) + " / " +  #
+        # str(self.current_power -self.previous_power),True)                self.logger.message('y Points to fit = ' + np.array_str(y_tofit,
+        # max_line_width =500), True)  # self.logger.message('y Points errors = ' + np.array_str(err_tofit, max_line_width =500),
+        # True)  # self.logger.message('Fit m , c = ' + str(m) + ", " +  str(c), True)  #  # self.logger.message('current   sp/W  = ' + str(
+        # current_sp)   + " / " + str(self.current_power), True)  # self.logger.message('predict   sp/W  = ' + str(predicted_sp) + " / " + str(
+        # self.requested_power), True)
+
     '''Bining dictionary'''
 
+    dummy_np_float_64 = np_float64(-9999.9999)
     dummy_float = -9999.9999
-    dummy_int   = -9999999
+    dummy_int = -9999999
     dummy_state = state.UNKNOWN
 
-    binned_amp_vs_kfpow = {} # A list of the keys for values
+    binned_amp_vs_kfpow = {}  # A list of the keys for values
     bin_keys = []  # A list of the keys for values
 
     '''  This is a list of teh amp_sp value at the center of each bin '''
@@ -649,10 +830,9 @@ class rf_conditioning_data(object):
     bin_keys.append(BIN_pop)
     binned_amp_vs_kfpow[BIN_pop] = dummy_float
 
-
-
-
-
+    BIN_pulses = 'BIN_pulses'
+    bin_keys.append(BIN_pulses)
+    binned_amp_vs_kfpow[BIN_pulses] = dummy_float
 
     ''' 
         The values dictionary. 
@@ -669,15 +849,13 @@ class rf_conditioning_data(object):
         we start writing then to file we can check they are being updated as expected. 
     '''
 
-
-    values = {} # A list of the keys for values
+    values = {}  # A list of the keys for values
     all_value_keys = []  # A list of the keys for values
-
 
     # keys for all the data we monitor
     time_stamp = 'time_stamp'
     all_value_keys.append(time_stamp)
-    values[time_stamp] = dummy_float # CHECK TYPE
+    values[time_stamp] = dummy_float  # CHECK TYPE
 
     # STATUS PF MAIN MONITORS
     vac_spike_status = 'vac_spike_status'
@@ -705,7 +883,6 @@ class rf_conditioning_data(object):
     pulses_to_next_ramp = 'pulses_to_next_ramp'
     all_value_keys.append(pulses_to_next_ramp)
     values[pulses_to_next_ramp] = dummy_int
-
 
     sol_value = 'sol_value'
     all_value_keys.append(sol_value)
@@ -757,6 +934,13 @@ class rf_conditioning_data(object):
     all_value_keys.append(vac_spike_status)
     values[probe_pha] = dummy_float
 
+
+    delta_kfpow = 'delta_kfpow'
+    all_value_keys.append(delta_kfpow)
+    values[delta_kfpow] = dummy_float
+
+
+
     vac_level = 'vac_level'
     all_value_keys.append(vac_level)
     values[vac_level] = dummy_float
@@ -797,7 +981,12 @@ class rf_conditioning_data(object):
     log_pulse_count = 'log_pulse_count'
     all_value_keys.append(log_pulse_count)
     values[log_pulse_count] = dummy_int
-    #log_breakdown_count = 'log_breakdown_count'
+    # log_breakdown_count = 'log_breakdown_count'
+
+    event_pulse_count_zero = 'event_pulse_count_zero'
+    all_value_keys.append(event_pulse_count_zero)
+    values[event_pulse_count_zero] = dummy_int
+
     log_amp_set = 'log_amp_set'
     all_value_keys.append(log_amp_set)
     values[log_amp_set] = dummy_int
@@ -818,11 +1007,11 @@ class rf_conditioning_data(object):
     all_value_keys.append(breakdown_rate)
     values[breakdown_rate] = state.UNKNOWN
 
-    breakdown_rate_low= 'breakdown_rate_low'
+    breakdown_rate_low = 'breakdown_rate_low'
     all_value_keys.append(breakdown_rate_low)
     values[breakdown_rate_low] = state.UNKNOWN
 
-    last_106_bd_count='last_106_bd_count'
+    last_106_bd_count = 'last_106_bd_count'
     all_value_keys.append(last_106_bd_count)
     values[last_106_bd_count] = dummy_int
 
@@ -860,19 +1049,18 @@ class rf_conditioning_data(object):
     values[can_rf_output] = state.UNKNOWN
 
     # This i sthe "general interloac" and should be re-named to reflect this
-    llrf_interlock = 'llrf_interlock' # The read value from EPICS
+    llrf_interlock = 'llrf_interlock'  # The read value from EPICS
     all_value_keys.append(llrf_interlock)
     values[llrf_interlock] = state.UNKNOWN
 
-    llrf_interlock_status = 'llrf_interlock_status' # the apps internal state, good, new_bad etc
+    llrf_interlock_status = 'llrf_interlock_status'  # the apps internal state, good, new_bad etc
     all_value_keys.append(llrf_interlock_status)
     values[llrf_interlock_status] = state.UNKNOWN
 
     # the state of the "Trace interlocks" these are where you can specify a power that disables LLRF
-    llrf_trace_interlock = 'llrf_trace_interlock' # The read value from EPICS
+    llrf_trace_interlock = 'llrf_trace_interlock'  # The read value from EPICS
     all_value_keys.append(llrf_trace_interlock)
     values[llrf_trace_interlock] = state.UNKNOWN
-
 
     llrf_trigger = 'llrf_trigger'
     all_value_keys.append(llrf_trigger)
@@ -899,15 +1087,15 @@ class rf_conditioning_data(object):
     all_value_keys.append(pulse_length_max)
     values[pulse_length_max] = dummy_float
 
-    pulse_length_status = 'pulse_length_status' # the apps internal state, good, new_bad etc
+    pulse_length_status = 'pulse_length_status'  # the apps internal state, good, new_bad etc
     all_value_keys.append(pulse_length_status)
     values[pulse_length_status] = state.UNKNOWN
 
-    llrf_output = 'llrf_output' # RF Output on LLRF panel
+    llrf_output = 'llrf_output'  # RF Output on LLRF panel
     all_value_keys.append(llrf_output)
     values[llrf_output] = state.UNKNOWN
 
-    llrf_output_status = 'llrf_output_status' # the apps internal state, good, new_bad etc
+    llrf_output_status = 'llrf_output_status'  # the apps internal state, good, new_bad etc
     all_value_keys.append(llrf_output_status)
     values[llrf_output_status] = state.UNKNOWN
 
@@ -915,15 +1103,15 @@ class rf_conditioning_data(object):
     all_value_keys.append(llrf_ff_amp_locked)
     values[llrf_ff_amp_locked] = state.UNKNOWN
 
-    llrf_ff_amp_locked_status = 'llrf_ff_amp_locked_status' # the apps internal state, good, new_bad etc
+    llrf_ff_amp_locked_status = 'llrf_ff_amp_locked_status'  # the apps internal state, good, new_bad etc
     all_value_keys.append(llrf_ff_amp_locked_status)
     values[llrf_ff_amp_locked_status] = state.UNKNOWN
 
-    llrf_ff_ph_locked  = 'llrf_ff_ph_locked'
+    llrf_ff_ph_locked = 'llrf_ff_ph_locked'
     all_value_keys.append(llrf_ff_ph_locked)
     values[llrf_ff_ph_locked] = state.UNKNOWN
 
-    llrf_ff_ph_locked_status  = 'llrf_ff_ph_locked_status' # the apps internal state, good, new_bad etc
+    llrf_ff_ph_locked_status = 'llrf_ff_ph_locked_status'  # the apps internal state, good, new_bad etc
     all_value_keys.append(llrf_ff_ph_locked_status)
     values[llrf_ff_ph_locked_status] = state.UNKNOWN
 
@@ -953,24 +1141,28 @@ class rf_conditioning_data(object):
 
     required_pulses = 'required_pulses'
     all_value_keys.append(required_pulses)
-    values[required_pulses] = state.UNKNOWN
+    values[required_pulses] = dummy_int
 
     next_power_increase = 'next_power_increase'
     all_value_keys.append(next_power_increase)
-    values[next_power_increase] = state.UNKNOWN
+    values[next_power_increase] = dummy_float
+
+    last_power_increase = 'last_power_increase'
+    all_value_keys.append(last_power_increase)
+    values[last_power_increase] = dummy_float
+
 
     log_pulse_length = 'log_pulse_length'
     all_value_keys.append(log_pulse_length)
-    values[log_pulse_length] = state.UNKNOWN
+    values[log_pulse_length] = dummy_float
 
     last_mean_power = 'last_mean_power'
     all_value_keys.append(last_mean_power)
-    values[last_mean_power] = state.UNKNOWN
+    values[last_mean_power] = dummy_float
 
     gui_can_rf_output = 'gui_can_rf_output'
     all_value_keys.append(gui_can_rf_output)
     values[gui_can_rf_output] = True
-
 
     amp_ff = 'amp_ff'
     all_value_keys.append(amp_ff)
@@ -978,7 +1170,15 @@ class rf_conditioning_data(object):
 
     amp_sp = 'amp_sp'
     all_value_keys.append(amp_sp)
-    values[amp_sp] = dummy_int
+    values[amp_sp] = dummy_float
+
+    kfpower_at_last_amp_sp = 'kfpower_at_last_amp_sp'
+    all_value_keys.append(kfpower_at_last_amp_sp)
+    values[kfpower_at_last_amp_sp] = dummy_float
+
+    last_amp_sp = 'last_amp_sp'
+    all_value_keys.append(last_amp_sp)
+    values[last_amp_sp] = dummy_float
 
     phi_sp = 'phi_sp'
     all_value_keys.append(phi_sp)
@@ -1005,54 +1205,53 @@ class rf_conditioning_data(object):
     # plot straight line fit values, old and current
     x_min = 'x_min'
     all_value_keys.append(x_min)
-    values[x_min] = dummy_float
+    values[x_min] = dummy_np_float_64
 
     x_max = 'x_max'
     all_value_keys.append(x_max)
-    values[x_max] = dummy_float
+    values[x_max] = dummy_np_float_64
 
     old_x_min = 'old_x_min'
     all_value_keys.append(old_x_min)
-    values[old_x_min] = dummy_float
+    values[old_x_min] = dummy_np_float_64
 
     old_x_max = 'old_x_max'
     all_value_keys.append(old_x_max)
-    values[old_x_max] = dummy_float
+    values[old_x_max] = dummy_np_float_64
 
     y_min = 'y_min'
     all_value_keys.append(y_min)
-    values[y_min] = dummy_float
+    values[y_min] = dummy_np_float_64
 
     y_max = 'y_max'
     all_value_keys.append(y_max)
-    values[y_max] = dummy_float
+    values[y_max] = dummy_np_float_64
 
     old_y_min = 'old_y_min'
     all_value_keys.append(old_y_min)
-    values[old_y_min] = dummy_float
+    values[old_y_min] = dummy_np_float_64
 
     old_y_max = 'old_y_max'
     all_value_keys.append(old_y_max)
-    values[old_y_max] = dummy_float
+    values[old_y_max] = dummy_np_float_64
 
     c = 'c'
     all_value_keys.append(c)
-    values[c] = dummy_float
+    values[c] = dummy_np_float_64
 
     m = 'm'
     all_value_keys.append(m)
-    values[m] = dummy_float
+    values[m] = dummy_np_float_64
 
     old_c = 'old_c'
     all_value_keys.append(old_c)
-    values[old_c] = dummy_float
+    values[old_c] = dummy_np_float_64
 
     old_m = 'old_m'
     all_value_keys.append(old_m)
-    values[old_m] = dummy_float
+    values[old_m] = dummy_np_float_64
 
-
-    #latest_ramp_up_sp = 'latest_ramp_up_sp'
+    # latest_ramp_up_sp = 'latest_ramp_up_sp'
     last_sp_above_100 = 'last_sp_above_100'
     all_value_keys.append(last_sp_above_100)
     values[last_sp_above_100] = dummy_float
@@ -1065,20 +1264,27 @@ class rf_conditioning_data(object):
     all_value_keys.append(next_sp_decrease)
     values[next_sp_decrease] = dummy_float
 
+    vac_level_can_ramp = 'vac_level_can_ramp'  # Flag which is T if we can ramp and f if we cna't base don current vac level
+    all_value_keys.append(vac_level_can_ramp)
+    values[vac_level_can_ramp] = False
 
-
-    vac_level_can_ramp = 'vac_level_can_ramp' # Flag which is T if we can ramp and f if we cna't base don current vac level
-    all_value_keys.append(vac_level_can_ramp )
-    values[vac_level_can_ramp ] = False
-
-    gui_can_ramp = 'gui_can_ramp' # Flag which is T if we can ramp and f if we
+    gui_can_ramp = 'gui_can_ramp'  # Flag which is T if we can ramp and f if we
     # cna't base don current vac level
-    all_value_keys.append(gui_can_ramp )
-    values[gui_can_ramp ] = False
+    all_value_keys.append(gui_can_ramp)
+    values[gui_can_ramp] = False
 
+    gui_can_ramp = 'gui_can_ramp'  # Flag which is T if we can ramp and f if we
+    # cna't base don current vac level
+    all_value_keys.append(gui_can_ramp)
+    values[gui_can_ramp] = False
+
+    last_ramp_method = '_ramp_method'  # Flag which is T if we can ramp and f if we
+    # cna't base don current vac level
+    all_value_keys.append(last_ramp_method)
+    values[last_ramp_method] = ramp_method.UNKNOWN
 
     # we know there will be some LLRF involved
-    #llrf_type = LLRF_TYPE.UNKNOWN_TYPE
+    # llrf_type = LLRF_TYPE.UNKNOWN_TYPE
 
     # config
     # for logging
@@ -1094,15 +1300,7 @@ class rf_conditioning_data(object):
     # fitting parameters
     previous_power = 0
 
-
-
-
-
-
-
-
-    #latest_ramp_up_sp = 0
-
+    # latest_ramp_up_sp = 0
 
     # values = {}  # EXPLAIN THIS
     #
@@ -1125,7 +1323,7 @@ class rf_conditioning_data(object):
     # values[llrf_ff_ph_locked] = state.UNKNOWN
     # values[can_rf_output_OLD] = state.UNKNOWN
 
-#sss
+    # sss
     #
     # values[last_sp_above_100] = 0
     # #values[latest_ramp_up_sp] = 0
@@ -1135,9 +1333,6 @@ class rf_conditioning_data(object):
     # dummy_float = -999.0
     # dummy_int = -999.0
     # dummy_bool = -999.0
-
-
-
 
     #
     #
@@ -1194,7 +1389,6 @@ class rf_conditioning_data(object):
     # #THERE ARE 2 COPIES OF THE last_million_log , FIX THIS !!!!!!!!!!!
     # last_million_log = None
 
-
     '''Expert Values '''
 
     expert_value_keys = []
@@ -1204,949 +1398,916 @@ class rf_conditioning_data(object):
     expert_value_keys.append(vac_pv_val)
     expert_values[vac_pv_val] = "STRING"
 
-    vac_decay_mode_val                   = "vac_decay_mode_val"
+    vac_decay_mode_val = "vac_decay_mode_val"
     expert_value_keys.append(vac_decay_mode_val)
     expert_values[vac_decay_mode_val] = "STRING"
 
-    vac_decay_level                      = "vac_decay_level"
+    vac_decay_level = "vac_decay_level"
     expert_value_keys.append(vac_decay_level)
     expert_values[vac_decay_level] = dummy_float
 
-    vac_decay_time_val                   = "vac_decay_time_val"
+    vac_decay_time_val = "vac_decay_time_val"
     expert_value_keys.append(vac_decay_time_val)
     expert_values[vac_decay_time_val] = dummy_int
 
-    vac_drop_amp                         = "vac_drop_amp"
+    vac_drop_amp = "vac_drop_amp"
     expert_value_keys.append(vac_drop_amp)
     expert_values[vac_drop_amp] = dummy_int
 
-    vac_hi_pressure                      = "vac_hi_pressure"
+    vac_hi_pressure = "vac_hi_pressure"
     expert_value_keys.append(vac_hi_pressure)
     expert_values[vac_hi_pressure] = dummy_float
 
-    vac_spike_delta_val                  = "vac_spike_delta_val"
+    vac_spike_delta_val = "vac_spike_delta_val"
     expert_value_keys.append(vac_spike_delta_val)
     expert_values[vac_spike_delta_val] = dummy_float
 
-    vac_num_samples_to_average_val       = "vac_num_samples_to_average_val"
+    vac_num_samples_to_average_val = "vac_num_samples_to_average_val"
     expert_value_keys.append(vac_num_samples_to_average_val)
     expert_values[vac_num_samples_to_average_val] = "STRING"
 
-    vac_drop_amp_val                     = "vac_drop_amp_val"
+    vac_drop_amp_val = "vac_drop_amp_val"
     expert_value_keys.append(vac_drop_amp_val)
     expert_values[vac_drop_amp_val] = "STRING"
 
-    ramp_when_hi                         = "ramp_when_hi"
+    ramp_when_hi = "ramp_when_hi"
     expert_value_keys.append(ramp_when_hi)
     expert_values[ramp_when_hi] = "STRING"
 
-    vac_decay_mode                       = "vac_decay_mode"
+    vac_decay_mode = "vac_decay_mode"
     expert_value_keys.append(vac_decay_mode)
     expert_values[vac_decay_mode] = "STRING"
 
-    vac_decay_level_val                  = "vac_decay_level_val"
+    vac_decay_level_val = "vac_decay_level_val"
     expert_value_keys.append(vac_decay_level_val)
     expert_values[vac_decay_level_val] = "STRING"
 
-    vac_hi_pressure_val                  = "vac_hi_pressure_val"
+    vac_hi_pressure_val = "vac_hi_pressure_val"
     expert_value_keys.append(vac_hi_pressure_val)
     expert_values[vac_hi_pressure_val] = "STRING"
 
-    ramp_when_hi_val                     = "ramp_when_hi_val"
+    ramp_when_hi_val = "ramp_when_hi_val"
     expert_value_keys.append(ramp_when_hi_val)
     expert_values[ramp_when_hi_val] = "STRING"
 
-    vac_spike_check_time_val             = "vac_spike_check_time_val"
+    vac_spike_check_time_val = "vac_spike_check_time_val"
     expert_value_keys.append(vac_spike_check_time_val)
     expert_values[vac_spike_check_time_val] = "STRING"
 
-    vac_spike_check_time                 = "vac_spike_check_time"
+    vac_spike_check_time = "vac_spike_check_time"
     expert_value_keys.append(vac_spike_check_time)
     expert_values[vac_spike_check_time] = "STRING"
 
-    is_breakdown_monitor_kf_pow          = "is_breakdown_monitor_kf_pow"
+    is_breakdown_monitor_kf_pow = "is_breakdown_monitor_kf_pow"
     expert_value_keys.append(is_breakdown_monitor_kf_pow)
     expert_values[is_breakdown_monitor_kf_pow] = False
 
-    is_breakdown_monitor_kr_pow          = "is_breakdown_monitor_kr_pow"
+    is_breakdown_monitor_kr_pow = "is_breakdown_monitor_kr_pow"
     expert_value_keys.append(is_breakdown_monitor_kr_pow)
     expert_values[is_breakdown_monitor_kr_pow] = False
 
-    is_breakdown_monitor_cf_pow          = "is_breakdown_monitor_cf_pow"
+    is_breakdown_monitor_cf_pow = "is_breakdown_monitor_cf_pow"
     expert_value_keys.append(is_breakdown_monitor_cf_pow)
     expert_values[is_breakdown_monitor_cf_pow] = False
 
-    is_breakdown_monitor_cr_pow          = "is_breakdown_monitor_cr_pow"
+    is_breakdown_monitor_cr_pow = "is_breakdown_monitor_cr_pow"
     expert_value_keys.append(is_breakdown_monitor_cr_pow)
     expert_values[is_breakdown_monitor_cr_pow] = False
 
-    is_breakdown_monitor_cp_pow          = "is_breakdown_monitor_cp_pow"
+    is_breakdown_monitor_cp_pow = "is_breakdown_monitor_cp_pow"
     expert_value_keys.append(is_breakdown_monitor_cp_pow)
     expert_values[is_breakdown_monitor_cp_pow] = False
 
-    is_breakdown_monitor_kf_pha          = "is_breakdown_monitor_kf_pha"
+    is_breakdown_monitor_kf_pha = "is_breakdown_monitor_kf_pha"
     expert_value_keys.append(is_breakdown_monitor_kf_pha)
     expert_values[is_breakdown_monitor_kf_pha] = False
 
-    is_breakdown_monitor_kr_pha          = "is_breakdown_monitor_kr_pha"
+    is_breakdown_monitor_kr_pha = "is_breakdown_monitor_kr_pha"
     expert_value_keys.append(is_breakdown_monitor_kr_pha)
     expert_values[is_breakdown_monitor_kr_pha] = False
 
-    is_breakdown_monitor_cf_pha          = "is_breakdown_monitor_cf_pha"
+    is_breakdown_monitor_cf_pha = "is_breakdown_monitor_cf_pha"
     expert_value_keys.append(is_breakdown_monitor_cf_pha)
     expert_values[is_breakdown_monitor_cf_pha] = False
 
-    is_breakdown_monitor_cr_pha          = "is_breakdown_monitor_cr_pha"
+    is_breakdown_monitor_cr_pha = "is_breakdown_monitor_cr_pha"
     expert_value_keys.append(is_breakdown_monitor_cr_pha)
     expert_values[is_breakdown_monitor_cr_pha] = False
 
-    is_breakdown_monitor_cp_pha          = "is_breakdown_monitor_cp_pha"
+    is_breakdown_monitor_cp_pha = "is_breakdown_monitor_cp_pha"
     expert_value_keys.append(is_breakdown_monitor_cp_pha)
     expert_values[is_breakdown_monitor_cp_pha] = False
 
-    mean_start_kf_pow                    = "mean_start_kf_pow"
+    mean_start_kf_pow = "mean_start_kf_pow"
     expert_value_keys.append(mean_start_kf_pow)
     expert_values[mean_start_kf_pow] = "STRING"
 
-    mean_start_kr_pow                    = "mean_start_kr_pow"
+    mean_start_kr_pow = "mean_start_kr_pow"
     expert_value_keys.append(mean_start_kr_pow)
     expert_values[mean_start_kr_pow] = "STRING"
 
-    mean_start_cf_pow                    = "mean_start_cf_pow"
+    mean_start_cf_pow = "mean_start_cf_pow"
     expert_value_keys.append(mean_start_cf_pow)
     expert_values[mean_start_cf_pow] = "STRING"
 
-    mean_start_cr_pow                    = "mean_start_cr_pow"
+    mean_start_cr_pow = "mean_start_cr_pow"
     expert_value_keys.append(mean_start_cr_pow)
     expert_values[mean_start_cr_pow] = "STRING"
 
-    mean_start_cp_pow                    = "mean_start_cp_pow"
+    mean_start_cp_pow = "mean_start_cp_pow"
     expert_value_keys.append(mean_start_cp_pow)
     expert_values[mean_start_cp_pow] = "STRING"
 
-    mean_start_kf_pha                    = "mean_start_kf_pha"
+    mean_start_kf_pha = "mean_start_kf_pha"
     expert_value_keys.append(mean_start_kf_pha)
     expert_values[mean_start_kf_pha] = "STRING"
 
-    mean_start_kr_pha                    = "mean_start_kr_pha"
+    mean_start_kr_pha = "mean_start_kr_pha"
     expert_value_keys.append(vac_pv_val)
     expert_values[vac_pv_val] = "STRING"
 
-    mean_start_cf_pha                    = "mean_start_cf_pha"
+    mean_start_cf_pha = "mean_start_cf_pha"
     expert_value_keys.append(mean_start_cf_pha)
     expert_values[mean_start_cf_pha] = "STRING"
 
-    mean_start_cr_pha                    = "mean_start_cr_pha"
+    mean_start_cr_pha = "mean_start_cr_pha"
     expert_value_keys.append(mean_start_cr_pha)
     expert_values[mean_start_cr_pha] = "STRING"
 
-    mean_start_cp_pha                    = "mean_start_cp_pha"
+    mean_start_cp_pha = "mean_start_cp_pha"
     expert_value_keys.append(mean_start_cp_pha)
     expert_values[mean_start_cp_pha] = "STRING"
 
-    mean_end_kf_pow                      = "mean_end_kf_pow"
+    mean_end_kf_pow = "mean_end_kf_pow"
     expert_value_keys.append(mean_end_kf_pow)
     expert_values[mean_end_kf_pow] = "STRING"
 
-    mean_end_kr_pow                      = "mean_end_kr_pow"
+    mean_end_kr_pow = "mean_end_kr_pow"
     expert_value_keys.append(mean_end_kr_pow)
     expert_values[mean_end_kr_pow] = "STRING"
 
-    mean_end_cf_pow                      = "mean_end_cf_pow"
+    mean_end_cf_pow = "mean_end_cf_pow"
     expert_value_keys.append(mean_end_cf_pow)
     expert_values[mean_end_cf_pow] = "STRING"
 
-    mean_end_cr_pow                      = "mean_end_cr_pow"
+    mean_end_cr_pow = "mean_end_cr_pow"
     expert_value_keys.append(mean_end_cr_pow)
     expert_values[mean_end_cr_pow] = "STRING"
 
-    mean_end_cp_pow                      = "mean_end_cp_pow"
+    mean_end_cp_pow = "mean_end_cp_pow"
     expert_value_keys.append(mean_end_cp_pow)
     expert_values[mean_end_cp_pow] = "STRING"
 
-    mean_end_kf_pha                      = "mean_end_kf_pha"
+    mean_end_kf_pha = "mean_end_kf_pha"
     expert_value_keys.append(mean_end_kf_pha)
     expert_values[mean_end_kf_pha] = "STRING"
 
-    mean_end_kr_pha                      = "mean_end_kr_pha"
+    mean_end_kr_pha = "mean_end_kr_pha"
     expert_value_keys.append(mean_end_kr_pha)
     expert_values[mean_end_kr_pha] = "STRING"
 
     expert_value_keys.append(vac_pv_val)
     expert_values[vac_pv_val] = "STRING"
 
-    mean_end_cf_pha                      = "mean_end_cf_pha"
+    mean_end_cf_pha = "mean_end_cf_pha"
     expert_value_keys.append(mean_end_cf_pha)
     expert_values[mean_end_cf_pha] = "STRING"
 
-    mean_end_cr_pha                      = "mean_end_cr_pha"
+    mean_end_cr_pha = "mean_end_cr_pha"
     expert_value_keys.append(mean_end_cr_pha)
     expert_values[mean_end_cr_pha] = "STRING"
 
-    mean_end_cp_pha                      = "mean_end_cp_pha"
+    mean_end_cp_pha = "mean_end_cp_pha"
     expert_value_keys.append(mean_end_cp_pha)
     expert_values[mean_end_cp_pha] = "STRING"
 
-    mask_units_kf_pow                     = "mask_units_kf_pow"
+    mask_units_kf_pow = "mask_units_kf_pow"
     expert_value_keys.append(mask_units_kf_pow)
     expert_values[mask_units_kf_pow] = "STRING"
 
-    mask_units_kr_pow                     = "mask_units_kr_pow"
+    mask_units_kr_pow = "mask_units_kr_pow"
     expert_value_keys.append(mask_units_kr_pow)
     expert_values[mask_units_kr_pow] = "STRING"
 
-    mask_units_cf_pow                     = "mask_units_cf_pow"
+    mask_units_cf_pow = "mask_units_cf_pow"
     expert_value_keys.append(mask_units_cf_pow)
     expert_values[mask_units_cf_pow] = "STRING"
 
-    mask_units_cr_pow                     = "mask_units_cr_pow"
+    mask_units_cr_pow = "mask_units_cr_pow"
     expert_value_keys.append(mask_units_cr_pow)
     expert_values[mask_units_cr_pow] = "STRING"
 
-    mask_units_cp_pow                     = "mask_units_cp_pow"
+    mask_units_cp_pow = "mask_units_cp_pow"
     expert_value_keys.append(mask_units_cp_pow)
     expert_values[mask_units_cp_pow] = "STRING"
 
-    mask_units_kf_pha                     = "mask_units_kf_pha"
+    mask_units_kf_pha = "mask_units_kf_pha"
     expert_value_keys.append(mask_units_kf_pha)
     expert_values[mask_units_kf_pha] = "STRING"
 
-    mask_units_kr_pha                     = "mask_units_kr_pha"
+    mask_units_kr_pha = "mask_units_kr_pha"
     expert_value_keys.append(mask_units_kr_pha)
     expert_values[mask_units_kr_pha] = "STRING"
 
-    mask_units_cf_pha                     = "mask_units_cf_pha"
+    mask_units_cf_pha = "mask_units_cf_pha"
     expert_value_keys.append(mask_units_cf_pha)
     expert_values[mask_units_cf_pha] = "STRING"
 
-    mask_units_cr_pha                     = "mask_units_cr_pha"
+    mask_units_cr_pha = "mask_units_cr_pha"
     expert_value_keys.append(mask_units_cr_pha)
     expert_values[mask_units_cr_pha] = "STRING"
 
-    mask_units_cp_pha                     = "mask_units_cp_pha"
+    mask_units_cp_pha = "mask_units_cp_pha"
     expert_value_keys.append(mask_units_cp_pha)
     expert_values[mask_units_cp_pha] = "STRING"
 
-    mask_start_kf_pow                    = "mask_start_kf_pow"
+    mask_start_kf_pow = "mask_start_kf_pow"
     expert_value_keys.append(mask_start_kf_pow)
     expert_values[mask_start_kf_pow] = "STRING"
 
-    mask_start_kr_pow                    = "mask_start_kr_pow"
+    mask_start_kr_pow = "mask_start_kr_pow"
     expert_value_keys.append(mask_start_kr_pow)
     expert_values[mask_start_kr_pow] = "STRING"
 
-    mask_start_cf_pow                    = "mask_start_cf_pow"
+    mask_start_cf_pow = "mask_start_cf_pow"
     expert_value_keys.append(mask_start_cf_pow)
     expert_values[mask_start_cf_pow] = "STRING"
 
-    mask_start_cr_pow                    = "mask_start_cr_pow"
+    mask_start_cr_pow = "mask_start_cr_pow"
     expert_value_keys.append(mask_start_cr_pow)
     expert_values[mask_start_cr_pow] = "STRING"
 
-    mask_start_cp_pow                    = "mask_start_cp_pow"
+    mask_start_cp_pow = "mask_start_cp_pow"
     expert_value_keys.append(mask_start_cp_pow)
     expert_values[mask_start_cp_pow] = "STRING"
 
-    mask_start_kf_pha                    = "mask_start_kf_pha"
+    mask_start_kf_pha = "mask_start_kf_pha"
     expert_value_keys.append(mask_start_kf_pha)
     expert_values[mask_start_kf_pha] = "STRING"
 
-    mask_start_kr_pha                    = "mask_start_kr_pha"
+    mask_start_kr_pha = "mask_start_kr_pha"
     expert_value_keys.append(mask_start_kr_pha)
     expert_values[mask_start_kr_pha] = "STRING"
 
-    mask_start_cf_pha                    = "mask_start_cf_pha"
+    mask_start_cf_pha = "mask_start_cf_pha"
     expert_value_keys.append(mask_start_cf_pha)
     expert_values[mask_start_cf_pha] = "STRING"
 
-    mask_start_cr_pha                    = "mask_start_cr_pha"
+    mask_start_cr_pha = "mask_start_cr_pha"
     expert_value_keys.append(mask_start_cr_pha)
     expert_values[mask_start_cr_pha] = "STRING"
 
-    mask_start_cp_pha                    = "mask_start_cp_pha"
+    mask_start_cp_pha = "mask_start_cp_pha"
     expert_value_keys.append(mask_start_cp_pha)
     expert_values[mask_start_cp_pha] = "STRING"
 
-    mask_end_kf_pow                      = "mask_end_kf_pow"
+    mask_end_kf_pow = "mask_end_kf_pow"
     expert_value_keys.append(mask_end_kf_pow)
     expert_values[mask_end_kf_pow] = "STRING"
 
-    mask_end_kr_pow                      = "mask_end_kr_pow"
+    mask_end_kr_pow = "mask_end_kr_pow"
     expert_value_keys.append(mask_end_kr_pow)
     expert_values[mask_end_kr_pow] = "STRING"
 
-    mask_end_cf_pow                      = "mask_end_cf_pow"
+    mask_end_cf_pow = "mask_end_cf_pow"
     expert_value_keys.append(mask_end_cf_pow)
     expert_values[mask_end_cf_pow] = "STRING"
 
-    mask_end_cr_pow                      = "mask_end_cr_pow"
+    mask_end_cr_pow = "mask_end_cr_pow"
     expert_value_keys.append(mask_end_cr_pow)
     expert_values[mask_end_cr_pow] = "STRING"
 
-    mask_end_cp_pow                      = "mask_end_cp_pow"
+    mask_end_cp_pow = "mask_end_cp_pow"
     expert_value_keys.append(mask_end_cp_pow)
     expert_values[mask_end_cp_pow] = "STRING"
 
-    mask_end_kf_pha                      = "mask_end_kf_pha"
+    mask_end_kf_pha = "mask_end_kf_pha"
     expert_value_keys.append(mask_end_kf_pha)
     expert_values[mask_end_kf_pha] = "STRING"
 
-    mask_end_kr_pha                      = "mask_end_kr_pha"
+    mask_end_kr_pha = "mask_end_kr_pha"
     expert_value_keys.append(mask_end_kr_pha)
     expert_values[mask_end_kr_pha] = "STRING"
 
-    mask_end_cf_pha                      = "mask_end_cf_pha"
+    mask_end_cf_pha = "mask_end_cf_pha"
     expert_value_keys.append(mask_end_cf_pha)
     expert_values[mask_end_cf_pha] = "STRING"
 
-    mask_end_cr_pha                      = "mask_end_cr_pha"
+    mask_end_cr_pha = "mask_end_cr_pha"
     expert_value_keys.append(mask_end_cr_pha)
     expert_values[mask_end_cr_pha] = "STRING"
 
-    mask_end_cp_pha                      = "mask_end_cp_pha"
+    mask_end_cp_pha = "mask_end_cp_pha"
     expert_value_keys.append(mask_end_cp_pha)
     expert_values[mask_end_cp_pha] = "STRING"
 
-    mask_window_start_kf_pow             = "mask_window_start_kf_pow"
+    mask_window_start_kf_pow = "mask_window_start_kf_pow"
     expert_value_keys.append(mask_window_start_kf_pow)
     expert_values[mask_window_start_kf_pow] = "STRING"
 
-    mask_window_start_kr_pow             = "mask_window_start_kr_pow"
+    mask_window_start_kr_pow = "mask_window_start_kr_pow"
     expert_value_keys.append(mask_window_start_kr_pow)
     expert_values[mask_window_start_kr_pow] = "STRING"
 
-    mask_window_start_cf_pow             = "mask_window_start_cf_pow"
+    mask_window_start_cf_pow = "mask_window_start_cf_pow"
     expert_value_keys.append(mask_window_start_cf_pow)
     expert_values[mask_window_start_cf_pow] = "STRING"
 
-    mask_window_start_cr_pow             = "mask_window_start_cr_pow"
+    mask_window_start_cr_pow = "mask_window_start_cr_pow"
     expert_value_keys.append(mask_window_start_cr_pow)
     expert_values[mask_window_start_cr_pow] = "STRING"
 
-    mask_window_start_cp_pow             = "mask_window_start_cp_pow"
+    mask_window_start_cp_pow = "mask_window_start_cp_pow"
     expert_value_keys.append(mask_window_start_cp_pow)
     expert_values[mask_window_start_cp_pow] = "STRING"
 
-    mask_window_start_kf_pha             = "mask_window_start_kf_pha"
+    mask_window_start_kf_pha = "mask_window_start_kf_pha"
     expert_value_keys.append(mask_window_start_kf_pha)
     expert_values[mask_window_start_kf_pha] = "STRING"
 
-    mask_window_start_kr_pha             = "mask_window_start_kr_pha"
+    mask_window_start_kr_pha = "mask_window_start_kr_pha"
     expert_value_keys.append(mask_window_start_kr_pha)
     expert_values[mask_window_start_kr_pha] = "STRING"
 
-    mask_window_start_cf_pha             = "mask_window_start_cf_pha"
+    mask_window_start_cf_pha = "mask_window_start_cf_pha"
     expert_value_keys.append(mask_window_start_cf_pha)
     expert_values[mask_window_start_cf_pha] = "STRING"
 
-    mask_window_start_cr_pha             = "mask_window_start_cr_pha"
+    mask_window_start_cr_pha = "mask_window_start_cr_pha"
     expert_value_keys.append(mask_window_start_cr_pha)
     expert_values[mask_window_start_cr_pha] = "STRING"
 
-    mask_window_start_cp_pha             = "mask_window_start_cp_pha"
+    mask_window_start_cp_pha = "mask_window_start_cp_pha"
     expert_value_keys.append(mask_window_start_cp_pha)
     expert_values[mask_window_start_cp_pha] = "STRING"
 
-    mask_window_end_kf_pow               = "mask_window_end_kf_pow"
+    mask_window_end_kf_pow = "mask_window_end_kf_pow"
     expert_value_keys.append(mask_window_end_kf_pow)
     expert_values[mask_window_end_kf_pow] = "STRING"
 
-    mask_window_end_kr_pow               = "mask_window_end_kr_pow"
+    mask_window_end_kr_pow = "mask_window_end_kr_pow"
     expert_value_keys.append(mask_window_end_kr_pow)
     expert_values[mask_window_end_kr_pow] = "STRING"
 
-    mask_window_end_cf_pow               = "mask_window_end_cf_pow"
+    mask_window_end_cf_pow = "mask_window_end_cf_pow"
     expert_value_keys.append(mask_window_end_cf_pow)
     expert_values[mask_window_end_cf_pow] = "STRING"
 
-    mask_window_end_cr_pow               = "mask_window_end_cr_pow"
+    mask_window_end_cr_pow = "mask_window_end_cr_pow"
     expert_value_keys.append(mask_window_end_cr_pow)
     expert_values[mask_window_end_cr_pow] = "STRING"
 
-    mask_window_end_cp_pow               = "mask_window_end_cp_pow"
+    mask_window_end_cp_pow = "mask_window_end_cp_pow"
     expert_value_keys.append(mask_window_end_cp_pow)
     expert_values[mask_window_end_cp_pow] = "STRING"
 
-    mask_window_end_kf_pha               = "mask_window_end_kf_pha"
+    mask_window_end_kf_pha = "mask_window_end_kf_pha"
     expert_value_keys.append(mask_window_end_kf_pha)
     expert_values[mask_window_end_kf_pha] = "STRING"
 
-    mask_window_end_kr_pha               = "mask_window_end_kr_pha"
+    mask_window_end_kr_pha = "mask_window_end_kr_pha"
     expert_value_keys.append(mask_window_end_kr_pha)
     expert_values[mask_window_end_kr_pha] = "STRING"
 
-    mask_window_end_cf_pha               = "mask_window_end_cf_pha"
+    mask_window_end_cf_pha = "mask_window_end_cf_pha"
     expert_value_keys.append(mask_window_end_cf_pha)
     expert_values[mask_window_end_cf_pha] = "STRING"
 
-    mask_window_end_cr_pha               = "mask_window_end_cr_pha"
+    mask_window_end_cr_pha = "mask_window_end_cr_pha"
     expert_value_keys.append(mask_window_end_cr_pha)
     expert_values[mask_window_end_cr_pha] = "STRING"
 
-    mask_window_end_cp_pha               = "mask_window_end_cp_pha"
+    mask_window_end_cp_pha = "mask_window_end_cp_pha"
     expert_value_keys.append(vac_pv_val)
     expert_values[vac_pv_val] = "STRING"
 
-    mask_min_kf_pow                      = "mask_min_kf_pow"
+    mask_min_kf_pow = "mask_min_kf_pow"
     expert_value_keys.append(mask_min_kf_pow)
     expert_values[mask_min_kf_pow] = "STRING"
 
-    mask_min_kr_pow                      = "mask_min_kr_pow"
+    mask_min_kr_pow = "mask_min_kr_pow"
     expert_value_keys.append(mask_min_kr_pow)
     expert_values[mask_min_kr_pow] = "STRING"
 
-    mask_min_cf_pow                      = "mask_min_cf_pow"
+    mask_min_cf_pow = "mask_min_cf_pow"
     expert_value_keys.append(mask_min_cf_pow)
     expert_values[mask_min_cf_pow] = "STRING"
 
-    mask_min_cr_pow                      = "mask_min_cr_pow"
+    mask_min_cr_pow = "mask_min_cr_pow"
     expert_value_keys.append(mask_min_cr_pow)
     expert_values[mask_min_cr_pow] = "STRING"
 
-    mask_min_cp_pow                      = "mask_min_cp_pow"
+    mask_min_cp_pow = "mask_min_cp_pow"
     expert_value_keys.append(mask_min_cp_pow)
     expert_values[mask_min_cp_pow] = "STRING"
 
-    mask_min_kf_pha                      = "mask_min_kf_pha"
+    mask_min_kf_pha = "mask_min_kf_pha"
     expert_value_keys.append(mask_min_kf_pha)
     expert_values[mask_min_kf_pha] = "STRING"
 
-    mask_min_kr_pha                      = "mask_min_kr_pha"
+    mask_min_kr_pha = "mask_min_kr_pha"
     expert_value_keys.append(mask_min_kr_pha)
     expert_values[mask_min_kr_pha] = "STRING"
 
-    mask_min_cf_pha                      = "mask_min_cf_pha"
+    mask_min_cf_pha = "mask_min_cf_pha"
     expert_value_keys.append(mask_min_cf_pha)
     expert_values[mask_min_cf_pha] = "STRING"
 
-    mask_min_cr_pha                      = "mask_min_cr_pha"
+    mask_min_cr_pha = "mask_min_cr_pha"
     expert_value_keys.append(mask_min_cr_pha)
     expert_values[mask_min_cr_pha] = "STRING"
 
-    mask_min_cp_pha                      = "mask_min_cp_pha"
+    mask_min_cp_pha = "mask_min_cp_pha"
     expert_value_keys.append(mask_min_cp_pha)
     expert_values[mask_min_cp_pha] = "STRING"
 
-    num_averages_kf_pow                  = "num_averages_kf_pow"
+    num_averages_kf_pow = "num_averages_kf_pow"
     expert_value_keys.append(num_averages_kf_pow)
     expert_values[num_averages_kf_pow] = "STRING"
 
-    num_averages_kr_pow                  = "num_averages_kr_pow"
+    num_averages_kr_pow = "num_averages_kr_pow"
     expert_value_keys.append(num_averages_kr_pow)
     expert_values[num_averages_kr_pow] = "STRING"
 
-    num_averages_cf_pow                  = "num_averages_cf_pow"
+    num_averages_cf_pow = "num_averages_cf_pow"
     expert_value_keys.append(num_averages_cf_pow)
     expert_values[num_averages_cf_pow] = "STRING"
 
-    num_averages_cr_pow                  = "num_averages_cr_pow"
+    num_averages_cr_pow = "num_averages_cr_pow"
     expert_value_keys.append(num_averages_cr_pow)
     expert_values[num_averages_cr_pow] = "STRING"
 
-    num_averages_cp_pow                  = "num_averages_cp_pow"
+    num_averages_cp_pow = "num_averages_cp_pow"
     expert_value_keys.append(num_averages_cp_pow)
     expert_values[num_averages_cp_pow] = "STRING"
 
-    num_averages_kf_pha                  = "num_averages_kf_pha"
+    num_averages_kf_pha = "num_averages_kf_pha"
     expert_value_keys.append(num_averages_kf_pha)
     expert_values[num_averages_kf_pha] = "STRING"
 
-    num_averages_kr_pha                  = "num_averages_kr_pha"
+    num_averages_kr_pha = "num_averages_kr_pha"
     expert_value_keys.append(num_averages_kr_pha)
     expert_values[num_averages_kr_pha] = "STRING"
 
-    num_averages_cf_pha                  = "num_averages_cf_pha"
+    num_averages_cf_pha = "num_averages_cf_pha"
     expert_value_keys.append(num_averages_cf_pha)
     expert_values[num_averages_cf_pha] = "STRING"
 
-    num_averages_cr_pha                  = "num_averages_cr_pha"
+    num_averages_cr_pha = "num_averages_cr_pha"
     expert_value_keys.append(num_averages_cr_pha)
     expert_values[num_averages_cr_pha] = "STRING"
 
-    num_averages_cp_pha                  = "num_averages_cp_pha"
+    num_averages_cp_pha = "num_averages_cp_pha"
     expert_value_keys.append(num_averages_cp_pha)
     expert_values[num_averages_cp_pha] = "STRING"
 
-    mask_auto_set_kf_pow                 = "mask_auto_set_kf_pow"
+    mask_auto_set_kf_pow = "mask_auto_set_kf_pow"
     expert_value_keys.append(mask_auto_set_kf_pow)
     expert_values[mask_auto_set_kf_pow] = "STRING"
 
-    mask_auto_set_kr_pow                 = "mask_auto_set_kr_pow"
+    mask_auto_set_kr_pow = "mask_auto_set_kr_pow"
     expert_value_keys.append(mask_auto_set_kr_pow)
     expert_values[mask_auto_set_kr_pow] = "STRING"
 
-    mask_auto_set_cf_pow                 = "mask_auto_set_cf_pow"
+    mask_auto_set_cf_pow = "mask_auto_set_cf_pow"
     expert_value_keys.append(mask_auto_set_cf_pow)
     expert_values[mask_auto_set_cf_pow] = "STRING"
 
-    mask_auto_set_cr_pow                 = "mask_auto_set_cr_pow"
+    mask_auto_set_cr_pow = "mask_auto_set_cr_pow"
     expert_value_keys.append(mask_auto_set_cr_pow)
     expert_values[mask_auto_set_cr_pow] = "STRING"
 
-    mask_auto_set_cp_pow                 = "mask_auto_set_cp_pow"
+    mask_auto_set_cp_pow = "mask_auto_set_cp_pow"
     expert_value_keys.append(mask_auto_set_cp_pow)
     expert_values[mask_auto_set_cp_pow] = "STRING"
 
-    mask_auto_set_kf_pha                 = "mask_auto_set_kf_pha"
+    mask_auto_set_kf_pha = "mask_auto_set_kf_pha"
     expert_value_keys.append(mask_auto_set_kf_pha)
     expert_values[mask_auto_set_kf_pha] = "STRING"
 
-    mask_auto_set_kr_pha                 = "mask_auto_set_kr_pha"
+    mask_auto_set_kr_pha = "mask_auto_set_kr_pha"
     expert_value_keys.append(mask_auto_set_kr_pha)
     expert_values[mask_auto_set_kr_pha] = "STRING"
 
-    mask_auto_set_cf_pha                 = "mask_auto_set_cf_pha"
+    mask_auto_set_cf_pha = "mask_auto_set_cf_pha"
     expert_value_keys.append(mask_auto_set_cf_pha)
     expert_values[mask_auto_set_cf_pha] = "STRING"
 
-    mask_auto_set_cr_pha                 = "mask_auto_set_cr_pha"
+    mask_auto_set_cr_pha = "mask_auto_set_cr_pha"
     expert_value_keys.append(mask_auto_set_cr_pha)
     expert_values[mask_auto_set_cr_pha] = "STRING"
 
-    mask_auto_set_cp_pha                 = "mask_auto_set_cp_pha"
+    mask_auto_set_cp_pha = "mask_auto_set_cp_pha"
     expert_value_keys.append(mask_auto_set_cp_pha)
     expert_values[mask_auto_set_cp_pha] = "STRING"
 
-    mask_type_kf_pow                     = "mask_type_kf_pow"
+    mask_type_kf_pow = "mask_type_kf_pow"
     expert_value_keys.append(mask_type_kf_pow)
     expert_values[mask_type_kf_pow] = "STRING"
 
-    mask_type_kr_pow                     = "mask_type_kr_pow"
+    mask_type_kr_pow = "mask_type_kr_pow"
     expert_value_keys.append(mask_type_kr_pow)
     expert_values[mask_type_kr_pow] = "STRING"
 
-    mask_type_cf_pow                     = "mask_type_cf_pow"
+    mask_type_cf_pow = "mask_type_cf_pow"
     expert_value_keys.append(mask_type_cf_pow)
     expert_values[mask_type_cf_pow] = "STRING"
 
-    mask_type_cr_pow                     = "mask_type_cr_pow"
+    mask_type_cr_pow = "mask_type_cr_pow"
     expert_value_keys.append(mask_type_cr_pow)
     expert_values[mask_type_cr_pow] = "STRING"
 
-    mask_type_cp_pow                     = "mask_type_cp_pow"
+    mask_type_cp_pow = "mask_type_cp_pow"
     expert_value_keys.append(mask_type_cp_pow)
     expert_values[mask_type_cp_pow] = "STRING"
 
-    mask_type_kf_pha                     = "mask_type_kf_pha"
+    mask_type_kf_pha = "mask_type_kf_pha"
     expert_value_keys.append(mask_type_kf_pha)
     expert_values[mask_type_kf_pha] = "STRING"
 
-    mask_type_kr_pha                     = "mask_type_kr_pha"
+    mask_type_kr_pha = "mask_type_kr_pha"
     expert_value_keys.append(mask_type_kr_pha)
     expert_values[mask_type_kr_pha] = "STRING"
 
-    mask_type_cf_pha                     = "mask_type_cf_pha"
+    mask_type_cf_pha = "mask_type_cf_pha"
     expert_value_keys.append(mask_type_cf_pha)
     expert_values[mask_type_cf_pha] = "STRING"
 
-    mask_type_cr_pha                     = "mask_type_cr_pha"
+    mask_type_cr_pha = "mask_type_cr_pha"
     expert_value_keys.append(mask_type_cr_pha)
     expert_values[mask_type_cr_pha] = "STRING"
 
-    mask_type_cp_pha                     = "mask_type_cp_pha"
+    mask_type_cp_pha = "mask_type_cp_pha"
     expert_value_keys.append(mask_type_cp_pha)
     expert_values[mask_type_cp_pha] = "STRING"
 
-    mask_level_kf_pow                    = "mask_level_kf_pow"
+    mask_level_kf_pow = "mask_level_kf_pow"
     expert_value_keys.append(mask_level_kf_pow)
     expert_values[mask_level_kf_pow] = "STRING"
 
-    mask_level_kr_pow                    = "mask_level_kr_pow"
+    mask_level_kr_pow = "mask_level_kr_pow"
     expert_value_keys.append(mask_level_kr_pow)
     expert_values[mask_level_kr_pow] = "STRING"
 
-    mask_level_cf_pow                    = "mask_level_cf_pow"
+    mask_level_cf_pow = "mask_level_cf_pow"
     expert_value_keys.append(mask_level_cf_pow)
     expert_values[mask_level_cf_pow] = "STRING"
 
-    mask_level_cr_pow                    = "mask_level_cr_pow"
+    mask_level_cr_pow = "mask_level_cr_pow"
     expert_value_keys.append(mask_level_cr_pow)
     expert_values[mask_level_cr_pow] = "STRING"
 
-    mask_level_cp_pow                    = "mask_level_cp_pow"
+    mask_level_cp_pow = "mask_level_cp_pow"
     expert_value_keys.append(mask_level_cp_pow)
     expert_values[mask_level_cp_pow] = "STRING"
 
-    mask_level_kf_pha                    = "mask_level_kf_pha"
+    mask_level_kf_pha = "mask_level_kf_pha"
     expert_value_keys.append(mask_level_kf_pha)
     expert_values[mask_level_kf_pha] = "STRING"
 
-    mask_level_kr_pha                    = "mask_level_kr_pha"
+    mask_level_kr_pha = "mask_level_kr_pha"
     expert_value_keys.append(mask_level_kr_pha)
     expert_values[mask_level_kr_pha] = "STRING"
 
-    mask_level_cf_pha                    = "mask_level_cf_pha"
+    mask_level_cf_pha = "mask_level_cf_pha"
     expert_value_keys.append(mask_level_cf_pha)
     expert_values[mask_level_cf_pha] = "STRING"
 
-    mask_level_cr_pha                    = "mask_level_cr_pha"
+    mask_level_cr_pha = "mask_level_cr_pha"
     expert_value_keys.append(mask_level_cr_pha)
     expert_values[mask_level_cr_pha] = "STRING"
 
-    mask_level_cp_pha                    = "mask_level_cp_pha"
+    mask_level_cp_pha = "mask_level_cp_pha"
     expert_value_keys.append(mask_level_cp_pha)
     expert_values[mask_level_cp_pha] = "STRING"
 
-
-
-
-    drop_amplitude_kf_pow                      = "drop_amplitude_kf_pow"
+    drop_amplitude_kf_pow = "drop_amplitude_kf_pow"
     expert_value_keys.append(drop_amplitude_kf_pow)
     expert_values[drop_amplitude_kf_pow] = "STRING"
 
-    drop_amplitude_kr_pow                      = "drop_amplitude_kr_pow"
+    drop_amplitude_kr_pow = "drop_amplitude_kr_pow"
     expert_value_keys.append(drop_amplitude_kr_pow)
     expert_values[drop_amplitude_kr_pow] = "STRING"
 
-    drop_amplitude_cf_pow                      = "drop_amplitude_cf_pow"
+    drop_amplitude_cf_pow = "drop_amplitude_cf_pow"
     expert_value_keys.append(drop_amplitude_cf_pow)
     expert_values[drop_amplitude_cf_pow] = "STRING"
 
-    drop_amplitude_cr_pow                      = "drop_amplitude_cr_pow"
+    drop_amplitude_cr_pow = "drop_amplitude_cr_pow"
     expert_value_keys.append(drop_amplitude_cr_pow)
     expert_values[drop_amplitude_cr_pow] = "STRING"
 
-    drop_amplitude_cp_pow                      = "drop_amplitude_cp_pow"
+    drop_amplitude_cp_pow = "drop_amplitude_cp_pow"
     expert_value_keys.append(drop_amplitude_cp_pow)
     expert_values[drop_amplitude_cp_pow] = "STRING"
 
-    drop_amplitude_kf_pha                      = "drop_amplitude_kf_pha"
+    drop_amplitude_kf_pha = "drop_amplitude_kf_pha"
     expert_value_keys.append(drop_amplitude_kf_pha)
     expert_values[drop_amplitude_kf_pha] = "STRING"
 
-    drop_amplitude_kr_pha                      = "drop_amplitude_kr_pha"
+    drop_amplitude_kr_pha = "drop_amplitude_kr_pha"
     expert_value_keys.append(drop_amplitude_kr_pha)
     expert_values[drop_amplitude_kr_pha] = "STRING"
 
-    drop_amplitude_cf_pha                      = "drop_amplitude_cf_pha"
+    drop_amplitude_cf_pha = "drop_amplitude_cf_pha"
     expert_value_keys.append(drop_amplitude_cf_pha)
     expert_values[drop_amplitude_cf_pha] = "STRING"
 
-    drop_amplitude_cr_pha                      = "drop_amplitude_cr_pha"
+    drop_amplitude_cr_pha = "drop_amplitude_cr_pha"
     expert_value_keys.append(drop_amplitude_cr_pha)
     expert_values[drop_amplitude_cr_pha] = "STRING"
 
-    drop_amplitude_cp_pha                      = "drop_amplitude_cp_pha"
+    drop_amplitude_cp_pha = "drop_amplitude_cp_pha"
     expert_value_keys.append(drop_amplitude_cp_pha)
     expert_values[drop_amplitude_cp_pha] = "STRING"
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    phase_end_by_power_kf_pow             = "phase_end_by_power_kf_pow"
+    phase_end_by_power_kf_pow = "phase_end_by_power_kf_pow"
     expert_value_keys.append(phase_end_by_power_kf_pow)
     expert_values[phase_end_by_power_kf_pow] = "STRING"
 
-    phase_end_by_power_kr_pow             = "phase_end_by_power_kr_pow"
+    phase_end_by_power_kr_pow = "phase_end_by_power_kr_pow"
     expert_value_keys.append(phase_end_by_power_kr_pow)
     expert_values[phase_end_by_power_kr_pow] = "STRING"
 
-    phase_end_by_power_cf_pow             = "phase_end_by_power_cf_pow"
+    phase_end_by_power_cf_pow = "phase_end_by_power_cf_pow"
     expert_value_keys.append(phase_end_by_power_cf_pow)
     expert_values[phase_end_by_power_cf_pow] = "STRING"
 
-    phase_end_by_power_cr_pow             = "phase_end_by_power_cr_pow"
+    phase_end_by_power_cr_pow = "phase_end_by_power_cr_pow"
     expert_value_keys.append(phase_end_by_power_cr_pow)
     expert_values[phase_end_by_power_cr_pow] = "STRING"
 
-    phase_end_by_power_cp_pow             = "phase_end_by_power_cp_pow"
+    phase_end_by_power_cp_pow = "phase_end_by_power_cp_pow"
     expert_value_keys.append(phase_end_by_power_cp_pow)
     expert_values[phase_end_by_power_cp_pow] = "STRING"
 
-    phase_end_by_power_kf_pha             = "phase_end_by_power_kf_pha"
+    phase_end_by_power_kf_pha = "phase_end_by_power_kf_pha"
     expert_value_keys.append(phase_end_by_power_kf_pha)
     expert_values[phase_end_by_power_kf_pha] = "STRING"
 
-    phase_end_by_power_kr_pha             = "phase_end_by_power_kr_pha"
+    phase_end_by_power_kr_pha = "phase_end_by_power_kr_pha"
     expert_value_keys.append(phase_end_by_power_kr_pha)
     expert_values[phase_end_by_power_kr_pha] = "STRING"
 
-    phase_end_by_power_cf_pha             = "phase_end_by_power_cf_pha"
+    phase_end_by_power_cf_pha = "phase_end_by_power_cf_pha"
     expert_value_keys.append(phase_end_by_power_cf_pha)
     expert_values[phase_end_by_power_cf_pha] = "STRING"
 
-    phase_end_by_power_cr_pha             = "phase_end_by_power_cr_pha"
+    phase_end_by_power_cr_pha = "phase_end_by_power_cr_pha"
     expert_value_keys.append(phase_end_by_power_cr_pha)
     expert_values[phase_end_by_power_cr_pha] = "STRING"
 
-    phase_end_by_power_cp_pha             = "phase_end_by_power_cp_pha"
+    phase_end_by_power_cp_pha = "phase_end_by_power_cp_pha"
     expert_value_keys.append(phase_end_by_power_cp_pha)
     expert_values[phase_end_by_power_cp_pha] = "STRING"
 
-
-
-
-
-
-
-
-
-    mask_end_power_kf_pow                = "mask_end_power_kf_pow"
+    mask_end_power_kf_pow = "mask_end_power_kf_pow"
     expert_value_keys.append(mask_end_power_kf_pow)
     expert_values[mask_end_power_kf_pow] = "STRING"
 
-    mask_end_power_kr_pow                = "mask_end_power_kr_pow"
+    mask_end_power_kr_pow = "mask_end_power_kr_pow"
     expert_value_keys.append(mask_end_power_kr_pow)
     expert_values[mask_end_power_kr_pow] = "STRING"
 
-    mask_end_power_cf_pow                = "mask_end_power_cf_pow"
+    mask_end_power_cf_pow = "mask_end_power_cf_pow"
     expert_value_keys.append(mask_end_power_cf_pow)
     expert_values[mask_end_power_cf_pow] = "STRING"
 
-    mask_end_power_cr_pow                = "mask_end_power_cr_pow"
+    mask_end_power_cr_pow = "mask_end_power_cr_pow"
     expert_value_keys.append(mask_end_power_cr_pow)
     expert_values[mask_end_power_cr_pow] = "STRING"
 
-    mask_end_power_cp_pow                = "mask_end_power_cp_pow"
+    mask_end_power_cp_pow = "mask_end_power_cp_pow"
     expert_value_keys.append(mask_end_power_cp_pow)
     expert_values[mask_end_power_cp_pow] = "STRING"
 
-    mask_end_power_kf_pha                = "mask_end_power_kf_pha"
+    mask_end_power_kf_pha = "mask_end_power_kf_pha"
     expert_value_keys.append(mask_end_power_kf_pha)
     expert_values[mask_end_power_kf_pha] = "STRING"
 
-    mask_end_power_kr_pha                = "mask_end_power_kr_pha"
+    mask_end_power_kr_pha = "mask_end_power_kr_pha"
     expert_value_keys.append(mask_end_power_kr_pha)
     expert_values[mask_end_power_kr_pha] = "STRING"
 
-    mask_end_power_cf_pha                = "mask_end_power_cf_pha"
+    mask_end_power_cf_pha = "mask_end_power_cf_pha"
     expert_value_keys.append(mask_end_power_cf_pha)
     expert_values[mask_end_power_cf_pha] = "STRING"
 
-    mask_end_power_cr_pha                = "mask_end_power_cr_pha"
+    mask_end_power_cr_pha = "mask_end_power_cr_pha"
     expert_value_keys.append(mask_end_power_cr_pha)
     expert_values[mask_end_power_cr_pha] = "STRING"
 
-    mask_end_power_cp_pha                = "mask_end_power_cp_pha"
+    mask_end_power_cp_pha = "mask_end_power_cp_pha"
     expert_value_keys.append(mask_end_power_cp_pha)
     expert_values[mask_end_power_cp_pha] = "STRING"
 
-
-
-
-
-    saved_on_breakdown_event_kf_pow      = "saved_on_breakdown_event_kf_pow"
+    saved_on_breakdown_event_kf_pow = "saved_on_breakdown_event_kf_pow"
     expert_value_keys.append(saved_on_breakdown_event_kf_pow)
     expert_values[saved_on_breakdown_event_kf_pow] = "STRING"
 
-    saved_on_breakdown_event_kr_pow      = "saved_on_breakdown_event_kr_pow"
+    saved_on_breakdown_event_kr_pow = "saved_on_breakdown_event_kr_pow"
     expert_value_keys.append(saved_on_breakdown_event_kr_pow)
     expert_values[saved_on_breakdown_event_kr_pow] = "STRING"
 
-    saved_on_breakdown_event_cf_pow      = "saved_on_breakdown_event_cf_pow"
+    saved_on_breakdown_event_cf_pow = "saved_on_breakdown_event_cf_pow"
     expert_value_keys.append(saved_on_breakdown_event_cf_pow)
     expert_values[saved_on_breakdown_event_cf_pow] = "STRING"
 
-    saved_on_breakdown_event_cr_pow      = "saved_on_breakdown_event_cr_pow"
+    saved_on_breakdown_event_cr_pow = "saved_on_breakdown_event_cr_pow"
     expert_value_keys.append(saved_on_breakdown_event_cr_pow)
     expert_values[saved_on_breakdown_event_cr_pow] = "STRING"
 
-    saved_on_breakdown_event_cp_pow      = "saved_on_breakdown_event_cp_pow"
+    saved_on_breakdown_event_cp_pow = "saved_on_breakdown_event_cp_pow"
     expert_value_keys.append(saved_on_breakdown_event_cp_pow)
     expert_values[saved_on_breakdown_event_cp_pow] = "STRING"
 
-    saved_on_breakdown_event_kf_pha      = "saved_on_breakdown_event_kf_pha"
+    saved_on_breakdown_event_kf_pha = "saved_on_breakdown_event_kf_pha"
     expert_value_keys.append(saved_on_breakdown_event_kf_pha)
     expert_values[saved_on_breakdown_event_kf_pha] = "STRING"
 
-    saved_on_breakdown_event_kr_pha      = "saved_on_breakdown_event_kr_pha"
+    saved_on_breakdown_event_kr_pha = "saved_on_breakdown_event_kr_pha"
     expert_value_keys.append(saved_on_breakdown_event_kr_pha)
     expert_values[saved_on_breakdown_event_kr_pha] = "STRING"
 
-    saved_on_breakdown_event_cf_pha      = "saved_on_breakdown_event_cf_pha"
+    saved_on_breakdown_event_cf_pha = "saved_on_breakdown_event_cf_pha"
     expert_value_keys.append(saved_on_breakdown_event_cf_pha)
     expert_values[saved_on_breakdown_event_cf_pha] = "STRING"
 
-    saved_on_breakdown_event_cr_pha      = "saved_on_breakdown_event_cr_pha"
+    saved_on_breakdown_event_cr_pha = "saved_on_breakdown_event_cr_pha"
     expert_value_keys.append(saved_on_breakdown_event_cr_pha)
     expert_values[saved_on_breakdown_event_cr_pha] = "STRING"
 
-    saved_on_breakdown_event_cp_pha      = "saved_on_breakdown_event_cp_pha"
+    saved_on_breakdown_event_cp_pha = "saved_on_breakdown_event_cp_pha"
     expert_value_keys.append(saved_on_breakdown_event_cp_pha)
     expert_values[saved_on_breakdown_event_cp_pha] = "STRING"
 
-    saved_on_vac_spike_kf_pow            = "saved_on_vac_spike_kf_pow"
+    saved_on_vac_spike_kf_pow = "saved_on_vac_spike_kf_pow"
     expert_value_keys.append(saved_on_vac_spike_kf_pow)
     expert_values[saved_on_vac_spike_kf_pow] = "STRING"
 
-    saved_on_vac_spike_kr_pow            = "saved_on_vac_spike_kr_pow"
+    saved_on_vac_spike_kr_pow = "saved_on_vac_spike_kr_pow"
     expert_value_keys.append(saved_on_vac_spike_kr_pow)
     expert_values[saved_on_vac_spike_kr_pow] = "STRING"
 
-    saved_on_vac_spike_cf_pow            = "saved_on_vac_spike_cf_pow"
+    saved_on_vac_spike_cf_pow = "saved_on_vac_spike_cf_pow"
     expert_value_keys.append(saved_on_vac_spike_cf_pow)
     expert_values[saved_on_vac_spike_cf_pow] = "STRING"
 
-    saved_on_vac_spike_cr_pow            = "saved_on_vac_spike_cr_pow"
+    saved_on_vac_spike_cr_pow = "saved_on_vac_spike_cr_pow"
     expert_value_keys.append(saved_on_vac_spike_cr_pow)
     expert_values[saved_on_vac_spike_cr_pow] = "STRING"
 
-    saved_on_vac_spike_cp_pow            = "saved_on_vac_spike_cp_pow"
+    saved_on_vac_spike_cp_pow = "saved_on_vac_spike_cp_pow"
     expert_value_keys.append(saved_on_vac_spike_cp_pow)
     expert_values[saved_on_vac_spike_cp_pow] = "STRING"
 
-    saved_on_vac_spike_kf_pha            = "saved_on_vac_spike_kf_pha"
+    saved_on_vac_spike_kf_pha = "saved_on_vac_spike_kf_pha"
     expert_value_keys.append(saved_on_vac_spike_kf_pha)
     expert_values[saved_on_vac_spike_kf_pha] = "STRING"
 
-    saved_on_vac_spike_kr_pha            = "saved_on_vac_spike_kr_pha"
+    saved_on_vac_spike_kr_pha = "saved_on_vac_spike_kr_pha"
     expert_value_keys.append(saved_on_vac_spike_kr_pha)
     expert_values[saved_on_vac_spike_kr_pha] = "STRING"
 
-    saved_on_vac_spike_cf_pha            = "saved_on_vac_spike_cf_pha"
+    saved_on_vac_spike_cf_pha = "saved_on_vac_spike_cf_pha"
     expert_value_keys.append(saved_on_vac_spike_cf_pha)
     expert_values[saved_on_vac_spike_cf_pha] = "STRING"
 
-    saved_on_vac_spike_cr_pha            = "saved_on_vac_spike_cr_pha"
+    saved_on_vac_spike_cr_pha = "saved_on_vac_spike_cr_pha"
     expert_value_keys.append(saved_on_vac_spike_cr_pha)
     expert_values[saved_on_vac_spike_cr_pha] = "STRING"
 
-    saved_on_vac_spike_cp_pha            = "saved_on_vac_spike_cp_pha"
+    saved_on_vac_spike_cp_pha = "saved_on_vac_spike_cp_pha"
     expert_value_keys.append(saved_on_vac_spike_cp_pha)
     expert_values[saved_on_vac_spike_cp_pha] = "STRING"
 
-    drop_amp_on_bd_kf_pow                = "drop_amp_on_bd_kf_pow"
+    drop_amp_on_bd_kf_pow = "drop_amp_on_bd_kf_pow"
     expert_value_keys.append(drop_amp_on_bd_kf_pow)
     expert_values[drop_amp_on_bd_kf_pow] = "STRING"
 
-    drop_amp_on_bd_kr_pow                = "drop_amp_on_bd_kr_pow"
+    drop_amp_on_bd_kr_pow = "drop_amp_on_bd_kr_pow"
     expert_value_keys.append(drop_amp_on_bd_kr_pow)
     expert_values[drop_amp_on_bd_kr_pow] = "STRING"
 
-    drop_amp_on_bd_cf_pow                = "drop_amp_on_bd_cf_pow"
+    drop_amp_on_bd_cf_pow = "drop_amp_on_bd_cf_pow"
     expert_value_keys.append(drop_amp_on_bd_cf_pow)
     expert_values[drop_amp_on_bd_cf_pow] = "STRING"
 
-    drop_amp_on_bd_cr_pow                = "drop_amp_on_bd_cr_pow"
+    drop_amp_on_bd_cr_pow = "drop_amp_on_bd_cr_pow"
     expert_value_keys.append(drop_amp_on_bd_cr_pow)
     expert_values[drop_amp_on_bd_cr_pow] = "STRING"
 
-
-    drop_amp_on_bd_cp_pow                = "drop_amp_on_bd_cp_pow"
+    drop_amp_on_bd_cp_pow = "drop_amp_on_bd_cp_pow"
     expert_value_keys.append(drop_amp_on_bd_cp_pow)
     expert_values[drop_amp_on_bd_cp_pow] = "STRING"
 
-    drop_amp_on_bd_kf_pha                = "drop_amp_on_bd_kf_pha"
+    drop_amp_on_bd_kf_pha = "drop_amp_on_bd_kf_pha"
     expert_value_keys.append(drop_amp_on_bd_kf_pha)
     expert_values[drop_amp_on_bd_kf_pha] = "STRING"
 
-    drop_amp_on_bd_kr_pha                = "drop_amp_on_bd_kr_pha"
+    drop_amp_on_bd_kr_pha = "drop_amp_on_bd_kr_pha"
     expert_value_keys.append(drop_amp_on_bd_kr_pha)
     expert_values[drop_amp_on_bd_kr_pha] = "STRING"
 
-    drop_amp_on_bd_cf_pha                = "drop_amp_on_bd_cf_pha"
+    drop_amp_on_bd_cf_pha = "drop_amp_on_bd_cf_pha"
     expert_value_keys.append(drop_amp_on_bd_cf_pha)
     expert_values[drop_amp_on_bd_cf_pha] = "STRING"
 
-    drop_amp_on_bd_cr_pha                = "drop_amp_on_bd_cr_pha"
+    drop_amp_on_bd_cr_pha = "drop_amp_on_bd_cr_pha"
     expert_value_keys.append(drop_amp_on_bd_cr_pha)
     expert_values[drop_amp_on_bd_cr_pha] = "STRING"
 
-    drop_amp_on_bd_cp_pha                = "drop_amp_on_bd_cp_pha"
+    drop_amp_on_bd_cp_pha = "drop_amp_on_bd_cp_pha"
     expert_value_keys.append(drop_amp_on_bd_cp_pha)
     expert_values[drop_amp_on_bd_cp_pha] = "STRING"
 
-    streak_kf_pow                        = "streak_kf_pow"
+    streak_kf_pow = "streak_kf_pow"
     expert_value_keys.append(streak_kf_pow)
     expert_values[streak_kf_pow] = "STRING"
 
-    streak_kr_pow                        = "streak_kr_pow"
+    streak_kr_pow = "streak_kr_pow"
     expert_value_keys.append(streak_kr_pow)
     expert_values[streak_kr_pow] = "STRING"
 
-    streak_cf_pow                        = "streak_cf_pow"
+    streak_cf_pow = "streak_cf_pow"
     expert_value_keys.append(streak_cf_pow)
     expert_values[streak_cf_pow] = "STRING"
 
-    streak_cr_pow                        = "streak_cr_pow"
+    streak_cr_pow = "streak_cr_pow"
     expert_value_keys.append(streak_cr_pow)
     expert_values[streak_cr_pow] = "STRING"
 
-    streak_cp_pow                        = "streak_cp_pow"
+    streak_cp_pow = "streak_cp_pow"
     expert_value_keys.append(streak_cp_pow)
     expert_values[streak_cp_pow] = "STRING"
 
-    streak_kf_pha                        = "streak_kf_pha"
+    streak_kf_pha = "streak_kf_pha"
     expert_value_keys.append(streak_kf_pha)
     expert_values[streak_kf_pha] = "STRING"
 
-    streak_kr_pha                        = "streak_kr_pha"
+    streak_kr_pha = "streak_kr_pha"
     expert_value_keys.append(streak_kr_pha)
     expert_values[streak_kr_pha] = "STRING"
 
-    streak_cf_pha                        = "streak_cf_pha"
+    streak_cf_pha = "streak_cf_pha"
     expert_value_keys.append(streak_cf_pha)
     expert_values[streak_cf_pha] = "STRING"
 
-    streak_cr_pha                        = "streak_cr_pha"
+    streak_cr_pha = "streak_cr_pha"
     expert_value_keys.append(streak_cr_pha)
     expert_values[streak_cr_pha] = "STRING"
 
-    streak_cp_pha                        = "streak_cp_pha"
+    streak_cp_pha = "streak_cp_pha"
     expert_value_keys.append(streak_cp_pha)
     expert_values[streak_cp_pha] = "STRING"
 
-    breakdown_rate_aim_val               = "breakdown_rate_aim_val"
+    breakdown_rate_aim_val = "breakdown_rate_aim_val"
     expert_value_keys.append(breakdown_rate_aim_val)
     expert_values[breakdown_rate_aim_val] = "STRING"
 
-    expected_daq_rep_rate_val            = "expected_daq_rep_rate_val"
+    expected_daq_rep_rate_val = "expected_daq_rep_rate_val"
     expert_value_keys.append(expected_daq_rep_rate_val)
     expert_values[expected_daq_rep_rate_val] = "STRING"
 
-    daq_rep_rate_error_val               = "daq_rep_rate_error_val"
+    daq_rep_rate_error_val = "daq_rep_rate_error_val"
     expert_value_keys.append(daq_rep_rate_error_val)
     expert_values[daq_rep_rate_error_val] = "STRING"
 
-    number_of_pulses_in_history_val      = "number_of_pulses_in_history_val"
+    number_of_pulses_in_history_val = "number_of_pulses_in_history_val"
     expert_value_keys.append(number_of_pulses_in_history_val)
     expert_values[number_of_pulses_in_history_val] = "STRING"
 
-    trace_buffer_size_val                = "trace_buffer_size_val"
+    trace_buffer_size_val = "trace_buffer_size_val"
     expert_value_keys.append(trace_buffer_size_val)
     expert_values[trace_buffer_size_val] = "STRING"
 
-    default_pulse_count_val              = "default_pulse_count_val"
+    default_pulse_count_val = "default_pulse_count_val"
     expert_value_keys.append(default_pulse_count_val)
     expert_values[default_pulse_count_val] = "STRING"
 
-    default_amp_increase_val             = "default_amp_increase_val"
+    default_amp_increase_val = "default_amp_increase_val"
     expert_value_keys.append(default_amp_increase_val)
     expert_values[default_amp_increase_val] = "STRING"
 
-    max_amp_increase_val                 = "max_amp_increase_val"
+    max_amp_increase_val = "max_amp_increase_val"
     expert_value_keys.append(max_amp_increase_val)
     expert_values[max_amp_increase_val] = "STRING"
 
-    num_fit_points_val                   = "num_fit_points_val"
+    num_fit_points_val = "num_fit_points_val"
     expert_value_keys.append(num_fit_points_val)
     expert_values[num_fit_points_val] = "STRING"
 
-    active_power_val                     = "active_power_val"
+    active_power_val = "active_power_val"
     expert_value_keys.append(active_power_val)
     expert_values[active_power_val] = dummy_float
 
-    num_future_traces_val                = "num_future_traces_val"
+    num_future_traces_val = "num_future_traces_val"
     expert_value_keys.append(num_future_traces_val)
     expert_values[num_future_traces_val] = dummy_int
 
-    keep_valve_open_val                  = "keep_valve_open_val"
+    keep_valve_open_val = "keep_valve_open_val"
     expert_value_keys.append(keep_valve_open_val)
     expert_values[keep_valve_open_val] = True
-
 
     keep_valve_open_valves_val = "keep_valve_open_valves_val"
     expert_value_keys.append(keep_valve_open_valves_val)
@@ -2172,24 +2333,6 @@ class rf_conditioning_data(object):
     expert_value_keys.append(max_amp_increase_val)
     expert_values[max_amp_increase_val] = True
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #     # these functions move up and down the ramp curve
 #     # and set the next increase, decrease values,
 #     # if ramping down delete previous entries that are above our new working point
@@ -2205,7 +2348,8 @@ class rf_conditioning_data(object):
 #         if len(dat.rf_condition_data_base.amp_sp_history) > 1:
 #             # delete last entry from amp_history
 #             self.logger.message('clear_last_sp_history for values greater than ' +str(dat.rf_condition_data_base.values[dat.last_sp_above_100]))
-#             dat.rf_condition_data_base.amp_sp_history  = [i for i in dat.rf_condition_data_base.amp_sp_history if i <= dat.rf_condition_data_base.values[dat.last_sp_above_100] ]
+#             dat.rf_condition_data_base.amp_sp_history  = [i for i in dat.rf_condition_data_base.amp_sp_history if i <=
+#             dat.rf_condition_data_base.values[dat.last_sp_above_100] ]
 #
 #             #dat.rf_condition_data_base.amp_sp_history = dat.rf_condition_data_base.amp_sp_history[:-1]
 #             self.logger.message('New amp_sp_history[-1] = ' + str(dat.rf_condition_data_base.amp_sp_history[-1]), True)
@@ -2214,7 +2358,8 @@ class rf_conditioning_data(object):
 #         #
 #         # could maybe do this more clever like
 #         # if we only keep mean values, just delete last entry in mean pwr vs amp_sp data dicts
-#         dat.rf_condition_data_base.sp_pwr_hist = [x for x in dat.rf_condition_data_base.sp_pwr_hist if x[0] < dat.rf_condition_data_base.amp_sp_history[-1] ]
+#         dat.rf_condition_data_base.sp_pwr_hist = [x for x in dat.rf_condition_data_base.sp_pwr_hist if x[0] <
+#         dat.rf_condition_data_base.amp_sp_history[-1] ]
 #         # delete entries from amp_pwr_mean_data
 #         dat.rf_condition_data_base.amp_pwr_mean_data = {key: value for key, value in
 #                                                         dat.rf_condition_data_base.amp_pwr_mean_data.iteritems()
@@ -2348,7 +2493,8 @@ class rf_conditioning_data(object):
 #
 #         return_value = 0
 #         if predicted_sp < current_sp:
-#             self.logger.message('Predicted sp is less than current_sp! returning current_sp + ' + str(self.llrf_config['DEFAULT_RF_INCREASE_LEVEL']) , True)
+#             self.logger.message('Predicted sp is less than current_sp! returning current_sp + ' + str(self.llrf_config[
+#             'DEFAULT_RF_INCREASE_LEVEL']) , True)
 #             return_value = current_sp + self.llrf_config['DEFAULT_RF_INCREASE_LEVEL']
 #
 #         elif m <= 0:
@@ -2357,7 +2503,8 @@ class rf_conditioning_data(object):
 #             return_value = current_sp + self.llrf_config['DEFAULT_RF_INCREASE_LEVEL']
 #
 #         elif predicted_sp - current_sp > self.llrf_config['MAX_DELTA_AMP_SP']:# MAGIC_STRING
-#             self.logger.message('Predicted SP > ' + str(self.llrf_config['MAX_DELTA_AMP_SP']) + ', too high, returning current_sp + ' + str(self.llrf_config['MAX_DELTA_AMP_SP']) ,True)
+#             self.logger.message('Predicted SP > ' + str(self.llrf_config['MAX_DELTA_AMP_SP']) + ', too high, returning current_sp + ' + str(
+#             self.llrf_config['MAX_DELTA_AMP_SP']) ,True)
 #             return_value = current_sp + self.llrf_config['MAX_DELTA_AMP_SP']
 #
 #         elif predicted_sp == current_sp:
@@ -2515,8 +2662,6 @@ class rf_conditioning_data(object):
 #             to_write.append(str(value))
 #         self.logger.message(','.join(to_write),True)
 #         #
-#         # The next amp_setpoint to set
-#         self.values[dat.log_amp_set] = dat.rf_condition_data_base.amp_sp_history[-1]
 #         #
 #         # the next amp_setpoint on ramp_down
 #         self.values[dat.next_sp_decrease] = dat.rf_condition_data_base.amp_sp_history[-2]
@@ -2617,13 +2762,13 @@ class rf_conditioning_data(object):
 #
 
 
-    # OLD BASE ClASS FUNCIONS
-    # OLD BASE ClASS FUNCIONS
-    # OLD BASE ClASS FUNCIONS
-    # OLD BASE ClASS FUNCIONS
-    # OLD BASE ClASS FUNCIONS
-    # OLD BASE ClASS FUNCIONS
-    # OLD BASE ClASS FUNCIONS
+# OLD BASE ClASS FUNCIONS
+# OLD BASE ClASS FUNCIONS
+# OLD BASE ClASS FUNCIONS
+# OLD BASE ClASS FUNCIONS
+# OLD BASE ClASS FUNCIONS
+# OLD BASE ClASS FUNCIONS
+# OLD BASE ClASS FUNCIONS
 #
 # self.data_log_timer = QTimer()
 # self.amp_pwr_log_timer = QTimer()
@@ -2726,7 +2871,8 @@ class rf_conditioning_data(object):
 #                 rf_condition_data_base.sp_pwr_hist.append([rf_condition_data_base.values[amp_sp],
 #                                                            rf_condition_data_base.values[
 #                                                                fwd_kly_pwr]])  #
-#                 # self.update_amp_pwr_mean_dict(rf_condition_data_base.values[amp_sp],  #                               rf_condition_data_base.values[fwd_kly_pwr])
+#                 # self.update_amp_pwr_mean_dict(rf_condition_data_base.values[amp_sp],  #
+#                 rf_condition_data_base.values[fwd_kly_pwr])
 #         # cancer
 #         if rf_condition_data_base.values[amp_sp] not in rf_condition_data_base.amp_sp_history:
 #             rf_condition_data_base.amp_sp_history.append(rf_condition_data_base.values[amp_sp])
@@ -2753,31 +2899,31 @@ class rf_conditioning_data(object):
 #     else:
 #         self.logger.message('Not adding to pulse_breakdown_log, amp = ' + str(amp), True)
 
-    # @staticmethod
-    # def add_data_key( key, initial_value = None):
-    #     '''
-    #     Function that adds a key to the main data dictionaries, we do this so that we are less
-    #     likely to forget to add a new key
-    #     :param key: new key to be added
-    #     :param initial_value: an intial value for the key, THIS SHOULD BE None, or, when debugging
-    #     of the correct type
-    #     '''
-    #     rf_conditioning_data.all_value_keys.append( key )
-    #     rf_conditioning_data.values[key] = initial_value
+# @staticmethod
+# def add_data_key( key, initial_value = None):
+#     '''
+#     Function that adds a key to the main data dictionaries, we do this so that we are less
+#     likely to forget to add a new key
+#     :param key: new key to be added
+#     :param initial_value: an intial value for the key, THIS SHOULD BE None, or, when debugging
+#     of the correct type
+#     '''
+#     rf_conditioning_data.all_value_keys.append( key )
+#     rf_conditioning_data.values[key] = initial_value
 
-    # meh ...
-    # phase_mask_by_power_trace_1_set = 'phase_mask_by_power_trace_1_set'
-    # all_value_keys.append(phase_mask_by_power_trace_1_set)
-    # values[phase_mask_by_power_trace_1_set] = False
-    #
-    # phase_mask_by_power_trace_2_set = 'phase_mask_by_power_trace_2_set'
-    # all_value_keys.append(phase_mask_by_power_trace_2_set)
-    # values[phase_mask_by_power_trace_2_set] = False
-    #
-    # phase_end_mask_by_power_trace_1_time = 'phase_end_mask_by_power_trace_1_time'
-    # all_value_keys.append(phase_end_mask_by_power_trace_1_time)
-    # values[phase_end_mask_by_power_trace_1_time] = bool
-    #
-    # phase_end_mask_by_power_trace_2_time = 'phase_end_mask_by_power_trace_2_time'
-    # all_value_keys.append(phase_end_mask_by_power_trace_2_time)
-    # values[phase_end_mask_by_power_trace_2_time] = state.UNKNOWN
+# meh ...
+# phase_mask_by_power_trace_1_set = 'phase_mask_by_power_trace_1_set'
+# all_value_keys.append(phase_mask_by_power_trace_1_set)
+# values[phase_mask_by_power_trace_1_set] = False
+#
+# phase_mask_by_power_trace_2_set = 'phase_mask_by_power_trace_2_set'
+# all_value_keys.append(phase_mask_by_power_trace_2_set)
+# values[phase_mask_by_power_trace_2_set] = False
+#
+# phase_end_mask_by_power_trace_1_time = 'phase_end_mask_by_power_trace_1_time'
+# all_value_keys.append(phase_end_mask_by_power_trace_1_time)
+# values[phase_end_mask_by_power_trace_1_time] = bool
+#
+# phase_end_mask_by_power_trace_2_time = 'phase_end_mask_by_power_trace_2_time'
+# all_value_keys.append(phase_end_mask_by_power_trace_2_time)
+# values[phase_end_mask_by_power_trace_2_time] = state.UNKNOWN

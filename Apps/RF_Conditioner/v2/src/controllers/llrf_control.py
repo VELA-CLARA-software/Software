@@ -1,5 +1,5 @@
 # llrf_handler.py
-import src.data.rf_condition_data_base as dat
+#import src.data.rf_condition_data_base as dat
 #from VELA_CLARA_LLRF_Control import LLRF_SCAN
 from VELA_CLARA_LLRF_Control import TRIG
 from src.data import config
@@ -141,36 +141,45 @@ class llrf_control(object):
 		if self.llrf_control.getTrigSource() == TRIG.OFF:
 			self.llrf_control.trigExt()
 
-	def set_amp(self, val1):
-		val = float(val1)
-		self.logger.message('set_amp(' + str(val) + ') called from ' + str(inspect.stack()[1][3]))
+	def set_amp(self, val1, update_last_amp_sp = False):
 
-		#llrf_handler_base.llrf_control.trigOff()
-		# for trace in llrf_handler_base.config.breakdown_config['BREAKDOWN_TRACES']:#MAGIC_STRING:
-		#     llrf_handler_base.llrf_control.setTraceSCAN(trace, LLRF_SCAN.PASSIVE)  # SHOULD BE INPUT Parameter
+		start_amp_sp = self.values[rf_conditioning_data.amp_sp]
+		self.logger.message('set_amp(' + str(val1) + ') called from ' + str(inspect.stack()[1][3]))
+
 		success = False
 		#if val != self.llrf_control.getAmpFF(): # TODO this has chnged from amp_SP due to
-		if val != self.llrf_control.getAmpSP(): # TODO this has chnged from amp_SP due to
-			self.logger.message('requested value is different to current value')
-			# some LLRF weirdness
-			self.llrf_control.setAmpSP(val)
+		current_value = self.llrf_control.getAmpSP()
+		if val1 != current_value: # TODO this has chnged from amp_SP due to
+			self.logger.message('requested value {} is different to current value {}'.format(val1, current_value))
+			self.llrf_control.setAmpSP(val1)
 			#self.llrf_control.setAmpFF(val) # TODO THIS SHOULD BE SP!!!!!!!!!!!!!!!!
 			self.mask_set = False
 			start = timer()
 			end = start
 			success = True
-			#while self.llrf_control.getAmpFF() != val: # TODO this has chnged from amp_SP due to
-			while self.llrf_control.getAmpSP() != val: # TODO this has chnged from amp_SP due to
+			#while self.llrf_control.getAmpFF() != val: #  this has chnged from amp_SP due to controls group not setting  LLRF
+			while self.llrf_control.getAmpSP() != val1:
 				#print("stuck in the whie loop, ", start, end, end-start)
 				end = timer()
 				if end - start > 3.0:#MAGIC_NUMBER
 					success = False
 					break
 			if success:
-				self.logger.message('set_amp(' + str(val) + '), took ' + str(end - start)+ \
-				                                 ' time,  averages NOT reset, mask_set = False')
+
+
+				self.logger.message('set_amp(' + str(val1) + '), took ' + str(end - start)+ ' time,  averages NOT reset, mask_set = False')
+				# update values dict to reflect new value
+
+				if update_last_amp_sp:
+					self.values[rf_conditioning_data.last_amp_sp] = start_amp_sp
+					print('last_amp_sp = ', self.values[rf_conditioning_data.last_amp_sp])
+					self.values[rf_conditioning_data.kfpower_at_last_amp_sp] = self.data.amp_vs_kfpow_running_stat[self.values[
+						rf_conditioning_data.last_amp_sp]][1]
+
+
+				self.values[rf_conditioning_data.amp_sp] = self.llrf_control.getAmpSP()
 			else:
-				self.logger.message('set_amp(' + str(val) + '), FAILED to set amp in less than 3 seconds '
+				self.logger.message('set_amp(' + str(val1) + '), FAILED to set amp in less than 3 seconds '
 				                                                         'averages NOT reset, mask_set = False')
 		else:
 			self.logger.message('requested value is THE SAME  to current value')

@@ -49,6 +49,8 @@ from PyQt4.QtGui import *
 from PyQt4.QtGui import QPixmap
 from PyQt4.QtGui import QTextCursor
 from PyQt4.QtCore import QTimer
+import pyqtgraph
+
 from numpy import float64
 
 
@@ -144,6 +146,62 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         self.can_ramp_button.setStyleSheet('QPushButton { background-color : ' + self.bad + '; color : black; }')
         self.can_ramp_button.setText('RAMP Disabled')
 
+        self.plot_item = self.graphicsView.getPlotItem()
+
+
+    def update_plot(self):
+        '''
+            plot the binned data, the curret working point (as a vertical line due to no kfpow for that amp_sp), lines of best fit
+        '''
+
+        pg = pyqtgraph
+
+        data =rf_conditioning_data.amp_vs_kfpow_running_stat
+        x = data.keys()
+        x.sort()
+        y = []
+
+        #data =
+        for item in x:
+            y.append( data[item][1] )
+
+
+        # draw vertical line at the new amp_sp
+        current_amp = int(self.values[rf_conditioning_data.amp_sp])
+        current_X = [current_amp, current_amp]
+        current_Y = [min(y), max(y)]
+
+        # call in binned data to plot
+        bin_X = rf_conditioning_data.binned_amp_vs_kfpow['BIN_X']
+        bin_Y = rf_conditioning_data.binned_amp_vs_kfpow['BIN_mean']
+
+        # do we need to clear ???
+        self.plot_item.clear()
+        #        self.plot_item.addItem(self.err)
+        #self.plot_item.plot(x, y, symbol='', pen={'color': 0.8, 'width': 1})
+        self.plot_item.plot(x, y,  pen={'color': 0.8, 'width': 1})
+
+        self.plot_item.plot(current_X, current_Y, pen=pg.mkPen('b', width=2))
+        #self.plot_item.plot([current_X], [current_Y], symbol='+', pen={'color': 0.8, 'width': 1.5})
+        self.plot_item.plot(bin_X, bin_Y, symbol='+', pen={'color': 'g', 'width': 1.0})
+
+        # add in straight line fits ...'new data'
+        self.plot_item.plot([self.values[rf_conditioning_data.x_min], self.values[rf_conditioning_data.x_max]],
+                            [self.values[rf_conditioning_data.y_min], self.values[rf_conditioning_data.y_max]], pen={'color': 'r', 'width': 2.5})
+
+        # add in plot of old SLF,
+        self.plot_item.plot(
+            [rf_conditioning_data.values[rf_conditioning_data.old_x_min], rf_conditioning_data.values[rf_conditioning_data.old_x_max]],
+            [rf_conditioning_data.values[rf_conditioning_data.old_y_min], rf_conditioning_data.values[rf_conditioning_data.old_y_max]],
+            pen={'color': 'y', 'width': 1.8})
+
+        # print(
+        #     'x_min = {}\nx_max = {}\ny_min = {}\ny_max = {}'.format(self.values[rf_conditioning_data.x_min], self.values[rf_conditioning_data.x_max],
+        #                                                             self.values[rf_conditioning_data.y_min], self.values[rf_conditioning_data.y_max]))
+
+        self.plot_item.setXRange(0.0, current_amp+200.0)
+        self.plot_item.setYRange(0.0, max(y)*1.4)
+
     def handle_can_ramp_button(self):
         if self.values[rf_conditioning_data.gui_can_ramp]:
             self.values[rf_conditioning_data.gui_can_ramp] = False
@@ -224,9 +282,18 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
 
         self.update_amp_sp()
 
+        # other stuff
+        self.current_ramp_index.setText('{}'.format(self.values[self.data.current_ramp_index]))
+        self.delta_power_outputwidget.setText('{}'.format(self.values[rf_conditioning_data.delta_kfpow] ))
+        self.next_power_increse_outputwidget.setText('{}'.format(self.values[rf_conditioning_data.next_power_increase] ))
+
+        self.last_power_increase_outputwidget.setText('{}'.format(self.values[rf_conditioning_data.last_power_increase] ))
+
+        self.last_increase_method_outputwidget.setText(  str(self.values[rf_conditioning_data.last_ramp_method] ))
+
+
     def update_amp_sp(self):
-        self.amp_set_outputwidget.setText(
-            '{}'.format(self.values[self.data.amp_sp]))
+        self.amp_set_outputwidget.setText('{}'.format(self.values[self.data.amp_sp]))
 
     def update_DAQ_rep_rate(self):
         self.trace_rep_rate_outpuwidget.setText(
@@ -376,7 +443,8 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         self.set_power_text(self.rev_kly_power_outputwidget, self.values[self.data.rev_kly_pwr])
 
     def set_power_text(self, widget, value):
-        widget.setText('{:0=4.2f} e6'.format(value * 0.000001))
+        #widget.setText('{:0=4f}'.format( int(value * 0.001) ))
+        widget.setText('{:1.2f} kW'.format( value * 0.001) )
 
     def init_widget_dict(self):
         """
