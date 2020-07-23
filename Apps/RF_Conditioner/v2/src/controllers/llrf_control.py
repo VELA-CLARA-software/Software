@@ -165,9 +165,7 @@ class llrf_control(object):
 					success = False
 					break
 			if success:
-
-
-				self.logger.message('set_amp(' + str(val1) + '), took ' + str(end - start)+ ' time,  averages NOT reset, mask_set = False')
+				self.logger.message('set_amp(' + str(val1) + '), took ' + str(end - start) + ' time,  averages NOT reset, mask_set = False')
 				# update values dict to reflect new value
 
 				if update_last_amp_sp:
@@ -175,8 +173,6 @@ class llrf_control(object):
 					print('last_amp_sp = ', self.values[rf_conditioning_data.last_amp_sp])
 					self.values[rf_conditioning_data.kfpower_at_last_amp_sp] = self.data.amp_vs_kfpow_running_stat[self.values[
 						rf_conditioning_data.last_amp_sp]][1]
-
-
 				self.values[rf_conditioning_data.amp_sp] = self.llrf_control.getAmpSP()
 			else:
 				self.logger.message('set_amp(' + str(val1) + '), FAILED to set amp in less than 3 seconds '

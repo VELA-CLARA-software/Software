@@ -48,6 +48,8 @@ print('main_controller: import monitor_hub')
 from src.monitors.monitor_hub import monitor_hub
 from src.view.rf_condition_view import rf_condition_view
 
+import random
+
 from PyQt4.QtGui import QApplication
 
 from src.data.state import state
@@ -119,6 +121,8 @@ class main_controller(object):
         self.hardware = hardware_control_hub()
         self.hardware.start_up()
 
+        # set the activ epulse count in teh c++ to the value in the pulse_breakdown_log
+        self.hardware.llrf_control.setActivePulseCount(self.values[rf_conditioning_data.log_pulse_count])
         self.hardware.llrf_controller.set_trace_mean_positions()
         # SET TRACE SCAN Paramaters
         self.hardware.llrf_controller.set_trace_SCAN()
@@ -145,9 +149,9 @@ class main_controller(object):
 
         # set the active pulse count to the value read in from the pulse-breakdown log file
         # set event_pulse_count_zero to be the active pulse count, then set the active pulse count to zero
-        self.hardware.llrf_control.setActivePulseCount(self.values[rf_conditioning_data.log_pulse_count])
-        self.values[rf_conditioning_data.event_pulse_count_zero] = self.values[rf_conditioning_data.log_pulse_count]
-        self.values[rf_conditioning_data.event_pulse_count] = 0
+        #print("Set Pulse counts in main loop")
+        # self.values[rf_conditioning_data.event_pulse_count_zero] = self.values[rf_conditioning_data.log_pulse_count]
+        # self.values[rf_conditioning_data.event_pulse_count] = 0
         # reset the event pulse count to zero (this function should achieve the same as the above lines ... )
         self.data.reset_event_pulse_count()
 
@@ -209,12 +213,20 @@ class main_controller(object):
                 if self.values[rf_conditioning_data.gui_can_ramp]:
                     if  self.values[rf_conditioning_data.vac_level_can_ramp]:
                         if self.values[rf_conditioning_data.breakdown_rate_low]:
-                            print("Calling ramp_up")
-                            self.ramp_up() # TODO better name??, ramp_up from a normal stae
+                            estimated_ramp_index = self.data.get_ramp_index_from_power(self.data.get_power_at_current_set_point())
+                            print("power = {}, estimated_ramp_index = {}".format(self.data.get_power_at_current_set_point(), estimated_ramp_index))
+                            print("Calling ramp / random up or down")
+
+                            if random.randint(0,1) > 0.5:
+                                print("ml ramp_up")
+                                self.ramp_up()  # TODO better name??, ramp_up from a normal stae
+                            else:
+                                print("ml ramp_down")
+                                self.ramp_down()
                         else:
-                            print("can;t ramp BD rate  hi")
+                            print("can't ramp BD rate  hi")
                     else:
-                        print("can;t ramp vac level hi")
+                        print("can't ramp vac level hi")
                 else:
                     print("main loop can't ramp: GUI DISABLED RAMPING")
             else:
@@ -225,8 +237,7 @@ class main_controller(object):
 
     def ramp_up(self):
         self.logger.message_header(' Ramp Up ')
-
-        setpoint_before_ramp =  self.hardware.llrf_obj[0].amp_sp
+        setpoint_before_ramp = self.hardware.llrf_obj[0].amp_sp
         if setpoint_before_ramp < 100:
             self.logger.message('!!WARNING!! Current setpoint before Ramp Up = ' + str(
                 setpoint_before_ramp) + ' suspect a breakdown has very recently occurred! ')
@@ -237,9 +248,13 @@ class main_controller(object):
         self.data.add_to_pulse_breakdown_log(self.hardware.llrf_obj[0].amp_sp)
         self.monitor_hub.llrf_monitor.update_amp_vs_kfpow_running_stat()
         self.data.log_kly_fwd_power_vs_amp()
+
+        # dynamically set ramp index based on measured power at this amp_set_point
+        self.data.set_ramp_index_for_current_power()
+
         # GET NEW SET_POINT
         # new amp always returns a value!!
-        new_amp = self.data.get_new_set_point(self.values[rf_conditioning_data.next_power_increase]) # value from ramp.py and ramp_index
+        new_amp = self.data.get_new_set_point(self.values[rf_conditioning_data.next_power_change]) # value from ramp.py and ramp_index
 
         # #
         # # set new_amp
@@ -253,12 +268,23 @@ class main_controller(object):
         # # move up curve (when below ~1MW
         # ''' !!! also calls set_next_sp_decrease !!!'''
         # we ONLY call the below function, if we have actually ramped with enough to data to attmept fitting
-        if self.values[rf_conditioning_data.last_ramp_method] == ramp_method.DEFAULT:
+
+        if self.values[rf_conditioning_data.last_ramp_method] == ramp_method.DEFAULT__TOO_FEW_BINS \
+            or self.values[rf_conditioning_data.last_ramp_method] == ramp_method.DEFAULT__ENOUGH_BINS__ZERO_IN_LIST__NOT_ENOUGH_NON_ZERO \
+            or self.values[rf_conditioning_data.last_ramp_method] == ramp_method.DEFAULT__DELTA_GTRTHN_MAX \
+            or self.values[rf_conditioning_data.last_ramp_method] == ramp_method.DEFAULT__NEG_RAMP \
+            or self.values[rf_conditioning_data.last_ramp_method] == ramp_method.DEFAULT__FLAT_RAMP:
+
             pass
         elif self.values[rf_conditioning_data.last_ramp_method] == ramp_method.UNKNOWN:
-            print("!!!MAJOR ERROR!!!!")
-        else: # probably should not be this, there are (will be) more possible ramp_method values to consider
-            self.data.move_up_ramp_curve()
+            print("!!!MAJOR ERROR!!!!\nramp_method = {}".format(self.values[rf_conditioning_data.last_ramp_method]))
+        else:
+            pass
+
+        # else: # probably should not be this, there are (will be) more possible ramp_method values to consider
+        #     self.data.move_up_ramp_curve()
+
+
         # #
         # '''Sanity Check '''
         # if setpoint_before_ramp != controller_base.data.values[dat.next_sp_decrease]:
@@ -279,6 +305,44 @@ class main_controller(object):
         self.logger.message('ramp_up FINISHED, we went from ' + str(setpoint_before_ramp) + ' to ' + str(new_amp))
 
 
+
+
+    def ramp_down(self):
+        self.logger.message_header('Ramp Down')
+        setpoint_before_ramp = self.hardware.llrf_obj[0].amp_sp
+        if setpoint_before_ramp < 100:
+            self.logger.message(
+                '!!WARNING!! Current setpoint before Ramp Down = ' + str(setpoint_before_ramp) + ' suspect a breakdown has very recently occurred! ')
+        #
+        # #
+        # # log data at the new setpoint MUST BE BEFORE  move_up_ramp_curve()
+        # update pulse breakdown log
+        self.data.add_to_pulse_breakdown_log(self.hardware.llrf_obj[0].amp_sp)
+        self.monitor_hub.llrf_monitor.update_amp_vs_kfpow_running_stat()
+        self.data.log_kly_fwd_power_vs_amp()
+        # dynamically set ramp index based on measured power at this amp_set_point
+        self.data.set_ramp_index_for_current_power()
+
+        # GET NEW SET_POINT
+        # new amp always returns a value!!
+        new_amp = self.data.get_new_set_point(-self.values[rf_conditioning_data.next_power_change]) # value from ramp.py and ramp_index
+        # #
+        # # set new_amp
+        if self.hardware.llrf_controller.set_amp(new_amp, update_last_amp_sp = True):
+            pass
+        else:
+            # we failed to set the requested amplitude .... erm.... not sure what to do ????
+            pass
+        # update the plot with new values
+        self.view.update_plot()
+        QApplication.processEvents()
+        #
+        # reset active pulse counters
+        # why does this function  happen in the outside_mask_trace_monitor ??
+        self.data.reset_event_pulse_count()
+        #self.data_monitor.outside_mask_trace_monitor.reset_event_pulse_count()
+        #
+        self.logger.message('ramp_down FINISHED, we went from ' + str(setpoint_before_ramp) + ' to ' + str(new_amp))
 
 
     def reached_min_pulse_count_for_this_step(self):
