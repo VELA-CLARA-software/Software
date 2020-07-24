@@ -210,14 +210,35 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         self.plot_item.plot(
             [rf_conditioning_data.values[rf_conditioning_data.old_x_min], current_amp],
             [rf_conditioning_data.values[rf_conditioning_data.old_y_min], expected_Y_old],
-            pen={'color': 'y', 'width': 1.8})
+            pen={'color': 'y', 'width': 1.0})
 
         # print(
         #     'x_min = {}\nx_max = {}\ny_min = {}\ny_max = {}'.format(self.values[rf_conditioning_data.x_min], self.values[rf_conditioning_data.x_max],
         #                                                             self.values[rf_conditioning_data.y_min], self.values[rf_conditioning_data.y_max]))
 
-        self.plot_item.setXRange(0.0, current_amp+200.0)
-        self.plot_item.setYRange(0.0, max(y)*1.4)
+
+
+        # Add second order polyfit to plot:
+
+
+        data_to_fit_x = rf_conditioning_data.values['polyfit_2order_X_all']
+        polyfit_2nd_order_y = rf_conditioning_data.values['polyfit_2order_Y_all']
+
+        #print('data_to_fit_x = {}\npolyfit_2nd_order_y = {}'.format(data_to_fit_x, polyfit_2nd_order_y))
+        self.plot_item.plot(data_to_fit_x, polyfit_2nd_order_y, pen={'color': 'c', 'width': 1.0})
+
+        # Add second order polyfit to plot (num_sp_to_fit data):
+
+
+        data_to_fit_x = rf_conditioning_data.values['polyfit_2order_X']
+        polyfit_2nd_order_y = rf_conditioning_data.values['polyfit_2order_Y']
+
+        print('data_to_fit_x = {}\npolyfit_2nd_order_y = {}'.format(data_to_fit_x, polyfit_2nd_order_y))
+
+        self.plot_item.plot(data_to_fit_x, polyfit_2nd_order_y, pen={'color': 'm', 'width': 2.5})
+
+        # self.plot_item.setXRange(0.0, current_amp+200.0)
+        # self.plot_item.setYRange(0.0, max(y)*1.4)
 
 
     def quick_update_plot(self):
@@ -278,6 +299,27 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
             [rf_conditioning_data.values[rf_conditioning_data.old_x_min], current_amp],
             [rf_conditioning_data.values[rf_conditioning_data.old_y_min], expected_Y_old],
             pen={'color': 'y', 'width': 1.8})
+
+        # Add second order polyfit to plot (all data):
+
+
+        data_to_fit_x = rf_conditioning_data.values['polyfit_2order_X_all']
+        polyfit_2nd_order_y = rf_conditioning_data.values['polyfit_2order_Y_all']
+
+        #print('data_to_fit_x = {}\npolyfit_2nd_order_y = {}'.format(data_to_fit_x, polyfit_2nd_order_y))
+
+        self.plot_item.plot(data_to_fit_x, polyfit_2nd_order_y, pen={'color': 'c', 'width': 1.0})
+
+        # Add second order polyfit to plot (num_sp_to_fit data):
+
+
+        
+        data_to_fit_x = rf_conditioning_data.values['polyfit_2order_X']
+        polyfit_2nd_order_y = rf_conditioning_data.values['polyfit_2order_Y']
+
+        print('data_to_fit_x = {}\npolyfit_2nd_order_y = {}'.format(data_to_fit_x, polyfit_2nd_order_y))
+
+        self.plot_item.plot(data_to_fit_x, polyfit_2nd_order_y, pen={'color': 'm', 'width': 2.5})
 
 
     def handle_can_ramp_button(self):

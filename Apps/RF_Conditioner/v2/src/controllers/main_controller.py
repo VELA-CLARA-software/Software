@@ -104,6 +104,15 @@ class main_controller(object):
         self.logger.message_header(__name__ + ', create rf_conditioning_data object',
                                    add_to_text_log=True, show_time_stamp=True)
         self.data = rf_conditioning_data(debug=self.debug)
+
+        self.logger.excluded_key_list = self.data.excluded_key_list
+        print("self.data.excluded_key_list = {}".format( self.data.excluded_key_list))
+
+
+
+
+
+
         self.data.initialise()
         self.values = self.data.values
 
@@ -212,14 +221,15 @@ class main_controller(object):
                         if self.values[rf_conditioning_data.breakdown_rate_low]:
                             estimated_ramp_index = self.data.get_ramp_index_from_power(self.data.get_power_at_current_set_point())
                             print("power = {}, estimated_ramp_index = {}".format(self.data.get_power_at_current_set_point(), estimated_ramp_index))
-                            print("Calling ramp / random up or down")
 
-                            if random.randint(0,1) > 0.5:
-                                print("ml ramp_up")
-                                self.ramp_up()  # TODO better name??, ramp_up from a normal stae
-                            else:
-                                print("ml ramp_down")
-                                self.ramp_down()
+                            self.ramp_up()
+                            # print("Calling ramp / random up or down")
+                            #  if random.randint(0,1) > 0.5:
+                            #     print("ml ramp_up")
+                            #     self.ramp_up()  # TODO better name??, ramp_up from a normal stae
+                            # else:
+                            #     print("ml ramp_down")
+                            #     self.ramp_down()
                         else:
                             print("can't ramp BD rate  hi")
                     else:

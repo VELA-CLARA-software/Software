@@ -25,7 +25,7 @@
 //*/
 '''
 
-import numpy as np
+import numpy as np, sys
 import matplotlib.pyplot as plt
 from config import config
 from rf_conditioning_logger import rf_conditioning_logger
@@ -60,6 +60,8 @@ class rf_conditioning_data(object):
     amp_vs_kfpow_running_stat = None
 
     last_fwd_kly_pwr = None
+
+    excluded_key_list = []
 
     """
     NOT SURE IF DEBUG DOES ANYTHING
@@ -497,8 +499,6 @@ class rf_conditioning_data(object):
         plt.savefig(bin_plots_path + r'\Binning_Plot.png')
         plt.close('all')
 
-
-
         plt.scatter(AMP_preBin, POW_preBin_MW, c='k', s=1.0, marker='.', label='Data', zorder=1)
         plt.scatter(bin_X, bin_mean, c='r', s=25, marker='x', label='Binned Mean', zorder=0)
         # plt.errorbar(bin_X, bin_mean, yerrbin_error, xerr=0, fmt='none', ecolor='red',
@@ -510,7 +510,6 @@ class rf_conditioning_data(object):
         plt.grid(True)
         plt.savefig(bin_plots_path + r'\Binning_Plot_zoom.png')
         plt.close('all')
-
 
     def initial_bin(self):
 
@@ -526,11 +525,15 @@ class rf_conditioning_data(object):
         num_pulses_prebin = []
         y = mean_kfpwr_raw = []
 
+
+
         for key in rcd.amp_vs_kfpow_running_stat.keys():
             amp_sp_raw.append(key)
             num_pulses_prebin.append(rcd.amp_vs_kfpow_running_stat[key][0])
             mean_kfpwr_raw.append(rcd.amp_vs_kfpow_running_stat[key][1])
             #print("init_bin set_up data = ", amp_sp_raw[-1], num_pulses_prebin[-1], mean_kfpwr_raw[-1])
+
+
 
         #print('mean_kfpwr_raw = {}'.format(mean_kfpwr_raw))
 
@@ -868,6 +871,15 @@ class rf_conditioning_data(object):
             data_to_fit_y2 = data_to_fit_y[-self.config.raw_config_data['NUM_SET_POINTS_TO_FIT']:]
 
             predicted_sp = self.slf_amp_kfpow_data(data_to_fit_x2, data_to_fit_y2, requested_power)
+            predicted_sp_2Order_all = self.poly_amp_kfpow_all_data(requested_power)
+            predicted_sp_2Order = self.poly_amp_kfpow_data(requested_power)
+
+            print('predicted_sp from slf = {}\npredicted_sp from 2nd order polyfit all data = {}\npredicted_sp from 2nd order polyfit = {}'.format(
+                predicted_sp, predicted_sp_2Order,
+                                                                                                predicted_sp_2Order_all))
+            # assign which fitting method amp_sp to use
+            predicted_sp = predicted_sp_2Order
+
             # check the valididty of the predicted_sp
             if abs(predicted_sp - current_amp_sp) > max_delta_power:
                 self.values[rf_conditioning_data.last_ramp_method] = ramp_method.DEFAULT__DELTA_GTRTHN_MAX
@@ -933,6 +945,7 @@ class rf_conditioning_data(object):
 
 
     def slf_amp_kfpow_data(self, data_to_fit_x, data_to_fit_y, requested_power):
+
         self.values[rf_conditioning_data.old_c] = self.values[rf_conditioning_data.c]
         self.values[rf_conditioning_data.old_m] = self.values[rf_conditioning_data.m]
         self.values[rf_conditioning_data.old_x_min] = self.values[rf_conditioning_data.x_min]
@@ -951,6 +964,104 @@ class rf_conditioning_data(object):
         self.values[rf_conditioning_data.y_max] = max(data_to_fit_y)
         self.values[rf_conditioning_data.c] = c
         self.values[rf_conditioning_data.m] = m
+        return predicted_sp
+
+    def poly_fit_2order(self, x, y, requested_power):
+
+        p = np.polyfit(x, y, 2, rcond=None, full=False)
+        p0 = c = p[0]
+        p1 = b = p[1]
+        p2 = a = p[2]
+
+        predicted_sp = -b + np.sqrt(b**2.0 - 4.0*a*c+4.0 * c *requested_power ) / (2.0 * c)
+
+        polyfit_2order = [p0*i**2 + p1*i + p2 for i in x]
+
+        return predicted_sp, p0, p1, p2, polyfit_2order
+
+    def poly_amp_kfpow_all_data(self, requested_power):
+        rcd = rf_conditioning_data
+
+        data_to_fit_x = rcd.binned_amp_vs_kfpow['BIN_X']
+        data_to_fit_y = rcd.binned_amp_vs_kfpow['BIN_mean']
+        data_to_fit_x_no_zero = [data_to_fit_x[i] for i in range(len(data_to_fit_x)) if data_to_fit_y[i] > 0.0]
+        data_to_fit_y_no_zero = [data_to_fit_y[i] for i in range(len(data_to_fit_y)) if data_to_fit_y[i] > 0.0]
+        data_to_fit_x_no_zero = np.insert(data_to_fit_x_no_zero, 0, 0.0)
+        data_to_fit_y_no_zero = np.insert(data_to_fit_y_no_zero, 0, 0.0)
+
+
+        # NOW WE MUST FIT
+        # NOW WE MUST FIT
+        predicted_sp, p0, p1, p2, polyfit_2order = self.poly_fit_2order(data_to_fit_x_no_zero, data_to_fit_y_no_zero, requested_power)
+
+        print('From poly_amp_kfpow_all_data:\npredicted_sp = {}\np0 = {}\np1 = {}\np2 = {}\n'.format(predicted_sp, p0, p1, p2))
+
+        self.values[rf_conditioning_data.p0_all] = p0
+        self.values[rf_conditioning_data.p1_all] = p1
+        self.values[rf_conditioning_data.p2_all] = p2
+        self.values[rf_conditioning_data.polyfit_2order_X_all] = data_to_fit_x_no_zero
+        self.values[rf_conditioning_data.polyfit_2order_Y_all] = polyfit_2order
+
+        bin_plots_path = r'C:\Users\dlerlp\Documents\RF_Conditioning_20200720'
+
+        #bin_mean = [i / 10 ** 6 for i in data_to_fit_y]
+        polyfit_2order = [p0*i**2 + p1 for i in data_to_fit_x_no_zero]
+        plt.scatter(data_to_fit_x_no_zero, data_to_fit_y_no_zero, c='k', s=25, marker='x', label='Binned Mean', zorder=0)
+        plt.plot(data_to_fit_x_no_zero, polyfit_2order, ls='--', lw=0.7, color='r', label='2nd order np.polyfit')
+        plt.scatter(predicted_sp, requested_power, marker='x', s=80, c='c', label='Predicted data point')
+        plt.xlabel('Set Point')
+        plt.ylabel('Power (MW)')
+        plt.legend()
+        plt.grid(True)
+        plt.savefig(bin_plots_path + r'\Second_order_np_polyfit_all_data.png')
+        plt.close('all')
+
+
+        return predicted_sp
+
+    def poly_amp_kfpow_data(self, requested_power):
+        rcd = rf_conditioning_data
+        data_to_fit_x_no_zero, data_to_fit_y_no_zero, num_bin_y_equal_zero = self.get_populated_fullbins_below_current_sp()
+        data_to_fit_x_no_zero = data_to_fit_x_no_zero[-4:]
+        data_to_fit_x_no_zero = np.insert(data_to_fit_x_no_zero, 0, 0.0)
+
+        data_to_fit_y_no_zero = data_to_fit_y_no_zero[-4:]
+        data_to_fit_y_no_zero = np.insert(data_to_fit_y_no_zero, 0, 0.0)
+
+        print('From poly_amp_kfpow_data:\ndata_to_fit_x_no_zero = {}\ndata_to_fit_y_no_zero = {}'.format(data_to_fit_x_no_zero,
+                                                                                                         data_to_fit_y_no_zero))
+
+        # NOW WE MUST FIT
+        predicted_sp, p0, p1, p2, polyfit_2order = self.poly_fit_2order(data_to_fit_x_no_zero, data_to_fit_y_no_zero, requested_power)
+
+        print('From poly_amp_kfpow_data:\npredicted_sp = {}\np0 = {}\np1 = {}\np2 = {}\n'.format(predicted_sp, p0, p1, p2))
+
+        self.values[rf_conditioning_data.p0] = p0
+        self.values[rf_conditioning_data.p1] = p1
+        self.values[rf_conditioning_data.p2] = p2
+        self.values[rf_conditioning_data.polyfit_2order_X] = data_to_fit_x_no_zero
+        self.values[rf_conditioning_data.polyfit_2order_Y] = polyfit_2order
+
+
+        self.values[rf_conditioning_data.polyfit_2order_X] = np.insert(self.values[rf_conditioning_data.polyfit_2order_X], -1, predicted_sp)
+        self.values[rf_conditioning_data.polyfit_2order_Y] = np.insert(self.values[rf_conditioning_data.polyfit_2order_Y], -1, requested_power)
+
+
+        bin_plots_path = r'C:\Users\dlerlp\Documents\RF_Conditioning_20200720'
+
+        #bin_mean = [i / 10 ** 6 for i in data_to_fit_y]
+
+        plt.scatter(data_to_fit_x_no_zero, data_to_fit_y_no_zero, c='k', s=25, marker='x', label='Binned Mean', zorder=0)
+        plt.plot(data_to_fit_x_no_zero, polyfit_2order, ls='--', lw=0.7, color='r', label='2nd order np.polyfit')
+        plt.scatter(predicted_sp, requested_power, marker='x', s=80, c='c', label='Predicted data point')
+        plt.xlabel('Set Point')
+        plt.ylabel('Power (MW)')
+        plt.legend()
+        plt.grid(True)
+        plt.savefig(bin_plots_path + r'\Second_order_np_polyfit_num_sp_data.png')
+        plt.close('all')
+
+
         return predicted_sp
 
 
@@ -1435,6 +1546,55 @@ class rf_conditioning_data(object):
     m = 'm'
     all_value_keys.append(m)
     values[m] = dummy_np_float_64
+
+    p0 = 'p0'
+    all_value_keys.append(p0)
+    values[p0] = dummy_np_float_64
+
+    p1 = 'p1'
+    all_value_keys.append(p1)
+    values[p1] = dummy_np_float_64
+
+    p2 = 'p2'
+    all_value_keys.append(p2)
+    values[p2] = dummy_np_float_64
+
+    p0_all = 'p0_all'
+    all_value_keys.append(p0_all)
+    values[p0_all] = dummy_np_float_64
+
+    p1_all = 'p1_all'
+    all_value_keys.append(p1_all)
+    values[p1_all] = dummy_np_float_64
+
+    p2_all = 'p2_all'
+    all_value_keys.append(p2_all)
+    values[p2_all] = dummy_np_float_64
+
+
+    # TODO: this is temporary! remove asap
+
+    polyfit_2order_X_all = 'polyfit_2order_X_all'
+    all_value_keys.append(polyfit_2order_X_all)
+    values[polyfit_2order_X_all] = dummy_np_float_64
+    excluded_key_list.append(polyfit_2order_X_all)
+
+    polyfit_2order_Y_all = 'polyfit_2order_Y_all'
+    all_value_keys.append(polyfit_2order_Y_all)
+    values[polyfit_2order_Y_all] = dummy_np_float_64
+    excluded_key_list.append(polyfit_2order_Y_all)
+
+    polyfit_2order_X = 'polyfit_2order_X'
+    all_value_keys.append(polyfit_2order_X)
+    values[polyfit_2order_X] = dummy_np_float_64
+    excluded_key_list.append(polyfit_2order_X)
+
+    polyfit_2order_Y = 'polyfit_2order_Y'
+    all_value_keys.append(polyfit_2order_Y)
+    values[polyfit_2order_Y] = dummy_np_float_64
+    excluded_key_list.append(polyfit_2order_Y)
+    # TODO ^^^^^ ##########################
+
 
     old_c = 'old_c'
     all_value_keys.append(old_c)

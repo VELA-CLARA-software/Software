@@ -114,6 +114,8 @@ class logger(object):
     _show_time_stamp = False
     _add_to_text_log = True
 
+    excluded_key_list = []
+
     def __init__(self, column_width=None):
         if column_width:
             self.column_width = column_width
@@ -237,14 +239,19 @@ class logger(object):
 
         type_list = []
         for key, val in values.iteritems():  # itervalues means just iterate over the values in the dict
-            rt = self.write_binary(val)
-            if rt == False:
-                self.message("!!!ERROR!!! " + key + ", binary log value is NONE-TYPE binary log corrupt ")
-                self.message(" VALUE WAS " + str(val))
-                self.message(" TYPE  WAS " + str(type(val)))
-                raw_input()
+
+            if key in self.excluded_key_list:
+                print("bin logging , ", key, " is excluded")
+                pass
             else:
-                type_list.append(rt)
+                rt = self.write_binary(val)
+                if rt == False:
+                    self.message("!!!ERROR!!! " + key + ", binary log value is NONE-TYPE binary log corrupt ")
+                    self.message(" VALUE WAS " + str(val))
+                    self.message(" TYPE  WAS " + str(type(val)))
+                    raw_input()
+                else:
+                    type_list.append(rt)
         logger._binary_log_file_obj.flush()
         if type_list != logger._binary_header_types:
             self.message(__name__ + " !!Warning!!, Binary Log File, data types have changed")
@@ -292,7 +299,7 @@ class logger(object):
 
         return val_type
 
-    def write_binary_log_header(self, data_to_log):
+    def write_binary_log_header(self, data_to_log ):
         '''
         This function writes the header for logging binary data
         'data_to_log' is a dictionary of data to log, the binary file header has two line, with each
@@ -313,18 +320,24 @@ class logger(object):
         header_names = []
         header_types_str = []
 
+        #print 'LOGGER excluded_key_list = {}'.format(self.excluded_key_list)
+
         # iterate over data_to_log, and get types for each entry
         for key, value in data_to_log.iteritems():
-            value_type = type(value)         # The type of the value being written
-            value_type_str = str(value_type) # the type converted to string
-            ''' There is 1 notable exception, we write a time_stamp data type as the time and 
-            date this function is called '''
-            if key == 'time_stamp':  # MAGIC_STRING
-                header_names.append('time_stamp, (start = ' + datetime.now().isoformat(' ') + ')')
+
+            if key in self.excluded_key_list:
+                pass
             else:
-                header_names.append(key)
-            logger._binary_header_types.append(value_type)
-            header_types_str.append(value_type_str)
+                value_type = type(value)         # The type of the value being written
+                value_type_str = str(value_type) # the type converted to string
+                ''' There is 1 notable exception, we write a time_stamp data type as the time and 
+                date this function is called '''
+                if key == 'time_stamp':  # MAGIC_STRING
+                    header_names.append('time_stamp, (start = ' + datetime.now().isoformat(' ') + ')')
+                else:
+                    header_names.append(key)
+                logger._binary_header_types.append(value_type)
+                header_types_str.append(value_type_str)
 
         # create the data_log file and write the plaintext header, raise exception if fail
         try:
