@@ -245,12 +245,10 @@ class main_controller(object):
         '''
             There are two sets of states to check, those related to if we can produce RF POWER and those related to
             state of the conditonning (vac level, breakdown count etc ... )
-
         '''
         self.check_LLRF_state()
         self.check_conditioning_state()
         self.check_ramping_status()
-
 
 
     def check_ramping_status(self):

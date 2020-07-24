@@ -25,7 +25,7 @@
 """
 from monitor import monitor
 from VELA_CLARA_enums import CONTROLLER_TYPE
-from VELA_CLARA_RF_Protection_Control import RF_GUN_PROT_STATUS
+from VELA_CLARA_RF_Protection_Control import RF_PROT_STATUS
 
 # At the moment its a very small simple class,
 # At a later date  we may increase what it can do (i.e. gain the ability  to reset the protection)
@@ -49,7 +49,7 @@ class rf_protection_monitor(monitor):
             self.data.values[self.data.rfprot_state] = self.hardware.prot_object[0].status
             #print('RF prot VALUE = ', self.data.values[self.data.rfprot_state])
 
-            if self.data.values[self.data.rfprot_state] == RF_GUN_PROT_STATUS.GOOD:
-                self.enable_RF_monitor_states[self.data.rfprot_good] = True
+            if self.data.values[self.data.rfprot_state] == RF_PROT_STATUS.GOOD:
+                self.data.values[self.data.rfprot_good] = True
             else:
-                self.enable_RF_monitor_states[self.data.rfprot_good] = False
+                self.data.values[self.data.rfprot_good] = False
