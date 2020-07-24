@@ -47,7 +47,7 @@ from CATAP.GlobalStates import STATE
 from CATAP.HardwareFactory import *
 
 
-print(TYPE.LLRF_TYPE)
+#print(TYPE.LLRF_TYPE)
 
 # import VELA_CLARA_Magnet_Control as mag
 import magnetAppGlobals as globals

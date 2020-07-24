@@ -229,7 +229,7 @@ class llrf_handler(llrf_handler_base):
             if self.have_averages():
             # cancerous name, change !!!!!
                if llrf_handler_base.llrfObj[0].kly_fwd_power_max > llrf_handler_base.config.llrf_config['KLY_PWR_FOR_ACTIVE_PULSE']:
-                    self.set_trace_masks()
+                    self.set_tracmasks()
                     for trace in llrf_handler_base.config.breakdown_config['BREAKDOWN_TRACES']:
                             if llrf_handler_base.llrfObj[0].trace_data[trace].check_mask:
                                 pass

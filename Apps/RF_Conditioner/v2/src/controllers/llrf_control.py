@@ -27,15 +27,12 @@ class llrf_control(object):
 		# owns a config and logging class
 		self.config = config.config()
 		self.config_data = self.config.raw_config_data
-
 		self.logger = rf_conditioning_logger.rf_conditioning_logger()
 		self.llrf_type = self.config_data[self.config.RF_STRUCTURE]
-
 		# the data class
 		self.data = rf_conditioning_data()
 		self.values = rf_conditioning_data.values
 		self.expert_values = rf_conditioning_data.expert_values
-
 		self.hardware = hardware_control_hub.hardware_control_hub()
 		self.llrf_control = self.hardware.llrf_control
 
@@ -72,8 +69,6 @@ class llrf_control(object):
 				self.llrf_control.setMeanStartEndTime(cd[c.CRPHA_MEAN_START], cd[c.CRPHA_MEAN_END], trace)
 			elif 'CAVITY_PROBE_PHASE' in trace:
 				self.llrf_control.setMeanStartEndTime(cd[c.CPPHA_MEAN_START], cd[c.CPPHA_MEAN_END], trace)
-
-
 		#
 		#
 		# self.get_pulse_end()

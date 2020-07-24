@@ -3362,7 +3362,7 @@ class Ui_rf_condition_mainWindow(object):
         rf_condition_mainWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(rf_condition_mainWindow)
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(rf_condition_mainWindow)
 
     def retranslateUi(self, rf_condition_mainWindow):

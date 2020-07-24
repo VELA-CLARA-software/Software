@@ -22,19 +22,6 @@ class view(QMainWindow, Ui_MainWindow ):
         self.img_name_to_widget = {}
         self.connect_widget()
 
-        self.IMG01_lcdNumber.display(1)
-        self.IMG02_lcdNumber.display(2)
-        self.IMG03_lcdNumber.display(3)
-        self.IMG04_lcdNumber.display(4)
-        self.IMG05_lcdNumber.display(5)
-        self.IMG06_lcdNumber.display(6)
-        self.IMG07_lcdNumber.display(7)
-        self.IMG08_lcdNumber.display(8)
-        self.IMG09_lcdNumber.display(9)
-        self.IMG10_lcdNumber.display(10)
-        self.IMG11_lcdNumber.display(11)
-
-
 
     def update_gui(self):
         print("update_gui")

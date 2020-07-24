@@ -467,7 +467,6 @@ class rf_condition_data_base(QObject):
         self.counter_add_to_pulse_breakdown_log += 1## MAGIC_NUMBER
 
     def log_kly_fwd_power_vs_amp(self):
-
         next_log_entry = self.last_kfp_running_stat_entry
         if rf_condition_data_base.values[amp_sp] in rf_condition_data_base.amp_vs_kfpow_running_stat.keys():
             next_log_entry = [rf_condition_data_base.values[amp_sp]] + \

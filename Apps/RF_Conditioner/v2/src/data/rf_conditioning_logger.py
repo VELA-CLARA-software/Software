@@ -205,7 +205,7 @@ class rf_conditioning_logger(logger):
                         log = [self.num(x) for x in line.split()]
                         r_dict[log[0]] = log[1:]
                         got_header = True
-        # write the dictionary to file only the latest values for each amp_sp  will be kept
+        # write the dictionary to file only the latest values for each amp_sp will be kept
         # also write the data in order of ascending amp_sp
         ordered_r_dict = collections.OrderedDict(sorted(r_dict.items()))
         with open(rf_conditioning_logger._kfow_running_stats_log_file, 'w') as f:
@@ -215,7 +215,6 @@ class rf_conditioning_logger(logger):
                 f.write(str(key) + ' ' + ' '.join(map(str, value)) + '\n')
         self.message('get_kfpow_running_stat_log complete', show_time_stamp=False,
                      add_to_text_log=True)
-
         # now open amp_power_log file for appending and LEAVE OPEN
         rf_conditioning_logger._kfow_running_stats_log_file_obj = open(
             rf_conditioning_logger._kfow_running_stats_log_file, 'a')

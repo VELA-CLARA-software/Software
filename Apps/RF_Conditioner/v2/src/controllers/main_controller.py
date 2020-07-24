@@ -187,7 +187,6 @@ class main_controller(object):
 
 
 
-
     #
     #     # flag for message in main loop
     #     self.has_not_shown_br_hi = True

@@ -163,27 +163,19 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         QApplication.processEvents()
         # Call various update functions for each widget / group of widgets
         self.update_mean_power_widgets()
-
         # vac level, and can we ramp due to vac
         self.update_vac_level()
-
         # updat evac_valve
         self.update_vac_valve()
-
         # update main status flags
         self.update_status_flags()
-
         # RF protection status
         self.update_RF_prot()
-
         # modulator state
         self.update_modulator_status()
-
         #
         self.update_temperature_values()
-
         self.update_CATAP_AMPSP_limit()
-
         self.update_DAQ_rep_rate()
 
     def update_DAQ_rep_rate(self):
@@ -313,7 +305,6 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
                                    self.values[self.data.vac_spike_status])
         self.set_widget_color_text(self.DC_spike_status_outputwidget,
                                    self.values[self.data.DC_spike_status])
-
         # self.widget[self.data.llrf_interlock] = self.llrf_interlock_outputwidget  #   #
         # self.widget[self.data.llrf_trace_interlock] = self.llrf_trace_interlock_outputwidget  #
         # self.widget[self.data.llrf_output_status] = self.llrf_output_outputwidget  #   #
@@ -350,11 +341,8 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         # self.rev_kly_power_outputwidget] = self.update_rev_kly_power  # #  # # vac_levell and
         # vac_level_can_ramp both talk to this widget  # self.widget[ self.vac_level_outputwidget
         # ] = self.update_vac_level
-
         # self.widget[self.data.rfprot_state] = self.RF_protection_outputwidget
-
         # self.widget[ self.cav_temp_outputwidget ] = self.data.cav_temp
-
         # self.widget[self.data.cav_temp] = self.cav_temp_outputwidget  # #self.widget[
         # self.data.water_temp] = self.water_temp_outputwidget  # self.widget[
         # self.data.pulse_length] = self.pulse_length_outputwidget  # #self.widget[
@@ -383,10 +371,8 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         # self.widget[self.data.pulse_length] = self.pulse_length_outputwidget  # self.widget[
         # self.data.pulse_length_status] = self.pulse_length_outputwidget  #  # #self.widget[
         # self.data.DC_spike_status] = self.DC_spike_status_outputwidget
-
         # self.widget[self.data.llrf_DAQ_rep_rate] = self.trace_rep_rate_outpuwidget  #
         # self.widget[self.data.llrf_DAQ_rep_rate_status] = self.trace_rep_rate_outpuwidget
-
         # self.widget[self.data.vac_level_can_ramp] = self.vac_level_outputwidget
 
     def update_expert_values_in_gui(self):

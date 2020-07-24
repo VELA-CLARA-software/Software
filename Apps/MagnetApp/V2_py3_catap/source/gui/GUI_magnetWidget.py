@@ -34,10 +34,10 @@ class GUI_magnetWidget(QtWidgets.QMainWindow, Ui_magnetWidget):
     # class variables (sort of static),
     # we only need one copy for each instance of this class
     psuStateColors = {STATE.OFF   : "background-color: red",
-                      STATE.ON    : "background-color: green",
+                      STATE.On    : "background-color: green",
                       # Lost in new magnet scheme
                       #MAG_PSU_STATE.MAG_PSU_TIMING: "background-color: yellow",
-                      STATE.ERR : "background-color: magenta"
+                      STATE.ERROR : "background-color: magenta"
         #,STATE.MAG_PSU_NONE  : "background-color: black"
                       }
     # the meter is *1000 to give 3 decimal places precision
