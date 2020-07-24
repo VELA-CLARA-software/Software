@@ -123,11 +123,11 @@ class hardware_control_hub(object):
         """
         self.logger.message(self.my_name + ' Starting CATAP Hardware Interfaces',
                                    add_to_text_log=True,show_time_stamp=False)
+        self.start_llrf_control()
         self.start_RF_protection()
         self.start_magnet_control()
         self.start_valve_control()
         self.start_mod_control()
-        self.start_llrf_control()
 
     def start_RF_protection(self):
         '''
@@ -224,7 +224,7 @@ class hardware_control_hub(object):
 
     def start_llrf_control(self):
         '''
-        Creates the requested LLRF Control object
+        Creates the requested LLRF Control object, it sets zero amp_sp as soon as the controller is created
         '''
         # alias for shorter lines
         hch = hardware_control_hub
@@ -234,6 +234,11 @@ class hardware_control_hub(object):
             message += 'FAILED to create a LLRF Control object'
         else:
             hch.llrf_control = hch.llrf_init.getLLRFController(MACHINE_MODE.PHYSICAL, rf_structure)
+
+            # SET zero amp_sp as soon as possible
+            hch.llrf_control.setAmpSP(0.0)
+            message += ' SET AMP_SP = 0, '
+
             hch.llrf_obj = [hch.llrf_control.getLLRFObjConstRef()]
             hch.have_controller[CONTROLLER_TYPE.LLRF] = True
             message += 'successfully created a ' + str(rf_structure) + ' LLRF control object'

@@ -56,7 +56,8 @@ class UnitConversion(object):
 
 	def currentToK(self, mag_type, current, field_integral_coefficients, magnetic_length, energy, magdict):
 		if (mag_type == 'QUAD') or (mag_type == 'quadrupole'):
-			self.coeffs = numpy.append(field_integral_coefficients[:-1] * int(self.sign),
+			self.ficmod = [i * int(self.sign) for i in field_integral_coefficients[:-1]]
+			self.coeffs = numpy.append(self.ficmod,
 									   field_integral_coefficients[-1])
 			self.int_strength = numpy.polyval(self.coeffs, abs(current))
 			self.effect = (scipy.constants.speed_of_light / 1e6) * self.int_strength / energy
@@ -65,21 +66,24 @@ class UnitConversion(object):
 			magdict.update({'k1l': float(self.k1l)})
 		elif (mag_type == 'SOL') or (mag_type == 'solenoid'):
 			self.sign = numpy.copysign(1, current)
-			self.coeffs = numpy.append(field_integral_coefficients[-4:-1] * int(self.sign),
+			self.ficmod = [i * int(self.sign) for i in field_integral_coefficients[-4:-1]]
+			self.coeffs = numpy.append(self.ficmod,
 									   field_integral_coefficients[-1])
 			self.int_strength = numpy.polyval(self.coeffs, abs(current))
 			self.field_amplitude = self.int_strength / magnetic_length
-			magdict.update({'field_amplitude': float(self.field_amplitude)})
+			magdict.update({'field_amplitude': float(int(self.sign) * self.field_amplitude)})
 		elif (mag_type == 'HCOR') or (mag_type == 'VCOR') or (mag_type == 'kicker'):
 			self.sign = numpy.copysign(1, current)
-			self.coeffs = numpy.append(field_integral_coefficients[:-1] * int(self.sign),
+			self.ficmod = [i * int(self.sign) for i in field_integral_coefficients[:-1]]
+			self.coeffs = numpy.append(self.ficmod,
 									   field_integral_coefficients[-1])
 			self.int_strength = numpy.polyval(self.coeffs, abs(current))
 			self.effect = (scipy.constants.speed_of_light / 1e6) * self.int_strength / energy
 			magdict.update({'angle': float(self.effect)})
 		elif (mag_type == 'DIP') or (mag_type == 'dipole'):
 			self.sign = numpy.copysign(1, current)
-			self.coeffs = numpy.append(field_integral_coefficients[:-1] * int(self.sign),
+			self.ficmod = [i * int(self.sign) for i in field_integral_coefficients[:-1]]
+			self.coeffs = numpy.append(self.ficmod,
 									   field_integral_coefficients[-1])
 			self.int_strength = numpy.polyval(self.coeffs, abs(current))
 			self.effect = (scipy.constants.speed_of_light / 1e6) * self.int_strength / energy

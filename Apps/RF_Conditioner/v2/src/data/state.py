@@ -43,6 +43,36 @@ class state(Enum):
     INTERLOCK = 8
     STANDBY = 9
 
-    statename = { BAD: 'BAD', GOOD: 'GOOD', UNKNOWN:'UNKNOWN', INIT:'INIT', NEW_BAD:'NEW_BAD',NEW_GOOD:'NEW_GOOD',
-                  TIMING:'TIMING', ERROR: 'ERROR', INTERLOCK:'INTERLOCK', STANDBY:'STANDBY'}
+    statename = {BAD: 'BAD', GOOD: 'GOOD', UNKNOWN: 'UNKNOWN', INIT: 'INIT', NEW_BAD: 'NEW_BAD', NEW_GOOD: 'NEW_GOOD', TIMING: 'TIMING',
+                 ERROR: 'ERROR', INTERLOCK: 'INTERLOCK', STANDBY: 'STANDBY'}
 
+@unique
+class ramp_method(Enum):
+    '''
+        flags states for different monitors
+        DEFAULT__TOO_FEW_BINS: Default amp_sp increase used. The TOTAL number of bins with amp_sp less than current amp_sp is < num_sp_to_fit + 1
+        DEFAULT__ENOUGH_BINS__ZERO_IN_LIST__NOT_ENOUGH_NON_ZERO: Default amp_sp increase used. There are not enough non-zero bins to satisfy num_sp_to_fit + 1
+        FIT__ENOUGH_BINS__ZERO_IN_LIST__ENOUGH_NON_ZERO: Fitting function engaged. Zero(s) in list so used the highest value non-zero amp_sp bins to fit
+        FIT_ENOUGH_BINS__ALL_NON_ZERO: Fitting function engaged. Enough bins and they are all non-zero, so use the previous num_sp_to_fit + 1 to use with
+                                       the fittting function.
+    '''
+    UNKNOWN = 0
+    DEFAULT__TOO_FEW_BINS = 1
+    DEFAULT__ENOUGH_BINS__ZERO_IN_LIST__NOT_ENOUGH_NON_ZERO = 2
+    PREDICTED_SP_GRTRTHN_CURRENT_SP = 3
+    DEFAULT__DELTA_GTRTHN_MAX = 4
+    PREDICTED_SP_LSSTHN_CURRENT_SP = 5
+    DEFAULT__NEG_RAMP = 6
+    DEFAULT__FLAT_RAMP = 7
+    FIT = 8
+
+
+
+    # others include: but the new sp  was too big, etc ...
+    statename = {UNKNOWN: 'UNKNOWN', DEFAULT__TOO_FEW_BINS: 'DEFAULT__TOO_FEW_BINS', DEFAULT__ENOUGH_BINS__ZERO_IN_LIST__NOT_ENOUGH_NON_ZERO:
+        'DEFAULT__ENOUGH_BINS__ZERO_IN_LIST__NOT_ENOUGH_NON_ZERO', PREDICTED_SP_LSSTHN_CURRENT_SP: 'PREDICTED_SP_LSSTHN_CURRENT_SP',
+                 DEFAULT__DELTA_GTRTHN_MAX:
+    'DEFAULT__DELTA_GTRTHN_MAX', DEFAULT__NEG_RAMP:
+        'DEFAULT__NEG_RAMP', DEFAULT__FLAT_RAMP: 'DEFAULT__FLAT_RAMP',
+                 FIT:
+        'FIT'}

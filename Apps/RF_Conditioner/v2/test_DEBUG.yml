@@ -66,9 +66,9 @@ RF_STRUCTURE: CLARA_LRRG # STRING
 
 DEFAULT_RF_INCREASE_LEVEL:  10  # INTEGER LLRF units
 DEFAULT_PULSE_COUNT:  150 # INTEGER, How many pulses to wait before the next ramp 
-MAX_DELTA_AMP_SP :  50 #; maximum setpoint increase allowed, no matter what the fitting says INTEGER
+MAX_DELTA_AMP_SP :  400 #; maximum setpoint increase allowed, no matter what the fitting says INTEGER
 
-NUM_SET_POINTS_TO_FIT:  20 # how many setpoints to fit when predicted then next setpoint
+NUM_SET_POINTS_TO_FIT:  4 # how many setpoints to fit when predicted then next setpoint
 
 
 MINIMUM_COOLDOWN_TIME: 3000 # INTEGER, minimum time in ms that a state (Vac spike, outside mask event) can be BAD for 
@@ -373,6 +373,7 @@ TEXT_LOG_FILENAME:  log.txt # general messages
 ##LOG_DIRECTORY:   "D:  \VELA\GIT Projects\Software\Apps\RF_Conditioner\logs_clara_lrrg\"
 #LOG_DIRECTORY: C:\Users\dlerlp\Documents\GitHub\Software\Apps\RF_Conditioner\v2\logs\
 LOG_DIRECTORY: C:\Users\djs56\GitHub\Software\Apps\RF_Conditioner\v2\logs\
+LOG_DIRECTORY: C:\Users\dlerlp\Documents\GitHub\Software\Apps\RF_Conditioner\v2\logs\
 OUTSIDE_MASK_FORWARD_FILENAME:  outside_forward_log
 OUTSIDE_MASK_REVERSE_FILENAME:  outside_reverse_log
 OUTSIDE_MASK_PROBE_FILENAME:  outside_probe_log
@@ -494,5 +495,10 @@ PID_integral_gain_GMON :  CLA-GUN-H2O-PID-02:INTG:RB
 PID_derivative_gain_GMON :  CLA-GUN-H2O-PID-02:DERI:RB
 PID_autotune_state_GMON :  CLA-GUN-H2O-PID-02:ATUNE:RB
 
+## Binning
 
+BIN_WIDTH: 100  ## Width of each bin in amp set points, the lower the number, the more bins will result
+MAX_AMP:  60000  ## x-coordinate, amp set points
+MAX_POW:  0.0  ## y-coordinate, Watts
+MIN_AMP:  500
 

@@ -56,9 +56,7 @@
 MODE: DEBUG
 
 #  The name of the RF structure, as used in CATAP
-RF_STRUCTURE: L01 # STRING
-
-
+RF_STRUCTURE: CLARA_LRRG # STRING VELA_HRRG L01
 
 ## main param
 #TIME_BETWEEN_RF_INCREASES :  10;seconds

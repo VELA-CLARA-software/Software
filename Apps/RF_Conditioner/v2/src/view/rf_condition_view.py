@@ -49,6 +49,8 @@ from PyQt4.QtGui import *
 from PyQt4.QtGui import QPixmap
 from PyQt4.QtGui import QTextCursor
 from PyQt4.QtCore import QTimer
+import pyqtgraph
+
 from numpy import float64
 
 
@@ -133,6 +135,174 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         # dict for widgets to simplfy updating values
         self.widget = {}
         self.expert_widget = {}
+        self.llrf_enable_button.clicked.connect(self.handle_llrf_enable_button)
+        self.llrf_enable_button.setStyleSheet('QPushButton { background-color : ' + self.good + '; '
+                                                                                             'color : black; }')
+        self.llrf_enable_button.setText('RF Enabled')
+
+
+        # initialise gui_can_ramp_button to "RAMP DISABLED"
+        self.can_ramp_button.clicked.connect(self.handle_can_ramp_button)
+        self.can_ramp_button.setStyleSheet('QPushButton { background-color : ' + self.bad + '; color : black; }')
+        self.can_ramp_button.setText('RAMP Disabled')
+
+        self.plot_item = self.graphicsView.getPlotItem()
+
+
+
+
+
+
+    def update_plot(self):
+        '''
+            plot the binned data, the curret working point (as a vertical line due to no kfpow for that amp_sp), lines of best fit
+        '''
+
+        pg = pyqtgraph
+
+        data =rf_conditioning_data.amp_vs_kfpow_running_stat
+        x = data.keys()
+        x.sort()
+        y = []
+
+        #data =
+        for item in x:
+            y.append( data[item][1] )
+
+
+        # draw vertical line at the new amp_sp
+        current_amp = int(self.values[rf_conditioning_data.amp_sp])
+        current_X = [current_amp, current_amp]
+        current_Y = [min(y), max(y)]
+
+        # call in binned data to plot
+        bin_X = rf_conditioning_data.binned_amp_vs_kfpow['BIN_X']
+        bin_Y = rf_conditioning_data.binned_amp_vs_kfpow['BIN_mean']
+
+        # do we need to clear ???
+        self.plot_item.clear()
+        #        self.plot_item.addItem(self.err)
+        #self.plot_item.plot(x, y, symbol='', pen={'color': 0.8, 'width': 1})
+        self.plot_item.plot(x, y,  pen={'color': 0.8, 'width': 1})
+
+        self.plot_item.plot(current_X, current_Y, pen=pg.mkPen('b', width=2))
+        #self.plot_item.plot([current_X], [current_Y], symbol='+', pen={'color': 0.8, 'width': 1.5})
+        self.plot_item.plot(bin_X, bin_Y, symbol='+', pen={'color': 'g', 'width': 1.0})
+
+        # Create current_Y using best fit data and current_X:
+
+        m = rf_conditioning_data.values[rf_conditioning_data.m]
+        c = rf_conditioning_data.values[rf_conditioning_data.c]
+        expected_Y = (current_amp * m) + c
+
+        old_m = rf_conditioning_data.values[rf_conditioning_data.old_m]
+        old_c = rf_conditioning_data.values[rf_conditioning_data.old_c]
+        expected_Y_old = (current_amp * old_m) + old_c
+
+        print('expected_Y = {}\nexpected_Y_old = {}'.format(expected_Y, expected_Y_old))
+
+
+        # add in straight line fits ...'new data'
+        self.plot_item.plot([self.values[rf_conditioning_data.x_min], current_amp],
+                            [self.values[rf_conditioning_data.y_min], expected_Y], pen={'color': 'r', 'width': 2.5})
+
+        # add in plot of old SLF,
+        self.plot_item.plot(
+            [rf_conditioning_data.values[rf_conditioning_data.old_x_min], current_amp],
+            [rf_conditioning_data.values[rf_conditioning_data.old_y_min], expected_Y_old],
+            pen={'color': 'y', 'width': 1.8})
+
+        # print(
+        #     'x_min = {}\nx_max = {}\ny_min = {}\ny_max = {}'.format(self.values[rf_conditioning_data.x_min], self.values[rf_conditioning_data.x_max],
+        #                                                             self.values[rf_conditioning_data.y_min], self.values[rf_conditioning_data.y_max]))
+
+        self.plot_item.setXRange(0.0, current_amp+200.0)
+        self.plot_item.setYRange(0.0, max(y)*1.4)
+
+
+    def quick_update_plot(self):
+        '''
+              plot the binned data, the curret working point (as a vertical line due to no kfpow for that amp_sp), lines of best fit
+          '''
+
+        pg = pyqtgraph
+
+        data =rf_conditioning_data.amp_vs_kfpow_running_stat
+        x = data.keys()
+        x.sort()
+        y = []
+
+        #data =
+        for item in x:
+            y.append( data[item][1] )
+
+
+        # draw vertical line at the new amp_sp
+        current_amp = int(self.values[rf_conditioning_data.amp_sp])
+        current_X = [current_amp, current_amp]
+        current_Y = [min(y), max(y)]
+
+        # call in binned data to plot
+        bin_X = rf_conditioning_data.binned_amp_vs_kfpow['BIN_X']
+        bin_Y = rf_conditioning_data.binned_amp_vs_kfpow['BIN_mean']
+
+        # do we need to clear ???
+        self.plot_item.clear()
+        #        self.plot_item.addItem(self.err)
+        #self.plot_item.plot(x, y, symbol='', pen={'color': 0.8, 'width': 1})
+        self.plot_item.plot(x, y,  pen={'color': 0.8, 'width': 1})
+
+        self.plot_item.plot(current_X, current_Y, pen=pg.mkPen('b', width=2))
+        #self.plot_item.plot([current_X], [current_Y], symbol='+', pen={'color': 0.8, 'width': 1.5})
+        self.plot_item.plot(bin_X, bin_Y, symbol='+', pen={'color': 'g', 'width': 1.0})
+
+        # Create current_Y using best fit data and current_X:
+
+        m = rf_conditioning_data.values[rf_conditioning_data.m]
+        c = rf_conditioning_data.values[rf_conditioning_data.c]
+        expected_Y = (current_amp * m) + c
+
+        old_m = rf_conditioning_data.values[rf_conditioning_data.old_m]
+        old_c = rf_conditioning_data.values[rf_conditioning_data.old_c]
+        expected_Y_old = (current_amp * old_m) + old_c
+
+        print('expected_Y = {}\nexpected_Y_old = {}'.format(expected_Y, expected_Y_old))
+
+
+        # add in straight line fits ...'new data'
+        self.plot_item.plot([self.values[rf_conditioning_data.x_min], current_amp],
+                            [self.values[rf_conditioning_data.y_min], expected_Y], pen={'color': 'r', 'width': 2.5})
+
+        # add in plot of old SLF,
+        self.plot_item.plot(
+            [rf_conditioning_data.values[rf_conditioning_data.old_x_min], current_amp],
+            [rf_conditioning_data.values[rf_conditioning_data.old_y_min], expected_Y_old],
+            pen={'color': 'y', 'width': 1.8})
+
+
+    def handle_can_ramp_button(self):
+        if self.values[rf_conditioning_data.gui_can_ramp]:
+            self.values[rf_conditioning_data.gui_can_ramp] = False
+            self.can_ramp_button.setStyleSheet('QPushButton { background-color : ' + self.bad + '; color : black; }')
+            self.can_ramp_button.setText('RAMP Disabled')
+        else:
+            self.values[rf_conditioning_data.gui_can_ramp] = True
+            self.can_ramp_button.setStyleSheet('QPushButton { background-color : ' + self.good +
+                                               '; color : black; }')
+
+            self.can_ramp_button.setText('RAMP Enabled')
+
+
+    def handle_llrf_enable_button(self):
+        if self.values[rf_conditioning_data.gui_can_rf_output]:
+            self.values[rf_conditioning_data.gui_can_rf_output] = False
+            self.llrf_enable_button.setStyleSheet('QPushButton { background-color : ' + self.bad + '; color : black; }')
+            self.llrf_enable_button.setText('RF Disabled')
+        else:
+            self.values[rf_conditioning_data.gui_can_rf_output] = True
+            self.llrf_enable_button.setStyleSheet('QPushButton { background-color : ' + self.good +
+                                               '; color : black; }')
+            self.llrf_enable_button.setText('RF Enabled')
 
     def start_gui_update(self):
         # reference to the values dictionary
@@ -143,13 +313,20 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
 
         # connect checkBOx for exper mode active
         self.edit_mode_checkbox.stateChanged.connect(self.handle_edit_mode)
-
         # self.init_widget_dict()
-
         self.timer = QTimer()
         self.timer.setSingleShot(False)
         self.timer.timeout.connect(self.update_gui)
         self.timer.start(self.config.raw_config_data[self.config.GUI_UPDATE_TIME])
+
+
+        self.timer2 = QTimer()
+        self.timer2.setSingleShot(False)
+        self.timer2.timeout.connect(self.quick_update_plot)
+        self.timer2.start(self.config.raw_config_data[self.config.GUI_UPDATE_TIME] * 10)
+
+
+
 
     def handle_edit_mode(self):
         print("handle_edit_mode")
@@ -178,6 +355,23 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         self.update_CATAP_AMPSP_limit()
         self.update_DAQ_rep_rate()
 
+        self.update_all_counters()
+
+        self.update_amp_sp()
+
+        # other stuff
+        self.current_ramp_index.setText('{}'.format(self.values[self.data.current_ramp_index]))
+        self.delta_power_outputwidget.setText('{}'.format(self.values[rf_conditioning_data.delta_kfpow] ))
+        self.next_power_increse_outputwidget.setText('{}'.format(self.values[rf_conditioning_data.next_power_change] ))
+
+        self.last_power_increase_outputwidget.setText('{}'.format(self.values[rf_conditioning_data.last_power_change] ))
+
+        self.last_increase_method_outputwidget.setText(  str(self.values[rf_conditioning_data.last_ramp_method] ))
+
+
+    def update_amp_sp(self):
+        self.amp_set_outputwidget.setText('{}'.format(self.values[self.data.amp_sp]))
+
     def update_DAQ_rep_rate(self):
         self.trace_rep_rate_outpuwidget.setText(
             '{:0=4.2f}'.format(self.values[self.data.llrf_DAQ_rep_rate]))
@@ -204,7 +398,7 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
     def update_widget(self, key, val, widget):
         print("update_widget() called,", type(val), key, widget.objectName())
         # meh
-        if key == self.data.breakdown_rate_hi:
+        if key == self.data.breakdown_rate_low:
             self.set_widget_color(widget, not val)
         elif key == self.data.vac_decay_level:
             self.set_widget_color(widget, val)
@@ -283,9 +477,11 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
 
     def update_vac_level(self):
         self.vac_level_outputwidget.setText(
-            '{:0=4.2f} e-9'.format(self.values[self.data.vac_level]))
+            '{}'.format(self.values[self.data.vac_level]))
         self.set_widget_color(self.vac_level_outputwidget,
                               self.values[self.data.vac_level_can_ramp])
+
+        #print 'Update vac GUI with {}'.format(self.values[self.data.vac_level])
 
     def update_status_flags(self):
 
@@ -323,7 +519,8 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         self.set_power_text(self.rev_kly_power_outputwidget, self.values[self.data.rev_kly_pwr])
 
     def set_power_text(self, widget, value):
-        widget.setText('{:0=4.2f} e6'.format(value * 0.000001))
+        #widget.setText('{:0=4f}'.format( int(value * 0.001) ))
+        widget.setText('{:1.2f} kW'.format( value * 0.001) )
 
     def init_widget_dict(self):
         """
@@ -354,10 +551,10 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         # self.dc_level_outputwidget  # self.widget[self.data.event_pulse_count] =
         # self.event_pulse_count_outputwidget  #  # # we're going to do BD rate aim on teh same
         # widget as the measured BD rate  # #self.widget[self.data.breakdown_rate_aim] =
-        # self.breakdown_rate_limit_outputwidget  # self.widget[self.data.breakdown_rate_hi] =
+        # self.breakdown_rate_limit_outputwidget  # self.widget[self.data.breakdown_rate_low] =
         # self.measured_breakdown_rate_outputwidget  # #self.widget[self.data.last_106_bd_count]
         # = self.last_106_count_outputwidget  #  # #self.widget[self.data.last_mean_power] =
-        # self.last_setpoint_power_outputwidget  #  # #self.widget[self.data.next_power_increase]
+        # self.last_setpoint_power_outputwidget  #  # #self.widget[self.data.next_power_change]
         # = self.next_power_increase_outputwidget  # #self.widget[self.data.next_sp_decrease] =
         # self.next_sp_decrease_outputwidget  #  # #self.widget[self.data.current_ramp_index] =
         # self.current_index_outputwidget  #  # self.widget[self.data.sol_value] =
@@ -374,6 +571,29 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         # self.widget[self.data.llrf_DAQ_rep_rate] = self.trace_rep_rate_outpuwidget  #
         # self.widget[self.data.llrf_DAQ_rep_rate_status] = self.trace_rep_rate_outpuwidget
         # self.widget[self.data.vac_level_can_ramp] = self.vac_level_outputwidget
+
+    def update_all_counters(self):
+        self.pulse_count_outputwidget.setText(
+            '{}'.format(self.values[self.data.pulse_count]))
+
+        self.event_pulse_count_outputwidget.setText(
+            '{} / {}'.format(self.values[self.data.event_pulse_count], self.values[self.data.required_pulses] ))
+
+        ''' HOW MNAY PULES TO NEXT RAMP (INLCDUGIN BD RATE BEING GOOD ETC, SO COULD BE  thousands'''
+        self.pulses_to_next_ramp_outputwidget.setText(
+            '{}'.format(self.values[self.data.pulses_to_next_ramp]))
+
+        self.breakdown_count_outputwidget.setText(
+            '{}'.format(self.values[self.data.breakdown_count]))
+
+        self.last_106_count_outputwidget.setText(
+            '{}'.format(self.values[self.data.last_106_bd_count]))
+
+        self.set_widget_color(self.last_106_count_outputwidget, self.values[self.data.breakdown_rate_low])
+
+        self.measured_breakdown_rate_outputwidget.setText(
+            '{}'.format(self.values[self.data.breakdown_rate]))
+
 
     def update_expert_values_in_gui(self):
         """

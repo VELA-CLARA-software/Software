@@ -63,10 +63,11 @@ class config(object):
 
     # TODO:  maybe put these in a generic utilities space
     get_rf_prot_type = {"CLARA_HRRG": RF_PROT_TYPE.CLARA_HRRG,
-                        "CLARA_LRRG": RF_PROT_TYPE.CLARA_LRRG, "VELA_HRRG": RF_PROT_TYPE.VELA_HRRG,
+                        "CLARA_LRRG": RF_PROT_TYPE.CLARA_LRRG,
+                        "VELA_HRRG": RF_PROT_TYPE.VELA_HRRG,
                         "VELA_LRRG": RF_PROT_TYPE.VELA_LRRG, "L01": RF_PROT_TYPE.L01,
                         LLRF_TYPE.CLARA_HRRG: RF_PROT_TYPE.CLARA_HRRG,
-                        LLRF_TYPE.CLARA_LRRG: RF_PROT_TYPE.CLARA_HRRG,
+                        LLRF_TYPE.CLARA_LRRG: RF_PROT_TYPE.CLARA_LRRG,
                         LLRF_TYPE.VELA_HRRG: RF_PROT_TYPE.VELA_HRRG,
                         LLRF_TYPE.VELA_LRRG: RF_PROT_TYPE.VELA_LRRG,
                         LLRF_TYPE.L01: RF_PROT_TYPE.L01}

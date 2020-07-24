@@ -29,6 +29,8 @@ import src.data.rf_conditioning_data as rf_conditioning_data
 from src.data.state import state
 from VELA_CLARA_LLRF_Control import TRIG
 from VELA_CLARA_LLRF_Control import INTERLOCK_STATE
+from matplotlib import pyplot as plt
+
 
 class llrf_monitor(monitor):
     """
@@ -64,6 +66,7 @@ class llrf_monitor(monitor):
         self.data = rf_conditioning_data.rf_conditioning_data()
         self.values = self.data.values
         self.expert_values = self.data.expert_values
+
 
 
         # new feature, the setting phase end index by remote...
@@ -149,25 +152,27 @@ class llrf_monitor(monitor):
         self.update_pulse_length()
 
         ''' update simple values '''
-        self.values[self.data.amp_sp] = int(self.llrf_obj[0].amp_sp)
+        self.values[self.data.amp_sp] = self.llrf_obj[0].amp_ff
+        # TODO THIS SHOULD BE THE AMP_SP we're not sure wy, but the Libera controls the SP is now
+        #  "broke"
+        # print( int(self.llrf_obj[0].amp_sp) ) # does not work
+        # print( int(self.llrf_obj[0].amp_sp) ) # does not work
+        # print( int(self.llrf_obj[0].amp_ff) ) # does not work
+        # print( int(self.llrf_obj[0].amp_ff) ) # does not work
+        # print 'amp_sp = {}'.format(self.values[self.data.amp_sp])
         self.values[self.data.phi_sp] = int(self.llrf_obj[0].phi_sp)
         self.values[self.data.TOR_ACQM] = self.llrf_control.getTORACQM()
         self.values[self.data.TOR_SCAN] = self.llrf_control.getTORSCAN()
         self.values[self.data.duplicate_pulse_count] = self.llrf_obj[0].duplicate_pulse_count
-
         self.values[self.data.llrf_trace_interlock] = self.llrf_control.areLLRFTraceInterlocksGood()
-
 
         # CATAP max amp setpoint value
         # This number CANNOT CHANGE WHILE RUNNING !!
         self.values[self.data.catap_max_amp] = self.llrf_control.getMaxAmpSP()
-
-
         ''' the latest running stats for this amp_set (from the c++) '''
         ## THIS GETS UPDATED TOO FREQUENTLY
         # if(self.llrf_control.isKeepingKlyFwdPwrRS()):
         #     self.update_amp_vs_kfpow_running_stat()
-
         #
         """WARNING"""
         # if setting phase trace end masks by value get those values...
@@ -177,6 +182,13 @@ class llrf_monitor(monitor):
         # if self.values[self.data.phase_mask_by_power_trace_2_set]:
         #     self.values[self.data.phase_end_mask_by_power_trace_2_time] = \
         #         monitor.llrf_control.getMaskInfiniteEndByPowerTime( self.phase_trace_1 )
+
+        # get delta_power  last setpoint power - current setpoint power (last_sp values set in set_amp in llrf_control
+        ''' it can happen that we've changed amp_sp but there have been no pulses when  we get here,  amp_vs_kfpow_running_stat can be empty '''
+        if self.values[self.data.amp_sp] in self.data.amp_vs_kfpow_running_stat:
+            self.values[self.data.delta_kfpow] = self.data.amp_vs_kfpow_running_stat[self.values[self.data.amp_sp]][1] - self.values[
+                self.data.kfpower_at_last_amp_sp]
+
 
 
     def update_daq_rep_rate(self):
@@ -220,7 +232,7 @@ class llrf_monitor(monitor):
         # THIS OLD WAY IS NOW BROKE, we use an RF RAMP table Instead we now use the  getPulseShape vector and count the number of 1.0s (SketchyAF)
         # pulse length
 
-        # TODO: Is thsi the same method for the lianc and the gun ???
+        # TODO: Is this the same method for the linac and the gun ???
 
         self.values[self.data.pulse_length] = self.llrf_control.getPulseShape().count(1) * 0.009
         #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -298,8 +310,22 @@ class llrf_monitor(monitor):
             self.values[self.data.llrf_ff_ph_locked_status] = state.BAD
 
     def update_amp_vs_kfpow_running_stat(self):
-        self.amp_vs_kfpow_running_stat[self.values[self.data.amp_sp]] = \
-            self.llrf_control.getKlyFwdPwrRSState(self.values[self.data.amp_sp])
+        '''
+            This function is updating the python dictionary  amp_vs_kfpow_running_stat with teh
+            values form the c++ amp_vs_kfpow_running_stat data
+            The c++ data includes every pulse, and so is the "most accurate"
+            TODO: we could  expose the c++ data to python and NEVER use a local copy in python
+
+            TODO how often does amp_vs_kfpow_running_stat get "synchronized" with the c++ data?
+
+        '''
+
+        # I lost the thread at the C++ here...
+        # print("Looking in c++ amp_v_kfpow for {}".format(self.values[self.data.amp_sp]))
+        self.data.amp_vs_kfpow_running_stat[self.values[self.data.amp_sp]] = \
+            self.llrf_control.getKlyFwdPwrRSState( int(self.values[self.data.amp_sp])) # TODO THIS HAS TO BE AN INT IN THE C++ ??? WTF
+        # TODO need c++ to return zeros if the key does not exist
+        #print("update amp_vs_kfpow_running_stat with amp_sp = {}".format(self.values[self.data.amp_sp]))
 
     def get_mean_power(self,key,trace):
         """

@@ -68,6 +68,19 @@ class MachineState(object):
     def getBeamDistributionsFromSimFrame(self, directory):
         return self.getDataFromSimFrame.getAllBeamFiles(directory)
 
+    # Returns dictionary with all CATAP objects
+    # Input: mode: CATAP STATE (physical / virtual)
+    # Output: CATAP dictionary, keyed by type
+    def getCATAPDict(self, mode):
+        if not self.CATAPInitialised:
+            self.getDataFromCATAP.initCATAP(mode)
+            self.CATAPInitialised = True
+        self.allDicts = self.getDataFromCATAP.setAllDicts()
+        return self.allDicts
+
+    def getEnergyGainFromCATAP(self):
+        return self.getDataFromCATAP.getEnergyDict()
+
     # Writes the machine state to CATAP
     # Inputs: mode: CATAP STATE (physical / virtual)
     #         datadict: machine state file
@@ -92,7 +105,7 @@ class MachineState(object):
     #         framework: SimFrame instance
     #         lattice: lattice to run
     #         datadict: machine state file to set simulation parameters
-    #         typp: get machine state from SimFrame or CATAP (if no file provided)
+    #         type: get machine state from SimFrame or CATAP (if no file provided)
     #         mode: CATAP state (physical / virtual)
     #         run: do SimFrame tracking?
     # Output: returns the machine state file w/ average beam distributions and file locations
@@ -100,7 +113,7 @@ class MachineState(object):
                                     type=None, mode=None, run=False, sections=None):
         if sections==None:
             sections = self.lattices
-        self.getMachineStateFromSimFrame(directory, lattice)
+        #self.getMachineStateFromSimFrame(directory, lattice)
         if datadict is not None:
             self.datadict = datadict
             self.writeDataToSimFrame.modifyFramework(framework, self.datadict)
@@ -111,6 +124,9 @@ class MachineState(object):
                 self.datadict = self.getMachineStateFromCATAP(mode)
             self.writeDataToSimFrame.modifyFramework(framework, self.datadict)
         if run == True:
+            if not os.path.isdir(directory):
+                os.makedirs(directory)
+            self.datadict['simulation']['directory'] = directory
             self.writeDataToSimFrame.runScript(framework, self.datadict, track=True)
             self.allbeamfiles = self.getDataFromSimFrame.getAllBeamFiles(directory)
             for i in self.allbeamfiles.keys():

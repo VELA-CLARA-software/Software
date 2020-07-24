@@ -15,6 +15,7 @@ class WriteDataToCATAP(object):
         self.lattices = ['BA1', 'INJ', 'S01', 'S02', 'L01', 'C2V']
         self.bsol_alias = aliases.bsol_alias
         self.screen_alias = aliases.screen_alias
+        self.gun_kly_fwd_power_max = aliases.gun_kly_fwd_power_max
         self.gun_pulse_length = 2.5
         self.linac_pulse_length = 0.75
         self.unitConversion = unit_conversion.UnitConversion()
@@ -96,8 +97,8 @@ class WriteDataToCATAP(object):
                                                                                        pulse_length,
                                                                                        length)
                         if ("GUN" in value['catap_alias']):
-                            if forward_power > 9.9 * 10 ** 6:
-                                forward_power = 9.9 * 10 ** 6
+                            if forward_power > self.gun_kly_fwd_power_max:
+                                forward_power = self.gun_kly_fwd_power_max
                         catap[value['catap_alias']].setAmpMW(forward_power)
                         catap[value['catap_alias']].setPhiDEG(phase)
                     if value['type'] in self.magnettypes:

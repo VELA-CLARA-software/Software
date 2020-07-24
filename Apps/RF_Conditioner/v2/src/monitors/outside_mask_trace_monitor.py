@@ -76,18 +76,19 @@ class outside_mask_trace_monitor(monitor):
 
         self.set_success = True
 
-    def reset_event_pulse_count(self):
+    def reset_event_pulse_count_OLD(self):
         """
         We keep a count of the number of pulses since the last 'event'
         This function resets those counters
         :return:
         """
-        self.event_pulse_count_zero = self.values[self.datat.pulse_count]
-        self.values[self.datat.pulse_count] = 0
-        self.logger.message_header(__name__ + ' reset_event_pulse_count', add_to_text_log=True,
-                                   show_time_stamp=True)
-        self.logger.message('event_pulse_count_zero = {}'.format(self.event_pulse_count_zero),
-                            add_to_text_log=True, show_time_stamp=False)
+        pass
+        # self.event_pulse_count_zero = self.values[self.datat.pulse_count]
+        # self.values[self.data.event_pulse_count] = 0
+        # self.logger.message_header(__name__ + ' reset_event_pulse_count', add_to_text_log=True,
+        #                            show_time_stamp=True)
+        # self.logger.message('event_pulse_count_zero = {}'.format(self.event_pulse_count_zero),
+        #                     add_to_text_log=True, show_time_stamp=False)
 
     def cooldown_function(self):
         monitor.logger.message(__name__ + ', cool down ended')
@@ -101,8 +102,9 @@ class outside_mask_trace_monitor(monitor):
         # The number of pulses
         self.values[self.data.pulse_count] = self.llrf_obj[0].active_pulse_count
         # the number of pulses since last 'event' (actually includes since last ramp, so re-name)
-        self.values[self.data.event_pulse_count] = self.values[self.data.pulse_count] - \
-                                              self.event_pulse_count_zero
+        #self.values[self.data.event_pulse_count] = self.values[self.data.pulse_count] - self.event_pulse_count_zero
+        self.values[self.data.event_pulse_count] = self.values[self.data.pulse_count] - self.values[self.data.event_pulse_count_zero]
+        #print 'Pulse count = {}\nEvent pulse count = {}'.format(self.values[self.data.pulse_count], self.values[self.data.event_pulse_count])
         # elapsed time since we started
         self.values[self.data.elapsed_time] = self.llrf_control.elapsedTime()
         # Number of Outside Mask Events Detected (OMED) by CATAP llrf

@@ -77,13 +77,14 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
 		#sys.stdout = EmittingStream(textWritten=self.normalOutputWritten)
 		self.data = base.data
 		# CONNECT BUTTONS TO FUNCTIONS
-		self.start_pause_ramp_button.clicked.connect(self.handle_start_pause_ramp_button)
+		#self.start_pause_ramp_button.clicked.connect(self.handle_start_pause_ramp_button)
+
 		self.llrf_enable_button.clicked.connect(self.handle_llrf_enable_button)
+		self.llrf_enable_button.clicked.connect(self.handle_can_rf_output)
+
 		self.copy_to_clipboard_button.clicked.connect(self.handle_copy_to_clipboard_button)
-		self.llrf_enable_button.clicked.connect(self.handle_can_rf_output)
 
 
-		self.llrf_enable_button.clicked.connect(self.handle_can_rf_output)
 		# error bars when plotting
 		self.err = None
 		self.handle_can_rf_output()
@@ -330,18 +331,7 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
 		else:
 			widget.setStyleSheet('QLabel { background-color : ' + self.good + '; color : black; }')
 
-	# functions to update colors in widgets
-	# def set_status(self, widget, val, status):
-	# 	if val == state.UNKNOWN:
-	# 		self.set_widget_color_text(widget, 'UNKNOWN', self.unknown, status)
-	# 	elif val == state.GOOD:
-	# 		self.set_widget_color_text(widget, 'GOOD', self.good, status)
-	# 	elif val == state.BAD:
-	# 		self.set_widget_color_text(widget, 'BAD', self.bad, status)
-	# 	elif val == state.INIT:
-	# 		self.set_widget_color_text(widget, 'INIT', self.init, status)
-	# 	else:
-	# 		self.set_widget_color_text(widget, 'MAJOR_ERROR', self.major_error, status)
+
 
 	def set_widget_color_text(self, widget, val):
 		self.set_widget_color(widget, val)
@@ -852,3 +842,15 @@ class gui_conditioning(QMainWindow, Ui_MainWindow, base):
 		#self.expert_widget[self.data.keep_valve_open] = self.keep_valve_open
 		self.expert_widget[self.data.keep_valve_open_val] = self.keep_valve_open_val
 
+# functions to update colors in widgets
+# def set_status(self, widget, val, status):
+# 	if val == state.UNKNOWN:
+# 		self.set_widget_color_text(widget, 'UNKNOWN', self.unknown, status)
+# 	elif val == state.GOOD:
+# 		self.set_widget_color_text(widget, 'GOOD', self.good, status)
+# 	elif val == state.BAD:
+# 		self.set_widget_color_text(widget, 'BAD', self.bad, status)
+# 	elif val == state.INIT:
+# 		self.set_widget_color_text(widget, 'INIT', self.init, status)
+# 	else:
+# 		self.set_widget_color_text(widget, 'MAJOR_ERROR', self.major_error, status)

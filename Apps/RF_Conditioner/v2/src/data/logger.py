@@ -40,6 +40,7 @@ import cPickle as pkl
 import numpy
 #import wolframclient.serializers as wxf
 from src.data.state import state
+from src.data.state import ramp_method
 from textwrap import fill
 
 
@@ -99,12 +100,10 @@ class logger(object):
     # RF_PROT_STATUS and similar enums from our bespoke CATAP controller, SHOULD ALWAYS BE A <B,
     # THINK VERY CAREFULLY about changin this!!!! You have be warned
     # ALL CATAP types and simple types need ot be defined here!!
-    _python_type_to_bintype = {long: '<q', int: '<i', float: '<f', RF_PROT_STATUS: '<B',
-                               L01_MOD_STATE: '<B',
-                              GUN_MOD_STATE: '<B', VALVE_STATE: '<B', TRIG: '<B', state: '<B',
-                              INTERLOCK_STATE: '<B', bool: '<?', numpy.float64: '<d',
-                              # BE CAREFUL WiTH str, THE BELOW IS CLEARLY GARBAGE
-                              str: '<i'}
+    _python_type_to_bintype = {long: '<q', int: '<i', float: '<f', RF_PROT_STATUS: '<B', L01_MOD_STATE: '<B', GUN_MOD_STATE: '<B', VALVE_STATE: '<B',
+                               TRIG: '<B', state: '<B', ramp_method: '<B', INTERLOCK_STATE: '<B', bool: '<?', numpy.float64: '<d',
+                               # BE CAREFUL WiTH str, THE BELOW IS CLEARLY GARBAGE
+                               str: '<i'}
 
     # width of config file text without timestamp (in characters!)
     _column_width = 80
@@ -237,11 +236,10 @@ class logger(object):
             raw_input()
 
         type_list = []
-        for key, val in values.iteritems():# itervalues means just iterate over the values in the dict
+        for key, val in values.iteritems():  # itervalues means just iterate over the values in the dict
             rt = self.write_binary(val)
             if rt == False:
-                self.message("!!!ERROR!!! " + key + ", binary log value is NONE-TYPE binary log "
-                                                     "corrupt ")
+                self.message("!!!ERROR!!! " + key + ", binary log value is NONE-TYPE binary log corrupt ")
                 self.message(" VALUE WAS " + str(val))
                 self.message(" TYPE  WAS " + str(type(val)))
                 raw_input()
@@ -249,7 +247,10 @@ class logger(object):
                 type_list.append(rt)
         logger._binary_log_file_obj.flush()
         if type_list != logger._binary_header_types:
-            self.message(__name__+" Warning, Binary Log File, data types have changed")
+            self.message(__name__ + " !!Warning!!, Binary Log File, data types have changed")
+            for i, (t1, t2) in enumerate(zip(type_list, logger._binary_header_types)):
+                if t1 != t2:
+                    print(t1, " != ", t2, list(values)[i])
 
 
 
@@ -266,9 +267,14 @@ class logger(object):
         """
         val_type = type(val)
         # self.message("val_type = " + str(val_type))
-        # for Python enums (used for the r general state of things) we need to convert th eENUm
+        # for Python enums (used for the general state of things) we need to convert the ENUM
         # to a number
         if val_type is state:
+            # self.message("struct_format = <B")
+            # self.message("val =  = " + str(val))
+            # We use val.value below to get the numerical value of the enum object !!!!!!!
+            logger._binary_log_file_obj.write(struct.pack('<B', val.value ))
+        elif val_type is ramp_method:
             # self.message("struct_format = <B")
             # self.message("val =  = " + str(val))
             # We use val.value below to get the numerical value of the enum object !!!!!!!
@@ -312,7 +318,7 @@ class logger(object):
             value_type = type(value)         # The type of the value being written
             value_type_str = str(value_type) # the type converted to string
             ''' There is 1 notable exception, we write a time_stamp data type as the time and 
-            date this funcitno is called '''
+            date this function is called '''
             if key == 'time_stamp':  # MAGIC_STRING
                 header_names.append('time_stamp, (start = ' + datetime.now().isoformat(' ') + ')')
             else:
