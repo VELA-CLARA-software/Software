@@ -143,9 +143,8 @@ class data_monitoring(data_monitoring_base):
 		if self.data.values[dat.can_rf_output] == state.NEW_BAD:
 			return True
 
-
 	def update_states(self ):
-		''' updates main_monitor_states using function sdefined in self.monitor_funcs'''
+		''' updates main_monitor_states using functions defined in self.monitor_funcs'''
 		#print('update_state')
 		for key in self.monitor_funcs.keys():
 			#print ('def update_states(self):  ',key)

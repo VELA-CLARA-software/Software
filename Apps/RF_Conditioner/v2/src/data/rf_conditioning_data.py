@@ -1028,6 +1028,11 @@ class rf_conditioning_data(object):
     all_value_keys = []  # A list of the keys for values
 
     # keys for all the data we monitor
+    main_can_ramp = 'main_can_ramp'
+    all_value_keys.append(main_can_ramp)
+    values[main_can_ramp] = False # CHECK TYPE
+
+    # keys for all the data we monitor
     time_stamp = 'time_stamp'
     all_value_keys.append(time_stamp)
     values[time_stamp] = dummy_float  # CHECK TYPE
@@ -1036,6 +1041,11 @@ class rf_conditioning_data(object):
     vac_spike_status = 'vac_spike_status'
     all_value_keys.append(vac_spike_status)
     values[vac_spike_status] = dummy_state
+
+    # STATUS PF MAIN MONITORS
+    last_vac_spike_status = 'last_vac_spike_status'
+    all_value_keys.append(last_vac_spike_status)
+    values[last_vac_spike_status] = dummy_state
 
     DC_spike_status = 'DC_spike_status'
     all_value_keys.append(DC_spike_status)
@@ -1146,7 +1156,11 @@ class rf_conditioning_data(object):
 
     breakdown_status = 'breakdown_status'
     all_value_keys.append(breakdown_status)
-    values[breakdown_status] = dummy_int
+    values[breakdown_status] = state.UNKNOWN
+
+    last_breakdown_status = 'last_breakdown_status'
+    all_value_keys.append(last_breakdown_status)
+    values[last_breakdown_status] = state.UNKNOWN
 
     breakdown_rate_aim = 'breakdown_rate_aim'
     all_value_keys.append(breakdown_rate_aim)
@@ -1207,13 +1221,17 @@ class rf_conditioning_data(object):
     all_value_keys.append(rfprot_state)
     values[rfprot_state] = state.UNKNOWN
 
+    rfprot_good = 'rfprot_good'
+    all_value_keys.append(rfprot_good)
+    values[rfprot_good] = False
+
     modulator_state = 'modulator_state'
     all_value_keys.append(modulator_state)
     values[modulator_state] = state.UNKNOWN
 
-    mod_output_status = 'mod_output_status'
-    all_value_keys.append(mod_output_status)
-    values[mod_output_status] = state.UNKNOWN
+    modulator_good = 'modulator_good'
+    all_value_keys.append(modulator_good)
+    values[modulator_good] = False
 
     can_rf_output_OLD = 'can_rf_output_OLD'
     all_value_keys.append(can_rf_output_OLD)

@@ -116,8 +116,6 @@ class monitor_hub(object):
                             show_time_stamp=False)
         self.start_rfprot_monitor()
         self.start_vac_valve()
-
-
         self.start_modulator_monitor()
         self.start_llrf_monitor()
         self.start_vac_monitor()
@@ -126,7 +124,6 @@ class monitor_hub(object):
         self.start_water_temperature_monitor()
         self.start_cavity_temperature_monitor()
         self.start_solenoid_monitoring()
-
         self.logger.message(__name__+' Sanity Check', add_to_text_log=True,show_time_stamp=False)
         for key, value in monitor_hub.is_monitoring.iteritems():
             try:
@@ -141,10 +138,6 @@ class monitor_hub(object):
                 raise
 
     def start_modulator_monitor(self):
-        '''
-
-        :return:
-        '''
         mh = monitor_hub
         self.logger.message(__name__ + ' start_modulator_monitor()')
         mh.modulator_monitor = modulator_monitor()

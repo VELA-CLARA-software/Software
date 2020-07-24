@@ -369,6 +369,12 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         self.last_increase_method_outputwidget.setText(  str(self.values[rf_conditioning_data.last_ramp_method] ))
 
 
+        self.set_widget_color(self.can_ramp_label_outputwidget, self.values[rf_conditioning_data.main_can_ramp])
+
+
+
+
+
     def update_amp_sp(self):
         self.amp_set_outputwidget.setText('{}'.format(self.values[self.data.amp_sp]))
 

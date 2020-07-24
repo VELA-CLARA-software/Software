@@ -132,6 +132,11 @@ class main_controller(object):
                                    add_to_text_log=True,show_time_stamp=True)
         self.monitor_hub = monitor_hub()
         self.monitor_hub.start_monitors()
+        # the vac monitor, DB monitor etc,keep a local state, at the mina_loop level we derive a state from them (
+        # e.g. new_good, new_bad, etc
+        self.conditioning_states = {}
+        self.conditioning_states[self.data.vac_spike_status] = state.UNKNOWN
+        self.conditioning_states[self.data.breakdown_status] = state.UNKNOWN
 
         # connect buttons
         self.view.update_expert_values_button.clicked.connect(self.update_expert_values) # MUST
@@ -146,7 +151,6 @@ class main_controller(object):
 
         # for testing, enable ramping
         self.view.handle_can_ramp_button()
-
         # set the active pulse count to the value read in from the pulse-breakdown log file
         # set event_pulse_count_zero to be the active pulse count, then set the active pulse count to zero
         #print("Set Pulse counts in main loop")
@@ -155,13 +159,9 @@ class main_controller(object):
         # reset the event pulse count to zero (this function should achieve the same as the above lines ... )
         self.data.reset_event_pulse_count()
 
-
-
         self.logger.message_header(
             __name__ + ' The RF Conditioning is Preparing to Entering Main_Loop !',
             add_to_text_log=True, show_time_stamp=True)
-
-
 
         self.hardware.llrf_control.keepKlyFwdPwrRS()
         self.hardware.llrf_controller.enable_trigger()
@@ -170,8 +170,6 @@ class main_controller(object):
         self.hardware.llrf_controller.enable_llrf()
         # TODO amp_sp on startup needs to be this value, i'm not sure exactly where value is set ??
         # rcd.log_amp_set
-
-
         # continue on the last but entry from the pusle_breakdown_log
         # pulse_breakdown has chosen start values, so continue, see get_pulse_count_breakdown_log()
         #
@@ -207,7 +205,6 @@ class main_controller(object):
             #
             # elif all_good
             #time.sleep(0.5)
-
             if self.reached_min_pulse_count_for_this_step():
                 print("reached_min_pulse_count_for_this_step")
                 if self.values[rf_conditioning_data.gui_can_ramp]:
@@ -233,6 +230,102 @@ class main_controller(object):
                 # continue (do some logging)
                 #print("do some logging")
                 self.monitor_hub.llrf_monitor.update_amp_vs_kfpow_running_stat()
+
+    def update_main_states(self):
+        '''
+            There are two sets of states to check, those related to if we can produce RF POWER and those related to
+            state of the conditonning (vac level, breakdown count etc ... )
+
+        '''
+        self.check_LLRF_state()
+        self.check_conditioning_state()
+        self.check_ramping_status()
+
+
+
+    def check_ramping_status(self):
+        '''
+            ATM there are 3 state that can disable ramping, the gui, the BD_rate, and vac level
+        '''
+        if self.values[rf_conditioning_data.gui_can_ramp]:
+            if self.values[rf_conditioning_data.breakdown_rate_low]:
+                if self.values[rf_conditioning_data.gui_can_ramp]:
+                    self.values[rf_conditioning_data.main_can_ramp] = True
+                else:
+                    self.values[rf_conditioning_data.main_can_ramp] = False
+            else:
+                self.values[rf_conditioning_data.main_can_ramp] = False
+        else:
+            self.values[rf_conditioning_data.main_can_ramp] = False
+
+
+    def check_conditioning_state(self):
+        '''
+            the main_loop needs ot know if we are in "good, new_good, bad or new_bad"
+        :return:
+        '''
+        rcd = rf_conditioning_data
+
+        # update 'last' values
+        self.values[rcd.last_breakdown_status] = self.conditioning_states[rcd.breakdown_status]
+        self.values[rcd.last_vac_spike_status] = self.conditioning_states[rcd.vac_spike_status]
+        # get new values (and set to new_good / new_bad if approprioate
+        self.conditioning_states[rcd.breakdown_status] = state.compare_states(self.values[rcd.breakdown_status],
+                                                                              self.values[rcd.last_breakdown_status])
+        self.conditioning_states[rcd.vac_spike_status] = state.compare_states(self.values[rcd.vac_spike_status],
+                                                                              self.values[rcd.last_vac_spike_status])
+
+    def check_LLRF_state(self):
+        '''
+            checks everything to enable RF power
+        '''
+        rcd = rf_conditioning_data
+        #
+        # set the old value to the current value
+        self.data.values[rcd.can_rf_output_OLD] = self.data.values[rcd.can_rf_output]
+
+        # check the state of teh RF protection and modulator, if they are bad we have decided NO-ARC does not intervene
+        mod_and_prot_good = False
+        if self.data.values[self.data.modulator_good]:
+            if self.data.values[self.data.rfprot_good]:
+                mod_and_prot_good = True
+
+        if mod_and_prot_good:
+            #
+            # Go through each LLRF setting  that effect if there is RF power (feel free to add more)
+            all_good = True
+            if self.data.values[rcd.llrf_interlock_status] != state.GOOD:
+                all_good = False
+            elif self.data.values[rcd.llrf_trigger_status] != state.GOOD:
+                all_good = False
+            elif self.data.values[rcd.pulse_length_status] != state.GOOD:
+                all_good = False
+            elif self.data.values[rcd.llrf_output_status] != state.GOOD:
+                all_good = False
+            elif self.data.values[rcd.llrf_ff_amp_locked_status] != state.GOOD:
+                all_good = False
+            elif self.data.values[rcd.llrf_ff_ph_locked_status] != state.GOOD:
+                all_good = False
+
+            if all_good:
+                self.data.values[rcd.can_rf_output] = state.GOOD
+            else:
+                self.data.values[rcd.can_rf_output] = state.BAD
+            # NOW check to see if this is a new good or a new bad
+            if state.is_new_good(self.data.values[rcd.can_rf_output], self.data.values[rcd.can_rf_output_OLD] ):
+                self.data.values[rcd.can_rf_output] = state.NEW_GOOD
+
+            if state.is_new_bad(self.data.values[rcd.can_rf_output], self.data.values[rcd.can_rf_output_OLD] ):
+                self.data.values[rcd.can_rf_output] = state.NEW_BAD
+            # now we check if the GUI has requested RF off
+            if self.values[rf_conditioning_data.gui_can_rf_output]:
+                if state.is_bad_or_new_bad(self.data.values[rcd.can_rf_output]):
+                    self.hardware.llrf_controller.enable_llrf()
+            else:
+                print("GUI SAYS We should disable RF ")
+                if state.is_good_or_new_good(self.data.values[rcd.can_rf_output]):
+                    print("GUI SAYS We should disable RF AND RF IS GOOD disable RF")
+                    self.hardware.llrf_controller.disableRFOutput()
 
 
     def ramp_up(self):

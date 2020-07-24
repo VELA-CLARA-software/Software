@@ -1,4 +1,4 @@
-              #!/usr/bin/env python
+# !/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
 /*
@@ -26,7 +26,7 @@
 from monitor import monitor
 from src.data.state import state
 from PyQt4.QtCore import QTimer
-#import src.data.rf_condition_data_base as dat
+# import src.data.rf_condition_data_base as dat
 from numpy import mean
 
 
@@ -45,7 +45,8 @@ class vac_monitor(monitor):
     If the vacuum level gets above VAC_MAX_LEVEL  vac_level_can_ramp is set to BAD,
     when the vacuum level is <= VAC_MAX_LEVEL vac_level_can_ramp is set to GOOD
     """
-    def __init__(self,):
+
+    def __init__(self, ):
         monitor.__init__(self)
         #
         # Local copies for some important  settings from the config file
@@ -64,41 +65,37 @@ class vac_monitor(monitor):
         self.gen_mon = self.hardware.gen_mon
 
         # connect to the vac PV
-        self.id_key = 'VAC_ID'# MAGIC_STRING  The key for the gen_mon keys dictionary
-        self.id = ''          # MAGIC_STRING, The value returned by gen_mon after connecting
-        self.vac_connected = self.hardware.connectPV(self.id_key, self.config_data[
-            self.config.VAC_PV])
+        self.id_key = 'VAC_ID'  # MAGIC_STRING  The key for the gen_mon keys dictionary
+        self.id = ''  # MAGIC_STRING, The value returned by gen_mon after connecting
+        self.vac_connected = self.hardware.connectPV(self.id_key, self.config_data[self.config.VAC_PV])
         if self.vac_connected:
             self.id = self.hardware.gen_mon_keys[self.id_key]
 
         # These are the relevant keys for the data dictionary
         # Key for the vacuum level
-        #self.data_dict_val_key = self.data.vac_level
+        # self.data_dict_val_key = self.data.vac_level
         # Key for the state of the vacuum (spike or not spike)
-        #self.data_dict_state_key = self.data.vac_spike_status
+        # self.data_dict_state_key = self.data.vac_spike_status
 
         """some variables  for the vacuum data"""
         self._reading_counter = -1  # counter for latest value acquired from control system
-        self._latest_value = None   # latest value acquired from control system
-        self._mean_level = None     # current mean of _value_history
-        self._value_history = []    # list of previous values used to calculate the rolling mean
+        self._latest_value = None  # latest value acquired from control system
+        self._mean_level = None  # current mean of _value_history
+        self._value_history = []  # list of previous values used to calculate the rolling mean
 
         # Log message if we should/should not  drop RF amp on a spike
         if self.should_drop_amp:
             adm = __name__ + ' will drop amp on spike detection'
         else:
             adm = __name__ + ' will NOT drop amp on spike detection'
-        self.logger.message(adm,add_to_text_log=True, show_time_stamp=False)
+        self.logger.message(adm, add_to_text_log=True, show_time_stamp=False)
 
         # set cool-down mode based on config, default will be LEVEL (monitor base class function)
         self.set_cooldown_mode(self.config_data[self.config.VAC_DECAY_MODE])
 
-
-
         # A timer for TIME cooldowns, (not generally sued for vacuum) the spike  detcetin will
         # start the timer, when the timer runs out it calls self.cooldown_function
         self.cooldown_timer.timeout.connect(self.cooldown_finished)
-
 
         # a timer for the minimum cooldown period, when a vac spike occurs this timer is
         # started to, give a minimum time before we can set a GOOD state.
@@ -151,12 +148,12 @@ class vac_monitor(monitor):
             if we are checking for hi vacuum levels
                 check for high vacuum level
         """
-        if self.update_value():              # if we get a new value
+        if self.update_value():  # if we get a new value
             self.update_mean_value()
-            if self._in_cooldown:            # if in cool-down,
-                self.check_has_cooled_down() # check to see if we should stay in cool-down
+            if self._in_cooldown:  # if in cool-down,
+                self.check_has_cooled_down()  # check to see if we should stay in cool-down
             else:
-                self.check_for_spike()       # check if new value is a vacuum  spike
+                self.check_for_spike()  # check if new value is a vacuum  spike
             if self.should_check_level_is_hi:
                 self.check_if_level_is_hi()
 
@@ -170,8 +167,9 @@ class vac_monitor(monitor):
         self._value_history.append(self._latest_value)
         if len(self._value_history) > self.num_samples_to_average:
             self._value_history.pop(0)
-            self._mean_level = sum(self._value_history)/self.num_samples_to_average
-            #print 'New Vacuum mean level = {}'.format(self._mean_level)
+            self._mean_level = sum(
+                self._value_history) / self.num_samples_to_average  # print 'New Vacuum mean level =  # {}'.format(
+            # self._mean_level)
 
     def update_value(self):
         """
@@ -184,7 +182,7 @@ class vac_monitor(monitor):
         v = self.gen_mon.getCounterAndValue(self.id)
         # the gen_monitor will just pass back the last value it has
         # value is a new value if counter has increased since last check
-        if v.keys()[0] != self._reading_counter: # value must be new
+        if v.keys()[0] != self._reading_counter:  # value must be new
             # update _latest_value
             self._latest_value = v.values()[0]
             # update main data dictionary
@@ -205,12 +203,12 @@ class vac_monitor(monitor):
         old_state = self.data.values[self.data.vac_level_can_ramp]
         if self._latest_value > self.max_level:  # if level is hi
             self.data.values[self.data.vac_level_can_ramp] = False  # Set BAD status
-            if old_state: # If state changed write message
+            if old_state:  # If state changed write message
                 m = __name__ + ' level hi, {} > {} '.format(self._latest_value, self.max_level)
                 self.logger.message(m, add_to_text_log=True, show_time_stamp=True)
-        else: # else level is NOT hi
+        else:  # else level is NOT hi
             self.data.values[self.data.vac_level_can_ramp] = True
-            if not old_state: # If state changed write message
+            if not old_state:  # If state changed write message
                 m = __name__ + ' level ok, {} < {} '.format(self._latest_value, self.max_level)
                 self.logger.message(m, add_to_text_log=True, show_time_stamp=True)
 
@@ -221,8 +219,7 @@ class vac_monitor(monitor):
         if self.level_cooldown:
             if self._latest_value < self.spike_decay_level * self._mean_level:
                 if self.min_time_good:
-                    self.logger.message(__name__+' has_cooled_down', add_to_text_log=True,
-                                        show_time_stamp=True)
+                    self.logger.message(__name__ + ' has_cooled_down', add_to_text_log=True, show_time_stamp=True)
                     self.in_cooldown = False
 
     def check_for_spike(self):
@@ -233,7 +230,7 @@ class vac_monitor(monitor):
         self._num_samples_to_average 'VAC_NUM_SAMPLES_TO_AVERAGE'
         :return:
         """
-        if self._mean_level is not None: # If we have a mean value
+        if self._mean_level is not None:  # If we have a mean value
             # check for a spike
             if self._latest_value >= self.spike_delta + self._mean_level:
                 # this is the first place we can detect a vacuum spike,
@@ -247,7 +244,6 @@ class vac_monitor(monitor):
                 self.logger.message_header(m, add_to_text_log=True, show_time_stamp=True)
                 self.dump_data()
                 self.start_cooldown()
-
 
     def min_cooldown_finished(self):
         self.min_time_good = True
@@ -265,7 +261,7 @@ class vac_monitor(monitor):
         self.in_cooldown = True
         self.min_time_good = False
         self.min_cooldown_timer.start(self.config_data[self.config.MINIMUM_COOLDOWN_TIME])
-        if self.timed_cooldown:         # if in timed_cooldown mode start the cooldown timer
+        if self.timed_cooldown:  # if in timed_cooldown mode start the cooldown timer
             self.cooldown_timer.start(self.config_data[self.config.VAC_SPIKE_DECAY_TIME])
 
     def cooldown_finished(self):
@@ -282,7 +278,7 @@ class vac_monitor(monitor):
         return self._latest_value
 
     @in_cooldown.setter
-    def in_cooldown(self,value):
+    def in_cooldown(self, value):
         """
         This property is a flag for if we are in cooldown or not. The vac state  is inverse to the
         in_cooldown state
@@ -307,9 +303,8 @@ class vac_monitor(monitor):
         """
         Get RF trace data from llrf_control and Pickle dump the vacuum data + other stuff
         """
-        new = self.hardware.llrf_control.getCutOneTraceData() # get data from CATAP llrf_control
+        new = self.hardware.llrf_control.getCutOneTraceData()  # get data from CATAP llrf_control
         new.update({'vacuum': self._value_history})
         new.update({'DC': self.data.values[self.data.DC_level]})
         new.update({'SOL': self.data.values[self.data.sol_value]})
         self.logger.pickle_file(__name__ + '_' + str(self.spike_count), new)
-

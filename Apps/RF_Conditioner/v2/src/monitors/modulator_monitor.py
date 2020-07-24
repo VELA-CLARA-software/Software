@@ -53,3 +53,13 @@ class modulator_monitor(monitor):
         # print("self.data.values[self.data.modulator_state] = ", self.data.values[
         #     self.data.modulator_state] )
 
+        # assume there is one PV that gives the RF state,
+        # MODULATOR, INTERLOCKS, LLRF
+        # wich MAY NOT be true
+        if self.data.values[self.data.modulator_state] == GUN_MOD_STATE.RF_ON:
+            self.data.values[self.data.modulator_good] = True
+        elif self.data.values[self.data.modulator_state] == L01_MOD_STATE.L01_RF_ON:
+            self.data.values[self.data.modulator_good] = True
+        else:
+            self.data.values[self.data.modulator_good] = False
+
