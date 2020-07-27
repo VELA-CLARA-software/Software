@@ -42,8 +42,7 @@ import numpy
 from src.data.state import state
 from src.data.state import ramp_method
 from textwrap import fill
-
-
+from numpy import float64
 
 
 
@@ -91,7 +90,7 @@ class logger(object):
     # entries in the dictionary to write to file changes, or their type does. To check for this
     # we keep a record of the binary file header to check against each time we write an entry
     _binary_header_length = None
-    _binary_header_types  = None
+    _binary_header_types = {}
     _binary_header_start_time = None
 
     # map of python type to struct type https://docs.python.org/2/library/struct.html
@@ -101,7 +100,7 @@ class logger(object):
     # THINK VERY CAREFULLY about changin this!!!! You have be warned
     # ALL CATAP types and simple types need ot be defined here!!
     _python_type_to_bintype = {long: '<q', int: '<i', float: '<f', RF_PROT_STATUS: '<B', L01_MOD_STATE: '<B', GUN_MOD_STATE: '<B', VALVE_STATE: '<B',
-                               TRIG: '<B', state: '<B', ramp_method: '<B', INTERLOCK_STATE: '<B', bool: '<?', numpy.float64: '<d',
+                               TRIG: '<B', state: '<B', ramp_method: '<B', INTERLOCK_STATE: '<B', bool: '<?', float64: '<d',
                                # BE CAREFUL WiTH str, THE BELOW IS CLEARLY GARBAGE
                                str: '<i'}
 
@@ -114,11 +113,19 @@ class logger(object):
     _show_time_stamp = False
     _add_to_text_log = True
 
-    excluded_key_list = []
+    _excluded_key_list = None
 
     def __init__(self, column_width=None):
         if column_width:
             self.column_width = column_width
+
+    @property
+    def excluded_key_list(self):
+        return logger._excluded_key_list
+
+    @excluded_key_list.setter
+    def excluded_key_list(self, value):
+        logger._excluded_key_list = value
 
     # get and set the config file
     @property
@@ -227,23 +234,31 @@ class logger(object):
         plaintext header to the file was written. IF it has throw some warning messages
         :param values:  dictionary of values to log,
         '''
+        # TODO maybe we don't need to loop over this list twice ...
         written_types = [] # local copy of types actually written
+        #print("logger.excluded_key_list = {}".format(logger._excluded_key_list))
         if len(values) == logger._binary_header_length:
             for key, val in values.iteritems():
-                #self.message("key =  " + key)
-                written_types.append(self.write_binary(val))
+
+                if key in logger._excluded_key_list:
+                    #print("1 write_binary_log key {} in excluded list ".format(key))
+                    pass
+                else:
+                    #print("1 write_binary_log key {} is NOT in excluded list ".format(key))
+                    written_types.append(self.write_binary(val))
         else:
             self.message(["!!!ERROR!!! write_bin_data passed data of incorrect length! ",
                           str(len(values)),"!=",logger._binary_header_length])
             raw_input()
 
-        type_list = []
+        type_list = {}
         for key, val in values.iteritems():  # itervalues means just iterate over the values in the dict
 
-            if key in self.excluded_key_list:
-                print("bin logging , ", key, " is excluded")
+            if key in logger._excluded_key_list:
+                #print("2 write_binary_log key {} in excluded list ".format(key))
                 pass
             else:
+                #print("2 write_binary_log key {} is NOT in excluded list ".format(key))
                 rt = self.write_binary(val)
                 if rt == False:
                     self.message("!!!ERROR!!! " + key + ", binary log value is NONE-TYPE binary log corrupt ")
@@ -251,13 +266,22 @@ class logger(object):
                     self.message(" TYPE  WAS " + str(type(val)))
                     raw_input()
                 else:
-                    type_list.append(rt)
+                    type_list[key] = rt
         logger._binary_log_file_obj.flush()
         if type_list != logger._binary_header_types:
             self.message(__name__ + " !!Warning!!, Binary Log File, data types have changed")
-            for i, (t1, t2) in enumerate(zip(type_list, logger._binary_header_types)):
-                if t1 != t2:
-                    print(t1, " != ", t2, list(values)[i])
+
+            for (k,v) in type_list.iteritems():
+                if k in logger._binary_header_types.keys():
+                    if type_list[k] != logger._binary_header_types[k]:
+                        print(type_list[k], " != ", logger._binary_header_types[k], " key  = ", k)
+                else:
+                    print("ERROR! {} key missing".format(k))
+
+
+            # for i, (t1, t2) in enumerate(zip(type_list, logger._binary_header_types)):
+            #     if t1 != t2:
+            #         print(t1, " != ", t2, list(values)[i])
 
 
 
@@ -294,7 +318,8 @@ class logger(object):
                 #self.message("val =  = " + str(val))
                 logger._binary_log_file_obj.write(struct.pack(struct_format, val))
             else:
-                self.message("ERROR write_binary passed data of None type. THIS SHOULD NOT HAPPEN! ")
+                self.message("ERROR write_binary passed data of {} type. THIS SHOULD NOT HAPPEN! ".format(val_type) )
+                print(logger._excluded_key_list)
                 return False
 
         return val_type
@@ -316,18 +341,19 @@ class logger(object):
         # cross-checked against, in further calls to  write_binary()
 
         logger._binary_header_length = len(data_to_log)  # the number of entries in data_to_log
-        logger._binary_header_types = []  # the type of each entry in data_to_log (filled below)
+        logger._binary_header_types = {}  # the type of each entry in data_to_log (filled below)
         header_names = []
         header_types_str = []
 
         #print 'LOGGER excluded_key_list = {}'.format(self.excluded_key_list)
 
+        print("write bin header logger.excluded_key_list = {}".format(logger._excluded_key_list))
         # iterate over data_to_log, and get types for each entry
         for key, value in data_to_log.iteritems():
-
-            if key in self.excluded_key_list:
-                pass
+            if key in logger._excluded_key_list:
+                print("write_binary_log_header key {} is in excluded list ".format(key))
             else:
+                print("write_binary_log_header key is NOT in excluded list, key = {}, type = {} ".format(key, type(value)))
                 value_type = type(value)         # The type of the value being written
                 value_type_str = str(value_type) # the type converted to string
                 ''' There is 1 notable exception, we write a time_stamp data type as the time and 
@@ -336,9 +362,8 @@ class logger(object):
                     header_names.append('time_stamp, (start = ' + datetime.now().isoformat(' ') + ')')
                 else:
                     header_names.append(key)
-                logger._binary_header_types.append(value_type)
+                logger._binary_header_types[key] = value_type
                 header_types_str.append(value_type_str)
-
         # create the data_log file and write the plaintext header, raise exception if fail
         try:
             # Create rwo strings fro the first two lines of the file, the 1st is tab separated

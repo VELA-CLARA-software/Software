@@ -55,7 +55,6 @@ from PyQt4.QtGui import QApplication
 from src.data.state import state
 from src.data.state import ramp_method
 
-
 #class main_controller(controller_base):
 class main_controller(object):
 
@@ -107,7 +106,9 @@ class main_controller(object):
 
         self.logger.excluded_key_list = self.data.excluded_key_list
         print("self.data.excluded_key_list = {}".format( self.data.excluded_key_list))
+        print(" self.logger.excluded_key_list = {}".format(  self.logger.excluded_key_list))
 
+        #raw_input()
 
 
 
