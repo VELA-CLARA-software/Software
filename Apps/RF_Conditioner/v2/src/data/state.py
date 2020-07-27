@@ -13,7 +13,7 @@
 //    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                   //
 //    GNU General Public License for more details.                                    //
 //                                                                                    //
-//    You should have received a copy of the GNU General Public License               //
+//    You should have received a copy of the GNU General Public License               //(*x value that gives a certain percentage of power required*)
 //    along with VELA-CLARA-Software.  If not, see <http://www.gnu.org/licenses/>.    //
 //
 //  Author:      DJS
@@ -120,8 +120,7 @@ class ramp_method(Enum):
     # others include: but the new sp  was too big, etc ...
     statename = {UNKNOWN: 'UNKNOWN', DEFAULT__TOO_FEW_BINS: 'DEFAULT__TOO_FEW_BINS', DEFAULT__ENOUGH_BINS__ZERO_IN_LIST__NOT_ENOUGH_NON_ZERO:
         'DEFAULT__ENOUGH_BINS__ZERO_IN_LIST__NOT_ENOUGH_NON_ZERO', PREDICTED_SP_LSSTHN_CURRENT_SP: 'PREDICTED_SP_LSSTHN_CURRENT_SP',
-                 DEFAULT__DELTA_GTRTHN_MAX:
-    'DEFAULT__DELTA_GTRTHN_MAX', DEFAULT__NEG_RAMP:
-        'DEFAULT__NEG_RAMP', DEFAULT__FLAT_RAMP: 'DEFAULT__FLAT_RAMP',
-                 FIT:
-        'FIT'}
+        DEFAULT__DELTA_GTRTHN_MAX:'DEFAULT__DELTA_GTRTHN_MAX', PREDICTED_SP_GRTRTHN_CURRENT_SP: 'PREDICTED_SP_GRTRTHN_CURRENT_SP',
+        DEFAULT__NEG_RAMP: 'DEFAULT__NEG_RAMP', DEFAULT__FLAT_RAMP: 'DEFAULT__FLAT_RAMP',FIT: 'FIT'}
+
+

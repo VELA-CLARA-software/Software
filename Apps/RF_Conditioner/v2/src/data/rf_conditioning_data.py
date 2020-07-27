@@ -870,12 +870,13 @@ class rf_conditioning_data(object):
             data_to_fit_x2 = data_to_fit_x[-self.config.raw_config_data['NUM_SET_POINTS_TO_FIT']:]
             data_to_fit_y2 = data_to_fit_y[-self.config.raw_config_data['NUM_SET_POINTS_TO_FIT']:]
 
-            predicted_sp = self.slf_amp_kfpow_data(data_to_fit_x2, data_to_fit_y2, requested_power)
+            # Call in various fit methods
+            predicted_sp_slf = self.slf_amp_kfpow_data(data_to_fit_x2, data_to_fit_y2, requested_power)
             predicted_sp_2Order_all = self.poly_amp_kfpow_all_data(requested_power)
             predicted_sp_2Order = self.poly_amp_kfpow_data(requested_power)
 
             print('predicted_sp from slf = {}\npredicted_sp from 2nd order polyfit all data = {}\npredicted_sp from 2nd order polyfit = {}'.format(
-                predicted_sp, predicted_sp_2Order,
+                predicted_sp_slf, predicted_sp_2Order,
                                                                                                 predicted_sp_2Order_all))
             # assign which fitting method amp_sp to use
             predicted_sp = predicted_sp_2Order
