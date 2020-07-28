@@ -54,6 +54,11 @@ def is_good_or_new_good(s):
         return True
     return False
 
+
+def is_good(s):
+    return s == state.GOOD
+
+
 def is_bad_or_new_bad(s):
     if s == state.BAD:
         return True

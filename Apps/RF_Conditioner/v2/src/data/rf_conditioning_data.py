@@ -110,14 +110,36 @@ class rf_conditioning_data(object):
 
         self.values[rcd.current_ramp_index] = self.get_ramp_index_from_power(self.get_kf_running_stat_power_at_current_set_point())
 
-        rcd.values[rcd.required_pulses] = ramp[rcd.values[rcd.current_ramp_index]][0]
         rcd.values[rcd.last_power_change] = rcd.values[rcd.next_power_change]
-        rcd.values[rcd.next_power_change] = float(ramp[rcd.values[rcd.current_ramp_index]][1])
+
+        [rcd.values[rcd.required_pulses], rcd.values[rcd.next_power_change] ] = self.get_power_and_num_pulses_for_ramp_index(rcd.values[rcd.current_ramp_index])
+
+        # rcd.values[rcd.required_pulses] = ramp[rcd.values[rcd.current_ramp_index]][0]
+        # rcd.values[rcd.next_power_change] = float(ramp[rcd.values[rcd.current_ramp_index]][1])
+
         self.logger.message_header(__name__ + ' set_ramp_values ')
         self.logger.message(
             'current ramp index = {}\nnext required pulses = {}\nnext power increase = {}'.format(rcd.values[rcd.current_ramp_index],
                                                                                                          rcd.values[rcd.required_pulses], rcd.values[
                                                                                                              rcd.next_power_change]))  #  #
+
+    def get_power_and_num_pulses_for_ramp_index(self, index):
+        if index < 0:
+            return ramp[0]
+        elif index > len(ramp) - 1:
+            return ramp[-1]
+        else:
+            return ramp[index]
+
+    def get_log_ramp_power_finsh(self):
+        print("get_log_ramp_power_finsh")
+
+        if rf_conditioning_data.values[rf_conditioning_data.last_amp_sp] > 500:
+            print("last_amp_sp > 500")
+            return self.get_kf_running_stat_power_at_set_point(rf_conditioning_data.values[rf_conditioning_data.last_amp_sp])
+        else:
+            print("last_amp_sp = {}".format( rf_conditioning_data.values[rf_conditioning_data.last_amp_sp]) )
+            return self.get_kf_running_stat_power_at_set_point( self.values[rf_conditioning_data.log_amp_set] )
 
     def get_kf_running_stat_power_at_current_set_point(self):
         return self.get_kfp_running_stat_at_current_set_point()[1]
@@ -935,7 +957,6 @@ class rf_conditioning_data(object):
         predicted_sp = int(predicted_sp)
         return float(predicted_sp)
 
-
     def poly_amp_kfpow_current_sp_to_fit(self, requested_power):
         rcd = rf_conditioning_data
         use_max_sp = False
@@ -977,7 +998,6 @@ class rf_conditioning_data(object):
 
         predicted_sp = int(predicted_sp)
         return float(predicted_sp)
-
 
     def poly_amp_kfpow_current_sp(self, requested_power):
         rcd = rf_conditioning_data
@@ -1354,13 +1374,13 @@ class rf_conditioning_data(object):
     all_value_keys.append(modulator_good)
     values[modulator_good] = False
 
-    can_rf_output_OLD = 'can_rf_output_OLD'
-    all_value_keys.append(can_rf_output_OLD)
-    values[can_rf_output_OLD] = state.UNKNOWN
+    can_rf_output_state_OLD = 'can_rf_output_state_OLD'
+    all_value_keys.append(can_rf_output_state_OLD)
+    values[can_rf_output_state_OLD] = state.UNKNOWN
 
-    can_rf_output = 'can_rf_output'
-    all_value_keys.append(can_rf_output)
-    values[can_rf_output] = state.UNKNOWN
+    can_rf_output_state = 'can_rf_output_state'
+    all_value_keys.append(can_rf_output_state)
+    values[can_rf_output_state] = state.UNKNOWN
 
     # This i sthe "general interloac" and should be re-named to reflect this
     llrf_interlock = 'llrf_interlock'  # The read value from EPICS
@@ -1725,7 +1745,7 @@ class rf_conditioning_data(object):
     # values[llrf_interlock_status] = state.UNKNOWN
     # values[llrf_ff_amp_locked] = state.UNKNOWN
     # values[llrf_ff_ph_locked] = state.UNKNOWN
-    # values[can_rf_output_OLD] = state.UNKNOWN
+    # values[can_rf_output_state_OLD] = state.UNKNOWN
 
     # sss
     #

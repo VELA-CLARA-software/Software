@@ -125,7 +125,7 @@ class llrf_control(object):
 		# this is sketchy AF
 
 	def disableRFOutput(self):
-		self.llrf_control.disableRFOutput()
+		self.llrf_control.disableRFOutput() # the c++ check is RF output is enabled, if not it disables rf output
 
 	def set_trace_SCAN(self):
 		self.llrf_control.setAllSCANToPassive()

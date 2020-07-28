@@ -52,7 +52,7 @@ import random
 
 from PyQt4.QtGui import QApplication
 
-from src.data.state import state
+from src.data.state import *
 from src.data.state import ramp_method
 
 #class main_controller(controller_base):
@@ -109,10 +109,6 @@ class main_controller(object):
         print(" self.logger.excluded_key_list = {}".format(  self.logger.excluded_key_list))
 
         #raw_input()
-
-
-
-
 
         self.data.initialise()
         self.values = self.data.values
@@ -196,52 +192,41 @@ class main_controller(object):
             self.update_main_states()
 
 
-            if new_bad() (in monitors vac, and BD (
-            # print / log a message, (probably  reset the event pulse counter here)
-            #
-            # elif enable_RF_bad(): # checks can_rf_output
-            #     if user gui buttons enable RF:
-            # enable RF
-            #
-            #
-            # elif new_good:
-            #   self.values[rf_conditioning_data.ramp_mode] = ramp_method.LOG_RAMP:
-            #   self.values[rf_conditioning_data.event_pulse_count] = 1
-            #   self.values[rf_conditioning_data.required_pulses] = 0
-            # elif all_good
-            #time.sleep(0.5)
+            if is_bad_or_new_bad(self.data.values[rf_conditioning_data.can_rf_output_state]):
+                print("State is bad")
+            elif is_new_good(self.data.values[rf_conditioning_data.can_rf_output_state]):
+                print("State is new_good, settign LOG_RAMP adn resstign pulse counters ")
+                self.values[rf_conditioning_data.ramp_mode] = ramp_method.LOG_RAMP
+                self.values[rf_conditioning_data.event_pulse_count] = 1
+                self.values[rf_conditioning_data.required_pulses] = 0
 
-            if self.reached_min_pulse_count_for_this_step():
-                print("reached_min_pulse_count_for_this_step")
 
-                if self.values[rf_conditioning_data.ramp_mode] == ramp_method.LOG_RAMP:
-                    pass
-                #    # we always ramp in LOG_RAMP mode
-                #    self.log_ramp_up()
 
-                elif self.values[rf_conditioning_data.gui_can_ramp]:
-                    if self.values[rf_conditioning_data.vac_level_can_ramp]:
-                        if self.values[rf_conditioning_data.breakdown_rate_low]:
-                            estimated_ramp_index = self.data.get_ramp_index_from_power(self.data.get_kf_running_stat_power_at_current_set_point())
-                            print("power = {}, estimated_ramp_index = {}".format(self.data.get_kf_running_stat_power_at_current_set_point(), estimated_ramp_index))
-                            self.ramp_up()
-                            # print("Calling ramp / random up or down")
-                            #  if random.randint(0,1) > 0.5:
-                            #     print("ml ramp_up")
-                            #     self.ramp_up()  # TODO better name??, ramp_up from a normal stae
-                            # else:
-                            #     print("ml ramp_down")
-                            #     self.ramp_down()
-                        else:
-                            print("can't ramp BD rate  hi")
-                    else:
-                        print("can't ramp vac level hi")
+            elif is_good(self.data.values[rf_conditioning_data.can_rf_output_state]):
+
+                if self.reached_min_pulse_count_for_this_step():
+                    print("reached_min_pulse_count_for_this_step")
+
+                    if self.values[rf_conditioning_data.ramp_mode] == ramp_method.LOG_RAMP:
+
+                        # we always ramp in LOG_RAMP mode
+                        self.log_ramp_up()
+
+                    elif self.values[rf_conditioning_data.main_can_ramp]:
+
+                        estimated_ramp_index = self.data.get_ramp_index_from_power(self.data.get_kf_running_stat_power_at_current_set_point())
+                        print("power = {}, estimated_ramp_index = {}".format(self.data.get_kf_running_stat_power_at_current_set_point(), estimated_ramp_index))
+                        self.ramp_up()
+                                # print("Calling ramp / random up or down")
+                                #  if random.randint(0,1) > 0.5:
+                                #     print("ml ramp_up")
+                                #     self.ramp_up()  # TODO better name??, ramp_up from a normal stae
+                                # else:
+                                #     print("ml ramp_down")
+                                #     self.ramp_down()
                 else:
-                    print("main loop can't ramp: GUI DISABLED RAMPING")
-            else:
-                # continue (do some logging)
-                #print("do some logging")
-                self.monitor_hub.llrf_monitor.update_amp_vs_kfpow_running_stat()
+                    # continue (do some logging)
+                    self.monitor_hub.llrf_monitor.update_amp_vs_kfpow_running_stat()
 
     def update_main_states(self):
         '''
@@ -293,7 +278,7 @@ class main_controller(object):
         rcd = rf_conditioning_data
         #
         # set the old value to the current value
-        self.data.values[rcd.can_rf_output_OLD] = self.data.values[rcd.can_rf_output]
+        self.data.values[rcd.can_rf_output_state_OLD] = self.data.values[rcd.can_rf_output_state]
 
         # check the state of teh RF protection and modulator, if they are bad we have decided NO-ARC does not intervene
         mod_and_prot_good = False
@@ -303,44 +288,46 @@ class main_controller(object):
 
         if mod_and_prot_good:
 
-            llrf_DAQ_rep_rate_status
-            self.values[self.data.llrf_DAQ_rep_rate_status] == state.BAD:
-
+            daq_freq_good = True
+            if self.values[self.data.llrf_DAQ_rep_rate_status] == state.BAD:
+                daq_freq_good = False
             #
             # Go through each LLRF setting  that effect if there is RF power (feel free to add more)
-            all_good = True
-            if self.data.values[rcd.llrf_interlock_status] != state.GOOD:
-                all_good = False
-            elif self.data.values[rcd.llrf_trigger_status] != state.GOOD:
-                all_good = False
-            elif self.data.values[rcd.pulse_length_status] != state.GOOD:
-                all_good = False
-            elif self.data.values[rcd.llrf_output_status] != state.GOOD:
-                all_good = False
-            elif self.data.values[rcd.llrf_ff_amp_locked_status] != state.GOOD:
-                all_good = False
-            elif self.data.values[rcd.llrf_ff_ph_locked_status] != state.GOOD:
-                all_good = False
 
-            if all_good:
-                self.data.values[rcd.can_rf_output] = state.GOOD
-            else:
-                self.data.values[rcd.can_rf_output] = state.BAD
-            # NOW check to see if this is a new good or a new bad
-            if state.is_new_good(self.data.values[rcd.can_rf_output], self.data.values[rcd.can_rf_output_OLD] ):
-                self.data.values[rcd.can_rf_output] = state.NEW_GOOD
+            if daq_freq_good:
+                all_good = True
+                if self.data.values[rcd.llrf_interlock_status] != state.GOOD:
+                    all_good = False
+                elif self.data.values[rcd.llrf_trigger_status] != state.GOOD:
+                    all_good = False
+                elif self.data.values[rcd.pulse_length_status] != state.GOOD:
+                    all_good = False
+                elif self.data.values[rcd.llrf_output_status] != state.GOOD:
+                    all_good = False
+                elif self.data.values[rcd.llrf_ff_amp_locked_status] != state.GOOD:
+                    all_good = False
+                elif self.data.values[rcd.llrf_ff_ph_locked_status] != state.GOOD:
+                    all_good = False
 
-            if state.is_new_bad(self.data.values[rcd.can_rf_output], self.data.values[rcd.can_rf_output_OLD] ):
-                self.data.values[rcd.can_rf_output] = state.NEW_BAD
-            # now we check if the GUI has requested RF off
-            if self.values[rf_conditioning_data.gui_can_rf_output]:
-                if state.is_bad_or_new_bad(self.data.values[rcd.can_rf_output]):
-                    self.hardware.llrf_controller.enable_llrf()
-            else:
-                print("GUI SAYS We should disable RF ")
-                if state.is_good_or_new_good(self.data.values[rcd.can_rf_output]):
-                    print("GUI SAYS We should disable RF AND RF IS GOOD disable RF")
-                    self.hardware.llrf_controller.disableRFOutput()
+                if all_good:
+                    self.data.values[rcd.can_rf_output_state] = state.GOOD
+                else:
+                    self.data.values[rcd.can_rf_output_state] = state.BAD
+                # NOW check to see if this is a new good or a new bad
+                if is_new_good(self.data.values[rcd.can_rf_output_state], self.data.values[rcd.can_rf_output_state_OLD] ):
+                    self.data.values[rcd.can_rf_output_state] = state.NEW_GOOD
+
+                if is_new_bad(self.data.values[rcd.can_rf_output_state], self.data.values[rcd.can_rf_output_state_OLD] ):
+                    self.data.values[rcd.can_rf_output_state] = state.NEW_BAD
+                # now we check if the GUI has requested RF off
+                if self.values[rf_conditioning_data.gui_can_rf_output]:
+                    if is_bad_or_new_bad(self.data.values[rcd.can_rf_output_state]):
+                        self.hardware.llrf_controller.enable_llrf()
+                else:
+                    print("GUI SAYS We should disable RF ")
+                    if is_good_or_new_good(self.data.values[rcd.can_rf_output_state]):
+                        print("GUI SAYS We should disable RF AND RF IS GOOD disable RF")
+                        self.hardware.llrf_controller.disableRFOutput()
 
 
     def log_ramp_up(self):
@@ -357,7 +344,24 @@ class main_controller(object):
 
         # switch here to set up curve if
         if lrc is None:
-            self.data.generate_log_ramp_curve()
+
+            # WE assume the ramp index is set correctly !
+
+            # GET NEW SET_POINT
+            # new amp always returns a value!!
+
+
+
+            power_finish = self.get_log_ramp_power_finsh()
+
+            print("log_curve power finsh = {}".format(power_finish))
+
+
+            self.data.generate_log_ramp_curve(p_start  = self.config.raw_config_data['LOG_RAMP_START_POWER'],
+                                              p_finish =  power_finish ,
+                                              ramp_rate =  self.config.raw_config_data['LOG_RAMP_CURVE_RAMP_RATE'],
+                                              numsteps =  self.config.raw_config_data['LOG_RAMP_CURVE_NUMSTEPS'],
+                                              pulses_per_step =  self.config.raw_config_data['LOG_RAMP_CURVE_PULSES_PER_STEP'] )
 
         # # set new_amp
         if self.hardware.llrf_controller.set_amp( lrc[ lrci][1], update_last_amp_sp = True):
@@ -367,11 +371,11 @@ class main_controller(object):
                 self.data.log_ramp_curve_index = -1
                 # reset active pulse counters
                 self.data.reset_event_pulse_count()
-                self.values[rf_conditioning_data.ramp_mode] == ramp_method.NORMAL_RAMP
+                self.values[rf_conditioning_data.ramp_mode] = ramp_method.NORMAL_RAMP
             else:
                 ''' set the number of pulses '''
                 rcd = rf_conditioning_data
-                rcd.values[rcd.required_pulses] = self.data.log_ramp_curve[ self.data.log_ramp_curve_index][0]
+                rcd.values[rcd.required_pulses] = self.data.log_ramp_curve[ self.data.log_ramp_curve_index ][0]
                 rcd.values[rcd.last_power_change] = 0.0
                 rcd.values[rcd.next_power_change] = 0.0
                 rcd.values[rcd.event_pulse_count_zero] = rcd.values[rcd.pulse_count]
@@ -504,7 +508,7 @@ class main_controller(object):
         ''' this function should be connected to the GUI enable / diasable LLRF, but MUST be run
         AFTER rf_conditioning_data.gui_can_rf_output is changed to the requested value '''
         if self.values[rf_conditioning_data.gui_can_rf_output]:
-            print("toggle_RF_output(), gui.can_rf_output, so calling enable_llrf ")
+            print("toggle_RF_output(), gui.can_rf_output_state, so calling enable_llrf ")
             self.hardware.llrf_controller.enable_llrf()
         else:
             self.hardware.llrf_controller.disableRFOutput()
