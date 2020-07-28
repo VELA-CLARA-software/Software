@@ -878,19 +878,30 @@ class rf_conditioning_data(object):
             data_to_fit_y2 = data_to_fit_y[-self.config.raw_config_data['NUM_SET_POINTS_TO_FIT']:]
 
             # Call in various fit methods
-            predicted_sp_slf = self.slf_amp_kfpow_data(requested_power)
-            predicted_sp_2Order_all = self.poly_amp_kfpow_all_data(requested_power)
-            predicted_sp_2Order_current_sp_to_fit = self.poly_amp_kfpow_current_sp_to_fit(requested_power)
-            predicted_sp_2Order_current = self.poly_amp_kfpow_current_sp_to_fit(requested_power)
+            sp_slf = self.slf_amp_kfpow_data(requested_power)
+            sp_quad_all = self.poly_amp_kfpow_all_data(requested_power)
+            sp_quad_current = self.poly_amp_kfpow_current_sp_to_fit(requested_power)
+            sp_quad_current_sp_to_fit = self.poly_amp_kfpow_current_sp_to_fit(requested_power)
 
-            print('predicted_sp from slf = {}\npredicted_sp from 2nd order polyfit all data = {}\npredicted_sp from 2nd order polyfit using all '
-                  'data below current amp_sp = {}\npredicted_sp from 2nd order polyfit using last {} viable datapoints '
-                  'below current amp_sp = {}'.format(
-                predicted_sp_slf, predicted_sp_2Order_current_sp_to_fit, predicted_sp_2Order_current, self.config.raw_config_data[
-                    'NUM_SET_POINTS_TO_FIT'], predicted_sp_2Order_all))
+            print('sp_slf = {}\nsp_quad_all = {}\nsp_quad_current = {}\nsp_quad_current_sp_to_fit = {}\n'
+                  .format(sp_slf, sp_quad_all, sp_quad_current,  sp_quad_current_sp_to_fit))
+
+
+
+            print('\ntype(sp_slf) = {}\ntype(sp_quad_all) = {}\ntype(sp_quad_current) = {}\ntype('
+                  'sp_quad_current_sp_to_fit) = {}'.format(type(sp_slf), type(sp_quad_all), type(sp_quad_current), type(sp_quad_current_sp_to_fit)))
+
+
+            # Recor returned fit results to values dict:
+
+            self.values[rf_conditioning_data.SP_SLF] = sp_slf
+            self.values[rf_conditioning_data.SP_QUAD_ALL] = sp_quad_all
+            self.values[rf_conditioning_data.SP_QUAD_CURRENT] = sp_quad_current
+            self.values[rf_conditioning_data.SP_QUAD_CURRENT_SP_TO_FIT] = sp_quad_current_sp_to_fit
+
 
             # assign which fitting method amp_sp to use
-            predicted_sp = predicted_sp_2Order_all
+            predicted_sp = sp_quad_all
 
             # check the valididty of the predicted_sp
             if abs(predicted_sp - current_amp_sp) > max_delta_power:
@@ -962,6 +973,10 @@ class rf_conditioning_data(object):
         use_max_sp = False
         data_to_fit_x, data_to_fit_y = self.get_data_for_polyfit(num_sp_to_fit,  use_max_sp)
 
+        # Exclude the origin from X and Y data:
+        data_to_fit_x = data_to_fit_x[1:]
+        data_to_fit_y = data_to_fit_y[1:]
+
         self.values[rf_conditioning_data.old_c] = self.values[rf_conditioning_data.c]
         self.values[rf_conditioning_data.old_m] = self.values[rf_conditioning_data.m]
         self.values[rf_conditioning_data.old_x_min] = self.values[rf_conditioning_data.x_min]
@@ -980,7 +995,8 @@ class rf_conditioning_data(object):
         self.values[rf_conditioning_data.y_max] = max(data_to_fit_y)
         self.values[rf_conditioning_data.c] = c
         self.values[rf_conditioning_data.m] = m
-        return predicted_sp
+        predicted_sp = int(predicted_sp)
+        return float(predicted_sp)
 
     def poly_fit_2order(self, x, y, requested_power):
 
@@ -993,7 +1009,8 @@ class rf_conditioning_data(object):
 
         polyfit_2order = [p0*i**2 + p1*i + p2 for i in x]
 
-        return predicted_sp, p0, p1, p2, polyfit_2order
+        predicted_sp = int(predicted_sp)
+        return float(predicted_sp), p0, p1, p2, polyfit_2order
 
     def poly_amp_kfpow_all_data(self, requested_power):
         rcd = rf_conditioning_data
@@ -1026,7 +1043,8 @@ class rf_conditioning_data(object):
         plt.savefig(bin_plots_path + r'\Second_order_np_polyfit_all_data.png')
         plt.close('all')
 
-        return predicted_sp
+        predicted_sp = int(predicted_sp)
+        return float(predicted_sp)
 
 
     def poly_amp_kfpow_current_sp_to_fit(self, requested_power):
@@ -1068,7 +1086,8 @@ class rf_conditioning_data(object):
         plt.savefig(bin_plots_path + r'\Second_order_np_polyfit_num_sp_data.png')
         plt.close('all')
 
-        return predicted_sp
+        predicted_sp = int(predicted_sp)
+        return float(predicted_sp)
 
 
     def poly_amp_kfpow_current_sp(self, requested_power):
@@ -1108,7 +1127,8 @@ class rf_conditioning_data(object):
         plt.savefig(bin_plots_path + r'\Second_order_np_polyfit_num_sp_data.png')
         plt.close('all')
 
-        return predicted_sp
+        predicted_sp = int(predicted_sp)
+        return float(predicted_sp)
 
     def get_data_for_polyfit(self, num_sp_to_fit,  use_max_sp):
         '''
@@ -1624,7 +1644,7 @@ class rf_conditioning_data(object):
     y_min = 'y_min'
     all_value_keys.append(y_min)
     #values[y_min] = dummy_np_float_64
-    values[y_min] = dummy_float
+    values[y_min] = dummy_np_float_64
 
     y_max = 'y_max'
     all_value_keys.append(y_max)
@@ -1632,7 +1652,7 @@ class rf_conditioning_data(object):
 
     old_y_min = 'old_y_min'
     all_value_keys.append(old_y_min)
-    values[old_y_min] = dummy_float
+    values[old_y_min] = dummy_np_float_64
 
     old_y_max = 'old_y_max'
     all_value_keys.append(old_y_max)
@@ -1687,36 +1707,51 @@ class rf_conditioning_data(object):
 
     polyfit_2order_X_all = 'polyfit_2order_X_all'
     all_value_keys.append(polyfit_2order_X_all)
-    values[polyfit_2order_X_all] = dummy_np_float_64
+    values[polyfit_2order_X_all] = [dummy_np_float_64]
     excluded_key_list.append(polyfit_2order_X_all)
 
     polyfit_2order_Y_all = 'polyfit_2order_Y_all'
     all_value_keys.append(polyfit_2order_Y_all)
-    values[polyfit_2order_Y_all] = dummy_np_float_64
+    values[polyfit_2order_Y_all] = [dummy_np_float_64]
     excluded_key_list.append(polyfit_2order_Y_all)
 
     polyfit_2order_X_current_sp = 'polyfit_2order_X_current_sp'
     all_value_keys.append(polyfit_2order_X_current_sp)
-    values[polyfit_2order_X_current_sp] = dummy_np_float_64
+    values[polyfit_2order_X_current_sp] = [dummy_np_float_64]
     excluded_key_list.append(polyfit_2order_X_current_sp)
 
     polyfit_2order_Y_current_sp = 'polyfit_2order_Y_current_sp'
     all_value_keys.append(polyfit_2order_Y_current_sp)
-    values[polyfit_2order_Y_current_sp] = dummy_np_float_64
+    values[polyfit_2order_Y_current_sp] = [dummy_np_float_64]
     excluded_key_list.append(polyfit_2order_Y_current_sp)
 
     polyfit_2order_X_current_sp_to_fit = 'polyfit_2order_X_current_sp_to_fit'
     all_value_keys.append(polyfit_2order_X_current_sp_to_fit)
-    values[polyfit_2order_X_current_sp_to_fit] = dummy_np_float_64
+    values[polyfit_2order_X_current_sp_to_fit] = [dummy_np_float_64]
     excluded_key_list.append(polyfit_2order_X_current_sp_to_fit)
 
 
     polyfit_2order_Y_current_sp_to_fit = 'polyfit_2order_Y_current_sp_to_fit'
     all_value_keys.append(polyfit_2order_Y_current_sp_to_fit)
-    values[polyfit_2order_Y_current_sp_to_fit] = dummy_np_float_64
+    values[polyfit_2order_Y_current_sp_to_fit] = [dummy_np_float_64]
     excluded_key_list.append(polyfit_2order_Y_current_sp_to_fit)
-
     # TODO ^^^^^ ##########################
+
+    SP_SLF = 'SP_SLF'
+    all_value_keys.append(SP_SLF)
+    values[SP_SLF] = dummy_float
+
+    SP_QUAD_ALL = 'SP_QUAD_ALL'
+    all_value_keys.append(SP_QUAD_ALL)
+    values[SP_QUAD_ALL] = dummy_float
+
+    SP_QUAD_CURRENT = 'SP_QUAD_CURRENT'
+    all_value_keys.append(SP_QUAD_CURRENT)
+    values[SP_QUAD_CURRENT] = dummy_float
+
+    SP_QUAD_CURRENT_SP_TO_FIT = 'SP_QUAD_CURRENT_SP_TO_FIT'
+    all_value_keys.append(SP_QUAD_CURRENT_SP_TO_FIT)
+    values[SP_QUAD_CURRENT_SP_TO_FIT] = dummy_float
 
     old_c = 'old_c'
     all_value_keys.append(old_c)
