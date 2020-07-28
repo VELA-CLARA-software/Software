@@ -66,19 +66,15 @@ class llrf_monitor(monitor):
         self.data = rf_conditioning_data.rf_conditioning_data()
         self.values = self.data.values
         self.expert_values = self.data.expert_values
-
-
-
         # new feature, the setting phase end index by remote...
         # if self.llrf_control.config.breakdown_config.has_key('PHASE_MASK_BY_POWER_PHASE_TRACE_1'):
         #     self.phase_trace_1 = monitor.config.breakdown_config['PHASE_MASK_BY_POWER_PHASE_TRACE_1']
         # if monitor.config.breakdown_config.has_key('PHASE_MASK_BY_POWER_PHASE_TRACE_2'):
         #     self.phase_trace_2 = monitor.config.breakdown_config['PHASE_MASK_BY_POWER_PHASE_TRACE_2']
-
         """ WARNING"""
         # min kyl fwd power to enable incrementing the pulse RF counter
         # THIS SHOULD GO IN THE HANDLER
-#        monitor.llrf_control.setActivePulsePowerLimit(monitor.config.llrf_config[
+        # monitor.llrf_control.setActivePulsePowerLimit(monitor.config.llrf_config[
         #        'KLY_PWR_FOR_ACTIVE_PULSE'])
         #; number extra traces to save after an out_side_mask_trace is detected
  #       monitor.llrf_control.setNumExtraTracesOnOutsideMaskEvent(monitor.config.llrf_config[
@@ -186,8 +182,10 @@ class llrf_monitor(monitor):
         # get delta_power  last setpoint power - current setpoint power (last_sp values set in set_amp in llrf_control
         ''' it can happen that we've changed amp_sp but there have been no pulses when  we get here,  amp_vs_kfpow_running_stat can be empty '''
         if self.values[self.data.amp_sp] in self.data.amp_vs_kfpow_running_stat:
-            self.values[self.data.delta_kfpow] = self.data.amp_vs_kfpow_running_stat[self.values[self.data.amp_sp]][1] - self.values[
+            self.values[self.data.delta_kfpow] = self.data.get_power_at_current_set_pointself.values[self.data.amp_sp]][1] - self.values[
                 self.data.kfpower_at_last_amp_sp]
+
+
 
 
 

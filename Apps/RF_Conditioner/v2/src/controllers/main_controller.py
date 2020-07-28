@@ -210,18 +210,24 @@ class main_controller(object):
             # reset daq_freq states to good
             #
             # elif new_good:
-            # ramp_down()
-            #
+            #   self.values[rf_conditioning_data.ramp_mode] = ramp_method.LOG_RAMP:
+            #   self.values[rf_conditioning_data.event_pulse_count] = 1
+            #   self.values[rf_conditioning_data.required_pulses] = 0
             # elif all_good
             #time.sleep(0.5)
+
             if self.reached_min_pulse_count_for_this_step():
                 print("reached_min_pulse_count_for_this_step")
-                if self.values[rf_conditioning_data.gui_can_ramp]:
-                    if  self.values[rf_conditioning_data.vac_level_can_ramp]:
+
+                if self.values[rf_conditioning_data.ramp_mode] == ramp_method.LOG_RAMP:
+                   # we always ramp in LOG_RAMP mode
+                   self.log_ramp_up()
+
+                elif self.values[rf_conditioning_data.gui_can_ramp]:
+                    if self.values[rf_conditioning_data.vac_level_can_ramp]:
                         if self.values[rf_conditioning_data.breakdown_rate_low]:
                             estimated_ramp_index = self.data.get_ramp_index_from_power(self.data.get_power_at_current_set_point())
                             print("power = {}, estimated_ramp_index = {}".format(self.data.get_power_at_current_set_point(), estimated_ramp_index))
-
                             self.ramp_up()
                             # print("Calling ramp / random up or down")
                             #  if random.randint(0,1) > 0.5:
@@ -336,6 +342,51 @@ class main_controller(object):
                     self.hardware.llrf_controller.disableRFOutput()
 
 
+    def log_ramp_up(self):
+        # # log data at the new setpoint MUST BE BEFORE  move_up_ramp_curve()
+        # update pulse breakdown log
+        self.data.add_to_pulse_breakdown_log(self.hardware.llrf_obj[0].amp_sp)
+        self.monitor_hub.llrf_monitor.update_amp_vs_kfpow_running_stat()
+        self.data.log_kly_fwd_power_vs_amp()
+
+        # someshort aliases
+        lrc = self.data.log_ramp_curve
+        lrci = self.data.log_ramp_curve_index
+
+
+        # switch here to set up curve if
+        if lrc is None:
+            self.data.generate_log_ramp_curve()
+
+        # # set new_amp
+        if self.hardware.llrf_controller.set_amp( lrc[ lrci][1], update_last_amp_sp = True):
+            if self.data.log_ramp_curve_index == len(self.data.log_ramp_curve) -1:
+                print("Log Ramp finished, setting log_ramp_curve to None")
+                self.data.log_ramp_curve = None
+                self.data.log_ramp_curve_index = -1
+                # reset active pulse counters
+                self.data.reset_event_pulse_count()
+                self.values[rf_conditioning_data.ramp_mode] == ramp_method.NORMAL_RAMP
+            else:
+                ''' set the number of pulses '''
+                rcd = rf_conditioning_data
+                rcd.values[rcd.required_pulses] = self.data.log_ramp_curve[ self.data.log_ramp_curve_index][0]
+                rcd.values[rcd.last_power_change] = 0.0
+                rcd.values[rcd.next_power_change] = 0.0
+                rcd.values[rcd.event_pulse_count_zero] = rcd.values[rcd.pulse_count]
+                rcd.values[rcd.event_pulse_count] = 0
+                self.logger.message_header(__name__ + ' reset_event_pulse_count')
+                self.logger.message('new event_pulse_count_zero = {}'.format(rcd.values[rcd.event_pulse_count_zero]))
+
+            self.data.log_ramp_curve_index +=1
+
+        else:
+             # we failed to set the requested amplitude .... erm.... not sure what to do ????
+             pass
+
+
+
+
     def ramp_up(self):
         self.logger.message_header(' Ramp Up ')
         setpoint_before_ramp = self.hardware.llrf_obj[0].amp_sp
@@ -355,8 +406,8 @@ class main_controller(object):
 
         # GET NEW SET_POINT
         # new amp always returns a value!!
-        new_amp = self.data.get_new_set_point(self.values[rf_conditioning_data.next_power_change]) # value from ramp.py and ramp_index
-
+        # the function to get the next set-point depends on the ramp_method
+        new_amp = self.data.get_new_set_point(self.values[rf_conditioning_data.next_power_change])  # value from ramp.py and ramp_index
         # #
         # # set new_amp
         if self.hardware.llrf_controller.set_amp(new_amp, update_last_amp_sp = True):
@@ -364,7 +415,6 @@ class main_controller(object):
         else:
              # we failed to set the requested amplitude .... erm.... not sure what to do ????
              pass
-
         # #
         # # move up curve (when below ~1MW
         # ''' !!! also calls set_next_sp_decrease !!!'''
@@ -375,7 +425,6 @@ class main_controller(object):
             or self.values[rf_conditioning_data.last_ramp_method] == ramp_method.DEFAULT__DELTA_GTRTHN_MAX \
             or self.values[rf_conditioning_data.last_ramp_method] == ramp_method.DEFAULT__NEG_RAMP \
             or self.values[rf_conditioning_data.last_ramp_method] == ramp_method.DEFAULT__FLAT_RAMP:
-
             pass
         elif self.values[rf_conditioning_data.last_ramp_method] == ramp_method.UNKNOWN:
             print("!!!MAJOR ERROR!!!!\nramp_method = {}".format(self.values[rf_conditioning_data.last_ramp_method]))
@@ -399,7 +448,6 @@ class main_controller(object):
         QApplication.processEvents()
         #
         # reset active pulse counters
-        # why does this function  happen in the outside_mask_trace_monitor ??
         self.data.reset_event_pulse_count()
         #self.data_monitor.outside_mask_trace_monitor.reset_event_pulse_count()
         #

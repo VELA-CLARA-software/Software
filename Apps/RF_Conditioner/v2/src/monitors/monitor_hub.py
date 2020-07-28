@@ -244,3 +244,16 @@ class monitor_hub(object):
         else:
             message += 'FAILED to start Solenoid Monitoring'
         self.logger.message(message)
+
+    def start_daq_frequency_monitor(self):
+        mh = monitor_hub
+        self.logger.message(__name__ + ' start_daq_frequency_monitor()')
+        mh.modulator_monitor = modulator_monitor()
+        mh.is_monitoring[mh.is_modulator_monitoring] = mh.modulator_monitor.set_success
+        message = 'start_rfprot_monitor '
+        if mh.is_monitoring[mh.is_modulator_monitoring]:
+            message += 'successfully started RF Modulator Monitoring'
+        else:
+            message += 'FAILED to start RF Modulator Monitoring'
+        self.logger.message(message)
+

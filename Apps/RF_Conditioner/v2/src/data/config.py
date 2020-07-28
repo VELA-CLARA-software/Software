@@ -300,14 +300,7 @@ class config(object):
         #                         config.config_file, "), KEY(S) = " + bad_key_string)
         # except Exception:
         #     raise
-
-
-
-
-
-
         # TODO:  add in more exceptions for cross checking data-types
-
         #
         # so far ...  no sanity check!
         config.have_config = True
@@ -325,14 +318,10 @@ class config(object):
     them
     
     """
-
     # TODO: get rid of all the sperate configs and just have one mega-config for all
-
-
     # a global MODE that can be set to DEBUG or OPERTAIONAL
 
     MODE = 'MODE'
-
 
     ## Config File Keyword Defintitions
     MINIMUM_COOLDOWN_TIME = 'MINIMUM_COOLDOWN_TIME'
@@ -382,14 +371,9 @@ class config(object):
     KFPOW_AMPSP_RUNNING_STATS_LOG_FILENAME = 'KFPOW_AMPSP_RUNNING_STATS_LOG_FILENAME'
     BINARY_DATA_LOG_TIME = 'BINARY_DATA_LOG_TIME'
     AMP_PWR_LOG_TIME = 'AMP_PWR_LOG_TIME'
-    log_keywords = [TEXT_LOG_FILENAME, LOG_DIRECTORY, BINARY_DATA_LOG_FILENAME,
-                    OUTSIDE_MASK_FORWARD_FILENAME,
-                    OUTSIDE_MASK_REVERSE_FILENAME, OUTSIDE_MASK_PROBE_FILENAME,
-                    PULSE_COUNT_BREAKDOWN_LOG_FILENAME, PULSE_COUNT_BREAKDOWN_LOG_FILENAME,
+    log_keywords = [TEXT_LOG_FILENAME, LOG_DIRECTORY, BINARY_DATA_LOG_FILENAME, OUTSIDE_MASK_FORWARD_FILENAME, OUTSIDE_MASK_REVERSE_FILENAME,
+                    OUTSIDE_MASK_PROBE_FILENAME, PULSE_COUNT_BREAKDOWN_LOG_FILENAME, PULSE_COUNT_BREAKDOWN_LOG_FILENAME,
                     KFPOW_AMPSP_RUNNING_STATS_LOG_FILENAME, BINARY_DATA_LOG_TIME, AMP_PWR_LOG_TIME]
-
-
-
     #
     # vac_valve_parameter(self):
     VAC_VALVE = 'VAC_VALVE'
@@ -397,24 +381,18 @@ class config(object):
     VAC_VALVE_CHECK_TIME = 'VAC_VALVE_CHECK_TIME'
     KEEP_VALVE_OPEN = 'KEEP_VALVE_OPEN'
     vac_valve_keywords = [VAC_VALVE, VAC_VALVE_AREA, VAC_VALVE_CHECK_TIME, KEEP_VALVE_OPEN]
-
-
-
-
     #
     # water temp keywords
     WATER_TEMPERATURE_PV_COUNT = 'WATER_TEMPERATURE_PV_COUNT'
     WATER_TEMPERATURE_PV = 'WATER_TEMPERATURE_PV'
     WATER_TEMPERATURE_CHECK_TIME = 'WATER_TEMPERATURE_CHECK_TIME'
-    water_temp_keywords = [WATER_TEMPERATURE_PV, WATER_TEMPERATURE_CHECK_TIME,
-                           WATER_TEMPERATURE_PV_COUNT]
+    water_temp_keywords = [WATER_TEMPERATURE_PV, WATER_TEMPERATURE_CHECK_TIME, WATER_TEMPERATURE_PV_COUNT]
     #
     # cavity temp keywords
     CAVITY_TEMPERATURE_PV_COUNT = 'CAVITY_TEMPERATURE_PV_COUNT'
     CAVITY_TEMPERATURE_PV = 'CAVITY_TEMPERATURE_PV'
     CAVITY_TEMPERATURE_CHECK_TIME = 'CAVITY_TEMPERATURE_CHECK_TIME'
-    cavity_temp_keywords = [CAVITY_TEMPERATURE_PV, CAVITY_TEMPERATURE_CHECK_TIME,
-                            CAVITY_TEMPERATURE_PV_COUNT ]
+    cavity_temp_keywords = [CAVITY_TEMPERATURE_PV, CAVITY_TEMPERATURE_CHECK_TIME, CAVITY_TEMPERATURE_PV_COUNT]
     #
     # solenoid keywords
     MAGNET_MACHINE_AREA = 'MAGNET_MACHINE_AREA'
@@ -467,10 +445,8 @@ class config(object):
     KRPHA_MEAN_END = 'KRPHA_MEAN_END'
     CFPOW_MEAN_START = 'CFPOW_MEAN_START'
     CFPOW_MEAN_END = 'CFPOW_MEAN_END'
-
     CPPOW_MEAN_START = 'CPPOW_MEAN_START'
     CPPOW_MEAN_END = 'CPPOW_MEAN_END'
-
     CRPOW_MEAN_START = 'CRPOW_MEAN_START'
     CRPOW_MEAN_END = 'CRPOW_MEAN_END'
     CFPHA_MEAN_START = 'CFPHA_MEAN_START'
@@ -490,12 +466,10 @@ class config(object):
                      # RF_INCREASE_LEVEL,
                      # RF_INCREASE_RATE,
                      # POWER_AIM,
-
                      # THESE WILL BE USED FOR CHECKING THE PULSE LENGTH, AND, MAYBE ONE DAY
                      # CHANGING IT AUTOMATICALLY
                      PULSE_LENGTH,
                      PULSE_LENGTH_ERROR,
-
                      KLY_PWR_FOR_ACTIVE_PULSE, KFPOW_MEAN_START, KFPOW_MEAN_END, KRPOW_MEAN_START,
                      KRPOW_MEAN_END, KFPHA_MEAN_START, KFPHA_MEAN_END, KRPHA_MEAN_START,
                      KRPHA_MEAN_END, CFPOW_MEAN_START, CFPOW_MEAN_END, CRPOW_MEAN_START,
@@ -721,6 +695,9 @@ class config(object):
                           KRPHA_PHASE_MASK_BY_POWER_LEVEL, CRPHA_PHASE_MASK_BY_POWER_LEVEL,
                           CFPHA_PHASE_MASK_BY_POWER_LEVEL, CPPHA_PHASE_MASK_BY_POWER_LEVEL]
 
+    LOG_RAMP_CURVE_NUMSTEPS = 'LOG_RAMP_CURVE_NUMSTEPS '
+    LOG_RAMP_CURVE_PULSES_PER_STEP = 'LOG_RAMP_CURVE_PULSES_PER_STEP'
+    LOG_RAMP_CURVE_RAMP_RATE = 'LOG_RAMP_CURVE_RAMP_RATE'
 
     #
     # modulator

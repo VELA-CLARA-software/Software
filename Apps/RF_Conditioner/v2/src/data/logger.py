@@ -100,7 +100,8 @@ class logger(object):
     # RF_PROT_STATUS and similar enums from our bespoke CATAP controller, SHOULD ALWAYS BE A <B,
     # THINK VERY CAREFULLY about changin this!!!! You have be warned
     # ALL CATAP types and simple types need ot be defined here!!
-    _python_type_to_bintype = {long: '<q', int: '<i', float: '<f', RF_PROT_STATUS: '<B', L01_MOD_STATE: '<B', GUN_MOD_STATE: '<B', VALVE_STATE: '<B',
+    _python_type_to_bintype = {long: '<q', int: '<i', float: '<f', RF_PROT_STATUS: '<B', L01_MOD_STATE: '<B', GUN_MOD_STATE: '<B',
+                               VALVE_STATE: '<B',
                                TRIG: '<B', state: '<B', ramp_method: '<B', INTERLOCK_STATE: '<B', bool: '<?', numpy.float64: '<d',
                                # BE CAREFUL WiTH str, THE BELOW IS CLEARLY GARBAGE
                                str: '<i'}

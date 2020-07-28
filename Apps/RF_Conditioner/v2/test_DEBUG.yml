@@ -372,7 +372,7 @@ TEXT_LOG_FILENAME:  log.txt # general messages
 ##LOG_DIRECTORY:   "C:  \Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\"; breakdown data
 ##LOG_DIRECTORY:   "D:  \VELA\GIT Projects\Software\Apps\RF_Conditioner\logs_clara_lrrg\"
 #LOG_DIRECTORY: C:\Users\dlerlp\Documents\GitHub\Software\Apps\RF_Conditioner\v2\logs\
-LOG_DIRECTORY: C:\Users\djs56\GitHub\Software\Apps\RF_Conditioner\v2\logs\
+#LOG_DIRECTORY: C:\Users\djs56\GitHub\Software\Apps\RF_Conditioner\v2\logs\
 LOG_DIRECTORY: C:\Users\dlerlp\Documents\GitHub\Software\Apps\RF_Conditioner\v2\logs\
 OUTSIDE_MASK_FORWARD_FILENAME:  outside_forward_log
 OUTSIDE_MASK_REVERSE_FILENAME:  outside_reverse_log
@@ -474,7 +474,7 @@ RF_PROT_CHECK_TIME: 1000 # INTEGER ms
 
 
 ##
-##  ___  ____  _  _  ____  ____    __    __      __  __  _____  _  _  ____  ____  _____  ____  ____  _  _  ___   
+##   ___  ____  _  _  ____  ____    __    __      __  __  _____  _  _  ____  ____  _____  ____  ____  _  _  ___
 ## / __)( ___)( \( )( ___)(  _ \  /__\  (  )    (  \/  )(  _  )( \( )(_  _)(_  _)(  _  )(  _ \(_  _)( \( )/ __)  
 ##( (_-. )__)  )  (  )__)  )   / /(__)\  )(__    )    (  )(_)(  )  (  _)(_   )(   )(_)(  )   / _)(_  )  (( (_-.  
 ## \___/(____)(_)\_)(____)(_)\_)(__)(__)(____)  (_/\/\_)(_____)(_)\_)(____) (__) (_____)(_)\_)(____)(_)\_)\___/  
@@ -501,4 +501,10 @@ BIN_WIDTH: 100  ## Width of each bin in amp set points, the lower the number, th
 MAX_AMP:  60000  ## x-coordinate, amp set points
 MAX_POW:  0.0  ## y-coordinate, Watts
 MIN_AMP:  500
+
+# log ramp curve
+
+LOG_RAMP_CURVE_NUMSTEPS : 100
+LOG_RAMP_CURVE_PULSES_PER_STEP : 10
+LOG_RAMP_CURVE_RAMP_RATE : 0.2
 

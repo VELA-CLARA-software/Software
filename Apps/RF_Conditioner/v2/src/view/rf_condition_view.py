@@ -95,10 +95,8 @@ class OutLog:
 
         if self.out:
             self.out.write(m)
-
         # also write message to the initial standard out
         OutLog.initial_stdout.write(m)
-
     # class main_controller(controller_base):
 
 
@@ -139,16 +137,11 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         self.llrf_enable_button.setStyleSheet('QPushButton { background-color : ' + self.good + '; '
                                                                                              'color : black; }')
         self.llrf_enable_button.setText('RF Enabled')
-
-
         # initialise gui_can_ramp_button to "RAMP DISABLED"
         self.can_ramp_button.clicked.connect(self.handle_can_ramp_button)
         self.can_ramp_button.setStyleSheet('QPushButton { background-color : ' + self.bad + '; color : black; }')
         self.can_ramp_button.setText('RAMP Disabled')
-
         self.plot_item = self.graphicsView.getPlotItem()
-
-
 
 
 
@@ -157,18 +150,14 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         '''
             plot the binned data, the curret working point (as a vertical line due to no kfpow for that amp_sp), lines of best fit
         '''
-
         pg = pyqtgraph
-
         data =rf_conditioning_data.amp_vs_kfpow_running_stat
         x = data.keys()
         x.sort()
         y = []
-
         #data =
         for item in x:
             y.append( data[item][1] )
-
 
         # draw vertical line at the new amp_sp
         current_amp = int(self.values[rf_conditioning_data.amp_sp])
@@ -394,7 +383,7 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         self.update_modulator_status()
         #
         self.update_temperature_values()
-        self.update_CATAP_AMPSP_limit()
+        self.update_CATAP_AMPSP_limit() # TODO only needs calling once
         self.update_DAQ_rep_rate()
 
         self.update_all_counters()
@@ -402,23 +391,30 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         self.update_amp_sp()
 
         # other stuff
+
+        rcd = rf_conditioning_data
+
         self.current_ramp_index.setText('{}'.format(self.values[self.data.current_ramp_index]))
-        self.delta_power_outputwidget.setText('{}'.format(self.values[rf_conditioning_data.delta_kfpow] ))
-        self.next_power_increse_outputwidget.setText('{}'.format(self.values[rf_conditioning_data.next_power_change] ))
+        self.delta_power_outputwidget.setText('{}'.format( int(self.values[rcd.delta_kfpow]) ))
+        self.next_power_increse_outputwidget.setText('{}'.format(self.values[rcd.next_power_change]))
+        self.last_power_increase_outputwidget.setText('{}'.format(self.values[rcd.last_power_change]))
+        self.last_increase_method_outputwidget.setText(str(self.values[rcd.last_ramp_method]))
+        self.can_ramp_label_outputwidget.setText('{}'.format(self.values[rcd.main_can_ramp]))
 
-        self.last_power_increase_outputwidget.setText('{}'.format(self.values[rf_conditioning_data.last_power_change] ))
-
-        self.last_increase_method_outputwidget.setText(  str(self.values[rf_conditioning_data.last_ramp_method] ))
 
 
-        self.set_widget_color(self.can_ramp_label_outputwidget, self.values[rf_conditioning_data.main_can_ramp])
-
+        #TODO
+        self.slf_predicted_next_amp_sp.setText('{}'.format(self.values[rcd.SP_SLF ]))
+        self.quad_all_predicted_next_amp_sp.setText('{}'.format(self.values[rcd.SP_QUAD_ALL]))
+        self.quad_less_current_predicted_next_amp_sp.setText('{}'.format(self.values[rcd.SP_QUAD_CURRENT ]))
+        self.quad_less_current_cut_predicted_next_amp_sp.setText('{}'.format(self.values[rcd.SP_QUAD_CURRENT_SP_TO_FIT ]))
 
 
 
 
     def update_amp_sp(self):
         self.amp_set_outputwidget.setText('{}'.format(self.values[self.data.amp_sp]))
+        self.last_amp_set_outputwidget.setText('{}'.format(self.values[self.data.last_amp_sp]))
 
     def update_DAQ_rep_rate(self):
         self.trace_rep_rate_outpuwidget.setText(
