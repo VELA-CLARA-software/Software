@@ -242,15 +242,19 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         self.plot_item.plot(data_to_fit_x, polyfit_2nd_order_y, pen={'color': 'm', 'width': 2.0})
 
         # Add second order polyfit to plot (all viable bins up to current sp):
-        data_to_fit_x = rf_conditioning_data.values['polyfit_2order_X_current_sp']
-        polyfit_2nd_order_y = rf_conditioning_data.values['polyfit_2order_Y_current_sp']
+        data_to_fit_x = rf_conditioning_data.values['polyfit_2order_X_current_sp'][0:-1]
+        polyfit_2nd_order_y = rf_conditioning_data.values['polyfit_2order_Y_current_sp'][0:-1]
 
         #rint('data_to_fit_x = {}\npolyfit_2nd_order_y = {}'.format(data_to_fit_x, polyfit_2nd_order_y))
 
-        if data_to_fit_x == -9999.9999:
+        if len(data_to_fit_x) == 1:
+            #print('type(data_to_fit_x) = {}'.format( type(data_to_fit_x)))
             pass
         else:
-            self.plot_item.plot(data_to_fit_x, polyfit_2nd_order_y, pen={'color': 'b', 'width': 3.0})
+            self.plot_item.plot(data_to_fit_x, polyfit_2nd_order_y, pen={'color': 'b', 'width': 2.0})
+            print('From quick_update_plot:\ndata_to_fit_x = {}\npolyfit_2nd_order_y = {}'.format(data_to_fit_x, polyfit_2nd_order_y))
+
+            #raw_input()
 
         # self.plot_item.setXRange(0.0, current_amp+200.0)
         # self.plot_item.setYRange(0.0, max(y)*1.4)
@@ -343,15 +347,18 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
 
         # Add second order polyfit to plot (all viable bins up to current sp):
 
-        data_to_fit_x = rf_conditioning_data.values['polyfit_2order_X_current_sp']
-        polyfit_2nd_order_y = rf_conditioning_data.values['polyfit_2order_Y_current_sp']
+        data_to_fit_x = rf_conditioning_data.values['polyfit_2order_X_current_sp'][0:-1]
+        polyfit_2nd_order_y = rf_conditioning_data.values['polyfit_2order_Y_current_sp'][0:-1]
 
         #print('data_to_fit_x = {}\npolyfit_2nd_order_y = {}'.format(data_to_fit_x, polyfit_2nd_order_y))
 
-        if data_to_fit_x == -9999.9999:
+        if len(data_to_fit_x) == 1:
+            #print('type(data_to_fit_x) = {}'.format( type(data_to_fit_x)))
             pass
         else:
-            self.plot_item.plot(data_to_fit_x, polyfit_2nd_order_y, pen={'color': 'b', 'width': 3.0})
+            self.plot_item.plot(data_to_fit_x, polyfit_2nd_order_y, pen={'color': 'b', 'width': 2.0})
+            #print('From quick_update_plot:\ndata_to_fit_x = {}\npolyfit_2nd_order_y = {}'.format(data_to_fit_x, polyfit_2nd_order_y))
+
 
 
     def handle_can_ramp_button(self):
@@ -438,7 +445,7 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         rcd = rf_conditioning_data
 
         self.current_ramp_index.setText('{}'.format(self.values[self.data.current_ramp_index]))
-        self.delta_power_outputwidget.setText('{}'.format( int(self.values[rcd.delta_kfpow]) ))
+
         self.next_power_increse_outputwidget.setText('{}'.format(self.values[rcd.next_power_change]))
         self.last_power_increase_outputwidget.setText('{}'.format(self.values[rcd.last_power_change]))
         self.last_increase_method_outputwidget.setText(str(self.values[rcd.last_ramp_method]))
@@ -453,6 +460,18 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         self.quad_less_current_cut_predicted_next_amp_sp.setText('{}'.format(self.values[rcd.SP_QUAD_CURRENT_SP_TO_FIT ]))
 
 
+
+        p_last = self.data.get_kf_running_stat_power_at_set_point(self.values[self.data.last_amp_sp])
+        print('##self.values[self.data.last_amp_sp] = {}'.format(self.values[self.data.last_amp_sp]))
+        p_current = self.data.get_kf_running_stat_power_at_current_set_point()
+
+        if p_last:
+            if p_current:
+                self.delta_power_outputwidget.setText('{}'.format( int( p_current- p_last ) ))
+            else:
+                self.delta_power_outputwidget.setText('NONE p_current')
+        else:
+            self.delta_power_outputwidget.setText('NONE p_last')
 
 
     def update_amp_sp(self):

@@ -192,23 +192,17 @@ class main_controller(object):
 
         while 1:
             QApplication.processEvents()
-            # check all the relevant states and set a combined state
-            # update_enable_LLRF_state() sets a flag for "can_rf_output"
 
-            # update the main_monitor states
-            # more flags for the state of each main monitor that can cause a switch off
+            self.update_main_states()
 
-            # if new_bad() (in monitors vac, and BD (
+
+            if new_bad() (in monitors vac, and BD (
             # print / log a message, (probably  reset the event pulse counter here)
             #
             # elif enable_RF_bad(): # checks can_rf_output
             #     if user gui buttons enable RF:
             # enable RF
             #
-            # elif daq_freq_bad:
-            # reset daq_freq_bad
-            # elif daq_freq_new_good
-            # reset daq_freq states to good
             #
             # elif new_good:
             #   self.values[rf_conditioning_data.ramp_mode] = ramp_method.LOG_RAMP:
@@ -221,14 +215,15 @@ class main_controller(object):
                 print("reached_min_pulse_count_for_this_step")
 
                 if self.values[rf_conditioning_data.ramp_mode] == ramp_method.LOG_RAMP:
-                   # we always ramp in LOG_RAMP mode
-                   self.log_ramp_up()
+                    pass
+                #    # we always ramp in LOG_RAMP mode
+                #    self.log_ramp_up()
 
                 elif self.values[rf_conditioning_data.gui_can_ramp]:
                     if self.values[rf_conditioning_data.vac_level_can_ramp]:
                         if self.values[rf_conditioning_data.breakdown_rate_low]:
-                            estimated_ramp_index = self.data.get_ramp_index_from_power(self.data.get_power_at_current_set_point())
-                            print("power = {}, estimated_ramp_index = {}".format(self.data.get_power_at_current_set_point(), estimated_ramp_index))
+                            estimated_ramp_index = self.data.get_ramp_index_from_power(self.data.get_kf_running_stat_power_at_current_set_point())
+                            print("power = {}, estimated_ramp_index = {}".format(self.data.get_kf_running_stat_power_at_current_set_point(), estimated_ramp_index))
                             self.ramp_up()
                             # print("Calling ramp / random up or down")
                             #  if random.randint(0,1) > 0.5:
@@ -261,6 +256,7 @@ class main_controller(object):
     def check_ramping_status(self):
         '''
             ATM there are 3 state that can disable ramping, the gui, the BD_rate, and vac level
+            TODO there should also be cavity_ratio
         '''
         if self.values[rf_conditioning_data.gui_can_ramp]:
             if self.values[rf_conditioning_data.breakdown_rate_low]:
@@ -306,6 +302,10 @@ class main_controller(object):
                 mod_and_prot_good = True
 
         if mod_and_prot_good:
+
+            llrf_DAQ_rep_rate_status
+            self.values[self.data.llrf_DAQ_rep_rate_status] == state.BAD:
+
             #
             # Go through each LLRF setting  that effect if there is RF power (feel free to add more)
             all_good = True

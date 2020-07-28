@@ -99,8 +99,6 @@ class rf_conditioning_data(object):
             rf_conditioning_data.ramp_power_sum = [sum(ramp_powers[:y]) for y in range(1, len(ramp_powers) + 1)]
             print("self.ramp_power_sum =",  rf_conditioning_data.ramp_power_sum)
 
-
-
     def get_ramp_index_from_power(self, power):
         '''
             we can get the place on the ramp curve
@@ -110,7 +108,7 @@ class rf_conditioning_data(object):
     def set_ramp_index_for_current_power(self):
         rcd = rf_conditioning_data
 
-        self.values[rcd.current_ramp_index] = self.get_ramp_index_from_power(self.get_power_at_current_set_point())
+        self.values[rcd.current_ramp_index] = self.get_ramp_index_from_power(self.get_kf_running_stat_power_at_current_set_point())
 
         rcd.values[rcd.required_pulses] = ramp[rcd.values[rcd.current_ramp_index]][0]
         rcd.values[rcd.last_power_change] = rcd.values[rcd.next_power_change]
@@ -131,30 +129,15 @@ class rf_conditioning_data(object):
         return r
 
     def get_kfp_running_stat_at_current_set_point(self):
-        return self.get_kfp_running_stat_at_set_point(rf_conditioning_data.values[rf_conditioning_data.amp_sp])
+        r = self.get_kfp_running_stat_at_set_point(rf_conditioning_data.values[rf_conditioning_data.amp_sp])
+        if type(r) == float:
+            return [0,0,0,0]
+        return r
 
     def get_kfp_running_stat_at_set_point(self, sp):
         if sp in rf_conditioning_data.amp_vs_kfpow_running_stat:
-            return self.amp_vs_kfpow_running_stat[sp][1]
-        return None
-
-    # def move_up_ramp_curve(self):
-    #     self.move_ramp_index(1)
-    #
-    # def move_down_ramp_curve(self):
-    #     # self.clear_last_sp_history(), warning, we trying to remove this for V2, but while that happens we might break things ...
-    #     self.move_ramp_index(-1)
-    #
-    # def move_ramp_index(self, val):
-    #     self.logger.message_header('move_ramp_index')
-    #     self.values[rf_conditioning_data.current_ramp_index] += val
-    #     if self.values[rf_conditioning_data.current_ramp_index] < 0:
-    #         self.values[rf_conditioning_data.current_ramp_index] = 0
-    #     # WARNING WE DON'T DO THE BELOW, WE KEEP THE RAMP INDEX INCREMENTING, ONLY RESET TO THE NUMBER OF RAMP POINTS WHEN WE LOOK UP THE NEXT SETTING
-    #     # elif self.values[rf_conditioning_data.current_ramp_index] > self.ramp_max_index:
-    #     #     self.values[rf_conditioning_data.current_ramp_index] = self.ramp_max_index
-    #     self.set_ramp_values()
-    #
+            return self.amp_vs_kfpow_running_stat[sp]
+        return [0,0,0,0]
 
     def reset_event_pulse_count(self):
         rcd = rf_conditioning_data
@@ -679,7 +662,6 @@ class rf_conditioning_data(object):
         plt.close('all')
         '''
 
-
     def generate_log_ramp_curve(self, p_start, p_finish, ramp_rate, numsteps, pulses_per_step):
         '''
 
@@ -706,157 +688,9 @@ class rf_conditioning_data(object):
 
         rf_conditioning_data.log_ramp_curve_index = 0
 
-
-
-
-
-
-
-
-    # def get_new_set_point(self, req_pwr_inc):
-    #     # TODO on each start-up do we want to do a few default increases regardless of how much saved data there is, and should we compare the power
-    #     #  at these default increase to the saved amp_sp vs KFPow data ?
-    #     # update the binned data dictionary with the latest mean kfpow and ampset
-    #     self.update_binned_data()
-    #     # then take 4 points in binned data  below current set_point
-    #     current_amp_sp = int(self.values[rf_conditioning_data.amp_sp]) # i dn't think we should do int here
-    #     current_power = rf_conditioning_data.amp_vs_kfpow_running_stat[current_amp_sp][1]
-    #     requested_power = int(current_power + req_pwr_inc)
-    #     num_full_bins_fit = self.config.raw_config_data['NUM_SET_POINTS_TO_FIT']
-    #     num_sp_to_fit = self.config.raw_config_data['NUM_SET_POINTS_TO_FIT']
-    #     default_increase = current_amp_sp + self.config.raw_config_data['DEFAULT_RF_INCREASE_LxEVEL']
-    #
-    #
-    #     print('current_power = {}\nreq_pwr_inc = {}\ncurrent_ramp_index = {}'.format(current_power, req_pwr_inc, rf_conditioning_data.values[
-    #         rf_conditioning_data.current_ramp_index]))
-    #
-    #     # this is all the amp_sp in the binned data (teh centre of every bin in x w(which is amp_sp)
-    #     binned_amp_sps = self.binned_amp_vs_kfpow['BIN_X']
-    #     # this is the value fo kfpow for each bin
-    #     binned_mean_kfpow = self.binned_amp_vs_kfpow['BIN_mean']
-    #
-    #     num_full_bins_below_current_sp = len([b for b in self.binned_amp_vs_kfpow['BIN_edges'] if b < current_amp_sp]) -1
-    #     bin_x_to_fit = self.binned_amp_vs_kfpow['BIN_X'][0:num_full_bins_below_current_sp]
-    #     bin_y_to_fit = self.binned_amp_vs_kfpow['BIN_mean'][0:num_full_bins_below_current_sp]
-    #     num_bin_y_equal_zero = len(bin_y_to_fit) - np.count_nonzero(bin_y_to_fit)
-    #
-    #     # # get all the index of all bins where bin-mid values is less than  current_amp_sp
-    #     # idx_to_fit = [i for i in range(len(binned_amp_sps)) if binned_amp_sps[i] <= current_amp_sp]
-    #     # print('idx_to_fit = {}\nlen(idx_to_fit) = {}'.format(idx_to_fit, len(idx_to_fit)))
-    #     # num_zeros_in_selected_bins = binned_mean_kfpow[0:idx_to_fit[-1]].count(0.0)
-    #     # viable_y_tofit = np.array([i for i in binned_mean_kfpow[0:idx_to_fit[-1]] if i > 0.0])
-    #
-    #     if len(bin_x_to_fit) <  num_full_bins_fit:
-    #         self.values[rf_conditioning_data.last_ramp_method] = ramp_method.DEFAULT__TOO_FEW_BINS
-    #         predicted_sp = default_increase
-    #         print('Not enough non-zero buns to fit to. Current number of non-zero bins = {}'.format(num_bin_y_equal_zero))
-    #     elif (len(bin_x_to_fit) - num_bin_y_equal_zero) < num_full_bins_fit:
-    #         self.values[rf_conditioning_data.last_ramp_method] = ramp_method.DEFAULT__ENOUGH_BINS__ZERO_IN_LIST__NOT_ENOUGH_NON_ZERO
-    #         predicted_sp = default_increase
-    #         self.logger.message('Less than {} non-zero data points in the binned data to fit.'.format(num_sp_to_fit))
-    #         self.logger.message('Ramping using default value of {} from {} to {}'.format(self.config.raw_config_data['DEFAULT_RF_INCREASE_LEVEL'],
-    #                                                                                  current_amp_sp, default_increase))
-    #     # OLD WAY
-    #     # # If TOTAL number of bins with amp_sp values less than current amp_sp is < num_sp_to_fit + 1
-    #     # if len(idx_to_fit) < num_full_bins_fit + 1: # TODO fences / fenceposts issue
-    #     #     self.values[rf_conditioning_data.last_ramp_method] = ramp_method.DEFAULT__TOO_FEW_BINS
-    #     #     predicted_sp = default_increase
-    #     #     print('Not enough non-zero buns to fit to. Current number of non-zero bins = {}'.format(len(idx_to_fit)))
-    #     # elif (len(idx_to_fit) - num_zeros_in_selected_bins) < num_full_bins_fit + 1:
-    #     #     self.values[rf_conditioning_data.last_ramp_method] = ramp_method.DEFAULT__ENOUGH_BINS__ZERO_IN_LIST__NOT_ENOUGH_NON_ZERO
-    #     #     predicted_sp = default_increase
-    #     #     self.logger.message('Less than {} non-zero data points in the binned data to fit.'.format(num_sp_to_fit))
-    #     #     self.logger.message('Ramping using default value of {} from {} to {}'.format(self.config.raw_config_data['DEFAULT_RF_INCREASE_LEVEL'],
-    #     #                                                                                  current_amp_sp, default_increase))
-    #
-    #     else: # WE HAVE TO TRY AND FIT
-    #         # now we remove data from bin_x_to_fit and bin_y_to_fit, if bin_x_to_fit[i] == 0.0
-    #         self.values[rf_conditioning_data.last_ramp_method] = ramp_method.FIT
-    #         self.logger.message('Fitting to {} datapoints.'.format(num_sp_to_fit))
-    #         print(bin_x_to_fit)
-    #         print(bin_y_to_fit)
-    #
-    #         data_to_fit_x = []
-    #         data_to_fit_y = []
-    #         for (bin_x,bin_mean) in zip(bin_x_to_fit,bin_y_to_fit):
-    #             if bin_mean > 0.0:
-    #                 data_to_fit_x.append(bin_x)
-    #                 data_to_fit_y.append(bin_mean)
-    #         data_to_fit_x = np.array(data_to_fit_x[-num_full_bins_fit:])
-    #         data_to_fit_y = np.array(data_to_fit_y[-num_full_bins_fit:])
-    #
-    #         self.values[rf_conditioning_data.old_c] = self.values[rf_conditioning_data.c]
-    #         self.values[rf_conditioning_data.old_m] = self.values[rf_conditioning_data.m]
-    #         self.values[rf_conditioning_data.old_x_min] = self.values[rf_conditioning_data.x_min]
-    #         self.values[rf_conditioning_data.old_y_max] = self.values[rf_conditioning_data.y_max]
-    #         self.values[rf_conditioning_data.old_y_min] = self.values[rf_conditioning_data.y_min]
-    #         self.values[rf_conditioning_data.old_x_max] = self.values[rf_conditioning_data.x_max]
-    #
-    #         print('FINAL DATA TO FIT x  = {}\ny = {}'.format(data_to_fit_x, data_to_fit_y))
-    #
-    #         # NOW WE MUST FIT
-    #
-    #
-    #         p = np.polyfit(data_to_fit_x, data_to_fit_y, 1, rcond=None, full=False)  # , w=np.array(err_tofit))  # [0][1]
-    #         print(type(p))
-    #         print(p)
-    #         m = p[0]
-    #         c = p[1]
-    #
-    #         predicted_sp = int((requested_power - c) / m)
-    #         print 'm = {}\nc = {}\nPredicted SP = {}'.format(m, c, predicted_sp)
-    #
-    #
-    #
-    #         self.values[rf_conditioning_data.x_min] = min(data_to_fit_x)
-    #         self.values[rf_conditioning_data.x_max] = max(data_to_fit_x)
-    #         self.values[rf_conditioning_data.y_min] = min(data_to_fit_y)
-    #         self.values[rf_conditioning_data.y_max] = max(data_to_fit_y)
-    #         self.values[rf_conditioning_data.c] = c
-    #         self.values[rf_conditioning_data.m] = m
-    #
-    #         # DO some checking of the fit,
-    #         # # if ramping  up
-    #
-    #         #print(
-    #         #'From rf_cond_data:\nmin(x_tofit) = {}\nmax(x_tofit) = {}\nmin(y_tofit) = {}\nmax(y_tofit) = {}\nc = {}\nm = {}\nPredicted SP = {
-    #         # }'.format(min(x_tofit),
-    #         #    max(x_tofit), min(y_tofit), max(y_tofit), c, m, predicted_sp))
-    #
-    #
-    #         if m < 0:
-    #             pass
-    #
-    #         elif predicted_sp - current_amp_sp > self.config.raw_config_data['MAX_DELTA_AMP_SP']:# MAGIC_STRING
-    #             self.values[rf_conditioning_data.last_ramp_method] = ramp_method.DEFAULT__DELTA_GTRTHN_MAX
-    #             self.logger.message('Amp set point returned from fit > than MAX_DELTA_AMP_SP ({} > {})\nUsing default amp set point increase of +{} instead'.format(
-    #                 predicted_sp - current_amp_sp, self.config.raw_config_data['MAX_DELTA_AMP_SP'], self.config.raw_config_data['DEFAULT_RF_INCREASE_LEVEL']))
-    #
-    #             return_value = default_increase
-    #
-    #         elif predicted_sp < current_amp_sp:
-    #             self.values[rf_conditioning_data.last_ramp_method] = ramp_method.PREDICTED_SP_GRTRTHN_CURRENT_SP
-    #             self.logger.message('Predicted sp is less than current_sp! returning current_sp + {}'.format(self.config.raw_config_data['DEFAULT_RF_INCREASE_LEVEL']))
-    #
-    #             return_value = default_increase
-    #
-    #         elif predicted_sp == current_amp_sp:
-    #             self.values[rf_conditioning_data.last_ramp_method] = ramp_method.DEFAULT__FLAT_RAMP
-    #             self.logger.message('Predicted sp == current_sp, returning current_sp + {}'.format(self.config.raw_config_data[
-    #                                                                                                    'DEFAULT_RF_INCREASE_LEVEL']))
-    #             return_value = default_increase
-    #
-    #         else:
-    #             self.values[rf_conditioning_data.last_ramp_method] = ramp_method.FIT
-    #
-    #             return_value = predicted_sp
-    #
-    #
-    #     return return_value
-
     def get_new_set_point(self, req_delta_pwr):
         '''
-            using teh binned data and the current amp_sp kf_power, estimate teh setpoint required to change the power by req_delta_pwr
+            using the binned data and the current amp_sp kf_power, estimate teh setpoint required to change the power by req_delta_pwr
 
         get_new_set_point(req_delta_pwr)
                                
@@ -881,7 +715,7 @@ class rf_conditioning_data(object):
                     if ramping_up and predicted_sp - current_sp   > 'MAX_DELTA_AMP_SP': default (or max?)
                     if ramping_down and current_sp - predicted_sp > 'MAX_DELTA_AMP_SP': default (or max?)
 
-    '''
+        '''
         set_point_to_return = ramping_down = ramping_up = None
         if req_delta_pwr < 0:
             ramping_down = True
@@ -926,7 +760,7 @@ class rf_conditioning_data(object):
             # Call in various fit methods
             sp_slf = self.slf_amp_kfpow_data(requested_power)
             sp_quad_all = self.poly_amp_kfpow_all_data(requested_power)
-            sp_quad_current = self.poly_amp_kfpow_current_sp_to_fit(requested_power)
+            sp_quad_current = self.poly_amp_kfpow_current_sp(requested_power)
             sp_quad_current_sp_to_fit = self.poly_amp_kfpow_current_sp_to_fit(requested_power)
 
             print('sp_slf = {}\nsp_quad_all = {}\nsp_quad_current = {}\nsp_quad_current_sp_to_fit = {}\n'
@@ -947,7 +781,7 @@ class rf_conditioning_data(object):
 
 
             # assign which fitting method amp_sp to use
-            predicted_sp = sp_quad_all
+            predicted_sp = sp_slf
 
             # check the valididty of the predicted_sp
             if abs(predicted_sp - current_amp_sp) > max_delta_power:
@@ -986,7 +820,6 @@ class rf_conditioning_data(object):
                 set_point_to_return = predicted_sp
         return set_point_to_return
 
-
     def get_populated_fullbins_below_current_sp(self):
         '''
             return bins, whose entire width is below the current amp_sp AND that haeve real data in them
@@ -1011,7 +844,6 @@ class rf_conditioning_data(object):
         data_to_fit_y = np.array(data_to_fit_y)
         print('FINAL DATA TO FIT x  = {}\ny = {}, num_y_zeroes = {}'.format(data_to_fit_x, data_to_fit_y,num_bin_y_equal_zero))
         return [data_to_fit_x, data_to_fit_y, num_bin_y_equal_zero]
-
 
     def slf_amp_kfpow_data(self, requested_power):
 
@@ -1045,13 +877,21 @@ class rf_conditioning_data(object):
         return float(predicted_sp)
 
     def poly_fit_2order(self, x, y, requested_power):
+        '''
+            Takes in x and y data then fits a quadratic function to data
+            Using that fitted function it then gives a precicted x-value (amp_sp) for a given y-value (reqwuested_power)
+            the predicted_sp is then converted into an integer to remove any fractional value then converted into a float to have the form xxxx.0
+        '''
 
         p = np.polyfit(x, y, 2, rcond=None, full=False)
         p0 = c = p[0]
         p1 = b = p[1]
         p2 = a = p[2]
 
-        predicted_sp = -b + np.sqrt(b**2.0 - 4.0*a*c+4.0 * c *requested_power ) / (2.0 * c)
+        #I think it might be the formula, can't see any other errors.. although the plots are looking iffy!
+        #i like that answer
+
+        predicted_sp = -b + np.sqrt(b**2.0 - 4.0*a*c + 4.0 * c * requested_power ) / (2.0 * c)
 
         polyfit_2order = [p0*i**2 + p1*i + p2 for i in x]
 
@@ -1059,6 +899,9 @@ class rf_conditioning_data(object):
         return float(predicted_sp), p0, p1, p2, polyfit_2order
 
     def poly_amp_kfpow_all_data(self, requested_power):
+        '''
+            Uses all available non-zero binned data for a quadratic fit
+        '''
         rcd = rf_conditioning_data
         use_max_sp = True
         num_sp_to_fit = 0
@@ -1138,7 +981,7 @@ class rf_conditioning_data(object):
 
     def poly_amp_kfpow_current_sp(self, requested_power):
         rcd = rf_conditioning_data
-        use_max_sp = True
+        use_max_sp = False
         num_sp_to_fit = 0
         data_to_fit_x, data_to_fit_y = self.get_data_for_polyfit( num_sp_to_fit,  use_max_sp)
 
@@ -1302,7 +1145,8 @@ class rf_conditioning_data(object):
 
     ramp_mode = "ramp_mode"
     all_value_keys.append(ramp_mode)
-    values[ramp_mode] = ramp.LOG_RAMP
+    values[ramp_mode] = ramp_method.LOG_RAMP
+    values[ramp_mode] = ramp_method.NORMAL_RAMP
 
     # keys for all the data we monitor
     main_can_ramp = 'main_can_ramp'

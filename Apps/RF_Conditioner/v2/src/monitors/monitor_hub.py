@@ -67,6 +67,9 @@ print('monitor_hub: import cavity_temperature_monitor')
 from src.monitors.solenoid_monitor import solenoid_monitor
 
 
+print('monitor_hub: import cavity_temperature_monitor')
+from src.monitors.daq_frequency_monitor import daq_frequency_monitor
+
 class monitor_hub(object):
     """
     This class creates and holds all the data monitoring classes
@@ -83,6 +86,7 @@ class monitor_hub(object):
     vac_valve_monitor = None
     sol_monitor = None
     user_gen_monitor = None
+    daq_frequency_monitor = None
 
     # state of each possible data monitor
 
@@ -96,11 +100,13 @@ class monitor_hub(object):
     is_rf_prot_monitoring = 'is_rf_prot_monitoring'
     is_vac_valve_monitor = 'is_vac_valve_monitor'
     is_sol_monitoring = 'is_sol_monitoring'
+    is_daq_frequency_monitoring = 'is_daq_frequency_monitoring'
 
     is_monitoring = {is_vac_monitoring: False,  # is_DC_monitoring: False,
                      is_modulator_monitoring: False, is_cavity_temp_monitoring: False,
                      is_outside_mask_monitoring: False, is_llrf_monitoring: False,
                      is_water_temp_monitoring: False, is_rf_prot_monitoring: False,
+                     is_daq_frequency_monitoring: False,
                      is_vac_valve_monitor: False, is_sol_monitoring: False}
 
     def __init__(self):
@@ -119,7 +125,7 @@ class monitor_hub(object):
         self.start_modulator_monitor()
         self.start_llrf_monitor()
         self.start_vac_monitor()
-        self.start_vac_monitor()
+        self.start_daq_frequency_monitor()
         self.start_outside_mask_monitor()
         self.start_water_temperature_monitor()
         self.start_cavity_temperature_monitor()
@@ -248,12 +254,12 @@ class monitor_hub(object):
     def start_daq_frequency_monitor(self):
         mh = monitor_hub
         self.logger.message(__name__ + ' start_daq_frequency_monitor()')
-        mh.modulator_monitor = modulator_monitor()
-        mh.is_monitoring[mh.is_modulator_monitoring] = mh.modulator_monitor.set_success
-        message = 'start_rfprot_monitor '
+        mh.daq_frequency_monitor = daq_frequency_monitor()
+        mh.is_monitoring[mh.is_daq_frequency_monitoring] = mh.daq_frequency_monitor.set_success
+        message = 'start_daq_frequency_monitor '
         if mh.is_monitoring[mh.is_modulator_monitoring]:
-            message += 'successfully started RF Modulator Monitoring'
+            message += 'successfully started LLRF DAQ Frequency Monitoring'
         else:
-            message += 'FAILED to start RF Modulator Monitoring'
+            message += 'FAILED to start LLRF DAQ Frequency Monitoring'
         self.logger.message(message)
 

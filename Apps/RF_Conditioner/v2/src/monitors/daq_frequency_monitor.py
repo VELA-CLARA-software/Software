@@ -43,6 +43,7 @@ class daq_frequency_monitor(monitor):
 
     def __init__(self):
         monitor.__init__(self)
+        self.set_success = False
         # aliases
         self.llrf_control = self.hardware.llrf_control
         self.llrf_obj = self.hardware.llrf_obj
@@ -51,7 +52,7 @@ class daq_frequency_monitor(monitor):
         self.timer.start( self.config_data[self.config.LLRF_CHECK_TIME])
         self.should_show_reset_daq_freg = True
         self.set_iointr_counter = 0
-
+        self.set_success = True
 
 
     def update_daq_rep_rate(self):
