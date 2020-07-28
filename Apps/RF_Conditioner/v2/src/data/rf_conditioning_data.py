@@ -867,7 +867,35 @@ class rf_conditioning_data(object):
         print('FINAL DATA TO FIT x  = {}\ny = {}, num_y_zeroes = {}'.format(data_to_fit_x, data_to_fit_y,num_bin_y_equal_zero))
         return [data_to_fit_x, data_to_fit_y, num_bin_y_equal_zero]
 
+    def poly_fit_2order(self, x, y, requested_power):
+        '''
+            Takes in x and y data then fits a quadratic function to data
+            Using that fitted function it then gives a precicted x-value (amp_sp) for a given y-value (reqwuested_power)
+            the predicted_sp is then converted into an integer to remove any fractional value then converted into a float to have the form xxxx.0
+        '''
+
+        p = np.polyfit(x, y, 2, rcond=None, full=False)
+
+        # deduct required y-value from 'c'
+        p0 = c = p[0] - requested_power
+        p1 = b = p[1]
+        p2 = a = p[2]
+
+        discriminant = np.sqrt(b ** 2.0 - 4.0 * a * c)
+        predicted_sp = -b + discriminant / (2.0 * c)
+        predicted_sp_alt = -b - discriminant / (2.0 * c)
+        print('\nFrom polyfit:\npredicted_sp = {}\npredicted_sp_alt = {}\n'.format(predicted_sp, predicted_sp_alt))
+
+        polyfit_2order = [p0 * i ** 2 + p1 * i + p2 for i in x]
+
+        predicted_sp = int(predicted_sp)
+        return float(predicted_sp), p0, p1, p2, polyfit_2order
+
     def slf_amp_kfpow_data(self, requested_power):
+        '''
+            Straight line fit using the last x number of non-zero bins BELOW the current amp_sp
+            (x = 'NUM_SET_POINTS_TO_FIT' from config)
+        '''
 
         num_sp_to_fit = self.config.raw_config_data['NUM_SET_POINTS_TO_FIT']
         use_max_sp = False
@@ -898,28 +926,6 @@ class rf_conditioning_data(object):
         predicted_sp = int(predicted_sp)
         return float(predicted_sp)
 
-    def poly_fit_2order(self, x, y, requested_power):
-        '''
-            Takes in x and y data then fits a quadratic function to data
-            Using that fitted function it then gives a precicted x-value (amp_sp) for a given y-value (reqwuested_power)
-            the predicted_sp is then converted into an integer to remove any fractional value then converted into a float to have the form xxxx.0
-        '''
-
-        p = np.polyfit(x, y, 2, rcond=None, full=False)
-        p0 = c = p[0]
-        p1 = b = p[1]
-        p2 = a = p[2]
-
-        #I think it might be the formula, can't see any other errors.. although the plots are looking iffy!
-        #i like that answer
-
-        predicted_sp = -b + np.sqrt(b**2.0 - 4.0*a*c + 4.0 * c * requested_power ) / (2.0 * c)
-
-        polyfit_2order = [p0*i**2 + p1*i + p2 for i in x]
-
-        predicted_sp = int(predicted_sp)
-        return float(predicted_sp), p0, p1, p2, polyfit_2order
-
     def poly_amp_kfpow_all_data(self, requested_power):
         '''
             Uses all available non-zero binned data for a quadratic fit
@@ -948,16 +954,62 @@ class rf_conditioning_data(object):
         plt.plot(data_to_fit_x, polyfit_2order, ls='--', lw=0.7, color='r', label='2nd order np.polyfit')
         plt.scatter(predicted_sp, requested_power, marker='x', s=80, c='c', label='Predicted data point')
         plt.xlabel('Set Point')
-        plt.ylabel('Power (MW)')
+        plt.ylabel('Power (W)')
         plt.legend()
         plt.grid(True)
-        plt.savefig(bin_plots_path + r'\Second_order_np_polyfit_all_data.png')
+        plt.savefig(bin_plots_path + r'\Quadratic_fit_all_data.png')
+        plt.close('all')
+
+        predicted_sp = int(predicted_sp)
+        return float(predicted_sp)
+
+
+    def poly_amp_kfpow_current_sp(self, requested_power):
+        '''
+            Use All of the non-zero bins BELOW the current amp_sp.
+        '''
+        rcd = rf_conditioning_data
+        use_max_sp = False
+        num_sp_to_fit = 0
+        data_to_fit_x, data_to_fit_y = self.get_data_for_polyfit( num_sp_to_fit,  use_max_sp)
+
+        print('From poly_amp_kfpow_current_sp:\ndata_to_fit_x_no_zero = {}\ndata_to_fit_y_no_zero = {}'.format(data_to_fit_x,
+                                                                                                         data_to_fit_y))
+
+        # NOW WE MUST FIT
+        predicted_sp, p0, p1, p2, polyfit_2order = self.poly_fit_2order(data_to_fit_x, data_to_fit_y, requested_power)
+
+        print('From poly_amp_kfpow_current_sp:\npredicted_sp = {}\np0 = {}\np1 = {}\np2 = {}\n'.format(predicted_sp, p0, p1, p2))
+
+        self.values[rcd.p0_current_sp] = p0
+        self.values[rcd.p1_current_sp] = p1
+        self.values[rcd.p2_current_sp] = p2
+        self.values[rcd.polyfit_2order_X_current_sp] = data_to_fit_x
+        self.values[rcd.polyfit_2order_Y_current_sp] = polyfit_2order
+
+        #self.values[rcd.polyfit_2order_X_current_sp] = np.insert(self.values[rcd.polyfit_2order_X_current_sp], -1, predicted_sp)
+        #self.values[rcd.polyfit_2order_Y_current_sp] = np.insert(self.values[rcd.polyfit_2order_Y_current_sp], -1, requested_power)
+
+        bin_plots_path = r'C:\Users\dlerlp\Documents\RF_Conditioning_20200720'
+
+        plt.scatter(data_to_fit_x, data_to_fit_y, c='k', s=25, marker='x', label='Binned Mean', zorder=0)
+        plt.plot(data_to_fit_x, polyfit_2order, ls='--', lw=0.7, color='r', label='2nd order np.polyfit')
+        plt.scatter(predicted_sp, requested_power, marker='x', s=80, c='c', label='Predicted data point')
+        plt.xlabel('Set Point')
+        plt.ylabel('Power (W)')
+        plt.legend()
+        plt.grid(True)
+        plt.savefig(bin_plots_path + r'\Quadratic_fit_below_current.png')
         plt.close('all')
 
         predicted_sp = int(predicted_sp)
         return float(predicted_sp)
 
     def poly_amp_kfpow_current_sp_to_fit(self, requested_power):
+        '''
+            Use the last x number of non-zero bins BELOW the current amp_sp
+            (x = 'NUM_SET_POINTS_TO_FIT' from config)
+        '''
         rcd = rf_conditioning_data
         use_max_sp = False
         num_sp_to_fit = self.config.raw_config_data['NUM_SET_POINTS_TO_FIT']
@@ -978,7 +1030,6 @@ class rf_conditioning_data(object):
         self.values[rcd.polyfit_2order_X_current_sp_to_fit] = data_to_fit_x
         self.values[rcd.polyfit_2order_Y_current_sp_to_fit] = polyfit_2order
 
-
         #self.values[rcd.polyfit_2order_X_current_sp_to_fit] = np.insert(self.values[rcd.polyfit_2order_X_current_sp_to_fit], -1, predicted_sp)
         #self.values[rcd.polyfit_2order_Y_current_sp_to_fit] = np.insert(self.values[rcd.polyfit_2order_Y_current_sp_to_fit], -1, requested_power)
 
@@ -993,47 +1044,7 @@ class rf_conditioning_data(object):
         plt.ylabel('Power (MW)')
         plt.legend()
         plt.grid(True)
-        plt.savefig(bin_plots_path + r'\Second_order_np_polyfit_num_sp_data.png')
-        plt.close('all')
-
-        predicted_sp = int(predicted_sp)
-        return float(predicted_sp)
-
-    def poly_amp_kfpow_current_sp(self, requested_power):
-        rcd = rf_conditioning_data
-        use_max_sp = False
-        num_sp_to_fit = 0
-        data_to_fit_x, data_to_fit_y = self.get_data_for_polyfit( num_sp_to_fit,  use_max_sp)
-
-        print('From poly_amp_kfpow_current_sp:\ndata_to_fit_x_no_zero = {}\ndata_to_fit_y_no_zero = {}'.format(data_to_fit_x,
-                                                                                                         data_to_fit_y))
-
-        # NOW WE MUST FIT
-        predicted_sp, p0, p1, p2, polyfit_2order = self.poly_fit_2order(data_to_fit_x, data_to_fit_y, requested_power)
-
-        print('From poly_amp_kfpow_current_sp:\npredicted_sp = {}\np0 = {}\np1 = {}\np2 = {}\n'.format(predicted_sp, p0, p1, p2))
-
-        self.values[rcd.p0_current_sp] = p0
-        self.values[rcd.p1_current_sp] = p1
-        self.values[rcd.p2_current_sp] = p2
-        self.values[rcd.polyfit_2order_X_current_sp] = data_to_fit_x
-        self.values[rcd.polyfit_2order_Y_current_sp] = polyfit_2order
-
-        self.values[rcd.polyfit_2order_X_current_sp] = np.insert(self.values[rcd.polyfit_2order_X_current_sp], -1, predicted_sp)
-        self.values[rcd.polyfit_2order_Y_current_sp] = np.insert(self.values[rcd.polyfit_2order_Y_current_sp], -1, requested_power)
-
-        bin_plots_path = r'C:\Users\dlerlp\Documents\RF_Conditioning_20200720'
-
-        #bin_mean = [i / 10 ** 6 for i in data_to_fit_y]
-
-        plt.scatter(data_to_fit_x, data_to_fit_y, c='k', s=25, marker='x', label='Binned Mean', zorder=0)
-        plt.plot(data_to_fit_x, polyfit_2order, ls='--', lw=0.7, color='r', label='2nd order np.polyfit')
-        plt.scatter(predicted_sp, requested_power, marker='x', s=80, c='c', label='Predicted data point')
-        plt.xlabel('Set Point')
-        plt.ylabel('Power (MW)')
-        plt.legend()
-        plt.grid(True)
-        plt.savefig(bin_plots_path + r'\Second_order_np_polyfit_num_sp_data.png')
+        plt.savefig(bin_plots_path + r'\Quadratic_fit_below_current_sp_num_sp_data.png')
         plt.close('all')
 
         predicted_sp = int(predicted_sp)
@@ -1674,6 +1685,10 @@ class rf_conditioning_data(object):
     old_m = 'old_m'
     all_value_keys.append(old_m)
     values[old_m] = dummy_np_float_64
+
+    log_ramp_curve_index = 'log_ramp_curve_index'
+    all_value_keys.append(log_ramp_curve_index)
+    values[log_ramp_curve_index] = dummy_int
 
     # latest_ramp_up_sp = 'latest_ramp_up_sp'
     last_sp_above_100 = 'last_sp_above_100'

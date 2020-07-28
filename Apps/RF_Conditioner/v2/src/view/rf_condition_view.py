@@ -144,11 +144,9 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         self.plot_item = self.graphicsView.getPlotItem()
 
 
-
-
     def update_plot(self):
         '''
-            plot the binned data, the curret working point (as a vertical line due to no kfpow for that amp_sp), lines of best fit
+            plot the binned data, the current working point (as a vertical line due to no kfpow for that amp_sp), lines of best fit
         '''
         rcd = rf_conditioning_data
         pg = pyqtgraph
@@ -166,8 +164,8 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         current_Y = [min(y), max(y)]
 
         # call in binned data to plot
-        bin_X = rf_conditioning_data.binned_amp_vs_kfpow['BIN_X']
-        bin_Y = rf_conditioning_data.binned_amp_vs_kfpow['BIN_mean']
+        bin_X = rcd.binned_amp_vs_kfpow['BIN_X']
+        bin_Y = rcd.binned_amp_vs_kfpow['BIN_mean']
 
         # do we need to clear ???
         self.plot_item.clear()
@@ -181,25 +179,25 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
 
         # Create current_Y using best fit data and current_X:
 
-        m = rf_conditioning_data.values[rf_conditioning_data.m]
-        c = rf_conditioning_data.values[rf_conditioning_data.c]
+        m = rcd.values[rcd.m]
+        c = rcd.values[rcd.c]
         expected_Y = (current_amp * m) + c
 
-        old_m = rf_conditioning_data.values[rf_conditioning_data.old_m]
-        old_c = rf_conditioning_data.values[rf_conditioning_data.old_c]
+        old_m = rcd.values[rcd.old_m]
+        old_c = rcd.values[rcd.old_c]
         expected_Y_old = (current_amp * old_m) + old_c
 
         #        print('expected_Y = {}\nexpected_Y_old = {}'.format(expected_Y, expected_Y_old))
 
 
         # add in straight line fits ...'new data'
-        self.plot_item.plot([self.values[rf_conditioning_data.x_min], current_amp],
-                            [self.values[rf_conditioning_data.y_min], expected_Y], pen={'color': 'r', 'width': 2.5})
+        self.plot_item.plot([self.values[rcd.x_min], current_amp],
+                            [self.values[rcd.y_min], expected_Y], pen={'color': 'r', 'width': 2.5})
 
         # add in plot of old SLF,
         self.plot_item.plot(
-            [rf_conditioning_data.values[rf_conditioning_data.old_x_min], current_amp],
-            [rf_conditioning_data.values[rf_conditioning_data.old_y_min], expected_Y_old],
+            [rcd.values[rcd.old_x_min], current_amp],
+            [rcd.values[rcd.old_y_min], expected_Y_old],
             pen={'color': 'y', 'width': 1.0})
 
         # print(
@@ -211,8 +209,8 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         # Add second order polyfit to plot (all data):
 
 
-        data_to_fit_x = rf_conditioning_data.values['polyfit_2order_X_all']
-        polyfit_2nd_order_y = rf_conditioning_data.values['polyfit_2order_Y_all']
+        data_to_fit_x = rcd.values['polyfit_2order_X_all']
+        polyfit_2nd_order_y = rcd.values['polyfit_2order_Y_all']
 
         # print('\n\nFrom polyfit_2order_X_all:\ntype(data_to_fit_x) = {}\ndata_to_fit_x = {}\npolyfit_2nd_order_y = {}'.format(data_to_fit_x,
         #                                                                                                                       type(data_to_fit_x),
@@ -222,16 +220,16 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         self.plot_item.plot(data_to_fit_x, polyfit_2nd_order_y, pen={'color': 'c', 'width': 2.0})
 
         # Add second order polyfit to plot (all data):
-        data_to_fit_x = rf_conditioning_data.values['polyfit_2order_X_all']
-        polyfit_2nd_order_y = rf_conditioning_data.values['polyfit_2order_Y_all']
+        data_to_fit_x = rcd.values['polyfit_2order_X_all']
+        polyfit_2nd_order_y = rcd.values['polyfit_2order_Y_all']
 
         #print('data_to_fit_x = {}\npolyfit_2nd_order_y = {}'.format(data_to_fit_x, polyfit_2nd_order_y))
 
         self.plot_item.plot(data_to_fit_x,polyfit_2nd_order_y, pen={'color': 'c', 'width': 2.0})
 
         # Add second order polyfit to plot (up to current sp & num_sp_to_fit data):
-        data_to_fit_x = rf_conditioning_data.values['polyfit_2order_X_current_sp_to_fit']
-        polyfit_2nd_order_y = rf_conditioning_data.values['polyfit_2order_Y_current_sp_to_fit']
+        data_to_fit_x = rcd.values['polyfit_2order_X_current_sp_to_fit']
+        polyfit_2nd_order_y = rcd.values['polyfit_2order_Y_current_sp_to_fit']
 
         # do not plot the origin:
         data_to_fit_x = data_to_fit_x[1:]
@@ -242,8 +240,8 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         self.plot_item.plot(data_to_fit_x, polyfit_2nd_order_y, pen={'color': 'm', 'width': 2.0})
 
         # Add second order polyfit to plot (all viable bins up to current sp):
-        data_to_fit_x = rf_conditioning_data.values['polyfit_2order_X_current_sp'][0:-1]
-        polyfit_2nd_order_y = rf_conditioning_data.values['polyfit_2order_Y_current_sp'][0:-1]
+        data_to_fit_x = rcd.values['polyfit_2order_X_current_sp']
+        polyfit_2nd_order_y = rcd.values['polyfit_2order_Y_current_sp']
 
         #rint('data_to_fit_x = {}\npolyfit_2nd_order_y = {}'.format(data_to_fit_x, polyfit_2nd_order_y))
 
@@ -254,8 +252,8 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
             self.plot_item.plot(data_to_fit_x, polyfit_2nd_order_y, pen={'color': 'b', 'width': 2.0})
             print('From quick_update_plot:\ndata_to_fit_x = {}\npolyfit_2nd_order_y = {}'.format(data_to_fit_x, polyfit_2nd_order_y))
 
-            #raw_input()
-
+    
+        # Rescale plots everytime function is called? can be annoying
         # self.plot_item.setXRange(0.0, current_amp+200.0)
         # self.plot_item.setYRange(0.0, max(y)*1.4)
 
@@ -266,8 +264,8 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
           '''
 
         pg = pyqtgraph
-
-        data =rf_conditioning_data.amp_vs_kfpow_running_stat
+        rcd = rf_conditioning_data
+        data = rf_conditioning_data.amp_vs_kfpow_running_stat
         x = data.keys()
         x.sort()
         y = []
@@ -278,13 +276,13 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
 
 
         # draw vertical line at the new amp_sp
-        current_amp = int(self.values[rf_conditioning_data.amp_sp])
+        current_amp = int(self.values[rcd.amp_sp])
         current_X = [current_amp, current_amp]
         current_Y = [min(y), max(y)]
 
         # call in binned data to plot
-        bin_X = rf_conditioning_data.binned_amp_vs_kfpow['BIN_X']
-        bin_Y = rf_conditioning_data.binned_amp_vs_kfpow['BIN_mean']
+        bin_X = rcd.binned_amp_vs_kfpow['BIN_X']
+        bin_Y = rcd.binned_amp_vs_kfpow['BIN_mean']
 
         # do we need to clear ???
         self.plot_item.clear()
@@ -298,12 +296,12 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
 
         # Create current_Y using best fit data and current_X:
 
-        m = rf_conditioning_data.values[rf_conditioning_data.m]
-        c = rf_conditioning_data.values[rf_conditioning_data.c]
+        m = rcd.values[rcd.m]
+        c = rcd.values[rcd.c]
         expected_Y = (current_amp * m) + c
 
-        old_m = rf_conditioning_data.values[rf_conditioning_data.old_m]
-        old_c = rf_conditioning_data.values[rf_conditioning_data.old_c]
+        old_m = rcd.values[rcd.old_m]
+        old_c = rcd.values[rcd.old_c]
         expected_Y_old = (current_amp * old_m) + old_c
 
         #print('expected_Y = {}\nexpected_Y_old = {}'.format(expected_Y, expected_Y_old))
@@ -313,20 +311,20 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         polyfit_2order_X_current_sp_to_fit'''
 
         # add in straight line fits ...'new data'
-        self.plot_item.plot([self.values[rf_conditioning_data.x_min], current_amp],
-                            [self.values[rf_conditioning_data.y_min], expected_Y], pen={'color': 'r', 'width': 2.5})
+        self.plot_item.plot([self.values[rcd.x_min], current_amp],
+                            [self.values[rcd.y_min], expected_Y], pen={'color': 'r', 'width': 2.5})
 
         # add in plot of old SLF,
         self.plot_item.plot(
-            [rf_conditioning_data.values[rf_conditioning_data.old_x_min], current_amp],
-            [rf_conditioning_data.values[rf_conditioning_data.old_y_min], expected_Y_old],
+            [rcd.values[rcd.old_x_min], current_amp],
+            [rcd.values[rcd.old_y_min], expected_Y_old],
             pen={'color': 'y', 'width': 1.8})
 
 
         # Add second order polyfit to plot (all data):
 
-        data_to_fit_x = rf_conditioning_data.values['polyfit_2order_X_all']
-        polyfit_2nd_order_y = rf_conditioning_data.values['polyfit_2order_Y_all']
+        data_to_fit_x = rcd.values['polyfit_2order_X_all']
+        polyfit_2nd_order_y = rcd.values['polyfit_2order_Y_all']
 
         #print('data_to_fit_x = {}\npolyfit_2nd_order_y = {}'.format(data_to_fit_x, polyfit_2nd_order_y))
 
@@ -334,8 +332,8 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
 
         # Add second order polyfit to plot (up to current sp & num_sp_to_fit data):
 
-        data_to_fit_x = rf_conditioning_data.values['polyfit_2order_X_current_sp_to_fit']
-        polyfit_2nd_order_y = rf_conditioning_data.values['polyfit_2order_Y_current_sp_to_fit']
+        data_to_fit_x = rcd.values['polyfit_2order_X_current_sp_to_fit']
+        polyfit_2nd_order_y = rcd.values['polyfit_2order_Y_current_sp_to_fit']
 
         # do not plot the origin:
         data_to_fit_x = data_to_fit_x[1:]
@@ -347,8 +345,8 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
 
         # Add second order polyfit to plot (all viable bins up to current sp):
 
-        data_to_fit_x = rf_conditioning_data.values['polyfit_2order_X_current_sp'][0:-1]
-        polyfit_2nd_order_y = rf_conditioning_data.values['polyfit_2order_Y_current_sp'][0:-1]
+        data_to_fit_x = rcd.values['polyfit_2order_X_current_sp']
+        polyfit_2nd_order_y = rcd.values['polyfit_2order_Y_current_sp']
 
         #print('data_to_fit_x = {}\npolyfit_2nd_order_y = {}'.format(data_to_fit_x, polyfit_2nd_order_y))
 
@@ -358,8 +356,6 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         else:
             self.plot_item.plot(data_to_fit_x, polyfit_2nd_order_y, pen={'color': 'b', 'width': 2.0})
             #print('From quick_update_plot:\ndata_to_fit_x = {}\npolyfit_2nd_order_y = {}'.format(data_to_fit_x, polyfit_2nd_order_y))
-
-
 
     def handle_can_ramp_button(self):
         if self.values[rf_conditioning_data.gui_can_ramp]:
