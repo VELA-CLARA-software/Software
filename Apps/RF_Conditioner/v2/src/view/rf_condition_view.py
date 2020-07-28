@@ -440,7 +440,17 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
 
         rcd = rf_conditioning_data
 
+
+        self.pulse_length_outputwidget.setText( str( self.values[self.data.pulse_length]  ))
+        self.set_widget_color(self.pulse_length_outputwidget, self.values[self.data.pulse_length_status])
+
+
         self.current_ramp_index.setText('{}'.format(self.values[self.data.current_ramp_index]))
+
+
+        self.log_ramp_curve_index_outputwidget.setText('{}'.format(self.values[self.data.log_ramp_curve_index]))
+
+
 
         self.next_power_increse_outputwidget.setText('{}'.format(self.values[rcd.next_power_change]))
         self.last_power_increase_outputwidget.setText('{}'.format(self.values[rcd.last_power_change]))

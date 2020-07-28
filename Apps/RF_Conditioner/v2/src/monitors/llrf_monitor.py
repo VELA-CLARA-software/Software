@@ -228,7 +228,8 @@ class llrf_monitor(monitor):
 
         # TODO: Is this the same method for the linac and the gun ???
 
-        self.values[self.data.pulse_length] = self.llrf_control.getPulseShape().count(1) * 0.009
+        #self.values[self.data.pulse_length] = self.llrf_control.getPulseShape().count(1) * 0.009 * 1000
+        self.values[self.data.pulse_length] = self.llrf_control.getPulseShape().count(1) * 9
         #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         # MAGIC THIS IS NOT EXACTLY CORRECT,
         if self.values[self.data.pulse_length] < self.values[self.data.pulse_length_min]:

@@ -180,11 +180,9 @@ class main_controller(object):
         # pulse_breakdown has chosen start values, so continue, see get_pulse_count_breakdown_log()
         #
 
-        # TODO pourge amp_sp_history
-        #print(self.data.amp_sp_history[-1])
         # TODO This needs to be the RELATIVELY-FAST-RAMP FUNCTiION
-        print("START-UP first active amp_sp = {}".format(self.values[rf_conditioning_data.log_amp_set]))
-        self.hardware.llrf_controller.set_amp( self.values[rf_conditioning_data.log_amp_set] )
+        # print("START-UP first active amp_sp = {}".format(self.values[rf_conditioning_data.log_amp_set]))
+        # self.hardware.llrf_controller.set_amp( self.values[rf_conditioning_data.log_amp_set] )
 
         while 1:
             QApplication.processEvents()
@@ -194,7 +192,9 @@ class main_controller(object):
 
             if is_bad_or_new_bad(self.data.values[rf_conditioning_data.can_rf_output_state]):
                 print("State is bad")
-            elif is_new_good(self.data.values[rf_conditioning_data.can_rf_output_state]):
+
+            elif self.data.values[rf_conditioning_data.can_rf_output_state] == state.NEW_GOOD:
+
                 print("State is new_good, settign LOG_RAMP adn resstign pulse counters ")
                 self.values[rf_conditioning_data.ramp_mode] = ramp_method.LOG_RAMP
                 self.values[rf_conditioning_data.event_pulse_count] = 1
@@ -266,9 +266,9 @@ class main_controller(object):
         self.values[rcd.last_breakdown_status] = self.conditioning_states[rcd.breakdown_status]
         self.values[rcd.last_vac_spike_status] = self.conditioning_states[rcd.vac_spike_status]
         # get new values (and set to new_good / new_bad if approprioate
-        self.conditioning_states[rcd.breakdown_status] = state.compare_states(self.values[rcd.breakdown_status],
+        self.conditioning_states[rcd.breakdown_status] = compare_states(self.values[rcd.breakdown_status],
                                                                               self.values[rcd.last_breakdown_status])
-        self.conditioning_states[rcd.vac_spike_status] = state.compare_states(self.values[rcd.vac_spike_status],
+        self.conditioning_states[rcd.vac_spike_status] = compare_states(self.values[rcd.vac_spike_status],
                                                                               self.values[rcd.last_vac_spike_status])
 
     def check_LLRF_state(self):
@@ -297,16 +297,22 @@ class main_controller(object):
             if daq_freq_good:
                 all_good = True
                 if self.data.values[rcd.llrf_interlock_status] != state.GOOD:
+                    print("llrf_interlock_status is not good")
                     all_good = False
                 elif self.data.values[rcd.llrf_trigger_status] != state.GOOD:
+                    print("llrf_trigger_status is not good")
                     all_good = False
                 elif self.data.values[rcd.pulse_length_status] != state.GOOD:
+                    print("pulse_length_status is not good")
                     all_good = False
                 elif self.data.values[rcd.llrf_output_status] != state.GOOD:
+                    print("llrf_output_status is not good")
                     all_good = False
                 elif self.data.values[rcd.llrf_ff_amp_locked_status] != state.GOOD:
+                    print("llrf_ff_amp_locked_status is not good")
                     all_good = False
                 elif self.data.values[rcd.llrf_ff_ph_locked_status] != state.GOOD:
+                    print("llrf_ff_ph_locked_status is not good")
                     all_good = False
 
                 if all_good:
@@ -329,7 +335,6 @@ class main_controller(object):
                         print("GUI SAYS We should disable RF AND RF IS GOOD disable RF")
                         self.hardware.llrf_controller.disableRFOutput()
 
-
     def log_ramp_up(self):
         # # log data at the new setpoint MUST BE BEFORE  move_up_ramp_curve()
         # update pulse breakdown log
@@ -339,7 +344,7 @@ class main_controller(object):
 
         # someshort aliases
         lrc = self.data.log_ramp_curve
-        lrci = self.data.log_ramp_curve_index
+        lrci = self.values[self.data.log_ramp_curve_index]
 
 
         # switch here to set up curve if
@@ -350,32 +355,41 @@ class main_controller(object):
             # GET NEW SET_POINT
             # new amp always returns a value!!
 
-
-
-            power_finish = self.get_log_ramp_power_finsh()
+            power_finish = self.data.get_log_ramp_power_finsh()
 
             print("log_curve power finsh = {}".format(power_finish))
+
 
 
             self.data.generate_log_ramp_curve(p_start  = self.config.raw_config_data['LOG_RAMP_START_POWER'],
                                               p_finish =  power_finish ,
                                               ramp_rate =  self.config.raw_config_data['LOG_RAMP_CURVE_RAMP_RATE'],
                                               numsteps =  self.config.raw_config_data['LOG_RAMP_CURVE_NUMSTEPS'],
-                                              pulses_per_step =  self.config.raw_config_data['LOG_RAMP_CURVE_PULSES_PER_STEP'] )
+                                              pulses_per_step =  self.config.raw_config_data['LOG_RAMP_CURVE_PULSES_PER_STEP'])
+
+        # someshort aliases
+        lrc = self.data.log_ramp_curve
+        lrci = self.values[self.data.log_ramp_curve_index]
+
+
+        if lrc is None:
+            print("ERROR lrc is None")
+            raw_input()
 
         # # set new_amp
         if self.hardware.llrf_controller.set_amp( lrc[ lrci][1], update_last_amp_sp = True):
-            if self.data.log_ramp_curve_index == len(self.data.log_ramp_curve) -1:
+
+            if self.values[self.data.log_ramp_curve_index] == len(self.data.log_ramp_curve) -1:
                 print("Log Ramp finished, setting log_ramp_curve to None")
                 self.data.log_ramp_curve = None
-                self.data.log_ramp_curve_index = -1
+                self.values[self.data.log_ramp_curve_index] = -1
                 # reset active pulse counters
                 self.data.reset_event_pulse_count()
                 self.values[rf_conditioning_data.ramp_mode] = ramp_method.NORMAL_RAMP
             else:
                 ''' set the number of pulses '''
                 rcd = rf_conditioning_data
-                rcd.values[rcd.required_pulses] = self.data.log_ramp_curve[ self.data.log_ramp_curve_index ][0]
+                rcd.values[rcd.required_pulses] = self.data.log_ramp_curve[ self.values[self.data.log_ramp_curve_index] ][0]
                 rcd.values[rcd.last_power_change] = 0.0
                 rcd.values[rcd.next_power_change] = 0.0
                 rcd.values[rcd.event_pulse_count_zero] = rcd.values[rcd.pulse_count]
@@ -383,7 +397,7 @@ class main_controller(object):
                 self.logger.message_header(__name__ + ' reset_event_pulse_count')
                 self.logger.message('new event_pulse_count_zero = {}'.format(rcd.values[rcd.event_pulse_count_zero]))
 
-            self.data.log_ramp_curve_index +=1
+            self.values[self.data.log_ramp_curve_index] +=1
 
         else:
              # we failed to set the requested amplitude .... erm.... not sure what to do ????

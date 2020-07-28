@@ -66,7 +66,6 @@ class rf_conditioning_data(object):
 
     # this curve is going to be redefined every time we switch back on, when not in use set to None!!
     log_ramp_curve = None
-    log_ramp_curve_index = None
 
     ramp_power_sum = None
 
@@ -138,8 +137,15 @@ class rf_conditioning_data(object):
             print("last_amp_sp > 500")
             return self.get_kf_running_stat_power_at_set_point(rf_conditioning_data.values[rf_conditioning_data.last_amp_sp])
         else:
+
+            # TODO this will have to return a real number >> 1000, if peo[ple have the pusle_breakdwon log file they can break thsi atm
+
             print("last_amp_sp = {}".format( rf_conditioning_data.values[rf_conditioning_data.last_amp_sp]) )
-            return self.get_kf_running_stat_power_at_set_point( self.values[rf_conditioning_data.log_amp_set] )
+            r= self.get_kf_running_stat_power_at_set_point( self.values[rf_conditioning_data.log_amp_set] )
+            if r < 500:
+                return 50000.0
+            else:
+                return r
 
     def get_kf_running_stat_power_at_current_set_point(self):
         return self.get_kfp_running_stat_at_current_set_point()[1]
@@ -179,7 +185,7 @@ class rf_conditioning_data(object):
         """
         # alias for shorter lines
         rcd = rf_conditioning_data
-        cd = self.config_data
+        cd = self.config.raw_config_data
         v = self.values
         v[rcd.breakdown_rate_aim] = cd[config.BREAKDOWN_RATE_AIM]
         v[rcd.llrf_DAQ_rep_rate_aim] = cd[config.RF_REPETITION_RATE]
@@ -188,8 +194,12 @@ class rf_conditioning_data(object):
 
         ## set the pusle length min adn max ranges
         v[rcd.expected_pulse_length] = cd[config.PULSE_LENGTH]
-        v[rcd.pulse_length_min] = cd[config.PULSE_LENGTH] + cd[config.PULSE_LENGTH_ERROR]
-        v[rcd.pulse_length_max] = cd[config.PULSE_LENGTH] - cd[config.PULSE_LENGTH_ERROR]
+        v[rcd.pulse_length_min] = cd[config.PULSE_LENGTH] - cd[config.PULSE_LENGTH_ERROR]
+        v[rcd.pulse_length_max] = cd[config.PULSE_LENGTH] + cd[config.PULSE_LENGTH_ERROR]
+
+        print("set_values_from_config pulse_length_min = {}".format(v[rcd.pulse_length_min]))
+        print("set_values_from_config pulse_length_max = {}".format(v[rcd.pulse_length_max]))
+
 
     def log_kly_fwd_power_vs_amp(self):
         '''
@@ -690,11 +700,17 @@ class rf_conditioning_data(object):
         '''
         # we work in base ramp_rate
         curve_p_finish = 1.01 * p_finish
+
+        print("curve_p_finish = {}".format(curve_p_finish))
+        print("p_start = {}".format(p_start))
+        print("p_finish = {}".format(p_finish))
+        print("ramp_rate = {}".format(ramp_rate))
+
         x_start = math.log(1 - (p_start / curve_p_finish), ramp_rate)
-        x_finish = math.log(1 - (p_finish / curve_p_finish) / ramp_rate)
+        x_finish = math.log(1 - (p_finish / curve_p_finish), ramp_rate)
 
         x_step = (x_finish - x_start) / numsteps
-        curve_powers = [curve_p_finish * (1.00 - ramp_rate ^ (x_start + x * x_step)) for x in range(0, numsteps + 1)]
+        curve_powers = [curve_p_finish * (1.00 - ramp_rate ** (x_start + x * x_step)) for x in range(0, numsteps + 1)]
         print(rf_conditioning_data.log_ramp_curve )
 
         x = np.linspace(0, 2 * np.pi, 10)
@@ -702,13 +718,26 @@ class rf_conditioning_data(object):
         bin_X = rf_conditioning_data.binned_amp_vs_kfpow['BIN_X']
         bin_Y = rf_conditioning_data.binned_amp_vs_kfpow['BIN_mean']
 
+        # Find all non-zero binnded data
+        bin_X = [bin_X[i] for i in range(len(bin_X)) if bin_Y[i] > 0.0]
+        bin_Y = [bin_Y[i] for i in range(len(bin_Y)) if bin_Y[i] > 0.0]
+
+        # todo write better log message
+        print("bin_X = ", bin_X)
+        print("bin_Y = ", bin_Y)
+        print("curve_powers = ", curve_powers)
+
         required_set_points = np.interp( curve_powers, bin_Y, bin_X)
 
-        print("required_set_points = ", required_set_points)
 
-        rf_conditioning_data.log_ramp_curve = [ [pulses_per_step, amp_sp] for amp_sp in  required_set_points  ]
+        rf_conditioning_data.log_ramp_curve = [ [ int(pulses_per_step), float(int(amp_sp))] for amp_sp in  required_set_points  ]
 
-        rf_conditioning_data.log_ramp_curve_index = 0
+        print(" rf_conditioning_data.log_ramp_curve = ",  rf_conditioning_data.log_ramp_curve)
+
+        #raw_input()
+
+        self.values[rf_conditioning_data.log_ramp_curve_index] = 0
+
 
     def get_new_set_point(self, req_delta_pwr):
         '''
@@ -803,7 +832,7 @@ class rf_conditioning_data(object):
 
 
             # assign which fitting method amp_sp to use
-            predicted_sp = sp_slf
+            predicted_sp = sp_quad_current_sp_to_fit
 
             # check the valididty of the predicted_sp
             if abs(predicted_sp - current_amp_sp) > max_delta_power:
@@ -877,19 +906,37 @@ class rf_conditioning_data(object):
         p = np.polyfit(x, y, 2, rcond=None, full=False)
 
         # deduct required y-value from 'c'
-        p0 = c = p[0] - requested_power
+        p0 = a = p[0]
         p1 = b = p[1]
-        p2 = a = p[2]
+        p2 = c = p[2]  # - requested_power
 
-        discriminant = np.sqrt(b ** 2.0 - 4.0 * a * c)
-        predicted_sp = -b + discriminant / (2.0 * c)
-        predicted_sp_alt = -b - discriminant / (2.0 * c)
-        print('\nFrom polyfit:\npredicted_sp = {}\npredicted_sp_alt = {}\n'.format(predicted_sp, predicted_sp_alt))
+        #discriminant = b ** 2.0 - 4.0 * a * c
+        #predicted_sp = -b + np.sqrt(discriminant) / (2.0 * c)
+        #predicted_sp_alt = -b - np.sqrt(discriminant) / (2.0 * c)
+
+        discriminant = (b*b) - (4.0* a* c) + (4.0* a* requested_power)
+        sqrt_discriminant = np.sqrt (discriminant)
+        predicted_sp = (-b - sqrt_discriminant ) / (2.0*a)
+        predicted_sp_alt =  (-b + sqrt_discriminant ) / (2.0*a)
+        print('\nFrom polyfit:\nrequested power = {}\ndiscriminant = {}\nsqrt_discriminant = {}\npredicted_sp = {}\npredicted_sp_alt = {}\n'.format(
+            requested_power,
+                                                                                                                                discriminant,
+                                                                                                                            sqrt_discriminant,
+                                                                                                                         predicted_sp,
+                                                                                                         predicted_sp_alt))
 
         polyfit_2order = [p0 * i ** 2 + p1 * i + p2 for i in x]
 
-        predicted_sp = int(predicted_sp)
-        return float(predicted_sp), p0, p1, p2, polyfit_2order
+        # Make sure the positve answer is returned as a float of the form xxxx.0
+        if predicted_sp < 0.0:
+            predicted_sp = int(predicted_sp_alt)
+            return float(predicted_sp), p0, p1, p2, polyfit_2order
+        else:
+            predicted_sp = int(predicted_sp)
+            return float(predicted_sp), p0, p1, p2, polyfit_2order
+        # Solve[c + b x + a x^2 == y, x]
+        #-b - sqrt (b^2 - 4* a* c + 4* a* y) / 2*a =x
+        #-b + sqrt (b^2 - 4* a* c + 4* a* y) / 2*a =x
 
     def slf_amp_kfpow_data(self, requested_power):
         '''
@@ -934,6 +981,10 @@ class rf_conditioning_data(object):
         use_max_sp = True
         num_sp_to_fit = 0
         data_to_fit_x, data_to_fit_y = self.get_data_for_polyfit(num_sp_to_fit,  use_max_sp)
+
+        # Remove origin:
+        data_to_fit_x = data_to_fit_x[1:]
+        data_to_fit_y = data_to_fit_y[1:]
 
         # NOW WE MUST FIT
         predicted_sp, p0, p1, p2, polyfit_2order = self.poly_fit_2order(data_to_fit_x, data_to_fit_y, requested_power)
@@ -1177,7 +1228,7 @@ class rf_conditioning_data(object):
     ramp_mode = "ramp_mode"
     all_value_keys.append(ramp_mode)
     values[ramp_mode] = ramp_method.LOG_RAMP
-    values[ramp_mode] = ramp_method.NORMAL_RAMP
+    #values[ramp_mode] = ramp_method.NORMAL_RAMP
 
     # keys for all the data we monitor
     main_can_ramp = 'main_can_ramp'

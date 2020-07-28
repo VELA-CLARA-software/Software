@@ -106,6 +106,8 @@ class config(object):
         except Exception:
             print("ERROR Failed To Read " + config._config_file + " suspect YAML formatting error")
             raise
+
+        # TODO we should  check that keywords expected (ie. defined  in this class, are in the config, and keywords in the config are in this class
         # if config.raw_config_data:
         #     print('Raw Config Data')
         #     for item in config.raw_config_data.iteritems():
@@ -698,7 +700,7 @@ class config(object):
     LOG_RAMP_CURVE_NUMSTEPS = 'LOG_RAMP_CURVE_NUMSTEPS '
     LOG_RAMP_CURVE_PULSES_PER_STEP = 'LOG_RAMP_CURVE_PULSES_PER_STEP'
     LOG_RAMP_CURVE_RAMP_RATE = 'LOG_RAMP_CURVE_RAMP_RATE'
-
+    LOG_RAMP_START_POWER  = 'LOG_RAMP_START_POWER'
     #
     # modulator
     MODULATOR_CHECK_TIME = 'MODULATOR_CHECK_TIME'
