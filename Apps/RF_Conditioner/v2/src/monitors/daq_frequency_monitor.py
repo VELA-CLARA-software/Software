@@ -88,22 +88,32 @@ class daq_frequency_monitor(monitor):
 
     def reset_daq_freg(self):
         if self.data.values[self.data.llrf_DAQ_rep_rate_status]  == state.BAD:
+            start_time = time.time()
             if self.should_show_reset_daq_freg:
                 self.logger.message('reset_daq_freg, llrf_DAQ_rep_rate_status == BAD')
                 self.should_show_reset_daq_freg = False
             # for a
-            if self.llrf_control.llrfObj[0].amp_sp != 0:
+            if self.llrf_control.getAmpSP() != 0:
                 self.logger.message('reset_daq_freg forcing set_amp(0)')
-                self.set_amp(0)
-            self.set_iointr_counter += 1
-            #print('reset_daq_freg = ', self.set_iointr_counter)
-            if self.set_iointr_counter == 100000: # MAGIC_NUMBER
-                self.logger.message('reset_daq_freg, set_iointr_counter = 100000')
+                #self.llrf_control.set_amp(0)
 
-                self.llrf_control.resetTORSCANToIOIntr()
-                time.sleep(0.02) # TODO meh ...
-                self.llrf_control.setTORACQMEvent()
-                self.set_iointr_counter = 0
+
+                self.llrf_control.setAmpSP(0.0)
+                start_time = time.time()
+
+            while time.time() - start_time < 0.02:
+                pass
+            #self.set_iointr_counter += 1
+            #print('reset_daq_freg = ', self.set_iointr_counter)
+            #if self.set_iointr_counter == 100000: # MAGIC_NUMBER
+            self.logger.message('reset_daq_freg, set_iointr_counter = 100000')
+
+            #self.llrf_control.resetTORSCANToIOIntr()
+            self.llrf_control.setTORSCANToIOIntr()
+            time.sleep(0.02) # TODO meh ...
+            self.llrf_control.setTORACQMEvent()
+            self.set_iointr_counter = 0
+
         else:
             if self.should_show_reset_daq_freg == False:
                 self.logger.message('reset_daq_freg, llrf_DAQ_rep_rate_status != BAD')

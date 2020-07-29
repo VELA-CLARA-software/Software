@@ -143,6 +143,8 @@ class main_controller(object):
         self.conditioning_states = {}
         self.conditioning_states[self.data.vac_spike_status] = state.UNKNOWN
         self.conditioning_states[self.data.breakdown_status] = state.UNKNOWN
+        # TODO: added llrf_DAQ to cond states
+        self.conditioning_states[self.data.llrf_DAQ_rep_rate_status] = state.UNKNOWN
 
         # connect buttons
         self.view.update_expert_values_button.clicked.connect(self.update_expert_values) # MUST
@@ -201,7 +203,6 @@ class main_controller(object):
                 self.values[rf_conditioning_data.required_pulses] = 0
 
 
-
             elif is_good(self.data.values[rf_conditioning_data.can_rf_output_state]):
 
                 if self.reached_min_pulse_count_for_this_step():
@@ -231,7 +232,7 @@ class main_controller(object):
     def update_main_states(self):
         '''
             There are two sets of states to check, those related to if we can produce RF POWER and those related to
-            state of the conditonning (vac level, breakdown count etc ... )
+            state of the conditonning (vac level, breakdown count, DAQ freq etc ... )
         '''
         self.check_LLRF_state()
         self.check_conditioning_state()
@@ -266,14 +267,21 @@ class main_controller(object):
         '''
         rcd = rf_conditioning_data
 
-        # update 'last' values
-        self.values[rcd.last_breakdown_status] = self.conditioning_states[rcd.breakdown_status]
-        self.values[rcd.last_vac_spike_status] = self.conditioning_states[rcd.vac_spike_status]
         # get new values (and set to new_good / new_bad if approprioate
         self.conditioning_states[rcd.breakdown_status] = compare_states(self.values[rcd.breakdown_status],
                                                                               self.values[rcd.last_breakdown_status])
         self.conditioning_states[rcd.vac_spike_status] = compare_states(self.values[rcd.vac_spike_status],
                                                                               self.values[rcd.last_vac_spike_status])
+
+        # TODO add DAQ freq
+
+        self.conditioning_states[rcd.llrf_DAQ_rep_rate_status] = compare_states(self.values[rcd.llrf_DAQ_rep_rate_status],
+                                                                        self.values[rcd.llrf_DAQ_rep_rate_status_previous])
+
+        # update 'last' values
+        self.values[rcd.last_breakdown_status] = self.conditioning_states[rcd.breakdown_status]
+        self.values[rcd.last_vac_spike_status] = self.conditioning_states[rcd.vac_spike_status]
+        self.values[rcd.llrf_DAQ_rep_rate_status_previous] = self.conditioning_states[rcd.llrf_DAQ_rep_rate_status]
 
     def check_LLRF_state(self):
         '''

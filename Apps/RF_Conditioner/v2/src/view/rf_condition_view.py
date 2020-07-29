@@ -475,7 +475,7 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
 
 
         p_last = self.data.get_kf_running_stat_power_at_set_point(self.values[self.data.last_amp_sp])
-        print('##self.values[self.data.last_amp_sp] = {}'.format(self.values[self.data.last_amp_sp]))
+        #print('##self.values[self.data.last_amp_sp] = {}'.format(self.values[self.data.last_amp_sp]))
         p_current = self.data.get_kf_running_stat_power_at_current_set_point()
 
         if p_last:
