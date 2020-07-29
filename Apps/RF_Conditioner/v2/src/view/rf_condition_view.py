@@ -189,6 +189,13 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
 
         #        print('expected_Y = {}\nexpected_Y_old = {}'.format(expected_Y, expected_Y_old))
 
+        print('m = {}\nc = {}\nexpected_Y = {}\nold_m = {}\nold_c = {}\nexpected_Y_old = {}\n'.format(m, c, expected_Y, old_m, old_c, expected_Y_old))
+        print('type(m) = {}\ntype(c) = {}\ntype(expected_Y) = {}\ntype(old_m) = {}\ntype(old_c) = {}\ntype(expected_Y_old) = {}\n'.format(type(m),
+                                                                                                                                          type(c), type(expected_Y), type(old_m), type(old_c),
+
+                                                                                                                                                                                        type(expected_Y_old)))
+        #raw_input()
+
 
         # add in straight line fits ...'new data'
         self.plot_item.plot([self.values[rcd.x_min], current_amp],
@@ -256,7 +263,6 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         # Rescale plots everytime function is called? can be annoying
         # self.plot_item.setXRange(0.0, current_amp+200.0)
         # self.plot_item.setYRange(0.0, max(y)*1.4)
-
 
     def quick_update_plot(self):
         '''
@@ -369,7 +375,6 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
 
             self.can_ramp_button.setText('RAMP Enabled')
 
-
     def handle_llrf_enable_button(self):
         if self.values[rf_conditioning_data.gui_can_rf_output]:
             self.values[rf_conditioning_data.gui_can_rf_output] = False
@@ -402,9 +407,6 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         self.timer2.timeout.connect(self.quick_update_plot)
         self.timer2.start(self.config.raw_config_data[self.config.GUI_UPDATE_TIME] * 10)
 
-
-
-
     def handle_edit_mode(self):
         print("handle_edit_mode")
         for key, value in self.expert_widget.iteritems():
@@ -416,6 +418,7 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
     def update_gui(self):
         QApplication.processEvents()
         # Call various update functions for each widget / group of widgets
+        self.update_cav_pwr_ratio_and_max()
         self.update_mean_power_widgets()
         # vac level, and can we ramp due to vac
         self.update_vac_level()
@@ -431,6 +434,8 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         self.update_temperature_values()
         self.update_CATAP_AMPSP_limit() # TODO only needs calling once
         self.update_DAQ_rep_rate()
+
+
 
         self.update_all_counters()
 
@@ -448,15 +453,17 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         self.current_ramp_index.setText('{}'.format(self.values[self.data.current_ramp_index]))
 
 
-        self.log_ramp_curve_index_outputwidget.setText('{}'.format(self.values[self.data.log_ramp_curve_index]))
+        self.log_ramp_curve_index_outputwidget.setText('{} / {}'.format(self.values[self.data.log_ramp_curve_index], self.config.raw_config_data['LOG_RAMP_CURVE_NUMSTEPS']))
 
 
 
-        self.next_power_increse_outputwidget.setText('{}'.format(self.values[rcd.next_power_change]))
-        self.last_power_increase_outputwidget.setText('{}'.format(self.values[rcd.last_power_change]))
+        self.next_power_increse_outputwidget.setText('{}'.format(self.values[rcd.next_requested_power_change]))
+        self.last_power_increase_outputwidget.setText('{}'.format(self.values[rcd.last_requested_power_change]))
         self.last_increase_method_outputwidget.setText(str(self.values[rcd.last_ramp_method]))
-        self.can_ramp_label_outputwidget.setText('{}'.format(self.values[rcd.main_can_ramp]))
 
+
+        self.can_ramp_label_outputwidget.setText('{}'.format(self.values[rcd.main_can_ramp]))
+        self.set_widget_color(self.can_ramp_label_outputwidget, self.values[self.data.main_can_ramp])
 
 
         #TODO
@@ -478,7 +485,6 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
                 self.delta_power_outputwidget.setText('NONE p_current')
         else:
             self.delta_power_outputwidget.setText('NONE p_last')
-
 
     def update_amp_sp(self):
         self.amp_set_outputwidget.setText('{}'.format(self.values[self.data.amp_sp]))
@@ -666,7 +672,7 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         # self.breakdown_rate_limit_outputwidget  # self.widget[self.data.breakdown_rate_low] =
         # self.measured_breakdown_rate_outputwidget  # #self.widget[self.data.last_106_bd_count]
         # = self.last_106_count_outputwidget  #  # #self.widget[self.data.last_mean_power] =
-        # self.last_setpoint_power_outputwidget  #  # #self.widget[self.data.next_power_change]
+        # self.last_setpoint_power_outputwidget  #  # #self.widget[self.data.next_requested_power_change]
         # = self.next_power_increase_outputwidget  # #self.widget[self.data.next_sp_decrease] =
         # self.next_sp_decrease_outputwidget  #  # #self.widget[self.data.current_ramp_index] =
         # self.current_index_outputwidget  #  # self.widget[self.data.sol_value] =
@@ -705,7 +711,6 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
 
         self.measured_breakdown_rate_outputwidget.setText(
             '{}'.format(self.values[self.data.breakdown_rate]))
-
 
     def update_expert_values_in_gui(self):
         """
@@ -1260,3 +1265,13 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
             self.set_widget_color_text(widget, state.UNKNOWN)
         else:
             self.set_widget_color_text(widget, state.ERROR)
+
+    def update_cav_pwr_ratio_and_max(self):
+        '''
+            Updates one GUI widget with current cavity power ratio and the max ratio allowed as defined in the config.yaml.
+        '''
+        cav_pwr_ratio = self.values[self.data.cav_pwr_ratio]
+        max_cav_pwr_ratio = self.config.raw_config_data['CAV_PWR_RATIO']
+        self.cav_pwr_ratio_outputwidget.setText('{:1.2f} / {}'.format(cav_pwr_ratio, max_cav_pwr_ratio))
+        self.set_widget_color(self.cav_pwr_ratio_outputwidget, self.values[self.data.cav_pwr_ratio_status])
+

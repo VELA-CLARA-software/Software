@@ -109,18 +109,18 @@ class rf_conditioning_data(object):
 
         self.values[rcd.current_ramp_index] = self.get_ramp_index_from_power(self.get_kf_running_stat_power_at_current_set_point())
 
-        rcd.values[rcd.last_power_change] = rcd.values[rcd.next_power_change]
+        rcd.values[rcd.last_requested_power_change] = rcd.values[rcd.next_requested_power_change]
 
-        [rcd.values[rcd.required_pulses], rcd.values[rcd.next_power_change] ] = self.get_power_and_num_pulses_for_ramp_index(rcd.values[rcd.current_ramp_index])
+        [rcd.values[rcd.required_pulses], rcd.values[rcd.next_requested_power_change] ] = self.get_power_and_num_pulses_for_ramp_index(rcd.values[rcd.current_ramp_index])
 
         # rcd.values[rcd.required_pulses] = ramp[rcd.values[rcd.current_ramp_index]][0]
-        # rcd.values[rcd.next_power_change] = float(ramp[rcd.values[rcd.current_ramp_index]][1])
+        # rcd.values[rcd.next_requested_power_change] = float(ramp[rcd.values[rcd.current_ramp_index]][1])
 
         self.logger.message_header(__name__ + ' set_ramp_values ')
         self.logger.message(
             'current ramp index = {}\nnext required pulses = {}\nnext power increase = {}'.format(rcd.values[rcd.current_ramp_index],
                                                                                                          rcd.values[rcd.required_pulses], rcd.values[
-                                                                                                             rcd.next_power_change]))  #  #
+                                                                                                             rcd.next_requested_power_change]))  #  #
 
     def get_power_and_num_pulses_for_ramp_index(self, index):
         if index < 0:
@@ -199,7 +199,6 @@ class rf_conditioning_data(object):
 
         print("set_values_from_config pulse_length_min = {}".format(v[rcd.pulse_length_min]))
         print("set_values_from_config pulse_length_max = {}".format(v[rcd.pulse_length_max]))
-
 
     def log_kly_fwd_power_vs_amp(self):
         '''
@@ -499,15 +498,30 @@ class rf_conditioning_data(object):
 
         bin_X, bin_mean, bin_edges, bin_pop, bin_data, bin_std, bin_pulses = self.initial_bin()
 
-        rcd.binned_amp_vs_kfpow['BIN_X'] = bin_X
-        rcd.binned_amp_vs_kfpow['BIN_mean'] = bin_mean
+        # Write .txt file for Frank Jackson's DC script
+        din_X_non_zero = bin_X
+
+        bin_X_non_zero = [bin_X[i] for i in range(len(bin_X)) if bin_mean[i] > 0.0]
+        bin_Y_non_zero = [bin_mean[i] for i in range(len(bin_mean)) if bin_mean[i] > 0.0]
+
+        savepath = self.config_data[config.LOG_DIRECTORY]
+        Frank_file = open(savepath + 'Binned_amp_sp_vs_kfpwr.txt', 'w+')
+        for i in range(len(bin_X_non_zero)):
+            Frank_file.write('{} {}\n'.format(bin_X_non_zero[i], bin_Y_non_zero[i]))
+
+        Frank_file.close()
+
+        # Update values dictionary
+
+        rcd.binned_amp_vs_kfpow[rcd.BIN_X] = bin_X
+        rcd.binned_amp_vs_kfpow[rcd.BIN_mean] = bin_mean
 
         #print('bin_X = {}\nbin_mean = {}'.format(bin_X, bin_mean))
 
 
-        rcd.binned_amp_vs_kfpow['BIN_edges'] = bin_edges
-        rcd.binned_amp_vs_kfpow['BIN_pop'] = bin_pop
-        rcd.binned_amp_vs_kfpow['BIN_pulses'] = bin_pulses
+        rcd.binned_amp_vs_kfpow[rcd.BIN_edges] = bin_edges
+        rcd.binned_amp_vs_kfpow[rcd.BIN_pop] = bin_pop
+        rcd.binned_amp_vs_kfpow[rcd.BIN_pulses] = bin_pulses
         # binned_amp_vs_kfpow[BIN_data] = bin_data
         # binned_amp_vs_kfpow[BIN_error] = bin_error
 
@@ -738,7 +752,6 @@ class rf_conditioning_data(object):
 
         self.values[rf_conditioning_data.log_ramp_curve_index] = 0
 
-
     def get_new_set_point(self, req_delta_pwr):
         '''
             using the binned data and the current amp_sp kf_power, estimate teh setpoint required to change the power by req_delta_pwr
@@ -794,7 +807,7 @@ class rf_conditioning_data(object):
                 set_point_to_return = default_decrease
             print('Not enough non-zero buns to fit to. Current number of non-zero bins = {}'.format(num_bin_y_equal_zero))
         elif (len(data_to_fit_x) - num_bin_y_equal_zero) < num_full_bins_fit:
-            self.values[rf_conditioning_data.last_ramp_method] = ramp_method.DEFAULT__ENOUGH_BINS__ZERO_IN_LIST__NOT_ENOUGH_NON_ZERO
+            self.values[rf_conditioning_data.last_ramp_method] = ramp_method.DEFAULT__ENOUGH_BINS__NOT_ENOUGH_NON_ZERO
             if ramping_up:
                 set_point_to_return = default_increase
             elif ramping_down:
@@ -804,9 +817,6 @@ class rf_conditioning_data(object):
                 'Ramping using default value of {} from {} to {}'.format(self.config.raw_config_data['DEFAULT_RF_INCREASE_LEVEL'], current_amp_sp,
                                                                          set_point_to_return))
         else:
-            # crop to numer set points to fit
-            data_to_fit_x2 = data_to_fit_x[-self.config.raw_config_data['NUM_SET_POINTS_TO_FIT']:]
-            data_to_fit_y2 = data_to_fit_y[-self.config.raw_config_data['NUM_SET_POINTS_TO_FIT']:]
 
             # Call in various fit methods
             sp_slf = self.slf_amp_kfpow_data(requested_power)
@@ -868,6 +878,7 @@ class rf_conditioning_data(object):
                 self.logger.message('Predicted sp ==  current_sp! returning current_sp + {}'.format(default_decrease))
                 set_point_to_return = default_decrease
             else:
+                self.values[rf_conditioning_data.last_ramp_method] = ramp_method.FIT
                 set_point_to_return = predicted_sp
         return set_point_to_return
 
@@ -905,25 +916,16 @@ class rf_conditioning_data(object):
 
         p = np.polyfit(x, y, 2, rcond=None, full=False)
 
-        # deduct required y-value from 'c'
         p0 = a = p[0]
         p1 = b = p[1]
-        p2 = c = p[2]  # - requested_power
-
-        #discriminant = b ** 2.0 - 4.0 * a * c
-        #predicted_sp = -b + np.sqrt(discriminant) / (2.0 * c)
-        #predicted_sp_alt = -b - np.sqrt(discriminant) / (2.0 * c)
+        p2 = c = p[2]
 
         discriminant = (b*b) - (4.0* a* c) + (4.0* a* requested_power)
         sqrt_discriminant = np.sqrt (discriminant)
         predicted_sp = (-b - sqrt_discriminant ) / (2.0*a)
         predicted_sp_alt =  (-b + sqrt_discriminant ) / (2.0*a)
         print('\nFrom polyfit:\nrequested power = {}\ndiscriminant = {}\nsqrt_discriminant = {}\npredicted_sp = {}\npredicted_sp_alt = {}\n'.format(
-            requested_power,
-                                                                                                                                discriminant,
-                                                                                                                            sqrt_discriminant,
-                                                                                                                         predicted_sp,
-                                                                                                         predicted_sp_alt))
+            requested_power, discriminant, sqrt_discriminant,  predicted_sp, predicted_sp_alt))
 
         polyfit_2order = [p0 * i ** 2 + p1 * i + p2 for i in x]
 
@@ -934,9 +936,7 @@ class rf_conditioning_data(object):
         else:
             predicted_sp = int(predicted_sp)
             return float(predicted_sp), p0, p1, p2, polyfit_2order
-        # Solve[c + b x + a x^2 == y, x]
-        #-b - sqrt (b^2 - 4* a* c + 4* a* y) / 2*a =x
-        #-b + sqrt (b^2 - 4* a* c + 4* a* y) / 2*a =x
+
 
     def slf_amp_kfpow_data(self, requested_power):
         '''
@@ -1013,7 +1013,6 @@ class rf_conditioning_data(object):
 
         predicted_sp = int(predicted_sp)
         return float(predicted_sp)
-
 
     def poly_amp_kfpow_current_sp(self, requested_power):
         '''
@@ -1153,26 +1152,6 @@ class rf_conditioning_data(object):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     '''Bining dictionary'''
 
     dummy_np_float_64 = np_float64(-9999.9999)
@@ -1282,6 +1261,16 @@ class rf_conditioning_data(object):
     values[cav_temp] = dummy_float
 
     # Mean Values of Traces # TODO: CHANGE THIS NAMES TO MORE CANONICAL ONES
+
+    cav_pwr_ratio = 'cav_pwr_ratio'
+    all_value_keys.append(cav_pwr_ratio)
+    values[cav_pwr_ratio] = dummy_float
+
+    # STATUS PF CAVITY POWER RATIO
+    cav_pwr_ratio_status = 'cav_pwr_ratio_status'
+    all_value_keys.append(cav_pwr_ratio_status)
+    values[cav_pwr_ratio_status] = dummy_state
+
     fwd_cav_pwr = 'fwd_cav_pwr'
     all_value_keys.append(fwd_cav_pwr)
     values[fwd_cav_pwr] = dummy_float
@@ -1539,13 +1528,13 @@ class rf_conditioning_data(object):
     all_value_keys.append(required_pulses)
     values[required_pulses] = dummy_int
 
-    next_power_change = 'next_power_change'
-    all_value_keys.append(next_power_change)
-    values[next_power_change] = dummy_float
+    next_requested_power_change = 'next_requested_power_change'
+    all_value_keys.append(next_requested_power_change)
+    values[next_requested_power_change] = dummy_int
 
-    last_power_change = 'last_power_change'
-    all_value_keys.append(last_power_change)
-    values[last_power_change] = dummy_float
+    last_requested_power_change = 'last_requested_power_change'
+    all_value_keys.append(last_requested_power_change)
+    values[last_requested_power_change] = dummy_int
 
 
     log_pulse_length = 'log_pulse_length'
@@ -1754,6 +1743,10 @@ class rf_conditioning_data(object):
     all_value_keys.append(next_sp_decrease)
     values[next_sp_decrease] = dummy_float
 
+    cav_pwr_ratio_can_ramp = 'cav_pwr_ratio_can_ramp'  # Flag which is T if we can ramp and f if we
+    all_value_keys.append(cav_pwr_ratio_can_ramp)
+    values[cav_pwr_ratio_can_ramp] = False
+
     vac_level_can_ramp = 'vac_level_can_ramp'  # Flag which is T if we can ramp and f if we cna't base don current vac level
     all_value_keys.append(vac_level_can_ramp)
     values[vac_level_can_ramp] = False
@@ -1843,7 +1836,7 @@ class rf_conditioning_data(object):
     # values[elapsed_time] = dummy_int + 15
     # values[DC_level] = dummy_float + 16
     # values[rev_power_spike_count] = dummy_int
-    # values[next_power_change] = -1
+    # values[next_requested_power_change] = -1
     # values[phase_mask_by_power_trace_1_set] = False
     # values[phase_mask_by_power_trace_2_set] = False
     # values[phase_end_mask_by_power_trace_1_time] = -1.0

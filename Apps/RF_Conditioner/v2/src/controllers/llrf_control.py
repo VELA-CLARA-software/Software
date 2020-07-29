@@ -104,10 +104,7 @@ class llrf_control(object):
 			if self.should_show_llrf_amp_ff_locked:
 				self.logger.message('enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()')
 				self.should_show_llrf_rf_output = False
-			# reset
-			# TODO this is the opposite logic to how  things  used to be ...
-			# self.llrf_control.lockAmpFF()
-			# meh
+			self.llrf_control.lockAmpFF()
 			sleep(0.02)
 		#
 		#should_show_llrf_pha_ff_locked
@@ -141,7 +138,7 @@ class llrf_control(object):
 	def set_amp(self, val1, update_last_amp_sp = False):
 
 		start_amp_sp = self.values[rf_conditioning_data.amp_sp]
-		self.logger.message('set_amp(' + str(val1) + ') called from ' + str(inspect.stack()[1][3]))
+		self.logger.message('set_amp (' + str(val1) + ') called from ' + str(inspect.stack()[1][3]))
 
 		success = False
 		#if val != self.llrf_control.getAmpFF(): # TODO this has chnged from amp_SP due to

@@ -240,13 +240,17 @@ class main_controller(object):
 
     def check_ramping_status(self):
         '''
-            ATM there are 3 state that can disable ramping, the gui, the BD_rate, and vac level
+            ATM there are 4 states that can disable ramping, the gui, the BD_rate, vac level & cavity power ratio (Detuned)
             TODO there should also be cavity_ratio
         '''
         if self.values[rf_conditioning_data.gui_can_ramp]:
             if self.values[rf_conditioning_data.breakdown_rate_low]:
-                if self.values[rf_conditioning_data.gui_can_ramp]:
-                    self.values[rf_conditioning_data.main_can_ramp] = True
+                if self.values[rf_conditioning_data.vac_level_can_ramp]:
+                    if self.values[rf_conditioning_data.cav_pwr_ratio_can_ramp]:
+                        self.values[rf_conditioning_data.main_can_ramp] = True
+
+                    else:
+                        self.values[rf_conditioning_data.main_can_ramp] = False
                 else:
                     self.values[rf_conditioning_data.main_can_ramp] = False
             else:
@@ -377,7 +381,9 @@ class main_controller(object):
             raw_input()
 
         # # set new_amp
-        if self.hardware.llrf_controller.set_amp( lrc[ lrci][1], update_last_amp_sp = True):
+        if self.hardware.llrf_controller.set_amp(lrc[lrci][1], update_last_amp_sp = True):
+
+            print('self.hardware.llrf_controller.set_amp(lrc[lrci][1] = {}'.format( self.hardware.llrf_controller.set_amp(lrc[lrci][1])))
 
             if self.values[self.data.log_ramp_curve_index] == len(self.data.log_ramp_curve) -1:
                 print("Log Ramp finished, setting log_ramp_curve to None")
@@ -390,8 +396,8 @@ class main_controller(object):
                 ''' set the number of pulses '''
                 rcd = rf_conditioning_data
                 rcd.values[rcd.required_pulses] = self.data.log_ramp_curve[ self.values[self.data.log_ramp_curve_index] ][0]
-                rcd.values[rcd.last_power_change] = 0.0
-                rcd.values[rcd.next_power_change] = 0.0
+                rcd.values[rcd.last_requested_power_change] = 0
+                rcd.values[rcd.next_requested_power_change] = 0
                 rcd.values[rcd.event_pulse_count_zero] = rcd.values[rcd.pulse_count]
                 rcd.values[rcd.event_pulse_count] = 0
                 self.logger.message_header(__name__ + ' reset_event_pulse_count')
@@ -400,8 +406,8 @@ class main_controller(object):
             self.values[self.data.log_ramp_curve_index] +=1
 
         else:
-             # we failed to set the requested amplitude .... erm.... not sure what to do ????
-             pass
+             print('we failed to set the requested amplitude .... erm.... not sure what to do ????')
+             #pass
 
 
 
@@ -426,7 +432,7 @@ class main_controller(object):
         # GET NEW SET_POINT
         # new amp always returns a value!!
         # the function to get the next set-point depends on the ramp_method
-        new_amp = self.data.get_new_set_point(self.values[rf_conditioning_data.next_power_change])  # value from ramp.py and ramp_index
+        new_amp = self.data.get_new_set_point(self.values[rf_conditioning_data.next_requested_power_change])  # value from ramp.py and ramp_index
         # #
         # # set new_amp
         if self.hardware.llrf_controller.set_amp(new_amp, update_last_amp_sp = True):
@@ -440,7 +446,7 @@ class main_controller(object):
         # we ONLY call the below function, if we have actually ramped with enough to data to attmept fitting
 
         if self.values[rf_conditioning_data.last_ramp_method] == ramp_method.DEFAULT__TOO_FEW_BINS \
-            or self.values[rf_conditioning_data.last_ramp_method] == ramp_method.DEFAULT__ENOUGH_BINS__ZERO_IN_LIST__NOT_ENOUGH_NON_ZERO \
+            or self.values[rf_conditioning_data.last_ramp_method] == ramp_method.DEFAULT__ENOUGH_BINS__NOT_ENOUGH_NON_ZERO \
             or self.values[rf_conditioning_data.last_ramp_method] == ramp_method.DEFAULT__DELTA_GTRTHN_MAX \
             or self.values[rf_conditioning_data.last_ramp_method] == ramp_method.DEFAULT__NEG_RAMP \
             or self.values[rf_conditioning_data.last_ramp_method] == ramp_method.DEFAULT__FLAT_RAMP:
@@ -493,7 +499,7 @@ class main_controller(object):
 
         # GET NEW SET_POINT
         # new amp always returns a value!!
-        new_amp = self.data.get_new_set_point(-self.values[rf_conditioning_data.next_power_change]) # value from ramp.py and ramp_index
+        new_amp = self.data.get_new_set_point(-self.values[rf_conditioning_data.next_requested_power_change]) # value from ramp.py and ramp_index
         # #
         # # set new_amp
         if self.hardware.llrf_controller.set_amp(new_amp, update_last_amp_sp = True):

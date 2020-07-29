@@ -89,16 +89,16 @@ class daq_frequency_monitor(monitor):
     def reset_daq_freg(self):
         if self.data.values[self.data.llrf_DAQ_rep_rate_status]  == state.BAD:
             if self.should_show_reset_daq_freg:
-                self.logger.message('reset_daq_freg, llrf_DAQ_rep_rate_status == BAD', True)
+                self.logger.message('reset_daq_freg, llrf_DAQ_rep_rate_status == BAD')
                 self.should_show_reset_daq_freg = False
             # for a
             if self.llrf_control.llrfObj[0].amp_sp != 0:
-                self.logger.message('reset_daq_freg forcing set_amp(0)', True)
+                self.logger.message('reset_daq_freg forcing set_amp(0)')
                 self.set_amp(0)
             self.set_iointr_counter += 1
             #print('reset_daq_freg = ', self.set_iointr_counter)
             if self.set_iointr_counter == 100000: # MAGIC_NUMBER
-                self.logger.message('reset_daq_freg, set_iointr_counter = 100000', True)
+                self.logger.message('reset_daq_freg, set_iointr_counter = 100000')
 
                 self.llrf_control.resetTORSCANToIOIntr()
                 time.sleep(0.02) # TODO meh ...
@@ -106,5 +106,5 @@ class daq_frequency_monitor(monitor):
                 self.set_iointr_counter = 0
         else:
             if self.should_show_reset_daq_freg == False:
-                self.logger.message('reset_daq_freg, llrf_DAQ_rep_rate_status != BAD', True)
+                self.logger.message('reset_daq_freg, llrf_DAQ_rep_rate_status != BAD')
                 self.should_show_reset_daq_freg = True
