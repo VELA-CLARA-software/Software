@@ -143,7 +143,7 @@ class main_controller(object):
         self.conditioning_states = {}
         self.conditioning_states[self.data.vac_spike_status] = state.UNKNOWN
         self.conditioning_states[self.data.breakdown_status] = state.UNKNOWN
-        # TODO: added llrf_DAQ to cond states
+        # TODO: move llrf_DAQ from conditioning states... but where to??
         self.conditioning_states[self.data.llrf_DAQ_rep_rate_status] = state.UNKNOWN
 
         # connect buttons
@@ -191,17 +191,65 @@ class main_controller(object):
 
             self.update_main_states()
 
+            '''
+                check states:
+                
+                llrf states that deliver power - 
+                    DAQ freq should  be here??? 
+                    disable power (because there is an issue with the state of the LLRF)
+                    llrf enable, rf output, trigger, lock, daq freq
+                    
+               
+                "breakdown states" (vacuum, omed, (DC))  
+                    disable power (because a measurement says disable power)
+                    omed, vac spike
+                           
+                can_ramp states
+                    we can have power, but we can't increase it
+                    vac level, gui, cavity ratio,  bd rate
+                              
+                
+                DAQ frequency is just good or bad
+                can_rf_output high level state includes DAQ freq
+                
+                if can_rf_output is bad, and gui alllows, reset LLRF states enable_llrf() (check each state and reset bad ones)
+                
+                when resetting LLRF, if gui, mod, prot are bad, no point trying to reset 
+                
+                
+                
+            '''
+            # TODO AJG: Plan:
+            '''
+            
+            Output of this decides whether to reset RF or not.
+            
+            save what they were and compare to how they are to get NEWGOOD, NEWBAD, GOOD & BAD (new G/B & G/B)
+            
+            def can_rf_output():  
+                can_rf_output_old_state == old labray state                               
+                if llrf_states == state.GOOD or state.NEWGOOD:   <-- GUI, MOD & PROT == state.GOOD or state.NEWGOOD:  <-- includes DAQ freq               
+                    if BD_states == state.GOOD or state.NEWGOOD:                       
+                            can_rf_output_state == state.GOOD
+                            can_rf_output_state == NEWGOOD --> logramp  if ANY are NEWGOOD                                                
+                    else:
+                        print..
+                else:
+                    print..
+                
+            return all 4 new G/B & G/B
+                                
+            '''
 
             if is_bad_or_new_bad(self.data.values[rf_conditioning_data.can_rf_output_state]):
                 print("State is bad")
 
             elif self.data.values[rf_conditioning_data.can_rf_output_state] == state.NEW_GOOD:
 
-                print("State is new_good, settign LOG_RAMP adn resstign pulse counters ")
+                print("State is new_good, setting LOG_RAMP and reassign pulse counters ")
                 self.values[rf_conditioning_data.ramp_mode] = ramp_method.LOG_RAMP
                 self.values[rf_conditioning_data.event_pulse_count] = 1
                 self.values[rf_conditioning_data.required_pulses] = 0
-
 
             elif is_good(self.data.values[rf_conditioning_data.can_rf_output_state]):
 
@@ -229,13 +277,37 @@ class main_controller(object):
                     # continue (do some logging)
                     self.monitor_hub.llrf_monitor.update_amp_vs_kfpow_running_stat()
 
+    def can_rf_output(self):
+        '''
+            This is the highest level state for can RF output or not.
+            It combines
+        '''
+
     def update_main_states(self):
         '''
             There are two sets of states to check, those related to if we can produce RF POWER and those related to
             state of the conditonning (vac level, breakdown count, DAQ freq etc ... )
         '''
+
+
+        '''
+            check the state of LLRF output, (if gui allows and there is a bad state) reset the LLRF states
+            sets a high level "LLRF_CAN_OUTPUT" state         
+        '''
         self.check_LLRF_state()
+
+
+        '''
+            check the state of BD events 
+            sets a high level "BD_STATE"         
+        '''
         self.check_conditioning_state()
+
+        # we need ot combine the outcome of the above two functions into one macr-rf conditiongin state
+        # good, bad, new_good, new_bad
+        # global_high_level variable, which we combine breakdown state and rf_can_output
+
+
         self.check_ramping_status()
 
 
@@ -273,7 +345,7 @@ class main_controller(object):
         self.conditioning_states[rcd.vac_spike_status] = compare_states(self.values[rcd.vac_spike_status],
                                                                               self.values[rcd.last_vac_spike_status])
 
-        # TODO add DAQ freq
+        # TODO AJG: remove DAQ stuff... but where to? to the ccheck LLRF_STATE function and, if bad reset there
 
         self.conditioning_states[rcd.llrf_DAQ_rep_rate_status] = compare_states(self.values[rcd.llrf_DAQ_rep_rate_status],
                                                                         self.values[rcd.llrf_DAQ_rep_rate_status_previous])
@@ -283,22 +355,117 @@ class main_controller(object):
         self.values[rcd.last_vac_spike_status] = self.conditioning_states[rcd.vac_spike_status]
         self.values[rcd.llrf_DAQ_rep_rate_status_previous] = self.conditioning_states[rcd.llrf_DAQ_rep_rate_status]
 
-    def check_LLRF_state(self):
+    # TODO AJG: Mid-level status of BD flags
+    def check_BD_state(self):
         '''
-            checks everything to enable RF power
+            This checks the states of OMED, vac spikes, DC GOOD/BAD
+            and returns a higher level state of GOOD, BAD, NEW_GOOD or NEW_BAD
         '''
         rcd = rf_conditioning_data
-        #
-        # set the old value to the current value
-        self.data.values[rcd.can_rf_output_state_OLD] = self.data.values[rcd.can_rf_output_state]
 
-        # check the state of teh RF protection and modulator, if they are bad we have decided NO-ARC does not intervene
-        mod_and_prot_good = False
+        # set the old status to the current status
+        self.data.values[rcd.BD_state_OLD] = self.data.values[rcd.BD_state]
+
+        # set all_BD_good = True and if ANY (doesn't have to be ALL) of the OMED, vac spikes, DC
+        # are state.BAD / state.NEW_BAD then all_BD_good gets set to False
+        all_BD_good = True
+        if is_bad_or_new_bad(self.data.values[rcd.OMED_state]):
+            all_BD_good = False
+        if is_bad_or_new_bad(self.data.values[rcd.DC_state]):
+            all_BD_good = False
+        if is_bad_or_new_bad(self.data.values[rcd.vac_spike_status]):
+            all_BD_good = False
+
+        # if set all_BD_good = True then set BD_state to state.GOOD
+        # Else set BD_state to state.BAD
+        if all_BD_good:
+            self.data.values[rcd.BD_state] = state.GOOD
+        else:
+            self.data.values[rcd.BD_state] = state.BAD
+
+        # NOW check to see if this is a State.NEW_GOOD or state.NEW_BAD
+        if is_new_good(self.data.values[rcd.BD_state], self.data.values[rcd.BD_state_OLD]):
+            self.data.values[rcd.BD_state] = state.NEW_GOOD
+
+        if is_new_bad(self.data.values[rcd.BD_state], self.data.values[rcd.BD_state_OLD]):
+            self.data.values[rcd.BD_state] = state.NEW_BAD
+
+    # TODO AJG: Mid-level check of can_ramp flags
+
+    def can_ramp_state(self):
+        rcd = rf_conditioning_data
+
+        # set the old status to the current status
+        self.data.values[rcd.can_ramp_status_OLD] = self.data.values[rcd.can_ramp_status]
+
+        # set all_BD_good = True and if ANY (doesn't have to be ALL) of the OMED, vac spikes, DC
+        # are state.BAD / state.NEW_BAD then all_BD_good gets set to False
+        all_can_ramps_good = True
+        #  gui_RAMP_button state
+
+        if self.data.values[rcd.gui_can_ramp] == False:
+            all_can_ramps_good = False
+        #  vac level
+        if self.data.values[rcd.vac_level_can_ramp] == False:
+            all_can_ramps_good = False
+        # cavity ratio
+        if is_bad_or_new_bad(self.data.values[rcd.cav_pwr_ratio_status]):
+            all_can_ramps_good = False
+        #  BD rate TODO AJG: not sure if "breakdown_rate" is the correct state...
+        if is_bad_or_new_bad(self.data.values[rcd.breakdown_rate]):
+            all_can_ramps_good = False
+
+
+        # if set all_can_ramps_good = True then set can_ramp_status to state.GOOD
+        # Else set can_ramp_status to state.BAD
+        if all_can_ramps_good:
+            self.data.values[rcd.BD_state] = state.GOOD
+        else:
+            self.data.values[rcd.BD_state] = state.BAD
+
+        # NOW check to see if these are State.NEW_GOOD or state.NEW_BAD
+        if is_new_good(self.data.values[rcd.can_ramp_status], self.data.values[rcd.can_ramp_status_OLD]):
+            self.data.values[rcd.can_ramp_status] = state.NEW_GOOD
+
+        if is_new_bad(self.data.values[rcd.can_ramp_status], self.data.values[rcd.can_ramp_status_OLD]):
+            self.data.values[rcd.can_ramp_status] = state.NEW_BAD
+
+
+    # TODO AJG: Amended from old check_LLRF_state
+    def check_LLRF_state(self):
+        '''
+            checks LLRF to enable RF power
+
+
+             check the state of LLRF output, (if gui allows and there is a bad state) reset the LLRF states
+            sets a high level "LLRF_CAN_OUTPUT" state
+
+
+            llrf states that deliver power -
+                    DAQ freq should  be here???
+                    disable power (because there is an issue with the state of the LLRF)
+                    llrf enable, rf output, trigger, lock, daq freq
+
+
+            This is to include GUI, MOD & PROT == state.GOOD or state.NEWGOOD:  <-- includes DAQ freq
+
+        '''
+
+        rcd = rf_conditioning_data
+
+        # set the old value to the current value
+        self.data.values[rcd.can_llrf_output_state_OLD] = self.data.values[rcd.can_llrf_output_state]
+
+        # check the state of the "ENABLE / DISABLE LLRF RF" button on GUI, the  RF protection and modulator, if they are bad we have decided NO-ARC
+        # does not intervene
+
+        GUI_mod_and_prot_good = False
         if self.data.values[self.data.modulator_good]:
             if self.data.values[self.data.rfprot_good]:
-                mod_and_prot_good = True
+                if self.data.values[self.data.gui_can_rf_output]:
+                    GUI_mod_and_prot_good = True
 
-        if mod_and_prot_good:
+        if GUI_mod_and_prot_good:
 
             daq_freq_good = True
             if self.values[self.data.llrf_DAQ_rep_rate_status] == state.BAD:
@@ -326,26 +493,35 @@ class main_controller(object):
                 elif self.data.values[rcd.llrf_ff_ph_locked_status] != state.GOOD:
                     print("llrf_ff_ph_locked_status is not good")
                     all_good = False
+                elif self.data.values[rcd.llrf_DAQ_rep_rate_status] != state.GOOD:
+                    print("llrf_DAQ_rep_rate_status is not good")
+                    all_good = False
 
                 if all_good:
                     self.data.values[rcd.can_rf_output_state] = state.GOOD
                 else:
                     self.data.values[rcd.can_rf_output_state] = state.BAD
                 # NOW check to see if this is a new good or a new bad
-                if is_new_good(self.data.values[rcd.can_rf_output_state], self.data.values[rcd.can_rf_output_state_OLD] ):
+                if is_new_good(self.data.values[rcd.can_rf_output_state], self.data.values[rcd.can_rf_output_state_OLD]):
                     self.data.values[rcd.can_rf_output_state] = state.NEW_GOOD
 
-                if is_new_bad(self.data.values[rcd.can_rf_output_state], self.data.values[rcd.can_rf_output_state_OLD] ):
+                if is_new_bad(self.data.values[rcd.can_rf_output_state], self.data.values[rcd.can_rf_output_state_OLD]):
                     self.data.values[rcd.can_rf_output_state] = state.NEW_BAD
-                # now we check if the GUI has requested RF off
-                if self.values[rf_conditioning_data.gui_can_rf_output]:
-                    if is_bad_or_new_bad(self.data.values[rcd.can_rf_output_state]):
-                        self.hardware.llrf_controller.enable_llrf()
+
+                # if can_llrf_output_state is BAD or NEW_BAD then try to reset the llrf:
+
+                if is_bad_or_new_bad(self.data.values[rcd.can_llrf_output_state]):
+                    self.hardware.llrf_controller.enable_llrf()
+
+                # TODO AJG: remove this and place all) into can_rf_output() function
+
+                '''
                 else:
                     print("GUI SAYS We should disable RF ")
                     if is_good_or_new_good(self.data.values[rcd.can_rf_output_state]):
                         print("GUI SAYS We should disable RF AND RF IS GOOD disable RF")
                         self.hardware.llrf_controller.disableRFOutput()
+                '''
 
     def log_ramp_up(self):
         # # log data at the new setpoint MUST BE BEFORE  move_up_ramp_curve()

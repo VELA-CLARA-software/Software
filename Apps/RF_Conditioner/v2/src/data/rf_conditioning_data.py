@@ -460,42 +460,13 @@ class rf_conditioning_data(object):
         # alias for shorter lines
         rcd = rf_conditioning_data
 
-        #
         # the pulse breakdwon log gets its own function, it's cancer
         self.setup_pulse_count_breakdown_log()
-        #
+
         # amp_vs_kfpow_running_stat dictionary
         rcd.amp_vs_kfpow_running_stat = self.logger.get_kfpow_running_stat_log()
-        #
-        # set some values from teh config, DO all of them here???
-        ##elf.values[dat.pulse_length_start] = self.llrf_config['PULSE_LENGTH_START']
-        # self.values[rcd.pulse_length_aim] = cd['PULSE_LENGTH_AIM']
-        # self.values[rcd.pulse_length_aim_error] = cd['PULSE_LENGTH_AIM_ERROR']
-        # self.values[rcd.pulse_length_min] = cd['PULSE_LENGTH_AIM'] - cd['PULSE_LENGTH_AIM_ERROR']
-        # self.values[rcd.pulse_length_max] = cd['PULSE_LENGTH_AIM'] + cd['PULSE_LENGTH_AIM_ERROR']
 
-        #  Binning data
-        # BIN_data = 'BIN_data'
-        # bin_keys.append(BIN_data)
-        # binned_amp_vs_kfpow[BIN_data] = dummy_float
-        # TODO: AT SOMe POINT WE NEED TO INCLUDE ERRORS IN THE BIN VALUE, BUT THIS NEEDS TO BE
-        #  DONE 'PROPERLY' USING THE FULL PULSE COUNTS
-        # BIN_error = 'BIN_error'
-        # bin_keys.append(BIN_error)
-        # binned_amp_vs_kfpow[BIN_error] = dummy_float
-
-        # TODO AJG: bin the amp-power data here after being read in
-        # print 'rcd.amp_vs_kfpow_running_stat[0] = ', rcd.amp_vs_kfpow_running_stat[0]
-        # print 'rcd.amp_vs_kfpow_running_stat[0][0] = ', rcd.amp_vs_kfpow_running_stat[0][0]
-        # print 'len(rcd.amp_vs_kfpow_running_stat) = ', len(rcd.amp_vs_kfpow_running_stat)
-
-        # TODO AJG: cycle over 'rcd.amp_vs_kfpow_running_stat' and append ...
-        # key = amp **
-        # [0] = num_pulses (with beam)
-        # [1] = power **
-        # [2] = rolling variance * (num_pulses -1)  .....I think!
-
-
+        # Call initial_bin()
         bin_X, bin_mean, bin_edges, bin_pop, bin_data, bin_std, bin_pulses = self.initial_bin()
 
         # Write .txt file for Frank Jackson's DC script
@@ -525,7 +496,7 @@ class rf_conditioning_data(object):
         # binned_amp_vs_kfpow[BIN_data] = bin_data
         # binned_amp_vs_kfpow[BIN_error] = bin_error
 
-        # TODO AJG: diagnostic plot saved to work folder:
+        # diagnostic plot saved to work folder:
 
         AMP_preBin = []
         POW_preBin = []
@@ -1433,6 +1404,44 @@ class rf_conditioning_data(object):
     all_value_keys.append(can_rf_output_state)
     values[can_rf_output_state] = state.UNKNOWN
 
+    # TODO AJG assigned new states for can_rf_output logic:
+
+    can_ramp_status_OLD = 'can_ramp_status_OLD'
+    all_value_keys.append(can_ramp_status_OLD)
+    values[can_ramp_status_OLD] = state.UNKNOWN
+
+    can_ramp_status = 'can_ramp_status'
+    all_value_keys.append(can_ramp_status)
+    values[can_ramp_status] = state.UNKNOWN
+
+    can_llrf_output_state_OLD = 'can_llrf_output_state_OLD'
+    all_value_keys.append(can_llrf_output_state_OLD)
+    values[can_llrf_output_state_OLD] = state.UNKNOWN
+
+    can_llrf_output_state = 'can_llrf_output_state'
+    all_value_keys.append(can_llrf_output_state)
+    values[can_llrf_output_state] = state.UNKNOWN
+
+    BD_state_OLD = 'BD_state_OLD'
+    all_value_keys.append(BD_state_OLD)
+    values[BD_state_OLD] = state.UNKNOWN
+
+    BD_state = 'BD_state'
+    all_value_keys.append(BD_state)
+    values[BD_state] = state.UNKNOWN
+
+    # Initialising these to state.GOOD until they are fully incorporated into NO-ARC
+
+    OMED_state = 'OMED_state'
+    all_value_keys.append(OMED_state)
+    values[OMED_state] = state.GOOD
+
+    DC_state = 'DC_state'
+    all_value_keys.append(DC_state)
+    values[DC_state] = state.GOOD
+
+    # TODO AJG: ^^^
+
     # This i sthe "general interloac" and should be re-named to reflect this
     llrf_interlock = 'llrf_interlock'  # The read value from EPICS
     all_value_keys.append(llrf_interlock)
@@ -1668,7 +1677,7 @@ class rf_conditioning_data(object):
     values[p2_all] = dummy_np_float_64
 
 
-    # TODO: this is temporary! remove asap
+    # TODO AJG: this is temporary! remove asap
 
     polyfit_2order_X_all = 'polyfit_2order_X_all'
     all_value_keys.append(polyfit_2order_X_all)
@@ -1766,9 +1775,6 @@ class rf_conditioning_data(object):
     all_value_keys.append(last_ramp_method)
     values[last_ramp_method] = ramp_method.UNKNOWN
 
-    # we know there will be some LLRF involved
-    # llrf_type = LLRF_TYPE.UNKNOWN_TYPE
-
     # config
     # for logging
     log_param = None
@@ -1782,95 +1788,6 @@ class rf_conditioning_data(object):
     sp_pwr_hist = []
     # fitting parameters
     previous_power = 0
-
-    # latest_ramp_up_sp = 0
-
-    # values = {}  # EXPLAIN THIS
-    #
-    # [values.update({x: 0}) for x in all_value_keys]
-
-    #
-    # values[vac_valve_status] = VALVE_STATE.VALVE_ERROR
-    # #values[rev_power_spike_count] = STATE.UNKNOWN
-    #
-    # values[modulator_state] = GUN_MOD_STATE.UNKNOWN_STATE
-    # values[rfprot_state] = RF_PROT_STATUS.UNKNOWN
-    #
-    # values[vac_spike_status] = state.UNKNOWN
-    # values[DC_spike_status] = state.UNKNOWN
-    # values[breakdown_status] = state.UNKNOWN
-    # values[llrf_output_status] = state.UNKNOWN
-    # values[llrf_trigger_status] = state.UNKNOWN
-    # values[llrf_interlock_status] = state.UNKNOWN
-    # values[llrf_ff_amp_locked] = state.UNKNOWN
-    # values[llrf_ff_ph_locked] = state.UNKNOWN
-    # values[can_rf_output_state_OLD] = state.UNKNOWN
-
-    # sss
-    #
-    # values[last_sp_above_100] = 0
-    # #values[latest_ramp_up_sp] = 0
-    #
-    # values[vac_level_can_ramp] = state.GOOD
-
-    # dummy_float = -999.0
-    # dummy_int = -999.0
-    # dummy_bool = -999.0
-
-    #
-    #
-    # values[pulse_length] = dummy_float + 2
-    # values[rev_kly_pwr] = dummy_float + 5
-    # values[rev_cav_pwr] = dummy_float + 6
-    # values[probe_pwr] = dummy_float + 7
-    # values[vac_level] = dummy_float
-    # values[breakdown_rate_aim] = dummy_int
-    # values[breakdown_rate_low] = dummy_bool
-    #
-    #
-    # values[breakdown_rate] = dummy_int+ 11
-    # values[breakdown_count] = dummy_int +2
-    # values[pulse_count] = dummy_int + 13
-    # values[event_pulse_count] = dummy_int +14
-    # values[duplicate_pulse_count] = dummy_int +14
-    # values[elapsed_time] = dummy_int + 15
-    # values[DC_level] = dummy_float + 16
-    # values[rev_power_spike_count] = dummy_int
-    # values[next_requested_power_change] = -1
-    # values[phase_mask_by_power_trace_1_set] = False
-    # values[phase_mask_by_power_trace_2_set] = False
-    # values[phase_end_mask_by_power_trace_1_time] = -1.0
-    # values[phase_end_mask_by_power_trace_2_time] = -1.0
-    #
-    #
-    #
-    #
-    # values[old_x_min] = dummy_float
-    # values[old_y_min] = dummy_float
-    # values[old_x_max] = dummy_float
-    # values[old_y_max] = dummy_float
-    # values[old_m] = dummy_float
-    # values[old_c] = dummy_float
-    # values[x_min] = dummy_float
-    # values[x_max] = dummy_float
-    # values[y_min] = dummy_float
-    # values[x_max] = dummy_float
-    # values[m] = dummy_float
-    # values[c] = dummy_float
-    #
-    # amp_pwr_mean_data = {} # EXPLAIN THIS
-    # amp_vs_kfpow_running_stat = {} # EXPLAIN THIS
-    #
-    # #logger
-    # logger = None
-    # _llrf_config = None
-    # _log_config = None
-    #
-    # last_fwd_kly_pwr = None
-    # last_amp = None
-    #
-    # #THERE ARE 2 COPIES OF THE last_million_log , FIX THIS !!!!!!!!!!!
-    # last_million_log = None
 
     '''Expert Values '''
 

@@ -67,54 +67,32 @@ class daq_frequency_monitor(monitor):
         BAD and now state is GOOD we call this NEW_GOOD, similarly GOOD to BAD is a NEW_BAD
         we use a NEW_GOOD to enable us to respond to changes in daq_rep_rate
         '''
+
+
+        # TODO AJG llrf_DAQ_rep_rate_status should only be good or bad
+
         DAQ_rep_rate = self.data.llrf_DAQ_rep_rate
         DAQ_rep_rate_status = self.data.llrf_DAQ_rep_rate_status
+
+        # update values library with latest DAQ_rep_rate
         self.values[DAQ_rep_rate] = self.llrf_obj[0].trace_rep_rate
+
+        # If latest DAQ_rep_rate out of bounds change state to BAD
         if self.values[DAQ_rep_rate] < self.values[self.data.llrf_DAQ_rep_rate_min]:
             self.values[DAQ_rep_rate_status] = state.BAD
 
         elif self.values[DAQ_rep_rate] > self.values[self.data.llrf_DAQ_rep_rate_max]:
             self.values[DAQ_rep_rate_status] = state.BAD
+
+        # If latest DAQ_rep_rate within bounds change state to GOOD
         else:
             self.values[self.data.llrf_DAQ_rep_rate_status] = state.GOOD
-        if self.values[self.data.llrf_DAQ_rep_rate_status_previous] == state.BAD:
-            if self.values[DAQ_rep_rate_status] == state.GOOD:
-                self.values[DAQ_rep_rate_status] = state.NEW_GOOD
+
+        # Latest state becomes old state when it has been processed.
         self.values[self.data.llrf_DAQ_rep_rate_status_previous] = self.values[DAQ_rep_rate_status]
 
-        if self.values[self.data.llrf_DAQ_rep_rate_status] == state.BAD:
-            self.reset_daq_freg()
+        # TODO move this out of monitor:-
+        #if self.values[self.data.llrf_DAQ_rep_rate_status] == state.BAD:
+        #    self.reset_daq_freg()
 
 
-    def reset_daq_freg(self):
-        if self.data.values[self.data.llrf_DAQ_rep_rate_status]  == state.BAD:
-            start_time = time.time()
-            if self.should_show_reset_daq_freg:
-                self.logger.message('reset_daq_freg, llrf_DAQ_rep_rate_status == BAD')
-                self.should_show_reset_daq_freg = False
-            # for a
-            if self.llrf_control.getAmpSP() != 0:
-                self.logger.message('reset_daq_freg forcing set_amp(0)')
-                #self.llrf_control.set_amp(0)
-
-
-                self.llrf_control.setAmpSP(0.0)
-                start_time = time.time()
-
-            while time.time() - start_time < 0.02:
-                pass
-            #self.set_iointr_counter += 1
-            #print('reset_daq_freg = ', self.set_iointr_counter)
-            #if self.set_iointr_counter == 100000: # MAGIC_NUMBER
-            self.logger.message('reset_daq_freg, set_iointr_counter = 100000')
-
-            #self.llrf_control.resetTORSCANToIOIntr()
-            self.llrf_control.setTORSCANToIOIntr()
-            time.sleep(0.02) # TODO meh ...
-            self.llrf_control.setTORACQMEvent()
-            self.set_iointr_counter = 0
-
-        else:
-            if self.should_show_reset_daq_freg == False:
-                self.logger.message('reset_daq_freg, llrf_DAQ_rep_rate_status != BAD')
-                self.should_show_reset_daq_freg = True
