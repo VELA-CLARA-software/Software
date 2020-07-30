@@ -697,6 +697,12 @@ class rf_conditioning_data(object):
     def generate_log_ramp_curve(self, p_start, p_finish, ramp_rate, numsteps, pulses_per_step):
         '''
 
+        :param p_start:
+        :param p_finish:
+        :param ramp_rate:
+        :param numsteps:
+        :param pulses_per_step:
+        :return:
         '''
         # we work in base ramp_rate
         curve_p_finish = 1.01 * p_finish
@@ -713,8 +719,7 @@ class rf_conditioning_data(object):
         curve_powers = [curve_p_finish * (1.00 - ramp_rate ** (x_start + x * x_step)) for x in range(0, numsteps + 1)]
         print(rf_conditioning_data.log_ramp_curve )
 
-        x = np.linspace(0, 2 * np.pi, 10)
-        y = np.sin(x)
+
         bin_X = rf_conditioning_data.binned_amp_vs_kfpow['BIN_X']
         bin_Y = rf_conditioning_data.binned_amp_vs_kfpow['BIN_mean']
 
