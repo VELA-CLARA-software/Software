@@ -247,9 +247,9 @@ class rf_conditioning_logger(logger):
         logger.working_directory = self.config_data[config.LOG_DIRECTORY]
 
         # set where to save Outside mask Event data
-        self._forward_file = self.working_directory + self.config_data[config.OUTSIDE_MASK_FORWARD_FILENAME]
-        self._probe_file = logger.working_directory + self.config_data[config.OUTSIDE_MASK_PROBE_FILENAME]
-        self._reverse_file = logger.working_directory + self.config_data[config.OUTSIDE_MASK_REVERSE_FILENAME]
+        self.forward_file = self.working_directory + self.config_data[config.OUTSIDE_MASK_FORWARD_FILENAME]
+        self.probe_file = logger.working_directory + self.config_data[config.OUTSIDE_MASK_PROBE_FILENAME]
+        self.reverse_file = logger.working_directory + self.config_data[config.OUTSIDE_MASK_REVERSE_FILENAME]
 
         # if in debug mode all files go in  working_directory
         if rf_conditioning_logger.debug:

@@ -9,6 +9,8 @@ import hardware_control_hub
 from time import sleep
 import inspect
 from timeit import default_timer as timer
+import time
+from src.data.state import state
 
 class llrf_control(object):
 	"""
@@ -45,6 +47,10 @@ class llrf_control(object):
 		self.should_show_llrf_amp_ff_locked = True
 		self.should_show_llrf_pha_ff_locked = True
 		self.should_show_reset_daq_freg = True
+
+		# TODO AJG  check DAQ_rep_rate_state and reset if state == state.BAD
+		if self.values[self.data.llrf_DAQ_rep_rate_status] == state.BAD:
+			self.reset_daq_freg()
 
 
 	def enable_llrf(self):
@@ -104,10 +110,7 @@ class llrf_control(object):
 			if self.should_show_llrf_amp_ff_locked:
 				self.logger.message('enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()')
 				self.should_show_llrf_rf_output = False
-			# reset
-			# TODO this is the opposite logic to how  things  used to be ...
-			# self.llrf_control.lockAmpFF()
-			# meh
+			self.llrf_control.lockAmpFF()
 			sleep(0.02)
 		#
 		#should_show_llrf_pha_ff_locked
@@ -123,6 +126,39 @@ class llrf_control(object):
 			sleep(0.02)
 
 		# this is sketchy AF
+
+	def reset_daq_freg(self):
+		if self.data.values[self.data.llrf_DAQ_rep_rate_status]  == state.BAD:
+			start_time = time.time()
+			if self.should_show_reset_daq_freg:
+				self.logger.message('reset_daq_freg, llrf_DAQ_rep_rate_status == BAD')
+				self.should_show_reset_daq_freg = False
+			# for a
+			if self.llrf_control.getAmpSP() != 0:
+				self.logger.message('reset_daq_freg forcing set_amp(0)')
+				#self.llrf_control.set_amp(0)
+
+
+				self.llrf_control.setAmpSP(0.0)
+				start_time = time.time()
+
+			while time.time() - start_time < 0.02:
+				pass
+			#self.set_iointr_counter += 1
+			#print('reset_daq_freg = ', self.set_iointr_counter)
+			#if self.set_iointr_counter == 100000: # MAGIC_NUMBER
+			self.logger.message('reset_daq_freg, time passed > 0.02s')
+
+			#self.llrf_control.resetTORSCANToIOIntr()
+			self.llrf_control.setTORSCANToIOIntr()
+			time.sleep(0.02) # TODO meh ...
+			self.llrf_control.setTORACQMEvent()
+			self.set_iointr_counter = 0
+
+		else:
+			if self.should_show_reset_daq_freg == False:
+				self.logger.message('reset_daq_freg, llrf_DAQ_rep_rate_status != BAD')
+				self.should_show_reset_daq_freg = True
 
 	def disableRFOutput(self):
 		self.llrf_control.disableRFOutput() # the c++ check is RF output is enabled, if not it disables rf output
@@ -141,7 +177,7 @@ class llrf_control(object):
 	def set_amp(self, val1, update_last_amp_sp = False):
 
 		start_amp_sp = self.values[rf_conditioning_data.amp_sp]
-		self.logger.message('set_amp(' + str(val1) + ') called from ' + str(inspect.stack()[1][3]))
+		self.logger.message('set_amp (' + str(val1) + ') called from ' + str(inspect.stack()[1][3]))
 
 		success = False
 		#if val != self.llrf_control.getAmpFF(): # TODO this has chnged from amp_SP due to

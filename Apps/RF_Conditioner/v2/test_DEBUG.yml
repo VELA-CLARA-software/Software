@@ -504,9 +504,12 @@ MIN_AMP:  500
 
 # log ramp curve
 
-LOG_RAMP_CURVE_NUMSTEPS : 100
+LOG_RAMP_CURVE_NUMSTEPS : 10
 LOG_RAMP_CURVE_PULSES_PER_STEP : 10
 LOG_RAMP_CURVE_RAMP_RATE : 0.2
 # in watts
 LOG_RAMP_START_POWER  : 30000
+
+# Cavity rev / fwd pwr ratio maximum threshhold: if ratio over this value then can_ramp == False
+CAV_PWR_RATIO  : 1.0
 

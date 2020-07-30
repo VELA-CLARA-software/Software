@@ -1324,7 +1324,7 @@
             <enum>QFrame::Sunken</enum>
            </property>
            <property name="text">
-            <string/>
+            <string>Max Cavity Power Ratio</string>
            </property>
            <property name="scaledContents">
             <bool>false</bool>
@@ -1340,7 +1340,7 @@
             <enum>QFrame::Sunken</enum>
            </property>
            <property name="text">
-            <string/>
+            <string>Cavity Power Ratio</string>
            </property>
            <property name="scaledContents">
             <bool>false</bool>
@@ -1747,7 +1747,7 @@
           </widget>
          </item>
          <item row="15" column="1" colspan="2">
-          <widget class="QLabel" name="llrf_ff_amp_locked_outputwidget_2">
+          <widget class="QLabel" name="cav_pwr_ratio_outputwidget">
            <property name="frameShape">
             <enum>QFrame::Box</enum>
            </property>
@@ -1755,7 +1755,7 @@
             <enum>QFrame::Sunken</enum>
            </property>
            <property name="text">
-            <string>locked?</string>
+            <string/>
            </property>
            <property name="alignment">
             <set>Qt::AlignAbsolute|Qt::AlignBottom|Qt::AlignCenter|Qt::AlignHCenter|Qt::AlignHorizontal_Mask|Qt::AlignJustify|Qt::AlignLeading|Qt::AlignLeft|Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing|Qt::AlignVCenter|Qt::AlignVertical_Mask</set>
@@ -1997,7 +1997,7 @@
           </widget>
          </item>
          <item row="16" column="1" colspan="2">
-          <widget class="QLabel" name="llrf_ff_ph_locked_outputwidget_2">
+          <widget class="QLabel" name="max_cav_pwr_ratio_outputwidget">
            <property name="frameShape">
             <enum>QFrame::Box</enum>
            </property>
@@ -2005,7 +2005,7 @@
             <enum>QFrame::Sunken</enum>
            </property>
            <property name="text">
-            <string>locked?</string>
+            <string/>
            </property>
            <property name="alignment">
             <set>Qt::AlignAbsolute|Qt::AlignBottom|Qt::AlignCenter|Qt::AlignHCenter|Qt::AlignHorizontal_Mask|Qt::AlignJustify|Qt::AlignLeading|Qt::AlignLeft|Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing|Qt::AlignVCenter|Qt::AlignVertical_Mask</set>

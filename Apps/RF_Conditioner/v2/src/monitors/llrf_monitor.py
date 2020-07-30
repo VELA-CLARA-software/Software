@@ -120,6 +120,33 @@ class llrf_monitor(monitor):
             self.logger.message(__name__ + ' adding ' + trace2 + ' to mean trace list  '
                                    'trace_mean_keys[trace2] = ' + self.trace_mean_keys[trace2])
 
+    def get_cav_pwr_ratio(self):
+        '''
+            Calculates the cavity reverse power / cavity forward power ratio * 100 ( = cav_pwr_ratio)
+            Compares cav_pwr_ratio with minimum allowed ratio as set in the config.yaml
+            if cav_pwr_ratio > max allowed then cav_pwr_ratio_status set to state.BAD and cav_pwr_ratio_can_ramp set to False
+            if cav_pwr_ratio <= max allowed then cav_pwr_ratio_status set to state.GOOD and cav_pwr_ratio_can_ramp set to True
+        '''
+
+        fwd_cav_pwr = self.values[self.data.fwd_cav_pwr]
+        rev_cav_pwr = self.values[self.data.rev_cav_pwr]
+        cav_pwr_ratio = rev_cav_pwr / fwd_cav_pwr * 100
+        self.values[self.data.cav_pwr_ratio] = cav_pwr_ratio
+        max_cav_pwr_ratio = self.config.raw_config_data['CAV_PWR_RATIO']
+
+        #print('fwd_cav_pwr = {}\nrev_cav_pwr = {}\ncav_pwr_ratio = {}\nmax_cav_pwr_ratio = {}'.format(fwd_cav_pwr, rev_cav_pwr, cav_pwr_ratio,
+        # max_cav_pwr_ratio))
+
+        if cav_pwr_ratio > max_cav_pwr_ratio:
+            self.data.values[self.data.cav_pwr_ratio_status] = state.BAD
+            self.data.values[self.data.cav_pwr_ratio_can_ramp] = False
+        else:
+            self.data.values[self.data.cav_pwr_ratio_status] = state.GOOD
+            self.data.values[self.data.cav_pwr_ratio_can_ramp] = True
+
+        #return cav_pwr_ratio
+
+
     def update_value(self):
         """
         Update all the 'simple' LLRF parameters, these are generally states and single numbers.
@@ -136,6 +163,9 @@ class llrf_monitor(monitor):
         for trace, key in self.trace_mean_keys.iteritems():
             #print("Get mean power for ", trace)
             self.get_mean_power(key, trace)
+
+        # Check the cavity power ratio
+        self.get_cav_pwr_ratio()
 
         ''' UPDATE LLRF values that are REQUIRED TO BE ABLE TO RAMP '''
         self.update_interlock_state()
