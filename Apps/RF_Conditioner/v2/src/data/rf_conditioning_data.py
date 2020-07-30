@@ -1238,9 +1238,9 @@ class rf_conditioning_data(object):
     values[cav_pwr_ratio] = dummy_float
 
     # STATUS PF CAVITY POWER RATIO
-    cav_pwr_ratio_status = 'cav_pwr_ratio_status'
-    all_value_keys.append(cav_pwr_ratio_status)
-    values[cav_pwr_ratio_status] = dummy_state
+    cav_pwr_ratio_good = 'cav_pwr_ratio_good'
+    all_value_keys.append(cav_pwr_ratio_good)
+    values[cav_pwr_ratio_good] = False
 
     fwd_cav_pwr = 'fwd_cav_pwr'
     all_value_keys.append(fwd_cav_pwr)
@@ -1396,13 +1396,13 @@ class rf_conditioning_data(object):
     all_value_keys.append(modulator_good)
     values[modulator_good] = False
 
-    can_rf_output_state_OLD = 'can_rf_output_state_OLD'
-    all_value_keys.append(can_rf_output_state_OLD)
-    values[can_rf_output_state_OLD] = state.UNKNOWN
+    can_rf_output_status_OLD = 'can_rf_output_status_OLD'
+    all_value_keys.append(can_rf_output_status_OLD)
+    values[can_rf_output_status_OLD] = state.UNKNOWN
 
-    can_rf_output_state = 'can_rf_output_state'
-    all_value_keys.append(can_rf_output_state)
-    values[can_rf_output_state] = state.UNKNOWN
+    can_rf_output_status = 'can_rf_output_status'
+    all_value_keys.append(can_rf_output_status)
+    values[can_rf_output_status] = state.UNKNOWN
 
     # TODO AJG assigned new states for can_rf_output logic:
 
@@ -1432,13 +1432,13 @@ class rf_conditioning_data(object):
 
     # Initialising these to state.GOOD until they are fully incorporated into NO-ARC
 
-    OMED_state = 'OMED_state'
-    all_value_keys.append(OMED_state)
-    values[OMED_state] = state.GOOD
+    #OMED_state = 'OMED_state'
+    #all_value_keys.append(OMED_state)
+    #values[OMED_state] = state.GOOD
 
-    DC_state = 'DC_state'
-    all_value_keys.append(DC_state)
-    values[DC_state] = state.GOOD
+    #DC_state = 'DC_state'
+    #all_value_keys.append(DC_state)
+    #values[DC_state] = state.GOOD
 
     # TODO AJG: ^^^
 

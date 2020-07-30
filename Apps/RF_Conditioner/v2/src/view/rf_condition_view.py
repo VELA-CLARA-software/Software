@@ -473,6 +473,12 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         self.quad_less_current_cut_predicted_next_amp_sp.setText('{}'.format(self.values[rcd.SP_QUAD_CURRENT_SP_TO_FIT ]))
 
 
+        self.set_widget_color_text(self.can_rf_output_status_outputwidget, self.data.values[rcd.can_rf_output_status])
+        self.set_widget_color_text(self.can_ramp_status_outputwidget, self.data.values[rcd.can_ramp_status])
+        self.set_widget_color_text(self.can_llrf_output_state_outputwidget, self.data.values[rcd.can_llrf_output_state])
+        self.set_widget_color_text(self.BD_state_outputwidget, self.data.values[rcd.BD_state])
+
+
 
         p_last = self.data.get_kf_running_stat_power_at_set_point(self.values[self.data.last_amp_sp])
         #print('##self.values[self.data.last_amp_sp] = {}'.format(self.values[self.data.last_amp_sp]))
@@ -1273,5 +1279,5 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         cav_pwr_ratio = self.values[self.data.cav_pwr_ratio]
         max_cav_pwr_ratio = self.config.raw_config_data['CAV_PWR_RATIO']
         self.cav_pwr_ratio_outputwidget.setText('{:1.2f} / {}'.format(cav_pwr_ratio, max_cav_pwr_ratio))
-        self.set_widget_color(self.cav_pwr_ratio_outputwidget, self.values[self.data.cav_pwr_ratio_status])
+        self.set_widget_color(self.cav_pwr_ratio_outputwidget, self.values[self.data.cav_pwr_ratio_can_ramp])
 
