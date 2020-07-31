@@ -698,15 +698,13 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
             '{}'.format(self.values[self.data.pulses_to_next_ramp]))
 
         self.breakdown_count_outputwidget.setText(
-            '{}'.format(self.values[self.data.breakdown_count]))
+            '{} / {}'.format(self.values[self.data.active_breakdown_count],self.values[self.data.total_breakdown_count]))
 
-        self.last_106_count_outputwidget.setText(
-            '{}'.format(self.values[self.data.last_106_bd_count]))
-
-        self.set_widget_color(self.last_106_count_outputwidget, self.values[self.data.breakdown_rate_low])
-
-        self.measured_breakdown_rate_outputwidget.setText(
-            '{}'.format(self.values[self.data.breakdown_rate]))
+        # self.last_106_count_outputwidget.setText(
+        #     '{}'.format(self.values[self.data.last_106_bd_count]))
+         # self.set_widget_color(self.last_106_count_outputwidget, self.values[self.data.breakdown_rate_low])
+        # self.measured_breakdown_rate_outputwidget.setText(
+        #     '{}'.format(self.values[self.data.breakdown_rate]))
 
     def update_expert_values_in_gui(self):
         """

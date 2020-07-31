@@ -116,7 +116,7 @@ class logger(object):
     _show_time_stamp = False
     _add_to_text_log = True
 
-    _excluded_key_list = None
+    _excluded_key_list = [-9999999]
 
     def __init__(self, column_width=None):
         if column_width:
@@ -362,6 +362,8 @@ class logger(object):
             # data names, the 2nd is tab separated data types
             joiner = '\t'
             if logger._binary_log_file_obj:
+                if type(header_names) != basestring:
+                    print(header_names)
                 head_names = joiner.join(header_names)+"\n"
                 head_types = joiner.join(header_types_str)+"\n"
                 logger._binary_log_file_obj.write(head_names)

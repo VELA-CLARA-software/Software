@@ -117,6 +117,8 @@ class rf_conditioning_data(object):
             rf_conditioning_data.ramp_power_sum = [sum(ramp_powers[:y]) for y in range(1, len(ramp_powers) + 1)]
             print("self.ramp_power_sum =",  rf_conditioning_data.ramp_power_sum)
 
+
+
     def get_ramp_index_from_power(self, power):
         '''
             we can get the place on the ramp curve
@@ -343,12 +345,7 @@ class rf_conditioning_data(object):
 
         message("update_breakdown_stats here ????????????????????")
         self.update_breakdown_stats()
-        raw_input()
-        raw_input()
-        raw_input()
-        raw_input()
-        raw_input()
-        raw_input()
+
 
     def update_breakdown_stats(self):
         '''
@@ -1874,7 +1871,7 @@ class rf_conditioning_data(object):
     all_value_keys.append(last_ramp_method)
     values[last_ramp_method] = ramp_method.UNKNOWN
 
-    bd_rate_calc_first_pulse_number = 'last_ramp_method'
+    bd_rate_calc_first_pulse_number = 'bd_rate_calc_first_pulse_number'
     all_value_keys.append(bd_rate_calc_first_pulse_number)
     values[bd_rate_calc_first_pulse_number] = dummy_int
 
@@ -1938,7 +1935,7 @@ class rf_conditioning_data(object):
 
     vac_drop_amp_val = "vac_drop_amp_val"
     expert_value_keys.append(vac_drop_amp_val)
-    expert_values[vac_drop_amp_val] = "STRING"
+    expert_values[vac_drop_amp_val] = dummy_int
 
     ramp_when_hi = "ramp_when_hi"
     expert_value_keys.append(ramp_when_hi)

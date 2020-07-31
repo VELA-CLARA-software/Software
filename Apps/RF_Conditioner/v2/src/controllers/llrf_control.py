@@ -75,6 +75,12 @@ class llrf_control(object):
 
 		# TODO AJG: input the "KLY_PWR_FOR_ACTIVE_PULSE" value from config.yaml into the C++ function "setActivePulsePowerLimit"
 		self.hardware.llrf_control.setActivePulsePowerLimit(self.config.raw_config_data['KLY_PWR_FOR_ACTIVE_PULSE'])
+		# TODO check the value  to update has been read by now (it probably has...)
+		self.hardware.llrf_control.setActivePulseCount(self.values[rf_conditioning_data.log_pulse_count])
+
+
+		self.set_trace_mean_positions()
+
 
 		# THIS SHOULD GO IN THE HANDLER
 		# monitor.llrf_control.setActivePulsePowerLimit(monitor.config.llrf_config[
@@ -308,7 +314,13 @@ class llrf_control(object):
 		'CAVITY_FORWARD_POWER' : 'CFPOW',
 		'CAVITY_PROBE_PHASE' : 'CPPHA',
 		'CAVITY_PROBE_POWER' : 'CPPOW'}
+
+		print('BREAKDOWN_TRACES = ',self.config_data['BREAKDOWN_TRACES'])
 		for trace in self.config_data['BREAKDOWN_TRACES']:
+
+			print("trace = ", trace)
+			print("short trace = ",  full_race_name_toShort_trace_name_dict[trace])
+
 			self.setup_trace_for_omed( full_race_name_toShort_trace_name_dict[trace] )
 
 		for trace in self.config_data['BREAKDOWN_TRACES']:
@@ -330,7 +342,7 @@ class llrf_control(object):
 		mask_type = self.config_data[trace + '_MASK_TYPE']  # is mask based on 'percent' of rolling mean, or "absolute" watts(phase)
 		mask_level = self.config_data[trace + '_MASK_LEVEL']  # AMOUNT OF MASK
 		mask_floor = self.config_data[trace + '_MASK_FLOOR']
-		mask_lo_min = self.config_data[trace + 'MASK_LO_MIN']  # mask_abs_min in c++
+		mask_lo_min = self.config_data[trace + '_MASK_LO_MIN']  # mask_abs_min in c++
 		if mask_type == 'ABSOLUTE':
 			is_percent = False
 		elif mask_type == 'PERCENT':
@@ -347,7 +359,8 @@ class llrf_control(object):
 		#
 		# set the check streak (how many points to trigger event)
 		check_streak = self.config_data[trace + '_CHECK_STREAK']
-		self.llrf_control.setNumContinuousOutsideMaskCount(trace, check_streak)
+		# TODO errrrrrrrrrrrrrrrr
+		#self.llrf_control.setNumContinuousOutsideMaskCount(trace, check_streak)
 		#
 		# set drop amp state and value)
 		drop_amp = self.config_data[trace+'_DROP_AMP']
@@ -360,7 +373,7 @@ class llrf_control(object):
 		self.llrf_control.setTraceRollingAverageSize(trace, num_average_traces)
 		#self.llrf_control.setInfiniteMasks(trace)
 		self.llrf_control.setShouldKeepRollingAverage(trace)
-		if self.llrf_obj[0].trace_data[trace].keep_rolling_average:
+		if self.llrf_obj[0].trace_data[  self.llrf_control.fullLLRFTraceName(trace) ].keep_rolling_average:
 			self.logger.message('STARTED rolling average for ' + trace)
 			self.logger.message('RollingAverageSize = ' + str(self.llrf_control.getTraceRollingAverageSize(trace)))
 			self.logger.message('RollingAverageCount = ' + str(self.llrf_control.getTraceRollingAverageCount(trace)))

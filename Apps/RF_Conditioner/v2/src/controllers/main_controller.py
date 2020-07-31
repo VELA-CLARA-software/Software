@@ -98,13 +98,19 @@ class main_controller(object):
         self.logger.message_header(__name__ + ', create rf_conditioning_data object',
                                    add_to_text_log=True, show_time_stamp=True)
         self.data = rf_conditioning_data(debug=self.debug)
+
         self.logger.excluded_key_list = self.data.excluded_key_list
         print("self.data.excluded_key_list = {}".format( self.data.excluded_key_list))
-        print(" self.logger.excluded_key_list = {}".format(  self.logger.excluded_key_list))
-
+        print(" self.logger.excluded_key_list = {}".format( self.logger.excluded_key_list))
         #raw_input()
         self.data.initialise()
         self.values = self.data.values
+
+        val_dict_len = len( self.values )
+        val_key_types = set([ type(x) for x in self.values.keys()  ])
+        print(val_dict_len, val_key_types)
+        print(self.data.all_value_keys)
+        raw_input()
 
         # should thios happen here, or in the view?
         self.view.data = self.data
@@ -118,13 +124,6 @@ class main_controller(object):
                                    add_to_text_log=True,show_time_stamp=True)
         self.hardware = hardware_control_hub()
         self.hardware.start_up()
-
-        # set the activ epulse count in teh c++ to the value in the pulse_breakdown_log
-        self.hardware.llrf_control.setActivePulseCount(self.values[rf_conditioning_data.log_pulse_count])
-        self.hardware.llrf_controller.set_trace_mean_positions()
-
-        # SET TRACE SCAN Paramaters
-        self.hardware.llrf_controller.set_trace_SCAN()
 
         # CATAP hardware controllers, these live here and are passed to where they are needed
         self.logger.message_header(__name__ + ', create monitor_hub object',
@@ -140,11 +139,21 @@ class main_controller(object):
         # TODO: move llrf_DAQ from conditioning states... but where to??
         self.conditioning_states[self.data.llrf_DAQ_rep_rate_status] = state.UNKNOWN
 
+        val_dict_len = len( self.values )
+        val_key_types = set([ type(x) for x in self.values.keys()  ])
+        print(val_dict_len, val_key_types)
+        raw_input()
+
         # connect buttons
         self.view.update_expert_values_button.clicked.connect(self.update_expert_values)
 
         # MUST BE CONNECTED AFTER MONITOR_HUB is created
         # Start Data Logging
+
+        val_dict_len = len( self.values )
+        val_key_types = set([ type(x) for x in self.values.keys()  ])
+        print(val_dict_len, val_key_types)
+        raw_input()
         self.logger.start_binary_data_logging(self.data.values)
         self.main_loop()
 
