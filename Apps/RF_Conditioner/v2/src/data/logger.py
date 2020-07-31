@@ -281,14 +281,6 @@ class logger(object):
                 else:
                     print("ERROR! {} key missing".format(k))
 
-
-            # for i, (t1, t2) in enumerate(zip(type_list, logger._binary_header_types)):
-            #     if t1 != t2:
-            #         print(t1, " != ", t2, list(values)[i])
-
-
-
-
     def write_binary(self, val):
         """
         This writes val to fileobject f, it needs to know how to convert all data types to
@@ -342,14 +334,11 @@ class logger(object):
         '''
         # these static variables save the data written to the header, this is so it can be
         # cross-checked against, in further calls to  write_binary()
-
         logger._binary_header_length = len(data_to_log)  # the number of entries in data_to_log
         logger._binary_header_types = {}  # the type of each entry in data_to_log (filled below)
         header_names = []
         header_types_str = []
-
         #print 'LOGGER excluded_key_list = {}'.format(self.excluded_key_list)
-
         print("write bin header logger.excluded_key_list = {}".format(logger._excluded_key_list))
         # iterate over data_to_log, and get types for each entry
         for key, value in data_to_log.iteritems():

@@ -97,8 +97,6 @@ class llrf_handler_base(base):
 		print 'get_breakdown_config_param ERROR ' + shortname + ' ,' + end_phrase
 		return None
 
-
-
 	# this is the bit that is going wrong
 	def set_mask_dict(self,dict, shortname):
 

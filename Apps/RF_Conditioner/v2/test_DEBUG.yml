@@ -64,9 +64,9 @@ RF_STRUCTURE: CLARA_LRRG # STRING
 #TIME_BETWEEN_RF_INCREASES :  10;seconds
 #RF_INCREASE_LEVEL=0.001;kw (KLYSTRON FORWARD POWER ESTIMATE)
 
-DEFAULT_RF_INCREASE_LEVEL:  10  # INTEGER LLRF units
-DEFAULT_PULSE_COUNT:  150 # INTEGER, How many pulses to wait before the next ramp 
-MAX_DELTA_AMP_SP :  400 #; maximum setpoint increase allowed, no matter what the fitting says INTEGER
+DEFAULT_RF_INCREASE_LEVEL: 10  # INTEGER LLRF units
+DEFAULT_PULSE_COUNT: 150 # INTEGER, How many pulses to wait before the next ramp
+MAX_DELTA_AMP_SP : 400 #; maximum setpoint increase allowed, no matter what the fitting says INTEGER
 
 NUM_SET_POINTS_TO_FIT:  4 # how many setpoints to fit when predicted then next setpoint
 
@@ -84,7 +84,6 @@ RF_REPETITION_RATE:  10 # INTEGER Hertz
 RF_REPETITION_RATE_ERROR:  3 #difference in Hertz from RF_REPETITION_RATE that is acceptable
 
 
-BREAKDOWN_RATE_AIM:  100 # per million active pulses
 
 LLRF_CHECK_TIME:  50 # INTEGER ms to check main llrf parameters
 
@@ -93,6 +92,8 @@ LLRF_CHECK_TIME:  50 # INTEGER ms to check main llrf parameters
 #LOW_POWER_INCREASE=1000;Watts, step size at low power
 #LOW_POWER_INCREASE_RATE_LIMIT=1000000;Watts. definition of low/normal power for _POWER_INCREASE tags
 NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY:  1000000 #how many pulses to count 
+BREAKDOWN_RATE_AIM:  100 #  INTEGER per NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY
+
 NUM_BUFFER_TRACES:  500 # number of traces in history, dumped on vac-spike
 
 ## Traces to calculate a mean value for 
@@ -161,8 +162,6 @@ TRACES_TO_SAVE:  # specify traces to save breakdown data#
   #- CAVITY_PROBE_POWER
   #- CAVITY_PROBE_POWER
 
-
-
 # WHAT EXTRA VLAUES TO SAVE ON BREAKDWON - SHOULD THI SBE CONFIGURABLE???
 EXTRA_BREAKDOWN_DAQ:  # ; has to go in python source code NOT IMPLEMENTED YET
   - VAC_LEVEL
@@ -182,11 +181,10 @@ CFPOW_MASK_END: 179 #;Only used if CRP_AUTO_SET=FALSE
 CFPOW_MASK_WINDOW_START: 301 #;Only used if CRP_AUTO_SET=FALSE
 CFPOW_MASK_WINDOW_END: 302 #;Only used if CRP_AUTO_SET=FALSE
 CFPOW_MASK_TYPE: PERCENT #; PERCENT OR ABSOLUTE
-CFPOW_MASK_ABS_MIN: 50 # integer,Minimum value for a mask, regardless
+CFPOWMASK_LO_MIN: 50 # integer,Minimum value for a mask, regardless
 CFPOW_MASK_LEVEL: 30 #integer,units depend on CFP_MASK_TYPE
 CFPOW_CHECK_STREAK: 10 #how many continuous points outside mask
 CFPOW_MASK_FLOOR: 50 #Watts, values below this won't get checked
-CFPOW_MASK_MIN: 50 #Watts, values below this won't get checked
 CFPOW_NUM_AVERAGE_TRACES: 5
 CFPOW_DROP_AMP: false #
 CFPOW_DROP_AMP_VALUE: 6
@@ -198,9 +196,9 @@ CRPOW_MASK_SET_TYPE:  TIME #(TIME or INDEX) for CRP_AUTO_SET=FALSE manually set 
 CRPOW_MASK_START:  0.8 # Only used if CRP_AUTO_SET=FALSE
 CRPOW_MASK_WINDOW_START:  2.4 # Only used if CRP_AUTO_SET=FALSE
 CRPOW_MASK_WINDOW_END:  3.4 # Only used if CRP_AUTO_SET=FALSE
-CRPOW_MASK_END:  5.0 # Only used if CRP_AUTO_SET=FALSE
-CRPOW_MASK_ABS_MIN:  50  # integer,Minimum value for a mask, regardless
-CRPOW_MASK_TYPE:  ABSOLUTE # ABSOLUTE OR PERCENT, mask type is to set the mask based on a percentage of previous values, or by absolute amount 
+CRPOW_MASK_END :  5.0 # Only used if CRP_AUTO_SET=FALSE
+CRPOWMASK_LO_MIN:  50  # integer,Minimum value for a mask, regardless
+CRPOW_MASK_TYPE :  ABSOLUTE # ABSOLUTE OR PERCENT, mask type is to set the mask based on a percentage of previous values, or by absolute amount
 CRPOW_NUM_AVERAGE_TRACES:  2 # 
 CRPOW_CHECK_STREAK :  2 # how many continuous points outside mask required to trigger event
 CRPOW_DROP_AMP_VALUE :  2 # value to drop RF amplitude to on event detection (LLRF UNITS)
@@ -216,7 +214,7 @@ CPPOW_MASK_START:  0.8 # Only used if CRP_AUTO_SET=FALSE
 CPPOW_MASK_WINDOW_START:  2.4 # Only used if CRP_AUTO_SET=FALSE
 CPPOW_MASK_WINDOW_END:  3.4 # Only used if CRP_AUTO_SET=FALSE
 CPPOW_MASK_END:  5.0 # Only used if CRP_AUTO_SET=FALSE
-CPPOW_MASK_ABS_MIN:  50  # integer,Minimum value for a mask, regardless
+CPPOWMASK_LO_MIN:  50  # integer,Minimum value for a mask, regardless
 CPPOW_MASK_TYPE:  ABSOLUTE # ABSOLUTE OR PERCENT, mask type is to set the mask based on a percentage of previous values, or by absolute amount
 CPPOW_NUM_AVERAGE_TRACES:  2 #
 CPPOW_CHECK_STREAK:  2 # how many continuous points outside mask required to trigger event
@@ -233,7 +231,7 @@ KRPOW_MASK_START:  0.8 # Only used if CRP_AUTO_SET=FALSE
 KRPOW_MASK_WINDOW_START:  2.4 # Only used if CRP_AUTO_SET=FALSE
 KRPOW_MASK_WINDOW_END:  3.4 # Only used if CRP_AUTO_SET=FALSE
 KRPOW_MASK_END:  5.0 # Only used if CRP_AUTO_SET=FALSE
-KRPOW_MASK_ABS_MIN:  50  # integer,Minimum value for a mask, regardless
+KRPOWMASK_LO_MIN:  50  # integer,Minimum value for a mask, regardless
 KRPOW_MASK_TYPE:  ABSOLUTE # ABSOLUTE OR PERCENT, mask type is to set the mask based on a percentage of previous values, or by absolute amount 
 KRPOW_NUM_AVERAGE_TRACES:  2 # 
 KRPOW_CHECK_STREAK:  2 # how many continuous points outside mask required to trigger event
@@ -250,7 +248,7 @@ KFPOW_MASK_START:  0.8 # Only used if CRP_AUTO_SET=FALSE
 KFPOW_MASK_WINDOW_START:  2.4 # Only used if CRP_AUTO_SET=FALSE
 KFPOW_MASK_WINDOW_END:  3.4 # Only used if CRP_AUTO_SET=FALSE
 KFPOW_MASK_END:  5.0 # Only used if CRP_AUTO_SET=FALSE
-KFPOW_MASK_ABS_MIN:  50  # integer,Minimum value for a mask, regardless
+KFPOWMASK_LO_MIN:  50  # integer,Minimum value for a mask, regardless
 KFPOW_MASK_TYPE:  ABSOLUTE # ABSOLUTE OR PERCENT, mask type is to set the mask based on a percentage of previous values, or by absolute amount 
 KFPOW_NUM_AVERAGE_TRACES:  2 # 
 KFPOW_CHECK_STREAK:  2 # how many continuous points outside mask required to trigger event
@@ -267,7 +265,7 @@ CFPHA_MASK_START:  0.8 # Only used if CRP_AUTO_SET=FALSE
 CFPHA_MASK_WINDOW_START:  2.4 # Only used if CRP_AUTO_SET=FALSE
 CFPHA_MASK_WINDOW_END:  3.4 # Only used if CRP_AUTO_SET=FALSE
 CFPHA_MASK_END:  5.0 # Only used if CRP_AUTO_SET=FALSE
-CFPHA_MASK_ABS_MIN:  50  # integer,Minimum value for a mask, regardless
+CFPHAMASK_LO_MIN:  50  # integer,Minimum value for a mask, regardless
 CFPHA_MASK_TYPE:  ABSOLUTE # ABSOLUTE OR PERCENT, mask type is to set the mask based on a percentage of previous values, or by absolute amount 
 CFPHA_NUM_AVERAGE_TRACES:  2 # 
 CFPHA_CHECK_STREAK:  2 # how many continuous points outside mask required to trigger event
@@ -290,7 +288,7 @@ CRPHA_MASK_START:  0.8 # Only used if CRP_AUTO_SET=FALSE
 CRPHA_MASK_WINDOW_START:  2.4 # Only used if CRP_AUTO_SET=FALSE
 CRPHA_MASK_WINDOW_END:  3.4 # Only used if CRP_AUTO_SET=FALSE
 CRPHA_MASK_END:  5.0 # Only used if CRP_AUTO_SET=FALSE
-CRPHA_MASK_ABS_MIN:  50  # integer,Minimum value for a mask, regardless
+CRPHAMASK_LO_MIN:  50  # integer,Minimum value for a mask, regardless
 CRPHA_MASK_TYPE:  ABSOLUTE # ABSOLUTE OR PERCENT, mask type is to set the mask based on a percentage of previous values, or by absolute amount 
 CRPHA_NUM_AVERAGE_TRACES:  2 # 
 CRPHA_CHECK_STREAK:  2 # how many continuous points outside mask required to trigger event
@@ -310,7 +308,7 @@ CPPHA_MASK_START:  0.8 # Only used if CRP_AUTO_SET=FALSE
 CPPHA_MASK_WINDOW_START:  2.4 # Only used if CRP_AUTO_SET=FALSE
 CPPHA_MASK_WINDOW_END:  3.4 # Only used if CRP_AUTO_SET=FALSE
 CPPHA_MASK_END:  5.0 # Only used if CRP_AUTO_SET=FALSE
-CPPHA_MASK_ABS_MIN:  50  # integer,Minimum value for a mask, regardless
+CPPHAMASK_LO_MIN:  50  # integer,Minimum value for a mask, regardless
 CPPHA_MASK_TYPE:  ABSOLUTE # ABSOLUTE OR PERCENT, mask type is to set the mask based on a percentage of previous values, or by absolute amount
 CPPHA_NUM_AVERAGE_TRACES:  2 #
 CPPHA_CHECK_STREAK:  2 # how many continuous points outside mask required to trigger event
@@ -330,7 +328,7 @@ KRPHA_MASK_START:  0.8 # Only used if CRP_AUTO_SET=FALSE
 KRPHA_MASK_WINDOW_START:  2.4 # Only used if CRP_AUTO_SET=FALSE
 KRPHA_MASK_WINDOW_END:  3.4 # Only used if CRP_AUTO_SET=FALSE
 KRPHA_MASK_END:  5.0 # Only used if CRP_AUTO_SET=FALSE
-KRPHA_MASK_ABS_MIN:  50  # integer,Minimum value for a mask, regardless
+KRPHAMASK_LO_MIN:  50  # integer,Minimum value for a mask, regardless
 KRPHA_MASK_TYPE:  ABSOLUTE # ABSOLUTE OR PERCENT, mask type is to set the mask based on a percentage of previous values, or by absolute amount 
 KRPHA_NUM_AVERAGE_TRACES:  2 # 
 KRPHA_CHECK_STREAK:  2 # how many continuous points outside mask required to trigger event
@@ -350,7 +348,7 @@ KFPHA_MASK_START:  0.8 # Only used if CRP_AUTO_SET=FALSE
 KFPHA_MASK_WINDOW_START:  2.4 # Only used if CRP_AUTO_SET=FALSE
 KFPHA_MASK_WINDOW_END:  3.4 # Only used if CRP_AUTO_SET=FALSE
 KFPHA_MASK_END:  5.0 # Only used if CRP_AUTO_SET=FALSE
-KFPHA_MASK_ABS_MIN:  50  # integer,Minimum value for a mask, regardless
+KFPHAMASK_LO_MIN:  50  # integer,Minimum value for a mask, regardless
 KFPHA_MASK_TYPE:  ABSOLUTE # ABSOLUTE OR PERCENT, mask type is to set the mask based on a percentage of previous values, or by absolute amount 
 KFPHA_NUM_AVERAGE_TRACES:  2 # 
 KFPHA_CHECK_STREAK:  2 # how many continuous points outside mask required to trigger event
@@ -372,8 +370,8 @@ TEXT_LOG_FILENAME:  log.txt # general messages
 ##LOG_DIRECTORY:   "C:  \Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\"; breakdown data
 ##LOG_DIRECTORY:   "D:  \VELA\GIT Projects\Software\Apps\RF_Conditioner\logs_clara_lrrg\"
 #LOG_DIRECTORY: C:\Users\dlerlp\Documents\GitHub\Software\Apps\RF_Conditioner\v2\logs\
-#LOG_DIRECTORY: C:\Users\djs56\GitHub\Software\Apps\RF_Conditioner\v2\logs\
-LOG_DIRECTORY: C:\Users\dlerlp\Documents\GitHub\Software\Apps\RF_Conditioner\v2\logs\
+LOG_DIRECTORY: C:\Users\djs56\GitHub\Software\Apps\RF_Conditioner\v2\logs\
+#LOG_DIRECTORY: C:\Users\dlerlp\Documents\GitHub\Software\Apps\RF_Conditioner\v2\logs\
 OUTSIDE_MASK_FORWARD_FILENAME:  outside_forward_log
 OUTSIDE_MASK_REVERSE_FILENAME:  outside_reverse_log
 OUTSIDE_MASK_PROBE_FILENAME:  outside_probe_log

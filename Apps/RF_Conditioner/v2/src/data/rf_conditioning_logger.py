@@ -124,7 +124,7 @@ class rf_conditioning_logger(logger):
 
     # NNeds re-writing
     def start_data_logging(self):
-        self.header(self.my_name + ' start_data_logging')
+        self.header(__name__ + ' start_data_logging')
         self.message(['data_log path = ' + self.data_path, ' starting monitoring, update time = ' + str(self.log_config['DATA_LOG_TIME'])])
         self.message(
             ['AMP_POWER_LOG  path = ' + self.amp_pwr_path, ' starting monitoring, update time = ' + str(self.log_config['AMP_PWR_LOG_TIME'])])
@@ -354,37 +354,10 @@ class rf_conditioning_logger(logger):
         QApplication.processEvents()
 
 
-    # @log_config.setter
-    # def log_config(self, value):
-    #     logger._log_config = value
-    #     self.log_directory = logger.config.log_config['LOG_DIRECTORY'] + self.log_start_str
-    #     os.makedirs(self.log_directory)
-    #     self.working_directory = self.log_directory + '\\'
-    #     self.data_path = self.working_directory + self.log_config[
-    #         'DATA_TEXT_LOG_FILENAME']  # MAGIC_STRING
-    #     self.amp_pwr_path = self.working_directory + self.log_config[
-    #         'KFPOW_AMPSP_RUNNING_STATS_LOG_FILENAME']  # MAGIC_STRING
-    #     self.forward_file = self.working_directory + self._log_config[
-    #         'OUTSIDE_MASK_FORWARD_FILENAME']  #
-    #     self.probe_file = self.working_directory + self._log_config[
-    #         'OUTSIDE_MASK_PROBE_FILENAME']  #
-    #     self.reverse_file = self.working_directory + self._log_config[
-    #         'OUTSIDE_MASK_REVERSE_FILENAME']
-    #     self.log_path = self.working_directory + self._log_config['TEXT_LOG_FILENAME']
-    #     self.header(self.my_name + ' log_config')
-    #     self.message(['log_directory     = ' + self.log_directory,
-    #                   'working_directory = ' + self.working_directory,
-    #                   'data_path    = ' + self.data_path, 'forward_file = ' + self.forward_file,
-    #                   'probe_file   = ' + self.probe_file,
-    #                   'reverse_file = ' + self.reverse_file, 'log_path     = ' + self.log_path])
-    #     # open log_file and LEAVE OPEN
-    #     self.log_file = open(self.log_path, 'a')
-
     # noinspection PyMethodMayBeStatic
     def pickle_file(self, file_name, obj):
         path = self.working_directory + file_name
         self.pickle_dump(path, obj)
-
     # don't bother with this, convert to wxf offline  # def pkl2wxf(self,path):  #     file =
     # open(path, 'rb')  #     objs = []  #     while True:  #         try:  #
     # objs.append(pkl.load(file))  #         except EOFError:  #             break  #

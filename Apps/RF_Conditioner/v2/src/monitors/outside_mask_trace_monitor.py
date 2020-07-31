@@ -130,9 +130,8 @@ class outside_mask_trace_monitor(monitor):
 
         # we then update the last million pulses log, this is a list of how many breakdwons in the
         # last 1 million pulses ...
-        # TODO: Think about why we are calling 1 million pulses? should 1 million actually be a
-        #  variable????
-        self.data.update_last_million_pulse_log()
+        #self.data.update_last_million_pulse_log() # OLD NAME!!!
+        self.data.update_active_pulse_breakdown_log()
 
     def new_breakdown(self):
         """

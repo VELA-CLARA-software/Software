@@ -472,12 +472,11 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         self.quad_less_current_predicted_next_amp_sp.setText('{}'.format(self.values[rcd.SP_QUAD_CURRENT ]))
         self.quad_less_current_cut_predicted_next_amp_sp.setText('{}'.format(self.values[rcd.SP_QUAD_CURRENT_SP_TO_FIT ]))
 
-
+        self.set_widget_color_text( self.check_mask_outputwidget , self.values[rcd.global_mask_checking] )
 
         p_last = self.data.get_kf_running_stat_power_at_set_point(self.values[self.data.last_amp_sp])
         #print('##self.values[self.data.last_amp_sp] = {}'.format(self.values[self.data.last_amp_sp]))
         p_current = self.data.get_kf_running_stat_power_at_current_set_point()
-
         if p_last:
             if p_current:
                 self.delta_power_outputwidget.setText('{}'.format( int( p_current- p_last ) ))

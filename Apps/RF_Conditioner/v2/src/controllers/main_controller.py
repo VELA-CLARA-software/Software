@@ -207,7 +207,6 @@ class main_controller(object):
                 can_ramp states
                     we can have power, but we can't increase it
                     vac level, gui, cavity ratio,  bd rate
-                              
                 
                 DAQ frequency is just good or bad
                 can_rf_output high level state includes DAQ freq
@@ -215,8 +214,6 @@ class main_controller(object):
                 if can_rf_output is bad, and gui alllows, reset LLRF states enable_llrf() (check each state and reset bad ones)
                 
                 when resetting LLRF, if gui, mod, prot are bad, no point trying to reset 
-                
-                
                 
             '''
             # TODO AJG: Plan:
