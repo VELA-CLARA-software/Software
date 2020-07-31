@@ -238,7 +238,7 @@ class vac_monitor(monitor):
                 if self.should_drop_amp:
 
                     # TODO AJG: IT ONLY drops the amp, if the amp has not already been dropped due to a breakdown
-                    #  breakdown status could be the high level combination of all breakdown
+                    #  breakdown status could be the high level combination of all breakdown indicators
                     if self.values[self.data.breakdown_status] == state.GOOD:
                         self.hardware.llrf_control.setAmpHP(self.amp_drop_value)
                 self.spike_count += 1

@@ -172,7 +172,7 @@ EXTRA_BREAKDOWN_DAQ:  # ; has to go in python source code NOT IMPLEMENTED YET
 
 OUTSIDE_MASK_COOLDOWN_TIME: 3000 # INTEGER,  cooldown time in milliseconds
 EXTRA_TRACES_ON_BREAKDOWN: 2 # INTEGER number of extra (subsequent) traces to save after an out_side_mask_trace is detected
-KLY_PWR_FOR_ACTIVE_PULSE: 500.0 # FLOAT, min kyl fwd power to enable incrementing the RF pulse counter (in Watts)
+# KLY_PWR_FOR_ACTIVE_PULSE: 500.0 # FLOAT, min kyl fwd power to enable incrementing the RF pulse counter (in Watts)
 
 ## CAVITY FORWARD POWER  MASK PARAMETERS
 CFPOW_AUTO_SET: false #;Will pick mask indices automatically, if false YOU must Define Them
@@ -498,17 +498,19 @@ PID_autotune_state_GMON :  CLA-GUN-H2O-PID-02:ATUNE:RB
 ## Binning
 
 BIN_WIDTH: 100  ## Width of each bin in amp set points, the lower the number, the more bins will result
-MAX_AMP:  60000  ## x-coordinate, amp set points
-MAX_POW:  0.0  ## y-coordinate, Watts
+MAX_AMP:  60000  ## maximum x-coordinate, amp set points
+MAX_POW:  0.0  ## maximum y-coordinate, Watts
 MIN_AMP:  500
 
 # log ramp curve
 
-LOG_RAMP_CURVE_NUMSTEPS : 10
+LOG_RAMP_CURVE_NUMSTEPS : 30
 LOG_RAMP_CURVE_PULSES_PER_STEP : 10
 LOG_RAMP_CURVE_RAMP_RATE : 0.2
 # in watts
-LOG_RAMP_START_POWER  : 30000
+LOG_RAMP_START_POWER  : 30000 # This should never be set less than the KLY_PWR_FOR_ACTIVE_PULSE value below!!!!
+KLY_PWR_FOR_ACTIVE_PULSE: 500.0 # FLOAT, min kyl fwd power to enable incrementing the RF pulse counter (in Watts)
+
 
 # Cavity rev / fwd pwr ratio maximum threshhold: if ratio over this value then can_ramp == False
 CAV_PWR_RATIO  : 1.0

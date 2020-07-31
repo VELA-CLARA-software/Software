@@ -48,9 +48,17 @@ class llrf_control(object):
 		self.should_show_llrf_pha_ff_locked = True
 		self.should_show_reset_daq_freg = True
 
-		# TODO AJG  check DAQ_rep_rate_state and reset if state == state.BAD
-		if self.values[self.data.llrf_DAQ_rep_rate_status] == state.BAD:
-			self.reset_daq_freg()
+		# TODO AJG: input the "KLY_PWR_FOR_ACTIVE_PULSE" value from config.yaml into the C++ function "setActivePulsePowerLimit"
+		self.hardware.llrf_control.setActivePulsePowerLimit(self.config.raw_config_data['KLY_PWR_FOR_ACTIVE_PULSE'])
+
+
+		# THIS SHOULD GO IN THE HANDLER
+		# monitor.llrf_control.setActivePulsePowerLimit(monitor.config.llrf_config[
+		#        'KLY_PWR_FOR_ACTIVE_PULSE'])
+
+		# TODO AJG  check DAQ_rep_rate_state and reset if state == state.BAD... THIS SHOULD HAPPEN in main_controller.py --> check_LLRF_state()
+		#if self.values[self.data.llrf_DAQ_rep_rate_status] == state.BAD:
+	    #		self.reset_daq_freg()
 
 
 	def enable_llrf(self):
@@ -127,38 +135,6 @@ class llrf_control(object):
 
 		# this is sketchy AF
 
-	def reset_daq_freg(self):
-		if self.data.values[self.data.llrf_DAQ_rep_rate_status]  == state.BAD:
-			start_time = time.time()
-			if self.should_show_reset_daq_freg:
-				self.logger.message('reset_daq_freg, llrf_DAQ_rep_rate_status == BAD')
-				self.should_show_reset_daq_freg = False
-			# for a
-			if self.llrf_control.getAmpSP() != 0:
-				self.logger.message('reset_daq_freg forcing set_amp(0)')
-				#self.llrf_control.set_amp(0)
-
-
-				self.llrf_control.setAmpSP(0.0)
-				start_time = time.time()
-
-			while time.time() - start_time < 0.02:
-				pass
-			#self.set_iointr_counter += 1
-			#print('reset_daq_freg = ', self.set_iointr_counter)
-			#if self.set_iointr_counter == 100000: # MAGIC_NUMBER
-			self.logger.message('reset_daq_freg, time passed > 0.02s')
-
-			#self.llrf_control.resetTORSCANToIOIntr()
-			self.llrf_control.setTORSCANToIOIntr()
-			time.sleep(0.02) # TODO meh ...
-			self.llrf_control.setTORACQMEvent()
-			self.set_iointr_counter = 0
-
-		else:
-			if self.should_show_reset_daq_freg == False:
-				self.logger.message('reset_daq_freg, llrf_DAQ_rep_rate_status != BAD')
-				self.should_show_reset_daq_freg = True
 
 	def disableRFOutput(self):
 		self.llrf_control.disableRFOutput() # the c++ check is RF output is enabled, if not it disables rf output
@@ -261,44 +237,3 @@ class llrf_control(object):
 				self.llrf_control.setMeanStartEndTime(cd[c.CRPHA_MEAN_START], cd[c.CRPHA_MEAN_END], trace)
 			elif 'CAVITY_PROBE_PHASE' in trace:
 				self.llrf_control.setMeanStartEndTime(cd[c.CPPHA_MEAN_START], cd[c.CPPHA_MEAN_END], trace)
-		#
-		#
-		# self.get_pulse_end()
-		# # MUST BE CALLED AFTER CHANGING PULSE WIDTH ' CANCER
-		# base.logger.header(self.my_name + ' set_mean_pwr_position',True)
-		# base.logger.message([
-		# 	'rf pulse end time = ' + str(self.pulse_end) + ', index = ' + str(self.pulse_end_index),
-		# 	'pulse_latency     = '  + str(base.llrfObj[0].pulse_latency),
-		# 	'.getPulseLength() = ' + str(base.llrf_control.getPulseLength())],True)
-		# s = None
-		# e = None
-		# if base.config.llrf_config.has_key('MEAN_TRACES'):
-		# 	i = 0
-		# 	for trace in base.config.llrf_config['MEAN_TRACES']:
-		# 		base.logger.message(trace + ' found in config file', True)
-		# 		i += 1
-		# 		r = self.has_mean_start_end_key_i(i)
-		# 		if r != False:
-		# 			if base.llrf_control.setMeanStartEndTime(r[0], r[1], trace):
-		# 				base.logger.message(trace + ' mean monitoring started', True)
-		# 				base.logger.message(['trace_mean_start/end Set Times (us) = ' + str(r[0]) +
-		# 				                     '/' +
-		# 				                     str(r[1]),
-		# 									 'meantime = ' + str(r[1] - r[0])], True)
-		#
-		# 				actual_start_index = base.llrf_control.getMeanStartIndex(trace)
-		# 				actual_stop_index = base.llrf_control.getMeanStopIndex(trace)
-		#
-		# 				actual_start_time = base.llrf_control.getTime(actual_start_index)
-		# 				actual_stop_time = base.llrf_control.getTime(actual_stop_index)
-		#
-		#
-		#
-		# 				base.logger.message(['trace_mean_start/end Read Times (us) = ' +
-		# 				                     str(actual_start_time) + '/' + str(actual_stop_time),
-		# 									 'meantime = ' + str(actual_stop_time - actual_start_time)], True)
-		#
-		# 		else:
-		# 			base.logger.message(trace + ' setting mean monitoring failed', True)
-		# else:
-		# 	base.logger.message('keyword MEAN_TRACES not found in config file, no mean value for traces applied', True)

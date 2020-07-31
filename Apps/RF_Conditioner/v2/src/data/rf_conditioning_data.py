@@ -454,6 +454,8 @@ class rf_conditioning_data(object):
 
     def initialise(self):
         """
+        This reads in the amp_power log data and bins it using initial_bin().
+        The binned amp_sp vs. kfpwr data is saved as a .txt file for use by Frank Jackson's DC measurement script.
         has to be CALLED after the config and logging is setup in main controller
         :return:
         """
@@ -730,30 +732,7 @@ class rf_conditioning_data(object):
 
     def get_new_set_point(self, req_delta_pwr):
         '''
-            using the binned data and the current amp_sp kf_power, estimate teh setpoint required to change the power by req_delta_pwr
-
-        get_new_set_point(req_delta_pwr)
-                               
-            if req_delta_pwr < 0: ramping_down
-            if req_delta_pwr > 0: ramping_up
-            
-            get the binned data to fit, this shoudl be a function
-            
-            if binned data is bad : 
-                if ramping_down: return negative default
-                if ramping_up  : return positive default
-
-            if binned data is good: fit
-                estimate amp_sp for current_power +  req_delta_pwr  (!!req_delta_pwr can be negative!!)
-                do the fit to get predicted_sp
-
-                check the valididty of the predicted_sp
-                
-                    if  ramping_down and predicted_sp >= current_sp: default 
-                    if  ramping_up and predicted_sp <= current_sp: default
-                    
-                    if ramping_up and predicted_sp - current_sp   > 'MAX_DELTA_AMP_SP': default (or max?)
-                    if ramping_down and current_sp - predicted_sp > 'MAX_DELTA_AMP_SP': default (or max?)
+            using the binned data and the current amp_sp kf_power, estimate the setpoint required to change the power by req_delta_pwr
 
         '''
         set_point_to_return = ramping_down = ramping_up = None

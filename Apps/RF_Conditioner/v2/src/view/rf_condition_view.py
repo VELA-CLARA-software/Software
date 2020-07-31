@@ -143,7 +143,6 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         self.can_ramp_button.setText('RAMP Disabled')
         self.plot_item = self.graphicsView.getPlotItem()
 
-
     def update_plot(self):
         '''
             plot the binned data, the current working point (as a vertical line due to no kfpow for that amp_sp), lines of best fit
@@ -189,33 +188,32 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
 
         #        print('expected_Y = {}\nexpected_Y_old = {}'.format(expected_Y, expected_Y_old))
 
-        print('m = {}\nc = {}\nexpected_Y = {}\nold_m = {}\nold_c = {}\nexpected_Y_old = {}\n'.format(m, c, expected_Y, old_m, old_c, expected_Y_old))
-        print('type(m) = {}\ntype(c) = {}\ntype(expected_Y) = {}\ntype(old_m) = {}\ntype(old_c) = {}\ntype(expected_Y_old) = {}\n'.format(type(m),
-                                                                                                                                          type(c), type(expected_Y), type(old_m), type(old_c),
+        print('\nFrom update_plot\nm = {}\nc = {}\nexpected_Y = {}\nold_m = {}\nold_c = {}\nexpected_Y_old = {}\n'.format(m, c, expected_Y, old_m,
+                                                                                                                       old_c,
+                                                                                                       expected_Y_old))
+        print('type(m) = {}\ntype(c) = {}\ntype(expected_Y) = {}\ntype(old_m) = {}\ntype(old_c) = {}\ntype(expected_Y_old) = {}'.format(type(m),
+                                                                type(c), type(expected_Y), type(old_m), type(old_c), type(expected_Y_old)))
 
-                                                                                                                                                                                        type(expected_Y_old)))
+
+        #raw_input()
+        x_min = self.values[rcd.x_min]
+        old_x_min = self.values[rcd.old_x_min]
+        y_min = self.values[rcd.y_min]
+        old_y_min = self.values[rcd.old_y_min]
+
+        print('x_min = {}\nold_x_min = {}\ny_min = {}\nold_y_min = {}\n'.format(x_min, old_x_min, y_min, old_y_min))
+        print('type(x_min) = {}\ntype(old_x_min) = {}\ntype(y_min) = {}\ntype(old_y_min) = {}\n'.format(type(x_min), type(old_x_min), type(y_min), type(old_y_min)))
+
         #raw_input()
 
-
         # add in straight line fits ...'new data'
-        self.plot_item.plot([self.values[rcd.x_min], current_amp],
-                            [self.values[rcd.y_min], expected_Y], pen={'color': 'r', 'width': 2.5})
+        self.plot_item.plot([x_min, current_amp], [y_min, expected_Y], pen={'color': 'r', 'width': 2.0})
+
 
         # add in plot of old SLF,
-        self.plot_item.plot(
-            [rcd.values[rcd.old_x_min], current_amp],
-            [rcd.values[rcd.old_y_min], expected_Y_old],
-            pen={'color': 'y', 'width': 1.0})
-
-        # print(
-        #     'x_min = {}\nx_max = {}\ny_min = {}\ny_max = {}'.format(self.values[rf_conditioning_data.x_min], self.values[rf_conditioning_data.x_max],
-        #                                                             self.values[rf_conditioning_data.y_min], self.values[rf_conditioning_data.y_max]))
-
-
+        self.plot_item.plot([old_x_min, current_amp], [old_y_min, expected_Y_old], pen={'color': 'y', 'width': 1.0})
 
         # Add second order polyfit to plot (all data):
-
-
         data_to_fit_x = rcd.values['polyfit_2order_X_all']
         polyfit_2nd_order_y = rcd.values['polyfit_2order_Y_all']
 
@@ -401,7 +399,6 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         self.timer.timeout.connect(self.update_gui)
         self.timer.start(self.config.raw_config_data[self.config.GUI_UPDATE_TIME])
 
-
         self.timer2 = QTimer()
         self.timer2.setSingleShot(False)
         self.timer2.timeout.connect(self.quick_update_plot)
@@ -416,6 +413,8 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
     # main update gui function, loop over all widgets, and if values is new update gui with new
     # value
     def update_gui(self):
+
+        rcd = rf_conditioning_data
         QApplication.processEvents()
         # Call various update functions for each widget / group of widgets
         self.update_cav_pwr_ratio_and_max()
@@ -430,21 +429,13 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         self.update_RF_prot()
         # modulator state
         self.update_modulator_status()
-        #
         self.update_temperature_values()
         self.update_CATAP_AMPSP_limit() # TODO only needs calling once
         self.update_DAQ_rep_rate()
-
-
-
         self.update_all_counters()
 
         self.update_amp_sp()
-
         # other stuff
-
-        rcd = rf_conditioning_data
-
 
         self.pulse_length_outputwidget.setText( str( self.values[self.data.pulse_length]  ))
         self.set_widget_color(self.pulse_length_outputwidget, self.values[self.data.pulse_length_status])
@@ -478,15 +469,14 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         self.set_widget_color_text(self.can_llrf_output_state_outputwidget, self.data.values[rcd.can_llrf_output_state])
         self.set_widget_color_text(self.BD_state_outputwidget, self.data.values[rcd.BD_state])
 
-
-
         p_last = self.data.get_kf_running_stat_power_at_set_point(self.values[self.data.last_amp_sp])
-        #print('##self.values[self.data.last_amp_sp] = {}'.format(self.values[self.data.last_amp_sp]))
         p_current = self.data.get_kf_running_stat_power_at_current_set_point()
+        print('## p_last = {}\np_current = {}'.format(p_last, p_current ))
+
 
         if p_last:
             if p_current:
-                self.delta_power_outputwidget.setText('{}'.format( int( p_current- p_last ) ))
+                self.delta_power_outputwidget.setText('{}'.format(int( self.values[self.data.delta_kfpow] ) ))
             else:
                 self.delta_power_outputwidget.setText('NONE p_current')
         else:
