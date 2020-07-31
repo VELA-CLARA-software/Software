@@ -463,6 +463,7 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         self.quad_less_current_predicted_next_amp_sp.setText('{}'.format(self.values[rcd.SP_QUAD_CURRENT ]))
         self.quad_less_current_cut_predicted_next_amp_sp.setText('{}'.format(self.values[rcd.SP_QUAD_CURRENT_SP_TO_FIT ]))
 
+        self.set_widget_color_text( self.check_mask_outputwidget , self.values[rcd.global_mask_checking] )
 
         self.set_widget_color_text(self.can_rf_output_status_outputwidget, self.data.values[rcd.can_rf_output_status])
         self.set_widget_color_text(self.can_ramp_status_outputwidget, self.data.values[rcd.can_ramp_status])
@@ -473,8 +474,6 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         p_current = self.data.get_kf_running_stat_power_at_current_set_point()
         delta_p = self.values[self.data.delta_kfpow]
         print('## p_last = {}\np_current = {}\ndelta_p = {}'.format(p_last, p_current, delta_p))
-
-
         if p_last:
             if p_current:
                 self.delta_power_outputwidget.setText('{}'.format(int( self.values[self.data.delta_kfpow] ) ))

@@ -66,6 +66,12 @@ class llrf_monitor(monitor):
         self.data = rf_conditioning_data.rf_conditioning_data()
         self.values = self.data.values
         self.expert_values = self.data.expert_values
+
+
+        # CATAP max amp setpoint value ONLY NEEDS TO BE CALLED ONCE CANNOT CHANGE AFTER CONFIg read
+        self.values[self.data.catap_max_amp] = self.llrf_control.getMaxAmpSP()
+
+
         # new feature, the setting phase end index by remote...
         # if self.llrf_control.config.breakdown_config.has_key('PHASE_MASK_BY_POWER_PHASE_TRACE_1'):
         #     self.phase_trace_1 = monitor.config.breakdown_config['PHASE_MASK_BY_POWER_PHASE_TRACE_1']
@@ -179,70 +185,25 @@ class llrf_monitor(monitor):
 
         ''' update simple values '''
         self.values[self.data.amp_sp] = self.llrf_obj[0].amp_ff
-        # TODO THIS SHOULD BE THE AMP_SP we're not sure wy, but the Libera controls the SP is now
-        #  "broke"
-        # print( int(self.llrf_obj[0].amp_sp) ) # does not work
-        # print( int(self.llrf_obj[0].amp_sp) ) # does not work
-        # print( int(self.llrf_obj[0].amp_ff) ) # does not work
-        # print( int(self.llrf_obj[0].amp_ff) ) # does not work
-        # print 'amp_sp = {}'.format(self.values[self.data.amp_sp])
         self.values[self.data.phi_sp] = int(self.llrf_obj[0].phi_sp)
         self.values[self.data.TOR_ACQM] = self.llrf_control.getTORACQM()
         self.values[self.data.TOR_SCAN] = self.llrf_control.getTORSCAN()
         self.values[self.data.duplicate_pulse_count] = self.llrf_obj[0].duplicate_pulse_count
         self.values[self.data.llrf_trace_interlock] = self.llrf_control.areLLRFTraceInterlocksGood()
 
-        # CATAP max amp setpoint value
-        # This number CANNOT CHANGE WHILE RUNNING !!
-        self.values[self.data.catap_max_amp] = self.llrf_control.getMaxAmpSP()
+        self.values[self.data.global_mask_checking] = self.llrf_control.isGlobalCheckMask()
+
+
         ''' the latest running stats for this amp_set (from the c++) '''
         ## THIS GETS UPDATED TOO FREQUENTLY
         # if(self.llrf_control.isKeepingKlyFwdPwrRS()):
         #     self.update_amp_vs_kfpow_running_stat()
         #
         """WARNING"""
-        # if setting phase trace end masks by value get those values...
-        # if self.values[self.data.phase_mask_by_power_trace_1_set]:
-        #     self.values[self.data.phase_end_mask_by_power_trace_1_time] = \
-        #         monitor.llrf_control.getMaskInfiniteEndByPowerTime(self.phase_trace_1 )
-        # if self.values[self.data.phase_mask_by_power_trace_2_set]:
-        #     self.values[self.data.phase_end_mask_by_power_trace_2_time] = \
-        #         monitor.llrf_control.getMaskInfiniteEndByPowerTime( self.phase_trace_1 )
-
-        # get delta_power  last setpoint power - current setpoint power (last_sp values set in set_amp in llrf_control
         ''' it can happen that we've changed amp_sp but there have been no pulses when  we get here,  amp_vs_kfpow_running_stat can be empty '''
         if self.values[self.data.amp_sp] in self.data.amp_vs_kfpow_running_stat:
             self.values[self.data.delta_kfpow] = self.data.get_kf_running_stat_power_at_current_set_point() - self.values[
                 self.data.kfpower_at_last_amp_sp]
-
-    # def update_daq_rep_rate(self):
-    #     ''' DATA ACQUISIATION REP RATE
-    #     The llrf controller estimates the daq frequency from the timestamps of the trace data
-    #     previous observed behaviour has shown this rate can change due to:
-    #         something happening in the llrf box,
-    #         something happening on the network,
-    #         something else.
-    #     If the daq_rep_rate deviates from what is expected we want to disable RF power until it
-    #     returns. We also  keep a memory of the previous state, and compare. If previous state was
-    #     BAD and now state is GOOD we call this NEW_GOOD, similarly GOOD to BAD is a NEW_BAD
-    #     we use a NEW_GOOD to enable us to respond to changes in daq_rep_rate
-    #     '''
-    #     DAQ_rep_rate = self.data.llrf_DAQ_rep_rate
-    #     DAQ_rep_rate_status = self.data.llrf_DAQ_rep_rate_status
-    #     self.values[DAQ_rep_rate] = self.llrf_obj[0].trace_rep_rate
-    #
-    #     if self.values[DAQ_rep_rate] < self.values[self.data.llrf_DAQ_rep_rate_min]:
-    #         self.values[DAQ_rep_rate_status] = state.BAD
-    #
-    #     elif self.values[DAQ_rep_rate] > self.values[self.data.llrf_DAQ_rep_rate_max]:
-    #         self.values[DAQ_rep_rate_status] = state.BAD
-    #     else:
-    #         self.values[self.data.llrf_DAQ_rep_rate_status] = state.GOOD
-    #
-    #     if self.values[self.data.llrf_DAQ_rep_rate_status_previous] == state.BAD:
-    #         if self.values[DAQ_rep_rate_status] == state.GOOD:
-    #             self.values[DAQ_rep_rate_status] = state.NEW_GOOD
-    #     self.values[self.data.llrf_DAQ_rep_rate_status_previous] = self.values[DAQ_rep_rate_status]
 
     def update_pulse_length(self):
         '''

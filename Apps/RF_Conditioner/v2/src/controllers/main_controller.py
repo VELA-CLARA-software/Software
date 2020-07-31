@@ -197,6 +197,43 @@ class main_controller(object):
                        True/False
                     -  self.data.values[rcd.can_llrf_output_state] - state of all hardware; see --> check_LLRF_state - state.state
                     
+               
+                "breakdown states" (vacuum, omed, (DC))  
+                    disable power (because a measurement says disable power)
+                    omed, vac spike
+                           
+                can_ramp states
+                    we can have power, but we can't increase it
+                    vac level, gui, cavity ratio,  bd rate
+                
+                DAQ frequency is just good or bad
+                can_rf_output high level state includes DAQ freq
+                
+                if can_rf_output is bad, and gui alllows, reset LLRF states enable_llrf() (check each state and reset bad ones)
+                
+                when resetting LLRF, if gui, mod, prot are bad, no point trying to reset 
+                
+            '''
+            # TODO AJG: Plan:
+            '''
+            
+            Output of this decides whether to reset RF or not.
+            
+            save what they were and compare to how they are to get NEWGOOD, NEWBAD, GOOD & BAD (new G/B & G/B)
+            
+            def can_rf_output():  
+                can_rf_output_old_state == old labray state                               
+                if llrf_states == state.GOOD or state.NEWGOOD:   <-- GUI, MOD & PROT == state.GOOD or state.NEWGOOD:  <-- includes DAQ freq               
+                    if BD_states == state.GOOD or state.NEWGOOD:                       
+                            can_rf_output_state == state.GOOD
+                            can_rf_output_state == NEWGOOD --> logramp  if ANY are NEWGOOD                                                
+                    else:
+                        print..
+                else:
+                    print..
+                
+            return all 4 new G/B & G/B
+                                
                 One new High-level state 
                     -  can_rf_output_status - Incorporates BD_state and can_llrf_output_state.
  
