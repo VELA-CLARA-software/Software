@@ -144,10 +144,10 @@ class llrf_monitor(monitor):
         # max_cav_pwr_ratio))
 
         if cav_pwr_ratio > max_cav_pwr_ratio:
-            self.data.values[self.data.cav_pwr_ratio_status] = state.BAD
+            self.data.values[self.data.cav_pwr_ratio_can_ramp] = state.BAD
             self.data.values[self.data.cav_pwr_ratio_can_ramp] = False
         else:
-            self.data.values[self.data.cav_pwr_ratio_status] = state.GOOD
+            self.data.values[self.data.cav_pwr_ratio_can_ramp] = state.GOOD
             self.data.values[self.data.cav_pwr_ratio_can_ramp] = True
 
         #return cav_pwr_ratio
