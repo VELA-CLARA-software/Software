@@ -98,24 +98,22 @@ class main_controller(object):
         self.logger.message_header(__name__ + ', create rf_conditioning_data object',
                                    add_to_text_log=True, show_time_stamp=True)
         self.data = rf_conditioning_data(debug=self.debug)
+        self.values = self.data.values
 
+
+
+
+        # pass the exclued key list for data (hardcoded there) to logger
         self.logger.excluded_key_list = self.data.excluded_key_list
         print("self.data.excluded_key_list = {}".format( self.data.excluded_key_list))
         print(" self.logger.excluded_key_list = {}".format( self.logger.excluded_key_list))
-        #raw_input()
         self.data.initialise()
-        self.values = self.data.values
 
-        val_dict_len = len( self.values )
-        val_key_types = set([ type(x) for x in self.values.keys()  ])
-        print(val_dict_len, val_key_types)
-        print(self.data.all_value_keys)
-        raw_input()
-
-        # should thios happen here, or in the view?
+        # should this happen here, or in the view? its here, because the view is created before data
         self.view.data = self.data
         self.view.values = self.data.values
         self.view.start_gui_update()
+
 
         # CATAP hardware controllers, these live here and are passed to where they are needed
         # self.hardware.start_up() actually creates the objects, this should only be done once,
@@ -125,11 +123,31 @@ class main_controller(object):
         self.hardware = hardware_control_hub()
         self.hardware.start_up()
 
+
+        print("after hardware_control_hub 1")
+        val_dict_len = len(self.values.keys() )
+        val_key_types = set([ type(x) for x in self.values.keys()])
+        print(val_dict_len, val_key_types)
+        for key, value in self.values.iteritems():
+            print("key = {}, val = {}".format(key, value))
+
+
         # CATAP hardware controllers, these live here and are passed to where they are needed
         self.logger.message_header(__name__ + ', create monitor_hub object',
                                    add_to_text_log=True,show_time_stamp=True)
         self.monitor_hub = monitor_hub()
         self.monitor_hub.start_monitors()
+
+        print("after monitor_hub 1")
+        val_dict_len = len( self.values.keys() )
+        val_key_types = set([ type(x) for x in self.values.keys()])
+        print(val_dict_len, val_key_types)
+        print(val_dict_len, val_key_types)
+        for key, value in self.values.iteritems():
+            print("key = {}, val = {}".format(key, value))
+
+        raw_input()
+
 
         # the vac monitor, DB monitor etc,keep a local state, at the mina_loop level we derive a state from them (
         # e.g. new_good, new_bad, etc
@@ -138,22 +156,11 @@ class main_controller(object):
         self.conditioning_states[self.data.breakdown_status] = state.UNKNOWN
         # TODO: move llrf_DAQ from conditioning states... but where to??
         self.conditioning_states[self.data.llrf_DAQ_rep_rate_status] = state.UNKNOWN
-
-        val_dict_len = len( self.values )
-        val_key_types = set([ type(x) for x in self.values.keys()  ])
-        print(val_dict_len, val_key_types)
-        raw_input()
-
         # connect buttons
         self.view.update_expert_values_button.clicked.connect(self.update_expert_values)
 
         # MUST BE CONNECTED AFTER MONITOR_HUB is created
         # Start Data Logging
-
-        val_dict_len = len( self.values )
-        val_key_types = set([ type(x) for x in self.values.keys()  ])
-        print(val_dict_len, val_key_types)
-        raw_input()
         self.logger.start_binary_data_logging(self.data.values)
         self.main_loop()
 
@@ -191,6 +198,16 @@ class main_controller(object):
         # print("START-UP first active amp_sp = {}".format(self.values[rf_conditioning_data.log_amp_set]))
         # self.hardware.llrf_controller.set_amp( self.values[rf_conditioning_data.log_amp_set] )
 
+
+        print("Before main loop while loop start")
+        val_dict_len = len( self.values )
+        val_key_types = set([ type(x) for x in self.values.keys()])
+        print(val_dict_len, val_key_types)
+        print(self.data.all_value_keys)
+        for key, val in self.values.iteritems():
+            if type(key) is int:
+                print(key, val)
+        raw_input()
         while 1:
             QApplication.processEvents()
 

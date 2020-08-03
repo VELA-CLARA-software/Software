@@ -100,8 +100,29 @@ class rf_conditioning_data(object):
         self.config_data = self.config.raw_config_data
         # alias for data dictionary
         self.values = rf_conditioning_data.values
+
+        # print("after rf_conditioning_data.values")
+        # val_dict_len = len( self.values )
+        # val_key_types = set([ type(x) for x in self.values.keys()  ])
+        # print(val_dict_len, val_key_types)
+        # print(self.all_value_keys)
+        # for key, val in self.values.iteritems():
+        #     if type(key) is int:
+        #         print(key, val)
+        # raw_input()
+
+
         # we can straight  away set some value from config_data
         self.set_values_from_config()
+        # print("after set_values_from_config")
+        # val_dict_len = len( self.values )
+        # val_key_types = set([ type(x) for x in self.values.keys()  ])
+        # print(val_dict_len, val_key_types)
+        # print(self.all_value_keys)
+        # for key, val in self.values.iteritems():
+        #     if type(key) is int:
+        #         print(key, val)
+        # raw_input()
         #
         # logging
         self.logger = rf_conditioning_logger()
@@ -172,6 +193,9 @@ class rf_conditioning_data(object):
         return self.get_kfp_running_stat_at_current_set_point()[1]
 
     def get_kf_running_stat_power_at_set_point(self, sp):
+        if sp is None:
+            print("ERROR passed sp is NONE")
+            return  [0,0,0,0]
         r = self.get_kfp_running_stat_at_set_point(sp)
         if r:
             return r[1]
@@ -324,6 +348,8 @@ class rf_conditioning_data(object):
         self.values[rcd.total_breakdown_count] = int(pulse_break_down_log[-1][1])
         self.values[rcd.current_ramp_index] = int(pulse_break_down_log[-1][3])
         self.values[rcd.log_pulse_length] = float(int(pulse_break_down_log[-1][3])) / float(1000.0)  # warning UNIT
+
+
         # TODO I don't think this is used and doesn't make sense to me now
         self.config_data['PULSE_LENGTH_START'] = self.values[rcd.log_pulse_length]
         #
@@ -344,6 +370,7 @@ class rf_conditioning_data(object):
         rcd.active_pulse_breakdown_log = [x for x in sorted_pulse_break_down_log if x[0] >= self.values[rcd.bd_rate_calc_first_pulse_number]]
 
         message("update_breakdown_stats here ????????????????????")
+
         self.update_breakdown_stats()
 
 
@@ -363,9 +390,9 @@ class rf_conditioning_data(object):
         # now
         # set is breakdown rate hi
         self.values[rcd.total_breakdown_count] = rcd.active_pulse_breakdown_log[-1][1]
-        self.values[rcd.values[rcd.active_breakdown_count]] = self.values[rcd.total_breakdown_count]  - rcd.active_pulse_breakdown_log[0][1]
+        self.values[rcd.active_breakdown_count] = self.values[rcd.total_breakdown_count]  - rcd.active_pulse_breakdown_log[0][1]
 
-        self.values[rcd.breakdown_rate_low] = self.values[rcd.values[rcd.active_breakdown_count] ] <= self.values[rcd.breakdown_rate_aim]
+        self.values[rcd.breakdown_rate_low] = self.values[rcd.active_breakdown_count] <= self.values[rcd.breakdown_rate_aim]
 
 
     #def update_last_million_pulse_log(self): OLD NAME
@@ -429,6 +456,17 @@ class rf_conditioning_data(object):
 
         # the pulse breakdwon log gets its own function, it's cancer
         self.setup_pulse_count_breakdown_log()
+
+        print("after setup_pulse_count_breakdown_log")
+        val_dict_len = len( self.values )
+        val_key_types = set([ type(x) for x in self.values.keys()  ])
+        print(val_dict_len, val_key_types)
+        print(self.all_value_keys)
+        for key, val in self.values.iteritems():
+            if type(key) is int:
+                print(key, val)
+        raw_input()
+
 
         # amp_vs_kfpow_running_stat dictionary
         rcd.amp_vs_kfpow_running_stat = self.logger.get_kfpow_running_stat_log()

@@ -314,15 +314,21 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         ''''polyfit_2order_Y_current_sp
         polyfit_2order_X_current_sp_to_fit'''
 
-        # add in straight line fits ...'new data'
-        self.plot_item.plot([self.values[rcd.x_min], current_amp],
-                            [self.values[rcd.y_min], expected_Y], pen={'color': 'r', 'width': 2.5})
+        # Don't plot slf unless sensible values for x_min etc are returned.
 
-        # add in plot of old SLF,
-        self.plot_item.plot(
-            [rcd.values[rcd.old_x_min], current_amp],
-            [rcd.values[rcd.old_y_min], expected_Y_old],
-            pen={'color': 'y', 'width': 1.8})
+        if self.values[rcd.y_min] < 0.0:
+            pass
+        else:
+
+            # add in straight line fits ...'new data'
+            self.plot_item.plot([self.values[rcd.x_min], current_amp],
+                                [self.values[rcd.y_min], expected_Y], pen={'color': 'r', 'width': 2.5})
+
+            # add in plot of old SLF,
+            self.plot_item.plot(
+                [rcd.values[rcd.old_x_min], current_amp],
+                [rcd.values[rcd.old_y_min], expected_Y_old],
+                pen={'color': 'y', 'width': 1.8})
 
 
         # Add second order polyfit to plot (all data):
@@ -472,8 +478,8 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
 
         p_last = self.data.get_kf_running_stat_power_at_set_point(self.values[self.data.last_amp_sp])
         p_current = self.data.get_kf_running_stat_power_at_current_set_point()
-        delta_p = self.values[self.data.delta_kfpow]
-        print('## p_last = {}\np_current = {}\ndelta_p = {}'.format(p_last, p_current, delta_p))
+        #delta_p = self.values[self.data.delta_kfpow]
+        print('## p_last = {}\np_current = {}\ndelta_p = {}'.format(p_last, p_current, self.values[self.data.delta_kfpow]))
         if p_last:
             if p_current:
                 self.delta_power_outputwidget.setText('{}'.format(int( self.values[self.data.delta_kfpow] ) ))
