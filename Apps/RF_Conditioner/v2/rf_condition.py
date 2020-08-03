@@ -14,10 +14,12 @@ from src.controllers.output_redirection import *
 # 	sys.path.append(os.getcwd())
 # else:
 sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\stage')
+#sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\stage\\')
+#sys.path.append('\\\\claraserv3\\apclara\\test\\Controllers\\bin\\stage')
 
 
 from PyQt4 import QtGui
-import VELA_CLARA_enums
+
 
 print('import main_controller')
 from src.controllers.main_controller import main_controller

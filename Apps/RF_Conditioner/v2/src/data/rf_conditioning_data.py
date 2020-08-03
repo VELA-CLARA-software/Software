@@ -457,17 +457,6 @@ class rf_conditioning_data(object):
         # the pulse breakdwon log gets its own function, it's cancer
         self.setup_pulse_count_breakdown_log()
 
-        print("after setup_pulse_count_breakdown_log")
-        val_dict_len = len( self.values )
-        val_key_types = set([ type(x) for x in self.values.keys()  ])
-        print(val_dict_len, val_key_types)
-        print(self.all_value_keys)
-        for key, val in self.values.iteritems():
-            if type(key) is int:
-                print(key, val)
-        raw_input()
-
-
         # amp_vs_kfpow_running_stat dictionary
         rcd.amp_vs_kfpow_running_stat = self.logger.get_kfpow_running_stat_log()
 

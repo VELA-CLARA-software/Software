@@ -137,18 +137,10 @@ class main_controller(object):
                                    add_to_text_log=True,show_time_stamp=True)
         self.monitor_hub = monitor_hub()
         self.monitor_hub.start_monitors()
-
-        print("after monitor_hub 1")
-        val_dict_len = len( self.values.keys() )
-        val_key_types = set([ type(x) for x in self.values.keys()])
-        print(val_dict_len, val_key_types)
-        print(val_dict_len, val_key_types)
-        for key, value in self.values.iteritems():
-            print("key = {}, val = {}".format(key, value))
-
-        raw_input()
-
-
+        ''' !!WARNING!! 
+            After we start monitoring the main data values dictionary can have entries added that are defined in the config file
+            This means the size of this dict can increase !!   
+        '''
         # the vac monitor, DB monitor etc,keep a local state, at the mina_loop level we derive a state from them (
         # e.g. new_good, new_bad, etc
         self.conditioning_states = {}
@@ -199,15 +191,6 @@ class main_controller(object):
         # self.hardware.llrf_controller.set_amp( self.values[rf_conditioning_data.log_amp_set] )
 
 
-        print("Before main loop while loop start")
-        val_dict_len = len( self.values )
-        val_key_types = set([ type(x) for x in self.values.keys()])
-        print(val_dict_len, val_key_types)
-        print(self.data.all_value_keys)
-        for key, val in self.values.iteritems():
-            if type(key) is int:
-                print(key, val)
-        raw_input()
         while 1:
             QApplication.processEvents()
 
