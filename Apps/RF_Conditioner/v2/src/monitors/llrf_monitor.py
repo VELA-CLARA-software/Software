@@ -326,7 +326,6 @@ class llrf_monitor(monitor):
         else:
             self.values[key] = self.llrf_obj[0].trace_data[trace].mean
             self.old_mean_values[trace] = self.values[key]
-
             # i probably dont need to do this anymore as we're now doing it in the c++
             # if self.is_kly_forward_power(trace):
             #     if self.old_mean_values[trace] > monitor.config.llrf_config['KLY_PWR_FOR_ACTIVE_PULSE']:
@@ -464,6 +463,25 @@ class llrf_monitor(monitor):
         self.data.streak_cp_pha ,  ev[self.data.streak_cp_pha]
         )
 
+
+    def print_mask_settings(self):
+        self.logger.message('isGlobalCheckMask = ' + str(self.llrf_control.isGlobalCheckMask()), show_time_stamp=False, add_to_text_log=True)
+        for trace in self.config.breakdown_config['BREAKDOWN_TRACES']:
+            self.logger.message(trace, show_time_stamp=False, add_to_text_log=True)
+            self.logger.message('isCheckingMask = ' + str(self.llrf_control.isCheckingMask(trace)), show_time_stamp=False, add_to_text_log=True)
+            self.logger.message(
+                'Start = ' + str(self.llrf_control.getMaskStartTime(trace)) + '(' + str(self.llrf_control.getMaskStartIndex(trace)) + ')',
+                show_time_stamp=False, add_to_text_log=True)
+            self.logger.message('End   = ' + str(self.llrf_control.getMaskEndTime(trace)) + '(' + str(self.llrf_control.getMaskEndIndex(trace)) + ')', show_time_stamp=False, add_to_text_log=True)
+
+            self.logger.message('Window Start = ' + str(self.llrf_control.getMaskWindowStartTime(trace)) + '(' + str(
+                self.llrf_control.getMaskWindowStartIndex(trace)) + ')', show_time_stamp=False, add_to_text_log=True)
+            self.logger.message('Window End   = ' + str(self.llrf_control.getMaskWindowEndTime(trace)) + '(' + str(
+                self.llrf_control.getMaskWindowEndIndex(trace)) + ')', show_time_stamp=False, add_to_text_log=True)
+            self.logger.message('Value = ' + str(self.llrf_control.getMaskValue(trace)), show_time_stamp=False, add_to_text_log=True)
+            self.logger.message('Floor = ' + str(self.llrf_control.getMaskFloor(trace)), show_time_stamp=False, add_to_text_log=True)
+            self.logger.message('IsPercent  = ' + str(self.llrf_control.isPercentMask(trace)), show_time_stamp=False, add_to_text_log=True)
+            self.logger.message('IsAbsolute = ' + str(self.llrf_control.isAbsoluteMask(trace)), show_time_stamp=False, add_to_text_log=True)
 
 
         # bool isGlobalCheckMask()const;

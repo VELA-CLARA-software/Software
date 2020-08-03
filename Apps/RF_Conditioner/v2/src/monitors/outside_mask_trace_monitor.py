@@ -99,6 +99,7 @@ class outside_mask_trace_monitor(monitor):
         """
         This is the main update function, it handles the pulse-counting and OMED-counting
         """
+        print('update_value() from outside_mask_trace_monitor')
         # The number of pulses
         self.values[self.data.pulse_count] = self.llrf_obj[0].active_pulse_count
         # the number of pulses since last 'event' (actually includes since last ramp, so re-name)
@@ -115,19 +116,37 @@ class outside_mask_trace_monitor(monitor):
             self.new_breakdown()
             self.new_omed_data = True
             self.previous_omed_count = self.values[self.data.num_outside_mask_traces]
+            print('num_outside_mask_traces = {}'.format(self.values[self.data.num_outside_mask_traces]))
+            print('previous_omed_count = {}'.format(self.previous_omed_count))
+
+        else:
+            print('num_outside_mask_traces <= previous_omed_count:\nnum_outside_mask_traces = {}\nprevious_omed_count = {}'.
+                  format(self.values[self.data.num_outside_mask_traces], self.previous_omed_count))
         #
         # Now we try collecting any new data, the OME data usually includes "future traces" (traces
-        # that are saved after the event trace). This means we have to ait for those traces
+        # that are saved after the event trace). This means we have to wait for those traces
         # before we can collect them. This is accomplished with the new_omed_data flag
         #
         # if we have new data, check if we can collect it
         if self.new_omed_data:
+
             # if we can collect it, collect it
             if self.llrf_control.canGetOutsideMaskEventData():
+                print('New OME data & can collect OME data')
                 self.collect_ome_data()
                 # RESET FLAG
                 self.new_omed_data = False
+            else:
+                print('New OME data but cannot collect OME')
 
+            '''
+        message("checkCollectingFutureTraces(): Num collected = ", llrf.omed.num_collected, "/",
+                llrf.omed.extra_traces_on_outside_mask_event + UTL::THREE_SIZET,
+                " (",llrf.omed.num_still_to_collect  ,")");
+            '''
+
+        else:
+            pass
         # we then update the last million pulses log, this is a list of how many breakdwons in the
         # last 1 million pulses ...
         #self.data.update_last_million_pulse_log() # OLD NAME!!!
@@ -150,7 +169,7 @@ class outside_mask_trace_monitor(monitor):
         """
         self.logger.message_header(__name__+ ' Collecting Outside Mask Event Data',
                                    add_to_text_log=True, show_time_stamp=True)
-        monitor.logger.message('event_pulse_count_zero = ' + str(self.event_pulse_count_zero), True)
+        self.logger.message('event_pulse_count_zero = ' + str(self.event_pulse_count_zero),  show_time_stamp=False)
         # new is a dictionary returned from CATAP llrf that conatins the data, messages etc
         # This is copied from the c++ code in liberaLLRFController.cpp
         #
@@ -175,7 +194,7 @@ class outside_mask_trace_monitor(monitor):
         # (update breakdown count, will only work if all states are not bad???????)
         self.data.force_update_breakdown_count(new["num_events"])  # MAGIC_STRING
 
-        monitor.logger.message("Python OME Message:\n" + new['message'],show_time_stamp=False)
+        self.logger.message("Python OME Message:\n" + new['message'],show_time_stamp=False)
         self.logger.message(__name__+' adding {} events '.format(new["num_events"]))
 
         self.ome_counts[new['trace_name']] += 1

@@ -26,9 +26,6 @@ class llrf_control(object):
 	mask_set = False
 	mask_count = 0
 
-
-
-
 	def __init__(self):
 		# owns a config and logging class
 		self.config = config.config()
@@ -58,18 +55,14 @@ class llrf_control(object):
 		# 	    self.reset_daq_freg()
 
 		# On startup disable mask checking and rolling averages
-
 		self.set_global_check_mask(False)
 		self.stop_trace_average()
 
 		# pass some config setting to c++ LLRF_control
 		self.llrf_control.setTracesToSaveOnOutsideMaskEvent( self.config_data['TRACES_TO_SAVE'])
 		self.llrf_control.setTracesToSaveWhenDumpingCutOneTraceData( self.config_data['VAC_SPIKE_TRACES_TO_SAVE'])
-
 		self.llrf_control.setAllTraceBufferSize(self.config_data['NUM_BUFFER_TRACES'])
-
-		# set up terace for omed and rollgin averages
-		self.setup_traces_for_omed_and_rolling_averages()
+		self.llrf_control.setNumExtraTracesOnOutsideMaskEvent(self.config_data['EXTRA_TRACES_ON_BREAKDOWN'])
 
 		self.set_trace_SCANs()
 
@@ -77,24 +70,25 @@ class llrf_control(object):
 		self.hardware.llrf_control.setActivePulsePowerLimit(self.config.raw_config_data['KLY_PWR_FOR_ACTIVE_PULSE'])
 		# TODO check the value  to update has been read by now (it probably has...)
 		self.hardware.llrf_control.setActivePulseCount(self.values[rf_conditioning_data.log_pulse_count])
+		#
+
 
 
 		self.set_trace_mean_positions()
+		# set up terace for omed and rollgin averages
+		self.setup_traces_for_omed_and_rolling_averages()
 
-
-		# THIS SHOULD GO IN THE HANDLER
-		# monitor.llrf_control.setActivePulsePowerLimit(monitor.config.llrf_config[
-		#        'KLY_PWR_FOR_ACTIVE_PULSE'])
-
-		# TODO AJG  check DAQ_rep_rate_state and reset if state == state.BAD... THIS SHOULD HAPPEN in main_controller.py --> check_LLRF_state()
-		#if self.values[self.data.llrf_DAQ_rep_rate_status] == state.BAD:
-	    #		self.reset_daq_freg()
 
 	def enable_llrf(self):
 		# go through each possible LLRF paramter (except HOLD_RF_ON_COM mod / protection parmaters
 		# and try and reset them
 		# cancer cancer cancer
 		#
+
+		# the first thing this needs to do is set 0 amp_sp,
+		self.llrf_control.setAmpHP(0.0) # HP 'high priority' it disables the trigger, then sets 0.0 amp_sp
+
+
 		if self.llrf_control.isInterlockActive():  #this means is the interlock BAD
 			if self.should_show_llrf_interlock_active:
 				self.logger.message('enable_llrf, isInterlockActive = True, attempting setInterlockNonActive()')
@@ -161,7 +155,36 @@ class llrf_control(object):
 				self.should_show_llrf_pha_ff_locked = False
 			self.llrf_control.lockPhaseFF()
 			sleep(0.02)
+
+
+		if self.data.values[self.data.llrf_DAQ_rep_rate_status] == state.BAD:
+			self.reset_daq_freg()
+		if self.data.values[self.data.llrf_DAQ_rep_rate_status] == state.NEW_BAD:
+			self.reset_daq_freg()
+
 		# this is sketchy AF
+
+	def reset_daq_freg(self):
+		start_time = time.time()
+		if self.should_show_reset_daq_freg:
+			self.logger.message('reset_daq_freg, llrf_DAQ_rep_rate_status == BAD')
+			self.should_show_reset_daq_freg = False
+		# for a
+		if self.llrf_control.getAmpSP() != 0:
+			self.logger.message('reset_daq_freg forcing set_amp(0)')
+			self.llrf_control.setAmpSP(0.0)
+			start_time = time.time()
+
+		while time.time() - start_time < 0.02:
+			pass
+		self.logger.message('reset_daq_freg, time passed > 0.02s')
+		self.llrf_control.setTORSCANToIOIntr()
+		time.sleep(0.02) # TODO meh ...
+		self.llrf_control.setTORACQMEvent()
+		#self.set_iointr_counter = 0
+
+
+
 
 
 	def disableRFOutput(self):
@@ -178,6 +201,7 @@ class llrf_control(object):
 		self.llrf_control.resetTORSCANToIOIntr()
 		self.logger.message(__name__ + ' setting One Record ACQM to event')
 		self.llrf_control.setTORACQMEvent()
+
 
 	def start_trace_average_no_reset(self,value):
 		for trace in self.config_data['BREAKDOWN_TRACES']:
@@ -254,6 +278,7 @@ class llrf_control(object):
 		sets the mean start and end positions from the config file
 		:return:
 		"""
+		print("set_trace_mean_positions (add log entry here)")
 		cd =self.config_data
 		c =self.config
 
@@ -298,10 +323,8 @@ class llrf_control(object):
 	# function to switch between log_ramp mask and normal_ramp mask
 	#
 
-
-
-
 	def setup_traces_for_omed_and_rolling_averages(self):
+		print("setup_traces_for_omed_and_rolling_averages")
 		# a dictionary to convert long to short trace names, smh
 		full_race_name_toShort_trace_name_dict = {
 		'KLYSTRON_REVERSE_PHASE' : 'KRPHA',
@@ -314,17 +337,47 @@ class llrf_control(object):
 		'CAVITY_FORWARD_POWER' : 'CFPOW',
 		'CAVITY_PROBE_PHASE' : 'CPPHA',
 		'CAVITY_PROBE_POWER' : 'CPPOW'}
-
 		print('BREAKDOWN_TRACES = ',self.config_data['BREAKDOWN_TRACES'])
 		for trace in self.config_data['BREAKDOWN_TRACES']:
-
 			print("trace = ", trace)
 			print("short trace = ",  full_race_name_toShort_trace_name_dict[trace])
-
 			self.setup_trace_for_omed( full_race_name_toShort_trace_name_dict[trace] )
-
 		for trace in self.config_data['BREAKDOWN_TRACES']:
 			self.set_trace_rolling_average( full_race_name_toShort_trace_name_dict[trace] )
+
+
+
+	def clear_all_rolling_averages(self):
+		print("clear_all_rolling_averages")
+		self.llrf_control.clearAllRollingAverage()
+
+	def set_infinite_hi_mask(self):
+		for trace in self.config_data['BREAKDOWN_TRACES']:
+			print("set_inifinit_hi_mask trace = ", trace)
+			self.llrf_control.setInfiniteHiMask(trace)
+
+	def set_nominal_masks(self):
+		'''
+			call this after a log ramp to reset the nominal masks WITH NO RESTTING OF THE ROLLING AVERAGE
+		'''
+		print("set_nominal_masks")
+		# a dictionary to convert long to short trace names, smh
+		full_race_name_toShort_trace_name_dict = {
+			'KLYSTRON_REVERSE_PHASE' : 'KRPHA',
+			'KLYSTRON_FORWARD_PHASE' : 'KFPHA',
+			'KLYSTRON_REVERSE_POWER' : 'KRPOW',
+			'KLYSTRON_FORWARD_POWER' : 'KFPOW',
+			'CAVITY_REVERSE_PHASE' : 'CRPHA',
+			'CAVITY_FORWARD_PHASE' : 'CFPHA',
+			'CAVITY_REVERSE_POWER' : 'CRPOW',
+			'CAVITY_FORWARD_POWER' : 'CFPOW',
+			'CAVITY_PROBE_PHASE' : 'CPPHA',
+			'CAVITY_PROBE_POWER' : 'CPPOW'}
+		print('BREAKDOWN_TRACES = ',self.config_data['BREAKDOWN_TRACES'])
+		for trace in self.config_data['BREAKDOWN_TRACES']:
+			print("trace = ", trace)
+			print("short trace = ",  full_race_name_toShort_trace_name_dict[trace])
+			self.setup_trace_for_omed( full_race_name_toShort_trace_name_dict[trace] )
 
 	def setup_trace_for_omed(self, trace):
 		'''
@@ -350,22 +403,69 @@ class llrf_control(object):
 		else:
 			is_percent = True
 		# send mask settings to c++
+		print("Setting these Mask parameters")
+		print("trace, is_percent, mask_level, mask_floor, mask_lo_min, mask_start, mask_end, mask_window_start,mask_window_end")
+		print(trace, is_percent, mask_level, mask_floor, mask_lo_min, mask_start, mask_end, mask_window_start,mask_window_end)
+		# # check values have got set correctly
+		# has_error = False
 		if mask_set_type == 'TIME':
 			self.llrf_control.setMaskParamatersTimes(trace, is_percent, mask_level, mask_floor, mask_lo_min, mask_start, mask_end, mask_window_start,
 			                                         mask_window_end)
+			# [s,e,ws,ws] = [self.llrf_control.getMaskStartTime(trace), self.llrf_control.getMaskEndTime(trace),self.llrf_control.getMaskWindowStartTime(trace), self.llrf_control.getMaskWindowEndTime(trace)]
+			#
+			# print("Manually compare these atm")
+			# print([s,e,ws,ws])
+			# print([mask_start, mask_end, mask_window_start, mask_window_end ])
 		elif mask_set_type == 'INDEX':
 			self.llrf_control.setMaskParamatersIndices(trace, is_percent, mask_level, mask_floor, mask_lo_min, mask_start, mask_end,
 			                                           mask_window_start, mask_window_end)
+			# [s,e,ws,ws] = [self.llrf_control.getMaskStartIndex(trace), self.llrf_control.getMaskEndIndex(trace),
+			#                self.llrf_control.getMaskWindowStartIndex(trace), self.llrf_control.getMaskWindowEndIndex(trace)]
+			# if [s,e,ws,ws] == [ mask_start, mask_end, mask_window_start, mask_window_end ] :
+			# 	pass
+			# else:
+			# 	print("!!ERROR!! {} trace not checking mask".format(trace))
+			# 	has_error = True
+		# if self.llrf_control.isCheckingMask(trace):
+		# 	pass
+		# else:
+		# 	print("!!ERROR!! {} trace not checking mask".format(trace))
+		# 	has_error = True
+		# if self.llrf_control.getMaskFloor(trace) == mask_floor:
+		# 	pass
+		# else:
+		# 	print("!!ERROR!! {} trace mask_floor = {}, expected {}".format(trace,self.llrf_control.getMaskFloor(trace), mask_floor))
+		# 	has_error = True
+		#
+		# if self.llrf_control.getMaskValue(trace) == mask_floor:
+		# 	pass
+		# else:
+		# 	print("!!ERROR!! {} trace mask_level = {}, expected {}".format(trace,self.llrf_control.getMaskValue(trace), mask_level))
+		# 	has_error = True
+		#
+		#
+		# if has_error:
+		# 	raw_input()
+
+
+
+
+
 		#
 		# set the check streak (how many points to trigger event)
 		check_streak = self.config_data[trace + '_CHECK_STREAK']
 		# TODO errrrrrrrrrrrrrrrr
-		#self.llrf_control.setNumContinuousOutsideMaskCount(trace, check_streak)
+		self.llrf_control.setNumContinuousOutsideMaskCount('CAVITY_REVERSE_PHASE', check_streak)
 		#
 		# set drop amp state and value)
 		drop_amp = self.config_data[trace+'_DROP_AMP']
 		drop_amp_value = self.config_data[trace+'_DROP_AMP_VALUE']
 		self.llrf_control.setDropAmpOnOutsideMaskEvent(trace, drop_amp, drop_amp_value)
+
+		# enable checking masks for this trace
+		self.llrf_control.setCheckMask(trace, True)
+
+
 
 	def set_trace_rolling_average(self, trace):
 		self.logger.message('Attempting to start rolling average for ' + trace)

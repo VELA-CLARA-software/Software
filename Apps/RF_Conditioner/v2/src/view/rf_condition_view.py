@@ -459,8 +459,8 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         self.last_increase_method_outputwidget.setText(str(self.values[rcd.last_ramp_method]))
 
 
-        self.can_ramp_label_outputwidget.setText('{}'.format(self.values[rcd.main_can_ramp]))
-        self.set_widget_color(self.can_ramp_label_outputwidget, self.values[self.data.main_can_ramp])
+        #self.can_ramp_label_outputwidget.setText('{}'.format(self.values[rcd.main_can_ramp]))
+        #self.set_widget_color(self.can_ramp_label_outputwidget, self.values[self.data.main_can_ramp])
 
 
         #TODO
@@ -479,7 +479,7 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         p_last = self.data.get_kf_running_stat_power_at_set_point(self.values[self.data.last_amp_sp])
         p_current = self.data.get_kf_running_stat_power_at_current_set_point()
         #delta_p = self.values[self.data.delta_kfpow]
-        print('## p_last = {}\np_current = {}\ndelta_p = {}'.format(p_last, p_current, self.values[self.data.delta_kfpow]))
+        #print('## p_last = {}\np_current = {}\ndelta_p = {}'.format(p_last, p_current, self.values[self.data.delta_kfpow]))
         if p_last:
             if p_current:
                 self.delta_power_outputwidget.setText('{}'.format(int( self.values[self.data.delta_kfpow] ) ))

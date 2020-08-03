@@ -115,17 +115,17 @@ MEAN_TRACES:
 ## ATM: MUST BE SET BY HAND FOR EACH PULSE LENGTH, using RF traces, 
 # only a human can decide over which range to calculate and average 
 ## KLYSTRON_FORWARD_POWER 
-KFPOW_MEAN_START:  2.3 # must be in us
-KFPOW_MEAN_END:  2.8  # must be in us
+KFPOW_MEAN_START:  2.0 # must be in us
+KFPOW_MEAN_END:  2.5  # must be in us
 ## KLYSTRON_REVERSE_POWER
-KRPOW_MEAN_START:  2.5  # must be in us
-KRPOW_MEAN_END:  3.0 # must be in us
+KRPOW_MEAN_START:  2.0  # must be in us
+KRPOW_MEAN_END:  2.5 # must be in us
 ## CAVITY_FORWARD_POWER
-CFPOW_MEAN_START:  2.9  # must be in us
-CFPOW_MEAN_END:  3.1  # must be in us
+CFPOW_MEAN_START:  3.2  # must be in us
+CFPOW_MEAN_END:  3.6  # must be in us
 ## CAVITY_REVERSE_POWER
-CRPOW_MEAN_START:  2.9  # must be in us
-CRPOW_MEAN_END:  3.1 # must be in us
+CRPOW_MEAN_START:  3.2  # must be in us
+CRPOW_MEAN_END:  3.6 # must be in us
 ## KLYSTRON_FORWARD_PHASE 
 KFPHA_MEAN_START:  2.3 # must be in us
 KFPHA_MEAN_END:  2.75 # must be in us
@@ -148,7 +148,8 @@ CPPHA_MEAN_END:  2.0  # must be in us
 ## breakdown / outside_mask traces
 ##BREAKDOWN_TRACES=CAVITY_FORWARD_POWER,CAVITY_REVERSE_POWER;
 BREAKDOWN_TRACES :
-  - CAVITY_REVERSE_PHASE
+ # - CAVITY_REVERSE_POWER
+  - KLYSTRON_FORWARD_POWER
 
 OUTSIDE_MASK_CHECK_TIME: 100 #INTEGER ms between outside_mask_trace checks, THIS IS FOR THE GUI, the c++ llrf module is checking every pulse 
 TRACES_TO_SAVE:  # specify traces to save breakdown data#
@@ -185,28 +186,26 @@ CFPOW_MASK_TYPE: PERCENT #; PERCENT OR ABSOLUTE
 CFPOW_MASK_LO_MIN: 50 # integer,Minimum value for a mask, regardless
 CFPOW_MASK_LEVEL: 30 #integer,units depend on CFP_MASK_TYPE
 CFPOW_CHECK_STREAK: 10 #how many continuous points outside mask
-CFPOW_MASK_FLOOR: 50 #Watts, values below this won't get checked
+CFPOW_MASK_FLOOR: 1000.0 #Watts, values below this won't get checked
 CFPOW_NUM_AVERAGE_TRACES: 5
 CFPOW_DROP_AMP: false #
 CFPOW_DROP_AMP_VALUE: 6
 
-
 ## CAVITY REFLECTED POWER/PHASE MASK PARAMETERS
-CRPOW_AUTO_SET:  false #;Will pick mask indices automatically, if false YOU must Define Them
-CRPOW_MASK_SET_TYPE:  TIME #(TIME or INDEX) for CRP_AUTO_SET=FALSE manually set s1,s2,s3,s4, via TIME in trace or INDEX in trace
-CRPOW_MASK_START:  0.8 # Only used if CRP_AUTO_SET=FALSE
-CRPOW_MASK_WINDOW_START:  2.4 # Only used if CRP_AUTO_SET=FALSE
-CRPOW_MASK_WINDOW_END:  3.4 # Only used if CRP_AUTO_SET=FALSE
-CRPOW_MASK_END :  5.0 # Only used if CRP_AUTO_SET=FALSE
-CRPOW_MASK_LO_MIN:  50  # integer,Minimum value for a mask, regardless
-CRPOW_MASK_TYPE :  ABSOLUTE # ABSOLUTE OR PERCENT, mask type is to set the mask based on a percentage of previous values, or by absolute amount
-CRPOW_NUM_AVERAGE_TRACES:  2 # 
+CRPOW_AUTO_SET :  false #;Will pick mask indices automatically, if false YOU must Define Them
+CRPOW_MASK_SET_TYPE :  TIME #(TIME or INDEX) for CRP_AUTO_SET=FALSE manually set s1,s2,s3,s4, via TIME in trace or INDEX in trace
+CRPOW_MASK_START :  1.2 # Only used if CRP_AUTO_SET=FALSE
+CRPOW_MASK_WINDOW_START :  3.7 # Only used if CRP_AUTO_SET=FALSE
+CRPOW_MASK_WINDOW_END :  4.25 # Only used if CRP_AUTO_SET=FALSE
+CRPOW_MASK_END :  6.0 # Only used if CRP_AUTO_SET=FALSE  # ms from end of RF pulse
+CRPOW_MASK_LO_MIN :  50  # integer,Minimum value for a mask, regardless
+CRPOW_MASK_TYPE :  PERCENT # ABSOLUTE OR PERCENT, mask type is to set the mask based on a percentage of previous values, or by absolute amount
+CRPOW_NUM_AVERAGE_TRACES :  2 #
 CRPOW_CHECK_STREAK :  2 # how many continuous points outside mask required to trigger event
 CRPOW_DROP_AMP_VALUE :  2 # value to drop RF amplitude to on event detection (LLRF UNITS)
-CRPOW_MASK_LEVEL :  35 # units depend on CRP_MASK_TYPE
-CRPOW_MASK_FLOOR :  0.0 # values below this won't get checked
-CRPOW_MASK_END :  4.8 # ms from end of RF pulse
-CRPOW_DROP_AMP :  false # should drop amplitude on event detection?
+CRPOW_MASK_LEVEL :  35.0 # units depend on CRP_MASK_TYPE
+CRPOW_MASK_FLOOR :  1000.0 # values below this won't get checked
+CRPOW_DROP_AMP :  true # should drop amplitude on event detection?
 
 ## CAVITY PROBE POWER MASK PARAMETERS
 CPPOW_AUTO_SET:  false #;Will pick mask indices automatically, if false YOU must Define Them
@@ -214,15 +213,14 @@ CPPOW_MASK_SET_TYPE:  TIME #(TIME or INDEX) for CRP_AUTO_SET=FALSE manually set 
 CPPOW_MASK_START:  0.8 # Only used if CRP_AUTO_SET=FALSE
 CPPOW_MASK_WINDOW_START:  2.4 # Only used if CRP_AUTO_SET=FALSE
 CPPOW_MASK_WINDOW_END:  3.4 # Only used if CRP_AUTO_SET=FALSE
-CPPOW_MASK_END:  5.0 # Only used if CRP_AUTO_SET=FALSE
+CPPOW_MASK_END:  5.0 # Only used if CRP_AUTO_SET=FALSE.  ms from end of RF pulse
 CPPOW_MASK_LO_MIN:  50  # integer,Minimum value for a mask, regardless
 CPPOW_MASK_TYPE:  ABSOLUTE # ABSOLUTE OR PERCENT, mask type is to set the mask based on a percentage of previous values, or by absolute amount
 CPPOW_NUM_AVERAGE_TRACES:  2 #
 CPPOW_CHECK_STREAK:  2 # how many continuous points outside mask required to trigger event
 CPPOW_DROP_AMP_VALUE:  2 # value to drop RF amplitude to on event detection (LLRF UNITS)
-CPPOW_MASK_LEVEL:  35 # units depend on CRP_MASK_TYPE
-CPPOW_MASK_FLOOR:  0.0 # values below this won't get checked
-CPPOW_MASK_END:  4.8 # ms from end of RF pulse
+CPPOW_MASK_LEVEL:  35.0 # units depend on CRP_MASK_TYPE
+CPPOW_MASK_FLOOR:  1000.0 # values below this won't get checked
 CPPOW_DROP_AMP:  false # should drop amplitude on event detection?
 
 ## klystron REFLECTED POWER  MASK PARAMETERS
@@ -231,33 +229,31 @@ KRPOW_MASK_SET_TYPE:  TIME #(TIME or INDEX) for CRP_AUTO_SET=FALSE manually set 
 KRPOW_MASK_START:  0.8 # Only used if CRP_AUTO_SET=FALSE
 KRPOW_MASK_WINDOW_START:  2.4 # Only used if CRP_AUTO_SET=FALSE
 KRPOW_MASK_WINDOW_END:  3.4 # Only used if CRP_AUTO_SET=FALSE
-KRPOW_MASK_END:  5.0 # Only used if CRP_AUTO_SET=FALSE
+KRPOW_MASK_END:  5.0 # Only used if CRP_AUTO_SET=FALSE.  ms from end of RF pulse
 KRPOW_MASK_LO_MIN:  50  # integer,Minimum value for a mask, regardless
 KRPOW_MASK_TYPE:  ABSOLUTE # ABSOLUTE OR PERCENT, mask type is to set the mask based on a percentage of previous values, or by absolute amount 
 KRPOW_NUM_AVERAGE_TRACES:  2 # 
 KRPOW_CHECK_STREAK:  2 # how many continuous points outside mask required to trigger event
 KRPOW_DROP_AMP_VALUE:  2 # value to drop RF amplitude to on event detection (LLRF UNITS)
-KRPOW_MASK_LEVEL:  35 # units depend on CRP_MASK_TYPE
-KRPOW_MASK_FLOOR:  0.0 # values below this won't get checked
-KRPOW_MASK_END:  4.8 # ms from end of RF pulse 
+KRPOW_MASK_LEVEL:  35.0 # units depend on CRP_MASK_TYPE float
+KRPOW_MASK_FLOOR:  1000.00 # values below this won't get checked
 KRPOW_DROP_AMP:  false # should drop amplitude on event detection?
 
 ## klystron REFLECTED POWER/PHASE MASK PARAMETERS
-KFPOW_AUTO_SET:  false #;Will pick mask indices automatically, if false YOU must Define Them
-KFPOW_MASK_SET_TYPE:  TIME #(TIME or INDEX) for CRP_AUTO_SET=FALSE manually set s1,s2,s3,s4, via TIME in trace or INDEX in trace
-KFPOW_MASK_START:  0.8 # Only used if CRP_AUTO_SET=FALSE
-KFPOW_MASK_WINDOW_START:  2.4 # Only used if CRP_AUTO_SET=FALSE
-KFPOW_MASK_WINDOW_END:  3.4 # Only used if CRP_AUTO_SET=FALSE
-KFPOW_MASK_END:  5.0 # Only used if CRP_AUTO_SET=FALSE
-KFPOW_MASK_LO_MIN:  50  # integer,Minimum value for a mask, regardless
-KFPOW_MASK_TYPE:  ABSOLUTE # ABSOLUTE OR PERCENT, mask type is to set the mask based on a percentage of previous values, or by absolute amount 
-KFPOW_NUM_AVERAGE_TRACES:  2 # 
-KFPOW_CHECK_STREAK:  2 # how many continuous points outside mask required to trigger event
-KFPOW_DROP_AMP:  false # should drop amplitude on event detection?
-KFPOW_DROP_AMP_VALUE:  2 # value to drop RF amplitude to on event detection (LLRF UNITS)
-KFPOW_MASK_LEVEL:  35 # units depend on CRP_MASK_TYPE
-KFPOW_MASK_FLOOR:  0.0 # values below this won't get checked
-KFPOW_MASK_END:  4.8 # ms from end of RF pulse 
+KFPOW_AUTO_SET :  false #;Will pick mask indices automatically, if false YOU must Define Them
+KFPOW_MASK_SET_TYPE :  TIME #(TIME or INDEX) for CRP_AUTO_SET=FALSE manually set s1,s2,s3,s4, via TIME in trace or INDEX in trace
+KFPOW_MASK_START :  1.3 # Only used if CRP_AUTO_SET=FALSE
+KFPOW_MASK_WINDOW_START :  3.6 # Only used if CRP_AUTO_SET=FALSE
+KFPOW_MASK_WINDOW_END :  3.8 # Only used if CRP_AUTO_SET=FALSE
+KFPOW_MASK_END :  3.4 # Only used if CRP_AUTO_SET=FALSE.  ms from end of RF pulse
+KFPOW_MASK_LO_MIN :  50  # integer,Minimum value for a mask, regardless
+KFPOW_MASK_TYPE :  PERCENT # ABSOLUTE OR PERCENT, mask type is to set the mask based on a percentage of previous values, or by absolute amount
+KFPOW_NUM_AVERAGE_TRACES :  2 #
+KFPOW_CHECK_STREAK :  2 # how many continuous points outside mask required to trigger event
+KFPOW_DROP_AMP :  true # should drop amplitude on event detection?
+KFPOW_DROP_AMP_VALUE :  2 # value to drop RF amplitude to on event detection (LLRF UNITS)
+KFPOW_MASK_LEVEL :  35.0 # units depend on CRP_MASK_TYPE
+KFPOW_MASK_FLOOR :  0.0 # values below this won't get checked
 
 ## CAVITY FORWARD POWER  MASK PARAMETERS
 CFPHA_AUTO_SET:  false #;Will pick mask indices automatically, if false YOU must Define Them
@@ -265,15 +261,14 @@ CFPHA_MASK_SET_TYPE:  TIME #(TIME or INDEX) for CRP_AUTO_SET=FALSE manually set 
 CFPHA_MASK_START:  0.8 # Only used if CRP_AUTO_SET=FALSE
 CFPHA_MASK_WINDOW_START:  2.4 # Only used if CRP_AUTO_SET=FALSE
 CFPHA_MASK_WINDOW_END:  3.4 # Only used if CRP_AUTO_SET=FALSE
-CFPHA_MASK_END:  5.0 # Only used if CRP_AUTO_SET=FALSE
+CFPHA_MASK_END:  5.0 # Only used if CRP_AUTO_SET=FALSE.  ms from end of RF pulse
 CFPHA_MASK_LO_MIN:  50  # integer,Minimum value for a mask, regardless
 CFPHA_MASK_TYPE:  ABSOLUTE # ABSOLUTE OR PERCENT, mask type is to set the mask based on a percentage of previous values, or by absolute amount 
 CFPHA_NUM_AVERAGE_TRACES:  2 # 
 CFPHA_CHECK_STREAK:  2 # how many continuous points outside mask required to trigger event
 CFPHA_DROP_AMP_VALUE:  2 # value to drop RF amplitude to on event detection (LLRF UNITS)
-CFPHA_MASK_LEVEL:  35 # units depend on CRP_MASK_TYPE
+CFPHA_MASK_LEVEL:  35.0 # units depend on CRP_MASK_TYPE
 CFPHA_MASK_FLOOR:  0.0 # values below this won't get checked
-CFPHA_MASK_END:  4.8 # ms from end of RF pulse 
 CFPHA_DROP_AMP:  false # should drop amplitude on event detection?
 # Was implemented, then taken out, so needs re-implementing and CHECKING, 
 # This feature allows the end of the phase mask to be set to the index of the 
@@ -288,15 +283,14 @@ CRPHA_MASK_SET_TYPE:  TIME #(TIME or INDEX) for CRP_AUTO_SET=FALSE manually set 
 CRPHA_MASK_START:  0.8 # Only used if CRP_AUTO_SET=FALSE
 CRPHA_MASK_WINDOW_START:  2.4 # Only used if CRP_AUTO_SET=FALSE
 CRPHA_MASK_WINDOW_END:  3.4 # Only used if CRP_AUTO_SET=FALSE
-CRPHA_MASK_END:  5.0 # Only used if CRP_AUTO_SET=FALSE
+CRPHA_MASK_END:  5.0 # Only used if CRP_AUTO_SET=FALSE.  ms from end of RF pulse
 CRPHA_MASK_LO_MIN:  50  # integer,Minimum value for a mask, regardless
 CRPHA_MASK_TYPE:  ABSOLUTE # ABSOLUTE OR PERCENT, mask type is to set the mask based on a percentage of previous values, or by absolute amount 
-CRPHA_NUM_AVERAGE_TRACES:  2 # 
+CRPHA_NUM_AVERAGE_TRACES:  2 #
 CRPHA_CHECK_STREAK:  2 # how many continuous points outside mask required to trigger event
 CRPHA_DROP_AMP_VALUE:  2 # value to drop RF amplitude to on event detection (LLRF UNITS)
-CRPHA_MASK_LEVEL:  35 # units depend on CRP_MASK_TYPE
+CRPHA_MASK_LEVEL:  35.0 # units depend on CRP_MASK_TYPE
 CRPHA_MASK_FLOOR:  0.0 # values below this won't get checked
-CRPHA_MASK_END:  4.8 # ms from end of RF pulse 
 CRPHA_DROP_AMP:  false # should drop amplitude on event detection?
 CRPHA_PHASE_MASK_BY_POWER_TRACE:  false # 
 CRPHA_PHASE_MASK_BY_POWER_LEVEL:  5000.0 # Watts, set the end of the phase mask to be at the index for this  (going from late to early in th epulse)
@@ -308,15 +302,14 @@ CPPHA_MASK_SET_TYPE:  TIME #(TIME or INDEX) for CRP_AUTO_SET=FALSE manually set 
 CPPHA_MASK_START:  0.8 # Only used if CRP_AUTO_SET=FALSE
 CPPHA_MASK_WINDOW_START:  2.4 # Only used if CRP_AUTO_SET=FALSE
 CPPHA_MASK_WINDOW_END:  3.4 # Only used if CRP_AUTO_SET=FALSE
-CPPHA_MASK_END:  5.0 # Only used if CRP_AUTO_SET=FALSE
+CPPHA_MASK_END:  5.0 # Only used if CRP_AUTO_SET=FALSE.  ms from end of RF pulse
 CPPHA_MASK_LO_MIN:  50  # integer,Minimum value for a mask, regardless
 CPPHA_MASK_TYPE:  ABSOLUTE # ABSOLUTE OR PERCENT, mask type is to set the mask based on a percentage of previous values, or by absolute amount
 CPPHA_NUM_AVERAGE_TRACES:  2 #
 CPPHA_CHECK_STREAK:  2 # how many continuous points outside mask required to trigger event
 CPPHA_DROP_AMP_VALUE:  2 # value to drop RF amplitude to on event detection (LLRF UNITS)
-CPPHA_MASK_LEVEL:  35 # units depend on CRP_MASK_TYPE
+CPPHA_MASK_LEVEL:  35.0 # units depend on CRP_MASK_TYPE
 CPPHA_MASK_FLOOR:  0.0 # values below this won't get checked
-CPPHA_MASK_END:  4.8 # ms from end of RF pulse
 CPPHA_DROP_AMP:  false # should drop amplitude on event detection?
 CPPHA_PHASE_MASK_BY_POWER_TRACE:  false #
 CPPHA_PHASE_MASK_BY_POWER_LEVEL:  5000.0 # Watts, set the end of the phase mask to be at the index for this  (going from late to early in th epulse)
@@ -328,15 +321,14 @@ KRPHA_MASK_SET_TYPE:  TIME #(TIME or INDEX) for CRP_AUTO_SET=FALSE manually set 
 KRPHA_MASK_START:  0.8 # Only used if CRP_AUTO_SET=FALSE
 KRPHA_MASK_WINDOW_START:  2.4 # Only used if CRP_AUTO_SET=FALSE
 KRPHA_MASK_WINDOW_END:  3.4 # Only used if CRP_AUTO_SET=FALSE
-KRPHA_MASK_END:  5.0 # Only used if CRP_AUTO_SET=FALSE
+KRPHA_MASK_END:  5.0 # Only used if CRP_AUTO_SET=FALSE.  ms from end of RF pulse
 KRPHA_MASK_LO_MIN:  50  # integer,Minimum value for a mask, regardless
 KRPHA_MASK_TYPE:  ABSOLUTE # ABSOLUTE OR PERCENT, mask type is to set the mask based on a percentage of previous values, or by absolute amount 
 KRPHA_NUM_AVERAGE_TRACES:  2 # 
 KRPHA_CHECK_STREAK:  2 # how many continuous points outside mask required to trigger event
 KRPHA_DROP_AMP_VALUE:  2 # value to drop RF amplitude to on event detection (LLRF UNITS)
-KRPHA_MASK_LEVEL:  35 # units depend on CRP_MASK_TYPE
+KRPHA_MASK_LEVEL:  35.0 # units depend on CRP_MASK_TYPE
 KRPHA_MASK_FLOOR:  0.0 # values below this won't get checked
-KRPHA_MASK_END:  4.8 # ms from end of RF pulse 
 KRPHA_DROP_AMP:  false # should drop amplitude on event detection?
 KRPHA_PHASE_MASK_BY_POWER_TRACE:  false # 
 KRPHA_PHASE_MASK_BY_POWER_LEVEL:  5000.0 # Watts, set the end of the phase mask to be at the index for this  (going from late to early in th epulse)
@@ -348,16 +340,15 @@ KFPHA_MASK_SET_TYPE:  TIME #(TIME or INDEX) for CRP_AUTO_SET=FALSE manually set 
 KFPHA_MASK_START:  0.8 # Only used if CRP_AUTO_SET=FALSE
 KFPHA_MASK_WINDOW_START:  2.4 # Only used if CRP_AUTO_SET=FALSE
 KFPHA_MASK_WINDOW_END:  3.4 # Only used if CRP_AUTO_SET=FALSE
-KFPHA_MASK_END:  5.0 # Only used if CRP_AUTO_SET=FALSE
+KFPHA_MASK_END:  5.0 # Only used if CRP_AUTO_SET=FALSE.  ms from end of RF pulse
 KFPHA_MASK_LO_MIN:  50  # integer,Minimum value for a mask, regardless
 KFPHA_MASK_TYPE:  ABSOLUTE # ABSOLUTE OR PERCENT, mask type is to set the mask based on a percentage of previous values, or by absolute amount 
 KFPHA_NUM_AVERAGE_TRACES:  2 # 
 KFPHA_CHECK_STREAK:  2 # how many continuous points outside mask required to trigger event
 KFPHA_DROP_AMP:  false # should drop amplitude on event detection?
 KFPHA_DROP_AMP_VALUE:  2 # value to drop RF amplitude to on event detection (LLRF UNITS)
-KFPHA_MASK_LEVEL:  35 # units depend on CRP_MASK_TYPE
+KFPHA_MASK_LEVEL:  35.0 # units depend on CRP_MASK_TYPE
 KFPHA_MASK_FLOOR:  0.0 # values below this won't get checked
-KFPHA_MASK_END:  4.8 # ms from end of RF pulse 
 KFPHA_PHASE_MASK_BY_POWER_TRACE:  false # 
 KFPHA_PHASE_MASK_BY_POWER_LEVEL:  5000.0 # Watts, set the end of the phase mask to be at the index for this  (going from late to early in th epulse)
 
@@ -387,7 +378,7 @@ KFPOW_AMPSP_RUNNING_STATS_LOG_FILENAME:  amp_power_log.txt
 
 ## Vacuum parameters
 VAC_PV:  CLA-LRG1-VAC-IMG-01:P
-VAC_SPIKE_DELTA:  0.0000004 # 4e-7
+VAC_SPIKE_DELTA:  0.000000001 # 1e-9
 # Decay mode is TIMED or LEVEL, if LEVEL then set VAC_SPIKE_DECAY_LEVEL
 # a lvel decay means wait until the desitred level is reached after an event, before setting the "vacuum_good" state
 # a timed decay will wait the set amount of tim ebefore setting "vacuum_good" 
@@ -397,9 +388,9 @@ VAC_SPIKE_DECAY_TIME:  2000 # ms only used if VAC_DECAY_MODE = TIME
 VAC_NUM_SAMPLES_TO_AVERAGE:  7 # integer, numer of samples over which to calcualte the rolling mean
 VAC_ROLLING_SUM_NUM_SAMPLES:  25 # We will keep a rolling sum of the vacuum level, which may help us in the future with generating an "adaptive ramp" based on vac activity 
 VAC_CHECK_TIME:  200 #; ms between vacuum level checks, we think this is the faatest they go at
-VAC_SHOULD_DROP_AMP:  false #; amp_sp to set if vacuum spike
+VAC_SHOULD_DROP_AMP:  true #; amp_sp to set if vacuum spike
 VAC_SPIKE_DROP_AMP:  5 #; amp_sp to set if vacuum spike
-VAC_MAX_LEVEL:  0.000000005 #5e-9; If vacuum level goes  above this, disable ramping 
+VAC_MAX_LEVEL:  0.000000005 #5e-9; If vacuum level goes  above this, disable ramping
 WHEN_VAC_HI_DISABLE_RAMP: true #BOOL, flag for whether to disable ramping when vac_level is above VAC_MAX_LEVEL
 VAC_SPIKE_TRACES_TO_SAVE:  
   - KLYSTRON_FORWARD_PHASE

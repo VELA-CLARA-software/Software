@@ -66,7 +66,7 @@ class rf_conditioning_data(object):
     excluded_key_list = []
 
     # this curve is going to be redefined every time we switch back on, when not in use set to None!!
-    log_ramp_curve = None
+    _log_ramp_curve = None
 
     ramp_power_sum = None
     
@@ -695,7 +695,7 @@ class rf_conditioning_data(object):
 
         x_step = (x_finish - x_start) / numsteps
         curve_powers = [curve_p_finish * (1.00 - ramp_rate ** (x_start + x * x_step)) for x in range(0, numsteps + 1)]
-        print(rf_conditioning_data.log_ramp_curve )
+        print(rf_conditioning_data._log_ramp_curve)
 
 
         bin_X = rf_conditioning_data.binned_amp_vs_kfpow['BIN_X']
@@ -709,16 +709,23 @@ class rf_conditioning_data(object):
         print("bin_X = ", bin_X)
         print("bin_Y = ", bin_Y)
         print("curve_powers = ", curve_powers)
-
         required_set_points = np.interp( curve_powers, bin_Y, bin_X)
-
-        rf_conditioning_data.log_ramp_curve = [ [ int(pulses_per_step), float(int(amp_sp))] for amp_sp in  required_set_points  ]
-
-        print(" rf_conditioning_data.log_ramp_curve = ",  rf_conditioning_data.log_ramp_curve)
-
+        print("required_set_points = ", required_set_points)
         #raw_input()
-
+        amp_sp_to_use =list(set(  [float(int(amp_sp)) for amp_sp in required_set_points] ))
+        rf_conditioning_data._log_ramp_curve = [ [ int(pulses_per_step), amp_sp] for amp_sp in  amp_sp_to_use  ]
+        print(" rf_conditioning_data._log_ramp_curve = ",  rf_conditioning_data._log_ramp_curve)
+        #raw_input()
         self.values[rf_conditioning_data.log_ramp_curve_index] = 0
+
+    @property
+    def log_ramp_curve(self):
+        return rf_conditioning_data._log_ramp_curve
+
+    @log_ramp_curve.setter
+    def log_ramp_curve(self, value):
+        rf_conditioning_data._log_ramp_curve = value
+
 
     def get_new_set_point(self, req_delta_pwr):
         '''
@@ -1641,6 +1648,13 @@ class rf_conditioning_data(object):
     llrf_DAQ_rep_rate_aim = 'llrf_DAQ_rep_rate_aim'
     all_value_keys.append(llrf_DAQ_rep_rate_aim)
     values[llrf_DAQ_rep_rate_aim] = dummy_float
+
+    GUI_mod_and_prot_good = 'GUI_mod_and_prot_good'
+    all_value_keys.append(GUI_mod_and_prot_good)
+    values[GUI_mod_and_prot_good] = False
+
+
+
 
     llrf_DAQ_rep_rate_status = 'llrf_DAQ_rep_rate_status'
     all_value_keys.append(llrf_DAQ_rep_rate_status)
