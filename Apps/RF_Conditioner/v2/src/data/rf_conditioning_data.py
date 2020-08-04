@@ -175,13 +175,13 @@ class rf_conditioning_data(object):
     def get_log_ramp_power_finsh(self):
         print("get_log_ramp_power_finsh")
 
-        if rf_conditioning_data.values[rf_conditioning_data.last_amp_sp] > 500:
+        # todo we need to think about how thsi should look for actual running
+
+        if rf_conditioning_data.values[rf_conditioning_data.last_amp_sp] > 500: # TODO on  startup this breaks ...
             print("last_amp_sp > 500")
-            return self.get_kf_running_stat_power_at_set_point(rf_conditioning_data.values[rf_conditioning_data.last_amp_sp])
+            return self.get_kf_running_stat_power_at_set_point( float(rf_conditioning_data.values[rf_conditioning_data.last_amp_sp]) )
         else:
-
             # TODO this will have to return a real number >> 1000, if peo[ple have the pusle_breakdwon log file they can break thsi atm
-
             print("last_amp_sp = {}".format( rf_conditioning_data.values[rf_conditioning_data.last_amp_sp]) )
             r= self.get_kf_running_stat_power_at_set_point( self.values[rf_conditioning_data.log_amp_set] )
             if r < 500:
@@ -193,6 +193,10 @@ class rf_conditioning_data(object):
         return self.get_kfp_running_stat_at_current_set_point()[1]
 
     def get_kf_running_stat_power_at_set_point(self, sp):
+
+        todo maybe, tis shuold return a numebr clsoe to the amp_sp you request power for, if the requested amp_sp is not in teh data |(this makes \
+                sense to me now!)
+
         if sp is None:
             print("ERROR passed sp is NONE")
             return  [0,0,0,0]
@@ -352,6 +356,9 @@ class rf_conditioning_data(object):
         #
         # The Frist amp_setpoint to set on start-up
         self.values[rcd.log_amp_set] = int(pulse_break_down_log[-1][2])
+
+        # TODO this fixes what to do no startup when log_rmaping ...
+        self.values[rcd.last_amp_sp] = int(pulse_break_down_log[-1][2])
 
         # Now we set-up the 'active_pulse_breakdown_log' this used to be the "last million log" but we are making the nuumber of pulses
         # configurable, once we have set the necessary parameters up, we can call the main_update breakdown stats function
@@ -716,8 +723,16 @@ class rf_conditioning_data(object):
         required_set_points = np.interp( curve_powers, bin_Y, bin_X)
         print("required_set_points = ", required_set_points)
         #raw_input()
-        amp_sp_to_use =list(set(  [float(int(amp_sp)) for amp_sp in required_set_points] ))
-        rf_conditioning_data._log_ramp_curve = [ [ int(pulses_per_step), amp_sp] for amp_sp in  amp_sp_to_use  ]
+        amp_sp_list = []
+        for amp_sp in required_set_points:
+            next_amp_sp = float(int(amp_sp))
+            if next_amp_sp in amp_sp_list:
+                pass
+            else:
+                amp_sp_list.append(   next_amp_sp  )
+
+        rf_conditioning_data._log_ramp_curve = [ [int(pulses_per_step), sp] for sp in amp_sp_list ]
+
         print(" rf_conditioning_data._log_ramp_curve = ",  rf_conditioning_data._log_ramp_curve)
         #raw_input()
         self.values[rf_conditioning_data.log_ramp_curve_index] = 0
@@ -920,12 +935,12 @@ class rf_conditioning_data(object):
         c = p[1]
         predicted_sp = int((requested_power - c) / m)
         #print 'm = {}\nc = {}\nPredicted SP = {}'.format(m, c, predicted_sp)
-        self.values[rf_conditioning_data.x_min] = min(data_to_fit_x)
-        self.values[rf_conditioning_data.x_max] = max(data_to_fit_x)
-        self.values[rf_conditioning_data.y_min] = min(data_to_fit_y)
-        self.values[rf_conditioning_data.y_max] = max(data_to_fit_y)
-        self.values[rf_conditioning_data.c] = c
-        self.values[rf_conditioning_data.m] = m
+        self.values[rf_conditioning_data.x_min] = float(min(data_to_fit_x))
+        self.values[rf_conditioning_data.x_max] = float(max(data_to_fit_x))
+        self.values[rf_conditioning_data.y_min] = float(min(data_to_fit_y))
+        self.values[rf_conditioning_data.y_max] = float(max(data_to_fit_y))
+        self.values[rf_conditioning_data.c] = float(c)
+        self.values[rf_conditioning_data.m] = float(m)
         predicted_sp = int(predicted_sp)
         return float(predicted_sp)
 
@@ -947,9 +962,9 @@ class rf_conditioning_data(object):
 
         print('From poly_amp_kfpow_all_data:\npredicted_sp = {}\np0 = {}\np1 = {}\np2 = {}\n'.format(predicted_sp, p0, p1, p2))
 
-        self.values[rcd.p0_all] = p0
-        self.values[rcd.p1_all] = p1
-        self.values[rcd.p2_all] = p2
+        self.values[rcd.p0_all] = float(p0)
+        self.values[rcd.p1_all] = float(p1)
+        self.values[rcd.p2_all] = float(p2)
         self.values[rcd.polyfit_2order_X_all] = data_to_fit_x
         self.values[rcd.polyfit_2order_Y_all] = polyfit_2order
 
@@ -987,9 +1002,9 @@ class rf_conditioning_data(object):
 
         print('From poly_amp_kfpow_current_sp:\npredicted_sp = {}\np0 = {}\np1 = {}\np2 = {}\n'.format(predicted_sp, p0, p1, p2))
 
-        self.values[rcd.p0_current_sp] = p0
-        self.values[rcd.p1_current_sp] = p1
-        self.values[rcd.p2_current_sp] = p2
+        self.values[rcd.p0_current_sp] = float(p0)
+        self.values[rcd.p1_current_sp] = float(p1)
+        self.values[rcd.p2_current_sp] = float(p2)
         self.values[rcd.polyfit_2order_X_current_sp] = data_to_fit_x
         self.values[rcd.polyfit_2order_Y_current_sp] = polyfit_2order
 
@@ -1030,9 +1045,9 @@ class rf_conditioning_data(object):
         print('From poly_amp_kfpow_current_sp_to_fit:\npolyfit_2order = {}\npredicted_sp = {}\np0 = {}\np1 = {}\np2 = {}\n'.format(polyfit_2order,predicted_sp,
                                                                                                                                    p0,p1, p2))
 
-        self.values[rcd.p0_current_sp_to_fit] = p0
-        self.values[rcd.p1_current_sp_to_fit] = p1
-        self.values[rcd.p2_current_sp_to_fit] = p2
+        self.values[rcd.p0_current_sp_to_fit] = float(p0)
+        self.values[rcd.p1_current_sp_to_fit] = float(p1)
+        self.values[rcd.p2_current_sp_to_fit] = float(p2)
         self.values[rcd.polyfit_2order_X_current_sp_to_fit] = data_to_fit_x
         self.values[rcd.polyfit_2order_Y_current_sp_to_fit] = polyfit_2order
 
@@ -1203,6 +1218,7 @@ class rf_conditioning_data(object):
     values[water_temp_gui] = dummy_float
     all_value_keys.append(cav_temp_gui)
     values[cav_temp_gui] = dummy_float
+    excluded_key_list.append(cav_temp_gui)
 
     pulses_to_next_ramp = 'pulses_to_next_ramp'
     all_value_keys.append(pulses_to_next_ramp)
@@ -1442,48 +1458,59 @@ class rf_conditioning_data(object):
     llrf_interlock = 'llrf_interlock'  # The read value from EPICS
     all_value_keys.append(llrf_interlock)
     values[llrf_interlock] = state.UNKNOWN
+    excluded_key_list.append(llrf_interlock)
 
     llrf_interlock_status = 'llrf_interlock_status'  # the apps internal state, good, new_bad etc
     all_value_keys.append(llrf_interlock_status)
     values[llrf_interlock_status] = state.UNKNOWN
+    excluded_key_list.append(llrf_interlock_status)
 
     # the state of the "Trace interlocks" these are where you can specify a power that disables LLRF
     llrf_trace_interlock = 'llrf_trace_interlock'  # The read value from EPICS
     all_value_keys.append(llrf_trace_interlock)
     values[llrf_trace_interlock] = state.UNKNOWN
+    excluded_key_list.append(llrf_trace_interlock)
 
     llrf_trigger = 'llrf_trigger'
     all_value_keys.append(llrf_trigger)
     values[llrf_trigger] = state.UNKNOWN
+    excluded_key_list.append(llrf_trigger)
 
     llrf_trigger_status = 'llrf_trigger_status'
     all_value_keys.append(llrf_trigger_status)
     values[llrf_trigger_status] = state.UNKNOWN
+    excluded_key_list.append(llrf_trigger_status)
 
     ## PULSE LENGTH
     pulse_length = 'pulse_length'
     all_value_keys.append(pulse_length)
     values[pulse_length] = dummy_float
+    excluded_key_list.append(pulse_length)
 
     expected_pulse_length = 'expected_pulse_length'
     all_value_keys.append(expected_pulse_length)
     values[expected_pulse_length] = dummy_float
+    excluded_key_list.append(expected_pulse_length)
 
     pulse_length_min = 'pulse_length_min'
     all_value_keys.append(pulse_length_min)
     values[pulse_length_min] = dummy_float
+    excluded_key_list.append(pulse_length_min)
 
     pulse_length_max = 'pulse_length_max'
     all_value_keys.append(pulse_length_max)
     values[pulse_length_max] = dummy_float
+    excluded_key_list.append(pulse_length_max)
 
     pulse_length_status = 'pulse_length_status'  # the apps internal state, good, new_bad etc
     all_value_keys.append(pulse_length_status)
     values[pulse_length_status] = state.UNKNOWN
+    excluded_key_list.append(pulse_length_status)
 
     llrf_output = 'llrf_output'  # RF Output on LLRF panel
     all_value_keys.append(llrf_output)
     values[llrf_output] = state.UNKNOWN
+    excluded_key_list.append(llrf_output)
 
     llrf_output_status = 'llrf_output_status'  # the apps internal state, good, new_bad etc
     all_value_keys.append(llrf_output_status)
@@ -1492,18 +1519,22 @@ class rf_conditioning_data(object):
     llrf_ff_amp_locked = 'llrf_ff_amp_locked'
     all_value_keys.append(llrf_ff_amp_locked)
     values[llrf_ff_amp_locked] = state.UNKNOWN
+    excluded_key_list.append(llrf_ff_amp_locked)
 
     llrf_ff_amp_locked_status = 'llrf_ff_amp_locked_status'  # the apps internal state, good, new_bad etc
     all_value_keys.append(llrf_ff_amp_locked_status)
     values[llrf_ff_amp_locked_status] = state.UNKNOWN
+    excluded_key_list.append(llrf_ff_amp_locked_status)
 
     llrf_ff_ph_locked = 'llrf_ff_ph_locked'
     all_value_keys.append(llrf_ff_ph_locked)
     values[llrf_ff_ph_locked] = state.UNKNOWN
+    excluded_key_list.append(llrf_ff_ph_locked)
 
     llrf_ff_ph_locked_status = 'llrf_ff_ph_locked_status'  # the apps internal state, good, new_bad etc
     all_value_keys.append(llrf_ff_ph_locked_status)
     values[llrf_ff_ph_locked_status] = state.UNKNOWN
+    excluded_key_list.append(llrf_ff_ph_locked_status)
 
     llrf_DAQ_rep_rate = 'llrf_DAQ_rep_rate'
     all_value_keys.append(llrf_DAQ_rep_rate)
@@ -1517,9 +1548,6 @@ class rf_conditioning_data(object):
     all_value_keys.append(GUI_mod_and_prot_good)
     values[GUI_mod_and_prot_good] = False
 
-
-
-
     llrf_DAQ_rep_rate_status = 'llrf_DAQ_rep_rate_status'
     all_value_keys.append(llrf_DAQ_rep_rate_status)
     values[llrf_DAQ_rep_rate_status] = state.UNKNOWN
@@ -1527,14 +1555,17 @@ class rf_conditioning_data(object):
     llrf_DAQ_rep_rate_status_previous = 'llrf_DAQ_rep_rate_status_previous'
     all_value_keys.append(llrf_DAQ_rep_rate_status_previous)
     values[llrf_DAQ_rep_rate_status_previous] = state.UNKNOWN
+    excluded_key_list.append(llrf_DAQ_rep_rate_status_previous)
 
     llrf_DAQ_rep_rate_max = 'llrf_DAQ_rep_rate_max'
     all_value_keys.append(llrf_DAQ_rep_rate_max)
     values[llrf_DAQ_rep_rate_max] = state.UNKNOWN
+    excluded_key_list.append(llrf_DAQ_rep_rate_max)
 
     llrf_DAQ_rep_rate_min = 'llrf_DAQ_rep_rate_min'
     all_value_keys.append(llrf_DAQ_rep_rate_min)
     values[llrf_DAQ_rep_rate_min] = dummy_float
+    excluded_key_list.append(llrf_DAQ_rep_rate_min)
 
     required_pulses = 'required_pulses'
     all_value_keys.append(required_pulses)
@@ -1547,14 +1578,17 @@ class rf_conditioning_data(object):
     last_requested_power_change = 'last_requested_power_change'
     all_value_keys.append(last_requested_power_change)
     values[last_requested_power_change] = dummy_int
+    excluded_key_list.append(last_requested_power_change)
 
     log_pulse_length = 'log_pulse_length'
     all_value_keys.append(log_pulse_length)
     values[log_pulse_length] = dummy_float
+    excluded_key_list.append(log_pulse_length)
 
     last_mean_power = 'last_mean_power'
     all_value_keys.append(last_mean_power)
     values[last_mean_power] = dummy_float
+    excluded_key_list.append(last_mean_power)
 
     gui_can_rf_output = 'gui_can_rf_output'
     all_value_keys.append(gui_can_rf_output)
@@ -1575,6 +1609,7 @@ class rf_conditioning_data(object):
     last_amp_sp = 'last_amp_sp'
     all_value_keys.append(last_amp_sp)
     values[last_amp_sp] = dummy_float
+    excluded_key_list.append(last_amp_sp)
 
     phi_sp = 'phi_sp'
     all_value_keys.append(phi_sp)
@@ -1612,103 +1647,106 @@ class rf_conditioning_data(object):
     old_x_min = 'old_x_min'
     all_value_keys.append(old_x_min)
     values[old_x_min] = dummy_float
+    excluded_key_list.append(old_x_min)
 
     old_x_max = 'old_x_max'
     all_value_keys.append(old_x_max)
     values[old_x_max] = dummy_float
+    excluded_key_list.append(old_x_max)
 
     y_min = 'y_min'
     all_value_keys.append(y_min)
     #values[y_min] = dummy_np_float_64
-    values[y_min] = dummy_np_float_64
+    values[y_min] = dummy_float
 
     y_max = 'y_max'
     all_value_keys.append(y_max)
-    values[y_max] = dummy_np_float_64
+    values[y_max] = dummy_float
 
     old_y_min = 'old_y_min'
     all_value_keys.append(old_y_min)
-    values[old_y_min] = dummy_np_float_64
+    values[old_y_min] = dummy_float
+    excluded_key_list.append(old_y_min)
 
     old_y_max = 'old_y_max'
     all_value_keys.append(old_y_max)
-    values[old_y_max] = dummy_np_float_64
+    values[old_y_max] = dummy_float
+    excluded_key_list.append(old_y_max)
 
     c = 'c'
     all_value_keys.append(c)
-    values[c] = dummy_np_float_64
+    values[c] = dummy_float
 
     m = 'm'
     all_value_keys.append(m)
-    values[m] = dummy_np_float_64
+    values[m] = dummy_float
 
     p0_current_sp = 'p0_current_sp'
     all_value_keys.append(p0_current_sp)
-    values[p0_current_sp] = dummy_np_float_64
+    values[p0_current_sp] = dummy_float
 
     p1_current_sp = 'p1_current_sp'
     all_value_keys.append(p1_current_sp)
-    values[p1_current_sp] = dummy_np_float_64
+    values[p1_current_sp] = dummy_float
 
     p2_current_sp = 'p2_current_sp'
     all_value_keys.append(p2_current_sp)
-    values[p2_current_sp] = dummy_np_float_64
+    values[p2_current_sp] = dummy_float
 
     p0_current_sp_to_fit = 'p0_current_sp_to_fit'
     all_value_keys.append(p0_current_sp_to_fit)
-    values[p0_current_sp_to_fit] = dummy_np_float_64
+    values[p0_current_sp_to_fit] = dummy_float
 
     p1_current_sp_to_fit = 'p1_current_sp_to_fit'
     all_value_keys.append(p1_current_sp_to_fit)
-    values[p1_current_sp_to_fit] = dummy_np_float_64
+    values[p1_current_sp_to_fit] = dummy_float
 
     p2_current_sp_to_fit = 'p2_current_sp_to_fit'
     all_value_keys.append(p2_current_sp_to_fit)
-    values[p2_current_sp_to_fit] = dummy_np_float_64
+    values[p2_current_sp_to_fit] = dummy_float
 
     p0_all = 'p0_all'
     all_value_keys.append(p0_all)
-    values[p0_all] = dummy_np_float_64
+    values[p0_all] = dummy_float
 
     p1_all = 'p1_all'
     all_value_keys.append(p1_all)
-    values[p1_all] = dummy_np_float_64
+    values[p1_all] = dummy_float
 
     p2_all = 'p2_all'
     all_value_keys.append(p2_all)
-    values[p2_all] = dummy_np_float_64
+    values[p2_all] = dummy_float
 
     # TODO AJG: this is temporary! remove asap
 
     polyfit_2order_X_all = 'polyfit_2order_X_all'
     all_value_keys.append(polyfit_2order_X_all)
-    values[polyfit_2order_X_all] = [dummy_np_float_64]
+    values[polyfit_2order_X_all] = [dummy_float]
     excluded_key_list.append(polyfit_2order_X_all)
 
     polyfit_2order_Y_all = 'polyfit_2order_Y_all'
     all_value_keys.append(polyfit_2order_Y_all)
-    values[polyfit_2order_Y_all] = [dummy_np_float_64]
+    values[polyfit_2order_Y_all] = [dummy_float]
     excluded_key_list.append(polyfit_2order_Y_all)
 
     polyfit_2order_X_current_sp = 'polyfit_2order_X_current_sp'
     all_value_keys.append(polyfit_2order_X_current_sp)
-    values[polyfit_2order_X_current_sp] = [dummy_np_float_64]
+    values[polyfit_2order_X_current_sp] = [dummy_float]
     excluded_key_list.append(polyfit_2order_X_current_sp)
 
     polyfit_2order_Y_current_sp = 'polyfit_2order_Y_current_sp'
     all_value_keys.append(polyfit_2order_Y_current_sp)
-    values[polyfit_2order_Y_current_sp] = [dummy_np_float_64]
+    values[polyfit_2order_Y_current_sp] = [dummy_float]
     excluded_key_list.append(polyfit_2order_Y_current_sp)
 
     polyfit_2order_X_current_sp_to_fit = 'polyfit_2order_X_current_sp_to_fit'
     all_value_keys.append(polyfit_2order_X_current_sp_to_fit)
-    values[polyfit_2order_X_current_sp_to_fit] = [dummy_np_float_64]
+    values[polyfit_2order_X_current_sp_to_fit] = [dummy_float]
     excluded_key_list.append(polyfit_2order_X_current_sp_to_fit)
-
 
     polyfit_2order_Y_current_sp_to_fit = 'polyfit_2order_Y_current_sp_to_fit'
     all_value_keys.append(polyfit_2order_Y_current_sp_to_fit)
-    values[polyfit_2order_Y_current_sp_to_fit] = [dummy_np_float_64]
+    values[polyfit_2order_Y_current_sp_to_fit] = [dummy_float]
     excluded_key_list.append(polyfit_2order_Y_current_sp_to_fit)
     # TODO ^^^^^ ##########################
 
@@ -1730,15 +1768,18 @@ class rf_conditioning_data(object):
 
     old_c = 'old_c'
     all_value_keys.append(old_c)
-    values[old_c] = dummy_np_float_64
+    values[old_c] = dummy_float
+    excluded_key_list.append(old_c)
 
     old_m = 'old_m'
     all_value_keys.append(old_m)
-    values[old_m] = dummy_np_float_64
+    values[old_m] = dummy_float
+    excluded_key_list.append(old_m)
 
     log_ramp_curve_index = 'log_ramp_curve_index'
     all_value_keys.append(log_ramp_curve_index)
     values[log_ramp_curve_index] = dummy_int
+    excluded_key_list.append(log_ramp_curve_index)
 
     # latest_ramp_up_sp = 'latest_ramp_up_sp'
     last_sp_above_100 = 'last_sp_above_100'

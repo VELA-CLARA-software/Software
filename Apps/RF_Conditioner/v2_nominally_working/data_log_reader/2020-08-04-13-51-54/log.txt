@@ -1,0 +1,3784 @@
+****************************************************************************************************
+******************* __         __    _  _  ___       _   ___  ___   __         __ ******************
+******************* \ \  ___  / /   | \| |/ _ \     /_\ | _ \/ __|  \ \  ___  / / ******************
+*******************  \ \/ _ \/ /    | .` | (_) |   / _ \|   / (__    \ \/ _ \/ /  ******************
+*******************   \_\___/_/     |_|\_|\___/   /_/ \_\_|_\\___|    \_\___/_/   ******************
+*******************                                                               ******************
+********************************************************************************
+*********************** Log Started 2020-08-04-13-51-54 ************************
+********************************************************************************
+********************************************************************************
+******************************** Configuration *********************************
+********************************************************************************
+config file =
+C:\Users\dlerlp\Documents\GitHub\Software\Apps\RF_Conditioner\v2\CLARA_LRRG.yml
+dumping parsed config data to text log
+CONFIG_FILE:
+C:\Users\dlerlp\Documents\GitHub\Software\Apps\RF_Conditioner\v2\CLARA_LRRG.yml,
+KFPOW_MASK_TYPE: PERCENT, KRPOW_MASK_FLOOR: 1000.0, BREAKDOWN_TRACES:
+['KLYSTRON_FORWARD_POWER'], CFPHA_MEAN_END: 2.0, MAX_POW: 0.0, MAX_AMP: 60000,
+VAC_SPIKE_DECAY_LEVEL: 1.2, CFPOW_MASK_WINDOW_START: 301, PID_on_off_GMON: CLA-
+GUN-H2O-PID-02:ON:RB, KRPOW_NUM_AVERAGE_TRACES: 2, CFPHA_MASK_SET_TYPE: TIME,
+CPPOW_MASK_START: 0.8, KRPOW_MASK_SET_TYPE: TIME, CPPOW_DROP_AMP: False,
+CRPOW_DROP_AMP_VALUE: 2, CFPOW_MASK_FLOOR: 1000.0, CRPHA_MASK_SET_TYPE: TIME,
+TEXT_LOG_FILENAME: log.txt, KFPHA_MASK_LO_MIN: 50, KRPOW_CHECK_STREAK: 2,
+VAC_VALVE_CHECK_TIME: 1000, CPPOW_MASK_SET_TYPE: TIME, CFPHA_CHECK_STREAK: 2,
+CPPOW_AUTO_SET: False, KFPOW_MASK_END: 3.4, CFPHA_MEAN_START: 0.0,
+PID_integral_gain: CLA-GUN-H2O-PID-02:INTG:RB, KRPHA_MASK_TYPE: ABSOLUTE,
+VAC_ROLLING_SUM_NUM_SAMPLES: 25, CFPOW_MASK_END: 179, CFPHA_NUM_AVERAGE_TRACES:
+2, KRPOW_AUTO_SET: False, KRPHA_PHASE_MASK_BY_POWER_TRACE: False,
+VAC_NUM_SAMPLES_TO_AVERAGE: 7, KFPHA_AUTO_SET: False, CRPOW_MASK_WINDOW_END:
+4.25, CFPHA_MASK_LO_MIN: 50, SOL_CHECK_TIME: 1000, MINIMUM_COOLDOWN_TIME: 3000,
+RF_STRUCTURE: CLARA_LRRG, WATER_TEMPERATURE_PV: ['CLA-GUN-RF-LRRG-01:RT', 'CLA-
+GUN-RF-LRRG-02:RT'], KRPHA_CHECK_STREAK: 2, KRPOW_MASK_END: 5.0,
+LLRF_CHECK_TIME: 50, KFPOW_AMPSP_RUNNING_STATS_LOG_FILENAME: amp_power_log.txt,
+CPPHA_PHASE_MASK_BY_POWER_LEVEL: 5000.0, PULSE_COUNT_BREAKDOWN_LOG_FILENAME:
+pulse_breakdown_log.txt, CFPOW_MASK_START: 57, CFPHA_AUTO_SET: False,
+KRPOW_DROP_AMP_VALUE: 2, KFPHA_PHASE_MASK_BY_POWER_LEVEL: 5000.0,
+CFPHA_MASK_FLOOR: 0.0, KRPHA_PHASE_MASK_BY_POWER_LEVEL: 5000.0,
+KFPOW_MASK_WINDOW_END: 3.8, CPPHA_DROP_AMP_VALUE: 2,
+OUTSIDE_MASK_FORWARD_FILENAME: outside_forward_log, KRPHA_MEAN_END: 3.0,
+KFPOW_MASK_START: 1.3, KEEP_VALVE_OPEN: False, CRPHA_MASK_LO_MIN: 50,
+CRPOW_MASK_FLOOR: 1000.0, SOL_WOBBLE_OSCILLATION_POINTS: 0, CRPHA_MEAN_START:
+2.8, DC_PV: EBT-INJ-SCOPE-01:P1, KRPHA_MASK_FLOOR: 0.0, CPPHA_MASK_WINDOW_START:
+2.4, CPPOW_MASK_TYPE: ABSOLUTE, CFPOW_MASK_LEVEL: 30, CFPHA_DROP_AMP_VALUE: 2,
+CRPHA_MASK_TYPE: ABSOLUTE, TRACES_TO_SAVE: ['KLYSTRON_FORWARD_PHASE',
+'KLYSTRON_REVERSE_PHASE', 'KLYSTRON_FORWARD_POWER', 'KLYSTRON_REVERSE_POWER',
+'CAVITY_REVERSE_PHASE', 'CAVITY_FORWARD_PHASE', 'CAVITY_FORWARD_POWER',
+'CAVITY_REVERSE_POWER'], KRPHA_MASK_WINDOW_END: 3.4, MAGNET_MACHINE_AREA:
+CLARA_PH1, DC_SPIKE_DELTA: 0.015, PID_proportional_gain: CLA-GUN-H2O-
+PID-02:PROP:RB, OUTSIDE_MASK_COOLDOWN_TIME: 3000, VAC_VALVE_AREA: CLARA_PH1,
+SOL_WOBBLE_LO: 0.0, KRPOW_MASK_LEVEL: 35.0, KRPHA_DROP_AMP: False,
+CRPHA_MASK_END: 5.0, CRPHA_MEAN_END: 3.0, KFPOW_MEAN_START: 2.0, CRPHA_DROP_AMP:
+False, KFPOW_MEAN_END: 2.5, CFPOW_NUM_AVERAGE_TRACES: 5, CPPHA_MASK_END: 5.0,
+VAC_VALVE: S01-VALV-01, PID_set_point: CLA-GUN-H2O-PID-02:SETVAL:RB,
+CAVITY_TEMPERATURE_CHECK_TIME: 1000, CFPHA_DROP_AMP: False,
+MODULATOR_CHECK_TIME: 1000, SOL_COUNT: 2, RF_REPETITION_RATE: 10,
+CPPHA_MASK_WINDOW_END: 3.4, LOG_RAMP_CURVE_NUMSTEPS: 30, KFPHA_MEAN_START: 2.3,
+RF_PROT_CHECK_TIME: 1000, KFPHA_MASK_TYPE: ABSOLUTE, MIN_AMP: 500,
+DC_CHECK_TIME: 1000, PID_on_off: CLA-GUN-H2O-PID-02:ON:RB,
+KRPHA_NUM_AVERAGE_TRACES: 2, KFPHA_MASK_FLOOR: 0.0, CRPHA_DROP_AMP_VALUE: 2,
+KRPHA_MASK_WINDOW_START: 2.4, CRPOW_MASK_TYPE: PERCENT, BIN_WIDTH: 100,
+KFPOW_MASK_FLOOR: 0.0, CPPOW_MASK_END: 5.0, BINARY_DATA_LOG_FILENAME: data_log,
+KRPHA_MASK_LO_MIN: 50, KFPOW_MASK_LEVEL: 35.0, OUTSIDE_MASK_CHECK_TIME: 100,
+MODE: OPERATIONAL, CRPOW_MASK_LO_MIN: 50, KLY_PWR_FOR_ACTIVE_PULSE: 500.0,
+SOL_NAMES: ['L01-SOL1', 'L01-SOL2'], CRPHA_MASK_FLOOR: 0.0, GMON_SUFFIX: _GMON,
+KFPOW_DROP_AMP_VALUE: 2, KRPOW_MEAN_END: 2.5, WHEN_VAC_HI_DISABLE_RAMP: True,
+AMP_PWR_LOG_TIME: 50, VAC_SPIKE_DROP_AMP: 5, DC_SPIKE_DECAY_TIME: 2000,
+CPPHA_MASK_TYPE: ABSOLUTE, KFPHA_MASK_SET_TYPE: TIME, KRPOW_MASK_WINDOW_START:
+2.4, PID_derivative_gain_GMON: CLA-GUN-H2O-PID-02:DERI:RB,
+SOL_WOBBLE_OSCILLATION_TIME: 100.0, PID_integral_gain_GMON: CLA-GUN-H2O-
+PID-02:INTG:RB, CFPOW_MASK_SET_TYPE: INDEX, CFPOW_MASK_WINDOW_END: 302,
+LOG_DIRECTORY:
+C:\Users\dlerlp\Documents\GitHub\Software\Apps\RF_Conditioner\v2\logs\,
+KFPHA_MASK_LEVEL: 35.0, CAVITY_TEMPERATURE_PV: ['CLA-GUN-RF-LRRG-01:RT'],
+VAC_SPIKE_DELTA: 1e-09, VAC_CHECK_TIME: 200, PID_set_point_GMON: CLA-GUN-H2O-
+PID-02:SETVAL:RB, DC_DECAY_MODE: TIMED, SOL_WOBBLE_HI: 0.0,
+CRPOW_MASK_WINDOW_START: 3.7, CPPHA_NUM_AVERAGE_TRACES: 2,
+CRPHA_NUM_AVERAGE_TRACES: 2, NUM_BUFFER_TRACES: 500, CRPHA_MASK_LEVEL: 35.0,
+CRPOW_CHECK_STREAK: 2, CPPHA_AUTO_SET: False, VAC_SHOULD_DROP_AMP: True,
+KFPHA_CHECK_STREAK: 2, KRPOW_MEAN_START: 2.0, KFPOW_AUTO_SET: False,
+OUTSIDE_MASK_PROBE_FILENAME: outside_probe_log, CPPOW_MASK_FLOOR: 1000.0,
+KRPOW_MASK_START: 0.8, DC_SHOULD_DROP_AMP: False, CRPOW_MEAN_START: 3.2,
+CFPOW_DROP_AMP_VALUE: 6, CRPOW_MEAN_END: 3.6, GUI_UPDATE_TIME: 1000,
+CPPOW_MEAN_END: 2.0, CFPOW_MEAN_START: 3.2, KFPHA_DROP_AMP_VALUE: 2,
+KRPHA_DROP_AMP_VALUE: 2, CPPHA_MEAN_END: 2.0, PULSE_LENGTH: 2500,
+DEFAULT_RF_INCREASE_LEVEL: 10, KFPHA_MEAN_END: 2.75, PID_derivative_gain: CLA-
+GUN-H2O-PID-02:DERI:RB, SHOULD_SOL_WOBBLE: False, CPPOW_MEAN_START: 0.0,
+VAC_DECAY_MODE: LEVEL, PULSE_LENGTH_ERROR: 50, KFPOW_MASK_SET_TYPE: TIME,
+PID_autotune_state: CLA-GUN-H2O-PID-02:ATUNE:RB, CFPOW_MASK_LO_MIN: 50,
+KRPHA_MASK_END: 5.0, CPPOW_MASK_WINDOW_START: 2.4, CFPOW_CHECK_STREAK: 10,
+CFPHA_MASK_LEVEL: 35.0, CRPHA_MASK_WINDOW_END: 3.4, CPPHA_CHECK_STREAK: 2,
+KRPHA_MEAN_START: 2.5, CPPOW_NUM_AVERAGE_TRACES: 2, CPPHA_MASK_LEVEL: 35.0,
+CPPHA_DROP_AMP: False, CAV_PWR_RATIO: 1.0, CRPHA_PHASE_MASK_BY_POWER_TRACE:
+False, PID_proportional_gain_GMON: CLA-GUN-H2O-PID-02:PROP:RB, CFPHA_MASK_END:
+5.0, LOG_RAMP_CURVE_RAMP_RATE: 0.2, CRPHA_CHECK_STREAK: 2, CRPHA_MASK_START:
+0.8, KFPHA_MASK_END: 5.0, KFPHA_NUM_AVERAGE_TRACES: 2, PID_output: CLA-GUN-H2O-
+PID-02:OUTPUT:RB, WATER_TEMPERATURE_PV_COUNT: 2, BREAKDOWN_RATE_AIM: 100,
+KRPOW_DROP_AMP: False, LOG_RAMP_CURVE_PULSES_PER_STEP: 10, CPPHA_MASK_FLOOR:
+0.0, CPPHA_MASK_SET_TYPE: TIME, KFPHA_MASK_START: 0.8,
+KFPHA_PHASE_MASK_BY_POWER_TRACE: False, WATER_TEMPERATURE_CHECK_TIME: 1000,
+CPPHA_PHASE_MASK_BY_POWER_TRACE: False, CFPOW_MASK_TYPE: PERCENT,
+CFPHA_MASK_WINDOW_START: 2.4, KRPOW_MASK_LO_MIN: 50, CRPOW_MASK_START: 1.2,
+CRPOW_MASK_SET_TYPE: TIME, CPPOW_CHECK_STREAK: 2, CPPHA_MASK_START: 0.8,
+CFPOW_DROP_AMP: False, CPPHA_MASK_LO_MIN: 50, KRPHA_AUTO_SET: False,
+MEAN_TRACES: ['KLYSTRON_FORWARD_POWER', 'KLYSTRON_REVERSE_POWER',
+'CAVITY_FORWARD_POWER', 'CAVITY_REVERSE_POWER', 'KLYSTRON_FORWARD_PHASE',
+'KLYSTRON_REVERSE_PHASE', 'CAVITY_FORWARD_PHASE', 'CAVITY_REVERSE_PHASE'],
+DC_SPIKE_DECAY_LEVEL: 1.2, CRPHA_MASK_WINDOW_START: 2.4, CPPOW_MASK_LO_MIN: 50,
+CRPOW_DROP_AMP: True, KFPOW_CHECK_STREAK: 2, DEFAULT_PULSE_COUNT: 150,
+CRPOW_NUM_AVERAGE_TRACES: 2, VAC_SPIKE_TRACES_TO_SAVE:
+['KLYSTRON_FORWARD_PHASE', 'KLYSTRON_REVERSE_PHASE', 'KLYSTRON_FORWARD_POWER',
+'KLYSTRON_REVERSE_POWER', 'CAVITY_REVERSE_PHASE', 'CAVITY_FORWARD_PHASE',
+'CAVITY_FORWARD_POWER', 'CAVITY_REVERSE_POWER'], PID_output_GMON: CLA-GUN-H2O-
+PID-02:OUTPUT:RB, CRPOW_MASK_LEVEL: 35.0, KFPOW_NUM_AVERAGE_TRACES: 2,
+BINARY_DATA_LOG_TIME: 1000, KRPHA_MASK_SET_TYPE: TIME, KFPOW_MASK_WINDOW_START:
+3.6, KFPOW_DROP_AMP: True, KRPOW_MASK_WINDOW_END: 3.4, PID_autotune_state_GMON:
+CLA-GUN-H2O-PID-02:ATUNE:RB, NUM_SET_POINTS_TO_FIT: 4, CFPHA_MASK_START: 0.8,
+CRPOW_AUTO_SET: False, CPPOW_MASK_LEVEL: 35.0, CPPHA_MEAN_START: 0.0,
+MAX_DELTA_AMP_SP: 400, CRPHA_AUTO_SET: False, VAC_PV: CLA-LRG1-VAC-IMG-01:P,
+KFPOW_MASK_LO_MIN: 50, CPPOW_DROP_AMP_VALUE: 2, CAVITY_TEMPERATURE_PV_COUNT: 1,
+VAC_MAX_LEVEL: 5e-09, CFPHA_MASK_TYPE: ABSOLUTE, KRPHA_MASK_LEVEL: 35.0,
+CRPHA_PHASE_MASK_BY_POWER_LEVEL: 5000.0, EXTRA_BREAKDOWN_DAQ: ['VAC_LEVEL',
+'DC_LEVEL', 'BREAKDOWN_RATE', 'BREAKDOWN_COUNT'], KFPHA_MASK_WINDOW_START: 2.4,
+KRPHA_MASK_START: 0.8, OUTSIDE_MASK_REVERSE_FILENAME: outside_reverse_log,
+CFPOW_MEAN_END: 3.6, NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY: 1000000,
+CFPHA_PHASE_MASK_BY_POWER_TRACE: False, CRPOW_MASK_END: 6.0,
+RF_REPETITION_RATE_ERROR: 3, CFPHA_MASK_WINDOW_END: 3.4, VAC_SPIKE_DECAY_TIME:
+2000, EXTRA_TRACES_ON_BREAKDOWN: 2, DC_SPIKE_DROP_AMP: 6, CFPOW_AUTO_SET: False,
+KFPHA_MASK_WINDOW_END: 3.4, KRPOW_MASK_TYPE: ABSOLUTE,
+DC_NUM_SAMPLES_TO_AVERAGE: 5, KFPHA_DROP_AMP: False, LOG_RAMP_START_POWER:
+30000, CPPOW_MASK_WINDOW_END: 3.4, CFPHA_PHASE_MASK_BY_POWER_LEVEL: 5000.0,
+
+2020-08-04 13:51:55.864000
+********************************************************************************
+***** src.controllers.main_controller, create rf_conditioning_data object ******
+********************************************************************************
+
+2020-08-04 13:51:55.864000
+Started in debug mode = False
+********************************************************************************
+****************** Print Rationalized kfpow_running_stat_log  ******************
+********************************************************************************
+get_kfpow_running_stat_log complete
+
+2020-08-04 13:51:56.620000
+********************************************************************************
+***** src.controllers.main_controller, create hardware_control_hub object ******
+********************************************************************************
+hardware_control_hub Starting CATAP Hardware Interfaces
+start_llrf_control()  SET AMP_SP = 0, successfully created a CLARA_LRRG LLRF
+control object
+
+2020-08-04 13:52:14.056000
+********************************************************************************
+********** src.controllers.main_controller, create monitor_hub object **********
+********************************************************************************
+src.monitors.monitor_hub Starting Data Monitoring
+src.monitors.monitor_hub start_rfprot_monitor()
+
+2020-08-04 13:52:15.157000
+src.controllers.hardware_control_hub connected, PV = CLA-LRG1-VAC-IMG-01:P with
+ID = d0,  acquiring data
+src.monitors.vac_monitor will drop amp on spike detection
+src.monitors.vac_monitor STARTED running
+src.monitors.vac_monitor vac_spike_status = state.UNKNOWN
+src.monitors.vac_monitor vac_spike_status = state.GOOD
+start_vac_monitor successfully started Vacuum Monitoring
+src.monitors.monitor_hub start_daq_frequency_monitor()
+********************************************************************************
+************************* Connecting to Water Temp PVs *************************
+********************************************************************************
+
+2020-08-04 13:52:16.258000
+src.controllers.hardware_control_hub connected, PV = CLA-GUN-RF-LRRG-01:RT with
+ID = d1,  acquiring data
+
+2020-08-04 13:52:16.258000
+src.monitors.vac_monitor level ok, 5.7e-10 < 5e-09
+
+2020-08-04 13:52:16.258000
+Connected to CLA-GUN-RF-LRRG-01:RT id = WATER_TEMP_ID_0
+********************************************************************************
+************************* Connecting to Water Temp PVs *************************
+********************************************************************************
+
+2020-08-04 13:52:17.308000
+src.controllers.hardware_control_hub connected, PV = CLA-GUN-RF-LRRG-02:RT with
+ID = d2,  acquiring data
+
+2020-08-04 13:52:17.323000
+Connected to CLA-GUN-RF-LRRG-02:RT id = WATER_TEMP_ID_1
+
+2020-08-04 13:52:17.323000
+start_water_temperature_monitor successfully started Water Temperature
+Monitoring
+
+2020-08-04 13:52:17.323000
+src.monitors.monitor_hub start_cavity_temperature_monitor()
+********************************************************************************
+************************ Connecting to Cavity Temp PVs *************************
+********************************************************************************
+
+2020-08-04 13:52:18.410000
+src.controllers.hardware_control_hub connected, PV = CLA-GUN-RF-LRRG-01:RT with
+ID = d3,  acquiring data
+
+2020-08-04 13:52:18.425000
+Connected to CLA-GUN-RF-LRRG-01:RT id = CAVITY_TEMP_ID_0
+
+2020-08-04 13:52:18.425000
+start_cavity_temperature_monitor successfully started Cavity Temperature
+Monitoring
+
+2020-08-04 13:52:18.425000
+src.monitors.monitor_hub start_solenoid_monitoring()
+src.monitors.monitor_hub Sanity Check
+is_cavity_temp_monitoring = True
+is_rf_prot_monitoring = True
+is_vac_monitoring = True
+is_water_temp_monitoring = True
+is_vac_valve_monitor = True
+is_modulator_monitoring = True
+is_outside_mask_monitoring = True
+is_daq_frequency_monitoring = True
+is_llrf_monitoring = True
+is_sol_monitoring = True
+
+2020-08-04 13:52:18.425000
+********************************************************************************
+********** src.data.rf_conditioning_logger start_binary_data_logging  **********
+********************************************************************************
+binary log file added
+p0_all  llrf_output_status      next_sp_decrease        probe_pha
+rev_cav_pha     can_llrf_output_state_OLD       breakdown_rate_aim      phi_sp
+num_outside_mask_traces next_requested_power_change     modulator_good
+p2_current_sp_to_fit    CAVITY_TEMP_ID_0        p2_current_sp
+pulse_length_status     pulse_length    llrf_trace_interlock
+cav_pwr_ratio_good      llrf_interlock  SP_QUAD_ALL     water_temp_gui
+last_requested_power_change     max_sp_increase ramp_mode
+llrf_ff_ph_locked       rev_kly_pha     llrf_ff_amp_locked_status
+pulse_length_min        llrf_DAQ_rep_rate_status_previous       delta_kfpow
+llrf_trigger    cav_pwr_ratio_can_ramp  p1_current_sp_to_fit    vac_level
+gui_can_rf_output       can_rf_output_status_OLD
+bd_rate_calc_first_pulse_number pulse_length_max        cav_pwr_ratio
+number_of_pulses_in_breakdown_history   probe_outside_mask_count
+llrf_interlock_status   current_ramp_index      y_min   old_x_min
+old_x_max       rev_kly_pwr     fwd_kly_pha     active_breakdown_count
+last_sp_above_100       event_pulse_count       time_stamp, (start = 2020-08-04
+13:52:18.463000)        log_ramp_curve_index    TOR_SCAN
+llrf_ff_ph_locked_status        last_mean_power rev_cav_pwr
+SP_QUAD_CURRENT_SP_TO_FIT       last_vac_spike_status   llrf_DAQ_rep_rate_status
+x_max   p0_current_sp_to_fit    amp_ff  c       L01-SOL1        L01-SOL2
+y_max   p1_current_sp   x_min   can_ramp_status kfpower_at_last_amp_sp
+vac_level_can_ramp      last_breakdown_status   reverse_outside_mask_count
+llrf_DAQ_rep_rate_min   llrf_DAQ_rep_rate_max   TOR_ACQM        p0_current_sp
+breakdown_rate_low      WATER_TEMP_ID_1 cav_temp        fwd_cav_pha
+BD_state_OLD    rfprot_good     last_amp_sp     vac_spike_status
+old_y_max       event_pulse_count_zero  DC_level        amp_sp
+global_mask_checking    gui_can_ramp    can_llrf_output_state   p1_all
+expected_pulse_length   old_y_min       log_pulse_count llrf_DAQ_rep_rate_aim
+llrf_ff_amp_locked      catap_max_amp   can_ramp_status_OLD     p2_all
+fwd_kly_pwr     sol_value       log_amp_set     duplicate_pulse_count   m
+pulse_count     fwd_cav_pwr     SP_SLF  WATER_TEMP_ID_0 probe_pwr
+llrf_output     can_rf_output_status    log_pulse_length        modulator_state
+elapsed_time    DC_spike_status llrf_trigger_status     pulses_to_next_ramp
+GUI_mod_and_prot_good   breakdown_status        catap_max_amp_can_ramp_status
+main_can_ramp   llrf_DAQ_rep_rate       vac_valve_status        SP_QUAD_CURRENT
+rev_power_spike_count   BD_state        last_ramp_method        required_pulses
+rfprot_state    old_m   total_breakdown_count   old_c   cav_temp_gui
+
+<type 'numpy.float64'>  <enum 'state'>  <type 'float'>  <type 'float'>  <type
+'float'>  <enum 'state'>  <type 'int'>    <type 'int'>    <type 'int'>    <type
+'int'>    <type 'bool'>   <type 'numpy.float64'>  <type 'float'>  <type
+'numpy.float64'>  <enum 'state'>  <type 'int'>    <type 'bool'>   <type 'bool'>
+<class 'VELA_CLARA_LLRF_Control.INTERLOCK_STATE'>       <type 'float'>  <type
+'float'>  <type 'int'>    <type 'float'>  <enum 'ramp_method'>    <type 'bool'>
+<type 'float'>  <enum 'state'>  <type 'int'>    <enum 'state'>  <type 'float'>
+<class 'VELA_CLARA_LLRF_Control.TRIG'>  <type 'bool'>   <type 'numpy.float64'>
+<type 'float'>  <type 'bool'>   <enum 'state'>  <type 'int'>    <type 'int'>
+<type 'float'>  <type 'int'>    <type 'int'>    <enum 'state'>  <type 'int'>
+<type 'numpy.float64'>  <type 'float'>  <type 'float'>  <type 'float'>  <type
+'float'>  <type 'int'>    <type 'float'>  <type 'int'>    <type 'float'>  <type
+'int'>    <type 'int'>    <enum 'state'>  <type 'float'>  <type 'float'>  <type
+'float'>  <enum 'state'>  <enum 'state'>  <type 'float'>  <type 'numpy.float64'>
+<type 'int'>    <type 'numpy.float64'>  <type 'float'>  <type 'float'>  <type
+'numpy.float64'>  <type 'numpy.float64'>  <type 'float'>  <enum 'state'>  <type
+'float'>  <type 'bool'>   <enum 'state'>  <type 'int'>    <type 'int'>    <type
+'int'>    <type 'int'>    <type 'numpy.float64'>  <type 'bool'>   <type 'float'>
+<type 'float'>  <type 'float'>  <enum 'state'>  <type 'bool'>   <type 'float'>
+<enum 'state'>  <type 'numpy.float64'>  <type 'int'>    <type 'float'>  <type
+'float'>  <type 'bool'>   <type 'bool'>   <enum 'state'>  <type 'numpy.float64'>
+<type 'int'>    <type 'numpy.float64'>  <type 'int'>    <type 'int'>    <type
+'bool'>   <type 'float'>  <enum 'state'>  <type 'numpy.float64'>  <type 'float'>
+<type 'float'>  <type 'int'>    <type 'int'>    <type 'numpy.float64'>  <type
+'int'>    <type 'float'>  <type 'float'>  <type 'float'>  <type 'float'>  <type
+'bool'>   <enum 'state'>  <type 'float'>  <class
+'VELA_CLARA_RF_Modulator_Control.GUN_MOD_STATE'> <type 'long'>   <enum 'state'>
+<enum 'state'>  <type 'int'>    <type 'bool'>   <enum 'state'>  <type 'bool'>
+<type 'bool'>   <type 'float'>  <class
+'VELA_CLARA_Vac_Valve_Control.VALVE_STATE'>      <type 'float'>  <type 'int'>
+<enum 'state'>  <enum 'ramp_method'>    <type 'int'>    <class
+'VELA_CLARA_RF_Protection_Control.RF_PROT_STATUS'>       <type 'numpy.float64'>
+<type 'int'>    <type 'numpy.float64'>  <type 'float'>
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 432639
+
+2020-08-04 13:52:18.547000
+********************************************************************************
+src.controllers.main_controller The RF Conditioning is Preparing to Entering
+Main_Loop !
+********************************************************************************
+
+2020-08-04 13:52:18.547000
+set_global_check_mask setGlobalCheckMask True
+
+2020-08-04 13:52:18.594000
+set_amp (2944.0) called from log_ramp_up
+
+2020-08-04 13:52:18.594000
+requested value 2944.0 is different to current value 0.0
+
+2020-08-04 13:52:18.695000
+set_amp(2944.0), took 0.08986960531 time,  averages NOT reset, mask_set = False
+
+2020-08-04 13:52:18.695000
+set_amp (2944.0) called from log_ramp_up
+
+2020-08-04 13:52:18.695000
+requested value is THE SAME  to current value
+
+2020-08-04 13:52:18.695000
+src.controllers.main_controller reset_event_pulse_count
+
+2020-08-04 13:52:18.695000
+new event_pulse_count_zero = 432639
+
+2020-08-04 13:52:19.681000
+New amp_sp_history value = 2944.0
+
+2020-08-04 13:52:19.681000
+set_amp (2949.0) called from log_ramp_up
+
+2020-08-04 13:52:19.681000
+requested value 2949.0 is different to current value 2944.0
+
+2020-08-04 13:52:19.681000
+set_amp(2949.0), took 0.00140899294709 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 13:52:19.681000
+set_amp (2949.0) called from log_ramp_up
+
+2020-08-04 13:52:19.681000
+requested value is THE SAME  to current value
+
+2020-08-04 13:52:19.681000
+src.controllers.main_controller reset_event_pulse_count
+
+2020-08-04 13:52:19.681000
+new event_pulse_count_zero = 432649
+
+2020-08-04 13:52:20.768000
+New amp_sp_history value = 2949.0
+
+2020-08-04 13:52:20.768000
+set_amp (2956.0) called from log_ramp_up
+
+2020-08-04 13:52:20.768000
+requested value 2956.0 is different to current value 2949.0
+
+2020-08-04 13:52:20.784000
+set_amp(2956.0), took 0.0108981966213 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 13:52:20.784000
+set_amp (2956.0) called from log_ramp_up
+
+2020-08-04 13:52:20.784000
+requested value is THE SAME  to current value
+
+2020-08-04 13:52:20.784000
+src.controllers.main_controller reset_event_pulse_count
+
+2020-08-04 13:52:20.784000
+new event_pulse_count_zero = 432660
+
+2020-08-04 13:52:21.871000
+New amp_sp_history value = 2956.0
+
+2020-08-04 13:52:21.871000
+set_amp (3010.0) called from log_ramp_up
+
+2020-08-04 13:52:21.871000
+requested value 3010.0 is different to current value 2956.0
+
+2020-08-04 13:52:21.933000
+set_amp(3010.0), took 0.0570761213401 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 13:52:21.933000
+set_amp (3010.0) called from log_ramp_up
+
+2020-08-04 13:52:21.933000
+requested value is THE SAME  to current value
+
+2020-08-04 13:52:21.933000
+src.controllers.main_controller reset_event_pulse_count
+
+2020-08-04 13:52:21.933000
+new event_pulse_count_zero = 432670
+
+2020-08-04 13:52:22.851000
+New amp_sp_history value = 3010.0
+
+2020-08-04 13:52:22.851000
+set_amp (2989.0) called from log_ramp_up
+
+2020-08-04 13:52:22.851000
+requested value 2989.0 is different to current value 3010.0
+
+2020-08-04 13:52:22.873000
+set_amp(2989.0), took 0.0152339920541 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 13:52:22.873000
+set_amp (2989.0) called from log_ramp_up
+
+2020-08-04 13:52:22.873000
+requested value is THE SAME  to current value
+
+2020-08-04 13:52:22.873000
+src.controllers.main_controller reset_event_pulse_count
+
+2020-08-04 13:52:22.873000
+new event_pulse_count_zero = 432681
+
+2020-08-04 13:52:23.938000
+New amp_sp_history value = 2989.0
+
+2020-08-04 13:52:23.938000
+set_amp (2963.0) called from log_ramp_up
+
+2020-08-04 13:52:23.938000
+requested value 2963.0 is different to current value 2989.0
+
+2020-08-04 13:52:24.007000
+set_amp(2963.0), took 0.0616510486744 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 13:52:24.007000
+set_amp (2963.0) called from log_ramp_up
+
+2020-08-04 13:52:24.007000
+requested value is THE SAME  to current value
+
+2020-08-04 13:52:24.007000
+src.controllers.main_controller reset_event_pulse_count
+
+2020-08-04 13:52:24.007000
+new event_pulse_count_zero = 432691
+
+2020-08-04 13:52:24.925000
+New amp_sp_history value = 2963.0
+
+2020-08-04 13:52:24.925000
+set_amp (2969.0) called from log_ramp_up
+
+2020-08-04 13:52:24.925000
+requested value 2969.0 is different to current value 2963.0
+
+2020-08-04 13:52:24.956000
+set_amp(2969.0), took 0.0273000652238 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 13:52:24.956000
+set_amp (2969.0) called from log_ramp_up
+
+2020-08-04 13:52:24.956000
+requested value is THE SAME  to current value
+
+2020-08-04 13:52:24.956000
+src.controllers.main_controller reset_event_pulse_count
+
+2020-08-04 13:52:24.956000
+new event_pulse_count_zero = 432701
+
+2020-08-04 13:52:25.911000
+New amp_sp_history value = 2969.0
+
+2020-08-04 13:52:25.911000
+set_amp (2974.0) called from log_ramp_up
+
+2020-08-04 13:52:25.911000
+requested value 2974.0 is different to current value 2969.0
+
+2020-08-04 13:52:25.927000
+set_amp(2974.0), took 0.00989404108438 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 13:52:25.927000
+set_amp (2974.0) called from log_ramp_up
+
+2020-08-04 13:52:25.927000
+requested value is THE SAME  to current value
+
+2020-08-04 13:52:25.927000
+src.controllers.main_controller reset_event_pulse_count
+
+2020-08-04 13:52:25.927000
+new event_pulse_count_zero = 432711
+
+2020-08-04 13:52:26.898000
+New amp_sp_history value = 2974.0
+
+2020-08-04 13:52:26.898000
+set_amp (2980.0) called from log_ramp_up
+
+2020-08-04 13:52:26.898000
+requested value 2980.0 is different to current value 2974.0
+
+2020-08-04 13:52:26.914000
+set_amp(2980.0), took 0.0100217103984 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 13:52:26.914000
+set_amp (2980.0) called from log_ramp_up
+
+2020-08-04 13:52:26.914000
+requested value is THE SAME  to current value
+
+2020-08-04 13:52:26.914000
+src.controllers.main_controller reset_event_pulse_count
+
+2020-08-04 13:52:26.914000
+new event_pulse_count_zero = 432721
+
+2020-08-04 13:52:27.901000
+New amp_sp_history value = 2980.0
+
+2020-08-04 13:52:27.901000
+set_amp (2985.0) called from log_ramp_up
+
+2020-08-04 13:52:27.901000
+requested value 2985.0 is different to current value 2980.0
+
+2020-08-04 13:52:27.916000
+set_amp(2985.0), took 0.00892296049925 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 13:52:27.916000
+set_amp (2985.0) called from log_ramp_up
+
+2020-08-04 13:52:27.916000
+requested value is THE SAME  to current value
+
+2020-08-04 13:52:27.916000
+src.controllers.main_controller reset_event_pulse_count
+
+2020-08-04 13:52:27.916000
+new event_pulse_count_zero = 432731
+
+2020-08-04 13:52:28.887000
+New amp_sp_history value = 2985.0
+
+2020-08-04 13:52:28.887000
+set_amp (2861.0) called from log_ramp_up
+
+2020-08-04 13:52:28.887000
+requested value 2861.0 is different to current value 2985.0
+
+2020-08-04 13:52:28.887000
+set_amp(2861.0), took 0.00132895156372 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 13:52:28.887000
+set_amp (2861.0) called from log_ramp_up
+
+2020-08-04 13:52:28.887000
+requested value is THE SAME  to current value
+
+2020-08-04 13:52:28.887000
+src.controllers.main_controller reset_event_pulse_count
+
+2020-08-04 13:52:28.887000
+new event_pulse_count_zero = 432741
+
+2020-08-04 13:52:29.868000
+New amp_sp_history value = 2861.0
+
+2020-08-04 13:52:29.868000
+set_amp (2993.0) called from log_ramp_up
+
+2020-08-04 13:52:29.868000
+requested value 2993.0 is different to current value 2861.0
+
+2020-08-04 13:52:29.890000
+set_amp(2993.0), took 0.0177450423955 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 13:52:29.890000
+set_amp (2993.0) called from log_ramp_up
+
+2020-08-04 13:52:29.890000
+requested value is THE SAME  to current value
+
+2020-08-04 13:52:29.890000
+src.controllers.main_controller reset_event_pulse_count
+
+2020-08-04 13:52:29.890000
+new event_pulse_count_zero = 432751
+
+2020-08-04 13:52:30.955000
+New amp_sp_history value = 2993.0
+
+2020-08-04 13:52:30.955000
+set_amp (2997.0) called from log_ramp_up
+
+2020-08-04 13:52:30.955000
+requested value 2997.0 is different to current value 2993.0
+
+2020-08-04 13:52:30.955000
+set_amp(2997.0), took 0.000696558485117 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 13:52:30.955000
+set_amp (2997.0) called from log_ramp_up
+
+2020-08-04 13:52:30.955000
+requested value is THE SAME  to current value
+
+2020-08-04 13:52:30.955000
+src.controllers.main_controller reset_event_pulse_count
+
+2020-08-04 13:52:30.955000
+new event_pulse_count_zero = 432762
+
+2020-08-04 13:52:32.057000
+New amp_sp_history value = 2997.0
+
+2020-08-04 13:52:32.057000
+set_amp (2872.0) called from log_ramp_up
+
+2020-08-04 13:52:32.057000
+requested value 2872.0 is different to current value 2997.0
+
+2020-08-04 13:52:32.073000
+set_amp(2872.0), took 0.00955436132929 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 13:52:32.073000
+set_amp (2872.0) called from log_ramp_up
+
+2020-08-04 13:52:32.073000
+requested value is THE SAME  to current value
+
+2020-08-04 13:52:32.079000
+src.controllers.main_controller reset_event_pulse_count
+
+2020-08-04 13:52:32.079000
+new event_pulse_count_zero = 432773
+
+2020-08-04 13:52:33.144000
+New amp_sp_history value = 2872.0
+
+2020-08-04 13:52:33.144000
+set_amp (3001.0) called from log_ramp_up
+
+2020-08-04 13:52:33.144000
+requested value 3001.0 is different to current value 2872.0
+
+2020-08-04 13:52:33.144000
+set_amp(3001.0), took 0.000480909799315 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 13:52:33.144000
+set_amp (3001.0) called from log_ramp_up
+
+2020-08-04 13:52:33.144000
+requested value is THE SAME  to current value
+
+2020-08-04 13:52:33.160000
+src.controllers.main_controller reset_event_pulse_count
+
+2020-08-04 13:52:33.160000
+new event_pulse_count_zero = 432783
+
+2020-08-04 13:52:34.131000
+New amp_sp_history value = 3001.0
+
+2020-08-04 13:52:34.131000
+set_amp (3004.0) called from log_ramp_up
+
+2020-08-04 13:52:34.131000
+requested value 3004.0 is different to current value 3001.0
+
+2020-08-04 13:52:34.147000
+set_amp(3004.0), took 0.010316408219 time,  averages NOT reset, mask_set = False
+
+2020-08-04 13:52:34.147000
+set_amp (3004.0) called from log_ramp_up
+
+2020-08-04 13:52:34.147000
+requested value is THE SAME  to current value
+
+2020-08-04 13:52:34.147000
+src.controllers.main_controller reset_event_pulse_count
+
+2020-08-04 13:52:34.147000
+new event_pulse_count_zero = 432793
+
+2020-08-04 13:52:35.118000
+New amp_sp_history value = 3004.0
+
+2020-08-04 13:52:35.118000
+set_amp (3007.0) called from log_ramp_up
+
+2020-08-04 13:52:35.118000
+requested value 3007.0 is different to current value 3004.0
+
+2020-08-04 13:52:35.133000
+set_amp(3007.0), took 0.0113748066769 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 13:52:35.133000
+set_amp (3007.0) called from log_ramp_up
+
+2020-08-04 13:52:35.133000
+requested value is THE SAME  to current value
+
+2020-08-04 13:52:35.133000
+src.controllers.main_controller reset_event_pulse_count
+
+2020-08-04 13:52:35.133000
+new event_pulse_count_zero = 432803
+
+2020-08-04 13:52:36.104000
+New amp_sp_history value = 3007.0
+
+2020-08-04 13:52:36.104000
+set_amp (2882.0) called from log_ramp_up
+
+2020-08-04 13:52:36.104000
+requested value 2882.0 is different to current value 3007.0
+
+2020-08-04 13:52:36.120000
+set_amp(2882.0), took 0.00928380822349 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 13:52:36.120000
+set_amp (2882.0) called from log_ramp_up
+
+2020-08-04 13:52:36.120000
+requested value is THE SAME  to current value
+
+2020-08-04 13:52:36.120000
+src.controllers.main_controller reset_event_pulse_count
+
+2020-08-04 13:52:36.120000
+new event_pulse_count_zero = 432813
+
+2020-08-04 13:52:37.085000
+New amp_sp_history value = 2882.0
+
+2020-08-04 13:52:37.085000
+set_amp (3019.0) called from log_ramp_up
+
+2020-08-04 13:52:37.085000
+requested value 3019.0 is different to current value 2882.0
+
+2020-08-04 13:52:37.107000
+set_amp(3019.0), took 0.0159298890402 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 13:52:37.107000
+set_amp (3019.0) called from log_ramp_up
+
+2020-08-04 13:52:37.107000
+requested value is THE SAME  to current value
+
+2020-08-04 13:52:37.107000
+src.controllers.main_controller reset_event_pulse_count
+
+2020-08-04 13:52:37.107000
+new event_pulse_count_zero = 432823
+
+2020-08-04 13:52:38.071000
+New amp_sp_history value = 3019.0
+
+2020-08-04 13:52:38.071000
+set_amp (3012.0) called from log_ramp_up
+
+2020-08-04 13:52:38.071000
+requested value 3012.0 is different to current value 3019.0
+
+2020-08-04 13:52:38.087000
+set_amp(3012.0), took 0.00877081572092 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 13:52:38.087000
+set_amp (3012.0) called from log_ramp_up
+
+2020-08-04 13:52:38.087000
+requested value is THE SAME  to current value
+
+2020-08-04 13:52:38.093000
+src.controllers.main_controller reset_event_pulse_count
+
+2020-08-04 13:52:38.093000
+new event_pulse_count_zero = 432833
+
+2020-08-04 13:52:39.074000
+New amp_sp_history value = 3012.0
+
+2020-08-04 13:52:39.074000
+set_amp (3015.0) called from log_ramp_up
+
+2020-08-04 13:52:39.074000
+requested value 3015.0 is different to current value 3012.0
+
+2020-08-04 13:52:39.089000
+set_amp(3015.0), took 0.0115100832298 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 13:52:39.089000
+set_amp (3015.0) called from log_ramp_up
+
+2020-08-04 13:52:39.089000
+requested value is THE SAME  to current value
+
+2020-08-04 13:52:39.089000
+src.controllers.main_controller reset_event_pulse_count
+
+2020-08-04 13:52:39.089000
+new event_pulse_count_zero = 432843
+
+2020-08-04 13:52:40.161000
+New amp_sp_history value = 3015.0
+
+2020-08-04 13:52:40.161000
+set_amp (3017.0) called from log_ramp_up
+
+2020-08-04 13:52:40.161000
+requested value 3017.0 is different to current value 3015.0
+
+2020-08-04 13:52:40.176000
+set_amp(3017.0), took 0.0109970907272 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 13:52:40.176000
+set_amp (3017.0) called from log_ramp_up
+
+2020-08-04 13:52:40.176000
+requested value is THE SAME  to current value
+
+2020-08-04 13:52:40.176000
+src.controllers.main_controller reset_event_pulse_count
+
+2020-08-04 13:52:40.176000
+new event_pulse_count_zero = 432854
+
+2020-08-04 13:52:41.147000
+New amp_sp_history value = 3017.0
+
+2020-08-04 13:52:41.147000
+set_amp (2891.0) called from log_ramp_up
+
+2020-08-04 13:52:41.147000
+requested value 2891.0 is different to current value 3017.0
+
+2020-08-04 13:52:41.147000
+set_amp(2891.0), took 0.000633716076678 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 13:52:41.147000
+set_amp (2891.0) called from log_ramp_up
+
+2020-08-04 13:52:41.147000
+requested value is THE SAME  to current value
+
+2020-08-04 13:52:41.147000
+src.controllers.main_controller reset_event_pulse_count
+
+2020-08-04 13:52:41.147000
+new event_pulse_count_zero = 432864
+
+2020-08-04 13:52:42.234000
+New amp_sp_history value = 2891.0
+
+2020-08-04 13:52:42.234000
+set_amp (3021.0) called from log_ramp_up
+
+2020-08-04 13:52:42.234000
+requested value 3021.0 is different to current value 2891.0
+
+2020-08-04 13:52:42.319000
+set_amp(3021.0), took 0.0788539926097 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 13:52:42.319000
+set_amp (3021.0) called from log_ramp_up
+
+2020-08-04 13:52:42.319000
+requested value is THE SAME  to current value
+
+2020-08-04 13:52:42.319000
+src.controllers.main_controller reset_event_pulse_count
+
+2020-08-04 13:52:42.319000
+new event_pulse_count_zero = 432874
+
+2020-08-04 13:52:43.221000
+New amp_sp_history value = 3021.0
+
+2020-08-04 13:52:43.221000
+set_amp (2900.0) called from log_ramp_up
+
+2020-08-04 13:52:43.221000
+requested value 2900.0 is different to current value 3021.0
+
+2020-08-04 13:52:43.237000
+set_amp(2900.0), took 0.00820457254594 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 13:52:43.237000
+set_amp (2900.0) called from log_ramp_up
+
+2020-08-04 13:52:43.237000
+requested value is THE SAME  to current value
+
+2020-08-04 13:52:43.237000
+src.controllers.main_controller reset_event_pulse_count
+
+2020-08-04 13:52:43.237000
+new event_pulse_count_zero = 432884
+
+2020-08-04 13:52:44.201000
+New amp_sp_history value = 2900.0
+
+2020-08-04 13:52:44.201000
+set_amp (2908.0) called from log_ramp_up
+
+2020-08-04 13:52:44.201000
+requested value 2908.0 is different to current value 2900.0
+
+2020-08-04 13:52:44.201000
+set_amp(2908.0), took 0.00137161825155 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 13:52:44.208000
+set_amp (2908.0) called from log_ramp_up
+
+2020-08-04 13:52:44.208000
+requested value is THE SAME  to current value
+
+2020-08-04 13:52:44.208000
+src.controllers.main_controller reset_event_pulse_count
+
+2020-08-04 13:52:44.208000
+new event_pulse_count_zero = 432894
+
+2020-08-04 13:52:45.188000
+New amp_sp_history value = 2908.0
+
+2020-08-04 13:52:45.188000
+set_amp (2915.0) called from log_ramp_up
+
+2020-08-04 13:52:45.188000
+requested value 2915.0 is different to current value 2908.0
+
+2020-08-04 13:52:45.204000
+set_amp(2915.0), took 0.0107106616446 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 13:52:45.204000
+set_amp (2915.0) called from log_ramp_up
+
+2020-08-04 13:52:45.204000
+requested value is THE SAME  to current value
+
+2020-08-04 13:52:45.204000
+src.controllers.main_controller reset_event_pulse_count
+
+2020-08-04 13:52:45.210000
+new event_pulse_count_zero = 432904
+
+2020-08-04 13:52:46.186000
+New amp_sp_history value = 2915.0
+
+2020-08-04 13:52:46.186000
+set_amp (2922.0) called from log_ramp_up
+
+2020-08-04 13:52:46.186000
+requested value 2922.0 is different to current value 2915.0
+
+2020-08-04 13:52:46.204000
+set_amp(2922.0), took 0.0143985187714 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 13:52:46.206000
+set_amp (2922.0) called from log_ramp_up
+
+2020-08-04 13:52:46.206000
+requested value is THE SAME  to current value
+
+2020-08-04 13:52:46.206000
+src.controllers.main_controller reset_event_pulse_count
+
+2020-08-04 13:52:46.206000
+new event_pulse_count_zero = 432914
+
+2020-08-04 13:52:47.212000
+New amp_sp_history value = 2922.0
+
+2020-08-04 13:52:47.214000
+set_amp (2928.0) called from log_ramp_up
+
+2020-08-04 13:52:47.214000
+requested value 2928.0 is different to current value 2922.0
+
+2020-08-04 13:52:47.232000
+set_amp(2928.0), took 0.0139285237061 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 13:52:47.234000
+set_amp (2928.0) called from log_ramp_up
+
+2020-08-04 13:52:47.234000
+requested value is THE SAME  to current value
+
+2020-08-04 13:52:47.234000
+src.controllers.main_controller reset_event_pulse_count
+
+2020-08-04 13:52:47.234000
+new event_pulse_count_zero = 432924
+
+2020-08-04 13:52:48.316000
+New amp_sp_history value = 2928.0
+
+2020-08-04 13:52:48.316000
+set_amp (2934.0) called from log_ramp_up
+
+2020-08-04 13:52:48.316000
+requested value 2934.0 is different to current value 2928.0
+
+2020-08-04 13:52:48.332000
+set_amp(2934.0), took 0.0080759109834 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 13:52:48.332000
+set_amp (2934.0) called from log_ramp_up
+
+2020-08-04 13:52:48.332000
+requested value is THE SAME  to current value
+
+2020-08-04 13:52:48.332000
+src.controllers.main_controller reset_event_pulse_count
+
+2020-08-04 13:52:48.332000
+new event_pulse_count_zero = 432935
+
+2020-08-04 13:52:49.340000
+New amp_sp_history value = 2934.0
+
+2020-08-04 13:52:49.342000
+set_amp (2939.0) called from log_ramp_up
+
+2020-08-04 13:52:49.342000
+requested value 2939.0 is different to current value 2934.0
+
+2020-08-04 13:52:49.361000
+set_amp(2939.0), took 0.0148367618828 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 13:52:49.363000
+set_amp (2939.0) called from log_ramp_up
+
+2020-08-04 13:52:49.363000
+requested value is THE SAME  to current value
+
+2020-08-04 13:52:49.363000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 432945
+
+2020-08-04 13:53:04.270000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 13:53:04.270000
+New amp_sp_history value = 2939.0
+
+2020-08-04 13:53:04.270000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 13:53:04.270000
+current ramp index = 33 next required pulses = 150 next power increase = 1000
+
+2020-08-04 13:53:04.809000
+set_amp (2982.0) called from ramp_up
+
+2020-08-04 13:53:04.809000
+requested value 2982.0 is different to current value 2939.0
+
+2020-08-04 13:53:04.825000
+set_amp(2982.0), took 0.000469995065217 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 13:53:04.872000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 433100
+
+2020-08-04 13:53:04.887000
+ramp_up FINISHED, we went from 2939.0 to 2982.0
+
+2020-08-04 13:53:19.854000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 13:53:19.854000
+New amp_sp_history value = 2982.0
+
+2020-08-04 13:53:19.854000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 13:53:19.854000
+current ramp index = 34 next required pulses = 150 next power increase = 1000
+
+2020-08-04 13:53:20.440000
+set_amp (3011.0) called from ramp_up
+
+2020-08-04 13:53:20.440000
+requested value 3011.0 is different to current value 2982.0
+
+2020-08-04 13:53:20.455000
+set_amp(3011.0), took 0.00206817673666 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 13:53:20.487000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 433257
+
+2020-08-04 13:53:20.487000
+ramp_up FINISHED, we went from 2982.0 to 3011.0
+
+2020-08-04 13:53:35.486000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 13:53:35.486000
+New amp_sp_history value = 3011.0
+
+2020-08-04 13:53:35.486000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 13:53:35.486000
+current ramp index = 35 next required pulses = 150 next power increase = 1000
+
+2020-08-04 13:53:36.056000
+set_amp (3031.0) called from ramp_up
+
+2020-08-04 13:53:36.056000
+requested value 3031.0 is different to current value 3011.0
+
+2020-08-04 13:53:36.071000
+set_amp(3031.0), took 0.0024253862162 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 13:53:36.109000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 433413
+
+2020-08-04 13:53:36.109000
+ramp_up FINISHED, we went from 3011.0 to 3031.0
+
+2020-08-04 13:53:51.037000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 13:53:51.037000
+New amp_sp_history value = 3031.0
+
+2020-08-04 13:53:51.037000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 13:53:51.037000
+current ramp index = 35 next required pulses = 150 next power increase = 1000
+
+2020-08-04 13:53:51.639000
+set_amp (3045.0) called from ramp_up
+
+2020-08-04 13:53:51.645000
+requested value 3045.0 is different to current value 3031.0
+
+2020-08-04 13:53:51.661000
+set_amp(3045.0), took 0.0145043586172 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 13:53:51.692000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 433569
+
+2020-08-04 13:53:51.692000
+ramp_up FINISHED, we went from 3031.0 to 3045.0
+
+2020-08-04 13:54:06.712000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 13:54:06.712000
+New amp_sp_history value = 3045.0
+
+2020-08-04 13:54:06.712000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 13:54:06.712000
+current ramp index = 35 next required pulses = 150 next power increase = 1000
+
+2020-08-04 13:54:07.298000
+set_amp (3056.0) called from ramp_up
+
+2020-08-04 13:54:07.298000
+requested value 3056.0 is different to current value 3045.0
+
+2020-08-04 13:54:07.360000
+set_amp(3056.0), took 0.0545802854765 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 13:54:07.398000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 433726
+
+2020-08-04 13:54:07.398000
+ramp_up FINISHED, we went from 3045.0 to 3056.0
+
+2020-08-04 13:54:22.365000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 13:54:22.365000
+New amp_sp_history value = 3056.0
+
+2020-08-04 13:54:22.365000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 13:54:22.365000
+current ramp index = 35 next required pulses = 150 next power increase = 1000
+
+2020-08-04 13:54:22.920000
+set_amp (3067.0) called from ramp_up
+
+2020-08-04 13:54:22.935000
+requested value 3067.0 is different to current value 3056.0
+
+2020-08-04 13:54:22.935000
+set_amp(3067.0), took 0.000512992502564 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 13:54:22.967000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 433882
+
+2020-08-04 13:54:22.967000
+ramp_up FINISHED, we went from 3056.0 to 3067.0
+
+2020-08-04 13:54:37.918000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 13:54:37.918000
+New amp_sp_history value = 3067.0
+
+2020-08-04 13:54:37.918000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 13:54:37.918000
+current ramp index = 36 next required pulses = 150 next power increase = 1000
+
+2020-08-04 13:54:38.472000
+set_amp (3077.0) called from ramp_up
+
+2020-08-04 13:54:38.472000
+requested value 3077.0 is different to current value 3067.0
+
+2020-08-04 13:54:38.503000
+set_amp(3077.0), took 0.0151030152449 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 13:54:38.535000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 434038
+
+2020-08-04 13:54:38.535000
+ramp_up FINISHED, we went from 3067.0 to 3077.0
+
+2020-08-04 13:54:53.585000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 13:54:53.585000
+New amp_sp_history value = 3077.0
+
+2020-08-04 13:54:53.585000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 13:54:53.585000
+current ramp index = 36 next required pulses = 150 next power increase = 1000
+
+2020-08-04 13:54:54.155000
+set_amp (3088.0) called from ramp_up
+
+2020-08-04 13:54:54.155000
+requested value 3088.0 is different to current value 3077.0
+
+2020-08-04 13:54:54.155000
+set_amp(3088.0), took 0.000490501535353 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 13:54:54.193000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 434195
+
+2020-08-04 13:54:54.193000
+ramp_up FINISHED, we went from 3077.0 to 3088.0
+
+2020-08-04 13:55:09.244000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 13:55:09.244000
+New amp_sp_history value = 3088.0
+
+2020-08-04 13:55:09.244000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 13:55:09.244000
+current ramp index = 36 next required pulses = 150 next power increase = 1000
+
+2020-08-04 13:55:09.861000
+set_amp (3099.0) called from ramp_up
+
+2020-08-04 13:55:09.877000
+requested value 3099.0 is different to current value 3088.0
+
+2020-08-04 13:55:09.892000
+set_amp(3099.0), took 0.0133318515755 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 13:55:09.930000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 434352
+
+2020-08-04 13:55:09.930000
+ramp_up FINISHED, we went from 3088.0 to 3099.0
+
+2020-08-04 13:55:24.913000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 13:55:24.913000
+New amp_sp_history value = 3099.0
+
+2020-08-04 13:55:24.913000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 13:55:24.913000
+current ramp index = 37 next required pulses = 150 next power increase = 1000
+
+2020-08-04 13:55:25.498000
+set_amp (3110.0) called from ramp_up
+
+2020-08-04 13:55:25.514000
+requested value 3110.0 is different to current value 3099.0
+
+2020-08-04 13:55:25.530000
+set_amp(3110.0), took 0.00717825679129 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 13:55:25.567000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 434509
+
+2020-08-04 13:55:25.567000
+ramp_up FINISHED, we went from 3099.0 to 3110.0
+
+2020-08-04 13:55:40.496000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 13:55:40.496000
+New amp_sp_history value = 3110.0
+
+2020-08-04 13:55:40.502000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 13:55:40.502000
+current ramp index = 37 next required pulses = 150 next power increase = 1000
+
+2020-08-04 13:55:41.050000
+set_amp (3119.0) called from ramp_up
+
+2020-08-04 13:55:41.066000
+requested value 3119.0 is different to current value 3110.0
+
+2020-08-04 13:55:41.081000
+set_amp(3119.0), took 0.00543454533187 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 13:55:41.119000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 434664
+
+2020-08-04 13:55:41.119000
+ramp_up FINISHED, we went from 3110.0 to 3119.0
+
+2020-08-04 13:55:56.070000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 13:55:56.070000
+New amp_sp_history value = 3119.0
+
+2020-08-04 13:55:56.070000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 13:55:56.070000
+current ramp index = 37 next required pulses = 150 next power increase = 1000
+
+2020-08-04 13:55:56.634000
+set_amp (3129.0) called from ramp_up
+
+2020-08-04 13:55:56.640000
+requested value 3129.0 is different to current value 3119.0
+
+2020-08-04 13:55:56.640000
+set_amp(3129.0), took 0.00082323555057 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 13:55:56.740000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 434821
+
+2020-08-04 13:55:56.756000
+ramp_up FINISHED, we went from 3119.0 to 3129.0
+
+2020-08-04 13:56:11.723000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 13:56:11.723000
+New amp_sp_history value = 3129.0
+
+2020-08-04 13:56:11.723000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 13:56:11.723000
+current ramp index = 37 next required pulses = 150 next power increase = 1000
+
+2020-08-04 13:56:12.277000
+set_amp (3137.0) called from ramp_up
+
+2020-08-04 13:56:12.277000
+requested value 3137.0 is different to current value 3129.0
+
+2020-08-04 13:56:12.293000
+set_amp(3137.0), took 0.00656570868375 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 13:56:12.324000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 434977
+
+2020-08-04 13:56:12.324000
+ramp_up FINISHED, we went from 3129.0 to 3137.0
+
+2020-08-04 13:56:27.291000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 13:56:27.291000
+New amp_sp_history value = 3137.0
+
+2020-08-04 13:56:27.291000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 13:56:27.291000
+current ramp index = 37 next required pulses = 150 next power increase = 1000
+
+2020-08-04 13:56:28.015000
+set_amp (3142.0) called from ramp_up
+
+2020-08-04 13:56:28.015000
+requested value 3142.0 is different to current value 3137.0
+
+2020-08-04 13:56:28.030000
+set_amp(3142.0), took 0.000570542918751 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 13:56:28.131000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 435135
+
+2020-08-04 13:56:28.131000
+ramp_up FINISHED, we went from 3137.0 to 3142.0
+
+2020-08-04 13:56:43.044000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 13:56:43.044000
+New amp_sp_history value = 3142.0
+
+2020-08-04 13:56:43.050000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 13:56:43.050000
+current ramp index = 37 next required pulses = 150 next power increase = 1000
+
+2020-08-04 13:56:43.667000
+set_amp (3147.0) called from ramp_up
+
+2020-08-04 13:56:43.667000
+requested value 3147.0 is different to current value 3142.0
+
+2020-08-04 13:56:43.699000
+set_amp(3147.0), took 0.0116192305708 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 13:56:43.730000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 435292
+
+2020-08-04 13:56:43.730000
+ramp_up FINISHED, we went from 3142.0 to 3147.0
+
+2020-08-04 13:56:58.732000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 13:56:58.732000
+New amp_sp_history value = 3147.0
+
+2020-08-04 13:56:58.732000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 13:56:58.738000
+current ramp index = 38 next required pulses = 150 next power increase = 1000
+
+2020-08-04 13:56:59.471000
+set_amp (3150.0) called from ramp_up
+
+2020-08-04 13:56:59.471000
+requested value 3150.0 is different to current value 3147.0
+
+2020-08-04 13:56:59.502000
+set_amp(3150.0), took 0.012574435179 time,  averages NOT reset, mask_set = False
+
+2020-08-04 13:56:59.540000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 435450
+
+2020-08-04 13:56:59.540000
+ramp_up FINISHED, we went from 3147.0 to 3150.0
+
+2020-08-04 13:57:14.507000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 13:57:14.507000
+New amp_sp_history value = 3150.0
+
+2020-08-04 13:57:14.507000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 13:57:14.507000
+current ramp index = 38 next required pulses = 150 next power increase = 1000
+
+2020-08-04 13:57:15.093000
+set_amp (3157.0) called from ramp_up
+
+2020-08-04 13:57:15.093000
+requested value 3157.0 is different to current value 3150.0
+
+2020-08-04 13:57:15.108000
+set_amp(3157.0), took 0.00556089164775 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 13:57:15.140000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 435606
+
+2020-08-04 13:57:15.140000
+ramp_up FINISHED, we went from 3150.0 to 3157.0
+
+2020-08-04 13:57:30.044000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 13:57:30.044000
+New amp_sp_history value = 3157.0
+
+2020-08-04 13:57:30.044000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 13:57:30.044000
+current ramp index = 38 next required pulses = 150 next power increase = 1000
+
+2020-08-04 13:57:30.608000
+set_amp (3159.0) called from ramp_up
+
+2020-08-04 13:57:30.614000
+requested value 3159.0 is different to current value 3157.0
+
+2020-08-04 13:57:30.630000
+set_amp(3159.0), took 0.00709027741948 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 13:57:30.661000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 435761
+
+2020-08-04 13:57:30.661000
+ramp_up FINISHED, we went from 3157.0 to 3159.0
+
+2020-08-04 13:57:45.597000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 13:57:45.597000
+New amp_sp_history value = 3159.0
+
+2020-08-04 13:57:45.597000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 13:57:45.597000
+current ramp index = 38 next required pulses = 150 next power increase = 1000
+
+2020-08-04 13:57:46.151000
+Predicted sp ==  current_sp! returning current_sp + 3169
+
+2020-08-04 13:57:46.151000
+set_amp (3169) called from ramp_up
+
+2020-08-04 13:57:46.151000
+requested value 3169 is different to current value 3159.0
+
+2020-08-04 13:57:46.151000
+set_amp(3169), took 0.000646946057373 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 13:57:46.198000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 435917
+
+2020-08-04 13:57:46.198000
+ramp_up FINISHED, we went from 3159.0 to 3169
+
+2020-08-04 13:58:01.104000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 13:58:01.104000
+New amp_sp_history value = 3169.0
+
+2020-08-04 13:58:01.104000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 13:58:01.104000
+current ramp index = 38 next required pulses = 150 next power increase = 1000
+
+2020-08-04 13:58:01.690000
+set_amp (3172.0) called from ramp_up
+
+2020-08-04 13:58:01.706000
+requested value 3172.0 is different to current value 3169.0
+
+2020-08-04 13:58:01.706000
+set_amp(3172.0), took 0.000613540356028 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 13:58:01.752000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 436073
+
+2020-08-04 13:58:01.752000
+ramp_up FINISHED, we went from 3169.0 to 3172.0
+
+2020-08-04 13:58:16.757000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 13:58:16.757000
+New amp_sp_history value = 3172.0
+
+2020-08-04 13:58:16.757000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 13:58:16.757000
+current ramp index = 38 next required pulses = 150 next power increase = 1000
+
+2020-08-04 13:58:17.358000
+set_amp (3179.0) called from ramp_up
+
+2020-08-04 13:58:17.358000
+requested value 3179.0 is different to current value 3172.0
+
+2020-08-04 13:58:17.374000
+set_amp(3179.0), took 0.00156411447108 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 13:58:17.405000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 436230
+
+2020-08-04 13:58:17.405000
+ramp_up FINISHED, we went from 3172.0 to 3179.0
+
+2020-08-04 13:58:32.410000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 13:58:32.410000
+New amp_sp_history value = 3179.0
+
+2020-08-04 13:58:32.410000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 13:58:32.410000
+current ramp index = 38 next required pulses = 150 next power increase = 1000
+
+2020-08-04 13:58:32.964000
+set_amp (3182.0) called from ramp_up
+
+2020-08-04 13:58:32.980000
+requested value 3182.0 is different to current value 3179.0
+
+2020-08-04 13:58:33.027000
+set_amp(3182.0), took 0.0439109675218 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 13:58:33.064000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 436387
+
+2020-08-04 13:58:33.064000
+ramp_up FINISHED, we went from 3179.0 to 3182.0
+
+2020-08-04 13:58:48.078000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 13:58:48.078000
+New amp_sp_history value = 3182.0
+
+2020-08-04 13:58:48.078000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 13:58:48.078000
+current ramp index = 39 next required pulses = 150 next power increase = 1000
+
+2020-08-04 13:58:48.648000
+set_amp (3191.0) called from ramp_up
+
+2020-08-04 13:58:48.663000
+requested value 3191.0 is different to current value 3182.0
+
+2020-08-04 13:58:48.663000
+set_amp(3191.0), took 0.000485209543058 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 13:58:48.748000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 436544
+
+2020-08-04 13:58:48.748000
+ramp_up FINISHED, we went from 3182.0 to 3191.0
+
+2020-08-04 13:59:03.730000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 13:59:03.730000
+New amp_sp_history value = 3191.0
+
+2020-08-04 13:59:03.730000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 13:59:03.737000
+current ramp index = 39 next required pulses = 150 next power increase = 1000
+
+2020-08-04 13:59:04.300000
+set_amp (3196.0) called from ramp_up
+
+2020-08-04 13:59:04.300000
+requested value 3196.0 is different to current value 3191.0
+
+2020-08-04 13:59:04.300000
+set_amp(3196.0), took 0.00060758686476 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 13:59:04.338000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 436700
+
+2020-08-04 13:59:04.338000
+ramp_up FINISHED, we went from 3191.0 to 3196.0
+
+2020-08-04 13:59:19.290000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 13:59:19.290000
+New amp_sp_history value = 3196.0
+
+2020-08-04 13:59:19.290000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 13:59:19.290000
+current ramp index = 39 next required pulses = 150 next power increase = 1000
+
+2020-08-04 13:59:19.822000
+set_amp (3203.0) called from ramp_up
+
+2020-08-04 13:59:19.838000
+requested value 3203.0 is different to current value 3196.0
+
+2020-08-04 13:59:19.853000
+set_amp(3203.0), took 0.00967706940054 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 13:59:19.891000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 436856
+
+2020-08-04 13:59:19.891000
+ramp_up FINISHED, we went from 3196.0 to 3203.0
+
+2020-08-04 13:59:34.827000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 13:59:34.827000
+New amp_sp_history value = 3203.0
+
+2020-08-04 13:59:34.827000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 13:59:34.827000
+current ramp index = 39 next required pulses = 150 next power increase = 1000
+
+2020-08-04 13:59:35.413000
+set_amp (3246.0) called from ramp_up
+
+2020-08-04 13:59:35.413000
+requested value 3246.0 is different to current value 3203.0
+
+2020-08-04 13:59:35.428000
+set_amp(3246.0), took 0.00893718272852 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 13:59:35.460000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 437012
+
+2020-08-04 13:59:35.460000
+ramp_up FINISHED, we went from 3203.0 to 3246.0
+
+2020-08-04 13:59:50.395000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 13:59:50.395000
+New amp_sp_history value = 3246.0
+
+2020-08-04 13:59:50.395000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 13:59:50.395000
+current ramp index = 40 next required pulses = 150 next power increase = 1000
+
+2020-08-04 13:59:51.028000
+set_amp (3288.0) called from ramp_up
+
+2020-08-04 13:59:51.028000
+requested value 3288.0 is different to current value 3246.0
+
+2020-08-04 13:59:51.044000
+set_amp(3288.0), took 0.00161604214543 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 13:59:51.081000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 437169
+
+2020-08-04 13:59:51.081000
+ramp_up FINISHED, we went from 3246.0 to 3288.0
+
+2020-08-04 14:00:06.034000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 14:00:06.034000
+New amp_sp_history value = 3288.0
+
+2020-08-04 14:00:06.034000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 14:00:06.034000
+current ramp index = 41 next required pulses = 150 next power increase = 1000
+
+2020-08-04 14:00:06.551000
+set_amp (3332.0) called from ramp_up
+
+2020-08-04 14:00:06.551000
+requested value 3332.0 is different to current value 3288.0
+
+2020-08-04 14:00:06.566000
+set_amp(3332.0), took 0.00236386680587 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 14:00:06.604000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 437325
+
+2020-08-04 14:00:06.604000
+ramp_up FINISHED, we went from 3288.0 to 3332.0
+
+2020-08-04 14:00:21.587000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 14:00:21.587000
+New amp_sp_history value = 3332.0
+
+2020-08-04 14:00:21.587000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 14:00:21.587000
+current ramp index = 42 next required pulses = 150 next power increase = 1000
+
+2020-08-04 14:00:22.126000
+set_amp (3371.0) called from ramp_up
+
+2020-08-04 14:00:22.126000
+requested value 3371.0 is different to current value 3332.0
+
+2020-08-04 14:00:22.126000
+set_amp(3371.0), took 0.0014291686677 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 14:00:22.173000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 437480
+
+2020-08-04 14:00:22.173000
+ramp_up FINISHED, we went from 3332.0 to 3371.0
+
+2020-08-04 14:00:37.125000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 14:00:37.125000
+New amp_sp_history value = 3371.0
+
+2020-08-04 14:00:37.125000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 14:00:37.125000
+current ramp index = 43 next required pulses = 150 next power increase = 1000
+
+2020-08-04 14:00:37.664000
+set_amp (3413.0) called from ramp_up
+
+2020-08-04 14:00:37.664000
+requested value 3413.0 is different to current value 3371.0
+
+2020-08-04 14:00:37.679000
+set_amp(3413.0), took 0.00860279496567 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 14:00:37.711000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 437636
+
+2020-08-04 14:00:37.726000
+ramp_up FINISHED, we went from 3371.0 to 3413.0
+
+2020-08-04 14:00:52.732000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 14:00:52.732000
+New amp_sp_history value = 3413.0
+
+2020-08-04 14:00:52.732000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 14:00:52.732000
+current ramp index = 44 next required pulses = 150 next power increase = 1000
+
+2020-08-04 14:00:53.280000
+set_amp (3471.0) called from ramp_up
+
+2020-08-04 14:00:53.280000
+requested value 3471.0 is different to current value 3413.0
+
+2020-08-04 14:00:53.295000
+set_amp(3471.0), took 0.00512198703723 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 14:00:53.333000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 437792
+
+2020-08-04 14:00:53.333000
+ramp_up FINISHED, we went from 3413.0 to 3471.0
+
+2020-08-04 14:01:08.284000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 14:01:08.284000
+New amp_sp_history value = 3471.0
+
+2020-08-04 14:01:08.284000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 14:01:08.284000
+current ramp index = 45 next required pulses = 150 next power increase = 1000
+
+2020-08-04 14:01:08.839000
+set_amp (3530.0) called from ramp_up
+
+2020-08-04 14:01:08.839000
+requested value 3530.0 is different to current value 3471.0
+
+2020-08-04 14:01:08.870000
+set_amp(3530.0), took 0.0132336189686 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 14:01:08.901000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 437948
+
+2020-08-04 14:01:08.901000
+ramp_up FINISHED, we went from 3471.0 to 3530.0
+
+2020-08-04 14:01:23.852000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 14:01:23.852000
+New amp_sp_history value = 3530.0
+
+2020-08-04 14:01:23.852000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 14:01:23.852000
+current ramp index = 47 next required pulses = 150 next power increase = 1000
+
+2020-08-04 14:01:25.077000
+set_amp (3574.0) called from ramp_up
+
+2020-08-04 14:01:25.077000
+requested value 3574.0 is different to current value 3530.0
+
+2020-08-04 14:01:25.109000
+set_amp(3574.0), took 0.0208666563473 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 14:01:25.156000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 438111
+
+2020-08-04 14:01:25.156000
+ramp_up FINISHED, we went from 3530.0 to 3574.0
+
+2020-08-04 14:01:40.160000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 14:01:40.160000
+New amp_sp_history value = 3574.0
+
+2020-08-04 14:01:40.160000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 14:01:40.160000
+current ramp index = 48 next required pulses = 150 next power increase = 1000
+
+2020-08-04 14:01:40.708000
+set_amp (3628.0) called from ramp_up
+
+2020-08-04 14:01:40.708000
+requested value 3628.0 is different to current value 3574.0
+
+2020-08-04 14:01:40.730000
+set_amp(3628.0), took 0.0179299313761 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 14:01:40.793000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 438267
+
+2020-08-04 14:01:40.793000
+ramp_up FINISHED, we went from 3574.0 to 3628.0
+
+2020-08-04 14:01:55.697000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 14:01:55.697000
+New amp_sp_history value = 3628.0
+
+2020-08-04 14:01:55.697000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 14:01:55.697000
+current ramp index = 50 next required pulses = 150 next power increase = 1000
+
+2020-08-04 14:01:56.214000
+set_amp (3690.0) called from ramp_up
+
+2020-08-04 14:01:56.229000
+requested value 3690.0 is different to current value 3628.0
+
+2020-08-04 14:01:56.245000
+set_amp(3690.0), took 0.00865042289638 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 14:01:56.283000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 438422
+
+2020-08-04 14:01:56.283000
+ramp_up FINISHED, we went from 3628.0 to 3690.0
+
+2020-08-04 14:02:11.150000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 14:02:11.150000
+New amp_sp_history value = 3690.0
+
+2020-08-04 14:02:11.150000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 14:02:11.150000
+current ramp index = 52 next required pulses = 150 next power increase = 1000
+
+2020-08-04 14:02:11.689000
+set_amp (3746.0) called from ramp_up
+
+2020-08-04 14:02:11.689000
+requested value 3746.0 is different to current value 3690.0
+
+2020-08-04 14:02:11.704000
+set_amp(3746.0), took 0.0085025778618 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 14:02:11.736000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 438577
+
+2020-08-04 14:02:11.736000
+ramp_up FINISHED, we went from 3690.0 to 3746.0
+
+2020-08-04 14:02:26.687000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 14:02:26.687000
+New amp_sp_history value = 3746.0
+
+2020-08-04 14:02:26.687000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 14:02:26.687000
+current ramp index = 53 next required pulses = 150 next power increase = 1000
+
+2020-08-04 14:02:27.257000
+set_amp (3768.0) called from ramp_up
+
+2020-08-04 14:02:27.289000
+requested value 3768.0 is different to current value 3746.0
+
+2020-08-04 14:02:27.304000
+set_amp(3768.0), took 0.000462387826246 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 14:02:27.342000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 438734
+
+2020-08-04 14:02:27.342000
+ramp_up FINISHED, we went from 3746.0 to 3768.0
+
+2020-08-04 14:02:42.340000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 14:02:42.340000
+New amp_sp_history value = 3768.0
+
+2020-08-04 14:02:42.340000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 14:02:42.340000
+current ramp index = 54 next required pulses = 150 next power increase = 1000
+
+2020-08-04 14:02:42.942000
+set_amp (3787.0) called from ramp_up
+
+2020-08-04 14:02:42.958000
+requested value 3787.0 is different to current value 3768.0
+
+2020-08-04 14:02:42.958000
+set_amp(3787.0), took 0.000433943367739 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 14:02:42.995000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 438891
+
+2020-08-04 14:02:42.995000
+ramp_up FINISHED, we went from 3768.0 to 3787.0
+
+2020-08-04 14:02:58.048000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 14:02:58.048000
+New amp_sp_history value = 3787.0
+
+2020-08-04 14:02:58.048000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 14:02:58.048000
+current ramp index = 54 next required pulses = 150 next power increase = 1000
+
+2020-08-04 14:02:58.766000
+set_amp (3807.0) called from ramp_up
+
+2020-08-04 14:02:58.781000
+requested value 3807.0 is different to current value 3787.0
+
+2020-08-04 14:02:58.797000
+set_amp(3807.0), took 0.0124838098111 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 14:02:58.835000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 439049
+
+2020-08-04 14:02:58.835000
+ramp_up FINISHED, we went from 3787.0 to 3807.0
+
+2020-08-04 14:03:13.832000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 14:03:13.832000
+New amp_sp_history value = 3807.0
+
+2020-08-04 14:03:13.832000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 14:03:13.839000
+current ramp index = 55 next required pulses = 150 next power increase = 1000
+
+2020-08-04 14:03:14.418000
+Predicted sp ==  current_sp! returning current_sp + 3817
+
+2020-08-04 14:03:14.434000
+set_amp (3817) called from ramp_up
+
+2020-08-04 14:03:14.440000
+requested value 3817 is different to current value 3807.0
+
+2020-08-04 14:03:14.456000
+set_amp(3817), took 0.011147581758 time,  averages NOT reset, mask_set = False
+
+2020-08-04 14:03:14.487000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 439206
+
+2020-08-04 14:03:14.487000
+ramp_up FINISHED, we went from 3807.0 to 3817
+
+2020-08-04 14:03:29.491000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 14:03:29.491000
+New amp_sp_history value = 3817.0
+
+2020-08-04 14:03:29.491000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 14:03:29.491000
+current ramp index = 55 next required pulses = 150 next power increase = 1000
+
+2020-08-04 14:03:30.055000
+set_amp (3818.0) called from ramp_up
+
+2020-08-04 14:03:30.055000
+requested value 3818.0 is different to current value 3817.0
+
+2020-08-04 14:03:30.071000
+set_amp(3818.0), took 0.00639834942763 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 14:03:30.108000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 439362
+
+2020-08-04 14:03:30.108000
+ramp_up FINISHED, we went from 3817.0 to 3818.0
+
+2020-08-04 14:03:45.028000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 14:03:45.028000
+New amp_sp_history value = 3818.0
+
+2020-08-04 14:03:45.028000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 14:03:45.028000
+current ramp index = 55 next required pulses = 150 next power increase = 1000
+
+2020-08-04 14:03:45.661000
+Predicted sp ==  current_sp! returning current_sp + 3828
+
+2020-08-04 14:03:45.661000
+set_amp (3828) called from ramp_up
+
+2020-08-04 14:03:45.661000
+requested value 3828 is different to current value 3818.0
+
+2020-08-04 14:03:45.677000
+set_amp(3828), took 0.00447272573319 time,  averages NOT reset, mask_set = False
+
+2020-08-04 14:03:45.714000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 439519
+
+2020-08-04 14:03:45.714000
+ramp_up FINISHED, we went from 3818.0 to 3828
+
+2020-08-04 14:04:00.703000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 14:04:00.703000
+New amp_sp_history value = 3828.0
+
+2020-08-04 14:04:00.703000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 14:04:00.703000
+current ramp index = 55 next required pulses = 150 next power increase = 1000
+
+2020-08-04 14:04:01.273000
+Predicted sp is less than current_sp! returning current_sp + 3838
+
+2020-08-04 14:04:01.273000
+set_amp (3838) called from ramp_up
+
+2020-08-04 14:04:01.273000
+requested value 3838 is different to current value 3828.0
+
+2020-08-04 14:04:01.289000
+set_amp(3838), took 0.00261259044339 time,  averages NOT reset, mask_set = False
+
+2020-08-04 14:04:01.320000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 439675
+
+2020-08-04 14:04:01.320000
+ramp_up FINISHED, we went from 3828.0 to 3838
+
+2020-08-04 14:04:16.279000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 14:04:16.279000
+New amp_sp_history value = 3838.0
+
+2020-08-04 14:04:16.301000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 14:04:16.301000
+current ramp index = 56 next required pulses = 150 next power increase = 1000
+
+2020-08-04 14:04:17.003000
+Predicted sp is less than current_sp! returning current_sp + 3848
+
+2020-08-04 14:04:17.034000
+set_amp (3848) called from ramp_up
+
+2020-08-04 14:04:17.050000
+requested value 3848 is different to current value 3838.0
+
+2020-08-04 14:04:17.066000
+set_amp(3848), took 0.011466093544 time,  averages NOT reset, mask_set = False
+
+2020-08-04 14:04:17.103000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 439833
+
+2020-08-04 14:04:17.103000
+ramp_up FINISHED, we went from 3838.0 to 3848
+
+2020-08-04 14:04:32.077000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 14:04:32.077000
+New amp_sp_history value = 3848.0
+
+2020-08-04 14:04:32.077000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 14:04:32.077000
+current ramp index = 56 next required pulses = 150 next power increase = 1000
+
+2020-08-04 14:04:32.626000
+Predicted sp is less than current_sp! returning current_sp + 3858
+
+2020-08-04 14:04:32.626000
+set_amp (3858) called from ramp_up
+
+2020-08-04 14:04:32.626000
+requested value 3858 is different to current value 3848.0
+
+2020-08-04 14:04:32.641000
+set_amp(3858), took 0.003279381472 time,  averages NOT reset, mask_set = False
+
+2020-08-04 14:04:32.710000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 439989
+
+2020-08-04 14:04:32.710000
+ramp_up FINISHED, we went from 3848.0 to 3858
+
+2020-08-04 14:04:47.553000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 14:04:47.553000
+New amp_sp_history value = 3858.0
+
+2020-08-04 14:04:47.553000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 14:04:47.553000
+current ramp index = 56 next required pulses = 150 next power increase = 1000
+
+2020-08-04 14:04:48.108000
+Predicted sp is less than current_sp! returning current_sp + 3868
+
+2020-08-04 14:04:48.123000
+set_amp (3868) called from ramp_up
+
+2020-08-04 14:04:48.123000
+requested value 3868 is different to current value 3858.0
+
+2020-08-04 14:04:48.123000
+set_amp(3868), took 0.000520268991977 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 14:04:48.155000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 440144
+
+2020-08-04 14:04:48.155000
+ramp_up FINISHED, we went from 3858.0 to 3868
+
+2020-08-04 14:05:03.113000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 14:05:03.113000
+New amp_sp_history value = 3868.0
+
+2020-08-04 14:05:03.113000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 14:05:03.113000
+current ramp index = 57 next required pulses = 150 next power increase = 1000
+
+2020-08-04 14:05:03.684000
+Predicted sp is less than current_sp! returning current_sp + 3878
+
+2020-08-04 14:05:03.684000
+set_amp (3878) called from ramp_up
+
+2020-08-04 14:05:03.684000
+requested value 3878 is different to current value 3868.0
+
+2020-08-04 14:05:03.715000
+set_amp(3878), took 0.0199064904963 time,  averages NOT reset, mask_set = False
+
+2020-08-04 14:05:03.753000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 440300
+
+2020-08-04 14:05:03.753000
+ramp_up FINISHED, we went from 3868.0 to 3878
+
+2020-08-04 14:05:18.611000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 14:05:18.611000
+New amp_sp_history value = 3878.0
+
+2020-08-04 14:05:18.611000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 14:05:18.611000
+current ramp index = 57 next required pulses = 150 next power increase = 1000
+
+2020-08-04 14:05:19.213000
+Predicted sp is less than current_sp! returning current_sp + 3888
+
+2020-08-04 14:05:19.213000
+set_amp (3888) called from ramp_up
+
+2020-08-04 14:05:19.213000
+requested value 3888 is different to current value 3878.0
+
+2020-08-04 14:05:19.213000
+set_amp(3888), took 0.000617840099835 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 14:05:19.260000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 440456
+
+2020-08-04 14:05:19.260000
+ramp_up FINISHED, we went from 3878.0 to 3888
+
+2020-08-04 14:05:34.187000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 14:05:34.187000
+New amp_sp_history value = 3888.0
+
+2020-08-04 14:05:34.187000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 14:05:34.187000
+current ramp index = 57 next required pulses = 150 next power increase = 1000
+
+2020-08-04 14:05:34.920000
+Predicted sp is less than current_sp! returning current_sp + 3898
+
+2020-08-04 14:05:34.927000
+set_amp (3898) called from ramp_up
+
+2020-08-04 14:05:34.927000
+requested value 3898 is different to current value 3888.0
+
+2020-08-04 14:05:34.942000
+set_amp(3898), took 0.0110612561338 time,  averages NOT reset, mask_set = False
+
+2020-08-04 14:05:34.973000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 440614
+
+2020-08-04 14:05:34.973000
+ramp_up FINISHED, we went from 3888.0 to 3898
+
+2020-08-04 14:05:49.963000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 14:05:49.963000
+New amp_sp_history value = 3898.0
+
+2020-08-04 14:05:49.963000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 14:05:49.970000
+current ramp index = 57 next required pulses = 150 next power increase = 1000
+
+2020-08-04 14:05:50.518000
+Predicted sp is less than current_sp! returning current_sp + 3908
+
+2020-08-04 14:05:50.534000
+set_amp (3908) called from ramp_up
+
+2020-08-04 14:05:50.534000
+requested value 3908 is different to current value 3898.0
+
+2020-08-04 14:05:50.534000
+set_amp(3908), took 0.000472310311807 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 14:05:50.587000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 440770
+
+2020-08-04 14:05:50.587000
+ramp_up FINISHED, we went from 3898.0 to 3908
+
+2020-08-04 14:06:05.562000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 14:06:05.562000
+New amp_sp_history value = 3908.0
+
+2020-08-04 14:06:05.562000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 14:06:05.562000
+current ramp index = 58 next required pulses = 150 next power increase = 1000
+
+2020-08-04 14:06:06.110000
+set_amp (3914.0) called from ramp_up
+
+2020-08-04 14:06:06.116000
+requested value 3914.0 is different to current value 3908.0
+
+2020-08-04 14:06:06.132000
+set_amp(3914.0), took 0.0148741365783 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 14:06:06.163000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 440926
+
+2020-08-04 14:06:06.163000
+ramp_up FINISHED, we went from 3908.0 to 3914.0
+
+2020-08-04 14:06:21.138000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 14:06:21.138000
+New amp_sp_history value = 3914.0
+
+2020-08-04 14:06:21.138000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 14:06:21.138000
+current ramp index = 58 next required pulses = 150 next power increase = 1000
+
+2020-08-04 14:06:21.788000
+set_amp (3925.0) called from ramp_up
+
+2020-08-04 14:06:21.796000
+requested value 3925.0 is different to current value 3914.0
+
+2020-08-04 14:06:21.817000
+set_amp(3925.0), took 0.0136430868721 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 14:06:21.859000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 441083
+
+2020-08-04 14:06:21.859000
+ramp_up FINISHED, we went from 3914.0 to 3925.0
+
+2020-08-04 14:06:36.793000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 14:06:36.793000
+New amp_sp_history value = 3925.0
+
+2020-08-04 14:06:36.793000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 14:06:36.793000
+current ramp index = 58 next required pulses = 150 next power increase = 1000
+
+2020-08-04 14:06:37.572000
+set_amp (3931.0) called from ramp_up
+
+2020-08-04 14:06:37.610000
+requested value 3931.0 is different to current value 3925.0
+
+2020-08-04 14:06:37.610000
+set_amp(3931.0), took 0.000579803905225 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 14:06:37.656000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 441241
+
+2020-08-04 14:06:37.656000
+ramp_up FINISHED, we went from 3925.0 to 3931.0
+
+2020-08-04 14:06:52.636000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 14:06:52.652000
+New amp_sp_history value = 3931.0
+
+2020-08-04 14:06:52.668000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 14:06:52.668000
+current ramp index = 58 next required pulses = 150 next power increase = 1000
+
+2020-08-04 14:06:54.201000
+set_amp (3940.0) called from ramp_up
+
+2020-08-04 14:06:54.201000
+requested value 3940.0 is different to current value 3931.0
+
+2020-08-04 14:06:54.247000
+set_amp(3940.0), took 0.026306824421 time,  averages NOT reset, mask_set = False
+
+2020-08-04 14:06:54.301000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 441407
+
+2020-08-04 14:06:54.301000
+ramp_up FINISHED, we went from 3931.0 to 3940.0
+
+2020-08-04 14:07:09.170000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 14:07:09.170000
+New amp_sp_history value = 3940.0
+
+2020-08-04 14:07:09.170000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 14:07:09.170000
+current ramp index = 59 next required pulses = 150 next power increase = 1000
+
+2020-08-04 14:07:09.756000
+set_amp (3946.0) called from ramp_up
+
+2020-08-04 14:07:09.756000
+requested value 3946.0 is different to current value 3940.0
+
+2020-08-04 14:07:09.787000
+set_amp(3946.0), took 0.0119962850214 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 14:07:09.825000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 441564
+
+2020-08-04 14:07:09.825000
+ramp_up FINISHED, we went from 3940.0 to 3946.0
+
+2020-08-04 14:07:24.831000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 14:07:24.831000
+New amp_sp_history value = 3946.0
+
+2020-08-04 14:07:24.831000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 14:07:24.831000
+current ramp index = 59 next required pulses = 150 next power increase = 1000
+
+2020-08-04 14:07:25.448000
+set_amp (3954.0) called from ramp_up
+
+2020-08-04 14:07:25.455000
+requested value 3954.0 is different to current value 3946.0
+
+2020-08-04 14:07:25.471000
+set_amp(3954.0), took 0.0140234488177 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 14:07:25.549000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 441721
+
+2020-08-04 14:07:25.549000
+ramp_up FINISHED, we went from 3946.0 to 3954.0
+
+2020-08-04 14:07:40.529000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 14:07:40.529000
+New amp_sp_history value = 3954.0
+
+2020-08-04 14:07:40.529000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 14:07:40.529000
+current ramp index = 59 next required pulses = 150 next power increase = 1000
+
+2020-08-04 14:07:41.078000
+set_amp (3961.0) called from ramp_up
+
+2020-08-04 14:07:41.078000
+requested value 3961.0 is different to current value 3954.0
+
+2020-08-04 14:07:41.093000
+set_amp(3961.0), took 0.00191801645542 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 14:07:41.131000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 441877
+
+2020-08-04 14:07:41.131000
+ramp_up FINISHED, we went from 3954.0 to 3961.0
+
+2020-08-04 14:07:56.102000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 14:07:56.102000
+New amp_sp_history value = 3961.0
+
+2020-08-04 14:07:56.102000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 14:07:56.102000
+current ramp index = 59 next required pulses = 150 next power increase = 1000
+
+2020-08-04 14:07:56.673000
+set_amp (3967.0) called from ramp_up
+
+2020-08-04 14:07:56.688000
+requested value 3967.0 is different to current value 3961.0
+
+2020-08-04 14:07:56.688000
+set_amp(3967.0), took 0.000627101086252 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 14:07:56.735000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 442033
+
+2020-08-04 14:07:56.735000
+ramp_up FINISHED, we went from 3961.0 to 3967.0
+
+2020-08-04 14:08:11.678000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 14:08:11.678000
+New amp_sp_history value = 3967.0
+
+2020-08-04 14:08:11.684000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 14:08:11.684000
+current ramp index = 60 next required pulses = 150 next power increase = 1000
+
+2020-08-04 14:08:12.248000
+set_amp (3974.0) called from ramp_up
+
+2020-08-04 14:08:12.248000
+requested value 3974.0 is different to current value 3967.0
+
+2020-08-04 14:08:12.264000
+set_amp(3974.0), took 0.00149928756559 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 14:08:12.302000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 442189
+
+2020-08-04 14:08:12.302000
+ramp_up FINISHED, we went from 3967.0 to 3974.0
+
+2020-08-04 14:08:27.222000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 14:08:27.222000
+New amp_sp_history value = 3974.0
+
+2020-08-04 14:08:27.228000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 14:08:27.228000
+current ramp index = 60 next required pulses = 150 next power increase = 1000
+
+2020-08-04 14:08:27.845000
+set_amp (3981.0) called from ramp_up
+
+2020-08-04 14:08:27.861000
+requested value 3981.0 is different to current value 3974.0
+
+2020-08-04 14:08:27.877000
+set_amp(3981.0), took 0.00662491284754 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 14:08:27.908000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 442345
+
+2020-08-04 14:08:27.908000
+ramp_up FINISHED, we went from 3974.0 to 3981.0
+
+2020-08-04 14:08:42.749000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 14:08:42.749000
+New amp_sp_history value = 3981.0
+
+2020-08-04 14:08:42.749000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 14:08:42.749000
+current ramp index = 60 next required pulses = 150 next power increase = 1000
+
+2020-08-04 14:08:43.304000
+Predicted sp is less than current_sp! returning current_sp + 3991
+
+2020-08-04 14:08:43.320000
+set_amp (3991) called from ramp_up
+
+2020-08-04 14:08:43.320000
+requested value 3991 is different to current value 3981.0
+
+2020-08-04 14:08:43.320000
+set_amp(3991), took 0.000631070080544 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 14:08:43.367000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 442500
+
+2020-08-04 14:08:43.367000
+ramp_up FINISHED, we went from 3981.0 to 3991
+
+2020-08-04 14:08:58.245000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 14:08:58.245000
+New amp_sp_history value = 3991.0
+
+2020-08-04 14:08:58.245000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 14:08:58.245000
+current ramp index = 60 next required pulses = 150 next power increase = 1000
+
+2020-08-04 14:08:58.947000
+Predicted sp is less than current_sp! returning current_sp + 4001
+
+2020-08-04 14:08:58.963000
+set_amp (4001) called from ramp_up
+
+2020-08-04 14:08:58.963000
+requested value 4001 is different to current value 3991.0
+
+2020-08-04 14:08:58.978000
+set_amp(4001), took 0.00564920176907 time,  averages NOT reset, mask_set = False
+
+2020-08-04 14:08:59.016000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 442658
+
+2020-08-04 14:08:59.016000
+ramp_up FINISHED, we went from 3991.0 to 4001
+
+2020-08-04 14:09:14.020000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 14:09:14.020000
+New amp_sp_history value = 4001.0
+
+2020-08-04 14:09:14.020000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 14:09:14.020000
+current ramp index = 60 next required pulses = 150 next power increase = 1000
+
+2020-08-04 14:09:14.575000
+set_amp (4031.0) called from ramp_up
+
+2020-08-04 14:09:14.591000
+requested value 4031.0 is different to current value 4001.0
+
+2020-08-04 14:09:14.591000
+set_amp(4031.0), took 0.00297773791158 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 14:09:14.637000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 442813
+
+2020-08-04 14:09:14.637000
+ramp_up FINISHED, we went from 4001.0 to 4031.0
+
+2020-08-04 14:09:29.547000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 14:09:29.547000
+New amp_sp_history value = 4031.0
+
+2020-08-04 14:09:29.547000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 14:09:29.547000
+current ramp index = 61 next required pulses = 150 next power increase = 1000
+
+2020-08-04 14:09:30.134000
+set_amp (4061.0) called from ramp_up
+
+2020-08-04 14:09:30.149000
+requested value 4061.0 is different to current value 4031.0
+
+2020-08-04 14:09:30.149000
+set_amp(4061.0), took 0.000552351695205 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 14:09:30.196000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 442970
+
+2020-08-04 14:09:30.196000
+ramp_up FINISHED, we went from 4031.0 to 4061.0
+
+2020-08-04 14:09:45.275000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 14:09:45.275000
+New amp_sp_history value = 4061.0
+
+2020-08-04 14:09:45.275000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 14:09:45.275000
+current ramp index = 62 next required pulses = 150 next power increase = 1000
+
+2020-08-04 14:09:45.949000
+set_amp (4094.0) called from ramp_up
+
+2020-08-04 14:09:45.959000
+requested value 4094.0 is different to current value 4061.0
+
+2020-08-04 14:09:45.977000
+set_amp(4094.0), took 0.0111396437696 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 14:09:46.018000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 443127
+
+2020-08-04 14:09:46.020000
+ramp_up FINISHED, we went from 4061.0 to 4094.0
+
+2020-08-04 14:10:00.965000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 14:10:00.965000
+New amp_sp_history value = 4094.0
+
+2020-08-04 14:10:00.965000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 14:10:00.965000
+current ramp index = 63 next required pulses = 150 next power increase = 1000
+
+2020-08-04 14:10:01.529000
+set_amp (4123.0) called from ramp_up
+
+2020-08-04 14:10:01.529000
+requested value 4123.0 is different to current value 4094.0
+
+2020-08-04 14:10:01.545000
+set_amp(4123.0), took 0.00655049420607 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 14:10:01.582000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 443283
+
+2020-08-04 14:10:01.582000
+ramp_up FINISHED, we went from 4094.0 to 4123.0
+
+2020-08-04 14:10:16.624000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 14:10:16.624000
+New amp_sp_history value = 4123.0
+
+2020-08-04 14:10:16.624000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 14:10:16.624000
+current ramp index = 64 next required pulses = 150 next power increase = 1000
+
+2020-08-04 14:10:17.458000
+set_amp (4162.0) called from ramp_up
+
+2020-08-04 14:10:17.495000
+requested value 4162.0 is different to current value 4123.0
+
+2020-08-04 14:10:17.511000
+set_amp(4162.0), took 0.000999525043653 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 14:10:17.611000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 443444
+
+2020-08-04 14:10:17.611000
+ramp_up FINISHED, we went from 4123.0 to 4162.0
+
+2020-08-04 14:10:32.614000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 14:10:32.614000
+New amp_sp_history value = 4162.0
+
+2020-08-04 14:10:32.614000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 14:10:32.614000
+current ramp index = 65 next required pulses = 150 next power increase = 1000
+
+2020-08-04 14:10:33.269000
+set_amp (4208.0) called from ramp_up
+
+2020-08-04 14:10:33.269000
+requested value 4208.0 is different to current value 4162.0
+
+2020-08-04 14:10:33.284000
+set_amp(4208.0), took 0.000706150221049 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 14:10:33.316000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 443601
+
+2020-08-04 14:10:33.331000
+ramp_up FINISHED, we went from 4162.0 to 4208.0
+
+2020-08-04 14:10:48.293000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 14:10:48.293000
+New amp_sp_history value = 4208.0
+
+2020-08-04 14:10:48.293000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 14:10:48.293000
+current ramp index = 67 next required pulses = 150 next power increase = 1000
+
+2020-08-04 14:10:49.226000
+set_amp (4247.0) called from ramp_up
+
+2020-08-04 14:10:49.226000
+requested value 4247.0 is different to current value 4208.0
+
+2020-08-04 14:10:49.257000
+set_amp(4247.0), took 0.0162920597625 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 14:10:49.295000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 443761
+
+2020-08-04 14:10:49.295000
+ramp_up FINISHED, we went from 4208.0 to 4247.0
+
+2020-08-04 14:11:04.321000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 14:11:04.321000
+New amp_sp_history value = 4247.0
+
+2020-08-04 14:11:04.352000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 14:11:04.368000
+current ramp index = 68 next required pulses = 150 next power increase = 1000
+
+2020-08-04 14:11:05.439000
+set_amp (4289.0) called from ramp_up
+
+2020-08-04 14:11:05.439000
+requested value 4289.0 is different to current value 4247.0
+
+2020-08-04 14:11:05.455000
+set_amp(4289.0), took 0.00827402994469 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 14:11:05.493000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 443923
+
+2020-08-04 14:11:05.508000
+ramp_up FINISHED, we went from 4247.0 to 4289.0
+
+2020-08-04 14:11:20.533000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 14:11:20.533000
+New amp_sp_history value = 4289.0
+
+2020-08-04 14:11:20.533000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 14:11:20.533000
+current ramp index = 69 next required pulses = 150 next power increase = 1000
+
+2020-08-04 14:11:21.582000
+set_amp (4333.0) called from ramp_up
+
+2020-08-04 14:11:21.598000
+requested value 4333.0 is different to current value 4289.0
+
+2020-08-04 14:11:21.620000
+set_amp(4333.0), took 0.0155935167802 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 14:11:21.651000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 444084
+
+2020-08-04 14:11:21.667000
+ramp_up FINISHED, we went from 4289.0 to 4333.0
+
+2020-08-04 14:11:36.590000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 14:11:36.590000
+New amp_sp_history value = 4333.0
+
+2020-08-04 14:11:36.590000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 14:11:36.590000
+current ramp index = 71 next required pulses = 150 next power increase = 1000
+
+2020-08-04 14:11:37.169000
+set_amp (4362.0) called from ramp_up
+
+2020-08-04 14:11:37.207000
+requested value 4362.0 is different to current value 4333.0
+
+2020-08-04 14:11:37.207000
+set_amp(4362.0), took 0.00043493561634 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 14:11:37.254000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 444241
+
+2020-08-04 14:11:37.254000
+ramp_up FINISHED, we went from 4333.0 to 4362.0
+
+2020-08-04 14:11:52.265000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 14:11:52.265000
+New amp_sp_history value = 4362.0
+
+2020-08-04 14:11:52.265000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 14:11:52.265000
+current ramp index = 72 next required pulses = 150 next power increase = 1000
+
+2020-08-04 14:11:53.252000
+set_amp (4392.0) called from ramp_up
+
+2020-08-04 14:11:53.252000
+requested value 4392.0 is different to current value 4362.0
+
+2020-08-04 14:11:53.283000
+set_amp(4392.0), took 0.0105902688199 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 14:11:53.321000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 444401
+
+2020-08-04 14:11:53.321000
+ramp_up FINISHED, we went from 4362.0 to 4392.0
+
+2020-08-04 14:12:08.322000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 14:12:08.322000
+New amp_sp_history value = 4392.0
+
+2020-08-04 14:12:08.322000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 14:12:08.322000
+current ramp index = 73 next required pulses = 150 next power increase = 1000
+
+2020-08-04 14:12:08.870000
+set_amp (4427.0) called from ramp_up
+
+2020-08-04 14:12:08.870000
+requested value 4427.0 is different to current value 4392.0
+
+2020-08-04 14:12:08.870000
+set_amp(4427.0), took 0.00134780428607 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 14:12:08.908000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 444557
+
+2020-08-04 14:12:08.908000
+ramp_up FINISHED, we went from 4392.0 to 4427.0
+
+2020-08-04 14:12:23.882000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 14:12:23.882000
+New amp_sp_history value = 4427.0
+
+2020-08-04 14:12:23.882000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 14:12:23.882000
+current ramp index = 74 next required pulses = 150 next power increase = 1000
+
+2020-08-04 14:12:24.468000
+set_amp (4459.0) called from ramp_up
+
+2020-08-04 14:12:24.483000
+requested value 4459.0 is different to current value 4427.0
+
+2020-08-04 14:12:24.499000
+set_amp(4459.0), took 0.00600773424662 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 14:12:24.537000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 444713
+
+2020-08-04 14:12:24.537000
+ramp_up FINISHED, we went from 4427.0 to 4459.0
+
+2020-08-04 14:12:39.473000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 14:12:39.473000
+New amp_sp_history value = 4459.0
+
+2020-08-04 14:12:39.480000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 14:12:39.480000
+current ramp index = 75 next required pulses = 150 next power increase = 1000
+
+2020-08-04 14:12:40.044000
+set_amp (4487.0) called from ramp_up
+
+2020-08-04 14:12:40.044000
+requested value 4487.0 is different to current value 4459.0
+
+2020-08-04 14:12:40.059000
+set_amp(4487.0), took 0.00274489025082 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 14:12:40.097000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 444869
+
+2020-08-04 14:12:40.097000
+ramp_up FINISHED, we went from 4459.0 to 4487.0
+
+2020-08-04 14:12:55.056000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 14:12:55.056000
+New amp_sp_history value = 4487.0
+
+2020-08-04 14:12:55.056000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 14:12:55.056000
+current ramp index = 76 next required pulses = 150 next power increase = 1000
+
+2020-08-04 14:12:55.626000
+set_amp (4519.0) called from ramp_up
+
+2020-08-04 14:12:55.642000
+requested value 4519.0 is different to current value 4487.0
+
+2020-08-04 14:12:55.658000
+set_amp(4519.0), took 0.00682799305173 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 14:12:55.689000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 445025
+
+2020-08-04 14:12:55.689000
+ramp_up FINISHED, we went from 4487.0 to 4519.0
+
+2020-08-04 14:13:10.748000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 14:13:10.748000
+New amp_sp_history value = 4519.0
+
+2020-08-04 14:13:10.748000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 14:13:10.748000
+current ramp index = 77 next required pulses = 150 next power increase = 1000
+
+2020-08-04 14:13:11.333000
+set_amp (4543.0) called from ramp_up
+
+2020-08-04 14:13:11.333000
+requested value 4543.0 is different to current value 4519.0
+
+2020-08-04 14:13:11.349000
+set_amp(4543.0), took 0.000430966622162 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 14:13:11.418000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 445182
+
+2020-08-04 14:13:11.433000
+ramp_up FINISHED, we went from 4519.0 to 4543.0
+
+2020-08-04 14:13:26.368000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 14:13:26.368000
+New amp_sp_history value = 4543.0
+
+2020-08-04 14:13:26.368000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 14:13:26.368000
+current ramp index = 78 next required pulses = 150 next power increase = 1000
+
+2020-08-04 14:13:27.155000
+set_amp (4569.0) called from ramp_up
+
+2020-08-04 14:13:27.186000
+requested value 4569.0 is different to current value 4543.0
+
+2020-08-04 14:13:27.202000
+set_amp(4569.0), took 0.0149313562449 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 14:13:27.239000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 445340
+
+2020-08-04 14:13:27.239000
+ramp_up FINISHED, we went from 4543.0 to 4569.0
+
+2020-08-04 14:13:42.259000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 14:13:42.275000
+New amp_sp_history value = 4569.0
+
+2020-08-04 14:13:42.275000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 14:13:42.275000
+current ramp index = 79 next required pulses = 150 next power increase = 1000
+
+2020-08-04 14:13:43.293000
+set_amp (4598.0) called from ramp_up
+
+2020-08-04 14:13:43.309000
+requested value 4598.0 is different to current value 4569.0
+
+2020-08-04 14:13:43.324000
+set_amp(4598.0), took 0.00676382764505 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 14:13:43.393000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 445502
+
+2020-08-04 14:13:43.393000
+ramp_up FINISHED, we went from 4569.0 to 4598.0
+
+2020-08-04 14:13:58.416000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-08-04 14:13:58.423000
+New amp_sp_history value = 4598.0
+
+2020-08-04 14:13:58.439000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-08-04 14:13:58.454000
+current ramp index = 80 next required pulses = 150 next power increase = 1000
+
+2020-08-04 14:13:59.927000
+set_amp (4627.0) called from ramp_up
+
+2020-08-04 14:13:59.927000
+requested value 4627.0 is different to current value 4598.0
+
+2020-08-04 14:13:59.942000
+set_amp(4627.0), took 0.0102105683732 time,  averages NOT reset, mask_set =
+False
+
+2020-08-04 14:13:59.989000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 445668
+
+2020-08-04 14:14:00.005000
+ramp_up FINISHED, we went from 4598.0 to 4627.0

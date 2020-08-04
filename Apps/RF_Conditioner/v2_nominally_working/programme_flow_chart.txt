@@ -1,0 +1,71 @@
+Programme FLOW
+
+creat an App
+
+create a main_controller
+main_controller init:
+	
+	create the GUI
+		This is so that message can get sent to GUI straight away, 
+		This GUI is not yet doing proper updates
+	
+	create config
+		read the config file
+		parse the config file, and 1st sanity check of entries
+	
+	create rf_conditioning_logger
+		check / create directories for log files
+			if in debug mode all =log files get pu tin working directory (this helps A LOT when you keep re-running the code)
+			working_directory:
+				KFPOW_AMPSP_RUNNING_STATS_LOG_FILENAME
+				PULSE_COUNT_BREAKDOWN_LOG_FILENAME
+					- sub_directory for this run (directory name = time and date of creation)
+						text_log 
+						binary_data_log 
+						breakdwon events pickle dumps
+		check / create directories text log files
+			KFPOW_AMPSP_RUNNING_STATS_LOG_FILENAME  exists
+			PULSE_COUNT_BREAKDOWN_LOG_FILENAME exists
+			start log.txt 	# DESCRIBE WHAT THIS FILE IS
+
+	Create Data class 
+		add default values from config to data.values, values is the dicgtionary where all the data is stored 
+
+		parse KFPOW_AMPSP_RUNNING_STATS_LOG_FILENAME # DESCRIBE WHAT THIS FILE IS
+			rf_conditioning_logger does this
+			File is a log of: # amp_sp, num_pulses (with beam), rolling mean, rolling variance * (num_pulses -1);
+			for each amp_sp the programme has taken data at. 
+			This log file is appneded to during running, so can become large, on first parsing, we discard old values
+			WARNING the Klystron warm-up time means that we can get noisey values 
+		parse PULSE_COUNT_BREAKDOWN_LOG_FILENAME  # DESCRIBE WHAT THIS FILE IS
+			rf_conditioning_logger does this
+			This is the log of num_pulse breakdowns, from whcih the breakdwon rate is calculated 
+			The formatting of processing of this file is cancerous atm. 
+			TODO: maybe we use fitting to move down in power steps as well as up? 
+
+	Create hardware_control_hub (this owns all CATAP objects, to be passed where they are needed)
+		create CATAP Hardware Modules
+			self.start_RF_protection()
+			self.start_magnet_control()
+			self.start_valve_control()
+			self.start_mod_control()
+			self.start_llrf_control()
+			and fill have_controller,  a dictionary of {controller_type : successfully created }
+			
+	Create monitor_hub (a class to hold all the main data_monitoring objects, vac, simple_llrf, vac_valve, modulator, gen_mon)
+        self.start_rfprot_monitor()
+        self.start_vac_valve()
+        self.start_modulator_monitor()
+        self.start_llrf_monitor() 
+			SIMPLE LLRF parameters
+		self.start_vac_monitor() 
+			monitors vacuum level, looks for spikes and if vac level is above limit 
+		self.outside_mask_trace_monitor()
+			updates, active_pulse_count, event_pulse_count, elapsed_time, num_outside_mask_traces
+			if a new OME has been detected it gets the data and pickle_dumps it to file
+			update_last_million_pulse_log() (rf_conditioning_data member function)
+        self.start_water_temperature_monitor()
+        self.start_cavity_temperature_monitor()
+        self.start_solenoid_monitoring()
+
+	

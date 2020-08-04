@@ -196,7 +196,7 @@ class llrf_monitor(monitor):
         #     self.update_amp_vs_kfpow_running_stat()
         #
         """WARNING"""
-        ''' it can happen that we've changed amp_sp but there have been no pulses when  we get here,  amp_vs_kfpow_running_stat can be empty '''
+        ''' it can happen that we've changed amp_sp but there have been no pulses when we get here, amp_vs_kfpow_running_stat can be empty '''
         if self.values[self.data.amp_sp] in self.data.amp_vs_kfpow_running_stat:
             self.values[self.data.delta_kfpow] = self.data.get_kf_running_stat_power_at_current_set_point() - self.values[
                 self.data.kfpower_at_last_amp_sp]
@@ -205,7 +205,8 @@ class llrf_monitor(monitor):
         if self.values[self.data.breakdown_rate_low]:
             self.values[self.data.pulses_to_next_ramp] = self.values[self.data.event_pulse_count]
         else:
-            # we have to count back thorough the active_pulse_breakdown_log
+            pass
+            # we have to count back thorough the active_pulse_breakdown_log and estimate how many pusles till breakdown_rate_low = True
 
     def update_pulse_length(self):
         '''

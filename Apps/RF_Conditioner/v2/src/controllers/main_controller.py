@@ -589,7 +589,7 @@ class main_controller(object):
             raw_input()
 
         # # set new_amp
-        if self.hardware.llrf_controller.set_amp(self.data.log_ramp_curve[lrci][1], update_last_amp_sp = True):
+        if self.hardware.llrf_controller.set_amp(self.data.log_ramp_curve[lrci][1], update_last_amp_sp = False):
 
             print('self.hardware.llrf_controller.set_amp(lrc[lrci][1] = {}'.format( self.hardware.llrf_controller.set_amp(self.data.log_ramp_curve[lrci][1])))
 

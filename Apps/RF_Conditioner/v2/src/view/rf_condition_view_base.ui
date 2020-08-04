@@ -1120,7 +1120,7 @@
          <rect>
           <x>240</x>
           <y>20</y>
-          <width>238</width>
+          <width>231</width>
           <height>731</height>
          </rect>
         </property>
@@ -1915,7 +1915,7 @@
           </widget>
          </item>
          <item row="7" column="1" colspan="2">
-          <widget class="QLabel" name="amp_set_outputwidget_2">
+          <widget class="QLabel" name="amp_set_outputwidget">
            <property name="frameShape">
             <enum>QFrame::Box</enum>
            </property>
@@ -1927,22 +1927,6 @@
            </property>
            <property name="alignment">
             <set>Qt::AlignAbsolute|Qt::AlignBottom|Qt::AlignCenter|Qt::AlignHCenter|Qt::AlignHorizontal_Mask|Qt::AlignJustify|Qt::AlignLeading|Qt::AlignLeft|Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing|Qt::AlignVCenter|Qt::AlignVertical_Mask</set>
-           </property>
-          </widget>
-         </item>
-         <item row="7" column="0">
-          <widget class="QLabel" name="RF_protection_label_2">
-           <property name="frameShape">
-            <enum>QFrame::Box</enum>
-           </property>
-           <property name="frameShadow">
-            <enum>QFrame::Sunken</enum>
-           </property>
-           <property name="text">
-            <string>Amp SP (now) / (last)</string>
-           </property>
-           <property name="scaledContents">
-            <bool>false</bool>
            </property>
           </widget>
          </item>
@@ -2163,6 +2147,22 @@
            </property>
            <property name="alignment">
             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="0">
+          <widget class="QLabel" name="RF_protection_label_2">
+           <property name="frameShape">
+            <enum>QFrame::Box</enum>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Sunken</enum>
+           </property>
+           <property name="text">
+            <string>Amp SP (now) / (last)</string>
+           </property>
+           <property name="scaledContents">
+            <bool>false</bool>
            </property>
           </widget>
          </item>
