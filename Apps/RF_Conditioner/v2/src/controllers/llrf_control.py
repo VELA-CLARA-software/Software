@@ -80,11 +80,9 @@ class llrf_control(object):
 
 
 	def enable_llrf(self):
-		# go through each possible LLRF paramter (except HOLD_RF_ON_COM mod / protection parmaters
-		# and try and reset them
-		# cancer cancer cancer
+		# go through each possible LLRF paramter (except HOLD_RF_ON_COM mod / protection parameters
+		# and try and reset them cancer cancer cancer
 		#
-
 		# the first thing this needs to do is set 0 amp_sp,
 		self.llrf_control.setAmpHP(0.0) # HP 'high priority' it disables the trigger, then sets 0.0 amp_sp
 
@@ -183,10 +181,6 @@ class llrf_control(object):
 		self.llrf_control.setTORACQMEvent()
 		#self.set_iointr_counter = 0
 
-
-
-
-
 	def disableRFOutput(self):
 		self.llrf_control.disableRFOutput() # the c++ check is RF output is enabled, if not it disables rf output
 
@@ -201,7 +195,6 @@ class llrf_control(object):
 		self.llrf_control.resetTORSCANToIOIntr()
 		self.logger.message(__name__ + ' setting One Record ACQM to event')
 		self.llrf_control.setTORACQMEvent()
-
 
 	def start_trace_average_no_reset(self,value):
 		for trace in self.config_data['BREAKDOWN_TRACES']:
@@ -345,8 +338,6 @@ class llrf_control(object):
 		for trace in self.config_data['BREAKDOWN_TRACES']:
 			self.set_trace_rolling_average( full_race_name_toShort_trace_name_dict[trace] )
 
-
-
 	def clear_all_rolling_averages(self):
 		print("clear_all_rolling_averages")
 		self.llrf_control.clearAllRollingAverage()
@@ -355,6 +346,13 @@ class llrf_control(object):
 		for trace in self.config_data['BREAKDOWN_TRACES']:
 			print("set_inifinit_hi_mask trace = ", trace)
 			self.llrf_control.setInfiniteHiMask(trace)
+
+	def set_infinite_masks(self):
+		for trace in self.config_data['BREAKDOWN_TRACES']:
+			print("set_inifinit_hi_mask trace = ", trace)
+			self.llrf_control.setInfiniteMasks(trace)
+
+
 
 	def set_nominal_masks(self):
 		'''

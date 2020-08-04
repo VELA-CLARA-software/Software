@@ -24,11 +24,10 @@
 //
 //*/
 '''
-
 import numpy as np, sys
 import matplotlib.pyplot as plt
 from config import config
-from rf_conditioning_logger import rf_conditioning_logger
+from src.data.rf_conditioning_logger import rf_conditioning_logger
 from VELA_CLARA_RF_Modulator_Control import GUN_MOD_STATE
 from VELA_CLARA_Vac_Valve_Control import VALVE_STATE
 from VELA_CLARA_RF_Protection_Control import RF_PROT_STATUS
@@ -39,6 +38,7 @@ from src.data.state import ramp_method
 from numpy import float64 as np_float64
 import math
 import winsound
+
 
 
 class rf_conditioning_data(object):
@@ -216,8 +216,7 @@ class rf_conditioning_data(object):
         rcd = rf_conditioning_data
         rcd.values[rcd.event_pulse_count_zero] = rcd.values[rcd.pulse_count]
         rcd.values[rcd.event_pulse_count] = 0
-        self.logger.message_header(__name__ + ' reset_event_pulse_count')
-        self.logger.message('new event_pulse_count_zero = {}'.format(rcd.values[rcd.event_pulse_count_zero]))
+        self.logger.message(__name__ + ' reset_event_pulse_count, new event_pulse_count_zero = {}'.format(rcd.values[rcd.event_pulse_count_zero]))
 
     def set_values_from_config(self):
         """
@@ -330,9 +329,8 @@ class rf_conditioning_data(object):
                 break
             elif index == -len(raw_pulse_break_down_log) +5: # MAGIC NUMBER
                 break
-
-        for entry in rationalised_pulse_breakdown_log:
-            print(entry)
+        # for entry in rationalised_pulse_breakdown_log:
+        #     print(entry)
         #
         pulse_break_down_log = rationalised_pulse_breakdown_log
         # TODO we need save this file to disc, (over-right existing file ?? )
@@ -349,7 +347,6 @@ class rf_conditioning_data(object):
         self.values[rcd.current_ramp_index] = int(pulse_break_down_log[-1][3])
         self.values[rcd.log_pulse_length] = float(int(pulse_break_down_log[-1][3])) / float(1000.0)  # warning UNIT
 
-
         # TODO I don't think this is used and doesn't make sense to me now
         self.config_data['PULSE_LENGTH_START'] = self.values[rcd.log_pulse_length]
         #
@@ -361,6 +358,9 @@ class rf_conditioning_data(object):
         #
         # sort the pulse breakdown log in asccending number of pulses (should just be a sanity check)
         sorted_pulse_break_down_log = sorted(pulse_break_down_log, key=lambda x: (x[2], x[0]))
+
+        self.logger.write_rationilized_pulse_breakdown_log(sorted_pulse_break_down_log)
+
         # TODO the names below could be better (?)
         # the amount of pulses to use in the history to calculate breakdown rate
         self.values[rcd.number_of_pulses_in_breakdown_history] = self.config_data['NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY']
@@ -368,11 +368,7 @@ class rf_conditioning_data(object):
         # how many pulses before where we are now to include in BD rate calculations
         self.values[rcd.bd_rate_calc_first_pulse_number] = self.values[rcd.log_pulse_count] - self.values[rcd.number_of_pulses_in_breakdown_history]
         rcd.active_pulse_breakdown_log = [x for x in sorted_pulse_break_down_log if x[0] >= self.values[rcd.bd_rate_calc_first_pulse_number]]
-
-        message("update_breakdown_stats here ????????????????????")
-
         self.update_breakdown_stats()
-
 
     def update_breakdown_stats(self):
         '''
@@ -425,12 +421,21 @@ class rf_conditioning_data(object):
         """
         rcd = rf_conditioning_data
         if amp > 100:  # MAGIC_NUMBER
-            self.logger.add_to_pulse_count_breakdown_log(
-                [rcd.values[rcd.pulse_count],
-                 rcd.values[rcd.total_breakdown_count], int(amp),
-                 int(rcd.values[rcd.current_ramp_index]),
-                 int(rcd.values[rcd.pulse_length])
-                 ])
+
+            if rcd.values[rcd.ramp_mode] == ramp_method.NORMAL_RAMP:
+                self.logger.add_to_pulse_count_breakdown_log(
+                    [rcd.values[rcd.pulse_count],
+                     rcd.values[rcd.total_breakdown_count],
+                     int(amp),
+                     int(rcd.values[rcd.current_ramp_index]),
+                     int(rcd.values[rcd.pulse_length])
+                     ])
+            else:
+                #print("log ramp mode, writing amp_sp = {} ".format(int(rcd._log_ramp_curve[-1][1])))
+                self.logger.add_to_pulse_count_breakdown_log(
+                    [rcd.values[rcd.pulse_count], rcd.values[rcd.total_breakdown_count], int(rcd._log_ramp_curve[-1][1]),
+                     int(rcd.values[rcd.current_ramp_index]), int(rcd.values[rcd.pulse_length])])
+
 
     def force_update_breakdown_count(self, count):
         rf_conditioning_data.values[rf_conditioning_data.total_breakdown_count] += count
@@ -1099,146 +1104,6 @@ class rf_conditioning_data(object):
                 data_to_fit_y.insert(0, 0.0)
 
             return data_to_fit_x, data_to_fit_y
-
-    def setup_pulse_count_breakdown_log_OLD(self):
-        """
-        this is way too complicated ... but its processing the data in two ways,
-        once by amp_setpoint and once by pulse count, it generates to main lists:
-        1) rf_condition_data.amp_sp_history
-              Sorted by amp_setpoint
-              Used to define how to ramp up and down
-        2) rf_condition_data.last_million_log
-              Sorted by pulse count
-              used to define the Breakdown Rate etc.
-        if I read through the comments, i can basically work out what is going on
-        """
-        # TODO: we should use fitting to move down in power steps instead of next_sp_decrease in the same way we move up in power steps
-        # TODO: the ramp index should continue to increment, even when it as above the total number of ramp points, then we know how many steps we
-        #  have actually gone up / down
-
-        # local alias for shorter lines
-        rcd = rf_conditioning_data
-        message = self.logger.message
-        #
-        # get the pulse_break_down_log entries from file (this is just the raw entries from the file )
-        pulse_break_down_log = self.logger.get_pulse_count_breakdown_log()
-        #
-        # based on the log file we set active pulse count total,
-        # the starting point is the one before the last entry  (WHY???? DJS Jan 2019)
-        #
-        # FIRST:
-        # save the last entry, log_pulse_count and breakdown count
-        # keep this seperate as pulse_count will get overwritten!!
-        # TODO use small helper functions to get pulse-count, amp_sp, bd, from an entry, so we don't make mistakes  with indexes
-        self.values[rcd.log_pulse_count] = int(pulse_break_down_log[-1][0])
-
-        # we **can** set these here,
-        self.values[rcd.pulse_count] = self.values[rcd.log_pulse_count]
-        self.values[rcd.event_pulse_count_zero] = self.values[rcd.log_pulse_count]
-        self.values[rcd.event_pulse_count] = 0
-
-
-        self.values[rcd.breakdown_count] = int(pulse_break_down_log[-1][1])
-
-        #
-        # next we must insert the data in to the main data values dictionary
-        # set the ramp index
-        self.values[rcd.current_ramp_index] = int(pulse_break_down_log[-1][3])
-        #self.set_ramp_values()
-
-        #
-        # pulse length (logged but not used as pulse_length is now defined by the pulse shaping
-        # table)
-        self.values[rcd.log_pulse_length] = float(int(pulse_break_down_log[-1][3])) / float(1000.0)  # warning UNIT
-
-        # TODO I don't think this is used and doesn't make sense to me now
-        self.config_data['PULSE_LENGTH_START'] = self.values[rcd.log_pulse_length]
-
-        #
-        # The Frist amp_setpoint to set on start-up
-        self.values[rcd.log_amp_set] =  int(pulse_break_down_log[-1][2])
-
-        # TODO djs: i don't think we need the below, (apart from to get some numbers out), this data should be ratinoalises (cut to just what we
-        #  need ) which is when a BD event happened, and the last point we were at
-        # first amp_sp to use is the is the  last one in log file ( IT USED TO BE THE  2nd to last one)
-        # remove values greater than than last_amp_sp_in_file
-        last_amp_sp_in_file = int(pulse_break_down_log[-1][2])
-        indices_to_remove = []
-        index_to_remove = 0
-        for entry in pulse_break_down_log:
-            #if entry[2] >= last_amp_sp_in_file:
-            if entry[2] > last_amp_sp_in_file:
-                indices_to_remove.append(index_to_remove)
-            index_to_remove += 1
-        #
-        # delete index_to_remove from pulse_break_down_log
-        # https://stackoverflow.com/questions/11303225/how-to-remove-multiple-indexes-from-a-list
-        # -at-the-same-time
-        for index in sorted(indices_to_remove, reverse=True):
-            del pulse_break_down_log[index]
-        #
-        # sort the list by setpoint (part 2) then pulse_count (part 0)
-        sorted_pulse_break_down_log_1 = sorted(pulse_break_down_log, key=lambda x: (x[2], x[0]))
-        #
-        # set the number of pulses required at this step to the default, updated later
-        self.values[rcd.required_pulses] = self.config_data['DEFAULT_PULSE_COUNT']
-        #
-        # Write to log
-        message(__name__ + ' has processed the pulse_count_breakdown_log ')
-        message([rcd.log_pulse_count + ' ' + str(self.values[rcd.log_pulse_count]), rcd.required_pulses + ' ' + str(self.values[rcd.required_pulses]),
-                 rcd.breakdown_count + ' ' + str(self.values[rcd.breakdown_count]), rcd.log_amp_set + ' ' + str(self.values[rcd.log_amp_set]),
-                 rcd.current_ramp_index + ' ' + str(self.values[rcd.current_ramp_index]), # hmmm what to do about pulse length chaing
-                 # 'pulse length = ' + str(self._llrf_config['PULSE_LENGTH_START']),
-                 rcd.next_sp_decrease + ' ' + str(self.values[rcd.next_sp_decrease])], )
-
-        # TODO we can overright the puslebreakdwon log with a trimmed/rationlized version if we want ...
-                        #
-        # Setting the last 10^6 breakdown last_106_bd_count
-        #
-        # get the last million pulses from THE ORIGINAL pulse_break_down_log
-        # !!! WE must use the original pulse_break_down_log, as it will have the true
-        # breakdown_count and pulse number !!!
-        # !!! (remember above we deleted the last entry in pulse_break_down_log to  generate
-        # amp_sp_history         !!!
-        pulse_break_down_log = self.logger.get_pulse_count_breakdown_log()
-        one_million_pulses_ago = self.values[rcd.log_pulse_count] - self.config_data['NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY']
-        rcd.last_million_log = [x for x in pulse_break_down_log if x[0] >= one_million_pulses_ago]
-        #
-        # write last_million_log to log
-
-        """ PRINT lAST MILLION PULSES """
-        # message('Last million pulses', add_to_text_log=True,show_time_stamp=False)
-        # for value in rcd.last_million_log:
-        #     str1 = ', '.join(str(e) for e in value)
-        #     message(str1, add_to_text_log=True, show_time_stamp=False)
-
-        message('One Million pulses ago  = ' + str(one_million_pulses_ago))
-        first_entry = ' , '.join(str(x) for x in rcd.last_million_log[0])
-        last_entry = ' , '.join(str(x) for x in rcd.last_million_log[-1])
-        message('last_million_log[ 0] = ' + first_entry)
-        message('last_million_log[-1] = ' + last_entry)
-        #
-        # sanity check
-        #
-        sanity_passed = True
-        if rcd.last_million_log[-1][1] != self.values[rcd.breakdown_count]:
-            message('Error in breakdown count')
-            sanity_passed = False
-        if rcd.last_million_log[-1][0] != self.values[rcd.log_pulse_count]:
-            message('Error in pulse_count')
-            sanity_passed = False
-        if sanity_passed:
-            message('Getting the pulse_breakdown_log passed sanity check')
-        else:
-            message('!!WARNING!! When getting the pulse_breakdown_log we failed a sanity check!!')
-
-        #
-        # Now we are free to update the breakdown stats !!
-        '''MAYBE DON'T CALL THIS HERE YET!!! ????'''
-        message("update_breakdown_stats here ????????????????????")
-        self.update_breakdown_stats()
-
-
 
 
     '''Bining dictionary'''
@@ -2880,3 +2745,157 @@ class rf_conditioning_data(object):
     max_amp_increase_val = "max_amp_increase_val"
     expert_value_keys.append(max_amp_increase_val)
     expert_values[max_amp_increase_val] = True
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    #
+    # def setup_pulse_count_breakdown_log_OLD(self):
+    #     """
+    #     this is way too complicated ... but its processing the data in two ways,
+    #     once by amp_setpoint and once by pulse count, it generates to main lists:
+    #     1) rf_condition_data.amp_sp_history
+    #           Sorted by amp_setpoint
+    #           Used to define how to ramp up and down
+    #     2) rf_condition_data.last_million_log
+    #           Sorted by pulse count
+    #           used to define the Breakdown Rate etc.
+    #     if I read through the comments, i can basically work out what is going on
+    #     """
+    #     # TODO: we should use fitting to move down in power steps instead of next_sp_decrease in the same way we move up in power steps
+    #     # TODO: the ramp index should continue to increment, even when it as above the total number of ramp points, then we know how many steps we
+    #     #  have actually gone up / down
+    #
+    #     # local alias for shorter lines
+    #     rcd = rf_conditioning_data
+    #     message = self.logger.message
+    #     #
+    #     # get the pulse_break_down_log entries from file (this is just the raw entries from the file )
+    #     pulse_break_down_log = self.logger.get_pulse_count_breakdown_log()
+    #     #
+    #     # based on the log file we set active pulse count total,
+    #     # the starting point is the one before the last entry  (WHY???? DJS Jan 2019)
+    #     #
+    #     # FIRST:
+    #     # save the last entry, log_pulse_count and breakdown count
+    #     # keep this seperate as pulse_count will get overwritten!!
+    #     # TODO use small helper functions to get pulse-count, amp_sp, bd, from an entry, so we don't make mistakes  with indexes
+    #     self.values[rcd.log_pulse_count] = int(pulse_break_down_log[-1][0])
+    #
+    #     # we **can** set these here,
+    #     self.values[rcd.pulse_count] = self.values[rcd.log_pulse_count]
+    #     self.values[rcd.event_pulse_count_zero] = self.values[rcd.log_pulse_count]
+    #     self.values[rcd.event_pulse_count] = 0
+    #
+    #
+    #     self.values[rcd.breakdown_count] = int(pulse_break_down_log[-1][1])
+    #
+    #     #
+    #     # next we must insert the data in to the main data values dictionary
+    #     # set the ramp index
+    #     self.values[rcd.current_ramp_index] = int(pulse_break_down_log[-1][3])
+    #     #self.set_ramp_values()
+    #
+    #     #
+    #     # pulse length (logged but not used as pulse_length is now defined by the pulse shaping
+    #     # table)
+    #     self.values[rcd.log_pulse_length] = float(int(pulse_break_down_log[-1][3])) / float(1000.0)  # warning UNIT
+    #
+    #     # TODO I don't think this is used and doesn't make sense to me now
+    #     self.config_data['PULSE_LENGTH_START'] = self.values[rcd.log_pulse_length]
+    #
+    #     #
+    #     # The Frist amp_setpoint to set on start-up
+    #     self.values[rcd.log_amp_set] =  int(pulse_break_down_log[-1][2])
+    #
+    #     # TODO djs: i don't think we need the below, (apart from to get some numbers out), this data should be ratinoalises (cut to just what we
+    #     #  need ) which is when a BD event happened, and the last point we were at
+    #     # first amp_sp to use is the is the  last one in log file ( IT USED TO BE THE  2nd to last one)
+    #     # remove values greater than than last_amp_sp_in_file
+    #     last_amp_sp_in_file = int(pulse_break_down_log[-1][2])
+    #     indices_to_remove = []
+    #     index_to_remove = 0
+    #     for entry in pulse_break_down_log:
+    #         #if entry[2] >= last_amp_sp_in_file:
+    #         if entry[2] > last_amp_sp_in_file:
+    #             indices_to_remove.append(index_to_remove)
+    #         index_to_remove += 1
+    #     #
+    #     # delete index_to_remove from pulse_break_down_log
+    #     # https://stackoverflow.com/questions/11303225/how-to-remove-multiple-indexes-from-a-list
+    #     # -at-the-same-time
+    #     for index in sorted(indices_to_remove, reverse=True):
+    #         del pulse_break_down_log[index]
+    #     #
+    #     # sort the list by setpoint (part 2) then pulse_count (part 0)
+    #     sorted_pulse_break_down_log_1 = sorted(pulse_break_down_log, key=lambda x: (x[2], x[0]))
+    #     #
+    #     # set the number of pulses required at this step to the default, updated later
+    #     self.values[rcd.required_pulses] = self.config_data['DEFAULT_PULSE_COUNT']
+    #     #
+    #     # Write to log
+    #     message(__name__ + ' has processed the pulse_count_breakdown_log ')
+    #     message([rcd.log_pulse_count + ' ' + str(self.values[rcd.log_pulse_count]), rcd.required_pulses + ' ' + str(self.values[rcd.required_pulses]),
+    #              rcd.breakdown_count + ' ' + str(self.values[rcd.breakdown_count]), rcd.log_amp_set + ' ' + str(self.values[rcd.log_amp_set]),
+    #              rcd.current_ramp_index + ' ' + str(self.values[rcd.current_ramp_index]), # hmmm what to do about pulse length chaing
+    #              # 'pulse length = ' + str(self._llrf_config['PULSE_LENGTH_START']),
+    #              rcd.next_sp_decrease + ' ' + str(self.values[rcd.next_sp_decrease])], )
+    #
+    #     # TODO we can overright the puslebreakdwon log with a trimmed/rationlized version if we want ...
+    #                     #
+    #     # Setting the last 10^6 breakdown last_106_bd_count
+    #     #
+    #     # get the last million pulses from THE ORIGINAL pulse_break_down_log
+    #     # !!! WE must use the original pulse_break_down_log, as it will have the true
+    #     # breakdown_count and pulse number !!!
+    #     # !!! (remember above we deleted the last entry in pulse_break_down_log to  generate
+    #     # amp_sp_history         !!!
+    #     pulse_break_down_log = self.logger.get_pulse_count_breakdown_log()
+    #     one_million_pulses_ago = self.values[rcd.log_pulse_count] - self.config_data['NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY']
+    #     rcd.last_million_log = [x for x in pulse_break_down_log if x[0] >= one_million_pulses_ago]
+    #     #
+    #     # write last_million_log to log
+    #
+    #     """ PRINT lAST MILLION PULSES """
+    #     # message('Last million pulses', add_to_text_log=True,show_time_stamp=False)
+    #     # for value in rcd.last_million_log:
+    #     #     str1 = ', '.join(str(e) for e in value)
+    #     #     message(str1, add_to_text_log=True, show_time_stamp=False)
+    #
+    #     message('One Million pulses ago  = ' + str(one_million_pulses_ago))
+    #     first_entry = ' , '.join(str(x) for x in rcd.last_million_log[0])
+    #     last_entry = ' , '.join(str(x) for x in rcd.last_million_log[-1])
+    #     message('last_million_log[ 0] = ' + first_entry)
+    #     message('last_million_log[-1] = ' + last_entry)
+    #     #
+    #     # sanity check
+    #     #
+    #     sanity_passed = True
+    #     if rcd.last_million_log[-1][1] != self.values[rcd.breakdown_count]:
+    #         message('Error in breakdown count')
+    #         sanity_passed = False
+    #     if rcd.last_million_log[-1][0] != self.values[rcd.log_pulse_count]:
+    #         message('Error in pulse_count')
+    #         sanity_passed = False
+    #     if sanity_passed:
+    #         message('Getting the pulse_breakdown_log passed sanity check')
+    #     else:
+    #         message('!!WARNING!! When getting the pulse_breakdown_log we failed a sanity check!!')
+    #
+    #     #
+    #     # Now we are free to update the breakdown stats !!
+    #     '''MAYBE DON'T CALL THIS HERE YET!!! ????'''
+    #     message("update_breakdown_stats here ????????????????????")
+    #     self.update_breakdown_stats()
+    #
+    #

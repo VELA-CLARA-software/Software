@@ -52,13 +52,12 @@
 ## 
 
 # MODE - DEBUG or OPERATIONAL
-# IF in DEBUG  mode, we will NEVER change a setting, BUT it will monitor values (?) 
-MODE: DEBUG
+# DEBUG mode can be used in the future to but currently is not well implemented
+# MODE: DEBUG
+MODE: OPERATIONAL
 
 #  The name of the RF structure, as used in CATAP
 RF_STRUCTURE: CLARA_LRRG # STRING
-
-
 
 ## main param
 #TIME_BETWEEN_RF_INCREASES :  10;seconds
@@ -152,7 +151,7 @@ BREAKDOWN_TRACES :
   - KLYSTRON_FORWARD_POWER
 
 OUTSIDE_MASK_CHECK_TIME: 100 #INTEGER ms between outside_mask_trace checks, THIS IS FOR THE GUI, the c++ llrf module is checking every pulse 
-TRACES_TO_SAVE:  # specify traces to save breakdown data#
+TRACES_TO_SAVE :  # specify traces to save breakdown data#
   - KLYSTRON_FORWARD_PHASE
   - KLYSTRON_REVERSE_PHASE
   - KLYSTRON_FORWARD_POWER

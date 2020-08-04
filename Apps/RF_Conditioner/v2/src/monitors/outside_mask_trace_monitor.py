@@ -48,8 +48,10 @@ class outside_mask_trace_monitor(monitor):
         self.llrf_control = self.hardware.llrf_control
         self.llrf_obj = self.hardware.llrf_obj
 
-        # set cool-down mode to TIMED, OME are always timed cool-down
+        # set cool-down mode to TIMED, OME are ***always*** timed cool-down
         self.set_cooldown_mode('TIMED')
+        # connect the cool_down timer timeout signal  to self.cooldown_finished
+        self.cooldown_timer.timeout.connect(self.cooldown_finished)
 
         # to count the number of pulses since th e last event we need to know the starting pulse
         # count
@@ -90,8 +92,8 @@ class outside_mask_trace_monitor(monitor):
         # self.logger.message('event_pulse_count_zero = {}'.format(self.event_pulse_count_zero),
         #                     add_to_text_log=True, show_time_stamp=False)
 
-    def cooldown_function(self):
-        monitor.logger.message(__name__ + ', cool down ended')
+    def cooldown_finished(self):
+        self.logger.message(__name__ + ', cool down ended')
         self.incool_down = False
         self.values[self.data.breakdown_status] = state.GOOD
 
@@ -99,7 +101,7 @@ class outside_mask_trace_monitor(monitor):
         """
         This is the main update function, it handles the pulse-counting and OMED-counting
         """
-        print('update_value() from outside_mask_trace_monitor')
+        #print('update_value() from outside_mask_trace_monitor')
         # The number of pulses
         self.values[self.data.pulse_count] = self.llrf_obj[0].active_pulse_count
         # the number of pulses since last 'event' (actually includes since last ramp, so re-name)
@@ -116,12 +118,12 @@ class outside_mask_trace_monitor(monitor):
             self.new_breakdown()
             self.new_omed_data = True
             self.previous_omed_count = self.values[self.data.num_outside_mask_traces]
-            print('num_outside_mask_traces = {}'.format(self.values[self.data.num_outside_mask_traces]))
-            print('previous_omed_count = {}'.format(self.previous_omed_count))
+            #print('num_outside_mask_traces = {}'.format(self.values[self.data.num_outside_mask_traces]))
+            #print('previous_omed_count = {}'.format(self.previous_omed_count))
 
-        else:
-            print('num_outside_mask_traces <= previous_omed_count:\nnum_outside_mask_traces = {}\nprevious_omed_count = {}'.
-                  format(self.values[self.data.num_outside_mask_traces], self.previous_omed_count))
+        # else:
+        #     print('num_outside_mask_traces <= previous_omed_count:\nnum_outside_mask_traces = {}\nprevious_omed_count = {}'.
+        #           format(self.values[self.data.num_outside_mask_traces], self.previous_omed_count))
         #
         # Now we try collecting any new data, the OME data usually includes "future traces" (traces
         # that are saved after the event trace). This means we have to wait for those traces
@@ -160,6 +162,7 @@ class outside_mask_trace_monitor(monitor):
         # set the breakdown_status to bad
         self.values[self.data.breakdown_status] = state.BAD
         # start or restart the cooldown_timer
+        print("cooldown_timer.start, time = {}".format(self.config_data[self.config.OUTSIDE_MASK_COOLDOWN_TIME]))
         self.cooldown_timer.start(self.config_data[self.config.OUTSIDE_MASK_COOLDOWN_TIME])
 
     def collect_ome_data(self):
@@ -199,4 +202,4 @@ class outside_mask_trace_monitor(monitor):
 
         self.ome_counts[new['trace_name']] += 1
         filename = new['trace_name'] + '_' + str(self.ome_counts[new['trace_name']])
-        self.logger.dump_ome_data(filename=filename)
+        self.logger.dump_ome_data(filename=filename, object=new)

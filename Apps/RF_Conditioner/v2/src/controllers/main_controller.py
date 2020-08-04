@@ -17,26 +17,16 @@
 //    along with VELA-CLARA-Software.  If not, see <http://www.gnu.org/licenses/>.    //
 //
 //  Author:      DJS
-//  Last edit:   03-07-2019
+//  Last edit:   04-08-2029
 //  FileName:    main_controller.py
-//  Description: The main_controller, holds all objects adn passes data/messsages betwen them
+//  Description: The main_controller, holds all objects and passes data/messsages betwwen them
 //
 //
 //
 //
 //*/
 '''
-#from PyQt4.QtGui import QApplication
-#from PyQt4.QtCore import QTimer
-#from controller_base import controller_base
-#from src.gui.gui_conditioning import gui_conditioning
-#import src.data.rf_condition_data_base as dat
-#from src.data.state import state
-import sys
-import time
-import os
 from src.data.ramp import ramp
-
 print('main_controller: import hardware_control_hub')
 from src.controllers.hardware_control_hub import hardware_control_hub
 print('main_controller: import config')
@@ -48,48 +38,51 @@ from src.data.rf_conditioning_data import rf_conditioning_data
 print('main_controller: import monitor_hub')
 from src.monitors.monitor_hub import monitor_hub
 from src.view.rf_condition_view import rf_condition_view
-
-import random
-
 from PyQt4.QtGui import QApplication
-
 from src.data.state import *
 from src.data.state import ramp_method
 
-#class main_controller(controller_base):
-class main_controller(object):
 
-    # other attributes will be initialised in base-class
+class main_controller(object):
 
     # We are going to have multiple debug modes so that you can set it from the command line,
     # hardcoded in to the source code, etc, PLUS in the config file
     def __init__(self, argv, config_file, debug=True, debug2=True):
         print(__name__, " init ")
+        print(debug, debug2)
+        print(debug, debug2)
+        print(debug, debug2)
         self.debug = True
         if debug == False:
             if debug2 == False:
                 self.debug = False
-
+        if self.debug:
+            print("main_controller is in debug mode")
+        else:
+            print("main_controller is NOT in debug mode")
         # args passed in from command line
         self.argv = argv
 
-        # pop the view so we can display startup messages
-        self.view = rf_condition_view()
-        self.view.show()
+        ''' The order of calls in  this __init__ is important, if you change the order that classes get instantiated things may break   '''
 
+        ''' Create the main view GUI class  '''
+        self.view = rf_condition_view()
+        # pop the view so we can display startup messages, adn process some QT events
+        self.view.show()
         QApplication.processEvents()
 
-        # Create config reader, and get configuration
+        ''' Create config reader, and get configuration '''
         print(__name__ + ', attempting to read config: ' + config_file)
         self.config = config()
         self.get_config(config_file)
         print(__name__ + ', got Config, starting Logging\n')
 
-        # Set the config for the GUI
-        self.view.config = self.config
+        ''' Each main class gets a references to  config so they can access the config dats   
+            As we create the gui first we set the config in here         '''
+        self.view.config = self.config  # Set the config for the GUI
         self.view.start_gui_update()
 
-        # start logging, sets up main text file logging, and logs the config
+        ''' start logging, sets up main text file logging, and logs the config '''
         self.logger = rf_conditioning_logger(debug=self.debug, column_width=80)
         self.logger.setup_text_log_files()
         self.logger.log_config()
@@ -97,19 +90,22 @@ class main_controller(object):
         # create a data object
         self.logger.message_header(__name__ + ', create rf_conditioning_data object',
                                    add_to_text_log=True, show_time_stamp=True)
+        if self.debug:
+            self.logger.message("Started in debug mode = True ")
+        else:
+            self.logger.message("Started in debug mode = False")
+
+        ''' Create the main data class '''
         self.data = rf_conditioning_data(debug=self.debug)
         self.values = self.data.values
 
-
-
-
-        # pass the exclued key list for data (hardcoded there) to logger
-        self.logger.excluded_key_list = self.data.excluded_key_list
+        self.logger.values = self.data.values           # set the logger values dict to data.values
+        self.logger.excluded_key_list = self.data.excluded_key_list         # pass the exclued key list for data (hardcoded there) to logger
         # print("self.data.excluded_key_list = {}".format( self.data.excluded_key_list))
         # print(" self.logger.excluded_key_list = {}".format( self.logger.excluded_key_list))
         self.data.initialise()
 
-        # should this happen here, or in the view? its here, because the view is created before data
+        # set the data in the gui class,   should this happen here, or in the view? its here, because the view is created before data
         self.view.data = self.data
         self.view.values = self.data.values
         self.view.start_gui_update()
@@ -153,7 +149,7 @@ class main_controller(object):
 
         # MUST BE CONNECTED AFTER MONITOR_HUB is created
         # Start Data Logging
-        self.logger.start_binary_data_logging(self.data.values)
+        self.logger.start_binary_data_logging()
         self.main_loop()
 
     def main_loop(self):
@@ -229,6 +225,7 @@ class main_controller(object):
                 self.hardware.llrf_control.fastRampModeOn() # in fast ramp mode,  the hi mask is the KFP max for that shot
                 # after log_ramping  finished which happens in the log_ramp_up function when we check the log ramp index
                 self.hardware.llrf_controller.clear_all_rolling_averages()
+                self.hardware.llrf_controller.set_infinite_masks()
 
 
                 print('1 KLYSTRON_FORWARD_POWER num ra = {}'.format(self.hardware.llrf_control.getTraceRollingAverageCount(
@@ -336,7 +333,7 @@ class main_controller(object):
         all_rf_outputs = True
         if is_bad_or_new_bad(self.data.values[rcd.can_llrf_output_state]):
             all_rf_outputs = False
-            print('can_llrf_output_state = '.format(self.data.values[rcd.can_llrf_output_state]))
+            #print('can_llrf_output_state = {}'.format(self.data.values[rcd.can_llrf_output_state]))
         if is_bad_or_new_bad(self.data.values[rcd.BD_state]):
             all_rf_outputs = False
             #print('BD_state = {}'.format(self.data.values[rcd.BD_state]))
@@ -623,7 +620,7 @@ class main_controller(object):
                 rcd.values[rcd.event_pulse_count_zero] = rcd.values[rcd.pulse_count]
                 rcd.values[rcd.event_pulse_count] = 0
 
-                self.logger.message_header(__name__ + ' reset_event_pulse_count')
+                self.logger.message(__name__ + ' reset_event_pulse_count')
                 self.logger.message('new event_pulse_count_zero = {}'.format(rcd.values[rcd.event_pulse_count_zero]))
 
                 print('self.values[self.data.log_ramp_curve_index] = {}'.format(self.values[self.data.log_ramp_curve_index]))

@@ -206,12 +206,21 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
 
         #raw_input()
 
-        # add in straight line fits ...'new data'
-        self.plot_item.plot([x_min, current_amp], [y_min, expected_Y], pen={'color': 'r', 'width': 2.0})
+        if self.values[rcd.y_min] < 0.0:
+            pass
+        else:
+
+            # add in straight line fits ...'new data'
+            self.plot_item.plot([self.values[rcd.x_min], current_amp],
+                                [self.values[rcd.y_min], expected_Y], pen={'color': 'r', 'width': 2.5})
+
+            # add in plot of old SLF,
+            self.plot_item.plot(
+            [rcd.values[rcd.old_x_min], current_amp],
+            [rcd.values[rcd.old_y_min], expected_Y_old],
+            pen={'color': 'y', 'width': 1.8})
 
 
-        # add in plot of old SLF,
-        self.plot_item.plot([old_x_min, current_amp], [old_y_min, expected_Y_old], pen={'color': 'y', 'width': 1.0})
 
         # Add second order polyfit to plot (all data):
         data_to_fit_x = rcd.values['polyfit_2order_X_all']
@@ -489,8 +498,7 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
             self.delta_power_outputwidget.setText('NONE p_last')
 
     def update_amp_sp(self):
-        self.amp_set_outputwidget.setText('{}'.format(self.values[self.data.amp_sp]))
-        self.last_amp_set_outputwidget.setText('{}'.format(self.values[self.data.last_amp_sp]))
+        self.amp_set_outputwidget.setText('{} / {}'.format(int(self.values[self.data.amp_sp]),int(self.values[self.data.last_amp_sp])))
 
     def update_DAQ_rep_rate(self):
         self.trace_rep_rate_outpuwidget.setText(
@@ -642,55 +650,7 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         #widget.setText('{:0=4f}'.format( int(value * 0.001) ))
         widget.setText('{:1.2f} kW'.format( value * 0.001) )
 
-    def init_widget_dict(self):
-        """
-        Here we create a dictionary that links each gui widget that displays updating information
-        to a  'bespoke' update function
-        Then, in the GUI update loop we iterate over each widget and call its update function
-        we ASSUME that the update function knows exactly how to update each widget
-        This create many functions, but, it means we cna tailor each parameter in the GUI
-        :return:
-        """  # MANUALLY CONNECT THESE UP :/  #  # mean powers for  # self.widget[
-        # self.probe_power_outputwidget  ] = self.update_probe_power  # self.widget[
-        # self.fwd_cav_power_outputwidget] = self.update_fwd_cav_power  # self.widget[
-        # self.rev_cav_power_outputwidget] = self.update_rev_cav_power  # self.widget[
-        # self.fwd_kly_power_outputwidget] = self.update_fwd_kly_power  # self.widget[
-        # self.rev_kly_power_outputwidget] = self.update_rev_kly_power  # #  # # vac_levell and
-        # vac_level_can_ramp both talk to this widget  # self.widget[ self.vac_level_outputwidget
-        # ] = self.update_vac_level
-        # self.widget[self.data.rfprot_state] = self.RF_protection_outputwidget
-        # self.widget[ self.cav_temp_outputwidget ] = self.data.cav_temp
-        # self.widget[self.data.cav_temp] = self.cav_temp_outputwidget  # #self.widget[
-        # self.data.water_temp] = self.water_temp_outputwidget  # self.widget[
-        # self.data.pulse_length] = self.pulse_length_outputwidget  # #self.widget[
-        # self.data.elapsed_time] = self.elapsed_time_outputwidget  # self.widget[
-        # self.data.breakdown_rate] = self.measured_breakdown_rate_outputwidget  # self.widget[
-        # self.data.breakdown_count] = self.breakdown_count_outputwidget  # self.widget[
-        # self.data.pulse_count] = self.pulse_count_outputwidget  # self.widget[self.data.amp_sp]
-        # = self.amp_set_outputwidget  # #self.widget[self.data.DC_level] =
-        # self.dc_level_outputwidget  # self.widget[self.data.event_pulse_count] =
-        # self.event_pulse_count_outputwidget  #  # # we're going to do BD rate aim on teh same
-        # widget as the measured BD rate  # #self.widget[self.data.breakdown_rate_aim] =
-        # self.breakdown_rate_limit_outputwidget  # self.widget[self.data.breakdown_rate_low] =
-        # self.measured_breakdown_rate_outputwidget  # #self.widget[self.data.last_106_bd_count]
-        # = self.last_106_count_outputwidget  #  # #self.widget[self.data.last_mean_power] =
-        # self.last_setpoint_power_outputwidget  #  # #self.widget[self.data.next_requested_power_change]
-        # = self.next_power_increase_outputwidget  # #self.widget[self.data.next_sp_decrease] =
-        # self.next_sp_decrease_outputwidget  #  # #self.widget[self.data.current_ramp_index] =
-        # self.current_index_outputwidget  #  # self.widget[self.data.sol_value] =
-        # self.sol_outputwidget  #  #  # # duplicate count is going to go in the expert panel !
-        # #self.widget[self.data.duplicate_pulse_count] = self.duplicate_count_outputwidget  #  #
-        #  # self.widget[self.data.pulses_to_next_ramp] = self.pulses_to_next_ramp_outputwidget
-        #  #  # # states  # self.widget[self.data.modulator_state] = self.mod_state_outputwidget
-        # # states  # self.widget[self.data.llrf_interlock_status] =
-        # self.llrf_interlock_outputwidget  # self.widget[self.data.llrf_trigger_status] =
-        # self.llrf_trigger_outputwidget  # # pulse length is a state AND a number  #  #
-        # self.widget[self.data.pulse_length] = self.pulse_length_outputwidget  # self.widget[
-        # self.data.pulse_length_status] = self.pulse_length_outputwidget  #  # #self.widget[
-        # self.data.DC_spike_status] = self.DC_spike_status_outputwidget
-        # self.widget[self.data.llrf_DAQ_rep_rate] = self.trace_rep_rate_outpuwidget  #
-        # self.widget[self.data.llrf_DAQ_rep_rate_status] = self.trace_rep_rate_outpuwidget
-        # self.widget[self.data.vac_level_can_ramp] = self.vac_level_outputwidget
+
 
     def update_all_counters(self):
         self.pulse_count_outputwidget.setText(
@@ -705,6 +665,9 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
 
         self.breakdown_count_outputwidget.setText(
             '{} / {}'.format(self.values[self.data.active_breakdown_count],self.values[self.data.total_breakdown_count]))
+
+
+
 
         # self.last_106_count_outputwidget.setText(
         #     '{}'.format(self.values[self.data.last_106_bd_count]))
