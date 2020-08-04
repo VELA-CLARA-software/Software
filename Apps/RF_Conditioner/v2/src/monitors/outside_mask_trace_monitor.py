@@ -200,6 +200,8 @@ class outside_mask_trace_monitor(monitor):
         # (update breakdown count, will only work if all states are not bad???????)
         self.data.force_update_breakdown_count(new["num_events"])  # MAGIC_STRING
 
+        # TODO force update pulse_breakdown log with "correct" data (i./e take into account if we are log ramping or not ...
+
         self.logger.message("Python OME Message:\n" + new['message'],show_time_stamp=False)
         self.logger.message(__name__+' adding {} events '.format(new["num_events"]))
 
