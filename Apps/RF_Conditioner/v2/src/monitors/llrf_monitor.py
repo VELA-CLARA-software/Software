@@ -46,7 +46,6 @@ class llrf_monitor(monitor):
         # aliases
         self.llrf_control = self.hardware.llrf_control
         self.llrf_obj = self.hardware.llrf_obj
-
         #
         # now match up trace names with the keys for power outputs from the 'values' dict
         self.trace_mean_keys = {}
@@ -59,14 +58,11 @@ class llrf_monitor(monitor):
         self.timer.start( self.config_data[self.config.LLRF_CHECK_TIME])
         #self.timer.start( 1000 )
         self.set_success = True
-
         self.old_rf_output = None
-
         # reference to the values dictionaries
         self.data = rf_conditioning_data.rf_conditioning_data()
         self.values = self.data.values
         self.expert_values = self.data.expert_values
-
 
         # CATAP max amp setpoint value ONLY NEEDS TO BE CALLED ONCE CANNOT CHANGE AFTER CONFIg read
         self.values[self.data.catap_max_amp] = self.llrf_control.getMaxAmpSP()
@@ -205,6 +201,12 @@ class llrf_monitor(monitor):
             self.values[self.data.delta_kfpow] = self.data.get_kf_running_stat_power_at_current_set_point() - self.values[
                 self.data.kfpower_at_last_amp_sp]
 
+
+        if self.values[self.data.breakdown_rate_low]:
+            self.values[self.data.pulses_to_next_ramp] = self.values[self.data.event_pulse_count]
+        else:
+            # we have to count back thorough the active_pulse_breakdown_log
+
     def update_pulse_length(self):
         '''
         HOW DO WE ACTUALLY DEFINE PULSE LENGTH!!!!!!!!!!!!
@@ -212,13 +214,10 @@ class llrf_monitor(monitor):
         :return:
         '''
         #
-
         # pulse length
         # THIS OLD WAY IS NOW BROKE, we use an RF RAMP table Instead we now use the  getPulseShape vector and count the number of 1.0s (SketchyAF)
         # pulse length
-
         # TODO: Is this the same method for the linac and the gun ???
-
         #self.values[self.data.pulse_length] = self.llrf_control.getPulseShape().count(1) * 0.009 * 1000
         self.values[self.data.pulse_length] = self.llrf_control.getPulseShape().count(1) * 9
         #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -483,46 +482,3 @@ class llrf_monitor(monitor):
             self.logger.message('IsPercent  = ' + str(self.llrf_control.isPercentMask(trace)), show_time_stamp=False, add_to_text_log=True)
             self.logger.message('IsAbsolute = ' + str(self.llrf_control.isAbsoluteMask(trace)), show_time_stamp=False, add_to_text_log=True)
 
-
-        # bool isGlobalCheckMask()const;
-        # bool isPercentMask(const std::string& name)const;
-        # bool isAbsoluteMask(const std::string& name)const;
-        # bool isCheckingMask(const std::string& name)const;
-        # bool isNotCheckingMask(const std::string& name)const;
-        # bool isCheckingMask(const llrfStructs::LLRF_PV_TYPE pv)const;
-        # bool isNotCheckingMask(const llrfStructs::LLRF_PV_TYPE pv)const;
-
-
-
-        #
-        # self.expert_values[self.data.is_breakdown_monitor_kf_pow] = False
-        # self.expert_values[self.data.is_breakdown_monitor_kr_pow] = False
-        # self.expert_values[self.data.is_breakdown_monitor_cf_pow] = False
-        # self.expert_values[self.data.is_breakdown_monitor_cr_pow] = False
-        # self.expert_values[self.data.is_breakdown_monitor_cp_pow] = False
-        # self.expert_values[self.data.is_breakdown_monitor_kf_pha] = False
-        # self.expert_values[self.data.is_breakdown_monitor_kr_pha] = False
-        # self.expert_values[self.data.is_breakdown_monitor_cf_pha] = False
-        # self.expert_values[self.data.is_breakdown_monitor_cr_pha] = False
-        # self.expert_values[self.data.is_breakdown_monitor_cp_pha] = False
-
-
-        # THIS IS THE NEW WAY TO GET POWER DATA
-    # we should check the value has changed !
-    # this needs to go into the c++ (!)
-    # this needs to go into the c++ (!)
-    # this needs to go into the c++ (!)
-    # this needs to go into the c++ (!)
-    # def update_amp_pwr_mean_dict(self,x,x2):
-    #     # amp_pwr_mean_data[amp_sp] { pwr_total,pwr_total_count, current_mean, max, min]
-    #     #print('called')
-    #     if x not in monitor.data.amp_pwr_mean_data:
-    #         monitor.data.amp_pwr_mean_data.update({x :[0,0,0,0,0]})
-    #         monitor.data.amp_pwr_mean_data[x][0] += x2
-    #         monitor.data.amp_pwr_mean_data[x][1] += 1
-    #         monitor.data.amp_pwr_mean_data[x][2] = float(monitor.data.amp_pwr_mean_data[x][0]) / float(monitor.data.amp_pwr_mean_data[x][1])
-    #     if monitor.data.amp_pwr_mean_data[x][3] > x:
-    #         monitor.data.amp_pwr_mean_data[x][3] = x
-    #     elif monitor.data.amp_pwr_mean_data[x][4] < x:
-    #         monitor.data.amp_pwr_mean_data[x][4] = x
-    #     monitor.data.values[dat.last_mean_power] = monitor.data.amp_pwr_mean_data[x][2]

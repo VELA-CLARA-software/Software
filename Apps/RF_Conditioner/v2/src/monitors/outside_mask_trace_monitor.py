@@ -104,9 +104,11 @@ class outside_mask_trace_monitor(monitor):
         #print('update_value() from outside_mask_trace_monitor')
         # The number of pulses
         self.values[self.data.pulse_count] = self.llrf_obj[0].active_pulse_count
+
         # the number of pulses since last 'event' (actually includes since last ramp, so re-name)
         #self.values[self.data.event_pulse_count] = self.values[self.data.pulse_count] - self.event_pulse_count_zero
         self.values[self.data.event_pulse_count] = self.values[self.data.pulse_count] - self.values[self.data.event_pulse_count_zero]
+
         #print 'Pulse count = {}\nEvent pulse count = {}'.format(self.values[self.data.pulse_count], self.values[self.data.event_pulse_count])
         # elapsed time since we started
         self.values[self.data.elapsed_time] = self.llrf_control.elapsedTime()

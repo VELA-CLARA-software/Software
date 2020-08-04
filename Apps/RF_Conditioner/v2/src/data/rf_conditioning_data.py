@@ -387,7 +387,6 @@ class rf_conditioning_data(object):
         # set is breakdown rate hi
         self.values[rcd.total_breakdown_count] = rcd.active_pulse_breakdown_log[-1][1]
         self.values[rcd.active_breakdown_count] = self.values[rcd.total_breakdown_count]  - rcd.active_pulse_breakdown_log[0][1]
-
         self.values[rcd.breakdown_rate_low] = self.values[rcd.active_breakdown_count] <= self.values[rcd.breakdown_rate_aim]
 
 
