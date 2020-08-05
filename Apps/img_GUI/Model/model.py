@@ -49,9 +49,9 @@ class Model(object):
         stdin, stdout, stderr = self.client.exec_command('screen -ls')
 
     def get_img_pressures_from_img_factories(self):
-        for img_name in self.img_factory.getAllIMGNames():
+        for img_name in self.img_factory.getAllNames():
             img_object = self.img_factory.getIMG(img_name)
-            self.img_pressures.update({img_name: img_object.getIMGPressure()})
+            self.img_pressures.update({img_name: img_object.getPressure()})
 
     def plotting_img_pressures(self, ax, time_pressure, i_iteration):
         if ax.get_legend() is not None:

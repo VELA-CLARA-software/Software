@@ -18,7 +18,7 @@ class procedure(object):
 
 
     # get names
-    img_names = img_factory.getAllIMGNames()
+    img_names = img_factory.getAllNames()
 
     print(img_names)
 
@@ -26,7 +26,7 @@ class procedure(object):
     img_values = {}
 
     for name in img_names:
-        img_values[name] = img_factory.getIMGPressure(name)  # print(name + '
+        img_values[name] = img_factory.getPressure(name)  # print(name + '
         # pres = ' + str(procedure.img_values[name]))
 
     def __init__(self):
@@ -36,6 +36,6 @@ class procedure(object):
     # called external to update states
     def update_states(self):
         for name in procedure.img_names:
-            procedure.img_values[name] = procedure.img_factory.getIMGPressure(name)
+            procedure.img_values[name] = procedure.img_factory.getPressure(name)
             print(name + ' pres = ' + str(procedure.img_values[name]))
 
