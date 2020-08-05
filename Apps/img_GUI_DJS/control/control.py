@@ -12,7 +12,7 @@ class control(object):
         self.start_gui_update()
         # show view
         self.view.show()
-        print(self.my_name + ', class initiliazed')
+        print(self.my_name + ', class initialised')
 
 
     def start_gui_update(self):
