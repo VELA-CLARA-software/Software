@@ -1,16 +1,12 @@
 import sys
-import os
+
 sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\stage')
 from VELA_CLARA_enums import MACHINE_MODE
-from VELA_CLARA_enums import MACHINE_AREA
-from VELA_CLARA_enums import CONTROLLER_TYPE
 from VELA_CLARA_LLRF_Control import LLRF_TYPE
 import VELA_CLARA_LLRF_Control
 from PyQt4.QtGui import QMainWindow
-from PyQt4.QtGui import QColor
 from PyQt4.QtGui import QTextCursor
-from src.view.rf_condition_view_base import Ui_rf_condition_mainWindow
-from io import StringIO
+from src.view.OLD.rf_condition_view_base import Ui_rf_condition_mainWindow
 import sys
 import os
 
@@ -110,21 +106,6 @@ if __name__ == '__main__':
     app = rf_condition(sys.argv)
     sys.exit(app.exec_())
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-import ctypes
 #libc = ctypes.oledll(None)
 
 from contextlib import contextmanager

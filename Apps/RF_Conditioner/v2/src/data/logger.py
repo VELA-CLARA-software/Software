@@ -243,6 +243,8 @@ class logger(object):
             self.message(["!!!ERROR!!! write_bin_data passed data of incorrect length! ", str(len(values)), "!=", logger._binary_header_length])
             raw_input()
 
+        #todo we are going through thsi loop twcice, i thinkw ecna do it all in a  siingle  pass (if we awant)
+
         type_list = {}
         for key, val in values.iteritems():  # itervalues means just iterate over the values in the dict
 
@@ -266,7 +268,7 @@ class logger(object):
             for (k, v) in type_list.iteritems():
                 if k in logger._binary_header_types.keys():
                     if type_list[k] != logger._binary_header_types[k]:
-                        print(type_list[k], " != ", logger._binary_header_types[k], " key  = ", k)
+                        self.message("write type {} != {} header type, for key = {}".format(type_list[k], logger._binary_header_types[k], k))
                 else:
                     print("ERROR! {} key missing".format(k))
 

@@ -89,6 +89,8 @@ def is_new_bad(snew, sold):
         if sold == state.NEW_BAD:
             return False
         return True
+    if snew == state.NEW_BAD:
+        return True
     return False
 
 def compare_states(snew, sold):

@@ -493,7 +493,7 @@ MIN_AMP:  500
 
 # log ramp curve
 
-LOG_RAMP_CURVE_NUMSTEPS : 30
+LOG_RAMP_CURVE_NUMSTEPS : 100 # will probably have to go even higher when ramping to ~ 8 MW
 LOG_RAMP_CURVE_PULSES_PER_STEP : 10
 LOG_RAMP_CURVE_RAMP_RATE : 0.2
 # in watts
