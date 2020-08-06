@@ -203,7 +203,7 @@ class llrf_monitor(monitor):
 
 
         if self.values[self.data.breakdown_rate_low]:
-            self.values[self.data.pulses_to_next_ramp] = self.values[self.data.event_pulse_count]
+            self.values[self.data.pulses_to_next_ramp] = self.values[self.data.required_pulses] -  self.values[self.data.event_pulse_count]
         else:
             pass
             # we have to count back thorough the active_pulse_breakdown_log and estimate how many pusles till breakdown_rate_low = True

@@ -199,7 +199,12 @@ class main_controller(object):
             # disable Global Mask Checking
             if is_bad_or_new_bad(self.data.values[rcd.BD_state]):
                 self.hardware.llrf_controller.set_global_check_mask(False)
-            #     self.clear_log_ramp_curve()
+
+                # Only clear log ramp curve if new.BAD / log_ramp_curve != None
+                if self.data.log_ramp_curve is not None:
+                    self.clear_log_ramp_curve()
+                else:
+                    pass
 
             if self.data.values[rcd.GUI_mod_and_prot_good] == False: # TODO false == false ! better  bname
                 self.hardware.llrf_controller.disableRFOutput()
@@ -236,7 +241,8 @@ class main_controller(object):
 
 
             elif current_state == state.GOOD:
-
+                # TODO update this (maybe we should put this on a timer, and just forget about it?)
+                self.monitor_hub.llrf_monitor.update_amp_vs_kfpow_running_stat()
                 if self.reached_min_pulse_count_for_this_step():
 
                     # print('2 KLYSTRON_FORWARD_POWER num ra = {}'.format(self.hardware.llrf_control.getTraceRollingAverageCount(
@@ -694,7 +700,7 @@ class main_controller(object):
         #         controller_base.data.values[dat.next_sp_decrease]), True)
         # #
         # update the plot with new values
-        print("Calling update_plot")
+        #print("Calling update_plot")
         self.view.update_plot()
         QApplication.processEvents()
         #

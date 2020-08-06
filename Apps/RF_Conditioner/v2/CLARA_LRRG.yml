@@ -502,5 +502,5 @@ KLY_PWR_FOR_ACTIVE_PULSE: 500.0 # FLOAT, min kyl fwd power to enable incrementin
 
 
 # Cavity rev / fwd pwr ratio maximum threshhold: if ratio over this value then can_ramp == False
-CAV_PWR_RATIO  : 1.0
+CAV_PWR_RATIO  : 1.0  # Ratio as percentage
 
