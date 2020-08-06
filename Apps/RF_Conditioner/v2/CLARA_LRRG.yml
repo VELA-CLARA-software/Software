@@ -147,7 +147,7 @@ CPPHA_MEAN_END:  2.0  # must be in us
 ## breakdown / outside_mask traces
 ##BREAKDOWN_TRACES=CAVITY_FORWARD_POWER,CAVITY_REVERSE_POWER;
 BREAKDOWN_TRACES :
- # - CAVITY_REVERSE_POWER
+  - CAVITY_REVERSE_POWER
   - KLYSTRON_FORWARD_POWER
 
 OUTSIDE_MASK_CHECK_TIME: 100 #INTEGER ms between outside_mask_trace checks, THIS IS FOR THE GUI, the c++ llrf module is checking every pulse 
@@ -203,7 +203,7 @@ CRPOW_NUM_AVERAGE_TRACES :  2 #
 CRPOW_CHECK_STREAK :  2 # how many continuous points outside mask required to trigger event
 CRPOW_DROP_AMP_VALUE :  2 # value to drop RF amplitude to on event detection (LLRF UNITS)
 CRPOW_MASK_LEVEL :  35.0 # units depend on CRP_MASK_TYPE
-CRPOW_MASK_FLOOR :  1000.0 # values below this won't get checked
+CRPOW_MASK_FLOOR :  5000.0 # values below this won't get checked
 CRPOW_DROP_AMP :  true # should drop amplitude on event detection?
 
 ## CAVITY PROBE POWER MASK PARAMETERS
@@ -493,7 +493,7 @@ MIN_AMP:  500
 
 # log ramp curve
 
-LOG_RAMP_CURVE_NUMSTEPS : 100 # will probably have to go even higher when ramping to ~ 8 MW
+LOG_RAMP_CURVE_NUMSTEPS : 140 # will probably have to go even higher when ramping to ~ 8 MW
 LOG_RAMP_CURVE_PULSES_PER_STEP : 10
 LOG_RAMP_CURVE_RAMP_RATE : 0.2
 # in watts

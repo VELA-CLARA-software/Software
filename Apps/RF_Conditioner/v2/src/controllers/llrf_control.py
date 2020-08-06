@@ -154,6 +154,10 @@ class llrf_control(object):
 			self.llrf_control.lockPhaseFF()
 			sleep(0.02)
 
+		if self.llrf_control.getTrigSource() != TRIG.EXTERNAL:
+			self.logger.message('enable_llrf, getTrigSource() != TRIG.EXTERNAL, attempting trigExt()')
+			self.llrf_control.trigExt()
+			self.should_show_llrf_rf_output = True
 
 		if self.data.values[self.data.llrf_DAQ_rep_rate_status] == state.BAD:
 			self.reset_daq_freg()
@@ -209,8 +213,11 @@ class llrf_control(object):
 			self.llrf_control.setShouldNotKeepRollingAverage(trace)
 
 	def enable_trigger(self):
-		if self.llrf_control.getTrigSource() == TRIG.OFF:
+		# if self.llrf_control.getTrigSource() == TRIG.OFF:
+		# 	self.llrf_control.trigExt()
+		if self.llrf_control.getTrigSource() != TRIG.EXTERNAL:
 			self.llrf_control.trigExt()
+
 
 	def set_amp(self, val1, update_last_amp_sp = False):
 		start_amp_sp = self.values[rf_conditioning_data.amp_sp]
@@ -240,8 +247,8 @@ class llrf_control(object):
 					self.values[rf_conditioning_data.last_amp_sp] = start_amp_sp
 					self.values[rf_conditioning_data.latest_amp_sp_from_ramp] = val1
 					self.logger.message('set_amp is updating last_amp_sp set to  {}'.format(start_amp_sp))
-					self.values[rf_conditioning_data.kfpower_at_last_amp_sp] = self.data.amp_vs_kfpow_running_stat[self.values[
-						rf_conditioning_data.last_amp_sp]][1]
+					self.values[rf_conditioning_data.kfpower_at_last_amp_sp] = self.data.amp_vs_kfpow_running_stat[ int(self.values[
+						rf_conditioning_data.last_amp_sp])][1]
 
 					# self.logger.message('set_amp  updating, last_amp_sp = {}, last_amp_sp =  '.format(start_amp_sp, self.values[rf_conditioning_data.last_amp_sp] ))
 

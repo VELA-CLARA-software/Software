@@ -137,8 +137,7 @@ class rf_conditioning_data(object):
         
         if rf_conditioning_data.ramp_power_sum is None:
             rf_conditioning_data.ramp_power_sum = [sum(ramp_powers[:y]) for y in range(1, len(ramp_powers) + 1)]
-            print("self.ramp_power_sum =",  rf_conditioning_data.ramp_power_sum)
-
+            self.logger.message("self.ramp_power_sum = {}".format(rf_conditioning_data.ramp_power_sum),  show_time_stamp=False)
 
 
     def get_ramp_index_from_power(self, power):
@@ -240,8 +239,9 @@ class rf_conditioning_data(object):
         v[rcd.expected_pulse_length] = cd[config.PULSE_LENGTH]
         v[rcd.pulse_length_min] = cd[config.PULSE_LENGTH] - cd[config.PULSE_LENGTH_ERROR]
         v[rcd.pulse_length_max] = cd[config.PULSE_LENGTH] + cd[config.PULSE_LENGTH_ERROR]
-        print("set_values_from_config pulse_length_min = {}".format(v[rcd.pulse_length_min]))
-        print("set_values_from_config pulse_length_max = {}".format(v[rcd.pulse_length_max]))
+        #self.logger.message("set_values_from_config pulse_length_min = {}\nset_values_from_config pulse_length_max = {}".format(v[
+        # rcd.pulse_length_min], v[rcd.pulse_length_max]),show_time_stamp=False)
+
 
     def log_kly_fwd_power_vs_amp(self):
         '''
@@ -296,33 +296,38 @@ class rf_conditioning_data(object):
         # get the pulse_break_down_log entries from file (this is just the raw entries from the file )
         raw_pulse_break_down_log = self.logger.get_pulse_count_breakdown_log()
 
-        print("raw_pulse_break_down_log ", raw_pulse_break_down_log)
+        self.logger.message("raw_pulse_break_down_log {} ".format(raw_pulse_break_down_log))
         #raw_input()
 
         rationalised_pulse_breakdown_log = [ raw_pulse_break_down_log[0]]
-        # we pull out each time the number of breakdwons changed,
+        # we pull out each time the number of breakdowns changed,
         bd_count = raw_pulse_break_down_log[0][rcd.pulse_breakdown_log_breakdown_count_index]
         pulse_count = raw_pulse_break_down_log[0][rcd.pulse_breakdown_log_pulse_count_index]
         for i, entry in enumerate(raw_pulse_break_down_log):
             #print(entry)
             entry_bd_count = entry[rcd.pulse_breakdown_log_breakdown_count_index]
             if entry_bd_count > bd_count:
-                print("i = {}, entry_bd_count > bd_count, {} > {}".format(i, entry_bd_count, bd_count) )
+                self.logger.message("i = {}, entry_bd_count > expected_bd_count, {} > {}".format(i, entry_bd_count, bd_count))
                 rationalised_pulse_breakdown_log.append(entry)
+
+                if entry_bd_count - bd_count > 1:
+                    self.logger.message("Number of breakdowns increased more than one, if this is more than 2 i suspect its been hacked! ")
+
                 bd_count = entry_bd_count
             elif entry_bd_count < bd_count:
-                message(__name__ + ' MJOR ERROR BREAKDOWN COUNT WENT DOWN IN THE PULSE BREAKDOWN LOG')
+                message(__name__ + '!!ERROR!! BREAKDOWN COUNT WENT DOWN IN THE PULSE BREAKDOWN LOG, THE LOG HAS BEEN HACKED!! ')
             # this is checking the pulse count always goes up, which is fine in theory, but we often hack the file by hand
             # entry_pulse_count = entry[rcd.pulse_breakdown_log_pulse_count_index]
             # if entry_pulse_count <= pulse_count:
             #     message(
             #         __name__ + ' {} <= {} warning BREAKDOWN LOG PULSE COUNT DID NOT INCREASE AT LINE = {} '.format(entry_pulse_count, pulse_count,
-            #                                                                                                    i + 1))
             # pulse_count = entry_pulse_count
             # check for pulse number increasing
+
         # append some values from the end of the pulse_break_down_log (if not already in)
         # we have to be a bit sneaky here, as there may be manual edits to the file
         # we'll have to be a little convoluted here
+        # TODO thsi does not work as intened
         added_count = 0
         index = -1
         while 1:
@@ -332,12 +337,13 @@ class rf_conditioning_data(object):
             index -= 1
             if added_count == 3: # MAGIC NUMBER
                 break
-            elif index == -len(raw_pulse_break_down_log) +5: # MAGIC NUMBER
+            elif index == -len(raw_pulse_break_down_log):
                 break
         # for entry in rationalised_pulse_breakdown_log:
         #     print(entry)
         #
-        pulse_break_down_log = rationalised_pulse_breakdown_log
+        pulse_break_down_log = sorted(rationalised_pulse_breakdown_log, key=lambda x: (x[2], x[0]))
+
         # TODO we need save this file to disc, (over-right existing file ?? )
         #
         # based on the log file we set active pulse count total,
@@ -442,6 +448,11 @@ class rf_conditioning_data(object):
                 #print("log ramp mode, writing amp_sp = {} ".format(int(rcd._log_ramp_curve[-1][1])))
                 #print('rcd._log_ramp_curve[-1][1] = {}'.format(rcd._log_ramp_curve[-1][1]))
                 #raw_input()
+
+                print('rcd.values[rcd.pulse_count] = {}\nrcd.values[rcd.total_breakdown_count] = {}\nint(rcd._log_ramp_curve[-1][1]) = {}\nint('
+                      'rcd.values[rcd.current_ramp_index]) = {}\nint(rcd.values[rcd.pulse_length]) = {}'.format(
+                    rcd.values[rcd.pulse_count],int(rcd._log_ramp_curve[-1][1]),
+                      rcd.values[rcd.total_breakdown_count], int(rcd.values[rcd.current_ramp_index]), int(rcd.values[rcd.pulse_length])))
                 self.logger.add_to_pulse_count_breakdown_log(
                     [rcd.values[rcd.pulse_count], rcd.values[rcd.total_breakdown_count], int(rcd._log_ramp_curve[-1][1]),
                      int(rcd.values[rcd.current_ramp_index]), int(rcd.values[rcd.pulse_length])])
@@ -710,6 +721,27 @@ class rf_conditioning_data(object):
         x_step = (x_finish - x_start) / numsteps
         curve_powers = [curve_p_finish * (1.00 - ramp_rate ** (x_start + x * x_step)) for x in range(0, numsteps + 1)]
 
+
+        # Here we 
+        hi_mask_factor_headroom = 3.0
+        hi_mask_factors = [(curve_powers[i+2] / curve_powers[i]) * hi_mask_factor_headroom for i in range(len(curve_powers)-2)]
+        #hi_mask_powers = [curve_powers[i+1] * hi_mask_factor for i in range(len(curve_powers)-1)]
+
+        # append a dummy value for convenience, so it's the same length as curve_powers
+        hi_mask_factors.append(hi_mask_factors[-1])
+        hi_mask_factors.append(hi_mask_factors[-1])
+
+        print('curve_powers = {}\nhi_mask_factors = {}'.format(curve_powers, hi_mask_factors))
+
+        #raw_input()
+
+        '''
+            we should use curve_[powers to estimate the values rquired for setFastRampHiMaskPowerFactor
+            (we need to set this for one step ahead of the ramp curve, (we get the data first, and then set, so have to be 1 step ahead)
+            add a new entry to each element of   rf_conditioning_data._log_ramp_curve
+            then BEFORE  we set the next amp in log_ramp() function  main_controller, we apply the next setFastRampHiMaskPowerFactor
+        '''
+
         bin_X = rf_conditioning_data.binned_amp_vs_kfpow['BIN_X']
         bin_Y = rf_conditioning_data.binned_amp_vs_kfpow['BIN_mean']
 
@@ -727,7 +759,7 @@ class rf_conditioning_data(object):
                 pass
             else:
                 amp_sp_list.append(next_amp_sp)
-        rf_conditioning_data._log_ramp_curve = [[int(pulses_per_step), sp] for sp in amp_sp_list]
+        rf_conditioning_data._log_ramp_curve = [[int(pulses_per_step), amp_sp_list[i], hi_mask_factors[i]] for i in range(len(amp_sp_list))]
         self.values[rf_conditioning_data.log_ramp_curve_index] = 0
 
         # print("bin_X = ", bin_X)
@@ -1820,7 +1852,6 @@ class rf_conditioning_data(object):
     number_of_pulses_in_breakdown_history = 'number_of_pulses_in_breakdown_history'
     all_value_keys.append(number_of_pulses_in_breakdown_history)
     values[number_of_pulses_in_breakdown_history] = dummy_int
-
 
 
     # config

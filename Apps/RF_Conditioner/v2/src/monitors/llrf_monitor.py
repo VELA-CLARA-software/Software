@@ -301,15 +301,13 @@ class llrf_monitor(monitor):
             values form the c++ amp_vs_kfpow_running_stat data
             The c++ data includes every pulse, and so is the "most accurate"
             TODO: we could  expose the c++ data to python and NEVER use a local copy in python
-
             TODO how often does amp_vs_kfpow_running_stat get "synchronized" with the c++ data?
-
         '''
-
         # I lost the thread at the C++ here...
         # print("Looking in c++ amp_v_kfpow for {}".format(self.values[self.data.amp_sp]))
-        self.data.amp_vs_kfpow_running_stat[self.values[self.data.amp_sp]] = \
-            self.llrf_control.getKlyFwdPwrRSState( int(self.values[self.data.amp_sp])) # TODO THIS HAS TO BE AN INT IN THE C++ ??? WTF
+        self.data.amp_vs_kfpow_running_stat[self.values[self.data.amp_sp]] = self.llrf_control.getKlyFwdPwrRSState( int(self.values[
+                                                                                                                            self.data.amp_sp]) )
+        #self.llrf_control.getKlyFwdPwrRSState( int(self.values[self.data.amp_sp])) # TODO THIS HAS TO BE AN INT OR FLOAT IN THE C++ ??? WTF
         # TODO need c++ to return zeros if the key does not exist
         #print("update amp_vs_kfpow_running_stat with amp_sp = {}".format(self.values[self.data.amp_sp]))
 
