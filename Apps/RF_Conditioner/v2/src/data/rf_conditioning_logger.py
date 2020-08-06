@@ -384,10 +384,8 @@ class rf_conditioning_logger(logger):
         logger.message_header(self,text, **kwargs)
         QApplication.processEvents()
 
-
-    # noinspection PyMethodMayBeStatic
     def pickle_file(self, file_name, obj):
-        path = self.working_directory + file_name
+        path = os.path.join(logger.working_directory, logger.log_start_str, file_name)
         self.pickle_dump(path, obj)
     # don't bother with this, convert to wxf offline  # def pkl2wxf(self,path):  #     file =
     # open(path, 'rb')  #     objs = []  #     while True:  #         try:  #

@@ -207,7 +207,9 @@ class rf_conditioning_data(object):
             # else find the sp "closest" but lower than the requested sp
             # Closest key in dictionary
             close_sp = min(self.amp_vs_kfpow_running_stat.keys(), key = lambda key: abs(key-sp))
-            self.logger.message("amp_vs_kfpow lookup, can't find {}, returning value at {} instead".format(sp, close_sp), show_time_stamp = True)
+            self.logger.message(
+                "amp_vs_kfpow lookup, called from {}, can't find {}, returning value at {} instead".format(str(inspect.stack()[1][3]), sp,
+                close_sp), show_time_stamp = True)
             return self.amp_vs_kfpow_running_stat[close_sp]
         else:
             return [0.0, 0.0, 0.0, 0.0]
@@ -241,7 +243,6 @@ class rf_conditioning_data(object):
         v[rcd.pulse_length_max] = cd[config.PULSE_LENGTH] + cd[config.PULSE_LENGTH_ERROR]
         #self.logger.message("set_values_from_config pulse_length_min = {}\nset_values_from_config pulse_length_max = {}".format(v[
         # rcd.pulse_length_min], v[rcd.pulse_length_max]),show_time_stamp=False)
-
 
     def log_kly_fwd_power_vs_amp(self):
         '''
@@ -404,7 +405,6 @@ class rf_conditioning_data(object):
         self.values[rcd.active_breakdown_count] = self.values[rcd.total_breakdown_count]  - rcd.active_pulse_breakdown_log[0][1]
         self.values[rcd.breakdown_rate_low] = self.values[rcd.active_breakdown_count] <= self.values[rcd.breakdown_rate_aim]
 
-
     #def update_last_million_pulse_log(self): OLD NAME
     def update_active_pulse_breakdown_log(self):
         """
@@ -449,14 +449,11 @@ class rf_conditioning_data(object):
                 #print('rcd._log_ramp_curve[-1][1] = {}'.format(rcd._log_ramp_curve[-1][1]))
                 #raw_input()
 
-                print('rcd.values[rcd.pulse_count] = {}\nrcd.values[rcd.total_breakdown_count] = {}\nint(rcd._log_ramp_curve[-1][1]) = {}\nint('
-                      'rcd.values[rcd.current_ramp_index]) = {}\nint(rcd.values[rcd.pulse_length]) = {}'.format(
-                    rcd.values[rcd.pulse_count],int(rcd._log_ramp_curve[-1][1]),
-                      rcd.values[rcd.total_breakdown_count], int(rcd.values[rcd.current_ramp_index]), int(rcd.values[rcd.pulse_length])))
-                self.logger.add_to_pulse_count_breakdown_log(
-                    [rcd.values[rcd.pulse_count], rcd.values[rcd.total_breakdown_count], int(rcd._log_ramp_curve[-1][1]),
-                     int(rcd.values[rcd.current_ramp_index]), int(rcd.values[rcd.pulse_length])])
+                if rcd._log_ramp_curve:
 
+                    self.logger.add_to_pulse_count_breakdown_log(
+                        [rcd.values[rcd.pulse_count], rcd.values[rcd.total_breakdown_count], int(rcd._log_ramp_curve[-1][1]),
+                         int(rcd.values[rcd.current_ramp_index]), int(rcd.values[rcd.pulse_length])])
 
     def force_update_breakdown_count(self, count):
         rf_conditioning_data.values[rf_conditioning_data.total_breakdown_count] += count
@@ -565,15 +562,11 @@ class rf_conditioning_data(object):
         num_pulses_prebin = []
         y = mean_kfpwr_raw = []
 
-
-
         for key in rcd.amp_vs_kfpow_running_stat.keys():
             amp_sp_raw.append(key)
             num_pulses_prebin.append(rcd.amp_vs_kfpow_running_stat[key][0])
             mean_kfpwr_raw.append(rcd.amp_vs_kfpow_running_stat[key][1])
             #print("init_bin set_up data = ", amp_sp_raw[-1], num_pulses_prebin[-1], mean_kfpwr_raw[-1])
-
-
 
         #print('mean_kfpwr_raw = {}'.format(mean_kfpwr_raw))
 
@@ -722,8 +715,8 @@ class rf_conditioning_data(object):
         curve_powers = [curve_p_finish * (1.00 - ramp_rate ** (x_start + x * x_step)) for x in range(0, numsteps + 1)]
 
 
-        # Here we 
-        hi_mask_factor_headroom = 3.0
+        # Here we
+        hi_mask_factor_headroom = 4.0
         hi_mask_factors = [(curve_powers[i+2] / curve_powers[i]) * hi_mask_factor_headroom for i in range(len(curve_powers)-2)]
         #hi_mask_powers = [curve_powers[i+1] * hi_mask_factor for i in range(len(curve_powers)-1)]
 

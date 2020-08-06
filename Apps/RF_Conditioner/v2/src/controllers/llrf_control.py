@@ -12,6 +12,7 @@ from timeit import default_timer as timer
 import time
 from src.data.state import state
 
+
 class llrf_control(object):
 	"""
 	This class is for controlling the LLRF,
@@ -71,21 +72,17 @@ class llrf_control(object):
 		# TODO check the value  to update has been read by now (it probably has...)
 		self.hardware.llrf_control.setActivePulseCount(self.values[rf_conditioning_data.log_pulse_count])
 		#
-
-
-
 		self.set_trace_mean_positions()
 		# set up terace for omed and rollgin averages
 		self.setup_traces_for_omed_and_rolling_averages()
-
 
 	def enable_llrf(self):
 		# go through each possible LLRF paramter (except HOLD_RF_ON_COM mod / protection parameters
 		# and try and reset them cancer cancer cancer
 		#
 		# the first thing this needs to do is set 0 amp_sp,
-		self.llrf_control.setAmpHP(0.0) # HP 'high priority' it disables the trigger, then sets 0.0 amp_sp
-
+		self.llrf_control.setAmpSP(0.0) # DO NOT USE setAmpHP 'high priority' it disables the trigger, which we ar echeckgin fro later on thsi
+		# function!!!
 
 		if self.llrf_control.isInterlockActive():  #this means is the interlock BAD
 			if self.should_show_llrf_interlock_active:
@@ -158,6 +155,8 @@ class llrf_control(object):
 			self.logger.message('enable_llrf, getTrigSource() != TRIG.EXTERNAL, attempting trigExt()')
 			self.llrf_control.trigExt()
 			self.should_show_llrf_rf_output = True
+			sleep(0.02)
+
 
 		if self.data.values[self.data.llrf_DAQ_rep_rate_status] == state.BAD:
 			self.reset_daq_freg()
