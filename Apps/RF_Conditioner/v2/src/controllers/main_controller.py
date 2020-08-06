@@ -41,7 +41,7 @@ from src.view.rf_condition_view import rf_condition_view
 from PyQt4.QtGui import QApplication
 from src.data.state import *
 from src.data.state import ramp_method
-
+import inspect
 
 class main_controller(object):
 
@@ -169,9 +169,7 @@ class main_controller(object):
         # reset the event pulse count to zero (this function should achieve the same as the above lines ... )
         self.data.reset_event_pulse_count()
 
-        self.logger.message_header(
-            __name__ + ' The RF Conditioning is Preparing to Entering Main_Loop !',
-            add_to_text_log=True, show_time_stamp=True)
+        self.logger.message_header(__name__ + ' The RF Conditioning is Preparing to Entering Main_Loop !', add_to_text_log=True, show_time_stamp=True)
 
         self.hardware.llrf_control.keepKlyFwdPwrRS()
         self.hardware.llrf_controller.enable_trigger()
@@ -202,36 +200,38 @@ class main_controller(object):
             if is_bad_or_new_bad(self.data.values[rcd.BD_state]):
                 self.hardware.llrf_controller.set_global_check_mask(False)
 
+                # Only clear log ramp curve if new.BAD / log_ramp_curve != None
+                if self.data.log_ramp_curve is not None:
+                    self.clear_log_ramp_curve()
+                else:
+                    pass
 
-            if self.data.values[rcd.GUI_mod_and_prot_good] == False: # TODOD flase == false ! betetr  bname
+            if self.data.values[rcd.GUI_mod_and_prot_good] == False: # TODO false == false ! better  bname
                 self.hardware.llrf_controller.disableRFOutput()
 
             elif is_bad_or_new_bad(self.data.values[rcd.can_llrf_output_state]):
                 self.hardware.llrf_controller.enable_llrf()
                 self.hardware.llrf_controller.set_global_check_mask(False)
-                self.clear_log_ramp_curve()
+
+
+                #self.clear_log_ramp_curve()
                 # TODO AJG: Double check enable_llrf enables everything needed
 
             elif current_state == state.NEW_GOOD:
-                print("State is new_good, setting LOG_RAMP and reassign pulse counters ")
-
                 # the amp_sp should "always be zero (or an amp_drop value) when we get to here
-
                 self.values[rf_conditioning_data.ramp_mode] = ramp_method.LOG_RAMP
                 self.values[rf_conditioning_data.event_pulse_count] = 1
                 self.values[rf_conditioning_data.required_pulses] = 0
-
                 #self.hardware.llrf_controller.set_infinite_hi_mask() # we set inifntie hi masks, before log_ramping, we call set_nominal_masks
                 self.hardware.llrf_control.fastRampModeOn() # in fast ramp mode,  the hi mask is the KFP max for that shot
                 # after log_ramping  finished which happens in the log_ramp_up function when we check the log ramp index
                 self.hardware.llrf_controller.clear_all_rolling_averages()
                 self.hardware.llrf_controller.set_infinite_masks()
 
-
-                print('1 KLYSTRON_FORWARD_POWER num ra = {}'.format(self.hardware.llrf_control.getTraceRollingAverageCount(
-                    'KLYSTRON_FORWARD_POWER')))
-                print('1 CAVITY_REVERSE_POWER num ra = {}'.format(self.hardware.llrf_control.getTraceRollingAverageCount(
-                    'CAVITY_REVERSE_POWER')))
+                # print('1 KLYSTRON_FORWARD_POWER num ra = {}'.format(self.hardware.llrf_control.getTraceRollingAverageCount(
+                #     'KLYSTRON_FORWARD_POWER')))
+                # print('1 CAVITY_REVERSE_POWER num ra = {}'.format(self.hardware.llrf_control.getTraceRollingAverageCount(
+                #     'CAVITY_REVERSE_POWER')))
 
                 #
                 # clear and reset the rolling averages
@@ -241,13 +241,14 @@ class main_controller(object):
 
 
             elif current_state == state.GOOD:
-
+                # TODO update this (maybe we should put this on a timer, and just forget about it?)
+                self.monitor_hub.llrf_monitor.update_amp_vs_kfpow_running_stat()
                 if self.reached_min_pulse_count_for_this_step():
 
-                    print('2 KLYSTRON_FORWARD_POWER num ra = {}'.format(self.hardware.llrf_control.getTraceRollingAverageCount(
-                        'KLYSTRON_FORWARD_POWER')))
-                    print('2 CAVITY_REVERSE_POWER num ra = {}'.format(self.hardware.llrf_control.getTraceRollingAverageCount(
-                        'CAVITY_REVERSE_POWER')))
+                    # print('2 KLYSTRON_FORWARD_POWER num ra = {}'.format(self.hardware.llrf_control.getTraceRollingAverageCount(
+                    #     'KLYSTRON_FORWARD_POWER')))
+                    # print('2 CAVITY_REVERSE_POWER num ra = {}'.format(self.hardware.llrf_control.getTraceRollingAverageCount(
+                    #     'CAVITY_REVERSE_POWER')))
 
 
                     # follow the ramp curve (either the log_ramp or normal_ramp)
@@ -391,7 +392,7 @@ class main_controller(object):
         #    all_BD_good = False
         elif is_bad_or_new_bad(self.data.values[rcd.vac_spike_status]):
             all_BD_good = False
-            print("vac_spike_status is not good")
+            #print("vac_spike_status is not good")
         else:
             all_BD_good = True
             #print("breakdown_status & vac_spike_status are good")
@@ -541,12 +542,12 @@ class main_controller(object):
 
         #print('After logic tree:\ncan_llrf_output_state = {}\n'.format(self.data.values[rcd.can_llrf_output_state]))
 
-
     def clear_log_ramp_curve(self):
+        self.logger.message('clear_log_ramp_curve called from ' + str(inspect.stack()[1][3]))
         self.data.log_ramp_curve = None
         self.values[self.data.log_ramp_curve_index] = -1
-        # reset active pulse counters
         self.data.reset_event_pulse_count()
+        self.values[self.data.ramp_mode] = ramp_method.NORMAL_RAMP
 
 
 
@@ -561,75 +562,85 @@ class main_controller(object):
         #lrc = self.data.log_ramp_curve
         #lrci = self.values[self.data.log_ramp_curve_index]
 
-
         # switch here to set up curve if
         if self.data.log_ramp_curve is None:
-            print("Log Ramp curve is NONE, generating a new one")
+            self.logger.message("!!Log Ramp curve is NONE, generating a new one", show_time_stamp = False)
+
+
             # WE assume the ramp index is set correctly !
             # GET NEW SET_POINT
             # new amp always returns a value!!
             power_finish = self.data.get_log_ramp_power_finsh()
-            print("log_curve power finsh = {}".format(power_finish))
 
+            self.logger.message("power_finish = {}".format(power_finish, show_time_stamp = False))
+            self.logger.message("breakdown_rate_low = {}".format(self.values[self.data.breakdown_rate_low], show_time_stamp = False))
+
+
+            if self.values[self.data.breakdown_rate_low]:
+                self.logger.message("Breakdown rate LO, log_ramp power_finish = {}".format(power_finish), show_time_stamp = False)
+                #pass
+            else:
+                delta_power = self.data.get_power_and_num_pulses_for_ramp_index(self.data.get_ramp_index_from_power(power_finish))[1]
+
+                power_finish -=  delta_power
+                self.logger.message("Breakdown rate HI, delta_power = {}, final_power_finish = {}".format(delta_power, power_finish),
+                                    show_time_stamp = False)
+
+
+            # TODO power_finish add to values dict and the GUI
+
+            self.logger.message("Log Ramp curve is NONE, generating a new one", show_time_stamp = False)
             self.data.generate_log_ramp_curve(p_start  = self.config.raw_config_data['LOG_RAMP_START_POWER'],
                                               p_finish =  power_finish ,
                                               ramp_rate =  self.config.raw_config_data['LOG_RAMP_CURVE_RAMP_RATE'],
                                               numsteps =  self.config.raw_config_data['LOG_RAMP_CURVE_NUMSTEPS'],
                                               pulses_per_step =  self.config.raw_config_data['LOG_RAMP_CURVE_PULSES_PER_STEP'])
 
-            print("self.data.log_ramp_curve in maIn_controller = {}".format(self.data.log_ramp_curve))
-
-        # someshort aliases
-        #lrc = self.data.log_ramp_curve
-        lrci = self.values[self.data.log_ramp_curve_index]
-
+            self.logger.message("self.data.log_ramp_curve in maIn_controller = {}".format(self.data.log_ramp_curve))
 
         if self.data.log_ramp_curve is None:
-            print("ERROR lrc is None")
+            self.logger.message("!!ERROR!! Log Ramp curve is NONE, this should not happen ", show_time_stamp = True)
             raw_input()
 
         # # set new_amp
-        if self.hardware.llrf_controller.set_amp(self.data.log_ramp_curve[lrci][1], update_last_amp_sp = True):
-
-            print('self.hardware.llrf_controller.set_amp(lrc[lrci][1] = {}'.format( self.hardware.llrf_controller.set_amp(self.data.log_ramp_curve[lrci][1])))
-
-
-
+        lrci = self.values[self.data.log_ramp_curve_index]
+        if self.hardware.llrf_controller.set_amp(self.data.log_ramp_curve[lrci][1], update_last_amp_sp = False):
+            # print('self.hardware.llrf_controller.set_amp(lrc[lrci][1] = {}'.format( self.hardware.llrf_controller.set_amp(
+            # self.data.log_ramp_curve[lrci][1])))
+            # if we have reached teh end of the log ramp curve ...
             if self.values[self.data.log_ramp_curve_index] == len(self.data.log_ramp_curve) -1:
-                print("Log Ramp finished, setting log_ramp_curve to None")
+                self.logger.message("Log Ramp finished, calling clear_log_ramp_curve()", show_time_stamp = False)
                 self.clear_log_ramp_curve()
-
                 self.hardware.llrf_control.fastRampModeOff() # set the masks back to nominal after infinite +_hi masks for log_ramping
-
                 self.values[rf_conditioning_data.ramp_mode] = ramp_method.NORMAL_RAMP
-                # TODO AJG: reset the number of required pulses here ??
                 current_normal_ramp_index = self.data.get_ramp_index_from_power(self.data.get_kf_running_stat_power_at_current_set_point())
                 self.values[rf_conditioning_data.required_pulses] = ramp[current_normal_ramp_index][0]
 
-                print('\n#From log_ramp_up\nrequired_pulses = {}\nramp[current_normal_ramp_index][0] = {}'.format(self.values[
-                                                                                                                  rf_conditioning_data.required_pulses], ramp[current_normal_ramp_index][0]))
+                # set the ramp index when we reahc teh top of teh rmap curve
+                self.data.set_ramp_index_for_current_power()
+
+                # print('\n#From log_ramp_up\nrequired_pulses = {}\nramp[current_normal_ramp_index][0] = {}'.format(self.values[
+                #                                                                                                   rf_conditioning_data.required_pulses], ramp[current_normal_ramp_index][0]))
             else:
                 ''' set the number of pulses '''
                 rcd = rf_conditioning_data
                 rcd.values[rcd.required_pulses] = self.data.log_ramp_curve[self.values[self.data.log_ramp_curve_index]][0]
-                print('required_pulses = {}'.format(rcd.values[rcd.required_pulses]))
-                print('self.data.log_ramp_curve[self.values[self.data.log_ramp_curve_index]] = {}'.format(self.data.log_ramp_curve[self.values[self.data.log_ramp_curve_index]]))
+                #print('required_pulses = {}'.format(rcd.values[rcd.required_pulses]))
+                #print('self.data.log_ramp_curve[self.values[self.data.log_ramp_curve_index]] = {}'.format(self.data.log_ramp_curve[self.values[
+                # self.data.log_ramp_curve_index]]))
                 #raw_input()
+                # Be careful manually setting parameters, are these the correct type?
                 rcd.values[rcd.last_requested_power_change] = 0
                 rcd.values[rcd.next_requested_power_change] = 0
                 rcd.values[rcd.event_pulse_count_zero] = rcd.values[rcd.pulse_count]
                 rcd.values[rcd.event_pulse_count] = 0
-
-                self.logger.message(__name__ + ' reset_event_pulse_count')
-                self.logger.message('new event_pulse_count_zero = {}'.format(rcd.values[rcd.event_pulse_count_zero]))
-
-                print('self.values[self.data.log_ramp_curve_index] = {}'.format(self.values[self.data.log_ramp_curve_index]))
-
+                #self.logger.message(__name__ + ' reset_event_pulse_count')
+                #self.logger.message('new event_pulse_count_zero = {}'.format(rcd.values[rcd.event_pulse_count_zero]))
+                # print('self.values[self.data.log_ramp_curve_index] = {}'.format(self.values[self.data.log_ramp_curve_index]))
             self.values[self.data.log_ramp_curve_index] += 1
-
         else:
-             print('we failed to set the requested amplitude .... erm.... not sure what to do ????\n*** LAST TIME THIS HAPPENED THE LIBERA AMP_SP '
-                   'HARD LIMIT WAS REACHED (10000) - LSC can change this ***')
+            self.logger.message("we failed to set the requested amplitude .... erm.... not sure what to do ????\n*** LAST TIME THIS HAPPENED THE LIBERA AMP_SP "
+                                "HARD LIMIT WAS REACHED (10000) - LSC can change this ***", show_time_stamp = False)
              #pass
 
 
@@ -689,7 +700,7 @@ class main_controller(object):
         #         controller_base.data.values[dat.next_sp_decrease]), True)
         # #
         # update the plot with new values
-        print("Calling update_plot")
+        #print("Calling update_plot")
         self.view.update_plot()
         QApplication.processEvents()
         #

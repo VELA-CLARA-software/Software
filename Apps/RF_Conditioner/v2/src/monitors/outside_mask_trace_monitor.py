@@ -51,6 +51,7 @@ class outside_mask_trace_monitor(monitor):
         # set cool-down mode to TIMED, OME are ***always*** timed cool-down
         self.set_cooldown_mode('TIMED')
         # connect the cool_down timer timeout signal  to self.cooldown_finished
+        self.cooldown_timer.setSingleShot(True)
         self.cooldown_timer.timeout.connect(self.cooldown_finished)
 
         # to count the number of pulses since th e last event we need to know the starting pulse
@@ -198,6 +199,13 @@ class outside_mask_trace_monitor(monitor):
         # event (i.e there was an event in a future trace as well as the original event)
         # (update breakdown count, will only work if all states are not bad???????)
         self.data.force_update_breakdown_count(new["num_events"])  # MAGIC_STRING
+        # TODO force update pulse_breakdown log with "correct" data (i./e take into account if we are log ramping or not ...
+
+        # self.data.add_to_pulse_breakdown_log(self.values[self.data.latest_amp_sp_from_ramp])
+        # self.logger.message("!!WARNING!! OME monitor is updating  the pulse_breakdown log with latest_amp_sp_from_ramp = {} or  last_amp_sp = {} ".format(
+        #     self.values[self.data.latest_amp_sp_from_ramp],
+        #     self.values[self.data.last_amp_sp]),show_time_stamp=False)
+
 
         self.logger.message("Python OME Message:\n" + new['message'],show_time_stamp=False)
         self.logger.message(__name__+' adding {} events '.format(new["num_events"]))

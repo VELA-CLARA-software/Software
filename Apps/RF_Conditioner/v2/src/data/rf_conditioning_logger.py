@@ -188,7 +188,7 @@ class rf_conditioning_logger(logger):
         copyfile(rf_conditioning_logger._pulse_count_log_file, rf_conditioning_logger.text_log_directory + "\\pulse_breakdown_log_on_startup.txt")
         with open(rf_conditioning_logger._pulse_count_log_file, 'w') as f:
             header_string = "# header: write what you want on lines starting with #\n# Total ACTIVE Pulses, # breakdowns, amp_set, index (point on " \
-                            "pulse / power curve) , pulse length\n# the init of this file could be \n1 0 500 0 3500\n2 0 500 0 3500"
+                            "pulse / power curve) , pulse length\n# the init of this file could be 1 0 500 0 3500, 2 0 500 0 3500, etc\n"
             f.write(header_string)
             for line in data_to_write:
                 f.write(' '.join(map(str, line)) + '\n')

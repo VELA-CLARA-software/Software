@@ -213,22 +213,19 @@ class llrf_control(object):
 			self.llrf_control.trigExt()
 
 	def set_amp(self, val1, update_last_amp_sp = False):
-
 		start_amp_sp = self.values[rf_conditioning_data.amp_sp]
-		self.logger.message('set_amp (' + str(val1) + ') called from ' + str(inspect.stack()[1][3]))
-
+		self.logger.message('set_amp (' + str(val1) + ') called from ' + str(inspect.stack()[1][3]), show_time_stamp = False)
 		success = False
 		#if val != self.llrf_control.getAmpFF(): # TODO this has chnged from amp_SP due to
 		current_value = self.llrf_control.getAmpSP()
-		if val1 != current_value: # TODO this has chnged from amp_SP due to
-			self.logger.message('requested value {} is different to current value {}'.format(val1, current_value))
+		if val1 != current_value:
+			# don't need thsi message?
+			#self.logger.message('set_amp requested value {} is different to current value {}'.format(val1, current_value), show_time_stamp = False)
 			self.llrf_control.setAmpSP(val1)
-			#self.llrf_control.setAmpFF(val) # TODO THIS SHOULD BE SP!!!!!!!!!!!!!!!!
-			self.mask_set = False
+			# timer so we know how long this function  takes, and to crash out if setting fails for some reason
 			start = timer()
 			end = start
 			success = True
-			#while self.llrf_control.getAmpFF() != val: #  this has chnged from amp_SP due to controls group not setting  LLRF
 			while self.llrf_control.getAmpSP() != val1:
 				#print("stuck in the whie loop, ", start, end, end-start)
 				end = timer()
@@ -236,33 +233,24 @@ class llrf_control(object):
 					success = False
 					break
 			if success:
-				self.logger.message('set_amp(' + str(val1) + '), took ' + str(end - start) + ' time,  averages NOT reset, mask_set = False')
-				# update values dict to reflect new value
-
+				# self.logger.message('set_amp(' + str(val1) + '), took ' + str(end - start) + ' time,  averages NOT reset, mask_set = False',
+				#                     show_time_stamp = False)
 				if update_last_amp_sp:
+					#self.values[rf_conditioning_data.last_amp_sp] = start_amp_sp
 					self.values[rf_conditioning_data.last_amp_sp] = start_amp_sp
-					print('last_amp_sp = ', self.values[rf_conditioning_data.last_amp_sp])
+					self.values[rf_conditioning_data.latest_amp_sp_from_ramp] = val1
+					self.logger.message('set_amp is updating last_amp_sp set to  {}'.format(start_amp_sp))
 					self.values[rf_conditioning_data.kfpower_at_last_amp_sp] = self.data.amp_vs_kfpow_running_stat[self.values[
 						rf_conditioning_data.last_amp_sp]][1]
+
+					# self.logger.message('set_amp  updating, last_amp_sp = {}, last_amp_sp =  '.format(start_amp_sp, self.values[rf_conditioning_data.last_amp_sp] ))
 
 				self.values[rf_conditioning_data.amp_sp] = self.llrf_control.getAmpSP()
 			else:
 				self.logger.message('set_amp(' + str(val1) + '), FAILED to set amp in less than 3 seconds '
-				                                                         'averages NOT reset, mask_set = False')
+				                                             'averages NOT reset, mask_set = False')
 		else:
-			self.logger.message('requested value is THE SAME  to current value')
-
-		# TODO this function is so the app has a copy of the last value it had set ...
-		# TODO i think in v2 we won't bother with this, and just use the ramp curve and fitting
-		#  to move down
-		#self.set_last_sp_above_100()
-		#     def set_last_sp_above_100(self):
-		#         llrf_handler_base.data.values[dat.amp_sp] = llrf_handler_base.llrfObj[0].amp_sp
-		#         if llrf_handler_base.llrfObj[0].amp_sp > 100: #MAGIC_NUMBER
-		#             llrf_handler_base.data.values[dat.last_sp_above_100] =
-		#             llrf_handler_base.llrfObj[0].amp_sp
-		#             llrf_handler_base.logger.message('last_sp_above_100 = ' + str(
-		#             llrf_handler_base.data.values[dat.last_sp_above_100]), True)
+			self.logger.message('requested value is THE SAME as current value', show_time_stamp = False)
 
 		return success
 

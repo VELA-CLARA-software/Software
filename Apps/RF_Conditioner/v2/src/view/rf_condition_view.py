@@ -33,10 +33,7 @@
 # import src.data.rf_condition_data_base as dat
 # from src.data.state import state
 import sys
-import time
-import os
-from PyQt4.QtGui import QMainWindow
-from rf_condition_view_base import Ui_rf_condition_mainWindow
+from src.view.rf_condition_view_base import Ui_rf_condition_mainWindow
 from VELA_CLARA_RF_Modulator_Control import GUN_MOD_STATE
 from VELA_CLARA_RF_Modulator_Control import L01_MOD_STATE
 from VELA_CLARA_Vac_Valve_Control import VALVE_STATE
@@ -50,8 +47,6 @@ from PyQt4.QtGui import QPixmap
 from PyQt4.QtGui import QTextCursor
 from PyQt4.QtCore import QTimer
 import pyqtgraph
-
-from numpy import float64
 
 
 class OutLog:
@@ -187,11 +182,12 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
 
         #        print('expected_Y = {}\nexpected_Y_old = {}'.format(expected_Y, expected_Y_old))
 
-        print('\nFrom update_plot\nm = {}\nc = {}\nexpected_Y = {}\nold_m = {}\nold_c = {}\nexpected_Y_old = {}\n'.format(m, c, expected_Y, old_m,
-                                                                                                                          old_c, expected_Y_old))
-        print('type(m) = {}\ntype(c) = {}\ntype(expected_Y) = {}\ntype(old_m) = {}\ntype(old_c) = {}\ntype(expected_Y_old) = {}'.format(type(m),
-                                                                                                                                        type(c), type(
-                expected_Y), type(old_m), type(old_c), type(expected_Y_old)))
+        #print('\nFrom update_plot\nm = {}\nc = {}\nexpected_Y = {}\nold_m = {}\nold_c = {}\nexpected_Y_old = {}\n'.format(m, c, expected_Y, old_m,
+        #                                                                                                                  old_c, expected_Y_old))
+        #print('type(m) = {}\ntype(c) = {}\ntype(expected_Y) = {}\ntype(old_m) = {}\ntype(old_c) = {}\ntype(expected_Y_old) = {}'.format(type(m),
+        #                                                                                                                                type(c),
+        #                                                                                                                                type(
+         #       expected_Y), type(old_m), type(old_c), type(expected_Y_old)))
 
         # raw_input()
         x_min = self.values[rcd.x_min]
@@ -199,9 +195,9 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         y_min = self.values[rcd.y_min]
         old_y_min = self.values[rcd.old_y_min]
 
-        print('x_min = {}\nold_x_min = {}\ny_min = {}\nold_y_min = {}\n'.format(x_min, old_x_min, y_min, old_y_min))
-        print('type(x_min) = {}\ntype(old_x_min) = {}\ntype(y_min) = {}\ntype(old_y_min) = {}\n'.format(type(x_min), type(old_x_min), type(y_min),
-                                                                                                        type(old_y_min)))
+        #print('x_min = {}\nold_x_min = {}\ny_min = {}\nold_y_min = {}\n'.format(x_min, old_x_min, y_min, old_y_min))
+        #print('type(x_min) = {}\ntype(old_x_min) = {}\ntype(y_min) = {}\ntype(old_y_min) = {}\n'.format(type(x_min), type(old_x_min), type(y_min),
+        #                                                                                                type(old_y_min)))
 
         # raw_input()
 
@@ -257,7 +253,7 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
             pass
         else:
             self.plot_item.plot(data_to_fit_x, polyfit_2nd_order_y, pen={'color': 'b', 'width': 2.0})
-            print('From quick_update_plot:\ndata_to_fit_x = {}\npolyfit_2nd_order_y = {}'.format(data_to_fit_x, polyfit_2nd_order_y))
+            #print('From quick_update_plot:\ndata_to_fit_x = {}\npolyfit_2nd_order_y = {}'.format(data_to_fit_x, polyfit_2nd_order_y))
 
         # Rescale plots everytime function is called? can be annoying  # self.plot_item.setXRange(0.0, current_amp+200.0)  #
         # self.plot_item.setYRange(0.0, max(y)*1.4)
@@ -469,8 +465,15 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         else:
             self.delta_power_outputwidget.setText('last power NONE')
 
+        if self.data.log_ramp_curve:
+            self.log_ramp_final_setpoint_outputwidget.setText( str(self.data.log_ramp_curve[-1][1]) )
+        else:
+            self.log_ramp_final_setpoint_outputwidget.setText("NONE")
+
+        self.live_amp_set_outputwidget.setText( str(int(self.values[self.data.amp_sp])) )
+
     def update_amp_sp(self):
-        self.amp_set_outputwidget.setText('{} / {}'.format(int(self.values[self.data.amp_sp]), int(self.values[self.data.last_amp_sp])))
+        self.amp_set_outputwidget.setText('{} / {}'.format(int(self.values[self.data.latest_amp_sp_from_ramp]), int(self.values[self.data.last_amp_sp])))
 
     def update_DAQ_rep_rate(self):
         self.trace_rep_rate_outpuwidget.setText('{:0=4.2f}'.format(self.values[self.data.llrf_DAQ_rep_rate]))
@@ -584,7 +587,7 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         self.set_widget_color_text(self.llrf_ff_ph_locked_outputwidget, self.values[self.data.llrf_ff_ph_locked_status])
         self.set_widget_color_text(self.llrf_trigger_outputwidget, self.values[self.data.llrf_trigger_status])
         self.set_widget_color_text(self.vac_spike_status_outputwidget, self.values[self.data.vac_spike_status])
-        self.set_widget_color_text(self.DC_spike_status_outputwidget, self.values[self.data.DC_spike_status])
+        #self.set_widget_color_text(self.DC_spike_status_outputwidget, self.values[self.data.DC_spike_status])
 
     def update_mean_power_widgets(self):
         self.set_power_text(self.probe_power_outputwidget, self.values[self.data.probe_pwr])
