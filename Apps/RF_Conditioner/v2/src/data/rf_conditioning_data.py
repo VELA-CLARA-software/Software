@@ -1639,6 +1639,12 @@ class rf_conditioning_data(object):
     all_value_keys.append(catap_max_amp)
     values[catap_max_amp] = dummy_float
 
+    llrf_max_amp = 'llrf_max_amp'
+    all_value_keys.append(llrf_max_amp)
+    values[llrf_max_amp] = dummy_float
+
+
+
     # We set a flag to tell us if we have reached the limit of CATAP "hardcoded" maxampSP value
     catap_max_amp_can_ramp_status = 'catap_max_amp_can_ramp_status'
     all_value_keys.append(catap_max_amp_can_ramp_status)
