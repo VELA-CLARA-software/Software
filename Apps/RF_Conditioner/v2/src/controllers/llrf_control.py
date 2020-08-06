@@ -111,7 +111,6 @@ class llrf_control(object):
 			# meh
 			sleep(0.02)
 		#
-		#
 		if self.llrf_control.isRFOutput():
 			if self.should_show_llrf_rf_output == False:
 				self.logger.message('enable_llrf, isRFOutput = True')
@@ -124,7 +123,6 @@ class llrf_control(object):
 			self.llrf_control.enableRFOutput()
 			# meh
 			sleep(0.02)
-		#
 		#
 		if self.llrf_control.isAmpFFLocked():
 			if self.should_show_llrf_amp_ff_locked == False:
@@ -268,8 +266,6 @@ class llrf_control(object):
 		print("set_trace_mean_positions (add log entry here)")
 		cd =self.config_data
 		c =self.config
-
-
 		for trace in cd[c.MEAN_TRACES]:
 			print("set_trace_mean_positions trace = ", trace)
 			if 'KLYSTRON_FORWARD_POWER' in trace:
@@ -282,7 +278,6 @@ class llrf_control(object):
 				self.llrf_control.setMeanStartEndTime(cd[c.CRPOW_MEAN_START], cd[c.CRPOW_MEAN_END], trace)
 			elif 'CAVITY_PROBE_POWER' in trace:
 				self.llrf_control.setMeanStartEndTime(cd[c.CPPOW_MEAN_START], cd[c.CPPOW_MEAN_END], trace)
-
 			elif 'KLYSTRON_FORWARD_PHASE' in trace:
 				self.llrf_control.setMeanStartEndTime(cd[c.KFPHA_MEAN_START], cd[c.KFPHA_MEAN_END], trace)
 			elif 'KLYSTRON_REVERSE_PHASE' in trace:
