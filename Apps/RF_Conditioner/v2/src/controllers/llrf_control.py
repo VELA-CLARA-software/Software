@@ -71,9 +71,6 @@ class llrf_control(object):
 		# TODO check the value  to update has been read by now (it probably has...)
 		self.hardware.llrf_control.setActivePulseCount(self.values[rf_conditioning_data.log_pulse_count])
 		#
-
-
-
 		self.set_trace_mean_positions()
 		# set up terace for omed and rollgin averages
 		self.setup_traces_for_omed_and_rolling_averages()
@@ -85,7 +82,6 @@ class llrf_control(object):
 		#
 		# the first thing this needs to do is set 0 amp_sp,
 		self.llrf_control.setAmpHP(0.0) # HP 'high priority' it disables the trigger, then sets 0.0 amp_sp
-
 
 		if self.llrf_control.isInterlockActive():  #this means is the interlock BAD
 			if self.should_show_llrf_interlock_active:
@@ -114,7 +110,6 @@ class llrf_control(object):
 			# meh
 			sleep(0.02)
 		#
-		#
 		if self.llrf_control.isRFOutput():
 			if self.should_show_llrf_rf_output == False:
 				self.logger.message('enable_llrf, isRFOutput = True')
@@ -127,7 +122,6 @@ class llrf_control(object):
 			self.llrf_control.enableRFOutput()
 			# meh
 			sleep(0.02)
-		#
 		#
 		if self.llrf_control.isAmpFFLocked():
 			if self.should_show_llrf_amp_ff_locked == False:
@@ -153,8 +147,7 @@ class llrf_control(object):
 				self.should_show_llrf_pha_ff_locked = False
 			self.llrf_control.lockPhaseFF()
 			sleep(0.02)
-
-
+		#
 		if self.data.values[self.data.llrf_DAQ_rep_rate_status] == state.BAD:
 			self.reset_daq_freg()
 		if self.data.values[self.data.llrf_DAQ_rep_rate_status] == state.NEW_BAD:
@@ -262,8 +255,6 @@ class llrf_control(object):
 		print("set_trace_mean_positions (add log entry here)")
 		cd =self.config_data
 		c =self.config
-
-
 		for trace in cd[c.MEAN_TRACES]:
 			print("set_trace_mean_positions trace = ", trace)
 			if 'KLYSTRON_FORWARD_POWER' in trace:
@@ -276,7 +267,6 @@ class llrf_control(object):
 				self.llrf_control.setMeanStartEndTime(cd[c.CRPOW_MEAN_START], cd[c.CRPOW_MEAN_END], trace)
 			elif 'CAVITY_PROBE_POWER' in trace:
 				self.llrf_control.setMeanStartEndTime(cd[c.CPPOW_MEAN_START], cd[c.CPPOW_MEAN_END], trace)
-
 			elif 'KLYSTRON_FORWARD_PHASE' in trace:
 				self.llrf_control.setMeanStartEndTime(cd[c.KFPHA_MEAN_START], cd[c.KFPHA_MEAN_END], trace)
 			elif 'KLYSTRON_REVERSE_PHASE' in trace:
