@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[    126836,       2642]
-NotebookOptionsPosition[    119811,       2524]
-NotebookOutlinePosition[    120187,       2540]
-CellTagsIndexPosition[    120144,       2537]
+NotebookDataLength[    141188,       2916]
+NotebookOptionsPosition[    133412,       2787]
+NotebookOutlinePosition[    133789,       2803]
+CellTagsIndexPosition[    133746,       2800]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -2519,11 +2519,274 @@ Cell[BoxData["53.939991102693526`"], "Output",
  CellChangeTimes->{{3.8049399736984477`*^9, 3.8049400397777543`*^9}},
  CellLabel->
   "Out[427]=",ExpressionUUID->"51f776bf-3155-41bf-b9f6-f29ac71e7738"]
+}, Open  ]],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+  "s1", "=", 
+   "\"\<key=p0_all,val=-9999.9999\nkey=llrf_output_status,val=state.UNKNOWN\n\
+key=next_sp_decrease,val=-9999.9999\nkey=probe_pha,val=-9999.9999\n\
+key=rev_cav_pha,val=-9999.9999\n\
+key=can_llrf_output_state_OLD,val=state.UNKNOWN\n\
+key=breakdown_rate_aim,val=100\nkey=phi_sp,val=state.UNKNOWN\n\
+key=num_outside_mask_traces,val=-9999999\n\
+key=next_requested_power_change,val=-9999999\nkey=modulator_good,val=False\n\
+key=p2_current_sp_to_fit,val=-9999.9999\nkey=p2_current_sp,val=-9999.9999\n\
+key=pulse_length_status,val=state.UNKNOWN\nkey=pulse_length,val=-9999.9999\n\
+key=llrf_trace_interlock,val=state.UNKNOWN\nkey=cav_pwr_ratio_good,val=False\n\
+key=llrf_interlock,val=state.UNKNOWN\nkey=SP_QUAD_ALL,val=-9999.9999\n\
+key=water_temp_gui,val=-9999.9999\n\
+key=last_requested_power_change,val=-9999999\n\
+key=max_sp_increase,val=-9999.9999\nkey=ramp_mode,val=ramp_method.LOG_RAMP\n\
+key=llrf_ff_ph_locked,val=state.UNKNOWN\nkey=rev_kly_pha,val=-9999.9999\n\
+key=llrf_ff_amp_locked_status,val=state.UNKNOWN\n\
+key=pulse_length_min,val=2450\n\
+key=llrf_DAQ_rep_rate_status_previous,val=state.UNKNOWN\n\
+key=delta_kfpow,val=-9999.9999\nkey=llrf_trigger,val=state.UNKNOWN\n\
+key=cav_pwr_ratio_can_ramp,val=False\nkey=p1_current_sp_to_fit,val=-9999.9999\
+\nkey=vac_level,val=-9999.9999\nkey=gui_can_rf_output,val=True\n\
+key=polyfit_2order_X_current_sp,val=[-9999.9999]\n\
+key=can_rf_output_status_OLD,val=state.UNKNOWN\n\
+key=bd_rate_calc_first_pulse_number,val=-608867\n\
+key=pulse_length_max,val=2550\nkey=polyfit_2order_X_all,val=[-9999.9999]\n\
+key=cav_pwr_ratio,val=-9999.9999\n\
+key=number_of_pulses_in_breakdown_history,val=1000000\n\
+key=probe_outside_mask_count,val=-9999999\n\
+key=llrf_interlock_status,val=state.UNKNOWN\nkey=current_ramp_index,val=273\n\
+key=y_min,val=-9999.9999\nkey=old_x_min,val=-9999.9999\n\
+key=old_x_max,val=-9999.9999\nkey=rev_kly_pwr,val=-9999.9999\n\
+key=fwd_kly_pha,val=-9999.9999\nkey=active_breakdown_count,val=0\n\
+key=last_sp_above_100,val=-9999.9999\nkey=event_pulse_count,val=0\n\
+key=time_stamp,val=-9999.9999\nkey=log_ramp_curve_index,val=-9999999\n\
+key=TOR_SCAN,val=state.UNKNOWN\n\
+key=llrf_ff_ph_locked_status,val=state.UNKNOWN\n\
+key=last_mean_power,val=-9999.9999\nkey=rev_cav_pwr,val=-9999.9999\n\
+key=SP_QUAD_CURRENT_SP_TO_FIT,val=-9999.9999\n\
+key=last_vac_spike_status,val=state.UNKNOWN\n\
+key=llrf_DAQ_rep_rate_status,val=state.UNKNOWN\nkey=x_max,val=-9999.9999\n\
+key=p0_current_sp_to_fit,val=-9999.9999\nkey=amp_ff,val=-9999999\n\
+key=c,val=-9999.9999\nkey=y_max,val=-9999.9999\n\
+key=p1_current_sp,val=-9999.9999\nkey=x_min,val=-9999.9999\n\
+key=can_ramp_status,val=state.UNKNOWN\n\
+key=kfpower_at_last_amp_sp,val=-9999.9999\nkey=vac_level_can_ramp,val=False\n\
+key=last_breakdown_status,val=state.UNKNOWN\n\
+key=reverse_outside_mask_count,val=-9999999\nkey=llrf_DAQ_rep_rate_min,val=7\n\
+key=llrf_DAQ_rep_rate_max,val=13\nkey=TOR_ACQM,val=state.UNKNOWN\n\
+key=p0_current_sp,val=-9999.9999\nkey=breakdown_rate_low,val=True\n\
+key=cav_temp,val=-9999.9999\nkey=fwd_cav_pha,val=-9999.9999\n\
+key=BD_state_OLD,val=state.UNKNOWN\nkey=rfprot_good,val=False\n\
+key=last_amp_sp,val=-9999.9999\nkey=vac_spike_status,val=state.UNKNOWN\n\
+key=old_y_max,val=-9999.9999\nkey=event_pulse_count_zero,val=390518\n\
+key=DC_level,val=-9999.9999\nkey=amp_sp,val=-9999.9999\n\
+key=global_mask_checking,val=False\nkey=gui_can_ramp,val=False\n\
+key=can_llrf_output_state,val=state.UNKNOWN\nkey=p1_all,val=-9999.9999\n\
+key=expected_pulse_length,val=2500\nkey=old_y_min,val=-9999.9999\n\
+key=log_pulse_count,val=390518\nkey=llrf_DAQ_rep_rate_aim,val=10\n\
+key=polyfit_2order_Y_all,val=[-9999.9999]\n\
+key=llrf_ff_amp_locked,val=state.UNKNOWN\nkey=catap_max_amp,val=-9999.9999\n\
+key=polyfit_2order_X_current_sp_to_fit,val=[-9999.9999]\n\
+key=can_ramp_status_OLD,val=state.UNKNOWN\nkey=p2_all,val=-9999.9999\n\
+key=fwd_kly_pwr,val=-9999.9999\nkey=sol_value,val=-9999.9999\n\
+key=log_amp_set,val=14458\nkey=duplicate_pulse_count,val=-9999999\n\
+key=m,val=-9999.9999\nkey=pulse_count,val=390518\n\
+key=fwd_cav_pwr,val=-9999.9999\nkey=SP_SLF,val=-9999.9999\n\
+key=probe_pwr,val=-9999.9999\nkey=llrf_output,val=state.UNKNOWN\n\
+key=can_rf_output_status,val=state.UNKNOWN\nkey=log_pulse_length,val=0.273\n\
+key=modulator_state,val=state.UNKNOWN\nkey=elapsed_time,val=-9999999\n\
+key=DC_spike_status,val=state.UNKNOWN\n\
+key=llrf_trigger_status,val=state.UNKNOWN\n\
+key=polyfit_2order_Y_current_sp_to_fit,val=[-9999.9999]\n\
+key=pulses_to_next_ramp,val=-9999999\n\
+key=polyfit_2order_Y_current_sp,val=[-9999.9999]\n\
+key=breakdown_status,val=state.UNKNOWN\n\
+key=catap_max_amp_can_ramp_status,val=True\nkey=main_can_ramp,val=False\n\
+key=llrf_DAQ_rep_rate,val=-9999.9999\nkey=vac_valve_status,val=state.UNKNOWN\n\
+key=SP_QUAD_CURRENT,val=-9999.9999\nkey=rev_power_spike_count,val=-9999999\n\
+key=BD_state,val=state.UNKNOWN\nkey=last_ramp_method,val=ramp_method.UNKNOWN\n\
+key=required_pulses,val=150\nkey=rfprot_state,val=state.UNKNOWN\n\
+key=old_m,val=-9999.9999\nkey=total_breakdown_count,val=-5\n\
+key=old_c,val=-9999.9999\nkey=cav_temp_gui,val=-9999.9999\>\""}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+  "s2", "=", 
+   "\"\<key=p0_all,val=-9999.9999\nkey=llrf_output_status,val=state.GOOD\n\
+key=next_sp_decrease,val=-9999.9999\nkey=probe_pha,val=-9999.9999\n\
+key=rev_cav_pha,val=159.851897669\n\
+key=can_llrf_output_state_OLD,val=state.UNKNOWN\n\
+key=breakdown_rate_aim,val=100\nkey=phi_sp,val=-19\n\
+key=num_outside_mask_traces,val=0\n\
+key=next_requested_power_change,val=-9999999\nkey=modulator_good,val=True\n\
+key=p2_current_sp_to_fit,val=-9999.9999\nkey=CAVITY_TEMP_ID_0,val=-9999.9999\n\
+key=p2_current_sp,val=-9999.9999\nkey=pulse_length_status,val=state.GOOD\n\
+key=pulse_length,val=2493\nkey=llrf_trace_interlock,val=True\n\
+key=cav_pwr_ratio_good,val=False\nkey=llrf_interlock,val=NON_ACTIVE\n\
+key=SP_QUAD_ALL,val=-9999.9999\nkey=water_temp_gui,val=31.648\n\
+key=last_requested_power_change,val=-9999999\n\
+key=max_sp_increase,val=-9999.9999\nkey=ramp_mode,val=ramp_method.LOG_RAMP\n\
+key=llrf_ff_ph_locked,val=True\nkey=rev_kly_pha,val=217.10423497\n\
+key=llrf_ff_amp_locked_status,val=state.GOOD\nkey=pulse_length_min,val=2450\n\
+key=llrf_DAQ_rep_rate_status_previous,val=state.GOOD\n\
+key=delta_kfpow,val=10000.8513026\nkey=llrf_trigger,val=EXTERNAL\n\
+key=cav_pwr_ratio_can_ramp,val=False\nkey=p1_current_sp_to_fit,val=-9999.9999\
+\nkey=vac_level,val=4.4e-10\nkey=gui_can_rf_output,val=True\n\
+key=polyfit_2order_X_current_sp,val=[-9999.9999]\n\
+key=can_rf_output_status_OLD,val=state.UNKNOWN\n\
+key=bd_rate_calc_first_pulse_number,val=-609482\n\
+key=pulse_length_max,val=2550\nkey=polyfit_2order_X_all,val=[-9999.9999]\n\
+key=cav_pwr_ratio,val=59.8525655236\n\
+key=number_of_pulses_in_breakdown_history,val=1000000\n\
+key=probe_outside_mask_count,val=-9999999\n\
+key=llrf_interlock_status,val=state.GOOD\nkey=current_ramp_index,val=273\n\
+key=y_min,val=-9999.9999\nkey=old_x_min,val=-9999.9999\n\
+key=old_x_max,val=-9999.9999\nkey=rev_kly_pwr,val=0.665577313253\n\
+key=fwd_kly_pha,val=230.266202933\nkey=active_breakdown_count,val=0\n\
+key=last_sp_above_100,val=-9999.9999\nkey=event_pulse_count,val=0\n\
+key=time_stamp,val=-9999.9999\nkey=log_ramp_curve_index,val=-9999999\n\
+key=TOR_SCAN,val=2\nkey=llrf_ff_ph_locked_status,val=state.GOOD\n\
+key=last_mean_power,val=-9999.9999\nkey=rev_cav_pwr,val=1.49487483396\n\
+key=SP_QUAD_CURRENT_SP_TO_FIT,val=-9999.9999\n\
+key=last_vac_spike_status,val=state.UNKNOWN\n\
+key=llrf_DAQ_rep_rate_status,val=state.GOOD\nkey=x_max,val=-9999.9999\n\
+key=p0_current_sp_to_fit,val=-9999.9999\nkey=amp_ff,val=-9999999\n\
+key=c,val=-9999.9999\nkey=L01-SOL1,val=-999.999\nkey=L01-SOL2,val=-999.999\n\
+key=y_max,val=-9999.9999\nkey=p1_current_sp,val=-9999.9999\n\
+key=x_min,val=-9999.9999\nkey=can_ramp_status,val=state.UNKNOWN\n\
+key=kfpower_at_last_amp_sp,val=-9999.9999\nkey=vac_level_can_ramp,val=True\n\
+key=last_breakdown_status,val=state.UNKNOWN\n\
+key=reverse_outside_mask_count,val=-9999999\nkey=llrf_DAQ_rep_rate_min,val=7\n\
+key=llrf_DAQ_rep_rate_max,val=13\nkey=TOR_ACQM,val=2\n\
+key=p0_current_sp,val=-9999.9999\nkey=breakdown_rate_low,val=True\n\
+key=WATER_TEMP_ID_1,val=31.7307\nkey=cav_temp,val=-9999.9999\n\
+key=fwd_cav_pha,val=175.614010907\nkey=BD_state_OLD,val=state.UNKNOWN\n\
+key=rfprot_good,val=True\nkey=last_amp_sp,val=-9999.9999\n\
+key=vac_spike_status,val=state.GOOD\nkey=old_y_max,val=-9999.9999\n\
+key=event_pulse_count_zero,val=390518\nkey=DC_level,val=-9999.9999\n\
+key=amp_sp,val=0.0\nkey=global_mask_checking,val=False\n\
+key=gui_can_ramp,val=False\nkey=can_llrf_output_state,val=state.UNKNOWN\n\
+key=p1_all,val=-9999.9999\nkey=expected_pulse_length,val=2500\n\
+key=old_y_min,val=-9999.9999\nkey=log_pulse_count,val=390518\n\
+key=llrf_DAQ_rep_rate_aim,val=10\nkey=polyfit_2order_Y_all,val=[-9999.9999]\n\
+key=llrf_ff_amp_locked,val=True\nkey=catap_max_amp,val=30000.0\n\
+key=polyfit_2order_X_current_sp_to_fit,val=[-9999.9999]\n\
+key=can_ramp_status_OLD,val=state.UNKNOWN\nkey=p2_all,val=-9999.9999\n\
+key=fwd_kly_pwr,val=1.22001759449\nkey=sol_value,val=-9999.9999\n\
+key=log_amp_set,val=14458\nkey=duplicate_pulse_count,val=0\n\
+key=m,val=-9999.9999\nkey=pulse_count,val=390518\n\
+key=fwd_cav_pwr,val=2.49759525073\nkey=SP_SLF,val=-9999.9999\n\
+key=WATER_TEMP_ID_0,val=31.648\nkey=probe_pwr,val=-9999.9999\n\
+key=llrf_output,val=True\nkey=can_rf_output_status,val=state.UNKNOWN\n\
+key=log_pulse_length,val=0.273\nkey=modulator_state,val=RF_ON\n\
+key=elapsed_time,val=1596446477854\nkey=DC_spike_status,val=state.UNKNOWN\n\
+key=llrf_trigger_status,val=state.GOOD\n\
+key=polyfit_2order_Y_current_sp_to_fit,val=[-9999.9999]\n\
+key=pulses_to_next_ramp,val=-9999999\n\
+key=polyfit_2order_Y_current_sp,val=[-9999.9999]\n\
+key=breakdown_status,val=state.GOOD\n\
+key=catap_max_amp_can_ramp_status,val=True\nkey=main_can_ramp,val=False\n\
+key=llrf_DAQ_rep_rate,val=10.1178101627\n\
+key=vac_valve_status,val=VALVE_CLOSED\nkey=SP_QUAD_CURRENT,val=-9999.9999\n\
+key=rev_power_spike_count,val=-9999999\nkey=BD_state,val=state.UNKNOWN\n\
+key=last_ramp_method,val=ramp_method.UNKNOWN\nkey=required_pulses,val=150\n\
+key=rfprot_state,val=GOOD\nkey=old_m,val=-9999.9999\n\
+key=total_breakdown_count,val=-5\nkey=old_c,val=-9999.9999\n\
+key=cav_temp_gui,val=-9999.9999\>\""}], ";"}], "\n"}], "Input",
+ CellChangeTimes->{{3.805435420308385*^9, 3.805435465550619*^9}},
+ CellLabel->
+  "In[2070]:=",ExpressionUUID->"da7bb9b9-53ea-48de-ba4e-b7837157d92a"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{"Length", "@", 
+  RowBox[{"StringSplit", "[", 
+   RowBox[{"s1", ",", "\"\<\\n\>\""}], "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{"Length", "@", 
+  RowBox[{"StringSplit", "[", 
+   RowBox[{"s2", ",", "\"\<\\n\>\""}], "]"}]}]}], "Input",
+ CellChangeTimes->{{3.805433361994006*^9, 3.805433369982456*^9}, {
+  3.80543378897683*^9, 3.8054338028789296`*^9}, {3.8054354715821667`*^9, 
+  3.8054354852364073`*^9}},
+ CellLabel->
+  "In[2074]:=",ExpressionUUID->"bd34e5a5-ca12-418b-84e9-ebc90fdb7b51"],
+
+Cell[BoxData["136"], "Output",
+ CellChangeTimes->{{3.8054333669162197`*^9, 3.805433370241327*^9}, {
+  3.8054337910516663`*^9, 3.805433803082817*^9}, {3.805435476559349*^9, 
+  3.8054354853953176`*^9}},
+ CellLabel->
+  "Out[2074]=",ExpressionUUID->"22a79d12-3d21-4250-a2f4-0f0bdabff7b7"],
+
+Cell[BoxData["141"], "Output",
+ CellChangeTimes->{{3.8054333669162197`*^9, 3.805433370241327*^9}, {
+  3.8054337910516663`*^9, 3.805433803082817*^9}, {3.805435476559349*^9, 
+  3.8054354854012966`*^9}},
+ CellLabel->
+  "Out[2075]=",ExpressionUUID->"f8db0784-6185-4571-ad70-25d1b6dba20f"]
+}, Open  ]],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"s11", "=", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"StringSplit", "[", 
+      RowBox[{"#", ",", "\"\<,\>\""}], "]"}], "&"}], "/@", 
+    RowBox[{"StringSplit", "[", 
+     RowBox[{
+      RowBox[{"StringSplit", "[", 
+       RowBox[{"s1", ",", "\"\<\\n\>\""}], "]"}], ",", "\"\<=\>\""}], 
+     "]"}]}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"s22", "=", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"StringSplit", "[", 
+      RowBox[{"#", ",", "\"\<,\>\""}], "]"}], "&"}], "/@", 
+    RowBox[{"StringSplit", "[", 
+     RowBox[{
+      RowBox[{"StringSplit", "[", 
+       RowBox[{"s2", ",", "\"\<\\n\>\""}], "]"}], ",", "\"\<=\>\""}], 
+     "]"}]}]}], ";"}]}], "Input",
+ CellChangeTimes->{{3.805435509116789*^9, 3.8054355569885473`*^9}},
+ CellLabel->
+  "In[2081]:=",ExpressionUUID->"86d79683-b344-44f9-b253-1ac0f972c198"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Complement", "[", 
+  RowBox[{
+   RowBox[{"Flatten", "[", 
+    RowBox[{
+     RowBox[{"s22", "\[LeftDoubleBracket]", 
+      RowBox[{"All", ",", "2"}], "\[RightDoubleBracket]"}], 
+     "\[LeftDoubleBracket]", 
+     RowBox[{"All", ",", "1"}], "\[RightDoubleBracket]"}], "]"}], ",", 
+   RowBox[{"Flatten", "[", 
+    RowBox[{
+     RowBox[{"s11", "\[LeftDoubleBracket]", 
+      RowBox[{"All", ",", "2"}], "\[RightDoubleBracket]"}], 
+     "\[LeftDoubleBracket]", 
+     RowBox[{"All", ",", "1"}], "\[RightDoubleBracket]"}], "]"}]}], 
+  "]"}]], "Input",
+ CellChangeTimes->{{3.8054355605085373`*^9, 3.8054356496607466`*^9}},
+ CellLabel->
+  "In[2096]:=",ExpressionUUID->"59cb2f6e-cb55-4abb-9f18-c09be19b2ea7"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"\<\"CAVITY_TEMP_ID_0\"\>", ",", "\<\"L01-SOL1\"\>", 
+   ",", "\<\"L01-SOL2\"\>", ",", "\<\"WATER_TEMP_ID_0\"\>", 
+   ",", "\<\"WATER_TEMP_ID_1\"\>"}], "}"}]], "Output",
+ CellChangeTimes->{{3.8054355636367397`*^9, 3.805435650318389*^9}},
+ CellLabel->
+  "Out[2096]=",ExpressionUUID->"9c21b54b-1702-4bfb-af9c-89b20e74d2fd"]
 }, Open  ]]
 }, Open  ]]
 },
-WindowSize->{1064, 1837},
-WindowMargins->{{Automatic, -1072}, {Automatic, 0}},
+WindowSize->{1080, 1837},
+WindowMargins->{{Automatic, -1088}, {Automatic, -8}},
 Magnification:>1.2 Inherited,
 FrontEndVersion->"12.0 for Microsoft Windows (64-bit) (April 8, 2019)",
 StyleDefinitions->"Default.nb"
@@ -2590,14 +2853,14 @@ Cell[CellGroupData[{
 Cell[69143, 1392, 2846, 72, 407, "Input",ExpressionUUID->"20f2b7d4-ab21-4d02-9432-87b0059759be"],
 Cell[71992, 1466, 3044, 67, 275, "Output",ExpressionUUID->"24bdcaf3-b09c-43e7-809f-96645f9cbe8a"]
 }, Open  ]],
-Cell[75051, 1536, 13193, 191, 1908, "Input",ExpressionUUID->"ee6b6ee7-e60a-4c55-8ba0-09b32f5e9434"],
+Cell[75051, 1536, 13193, 191, 1860, "Input",ExpressionUUID->"ee6b6ee7-e60a-4c55-8ba0-09b32f5e9434"],
 Cell[CellGroupData[{
 Cell[88269, 1731, 611, 15, 35, "Input",ExpressionUUID->"3b0b4467-87be-4585-a02e-635e691c2624"],
 Cell[88883, 1748, 15469, 305, 83, "Output",ExpressionUUID->"4a902ea8-3110-441a-8213-48a41fa070cc"]
 }, Open  ]],
 Cell[CellGroupData[{
 Cell[104389, 2058, 237, 5, 35, "Input",ExpressionUUID->"ef8a8ba5-37d3-4f4d-8e21-172683d3c5da"],
-Cell[104629, 2065, 518, 10, 64, "Output",ExpressionUUID->"ce94114b-32b8-4def-9376-4b79ddf209ea"]
+Cell[104629, 2065, 518, 10, 39, "Output",ExpressionUUID->"ce94114b-32b8-4def-9376-4b79ddf209ea"]
 }, Open  ]],
 Cell[CellGroupData[{
 Cell[105184, 2080, 505, 13, 35, "Input",ExpressionUUID->"8a2aad99-08c9-413e-a72e-c302c6228a4c"],
@@ -2642,6 +2905,17 @@ Cell[118952, 2500, 209, 4, 39, "Output",ExpressionUUID->"e326a121-dd50-4cb3-a068
 Cell[119164, 2506, 199, 3, 39, "Output",ExpressionUUID->"fe09845a-0921-4140-bda9-0b046e1255a7"],
 Cell[119366, 2511, 215, 4, 39, "Output",ExpressionUUID->"76c41659-d927-441e-bd01-e68d73676842"],
 Cell[119584, 2517, 199, 3, 39, "Output",ExpressionUUID->"51f776bf-3155-41bf-b9f6-f29ac71e7738"]
+}, Open  ]],
+Cell[119798, 2523, 10496, 172, 6684, "Input",ExpressionUUID->"da7bb9b9-53ea-48de-ba4e-b7837157d92a"],
+Cell[CellGroupData[{
+Cell[130319, 2699, 510, 11, 60, "Input",ExpressionUUID->"bd34e5a5-ca12-418b-84e9-ebc90fdb7b51"],
+Cell[130832, 2712, 284, 5, 39, "Output",ExpressionUUID->"22a79d12-3d21-4250-a2f4-0f0bdabff7b7"],
+Cell[131119, 2719, 284, 5, 39, "Output",ExpressionUUID->"f8db0784-6185-4571-ad70-25d1b6dba20f"]
+}, Open  ]],
+Cell[131418, 2727, 857, 25, 60, "Input",ExpressionUUID->"86d79683-b344-44f9-b253-1ac0f972c198"],
+Cell[CellGroupData[{
+Cell[132300, 2756, 721, 18, 35, "Input",ExpressionUUID->"59cb2f6e-cb55-4abb-9f18-c09be19b2ea7"],
+Cell[133024, 2776, 360, 7, 39, "Output",ExpressionUUID->"9c21b54b-1702-4bfb-af9c-89b20e74d2fd"]
 }, Open  ]]
 }, Open  ]]
 }
