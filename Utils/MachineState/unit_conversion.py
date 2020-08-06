@@ -12,7 +12,7 @@ class UnitConversion(object):
 		self.alias_names = aliases.alias_names
 		self.type_alias = aliases.type_alias
 		speed_of_light = scipy.constants.speed_of_light / 1e6
-		self.lattices = ['BA1', 'INJ', 'S01', 'S02', 'L01', 'C2V', 'VCA']
+		self.lattices = ['EBT-BA1', 'INJ', 'CLA-S01', 'CLA-S02', 'L01', 'CLA-C2V', 'VCA']
 		self.gun_pulse_length = 2.5
 		self.linac_pulse_length = 0.75
 		self.energy = {}

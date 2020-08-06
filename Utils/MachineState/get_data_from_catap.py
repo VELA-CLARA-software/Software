@@ -41,11 +41,12 @@ class GetDataFromCATAP(object):
 		self.linacdata = {}
 		self.alldata = {}
 		self.alldata.update({"INJ": {}})
-		self.alldata.update({"S01": {}})
+		self.alldata.update({"CLA-S01": {}})
 		self.alldata.update({"L01": {}})
-		self.alldata.update({"S02": {}})
-		self.alldata.update({"C2V": {}})
-		self.alldata.update({"BA1": {}})
+		self.alldata.update({"CLA-S02": {}})
+		self.alldata.update({"CLA-C2V": {}})
+		self.alldata.update({"EBT-INJ": {}})
+		self.alldata.update({"EBT-BA1": {}})
 		self.alldata.update({"VCA": {}})
 		self.alldataset = False
 
@@ -114,18 +115,22 @@ class GetDataFromCATAP(object):
 		return True
 
 	def getMachineAreaString(self, name):
-		if "INJ" in name or "GUN" in name or "LRG1" in name:
+		#if "INJ" in name or "GUN" in name or "LRG1" in name:
+		if "GUN" in name or "LRG1" in name:
 			return "INJ"
 		elif "S01" in name:
-			return "S01"
+			return "CLA-S01"
 		elif "S02" in name:
-			return "S02"
+			return "CLA-S02"
 		elif "L01" in name:
 			return "L01"
 		elif "C2V" in name:
-			return "C2V"
-		elif "BA1" in name:
-			return "BA1"
+			return "CLA-C2V"
+		elif "EBT" in name:
+			if "BA1" in name:
+				return "EBT-BA1"
+			elif "INJ" in name:
+				return "EBT-INJ"
 		elif "VCA" in name:
 			return "VCA"
 
@@ -391,7 +396,7 @@ class GetDataFromCATAP(object):
 		if not self.alldataset:
 			self.getAllData()
 		else:
-			return self.alldata['S01']['CLA-S01-DIA-WCM-01']
+			return self.alldata['CLA-S01']['CLA-S01-DIA-WCM-01']
 
 	def checkType(self, datadict):
 		for i in datadict.keys():

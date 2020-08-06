@@ -50,7 +50,20 @@ framework = machinestate.getFramework()
 machinestatefile = machinestate.parseParameterInputFile("catap-test.yaml")
 
 # Set up lattice end point (default is to start at generator, at the moment we have to do it this way)
-machinestate.updateLatticeEnd(machinestatefile, 'C2V')
+machinestate.updateLatticeEnd(machinestatefile, 'CLA-S02')
+
+catapdata = machinestate.getMachineStateFromCATAP(mode)
+    # We have to fudge this for now as the conversion between current and solenoid strength doesn't work
+catapdata['INJ']['CLA-LRG1-MAG-SOL-01'].update({'field_amplitude': 0.255})
+catapdata['INJ']['CLA-LRG1-MAG-BSOL-01'].update({'field_amplitude': -0.07})
+# # Write machine state dictionary to simframe and runs simulation
+# simframefileupdate = machinestate.writeMachineStateToSimFrame('injector', framework,
+#                                                               'Lattices/CLA10-BA1_OM.def', datadict=catapdata,
+#                                                               run=True, type='CATAP')
+#
+# framework['S02'].prefix = '..\injector\CLA-S02-APER-01.hdf5'
+#
+# machinestate.updateLatticeStart(machinestatefile, 'S02')
 
 # Quad settings
 quadsettings = [-2,-1,0,1,2]
@@ -73,11 +86,11 @@ for i in quadsettings:
     # Write machine state dictionary to simframe and runs simulation
     simframefileupdate = machinestate.writeMachineStateToSimFrame('quadscan_test'+str(i), framework,
                                                                   'Lattices/CLA10-BA1_OM.def', datadict=catapdata,
-                                                                  run=True)
+                                                                  run=True, type='CATAP')
     # Exports machine state from simframe (hardware settings and simulated data @ screens / bpms)
     machinestate.exportParameterValuesToYAMLFile("simframe-test"+str(i)+".yaml",simframefileupdate)
     # Update dictionary of beam size
-    s02cam02xsig.update({i: simframefileupdate['S02']['CLA-S02-DIA-CAM-02']['x_sigma']})
+    s02cam02xsig.update({i: simframefileupdate['CLA-S02']['CLA-S02-DIA-CAM-02']['x_sigma']})
 
 print(s02cam02xsig.items())
 

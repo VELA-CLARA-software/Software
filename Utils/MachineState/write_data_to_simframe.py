@@ -16,7 +16,7 @@ class WriteDataToSimFrame(object):
         self.l01_position = self.unitConversion.getL01Position()
         self.lattices = self.unitConversion.getLattices()
 
-    def updateFrameworkElements(self, framework, inputdict):
+    def updateFrameworkElements(self, framework, inputdict, type=None):
         for section in self.lattices:
             for key, value in inputdict[section].items():
                 if (isinstance(value, dict)):
@@ -28,13 +28,24 @@ class WriteDataToSimFrame(object):
                         if inputdict[section][key]['type'] == 'quadrupole':
                             framework.modifyElement(self.keymod, 'k1l', float(value['k1l']))
                         elif inputdict[section][key]['type'] == 'cavity':
-                            framework.modifyElement(self.keymod, 'field_amplitude', float(value['field_amplitude']))
+                            if type=='CATAP':
+                                typemod = 1e6
+                            else:
+                                typemod = 1
+                            print(type)
+                            print(typemod)
+                            framework.modifyElement(self.keymod, 'field_amplitude', float(value['field_amplitude']*typemod))
                             framework.modifyElement(self.keymod, 'phase', value['phase'])
                         elif inputdict[section][key]['type'] == 'solenoid':
                             if 'BSOL' in key:
                                 framework.modifyElement(self.keymod, 'field_amplitude', 0.3462 * float(value['field_amplitude']))
                             else:
                                 framework.modifyElement(self.keymod, 'field_amplitude', float(value['field_amplitude']))
+                        elif inputdict[section][key]['type'] == 'cavity':
+                            framework.generator.sig_x = float(value['x_mm_sig'])
+                            framework.generator.sig_y = float(value['x_mm_sig'])
+                            framework.generator.sig_x = float(value['x_mm_sig'])
+                            framework.generator.sig_x = float(value['x_mm_sig'])
 
     def getEnergyDict(self):
         return self.energy
@@ -77,7 +88,7 @@ class WriteDataToSimFrame(object):
         framework.generator.sig_x = inputdict['generator']['sig_x']['value']
         framework.generator.sig_y = inputdict['generator']['sig_y']['value']
         framework.generator.spot_size = float(numpy.mean([inputdict['generator']['sig_x']['value'],inputdict['generator']['sig_y']['value']]))
-        self.updateFrameworkElements(framework, inputdict)
+        self.updateFrameworkElements(framework, inputdict, type=type)
 
     def runScript(self, framework, inputdict, modify=False, track=False):
         self.update_tracking_codes(framework, inputdict)
@@ -94,38 +105,47 @@ class WriteDataToSimFrame(object):
         else:
             time.sleep(0.5)
 
+    def get_machine_areas(self, inputdict):
+        return inputdict.keys()
+
     def update_tracking_codes(self, framework, inputdict):
+        self.machineareas = self.get_machine_areas(inputdict)
         for l, c in inputdict['simulation']['tracking_code'].items():
-            framework.change_Lattice_Code(l, c)
+            if l in self.machineareas:
+                framework.change_Lattice_Code(l, c)
 
     def update_CSR(self, framework, inputdict):
+        self.machineareas = self.get_machine_areas(inputdict)
         for l, c in inputdict['simulation']['csr'].items():
-            lattice = framework[l]
-            elements = lattice.elements.values()
-            for e in elements:
-                e.csr_enable = c
-                e.sr_enable = c
-                e.isr_enable = c
-                e.csr_bins = inputdict['simulation']['csr_bins'][l]
-                e.current_bins = 0
-                e.longitudinal_wakefield_enable = c
-                e.transverse_wakefield_enable = c
-            lattice.csrDrifts = c
+            if l in self.machineareas:
+                lattice = framework[l]
+                elements = lattice.elements.values()
+                for e in elements:
+                    e.csr_enable = c
+                    e.sr_enable = c
+                    e.isr_enable = c
+                    e.csr_bins = inputdict['simulation']['csr_bins'][l]
+                    e.current_bins = 0
+                    e.longitudinal_wakefield_enable = c
+                    e.transverse_wakefield_enable = c
+                lattice.csrDrifts = c
 
     def update_LSC(self, framework, inputdict):
+        self.machineareas = self.get_machine_areas(inputdict)
         for l, c in inputdict['simulation']['lsc'].items():
-            lattice = framework[l]
-            elements = lattice.elements.values()
-            for e in elements:
-                e.lsc_enable = c
-                e.lsc_bins = inputdict['simulation']['lsc_bins'][l]
-            #     e.smoothing_half_width = 1
-            #     e.lsc_high_frequency_cutoff_start = -1#0.25
-            #     e.lsc_high_frequency_cutoff_end = -1#0.33
-            # lattice.lsc_high_frequency_cutoff_start = -1#0.25
-            # lattice.lsc_high_frequency_cutoff_end = -1#0.33
-            lattice.lsc_bins = inputdict['simulation']['lsc_bins'][l]
-            lattice.lscDrifts = c
+            if l in self.machineareas:
+                lattice = framework[l]
+                elements = lattice.elements.values()
+                for e in elements:
+                    e.lsc_enable = c
+                    e.lsc_bins = inputdict['simulation']['lsc_bins'][l]
+                #     e.smoothing_half_width = 1
+                #     e.lsc_high_frequency_cutoff_start = -1#0.25
+                #     e.lsc_high_frequency_cutoff_end = -1#0.33
+                # lattice.lsc_high_frequency_cutoff_start = -1#0.25
+                # lattice.lsc_high_frequency_cutoff_end = -1#0.33
+                lattice.lsc_bins = inputdict['simulation']['lsc_bins'][l]
+                lattice.lscDrifts = c
 
     def setEnergyAtElement(self, inputdict):
         if "GUN" in name or "LRG1" in name:

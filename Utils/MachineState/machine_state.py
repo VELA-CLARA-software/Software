@@ -116,13 +116,13 @@ class MachineState(object):
         #self.getMachineStateFromSimFrame(directory, lattice)
         if datadict is not None:
             self.datadict = datadict
-            self.writeDataToSimFrame.modifyFramework(framework, self.datadict)
+            self.writeDataToSimFrame.modifyFramework(framework, self.datadict, type=type)
         else:
             if type == "SimFrame":
                 self.datadict = self.getSimFrameDataDict()
             elif type == "CATAP":
                 self.datadict = self.getMachineStateFromCATAP(mode)
-            self.writeDataToSimFrame.modifyFramework(framework, self.datadict)
+            self.writeDataToSimFrame.modifyFramework(framework, self.datadict, type=type)
         if run == True:
             if not os.path.isdir(directory):
                 os.makedirs(directory)
