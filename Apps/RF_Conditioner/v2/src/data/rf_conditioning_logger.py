@@ -175,9 +175,11 @@ class rf_conditioning_logger(logger):
             for line in lines:
                 if '#' not in line:
                     log.append([int(x) for x in line.split()])
+
         self.message('Read pulse_count_breakdown_log')
         rf_conditioning_logger._pulse_count_log_file_obj = open(rf_conditioning_logger._pulse_count_log_file, 'a')
-        return log
+        # return log, with empty entries removed ...
+        return [x for x in log if x != []]
 
     def write_rationilized_pulse_breakdown_log(self, data_to_write):
         '''
@@ -193,6 +195,7 @@ class rf_conditioning_logger(logger):
             for line in data_to_write:
                 f.write(' '.join(map(str, line)) + '\n')
         rf_conditioning_logger._pulse_count_log_file_obj = open(rf_conditioning_logger._pulse_count_log_file, 'a')
+       # raw_input()
 
     def num(self, s):
         try:
@@ -381,10 +384,8 @@ class rf_conditioning_logger(logger):
         logger.message_header(self,text, **kwargs)
         QApplication.processEvents()
 
-
-    # noinspection PyMethodMayBeStatic
     def pickle_file(self, file_name, obj):
-        path = self.working_directory + file_name
+        path = os.path.join(logger.working_directory, logger.log_start_str, file_name)
         self.pickle_dump(path, obj)
     # don't bother with this, convert to wxf offline  # def pkl2wxf(self,path):  #     file =
     # open(path, 'rb')  #     objs = []  #     while True:  #         try:  #

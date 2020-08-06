@@ -554,9 +554,28 @@ class main_controller(object):
     def log_ramp_up(self):
         # # log data at the new setpoint MUST BE BEFORE  move_up_ramp_curve()
         # update pulse breakdown log
+
+        # TODO AJG: reset triggers here ??
+        self.hardware.llrf_controller.enable_trigger()
+
         self.data.add_to_pulse_breakdown_log(self.hardware.llrf_obj[0].amp_sp)
         self.monitor_hub.llrf_monitor.update_amp_vs_kfpow_running_stat()
         self.data.log_kly_fwd_power_vs_amp()
+
+        '''
+        /* FAST RAMP WE SET THE HI MASK FOR POWERS TO BE prop-to THE KFP MAX */
+        if  (llrf.fast_ramp_mode)
+        {
+            if( stringIsSubString( data.name, "POWER"))
+            {
+                //message("Setting fast_ramp_hi_mask for ", data.name, " to ", llrf.fast_ramp_power_factor  * llrf.kly_fwd_power_max);
+                std::fill(hi_mask.begin(), hi_mask.end(), llrf.fast_ramp_power_factor  * llrf.kly_fwd_power_max); // MAGIC NUMBER
+            }
+        }
+        # setFastRampHiMaskPowerFactor( float )
+        # getFastRampHiMaskPowerFactor()
+
+        '''
 
         # someshort aliases
         #lrc = self.data.log_ramp_curve
@@ -604,6 +623,14 @@ class main_controller(object):
 
         # # set new_amp
         lrci = self.values[self.data.log_ramp_curve_index]
+
+        # we need to set the next setFastRampHiMaskPowerFactor before we call set_amp
+        hi_mask_factor = self.data.log_ramp_curve[lrci][2]
+        self.hardware.llrf_control.setFastRampHiMaskPowerFactor(hi_mask_factor)
+        #print('hi_mask_power = {}'.format(hi_mask_power))
+
+        #raw_input()
+
         if self.hardware.llrf_controller.set_amp(self.data.log_ramp_curve[lrci][1], update_last_amp_sp = False):
             # print('self.hardware.llrf_controller.set_amp(lrc[lrci][1] = {}'.format( self.hardware.llrf_controller.set_amp(
             # self.data.log_ramp_curve[lrci][1])))
@@ -614,7 +641,11 @@ class main_controller(object):
                 self.hardware.llrf_control.fastRampModeOff() # set the masks back to nominal after infinite +_hi masks for log_ramping
                 self.values[rf_conditioning_data.ramp_mode] = ramp_method.NORMAL_RAMP
                 current_normal_ramp_index = self.data.get_ramp_index_from_power(self.data.get_kf_running_stat_power_at_current_set_point())
-                self.values[rf_conditioning_data.required_pulses] = ramp[current_normal_ramp_index][0]
+
+                if current_normal_ramp_index > len(ramp) - 1:
+                    self.values[rf_conditioning_data.required_pulses] = ramp[-1][0]
+                else:
+                    self.values[rf_conditioning_data.required_pulses] = ramp[current_normal_ramp_index][0]
 
                 # set the ramp index when we reahc teh top of teh rmap curve
                 self.data.set_ramp_index_for_current_power()
@@ -684,7 +715,7 @@ class main_controller(object):
             or self.values[rf_conditioning_data.last_ramp_method] == ramp_method.DEFAULT__FLAT_RAMP:
             pass
         elif self.values[rf_conditioning_data.last_ramp_method] == ramp_method.UNKNOWN:
-            print("!!!MAJOR ERROR!!!!\nramp_method = {}".format(self.values[rf_conditioning_data.last_ramp_method]))
+            self.logger.message("!!!MAJOR ERROR!!!!\nramp_method = {}".format(self.values[rf_conditioning_data.last_ramp_method]))
         else:
             pass
 
@@ -761,7 +792,7 @@ class main_controller(object):
         ''' this function should be connected to the GUI enable / disable LLRF, but MUST be run
         AFTER rf_conditioning_data.gui_can_rf_output is changed to the requested value '''
         if self.values[rf_conditioning_data.gui_can_rf_output]:
-            print("toggle_RF_output(), gui.can_rf_output_state, so calling enable_llrf ")
+            self.logger.message("toggle_RF_output(), gui.can_rf_output_state, so calling enable_llrf ")
             self.hardware.llrf_controller.enable_llrf()
         else:
             self.hardware.llrf_controller.disableRFOutput()
@@ -776,7 +807,8 @@ class main_controller(object):
 
     def update_expert_values(self):
         # get all teh expert values from the various places that want them
-        print("self.update_expert_values called")
+        print()
+        self.logger.message("self.update_expert_values called")
         self.monitor_hub.llrf_monitor.get_llrf_expert_values()
         # update the gui with the latest values
         self.view.update_expert_values_in_gui()
