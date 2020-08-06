@@ -42,21 +42,22 @@ class vac_monitor(monitor):
         an amount set in the config then a BAD state is set, which the conditioning_main_loop
         responds to. The state goes back to GOOD either when a time limit has passed, or,
         more commonly, the vacuum level returns below the limit
-        If the vacuum level gets above VAC_MAX_LEVEL  vac_level_can_ramp is set to BAD,
-        when the vacuum level is <= VAC_MAX_LEVEL vac_level_can_ramp is set to GOOD
+        If the vacuum level gets above VAC_MAX_LEVEL_FOR_RAMP  vac_level_can_ramp is set to BAD,
+        when the vacuum level is <= VAC_MAX_LEVEL_FOR_RAMP vac_level_can_ramp is set to GOOD
     """
 
     def __init__(self, ):
         monitor.__init__(self)
         #
         # Local copies for some important  settings from the config file
+        self.max_acceptable_level = self.config_data[self.config.VAC_SPIKE_MAX_LEVEL_FOR_OFF]
         self.spike_delta = self.config_data[self.config.VAC_SPIKE_DELTA]
         self.spike_decay_level = self.config_data[self.config.VAC_SPIKE_DECAY_LEVEL]
         self.spike_decay_time = self.config_data[self.config.VAC_SPIKE_DECAY_TIME]
         self.num_samples_to_average = self.config_data[self.config.VAC_NUM_SAMPLES_TO_AVERAGE]
         self.should_drop_amp = self.config_data[self.config.VAC_SHOULD_DROP_AMP]
         self.amp_drop_value = self.config_data[self.config.VAC_SPIKE_DROP_AMP]
-        self.max_level = self.config_data[self.config.VAC_MAX_LEVEL]
+        self.max_level = self.config_data[self.config.VAC_MAX_LEVEL_FOR_RAMP]
         self.should_check_level_is_hi = self.config_data[self.config.WHEN_VAC_HI_DISABLE_RAMP]
         # Count how many spikes we have detected:
         self.spike_count = 0
@@ -224,9 +225,14 @@ class vac_monitor(monitor):
         """
         if self._mean_level is not None:  # If we have a mean value
             # check for a spike
+            should_respond = False
             if self._latest_value >= self.spike_delta + self._mean_level:
+                should_respond = True
+            elif self.max_acceptable_level < self._latest_value:
+                should_respond = True
                 # this is the first place we can detect a vacuum spike,
                 # so drop amp here if we are in a GOOD state
+            if should_respond:
                 if self.should_drop_amp:
                     # TODO AJG: IT ONLY drops the amp, if the amp has not already been dropped due to a breakdown
                     #  breakdown status could be the high level combination of all breakdown indicators

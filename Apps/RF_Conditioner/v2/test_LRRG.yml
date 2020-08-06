@@ -391,8 +391,8 @@ VAC_NUM_SAMPLES_TO_AVERAGE:  7 # integer, numer of samples over which to calcual
 VAC_CHECK_TIME:  200 #; ms between vacuum level checks, we think this is the faatest they go at
 VAC_SHOULD_DROP_AMP:  false #; amp_sp to set if vacuum spike
 VAC_SPIKE_DROP_AMP:  5 #; amp_sp to set if vacuum spike
-VAC_MAX_LEVEL:  0.000000005 #5e-9; If vacuum level goes  above this, disable ramping 
-WHEN_VAC_HI_DISABLE_RAMP: true #BOOL, flag for whether to disable ramping when vac_level is above VAC_MAX_LEVEL
+VAC_MAX_LEVEL_FOR_RAMP:  0.000000005 #5e-9; If vacuum level goes  above this, disable ramping
+WHEN_VAC_HI_DISABLE_RAMP: true #BOOL, flag for whether to disable ramping when vac_level is above VAC_MAX_LEVEL_FOR_RAMP
 VAC_SPIKE_TRACES_TO_SAVE:  
   - KLYSTRON_FORWARD_PHASE
   - KLYSTRON_REVERSE_PHASE

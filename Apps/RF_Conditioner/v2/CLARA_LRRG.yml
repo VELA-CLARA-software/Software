@@ -378,6 +378,7 @@ KFPOW_AMPSP_RUNNING_STATS_LOG_FILENAME:  amp_power_log.txt
 ## Vacuum parameters
 VAC_PV:  CLA-LRG1-VAC-IMG-01:P
 VAC_SPIKE_DELTA:  0.00000001 # 1e-8
+VAC_SPIKE_MAX_LEVEL_FOR_OFF:  0.00000001 # 1e-8
 # Decay mode is TIMED or LEVEL, if LEVEL then set VAC_SPIKE_DECAY_LEVEL
 # a lvel decay means wait until the desitred level is reached after an event, before setting the "vacuum_good" state
 # a timed decay will wait the set amount of tim ebefore setting "vacuum_good" 
@@ -389,8 +390,8 @@ VAC_ROLLING_SUM_NUM_SAMPLES:  25 # We will keep a rolling sum of the vacuum leve
 VAC_CHECK_TIME:  200 #; ms between vacuum level checks, we think this is the faatest they go at
 VAC_SHOULD_DROP_AMP:  true #; amp_sp to set if vacuum spike
 VAC_SPIKE_DROP_AMP:  5 #; amp_sp to set if vacuum spike
-VAC_MAX_LEVEL:  0.000000005 #5e-9; If vacuum level goes  above this, disable ramping
-WHEN_VAC_HI_DISABLE_RAMP: true #BOOL, flag for whether to disable ramping when vac_level is above VAC_MAX_LEVEL
+VAC_MAX_LEVEL_FOR_RAMP_FOR_RAMP:  0.000000005 #5e-9; If vacuum level goes  above this, disable ramping
+WHEN_VAC_HI_DISABLE_RAMP: true #BOOL, flag for whether to disable ramping when vac_level is above VAC_MAX_LEVEL_FOR_RAMP
 VAC_SPIKE_TRACES_TO_SAVE:  
   - KLYSTRON_FORWARD_PHASE
   - KLYSTRON_REVERSE_PHASE
