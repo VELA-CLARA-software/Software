@@ -17,10 +17,10 @@
 //    along with VELA-CLARA-Software.  If not, see <http://www.gnu.org/licenses/>.    //
 //
 //  Author:      DJS
-//  Last edit:   04-08-2029
+//  Last edit:   04-08-2020
 //  FileName:    main_controller.py
-//  Description: The main_controller, holds all objects and passes data/messsages betwwen them
-//
+//  Description: The main_controller, holds all objects and passes data/messsages between them
+//               runes main_loop, which gets and checks all relevant states, and  decides how to ramp
 //
 //
 //

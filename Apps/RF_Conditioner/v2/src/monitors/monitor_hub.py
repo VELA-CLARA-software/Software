@@ -120,10 +120,11 @@ class monitor_hub(object):
     def start_monitors(self):
         self.logger.message(__name__ + ' Starting Data Monitoring', add_to_text_log=True,
                             show_time_stamp=False)
+        self.start_llrf_monitor()
+        self.start_keep_alive_hRF_heartbeat()
         self.start_rfprot_monitor()
         self.start_vac_valve()
         self.start_modulator_monitor()
-        self.start_llrf_monitor()
         self.start_vac_monitor()
         self.start_daq_frequency_monitor()
         self.start_outside_mask_monitor()

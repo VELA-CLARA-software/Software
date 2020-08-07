@@ -40,6 +40,9 @@ class llrf_control(object):
 		# get the llrf_control from hardware_control_hub
 		self.hardware = hardware_control_hub.hardware_control_hub()
 		self.llrf_control = self.hardware.llrf_control # TODO awfuil awfukl name
+		self.llrf_control.setKeepAlive(True)
+		self.llrf_control.keepAlive()
+
 		self.llrf_obj = self.hardware.llrf_obj
 
 		# init some display switches
@@ -75,6 +78,10 @@ class llrf_control(object):
 		self.set_trace_mean_positions()
 		# set up terace for omed and rollgin averages
 		self.setup_traces_for_omed_and_rolling_averages()
+
+		self.llrf_control.setKeepAlive(True)
+		self.llrf_control.keepAlive()
+
 
 	def enable_llrf(self):
 		# go through each possible LLRF paramter (except HOLD_RF_ON_COM mod / protection parameters

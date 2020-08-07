@@ -44,6 +44,9 @@ class llrf_monitor(monitor):
         # aliases
         self.llrf_control = self.hardware.llrf_control
         self.llrf_obj = self.hardware.llrf_obj
+        self.llrf_control.setKeepAlive(True)
+        self.llrf_control.keepAlive()
+
         #
         # now match up trace names with the keys for power outputs from the 'values' dict
         self.trace_mean_keys = {}
@@ -57,7 +60,7 @@ class llrf_monitor(monitor):
         # self.timer.start( 1000 )
         self.set_success = True
         self.old_rf_output = None
-        # reference to the values dictionaries
+        # create data object and get reference to the values dictionaries
         self.data = rf_conditioning_data.rf_conditioning_data()
         self.values = self.data.values
         self.expert_values = self.data.expert_values
@@ -176,14 +179,8 @@ class llrf_monitor(monitor):
 
     def update_pulse_length(self):
         '''
-        HOW DO WE ACTUALLY DEFINE PULSE LENGTH!!!!!!!!!!!!
-
-        :return:
+            HOW DO WE ACTUALLY DEFINE PULSE LENGTH!!!!!!!!!!!! This method is probably not well-used
         '''
-        #
-        # pulse length
-        # THIS OLD WAY IS NOW BROKE, we use an RF RAMP table Instead we now use the  getPulseShape vector and count the number of 1.0s (SketchyAF)
-        # pulse length
         # TODO: Is this the same method for the linac and the gun ???
         # self.values[self.data.pulse_length] = self.llrf_control.getPulseShape().count(1) * 0.009 * 1000
         self.values[self.data.pulse_length] = self.llrf_control.getPulseShape().count(1) * 9

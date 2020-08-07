@@ -234,6 +234,8 @@ class hardware_control_hub(object):
             message += 'FAILED to create a LLRF Control object'
         else:
             hch.llrf_control = hch.llrf_init.getLLRFController(MACHINE_MODE.PHYSICAL, rf_structure)
+            hch.llrf_control.setKeepAlive(True)
+            hch.llrf_control.keepAlive()
 
             # SET zero amp_sp as soon as possible
             hch.llrf_control.setAmpSP(0.0)
@@ -244,7 +246,8 @@ class hardware_control_hub(object):
             message += 'successfully created a ' + str(rf_structure) + ' LLRF control object'
         self.logger.message(message)
 
-        self.llrf_controller = llrf_control.llrf_control()
+        self.llrf_controller = llrf_control.llrf_control() # TODO better names for llrf_controller, (maybe llrf_py) so we never choose wrong object
+
 
 
 
