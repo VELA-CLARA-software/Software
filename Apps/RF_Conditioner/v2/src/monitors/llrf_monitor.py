@@ -67,7 +67,7 @@ class llrf_monitor(monitor):
 
         # CATAP max amp setpoint value ONLY NEEDS TO BE CALLED ONCE CANNOT CHANGE AFTER c++ CONFIG read
         self.values[self.data.catap_max_amp] = self.llrf_control.getMaxAmpSP()
-        self.values[self.data.llrf_max_amp] = self.llrf_control.getLLRFMaxAmpSP()
+        self.values[self.data.llrf_max_amp] = self.llrf_control.getLLRFMaxAmpSP() # this has not been tested yet
 
     def set_mean_dictionaries(self):
         # manually set up dicts to monitor trace 'means'

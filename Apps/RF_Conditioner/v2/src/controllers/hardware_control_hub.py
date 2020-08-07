@@ -71,6 +71,7 @@ class hardware_control_hub(object):
     print('import VELA_CLARA_LLRF_Control')
     llrf_init = VELA_CLARA_LLRF_Control.init()
     llrf_init.setQuiet()
+    #llrf_init.setVerbose()
     llrf_control = None
     llrf_obj = None
     # magnets

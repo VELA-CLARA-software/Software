@@ -175,7 +175,7 @@ class rf_conditioning_data(object):
     def get_log_ramp_power_finsh(self):
         # todo we need to think about how thsi should look for actual running
         if rf_conditioning_data.values[rf_conditioning_data.latest_amp_sp_from_ramp] > 500: # TODO on  startup this was breaking, maybe ok now
-            return self.get_kf_running_stat_power_at_set_point( float(rf_conditioning_data.values[rf_conditioning_data.latest_amp_sp_from_ramp]) )
+            return self.get_kf_running_stat_power_at_set_point(float(rf_conditioning_data.values[rf_conditioning_data.latest_amp_sp_from_ramp]))
         else:
             self.logger.message("This should not really happen, in get_log_ramp_power_finish, last_amp_sp = {} < 500".format(
                 rf_conditioning_data.values[rf_conditioning_data.last_amp_sp]), show_time_stamp = True)
@@ -1419,6 +1419,10 @@ class rf_conditioning_data(object):
     modulator_state = 'modulator_state'
     all_value_keys.append(modulator_state)
     values[modulator_state] = state.UNKNOWN
+
+    llrf_heart_beat_value = 'llrf_heart_beat_value'
+    all_value_keys.append(llrf_heart_beat_value)
+    values[llrf_heart_beat_value] = dummy_float
 
     modulator_good = 'modulator_good'
     all_value_keys.append(modulator_good)

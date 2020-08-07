@@ -66,6 +66,8 @@ from src.monitors.cavity_temperature_monitor import cavity_temperature_monitor
 print('monitor_hub: import cavity_temperature_monitor')
 from src.monitors.solenoid_monitor import solenoid_monitor
 
+print('monitor_hub: import rf_heartbeat')
+from src.monitors.rf_heartbeat import rf_heartbeat
 
 print('monitor_hub: import cavity_temperature_monitor')
 from src.monitors.daq_frequency_monitor import daq_frequency_monitor
@@ -87,10 +89,12 @@ class monitor_hub(object):
     sol_monitor = None
     user_gen_monitor = None
     daq_frequency_monitor = None
+    rf_heartbeater = None
 
     # state of each possible data monitor
 
     is_vac_monitoring = 'is_vac_monitoring'
+    is_rf_heartbeat_monitoring = 'is_rf_heartbeat_monitoring'
     # is_DC_monitoring = 'is_DC_monitoring'
     is_modulator_monitoring = 'is_modulator_monitoring'
     is_cavity_temp_monitoring = 'is_cavity_temp_monitoring'
@@ -107,7 +111,7 @@ class monitor_hub(object):
                      is_outside_mask_monitoring: False, is_llrf_monitoring: False,
                      is_water_temp_monitoring: False, is_rf_prot_monitoring: False,
                      is_daq_frequency_monitoring: False,
-                     is_vac_valve_monitor: False, is_sol_monitoring: False}
+                     is_vac_valve_monitor: False, is_sol_monitoring: False, is_rf_heartbeat_monitoring: False}
 
     def __init__(self):
         # owns a config and logging class
@@ -121,7 +125,7 @@ class monitor_hub(object):
         self.logger.message(__name__ + ' Starting Data Monitoring', add_to_text_log=True,
                             show_time_stamp=False)
         self.start_llrf_monitor()
-        self.start_keep_alive_hRF_heartbeat()
+        self.start_keep_alive_RF_heartbeat()
         self.start_rfprot_monitor()
         self.start_vac_valve()
         self.start_modulator_monitor()
@@ -143,6 +147,18 @@ class monitor_hub(object):
                 print >> sys.stderr, err
                 self.logger.message([err])
                 raise
+
+    def start_keep_alive_RF_heartbeat(self):
+        mh = monitor_hub
+        self.logger.message(__name__ + ' start_keep_alive_RF_heartbeat()')
+        mh.rf_heartbeater = rf_heartbeat()
+        mh.is_monitoring[mh.is_rf_heartbeat_monitoring] = mh.rf_heartbeater.set_success
+        message = 'start_rfprot_monitor '
+        if mh.is_monitoring[mh.is_rf_heartbeat_monitoring]:
+            message += 'successfully started RF Heartbeat'
+        else:
+            message += 'FAILED to start RF Heartbeat'
+        self.logger.message(message)
 
     def start_modulator_monitor(self):
         mh = monitor_hub
@@ -184,7 +200,7 @@ class monitor_hub(object):
         mh = monitor_hub
         self.logger.message(__name__ + ' start_llrf_monitor()')
         mh.llrf_monitor = llrf_monitor()
-        mh.is_monitoring[mh.is_llrf_monitoring] = mh.rf_prot_monitor.set_success
+        mh.is_monitoring[mh.is_llrf_monitoring] = mh.llrf_monitor.set_success
         message = 'start_llrf_monitor '
         if mh.is_monitoring[mh.is_llrf_monitoring]:
             message += ' successfully started LLRF Monitoring'

@@ -1160,6 +1160,28 @@
            </property>
           </widget>
          </item>
+         <item row="29" column="0">
+          <widget class="QLabel" name="cavity_ratio_label_2">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="frameShape">
+            <enum>QFrame::Box</enum>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Sunken</enum>
+           </property>
+           <property name="text">
+            <string>High-level can RF output</string>
+           </property>
+           <property name="scaledContents">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
          <item row="14" column="0">
           <widget class="QLabel" name="pulse_length_label_2">
            <property name="frameShape">
@@ -1268,7 +1290,7 @@
            </property>
           </widget>
          </item>
-         <item row="30" column="0">
+         <item row="31" column="0">
           <widget class="QLabel" name="probe_power_label_2">
            <property name="frameShape">
             <enum>QFrame::Box</enum>
@@ -1328,23 +1350,7 @@
            </property>
           </widget>
          </item>
-         <item row="28" column="0">
-          <widget class="QLabel" name="rev_cav_power_label_2">
-           <property name="frameShape">
-            <enum>QFrame::Box</enum>
-           </property>
-           <property name="frameShadow">
-            <enum>QFrame::Sunken</enum>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="scaledContents">
-            <bool>false</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="31" column="0">
+         <item row="32" column="0">
           <widget class="QLabel" name="cav_temp_label_2">
            <property name="minimumSize">
             <size>
@@ -1363,25 +1369,6 @@
            </property>
            <property name="scaledContents">
             <bool>false</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="32" column="0">
-          <widget class="QLabel" name="power_aim_label_2">
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="frameShape">
-            <enum>QFrame::Box</enum>
-           </property>
-           <property name="frameShadow">
-            <enum>QFrame::Sunken</enum>
-           </property>
-           <property name="text">
-            <string>Mid-level BD state</string>
            </property>
           </widget>
          </item>
@@ -1597,7 +1584,7 @@
            </property>
           </widget>
          </item>
-         <item row="31" column="1" colspan="2">
+         <item row="32" column="1" colspan="2">
           <widget class="QLabel" name="can_llrf_output_state_outputwidget">
            <property name="frameShape">
             <enum>QFrame::Box</enum>
@@ -1613,7 +1600,7 @@
            </property>
           </widget>
          </item>
-         <item row="30" column="1" colspan="2">
+         <item row="31" column="1" colspan="2">
           <widget class="QLabel" name="can_ramp_status_outputwidget">
            <property name="frameShape">
             <enum>QFrame::Box</enum>
@@ -1623,22 +1610,6 @@
            </property>
            <property name="text">
             <string>0</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignAbsolute|Qt::AlignBottom|Qt::AlignCenter|Qt::AlignHCenter|Qt::AlignHorizontal_Mask|Qt::AlignJustify|Qt::AlignLeading|Qt::AlignLeft|Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing|Qt::AlignVCenter|Qt::AlignVertical_Mask</set>
-           </property>
-          </widget>
-         </item>
-         <item row="32" column="1" colspan="2">
-          <widget class="QLabel" name="BD_state_outputwidget">
-           <property name="frameShape">
-            <enum>QFrame::Box</enum>
-           </property>
-           <property name="frameShadow">
-            <enum>QFrame::Sunken</enum>
-           </property>
-           <property name="text">
-            <string>-9</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignAbsolute|Qt::AlignBottom|Qt::AlignCenter|Qt::AlignHCenter|Qt::AlignHorizontal_Mask|Qt::AlignJustify|Qt::AlignLeading|Qt::AlignLeft|Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing|Qt::AlignVCenter|Qt::AlignVertical_Mask</set>
@@ -2064,44 +2035,6 @@
            </property>
           </widget>
          </item>
-         <item row="29" column="1" colspan="2">
-          <widget class="QLabel" name="can_rf_output_status_outputwidget">
-           <property name="frameShape">
-            <enum>QFrame::Box</enum>
-           </property>
-           <property name="frameShadow">
-            <enum>QFrame::Sunken</enum>
-           </property>
-           <property name="text">
-            <string>0</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignAbsolute|Qt::AlignBottom|Qt::AlignCenter|Qt::AlignHCenter|Qt::AlignHorizontal_Mask|Qt::AlignJustify|Qt::AlignLeading|Qt::AlignLeft|Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing|Qt::AlignVCenter|Qt::AlignVertical_Mask</set>
-           </property>
-          </widget>
-         </item>
-         <item row="29" column="0">
-          <widget class="QLabel" name="cavity_ratio_label_2">
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="frameShape">
-            <enum>QFrame::Box</enum>
-           </property>
-           <property name="frameShadow">
-            <enum>QFrame::Sunken</enum>
-           </property>
-           <property name="text">
-            <string>High-level can RF output</string>
-           </property>
-           <property name="scaledContents">
-            <bool>false</bool>
-           </property>
-          </widget>
-         </item>
          <item row="5" column="0" colspan="3">
           <widget class="QLabel" name="last_106_count_label_2">
            <property name="frameShape">
@@ -2115,22 +2048,6 @@
            </property>
            <property name="alignment">
             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="7" column="0">
-          <widget class="QLabel" name="RF_protection_label_2">
-           <property name="frameShape">
-            <enum>QFrame::Box</enum>
-           </property>
-           <property name="frameShadow">
-            <enum>QFrame::Sunken</enum>
-           </property>
-           <property name="text">
-            <string>Ramped SP (now) / (last)</string>
-           </property>
-           <property name="scaledContents">
-            <bool>false</bool>
            </property>
           </widget>
          </item>
@@ -2150,6 +2067,22 @@
            </property>
           </widget>
          </item>
+         <item row="7" column="0">
+          <widget class="QLabel" name="RF_protection_label_2">
+           <property name="frameShape">
+            <enum>QFrame::Box</enum>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Sunken</enum>
+           </property>
+           <property name="text">
+            <string>Ramped SP (now) / (last)</string>
+           </property>
+           <property name="scaledContents">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
          <item row="9" column="1" colspan="2">
           <widget class="QLabel" name="log_ramp_final_setpoint_outputwidget">
            <property name="frameShape">
@@ -2163,6 +2096,73 @@
            </property>
            <property name="alignment">
             <set>Qt::AlignAbsolute|Qt::AlignBottom|Qt::AlignCenter|Qt::AlignHCenter|Qt::AlignHorizontal_Mask|Qt::AlignJustify|Qt::AlignLeading|Qt::AlignLeft|Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing|Qt::AlignVCenter|Qt::AlignVertical_Mask</set>
+           </property>
+          </widget>
+         </item>
+         <item row="29" column="1" colspan="2">
+          <widget class="QLabel" name="can_rf_output_status_outputwidget">
+           <property name="frameShape">
+            <enum>QFrame::Box</enum>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Sunken</enum>
+           </property>
+           <property name="text">
+            <string>0</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignAbsolute|Qt::AlignBottom|Qt::AlignCenter|Qt::AlignHCenter|Qt::AlignHorizontal_Mask|Qt::AlignJustify|Qt::AlignLeading|Qt::AlignLeft|Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing|Qt::AlignVCenter|Qt::AlignVertical_Mask</set>
+           </property>
+          </widget>
+         </item>
+         <item row="33" column="1" colspan="2">
+          <widget class="QLabel" name="BD_state_outputwidget">
+           <property name="frameShape">
+            <enum>QFrame::Box</enum>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Sunken</enum>
+           </property>
+           <property name="text">
+            <string>-9</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignAbsolute|Qt::AlignBottom|Qt::AlignCenter|Qt::AlignHCenter|Qt::AlignHorizontal_Mask|Qt::AlignJustify|Qt::AlignLeading|Qt::AlignLeft|Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing|Qt::AlignVCenter|Qt::AlignVertical_Mask</set>
+           </property>
+          </widget>
+         </item>
+         <item row="33" column="0">
+          <widget class="QLabel" name="power_aim_label_2">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="frameShape">
+            <enum>QFrame::Box</enum>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Sunken</enum>
+           </property>
+           <property name="text">
+            <string>Mid-level BD state</string>
+           </property>
+          </widget>
+         </item>
+         <item row="34" column="0" colspan="3">
+          <widget class="QLabel" name="RF_Heartbeat_outputwidget">
+           <property name="frameShape">
+            <enum>QFrame::Box</enum>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Sunken</enum>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="scaledContents">
+            <bool>false</bool>
            </property>
           </widget>
          </item>

@@ -489,7 +489,7 @@ PID_llrf_max_amp_sp_limit  : CLA-GUN-LRF-CTRL-01:vm:dsp:sp_amp:amplitude:DRVH
 ## Binning
 
 BIN_WIDTH: 100  ## Width of each bin in amp set points, the lower the number, the more bins will result
-MAX_AMP:  60000  ## maximum x-coordinate, amp set points
+MAX_AMP:  120000  ## maximum x-coordinate, amp set points
 MAX_POW:  0.0  ## maximum y-coordinate, Watts
 MIN_AMP:  500
 
@@ -504,5 +504,5 @@ KLY_PWR_FOR_ACTIVE_PULSE: 500.0 # FLOAT, min kyl fwd power to enable incrementin
 
 
 # Cavity rev / fwd pwr ratio maximum threshold: if ratio over this value then can_ramp == False
-CAV_PWR_RATIO  : 1.0  # Ratio as percentage
+CAV_PWR_RATIO  : 2.0  # Ratio as percentage
 

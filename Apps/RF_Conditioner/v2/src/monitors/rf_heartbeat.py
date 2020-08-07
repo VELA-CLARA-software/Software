@@ -17,7 +17,7 @@
 //    along with VELA-CLARA-Software.  If not, see <http://www.gnu.org/licenses/>.    //
 //
 //  Author:      DJS
-//  Last edit:   03-07-2018
+//  Last edit:   03-07-2020
 //  FileName:    rf_heartbeat.py
 //  Description: The hardware_control_hub, creates and holds all CATAP hardware controllers,
 //                they get passed to where they are needed
@@ -25,7 +25,7 @@
 //*/
 '''
 from monitor import monitor
-
+from VELA_CLARA_enums import CONTROLLER_TYPE
 
 class rf_heartbeat(monitor):
     """
@@ -34,34 +34,24 @@ class rf_heartbeat(monitor):
     def __init__(self):
         monitor.__init__(self)
 
-        self.update_time = 5
+        self.update_time = 5000
 
-        if self.hardware.have_controller[CONTROLLER_TYPE.RF_MOD]:
-            self.mod = self.hardware.mod_obj
+        # safety check teh controller exists
+        if self.hardware.have_controller[CONTROLLER_TYPE.LLRF]:
+            self.llrf_control = self.hardware.llrf_control
+            # if it exists start timer, which calls self.check function every self.update_time
             self.start()
             self.set_success = True
         else:
             self.set_success = False
 
     def check(self):
-        self.llrf_control.setKeepAlive(True)
-        self.llrf_control.keepAlive()
-
-
-        self.data.values[self.data.modulator_state] = self.mod[0].main_state
-        # print("self.data.values[self.data.modulator_state] = ", self.data.values[
-        #     self.data.modulator_state] )
-
-        # assume there is one PV that gives the RF state,
-        # MODULATOR, INTERLOCKS, LLRF
-        # wich MAY NOT be true
-        if self.data.values[self.data.modulator_state] == GUN_MOD_STATE.RF_ON:
-            self.data.values[self.data.modulator_good] = True
-        elif self.data.values[self.data.modulator_state] == L01_MOD_STATE.L01_RF_ON:
-            self.data.values[self.data.modulator_good] = True
-        else:
-            self.data.values[self.data.modulator_good] = False
-
+        # force keep
+        self.hardware.llrf_control.setKeepAlive(True)
+        self.hardware.llrf_control.keepAlive()
+        self.data.values[self.data.llrf_heart_beat_value] = self.llrf_control.getKeepAliveValue()
+        #print('getKeepAliveValue = ', self.llrf_control.getKeepAliveValue())
+        #print("hearbeat mon =  ", self.data.values[self.data.llrf_heart_beat_value])
 
 
 

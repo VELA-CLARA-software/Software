@@ -103,6 +103,8 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
     timing = 'yellow'
     init = 'orange'
     standby = 'purple'
+    one = 'green'
+    zero = 'yellow'
 
     #
     # other attributes will be initialised in base-class
@@ -488,6 +490,22 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
 
         self.live_amp_set_outputwidget.setText( str(int(self.values[self.data.amp_sp])) )
 
+        # Heartbeat flash on/off
+        #print('self.data.values[self.data.llrf_heart_beat_value]= {}'.format(self.values[self.data.llrf_heart_beat_value]))
+        #raw_input()
+
+        if self.data.values[self.data.llrf_heart_beat_value] == 0.0:
+            self.RF_Heartbeat_outputwidget.setText('HEARTBEAT: REST')
+            self.RF_Heartbeat_outputwidget.setStyleSheet('QLabel { background-color : ' + self.zero + '; color : black; }')
+
+        elif self.data.values[self.data.llrf_heart_beat_value] == 1.0:
+            self.RF_Heartbeat_outputwidget.setText('HEARTBEAT: PULSE')
+            self.RF_Heartbeat_outputwidget.setStyleSheet('QLabel { background-color : ' + self.one + '; color : black; }')
+        else:
+            self.RF_Heartbeat_outputwidget.setText('HEARTBEAT: UNKNOWN')
+            self.RF_Heartbeat_outputwidget.setStyleSheet('QLabel { background-color : ' + self.unknown + '; color : black; }')
+
+
     def update_amp_sp(self):
         self.amp_set_outputwidget.setText('{} / {}'.format(int(self.values[self.data.latest_amp_sp_from_ramp]), int(self.values[self.data.last_amp_sp])))
 
@@ -701,6 +719,10 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
             widget.setText('TIMING')
         elif val == state.STANDBY:
             widget.setText('STANDBY')
+        elif val == 0.0:
+            widget.setText('HEARTBEAT 0')
+        elif val == 1.0:
+            widget.setText('HEARTBEAT 1')
         else:
             widget.setText('UNKNOWN')
 
@@ -723,6 +745,10 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
             widget.setStyleSheet('QLabel { background-color : ' + self.timing + '; color : black; }')
         elif val == state.STANDBY:
             widget.setStyleSheet('QLabel { background-color : ' + self.standby + '; color : black; }')
+        elif val == 0.0:
+            widget.setStyleSheet('QLabel { background-color : ' + self.zero + '; color : black; }')
+        elif val == 1.0:
+            widget.setStyleSheet('QLabel { background-color : ' + self.one + '; color : black; }')
         else:
             widget.setStyleSheet('QLabel { background-color : ' + self.unknown + '; color : black; }')
 

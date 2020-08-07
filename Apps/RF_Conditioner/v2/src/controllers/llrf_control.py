@@ -250,7 +250,7 @@ class llrf_control(object):
 			if update_last_amp_sp:
 				#self.values[rf_conditioning_data.last_amp_sp] = start_amp_sp
 				self.values[rf_conditioning_data.last_amp_sp] = start_amp_sp
-				self.values[rf_conditioning_data.latest_amp_sp_from_ramp] = val1
+				self.values[rf_conditioning_data.latest_amp_sp_from_ramp] = float(val1)
 				self.logger.message('set_amp is updating last_amp_sp set to  {}'.format(start_amp_sp))
 				self.values[rf_conditioning_data.kfpower_at_last_amp_sp] = self.data.amp_vs_kfpow_running_stat[ int(self.values[
 					rf_conditioning_data.last_amp_sp])][1]
