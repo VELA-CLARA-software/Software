@@ -550,6 +550,8 @@ class rf_conditioning_data(object):
 
     def initial_bin(self):
 
+        # TODO AJG: Find a way to exclude obviosly bad data recorded during periods of low DAQ frequency (we think).
+
         '''This reads in the data from the amp_power log and bins all available data.
         The power values are already mean so need multiplying by the # of pulses, summing then dividing by the total number of pulses
         to get the genuine mean.
@@ -638,6 +640,8 @@ class rf_conditioning_data(object):
         #  amp_setpoint data or do we re-bin all the data ???
         # TODO Lets update the binned data with amp_vs_kfpow_running_stat
         # TODO it seems like there maybe a 'cleaner' way to do this
+
+        # TODO AJG: Do not update bins if data is clearly bad i.e. data from periods of low DAQ frequency.
 
         # new_amp = int(self.amp_vs_kfpow_running_stat[self.values[self.data.amp_sp]])
 
@@ -926,6 +930,12 @@ class rf_conditioning_data(object):
         # Make sure the positve answer is returned as a float of the form xxxx.0
         if predicted_sp < 0.0:
             predicted_sp = int(predicted_sp_alt)
+            return float(predicted_sp), p0, p1, p2, polyfit_2order
+        # if fitting fais and an np.NaN is returned set the predicted_sp to current + default minimum
+        elif np.isnan(predicted_sp):
+            print('np.NaN returned from poly_fit_2order()')
+            predicted_sp = self.values[rf_conditioning_data.amp_sp] + self.config.raw_config_data['DEFAULT_RF_INCREASE_LEVEL']
+            predicted_sp = int(predicted_sp)
             return float(predicted_sp), p0, p1, p2, polyfit_2order
         else:
             predicted_sp = int(predicted_sp)

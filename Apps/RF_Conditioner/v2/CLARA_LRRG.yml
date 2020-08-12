@@ -63,9 +63,9 @@ RF_STRUCTURE: CLARA_LRRG # STRING
 #TIME_BETWEEN_RF_INCREASES :  10;seconds
 #RF_INCREASE_LEVEL=0.001;kw (KLYSTRON FORWARD POWER ESTIMATE)
 
-DEFAULT_RF_INCREASE_LEVEL: 10  # INTEGER LLRF units
-DEFAULT_PULSE_COUNT: 150 # INTEGER, How many pulses to wait before the next ramp
-MAX_DELTA_AMP_SP : 400 #; maximum setpoint increase allowed, no matter what the fitting says INTEGER
+DEFAULT_RF_INCREASE_LEVEL: 50  # INTEGER LLRF units
+DEFAULT_PULSE_COUNT: 1000 # INTEGER, How many pulses to wait before the next ramp
+MAX_DELTA_AMP_SP: 300 #; maximum setpoint increase allowed, no matter what the fitting says INTEGER
 
 NUM_SET_POINTS_TO_FIT:  4 # how many setpoints to fit when predicted then next setpoint
 
@@ -90,8 +90,8 @@ LLRF_CHECK_TIME:  50 # INTEGER ms to check main llrf parameters
 #NORMAL_POWER_INCREASE=10000;Watts normalstep size
 #LOW_POWER_INCREASE=1000;Watts, step size at low power
 #LOW_POWER_INCREASE_RATE_LIMIT=1000000;Watts. definition of low/normal power for _POWER_INCREASE tags
-NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY:  1000000 #how many pulses to count 
-BREAKDOWN_RATE_AIM:  100 #  INTEGER per NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY
+NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY:  100000 #how many pulses to count
+BREAKDOWN_RATE_AIM:  10 #  INTEGER per NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY
 
 NUM_BUFFER_TRACES:  500 # number of traces in history, dumped on vac-spike
 
@@ -378,7 +378,7 @@ KFPOW_AMPSP_RUNNING_STATS_LOG_FILENAME:  amp_power_log.txt
 ## Vacuum parameters
 VAC_PV:  CLA-LRG1-VAC-IMG-01:P
 VAC_SPIKE_DELTA:  0.00000001 # 1e-8
-VAC_SPIKE_MAX_LEVEL_FOR_OFF:  0.00000001 # 1e-8
+VAC_SPIKE_MAX_LEVEL_FOR_OFF:  0.000000002 # 2e-9
 # Decay mode is TIMED or LEVEL, if LEVEL then set VAC_SPIKE_DECAY_LEVEL
 # a lvel decay means wait until the desitred level is reached after an event, before setting the "vacuum_good" state
 # a timed decay will wait the set amount of tim ebefore setting "vacuum_good" 
