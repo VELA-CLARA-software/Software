@@ -37,7 +37,8 @@ class UnitConversion(object):
 	def getEnergyGain(self, rf_type, forward_power, phase, pulse_length, cavity_length):
 		if (rf_type == "LRRG_GUN") or ("GUN" in rf_type):
 			self.gun_energy_gain = self.getEnergyFromRF(forward_power, phase, pulse_length, cavity=rf_type)
-			self.field_amplitude = float(self.gun_energy_gain / 0.0644)
+			self.energy_gain = self.getEnergyFromRF(forward_power, 0, pulse_length, cavity=rf_type)
+			self.field_amplitude = float(self.energy_gain / 0.0644)
 			return [self.gun_energy_gain, self.field_amplitude]
 		elif (rf_type == "L01") or ("L01" in rf_type):
 			self.l01_energy_gain = self.getEnergyFromRF(forward_power, phase, pulse_length, cavity=rf_type)
@@ -144,7 +145,7 @@ class UnitConversion(object):
 			bestcase = 0.407615 + 1.94185 * (((1 - math.exp(-1.54427 * pulse_length)) * (
 					0.0331869 + 6.05422 * 10 ** -7 * forward_power)) * abs(numpy.cos(phase))) ** 0.5
 			worstcase = 0.377 + 1.81689 * (((1 - math.exp(-1.54427 * pulse_length)) * (
-					0.0331869 + 6.05422 * 10 ** -7 * forward_power)) * abs(numpy.cos(phase))) ** 0.5
+			 		0.0331869 + 6.05422 * 10 ** -7 * forward_power)) * abs(numpy.cos(phase))) ** 0.5
 			return numpy.mean([bestcase, worstcase])
 		elif (cavity == "L01") or ("L01" in cavity):
 			return (numpy.sqrt(forward_power * 6.248 * 1e7) * 1e-6)
