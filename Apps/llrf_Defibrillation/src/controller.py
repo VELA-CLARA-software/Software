@@ -24,7 +24,8 @@
 '''
 import sys
 # Add the release folder to the path to get latest HWC
-sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\stage')
+# sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release')
+sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\Release')
 
 from src.data import data
 from src.procedure import procedure

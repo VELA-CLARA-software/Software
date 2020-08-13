@@ -40,6 +40,9 @@ class llrf_control(object):
 		# get the llrf_control from hardware_control_hub
 		self.hardware = hardware_control_hub.hardware_control_hub()
 		self.llrf_control = self.hardware.llrf_control # TODO awfuil awfukl name
+		self.llrf_control.setKeepAlive(True)
+		self.llrf_control.keepAlive()
+
 		self.llrf_obj = self.hardware.llrf_obj
 
 		# init some display switches
@@ -75,6 +78,10 @@ class llrf_control(object):
 		self.set_trace_mean_positions()
 		# set up terace for omed and rollgin averages
 		self.setup_traces_for_omed_and_rolling_averages()
+
+		self.llrf_control.setKeepAlive(True)
+		self.llrf_control.keepAlive()
+
 
 	def enable_llrf(self):
 		# go through each possible LLRF paramter (except HOLD_RF_ON_COM mod / protection parameters
@@ -222,39 +229,38 @@ class llrf_control(object):
 		success = False
 		#if val != self.llrf_control.getAmpFF(): # TODO this has chnged from amp_SP due to
 		current_value = self.llrf_control.getAmpSP()
-		if val1 != current_value:
+		if val1 == current_value:
+			self.logger.message('requested value is THE SAME as current value', show_time_stamp = False)
 			# don't need thsi message?
 			#self.logger.message('set_amp requested value {} is different to current value {}'.format(val1, current_value), show_time_stamp = False)
-			self.llrf_control.setAmpSP(val1)
-			# timer so we know how long this function  takes, and to crash out if setting fails for some reason
-			start = timer()
-			end = start
-			success = True
-			while self.llrf_control.getAmpSP() != val1:
-				#print("stuck in the whie loop, ", start, end, end-start)
-				end = timer()
-				if end - start > 3.0:#MAGIC_NUMBER
-					success = False
-					break
-			if success:
-				# self.logger.message('set_amp(' + str(val1) + '), took ' + str(end - start) + ' time,  averages NOT reset, mask_set = False',
-				#                     show_time_stamp = False)
-				if update_last_amp_sp:
-					#self.values[rf_conditioning_data.last_amp_sp] = start_amp_sp
-					self.values[rf_conditioning_data.last_amp_sp] = start_amp_sp
-					self.values[rf_conditioning_data.latest_amp_sp_from_ramp] = val1
-					self.logger.message('set_amp is updating last_amp_sp set to  {}'.format(start_amp_sp))
-					self.values[rf_conditioning_data.kfpower_at_last_amp_sp] = self.data.amp_vs_kfpow_running_stat[ int(self.values[
-						rf_conditioning_data.last_amp_sp])][1]
+		self.llrf_control.setAmpSP(val1)
+		# timer so we know how long this function  takes, and to crash out if setting fails for some reason
+		start = timer()
+		end = start
+		success = True
+		while self.llrf_control.getAmpSP() != val1:
+			#print("stuck in the whie loop, ", start, end, end-start)
+			end = timer()
+			if end - start > 3.0:#MAGIC_NUMBER
+				success = False
+				break
+		if success:
+			# self.logger.message('set_amp(' + str(val1) + '), took ' + str(end - start) + ' time,  averages NOT reset, mask_set = False',
+			#                     show_time_stamp = False)
+			if update_last_amp_sp:
+				#self.values[rf_conditioning_data.last_amp_sp] = start_amp_sp
+				self.values[rf_conditioning_data.last_amp_sp] = start_amp_sp
+				self.values[rf_conditioning_data.latest_amp_sp_from_ramp] = float(val1)
+				self.logger.message('set_amp is updating last_amp_sp set to  {}'.format(start_amp_sp))
+				self.values[rf_conditioning_data.kfpower_at_last_amp_sp] = self.data.amp_vs_kfpow_running_stat[ int(self.values[
+					rf_conditioning_data.last_amp_sp])][1]
 
-					# self.logger.message('set_amp  updating, last_amp_sp = {}, last_amp_sp =  '.format(start_amp_sp, self.values[rf_conditioning_data.last_amp_sp] ))
+				# self.logger.message('set_amp  updating, last_amp_sp = {}, last_amp_sp =  '.format(start_amp_sp, self.values[rf_conditioning_data.last_amp_sp] ))
 
-				self.values[rf_conditioning_data.amp_sp] = self.llrf_control.getAmpSP()
-			else:
-				self.logger.message('set_amp(' + str(val1) + '), FAILED to set amp in less than 3 seconds '
-				                                             'averages NOT reset, mask_set = False')
+			self.values[rf_conditioning_data.amp_sp] = self.llrf_control.getAmpSP()
 		else:
-			self.logger.message('requested value is THE SAME as current value', show_time_stamp = False)
+			self.logger.message('set_amp(' + str(val1) + '), FAILED to set amp in less than 3 seconds averages NOT reset, mask_set = False')
+
 
 		return success
 

@@ -63,9 +63,9 @@ RF_STRUCTURE: CLARA_LRRG # STRING
 #TIME_BETWEEN_RF_INCREASES :  10;seconds
 #RF_INCREASE_LEVEL=0.001;kw (KLYSTRON FORWARD POWER ESTIMATE)
 
-DEFAULT_RF_INCREASE_LEVEL: 10  # INTEGER LLRF units
-DEFAULT_PULSE_COUNT: 150 # INTEGER, How many pulses to wait before the next ramp
-MAX_DELTA_AMP_SP : 400 #; maximum setpoint increase allowed, no matter what the fitting says INTEGER
+DEFAULT_RF_INCREASE_LEVEL: 50  # INTEGER LLRF units
+DEFAULT_PULSE_COUNT: 1000 # INTEGER, How many pulses to wait before the next ramp
+MAX_DELTA_AMP_SP: 300 #; maximum setpoint increase allowed, no matter what the fitting says INTEGER
 
 NUM_SET_POINTS_TO_FIT:  4 # how many setpoints to fit when predicted then next setpoint
 
@@ -90,8 +90,8 @@ LLRF_CHECK_TIME:  50 # INTEGER ms to check main llrf parameters
 #NORMAL_POWER_INCREASE=10000;Watts normalstep size
 #LOW_POWER_INCREASE=1000;Watts, step size at low power
 #LOW_POWER_INCREASE_RATE_LIMIT=1000000;Watts. definition of low/normal power for _POWER_INCREASE tags
-NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY:  1000000 #how many pulses to count 
-BREAKDOWN_RATE_AIM:  100 #  INTEGER per NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY
+NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY:  100000 #how many pulses to count
+BREAKDOWN_RATE_AIM:  10 #  INTEGER per NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY
 
 NUM_BUFFER_TRACES:  500 # number of traces in history, dumped on vac-spike
 
@@ -378,7 +378,7 @@ KFPOW_AMPSP_RUNNING_STATS_LOG_FILENAME:  amp_power_log.txt
 ## Vacuum parameters
 VAC_PV:  CLA-LRG1-VAC-IMG-01:P
 VAC_SPIKE_DELTA:  0.00000001 # 1e-8
-VAC_SPIKE_MAX_LEVEL_FOR_OFF:  0.00000001 # 1e-8
+VAC_SPIKE_MAX_LEVEL_FOR_OFF:  0.000000002 # 2e-9
 # Decay mode is TIMED or LEVEL, if LEVEL then set VAC_SPIKE_DECAY_LEVEL
 # a lvel decay means wait until the desitred level is reached after an event, before setting the "vacuum_good" state
 # a timed decay will wait the set amount of tim ebefore setting "vacuum_good" 
@@ -390,7 +390,7 @@ VAC_ROLLING_SUM_NUM_SAMPLES:  25 # We will keep a rolling sum of the vacuum leve
 VAC_CHECK_TIME:  200 #; ms between vacuum level checks, we think this is the faatest they go at
 VAC_SHOULD_DROP_AMP:  true #; amp_sp to set if vacuum spike
 VAC_SPIKE_DROP_AMP:  5 #; amp_sp to set if vacuum spike
-VAC_MAX_LEVEL_FOR_RAMP_FOR_RAMP:  0.000000005 #5e-9; If vacuum level goes  above this, disable ramping
+VAC_MAX_LEVEL_FOR_RAMP:  0.000000005 #5e-9; If vacuum level goes  above this, disable ramping
 WHEN_VAC_HI_DISABLE_RAMP: true #BOOL, flag for whether to disable ramping when vac_level is above VAC_MAX_LEVEL_FOR_RAMP
 VAC_SPIKE_TRACES_TO_SAVE:  
   - KLYSTRON_FORWARD_PHASE
@@ -484,11 +484,12 @@ PID_proportional_gain_GMON :  CLA-GUN-H2O-PID-02:PROP:RB
 PID_integral_gain_GMON :  CLA-GUN-H2O-PID-02:INTG:RB
 PID_derivative_gain_GMON :  CLA-GUN-H2O-PID-02:DERI:RB
 PID_autotune_state_GMON :  CLA-GUN-H2O-PID-02:ATUNE:RB
+PID_llrf_max_amp_sp_limit  : CLA-GUN-LRF-CTRL-01:vm:dsp:sp_amp:amplitude:DRVH
 
 ## Binning
 
 BIN_WIDTH: 100  ## Width of each bin in amp set points, the lower the number, the more bins will result
-MAX_AMP:  60000  ## maximum x-coordinate, amp set points
+MAX_AMP:  120000  ## maximum x-coordinate, amp set points
 MAX_POW:  0.0  ## maximum y-coordinate, Watts
 MIN_AMP:  500
 
@@ -502,6 +503,6 @@ LOG_RAMP_START_POWER  : 30000 # This should never be set less than the KLY_PWR_F
 KLY_PWR_FOR_ACTIVE_PULSE: 500.0 # FLOAT, min kyl fwd power to enable incrementing the RF pulse counter (in Watts)
 
 
-# Cavity rev / fwd pwr ratio maximum threshhold: if ratio over this value then can_ramp == False
-CAV_PWR_RATIO  : 1.0  # Ratio as percentage
+# Cavity rev / fwd pwr ratio maximum threshold: if ratio over this value then can_ramp == False
+CAV_PWR_RATIO  : 2.0  # Ratio as percentage
 

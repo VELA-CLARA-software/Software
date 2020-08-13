@@ -175,7 +175,7 @@ class rf_conditioning_data(object):
     def get_log_ramp_power_finsh(self):
         # todo we need to think about how thsi should look for actual running
         if rf_conditioning_data.values[rf_conditioning_data.latest_amp_sp_from_ramp] > 500: # TODO on  startup this was breaking, maybe ok now
-            return self.get_kf_running_stat_power_at_set_point( float(rf_conditioning_data.values[rf_conditioning_data.latest_amp_sp_from_ramp]) )
+            return self.get_kf_running_stat_power_at_set_point(float(rf_conditioning_data.values[rf_conditioning_data.latest_amp_sp_from_ramp]))
         else:
             self.logger.message("This should not really happen, in get_log_ramp_power_finish, last_amp_sp = {} < 500".format(
                 rf_conditioning_data.values[rf_conditioning_data.last_amp_sp]), show_time_stamp = True)
@@ -550,6 +550,8 @@ class rf_conditioning_data(object):
 
     def initial_bin(self):
 
+        # TODO AJG: Find a way to exclude obviosly bad data recorded during periods of low DAQ frequency (we think).
+
         '''This reads in the data from the amp_power log and bins all available data.
         The power values are already mean so need multiplying by the # of pulses, summing then dividing by the total number of pulses
         to get the genuine mean.
@@ -638,6 +640,8 @@ class rf_conditioning_data(object):
         #  amp_setpoint data or do we re-bin all the data ???
         # TODO Lets update the binned data with amp_vs_kfpow_running_stat
         # TODO it seems like there maybe a 'cleaner' way to do this
+
+        # TODO AJG: Do not update bins if data is clearly bad i.e. data from periods of low DAQ frequency.
 
         # new_amp = int(self.amp_vs_kfpow_running_stat[self.values[self.data.amp_sp]])
 
@@ -926,6 +930,12 @@ class rf_conditioning_data(object):
         # Make sure the positve answer is returned as a float of the form xxxx.0
         if predicted_sp < 0.0:
             predicted_sp = int(predicted_sp_alt)
+            return float(predicted_sp), p0, p1, p2, polyfit_2order
+        # if fitting fais and an np.NaN is returned set the predicted_sp to current + default minimum
+        elif np.isnan(predicted_sp):
+            print('np.NaN returned from poly_fit_2order()')
+            predicted_sp = self.values[rf_conditioning_data.amp_sp] + self.config.raw_config_data['DEFAULT_RF_INCREASE_LEVEL']
+            predicted_sp = int(predicted_sp)
             return float(predicted_sp), p0, p1, p2, polyfit_2order
         else:
             predicted_sp = int(predicted_sp)
@@ -1420,6 +1430,10 @@ class rf_conditioning_data(object):
     all_value_keys.append(modulator_state)
     values[modulator_state] = state.UNKNOWN
 
+    llrf_heart_beat_value = 'llrf_heart_beat_value'
+    all_value_keys.append(llrf_heart_beat_value)
+    values[llrf_heart_beat_value] = dummy_float
+
     modulator_good = 'modulator_good'
     all_value_keys.append(modulator_good)
     values[modulator_good] = False
@@ -1638,6 +1652,12 @@ class rf_conditioning_data(object):
     catap_max_amp = 'catap_max_amp'
     all_value_keys.append(catap_max_amp)
     values[catap_max_amp] = dummy_float
+
+    llrf_max_amp = 'llrf_max_amp'
+    all_value_keys.append(llrf_max_amp)
+    values[llrf_max_amp] = dummy_float
+
+
 
     # We set a flag to tell us if we have reached the limit of CATAP "hardcoded" maxampSP value
     catap_max_amp_can_ramp_status = 'catap_max_amp_can_ramp_status'
