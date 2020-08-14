@@ -403,6 +403,9 @@ class rf_conditioning_data(object):
         # set is breakdown rate hi
         self.values[rcd.total_breakdown_count] = rcd.active_pulse_breakdown_log[-1][1]
         self.values[rcd.active_breakdown_count] = self.values[rcd.total_breakdown_count]  - rcd.active_pulse_breakdown_log[0][1]
+        #print 'self.values[rcd.total_breakdown_count] = {}\n rcd.active_pulse_breakdown_log[0][1] = {}'.format(self.values[
+        #                                                                                                           rcd.total_breakdown_count],
+        #                                                                                                       rcd.active_pulse_breakdown_log[0][1])
         self.values[rcd.breakdown_rate_low] = self.values[rcd.active_breakdown_count] <= self.values[rcd.breakdown_rate_aim]
 
     #def update_last_million_pulse_log(self): OLD NAME
@@ -454,6 +457,9 @@ class rf_conditioning_data(object):
                     self.logger.add_to_pulse_count_breakdown_log(
                         [rcd.values[rcd.pulse_count], rcd.values[rcd.total_breakdown_count], int(rcd._log_ramp_curve[-1][1]),
                          int(rcd.values[rcd.current_ramp_index]), int(rcd.values[rcd.pulse_length])])
+                else:
+                    self.logger.message('add_to_pulse_breakdown_log logic is missing action here. This could be causing problems for the '
+                                        'pulse_breakdown_log')
 
     def force_update_breakdown_count(self, count):
         rf_conditioning_data.values[rf_conditioning_data.total_breakdown_count] += count
@@ -483,11 +489,14 @@ class rf_conditioning_data(object):
         # amp_vs_kfpow_running_stat dictionary
         rcd.amp_vs_kfpow_running_stat = self.logger.get_kfpow_running_stat_log()
 
+        # rteduce the amp pwr data set to exlcude outliers
+        self.reduce_amp_power_log_data()
         # Call initial_bin()
-        bin_X, bin_mean, bin_edges, bin_pop, bin_data, bin_std, bin_pulses = self.initial_bin()
+        bin_mean, bin_edges, bin_pop, bin_data, bin_std, bin_pulses = self.initial_bin()
 
         # Write .txt file for Frank Jackson's DC script
-        din_X_non_zero = bin_X
+        bin_X = rcd.binned_amp_vs_kfpow[rcd.BIN_X]
+
 
         bin_X_non_zero = [bin_X[i] for i in range(len(bin_X)) if bin_mean[i] > 0.0]
         bin_Y_non_zero = [bin_mean[i] for i in range(len(bin_mean)) if bin_mean[i] > 0.0]
@@ -530,7 +539,7 @@ class rf_conditioning_data(object):
         # plt.errorbar(bin_X, bin_mean, yerrbin_error, xerr=0, fmt='none', ecolor='red',
         # elinewidth=0.5, capsize=2.0, capthick=0.5)
         plt.xlabel('Set Point')
-        plt.ylabel('Power (MW)')
+        plt.ylabel('Power (W)')
         plt.legend()
         plt.grid(True)
         plt.savefig(bin_plots_path + r'\Binning_Plot.png')
@@ -542,22 +551,45 @@ class rf_conditioning_data(object):
         # elinewidth=0.5, capsize=2.0, capthick=0.5)
         plt.xlim(0.0, max(AMP_preBin))
         plt.xlabel('Set Point')
-        plt.ylabel('Power (MW)')
+        plt.ylabel('Power (W)')
         plt.legend()
         plt.grid(True)
         plt.savefig(bin_plots_path + r'\Binning_Plot_zoom.png')
         plt.close('all')
 
-    def initial_bin(self):
+    # TODO AJG: Define a function that reduces the raw data from amp_power_log.txt to only include values within a specified range either side of a
+    #  fitted 4th order polynomial
 
-        # TODO AJG: Find a way to exclude obviosly bad data recorded during periods of low DAQ frequency (we think).
+    def poly_fit_4order(self, x, y):
 
-        '''This reads in the data from the amp_power log and bins all available data.
-        The power values are already mean so need multiplying by the # of pulses, summing then dividing by the total number of pulses
-        to get the genuine mean.
+        p = np.polyfit(x, y, 4, rcond=None, full=False)
+
+        p0 = a = p[0]
+        p1 = b = p[1]
+        p2 = c = p[2]
+        p3 = d = p[3]
+        p4 = e = p[4]
+
+        polyfit_4th_order = [p0 * i ** 4 + p1 * i ** 3 + p2 * i ** 2 + p3 * i + p4 for i in x]
+
+        return p0, p1, p2, p3, p4, polyfit_4th_order
+
+    def reduce_amp_power_log_data(self):
         '''
+            This function returns a reduced amp_sp vs. KFPower dataset with outliers removed.
+            The raw amp_sp vs KFPower data from the amp_power_log.txt is read in BEFORE initial_bin() [which might need renaming].
+            It performs a binning function then fits a 4th order polynomial function to all non-zero bin means.
+            Upper and lower limits are defined by adding/subtracting the 'AMP_PWR_ACCEPTANCE_WINDOW' value read in from the config .yaml.
+            Any raw amp_sp vs. KFPower datapoints that lie outside of this corridor are removed to form a new dataset (amp_sp_reduced,
+            KFPower_reduced).
+            These are then used as inputs for the initial_bin() function that performs as usual
+            num_pulses_reduced is also recorded as it gets used in the calculation of the BIN_mean in initial_bin()
+        '''
+        # TODO AJG: A lot of this function can be tidied up into other functions. Maybe a lot in common with initial_bin() and update_binned_data()
 
+        bin_plots_path = r'C:\Users\dlerlp\Documents\RF_Conditioning_20200720'
         rcd = rf_conditioning_data
+
 
         # cycle through amp_vs_kfpow_running_stat to populate amp_sp, kfpwr and number-of-pulses lists
         x = amp_sp_raw = []
@@ -577,7 +609,151 @@ class rf_conditioning_data(object):
         max_pow = self.config.raw_config_data['MAX_POW']
         min_amp = self.config.raw_config_data['MIN_AMP']
         max_amp = self.config.raw_config_data['MAX_AMP']
+        amp_pwr_acceptance_window = self.config.raw_config_data['AMP_PWR_ACCEPTANCE_WINDOW']
 
+        x.append(max_amp)
+        #y = [y[i] for i in range(len(x) - 1) if x[i] != x[i + 1]]
+        y.append(max_pow)
+
+        # Create list of bin edges starting at min_amp and ending at max_amp (max_amp now last element of x list)
+        bedges = np.arange(int(min_amp), int(x[-1]), bin_width).tolist()  # Not happy with np.arange.tolist() but it works!?!
+
+        # create arrays of zeros of length len(bedges)-1 ready to be populated by the main calculator
+        bin_pulses = np.zeros(len(bedges) - 1)
+        bin_mean =  np.zeros(len(bedges) - 1)
+
+        # Create dictionary of empty lists ready to be populated by all the raw kfpwr data sorted by bins where the bin index is the dict key
+        keyList = [i for i in range(len(bedges) - 1)]
+        data_binned = {}
+        for i in keyList:
+            data_binned[i] = []
+
+        # MAIN CALCULATOR: cycle over data and assign it to bins
+        for i in range(0, len(x)):
+            for j in range(0, len(bin_mean)):
+                if x[i] >= bedges[j] and x[i] < bedges[j + 1]:
+                    # multiply the number of pulses by the mean kfpowr to get the product (used in MEAN_EQN)
+                    bin_pulse_x_mean =  num_pulses_prebin[i] * y[i]
+                    # Define the new total number of pulses in the bin (used in MEAN_EQN)
+                    bin_pulses_new = (bin_pulses[j] +  num_pulses_prebin[i])
+                    # MEAN_EQN:
+                    bin_mean[j] = ((bin_mean[j] * bin_pulses[j]) + (bin_pulse_x_mean)) / bin_pulses_new
+
+
+        # Create a list of mid-bin amp set point values for use with the GUI plotter
+        BIN_X = [k + bin_width / 2.0 for k in bedges[:-1]]
+
+        #print('X = {}\nbin_mean = {}\nbin_pulses = {}\nbin_pop = {}\ndata_binned = {}\nbin_error = {}'.format(X[0:10], bin_mean[0:10],
+        # bin_pulses[0:10], bin_pop[0:10],data_binned, bin_std[0:10]))
+
+
+        #plt.scatter(newdata[0], newdata[0], c='g', s=35, marker='x', label='Data', zorder=1)
+        plt.scatter(x, y, c='k', s=2.0, marker='.', label='Raw Data', zorder=0)
+        plt.scatter(BIN_X, bin_mean, c='r', s=2.5, marker='.', label='Binned Mean', zorder=1)
+        plt.xlabel('Set Point')
+        plt.ylabel('Power (W)')
+        plt.legend()
+        plt.grid(True)
+        plt.savefig(bin_plots_path + r'\Initial_Binning_Plot.png')
+        plt.close('all')
+
+        # only use non-zero binned data
+        data_to_fit_x = [BIN_X[i] for i in range(len(BIN_X)) if bin_mean[i] > 0.0]
+        data_to_fit_y = [bin_mean[i] for i in range(len(bin_mean)) if bin_mean[i] > 0.0]
+
+        # fit a 4th order polynomial to the non-zero binned data
+        p0, p1, p2, p3, p4, polyfit_4th_order = self.poly_fit_4order(data_to_fit_x, data_to_fit_y)
+
+        # Reduce raw data to only include data points within the acceptance region
+        All_amp_sp = range(int(data_to_fit_x[-1] + bin_width ))
+        polyfit_4th_order_All_amp_sp = [p0 * i ** 4 + p1 * i ** 3 + p2 * i ** 2 + p3 * i + p4 for i in All_amp_sp]
+        DATA_upper_limit = [i + amp_pwr_acceptance_window for i in polyfit_4th_order_All_amp_sp]
+        DATA_lower_limit = [i - amp_pwr_acceptance_window for i in polyfit_4th_order_All_amp_sp]
+
+        plt.scatter(x, y, c='k', s=2.0, marker='.', label='Raw Data', zorder=0)
+        plt.scatter(BIN_X, bin_mean, c='r', s=2.5, marker='.', label='Binned Mean', zorder=1)
+        plt.plot(data_to_fit_x, polyfit_4th_order, ls='--', lw=2.1, color='c', label='4th Order Fit', zorder=2)
+        plt.plot(All_amp_sp, DATA_upper_limit, ls='-.', lw=1.0, color='r', label='upper & lower limits', zorder=2)
+        plt.plot(All_amp_sp, DATA_lower_limit, ls='-.', lw=1.0, color='r', zorder=2)
+        plt.xlabel('Set Point')
+        plt.ylabel('Power (W)')
+        plt.legend()
+        plt.grid(True)
+        plt.savefig(bin_plots_path + r'\Binning_Acceptance_Area.png')
+        plt.close('all')
+
+        amp_sp_reduced = []
+        num_pulses_reduced = []
+        KFPower_reduced = []
+        # exclude the artificially introduced max_amp from algorithm
+        num_excl_data_points = 0
+        for i in range(len(x)-1):
+            #print x[i]
+            #print All_amp_sp[0]
+            #raw_input()
+            idx = All_amp_sp.index(int(x[i]))
+
+            if y[i] > DATA_lower_limit[idx] and y[i] < DATA_upper_limit[idx]:
+                amp_sp_reduced.append(x[i])
+                num_pulses_reduced.append(num_pulses_prebin[i])
+                KFPower_reduced.append(y[i])
+            else:
+                num_excl_data_points += 1
+                #print 'idx {} failed to make the cut.'.format(idx)
+
+        self.logger.message_header('{} amp set point vs KFPower data points excluded from binning due to them being outside the +/- {} MW window of '
+                                   'the fitted 4th order polynomial function'.format(num_excl_data_points, amp_pwr_acceptance_window/10.0**6.0))
+
+
+        #print 'bedges = {}'.format(bedges)
+        #raw_input()
+        # TODO AJG: add x_reduced, num_pulses_reduced, y_reduced to binned_amp_vs_kfpow dict (line 1319)
+
+        rcd.binned_amp_vs_kfpow[rcd.amp_sp_reduced] = amp_sp_reduced
+        rcd.binned_amp_vs_kfpow[rcd.num_pulses_reduced] = num_pulses_reduced
+        rcd.binned_amp_vs_kfpow[rcd.KFPower_reduced] = KFPower_reduced
+        rcd.binned_amp_vs_kfpow[rcd.BIN_edges] = bedges
+        rcd.binned_amp_vs_kfpow[rcd.BIN_X] = BIN_X
+        rcd.binned_amp_vs_kfpow[rcd.All_amp_sp] = All_amp_sp
+        rcd.binned_amp_vs_kfpow[rcd.polyfit_4th_order_All_amp_sp] = polyfit_4th_order_All_amp_sp
+        rcd.binned_amp_vs_kfpow[rcd.DATA_lower_limit] = DATA_lower_limit
+        rcd.binned_amp_vs_kfpow[rcd.DATA_upper_limit] = DATA_upper_limit
+
+    def initial_bin(self):
+
+        # TODO AJG: Find a way to exclude obviosly bad data recorded during periods of low DAQ frequency (we think).
+
+        '''This reads in the data from the amp_power log and bins all available data.
+        The power values are already mean so need multiplying by the # of pulses, summing then dividing by the total number of pulses
+        to get the genuine mean.
+        '''
+
+        rcd = rf_conditioning_data
+
+
+        # TODO AJG: Remove x, y, bin width etc from initial_bin() as it happens first in the reduce_amp_power_log_data() function.
+        '''
+        # cycle through amp_vs_kfpow_running_stat to populate amp_sp, kfpwr and number-of-pulses lists
+        x = amp_sp_raw = []
+        num_pulses_prebin = []
+        y = mean_kfpwr_raw = []
+
+        for key in rcd.amp_vs_kfpow_running_stat.keys():
+            amp_sp_raw.append(key)
+            num_pulses_prebin.append(rcd.amp_vs_kfpow_running_stat[key][0])
+            mean_kfpwr_raw.append(rcd.amp_vs_kfpow_running_stat[key][1])
+            #print("init_bin set_up data = ", amp_sp_raw[-1], num_pulses_prebin[-1], mean_kfpwr_raw[-1])
+
+        #print('mean_kfpwr_raw = {}'.format(mean_kfpwr_raw))
+
+        # Call in config parameters
+        bin_width = self.config.raw_config_data['BIN_WIDTH']
+        max_pow = self.config.raw_config_data['MAX_POW']
+        min_amp = self.config.raw_config_data['MIN_AMP']
+        max_amp = self.config.raw_config_data['MAX_AMP']
+        
+        
+        
         # append max_amp & max_pow to list of amp & power. This is done so bins can be created ahead of the current amp_sp/kfpwr data point.
         #x = [x[i] for i in range(len(x) - 1) if x[i] != x[i + 1]]
         x.append(max_amp)
@@ -586,6 +762,13 @@ class rf_conditioning_data(object):
 
         # Create list of bin edges starting at min_amp and ending at max_amp (max_amp now last element of x list)
         bedges = np.arange(int(min_amp), int(x[-1]), bin_width).tolist()  # Not happy with np.arange.tolist() but it works!?!
+        
+        '''
+        x = rcd.binned_amp_vs_kfpow[rcd.amp_sp_reduced]
+        num_pulses_reduced = rcd.binned_amp_vs_kfpow[rcd.num_pulses_reduced]
+        y = rcd.binned_amp_vs_kfpow[rcd.KFPower_reduced]
+        bedges = rcd.binned_amp_vs_kfpow[rcd.BIN_edges]
+
 
         # create arrays of zeros of length len(bedges)-1 ready to be populated by the main calculator
         bin_pulses = np.zeros(len(bedges) - 1)
@@ -605,9 +788,9 @@ class rf_conditioning_data(object):
             for j in range(0, len(bin_mean)):
                 if x[i] >= bedges[j] and x[i] < bedges[j + 1]:
                     # multiply the number of pulses by the mean kfpowr to get the product (used in MEAN_EQN)
-                    bin_pulse_x_mean =  num_pulses_prebin[i] * y[i]
+                    bin_pulse_x_mean =  num_pulses_reduced[i] * y[i]
                     # Define the new total number of pulses in the bin (used in MEAN_EQN)
-                    bin_pulses_new = (bin_pulses[j] +  num_pulses_prebin[i])
+                    bin_pulses_new = (bin_pulses[j] +  num_pulses_reduced[i])
                     # MEAN_EQN:
                     bin_mean[j] = ((bin_mean[j] * bin_pulses[j]) + (bin_pulse_x_mean)) / bin_pulses_new
                     # Update the total number of pulses in the bin with new value
@@ -619,13 +802,12 @@ class rf_conditioning_data(object):
                     # Calculate the standard deviation of the data in each bin (needs to be weighted properly)
                     bin_std[j] = np.std(data_binned[j])
 
-        # Create a list of mid-bin amp set point values for use with the GUI plotter
-        X = [k + bin_width / 2.0 for k in bedges[:-1]]
+
 
         #print('X = {}\nbin_mean = {}\nbin_pulses = {}\nbin_pop = {}\ndata_binned = {}\nbin_error = {}'.format(X[0:10], bin_mean[0:10],
         # bin_pulses[0:10], bin_pop[0:10],data_binned, bin_std[0:10]))
 
-        return X, bin_mean, bedges, bin_pop, data_binned, bin_std, bin_pulses
+        return bin_mean, bedges, bin_pop, data_binned, bin_std, bin_pulses
 
     def update_binned_data(self):
         '''
@@ -655,46 +837,65 @@ class rf_conditioning_data(object):
         newdata = [new_amp, new_kfp, new_pulses]
         #print('new_kfp_list = {}\ntype(new_kfp_list) = {}'.format(new_kfp_pulses_list, type(new_kfp_pulses_list)))
 
-        # Call in data from binned_amp_vs_kfpow distionary already populated by initial_bin() ind subsequently here.
-        bin_mean = rf_conditioning_data.binned_amp_vs_kfpow['BIN_mean']
-        bedges = rf_conditioning_data.binned_amp_vs_kfpow['BIN_edges']
-        bin_pop = rf_conditioning_data.binned_amp_vs_kfpow['BIN_pop']
-        bin_pulses = rf_conditioning_data.binned_amp_vs_kfpow['BIN_pulses']
+        # TODO AJG: Check if newdata is within the acceptance region for inclusion in updating the binned data
 
-        # Cycle through bin edges until the x-axis (amp_sp) data sits between current and next bin edge.
-        for i in range(int(len(bin_mean))):
-            if newdata[0] >= bedges[i] and newdata[0] < bedges[i + 1]:
-                # multiply the number of pulses by the mean kfpowr to get the product (used in MEAN_EQN)
-                bin_pulse_x_mean =  newdata[1] * newdata[2]
-                # Define the new total number of pulses in the bin (used in MEAN_EQN)
-                bin_pulses_new = (bin_pulses[i] + newdata[2])
-                # MEAN_EQN:
-                bin_mean[i] = ((bin_mean[i] * bin_pulses[i]) + (bin_pulse_x_mean)) / bin_pulses_new
-                # Update the total number of pulses in the bin with new value
-                bin_pulses[i] = bin_pulses_new
-                # Add one to bin population
-                bin_pop[i] += 1.0
-                # Once found no need to continue, so break.
-                break
-            else:
-                pass
+        # Check if newdata is within the acceptance region for inclusion in updating the binned data
+        rcd = rf_conditioning_data
+        All_amp_sp = rcd.binned_amp_vs_kfpow[rcd.All_amp_sp]
+        polyfit_4th_order_All_amp_sp = rcd.binned_amp_vs_kfpow[rcd.polyfit_4th_order_All_amp_sp]
+        DATA_lower_limit = rcd.binned_amp_vs_kfpow[rcd.DATA_lower_limit]
+        DATA_upper_limit = rcd.binned_amp_vs_kfpow[rcd.DATA_upper_limit]
 
-        # Update dictionary with new values
-        rf_conditioning_data.binned_amp_vs_kfpow['BIN_mean'] = bin_mean
-        rf_conditioning_data.binned_amp_vs_kfpow['BIN_pop'] = bin_pop
-        rf_conditioning_data.binned_amp_vs_kfpow['BIN_pulses'] = bin_pulses
+        #       find the index of new_amp in All_amp_sp
+        idx = All_amp_sp.index(newdata[0])
 
-        '''
-        bin_plots_path = r'C:\Users\dlerlp\Documents\RF_Conditioning_20200720'
-        plt.scatter(newdata[0], newdata[0], c='g', s=35, marker='x', label='Data', zorder=1)
-        plt.scatter(BIN_X_dyn, BIN_mean, c='r', s=25, marker='x', label='Binned Mean', zorder=0)
-        plt.xlabel('Set Point')
-        plt.ylabel('Power (MW)')
-        plt.legend()
-        plt.grid(True)
-        plt.savefig(bin_plots_path + r'\Dynamic_Binning_Plot.png')
-        plt.close('all')
-        '''
+        if newdata[1] > DATA_lower_limit[idx] and newdata[1] < DATA_upper_limit[idx]:
+
+            # Call in data from binned_amp_vs_kfpow distionary already populated by initial_bin() ind subsequently here.
+            bin_mean = rf_conditioning_data.binned_amp_vs_kfpow['BIN_mean']
+            bedges = rf_conditioning_data.binned_amp_vs_kfpow['BIN_edges']
+            bin_pop = rf_conditioning_data.binned_amp_vs_kfpow['BIN_pop']
+            bin_pulses = rf_conditioning_data.binned_amp_vs_kfpow['BIN_pulses']
+
+            # Cycle through bin edges until the x-axis (amp_sp) data sits between current and next bin edge.
+            for i in range(int(len(bin_mean))):
+                if newdata[0] >= bedges[i] and newdata[0] < bedges[i + 1]:
+                    # multiply the number of pulses by the mean kfpowr to get the product (used in MEAN_EQN)
+                    bin_pulse_x_mean =  newdata[1] * newdata[2]
+                    # Define the new total number of pulses in the bin (used in MEAN_EQN)
+                    bin_pulses_new = (bin_pulses[i] + newdata[2])
+                    # MEAN_EQN:
+                    bin_mean[i] = ((bin_mean[i] * bin_pulses[i]) + (bin_pulse_x_mean)) / bin_pulses_new
+                    # Update the total number of pulses in the bin with new value
+                    bin_pulses[i] = bin_pulses_new
+                    # Add one to bin population
+                    bin_pop[i] += 1.0
+                    # Once found no need to continue, so break.
+                    break
+                else:
+                    pass
+
+            # Update dictionary with new values
+            rf_conditioning_data.binned_amp_vs_kfpow['BIN_mean'] = bin_mean
+            rf_conditioning_data.binned_amp_vs_kfpow['BIN_pop'] = bin_pop
+            rf_conditioning_data.binned_amp_vs_kfpow['BIN_pulses'] = bin_pulses
+
+            '''
+            bin_plots_path = r'C:\Users\dlerlp\Documents\RF_Conditioning_20200720'
+            plt.scatter(newdata[0], newdata[0], c='g', s=35, marker='x', label='Data', zorder=1)
+            plt.scatter(BIN_X_dyn, BIN_mean, c='r', s=25, marker='x', label='Binned Mean', zorder=0)
+            plt.xlabel('Set Point')
+            plt.ylabel('Power (MW)')
+            plt.legend()
+            plt.grid(True)
+            plt.savefig(bin_plots_path + r'\Dynamic_Binning_Plot.png')
+            plt.close('all')
+            '''
+        else:
+            self.logger.message('New data point (amp_sp = {}, KFPower = {}) is outside acceptance region and will be excluded from updating the '
+                                'binned data.'.format(newdata[0], newdata[1]))
+
+
 
     def generate_log_ramp_curve(self, p_start, p_finish, ramp_rate, numsteps, pulses_per_step):
         '''
@@ -933,7 +1134,9 @@ class rf_conditioning_data(object):
             return float(predicted_sp), p0, p1, p2, polyfit_2order
         # if fitting fais and an np.NaN is returned set the predicted_sp to current + default minimum
         elif np.isnan(predicted_sp):
-            print('np.NaN returned from poly_fit_2order()')
+            self.logger.message('np.NaN returned from poly_fit_2order(). Returning predicted sp = current_sp + default increase, {} + {}'.format(
+               self.values[rf_conditioning_data.amp_sp], self.config.raw_config_data["DEFAULT_RF_INCREASE_LEVEL"]))
+
             predicted_sp = self.values[rf_conditioning_data.amp_sp] + self.config.raw_config_data['DEFAULT_RF_INCREASE_LEVEL']
             predicted_sp = int(predicted_sp)
             return float(predicted_sp), p0, p1, p2, polyfit_2order
@@ -1181,6 +1384,40 @@ class rf_conditioning_data(object):
     BIN_pulses = 'BIN_pulses'
     bin_keys.append(BIN_pulses)
     binned_amp_vs_kfpow[BIN_pulses] = dummy_float
+
+    amp_sp_reduced = 'amp_sp_reduced'
+    bin_keys.append(amp_sp_reduced)
+    binned_amp_vs_kfpow[amp_sp_reduced] = dummy_float
+
+    KFPower_reduced = 'KFPower_reduced'
+    bin_keys.append(KFPower_reduced)
+    binned_amp_vs_kfpow[KFPower_reduced] = dummy_float
+
+    num_pulses_reduced = 'num_pulses_reduced'
+    bin_keys.append(num_pulses_reduced)
+    binned_amp_vs_kfpow[num_pulses_reduced] = dummy_float
+
+    All_amp_sp = 'All_amp_sp'
+    bin_keys.append(All_amp_sp)
+    binned_amp_vs_kfpow[All_amp_sp] = dummy_float
+
+    polyfit_4th_order_All_amp_sp = 'polyfit_4th_order_All_amp_sp'
+    bin_keys.append(polyfit_4th_order_All_amp_sp)
+    binned_amp_vs_kfpow[polyfit_4th_order_All_amp_sp] = dummy_float
+
+    DATA_upper_limit = 'DATA_upper_limit'
+    bin_keys.append(DATA_upper_limit)
+    binned_amp_vs_kfpow[DATA_upper_limit] = dummy_float
+
+    DATA_lower_limit = 'DATA_lower_limit'
+    bin_keys.append(DATA_lower_limit)
+    binned_amp_vs_kfpow[DATA_lower_limit] = DATA_lower_limit
+
+
+
+
+
+
 
     ''' 
         The values dictionary. 

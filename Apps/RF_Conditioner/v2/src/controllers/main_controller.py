@@ -555,7 +555,6 @@ class main_controller(object):
         # # log data at the new setpoint MUST BE BEFORE  move_up_ramp_curve()
         # update pulse breakdown log
 
-        # TODO AJG: reset triggers here ??
         self.hardware.llrf_controller.enable_trigger()
 
         self.data.add_to_pulse_breakdown_log(self.hardware.llrf_obj[0].amp_sp)

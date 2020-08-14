@@ -170,7 +170,7 @@ EXTRA_BREAKDOWN_DAQ:  # ; has to go in python source code NOT IMPLEMENTED YET
   - BREAKDOWN_RATE
   - BREAKDOWN_COUNT
 
-OUTSIDE_MASK_COOLDOWN_TIME: 3000 # INTEGER,  cooldown time in milliseconds
+OUTSIDE_MASK_COOLDOWN_TIME: 4000 # INTEGER,  cooldown time in milliseconds
 EXTRA_TRACES_ON_BREAKDOWN: 2 # INTEGER number of extra (subsequent) traces to save after an out_side_mask_trace is detected
 # KLY_PWR_FOR_ACTIVE_PULSE: 500.0 # FLOAT, min kyl fwd power to enable incrementing the RF pulse counter (in Watts)
 
@@ -488,15 +488,21 @@ PID_llrf_max_amp_sp_limit  : CLA-GUN-LRF-CTRL-01:vm:dsp:sp_amp:amplitude:DRVH
 
 ## Binning
 
-BIN_WIDTH: 100  ## Width of each bin in amp set points, the lower the number, the more bins will result
+BIN_WIDTH: 400  ## Width of each bin in amp set points, the lower the number, the more bins will result
 MAX_AMP:  120000  ## maximum x-coordinate, amp set points
 MAX_POW:  0.0  ## maximum y-coordinate, Watts
 MIN_AMP:  500
+## AMP_PWR_ACCEPTANCE_WINDOW is the value to add and subtract from the 4th order fitted polynomial #
+## to create the upper & lower acceptance boundaries.
+## amp kfp data outside this region will not be used in the binned data.
+## we think the 'Bad Data' is created when the DAQ frequency is low and mis-matches powers and amp set points.
+
+AMP_PWR_ACCEPTANCE_WINDOW :  750000
 
 # log ramp curve
 
-LOG_RAMP_CURVE_NUMSTEPS : 140 # will probably have to go even higher when ramping to ~ 8 MW
-LOG_RAMP_CURVE_PULSES_PER_STEP : 10
+LOG_RAMP_CURVE_NUMSTEPS : 500 # will probably have to go even higher when ramping to ~ 8 MW
+LOG_RAMP_CURVE_PULSES_PER_STEP : 80
 LOG_RAMP_CURVE_RAMP_RATE : 0.2
 # in watts
 LOG_RAMP_START_POWER  : 30000 # This should never be set less than the KLY_PWR_FOR_ACTIVE_PULSE value below!!!!
