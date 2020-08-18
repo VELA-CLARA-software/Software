@@ -137,10 +137,19 @@ class rf_conditioning_logger(logger):
         # TODO what about during a log_ramp  - we don't add to this file here?
         '''
             IF IN LOG_RAMP MODE, 
-            WE WILL CHANGE THE AMP_SP TO BE THE SMP_SP FOR THE END OF THE LOG_RMAP 
+            WE WILL CHANGE THE AMP_SP TO BE THE AMP_SP FOR THE END OF THE LOG_RMAP 
         '''
+
         rf_conditioning_logger._pulse_count_log_file_obj.write(" ".join(map(str, new_values)) + '\n')
         rf_conditioning_logger._pulse_count_log_file_obj.flush()
+
+
+
+
+
+
+
+
 
     # def add_to_pulse_count_breakdown_log_during_log_ramp(self, new_values):
     #     """

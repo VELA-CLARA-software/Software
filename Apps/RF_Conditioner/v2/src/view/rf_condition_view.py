@@ -161,6 +161,16 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         # Plot unbinned data in greyscale
         self.plot_item.plot(x, y, pen={'color': 0.9, 'width': 1.0})
 
+        # plot upper and lower limits for bin exclusion
+        All_amp_sp = rcd.binned_amp_vs_kfpow[rcd.All_amp_sp]
+        polyfit_4th_order_All_amp_sp = rcd.binned_amp_vs_kfpow[rcd.polyfit_4th_order_All_amp_sp]
+        DATA_lower_limit = rcd.binned_amp_vs_kfpow[rcd.DATA_lower_limit]
+        DATA_upper_limit = rcd.binned_amp_vs_kfpow[rcd.DATA_upper_limit]
+
+        self.plot_item.plot(All_amp_sp, DATA_lower_limit, pen={'color': 'y', 'width': 0.7})
+        #self.plot_item.plot(All_amp_sp, polyfit_4th_order_All_amp_sp, pen={'color': 'y', 'width': 2.0})
+        self.plot_item.plot(All_amp_sp, DATA_upper_limit, pen={'color': 'y', 'width': 0.7})
+
         # draw vertical line at the new amp_sp
         current_amp = int(self.values[rf_conditioning_data.amp_sp])
         current_X = [current_amp, current_amp]
@@ -279,6 +289,17 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
 
         # Plot unbinned data in greyscale
         self.plot_item.plot(x, y, pen={'color': 0.9, 'width': 1.0})
+
+        # plot upper and lower limits for bin exclusion
+
+        All_amp_sp = rcd.binned_amp_vs_kfpow[rcd.All_amp_sp]
+        polyfit_4th_order_All_amp_sp = rcd.binned_amp_vs_kfpow[rcd.polyfit_4th_order_All_amp_sp]
+        DATA_lower_limit = rcd.binned_amp_vs_kfpow[rcd.DATA_lower_limit]
+        DATA_upper_limit = rcd.binned_amp_vs_kfpow[rcd.DATA_upper_limit]
+
+        self.plot_item.plot(All_amp_sp, DATA_lower_limit, pen={'color': 'y', 'width': 0.7})
+        #self.plot_item.plot(All_amp_sp, polyfit_4th_order_All_amp_sp, pen={'color': 'y', 'width': 2.0})
+        self.plot_item.plot(All_amp_sp, DATA_upper_limit, pen={'color': 'y', 'width': 0.7})
 
         # draw vertical line at the new amp_sp
         current_amp = int(self.values[rf_conditioning_data.amp_sp])

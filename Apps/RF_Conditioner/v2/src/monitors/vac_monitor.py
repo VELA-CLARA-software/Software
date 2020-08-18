@@ -240,7 +240,8 @@ class vac_monitor(monitor):
                         self.hardware.llrf_control.setAmpHP(self.amp_drop_value)
                 self.spike_count += 1
                 m = __name__ + ' NEW vacuum spike, #{}: '.format(self.spike_count)
-                m += "{} > {} + {}.".format(self._latest_value, self.spike_delta, self._mean_level)
+                m += "either {} > {} + {}.".format(self._latest_value, self.spike_delta, self._mean_level)
+                m += "or {} > {}.".format(self._latest_value, self.max_acceptable_level)
                 self.logger.message_header(m, add_to_text_log=True, show_time_stamp=True)
                 self.dump_data()
                 self.start_cooldown()
