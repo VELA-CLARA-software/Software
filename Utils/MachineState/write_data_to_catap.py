@@ -120,7 +120,7 @@ class WriteDataToCATAP(object):
                             # else:
                             #     strength = value['angle']
                         elif value['type'] == 'quadrupole':
-                            strength = value['k1l']
+                            strength = value['k1']
                         if self.combined_kicker:
                             vcurrent = self.unitConversion.kToCurrent(value['type'],
                                                                       vstrength,

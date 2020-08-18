@@ -26,7 +26,7 @@ class WriteDataToSimFrame(object):
                         self.keymod = key
                     if not framework.getElement(self.keymod) == {}:
                         if inputdict[section][key]['type'] == 'quadrupole':
-                            framework.modifyElement(self.keymod, 'k1l', float(value['k1l']))
+                            framework.modifyElement(self.keymod, 'k1', float(value['k1']))
                         elif inputdict[section][key]['type'] == 'cavity':
                             if type=='CATAP':
                                 typemod = 1e6
@@ -90,10 +90,10 @@ class WriteDataToSimFrame(object):
         framework.generator.spot_size = float(numpy.mean([inputdict['generator']['sig_x']['value'],inputdict['generator']['sig_y']['value']]))
         self.updateFrameworkElements(framework, inputdict, type=type)
 
-    def runScript(self, framework, inputdict, modify=False, track=False):
-        self.update_tracking_codes(framework, inputdict)
-        self.update_CSR(framework, inputdict)
-        self.update_LSC(framework, inputdict)
+    def runScript(self, framework, inputdict, modify=False, track=False, sections=None):
+        self.update_tracking_codes(framework, inputdict, sections)
+        self.update_CSR(framework, inputdict, sections)
+        self.update_LSC(framework, inputdict, sections)
         startLattice = inputdict['simulation']['starting_lattice']
         endLattice = inputdict['simulation']['final_lattice']
         framework.setSubDirectory(str(inputdict['simulation']['directory']))
@@ -108,16 +108,22 @@ class WriteDataToSimFrame(object):
     def get_machine_areas(self, inputdict):
         return inputdict.keys()
 
-    def update_tracking_codes(self, framework, inputdict):
-        self.machineareas = self.get_machine_areas(inputdict)
+    def update_tracking_codes(self, framework, inputdict, sections=None):
+        if sections is not None:
+            self.areas = sections
+        else:
+            self.areas = self.get_machine_areas(inputdict)
         for l, c in inputdict['simulation']['tracking_code'].items():
-            if l in self.machineareas:
+            if l in self.areas:
                 framework.change_Lattice_Code(l, c)
 
-    def update_CSR(self, framework, inputdict):
-        self.machineareas = self.get_machine_areas(inputdict)
+    def update_CSR(self, framework, inputdict, sections=None):
+        if sections is not None:
+            self.areas = sections
+        else:
+            self.areas = self.get_machine_areas(inputdict)
         for l, c in inputdict['simulation']['csr'].items():
-            if l in self.machineareas:
+            if l in self.areas:
                 lattice = framework[l]
                 elements = lattice.elements.values()
                 for e in elements:
@@ -130,10 +136,13 @@ class WriteDataToSimFrame(object):
                     e.transverse_wakefield_enable = c
                 lattice.csrDrifts = c
 
-    def update_LSC(self, framework, inputdict):
-        self.machineareas = self.get_machine_areas(inputdict)
+    def update_LSC(self, framework, inputdict, sections=None):
+        if sections is not None:
+            self.areas = sections
+        else:
+            self.areas = self.get_machine_areas(inputdict)
         for l, c in inputdict['simulation']['lsc'].items():
-            if l in self.machineareas:
+            if l in self.areas:
                 lattice = framework[l]
                 elements = lattice.elements.values()
                 for e in elements:

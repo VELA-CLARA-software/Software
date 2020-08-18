@@ -211,7 +211,7 @@ class GetDataFromSimFrame(object):
 		for quad in self.Framework.getElementType('quadrupole'):
 			self.quad_values.update({quad['objectname']: {}})
 			self.quad_values[quad['objectname']].update({'type': quad['objecttype']})
-			self.quad_values[quad['objectname']].update({'k1l': quad['k1l']})
+			self.quad_values[quad['objectname']].update({'k1': quad['k1']})
 			self.quad_values[quad['objectname']].update({'field_integral_coefficients': quad['field_integral_coefficients']})
 			self.quad_values[quad['objectname']].update({'magnetic_length': quad['length']})
 			self.quad_values[quad['objectname']].update({'PV_suffixes': "SETI"})

@@ -127,7 +127,11 @@ class MachineState(object):
             if not os.path.isdir(directory):
                 os.makedirs(directory)
             self.datadict['simulation']['directory'] = directory
-            self.writeDataToSimFrame.runScript(framework, self.datadict, track=True)
+            if sections is not None:
+                self.sections = sections
+                self.writeDataToSimFrame.runScript(framework, self.datadict, track=True, sections=self.sections)
+            else:
+                self.writeDataToSimFrame.runScript(framework, self.datadict, track=True)
             self.allbeamfiles = self.getDataFromSimFrame.getAllBeamFiles(directory)
             for i in self.allbeamfiles.keys():
                 for j in sections:

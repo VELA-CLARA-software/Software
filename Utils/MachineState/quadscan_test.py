@@ -40,7 +40,7 @@ time.sleep(1)
 machinestate.exportParameterValuesToYAMLFile("catap-test.yaml",catapdata)
 
 # Set up simframe
-machinestate.getMachineStateFromSimFrame('test','Lattices/CLA10-BA1_OM.def')
+machinestate.getMachineStateFromSimFrame('test','Lattices/CLA-S02.def')
 time.sleep(1)
 machinestate.initialiseSimFrameData()
 simframedata = machinestate.getSimFrameDataDict()
@@ -66,7 +66,7 @@ catapdata['INJ']['CLA-LRG1-MAG-BSOL-01'].update({'field_amplitude': -0.07})
 # machinestate.updateLatticeStart(machinestatefile, 'S02')
 
 # Quad settings
-quadsettings = [-2,-1,0,1,2]
+quadsettings = [-15,-10,0]
 
 # Dict for beam size at s02-cam-02
 s02cam02xsig = {}
@@ -74,9 +74,9 @@ s02cam02xsig = {}
 # Iterate over quad settings
 for i in quadsettings:
     # Set magnet current; we need to check that read current ~= set current
-    catapdict['Magnet']['CLA-S02-MAG-QUAD-01'].SETI(i)
-    ri_tol = catapdict['Magnet']['CLA-S02-MAG-QUAD-01'].getREADITolerance()
-    while (i - ri_tol) < catapdict['Magnet']['CLA-S02-MAG-QUAD-01'].getREADI() < (i + ri_tol):
+    catapdict['Magnet']['CLA-S02-MAG-QUAD-05'].SETI(i)
+    ri_tol = catapdict['Magnet']['CLA-S02-MAG-QUAD-05'].getREADITolerance()
+    while (i - ri_tol) < catapdict['Magnet']['CLA-S02-MAG-QUAD-05'].getREADI() < (i + ri_tol):
         time.sleep(0.1)
     # Get updated machine state from CATAP
     catapdata = machinestate.getMachineStateFromCATAP(mode)
@@ -85,12 +85,12 @@ for i in quadsettings:
     catapdata['INJ']['CLA-LRG1-MAG-BSOL-01'].update({'field_amplitude': -0.07})
     # Write machine state dictionary to simframe and runs simulation
     simframefileupdate = machinestate.writeMachineStateToSimFrame('quadscan_test'+str(i), framework,
-                                                                  'Lattices/CLA10-BA1_OM.def', datadict=catapdata,
-                                                                  run=True, type='CATAP')
+                                                                  'Lattices/CLA-S02.def', datadict=catapdata,
+                                                                  run=True, type='CATAP', sections=['INJ', 'CLA-S01', 'CLA-S02', 'L01'])
     # Exports machine state from simframe (hardware settings and simulated data @ screens / bpms)
     machinestate.exportParameterValuesToYAMLFile("simframe-test"+str(i)+".yaml",simframefileupdate)
     # Update dictionary of beam size
-    s02cam02xsig.update({i: simframefileupdate['CLA-S02']['CLA-S02-DIA-CAM-02']['x_sigma']})
+    s02cam02xsig.update({i: simframefileupdate['CLA-S02']['CLA-S02-DIA-CAM-03']['x_sigma']})
 
 print(s02cam02xsig.items())
 
