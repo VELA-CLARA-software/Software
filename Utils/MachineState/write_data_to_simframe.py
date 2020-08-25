@@ -90,18 +90,19 @@ class WriteDataToSimFrame(object):
         framework.generator.spot_size = float(numpy.mean([inputdict['generator']['sig_x']['value'],inputdict['generator']['sig_y']['value']]))
         self.updateFrameworkElements(framework, inputdict, type=type)
 
-    def runScript(self, framework, inputdict, modify=False, track=False, sections=None):
+    def runScript(self, framework, inputdict, modify=False, track=False, sections=None, directory=None):
         self.update_tracking_codes(framework, inputdict, sections)
         self.update_CSR(framework, inputdict, sections)
         self.update_LSC(framework, inputdict, sections)
-        startLattice = inputdict['simulation']['starting_lattice']
-        endLattice = inputdict['simulation']['final_lattice']
-        framework.setSubDirectory(str(inputdict['simulation']['directory']))
+        self.startLattice = inputdict['simulation']['starting_lattice']
+        self.endLattice = inputdict['simulation']['final_lattice']
+        if directory==None:
+            framework.setSubDirectory(str(inputdict['simulation']['directory']))
         if modify == True:
             self.modifyFramework(framework, inputdictscan=False)
         framework.save_changes_file(filename=framework.subdirectory+'/changes.yaml')
         if inputdict['simulation']['track'] or track==True:
-            framework.track(startfile=startLattice, endfile=endLattice)
+            framework.track(startfile=self.startLattice, endfile=self.endLattice)
         else:
             time.sleep(0.5)
 

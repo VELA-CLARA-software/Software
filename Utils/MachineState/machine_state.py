@@ -36,7 +36,7 @@ class MachineState(object):
 
     # Reads the machine state from CATAP. See all functions below in GetDataFromCATAP class
     # Also sets defaults for the simulation
-    def getMachineStateFromCATAP(self, mode):
+    def getMachineStateFromCATAP(self, mode, start_lattice='Generator', final_lattice='CLA-S02'):
         if not self.CATAPInitialised:
             self.getDataFromCATAP.initCATAP(mode)
             self.CATAPInitialised = True
@@ -46,7 +46,9 @@ class MachineState(object):
         self.wcm_object = self.getDataFromCATAP.getWCMObject()
         self.getDataFromSimFrame.setSimulationDictDefaults(self.allData,
                                                            vc_object=self.vc_object,
-                                                           wcm_object=self.wcm_object)
+                                                           wcm_object=self.wcm_object,
+                                                           start_lattice=start_lattice,
+                                                           final_lattice=final_lattice)
         self.simulation_defaults_set = True
         return self.allData
 
