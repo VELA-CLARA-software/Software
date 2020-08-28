@@ -68,7 +68,9 @@ class svdNoiseRemover():
         year = today.strftime("%Y")
         month = today.strftime("%m")
         day = today.strftime("%d")
-        csvDir = "SVD/" + year  + "/" + month + "/" + day
+        hr = today.strftime("%H")
+        min = today.strftime("%M")
+        csvDir = "SVD/" + year  + "/" + month + "/" + day + "/" + hr + min
 
         if debug:
             print("Writing to CSVs in ./"+csvDir)
@@ -119,7 +121,7 @@ class svdNoiseRemover():
             charge = []
             for i in np.arange(0, self.modes.shape[2], 1):
                 base = np.mean(self.modes[mode-1, 0:100, i])
-                dat = (self.modes[mode-1, :, i] - base)
+                dat = (self.modes[mode-1, :, i] - base)*130.588E-3
                 charge.append(np.sum(dat[dat > 0]*(4E-9)))
                 if debug:
                     print charge[i]*1e12

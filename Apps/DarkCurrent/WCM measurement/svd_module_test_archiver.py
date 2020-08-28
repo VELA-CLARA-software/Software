@@ -23,7 +23,7 @@ for event in data[0]["data"]:
 
 np_values = np.array(values, dtype=np.float)
 np_values = (np_values*5.63083E-5)-1.8514 #Convert to voltage
-np_values = (np_values*130.588E-3) #Convert to amps
+#np_values = (np_values*130.588E-3) #Convert to amps
 noiseRemover = svd_module.svdNoiseRemover()
 
 noiseRemover.SVD(values=np_values, dim=1)
