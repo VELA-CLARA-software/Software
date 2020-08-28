@@ -87,10 +87,15 @@ class GetDataFromCATAP(object):
 		# get factories / controllers
 		self.hf = CATAP.HardwareFactory.HardwareFactory(mode)
 		self.hf.debugMessagesOff()
-		self.gun_llrf_type = CATAP.HardwareFactory.TYPE.LRRG_GUN
-		self.gunFac = self.hf.getLLRFFactory(self.gun_llrf_type)
-		self.l01_llrf_type = CATAP.HardwareFactory.TYPE.L01
-		self.l01Fac = self.hf.getLLRFFactory(self.l01_llrf_type)
+		self.llrf_types = [CATAP.HardwareFactory.TYPE.LRRG_GUN, CATAP.HardwareFactory.TYPE.L01]
+		# self.gun_llrf_type = CATAP.HardwareFactory.TYPE.LRRG_GUN
+		self.llrf_factory = self.hf.getLLRFFactory(self.llrf_types)
+		self.llrf_names = self.llrf_factory.getLLRFNames()
+		self.gunname = self.llrf_names[0]
+		self.linacnames = self.llrf_names[1:]
+		# self.gunFac = self.hf.getLLRFFactory(self.llrf)
+		# self.l01_llrf_type = CATAP.HardwareFactory.TYPE.L01
+		# self.l01Fac = self.hf.getLLRFFactory(self.l01_llrf_type)
 		self.chargeFac = self.hf.getChargeFactory()
 		self.bpmFac = self.hf.getBPMFactory()
 		self.scrFac = self.hf.getScreenFactory()
@@ -101,12 +106,11 @@ class GetDataFromCATAP(object):
 
 		# #self.pilFac = hf.getPILa()
 		# #self.camFac = hf.getcam()
-		self.gunname = "LRRG_GUN"
-		self.linacnames.update({"L01": self.l01_llrf_type})
-		self.linacFac = {}
+		self.gunLLRFObj = self.llrf_factory.getLLRF(self.llrf_names[0])
+		self.linacLLRFObj = {}
 		self.setGunStartEndTime(self.gunStartTime, self.gunEndTime)
-		for key, value in self.linacnames.items():
-			self.linacFac.update({key: self.hf.getLLRFFactory(value)})
+		for key in self.linacnames:
+			self.linacLLRFObj[key] = self.llrf_factory.getLLRF(key)
 			self.linacStartTimes.update({key: 0.1}) # MAGIC NUMBER
 			self.linacEndTimes.update({key: 1.0}) # MAGIC NUMBER
 			self.setLinacStartEndTime(key, self.linacStartTimes[key], self.linacEndTimes[key])
@@ -171,15 +175,20 @@ class GetDataFromCATAP(object):
 		self.allDataDict.update({"Screen": self.screenDict})
 
 	def setGunLLRFDict(self):
-		self.gunLLRFObj = self.gunFac.getLLRF('LRRG_GUN')
 		self.allDataDict.update({"LRRG_GUN": self.gunLLRFObj})
 
+	def linacNameConvert(self, key):
+		if key == 'CLA-L01-LRF-CTRL-01':
+			return 'L01'
+		else:
+			return key
+
 	def setLinacLLRFDict(self):
-		self.linacLLRFObj = {}
-		for key, value in self.linacnames.items():
-			self.linacLLRFObj[key] = self.linacFac[key].getLLRF(key)
-			self.linacdata.update({key: {}})
-			self.allDataDict.update({key: self.linacLLRFObj[key]})
+		for key in self.linacnames:
+			self.keyupdate = self.linacNameConvert(key)
+			self.linacLLRFObj[self.keyupdate] = self.llrf_factory.getLLRF(key)
+			self.linacdata.update({self.keyupdate: {}})
+			self.allDataDict.update({self.keyupdate: self.linacLLRFObj[self.keyupdate]})
 
 	def setAllDicts(self):
 		self.setBPMDict()
@@ -286,18 +295,18 @@ class GetDataFromCATAP(object):
 		self.gunStartTime = start_time
 		self.gunEndTime = end_time
 		for trace in self.guntraces:
-			self.gunFac.setMeanStartEndTime(self.gunname, trace, start_time, end_time)
+			self.gunLLRFObj.setMeanStartEndTime(start_time, end_time, trace)
 
 	def setLinacStartEndTime(self, name, start_time, end_time):
 		for trace in self.linactraces:
 			self.linacStartTimes[name] = start_time
 			self.linacEndTimes[name] = end_time
-			self.linacFac[name].setMeanStartEndTime(name, trace, start_time, end_time)
+			self.linacLLRFObj[name].setMeanStartEndTime(start_time, end_time, trace)
 
 	def getGunLLRFData(self):
 		if self.dictsSet:
 			for trace in self.guntraces:
-				self.gundata.update({trace: self.gunFac.getCutMean(self.gunname, trace)})
+				self.gundata.update({trace: self.llrf_factory.getCutMean(self.gunname, trace)})
 				self.gundata.update({trace: self.gundata[trace]})
 			self.pulse_length = 2.5
 			self.getenergy = self.unitConversion.getEnergyGain(self.gunname,
@@ -323,31 +332,32 @@ class GetDataFromCATAP(object):
 
 	def getLinacLLRFData(self, linac_name):
 		if self.dictsSet:
+			self.linacname = self.linacNameConvert(linac_name)
 			for trace in self.linactraces:
-				self.linacdata[linac_name].update({trace: self.linacFac[linac_name].getCutMean(linac_name, trace)})
-				self.linacdata[linac_name].update({trace: self.linacdata[linac_name][trace]})
+				self.linacdata[self.linacname].update({trace: self.llrf_factory.getCutMean(linac_name, trace)})
+				self.linacdata[self.linacname].update({trace: self.linacdata[self.linacname][trace]})
 			self.pulse_length = 0.75
 			self.getenergy = self.unitConversion.getEnergyGain(linac_name,
-																self.linacLLRFObj[linac_name].getAmpMW(),
-																self.linacLLRFObj[linac_name].getPhiDEG(),
+																self.linacLLRFObj[self.linacname].getAmpMW(),
+																self.linacLLRFObj[self.linacname].getPhiDEG(),
 															    0.75,
-																self.linac_length[linac_name])
+																self.linac_length[self.linacname])
 			#self.linacdata[linac_name].update({"phase":self.linacdata[linac_name]["CAVITY_FORWARD_PHASE"]})
-			self.linacdata[linac_name].update({"phase": self.linacLLRFObj[linac_name].getPhiDEG()})
-			self.linacdata[linac_name].update({"amplitude_MW": self.linacLLRFObj[linac_name].getAmpMW()})
-			self.linacdata[linac_name].update({"amplitude": self.linacLLRFObj[linac_name].getAmp()})
-			self.linacdata[linac_name].update({"energy_gain": float(self.getenergy[0])})
-			self.linacdata[linac_name].update({"field_amplitude": self.getenergy[1]})
-			self.linacdata[linac_name].update({"type": 'cavity'})
-			self.linacdata[linac_name].update({"length": self.linac_length[linac_name]})
-			self.linacdata[linac_name].update({"pulse_length": self.pulse_length})
-			self.linacdata[linac_name].update({"catap_alias": linac_name})
-			self.alldata[self.getMachineAreaString(linac_name)].update({linac_name: self.linacdata[linac_name]})
-			self.linacDataSet.update({linac_name: True})
+			self.linacdata[self.linacname].update({"phase": self.linacLLRFObj[self.linacname].getPhiDEG()})
+			self.linacdata[self.linacname].update({"amplitude_MW": self.linacLLRFObj[self.linacname].getAmpMW()})
+			self.linacdata[self.linacname].update({"amplitude": self.linacLLRFObj[self.linacname].getAmp()})
+			self.linacdata[self.linacname].update({"energy_gain": float(self.getenergy[0])})
+			self.linacdata[self.linacname].update({"field_amplitude": self.getenergy[1]})
+			self.linacdata[self.linacname].update({"type": 'cavity'})
+			self.linacdata[self.linacname].update({"length": self.linac_length[self.linacname]})
+			self.linacdata[self.linacname].update({"pulse_length": self.pulse_length})
+			self.linacdata[self.linacname].update({"catap_alias": linac_name})
+			self.alldata[self.getMachineAreaString(self.linacname)].update({self.linacname: self.linacdata[self.linacname]})
+			self.linacDataSet.update({self.linacname: True})
 
 		else:
 			self.setAllDicts()
-			self.getLinacLLRFData(linac_name)
+			self.getLinacLLRFData(self.linacname)
 
 	def setGunEnergyGain(self):
 		if self.gunDataSet:
@@ -364,9 +374,10 @@ class GetDataFromCATAP(object):
 		if self.dictsSet:
 			self.getGunLLRFData()
 			self.energy.update({self.gun_position: self.gundata['energy_gain']})
-			for i in self.linacnames.keys():
+			for i in self.linacnames:
 				self.getLinacLLRFData(i)
-				self.energy.update({self.linac_position[i]: self.linacdata[i]['energy_gain']})
+				self.linacname = self.linacNameConvert(i)
+				self.energy.update({self.linac_position[self.linacname]: self.linacdata[self.linacname]['energy_gain']})
 			for i in self.bpmnames:
 				self.getBPMData(i)
 			for i in self.magnames:
