@@ -11,6 +11,7 @@ values = []
 for row in csvreader:
     values.append(row)
 np_values = np.array(values, dtype=np.float)
+np_values = (np_values*5.63083E-5)-1.8514 #Convert to voltage
 noiseRemover = svd_module.svdNoiseRemover()
 
 noiseRemover.SVD(values=np_values, dim=0)

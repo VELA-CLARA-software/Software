@@ -93,6 +93,40 @@ class svdNoiseRemover():
         csvFile = open(csvDir + "/freqData.csv", 'wb')
         csvWriter = csv.writer(csvFile, delimiter=',')
         csvWriter.writerows(self.fmodes.transpose())
+        if debug:
+            print("Writing charge data")
+        csvFile = open(csvDir + "/chargeData.csv", 'wb')
+        csvWriter = csv.writer(csvFile, delimiter=',')
+        csvWriter.writerow(self.charge.transpose())
+
+    def calculateDarkCharge(self, wcm="clara", mode=1):
+        if debug:
+            print("calculating dark charge")
+        #Specify for clara, anything else gives vela
+        if wcm.lower() == "clara":
+            if debug:
+                print("Using CLARA calibration factor")
+            wcm_V2A = 130.588E-3
+        else:
+            wcm_V2A = 131.631E-3
+            if debug:
+                print("Using VELA calibration factor")
+        try: self.modes
+        except NameError: self.modes = None
+        if self.modes is None:
+            print("Run SVD and mode decomp first")
+        else:
+            charge = []
+            for i in np.arange(0, self.modes.shape[2], 1):
+                base = np.mean(self.modes[mode-1, 0:100, i])
+                dat = (self.modes[mode-1, :, i] - base)
+                charge.append(np.sum(dat[dat > 0]*(4E-9)))
+                if debug:
+                    print charge[i]*1e12
+            self.charge = np.array(charge)
+            print(self.charge.shape)
+
+
 
 
 
