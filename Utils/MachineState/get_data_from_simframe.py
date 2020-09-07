@@ -1,11 +1,10 @@
 import collections
 import os, sys
 import numpy
-sys.path.append('E://VELA-CLARA-software//OnlineModel')
 import SimulationFramework.Framework as Fw
 import SimulationFramework.Modules.read_beam_file as read_beam_file
 import SimulationFramework.Modules.read_twiss_file as read_twiss_file
-sys.path.append(os.path.realpath(__file__)+'/../../../../')
+# sys.path.append(os.path.realpath(__file__)+'/../../../../')
 import unit_conversion
 import aliases
 
@@ -280,15 +279,15 @@ class GetDataFromSimFrame(object):
 		self.charge_values.update({'charge': {}})
 		self.charge_values['charge'].update({'type': 'generator'})
 		self.charge_values['charge'].update({'catap_type': 'charge'})
-		self.charge_values['charge'].update({'value': self.Framework.generator.charge})
+		self.charge_values['charge'].update({'value': self.Framework.generator.__getattr__('charge')})
 		self.charge_values['charge'].update({'PV': 'CLA-S01-DIA-WCM-01'})
 		self.charge_values['charge'].update({'PV_suffixes': 'Q'})
 		self.number_of_particles.update({'number_of_particles': collections.OrderedDict()})
-		self.number_of_particles['number_of_particles'].update({'value': int(self.Framework.generator.particles/10)})
+		self.number_of_particles['number_of_particles'].update({'value': int(self.Framework.generator.particles)})
 		self.number_of_particles['number_of_particles'].update({'type': 'generator'})
 		self.cathode.update({'cathode': {}})
 		self.cathode['cathode'].update({'type': 'generator'})
-		self.cathode['cathode'].update({'value': self.Framework.generator.parameters['cathode']})
+		self.cathode['cathode'].update({'value': self.Framework.generator.__getattr__('cathode')})
 		self.space_charge.update({'space_charge': {}})
 		self.space_charge['space_charge'].update({'type': 'generator'})
 		self.space_charge['space_charge'].update({'value': False})
@@ -298,31 +297,31 @@ class GetDataFromSimFrame(object):
 		self.laser_values.update({'dist_x': {}})
 		self.laser_values['dist_x'].update({'type': 'generator'})
 		self.laser_values['dist_x'].update({'catap_type': 'pil'})
-		self.laser_values['dist_x'].update({'value': self.Framework.generator.parameters['dist_x']})
+		self.laser_values['dist_x'].update({'value': self.Framework.generator.__getattr__('distribution_type_x')})
 		self.laser_values.update({'dist_y': {}})
 		self.laser_values['dist_y'].update({'type': 'generator'})
 		self.laser_values['dist_y'].update({'catap_type': 'pil'})
-		self.laser_values['dist_y'].update({'value': self.Framework.generator.parameters['dist_y']})
+		self.laser_values['dist_y'].update({'value': self.Framework.generator.__getattr__('distribution_type_y')})
 		self.laser_values.update({'dist_z': {}})
 		self.laser_values['dist_z'].update({'type': 'generator'})
 		self.laser_values['dist_z'].update({'catap_type': 'pil'})
-		self.laser_values['dist_z'].update({'value': self.Framework.generator.parameters['dist_z']})
+		self.laser_values['dist_z'].update({'value': self.Framework.generator.__getattr__('distribution_type_z')})
 		self.laser_values.update({'sig_x': {}})
 		self.laser_values['sig_x'].update({'type': 'generator'})
 		self.laser_values['sig_x'].update({'catap_type': 'pil'})
-		self.laser_values['sig_x'].update({'value': self.Framework.generator.parameters['sig_x']})
+		self.laser_values['sig_x'].update({'value': self.Framework.generator.__getattr__('sigma_x')})
 		self.laser_values.update({'sig_y': {}})
 		self.laser_values['sig_y'].update({'type': 'generator'})
 		self.laser_values['sig_y'].update({'catap_type': 'pil'})
-		self.laser_values['sig_y'].update({'value': self.Framework.generator.parameters['sig_y']})
+		self.laser_values['sig_y'].update({'value': self.Framework.generator.__getattr__('sigma_y')})
 		self.laser_values.update({'spot_size': {}})
 		self.laser_values['spot_size'].update({'type': 'generator'})
 		self.laser_values['spot_size'].update({'catap_type': 'pil'})
-		self.laser_values['spot_size'].update({'value': self.Framework.generator.parameters['sig_x']})
+		self.laser_values['spot_size'].update({'value': self.Framework.generator.__getattr__('sigma_x')})
 		self.laser_values.update({'sig_clock': {}})
 		self.laser_values['sig_clock'].update({'type': 'generator'})
 		self.laser_values['sig_clock'].update({'catap_type': 'pil'})
-		self.laser_values['sig_clock'].update({'value': self.Framework.generator.parameters['sig_clock']})
+		self.laser_values['sig_clock'].update({'value': self.Framework.generator.__getattr__('sigma_t')})
 
 	def getAllBeamFiles(self, directory):
 		for file in os.listdir(directory):
