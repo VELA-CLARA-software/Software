@@ -57,13 +57,14 @@ class UnitConversion(object):
 
 	def currentToK(self, mag_type, current, field_integral_coefficients, magnetic_length, energy, magdict):
 		if (mag_type == 'QUAD') or (mag_type == 'quadrupole'):
+			self.sign = numpy.copysign(1, current)
 			self.ficmod = [i * int(self.sign) for i in field_integral_coefficients[:-1]]
 			self.coeffs = numpy.append(self.ficmod,
 									   field_integral_coefficients[-1])
 			self.int_strength = numpy.polyval(self.coeffs, abs(current))
 			self.effect = (scipy.constants.speed_of_light / 1e6) * self.int_strength / energy
 			# self.update_widgets_with_values("lattice:" + key + ":k1l", effect / value['magnetic_length'])
-			self.k1 = numpy.sign(current) * 1000 * self.effect / (magnetic_length)
+			self.k1 = 1000 * self.effect / (magnetic_length)
 			magdict.update({'k1': float(self.k1)})
 		elif (mag_type == 'SOL') or (mag_type == 'solenoid'):
 			self.sign = numpy.copysign(1, current)
@@ -93,15 +94,13 @@ class UnitConversion(object):
 
 	def kToCurrent(self, mag_type, k, field_integral_coefficients, magnetic_length, energy):
 		if (mag_type == 'QUAD') or (mag_type == 'quadrupole'):
-			self.effect = k / 1000 #* magnetic_length
+			self.effect = magnetic_length * k / 1000 #* magnetic_length
 			self.int_strength = self.effect * energy / (scipy.constants.speed_of_light / 1e6)
-			self.sign = int(numpy.copysign(1, self.int_strength - field_integral_coefficients[-1]))
-			fic1 = [x * int(self.sign) for x in field_integral_coefficients[:-1]]
-			self.coeffs = numpy.append(fic1, field_integral_coefficients[-1])
-			self.coeffs[-1] -= self.int_strength  # Need to find roots of polynomial, i.e. a1*x + a0 - y = 0
+			self.sign = numpy.copysign(1, k)
+			self.ficmod = [i * int(self.sign) for i in field_integral_coefficients[:-1]]
+			self.coeffs = numpy.append(self.ficmod, field_integral_coefficients[-1])
 			self.roots = numpy.roots(self.coeffs)
-			self.current = numpy.copysign(self.roots[-1].real,
-										  self.sign)  # last root is always x value (#TODO: can prove this?)
+			self.current = self.roots[1].real * self.int_strength
 			return self.current
 		elif (mag_type == 'SOL') or (mag_type == 'solenoid'):
 			self.int_strength = k * magnetic_length

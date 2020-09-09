@@ -1,6 +1,5 @@
 import os, sys
-sys.path.append(os.path.abspath(__file__+'/../../../OnlineModel/'))
-sys.path.append(os.path.abspath(__file__+'/../../../SimFrame/'))
+sys.path.append(os.path.abspath(__file__+'/../../../../../simframe/'))
 import machine_state
 import CATAP.HardwareFactory
 import time
@@ -27,6 +26,8 @@ for name in catapdict['Magnet'].keys():
 catapdict['L01'].setAmpMW(20 * 10 ** 6)
 
 catapdict['LRRG_GUN'].setAmpMW(9.9 * 10 ** 6)
+
+catapdict['Charge']['CLA-S01-DIA-WCM-01'].q = 10
 
 
 # Don't know if this is necessary

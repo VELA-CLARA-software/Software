@@ -281,7 +281,7 @@ class GetDataFromSimFrame(object):
 		self.charge_values.update({'charge': {}})
 		self.charge_values['charge'].update({'type': 'generator'})
 		self.charge_values['charge'].update({'catap_type': 'charge'})
-		self.charge_values['charge'].update({'value': self.Framework.generator.charge})
+		self.charge_values['charge'].update({'value': self.Framework.generator.__getattr__('charge')})
 		self.charge_values['charge'].update({'PV': 'CLA-S01-DIA-WCM-01'})
 		self.charge_values['charge'].update({'PV_suffixes': 'Q'})
 		self.number_of_particles.update({'number_of_particles': collections.OrderedDict()})
