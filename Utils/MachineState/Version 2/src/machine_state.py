@@ -1,7 +1,7 @@
 import os, sys
 import numpy
 import ruamel.yaml as yaml
-import get_data_from_catap
+import src.get_data_from_catap
 import get_data_from_simframe
 import write_data_to_catap
 import write_data_to_simframe

@@ -1,7 +1,8 @@
 import os, sys
-sys.path.append(os.path.abspath(__file__+'/../../../OnlineModel/'))
-sys.path.append(os.path.abspath(__file__+'/../../../SimFrame/'))
-import machine_state
+sys.path.append(os.path.abspath(__file__+'/srs/'))
+#sys.path.append(os.path.abspath(__file__+'/../../../OnlineModel/'))
+#sys.path.append(os.path.abspath(__file__+'/../../../SimFrame/'))
+import src.machine_state
 import CATAP.HardwareFactory
 import time
 
