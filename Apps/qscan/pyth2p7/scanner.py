@@ -1,13 +1,13 @@
-from PyQt5 import QtGui, QtCore
-from PyQt5.QtCore import pyqtSignal
-from PyQt5.QtCore import pyqtSlot
+from PyQt4 import QtGui, QtCore
+from PyQt4.QtCore import pyqtSignal
+from PyQt4.QtCore import pyqtSlot
 import sys,os
 #import view
 import numpy as np
 
-#sys.path.append("\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\stage\\")
-sys.path.append("\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\stage\\Python3_x64\\")
-sys.path.append("\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\stage\\Python3_x64\\")
+sys.path.append("\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\stage\\")
+#sys.path.append("\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\stage\\Python3_x64\\")
+#sys.path.append("\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\stage\\Python3_x64\\")
 
 
 #

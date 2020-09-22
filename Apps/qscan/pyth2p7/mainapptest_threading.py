@@ -11,6 +11,24 @@ import scanner
 #import controller
 #import striptool
 
+class Worker(QRunnable):
+    '''
+    Worker thread
+    '''
+
+    @pyqtSlot()
+    def run(self):
+        '''
+        Your code goes in this function
+        '''
+        print("Thread start") 
+        time.sleep(5)
+        print("Thread complete")
+
+
+
+
+
 class testclassforsignals(QtCore.QObject): 
 # A test class that emits signals 
 # It could do anything and emit signals which
@@ -39,6 +57,8 @@ class App(QtGui.QApplication):
         self.view = view.Ui_MainWindow()
         self.MainWindow = QtGui.QMainWindow()
         self.view.setupUi(self.MainWindow)
+        self.threadpool = QThreadPool()
+        print("Multithreading with maximum %d threads" % self.threadpool.maxThreadCount())
 # application which creates a gui and graph 
 # and button. The button starts the test class which generates the signal
 # the graph then updates from the signal 
@@ -47,20 +67,17 @@ class App(QtGui.QApplication):
         self.mygenerator = testclassforsignals()
         self.view.pushButton.clicked.connect(self.mygenerator.generate)  
         self.myscanner = scanner.chargescanner()
-#        print("****TEST********",self.view.doubleSpinBox.value())
-#        self.myscanner.setxrange(self.view.doubleSpinBox.value(),self.view.doubleSpinBox_2.value(),int(self.view.doubleSpinBox_3.value()))
-#        self.myscanner.setxrange(self.view.doubleSpinBox_4.value(),self.view.doubleSpinBox_5.value(),int(self.view.doubleSpinBox_6.value()))
-#        self.view.pushButton.clicked.connect(self.myscanner.doscan)
-#        theval = self.view.doubleSpinBox.value()
-#        self.view.pushButton.clicked.connect(lambda: self.myscanner.doscan(float(theval)))  		
-        self.view.pushButton.clicked.connect(\
-		   lambda: self.myscanner.doscan(\
-              self.view.doubleSpinBox.value(),\
-			  self.view.doubleSpinBox_2.value(),\
-			  int(self.view.doubleSpinBox_3.value()),\
-			  self.view.doubleSpinBox_6.value(),\
-			  self.view.doubleSpinBox_4.value(),\
-			  int(self.view.doubleSpinBox_5.value()) ) )  
+
+        self.view.pushButton.clicked.connect(self.fn_worker) 
+  		
+#        self.view.pushButton.clicked.connect(\
+#		   lambda: self.myscanner.doscan(\
+#              self.view.doubleSpinBox.value(),\
+#			  self.view.doubleSpinBox_2.value(),\
+#			  int(self.view.doubleSpinBox_3.value()),\
+#			  self.view.doubleSpinBox_6.value(),\
+#			  self.view.doubleSpinBox_4.value(),\
+#			  int(self.view.doubleSpinBox_5.value()) ) )  
 # add a plot to the window
         self.s3 = pg.ScatterPlotItem(pxMode=False)   ## Set pxMode=False to allow spots to transform with the view
         
@@ -114,6 +131,20 @@ class App(QtGui.QApplication):
     def get_text_output(self, arg1):
         self.view.textBrowser.append(arg1)
         self.processEvents() 
+  
+    def fn_worker()
+        worker = Worker()
+		self.threadpool.start(worker)
+		
+        self.myscanner.doscan(\
+              self.view.doubleSpinBox.value(),\
+              self.view.doubleSpinBox_2.value(),\
+              int(self.view.doubleSpinBox_3.value()),\
+              self.view.doubleSpinBox_6.value(),\
+              self.view.doubleSpinBox_4.value(),\
+              int(self.view.doubleSpinBox_5.value()) )
+
+
         
 if __name__ == '__main__':
     app = App(sys.argv)
