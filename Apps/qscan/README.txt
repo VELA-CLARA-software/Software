@@ -8,13 +8,34 @@ Code tested and used on control room computers.
 --qscan\pyth2p7
 NOT FULLY TESTED. More advanced GUI with messagebox output and spin box input. 
 Python 2.7, PyQt4. Main loop in mainapptest.py
-Code tested on laptop DDAST0034 only to the point that the GUI appears. 
+Code tested on laptop DLAST0034 only to the point that the GUI appears. 
+--qscan\pyth3p6_withthread\
+----\v0
+NOT FULLY TESTED. More advanced GUI with messagebox output and spin box input. 
+Python 3.6, PyQt5. Main loop in mainapptest.py
+Threaded so that output on gui continues in unfrozen fashion
+Code half tested on DDAST0036
+----\v1
+NOT FULLY TESTED. A SORT OF 'TEMPLATE' CLARA THREADED APP. 
+More advanced GUI with messagebox output and spin box input. 
+Python 3.6, PyQt5. Main loop in main.py
+Threaded so that output on gui continues in unfrozen fashion
+Plus GUI input now integrated,  
+Code half tested on DDAST0036
 
 
 
 #################
 Commits History
 #################
+
+22nd Sep 2020. ~1800
+The previous commit contained development done on my laptop DLAST0034 over summer 2020 working at home mainly. (my connection to my desktop broke during this period due to the office heating upgrade)
+Then in Sep 2020 I returned to the lab and started working again on my desktop DDAST0036.
+I took the qscan app and, with python 3.6 pyqt 5, started to develop a threaded version. I managed to get somewhere with this, without reaching full testing, but created more directories
+qscan\pyth3p6 - not fully tested, advanced gui, python3.6 and pyqt5 
+qscan\pyth3p6_withthread - not fully tested, advanced gui, python3.6 and pyqt5, AND threading 
+
 
 22nd Sep 2020. ~1700
 !!!!! Changing directory structure to start to store different versions of code all together !!!!!!
