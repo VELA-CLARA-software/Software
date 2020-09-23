@@ -28,6 +28,9 @@ from monitor import monitor
 from VELA_CLARA_enums import CONTROLLER_TYPE
 from VELA_CLARA_RF_Modulator_Control import L01_MOD_STATE
 from VELA_CLARA_RF_Modulator_Control import GUN_MOD_STATE
+from VELA_CLARA_LLRF_Control import LLRF_TYPE
+from VELA_CLARA_RF_Modulator_Control import L01_MOD_FAULT
+
 
 class modulator_monitor(monitor):
     """
@@ -52,6 +55,17 @@ class modulator_monitor(monitor):
         self.data.values[self.data.modulator_state] = self.mod[0].main_state
         # print("self.data.values[self.data.modulator_state] = ", self.data.values[
         #     self.data.modulator_state] )
+
+        # If conditioning Linac 1 we need to check the fault PV as
+        if self.config_data[self.config.RF_STRUCTURE] == LLRF_TYPE.L01:
+            if self.mod[0].l01_fault == L01_MOD_FAULT.NO_FAULT:
+                if self.data.values[self.data.modulator_state] == L01_MOD_STATE.L01_RF_ON:
+                    self.data.values[self.data.modulator_good] = True
+                else:
+                    pass
+            else:
+                pass
+
 
         # assume there is one PV that gives the RF state,
         # MODULATOR, INTERLOCKS, LLRF

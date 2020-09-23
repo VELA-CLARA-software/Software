@@ -180,6 +180,7 @@ class config(object):
                         config.monitor_config = {}
                     config.monitor_config[key.replace(general_monSuffix, '')] = value
             for key, value in config.monitor_config.iteritems():
+                # TODO: if there are no signals it should not crash
                 config.raw_config_data[key] = value
         else:
             print('WARNING GMON_SUFFIX not found in config file ')

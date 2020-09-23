@@ -162,7 +162,7 @@ class hardware_control_hub(object):
         # alias for shorter lines
         hch = hardware_control_hub
         machine_area = self.config_data[self.config.MAGNET_MACHINE_AREA]
-        message = 'start_mod_control() '
+        message = 'start_magnet_control() '
         if machine_area == MACHINE_AREA.VELA_INJ:  # MAGIC_STRING
             hch.mag_control = hch.mag_init.physical_CLARA_Ph1_Magnet_Controller()
             hch.have_controller[CONTROLLER_TYPE.MAGNET] = True
@@ -183,7 +183,7 @@ class hardware_control_hub(object):
         valve = self.config_data[self.config.VAC_VALVE]
         # alias for shorter lines
         hch = hardware_control_hub
-        message = 'start_mod_control() '
+        message = 'start_valve_control() '
         if machine_area == MACHINE_AREA.CLARA_PH1:
             #hch.valve_control = hch.valve_init.physical_CLARA_PH1_Vac_Valve_Controller()
             hch.valve_control = hch.valve_init.physical_CLARA_PH1_Vac_Valve_Controller()
