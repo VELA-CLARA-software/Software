@@ -389,6 +389,13 @@ class llrf_control(object):
 		mask_level = self.config_data[trace + '_MASK_LEVEL']  # AMOUNT OF MASK
 		mask_floor = self.config_data[trace + '_MASK_FLOOR']
 		mask_lo_min = self.config_data[trace + '_MASK_LO_MIN']  # mask_abs_min in c++
+
+		# set the check streak (how many points to trigger event)
+		check_streak = self.config_data[trace + '_CHECK_STREAK']
+
+		self.llrf_control.setNumContinuousOutsideMaskCount(trace, check_streak)
+
+
 		if mask_type == 'ABSOLUTE':
 			is_percent = False
 		elif mask_type == 'PERCENT':
@@ -441,14 +448,8 @@ class llrf_control(object):
 		# 	raw_input()
 
 
-
-
-
 		#
-		# set the check streak (how many points to trigger event)
-		check_streak = self.config_data[trace + '_CHECK_STREAK']
-		# TODO errrrrrrrrrrrrrrrr
-		self.llrf_control.setNumContinuousOutsideMaskCount('CAVITY_REVERSE_PHASE', check_streak)
+
 		#
 		# set drop amp state and value)
 		drop_amp = self.config_data[trace+'_DROP_AMP']
