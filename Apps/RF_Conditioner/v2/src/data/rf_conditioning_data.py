@@ -290,6 +290,10 @@ class rf_conditioning_data(object):
               Sorted by pulse count
               used to define the Breakdown Rate etc.
         if I read through the comments, i can basically work out what is going on
+
+
+        TODO thi sneed s a big long re-write!!! we need to tag log rmaping ,
+
         """
         rcd = rf_conditioning_data
         message = self.logger.message
@@ -325,6 +329,10 @@ class rf_conditioning_data(object):
             # pulse_count = entry_pulse_count
             # check for pulse number increasing
 
+        rationalised_pulse_breakdown_log.append(raw_pulse_break_down_log[-1])
+
+        print("rationalised_pulse_breakdown_log = {} ".format(rationalised_pulse_breakdown_log))
+
         # append some values from the end of the pulse_break_down_log (if not already in)
         # we have to be a bit sneaky here, as there may be manual edits to the file
         # we'll have to be a little convoluted here
@@ -343,7 +351,12 @@ class rf_conditioning_data(object):
         # for entry in rationalised_pulse_breakdown_log:
         #     print(entry)
         #
-        pulse_break_down_log = sorted(rationalised_pulse_breakdown_log, key=lambda x: (x[2], x[0]))
+        #pulse_break_down_log = sorted(rationalised_pulse_breakdown_log, key=lambda x: (x[2], x[0]))
+        pulse_break_down_log = sorted(rationalised_pulse_breakdown_log, key=lambda x: (x[0]))
+
+        print("pulse_break_down_log = {} ".format(pulse_break_down_log))
+
+        self.logger.message(["Rationalized pulse_break_down_log =\n", pulse_break_down_log])
 
         # TODO we need save this file to disc, (over-right existing file ?? )
         #

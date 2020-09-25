@@ -614,7 +614,7 @@ class main_controller(object):
                                               numsteps =  self.config.raw_config_data['LOG_RAMP_CURVE_NUMSTEPS'],
                                               pulses_per_step =  self.config.raw_config_data['LOG_RAMP_CURVE_PULSES_PER_STEP'])
 
-            self.logger.message("self.data.log_ramp_curve in maIn_controller = {}".format(self.data.log_ramp_curve))
+            #self.logger.message("self.data.log_ramp_curve in maIn_controller = {}".format(self.data.log_ramp_curve))
 
         if self.data.log_ramp_curve is None:
             self.logger.message("!!ERROR!! Log Ramp curve is NONE, this should not happen ", show_time_stamp = True)
