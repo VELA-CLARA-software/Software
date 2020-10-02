@@ -35,7 +35,7 @@ from VELA_CLARA_RF_Modulator_Control import GUN_MOD_STATE
 from VELA_CLARA_RF_Modulator_Control import L01_MOD_STATE
 from VELA_CLARA_LLRF_Control import TRIG
 from VELA_CLARA_LLRF_Control import INTERLOCK_STATE
-import os
+import os, sys
 import cPickle as pkl
 import numpy
 # import wolframclient.serializers as wxf
@@ -329,6 +329,7 @@ class logger(object):
         logger._binary_header_types = {}  # the type of each entry in data_to_log (filled below)
         header_names = []
         header_types_str = []
+        header_types_bytes = []
         # print 'LOGGER excluded_key_list = {}'.format(self.excluded_key_list)
         print("write bin header logger.excluded_key_list = {}".format(logger._excluded_key_list))
         # iterate over data_to_log, and get types for each entry
@@ -345,6 +346,8 @@ class logger(object):
                     header_names.append('time_stamp, (start = ' + datetime.now().isoformat(' ') + ')')
                 else:
                     header_names.append(key)
+                    size_bytes = sys.getsizeof(value)
+                    header_types_str.append(size_bytes)
                 logger._binary_header_types[key] = value_type
                 header_types_str.append(value_type_str)
         # create the data_log file and write the plaintext header, raise exception if fail
@@ -357,8 +360,10 @@ class logger(object):
                     print(header_names)
                 head_names = joiner.join(header_names) + "\n"
                 head_types = joiner.join(header_types_str) + "\n"
+                head_bytes = joiner.join(header_types_bytes) + "\n"
                 logger._binary_log_file_obj.write(head_names)
                 logger._binary_log_file_obj.write(head_types)
+                logger._binary_log_file_obj.write(head_bytes)
                 self.message(["binary log file added ", head_names, head_types], show_time_stamp=False)
             else:
                 raise ValueError('logger _binary_log_file_obj not defined')
