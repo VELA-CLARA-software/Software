@@ -30,14 +30,14 @@ class WriteDataToCATAP(object):
             if isinstance(inputdict[key], dict):
                 if 'type' in inputdict[key].keys():
                     if (value['type'] in self.magnettypes):
-                        self.energy_at_magnet = 0
+                        self.energy_at_magnet = 0.0
                         if ("GUN" in key) or ("LRG1" in key):
                             self.energy_at_magnet = energy[self.gun_position]
                         else:
                             for k, v in energy.items():
                                 if k < value['position']:
                                     self.energy_at_magnet += v
-                        if self.energy_at_magnet == 0:
+                        if self.energy_at_magnet == 0.0:
                             self.energy_at_magnet = energy[self.l01_position]
                         inputdict[key].update({'energy': self.energy_at_magnet})
 
@@ -65,6 +65,7 @@ class WriteDataToCATAP(object):
                         if (value['screen'] in allbeamfiles.keys()):
                             datadict[key]['x'] = allbeamfiles[value['screen']]['x']['mean']
                             datadict[key]['y'] = allbeamfiles[value['screen']]['y']['mean']
+                            datadict[key]['x_y_mean'] = allbeamfiles[value['screen']]['x_y']['mean']
                             datadict[key]['x_dist'] = allbeamfiles[value['screen']]['x']['dist']
                             datadict[key]['y_dist'] = allbeamfiles[value['screen']]['y']['dist']
                             datadict[key]['x_sigma'] = allbeamfiles[value['screen']]['x']['sigma']

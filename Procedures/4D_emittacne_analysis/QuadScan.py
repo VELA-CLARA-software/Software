@@ -339,7 +339,7 @@ plt.ylim(0, 0.8)
 XplotYs = numpy.zeros(len(indxx))    ##Array holding y values for graph of x
 for i in range(len(indxx)):
     XplotYs[i] = calibration*imagesigma[indxx[i]][0]/numpy.sqrt(optics[indxx[i]][0])
-
+print(epsx,epsy)
 plt.plot(indxx, XplotYs, '--ko', fillstyle='none')
 plt.plot([0,38], numpy.sqrt([epsx, epsx]), '-b')
 
@@ -359,7 +359,7 @@ plt.plot(indxy, YplotYs, '--ko', fillstyle='none')
 plt.plot([0,38], numpy.sqrt([epsy, epsy]), '-b')
 plt.subplots_adjust(hspace=0.7)
 
-print'asdasdfdsd'
+#print'asdasdfdsd'
 
 
 plt.show()      ##Shows the figures

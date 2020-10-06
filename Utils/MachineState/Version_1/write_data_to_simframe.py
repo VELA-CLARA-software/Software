@@ -29,9 +29,9 @@ class WriteDataToSimFrame(object):
                             framework.modifyElement(self.keymod, 'k1', float(value['k1']))
                         elif inputdict[section][key]['type'] == 'cavity':
                             if type=='CATAP':
-                                typemod = 1e6
+                                typemod = 1.0e6
                             else:
-                                typemod = 1
+                                typemod = 1.0
                             print(type)
                             print(typemod)
                             framework.modifyElement(self.keymod, 'field_amplitude', float(value['field_amplitude']*typemod))

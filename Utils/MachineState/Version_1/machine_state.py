@@ -7,13 +7,15 @@ import write_data_to_catap
 import write_data_to_simframe
 import unit_conversion
 import aliases
+import scipy.constants
+
 
 # Main class for writing / reading the machine state from / to SimFrame / CATAP
 class MachineState(object):
 
     def __init__(self):
         object.__init__(self)
-        self.my_name="MachineState"
+        self.my_name = "MachineState"
         self.getDataFromCATAP = get_data_from_catap.GetDataFromCATAP()
         self.getDataFromSimFrame = get_data_from_simframe.GetDataFromSimFrame()
         self.writeDataToCATAP = write_data_to_catap.WriteDataToCATAP()
@@ -95,12 +97,13 @@ class MachineState(object):
         self.allbeamfiles = self.getDataFromSimFrame.getAllBeamFiles(directory)
         self.writeDataToSimFrame.getLLRFEnergyGain(datadict)
         self.energy = self.writeDataToSimFrame.getEnergyDict()
-        if sections==None:
+        if sections == None:
             self.sections_to_write = datadict.keys()
         else:
             self.sections_to_write = sections
         for i in self.sections_to_write:
-            self.writeDataToCATAP.writeMachineStateToCATAP(mode, datadict[i], self.allbeamfiles, self.allDicts, self.energy)
+            self.writeDataToCATAP.writeMachineStateToCATAP(mode, datadict[i], self.allbeamfiles, self.allDicts,
+                                                           self.energy)
 
     # Writes the machine state file to SimFrame. Requires the framework to be initialised, and a simulation lattice file
     # Inputs: directory: location of output beam distributions
@@ -113,9 +116,9 @@ class MachineState(object):
     # Output: returns the machine state file w/ average beam distributions and file locations
     def writeMachineStateToSimFrame(self, directory, framework, lattice, datadict=None,
                                     type=None, mode=None, run=False, sections=None):
-        if sections==None:
+        if sections == None:
             sections = self.lattices
-        #self.getMachineStateFromSimFrame(directory, lattice)
+        # self.getMachineStateFromSimFrame(directory, lattice)
         if datadict is not None:
             self.datadict = datadict
             self.writeDataToSimFrame.modifyFramework(framework, self.datadict, type=type)
@@ -137,13 +140,40 @@ class MachineState(object):
             self.allbeamfiles = self.getDataFromSimFrame.getAllBeamFiles(directory)
             for i in self.allbeamfiles.keys():
                 for j in sections:
-                    if (self.allbeamfiles[i]['type'] == 'screen') and (i in self.datadict[j].keys()):
+                    if ((self.allbeamfiles[i]['type'] == 'screen') or (self.allbeamfiles[i]['type'] == 'aperture')) \
+                            and (i in self.datadict[j].keys()):
+                        #q_e_c = scipy.constants.e / scipy.constants.c
+                        #energy_beam = self.getEnergyGainFromCATAP()
+                        #gamma = float(energy_beam[0.17] + energy_beam[3.2269]) / scipy.constants.electron_mass
+                        #factor = q_e_c / (gamma * scipy.constants.electron_mass * scipy.constants.c)
+                        factor=1.0
                         self.datadict[j][self.screen_to_camera[i]].update({'x_mm': self.allbeamfiles[i]['x']['mean']})
                         self.datadict[j][self.screen_to_camera[i]].update({'y_mm': self.allbeamfiles[i]['y']['mean']})
-                        self.datadict[j][self.screen_to_camera[i]].update({'x_mm_sig': self.allbeamfiles[i]['x']['sigma']})
-                        self.datadict[j][self.screen_to_camera[i]].update({'y_mm_sig': self.allbeamfiles[i]['y']['sigma']})
+                        self.datadict[j][self.screen_to_camera[i]].update(
+                            {'x_mm_sig': self.allbeamfiles[i]['x']['sigma']})
+                        self.datadict[j][self.screen_to_camera[i]].update(
+                            {'y_mm_sig': self.allbeamfiles[i]['y']['sigma']})
                         self.datadict[j][self.screen_to_camera[i]].update({'x_mean': self.allbeamfiles[i]['x']['mean']})
                         self.datadict[j][self.screen_to_camera[i]].update({'y_mean': self.allbeamfiles[i]['y']['mean']})
+                        self.datadict[j][self.screen_to_camera[i]].update({'x_var': self.allbeamfiles[i]['x']['var']})
+                        self.datadict[j][self.screen_to_camera[i]].update({'y_var': self.allbeamfiles[i]['y']['var']})
+                        self.datadict[j][self.screen_to_camera[i]].update(
+                            {'x_y_mean': self.allbeamfiles[i]['x_y']['mean']})
+                        self.datadict[j][self.screen_to_camera[i]].update({'px_py_mean': numpy.mean(numpy.multiply(
+                            numpy.multiply(factor, self.allbeamfiles[i]['px']['dist']),
+                            numpy.multiply(factor, self.allbeamfiles[i]['py']['dist'])))})
+                        self.datadict[j][self.screen_to_camera[i]].update({'x_px_mean': numpy.mean(numpy.multiply(
+                            numpy.multiply(factor, self.allbeamfiles[i]['x']['dist']),
+                            self.allbeamfiles[i]['px']['dist']))})
+                        self.datadict[j][self.screen_to_camera[i]].update({'y_py_mean': numpy.mean(numpy.multiply(
+                            numpy.multiply(factor, self.allbeamfiles[i]['y']['dist']),
+                            self.allbeamfiles[i]['py']['dist']))})
+                        self.datadict[j][self.screen_to_camera[i]].update({'x_py_mean': numpy.mean(numpy.multiply(
+                            numpy.multiply(factor, self.allbeamfiles[i]['x']['dist']),
+                            self.allbeamfiles[i]['py']['dist']))})
+                        self.datadict[j][self.screen_to_camera[i]].update({'y_px_mean': numpy.mean(numpy.multiply(
+                            numpy.multiply(factor, self.allbeamfiles[i]['y']['dist']),
+                            self.allbeamfiles[i]['px']['dist']))})
                         self.datadict[j][self.screen_to_camera[i]].update({'z_mean': self.allbeamfiles[i]['z']['mean']})
                         self.datadict[j][self.screen_to_camera[i]].update(
                             {'px_mean': self.allbeamfiles[i]['px']['mean']})
@@ -152,21 +182,33 @@ class MachineState(object):
                         self.datadict[j][self.screen_to_camera[i]].update(
                             {'pz_mean': self.allbeamfiles[i]['pz']['mean']})
                         self.datadict[j][self.screen_to_camera[i]].update({'t_mean': self.allbeamfiles[i]['t']['mean']})
-                        self.datadict[j][self.screen_to_camera[i]].update({'x_sigma': self.allbeamfiles[i]['x']['sigma']})
-                        self.datadict[j][self.screen_to_camera[i]].update({'y_sigma': self.allbeamfiles[i]['y']['sigma']})
-                        self.datadict[j][self.screen_to_camera[i]].update({'z_sigma': self.allbeamfiles[i]['z']['sigma']})
+                        self.datadict[j][self.screen_to_camera[i]].update(
+                            {'x_sigma': self.allbeamfiles[i]['x']['sigma']})
+                        self.datadict[j][self.screen_to_camera[i]].update(
+                            {'y_sigma': self.allbeamfiles[i]['y']['sigma']})
+                        self.datadict[j][self.screen_to_camera[i]].update(
+                            {'z_sigma': self.allbeamfiles[i]['z']['sigma']})
                         self.datadict[j][self.screen_to_camera[i]].update(
                             {'px_sigma': self.allbeamfiles[i]['px']['sigma']})
                         self.datadict[j][self.screen_to_camera[i]].update(
                             {'py_sigma': self.allbeamfiles[i]['py']['sigma']})
                         self.datadict[j][self.screen_to_camera[i]].update(
                             {'pz_sigma': self.allbeamfiles[i]['pz']['sigma']})
-                        self.datadict[j][self.screen_to_camera[i]].update({'t_sigma': self.allbeamfiles[i]['t']['sigma']})
-                        self.datadict[j][self.screen_to_camera[i]].update({'filename': self.allbeamfiles[i]['filename']})
+                        self.datadict[j][self.screen_to_camera[i]].update({'px_var': numpy.multiply(numpy.square(factor),
+                                                                                                 self.allbeamfiles[i][
+                                                                                                     'px']['var'])})
+                        self.datadict[j][self.screen_to_camera[i]].update({'py_var': numpy.multiply(numpy.square(factor),
+                                                                                    self.allbeamfiles[i]['py']['var'])})
+                        self.datadict[j][self.screen_to_camera[i]].update({'pz_var': self.allbeamfiles[i]['pz']['var']})
+                        self.datadict[j][self.screen_to_camera[i]].update(
+                            {'t_sigma': self.allbeamfiles[i]['t']['sigma']})
+                        self.datadict[j][self.screen_to_camera[i]].update(
+                            {'filename': self.allbeamfiles[i]['filename']})
                     elif (self.allbeamfiles[i]['type'] == 'bpm') and (i in self.datadict[j].keys()):
                         self.datadict[j][i].update({'x': self.allbeamfiles[i]['x']['mean']})
                         self.datadict[j][i].update({'y': self.allbeamfiles[i]['y']['mean']})
                         self.datadict[j][i].update({'filename': self.allbeamfiles[i]['filename']})
+
         return self.datadict
 
     # Returns the SimFrame machine state dict
@@ -207,7 +249,7 @@ class MachineState(object):
             self.getMachineStateFromCATAP(mode)
         for key, value in self.allDicts.items():
             if value['simframe_alias'] is not None:
-                self.pvAlias.update({key:value['simframe_alias']})
+                self.pvAlias.update({key: value['simframe_alias']})
 
     # Write machine state to YAML file
     # Inputs: filename: name of file to write to
@@ -231,11 +273,11 @@ class MachineState(object):
         for key, value in data_dict.items():
             if isinstance(value, dict) and not key == 'sub_elements':
                 subdict = self.convertDataTypes({}, value)
-                edict.update({key:subdict})
+                edict.update({key: subdict})
             else:
                 if not key == 'sub_elements':
                     # value = self.model.data.Framework.convert_numpy_types(value)
-                    edict.update({key:value})
+                    edict.update({key: value})
         return export_dict
 
     # Reads in a machine state file to a python dict

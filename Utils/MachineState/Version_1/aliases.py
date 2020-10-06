@@ -9,7 +9,8 @@ alias_names = {"CLA-L01-LRF-CTRL-01": "CLA-L01-CAV",
                "CLA-LRG1-GUN-CAV": "LRRG_GUN"}
                #"CLA-LRG1-MAG-BSOL-01": "CLA-LRG1-MAG-SOL-01"}
 
-screen_alias = {"S01-SCR-01": "CLA-S01-DIA-SCR-01",
+screen_alias = {"S02-APER-01": "CLA-S02-APER-01",
+                "S01-SCR-01": "CLA-S01-DIA-SCR-01",
                 "S02-SCR-01": "CLA-S02-DIA-SCR-01",
                 "S02-SCR-02": "CLA-S02-DIA-SCR-02",
                 "S02-SCR-03": "CLA-S02-DIA-SCR-03",
@@ -21,7 +22,8 @@ screen_alias = {"S01-SCR-01": "CLA-S01-DIA-SCR-01",
                 "INJ-SCR-08": "EBT-INJ-DIA-YAG-08",
                 "INJ-SCR-09": "EBT-INJ-DIA-YAG-09"}
 
-screen_to_camera = {"CLA-S01-DIA-SCR-01": "CLA-S01-DIA-CAM-01",
+screen_to_camera = {"CLA-S02-APER-01": "CLA-S02-APER-01",
+                    "CLA-S01-DIA-SCR-01": "CLA-S01-DIA-CAM-01",
                     "CLA-S02-DIA-SCR-01": "CLA-S02-DIA-CAM-01",
                     "CLA-S02-DIA-SCR-02": "CLA-S02-DIA-CAM-02",
                     "CLA-S02-DIA-SCR-03": "CLA-S02-DIA-CAM-03",
