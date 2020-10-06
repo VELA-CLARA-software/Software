@@ -764,7 +764,7 @@ class rf_conditioning_data(object):
             amp_sp_raw.append(key)
             num_pulses_prebin.append(rcd.amp_vs_kfpow_running_stat[key][0])
             mean_kfpwr_raw.append(rcd.amp_vs_kfpow_running_stat[key][1])
-            print("init_bin set_up data = ", amp_sp_raw[-1], num_pulses_prebin[-1], mean_kfpwr_raw[-1])
+            #print("init_bin set_up data = ", amp_sp_raw[-1], num_pulses_prebin[-1], mean_kfpwr_raw[-1])
 
         #print('mean_kfpwr_raw = {}'.format(mean_kfpwr_raw))
 
