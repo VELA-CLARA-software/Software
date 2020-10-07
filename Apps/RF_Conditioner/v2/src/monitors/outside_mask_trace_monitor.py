@@ -28,6 +28,7 @@
 '''
 from monitor import monitor
 from src.data.state import state
+from datetime import datetime
 
 
 class outside_mask_trace_monitor(monitor):
@@ -141,6 +142,8 @@ class outside_mask_trace_monitor(monitor):
                 self.collect_ome_data()
                 # RESET FLAG
                 self.new_omed_data = False
+                #TODO AJG: add timestamp to "breakdown_timestamps" in data dictionary
+                self.values[self.data.breakdown_timestamps] = datetime.now().isoformat(' ')
             else:
                 print('New OME data but cannot collect OME')
 

@@ -31,6 +31,7 @@ from src.data.rf_conditioning_logger import rf_conditioning_logger
 from VELA_CLARA_RF_Modulator_Control import GUN_MOD_STATE
 from VELA_CLARA_Vac_Valve_Control import VALVE_STATE
 from VELA_CLARA_RF_Protection_Control import RF_PROT_STATUS
+from VELA_CLARA_RF_Modulator_Control import HOLD_RF_ON_STATE
 from VELA_CLARA_LLRF_Control import LLRF_TYPE
 from ramp import *
 from src.data.state import state
@@ -38,6 +39,8 @@ from src.data.state import ramp_method
 from numpy import float64 as np_float64
 import math
 import winsound
+from datetime import datetime
+from datetime import timedelta
 import inspect
 
 
@@ -207,9 +210,9 @@ class rf_conditioning_data(object):
             # else find the sp "closest" but lower than the requested sp
             # Closest key in dictionary
             close_sp = min(self.amp_vs_kfpow_running_stat.keys(), key = lambda key: abs(key-sp))
-            self.logger.message(
-                "amp_vs_kfpow lookup, called from {}, can't find {}, returning value at {} instead".format(str(inspect.stack()[1][3]), sp,
-                close_sp), show_time_stamp = True)
+            #self.logger.message(
+            #    "amp_vs_kfpow lookup, called from {}, can't find {}, returning value at {} instead".format(str(inspect.stack()[1][3]), sp,
+            #    close_sp), show_time_stamp = True)
             return self.amp_vs_kfpow_running_stat[close_sp]
         else:
             return [0.0, 0.0, 0.0, 0.0]
@@ -481,6 +484,19 @@ class rf_conditioning_data(object):
                             str(rf_conditioning_data.values[rf_conditioning_data.pulse_count]))
         self.beep(count)
         #self.add_to_pulse_breakdown_log(rf_condition_data_base.amp_sp_history[-1])
+
+    def breakdown_rate_able_to_ramp_countdown(self):
+        '''This function delivers a countdown until the breakdown rate is low enough to allow ramping.
+           Only to be used when the breakdown rate is higher than the breakdown rate aim.'''
+        rcd = rf_conditioning_data
+        brakdown_timestamps = rcd.values[rcd.breakdown_timestamps]
+        repetition_rate = self.config_data[config.RF_REPETITION_RATE]
+        breakdown_rate = self.config_data[config.BREAKDOWN_RATE_AIM]
+        number_pulses_in_bd_history = self.config_data[config.NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY]
+        now = datetime.now()
+        time_delta = timedelta(seconds = number_pulses_in_bd_history/repetition_rate)
+        breakdown_rate_boundary = now - time_delta
+
 
     def beep(self, count):
         winsound.Beep(2000,150)## MAGIC_NUMBER
@@ -1428,6 +1444,7 @@ class rf_conditioning_data(object):
     dummy_int = -9999999
     dummy_state = state.UNKNOWN
     dummy_list = []
+    dummy_hold_rf_on_state = HOLD_RF_ON_STATE.UNKNOWN_HOLD_RF_ON_STATE
 
     binned_amp_vs_kfpow = {}  # A list of the keys for values
     bin_keys = []  # A list of the keys for values
@@ -1668,6 +1685,16 @@ class rf_conditioning_data(object):
     all_value_keys.append(reverse_outside_mask_count)
     values[reverse_outside_mask_count] = dummy_int
 
+    #TODO AJG: create a list of breakdown timestamps to calculate
+    #  "Time until ramp" countdown for GUI
+    #  No need to log this in binary
+
+    breakdown_timestamps = 'breakdown_timestamps'
+    all_value_keys.append(breakdown_timestamps)
+    values[breakdown_timestamps] = dummy_list
+    excluded_key_list.append(breakdown_timestamps)
+
+
     breakdown_status = 'breakdown_status'
     all_value_keys.append(breakdown_status)
     values[breakdown_status] = state.UNKNOWN
@@ -1745,9 +1772,17 @@ class rf_conditioning_data(object):
     all_value_keys.append(rfprot_state)
     values[rfprot_state] = state.UNKNOWN
 
+
+    #TODO AJG: create hold rf on state
     rfprot_good = 'rfprot_good'
     all_value_keys.append(rfprot_good)
     values[rfprot_good] = False
+
+
+    hold_rf_on_state = 'hold_rf_on_state'
+    all_value_keys.append(hold_rf_on_state)
+    values[hold_rf_on_state] = dummy_hold_rf_on_state
+    excluded_key_list.append(hold_rf_on_state)
 
     modulator_state = 'modulator_state'
     all_value_keys.append(modulator_state)

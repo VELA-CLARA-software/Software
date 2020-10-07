@@ -28,6 +28,7 @@ from monitor import monitor
 from VELA_CLARA_enums import CONTROLLER_TYPE
 from VELA_CLARA_RF_Modulator_Control import L01_MOD_STATE
 from VELA_CLARA_RF_Modulator_Control import GUN_MOD_STATE
+from VELA_CLARA_RF_Modulator_Control import HOLD_RF_ON_STATE
 from VELA_CLARA_LLRF_Control import LLRF_TYPE
 from VELA_CLARA_RF_Modulator_Control import L01_MOD_FAULT
 
@@ -53,6 +54,7 @@ class modulator_monitor(monitor):
 
     def check(self):
         self.data.values[self.data.modulator_state] = self.mod[0].main_state
+        self.data.values[self.data.hold_rf_on_state] = self.mod[0].hold_rf_on_state
         # print("self.data.values[self.data.modulator_state] = ", self.data.values[
         #     self.data.modulator_state] )
 
@@ -65,6 +67,7 @@ class modulator_monitor(monitor):
                     pass
             else:
                 pass
+
 
 
         # assume there is one PV that gives the RF state,

@@ -33,6 +33,7 @@ from VELA_CLARA_Vac_Valve_Control import VALVE_STATE
 from VELA_CLARA_RF_Protection_Control import RF_PROT_STATUS
 from VELA_CLARA_RF_Modulator_Control import GUN_MOD_STATE
 from VELA_CLARA_RF_Modulator_Control import L01_MOD_STATE
+from VELA_CLARA_RF_Modulator_Control import HOLD_RF_ON_STATE
 from VELA_CLARA_LLRF_Control import TRIG
 from VELA_CLARA_LLRF_Control import INTERLOCK_STATE
 import os, sys
@@ -98,7 +99,10 @@ class logger(object):
     # THINK VERY CAREFULLY about changing this!!!! You have be warned
     # ALL CATAP types and simple types need to be defined here!!
     _python_type_to_bintype = {long: '<q', int: '<i', float: '<f', RF_PROT_STATUS: '<B', L01_MOD_STATE: '<B', GUN_MOD_STATE: '<B', VALVE_STATE: '<B',
-                               TRIG: '<B', state: '<B', ramp_method: '<B', INTERLOCK_STATE: '<B', bool: '<?', numpy.float64: '<d', float64: '<d',
+                               TRIG: '<B', state: '<B', ramp_method: '<B', INTERLOCK_STATE: '<B', bool: '<?',
+                               numpy.float64: ' \
+                                                                                                                               ''<d',\
+                                                                                                                                              float64: '<d',
                                # BE CAREFUL WiTH str, THE BELOW IS CLEARLY GARBAGE
                                str: '<i'}
 
@@ -296,6 +300,14 @@ class logger(object):
             # self.message("val =  = " + str(val))
             # We use val.value below to get the numerical value of the enum object !!!!!!!
             logger._binary_log_file_obj.write(struct.pack('<B', val.value))
+
+        #elif val_type is HOLD_RF_ON_STATE:
+        #    # self.message("struct_format = <B")
+        #    # self.message("val =  = " + str(val))
+        #    # We use val.value below to get the numerical value of the enum object !!!!!!!
+        #    print('val = '.format(val))
+        #    logger._binary_log_file_obj.write(struct.pack('<B', val.value))
+
         else:
             struct_format = logger._python_type_to_bintype.get(val_type, None)
 
@@ -347,7 +359,7 @@ class logger(object):
                 else:
                     header_names.append(key)
                     size_bytes = sys.getsizeof(value)
-                    header_types_str.append(size_bytes)
+                    header_types_str.append(str(size_bytes))
                 logger._binary_header_types[key] = value_type
                 header_types_str.append(value_type_str)
         # create the data_log file and write the plaintext header, raise exception if fail

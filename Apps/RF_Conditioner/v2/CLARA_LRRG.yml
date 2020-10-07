@@ -177,14 +177,16 @@ EXTRA_TRACES_ON_BREAKDOWN: 2 # INTEGER number of extra (subsequent) traces to sa
 
 ## CAVITY FORWARD POWER  MASK PARAMETERS
 CFPOW_AUTO_SET: false #;Will pick mask indices automatically, if false YOU must Define Them
-CFPOW_MASK_SET_TYPE: INDEX #; (TIME or INDEX) for CRP_AUTO_SET=FALSE manually set s1,s2,s3,s4, via TIME in trace or INDEX in trace
+CFPOW_MASK_SET_TYPE: TIME #; (TIME or INDEX) for CRP_AUTO_SET=FALSE manually set s1,s2,s3,s4, via TIME in trace or INDEX in trace
 CFPOW_MASK_START: 1.5 #Only used if CRP_AUTO_SET=FALSE
 CFPOW_MASK_END: 3.5 #;Only used if CRP_AUTO_SET=FALSE
 CFPOW_MASK_WINDOW_START: 4.5 #;Only used if CRP_AUTO_SET=FALSE
 CFPOW_MASK_WINDOW_END: 4.6 #;Only used if CRP_AUTO_SET=FALSE
 CFPOW_MASK_TYPE: PERCENT #; PERCENT OR ABSOLUTE
 CFPOW_MASK_LO_MIN: 50 # integer,Minimum value for a mask, regardless
-CFPOW_MASK_LEVEL: 20 #integer,units depend on CFP_MASK_TYPE
+CFPOW_MASK_LEVEL: 15 #integer,units depend on CFP_MASK_TYPE
+CFPOW_MASK_LEVEL_LO:  10 #integer,units depend on CFP_MASK_TYPE lower bound of acceptance region if needed
+CFPOW_MASK_LEVEL_HI:  40 #integer,units depend on CFP_MASK_TYPE upper bound of acceptance region if needed
 CFPOW_CHECK_STREAK: 2 #how many continuous points outside mask
 CFPOW_MASK_FLOOR: 1000.0 #Watts, values below this won't get checked
 CFPOW_NUM_AVERAGE_TRACES: 2

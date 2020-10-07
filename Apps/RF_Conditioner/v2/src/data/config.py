@@ -523,6 +523,9 @@ class config(object):
     KFPOW_MASK_LEVEL = 'KFPOW_MASK_LEVEL'
     KRPOW_MASK_LEVEL = 'KRPOW_MASK_LEVEL'
     CFPHA_MASK_LEVEL = 'CFPHA_MASK_LEVEL'
+    # TODO: Added seperate high & low parameters to create mask for CFPower to try to catch instabitlities without preventing ramping.
+    CFPOW_MASK_LEVEL_LO = 'CFPOW_MASK_LEVEL_LO'
+    CFPOW_MASK_LEVEL_HI = 'CFPOW_MASK_LEVEL_HI'
     CRPHA_MASK_LEVEL = 'CRPHA_MASK_LEVEL'
     CPPHA_MASK_LEVEL = 'CPPHA_MASK_LEVEL'
     KFPHA_MASK_LEVEL = 'KFPHA_MASK_LEVEL'
@@ -654,7 +657,10 @@ class config(object):
                           CRPOWMASK_LO_MIN, CPPOWMASK_LO_MIN, KFPOWMASK_LO_MIN,
                           KRPOWMASK_LO_MIN, CFPHAMASK_LO_MIN, CRPHAMASK_LO_MIN,
                           CPPHAMASK_LO_MIN, KFPHAMASK_LO_MIN, KRPHAMASK_LO_MIN,
-                          CFPOW_MASK_LEVEL, CRPOW_MASK_LEVEL, CPPOW_MASK_LEVEL, KFPOW_MASK_LEVEL,
+                          CFPOW_MASK_LEVEL,
+                          CFPOW_MASK_LEVEL_LO,
+                          CFPOW_MASK_LEVEL_HI,
+                          CRPOW_MASK_LEVEL, CPPOW_MASK_LEVEL, KFPOW_MASK_LEVEL,
                           KRPOW_MASK_LEVEL, CFPHA_MASK_LEVEL, CRPHA_MASK_LEVEL, CPPHA_MASK_LEVEL,
                           KFPHA_MASK_LEVEL, KRPHA_MASK_LEVEL, CFPOW_CHECK_STREAK,
                           CRPOW_CHECK_STREAK, CPPOW_CHECK_STREAK, KFPOW_CHECK_STREAK,

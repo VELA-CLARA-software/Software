@@ -390,6 +390,10 @@ class llrf_control(object):
 		mask_floor = self.config_data[trace + '_MASK_FLOOR']
 		mask_lo_min = self.config_data[trace + '_MASK_LO_MIN']  # mask_abs_min in c++
 
+		#TODO AJG: send CFPOW_MASK_LEVEL_LO & CFPOW_MASK_LEVEL_HI to C++
+
+
+
 		# set the check streak (how many points to trigger event)
 		check_streak = self.config_data[trace + '_CHECK_STREAK']
 
@@ -403,52 +407,39 @@ class llrf_control(object):
 		else:
 			is_percent = True
 		# send mask settings to c++
-		print("Setting these Mask parameters")
-		print("trace, is_percent, mask_level, mask_floor, mask_lo_min, mask_start, mask_end, mask_window_start,mask_window_end")
-		print(trace, is_percent, mask_level, mask_floor, mask_lo_min, mask_start, mask_end, mask_window_start,mask_window_end)
-		# # check values have got set correctly
-		# has_error = False
-		if mask_set_type == 'TIME':
-			self.llrf_control.setMaskParamatersTimes(trace, is_percent, mask_level, mask_floor, mask_lo_min, mask_start, mask_end, mask_window_start,
-			                                         mask_window_end)
-			# [s,e,ws,ws] = [self.llrf_control.getMaskStartTime(trace), self.llrf_control.getMaskEndTime(trace),self.llrf_control.getMaskWindowStartTime(trace), self.llrf_control.getMaskWindowEndTime(trace)]
-			#
-			# print("Manually compare these atm")
-			# print([s,e,ws,ws])
-			# print([mask_start, mask_end, mask_window_start, mask_window_end ])
-		elif mask_set_type == 'INDEX':
-			self.llrf_control.setMaskParamatersIndices(trace, is_percent, mask_level, mask_floor, mask_lo_min, mask_start, mask_end,
-			                                           mask_window_start, mask_window_end)
-			# [s,e,ws,ws] = [self.llrf_control.getMaskStartIndex(trace), self.llrf_control.getMaskEndIndex(trace),
-			#                self.llrf_control.getMaskWindowStartIndex(trace), self.llrf_control.getMaskWindowEndIndex(trace)]
-			# if [s,e,ws,ws] == [ mask_start, mask_end, mask_window_start, mask_window_end ] :
-			# 	pass
-			# else:
-			# 	print("!!ERROR!! {} trace not checking mask".format(trace))
-			# 	has_error = True
-		# if self.llrf_control.isCheckingMask(trace):
-		# 	pass
-		# else:
-		# 	print("!!ERROR!! {} trace not checking mask".format(trace))
-		# 	has_error = True
-		# if self.llrf_control.getMaskFloor(trace) == mask_floor:
-		# 	pass
-		# else:
-		# 	print("!!ERROR!! {} trace mask_floor = {}, expected {}".format(trace,self.llrf_control.getMaskFloor(trace), mask_floor))
-		# 	has_error = True
-		#
-		# if self.llrf_control.getMaskValue(trace) == mask_floor:
-		# 	pass
-		# else:
-		# 	print("!!ERROR!! {} trace mask_level = {}, expected {}".format(trace,self.llrf_control.getMaskValue(trace), mask_level))
-		# 	has_error = True
-		#
-		#
-		# if has_error:
-		# 	raw_input()
+		if trace == 'CAVITY_FORWARD_POWER':
+			mask_level_lo = self.config_data[trace + '_MASK_LEVEL_LO']
+			mask_level_hi = self.config_data[trace + '_MASK_LEVEL_HI']
 
 
-		#
+			print("Setting these Mask parameters")
+			print("trace, is_percent, mask_level_lo, mask_level_hi, mask_floor, mask_lo_min, mask_start, mask_end, mask_window_start,"
+			      "mask_window_end")
+			print(trace, is_percent,  mask_level_lo, mask_level_hi, mask_floor, mask_lo_min, mask_start, mask_end, mask_window_start,mask_window_end)
+			# # check values have got set correctly
+			# has_error = False
+			if mask_set_type == 'TIME':
+				self.llrf_control.setMaskParamatersTimes(trace, is_percent,  mask_level_lo, mask_level_hi, mask_floor, mask_lo_min, mask_start, mask_end, mask_window_start,
+				                                         mask_window_end)
+
+			elif mask_set_type == 'INDEX':
+				self.llrf_control.setMaskParamatersIndices(trace, is_percent,  mask_level_lo, mask_level_hi, mask_floor, mask_lo_min, mask_start, mask_end,
+				                                           mask_window_start, mask_window_end)
+		else:
+			print("Setting these Mask parameters")
+			print("trace, is_percent, mask_level, mask_floor, mask_lo_min, mask_start, mask_end, mask_window_start,mask_window_end")
+			print(trace, is_percent, mask_level, mask_floor, mask_lo_min, mask_start, mask_end, mask_window_start,mask_window_end)
+			# # check values have got set correctly
+			# has_error = False
+			if mask_set_type == 'TIME':
+				self.llrf_control.setMaskParamatersTimes(trace, is_percent, mask_level, mask_floor, mask_lo_min, mask_start, mask_end, mask_window_start,
+				                                         mask_window_end)
+
+			elif mask_set_type == 'INDEX':
+				self.llrf_control.setMaskParamatersIndices(trace, is_percent, mask_level, mask_floor, mask_lo_min, mask_start, mask_end,
+				                                           mask_window_start, mask_window_end)
+
+
 
 		#
 		# set drop amp state and value)

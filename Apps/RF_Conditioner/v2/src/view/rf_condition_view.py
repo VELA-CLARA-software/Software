@@ -38,7 +38,7 @@ from VELA_CLARA_RF_Modulator_Control import GUN_MOD_STATE
 from VELA_CLARA_RF_Modulator_Control import L01_MOD_STATE
 from VELA_CLARA_Vac_Valve_Control import VALVE_STATE
 from VELA_CLARA_RF_Protection_Control import RF_PROT_STATUS
-
+from VELA_CLARA_RF_Modulator_Control import HOLD_RF_ON_STATE
 from src.data.rf_conditioning_data import rf_conditioning_data
 from src.data.state import state
 from PyQt4.QtGui import *
@@ -498,6 +498,9 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         self.set_widget_color_text(self.can_llrf_output_state_outputwidget, self.data.values[rcd.can_llrf_output_state])
         self.set_widget_color_text(self.BD_state_outputwidget, self.data.values[rcd.BD_state])
 
+        self.set_widget_color_text(self.hold_rf_on_state_outputwidget, self.values[self.data.hold_rf_on_state])
+
+
         if self.data.get_kf_running_stat_power_at_set_point(self.values[self.data.last_amp_sp]):
             if self.data.get_kf_running_stat_power_at_current_set_point():
                 self.delta_power_outputwidget.setText('{}'.format(int(self.values[self.data.delta_kfpow])))
@@ -672,6 +675,11 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
             '{} / {}'.format(self.values[self.data.active_breakdown_count], self.values[self.data.total_breakdown_count]))
         self.set_widget_color( self.breakdown_count_outputwidget, self.values[rf_conditioning_data.breakdown_rate_low] )
 
+
+
+
+
+
     def update_expert_values_in_gui(self):
         """
         update the exper_values panels
@@ -746,6 +754,14 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
             widget.setText('HEARTBEAT 0')
         elif val == 1.0:
             widget.setText('HEARTBEAT 1')
+        elif val == HOLD_RF_ON_STATE.MANUAL_RF:
+            widget.setText('MANUAL_RF')
+        elif val == HOLD_RF_ON_STATE.HOLD_RF_ON:
+            widget.setText('HOLD_RF_ON')
+        elif val == HOLD_RF_ON_STATE.HOLD_RF_ON_CON:
+            widget.setText('HOLD_RF_ON_CON')
+        elif val == HOLD_RF_ON_STATE.UNKNOWN_HOLD_RF_ON_STATE:
+            widget.setText('UNKNOWN_HOLD_RF_ON_STATE')
         else:
             widget.setText('UNKNOWN')
 
@@ -772,6 +788,15 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
             widget.setStyleSheet('QLabel { background-color : ' + self.zero + '; color : black; }')
         elif val == 1.0:
             widget.setStyleSheet('QLabel { background-color : ' + self.one + '; color : black; }')
+        elif val == HOLD_RF_ON_STATE.MANUAL_RF:
+            widget.setStyleSheet('QLabel { background-color : ' + self.bad + '; color : black; }')
+        elif val == HOLD_RF_ON_STATE.HOLD_RF_ON:
+            widget.setStyleSheet('QLabel { background-color : ' + self.bad + '; color : black; }')
+        elif val == HOLD_RF_ON_STATE.HOLD_RF_ON_CON:
+            widget.setStyleSheet('QLabel { background-color : ' + self.good + '; color : black; }')
+        elif val == HOLD_RF_ON_STATE.UNKNOWN_HOLD_RF_ON_STATE:
+            widget.setStyleSheet('QLabel { background-color : ' + self.unknown + '; color : black; }')
+
         else:
             widget.setStyleSheet('QLabel { background-color : ' + self.unknown + '; color : black; }')
 
