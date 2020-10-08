@@ -3,8 +3,8 @@
 block_cipher = None
 
 
-a = Analysis(['main.pyw'],
-             pathex=['C:\\Users\\djs56\\GitHub\\Software\\Apps\\llrf_Defibrillation'],
+a = Analysis(['main.py'],
+             pathex=['C:\\Users\\dlerlp\\Documents\\GitHub\\Software\\Apps\\llrf_Defibrillation'],
              binaries=[],
              datas=[],
              hiddenimports=[],
@@ -30,4 +30,4 @@ exe = EXE(pyz,
           upx=True,
           upx_exclude=[],
           runtime_tmpdir=None,
-          console=False , icon='resources\\llrf_defibrillator\\defib.ico')
+          console=False , icon='resources\\llrf_defibrillator\\llrf_defibrillator.ico')
