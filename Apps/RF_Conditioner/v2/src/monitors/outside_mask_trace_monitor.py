@@ -28,7 +28,7 @@
 '''
 from monitor import monitor
 from src.data.state import state
-from datetime import datetime
+from src.data.rf_conditioning_data import rf_conditioning_data
 
 
 class outside_mask_trace_monitor(monitor):
@@ -107,6 +107,9 @@ class outside_mask_trace_monitor(monitor):
         # The number of pulses
         self.values[self.data.pulse_count] = self.llrf_obj[0].active_pulse_count
 
+
+
+
         # the number of pulses since last 'event' (actually includes since last ramp, so re-name)
         #self.values[self.data.event_pulse_count] = self.values[self.data.pulse_count] - self.event_pulse_count_zero
         self.values[self.data.event_pulse_count] = self.values[self.data.pulse_count] - self.values[self.data.event_pulse_count_zero]
@@ -122,6 +125,9 @@ class outside_mask_trace_monitor(monitor):
             self.new_breakdown()
             self.new_omed_data = True
             self.previous_omed_count = self.values[self.data.num_outside_mask_traces]
+
+
+
             #print('num_outside_mask_traces = {}'.format(self.values[self.data.num_outside_mask_traces]))
             #print('previous_omed_count = {}'.format(self.previous_omed_count))
 
@@ -142,8 +148,7 @@ class outside_mask_trace_monitor(monitor):
                 self.collect_ome_data()
                 # RESET FLAG
                 self.new_omed_data = False
-                #TODO AJG: add timestamp to "breakdown_timestamps" in data dictionary
-                self.values[self.data.breakdown_timestamps] = datetime.now().isoformat(' ')
+
             else:
                 print('New OME data but cannot collect OME')
 
@@ -170,6 +175,12 @@ class outside_mask_trace_monitor(monitor):
         # start or restart the cooldown_timer
         print("cooldown_timer.start, time = {}".format(self.config_data[self.config.OUTSIDE_MASK_COOLDOWN_TIME]))
         self.cooldown_timer.start(self.config_data[self.config.OUTSIDE_MASK_COOLDOWN_TIME])
+
+        # TODO AJG: update the active_pulse_breakdown_log in the data dictionary:
+
+        self.values[rf_conditioning_data.breakdown_pulse_count].append(self.llrf_obj[0].active_pulse_count)
+        print('self.values[rf_conditioning_data.breakdown_pulse_count] New BD = {}'.format(self.values[rf_conditioning_data.breakdown_pulse_count]))
+
 
     def collect_ome_data(self):
         """

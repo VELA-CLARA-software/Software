@@ -402,6 +402,13 @@ class rf_conditioning_data(object):
         rcd.active_pulse_breakdown_log = [x for x in sorted_pulse_break_down_log if x[0] >= self.values[rcd.bd_rate_calc_first_pulse_number]]
         self.update_breakdown_stats()
 
+        # TODO AJG: populate the active_pulse_breakdown_log in the data dictionary:
+
+        self.values[rcd.breakdown_pulse_count] = [rcd.active_pulse_breakdown_log[i][0] for i in range(len(rcd.active_pulse_breakdown_log)-1) if
+                                                       rcd.active_pulse_breakdown_log[i][1] != rcd.active_pulse_breakdown_log[i+1][1] ]
+
+        print('self.values[rcd.breakdown_pulse_count] = {}'.format(self.values[rcd.breakdown_pulse_count]))
+
     def update_breakdown_stats(self):
         '''
             this function updates the breakdown stats, & the active_pulse_breakdown_log
@@ -423,6 +430,12 @@ class rf_conditioning_data(object):
         #                                                                                                           rcd.total_breakdown_count],
         #                                                                                                       rcd.active_pulse_breakdown_log[0][1])
         self.values[rcd.breakdown_rate_low] = self.values[rcd.active_breakdown_count] <= self.values[rcd.breakdown_rate_aim]
+
+        #print('rcd.active_pulse_breakdown_log = {}'.format(rcd.active_pulse_breakdown_log))
+
+
+
+
 
     #def update_last_million_pulse_log(self): OLD NAME
     def update_active_pulse_breakdown_log(self):
@@ -486,17 +499,47 @@ class rf_conditioning_data(object):
         #self.add_to_pulse_breakdown_log(rf_condition_data_base.amp_sp_history[-1])
 
     def breakdown_rate_able_to_ramp_countdown(self):
-        '''This function delivers a countdown until the breakdown rate is low enough to allow ramping.
+        '''This function delivers a countdown until the breakdown rate is low enough to allow ramping, when
+            BDR < BDR aim
+           (in pulses and as a datetime.datetime string).
            Only to be used when the breakdown rate is higher than the breakdown rate aim.'''
-        rcd = rf_conditioning_data
-        brakdown_timestamps = rcd.values[rcd.breakdown_timestamps]
-        repetition_rate = self.config_data[config.RF_REPETITION_RATE]
-        breakdown_rate = self.config_data[config.BREAKDOWN_RATE_AIM]
-        number_pulses_in_bd_history = self.config_data[config.NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY]
-        now = datetime.now()
-        time_delta = timedelta(seconds = number_pulses_in_bd_history/repetition_rate)
-        breakdown_rate_boundary = now - time_delta
 
+        rcd = rf_conditioning_data
+
+        #TODO AJG: need to create list from logs, then append any new BD's pulse count to list
+
+        breakdown_rate_aim = int(self.config_data[config.BREAKDOWN_RATE_AIM])
+        number_pulses_in_bd_history = float(self.config_data[config.NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY])
+        repetition_rate = float(self.config_data[config.RF_REPETITION_RATE])
+
+        breakdown_rate_boundary =  self.values[rcd.breakdown_pulse_count][-breakdown_rate_aim]
+        current_pulse_count = float(rcd.values[rcd.pulse_count])
+
+        breakdown_history_pulse_count = current_pulse_count - number_pulses_in_bd_history
+        breakdown_rate_able_to_ramp_countdown_pulses = (breakdown_rate_boundary - breakdown_history_pulse_count)
+        breakdown_rate_able_to_ramp_countdown_seconds = breakdown_rate_able_to_ramp_countdown_pulses / repetition_rate
+        breakdown_rate_able_to_ramp_countdown_HrMinSec = str(timedelta(seconds = breakdown_rate_able_to_ramp_countdown_seconds ))
+
+        rcd.values[rcd.breakdown_rate_able_to_ramp_countdown_pulses] = breakdown_rate_able_to_ramp_countdown_pulses
+        rcd.values[rcd.breakdown_rate_able_to_ramp_countdown_HrMinSec] = breakdown_rate_able_to_ramp_countdown_HrMinSec
+
+        '''
+        
+
+        breakdown_pulse_count_list = rcd.values[rcd.breakdown_pulse_count]
+        repetition_rate = float(self.config_data[config.RF_REPETITION_RATE])
+
+        number_pulses_in_bd_history = float(self.config_data[config.NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY])
+        current_pulse_count = float(rcd.values[rcd.pulse_count])
+        #print('len(breakdown_pulse_count_list) = {}'.format(len(breakdown_pulse_count_list)))
+        breakdown_history_pulse_count = current_pulse_count - number_pulses_in_bd_history
+        breakdown_rate_able_to_ramp_countdown_pulses = (breakdown_rate_boundary - breakdown_history_pulse_count)
+        breakdown_rate_able_to_ramp_countdown_seconds = breakdown_rate_able_to_ramp_countdown_pulses / repetition_rate
+        breakdown_rate_able_to_ramp_countdown_HrMinSec = str(timedelta(seconds = breakdown_rate_able_to_ramp_countdown_seconds ))
+
+        rcd.values[rcd.breakdown_rate_able_to_ramp_countdown_pulses] = breakdown_rate_able_to_ramp_countdown_pulses
+        rcd.values[rcd.breakdown_rate_able_to_ramp_countdown_HrMinSec] = breakdown_rate_able_to_ramp_countdown_HrMinSec
+        '''
 
     def beep(self, count):
         winsound.Beep(2000,150)## MAGIC_NUMBER
@@ -1444,6 +1487,7 @@ class rf_conditioning_data(object):
     dummy_int = -9999999
     dummy_state = state.UNKNOWN
     dummy_list = []
+    dummy_str = 'dummy_str'
     dummy_hold_rf_on_state = HOLD_RF_ON_STATE.UNKNOWN_HOLD_RF_ON_STATE
 
     binned_amp_vs_kfpow = {}  # A list of the keys for values
@@ -1689,10 +1733,20 @@ class rf_conditioning_data(object):
     #  "Time until ramp" countdown for GUI
     #  No need to log this in binary
 
-    breakdown_timestamps = 'breakdown_timestamps'
-    all_value_keys.append(breakdown_timestamps)
-    values[breakdown_timestamps] = dummy_list
-    excluded_key_list.append(breakdown_timestamps)
+    breakdown_pulse_count = 'breakdown_pulse_count'
+    all_value_keys.append(breakdown_pulse_count)
+    values[breakdown_pulse_count] = dummy_list
+    excluded_key_list.append(breakdown_pulse_count)
+
+    breakdown_rate_able_to_ramp_countdown_HrMinSec = 'breakdown_rate_able_to_ramp_countdown_HrMinSec'
+    all_value_keys.append(breakdown_rate_able_to_ramp_countdown_HrMinSec)
+    values[breakdown_rate_able_to_ramp_countdown_HrMinSec] = dummy_str
+    excluded_key_list.append(breakdown_rate_able_to_ramp_countdown_HrMinSec)
+
+    breakdown_rate_able_to_ramp_countdown_pulses = 'breakdown_rate_able_to_ramp_countdown_pulses'
+    all_value_keys.append(breakdown_rate_able_to_ramp_countdown_pulses)
+    values[breakdown_rate_able_to_ramp_countdown_pulses] = dummy_float
+    excluded_key_list.append(breakdown_rate_able_to_ramp_countdown_pulses)
 
 
     breakdown_status = 'breakdown_status'
@@ -1795,6 +1849,10 @@ class rf_conditioning_data(object):
     modulator_good = 'modulator_good'
     all_value_keys.append(modulator_good)
     values[modulator_good] = False
+
+    is_amp_ff_connected = 'is_amp_ff_connected'
+    all_value_keys.append(is_amp_ff_connected)
+    values[is_amp_ff_connected] = state.UNKNOWN
 
     can_rf_output_status_OLD = 'can_rf_output_status_OLD'
     all_value_keys.append(can_rf_output_status_OLD)

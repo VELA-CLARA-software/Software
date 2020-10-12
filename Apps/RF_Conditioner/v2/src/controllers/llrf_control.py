@@ -98,7 +98,12 @@ class llrf_control(object):
 			# try and reset
 			self.llrf_control.setInterlockNonActive()
 			# meh
-			sleep(0.02)
+			#sleep(0.1)
+
+			start_time = time.time()
+			while time.time() - start_time < 0.1:
+				pass
+
 		else:
 			if self.should_show_llrf_interlock_active == False:
 				self.logger.message('enable_llrf, isInterlockActive = False')
@@ -116,7 +121,11 @@ class llrf_control(object):
 			# try and reset
 			self.llrf_control.trigExt()
 			# meh
-			sleep(0.02)
+			#sleep(0.1)
+
+			start_time = time.time()
+			while time.time() - start_time < 0.1:
+				pass
 		#
 		if self.llrf_control.isRFOutput():
 			if self.should_show_llrf_rf_output == False:
@@ -129,7 +138,11 @@ class llrf_control(object):
 			# reset
 			self.llrf_control.enableRFOutput()
 			# meh
-			sleep(0.02)
+			#sleep(0.1)
+
+			start_time = time.time()
+			while time.time() - start_time < 0.1:
+				pass
 		#
 		if self.llrf_control.isAmpFFLocked():
 			if self.should_show_llrf_amp_ff_locked == False:
@@ -142,7 +155,13 @@ class llrf_control(object):
 				self.logger.message('enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()')
 				self.should_show_llrf_rf_output = False
 			self.llrf_control.lockAmpFF()
-			sleep(0.02)
+
+			#sleep(0.1)
+
+			start_time = time.time()
+			while time.time() - start_time < 0.1:
+				pass
+
 		#
 		#should_show_llrf_pha_ff_locked
 		if self.llrf_control.isPhaseFFLocked():
@@ -154,13 +173,20 @@ class llrf_control(object):
 				self.logger.message('enable_llrf, isPhaseFFLocked = False, attempting lockPhaseFF()')
 				self.should_show_llrf_pha_ff_locked = False
 			self.llrf_control.lockPhaseFF()
-			sleep(0.02)
+			#sleep(0.1)
+
+			start_time = time.time()
+			while time.time() - start_time < 0.1:
+				pass
 
 		if self.llrf_control.getTrigSource() != TRIG.EXTERNAL:
 			self.logger.message('enable_llrf, getTrigSource() != TRIG.EXTERNAL, attempting trigExt()')
 			self.llrf_control.trigExt()
 			self.should_show_llrf_rf_output = True
-			sleep(0.02)
+			#sleep(0.1)
+			start_time = time.time()
+			while time.time() - start_time < 0.1:
+				pass
 
 
 		if self.data.values[self.data.llrf_DAQ_rep_rate_status] == state.BAD:
@@ -181,11 +207,14 @@ class llrf_control(object):
 			self.llrf_control.setAmpSP(0.0)
 			start_time = time.time()
 
-		while time.time() - start_time < 0.02:
+		while time.time() - start_time < 0.1:
 			pass
-		self.logger.message('reset_daq_freg, time passed > 0.02s')
+		self.logger.message('reset_daq_freg, time passed > 0.1s')
 		self.llrf_control.setTORSCANToIOIntr()
-		time.sleep(0.02) # TODO meh ...
+		#time.sleep(0.1) # TODO meh ...
+		start_time = time.time()
+		while time.time() - start_time < 0.1:
+			pass
 		self.llrf_control.setTORACQMEvent()
 		#self.set_iointr_counter = 0
 
@@ -221,6 +250,21 @@ class llrf_control(object):
 		# 	self.llrf_control.trigExt()
 		if self.llrf_control.getTrigSource() != TRIG.EXTERNAL:
 			self.llrf_control.trigExt()
+
+	def reset_trigger(self):
+		'''
+			we've noticed some Freezing up of the LLRF box, a potential fix is to flip the trigger state
+			we'll try this is part  of the DAQ freq reset
+		'''
+
+		self.llrf_control.trigOff()
+
+		#TODO AJG: hunt down all sleeps and replace with 3 lines below
+		start_time = time.time()
+		while time.time() - start_time < 0.1:
+			pass
+
+		self.llrf_control.trigExt()
 
 
 	def set_amp(self, val1, update_last_amp_sp = False):
