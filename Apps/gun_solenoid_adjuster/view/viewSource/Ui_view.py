@@ -25,7 +25,7 @@ except AttributeError:
 class Ui_SolAdjuster(object):
     def setupUi(self, SolAdjuster):
         SolAdjuster.setObjectName(_fromUtf8("SolAdjuster"))
-        SolAdjuster.resize(211, 445)
+        SolAdjuster.resize(211, 463)
         self.centralwidget = QtGui.QWidget(SolAdjuster)
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
         self.verticalLayout = QtGui.QVBoxLayout(self.centralwidget)
@@ -98,7 +98,7 @@ class Ui_SolAdjuster(object):
         self.label_5.setObjectName(_fromUtf8("label_5"))
         self.horizontalLayout_2.addWidget(self.label_5)
         self.bsol_seti = QtGui.QDoubleSpinBox(self.groupBox_2)
-        self.bsol_seti.setMinimumSize(QtCore.QSize(10, 10))
+        self.bsol_seti.setMinimumSize(QtCore.QSize(10, 30))
         self.bsol_seti.setButtonSymbols(QtGui.QAbstractSpinBox.PlusMinus)
         self.bsol_seti.setDecimals(3)
         self.bsol_seti.setMinimum(-250.0)
@@ -145,7 +145,7 @@ class Ui_SolAdjuster(object):
         self.label_8.setObjectName(_fromUtf8("label_8"))
         self.horizontalLayout_4.addWidget(self.label_8)
         self.sol_seti = QtGui.QDoubleSpinBox(self.groupBox_3)
-        self.sol_seti.setMinimumSize(QtCore.QSize(10, 10))
+        self.sol_seti.setMinimumSize(QtCore.QSize(10, 30))
         self.sol_seti.setButtonSymbols(QtGui.QAbstractSpinBox.PlusMinus)
         self.sol_seti.setDecimals(3)
         self.sol_seti.setMinimum(-250.0)

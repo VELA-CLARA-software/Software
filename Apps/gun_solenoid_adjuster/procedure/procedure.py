@@ -64,7 +64,7 @@ class procedure(object):
         if val >= self.min_sol:
             if val <= self.max_sol:
                 print("Set new sol val = ", val)
-                procedure.objects["sol"].SI(val)
+                procedure.objects["sol"].SI = val
 
     def bsol_seti(self, val):
         print(__name__," bsol_seti")

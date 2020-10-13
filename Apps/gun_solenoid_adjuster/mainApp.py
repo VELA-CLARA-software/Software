@@ -38,13 +38,22 @@ from view.view import view as view
 class App(QtGui.QApplication):
     def __init__(self, sys_argv):
         QtGui.QWidget.__init__(self, sys_argv)
+
+
         self.procedure = procedure()
         self.view = view()
         print 'Creating Controller'
         self.control = control(sys_argv, view = self.view, procedure= self.procedure)
+
+
         print 'Running'
 
 
 if __name__ == '__main__':
     app = App(sys.argv)
+    app_icon = QtGui.QIcon()
+    app_icon.addFile('resources\\gun_solenoid_adjuster\\gun_solenoid_adjuster.ico', QtCore.QSize(
+        256, 256))
+    app.setWindowIcon(app_icon)
+
     sys.exit(app.exec_())

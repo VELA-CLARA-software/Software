@@ -2,9 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6acf709e-b81e-478a-a08b-84f0a1e9a357" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/MagnetApp.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/MagnetApp.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GUI/GUI_magnetWidget.py" beforeDir="false" afterPath="$PROJECT_DIR$/GUI/GUI_magnetWidget.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../gun_solenoid_adjuster/control/control.py" beforeDir="false" afterPath="$PROJECT_DIR$/../gun_solenoid_adjuster/control/control.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../gun_solenoid_adjuster/mainApp.py" beforeDir="false" afterPath="$PROJECT_DIR$/../gun_solenoid_adjuster/mainApp.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../gun_solenoid_adjuster/procedure/procedure.py" beforeDir="false" afterPath="$PROJECT_DIR$/../gun_solenoid_adjuster/procedure/procedure.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../gun_solenoid_adjuster/resources/cam_status/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../gun_solenoid_adjuster/resources/cam_status/moview.ico" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../gun_solenoid_adjuster/resources/cam_status/moview.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../gun_solenoid_adjuster/view/view.py" beforeDir="false" afterPath="$PROJECT_DIR$/../gun_solenoid_adjuster/view/view.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../gun_solenoid_adjuster/view/viewSource/Ui_view.py" beforeDir="false" afterPath="$PROJECT_DIR$/../gun_solenoid_adjuster/view/viewSource/Ui_view.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../gun_solenoid_adjuster/view/viewSource/Ui_view.ui" beforeDir="false" afterPath="$PROJECT_DIR$/../gun_solenoid_adjuster/view/viewSource/Ui_view.ui" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

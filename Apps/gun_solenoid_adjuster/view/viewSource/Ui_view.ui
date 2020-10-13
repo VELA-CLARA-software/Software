@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>211</width>
-    <height>445</height>
+    <height>463</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -189,7 +189,7 @@
                 <property name="minimumSize">
                  <size>
                   <width>10</width>
-                  <height>10</height>
+                  <height>30</height>
                  </size>
                 </property>
                 <property name="buttonSymbols">
@@ -308,7 +308,7 @@
                 <property name="minimumSize">
                  <size>
                   <width>10</width>
-                  <height>10</height>
+                  <height>30</height>
                  </size>
                 </property>
                 <property name="buttonSymbols">

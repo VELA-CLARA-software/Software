@@ -5,8 +5,10 @@
 from PyQt4.QtGui import QWidget
 from PyQt4.QtGui import QMainWindow
 from PyQt4.QtGui import QIcon
-from PyQt4.QtGui import QFocusEvent
 from PyQt4.QtGui import QDoubleSpinBox
+from PyQt4.QtGui import QFocusEvent
+from PyQt4.QtCore import QSize
+from PyQt4.QtGui import QDoubleValidator
 from PyQt4.QtGui import QDoubleValidator
 from PyQt4.QtGui import QPixmap
 from PyQt4.QtGui import QVBoxLayout
@@ -29,7 +31,8 @@ class view(QMainWindow, Ui_SolAdjuster ):
         self.setupUi(self)
         self.red = "#ff5733"
         self.green = "#75ff33"
-        self.setWindowIcon(QIcon('resources\\cam_status\\moview.ico'))
+        #self.setWindowIcon(QIcon('resources\\gun_solenoid_adjuster\\gun_solenoid_adjuster.ico'))
+
 
         self.bsol_stepsize.setValue(1.00)
         self.sol_stepsize.setValue(1.00)
@@ -93,13 +96,8 @@ class view(QMainWindow, Ui_SolAdjuster ):
 
 
     def update_gui(self):
-        self.sol_seti.setValue(procedure.data["sol_seti"])
-        self.bsol_seti.setValue(procedure.data["bsol_seti"])
-
         self.BSol_PSU_State.setText("{:.3f}".format(procedure.data["bsol_readi"]))
         self.Sol_PSU_State.setText("{:.3f}".format(procedure.data["sol_readi"]))
-
-
         self.BSol_PSU_State.setStyleSheet(self.psuStateColors[procedure.data["bsol_psu"]] )
         self.Sol_PSU_State.setStyleSheet(self.psuStateColors[procedure.data["sol_psu"]] )
 

@@ -68,6 +68,8 @@ class control(object):
         self.view.sol_stepsize.valueChanged.connect(self.handle_sol_step)
         self.view.bsol_seti.valueChanged.connect(self.handle_bsol_seti)
         self.view.sol_seti.valueChanged.connect(self.handle_sol_seti)
+        self.handle_bsol_step()
+        self.handle_sol_step()
 
     def handle_BSol_PSU_State(self):
         print(__name__," handle_BSol_PSU_State")
@@ -78,14 +80,15 @@ class control(object):
         control.procedure.toggle_psu("sol")
 
     def handle_sol_step(self):
-        print(__name__," handle_sol_step")
+        print(__name__," handle_sol_step, ",self.view.sol_stepsize.value())
         self.view.sol_seti.setSingleStep(self.view.sol_stepsize.value())
         print("sol_seti step = ", self.view.sol_seti.singleStep())
 
 
     def handle_bsol_step(self):
-        self.view.sol_seti.setSingleStep(self.view.bsol_stepsize.value())
-        print("bsol_seti step = ", self.view.bsol_seti.singleStep())
+        print(__name__," handle_bsol_step, ",self.view.bsol_stepsize.value())
+        self.view.bsol_seti.setSingleStep(self.view.bsol_stepsize.value())
+        print("bsol_seti step = ", self.view.bsol_seti.value())
 
     def handle_bsol_seti(self):
         print(__name__," handle_bsol_seti")
@@ -95,7 +98,7 @@ class control(object):
         #self.view.sol_seti.setSingleStep(self.view.sol_stepsize.value())
 
     def handle_sol_seti(self):
-        print(__name__," handle_sol_seti")
+        print(__name__," handle_sol_seti, ",self.view.sol_seti.value())
         if self.view.sol_seti_has_focus:
             control.procedure.sol_seti(self.view.sol_seti.value())
 
