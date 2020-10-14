@@ -27,8 +27,10 @@
 //*/
 '''
 import sys,os
-sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\stage\\')
+#sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\stage\\')
 #sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\Release\\')
+#sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\Release\\')
+sys.path.append('\\\\claraserv3\\claranet\\test\\Controllers\\bin\\Release\\')
 import VELA_CLARA_PILaser_Control as pil
 import virtual_cathode_model_data as model_data
 from numpy import array

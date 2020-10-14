@@ -3,15 +3,23 @@
   <component name="ChangeListManager">
     <list default="true" id="6acf709e-b81e-478a-a08b-84f0a1e9a357" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Valve_Status/VC_Setup.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Valve_Status/Valve_State.spec" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Valve_Status/Valve_Status.spec" beforeDir="false" afterPath="$PROJECT_DIR$/../Valve_Status/Valve_Status.spec" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Valve_Status/mainApp.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Valve_Status/mainApp.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Valve_Status/view/view.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Valve_Status/view/view.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Virtual_Cathode_Setup/v4/Virtual_Cathode_App.spec" beforeDir="false" afterPath="$PROJECT_DIR$/../Virtual_Cathode_Setup/v4/Virtual_Cathode_App.spec" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Virtual_Cathode_Setup/v4/build/Virtual_Cathode_App/Analysis-00.toc" beforeDir="false" afterPath="$PROJECT_DIR$/../Virtual_Cathode_Setup/v4/build/Virtual_Cathode_App/Analysis-00.toc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Virtual_Cathode_Setup/v4/build/Virtual_Cathode_App/EXE-00.toc" beforeDir="false" afterPath="$PROJECT_DIR$/../Virtual_Cathode_Setup/v4/build/Virtual_Cathode_App/EXE-00.toc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Virtual_Cathode_Setup/v4/build/Virtual_Cathode_App/PKG-00.pkg" beforeDir="false" afterPath="$PROJECT_DIR$/../Virtual_Cathode_Setup/v4/build/Virtual_Cathode_App/PKG-00.pkg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Virtual_Cathode_Setup/v4/build/Virtual_Cathode_App/PKG-00.toc" beforeDir="false" afterPath="$PROJECT_DIR$/../Virtual_Cathode_Setup/v4/build/Virtual_Cathode_App/PKG-00.toc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Virtual_Cathode_Setup/v4/build/Virtual_Cathode_App/PYZ-00.pyz" beforeDir="false" afterPath="$PROJECT_DIR$/../Virtual_Cathode_Setup/v4/build/Virtual_Cathode_App/PYZ-00.pyz" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Virtual_Cathode_Setup/v4/build/Virtual_Cathode_App/PYZ-00.toc" beforeDir="false" afterPath="$PROJECT_DIR$/../Virtual_Cathode_Setup/v4/build/Virtual_Cathode_App/PYZ-00.toc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Virtual_Cathode_Setup/v4/build/Virtual_Cathode_App/warn-Virtual_Cathode_App.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../Virtual_Cathode_Setup/v4/build/Virtual_Cathode_App/warn-Virtual_Cathode_App.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Virtual_Cathode_Setup/v4/build/Virtual_Cathode_App/xref-Virtual_Cathode_App.html" beforeDir="false" afterPath="$PROJECT_DIR$/../Virtual_Cathode_Setup/v4/build/Virtual_Cathode_App/xref-Virtual_Cathode_App.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Virtual_Cathode_Setup/v4/src/virtual_cathode_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Virtual_Cathode_Setup/v4/src/virtual_cathode_model.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../gun_solenoid_adjuster/control/control.py" beforeDir="false" afterPath="$PROJECT_DIR$/../gun_solenoid_adjuster/control/control.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../gun_solenoid_adjuster/mainApp.py" beforeDir="false" afterPath="$PROJECT_DIR$/../gun_solenoid_adjuster/mainApp.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../gun_solenoid_adjuster/procedure/procedure.py" beforeDir="false" afterPath="$PROJECT_DIR$/../gun_solenoid_adjuster/procedure/procedure.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../gun_solenoid_adjuster/resources/cam_status/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../gun_solenoid_adjuster/resources/cam_status/moview.ico" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../gun_solenoid_adjuster/resources/cam_status/moview.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../gun_solenoid_adjuster/view/view.py" beforeDir="false" afterPath="$PROJECT_DIR$/../gun_solenoid_adjuster/view/view.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../gun_solenoid_adjuster/view/viewSource/Ui_view.py" beforeDir="false" afterPath="$PROJECT_DIR$/../gun_solenoid_adjuster/view/viewSource/Ui_view.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../gun_solenoid_adjuster/view/viewSource/Ui_view.ui" beforeDir="false" afterPath="$PROJECT_DIR$/../gun_solenoid_adjuster/view/viewSource/Ui_view.ui" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

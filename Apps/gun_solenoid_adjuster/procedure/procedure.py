@@ -52,10 +52,10 @@ class procedure(object):
 
 
     def __init__(self):
-        self.min_sol = 149
-        self.max_sol = 201
+        self.min_sol = 149.5
+        self.max_sol = 200
         self.min_bsol = -180
-        self.max_bsol = -135
+        self.max_bsol = -135.5
 
 
     # called external to update states
@@ -100,7 +100,6 @@ class procedure(object):
         procedure.data["bsol_psu"] = procedure.objects["bsol"].psuState
         procedure.data["bsol_is_degaussing"] = procedure.objects["bsol"].isDegaussing
 
-        procedure.data["bsol_is_degaussing"] = procedure.objects["sol"].isDegaussing
 
         #procedure.data["rf_prot"] = procedure.objects["gun_prot"].isGood
         procedure.data["rf_prot"] = procedure.rfp.isGood("CLARA_LRRG")

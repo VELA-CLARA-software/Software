@@ -26,7 +26,14 @@ class view(QMainWindow, Ui_view ):
         QWidget.__init__(self)
         self.my_name = 'view'
         self.setupUi(self)
-        self.setWindowIcon(QIcon('resources\\Valve_Status\\valve.ico'))
+        #self.setWindowIcon(QIcon('resources\\Valve_Status\\valve.ico'))
+        self.setWindowIcon(QIcon('valve.ico'))
+
+        self.red = "#ff5733"
+        self.green = "#75ff33"
+
+
+
         #print(self.my_name + ', class initiliazed')
 
     def add_valves(self,names):
@@ -45,10 +52,10 @@ class view(QMainWindow, Ui_view ):
 
     def update_valve_widget(self,widget,state):
         if state == VALVE_STATE.VALVE_OPEN:
-            widget.setStyleSheet("background-color: green")
+            widget.setStyleSheet("background-color: " + self.green)
             widget.setText( widget.objectName() + ' OPEN' )
         elif state == VALVE_STATE.VALVE_CLOSED:
-            widget.setStyleSheet("background-color: red")
+            widget.setStyleSheet("background-color: " + self.red)
             widget.setText( widget.objectName() + ' CLOSED' )
         elif state == VALVE_STATE.VALVE_TIMING:
             widget.setStyleSheet("background-color: yellow")
