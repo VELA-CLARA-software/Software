@@ -119,7 +119,7 @@ class control(object):
 
     def handle_degauss_bsol(self):
         print(__name__," handle_degauss_bsol")
-        control.procedure.degauss("LRG-BSOL", to_zero=True)
+        control.procedure.degauss("LRG-BSOL", to_zero=False)
 
     def start_gui_update(self):
         self.timer = QTimer()
