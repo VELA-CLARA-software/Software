@@ -84,6 +84,14 @@ class model_data(object):
 	sy_val = 'sy_val'
 	cov_val = 'cov_val'
 	avg_pix_val = 'avg_val'
+
+	x_val_mm = 'x_val_mm'
+	y_val_mm = 'y_val_mm'
+	sx_val_mm = 'sx_val_mm'
+	sy_val_mm = 'sy_val_mm'
+	cov_val_mm = 'cov_val_mm'
+	avg_pix_val_mm = 'avg_val_mm'
+
 	# intensity (laser beam)
 	int_val = 'int_val'
 	# WCm charge
@@ -97,6 +105,14 @@ class model_data(object):
 	int_mean = 'int_mean'
 	wcm_mean = 'wcm_mean'
 	cov_mean = 'cov_mean'
+
+	x_mean_mm = 'x_mean_mm'
+	y_mean_mm = 'y_mean_mm'
+	sx_mean_mm = 'sx_mean_mm'
+	sy_mean_mm = 'sy_mean_mm'
+	int_mean_mm = 'int_mean_mm'
+	wcm_mean_mm = 'wcm_mean_mm'
+	cov_mean_mm = 'cov_mean_mm'
 	avg_pix_mean = 'avg_mean'
 	# analyse standard deviation (mm)
 	x_sd = 'x_sd'
@@ -105,8 +121,33 @@ class model_data(object):
 	sy_sd = 'sy_sd'
 	int_sd = 'int_sd'
 	wcm_sd = 'wcm_sd'
+
 	cov_sd = 'cov_sd'
+	x_sd_mm = 'x_sd_mm'
+	y_sd_mm = 'y_sd_mm'
+	sx_sd_mm = 'sx_sd_mm'
+	sy_sd_mm = 'sy_sd_mm'
+	int_sd_mm = 'int_sd_mm'
+	wcm_sd_mm = 'wcm_sd_mm'
+	cov_sd_mm = 'cov_sd_mm'
 	avg_pix_sd = 'avg_pix_sd'
+
+	x_sd_per = 'x_sd_per'
+	y_sd_per = 'y_sd_per'
+	sx_sd_per = 'sx_sd_per'
+	sy_sd_per = 'sy_sd_per'
+	int_sd_per = 'int_sd_per'
+	wcm_sd_per = 'wcm_sd_per'
+	cov_sd_per = 'cov_sd_per'
+	x_sd_mm_per = 'x_sd_mm_per'
+	y_sd_mm_per = 'y_sd_mm_per'
+	sx_sd_mm_per = 'sx_sd_mm_per'
+	sy_sd_mm_per = 'sy_sd_mm_per'
+	int_sd_mm_per = 'int_sd_mm_per'
+	wcm_sd_mm_per = 'wcm_sd_mm_per'
+	cov_sd_mm_per = 'cov_sd_mm_per'
+	avg_pix_sd_per = 'avg_pix_sd_per'
+
 	avg_pix_beam_level = 'avg_pix_beam_level'
 	# analyse buffers (not used)
 	x_buf = 'x_buf'
@@ -161,9 +202,23 @@ class model_data(object):
 	                  mask_x_user, mask_y_user, mask_x_rad_user, mask_y_rad_user, mask_feedback,
 	                  num_images, is_collecting_or_saving, last_filename, is_acquiring, min_level,
 	                  min_level_rbv, max_level, max_level_rbv, is_analysing, use_background,
-	                  use_npoint, ana_step_size, x_val, y_val, sx_val, sy_val, int_val, wcm_val,
-	                  cov_val, avg_pix_val, x_mean, y_mean, sx_mean, sy_mean, int_mean, wcm_mean,
-	                  cov_mean, avg_pix_mean, x_sd, y_sd, sx_sd, sy_sd, int_sd, wcm_sd, cov_sd,
+	                  use_npoint, ana_step_size,
+
+	                  x_val, y_val, sx_val, sy_val, int_val, wcm_val, avg_pix_val,
+	                  x_val_mm, y_val_mm, sx_val_mm, sy_val_mm, int_val, avg_pix_val,
+
+	                  x_mean, y_mean, sx_mean, sy_mean,
+	                  x_mean_mm, y_mean_mm, sx_mean_mm, sy_mean_mm,
+
+
+	                  int_mean, wcm_mean,cov_val,
+	                  cov_mean, avg_pix_mean,
+
+	                  x_sd_mm, y_sd_mm, sx_sd_mm, sy_sd_mm, int_sd_mm, wcm_sd, cov_sd_mm,
+	                  x_sd_mm_per, y_sd_mm_per, sx_sd_mm_per, sy_sd_mm_per, int_sd_mm_per, wcm_sd_per, cov_sd_mm_per,
+	                  x_sd_per, y_sd_per, sx_sd_per, sy_sd_per, cov_sd_per,
+
+
 	                  avg_pix_sd, x_buf, y_buf, sx_buf, sy_buf, i_buf, cov_buf, image,
 	                  shutter1_open, is_setting_pos, shutter2_open, H_step_read, V_step_read,
 	                  xpix_full, ypix_full, x_pix, y_pix, sig_x_pix, sig_y_pix, last_save_dir,
