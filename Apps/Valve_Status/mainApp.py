@@ -23,7 +23,8 @@
 //*/
 '''
 import sys
-sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\Release\\')
+#sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\Release\\')
+sys.path.append('\\\\claraserv3\\claranet\\test\\Controllers\\bin\\Release\\')
 # for i in sys.path:
 #     print i
 from PyQt4.QtGui import QApplication

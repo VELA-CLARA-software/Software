@@ -121,6 +121,13 @@ class llrf_monitor(monitor):
             # self.data.values[self.data.cav_pwr_ratio_can_ramp] = state.GOOD
             self.data.values[self.data.cav_pwr_ratio_can_ramp] = True
 
+    def check_ff_amp_lock_CHID(self):
+        """
+        Checks the connection to the Libera LLRF amplitude feed forward lock CHID
+        """
+
+        self.data.values[self.data.is_amp_ff_connected] = self.llrf_control.isAmpFFconnected()
+
     def update_llrf_value(self):
         """
         Update all the 'simple' LLRF parameters, these are generally states and single numbers.
@@ -147,6 +154,7 @@ class llrf_monitor(monitor):
         self.update_rf_output_state()
         self.update_ff_amp_lock_state()
         self.update_ff_phase_lock_state()
+        self.check_ff_amp_lock_CHID()
         # self.update_daq_rep_rate()
 
         self.update_pulse_length()

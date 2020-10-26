@@ -27,8 +27,10 @@
 //*/
 '''
 import sys,os
-sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\stage\\')
+#sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\stage\\')
 #sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\Release\\')
+#sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\Release\\')
+sys.path.append('\\\\claraserv3\\claranet\\test\\Controllers\\bin\\Release\\')
 import VELA_CLARA_PILaser_Control as pil
 import virtual_cathode_model_data as model_data
 from numpy import array
@@ -130,6 +132,10 @@ class virtual_cathode_model():
         '''
             Get latest values from controllers and put them in the data dict
         '''
+        # ref shortnam
+        #v = self.value
+
+
         self.values[self.data.is_acquiring] = self.pil.isAcquiring()
         self.values[self.data.is_analysing] = self.pil.isAnalysing()
         self.values[self.data.is_collecting_or_saving] = self.pil.isNotBusy()
@@ -144,31 +150,91 @@ class virtual_cathode_model():
         self.values[self.data.sx_val] = self.vc_data.sig_x
         self.values[self.data.sy_val] = self.vc_data.sig_y
         self.values[self.data.cov_val] = self.vc_data.sig_xy
-        self.values[self.data.avg_pix_val] = self.vc_data.avg_pix
+        self.values[self.data.x_val_mm] = self.vc_data.x * self.values[self.data.x_pix_to_mm]
+        self.values[self.data.y_val_mm] = self.vc_data.y * self.values[self.data.y_pix_to_mm]
+        self.values[self.data.sx_val_mm] = self.vc_data.sig_x * self.values[self.data.x_pix_to_mm]
+        self.values[self.data.sy_val_mm] = self.vc_data.sig_y * self.values[self.data.y_pix_to_mm]
+        self.values[self.data.cov_val_mm] = self.vc_data.sig_xy * self.values[
+            self.data.x_pix_to_mm] * self.values[self.data.y_pix_to_mm]
+
+
+
 
         self.values[self.data.x_mean] = self.vc_data.x_mean
         self.values[self.data.y_mean] = self.vc_data.y_mean
         self.values[self.data.sx_mean] = self.vc_data.sig_x_mean
         self.values[self.data.sy_mean] = self.vc_data.sig_y_mean
         self.values[self.data.cov_mean] = self.vc_data.sig_xy_mean
-        self.values[self.data.avg_pix_mean] = self.vc_data.avg_pix_mean
+
+
+        self.values[self.data.cov_mean_mm] = self.vc_data.sig_xy_mean
+        self.values[self.data.x_mean_mm] = self.vc_data.x_mean * self.values[self.data.x_pix_to_mm]
+        self.values[self.data.y_mean_mm] = self.vc_data.y_mean * self.values[self.data.y_pix_to_mm]
+        self.values[self.data.sx_mean_mm] = self.vc_data.sig_x_mean * self.values[
+            self.data.x_pix_to_mm]
+        self.values[self.data.sy_mean_mm] = self.vc_data.sig_y_mean * self.values[self.data.y_pix_to_mm]
+        self.values[self.data.cov_mean_mm] = self.vc_data.sig_xy_mean  * self.values[
+            self.data.x_pix_to_mm] * self.values[self.data.y_pix_to_mm]
+
+
+
 
         self.values[self.data.x_sd] = self.vc_data.x_sd
         self.values[self.data.y_sd] = self.vc_data.y_sd
         self.values[self.data.sx_sd] = self.vc_data.sig_x_sd
         self.values[self.data.sy_sd] = self.vc_data.sig_y_sd
         self.values[self.data.cov_sd] = self.vc_data.sig_xy_sd
+        self.values[self.data.x_sd_mm] = self.vc_data.x_sd * self.values[self.data.x_pix_to_mm]
+        self.values[self.data.y_sd_mm] = self.vc_data.y_sd * self.values[self.data.y_pix_to_mm]
+        self.values[self.data.sx_sd_mm] = self.vc_data.sig_x_sd * self.values[self.data.x_pix_to_mm]
+        self.values[self.data.sy_sd_mm] = self.vc_data.sig_y_sd * self.values[self.data.y_pix_to_mm]
+        self.values[self.data.cov_sd_mm] = self.vc_data.sig_xy_sd * self.values[
+            self.data.x_pix_to_mm] * self.values[self.data.y_pix_to_mm]
+
+        self.values[self.data.x_sd_per] =  (self.values[self.data.x_sd] / self.values[
+            self.data.x_mean])*100
+        self.values[self.data.y_sd] = (self.values[self.data.y_sd] / self.values[
+            self.data.y_mean])*100
+        self.values[self.data.sx_sd] = (self.values[self.data.sx_sd] / self.values[
+            self.data.sx_mean])*100
+        self.values[self.data.sy_sd] = (self.values[self.data.sy_sd] / self.values[
+            self.data.sy_mean])*100
+        self.values[self.data.cov_sd] = (self.values[self.data.cov_sd] / self.values[
+            self.data.cov_mean])*100
+        self.values[self.data.x_sd_mm] = (self.values[self.data.x_sd_mm] / self.values[
+            self.data.x_mean])*100
+        self.values[self.data.y_sd_mm] = (self.values[self.data.y_sd_mm] / self.values[
+            self.data.y_mean_mm])*100
+        self.values[self.data.sx_sd_mm] = (self.values[self.data.sx_sd_mm] / self.values[
+            self.data.sx_mean_mm])*100
+        self.values[self.data.sy_sd_mm] = (self.values[self.data.sy_sd_mm] / self.values[
+            self.data.sy_mean_mm])*100
+        self.values[self.data.cov_sd_mm] = (self.values[self.data.cov_sd_mm] / self.values[
+            self.data.cov_mean_mm])*100
+
+
+        self.values[self.data.avg_pix_val] = self.vc_data.avg_pix
+        self.values[self.data.avg_pix_mean] = self.vc_data.avg_pix_mean
         self.values[self.data.avg_pix_sd] = self.vc_data.avg_pix_sd
+        self.values[self.data.avg_pix_sd_per] =(
+                                                       self.vc_data.avg_pix_sd/self.vc_data.avg_pix_mean)*100
+
+
+        self.values[self.data.x_sd_per] = (self.pil_obj.Q_sd / self.pil_obj.Q_mean)*100
+
 
         self.values[self.data.wcm_val] = self.pil_obj.Q
         self.values[self.data.wcm_mean] = self.pil_obj.Q_mean
         self.values[self.data.wcm_sd] = self.pil_obj.Q_sd
-#        self.values[self.data.wcm_buffer_full] = self.pil_obj.Q_full
+        self.values[self.data.wcm_sd_per] = (self.pil_obj.Q_sd / self.pil_obj.Q_mean)*100
+
+        #        self.values[self.data.wcm_buffer_full] = self.pil_obj.Q_full
 
         # these are flakey  laser INTENSITY
         self.values[self.data.int_val] = self.pil_obj.energy
         self.values[self.data.int_mean] = self.pil_obj.energy_mean
         self.values[self.data.int_sd] = self.pil_obj.energy_sd
+        self.values[self.data.int_sd_per] = (self.pil_obj.energy_sd / self.pil_obj.energy)*100
  #       self.values[self.data.laser_buffer_full] = self.pil_obj.energy_full
 
         #print('take image START')

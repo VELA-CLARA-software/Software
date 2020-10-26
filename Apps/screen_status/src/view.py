@@ -37,7 +37,9 @@ from PyQt4 import QtCore
 from viewSource.Ui_screen_status_view import Ui_screen_status_view
 # We need the SCREEN.STATE enum
 import sys,os
-sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release\\')
+#sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release\\')
+sys.path.append('\\\\claraserv3\\claranet\\test\\Controllers\\bin\\Release')
+
 from VELA_CLARA_Screen_Control import SCREEN_STATE
 import data as data
 from operator import itemgetter

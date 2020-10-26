@@ -31,6 +31,7 @@ from src.data.rf_conditioning_logger import rf_conditioning_logger
 from VELA_CLARA_RF_Modulator_Control import GUN_MOD_STATE
 from VELA_CLARA_Vac_Valve_Control import VALVE_STATE
 from VELA_CLARA_RF_Protection_Control import RF_PROT_STATUS
+from VELA_CLARA_RF_Modulator_Control import HOLD_RF_ON_STATE
 from VELA_CLARA_LLRF_Control import LLRF_TYPE
 from ramp import *
 from src.data.state import state
@@ -38,6 +39,8 @@ from src.data.state import ramp_method
 from numpy import float64 as np_float64
 import math
 import winsound
+from datetime import datetime
+from datetime import timedelta
 import inspect
 
 
@@ -207,9 +210,9 @@ class rf_conditioning_data(object):
             # else find the sp "closest" but lower than the requested sp
             # Closest key in dictionary
             close_sp = min(self.amp_vs_kfpow_running_stat.keys(), key = lambda key: abs(key-sp))
-            self.logger.message(
-                "amp_vs_kfpow lookup, called from {}, can't find {}, returning value at {} instead".format(str(inspect.stack()[1][3]), sp,
-                close_sp), show_time_stamp = True)
+            #self.logger.message(
+            #    "amp_vs_kfpow lookup, called from {}, can't find {}, returning value at {} instead".format(str(inspect.stack()[1][3]), sp,
+            #    close_sp), show_time_stamp = True)
             return self.amp_vs_kfpow_running_stat[close_sp]
         else:
             return [0.0, 0.0, 0.0, 0.0]
@@ -290,6 +293,10 @@ class rf_conditioning_data(object):
               Sorted by pulse count
               used to define the Breakdown Rate etc.
         if I read through the comments, i can basically work out what is going on
+
+
+        TODO thi sneed s a big long re-write!!! we need to tag log rmaping ,
+
         """
         rcd = rf_conditioning_data
         message = self.logger.message
@@ -325,6 +332,10 @@ class rf_conditioning_data(object):
             # pulse_count = entry_pulse_count
             # check for pulse number increasing
 
+        rationalised_pulse_breakdown_log.append(raw_pulse_break_down_log[-1])
+
+        print("rationalised_pulse_breakdown_log = {} ".format(rationalised_pulse_breakdown_log))
+
         # append some values from the end of the pulse_break_down_log (if not already in)
         # we have to be a bit sneaky here, as there may be manual edits to the file
         # we'll have to be a little convoluted here
@@ -343,7 +354,12 @@ class rf_conditioning_data(object):
         # for entry in rationalised_pulse_breakdown_log:
         #     print(entry)
         #
-        pulse_break_down_log = sorted(rationalised_pulse_breakdown_log, key=lambda x: (x[2], x[0]))
+        #pulse_break_down_log = sorted(rationalised_pulse_breakdown_log, key=lambda x: (x[2], x[0]))
+        pulse_break_down_log = sorted(rationalised_pulse_breakdown_log, key=lambda x: (x[0]))
+
+        print("pulse_break_down_log = {} ".format(pulse_break_down_log))
+
+        self.logger.message(["Rationalized pulse_break_down_log =\n", pulse_break_down_log])
 
         # TODO we need save this file to disc, (over-right existing file ?? )
         #
@@ -386,6 +402,13 @@ class rf_conditioning_data(object):
         rcd.active_pulse_breakdown_log = [x for x in sorted_pulse_break_down_log if x[0] >= self.values[rcd.bd_rate_calc_first_pulse_number]]
         self.update_breakdown_stats()
 
+        # TODO AJG: populate the active_pulse_breakdown_log in the data dictionary:
+
+        self.values[rcd.breakdown_pulse_count] = [rcd.active_pulse_breakdown_log[i][0] for i in range(len(rcd.active_pulse_breakdown_log)-1) if
+                                                       rcd.active_pulse_breakdown_log[i][1] != rcd.active_pulse_breakdown_log[i+1][1] ]
+
+        print('self.values[rcd.breakdown_pulse_count] = {}'.format(self.values[rcd.breakdown_pulse_count]))
+
     def update_breakdown_stats(self):
         '''
             this function updates the breakdown stats, & the active_pulse_breakdown_log
@@ -407,6 +430,12 @@ class rf_conditioning_data(object):
         #                                                                                                           rcd.total_breakdown_count],
         #                                                                                                       rcd.active_pulse_breakdown_log[0][1])
         self.values[rcd.breakdown_rate_low] = self.values[rcd.active_breakdown_count] <= self.values[rcd.breakdown_rate_aim]
+
+        #print('rcd.active_pulse_breakdown_log = {}'.format(rcd.active_pulse_breakdown_log))
+
+
+
+
 
     #def update_last_million_pulse_log(self): OLD NAME
     def update_active_pulse_breakdown_log(self):
@@ -469,6 +498,49 @@ class rf_conditioning_data(object):
         self.beep(count)
         #self.add_to_pulse_breakdown_log(rf_condition_data_base.amp_sp_history[-1])
 
+    def breakdown_rate_able_to_ramp_countdown(self):
+        '''This function delivers a countdown until the breakdown rate is low enough to allow ramping, when
+            BDR < BDR aim
+           (in pulses and as a datetime.datetime string).
+           Only to be used when the breakdown rate is higher than the breakdown rate aim.'''
+
+        rcd = rf_conditioning_data
+
+        #TODO AJG: need to create list from logs, then append any new BD's pulse count to list
+
+        breakdown_rate_aim = int(self.config_data[config.BREAKDOWN_RATE_AIM])
+        number_pulses_in_bd_history = float(self.config_data[config.NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY])
+        repetition_rate = float(self.config_data[config.RF_REPETITION_RATE])
+
+        breakdown_rate_boundary =  self.values[rcd.breakdown_pulse_count][-breakdown_rate_aim]
+        current_pulse_count = float(rcd.values[rcd.pulse_count])
+
+        breakdown_history_pulse_count = current_pulse_count - number_pulses_in_bd_history
+        breakdown_rate_able_to_ramp_countdown_pulses = (breakdown_rate_boundary - breakdown_history_pulse_count)
+        breakdown_rate_able_to_ramp_countdown_seconds = breakdown_rate_able_to_ramp_countdown_pulses / repetition_rate
+        breakdown_rate_able_to_ramp_countdown_HrMinSec = str(timedelta(seconds = breakdown_rate_able_to_ramp_countdown_seconds ))
+
+        rcd.values[rcd.breakdown_rate_able_to_ramp_countdown_pulses] = breakdown_rate_able_to_ramp_countdown_pulses
+        rcd.values[rcd.breakdown_rate_able_to_ramp_countdown_HrMinSec] = breakdown_rate_able_to_ramp_countdown_HrMinSec
+
+        '''
+        
+
+        breakdown_pulse_count_list = rcd.values[rcd.breakdown_pulse_count]
+        repetition_rate = float(self.config_data[config.RF_REPETITION_RATE])
+
+        number_pulses_in_bd_history = float(self.config_data[config.NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY])
+        current_pulse_count = float(rcd.values[rcd.pulse_count])
+        #print('len(breakdown_pulse_count_list) = {}'.format(len(breakdown_pulse_count_list)))
+        breakdown_history_pulse_count = current_pulse_count - number_pulses_in_bd_history
+        breakdown_rate_able_to_ramp_countdown_pulses = (breakdown_rate_boundary - breakdown_history_pulse_count)
+        breakdown_rate_able_to_ramp_countdown_seconds = breakdown_rate_able_to_ramp_countdown_pulses / repetition_rate
+        breakdown_rate_able_to_ramp_countdown_HrMinSec = str(timedelta(seconds = breakdown_rate_able_to_ramp_countdown_seconds ))
+
+        rcd.values[rcd.breakdown_rate_able_to_ramp_countdown_pulses] = breakdown_rate_able_to_ramp_countdown_pulses
+        rcd.values[rcd.breakdown_rate_able_to_ramp_countdown_HrMinSec] = breakdown_rate_able_to_ramp_countdown_HrMinSec
+        '''
+
     def beep(self, count):
         winsound.Beep(2000,150)## MAGIC_NUMBER
 
@@ -490,7 +562,9 @@ class rf_conditioning_data(object):
         rcd.amp_vs_kfpow_running_stat = self.logger.get_kfpow_running_stat_log()
 
         # rteduce the amp pwr data set to exlcude outliers
-        self.reduce_amp_power_log_data()
+        # TODO: AJG reduce data
+        #if len(rcd.amp_vs_kfpow_running_stat) > 3:
+        #    self.reduce_amp_power_log_data()
         # Call initial_bin()
         bin_mean, bin_edges, bin_pop, bin_data, bin_std, bin_pulses = self.initial_bin()
 
@@ -512,6 +586,10 @@ class rf_conditioning_data(object):
 
         rcd.binned_amp_vs_kfpow[rcd.BIN_X] = bin_X
         rcd.binned_amp_vs_kfpow[rcd.BIN_mean] = bin_mean
+
+        print('bin_X = {}\nbin_mean = {}'.format(bin_X, bin_mean))
+
+        #raw_input()
 
         #print('bin_X = {}\nbin_mean = {}'.format(bin_X, bin_mean))
 
@@ -535,6 +613,7 @@ class rf_conditioning_data(object):
         POW_preBin_MW = [i / 10 ** 6 for i in POW_preBin]
         bin_mean = [i / 10 ** 6 for i in bin_mean]
         plt.scatter(AMP_preBin, POW_preBin_MW, c='k', s=1.0, marker='.', label='Data', zorder=1)
+        print('bin_X = {}\nbin_mean = {}'.format(bin_X, bin_mean))
         plt.scatter(bin_X, bin_mean, c='r', s=25, marker='x', label='Binned Mean', zorder=0)
         # plt.errorbar(bin_X, bin_mean, yerrbin_error, xerr=0, fmt='none', ecolor='red',
         # elinewidth=0.5, capsize=2.0, capthick=0.5)
@@ -609,6 +688,7 @@ class rf_conditioning_data(object):
         max_pow = self.config.raw_config_data['MAX_POW']
         min_amp = self.config.raw_config_data['MIN_AMP']
         max_amp = self.config.raw_config_data['MAX_AMP']
+
         amp_pwr_acceptance_window = self.config.raw_config_data['AMP_PWR_ACCEPTANCE_WINDOW']
 
         x.append(max_amp)
@@ -616,8 +696,8 @@ class rf_conditioning_data(object):
         y.append(max_pow)
 
         # Create list of bin edges starting at min_amp and ending at max_amp (max_amp now last element of x list)
-        bedges = np.arange(int(min_amp), int(x[-1]), bin_width).tolist()  # Not happy with np.arange.tolist() but it works!?!
-
+        bedges = np.arange(int(min_amp), int(max_amp), bin_width).tolist()  # Not happy with np.arange.tolist() but it works!?!
+        print('len(bedges) = {}\nmax_amp = {}'.format(len(bedges), max_amp))
         # create arrays of zeros of length len(bedges)-1 ready to be populated by the main calculator
         bin_pulses = np.zeros(len(bedges) - 1)
         bin_mean =  np.zeros(len(bedges) - 1)
@@ -662,6 +742,7 @@ class rf_conditioning_data(object):
         data_to_fit_y = [bin_mean[i] for i in range(len(bin_mean)) if bin_mean[i] > 0.0]
 
         # fit a 4th order polynomial to the non-zero binned data
+
         p0, p1, p2, p3, p4, polyfit_4th_order = self.poly_fit_4order(data_to_fit_x, data_to_fit_y)
 
         # Reduce raw data to only include data points within the acceptance region
@@ -732,7 +813,7 @@ class rf_conditioning_data(object):
 
 
         # TODO AJG: Remove x, y, bin width etc from initial_bin() as it happens first in the reduce_amp_power_log_data() function.
-        '''
+
         # cycle through amp_vs_kfpow_running_stat to populate amp_sp, kfpwr and number-of-pulses lists
         x = amp_sp_raw = []
         num_pulses_prebin = []
@@ -751,6 +832,8 @@ class rf_conditioning_data(object):
         max_pow = self.config.raw_config_data['MAX_POW']
         min_amp = self.config.raw_config_data['MIN_AMP']
         max_amp = self.config.raw_config_data['MAX_AMP']
+
+        print('bin_width = {}\nmax_pow = {}\nmin_amp = {}\nmax_amp = {}'.format(bin_width, max_pow, min_amp, max_amp))
         
         
         
@@ -760,18 +843,21 @@ class rf_conditioning_data(object):
         #y = [y[i] for i in range(len(x) - 1) if x[i] != x[i + 1]]
         y.append(max_pow)
 
+
         # Create list of bin edges starting at min_amp and ending at max_amp (max_amp now last element of x list)
-        bedges = np.arange(int(min_amp), int(x[-1]), bin_width).tolist()  # Not happy with np.arange.tolist() but it works!?!
+        bedges = list(np.arange(int(min_amp), int(max_amp), bin_width))  # Not happy with np.arange.tolist() but it works!?!
         
-        '''
-        x = rcd.binned_amp_vs_kfpow[rcd.amp_sp_reduced]
-        num_pulses_reduced = rcd.binned_amp_vs_kfpow[rcd.num_pulses_reduced]
-        y = rcd.binned_amp_vs_kfpow[rcd.KFPower_reduced]
-        bedges = rcd.binned_amp_vs_kfpow[rcd.BIN_edges]
+
+        #x = rcd.binned_amp_vs_kfpow[rcd.amp_sp]
+        #num_pulses_reduced = rcd.binned_amp_vs_kfpow[rcd.num_pulses_reduced]
+        #y = rcd.binned_amp_vs_kfpow[rcd.kly_fwd_power_history]
+        #bedges = rcd.binned_amp_vs_kfpow[rcd.BIN_edges]
+
+        print('rcd.binned_amp_vs_kfpow[rcd.BIN_edges] = {}\nbedges = {}'.format(rcd.binned_amp_vs_kfpow[rcd.BIN_edges], bedges))
 
 
         # create arrays of zeros of length len(bedges)-1 ready to be populated by the main calculator
-        bin_pulses = np.zeros(len(bedges) - 1)
+        #bin_pulses = np.zeros(len(bedges) - 1)
         bin_mean =  np.zeros(len(bedges) - 1)
         bin_pop = np.zeros(len(bedges) - 1)
         bin_std = np.zeros(len(bedges) - 1)
@@ -788,9 +874,9 @@ class rf_conditioning_data(object):
             for j in range(0, len(bin_mean)):
                 if x[i] >= bedges[j] and x[i] < bedges[j + 1]:
                     # multiply the number of pulses by the mean kfpowr to get the product (used in MEAN_EQN)
-                    bin_pulse_x_mean =  num_pulses_reduced[i] * y[i]
+                    bin_pulse_x_mean =  num_pulses_prebin[i] * y[i]
                     # Define the new total number of pulses in the bin (used in MEAN_EQN)
-                    bin_pulses_new = (bin_pulses[j] +  num_pulses_reduced[i])
+                    bin_pulses_new = (bin_pulses[j] +  num_pulses_prebin[i])
                     # MEAN_EQN:
                     bin_mean[j] = ((bin_mean[j] * bin_pulses[j]) + (bin_pulse_x_mean)) / bin_pulses_new
                     # Update the total number of pulses in the bin with new value
@@ -802,10 +888,43 @@ class rf_conditioning_data(object):
                     # Calculate the standard deviation of the data in each bin (needs to be weighted properly)
                     bin_std[j] = np.std(data_binned[j])
 
+        '''
+        # MAIN CALCULATOR: cycle over data and assign it to bins
+        for i in range(0, len(x)):
+            for j in range(0, len(bin_mean)):
+                if x[i] >= bedges[j] and x[i] < bedges[j + 1]:
+                    # multiply the number of pulses by the mean kfpowr to get the product (used in MEAN_EQN)
+                    print('len(bin_pulses) = {}\nlen(y) = {}'.format(len(bin_pulses),len(y)))
+                    bin_pulse_x_mean =  bin_pulses[j] * y[i]
+                    # Define the new total number of pulses in the bin (used in MEAN_EQN)
 
+                    bin_pulses_new = (bin_pulses[j] + num_pulses_prebin[i])
+
+                    if bin_pulses_new < 1:
+                        print('div by zero coming up!')
+                    # MEAN_EQN:
+                    bin_mean[j] = ((bin_mean[j] * bin_pulses[j]) + (bin_pulse_x_mean)) / bin_pulses_new
+                    # Update the total number of pulses in the bin with new value
+                    bin_pulses[j] = bin_pulses_new
+                    # Add one to bin population
+                    bin_pop[j] += 1.0
+                    # Add datapoint to data_binned dictionary
+                    data_binned[j].append(y[i])
+                    # Calculate the standard deviation of the data in each bin (needs to be weighted properly)
+                    bin_std[j] = np.std(data_binned[j])
+
+        '''
 
         #print('X = {}\nbin_mean = {}\nbin_pulses = {}\nbin_pop = {}\ndata_binned = {}\nbin_error = {}'.format(X[0:10], bin_mean[0:10],
         # bin_pulses[0:10], bin_pop[0:10],data_binned, bin_std[0:10]))
+
+        BIN_X = [k + bin_width / 2.0 for k in bedges[:-1]]
+
+        rcd.binned_amp_vs_kfpow[rcd.BIN_X] = BIN_X
+        All_amp_sp = range(int(x[-1] + bin_width ))
+        rcd.binned_amp_vs_kfpow[rcd.All_amp_sp] = All_amp_sp
+        #rcd.binned_amp_vs_kfpow[rcd.BIN_mean] = bin_mean
+
 
         return bin_mean, bedges, bin_pop, data_binned, bin_std, bin_pulses
 
@@ -835,45 +954,51 @@ class rf_conditioning_data(object):
 
         # Collate new data into newdata list
         newdata = [new_amp, new_kfp, new_pulses]
+
+        if type(newdata) != list:
+            print("ERRRRRRRRRRRRRRRR")
+            print(newdata)
+            newdata = [new_amp, new_kfp, new_pulses]
+
         #print('new_kfp_list = {}\ntype(new_kfp_list) = {}'.format(new_kfp_pulses_list, type(new_kfp_pulses_list)))
 
         # TODO AJG: Check if newdata is within the acceptance region for inclusion in updating the binned data
 
         # Check if newdata is within the acceptance region for inclusion in updating the binned data
         rcd = rf_conditioning_data
-        All_amp_sp = rcd.binned_amp_vs_kfpow[rcd.All_amp_sp]
-        polyfit_4th_order_All_amp_sp = rcd.binned_amp_vs_kfpow[rcd.polyfit_4th_order_All_amp_sp]
-        DATA_lower_limit = rcd.binned_amp_vs_kfpow[rcd.DATA_lower_limit]
-        DATA_upper_limit = rcd.binned_amp_vs_kfpow[rcd.DATA_upper_limit]
+        #All_amp_sp = rcd.binned_amp_vs_kfpow[rcd.All_amp_sp]
+        #polyfit_4th_order_All_amp_sp = rcd.binned_amp_vs_kfpow[rcd.polyfit_4th_order_All_amp_sp]
+        #DATA_lower_limit = rcd.binned_amp_vs_kfpow[rcd.DATA_lower_limit]
+        #DATA_upper_limit = rcd.binned_amp_vs_kfpow[rcd.DATA_upper_limit]
 
         #       find the index of new_amp in All_amp_sp
-        idx = All_amp_sp.index(newdata[0])
+        #idx = All_amp_sp.index(newdata[0])
 
-        if newdata[1] > DATA_lower_limit[idx] and newdata[1] < DATA_upper_limit[idx]:
+        #if newdata[1] > DATA_lower_limit[idx] and newdata[1] < DATA_upper_limit[idx]:
 
             # Call in data from binned_amp_vs_kfpow distionary already populated by initial_bin() ind subsequently here.
-            bin_mean = rf_conditioning_data.binned_amp_vs_kfpow['BIN_mean']
-            bedges = rf_conditioning_data.binned_amp_vs_kfpow['BIN_edges']
-            bin_pop = rf_conditioning_data.binned_amp_vs_kfpow['BIN_pop']
-            bin_pulses = rf_conditioning_data.binned_amp_vs_kfpow['BIN_pulses']
+        bin_mean = rf_conditioning_data.binned_amp_vs_kfpow['BIN_mean']
+        bedges = rf_conditioning_data.binned_amp_vs_kfpow['BIN_edges']
+        bin_pop = rf_conditioning_data.binned_amp_vs_kfpow['BIN_pop']
+        bin_pulses = rf_conditioning_data.binned_amp_vs_kfpow['BIN_pulses']
 
-            # Cycle through bin edges until the x-axis (amp_sp) data sits between current and next bin edge.
-            for i in range(int(len(bin_mean))):
-                if newdata[0] >= bedges[i] and newdata[0] < bedges[i + 1]:
-                    # multiply the number of pulses by the mean kfpowr to get the product (used in MEAN_EQN)
-                    bin_pulse_x_mean =  newdata[1] * newdata[2]
-                    # Define the new total number of pulses in the bin (used in MEAN_EQN)
-                    bin_pulses_new = (bin_pulses[i] + newdata[2])
-                    # MEAN_EQN:
-                    bin_mean[i] = ((bin_mean[i] * bin_pulses[i]) + (bin_pulse_x_mean)) / bin_pulses_new
-                    # Update the total number of pulses in the bin with new value
-                    bin_pulses[i] = bin_pulses_new
-                    # Add one to bin population
-                    bin_pop[i] += 1.0
-                    # Once found no need to continue, so break.
-                    break
-                else:
-                    pass
+        # Cycle through bin edges until the x-axis (amp_sp) data sits between current and next bin edge.
+        for i in range(int(len(bin_mean))):
+            if newdata[0] >= bedges[i] and newdata[0] < bedges[i + 1]:
+                # multiply the number of pulses by the mean kfpowr to get the product (used in MEAN_EQN)
+                bin_pulse_x_mean =  newdata[1] * newdata[2]
+                # Define the new total number of pulses in the bin (used in MEAN_EQN)
+                bin_pulses_new = (bin_pulses[i] + newdata[2])
+                # MEAN_EQN:
+                bin_mean[i] = ((bin_mean[i] * bin_pulses[i]) + (bin_pulse_x_mean)) / bin_pulses_new
+                # Update the total number of pulses in the bin with new value
+                bin_pulses[i] = bin_pulses_new
+                # Add one to bin population
+                bin_pop[i] += 1.0
+                # Once found no need to continue, so break.
+                break
+            else:
+                pass
 
             # Update dictionary with new values
             rf_conditioning_data.binned_amp_vs_kfpow['BIN_mean'] = bin_mean
@@ -913,6 +1038,8 @@ class rf_conditioning_data(object):
                             , show_time_stamp=False)
 
         # TODO maybe some error checking here for 'wrong' passed values
+
+        print('p_start = {}\ncurve_p_finish = {}\nramp_rate = {}'.format(p_start, curve_p_finish, ramp_rate))
         x_start = math.log(1 - (p_start / curve_p_finish), ramp_rate)
         x_finish = math.log(1 - (p_finish / curve_p_finish), ramp_rate)
 
@@ -946,6 +1073,8 @@ class rf_conditioning_data(object):
         # Find all non-zero binnded data
         bin_X = [bin_X[i] for i in range(len(bin_X)) if bin_Y[i] > 0.0]
         bin_Y = [bin_Y[i] for i in range(len(bin_Y)) if bin_Y[i] > 0.0]
+
+        print('bin_X = {}\nbin_Y = {}'.format(bin_X,bin_Y))
 
         #raw_input()
         required_set_points = np.interp( curve_powers, bin_Y, bin_X)
@@ -1041,7 +1170,7 @@ class rf_conditioning_data(object):
 
 
             # assign which fitting method amp_sp to use
-            predicted_sp = sp_quad_current_sp_to_fit
+            predicted_sp = sp_slf
 
             # check the valididty of the predicted_sp
             if abs(predicted_sp - current_amp_sp) > max_delta_power:
@@ -1357,6 +1486,9 @@ class rf_conditioning_data(object):
     dummy_float = -9999.9999
     dummy_int = -9999999
     dummy_state = state.UNKNOWN
+    dummy_list = []
+    dummy_str = 'dummy_str'
+    dummy_hold_rf_on_state = HOLD_RF_ON_STATE.UNKNOWN_HOLD_RF_ON_STATE
 
     binned_amp_vs_kfpow = {}  # A list of the keys for values
     bin_keys = []  # A list of the keys for values
@@ -1381,10 +1513,23 @@ class rf_conditioning_data(object):
     bin_keys.append(BIN_pop)
     binned_amp_vs_kfpow[BIN_pop] = dummy_float
 
+    ''' This is how mnay pulses contributed to the mean '''
     BIN_pulses = 'BIN_pulses'
     bin_keys.append(BIN_pulses)
     binned_amp_vs_kfpow[BIN_pulses] = dummy_float
 
+    '''The standard deviation in each bin'''
+    BIN_std = 'BIN_std'
+    bin_keys.append(BIN_std)
+    binned_amp_vs_kfpow[BIN_std] = dummy_float
+
+    '''This ends up being a list of lists that holds all the power data values in each bin'''
+    BIN_all_data = 'BIN_all_data'
+    bin_keys.append(BIN_all_data)
+    binned_amp_vs_kfpow[BIN_all_data] = dummy_list
+
+
+    ### Redundant? associated with the "reduce_amp_power_log_data" function
     amp_sp_reduced = 'amp_sp_reduced'
     bin_keys.append(amp_sp_reduced)
     binned_amp_vs_kfpow[amp_sp_reduced] = dummy_float
@@ -1411,7 +1556,9 @@ class rf_conditioning_data(object):
 
     DATA_lower_limit = 'DATA_lower_limit'
     bin_keys.append(DATA_lower_limit)
-    binned_amp_vs_kfpow[DATA_lower_limit] = DATA_lower_limit
+    binned_amp_vs_kfpow[DATA_lower_limit] = dummy_float
+
+    ####################################################
 
 
 
@@ -1582,6 +1729,26 @@ class rf_conditioning_data(object):
     all_value_keys.append(reverse_outside_mask_count)
     values[reverse_outside_mask_count] = dummy_int
 
+    #TODO AJG: create a list of breakdown timestamps to calculate
+    #  "Time until ramp" countdown for GUI
+    #  No need to log this in binary
+
+    breakdown_pulse_count = 'breakdown_pulse_count'
+    all_value_keys.append(breakdown_pulse_count)
+    values[breakdown_pulse_count] = dummy_list
+    excluded_key_list.append(breakdown_pulse_count)
+
+    breakdown_rate_able_to_ramp_countdown_HrMinSec = 'breakdown_rate_able_to_ramp_countdown_HrMinSec'
+    all_value_keys.append(breakdown_rate_able_to_ramp_countdown_HrMinSec)
+    values[breakdown_rate_able_to_ramp_countdown_HrMinSec] = dummy_str
+    excluded_key_list.append(breakdown_rate_able_to_ramp_countdown_HrMinSec)
+
+    breakdown_rate_able_to_ramp_countdown_pulses = 'breakdown_rate_able_to_ramp_countdown_pulses'
+    all_value_keys.append(breakdown_rate_able_to_ramp_countdown_pulses)
+    values[breakdown_rate_able_to_ramp_countdown_pulses] = dummy_float
+    excluded_key_list.append(breakdown_rate_able_to_ramp_countdown_pulses)
+
+
     breakdown_status = 'breakdown_status'
     all_value_keys.append(breakdown_status)
     values[breakdown_status] = state.UNKNOWN
@@ -1659,9 +1826,17 @@ class rf_conditioning_data(object):
     all_value_keys.append(rfprot_state)
     values[rfprot_state] = state.UNKNOWN
 
+
+    #TODO AJG: create hold rf on state
     rfprot_good = 'rfprot_good'
     all_value_keys.append(rfprot_good)
     values[rfprot_good] = False
+
+
+    hold_rf_on_state = 'hold_rf_on_state'
+    all_value_keys.append(hold_rf_on_state)
+    values[hold_rf_on_state] = dummy_hold_rf_on_state
+    excluded_key_list.append(hold_rf_on_state)
 
     modulator_state = 'modulator_state'
     all_value_keys.append(modulator_state)
@@ -1674,6 +1849,10 @@ class rf_conditioning_data(object):
     modulator_good = 'modulator_good'
     all_value_keys.append(modulator_good)
     values[modulator_good] = False
+
+    is_amp_ff_connected = 'is_amp_ff_connected'
+    all_value_keys.append(is_amp_ff_connected)
+    values[is_amp_ff_connected] = state.UNKNOWN
 
     can_rf_output_status_OLD = 'can_rf_output_status_OLD'
     all_value_keys.append(can_rf_output_status_OLD)

@@ -98,7 +98,12 @@ class llrf_control(object):
 			# try and reset
 			self.llrf_control.setInterlockNonActive()
 			# meh
-			sleep(0.02)
+			#sleep(0.1)
+
+			start_time = time.time()
+			while time.time() - start_time < 0.1:
+				pass
+
 		else:
 			if self.should_show_llrf_interlock_active == False:
 				self.logger.message('enable_llrf, isInterlockActive = False')
@@ -116,7 +121,11 @@ class llrf_control(object):
 			# try and reset
 			self.llrf_control.trigExt()
 			# meh
-			sleep(0.02)
+			#sleep(0.1)
+
+			start_time = time.time()
+			while time.time() - start_time < 0.1:
+				pass
 		#
 		if self.llrf_control.isRFOutput():
 			if self.should_show_llrf_rf_output == False:
@@ -129,7 +138,11 @@ class llrf_control(object):
 			# reset
 			self.llrf_control.enableRFOutput()
 			# meh
-			sleep(0.02)
+			#sleep(0.1)
+
+			start_time = time.time()
+			while time.time() - start_time < 0.1:
+				pass
 		#
 		if self.llrf_control.isAmpFFLocked():
 			if self.should_show_llrf_amp_ff_locked == False:
@@ -142,7 +155,13 @@ class llrf_control(object):
 				self.logger.message('enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()')
 				self.should_show_llrf_rf_output = False
 			self.llrf_control.lockAmpFF()
-			sleep(0.02)
+
+			#sleep(0.1)
+
+			start_time = time.time()
+			while time.time() - start_time < 0.1:
+				pass
+
 		#
 		#should_show_llrf_pha_ff_locked
 		if self.llrf_control.isPhaseFFLocked():
@@ -154,13 +173,20 @@ class llrf_control(object):
 				self.logger.message('enable_llrf, isPhaseFFLocked = False, attempting lockPhaseFF()')
 				self.should_show_llrf_pha_ff_locked = False
 			self.llrf_control.lockPhaseFF()
-			sleep(0.02)
+			#sleep(0.1)
+
+			start_time = time.time()
+			while time.time() - start_time < 0.1:
+				pass
 
 		if self.llrf_control.getTrigSource() != TRIG.EXTERNAL:
 			self.logger.message('enable_llrf, getTrigSource() != TRIG.EXTERNAL, attempting trigExt()')
 			self.llrf_control.trigExt()
 			self.should_show_llrf_rf_output = True
-			sleep(0.02)
+			#sleep(0.1)
+			start_time = time.time()
+			while time.time() - start_time < 0.1:
+				pass
 
 
 		if self.data.values[self.data.llrf_DAQ_rep_rate_status] == state.BAD:
@@ -181,11 +207,14 @@ class llrf_control(object):
 			self.llrf_control.setAmpSP(0.0)
 			start_time = time.time()
 
-		while time.time() - start_time < 0.02:
+		while time.time() - start_time < 0.1:
 			pass
-		self.logger.message('reset_daq_freg, time passed > 0.02s')
+		self.logger.message('reset_daq_freg, time passed > 0.1s')
 		self.llrf_control.setTORSCANToIOIntr()
-		time.sleep(0.02) # TODO meh ...
+		#time.sleep(0.1) # TODO meh ...
+		start_time = time.time()
+		while time.time() - start_time < 0.1:
+			pass
 		self.llrf_control.setTORACQMEvent()
 		#self.set_iointr_counter = 0
 
@@ -221,6 +250,21 @@ class llrf_control(object):
 		# 	self.llrf_control.trigExt()
 		if self.llrf_control.getTrigSource() != TRIG.EXTERNAL:
 			self.llrf_control.trigExt()
+
+	def reset_trigger(self):
+		'''
+			we've noticed some Freezing up of the LLRF box, a potential fix is to flip the trigger state
+			we'll try this is part  of the DAQ freq reset
+		'''
+
+		self.llrf_control.trigOff()
+
+		#TODO AJG: hunt down all sleeps and replace with 3 lines below
+		start_time = time.time()
+		while time.time() - start_time < 0.1:
+			pass
+
+		self.llrf_control.trigExt()
 
 
 	def set_amp(self, val1, update_last_amp_sp = False):
@@ -389,6 +433,17 @@ class llrf_control(object):
 		mask_level = self.config_data[trace + '_MASK_LEVEL']  # AMOUNT OF MASK
 		mask_floor = self.config_data[trace + '_MASK_FLOOR']
 		mask_lo_min = self.config_data[trace + '_MASK_LO_MIN']  # mask_abs_min in c++
+
+		#TODO AJG: send CFPOW_MASK_LEVEL_LO & CFPOW_MASK_LEVEL_HI to C++
+
+
+
+		# set the check streak (how many points to trigger event)
+		check_streak = self.config_data[trace + '_CHECK_STREAK']
+
+		self.llrf_control.setNumContinuousOutsideMaskCount(trace, check_streak)
+
+
 		if mask_type == 'ABSOLUTE':
 			is_percent = False
 		elif mask_type == 'PERCENT':
@@ -396,59 +451,40 @@ class llrf_control(object):
 		else:
 			is_percent = True
 		# send mask settings to c++
-		print("Setting these Mask parameters")
-		print("trace, is_percent, mask_level, mask_floor, mask_lo_min, mask_start, mask_end, mask_window_start,mask_window_end")
-		print(trace, is_percent, mask_level, mask_floor, mask_lo_min, mask_start, mask_end, mask_window_start,mask_window_end)
-		# # check values have got set correctly
-		# has_error = False
-		if mask_set_type == 'TIME':
-			self.llrf_control.setMaskParamatersTimes(trace, is_percent, mask_level, mask_floor, mask_lo_min, mask_start, mask_end, mask_window_start,
-			                                         mask_window_end)
-			# [s,e,ws,ws] = [self.llrf_control.getMaskStartTime(trace), self.llrf_control.getMaskEndTime(trace),self.llrf_control.getMaskWindowStartTime(trace), self.llrf_control.getMaskWindowEndTime(trace)]
-			#
-			# print("Manually compare these atm")
-			# print([s,e,ws,ws])
-			# print([mask_start, mask_end, mask_window_start, mask_window_end ])
-		elif mask_set_type == 'INDEX':
-			self.llrf_control.setMaskParamatersIndices(trace, is_percent, mask_level, mask_floor, mask_lo_min, mask_start, mask_end,
-			                                           mask_window_start, mask_window_end)
-			# [s,e,ws,ws] = [self.llrf_control.getMaskStartIndex(trace), self.llrf_control.getMaskEndIndex(trace),
-			#                self.llrf_control.getMaskWindowStartIndex(trace), self.llrf_control.getMaskWindowEndIndex(trace)]
-			# if [s,e,ws,ws] == [ mask_start, mask_end, mask_window_start, mask_window_end ] :
-			# 	pass
-			# else:
-			# 	print("!!ERROR!! {} trace not checking mask".format(trace))
-			# 	has_error = True
-		# if self.llrf_control.isCheckingMask(trace):
-		# 	pass
-		# else:
-		# 	print("!!ERROR!! {} trace not checking mask".format(trace))
-		# 	has_error = True
-		# if self.llrf_control.getMaskFloor(trace) == mask_floor:
-		# 	pass
-		# else:
-		# 	print("!!ERROR!! {} trace mask_floor = {}, expected {}".format(trace,self.llrf_control.getMaskFloor(trace), mask_floor))
-		# 	has_error = True
-		#
-		# if self.llrf_control.getMaskValue(trace) == mask_floor:
-		# 	pass
-		# else:
-		# 	print("!!ERROR!! {} trace mask_level = {}, expected {}".format(trace,self.llrf_control.getMaskValue(trace), mask_level))
-		# 	has_error = True
-		#
-		#
-		# if has_error:
-		# 	raw_input()
+		if trace == 'CAVITY_FORWARD_POWER':
+			mask_level_lo = self.config_data[trace + '_MASK_LEVEL_LO']
+			mask_level_hi = self.config_data[trace + '_MASK_LEVEL_HI']
+
+
+			print("Setting these Mask parameters")
+			print("trace, is_percent, mask_level_lo, mask_level_hi, mask_floor, mask_lo_min, mask_start, mask_end, mask_window_start,"
+			      "mask_window_end")
+			print(trace, is_percent,  mask_level_lo, mask_level_hi, mask_floor, mask_lo_min, mask_start, mask_end, mask_window_start,mask_window_end)
+			# # check values have got set correctly
+			# has_error = False
+			if mask_set_type == 'TIME':
+				self.llrf_control.setMaskParamatersTimes(trace, is_percent,  mask_level_lo, mask_level_hi, mask_floor, mask_lo_min, mask_start, mask_end, mask_window_start,
+				                                         mask_window_end)
+
+			elif mask_set_type == 'INDEX':
+				self.llrf_control.setMaskParamatersIndices(trace, is_percent,  mask_level_lo, mask_level_hi, mask_floor, mask_lo_min, mask_start, mask_end,
+				                                           mask_window_start, mask_window_end)
+		else:
+			print("Setting these Mask parameters")
+			print("trace, is_percent, mask_level, mask_floor, mask_lo_min, mask_start, mask_end, mask_window_start,mask_window_end")
+			print(trace, is_percent, mask_level, mask_floor, mask_lo_min, mask_start, mask_end, mask_window_start,mask_window_end)
+			# # check values have got set correctly
+			# has_error = False
+			if mask_set_type == 'TIME':
+				self.llrf_control.setMaskParamatersTimes(trace, is_percent, mask_level, mask_floor, mask_lo_min, mask_start, mask_end, mask_window_start,
+				                                         mask_window_end)
+
+			elif mask_set_type == 'INDEX':
+				self.llrf_control.setMaskParamatersIndices(trace, is_percent, mask_level, mask_floor, mask_lo_min, mask_start, mask_end,
+				                                           mask_window_start, mask_window_end)
 
 
 
-
-
-		#
-		# set the check streak (how many points to trigger event)
-		check_streak = self.config_data[trace + '_CHECK_STREAK']
-		# TODO errrrrrrrrrrrrrrrr
-		self.llrf_control.setNumContinuousOutsideMaskCount('CAVITY_REVERSE_PHASE', check_streak)
 		#
 		# set drop amp state and value)
 		drop_amp = self.config_data[trace+'_DROP_AMP']

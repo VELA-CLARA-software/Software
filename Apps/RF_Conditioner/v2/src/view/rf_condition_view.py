@@ -38,8 +38,9 @@ from VELA_CLARA_RF_Modulator_Control import GUN_MOD_STATE
 from VELA_CLARA_RF_Modulator_Control import L01_MOD_STATE
 from VELA_CLARA_Vac_Valve_Control import VALVE_STATE
 from VELA_CLARA_RF_Protection_Control import RF_PROT_STATUS
-
+from VELA_CLARA_RF_Modulator_Control import HOLD_RF_ON_STATE
 from src.data.rf_conditioning_data import rf_conditioning_data
+
 from src.data.state import state
 from PyQt4.QtGui import *
 
@@ -162,14 +163,14 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         self.plot_item.plot(x, y, pen={'color': 0.9, 'width': 1.0})
 
         # plot upper and lower limits for bin exclusion
-        All_amp_sp = rcd.binned_amp_vs_kfpow[rcd.All_amp_sp]
+        #All_amp_sp = rcd.binned_amp_vs_kfpow[rcd.All_amp_sp]
         polyfit_4th_order_All_amp_sp = rcd.binned_amp_vs_kfpow[rcd.polyfit_4th_order_All_amp_sp]
-        DATA_lower_limit = rcd.binned_amp_vs_kfpow[rcd.DATA_lower_limit]
-        DATA_upper_limit = rcd.binned_amp_vs_kfpow[rcd.DATA_upper_limit]
+        #DATA_lower_limit = rcd.binned_amp_vs_kfpow[rcd.DATA_lower_limit]
+        #DATA_upper_limit = rcd.binned_amp_vs_kfpow[rcd.DATA_upper_limit]
 
-        self.plot_item.plot(All_amp_sp, DATA_lower_limit, pen={'color': 'y', 'width': 0.7})
+        #self.plot_item.plot(All_amp_sp, DATA_lower_limit, pen={'color': 'y', 'width': 0.7})
         #self.plot_item.plot(All_amp_sp, polyfit_4th_order_All_amp_sp, pen={'color': 'y', 'width': 2.0})
-        self.plot_item.plot(All_amp_sp, DATA_upper_limit, pen={'color': 'y', 'width': 0.7})
+        #self.plot_item.plot(All_amp_sp, DATA_upper_limit, pen={'color': 'y', 'width': 0.7})
 
         # draw vertical line at the new amp_sp
         current_amp = int(self.values[rf_conditioning_data.amp_sp])
@@ -231,14 +232,14 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
 
 
         # Add second order polyfit to plot (all data):
-        data_to_fit_x_all = rcd.values['polyfit_2order_X_all']
-        polyfit_2nd_order_y_all = rcd.values['polyfit_2order_Y_all']
+        #data_to_fit_x_all = rcd.values['polyfit_2order_X_all']
+        #polyfit_2nd_order_y_all = rcd.values['polyfit_2order_Y_all']
 
         # print('\n\nFrom polyfit_2order_X_all:\ntype(data_to_fit_x) = {}\ndata_to_fit_x = {}\npolyfit_2nd_order_y = {}'.format(data_to_fit_x,
         #                                                                                                                       type(data_to_fit_x),
         #                                                                                                                       polyfit_2nd_order_y))
 
-        self.plot_item.plot(data_to_fit_x_all, polyfit_2nd_order_y_all, pen={'color': 'c', 'width': 2.0})
+        #self.plot_item.plot(data_to_fit_x_all, polyfit_2nd_order_y_all, pen={'color': 'c', 'width': 2.0})
 
 
         # Add second order polyfit to plot (up to current sp & num_sp_to_fit data):
@@ -254,16 +255,16 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         self.plot_item.plot(data_x_current_sp_to_fit, polyfit_2order_Y_current_sp_to_fit, pen={'color': 'm', 'width': 2.0})
 
         # Add second order polyfit to plot (all viable bins up to current sp):
-        polyfit_2order_X_current_sp = rcd.values['polyfit_2order_X_current_sp']
-        polyfit_2order_Y_current_sp = rcd.values['polyfit_2order_Y_current_sp']
+        #polyfit_2order_X_current_sp = rcd.values['polyfit_2order_X_current_sp']
+        #polyfit_2order_Y_current_sp = rcd.values['polyfit_2order_Y_current_sp']
 
         # rint('data_to_fit_x = {}\npolyfit_2nd_order_y = {}'.format(data_to_fit_x, polyfit_2nd_order_y))
 
-        if len(polyfit_2order_X_current_sp) == 1:
+        #if len(polyfit_2order_X_current_sp) == 1:
             # print('type(data_to_fit_x) = {}'.format( type(data_to_fit_x)))
-            pass
-        else:
-            self.plot_item.plot(polyfit_2order_X_current_sp, polyfit_2order_Y_current_sp, pen={'color': 'b', 'width': 2.0})
+        #    pass
+        #else:
+        #    self.plot_item.plot(polyfit_2order_X_current_sp, polyfit_2order_Y_current_sp, pen={'color': 'b', 'width': 2.0})
             #print('From quick_update_plot:\ndata_to_fit_x = {}\npolyfit_2nd_order_y = {}'.format(data_to_fit_x, polyfit_2nd_order_y))
 
         # Rescale plots everytime function is called? can be annoying  # self.plot_item.setXRange(0.0, current_amp+200.0)  #
@@ -292,14 +293,16 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
 
         # plot upper and lower limits for bin exclusion
 
-        All_amp_sp = rcd.binned_amp_vs_kfpow[rcd.All_amp_sp]
-        polyfit_4th_order_All_amp_sp = rcd.binned_amp_vs_kfpow[rcd.polyfit_4th_order_All_amp_sp]
-        DATA_lower_limit = rcd.binned_amp_vs_kfpow[rcd.DATA_lower_limit]
-        DATA_upper_limit = rcd.binned_amp_vs_kfpow[rcd.DATA_upper_limit]
+        # TODO AJG: remove all reduced data tendrils
 
-        self.plot_item.plot(All_amp_sp, DATA_lower_limit, pen={'color': 'y', 'width': 0.7})
+        #All_amp_sp = rcd.binned_amp_vs_kfpow[rcd.All_amp_sp]
+        polyfit_4th_order_All_amp_sp = rcd.binned_amp_vs_kfpow[rcd.polyfit_4th_order_All_amp_sp]
+        #DATA_lower_limit = rcd.binned_amp_vs_kfpow[rcd.DATA_lower_limit]
+        #DATA_upper_limit = rcd.binned_amp_vs_kfpow[rcd.DATA_upper_limit]
+
+        #self.plot_item.plot(All_amp_sp, DATA_lower_limit, pen={'color': 'y', 'width': 0.7})
         #self.plot_item.plot(All_amp_sp, polyfit_4th_order_All_amp_sp, pen={'color': 'y', 'width': 2.0})
-        self.plot_item.plot(All_amp_sp, DATA_upper_limit, pen={'color': 'y', 'width': 0.7})
+        #self.plot_item.plot(All_amp_sp, DATA_upper_limit, pen={'color': 'y', 'width': 0.7})
 
         # draw vertical line at the new amp_sp
         current_amp = int(self.values[rf_conditioning_data.amp_sp])
@@ -361,14 +364,14 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
 
 
         # Add second order polyfit to plot (all data):
-        data_to_fit_x_all = rcd.values['polyfit_2order_X_all']
-        polyfit_2nd_order_y_all = rcd.values['polyfit_2order_Y_all']
+        #data_to_fit_x_all = rcd.values['polyfit_2order_X_all']
+        #polyfit_2nd_order_y_all = rcd.values['polyfit_2order_Y_all']
 
         # print('\n\nFrom polyfit_2order_X_all:\ntype(data_to_fit_x) = {}\ndata_to_fit_x = {}\npolyfit_2nd_order_y = {}'.format(data_to_fit_x,
         #                                                                                                                       type(data_to_fit_x),
         #                                                                                                                       polyfit_2nd_order_y))
 
-        self.plot_item.plot(data_to_fit_x_all, polyfit_2nd_order_y_all, pen={'color': 'c', 'width': 2.0})
+        #self.plot_item.plot(data_to_fit_x_all, polyfit_2nd_order_y_all, pen={'color': 'c', 'width': 2.0})
 
 
         # Add second order polyfit to plot (up to current sp & num_sp_to_fit data):
@@ -384,16 +387,16 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         self.plot_item.plot(data_x_current_sp_to_fit, polyfit_2order_Y_current_sp_to_fit, pen={'color': 'm', 'width': 2.0})
 
         # Add second order polyfit to plot (all viable bins up to current sp):
-        polyfit_2order_X_current_sp = rcd.values['polyfit_2order_X_current_sp']
-        polyfit_2order_Y_current_sp = rcd.values['polyfit_2order_Y_current_sp']
+        #polyfit_2order_X_current_sp = rcd.values['polyfit_2order_X_current_sp']
+        #polyfit_2order_Y_current_sp = rcd.values['polyfit_2order_Y_current_sp']
 
         # rint('data_to_fit_x = {}\npolyfit_2nd_order_y = {}'.format(data_to_fit_x, polyfit_2nd_order_y))
 
-        if len(polyfit_2order_X_current_sp) == 1:
+        #if len(polyfit_2order_X_current_sp) == 1:
             # print('type(data_to_fit_x) = {}'.format( type(data_to_fit_x)))
-            pass
-        else:
-            self.plot_item.plot(polyfit_2order_X_current_sp, polyfit_2order_Y_current_sp, pen={'color': 'b', 'width': 2.0})
+        #    pass
+        #else:
+        #    self.plot_item.plot(polyfit_2order_X_current_sp, polyfit_2order_Y_current_sp, pen={'color': 'b', 'width': 2.0})
             #print('From quick_update_plot:\ndata_to_fit_x = {}\npolyfit_2nd_order_y = {}'.format(data_to_fit_x, polyfit_2nd_order_y))
 
 
@@ -495,6 +498,12 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         self.set_widget_color_text(self.can_ramp_status_outputwidget, self.data.values[rcd.can_ramp_status])
         self.set_widget_color_text(self.can_llrf_output_state_outputwidget, self.data.values[rcd.can_llrf_output_state])
         self.set_widget_color_text(self.BD_state_outputwidget, self.data.values[rcd.BD_state])
+
+        self.set_widget_color_text(self.hold_rf_on_state_outputwidget, self.values[self.data.hold_rf_on_state])
+
+        self.set_widget_color_text(self.is_amp_ff_connected_outputwidget,  self.values[self.data.is_amp_ff_connected])
+
+
 
         if self.data.get_kf_running_stat_power_at_set_point(self.values[self.data.last_amp_sp]):
             if self.data.get_kf_running_stat_power_at_current_set_point():
@@ -658,7 +667,31 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         widget.setText('{:1.2f} kW'.format(value * 0.001))
 
     def update_all_counters(self):
+
+
+
+        #TODO AJG: added countdown until BDR is low here
+        if self.values[rf_conditioning_data.breakdown_rate_low]:
+
+            self.BDR_ramp_countdown_pulses_outputwidget.setText('BDR good')
+            self.BDR_ramp_countdown_pulses_outputwidget.setStyleSheet('QLabel { background-color : ' + self.good + '; color : black; }')
+            self.BDR_ramp_countdown_time_outputwidget.setText('BDR good')
+            self.BDR_ramp_countdown_time_outputwidget.setStyleSheet('QLabel { background-color : ' + self.good + '; color : black; }')
+
+        else:
+            self.BDR_ramp_countdown_pulses_outputwidget.setText('{} pulses'.format(self.values[
+                                    self.data.breakdown_rate_able_to_ramp_countdown_pulses]))
+            self.BDR_ramp_countdown_pulses_outputwidget.setStyleSheet('QLabel { background-color : ' + self.bad + '; color : black; }')
+
+            self.BDR_ramp_countdown_time_outputwidget.setText('{}'.format(self.values[
+                                    self.data.breakdown_rate_able_to_ramp_countdown_HrMinSec]))
+            self.BDR_ramp_countdown_time_outputwidget.setStyleSheet('QLabel { background-color : ' + self.bad + '; color : black; }')
+
+
+
         self.pulse_count_outputwidget.setText('{}'.format(self.values[self.data.pulse_count]))
+
+
 
         self.event_pulse_count_outputwidget.setText(
             '{} / {}'.format(self.values[self.data.event_pulse_count], self.values[self.data.required_pulses]))
@@ -669,6 +702,11 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         self.breakdown_count_outputwidget.setText(
             '{} / {}'.format(self.values[self.data.active_breakdown_count], self.values[self.data.total_breakdown_count]))
         self.set_widget_color( self.breakdown_count_outputwidget, self.values[rf_conditioning_data.breakdown_rate_low] )
+
+
+
+
+
 
     def update_expert_values_in_gui(self):
         """
@@ -744,6 +782,14 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
             widget.setText('HEARTBEAT 0')
         elif val == 1.0:
             widget.setText('HEARTBEAT 1')
+        elif val == HOLD_RF_ON_STATE.MANUAL_RF:
+            widget.setText('MANUAL_RF')
+        elif val == HOLD_RF_ON_STATE.HOLD_RF_ON:
+            widget.setText('HOLD_RF_ON')
+        elif val == HOLD_RF_ON_STATE.HOLD_RF_ON_CON:
+            widget.setText('HOLD_RF_ON_CON')
+        elif val == HOLD_RF_ON_STATE.UNKNOWN_HOLD_RF_ON_STATE:
+            widget.setText('UNKNOWN_HOLD_RF_ON_STATE')
         else:
             widget.setText('UNKNOWN')
 
@@ -770,6 +816,15 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
             widget.setStyleSheet('QLabel { background-color : ' + self.zero + '; color : black; }')
         elif val == 1.0:
             widget.setStyleSheet('QLabel { background-color : ' + self.one + '; color : black; }')
+        elif val == HOLD_RF_ON_STATE.MANUAL_RF:
+            widget.setStyleSheet('QLabel { background-color : ' + self.bad + '; color : black; }')
+        elif val == HOLD_RF_ON_STATE.HOLD_RF_ON:
+            widget.setStyleSheet('QLabel { background-color : ' + self.bad + '; color : black; }')
+        elif val == HOLD_RF_ON_STATE.HOLD_RF_ON_CON:
+            widget.setStyleSheet('QLabel { background-color : ' + self.good + '; color : black; }')
+        elif val == HOLD_RF_ON_STATE.UNKNOWN_HOLD_RF_ON_STATE:
+            widget.setStyleSheet('QLabel { background-color : ' + self.unknown + '; color : black; }')
+
         else:
             widget.setStyleSheet('QLabel { background-color : ' + self.unknown + '; color : black; }')
 

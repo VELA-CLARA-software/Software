@@ -1,10 +1,10 @@
-# -*- mode: python -*-
+# -*- mode: python ; coding: utf-8 -*-
 
 block_cipher = None
 
 
-a = Analysis(['mainAPp.py'],
-             pathex=['D:\\VELA\\GIT Projects\\Software\\Apps\\Valve_Status'],
+a = Analysis(['mainApp.py'],
+             pathex=['C:\\Users\\dlerlp\\Documents\\GitHub\\Software\\Apps\\Valve_Status'],
              binaries=[],
              datas=[],
              hiddenimports=[],
@@ -13,7 +13,8 @@ a = Analysis(['mainAPp.py'],
              excludes=[],
              win_no_prefer_redirects=False,
              win_private_assemblies=False,
-             cipher=block_cipher)
+             cipher=block_cipher,
+             noarchive=False)
 pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
 exe = EXE(pyz,
@@ -21,9 +22,13 @@ exe = EXE(pyz,
           a.binaries,
           a.zipfiles,
           a.datas,
+          [],
           name='Valve_Status',
           debug=False,
+          bootloader_ignore_signals=False,
           strip=False,
           upx=True,
+          upx_exclude=[],
           runtime_tmpdir=None,
-          console=False , icon='resources\\Valve_Status\\valve.ico')
+		  console=False, 
+		  icon='valve.ico')

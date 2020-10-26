@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['mainApp.pyw'],
-             pathex=['C:\\Users\\djs56\\GitHub\\Software\\Apps\\screen_status'],
+             pathex=['C:\\Users\\dlerlp\\Documents\\GitHub\\Software\\Apps\\screen_status'],
              binaries=[],
              datas=[],
              hiddenimports=[],

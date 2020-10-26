@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1480</width>
+    <width>1387</width>
     <height>889</height>
    </rect>
   </property>
@@ -1120,7 +1120,7 @@
          <rect>
           <x>240</x>
           <y>20</y>
-          <width>251</width>
+          <width>241</width>
           <height>731</height>
          </rect>
         </property>
@@ -1321,7 +1321,7 @@
             <enum>QFrame::Sunken</enum>
            </property>
            <property name="text">
-            <string/>
+            <string>Is amp FF connected?</string>
            </property>
            <property name="scaledContents">
             <bool>false</bool>
@@ -1373,7 +1373,7 @@
           </widget>
          </item>
          <item row="24" column="1" colspan="2">
-          <widget class="QLabel" name="can_ramp_label_outputwidget_2">
+          <widget class="QLabel" name="is_amp_ff_connected_outputwidget">
            <property name="minimumSize">
             <size>
              <width>0</width>
@@ -1387,7 +1387,7 @@
             <enum>QFrame::Sunken</enum>
            </property>
            <property name="text">
-            <string>Can Ramp</string>
+            <string/>
            </property>
            <property name="scaledContents">
             <bool>false</bool>
@@ -1406,7 +1406,7 @@
             <enum>QFrame::Sunken</enum>
            </property>
            <property name="text">
-            <string/>
+            <string>Time until  BDR Low</string>
            </property>
            <property name="scaledContents">
             <bool>false</bool>
@@ -1428,7 +1428,7 @@
             <enum>QFrame::Sunken</enum>
            </property>
            <property name="text">
-            <string/>
+            <string>Pulses until  BDR Low</string>
            </property>
            <property name="scaledContents">
             <bool>false</bool>
@@ -1450,7 +1450,7 @@
             <enum>QFrame::Sunken</enum>
            </property>
            <property name="text">
-            <string>CATAP Amp Level</string>
+            <string/>
            </property>
            <property name="scaledContents">
             <bool>false</bool>
@@ -1461,7 +1461,7 @@
           </widget>
          </item>
          <item row="27" column="0">
-          <widget class="QLabel" name="fwd_cav_power_label_2">
+          <widget class="QLabel" name="HoldRFOnState">
            <property name="frameShape">
             <enum>QFrame::Box</enum>
            </property>
@@ -1469,7 +1469,7 @@
             <enum>QFrame::Sunken</enum>
            </property>
            <property name="text">
-            <string/>
+            <string>Hold RF On-Con State</string>
            </property>
            <property name="scaledContents">
             <bool>false</bool>
@@ -1477,7 +1477,7 @@
           </widget>
          </item>
          <item row="26" column="1" colspan="2">
-          <widget class="QLabel" name="rev_kly_power_outputwidget_2">
+          <widget class="QLabel" name="BDR_ramp_countdown_time_outputwidget">
            <property name="frameShape">
             <enum>QFrame::Box</enum>
            </property>
@@ -1493,7 +1493,7 @@
           </widget>
          </item>
          <item row="25" column="1" colspan="2">
-          <widget class="QLabel" name="fwd_kly_power_outputwidget_2">
+          <widget class="QLabel" name="BDR_ramp_countdown_pulses_outputwidget">
            <property name="frameShape">
             <enum>QFrame::Box</enum>
            </property>
@@ -1509,7 +1509,7 @@
           </widget>
          </item>
          <item row="27" column="1" colspan="2">
-          <widget class="QLabel" name="fwd_cav_power_outputwidget_2">
+          <widget class="QLabel" name="hold_rf_on_state_outputwidget">
            <property name="frameShape">
             <enum>QFrame::Box</enum>
            </property>
@@ -1663,7 +1663,7 @@
             <enum>QFrame::Sunken</enum>
            </property>
            <property name="text">
-            <string>TRUE</string>
+            <string/>
            </property>
            <property name="alignment">
             <set>Qt::AlignAbsolute|Qt::AlignBottom|Qt::AlignCenter|Qt::AlignHCenter|Qt::AlignHorizontal_Mask|Qt::AlignJustify|Qt::AlignLeading|Qt::AlignLeft|Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing|Qt::AlignVCenter|Qt::AlignVertical_Mask</set>
@@ -1757,7 +1757,7 @@
             <enum>QFrame::Sunken</enum>
            </property>
            <property name="text">
-            <string>No</string>
+            <string/>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -1786,22 +1786,6 @@
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="21" column="1" colspan="2">
-          <widget class="QLabel" name="vac_valve_status_outputwidget_2">
-           <property name="frameShape">
-            <enum>QFrame::Box</enum>
-           </property>
-           <property name="frameShadow">
-            <enum>QFrame::Sunken</enum>
-           </property>
-           <property name="text">
-            <string>Open</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignAbsolute|Qt::AlignBottom|Qt::AlignCenter|Qt::AlignHCenter|Qt::AlignHorizontal_Mask|Qt::AlignJustify|Qt::AlignLeading|Qt::AlignLeft|Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing|Qt::AlignVCenter|Qt::AlignVertical_Mask</set>
            </property>
           </widget>
          </item>
@@ -1949,22 +1933,6 @@
            </property>
            <property name="text">
             <string>UK</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignAbsolute|Qt::AlignBottom|Qt::AlignCenter|Qt::AlignHCenter|Qt::AlignHorizontal_Mask|Qt::AlignJustify|Qt::AlignLeading|Qt::AlignLeft|Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing|Qt::AlignVCenter|Qt::AlignVertical_Mask</set>
-           </property>
-          </widget>
-         </item>
-         <item row="20" column="1" colspan="2">
-          <widget class="QLabel" name="vac_level_outputwidget_2">
-           <property name="frameShape">
-            <enum>QFrame::Box</enum>
-           </property>
-           <property name="frameShadow">
-            <enum>QFrame::Sunken</enum>
-           </property>
-           <property name="text">
-            <string>No</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignAbsolute|Qt::AlignBottom|Qt::AlignCenter|Qt::AlignHCenter|Qt::AlignHorizontal_Mask|Qt::AlignJustify|Qt::AlignLeading|Qt::AlignLeft|Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing|Qt::AlignVCenter|Qt::AlignVertical_Mask</set>

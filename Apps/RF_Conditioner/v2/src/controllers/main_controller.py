@@ -36,6 +36,7 @@ from src.data.rf_conditioning_logger import rf_conditioning_logger
 print('main_controller: import rf_conditioning_data')
 from src.data.rf_conditioning_data import rf_conditioning_data
 print('main_controller: import monitor_hub')
+
 from src.monitors.monitor_hub import monitor_hub
 from src.view.rf_condition_view import rf_condition_view
 from PyQt4.QtGui import QApplication
@@ -196,8 +197,13 @@ class main_controller(object):
 
             current_state = self.data.values[rcd.can_rf_output_status]
 
+
+
             # disable Global Mask Checking
             if is_bad_or_new_bad(self.data.values[rcd.BD_state]):
+
+
+
                 self.hardware.llrf_controller.set_global_check_mask(False)
 
                 # Only clear log ramp curve if new.BAD / log_ramp_curve != None
@@ -379,6 +385,9 @@ class main_controller(object):
             and returns a higher level state of GOOD, BAD, NEW_GOOD or NEW_BAD
         '''
         rcd = rf_conditioning_data
+
+
+
         #print('\nFrom check_BD_state\nBD_state_OLD = {}\nBD_state = {}'.format(self.data.values[rcd.BD_state_OLD],  self.data.values[rcd.BD_state]))
         # set the old status to the current status
         self.data.values[rcd.BD_state_OLD] = self.data.values[rcd.BD_state]
@@ -420,6 +429,13 @@ class main_controller(object):
         '''
         rcd = rf_conditioning_data
 
+
+        #TODO AJG: update the time/pulses until BDR is low enough to ramp countdowns
+
+        if self.data.values[rcd.breakdown_rate_low] == False:
+
+            self.data.breakdown_rate_able_to_ramp_countdown()
+
         #print('\nFrom can_ramp_state\ncan_ramp_status_OLD = {}\ncan_ramp_status = {}'.format(self.data.values[rcd.BD_state_OLD],
         # self.data.values[rcd.BD_state]))
 
@@ -430,8 +446,8 @@ class main_controller(object):
         # are state.BAD / state.NEW_BAD then all_BD_good gets set to False
 
         # This is a compact expression which returns True if ALL components in the list are tTrue, otherwise False is returned
-        all_can_ramps_good = all(  [self.data.values[rcd.gui_can_ramp], self.data.values[rcd.vac_level_can_ramp ], self.data.values[
-            rcd.cav_pwr_ratio_can_ramp], self.data.values[rcd.breakdown_rate_low]] )
+        all_can_ramps_good = all([self.data.values[rcd.gui_can_ramp], self.data.values[rcd.vac_level_can_ramp ], self.data.values[
+            rcd.cav_pwr_ratio_can_ramp], self.data.values[rcd.breakdown_rate_low]])
 
         #print("gui_can_ramp = {}\nvac_level_can_ramp = {}\ncav_pwr_ratio_can_ramp = {}\nbreakdown_rate_low = {}".format(
         #    self.data.values[rcd.gui_can_ramp], self.data.values[rcd.vac_level_can_ramp ], self.data.values[
@@ -614,7 +630,7 @@ class main_controller(object):
                                               numsteps =  self.config.raw_config_data['LOG_RAMP_CURVE_NUMSTEPS'],
                                               pulses_per_step =  self.config.raw_config_data['LOG_RAMP_CURVE_PULSES_PER_STEP'])
 
-            self.logger.message("self.data.log_ramp_curve in maIn_controller = {}".format(self.data.log_ramp_curve))
+            #self.logger.message("self.data.log_ramp_curve in maIn_controller = {}".format(self.data.log_ramp_curve))
 
         if self.data.log_ramp_curve is None:
             self.logger.message("!!ERROR!! Log Ramp curve is NONE, this should not happen ", show_time_stamp = True)
