@@ -150,7 +150,7 @@ class virtual_cathode_view(QtGui.QMainWindow, Ui_virtual_cathode_view):
 
         ##print('update widget loop')
         for key, value in self.widget_to_dataname.iteritems():
-            # print('update widget ', value, key)
+            print('update widget ', value, key)
             if self.new_value(value):
                 if self.is_mask_read(key):
                     if not_updated_read_roi:
@@ -376,25 +376,51 @@ class virtual_cathode_view(QtGui.QMainWindow, Ui_virtual_cathode_view):
         '''
         self.widget_to_dataname = {}
         self.widget_to_dataname[self.x_val] = self.model_data.x_val
+        self.widget_to_dataname[self.x_val_mm] = self.model_data.x_val_mm
         self.widget_to_dataname[self.x_val_2] = self.model_data.x_val
         self.widget_to_dataname[self.x_mean] = self.model_data.x_mean
+        self.widget_to_dataname[self.x_mean_mm] = self.model_data.x_mean_mm
         self.widget_to_dataname[self.x_sd] = self.model_data.x_sd
+        self.widget_to_dataname[self.x_sd_per] = self.model_data.x_sd_per
+        self.widget_to_dataname[self.x_sd_mm] = self.model_data.x_sd_mm
+        self.widget_to_dataname[self.x_sd_mm_per] = self.model_data.x_sd_mm_per
         self.widget_to_dataname[self.y_val] = self.model_data.y_val
+        self.widget_to_dataname[self.y_val_mm] = self.model_data.y_val_mm
         self.widget_to_dataname[self.y_val_2] = self.model_data.y_val
         self.widget_to_dataname[self.y_mean] = self.model_data.y_mean
+        self.widget_to_dataname[self.y_mean_mm] = self.model_data.y_mean_mm
         self.widget_to_dataname[self.y_sd] = self.model_data.y_sd
+        self.widget_to_dataname[self.y_sd_per] = self.model_data.y_sd_per
+        self.widget_to_dataname[self.y_sd_mm] = self.model_data.y_sd_mm
+        self.widget_to_dataname[self.y_sd_mm_per] = self.model_data.y_sd_mm_per
         self.widget_to_dataname[self.sx_val] = self.model_data.sx_val
+        self.widget_to_dataname[self.sx_val_mm] = self.model_data.sx_val_mm
         self.widget_to_dataname[self.sx_mean] = self.model_data.sx_mean
+        self.widget_to_dataname[self.sx_mean_mm] = self.model_data.sx_mean_mm
         self.widget_to_dataname[self.sx_sd] = self.model_data.sx_sd
+        self.widget_to_dataname[self.sx_sd_per] = self.model_data.sx_sd_per
+        self.widget_to_dataname[self.sx_sd_mm] = self.model_data.sx_sd_mm
+        self.widget_to_dataname[self.sx_sd_mm_per] = self.model_data.sx_sd_mm_per
         self.widget_to_dataname[self.sy_val] = self.model_data.sy_val
+        self.widget_to_dataname[self.sy_val_mm] = self.model_data.sy_val_mm
         self.widget_to_dataname[self.sy_mean] = self.model_data.sy_mean
+        self.widget_to_dataname[self.sy_mean_mm] = self.model_data.sy_mean_mm
         self.widget_to_dataname[self.sy_sd] = self.model_data.sy_sd
+        self.widget_to_dataname[self.sy_sd_per] = self.model_data.sy_sd_per
+        self.widget_to_dataname[self.sy_sd_mm] = self.model_data.sy_sd_mm
+        self.widget_to_dataname[self.sy_sd_mm_per] = self.model_data.sy_sd_mm_per
         self.widget_to_dataname[self.cov_val] = self.model_data.cov_val
+        self.widget_to_dataname[self.cov_val_mm] = self.model_data.cov_val_mm
         self.widget_to_dataname[self.cov_mean] = self.model_data.cov_mean
+        self.widget_to_dataname[self.cov_mean_mm] = self.model_data.cov_mean_mm
         self.widget_to_dataname[self.cov_sd] = self.model_data.cov_sd
+        self.widget_to_dataname[self.cov_sd_per] = self.model_data.cov_sd_per
+        self.widget_to_dataname[self.cov_sd_mm] = self.model_data.cov_sd_mm
+        self.widget_to_dataname[self.cov_sd_mm_per] = self.model_data.cov_sd_mm_per
         self.widget_to_dataname[self.avg_pix_val] = self.model_data.avg_pix_val
         self.widget_to_dataname[self.avg_pix_mean] = self.model_data.avg_pix_mean
         self.widget_to_dataname[self.avg_pix_sd] = self.model_data.avg_pix_sd
+        self.widget_to_dataname[self.avg_pix_sd_per] = self.model_data.avg_pix_sd_per
         self.widget_to_dataname[self.imageLayout] = self.model_data.image
         self.widget_to_dataname[self.mask_x_read] = self.model_data.mask_x_rbv
         self.widget_to_dataname[self.mask_y_read] = self.model_data.mask_y_rbv
@@ -418,9 +444,11 @@ class virtual_cathode_view(QtGui.QMainWindow, Ui_virtual_cathode_view):
         self.widget_to_dataname[self.wcm_val_2] = self.model_data.wcm_val
         self.widget_to_dataname[self.wcm_mean] = self.model_data.wcm_mean
         self.widget_to_dataname[self.wcm_sd] = self.model_data.wcm_sd
+        self.widget_to_dataname[self.wcm_sd_per] = self.model_data.wcm_sd_per
         self.widget_to_dataname[self.int_val] = self.model_data.int_val  # '[self.update_real]
         self.widget_to_dataname[self.int_mean] = self.model_data.int_mean  # [self.update_real]
         self.widget_to_dataname[self.int_sd] = self.model_data.int_sd  # [self.update_real]
+        self.widget_to_dataname[self.int_sd_per] = self.model_data.int_sd_per  # [self.update_real]
         self.widget_to_dataname[self.hwp_read] = self.model_data.hwp_read
         self.widget_to_dataname[self.last_filename] = self.model_data.last_save_file
         self.widget_to_dataname[self.last_directory] = self.model_data.last_save_dir
@@ -442,22 +470,52 @@ class virtual_cathode_view(QtGui.QMainWindow, Ui_virtual_cathode_view):
         self.widget_updatefunc[self.x_val_2] = [self.update_real]
         self.widget_updatefunc[self.x_mean] = [self.update_real]
         self.widget_updatefunc[self.x_sd] = [self.update_real]
+        self.widget_updatefunc[self.x_sd_per] = [self.update_real]
         self.widget_updatefunc[self.y_val] = [self.update_real]
         self.widget_updatefunc[self.y_val_2] = [self.update_real]
         self.widget_updatefunc[self.y_mean] = [self.update_real]
         self.widget_updatefunc[self.y_sd] = [self.update_real]
+        self.widget_updatefunc[self.y_sd_per] = [self.update_real]
         self.widget_updatefunc[self.sx_val] = [self.update_real]
         self.widget_updatefunc[self.sx_mean] = [self.update_real]
         self.widget_updatefunc[self.sx_sd] = [self.update_real]
+        self.widget_updatefunc[self.sx_sd_per] = [self.update_real]
         self.widget_updatefunc[self.sy_val] = [self.update_real]
         self.widget_updatefunc[self.sy_mean] = [self.update_real]
         self.widget_updatefunc[self.sy_sd] = [self.update_real]
+        self.widget_updatefunc[self.sy_sd_per] = [self.update_real]
         self.widget_updatefunc[self.cov_val] = [self.update_real]
         self.widget_updatefunc[self.cov_mean] = [self.update_real]
         self.widget_updatefunc[self.cov_sd] = [self.update_real]
+        self.widget_updatefunc[self.cov_sd_per] = [self.update_real]
+
+        self.widget_updatefunc[self.x_val_mm] = [self.update_real]
+        self.widget_updatefunc[self.x_mean_mm] = [self.update_real]
+        self.widget_updatefunc[self.x_sd_mm] = [self.update_real]
+        self.widget_updatefunc[self.x_sd_mm_per] = [self.update_real]
+        self.widget_updatefunc[self.y_val_mm] = [self.update_real]
+        self.widget_updatefunc[self.y_mean_mm] = [self.update_real]
+        self.widget_updatefunc[self.y_sd_mm] = [self.update_real]
+        self.widget_updatefunc[self.y_sd_mm_per] = [self.update_real]
+        self.widget_updatefunc[self.sx_val_mm] = [self.update_real]
+        self.widget_updatefunc[self.sx_mean_mm] = [self.update_real]
+        self.widget_updatefunc[self.sx_sd_mm] = [self.update_real]
+        self.widget_updatefunc[self.sx_sd_mm_per] = [self.update_real]
+        self.widget_updatefunc[self.sy_val_mm] = [self.update_real]
+        self.widget_updatefunc[self.sy_mean_mm] = [self.update_real]
+        self.widget_updatefunc[self.sy_sd_mm] = [self.update_real]
+        self.widget_updatefunc[self.sy_sd_mm_per] = [self.update_real]
+        self.widget_updatefunc[self.cov_val_mm] = [self.update_real]
+        self.widget_updatefunc[self.cov_mean_mm] = [self.update_real]
+        self.widget_updatefunc[self.cov_sd_mm] = [self.update_real]
+        self.widget_updatefunc[self.cov_sd_mm_per] = [self.update_real]
+
+
         self.widget_updatefunc[self.avg_pix_val] = [self.update_real]
         self.widget_updatefunc[self.avg_pix_mean] = [self.update_real]
         self.widget_updatefunc[self.avg_pix_sd] = [self.update_real]
+        self.widget_updatefunc[self.avg_pix_sd_per] = [self.update_real]
+
         self.widget_updatefunc[self.imageLayout] = [self.update_image]
         self.widget_updatefunc[self.mask_x_read] = [self.update_int]
         self.widget_updatefunc[self.mask_y_read] = [self.update_int]
@@ -493,10 +551,12 @@ class virtual_cathode_view(QtGui.QMainWindow, Ui_virtual_cathode_view):
         self.widget_updatefunc[self.wcm_val_2] = [self.update_real]
         self.widget_updatefunc[self.wcm_mean] = [self.update_real]
         self.widget_updatefunc[self.wcm_sd] = [self.update_real]
+        self.widget_updatefunc[self.wcm_sd_per] = [self.update_real]
 
         self.widget_updatefunc[self.int_val] = [self.update_real]
         self.widget_updatefunc[self.int_mean] = [self.update_real]
         self.widget_updatefunc[self.int_sd] = [self.update_real]
+        self.widget_updatefunc[self.int_sd_per] = [self.update_real]
 
         self.widget_updatefunc[self.hwp_read] = [self.update_real]
         self.widget_updatefunc[self.last_filename] = [self.update_string]

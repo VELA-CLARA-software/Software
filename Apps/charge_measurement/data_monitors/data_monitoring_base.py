@@ -47,7 +47,7 @@ class data_monitoring_base(base):
 	def start_monitors(self):
 		self.logger.header(self.my_name + ' start_monitors ')
 		##
-		if base.config.pil_config:
+		if base.config.las_hwp_config:
 			if self.start_pil_monitor():
 				self.logger.message('Monitoring PIL', True)
 			else:

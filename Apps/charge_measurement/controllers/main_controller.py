@@ -165,24 +165,33 @@ class main_controller(controller_base):
                         time.sleep(0.5)
                         self.laser_energy_range = controller_base.pil_handler.set_laser_energy_range(self.range-1)
                         time.sleep(0.5)
+                        if controller_base.shutter_handler.is_shutter_closed():
+                            controller_base.shutter_handler.open_shutter()
+                            time.sleep(1)
                         self.has_been_overrange = True
                 time.sleep(1)
                 QApplication.processEvents()
                 if not self.has_been_overrange:
-                    self.time_from = datetime.datetime.now().isoformat() + "Z"
-                    self.time_to = (datetime.datetime.now() + datetime.timedelta(seconds=controller_base.data.values[dat.num_shots]/10)).isoformat() + "Z"
-                    self.time_flo = datetime.datetime.now() + datetime.timedelta(seconds=controller_base.data.values[dat.num_shots]/10)
-                    while datetime.datetime.now() < self.time_flo:
-                        QApplication.processEvents()
-                        time.sleep(0.1)
-                    controller_base.data_monitor.pil_monitor.read_from_archiver("pv",self.time_from,self.time_to,i)
-                    controller_base.data_monitor.mag_monitor.update_mag_values("pv",self.time_from,self.time_to,i)
-                    controller_base.data_monitor.llrf_monitor.update_rf_values("pv",self.time_from,self.time_to,i)
-                    controller_base.data_monitor.pil_monitor.save_vc_image(i)
-                    # controller_base.data.values[dat.charge_values][i] = numpy.random.rand(10).tolist()
-                    # controller_base.data.values[dat.ophir_values][i] = numpy.random.rand(10).tolist()
-                    self.gui.update_plot()
-                    self.has_been_overrange = False
+                    if controller_base.shutter_handler.is_shutter_closed():
+                        controller_base.shutter_handler.open_shutter()
+                        time.sleep(1)
+                    if controller_base.shutter_handler.is_shutter_open():
+                        self.time_from = datetime.datetime.now().isoformat() + "Z"
+                        self.time_to = (datetime.datetime.now() + datetime.timedelta(seconds=controller_base.data.values[dat.num_shots]/10)).isoformat() + "Z"
+                        self.time_flo = datetime.datetime.now() + datetime.timedelta(seconds=controller_base.data.values[dat.num_shots]/10)
+                        while datetime.datetime.now() < self.time_flo:
+                            QApplication.processEvents()
+                            time.sleep(0.1)
+                        controller_base.data_monitor.pil_monitor.read_from_archiver("pv",self.time_from,self.time_to,i)
+                        controller_base.data_monitor.mag_monitor.update_mag_values("pv",self.time_from,self.time_to,i)
+                        controller_base.data_monitor.llrf_monitor.update_rf_values("pv",self.time_from,self.time_to,i)
+                        controller_base.data_monitor.pil_monitor.save_vc_image(i)
+                        # controller_base.data.values[dat.charge_values][i] = numpy.random.rand(10).tolist()
+                        # controller_base.data.values[dat.ophir_values][i] = numpy.random.rand(10).tolist()
+                        self.gui.update_plot()
+                        self.has_been_overrange = False
+                    else:
+                        self.logger.message('Shutter not open!!!!!!!!!!!!!!!!!!!!', True)
                 else:
                     self.has_been_overrange = False
             self.gui.progressBar.setValue(100)
