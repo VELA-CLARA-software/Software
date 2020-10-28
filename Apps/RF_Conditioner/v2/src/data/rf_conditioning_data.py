@@ -621,7 +621,7 @@ class rf_conditioning_data(object):
         plt.ylabel('Power (W)')
         plt.legend()
         plt.grid(True)
-        plt.savefig(bin_plots_path + r'\Binning_Plot.png')
+        #plt.savefig(bin_plots_path + r'\Binning_Plot.png')
         plt.close('all')
 
         plt.scatter(AMP_preBin, POW_preBin_MW, c='k', s=1.0, marker='.', label='Data', zorder=1)
@@ -633,7 +633,7 @@ class rf_conditioning_data(object):
         plt.ylabel('Power (W)')
         plt.legend()
         plt.grid(True)
-        plt.savefig(bin_plots_path + r'\Binning_Plot_zoom.png')
+        #plt.savefig(bin_plots_path + r'\Binning_Plot_zoom.png')
         plt.close('all')
 
     # TODO AJG: Define a function that reduces the raw data from amp_power_log.txt to only include values within a specified range either side of a
