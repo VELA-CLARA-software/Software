@@ -4,10 +4,13 @@
 # run this from the commnand line, 
 # should compile in all libraries that have 
 # a path defined in the python source code
-pyinstaller -F -n  "ba1_easy_stages" main.pyw  --distpath "\\apclara1\ControlRoomApps\Stage\ba1_easy_stage"
+pyinstaller -F -n -w "ba1_easy_stages" main.pyw --icon=.\resources\ba1_easy_stage\stage.ico --distpath "\\claraserv3\claranet\apps\legacy\binaries\BA1_easy_stage"
 
 # WITH ICON
 # pyinstaller -F -w --icon=.\resources\magnetApp\magpic.ico -n "magnetApp" magnetApp.pyw
+
+
+pyinstaller --onefile --clean -F -w --icon=".\resources\Valve_Status\valve.ico" -n "ba1_easy_stages" mainApp.py
 
 # to new dist folders
 # --distpath "\\apclara1\ControlRoomApps\Stage\magnetApp"

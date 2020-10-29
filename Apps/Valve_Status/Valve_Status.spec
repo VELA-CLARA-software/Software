@@ -3,7 +3,7 @@
 block_cipher = None
 
 
-a = Analysis(['mainApp.py'],
+a = Analysis(['Valve_Status.pyw'],
              pathex=['C:\\Users\\dlerlp\\Documents\\GitHub\\Software\\Apps\\Valve_Status'],
              binaries=[],
              datas=[],
@@ -15,6 +15,7 @@ a = Analysis(['mainApp.py'],
              win_private_assemblies=False,
              cipher=block_cipher,
              noarchive=False)
+
 pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
 exe = EXE(pyz,
@@ -31,4 +32,4 @@ exe = EXE(pyz,
           upx_exclude=[],
           runtime_tmpdir=None,
 		  console=False, 
-		  icon='valve.ico')
+		  icon='Valve_Status.ico')

@@ -26,13 +26,15 @@ class view(QMainWindow, Ui_view ):
         QWidget.__init__(self)
         self.my_name = 'view'
         self.setupUi(self)
-        #self.setWindowIcon(QIcon('resources\\Valve_Status\\valve.ico'))
-        self.setWindowIcon(QIcon('valve.ico'))
+
+        self.setWindowIcon(QIcon('Valve_Status.ico'))
 
         self.red = "#ff5733"
         self.green = "#75ff33"
 
-
+        import ctypes
+        myappid = 'mycompany.myproduct.subproduct.version'  # arbitrary string
+        ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
 
         #print(self.my_name + ', class initiliazed')
 
