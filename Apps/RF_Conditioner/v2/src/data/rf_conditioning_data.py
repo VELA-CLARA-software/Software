@@ -508,6 +508,25 @@ class rf_conditioning_data(object):
 
         #TODO AJG: need to create list from logs, then append any new BD's pulse count to list
 
+        breakdown_rate_aim = int(self.config_data[config.BREAKDOWN_RATE_AIM])  # 10
+        number_pulses_in_bd_history = float(self.config_data[config.NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY]) # 100000
+        repetition_rate = float(self.config_data[config.RF_REPETITION_RATE])  # rep rate for LRRG = 10 Hz
+        # LINE BELOW: The pulse count address of the 10th latest BD that has to drop off the back of the list so BDR is low and we can ramp.
+        breakdown_rate_boundary = self.values[rcd.breakdown_pulse_count][-breakdown_rate_aim]
+
+        current_pulse_count = float(rcd.values[rcd.pulse_count])  # Current pulse count
+
+        # LINE BELOW: Formula that returns the number of pulses until we have 9 BDs in the last 100000 pulses.
+        breakdown_rate_able_to_ramp_countdown_pulses = breakdown_rate_boundary + number_pulses_in_bd_history - current_pulse_count
+        
+        breakdown_rate_able_to_ramp_countdown_seconds = float(breakdown_rate_able_to_ramp_countdown_pulses) / float(repetition_rate)
+        breakdown_rate_able_to_ramp_countdown_HrMinSec = str(timedelta(seconds=breakdown_rate_able_to_ramp_countdown_seconds))
+
+        rcd.values[rcd.breakdown_rate_able_to_ramp_countdown_pulses] = breakdown_rate_able_to_ramp_countdown_pulses
+        rcd.values[rcd.breakdown_rate_able_to_ramp_countdown_HrMinSec] = breakdown_rate_able_to_ramp_countdown_HrMinSec
+
+        '''
+        
         breakdown_rate_aim = int(self.config_data[config.BREAKDOWN_RATE_AIM])
         number_pulses_in_bd_history = float(self.config_data[config.NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY])
         repetition_rate = float(self.config_data[config.RF_REPETITION_RATE])
@@ -523,7 +542,7 @@ class rf_conditioning_data(object):
         rcd.values[rcd.breakdown_rate_able_to_ramp_countdown_pulses] = breakdown_rate_able_to_ramp_countdown_pulses
         rcd.values[rcd.breakdown_rate_able_to_ramp_countdown_HrMinSec] = breakdown_rate_able_to_ramp_countdown_HrMinSec
 
-        '''
+        
         
 
         breakdown_pulse_count_list = rcd.values[rcd.breakdown_pulse_count]
@@ -621,7 +640,7 @@ class rf_conditioning_data(object):
         plt.ylabel('Power (W)')
         plt.legend()
         plt.grid(True)
-        plt.savefig(bin_plots_path + r'\Binning_Plot.png')
+        #plt.savefig(bin_plots_path + r'\Binning_Plot.png')
         plt.close('all')
 
         plt.scatter(AMP_preBin, POW_preBin_MW, c='k', s=1.0, marker='.', label='Data', zorder=1)
@@ -633,7 +652,7 @@ class rf_conditioning_data(object):
         plt.ylabel('Power (W)')
         plt.legend()
         plt.grid(True)
-        plt.savefig(bin_plots_path + r'\Binning_Plot_zoom.png')
+        #plt.savefig(bin_plots_path + r'\Binning_Plot_zoom.png')
         plt.close('all')
 
     # TODO AJG: Define a function that reduces the raw data from amp_power_log.txt to only include values within a specified range either side of a

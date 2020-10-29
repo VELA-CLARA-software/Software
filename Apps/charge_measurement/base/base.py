@@ -5,7 +5,7 @@ from data.charge_measurement_data import charge_measurement_data
 import sys, os
 sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\stage\\Python3_x64')
 #import VELA_CLARA_enums
-import CATAP
+import CATAP.HardwareFactory
 import VELA_CLARA_Camera_Control
 import VELA_CLARA_LLRF_Control
 
@@ -23,7 +23,7 @@ class base(object):
     config.logger = logger
     # init LLRF Hardware Controllers
 
-    hardware_factory = CATAP.HardwareFactory(CATAP.STATE.PHYSICAL)
+    hardware_factory = CATAP.HardwareFactory.HardwareFactory(CATAP.HardwareFactory.STATE.PHYSICAL)
 
     pil_cont = 1  # VELA_CLARA_PILaser_Control
     pil_init = 1  # VELA_CLARA_PILaser_Control.init()
@@ -36,14 +36,33 @@ class base(object):
     _pil_factory = None
     _pilFactoryObj = None
 
+    _pil_control = None
+    _pilObj = None
+    _pil_handler = None
+
+    _las_hwp_factory = None
+    _lasHWPFactoryObj = None
+
+    _las_em_factory = None
+    _lasEMFactoryObj = None
+
     _hwp_control = None
     _hwpObj = None
     _las_em_control = None
     _lasEMObj = None
 
-    _pil_control = None
-    _pilObj = None
-    _pil_handler = None
+    _las_hwp_control = None
+    _lasHWPObj = None
+    _las_hwp_handler = None
+
+    _las_em_control = None
+    _lasEMObj = None
+    _las_em_handler = None
+
+    _hwp_control = None
+    _hwpObj = None
+    _las_em_control = None
+    _lasEMObj = None
 
     _cam_control = None
     _camObj = None
@@ -56,6 +75,11 @@ class base(object):
     _llrf_control = None
     _llrfObj = None
     _llrf_handler = None
+
+    _shutter_control_1 = None
+    _shutter_control_2 = None
+    _shutterObj = None
+    _shutter_handler = None
 
     mag_cont = 1#VELA_CLARA_Magnet_Control
     mag_init = 1#VELA_CLARA_Magnet_Control.init()
@@ -79,6 +103,30 @@ class base(object):
     @property
     def pilFactoryObj(self):
         return base._pilFactoryObj
+
+    @property
+    def las_em_factory(self):
+        return base._las_em_factory
+
+    @las_em_factory.setter
+    def las_em_factory(self, value):
+        base._las_em_factory = value
+
+    @property
+    def lasEMFactoryObj(self):
+        return base._lasEMFactoryObj
+
+    @property
+    def las_hwp_factory(self):
+        return base._las_hwp_factory
+
+    @las_hwp_factory.setter
+    def las_hwp_factory(self, value):
+        base._las_hwp_factory = value
+
+    @property
+    def lasHWPFactoryObj(self):
+        return base._lasHWPFactoryObj
 
     @property
     def hwp_control(self):
@@ -177,6 +225,38 @@ class base(object):
         base._llrf_handler = value
 
     @property
+    def shutter_control_1(self):
+        return base._shutter_control_1
+
+    @shutter_control_1.setter
+    def shutter_control_1(self, value):
+        base._shutter_control_1 = value
+
+    @property
+    def shutter_control_2(self):
+        return base._shutter_control_2
+
+    @shutter_control_2.setter
+    def shutter_control_2(self, value):
+        base._shutter_control_2 = value
+
+    @property
+    def shutterObj(self):
+        return base._shutterObj
+
+    @shutterObj.setter
+    def shutterObj(self, value):
+        base._shutterObj = value
+
+    @property
+    def shutter_handler(self):
+        return base._shutter_handler
+
+    @shutter_handler.setter
+    def shutter_handler(self, value):
+        base._shutter_handler = value
+
+    @property
     def mag_control(self):
         return base._mag_control
 
@@ -201,7 +281,8 @@ class base(object):
         base._mag_handler = value
 
     def set_config(self):
-        base.data.pil_config = base.config.pil_config
+        base.data.las_hwp_config = base.config.las_hwp_config
+        base.data.las_em_config = base.config.las_em_config
         base.logger.log_config = base.config.log_config
         base.data.llrf_config = base.config.llrf_config
         base.data.mag_config = base.config.mag_config

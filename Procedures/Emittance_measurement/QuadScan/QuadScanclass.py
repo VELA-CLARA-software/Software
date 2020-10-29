@@ -629,24 +629,13 @@ class GeneralQuadScan(object):
         """
 
         d_matrix = np.zeros_like(self.d_matrix)
-
-        # for n_step, q_str in zip(np.arange(self.nsteps), np.arange(len(self.qstrengths))):
         for n_step in np.arange(self.nsteps):
-            # quad_strengths = deepcopy(self.qstrengths[q_str, :])
-            # transfer_matrix = self.transfer_matrix_quad_scan(quad_strengths)
             transfer_matrix = self.transfer_matrix_from_simframe(os.path.abspath(os.path.join(os.getcwd(),
                                                                                               'quad_scan_setup_' +
                                                                                               str(n_step))))
             np.savetxt(os.path.abspath(os.path.join(os.getcwd(), 'quad_scan_setup_' + str(n_step),
                                                     "transfer_matrix_rec_obs_VM.txt")), transfer_matrix)
             self.calculation_d_matrix_step(transfer_matrix)
-            # cov_matrix_rec_point=self.cov_matrix_from_simframe('CLA-S02-DIA-SCR-02',
-            #    os.path.join('C:\\','Users','qfi29231','Documents','spawn_emittances', 'Emittance_GUI','quad_scan_setup_'+str(n_step)))
-            # cov_matrix_obs_point = self.cov_matrix_from_simframe('CLA-S02-DIA-SCR-03',
-            #                                                     os.path.join('C:\\', 'Users', 'qfi29231', 'Documents',
-            #                                                                  'spawn_emittances', 'Emittance_GUI',
-            #                                                                  'quad_scan_setup_' + str(n_step)))
-
             for k in np.arange(self.d_matrix_step.shape[1]):
                 d_matrix[(3 * n_step), k] = deepcopy(self.d_matrix_step[0, k])
                 d_matrix[(3 * n_step) + 1, k] = deepcopy(self.d_matrix_step[1, k])
@@ -665,8 +654,7 @@ class GeneralQuadScan(object):
         self.reconstruction_d_matrix()
         np.savetxt(os.path.join(os.getcwd(), 'd_matrix_test.dat'), self.d_matrix)
         np.savetxt(os.path.join(os.getcwd(), 'sigma_1_test.dat'), self.screen_data)
-        # dxinv = np.linalg.pinv(self.d_matrix, rcond=1e-5, hermitian=False)
-        dxinv = linalg.pinv2(self.d_matrix, rcond=1.e-8)
+        dxinv = linalg.pinv(self.d_matrix, cond=1e-6, rcond=1.e-6)
         np.savetxt(os.path.join(os.getcwd(), 'd_matrix_inv_test.dat'), dxinv)
         matrix_repr = np.dot(dxinv, self.screen_data)
         for ix in np.arange(self.cov_matrix.shape[0]):
@@ -702,6 +690,7 @@ class GeneralQuadScan(object):
                         value = deepcopy(matrix_repr[9])
                 matrix_cov[ix, iy] = deepcopy(value)
         setattr(self, 'cov_matrix', matrix_cov)
+
         directory = os.path.join('C:\\', 'Users', 'qfi29231', 'Documents', 'spawn_emittances', 'Emittance_GUI',
                                  'quad_scan_setup_0')
         np.savetxt(os.path.join(os.getcwd(), 'cov_matrix_test.dat'), self.cov_matrix)

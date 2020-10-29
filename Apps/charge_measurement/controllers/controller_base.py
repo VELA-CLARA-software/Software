@@ -4,6 +4,7 @@ from data.config_reader import config_reader
 from data.data_logger import data_logger
 from VELA_CLARA_LLRF_Control import MACHINE_MODE,MACHINE_AREA,LLRF_TYPE
 from controllers.pil_handler import pil_handler
+from controllers.shutter_handler import shutter_handler
 from controllers.llrf_handler import llrf_handler
 from controllers.mag_handler import mag_handler
 import datetime
@@ -20,6 +21,7 @@ class controller_base(base):
 	data_monitor = data_monitoring()
 
 	pil_handler = None
+	shutter_handler = None
 	llrf_handler = None
 	mag_handler = None
 
@@ -47,8 +49,10 @@ class controller_base(base):
 
 			base.logger.header(self.my_name + ' creating HWC ', True)
 
-			if bool(base.config.pil_config):
+			if bool(base.config.las_hwp_config):
 				self.start_pil_control()
+			if bool(base.config.shutter_config):
+				self.start_shutter_control()
 			if bool(base.config.llrf_config):
 				self.start_llrf_control()
 			if bool(base.config.mag_config):
@@ -71,15 +75,24 @@ class controller_base(base):
 		# if a is not MACHINE_AREA.UNKNOWN_AREA:
 		# base.pil_control = base.pil_init.getPILaserController(a)
 		# base.scope_control = base.scope_init.physical_VELA_INJ_Scope_Controller()
-		base.pil_factory = base.hardware_factory.getLaserFactory()
-		base.hwp_control = base.pil_factory.getLaser(base.config.pil_config['HWP_NAME'])
-		base.las_em_control = base.pil_factory.getLaser(base.config.pil_config['LAS_EM_NAME'])
+		base.las_hwp_factory = base.hardware_factory.getLaserHWPFactory()
+		base.las_em_factory = base.hardware_factory.getLaserEnergyMeterFactory()
+		base.hwp_control = base.las_hwp_factory.getLaserHWP(base.config.las_hwp_config['LAS_HWP_NAME'])
+		base.las_em_control = base.las_em_factory.getLaserEnergyMeter(base.config.las_em_config['LAS_EM_NAME'])
 		base.logger.message('start_pil_control created PIL object', True)
 		base.logger.message('Monitoring PIL', True)
 		# base.config.charge_config['CHARGE_NAME'] = self.get_charge_names()
 		base.cam_control = base.cam_init.physical_CLARA_VC_Camera_Controller()
 		base.logger.message('start_cam_control created VC object', True)
 		controller_base.pil_handler = pil_handler()
+
+	def start_shutter_control(self):
+		base.shutter_factory = base.hardware_factory.getShutterFactory()
+		base.shutter_control_1 = base.shutter_factory.getShutter(base.config.shutter_config['SHUTTER_NAME_1'])
+		base.shutter_control_2 = base.shutter_factory.getShutter(base.config.shutter_config['SHUTTER_NAME_2'])
+		base.logger.message('start_shutter_control created SHUTTER object', True)
+		base.logger.message('Monitoring SHUTTER', True)
+		controller_base.shutter_handler = shutter_handler()
 
 	def start_llrf_control(self):
 		try:

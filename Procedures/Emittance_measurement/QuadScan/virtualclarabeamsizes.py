@@ -23,11 +23,9 @@ from QuadScanclass import GeneralQuadScan
 
 class BeamSizeDetermination(GeneralQuadScan):
     """
-
     Daughter class of py:class GeneralQuadScan containing all methods to
     calculate the quad strengths from experimental data and use the interface
     between CATAP and SimFrame to obtain the beam sizes.
-
     :ivar BeamMomentum: Beam Momentum: 29.5 MeV
     :ivar beam_sizes: Dictionary to save the beam sizes: OrderedDict()
     :ivar current_path: Path of Current file: []
@@ -39,8 +37,6 @@ class BeamSizeDetermination(GeneralQuadScan):
     :ivar lattice_start: Beginning of lattice (SimFrame run)
     :ivar lattice_end: End of lattice (Simframe run)
     :ivar screen: screen to look at: ''
-
-
     """
     m_e_MeV = scipy.constants.physical_constants['natural unit of energy in MeV'][0]
     q_e_c = scipy.constants.e / scipy.constants.c
@@ -52,9 +48,7 @@ class BeamSizeDetermination(GeneralQuadScan):
 
     def _init__(self):
         """
-
         Initialisation of the object
-
         """
         super(BeamSizeDetermination, self).__init__()
         self.current_path = ''  #: Path of the file with the experimental currents
@@ -74,13 +68,9 @@ class BeamSizeDetermination(GeneralQuadScan):
     def lattice_start(self):
         """
             The unique name of the lattice_start property.
-
             :getter: Returns lattice_start's name
-
             :setter: Sets lattice_start's name
-
             :type: string
-
             """
         return self.__lattice_start
 
@@ -92,13 +82,9 @@ class BeamSizeDetermination(GeneralQuadScan):
     def lattice_end(self):
         """
             The unique name of the lattice_end property.
-
             :getter: Returns lattice_end's name:
-
             :setter: Sets lattice_end's name:
-
             :type: string
-
         """
         return self.__lattice_end
 
@@ -109,13 +95,9 @@ class BeamSizeDetermination(GeneralQuadScan):
     @staticmethod
     def extract_beamsize_dict_one_quad(camera_dictionary):
         """
-
             Method to fill in the beam size dictionary for a set of optimised quads
-
             :param camera_dictionary: Dictionary with all the information from the Observation point camera:
-
             :return beam_size: Dictionary with beam sizes and coupling terms:
-
         """
 
         # Update dictionary of beam size
@@ -126,11 +108,8 @@ class BeamSizeDetermination(GeneralQuadScan):
     def calculation_cov_matrix(self):
         """
             Calculation of the covariance matrix at any point for any distribution
-
             :param distribution: Distribution obtained at a particular point:
-
             :return: matrix: Covariance matrix at the point of analysis:
-
         """
         gamma = self.BeamMomentum / self.m_e_MeV
         factor = scipy.constants.e / (self.q_e_c * gamma * scipy.constants.m_e * np.square(self.speed_of_light))
@@ -158,11 +137,8 @@ class BeamSizeDetermination(GeneralQuadScan):
 
     def fill_in_currents_from_file(self):
         """
-
             Fill in the currents array (self.currents_optimised) by reading the Current file
-
             :return self.currents_optimised: array of optimised currents for sets of quads:
-
         """
         self.currents_optimised = np.loadtxt(self.current_path, delimiter=',')
         self.nsteps = self.currents_optimised.shape[0]
@@ -170,11 +146,8 @@ class BeamSizeDetermination(GeneralQuadScan):
 
     def currents_to_quad_strengths(self):
         """
-
             Calculate the quad strengths from array of currents
-
             :return self.quad_strengths: array of optimised quad strengths:
-
         """
         quad_settings = np.zeros_like(self.quad_settings)
         for i_c, currents in enumerate(self.currents_optimised):
@@ -188,16 +161,13 @@ class BeamSizeDetermination(GeneralQuadScan):
 
     def setting_up_simframe(self):
         """
-
             Method to set up the simframe object (machine state)
-
             :param catapdict: CATAP dictionary:
-
             :return simframedata: SimFrame dict:
-
         """
         # Set up Simframe
-        self.machinestate.getMachineStateFromSimFrame('test', self.lattice)
+        self.machinestate.getMachineStateFromSimFrame('test', self.lattice_injector)
+        time.sleep(1)
         self.machinestate.initialiseSimFrameData()
         setattr(self, 'simframedata', self.machinestate.getSimFrameDataDict())
         setattr(self, 'framework', self.machinestate.getFramework())
@@ -210,11 +180,17 @@ class BeamSizeDetermination(GeneralQuadScan):
         # We have to fudge this for now as the conversion between current and solenoid strength doesn't work
         get_data_from_catap = self.machinestate.getDataFromCATAP
         catapdata['generator']['charge'].update({'value': self.charge})
-        catapdata['generator']['number_of_particles']['value'] = np.power(2, 9)
-        catapdata['INJ']['CLA-LRG1-MAG-SOL-01'].update({'field_amplitude': 0.255})
-        catapdata['INJ']['CLA-LRG1-MAG-BSOL-01'].update({'field_amplitude': 0.0})
+        catapdata['generator']['number_of_particles']['value'] = np.power(2, 14)
+        catapdata['L01']['CLA-L01-MAG-SOL-01'].update({'field_amplitude': 0.0})
+        catapdata['L01']['CLA-L01-MAG-SOL-02'].update({'field_amplitude': 0.0})
+        catapdata['INJ']['CLA-LRG1-MAG-SOL-01'].update({'field_amplitude': 0.216})
+        catapdata['INJ']['CLA-LRG1-MAG-BSOL-01'].update({'field_amplitude': -0.06730128})
+        print(catapdata.keys())
+        time.sleep(40)
         energy_beam = self.machinestate.getEnergyGainFromCATAP()
         setattr(self, 'BeamMomentum', float(energy_beam[0.17] + energy_beam[3.2269]))
+        print(self.BeamMomentum)
+        time.sleep(40)
         # Write machine state dictionary to simframe and runs simulation
         simframefileupdate = self.machinestate.writeMachineStateToSimFrame('injector',
                                                                            framework=self.framework,
@@ -222,18 +198,24 @@ class BeamSizeDetermination(GeneralQuadScan):
                                                                            datadict=catapdata,
                                                                            run=True, type='CATAP',
                                                                            sections=['INJ', 'CLA-S01', 'L01'])
+        ######################## Chromaticity: Setting the beam energy to be the same for all particles #############
         self.beam.read_HDF5_beam_file(os.path.join('injector', 'CLA-S02-APER-01.hdf5'))
-        # dictionary_aperture = self.read_hdf5_file('injector')
+        a_p_sq = np.square(np.multiply(1.e-6 / self.q_e_c, getattr(self.beam, 'px'))) + np.square(
+            np.multiply(1.e-6 / self.q_e_c, getattr(self.beam, 'py')))
+        a_pz = np.sqrt(np.multiply(np.square(1. / self.speed_of_light),
+                                   np.array(
+                                       [np.square(self.BeamMomentum) - t - np.square(self.m_e_MeV) for t in a_p_sq])))
+        self.beam.beam.update({'code': 'ASTRA'})
+        self.beam.beam.update({'pz': np.multiply(1.e6 * scipy.constants.e, a_pz)})
+        self.beam.write_HDF5_beam_file(os.path.join('injector', 'CLA-S02-APER-01.hdf5'))
+        ############################################################################
         matrix = self.calculation_cov_matrix()
         file_path = os.path.join(os.getcwd(), 'test')
 
     def preparing_catap_data_and_simframe(self):
         """
-
             Method with the sequence for getting the CATAP Dictionary and interact with SimFrame
-
             :return  catapdict: Dictionary with all the PVs:
-
         """
         setattr(self, 'machinestate', machine_state.MachineState())
         setattr(self, 'mode', CATAP.HardwareFactory.STATE.VIRTUAL)
@@ -244,62 +226,29 @@ class BeamSizeDetermination(GeneralQuadScan):
         # Switch on magnets in VM
         for name in catapdict['Magnet'].keys():
             catapdict['Magnet'][name].switchOn()
-            # if name == 'CLA-LRG1-MAG-BSOL-01':
-            #    catapdict['Magnet'][name].SETI(-2.20)
-            # elif name == 'CLA-LRG1-MAG-SOL-01':
-            #    catapdict['Magnet'][name].SETI(-150.0)
-            time.sleep(1)
 
-        # catapdict['L01'].setAmpMW(self.unitconversion.getPowerFromFieldAmplitude('L01', 64.5, 0, 2.5, 2.03333))
-        # catapdict['L01'].setPhiDEG(0.0)
-
-        # catapdict['LRRG_GUN'].setAmpMW(self.unitconversion.getPowerFromFieldAmplitude('LRRG_GUN', 24.5, 0, 0.75, 0.17))
-        # catapdict['LRRG_GUN'].setPhiDEG(0.0)
-        # catapdict['L01'].setAmpMW(10.0e6)
-        # catapdict['LRRG_GUN'].setAmpMW(8.630e6)
-        catapdict['L01'].setAmpMW(20.0e6)
-        catapdict['LRRG_GUN'].setAmpMW(10.0e6)
+        catapdict['L01'].setAmpMW(21.2*10**6)
+        catapdict['LRRG_GUN'].setAmpMW(58.8*10**6)
         catapdict['L01'].setPhiDEG(0)
         catapdict['LRRG_GUN'].setPhiDEG(0)
         catapdict['Charge']['CLA-S01-DIA-WCM-01'].q = self.charge
 
-        # print('LLRG Energy ',
-        #      self.unitconversion.getEnergyFromRF(catapdict['LRRG_GUN'].getAmpMW(), catapdict['LRRG_GUN'].getPhiDEG(),
-        #                                          2.5,
-        #                                          "LRRG_GUN"), ' MeV',
-        #      ' Linac Energy ',
-        #      self.unitconversion.getEnergyFromRF(catapdict['L01'].getAmpMW(), catapdict['L01'].getPhiDEG(), 0.7,
-        #                                          "L01"),
-        #      ' MeV',
-        #      ' Total Energy = ',
-        #     self.unitconversion.getEnergyFromRF(catapdict['LRRG_GUN'].getAmpMW(), catapdict['LRRG_GUN'].getPhiDEG(),
-        #                                         2.5,
-        #                                         "LRRG_GUN") + self.unitconversion.getEnergyFromRF(
-        #         catapdict['L01'].getAmpMW(),
-        #         catapdict['L01'].getPhiDEG(), 0.75,
-        #         "L01"), ' MeV')
         if not os.path.isdir(os.path.abspath(os.path.join(os.getcwd(), "test"))):
             os.makedirs(os.path.abspath(os.path.join(os.getcwd(), "test")))
 
+        catapdata=self.machinestate.getMachineStateFromCATAP(self.mode)
         self.machinestate.exportParameterValuesToYAMLFile(
-            os.path.abspath(os.path.join(os.getcwd(), "test", "catap-test.yaml")),
-            self.machinestate.getMachineStateFromCATAP(self.mode))
+            os.path.abspath(os.path.join(os.getcwd(), "test", "catap-test.yaml")),catapdata)
         self.setting_up_simframe()
         return catapdict
 
     def quad_set_sequence(self, rows, currents_optimised, catapdict):
         """
-
                 Method to extract the camera info from each set of quad sequence
-
                 :param rows: Number of quad scan (from 1 up to the number of scans: int(self.nsteps):
-
                 :param catapdict: CATAP dictionary  with all the PVs obtained from CATAP:
-
                 :param self.currents_optimised: Set of currents for the optimised quad strengths:
-
                 :return self.beam_sizes: beam sizes array obtained from quad scans:
-
                 """
         cam_data = OrderedDict()
         self.framework.set_lattice_prefix('CLA-S02', os.path.join('..', 'injector/'))
@@ -313,7 +262,6 @@ class BeamSizeDetermination(GeneralQuadScan):
             if catapdict['Magnet']['CLA-S02-MAG-QUAD-0' + str(i_currents + 1)].psu_state == 'OFF':
                 catapdict['Magnet']['CLA-S02-MAG-QUAD-0' + str(i_currents + 1)].SetPSUState('ON')
                 catapdict['Magnet']['CLA-S02-MAG-QUAD-0' + str(i_currents + 1)].SETI(0)
-            # catapdict['Magnet']['CLA-S02-MAG-QUAD-0' + str(i_currents + 1)].SETI(currents)
         catapdict['Magnet']['CLA-S02-MAG-QUAD-01'].SETI(currents_optimised[rows, 0])
         time.sleep(0.25)
         catapdict['Magnet']['CLA-S02-MAG-QUAD-02'].SETI(currents_optimised[rows, 1])
@@ -324,9 +272,6 @@ class BeamSizeDetermination(GeneralQuadScan):
         time.sleep(0.25)
         catapdict['Magnet']['CLA-S02-MAG-QUAD-05'].SETI(currents_optimised[rows, 4])
         time.sleep(0.25)
-        # ri_tol = catapdict['Magnet']['CLA-S02-MAG-QUAD-03'].getREADITolerance()
-        # while (currents - ri_tol) < catapdict['Magnet']['CLA-S02-MAG-QUAD-0' + str(i_currents + 1)].getREADI() < (currents + ri_tol):
-        #    time.sleep(1.55)
         print('+++++++++++++++++++++++ After ', catapdict['Magnet']['CLA-S02-MAG-QUAD-01'].READI,
               catapdict['Magnet']['CLA-S02-MAG-QUAD-02'].READI,
               catapdict['Magnet']['CLA-S02-MAG-QUAD-03'].READI,
@@ -335,12 +280,6 @@ class BeamSizeDetermination(GeneralQuadScan):
         #  Get updated machine state from CATAP
         catapdata = self.machinestate.getMachineStateFromCATAP(self.mode, start_lattice=self.lattice_start,
                                                                final_lattice=self.lattice_end)
-        # Write machine state dictionary to simframe and runs simulation
-        # catapdata['generator']['charge'].update({'value': self.charge})
-        catapdata['generator']['number_of_particles']['value'] = np.power(2, 13)
-        # catapdata['simulation'].update({'starting_lattice': self.lattice_start})
-        # catapdata['simulation'].update({'final_lattice': self.lattice_end})
-
         simframe_file_update = self.machinestate.writeMachineStateToSimFrame(
             directory='quad_scan_setup_' + str(rows),
             framework=self.framework, lattice=self.lattice,
@@ -358,17 +297,11 @@ class BeamSizeDetermination(GeneralQuadScan):
 
     def fill_in_beam_size_dictionary(self, x_sig, y_sig, x_y_sig):
         """
-
              Fill in the beam size dictionary
-
             :param x_sig: Array with x rms from the camera:
-
             :param y_sig: Array with y rms from the camera:
-
             :param x_y_sig: Array with x-y coupling terms from the camera:
-
             :return self.beam_sizes: Dictionary with info from the camera:
-
         """
         setattr(self, 'beam_sizes', OrderedDict())
         screen_data = np.zeros(3 * self.nsteps)
@@ -396,7 +329,6 @@ class BeamSizeDetermination(GeneralQuadScan):
         y_sigma = []
         x_y_mean = []
         cam_data = OrderedDict()
-        path = os.path.join('C:\\', "Program Files", "EPICS Windows Tools", "caput.exe")
         self.framework.set_lattice_prefix('CLA-S02', os.path.join('..', 'injector/'))
         setattr(self, 'lattice_start', 'CLA-S02')
         setattr(self, 'lattice_end', getattr(self, 'lattice_start'))
@@ -423,11 +355,13 @@ class BeamSizeDetermination(GeneralQuadScan):
                     catapdict['Magnet']['CLA-S02-MAG-QUAD-0' + str(i_currents + 1)].SetPSUState('ON')
                     catapdict['Magnet']['CLA-S02-MAG-QUAD-0' + str(i_currents + 1)].SETI(0.0)
 
-                while catapdict['Magnet']['CLA-S02-MAG-QUAD-0' + str(i_currents + 1)].READI != float(currents_optimised[rows,i_currents]):
-                    catapdict['Magnet']['CLA-S02-MAG-QUAD-0' + str(i_currents + 1)].SETI(float(currents_optimised[rows,i_currents]))
+                while catapdict['Magnet']['CLA-S02-MAG-QUAD-0' + str(i_currents + 1)].READI != float(
+                        currents_optimised[rows, i_currents]):
+                    catapdict['Magnet']['CLA-S02-MAG-QUAD-0' + str(i_currents + 1)].SETI(
+                        float(currents_optimised[rows, i_currents]))
 
-            # ri_tol = catapdict['Magnet']['CLA-S02-MAG-QUAD-03'].getREADITolerance()
-            # while (currents - ri_tol) < catapdict['Magnet']['CLA-S02-MAG-QUAD-0' + str(i_currents + 1)].getREADI() < (currents + ri_tol):
+            # ri_tol = catapdict['Magnet']['CLA-S02-MAG-QUAD-03'].READITolerance()
+            # while (currents - ri_tol) < catapdict['Magnet']['CLA-S02-MAG-QUAD-0' + str(i_currents + 1)].READI() < (currents + ri_tol):
             #    time.sleep(1.55)
             print('+++++++++++++++++++++++ After ',
                   catapdict['Magnet']['CLA-S02-MAG-QUAD-01'].READI == currents_optimised[rows, 0],
@@ -435,9 +369,21 @@ class BeamSizeDetermination(GeneralQuadScan):
                   catapdict['Magnet']['CLA-S02-MAG-QUAD-03'].READI == currents_optimised[rows, 2],
                   catapdict['Magnet']['CLA-S02-MAG-QUAD-04'].READI == currents_optimised[rows, 3],
                   catapdict['Magnet']['CLA-S02-MAG-QUAD-05'].READI == currents_optimised[rows, 4])
+
+            # Exports machine state from simframe (hardware settings and simulated data @ screens / bpms)
+            self.machinestate.exportParameterValuesToYAMLFile(
+                os.path.abspath(os.path.join(os.getcwd(), "test", "simframe-test" + str(rows) + ".yaml")),
+                self.machinestate.getMachineStateFromCATAP(self.mode))
+
+            machinestatefile = self.machinestate.parseParameterInputFile(
+                os.path.join("test", "simframe-test" + str(rows) + ".yaml"))
+            self.machinestate.updateLatticeEnd(machinestatefile, 'CLA-S02')
             #  Get updated machine state from CATAP
             catapdata = self.machinestate.getMachineStateFromCATAP(self.mode, start_lattice=self.lattice_start,
                                                                    final_lattice=self.lattice_end)
+            for i_currents in np.arange(currents_optimised.shape[1]):
+                catapdata['CLA-S02']['CLA-S02-MAG-QUAD-0' + str(i_currents + 1)]['k1'] = self.qstrengths[
+                    rows, i_currents]
             # Write machine state dictionary to simframe and runs simulation
             # catapdata['generator']['charge'].update({'value': self.charge})
             # catapdata['generator']['number_of_particles']['value'] = np.power(2, 9)
@@ -448,10 +394,7 @@ class BeamSizeDetermination(GeneralQuadScan):
                 directory='quad_scan_setup_' + str(rows),
                 framework=self.framework, lattice=self.lattice,
                 datadict=catapdata, run=True, type='CATAP', sections=['CLA-S02'])
-            # Exports machine state from simframe (hardware settings and simulated data @ screens / bpms)
-            self.machinestate.exportParameterValuesToYAMLFile(
-                os.path.abspath(os.path.join(os.getcwd(), "test", "simframe-test" + str(rows) + ".yaml")),
-                simframe_file_update)
+
             [catapdict['Magnet']['CLA-S02-MAG-QUAD-0' + str(i_c)].switchOn() for i_c in np.arange(1, 6)]
             [catapdict['Magnet']['CLA-S02-MAG-QUAD-0' + str(i_c)].SETI(0.0) for i_c in np.arange(1, 6)]
             time.sleep(1)
@@ -466,11 +409,8 @@ class BeamSizeDetermination(GeneralQuadScan):
 
     def sequence_to_prepare_machine_state_and_simframe(self):
         """
-
             Sequence to set up the catap and simframe dictionaries
-
             :return self.beam_sizes: Set beam_sizes:
-
         """
         catapdict = self.preparing_catap_data_and_simframe()
         self.quad_scan(catapdict)

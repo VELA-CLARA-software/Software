@@ -20,8 +20,10 @@ class config_reader(object):
 
     all_config_data = None
 
-    pil_config = None
+    las_em_config = None
+    las_hwp_config = None
     llrf_config = None
+    shutter_config = None
     mag_config = None
     log_config = None
     machine_mode = None
@@ -64,14 +66,18 @@ class config_reader(object):
         #     config_reader.machine_mode = self.get_machine_mode(config_reader.config['MACHINE_MODE'])
         # except:
         #     return False
-        self.pil_parameter()
+        self.las_em_parameter()
+        self.las_hwp_parameter()
+        self.shutter_parameter()
         self.llrf_parameter()
         self.mag_parameter()
         self.log_param()
         self.gui_param()
         print(config_reader.my_name + ' read input from ' + str(config_reader.config_file))
 
-        config_reader.all_config_data = [config_reader.pil_config,
+        config_reader.all_config_data = [config_reader.las_em_config,
+                                         config_reader.las_hwp_config,
+                                         config_reader.shutter_config,
                                          config_reader.llrf_config,
                                          config_reader.mag_config,
                                          config_reader.log_config,
@@ -148,14 +154,32 @@ class config_reader(object):
         #     print k, v
         return r
 
-    def pil_parameter(self):
-        string_param = ['PIL_NAME','LAS_EM_NAME','HWP_NAME']
-        area_param = ['PIL_AREA']
-        mode_param = ['PIL_MODE']
-        int_param = ['PIL_CHECK_TIME']
-        config_reader.pil_config = self.get_param_dict(string_param=string_param, area_param=area_param,
+    def las_em_parameter(self):
+        string_param = ['LAS_EM_NAME']
+        area_param = ['LAS_EM_AREA']
+        mode_param = ['LAS_EM_MODE']
+        int_param = ['LAS_EM_CHECK_TIME']
+        config_reader.las_em_config = self.get_param_dict(string_param=string_param, area_param=area_param,
                                                        int_param=int_param,mode_param=mode_param)
-        return config_reader.pil_config
+        return config_reader.las_em_config
+
+    def las_hwp_parameter(self):
+        string_param = ['LAS_HWP_NAME']
+        area_param = ['LAS_HWP_AREA']
+        mode_param = ['LAS_HWP_MODE']
+        int_param = ['LAS_HWP_CHECK_TIME']
+        config_reader.las_hwp_config = self.get_param_dict(string_param=string_param, area_param=area_param,
+                                                           int_param=int_param, mode_param=mode_param)
+        return config_reader.las_hwp_config
+
+    def shutter_parameter(self):
+        string_param = ['SHUTTER_NAME_1', 'SHUTTER_NAME_2']
+        area_param = ['SHUTTER_AREA']
+        mode_param = ['SHUTTER_MODE']
+        int_param = ['SHUTTER_CHECK_TIME']
+        config_reader.shutter_config = self.get_param_dict(string_param=string_param, area_param=area_param,
+                                                       int_param=int_param,mode_param=mode_param)
+        return config_reader.shutter_config
 
     def llrf_parameter(self):
         string_param = ['LLRF_NAME']

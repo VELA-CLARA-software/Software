@@ -50,6 +50,7 @@
 ## CFPOW => "CAVITY_FORWARD_POWER"
 ## CFPHA => "CAVITY_FORWARD_PHASE"
 ## 
+## C:\Users\dlerlp\Documents\GitHub\Software\Apps\RF_Conditioner\v2\CLARA_LRRG.yml 0
 
 # MODE - DEBUG or OPERATIONAL
 # DEBUG mode can be used in the future to but currently is not well implemented
@@ -363,7 +364,7 @@ TEXT_LOG_FILENAME:  log.txt # general messages
 #LOG_DIRECTORY:  D:  \VELA\GIT Projects\Software\Apps\RF_Conditioner\logs_l01_test\
 ##LOG_DIRECTORY:   "C:  \Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\"; breakdown data
 ##LOG_DIRECTORY:   "D:  \VELA\GIT Projects\Software\Apps\RF_Conditioner\logs_clara_lrrg\"
-#LOG_DIRECTORY: C:\Users\dlerlp\Documents\GitHub\Software\Apps\RF_Conditioner\v2\logs\
+#LOG_DIRECTORY: C:\Users\dlerlp\Documents\GiBinning_Plot.pngtHub\Software\Apps\RF_Conditioner\v2\logs\
 #LOG_DIRECTORY: C:\Users\djs56\GitHub\Software\Apps\RF_Conditioner\v2\logs\
 LOG_DIRECTORY: C:\Users\dlerlp\Documents\GitHub\Software\Apps\RF_Conditioner\v2\logs\
 OUTSIDE_MASK_FORWARD_FILENAME:  outside_forward_log

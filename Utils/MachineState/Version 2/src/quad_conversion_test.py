@@ -31,7 +31,7 @@ for i in range(1,4):
     mag_names.append(mag_name)
     catapdict['Magnet'][mag_name].switchOn()
     time.sleep(1)
-    catapdict['Magnet'][mag_name].SETI(-i)
+    catapdict['Magnet'][mag_name].SETI(i * 10)
 
 # Returns the machine state dictionary from CATAP
 catapdata = machinestate.getMachineStateFromCATAP(mode)

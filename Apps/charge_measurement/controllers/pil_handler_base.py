@@ -1,4 +1,3 @@
-# import data.bpm_attenuation_calibration_data_base as dat
 from base.base import base
 
 class pil_handler_base(base):
@@ -13,5 +12,7 @@ class pil_handler_base(base):
 
 		# self.timevector = base.bpmObj[0].time_vector.value
 		base.config.pil_config = base.config.pil_config
+		base.config.las_em_config = base.config.las_em_config
+		base.config.las_hwp_config = base.config.las_hwp_config
 		# self.start_trace_monitoring( base.config.bpm_config['TRACES_TO_SAVE'])#MAGIC_STRING
 		self.pil_data_values_dict = {}
