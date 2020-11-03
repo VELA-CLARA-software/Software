@@ -645,7 +645,7 @@
           </property>
           <layout class="QGridLayout" name="gridLayout_3">
            <item row="1" column="5">
-            <widget class="QLabel" name="int_sd_per">
+            <widget class="QLabel" name="las_int_sd_per">
              <property name="minimumSize">
               <size>
                <width>40</width>
@@ -870,7 +870,7 @@
             </widget>
            </item>
            <item row="3" column="3">
-            <widget class="QLabel" name="avg_pix_mean">
+            <widget class="QLabel" name="img_avg_mean">
              <property name="minimumSize">
               <size>
                <width>40</width>
@@ -966,7 +966,7 @@
             </widget>
            </item>
            <item row="3" column="2">
-            <widget class="QLabel" name="avg_pix_val">
+            <widget class="QLabel" name="img_avg">
              <property name="minimumSize">
               <size>
                <width>40</width>
@@ -1030,7 +1030,7 @@
             </widget>
            </item>
            <item row="3" column="4">
-            <widget class="QLabel" name="avg_pix_sd">
+            <widget class="QLabel" name="img_avg_sd">
              <property name="minimumSize">
               <size>
                <width>40</width>
@@ -1062,7 +1062,7 @@
             </widget>
            </item>
            <item row="3" column="5">
-            <widget class="QLabel" name="avg_pix_sd_per">
+            <widget class="QLabel" name="img_avg_sd_per">
              <property name="minimumSize">
               <size>
                <width>40</width>
@@ -1094,7 +1094,7 @@
             </widget>
            </item>
            <item row="4" column="2">
-            <widget class="QLabel" name="x_val_mm">
+            <widget class="QLabel" name="x_mm">
              <property name="minimumSize">
               <size>
                <width>40</width>
@@ -1318,7 +1318,7 @@
             </widget>
            </item>
            <item row="5" column="2">
-            <widget class="QLabel" name="y_val_mm">
+            <widget class="QLabel" name="y_mm">
              <property name="minimumSize">
               <size>
                <width>40</width>
@@ -1446,7 +1446,7 @@
             </widget>
            </item>
            <item row="6" column="2">
-            <widget class="QLabel" name="sx_val_mm">
+            <widget class="QLabel" name="sx_mm">
              <property name="minimumSize">
               <size>
                <width>40</width>
@@ -1702,7 +1702,7 @@
             </widget>
            </item>
            <item row="7" column="2">
-            <widget class="QLabel" name="sy_val_mm">
+            <widget class="QLabel" name="sy_mm">
              <property name="minimumSize">
               <size>
                <width>40</width>
@@ -1958,7 +1958,7 @@
             </widget>
            </item>
            <item row="8" column="2">
-            <widget class="QLabel" name="cov_val_mm">
+            <widget class="QLabel" name="cov_mm">
              <property name="minimumSize">
               <size>
                <width>40</width>
@@ -2054,7 +2054,7 @@
             </widget>
            </item>
            <item row="9" column="2">
-            <widget class="QLabel" name="x_val">
+            <widget class="QLabel" name="x_pix">
              <property name="minimumSize">
               <size>
                <width>40</width>
@@ -2150,7 +2150,7 @@
             </widget>
            </item>
            <item row="9" column="5">
-            <widget class="QLabel" name="x_sd_per">
+            <widget class="QLabel" name="x_sd_pix_per">
              <property name="minimumSize">
               <size>
                <width>40</width>
@@ -2182,7 +2182,7 @@
             </widget>
            </item>
            <item row="9" column="3">
-            <widget class="QLabel" name="x_mean">
+            <widget class="QLabel" name="x_mean_pix">
              <property name="minimumSize">
               <size>
                <width>40</width>
@@ -2214,7 +2214,7 @@
             </widget>
            </item>
            <item row="9" column="4">
-            <widget class="QLabel" name="x_sd">
+            <widget class="QLabel" name="x_sd_pix">
              <property name="minimumSize">
               <size>
                <width>40</width>
@@ -2246,7 +2246,7 @@
             </widget>
            </item>
            <item row="10" column="2">
-            <widget class="QLabel" name="y_val">
+            <widget class="QLabel" name="y_pix">
              <property name="minimumSize">
               <size>
                <width>40</width>
@@ -2278,7 +2278,7 @@
             </widget>
            </item>
            <item row="10" column="3">
-            <widget class="QLabel" name="y_mean">
+            <widget class="QLabel" name="y_mean_pix">
              <property name="minimumSize">
               <size>
                <width>40</width>
@@ -2342,7 +2342,7 @@
             </widget>
            </item>
            <item row="10" column="4">
-            <widget class="QLabel" name="y_sd">
+            <widget class="QLabel" name="y_sd_pix">
              <property name="minimumSize">
               <size>
                <width>40</width>
@@ -2406,7 +2406,7 @@
             </widget>
            </item>
            <item row="10" column="5">
-            <widget class="QLabel" name="y_sd_per">
+            <widget class="QLabel" name="y_sd_pix_per">
              <property name="minimumSize">
               <size>
                <width>40</width>
@@ -2470,7 +2470,7 @@
             </widget>
            </item>
            <item row="11" column="3">
-            <widget class="QLabel" name="sx_mean">
+            <widget class="QLabel" name="sx_mean_pix">
              <property name="minimumSize">
               <size>
                <width>40</width>
@@ -2502,7 +2502,7 @@
             </widget>
            </item>
            <item row="11" column="2">
-            <widget class="QLabel" name="sx_val">
+            <widget class="QLabel" name="sx_pix">
              <property name="minimumSize">
               <size>
                <width>40</width>
@@ -2534,7 +2534,7 @@
             </widget>
            </item>
            <item row="11" column="4">
-            <widget class="QLabel" name="sx_sd">
+            <widget class="QLabel" name="sx_sd_pix">
              <property name="minimumSize">
               <size>
                <width>40</width>
@@ -2598,7 +2598,7 @@
             </widget>
            </item>
            <item row="11" column="5">
-            <widget class="QLabel" name="sx_sd_per">
+            <widget class="QLabel" name="sx_sd_pix_per">
              <property name="minimumSize">
               <size>
                <width>40</width>
@@ -2630,7 +2630,7 @@
             </widget>
            </item>
            <item row="12" column="2">
-            <widget class="QLabel" name="sy_val">
+            <widget class="QLabel" name="sy_pix">
              <property name="minimumSize">
               <size>
                <width>40</width>
@@ -2694,7 +2694,7 @@
             </widget>
            </item>
            <item row="12" column="4">
-            <widget class="QLabel" name="sy_sd">
+            <widget class="QLabel" name="sy_sd_pix">
              <property name="minimumSize">
               <size>
                <width>40</width>
@@ -2726,7 +2726,7 @@
             </widget>
            </item>
            <item row="12" column="5">
-            <widget class="QLabel" name="sy_sd_per">
+            <widget class="QLabel" name="sy_sd_pix_per">
              <property name="minimumSize">
               <size>
                <width>40</width>
@@ -2758,7 +2758,7 @@
             </widget>
            </item>
            <item row="12" column="3">
-            <widget class="QLabel" name="sy_mean">
+            <widget class="QLabel" name="sy_mean_pix">
              <property name="minimumSize">
               <size>
                <width>40</width>
@@ -2790,7 +2790,7 @@
             </widget>
            </item>
            <item row="13" column="3">
-            <widget class="QLabel" name="cov_mean">
+            <widget class="QLabel" name="cov_mean_pix">
              <property name="minimumSize">
               <size>
                <width>40</width>
@@ -2822,7 +2822,7 @@
             </widget>
            </item>
            <item row="13" column="2">
-            <widget class="QLabel" name="cov_val">
+            <widget class="QLabel" name="cov_pix">
              <property name="minimumSize">
               <size>
                <width>40</width>
@@ -2886,7 +2886,7 @@
             </widget>
            </item>
            <item row="13" column="5">
-            <widget class="QLabel" name="cov_sd_per">
+            <widget class="QLabel" name="cov_sd_pix_per">
              <property name="minimumSize">
               <size>
                <width>40</width>
@@ -2918,7 +2918,7 @@
             </widget>
            </item>
            <item row="13" column="4">
-            <widget class="QLabel" name="cov_sd">
+            <widget class="QLabel" name="cov_sd_pix">
              <property name="minimumSize">
               <size>
                <width>40</width>
@@ -3215,7 +3215,7 @@
             </widget>
            </item>
            <item row="1" column="2">
-            <widget class="QLabel" name="int_val">
+            <widget class="QLabel" name="las_int">
              <property name="minimumSize">
               <size>
                <width>40</width>
@@ -3247,7 +3247,7 @@
             </widget>
            </item>
            <item row="1" column="4">
-            <widget class="QLabel" name="int_sd">
+            <widget class="QLabel" name="las_int_sd">
              <property name="minimumSize">
               <size>
                <width>40</width>
@@ -3279,7 +3279,7 @@
             </widget>
            </item>
            <item row="1" column="3">
-            <widget class="QLabel" name="int_mean">
+            <widget class="QLabel" name="las_int_mean">
              <property name="minimumSize">
               <size>
                <width>40</width>
