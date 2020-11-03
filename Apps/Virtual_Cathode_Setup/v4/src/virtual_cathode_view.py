@@ -481,9 +481,11 @@ class virtual_cathode_view(QtGui.QMainWindow, Ui_virtual_cathode_view):
         self.widget_to_dataname[self.last_directory] = self.model_data.last_save_dir
         self.widget_to_dataname[self.set_pos_pushButton] = self.model_data.is_setting_pos
 
-        self.widget_to_dataname[self.rs_buffer_size] = self.model_data.rs_buffer_size
-        self.widget_to_dataname[self.rs_buffer_count] = self.model_data.rs_buffer_count
-        self.widget_to_dataname[self.rs_buffer_full] = self.model_data.rs_buffer_full
+
+        # TODO do this
+        # self.widget_to_dataname[self.rs_buffer_size] = self.model_data.rs_buffer_size
+        # self.widget_to_dataname[self.rs_buffer_count] = self.model_data.rs_buffer_count
+        # self.widget_to_dataname[self.rs_buffer_full] = self.model_data.rs_buffer_full
 
 
 
@@ -610,10 +612,9 @@ class virtual_cathode_view(QtGui.QMainWindow, Ui_virtual_cathode_view):
         self.widget_updatefunc[self.set_pos_pushButton] = [self.update_set_pos_button]
 
         # TODO figure out how to do the buffer count / max count and go green / red when full
-        self.widget_updatefunc[self.rs_buffer_size] = [self.update_int]
-
-        self.widget_to_dataname[self.rs_buffer_count] = self.model_data.rs_buffer_count
-        self.widget_to_dataname[self.rs_buffer_full] = self.model_data.rs_buffer_full
+        # self.widget_updatefunc[self.rs_buffer_size] = [self.update_int]
+        # self.widget_to_dataname[self.rs_buffer_count] = self.model_data.rs_buffer_count
+        # self.widget_to_dataname[self.rs_buffer_full] = self.model_data.rs_buffer_full
 
 
     # the below don't exist yet
