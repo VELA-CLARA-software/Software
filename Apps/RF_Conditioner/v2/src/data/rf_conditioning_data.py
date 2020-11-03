@@ -405,7 +405,7 @@ class rf_conditioning_data(object):
         # TODO AJG: populate the active_pulse_breakdown_log in the data dictionary:
 
         self.values[rcd.breakdown_pulse_count] = [rcd.active_pulse_breakdown_log[i][0] for i in range(len(rcd.active_pulse_breakdown_log)-1) if
-                                                       rcd.active_pulse_breakdown_log[i][1] != rcd.active_pulse_breakdown_log[i+1][1] ]
+                                                       rcd.active_pulse_breakdown_log[i][1] != rcd.active_pulse_breakdown_log[i+1][1]]
 
         print('self.values[rcd.breakdown_pulse_count] = {}'.format(self.values[rcd.breakdown_pulse_count]))
 
@@ -516,7 +516,7 @@ class rf_conditioning_data(object):
         current_pulse_count = float(rcd.values[rcd.pulse_count])
 
         breakdown_history_pulse_count = current_pulse_count - number_pulses_in_bd_history
-        breakdown_rate_able_to_ramp_countdown_pulses = (breakdown_rate_boundary - breakdown_history_pulse_count)
+        breakdown_rate_able_to_ramp_countdown_pulses = breakdown_rate_boundary - breakdown_history_pulse_count
         breakdown_rate_able_to_ramp_countdown_seconds = breakdown_rate_able_to_ramp_countdown_pulses / repetition_rate
         breakdown_rate_able_to_ramp_countdown_HrMinSec = str(timedelta(seconds = breakdown_rate_able_to_ramp_countdown_seconds ))
 

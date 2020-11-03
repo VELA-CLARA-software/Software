@@ -313,6 +313,14 @@ class vac_monitor(monitor):
 
         ## DJS just hacke dthis in -  is it dafe, is it correct?
         ## TODO it should be a config  option (if to count vac spikes as events or not, but remember, don't double  count if we also get a OME Detected!)
-        if self.values[self.data.breakdown_status] != state.BAD:
-            self.data.force_update_breakdown_count(1)  # MAGIC_STRING
+        # TODO AJG: added the condition attached to the config .yaml:
+        vac_spike_increase_BD_count = self.config.raw_config_data['VAC_SPIKE_INCREASE_BD_COUNT']
+
+        if vac_spike_increase_BD_count:
+            if self.values[self.data.breakdown_status] != state.BAD:
+                self.data.force_update_breakdown_count(1)  # MAGIC_STRING
+            else:
+                pass
+        else:
+            pass
 
