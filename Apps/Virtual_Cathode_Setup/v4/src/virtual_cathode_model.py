@@ -191,27 +191,66 @@ class virtual_cathode_model():
         self.values[self.data.cov_sd_mm] = self.vc_data.sig_xy_sd * self.values[
             self.data.x_pix_to_mm] * self.values[self.data.y_pix_to_mm]
 
-        self.values[self.data.x_sd_per] =  (self.values[self.data.x_sd] / self.values[
-            self.data.x_mean])*100
-        self.values[self.data.y_sd] = (self.values[self.data.y_sd] / self.values[
-            self.data.y_mean])*100
-        self.values[self.data.sx_sd] = (self.values[self.data.sx_sd] / self.values[
-            self.data.sx_mean])*100
-        self.values[self.data.sy_sd] = (self.values[self.data.sy_sd] / self.values[
-            self.data.sy_mean])*100
-        self.values[self.data.cov_sd] = (self.values[self.data.cov_sd] / self.values[
-            self.data.cov_mean])*100
-        self.values[self.data.x_sd_mm] = (self.values[self.data.x_sd_mm] / self.values[
-            self.data.x_mean])*100
-        self.values[self.data.y_sd_mm] = (self.values[self.data.y_sd_mm] / self.values[
-            self.data.y_mean_mm])*100
-        self.values[self.data.sx_sd_mm] = (self.values[self.data.sx_sd_mm] / self.values[
-            self.data.sx_mean_mm])*100
-        self.values[self.data.sy_sd_mm] = (self.values[self.data.sy_sd_mm] / self.values[
-            self.data.sy_mean_mm])*100
-        self.values[self.data.cov_sd_mm] = (self.values[self.data.cov_sd_mm] / self.values[
-            self.data.cov_mean_mm])*100
 
+        if self.values[self.data.x_mean] != 0.0:
+            self.values[self.data.x_sd_per] = (self.values[self.data.x_sd] / self.values[
+                self.data.x_mean])*100
+        else:
+            self.values[self.data.x_sd_per] = 0
+
+        if self.values[self.data.y_mean] != 0.0:
+            self.values[self.data.y_sd_per] = (self.values[self.data.y_sd] / self.values[
+                self.data.y_mean])*100
+        else:
+            self.values[self.data.y_sd_per] = 0
+
+        if self.values[self.data.sx_mean] != 0.0:
+            self.values[self.data.sx_sd_per] = (self.values[self.data.sx_sd] / self.values[
+                self.data.sx_mean])*100
+        else:
+            self.values[self.data.sx_sd_per] = 0
+
+        if self.values[self.data.sy_mean] != 0.0:
+            self.values[self.data.sy_sd_per] = (self.values[self.data.sy_sd] / self.values[
+            self.data.sy_mean])*100
+        else:
+            self.values[self.data.sy_sd_per] = 0
+
+        if self.values[self.data.cov_mean] != 0.0:
+            self.values[self.data.cov_sd_per] = (self.values[self.data.cov_sd] / self.values[
+            self.data.cov_mean])*100
+        else:
+            self.values[self.data.cov_sd_per] = 0
+
+        if self.values[self.data.x_mean_mm] != 0.0:
+            self.values[self.data.x_sd_mm_per] = (self.values[self.data.x_sd_mm] / self.values[
+            self.data.x_mean_mm])*100
+        else:
+            self.values[self.data.x_sd_mm_per] = 0
+
+        if self.values[self.data.y_mean_mm] != 0.0:
+            self.values[self.data.y_sd_mm_per] = (self.values[self.data.y_sd_mm] / self.values[
+            self.data.y_mean_mm])*100
+        else:
+            self.values[self.data.y_sd_mm_per] = 0
+
+        if self.values[self.data.sx_mean_mm] != 0.0:
+            self.values[self.data.sx_sd_mm_per] = (self.values[self.data.sx_sd_mm] / self.values[
+            self.data.sx_mean_mm])*100
+        else:
+            self.values[self.data.sx_sd_mm_per] = 0
+
+        if self.values[self.data.sy_mean_mm] != 0.0:
+            self.values[self.data.sy_sd_mm_per] = (self.values[self.data.sy_sd_mm] / self.values[
+            self.data.sy_mean_mm])*100
+        else:
+            self.values[self.data.sy_sd_mm_per] = 0
+
+        if self.values[self.data.cov_mean_mm] != 0.0:
+            self.values[self.data.cov_sd_mm_per] = (self.values[self.data.cov_sd_mm] / self.values[
+                self.data.cov_mean_mm])*100
+        else:
+            self.values[self.data.cov_sd_mm_per] = 0
 
         self.values[self.data.avg_pix_val] = self.vc_data.avg_pix
         self.values[self.data.avg_pix_mean] = self.vc_data.avg_pix_mean
@@ -234,7 +273,13 @@ class virtual_cathode_model():
         self.values[self.data.int_val] = self.pil_obj.energy
         self.values[self.data.int_mean] = self.pil_obj.energy_mean
         self.values[self.data.int_sd] = self.pil_obj.energy_sd
-        self.values[self.data.int_sd_per] = (self.pil_obj.energy_sd / self.pil_obj.energy)*100
+
+        if self.pil_obj.energy != 0.0:
+            self.values[self.data.int_sd_per] = (self.pil_obj.energy_sd / self.pil_obj.energy)*100
+        else:
+            self.values[self.data.int_sd_per] = 0.0
+
+
  #       self.values[self.data.laser_buffer_full] = self.pil_obj.energy_full
 
         #print('take image START')
