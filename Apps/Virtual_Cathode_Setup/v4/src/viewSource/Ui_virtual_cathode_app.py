@@ -1325,6 +1325,7 @@ class Ui_virtual_cathode_view(object):
         self.rs_buffer_size_spinbox.setButtonSymbols(QtGui.QAbstractSpinBox.NoButtons)
         self.rs_buffer_size_spinbox.setMinimum(-1)
         self.rs_buffer_size_spinbox.setMaximum(99999999)
+        self.rs_buffer_size_spinbox.setProperty("value", 1)
         self.rs_buffer_size_spinbox.setObjectName(_fromUtf8("rs_buffer_size_spinbox"))
         self.horizontalLayout_6.addWidget(self.rs_buffer_size_spinbox)
         self.rs_buffer_size = QtGui.QLabel(self.tab)

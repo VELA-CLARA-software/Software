@@ -150,7 +150,7 @@ class virtual_cathode_view(QtGui.QMainWindow, Ui_virtual_cathode_view):
 
         ##print('update widget loop')
         for key, value in self.widget_to_dataname.iteritems():
-            print('update widget ', value, key)
+            #print('update widget ', value, key)
             if self.new_value(value):
                 if self.is_mask_read(key):
                     if not_updated_read_roi:
@@ -161,12 +161,12 @@ class virtual_cathode_view(QtGui.QMainWindow, Ui_virtual_cathode_view):
                 except:
                     print('ERROR in updating ', key, value)
 
-        print(self.model_data.values[self.model_data.img_avg_mean])
-        print(self.model_data.values[self.model_data.avg_pix_beam_level])
-        print(self.model_data.values[self.model_data.img_avg_mean])
-        print(self.model_data.values[self.model_data.avg_pix_beam_level])
-        print(self.model_data.values[self.model_data.img_avg_mean])
-        print(self.model_data.values[self.model_data.avg_pix_beam_level])
+        # print(self.model_data.values[self.model_data.img_avg_mean])
+        # print(self.model_data.values[self.model_data.avg_pix_beam_level])
+        # print(self.model_data.values[self.model_data.img_avg_mean])
+        # print(self.model_data.values[self.model_data.avg_pix_beam_level])
+        # print(self.model_data.values[self.model_data.img_avg_mean])
+        # print(self.model_data.values[self.model_data.avg_pix_beam_level])
 
         if self.model_data.values[self.model_data.avg_pix_beam_level] < self.model_data.values[
             self.model_data.img_avg_mean]:
@@ -398,12 +398,12 @@ class virtual_cathode_view(QtGui.QMainWindow, Ui_virtual_cathode_view):
         self.widget_to_dataname[self.x_mm] = self.model_data.x_mm
         self.widget_to_dataname[self.x_mean_mm] = self.model_data.x_mean_mm
         self.widget_to_dataname[self.x_sd_mm] = self.model_data.x_sd_mm
-        self.widget_to_dataname[self.sx_sd_mm_per] = self.model_data.sx_sd_mm_per
+        self.widget_to_dataname[self.x_sd_mm_per] = self.model_data.x_sd_mm_per
 
         self.widget_to_dataname[self.y_mm] = self.model_data.y_mm
         self.widget_to_dataname[self.y_mean_mm] = self.model_data.y_mean_mm
         self.widget_to_dataname[self.y_sd_mm] = self.model_data.y_sd_mm
-        self.widget_to_dataname[self.sy_sd_mm_per] = self.model_data.sy_sd_mm_per
+        self.widget_to_dataname[self.y_sd_mm_per] = self.model_data.y_sd_mm_per
 
         self.widget_to_dataname[self.sx_mm] = self.model_data.sx_mm
         self.widget_to_dataname[self.sx_mean_mm] = self.model_data.sx_mean_mm
@@ -480,7 +480,13 @@ class virtual_cathode_view(QtGui.QMainWindow, Ui_virtual_cathode_view):
         self.widget_to_dataname[self.last_directory] = self.model_data.last_save_dir
         self.widget_to_dataname[self.last_directory] = self.model_data.last_save_dir
         self.widget_to_dataname[self.set_pos_pushButton] = self.model_data.is_setting_pos
+
         self.widget_to_dataname[self.rs_buffer_size] = self.model_data.rs_buffer_size
+        self.widget_to_dataname[self.rs_buffer_count] = self.model_data.rs_buffer_count
+        self.widget_to_dataname[self.rs_buffer_full] = self.model_data.rs_buffer_full
+
+
+
         # # the below don't exist yet
         # # self.widget_to_dataname[self.int_val] = self.model_data.int_val
         # # self.widget_to_dataname[self.int_val_2] = self.model_data.int_val
@@ -497,6 +503,7 @@ class virtual_cathode_view(QtGui.QMainWindow, Ui_virtual_cathode_view):
         self.widget_updatefunc[self.x_mean_mm] = [self.update_real]
         self.widget_updatefunc[self.x_sd_mm] = [self.update_real]
         self.widget_updatefunc[self.x_sd_mm_per] = [self.update_real]
+
         self.widget_updatefunc[self.y_mm] = [self.update_real]
         self.widget_updatefunc[self.y_val_2] = [self.update_real]
         self.widget_updatefunc[self.y_mean_mm] = [self.update_real]
@@ -601,7 +608,13 @@ class virtual_cathode_view(QtGui.QMainWindow, Ui_virtual_cathode_view):
         self.widget_updatefunc[self.set_pos_pushButton] = [self.update_set_pos_button]
 
         self.widget_updatefunc[self.set_pos_pushButton] = [self.update_set_pos_button]
+
+        # TODO figure out how to do the buffer count / max count and go green / red when full
         self.widget_updatefunc[self.rs_buffer_size] = [self.update_int]
+
+        self.widget_to_dataname[self.rs_buffer_count] = self.model_data.rs_buffer_count
+        self.widget_to_dataname[self.rs_buffer_full] = self.model_data.rs_buffer_full
+
 
     # the below don't exist yet
     # self.widget_updatefunc[self.int_val] = [self.update_real]

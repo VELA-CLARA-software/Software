@@ -142,73 +142,75 @@ class virtual_cathode_model():
 
         v[self.data.x_pix] = self.vc_data.x_pix
         v[self.data.x_mean_pix] = self.vc_data.x_pix_mean
-
-        v[self.data.x_mm] = self.vc_data.x_pix * v[self.data.x_pix_to_mm]
-        v[self.data.x_mean_mm] = self.vc_data.x_mean * v[self.data.x_pix_to_mm]
-        v[self.data.x_sd_mm] = self.vc_data.x_pix_sd * v[self.data.x_pix_to_mm]
-
+        v[self.data.x_sd_pix] = self.vc_data.x_pix_sd
         if v[self.data.x_mean_mm] != 0.0:
             v[self.data.x_sd_mm_per] = (v[self.data.x_sd_mm] / v[self.data.x_mean_mm])*100
         else:
             v[self.data.x_sd_mm_per] = 0
 
         v[self.data.y_pix] = self.vc_data.y_pix
-        v[self.data.sx_pix] = self.vc_data.sig_x_pix
-        v[self.data.sy_pix] = self.vc_data.sig_y_pix
-        v[self.data.cov_pix] = self.vc_data.sig_xy_pix
-
-        v[self.data.y_mm] = self.vc_data.y_pix * v[self.data.y_pix_to_mm]
-        v[self.data.y_sd_mm] = self.vc_data.y_pix_sd * v[self.data.y_pix_to_mm]
-        v[self.data.sx_mm] = self.vc_data.sig_x_pix * v[self.data.x_pix_to_mm]
-        v[self.data.sx_sd_mm] = self.vc_data.sig_x_pix_sd * v[self.data.x_pix_to_mm]
-        v[self.data.sy_sd_mm] = self.vc_data.sig_y_pix_sd * v[self.data.y_pix_to_mm]
-        v[self.data.cov_sd_mm] = self.vc_data.sig_xy_pix_sd * v[self.data.x_pix_to_mm] * v[self.data.y_pix_to_mm]
-        v[self.data.sy_mm] = self.vc_data.sig_y_pix * v[self.data.y_pix_to_mm]
-        v[self.data.cov_mm] = self.vc_data.sig_xy_pix * v[self.data.x_pix_to_mm] * v[self.data.y_pix_to_mm]
-
-        v[self.data.x_sd_pix] = self.vc_data.x_pix_sd
-
         v[self.data.y_mean_pix] = self.vc_data.y_pix_mean
-        v[self.data.sx_mean_pix] = self.vc_data.sig_x_pix_mean
-        v[self.data.sy_mean_pix] = self.vc_data.sig_y_pix_mean
-        v[self.data.cov_mean_pix] = self.vc_data.sig_xy_pix_mean
-
-        v[self.data.y_mean_mm] = self.vc_data.y_mean * v[self.data.y_pix_to_mm]
-        v[self.data.sx_mean_mm] = self.vc_data.sig_x_mean * v[self.data.x_pix_to_mm]
-        v[self.data.sy_mean_mm] = self.vc_data.sig_y_mean * v[self.data.y_pix_to_mm]
-        v[self.data.cov_mean_mm] = self.vc_data.sig_xy_mean  * v[self.data.x_pix_to_mm] * v[self.data.y_pix_to_mm]
-
         v[self.data.y_sd_pix] = self.vc_data.y_pix_sd
-        v[self.data.sx_sd_pix] = self.vc_data.sig_x_pix_sd
-        v[self.data.sy_sd_pix] = self.vc_data.sig_y_pix_sd
-        v[self.data.cov_sd_pix] = self.vc_data.sig_xy_pix_sd
-
         # For all percents check for a div by zero!!!!!!
         if v[self.data.y_mean_pix] != 0.0:
             v[self.data.y_sd_pix_per] = (v[self.data.y_sd_pix] / v[self.data.y_mean_pix])*100
         else:
             v[self.data.y_sd_pix_per] = 0
 
-        if v[self.data.sx_mean_pix] != 0.0:
-            v[self.data.sx_sd_pix_per] = (v[self.data.sx_sd_pix] / v[self.data.sx_mean_pix])*100
-        else:
-            v[self.data.sx_sd_pix_per] = 0
-
+        v[self.data.sy_pix] = self.vc_data.sig_y_pix
+        v[self.data.sy_mean_pix] = self.vc_data.sig_y_pix_mean
+        v[self.data.sy_sd_pix] = self.vc_data.sig_y_pix_sd
         if v[self.data.sy_mean_pix] != 0.0:
             v[self.data.sy_sd_pix_per] = (v[self.data.sy_sd_pix] / v[self.data.sy_mean_pix])*100
         else:
             v[self.data.sy_sd_pix_per] = 0
 
+        v[self.data.sx_pix] = self.vc_data.sig_x_pix
+        v[self.data.sx_mean_pix] = self.vc_data.sig_x_pix_mean
+        v[self.data.sx_sd_pix] = self.vc_data.sig_x_pix_sd
+        if v[self.data.sx_mean_pix] != 0.0:
+            v[self.data.sx_sd_pix_per] = (v[self.data.sx_sd_pix] / v[self.data.sx_mean_pix])*100
+        else:
+            v[self.data.sx_sd_pix_per] = 0
+
+        v[self.data.cov_mean_pix] = self.vc_data.sig_xy_pix_mean
+        v[self.data.cov_sd_pix] = self.vc_data.sig_xy_pix_sd
+        v[self.data.cov_pix] = self.vc_data.sig_xy_pix
         if v[self.data.cov_mean_pix] != 0.0:
             v[self.data.cov_sd_pix_per] = (v[self.data.cov_sd_pix] / v[self.data.cov_mean_pix])*100
         else:
             v[self.data.cov_sd_pix_per] = 0
-        # FRO ANALYSIs IN MM PERCENTS, JUST COPY THBE PIXEL VALUES
+
+
+        v[self.data.x_mm] = self.vc_data.x_pix * v[self.data.x_pix_to_mm]
+        v[self.data.x_mean_mm] = self.vc_data.x_mean * v[self.data.x_pix_to_mm]
+        v[self.data.x_sd_mm] = self.vc_data.x_pix_sd * v[self.data.x_pix_to_mm]
         v[self.data.x_sd_mm_per] = v[self.data.x_sd_pix_per]
+
+        v[self.data.y_mm] = self.vc_data.y_pix * v[self.data.y_pix_to_mm]
+        v[self.data.y_mean_mm] = self.vc_data.y_mean * v[self.data.y_pix_to_mm]
+        v[self.data.y_sd_mm] = self.vc_data.y_pix_sd * v[self.data.y_pix_to_mm]
         v[self.data.y_sd_mm_per] = v[self.data.y_sd_pix_per]
+
+        v[self.data.sx_mm] = self.vc_data.sig_x_pix * v[self.data.x_pix_to_mm]
+        v[self.data.sx_mean_mm] = self.vc_data.sig_x_mean * v[self.data.x_pix_to_mm]
+        v[self.data.sx_sd_mm] = self.vc_data.sig_x_pix_sd * v[self.data.x_pix_to_mm]
         v[self.data.sx_sd_mm_per] = v[self.data.sx_sd_pix_per]
+
+
+        v[self.data.sy_mm] = self.vc_data.sig_y_pix * v[self.data.y_pix_to_mm]
+        v[self.data.sy_mean_mm] = self.vc_data.sig_y_mean * v[self.data.y_pix_to_mm]
+        v[self.data.sy_sd_mm] = self.vc_data.sig_y_pix_sd * v[self.data.y_pix_to_mm]
         v[self.data.sy_sd_mm_per] = v[self.data.sy_sd_pix_per]
+
+
+        v[self.data.cov_mm] = self.vc_data.sig_xy_pix * v[self.data.x_pix_to_mm] * v[self.data.y_pix_to_mm]
+        v[self.data.cov_sd_mm] = self.vc_data.sig_xy_pix_sd * v[self.data.x_pix_to_mm] * v[self.data.y_pix_to_mm]
+        v[self.data.cov_mean_mm] = self.vc_data.sig_xy_mean * v[self.data.x_pix_to_mm] * v[self.data.y_pix_to_mm]
         v[self.data.cov_sd_mm_per] = v[self.data.cov_sd_pix_per]
+
+        # FRO ANALYSIs IN MM PERCENTS, JUST COPY THBE PIXEL VALUES
+
 
         # laser energy meter
         v[self.data.las_int] = self.pil_obj.energy
@@ -228,7 +230,7 @@ class virtual_cathode_model():
             v[self.data.wcm_sd_per] = 0.0
 
         # image average pixel value
-        v[self.data.img_avg] =self.vc_data.avg_pix_mean
+        v[self.data.img_avg] = self.vc_data.avg_pix_mean
         v[self.data.img_avg_mean] = self.vc_data.avg_pix_mean
         v[self.data.img_avg_sd] = self.vc_data.avg_pix_sd
         if self.vc_data.avg_pix_mean != 0.0:
@@ -282,12 +284,20 @@ class virtual_cathode_model():
         else:
             v[self.data.shutter2_open] = False
 
-        v[self.data.x_buffer_full] = self.vc_data.x_full
-        v[self.data.y_buffer_full] = self.vc_data.y_full
-        v[self.data.sig_x_buffer_full] = self.vc_data.sig_x_full
-        v[self.data.sig_y_buffer_full] = self.vc_data.sig_y_full
-        v[self.data.cov_xy_buffer_full] = self.vc_data.sig_xy_full
-        v[self.data.pixel_avg_buffer_full] = self.vc_data.avg_pix_full
+
+        v[self.data.rs_buffer_size] = self.pil_obj.max_buffer_count
+        v[self.data.rs_buffer_count] = self.pil_obj.buffer_count
+        v[self.data.rs_buffer_full] = self.pil_obj.buffer_full
+
+        print(self.data.rs_buffer_size,v[self.data.rs_buffer_size] )
+        print(self.data.rs_buffer_count,v[self.data.rs_buffer_count] )
+        print(self.data.rs_buffer_full,v[self.data.rs_buffer_full] )
+
+
+
+    def set_buffer_size(self, val):
+        print("set_buffer_size = ", val)
+        self.pil.setAllRSBufferSize(val)
 
 
     def move_left(self, step):

@@ -263,24 +263,32 @@ class model_data(object):
 	all_value_keys.append(ypix_full)
 	is_setting_pos = 'is_setting_pos'
 	all_value_keys.append(is_setting_pos)
+
 	rs_buffer_size = 'rs_buffer_size'
 	all_value_keys.append(rs_buffer_size)
-	laser_buffer_full = 'laser_buffer_full'
-	all_value_keys.append(laser_buffer_full)
-	wcm_buffer_full = 'wcm_buffer_full'
-	all_value_keys.append(wcm_buffer_full)
-	pixel_avg_buffer_full = 'pixel_avg_buffer_full'
-	all_value_keys.append(pixel_avg_buffer_full)
-	x_buffer_full = 'x_buffer_full'
-	all_value_keys.append(x_buffer_full)
-	y_buffer_full = 'y_buffer_full'
-	all_value_keys.append(y_buffer_full)
-	sig_x_buffer_full = 'sig_x_buffer_full'
-	all_value_keys.append(sig_x_buffer_full)
-	sig_y_buffer_full = 'sig_y_buffer_full'
-	all_value_keys.append(sig_y_buffer_full)
-	cov_xy_buffer_full = 'cov_xy_buffer_full'
-	all_value_keys.append(cov_xy_buffer_full)
+
+	rs_buffer_count = 'rs_buffer_count'
+	all_value_keys.append(rs_buffer_count)
+
+	rs_buffer_full  = 'rs_buffer_full'
+	all_value_keys.append(rs_buffer_full)
+
+	# laser_buffer_full = 'laser_buffer_full'
+	# all_value_keys.append(laser_buffer_full)
+	# wcm_buffer_full = 'wcm_buffer_full'
+	# all_value_keys.append(wcm_buffer_full)
+	# pixel_avg_buffer_full = 'pixel_avg_buffer_full'
+	# all_value_keys.append(pixel_avg_buffer_full)
+	# x_buffer_full = 'x_buffer_full'
+	# all_value_keys.append(x_buffer_full)
+	# y_buffer_full = 'y_buffer_full'
+	# all_value_keys.append(y_buffer_full)
+	# sig_x_buffer_full = 'sig_x_buffer_full'
+	# all_value_keys.append(sig_x_buffer_full)
+	# sig_y_buffer_full = 'sig_y_buffer_full'
+	# all_value_keys.append(sig_y_buffer_full)
+	# cov_xy_buffer_full = 'cov_xy_buffer_full'
+	# all_value_keys.append(cov_xy_buffer_full)
 
 
 	# object names, These are the shutter names in the c++
