@@ -38,7 +38,7 @@ from numpy import linspace
 from math import ceil
 import virtual_cathode_model_data
 import pyqtgraph as pg
-
+from decimal import Decimal
 
 class virtual_cathode_view(QtGui.QMainWindow, Ui_virtual_cathode_view):
     # custom close signal to send to controller
@@ -187,7 +187,7 @@ class virtual_cathode_view(QtGui.QMainWindow, Ui_virtual_cathode_view):
                     try:
                         self.widget_updatefunc_rs[key][0](key, value, self.widget_updatefunc_rs[key])
                     except:
-                        print('ERROR in updating ', key, value)
+                        print('ERROR2 in updating ', key, value)
 
 
         if self.model_data.values[self.model_data.avg_pix_beam_level] < self.model_data.values[
@@ -371,6 +371,11 @@ class virtual_cathode_view(QtGui.QMainWindow, Ui_virtual_cathode_view):
     def update_real(self, widget, value, dummy):
         widget.setText("%.2f" % self.model_data.values.get(value))
 
+    def update_real_rs(self, widget, value, dummy):
+        s= "{:.1E}".format(self.model_data.values.get(value))
+        print(s)
+        widget.setText(QtCore.QString(s))
+
     def update_image(self, widget, value, dummy):
         self.vc_image.setImage(image=self.model_data.values.get(value), autoDownsample=True)
         self.vc_image.setLevels([self.spinBox_minLevel.value(), self.spinBox_maxLevel.value()], update=True)
@@ -484,35 +489,15 @@ class virtual_cathode_view(QtGui.QMainWindow, Ui_virtual_cathode_view):
         self.widget_to_dataname[self.set_pos_pushButton] = self.model_data.is_setting_pos
         self.widget_to_dataname[self.rs_buffer_count] = self.model_data.rs_buffer_count
         self.widget_to_dataname[self.set_pos_pushButton] = self.model_data.is_setting_pos
-
-
-        #self.widget_to_dataname[self.int_val] = self.model_data.int_val  # '[self.update_real]
-        #self.widget_to_dataname[self.int_mean] = self.model_data.int_mean  # [self.update_real]
-        #self.widget_to_dataname[self.int_sd] = self.model_data.int_sd  # [self.update_real]
-        #self.widget_to_dataname[self.int_sd_per] = self.model_data.int_sd_per  # [self.update_real]
-
-        # TODO do this
-        # self.widget_to_dataname[self.rs_buffer_size] = self.model_data.rs_buffer_size
         self.widget_to_dataname[self.rs_buffer_count] = self.model_data.rs_buffer_count
-        # self.widget_to_dataname[self.rs_buffer_full] = self.model_data.rs_buffer_full
 
 
-
-        # # the below don't exist yet
-        # # self.widget_to_dataname[self.int_val] = self.model_data.int_val
-        # # self.widget_to_dataname[self.int_val_2] = self.model_data.int_val
-        # # self.widget_to_dataname[self.int_mean] = self.model_data.int_mean
-        # # self.widget_to_dataname[self.int_sd] = self.model_data.int_sd
         # '''
         #     similar to above, but holds the update functions and constant parameters to pass to
         #     those functions
         # '''
         self.widget_updatefunc = {}
-        # # analysis results, x, y, xy,  mean,sigma,and standard deviations of running states
-        self.widget_updatefunc[self.x_val_2] = [self.update_real]
-
-
-
+        #self.widget_updatefunc[self.x_val_2] = [self.update_real]
         self.widget_updatefunc[self.x_mm] = [self.update_real]
         self.widget_updatefunc[self.y_mm] = [self.update_real]
         self.widget_updatefunc[self.sx_mm] = [self.update_real]
@@ -527,59 +512,55 @@ class virtual_cathode_view(QtGui.QMainWindow, Ui_virtual_cathode_view):
         self.widget_updatefunc[self.las_int] = [self.update_real]
         self.widget_updatefunc[self.wcm_val] = [self.update_real]
 
-
+        # we keep the running stats value sin different dict, as they are only updated when the
+        # buffer is full
         self.widget_updatefunc_rs = {}
-
-        self.widget_updatefunc_rs[self.y_val_2] = [self.update_real]
-        self.widget_updatefunc_rs[self.x_mean_mm] = [self.update_real]
-        self.widget_updatefunc_rs[self.x_sd_mm] = [self.update_real]
-        self.widget_updatefunc_rs[self.x_sd_mm_per] = [self.update_real]
-        self.widget_updatefunc_rs[self.y_mean_mm] = [self.update_real]
-        self.widget_updatefunc_rs[self.y_sd_mm] = [self.update_real]
-        self.widget_updatefunc_rs[self.y_sd_mm_per] = [self.update_real]
-        self.widget_updatefunc_rs[self.sx_mean_mm] = [self.update_real]
-        self.widget_updatefunc_rs[self.sx_sd_mm] = [self.update_real]
-        self.widget_updatefunc_rs[self.sx_sd_mm_per] = [self.update_real]
-        self.widget_updatefunc_rs[self.sy_mean_mm] = [self.update_real]
-        self.widget_updatefunc_rs[self.sy_sd_mm] = [self.update_real]
-        self.widget_updatefunc_rs[self.sy_sd_mm_per] = [self.update_real]
-        self.widget_updatefunc_rs[self.cov_mean_mm] = [self.update_real]
-        self.widget_updatefunc_rs[self.cov_sd_mm] = [self.update_real]
-        self.widget_updatefunc_rs[self.cov_sd_mm_per] = [self.update_real]
-        self.widget_updatefunc_rs[self.x_mean_pix] = [self.update_real]
-        self.widget_updatefunc_rs[self.x_sd_pix] = [self.update_real]
-        self.widget_updatefunc_rs[self.x_sd_pix_per] = [self.update_real]
-        self.widget_updatefunc_rs[self.y_mean_pix] = [self.update_real]
-        self.widget_updatefunc_rs[self.y_sd_pix] = [self.update_real]
-        self.widget_updatefunc_rs[self.y_sd_pix_per] = [self.update_real]
-        self.widget_updatefunc_rs[self.sx_mean_pix] = [self.update_real]
-        self.widget_updatefunc_rs[self.sx_sd_pix] = [self.update_real]
-        self.widget_updatefunc_rs[self.sx_sd_pix_per] = [self.update_real]
-        self.widget_updatefunc_rs[self.sy_mean_pix] = [self.update_real]
-        self.widget_updatefunc_rs[self.sy_sd_pix] = [self.update_real]
-        self.widget_updatefunc_rs[self.sy_sd_pix_per] = [self.update_real]
-        self.widget_updatefunc_rs[self.cov_mean_pix] = [self.update_real]
-        self.widget_updatefunc_rs[self.cov_sd_pix] = [self.update_real]
-        self.widget_updatefunc_rs[self.cov_sd_pix_per] = [self.update_real]
-        self.widget_updatefunc_rs[self.img_avg_mean] = [self.update_real]
-        self.widget_updatefunc_rs[self.img_avg_sd] = [self.update_real]
-        self.widget_updatefunc_rs[self.img_avg_sd_per] = [self.update_real]
-        self.widget_updatefunc_rs[self.wcm_mean] = [self.update_real]
-        self.widget_updatefunc_rs[self.wcm_sd] = [self.update_real]
-        self.widget_updatefunc_rs[self.wcm_sd_per] = [self.update_real]
-        self.widget_updatefunc_rs[self.las_int_mean] = [self.update_real]
-        self.widget_updatefunc_rs[self.las_int_sd] = [self.update_real]
-        self.widget_updatefunc_rs[self.las_int_sd_per] = [self.update_real]
-        self.widget_updatefunc_rs[self.wcm_mean] = [self.update_real]
-        self.widget_updatefunc_rs[self.wcm_sd] = [self.update_real]
-        self.widget_updatefunc_rs[self.wcm_sd_per] = [self.update_real]
-        self.widget_updatefunc_rs[self.img_avg_mean] = [self.update_real]
-        self.widget_updatefunc_rs[self.img_avg_sd] = [self.update_real]
-        self.widget_updatefunc_rs[self.img_avg_sd_per] = [self.update_real]
-
-
-
-
+        self.widget_updatefunc_rs[self.y_val_2] = [self.update_real_rs]
+        self.widget_updatefunc_rs[self.x_mean_mm] = [self.update_real_rs]
+        self.widget_updatefunc_rs[self.x_sd_mm] = [self.update_real_rs]
+        self.widget_updatefunc_rs[self.x_sd_mm_per] = [self.update_real_rs]
+        self.widget_updatefunc_rs[self.y_mean_mm] = [self.update_real_rs]
+        self.widget_updatefunc_rs[self.y_sd_mm] = [self.update_real_rs]
+        self.widget_updatefunc_rs[self.y_sd_mm_per] = [self.update_real_rs]
+        self.widget_updatefunc_rs[self.sx_mean_mm] = [self.update_real_rs]
+        self.widget_updatefunc_rs[self.sx_sd_mm] = [self.update_real_rs]
+        self.widget_updatefunc_rs[self.sx_sd_mm_per] = [self.update_real_rs]
+        self.widget_updatefunc_rs[self.sy_mean_mm] = [self.update_real_rs]
+        self.widget_updatefunc_rs[self.sy_sd_mm] = [self.update_real_rs]
+        self.widget_updatefunc_rs[self.sy_sd_mm_per] = [self.update_real_rs]
+        self.widget_updatefunc_rs[self.cov_mean_mm] = [self.update_real_rs]
+        self.widget_updatefunc_rs[self.cov_sd_mm] = [self.update_real_rs]
+        self.widget_updatefunc_rs[self.cov_sd_mm_per] = [self.update_real_rs]
+        self.widget_updatefunc_rs[self.x_mean_pix] = [self.update_real_rs]
+        self.widget_updatefunc_rs[self.x_sd_pix] = [self.update_real_rs]
+        self.widget_updatefunc_rs[self.x_sd_pix_per] = [self.update_real_rs]
+        self.widget_updatefunc_rs[self.y_mean_pix] = [self.update_real_rs]
+        self.widget_updatefunc_rs[self.y_sd_pix] = [self.update_real_rs]
+        self.widget_updatefunc_rs[self.y_sd_pix_per] = [self.update_real_rs]
+        self.widget_updatefunc_rs[self.sx_mean_pix] = [self.update_real_rs]
+        self.widget_updatefunc_rs[self.sx_sd_pix] = [self.update_real_rs]
+        self.widget_updatefunc_rs[self.sx_sd_pix_per] = [self.update_real_rs]
+        self.widget_updatefunc_rs[self.sy_mean_pix] = [self.update_real_rs]
+        self.widget_updatefunc_rs[self.sy_sd_pix] = [self.update_real_rs]
+        self.widget_updatefunc_rs[self.sy_sd_pix_per] = [self.update_real_rs]
+        self.widget_updatefunc_rs[self.cov_mean_pix] = [self.update_real_rs]
+        self.widget_updatefunc_rs[self.cov_sd_pix] = [self.update_real_rs]
+        self.widget_updatefunc_rs[self.cov_sd_pix_per] = [self.update_real_rs]
+        self.widget_updatefunc_rs[self.img_avg_mean] = [self.update_real_rs]
+        self.widget_updatefunc_rs[self.img_avg_sd] = [self.update_real_rs]
+        self.widget_updatefunc_rs[self.img_avg_sd_per] = [self.update_real_rs]
+        self.widget_updatefunc_rs[self.wcm_mean] = [self.update_real_rs]
+        self.widget_updatefunc_rs[self.wcm_sd] = [self.update_real_rs]
+        self.widget_updatefunc_rs[self.wcm_sd_per] = [self.update_real_rs]
+        self.widget_updatefunc_rs[self.las_int_mean] = [self.update_real_rs]
+        self.widget_updatefunc_rs[self.las_int_sd] = [self.update_real_rs]
+        self.widget_updatefunc_rs[self.las_int_sd_per] = [self.update_real_rs]
+        self.widget_updatefunc_rs[self.wcm_mean] = [self.update_real_rs]
+        self.widget_updatefunc_rs[self.wcm_sd] = [self.update_real_rs]
+        self.widget_updatefunc_rs[self.wcm_sd_per] = [self.update_real_rs]
+        self.widget_updatefunc_rs[self.img_avg_mean] = [self.update_real_rs]
+        self.widget_updatefunc_rs[self.img_avg_sd] = [self.update_real_rs]
+        self.widget_updatefunc_rs[self.img_avg_sd_per] = [self.update_real_rs]
 
 
 
@@ -614,8 +595,7 @@ class virtual_cathode_view(QtGui.QMainWindow, Ui_virtual_cathode_view):
         self.widget_updatefunc[self.step_size_read] = [self.update_int]
         self.widget_updatefunc[self.H_step_read] = [self.update_real]
         self.widget_updatefunc[self.V_step_read] = [self.update_real]
-        # wcm_val is in the stats panel
-        self.widget_updatefunc[self.wcm_val] = [self.update_real]
+
         # wcm_2 widget is by the laser motors panel
         self.widget_updatefunc[self.wcm_val] = [self.update_real]
 
@@ -628,18 +608,6 @@ class virtual_cathode_view(QtGui.QMainWindow, Ui_virtual_cathode_view):
 
         self.widget_updatefunc[self.set_pos_pushButton] = [self.update_set_pos_button]
         self.widget_updatefunc[self.rs_buffer_count] = [self.update_int]
-
-        # TODO figure out how to do the buffer count / max count and go green / red when full
-        # self.widget_updatefunc[self.rs_buffer_size] = [self.update_int]
-        #self.widget_updatefunc[self.rs_buffer_full] = [self.update_rs_buffer_full]
-
-    # the below don't exist yet
-    # self.widget_updatefunc[self.int_val] = [self.update_real]
-    # self.widget_updatefunc[self.int_val_2] = [self.update_real]
-    # self.widget_updatefunc[self.int_mean] = [self.update_real]
-    # self.widget_updatefunc[self.int_sd] = [self.update_real]
-
-
 
 
     def closeEvent(self, event):
