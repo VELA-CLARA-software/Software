@@ -319,18 +319,19 @@ class virtual_cathode_model():
         self.pil.setHWP(self.pil_obj.HWP + delta_value)
 
     def get_fast_image(self):
-        if self.pil.isAcquiring_VC():
-            # DEBUG
-            #print('take image 1')
-            self.pil.takeFastImage_VC()#getFastImage_VC():
-            npData = array(  self.vc_image.data ).reshape(( self.vc_image.num_pix_y,
-                                                                self.vc_image.num_pix_x))
-              #  never works :((((
-              #  npData = array(self.vc_image.data2D)
-            #print('return image')
-            return flipud(npData)
-        else:
-            print('failed to get image')
+        # TODO sonme error handling
+        # if self.pil.isAcquiring_VC():
+        #     # DEBUG
+        #     #print('take image 1')
+        #     self.pil.takeFastImage_VC()#getFastImage_VC():
+        #     npData = array(  self.vc_image.data ).reshape(( self.vc_image.num_pix_y,
+        #                                                         self.vc_image.num_pix_x))
+        #       #  never works :((((
+        #       #  npData = array(self.vc_image.data2D)
+        #     #print('return image')
+        #     return flipud(npData)
+        # else:
+        #     print('failed to get image')
         return self.get_fake_image()
 
     def get_fake_image(self):
