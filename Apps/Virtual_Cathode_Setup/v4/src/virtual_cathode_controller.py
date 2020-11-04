@@ -114,7 +114,8 @@ class virtual_cathode_controller(QtGui.QApplication):
                             yRad = self.view.maskYRadius_spinBox.value()
                           )
 
-
+    def handle_RS_autoreset(self):
+        print('handle_RS_autoreset')
 
     def handle_setIntensity_pushButton(self):
         print 'handle_setIntensity_pushButton'
@@ -244,6 +245,8 @@ class virtual_cathode_controller(QtGui.QApplication):
         self.view.stepSize_spinBox.valueChanged.connect(self.handle_stepSize_spinBox)
         self.view.spinBox_minLevel.valueChanged.connect(self.handle_spinBox_minLevel)
         self.view.spinBox_maxLevel.valueChanged.connect(self.handle_spinBox_maxLevel)
+
+        self.view.RS_autoreset.released.connect(self.handle_RS_autoreset)
 
         self.view.rs_buffer_size_spinbox.valueChanged.connect(self.handle_rs_buffer_size_spinbox)
 

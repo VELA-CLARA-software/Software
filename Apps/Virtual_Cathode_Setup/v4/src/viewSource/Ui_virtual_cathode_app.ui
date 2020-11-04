@@ -3366,7 +3366,7 @@
              <number>99999999</number>
             </property>
             <property name="value">
-             <number>1</number>
+             <number>10</number>
             </property>
            </widget>
           </item>
@@ -3374,6 +3374,13 @@
            <widget class="QLabel" name="rs_buffer_size">
             <property name="text">
              <string>Buffer Size</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="RS_autoreset">
+            <property name="text">
+             <string>Auto-Reset</string>
             </property>
            </widget>
           </item>
