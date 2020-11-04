@@ -71,6 +71,7 @@ class virtual_cathode_controller(QtGui.QApplication):
         # # a clipboad item fro copying paths to
         # self.cb = QtGui.QApplication.clipboard()
         # self.cb.clear(mode = self.cb.Clipboard)
+        self.model.set_rs_buffer_size(5)
 
     def handle_close_down(self):
         self.timer.stop()
@@ -114,11 +115,10 @@ class virtual_cathode_controller(QtGui.QApplication):
                             yRad = self.view.maskYRadius_spinBox.value()
                           )
 
-    def handle_RS_autoreset(self):
-        print('handle_RS_autoreset')
+
 
     def handle_setIntensity_pushButton(self):
-        print 'handle_setIntensity_pushButton'
+        print('handle_setIntensity_pushButton')
 
     def handle_load_pushButton(self):
         print 'handle_load_pushButton'
@@ -130,7 +130,7 @@ class virtual_cathode_controller(QtGui.QApplication):
         self.model.reset_running_stats()
 
     def handle_rs_buffer_size_spinbox(self):
-        self.model.set_buffer_size(self.view.rs_buffer_size_spinbox.value())
+        self.model.set_rs_buffer_size(self.view.rs_buffer_size_spinbox.value())
 
     def handle_analyse_pushButton(self):
         #print 'handle_analyse_pushButton'
@@ -246,7 +246,6 @@ class virtual_cathode_controller(QtGui.QApplication):
         self.view.spinBox_minLevel.valueChanged.connect(self.handle_spinBox_minLevel)
         self.view.spinBox_maxLevel.valueChanged.connect(self.handle_spinBox_maxLevel)
 
-        self.view.RS_autoreset.released.connect(self.handle_RS_autoreset)
 
         self.view.rs_buffer_size_spinbox.valueChanged.connect(self.handle_rs_buffer_size_spinbox)
 
