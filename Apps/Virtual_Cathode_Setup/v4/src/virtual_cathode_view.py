@@ -80,6 +80,7 @@ class virtual_cathode_view(QtGui.QMainWindow, Ui_virtual_cathode_view):
         self.handle_RS_autoreset()
 
 
+
     def handle_RS_autoreset(self):
         print('handle_RS_autoreset')
         if self.RS_autoreset.isChecked():
@@ -183,18 +184,25 @@ class virtual_cathode_view(QtGui.QMainWindow, Ui_virtual_cathode_view):
         if self.model_data.values[self.model_data.rs_buffer_full]:
             for key, value in self.widget_to_dataname_rs.iteritems():
                 # print('update widget ', value, key)
-                if self.new_value(value):
-                    try:
-                        self.widget_updatefunc_rs[key][0](key, value, self.widget_updatefunc_rs[key])
-                    except:
-                        print('ERROR2 in updating ', key, value)
-
-
+                self.widget_updatefunc_rs[key][0](key, value, self.widget_updatefunc_rs[key])
+                # if self.new_value(value):
+                #     try:
+                #         self.widget_updatefunc_rs[key][0](key, value, self.widget_updatefunc_rs[key])
+                #     except:
+                #         print('ERROR2 in updating ', key, value)
+                # else:
+                #     print(key, value, " is not new")
         if self.model_data.values[self.model_data.avg_pix_beam_level] < self.model_data.values[
             self.model_data.img_avg_mean]:
             self.img_avg.setStyleSheet("background-color: #ffffff")
         else:
             self.img_avg.setStyleSheet("background-color: #ff5733")
+
+        if self.model_data.values[self.model_data.rs_buffer_full]:
+            self.rs_buffer_count.setStyleSheet("background-color: #75ff33")
+        else:
+            self.rs_buffer_count.setStyleSheet("background-color: #ff5733")
+
 
 
     def update_rs_buffer_full(self):
@@ -373,7 +381,6 @@ class virtual_cathode_view(QtGui.QMainWindow, Ui_virtual_cathode_view):
 
     def update_real_rs(self, widget, value, dummy):
         s= "{:.1E}".format(self.model_data.values.get(value))
-        print(s)
         widget.setText(QtCore.QString(s))
 
     def update_image(self, widget, value, dummy):
@@ -387,7 +394,7 @@ class virtual_cathode_view(QtGui.QMainWindow, Ui_virtual_cathode_view):
     def update_latest_dir(self, widget, value, dummy):
         if self.model_data.values.get(value) != 'UNKNOWN':  # MAGIC_STRING
             s = self.model_data.values.get(
-                self.model_data.image_save_dir_root) + '\\' + self.model_data.values.get(value)
+                self.model_data.image_save_dir_root) + self.model_data.values.get(value)
             widget.setText(QtCore.QString(s))
 
     def update_set_pos_button(self):
@@ -434,30 +441,39 @@ class virtual_cathode_view(QtGui.QMainWindow, Ui_virtual_cathode_view):
         self.widget_to_dataname_rs[self.x_mean_mm] = self.model_data.x_mean_mm
         self.widget_to_dataname_rs[self.x_sd_mm] = self.model_data.x_sd_mm
         self.widget_to_dataname_rs[self.x_sd_mm_per] = self.model_data.x_sd_mm_per
+
         self.widget_to_dataname_rs[self.y_mean_mm] = self.model_data.y_mean_mm
         self.widget_to_dataname_rs[self.y_sd_mm] = self.model_data.y_sd_mm
         self.widget_to_dataname_rs[self.y_sd_mm_per] = self.model_data.y_sd_mm_per
+
         self.widget_to_dataname_rs[self.sx_mean_mm] = self.model_data.sx_mean_mm
         self.widget_to_dataname_rs[self.sx_sd_mm] = self.model_data.sx_sd_mm
         self.widget_to_dataname_rs[self.sx_sd_mm_per] = self.model_data.sx_sd_mm_per
+
         self.widget_to_dataname_rs[self.sy_mean_mm] = self.model_data.sy_mean_mm
         self.widget_to_dataname_rs[self.sy_sd_mm] = self.model_data.sy_sd_mm
         self.widget_to_dataname_rs[self.sy_sd_mm_per] = self.model_data.sy_sd_mm_per
+
         self.widget_to_dataname_rs[self.cov_mean_mm] = self.model_data.cov_mean_mm
         self.widget_to_dataname_rs[self.cov_sd_mm] = self.model_data.cov_sd_mm
         self.widget_to_dataname_rs[self.cov_sd_mm_per] = self.model_data.cov_sd_mm_per
+
         self.widget_to_dataname_rs[self.x_mean_pix] = self.model_data.x_mean_pix
         self.widget_to_dataname_rs[self.x_sd_pix] = self.model_data.x_sd_pix
         self.widget_to_dataname_rs[self.x_sd_pix_per] = self.model_data.x_sd_pix_per
+
         self.widget_to_dataname_rs[self.y_mean_pix] = self.model_data.y_mean_pix
         self.widget_to_dataname_rs[self.y_sd_pix] = self.model_data.y_sd_pix
         self.widget_to_dataname_rs[self.y_sd_pix_per] = self.model_data.y_sd_pix_per
+
         self.widget_to_dataname_rs[self.sx_mean_pix] = self.model_data.sx_mean_pix
         self.widget_to_dataname_rs[self.sx_sd_pix] = self.model_data.sx_sd_pix
         self.widget_to_dataname_rs[self.sx_sd_pix_per] = self.model_data.sx_sd_pix_per
+
         self.widget_to_dataname_rs[self.sy_mean_pix] = self.model_data.sy_mean_pix
         self.widget_to_dataname_rs[self.sy_sd_pix] = self.model_data.sy_sd_pix
         self.widget_to_dataname_rs[self.sy_sd_pix_per] = self.model_data.sy_sd_pix_per
+
         self.widget_to_dataname_rs[self.cov_mean_pix] = self.model_data.cov_mean_pix
         self.widget_to_dataname_rs[self.cov_sd_pix] = self.model_data.cov_sd_pix
         self.widget_to_dataname_rs[self.cov_sd_pix_per] = self.model_data.cov_sd_pix_per
@@ -485,7 +501,7 @@ class virtual_cathode_view(QtGui.QMainWindow, Ui_virtual_cathode_view):
         self.widget_to_dataname[self.hwp_read] = self.model_data.hwp_read
         self.widget_to_dataname[self.last_filename] = self.model_data.last_save_file
         self.widget_to_dataname[self.last_directory] = self.model_data.last_save_dir
-        self.widget_to_dataname[self.last_directory] = self.model_data.last_save_dir
+        #self.widget_to_dataname[self.last_directory] = self.model_data.last_save_dir
         self.widget_to_dataname[self.set_pos_pushButton] = self.model_data.is_setting_pos
         self.widget_to_dataname[self.rs_buffer_count] = self.model_data.rs_buffer_count
         self.widget_to_dataname[self.set_pos_pushButton] = self.model_data.is_setting_pos
@@ -516,12 +532,15 @@ class virtual_cathode_view(QtGui.QMainWindow, Ui_virtual_cathode_view):
         # buffer is full
         self.widget_updatefunc_rs = {}
         self.widget_updatefunc_rs[self.y_val_2] = [self.update_real_rs]
+
         self.widget_updatefunc_rs[self.x_mean_mm] = [self.update_real_rs]
         self.widget_updatefunc_rs[self.x_sd_mm] = [self.update_real_rs]
         self.widget_updatefunc_rs[self.x_sd_mm_per] = [self.update_real_rs]
+
         self.widget_updatefunc_rs[self.y_mean_mm] = [self.update_real_rs]
         self.widget_updatefunc_rs[self.y_sd_mm] = [self.update_real_rs]
         self.widget_updatefunc_rs[self.y_sd_mm_per] = [self.update_real_rs]
+
         self.widget_updatefunc_rs[self.sx_mean_mm] = [self.update_real_rs]
         self.widget_updatefunc_rs[self.sx_sd_mm] = [self.update_real_rs]
         self.widget_updatefunc_rs[self.sx_sd_mm_per] = [self.update_real_rs]

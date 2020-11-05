@@ -202,6 +202,10 @@ class controller(object):
                 controller.model.data.values.get(data.last_save_dir)
             self.cb.setText(s, mode = self.cb.Clipboard)
 
+    def handle_copy_data_to_clipboard(self):
+        print("handle_copy_data_to_clipboard")
+
+
     def handle_center_mask_pushButton(self):
         controller.model.center_mask()
 

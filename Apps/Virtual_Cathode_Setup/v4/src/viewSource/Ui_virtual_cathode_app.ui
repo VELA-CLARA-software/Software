@@ -44,7 +44,7 @@
       </property>
       <property name="maximumSize">
        <size>
-        <width>400</width>
+        <width>380</width>
         <height>16777215</height>
        </size>
       </property>
@@ -637,6 +637,9 @@
         </item>
         <item>
          <layout class="QGridLayout" name="gridLayout_3">
+          <property name="spacing">
+           <number>2</number>
+          </property>
           <item row="10" column="3">
            <widget class="QLabel" name="y_mean_pix">
             <property name="sizePolicy">
@@ -659,7 +662,7 @@
             </property>
             <property name="font">
              <font>
-              <pointsize>9</pointsize>
+              <pointsize>8</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
@@ -697,7 +700,7 @@
             </property>
             <property name="font">
              <font>
-              <pointsize>9</pointsize>
+              <pointsize>8</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
@@ -709,7 +712,7 @@
              <bool>true</bool>
             </property>
             <property name="alignment">
-             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             <set>Qt::AlignCenter</set>
             </property>
            </widget>
           </item>
@@ -767,7 +770,7 @@
             </property>
             <property name="font">
              <font>
-              <pointsize>9</pointsize>
+              <pointsize>8</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
@@ -805,7 +808,7 @@
             </property>
             <property name="font">
              <font>
-              <pointsize>9</pointsize>
+              <pointsize>8</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
@@ -843,7 +846,7 @@
             </property>
             <property name="font">
              <font>
-              <pointsize>9</pointsize>
+              <pointsize>8</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
@@ -913,7 +916,7 @@
             </property>
             <property name="font">
              <font>
-              <pointsize>9</pointsize>
+              <pointsize>8</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
@@ -925,7 +928,7 @@
              <bool>true</bool>
             </property>
             <property name="alignment">
-             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             <set>Qt::AlignCenter</set>
             </property>
            </widget>
           </item>
@@ -989,7 +992,7 @@
             </property>
             <property name="font">
              <font>
-              <pointsize>9</pointsize>
+              <pointsize>8</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
@@ -1001,7 +1004,7 @@
              <bool>true</bool>
             </property>
             <property name="alignment">
-             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             <set>Qt::AlignCenter</set>
             </property>
            </widget>
           </item>
@@ -1135,7 +1138,7 @@
             </property>
             <property name="font">
              <font>
-              <pointsize>9</pointsize>
+              <pointsize>8</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
@@ -1147,7 +1150,7 @@
              <bool>true</bool>
             </property>
             <property name="alignment">
-             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             <set>Qt::AlignCenter</set>
             </property>
            </widget>
           </item>
@@ -1205,7 +1208,7 @@
             </property>
             <property name="font">
              <font>
-              <pointsize>9</pointsize>
+              <pointsize>8</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
@@ -1217,7 +1220,7 @@
              <bool>true</bool>
             </property>
             <property name="alignment">
-             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             <set>Qt::AlignCenter</set>
             </property>
            </widget>
           </item>
@@ -1345,7 +1348,7 @@
             </property>
             <property name="font">
              <font>
-              <pointsize>9</pointsize>
+              <pointsize>8</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
@@ -1415,7 +1418,7 @@
             </property>
             <property name="font">
              <font>
-              <pointsize>9</pointsize>
+              <pointsize>8</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
@@ -1485,7 +1488,7 @@
             </property>
             <property name="font">
              <font>
-              <pointsize>9</pointsize>
+              <pointsize>8</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
@@ -1523,7 +1526,7 @@
             </property>
             <property name="font">
              <font>
-              <pointsize>9</pointsize>
+              <pointsize>8</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
@@ -1739,7 +1742,7 @@
             </property>
             <property name="font">
              <font>
-              <pointsize>9</pointsize>
+              <pointsize>8</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
@@ -1751,7 +1754,7 @@
              <bool>true</bool>
             </property>
             <property name="alignment">
-             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             <set>Qt::AlignCenter</set>
             </property>
            </widget>
           </item>
@@ -1906,7 +1909,7 @@
              <bool>true</bool>
             </property>
             <property name="alignment">
-             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             <set>Qt::AlignCenter</set>
             </property>
            </widget>
           </item>
@@ -2172,7 +2175,7 @@
             </property>
             <property name="font">
              <font>
-              <pointsize>9</pointsize>
+              <pointsize>8</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
@@ -2210,7 +2213,7 @@
             </property>
             <property name="font">
              <font>
-              <pointsize>9</pointsize>
+              <pointsize>8</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
@@ -2321,7 +2324,7 @@
             </property>
             <property name="font">
              <font>
-              <pointsize>9</pointsize>
+              <pointsize>8</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
@@ -2359,7 +2362,7 @@
             </property>
             <property name="font">
              <font>
-              <pointsize>9</pointsize>
+              <pointsize>8</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
@@ -2397,7 +2400,7 @@
             </property>
             <property name="font">
              <font>
-              <pointsize>9</pointsize>
+              <pointsize>8</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
@@ -2409,7 +2412,7 @@
              <bool>true</bool>
             </property>
             <property name="alignment">
-             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             <set>Qt::AlignCenter</set>
             </property>
            </widget>
           </item>
@@ -2499,7 +2502,7 @@
             </property>
             <property name="font">
              <font>
-              <pointsize>9</pointsize>
+              <pointsize>8</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
@@ -2569,7 +2572,7 @@
             </property>
             <property name="font">
              <font>
-              <pointsize>9</pointsize>
+              <pointsize>8</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
@@ -2639,7 +2642,7 @@
             </property>
             <property name="font">
              <font>
-              <pointsize>9</pointsize>
+              <pointsize>8</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
@@ -2651,7 +2654,7 @@
              <bool>true</bool>
             </property>
             <property name="alignment">
-             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             <set>Qt::AlignCenter</set>
             </property>
            </widget>
           </item>
@@ -2747,7 +2750,7 @@
             </property>
             <property name="font">
              <font>
-              <pointsize>9</pointsize>
+              <pointsize>8</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
@@ -2785,7 +2788,7 @@
             </property>
             <property name="font">
              <font>
-              <pointsize>9</pointsize>
+              <pointsize>8</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
@@ -2823,7 +2826,7 @@
             </property>
             <property name="font">
              <font>
-              <pointsize>9</pointsize>
+              <pointsize>8</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
@@ -2861,7 +2864,7 @@
             </property>
             <property name="font">
              <font>
-              <pointsize>9</pointsize>
+              <pointsize>8</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
@@ -2873,7 +2876,7 @@
              <bool>true</bool>
             </property>
             <property name="alignment">
-             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             <set>Qt::AlignCenter</set>
             </property>
            </widget>
           </item>
@@ -2969,7 +2972,7 @@
             </property>
             <property name="font">
              <font>
-              <pointsize>9</pointsize>
+              <pointsize>8</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
@@ -3077,7 +3080,7 @@
             </property>
             <property name="font">
              <font>
-              <pointsize>9</pointsize>
+              <pointsize>8</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
@@ -3153,7 +3156,7 @@
             </property>
             <property name="font">
              <font>
-              <pointsize>9</pointsize>
+              <pointsize>8</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
@@ -3165,7 +3168,7 @@
              <bool>true</bool>
             </property>
             <property name="alignment">
-             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             <set>Qt::AlignCenter</set>
             </property>
            </widget>
           </item>
@@ -3223,7 +3226,7 @@
             </property>
             <property name="font">
              <font>
-              <pointsize>9</pointsize>
+              <pointsize>8</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
@@ -3293,7 +3296,7 @@
             </property>
             <property name="font">
              <font>
-              <pointsize>9</pointsize>
+              <pointsize>8</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
@@ -3305,7 +3308,7 @@
              <bool>true</bool>
             </property>
             <property name="alignment">
-             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             <set>Qt::AlignCenter</set>
             </property>
            </widget>
           </item>
@@ -3369,7 +3372,7 @@
             </property>
             <property name="font">
              <font>
-              <pointsize>9</pointsize>
+              <pointsize>8</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
@@ -3471,7 +3474,7 @@
             </property>
             <property name="font">
              <font>
-              <pointsize>9</pointsize>
+              <pointsize>8</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
@@ -3547,7 +3550,7 @@
             </property>
             <property name="font">
              <font>
-              <pointsize>9</pointsize>
+              <pointsize>8</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
@@ -3559,7 +3562,7 @@
              <bool>true</bool>
             </property>
             <property name="alignment">
-             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             <set>Qt::AlignCenter</set>
             </property>
            </widget>
           </item>
@@ -3617,7 +3620,7 @@
             </property>
             <property name="font">
              <font>
-              <pointsize>9</pointsize>
+              <pointsize>8</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
@@ -3655,7 +3658,7 @@
             </property>
             <property name="font">
              <font>
-              <pointsize>9</pointsize>
+              <pointsize>8</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
@@ -3715,11 +3718,22 @@
          </layout>
         </item>
         <item>
-         <widget class="QPushButton" name="resetMeanSD_pushButton">
-          <property name="text">
-           <string>Reset Means and Sigma</string>
-          </property>
-         </widget>
+         <layout class="QHBoxLayout" name="horizontalLayout_4">
+          <item>
+           <widget class="QPushButton" name="copy_data_to_clipboard">
+            <property name="text">
+             <string>Copy Laser &amp; WCM Data To Clip</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="resetMeanSD_pushButton">
+            <property name="text">
+             <string>Reset Means and Sigma</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
         <item>
          <widget class="Line" name="line_7">
@@ -3870,6 +3884,7 @@
        <zorder>line_2</zorder>
        <zorder>resetMeanSD_pushButton</zorder>
        <zorder>layoutWidget</zorder>
+       <zorder>copy_data_to_clipboard</zorder>
       </widget>
       <widget class="QWidget" name="tab_2">
        <attribute name="title">

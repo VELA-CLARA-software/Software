@@ -69,8 +69,8 @@ class virtual_cathode_controller(QtGui.QApplication):
         self.view.activateWindow()
         #
         # # a clipboad item fro copying paths to
-        # self.cb = QtGui.QApplication.clipboard()
-        # self.cb.clear(mode = self.cb.Clipboard)
+        self.cb = QtGui.QApplication.clipboard()
+        self.cb.clear(mode = self.cb.Clipboard)
         self.model.set_rs_buffer_size(5)
 
     def handle_close_down(self):
@@ -114,6 +114,7 @@ class virtual_cathode_controller(QtGui.QApplication):
                             xRad = self.view.maskXRadius_spinBox.value(),
                             yRad = self.view.maskYRadius_spinBox.value()
                           )
+
 
 
 
@@ -204,19 +205,36 @@ class virtual_cathode_controller(QtGui.QApplication):
         self.model.move_up(self.view.mirror_v_step_set_spinBox.value())
 
     def handle_open_path_push_button(self):
-        f = '\\\\claraserv3'
-        if controller.self.data[data.last_save_dir] == 'UNKNOWN':
-            f.join('\\CameraImages\\')
-        else:
-            f = f + controller.self.data[data.last_save_path]
-        QtGui.QFileDialog.getOpenFileNames(self.view.centralwidget, 'Images', f)
+        f = str(self.view.last_directory.text())
+        try:
+            QtGui.QFileDialog.getOpenFileNames(self.view.centralwidget, 'Images', f)
+        except:
+            print("Erroro opening ", f)
+            pass
 
     def handle_copy_path_pushButton(self):
-        if controller.self.data.get(data.last_save_path) != 'UNKNOWN':#
-            # MAGIC_STRING
-            s = controller.self.data.get(data.image_save_dir_root)+ \
-                controller.self.data.get(data.last_save_dir)
-            self.cb.setText(s, mode = self.cb.Clipboard)
+        s = str(self.view.last_directory.text())
+        self.cb.setText(s, mode = self.cb.Clipboard)
+
+
+    def handle_copy_data_to_clipboard(self):
+
+        v = self.model.values
+        d = self.model.data
+
+        ld = [v[d.las_int], v[d.las_int_mean], v[d.las_int_sd], v[d.las_int_sd_per]]
+        wd = [v[d.wcm_val], v[d.wcm_mean], v[d.wcm_sd], v[d.wcm_sd_per]]
+
+        lds  = ["las E (uJ) : "] + ["{:.1E}".format(i) for i in ld]
+        wds  = ["wcm Q (pC) : "] + ["{:.1E}".format(i) for i in wd]
+
+        header = ["            ", "  val  ", "    mean ", "    rms  ", "   rms(%)"]
+        s = ''.join(header) + '\n' + ' '.join(lds) + '\n' + ' '.join(wds)
+        print(s)
+        self.cb.setText(s, mode=self.cb.Clipboard)
+
+
+
 
     def handle_center_mask_pushButton(self):
         self.model.center_mask()
@@ -245,6 +263,8 @@ class virtual_cathode_controller(QtGui.QApplication):
         self.view.stepSize_spinBox.valueChanged.connect(self.handle_stepSize_spinBox)
         self.view.spinBox_minLevel.valueChanged.connect(self.handle_spinBox_minLevel)
         self.view.spinBox_maxLevel.valueChanged.connect(self.handle_spinBox_maxLevel)
+
+        self.view.copy_data_to_clipboard.clicked.connect(self.handle_copy_data_to_clipboard)
 
 
         self.view.rs_buffer_size_spinbox.valueChanged.connect(self.handle_rs_buffer_size_spinbox)

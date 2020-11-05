@@ -279,22 +279,18 @@ class virtual_cathode_model():
             v[self.data.shutter2_open] = True
         else:
             v[self.data.shutter2_open] = False
-
-
         #v[self.data.rs_buffer_size] = self.pil_obj.max_buffer_count
         v[self.data.rs_buffer_count] = self.pil_obj.Q_n
         v[self.data.rs_buffer_full] = self.pil_obj.Q_full
-
         if v[self.data.rs_buffer_full]:
             if self.data.values[self.data.rs_auto_reset]:
                 self.reset_running_stats()
-
-        print("Q_n = ",v[self.data.rs_buffer_count], v[self.data.rs_buffer_full])
+        #print("Q_n = ",v[self.data.rs_buffer_count], v[self.data.rs_buffer_full])
 
 
 
     def set_rs_buffer_size(self, val):
-        print("set_buffer_size = ", val)
+        #print("set_buffer_size = ", val)
         self.pil.setAllRSBufferSize(val)
 
     def move_left(self, step):
