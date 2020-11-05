@@ -287,8 +287,6 @@ class virtual_cathode_model():
                 self.reset_running_stats()
         #print("Q_n = ",v[self.data.rs_buffer_count], v[self.data.rs_buffer_full])
 
-
-
     def set_rs_buffer_size(self, val):
         #print("set_buffer_size = ", val)
         self.pil.setAllRSBufferSize(val)
@@ -313,18 +311,18 @@ class virtual_cathode_model():
 
     def get_fast_image(self):
         # TODO sonme error handling
-        # if self.pil.isAcquiring_VC():
-        #     # DEBUG
-        #     #print('take image 1')
-        #     self.pil.takeFastImage_VC()#getFastImage_VC():
-        #     npData = array(  self.vc_image.data ).reshape(( self.vc_image.num_pix_y,
-        #                                                         self.vc_image.num_pix_x))
-        #       #  never works :((((
-        #       #  npData = array(self.vc_image.data2D)
-        #     #print('return image')
-        #     return flipud(npData)
-        # else:
-        #     print('failed to get image')
+        if self.pil.isAcquiring_VC():
+            # DEBUG
+            #print('take image 1')
+            self.pil.takeFastImage_VC()#getFastImage_VC():
+            npData = array(  self.vc_image.data ).reshape(( self.vc_image.num_pix_y,
+                                                                self.vc_image.num_pix_x))
+              #  never works :((((
+              #  npData = array(self.vc_image.data2D)
+            #print('return image')
+            return flipud(npData)
+        else:
+            print('failed to get image')
         return self.get_fake_image()
 
     def get_fake_image(self):
