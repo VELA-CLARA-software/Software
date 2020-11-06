@@ -273,6 +273,9 @@ class model_data(object):
 	rs_buffer_full  = 'rs_buffer_full'
 	all_value_keys.append(rs_buffer_full)
 
+	rs_auto_reset  = 'rs_auto_reset'
+	all_value_keys.append(rs_auto_reset)
+
 	# laser_buffer_full = 'laser_buffer_full'
 	# all_value_keys.append(laser_buffer_full)
 	# wcm_buffer_full = 'wcm_buffer_full'

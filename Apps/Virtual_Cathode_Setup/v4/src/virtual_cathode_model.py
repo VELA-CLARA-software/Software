@@ -211,7 +211,6 @@ class virtual_cathode_model():
 
         # FRO ANALYSIs IN MM PERCENTS, JUST COPY THBE PIXEL VALUES
 
-
         # laser energy meter
         v[self.data.las_int] = self.pil_obj.energy
         v[self.data.las_int_mean] = self.pil_obj.energy_mean
@@ -238,12 +237,9 @@ class virtual_cathode_model():
         else:
             v[self.data.img_avg_sd_per] = 0.0
 
-
-
-
- #       v[self.data.laser_buffer_full] = self.pil_obj.energy_full
-
+        #v[self.data.laser_buffer_full] = self.pil_obj.energy_full
         #print('take image START')
+
         v[self.data.image] = self.get_fast_image()
 
         v[self.data.is_setting_pos] = self.pil.isSettingPos()
@@ -283,22 +279,17 @@ class virtual_cathode_model():
             v[self.data.shutter2_open] = True
         else:
             v[self.data.shutter2_open] = False
+        #v[self.data.rs_buffer_size] = self.pil_obj.max_buffer_count
+        v[self.data.rs_buffer_count] = self.pil_obj.Q_n
+        v[self.data.rs_buffer_full] = self.pil_obj.Q_full
+        if v[self.data.rs_buffer_full]:
+            if self.data.values[self.data.rs_auto_reset]:
+                self.reset_running_stats()
+        #print("Q_n = ",v[self.data.rs_buffer_count], v[self.data.rs_buffer_full])
 
-
-        v[self.data.rs_buffer_size] = self.pil_obj.max_buffer_count
-        v[self.data.rs_buffer_count] = self.pil_obj.buffer_count
-        v[self.data.rs_buffer_full] = self.pil_obj.buffer_full
-
-        print(self.data.rs_buffer_size,v[self.data.rs_buffer_size] )
-        print(self.data.rs_buffer_count,v[self.data.rs_buffer_count] )
-        print(self.data.rs_buffer_full,v[self.data.rs_buffer_full] )
-
-
-
-    def set_buffer_size(self, val):
-        print("set_buffer_size = ", val)
+    def set_rs_buffer_size(self, val):
+        #print("set_buffer_size = ", val)
         self.pil.setAllRSBufferSize(val)
-
 
     def move_left(self, step):
         self.pil.moveLeft(step)
@@ -319,6 +310,7 @@ class virtual_cathode_model():
         self.pil.setHWP(self.pil_obj.HWP + delta_value)
 
     def get_fast_image(self):
+        # TODO sonme error handling
         if self.pil.isAcquiring_VC():
             # DEBUG
             #print('take image 1')
