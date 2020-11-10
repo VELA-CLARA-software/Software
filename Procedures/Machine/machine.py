@@ -55,7 +55,7 @@ class Machine(object):
         pvid = self.addPV(pv)
         pvid.value = value
 
-    def initilise_parameters(self):
+    def initialise_parameters(self):
         if self.lineType=='VELA':
             self.velaMethod()
         elif self.lineType=='CLARA':

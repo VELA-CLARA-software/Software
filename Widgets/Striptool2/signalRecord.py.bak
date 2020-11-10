@@ -92,7 +92,7 @@ class recordWorker(qt.QObject):
         return float(sum(numbers)) /  float(max(len(numbers), 1))
 
     def calculate_mean_data_time(self, numbers):
-        time, data = list(zip(*numbers))
+        time, data = zip(*numbers)
         return self.calculate_mean(time), self.calculate_mean(data)
 
     def __init__(self, records, signal, name):
@@ -309,7 +309,7 @@ class signalRecorderCSV(qt.QObject):
 
     def open_file(self, filename):
         self.basefilename, file_extension = os.path.splitext(filename)
-        print(('Opening file ', self.basefilename + '.csv'))
+        print('Opening file ', self.basefilename + '.csv')
         self.file = open(self.basefilename + '.csv',"wb", 1)
         self.writer = csv.writer(self.file, delimiter=',', quotechar='"')
 
@@ -341,7 +341,7 @@ class signalRecorderLog(qt.QObject):
         self.records = {}
         formatter = logging.Formatter(fmt='%(asctime)s %(message)s')#,
 #                              datefmt='%Y-%m-%d %H:%M:%S,uuu')
-        print(('Opening logger at ', filename))
+        print('Opening logger at ', filename)
         self.fileLogger = RotatingFileHandler(filename, maxBytes=maxBytes, backupCount=backupCount)
         self.fileLogger.setFormatter(formatter)
         signalLogger.addHandler(self.fileLogger)

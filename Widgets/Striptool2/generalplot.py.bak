@@ -22,8 +22,8 @@ def curveUpdate(self, curve):
     curve.update()
 
 def logthread(caller):
-    print(("%-25s: %s, %s," % (caller, threading.current_thread().name,
-                              threading.current_thread().ident)))
+    print('%-25s: %s, %s,' % (caller, threading.current_thread().name,
+                              threading.current_thread().ident))
 
 class CustomException(Exception):
     def __init__(self, value):
@@ -120,7 +120,7 @@ class generalPlot(qt.QWidget):
         filter="HDF5 files (*.h5);;XLSX files (*.xlsx);;CSV files (*.csv);; Binary Files (*.bin)", selectedFilter="HDF5 files (*.h5)"))
         _, file_extension = os.path.splitext(saveFileName)
         if file_extension == '.csv' or file_extension == '.bin':
-            print(('file_extension = ', file_extension))
+            print ('file_extension = ', file_extension)
             self.saveCurveCSVBin(saveFileName, name)
         elif file_extension == '.xlsx':
             self.saveDataXLSX(saveFileName, name)
@@ -131,7 +131,7 @@ class generalPlot(qt.QWidget):
             self.saveDataH5(saveFileName, name)
 
     def saveDataH5(self, saveFileName, name=False):
-        print(('saveFileName = ', saveFileName))
+        print ('saveFileName = ', saveFileName)
         data_dict = {}
         if not name:
             records = self.records
@@ -180,7 +180,8 @@ class generalPlot(qt.QWidget):
         filename, file_extension = os.path.splitext(saveFileName)
         saveData = self.formatCurveData(name)
         if file_extension == '.csv':
-            fmt="%.11e,%.6e"
+            # fmt='%s,%s,%.18e'
+            fmt='%.11e,%.6e'
             target = open(saveFileName,'w')
             for row in saveData:
                 target.write((fmt % tuple(row))+'\n')

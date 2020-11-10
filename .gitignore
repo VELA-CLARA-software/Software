@@ -17,3 +17,6 @@ Apps/MomentumApp/controller/controller.py
 *.h5
 Procedures/Tomography_Analysis/CLARATomography2DHK/Data 2019-03-04 10pC degaussing sol -125.0/S02-CAM-02_2019-3-4_17-48-46_10images.hdf5
 Apps/AlignOnBPMs_v2/bpm_calibration_test.py
+Apps/DataRecorder/*/
+build/
+dist/

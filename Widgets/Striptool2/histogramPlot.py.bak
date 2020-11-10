@@ -113,7 +113,7 @@ class histogramPlot(qt.QWidget):
         self.normalise = value
 
     def clearHistogram(self):
-        for plot in self.histogramPlotCurves.values():
+        for plot in self.histogramPlotCurves.itervalues():
             plot.setCutTime(time.time())
 
     def setPlotRate(self, value):
@@ -131,7 +131,7 @@ class histogramPlot(qt.QWidget):
 
     def plotUpdate(self):
         if self.isVisible() and not self.paused:
-            for curve in list(self.histogramPlotCurves.values()):
+            for curve in self.histogramPlotCurves.values():
                 curve.update()
 
     def pausePlotting(self, value=True):
@@ -158,7 +158,7 @@ class histogramPlot(qt.QWidget):
             self.addCurve(name)
 
     def setNumberOfBins(self, nbins):
-        for plot in self.histogramPlotCurves.values():
+        for plot in self.histogramPlotCurves.itervalues():
             plot.setNumberOfBins(nbins)
 
 class histogramPlotCurve(qt.QObject):
@@ -202,12 +202,12 @@ class histogramPlotCurve(qt.QObject):
             self.doingPlot  = True
             if len(data) > self.decimateScale:
                 del data[:len(data)-self.decimateScale]
-            x, y = list(zip(*data))
+            x, y = zip(*data)
             pos = bisect_left(x, self.cutTime)
             if pos > 0:
                 del data[:pos]
             if len(data) > 0:
-                x, y = list(zip(*data))
+                x, y = zip(*data)
                 y2,x2 = np.histogram(y, bins=self.numberBins)
                 if self.parent.subtractMeans:
                     x2 = x2 - np.mean(x2)

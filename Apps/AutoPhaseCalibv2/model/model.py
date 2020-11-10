@@ -95,7 +95,7 @@ class Model(object):
             self.sleepTimeDipole = 0.25
             self.sleepTimeFine = 0.1
         self.crestingData = dataArray()
-        self.parameters = self.baseMachine.initilise_parameters()
+        self.parameters = self.baseMachine.initialise_parameters()
         self.data = []
         self.calibrationPhase = {'Gun': None, 'Linac1': None}
         self.settings = {'Gun_Amp_Set': 71000, 'Linac1_Amp_Set': 41000}
