@@ -28,17 +28,21 @@ from datetime import datetime
 # from src.data.state import state
 import os
 import cPickle as pkl
+from shutil import copyfile
 from src.data.config import config
 from src.data.logger import logger
+#from src.data import rf_conditioning_data
 import numpy
 # import src.data.rf_condition_data_base as dat
 # import wolframclient.serializers as wxf
 # from src.data.state import state
 import sys
+import numpy as np
 import traceback
 import collections
 from PyQt4.QtGui import QApplication
 from PyQt4.QtCore import QTimer
+from src.data.state import ramp_method
 
 class rf_conditioning_logger(logger):
     '''
@@ -59,7 +63,7 @@ class rf_conditioning_logger(logger):
     This is so that we can call QApplication.processEvents(), and keep logger free of QT imports
 
     '''
-    debug = False
+    debug = None
 
     _pulse_count_log_file = None
     _pulse_count_log_file_obj = None
@@ -72,38 +76,31 @@ class rf_conditioning_logger(logger):
         # debug = True sets the working directory directory to not be timestamped,
         # folder, to make
         rf_conditioning_logger.debug = debug
+        if rf_conditioning_logger.debug:
+            self.message("rf_conditioning_logger is in debug mode",add_to_text_log=False,show_time_stamp=False)
+        else:
+            self.message("rf_conditioning_logger is NOT in debug mode",add_to_text_log=False,show_time_stamp=False)
+
         self.column_width = column_width
 
         # has a config reader to get the config parameters to pass to logger
         # WE ASSUME THE CONFIG HAS BEEN PARSED CORRECTLY!
         self.config = config()
         self.config_data = self.config.raw_config_data
-
-        self.data_log_timer = QTimer() # A thread to write the binary log
-
+        #
+        self.data_log_timer = QTimer() # A thread to write the binary log automatically
+        #
+        # this is the apps main data dictionary, this is set using
         self.values = None
 
-    def set_data_values(self, values):
-        '''
-        Data Values is the main data values dictionary that is logged to a bianry file
-        :param values:
-        :return:
-        '''
-        self.values = values
-
-
-    def start_binary_data_logging(self, values):
+    def start_binary_data_logging(self):
         '''
         set local self.values to values and  Start the binary data log,
-        :param values: main data values dictionary that is logged to a binary file
         rf_condition_data.values[]
         '''
-        self.values = values
         self.data_log_timer = QTimer()
         self.open_binary_log_file( self.config_data[self.config.BINARY_DATA_LOG_FILENAME] )
-
         self.message_header(__name__ + ' start_binary_data_logging ', show_time_stamp=True)
-
         ''' Write the plaintext header to the log file '''
         self.write_binary_log_header(self.values)
         self.log_binary_data()
@@ -117,23 +114,6 @@ class rf_conditioning_logger(logger):
         '''
         self.write_binary_log(self.values)
 
-    # NNeds re-writing
-    def start_data_logging(self):
-        self.header(self.my_name + ' start_data_logging')
-        self.message(['data_log path = ' + self.data_path,
-                      ' starting monitoring, update time = ' + str(
-                          self.log_config['DATA_LOG_TIME'])])
-        self.message(['AMP_POWER_LOG  path = ' + self.amp_pwr_path,
-                      ' starting monitoring, update time = ' + str(
-                          self.log_config['AMP_PWR_LOG_TIME'])])
-
-
-    def num(self, s):
-        try:
-            return int(s)
-        except ValueError:
-            return float(s)
-
     def add_to_kfpow_running_stat_log(self, x):
         '''
         WRITE x TO kfpow_running_stat_log but don't write for an amp with zero pulses of data in it
@@ -141,8 +121,8 @@ class rf_conditioning_logger(logger):
         [amp_sp, num_pulses (with beam), rolling mean, rolling variance * (num_pulses -1)]
         '''
         if x[1] != 0:
-            self._kfow_running_stats_log_file_obj.write(' '.join(map(str, x)) + '\n')
-            self._kfow_running_stats_log_file_obj.flush()
+            rf_conditioning_logger._kfow_running_stats_log_file_obj.write(' '.join(map(str, x)) + '\n')
+            rf_conditioning_logger._kfow_running_stats_log_file_obj.flush()
 
             # def add_to_pulse_breakdown_log(self, x):
 
@@ -154,12 +134,44 @@ class rf_conditioning_logger(logger):
         :param new_values: A LIST OF NUMBERS ! that are converted to a string and written to
         _pulse_count_log_file_obj
         """
-        rf_conditioning_logger._pulse_count_log_file_obj.write(
-            " ".join(map(str, new_values)) + '\n')
+        # TODO what about during a log_ramp  - we don't add to this file here?
+        '''
+            IF IN LOG_RAMP MODE, 
+            WE WILL CHANGE THE AMP_SP TO BE THE AMP_SP FOR THE END OF THE LOG_RMAP 
+        '''
+
+        rf_conditioning_logger._pulse_count_log_file_obj.write(" ".join(map(str, new_values)) + '\n')
         rf_conditioning_logger._pulse_count_log_file_obj.flush()
+
+
+
+
+
+
+
+
+
+    # def add_to_pulse_count_breakdown_log_during_log_ramp(self, new_values):
+    #     """
+    #     update the _pulse_count_log_file with latest numbers
+    #     Adds x to the pulse_breakdown_log, x is a list of: [Total ACTIVE Pulses, Num breakdowns,
+    #     amp_set, ramp_index (point on pulse / power curve) , pulse length]
+    #     :param new_values: A LIST OF NUMBERS ! that are converted to a string and written to
+    #     _pulse_count_log_file_obj
+    #     '''
+    #         IF IN LOG_RAMP MODE,
+    #         WE WILL CHANGE THE AMP_SP TO BE THE SMP_SP FOR THE END OF THE LOG_RMAP
+    #     '''
+    #     """
+    #     # TODO what about during a log_ramp  - we don't add to this file here?
+    #     rf_conditioning_logger._pulse_count_log_file_obj.write(" ".join(map(str, new_values)) + '\n')
+    #     rf_conditioning_logger._pulse_count_log_file_obj.flush()
+
+
 
     def get_pulse_count_breakdown_log(self):
         '''
+        copy the existing pulse_breakdown_count log file to the text_wokrign_directory
         read the pulse_breakdown_count log file and put the contents in log
         create a file object _pulse_count_log_file_obj to use for appending new data
         :return: log (nested list of pulse_breakdown_log entries
@@ -172,10 +184,33 @@ class rf_conditioning_logger(logger):
             for line in lines:
                 if '#' not in line:
                     log.append([int(x) for x in line.split()])
+
         self.message('Read pulse_count_breakdown_log')
-        rf_conditioning_logger._pulse_count_log_file_obj = open(
-            rf_conditioning_logger._pulse_count_log_file, 'a')
-        return log
+        rf_conditioning_logger._pulse_count_log_file_obj = open(rf_conditioning_logger._pulse_count_log_file, 'a')
+        # return log, with empty entries removed ...
+        return [x for x in log if x != []]
+
+    def write_rationilized_pulse_breakdown_log(self, data_to_write):
+        '''
+            we copy the pulse_breakdown_log into the current log folder,
+            then overwrite the main pulse_breakdown_log with the rationlized version from rf_condition_data
+        '''
+        rf_conditioning_logger._pulse_count_log_file_obj.close()
+        copyfile(rf_conditioning_logger._pulse_count_log_file, rf_conditioning_logger.text_log_directory + "\\pulse_breakdown_log_on_startup.txt")
+        with open(rf_conditioning_logger._pulse_count_log_file, 'w') as f:
+            header_string = "# header: write what you want on lines starting with #\n# Total ACTIVE Pulses, # breakdowns, amp_set, index (point on " \
+                            "pulse / power curve) , pulse length\n# the init of this file could be 1 0 500 0 3500, 2 0 500 0 3500, etc\n"
+            f.write(header_string)
+            for line in data_to_write:
+                f.write(' '.join(map(str, line)) + '\n')
+        rf_conditioning_logger._pulse_count_log_file_obj = open(rf_conditioning_logger._pulse_count_log_file, 'a')
+       # raw_input()
+
+    def num(self, s):
+        try:
+            return int(s)
+        except ValueError:
+            return float(s)
 
     def get_kfpow_running_stat_log(self):
         '''
@@ -205,20 +240,28 @@ class rf_conditioning_logger(logger):
                         log = [self.num(x) for x in line.split()]
                         r_dict[log[0]] = log[1:]
                         got_header = True
-        # write the dictionary to file only the latest values for each amp_sp  will be kept
+        # write the dictionary to file only the latest values for each amp_sp will be kept
         # also write the data in order of ascending amp_sp
         ordered_r_dict = collections.OrderedDict(sorted(r_dict.items()))
+        self.message_header('Print Rationalized kfpow_running_stat_log ', show_time_stamp=False, add_to_text_log=True)
+        full_string = ''
         with open(rf_conditioning_logger._kfow_running_stats_log_file, 'w') as f:
             f.write(header_string)
             for key, value in ordered_r_dict.iteritems():
                 # str(key) + ' '.join(map(str, value)) + '\n'
+
                 f.write(str(key) + ' ' + ' '.join(map(str, value)) + '\n')
         self.message('get_kfpow_running_stat_log complete', show_time_stamp=False,
                      add_to_text_log=True)
+                # s = str(key) + ' ' + ' '.join(map(str, value)) + '\n'
+                # f.write(s)
+                # full_string += s + '\n'
+                # print(s)
+        # #self.message(full_string, show_time_stamp=False, add_to_text_log=True)
+        # self.message('get_kfpow_running_stat_log complete', show_time_stamp=False, add_to_text_log=True)
 
         # now open amp_power_log file for appending and LEAVE OPEN
-        rf_conditioning_logger._kfow_running_stats_log_file_obj = open(
-            rf_conditioning_logger._kfow_running_stats_log_file, 'a')
+        rf_conditioning_logger._kfow_running_stats_log_file_obj = open(rf_conditioning_logger._kfow_running_stats_log_file, 'a')
         return r_dict
 
     def setup_text_log_files(self):
@@ -238,33 +281,31 @@ class rf_conditioning_logger(logger):
         logger.log_directory = self.config_data[config.LOG_DIRECTORY]
         logger.working_directory = self.config_data[config.LOG_DIRECTORY]
 
-        # set where to save Outside mask Event data
-        self._forward_file = self.working_directory + self.config_data[
-            config.OUTSIDE_MASK_FORWARD_FILENAME]
-        self._probe_file = logger.working_directory + self.config_data[
-            config.OUTSIDE_MASK_PROBE_FILENAME]
-        self._reverse_file = logger.working_directory + self.config_data[
-            config.OUTSIDE_MASK_REVERSE_FILENAME]
+        # # set where to save Outside mask Event data
+        # self.forward_file = logger.working_directory + self.config_data[config.OUTSIDE_MASK_FORWARD_FILENAME]
+        # self.probe_file = logger.working_directory + self.config_data[config.OUTSIDE_MASK_PROBE_FILENAME]
+        # self.reverse_file = logger.working_directory + self.config_data[config.OUTSIDE_MASK_REVERSE_FILENAME]
 
         # if in debug mode all files go in  working_directory
         if rf_conditioning_logger.debug:
             logger.text_log_directory = logger.working_directory
             logger.binary_log_directory = logger.working_directory
+            self.message("rf_conditioning_logger in debug mode log directory = " + str(logger.working_directory))
         else:
             # individual text and binary logs are kept in a subdirectory of working directory
             logger.text_log_directory = os.path.join(logger.working_directory, logger.log_start_str)
-            logger.binary_log_directory = os.path.join(logger.working_directory,
-                                                       logger.log_start_str)
+            logger.binary_log_directory = os.path.join(logger.working_directory, logger.log_start_str)
             # make a directory for text and binary log
             try:
                 os.makedirs(str(logger.text_log_directory))
+                self.message("Success rf_conditioning_logger created log directory = " + str(logger.text_log_directory))
             except:
-                self.message("Error creating log directory = " + str(logger.text_log_directory))
+                self.message("!!Error!! in rf_conditioning_logger creating log directory = " + str(logger.text_log_directory))
                 raise
 
     def set_text_log_files(self):
         """
-        open / check the following log files:
+            open / check the following log files:
             PULSE_COUNT_BREAKDOWN_LOG_FILENAME
             KFPOW_AMPSP_RUNNING_STATS_LOG_FILENAME
             TEXT_LOG_FILENAME
@@ -275,16 +316,13 @@ class rf_conditioning_logger(logger):
         rcl = rf_conditioning_logger
         try:
             # Raise exception if PULSE_COUNT_BREAKDOWN_LOG_FILENAME can't be found where expected
-            rcl._pulse_count_log_file = os.path.join(logger.working_directory, self.config_data[
-                config.PULSE_COUNT_BREAKDOWN_LOG_FILENAME])
+            rcl._pulse_count_log_file = os.path.join(logger.working_directory, self.config_data[config.PULSE_COUNT_BREAKDOWN_LOG_FILENAME])
             if not os.path.exists(rf_conditioning_logger._pulse_count_log_file):
                 err = rcl._pulse_count_log_file
                 raise
             # Raise exception if KFPOW_AMPSP_RUNNING_STATS_LOG_FILENAME can't be found where
             # expected
-            rcl._kfow_running_stats_log_file = os.path.join(logger.working_directory,
-                                                            self.config_data[
-                                                                config.KFPOW_AMPSP_RUNNING_STATS_LOG_FILENAME])
+            rcl._kfow_running_stats_log_file = os.path.join(logger.working_directory, self.config_data[config.KFPOW_AMPSP_RUNNING_STATS_LOG_FILENAME])
             if not os.path.exists(rcl._kfow_running_stats_log_file):
                 err = rcl._kfow_running_stats_log_file
                 raise Exception
@@ -296,8 +334,7 @@ class rf_conditioning_logger(logger):
 
         print rcl.text_log_header
         self.write_text_log(rcl.text_log_header)
-        self.message_header("Log Started " + logger.log_start_str, add_to_text_log=True,
-                            show_time_stamp=False)
+        self.message_header("Log Started " + logger.log_start_str, add_to_text_log=True, show_time_stamp=False)
 
     def log_config(self):
         """
@@ -309,16 +346,15 @@ class rf_conditioning_logger(logger):
                                                                             'log']
         s = ''
         for key, value in self.config_data.iteritems():
-            s += ''.join(
-                '%s: %s, ' % (key, value))  # logdata.append(''.join('%s: %s, ' % (key,   # value)))
+            s += ''.join('%s: %s, ' % (key, value))  # logdata.append(''.join('%s: %s, ' % (key,   # value)))
         logdata.append(s)
         self.message(logdata)
 
     def dump_ome_data(self, filename, object):
         """
-        Pickle dump an ome data dictionary to file (called from outside_mask_trace_monitor )
+            Pickle dump an ome data dictionary to file (called from outside_mask_trace_monitor )
         """
-        self.pickle_dump(path=os.path.join(logger.working_directory, filename), obj=object)
+        self.pickle_dump(path=os.path.join(logger.binary_log_directory, filename), obj=object)
 
     # noinspection PyMethodMayBeStatic
     def pickle_dump(self, path, obj):
@@ -331,8 +367,11 @@ class rf_conditioning_logger(logger):
             self.message(__name__ + ' ERROR pickle_dumping to ' + path)
         self.message(__name__ + ' pickle_dumped  ' + path)
 
-    def start_text_log(self):
-        pass
+    # def start_text_log(self):
+    #     # which one??
+    #     logger.open_ascii_log_file()
+    #     logger.open_text_log_file()
+
 
     def message(self, text, **kwargs):
         """
@@ -354,38 +393,9 @@ class rf_conditioning_logger(logger):
         logger.message_header(self,text, **kwargs)
         QApplication.processEvents()
 
-
-    # @log_config.setter
-    # def log_config(self, value):
-    #     logger._log_config = value
-    #     self.log_directory = logger.config.log_config['LOG_DIRECTORY'] + self.log_start_str
-    #     os.makedirs(self.log_directory)
-    #     self.working_directory = self.log_directory + '\\'
-    #     self.data_path = self.working_directory + self.log_config[
-    #         'DATA_TEXT_LOG_FILENAME']  # MAGIC_STRING
-    #     self.amp_pwr_path = self.working_directory + self.log_config[
-    #         'KFPOW_AMPSP_RUNNING_STATS_LOG_FILENAME']  # MAGIC_STRING
-    #     self.forward_file = self.working_directory + self._log_config[
-    #         'OUTSIDE_MASK_FORWARD_FILENAME']  #
-    #     self.probe_file = self.working_directory + self._log_config[
-    #         'OUTSIDE_MASK_PROBE_FILENAME']  #
-    #     self.reverse_file = self.working_directory + self._log_config[
-    #         'OUTSIDE_MASK_REVERSE_FILENAME']
-    #     self.log_path = self.working_directory + self._log_config['TEXT_LOG_FILENAME']
-    #     self.header(self.my_name + ' log_config')
-    #     self.message(['log_directory     = ' + self.log_directory,
-    #                   'working_directory = ' + self.working_directory,
-    #                   'data_path    = ' + self.data_path, 'forward_file = ' + self.forward_file,
-    #                   'probe_file   = ' + self.probe_file,
-    #                   'reverse_file = ' + self.reverse_file, 'log_path     = ' + self.log_path])
-    #     # open log_file and LEAVE OPEN
-    #     self.log_file = open(self.log_path, 'a')
-
-    # noinspection PyMethodMayBeStatic
     def pickle_file(self, file_name, obj):
-        path = self.working_directory + file_name
+        path = os.path.join(logger.working_directory, logger.log_start_str, file_name)
         self.pickle_dump(path, obj)
-
     # don't bother with this, convert to wxf offline  # def pkl2wxf(self,path):  #     file =
     # open(path, 'rb')  #     objs = []  #     while True:  #         try:  #
     # objs.append(pkl.load(file))  #         except EOFError:  #             break  #

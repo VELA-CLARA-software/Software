@@ -1,0 +1,185 @@
+elements:
+  CLA-LRG1-APER:
+    type: aperture
+    shape: rectangular
+    horizontal_size: 0.017
+    vertical_size: 0.017
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 0]
+    position_start: [0, 0, 0]
+  CLA-LRG1-GUN-CAV:
+    type: cavity
+    length: 0.17
+    field_amplitude: 58800000.0
+    frequency: 2997440000.0
+    n_cells: 2.5
+    Controller_Name: GUN10
+    Structure_Type: 'StandingWave'
+    phase: -16
+    PV_suffixes:
+      phase: vm:dsp:sp_ph:phase
+      field_amplitude: ad1:ch3:power_remote_s.POWER
+    PV_root: CLA-GUN-LRF-CTRL-01
+    field_definition: $master_lattice_location$Data_Files/bas_gun.txt
+    lsc_cutoff_high: [0, 0]
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 0.17]
+    position_start: [0, 0, 0]
+    sub_elements:
+      CLA-LRG1-MAG-SOL-01:
+        type: solenoid
+        length: 0.13950
+        field_amplitude: 0.216
+        field_definition: $master_lattice_location$Data_Files/Measured_Main_Solenoid_2019.txt
+        global_rotation: [0, 0, 0]
+        position_end: [0, 0, 0]
+        position_start: [0, 0, 0]
+        field_integral_coefficients: [2.17321571, -0.858179277, 0.172127130, -0.0171033399, 6.70371530e-04, -3.53922e-08,
+                     1.53138e-05, 0.167819191, 0.0]
+      CLA-LRG1-MAG-BSOL-01:
+        type: solenoid
+        length: 0.0125
+        field_amplitude: -0.06730128
+        field_definition: $master_lattice_location$Data_Files/Measured_Bucking_Solenoid_2019.txt
+        global_rotation: [0, 0, 0]
+        position_end: [0, 0, 0]
+        position_start: [0, 0, 0]
+        field_integral_coefficients: [0.000513431, -1.27695e-7, 1.61655e-10, -0.032733798, -4.29885e-06, 2.28967e-08, 0.001833327,
+                      -2.5354e-06, -1.04715e-09, -1.61177e-12, -2.94837e-05, 2.13938e-07, -0.003957362, 0.246073139,
+                      -4.393602393, 0.0]
+  CLA-S01-APER:
+    type: aperture
+    shape: rectangular
+    horizontal_size: 0.017
+    vertical_size: 0.017
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 0.32482]
+    position_start: [0, 0, 0.32482]
+  CLA-S01-MAG-HVCOR-01:
+    type: kicker
+    length: 0.03
+    sr_enable: true
+    isr_enable: true
+    Controller_Name: COR1
+    Online_Model_Name: C1-COR01
+    Horizontal_PV: CLA-S01-MAG-HCOR-01
+    Vertcal_PV: CLA-S01-MAG-VCOR-01
+    field_integral_coefficients_horizontal: [0.023624156190865,0.00354362342862975]
+    field_integral_coefficients_vertical: [0.0231571709981465,0.00347357564972197]
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 0.35482]
+    position_start: [0, 0, 0.32482]
+  CLA-S01-DIA-WCM-01:
+    type: wall_current_monitor
+    length: 0.05
+    Controller_Name: WCM01
+    Online_Model_Name: C1-WCM01
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 0.7277]
+    position_start: [0, 0, 0.6777]
+    PV_suffixes:
+      charge: Q
+  CLA-S01-MAG-HVCOR-02:
+    type: kicker
+    length: 0.102
+    sr_enable: true
+    isr_enable: true
+    Controller_Name: COR2
+    Online_Model_Name: C1-COR02
+    Horizontal_PV: CLA-S01-MAG-HCOR-02
+    Vertcal_PV: CLA-S01-MAG-VCOR-02
+    field_integral_coefficients_horizontal: [0.0234042553191489,0.0]
+    field_integral_coefficients_vertical: [0.0234042553191489,0.0]
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 0.8297]
+    position_start: [0, 0, 0.7277]
+  CLA-S01-DIA-BPM-01:
+    type: beam_position_monitor
+    length: 0.108
+    Controller_Name: BPM01
+    Online_Model_Name: C1-BPM01
+    PV: CLA-S01-DIA-BPM-01
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 0.9377]
+    position_start: [0, 0, 0.8297]
+  CLA-S01-DIA-SCR-01:
+    type: screen
+    output_filename: '"CLA-S01-DIA-SCR-01.SDDS"'
+    camera_PV: CLA-S01-DIA-CAM-01
+    buffer_start: [0, 0, 0.9377]
+    buffer_start_length: 0.043333
+    buffer_end_length: 0.076667
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 0.981033]
+    position_start: [0, 0, 0.981033]
+  CLA-L01-APER:
+    type: aperture
+    shape: rectangular
+    horizontal_size: 0.1
+    vertical_size: 0.1
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 1.0577]
+    position_start: [0, 0, 1.0577]
+  CLA-L01-CLEANER:
+    type: cleaner
+    mode: absvalue
+    tlimit: 1e-9 # allow +/- 1ns bunch length
+    global_rotation: [0, 0, 0]
+    position_end: [0, 0, 1.0577]
+    position_start: [0, 0, 1.0577]
+  CLA-L01-CAV:
+    type: cavity
+    length: 2.03333
+    Structure_Type: 'TravellingWave'
+    cell_length: 0.0333333
+    coupling_cell_length: 0.0495
+    field_amplitude: 21200000.0
+    frequency: 2998500000.0
+    phase: 0
+    longitudinal_wakefield_sdds: $master_lattice_location$Data_Files/Sz5um10mm.sdds
+    transverse_wakefield_sdds: $master_lattice_location$Data_Files/Sx5um10mm.sdds
+    field_definition: $master_lattice_location$Data_Files/TWS_S-DL.dat
+    field_definition_gdf: $master_lattice_location$Data_Files/mockup2m.gdf
+    lsc_enable: true
+    lsc_bins: 20.0
+    lsc_cutoff_high: [0.2, 0.25]
+    buffer_start: [0, 0, 1.0577]
+    buffer_start_length: 0.13587
+    buffer_end_length: 0.14457
+    Controller_Name: L01
+    Online_Model_Name: C1-L01
+    PV_root: CLA-L01-LRF-CTRL-01
+    PV_suffixes:
+      phase: vm:dsp:sp_ph:phase
+      field_amplitude: ad1:ch3:power_remote_s.POWER
+    position_end: [0, 0, 3.2269]
+    position_start: [0, 0, 1.19357]
+    sub_elements:
+      CLA-L01-WAKE:
+        type: longitudinal_wakefield
+        length: 2.03333
+        cell_length: 0.0333333333333333
+        coupling_cell_length: 0.0495
+        field_definition: $master_lattice_location$Data_Files/SzSx5um10mm.dat
+        global_rotation: [0, 0, 0]
+        position_end: [0, 0, 3.2269]
+        position_start: [0, 0, 1.19357]
+        scale_kick: 1
+      CLA-L01-MAG-SOL-01:
+        type: solenoid
+        length: 0.72691820512820505
+        field_amplitude: 0.0
+        field_definition: $master_lattice_location$Data_Files/SwissFEL_linac_sols.dat
+        position_end: [0, 0, 2.2]
+        position_start: [0, 0, 1.70]
+        field_integral_coefficients: [0.911580969, -0.0374385376, 0.00106926073, -1.64644381e-05, 1.01769629e-07, 0, 0, 0.37651102,
+                      0.12171419]
+      CLA-L01-MAG-SOL-02:
+        type: solenoid
+        length: 0.72691820512820505
+        field_amplitude: 0.0
+        field_definition: $master_lattice_location$Data_Files/SwissFEL_linac_sols.dat
+        position_end: [0, 0, 3.2]
+        position_start: [0, 0, 2.70]
+        field_integral_coefficients: [0.847688880, -0.0653499119, 0.00243270133, -4.29020066e-05, 2.87019853e-07, 0, 0, 0.37651102,
+                      0.12171419]

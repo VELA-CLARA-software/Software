@@ -63,10 +63,11 @@ class config(object):
 
     # TODO:  maybe put these in a generic utilities space
     get_rf_prot_type = {"CLARA_HRRG": RF_PROT_TYPE.CLARA_HRRG,
-                        "CLARA_LRRG": RF_PROT_TYPE.CLARA_LRRG, "VELA_HRRG": RF_PROT_TYPE.VELA_HRRG,
+                        "CLARA_LRRG": RF_PROT_TYPE.CLARA_LRRG,
+                        "VELA_HRRG": RF_PROT_TYPE.VELA_HRRG,
                         "VELA_LRRG": RF_PROT_TYPE.VELA_LRRG, "L01": RF_PROT_TYPE.L01,
                         LLRF_TYPE.CLARA_HRRG: RF_PROT_TYPE.CLARA_HRRG,
-                        LLRF_TYPE.CLARA_LRRG: RF_PROT_TYPE.CLARA_HRRG,
+                        LLRF_TYPE.CLARA_LRRG: RF_PROT_TYPE.CLARA_LRRG,
                         LLRF_TYPE.VELA_HRRG: RF_PROT_TYPE.VELA_HRRG,
                         LLRF_TYPE.VELA_LRRG: RF_PROT_TYPE.VELA_LRRG,
                         LLRF_TYPE.L01: RF_PROT_TYPE.L01}
@@ -105,6 +106,8 @@ class config(object):
         except Exception:
             print("ERROR Failed To Read " + config._config_file + " suspect YAML formatting error")
             raise
+
+        # TODO we should  check that keywords expected (ie. defined  in this class, are in the config, and keywords in the config are in this class
         # if config.raw_config_data:
         #     print('Raw Config Data')
         #     for item in config.raw_config_data.iteritems():
@@ -177,6 +180,7 @@ class config(object):
                         config.monitor_config = {}
                     config.monitor_config[key.replace(general_monSuffix, '')] = value
             for key, value in config.monitor_config.iteritems():
+                # TODO: if there are no signals it should not crash
                 config.raw_config_data[key] = value
         else:
             print('WARNING GMON_SUFFIX not found in config file ')
@@ -252,9 +256,6 @@ class config(object):
         except Exception:
                 raise
 
-
-
-
         # CHECK TH EVERACITY OF THE CONFIG FILE - SOMEHOW
 
         # WE ONLY CHECK THE
@@ -299,14 +300,7 @@ class config(object):
         #                         config.config_file, "), KEY(S) = " + bad_key_string)
         # except Exception:
         #     raise
-
-
-
-
-
-
         # TODO:  add in more exceptions for cross checking data-types
-
         #
         # so far ...  no sanity check!
         config.have_config = True
@@ -324,14 +318,10 @@ class config(object):
     them
     
     """
-
     # TODO: get rid of all the sperate configs and just have one mega-config for all
-
-
     # a global MODE that can be set to DEBUG or OPERTAIONAL
 
     MODE = 'MODE'
-
 
     ## Config File Keyword Defintitions
     MINIMUM_COOLDOWN_TIME = 'MINIMUM_COOLDOWN_TIME'
@@ -347,13 +337,16 @@ class config(object):
     VAC_SPIKE_DELTA = 'VAC_SPIKE_DELTA'
     VAC_DECAY_MODE = 'VAC_DECAY_MODE'
     VAC_CHECK_TIME = 'VAC_CHECK_TIME'
-    VAC_MAX_LEVEL = 'VAC_MAX_LEVEL'
+    VAC_MAX_LEVEL_FOR_RAMP = 'VAC_MAX_LEVEL_FOR_RAMP'
+    VAC_SPIKE_MAX_LEVEL_FOR_OFF = 'VAC_SPIKE_MAX_LEVEL_FOR_OFF'
     VAC_PV = 'VAC_PV'
-    vac_keywords = [WHEN_VAC_HI_DISABLE_RAMP,VAC_NUM_SAMPLES_TO_AVERAGE, VAC_SPIKE_DECAY_LEVEL,
-                    VAC_SPIKE_DECAY_TIME,VAC_ROLLING_SUM_NUM_SAMPLES,
-                    VAC_SHOULD_DROP_AMP, VAC_SPIKE_DROP_AMP,  # VAC_MAX_AMP_DROP,
-                    VAC_SPIKE_DELTA, VAC_CHECK_TIME, VAC_DECAY_MODE, VAC_MAX_LEVEL, VAC_PV,
-                    MINIMUM_COOLDOWN_TIME]
+    # TODO AJG: added this in the CLARA_LRRG.yml:
+    VAC_SPIKE_INCREASE_BD_COUNT = 'VAC_SPIKE_INCREASE_BD_COUNT'
+
+    # TODO all these individal lists can go, and we will work of one huge, master list
+    vac_keywords = [WHEN_VAC_HI_DISABLE_RAMP, VAC_NUM_SAMPLES_TO_AVERAGE, VAC_SPIKE_DECAY_LEVEL, VAC_SPIKE_DECAY_TIME, VAC_ROLLING_SUM_NUM_SAMPLES,
+                    VAC_SHOULD_DROP_AMP, VAC_SPIKE_DROP_AMP, VAC_SPIKE_DELTA, VAC_CHECK_TIME, VAC_DECAY_MODE, VAC_MAX_LEVEL_FOR_RAMP, VAC_PV,
+                    MINIMUM_COOLDOWN_TIME, VAC_SPIKE_MAX_LEVEL_FOR_OFF]
 
     DC_PV = 'DC_PV'
     DC_DECAY_MODE = 'DC_DECAY_MODE'
@@ -381,14 +374,9 @@ class config(object):
     KFPOW_AMPSP_RUNNING_STATS_LOG_FILENAME = 'KFPOW_AMPSP_RUNNING_STATS_LOG_FILENAME'
     BINARY_DATA_LOG_TIME = 'BINARY_DATA_LOG_TIME'
     AMP_PWR_LOG_TIME = 'AMP_PWR_LOG_TIME'
-    log_keywords = [TEXT_LOG_FILENAME, LOG_DIRECTORY, BINARY_DATA_LOG_FILENAME,
-                    OUTSIDE_MASK_FORWARD_FILENAME,
-                    OUTSIDE_MASK_REVERSE_FILENAME, OUTSIDE_MASK_PROBE_FILENAME,
-                    PULSE_COUNT_BREAKDOWN_LOG_FILENAME, PULSE_COUNT_BREAKDOWN_LOG_FILENAME,
+    log_keywords = [TEXT_LOG_FILENAME, LOG_DIRECTORY, BINARY_DATA_LOG_FILENAME, OUTSIDE_MASK_FORWARD_FILENAME, OUTSIDE_MASK_REVERSE_FILENAME,
+                    OUTSIDE_MASK_PROBE_FILENAME, PULSE_COUNT_BREAKDOWN_LOG_FILENAME, PULSE_COUNT_BREAKDOWN_LOG_FILENAME,
                     KFPOW_AMPSP_RUNNING_STATS_LOG_FILENAME, BINARY_DATA_LOG_TIME, AMP_PWR_LOG_TIME]
-
-
-
     #
     # vac_valve_parameter(self):
     VAC_VALVE = 'VAC_VALVE'
@@ -396,24 +384,18 @@ class config(object):
     VAC_VALVE_CHECK_TIME = 'VAC_VALVE_CHECK_TIME'
     KEEP_VALVE_OPEN = 'KEEP_VALVE_OPEN'
     vac_valve_keywords = [VAC_VALVE, VAC_VALVE_AREA, VAC_VALVE_CHECK_TIME, KEEP_VALVE_OPEN]
-
-
-
-
     #
     # water temp keywords
     WATER_TEMPERATURE_PV_COUNT = 'WATER_TEMPERATURE_PV_COUNT'
     WATER_TEMPERATURE_PV = 'WATER_TEMPERATURE_PV'
     WATER_TEMPERATURE_CHECK_TIME = 'WATER_TEMPERATURE_CHECK_TIME'
-    water_temp_keywords = [WATER_TEMPERATURE_PV, WATER_TEMPERATURE_CHECK_TIME,
-                           WATER_TEMPERATURE_PV_COUNT]
+    water_temp_keywords = [WATER_TEMPERATURE_PV, WATER_TEMPERATURE_CHECK_TIME, WATER_TEMPERATURE_PV_COUNT]
     #
     # cavity temp keywords
     CAVITY_TEMPERATURE_PV_COUNT = 'CAVITY_TEMPERATURE_PV_COUNT'
     CAVITY_TEMPERATURE_PV = 'CAVITY_TEMPERATURE_PV'
     CAVITY_TEMPERATURE_CHECK_TIME = 'CAVITY_TEMPERATURE_CHECK_TIME'
-    cavity_temp_keywords = [CAVITY_TEMPERATURE_PV, CAVITY_TEMPERATURE_CHECK_TIME,
-                            CAVITY_TEMPERATURE_PV_COUNT ]
+    cavity_temp_keywords = [CAVITY_TEMPERATURE_PV, CAVITY_TEMPERATURE_CHECK_TIME, CAVITY_TEMPERATURE_PV_COUNT]
     #
     # solenoid keywords
     MAGNET_MACHINE_AREA = 'MAGNET_MACHINE_AREA'
@@ -466,10 +448,8 @@ class config(object):
     KRPHA_MEAN_END = 'KRPHA_MEAN_END'
     CFPOW_MEAN_START = 'CFPOW_MEAN_START'
     CFPOW_MEAN_END = 'CFPOW_MEAN_END'
-
     CPPOW_MEAN_START = 'CPPOW_MEAN_START'
     CPPOW_MEAN_END = 'CPPOW_MEAN_END'
-
     CRPOW_MEAN_START = 'CRPOW_MEAN_START'
     CRPOW_MEAN_END = 'CRPOW_MEAN_END'
     CFPHA_MEAN_START = 'CFPHA_MEAN_START'
@@ -489,12 +469,10 @@ class config(object):
                      # RF_INCREASE_LEVEL,
                      # RF_INCREASE_RATE,
                      # POWER_AIM,
-
                      # THESE WILL BE USED FOR CHECKING THE PULSE LENGTH, AND, MAYBE ONE DAY
                      # CHANGING IT AUTOMATICALLY
                      PULSE_LENGTH,
                      PULSE_LENGTH_ERROR,
-
                      KLY_PWR_FOR_ACTIVE_PULSE, KFPOW_MEAN_START, KFPOW_MEAN_END, KRPOW_MEAN_START,
                      KRPOW_MEAN_END, KFPHA_MEAN_START, KFPHA_MEAN_END, KRPHA_MEAN_START,
                      KRPHA_MEAN_END, CFPOW_MEAN_START, CFPOW_MEAN_END, CRPOW_MEAN_START,
@@ -532,22 +510,25 @@ class config(object):
     KRPHA_DROP_AMP = 'KRPHA_DROP_AMP'
     BREAKDOWN_TRACES = 'BREAKDOWN_TRACES'
     VAC_SPIKE_TRACES_TO_SAVE = 'VAC_SPIKE_TRACES_TO_SAVE'
-    CFPOW_MASK_ABS_MIN = 'CFPOW_MASK_ABS_MIN'
-    CRPOW_MASK_ABS_MIN = 'CRPOW_MASK_ABS_MIN'
-    CPPOW_MASK_ABS_MIN = 'CPPOW_MASK_ABS_MIN'
-    KFPOW_MASK_ABS_MIN = 'KFPOW_MASK_ABS_MIN'
-    KRPOW_MASK_ABS_MIN = 'KRPOW_MASK_ABS_MIN'
-    CFPHA_MASK_ABS_MIN = 'CFPHA_MASK_ABS_MIN'
-    CRPHA_MASK_ABS_MIN = 'CRPHA_MASK_ABS_MIN'
-    CPPHA_MASK_ABS_MIN = 'CPPHA_MASK_ABS_MIN'
-    KFPHA_MASK_ABS_MIN = 'KFPHA_MASK_ABS_MIN'
-    KRPHA_MASK_ABS_MIN = 'KRPHA_MASK_ABS_MIN'
+    CFPOWMASK_LO_MIN = 'CFPOW_MASK_LO_MIN'
+    CRPOWMASK_LO_MIN = 'CRPOW_MASK_LO_MIN'
+    CPPOWMASK_LO_MIN = 'CPPOW_MASK_LO_MIN'
+    KFPOWMASK_LO_MIN = 'KFPOW_MASK_LO_MIN'
+    KRPOWMASK_LO_MIN = 'KRPOW_MASK_LO_MIN'
+    CFPHAMASK_LO_MIN = 'CFPHA_MASK_LO_MIN'
+    CRPHAMASK_LO_MIN = 'CRPHA_MASK_LO_MIN'
+    CPPHAMASK_LO_MIN = 'CPPHA_MASK_LO_MIN'
+    KFPHAMASK_LO_MIN = 'KFPHA_MASK_LO_MIN'
+    KRPHAMASK_LO_MIN = 'KRPHA_MASK_LO_MIN'
     CFPOW_MASK_LEVEL = 'CFPOW_MASK_LEVEL'
     CRPOW_MASK_LEVEL = 'CRPOW_MASK_LEVEL'
     CPPOW_MASK_LEVEL = 'CPPOW_MASK_LEVEL'
     KFPOW_MASK_LEVEL = 'KFPOW_MASK_LEVEL'
     KRPOW_MASK_LEVEL = 'KRPOW_MASK_LEVEL'
     CFPHA_MASK_LEVEL = 'CFPHA_MASK_LEVEL'
+    # TODO: Added seperate high & low parameters to create mask for CFPower to try to catch instabitlities without preventing ramping.
+    CFPOW_MASK_LEVEL_LO = 'CFPOW_MASK_LEVEL_LO'
+    CFPOW_MASK_LEVEL_HI = 'CFPOW_MASK_LEVEL_HI'
     CRPHA_MASK_LEVEL = 'CRPHA_MASK_LEVEL'
     CPPHA_MASK_LEVEL = 'CPPHA_MASK_LEVEL'
     KFPHA_MASK_LEVEL = 'KFPHA_MASK_LEVEL'
@@ -675,11 +656,14 @@ class config(object):
                           KFPHA_AUTO_SET, KRPHA_AUTO_SET, CFPOW_DROP_AMP, CRPOW_DROP_AMP,
                           CPPOW_DROP_AMP, KFPOW_DROP_AMP, KRPOW_DROP_AMP, CFPHA_DROP_AMP,
                           CRPHA_DROP_AMP, CPPHA_DROP_AMP, KFPHA_DROP_AMP, KRPHA_DROP_AMP,
-                          BREAKDOWN_TRACES, VAC_SPIKE_TRACES_TO_SAVE, CFPOW_MASK_ABS_MIN,
-                          CRPOW_MASK_ABS_MIN, CPPOW_MASK_ABS_MIN, KFPOW_MASK_ABS_MIN,
-                          KRPOW_MASK_ABS_MIN, CFPHA_MASK_ABS_MIN, CRPHA_MASK_ABS_MIN,
-                          CPPHA_MASK_ABS_MIN, KFPHA_MASK_ABS_MIN, KRPHA_MASK_ABS_MIN,
-                          CFPOW_MASK_LEVEL, CRPOW_MASK_LEVEL, CPPOW_MASK_LEVEL, KFPOW_MASK_LEVEL,
+                          BREAKDOWN_TRACES, VAC_SPIKE_TRACES_TO_SAVE, CFPOWMASK_LO_MIN,
+                          CRPOWMASK_LO_MIN, CPPOWMASK_LO_MIN, KFPOWMASK_LO_MIN,
+                          KRPOWMASK_LO_MIN, CFPHAMASK_LO_MIN, CRPHAMASK_LO_MIN,
+                          CPPHAMASK_LO_MIN, KFPHAMASK_LO_MIN, KRPHAMASK_LO_MIN,
+                          CFPOW_MASK_LEVEL,
+                          CFPOW_MASK_LEVEL_LO,
+                          CFPOW_MASK_LEVEL_HI,
+                          CRPOW_MASK_LEVEL, CPPOW_MASK_LEVEL, KFPOW_MASK_LEVEL,
                           KRPOW_MASK_LEVEL, CFPHA_MASK_LEVEL, CRPHA_MASK_LEVEL, CPPHA_MASK_LEVEL,
                           KFPHA_MASK_LEVEL, KRPHA_MASK_LEVEL, CFPOW_CHECK_STREAK,
                           CRPOW_CHECK_STREAK, CPPOW_CHECK_STREAK, KFPOW_CHECK_STREAK,
@@ -720,7 +704,10 @@ class config(object):
                           KRPHA_PHASE_MASK_BY_POWER_LEVEL, CRPHA_PHASE_MASK_BY_POWER_LEVEL,
                           CFPHA_PHASE_MASK_BY_POWER_LEVEL, CPPHA_PHASE_MASK_BY_POWER_LEVEL]
 
-
+    LOG_RAMP_CURVE_NUMSTEPS = 'LOG_RAMP_CURVE_NUMSTEPS '
+    LOG_RAMP_CURVE_PULSES_PER_STEP = 'LOG_RAMP_CURVE_PULSES_PER_STEP'
+    LOG_RAMP_CURVE_RAMP_RATE = 'LOG_RAMP_CURVE_RAMP_RATE'
+    LOG_RAMP_START_POWER  = 'LOG_RAMP_START_POWER'
     #
     # modulator
     MODULATOR_CHECK_TIME = 'MODULATOR_CHECK_TIME'

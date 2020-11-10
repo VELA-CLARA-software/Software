@@ -27,23 +27,23 @@
 
 from datetime import datetime
 import struct
-#from VELA_CLARA_enums import STATE
+# from VELA_CLARA_enums import STATE
 # this should import all the possible enums that might be logged from CATAP
 from VELA_CLARA_Vac_Valve_Control import VALVE_STATE
 from VELA_CLARA_RF_Protection_Control import RF_PROT_STATUS
 from VELA_CLARA_RF_Modulator_Control import GUN_MOD_STATE
 from VELA_CLARA_RF_Modulator_Control import L01_MOD_STATE
+from VELA_CLARA_RF_Modulator_Control import HOLD_RF_ON_STATE
 from VELA_CLARA_LLRF_Control import TRIG
 from VELA_CLARA_LLRF_Control import INTERLOCK_STATE
-import os
+import os, sys
 import cPickle as pkl
 import numpy
-#import wolframclient.serializers as wxf
+# import wolframclient.serializers as wxf
 from src.data.state import state
+from src.data.state import ramp_method
 from textwrap import fill
-
-
-
+from numpy import float64
 
 
 class logger(object):
@@ -61,14 +61,13 @@ class logger(object):
 
     This class is a use case for Python's double-underscore name mangling ... meh
     https://stackoverflow.com/questions/7841812/inheritance-and-base-class-method-call-python
-    classes that inherit from it need axccess to message, message_header, but they may also want
+    classes that inherit from it need access to message, message_header, but they may also want
     to overload it, for example when re-directing print statements to a gui,
-    this is th ereson for the __do_message and all that
+    this is the reason for the __do_message and all that
     '''
     # a timestamp, can be used to create a new directory with this timesatmp
     log_start = datetime.now()
     log_start_str = log_start.isoformat('-').replace(":", "-").split('.', 1)[0]
-
     # the working directory for logging
     working_directory = None
     # these files can be given different directories
@@ -77,9 +76,9 @@ class logger(object):
     ascii_log_directory = None
 
     # the file names for log files, you get three
-    text_log_file= None
-    binary_log_file= None
-    ascii_log_file= None
+    text_log_file = None
+    binary_log_file = None
+    ascii_log_file = None
 
     # A file object that records all messages,
     _text_log_file_obj = None
@@ -90,34 +89,45 @@ class logger(object):
     # entries in the dictionary to write to file changes, or their type does. To check for this
     # we keep a record of the binary file header to check against each time we write an entry
     _binary_header_length = None
-    _binary_header_types  = None
+    _binary_header_types = {}
     _binary_header_start_time = None
 
     # map of python type to struct type https://docs.python.org/2/library/struct.html
     # little endian basic types
     # str IS NOT WELL DEFINED IN THIS !
     # RF_PROT_STATUS and similar enums from our bespoke CATAP controller, SHOULD ALWAYS BE A <B,
-    # THINK VERY CAREFULLY about changin this!!!! You have be warned
-    # ALL CATAP types and simple types need ot be defined here!!
-    _python_type_to_bintype = {long: '<q', int: '<i', float: '<f', RF_PROT_STATUS: '<B',
-                               L01_MOD_STATE: '<B',
-                              GUN_MOD_STATE: '<B', VALVE_STATE: '<B', TRIG: '<B', state: '<B',
-                              INTERLOCK_STATE: '<B', bool: '<?', numpy.float64: '<d',
-                              # BE CAREFUL WiTH str, THE BELOW IS CLEARLY GARBAGE
-                              str: '<i'}
+    # THINK VERY CAREFULLY about changing this!!!! You have be warned
+    # ALL CATAP types and simple types need to be defined here!!
+    _python_type_to_bintype = {long: '<q', int: '<i', float: '<f', RF_PROT_STATUS: '<B', L01_MOD_STATE: '<B', GUN_MOD_STATE: '<B', VALVE_STATE: '<B',
+                               TRIG: '<B', state: '<B', ramp_method: '<B', INTERLOCK_STATE: '<B', bool: '<?',
+                               numpy.float64: ' \
+                                                                                                                               ''<d',\
+                                                                                                                                              float64: '<d',
+                               # BE CAREFUL WiTH str, THE BELOW IS CLEARLY GARBAGE
+                               str: '<i'}
 
     # width of config file text without timestamp (in characters!)
     _column_width = 80
-    stars = '\n' + '*'*_column_width + '\n'
+    stars = '\n' + '*' * _column_width + '\n'
     header_format_string = '{:*^' + str(_column_width) + '}'
 
     # paramters for showing message or adding to text log
     _show_time_stamp = False
     _add_to_text_log = True
 
+    _excluded_key_list = [-9999999]
+
     def __init__(self, column_width=None):
         if column_width:
             self.column_width = column_width
+
+    @property
+    def excluded_key_list(self):
+        return logger._excluded_key_list
+
+    @excluded_key_list.setter
+    def excluded_key_list(self, value):
+        logger._excluded_key_list = value
 
     # get and set the config file
     @property
@@ -130,14 +140,13 @@ class logger(object):
         logger.stars = '\n' + '*' * logger._column_width + '\n'
         logger.header_format_string = '{:*^' + str(logger._column_width) + '}'
 
-
-    def update_timestamp_textlog(self,**kwargs):
+    def update_timestamp_textlog(self, **kwargs):
         if 'add_to_text_log' in kwargs:
             logger._add_to_text_log = kwargs['add_to_text_log']
         if 'show_time_stamp' in kwargs:
             logger._show_time_stamp = kwargs['show_time_stamp']
 
-    def message(self,text, **kwargs):
+    def message(self, text, **kwargs):
         """
         To allow overloads in derived class use the double underscore name-mangling convention
         https://stackoverflow.com/questions/7841812/inheritance-and-base-class-method-call-python
@@ -146,7 +155,7 @@ class logger(object):
         """
         self.__do_message(text, **kwargs)
 
-    def message_header(self,text, **kwargs):
+    def message_header(self, text, **kwargs):
         """
         To allow overloads in derived class use the double underscore name-mangling convention
         https://stackoverflow.com/questions/7841812/inheritance-and-base-class-method-call-python
@@ -164,11 +173,11 @@ class logger(object):
         """
         self.update_timestamp_textlog(**kwargs)
         str = logger.stars + logger.header_format_string.format(' ' + text + ' ') + logger.stars
-        self.__do_message(str,**kwargs)
-    __do_message_header = do_message_header
+        self.__do_message(str, **kwargs)
 
+    __do_message_header = do_message_header  # !! be careful!! see note at start of class, and link to stackoverflow
 
-    def do_message(self,text, **kwargs):
+    def do_message(self, text, **kwargs):
         '''
         messaging function, print to screen message, adn maybe write to log file
         :param text:  text to print / log, diplay to GUI
@@ -194,10 +203,9 @@ class logger(object):
         print(str)
         if logger._add_to_text_log:
             self.write_text_log(str)
-    __do_message = do_message
 
+    __do_message = do_message  # !! be careful!! see note at start of class, and link to stackoverflow
 
-    #def write_text_log(self, str, show_time_stamp = True):
     def write_text_log(self, str):
         """
         write str, prepended with date-time,  to the log file, NO EXCEPTION Handling here,
@@ -212,47 +220,61 @@ class logger(object):
         #     write_str = datetime.now().isoformat(' ') + ' ' + write_str
         if logger._text_log_file_obj:
             logger._text_log_file_obj.write(write_str)
-            logger._text_log_file_obj.flush()
-            # previously opened and closed files as we went ...
-            # with open(self.log_path,'a') as f:
-            #     f.write(write_str)
+            logger._text_log_file_obj.flush()  # previously opened and closed files as we went ...  # with open(self.log_path,'a') as f:  #     f.write(write_str)
         else:
-            print(self.__name__ + " ERROR Writing to log, logger._text_log_file_obj is None")
+            print(__name__ + " ERROR Writing to log, logger._text_log_file_obj is None")
 
-    def write_binary_log(self,values):
+    def write_binary_log(self, values):
         '''
         Actually write the binary data, element by element. To ensure the fidelity of the log
         file, we check that the number of elements and their type HAS NOT CHANGED since the
         plaintext header to the file was written. IF it has throw some warning messages
         :param values:  dictionary of values to log,
         '''
-        written_types = [] # local copy of types actually written
+        # TODO maybe we don't need to loop over this list twice ...
+        written_types = []  # local copy of types actually written
+        # print("logger.excluded_key_list = {}".format(logger._excluded_key_list))
         if len(values) == logger._binary_header_length:
             for key, val in values.iteritems():
-                #self.message("key =  " + key)
-                written_types.append(self.write_binary(val))
+
+                if key in logger._excluded_key_list:
+                    # print("1 write_binary_log key {} in excluded list ".format(key))
+                    pass
+                else:
+                    # print("1 write_binary_log key {} is NOT in excluded list ".format(key))
+                    written_types.append(self.write_binary(val))
         else:
-            self.message(["!!!ERROR!!! write_bin_data passed data of incorrect length! ",
-                          str(len(values)),"!=",logger._binary_header_length])
+            self.message(["!!!ERROR!!! write_bin_data passed data of incorrect length! ", str(len(values)), "!=", logger._binary_header_length])
             raw_input()
 
-        type_list = []
-        for key, val in values.iteritems():# itervalues means just iterate over the values in the dict
-            rt = self.write_binary(val)
-            if rt == False:
-                self.message("!!!ERROR!!! " + key + ", binary log value is NONE-TYPE binary log "
-                                                     "corrupt ")
-                self.message(" VALUE WAS " + str(val))
-                self.message(" TYPE  WAS " + str(type(val)))
-                raw_input()
+        #todo we are going through thsi loop twcice, i thinkw ecna do it all in a  siingle  pass (if we awant)
+
+        type_list = {}
+        for key, val in values.iteritems():  # itervalues means just iterate over the values in the dict
+
+            if key in logger._excluded_key_list:
+                # print("2 write_binary_log key {} in excluded list ".format(key))
+                pass
             else:
-                type_list.append(rt)
+                # print("2 write_binary_log key {} is NOT in excluded list ".format(key))
+                rt = self.write_binary(val)
+                if rt == False:
+                    self.message("!!!ERROR!!! " + key + ", binary log value is NONE-TYPE binary log corrupt ")
+                    self.message(" VALUE WAS " + str(val))
+                    self.message(" TYPE  WAS " + str(type(val)))
+                    raw_input()
+                else:
+                    type_list[key] = rt
         logger._binary_log_file_obj.flush()
         if type_list != logger._binary_header_types:
-            self.message(__name__+" Warning, Binary Log File, data types have changed")
+            self.message(__name__ + " !!Warning!!, Binary Log File, data types have changed")
 
-
-
+            for (k, v) in type_list.iteritems():
+                if k in logger._binary_header_types.keys():
+                    if type_list[k] != logger._binary_header_types[k]:
+                        self.message("write type {} != {} header type, for key = {}".format(type_list[k], logger._binary_header_types[k], k))
+                else:
+                    print("ERROR! {} key missing".format(k))
 
     def write_binary(self, val):
         """
@@ -266,22 +288,36 @@ class logger(object):
         """
         val_type = type(val)
         # self.message("val_type = " + str(val_type))
-        # for Python enums (used for the r general state of things) we need to convert th eENUm
+        # for Python enums (used for the general state of things) we need to convert the ENUM
         # to a number
         if val_type is state:
             # self.message("struct_format = <B")
             # self.message("val =  = " + str(val))
             # We use val.value below to get the numerical value of the enum object !!!!!!!
-            logger._binary_log_file_obj.write(struct.pack('<B', val.value ))
+            logger._binary_log_file_obj.write(struct.pack('<B', val.value))
+        elif val_type is ramp_method:
+            # self.message("struct_format = <B")
+            # self.message("val =  = " + str(val))
+            # We use val.value below to get the numerical value of the enum object !!!!!!!
+            logger._binary_log_file_obj.write(struct.pack('<B', val.value))
+
+        #elif val_type is HOLD_RF_ON_STATE:
+        #    # self.message("struct_format = <B")
+        #    # self.message("val =  = " + str(val))
+        #    # We use val.value below to get the numerical value of the enum object !!!!!!!
+        #    print('val = '.format(val))
+        #    logger._binary_log_file_obj.write(struct.pack('<B', val.value))
+
         else:
             struct_format = logger._python_type_to_bintype.get(val_type, None)
 
             if struct_format:
-                #self.message("struct_format = " + str(struct_format))
-                #self.message("val =  = " + str(val))
+                # self.message("struct_format = " + str(struct_format))
+                # self.message("val =  = " + str(val))
                 logger._binary_log_file_obj.write(struct.pack(struct_format, val))
             else:
-                self.message("ERROR write_binary passed data of None type. THIS SHOULD NOT HAPPEN! ")
+                self.message("ERROR write_binary passed data of {} type. THIS SHOULD NOT HAPPEN! ".format(val_type))
+                print(logger._excluded_key_list)
                 return False
 
         return val_type
@@ -301,37 +337,46 @@ class logger(object):
         '''
         # these static variables save the data written to the header, this is so it can be
         # cross-checked against, in further calls to  write_binary()
-
         logger._binary_header_length = len(data_to_log)  # the number of entries in data_to_log
-        logger._binary_header_types = []  # the type of each entry in data_to_log (filled below)
+        logger._binary_header_types = {}  # the type of each entry in data_to_log (filled below)
         header_names = []
         header_types_str = []
-
+        header_types_bytes = []
+        # print 'LOGGER excluded_key_list = {}'.format(self.excluded_key_list)
+        print("write bin header logger.excluded_key_list = {}".format(logger._excluded_key_list))
         # iterate over data_to_log, and get types for each entry
         for key, value in data_to_log.iteritems():
-            value_type = type(value)         # The type of the value being written
-            value_type_str = str(value_type) # the type converted to string
-            ''' There is 1 notable exception, we write a time_stamp data type as the time and 
-            date this funcitno is called '''
-            if key == 'time_stamp':  # MAGIC_STRING
-                header_names.append('time_stamp, (start = ' + datetime.now().isoformat(' ') + ')')
+            if key in logger._excluded_key_list:
+                print("write_binary_log_header key {} is in excluded list ".format(key))
             else:
-                header_names.append(key)
-            logger._binary_header_types.append(value_type)
-            header_types_str.append(value_type_str)
-
+                print("write_binary_log_header key is NOT in excluded list, key = {}, type = {} ".format(key, type(value)))
+                value_type = type(value)  # The type of the value being written
+                value_type_str = str(value_type)  # the type converted to string
+                ''' There is 1 notable exception, we write a time_stamp data type as the time and 
+                date this function is called '''
+                if key == 'time_stamp':  # MAGIC_STRING
+                    header_names.append('time_stamp, (start = ' + datetime.now().isoformat(' ') + ')')
+                else:
+                    header_names.append(key)
+                    size_bytes = sys.getsizeof(value)
+                    header_types_str.append(str(size_bytes))
+                logger._binary_header_types[key] = value_type
+                header_types_str.append(value_type_str)
         # create the data_log file and write the plaintext header, raise exception if fail
         try:
             # Create rwo strings fro the first two lines of the file, the 1st is tab separated
             # data names, the 2nd is tab separated data types
             joiner = '\t'
             if logger._binary_log_file_obj:
-                head_names = joiner.join(header_names)+"\n"
-                head_types = joiner.join(header_types_str)+"\n"
+                if type(header_names) != basestring:
+                    print(header_names)
+                head_names = joiner.join(header_names) + "\n"
+                head_types = joiner.join(header_types_str) + "\n"
+                head_bytes = joiner.join(header_types_bytes) + "\n"
                 logger._binary_log_file_obj.write(head_names)
                 logger._binary_log_file_obj.write(head_types)
-                self.message(["binary log file added ",head_names,head_types ],
-                             show_time_stamp=False)
+                logger._binary_log_file_obj.write(head_bytes)
+                self.message(["binary log file added ", head_names, head_types], show_time_stamp=False)
             else:
                 raise ValueError('logger _binary_log_file_obj not defined')
         except Exception:
@@ -356,7 +401,7 @@ class logger(object):
         try:
             if logger.binary_log_directory:
                 if logger.binary_log_file:
-                    fp = os.path.join(logger.binary_log_directory,logger.binary_log_file)
+                    fp = os.path.join(logger.binary_log_directory, logger.binary_log_file)
                     logger._binary_log_file_obj = open(fp, 'a')
                 else:
                     raise ValueError('logger _binary_log_file not defined')
@@ -364,12 +409,13 @@ class logger(object):
                 raise ValueError('logger _binary_log_directory not defined')
         except Exception:
             raise
+
     # not implemented yet
     def open_ascii_log_file(self):
         try:
             if logger.ascii_log_directory:
                 if logger.ascii_log_file:
-                    fp = os.path.join(logger.ascii_log_directory,logger.ascii_log_file)
+                    fp = os.path.join(logger.ascii_log_directory, logger.ascii_log_file)
                     logger._text_log_file_obj = open(fp, 'a')
                 else:
                     raise ValueError('logger _ascii_log_file not defined')
@@ -381,153 +427,19 @@ class logger(object):
     # noinspection PyMethodMayBeStatic
     def pickle_file(self, file_name, obj):
         path = logger.working_directory + file_name
-        self.pickle_dump(path,obj)
+        self.pickle_dump(path, obj)
 
     # noinspection PyMethodMayBeStatic
     def pickle_dump(self, path, obj):
-        self.message(__name__+' pickle_dumping '+path, add_to_text_log=True,show_time_stamp=True)
+        self.message(__name__ + ' pickle_dumping ' + path, add_to_text_log=True, show_time_stamp=True)
         try:
             with open(path + '.pkl', 'wb') as f:
                 pkl.dump(obj, f, pkl.HIGHEST_PROTOCOL)
         except Exception as e:
             print(e)
-            self.message(__name__+' EXCEPTION '+str(e), add_to_text_log=True,
-                         show_time_stamp=True)
-            self.message(__name__+' ERROR pickle_dumping to '+path, add_to_text_log=True,
-                         show_time_stamp=True)
+            self.message(__name__ + ' EXCEPTION ' + str(e), add_to_text_log=True, show_time_stamp=True)
+            self.message(__name__ + ' ERROR pickle_dumping to ' + path, add_to_text_log=True, show_time_stamp=True)
 
+    # '''  # Getters and setter for the 3 different types of log file  # You CAN ONLY SET A FILE IF YOU HAVE A WORKING DIRECTORY  # '''  # @property  # def text_log_file(self):  #     return logger._text_log_file  #  # @text_log_file.setter  # def text_log_file(self, value):  #     logger._text_log_file = value  #  # @property  # def binary_log_file(self):  #     return logger._binary_log_file  #  # @binary_log_file.setter  # def binary_log_file(self, value):  #     logger._binary_log_file = value  #  # @property  # def ascii_log_file(self):  #     return logger._ascii_log_file  #  # @ascii_log_file.setter  # def ascii_log_file(self, value):  #     logger._ascii_log_file = value  #  #  # @property  # def working_directory(self):  #     return logger._working_directory  #  # @working_directory.setter  # def working_directory(self, value):  #     logger._working_directory = value  #  # @property  # def text_log_directory(self):  #     return logger._text_log_directory  #  # @text_log_directory.setter  # def text_log_directory(self, value):  #     print("text_log_directory sdetter")  #     print("text_log_directory sdetter")  #     print("text_log_directory sdetter")  #     print("text_log_directory sdetter")  #     print("text_log_directory sdetter")  #     print("text_log_directory sdetter")  #     print("text_log_directory sdetter")  #     print("text_log_directory sdetter")  #     logger._text_log_directory = value  #  # @property  # def binary_log_directory(self):  #     return logger._binary_log_directory  #  # @binary_log_directory.setter  # def binary_log_directory(self, value):  #     logger._binary_log_directory = value  #  # @property  # def ascii_log_directory(self):  #     return logger._ascii_log_directory  #  # @ascii_log_directory.setter  # def ascii_log_directory(self, value):  #     logger._ascii_log_directory = value
 
-    # '''
-    # Getters and setter for the 3 different types of log file
-    # You CAN ONLY SET A FILE IF YOU HAVE A WORKING DIRECTORY
-    # '''
-    # @property
-    # def text_log_file(self):
-    #     return logger._text_log_file
-    #
-    # @text_log_file.setter
-    # def text_log_file(self, value):
-    #     logger._text_log_file = value
-    #
-    # @property
-    # def binary_log_file(self):
-    #     return logger._binary_log_file
-    #
-    # @binary_log_file.setter
-    # def binary_log_file(self, value):
-    #     logger._binary_log_file = value
-    #
-    # @property
-    # def ascii_log_file(self):
-    #     return logger._ascii_log_file
-    #
-    # @ascii_log_file.setter
-    # def ascii_log_file(self, value):
-    #     logger._ascii_log_file = value
-    #
-    #
-    # @property
-    # def working_directory(self):
-    #     return logger._working_directory
-    #
-    # @working_directory.setter
-    # def working_directory(self, value):
-    #     logger._working_directory = value
-    #
-    # @property
-    # def text_log_directory(self):
-    #     return logger._text_log_directory
-    #
-    # @text_log_directory.setter
-    # def text_log_directory(self, value):
-    #     print("text_log_directory sdetter")
-    #     print("text_log_directory sdetter")
-    #     print("text_log_directory sdetter")
-    #     print("text_log_directory sdetter")
-    #     print("text_log_directory sdetter")
-    #     print("text_log_directory sdetter")
-    #     print("text_log_directory sdetter")
-    #     print("text_log_directory sdetter")
-    #     logger._text_log_directory = value
-    #
-    # @property
-    # def binary_log_directory(self):
-    #     return logger._binary_log_directory
-    #
-    # @binary_log_directory.setter
-    # def binary_log_directory(self, value):
-    #     logger._binary_log_directory = value
-    #
-    # @property
-    # def ascii_log_directory(self):
-    #     return logger._ascii_log_directory
-    #
-    # @ascii_log_directory.setter
-    # def ascii_log_directory(self, value):
-    #     logger._ascii_log_directory = value
-
-
-
-
-
-    # TODO Write a converter for wxf files atm convert to wxf offline
-    # def pkl2wxf(self,path):
-    #     file = open(path, 'rb')
-    #     objs = []
-    #     while True:
-    #         try:
-    #             objs.append(pkl.load(file))
-    #         except EOFError:
-    #             break
-    #     file.close()
-    #     # print(objs)
-    #     path2 = path.replace(".pkl", "")
-    #     wxf.export(objs, path2 + '.wxf', target_format='wxf')
-    #
-    # def write_binary_old(self, f, val):
-    #     '''
-    #     This function needs ot know how to write all data types to binary
-    #     TODO: write more cases
-    #     use a dicitonary
-    #     :param f: fileobject to write binary data to
-    #     :param val: data to write to file_object
-    #     :return: the type of val (used for error checking)
-    #     '''
-    #     if type(val) is long:
-    #         f.write(struct.pack('<l', val))
-    #         #print struct.calcsize('<l')
-    #     elif type(val) is int:
-    #         f.write(struct.pack('<i', val))
-    #         #print struct.calcsize('<i')
-    #     elif type(val) is float:
-    #         f.write(struct.pack('<f', val))
-    #         #print struct.calcsize('<f')
-    #     elif type(val) is RF_GUN_PROT_STATUS:
-    #         f.write(struct.pack('<B', val))
-    #         #print struct.calcsize('<B')
-    #     elif type(val) is GUN_MOD_STATE:
-    #         f.write(struct.pack('<B', val))
-    #         #print struct.calcsize('<B')
-    #     elif type(val) is VALVE_STATE:
-    #         f.write(struct.pack('<B', val))
-    #         #print struct.calcsize('<B')
-    #     elif type(val) is TRIG:
-    #         f.write(struct.pack('<B', val))
-    #         #print struct.calcsize('<B')
-    #     elif type(val) is INTERLOCK_STATE:
-    #         f.write(struct.pack('<B', val))
-    #         #print struct.calcsize('<B')
-    #     elif type(val) is bool:
-    #         f.write(struct.pack('<?', val))
-    #         #print struct.calcsize('<?')
-    #     elif type(val) is numpy.float64:
-    #         f.write(struct.pack('<f', val))
-    #         #f.write(struct.pack('<?', val))
-    #     elif type(val) is str:
-    #         f.write(struct.pack('<i', -1))
-    #     elif type(val) is state:
-    #         f.write(struct.pack('<B', val))
-    #     else:
-    #         print(self.my_name + ' write_binary() error unknown type, ' + str(type(val)) )
-    #     return type(val)
-    #     #print str(val) + '   ' + str(type(val))
+    # TODO Write a converter for wxf files atm convert to wxf offline  # def pkl2wxf(self,path):  #     file = open(path, 'rb')  #     objs = []  #     while True:  #         try:  #             objs.append(pkl.load(file))  #         except EOFError:  #             break  #     file.close()  #     # print(objs)  #     path2 = path.replace(".pkl", "")  #     wxf.export(objs, path2 + '.wxf', target_format='wxf')  #  # def write_binary_old(self, f, val):  #     '''  #     This function needs ot know how to write all data types to binary  #     TODO: write more cases  #     use a dicitonary  #     :param f: fileobject to write binary data to  #     :param val: data to write to file_object  #     :return: the type of val (used for error checking)  #     '''  #     if type(val) is long:  #         f.write(struct.pack('<l', val))  #         #print struct.calcsize('<l')  #     elif type(val) is int:  #         f.write(struct.pack('<i', val))  #         #print struct.calcsize('<i')  #     elif type(val) is float:  #         f.write(struct.pack('<f', val))  #         #print struct.calcsize('<f')  #     elif type(val) is RF_GUN_PROT_STATUS:  #         f.write(struct.pack('<B', val))  #         #print struct.calcsize('<B')  #     elif type(val) is GUN_MOD_STATE:  #         f.write(struct.pack('<B', val))  #         #print struct.calcsize('<B')  #     elif type(val) is VALVE_STATE:  #         f.write(struct.pack('<B', val))  #         #print struct.calcsize('<B')  #     elif type(val) is TRIG:  #         f.write(struct.pack('<B', val))  #         #print struct.calcsize('<B')  #     elif type(val) is INTERLOCK_STATE:  #         f.write(struct.pack('<B', val))  #         #print struct.calcsize('<B')  #     elif type(val) is bool:  #         f.write(struct.pack('<?', val))  #         #print struct.calcsize('<?')  #     elif type(val) is numpy.float64:  #         f.write(struct.pack('<f', val))  #         #f.write(struct.pack('<?', val))  #     elif type(val) is str:  #         f.write(struct.pack('<i', -1))  #     elif type(val) is state:  #         f.write(struct.pack('<B', val))  #     else:  #         print(self.my_name + ' write_binary() error unknown type, ' + str(type(val)) )  #     return type(val)  #     #print str(val) + '   ' + str(type(val))

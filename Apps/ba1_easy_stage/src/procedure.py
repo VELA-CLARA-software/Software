@@ -24,7 +24,9 @@
 '''
 # Add the release folder to the path to get latest HWC
 import sys
-sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release')
+#sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release')
+sys.path.append('\\\\claraserv3\\claranet\\test\\Controllers\\bin\\Release')
+sys.path.append('\\\\claraserv3.dl.ac.uk\\claranet\\test\\Controllers\\bin\\Release')
 import VELA_CLARA_BA1_Stages_Control as stage
 from src.data import data
 

@@ -24,14 +24,10 @@ class llrf_handler_base(base):
 		#self.timevector_dt = self.timevector[1]-self.timevector[0]
 		base.config.llrf_config = base.config.llrf_config
 
-
 		self.start_trace_monitoring( base.config.llrf_config['TRACES_TO_SAVE'])#MAGIC_STRING
-
 
 		# must come after start_trace_monitoring
 		self.setup_trace_rolling_average()
-
-
 
 		base.llrf_control.setTracesToSaveOnOutsideMaskEvent( base.config.llrf_config['TRACES_TO_SAVE'])#MAGIC_STRING
 		base.llrf_control.setTracesToSaveWhenDumpingCutOneTraceData( base.config.llrf_config['VAC_SPIKE_TRACES_TO_SAVE'])#MAGIC_STRING
@@ -100,8 +96,6 @@ class llrf_handler_base(base):
 					return base.config.breakdown_config[key]
 		print 'get_breakdown_config_param ERROR ' + shortname + ' ,' + end_phrase
 		return None
-
-
 
 	# this is the bit that is going wrong
 	def set_mask_dict(self,dict, shortname):

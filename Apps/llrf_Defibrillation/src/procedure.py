@@ -32,8 +32,12 @@ class procedure(object):
     llrf_init = llrf.init()
     #llrf_init.setVerbose()
     llrf_init.setQuiet()
+
+
     gun_llrf_control = llrf_init.getLLRFController(llrf.MACHINE_MODE.PHYSICAL, llrf.LLRF_TYPE.CLARA_LRRG)
     linac_llrf_control = llrf_init.getLLRFController(llrf.MACHINE_MODE.PHYSICAL, llrf.LLRF_TYPE.L01)
+
+
     data = data.data()
 
     def __init__(self):

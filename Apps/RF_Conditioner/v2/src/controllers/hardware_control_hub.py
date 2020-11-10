@@ -71,6 +71,7 @@ class hardware_control_hub(object):
     print('import VELA_CLARA_LLRF_Control')
     llrf_init = VELA_CLARA_LLRF_Control.init()
     llrf_init.setQuiet()
+    llrf_init.setVerbose()
     llrf_control = None
     llrf_obj = None
     # magnets
@@ -123,11 +124,11 @@ class hardware_control_hub(object):
         """
         self.logger.message(self.my_name + ' Starting CATAP Hardware Interfaces',
                                    add_to_text_log=True,show_time_stamp=False)
+        self.start_llrf_control()
         self.start_RF_protection()
         self.start_magnet_control()
         self.start_valve_control()
         self.start_mod_control()
-        self.start_llrf_control()
 
     def start_RF_protection(self):
         '''
@@ -161,7 +162,7 @@ class hardware_control_hub(object):
         # alias for shorter lines
         hch = hardware_control_hub
         machine_area = self.config_data[self.config.MAGNET_MACHINE_AREA]
-        message = 'start_mod_control() '
+        message = 'start_magnet_control() '
         if machine_area == MACHINE_AREA.VELA_INJ:  # MAGIC_STRING
             hch.mag_control = hch.mag_init.physical_CLARA_Ph1_Magnet_Controller()
             hch.have_controller[CONTROLLER_TYPE.MAGNET] = True
@@ -182,7 +183,7 @@ class hardware_control_hub(object):
         valve = self.config_data[self.config.VAC_VALVE]
         # alias for shorter lines
         hch = hardware_control_hub
-        message = 'start_mod_control() '
+        message = 'start_valve_control() '
         if machine_area == MACHINE_AREA.CLARA_PH1:
             #hch.valve_control = hch.valve_init.physical_CLARA_PH1_Vac_Valve_Controller()
             hch.valve_control = hch.valve_init.physical_CLARA_PH1_Vac_Valve_Controller()
@@ -224,7 +225,7 @@ class hardware_control_hub(object):
 
     def start_llrf_control(self):
         '''
-        Creates the requested LLRF Control object
+        Creates the requested LLRF Control object, it sets zero amp_sp as soon as the controller is created
         '''
         # alias for shorter lines
         hch = hardware_control_hub
@@ -234,12 +235,20 @@ class hardware_control_hub(object):
             message += 'FAILED to create a LLRF Control object'
         else:
             hch.llrf_control = hch.llrf_init.getLLRFController(MACHINE_MODE.PHYSICAL, rf_structure)
+            hch.llrf_control.setKeepAlive(True)
+            hch.llrf_control.keepAlive()
+
+            # SET zero amp_sp as soon as possible
+            hch.llrf_control.setAmpSP(0.0)
+            message += ' SET AMP_SP = 0, '
+
             hch.llrf_obj = [hch.llrf_control.getLLRFObjConstRef()]
             hch.have_controller[CONTROLLER_TYPE.LLRF] = True
             message += 'successfully created a ' + str(rf_structure) + ' LLRF control object'
         self.logger.message(message)
 
-        self.llrf_controller = llrf_control.llrf_control()
+        self.llrf_controller = llrf_control.llrf_control() # TODO better names for llrf_controller, (maybe llrf_py) so we never choose wrong object
+
 
 
 

@@ -33,23 +33,21 @@
 # import src.data.rf_condition_data_base as dat
 # from src.data.state import state
 import sys
-import time
-import os
-from PyQt4.QtGui import QMainWindow
-from rf_condition_view_base import Ui_rf_condition_mainWindow
+from src.view.rf_condition_view_base import Ui_rf_condition_mainWindow
 from VELA_CLARA_RF_Modulator_Control import GUN_MOD_STATE
 from VELA_CLARA_RF_Modulator_Control import L01_MOD_STATE
 from VELA_CLARA_Vac_Valve_Control import VALVE_STATE
 from VELA_CLARA_RF_Protection_Control import RF_PROT_STATUS
-
+from VELA_CLARA_RF_Modulator_Control import HOLD_RF_ON_STATE
 from src.data.rf_conditioning_data import rf_conditioning_data
+
 from src.data.state import state
 from PyQt4.QtGui import *
 
 from PyQt4.QtGui import QPixmap
 from PyQt4.QtGui import QTextCursor
 from PyQt4.QtCore import QTimer
-from numpy import float64
+import pyqtgraph
 
 
 class OutLog:
@@ -88,16 +86,13 @@ class OutLog:
             tc = self.edit.textColor()
             self.edit.setTextColor(self.color)
 
-        self.edit.moveCursor(QTextCursor.End)
+        # self.edit.moveCursor(QTextCursor.End)
         self.edit.insertPlainText(m)
 
         if self.out:
             self.out.write(m)
-
         # also write message to the initial standard out
-        OutLog.initial_stdout.write(m)
-
-    # class main_controller(controller_base):
+        OutLog.initial_stdout.write(m)  # class main_controller(controller_base):
 
 
 class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
@@ -109,6 +104,8 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
     timing = 'yellow'
     init = 'orange'
     standby = 'purple'
+    one = 'green'
+    zero = 'yellow'
 
     #
     # other attributes will be initialised in base-class
@@ -133,6 +130,296 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         # dict for widgets to simplfy updating values
         self.widget = {}
         self.expert_widget = {}
+        self.llrf_enable_button.clicked.connect(self.handle_llrf_enable_button)
+        self.llrf_enable_button.setStyleSheet('QPushButton { background-color : ' + self.good + '; '
+                                                                                                'color : black; }')
+        self.llrf_enable_button.setText('RF Enabled')
+        # initialise gui_can_ramp_button to "RAMP DISABLED"
+        self.can_ramp_button.clicked.connect(self.handle_can_ramp_button)
+        self.can_ramp_button.setStyleSheet('QPushButton { background-color : ' + self.bad + '; color : black; }')
+        self.can_ramp_button.setText('RAMP Disabled')
+        self.plot_item = self.graphicsView.getPlotItem()
+
+
+
+    def update_plot(self):
+        '''
+            plot the binned data, the current working point (as a vertical line due to no kfpow for that amp_sp), lines of best fit
+        '''
+        rcd = rf_conditioning_data
+        pg = pyqtgraph
+        data = rf_conditioning_data.amp_vs_kfpow_running_stat
+        x = data.keys()
+        x.sort()
+        y = []
+        # data =
+        for item in x:
+            y.append(data[item][1])
+
+        # do we need to clear ???
+        self.plot_item.clear()
+
+        # Plot unbinned data in greyscale
+        self.plot_item.plot(x, y, pen={'color': 0.9, 'width': 1.0})
+
+        # plot upper and lower limits for bin exclusion
+        #All_amp_sp = rcd.binned_amp_vs_kfpow[rcd.All_amp_sp]
+        polyfit_4th_order_All_amp_sp = rcd.binned_amp_vs_kfpow[rcd.polyfit_4th_order_All_amp_sp]
+        #DATA_lower_limit = rcd.binned_amp_vs_kfpow[rcd.DATA_lower_limit]
+        #DATA_upper_limit = rcd.binned_amp_vs_kfpow[rcd.DATA_upper_limit]
+
+        #self.plot_item.plot(All_amp_sp, DATA_lower_limit, pen={'color': 'y', 'width': 0.7})
+        #self.plot_item.plot(All_amp_sp, polyfit_4th_order_All_amp_sp, pen={'color': 'y', 'width': 2.0})
+        #self.plot_item.plot(All_amp_sp, DATA_upper_limit, pen={'color': 'y', 'width': 0.7})
+
+        # draw vertical line at the new amp_sp
+        current_amp = int(self.values[rf_conditioning_data.amp_sp])
+        current_X = [current_amp, current_amp]
+        current_Y = [min(y), max(y)]
+
+
+        if current_amp < 0.0:
+            pass
+        else:
+            self.plot_item.plot(current_X, current_Y, pen=pg.mkPen('b', width=2))
+
+
+        # call in binned data to plot
+        bin_X = rcd.binned_amp_vs_kfpow['BIN_X']
+        bin_Y = rcd.binned_amp_vs_kfpow['BIN_mean']
+
+
+        self.plot_item.plot(bin_X, bin_Y, symbol='+', pen={'color': 'g', 'width': 2.0})
+
+        # Create current_Y using best fit data and current_X:
+
+        m = rcd.values[rcd.m]
+        c = rcd.values[rcd.c]
+        expected_Y = (current_amp * m) + c
+
+        old_m = rcd.values[rcd.old_m]
+        old_c = rcd.values[rcd.old_c]
+        expected_Y_old = (current_amp * old_m) + old_c
+
+        #print('expected_Y = {}\nexpected_Y_old = {}'.format(expected_Y, expected_Y_old))
+
+        #print('\nFrom update_plot\nm = {}\nc = {}\nexpected_Y = {}\nold_m = {}\nold_c = {}\nexpected_Y_old = {}\n'.format(m, c, expected_Y, old_m,
+        #                                                                                                                  old_c, expected_Y_old))
+        #print('type(m) = {}\ntype(c) = {}\ntype(expected_Y) = {}\ntype(old_m) = {}\ntype(old_c) = {}\ntype(expected_Y_old) = {}'.format(type(m),
+        #             type(c), type(expected_Y), type(old_m), type(old_c), type(expected_Y_old)))
+
+
+        x_min = self.values[rcd.x_min]
+        old_x_min = self.values[rcd.old_x_min]
+        y_min = self.values[rcd.y_min]
+        old_y_min = self.values[rcd.old_y_min]
+
+        #print('x_min = {}\nold_x_min = {}\ny_min = {}\nold_y_min = {}\n'.format(x_min, old_x_min, y_min, old_y_min))
+        #print('type(x_min) = {}\ntype(old_x_min) = {}\ntype(y_min) = {}\ntype(old_y_min) = {}\n'.format(type(x_min), type(old_x_min), type(y_min),
+        #                                                                                                type(old_y_min)))
+
+        # raw_input()
+
+        if y_min < 0.0 or x_min < 0.0:
+            pass
+        else:
+
+            # add in straight line fits ...'new data'
+            self.plot_item.plot([x_min, current_amp], [y_min, expected_Y], pen={'color': 'r', 'width': 1.5})
+
+            # add in plot of old SLF,
+            self.plot_item.plot([old_x_min, current_amp], [old_y_min, expected_Y_old], pen={'color': 'y', 'width': 1.5})
+
+
+        # Add second order polyfit to plot (all data):
+        #data_to_fit_x_all = rcd.values['polyfit_2order_X_all']
+        #polyfit_2nd_order_y_all = rcd.values['polyfit_2order_Y_all']
+
+        # print('\n\nFrom polyfit_2order_X_all:\ntype(data_to_fit_x) = {}\ndata_to_fit_x = {}\npolyfit_2nd_order_y = {}'.format(data_to_fit_x,
+        #                                                                                                                       type(data_to_fit_x),
+        #                                                                                                                       polyfit_2nd_order_y))
+
+        #self.plot_item.plot(data_to_fit_x_all, polyfit_2nd_order_y_all, pen={'color': 'c', 'width': 2.0})
+
+
+        # Add second order polyfit to plot (up to current sp & num_sp_to_fit data):
+        data_x_current_sp_to_fit = rcd.values['polyfit_2order_X_current_sp_to_fit']
+        polyfit_2order_Y_current_sp_to_fit = rcd.values['polyfit_2order_Y_current_sp_to_fit']
+
+        # do not plot the origin:
+        data_x_current_sp_to_fit = data_x_current_sp_to_fit[1:]
+        polyfit_2order_Y_current_sp_to_fit = polyfit_2order_Y_current_sp_to_fit[1:]
+
+        # print('data_to_fit_x = {}\npolyfit_2nd_order_y = {}'.format(data_to_fit_x, polyfit_2nd_order_y))
+
+        self.plot_item.plot(data_x_current_sp_to_fit, polyfit_2order_Y_current_sp_to_fit, pen={'color': 'm', 'width': 2.0})
+
+        # Add second order polyfit to plot (all viable bins up to current sp):
+        #polyfit_2order_X_current_sp = rcd.values['polyfit_2order_X_current_sp']
+        #polyfit_2order_Y_current_sp = rcd.values['polyfit_2order_Y_current_sp']
+
+        # rint('data_to_fit_x = {}\npolyfit_2nd_order_y = {}'.format(data_to_fit_x, polyfit_2nd_order_y))
+
+        #if len(polyfit_2order_X_current_sp) == 1:
+            # print('type(data_to_fit_x) = {}'.format( type(data_to_fit_x)))
+        #    pass
+        #else:
+        #    self.plot_item.plot(polyfit_2order_X_current_sp, polyfit_2order_Y_current_sp, pen={'color': 'b', 'width': 2.0})
+            #print('From quick_update_plot:\ndata_to_fit_x = {}\npolyfit_2nd_order_y = {}'.format(data_to_fit_x, polyfit_2nd_order_y))
+
+        # Rescale plots everytime function is called? can be annoying  # self.plot_item.setXRange(0.0, current_amp+200.0)  #
+        # self.plot_item.setYRange(0.0, max(y)*1.4)
+
+    def quick_update_plot(self):
+        '''
+              plot the binned data, the curret working point (as a vertical line due to no kfpow for that amp_sp), lines of best fit
+          '''
+
+        rcd = rf_conditioning_data
+        pg = pyqtgraph
+        data = rf_conditioning_data.amp_vs_kfpow_running_stat
+        x = data.keys()
+        x.sort()
+        y = []
+        # data =
+        for item in x:
+            y.append(data[item][1])
+
+        # do we need to clear ???
+        self.plot_item.clear()
+
+        # Plot unbinned data in greyscale
+        self.plot_item.plot(x, y, pen={'color': 0.9, 'width': 1.0})
+
+        # plot upper and lower limits for bin exclusion
+
+        # TODO AJG: remove all reduced data tendrils
+
+        #All_amp_sp = rcd.binned_amp_vs_kfpow[rcd.All_amp_sp]
+        polyfit_4th_order_All_amp_sp = rcd.binned_amp_vs_kfpow[rcd.polyfit_4th_order_All_amp_sp]
+        #DATA_lower_limit = rcd.binned_amp_vs_kfpow[rcd.DATA_lower_limit]
+        #DATA_upper_limit = rcd.binned_amp_vs_kfpow[rcd.DATA_upper_limit]
+
+        #self.plot_item.plot(All_amp_sp, DATA_lower_limit, pen={'color': 'y', 'width': 0.7})
+        #self.plot_item.plot(All_amp_sp, polyfit_4th_order_All_amp_sp, pen={'color': 'y', 'width': 2.0})
+        #self.plot_item.plot(All_amp_sp, DATA_upper_limit, pen={'color': 'y', 'width': 0.7})
+
+        # draw vertical line at the new amp_sp
+        current_amp = int(self.values[rf_conditioning_data.amp_sp])
+        current_X = [current_amp, current_amp]
+        current_Y = [min(y), max(y)]
+
+
+        if current_amp < 0.0:
+            pass
+        else:
+            self.plot_item.plot(current_X, current_Y, pen=pg.mkPen('b', width=2))
+
+
+        # call in binned data to plot
+        bin_X = rcd.binned_amp_vs_kfpow['BIN_X']
+        bin_Y = rcd.binned_amp_vs_kfpow['BIN_mean']
+
+
+        self.plot_item.plot(bin_X, bin_Y, symbol='+', pen={'color': 'g', 'width': 2.0})
+
+        # Create current_Y using best fit data and current_X:
+
+        m = rcd.values[rcd.m]
+        c = rcd.values[rcd.c]
+        expected_Y = (current_amp * m) + c
+
+        old_m = rcd.values[rcd.old_m]
+        old_c = rcd.values[rcd.old_c]
+        expected_Y_old = (current_amp * old_m) + old_c
+
+        #print('expected_Y = {}\nexpected_Y_old = {}'.format(expected_Y, expected_Y_old))
+
+        #print('\nFrom update_plot\nm = {}\nc = {}\nexpected_Y = {}\nold_m = {}\nold_c = {}\nexpected_Y_old = {}\n'.format(m, c, expected_Y, old_m,
+        #                                                                                                                  old_c, expected_Y_old))
+        #print('type(m) = {}\ntype(c) = {}\ntype(expected_Y) = {}\ntype(old_m) = {}\ntype(old_c) = {}\ntype(expected_Y_old) = {}'.format(type(m),
+        #             type(c), type(expected_Y), type(old_m), type(old_c), type(expected_Y_old)))
+
+
+        x_min = self.values[rcd.x_min]
+        old_x_min = self.values[rcd.old_x_min]
+        y_min = self.values[rcd.y_min]
+        old_y_min = self.values[rcd.old_y_min]
+
+        #print('x_min = {}\nold_x_min = {}\ny_min = {}\nold_y_min = {}\n'.format(x_min, old_x_min, y_min, old_y_min))
+        #print('type(x_min) = {}\ntype(old_x_min) = {}\ntype(y_min) = {}\ntype(old_y_min) = {}\n'.format(type(x_min), type(old_x_min), type(y_min),
+        #                                                                                                type(old_y_min)))
+
+        # raw_input()
+
+        if y_min < 0.0 or x_min < 0.0:
+            pass
+        else:
+
+            # add in straight line fits ...'new data'
+            self.plot_item.plot([x_min, current_amp], [y_min, expected_Y], pen={'color': 'r', 'width': 1.5})
+
+            # add in plot of old SLF,
+            self.plot_item.plot([old_x_min, current_amp], [old_y_min, expected_Y_old], pen={'color': 'y', 'width': 1.5})
+
+
+        # Add second order polyfit to plot (all data):
+        #data_to_fit_x_all = rcd.values['polyfit_2order_X_all']
+        #polyfit_2nd_order_y_all = rcd.values['polyfit_2order_Y_all']
+
+        # print('\n\nFrom polyfit_2order_X_all:\ntype(data_to_fit_x) = {}\ndata_to_fit_x = {}\npolyfit_2nd_order_y = {}'.format(data_to_fit_x,
+        #                                                                                                                       type(data_to_fit_x),
+        #                                                                                                                       polyfit_2nd_order_y))
+
+        #self.plot_item.plot(data_to_fit_x_all, polyfit_2nd_order_y_all, pen={'color': 'c', 'width': 2.0})
+
+
+        # Add second order polyfit to plot (up to current sp & num_sp_to_fit data):
+        data_x_current_sp_to_fit = rcd.values['polyfit_2order_X_current_sp_to_fit']
+        polyfit_2order_Y_current_sp_to_fit = rcd.values['polyfit_2order_Y_current_sp_to_fit']
+
+        # do not plot the origin:
+        data_x_current_sp_to_fit = data_x_current_sp_to_fit[1:]
+        polyfit_2order_Y_current_sp_to_fit = polyfit_2order_Y_current_sp_to_fit[1:]
+
+        # print('data_to_fit_x = {}\npolyfit_2nd_order_y = {}'.format(data_to_fit_x, polyfit_2nd_order_y))
+
+        self.plot_item.plot(data_x_current_sp_to_fit, polyfit_2order_Y_current_sp_to_fit, pen={'color': 'm', 'width': 2.0})
+
+        # Add second order polyfit to plot (all viable bins up to current sp):
+        #polyfit_2order_X_current_sp = rcd.values['polyfit_2order_X_current_sp']
+        #polyfit_2order_Y_current_sp = rcd.values['polyfit_2order_Y_current_sp']
+
+        # rint('data_to_fit_x = {}\npolyfit_2nd_order_y = {}'.format(data_to_fit_x, polyfit_2nd_order_y))
+
+        #if len(polyfit_2order_X_current_sp) == 1:
+            # print('type(data_to_fit_x) = {}'.format( type(data_to_fit_x)))
+        #    pass
+        #else:
+        #    self.plot_item.plot(polyfit_2order_X_current_sp, polyfit_2order_Y_current_sp, pen={'color': 'b', 'width': 2.0})
+            #print('From quick_update_plot:\ndata_to_fit_x = {}\npolyfit_2nd_order_y = {}'.format(data_to_fit_x, polyfit_2nd_order_y))
+
+
+    def handle_can_ramp_button(self):
+        if self.values[rf_conditioning_data.gui_can_ramp]:
+            self.values[rf_conditioning_data.gui_can_ramp] = False
+            self.can_ramp_button.setStyleSheet('QPushButton { background-color : ' + self.bad + '; color : black; }')
+            self.can_ramp_button.setText('RAMP Disabled')
+        else:
+            self.values[rf_conditioning_data.gui_can_ramp] = True
+            self.can_ramp_button.setStyleSheet('QPushButton { background-color : ' + self.good + '; color : black; }')
+
+            self.can_ramp_button.setText('RAMP Enabled')
+
+    def handle_llrf_enable_button(self):
+        if self.values[rf_conditioning_data.gui_can_rf_output]:
+            self.values[rf_conditioning_data.gui_can_rf_output] = False
+            self.llrf_enable_button.setStyleSheet('QPushButton { background-color : ' + self.bad + '; color : black; }')
+            self.llrf_enable_button.setText('RF Disabled')
+        else:
+            self.values[rf_conditioning_data.gui_can_rf_output] = True
+            self.llrf_enable_button.setStyleSheet('QPushButton { background-color : ' + self.good + '; color : black; }')
+            self.llrf_enable_button.setText('RF Enabled')
 
     def start_gui_update(self):
         # reference to the values dictionary
@@ -143,119 +430,182 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
 
         # connect checkBOx for exper mode active
         self.edit_mode_checkbox.stateChanged.connect(self.handle_edit_mode)
-
         # self.init_widget_dict()
-
         self.timer = QTimer()
         self.timer.setSingleShot(False)
         self.timer.timeout.connect(self.update_gui)
         self.timer.start(self.config.raw_config_data[self.config.GUI_UPDATE_TIME])
 
+        self.timer2 = QTimer()
+        self.timer2.setSingleShot(False)
+        self.timer2.timeout.connect(self.quick_update_plot)
+        self.timer2.start(self.config.raw_config_data[self.config.GUI_UPDATE_TIME] * 10)
+
     def handle_edit_mode(self):
         print("handle_edit_mode")
         for key, value in self.expert_widget.iteritems():
             print(key)
-            value.setEnabled( self.edit_mode_checkbox.isChecked() )
+            value.setEnabled(self.edit_mode_checkbox.isChecked())
 
     # main update gui function, loop over all widgets, and if values is new update gui with new
     # value
     def update_gui(self):
+
+        rcd = rf_conditioning_data
         QApplication.processEvents()
         # Call various update functions for each widget / group of widgets
+        self.update_cav_pwr_ratio_and_max()
         self.update_mean_power_widgets()
-
         # vac level, and can we ramp due to vac
         self.update_vac_level()
-
         # updat evac_valve
         self.update_vac_valve()
-
         # update main status flags
         self.update_status_flags()
-
         # RF protection status
         self.update_RF_prot()
-
         # modulator state
         self.update_modulator_status()
-
-        #
         self.update_temperature_values()
-
-        self.update_CATAP_AMPSP_limit()
-
+        self.update_CATAP_AMPSP_limit()  # TODO only needs calling once
         self.update_DAQ_rep_rate()
+        self.update_all_counters()
+
+        self.update_amp_sp()
+        # other stuff
+
+        self.pulse_length_outputwidget.setText(str(self.values[self.data.pulse_length]))
+        self.set_widget_color(self.pulse_length_outputwidget, self.values[self.data.pulse_length_status])
+
+        self.current_ramp_index.setText('{}'.format(self.values[self.data.current_ramp_index]))
+
+        self.log_ramp_curve_index_outputwidget.setText(
+            '{} / {}'.format(self.values[self.data.log_ramp_curve_index], self.config.raw_config_data['LOG_RAMP_CURVE_NUMSTEPS']))
+
+        self.next_power_increse_outputwidget.setText('{}'.format(self.values[rcd.next_requested_power_change]))
+        self.last_power_increase_outputwidget.setText('{}'.format(self.values[rcd.last_requested_power_change]))
+        self.last_increase_method_outputwidget.setText(str(self.values[rcd.last_ramp_method]))
+
+        self.slf_predicted_next_amp_sp.setText('{}'.format(self.values[rcd.SP_SLF]))
+        self.quad_all_predicted_next_amp_sp.setText('{}'.format(self.values[rcd.SP_QUAD_ALL]))
+        self.quad_less_current_predicted_next_amp_sp.setText('{}'.format(self.values[rcd.SP_QUAD_CURRENT]))
+        self.quad_less_current_cut_predicted_next_amp_sp.setText('{}'.format(self.values[rcd.SP_QUAD_CURRENT_SP_TO_FIT]))
+
+        self.set_widget_color_text(self.check_mask_outputwidget, self.values[rcd.global_mask_checking])
+
+        # higher level state widgets
+        self.set_widget_color_text(self.can_rf_output_status_outputwidget, self.data.values[rcd.can_rf_output_status])
+        self.set_widget_color_text(self.can_ramp_status_outputwidget, self.data.values[rcd.can_ramp_status])
+        self.set_widget_color_text(self.can_llrf_output_state_outputwidget, self.data.values[rcd.can_llrf_output_state])
+        self.set_widget_color_text(self.BD_state_outputwidget, self.data.values[rcd.BD_state])
+
+        self.set_widget_color_text(self.hold_rf_on_state_outputwidget, self.values[self.data.hold_rf_on_state])
+
+        self.set_widget_color_text(self.is_amp_ff_connected_outputwidget,  self.values[self.data.is_amp_ff_connected])
+
+
+
+        if self.data.get_kf_running_stat_power_at_set_point(self.values[self.data.last_amp_sp]):
+            if self.data.get_kf_running_stat_power_at_current_set_point():
+                self.delta_power_outputwidget.setText('{}'.format(int(self.values[self.data.delta_kfpow])))
+            else:
+                self.delta_power_outputwidget.setText('power now is NONE')
+        else:
+            self.delta_power_outputwidget.setText('last power NONE')
+
+        if self.data.log_ramp_curve:
+            self.log_ramp_final_setpoint_outputwidget.setText( str(self.data.log_ramp_curve[-1][1]) )
+        else:
+            self.log_ramp_final_setpoint_outputwidget.setText("NONE")
+
+        self.live_amp_set_outputwidget.setText( str(int(self.values[self.data.amp_sp])) )
+
+        # Heartbeat flash on/off
+        #print('self.data.values[self.data.llrf_heart_beat_value]= {}'.format(self.values[self.data.llrf_heart_beat_value]))
+        #raw_input()
+
+        if self.data.values[self.data.llrf_heart_beat_value] == 0.0:
+            self.RF_Heartbeat_outputwidget.setText('HEARTBEAT: REST')
+            self.RF_Heartbeat_outputwidget.setStyleSheet('QLabel { background-color : ' + self.zero + '; color : black; }')
+
+        elif self.data.values[self.data.llrf_heart_beat_value] == 1.0:
+            self.RF_Heartbeat_outputwidget.setText('HEARTBEAT: PULSE')
+            self.RF_Heartbeat_outputwidget.setStyleSheet('QLabel { background-color : ' + self.one + '; color : black; }')
+        else:
+            self.RF_Heartbeat_outputwidget.setText('HEARTBEAT: UNKNOWN')
+            self.RF_Heartbeat_outputwidget.setStyleSheet('QLabel { background-color : ' + self.unknown + '; color : black; }')
+
+
+    def update_amp_sp(self):
+        self.amp_set_outputwidget.setText('{} / {}'.format(int(self.values[self.data.latest_amp_sp_from_ramp]), int(self.values[self.data.last_amp_sp])))
 
     def update_DAQ_rep_rate(self):
-        self.trace_rep_rate_outpuwidget.setText(
-            '{:0=4.2f}'.format(self.values[self.data.llrf_DAQ_rep_rate]))
-        self.set_widget_color(self.trace_rep_rate_outpuwidget,
-                              self.values[self.data.llrf_DAQ_rep_rate_status])
+        self.trace_rep_rate_outpuwidget.setText('{:0=4.2f}'.format(self.values[self.data.llrf_DAQ_rep_rate]))
+        self.set_widget_color(self.trace_rep_rate_outpuwidget, self.values[self.data.llrf_DAQ_rep_rate_status])
 
     def update_amp_phase_setpoint(self):
         self.amp_set_outputwidget.setText(str(int(self.values[self.data.amp_sp])))
 
     def update_CATAP_AMPSP_limit(self):
-        self.catap_amp_level_outputwidget.setText(str(int(self.values[self.data.catap_max_amp])))
-        self.set_widget_color(self.catap_amp_level_outputwidget,
-                              self.values[self.data.catap_max_amp_can_ramp_status])
-
+        self.catap_amp_level_outputwidget.setText( "{} / {} ".format(  str(int(self.values[self.data.llrf_max_amp])), str(int(self.values[
+                                                                                                                                     self.data.catap_max_amp]))))
+        # TODO thsi needs to incldue the LLRF_MAX_AMP_SP
+        self.set_widget_color(self.catap_amp_level_outputwidget, self.values[self.data.catap_max_amp_can_ramp_status])
     def update_temperature_values(self):
         # technically, these are defined at run time, as there cna be more than one PV to record,
         # this is a bit of a hack to get some numbers into the GUI
-        self.cav_temp_outputwidget.setText('{:0=4.2f}'.format(self.values[
-                                                                  self.data.cav_temp_gui]))  # We
-        # don't have a a water anymore ... .  # self.water_temp_outputwidget.setText(  #     '{
-        # :0=4.2f}'.format(self.values[self.data.water_temp_gui]))
+        self.cav_temp_outputwidget.setText('{:0=4.2f}'.format(self.values[self.data.cav_temp_gui]))
+        # We  # don't have a a water anymore ... .  #
+        # self.water_temp_outputwidget.setText(  #     '{  # :0=4.2f}'.format(self.values[self.data.water_temp_gui]))
 
-    # the outputwidget is update based on data type
-    def update_widget(self, key, val, widget):
-        print("update_widget() called,", type(val), key, widget.objectName())
-        # meh
-        if key == self.data.breakdown_rate_hi:
-            self.set_widget_color(widget, not val)
-        elif key == self.data.vac_decay_level:
-            self.set_widget_color(widget, val)
-        elif key == self.data.pulse_length_status:
-            self.set_widget_color(widget, val)
-        elif key == self.data.llrf_interlock_status:
-            self.set_widget_color_text(widget, val)
-        elif key == self.data.llrf_trigger_status:
-            self.set_widget_color_text(widget, val)
-        elif key == self.data.vac_spike_status:
-            self.set_widget_color_text(widget, val)
-        elif key == self.data.DC_spike_status:
-            self.set_widget_color_text(widget, val)
-        elif key == self.data.llrf_DAQ_rep_rate_status:
-            self.set_widget_color(widget, val)
-        elif key == self.data.llrf_output_status:
-            self.set_widget_color_text(widget, val)
-        elif widget == self.event_pulse_count_outputwidget:
-            widget.setText(('%i' % val) + ('/%i' % self.values[
-                self.data.required_pulses]))  #   # self.clip_vals[key] = widget.text()
-        elif type(val) is long:
-            widget.setText('%i' % val)  # self.clip_vals[key] = widget.text()
-        elif type(val) is int:
-            # print(key,' is a int')
-            widget.setText('%i' % val)  # self.clip_vals[key] = widget.text()
-        elif type(val) is float:
-            widget.setText('%.2E' % val)  # self.clip_vals[key] = widget.text()
-        elif type(val) is RF_PROT_STATUS:
-            self.set_RF_prot(widget, val)
-        elif type(val) is GUN_MOD_STATE:
-            self.set_gun_mod_state(widget, val, key)
-        elif type(val) is L01_MOD_STATE:
-            self.set_L01_mod_state(widget, val, key)
-        elif type(val) is VALVE_STATE:
-            self.set_valve(widget, val)
-        elif type(val) is bool:
-            self.set_widget_color_text(widget, val)
-        elif type(val) is float64:
-            widget.setText('%.2E' % val)  # self.clip_vals[key] = widget.text()
-        elif type(val) is str:
-            widget.setText('%i' % -1)
-        else:
-            print 'update_widget error ' + str(val) + ' ' + str(type(val))
+    # # the outputwidget is update based on data type
+    # def update_widget(self, key, val, widget):
+    #     print("update_widget() called,", type(val), key, widget.objectName())
+    #     # meh
+    #     if key == self.data.breakdown_rate_low:
+    #         self.set_widget_color(widget, not val)
+    #     elif key == self.data.vac_decay_level:
+    #         self.set_widget_color(widget, val)
+    #     elif key == self.data.pulse_length_status:
+    #         self.set_widget_color(widget, val)
+    #     elif key == self.data.llrf_interlock_status:
+    #         self.set_widget_color_text(widget, val)
+    #     elif key == self.data.llrf_trigger_status:
+    #         self.set_widget_color_text(widget, val)
+    #     elif key == self.data.vac_spike_status:
+    #         self.set_widget_color_text(widget, val)
+    #     elif key == self.data.DC_spike_status:
+    #         self.set_widget_color_text(widget, val)
+    #     elif key == self.data.llrf_DAQ_rep_rate_status:
+    #         self.set_widget_color(widget, val)
+    #     elif key == self.data.llrf_output_status:
+    #         self.set_widget_color_text(widget, val)
+    #     elif widget == self.event_pulse_count_outputwidget:
+    #         widget.setText(('%i' % val) + ('/%i' % self.values[
+    #             self.data.required_pulses]))  #   # self.clip_vals[key] = widget.text()
+    #     elif type(val) is long:
+    #         widget.setText('%i' % val)  # self.clip_vals[key] = widget.text()
+    #     elif type(val) is int:
+    #         # print(key,' is a int')
+    #         widget.setText('%i' % val)  # self.clip_vals[key] = widget.text()
+    #     elif type(val) is float:
+    #         widget.setText('%.2E' % val)  # self.clip_vals[key] = widget.text()
+    #     elif type(val) is RF_PROT_STATUS:
+    #         self.set_RF_prot(widget, val)
+    #     elif type(val) is GUN_MOD_STATE:
+    #         self.set_gun_mod_state(widget, val, key)
+    #     elif type(val) is L01_MOD_STATE:
+    #         self.set_L01_mod_state(widget, val, key)
+    #     elif type(val) is VALVE_STATE:
+    #         self.set_valve(widget, val)
+    #     elif type(val) is bool:
+    #         self.set_widget_color_text(widget, val)
+    #     elif type(val) is float64:
+    #         widget.setText('%.2E' % val)  # self.clip_vals[key] = widget.text()
+    #     elif type(val) is str:
+    #         widget.setText('%i' % -1)
+    #     else:
+    #         print 'update_widget error ' + str(val) + ' ' + str(type(val))
 
     def normal_output_writer(self, text):
         """Append text to the QTextEdit."""
@@ -290,38 +640,19 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
             self.set_widget_color_text(widget, state.ERROR)
 
     def update_vac_level(self):
-        self.vac_level_outputwidget.setText(
-            '{:0=4.2f} e-9'.format(self.values[self.data.vac_level]))
-        self.set_widget_color(self.vac_level_outputwidget,
-                              self.values[self.data.vac_level_can_ramp])
+        self.vac_level_outputwidget.setText('{}'.format(self.values[self.data.vac_level]))
+        self.set_widget_color(self.vac_level_outputwidget, self.values[self.data.vac_level_can_ramp])
 
     def update_status_flags(self):
 
-        self.set_widget_color_text(self.llrf_interlock_outputwidget,
-                                   self.values[self.data.llrf_interlock_status])
-        self.set_widget_color_text(self.llrf_trace_interlock_outputwidget,
-                                   self.values[self.data.llrf_interlock_status])
-        self.set_widget_color_text(self.llrf_output_outputwidget,
-                                   self.values[self.data.llrf_output_status])
-        self.set_widget_color_text(self.llrf_ff_amp_locked_outputwidget,
-                                   self.values[self.data.llrf_ff_amp_locked_status])
-        self.set_widget_color_text(self.llrf_ff_ph_locked_outputwidget,
-                                   self.values[self.data.llrf_ff_ph_locked_status])
-        self.set_widget_color_text(self.llrf_trigger_outputwidget,
-                                   self.values[self.data.llrf_trigger_status])
-        self.set_widget_color_text(self.vac_spike_status_outputwidget,
-                                   self.values[self.data.vac_spike_status])
-        self.set_widget_color_text(self.DC_spike_status_outputwidget,
-                                   self.values[self.data.DC_spike_status])
-
-        # self.widget[self.data.llrf_interlock] = self.llrf_interlock_outputwidget  #   #
-        # self.widget[self.data.llrf_trace_interlock] = self.llrf_trace_interlock_outputwidget  #
-        # self.widget[self.data.llrf_output_status] = self.llrf_output_outputwidget  #   #
-        # self.widget[self.data.llrf_ff_amp_locked_status] = self.llrf_ff_amp_locked_outputwidget
-        # self.widget[self.data.llrf_ff_ph_locked_status] = self.llrf_ff_ph_locked_outputwidget
-        # self.widget[self.data.vac_spike_status] = self.vac_spike_status_outputwidget  #   #
-        # self.widget[self.data.vac_valve_status] = self.vac_valve_status_outputwidget  #   #
-        # self.widget[self.data.llrf_output_status] = self.llrf_output_outputwidget
+        self.set_widget_color_text(self.llrf_interlock_outputwidget, self.values[self.data.llrf_interlock_status])
+        self.set_widget_color_text(self.llrf_trace_interlock_outputwidget, self.values[self.data.llrf_interlock_status])
+        self.set_widget_color_text(self.llrf_output_outputwidget, self.values[self.data.llrf_output_status])
+        self.set_widget_color_text(self.llrf_ff_amp_locked_outputwidget, self.values[self.data.llrf_ff_amp_locked_status])
+        self.set_widget_color_text(self.llrf_ff_ph_locked_outputwidget, self.values[self.data.llrf_ff_ph_locked_status])
+        self.set_widget_color_text(self.llrf_trigger_outputwidget, self.values[self.data.llrf_trigger_status])
+        self.set_widget_color_text(self.vac_spike_status_outputwidget, self.values[self.data.vac_spike_status])
+        #self.set_widget_color_text(self.DC_spike_status_outputwidget, self.values[self.data.DC_spike_status])
 
     def update_mean_power_widgets(self):
         self.set_power_text(self.probe_power_outputwidget, self.values[self.data.probe_pwr])
@@ -332,62 +663,50 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         self.set_power_text(self.rev_kly_power_outputwidget, self.values[self.data.rev_kly_pwr])
 
     def set_power_text(self, widget, value):
-        widget.setText('{:0=4.2f} e6'.format(value * 0.000001))
+        # widget.setText('{:0=4f}'.format( int(value * 0.001) ))
+        widget.setText('{:1.2f} kW'.format(value * 0.001))
 
-    def init_widget_dict(self):
-        """
-        Here we create a dictionary that links each gui widget that displays updating information
-        to a  'bespoke' update function
-        Then, in the GUI update loop we iterate over each widget and call its update function
-        we ASSUME that the update function knows exactly how to update each widget
-        This create many functions, but, it means we cna tailor each parameter in the GUI
-        :return:
-        """  # MANUALLY CONNECT THESE UP :/  #  # mean powers for  # self.widget[
-        # self.probe_power_outputwidget  ] = self.update_probe_power  # self.widget[
-        # self.fwd_cav_power_outputwidget] = self.update_fwd_cav_power  # self.widget[
-        # self.rev_cav_power_outputwidget] = self.update_rev_cav_power  # self.widget[
-        # self.fwd_kly_power_outputwidget] = self.update_fwd_kly_power  # self.widget[
-        # self.rev_kly_power_outputwidget] = self.update_rev_kly_power  # #  # # vac_levell and
-        # vac_level_can_ramp both talk to this widget  # self.widget[ self.vac_level_outputwidget
-        # ] = self.update_vac_level
+    def update_all_counters(self):
 
-        # self.widget[self.data.rfprot_state] = self.RF_protection_outputwidget
 
-        # self.widget[ self.cav_temp_outputwidget ] = self.data.cav_temp
 
-        # self.widget[self.data.cav_temp] = self.cav_temp_outputwidget  # #self.widget[
-        # self.data.water_temp] = self.water_temp_outputwidget  # self.widget[
-        # self.data.pulse_length] = self.pulse_length_outputwidget  # #self.widget[
-        # self.data.elapsed_time] = self.elapsed_time_outputwidget  # self.widget[
-        # self.data.breakdown_rate] = self.measured_breakdown_rate_outputwidget  # self.widget[
-        # self.data.breakdown_count] = self.breakdown_count_outputwidget  # self.widget[
-        # self.data.pulse_count] = self.pulse_count_outputwidget  # self.widget[self.data.amp_sp]
-        # = self.amp_set_outputwidget  # #self.widget[self.data.DC_level] =
-        # self.dc_level_outputwidget  # self.widget[self.data.event_pulse_count] =
-        # self.event_pulse_count_outputwidget  #  # # we're going to do BD rate aim on teh same
-        # widget as the measured BD rate  # #self.widget[self.data.breakdown_rate_aim] =
-        # self.breakdown_rate_limit_outputwidget  # self.widget[self.data.breakdown_rate_hi] =
-        # self.measured_breakdown_rate_outputwidget  # #self.widget[self.data.last_106_bd_count]
-        # = self.last_106_count_outputwidget  #  # #self.widget[self.data.last_mean_power] =
-        # self.last_setpoint_power_outputwidget  #  # #self.widget[self.data.next_power_increase]
-        # = self.next_power_increase_outputwidget  # #self.widget[self.data.next_sp_decrease] =
-        # self.next_sp_decrease_outputwidget  #  # #self.widget[self.data.current_ramp_index] =
-        # self.current_index_outputwidget  #  # self.widget[self.data.sol_value] =
-        # self.sol_outputwidget  #  #  # # duplicate count is going to go in the expert panel !
-        # #self.widget[self.data.duplicate_pulse_count] = self.duplicate_count_outputwidget  #  #
-        #  # self.widget[self.data.pulses_to_next_ramp] = self.pulses_to_next_ramp_outputwidget
-        #  #  # # states  # self.widget[self.data.modulator_state] = self.mod_state_outputwidget
-        # # states  # self.widget[self.data.llrf_interlock_status] =
-        # self.llrf_interlock_outputwidget  # self.widget[self.data.llrf_trigger_status] =
-        # self.llrf_trigger_outputwidget  # # pulse length is a state AND a number  #  #
-        # self.widget[self.data.pulse_length] = self.pulse_length_outputwidget  # self.widget[
-        # self.data.pulse_length_status] = self.pulse_length_outputwidget  #  # #self.widget[
-        # self.data.DC_spike_status] = self.DC_spike_status_outputwidget
+        #TODO AJG: added countdown until BDR is low here
+        if self.values[rf_conditioning_data.breakdown_rate_low]:
 
-        # self.widget[self.data.llrf_DAQ_rep_rate] = self.trace_rep_rate_outpuwidget  #
-        # self.widget[self.data.llrf_DAQ_rep_rate_status] = self.trace_rep_rate_outpuwidget
+            self.BDR_ramp_countdown_pulses_outputwidget.setText('BDR good')
+            self.BDR_ramp_countdown_pulses_outputwidget.setStyleSheet('QLabel { background-color : ' + self.good + '; color : black; }')
+            self.BDR_ramp_countdown_time_outputwidget.setText('BDR good')
+            self.BDR_ramp_countdown_time_outputwidget.setStyleSheet('QLabel { background-color : ' + self.good + '; color : black; }')
 
-        # self.widget[self.data.vac_level_can_ramp] = self.vac_level_outputwidget
+        else:
+            self.BDR_ramp_countdown_pulses_outputwidget.setText('{} pulses'.format(self.values[
+                                    self.data.breakdown_rate_able_to_ramp_countdown_pulses]))
+            self.BDR_ramp_countdown_pulses_outputwidget.setStyleSheet('QLabel { background-color : ' + self.bad + '; color : black; }')
+
+            self.BDR_ramp_countdown_time_outputwidget.setText('{}'.format(self.values[
+                                    self.data.breakdown_rate_able_to_ramp_countdown_HrMinSec]))
+            self.BDR_ramp_countdown_time_outputwidget.setStyleSheet('QLabel { background-color : ' + self.bad + '; color : black; }')
+
+
+
+        self.pulse_count_outputwidget.setText('{}'.format(self.values[self.data.pulse_count]))
+
+
+
+        self.event_pulse_count_outputwidget.setText(
+            '{} / {}'.format(self.values[self.data.event_pulse_count], self.values[self.data.required_pulses]))
+
+        ''' HOW MNAY PULES TO NEXT RAMP (INLCDUGIN BD RATE BEING GOOD ETC, SO COULD BE  thousands'''
+        self.pulses_to_next_ramp_outputwidget.setText('{}'.format(self.values[self.data.pulses_to_next_ramp]))
+
+        self.breakdown_count_outputwidget.setText(
+            '{} / {}'.format(self.values[self.data.active_breakdown_count], self.values[self.data.total_breakdown_count]))
+        self.set_widget_color( self.breakdown_count_outputwidget, self.values[rf_conditioning_data.breakdown_rate_low] )
+
+
+
+
+
 
     def update_expert_values_in_gui(self):
         """
@@ -408,29 +727,16 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         if isinstance(widget, QLineEdit):
             widget.setText(str(val))
 
-        #
-        # if key is self.data.is_breakdown_monitor_kf_pow:
-        #     self.set_widget_color_text(widget, val)
-        # elif key is self.data.is_breakdown_monitor_kr_pow:
-        #     self.set_widget_color_text(widget, val)
-        # elif key is self.data.is_breakdown_monitor_cf_pow:
-        #     self.set_widget_color_text(widget, val)
-        # elif key is self.data.is_breakdown_monitor_cr_pow:
-        #     self.set_widget_color_text(widget, val)
-        # elif key is self.data.is_breakdown_monitor_cp_pow:
-        #     self.set_widget_color_text(widget, val)
-        # elif key is self.data.is_breakdown_monitor_kf_pha:
-        #     self.set_widget_color_text(widget, val)
-        # elif key is self.data.is_breakdown_monitor_kr_pha:
-        #     self.set_widget_color_text(widget, val)
-        # elif key is self.data.is_breakdown_monitor_cf_pha:
-        #     self.set_widget_color_text(widget, val)
-        # elif key is self.data.is_breakdown_monitor_cr_pha:
-        #     self.set_widget_color_text(widget, val)
-        # elif key is self.data.is_breakdown_monitor_cp_pha:
-        #     self.set_widget_color_text(widget, val)
-        # else:
-        #     pass
+        #  # if key is self.data.is_breakdown_monitor_kf_pow:  #     self.set_widget_color_text(widget, val)  # elif key is
+        #  self.data.is_breakdown_monitor_kr_pow:  #     self.set_widget_color_text(widget, val)  # elif key is
+        #  self.data.is_breakdown_monitor_cf_pow:  #     self.set_widget_color_text(widget, val)  # elif key is
+        #  self.data.is_breakdown_monitor_cr_pow:  #     self.set_widget_color_text(widget, val)  # elif key is
+        #  self.data.is_breakdown_monitor_cp_pow:  #     self.set_widget_color_text(widget, val)  # elif key is
+        #  self.data.is_breakdown_monitor_kf_pha:  #     self.set_widget_color_text(widget, val)  # elif key is
+        #  self.data.is_breakdown_monitor_kr_pha:  #     self.set_widget_color_text(widget, val)  # elif key is
+        #  self.data.is_breakdown_monitor_cf_pha:  #     self.set_widget_color_text(widget, val)  # elif key is
+        #  self.data.is_breakdown_monitor_cr_pha:  #     self.set_widget_color_text(widget, val)  # elif key is
+        #  self.data.is_breakdown_monitor_cp_pha:  #     self.set_widget_color_text(widget, val)  # else:  #     pass
 
     def set_widget_color_text(self, widget, val):
         self.set_widget_color(widget, val)
@@ -472,6 +778,18 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
             widget.setText('TIMING')
         elif val == state.STANDBY:
             widget.setText('STANDBY')
+        elif val == 0.0:
+            widget.setText('HEARTBEAT 0')
+        elif val == 1.0:
+            widget.setText('HEARTBEAT 1')
+        elif val == HOLD_RF_ON_STATE.MANUAL_RF:
+            widget.setText('MANUAL_RF')
+        elif val == HOLD_RF_ON_STATE.HOLD_RF_ON:
+            widget.setText('HOLD_RF_ON')
+        elif val == HOLD_RF_ON_STATE.HOLD_RF_ON_CON:
+            widget.setText('HOLD_RF_ON_CON')
+        elif val == HOLD_RF_ON_STATE.UNKNOWN_HOLD_RF_ON_STATE:
+            widget.setText('UNKNOWN_HOLD_RF_ON_STATE')
         else:
             widget.setText('UNKNOWN')
 
@@ -483,24 +801,32 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         elif val == state.INIT:
             widget.setStyleSheet('QLabel { background-color : ' + self.init + '; color : black; }')
         elif val == state.UNKNOWN:
-            widget.setStyleSheet(
-                'QLabel { background-color : ' + self.unknown + '; color : black; }')
+            widget.setStyleSheet('QLabel { background-color : ' + self.unknown + '; color : black; }')
         elif val == state.INTERLOCK:
-            widget.setStyleSheet(
-                'QLabel { background-color : ' + self.interlock + '; color : black; }')
+            widget.setStyleSheet('QLabel { background-color : ' + self.interlock + '; color : black; }')
         elif val == True:
             widget.setStyleSheet('QLabel { background-color : ' + self.good + '; color : black; }')
         elif val == False:
             widget.setStyleSheet('QLabel { background-color : ' + self.bad + '; color : black; }')
         elif val == state.TIMING:
-            widget.setStyleSheet(
-                'QLabel { background-color : ' + self.timing + '; color : black; }')
+            widget.setStyleSheet('QLabel { background-color : ' + self.timing + '; color : black; }')
         elif val == state.STANDBY:
-            widget.setStyleSheet(
-                'QLabel { background-color : ' + self.standby + '; color : black; }')
+            widget.setStyleSheet('QLabel { background-color : ' + self.standby + '; color : black; }')
+        elif val == 0.0:
+            widget.setStyleSheet('QLabel { background-color : ' + self.zero + '; color : black; }')
+        elif val == 1.0:
+            widget.setStyleSheet('QLabel { background-color : ' + self.one + '; color : black; }')
+        elif val == HOLD_RF_ON_STATE.MANUAL_RF:
+            widget.setStyleSheet('QLabel { background-color : ' + self.bad + '; color : black; }')
+        elif val == HOLD_RF_ON_STATE.HOLD_RF_ON:
+            widget.setStyleSheet('QLabel { background-color : ' + self.bad + '; color : black; }')
+        elif val == HOLD_RF_ON_STATE.HOLD_RF_ON_CON:
+            widget.setStyleSheet('QLabel { background-color : ' + self.good + '; color : black; }')
+        elif val == HOLD_RF_ON_STATE.UNKNOWN_HOLD_RF_ON_STATE:
+            widget.setStyleSheet('QLabel { background-color : ' + self.unknown + '; color : black; }')
+
         else:
-            widget.setStyleSheet(
-                'QLabel { background-color : ' + self.unknown + '; color : black; }')
+            widget.setStyleSheet('QLabel { background-color : ' + self.unknown + '; color : black; }')
 
     def set_up_expert_widgets(self):
         # The value IS THE SAME as the key for the expert_values data dictionary, by doing this
@@ -512,8 +838,7 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         self.expert_widget[self.data.vac_drop_amp] = self.vac_drop_amp
         self.expert_widget[self.data.vac_hi_pressure] = self.vac_hi_pressure
         self.expert_widget[self.data.vac_spike_delta_val] = self.vac_spike_delta_val
-        self.expert_widget[
-             self.data.vac_num_samples_to_average_val] = self.vac_num_samples_to_average_val
+        self.expert_widget[self.data.vac_num_samples_to_average_val] = self.vac_num_samples_to_average_val
         self.expert_widget[self.data.vac_drop_amp_val] = self.vac_drop_amp_val
         self.expert_widget[self.data.ramp_when_hi] = self.ramp_when_hi
         self.expert_widget[self.data.vac_decay_mode] = self.vac_decay_mode
@@ -531,8 +856,7 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         self.expert_widget[self.data.is_breakdown_monitor_kr_pha] = self.is_breakdown_monitor_kr_pha
         self.expert_widget[self.data.is_breakdown_monitor_cf_pha] = self.is_breakdown_monitor_cf_pha
         self.expert_widget[self.data.is_breakdown_monitor_cr_pha] = self.is_breakdown_monitor_cr_pha
-        self.expert_widget[
-            self.data.is_breakdown_monitor_cp_pha] = self.is_breakdown_monitor_cp_pha  #
+        self.expert_widget[self.data.is_breakdown_monitor_cp_pha] = self.is_breakdown_monitor_cp_pha  #
         self.expert_widget[self.data.mean_start_kf_pow] = self.mean_start_kf_pow  #
         self.expert_widget[self.data.mean_start_kr_pow] = self.mean_start_kr_pow  #
         self.expert_widget[self.data.mean_start_cf_pow] = self.mean_start_cf_pow  #
@@ -722,7 +1046,6 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         self.expert_widget[self.data.saved_on_vac_spike_cr_pha] = self.saved_on_vac_spike_cr_pha
         self.expert_widget[self.data.saved_on_vac_spike_cp_pha] = self.saved_on_vac_spike_cp_pha
 
-
         self.expert_widget[self.data.drop_amp_on_bd_kf_pow] = self.drop_amp_on_bd_kf_pow
         self.expert_widget[self.data.drop_amp_on_bd_kr_pow] = self.drop_amp_on_bd_kr_pow
         self.expert_widget[self.data.drop_amp_on_bd_cf_pow] = self.drop_amp_on_bd_cf_pow
@@ -733,7 +1056,6 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         self.expert_widget[self.data.drop_amp_on_bd_cf_pha] = self.drop_amp_on_bd_cf_pha
         self.expert_widget[self.data.drop_amp_on_bd_cr_pha] = self.drop_amp_on_bd_cr_pha
         self.expert_widget[self.data.drop_amp_on_bd_cp_pha] = self.drop_amp_on_bd_cp_pha
-
 
         self.expert_widget[self.data.phase_end_by_power_kf_pow] = self.phase_end_by_power_kf_pow
         self.expert_widget[self.data.phase_end_by_power_kr_pow] = self.phase_end_by_power_kr_pow
@@ -768,8 +1090,6 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         self.expert_widget[self.data.drop_amplitude_cr_pha] = self.drop_amplitude_cr_pha
         self.expert_widget[self.data.drop_amplitude_cp_pha] = self.drop_amplitude_cp_pha
 
-
-
         self.expert_widget[self.data.num_future_traces_val] = self.num_future_traces_val
         self.expert_widget[self.data.active_power_val] = self.active_power_val
         self.expert_widget[self.data.keep_valve_open_valves_val] = self.keep_valve_open_valves_val
@@ -785,74 +1105,42 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         self.expert_widget[self.data.max_amp_increase_val] = self.max_amp_increase_val
         self.expert_widget[self.data.num_fit_points_val] = self.num_fit_points_val
 
-
-
-
-
-
-        # self.expert_widget[
-        #
-        #
-        # self.expert_widget[  #     self.data.saved_on_breakdown_event_kf_pow] =
-        # self.saved_on_breakdown_event_kf_pow
-        # # self.expert_widget[  #
-        # self.data.saved_on_breakdown_event_kr_pow] = self.saved_on_breakdown_event_kr_pow  #
-        # self.expert_widget[  #     self.data.saved_on_breakdown_event_cf_pow] =
-        # self.saved_on_breakdown_event_cf_pow  # self.expert_widget[  #
-        # self.data.saved_on_breakdown_event_cf_pow] = self.saved_on_breakdown_event_cf_pow  #
-        # self.expert_widget[  #     self.data.saved_on_breakdown_event_cp_pow] =
-        # self.saved_on_breakdown_event_cp_pow  # self.expert_widget[  #
-        # self.data.saved_on_breakdown_event_kf_pha] = self.saved_on_breakdown_event_kf_pha  #
-        # self.expert_widget[  #     self.data.saved_on_breakdown_event_kr_pha] =
-        # self.saved_on_breakdown_event_kr_pha  # self.expert_widget[  #
-        # self.data.saved_on_breakdown_event_cf_pha] = self.saved_on_breakdown_event_cf_pha  #
-        # self.expert_widget[  #     self.data.saved_on_breakdown_event_cr_pha] =
-        # self.saved_on_breakdown_event_cr_pha  # self.expert_widget[  #
-        # self.data.saved_on_breakdown_event_cp_pha] = self.saved_on_breakdown_event_cp_pha  #
-        # self.expert_widget[self.data.saved_on_vac_spike_kf_pow] =
-        # self.saved_on_vac_spike_kf_pow  # self.expert_widget[
-        # self.data.saved_on_vac_spike_kr_pow] = self.saved_on_vac_spike_kr_pow  #
-        # self.expert_widget[self.data.saved_on_vac_spike_cf_pow] =
-        # self.saved_on_vac_spike_cf_pow  # self.expert_widget[
-        # self.data.saved_on_vac_spike_cf_pow] = self.saved_on_vac_spike_cf_pow  #
-        # self.expert_widget[self.data.saved_on_vac_spike_cp_pow] =
-        # self.saved_on_vac_spike_cp_pow  # self.expert_widget[
-        # self.data.saved_on_vac_spike_kf_pha] = self.saved_on_vac_spike_kf_pha  #
-        # self.expert_widget[self.data.saved_on_vac_spike_kr_pha] =
-        # self.saved_on_vac_spike_kr_pha  # self.expert_widget[
-        # self.data.saved_on_vac_spike_cf_pha] = self.saved_on_vac_spike_cf_pha  #
-        # self.expert_widget[self.data.saved_on_vac_spike_cr_pha] =
-        # self.saved_on_vac_spike_cr_pha  # self.expert_widget[
-        # self.data.saved_on_vac_spike_cp_pha] = self.saved_on_vac_spike_cp_pha  #
-        # self.data.streak_kr_pow] = self.streak_kr_pow  # self.expert_widget[
-        # self.data.streak_cf_pow] = self.streak_cf_pow  # self.expert_widget[
-        # self.data.streak_cf_pow] = self.streak_cf_pow  # self.expert_widget[
-        # self.data.streak_cp_pow] = self.streak_cp_pow  # self.expert_widget[
-        # self.data.streak_kf_pha] = self.streak_kf_pha  # self.expert_widget[
-        # self.data.streak_kr_pha] = self.streak_kr_pha  # self.expert_widget[
-        # self.data.streak_cf_pha] = self.streak_cf_pha  # self.expert_widget[
-        # self.data.streak_cr_pha] = self.streak_cr_pha  # self.expert_widget[
-        # self.data.streak_cp_pha] = self.streak_cp_pha  # self.expert_widget[
-        # self.data.breakdown_rate_aim] = self.breakdown_rate_aim  # self.expert_widget[
-        # self.data.breakdown_rate_aim_val] = self.breakdown_rate_aim_val  # self.expert_widget[
-        # self.data.expected_daq_rep_rate_val] = self.expected_daq_rep_rate_val  #
-        # self.expert_widget[self.data.daq_rep_rate_error_val] = self.daq_rep_rate_error_val  #
-        # self.expert_widget[  #     self.data.number_of_pulses_in_history_val] =
-        # self.number_of_pulses_in_history_val  # self.expert_widget[
-        # self.data.trace_buffer_size_val] = self.trace_buffer_size_val  # self.expert_widget[
-        # self.data.default_pulse_count_val] = self.default_pulse_count_val  #
-        # #self.expert_widget[self.data.default_amp_increase] = self.default_amp_increase  #
-        # self.expert_widget[self.data.default_amp_increase_val] = self.default_amp_increase_val
-        # #self.expert_widget[self.data.max_amp_increase] = self.max_amp_increase  #
-        # self.expert_widget[self.data.max_amp_increase_val] = self.max_amp_increase_val  #
-        # #self.expert_widget[self.data.num_fit_points] = self.num_fit_points  #
-        # self.expert_widget[self.data.num_fit_points_val] = self.num_fit_points_val  #
-        # #self.expert_widget[self.data.active_power] = self.active_power  # self.expert_widget[
-        # self.data.active_power_val] = self.active_power_val  # #self.expert_widget[
-        # self.data.num_future_traces] = self.num_future_traces  # self.expert_widget[
-        # self.data.num_future_traces_val] = self.num_future_traces_val  # #self.expert_widget[
-        # self.data.keep_valve_open] = self.keep_valve_open  # self.expert_widget[
-        # self.data.keep_valve_open_val] = self.keep_valve_open_val
+        # self.expert_widget[  #  #  # self.expert_widget[  #     self.data.saved_on_breakdown_event_kf_pow] =  #
+        # self.saved_on_breakdown_event_kf_pow  # # self.expert_widget[  #  # self.data.saved_on_breakdown_event_kr_pow] =
+        # self.saved_on_breakdown_event_kr_pow  #  # self.expert_widget[  #     self.data.saved_on_breakdown_event_cf_pow] =  #
+        # self.saved_on_breakdown_event_cf_pow  # self.expert_widget[  #  # self.data.saved_on_breakdown_event_cf_pow] =
+        # self.saved_on_breakdown_event_cf_pow  #  # self.expert_widget[  #     self.data.saved_on_breakdown_event_cp_pow] =  #
+        # self.saved_on_breakdown_event_cp_pow  # self.expert_widget[  #  # self.data.saved_on_breakdown_event_kf_pha] =
+        # self.saved_on_breakdown_event_kf_pha  #  # self.expert_widget[  #     self.data.saved_on_breakdown_event_kr_pha] =  #
+        # self.saved_on_breakdown_event_kr_pha  # self.expert_widget[  #  # self.data.saved_on_breakdown_event_cf_pha] =
+        # self.saved_on_breakdown_event_cf_pha  #  # self.expert_widget[  #     self.data.saved_on_breakdown_event_cr_pha] =  #
+        # self.saved_on_breakdown_event_cr_pha  # self.expert_widget[  #  # self.data.saved_on_breakdown_event_cp_pha] =
+        # self.saved_on_breakdown_event_cp_pha  #  # self.expert_widget[self.data.saved_on_vac_spike_kf_pow] =  # self.saved_on_vac_spike_kf_pow  #
+        # self.expert_widget[  # self.data.saved_on_vac_spike_kr_pow] = self.saved_on_vac_spike_kr_pow  #  # self.expert_widget[
+        # self.data.saved_on_vac_spike_cf_pow] =  # self.saved_on_vac_spike_cf_pow  # self.expert_widget[  # self.data.saved_on_vac_spike_cf_pow] =
+        # self.saved_on_vac_spike_cf_pow  #  # self.expert_widget[self.data.saved_on_vac_spike_cp_pow] =  # self.saved_on_vac_spike_cp_pow  #
+        # self.expert_widget[  # self.data.saved_on_vac_spike_kf_pha] = self.saved_on_vac_spike_kf_pha  #  # self.expert_widget[
+        # self.data.saved_on_vac_spike_kr_pha] =  # self.saved_on_vac_spike_kr_pha  # self.expert_widget[  # self.data.saved_on_vac_spike_cf_pha] =
+        # self.saved_on_vac_spike_cf_pha  #  # self.expert_widget[self.data.saved_on_vac_spike_cr_pha] =  # self.saved_on_vac_spike_cr_pha  #
+        # self.expert_widget[  # self.data.saved_on_vac_spike_cp_pha] = self.saved_on_vac_spike_cp_pha  #  # self.data.streak_kr_pow] =
+        # self.streak_kr_pow  # self.expert_widget[  # self.data.streak_cf_pow] = self.streak_cf_pow  # self.expert_widget[  #
+        # self.data.streak_cf_pow] = self.streak_cf_pow  # self.expert_widget[  # self.data.streak_cp_pow] = self.streak_cp_pow  #
+        # self.expert_widget[  # self.data.streak_kf_pha] = self.streak_kf_pha  # self.expert_widget[  # self.data.streak_kr_pha] =
+        # self.streak_kr_pha  # self.expert_widget[  # self.data.streak_cf_pha] = self.streak_cf_pha  # self.expert_widget[  #
+        # self.data.streak_cr_pha] = self.streak_cr_pha  # self.expert_widget[  # self.data.streak_cp_pha] = self.streak_cp_pha  #
+        # self.expert_widget[  # self.data.breakdown_rate_aim] = self.breakdown_rate_aim  # self.expert_widget[  #
+        # self.data.breakdown_rate_aim_val] = self.breakdown_rate_aim_val  # self.expert_widget[  # self.data.expected_daq_rep_rate_val] =
+        # self.expected_daq_rep_rate_val  #  # self.expert_widget[self.data.daq_rep_rate_error_val] = self.daq_rep_rate_error_val  #  #
+        # self.expert_widget[  #     self.data.number_of_pulses_in_history_val] =  # self.number_of_pulses_in_history_val  # self.expert_widget[  #
+        # self.data.trace_buffer_size_val] = self.trace_buffer_size_val  # self.expert_widget[  # self.data.default_pulse_count_val] =
+        # self.default_pulse_count_val  #  # #self.expert_widget[self.data.default_amp_increase] = self.default_amp_increase  #  #
+        # self.expert_widget[self.data.default_amp_increase_val] = self.default_amp_increase_val  # #self.expert_widget[self.data.max_amp_increase]
+        # = self.max_amp_increase  #  # self.expert_widget[self.data.max_amp_increase_val] = self.max_amp_increase_val  #  # #self.expert_widget[
+        # self.data.num_fit_points] = self.num_fit_points  #  # self.expert_widget[self.data.num_fit_points_val] = self.num_fit_points_val  #  #
+        # #self.expert_widget[self.data.active_power] = self.active_power  # self.expert_widget[  # self.data.active_power_val] =
+        # self.active_power_val  # #self.expert_widget[  # self.data.num_future_traces] = self.num_future_traces  # self.expert_widget[  #
+        # self.data.num_future_traces_val] = self.num_future_traces_val  # #self.expert_widget[  # self.data.keep_valve_open] =
+        # self.keep_valve_open  # self.expert_widget[  # self.data.keep_valve_open_val] = self.keep_valve_open_val
 
     def update_modulator_status(self):
         widget = self.mod_state_outputwidget
@@ -942,3 +1230,12 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
             self.set_widget_color_text(widget, state.UNKNOWN)
         else:
             self.set_widget_color_text(widget, state.ERROR)
+
+    def update_cav_pwr_ratio_and_max(self):
+        '''
+            Updates one GUI widget with current cavity power ratio and the max ratio allowed as defined in the config.yaml.
+        '''
+        cav_pwr_ratio = self.values[self.data.cav_pwr_ratio]
+        max_cav_pwr_ratio = self.config.raw_config_data['CAV_PWR_RATIO']
+        self.cav_pwr_ratio_outputwidget.setText('{:1.2f}%/ {}%'.format(cav_pwr_ratio, max_cav_pwr_ratio))
+        self.set_widget_color(self.cav_pwr_ratio_outputwidget, self.values[self.data.cav_pwr_ratio_can_ramp])

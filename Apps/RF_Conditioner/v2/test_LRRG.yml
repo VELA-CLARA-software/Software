@@ -56,9 +56,7 @@
 MODE: DEBUG
 
 #  The name of the RF structure, as used in CATAP
-RF_STRUCTURE: L01 # STRING
-
-
+RF_STRUCTURE: CLARA_LRRG # STRING VELA_HRRG L01
 
 ## main param
 #TIME_BETWEEN_RF_INCREASES :  10;seconds
@@ -178,7 +176,7 @@ CFPOW_MASK_END: 179 #;Only used if CRP_AUTO_SET=FALSE
 CFPOW_MASK_WINDOW_START: 301 #;Only used if CRP_AUTO_SET=FALSE
 CFPOW_MASK_WINDOW_END: 302 #;Only used if CRP_AUTO_SET=FALSE
 CFPOW_MASK_TYPE: PERCENT #; PERCENT OR ABSOLUTE
-CFPOW_MASK_ABS_MIN: 50 # integer,Minimum value for a mask, regardless
+CFPOWMASK_LO_MIN: 50 # integer,Minimum value for a mask, regardless
 CFPOW_MASK_LEVEL: 30 #integer,units depend on CFP_MASK_TYPE
 CFPOW_CHECK_STREAK: 10 #how many continuous points outside mask
 CFPOW_MASK_FLOOR: 50 #Watts, values below this won't get checked
@@ -195,7 +193,7 @@ CRPOW_MASK_START:  0.8 # Only used if CRP_AUTO_SET=FALSE
 CRPOW_MASK_WINDOW_START:  2.4 # Only used if CRP_AUTO_SET=FALSE
 CRPOW_MASK_WINDOW_END:  3.4 # Only used if CRP_AUTO_SET=FALSE
 CRPOW_MASK_END:  5.0 # Only used if CRP_AUTO_SET=FALSE
-CRPOW_MASK_ABS_MIN:  50  # integer,Minimum value for a mask, regardless
+CRPOWMASK_LO_MIN:  50  # integer,Minimum value for a mask, regardless
 CRPOW_MASK_TYPE:  ABSOLUTE # ABSOLUTE OR PERCENT, mask type is to set the mask based on a percentage of previous values, or by absolute amount 
 CRPOW_NUM_AVERAGE_TRACES:  2 # 
 CRPOW_CHECK_STREAK:  2 # how many continuous points outside mask required to trigger event
@@ -212,7 +210,7 @@ CPPOW_MASK_START:  0.8 # Only used if CRP_AUTO_SET=FALSE
 CPPOW_MASK_WINDOW_START:  2.4 # Only used if CRP_AUTO_SET=FALSE
 CPPOW_MASK_WINDOW_END:  3.4 # Only used if CRP_AUTO_SET=FALSE
 CPPOW_MASK_END:  5.0 # Only used if CRP_AUTO_SET=FALSE
-CPPOW_MASK_ABS_MIN:  50  # integer,Minimum value for a mask, regardless
+CPPOWMASK_LO_MIN:  50  # integer,Minimum value for a mask, regardless
 CPPOW_MASK_TYPE:  ABSOLUTE # ABSOLUTE OR PERCENT, mask type is to set the mask based on a percentage of previous values, or by absolute amount 
 CPPOW_NUM_AVERAGE_TRACES:  2 # 
 CPPOW_CHECK_STREAK:  2 # how many continuous points outside mask required to trigger event
@@ -229,7 +227,7 @@ KRPOW_MASK_START:  0.8 # Only used if CRP_AUTO_SET=FALSE
 KRPOW_MASK_WINDOW_START:  2.4 # Only used if CRP_AUTO_SET=FALSE
 KRPOW_MASK_WINDOW_END:  3.4 # Only used if CRP_AUTO_SET=FALSE
 KRPOW_MASK_END:  5.0 # Only used if CRP_AUTO_SET=FALSE
-KRPOW_MASK_ABS_MIN:  50  # integer,Minimum value for a mask, regardless
+KRPOWMASK_LO_MIN:  50  # integer,Minimum value for a mask, regardless
 KRPOW_MASK_TYPE:  ABSOLUTE # ABSOLUTE OR PERCENT, mask type is to set the mask based on a percentage of previous values, or by absolute amount 
 KRPOW_NUM_AVERAGE_TRACES:  2 # 
 KRPOW_CHECK_STREAK:  2 # how many continuous points outside mask required to trigger event
@@ -246,7 +244,7 @@ KFPOW_MASK_START:  0.8 # Only used if CRP_AUTO_SET=FALSE
 KFPOW_MASK_WINDOW_START:  2.4 # Only used if CRP_AUTO_SET=FALSE
 KFPOW_MASK_WINDOW_END:  3.4 # Only used if CRP_AUTO_SET=FALSE
 KFPOW_MASK_END:  5.0 # Only used if CRP_AUTO_SET=FALSE
-KFPOW_MASK_ABS_MIN:  50  # integer,Minimum value for a mask, regardless
+KFPOWMASK_LO_MIN:  50  # integer,Minimum value for a mask, regardless
 KFPOW_MASK_TYPE:  ABSOLUTE # ABSOLUTE OR PERCENT, mask type is to set the mask based on a percentage of previous values, or by absolute amount 
 KFPOW_NUM_AVERAGE_TRACES:  2 # 
 KFPOW_CHECK_STREAK:  2 # how many continuous points outside mask required to trigger event
@@ -263,7 +261,7 @@ CFPHA_MASK_START:  0.8 # Only used if CRP_AUTO_SET=FALSE
 CFPHA_MASK_WINDOW_START:  2.4 # Only used if CRP_AUTO_SET=FALSE
 CFPHA_MASK_WINDOW_END:  3.4 # Only used if CRP_AUTO_SET=FALSE
 CFPHA_MASK_END:  5.0 # Only used if CRP_AUTO_SET=FALSE
-CFPHA_MASK_ABS_MIN:  50  # integer,Minimum value for a mask, regardless
+CFPHAMASK_LO_MIN:  50  # integer,Minimum value for a mask, regardless
 CFPHA_MASK_TYPE:  ABSOLUTE # ABSOLUTE OR PERCENT, mask type is to set the mask based on a percentage of previous values, or by absolute amount 
 CFPHA_NUM_AVERAGE_TRACES:  2 # 
 CFPHA_CHECK_STREAK:  2 # how many continuous points outside mask required to trigger event
@@ -286,7 +284,7 @@ CRPHA_MASK_START:  0.8 # Only used if CRP_AUTO_SET=FALSE
 CRPHA_MASK_WINDOW_START:  2.4 # Only used if CRP_AUTO_SET=FALSE
 CRPHA_MASK_WINDOW_END:  3.4 # Only used if CRP_AUTO_SET=FALSE
 CRPHA_MASK_END:  5.0 # Only used if CRP_AUTO_SET=FALSE
-CRPHA_MASK_ABS_MIN:  50  # integer,Minimum value for a mask, regardless
+CRPHAMASK_LO_MIN:  50  # integer,Minimum value for a mask, regardless
 CRPHA_MASK_TYPE:  ABSOLUTE # ABSOLUTE OR PERCENT, mask type is to set the mask based on a percentage of previous values, or by absolute amount 
 CRPHA_NUM_AVERAGE_TRACES:  2 # 
 CRPHA_CHECK_STREAK:  2 # how many continuous points outside mask required to trigger event
@@ -306,7 +304,7 @@ CPPHA_MASK_START:  0.8 # Only used if CRP_AUTO_SET=FALSE
 CPPHA_MASK_WINDOW_START:  2.4 # Only used if CRP_AUTO_SET=FALSE
 CPPHA_MASK_WINDOW_END:  3.4 # Only used if CRP_AUTO_SET=FALSE
 CPPHA_MASK_END:  5.0 # Only used if CRP_AUTO_SET=FALSE
-CPPHA_MASK_ABS_MIN:  50  # integer,Minimum value for a mask, regardless
+CPPHAMASK_LO_MIN:  50  # integer,Minimum value for a mask, regardless
 CPPHA_MASK_TYPE:  ABSOLUTE # ABSOLUTE OR PERCENT, mask type is to set the mask based on a percentage of previous values, or by absolute amount 
 CPPHA_NUM_AVERAGE_TRACES:  2 # 
 CPPHA_CHECK_STREAK:  2 # how many continuous points outside mask required to trigger event
@@ -326,7 +324,7 @@ KRPHA_MASK_START:  0.8 # Only used if CRP_AUTO_SET=FALSE
 KRPHA_MASK_WINDOW_START:  2.4 # Only used if CRP_AUTO_SET=FALSE
 KRPHA_MASK_WINDOW_END:  3.4 # Only used if CRP_AUTO_SET=FALSE
 KRPHA_MASK_END:  5.0 # Only used if CRP_AUTO_SET=FALSE
-KRPHA_MASK_ABS_MIN:  50  # integer,Minimum value for a mask, regardless
+KRPHAMASK_LO_MIN:  50  # integer,Minimum value for a mask, regardless
 KRPHA_MASK_TYPE:  ABSOLUTE # ABSOLUTE OR PERCENT, mask type is to set the mask based on a percentage of previous values, or by absolute amount 
 KRPHA_NUM_AVERAGE_TRACES:  2 # 
 KRPHA_CHECK_STREAK:  2 # how many continuous points outside mask required to trigger event
@@ -346,7 +344,7 @@ KFPHA_MASK_START:  0.8 # Only used if CRP_AUTO_SET=FALSE
 KFPHA_MASK_WINDOW_START:  2.4 # Only used if CRP_AUTO_SET=FALSE
 KFPHA_MASK_WINDOW_END:  3.4 # Only used if CRP_AUTO_SET=FALSE
 KFPHA_MASK_END:  5.0 # Only used if CRP_AUTO_SET=FALSE
-KFPHA_MASK_ABS_MIN:  50  # integer,Minimum value for a mask, regardless
+KFPHAMASK_LO_MIN:  50  # integer,Minimum value for a mask, regardless
 KFPHA_MASK_TYPE:  ABSOLUTE # ABSOLUTE OR PERCENT, mask type is to set the mask based on a percentage of previous values, or by absolute amount 
 KFPHA_NUM_AVERAGE_TRACES:  2 # 
 KFPHA_CHECK_STREAK:  2 # how many continuous points outside mask required to trigger event
@@ -393,8 +391,8 @@ VAC_NUM_SAMPLES_TO_AVERAGE:  7 # integer, numer of samples over which to calcual
 VAC_CHECK_TIME:  200 #; ms between vacuum level checks, we think this is the faatest they go at
 VAC_SHOULD_DROP_AMP:  false #; amp_sp to set if vacuum spike
 VAC_SPIKE_DROP_AMP:  5 #; amp_sp to set if vacuum spike
-VAC_MAX_LEVEL:  0.000000005 #5e-9; If vacuum level goes  above this, disable ramping 
-WHEN_VAC_HI_DISABLE_RAMP: true #BOOL, flag for whether to disable ramping when vac_level is above VAC_MAX_LEVEL
+VAC_MAX_LEVEL_FOR_RAMP:  0.000000005 #5e-9; If vacuum level goes  above this, disable ramping
+WHEN_VAC_HI_DISABLE_RAMP: true #BOOL, flag for whether to disable ramping when vac_level is above VAC_MAX_LEVEL_FOR_RAMP
 VAC_SPIKE_TRACES_TO_SAVE:  
   - KLYSTRON_FORWARD_PHASE
   - KLYSTRON_REVERSE_PHASE

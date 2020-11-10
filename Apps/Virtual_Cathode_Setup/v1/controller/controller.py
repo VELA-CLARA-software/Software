@@ -60,11 +60,9 @@ class controller(object):
         # show the gui
         self.view.show()
         self.view.activateWindow()
-
         # a clipboad item fro copying paths to
         self.cb = QtGui.QApplication.clipboard()
         self.cb.clear(mode = self.cb.Clipboard)
-
         self.fileLoad  =  loadView.GUI_FileLoad()
         self.fileSave  =  saveView.GUI_FileSave()
 
@@ -73,7 +71,7 @@ class controller(object):
         if self.start_count < 5:
             self.start_count += 1
         elif self.start_count == 5:
-            print 'self.start_count == 5'
+            print('self.start_count == 5')
             self.start_count += 1
             controller.model.update_values()
             self.view.start_up()
@@ -84,7 +82,6 @@ class controller(object):
             self.timer.timeout.connect(self.update)
             self.timer.start(100)
 
-
     def update(self):
         # we give the app a few ticks to init the hardware controllers before updating the mainView
         controller.model.update_values()
@@ -94,17 +91,16 @@ class controller(object):
         controller.model.collect_and_save(controller.view.numImages_spinBox.value())
 
     def handle_setPosition_pushButton(self):
-        print 'handle_setPosition_pushButton'
+        print('handle_setPosition_pushButton')
 
     def handle_setMask_pushButton(self):
         controller.model.setMask( x = controller.view.maskX_spinBox.value(),
                                   y = controller.view.maskY_spinBox.value(),
                                   xRad = controller.view.maskXRadius_spinBox.value(),
-                                  yRad = controller.view.maskYRadius_spinBox.value()
-                                  )
+                                  yRad = controller.view.maskYRadius_spinBox.value())
 
     def handle_setIntensity_pushButton(self):
-        print 'handle_setIntensity_pushButton'
+        print('handle_setIntensity_pushButton')
 
     def handle_load_pushButton(self):
         self.fileLoad.show()
@@ -112,50 +108,51 @@ class controller(object):
 
     def handle_save_pushButton(self):
         self.fileSave.show()
-        print 'handle_save_pushButton'
+        print('handle_save_pushButton')
 
     def handle_resetMeanSD_pushButton(self):
+        print("handle_resetMeanSD_pushButton")
         controller.model.reset_running_values()
 
     def handle_analyse_pushButton(self):
-        print 'handle_analyse_pushButton'
+        print('handle_analyse_pushButton')
         controller.model.analyse()
 
     def handle_reset_background_pushButton(self):
         controller.model.set_background()
-        print 'handle_reset_background_pushButton'
+        print('handle_reset_background_pushButton')
 
     def handle_useBackground_pushButton(self):
         controller.model.use_background()
-        print 'handle_useBackground_checkBox'
+        print('handle_useBackground_checkBox')
 
     def handle_use_npoint_pushButton(self):
         controller.model.use_npoint()
-        print 'handle_use_npoint_checkBox'
+        print('handle_use_npoint_checkBox')
 
     def handle_acquire_pushButton(self):
         controller.model.acquire()
-        print 'handle_acquire_pushButton'
+        print('handle_acquire_pushButton')
 
     def handle_numImages_spinBox(self):
-        print 'handle_numImages_spinBox'
+        print('handle_numImages_spinBox')
 
     def handle_stepSize_spinBox(self):
         controller.model.setStepSize(controller.view.stepSize_spinBox.value())
-        print 'handle_stepSize_spinBox'
+        print('handle_stepSize_spinBox')
 
     def handle_autoLevel_pushButton(self):
         controller.view.autoSetLevel()
-        print 'handle_stepSize_spinBox'
+        print('handle_stepSize_spinBox')
 
     def handle_setLevel_pushButton(self):
         controller.view.setLevel()
-        print 'handle_stepSize_spinBox'
+        print('handle_stepSize_spinBox')
 
     def handle_feed_back_check(self):
-        print 'handle_feed_back_check'
-        print 'handle_feed_back_check'
-        print 'handle_feed_back_check'
+        print('handle_feed_back_check')
+        print('handle_feed_back_check')
+        print('handle_feed_back_check')
         controller.model.toggle_feedback(controller.view.feed_back_check.isChecked())
 
     def handle_spinBox_minLevel(self):
@@ -204,6 +201,10 @@ class controller(object):
             s = controller.model.data.values.get(data.image_save_dir_root)+ \
                 controller.model.data.values.get(data.last_save_dir)
             self.cb.setText(s, mode = self.cb.Clipboard)
+
+    def handle_copy_data_to_clipboard(self):
+        print("handle_copy_data_to_clipboard")
+
 
     def handle_center_mask_pushButton(self):
         controller.model.center_mask()

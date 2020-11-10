@@ -241,13 +241,13 @@ class magnetAppController(object):
                         corr_list.append(magnet)
                 LOCAL_mags = [e for e in LOCAL_mags if e not in corr_list]
 
-                # disable degaussing BA1 magnets
-                BA1_list = []
-                for magnet in LOCAL_mags:
-                    if 'BA1' in magnet:
-                        print(magnet, ' as a BA1 magnet, NOT degaussing')
-                        BA1_list.append(magnet)
-                LOCAL_mags = [e for e in LOCAL_mags if e not in BA1_list]
+                # # disable degaussing BA1 magnets
+                # BA1_list = []
+                # for magnet in LOCAL_mags:
+                #     if 'BA1' in magnet:
+                #         print(magnet, ' as a BA1 magnet, NOT degaussing')
+                #         BA1_list.append(magnet)
+                # LOCAL_mags = [e for e in LOCAL_mags if e not in BA1_list]
 
 
                 if len(LOCAL_mags) > 0:

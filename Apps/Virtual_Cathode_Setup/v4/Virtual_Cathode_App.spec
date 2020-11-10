@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['mainApp.py'],
-             pathex=['C:\\Users\\djs56\\GitHub\\Software\\Apps\\Virtual_Cathode_Setup\\v4'],
+             pathex=['C:\\Users\\dlerlp\\Documents\\GitHub\\Software\\Apps\\Virtual_Cathode_Setup\\v4'],
              binaries=[],
              datas=[],
              hiddenimports=[],

@@ -28,6 +28,7 @@
 '''
 from monitor import monitor
 from src.data.state import state
+from src.data.rf_conditioning_data import rf_conditioning_data
 
 
 class outside_mask_trace_monitor(monitor):
@@ -48,8 +49,11 @@ class outside_mask_trace_monitor(monitor):
         self.llrf_control = self.hardware.llrf_control
         self.llrf_obj = self.hardware.llrf_obj
 
-        # set cool-down mode to TIMED, OME are always timed cool-down
+        # set cool-down mode to TIMED, OME are ***always*** timed cool-down
         self.set_cooldown_mode('TIMED')
+        # connect the cool_down timer timeout signal  to self.cooldown_finished
+        self.cooldown_timer.setSingleShot(True)
+        self.cooldown_timer.timeout.connect(self.cooldown_finished)
 
         # to count the number of pulses since th e last event we need to know the starting pulse
         # count
@@ -76,21 +80,22 @@ class outside_mask_trace_monitor(monitor):
 
         self.set_success = True
 
-    def reset_event_pulse_count(self):
+    def reset_event_pulse_count_OLD(self):
         """
         We keep a count of the number of pulses since the last 'event'
         This function resets those counters
         :return:
         """
-        self.event_pulse_count_zero = self.values[self.datat.pulse_count]
-        self.values[self.datat.pulse_count] = 0
-        self.logger.message_header(__name__ + ' reset_event_pulse_count', add_to_text_log=True,
-                                   show_time_stamp=True)
-        self.logger.message('event_pulse_count_zero = {}'.format(self.event_pulse_count_zero),
-                            add_to_text_log=True, show_time_stamp=False)
+        pass
+        # self.event_pulse_count_zero = self.values[self.datat.pulse_count]
+        # self.values[self.data.event_pulse_count] = 0
+        # self.logger.message_header(__name__ + ' reset_event_pulse_count', add_to_text_log=True,
+        #                            show_time_stamp=True)
+        # self.logger.message('event_pulse_count_zero = {}'.format(self.event_pulse_count_zero),
+        #                     add_to_text_log=True, show_time_stamp=False)
 
-    def cooldown_function(self):
-        monitor.logger.message(__name__ + ', cool down ended')
+    def cooldown_finished(self):
+        self.logger.message(__name__ + ', cool down ended')
         self.incool_down = False
         self.values[self.data.breakdown_status] = state.GOOD
 
@@ -98,11 +103,18 @@ class outside_mask_trace_monitor(monitor):
         """
         This is the main update function, it handles the pulse-counting and OMED-counting
         """
+        #print('update_value() from outside_mask_trace_monitor')
         # The number of pulses
         self.values[self.data.pulse_count] = self.llrf_obj[0].active_pulse_count
+
+
+
+
         # the number of pulses since last 'event' (actually includes since last ramp, so re-name)
-        self.values[self.data.event_pulse_count] = self.values[self.data.pulse_count] - \
-                                              self.event_pulse_count_zero
+        #self.values[self.data.event_pulse_count] = self.values[self.data.pulse_count] - self.event_pulse_count_zero
+        self.values[self.data.event_pulse_count] = self.values[self.data.pulse_count] - self.values[self.data.event_pulse_count_zero]
+
+        #print 'Pulse count = {}\nEvent pulse count = {}'.format(self.values[self.data.pulse_count], self.values[self.data.event_pulse_count])
         # elapsed time since we started
         self.values[self.data.elapsed_time] = self.llrf_control.elapsedTime()
         # Number of Outside Mask Events Detected (OMED) by CATAP llrf
@@ -113,24 +125,45 @@ class outside_mask_trace_monitor(monitor):
             self.new_breakdown()
             self.new_omed_data = True
             self.previous_omed_count = self.values[self.data.num_outside_mask_traces]
+
+
+
+            #print('num_outside_mask_traces = {}'.format(self.values[self.data.num_outside_mask_traces]))
+            #print('previous_omed_count = {}'.format(self.previous_omed_count))
+
+        # else:
+        #     print('num_outside_mask_traces <= previous_omed_count:\nnum_outside_mask_traces = {}\nprevious_omed_count = {}'.
+        #           format(self.values[self.data.num_outside_mask_traces], self.previous_omed_count))
         #
         # Now we try collecting any new data, the OME data usually includes "future traces" (traces
-        # that are saved after the event trace). This means we have to ait for those traces
+        # that are saved after the event trace). This means we have to wait for those traces
         # before we can collect them. This is accomplished with the new_omed_data flag
         #
         # if we have new data, check if we can collect it
         if self.new_omed_data:
+
             # if we can collect it, collect it
             if self.llrf_control.canGetOutsideMaskEventData():
+                print('New OME data & can collect OME data')
                 self.collect_ome_data()
                 # RESET FLAG
                 self.new_omed_data = False
 
+            else:
+                print('New OME data but cannot collect OME')
+
+            '''
+        message("checkCollectingFutureTraces(): Num collected = ", llrf.omed.num_collected, "/",
+                llrf.omed.extra_traces_on_outside_mask_event + UTL::THREE_SIZET,
+                " (",llrf.omed.num_still_to_collect  ,")");
+            '''
+
+        else:
+            pass
         # we then update the last million pulses log, this is a list of how many breakdwons in the
         # last 1 million pulses ...
-        # TODO: Think about why we are calling 1 million pulses? should 1 million actually be a
-        #  variable????
-        self.data.update_last_million_pulse_log()
+        #self.data.update_last_million_pulse_log() # OLD NAME!!!
+        self.data.update_active_pulse_breakdown_log()
 
     def new_breakdown(self):
         """
@@ -140,7 +173,14 @@ class outside_mask_trace_monitor(monitor):
         # set the breakdown_status to bad
         self.values[self.data.breakdown_status] = state.BAD
         # start or restart the cooldown_timer
+        print("cooldown_timer.start, time = {}".format(self.config_data[self.config.OUTSIDE_MASK_COOLDOWN_TIME]))
         self.cooldown_timer.start(self.config_data[self.config.OUTSIDE_MASK_COOLDOWN_TIME])
+
+        # TODO AJG: update the active_pulse_breakdown_log in the data dictionary:
+
+        self.values[rf_conditioning_data.breakdown_pulse_count].append(self.llrf_obj[0].active_pulse_count)
+        print('self.values[rf_conditioning_data.breakdown_pulse_count] New BD = {}'.format(self.values[rf_conditioning_data.breakdown_pulse_count]))
+
 
     def collect_ome_data(self):
         """
@@ -149,7 +189,7 @@ class outside_mask_trace_monitor(monitor):
         """
         self.logger.message_header(__name__+ ' Collecting Outside Mask Event Data',
                                    add_to_text_log=True, show_time_stamp=True)
-        monitor.logger.message('event_pulse_count_zero = ' + str(self.event_pulse_count_zero), True)
+        self.logger.message('event_pulse_count_zero = ' + str(self.event_pulse_count_zero),  show_time_stamp=False)
         # new is a dictionary returned from CATAP llrf that conatins the data, messages etc
         # This is copied from the c++ code in liberaLLRFController.cpp
         #
@@ -173,10 +213,17 @@ class outside_mask_trace_monitor(monitor):
         # event (i.e there was an event in a future trace as well as the original event)
         # (update breakdown count, will only work if all states are not bad???????)
         self.data.force_update_breakdown_count(new["num_events"])  # MAGIC_STRING
+        # TODO force update pulse_breakdown log with "correct" data (i./e take into account if we are log ramping or not ...
 
-        monitor.logger.message("Python OME Message:\n" + new['message'],show_time_stamp=False)
+        # self.data.add_to_pulse_breakdown_log(self.values[self.data.latest_amp_sp_from_ramp])
+        # self.logger.message("!!WARNING!! OME monitor is updating  the pulse_breakdown log with latest_amp_sp_from_ramp = {} or  last_amp_sp = {} ".format(
+        #     self.values[self.data.latest_amp_sp_from_ramp],
+        #     self.values[self.data.last_amp_sp]),show_time_stamp=False)
+
+
+        self.logger.message("Python OME Message:\n" + new['message'],show_time_stamp=False)
         self.logger.message(__name__+' adding {} events '.format(new["num_events"]))
 
         self.ome_counts[new['trace_name']] += 1
         filename = new['trace_name'] + '_' + str(self.ome_counts[new['trace_name']])
-        self.logger.dump_ome_data(filename=filename)
+        self.logger.dump_ome_data(filename=filename, object=new)

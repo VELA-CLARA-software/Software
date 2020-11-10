@@ -23,7 +23,8 @@
 //*/
 '''
 import sys,os
-sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\Release\\')
+#sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\Release\\')
+sys.path.append('\\\\claraserv3\\claranet\\test\\Controllers\\bin\\Release')
 
 from VELA_CLARA_Screen_Control import SCREEN_STATE
 from VELA_CLARA_Screen_Control import SCREEN_TYPE

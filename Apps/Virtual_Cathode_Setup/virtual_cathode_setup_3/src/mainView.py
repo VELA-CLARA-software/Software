@@ -475,7 +475,7 @@ class mainView(QtGui.QMainWindow, Ui_mainView ):
         self.widget_updatefunc[self.set_pos_pushButton] =  [self.update_set_pos_button]
 
         self.widget_updatefunc[self.set_pos_pushButton] =  [self.update_set_pos_button]
-        self.widget_updatefunc[self.rs_buffer_size] =  [self.update_int]
+        self.widget_updatefunc[self.rs_buffer_count] =  [self.update_int]
 
 
         # the below don't exist yet
