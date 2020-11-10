@@ -1,10 +1,10 @@
 headings: ['Off', 'Gun-10', 'CLARA Quads', 'CLARA Dipoles', 'CLARA Correctors', 'CLARA BPMs', 'VELA Quads', 'VELA Dipoles', 'VELA Correctors', 'Custom']
 frequencies: [1, 5, 10, 25, 50, 100]
 magnets:
-  'Off':
+  Off:
     Names: []
     PVs: {}
-  'Gun-10':
+  Gun-10:
     Names: [
     ['CLA-GUN-LRF-CTRL-01:vm:dsp:ff_amp:amplitude','RF Amplitude'],
     ['CLA-GUN-LRF-CTRL-01:ad1:ch1:power_remote_s.POWER','KLY FWD Power'],
@@ -55,7 +55,7 @@ magnets:
     PVs:
       X: ['self.CLARAbpms', getXFromPV]
       Y: ['self.CLARAbpms', getYFromPV]
-   Water Temperatures:
+  Water Temperatures:
     Names: [
     ['CLA-L01-H2O-TT-09:RT', 'L01 Water'],
     ['CLA-GUN-RF-LRRG-01:RT', 'Gun Water 01'],
