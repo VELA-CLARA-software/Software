@@ -274,14 +274,14 @@ class scrollingPlotPlot(qt.QWidget):
         self.plot.showGrid(x=True, y=True)
 
     def setAxesToZero(self):
-        for a in self.namedaxes.iteritems():
+        for a in self.namedaxes.items():
             axis, vb = a[1]
             vb.enableAutoRange(y=False)
             currentrange = vb.viewRange()
             vb.setYRange(0, currentrange[1][1], padding=0)
 
     def setYRange(self, *args, **kwargs):
-        for a in self.namedaxes.iteritems():
+        for a in self.namedaxes.items():
             axis, vb = a[1]
             vb.enableAutoRange(y=False)
             vb.setYRange(*args, **kwargs)
@@ -339,7 +339,7 @@ class scrollingPlotPlot(qt.QWidget):
         return axis, viewbox
 
     def getAxes(self):
-        return self.namedaxes.keys()
+        return list(self.namedaxes.keys())
 
     def changeAxis(self, name, axisname):
         record = self.records
@@ -394,7 +394,7 @@ class scrollingPlotPlot(qt.QWidget):
     #     axis.setVisible(visible)
 
     def findFirstEmptyColumnInGraphicsLayout(self):
-        rowsfilled =  self.plotWidget.ci.rows.get(0, {}).keys()
+        rowsfilled =  list(self.plotWidget.ci.rows.get(0, {}).keys())
         for i in range(49):
             if not i in rowsfilled:
                 return i

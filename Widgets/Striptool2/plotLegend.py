@@ -107,7 +107,7 @@ class plotLegendTree(ParameterTree):
                 axesdata[name].append(onoff)
             except:
                 pass
-            for axis, booles in axesdata.items():
+            for axis, booles in list(axesdata.items()):
                 axis.setVisible(any(booles))
 
     def toggleAxisVisible(self, header, visible=False):
@@ -165,7 +165,7 @@ class plotLegendTree(ParameterTree):
         try:
             self.generalPlot.removeSignal(str(name))
         except Exception as e:
-            print 'Exception in signal removal: ', e
+            print('Exception in signal removal: ', e)
         finally:
             for i in range(self.topLevelItemCount()):
                 item = self.topLevelItem(i)

@@ -42,7 +42,7 @@ class getMagnetProperties(object):
             self.machine = globalMachine
 
     def getDBURT(self, DBURT):
-        print 'loading DBURT ', DBURT
+        print('loading DBURT ', DBURT)
         self.magRef = globalMachine.magnets.getDBURT(DBURT)
         self.machine = localMachine(self.magRef)
 
@@ -56,6 +56,7 @@ class getMagnetProperties(object):
     def getK(self, magnetname, current=None, integrated=False):
         """Perform the calculation of K value (or bend angle)."""
         magnet = self.machine.magnets.getMagObjConstRef(magnetname)
+        print('fieldIntegralCoefficients = ', magnet.fieldIntegralCoefficients)
         if current is None:
             current = magnet.SI
         # print 'current = ', current
@@ -78,7 +79,7 @@ class getMagnetProperties(object):
             k = effect / 1000
         elif mag_type in ('QUAD', 'SEXT'):
             k = 1000 * effect
-            k = k / magnet.magneticLength  if integrated else k # focusing term K
+            k = k / magnet.magneticLength  if not integrated else k # focusing term K
         elif mag_type in ('HCOR', 'VCOR'):
             k = effect/1000  # deflection in mrad
         elif mag_type == 'SOL': # solenoids
@@ -136,19 +137,19 @@ class getMagnetProperties(object):
         magnetcontrollernames = self.getMagnetControllerNames()
         names = self.getMagnetNames()
         data = [[self.getMagnetName(m), self.getMagnetParameterType(m), self.getK(m), self.getS(m)] for m in magnetcontrollernames]
-        return zip(*zip(*list(sorted(data,key=lambda l:l[-1])))[:-1])
+        return list(zip(*list(zip(*list(sorted(data,key=lambda l:l[-1]))))[:-1]))
 
 if __name__ == "__main__":
     magprop = getMagnetProperties()#'CLARA_2_BA1_BA2_2018-11-20-1951.dburt')
     en1 = magprop.calculateMomentumFromDipole('BA1-DIP01', 56.485)
     en2 = magprop.calculateMomentumFromDipole('BA1-DIP01', 57.765)
-    print 'energy1 = ', en1, '  energy2 = ', en2, '   diff = ', en2-en1
+    print('energy1 = ', en1, '  energy2 = ', en2, '   diff = ', en2-en1)
     # exit()
     # # magprop.momentum = 31.5
     # print magprop.momentum
     magprop = getMagnetProperties()
     magprop.momentum = 35.5
-    print magprop.getK('BA1-QUAD07', 1.9, integrated=True)[1]/1000
+    print(magprop.getK('BA1-QUAD07', 10, integrated=True)[1]/1000)
     # print magprop.getK('C2V-QUAD2')
     # print magprop.getK('C2V-QUAD3')
     # with open('CLARA_2_BA1_BA2_2018-11-20-1951.'+str(np.round(magprop.momentum,decimals=2))+'.txt', 'w') as f:

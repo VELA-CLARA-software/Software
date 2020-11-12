@@ -301,10 +301,10 @@ class scatterPlotPlot(pg.PlotWidget):
                 del data2[:startpos2]
                 if self.signalDelayTime1 != self.signalDelayTime2:
                     if self.signalDelayTime1 < self.signalDelayTime2:
-                        tmpdata1 = zip(*data1)[0]
+                        tmpdata1 = list(zip(*data1))[0]
                         data1 = [takeClosestPosition(tmpdata1, data1, timeval[0])[1] for timeval in data2]
                     else:
-                        tmpdata2 = zip(*data2)[0]
+                        tmpdata2 = list(zip(*data2))[0]
                         data2 = [takeClosestPosition(tmpdata2, data2, timeval[0])[1] for timeval in data1]
                     # if self.signalDelayTime1 > self.signalDelayTime2:
                     #     ratio = int(self.signalDelayTime1 / self.signalDelayTime2)
@@ -331,9 +331,9 @@ class scatterPlotPlot(pg.PlotWidget):
                 elif len(data2) > len(data1):
                     del data2[len(data1) - len(data2):]
                 if len(data1) > 1 and len(data2) > 1:
-                    x1,x = zip(*data1)
+                    x1,x = list(zip(*data1))
                     x=list(x)
-                    x2,y = zip(*data2)
+                    x2,y = list(zip(*data2))
                     y=list(y)
                     start = time.time()
                     pr = pearsonr(x,y)

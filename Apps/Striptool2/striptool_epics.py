@@ -3,7 +3,8 @@ if getattr(sys, 'frozen', True):
     print( 'Frozen!')
     sys.path.append("../../Widgets/Striptool2")
 sys.path.append("../../../")
-sys.path.append("\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\Release")
+sys.path.append("\\\\claraserv3\\claranet\\test\\Controllers\\bin\\Release")
+# sys.path.append("\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release")
 import Software.Procedures.qt as qt
 from pyqtgraph.dockarea import DockArea, Dock
 import VELA_CLARA_Magnet_Control as vmag
@@ -13,7 +14,7 @@ import  VELA_CLARA_LLRF_Control as vllrf
 
 import argparse
 parser = argparse.ArgumentParser(description='Striptool')
-parser.add_argument('settings', type=str, default=None,
+parser.add_argument('-s','--settings', type=str, default='striptool.yaml',
                     help='Location of the YAML settings filename')
 
 ''' Load loggerWidget library (comment out if not available) '''
