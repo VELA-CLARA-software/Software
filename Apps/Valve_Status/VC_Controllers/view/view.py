@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # DJS 2017
-# part of MagtnetApp
 from PyQt4.QtGui import QWidget
 from PyQt4.QtGui import QMainWindow
 from PyQt4.QtGui import QIcon
