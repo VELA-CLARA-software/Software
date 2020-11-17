@@ -159,7 +159,7 @@ class main_controller(object):
         self.values[rf_conditioning_data.required_pulses] = self.config.raw_config_data['DEFAULT_PULSE_COUNT']
 
         # for testing, enable ramping
-        self.view.handle_can_ramp_button()
+        #self.view.handle_can_ramp_button()
         # set the active pulse count to the value read in from the pulse-breakdown log file
         # set event_pulse_count_zero to be the active pulse count, then set the active pulse count to zero
 

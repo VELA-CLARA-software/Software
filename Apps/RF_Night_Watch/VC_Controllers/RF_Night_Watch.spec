@@ -30,4 +30,4 @@ exe = EXE(pyz,
           upx=True,
           upx_exclude=[],
           runtime_tmpdir=None,
-          console=True )
+          console=True , icon='resources\\RF_Night_Watch\\RF_Night_Watch.ico')
