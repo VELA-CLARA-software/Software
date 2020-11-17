@@ -432,7 +432,7 @@ DC_SPIKE_DROP_AMP: 6 #; INTEGER amp_sp to set if vacuum spike
 
 
 ##Temperature PVs TODO: WHAT IF WE WANT MORE THAN ONE OF THESE??? HOW WILL THEY BE DISPALYED IN THE GUI?
-## ATM I will assume ONLY th efirts one will be dsiplayed, all will be written to the data log file ! (hopefully) 
+## ATM I will assume ONLY the first one will be dsiplayed, all will be written to the data log file ! (hopefully) 
 CAVITY_TEMPERATURE_PV_COUNT: 1 # INTEGER to give number of water temperatures we are monitoring, 
 CAVITY_TEMPERATURE_PV: [CLA-GUN-RF-LRRG-01:RT]
 CAVITY_TEMPERATURE_CHECK_TIME:  1000 #;ms between getting new value
