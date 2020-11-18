@@ -10,19 +10,36 @@ import sys
 sys.path.append('\\\\claraserv3\\claranet\\test\\CATAP\\bin')
 sys.path.append('\\\\claraserv3.dl.ac.uk\\claranet\\test\\CATAP\\bin')
 from CATAP.EPICSTools import *
-import random
+from datetime import datetime
+import json
 import time
+
 #
 # Adding a STATE argument will specify which EPICS instance to use.
 ET = EPICSTools(STATE.PHYSICAL)
 
 # Monitoring a PV is done via EPICSTools by providing the PV:
-rf_traces_pv = 'CLA-GUN-LRF-CTRL-01:ad1:dod_demod_vec'
+single_pv_dict = {
+"gun_rf_phase_FF"  : 'CLA-GUN-LRF-CTRL-01:vm:dsp:ff_ph:phase',
+"gun_rf_phase_SP"  : 'CLA-GUN-LRF-CTRL-01:vm:dsp:sp_ph:phase',
+"gun_rf_phase_lock"  : 'CLA-GUN-LRF-CTRL-01:vm:dsp:ff_ph:lock',
+"Q_pv" : 'CLA-S01-DIA-WCM-01:Q',
+"E_pv" : 'CLA-LAS-DIA-EM-06:E_RB',
+"bsol_seti_pv" : 'CLA-LRG1-MAG-SOL-01:GETSETI',
+"bsol_pow_pv" : 'CLA-LRG1-MAG-SOL-01:RPOWER',
+"sol2_seti_pv" : 'CLA-GUN-MAG-SOL-02:GETSETI',
+"sol2_pow_pv" : 'CLA-GUN-MAG-SOL-02:RPOWER',
+"las_sigma_x" : 'CLA-C2V-DIA-CAM-01:ANA:SigmaXPix_RBV',
+"las_sigma_y" : 'CLA-C2V-DIA-CAM-01:ANA:SigmaYPix_RBV',
+"las_x" : 'CLA-C2V-DIA-CAM-01:ANA:XPix_RBV',
+"las_y" : 'CLA-C2V-DIA-CAM-01:ANA:YPix_RBV',
+"las_cam_avg_int" : 'CLA-C2V-DIA-CAM-01:ANA:AvgIntensity_RBV'
+}
 
-pv = 'CLA-GUN-LRF-CTRL-01:ad1:dod_demod_vec'
+network_loc = '\\\\claraserv3\\claranet\\apps\\legacy\\logs\\continuous_qe_daq\\'
+
 TRACE_NUM_ELEMENTS_TOTAL = 1024
 TRACE_NUM_ELEMENTS_USED = 1017
-
 TRACE_NUM_OF_START_ZEROS = 7
 TRACE_MAP = {"KLYSTRON_FORWARD_POWER" :  1,
 "KLYSTRON_FORWARD_PHASE" :  2,
@@ -42,80 +59,109 @@ TRACE_MAP = {"KLYSTRON_FORWARD_POWER" :  1,
 "HRRG_CAVITY_REVERSE_PHASE" : 23}
 NUM_CHUNKS = 24
 
-def chunks(lst, n):
-    """Yield successive n-sized chunks from lst."""
-    for i in range(0, len(lst), n):
-        yield lst[i:i + n]
-
-def get_dmod_data():
-    ''' connect to PV, get all trace data, then disconnect  '''
-    data = ET.getArray(rf_traces_pv)
-    return chunks(data,TRACE_NUM_ELEMENTS_TOTAL)
+def split(a, n):
+    k, m = divmod(len(a), n)
+    return (a[i * k + min(i, m):(i + 1) * k + min(i + 1, m)] for i in range(n))
 
 def get_trace_data(trace_name):
-    data = ET.getArray(rf_traces_pv)
-    n= NUM_CHUNKS
-    final = [data[i * n:(i + 1) * n] for i in range((len(data) + n - 1) // n)]
-    #raw_data = list(get_dmod_data())
-    print(len(final))
-    print(final[0])
-    input()
+    gun_rf_traces_pv = 'CLA-GUN-LRF-CTRL-01:ad1:dod_demod_vec'
+    final = list(split(ET.getArray(gun_rf_traces_pv),24))
+    r = {}
     if type(trace_name) == str:
-        ans = raw_data[ TRACE_MAP(trace_name) ]
+        ans = final[ TRACE_MAP[trace_name] ]
         if "POWER" in trace_name:
             ans = [(i**2)/100 for i in ans]
+        r[trace_name] = ans
     if type(trace_name) == list:
         ans = []
         for name in trace_name:
-            ans.append(raw_data[ TRACE_MAP(name) ])
+            ans.append(final[TRACE_MAP[name] ])
             if "POWER" in trace_name:
-                ans = [(i**2)/100 for i in ans]
-    return ans
+                ans[-1] = [(i**2)/100 for i in ans]
+            r[name] = ans[-1]
+    return r
 
-print("Current READI Value: ", ET.getArray(rf_traces_pv))
-
-print(get_dmod_data())
-
-
-print(get_trace_data('LRRG_CAVITY_FORWARD_PHASE'))
-
-input()
+def get_single_Pv_data():
+    data = {}
+    for key, value in single_pv_dict.items():
+        data[key] = ET.get(value)
+    return data
 
 
+def get_data_to_log():
+    return {**get_trace_data(['KLYSTRON_FORWARD_POWER','LRRG_CAVITY_FORWARD_POWER']),
+             **get_single_Pv_data()}
+
+def log_data(fn, data):
+    dt_string = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
+    fullpath = network_loc + fn + '_' + dt_string + '.json'
+    file =  open(fullpath,"w")
+    file.write(json.dumps(data))  # use `json.loads` to do the reverse
+    file.close()
+    print("logged ",fullpath)
 
 
-
-def get_dmod_data():
-    ''' connect to PV, get all trace data, then diconnect  '''
-    data = ET.getArray(rf_traces_pv)
-    return chunks(data,TRACE_NUM_ELEMENTS_TOTAL)
+def should_log(data):
+    return True
 
 
-def get_trace_data(trace_name):
-    raw_data = get_dmod_data()
-    if type(trace_name) == str:
-        ans = raw_data[ TRACE_MAP(trace_name) ]
-        if "POWER" in trace_name:
-            ans = [(i**2)/100 for i in ans]
-    if type(trace_name) == list:
-        ans = []
-        for name in trace_name:
-            ans.append(raw_data[ TRACE_MAP(name) ])
-            if "POWER" in trace_name:
-                ans = [(i**2)/100 for i in ans]
-    return ans
-
-
-
-print(get_dmod_data())
-
-
-print(get_dmod_data())
-
-input()
+ts = time.time()
+log_time = 60
+print("Running")
+while 1:
+    if time.time() - ts > log_time:
+        data = get_data_to_log()
+        if should_log(data):
+            log_data("test", data)
+            ts = time.time()
 
 
 
+# data_to_write = {**get_trace_data(['KLYSTRON_FORWARD_POWER','LRRG_CAVITY_FORWARD_POWER']),
+#       **get_single_Pv_data()}
+# print(data_to_write)
+# input()
+
+# def calculate_qe(self, d, calibration_factors = [4.66e-6, 15.4], rounding = 6):
+# 	# d is a dictionary containing your measurement of WCM and laser energy ("ophir").
+# 	# the keys "charge_values" and "ophir_values" are themselves dictionaries
+# 	# containing lists of measured data, keyed by the settings of the laser half-wave plate
+# 	self.ophirmean = []
+# 	self.ophirmeanall = []
+# 	self.ophirmeanstderr = []
+# 	self.wcmmean = []
+# 	self.wcmmeanall = []
+# 	self.wcmmeanstderr = []
+# 	for j in range(0,len(d["ophir_values"])-1):
+# 		self.ophirmean.append(numpy.mean(list(d["ophir_values"].values())[j]))
+# 		self.wcmmean.append(numpy.mean(list(d["charge_values"].values())[j]))
+# 		self.ophirstderr.append(numpy.std(list(d["ophir_values"].values())[j]) / numpy.sqrt(len(list(d["ophir_values"].values())[j])))
+# 		self.wcmstderr.append(numpy.std(list(d["charge_values"].values())[j]) / numpy.sqrt(len(list(d["charge_values"].values())[j])))
+# 	for i, j, k, l in zip(self.wcmmean, self.ophirmean, self.wcmstderr, self.ophirstderr):
+# 		self.wcmmeanall.append(i)
+# 		self.ophirmeanall.append(j)
+# 		self.wcmstderrall.append(k)
+# 		self.ophirstderrall.append(l)
+# 	self.x, self.y = self.ophirmeanall, self.wcmmeanall
+# 	try:
+# 		self.m, self.c = numpy.around(numpy.polyfit(self.x, self.y, 1), 2)
+# 	except:
+# 		self.m, self.c = 0, 0
+# 	self.fit = self.m
+# 	self.cross = self.c
+# 	self.QE = numpy.around(calibration_factors[0] * self.m / calibration_factors[1], rounding)
+# 	self.qeall = self.QE
+# 	d["fit"] = self.m
+# 	d["cross"] = self.c
+# 	d["qe"] = self.QE * 10**(5)
+
+#
+# print(get_dmod_data())
+#
+#
+# print(get_dmod_data())
+#
+# input()
 
 
 
@@ -123,39 +169,6 @@ input()
 
 
 
-
-
-
-
-
-
-
-
-# Putting to a PV can only be done through the EPICSTools object
-seti_pv = "CLA-C2V-MAG-HCOR-01:SETI"
-set_current = int(random.random() * 10)
-ET.put(seti_pv, set_current)
-
-# Getting a PV value can only be done through the EPICSTools object
-getseti_pv = "CLA-C2V-MAG-HCOR-01:GETSETI"
-ET.get(getseti_pv)
-
-# Example of using monitor, put, and get:
-
-# Turn on HCOR-01
-spower_pv = "CLA-C2V-MAG-HCOR-01:SPOWER"
-ET.put(spower_pv, 1)
-# Wait for HCOR-01 READI value to reach SETI
-while(readi_monitor.getValue() != ET.get(getseti_pv)):
-    print("READI VALUE: ", readi_monitor.getValue())
-    time.sleep(0.1)
-print("READI VALUE: ", readi_monitor.getValue(), " SETI VALUE: ", ET.get(getseti_pv))
-
-# From the monitor object, buffer, buffer average,
-# and buffer standard deviation can be accessed:
-print("Current READI Buffer: ", readi_monitor.getBuffer())
-print("READI Buffer Average: ", readi_monitor.getBufferAverage())
-print("READI Buffer Standard Deviation: ", readi_monitor.getBufferStdDev())
 
 
 

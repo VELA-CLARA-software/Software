@@ -149,8 +149,6 @@ class view(QMainWindow, Ui_screen_status_view ):
 
 
     def update_widget(self,widget,state):
-
-
         if self.data.clara_led_state:
             self.set_clara_led_is_on()
         else:

@@ -54,7 +54,7 @@ class virtual_cathode_view(QtGui.QMainWindow, Ui_virtual_cathode_view):
         # startup
         self.setupUi(self)
         self.setWindowTitle("VELA - CLARA Virtual Cathode Setup")
-        #
+        #plot
         # the mainView holds a few dictionaries that are iterated over to update widgets
         self.set_widget_dicts()
 
