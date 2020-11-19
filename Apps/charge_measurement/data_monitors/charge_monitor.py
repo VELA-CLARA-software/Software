@@ -1,6 +1,6 @@
-from monitor import monitor
-from PyQt4.QtCore import QTimer
-import data.bpm_calibrate_data_base as dat
+from data_monitors.monitor import monitor
+from PyQt5.QtCore import QTimer
+import data.charge_measurement_data_base as dat
 import numpy
 import time
 
@@ -17,14 +17,13 @@ class charge_monitor(monitor):
         self.my_name = 'scope_monitor'
         self.bunch_charge = 0
         # init base-class
-        monitor.__init__(self,update_time=1000)
+        monitor.__init__(self, update_time=1000)
 
-        self.check_charge_is_monitoring()
         self.timer = QTimer()
-        self.timer.timeout.connect(self.update_bunch_charge)
-
+        self.check_charge_is_monitoring()
         self.set_success = True
         self.timer.start(self.update_time)
+
 
         self.run()
 
@@ -38,15 +37,27 @@ class charge_monitor(monitor):
         # else:
         monitor.logger.message(self.my_name, ' NOT STARTED running')
 
+    def get_charge_buffer(self):
+        return monitor.charge_factory.getQBuffer(monitor.config.charge_config['WCM_NAME'])
+
     def check_charge_is_monitoring(self):
-        charge_buffer = monitor.charge_control.getChargeBuffer(monitor.config.charge_config['CHARGE_DIAG_TYPE'])
+        charge_buffer = monitor.charge_factory.getQBuffer(monitor.config.charge_config['WCM_NAME'])
         if len(charge_buffer) > 1:
             if charge_buffer[-1] != charge_buffer[-2]:
                 monitor.data.values[dat.charge_status] = True
         else:
             monitor.data.values[dat.charge_status] = False
 
-    def update_bunch_charge(self):
-        monitor.data.values[dat.charge_values] = []
-        monitor.data.values[dat.charge_values] = monitor.charge_control.getChargeBuffer(monitor.config.charge_config['CHARGE_DIAG_TYPE'])
-        monitor.data.values[dat.bunch_charge] = numpy.mean(monitor.data.values[dat.charge_values])
+    def set_buffer_size(self, value):
+        monitor.charge_factory.setBufferSize(value)
+
+    def update_charge_values(self, hwp):
+        monitor.data.values[dat.charge_values][hwp] = monitor.charge_factory.getQBuffer(
+            monitor.config.charge_config['WCM_NAME'])
+        monitor.data.values[dat.bunch_charge][hwp] = numpy.mean(monitor.data.values[dat.charge_values][hwp])
+        self.chargemean = numpy.mean(list(monitor.data.values[dat.charge_values][hwp]))
+        if self.chargemean > monitor.config.charge_config['MIN_CHARGE_ACCEPTED']:
+            monitor.data.values[dat.charge_mean].append(numpy.mean(list(monitor.data.values[dat.charge_values][hwp])))
+            monitor.data.values[dat.charge_stderr].append(
+                numpy.std(list(monitor.data.values[dat.charge_values][hwp])) / numpy.sqrt(
+                    len(list(monitor.data.values[dat.charge_values][hwp]))))

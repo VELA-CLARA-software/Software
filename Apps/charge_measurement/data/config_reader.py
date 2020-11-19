@@ -1,5 +1,3 @@
-from VELA_CLARA_LLRF_Control import MACHINE_AREA, MACHINE_MODE, LLRF_TYPE
-
 class config_reader(object):
     # whoami
     my_name = 'config_reader'
@@ -20,13 +18,14 @@ class config_reader(object):
 
     all_config_data = None
 
+    vc_config = None
+    charge_config = None
     las_em_config = None
     las_hwp_config = None
     llrf_config = None
     shutter_config = None
     mag_config = None
     log_config = None
-    machine_mode = None
     gui_config = None
 
     def __init__(self):
@@ -62,26 +61,27 @@ class config_reader(object):
             content = [s for s in content if s[0] and s[1]]
             print(content)
             [config_reader.config.update({x[0]: x[1]}) for x in content]
-        # try:
-        #     config_reader.machine_mode = self.get_machine_mode(config_reader.config['MACHINE_MODE'])
-        # except:
-        #     return False
+
+        self.vc_parameter()
         self.las_em_parameter()
         self.las_hwp_parameter()
         self.shutter_parameter()
         self.llrf_parameter()
         self.mag_parameter()
+        self.charge_parameter()
         self.log_param()
         self.gui_param()
         print(config_reader.my_name + ' read input from ' + str(config_reader.config_file))
 
-        config_reader.all_config_data = [config_reader.las_em_config,
+        config_reader.all_config_data = [config_reader.charge_config,
+                                         config_reader.las_em_config,
                                          config_reader.las_hwp_config,
                                          config_reader.shutter_config,
                                          config_reader.llrf_config,
                                          config_reader.mag_config,
                                          config_reader.log_config,
-                                         config_reader.gui_config]
+                                         config_reader.gui_config,
+                                         config_reader.vc_config]
 
         return self.sanity_checks()
 
@@ -125,21 +125,6 @@ class config_reader(object):
                 r.update({item: float(config_reader.config[item])})
             except:
                 print(self.my_name, " FAILED to Find, ", item)
-        for item in area_param:
-            try:
-                r.update({item: self.get_machine_area(config_reader.config[item])})
-            except:
-                print(self.my_name, " FAILED to Find, ", item)
-        for item in diag_param:
-            try:
-                r.update({item: self.get_diag_type(config_reader.config[item])})
-            except:
-                print(self.my_name, " FAILED to Find, ", item)
-        for item in mode_param:
-            try:
-                r.update({item: self.get_machine_mode(config_reader.config[item])})
-            except:
-                print(self.my_name, " FAILED to Find, ", item)
         for item in type_param:
             try:
                 r.update({item: self.get_llrf_type(config_reader.config[item])})
@@ -154,13 +139,18 @@ class config_reader(object):
         #     print k, v
         return r
 
+    def vc_parameter(self):
+        string_param = ['VC_SIGXPIX', 'VC_SIGYPIX', 'VC_XPIX', 'VC_YPIX', 'VC_AVGINTENSITY']
+        config_reader.vc_config = self.get_param_dict(string_param=string_param)
+        return config_reader.vc_config
+
     def las_em_parameter(self):
         string_param = ['LAS_EM_NAME']
         area_param = ['LAS_EM_AREA']
         mode_param = ['LAS_EM_MODE']
         int_param = ['LAS_EM_CHECK_TIME']
         config_reader.las_em_config = self.get_param_dict(string_param=string_param, area_param=area_param,
-                                                       int_param=int_param,mode_param=mode_param)
+                                                          int_param=int_param, mode_param=mode_param)
         return config_reader.las_em_config
 
     def las_hwp_parameter(self):
@@ -168,9 +158,22 @@ class config_reader(object):
         area_param = ['LAS_HWP_AREA']
         mode_param = ['LAS_HWP_MODE']
         int_param = ['LAS_HWP_CHECK_TIME']
+        float_param = ['LAS_HWP_START', 'LAS_HWP_END']
         config_reader.las_hwp_config = self.get_param_dict(string_param=string_param, area_param=area_param,
-                                                           int_param=int_param, mode_param=mode_param)
+                                                           int_param=int_param, mode_param=mode_param,
+                                                           float_param=float_param)
         return config_reader.las_hwp_config
+
+    def charge_parameter(self):
+        string_param = ['WCM_NAME']
+        mode_param = ['WM_MODE']
+        int_param = ['WCM_CHECK_TIME']
+        area_param = ['WCM_AREA']
+        float_param = ['MIN_CHARGE_ACCEPTED']
+        config_reader.charge_config = self.get_param_dict(string_param=string_param, area_param=area_param,
+                                                          int_param=int_param, mode_param=mode_param,
+                                                          float_param=float_param)
+        return config_reader.charge_config
 
     def shutter_parameter(self):
         string_param = ['SHUTTER_NAME_1', 'SHUTTER_NAME_2']
@@ -178,29 +181,19 @@ class config_reader(object):
         mode_param = ['SHUTTER_MODE']
         int_param = ['SHUTTER_CHECK_TIME']
         config_reader.shutter_config = self.get_param_dict(string_param=string_param, area_param=area_param,
-                                                       int_param=int_param,mode_param=mode_param)
+                                                           int_param=int_param, mode_param=mode_param)
         return config_reader.shutter_config
 
     def llrf_parameter(self):
-        string_param = ['LLRF_NAME']
-        area_param = ['LLRF_AREA']
-        int_param = ['LLRF_CHECK_TIME','NUM_BUFFER_TRACES']
-        mode_param = ['LLRF_MODE','MACHINE_MODE']
-        type_param = ['LLRF_TYPE']
-        list_param = ['TRACES_TO_SAVE','MEAN_TRACES']
-        float_param = ['1_MEAN_START','1_MEAN_END','2_MEAN_START','2_MEAN_END','3_MEAN_START','3_MEAN_END','4_MEAN_START','4_MEAN_END']
-        config_reader.llrf_config = self.get_param_dict(string_param=string_param, area_param=area_param,
-                                                        int_param=int_param, mode_param=mode_param, type_param=type_param,
-                                                        list_param=list_param, float_param=float_param)
+        string_param = ['GUN_KLYSTRON_POWER', 'GUN_CAVITY_POWER', 'GUN_PHASE_SP', 'GUN_PHASE_FF',
+                        'GUN_PHASE_FF_LOCK_STATE']
+        config_reader.llrf_config = self.get_param_dict(string_param=string_param)
         return config_reader.llrf_config
 
     def mag_parameter(self):
         string_param = ['BSOL_NAME','SOL_NAME']
-        area_param = ['MACHINE_AREA']
         int_param = ['MAG_CHECK_TIME']
-        mode_param = ['MACHINE_MODE']
-        config_reader.mag_config = self.get_param_dict(string_param=string_param, area_param=area_param,
-                                                         int_param=int_param,mode_param=mode_param)
+        config_reader.mag_config = self.get_param_dict(string_param=string_param, int_param=int_param)
         return config_reader.mag_config
 
     def log_param(self):
@@ -224,29 +217,3 @@ class config_reader(object):
             return True
         elif text == 'FALSE':
             return False
-
-    def get_machine_area(self, text):
-        if text == 'S01':
-            return MACHINE_AREA.CLARA_S01
-        elif text == 'VELA_INJ':
-            return MACHINE_AREA.VELA_INJ
-        elif text == 'CLARA_PH1':
-            return MACHINE_AREA.CLARA_PH1
-        elif text == 'C2B':
-            return MACHINE_AREA.CLARA_2_BA1_BA2
-        else:
-            return MACHINE_AREA.UNKNOWN_AREA
-
-    def get_machine_mode(self, text):
-        if text == 'PHYSICAL':
-            return MACHINE_MODE.PHYSICAL
-        elif text == 'VIRTUAL':
-            return MACHINE_MODE.VIRTUAL
-        elif text == 'OFFLINE':
-            return MACHINE_MODE.OFFLINE
-
-    def get_llrf_type(self, text):
-        if text == 'CLARA_LRRG':
-            return LLRF_TYPE.CLARA_LRRG
-        else:
-            return LLRF_TYPE.UNKNOWN_TYPE

@@ -1,4 +1,3 @@
-import os
 import sys, os
 sys.path.append(os.path.join(sys.path[0],'base'))
 sys.path.append(os.path.join(sys.path[0],'controllers'))
@@ -6,19 +5,27 @@ sys.path.append(os.path.join(sys.path[0],'data'))
 sys.path.append(os.path.join(sys.path[0],'data_monitors'))
 sys.path.append(os.path.join(sys.path[0],'gui'))
 sys.path.append(os.path.join(sys.path[0],'logs'))
+# sys.path.append('..\\..\\..\\..\\CATAP-build\\PythonInterface\\Release\\CATAP')
+for item in sys.path:
+  if "PythonInterface" not in str(item):
+    continue
+  else:
+    sys.path.remove(item)
+sys.path.append("\\\\192.168.83.14\\claranet\\test\\CATAP\\bin\\")
+sys.path.append('\\\\192.168.83.14\\claranet\\test\\Controllers\\bin\\python3_x64')
+# sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\stage\\Python3_x64')
+# sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\stage\\Python3_x64')
 # if os.environ['COMPUTERNAME'] == "ASTECDELL10":
-# 	print 'port'
 # 	sys.path.append(os.getcwd())
-# 	sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\stage')
+# 	sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\stage\\Python3_x64')
 # else:
-# 	print 'desk'
-# 	sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\stage')
+# 	sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\stage\\Python3_x64')
 from PyQt5 import QtGui
 from controllers.main_controller import main_controller
 
-# os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
-# os.environ["EPICS_CA_ADDR_LIST"] = "10.10.0.12"# 192.168.83.255"
-# os.environ["EPICS_CA_MAX_ARRAY_BYTES"] = "10000000"
+os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
+os.environ["EPICS_CA_ADDR_LIST"] = "192.168.83.255" #"10.10.0.12"#
+os.environ["EPICS_CA_MAX_ARRAY_BYTES"] = "10000000"
 # os.environ["EPICS_CA_SERVER_PORT"] = "600"
 
 class charge_measurement(QtGui.QApplication):
@@ -26,7 +33,8 @@ class charge_measurement(QtGui.QApplication):
 		# you need this init line here to instantiate a QTApplication
 		QtGui.QApplication.__init__(self, argv)
 		# Everything else is handled by a main _controller
-		self.controller = main_controller(argv, config_file='\\\\apclara1\\ControlRoomApps\\Stage\\Software\\Apps\\charge_measurement\\charge_measurement.config')
+		self.controller = main_controller(argv,
+										  config_file='\\\\192.168.83.14\\claranet\\apps\\stage\\config\\charge_measurement\\charge_measurement.config')
 
 
 if __name__ == '__main__':

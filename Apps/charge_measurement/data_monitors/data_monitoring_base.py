@@ -1,6 +1,7 @@
 from data_monitors.pil_monitor import pil_monitor
 from data_monitors.llrf_monitor import llrf_monitor
 from data_monitors.mag_monitor import mag_monitor
+from data_monitors.charge_monitor import charge_monitor
 import data.charge_measurement_data_base as dat
 from base.base import base
 
@@ -15,10 +16,12 @@ class data_monitoring_base(base):
 	pil_id = 'PIL_ID'
 	llrf_id = 'LLRF_ID'
 	mag_id = 'MAG_ID'
+	charge_id = 'CHARGE_ID'
 	all_id = [pil_id, llrf_id, mag_id]
 	gen_mon_keys.update({pil_id:None})
 	gen_mon_keys.update({llrf_id:None})
 	gen_mon_keys.update({mag_id:None})
+	gen_mon_keys.update({charge_id: None})
 	# explicit flags for possible monitors & monitors states
 	# these are used to determine if monitoring these items is happening
 	# they're NOT for defining vacuum good, / bad etc.
@@ -27,19 +30,23 @@ class data_monitoring_base(base):
 	pil_monitoring = "pil_monitoring"
 	llrf_monitoring = "llrf_monitoring"
 	mag_monitoring = "mag_monitoring"
+	charge_monitoring = "charge_monitoring"
 
 	is_monitoring = {}
 	all_monitors = [pil_monitoring,
 					llrf_monitoring,
-					mag_monitoring]
+					mag_monitoring,
+					charge_monitoring]
 	is_monitoring.update({pil_monitoring:False})
 	is_monitoring.update({llrf_monitoring: False})
 	is_monitoring.update({mag_monitoring: False})
+	is_monitoring.update({charge_monitoring: False})
 	#
 	#all poossible monitors
 	pil_monitor = None
 	llrf_monitor = None
 	mag_monitor = None
+	charge_monitor = None
 
 	def __init__(self):
 		base.__init__(self)
@@ -68,12 +75,18 @@ class data_monitoring_base(base):
 			else:
 				self.logger.message('Not monitoring magnets - start_mag_monitor failed', True)
 		else:
-			self.logger.message('Not monitoring magnets - No config data',True)
+			self.logger.message('Not monitoring magnets - No config data', True)
+		if base.config.charge_config:
+			if self.start_charge_monitor():
+				self.logger.message('Monitoring charge', True)
+			else:
+				self.logger.message('Not monitoring charge - start_charge_monitor failed', True)
+		else:
+			self.logger.message('Not monitoring charge - No config data',True)
 
 	def start_pil_monitor(self):
 		data_monitoring_base.pil_monitor = pil_monitor()
 		data_monitoring_base.is_monitoring[dat.pil_status] = data_monitoring_base.pil_monitor.set_success
-		self.check_mode()
 		return data_monitoring_base.pil_monitor.set_success
 
 	def start_llrf_monitor(self):
@@ -86,5 +99,7 @@ class data_monitoring_base(base):
 		data_monitoring_base.is_monitoring[dat.mag_status] = data_monitoring_base.mag_monitor.set_success
 		return data_monitoring_base.mag_monitor.set_success
 
-	def check_mode(self):
-		print(dat.machine_mode)
+	def start_charge_monitor(self):
+		data_monitoring_base.charge_monitor = charge_monitor()
+		data_monitoring_base.is_monitoring[dat.charge_status] = data_monitoring_base.charge_monitor.set_success
+		return data_monitoring_base.charge_monitor.set_success

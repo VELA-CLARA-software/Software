@@ -132,19 +132,19 @@ class data_logger(object):
             self.wcmmean.append(numpy.mean(list(d["charge_values"].values())[j]))
             self.ophirstderr.append(numpy.std(list(d["ophir_values"].values())[j]) / numpy.sqrt(len(list(d["ophir_values"].values())[j])))
             self.wcmstderr.append(numpy.std(list(d["charge_values"].values())[j]) / numpy.sqrt(len(list(d["charge_values"].values())[j])))
-            self.klyfwdmean.append(numpy.mean(list(d["kly_fwd_pwr_values"].values())[j]))
-            self.klyfwdstderr.append(
-                numpy.std(list(d["kly_fwd_pwr_values"].values())[j]) / numpy.sqrt(len(list(d["kly_fwd_pwr_values"].values())[j])))
-            self.vcxmean.append(numpy.mean(list(d["vc_x_pix_values"].values())[j]))
-            self.vcymean.append(numpy.mean(list(d["vc_y_pix_values"].values())[j]))
-            self.vcxstderr.append(numpy.std(list(d["vc_x_pix_values"].values())[j]) / numpy.sqrt(len(list(d["vc_x_pix_values"].values())[j])))
-            self.vcystderr.append(numpy.std(list(d["vc_y_pix_values"].values())[j]) / numpy.sqrt(len(list(d["vc_y_pix_values"].values())[j])))
-            self.vcsigxmean.append(numpy.mean(list(d["vc_sig_x_pix_values"].values())[j]))
-            self.vcsigymean.append(numpy.mean(list(d["vc_sig_y_pix_values"].values())[j]))
-            self.vcsigxstderr.append(
-                numpy.std(list(d["vc_sig_x_pix_values"].values())[j]) / numpy.sqrt(len(list(d["vc_sig_x_pix_values"].values())[j])))
-            self.vcsigystderr.append(
-                numpy.std(list(d["vc_sig_y_pix_values"].values())[j]) / numpy.sqrt(len(list(d["vc_sig_y_pix_values"].values())[j])))
+            # self.klyfwdmean.append(numpy.mean(list(d["kly_fwd_pwr_values"].values())[j]))
+            # self.klyfwdstderr.append(
+            #     numpy.std(list(d["kly_fwd_pwr_values"].values())[j]) / numpy.sqrt(len(list(d["kly_fwd_pwr_values"].values())[j])))
+            # self.vcxmean.append(numpy.mean(list(d["vc_x_pix_values"].values())[j]))
+            # self.vcymean.append(numpy.mean(list(d["vc_y_pix_values"].values())[j]))
+            # self.vcxstderr.append(numpy.std(list(d["vc_x_pix_values"].values())[j]) / numpy.sqrt(len(list(d["vc_x_pix_values"].values())[j])))
+            # self.vcystderr.append(numpy.std(list(d["vc_y_pix_values"].values())[j]) / numpy.sqrt(len(list(d["vc_y_pix_values"].values())[j])))
+            # self.vcsigxmean.append(numpy.mean(list(d["vc_sig_x_pix_values"].values())[j]))
+            # self.vcsigymean.append(numpy.mean(list(d["vc_sig_y_pix_values"].values())[j]))
+            # self.vcsigxstderr.append(
+            #     numpy.std(list(d["vc_sig_x_pix_values"].values())[j]) / numpy.sqrt(len(list(d["vc_sig_x_pix_values"].values())[j])))
+            # self.vcsigystderr.append(
+            #     numpy.std(list(d["vc_sig_y_pix_values"].values())[j]) / numpy.sqrt(len(list(d["vc_sig_y_pix_values"].values())[j])))
             self.bsolmean.append(numpy.mean(list(d["bsol_values"].values())[j]))
             self.solmean.append(numpy.mean(list(d["sol_values"].values())[j]))
             self.offcrestmean.append(list(d["off_crest_phase"].values())[j])
@@ -153,22 +153,27 @@ class data_logger(object):
             self.ophirmeanall.append(j)
             self.wcmstderrall.append(k)
             self.ophirstderrall.append(l)
-        self.klyfwdmeanall = numpy.mean(self.klyfwdmean)
-        self.klyfwdstderrall = numpy.mean(self.klyfwdstderr)
-        self.vcxmeanall = numpy.mean(self.vcxmean)
-        self.vcxstderrall = numpy.mean(self.vcxstderr)
-        self.vcymeanall = numpy.mean(self.vcymean)
-        self.vcystderrall = numpy.mean(self.vcystderr)
-        self.vcsigxmeanall = numpy.mean(self.vcsigxmean)
-        self.vcsigxstderrall = numpy.mean(self.vcsigxstderr)
-        self.vcsigymeanall = numpy.mean(self.vcsigymean)
-        self.vcsigystderrall = numpy.mean(self.vcsigystderr)
+        # self.klyfwdmeanall = numpy.mean(self.klyfwdmean)
+        # self.klyfwdstderrall = numpy.mean(self.klyfwdstderr)
+        # self.vcxmeanall = numpy.mean(self.vcxmean)
+        # self.vcxstderrall = numpy.mean(self.vcxstderr)
+        # self.vcymeanall = numpy.mean(self.vcymean)
+        # self.vcystderrall = numpy.mean(self.vcystderr)
+        # self.vcsigxmeanall = numpy.mean(self.vcsigxmean)
+        # self.vcsigxstderrall = numpy.mean(self.vcsigxstderr)
+        # self.vcsigymeanall = numpy.mean(self.vcsigymean)
+        # self.vcsigystderrall = numpy.mean(self.vcsigystderr)
         self.bsolmeanall = numpy.mean(self.bsolmean)
         self.solmeanall = numpy.mean(self.solmean)
         self.offcrestmeanall = numpy.mean(self.offcrestmean)
         self.x, self.y = self.ophirmeanall, self.wcmmeanall
         try:
             self.m, self.c = numpy.around(numpy.polyfit(self.x, self.y, 1), 2)
+            print("FIT!!!")
+            aa, bb, cc = numpy.polyfit(self.x, self.y, 1, full=True)
+            print(aa)
+            print(bb)
+            print(cc)
         except:
             self.m, self.c = 0, 0
         self.fit = self.m
@@ -179,23 +184,23 @@ class data_logger(object):
         d["fit"] = self.m
         d["cross"] = self.c
         d["qe"] = self.QE * 10**(5)
-        d["kly_fwd_mean_all"] = self.klyfwdmeanall
+        # d["kly_fwd_mean_all"] = self.klyfwdmeanall
         self.rb = xlrd.open_workbook(data_logger.config.log_config['SUMMARY_FILE'])
         self.df = pandas.DataFrame({'':[''],
                                     'filename': [os.path.basename(filename)],
                                     'charge_cross_zero': [self.cross],
                                     'fit': [self.fit],
                                     'qe_effective': [self.qeall],
-                                    'kly_fwd_mean': [self.klyfwdmeanall],
-                                    'kly_fwd_stderr': [self.klyfwdstderrall],
-                                    'vc_x_pix_mean': [self.vcxmeanall],
-                                    'vc_x_pix_stderr': [self.vcxstderrall],
-                                    'vc_y_pix_mean': [self.vcymeanall],
-                                    'vc_y_pix_stderr': [self.vcystderrall],
-                                    'vc_sig_x_pix_mean': [self.vcsigxmeanall],
-                                    'vc_sig_x_pix_stderr': [self.vcsigxstderrall],
-                                    'vc_sig_y_pix_mean': [self.vcsigymeanall],
-                                    'vc_sig_y_pix_stderr': [self.vcsigystderrall],
+                                    # 'kly_fwd_mean': [self.klyfwdmeanall],
+                                    # 'kly_fwd_stderr': [self.klyfwdstderrall],
+                                    # 'vc_x_pix_mean': [self.vcxmeanall],
+                                    # 'vc_x_pix_stderr': [self.vcxstderrall],
+                                    # 'vc_y_pix_mean': [self.vcymeanall],
+                                    # 'vc_y_pix_stderr': [self.vcystderrall],
+                                    # 'vc_sig_x_pix_mean': [self.vcsigxmeanall],
+                                    # 'vc_sig_x_pix_stderr': [self.vcsigxstderrall],
+                                    # 'vc_sig_y_pix_mean': [self.vcsigymeanall],
+                                    # 'vc_sig_y_pix_stderr': [self.vcsigystderrall],
                                     'sol_mean': [self.solmeanall],
                                     'bsol_mean': [self.bsolmeanall],
                                     'off_crest_phase_mean': [self.offcrestmeanall]})

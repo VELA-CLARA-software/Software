@@ -1,14 +1,10 @@
 import sys, os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-from data.config_reader import config_reader
-from data.data_logger import data_logger
-from VELA_CLARA_LLRF_Control import MACHINE_MODE,MACHINE_AREA,LLRF_TYPE
-from controllers.pil_handler import pil_handler
-from controllers.shutter_handler import shutter_handler
 from controllers.llrf_handler import llrf_handler
 from controllers.mag_handler import mag_handler
-import datetime
-import data.charge_measurement_data_base as dat
+from controllers.charge_handler import charge_handler
+from controllers.pil_handler import pil_handler
+from controllers.shutter_handler import shutter_handler
 from data_monitors.data_monitoring import data_monitoring
 from base.base import base
 
@@ -24,6 +20,7 @@ class controller_base(base):
 	shutter_handler = None
 	llrf_handler = None
 	mag_handler = None
+	charge_handler = None
 
 	def __init__(self, argv, config_file):
 		#super(base, self).__init__()
@@ -49,7 +46,7 @@ class controller_base(base):
 
 			base.logger.header(self.my_name + ' creating HWC ', True)
 
-			if bool(base.config.las_hwp_config):
+			if bool(base.config.las_hwp_config) and bool(base.config.las_em_config):
 				self.start_pil_control()
 			if bool(base.config.shutter_config):
 				self.start_shutter_control()
@@ -57,6 +54,10 @@ class controller_base(base):
 				self.start_llrf_control()
 			if bool(base.config.mag_config):
 				self.start_mag_control()
+			if bool(base.config.charge_config):
+				self.start_charge_control()
+			if bool(base.config.vc_config):
+				self.start_vc_control()
 		else:
 			base.logger.header(self.my_name + ' read_config failed sanity checks!!!', True)
 
@@ -66,6 +67,25 @@ class controller_base(base):
 		for item in base.config.all_config_data:
 			logdata.append(''.join(['%s:%s, ' % (key, value) for (key, value) in item.items()]))
 		base.logger.message(logdata, True)
+
+	def start_vc_control(self):
+		self.vcobjects = {}
+		for key, value in base.config.vc_config.items():
+			base.epics_tools.monitor(value)
+			base.epics_tools.getMonitor(value)
+			self.vcobjects.update({value: base.epics_tools.getMonitor(value)})
+		base.vc_objects = self.vcobjects
+		base.logger.message('Monitoring VC', True)
+
+	def start_llrf_control(self):
+		self.llrfobjects = {}
+		for key, value in base.config.llrf_config.items():
+			base.epics_tools.monitor(value)
+			base.epics_tools.getMonitor(value)
+			self.llrfobjects.update({value: base.epics_tools.getMonitor(value)})
+		base.llrf_objects = self.llrfobjects
+		controller_base.llrf_handler = llrf_handler()
+		base.logger.message('Monitoring GUN LLRF', True)
 
 	def start_pil_control(self):
 		# try:
@@ -82,10 +102,15 @@ class controller_base(base):
 		base.logger.message('start_pil_control created PIL object', True)
 		base.logger.message('Monitoring PIL', True)
 		# base.config.charge_config['CHARGE_NAME'] = self.get_charge_names()
-		base.cam_control = base.cam_init.physical_CLARA_VC_Camera_Controller()
-		base.logger.message('start_cam_control created VC object', True)
 		controller_base.pil_handler = pil_handler()
 
+	def start_charge_control(self):
+		base.charge_factory = base.hardware_factory.getChargeFactory()
+		base.charge_control = base.charge_factory.getChargeDiagnostic(base.config.charge_config['WCM_NAME'])
+		base.logger.message('start_charge_control created CHARGE object', True)
+		base.logger.message('Monitoring CHARGE', True)
+		controller_base.charge_handler = charge_handler()
+		
 	def start_shutter_control(self):
 		base.shutter_factory = base.hardware_factory.getShutterFactory()
 		base.shutter_control_1 = base.shutter_factory.getShutter(base.config.shutter_config['SHUTTER_NAME_1'])
@@ -94,40 +119,9 @@ class controller_base(base):
 		base.logger.message('Monitoring SHUTTER', True)
 		controller_base.shutter_handler = shutter_handler()
 
-	def start_llrf_control(self):
-		try:
-			a = base.config.llrf_config['LLRF_TYPE']  # MAGIC_STRING
-		except:
-			a = LLRF_TYPE.UNKNOWN_TYPE
-		if a is not MACHINE_AREA.UNKNOWN_AREA:
-			b = base.config.llrf_config['MACHINE_MODE']
-			base.llrf_control = base.llrf_init.getLLRFController(MACHINE_MODE.PHYSICAL, a)
-			base.logger.message('start_llrf_control created ' + str(base.config.llrf_config['LLRF_TYPE']) + ' object',
-								True)
-			base.data.values[dat.llrf_object]["CLARA_LRRG"] = base.llrf_control.getLLRFObjConstRef()
-			base.logger.message('Monitoring LLRF', True)
-			base.config.llrf_config['LLRF_NAME'] = base.data.values[dat.llrf_object]["CLARA_LRRG"].name
-			base.data.values[dat.machine_mode] = 'physical'
-			controller_base.llrf_handler = llrf_handler()
-		else:
-			base.logger.message('start_llrf_control UNKNOWN_MACHINE area cannot create llrf object', True)
-
 	def start_mag_control(self):
-		try:
-			a = base.config.mag_config['MACHINE_AREA']# MAGIC_STRING
-		except:
-			a = MACHINE_AREA.UNKNOWN_AREA
-		if a is not MACHINE_AREA.UNKNOWN_AREA:
-			b = base.config.mag_config['MACHINE_MODE']
-			#base.mag_control = base.mag_init.getMagnetController(b,a)
-			base.logger.message('start_mag_control created ' + str(base.config.mag_config['MACHINE_AREA']) + ' object', True)
-			#base.logger.message('Monitoring magnets: ' + ' '.join(self.get_mag_names()), True)
-			#base.config.mag_config['SOL_NAME'] = self.get_mag_names()
-			#base.config.mag_config['BSOL_NAME'] = self.get_mag_names()
-			base.data.values[dat.machine_mode] = 'physical'
-			controller_base.mag_handler = mag_handler()
-		else:
-			base.logger.message('start_mag_control UNKNOWN_MACHINE area cannot create mag object', True)
+		base.magnet_factory = base.hardware_factory.getMagnetFactory()
+		controller_base.mag_handler = mag_handler()
 
 	def get_mag_names(self):
 		temp = []
