@@ -18,7 +18,7 @@ mag_control = init.getMagnetController(MACHINE_MODE.PHYSICAL,MACHINE_AREA.CLARA_
 
 # sine wave paramters
 mean_current_sol = 175 # the nominal setting of the solenoid Max 250, (or maybe 300)
-Amplitude_sol  = 35 # +- Amps from nominal_current (peak of sin wave)
+Amplitude_sol  = 24 # +- Amps from nominal_current (peak of sin wave)
 mean_current_bsol = -1.0*0.9*mean_current_sol # the nominal setting of the solenoid Max 250, (or maybe 300) 
 #mean_current_bsol = -100 # the nominal setting of the solenoid Max 250, (or maybe 300) 
 Amplitude_bsol  = 0.9*Amplitude_sol # +- Amps from nominal_current (peak of sin wave)

@@ -138,8 +138,25 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         self.can_ramp_button.clicked.connect(self.handle_can_ramp_button)
         self.can_ramp_button.setStyleSheet('QPushButton { background-color : ' + self.bad + '; color : black; }')
         self.can_ramp_button.setText('RAMP Disabled')
-        self.plot_item = self.graphicsView.getPlotItem()
 
+        # initialise update_individual_trace_button to "Individual Trace Updates Stopped"
+        self.update_individual_trace_button.clicked.connect(self.handle_update_individual_trace_button)
+        self.update_individual_trace_button.setStyleSheet('QPushButton { background-color : ' + self.bad + '; color : black; }')
+        self.update_individual_trace_button.setText('Individual Trace Updates Stopped')
+
+
+        self.plot_item = self.graphicsView.getPlotItem()
+        
+        # Close down the app if close button pressed on GUI:
+        self.aboutToQuit.connect(self.closeEvent)
+
+
+    def closeEvent(self):
+        '''
+            Closes down the app if close button pressed on GUI.
+        '''
+        print('Close button pressed on RF_Night_Watch GUI.')
+        sys.exit(0)
 
 
     def update_plot(self):
@@ -408,8 +425,18 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         else:
             self.values[rf_conditioning_data.gui_can_ramp] = True
             self.can_ramp_button.setStyleSheet('QPushButton { background-color : ' + self.good + '; color : black; }')
-
             self.can_ramp_button.setText('RAMP Enabled')
+
+    # TODO AJG: add funtion to handle individual_trace_updates button:
+    def handle_update_individual_trace_button(self):
+        if self.values[rf_conditioning_data.update_individual_trace]:
+            self.values[rf_conditioning_data.update_individual_trace] = False
+            self.individual_update_individual_trace.setStyleSheet('QPushButton { background-color : ' + self.bad + '; color : black; }')
+            self.individual_update_individual_trace.setText('Individual Trace Updates Stopped')
+        else:
+            self.values[rf_conditioning_data.update_individual_trace] = True
+            self.update_individual_trace_button.setStyleSheet('QPushButton { background-color : ' + self.good + '; color : black; }')
+            self.update_individual_trace_button.setText('Individual Trace Updates at 10 Hz')
 
     def handle_llrf_enable_button(self):
         if self.values[rf_conditioning_data.gui_can_rf_output]:

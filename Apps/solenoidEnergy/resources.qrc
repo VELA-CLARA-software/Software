@@ -1,8 +1,0 @@
-<RCC>
-  <qresource>
-    <file alias='solenoidEnergy.jpg'>solenoidEnergy.jpg</file>
-  </qresource>
-  <qresource>
-    <file alias='solenoidEnergy.png'>solenoidEnergy.png</file>
-  </qresource>
-</RCC>

@@ -1,8 +1,0 @@
-monitors: [
-'CLA-S01-DIA-BPM-01',
-'CLA-S01-DIA-BPM-01',
-]
-actuators: [
-'EBT-INJ-MAG-HCOR-01:SETI',
-'EBT-INJ-MAG-VCOR-01:SETI',
-]

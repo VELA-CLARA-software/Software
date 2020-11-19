@@ -1,9 +1,9 @@
 import sys, time, os
-if getattr(sys, 'frozen', False):
-    print( 'frozen!')
-else:
-    print( 'Not frozen!')
-    sys.path.append("../../Widgets/Striptool2")
+# if getattr(sys, 'frozen', False):
+#     print( 'frozen!')
+# else:
+#     print( 'Not frozen!')
+sys.path.append("../../Widgets/Striptool2")
 sys.path.append("../../../")
 import Software.Procedures.qt as qt
 from pyqtgraph.dockarea import DockArea, Dock

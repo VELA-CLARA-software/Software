@@ -1,8 +1,0 @@
-Quadrupoles:
-  EBT-INJ-MAG-QUAD-01: [SETI,READI]
-  EBT-INJ-MAG-QUAD-02: [SETI,READI]
-Vacuum:
-  CLA-S01-VAC-IMG-01: [PRES]
-  CLA-S01-VAC-IONP-01: [PRES]
-Temperatures:
-  CLA-L01-H2O-TT-09: [RT]

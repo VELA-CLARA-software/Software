@@ -50,6 +50,7 @@
 ## CFPOW => "CAVITY_FORWARD_POWER"
 ## CFPHA => "CAVITY_FORWARD_PHASE"
 ## 
+## C:\Users\dlerlp\Documents\GitHub\Software\Apps\RF_Conditioner\v2\CLARA_LRRG.yml 0
 
 # MODE - DEBUG or OPERATIONAL
 # DEBUG mode can be used in the future to but currently is not well implemented
@@ -114,18 +115,24 @@ MEAN_TRACES:
 ## ATM: MUST BE SET BY HAND FOR EACH PULSE LENGTH, using RF traces, 
 # only a human can decide over which range to calculate and average 
 ## KLYSTRON_FORWARD_POWER 
-KFPOW_MEAN_START:  2.0 # must be in us
-KFPOW_MEAN_END:  2.5  # must be in us
+#KFPOW_MEAN_START:  2.0 # must be in us
+KFPOW_MEAN_START:  1.7 # must be in us
+#KFPOW_MEAN_END:  2.5  # must be in us
+KFPOW_MEAN_END:  2.3  # must be in us
 ## KLYSTRON_REVERSE_POWER
-KRPOW_MEAN_START:  2.0  # must be in us
-KRPOW_MEAN_END:  2.5 # must be in us
+KRPOW_MEAN_START:  1.7  # must be in us
+KRPOW_MEAN_END:  2.3 # must be in us
 ## CAVITY_FORWARD_POWER
-CFPOW_MEAN_START:  3.2  # must be in us
-CFPOW_MEAN_END:  3.6  # must be in us
+#CFPOW_MEAN_START:  3.2  # must be in us
+#CFPOW_MEAN_END:  3.6  # must be in us
+CFPOW_MEAN_START:  1.9  # must be in us
+CFPOW_MEAN_END:  2.1 # must be in us
 ## CAVITY_REVERSE_POWER
-CRPOW_MEAN_START:  3.2  # must be in us
-CRPOW_MEAN_END:  3.6 # must be in us
-## KLYSTRON_FORWARD_PHASE 
+#CRPOW_MEAN_START:  3.2  # must be in us
+#CRPOW_MEAN_END:  3.6 # must be in us
+CRPOW_MEAN_START:  2.314  # must be in us
+CRPOW_MEAN_END:  2.503 # must be in us
+## KLYSTRON_FORWARD_PHASE
 KFPHA_MEAN_START:  2.3 # must be in us
 KFPHA_MEAN_END:  2.75 # must be in us
 ## KLYSTRON_REVERSE_POWER
@@ -196,10 +203,13 @@ CFPOW_DROP_AMP_VALUE: 6
 ## CAVITY REFLECTED POWER/PHASE MASK PARAMETERS
 CRPOW_AUTO_SET :  false #;Will pick mask indices automatically, if false YOU must Define Them
 CRPOW_MASK_SET_TYPE :  TIME #(TIME or INDEX) for CRP_AUTO_SET=FALSE manually set s1,s2,s3,s4, via TIME in trace or INDEX in trace
-CRPOW_MASK_START :  1.2 # Only used if CRP_AUTO_SET=FALSE
-CRPOW_MASK_WINDOW_START :  3.7 # Only used if CRP_AUTO_SET=FALSE
-CRPOW_MASK_WINDOW_END :  4.25 # Only used if CRP_AUTO_SET=FALSE
-CRPOW_MASK_END :  6.0 # Only used if CRP_AUTO_SET=FALSE  # ms from end of RF pulse
+#CRPOW_MASK_START :  1.2 # Only used if CRP_AUTO_SET=FALSE
+CRPOW_MASK_START :  1.33 # Only used if CRP_AUTO_SET=FALSE
+#CRPOW_MASK_WINDOW_START :  3.7 # Only used if CRP_AUTO_SET=FALSE
+CRPOW_MASK_WINDOW_START :  3.6 # Only used if CRP_AUTO_SET=FALSE
+CRPOW_MASK_WINDOW_END :  4.3 # Only used if CRP_AUTO_SET=FALSE
+#CRPOW_MASK_WINDOW_END :  4.25 # Only used if CRP_AUTO_SET=FALSE
+CRPOW_MASK_END :  7.0 # Only used if CRP_AUTO_SET=FALSE  # ms from end of RF pulse
 CRPOW_MASK_LO_MIN :  50  # integer,Minimum value for a mask, regardless
 CRPOW_MASK_TYPE :  PERCENT # ABSOLUTE OR PERCENT, mask type is to set the mask based on a percentage of previous values, or by absolute amount
 CRPOW_NUM_AVERAGE_TRACES :  2 #
@@ -244,8 +254,8 @@ KRPOW_DROP_AMP:  false # should drop amplitude on event detection?
 ## klystron REFLECTED POWER/PHASE MASK PARAMETERS
 KFPOW_AUTO_SET :  false #;Will pick mask indices automatically, if false YOU must Define Them
 KFPOW_MASK_SET_TYPE :  TIME #(TIME or INDEX) for CRP_AUTO_SET=FALSE manually set s1,s2,s3,s4, via TIME in trace or INDEX in trace
-KFPOW_MASK_START :  1.3 # Only used if CRP_AUTO_SET=FALSE
-KFPOW_MASK_WINDOW_START :  3.6 # Only used if CRP_AUTO_SET=FALSE
+KFPOW_MASK_START :  1.4 # Only used if CRP_AUTO_SET=FALSE
+KFPOW_MASK_WINDOW_START :  3.3 # Only used if CRP_AUTO_SET=FALSE
 KFPOW_MASK_WINDOW_END :  3.8 # Only used if CRP_AUTO_SET=FALSE
 KFPOW_MASK_END :  3.4 # Only used if CRP_AUTO_SET=FALSE.  ms from end of RF pulse
 KFPOW_MASK_LO_MIN :  50  # integer,Minimum value for a mask, regardless
@@ -363,7 +373,7 @@ TEXT_LOG_FILENAME:  log.txt # general messages
 #LOG_DIRECTORY:  D:  \VELA\GIT Projects\Software\Apps\RF_Conditioner\logs_l01_test\
 ##LOG_DIRECTORY:   "C:  \Users\dlerlp\Documents\RF_condition_2018\logs_clara_lrrg\"; breakdown data
 ##LOG_DIRECTORY:   "D:  \VELA\GIT Projects\Software\Apps\RF_Conditioner\logs_clara_lrrg\"
-#LOG_DIRECTORY: C:\Users\dlerlp\Documents\GitHub\Software\Apps\RF_Conditioner\v2\logs\
+#LOG_DIRECTORY: C:\Users\dlerlp\Documents\GiBinning_Plot.pngtHub\Software\Apps\RF_Conditioner\v2\logs\
 #LOG_DIRECTORY: C:\Users\djs56\GitHub\Software\Apps\RF_Conditioner\v2\logs\
 LOG_DIRECTORY: C:\Users\dlerlp\Documents\GitHub\Software\Apps\RF_Conditioner\v2\logs\
 OUTSIDE_MASK_FORWARD_FILENAME:  outside_forward_log
@@ -380,8 +390,8 @@ KFPOW_AMPSP_RUNNING_STATS_LOG_FILENAME:  amp_power_log.txt
 
 ## Vacuum parameters
 VAC_PV:  CLA-LRG1-VAC-IMG-01:P
-VAC_SPIKE_DELTA:  0.00000001 # 1e-8
-VAC_SPIKE_MAX_LEVEL_FOR_OFF:  0.000000002 # 2e-9
+VAC_SPIKE_DELTA:  0.00000002 # 1e-8
+VAC_SPIKE_MAX_LEVEL_FOR_OFF:  0.00000005 # 2e-8
 # Decay mode is TIMED or LEVEL, if LEVEL then set VAC_SPIKE_DECAY_LEVEL
 # a lvel decay means wait until the desitred level is reached after an event, before setting the "vacuum_good" state
 # a timed decay will wait the set amount of tim ebefore setting "vacuum_good" 
@@ -422,7 +432,7 @@ DC_SPIKE_DROP_AMP: 6 #; INTEGER amp_sp to set if vacuum spike
 
 
 ##Temperature PVs TODO: WHAT IF WE WANT MORE THAN ONE OF THESE??? HOW WILL THEY BE DISPALYED IN THE GUI?
-## ATM I will assume ONLY th efirts one will be dsiplayed, all will be written to the data log file ! (hopefully) 
+## ATM I will assume ONLY the first one will be dsiplayed, all will be written to the data log file ! (hopefully) 
 CAVITY_TEMPERATURE_PV_COUNT: 1 # INTEGER to give number of water temperatures we are monitoring, 
 CAVITY_TEMPERATURE_PV: [CLA-GUN-RF-LRRG-01:RT]
 CAVITY_TEMPERATURE_CHECK_TIME:  1000 #;ms between getting new value
@@ -454,7 +464,9 @@ VAC_VALVE: S01-VALV-01
 #VAC_VALVE:      # a list of strings ??? TODO
 #  - S01-VALV-01  
 VAC_VALVE_CHECK_TIME: 1000 # ms between getting new value!!!!
-KEEP_VALVE_OPEN: false # should the valve be kept open or not?  
+KEEP_VALVE_OPEN: true # should the valve be kept open or not?
+
+VAC_SPIKE_INCREASE_BD_COUNT: true  # Include vac spikes that aren't associated with OMEs in the Breakdown Count.
 
 ##gui
 GUI_UPDATE_TIME: 1000 # INTEGER milliseconds
@@ -480,6 +492,7 @@ RF_PROT_CHECK_TIME: 1000 # INTEGER ms
 ## data dictionary, 
 ## 
 GMON_SUFFIX:  _GMON
+PID_llc_vacuum_GMON :  CLA-LLC-VAC-IMG-01:PRES
 PID_on_off_GMON :  CLA-GUN-H2O-PID-02:ON:RB
 PID_set_point_GMON :  CLA-GUN-H2O-PID-02:SETVAL:RB
 PID_output_GMON :  CLA-GUN-H2O-PID-02:OUTPUT:RB
@@ -513,5 +526,5 @@ KLY_PWR_FOR_ACTIVE_PULSE: 500.0 # FLOAT, min kyl fwd power to enable incrementin
 
 
 # Cavity rev / fwd pwr ratio maximum threshold: if ratio over this value then can_ramp == False
-CAV_PWR_RATIO  : 2.0  # Ratio as percentage
+CAV_PWR_RATIO  : 3.5  # Ratio as percentage
 
