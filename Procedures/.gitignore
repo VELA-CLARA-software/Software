@@ -1,7 +1,0 @@
-*/build
-*/dist
-*.spec
-*.pyc
-*.pyd
-.idea
-CameraImages/

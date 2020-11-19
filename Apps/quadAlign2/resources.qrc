@@ -1,8 +1,0 @@
-<RCC>
-  <qresource>
-    <file alias='quadAlign.jpg'>quadAlign.jpg</file>
-  </qresource>
-  <qresource>
-    <file alias='quadAlign.png'>quadAlign.png</file>
-  </qresource>
-</RCC>
