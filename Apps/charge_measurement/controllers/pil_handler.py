@@ -1,9 +1,6 @@
 from controllers.pil_handler_base import pil_handler_base
 import data.charge_measurement_data_base as dat
-import numpy
-import datetime
 import time
-import requests
 
 class pil_handler(pil_handler_base):
     #whoami
@@ -15,6 +12,12 @@ class pil_handler(pil_handler_base):
         self.laser_energy_range_pv = "CLA-LAS-DIA-EM-06:Range_SP"
         self.hwp_pv_name = "EBT-LAS-OPT-HWP-2:ROT:MABS"
         self.hwp_get_pv_name = "EBT-LAS-OPT-HWP-2:ROT:RPOS"
+        self.vc_key_to_pv = {}
+        self.vc_key_to_pv.update({pil_handler_base.config.vc_config['VC_AVGINTENSITY']: dat.vc_intensity_values})
+        self.vc_key_to_pv.update({pil_handler_base.config.vc_config['VC_XPIX']: dat.vc_x_pix_values})
+        self.vc_key_to_pv.update({pil_handler_base.config.vc_config['VC_YPIX']: dat.vc_y_pix_values})
+        self.vc_key_to_pv.update({pil_handler_base.config.vc_config['VC_SIGXPIX']: dat.vc_sig_x_pix_values})
+        self.vc_key_to_pv.update({pil_handler_base.config.vc_config['VC_SIGYPIX']: dat.vc_sig_y_pix_values})
 
     def set_laser_energy_range(self, value):
         pil_handler_base.las_em_control.setStop()
@@ -33,8 +36,12 @@ class pil_handler(pil_handler_base):
 
     def set_pil_buffer(self,value):
         pass
-        # pil_handler_base.pil_control.setBufferSize(value)
-        # pil_handler_base.logger.message('setting PIL buffer = ' + str(value), True)
+        pil_handler_base.las_em_control.setBufferSize(value)
+        pil_handler_base.logger.message('setting PIL buffer = ' + str(value), True)
+
+    def set_vc_buffer(self, val):
+        for key, value in pil_handler_base.vc_objects.items():
+            pil_handler_base.vc_objects[key].setBufferSize(val)
 
     def set_hwp(self, value):
         pil_handler_base.hwp_control.setHWP(value)
