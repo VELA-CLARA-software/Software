@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1139</width>
-    <height>961</height>
+    <height>978</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -508,7 +508,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="Gun_Tab">
        <attribute name="icon">
@@ -1099,71 +1099,6 @@
             </widget>
            </item>
            <item>
-            <widget class="QGroupBox" name="groupBox_2">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="title">
-              <string>Set Momentum</string>
-             </property>
-             <layout class="QGridLayout" name="gridLayout_3">
-              <item row="1" column="1">
-               <widget class="QDoubleSpinBox" name="Gun_Dipole_Set">
-                <property name="enabled">
-                 <bool>true</bool>
-                </property>
-                <property name="toolTip">
-                 <string>C2V dipole current equivalent for the beam momentum</string>
-                </property>
-                <property name="suffix">
-                 <string> A</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="1">
-               <widget class="QLabel" name="label_22">
-                <property name="text">
-                 <string>Dipole Current</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="0">
-               <widget class="QLabel" name="label_21">
-                <property name="text">
-                 <string>Momentum</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="0">
-               <widget class="QDoubleSpinBox" name="Gun_Momentum_Set">
-                <property name="toolTip">
-                 <string>Momentum equivalent for the C2V dipole current</string>
-                </property>
-                <property name="suffix">
-                 <string> MeV/c</string>
-                </property>
-                <property name="singleStep">
-                 <double>0.100000000000000</double>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="0" colspan="2">
-               <widget class="QPushButton" name="Gun_EnergySet_Button">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="text">
-                 <string>Set Dipole Current</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </widget>
-           </item>
-           <item>
             <widget class="QGroupBox" name="Gun_Set_Phase">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -1226,6 +1161,71 @@
                 </property>
                 <property name="singleStep">
                  <double>0.500000000000000</double>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QGroupBox" name="groupBox_2">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="title">
+              <string>Set Momentum</string>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_3">
+              <item row="1" column="1">
+               <widget class="QDoubleSpinBox" name="Gun_Dipole_Set">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
+                <property name="toolTip">
+                 <string>C2V dipole current equivalent for the beam momentum</string>
+                </property>
+                <property name="suffix">
+                 <string> A</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QLabel" name="label_22">
+                <property name="text">
+                 <string>Dipole Current</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="0">
+               <widget class="QLabel" name="label_21">
+                <property name="text">
+                 <string>Momentum</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QDoubleSpinBox" name="Gun_Momentum_Set">
+                <property name="toolTip">
+                 <string>Momentum equivalent for the C2V dipole current</string>
+                </property>
+                <property name="suffix">
+                 <string> MeV/c</string>
+                </property>
+                <property name="singleStep">
+                 <double>0.100000000000000</double>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0" colspan="2">
+               <widget class="QPushButton" name="Gun_EnergySet_Button">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
+                <property name="text">
+                 <string>Set Momentum</string>
                 </property>
                </widget>
               </item>
@@ -1455,6 +1455,26 @@
                   </widget>
                  </item>
                 </layout>
+               </widget>
+              </item>
+              <item row="5" column="0">
+               <widget class="QLabel" name="label_35">
+                <property name="toolTip">
+                 <string>PID Loop must have been previously set-up!</string>
+                </property>
+                <property name="text">
+                 <string>Use PID Loop?</string>
+                </property>
+               </widget>
+              </item>
+              <item row="5" column="1">
+               <widget class="QCheckBox" name="L01_PID_Checkbox">
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
+                </property>
                </widget>
               </item>
              </layout>
@@ -1850,79 +1870,6 @@
                 </property>
                </widget>
               </item>
-              <item row="0" column="3">
-               <widget class="QCheckBox" name="L01_PID_Checkbox">
-                <property name="text">
-                 <string/>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="0" colspan="2">
-               <widget class="QLabel" name="label_35">
-                <property name="toolTip">
-                 <string>PID Loop must have been previously set-up!</string>
-                </property>
-                <property name="text">
-                 <string>Use PID Loop?</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </widget>
-           </item>
-           <item>
-            <widget class="QGroupBox" name="groupBox_3">
-             <property name="title">
-              <string>Set Momentum</string>
-             </property>
-             <layout class="QGridLayout" name="gridLayout_4">
-              <item row="0" column="0">
-               <widget class="QLabel" name="label_23">
-                <property name="text">
-                 <string>Momentum</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="1">
-               <widget class="QDoubleSpinBox" name="Linac1_Dipole_Set">
-                <property name="enabled">
-                 <bool>true</bool>
-                </property>
-                <property name="toolTip">
-                 <string>C2V dipole current equivalent for the beam momentum</string>
-                </property>
-                <property name="suffix">
-                 <string> A</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="0">
-               <widget class="QDoubleSpinBox" name="Linac1_Momentum_Set">
-                <property name="toolTip">
-                 <string>Momentum equivalent for the C2V dipole current</string>
-                </property>
-                <property name="suffix">
-                 <string> MeV/c</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="1">
-               <widget class="QLabel" name="label_24">
-                <property name="text">
-                 <string>Dipole Current</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="0" colspan="2">
-               <widget class="QPushButton" name="Linac1_EnergySet_Button">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="text">
-                 <string>Set Dipole Current</string>
-                </property>
-               </widget>
-              </item>
              </layout>
             </widget>
            </item>
@@ -1989,6 +1936,62 @@
                 </property>
                 <property name="singleStep">
                  <double>0.500000000000000</double>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QGroupBox" name="groupBox_3">
+             <property name="title">
+              <string>Set Momentum</string>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_4">
+              <item row="0" column="0">
+               <widget class="QLabel" name="label_23">
+                <property name="text">
+                 <string>Momentum</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QDoubleSpinBox" name="Linac1_Dipole_Set">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
+                <property name="toolTip">
+                 <string>C2V dipole current equivalent for the beam momentum</string>
+                </property>
+                <property name="suffix">
+                 <string> A</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QDoubleSpinBox" name="Linac1_Momentum_Set">
+                <property name="toolTip">
+                 <string>Momentum equivalent for the C2V dipole current</string>
+                </property>
+                <property name="suffix">
+                 <string> MeV/c</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QLabel" name="label_24">
+                <property name="text">
+                 <string>Dipole Current</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0" colspan="2">
+               <widget class="QPushButton" name="Linac1_EnergySet_Button">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
+                <property name="text">
+                 <string>Set Momentum</string>
                 </property>
                </widget>
               </item>

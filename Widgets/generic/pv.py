@@ -49,7 +49,8 @@ class PVObject(qt.QObject):
             return self._value[1]
     @value.setter
     def value(self, val):
-        self.put(val)
+        if self.writeAccess:
+            self.put(val)
 
     @property
     def time(self):

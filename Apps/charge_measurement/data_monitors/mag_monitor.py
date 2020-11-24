@@ -57,26 +57,26 @@ class mag_monitor(monitor):
         # else:
         #     monitor.data.values[dat.charge_status] = False
 
-    def update_mag_values(self,pv,time_from,time_to,hwp):
-        self.sol_url = "http://claraserv2.dl.ac.uk:17668/retrieval/data/getData.json?pv=" + self.sol_pv_name + "&from=" + time_from + "&to=" + time_to
-        self.bsol_url = "http://claraserv2.dl.ac.uk:17668/retrieval/data/getData.json?pv=" + self.bsol_pv_name + "&from=" + time_from + "&to=" + time_to
-        self.solr = requests.get(self.sol_url)
-        self.soldata = self.solr.json()
-        self.solevent = []
-        self.soltimestamp = []
-        for i in range(len(self.soldata[0]["data"])):
-            self.solevent.append(self.soldata[0]["data"][i]["val"])
-            self.soltimestamp.append(
-                float(str(self.soldata[0]["data"][i]["secs"]) + "." + str(self.soldata[0]["data"][i]["nanos"])))
-        self.bsolr = requests.get(self.bsol_url)
-        self.bsoldata = self.bsolr.json()
-        self.bsolevent = []
-        self.bsoltimestamp = []
-        for i in range(len(self.bsoldata[0]["data"])):
-            self.bsolevent.append(self.bsoldata[0]["data"][i]["val"])
-            self.bsoltimestamp.append(
-                float(str(self.bsoldata[0]["data"][i]["secs"]) + "." + str(self.bsoldata[0]["data"][i]["nanos"])))
-        monitor.data.values[dat.bsol_time_stamp][hwp] = self.bsoltimestamp
-        monitor.data.values[dat.sol_time_stamp][hwp] = self.soltimestamp
-        monitor.data.values[dat.bsol_values][hwp] = self.bsolevent
-        monitor.data.values[dat.sol_values][hwp] = self.solevent
+    def update_mag_values(self, hwp):
+        # self.sol_url = "http://claraserv2.dl.ac.uk:17668/retrieval/data/getData.json?pv=" + self.sol_pv_name + "&from=" + time_from + "&to=" + time_to
+        # self.bsol_url = "http://claraserv2.dl.ac.uk:17668/retrieval/data/getData.json?pv=" + self.bsol_pv_name + "&from=" + time_from + "&to=" + time_to
+        # self.solr = requests.get(self.sol_url)
+        # self.soldata = self.solr.json()
+        # self.solevent = []
+        # self.soltimestamp = []
+        # for i in range(len(self.soldata[0]["data"])):
+        #     self.solevent.append(self.soldata[0]["data"][i]["val"])
+        #     self.soltimestamp.append(
+        #         float(str(self.soldata[0]["data"][i]["secs"]) + "." + str(self.soldata[0]["data"][i]["nanos"])))
+        # self.bsolr = requests.get(self.bsol_url)
+        # self.bsoldata = self.bsolr.json()
+        # self.bsolevent = []
+        # self.bsoltimestamp = []
+        # for i in range(len(self.bsoldata[0]["data"])):
+        #     self.bsolevent.append(self.bsoldata[0]["data"][i]["val"])
+        #     self.bsoltimestamp.append(
+        #         float(str(self.bsoldata[0]["data"][i]["secs"]) + "." + str(self.bsoldata[0]["data"][i]["nanos"])))
+        # monitor.data.values[dat.bsol_time_stamp][hwp] = self.bsoltimestamp
+        # monitor.data.values[dat.sol_time_stamp][hwp] = self.soltimestamp
+        monitor.data.values[dat.bsol_values][hwp] = monitor.magnet_factory.getREADI(monitor.config.mag_config['BSOL_NAME'])
+        monitor.data.values[dat.sol_values][hwp] = monitor.magnet_factory.getREADI(monitor.config.mag_config['SOL_NAME'])

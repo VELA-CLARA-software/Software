@@ -47,8 +47,10 @@ class App(qt.QObject):
         self.splash.showMessage("<h1><font color='#6BBAFD'>Autocrester Initialising...</font></h1>", qt.Qt.AlignTop | qt.Qt.AlignCenter, qt.Qt.black)
         self.machineType, self.lineType, self.gunType = sys_argv[1],sys_argv[2],sys_argv[3]
         app.processEvents()
-        if not self.machineType == 'aNone':
+        if not self.machineType == 'None':
             self.Linac01Timing = linacTiming.Linac01Timing()
+        else:
+            self.Linac01Timing = None
         self.model = model.Model(self.machineType, self.lineType, self.gunType)
         app.processEvents()
         self.controller = controller.Controller(self.view, self.model, self.Linac01Timing)

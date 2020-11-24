@@ -16,7 +16,7 @@ signal.signal(signal.SIGINT, signal.SIG_DFL)
 #                               threading.current_thread().ident))
 
 class scatterPlot(qt.QWidget):
-    scatterSelectionChanged = qt.pyqtSignal('QString', 'QString', int)
+    scatterSelectionChanged = qt.pyqtSignal('QString', 'QString', int, int)
 
     def __init__(self, generalplot, parent=None, plotRateBar=False):
         super(scatterPlot, self).__init__(parent)
@@ -94,6 +94,17 @@ class scatterPlot(qt.QWidget):
         self.offsetSpinBoxWidgetLayout.addWidget(self.offsetSpinBoxLabel)
         self.offsetSpinBoxWidgetLayout.addWidget(self.offsetSpinBox)
         self.offsetSpinBox.valueChanged.connect(self.selectionBarChanged)
+        #
+        self.decimateSpinBox = qt.QComboBox()
+        for i in range(4,20):
+            val = int((2**(i)))
+            if val < 2000:
+                self.decimateSpinBox.addItem(str(val)+'', val)
+            else:
+                self.decimateSpinBox.addItem(str(int(val/1000))+'k', val)
+        self.decimateSpinBox.setCurrentIndex(11)
+        self.decimateSpinBox.currentIndexChanged.connect(self.selectionBarChanged)
+        #
         self.selectionBarLayout = qt.QHBoxLayout()
         self.selectionBarLayout.addSpacerItem(spacer)
         self.selectionBarLayout.addWidget(self.combobox1)
@@ -104,9 +115,11 @@ class scatterPlot(qt.QWidget):
         self.selectionBarLayout.addSpacerItem(spacer)
         self.selectionBarLayout.addLayout(self.offsetSpinBoxWidgetLayout)
         self.selectionBarLayout.addSpacerItem(spacer)
+        self.selectionBarLayout.addWidget(self.decimateSpinBox)
 
     def selectionBarChanged(self, index):
-        self.scatterSelectionChanged.emit(self.combobox1.currentText(), self.combobox2.currentText(), self.offsetSpinBox.value())
+        decimate = 2**(4+self.decimateSpinBox.currentIndex())
+        self.scatterSelectionChanged.emit(self.combobox1.currentText(), self.combobox2.currentText(), self.offsetSpinBox.value(), decimate)
         self.plotWidget.update()
 
     def updateSelectionBar(self):
@@ -207,7 +220,7 @@ class scatterPlotPlot(pg.PlotWidget):
     def printPoints(self,scatterPlot, points):
         point = points[0]
         text =  "{%0.3f, %0.3f}" % (point.pos()[0], point.pos()[1])
-        print(text)
+        # print(text)
         self.statusChanged.emit(text)
 
     def isSelectionInRecords(self, selection):
@@ -232,10 +245,12 @@ class scatterPlotPlot(pg.PlotWidget):
             recordname = 'dataMean10'
         return self.records[selection]['timer'], self.records[selection][recordname]
 
-    def setSelectionIndex(self, x, y, offset):
+    def setSelectionIndex(self, x, y, offset, decimate):
         self.selectionNameX = str(x)
         self.selectionNameY = str(y)
         self.selectionOffset = int(offset)
+        # print(decimate)
+        self.decimateScale = int(decimate)
         if self.isSelectionInRecords(self.selectionNameX) and self.isSelectionInRecords(self.selectionNameY):
             self.signalDelayTime1, self.data1 = self.getDataIfMean(self.selectionNameX)
             self.signalDelayTime2, self.data2 = self.getDataIfMean(self.selectionNameY)

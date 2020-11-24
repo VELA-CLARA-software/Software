@@ -4,13 +4,13 @@ block_cipher = None
 
 
 a = Analysis(['charge_measurement.py'],
-             pathex=['E:\\VELA-CLARA-software\\Software\\Apps\\charge_measurement'],
-             binaries=[],
+             pathex=['E:\\VELA-CLARA-software\\Software\\Apps\\charge_measurement', '\\\\192.168.83.14\\claranet\\test\\CATAP\\bin\\', '\\\192.168.83.14\\claranet\\test\\Controllers\\bin\\python3_x64'],
+             binaries=[ ( '\\\\192.168.83.14\\claranet\\test\\CATAP\\bin\\', '.' ) ],
              datas=[],
              hiddenimports=[],
              hookspath=[],
              runtime_hooks=[],
-             excludes=['matplotlib', 'PyQt4'],
+             excludes=['PyQt4'],
              win_no_prefer_redirects=False,
              win_private_assemblies=False,
              cipher=block_cipher,

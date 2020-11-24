@@ -170,18 +170,28 @@ class signalTable(qt.QWidget):
     signalRateChanged = qt.pyqtSignal('PyQt_PyObject', 'PyQt_PyObject')
     colourPickerButtonPushed = qt.pyqtSignal('PyQt_PyObject')
 
-    def __init__(self, parent = None, VELAMagnetController=None, CLARAMagnetController=None, VELABPMController=None, CLARABPMController=None, LRRGRFController=None,  L01RFController=None, GeneralController=None, settings=None):
+    def __init__(self, parent = None, CLARAMagnetController=None, CLARABPMController=None, LRRGRFController=None,  L01RFController=None, GeneralController=None, settings=None):
         super(signalTable, self).__init__(parent)
         self.setMaximumHeight(100)
-        self.settings_filename = 'striptool.yaml' if settings is None else settings
-        with open(self.settings_filename, 'r') as stream:
-            self.settings = yaml.load(stream, Loader=yaml.Loader)
+        if settings is None:
+            if os.path.isfile('./striptool.yaml' ):
+                self.settings_filename = './striptool.yaml'
+            else:
+                self.settings_filename = '\\\\claraserv3.dl.ac.uk\\claranet\\apps\\legacy\\config\\striptool_epics\\striptool.yaml'
+        else:
+            self.settings_filename = settings
+        print('Using settings files at:', self.settings_filename)
+        if os.path.isfile(self.settings_filename):
+            with open(self.settings_filename, 'r') as stream:
+                self.settings = yaml.load(stream, Loader=yaml.Loader)
+        else:
+            self.settings = {}
         self.magnetnames = self.settings['magnets']
         self.headings = self.settings['headings']
         self.frequencies = self.settings['frequencies']
-        self.VELAMagnets = VELAMagnetController
+        self.VELAMagnets = CLARAMagnetController
         self.CLARAMagnets = CLARAMagnetController
-        self.VELAbpms = VELABPMController
+        self.VELAbpms = CLARABPMController
         self.CLARAbpms = CLARABPMController
         self.L01RF = L01RFController
         self.LRRGRF = LRRGRFController
@@ -211,7 +221,7 @@ class signalTable(qt.QWidget):
 
     def reloadSettings(self):
         self.stream = open(self.settings_filename, 'r')
-        self.settings = yaml.load(self.stream)
+        self.settings = yaml.safe_load(self.stream)
         self.stream.close()
         self.magnetnames = self.settings['magnets']
         self.headings = self.settings['headings']

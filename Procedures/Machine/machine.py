@@ -33,6 +33,7 @@ class Machine(object):
             self.gunPhiSp = 0
             self.linac1AmpSp = 35000
             self.gunAmpSp = 71000
+        self.settings = {'Gun':{'PID': False}, 'Linac1': {'PID': True}}
         print('SELF.MACHINETYPE = ', self.machineType)
 
     # LINAC PID PVs
@@ -44,7 +45,8 @@ class Machine(object):
     def addPV(self, pv):
         if not pv in self.pvids:
             self.pvids[pv] = PVObject(pv)
-            setattr(self.pvids[pv], 'writeAccess', True)
+            if self.machineType == 'Physical':
+                setattr(self.pvids[pv], 'writeAccess', True)
         return self.pvids[pv]
 
     def getPVValue(self, pv):
@@ -53,7 +55,8 @@ class Machine(object):
 
     def setPVValue(self, pv, value):
         pvid = self.addPV(pv)
-        pvid.value = value
+        if self.machineType == 'Physical':
+            pvid.value = value
 
     def initialise_parameters(self):
         if self.lineType=='VELA':
@@ -97,10 +100,11 @@ class Machine(object):
             self.cameras = None
             self.screens = None
             self.generalPV = None
-            sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release')
+            sys.path.append('\\\\claraserv3\\claranet\\test\\Controllers\\bin\\Release')
         else:
             '''This is the place to get contollers'''
-            sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release')
+            sys.path.append('\\\\claraserv3\\claranet\\test\\Controllers\\bin\\Release')
+            sys.path.append(r"\\apclara1.dl.ac.uk\ControlRoomApps\Controllers\bin\Release")
             # sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\stage\\Python3_x64\\')
             # sys.path.append('C:\\Python38\\Python3_x64\\')
             # os.environ["PATH"] = os.environ["PATH"]+";\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release\\root_v5.34.34\\bin\\"
@@ -188,7 +192,7 @@ class Machine(object):
                     if 'magnets' in self.controllers:
                         self.magnets = self.magInit.physical_C2B_Magnet_Controller()
                     if 'charge' in self.controllers:
-                        self.scope = self.scopeInit.physical_CLARA_PH1_Charge_Controller()
+                        self.scope = self.scopeInit.physical_C2B_Charge_Controller()
                     if 'bpms' in self.controllers:
                         self.bpms = self.bpmInit.physical_C2B_BPM_Controller()
                     if 'gunllrf' in self.controllers:
@@ -222,6 +226,51 @@ class Machine(object):
         # self.SAMPL.stopElement = 'CLA-C2V-DIA-SCR-01-W'
         # self.SAMPL.initDistribFile = '4k-250pC.ini'
 
+    def set_PID(self, cavity, pid=False):
+        self.settings[cavity]['PID'] = pid
+
+    def initialise_Gun_PID(self, initialPhase=0):
+        pass
+
+    def disable_Gun_PID(self):
+        pass
+
+    def get_linac_string(self, cavity=1):
+        return 'L'+str(int(cavity)).zfill(2)
+
+    def initialise_Linac_PID(self, cavity=1, initialPhase=0):
+        if self.machineType == 'Physical':
+            lstr = self.get_linac_string(cavity)
+            # print('CLA-'+lstr+'-LRF-CTRL-01:vm:phase:pid.SCAN')
+            self.setPVValue('CLA-'+lstr+'-LRF-CTRL-01:vm:phase:pid.SCAN', 0)
+            time.sleep(0.1)
+            self.setPVValue('CLA-'+lstr+'-LRF-CTRL-01:vm:phase:pid.KI', 0)
+            time.sleep(0.1)
+            self.setPVValue('CLA-'+lstr+'-LRF-CTRL-01:vm:phase', initialPhase)
+            time.sleep(0.1)
+            self.setPVValue('CLA-'+lstr+'-LRF-CTRL-01:vm:phase:pid.SCAN', 9)
+            time.sleep(0.1)
+            self.setPVValue('CLA-'+lstr+'-LRF-CTRL-01:vm:phase:pid.KI', 20)
+            time.sleep(1)
+            self.PID_settle(10,0.1)
+        return
+
+    def PID_settle(self, iterations=10, sleep=0.1):
+        i = 0
+        while abs(self.getPVValue('CLA-L01-LRF-CTRL-01:vm:phase:pid.ERR')) > 1 and i < iterations:
+            i += 1
+            print(abs(self.getPVValue('CLA-L01-LRF-CTRL-01:vm:phase:pid.ERR')))
+            time.sleep(sleep)
+        print('Done!', abs(self.getPVValue('CLA-L01-LRF-CTRL-01:vm:phase:pid.ERR')))
+        return
+
+    def disable_Linac_PID(self, cavity=1):
+        if self.machineType == 'Physical':
+            lstr = self.get_linac_string(cavity)
+            self.setPVValue('CLA-'+lstr+'-LRF-CTRL-01:vm:phase:pid.SCAN', 0)
+            self.setPVValue('CLA-'+lstr+'-LRF-CTRL-01:vm:phase:pid.KI', 0)
+        return
+
     def setAmplitude(self, cavity, value):
         if cavity == 'Gun':
             self.setGunAmplitude(value)
@@ -240,8 +289,6 @@ class Machine(object):
             self.setGunPhase(value)
         elif cavity == 'Linac1':
             self.setLinac1Phase(value)
-        elif cavity == 'Linac1PID':
-            self.setLinac1PhasePID(value)
         return True
 
     def getPhase(self, cavity):
@@ -249,8 +296,6 @@ class Machine(object):
             return self.getGunPhase()
         elif cavity == 'Linac1':
             return self.getLinac1Phase()
-        elif cavity == 'Linac1PID':
-            return self.getLinac1PhasePID()
 
     def getKlystronForwardPower(self, cavity):
         if cavity == 'Gun':
@@ -291,32 +336,25 @@ class Machine(object):
         return self.linac1llrf.getKlyFwdPower()
 
     def setLinac1Phase(self, phase):
-        print('setting L01 phase = ', np.mod(180+phase,360)-180)
+        # print('setting L01 phase = ', np.mod(180+phase,360)-180)
         if self.machineType == 'None':
             self.linac1PhiSp = phase
         else:
-            self.linac1llrf.setPhiSP(np.mod(180+phase,360)-180)
+            if self.settings['Linac1']['PID']:
+                self.setPVValue('CLA-L01-LRF-CTRL-01:vm:phase',np.mod(180+phase,360)-180)
+                self.PID_settle(10,0.1)
+            else:
+                self.linac1llrf.setPhiSP(np.mod(180+phase,360)-180)
         return True
 
     def getLinac1Phase(self):
         if self.machineType == 'None':
             return self.linac1PhiSp if hasattr(self, 'linac1PhiSp') else 0
         else:
-            return self.linac1llrf.getPhiSP()
-
-    def setLinac1PhasePID(self, phase):
-        print('setting L01 PID phase = ', np.mod(180+phase,360)-180)
-        if self.machineType == 'None':
-            self.linac1PhiSpPID = phase
-        else:
-            self.setPVValue('CLA-L01-LRF-CTRL-01:PHAA:PID.VAL',np.mod(180+phase,360)-180)
-        return True
-
-    def getLinac1PhasePID(self):
-        if self.machineType == 'None':
-            return self.linac1PhiSp if hasattr(self, 'linac1PhiSp') else 0
-        else:
-            return self.getPVValue('CLA-L01-LRF-CTRL-01:PHAA:PID.VAL')
+            if self.settings['Linac1']['PID']:
+                return self.getPVValue('CLA-L01-LRF-CTRL-01:vm:phase')
+            else:
+                return self.linac1llrf.getPhiSP()
 
     def setLinac1Amplitude(self, amp):
         if self.machineType == 'None':
@@ -339,21 +377,35 @@ class Machine(object):
             self.bpmDataObjects[bpm] = self.bpms.getBPMDataObject(bpm)
         return self.bpmDataObjects[bpm]
 
-    # def getBPMBuffer(self, bpm, buffer=10, plane='X'):
-    #     if self.machineType == 'None':
-    #         value = [20*np.random.random_sample() - 10 for i in range(buffer)]
-    #         return value
-    #     else:
-    #         obj = self.getBPMDataObject(bpm)
-    #         obj.setBufferSize(buffer)
-    #         if plane == 'Y':
-    #             while not obj.isYBufferFull():
-    #                 time.sleep(0.001)
-    #             return zip(obj.yBuffer, obj.statusBuffer)
-    #         else:
-    #             return obj.x
-    #         else:
-    #             return float('nan')
+    def getBPMBuffer(self, bpm, buffer=10, plane='X'):
+        if self.machineType == 'None':
+            value = [20*np.random.random_sample() - 10 for i in range(buffer)]
+            return value
+        else:
+            self.timenow = time.time()
+            # obj = self.getBPMDataObject(bpm)
+            self.bpms.setBufferSize(buffer)
+            while self.bpms.isDataBufferNotFull(bpm):
+                time.sleep(0.1)
+                self.timesleep = time.time()
+                extra_time = 0
+                if self.timesleep > (self.timenow + (buffer / 10.0) + extra_time):
+                    print('Buffer never filled!')
+                    break
+            if plane == 'Y':
+                values =  self.bpms.getBPMYBuffer(bpm)
+            else:
+                values = self.bpms.getBPMXBuffer(bpm)
+            return values
+
+    def getMeanBPMPosition(self, bpm, buffer=10, plane='X', ignoreNonLinear=True):
+        values_aray = self.getBPMBuffer(bpm, buffer, plane)
+        if len(values_aray) > 1:
+            return np.mean(values_aray)
+        elif len(values_aray) > 0:
+            return values_aray[0]
+        else:
+            return float('nan')
 
     def getBPMPosition(self, bpm, plane='X', ignoreNonLinear=True):
         if self.machineType == 'None':
@@ -371,7 +423,7 @@ class Machine(object):
                 else:
                     return obj.x
             else:
-                # print 'bad! = ', obj.x, obj.y
+                # print 'bad! = ', obj.x, obj.y, obj.status
                 return float('nan')
 
     def getBPMPositionStatus(self, bpm, plane='X'):
