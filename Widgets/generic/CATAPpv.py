@@ -1,5 +1,7 @@
 import time, copy, sys, math
-from epics import caget, caput, cainfo, PV
+# from epics import caget, caput, cainfo, PV
+import  VELA_CLARA_General_Monitor as vgen
+generalMonitor = vgen.init()
 import numpy as np
 sys.path.append("../../../")
 import Software.Procedures.qt as qt
@@ -20,11 +22,13 @@ class PVObject(qt.QObject):
     def __init__(self, pv, readback=None, parent=None):
         super(PVObject, self).__init__()
         self.name = pv
-        # print ('name = ', self.name)
-        self.pv = PV(self.name, callback=self.callback)
+        # self.pv = PV(self.name, callback=self.callback)
+        pvid = self.general.connectPV(str(self.name))
+        if pvid is 'FAILED':
+            print(('Is this a valid PV? - ', self.name))
         # print ('pv = ', self.pv)
         self.dict = OrderedDict()
-        self._value = [time.time(), self.pv.get()]
+        self._value = [time.time(), self.pv.getValue()]
         self.writeAccess = False
         self.readBackName = readback
         if not self.readBackName is None:
@@ -49,8 +53,7 @@ class PVObject(qt.QObject):
             return self._value[1]
     @value.setter
     def value(self, val):
-        if self.writeAccess:
-            self.put(val)
+        self.put(val)
 
     @property
     def time(self):

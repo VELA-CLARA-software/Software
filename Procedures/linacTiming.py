@@ -13,6 +13,7 @@ class Linac01Timing(object):
 
     def __init__(self):
         super(Linac01Timing, self).__init__()
+        print('LinacTiming is LIVE!')
         self.pvs = [PVObject(x) for x in self.pvNames]
         [setattr(x, 'writeAccess', True) for x in self.pvs]
 

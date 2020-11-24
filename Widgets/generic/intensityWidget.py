@@ -45,15 +45,15 @@ class intensityWidget(QWidget):
 
 def spin(*args, **kwargs):
     spinValue = random.random()
-    pw.setValue(0, spinValue)
+    pw.setValue(spinValue)
     pw.update()
 
 if __name__ == '__main__':
     import sys
     global pw
     app = QApplication(sys.argv)
-    pw = intensityGraph()
-    pw.setValue(0, 0.76)
+    pw = intensityWidget()
+    pw.setValue(0.76)
     pw.show()
     timer = QTimer()
     timer.timeout.connect(spin)

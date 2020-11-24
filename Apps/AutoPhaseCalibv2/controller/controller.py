@@ -12,10 +12,25 @@ import Software.Widgets.loggerWidget.loggerWidget as lw
 import logging
 logger = logging.getLogger(__name__)
 
+import functools
+def debugLog(func):
+    @functools.wraps(func)
+    def logfunction(*args, **kwargs):
+        debugStr = str(func.__name__)+' called'
+        if len(args) > 1:
+            debugStr += ' args='+str(args[1:])
+        if len(kwargs) > 0:
+            debugStr += ' kwargs='+str(kwargs)
+        getattr(logger, 'debug')(debugStr)
+        value = func(*args, **kwargs)
+        return value
+    return logfunction
+
 class GenericThread(qt.QThread):
 
     result = qt.pyqtSignal(object)
 
+    @debugLog
     def __init__(self, function, *args, **kwargs):
         qt.QThread.__init__(self)
         self.function = function
@@ -58,7 +73,7 @@ class Controller(qt.QObject):
 
     newDataSignal = qt.pyqtSignal()
     # loggerSignal = qt.pyqtSignal(str)
-    loggerSignal = qt.pyqtSignal(['QString'], ['QString','QString'])
+    loggerSignal = qt.pyqtSignal(['QString','QString'], ['QString'])
     progressSignal = qt.pyqtSignal(int)
 
     defaults = {'Gun_Amp_Step_Set': 100,
@@ -87,12 +102,22 @@ class Controller(qt.QObject):
     'Linac1_OffCrest_Phase_Set': 0,
     }
 
+    def debugArgs(self, func, *args, **kwargs):
+        debugStr = str(func)+' called'
+        if len(args) > 0:
+            debugStr += ' args='+str(args)
+        if len(kwargs) > 0:
+            debugStr += ' kwargs='+str(kwargs)
+        getattr(logger, 'debug')(debugStr)
+
+    @debugLog
     def save_config(self):
         for w in self.defaults:
             self.settings[w] = getattr(self.view, w).value()
         with open('autocrester.yaml', 'w') as stream:
             yaml.dump(self.settings, stream, default_flow_style=False)
 
+    @debugLog
     def load_config(self):
         try:
             with open('autocrester.yaml', 'r') as stream:
@@ -111,6 +136,7 @@ class Controller(qt.QObject):
         for w in self.defaults:
             getattr(self.view, w).setValue(self.defaults[w])
 
+    @debugLog
     def __init__(self, view, model, L01timing=None):
         super(Controller, self).__init__()
         '''define model and view'''
@@ -121,6 +147,7 @@ class Controller(qt.QObject):
         self.model.logger = self.loggerSignal
         self.model.newData = self.newDataSignal
         self.model.progress = self.progressSignal
+        model.debugLog = debugLog
         self.machineSignaller = machineSignaller(self.model.baseMachine)
         self.machineReciever = machineReciever(self.model.baseMachine)
         self.model.machine = self.machineSignaller
@@ -144,7 +171,7 @@ class Controller(qt.QObject):
         self.view.actionSave_Defaults.triggered.connect(self.save_config)
         self.view.actionApply_Default_Settings.triggered.connect(self.apply_defaults)
 
-        self.log = lw.loggerWidget(autosave=True, logdirectory='\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Software\\Application_Logs\\Autocrester\\', appname='AutoCrester')
+        self.log = lw.loggerWidget(autosave=True, logdirectory='\\\\claraserv3\\claranet\\apps\\legacy\\logs\\autoCrester\\', appname='AutoCrester')
         self.log.setFilterLevel('Info')
         # sys.stdout = lw.redirectLogger(self.log, 'stdout')
         # sys.stderr = lw.redirectLogger(self.log, 'stderr')
@@ -157,7 +184,8 @@ class Controller(qt.QObject):
         self.view.Linac1_Rough_Button, self.view.Linac1_Fine_Button, self.view.Linac1_SetPhase_Button, self.view.Linac1_Dipole_Button,
         self.view.Linac1_LoadBURT_Button, self.view.Linac1_Fine_Screen_Button, self.view.Gun_Fine_Screen_Button,
         self.view.Linac1_TurnOn_Button, self.view.Gun_TurnOn_Button, self.view.Gun_Fine_Update_Start_Button, self.view.Linac1_Fine_Update_Start_Button,
-        self.view.Gun_LinacTiming_Off_Button, self.view.Linac1_LinacTiming_On_Button, self.view.Linac1_LinacTiming_Off_Button, self.view.L01_PID_Checkbox
+        self.view.Gun_LinacTiming_Off_Button, self.view.Linac1_LinacTiming_On_Button, self.view.Linac1_LinacTiming_Off_Button, self.view.L01_PID_Checkbox,
+        self.view.Gun_EnergySet_Button, self.view.Linac1_EnergySet_Button
         ]
 
         # self.view.setupMagnetsButton.clicked.connect(self.model.magnetDegausser)
@@ -172,7 +200,7 @@ class Controller(qt.QObject):
         self.view.Gun_Dipole_Set.valueChanged[float].connect(self.updateGunMomentumSet)
         self.view.Gun_Fine_Update_Start_Button.clicked.connect(self.updateStartingGunPhaseCurrent)
         self.view.Gun_LinacTiming_Off_Button.clicked.connect(self.setLinacTimingOff)
-
+        self.view.Gun_EnergySet_Button.clicked.connect(self.setGunMomentum)
         self.view.Linac1_TurnOn_Button.clicked.connect(self.linac1Ramp)
         self.view.Linac1_LoadBURT_Button.clicked.connect(self.loadLinac1BURT)
         self.view.Linac1_Rough_Button.clicked.connect(self.linac1CresterQuick)
@@ -185,6 +213,7 @@ class Controller(qt.QObject):
         self.view.Linac1_Fine_Update_Start_Button.clicked.connect(self.updateStartingLinac1PhaseCurrent)
         self.view.Linac1_LinacTiming_On_Button.clicked.connect(self.setLinac1TimingOn)
         self.view.Linac1_LinacTiming_Off_Button.clicked.connect(self.setLinac1TimingOff)
+        self.view.Linac1_EnergySet_Button.clicked.connect(self.setLinac1Momentum)
 
         self.view.Linac1_Timing_Monitor.clicked.connect(self.toggleLinac1Timing)
 
@@ -216,7 +245,7 @@ class Controller(qt.QObject):
         self.monitors['linac1_amp'] = updatingTimer(self.view.Linac1_Amp_Monitor, 'widget', 100, self.model.machine.getLinac1Amplitude)
         self.monitors['linac1_amp'].start()
 
-        if not self.model.machineType == 'aNone':
+        if not self.model.machineType == 'None':
             # self.Linac01Timing = linacTiming.Linac01Timing()
             self.monitors['linac1_timing'] = updatingTimer(self.Linac1_Timing_Monitor, 'function', 250, self.Linac01Timing.isLinacOn)
             self.monitors['linac1_timing'].start()
@@ -229,18 +258,23 @@ class Controller(qt.QObject):
         for t in self.monitors:
             t.quit()
 
-    def setGunPhaseOffset(self):
+    @debugLog
+    def setGunPhaseOffset(self, *args):
         self.model.gunPhaser(gunPhaseSet=self.view.Gun_OffCrest_Phase_Set.value(), offset=True)
+        self.cavity = 'Gun'
         time.sleep(0.5)
         pm = '' if self.view.Gun_OffCrest_Phase_Set.value() < 0 else '+'
-        self.loggerSignal.emit('Set '+pm+str(self.view.Gun_OffCrest_Phase_Set.value())+'deg to '+self.cavity+' = '+str(self.model.machine.getPhase(self.cavity)))
+        self.loggerSignal.emit('Set '+pm+str(self.view.Gun_OffCrest_Phase_Set.value())+'deg to '+self.cavity+' = '+str(self.model.machine.getPhase(self.cavity)), 'info')
 
-    def setLinac1PhaseOffset(self):
+    @debugLog
+    def setLinac1PhaseOffset(self, *args):
         self.model.linac1Phaser(linac1PhaseSet=self.view.Linac1_OffCrest_Phase_Set.value(), offset=True)
+        self.cavity = 'Linac1'
         time.sleep(0.5)
         pm = '' if self.view.Linac1_OffCrest_Phase_Set.value() < 0 else '+'
-        self.loggerSignal.emit('Set '+pm+str(self.view.Linac1_OffCrest_Phase_Set.value())+'deg to '+self.cavity+' = '+str(self.model.machine.getPhase(self.cavity)))
+        self.loggerSignal.emit('Set '+pm+str(self.view.Linac1_OffCrest_Phase_Set.value())+'deg to '+self.cavity+' = '+str(self.model.machine.getPhase(self.cavity)), 'info')
 
+    @debugLog
     def loadBURT(self, function, button):
         self.disableButtons()
         self.thread = GenericThread(getattr(self.model,function))
@@ -249,33 +283,43 @@ class Controller(qt.QObject):
         self.thread.result.connect(lambda x: self.loadedBurt(button, x))
         self.thread.start()
 
+    @debugLog
     def loadedBurt(self, button, success):
         if success:
-            self.loggerSignal.emit('Successfully applied DBURT!')
+            self.loggerSignal.emit('Successfully applied DBURT!', 'info')
             getattr(self.view,button).setStyleSheet("background-color: green")
         else:
             self.setLabel('FAILED to apply DBURT!','warning')
             getattr(self.view,button).setStyleSheet("background-color: red")
         qt.QTimer.singleShot(60*1000, lambda: getattr(self.view,button).setStyleSheet("background-color: None"))
 
-    def loadGunBURT(self):
+    @debugLog
+    def loadGunBURT(self, *args, **kwargs):
+        self.setLabel('loadGunBURT called','debug')
         self.loadBURT('loadGunBURT','Gun_LoadBURT_Button')
 
-    def loadLinac1BURT(self):
+    @debugLog
+    def loadLinac1BURT(self, *args, **kwargs):
+        self.setLabel('loadLinac1BURT called','debug')
         self.loadBURT('loadLinac1BURT', 'Linac1_LoadBURT_Button')
 
-    def setLinacTimingOff(self):
+    @debugLog
+    def setLinacTimingOff(self, *args, **kwargs):
+        self.setLabel('setLinacTimingOff called','debug')
         self.setLinac1TimingOff()
 
-    def setLinac1TimingOn(self):
+    @debugLog
+    def setLinac1TimingOn(self, *args, **kwargs):
         if not self.model.machineType == 'None':
             self.Linac01Timing.resetTiming()
 
-    def setLinac1TimingOff(self):
+    @debugLog
+    def setLinac1TimingOff(self, *args, **kwargs):
         if not self.model.machineType == 'None':
             self.Linac01Timing.offsetTiming(100)
 
-    def toggleLinac1Timing(self):
+    @debugLog
+    def toggleLinac1Timing(self, *args, **kwargs):
         if self.Linac01Timing.isLinacOn:
             self.setLinac1TimingOff()
         else:
@@ -293,6 +337,7 @@ class Controller(qt.QObject):
             self.view.Linac1_LinacTiming_Off_Button.setStyleSheet("background-color: green")
             self.view.Linac1_Timing_Monitor.setStyleSheet("background-color: red")
 
+    @debugLog
     def updateGunDipoleSet(self, mom):
         try:
             self.view.Gun_Dipole_Set.valueChanged[float].disconnect(self.updateGunMomentumSet)
@@ -301,6 +346,7 @@ class Controller(qt.QObject):
         self.view.Gun_Dipole_Set.setValue(self.model.calculateDipoleFromMomentum(mom))
         self.view.Gun_Dipole_Set.valueChanged[float].connect(self.updateGunMomentumSet)
 
+    @debugLog
     def updateGunMomentumSet(self, I):
         try:
             self.view.Gun_Momentum_Set.valueChanged[float].disconnect(self.updateGunDipoleSet)
@@ -309,6 +355,7 @@ class Controller(qt.QObject):
         self.view.Gun_Momentum_Set.setValue(self.model.calculateMomentumFromDipole(I))
         self.view.Gun_Momentum_Set.valueChanged[float].connect(self.updateGunDipoleSet)
 
+    @debugLog
     def updateLinac1DipoleSet(self, mom):
         try:
             self.view.Linac1_Dipole_Set.valueChanged[float].disconnect(self.updateLinac1MomentumSet)
@@ -317,6 +364,7 @@ class Controller(qt.QObject):
         self.view.Linac1_Dipole_Set.setValue(self.model.calculateDipoleFromMomentum(mom))
         self.view.Linac1_Dipole_Set.valueChanged[float].connect(self.updateLinac1MomentumSet)
 
+    @debugLog
     def updateLinac1MomentumSet(self, I):
         try:
             self.view.Linac1_Momentum_Set.valueChanged[float].disconnect(self.updateLinac1DipoleSet)
@@ -353,17 +401,20 @@ class Controller(qt.QObject):
         # print self.enableSaveTimer.isActive()
         # print self.enableSaveTimer
 
-    def abortRunning(self):
+    @debugLog
+    def abortRunning(self, *args, **kwargs):
         self.model.abort()
 
-    def finishRunning(self):
+    @debugLog
+    def finishRunning(self, *args, **kwargs):
         self.model.finish()
 
     def updatePlot(self):
         # print('Plot Update Called! - ', self.model.cavity, self.model.actuator)
         self.plots[self.cavity].newData(self.cavity, self.model.actuator, self.model.crestingData[self.model.cavity][self.model.actuator])
 
-    def gunRamp(self):
+    @debugLog
+    def gunRamp(self, *args):
         self.disableButtons()
         self.cavity = 'Gun'
         self.actuator = 'approx'
@@ -371,7 +422,8 @@ class Controller(qt.QObject):
         self.thread.finished.connect(self.enableButtons)
         self.thread.start()
 
-    def linac1Ramp(self):
+    @debugLog
+    def linac1Ramp(self, *args):
         self.disableButtons()
         self.cavity = 'Linac1'
         self.actuator = 'approx'
@@ -379,7 +431,8 @@ class Controller(qt.QObject):
         self.thread.finished.connect(self.enableButtons)
         self.thread.start()
 
-    def gunWCMCrester(self):
+    @debugLog
+    def gunWCMCrester(self, *args):
         self.disableButtons()
         self.cavity = 'Gun'
         self.actuator = 'approx'
@@ -389,26 +442,30 @@ class Controller(qt.QObject):
         self.thread.finished.connect(self.updateStartingGunPhaseCalibration)
         self.thread.start()
 
-    def linac1CresterQuick(self):
+    @debugLog
+    def linac1CresterQuick(self, *args):
         self.disableButtons()
         self.cavity = 'Linac1'
         self.actuator = 'approx'
-        self.thread = GenericThread(self.model.linacCresterQuick, 1, self.view.Linac1_Rough_PointSeperation_Set.value(), self.view.Linac1_Rough_NShots_Set.value(), self.view.Linac1_Rough_Fit_Offset.value())
+        self.thread = GenericThread(self.model.linacCresterQuick, 1, self.view.Linac1_Rough_PointSeperation_Set.value(), self.view.Linac1_Rough_NShots_Set.value(), self.view.Linac1_Rough_Fit_Offset.value(), PID=self.view.L01_PID_Checkbox.isChecked())
         self.newDataSignal.connect(self.updatePlot)
         self.thread.finished.connect(self.enableSaveButtons)
         self.thread.finished.connect(self.updateStartingLinac1PhaseCalibration)
         self.thread.start()
 
-    def gunBPMCrester(self):
+    @debugLog
+    def gunBPMCrester(self, *args):
         self.disableButtons()
         self.cavity = 'Gun'
         self.actuator = 'fine'
         self.thread = GenericThread(self.model.gunCresterFine, self.view.Gun_Fine_Range_Start.value(), self.view.Gun_Fine_Range_Set.value(), self.view.Gun_Fine_PointSeperation_Set.value(), self.view.Gun_Fine_NShots_Set.value())
         self.newDataSignal.connect(self.updatePlot)
         self.thread.finished.connect(self.enableSaveButtons)
+        self.thread.finished.connect(self.updateStartingLinac1PhaseCalibration)
         self.thread.start()
 
-    def linac1BPMCrester(self):
+    @debugLog
+    def linac1BPMCrester(self, *args):
         self.disableButtons()
         self.cavity = 'Linac1'
         self.actuator = 'fine'
@@ -417,28 +474,33 @@ class Controller(qt.QObject):
                                     self.view.Linac1_Fine_NShots_Set.value(), PID=self.view.L01_PID_Checkbox.isChecked())
         self.newDataSignal.connect(self.updatePlot)
         self.thread.finished.connect(self.enableSaveButtons)
+        self.thread.finished.connect(self.updateStartingLinac1PhaseCalibration)
         self.thread.start()
 
-    def gunScreenCrester(self):
+    @debugLog
+    def gunScreenCrester(self, *args):
         self.disableButtons()
         self.cavity = 'Gun'
         self.actuator = 'screen'
         self.thread = GenericThread(self.model.gunCresterFineScreen, self.view.Gun_Fine_Range_Start.value(), self.view.Gun_Fine_Range_Set.value(), self.view.Gun_Fine_PointSeperation_Set.value(), self.view.Gun_Fine_NShots_Set.value())
         self.newDataSignal.connect(self.updatePlot)
         self.thread.finished.connect(self.enableSaveButtons)
+        self.thread.finished.connect(self.updateStartingLinac1PhaseCalibration)
         self.thread.start()
 
-    def linac1ScreenCrester(self):
+    @debugLog
+    def linac1ScreenCrester(self, *args):
         self.disableButtons()
         self.cavity = 'Linac1'
         self.actuator = 'screen'
         self.thread = GenericThread(self.model.linacCresterFineScreen, 1, self.view.Linac1_Fine_Range_Start.value(), self.view.Linac1_Fine_Range_Set.value(), self.view.Linac1_Fine_PointSeperation_Set.value(), self.view.Linac1_Fine_NShots_Set.value())
         self.newDataSignal.connect(self.updatePlot)
         self.thread.finished.connect(self.enableSaveButtons)
-        # self.thread.finished.connect(self.autoSaveData)
+        self.thread.finished.connect(self.updateStartingLinac1PhaseCalibration)
         self.thread.start()
 
-    def setDipoleCurrentForGun(self):
+    @debugLog
+    def setDipoleCurrentForGun(self, *args):
         self.disableButtons()
         self.cavity = 'Gun'
         self.actuator = 'dipole'
@@ -448,7 +510,8 @@ class Controller(qt.QObject):
         self.thread.finished.connect(lambda : self.view.Gun_Dipole_Set.setValue(self.model.finalDipoleI))
         self.thread.start()
 
-    def setDipoleCurrentForLinac1(self):
+    @debugLog
+    def setDipoleCurrentForLinac1(self, *args):
         self.disableButtons()
         self.cavity = 'Linac1'
         self.actuator = 'dipole'
@@ -459,17 +522,43 @@ class Controller(qt.QObject):
         self.thread.finished.connect(lambda : self.view.Linac1_Dipole_Set.setValue(self.model.finalDipoleI))
         self.thread.start()
 
-    def updateStartingGunPhaseCalibration(self):
+    @debugLog
+    def setGunMomentum(self, *args):
+        self.disableButtons()
+        self.cavity = 'Gun'
+        self.actuator = 'momentum'
+        self.thread = GenericThread(self.model.gunMomentumSet, self.view.Gun_Dipole_Set.value())
+        # self.newDataSignal.connect(self.updatePlot)
+        self.thread.finished.connect(self.enableSaveButtons)
+        # self.thread.finished.connect(self.autoSaveData)
+        self.thread.start()
+
+    @debugLog
+    def setLinac1Momentum(self, *args):
+        self.disableButtons()
+        self.cavity = 'Linac1'
+        self.actuator = 'momentum'
+        self.thread = GenericThread(self.model.linacMomentumSet, 1, self.view.Linac1_Dipole_Set.value())
+        # self.newDataSignal.connect(self.updatePlot)
+        self.thread.finished.connect(self.enableSaveButtons)
+        # self.thread.finished.connect(self.autoSaveData)
+        self.thread.start()
+
+    @debugLog
+    def updateStartingGunPhaseCalibration(self, *args, **kwargs):
         self.view.Gun_Fine_Range_Start.setValue(self.model.crestingData['Gun']['calibrationPhase'])
 
-    def updateStartingGunPhaseCurrent(self):
+    @debugLog
+    def updateStartingGunPhaseCurrent(self, *args, **kwargs):
         self.view.Gun_Fine_Range_Start.setValue(self.model.machine.getGunPhase())
 
+    @debugLog
     def updateStartingLinac1PhaseCalibration(self):
         if 'calibrationPhase' in self.model.crestingData['Linac1']:
             self.view.Linac1_Fine_Range_Start.setValue(self.model.crestingData['Linac1']['calibrationPhase'])
 
-    def updateStartingLinac1PhaseCurrent(self):
+    @debugLog
+    def updateStartingLinac1PhaseCurrent(self, *args, **kwargs):
         self.view.Linac1_Fine_Range_Start.setValue(self.model.machine.getLinac1Phase())
 
     def updateProgress(self, progress):
@@ -477,19 +566,26 @@ class Controller(qt.QObject):
 
     def setLabel(self, string, severity='info'):
         getattr(logger, str(severity))(string)
-        self.view.label_MODE.setText('Status: <font color="red">' + string + '</font>')
+        if not str(severity).lower() == 'debug':
+            self.view.label_MODE.setText('Status: <font color="red">' + string + '</font>')
 
+    @debugLog
     def cancelSave(self):
-        if self.actuator == 'dipole':
-            self.model.machine.setDip(self.model.startingDipole)
-        else:
-            self.model.machine.setPhase(self.cavity, self.model.approxcrest)
+        if self.model.machineType is not None:
+            if self.actuator == 'dipole':
+                if hasattr(self.model, 'startingDipole'):
+                    self.model.machine.setDip(self.model.startingDipole)
+            else:
+                if hasattr(self.model, 'approxcrest'):
+                    self.model.machine.setPhase(self.cavity, self.model.approxcrest)
         self.enableButtons()
 
+    @debugLog
     def autoSaveData(self):
         self.model.applyFinalPhase(self.cavity)
         self.saveData(cavity=[self.cavity], type=[self.actuator])
 
+    @debugLog
     def saveData(self, cavity=None, type=None):
         self.enableButtons()
         self.model.saveData(cavity=cavity, type=type, savetoworkfolder=self.view.actionSave_to_Work_Folder.isChecked())
