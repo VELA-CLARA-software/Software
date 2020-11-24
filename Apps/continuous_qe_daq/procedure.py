@@ -10,6 +10,7 @@
 import sys
 sys.path.append('\\\\claraserv3\\claranet\\test\\CATAP\\bin')
 sys.path.append('\\\\claraserv3.dl.ac.uk\\claranet\\test\\CATAP\\bin')
+
 from CATAP.EPICSTools import *
 from datetime import datetime
 import json

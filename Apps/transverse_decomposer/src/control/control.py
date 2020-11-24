@@ -22,7 +22,8 @@
 //
 //*/
 '''
-#from PyQt5.QtCore import QTimer
+from PyQt5.QtCore import QTimer
+from PyQt5 import QtWidgets, uic, QtGui
 from src.procedure.procedure import procedure
 from src.view.view import view as view
 
@@ -51,8 +52,12 @@ class control(object):
         '''
         # connect main buttons to functions
         control.view.get_roi_data_button.clicked.connect(self.handle_get_roi_data_button)
-        control.view.get_roi_data_button.clicked.connect(self.handle_analyse_button)
+        #control.view.get_roi_data_button.clicked.connect(self.handle_analyse_button)
 
+        self.timer = QTimer()
+        self.timer.setSingleShot(False)
+        self.timer.timeout.connect(self.update_gui)
+        self.timer.start(200)
 
     def handle_analyse_button(self):
         print("handle_analyse_button")
@@ -61,6 +66,11 @@ class control(object):
     def handle_get_roi_data_button(self):
         print("handle_get_roi_data_button")
         control.procedure.get_roi_data()
+        print("update_image")
+        control.view.update_image(control.procedure.roi_data, 0.062, 0.062)
 
-        control.view.update_image(control.procedure.roi_data, 0.062,0.062)
+    def update_gui(self):
+        pass
+
+
 

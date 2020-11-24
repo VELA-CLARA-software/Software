@@ -21,11 +21,12 @@
 //*/
 '''
 import sys
-sys.path.append('\\\\claraserv3\\claranet\\test\\CATAP\\bin')
-sys.path.append('\\\\claraserv3.dl.ac.uk\\claranet\\test\\CATAP\\bin') # meh
+# sys.path.append('\\\\claraserv3\\claranet\\test\\CATAP\\bin')
+# sys.path.append('\\\\claraserv3.dl.ac.uk\\claranet\\test\\CATAP\\bin') # meh
+sys.path.append('C:\\Users\\dlerlp\\Documents\\CATAP_Build\\PythonInterface\\Release\\')
 from CATAP.EPICSTools import *
 import json
-
+import numpy
 
 class procedure(object):
     '''
@@ -86,16 +87,38 @@ class procedure(object):
         print("roi_num_pix_x = {}".format(procedure.roi_num_pix_x))
         procedure.roi_num_pix_y = procedure.ET.get(procedure.roi_num_pix_y_pv)
         print("roi_num_pix_x = {}".format(procedure.roi_num_pix_y))
-        procedure.roi_data_raw =  procedure.ET.getArray(procedure.roi_data_pv)
+
+        num_pix = procedure.roi_num_pix_x * procedure.roi_num_pix_y#  + 1 # ha ! ;)
+
+        procedure.roi_data_raw =  procedure.ET.getArray(procedure.roi_data_pv, num_pix)
         print("len( procedure.roi_data_raw = {}".format(len( procedure.roi_data_raw)))
 
-        procedure.roi_data = list(self.chunk(procedure.roi_data_raw, procedure.roi_num_pix_x))
+        for i in range(0,10):
+            print( procedure.roi_data_raw[i] )
+
+        t = numpy.array(procedure.roi_data_raw)
+        for i in range(0,10):
+            print( t[i] )
+
+        t2 = t.reshape(procedure.roi_num_pix_y,procedure.roi_num_pix_x)
+        for i in range(0,10):
+            print(t2[i] )
+        procedure.roi_dat = numpy.flipud(t2)
+
+        for i in range(0,10):
+            print( procedure.roi_dat[i] )
+
+        #procedure.roi_data = list(self.chunk(procedure.roi_data_raw[:-1], procedure.roi_num_pix_x))
+
+        # print("len( procedure.roi_data[0] = {}".format(len( procedure.roi_data[0])))
+        # print("len( procedure.roi_data = {}".format(len( procedure.roi_data)))
+
 
         print( len( procedure.roi_data_raw) )
-        print( len( procedure.roi_data) )
-        print( len( procedure.roi_num_pix_x) )
-        print( len( procedure.roi_num_pix_y) )
-        print( len( procedure.roi_num_pix_y) )
+        print( type( procedure.roi_data) )
+        print( num_pix )
+        print( procedure.roi_num_pix_x )
+        print( procedure.roi_num_pix_y )
 
 
     def set_roi_from_mask(self):
@@ -133,4 +156,4 @@ class procedure(object):
             funciton to analyze the ROI data
         :return:
         '''
-        print("analyse")
+        print("analysehandle_analyse_button")

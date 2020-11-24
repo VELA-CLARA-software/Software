@@ -25,6 +25,7 @@ from PyQt5.QtWidgets import QWidget
 from PyQt5.QtWidgets import QMainWindow
 from src.view.viewSource.Ui_view import Ui_view
 import pyqtgraph as pg
+from numpy import amax
 
 class view(QMainWindow, Ui_view):
     '''
@@ -74,7 +75,8 @@ class view(QMainWindow, Ui_view):
         :param y_pix_scale_factor: pix to mm
         '''
         print("update_image")
-        self.vc_image.scale(self.model_data.values[x_pix_scale_factor],
-                            self.model_data.values[y_pix_scale_factor])
+        self.vc_image.scale(x_pix_scale_factor, y_pix_scale_factor)
         self.vc_image.setOpts(axisOrder='row-major')
-        self.vc_image.setImage(array_data)
+        self.vc_image.setImage(image=array_data, autoDownsample=True)
+        self.vc_image.setLevels([0, amax(array_data)], update=True)
+        print("update_image FIN")
