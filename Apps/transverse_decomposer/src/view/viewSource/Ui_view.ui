@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>view</class>
+ <widget class="QMainWindow" name="view">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>798</width>
+    <height>733</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Laser Transverse Profile Decomposition</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="GraphicsView" name="graphics_area">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>781</width>
+      <height>571</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="get_roi_data_button">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>600</y>
+      <width>256</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Get ROI Data</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="analyse_button">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>640</y>
+      <width>256</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Analyse Image</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>GraphicsView</class>
+   <extends>QGraphicsView</extends>
+   <header>pyqtgraph.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
