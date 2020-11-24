@@ -11,7 +11,7 @@ class pil_handler_base(base):
 		#self.num_buffer_traces = 40
 
 		# self.timevector = base.bpmObj[0].time_vector.value
-		base.config.pil_config = base.config.pil_config
+		#base.config.pil_config = base.config.pil_config
 		base.config.las_em_config = base.config.las_em_config
 		base.config.las_hwp_config = base.config.las_hwp_config
 		# self.start_trace_monitoring( base.config.bpm_config['TRACES_TO_SAVE'])#MAGIC_STRING

@@ -54,7 +54,7 @@ class virtual_cathode_view(QtGui.QMainWindow, Ui_virtual_cathode_view):
         # startup
         self.setupUi(self)
         self.setWindowTitle("VELA - CLARA Virtual Cathode Setup")
-        #
+        #plot
         # the mainView holds a few dictionaries that are iterated over to update widgets
         self.set_widget_dicts()
 
@@ -225,7 +225,7 @@ class virtual_cathode_view(QtGui.QMainWindow, Ui_virtual_cathode_view):
         should_enable = False
         if self.model_data.values.get(self.model_data.shutter1_open):
             if self.model_data.values.get(self.model_data.shutter2_open):
-                if self.model_data.values[self.model_data.avg_pix_beam_level] <  self.model_data.values[self.model_data.avg_pix_val]:
+                if self.model_data.values[self.model_data.avg_pix_beam_level] <  self.model_data.values[self.model_data.img_avg]:
                     should_enable = True
         self.move_left_pushButton.setEnabled(should_enable)
         self.move_right_pushButton.setEnabled(should_enable)

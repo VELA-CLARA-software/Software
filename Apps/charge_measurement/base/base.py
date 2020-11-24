@@ -2,12 +2,9 @@
 from data.config_reader import config_reader
 from data.data_logger import data_logger
 from data.charge_measurement_data import charge_measurement_data
-import sys, os
-sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\stage\\Python3_x64')
-#import VELA_CLARA_enums
-import CATAP.HardwareFactory
-import VELA_CLARA_Camera_Control
-import VELA_CLARA_LLRF_Control
+
+from CATAP.HardwareFactory import *
+from CATAP.EPICSTools import *
 
 class base(object):
     #whoami
@@ -23,15 +20,15 @@ class base(object):
     config.logger = logger
     # init LLRF Hardware Controllers
 
-    hardware_factory = CATAP.HardwareFactory.HardwareFactory(CATAP.HardwareFactory.STATE.PHYSICAL)
+    hardware_factory = HardwareFactory(STATE.PHYSICAL)
+    epics_tools = EPICSTools(STATE.PHYSICAL)
 
     pil_cont = 1  # VELA_CLARA_PILaser_Control
     pil_init = 1  # VELA_CLARA_PILaser_Control.init()
     # pil_init.setVerbose()
 
-    cam_cont = VELA_CLARA_Camera_Control
-    cam_init = VELA_CLARA_Camera_Control.init()
-    cam_init.setVerbose()
+    _vc_objects = None
+    _llrf_objects = None
 
     _pil_factory = None
     _pilFactoryObj = None
@@ -55,22 +52,15 @@ class base(object):
     _lasHWPObj = None
     _las_hwp_handler = None
 
-    _las_em_control = None
-    _lasEMObj = None
     _las_em_handler = None
-
-    _hwp_control = None
-    _hwpObj = None
-    _las_em_control = None
-    _lasEMObj = None
 
     _cam_control = None
     _camObj = None
     _cam_handler = None
     #
-    llrf_cont = VELA_CLARA_LLRF_Control
-    llrf_init = VELA_CLARA_LLRF_Control.init()
-    llrf_init.setVerbose()
+    # llrf_cont = VELA_CLARA_LLRF_Control
+    # llrf_init = VELA_CLARA_LLRF_Control.init()
+    # llrf_init.setVerbose()
 
     _llrf_control = None
     _llrfObj = None
@@ -81,6 +71,10 @@ class base(object):
     _shutterObj = None
     _shutter_handler = None
 
+    _charge_control = None
+    _chargeObj = None
+    _charge_handler = None
+
     mag_cont = 1#VELA_CLARA_Magnet_Control
     mag_init = 1#VELA_CLARA_Magnet_Control.init()
     #mag_init.setVerbose()
@@ -89,8 +83,27 @@ class base(object):
     _magObj = None
     _mag_handler = None
 
+    _magnet_factory = None
+    _magnetFactoryObj = None
+
     def __init__(self):
         pass
+
+    @property
+    def vc_objects(self):
+        return base._vc_objects
+
+    @vc_objects.setter
+    def vc_objects(self, value):
+        base._vc_objects = value
+
+    @property
+    def llrf_objects(self):
+        return base._llrf_objects
+
+    @llrf_objects.setter
+    def llrf_objects(self, value):
+        base._llrf_objects = value
 
     @property
     def pil_factory(self):
@@ -257,6 +270,30 @@ class base(object):
         base._shutter_handler = value
 
     @property
+    def charge_control(self):
+        return base._charge_control
+
+    @charge_control.setter
+    def charge_control(self, value):
+        base._charge_control = value
+
+    @property
+    def chargeObj(self):
+        return base._chargeObj
+
+    @chargeObj.setter
+    def chargeObj(self, value):
+        base._chargeObj = value
+
+    @property
+    def charge_handler(self):
+        return base._charge_handler
+
+    @charge_handler.setter
+    def charge_handler(self, value):
+        base._charge_handler = value
+
+    @property
     def mag_control(self):
         return base._mag_control
 
@@ -279,6 +316,18 @@ class base(object):
     @mag_handler.setter
     def mag_handler(self, value):
         base._mag_handler = value
+
+    @property
+    def magnet_factory(self):
+        return base._magnet_factory
+
+    @magnet_factory.setter
+    def magnet_factory(self, value):
+        base._magnet_factory = value
+
+    @property
+    def magnetFactoryObj(self):
+        return base._magnetFactoryObj
 
     def set_config(self):
         base.data.las_hwp_config = base.config.las_hwp_config

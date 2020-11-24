@@ -7,20 +7,13 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import pyqtSignal
-from PyQt5.QtWidgets import QMainWindow
 import pyqtgraph
-import sys, os, time, math, datetime, copy, re
-import glob
-from PyQt5.QtCore import QObject, pyqtSignal, QThread, QTimer, QRectF, Qt
-from PyQt5.QtGui import * #QApplication, QMainWindow, QWidget, QPushButton, QVBoxLayout, QHBoxLayout, QComboBox, QTabWidget, QLineEdit, QFileDialog, QLabel, QAction, QPixmap, qApp, QStyle, QGroupBox, QSpinBox
-from pyqtgraph import LegendItem, mkPen, mkBrush, LabelItem, TableWidget, GraphicsLayoutWidget, setConfigOption, \
-setConfigOptions, InfiniteLine, ImageItem, GraphicsView, GraphicsLayout, GraphicsWindow, ViewBox, PlotDataItem, colorStr, mkColor
-from pyqtgraph.graphicsItems.LegendItem import ItemSample
-import argparse
-import imageio
+from pyqtgraph import GraphicsView, GraphicsLayout
 import numpy as np
-
+import matplotlib
+matplotlib.use('Qt5Agg')
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
+from matplotlib.figure import Figure
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -54,9 +47,11 @@ class Ui_MainWindow(object):
         self.labelBox.addStretch()
         self.scanButton = QtGui.QPushButton()
         self.scanButton.setObjectName(_fromUtf8("scanButton"))
-        self.scanButton.setMinimumSize(QtCore.QSize(100,100))
-        self.comboBox = QtGui.QComboBox()
-        self.comboBox.setObjectName(_fromUtf8("comboBox"))
+        self.scanButton.setMinimumSize(QtCore.QSize(100, 100))
+        self.saveButton = QtGui.QPushButton()
+        self.saveButton.setObjectName(_fromUtf8("saveButton"))
+        self.saveButton.setMinimumSize(QtCore.QSize(100, 100))
+        self.saveButton.setEnabled(False)
         self.groupBox = QtGui.QGroupBox()
         self.groupBox.setObjectName(_fromUtf8("groupBox"))
         self.groupBox.setMinimumSize(QtCore.QSize(200,200))
@@ -83,21 +78,6 @@ class Ui_MainWindow(object):
         self.numShotsHBox.addWidget(self.numShotsLabel)
         self.numShotsHBox.addWidget(self.numShotsOutputWidget)
         self.numShotsHBox.addSpacing(300)
-        self.measureTypeGroupBox = QtGui.QGroupBox()
-        self.measureTypeGroupBox.setObjectName(_fromUtf8("measureTypeGroupBox"))
-        self.attenuationButton = QtGui.QRadioButton(self.measureTypeGroupBox)
-        self.attenuationButton.setObjectName(_fromUtf8("attenuationButton"))
-        self.delayButton = QtGui.QRadioButton(self.measureTypeGroupBox)
-        self.delayButton.setObjectName(_fromUtf8("delayButton"))
-        self.radioButtonVBoxLayout = QtGui.QVBoxLayout()
-        self.radioButtonVBoxLayout.setObjectName(_fromUtf8("radioButtonVBoxLayout"))
-        self.attenuationButton.setAutoExclusive(True)
-        self.attenuationButton.setCheckable(True)
-        self.delayButton.setAutoExclusive(True)
-        self.delayButton.setCheckable(True)
-        self.radioButtonVBoxLayout.addWidget(self.attenuationButton)
-        self.radioButtonVBoxLayout.addWidget(self.delayButton)
-        self.measureTypeGroupBox.setLayout(self.radioButtonVBoxLayout)
         self.scanRangeHBox = QtGui.QHBoxLayout()
         self.rangeLabelVBox = QtGui.QVBoxLayout()
         self.lowerBoundVBox = QtGui.QVBoxLayout()
@@ -207,39 +187,58 @@ class Ui_MainWindow(object):
         self.bunchChargeHBox.addWidget(self.bunchChargeLabel)
         self.bunchChargeHBox.addWidget(self.bunchChargeDiagTypeLabel)
         self.bunchChargeHBox.addWidget(self.bunchChargeOutputWidget)
-        self.midVBox.addWidget(self.comboBox)
-        self.midVBox.addLayout(self.numShotsHBox)
         # self.midVBox.addWidget(self.measureTypeGroupBox)
-        self.midVBox.addWidget(self.scanButton)
-        self.midVBox.addWidget(self.groupBox)
         self.midVBox.addLayout(self.scanRangeHBox)
+        self.midVBox.addLayout(self.numShotsHBox)
+        self.midVBox.addWidget(self.groupBox)
         self.midVBox.addLayout(self.resultsHBox)
         self.midVBox.addLayout(self.messageHBox)
+        self.midVBox.addWidget(self.scanButton)
+        self.midVBox.addWidget(self.saveButton)
         self.midVBox.addLayout(self.bunchChargeHBox)
-        self.chargePlotWidget = QWidget()
-        self.chargePlotLayout = QVBoxLayout()
-        self.chargePlotWidget.setLayout(self.chargePlotLayout)
-        pyqtgraph.setConfigOption('background', 'w')
-        self.chargePlotView = GraphicsView(self.chargePlotWidget,useOpenGL=True)
-        self.chargePlotWidgetGraphicsLayout = GraphicsLayout()
-        self.chargePlotView.setCentralItem(self.chargePlotWidgetGraphicsLayout)
-        self.plotItem = pyqtgraph.ErrorBarItem(x=np.array([]), y=np.array([]), height=np.array([]), beam=None, pen={'color':'b', 'width':2})
-        self.chargePlot = self.chargePlotWidgetGraphicsLayout.addPlot(title='wcm vs ophir',x=np.array([]), y=np.array([]), height=np.array([]), width=np.array([]), beam=None, pen={'color':'b', 'width':2})
-        self.chargePlot.showGrid(x=True, y=True)
-        self.plotVBox.addWidget(self.chargePlotView)
+        # self.chargePlotWidget = QWidget()
+        self.chargePlotLayout = QtGui.QVBoxLayout()
+        self.plotCanvas = MplCanvas(self)
+        self.plotCanvas.axes.grid()
+        self.plotCanvas.axes.set_title('wcm vs laser energy')
+        self.plotCanvas.axes.set_xlabel('laser energy (uJ)')
+        self.plotCanvas.axes.set_ylabel('bunch charge (pC)')
+        self.chargePlotLayout.addWidget(self.plotCanvas)
+        # self.chargePlotWidget.setLayout(self.chargePlotLayout)
+        # pyqtgraph.setConfigOption('background', 'w')
+        # self.graphicsView = GraphicsView()
+        # self.graphicsLayout = GraphicsLayout()
+        # self.chargePlotView = GraphicsView(self.chargePlot, useOpenGL=True)
+        # self.chargePlotView.addItem(self.chargePlot)
+        # self.chargePlotView.setCentralItem(self.chargePlotWidgetGraphicsLayout)
+        # self.chargePlotPlot = pyqtgraph.PlotItem()
+        # self.graphicsView.setCentralItem(self.graphicsLayout)
+        # self.chargePlotPlot = self.graphicsLayout.addPlot(title="wcm vs ophir")
+        # self.chargePlotPlot.setLabel('bottom', text='laser energy', units='uJ')
+        # self.chargePlotPlot.setLabel('left', text='wcm charge', units='pC')
+        # self.chargeSubPlot = self.chargePlotPlot.plot(symbolPen = 'b', symbol='o', width=0, symbolSize=1, pen=None)
+        # self.chargePlot = pyqtgraph.ErrorBarItem(x=np.array([]), y=np.array([]), height=np.array([]), beam=None, pen={'color':'b', 'width':2})
+        # self.chargePlotPlot.addItem(self.chargePlot)
+        # self.chargePlotLayout.addWidget(self.graphicsView)
+        # # self.chargePlotLayout.addWidget(self.chargePlot)
+        # # self.plotItem = pyqtgraph.ErrorBarItem(x=np.array([]), y=np.array([]), beam=None,
+        # #                                        pen={'color': 'b', 'width': 2})
+        # # self.chargePlot = self.chargePlotWidgetGraphicsLayout.ErrorBarItem(title='wcm vs ophir', x=np.array([]),
+        # #                                                               y=np.array([]), beam=None,
+        # #                                                               pen={'color': 'b', 'width': 2})
+        # self.chargePlotPlot.showGrid(x=True, y=True)
+        # self.plotVBox.addWidget(self.chargePlotWidget)
         self.mainBox.addLayout(self.midVBox)
-        self.mainBox.addLayout(self.plotVBox)
+        self.mainBox.addLayout(self.chargePlotLayout)
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(_translate("MainWindow", "Charge measurement", None))
         self.scanButton.setText(_translate("MainWindow", "Scan laser attenuator", None))
+        self.saveButton.setText(_translate("MainWindow", "Save data", None))
         self.groupBox.setTitle(_translate("MainWindow", "Comments", None))
         self.numShotsLabel.setText(_translate("MainWindow", "# Shots", None))
-        self.measureTypeGroupBox.setTitle(_translate("MainWindow", "Choose calibration type", None))
-        self.attenuationButton.setText(_translate("MainWindow", "Attenuation", None))
-        self.delayButton.setText(_translate("MainWindow", "Delay", None))
         self.scanRangeLabel.setText(_translate("MainWindow", "Scan Range", None))
         self.newVals.setText(_translate("MainWindow", "", None))
         self.lowerBoundLabel.setText(_translate("MainWindow", "Lower Bound", None))
@@ -250,11 +249,12 @@ class Ui_MainWindow(object):
         self.newFont = QtGui.QFont("Comic Sans", 20, QtGui.QFont.Bold)
         self.titleLabel.setFont(self.newFont)
         self.titleLabel.setText(_translate("MainWindow", "VELA/CLARA Beam \nPosition Monitor \nCalibrator", None))
-        self.infoText1 = "Please select the BPMs to calibrate from the list using \nthe drop-down menu and the 'Calibrate BPM' button."
-        self.infoText2 = self.infoText1+"\nThe number of shots for each attenuation/delay setting,\n and the range to scan over (from 1 - 20 \n or 0 - 511), can also be set."
-        self.infoText3 = self.infoText2+" Click 'Calibrate BPMs' when \nready. The tabs generated will show the results."
-        self.infoLabel.setText(_translate("MainWindow", self.infoText3, None))
-        #self.TabWidget.setTabText(self.TabWidget.indexOf(self.tab1), _translate("TabWidget", "Tab 2", None))
 
     def closeEvent(self, event):
         self.closing.emit()
+
+class MplCanvas(FigureCanvasQTAgg):
+    def __init__(self, parent=None, width=5, height=4, dpi=100):
+        fig = Figure(figsize=(width, height), dpi=dpi)
+        self.axes = fig.add_subplot(111)
+        super(MplCanvas, self).__init__(fig)
