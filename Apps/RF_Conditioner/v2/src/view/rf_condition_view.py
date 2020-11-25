@@ -146,16 +146,16 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
 
 
         self.plot_item = self.graphicsView.getPlotItem()
-        
-        # Close down the app if close button pressed on GUI:
-        self.aboutToQuit.connect(self.closeEvent)
 
 
-    def closeEvent(self):
+
+    def closeEvent(self, unknown_arg):
+        # TODO AJG:  this is getting called in backend_pyqt5.py
         '''
             Closes down the app if close button pressed on GUI.
         '''
-        print('Close button pressed on RF_Night_Watch GUI.')
+        #print('unknown_arg in closeEvent = {}'.format(self.unknown_arg))
+        print('Close button pressed on No-ARCv2 GUI.')
         sys.exit(0)
 
 
@@ -431,8 +431,8 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
     def handle_update_individual_trace_button(self):
         if self.values[rf_conditioning_data.update_individual_trace]:
             self.values[rf_conditioning_data.update_individual_trace] = False
-            self.individual_update_individual_trace.setStyleSheet('QPushButton { background-color : ' + self.bad + '; color : black; }')
-            self.individual_update_individual_trace.setText('Individual Trace Updates Stopped')
+            self.update_individual_trace_button.setStyleSheet('QPushButton { background-color : ' + self.bad + '; color : black; }')
+            self.update_individual_trace_button.setText('Individual Trace Updates Stopped')
         else:
             self.values[rf_conditioning_data.update_individual_trace] = True
             self.update_individual_trace_button.setStyleSheet('QPushButton { background-color : ' + self.good + '; color : black; }')

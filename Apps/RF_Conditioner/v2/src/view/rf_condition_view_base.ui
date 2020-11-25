@@ -1119,7 +1119,7 @@
         <property name="geometry">
          <rect>
           <x>240</x>
-          <y>20</y>
+          <y>90</y>
           <width>241</width>
           <height>731</height>
          </rect>
@@ -2135,6 +2135,19 @@
           </widget>
          </item>
         </layout>
+       </widget>
+       <widget class="QPushButton" name="update_individual_trace_button">
+        <property name="geometry">
+         <rect>
+          <x>240</x>
+          <y>30</y>
+          <width>241</width>
+          <height>23</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Start / Stop Individual Trace Updates</string>
+        </property>
        </widget>
       </widget>
       <widget class="QWidget" name="expert_tab">
