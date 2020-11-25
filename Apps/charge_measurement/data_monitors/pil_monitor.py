@@ -1,10 +1,7 @@
 from data_monitors.monitor import monitor
 from PyQt5.QtCore import QTimer
 import data.charge_measurement_data_base as dat
-import numpy, random
-import time
-import requests
-import json
+import numpy
 
 class pil_monitor(monitor):
     # whoami
@@ -46,12 +43,34 @@ class pil_monitor(monitor):
             monitor.config.vc_config['VC_SIGYPIX']].getBuffer()
         monitor.data.values[dat.vc_intensity_values][hwp] = monitor.vc_objects[
             monitor.config.vc_config['VC_AVGINTENSITY']].getBuffer()
+        monitor.data.values[dat.vc_x_pix_mean][hwp] = numpy.mean(monitor.data.values[dat.vc_x_pix_values][hwp])
+        monitor.data.values[dat.vc_y_pix_mean][hwp] = numpy.mean(monitor.data.values[dat.vc_y_pix_values][hwp])
+        monitor.data.values[dat.vc_sig_x_pix_mean][hwp] = numpy.mean(monitor.data.values[dat.vc_sig_x_pix_values][hwp])
+        monitor.data.values[dat.vc_sig_y_pix_mean][hwp] = numpy.mean(monitor.data.values[dat.vc_sig_y_pix_values][hwp])
+        monitor.data.values[dat.vc_intensity_mean][hwp] = numpy.mean(monitor.data.values[dat.vc_intensity_values][hwp])
+        monitor.data.values[dat.vc_x_pix_stderr][hwp] = numpy.std(
+            monitor.data.values[dat.vc_x_pix_values][hwp]) / numpy.sqrt(
+            len(monitor.data.values[dat.vc_x_pix_values][hwp]))
+        monitor.data.values[dat.vc_y_pix_stderr][hwp] = numpy.std(
+            monitor.data.values[dat.vc_y_pix_values][hwp]) / numpy.sqrt(
+            len(monitor.data.values[dat.vc_y_pix_values][hwp]))
+        monitor.data.values[dat.vc_sig_x_pix_stderr][hwp] = numpy.std(
+            monitor.data.values[dat.vc_sig_x_pix_values][hwp]) / numpy.sqrt(
+            len(monitor.data.values[dat.vc_sig_x_pix_values][hwp]))
+        monitor.data.values[dat.vc_sig_y_pix_stderr][hwp] = numpy.std(
+            monitor.data.values[dat.vc_sig_y_pix_values][hwp]) / numpy.sqrt(
+            len(monitor.data.values[dat.vc_sig_y_pix_values][hwp]))
+        monitor.data.values[dat.vc_intensity_stderr][hwp] = numpy.std(
+            monitor.data.values[dat.vc_intensity_values][hwp]) / numpy.sqrt(
+            len(monitor.data.values[dat.vc_intensity_values][hwp]))
+
 
     def get_laser_energy(self, hwp):
         monitor.data.values[dat.ophir_values][hwp] = monitor.las_em_factory.getEnergyBuffer(
             monitor.config.las_em_config['LAS_EM_NAME'])
-        if monitor.data.values[dat.charge_mean][-1] > monitor.config.charge_config['MIN_CHARGE_ACCEPTED']:
-            monitor.data.values[dat.ophir_mean].append(numpy.mean(list(monitor.data.values[dat.ophir_values][hwp])))
-            monitor.data.values[dat.ophir_stderr].append(
-                numpy.std(list(monitor.data.values[dat.ophir_values][hwp])) / numpy.sqrt(
-                    len(list(monitor.data.values[dat.ophir_values][hwp]))))
+        if monitor.data.values[dat.charge_mean][hwp] > monitor.config.charge_config['MIN_CHARGE_ACCEPTED']:
+            monitor.data.values[dat.ophir_mean][hwp] = numpy.mean(list(monitor.data.values[dat.ophir_values][hwp]))
+            monitor.data.values[dat.ophir_stderr][hwp] = numpy.std(
+                list(monitor.data.values[dat.ophir_values][hwp])) / numpy.sqrt(
+                len(list(monitor.data.values[dat.ophir_values][hwp])))
+

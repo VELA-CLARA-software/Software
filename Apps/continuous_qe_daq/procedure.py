@@ -3,12 +3,14 @@
 # get LLRF KFPower trace
 # get cavity FWD power trace
 #
-#
+# TODO / make new folders for each day
+# TODO / reduce amount of saved data
 #
 # get cavity FWD power trace
 import sys
 sys.path.append('\\\\claraserv3\\claranet\\test\\CATAP\\bin')
 sys.path.append('\\\\claraserv3.dl.ac.uk\\claranet\\test\\CATAP\\bin')
+
 from CATAP.EPICSTools import *
 from datetime import datetime
 import json
@@ -25,6 +27,8 @@ single_pv_dict = {
 "gun_rf_phase_lock"  : 'CLA-GUN-LRF-CTRL-01:vm:dsp:ff_ph:lock',
 "Q_pv" : 'CLA-S01-DIA-WCM-01:Q',
 "E_pv" : 'CLA-LAS-DIA-EM-06:E_RB',
+"E_range_pv" : 'CLA-LAS-DIA-EM-06:Range_RB',
+"E_overrange_pv" : 'CLA-LAS-DIA-EM-06:OverRange_RB',
 "bsol_seti_pv" : 'CLA-LRG1-MAG-SOL-01:GETSETI',
 "bsol_pow_pv" : 'CLA-LRG1-MAG-SOL-01:RPOWER',
 "sol2_seti_pv" : 'CLA-GUN-MAG-SOL-02:GETSETI',
@@ -33,7 +37,14 @@ single_pv_dict = {
 "las_sigma_y" : 'CLA-C2V-DIA-CAM-01:ANA:SigmaYPix_RBV',
 "las_x" : 'CLA-C2V-DIA-CAM-01:ANA:XPix_RBV',
 "las_y" : 'CLA-C2V-DIA-CAM-01:ANA:YPix_RBV',
-"las_cam_avg_int" : 'CLA-C2V-DIA-CAM-01:ANA:AvgIntensity_RBV'
+"las_cam_avg_int" : 'CLA-C2V-DIA-CAM-01:ANA:AvgIntensity_RBV',
+"las_mirror4_v_pos" : 'CLA-LAS-OPT-PICO-4C-PM-4:V:POS',
+"las_mirror4_h_pos" : 'CLA-LAS-OPT-PICO-4C-PM-4:H:POS',
+"las_mirror3_h_pos" : 'CLA-LAS-OPT-PICO-4B-PM-3:H:POS',
+"las_mirror3_h_pos" : 'CLA-LAS-OPT-PICO-4B-PM-3:V:POS',
+"las_mirror5_h_pos" : 'CLA-LAS-OPT-PICO-4B-PM-5:V:POS',
+"las_mirror5_h_pos" : 'CLA-LAS-OPT-PICO-4B-PM-5:V:POS',
+"las_hwp" : 'EBT-LAS-OPT-HWP-2:ROT:RPOS'
 }
 
 network_loc = '\\\\claraserv3\\claranet\\apps\\legacy\\logs\\continuous_qe_daq\\'
@@ -102,11 +113,13 @@ def log_data(fn, data):
 
 
 def should_log(data):
-    return True
+    if data["Q_pv"] > 10.0:
+        return True
+    return False
 
 
 ts = time.time()
-log_time = 60
+log_time = 10
 print("Running")
 while 1:
     if time.time() - ts > log_time:

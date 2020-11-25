@@ -1,0 +1,159 @@
+'''
+/*
+//              This file is part of VELA-CLARA-Software.                             //
+//------------------------------------------------------------------------------------//
+//    VELA-CLARA-Software is free software: you can redistribute it and/or modify     //
+//    it under the terms of the GNU General Public License as published by            //
+//    the Free Software Foundation, either version 3 of the License, or               //
+//    (at your option) any later version.                                             //
+//    VELA-CLARA-Software is distributed in the hope that it will be useful,          //
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of                  //
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                   //
+//    GNU General Public License for more details.                                    //
+//                                                                                    //
+//    You should have received a copy of the GNU General Public License               //
+//    along with VELA-CLARA-Software.  If not, see <http://www.gnu.org/licenses/>.    //
+//
+//  Author:      DJS
+//  Last edit:   24-11-2020
+//  FileName:    procedure.oy
+//  Description: Procedure for simple laser transverse profile  decomposition
+//*/
+'''
+import sys
+# sys.path.append('\\\\claraserv3\\claranet\\test\\CATAP\\bin')
+# sys.path.append('\\\\claraserv3.dl.ac.uk\\claranet\\test\\CATAP\\bin') # meh
+sys.path.append('C:\\Users\\dlerlp\\Documents\\CATAP_Build\\PythonInterface\\Release\\')
+from CATAP.EPICSTools import *
+import json
+import numpy
+
+class procedure(object):
+    '''
+        A procedure class. This class is the 'model' in the Model-View_controller paradigm.  it
+        instantiates and interfaces to  CATAP from which you can get data
+    '''
+    #  create a hardware factory for PHYSICAL CLARA
+    #
+    # Adding a STATE argument will specify which EPICS instance to use.
+    ET = EPICSTools(STATE.PHYSICAL)
+
+    roi_data_pv = 'CLA-VCA-DIA-CAM-01:CAM3:ArrayData'
+    roi_num_pix_x_pv = 'CLA-VCA-DIA-CAM-01:ROI1:SizeX_RBV'
+    roi_num_pix_y_pv = 'CLA-VCA-DIA-CAM-01:ROI1:SizeY_RBV'
+    roi_data = None
+    roi_num_pix_x = None
+    roi_num_pix_y = None
+
+    mask_x_pv = 'CLA-VCA-DIA-CAM-01:ANA:MaskXRad_RBV'
+    mask_y_pv = 'CLA-VCA-DIA-CAM-01:ANA:MaskYRad_RBV'
+    mask_centre_x_pv = 'CLA-VCA-DIA-CAM-01:ANA:MaskXCenter_RBV'
+    mask_centre_y_pv = 'CLA-VCA-DIA-CAM-01:ANA:MaskYCenter_RBV'
+    mask_x = None
+    mask_y = None
+    mask_centre_x = None
+    mask_centre_y = None
+
+    size_x_pv = 'CLA-VCA-DIA-CAM-01:ROI1:SizeX'
+    size_y_pv = 'CLA-VCA-DIA-CAM-01:ROI1:SizeY'
+    min_x_pv = 'CLA-VCA-DIA-CAM-01:ROI1:MinX'
+    min_y_pv = 'CLA-VCA-DIA-CAM-01:ROI1:MinY'
+
+
+    def __init__(self):
+        print(__name__ + ', class initialized')
+
+    def chunk(self, a, n):
+        '''
+            custom  list chunking  function, or get one from np when you can be bothered
+        :param a: data to split
+        :param n: chunk size
+        :return: chunked array of a
+        '''
+        k, m = divmod(len(a), n)
+        return (a[i * k + min(i, m):(i + 1) * k + min(i + 1, m)] for i in range(n))
+
+    def get_roi_data(self):
+        '''
+            Get the state for each valve in valve_names. Called externally (e.g. control) to
+            update states
+        '''
+        print("get_roi_data")
+
+        self.set_roi_from_mask()
+
+        print("get_roi_data")
+        procedure.roi_num_pix_x = procedure.ET.get(procedure.roi_num_pix_x_pv)
+        print("roi_num_pix_x = {}".format(procedure.roi_num_pix_x))
+        procedure.roi_num_pix_y = procedure.ET.get(procedure.roi_num_pix_y_pv)
+        print("roi_num_pix_x = {}".format(procedure.roi_num_pix_y))
+
+        num_pix = procedure.roi_num_pix_x * procedure.roi_num_pix_y#  + 1 # ha ! ;)
+
+        procedure.roi_data_raw =  procedure.ET.getArray(procedure.roi_data_pv, num_pix)
+        print("len( procedure.roi_data_raw = {}".format(len( procedure.roi_data_raw)))
+
+        for i in range(0,10):
+            print( procedure.roi_data_raw[i] )
+
+        t = numpy.array(procedure.roi_data_raw)
+        for i in range(0,10):
+            print( t[i] )
+
+        t2 = t.reshape(procedure.roi_num_pix_y,procedure.roi_num_pix_x)
+        for i in range(0,10):
+            print(t2[i] )
+        procedure.roi_dat = numpy.flipud(t2)
+
+        for i in range(0,10):
+            print( procedure.roi_dat[i] )
+
+        #procedure.roi_data = list(self.chunk(procedure.roi_data_raw[:-1], procedure.roi_num_pix_x))
+
+        # print("len( procedure.roi_data[0] = {}".format(len( procedure.roi_data[0])))
+        # print("len( procedure.roi_data = {}".format(len( procedure.roi_data)))
+
+
+        print( len( procedure.roi_data_raw) )
+        print( type( procedure.roi_data) )
+        print( num_pix )
+        print( procedure.roi_num_pix_x )
+        print( procedure.roi_num_pix_y )
+
+
+    def set_roi_from_mask(self):
+        print("set_roi_from_mask")
+        procedure.mask_x = procedure.ET.get(procedure.mask_x_pv)
+        procedure.mask_y = procedure.ET.get(procedure.mask_y_pv)
+        procedure.mask_centre_x = procedure.ET.get(procedure.mask_centre_x_pv)
+        procedure.mask_centre_y = procedure.ET.get(procedure.mask_centre_y_pv)
+
+        print("mask_x = {}, mask_y = {}, mask_centre_x = {}, mask_centre_y = {}".format(
+            procedure.mask_x , procedure.mask_y, procedure.mask_centre_x,
+               procedure.mask_centre_y))
+
+        min_x = procedure.mask_centre_x - procedure.mask_x
+        min_y = procedure.mask_centre_y - procedure.mask_x
+
+        size_x = 2 * procedure.mask_x
+        size_y = 2 * procedure.mask_y
+
+        print("min_x={}, min_y={}, size_x={}, size_y={}".format(min_x,min_y,size_x,size_y))
+
+
+        procedure.ET.put( procedure.size_x_pv, size_x )
+        procedure.ET.put( procedure.size_y_pv, size_y )
+        procedure.ET.put( procedure.min_x_pv, min_x )
+        procedure.ET.put( procedure.min_y_pv, min_y )
+
+
+
+
+
+
+    def analyse(self):
+        '''
+            funciton to analyze the ROI data
+        :return:
+        '''
+        print("analysehandle_analyse_button")

@@ -58,12 +58,30 @@ kly_fwd_pwr_values = 'kly_fwd_pwr_values'
 gun_fwd_pwr_values = 'gun_fwd_pwr_values'
 gun_pha_sp_values = 'gun_pha_sp_values'
 gun_pha_ff_values = 'gun_pha_ff_values'
+kly_fwd_pwr_mean = 'kly_fwd_pwr_mean'
+gun_fwd_pwr_mean = 'gun_fwd_pwr_mean'
+gun_pha_sp_mean = 'gun_pha_sp_mean'
+gun_pha_ff_mean = 'gun_pha_ff_mean'
+kly_fwd_pwr_stderr = 'kly_fwd_pwr_stderr'
+gun_fwd_pwr_stderr = 'gun_fwd_pwr_stderr'
+gun_pha_sp_stderr = 'gun_pha_sp_stderr'
+gun_pha_ff_stderr = 'gun_pha_ff_stderr'
 gun_pha_ff_lock_values = 'gun_pha_ff_lock_values'
 vc_intensity_values = 'vc_intensity_values'
 vc_x_pix_values = 'vc_x_pix_values'
 vc_y_pix_values = 'vc_y_pix_values'
 vc_sig_x_pix_values = 'vc_sig_x_pix_values'
 vc_sig_y_pix_values = 'vc_sig_y_pix_values'
+vc_intensity_mean = 'vc_intensity_mean'
+vc_x_pix_mean = 'vc_x_pix_mean'
+vc_y_pix_mean = 'vc_y_pix_mean'
+vc_sig_x_pix_mean = 'vc_sig_x_pix_mean'
+vc_sig_y_pix_mean = 'vc_sig_y_pix_mean'
+vc_intensity_stderr = 'vc_intensity_stderr'
+vc_x_pix_stderr = 'vc_x_pix_stderr'
+vc_y_pix_stderr = 'vc_y_pix_stderr'
+vc_sig_x_pix_stderr = 'vc_sig_x_pix_stderr'
+vc_sig_y_pix_stderr = 'vc_sig_y_pix_stderr'
 bsol_time_stamp = 'bsol_time_stamp'
 sol_time_stamp = 'sol_time_stamp'
 set_hwp_start = 'set_hwp_start'
@@ -145,12 +163,30 @@ kly_fwd_pwr_values,
 gun_fwd_pwr_values,
 gun_pha_sp_values,
 gun_pha_ff_values,
+kly_fwd_pwr_mean,
+gun_fwd_pwr_mean,
+gun_pha_sp_mean,
+gun_pha_ff_mean,
+kly_fwd_pwr_stderr,
+gun_fwd_pwr_stderr,
+gun_pha_sp_stderr,
+gun_pha_ff_stderr,
 gun_pha_ff_lock_values,
 vc_intensity_values,
 vc_x_pix_values,
 vc_y_pix_values,
 vc_sig_x_pix_values,
 vc_sig_y_pix_values,
+vc_intensity_mean,
+vc_x_pix_mean,
+vc_y_pix_mean,
+vc_sig_x_pix_mean,
+vc_sig_y_pix_mean,
+vc_intensity_stderr,
+vc_x_pix_stderr,
+vc_y_pix_stderr,
+vc_sig_x_pix_stderr,
+vc_sig_y_pix_stderr,
 set_hwp_start,
 set_hwp_end,
 get_current_hwp,
@@ -209,6 +245,14 @@ class charge_measurement_data_base(QObject):
     values[gun_fwd_pwr_values] = {}
     values[gun_pha_sp_values] = {}
     values[gun_pha_ff_values] = {}
+    values[kly_fwd_pwr_mean] = {}
+    values[gun_fwd_pwr_mean] = {}
+    values[gun_pha_sp_mean] = {}
+    values[gun_pha_ff_mean] = {}
+    values[kly_fwd_pwr_stderr] = {}
+    values[gun_fwd_pwr_stderr] = {}
+    values[gun_pha_sp_stderr] = {}
+    values[gun_pha_ff_stderr] = {}
     values[gun_pha_ff_lock_values] = {}
     values[vc_intensity_time_stamp] = {}
     values[vc_x_pix_time_stamp] = {}
@@ -239,10 +283,10 @@ class charge_measurement_data_base(QObject):
     values[ready_to_go] = False
     values[charge_values] = {}
     values[ophir_values] = {}
-    values[charge_mean] = []
-    values[ophir_mean] = []
-    values[charge_stderr] = []
-    values[ophir_stderr] = []
+    values[charge_mean] = {}
+    values[ophir_mean] = {}
+    values[charge_stderr] = {}
+    values[ophir_stderr] = {}
     values[hwp_values] = []
     values[sol_values] = {}
     values[bsol_values] = {}
@@ -251,6 +295,16 @@ class charge_measurement_data_base(QObject):
     values[vc_y_pix_values] = {}
     values[vc_sig_x_pix_values] = {}
     values[vc_sig_y_pix_values] = {}
+    values[vc_intensity_mean] = {}
+    values[vc_x_pix_mean] = {}
+    values[vc_y_pix_mean] = {}
+    values[vc_sig_x_pix_mean] = {}
+    values[vc_sig_y_pix_mean] = {}
+    values[vc_intensity_stderr] = {}
+    values[vc_x_pix_stderr] = {}
+    values[vc_y_pix_stderr] = {}
+    values[vc_sig_x_pix_stderr] = {}
+    values[vc_sig_y_pix_stderr] = {}
     values[set_hwp_start] = dummy_dbl
     values[set_hwp_end] = dummy_dbl + 1
     values[set_current_hwp] = dummy_dbl

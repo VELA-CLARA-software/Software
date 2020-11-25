@@ -5,7 +5,8 @@ sys.path.append(os.path.join(sys.path[0],'data'))
 sys.path.append(os.path.join(sys.path[0],'data_monitors'))
 sys.path.append(os.path.join(sys.path[0],'gui'))
 sys.path.append(os.path.join(sys.path[0],'logs'))
-# sys.path.append('..\\..\\..\\..\\CATAP-build\\PythonInterface\\Release\\CATAP')
+
+
 for item in sys.path:
   if "PythonInterface" not in str(item):
     continue
@@ -13,13 +14,9 @@ for item in sys.path:
     sys.path.remove(item)
 sys.path.append("\\\\192.168.83.14\\claranet\\test\\CATAP\\bin\\")
 sys.path.append('\\\\192.168.83.14\\claranet\\test\\Controllers\\bin\\python3_x64')
-# sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\stage\\Python3_x64')
-# sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\stage\\Python3_x64')
-# if os.environ['COMPUTERNAME'] == "ASTECDELL10":
-# 	sys.path.append(os.getcwd())
-# 	sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\stage\\Python3_x64')
-# else:
-# 	sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\stage\\Python3_x64')
+
+
+
 from PyQt5 import QtGui
 from controllers.main_controller import main_controller
 

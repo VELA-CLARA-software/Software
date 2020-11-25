@@ -8,7 +8,7 @@ import random as r
 from functools import partial
 sys.path.append("../../../")
 from Software.Utils.dict_to_h5 import *
-import Software.Procedures.Machine.machine as machine
+import Software.Procedures.Machine.machine as Machine
 degree = physics.pi/180.0
 
 def merge_two_dicts(x, y):
@@ -66,6 +66,9 @@ class emitter(object):
         if self.signal is not None:
             self.signal.emit(*args, **kwargs)
 
+    def __getitem__(self, attr):
+        return getitem(self.signal,attr)
+
 class machineSetter(object):
     def __init__(self, machine):
         super(machineSetter, self).__init__()
@@ -80,9 +83,14 @@ class Model(object):
     sleepTimeDipole = 0.001
     sleepTimeFine = 0.001
 
-    def __init__(self, machineType, lineType, gunType):
+    def __init__(self, machineType, lineType, gunType, machine=None):
         super(Model, self).__init__()
-        self.baseMachine = machine.Machine(machineType, lineType, gunType)
+        if machine is None:
+            self.baseMachine = Machine.Machine(machineType, lineType, gunType)
+            self.parameters = self.baseMachine.initialise_parameters()
+        else:
+            self.baseMachine = machine
+            self.parameters = self.baseMachine.parameters
         self.machine = machineSetter(self.baseMachine)
         self.machineType = machineType
         self.lineType = lineType
@@ -95,7 +103,6 @@ class Model(object):
             self.sleepTimeDipole = 0.25
             self.sleepTimeFine = 0.1
         self.dataArray = dataArray()
-        self.parameters = self.baseMachine.initilise_parameters()
         self.data = []
         self.getDataFunction = {}
         self.calibrationPhase = {'CTR': None, 'delE': None}
@@ -131,6 +138,9 @@ class Model(object):
         self.getDataFunction['bpmpos'] = partial(self.machine.getBPMPosition, 'C2V-BPM01')
         self.getDataFunction['ctrsignal'] = partial(self.machine.getCTRSignal)
         self.getDataFunction['wcmq'] = partial(self.machine.getWCMCharge, self.parameters['scope'])
+        self.machine.set_PID(self.cavity, True)
+        currentPhase = self.machine.getPhase(self.cavity)
+        self.initialise_Linac_PID(cavity=1, initialPhase=currentPhase)
         self.correctRFAmplitude = correctRFAmplitude
         if self.correctRFAmplitude:
             self.getCorrectDataFunction = partial(self.machine.getBPMPosition, 'C2V-BPM01')
@@ -139,15 +149,37 @@ class Model(object):
             self.maxRF = maxRF
         self.do_CTR_Scan()
 
-    def Correct_Momentum(self, bpmtarget=0, linacstep=50, maxRF=40000):
+    def Correct_Momentum_Gun(self, bpmtarget=0, step=50, maxRF=67800, nSamples=3):
+        self.resetAbortFinish()
+        self.source = 'CTR'
+        self.cavity = 'Gun'
+        self.getCorrectDataFunction = partial(self.machine.getBPMPosition, 'C2V-BPM01')
+        self.getCorrectDataTarget = bpmtarget
+        self.getCorrectDataStep = step
+        self.maxRF = maxRF
+        self.correctBPMUsingRFAmplitude(step=self.getCorrectDataStep, target=self.getCorrectDataTarget, nSamples=nSamples)
+
+    def Correct_Momentum(self, bpmtarget=0, step=50, maxRF=40000, nSamples=3):
         self.resetAbortFinish()
         self.source = 'CTR'
         self.cavity = 'Linac1'
         self.getCorrectDataFunction = partial(self.machine.getBPMPosition, 'C2V-BPM01')
         self.getCorrectDataTarget = bpmtarget
-        self.getCorrectDataStep = linacstep
+        self.getCorrectDataStep = step
         self.maxRF = maxRF
-        self.correctBPMUsingRFAmplitude(step=self.getCorrectDataStep, target=self.getCorrectDataTarget)
+        self.correctBPMUsingRFAmplitude(step=self.getCorrectDataStep, target=self.getCorrectDataTarget, nSamples=nSamples)
+
+    def initialise_Linac_PID(self, *args, **kwargs):
+        self.machine.initialise_Linac_PID(*args, **kwargs)
+
+    def disable_Linac_PID(self, no=1):
+        self.machine.disable_Linac_PID(cavity=no)
+
+    def initialise_Gun_PID(self, *args, **kwargs):
+        self.machine.initialise_Gun_PID(*args, **kwargs)
+
+    def disable_Gun_PID(self):
+        self.machine.disable_Gun_PID()
 
     def saveData(self, source=None, type=None, savetoworkfolder=True):
         # print('###  SAVING DATA  ###')
@@ -333,26 +365,26 @@ class Model(object):
                 self.startingPhase = phase
                 return
 
-    def correctBPMUsingRFAmplitude(self, step=50, target=0, stdTarget=None, maxRF=60000):
+    def correctBPMUsingRFAmplitude(self, step=50, target=0, stdTarget=None, maxRF=60000, nSamples=3):
         maxRF = maxRF if self.maxRF is None else self.maxRF
         amplitude = self.machine.getAmplitude(self.cavity)
         print('STARTING AMPLITUDE = ', amplitude)
-        mean, std = self.getRFCorrectionData(nSamples=3)
+        mean, std = self.getRFCorrectionData(nSamples=nSamples)
         print('MEAN = ', mean, '  STD = ', std)
         std = stdTarget if stdTarget is not None else std if std > 0.01 else 0.1
         direction = 1 if mean > target else -1
-        self.logger[str, str].emit('Starting RF Correction target='+str(target)+'  current_value='+str(mean), 'debug')
+        # self.logger[str, str].emit('Starting RF Correction target='+str(target)+'  current_value='+str(mean), 'debug')
         oscillate = 0
         while (abs(mean-target) > std):
-            self.logger[str, str].emit('Stepping RF='+str(step)+' target='+str(target)+'  current_value='+str(mean), 'debug')
+            # self.logger[str, str].emit('Stepping RF='+str(step)+' target='+str(target)+'  current_value='+str(mean), 'debug')
             amplitude += step * direction
             print('AMPLITUDE = ', amplitude)
             if amplitude > maxRF:
-                self.logger[str, str].emit('RF Amplitude limit reached!', 'error')
+                # self.logger[str, str].emit('RF Amplitude limit reached!', 'error')
                 return False
             self.machine.setAmplitude(self.cavity, amplitude)
             time.sleep(self.sleepTimeFine)
-            mean, std = self.getRFCorrectionData(nSamples=1)
+            mean, std = self.getRFCorrectionData(nSamples=nSamples)
             std = stdTarget if stdTarget is not None else std if std > 0.01 else 0.1
             new_direction = 1 if mean > target else -1
             if not new_direction == direction:

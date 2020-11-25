@@ -2,10 +2,6 @@ from data_monitors.monitor import monitor
 from PyQt5.QtCore import QTimer
 import data.charge_measurement_data_base as dat
 import numpy
-import time
-import requests
-import json
-import epics
 
 class llrf_monitor(monitor):
     # whoami
@@ -61,6 +57,24 @@ class llrf_monitor(monitor):
         monitor.data.values[dat.gun_pha_ff_lock_values][hwp] = monitor.llrf_objects[monitor.config.llrf_config[
             'GUN_PHASE_FF_LOCK_STATE']].getValue()
         monitor.data.values[dat.off_crest_phase_dict][hwp] = monitor.data.values[dat.off_crest_phase]
+        monitor.data.values[dat.kly_fwd_pwr_mean][hwp] = numpy.mean(monitor.data.values[dat.kly_fwd_pwr_values][hwp])
+        monitor.data.values[dat.gun_fwd_pwr_mean][hwp] = numpy.mean(monitor.data.values[dat.gun_fwd_pwr_values][hwp])
+        monitor.data.values[dat.gun_pha_sp_mean][hwp] = numpy.mean(monitor.data.values[dat.gun_pha_sp_values][hwp])
+        monitor.data.values[dat.gun_pha_ff_mean][hwp] = numpy.mean(monitor.data.values[dat.gun_pha_ff_values][hwp])
+        monitor.data.values[dat.kly_fwd_pwr_stderr][hwp] = numpy.std(
+            monitor.data.values[dat.kly_fwd_pwr_values][hwp]) / numpy.sqrt(
+            len(monitor.data.values[dat.kly_fwd_pwr_values][hwp]))
+        monitor.data.values[dat.gun_fwd_pwr_stderr][hwp] = numpy.std(
+            monitor.data.values[dat.gun_fwd_pwr_values][hwp]) / numpy.sqrt(
+            len(monitor.data.values[dat.gun_fwd_pwr_values][hwp]))
+        monitor.data.values[dat.gun_pha_sp_stderr][hwp] = numpy.std(
+            monitor.data.values[dat.gun_pha_sp_values][hwp]) / numpy.sqrt(
+            len(monitor.data.values[dat.gun_pha_sp_values][hwp]))
+        monitor.data.values[dat.gun_pha_ff_stderr][hwp] = numpy.std(
+            monitor.data.values[dat.gun_pha_ff_values][hwp]) / numpy.sqrt(
+            len(monitor.data.values[dat.gun_pha_ff_values][hwp]))
+
+
 
     def check_llrf_is_monitoring(self):
         pass

@@ -3,7 +3,7 @@ import sys
 import os
 import fnmatch
 import time
-import ruamel.yaml
+import ruamel.yaml as yaml
 sys.path.append("../../../")
 from Software.Apps.CTRApp.controller.plots import *
 from Software.Utils.dict_to_h5 import *
@@ -74,7 +74,7 @@ class Controller(qt.QObject):
     def load_config(self):
         try:
             with open('CTRApp.yaml', 'r') as stream:
-                self.settings = yaml.load(stream)
+                self.settings = yaml.load(stream, Loader=ruamel.yaml.Loader)
             self.apply_config()
         except:
             self.apply_defaults()
@@ -133,7 +133,7 @@ class Controller(qt.QObject):
         self.buttons = [self.view.CTR_Gun_Load_Crest_Button, self.view.CTR_Linac_Load_Crest_Button,
         self.view.CTR_Correct_Momentum_Button, self.view.CTR_Detector_Sensitivity_1, self.view.CTR_Detector_Sensitivity_2, self.view.CTR_Detector_Sensitivity_3,
         self.view.CTR_Detector_Sensitivity_4, self.view.CTR_Detector_Sensitivity_5, self.view.CTR_Do_Scan_Button, self.view.CTR_Save_Button,
-        self.view.CTR_Gun_Crest_Set, self.view.CTR_Linac_Crest_Set, self.view.CTR_Auto_Correct_Set, self.view.CTR_C2V_Position_Set, self.view.CTR_Max_Linac_Set,
+        self.view.CTR_Gun_Crest_Set, self.view.CTR_Linac1_Crest_Set, self.view.CTR_Auto_Correct_Set, self.view.CTR_C2V_Position_Set, self.view.CTR_Max_Linac_Set,
         self.view.CTR_Phase_Start_Set, self.view.CTR_Phase_End_Set, self.view.CTR_Phase_Step_Set, self.view.CTR_NShots_Set, self.view.CTR_Linac_Step_Set,
         ]
 
@@ -242,7 +242,7 @@ class Controller(qt.QObject):
 
     def CTR_Load_Crest(self, type='Gun'):
         savetoworkfolder = self.view.actionSave_to_Work_Folder.isChecked()
-        dir = '\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Work\\'+time.strftime("%Y\\%m\\%d")+'\\' if savetoworkfolder else '.'
+        dir = '\\\\claraserv3\\claranet\\apps\\legacy\\logs\\autoCrester\\'+time.strftime("%Y\\%m\\%d")+'\\' if savetoworkfolder else '.'
         fine_files = []
         approx_files = []
         for file in os.listdir(dir):
@@ -285,7 +285,7 @@ class Controller(qt.QObject):
         self.actuator = 'CTR'
         self.thread = GenericThread(self.model.CTR_Scan, self.view.CTR_Phase_Start_Set.value(), self.view.CTR_Phase_End_Set.value(),
                                     self.view.CTR_Phase_Step_Set.value(), self.view.CTR_NShots_Set.value(),
-                                    self.view.CTR_Gun_Crest_Set.value(), self.view.CTR_Linac_Crest_Set.value(),
+                                    self.view.CTR_Gun_Crest_Set.value(), self.view.CTR_Linac1_Crest_Set.value(),
                                     self.view.CTR_Auto_Correct_Set.isChecked(), self.view.CTR_C2V_Position_Set.value(), self.view.CTR_Linac_Step_Set.value(),
                                     self.view.CTR_Max_Linac_Set.value())
         self.newDataSignal.connect(self.updatePlot)

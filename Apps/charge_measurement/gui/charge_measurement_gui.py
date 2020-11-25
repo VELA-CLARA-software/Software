@@ -1,13 +1,10 @@
 from PyQt5.QtWidgets import QMainWindow
-from PyQt5.QtCore import QTimer
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtCore import pyqtSignal
 from gui.gui_mainwindow import Ui_MainWindow
 import data.charge_measurement_data_base as dat
-from pyqtgraph import mkPen
 from base.base import base
 import numpy
-import pyqtgraph
 
 class charge_measurement_gui(QMainWindow, Ui_MainWindow, base):
 	my_name = 'charge_measurement_gui'
@@ -242,21 +239,20 @@ class charge_measurement_gui(QMainWindow, Ui_MainWindow, base):
 	def handle_save_button(self):
 		if self.data.values[dat.scan_status] == "complete":
 			self.data.values[dat.save_clicked] = True
-			self.messageLabel.setText('Data saved to ' + base.config.log_param['SUMMARY_FILE'])
-			self.scanButton.setEnabled(False)
+			self.messageLabel.setText('Data saved')
+			self.saveButton.setEnabled(False)
 		else:
 			self.messageLabel.setText("WARNING: SCAN not done!!!!")
 
 	def set_results_label(self):
-		self.fitlabel = ["fit = " + str(self.data.values[dat.fit]) + "pC/uJ + " + str(
-			self.data.values[dat.cross]) + "\n QE = " + str(
-			self.data.values[dat.qe]) + " E-05"]
-		self.plotCanvas.axes.legend([['data'], self.fitlabel], loc='upper left')
-		self.plotCanvas.draw()
+		pass
+		# self.fitlabel = ["fit = " + str(self.data.values[dat.fit]) + "pC/uJ + " + str(
+		# 	self.data.values[dat.cross]) + "\n QE = " + str(
+		# 	self.data.values[dat.qe]) + " E-05"]
+		# self.plotCanvas.axes.legend([['data'], self.fitlabel], loc='upper left')
+		# self.plotCanvas.draw()
 
 	def plot_fit(self):
-		self.wcmfit1 = (self.data.values[dat.ophir_mean][0] * self.data.values[dat.fit]) + self.data.values[dat.cross]
-		self.wcmfit2 = (self.data.values[dat.ophir_mean][-1] * self.data.values[dat.fit]) + self.data.values[dat.cross]
 		# self.plotCanvas.axes.cla()  # Clear the canvas.
 		# self.plotCanvas.axes.set_title('wcm vs laser energy')
 		# self.plotCanvas.axes.set_xlabel('laser energy (uJ)')
@@ -270,12 +266,12 @@ class charge_measurement_gui(QMainWindow, Ui_MainWindow, base):
 		# 							  xerr=self.data.values[dat.ophir_stderr],
 		# 							  yerr=self.data.values[dat.charge_stderr], fmt='bo')
 		self.fitted = [(x * self.data.values[dat.fit]) + self.data.values[dat.cross] for x in
-					   self.data.values[dat.ophir_mean]]
-		self.plotCanvas.axes.plot(self.data.values[dat.ophir_mean], self.fitted, "r")
-		self.plotCanvas.axes.legend(
+					   list(self.data.values[dat.ophir_mean].values())]
+		self.plotCanvas.axes.plot(list(self.data.values[dat.ophir_mean].values()), self.fitted, "r")
+		self.plotCanvas.axes.set_title(
 			"fit = " + str(self.data.values[dat.fit]) + "pC/uJ + " + str(
 				self.data.values[dat.cross]) + "\n QE = " + str(
-				self.data.values[dat.qe]) + " E-05")
+				self.data.values[dat.qe] * 10**5) + " E-05")
 		self.plotCanvas.draw()
 
 	def update_plot(self):
@@ -287,16 +283,17 @@ class charge_measurement_gui(QMainWindow, Ui_MainWindow, base):
 			self.wcmstderr = []
 			self.plotdataitems = []
 			self.plotCanvas.axes.cla()  # Clear the canvas.
-			self.plotCanvas.axes.set_title('wcm vs laser energy')
+			self.plotCanvas.axes.set_title('')
 			self.plotCanvas.axes.set_xlabel('laser energy (uJ)')
 			self.plotCanvas.axes.set_ylabel('bunch charge (pC)')
 			self.plotCanvas.axes.set_xlim(
-				[min(self.data.values[dat.ophir_mean]) - 0.02, max(self.data.values[dat.ophir_mean]) + 0.02])
+				[min(self.data.values[dat.ophir_mean].values()) - 0.02, max(self.data.values[dat.ophir_mean].values()) + 0.02])
 			self.plotCanvas.axes.set_ylim(
-				[min(self.data.values[dat.charge_mean]) - 10, max(self.data.values[dat.charge_mean]) + 10])
-			self.plotCanvas.axes.errorbar(self.data.values[dat.ophir_mean], self.data.values[dat.charge_mean],
-										  xerr=self.data.values[dat.ophir_stderr],
-										  yerr=self.data.values[dat.charge_stderr], fmt='bo')
+				[min(self.data.values[dat.charge_mean].values()) - 10, max(self.data.values[dat.charge_mean].values()) + 10])
+			self.plotCanvas.axes.errorbar(list(self.data.values[dat.ophir_mean].values()),
+										  list(self.data.values[dat.charge_mean].values()),
+										  xerr=list(self.data.values[dat.ophir_stderr].values()),
+										  yerr=list(self.data.values[dat.charge_stderr].values()), fmt='bo')
 			self.plotCanvas.axes.grid()
 			# Trigger the canvas to update and redraw.
 			self.plotCanvas.draw()

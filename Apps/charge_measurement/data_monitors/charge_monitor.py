@@ -2,7 +2,6 @@ from data_monitors.monitor import monitor
 from PyQt5.QtCore import QTimer
 import data.charge_measurement_data_base as dat
 import numpy
-import time
 
 class charge_monitor(monitor):
     # whoami
@@ -57,7 +56,8 @@ class charge_monitor(monitor):
         monitor.data.values[dat.bunch_charge][hwp] = numpy.mean(monitor.data.values[dat.charge_values][hwp])
         self.chargemean = numpy.mean(list(monitor.data.values[dat.charge_values][hwp]))
         if self.chargemean > monitor.config.charge_config['MIN_CHARGE_ACCEPTED']:
-            monitor.data.values[dat.charge_mean].append(numpy.mean(list(monitor.data.values[dat.charge_values][hwp])))
-            monitor.data.values[dat.charge_stderr].append(
-                numpy.std(list(monitor.data.values[dat.charge_values][hwp])) / numpy.sqrt(
-                    len(list(monitor.data.values[dat.charge_values][hwp]))))
+            monitor.data.values[dat.charge_mean][hwp] = numpy.mean(list(monitor.data.values[dat.charge_values][hwp]))
+            monitor.data.values[dat.charge_stderr][hwp] = numpy.std(
+                list(monitor.data.values[dat.charge_values][hwp])) / numpy.sqrt(
+                len(list(monitor.data.values[dat.charge_values][hwp])))
+

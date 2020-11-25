@@ -146,7 +146,17 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
 
 
         self.plot_item = self.graphicsView.getPlotItem()
+        
+        # Close down the app if close button pressed on GUI:
+        self.aboutToQuit.connect(self.closeEvent)
 
+
+    def closeEvent(self):
+        '''
+            Closes down the app if close button pressed on GUI.
+        '''
+        print('Close button pressed on RF_Night_Watch GUI.')
+        sys.exit(0)
 
 
     def closeEvent(self, unknown_arg):
@@ -433,6 +443,7 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
             self.values[rf_conditioning_data.update_individual_trace] = False
             self.update_individual_trace_button.setStyleSheet('QPushButton { background-color : ' + self.bad + '; color : black; }')
             self.update_individual_trace_button.setText('Individual Trace Updates Stopped')
+
         else:
             self.values[rf_conditioning_data.update_individual_trace] = True
             self.update_individual_trace_button.setStyleSheet('QPushButton { background-color : ' + self.good + '; color : black; }')

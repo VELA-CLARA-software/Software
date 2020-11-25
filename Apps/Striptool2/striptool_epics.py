@@ -1,6 +1,6 @@
 import sys, time, os
 if getattr(sys, 'frozen', True):
-    print( 'Frozen!')
+    # print( 'Frozen!')
     sys.path.append("../../Widgets/Striptool2")
 sys.path.append("../../../")
 sys.path.append("\\\\claraserv3\\claranet\\test\\Controllers\\bin\\Release")
@@ -11,10 +11,9 @@ import VELA_CLARA_Magnet_Control as vmag
 import VELA_CLARA_BPM_Control as vbpmc
 import  VELA_CLARA_General_Monitor as vgen
 import  VELA_CLARA_LLRF_Control as vllrf
-
 import argparse
 parser = argparse.ArgumentParser(description='Striptool')
-parser.add_argument('-s','--settings', type=str, default='striptool.yaml',
+parser.add_argument('-s','--settings', type=str, default='\\\\claraserv3.dl.ac.uk\\claranet\\apps\\legacy\\config\\striptool_epics\\striptool.yaml',
                     help='Location of the YAML settings filename')
 
 ''' Load loggerWidget library (comment out if not available) '''
@@ -79,9 +78,7 @@ class striptool_Epics(qt.QMainWindow):
         self.scatterplot = self.generalplot.scatterPlot()
         self.legend = self.generalplot.legend()
         self.signaltable = signaltable.signalTable(parent=self.generalplot,
-        VELAMagnetController=Vmagnets,
         CLARAMagnetController=Cmagnets,
-        VELABPMController=Vbpms,
         CLARABPMController=Cbpms,
         LRRGRFController=LRRGllrf,
         L01RFController=L01llrf,
@@ -257,11 +254,9 @@ def main():
     maginit = vmag.init()
     bpms = vbpmc.init()
     llrf = vllrf.init()
-    global Vmagnets, Cmagnets, Vbpms, Cbpms, L01llrf, LRRGllrf, general
-    Vmagnets = maginit.physical_VELA_INJ_Magnet_Controller()
-    Cmagnets = maginit.physical_CLARA_PH1_Magnet_Controller()
-    Vbpms = bpms.physical_VELA_INJ_BPM_Controller()
-    Cbpms = bpms.physical_CLARA_PH1_BPM_Controller()
+    global Cmagnets, Cbpms, L01llrf, LRRGllrf, general
+    Cmagnets = maginit.physical_C2B_Magnet_Controller()
+    Cbpms = bpms.physical_C2B_BPM_Controller()
     L01llrf = llrf.physical_L01_LLRF_Controller()
     LRRGllrf = llrf.physical_CLARA_LRRG_LLRF_Controller()
     general = vgen.init()

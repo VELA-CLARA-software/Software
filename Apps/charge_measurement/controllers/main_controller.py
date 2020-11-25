@@ -79,25 +79,34 @@ class main_controller(controller_base):
             if controller_base.data.values[dat.save_clicked]:
                 self.json_data = {"pil_name": self.data.values[dat.pil_name],
                                   "comments": self.data.values[dat.comments],
-                                  "measurement_type": self.data.values[dat.measurement_type],
-                                  "time_stamp": self.data.values[dat.time_stamp],
-                                  "charge_time_stamp": self.data.values[dat.charge_time_stamp],
-                                  "ophir_time_stamp": self.data.values[dat.ophir_time_stamp],
-                                  "gun_fwd_pwr_mean_time_stamp": self.data.values[dat.gun_fwd_pwr_mean_time_stamp],
-                                  "gun_fwd_pha_mean_time_stamp": self.data.values[dat.gun_fwd_pha_mean_time_stamp],
-                                  "vc_intensity_time_stamp": self.data.values[dat.vc_intensity_time_stamp],
-                                  "vc_x_pix_time_stamp": self.data.values[dat.vc_x_pix_time_stamp],
-                                  "vc_y_pix_time_stamp": self.data.values[dat.vc_y_pix_time_stamp],
-                                  "vc_sig_x_pix_time_stamp": self.data.values[dat.vc_sig_x_pix_time_stamp],
-                                  "vc_sig_y_pix_time_stamp": self.data.values[dat.vc_sig_y_pix_time_stamp],
+                                  "vc_intensity_mean": self.data.values[dat.vc_intensity_mean],
+                                  "vc_intensity_stderr": self.data.values[dat.vc_intensity_stderr],
+                                  "vc_x_pix_mean": self.data.values[dat.vc_x_pix_mean],
+                                  "vc_x_pix_stderr": self.data.values[dat.vc_x_pix_stderr],
+                                  "vc_y_pix_mean": self.data.values[dat.vc_y_pix_mean],
+                                  "vc_y_pix_stderr": self.data.values[dat.vc_y_pix_stderr],
+                                  "vc_sig_x_pix_mean": self.data.values[dat.vc_sig_x_pix_mean],
+                                  "vc_sig_x_pix_stderr": self.data.values[dat.vc_sig_x_pix_stderr],
+                                  "vc_sig_y_pix_mean": self.data.values[dat.vc_sig_y_pix_mean],
+                                  "vc_sig_y_pix_stderr": self.data.values[dat.vc_sig_y_pix_stderr],
                                   "charge_values": self.data.values[dat.charge_values],
+                                  "charge_mean": self.data.values[dat.charge_mean],
+                                  "charge_stderr": self.data.values[dat.charge_stderr],
                                   "ophir_values": self.data.values[dat.ophir_values],
-                                  "vc_intensity_values": self.data.values[dat.vc_intensity_values],
-                                  "vc_x_pix_values": self.data.values[dat.vc_x_pix_values],
-                                  "vc_y_pix_values": self.data.values[dat.vc_y_pix_values],
-                                  "vc_sig_x_pix_values": self.data.values[dat.vc_sig_x_pix_values],
-                                  "vc_sig_y_pix_values": self.data.values[dat.vc_sig_y_pix_values],
-                                  "hwp_values": self.data.values[dat.hwp_values],
+                                  "ophir_mean": self.data.values[dat.ophir_mean],
+                                  "ophir_stderr": self.data.values[dat.ophir_stderr],
+                                  "fit": self.data.values[dat.fit],
+                                  "cross": self.data.values[dat.cross],
+                                  "qe": self.data.values[dat.qe],
+                                  "kly_fwd_pwr_mean": self.data.values[dat.kly_fwd_pwr_mean],
+                                  "kly_fwd_pwr_stderr": self.data.values[dat.kly_fwd_pwr_stderr],
+                                  "gun_fwd_pwr_mean": self.data.values[dat.gun_fwd_pwr_mean],
+                                  "gun_fwd_pwr_stderr": self.data.values[dat.gun_fwd_pwr_stderr],
+                                  "gun_pha_sp_mean": self.data.values[dat.gun_pha_sp_mean],
+                                  "gun_pha_sp_stderr": self.data.values[dat.gun_pha_sp_stderr],
+                                  "gun_pha_ff_mean": self.data.values[dat.gun_pha_ff_mean],
+                                  "gun_pha_ff_stderr": self.data.values[dat.gun_pha_ff_stderr],
+                                  "off_crest_phase_dict": self.data.values[dat.off_crest_phase_dict],
                                   "sol_values": self.data.values[dat.sol_values],
                                   "bsol_values": self.data.values[dat.bsol_values],
                                   "kly_fwd_pwr_values": self.data.values[dat.kly_fwd_pwr_values],
@@ -107,7 +116,7 @@ class main_controller(controller_base):
                                   "vc_image_name": self.data.values[dat.vc_image_name],
                                   "vc_image_directory": self.data.values[dat.vc_image_directory]
                                   }
-                self.m, self.cross, self.qe, self.filename = self.logger.add_to_scan_json(self.json_data)
+                self.filename = self.logger.add_to_scan_json(self.json_data)
                 controller_base.data.values[dat.file_names].append(self.filename)
                 self.logger.message('Data saved to' + self.filename, True)
                 controller_base.data.values[dat.save_clicked] = False
@@ -188,22 +197,40 @@ class main_controller(controller_base):
             controller_base.pil_handler.set_hwp(self.hwp_start)
 
     def clear_values(self):
-        controller_base.data.values[dat.charge_mean] = []
-        controller_base.data.values[dat.ophir_mean] = []
-        controller_base.data.values[dat.charge_stderr] = []
-        controller_base.data.values[dat.ophir_stderr] = []
+        controller_base.data.values[dat.charge_mean] = {}
+        controller_base.data.values[dat.ophir_mean] = {}
+        controller_base.data.values[dat.charge_stderr] = {}
+        controller_base.data.values[dat.ophir_stderr] = {}
         controller_base.data.values[dat.charge_values] = {}
         controller_base.data.values[dat.ophir_values] = {}
         controller_base.data.values[dat.kly_fwd_pwr_values] = {}
         controller_base.data.values[dat.gun_fwd_pwr_values] = {}
         controller_base.data.values[dat.gun_pha_sp_values] = {}
         controller_base.data.values[dat.gun_pha_ff_values] = {}
+        controller_base.data.values[dat.kly_fwd_pwr_mean] = {}
+        controller_base.data.values[dat.gun_fwd_pwr_mean] = {}
+        controller_base.data.values[dat.gun_pha_sp_mean] = {}
+        controller_base.data.values[dat.gun_pha_ff_mean] = {}
+        controller_base.data.values[dat.kly_fwd_pwr_stderr] = {}
+        controller_base.data.values[dat.gun_fwd_pwr_stderr] = {}
+        controller_base.data.values[dat.gun_pha_sp_stderr] = {}
+        controller_base.data.values[dat.gun_pha_ff_stderr] = {}
         controller_base.data.values[dat.gun_pha_ff_lock_values] = {}
         controller_base.data.values[dat.vc_intensity_values] = {}
         controller_base.data.values[dat.vc_x_pix_values] = {}
         controller_base.data.values[dat.vc_y_pix_values] = {}
         controller_base.data.values[dat.vc_sig_x_pix_values] = {}
         controller_base.data.values[dat.vc_sig_y_pix_values] = {}
+        controller_base.data.values[dat.vc_intensity_mean] = {}
+        controller_base.data.values[dat.vc_x_pix_mean] = {}
+        controller_base.data.values[dat.vc_y_pix_mean] = {}
+        controller_base.data.values[dat.vc_sig_x_pix_mean] = {}
+        controller_base.data.values[dat.vc_sig_y_pix_mean] = {}
+        controller_base.data.values[dat.vc_intensity_stderr] = {}
+        controller_base.data.values[dat.vc_x_pix_stderr] = {}
+        controller_base.data.values[dat.vc_y_pix_stderr] = {}
+        controller_base.data.values[dat.vc_sig_x_pix_stderr] = {}
+        controller_base.data.values[dat.vc_sig_y_pix_stderr] = {}
         controller_base.data.values[dat.sol_values] = {}
         controller_base.data.values[dat.bsol_values] = {}
         controller_base.data.values[dat.charge_time_stamp] = {}
@@ -231,7 +258,8 @@ class main_controller(controller_base):
             self.ophirmeanall = []
             self.wcmstderrall = []
             self.ophirstderrall = []
-            self.x, self.y = controller_base.data.values[dat.ophir_mean], controller_base.data.values[dat.charge_mean]
+            self.x, self.y = list(controller_base.data.values[dat.ophir_mean].values()), list(
+                controller_base.data.values[dat.charge_mean].values())
             try:
                 self.m, self.c = numpy.around(numpy.polyfit(self.x, self.y, 1), 2)
             except:
