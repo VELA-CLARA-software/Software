@@ -1,0 +1,391 @@
+/* default formatting */
+body {
+  margin:0px;
+  color:black;
+  background-color:white;
+  font-family:sans-serif;
+  /* background-image:url(elog.gif); */
+}
+
+/* standard link colors and decorations */
+a:link { color:#0000FF; text-decoration:none }
+a:visited { color:#800080; text-decoration:none }
+a:hover { color:#0000FF; text-decoration:underline }
+a:active { color:#0000FF; text-decoration:underline }
+a:focus { color:#0000FF; text-decoration:underline }
+
+td {
+  color:black;
+  font-family:sans-serif; 
+}
+
+/* frame table */
+.frame {
+  width:100%;
+}
+
+/* printable frame table */
+.pframe {
+  width:600px;
+}
+
+/* standard formatting for logbook tabs */
+.tabs {
+  font-family:sans-serif;
+  font-size:10pt;
+  background-color:white;
+}
+
+/* unselected and selected group tabs */
+
+.gtab a {
+  background-color:#B0E0B0;
+  padding-left:1px;
+  padding-right:1px;
+}
+
+.gtab {
+  background-color:#B0E0B0;
+  border-right:1px solid #409040;
+}
+
+.sgtab a {
+  color:white;
+  padding-left:1px;
+  padding-right:1px;
+}
+
+.sgtab {
+  background-color:#486090;
+  color:white;
+  border-right:1px solid #084070;
+}
+
+.sgtab a:visited { color:white; } /* buf for IE */
+
+/* unselected and selected logbook tabs */
+
+.ltab a {
+  background-color:#E0E0E0;
+  padding-left:1px;
+  padding-right:1px;
+}
+
+.ltab {
+  background-color:#E0E0E0;
+  border-right:1px solid gray;
+}
+
+.sltab a {
+  background-color:#486090;
+  color:white;
+  padding-left:1px;
+  padding-right:1px;
+}
+
+.sltab {
+  background-color:#486090;
+  color:white;
+  border-right:1px solid #084070;
+}
+
+.sltab a:visited { color:white; } /* bug for IE */
+
+/* logbook title, left, middle and right cell */
+
+.title1 {
+  background-color:#486090;
+  border-bottom:1px solid black;
+  border-top:1px solid #E0E0E0;
+  border-left:1px solid #E0E0E0;
+  color:white;
+  font-size:medium;
+  font-family:sans-serif;
+  text-align:left;
+}
+
+.title2 {
+  background-color:#486090;
+  border-bottom:1px solid black;
+  border-top:1px solid #E0E0E0;
+  color:white;
+  font-size:medium;
+  font-family:sans-serif;
+  text-align:center;
+}
+
+.title3 {
+  border-bottom:1px solid black;
+  border-top:1px solid #E0E0E0;
+  border-right:1px solid black;
+  background-color:#486090;
+  text-align:right;
+}
+
+/* main menu row */
+
+.menuframe {
+  border:1px solid #486090;
+  border-top:1px solid white;
+  border-left:1px solid white;
+  padding:1px;
+  background-color:#E0E0E0;
+}
+
+.menu1 {
+  text-align:left;
+  font-size:10pt;
+}
+
+.menu2a {
+  text-align:left;
+  font-size:10pt;
+}
+
+.menu2b {
+  text-align:right;
+  font-size:10pt;
+}
+
+.menu3 {
+  text-align:left;
+  font-size:8pt;
+  font-weight:bold;
+}
+
+.menu4 {
+  text-align:right;
+  font-size:10pt;
+  vertical-align:middle;
+}
+
+/* frame table in listings */
+.listframe {
+  border:1px solid #0000FF;
+  border-top:1px solid white;
+  border-left:1pc solid white;
+  background-color:#486090;
+  border:0px;
+}
+
+/* title row in listing */
+.listtitle {
+  border:1px solid #0000FF;
+  border-top:1px solid white;
+  border-left:1px solid white;
+  background-color:#CCCCFF;
+  text-align:center;
+}
+
+/* odd and even lines in message listing */
+
+.list1 {
+  border:1px solid #308000;
+  border-top:1px solid white;
+  border-left:1px solid white;
+  background-color:#DDEEBB;
+  text-align:center;
+}
+
+.list2 {
+  border:1px solid #808040;
+  border-top:1px solid white;
+  border-left:1px solid white;
+  background-color:#FFFFB0;
+  text-align:center;
+}
+
+.list1h {
+  border:1px solid #308000;
+  border-top:1px solid white;
+  border-left:1px solid white;
+  background-color:#DDEEBB;
+  text-align:center;
+  font-weight:bold;
+}
+
+.list2h {
+  border:1px solid #808040;
+  border-top:1px solid white;
+  border-left:1px solid white;
+  background-color:#FFFFB0;
+  text-align:center;
+  font-weight:bold;
+}
+
+/* attachment line */
+
+.attachment {
+  border:1px solid #808040;
+  border-top:1px solid white;
+  border-left:1px solid white;
+  background-color:#FFFFB0;
+  text-align:left;
+}
+
+/* threaded listing */
+.thread {
+  border:1px solid #308000;
+  border-top:1px solid white;
+  border-left:1px solid white;
+  background-color:#DDEEBB;
+  text-align:left;
+}
+
+.threadreply {
+  border:1px solid #808040;
+  border-top:1px solid white;
+  border-left:1px solid white;
+  background-color:#FFFFB0;
+  text-align:left;
+}
+
+/* attribute names and values on single message page */
+.attribhead {
+  background-color:#E0E0A0;
+  border:1px solid #0000FF;
+  border-top:1px solid white;
+  border-left:1px solid white;
+  padding:1px;
+  font-size:10pt;
+  font-family:sans-serif;
+}
+
+.attribname {
+  width:150px;
+  background-color:#CCCCFF;
+  border:1px solid #0000FF;
+  border-top:1px solid white;
+  border-left:1px solid white;
+  padding:1px;
+}
+
+.attribvalue {
+  border:1px solid #308000;
+  border-top:1px solid white;
+  border-left:1px solid white;
+  background-color:#DDEEBB;
+  padding:1px;
+}
+
+.attribvalue2 {
+  border:1px solid #808040;
+  border-top:1px solid white;
+  border-left:1px solid white;
+  background-color:#FFFFB0;
+  padding:1px;
+}
+
+/* message cell in listing */
+.messagelist {
+  background-color:white;
+  border-right:1px solid gray;
+  border-left:1px solid gray;
+  border-bottom:1px solid gray;
+  font-family:'lucida console',courier,monospace;
+  font-size:10pt;
+  padding:1px;
+}
+
+/* message display in single message page */
+.messageframe {
+  background-color:white;
+  border:1px solid #486090;
+  border-top:0px;
+  padding:1px;
+}
+
+.messagepre {
+  font-family:'lucida console',courier,monospace;
+  font-size:10pt;
+}
+
+/* attachment size */
+.bytes {
+  font-family:'lucida console',courier,monospace;
+  font-size:10pt;
+}
+
+/* summary display (threaded mode expand) */
+.summary {
+  border:1px solid black;
+  border-top:1px solid white;
+  border-left:1px solid white;
+  background-color:white;
+  font-family:'lucida console',courier,monospace;
+  font-size:8pt;
+}
+
+/* input forms */
+.form1 {
+  border:1px solid #308000;
+  border-top:1px solid white;
+  border-left:1px solid white;
+  background-color:#DDEEBB;
+  padding:1px;
+}
+
+.form2 {
+  border:1px solid #308000;
+  border-top:1px solid white;
+  border-left:1px solid white;
+  background-color:#DDEEBB;
+  padding:1px;
+}
+
+/* error message */
+.errormsg {
+  border:1px solid #486090;
+  padding:1px;
+  background-color:#FFB0B0;
+  text-align:center;
+  font-size:medium;
+}
+
+/* notification (warning) */
+.notifymsg {
+  padding:1px;
+  border:1px solid #806000;
+  border-top:1px solid white;
+  border-left:1px solid white;
+  background-color:#FFD070;
+  text-align:center;
+  font-size:small;
+}
+
+/* dialog boxes (login, delete, etc.) */
+.dlgframe {
+  width:50%;
+  background-color:#486090; 
+  border:1px solid #486090;
+  margin-top:2cm;
+}
+
+.dlgerror {
+  background-color:red;
+  padding:10px;
+  font-size:small;
+  text-align:center;
+  font-size:medium;
+  color:white;
+}
+
+.dlgtitle {
+  background-color:#486090;
+  color:white;
+  font-size:medium;
+  text-align:center;
+  padding:5px;
+}
+
+.dlgform {
+  background-color:#DDEEBB;
+  padding:5px;
+}
+
+/* ELOG home page link at bottom of page */
+.bottomlink {
+  font-family:sans-serif; 
+  font-size:xx-small;
+}
+

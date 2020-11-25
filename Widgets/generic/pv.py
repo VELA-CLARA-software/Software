@@ -49,8 +49,12 @@ class PVObject(qt.QObject):
             return self._value[1]
     @value.setter
     def value(self, val):
+<<<<<<< HEAD
         if self.writeAccess:
             self.put(val)
+=======
+        self.put(val)
+>>>>>>> parent of 903bfae1... Added handle_update_individual_trace button to NO-ARCv2 GUI that toggles the updating of individual traces between passive and 10Hz.
 
     @property
     def time(self):

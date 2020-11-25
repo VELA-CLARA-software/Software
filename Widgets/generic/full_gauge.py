@@ -18,7 +18,11 @@ class gauge(QWidget):
         self.gauge.setProperty('gauge_value',0)
         self.layout.addWidget(self.gaugeWidget)
 
+<<<<<<< HEAD
     def setValue(self, value):
+=======
+    def setValue(self, time, value):
+>>>>>>> parent of 903bfae1... Added handle_update_individual_trace button to NO-ARCv2 GUI that toggles the updating of individual traces between passive and 10Hz.
         #print ('guage value = ', value)
         self.gauge.setProperty('gauge_value',value)
 

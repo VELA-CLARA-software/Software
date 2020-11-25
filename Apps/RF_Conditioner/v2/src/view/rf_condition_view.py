@@ -138,13 +138,6 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         self.can_ramp_button.clicked.connect(self.handle_can_ramp_button)
         self.can_ramp_button.setStyleSheet('QPushButton { background-color : ' + self.bad + '; color : black; }')
         self.can_ramp_button.setText('RAMP Disabled')
-
-        # initialise update_individual_trace_button to "Individual Trace Updates Stopped"
-        self.update_individual_trace_button.clicked.connect(self.handle_update_individual_trace_button)
-        self.update_individual_trace_button.setStyleSheet('QPushButton { background-color : ' + self.bad + '; color : black; }')
-        self.update_individual_trace_button.setText('Individual Trace Updates Stopped')
-
-
         self.plot_item = self.graphicsView.getPlotItem()
         
         # Close down the app if close button pressed on GUI:
@@ -435,8 +428,8 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         else:
             self.values[rf_conditioning_data.gui_can_ramp] = True
             self.can_ramp_button.setStyleSheet('QPushButton { background-color : ' + self.good + '; color : black; }')
-            self.can_ramp_button.setText('RAMP Enabled')
 
+<<<<<<< HEAD
     # TODO AJG: add funtion to handle individual_trace_updates button:
     def handle_update_individual_trace_button(self):
         if self.values[rf_conditioning_data.update_individual_trace]:
@@ -448,6 +441,9 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
             self.values[rf_conditioning_data.update_individual_trace] = True
             self.update_individual_trace_button.setStyleSheet('QPushButton { background-color : ' + self.good + '; color : black; }')
             self.update_individual_trace_button.setText('Individual Trace Updates at 10 Hz')
+=======
+            self.can_ramp_button.setText('RAMP Enabled')
+>>>>>>> parent of 903bfae1... Added handle_update_individual_trace button to NO-ARCv2 GUI that toggles the updating of individual traces between passive and 10Hz.
 
     def handle_llrf_enable_button(self):
         if self.values[rf_conditioning_data.gui_can_rf_output]:

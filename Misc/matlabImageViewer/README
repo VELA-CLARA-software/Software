@@ -1,0 +1,11 @@
+README for matlabImageViewer:
+
+This program was written for interpreting the image data from FERMI@Elettra experiments in 2017 (ADB+PHW).
+The files that were sent to us were all created using MATLAB software written by the FERMI people - the data files are in MATLAB binary structs.
+As I was having trouble parsing their code (since I don't speak either Italian or MATLAB), I wrote a program for reading these data structs into Python.
+
+(some more complex image analysis to come later... but by this time I may well be able to read the data in using one of our applications - matplotlib is a nightmare to work with)
+
+Since this data is probably quite different from that we'll get using the CLARA cameras, this program may not be of much use to anyone else, but feel free to ask if you're curious.
+
+Alex Brynes

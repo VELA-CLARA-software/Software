@@ -16,7 +16,11 @@ signal.signal(signal.SIGINT, signal.SIG_DFL)
 #                               threading.current_thread().ident))
 
 class scatterPlot(qt.QWidget):
+<<<<<<< HEAD
     scatterSelectionChanged = qt.pyqtSignal('QString', 'QString', int, int)
+=======
+    scatterSelectionChanged = qt.pyqtSignal('QString', 'QString', int)
+>>>>>>> parent of 903bfae1... Added handle_update_individual_trace button to NO-ARCv2 GUI that toggles the updating of individual traces between passive and 10Hz.
 
     def __init__(self, generalplot, parent=None, plotRateBar=False):
         super(scatterPlot, self).__init__(parent)
@@ -94,6 +98,7 @@ class scatterPlot(qt.QWidget):
         self.offsetSpinBoxWidgetLayout.addWidget(self.offsetSpinBoxLabel)
         self.offsetSpinBoxWidgetLayout.addWidget(self.offsetSpinBox)
         self.offsetSpinBox.valueChanged.connect(self.selectionBarChanged)
+<<<<<<< HEAD
         #
         self.decimateSpinBox = qt.QComboBox()
         for i in range(4,20):
@@ -105,6 +110,8 @@ class scatterPlot(qt.QWidget):
         self.decimateSpinBox.setCurrentIndex(11)
         self.decimateSpinBox.currentIndexChanged.connect(self.selectionBarChanged)
         #
+=======
+>>>>>>> parent of 903bfae1... Added handle_update_individual_trace button to NO-ARCv2 GUI that toggles the updating of individual traces between passive and 10Hz.
         self.selectionBarLayout = qt.QHBoxLayout()
         self.selectionBarLayout.addSpacerItem(spacer)
         self.selectionBarLayout.addWidget(self.combobox1)
@@ -115,11 +122,17 @@ class scatterPlot(qt.QWidget):
         self.selectionBarLayout.addSpacerItem(spacer)
         self.selectionBarLayout.addLayout(self.offsetSpinBoxWidgetLayout)
         self.selectionBarLayout.addSpacerItem(spacer)
+<<<<<<< HEAD
         self.selectionBarLayout.addWidget(self.decimateSpinBox)
 
     def selectionBarChanged(self, index):
         decimate = 2**(4+self.decimateSpinBox.currentIndex())
         self.scatterSelectionChanged.emit(self.combobox1.currentText(), self.combobox2.currentText(), self.offsetSpinBox.value(), decimate)
+=======
+
+    def selectionBarChanged(self, index):
+        self.scatterSelectionChanged.emit(self.combobox1.currentText(), self.combobox2.currentText(), self.offsetSpinBox.value())
+>>>>>>> parent of 903bfae1... Added handle_update_individual_trace button to NO-ARCv2 GUI that toggles the updating of individual traces between passive and 10Hz.
         self.plotWidget.update()
 
     def updateSelectionBar(self):
@@ -220,7 +233,11 @@ class scatterPlotPlot(pg.PlotWidget):
     def printPoints(self,scatterPlot, points):
         point = points[0]
         text =  "{%0.3f, %0.3f}" % (point.pos()[0], point.pos()[1])
+<<<<<<< HEAD
         # print(text)
+=======
+        print(text)
+>>>>>>> parent of 903bfae1... Added handle_update_individual_trace button to NO-ARCv2 GUI that toggles the updating of individual traces between passive and 10Hz.
         self.statusChanged.emit(text)
 
     def isSelectionInRecords(self, selection):
@@ -245,12 +262,19 @@ class scatterPlotPlot(pg.PlotWidget):
             recordname = 'dataMean10'
         return self.records[selection]['timer'], self.records[selection][recordname]
 
+<<<<<<< HEAD
     def setSelectionIndex(self, x, y, offset, decimate):
         self.selectionNameX = str(x)
         self.selectionNameY = str(y)
         self.selectionOffset = int(offset)
         # print(decimate)
         self.decimateScale = int(decimate)
+=======
+    def setSelectionIndex(self, x, y, offset):
+        self.selectionNameX = str(x)
+        self.selectionNameY = str(y)
+        self.selectionOffset = int(offset)
+>>>>>>> parent of 903bfae1... Added handle_update_individual_trace button to NO-ARCv2 GUI that toggles the updating of individual traces between passive and 10Hz.
         if self.isSelectionInRecords(self.selectionNameX) and self.isSelectionInRecords(self.selectionNameY):
             self.signalDelayTime1, self.data1 = self.getDataIfMean(self.selectionNameX)
             self.signalDelayTime2, self.data2 = self.getDataIfMean(self.selectionNameY)

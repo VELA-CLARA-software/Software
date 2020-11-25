@@ -2192,12 +2192,6 @@ class rf_conditioning_data(object):
     all_value_keys.append(p2_all)
     values[p2_all] = dummy_float
 
-    # TODO AJG: adding a update_individual_trace:
-    update_individual_trace = 'update_individual_trace'
-    all_value_keys.append(update_individual_trace)
-    values[update_individual_trace] = False
-    excluded_key_list.append(update_individual_trace)
-
     # TODO AJG: this is temporary! remove asap
 
     polyfit_2order_X_all = 'polyfit_2order_X_all'

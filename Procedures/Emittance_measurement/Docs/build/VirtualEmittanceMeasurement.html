@@ -1,0 +1,711 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Virtual Beam size measurement (BeamSizeDetermination Class) &#8212; Emittance Measurement</title>
+    <link rel="stylesheet" href="_static/agogo.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="GeneralQuadScan (parent class)" href="EmittanceQuadScan.html" />
+    <link rel="prev" title="Welcome to Emittance GUI’s documentation!" href="index.html" /> 
+  </head><body>
+    <div class="header-wrapper" role="banner">
+      <div class="header">
+        <div class="headertitle"><a
+          href="index.html">Emittance Measurement</a></div>
+        <div class="rel" role="navigation" aria-label="related navigation">
+          <a href="index.html" title="Welcome to Emittance GUI’s documentation!"
+             accesskey="P">previous</a> |
+          <a href="EmittanceQuadScan.html" title="GeneralQuadScan (parent class)"
+             accesskey="N">next</a> |
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a>
+        </div>
+       </div>
+    </div>
+
+    <div class="content-wrapper">
+      <div class="content">
+        <div class="document">
+            
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="virtual-beam-size-measurement-beamsizedetermination-class">
+<h1>Virtual Beam size measurement (BeamSizeDetermination Class)<a class="headerlink" href="#virtual-beam-size-measurement-beamsizedetermination-class" title="Permalink to this headline">¶</a></h1>
+<p>This page contains the description of the BeamSizeDetermination class for the Virtual Emittance measurement.
+It takes a set of currents in order to determine the beam sizes at the observation point using the Virtual
+accelerator (daughter class of GeneralQuadScan).</p>
+<dl class="class">
+<dt id="QuadScan.virtualclarabeamsizes.BeamSizeDetermination">
+<em class="property">class </em><code class="descclassname">QuadScan.virtualclarabeamsizes.</code><code class="descname">BeamSizeDetermination</code><a class="reference internal" href="_modules/QuadScan/virtualclarabeamsizes.html#BeamSizeDetermination"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#QuadScan.virtualclarabeamsizes.BeamSizeDetermination" title="Permalink to this definition">¶</a></dt>
+<dd><p>Daughter class of py:class GeneralQuadScan containing all methods to
+calculate the quad strengths from experimental data and use the interface
+between CATAP and SimFrame to obtain the beam sizes.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Variables:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="#QuadScan.virtualclarabeamsizes.BeamSizeDetermination.BeamMomentum" title="QuadScan.virtualclarabeamsizes.BeamSizeDetermination.BeamMomentum"><strong>BeamMomentum</strong></a> – Beam Momentum: 29.5 MeV</li>
+<li><a class="reference internal" href="EmittanceQuadScan.html#QuadScan.QuadScanclass.GeneralQuadScan.beam_sizes" title="QuadScan.QuadScanclass.GeneralQuadScan.beam_sizes"><strong>beam_sizes</strong></a> – Dictionary to save the beam sizes: OrderedDict()</li>
+<li><strong>current_path</strong> – Path of Current file: []</li>
+<li><strong>currents_optimised</strong> – Array of optimised currents : []</li>
+<li><strong>machinestate</strong> – Machine State object built from the interface between SIMFRAME and CATAP: ‘machinestate’</li>
+<li><strong>mode</strong> – Mode in which CATAP is to work (PHYSICAL or VIRTUAL): VIRTUAL</li>
+<li><strong>simframedata</strong> – SimFrameDictionary for the simulation</li>
+<li><strong>framework</strong> – SimFrame object</li>
+<li><a class="reference internal" href="#QuadScan.virtualclarabeamsizes.BeamSizeDetermination.lattice_start" title="QuadScan.virtualclarabeamsizes.BeamSizeDetermination.lattice_start"><strong>lattice_start</strong></a> – Beginning of lattice (SimFrame run)</li>
+<li><a class="reference internal" href="#QuadScan.virtualclarabeamsizes.BeamSizeDetermination.lattice_end" title="QuadScan.virtualclarabeamsizes.BeamSizeDetermination.lattice_end"><strong>lattice_end</strong></a> – End of lattice (Simframe run)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Initialisation of the object</p>
+<dl class="attribute">
+<dt id="QuadScan.virtualclarabeamsizes.BeamSizeDetermination.BeamMomentum">
+<code class="descname">BeamMomentum</code><em class="property"> = 29.5</em><a class="headerlink" href="#QuadScan.virtualclarabeamsizes.BeamSizeDetermination.BeamMomentum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Beam momentum 30.0 MeV nominal</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="QuadScan.virtualclarabeamsizes.BeamSizeDetermination.FileOpen">
+<em class="property">static </em><code class="descname">FileOpen</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#QuadScan.virtualclarabeamsizes.BeamSizeDetermination.FileOpen" title="Permalink to this definition">¶</a></dt>
+<dd><p>Subroutine used to read data from a text file into an array</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> – Path of the file to be opened</td>
+</tr>
+</tbody>
+</table>
+<p>:return Numpy array : the contents of the file</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="QuadScan.virtualclarabeamsizes.BeamSizeDetermination.I2K_CLARA_simple">
+<code class="descname">I2K_CLARA_simple</code><span class="sig-paren">(</span><em>currents</em>, <em>beamMomentum</em><span class="sig-paren">)</span><a class="headerlink" href="#QuadScan.virtualclarabeamsizes.BeamSizeDetermination.I2K_CLARA_simple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to calculate the quad strengths from the currents</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>currents</strong> – Currents</li>
+<li><strong>beamMomentum</strong> – Beam Momentum</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Return k_values:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><p class="first last">for each quadrupole</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="QuadScan.virtualclarabeamsizes.BeamSizeDetermination.Smatrix">
+<code class="descname">Smatrix</code><em class="property"> = array([[ 0,  1,  0,  0],        [-1,  0,  0,  0],        [ 0,  0,  0,  1],        [ 0,  0, -1,  0]])</em><a class="headerlink" href="#QuadScan.virtualclarabeamsizes.BeamSizeDetermination.Smatrix" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="QuadScan.virtualclarabeamsizes.BeamSizeDetermination.beam_sizes">
+<code class="descname">beam_sizes</code><a class="headerlink" href="#QuadScan.virtualclarabeamsizes.BeamSizeDetermination.beam_sizes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="QuadScan.virtualclarabeamsizes.BeamSizeDetermination.calculation_d_matrix_step">
+<code class="descname">calculation_d_matrix_step</code><span class="sig-paren">(</span><em>transfer_matrix</em><span class="sig-paren">)</span><a class="headerlink" href="#QuadScan.virtualclarabeamsizes.BeamSizeDetermination.calculation_d_matrix_step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculation of the D matrix for a single set of values of quad scans</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>transfer_matrix</strong> – Transfer matrix at the reconstruction point</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Return self.d_matrix:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body">(filling in the d_matrix array)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="QuadScan.virtualclarabeamsizes.BeamSizeDetermination.charge">
+<code class="descname">charge</code><a class="headerlink" href="#QuadScan.virtualclarabeamsizes.BeamSizeDetermination.charge" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="QuadScan.virtualclarabeamsizes.BeamSizeDetermination.cov_matrix">
+<code class="descname">cov_matrix</code><a class="headerlink" href="#QuadScan.virtualclarabeamsizes.BeamSizeDetermination.cov_matrix" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="QuadScan.virtualclarabeamsizes.BeamSizeDetermination.covariance_matrix_reconstruction">
+<code class="descname">covariance_matrix_reconstruction</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#QuadScan.virtualclarabeamsizes.BeamSizeDetermination.covariance_matrix_reconstruction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstruction of the covariance matrix at reconstruction point from D Matrix and set of beamsizes</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Return self.cov_matrix:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body">(covariance matrix at reconstruction point)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="QuadScan.virtualclarabeamsizes.BeamSizeDetermination.currents_to_quad_strengths">
+<code class="descname">currents_to_quad_strengths</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/QuadScan/virtualclarabeamsizes.html#BeamSizeDetermination.currents_to_quad_strengths"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#QuadScan.virtualclarabeamsizes.BeamSizeDetermination.currents_to_quad_strengths" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the quad strengths from array of currents</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Return self.quad_strengths:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body">array of optimised quad strengths</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="QuadScan.virtualclarabeamsizes.BeamSizeDetermination.dlen1">
+<code class="descname">dlen1</code><em class="property"> = 0.105327</em><a class="headerlink" href="#QuadScan.virtualclarabeamsizes.BeamSizeDetermination.dlen1" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="QuadScan.virtualclarabeamsizes.BeamSizeDetermination.dlen2">
+<code class="descname">dlen2</code><em class="property"> = 0.2993</em><a class="headerlink" href="#QuadScan.virtualclarabeamsizes.BeamSizeDetermination.dlen2" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="QuadScan.virtualclarabeamsizes.BeamSizeDetermination.dlen3">
+<code class="descname">dlen3</code><em class="property"> = 1.033333</em><a class="headerlink" href="#QuadScan.virtualclarabeamsizes.BeamSizeDetermination.dlen3" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="QuadScan.virtualclarabeamsizes.BeamSizeDetermination.emits">
+<code class="descname">emits</code><a class="headerlink" href="#QuadScan.virtualclarabeamsizes.BeamSizeDetermination.emits" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="QuadScan.virtualclarabeamsizes.BeamSizeDetermination.emits_matrix">
+<code class="descname">emits_matrix</code><a class="headerlink" href="#QuadScan.virtualclarabeamsizes.BeamSizeDetermination.emits_matrix" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="QuadScan.virtualclarabeamsizes.BeamSizeDetermination.extract_beamsize_dict_one_quad">
+<em class="property">static </em><code class="descname">extract_beamsize_dict_one_quad</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/QuadScan/virtualclarabeamsizes.html#BeamSizeDetermination.extract_beamsize_dict_one_quad"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#QuadScan.virtualclarabeamsizes.BeamSizeDetermination.extract_beamsize_dict_one_quad" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to fill in the beam size dictionary for a set of optimised quads</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>camera_dictionary</strong> – Dictionary with all the information from the Observation point camera</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Return beam_size:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body">Dictionary with beam sizes and coupling terms</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="QuadScan.virtualclarabeamsizes.BeamSizeDetermination.fill_in_beam_size_dictionary">
+<code class="descname">fill_in_beam_size_dictionary</code><span class="sig-paren">(</span><em>x_sig</em>, <em>y_sig</em>, <em>x_y_sig</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/QuadScan/virtualclarabeamsizes.html#BeamSizeDetermination.fill_in_beam_size_dictionary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#QuadScan.virtualclarabeamsizes.BeamSizeDetermination.fill_in_beam_size_dictionary" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div>Fill in the beam size dictionary</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>x_sig</strong> – Array with x rms from the camera:</li>
+<li><strong>y_sig</strong> – Array with y rms from the camera:</li>
+<li><strong>x_y_sig</strong> – Array with x-y coupling terms from the camera:</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Return self.beam_sizes:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><p class="first last">Dictionary with info from the camera:</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="QuadScan.virtualclarabeamsizes.BeamSizeDetermination.fill_in_currents_from_file">
+<code class="descname">fill_in_currents_from_file</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/QuadScan/virtualclarabeamsizes.html#BeamSizeDetermination.fill_in_currents_from_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#QuadScan.virtualclarabeamsizes.BeamSizeDetermination.fill_in_currents_from_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fill in the currents array (self.currents_optimised) by reading the Current file</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Return self.currents_optimised:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body">array of optimised currents for sets of quads</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="QuadScan.virtualclarabeamsizes.BeamSizeDetermination.finding_eigenvalues">
+<code class="descname">finding_eigenvalues</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#QuadScan.virtualclarabeamsizes.BeamSizeDetermination.finding_eigenvalues" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to find eigenvalues (in order to calculate the emittances as the imaginary eigenvalues of cov_matrixdot S</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Return self.emit:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body">Emittances for both normal modes</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Return self.emit_matrix:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body">Transformation between normal mode space and cartesian space</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="QuadScan.virtualclarabeamsizes.BeamSizeDetermination.input_dist">
+<code class="descname">input_dist</code><a class="headerlink" href="#QuadScan.virtualclarabeamsizes.BeamSizeDetermination.input_dist" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="QuadScan.virtualclarabeamsizes.BeamSizeDetermination.lattice_end">
+<code class="descname">lattice_end</code><a class="headerlink" href="#QuadScan.virtualclarabeamsizes.BeamSizeDetermination.lattice_end" title="Permalink to this definition">¶</a></dt>
+<dd><p>The unique name of the lattice_end property.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Getter:</th><td class="field-body">Returns lattice_end’s name</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Setter:</th><td class="field-body">Sets lattice_end’s name</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="QuadScan.virtualclarabeamsizes.BeamSizeDetermination.lattice_start">
+<code class="descname">lattice_start</code><a class="headerlink" href="#QuadScan.virtualclarabeamsizes.BeamSizeDetermination.lattice_start" title="Permalink to this definition">¶</a></dt>
+<dd><p>The unique name of the lattice_start property.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Getter:</th><td class="field-body">Returns lattice_start’s name</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Setter:</th><td class="field-body">Sets lattice_start’s name</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="QuadScan.virtualclarabeamsizes.BeamSizeDetermination.match_beam_divergence">
+<code class="descname">match_beam_divergence</code><span class="sig-paren">(</span><em>sig_xpx</em>, <em>sig_ypy</em>, <em>q_strength</em><span class="sig-paren">)</span><a class="headerlink" href="#QuadScan.virtualclarabeamsizes.BeamSizeDetermination.match_beam_divergence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to match the beam and optimise the quads (finding an elliptical beam with waist at observation point)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>sig_xpx</strong> – coupling transversal term in x</li>
+<li><strong>sig_ypy</strong> – coupling transversal term in y</li>
+<li><strong>q_strength</strong> – Quad strength</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Return difference of coupling terms:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><p class="first last">to be minimise</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="QuadScan.virtualclarabeamsizes.BeamSizeDetermination.merit_function">
+<code class="descname">merit_function</code><span class="sig-paren">(</span><em>sig_xpx</em>, <em>sig_ypy</em><span class="sig-paren">)</span><a class="headerlink" href="#QuadScan.virtualclarabeamsizes.BeamSizeDetermination.merit_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Merit function to be minimise</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>sig_xpx</strong> – </li>
+<li><strong>sig_ypy</strong> – </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Return lambda function:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><p class="first last">to minimise as a function of quad strength</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="QuadScan.virtualclarabeamsizes.BeamSizeDetermination.multiplication_d_matrix_even">
+<code class="descname">multiplication_d_matrix_even</code><span class="sig-paren">(</span><em>index</em>, <em>transfer_matrix</em><span class="sig-paren">)</span><a class="headerlink" href="#QuadScan.virtualclarabeamsizes.BeamSizeDetermination.multiplication_d_matrix_even" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculation of the even terms of the D matrix from the transfer matrix</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>index</strong> – even index of the general D matrix</li>
+<li><strong>transfer_matrix</strong> – transfer matrix at reconstruction point</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Return self.d_matrix_step:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><p class="first last">(filling in the d_matrix array)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="QuadScan.virtualclarabeamsizes.BeamSizeDetermination.multiplication_d_matrix_odd">
+<code class="descname">multiplication_d_matrix_odd</code><span class="sig-paren">(</span><em>index</em>, <em>transfer_matrix</em><span class="sig-paren">)</span><a class="headerlink" href="#QuadScan.virtualclarabeamsizes.BeamSizeDetermination.multiplication_d_matrix_odd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculation of the odd terms of the D matrix from the transfer matrix</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>index</strong> – odd index of the general D matrix</li>
+<li><strong>transfer_matrix</strong> – transfer matrix at reconstruction point</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Return self.d_matrix_step:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><p class="first last">(filling in the d_matrix array)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="QuadScan.virtualclarabeamsizes.BeamSizeDetermination.nsteps">
+<code class="descname">nsteps</code><a class="headerlink" href="#QuadScan.virtualclarabeamsizes.BeamSizeDetermination.nsteps" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="QuadScan.virtualclarabeamsizes.BeamSizeDetermination.optimising_match_divergence">
+<code class="descname">optimising_match_divergence</code><span class="sig-paren">(</span><em>sig_xpx</em>, <em>sig_ypy</em>, <em>q_strength</em><span class="sig-paren">)</span><a class="headerlink" href="#QuadScan.virtualclarabeamsizes.BeamSizeDetermination.optimising_match_divergence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to find the optimum quads</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>sig_xpx</strong> – Transversal coupling term in x</li>
+<li><strong>sig_ypy</strong> – Transversal coupling term in x</li>
+<li><strong>q_strength</strong> – Initial guess of quad strength</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Return optimum quad strength:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><p class="first last">Optimised quad strength</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="QuadScan.virtualclarabeamsizes.BeamSizeDetermination.path_output">
+<code class="descname">path_output</code><a class="headerlink" href="#QuadScan.virtualclarabeamsizes.BeamSizeDetermination.path_output" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="QuadScan.virtualclarabeamsizes.BeamSizeDetermination.plot_quad_scan">
+<code class="descname">plot_quad_scan</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#QuadScan.virtualclarabeamsizes.BeamSizeDetermination.plot_quad_scan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to  plot the quad scans beam sizes and coupling terms</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="QuadScan.virtualclarabeamsizes.BeamSizeDetermination.plot_quad_scan_strengths">
+<code class="descname">plot_quad_scan_strengths</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#QuadScan.virtualclarabeamsizes.BeamSizeDetermination.plot_quad_scan_strengths" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to  plot the quad scans strengths</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="QuadScan.virtualclarabeamsizes.BeamSizeDetermination.preparing_catap_data">
+<code class="descname">preparing_catap_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/QuadScan/virtualclarabeamsizes.html#BeamSizeDetermination.preparing_catap_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#QuadScan.virtualclarabeamsizes.BeamSizeDetermination.preparing_catap_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method with the sequence for getting the CATAP Dictionary and interact with SimFrame</p>
+<p>:return  catapdict : Dictionary with all the PVs</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="QuadScan.virtualclarabeamsizes.BeamSizeDetermination.qlength">
+<code class="descname">qlength</code><em class="property"> = 0.1007</em><a class="headerlink" href="#QuadScan.virtualclarabeamsizes.BeamSizeDetermination.qlength" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="QuadScan.virtualclarabeamsizes.BeamSizeDetermination.qstrengths">
+<code class="descname">qstrengths</code><a class="headerlink" href="#QuadScan.virtualclarabeamsizes.BeamSizeDetermination.qstrengths" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="QuadScan.virtualclarabeamsizes.BeamSizeDetermination.quad_scan">
+<code class="descname">quad_scan</code><span class="sig-paren">(</span><em>catapdict</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/QuadScan/virtualclarabeamsizes.html#BeamSizeDetermination.quad_scan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#QuadScan.virtualclarabeamsizes.BeamSizeDetermination.quad_scan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to perform the quad scan from the optimised currents</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>catapdict</strong> – CATAP dictionary  with all the PVs obtained from CATAP:</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Return self.beam_sizes:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body">beam sizes array obtained from quad scans</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="QuadScan.virtualclarabeamsizes.BeamSizeDetermination.quad_set_sequence">
+<code class="descname">quad_set_sequence</code><span class="sig-paren">(</span><em>rows</em>, <em>catapdict</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/QuadScan/virtualclarabeamsizes.html#BeamSizeDetermination.quad_set_sequence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#QuadScan.virtualclarabeamsizes.BeamSizeDetermination.quad_set_sequence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to extract the camera info from each set of quad sequence</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>rows</strong> – Number of quad scan (from 1 up to the number of scans: int(self.nsteps)</li>
+<li><strong>catapdict</strong> – CATAP dictionary  with all the PVs obtained from CATAP:</li>
+<li><strong>self.currents_optimised</strong> – Set of currents for the optimised quad strengths:</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Return self.beam_sizes:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><p class="first last">beam sizes array obtained from quad scans:</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="QuadScan.virtualclarabeamsizes.BeamSizeDetermination.reconstruction_d_matrix">
+<code class="descname">reconstruction_d_matrix</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#QuadScan.virtualclarabeamsizes.BeamSizeDetermination.reconstruction_d_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculating the D matrix from the transfer matrix post Linac for all measurements</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Return self.d_matrix:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body">filling in the self.d_matrix (dimensions (3*self.nstep,10))</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="QuadScan.virtualclarabeamsizes.BeamSizeDetermination.rel_gamma">
+<code class="descname">rel_gamma</code><em class="property"> = 88.06281753405338</em><a class="headerlink" href="#QuadScan.virtualclarabeamsizes.BeamSizeDetermination.rel_gamma" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="QuadScan.virtualclarabeamsizes.BeamSizeDetermination.screen_data">
+<code class="descname">screen_data</code><a class="headerlink" href="#QuadScan.virtualclarabeamsizes.BeamSizeDetermination.screen_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="QuadScan.virtualclarabeamsizes.BeamSizeDetermination.sequence_to_prepare_machine_state_and_simframe">
+<code class="descname">sequence_to_prepare_machine_state_and_simframe</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/QuadScan/virtualclarabeamsizes.html#BeamSizeDetermination.sequence_to_prepare_machine_state_and_simframe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#QuadScan.virtualclarabeamsizes.BeamSizeDetermination.sequence_to_prepare_machine_state_and_simframe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sequence to set up the catap and simframe dictionaries</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Return self.beam_sizes:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body">Set beam_sizes</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="QuadScan.virtualclarabeamsizes.BeamSizeDetermination.setting_up_simframe">
+<code class="descname">setting_up_simframe</code><span class="sig-paren">(</span><em>catapdict</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/QuadScan/virtualclarabeamsizes.html#BeamSizeDetermination.setting_up_simframe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#QuadScan.virtualclarabeamsizes.BeamSizeDetermination.setting_up_simframe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to set up the simframe object (machine state)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>catapdict</strong> – CATAP dictionary</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Return simframedata:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body">SimFrame dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="QuadScan.virtualclarabeamsizes.BeamSizeDetermination.transfer_matrix_drift">
+<em class="property">static </em><code class="descname">transfer_matrix_drift</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#QuadScan.virtualclarabeamsizes.BeamSizeDetermination.transfer_matrix_drift" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transfer matrix for Drifts</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>length</strong> – Drift length</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Return Transfer Matrix:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body">for a drift</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="QuadScan.virtualclarabeamsizes.BeamSizeDetermination.transfer_matrix_post_linac">
+<code class="descname">transfer_matrix_post_linac</code><span class="sig-paren">(</span><em>q_strengths</em><span class="sig-paren">)</span><a class="headerlink" href="#QuadScan.virtualclarabeamsizes.BeamSizeDetermination.transfer_matrix_post_linac" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transfer Matrix to be obtained at the reconstruction point</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>q_strengths</strong> – Optimised quad strengths</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Return Transfer Matrix:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body">at reconstruction point:</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="QuadScan.virtualclarabeamsizes.BeamSizeDetermination.transfer_matrix_quad">
+<code class="descname">transfer_matrix_quad</code><span class="sig-paren">(</span><em>k1</em>, <em>length</em><span class="sig-paren">)</span><a class="headerlink" href="#QuadScan.virtualclarabeamsizes.BeamSizeDetermination.transfer_matrix_quad" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transfer Matrix for a Quad (Thin Lens approximation)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>k1</strong> – Quad Strength</li>
+<li><strong>length</strong> – Length of the quad</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Return Transfer matrix:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><p class="first last">for a Quad</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#QuadScan.virtualclarabeamsizes.BeamSizeDetermination" title="QuadScan.virtualclarabeamsizes.BeamSizeDetermination"><code class="xref py py-obj docutils literal notranslate"><span class="pre">QuadScan.virtualclarabeamsizes.BeamSizeDetermination</span></code></a>()</td>
+<td>Daughter class of py:class GeneralQuadScan containing all methods to calculate the quad strengths from experimental data and use the interface between CATAP and SimFrame to obtain the beam sizes.</td>
+</tr>
+</tbody>
+</table>
+<img src="_images/inheritance-e2eca1065371c35e37c72bcbf8b01e131d9bb823.png" alt="Inheritance diagram of QuadScan.virtualclarabeamsizes.BeamSizeDetermination, QuadScan.QuadScanclass.GeneralQuadScan, machine_state.MachineState" usemap="#inheritance2a2c1ebe90" class="inheritance"/>
+<map id="inheritance2a2c1ebe90" name="inheritance2a2c1ebe90">
+<area shape="rect" id="node1" href="#QuadScan.virtualclarabeamsizes.BeamSizeDetermination" target="_top" title="Daughter class of py:class GeneralQuadScan containing all methods to" alt="" coords="181,55,344,80"/>
+<area shape="rect" id="node2" href="EmittanceQuadScan.html#QuadScan.QuadScanclass.GeneralQuadScan" target="_top" title="Parent class that has all the methods to measure the emittance values" alt="" coords="5,55,133,80"/>
+</map></div>
+
+
+          </div>
+        </div>
+      </div>
+        </div>
+        <div class="sidebar">
+          <h3>Table Of Contents</h3>
+          <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Virtual Beam size measurement (BeamSizeDetermination Class)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="EmittanceQuadScan.html">GeneralQuadScan (parent class)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="QuadScan.html">QuadScan Module</a></li>
+</ul>
+
+          <div role="search">
+            <h3 style="margin-top: 1.5em;">Search</h3>
+            <form class="search" action="search.html" method="get">
+                <input type="text" name="q" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+            </form>
+          </div>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+    <div class="footer-wrapper">
+      <div class="footer">
+        <div class="left">
+          <div role="navigation" aria-label="related navigaton">
+            <a href="index.html" title="Welcome to Emittance GUI’s documentation!"
+              >previous</a> |
+            <a href="EmittanceQuadScan.html" title="GeneralQuadScan (parent class)"
+              >next</a> |
+            <a href="py-modindex.html" title="Python Module Index"
+              >modules</a> |
+            <a href="genindex.html" title="General Index"
+              >index</a>
+          </div>
+          <div role="note" aria-label="source link">
+              <br/>
+              <a href="_sources/VirtualEmittanceMeasurement.rst.txt"
+                rel="nofollow">Show Source</a>
+          </div>
+        </div>
+
+        <div class="right">
+          
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, H.M. Castaneda Cortes, D.J. Scott, A. Wolski, A. Brynes, M. King.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.0.
+    </div>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+  </body>
+</html>

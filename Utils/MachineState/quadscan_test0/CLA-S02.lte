@@ -1,0 +1,75 @@
+START: charge, total = 9.9999999999975e-12;
+CLA-S02-APER-01: maxamp, x_max = 0.017, y_max = 0.017;
+CLA-S02-MAG-HVCOR-01: kicker, l = 0.076607;
+drift1: csrdrift, l = 0.028719999999999857, lsc_interpolate = 1, csr = 1,&
+use_stupakov = 1, dz = 0.01, lsc_bins = 200, lsc_high_frequency_cutoff0 = -1,&
+lsc_high_frequency_cutoff1 = -1, lsc_low_frequency_cutoff0 = -1,&
+lsc_low_frequency_cutoff1 = -1;
+CLA-S02-MAG-QUAD-01: kquad, l = 0.1007, n_kicks = 20, synch_rad = 1, isr = 1,&
+k1 = 1.3825715682362327;
+CLA-S02-DIA-BPM-01: moni, l = 0.04528;
+drift2: csrdrift, l = 0.2540199999999997, lsc_interpolate = 1, csr = 1,&
+use_stupakov = 1, dz = 0.01, lsc_bins = 200, lsc_high_frequency_cutoff0 = -1,&
+lsc_high_frequency_cutoff1 = -1, lsc_low_frequency_cutoff0 = -1,&
+lsc_low_frequency_cutoff1 = -1;
+CLA-S02-MAG-QUAD-02: kquad, l = 0.1007, n_kicks = 20, synch_rad = 1, isr = 1,&
+k1 = 1.3807153049638823;
+drift3: csrdrift, l = 0.11233000000000004, lsc_interpolate = 1, csr = 1,&
+use_stupakov = 1, dz = 0.01, lsc_bins = 200, lsc_high_frequency_cutoff0 = -1,&
+lsc_high_frequency_cutoff1 = -1, lsc_low_frequency_cutoff0 = -1,&
+lsc_low_frequency_cutoff1 = -1;
+CLA-S02-DIA-SCR-01: watch, filename = CLA-S02-DIA-SCR-01.SDDS;
+drift4: csrdrift, l = 0.14823999999999948, lsc_interpolate = 1, csr = 1,&
+use_stupakov = 1, dz = 0.01, lsc_bins = 200, lsc_high_frequency_cutoff0 = -1,&
+lsc_high_frequency_cutoff1 = -1, lsc_low_frequency_cutoff0 = -1,&
+lsc_low_frequency_cutoff1 = -1;
+CLA-S02-MAG-HVCOR-02: kicker, l = 0.03;
+drift5: csrdrift, l = 0.07554999999999978, lsc_interpolate = 1, csr = 1,&
+use_stupakov = 1, dz = 0.01, lsc_bins = 200, lsc_high_frequency_cutoff0 = -1,&
+lsc_high_frequency_cutoff1 = -1, lsc_low_frequency_cutoff0 = -1,&
+lsc_low_frequency_cutoff1 = -1;
+CLA-S02-COL-01: ecol, l = 0.35, x_max = 0.01, y_max = 0.01;
+CLA-S02-APER-02: maxamp, x_max = 0.017, y_max = 0.017;
+drift6: csrdrift, l = 0.1219399999999995, lsc_interpolate = 1, csr = 1,&
+use_stupakov = 1, dz = 0.01, lsc_bins = 200, lsc_high_frequency_cutoff0 = -1,&
+lsc_high_frequency_cutoff1 = -1, lsc_low_frequency_cutoff0 = -1,&
+lsc_low_frequency_cutoff1 = -1;
+CLA-S02-MAG-HVCOR-03: kicker, l = 0.03;
+drift7: csrdrift, l = 0.16527000000000047, lsc_interpolate = 1, csr = 1,&
+use_stupakov = 1, dz = 0.01, lsc_bins = 200, lsc_high_frequency_cutoff0 = -1,&
+lsc_high_frequency_cutoff1 = -1, lsc_low_frequency_cutoff0 = -1,&
+lsc_low_frequency_cutoff1 = -1;
+CLA-S02-DIA-SCR-02: watch, filename = CLA-S02-DIA-SCR-02.SDDS;
+drift8: csrdrift, l = 0.16596999999999973, lsc_interpolate = 1, csr = 1,&
+use_stupakov = 1, dz = 0.01, lsc_bins = 200, lsc_high_frequency_cutoff0 = -1,&
+lsc_high_frequency_cutoff1 = -1, lsc_low_frequency_cutoff0 = -1,&
+lsc_low_frequency_cutoff1 = -1;
+CLA-S02-MAG-QUAD-03: kquad, l = 0.1007, n_kicks = 20, synch_rad = 1, isr = 1,&
+k1 = 1.3856274354107605;
+drift9: csrdrift, l = 0.29930000000000057, lsc_interpolate = 1, csr = 1,&
+use_stupakov = 1, dz = 0.01, lsc_bins = 200, lsc_high_frequency_cutoff0 = -1,&
+lsc_high_frequency_cutoff1 = -1, lsc_low_frequency_cutoff0 = -1,&
+lsc_low_frequency_cutoff1 = -1;
+CLA-S02-MAG-QUAD-04: kquad, l = 0.1007, n_kicks = 20, synch_rad = 1, isr = 1,&
+k1 = 1.3932351972300197;
+drift10: csrdrift, l = 0.7124499999999996, lsc_interpolate = 1, csr = 1,&
+use_stupakov = 1, dz = 0.01, lsc_bins = 200, lsc_high_frequency_cutoff0 = -1,&
+lsc_high_frequency_cutoff1 = -1, lsc_low_frequency_cutoff0 = -1,&
+lsc_low_frequency_cutoff1 = -1;
+CLA-S02-MAG-QUAD-05: kquad, l = 0.1007, n_kicks = 20, synch_rad = 1, isr = 1,&
+k1 = 1.4167323843725272;
+CLA-S02-DIA-BPM-02: moni, l = 0.05135;
+drift11: csrdrift, l = 0.04143000000000008, lsc_interpolate = 1, csr = 1,&
+use_stupakov = 1, dz = 0.01, lsc_bins = 200, lsc_high_frequency_cutoff0 = -1,&
+lsc_high_frequency_cutoff1 = -1, lsc_low_frequency_cutoff0 = -1,&
+lsc_low_frequency_cutoff1 = -1;
+CLA-S02-DIA-SCR-03: watch, filename = CLA-S02-DIA-SCR-03.SDDS;
+end: watch, filename = CLA-S02-DIA-SCR-03.SDDS;
+CLA-S02: Line=(START, CLA-S02-APER-01, CLA-S02-MAG-HVCOR-01, &
+drift1, CLA-S02-MAG-QUAD-01, CLA-S02-DIA-BPM-01, drift2, &
+CLA-S02-MAG-QUAD-02, drift3, CLA-S02-DIA-SCR-01, drift4, &
+CLA-S02-MAG-HVCOR-02, drift5, CLA-S02-COL-01, &
+CLA-S02-APER-02, drift6, CLA-S02-MAG-HVCOR-03, drift7, &
+CLA-S02-DIA-SCR-02, drift8, CLA-S02-MAG-QUAD-03, drift9, &
+CLA-S02-MAG-QUAD-04, drift10, CLA-S02-MAG-QUAD-05, &
+CLA-S02-DIA-BPM-02, drift11, CLA-S02-DIA-SCR-03, END )

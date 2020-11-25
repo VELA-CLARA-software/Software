@@ -170,6 +170,7 @@ class signalTable(qt.QWidget):
     signalRateChanged = qt.pyqtSignal('PyQt_PyObject', 'PyQt_PyObject')
     colourPickerButtonPushed = qt.pyqtSignal('PyQt_PyObject')
 
+<<<<<<< HEAD
     def __init__(self, parent = None, CLARAMagnetController=None, CLARABPMController=None, LRRGRFController=None,  L01RFController=None, GeneralController=None, settings=None):
         super(signalTable, self).__init__(parent)
         self.setMaximumHeight(100)
@@ -192,6 +193,20 @@ class signalTable(qt.QWidget):
         self.VELAMagnets = CLARAMagnetController
         self.CLARAMagnets = CLARAMagnetController
         self.VELAbpms = CLARABPMController
+=======
+    def __init__(self, parent = None, VELAMagnetController=None, CLARAMagnetController=None, VELABPMController=None, CLARABPMController=None, LRRGRFController=None,  L01RFController=None, GeneralController=None, settings=None):
+        super(signalTable, self).__init__(parent)
+        self.setMaximumHeight(100)
+        self.settings_filename = 'striptool.yaml' if settings is None else settings
+        with open(self.settings_filename, 'r') as stream:
+            self.settings = yaml.load(stream, Loader=yaml.Loader)
+        self.magnetnames = self.settings['magnets']
+        self.headings = self.settings['headings']
+        self.frequencies = self.settings['frequencies']
+        self.VELAMagnets = VELAMagnetController
+        self.CLARAMagnets = CLARAMagnetController
+        self.VELAbpms = VELABPMController
+>>>>>>> parent of 903bfae1... Added handle_update_individual_trace button to NO-ARCv2 GUI that toggles the updating of individual traces between passive and 10Hz.
         self.CLARAbpms = CLARABPMController
         self.L01RF = L01RFController
         self.LRRGRF = LRRGRFController
@@ -221,7 +236,11 @@ class signalTable(qt.QWidget):
 
     def reloadSettings(self):
         self.stream = open(self.settings_filename, 'r')
+<<<<<<< HEAD
         self.settings = yaml.safe_load(self.stream)
+=======
+        self.settings = yaml.load(self.stream)
+>>>>>>> parent of 903bfae1... Added handle_update_individual_trace button to NO-ARCv2 GUI that toggles the updating of individual traces between passive and 10Hz.
         self.stream.close()
         self.magnetnames = self.settings['magnets']
         self.headings = self.settings['headings']

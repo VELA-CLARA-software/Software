@@ -1,0 +1,652 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>QuadScanclass &#8212; Emittance Measurement</title>
+    <link rel="stylesheet" href="../_static/agogo.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head><body>
+    <div class="header-wrapper" role="banner">
+      <div class="header">
+        <div class="headertitle"><a
+          href="../index.html">Emittance Measurement</a></div>
+        <div class="rel" role="navigation" aria-label="related navigation">
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a>
+        </div>
+       </div>
+    </div>
+
+    <div class="content-wrapper">
+      <div class="content">
+        <div class="document">
+            
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for QuadScanclass</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+<span class="kn">from</span> <span class="nn">ocelot.common.globals</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">scipy.linalg</span>
+<span class="kn">import</span> <span class="nn">scipy.optimize</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">from</span> <span class="nn">cycler</span> <span class="kn">import</span> <span class="n">cycler</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+
+<span class="k">class</span> <span class="nc">GeneralQuadScan</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    Parent class that has all the methods to measure the emittance values</span>
+<span class="sd">    by reconstructing the covariance matrix at reconstruction point</span>
+<span class="sd">    from the beamsizes and optimised quad strengths</span>
+
+<span class="sd">    :ivar charge: Charge: 10 pC</span>
+<span class="sd">    :ivar SMatrix: Antisymmetric matrix: Smatrix</span>
+<span class="sd">    :ivar rel_gamma: Relativistic gamma: 30.0 / m_e_MeV</span>
+<span class="sd">    :ivar qlength: Quad length: 0.1007</span>
+<span class="sd">    :ivar dlen1: Drift length: 0.105327</span>
+<span class="sd">    :ivar dlen2: Drift length: 0.299300</span>
+<span class="sd">    :ivar dlen3: Drift length: 1.033333</span>
+<span class="sd">    :ivar cov_matrix: Calculated covariance matrix at reconstruction point: np.zeros((4, 4))</span>
+<span class="sd">    :ivar emits: Emittances of normal modes: np.zeros((2, 1))</span>
+<span class="sd">    :ivar emits_matrix: Emittances matrix transformation:[]</span>
+<span class="sd">    :ivar qstrengths: Optimised quad strengths: []</span>
+<span class="sd">    :ivar Nsteps: Number of steps of quad scan:  20</span>
+<span class="sd">    :ivar input_dist: path of the input distribution for simulation: &#39;&#39;</span>
+<span class="sd">    :ivar d_matrix_step: D matrix calculated for a single set of quad values:  np.zeros((3,10))</span>
+<span class="sd">    :ivar d_matrix: total D matrix over all quad scans: np.array([])</span>
+<span class="sd">    :ivar beam_sizes: data obtained from observation point used to calculate the emittance: OrderedDict()</span>
+<span class="sd">    :ivar screen_data: Data ordered obtained from observation point in order to find the cov. matrix: np.array((3*nstep,10))</span>
+<span class="sd">    :ivar path_output: Path to store the plot of the quad scan: &#39;&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">Smatrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                        <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+                        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>  <span class="c1">#: Smatrix</span>
+    <span class="n">rel_gamma</span> <span class="o">=</span> <span class="mf">45.0</span> <span class="o">/</span> <span class="n">m_e_MeV</span>  <span class="c1">#: relative gamma: 45</span>
+    <span class="n">qlength</span> <span class="o">=</span> <span class="mf">0.1007</span>  <span class="c1">#: Quad length: 0.1007</span>
+    <span class="n">dlen1</span> <span class="o">=</span> <span class="mf">0.105327</span>  <span class="c1">#: Drift length: 0.105327</span>
+    <span class="n">dlen2</span> <span class="o">=</span> <span class="mf">0.299300</span>  <span class="c1">#: Drift length:0.299300</span>
+    <span class="n">dlen3</span> <span class="o">=</span> <span class="mf">1.033333</span>  <span class="c1">#:  Drift length:1.033333</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Initialisation of the object</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__charge</span> <span class="o">=</span> <span class="mi">10</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__cov_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>  <span class="c1">#: Covariance Matrix at reconstruction point</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__emits</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>  <span class="c1">#: Emittances of normal modes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__emits_matrix</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1">#: Emittance transformation matrix</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__qstrengths</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1">#: optimised values of Quad Strengths</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__input_dist</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>  <span class="c1">#: Path of input distribution: &#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__nsteps</span> <span class="o">=</span> <span class="mi">20</span>  <span class="c1">#: Number of steps of Quad Scan: 20</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">d_matrix_step</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>  <span class="c1">#: D matrix for one set of quad strengths</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">d_matrix</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1">#: Total D matrix for all sets of quads</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__beam_sizes</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>  <span class="c1">#: Dictionary with the measured beam sizes at observation point</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__screen_data</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1">#: Array with measured data being ordered: []</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__path_output</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>  <span class="c1">#: Path where the Quad Scan plot is to be saved</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">charge</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__charge</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">input_dist</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__input_dist</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__input_dist</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__input_dist</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">cov_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__cov_matrix</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">emits</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__emits</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">emits_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__emits_matrix</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">qstrengths</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__qstrengths</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">nsteps</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1">#: Number of steps of Quad Scan: 20</span>
+        <span class="k">return</span> <span class="n">deepcopy</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__nsteps</span><span class="p">))</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">beam_sizes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__beam_sizes</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">screen_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__screen_data</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">path_output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__path_output</span>
+
+    <span class="nd">@path_output</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">path_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__path_output</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+    <span class="nd">@charge</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">charge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">charg</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__charge</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">charg</span><span class="p">)</span>
+
+    <span class="nd">@screen_data</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">screen_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scr</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__screen_data</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">scr</span><span class="p">)</span>
+
+    <span class="nd">@beam_sizes</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">beam_sizes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">beam_size</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__beam_sizes</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">beam_size</span><span class="p">)</span>
+
+    <span class="nd">@input_dist</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">input_dist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path_dist</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__input_dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">path_dist</span><span class="p">))</span>
+
+    <span class="nd">@cov_matrix</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">cov_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matrix</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__cov_matrix</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
+
+    <span class="nd">@emits</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">emits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">emits_array</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">i_exy</span><span class="p">,</span> <span class="n">emitt</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">emits_array</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__emits</span><span class="p">[</span><span class="n">i_exy</span><span class="p">]</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">emitt</span><span class="p">)</span>
+
+    <span class="nd">@emits_matrix</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">emits_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">emits_m</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__emits_matrix</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">emits_m</span><span class="p">)</span>
+
+    <span class="nd">@qstrengths</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">qstrengths</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">qstr</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__qstrengths</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">qstr</span><span class="p">)</span>
+
+    <span class="nd">@nsteps</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">nsteps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nstep</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__nsteps</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">nstep</span><span class="p">))</span>
+        <span class="c1">#self.d_matrix = np.zeros((3 * int(self.nsteps), 10))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">qstrengths</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">nsteps</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">FileOpen</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Subroutine used to read data from a text file into an array</span>
+
+<span class="sd">        :parameter filename: Path of the file to be opened</span>
+
+<span class="sd">        :return Numpy array : the contents of the file</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">filename</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">:]</span> <span class="o">!=</span> <span class="s2">&quot;.txt&quot;</span><span class="p">:</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="n">filename</span> <span class="o">+</span> <span class="s2">&quot;.txt&quot;</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+
+        <span class="n">nlines</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="n">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>  <span class="c1"># opens on &#39;read&#39; mode</span>
+
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">nlines</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">fromstring</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">))</span>
+
+        <span class="n">file</span><span class="o">.</span><span class="n">close</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="n">nlines</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">size</span> <span class="o">/</span> <span class="n">nlines</span><span class="p">)))</span>
+
+        <span class="k">return</span> <span class="n">data</span>
+
+    <span class="k">def</span> <span class="nf">I2K_CLARA_simple</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">currents</span><span class="p">,</span> <span class="n">beamMomentum</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to calculate the quad strengths from the currents</span>
+
+<span class="sd">        :parameter currents: Currents</span>
+
+<span class="sd">        :parameter beamMomentum: Beam Momentum</span>
+
+<span class="sd">        :return k_values: for each quadrupole</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># quad calibrations are in the magnet controller</span>
+        <span class="n">pfitq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">FileOpen</span><span class="p">(</span><span class="s1">&#39;QuadCalibration.txt&#39;</span><span class="p">))</span>
+
+        <span class="c1"># currents are from the experiment</span>
+        <span class="n">currents</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">currents</span><span class="p">)</span>
+        <span class="n">kvals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+            <span class="n">kvals</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+                <span class="n">kvals</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="n">kvals</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">+</span> <span class="n">pfitq</span><span class="p">[</span><span class="n">p</span><span class="p">][</span><span class="n">n</span><span class="p">]</span> <span class="o">*</span> <span class="n">currents</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">**</span> <span class="p">(</span><span class="mi">3</span> <span class="o">-</span> <span class="n">p</span><span class="p">)</span>
+        <span class="c1"># k value with momentum - what is this factor of 30???</span>
+        <span class="n">kvals</span> <span class="o">=</span> <span class="n">kvals</span> <span class="o">*</span> <span class="mi">30</span> <span class="o">/</span> <span class="n">beamMomentum</span>
+        <span class="k">return</span> <span class="n">kvals</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">transfer_matrix_drift</span><span class="p">(</span><span class="n">length</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Transfer matrix for Drifts</span>
+
+<span class="sd">        :parameter length: Drift length</span>
+
+<span class="sd">        :return Transfer Matrix: for a drift</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                         <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                         <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">length</span><span class="p">],</span>
+                         <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span>
+
+    <span class="k">def</span> <span class="nf">transfer_matrix_quad</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k1</span><span class="p">,</span> <span class="n">length</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Transfer Matrix for a Quad (Thin Lens approximation)</span>
+
+<span class="sd">        :parameter k1: Quad Strength</span>
+
+<span class="sd">        :parameter length: Length of the quad</span>
+
+<span class="sd">        :return  Transfer matrix: for a Quad</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transfer_matrix_drift</span><span class="p">(</span><span class="n">length</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">k1</span><span class="p">:</span>
+            <span class="n">omega</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">k1</span><span class="p">)</span>
+            <span class="n">m</span> <span class="o">=</span> <span class="p">[[</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">omega</span> <span class="o">*</span> <span class="n">length</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">omega</span> <span class="o">*</span> <span class="n">length</span><span class="p">)</span> <span class="o">/</span> <span class="n">omega</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                 <span class="p">[</span><span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">omega</span> <span class="o">*</span> <span class="n">length</span><span class="p">)</span> <span class="o">*</span> <span class="n">omega</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">omega</span> <span class="o">*</span> <span class="n">length</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                 <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">cosh</span><span class="p">(</span><span class="n">omega</span> <span class="o">*</span> <span class="n">length</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sinh</span><span class="p">(</span><span class="n">omega</span> <span class="o">*</span> <span class="n">length</span><span class="p">)</span> <span class="o">/</span> <span class="n">omega</span><span class="p">],</span>
+                 <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sinh</span><span class="p">(</span><span class="n">omega</span> <span class="o">*</span> <span class="n">length</span><span class="p">)</span> <span class="o">*</span> <span class="n">omega</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">cosh</span><span class="p">(</span><span class="n">omega</span> <span class="o">*</span> <span class="n">length</span><span class="p">)]]</span>
+
+            <span class="n">m</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">m</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">m</span>
+
+    <span class="k">def</span> <span class="nf">transfer_matrix_post_linac</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">q_strengths</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Transfer Matrix to be obtained at the reconstruction point</span>
+
+<span class="sd">        :parameter q_strengths: Optimised quad strengths</span>
+
+<span class="sd">        :return Transfer Matrix: at reconstruction point:</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">mq1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transfer_matrix_quad</span><span class="p">(</span><span class="n">q_strengths</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">qlength</span><span class="p">)</span>
+        <span class="n">mq2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transfer_matrix_quad</span><span class="p">(</span><span class="n">q_strengths</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">qlength</span><span class="p">)</span>
+        <span class="n">md1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transfer_matrix_drift</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dlen1</span><span class="p">)</span>
+        <span class="n">md2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transfer_matrix_drift</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dlen2</span><span class="p">)</span>
+        <span class="n">md3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transfer_matrix_drift</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dlen3</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">md3</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">mq2</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">md2</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">mq1</span><span class="p">,</span> <span class="n">md1</span><span class="p">))))</span>
+
+    <span class="k">def</span> <span class="nf">match_beam_divergence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sig_xpx</span><span class="p">,</span> <span class="n">sig_ypy</span><span class="p">,</span> <span class="n">q_strength</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Method to match the beam and optimise the quads (finding an elliptical beam with waist at observation point)</span>
+
+<span class="sd">        :parameter sig_xpx: coupling transversal term in x</span>
+
+<span class="sd">        :parameter sig_ypy:  coupling transversal term in y</span>
+
+<span class="sd">        :parameter q_strength: Quad strength</span>
+
+<span class="sd">        :return difference of coupling terms: to be minimise</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">tm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transfer_matrix_post_linac</span><span class="p">(</span><span class="n">q_strength</span><span class="p">)</span>
+        <span class="n">cm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">tm</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cov_matrix</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">tm</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">cm</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">sig_xpx</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">cm</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">-</span> <span class="n">sig_ypy</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">merit_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sig_xpx</span><span class="p">,</span> <span class="n">sig_ypy</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Merit function to be minimise</span>
+
+<span class="sd">        :parameter sig_xpx:</span>
+
+<span class="sd">        :parameter sig_ypy:</span>
+
+<span class="sd">        :return lambda function:  to minimise as a function of quad strength</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="k">lambda</span> <span class="n">q_str</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">match_beam_divergence</span><span class="p">(</span><span class="n">sig_xpx</span><span class="p">,</span> <span class="n">sig_ypy</span><span class="p">,</span> <span class="n">q_str</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">optimising_match_divergence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sig_xpx</span><span class="p">,</span> <span class="n">sig_ypy</span><span class="p">,</span> <span class="n">q_strength</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to find the optimum quads</span>
+
+<span class="sd">        :parameter sig_xpx: Transversal coupling term in x</span>
+
+<span class="sd">        :parameter sig_ypy: Transversal coupling term in x</span>
+
+<span class="sd">        :parameter q_strength: Initial guess of quad strength</span>
+
+<span class="sd">        :return optimum quad strength: Optimised quad strength</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">scipy</span><span class="o">.</span><span class="n">optimize</span><span class="o">.</span><span class="n">fmin</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">merit_function</span><span class="p">(</span><span class="n">sig_xpx</span><span class="p">,</span> <span class="n">sig_ypy</span><span class="p">),</span> <span class="n">x0</span><span class="o">=</span><span class="n">q_strength</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">multiplication_d_matrix_even</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">transfer_matrix</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Calculation of the even terms of the D matrix from the transfer matrix</span>
+
+<span class="sd">        :parameter index: even index of the general D matrix</span>
+
+<span class="sd">        :parameter transfer_matrix: transfer matrix at reconstruction point</span>
+
+<span class="sd">        :return self.d_matrix_step:  (filling in the d_matrix array)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">i_overall</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">i_dx</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">d_matrix_step</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">i_dy</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">i_dx</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">d_matrix_step</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">i_dy</span> <span class="o">==</span> <span class="n">i_dx</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">d_matrix_step</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="n">i_overall</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">transfer_matrix</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="n">i_dy</span><span class="p">])</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">d_matrix_step</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="n">i_overall</span><span class="p">]</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">transfer_matrix</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="n">i_dx</span><span class="p">]</span> <span class="o">*</span> <span class="n">transfer_matrix</span><span class="p">[</span>
+                        <span class="n">index</span><span class="p">,</span> <span class="n">i_dy</span><span class="p">]</span>
+                <span class="n">i_overall</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">def</span> <span class="nf">multiplication_d_matrix_odd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">transfer_matrix</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Calculation of the odd terms of the D matrix from the transfer matrix</span>
+
+<span class="sd">            :parameter index: odd index of the general D matrix</span>
+
+<span class="sd">            :parameter transfer_matrix: transfer matrix at reconstruction point</span>
+
+<span class="sd">            :return self.d_matrix_step:  (filling in the d_matrix array)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">i_overall</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">i_dx</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">d_matrix_step</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">i_dy</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">i_dx</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">d_matrix_step</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">i_dy</span> <span class="o">==</span> <span class="n">i_dx</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">d_matrix_step</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="n">i_overall</span><span class="p">]</span> <span class="o">=</span> <span class="n">transfer_matrix</span><span class="p">[</span><span class="n">index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">i_dy</span><span class="p">]</span> <span class="o">*</span> <span class="n">transfer_matrix</span><span class="p">[</span>
+                        <span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">i_dx</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">d_matrix_step</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="n">i_overall</span><span class="p">]</span> <span class="o">=</span> <span class="n">transfer_matrix</span><span class="p">[</span><span class="n">index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">i_dx</span><span class="p">]</span> <span class="o">*</span> <span class="n">transfer_matrix</span><span class="p">[</span>
+                        <span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">i_dy</span><span class="p">]</span> <span class="o">+</span> \
+                                                           <span class="n">transfer_matrix</span><span class="p">[</span><span class="n">index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">i_dy</span><span class="p">]</span> <span class="o">*</span> <span class="n">transfer_matrix</span><span class="p">[</span>
+                                                               <span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">i_dx</span><span class="p">]</span>
+                <span class="n">i_overall</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">def</span> <span class="nf">calculation_d_matrix_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transfer_matrix</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Calculation of the D matrix for a single set of values of quad scans</span>
+
+<span class="sd">        :parameter transfer_matrix: Transfer matrix at the reconstruction point</span>
+
+<span class="sd">        :return self.d_matrix: (filling in the d_matrix array)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">d_matrix_step</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">d_matrix_step</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">d_matrix_step</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">d_matrix_step</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">d_matrix_step</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">d_matrix_step</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">d_matrix_step</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">]</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">d_matrix_step</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">7</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">d_matrix_step</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">8</span><span class="p">]</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">d_matrix_step</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">d_matrix_step</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">d_matrix_step</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="p">(</span>
+                <span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">d_matrix_step</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="p">(</span>
+                <span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">d_matrix_step</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">*</span> <span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="p">(</span>
+                <span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">d_matrix_step</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">d_matrix_step</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="p">(</span>
+                <span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">d_matrix_step</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">*</span> <span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="p">(</span>
+                <span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">d_matrix_step</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">7</span><span class="p">]</span> <span class="o">=</span> <span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">d_matrix_step</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">8</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">*</span> <span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span> <span class="o">+</span> <span class="p">(</span>
+                <span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">d_matrix_step</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">9</span><span class="p">]</span> <span class="o">=</span> <span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">*</span> <span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">d_matrix_step</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">d_matrix_step</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">d_matrix_step</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">d_matrix_step</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">d_matrix_step</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">d_matrix_step</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">d_matrix_step</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">]</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">d_matrix_step</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">7</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">d_matrix_step</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">]</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">d_matrix_step</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">9</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">transfer_matrix</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+
+        <span class="c1"># for index in np.arange(self.d_matrix.shape[0]):</span>
+        <span class="c1">#    if np.remainder(index, 2) == 0:</span>
+        <span class="c1">#        self.multiplication_d_matrix_even(index, transfer_matrix)</span>
+        <span class="c1">#    else:</span>
+        <span class="c1">#        self.multiplication_d_matrix_odd(index, transfer_matrix)</span>
+
+    <span class="k">def</span> <span class="nf">reconstruction_d_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculating the D matrix from the transfer matrix post Linac for all measurements</span>
+
+<span class="sd">        :return  self.d_matrix: filling in the self.d_matrix (dimensions (3*self.nstep,10))</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">n_step</span><span class="p">,</span> <span class="n">q_str</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nsteps</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">qstrengths</span><span class="p">))):</span>
+            <span class="n">transfer_matrix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transfer_matrix_post_linac</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">qstrengths</span><span class="p">[</span><span class="n">q_str</span><span class="p">,</span> <span class="p">:])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">calculation_d_matrix_step</span><span class="p">(</span><span class="n">transfer_matrix</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">d_matrix</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">d_matrix_step</span><span class="p">)</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="s1">&#39;d_matrix&#39;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">d_matrix</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;+++ D matrix is </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">d_matrix</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">covariance_matrix_reconstruction</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Reconstruction of the covariance matrix at reconstruction point from D Matrix and set of beamsizes</span>
+
+<span class="sd">        :return  self.cov_matrix: (covariance matrix at reconstruction point)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reconstruction_d_matrix</span><span class="p">()</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="s1">&#39;d_matrix_test.dat&#39;</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">d_matrix</span><span class="p">)</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="s1">&#39;sigma_1_test.dat&#39;</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">screen_data</span><span class="p">)</span>
+        <span class="n">dxinv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">pinv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">d_matrix</span><span class="p">)</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="s1">&#39;d_matrix_inv_test.dat&#39;</span><span class="p">),</span> <span class="n">dxinv</span><span class="p">)</span>
+        <span class="n">matrix_repr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">dxinv</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">screen_data</span><span class="p">)</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;cov_matrix&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">matrix_repr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">4</span><span class="p">)],</span>
+                                              <span class="p">[</span><span class="n">matrix_repr</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">matrix_repr</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">matrix_repr</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="n">matrix_repr</span><span class="p">[</span><span class="mi">6</span><span class="p">]],</span>
+                                              <span class="p">[</span><span class="n">matrix_repr</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">matrix_repr</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="n">matrix_repr</span><span class="p">[</span><span class="mi">7</span><span class="p">],</span> <span class="n">matrix_repr</span><span class="p">[</span><span class="mi">8</span><span class="p">]],</span>
+                                              <span class="p">[</span><span class="n">matrix_repr</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">matrix_repr</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span> <span class="n">matrix_repr</span><span class="p">[</span><span class="mi">8</span><span class="p">],</span> <span class="n">matrix_repr</span><span class="p">[</span><span class="mi">9</span><span class="p">]]]))</span>
+
+        <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="s1">&#39;cov_matrix_test.dat&#39;</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">cov_matrix</span><span class="p">)</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">finding_eigenvalues</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Method to find eigenvalues (in order to calculate the emittances as the imaginary eigenvalues of cov_matrix\dot S</span>
+
+<span class="sd">        :return self.emit:  Emittances for both normal modes</span>
+<span class="sd">        :return self.emit_matrix: Transformation between normal mode space and cartesian space</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">covariance_matrix_reconstruction</span><span class="p">()</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+        <span class="n">d_eigen</span><span class="p">,</span> <span class="n">a_f</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eig</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cov_matrix</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Smatrix</span><span class="p">))</span>
+        <span class="n">d_eigen</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">d_eigen</span><span class="p">)</span>
+        <span class="n">ix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">d_eigen</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">ix2</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">ix</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]]))</span>
+
+        <span class="n">d_eigen_new</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">d_eigen</span><span class="p">[</span><span class="n">y</span><span class="p">]</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="p">[</span><span class="n">ix2</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">ix2</span><span class="p">[</span><span class="mi">3</span><span class="p">]]]))</span>
+        <span class="n">m_transf</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">a_f</span><span class="p">[:,</span> <span class="n">ix2</span><span class="p">])</span>
+        <span class="c1"># Normalise the transformation matrix</span>
+        <span class="n">nrm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">m_transf</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Smatrix</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">m_transf</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Smatrix</span><span class="p">)))</span>
+        <span class="n">m_transf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">m_transf</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">absolute</span><span class="p">(</span><span class="n">nrm</span><span class="p">))))</span>
+        <span class="c1"># m_transf = np.matmul(m_transf, np.linalg.inv(np.sqrt(np.absolute(nrm))))</span>
+        <span class="n">mx</span> <span class="o">=</span> <span class="n">m_transf</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="n">my</span> <span class="o">=</span> <span class="n">m_transf</span><span class="p">[</span><span class="mi">2</span><span class="p">:,</span> <span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">mx</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">conjugate</span><span class="p">(</span><span class="n">mx</span><span class="p">))</span> <span class="o">&lt;</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">my</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">conjugate</span><span class="p">(</span><span class="n">my</span><span class="p">)):</span>
+            <span class="n">d_eigen_new</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">d_eigen_new</span><span class="p">[</span><span class="n">y</span><span class="p">]</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]))</span>
+            <span class="n">m_transf</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">m_transf</span><span class="p">[:,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;emits&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="mf">1e6</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">rel_gamma</span><span class="p">,</span> <span class="n">d_eigen_new</span><span class="p">))</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;emits_matrix&#39;</span><span class="p">,</span> <span class="n">m_transf</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;+++++++++++ Emittances = </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;emits&#39;</span><span class="p">)))</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="s1">&#39;emittances_values.txt&#39;</span><span class="p">),</span> <span class="n">d_eigen_new</span><span class="p">)</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="s1">&#39;normalised_emittances_values.txt&#39;</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">emits</span><span class="p">)</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="s1">&#39;emittance_matrix_values.txt&#39;</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">emits_matrix</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">plot_quad_scan</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">                Method to  plot the quad scans beam sizes and coupling terms</span>
+
+<span class="sd">                &quot;&quot;&quot;</span>
+        <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">ax_y</span> <span class="o">=</span> <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">twinx</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">axs</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">colour</span><span class="p">,</span> <span class="n">title_l</span><span class="p">,</span> <span class="n">marker</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">([</span><span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ax_y</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;x_var&#39;</span><span class="p">,</span> <span class="s1">&#39;y_var&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;navy&#39;</span><span class="p">,</span> <span class="s1">&#39;forestgreen&#39;</span><span class="p">],</span>
+                                                     <span class="p">[</span><span class="sa">r</span><span class="s1">&#39;x$_</span><span class="si">{rms}</span><span class="s1">$[mm]&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;y$_</span><span class="si">{rms}</span><span class="s1">$[mm]&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="s2">&quot;^&quot;</span><span class="p">]):</span>
+            <span class="n">axs</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">beam_sizes</span><span class="p">[</span><span class="n">key</span><span class="p">])),</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="mf">1.0e6</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">beam_sizes</span><span class="p">[</span><span class="n">key</span><span class="p">])),</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">2.2</span><span class="p">,</span>
+                     <span class="n">color</span><span class="o">=</span><span class="n">colour</span><span class="p">,</span>
+                     <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span>
+                     <span class="n">ms</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+            <span class="n">axs</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="mf">0.8e6</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">beam_sizes</span><span class="p">[</span><span class="n">key</span><span class="p">]),</span> <span class="mf">1.2e6</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">beam_sizes</span><span class="p">[</span><span class="n">key</span><span class="p">])])</span>
+            <span class="n">axs</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">colour</span><span class="p">,</span> <span class="n">labelcolor</span><span class="o">=</span><span class="n">colour</span><span class="p">)</span>
+            <span class="n">axs</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">title_l</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">colour</span><span class="p">)</span>
+            <span class="n">axs</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">get_offset_text</span><span class="p">()</span><span class="o">.</span><span class="n">set_color</span><span class="p">(</span><span class="n">colour</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">setp</span><span class="p">(</span><span class="n">axs</span><span class="o">.</span><span class="n">spines</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span> <span class="n">color</span><span class="o">=</span><span class="n">colour</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">setp</span><span class="p">([</span><span class="n">axs</span><span class="o">.</span><span class="n">get_xticklines</span><span class="p">(),</span> <span class="n">axs</span><span class="o">.</span><span class="n">get_yticklines</span><span class="p">()],</span> <span class="n">color</span><span class="o">=</span><span class="n">colour</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">ticks</span> <span class="ow">in</span> <span class="n">axs</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">get_major_ticks</span><span class="p">():</span>
+                <span class="n">ticks</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">set_color</span><span class="p">(</span><span class="n">colour</span><span class="p">)</span>
+        <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">beam_sizes</span><span class="p">[</span><span class="n">key</span><span class="p">])),</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="mf">1.0e6</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">beam_sizes</span><span class="p">[</span><span class="s1">&#39;x_y_mean&#39;</span><span class="p">]),</span>
+                   <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">2.2</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span>
+                   <span class="n">marker</span><span class="o">=</span><span class="n">marker</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+        <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;tomato&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;&lt;xy&gt; [mm$^2$]&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;tomato&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">get_offset_text</span><span class="p">()</span><span class="o">.</span><span class="n">set_color</span><span class="p">(</span><span class="s1">&#39;tomato&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">setp</span><span class="p">(</span><span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">spines</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;tomato&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">setp</span><span class="p">([</span><span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get_xticklines</span><span class="p">(),</span> <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get_yticklines</span><span class="p">()],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;tomato&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="mf">1.5e6</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">beam_sizes</span><span class="p">[</span><span class="s1">&#39;x_y_mean&#39;</span><span class="p">]),</span> <span class="mf">1.6e6</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">beam_sizes</span><span class="p">[</span><span class="s1">&#39;x_y_mean&#39;</span><span class="p">])])</span>
+        <span class="k">for</span> <span class="n">ticks</span> <span class="ow">in</span> <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">get_major_ticks</span><span class="p">():</span>
+            <span class="n">ticks</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">set_color</span><span class="p">(</span><span class="s1">&#39;tomato&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">axs</span> <span class="ow">in</span> <span class="n">ax</span><span class="p">:</span>
+            <span class="n">axs</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nsteps</span><span class="p">))</span>
+            <span class="n">axs</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;navy&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">hspace</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">wspace</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path_output</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;png&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">120</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">plot_quad_scan_strengths</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">                Method to  plot the quad scans strengths</span>
+
+<span class="sd">                &quot;&quot;&quot;</span>
+        <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i_x</span><span class="p">,</span> <span class="n">colour</span><span class="p">,</span> <span class="n">marker</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="p">[</span><span class="s1">&#39;darkslateblue&#39;</span><span class="p">,</span> <span class="s1">&#39;maroon&#39;</span><span class="p">,</span> <span class="s1">&#39;forestgreen&#39;</span><span class="p">],</span>
+                                       <span class="p">[</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="s1">&#39;^&#39;</span><span class="p">,</span> <span class="s1">&#39;v&#39;</span><span class="p">]):</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">nsteps</span><span class="p">),</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">qstrengths</span><span class="p">[</span><span class="n">t</span><span class="p">][</span><span class="nb">int</span><span class="p">(</span><span class="n">i_x</span><span class="p">)]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nsteps</span><span class="p">)]),</span>
+                    <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">2.2</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">colour</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="n">marker</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;Quad &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">i_x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)))</span>
+        <span class="n">leg</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">line</span><span class="p">,</span> <span class="n">text</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">leg</span><span class="o">.</span><span class="n">get_lines</span><span class="p">(),</span> <span class="n">leg</span><span class="o">.</span><span class="n">get_texts</span><span class="p">()):</span>
+            <span class="n">text</span><span class="o">.</span><span class="n">set_color</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">get_color</span><span class="p">())</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Quad Strength [m$^{-1}$]&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;navy&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Step&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;navy&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">get_offset_text</span><span class="p">()</span><span class="o">.</span><span class="n">set_color</span><span class="p">(</span><span class="s1">&#39;navy&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">setp</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;navy&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">setp</span><span class="p">([</span><span class="n">ax</span><span class="o">.</span><span class="n">get_xticklines</span><span class="p">(),</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_yticklines</span><span class="p">()],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;navy&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;xaxis&#39;</span><span class="p">,</span> <span class="s1">&#39;yaxis&#39;</span><span class="p">]:</span>
+            <span class="n">axs</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">ticks</span> <span class="ow">in</span> <span class="n">axs</span><span class="o">.</span><span class="n">get_major_ticks</span><span class="p">():</span>
+                <span class="n">ticks</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">set_color</span><span class="p">(</span><span class="s1">&#39;navy&#39;</span><span class="p">)</span>
+
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">nsteps</span><span class="p">))</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;navy&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">hspace</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">wspace</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="s1">&#39;quad_scan_strength.png&#39;</span><span class="p">),</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;png&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">120</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+        </div>
+        <div class="sidebar">
+          <h3>Table Of Contents</h3>
+          <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../VirtualEmittanceMeasurement.html">Virtual Beam size measurement (BeamSizeDetermination Class)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../EmittanceQuadScan.html">GeneralQuadScan (parent class)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../QuadScan.html">QuadScan Module</a></li>
+</ul>
+
+          <div role="search">
+            <h3 style="margin-top: 1.5em;">Search</h3>
+            <form class="search" action="../search.html" method="get">
+                <input type="text" name="q" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+            </form>
+          </div>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+    <div class="footer-wrapper">
+      <div class="footer">
+        <div class="left">
+          <div role="navigation" aria-label="related navigaton">
+            <a href="../py-modindex.html" title="Python Module Index"
+              >modules</a> |
+            <a href="../genindex.html" title="General Index"
+              >index</a>
+          </div>
+          <div role="note" aria-label="source link">
+          </div>
+        </div>
+
+        <div class="right">
+          
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, H.M. Castaneda Cortes, D.J. Scott, A. Wolski, A. Brynes, M. King.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.0.
+    </div>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+  </body>
+</html>

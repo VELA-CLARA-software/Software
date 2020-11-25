@@ -1,0 +1,8 @@
+*.pyc
+*.dll
+*.pyd
+*.dat
+*.pkl
+.idea
+build/
+*.h5

@@ -1,0 +1,211 @@
+/*
+Copyright (c) 2003-2015, CKSource - Frederico Knabben. All rights reserved.
+For licensing, see LICENSE.md or http://ckeditor.com/license
+*/
+
+body
+{
+	/* Font */
+	font-family: sans-serif, Arial, Verdana, "Trebuchet MS";
+	font-size: 12px;
+
+	/* Text color */
+	color: #333;
+
+	/* Remove the background color to make it transparent */
+	background-color: #fff;
+
+	margin: 20px;
+}
+
+.cke_editable
+{
+	font-size: 13px;
+	line-height: 1.6;
+}
+
+blockquote
+{
+	font-style: italic;
+	font-family: Georgia, Times, "Times New Roman", serif;
+	padding: 2px 0;
+	border-style: solid;
+	border-color: #ccc;
+	border-width: 0;
+}
+
+.cke_contents_ltr blockquote
+{
+	padding-left: 20px;
+	padding-right: 8px;
+	border-left-width: 5px;
+}
+
+.cke_contents_rtl blockquote
+{
+	padding-left: 8px;
+	padding-right: 20px;
+	border-right-width: 5px;
+}
+
+a
+{
+	color: #0782C1;
+}
+
+ol,ul,dl
+{
+	/* IE7: reset rtl list margin. (#7334) */
+	*margin-right: 0px;
+	/* preserved spaces for list items with text direction other than the list. (#6249,#8049)*/
+	padding: 0 40px;
+}
+
+h1,h2,h3,h4,h5,h6
+{
+	font-weight: normal;
+	line-height: 1.2;
+}
+
+hr
+{
+	border: 0px;
+	border-top: 1px solid #ccc;
+}
+
+img.right
+{
+	border: 1px solid #ccc;
+	float: right;
+	margin-left: 15px;
+	padding: 5px;
+}
+
+img.left
+{
+	border: 1px solid #ccc;
+	float: left;
+	margin-right: 15px;
+	padding: 5px;
+}
+
+pre
+{
+	white-space: pre-wrap; /* CSS 2.1 */
+	word-wrap: break-word; /* IE7 */
+	-moz-tab-size: 4;
+	-o-tab-size: 4;
+	-webkit-tab-size: 4;
+	tab-size: 4;
+}
+
+.marker
+{
+	background-color: Yellow;
+}
+
+span[lang]
+{
+	font-style: italic;
+}
+
+figure
+{
+	text-align: center;
+	border: solid 1px #ccc;
+	border-radius: 2px;
+	background: rgba(0,0,0,0.05);
+	padding: 10px;
+	margin: 10px 20px;
+	display: inline-block;
+}
+
+figure > figcaption
+{
+	text-align: center;
+	display: block; /* For IE8 */
+}
+
+a > img {
+	padding: 1px;
+	margin: 1px;
+	border: none;
+	outline: 1px solid #0782C1;
+}
+
+th {
+	text-align: left;
+}
+
+/* styles for machine status tables */
+table.machine-status {
+    border: 1px solid gray;
+    border-collapse: collapse;
+}
+
+table.machine-status td {
+    border: 1px solid gray;
+    padding: 2px;
+}
+table.machine-status th {
+    padding: 2px;
+}
+
+table.machine-status th.msTitle {
+    text-align: left;
+    font-style: italic;
+}
+
+table.machine-status th.msDateTime {
+    text-align: right;
+    font-size: 0.8em;
+    font-weight: normal;
+}
+
+/* # colour scheme: from http://colorschemedesigner.com/
+# pastel scheme used for regions; default scheme for RF/EMMA
+# region	angle	header	body	header dec
+# Gun	120�	E6E673	E6E6CF
+# Buncher 120�	ffff00	ffffbf
+# Booster 135�	CCFF00	F2FFBF
+# Inj	150�	b8e673	DCE6CF 184 230 115
+# ST1	180�	5cb85c	CFE6CF  92 184  92
+# RF	210�	009999	BFFFFF
+# sliders 210�	BFFFFF	E6FFFF
+# ARC1	240�	5c73b8	CFD4E6  92 115 184
+# ST2	270�	5c458a	D6CFE6  92  69 138
+# ST3	0�	e67373	E6CFCF 230 115 115
+# ARC2	30�	e6a173	E6D8CF 230 161 115
+# ST4	60�	e6cf73	e6e1cf 230 207 115
+# FEL     90�  aa9739    fff00a
+# EmI    240�    8e41d5  b68edb (Brightness increased a bit)
+# EMMA	85�		ffd940	ffe373
+# MagPos 170�    7aee3c  99ee6b */
+
+table.gun {background: #e6e6cf;}
+table.gun th {background: #e6e673;}
+table.linac1 {background: #dce6cf;}
+table.linac1 th {background: #b8e673;}
+table.s02 {background: #cfe6cf;}
+table.s02 th {background: #5cb85c;}
+table.c2v {background: #cfd4e6;}
+table.c2v th {background: #5c73b8;}
+table.vs2 {background: #d6cfe6;}
+table.vs2 th {background: #5c458a;}
+table.ba1 {background: #e6cfcf;}
+table.ba1 th {background: #e67373;}
+table.ba1-motors {background: #e6d8cf;}
+table.ba1-motors th {background: #e6a173;}
+table.ess-cryostat {background: #f4f8fc;}
+table.ess-cryostat th {background: #deeaf6;}
+table.ess-llrf {background: #fdf6f1;}
+table.ess-llrf th {background: #ffe4d5;}
+table.snapshot {background: #e6e1cf;}
+table.snapshot th {background: #e6cf73;}
+table.rf {background: #bfffff;}
+table.rf th {background: #009999;}
+table.rfsliders {background: #e6ffff;}
+table.rfsliders th {background: #bfffff;}
+table.fel {background: #fff00a;}
+table.fel th {background: #aa9739;}
+

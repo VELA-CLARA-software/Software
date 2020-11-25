@@ -1,0 +1,10 @@
+Old
+__*/
+*build*/
+*dist*/
+*.dll
+*.exe
+*.spec
+*.lib
+*.pyi
+*.exp
