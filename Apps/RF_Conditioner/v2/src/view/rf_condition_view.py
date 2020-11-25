@@ -139,17 +139,7 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         self.can_ramp_button.setStyleSheet('QPushButton { background-color : ' + self.bad + '; color : black; }')
         self.can_ramp_button.setText('RAMP Disabled')
         self.plot_item = self.graphicsView.getPlotItem()
-        
-        # Close down the app if close button pressed on GUI:
-        self.aboutToQuit.connect(self.closeEvent)
 
-
-    def closeEvent(self):
-        '''
-            Closes down the app if close button pressed on GUI.
-        '''
-        print('Close button pressed on RF_Night_Watch GUI.')
-        sys.exit(0)
 
 
     def closeEvent(self, unknown_arg):
