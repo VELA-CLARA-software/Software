@@ -111,7 +111,7 @@ class virtual_cathode_model():
         self.values[self.data.ypix_full] = self.values[self.data.num_pix_y] * \
                                             self.values[self.data.y_pix_scale_factor]
         # get a fake image to start things off (plus used when debugging)
-        self.values[self.data.image]  = self.get_fake_image()
+        self.values[self.data.image] = self.get_fake_image()
 
     def reset_running_stats(self):
         '''

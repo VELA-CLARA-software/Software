@@ -48,7 +48,7 @@ class control(object):
 
     def set_up_gui(self):
         '''
-            Sets up the widget slots / signals from the gui
+            Sets up the widget slots / signsetDataals from the gui
         '''
         # connect main buttons to functions
         control.view.get_roi_data_button.clicked.connect(self.handle_get_roi_data_button)
