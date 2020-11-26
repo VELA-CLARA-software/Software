@@ -1,7 +1,17 @@
-import os, sys
-import numpy
 import ruamel.yaml as yaml
-import src.get_data_from_catap
+import sys, os
+for item in sys.path:
+  if "PythonInterface" not in str(item):
+    continue
+  else:
+    sys.path.remove(item)
+sys.path.append("\\\\192.168.83.14\\claranet\\test\\CATAP\\bin-dev_branch-57\\")
+# sys.path.append(os.path.abspath(__file__+'/../../../../../../../CATAP-build/PythonInterface/Release/CATAP/'))
+sys.path.append('\\\\192.168.83.14\\claranet\\test\\Controllers\\bin\\python3_x64')
+sys.path.append("\\\\192.168.83.14\\claranet\\test\\SimFrame\\")
+# sys.path.append('\\\\apclara1.dl.ac.uk\\opt\\SimFrame')
+# sys.path.append(os.path.abspath(__file__+'/../../../../../../../simframe/'))
+import get_data_from_catap
 import get_data_from_simframe
 import write_data_to_catap
 import write_data_to_simframe

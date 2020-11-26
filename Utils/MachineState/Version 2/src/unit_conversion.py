@@ -55,7 +55,8 @@ class UnitConversion(object):
 			self.forward_power = self.getPowerFromEnergy(self.energy_gain, phase, pulse_length, cavity=rf_type)
 			return self.forward_power
 
-	def currentToK(self, mag_type, current, field_integral_coefficients, magnetic_length, energy, magdict):
+	def currentToK(self, mag_type, current, field_integral_coefficients, magnetic_length, energy, magdict,
+				   psu_state="On"):
 		if (mag_type == 'QUAD') or (mag_type == 'quadrupole'):
 			self.sign = numpy.copysign(1, current)
 			self.ficmod = [i * int(self.sign) for i in field_integral_coefficients[:-1]]
@@ -65,7 +66,10 @@ class UnitConversion(object):
 			self.effect = (scipy.constants.speed_of_light / 1e6) * self.int_strength / energy
 			# self.update_widgets_with_values("lattice:" + key + ":k1l", effect / value['magnetic_length'])
 			self.k1 = 1000 * self.effect / (magnetic_length)
-			magdict.update({'k1': float(self.k1)})
+			if psu_state == "On":
+				magdict.update({'k1': float(self.k1)})
+			else:
+				magdict.update({'k1': 0})
 		elif (mag_type == 'SOL') or (mag_type == 'solenoid'):
 			self.sign = numpy.copysign(1, current)
 			self.ficmod = [i * int(self.sign) for i in field_integral_coefficients[-4:-1]]
@@ -74,6 +78,10 @@ class UnitConversion(object):
 			self.int_strength = numpy.polyval(self.coeffs, abs(current))
 			self.field_amplitude = self.int_strength / magnetic_length
 			magdict.update({'field_amplitude': float(int(self.sign) * self.field_amplitude)})
+			if psu_state == "On":
+				magdict.update({'field_amplitude': float(self.k1)})
+			else:
+				magdict.update({'field_amplitude': 0})
 		elif (mag_type == 'HCOR') or (mag_type == 'VCOR') or (mag_type == 'kicker'):
 			self.sign = numpy.copysign(1, current)
 			self.ficmod = [i * int(self.sign) for i in field_integral_coefficients[:-1]]
@@ -82,6 +90,10 @@ class UnitConversion(object):
 			self.int_strength = numpy.polyval(self.coeffs, abs(current))
 			self.effect = (scipy.constants.speed_of_light / 1e6) * self.int_strength / energy
 			magdict.update({'angle': float(self.effect)})
+			if psu_state == "On":
+				magdict.update({'angle': float(self.k1)})
+			else:
+				magdict.update({'angle': 0})
 		elif (mag_type == 'DIP') or (mag_type == 'dipole'):
 			self.sign = numpy.copysign(1, current)
 			self.ficmod = [i * int(self.sign) for i in field_integral_coefficients[:-1]]
@@ -91,6 +103,10 @@ class UnitConversion(object):
 			self.effect = (scipy.constants.speed_of_light / 1e6) * self.int_strength / energy
 			self.angle = numpy.radians(self.effect / 1000)
 			magdict.update({'angle': float(self.angle)})
+			if psu_state == "On":
+				magdict.update({'angle': float(self.k1)})
+			else:
+				magdict.update({'angle': 0})
 
 	def kToCurrent(self, mag_type, k, field_integral_coefficients, magnetic_length, energy):
 		if (mag_type == 'QUAD') or (mag_type == 'quadrupole'):

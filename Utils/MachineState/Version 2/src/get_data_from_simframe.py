@@ -2,11 +2,9 @@ import collections
 import os, sys
 import numpy
 
-#sys.path.append(os.path.abspath(__file__+'/../../../../../simframe/'))
 import SimulationFramework.Framework as Fw
 import SimulationFramework.Modules.read_beam_file as read_beam_file
 import SimulationFramework.Modules.read_twiss_file as read_twiss_file
-# sys.path.append(os.path.realpath(__file__)+'/../../../../')
 import unit_conversion
 import aliases
 

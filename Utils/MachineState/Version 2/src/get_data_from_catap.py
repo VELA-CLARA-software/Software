@@ -1,9 +1,8 @@
 import os, sys
 import numpy
 import time
-sys.path.append(os.path.abspath(__file__+'/../../CATAP-build/PythonInterface/Debug'))
-sys.path.append('\\apclara1\ControlRoomApps\Controllers\bin\stage\Python3_x64')
-import CATAP.HardwareFactory
+from CATAP.HardwareFactory import *
+from CATAP.EPICSTools import *
 import unit_conversion
 import aliases
 
@@ -12,7 +11,7 @@ vc_controller_modules = ['Camera', 'LLRF', 'PILaser']
 
 class GetDataFromCATAP(object):
 
-	def __init__(self):
+	def __init__(self, buffer=False):
 		object.__init__(self)
 		self.my_name="GetDataFromCATAP"
 		self.unitConversion = unit_conversion.UnitConversion()
@@ -30,6 +29,11 @@ class GetDataFromCATAP(object):
 		self.screenDict = {}
 		self.allDataDict = {}
 		self.allDictStatus = {}
+
+		self.epics_tools_types = {'llrf': True,
+							'camera': True}
+		self.epics_tools_monitors = {}
+		self.monitors = {}
 		
 		self.bpmdata = {}
 		self.chargedata = {}
@@ -79,43 +83,49 @@ class GetDataFromCATAP(object):
 				  server_port="6000",
 				  max_array_bytes="1000000"):
 		# setup environment
-		if mode == CATAP.HardwareFactory.STATE.VIRTUAL:
-			os.environ["EPICS_CA_ADDR_LIST"]=addr_list
-			os.environ["EPICS_CA_AUTO_ADDR_LIST"]=auto_addr_list
-			os.environ["EPICS_CA_SERVER_PORT"]=server_port
-			os.environ["EPICS_CA_MAX_ARRAY_BYTES"]=max_array_bytes
+		if mode == STATE.VIRTUAL:
+			os.environ["EPICS_CA_ADDR_LIST"] = "10.10.0.12"
+			os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
+			os.environ["EPICS_CA_SERVER_PORT"] = "6000"
+			os.environ["EPICS_CA_MAX_ARRAY_BYTES"] = "10000000"
+		elif mode == STATE.PHYSICAL:
+			os.environ["EPICS_CA_ADDR_LIST"]= "192.168.83.255"
+			os.environ["EPICS_CA_AUTO_ADDR_LIST"]= "NO"
+			os.environ["EPICS_CA_SERVER_PORT"]= "5064"
+			os.environ["EPICS_CA_MAX_ARRAY_BYTES"]= "10000000"
 		# get factories / controllers
-		self.hf = CATAP.HardwareFactory.HardwareFactory(mode)
+		self.hf = HardwareFactory(mode)
+		self.epics_tools = EPICSTools(mode)
 		self.hf.debugMessagesOff()
-		self.llrf_types = [CATAP.HardwareFactory.TYPE.LRRG_GUN, CATAP.HardwareFactory.TYPE.L01]
+		self.llrf_types = [TYPE.LRRG_GUN, TYPE.L01]
 		# self.gun_llrf_type = CATAP.HardwareFactory.TYPE.LRRG_GUN
 		self.llrf_factory = self.hf.getLLRFFactory(self.llrf_types)
 		self.llrf_names = self.llrf_factory.getLLRFNames()
 		self.gunname = self.llrf_names[0]
 		self.linacnames = self.llrf_names[1:]
-		# self.gunFac = self.hf.getLLRFFactory(self.llrf)
-		# self.l01_llrf_type = CATAP.HardwareFactory.TYPE.L01
-		# self.l01Fac = self.hf.getLLRFFactory(self.l01_llrf_type)
+		self.gunLLRFObj = self.llrf_factory.getLLRF(self.llrf_names[0])
+		self.linacLLRFObj = {}
+		if mode == STATE.VIRTUAL:
+			self.setGunStartEndTime(self.gunStartTime, self.gunEndTime)
+		for key in self.linacnames:
+			self.linacLLRFObj[key] = self.llrf_factory.getLLRF(key)
+			self.linacStartTimes.update({key: 0.1})  # MAGIC NUMBER
+			self.linacEndTimes.update({key: 1.0})  # MAGIC NUMBER
+			if mode == STATE.VIRTUAL:
+				self.setLinacStartEndTime(key, self.linacStartTimes[key], self.linacEndTimes[key])
+			self.linacDataSet.update({key: False})
+			self.linacEnergyGain.update({key: 0.0})
 		self.chargeFac = self.hf.getChargeFactory()
 		self.bpmFac = self.hf.getBPMFactory()
 		self.scrFac = self.hf.getScreenFactory()
 		self.magFac = self.hf.getMagnetFactory()
-		if mode == CATAP.HardwareFactory.STATE.VIRTUAL:
+		if mode == STATE.VIRTUAL:
 			self.magFac.switchOnAll()
-		self.camFac = self.hf.getCameraFactory()
+		if not self.epics_tools_types['camera']:
+			self.camFac = self.hf.getCameraFactory()
 
 		# #self.pilFac = hf.getPILa()
 		# #self.camFac = hf.getcam()
-		self.gunLLRFObj = self.llrf_factory.getLLRF(self.llrf_names[0])
-		self.linacLLRFObj = {}
-		self.setGunStartEndTime(self.gunStartTime, self.gunEndTime)
-		for key in self.linacnames:
-			self.linacLLRFObj[key] = self.llrf_factory.getLLRF(key)
-			self.linacStartTimes.update({key: 0.1}) # MAGIC NUMBER
-			self.linacEndTimes.update({key: 1.0}) # MAGIC NUMBER
-			self.setLinacStartEndTime(key, self.linacStartTimes[key], self.linacEndTimes[key])
-			self.linacDataSet.update({key: False})
-			self.linacEnergyGain.update({key: 0.0})
 		return True
 
 	def getMachineAreaString(self, name):
@@ -151,22 +161,35 @@ class GetDataFromCATAP(object):
 		self.allDataDict.update({"Magnet": self.magDict})
 	
 	def setChargeDict(self):
-		self.chargenames = self.chargeFac.getAllChargeDiagnosticNames()
+		#self.chargenames = self.chargeFac.getAllChargeDiagnosticNames()
+		self.chargenames = ['CLA-S01-DIA-WCM-01']
 		for i in self.chargenames:
 			self.chargeDict[i] = self.chargeFac.getChargeDiagnostic(i)
 		self.allDataDict.update({"Charge": self.chargeDict})
 
 	def setCameraDict(self):
-		self.camnames = self.camFac.getCameraNames()
-		for i in self.camnames:
-			self.cameraDict[i] = self.camFac.getCamera(i)
-			if i == "CLA-VCA-DIA-CAM-01":
-				self.cameraDict[i].setX(0)
-				self.cameraDict[i].setY(0)
-				self.cameraDict[i].setSigX(0.35)
-				self.cameraDict[i].setSigY(0.35)
-				self.cameraDict[i].setSigXY(0.35)
-		self.allDataDict.update({"Camera": self.cameraDict})
+		if not self.epics_tools_types['camera']:
+			self.camnames = self.camFac.getCameraNames()
+			for i in self.camnames:
+				self.cameraDict[i] = self.camFac.getCamera(i)
+				if i == "CLA-VCA-DIA-CAM-01" and mode == STATE.VIRTUAL:
+					self.cameraDict[i].setX(0)
+					self.cameraDict[i].setY(0)
+					self.cameraDict[i].setSigX(0.35)
+					self.cameraDict[i].setSigY(0.35)
+					self.cameraDict[i].setSigXY(0.35)
+			self.allDataDict.update({"Camera": self.cameraDict})
+		else:
+			self.camnames = list(aliases.screen_to_camera.values())
+			self.vc_name = 'CLA-VCA-DIA-CAM-01'
+			self.camnames.append(self.vc_name)
+			for name in self.camnames:
+				self.epics_tools_monitors[name] = {}
+				for key, value in aliases.camera_epics_tools.items():
+					self.epics_tools.monitor(name + ':ANA:' + value)
+					self.epics_tools_monitors[name][key] = self.epics_tools.getMonitor(name + ':ANA:' + value)
+				self.cameraDict[name] = self.epics_tools_monitors[name]
+
 
 	def setScreenDict(self):
 		self.screennames = self.scrFac.getAllScreenNames()
@@ -176,6 +199,11 @@ class GetDataFromCATAP(object):
 
 	def setGunLLRFDict(self):
 		self.allDataDict.update({"LRRG_GUN": self.gunLLRFObj})
+		if self.epics_tools_types['llrf']:
+			self.epics_tools_monitors[self.llrf_names[0]] = {}
+			for key, value in aliases.llrf_epics_tools.items():
+				self.epics_tools.monitor(self.llrf_names[0] + ':' + value)
+				self.epics_tools_monitors[self.llrf_names[0]][key] = self.epics_tools.getMonitor(self.llrf_names[0] + ':' + value)
 
 	def linacNameConvert(self, key):
 		if key == 'CLA-L01-LRF-CTRL-01':
@@ -189,6 +217,11 @@ class GetDataFromCATAP(object):
 			self.linacLLRFObj[self.keyupdate] = self.llrf_factory.getLLRF(key)
 			self.linacdata.update({self.keyupdate: {}})
 			self.allDataDict.update({self.keyupdate: self.linacLLRFObj[self.keyupdate]})
+			if self.epics_tools_types['llrf']:
+				self.epics_tools_monitors[key] = {}
+				for key1, value in aliases.llrf_epics_tools.items():
+					self.epics_tools.monitor(key + ':' + value)
+					self.epics_tools_monitors[key][key1] = self.epics_tools.getMonitor(key + ':' + value)
 
 	def setAllDicts(self):
 		self.setBPMDict()
@@ -214,26 +247,34 @@ class GetDataFromCATAP(object):
 			self.setAllDicts()
 			self.getBPMData(name)
 
-	def getCameraData(self,name):
+	def getCameraData(self, name):
 		if self.dictsSet:
 			self.cameradata[name] = {}
-			self.cameradata[name]['x_pix'] = self.cameraDict[name].getXPix()
-			self.cameradata[name]['y_pix'] = self.cameraDict[name].getYPix()
-			# self.cameradata[name]['xy_pix'] = self.cameraDict[name].getXYPix()
-			self.cameradata[name]['x_mm'] = self.cameraDict[name].getXmm()
-			self.cameradata[name]['y_mm'] = self.cameraDict[name].getYmm()
-			# self.cameradata[name]['xy_mm'] = self.cameraDict[name].getXYmm()
-			self.cameradata[name]['x_pix_sig'] = self.cameraDict[name].getSigXPix()
-			self.cameradata[name]['y_pix_sig'] = self.cameraDict[name].getSigYPix()
-			# self.cameradata[name]['xy_pix_sig'] = self.cameraDict[name].getSigXYPix()
-			self.cameradata[name]['x_mm_sig'] = self.cameraDict[name].getSigXmm()
-			self.cameradata[name]['y_mm_sig'] = self.cameraDict[name].getSigYmm()
-			# self.cameradata[name]['xy_mm_sig'] = self.cameraDict[name].getSigXYmm()
-			self.cameradata[name]['sum_intensity'] = self.cameraDict[name].getSumIntensity()
-			self.cameradata[name]['avg_intensity'] = self.cameraDict[name].getAvgIntensity()
-			self.cameradata[name]['screen'] = self.cameraDict[name].getScreen()
-			if self.cameradata[name]['screen'] in self.screen_alias.keys():
-				self.cameradata[name].update({'screen': self.screen_alias[self.cameradata[name]['screen']]})
+			if not self.epics_tools_types['camera']:
+				self.cameradata[name]['x_pix_abs'] = self.cameraDict[name].getXPix()
+				self.cameradata[name]['y_pix_abs'] = self.cameraDict[name].getYPix()
+				self.cameradata[name]['x_pix'] = self.cameradata[name]['x_pix_abs'] - aliases.vc_rf_centre['x_pix']
+				self.cameradata[name]['y_pix'] = self.cameradata[name]['y_pix_abs'] - aliases.vc_rf_centre['y_pix']
+				# self.cameradata[name]['xy_pix'] = self.cameraDict[name].getXYPix()
+				self.cameradata[name]['x_mm_abs'] = self.cameraDict[name].getXmm() - aliases.vc_rf_centre['x_mm']
+				self.cameradata[name]['y_mm_abs'] = self.cameraDict[name].getYmm() - aliases.vc_rf_centre['y_mm']
+				self.cameradata[name]['x_mm'] = self.cameradata[name]['x_mm_abs']
+				self.cameradata[name]['y_mm'] = self.cameradata[name]['y_mm_abs']
+				# self.cameradata[name]['xy_mm'] = self.cameraDict[name].getXYmm()
+				self.cameradata[name]['x_pix_sig'] = self.cameraDict[name].getSigXPix()
+				self.cameradata[name]['y_pix_sig'] = self.cameraDict[name].getSigYPix()
+				# self.cameradata[name]['xy_pix_sig'] = self.cameraDict[name].getSigXYPix()
+				self.cameradata[name]['x_mm_sig'] = self.cameraDict[name].getSigXmm()
+				self.cameradata[name]['y_mm_sig'] = self.cameraDict[name].getSigYmm()
+				# self.cameradata[name]['xy_mm_sig'] = self.cameraDict[name].getSigXYmm()
+				self.cameradata[name]['sum_intensity'] = self.cameraDict[name].getSumIntensity()
+				self.cameradata[name]['avg_intensity'] = self.cameraDict[name].getAvgIntensity()
+				self.cameradata[name]['screen'] = self.cameraDict[name].getScreen()
+				if self.cameradata[name]['screen'] in self.screen_alias.keys():
+					self.cameradata[name].update({'screen': self.screen_alias[self.cameradata[name]['screen']]})
+			else:
+				for key, value in aliases.camera_epics_tools.items():
+					self.cameradata[name][key] = float(numpy.mean(self.epics_tools_monitors[name][key].getBuffer()))
 			self.cameradata[name]['type'] = "camera"
 			self.alldata[self.getMachineAreaString(name)].update({name: self.cameradata[name]})
 		else:
@@ -265,10 +306,10 @@ class GetDataFromCATAP(object):
 			self.magnetdata[name] = {}
 			self.magnetdata[name]['READI'] = self.magDict[name].READI
 			self.magnetdata[name]['SETI'] = self.magDict[name].getSETI()
-			self.magnetdata[name]['type'] = self.type_alias[self.magDict[name].getMagnetType()]
+			self.magnetdata[name]['type'] = self.type_alias[self.magFac.getMagnetType(name)]
 			self.magnetdata[name]['psu_state'] = str(self.magDict[name].psu_state)
 			self.magnetdata[name]['field_integral_coefficients'] = self.magDict[name].getFieldIntegralCoefficients()
-			self.magnetdata[name]['magnetic_length'] = self.magDict[name].getMagneticLength() * 0.001
+			self.magnetdata[name]['magnetic_length'] = self.magDict[name].magnetic_length * 0.001
 			self.energy_at_magnet = 0
 			if "GUN" in name or "LRG1" in name:
 				self.energy_at_magnet = energy[self.gun_position]
@@ -279,11 +320,12 @@ class GetDataFromCATAP(object):
 			if self.energy_at_magnet == 0:
 				self.energy_at_magnet = energy[self.linac_position['L01']]
 			self.unitConversion.currentToK(self.magnetdata[name]['type'],
-			 								 self.magDict[name].READI,
-											 self.magDict[name].getFieldIntegralCoefficients(),
-											 self.magDict[name].magnetic_length,
-											 self.energy_at_magnet,
-											 self.magnetdata[name])
+										   self.magDict[name].READI,
+										   self.magDict[name].getFieldIntegralCoefficients(),
+										   self.magnetdata[name]['magnetic_length'],
+										   self.energy_at_magnet,
+										   self.magnetdata[name],
+										   psu_state=self.magnetdata[name]['psu_state'])
 			self.magnetdata[name]['energy'] = self.energy_at_magnet
 			self.magnetdata[name]['position'] = self.magDict[name].position
 			self.alldata[self.getMachineAreaString(name)].update({name: self.magnetdata[name]})
@@ -305,19 +347,25 @@ class GetDataFromCATAP(object):
 
 	def getGunLLRFData(self):
 		if self.dictsSet:
-			for trace in self.guntraces:
-				self.gundata.update({trace: self.llrf_factory.getCutMean(self.gunname, trace)})
-				self.gundata.update({trace: self.gundata[trace]})
+			if not self.epics_tools_types['llrf']:
+				for trace in self.guntraces:
+					self.gundata.update({trace: self.llrf_factory.getCutMean(self.gunname, trace)})
+					self.gundata.update({trace: self.gundata[trace]})
+				#self.gundata.update({"phase": self.gundata["CAVITY_FORWARD_POWER"]})
+				self.gundata.update({"phase": self.gunLLRFObj.getPhiDEG()})
+				self.gundata.update({"amplitude_MW": self.gunLLRFObj.getAmpMW()})
+				self.gundata.update({"amplitude": self.gunLLRFObj.getAmp()})
+			else:
+				for key, value in aliases.llrf_epics_tools.items():
+					self.gundata[key] = float(numpy.mean(self.epics_tools_monitors[self.llrf_names[0]][key].getBuffer()))
+				self.gundata['amplitude_MW'] = self.gundata['cavity_amplitude_MW']
+				self.gundata['phase'] = self.gundata['phase_sp']
 			self.pulse_length = 2.5
 			self.getenergy = self.unitConversion.getEnergyGain(self.gunname,
-																self.gunLLRFObj.getAmpMW(),
-																self.gunLLRFObj.getPhiDEG(),
-															    self.pulse_length,
-																self.gun_length)
-			#self.gundata.update({"phase": self.gundata["CAVITY_FORWARD_POWER"]})
-			self.gundata.update({"phase": self.gunLLRFObj.getPhiDEG()})
-			self.gundata.update({"amplitude_MW": self.gunLLRFObj.getAmpMW()})
-			self.gundata.update({"amplitude": self.gunLLRFObj.getAmp()})
+															   self.gundata['amplitude_MW'],
+															   self.gundata['phase'],
+															   self.pulse_length,
+															   self.gun_length)
 			self.gundata.update({"energy_gain": float(self.getenergy[0])})
 			self.gundata.update({"field_amplitude": self.getenergy[1]})
 			self.gundata.update({"type": 'cavity'})
@@ -333,19 +381,26 @@ class GetDataFromCATAP(object):
 	def getLinacLLRFData(self, linac_name):
 		if self.dictsSet:
 			self.linacname = self.linacNameConvert(linac_name)
-			for trace in self.linactraces:
-				self.linacdata[self.linacname].update({trace: self.llrf_factory.getCutMean(linac_name, trace)})
-				self.linacdata[self.linacname].update({trace: self.linacdata[self.linacname][trace]})
+			if not self.epics_tools_types['llrf']:
+				for trace in self.linactraces:
+					self.linacdata[self.linacname].update({trace: self.llrf_factory.getCutMean(linac_name, trace)})
+					self.linacdata[self.linacname].update({trace: self.linacdata[self.linacname][trace]})
+				self.linacdata[self.linacname].update({"phase": self.linacLLRFObj[self.linacname].getPhiDEG()})
+				self.linacdata[self.linacname].update({"amplitude_MW": self.linacLLRFObj[self.linacname].getAmpMW()})
+				self.linacdata[self.linacname].update({"amplitude": self.linacLLRFObj[self.linacname].getAmp()})
+			else:
+				for key, value in aliases.llrf_epics_tools.items():
+					self.linacdata[self.linacname][key] = float(numpy.mean(
+						self.epics_tools_monitors[linac_name][key].getBuffer()))
+				self.linacdata[self.linacname]['amplitude_MW'] = self.linacdata[self.linacname]['cavity_amplitude_MW']
+				self.linacdata[self.linacname]['phase'] = self.linacdata[self.linacname]['phase_sp']
 			self.pulse_length = 0.75
 			self.getenergy = self.unitConversion.getEnergyGain(linac_name,
-																self.linacLLRFObj[self.linacname].getAmpMW(),
-																self.linacLLRFObj[self.linacname].getPhiDEG(),
+																self.linacdata[self.linacname]['amplitude_MW'],
+																self.linacdata[self.linacname]['phase'],
 															    0.75,
 																self.linac_length[self.linacname])
 			#self.linacdata[linac_name].update({"phase":self.linacdata[linac_name]["CAVITY_FORWARD_PHASE"]})
-			self.linacdata[self.linacname].update({"phase": self.linacLLRFObj[self.linacname].getPhiDEG()})
-			self.linacdata[self.linacname].update({"amplitude_MW": self.linacLLRFObj[self.linacname].getAmpMW()})
-			self.linacdata[self.linacname].update({"amplitude": self.linacLLRFObj[self.linacname].getAmp()})
 			self.linacdata[self.linacname].update({"energy_gain": float(self.getenergy[0])})
 			self.linacdata[self.linacname].update({"field_amplitude": self.getenergy[1]})
 			self.linacdata[self.linacname].update({"type": 'cavity'})

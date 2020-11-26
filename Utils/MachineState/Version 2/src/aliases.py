@@ -37,15 +37,41 @@ bsol_alias = {"CLA-LRG1-MAG-BSOL-01": "CLA-LRG1-MAG-SOL-01"}
 type_alias = {TYPE.QUADRUPOLE: "quadrupole",
               TYPE.SOLENOID: "solenoid",
               TYPE.BUCKING_SOLENOID: "solenoid",
-              TYPE.LLRF_TYPE: "cavity",
+              TYPE.LRRG_GUN: "cavity",
+              TYPE.L01: "cavity",
               TYPE.HORIZONTAL_CORRECTOR: "kicker",
               TYPE.VERTICAL_CORRECTOR: "kicker",
               TYPE.DIPOLE: "dipole",
               TYPE.BPM_TYPE: "bpm",
-              TYPE.SCREEN: "screen",
-              TYPE.CAMERA_TYPE: "camera",
+              TYPE.VELA_PNEUMATIC: "screen",
+              TYPE.VELA_HV_MOVER: "screen",
+              TYPE.CLARA_HV_MOVER: "screen",
+              TYPE.CLARA_V_MOVER: "screen",
+              TYPE.CLARA_PNEUMATIC: "screen",
+              #TYPE.CAMERA_TYPE: "camera",
               TYPE.VALVE: "valve",
               TYPE.CHARGE: "charge",
-              TYPE.IMG_TYPE: "img"}
+              "DIP": 'dipole',
+              "QUAD": 'quadrupole',
+              "SOL": 'solenoid',
+              "HCOR": 'kicker',
+              "VCOR": 'kicker'}
 
 gun_kly_fwd_power_max = 9.9 * 10 ** 6
+
+camera_epics_tools = {'x_pix': 'XPix_RBV',
+                      'x_mm': 'X_RBV',
+                      'y_pix': 'YPix_RBV',
+                      'y_mm': 'Y_RBV',
+                      'x_pix_sig': 'SigmaXPix_RBV',
+                      'x_mm_sig': 'SigmaX_RBV',
+                      'y_pix_sig': 'SigmaYPix_RBV',
+                      'y_mm_sig': 'SigmaY_RBV',
+                      'avg_intensity': 'AvgIntensity_RBV',
+                      'sum_intensity': 'Intensity_RBV'}
+
+llrf_epics_tools = {'klystron_amplitude_MW': 'ad1:ch1:Power:Wnd:Avg',
+                    'cavity_amplitude_MW': 'ad1:ch3:Power:Wnd:Avg',
+                    'phase_sp': 'vm:dsp:sp_ph:phase',
+                    'phase_ff': 'vm:dsp:ff_ph:phase'}
+

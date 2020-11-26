@@ -1,6 +1,4 @@
 import os, sys
-sys.path.append(os.path.abspath(__file__+'/../../../../../simframe/'))
-# sys.path.append(os.path.abspath(__file__+'/../../../SimFrame/'))
 import machine_state
 import CATAP.HardwareFactory
 import unit_conversion
