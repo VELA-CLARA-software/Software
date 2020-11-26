@@ -222,16 +222,22 @@ class llrf_control(object):
 		self.llrf_control.disableRFOutput() # the c++ check is RF output is enabled, if not it disables rf output
 
 	def set_trace_SCANs(self):
-		self.logger.message(__name__ + ' setting all SCAN to passive')
-		self.llrf_control.setAllSCANToPassive()
-		self.logger.message(__name__ + ' setting KLYSTRON_FORWARD_POWER SCAN to 10 seconds')
-		self.llrf_control.setPowerRemoteTraceSCAN10sec('KLYSTRON_FORWARD_POWER')
-		self.logger.message(__name__ + ' setting CAVITY_PROBE_POWER SCAN to 10 seconds')
-		self.llrf_control.setPowerRemoteTraceSCAN10sec('CAVITY_PROBE_POWER')
-		self.logger.message(__name__ + ' setting One Record SCAN to IO/intr')
-		self.llrf_control.resetTORSCANToIOIntr()
-		self.logger.message(__name__ + ' setting One Record ACQM to event')
-		self.llrf_control.setTORACQMEvent()
+		'''
+        This function is now sensitive to the "handle_update_individual_trace" button in the GUI
+        :return:
+        '''
+		if rf_conditioning_data.values[rf_conditioning_data.update_individual_trace]:
+			self.logger.message(__name__ + ' setting KLYSTRON_FORWARD_POWER SCAN to 10 seconds')
+			self.llrf_control.setPowerRemoteTraceSCAN10sec('KLYSTRON_FORWARD_POWER')
+			self.logger.message(__name__ + ' setting CAVITY_PROBE_POWER SCAN to 10 seconds')
+			self.llrf_control.setPowerRemoteTraceSCAN10sec('CAVITY_PROBE_POWER')
+			self.logger.message(__name__ + ' setting One Record SCAN to IO/intr')
+			self.llrf_control.resetTORSCANToIOIntr()
+			self.logger.message(__name__ + ' setting One Record ACQM to event')
+			self.llrf_control.setTORACQMEvent()
+		else:
+			self.logger.message(__name__ + ' setting all SCAN to passive')
+			self.llrf_control.setAllSCANToPassive()
 
 	def start_trace_average_no_reset(self,value):
 		for trace in self.config_data['BREAKDOWN_TRACES']:

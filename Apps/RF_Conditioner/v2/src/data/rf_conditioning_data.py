@@ -2032,6 +2032,12 @@ class rf_conditioning_data(object):
     values[llrf_DAQ_rep_rate_min] = dummy_float
     excluded_key_list.append(llrf_DAQ_rep_rate_min)
 
+    # TODO AJG: adding a update_individual_trace:
+    update_individual_trace = 'update_individual_trace'
+    all_value_keys.append(update_individual_trace)
+    values[update_individual_trace] = False
+    excluded_key_list.append(update_individual_trace)
+
     required_pulses = 'required_pulses'
     all_value_keys.append(required_pulses)
     values[required_pulses] = dummy_int

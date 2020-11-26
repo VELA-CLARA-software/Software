@@ -139,26 +139,32 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         self.can_ramp_button.setStyleSheet('QPushButton { background-color : ' + self.bad + '; color : black; }')
         self.can_ramp_button.setText('RAMP Disabled')
         self.plot_item = self.graphicsView.getPlotItem()
+
+        # initialise update_individual_trace_button to "Individual Trace Updates Stopped"
+        self.update_individual_trace_button.clicked.connect(self.handle_update_individual_trace_button)
+        self.update_individual_trace_button.setStyleSheet('QPushButton { background-color : ' + self.bad + '; color : black; }')
+        self.update_individual_trace_button.setText('Individual Trace Updates Stopped')
         
-        # Close down the app if close button pressed on GUI:
-        self.aboutToQuit.connect(self.closeEvent)
 
 
-    def closeEvent(self):
-        '''
-            Closes down the app if close button pressed on GUI.
-        '''
-        print('Close button pressed on RF_Night_Watch GUI.')
-        sys.exit(0)
 
-
-    def closeEvent(self, unknown_arg):
+    def closeEvent(self, event):
         # TODO AJG:  this is getting called in backend_pyqt5.py
         '''
             Closes down the app if close button pressed on GUI.
+            Before closeing all trace updates are set to 10Hz
         '''
-        #print('unknown_arg in closeEvent = {}'.format(self.unknown_arg))
+        self.event = event
+        print('unknown_arg in closeEvent = {}'.format(self.event))
         print('Close button pressed on No-ARCv2 GUI.')
+        self.logger.message(__name__ + ' setting KLYSTRON_FORWARD_POWER SCAN to 10 seconds')
+        self.llrf_control.setPowerRemoteTraceSCAN10sec('KLYSTRON_FORWARD_POWER')
+        self.logger.message(__name__ + ' setting CAVITY_PROBE_POWER SCAN to 10 seconds')
+        self.llrf_control.setPowerRemoteTraceSCAN10sec('CAVITY_PROBE_POWER')
+        self.logger.message(__name__ + ' setting One Record SCAN to IO/intr')
+        self.llrf_control.resetTORSCANToIOIntr()
+        self.logger.message(__name__ + ' setting One Record ACQM to event')
+        self.llrf_control.setTORACQMEvent()
         sys.exit(0)
 
 
@@ -428,8 +434,8 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         else:
             self.values[rf_conditioning_data.gui_can_ramp] = True
             self.can_ramp_button.setStyleSheet('QPushButton { background-color : ' + self.good + '; color : black; }')
+            self.can_ramp_button.setText('RAMP Enabled')
 
-<<<<<<< HEAD
     # TODO AJG: add funtion to handle individual_trace_updates button:
     def handle_update_individual_trace_button(self):
         if self.values[rf_conditioning_data.update_individual_trace]:
@@ -441,9 +447,6 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
             self.values[rf_conditioning_data.update_individual_trace] = True
             self.update_individual_trace_button.setStyleSheet('QPushButton { background-color : ' + self.good + '; color : black; }')
             self.update_individual_trace_button.setText('Individual Trace Updates at 10 Hz')
-=======
-            self.can_ramp_button.setText('RAMP Enabled')
->>>>>>> parent of 903bfae1... Added handle_update_individual_trace button to NO-ARCv2 GUI that toggles the updating of individual traces between passive and 10Hz.
 
     def handle_llrf_enable_button(self):
         if self.values[rf_conditioning_data.gui_can_rf_output]:
