@@ -140,11 +140,8 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         self.can_ramp_button.setText('RAMP Disabled')
         self.plot_item = self.graphicsView.getPlotItem()
 
-        # initialise update_individual_trace_button to "Individual Trace Updates Stopped"
-        self.update_individual_trace_button.clicked.connect(self.handle_update_individual_trace_button)
-        self.update_individual_trace_button.setStyleSheet('QPushButton { background-color : ' + self.bad + '; color : black; }')
-        self.update_individual_trace_button.setText('Individual Trace Updates Stopped')
-        
+
+
 
 
 
@@ -152,19 +149,10 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         # TODO AJG:  this is getting called in backend_pyqt5.py
         '''
             Closes down the app if close button pressed on GUI.
-            Before closeing all trace updates are set to 10Hz
         '''
         self.event = event
-        print('unknown_arg in closeEvent = {}'.format(self.event))
+        #print('unknown_arg in closeEvent = {}'.format(self.unknown_arg))
         print('Close button pressed on No-ARCv2 GUI.')
-        self.logger.message(__name__ + ' setting KLYSTRON_FORWARD_POWER SCAN to 10 seconds')
-        self.llrf_control.setPowerRemoteTraceSCAN10sec('KLYSTRON_FORWARD_POWER')
-        self.logger.message(__name__ + ' setting CAVITY_PROBE_POWER SCAN to 10 seconds')
-        self.llrf_control.setPowerRemoteTraceSCAN10sec('CAVITY_PROBE_POWER')
-        self.logger.message(__name__ + ' setting One Record SCAN to IO/intr')
-        self.llrf_control.resetTORSCANToIOIntr()
-        self.logger.message(__name__ + ' setting One Record ACQM to event')
-        self.llrf_control.setTORACQMEvent()
         sys.exit(0)
 
 
@@ -287,11 +275,11 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         # rint('data_to_fit_x = {}\npolyfit_2nd_order_y = {}'.format(data_to_fit_x, polyfit_2nd_order_y))
 
         #if len(polyfit_2order_X_current_sp) == 1:
-            # print('type(data_to_fit_x) = {}'.format( type(data_to_fit_x)))
+        # print('type(data_to_fit_x) = {}'.format( type(data_to_fit_x)))
         #    pass
         #else:
         #    self.plot_item.plot(polyfit_2order_X_current_sp, polyfit_2order_Y_current_sp, pen={'color': 'b', 'width': 2.0})
-            #print('From quick_update_plot:\ndata_to_fit_x = {}\npolyfit_2nd_order_y = {}'.format(data_to_fit_x, polyfit_2nd_order_y))
+        #print('From quick_update_plot:\ndata_to_fit_x = {}\npolyfit_2nd_order_y = {}'.format(data_to_fit_x, polyfit_2nd_order_y))
 
         # Rescale plots everytime function is called? can be annoying  # self.plot_item.setXRange(0.0, current_amp+200.0)  #
         # self.plot_item.setYRange(0.0, max(y)*1.4)
@@ -419,11 +407,11 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         # rint('data_to_fit_x = {}\npolyfit_2nd_order_y = {}'.format(data_to_fit_x, polyfit_2nd_order_y))
 
         #if len(polyfit_2order_X_current_sp) == 1:
-            # print('type(data_to_fit_x) = {}'.format( type(data_to_fit_x)))
+        # print('type(data_to_fit_x) = {}'.format( type(data_to_fit_x)))
         #    pass
         #else:
         #    self.plot_item.plot(polyfit_2order_X_current_sp, polyfit_2order_Y_current_sp, pen={'color': 'b', 'width': 2.0})
-            #print('From quick_update_plot:\ndata_to_fit_x = {}\npolyfit_2nd_order_y = {}'.format(data_to_fit_x, polyfit_2nd_order_y))
+        #print('From quick_update_plot:\ndata_to_fit_x = {}\npolyfit_2nd_order_y = {}'.format(data_to_fit_x, polyfit_2nd_order_y))
 
 
     def handle_can_ramp_button(self):
@@ -436,17 +424,7 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
             self.can_ramp_button.setStyleSheet('QPushButton { background-color : ' + self.good + '; color : black; }')
             self.can_ramp_button.setText('RAMP Enabled')
 
-    # TODO AJG: add funtion to handle individual_trace_updates button:
-    def handle_update_individual_trace_button(self):
-        if self.values[rf_conditioning_data.update_individual_trace]:
-            self.values[rf_conditioning_data.update_individual_trace] = False
-            self.update_individual_trace_button.setStyleSheet('QPushButton { background-color : ' + self.bad + '; color : black; }')
-            self.update_individual_trace_button.setText('Individual Trace Updates Stopped')
 
-        else:
-            self.values[rf_conditioning_data.update_individual_trace] = True
-            self.update_individual_trace_button.setStyleSheet('QPushButton { background-color : ' + self.good + '; color : black; }')
-            self.update_individual_trace_button.setText('Individual Trace Updates at 10 Hz')
 
     def handle_llrf_enable_button(self):
         if self.values[rf_conditioning_data.gui_can_rf_output]:
@@ -585,7 +563,7 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
 
     def update_CATAP_AMPSP_limit(self):
         self.catap_amp_level_outputwidget.setText( "{} / {} ".format(  str(int(self.values[self.data.llrf_max_amp])), str(int(self.values[
-                                                                                                                                     self.data.catap_max_amp]))))
+                                                                                                                                  self.data.catap_max_amp]))))
         # TODO thsi needs to incldue the LLRF_MAX_AMP_SP
         self.set_widget_color(self.catap_amp_level_outputwidget, self.values[self.data.catap_max_amp_can_ramp_status])
     def update_temperature_values(self):
@@ -717,11 +695,11 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
 
         else:
             self.BDR_ramp_countdown_pulses_outputwidget.setText('{} pulses'.format(self.values[
-                                    self.data.breakdown_rate_able_to_ramp_countdown_pulses]))
+                                                                                       self.data.breakdown_rate_able_to_ramp_countdown_pulses]))
             self.BDR_ramp_countdown_pulses_outputwidget.setStyleSheet('QLabel { background-color : ' + self.bad + '; color : black; }')
 
             self.BDR_ramp_countdown_time_outputwidget.setText('{}'.format(self.values[
-                                    self.data.breakdown_rate_able_to_ramp_countdown_HrMinSec]))
+                                                                              self.data.breakdown_rate_able_to_ramp_countdown_HrMinSec]))
             self.BDR_ramp_countdown_time_outputwidget.setStyleSheet('QLabel { background-color : ' + self.bad + '; color : black; }')
 
 

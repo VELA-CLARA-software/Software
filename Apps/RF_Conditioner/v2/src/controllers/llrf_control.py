@@ -194,7 +194,7 @@ class llrf_control(object):
 		if self.data.values[self.data.llrf_DAQ_rep_rate_status] == state.NEW_BAD:
 			self.reset_daq_freg()
 
-		# this is sketchy AF
+	# this is sketchy AF
 
 	def reset_daq_freg(self):
 		start_time = time.time()
@@ -216,28 +216,22 @@ class llrf_control(object):
 		while time.time() - start_time < 0.1:
 			pass
 		self.llrf_control.setTORACQMEvent()
-		#self.set_iointr_counter = 0
+	#self.set_iointr_counter = 0
 
 	def disableRFOutput(self):
 		self.llrf_control.disableRFOutput() # the c++ check is RF output is enabled, if not it disables rf output
 
 	def set_trace_SCANs(self):
-		'''
-        This function is now sensitive to the "handle_update_individual_trace" button in the GUI
-        :return:
-        '''
-		if rf_conditioning_data.values[rf_conditioning_data.update_individual_trace]:
-			self.logger.message(__name__ + ' setting KLYSTRON_FORWARD_POWER SCAN to 10 seconds')
-			self.llrf_control.setPowerRemoteTraceSCAN10sec('KLYSTRON_FORWARD_POWER')
-			self.logger.message(__name__ + ' setting CAVITY_PROBE_POWER SCAN to 10 seconds')
-			self.llrf_control.setPowerRemoteTraceSCAN10sec('CAVITY_PROBE_POWER')
-			self.logger.message(__name__ + ' setting One Record SCAN to IO/intr')
-			self.llrf_control.resetTORSCANToIOIntr()
-			self.logger.message(__name__ + ' setting One Record ACQM to event')
-			self.llrf_control.setTORACQMEvent()
-		else:
-			self.logger.message(__name__ + ' setting all SCAN to passive')
-			self.llrf_control.setAllSCANToPassive()
+		self.logger.message(__name__ + ' setting all SCAN to passive')
+		self.llrf_control.setAllSCANToPassive()
+		self.logger.message(__name__ + ' setting KLYSTRON_FORWARD_POWER SCAN to 10 seconds')
+		self.llrf_control.setPowerRemoteTraceSCAN10sec('KLYSTRON_FORWARD_POWER')
+		self.logger.message(__name__ + ' setting CAVITY_PROBE_POWER SCAN to 10 seconds')
+		self.llrf_control.setPowerRemoteTraceSCAN10sec('CAVITY_PROBE_POWER')
+		self.logger.message(__name__ + ' setting One Record SCAN to IO/intr')
+		self.llrf_control.resetTORSCANToIOIntr()
+		self.logger.message(__name__ + ' setting One Record ACQM to event')
+		self.llrf_control.setTORACQMEvent()
 
 	def start_trace_average_no_reset(self,value):
 		for trace in self.config_data['BREAKDOWN_TRACES']:
@@ -259,9 +253,9 @@ class llrf_control(object):
 
 	def reset_trigger(self):
 		'''
-			we've noticed some Freezing up of the LLRF box, a potential fix is to flip the trigger state
-			we'll try this is part  of the DAQ freq reset
-		'''
+	        we've noticed some Freezing up of the LLRF box, a potential fix is to flip the trigger state
+	        we'll try this is part  of the DAQ freq reset
+	    '''
 
 		self.llrf_control.trigOff()
 
@@ -281,8 +275,8 @@ class llrf_control(object):
 		current_value = self.llrf_control.getAmpSP()
 		if val1 == current_value:
 			self.logger.message('requested value is THE SAME as current value', show_time_stamp = False)
-			# don't need thsi message?
-			#self.logger.message('set_amp requested value {} is different to current value {}'.format(val1, current_value), show_time_stamp = False)
+		# don't need thsi message?
+		#self.logger.message('set_amp requested value {} is different to current value {}'.format(val1, current_value), show_time_stamp = False)
 		self.llrf_control.setAmpSP(val1)
 		# timer so we know how long this function  takes, and to crash out if setting fails for some reason
 		start = timer()
@@ -303,9 +297,9 @@ class llrf_control(object):
 				self.values[rf_conditioning_data.latest_amp_sp_from_ramp] = float(val1)
 				self.logger.message('set_amp is updating last_amp_sp set to  {}'.format(start_amp_sp))
 				self.values[rf_conditioning_data.kfpower_at_last_amp_sp] = self.data.amp_vs_kfpow_running_stat[ int(self.values[
-					rf_conditioning_data.last_amp_sp])][1]
+					                                                                                                    rf_conditioning_data.last_amp_sp])][1]
 
-				# self.logger.message('set_amp  updating, last_amp_sp = {}, last_amp_sp =  '.format(start_amp_sp, self.values[rf_conditioning_data.last_amp_sp] ))
+			# self.logger.message('set_amp  updating, last_amp_sp = {}, last_amp_sp =  '.format(start_amp_sp, self.values[rf_conditioning_data.last_amp_sp] ))
 
 			self.values[rf_conditioning_data.amp_sp] = self.llrf_control.getAmpSP()
 		else:
@@ -316,9 +310,9 @@ class llrf_control(object):
 
 	def set_trace_mean_positions(self):
 		"""
-		sets the mean start and end positions from the config file
-		:return:
-		"""
+	    sets the mean start and end positions from the config file
+	    :return:
+	    """
 		print("set_trace_mean_positions (add log entry here)")
 		cd =self.config_data
 		c =self.config
@@ -365,16 +359,16 @@ class llrf_control(object):
 		print("setup_traces_for_omed_and_rolling_averages")
 		# a dictionary to convert long to short trace names, smh
 		full_race_name_toShort_trace_name_dict = {
-		'KLYSTRON_REVERSE_PHASE' : 'KRPHA',
-		'KLYSTRON_FORWARD_PHASE' : 'KFPHA',
-		'KLYSTRON_REVERSE_POWER' : 'KRPOW',
-		'KLYSTRON_FORWARD_POWER' : 'KFPOW',
-		'CAVITY_REVERSE_PHASE' : 'CRPHA',
-		'CAVITY_FORWARD_PHASE' : 'CFPHA',
-		'CAVITY_REVERSE_POWER' : 'CRPOW',
-		'CAVITY_FORWARD_POWER' : 'CFPOW',
-		'CAVITY_PROBE_PHASE' : 'CPPHA',
-		'CAVITY_PROBE_POWER' : 'CPPOW'}
+			'KLYSTRON_REVERSE_PHASE' : 'KRPHA',
+			'KLYSTRON_FORWARD_PHASE' : 'KFPHA',
+			'KLYSTRON_REVERSE_POWER' : 'KRPOW',
+			'KLYSTRON_FORWARD_POWER' : 'KFPOW',
+			'CAVITY_REVERSE_PHASE' : 'CRPHA',
+			'CAVITY_FORWARD_PHASE' : 'CFPHA',
+			'CAVITY_REVERSE_POWER' : 'CRPOW',
+			'CAVITY_FORWARD_POWER' : 'CFPOW',
+			'CAVITY_PROBE_PHASE' : 'CPPHA',
+			'CAVITY_PROBE_POWER' : 'CPPOW'}
 		print('BREAKDOWN_TRACES = ',self.config_data['BREAKDOWN_TRACES'])
 		for trace in self.config_data['BREAKDOWN_TRACES']:
 			print("trace = ", trace)
@@ -401,8 +395,8 @@ class llrf_control(object):
 
 	def set_nominal_masks(self):
 		'''
-			call this after a log ramp to reset the nominal masks WITH NO RESTTING OF THE ROLLING AVERAGE
-		'''
+	        call this after a log ramp to reset the nominal masks WITH NO RESTTING OF THE ROLLING AVERAGE
+	    '''
 		print("set_nominal_masks")
 		# a dictionary to convert long to short trace names, smh
 		full_race_name_toShort_trace_name_dict = {
@@ -424,10 +418,10 @@ class llrf_control(object):
 
 	def setup_trace_for_omed(self, trace):
 		'''
-		setup the trace for outside mask event deteciton (all required parameters)
-		:param trace_type: a string for the trace type that is prepends to each of the outside mask settign keyweords (defined in the config)
-		fast_ramp_mode !! is a setting the c++ that sets hi mask to max of KFPower
-		'''
+	    setup the trace for outside mask event deteciton (all required parameters)
+	    :param trace_type: a string for the trace type that is prepends to each of the outside mask settign keyweords (defined in the config)
+	    fast_ramp_mode !! is a setting the c++ that sets hi mask to max of KFPower
+	    '''
 		# these are all the possible config parameters, THEY MUST EXIST IN THE CONFIG OR THIS BREAK!!
 		auto_set = self.config_data[trace + '_AUTO_SET']  # NOT USED ANYMORE REALLY,
 		mask_set_type = self.config_data[trace + '_MASK_SET_TYPE']  # using indices or time on pusle to set mask positions

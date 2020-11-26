@@ -464,7 +464,7 @@ VAC_VALVE: S01-VALV-01
 #VAC_VALVE:      # a list of strings ??? TODO
 #  - S01-VALV-01  
 VAC_VALVE_CHECK_TIME: 1000 # ms between getting new value!!!!
-KEEP_VALVE_OPEN: true # should the valve be kept open or not?
+KEEP_VALVE_OPEN: false # should the valve be kept open or not?
 
 VAC_SPIKE_INCREASE_BD_COUNT: true  # Include vac spikes that aren't associated with OMEs in the Breakdown Count.
 

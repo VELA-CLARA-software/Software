@@ -147,7 +147,6 @@ class main_controller(object):
         # self.conditioning_states[self.data.llrf_DAQ_rep_rate_status] = state.UNKNOWN
         # connect buttons
         self.view.update_expert_values_button.clicked.connect(self.update_expert_values)
-
         # MUST BE CONNECTED AFTER MONITOR_HUB is created
         # Start Data Logging
         self.logger.start_binary_data_logging()
