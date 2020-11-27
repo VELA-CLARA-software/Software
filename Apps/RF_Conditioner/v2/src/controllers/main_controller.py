@@ -149,8 +149,14 @@ class main_controller(object):
         self.view.update_expert_values_button.clicked.connect(self.update_expert_values)
         # MUST BE CONNECTED AFTER MONITOR_HUB is created
         # Start Data Logging
+
+
+
         self.logger.start_binary_data_logging()
         self.main_loop()
+
+    
+
 
     def main_loop(self):
         rcd = rf_conditioning_data

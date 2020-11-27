@@ -40,7 +40,7 @@ from VELA_CLARA_Vac_Valve_Control import VALVE_STATE
 from VELA_CLARA_RF_Protection_Control import RF_PROT_STATUS
 from VELA_CLARA_RF_Modulator_Control import HOLD_RF_ON_STATE
 from src.data.rf_conditioning_data import rf_conditioning_data
-
+from src.controllers import llrf_control
 from src.data.state import state
 from PyQt4.QtGui import *
 
@@ -143,18 +143,24 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         self.can_ramp_button.setStyleSheet('QPushButton { background-color : ' + self.bad + '; color : black; }')
         self.can_ramp_button.setText('RAMP Disabled')
 
-        # initialise update_individual_trace_button to "Individual Trace Updates Stopped"
-        self.update_individual_trace_button.clicked.connect(self.handle_update_individual_trace_button)
-        self.update_individual_trace_button.setStyleSheet('QPushButton { background-color : ' + self.bad + '; color : black; }')
-        self.update_individual_trace_button.setText('Individual Trace Updates Stopped')
+
 
 
         self.plot_item = self.graphicsView.getPlotItem()
 
-        self.aboutToQuit.connect(self.closeEvent)
+        #self.aboutToQuit.connect(self.closeEvent)
 
 
-    def closeEvent(self):
+    def closeEvent(self, event):
+        '''
+            Closes down the app if close button pressed on GUI.
+            Before closing it sets all trce scans back to 10 Hz no matter what the previous/current frequencies
+        '''
+        # TODO AJG: call in function that resets all traces to 10 HZ refresh rate
+        self.event = event
+        self.llrf_control = llrf_control.llrf_control()
+        self.llrf_control.set_all_scans_to_10Hz()
+        #self.llrf_control.set_all_scans_to_passive_KFPower_to_10sec()
         print('Close button pressed on RF_Night_Watch GUI.')
         sys.exit(0)
 
@@ -427,16 +433,18 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
             self.can_ramp_button.setStyleSheet('QPushButton { background-color : ' + self.good + '; color : black; }')
             self.can_ramp_button.setText('RAMP Enabled')
 
+    '''
     # TODO AJG: add funtion to handle individual_trace_updates button:
     def handle_update_individual_trace_button(self):
-        if self.values[rf_conditioning_data.update_individual_trace]:
-            self.values[rf_conditioning_data.update_individual_trace] = False
+        if self.values[rf_conditioning_data.update_individual_trace_10Hz]:
+            self.values[rf_conditioning_data.update_individual_trace_10Hz] = False
             self.individual_update_individual_trace.setStyleSheet('QPushButton { background-color : ' + self.bad + '; color : black; }')
             self.individual_update_individual_trace.setText('Individual Trace Updates Stopped')
         else:
-            self.values[rf_conditioning_data.update_individual_trace] = True
+            self.values[rf_conditioning_data.update_individual_trace_10Hz] = True
             self.update_individual_trace_button.setStyleSheet('QPushButton { background-color : ' + self.good + '; color : black; }')
             self.update_individual_trace_button.setText('Individual Trace Updates at 10 Hz')
+    '''
 
     def handle_llrf_enable_button(self):
         if self.values[rf_conditioning_data.gui_can_rf_output]:

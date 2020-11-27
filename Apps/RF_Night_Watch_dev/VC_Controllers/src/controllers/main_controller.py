@@ -40,8 +40,10 @@ print('main_controller: import monitor_hub')
 from src.monitors.monitor_hub import monitor_hub
 from src.view.rf_condition_view import rf_condition_view
 from PyQt4.QtGui import QApplication
+from PyQt4.QtGui import *
 from src.data.state import *
 from src.data.state import ramp_method
+from src.controllers import llrf_control
 import inspect
 
 class main_controller(object):
@@ -138,6 +140,10 @@ class main_controller(object):
             After we start monitoring the main data values dictionary can have entries added that are defined in the config file
             This means the size of this dict can increase !!   
         '''
+
+        '''Create the llrf_control class'''
+        self.llrf_control = llrf_control.llrf_control()
+
         # the vac monitor, DB monitor etc,keep a local state, at the mina_loop level we derive a state from them (
         # e.g. new_good, new_bad, etc
         # self.conditioning_states = {}
@@ -148,10 +154,37 @@ class main_controller(object):
         # connect buttons
         self.view.update_expert_values_button.clicked.connect(self.update_expert_values)
 
+        # TODO AJG: connect GUI update_expert_values button here to call in update_expert_values() function located in this class:
+        self.view.update_individual_trace_button.clicked.connect(self.toggle_update_individual_trace)
+        self.view.update_individual_trace_button.setStyleSheet('QPushButton { background-color : ' + self.view.zero + '; color : black; }')
+        self.view.update_individual_trace_button.setText('Individual Trace Updates every 10s')
+
+        # TODO AJG: start with all traces set to passicve except KFPower set to update every 10 seconds.
+        self.logger.message(__name__ + ' setting all traces to passive, KFPower to 0.1 Hz')
+        self.llrf_control.set_all_scans_to_passive_KFPower_to_10sec()
+
         # MUST BE CONNECTED AFTER MONITOR_HUB is created
         # Start Data Logging
         self.logger.start_binary_data_logging()
         self.main_loop()
+
+    def toggle_update_individual_trace(self):
+        '''
+            This function is called in whenever the update_expert_values button is clicked on the GUI.
+            If the attribute "update_individual_trace_10Hz" (in rf_conditioning_data.values dict) was True it is converted to False & vice-versa.
+            Also it calls in the set_trace_SCANs() function in llrf_control.py which handles the change in update frequency.
+        '''
+
+        if self.values[rf_conditioning_data.update_individual_trace_10Hz]:
+            self.values[rf_conditioning_data.update_individual_trace_10Hz] = False
+            self.view.update_individual_trace_button.setStyleSheet('QPushButton { background-color : ' + self.view.zero + '; color : black; }')
+            self.view.update_individual_trace_button.setText('Individual Trace Updates every 10s')
+        else:
+            self.values[rf_conditioning_data.update_individual_trace_10Hz] = True
+            self.view.update_individual_trace_button.setStyleSheet('QPushButton { background-color : ' + self.view.good + '; color : black; }')
+            self.view.update_individual_trace_button.setText('Individual Trace Updates every 0.1s')
+
+        self.llrf_control.set_trace_SCANs()
 
     def main_loop(self):
         rcd = rf_conditioning_data

@@ -2,6 +2,7 @@
 #import src.data.rf_condition_data_base as dat
 #from VELA_CLARA_LLRF_Control import LLRF_SCAN
 from VELA_CLARA_LLRF_Control import TRIG
+from VELA_CLARA_LLRF_Control import LLRF_SCAN # TODO here is how you can import the enum
 from src.data import config
 from src.data import rf_conditioning_logger
 from src.data.rf_conditioning_data import rf_conditioning_data
@@ -223,21 +224,78 @@ class llrf_control(object):
 
 	def set_trace_SCANs(self):
 		'''
-		This function is now sensitive to the "handle_update_individual_trace" button in the GUI
-		:return:
+		This function is now sensitive to the "handle_update_individual_trace" button in the GUI.
+		If the attribute "update_individual_trace_10Hz" (in rf_conditioning_data.values dict) is True
+		then all traces are set to 10 Hz refresh rate
+		If False the all traces are set to 0.1 Hz refresh rate.
+
+		Use names below
+		"KLYSTRON_REVERSE_POWER"
+		"KLYSTRON_REVERSE_PHASE"
+		"KLYSTRON_FORWARD_POWER"
+		"KLYSTRON_FORWARD_PHASE"
+		"CAVITY_REVERSE_POWER"
+		"CAVITY_REVERSE_PHASE"
+		"CAVITY_PROBE_POWER"
+		"CAVITY_PROBE_PHASE"
+		"CAVITY_FORWARD_POWER"
+		"CAVITY_FORWARD_PHASE"
+
+		.def("setTraceSCAN",  &liberaLLRFController::setTraceSCAN,(NAME_ARG,VALUE_ARG),"Set trace 'name' SCAN rate to 'value' (if monitoring)")
+        .def("setAllTraceSCAN",  &liberaLLRFController::setAllTraceSCAN,(VALUE_ARG),"Set all monitoring traces SCAN rate to 'value'")
+        .def("setAllSCANToPassive",  &liberaLLRFController::setAllSCANToPassive,"Set all SCAN to Passive")
+        .def("setPowerRemoteTraceSCAN10sec",  &liberaLLRFController::setPowerRemoteTraceSCAN10sec,(NAME_ARG),"Set trace 'name' power remote SCAN to 10 seconds")
+
+        enum_<LLRF_SCAN>("LLRF_SCAN")
+        .value("PASSIVE",LLRF_SCAN::PASSIVE)
+        .value("EVENT",LLRF_SCAN::EVENT)
+        .value("IO_INTR", LLRF_SCAN::IO_INTR)
+        .value("TEN", LLRF_SCAN::TEN)
+        .value("FIVE", LLRF_SCAN::FIVE)
+        .value("TWO", LLRF_SCAN::TWO)
+        .value("ZERO_POINT_TWO", LLRF_SCAN::ZERO_POINT_TWO)
+        .value("ZERO_POINT_FIVE", LLRF_SCAN::ZERO_POINT_FIVE)
+        .value("ZERO_POINT_ONE", LLRF_SCAN::ZERO_POINT_ONE)
+        .value("UNKNOWN_SCAN", LLRF_SCAN::UNKNOWN_SCAN)
+
 		'''
-		if rf_conditioning_data.values[rf_conditioning_data.update_individual_trace]:
-			self.logger.message(__name__ + ' setting KLYSTRON_FORWARD_POWER SCAN to 10 seconds')
-			self.llrf_control.setPowerRemoteTraceSCAN10sec('KLYSTRON_FORWARD_POWER')
-			self.logger.message(__name__ + ' setting CAVITY_PROBE_POWER SCAN to 10 seconds')
-			self.llrf_control.setPowerRemoteTraceSCAN10sec('CAVITY_PROBE_POWER')
-			self.logger.message(__name__ + ' setting One Record SCAN to IO/intr')
-			self.llrf_control.resetTORSCANToIOIntr()
-			self.logger.message(__name__ + ' setting One Record ACQM to event')
-			self.llrf_control.setTORACQMEvent()
+		self.update_individual_trace_10Hz = rf_conditioning_data.values[rf_conditioning_data.update_individual_trace_10Hz]
+		if self.update_individual_trace_10Hz:
+			self.set_all_scans_to_10Hz()
 		else:
-			self.logger.message(__name__ + ' setting all SCAN to passive')
-			self.llrf_control.setAllSCANToPassive()
+			self.set_all_scans_to_passive_KFPower_to_10sec()
+
+
+
+
+			#self.llrf_control.setAllTraceSCAN(self.llrf_control.LLRF_SCAN.ZERO_POINT_ONE)
+
+			'''
+			ok so this is the broke bit, teh enum is not "owned" by self.llrf_obj, its not really an opbjetc, its a set of "definitions"  
+			great, thanks Duncan, can you check my question in teams, just to make sure!
+			'''
+	def set_all_scans_to_passive_KFPower_to_10sec(self):
+		'''*** BEWARE of Hz / seconds confusion!***
+		sets all traces to passive but swithces Klystron forward power trace to update every 10 seconds
+		'''
+		self.logger.message(__name__ + ' setting all SCAN to passive')
+		self.llrf_control.setAllSCANToPassive()
+		self.logger.message(__name__ + ' setting all traces to passive, KFPower to 0.1 Hz')
+		self.llrf_control.setPowerRemoteTraceSCAN10sec('KLYSTRON_FORWARD_POWER')
+
+	def set_all_scans_to_10Hz(self):
+		''' *** BEWARE of Hz / seconds confusion!***
+		sets all traces to update every 0.1 seconds
+		'''
+		self.logger.message(__name__ + ' setting all SCAN to 10 Hz')
+		self.llrf_control.setAllTraceSCAN(LLRF_SCAN.ZERO_POINT_ONE)
+
+		# TODO AJGNot sure about 2 settings below???
+		self.logger.message(__name__ + ' setting One Record SCAN to IO/intr')
+		self.llrf_control.resetTORSCANToIOIntr()
+		self.logger.message(__name__ + ' setting One Record ACQM to event')
+		self.llrf_control.setTORACQMEvent()
+
 
 	def start_trace_average_no_reset(self,value):
 		for trace in self.config_data['BREAKDOWN_TRACES']:

@@ -1826,8 +1826,6 @@ class rf_conditioning_data(object):
     # values[last_106_bd_count] = dummy_int
 
 
-
-
     pulse_count = 'pulse_count'
     all_value_keys.append(pulse_count)
     values[pulse_count] = dummy_int
@@ -2192,11 +2190,13 @@ class rf_conditioning_data(object):
     all_value_keys.append(p2_all)
     values[p2_all] = dummy_float
 
-    # TODO AJG: adding a update_individual_trace:
-    update_individual_trace = 'update_individual_trace'
-    all_value_keys.append(update_individual_trace)
-    values[update_individual_trace] = False
-    excluded_key_list.append(update_individual_trace)
+    # TODO AJG: adding a update_individual_trace_10Hz:
+    # if True:  Traces update at 10 Hz
+    # if False: trav=ces update at 0.1 Hz
+    update_individual_trace_10Hz = 'update_individual_trace_10Hz'
+    all_value_keys.append(update_individual_trace_10Hz)
+    values[update_individual_trace_10Hz] = False
+    excluded_key_list.append(update_individual_trace_10Hz)
 
     # TODO AJG: this is temporary! remove asap
 
