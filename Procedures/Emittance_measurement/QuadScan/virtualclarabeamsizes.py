@@ -186,7 +186,7 @@ class BeamSizeDetermination(GeneralQuadScan):
         # We have to fudge this for now as the conversion between current and solenoid strength doesn't work
         get_data_from_catap = self.machinestate.getDataFromCATAP
         catapdata['generator']['charge'].update({'value': self.charge})
-        catapdata['generator']['number_of_particles']['value'] = np.power(2,10)
+        catapdata['generator']['number_of_particles']['value'] = np.power(2,16)
         ## Work arounds given the issues with the Klystron Fwd power in the VM
         catapdata['L01']['L01'].update({'field_amplitude': 21.2})
         catapdata['L01']['CLA-L01-MAG-SOL-01'].update({'field_amplitude': 0.0})
