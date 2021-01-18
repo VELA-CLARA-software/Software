@@ -71,9 +71,15 @@ class WCM(object):
 #        import VELA_CLARA_Vac_Valve_Control as valve
         import VELA_CLARA_LLRF_Control as rfx
         import VELA_CLARA_Camera_Control as camx
+        import VELA_CLARA_Magnet_Control as mags
  
         # noting the current date and time
         self.current_date = today.strftime("%d%m%Y_%H-%M-%S")
+        
+        # initialise the magnets
+        mags_init = mags.init()
+        mags_init.setVerbose()
+        mc = mags_init.physical_CLARA_PH1_Magnet_Controller()
         
         # initialize cameras
         cam_init = camx.init()
@@ -165,6 +171,21 @@ class WCM(object):
 #        outF.close()
 #        raw_input()
 #        exit()
+        
+        # set the correctors to zero. 
+        s1hcor1 = mc.getMagObjConstRef("S01-HCOR1")
+        s1vcor1 = mc.getMagObjConstRef("S01-VCOR1")
+        s1hcor2 = mc.getMagObjConstRef("S01-HCOR2")
+        s1vcor2 = mc.getMagObjConstRef("S01-VCOR2")        
+        print 's1 hcor1 current ', s1hcor1.SI
+        print 's1 vcor1 current ', s1vcor1.SI
+        print 's1 hcor2 current ', s1hcor2.SI
+        print 's1 vcor2 current ', s1vcor2.SI
+       
+        #s1hcor1.SI = 0 # TEST THIS. 
+        
+        
+        exit()
         
         number_rf_vals = 3
         for i in range(number_rf_vals):
