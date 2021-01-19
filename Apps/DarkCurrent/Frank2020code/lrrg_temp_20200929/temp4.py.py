@@ -15,6 +15,11 @@ import matplotlib.pyplot as plt
 #import pandas as pd
 import svd_module
 
+#from PyQt4 import QtGui
+#from PyQt4.QtWidgets import QMessageBox
+from PyQt4.QtGui import *
+from PyQt4.QtCore import *
+
 del os.environ["EPICS_CA_AUTO_ADDR_LIST"]
 #del os.environ["EPICS_CA_SERVER_PORT"]
 os.environ["EPICS_CA_ADDR_LIST"] = "192.168.83.255"
@@ -63,6 +68,40 @@ else:
 number_of_shots = 200
 number_of_measurements = 3
 
+'''
+class Example(QtGui.QWidget):
+    
+    def __init__(self):
+        super(Example, self).__init__()
+        
+        self.initUI()
+        
+    def initUI(self):      
+
+        #self.txt = QtGui.QDialog('Please check that:', self)
+        #self.txt.move(10, 10)
+        #self.txt = QtGui.QInputDialog.getText(self, 'Input Dialog', 'Enter your name:')
+        
+    
+        self.btn = QtGui.QPushButton('I confirm', self)
+        self.btn.move(20, 20)
+#        self.btn.clicked.connect(return 0)
+        
+#        self.le = QtGui.QLineEdit(self)
+#        self.le.move(130, 22)
+        
+        self.setGeometry(300, 300, 290, 150)
+        self.setWindowTitle('PLEASE READ!')
+        self.show()
+        
+#    def showDialog(self):
+        
+        #text, ok = QtGui.QInputDialog.getText(self, 'Input Dialog', 
+        #    'Enter your name:')
+        
+        #if ok:
+        #            self.le.setText(str(text))
+'''
 
 class WCM(object):
     def __init__(self):
@@ -183,7 +222,27 @@ class WCM(object):
         print 's1 vcor2 current ', s1vcor2.SI
        
         #s1hcor1.SI = 0 # TEST THIS. 
+               
+        #app = QtGui.QApplication(sys.argv)
+        #ex = Example()
+        #sys.exit(app.exec_())
+ 
+
+        app = QApplication( sys.argv )
+        box = QMessageBox()
+# Window Title
+        box.setWindowTitle( "PLEASE READ!!" )
+# Icon: Information, Warning, Question, Critical
+        box.setIcon( QMessageBox.Information )
+# Short version of the information
+        box.setText( "PLEASE READ AND CONFIRM!" )
+# Informative text
+        box.setInformativeText( "PLEASE CHECK: \n1) THAT S01-SCR-01 IS IN! \n2) AND THAT CORRECTORS ARE OFF" )
+# Show the messagebox as a modal dialog
+        box.exec_()
+
         
+        raw_input()
         
         exit()
         
