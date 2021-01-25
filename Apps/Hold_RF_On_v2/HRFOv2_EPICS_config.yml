@@ -1,0 +1,61 @@
+# This is the configuration file for HRFOv2_EPICS.
+
+#Master_Dict_path:  "C:\\Users\\zup98752\\OneDrive - Science and Technology Facilities Council\\Axions\\CASCADE_2\\Data"
+savepath:  "C:\\Users\\zup98752\\OneDrive - Science and Technology Facilities Council\\Hold_RF_On\\Python\\Analysis"
+#Interpolated_datapath:  "C:\\Users\\zup98752\\OneDrive - Science and Technology Facilities Council\\Axions\\CASCADE_2\\Data\\Interpolated_data"
+#CL_datapath:  "C:\\Users\\zup98752\\OneDrive - Science and Technology Facilities Council\\Axions\\CASCADE_2\\Data\\CLs"
+
+# Full list of all PVs of interest
+all_mod_PVs:  
+ - "CLA-GUNS-HRF-MOD-01:HvPs:HvPs1:CurrRead"
+ - "CLA-GUNS-HRF-MOD-01:HvPs:HvPs1:TrigCountRead"
+ - "CLA-GUNS-HRF-MOD-01:HvPs:HvPs1:VoltRead"
+ - "CLA-GUNS-HRF-MOD-01:HvPs:HvPs2:CurrRead"
+ - "CLA-GUNS-HRF-MOD-01:HvPs:HvPs2:VoltRead"
+ - "CLA-GUNS-HRF-MOD-01:HvPs:HvPs3:CurrRead"
+ - "CLA-GUNS-HRF-MOD-01:HvPs:HvPs3:VoltRead"
+ - "CLA-GUNS-HRF-MOD-01:Pt:Diag:CtArc"
+ - "CLA-GUNS-HRF-MOD-01:Pt:Diag:CtRead"
+ - "CLA-GUNS-HRF-MOD-01:Pt:Diag:CvdArc"
+ - "CLA-GUNS-HRF-MOD-01:Pt:Diag:CvdRead"
+ - "CLA-GUNS-HRF-MOD-01:Pt:Diag:PlswthFwhmRead"
+ - "CLA-GUNS-HRF-MOD-01:Pt:Diag:PlswthRead"
+ - "CLA-GUNS-HRF-MOD-01:Pt:Diag:PowRead"
+ - "CLA-GUNS-HRF-MOD-01:Pt:Diag:PrfRead"
+ - "CLA-GUNS-HRF-MOD-01:Pt:FilPs:CurrRead"
+ - "CLA-GUNS-HRF-MOD-01:Pt:FilPs:VoltRead"
+ - "CLA-GUNS-HRF-MOD-01:Rf:Cool:BodyOutletTemp"
+ - "CLA-GUNS-HRF-MOD-01:Rf:Cool:KlystLimit"
+ - "CLA-GUNS-HRF-MOD-01:Rf:Cool:KlystPower"
+ - "CLA-GUNS-HRF-MOD-01:Rf:Ionp:PresRead1"
+ - "CLA-GUNS-HRF-MOD-01:Rf:MagPs1:CurrRead"
+ - "CLA-GUNS-HRF-MOD-01:Rf:MagPs1:VoltRead"
+ - "CLA-GUNS-HRF-MOD-01:Rf:MagPs2:CurrRead"
+ - "CLA-GUNS-HRF-MOD-01:Rf:MagPs2:VoltRead"
+ - "CLA-GUNS-HRF-MOD-01:Rf:MagPs3:CurrRead"
+ - "CLA-GUNS-HRF-MOD-01:Rf:MagPs3:VoltRead"
+ - "CLA-GUNS-HRF-MOD-01:Rf:MagPs4:CurrRead"
+ - "CLA-GUNS-HRF-MOD-01:Rf:MagPs4:VoltRead"
+ - "CLA-GUNS-HRF-MOD-01:Sys:ErrorRead.SVAL"
+ - "CLA-GUNS-HRF-MOD-01:Sys:ExtComm:AccessLevel"
+ - "CLA-GUNS-HRF-MOD-01:Sys:HvHoursRead"
+ - "CLA-GUNS-HRF-MOD-01:Sys:OffHoursRead"
+ - "CLA-GUNS-HRF-MOD-01:Sys:RemainingTime"
+ - "CLA-GUNS-HRF-MOD-01:Sys:StandbyHoursRead"
+ - "CLA-GUNS-HRF-MOD-01:Sys:StateRead"
+ - "CLA-GUNS-HRF-MOD-01:Sys:StateSet"
+ - "CLA-GUNS-HRF-MOD-01:Sys:Trig:PlswthSet"
+ - "CLA-GUNS-HRF-MOD-01:Sys:Trig:PrfSet"
+ - "CLA-GUNS-HRF-MOD-01:Sys:TrigHoursRead"
+
+interlock_PVs:
+ - "CLA-GUNS-HRF-MOD-01:Sys:INTLK1"
+ - "CLA-GUNS-HRF-MOD-01:Sys:INTLK2"
+ - "CLA-GUNS-HRF-MOD-01:Sys:INTLK3"
+ - "CLA-GUNS-HRF-MOD-01:Sys:INTLK4"
+ - "CLA-GUNS-HRF-MOD-01:Sys:INTLK5"
+
+
+# If True then all PVs in "all_mod_PVs" list above will be read in and plotted.
+# If False then the previously save .pkl will be read in and stored as the values dictionary
+READ_PVs:  False

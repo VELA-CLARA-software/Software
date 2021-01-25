@@ -1,217 +1,208 @@
-'''
-Python 3:
-https://www.python.org/downloads/windows/
-Pycharm:
-https://www.jetbrains.com/pycharm/download/#section=windows
-Github:
-https://git-scm.com/download/win
-'''
+import yaml, sys, csv, requests
+import numpy as np
+from decimal import *
+import pickle as pkl
+import HRFOv2_EPICS_data
+from matplotlib import pyplot as plt
 
-savepath = r"C:\Users\zup98752\OneDrive - Science and Technology Facilities Council\Hold_RF_On\Python\Analysis"
+from HRFOv2_EPICS_figures import figures
+from HRFOv2_EPICS_data import  data_functions
 
-import json
-import requests
-import matplotlib.pyplot as plt
+getcontext().prec = 100
 
-#Define the PV
-pv_name = 'CLA-GUNS-HRF-MOD-01:Sys:StateRead'
-#pv_name = "CLA-S01-DIA-WCM-01:Q"
+class reader():
+    '''
+    Class that handles reading in any data files like .yml, .txt, .csv, .pkl etc...
+    '''
 
-#Define the from and to times
-time_from = "2021-01-19T10:00:00.00Z"
-time_to = "2021-01-21T14:00:00.00Z"
+    def __init__(self):
+        print('Initiated reader().')
 
-url = "http://claraserv2.dl.ac.uk:17668/retrieval/data/getData.json?pv="+pv_name+"&from="+time_from+"&to="+time_to
-print(url)
+    def read_yaml(self):
+        # Read YAML file
+        self.config_file = sys.argv[1]
+        print(f'config_file = {self.config_file}')
+        #self.Decimal_list = ['B_loc', 'B_sigma_intermediate', 'B_alpha']
+        with open(self.config_file, 'r') as stream:
+            self.raw_config_data = yaml.safe_load(stream)
 
-r = requests.get(url)
-data = r.json()
+            print(self.raw_config_data.keys())
+            for key, val in self.raw_config_data.items():
+                if key in HRFOv2_EPICS_data.all_value_keys:
+                    HRFOv2_EPICS_data.values[str(key)] = val
+                    print(f'key = {key}, val = {val}')
 
-yaxis = []
-time = []
-for event in data[0]["data"] :
-    time.append(event["secs"]+event["nanos"]*1E-9)
-    yaxis.append(event["val"])
+                else:
+                    print(f'{key} not yet added to all_value_keys list in HRFOv2_EPICS_data.py')
+                    sys.exit()
 
-print(data[0]["meta"])
+    def read_EPICS_PVs(self, verbose=True):
+        '''
 
-savename = data[0]["meta"]['name'][0:19]
-print(savepath + "\\" + savename + r".png")
+        :param verbose: if True then function prints out attributes for diagnostics.
+        :return:
+        '''
 
-plt.plot(time,yaxis)
-#plt.ylabel(data[0]["meta"]["EGU"])
-plt.ylabel(data[0]["meta"]['name'])
-plt.xlabel("Time Since Epics Epoch")
-plt.savefig(savepath + "\\" + savename + r".png")
-plt.close('all')
+        figs = figures()
+        df = data_functions()
+        self.verbose = verbose
+        self.savepath = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.savepath]
+        self.all_mod_PVs = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.all_mod_PVs]
+        self.interlock_PVs = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.interlock_PVs]
+        self.PV_idx_dict = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.PV_idx_dict]
 
-all_mod_PVs = [	"CLA-GUNS-HRF-MOD-01:HvPs:HvPs1:CurrRead",
-	"CLA-GUNS-HRF-MOD-01:HvPs:HvPs1:TrigCountRead",
-	"CLA-GUNS-HRF-MOD-01:HvPs:HvPs1:VoltRead",
-	"CLA-GUNS-HRF-MOD-01:HvPs:HvPs2:CurrRead",
-	"CLA-GUNS-HRF-MOD-01:HvPs:HvPs2:VoltRead",
-	"CLA-GUNS-HRF-MOD-01:HvPs:HvPs3:CurrRead"	,
-	"CLA-GUNS-HRF-MOD-01:HvPs:HvPs3:VoltRead"	,
-	"CLA-GUNS-HRF-MOD-01:Pt:Diag:CtArc"	,
-	"CLA-GUNS-HRF-MOD-01:Pt:Diag:CtRead"	,
-	"CLA-GUNS-HRF-MOD-01:Pt:Diag:CvdArc"	,
-	"CLA-GUNS-HRF-MOD-01:Pt:Diag:CvdRead"	,
-	"CLA-GUNS-HRF-MOD-01:Pt:Diag:PlswthFwhmRead"	,
-	"CLA-GUNS-HRF-MOD-01:Pt:Diag:PlswthRead"	,
-	"CLA-GUNS-HRF-MOD-01:Pt:Diag:PowRead"	,
-	"CLA-GUNS-HRF-MOD-01:Pt:Diag:PrfRead"	,
-	"CLA-GUNS-HRF-MOD-01:Pt:FilPs:CurrRead"	,
-	"CLA-GUNS-HRF-MOD-01:Pt:FilPs:VoltRead"	,
-	"CLA-GUNS-HRF-MOD-01:Rf:Cool:BodyOutletTemp"	,
-	"CLA-GUNS-HRF-MOD-01:Rf:Cool:KlystLimit"	,
-	"CLA-GUNS-HRF-MOD-01:Rf:Cool:KlystPower"	,
-	"CLA-GUNS-HRF-MOD-01:Rf:Ionp:PresRead1"	,
-	"CLA-GUNS-HRF-MOD-01:Rf:MagPs1:CurrRead"	,
-	"CLA-GUNS-HRF-MOD-01:Rf:MagPs1:VoltRead"	,
-	"CLA-GUNS-HRF-MOD-01:Rf:MagPs2:CurrRead"	,
-	"CLA-GUNS-HRF-MOD-01:Rf:MagPs2:VoltRead"	,
-	"CLA-GUNS-HRF-MOD-01:Rf:MagPs3:CurrRead"	,
-	"CLA-GUNS-HRF-MOD-01:Rf:MagPs3:VoltRead"	,
-	"CLA-GUNS-HRF-MOD-01:Rf:MagPs4:CurrRead"	,
-	"CLA-GUNS-HRF-MOD-01:Rf:MagPs4:VoltRead"	,
-	"CLA-GUNS-HRF-MOD-01:Sys:ErrorRead.SVAL"	,
-	"CLA-GUNS-HRF-MOD-01:Sys:ExtComm:AccessLevel"	,
-	"CLA-GUNS-HRF-MOD-01:Sys:HvHoursRead"	,
-	"CLA-GUNS-HRF-MOD-01:Sys:INTLK1"	,
-	"CLA-GUNS-HRF-MOD-01:Sys:INTLK2"	,
-	"CLA-GUNS-HRF-MOD-01:Sys:INTLK3"	,
-	"CLA-GUNS-HRF-MOD-01:Sys:INTLK4"	,
-	"CLA-GUNS-HRF-MOD-01:Sys:INTLK5"	,
-	"CLA-GUNS-HRF-MOD-01:Sys:OffHoursRead"	,
-	"CLA-GUNS-HRF-MOD-01:Sys:RemainingTime"	,
-	"CLA-GUNS-HRF-MOD-01:Sys:StandbyHoursRead"	,
-	"CLA-GUNS-HRF-MOD-01:Sys:StateRead"	,
-	"CLA-GUNS-HRF-MOD-01:Sys:StateSet"	,
-	"CLA-GUNS-HRF-MOD-01:Sys:Trig:PlswthSet"	,
-	"CLA-GUNS-HRF-MOD-01:Sys:Trig:PrfSet"	,
-	"CLA-GUNS-HRF-MOD-01:Sys:TrigHoursRead"	]
+        #pv_name = "CLA-GUNS-HRF-MOD-01:Sys:INTLK5"
 
-opaque_PVs_name = []
-opaque_PVs_index = []
-X_DATA = []
-Y_DATA = []
-for pv_idx, pv_name in enumerate(all_mod_PVs):
+        # Define the from and to times
+        time_from = "2021-01-19T10:00:00.00Z"
+        time_to = "2021-01-21T14:00:00.00Z"
 
-    print('\n', pv_idx)
-    url = "http://claraserv2.dl.ac.uk:17668/retrieval/data/getData.json?pv=" + pv_name + "&from=" + time_from + "&to=" + time_to
-    print(url)
-    try:
-        r = requests.get(url)
-        data = r.json()
+        self.PV_TIME_DATA = []
+        self.PV_YAXIS_DATA = []
 
-        yaxis = []
-        time = []
-        for event in data[0]["data"]:
-            time.append(event["secs"] + event["nanos"] * 1E-9)
-            yaxis.append(event["val"])
+        for pv_idx, pv_name in enumerate(self.all_mod_PVs):
 
-        X_DATA.append(time)
-        Y_DATA.append(yaxis)
+            self.PV_idx_dict[pv_name] = str(pv_idx)
 
-        print(data[0]["meta"])
+            url = "http://claraserv2.dl.ac.uk:17668/retrieval/data/getData.json?pv=" + pv_name + "&from=" + time_from + "&to=" + time_to
 
-        savename = data[0]["meta"]['name'][0:19]
-        print(savepath + "\\" + savename + r".png")
 
-        plt.plot(time, yaxis, ls='-', lw=1.0, color='b')
-        plt.scatter(time, yaxis, marker='o', s=3.0, c='r')
+            r = requests.get(url)
+            data = r.json()
+
+            yaxis = []
+            time = []
+            for event in data[0]["data"]:
+                time.append(event["secs"] + event["nanos"] * 1E-9)
+                yaxis.append(event["val"])
+
+            self.PV_TIME_DATA.append(time)
+            self.PV_YAXIS_DATA.append(yaxis)
+
+            self.savename = df.remove_char_from_str(data[0]["meta"]['name'])
+
+            if self.verbose:
+                print('\n', pv_idx)
+                print(url)
+                print(data[0]["meta"])
+                print(f'savename_2 = {self.savename}')
+
+            figs.individual_PV_plot(time, yaxis, pv_name, self.savename, pv_idx)
+
+        HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.PV_idx_dict] = self.PV_idx_dict
+        HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.PV_TIME_DATA] = self.PV_TIME_DATA
+        HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.PV_YAXIS_DATA] = self.PV_YAXIS_DATA
+
+        self.save_dict_2_pkl(HRFOv2_EPICS_data.values, r'\post_PV_read_values_dict.pkl')
+
+
+
+    def PCorllett_read_EPICS_PVs(self):
+        self.savepath = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.savepath]
+        self.PVs = ['CLA-GUN-LRF-CTRL-01:ad1:ch1:Power:Wnd:Avg', 'CLA-GUN-LRF-CTRL-01:ad1:ch3:Power:Wnd:Avg']
+        self.interlock_PVs = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.interlock_PVs]
+
+        #pv_name = "CLA-GUNS-HRF-MOD-01:Sys:INTLK5"
+
+        # Define the from and to times
+        time_from = "2021-01-19T10:00:00.00Z"
+        time_to = "2021-01-25T14:00:00.00Z"
+
+        self.X_DATA = []
+        self.Y_DATA = []
+
+        for pv_idx, pv_name in enumerate(self.PVs):
+
+            print('\n', pv_idx)
+            url = "http://claraserv2.dl.ac.uk:17668/retrieval/data/getData.json?pv=" + pv_name + "&from=" + time_from + "&to=" + time_to
+            print(url)
+
+            r = requests.get(url)
+            data = r.json()
+
+            yaxis = []
+            time = []
+            for event in data[0]["data"]:
+                time.append(event["secs"] + event["nanos"] * 1E-9)
+                yaxis.append(event["val"])
+
+            self.X_DATA.append(time)
+            self.Y_DATA.append(yaxis)
+
+            print(data[0]["meta"])
+
+            savename = data[0]["meta"]['name'][0:19]
+            print(self.savepath + "\\" + savename + r".png")
+
+            plt.plot(time, yaxis, ls='-', lw=1.0, color='b')
+            plt.scatter(time, yaxis, marker='o', s=3.0, c='r')
+            # plt.ylabel(data[0]["meta"]["EGU"])
+            plt.title(data[0]["meta"]['name'])
+            plt.ylabel(data[0]["meta"]['name'])
+            plt.xlabel("Time Since Epics Epoch")
+            plt.savefig(self.savepath + "\\" + savename + f"_pv_{pv_idx}_Z.png")
+            plt.close('all')
+
+        print(f'len(self.Y_DATA[0]) = {len(self.Y_DATA[0])}')
+        print(f'len(self.Y_DATA[1]) = {len(self.Y_DATA[1])}')
+
+        lengths = [len(self.Y_DATA[0]), len(self.Y_DATA[1])]
+        length = int(min(lengths))
+
+        self.Y_data_ratio = [self.Y_DATA[0][i] / self.Y_DATA[1][i] for i in range(length)]
+        plt.plot(self.X_DATA[0][0:length], self.Y_data_ratio, ls='-', lw=1.0, color='b')
+        plt.scatter(self.X_DATA[0][0:length], self.Y_data_ratio, marker='o', s=3.0, c='r')
         # plt.ylabel(data[0]["meta"]["EGU"])
-        plt.title(data[0]["meta"]['name'])
-        plt.ylabel(data[0]["meta"]['name'])
+        #plt.title(data[0]["meta"]['name'])
+        #plt.ylabel(data[0]["meta"]['name'])
+        plt.ylim(0.0, 3.0)
         plt.xlabel("Time Since Epics Epoch")
-        plt.savefig(savepath + "\\" + savename + f"_pv_{pv_idx}.png")
+        plt.savefig(self.savepath + "\\" + "Insertion_loss.png")
         plt.close('all')
-    except:
-        print(f'Could not access {pv_name}')
-        opaque_PVs_name.append(pv_name)
-        opaque_PVs_index.append(pv_idx)
 
-print('\nPVs unable to open:')
-for i in range(len(opaque_PVs_name)):
-    print(f'{opaque_PVs_index[i]}: {opaque_PVs_name[i]}')
+        # sub plots:
 
-# sub plots:
+        PV_idx_0 = 0
+        PV_idx_1 = 1
 
-PV_idx_0 = 14
-PV_idx_1 = 40
-
-fig, axs = plt.subplots(2)
-fig.suptitle(f'{all_mod_PVs[PV_idx_0]}\n{all_mod_PVs[PV_idx_1]}')
-axs[0].plot(X_DATA[PV_idx_0], Y_DATA[PV_idx_0], ls='-', lw=1.0, color='b')
-axs[0].scatter(X_DATA[PV_idx_0], Y_DATA[PV_idx_0], marker='o', s=3.0, c='r')
-axs[1].plot(X_DATA[PV_idx_1], Y_DATA[PV_idx_1], ls='-', lw=1.0, color='b')
-axs[1].scatter(X_DATA[PV_idx_1], Y_DATA[PV_idx_1], marker='o', s=3.0, c='r')
-plt.savefig(savepath + f"\\_subplots_{PV_idx_0}_{PV_idx_1}.png")
-plt.close('all')
-
-# Multiple y-axes:
-
-def make_patch_spines_invisible(ax):
-    ax.set_frame_on(True)
-    ax.patch.set_visible(False)
-    for sp in ax.spines.values():
-        sp.set_visible(False)
+        fig, axs = plt.subplots(2)
+        #fig.suptitle(f'{self.all_mod_PVs[PV_idx_0]}\n{self.all_mod_PVs[PV_idx_1]}')
+        axs[0].plot(self.X_DATA[PV_idx_0], self.Y_DATA[PV_idx_0], ls='-', lw=1.0, color='b')
+        axs[0].scatter(self.X_DATA[PV_idx_0], self.Y_DATA[PV_idx_0], marker='o', s=3.0, c='r')
+        axs[1].plot(self.X_DATA[PV_idx_1], self.Y_DATA[PV_idx_1], ls='-', lw=1.0, color='b')
+        axs[1].scatter(self.X_DATA[PV_idx_1], self.Y_DATA[PV_idx_1], marker='o', s=3.0, c='r')
+        plt.savefig(self.savepath + f"\\Insertion_loss_{PV_idx_0}_{PV_idx_1}.png")
+        plt.close('all')
 
 
-fig, host = plt.subplots()
-fig.subplots_adjust(right=0.75)
+    def save_dict_2_pkl(self, dict_to_save, savename):
+        '''
+        Saves python dictionary as .pkl
+        :param dict_to_save: Which dictionary to save
+        :param savename: String of the form r'\post_PV_read_values_dict.pkl'
+        :return:
+        '''
+        self.dict_to_save = dict_to_save
+        self.savename = savename
+        self.savepath = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.savepath]
 
-par1 = host.twinx()
-par2 = host.twinx()
+        with open(self.savepath + self.savename, 'wb') as handle:
+            pkl.dump(self.dict_to_save, handle, protocol=pkl.HIGHEST_PROTOCOL)
 
-# Offset the right spine of par2.  The ticks and label have already been
-# placed on the right by twinx above.
-par2.spines["right"].set_position(("axes", 1.2))
-# Having been created by twinx, par2 has its frame off, so the line of its
-# detached spine is invisible.  First, activate the frame but make the patch
-# and spines invisible.
-make_patch_spines_invisible(par2)
-# Second, show the right spine.
-par2.spines["right"].set_visible(True)
+        print(f'\nSaved {self.savename} in {self.savepath}\n')
 
-PV_idx_1 = 1
-PV_idx_2 = 37
-PV_idx_3 = 8
+    def load_post_PV_read_pkl_2_dict(self, savename):
+        '''
+        Reads in .pkl and converts it to a Python dictionary.
+        :param savename: String of the form r'\post_PV_read_values_dict.pkl'
+        :return:
+        '''
+        self.savename = savename
+        self.savepath = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.savepath]
 
-#p1, = host.plot([0, 1, 2], [0, 1, 2], "b-", label="Density")
-#p2, = par1.plot([0, 1, 2], [0, 3, 2], "r-", label="Temperature")
-#p3, = par2.plot([0, 1, 2], [50, 30, 15], "g-", label="Velocity")
+        with open(self.savepath + self.savename, 'rb') as handle:
+            self.dict = pkl.load(handle)
 
-p1, = host.plot(X_DATA[PV_idx_1], Y_DATA[PV_idx_1], ls='-', lw=1.0, color='r')
-#p1, = host.scatter(X_DATA[PV_idx_1], Y_DATA[PV_idx_1], marker='o', s=3.0, c='r')
-p2, = par1.plot(X_DATA[PV_idx_2], Y_DATA[PV_idx_2], ls='-', lw=1.0, color='g')
-#p2, = par1.scatter(X_DATA[PV_idx_2], Y_DATA[PV_idx_2], marker='o', s=3.0, c='r')
-p3, = par2.plot(X_DATA[PV_idx_3], Y_DATA[PV_idx_3], ls='-', lw=1.0, color='b')
-#p3, = par2.scatter(X_DATA[PV_idx_3], Y_DATA[PV_idx_3], marker='o', s=3.0, c='r')
+        HRFOv2_EPICS_data.values = self.dict
 
-# host.set_xlim(0, 2)
-# host.set_ylim(0, 2)
-# par1.set_ylim(0, 4)
-# par2.set_ylim(1, 65)
-
-# host.set_xlabel("Distance")
-# host.set_ylabel("Density")
-# par1.set_ylabel("Temperature")
-# par2.set_ylabel("Velocity")
-
-host.yaxis.label.set_color(p1.get_color())
-par1.yaxis.label.set_color(p2.get_color())
-par2.yaxis.label.set_color(p3.get_color())
-
-tkw = dict(size=4, width=1.5)
-host.tick_params(axis='y', colors=p1.get_color(), **tkw)
-par1.tick_params(axis='y', colors=p2.get_color(), **tkw)
-par2.tick_params(axis='y', colors=p3.get_color(), **tkw)
-host.tick_params(axis='x', **tkw)
-
-lines = [p1, p2, p3]
-
-#host.legend(lines, [l.get_label() for l in lines])
-
-plt.savefig(savepath + f"\\_Multi_y_{PV_idx_1}_{PV_idx_2}_{PV_idx_3}.png")
-plt.close('all')
+        print(f'\nLoaded "{self.savename[1:]}" from {self.savepath}\n')

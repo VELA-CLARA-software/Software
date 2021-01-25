@@ -164,7 +164,6 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         print('Close button pressed on RF_Night_Watch GUI.')
         sys.exit(0)
 
-
     def update_plot(self):
         '''
             plot the binned data, the current working point (as a vertical line due to no kfpow for that amp_sp), lines of best fit
