@@ -12,13 +12,14 @@ getcontext().prec = 100
 
 class reader():
     '''
-    Class that handles reading in any data files like .yml, .txt, .csv, .pkl etc...
+    Class that handles reading in & writing any data files like .yml, .txt, .csv, .pkl etc...
     '''
 
     def __init__(self):
         print('Initiated reader().')
 
     def read_yaml(self):
+
         # Read YAML file
         self.config_file = sys.argv[1]
         print(f'config_file = {self.config_file}')
@@ -29,8 +30,13 @@ class reader():
             print(self.raw_config_data.keys())
             for key, val in self.raw_config_data.items():
                 if key in HRFOv2_EPICS_data.all_value_keys:
-                    HRFOv2_EPICS_data.values[str(key)] = val
+                    #mod_group_time_spacing = val
                     print(f'key = {key}, val = {val}')
+                    HRFOv2_EPICS_data.values[key] = val
+
+                    if key == "mod_group_time_spacing":
+                        print(f'HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.mod_group_time_spacing] = '
+                              f'{HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.mod_group_time_spacing]}')
 
                 else:
                     print(f'{key} not yet added to all_value_keys list in HRFOv2_EPICS_data.py')
@@ -38,7 +44,9 @@ class reader():
 
     def read_EPICS_PVs(self, verbose=True):
         '''
-
+        Reads in every PV in the "all_mod_PVs" list
+        saves the time data and the yaxis data
+        plots each individual PVs yaxis data as a function of time
         :param verbose: if True then function prints out attributes for diagnostics.
         :return:
         '''
@@ -49,50 +57,83 @@ class reader():
         self.savepath = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.savepath]
         self.all_mod_PVs = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.all_mod_PVs]
         self.interlock_PVs = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.interlock_PVs]
-        self.PV_idx_dict = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.PV_idx_dict]
-
+        self.pv_idx_dict = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.pv_idx_dict]
+        self.idx_pv_dict = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.idx_pv_dict]
+        self.date_from = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.date_from]
+        self.time_from = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.time_from]
+        self.date_to = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.date_to]
+        self.time_to = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.time_to]
+        self.PLOT_ALL_PVs = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.PLOT_ALL_PVs]
         #pv_name = "CLA-GUNS-HRF-MOD-01:Sys:INTLK5"
 
-        # Define the from and to times
-        time_from = "2021-01-19T10:00:00.00Z"
-        time_to = "2021-01-21T14:00:00.00Z"
+        # Call in the from and to times saved in the data dictionary originally read in from the config file
+        self.EPICS_date_time_from = df.concatenate_date_time_to_EPICS_format(self.date_from, self.time_from)
+        self.EPICS_date_time_to = df.concatenate_date_time_to_EPICS_format(self.date_to, self.time_to)
 
+
+        # save the formatted string in the data dictionary
+        HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.EPICS_date_time_from] = self.EPICS_date_time_from
+        HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.EPICS_date_time_to] = self.EPICS_date_time_to
+
+        # Initiate empty time and yaxis data lists for all PVs
+        # These will end up being a list of lists
         self.PV_TIME_DATA = []
         self.PV_YAXIS_DATA = []
 
         for pv_idx, pv_name in enumerate(self.all_mod_PVs):
 
-            self.PV_idx_dict[pv_name] = str(pv_idx)
+            # add to the PV_idx_dict & idx_PV_dict dictionaries
+            self.pv_idx_dict[pv_name] = str(pv_idx)
+            self.idx_pv_dict[str(pv_idx)] = pv_name
 
-            url = "http://claraserv2.dl.ac.uk:17668/retrieval/data/getData.json?pv=" + pv_name + "&from=" + time_from + "&to=" + time_to
+            # Construct url from "pv_name", "EPICS_date_time_from" & "EPICS_date_time_to"
+            url = "http://claraserv2.dl.ac.uk:17668/retrieval/data/getData.json?pv=" + \
+                  pv_name + "&from=" + self.EPICS_date_time_from + "&to=" + self.EPICS_date_time_to
 
-
+            #Retrieve data from EPICS archiver
             r = requests.get(url)
             data = r.json()
 
+            # Initiate empty time and yaxis data lists for each individual PV
             yaxis = []
             time = []
             for event in data[0]["data"]:
                 time.append(event["secs"] + event["nanos"] * 1E-9)
                 yaxis.append(event["val"])
 
+            # Append time & yaxis data
             self.PV_TIME_DATA.append(time)
             self.PV_YAXIS_DATA.append(yaxis)
 
+            # Create a savename for the PV plot by removing the ":" character from the PV name string
             self.savename = df.remove_char_from_str(data[0]["meta"]['name'])
 
+            # If function arguement verbose=True print out any diagnostic data required
             if self.verbose:
                 print('\n', pv_idx)
                 print(url)
                 print(data[0]["meta"])
-                print(f'savename_2 = {self.savename}')
+                print(f'savename = {self.savename}')
 
-            figs.individual_PV_plot(time, yaxis, pv_name, self.savename, pv_idx)
+            # if "PLOT_ALL_PVs:  True" in config yaml then plot each and every PV individually and save in the savepath folder
+            if self.PLOT_ALL_PVs:
+                figs.individual_PV_plot(time, yaxis, pv_name, self.savename, pv_idx)
 
-        HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.PV_idx_dict] = self.PV_idx_dict
+            else:
+                print('Not plotting individual PVs')
+
+            # Save the modulator state read again for ease of access
+            if pv_name == "CLA-GUNS-HRF-MOD-01:Sys:StateRead":
+                HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.mod_StateRead_time] = time
+                HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.mod_StateRead_yaxis] = yaxis
+
+        # Save data to the values dictionary for use later on
+        HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.pv_idx_dict] = self.pv_idx_dict
+        HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.idx_pv_dict] = self.idx_pv_dict
         HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.PV_TIME_DATA] = self.PV_TIME_DATA
         HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.PV_YAXIS_DATA] = self.PV_YAXIS_DATA
 
+        # Save the values dictionary as a .pkl so that we can re-run the script without having to re-read the data.
         self.save_dict_2_pkl(HRFOv2_EPICS_data.values, r'\post_PV_read_values_dict.pkl')
 
 

@@ -41,7 +41,6 @@ class figures():
         plt.savefig(self.savepath + "\\" + self.savename + f"_pv_{self.PV_idx}.png")
         plt.close('all')
 
-    # TODO: Make a generic subplots_x() reader instead of subplots_2() & subplots_3() etc....
 
     def subplots_x(self, pv_idx_list):
         '''
@@ -78,6 +77,9 @@ class figures():
 
             axs[idx].plot(self.PV_TIME_DATA[pv_idx], self.PV_YAXIS_DATA[pv_idx], ls='-', lw=1.0, color='b')
             axs[idx].scatter(self.PV_TIME_DATA[pv_idx], self.PV_YAXIS_DATA[pv_idx], marker='o', s=3.0, c='r')
+            if idx < self.N_PVs-1:
+                # make these tick labels invisible
+                plt.setp(axs[idx].get_xticklabels(), visible=False)
 
         fig.suptitle(self.suptitle_string, fontsize=7)
         plt.savefig(self.savepath + f"\\_subplots_{self.savename_idx_string}.png")
@@ -104,6 +106,8 @@ class figures():
         fig.suptitle(f'{self.all_mod_PVs[self.pv_idx_0]}\n{self.all_mod_PVs[self.pv_idx_1]}')
         axs[0].plot(self.PV_TIME_DATA[self.pv_idx_0], self.PV_YAXIS_DATA[self.pv_idx_0], ls='-', lw=1.0, color='b')
         axs[0].scatter(self.PV_TIME_DATA[self.pv_idx_0], self.PV_YAXIS_DATA[self.pv_idx_0], marker='o', s=3.0, c='r')
+        # make these tick labels invisible
+        plt.setp(axs[0].get_xticklabels(), visible=False)
         axs[1].plot(self.PV_TIME_DATA[self.pv_idx_1], self.PV_YAXIS_DATA[self.pv_idx_1], ls='-', lw=1.0, color='b')
         axs[1].scatter(self.PV_TIME_DATA[self.pv_idx_1], self.PV_YAXIS_DATA[self.pv_idx_1], marker='o', s=3.0, c='r')
         plt.savefig(self.savepath + f"\\_subplots_{self.pv_idx_0}_{self.pv_idx_1}.png")
@@ -132,12 +136,17 @@ class figures():
         fig.suptitle(f'{self.all_mod_PVs[self.pv_idx_0]}\n{self.all_mod_PVs[self.pv_idx_1]}')
         axs[0].plot(self.PV_TIME_DATA[self.pv_idx_0], self.PV_YAXIS_DATA[self.pv_idx_0], ls='-', lw=1.0, color='b')
         axs[0].scatter(self.PV_TIME_DATA[self.pv_idx_0], self.PV_YAXIS_DATA[self.pv_idx_0], marker='o', s=3.0, c='r')
+        # make these tick labels invisible
+        plt.setp(axs[0].get_xticklabels(), visible=False)
         axs[1].plot(self.PV_TIME_DATA[self.pv_idx_1], self.PV_YAXIS_DATA[self.pv_idx_1], ls='-', lw=1.0, color='b')
         axs[1].scatter(self.PV_TIME_DATA[self.pv_idx_1], self.PV_YAXIS_DATA[self.pv_idx_1], marker='o', s=3.0, c='r')
+        # make these tick labels invisible
+        plt.setp(axs[1].get_xticklabels(), visible=False)
         axs[2].plot(self.PV_TIME_DATA[self.pv_idx_2], self.PV_YAXIS_DATA[self.pv_idx_2], ls='-', lw=1.0, color='b')
         axs[2].scatter(self.PV_TIME_DATA[self.pv_idx_2], self.PV_YAXIS_DATA[self.pv_idx_2], marker='o', s=3.0, c='r')
         plt.savefig(self.savepath + f"\\_subplots_{self.pv_idx_0}_{self.pv_idx_1}_{self.pv_idx_2}.png")
         plt.close('all')
+
 
     def make_patch_spines_invisible(self, ax):
         '''
@@ -151,6 +160,7 @@ class figures():
         for sp in ax.spines.values():
             sp.set_visible(False)
 
+
     def triple_yaxis_plot(self, pv_idx_0, pv_idx_1, pv_idx_2):
         '''
         Creates a figure of three PV values on the same plot with 3 y-axes.
@@ -160,11 +170,9 @@ class figures():
         :param pv_idx_2:
         :return:
         '''
-
         self.pv_idx_0 = pv_idx_0
         self.pv_idx_1 = pv_idx_1
         self.pv_idx_2 = pv_idx_2
-
 
         fig, host = plt.subplots()
         fig.subplots_adjust(right=0.75)
@@ -181,8 +189,6 @@ class figures():
         self.make_patch_spines_invisible(par2)
         # Second, show the right spine.
         par2.spines["right"].set_visible(True)
-
-
 
         p1, = host.plot(self.PV_TIME_DATA[self.pv_idx_0], self.PV_YAXIS_DATA[self.pv_idx_0], ls='-', lw=1.0, color='r')
         # p1, = host.scatter(X_DATA[PV_idx_1], Y_DATA[PV_idx_1], marker='o', s=3.0, c='r')
@@ -216,4 +222,35 @@ class figures():
         # host.legend(lines, [l.get_label() for l in lines])
 
         plt.savefig(self.savepath + f"\\_Multi_y_{self.pv_idx_0}_{self.pv_idx_1}_{self.pv_idx_2}.png")
+        plt.close('all')
+
+
+    def histogram(self, data, xaxis_name, xmax):
+
+        self.data = data
+        self.xaxis_name = xaxis_name
+        self.xmax = xmax
+        self.savepath = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.savepath]
+
+        self.data_reduced = [i for i in self.data if i <= self.xmax]
+        self.savename = f'\\{xaxis_name}.png'
+        min_data = min(self.data_reduced)
+        max_data = max(self.data_reduced)
+
+        mean_dev_L = np.mean(self.data_reduced)
+        std_dev_L = np.std(self.data_reduced)
+        nbin = int(np.sqrt(len(self.data_reduced)) * 2.0)
+        #print('len(data) = {}\nnbin = {}\ndata = {}\nnumber of NaNs in data = {}\nmin_data = {}\nmax_data = {}\nmean_dev_L = {}\nstd_dev_L = {}'
+        #      .format(len(data), nbin, data, len(nans_in_data), min(data), max(data), mean_dev_L, std_dev_L))
+
+        n, bedges, patches = plt.hist(self.data_reduced, bins=nbin, range=(min_data, max_data), histtype='step', color='k')
+        plt.plot([mean_dev_L, mean_dev_L], [0.0, max(n)], lw=0.5, ls='--', color='r')
+        plt.plot([mean_dev_L + std_dev_L, mean_dev_L + std_dev_L], [0.0, max(n)], lw=0.5, ls='--', color='g')
+        plt.plot([mean_dev_L - std_dev_L, mean_dev_L - std_dev_L], [0.0, max(n)], lw=0.5, ls='--', color='g')
+        plt.text(min(bedges), max(n) * 0.9, r'$\mu$'' = {}\n'r'$\sigma$'' = {}\nN = {}\n'
+                 .format(mean_dev_L, std_dev_L, len(self.data_reduced)))
+        #plt.xlim(0.0, self.xmax)
+        plt.xlabel(self.xaxis_name)
+        plt.ylabel('N')
+        plt.savefig(self.savepath + self.savename)
         plt.close('all')

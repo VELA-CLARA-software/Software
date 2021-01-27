@@ -6,7 +6,7 @@ Date:   25/01/2021
 from HRFOv2_EPICS_main_controller import main_controller
 from HRFOv2_EPICS_reader import reader
 
-class CASCADE_2():
+class HRFOv2_EPICS():
     '''
         Mainly a wrapper class that just gets things started.
     '''
@@ -21,4 +21,4 @@ class CASCADE_2():
 
 if __name__ == '__main__':
     print('\nStarting HRFOv2_EPICS.\n')
-    CASCADE_2()
+    HRFOv2_EPICS()
