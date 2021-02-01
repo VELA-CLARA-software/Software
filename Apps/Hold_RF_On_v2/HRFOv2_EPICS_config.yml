@@ -9,14 +9,14 @@ savepath:  "C:\\Users\\zup98752\\OneDrive - Science and Technology Facilities Co
 # Date & time from:
 # date in the format "YYYY-MM-DD"
 # time in the format "HH:MM:SS.SS"
-date_from:  "202-08-10"
-time_from: "10:00:00.00"
+date_from:  "2020-10-10"
+time_from:  "10:00:00.00"
 
 
 # Date & time to:
 # date in the format "YYYY-MM-DD"
 # time in the format "HH:MM:SS.SS"
-date_to:  "2020-08-20"
+date_to:  "2020-10-20"
 time_to:  "14:00:00.00"
 
 
@@ -86,4 +86,7 @@ PLOT_ALL_PVs:  True
 # then it is excluded from the group and forms the first event in a new group
 # Values tried = [120, 240.0, 20.0]
 # 20.0 seconds seems reasonable after looking at the histogram of delta times
-mod_group_time_spacing: 20.0  #  units = seconds
+mod_group_time_spacing: 60.0  #  units = seconds
+
+
+#MODE:  'Standby'

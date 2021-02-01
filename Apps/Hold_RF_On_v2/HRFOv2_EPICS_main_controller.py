@@ -46,7 +46,8 @@ class main_controller():
         figs.subplots_x([3, 2, 1, 0])
 
         # Scan mod StateRead for groups
-        df.scan_data_for_groups()
+        #df.scan_data_for_delta_time_groups()
+        df.scan_data_for_standby_groups()
 
     def create_folder_time_range_as_name(self):
         '''
@@ -58,8 +59,6 @@ class main_controller():
         #df.create_folder_named_date_time_from_to()
 
         self.directory = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.savepath]
-
-
 
         self.folder_name = df.create_folder_name()
 

@@ -226,6 +226,13 @@ class figures():
 
 
     def histogram(self, data, xaxis_name, xmax):
+        '''
+        Generic histogram plotter including mean & st. dev. calcs.
+        :param data:
+        :param xaxis_name:
+        :param xmax:
+        :return:
+        '''
 
         self.data = data
         self.xaxis_name = xaxis_name
@@ -243,13 +250,15 @@ class figures():
         #print('len(data) = {}\nnbin = {}\ndata = {}\nnumber of NaNs in data = {}\nmin_data = {}\nmax_data = {}\nmean_dev_L = {}\nstd_dev_L = {}'
         #      .format(len(data), nbin, data, len(nans_in_data), min(data), max(data), mean_dev_L, std_dev_L))
 
+        #print(f'xmax = {self.xmax}')
         n, bedges, patches = plt.hist(self.data_reduced, bins=nbin, range=(min_data, max_data), histtype='step', color='k')
         plt.plot([mean_dev_L, mean_dev_L], [0.0, max(n)], lw=0.5, ls='--', color='r')
         plt.plot([mean_dev_L + std_dev_L, mean_dev_L + std_dev_L], [0.0, max(n)], lw=0.5, ls='--', color='g')
         plt.plot([mean_dev_L - std_dev_L, mean_dev_L - std_dev_L], [0.0, max(n)], lw=0.5, ls='--', color='g')
-        plt.text(min(bedges), max(n) * 0.9, r'$\mu$'' = {}\n'r'$\sigma$'' = {}\nN = {}\n'
+        plt.text(int(self.xmax*0.6), max(n) * 0.75, r'$\mu$'' = {}\n'r'$\sigma$'' = {}\nN = {}\n'
                  .format(mean_dev_L, std_dev_L, len(self.data_reduced)))
         #plt.xlim(0.0, self.xmax)
+        #plt.ylim(0.0, 200.0)
         plt.xlabel(self.xaxis_name)
         plt.ylabel('N')
         plt.savefig(self.savepath + self.savename)

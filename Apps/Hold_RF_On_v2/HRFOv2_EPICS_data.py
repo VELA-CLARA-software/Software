@@ -3,6 +3,7 @@ import numpy as np, cmath, math
 from decimal import Decimal, getcontext
 import re, sys, os
 from HRFOv2_EPICS_figures import figures
+from HRFOv2_EPICS_reader import reader
 
 
 # set number of decimal places for Decimal to use....
@@ -41,7 +42,6 @@ class data_functions():
     def __init__(self):
         print('Initiated data_functions()')
 
-
     def remove_char_from_str(self, string_1):
         '''
         Removes characters in '[!@#$:]' form string and returns ammended string
@@ -68,19 +68,6 @@ class data_functions():
 
         return self.string_2
 
-
-    def concatenate_date_time_to_EPICS_format(self, date, time):
-        '''
-        Takes the inputs from the config yaml and returns a string in the format that EPICS requires
-        :param date: String in the format "YYYY-MM-DD"
-        :param time: String in the format "HH:MM:SS.SS"
-        :return: Formatted string "YYYY-MM-DDTHH:MM:SS.SSZ"
-        '''
-        self.date = date
-        self.time = time
-        self.formatted_string = f'{self.date}T{self.time}Z'
-
-        return self.formatted_string
 
     def create_folder_name(self):
         '''
@@ -148,16 +135,18 @@ class data_functions():
         return self.pv_name
 
 
-    def scan_data_for_groups(self):
+    def scan_data_for_delta_time_groups(self):
         '''
         Initial function that scans the time data of the Mod state read PV ("CLA-GUNS-HRF-MOD-01:Sys:StateRead")
         and finds groups of events.
         :return:
         '''
         figs = figures()
+        read = reader()
         self.mod_StateRead_time = values[mod_StateRead_time]
         self.mod_StateRead_yaxis = values[mod_StateRead_yaxis]
         self.mod_group_time_spacing = values[mod_group_time_spacing]
+        self.mod_state_dict = values[mod_state_dict]
 
         self.mod_StateRead_time = [float(i) for i in self.mod_StateRead_time]
         self.mod_StateRead_yaxis = [float(i) for i in self.mod_StateRead_yaxis]
@@ -171,6 +160,7 @@ class data_functions():
         self.local_group_yaxis_val = []
 
         self.mod_StateRead_groups_delta_time = []
+        self.mod_StateRead_string_states = []
 
         self.local_group_start_idx = 0
         for idx, time_val in enumerate(self.mod_StateRead_time[0:-1]):
@@ -180,21 +170,22 @@ class data_functions():
             if self.delta_time <= self.mod_group_time_spacing:
                 self.local_group_idx.append(idx)
                 self.local_group_time_val.append(time_val)
-                self.local_group_yaxis_val.append(self.mod_StateRead_yaxis[idx])
+                self.local_group_yaxis_val.append(int(self.mod_StateRead_yaxis[idx]))
                 #print(f'delta_time = {self.delta_time}\n')
                 #       f'mod_group_time_spacing = {self.mod_group_time_spacing}')
                 # print(f'len(local_group_idx) = {len(self.local_group_idx)}')
             else:
                 self.local_group_idx.append(idx)
                 self.local_group_time_val.append(time_val)
-                self.local_group_yaxis_val.append(self.mod_StateRead_yaxis[idx])
+                self.local_group_yaxis_val.append(int(self.mod_StateRead_yaxis[idx]))
 
                 self.mod_StateRead_groups_idxs.append(self.local_group_idx)
                 self.mod_StateRead_groups_time_vals.append(self.local_group_time_val)
                 self.mod_StateRead_groups_yaxis_vals.append(self.local_group_yaxis_val)
 
                 self.local_group_idx = []
-                self.local_group_val = []
+                self.local_group_time_val = []
+                self.local_group_yaxis_val = []
 
                 self.local_group_start_idx = self.mod_StateRead_time[idx + 1]
 
@@ -202,10 +193,19 @@ class data_functions():
                 #       f'*** mod_group_time_spacing = {self.mod_group_time_spacing}')
                 # print(f'*** len(local_group_idx) = {len(self.local_group_idx)}')
 
+        # append the last values on to lists as the loop missed them out
 
-        figs.histogram(self.mod_StateRead_groups_delta_time, 'groups_delta_time', 40.0)
+        self.mod_StateRead_groups_idxs.append([int(len(mod_StateRead_time))])
+        self.mod_StateRead_groups_time_vals.append([self.mod_StateRead_time[-1]])
+        self.mod_StateRead_groups_yaxis_vals.append([int(self.mod_StateRead_yaxis[-1])])
+
+
+
+        figs.histogram(self.mod_StateRead_groups_delta_time, 'groups_delta_time', 120.0)
 
         self.mod_StateRead_groups_length = [len(i) for i in self.mod_StateRead_groups_idxs]
+
+
 
         values[mod_StateRead_groups_length] = self.mod_StateRead_groups_length
         values[mod_StateRead_groups_idxs] = self.mod_StateRead_groups_idxs
@@ -216,6 +216,111 @@ class data_functions():
               f'len(self.mod_StateRead_time) = {len(self.mod_StateRead_time)}\n'
               f'len(self.mod_StateRead_groups_idxs) = {len(self.mod_StateRead_groups_idxs)}\n'
               f'self.mod_StateRead_groups_idxs = {self.mod_StateRead_groups_idxs}')
+
+        for g in self.mod_StateRead_groups_yaxis_vals:
+            print(f'\ng = {g}')
+            for s in g:
+                #print(f's = {s}')
+                string_state = self.mod_state_dict[str(s)]
+                self.mod_StateRead_string_states.append(string_state)
+
+                print(string_state)
+
+
+        read.save_two_lists_csv(self.mod_StateRead_string_states[0:-1], self.mod_StateRead_groups_delta_time, r'\Mod_States_Delta_Time')
+
+        values[mod_StateRead_string_states] = self.mod_StateRead_string_states
+
+
+    def scan_data_for_standby_groups(self):
+        '''
+        Initial function that reads the Mod state read PV ("CLA-GUNS-HRF-MOD-01:Sys:StateRead")
+        and finds groups of events each group starts with a standby state.
+        Standby state == 6 in the yaxis data (values[mod_StateRead_yaxis)
+        :return:
+        '''
+        figs = figures()
+        read = reader()
+        self.mod_StateRead_time = values[mod_StateRead_time]
+        self.mod_StateRead_yaxis = values[mod_StateRead_yaxis]
+        self.mod_state_dict = values[mod_state_dict]
+
+        self.mod_StateRead_time = [float(i) for i in self.mod_StateRead_time]
+        self.mod_StateRead_yaxis = [int(i) for i in self.mod_StateRead_yaxis]
+
+        self.mod_StateRead_groups_standby_idxs = []
+        self.mod_StateRead_groups_standby_time_vals = []
+        self.mod_StateRead_groups_standby_yaxis_vals = []
+
+        self.local_group_idx = []
+        self.local_group_time = []
+        self.local_group_yaxis = []
+        for idx, yval in enumerate(self.mod_StateRead_yaxis):
+            if yval == 6:
+
+                self.mod_StateRead_groups_standby_idxs.append(self.local_group_idx)
+                self.mod_StateRead_groups_standby_time_vals.append(self.local_group_time)
+                self.mod_StateRead_groups_standby_yaxis_vals.append(self.local_group_yaxis)
+
+                self.local_group_idx = []
+                self.local_group_time = []
+                self.local_group_yaxis = []
+
+                self.local_group_idx.append(idx)
+                self.local_group_time.append(self.mod_StateRead_time[idx])
+                self.local_group_yaxis.append(yval)
+
+            else:
+                self.local_group_idx.append(idx)
+                self.local_group_time.append(self.mod_StateRead_time[idx])
+                self.local_group_yaxis.append(yval)
+
+        for g in self.mod_StateRead_groups_standby_yaxis_vals:
+
+            print(f'\ng = {g}')
+            for s in g:
+                # print(f's = {s}')
+                string_state = self.mod_state_dict[str(s)]
+                #self.mod_StateRead_string_states.append(string_state)
+
+                print(string_state)
+
+        values[mod_StateRead_groups_standby_idxs] = self.mod_StateRead_groups_standby_idxs
+        values[mod_StateRead_groups_standby_time_vals] = self.mod_StateRead_groups_standby_time_vals
+        values[mod_StateRead_groups_standby_yaxis_vals] = self.mod_StateRead_groups_standby_yaxis_vals
+
+        # TODO: save groups as csv for comparison
+
+
+    '''
+    interesting group from the delta time method.
+    it looks like an operator spamming the mod with HV request..... could have been me!
+    
+    g = [4]
+    HV Interlock
+    
+    g = [6, 4, 6, 9, 4, 6, 9, 4, 6, 9, 4, 6, 9, 10, 12, 13]
+    Standby
+    HV Interlock
+    Standby
+    HV Request
+    HV Interlock
+    Standby
+    HV Request
+    HV Interlock
+    Standby
+    HV Request
+    HV Interlock
+    Standby
+    HV Request
+    HV On
+    Trig Request
+    Trig
+    
+    g = [4]
+    HV Interlock
+    '''
+
 
 
 
@@ -332,3 +437,45 @@ values[mod_StateRead_groups_yaxis_vals] = []
 mod_StateRead_groups_delta_time = 'mod_StateRead_groups_delta_time'
 all_value_keys.append((mod_StateRead_groups_delta_time))
 values[mod_StateRead_groups_delta_time] = []
+
+mod_StateRead_groups_states = 'mod_StateRead_groups_states'
+all_value_keys.append(mod_StateRead_groups_states)
+values[mod_StateRead_groups_states] = []
+
+mod_state_dict = 'mod_state_dict'
+all_value_keys.append(mod_state_dict)
+values[mod_state_dict] = {  '0': "Init/not connected",
+                    '1': "Standby Interlock",
+                    '2': "OFF",
+                    '3': "Off Request",
+                    '4': "HV Interlock",
+                    '5': "Standby Request",
+                    '6': "Standby",
+                    '7': "HV Off Request",
+                    '8': "Trigger Interlock",
+                    '9': "HV Request",
+                    '10': "HV On",
+                    '11': "Trig Off Request",
+                    '12': "Trig Request",
+                    '13': "Trig"}
+
+mod_StateRead_string_states = 'mod_StateRead_string_states'
+all_value_keys.append(mod_StateRead_string_states)
+values[mod_StateRead_string_states] = []
+
+mod_StateRead_groups_standby_idxs = 'mod_StateRead_groups_standby_idxs'
+all_value_keys.append(mod_StateRead_groups_standby_idxs)
+values[mod_StateRead_groups_standby_idxs] = []
+
+mod_StateRead_groups_standby_time_vals = 'mod_StateRead_groups_standby_time_vals'
+all_value_keys.append(mod_StateRead_groups_standby_time_vals)
+values[mod_StateRead_groups_standby_time_vals] = []
+
+mod_StateRead_groups_standby_yaxis_vals = 'mod_StateRead_groups_standby_yaxis_vals'
+all_value_keys.append(mod_StateRead_groups_standby_yaxis_vals)
+values[mod_StateRead_groups_standby_yaxis_vals] = []
+
+
+
+
+

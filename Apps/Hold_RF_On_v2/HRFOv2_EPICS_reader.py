@@ -1,4 +1,4 @@
-import yaml, sys, csv, requests
+import yaml, sys, csv, requests, re
 import numpy as np
 from decimal import *
 import pickle as pkl
@@ -6,7 +6,7 @@ import HRFOv2_EPICS_data
 from matplotlib import pyplot as plt
 
 from HRFOv2_EPICS_figures import figures
-from HRFOv2_EPICS_data import  data_functions
+#from HRFOv2_EPICS_data import  data_functions
 
 getcontext().prec = 100
 
@@ -42,6 +42,46 @@ class reader():
                     print(f'{key} not yet added to all_value_keys list in HRFOv2_EPICS_data.py')
                     sys.exit()
 
+    def remove_char_from_str(self, string_1):
+        '''
+        Removes characters in '[!@#$:]' form string and returns ammended string
+        :param string_1:
+        :return:
+        '''
+        self.string_1 = string_1
+
+        self.string_2 = re.sub('[!@#$:]', '', self.string_1)
+
+        return self.string_2
+
+    def replace_char_from_str(self, string_1, old_char, new_char):
+        '''
+        Removes characters in '[!@#$:]' form string and returns ammended string
+        :param string_1:
+        :return:
+        '''
+        self.string_1 = string_1
+        self.old_char = old_char
+        self.new_char = new_char
+
+        self.string_2 = re.sub(self.old_char, self.new_char, self.string_1)
+
+        return self.string_2
+
+
+    def concatenate_date_time_to_EPICS_format(self, date, time):
+        '''
+        Takes the inputs from the config yaml and returns a string in the format that EPICS requires
+        :param date: String in the format "YYYY-MM-DD"
+        :param time: String in the format "HH:MM:SS.SS"
+        :return: Formatted string "YYYY-MM-DDTHH:MM:SS.SSZ"
+        '''
+        self.date = date
+        self.time = time
+        self.formatted_string = f'{self.date}T{self.time}Z'
+
+        return self.formatted_string
+
     def read_EPICS_PVs(self, verbose=True):
         '''
         Reads in every PV in the "all_mod_PVs" list
@@ -52,7 +92,7 @@ class reader():
         '''
 
         figs = figures()
-        df = data_functions()
+        #df = data_functions()
         self.verbose = verbose
         self.savepath = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.savepath]
         self.all_mod_PVs = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.all_mod_PVs]
@@ -67,8 +107,8 @@ class reader():
         #pv_name = "CLA-GUNS-HRF-MOD-01:Sys:INTLK5"
 
         # Call in the from and to times saved in the data dictionary originally read in from the config file
-        self.EPICS_date_time_from = df.concatenate_date_time_to_EPICS_format(self.date_from, self.time_from)
-        self.EPICS_date_time_to = df.concatenate_date_time_to_EPICS_format(self.date_to, self.time_to)
+        self.EPICS_date_time_from = self.concatenate_date_time_to_EPICS_format(self.date_from, self.time_from)
+        self.EPICS_date_time_to = self.concatenate_date_time_to_EPICS_format(self.date_to, self.time_to)
 
 
         # save the formatted string in the data dictionary
@@ -106,7 +146,7 @@ class reader():
             self.PV_YAXIS_DATA.append(yaxis)
 
             # Create a savename for the PV plot by removing the ":" character from the PV name string
-            self.savename = df.remove_char_from_str(data[0]["meta"]['name'])
+            self.savename = self.remove_char_from_str(data[0]["meta"]['name'])
 
             # If function arguement verbose=True print out any diagnostic data required
             if self.verbose:
@@ -247,3 +287,45 @@ class reader():
         HRFOv2_EPICS_data.values = self.dict
 
         print(f'\nLoaded "{self.savename[1:]}" from {self.savepath}\n')
+
+    def save_two_lists_txt(self, list_1, list_2, savename):
+        '''
+        Generic function that saves 2 lists as a .txt file.
+        :param list_1:
+        :param list_2: same length as list 1
+        :param savename: excluding the .txt suffix eg r'\best_fit_line'
+        :return:
+        '''
+        self.list_1 = list_1
+        self.list_2 = list_2
+        self.savename = savename
+        self.savepath = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.savepath]
+
+        f = open(self.savepath + self.savename + ".csv", "w")
+        for i in range(len(self.list_1)):
+            f.write(f"{self.list_1[i]}      {self.list_2[i]}\n")
+
+        f.close()
+
+        print(f'\n{self.savename}.txt saved')
+
+    def save_two_lists_csv(self, list_1, list_2, savename):
+        '''
+        Generic function that saves 2 lists as a .csv file.
+        :param list_1:
+        :param list_2: same length as list 1
+        :param savename: excluding the .csv suffix eg '\best_fit_line'
+        :return:
+        '''
+        self.list_1 = list_1
+        self.list_2 = list_2
+        self.savename = savename
+        self.savepath = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.savepath]
+
+        f = open(self.savepath + self.savename + ".csv", "w")
+        for i in range(len(self.list_1)):
+            f.write(f"{self.list_1[i]},{self.list_2[i]}\n")
+
+        f.close()
+
+        print(f'\n{self.savename}.csv saved')
