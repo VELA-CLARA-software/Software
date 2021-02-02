@@ -231,6 +231,15 @@ class data_functions():
 
         values[mod_StateRead_string_states] = self.mod_StateRead_string_states
 
+        # find unique groups and the number of each that there are
+        self.unique_groups_delta_time, self.unique_groups_population_delta_time \
+            = self.find_unique_groups(self.mod_StateRead_groups_yaxis_vals)
+
+        # Save to csv for ease of comparison
+        read.save_two_lists_csv(self.unique_groups_delta_time,
+                                self.unique_groups_population_delta_time,
+                                r'\unique_groups_population_delta_time')
+
 
     def scan_data_for_standby_groups(self):
         '''
@@ -289,7 +298,48 @@ class data_functions():
         values[mod_StateRead_groups_standby_time_vals] = self.mod_StateRead_groups_standby_time_vals
         values[mod_StateRead_groups_standby_yaxis_vals] = self.mod_StateRead_groups_standby_yaxis_vals
 
+        # find unique groups and the number of each that there are
+        self.unique_groups_standby, self.unique_groups_population_standby \
+            = self.find_unique_groups(self.mod_StateRead_groups_standby_yaxis_vals)
+
+        # Save to csv for ease of comparison
+        read.save_two_lists_csv(self.unique_groups_standby,
+                                self.unique_groups_population_standby,
+                                r'\unique_groups_population_standby')
+
         # TODO: save groups as csv for comparison
+
+    def find_unique_groups(self, yaxis_vals):
+        '''
+        Finds unique groups and also determines the number of each type.
+        :param yaxis_vals: list of lists containing mod states as integers from 1--> 13 inclusive.
+        :return: unique_groups, unique_groups_population
+        '''
+        self.yaxis_vals = yaxis_vals
+
+        self.unique_groups = []
+        for gr in self.yaxis_vals:
+            if gr in self.unique_groups:
+                pass
+            else:
+                self.unique_groups.append(gr)
+
+        self.unique_groups_population = [0]*len(self.unique_groups)
+        for gr in self.yaxis_vals:
+            for un_gr_idx, un_gr in enumerate(self.unique_groups):
+                if gr == un_gr:
+                    self.unique_groups_population[un_gr_idx]+= 1
+                else:
+                    pass
+        print('\n\n')
+        print(f'unique_groups = {self.unique_groups}\n'
+              f'unique_groups_population = {self.unique_groups_population}')
+
+        return self.unique_groups, self.unique_groups_population
+
+
+
+
 
 
     '''

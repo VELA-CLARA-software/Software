@@ -46,8 +46,9 @@ class main_controller():
         figs.subplots_x([3, 2, 1, 0])
 
         # Scan mod StateRead for groups
-        #df.scan_data_for_delta_time_groups()
+        df.scan_data_for_delta_time_groups()
         df.scan_data_for_standby_groups()
+
 
     def create_folder_time_range_as_name(self):
         '''

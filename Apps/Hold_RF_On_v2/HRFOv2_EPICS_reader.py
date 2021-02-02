@@ -135,6 +135,10 @@ class reader():
             data = r.json()
 
             # Initiate empty time and yaxis data lists for each individual PV
+            # time_0 = time[0]
+            # relative_time = [i - time_0 for i in time]
+            # print(relative_time)
+
             yaxis = []
             time = []
             for event in data[0]["data"]:
@@ -314,7 +318,7 @@ class reader():
         Generic function that saves 2 lists as a .csv file.
         :param list_1:
         :param list_2: same length as list 1
-        :param savename: excluding the .csv suffix eg '\best_fit_line'
+        :param savename: excluding the .csv suffix eg r'\best_fit_line'
         :return:
         '''
         self.list_1 = list_1

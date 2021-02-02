@@ -100,11 +100,9 @@ class logger(object):
     # ALL CATAP types and simple types need to be defined here!!
     _python_type_to_bintype = {long: '<q', int: '<i', float: '<f', RF_PROT_STATUS: '<B', L01_MOD_STATE: '<B', GUN_MOD_STATE: '<B', VALVE_STATE: '<B',
                                TRIG: '<B', state: '<B', ramp_method: '<B', INTERLOCK_STATE: '<B', bool: '<?',
-                               numpy.float64: ' \
-                                                                                                                               ''<d',\
-                                                                                                                                              float64: '<d',
-                               # BE CAREFUL WiTH str, THE BELOW IS CLEARLY GARBAGE
-                               str: '<i'}
+                               numpy.float64: '<d', float64: '<d', str: '<i'}
+    #                               BE CAREFUL WiTH str, THE ABOVE ^^^^^^^^^ IS CLEARLY GARBAGE
+
 
     # width of config file text without timestamp (in characters!)
     _column_width = 80
@@ -364,7 +362,7 @@ class logger(object):
                 header_types_str.append(value_type_str)
         # create the data_log file and write the plaintext header, raise exception if fail
         try:
-            # Create rwo strings fro the first two lines of the file, the 1st is tab separated
+            # Create rwo strings from the first two lines of the file, the 1st is tab separated
             # data names, the 2nd is tab separated data types
             joiner = '\t'
             if logger._binary_log_file_obj:

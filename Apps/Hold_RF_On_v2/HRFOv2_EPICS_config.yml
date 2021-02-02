@@ -63,6 +63,8 @@ all_mod_PVs:
  - "CLA-GUNS-HRF-MOD-01:Sys:Trig:PrfSet"
  - "CLA-GUNS-HRF-MOD-01:Sys:TrigHoursRead"
 
+
+# Separate list for "Sys:INTLK" PVs
 interlock_PVs:
  - "CLA-GUNS-HRF-MOD-01:Sys:INTLK1"
  - "CLA-GUNS-HRF-MOD-01:Sys:INTLK2"
