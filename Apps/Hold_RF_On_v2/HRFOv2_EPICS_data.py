@@ -201,7 +201,7 @@ class data_functions():
 
 
 
-        figs.histogram(self.mod_StateRead_groups_delta_time, 'groups_delta_time', 120.0)
+        figs.histogram(self.mod_StateRead_groups_delta_time, 'groups_delta_time', 50.0)
 
         self.mod_StateRead_groups_length = [len(i) for i in self.mod_StateRead_groups_idxs]
 
@@ -218,13 +218,13 @@ class data_functions():
               f'self.mod_StateRead_groups_idxs = {self.mod_StateRead_groups_idxs}')
 
         for g in self.mod_StateRead_groups_yaxis_vals:
-            print(f'\ng = {g}')
+            #print(f'\ng = {g}')
             for s in g:
                 #print(f's = {s}')
                 string_state = self.mod_state_dict[str(s)]
                 self.mod_StateRead_string_states.append(string_state)
 
-                print(string_state)
+                #print(string_state)
 
 
         read.save_two_lists_csv(self.mod_StateRead_string_states[0:-1], self.mod_StateRead_groups_delta_time, r'\Mod_States_Delta_Time')
@@ -236,7 +236,7 @@ class data_functions():
             = self.find_unique_groups(self.mod_StateRead_groups_yaxis_vals)
 
         # Save to csv for ease of comparison
-        read.save_two_lists_csv(self.unique_groups_delta_time,
+        read.save_mod_state_names_and_populations_to_csv(self.unique_groups_delta_time,
                                 self.unique_groups_population_delta_time,
                                 r'\unique_groups_population_delta_time')
 
@@ -286,13 +286,13 @@ class data_functions():
 
         for g in self.mod_StateRead_groups_standby_yaxis_vals:
 
-            print(f'\ng = {g}')
+            #print(f'\ng = {g}')
             for s in g:
                 # print(f's = {s}')
                 string_state = self.mod_state_dict[str(s)]
                 #self.mod_StateRead_string_states.append(string_state)
 
-                print(string_state)
+                #print(string_state)
 
         values[mod_StateRead_groups_standby_idxs] = self.mod_StateRead_groups_standby_idxs
         values[mod_StateRead_groups_standby_time_vals] = self.mod_StateRead_groups_standby_time_vals
@@ -303,7 +303,7 @@ class data_functions():
             = self.find_unique_groups(self.mod_StateRead_groups_standby_yaxis_vals)
 
         # Save to csv for ease of comparison
-        read.save_two_lists_csv(self.unique_groups_standby,
+        read.save_mod_state_names_and_populations_to_csv(self.unique_groups_standby,
                                 self.unique_groups_population_standby,
                                 r'\unique_groups_population_standby')
 
@@ -339,7 +339,7 @@ class data_functions():
 
 
 
-
+    # TODO: for each group
 
 
     '''
@@ -419,6 +419,10 @@ values[interlock_PVs] = []
 PLOT_ALL_PVs = 'PLOT_ALL_PVs'
 all_value_keys.append(PLOT_ALL_PVs)
 values[PLOT_ALL_PVs] = False
+
+X_HIGHEST_PEAKS_HIST = 'X_HIGHEST_PEAKS_HIST'
+all_value_keys.append(X_HIGHEST_PEAKS_HIST)
+values[X_HIGHEST_PEAKS_HIST] = Dummy_int
 
 mod_group_time_spacing = 'mod_group_time_spacing'
 all_value_keys.append(mod_group_time_spacing)

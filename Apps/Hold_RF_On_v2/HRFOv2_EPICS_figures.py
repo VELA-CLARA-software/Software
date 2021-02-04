@@ -233,7 +233,7 @@ class figures():
         :param xmax:
         :return:
         '''
-
+        # try:
         self.data = data
         self.xaxis_name = xaxis_name
         self.xmax = xmax
@@ -246,16 +246,22 @@ class figures():
 
         mean_dev_L = np.mean(self.data_reduced)
         std_dev_L = np.std(self.data_reduced)
-        nbin = int(np.sqrt(len(self.data_reduced)) * 2.0)
+        nbin = int(np.sqrt(len(self.data_reduced)) * 5.0)
         #print('len(data) = {}\nnbin = {}\ndata = {}\nnumber of NaNs in data = {}\nmin_data = {}\nmax_data = {}\nmean_dev_L = {}\nstd_dev_L = {}'
         #      .format(len(data), nbin, data, len(nans_in_data), min(data), max(data), mean_dev_L, std_dev_L))
 
         #print(f'xmax = {self.xmax}')
-        n, bedges, patches = plt.hist(self.data_reduced, bins=nbin, range=(min_data, max_data), histtype='step', color='k')
-        plt.plot([mean_dev_L, mean_dev_L], [0.0, max(n)], lw=0.5, ls='--', color='r')
-        plt.plot([mean_dev_L + std_dev_L, mean_dev_L + std_dev_L], [0.0, max(n)], lw=0.5, ls='--', color='g')
-        plt.plot([mean_dev_L - std_dev_L, mean_dev_L - std_dev_L], [0.0, max(n)], lw=0.5, ls='--', color='g')
-        plt.text(int(self.xmax*0.6), max(n) * 0.75, r'$\mu$'' = {}\n'r'$\sigma$'' = {}\nN = {}\n'
+        self.n, self.bedges, self.patches = plt.hist(self.data_reduced, bins=nbin, range=(min_data, max_data), histtype='step', color='k')
+
+        self.midbin_vals = self.define_midbins_from_bedegs(self.bedges)
+        self.peak_x_val, self.peak_y_val = self.find_top_x_peaks_histogram(self.n, self.bedges)
+
+        plt.scatter(self.peak_x_val, self.peak_y_val, marker='x', s=50, c='r')
+
+        plt.plot([mean_dev_L, mean_dev_L], [0.0, max(self.n)], lw=0.5, ls='--', color='r')
+        plt.plot([mean_dev_L + std_dev_L, mean_dev_L + std_dev_L], [0.0, max(self.n)], lw=0.5, ls='--', color='g')
+        plt.plot([mean_dev_L - std_dev_L, mean_dev_L - std_dev_L], [0.0, max(self.n)], lw=0.5, ls='--', color='g')
+        plt.text(int(self.xmax*0.6), max(self.n) * 0.75, r'$\mu$'' = {}\n'r'$\sigma$'' = {}\nN = {}\n'
                  .format(mean_dev_L, std_dev_L, len(self.data_reduced)))
         #plt.xlim(0.0, self.xmax)
         #plt.ylim(0.0, 200.0)
@@ -263,3 +269,110 @@ class figures():
         plt.ylabel('N')
         plt.savefig(self.savepath + self.savename)
         plt.close('all')
+
+
+        #self.midbin_vals = self.define_midbins_from_bedegs(self.bedges)
+
+        # except:
+        #     print(f'Unable to produce histogram of {self.xaxis_name}')
+        #     pass
+
+    def define_midbins_from_bedegs(self, bedges):
+        '''
+        From a list/array of histogram bin edges it s sometimes useful to know the mid-bin values
+        :param bedges: a list/array of histogram bin-edge x-axis values
+        :return: a list of histogram x-axis mid-bin values
+        '''
+
+        # print(f'type(self.bedges) = {type(self.bedges)}')
+
+        # convert to list for ease of use
+        if str(type(self.bedges)) == "<class 'numpy.ndarray'>":
+            self.bedges = bedges.tolist()
+        else:
+            pass
+
+        # print(f'type(self.bedges) = {type(self.bedges)}')
+
+        self.midbin_vals = [((self.bedges[i+1] -self.bedges[i]) / 2.0) + self.bedges[i] for i in range(len(self.bedges)-1)]
+
+        #print(f'\nIdiot Check:\n{self.bedges[0]}  {self.midbin_vals[0]}  {self.bedges[1]}\n')
+
+        return self.midbin_vals
+
+
+    def find_top_x_peaks_histogram(self,  bin_population, midbin_vals):
+        '''
+        The returns from pyplot.his() are used in this function to give the x-axis value of the the top X number of peaks,
+        along with the number of members of that bin.
+        eg. self.n, self.bedges, self.patches = plt.hist(self.data_reduced, bins=nbin, range=(min_data, max_data), histtype='step', color='k')
+        :param n: Number of members of each bin.
+        :param midbin_vals: a list of histogram x-axis mid-bin values.
+
+        :return:
+        '''
+
+
+        #self.top_x = int(HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.X_HIGHEST_PEAKS_HIST])
+        self.top_x = int(25)
+        self.bin_population = bin_population
+        self.midbin_vals = midbin_vals
+
+
+        self.temp_bin_population = list(np.copy(bin_population))
+
+        self.peak_x_val = []
+        self.peak_y_val = []
+
+        count = 0
+        while self.top_x > count:
+
+            # Define (new) max value in temp_bin_population list
+            # and it's index in the original bin_population list
+            # 2 lists are used because otherwise the indexing becomes irrelevant.
+            max_val = max(self.temp_bin_population)
+            max_idx = int(np.argwhere(self.bin_population == max_val)[-1])
+            temp_max_idx = int(np.argwhere(self.temp_bin_population == max_val)[-1])
+
+            # Append values to lists to be returned by the function
+            self.peak_x_val.append(self.midbin_vals[max_idx])
+            self.peak_y_val.append(self.bin_population[max_idx])
+
+            # Remove the maximum value from the temp_bin_population list
+            # so that the next highest value can be found by the max() function
+            self.temp_bin_population.remove(self.temp_bin_population[temp_max_idx])
+
+            print(count, f'\nmax_val = {max_val}\nmax_idx = {max_idx}\nlen(temp_bin_population) = {len(self.temp_bin_population)}')
+
+            # Increase the count by 1 for the while loop to function
+            count += 1
+
+        print(f'\nself.peak_x_val = {self.peak_x_val}\nself.peak_y_val = {self.peak_y_val}\n')
+
+        return self.peak_x_val, self.peak_y_val
+
+    def Nmaxelements(self, list1, N):
+        '''
+        taken from the website "geeksforgeeks.org" available at:
+        https://www.geeksforgeeks.org/python-program-to-find-n-largest-elements-from-a-list/
+        Never used in this script but useful for future reference.
+        ""
+        :param list1:
+        :param N:
+        :return:
+        '''
+        final_list = []
+
+        for i in range(0, N):
+            max1 = 0
+
+            for j in range(len(list1)):
+                if list1[j] > max1:
+                    max1 = list1[j]
+
+            list1.remove(max1)
+            final_list.append(max1)
+
+        print(final_list)
+
+        return final_list

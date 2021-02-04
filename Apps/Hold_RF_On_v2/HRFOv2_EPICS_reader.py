@@ -122,6 +122,8 @@ class reader():
 
         for pv_idx, pv_name in enumerate(self.all_mod_PVs):
 
+            print(f'\n\nAttempting to read {pv_name}')
+
             # add to the PV_idx_dict & idx_PV_dict dictionaries
             self.pv_idx_dict[pv_name] = str(pv_idx)
             self.idx_pv_dict[str(pv_idx)] = pv_name
@@ -154,7 +156,7 @@ class reader():
 
             # If function arguement verbose=True print out any diagnostic data required
             if self.verbose:
-                print('\n', pv_idx)
+                print(pv_idx)
                 print(url)
                 print(data[0]["meta"])
                 print(f'savename = {self.savename}')
@@ -333,3 +335,36 @@ class reader():
         f.close()
 
         print(f'\n{self.savename}.csv saved')
+
+    def save_mod_state_names_and_populations_to_csv(self, list_1, list_2, savename):
+        '''
+        Specific function that save modulator state names of a group
+        and the population of that group type to csv in the format:
+        :param list_1: list of lists of the modulator state numbers.
+        :param list_2: List of population size for each group type. Same length as list 1.
+        :param savename: excluding the .csv suffix eg r'\best_fit_line'
+        :return:
+        '''
+
+        self.list_1 = list_1
+        self.list_2 = list_2
+        self.savename = savename
+        self.mod_state_dict = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.mod_state_dict]
+        self.savepath = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.savepath]
+        self.max_length = len(self.list_2)
+
+        f = open(self.savepath + self.savename + ".csv", "w")
+        f.write(f"Group Index,Group Population,Mod States\n")
+        for Group_list_idx, group_list in enumerate(self.list_1):
+            group_length = len(group_list)
+            for mod_state_idx, mod_state_number in enumerate(group_list):
+
+                name = self.mod_state_dict[str(mod_state_number)]
+                if mod_state_idx == 0:
+                    f.write(f"\n{Group_list_idx},{self.list_2[Group_list_idx]},{name}\n")
+                elif mod_state_idx == group_length:
+                    f.write(f", ,{name}\n\n")
+                else:
+                    f.write(f", ,{name}\n")
+
+        f.close()
