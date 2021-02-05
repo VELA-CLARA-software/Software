@@ -22,6 +22,8 @@ time_to:  "18:00:00.00"
 
 # Full list of all PVs of interest
 all_mod_PVs:
+ - "CLA-GUNS-HRF-MOD-01:Sys:StateRead"
+ - "CLA-GUNS-HRF-MOD-01:Sys:StateSet"
  - "CLA-GUNS-HRF-MOD-01:Pt:Diag:CtArc"
  - "CLA-GUNS-HRF-MOD-01:Pt:Diag:CvdArc"
  - "CLA-GUNS-HRF-MOD-01:HvPs:HvPs1:CurrRead"
@@ -59,8 +61,6 @@ all_mod_PVs:
  - "CLA-GUNS-HRF-MOD-01:Sys:OffHoursRead"
  - "CLA-GUNS-HRF-MOD-01:Sys:RemainingTime"
  - "CLA-GUNS-HRF-MOD-01:Sys:StandbyHoursRead"
- - "CLA-GUNS-HRF-MOD-01:Sys:StateSet"
- - "CLA-GUNS-HRF-MOD-01:Sys:StateRead"
  - "CLA-GUNS-HRF-MOD-01:Sys:TrigHoursRead"
  - "CLA-GUNS-HRF-MOD-01:Sys:Trig:PlswthSet"
  - "CLA-GUNS-HRF-MOD-01:Sys:Trig:PrfSet"
@@ -163,7 +163,7 @@ interlock_PVs:
 
 # If True then all PVs in "all_mod_PVs" list above will be read in and plotted.
 # If False then the previously save .pkl will be read in and stored as the values dictionary
-READ_PVs:  True
+READ_PVs:  False
 
 
 # if set ti=o True then all individual PVs will be plotted and saved

@@ -6,7 +6,7 @@ from decimal import *
 import scipy
 from scipy import stats
 
-#from CASCADE_2_data import data_functions
+#from HRFOv2_EPICS_reader import reader
 
 class figures():
     #C2_data = CASCADE_2_data()
@@ -300,56 +300,38 @@ class figures():
 
         return self.midbin_vals
 
-
-    def find_top_x_peaks_histogram(self,  bin_population, midbin_vals):
+    def find_top_x_peaks_histogram(self, bin_population, midbin_vals):
         '''
-        The returns from pyplot.his() are used in this function to give the x-axis value of the the top X number of peaks,
-        along with the number of members of that bin.
-        eg. self.n, self.bedges, self.patches = plt.hist(self.data_reduced, bins=nbin, range=(min_data, max_data), histtype='step', color='k')
-        :param n: Number of members of each bin.
-        :param midbin_vals: a list of histogram x-axis mid-bin values.
-
-        :return:
-        '''
-
-
-        #self.top_x = int(HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.X_HIGHEST_PEAKS_HIST])
-        self.top_x = int(25)
+		The returns from pyplot.his() are used in this function to give the x-axis value of the the top X number of peaks,
+		along with the number of members of that bin.
+		eg. self.n, self.bedges, self.patches = plt.hist(self.data_reduced, bins=nbin, range=(min_data, max_data), histtype='step', color='k')
+		:param n: Number of members of each bin.
+		:param midbin_vals: a list of histogram x-axis mid-bin values.
+		:return: peak_x_val, peak_y_val
+		'''
+        self.top_x = int(HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.X_HIGHEST_PEAKS_HIST])
+        # Bypass the config value of top_x if not reading in the PVs
+        # self.top_x = int(25)
         self.bin_population = bin_population
-        self.midbin_vals = midbin_vals
-
-
-        self.temp_bin_population = list(np.copy(bin_population))
-
+        self.midbin_vals = np.array(midbin_vals)
         self.peak_x_val = []
         self.peak_y_val = []
 
         count = 0
         while self.top_x > count:
-
-            # Define (new) max value in temp_bin_population list
-            # and it's index in the original bin_population list
-            # 2 lists are used because otherwise the indexing becomes irrelevant.
-            max_val = max(self.temp_bin_population)
-            max_idx = int(np.argwhere(self.bin_population == max_val)[-1])
-            temp_max_idx = int(np.argwhere(self.temp_bin_population == max_val)[-1])
-
-            # Append values to lists to be returned by the function
-            self.peak_x_val.append(self.midbin_vals[max_idx])
-            self.peak_y_val.append(self.bin_population[max_idx])
-
-            # Remove the maximum value from the temp_bin_population list
-            # so that the next highest value can be found by the max() function
-            self.temp_bin_population.remove(self.temp_bin_population[temp_max_idx])
-
-            print(count, f'\nmax_val = {max_val}\nmax_idx = {max_idx}\nlen(temp_bin_population) = {len(self.temp_bin_population)}')
-
-            # Increase the count by 1 for the while loop to function
+            #print(f'\ncount = {count}')
+            bin_population_top_idxs = self.bin_population.argsort()[-self.top_x:][::-1]
+            self.peak_x_val.append(self.midbin_vals[bin_population_top_idxs[count]])
+            self.peak_y_val.append(self.bin_population[bin_population_top_idxs[count]])
             count += 1
 
         print(f'\nself.peak_x_val = {self.peak_x_val}\nself.peak_y_val = {self.peak_y_val}\n')
 
+        HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.hist_peak_x_vals] = self.peak_x_val
+        HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.hist_peak_y_vals] = self.peak_y_val
+
         return self.peak_x_val, self.peak_y_val
+
 
     def Nmaxelements(self, list1, N):
         '''
@@ -376,3 +358,56 @@ class figures():
         print(final_list)
 
         return final_list
+
+    def unique_group_subplots_x(self, unique_group_idx, pv_idx_list):
+        '''
+
+        *** NB - Just for "standby --> standby" groups NOT "delta_time" yet ***
+
+        Creates a figure of X number vertically stacked PV subplots with modulator state at the bottom
+        and all members of the unique group plotted in each PV subplot.
+        :param pv_idx_list: a list of all PVs required with mod state (usually index 0) at the end of the list.
+        :return:
+        '''
+
+        self.unique_group_idx = int(unique_group_idx)
+        self.pv_idx_list = pv_idx_list
+        self.N_PVs = len(self.pv_idx_list)
+
+        if self.N_PVs > 9:
+            print(f'\n\nMore than 9 sublots selected in subplots_x() function.\nReduce number or amend function.')
+            sys.exit()
+        else:
+            pass
+
+        self.savepath = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.savepath]
+        self.all_mod_PVs = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.all_mod_PVs]
+        self.PV_TIME_DATA = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.PV_TIME_DATA]
+        self.PV_YAXIS_DATA = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.PV_YAXIS_DATA]
+        # self.unique_groups_standby = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.unique_groups_standby]
+        self.unique_group_start_times = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.unique_group_start_times_standby][self.unique_group_idx]
+        self.unique_group_end_times= HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.unique_group_end_times_standby][self.unique_group_idx]
+        # self.unique_groups_population_standby = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.unique_groups_population_standby]
+        self.colours = ['r', 'g', 'b', 'c', 'darkorange', 'm', 'k', 'gray', 'brown']
+
+        self.savename_idx_string = ''
+        self.suptitle_string = ''
+        fig, axs = plt.subplots(self.N_PVs)
+
+        # TODO: set up x-axis so start of each group = (0s) and end = (0s + delta time)
+        #  maybe start - 20s and end + 20s to capture context
+        #  then for each PV subplot cycle over each unique group member and plot x and y.
+
+        for idx, pv_idx in enumerate(self.pv_idx_list):
+            self.savename_idx_string + '_' + str(pv_idx)
+            self.suptitle_string + self.all_mod_PVs[pv_idx] + '\n'
+
+            axs[idx].plot(self.PV_TIME_DATA[pv_idx], self.PV_YAXIS_DATA[pv_idx], ls='-', lw=1.0, color='b')
+            axs[idx].scatter(self.PV_TIME_DATA[pv_idx], self.PV_YAXIS_DATA[pv_idx], marker='o', s=3.0, c='r')
+            if idx < self.N_PVs-1:
+                # make these tick labels invisible
+                plt.setp(axs[idx].get_xticklabels(), visible=False)
+
+        fig.suptitle(self.suptitle_string, fontsize=7)
+        plt.savefig(self.savepath + f"\\_subplots_{self.savename_idx_string}.png")
+        plt.close('all')

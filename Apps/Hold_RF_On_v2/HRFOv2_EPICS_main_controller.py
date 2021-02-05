@@ -27,7 +27,6 @@ class main_controller():
         figs = figures()
 
 
-
         self.READ_PVs = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.READ_PVs]
 
         if self.READ_PVs:
@@ -43,11 +42,13 @@ class main_controller():
         figs.triple_yaxis_plot(3, 2, 1)
 
         # enter PV indeces as a list, eg [1, 2, 3, 4]
-        figs.subplots_x([3, 2, 1, 0])
+        figs.subplots_x([3, 2, 1, 15, 10, 0])
 
         # Scan mod StateRead for groups
         df.scan_data_for_delta_time_groups()
         df.scan_data_for_standby_groups()
+
+        df.save_hist_peak_vals_to_csv()
 
 
     def create_folder_time_range_as_name(self):
