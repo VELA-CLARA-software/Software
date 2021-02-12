@@ -42,13 +42,35 @@ class main_controller():
         figs.triple_yaxis_plot(3, 2, 1)
 
         # enter PV indeces as a list, eg [1, 2, 3, 4]
-        figs.subplots_x([3, 2, 1, 15, 10, 0])
+        figs.subplots_x([3, 2, 1, 4])
 
         # Scan mod StateRead for groups
         df.scan_data_for_delta_time_groups()
         df.scan_data_for_standby_groups()
 
+        ######################################################################################
+
+        # for the first run use this:
+        #unique_group_numbers = [1]
+
+        # find the unique group numbers of interest from the "unique_groups_population_standby.csv"
+        # created on the first run.
+        # for subsequent runs enter unique group numbers of interest into a list (un-hash below)
+        unique_group_numbers = [2, 3, 5, 11, 18, 22, 24, 25, 31]
+
+        # for all runs enter the pv indices into al list
+        pv_list = [33, 13, 3]
+
+        # If you require individual plots with Index Number as the x-axis instead of time
+        # set individual_index=True in the function below
+
+        for ugn in unique_group_numbers:
+            figs.handle_group_subplots(ugn, pv_list, xaxis='both', individual_index=False)
+
         df.save_hist_peak_vals_to_csv()
+
+        ####################################################################################
+
 
 
     def create_folder_time_range_as_name(self):

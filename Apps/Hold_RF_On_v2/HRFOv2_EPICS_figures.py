@@ -1,4 +1,4 @@
-import numpy as np, time, sys
+import numpy as np, time, sys, os
 from matplotlib import pyplot as plt
 from mpl_toolkits.mplot3d.axes3d import Axes3D
 import HRFOv2_EPICS_data
@@ -101,6 +101,19 @@ class figures():
         self.all_mod_PVs = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.all_mod_PVs]
         self.PV_TIME_DATA = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.PV_TIME_DATA]
         self.PV_YAXIS_DATA = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.PV_YAXIS_DATA]
+
+        print(f'len(self.PV_TIME_DATA[self.pv_idx_0]) = {len(self.PV_TIME_DATA[self.pv_idx_0])}\n'
+              f'len(self.PV_YAXIS_DATA[self.pv_idx_0]) = {len(self.PV_YAXIS_DATA[self.pv_idx_0])}')
+
+        print(f'len(self.PV_TIME_DATA[self.pv_idx_1]) = {len(self.PV_TIME_DATA[self.pv_idx_1])}\n'
+              f'len(self.PV_YAXIS_DATA[self.pv_idx_1]) = {len(self.PV_YAXIS_DATA[self.pv_idx_1])}\n\n')
+
+
+        # for index in range(len(self.PV_TIME_DATA)):
+        #     print(f'len(self.PV_TIME_DATA[self.pv_idx_{index}]) = {len(self.PV_TIME_DATA[index])}\n'
+        #           f'len(self.PV_YAXIS_DATA[self.pv_idx_{index}]) = {len(self.PV_YAXIS_DATA[index])}\n')
+        #
+        # input()
 
         fig, axs = plt.subplots(2)
         fig.suptitle(f'{self.all_mod_PVs[self.pv_idx_0]}\n{self.all_mod_PVs[self.pv_idx_1]}')
@@ -359,19 +372,298 @@ class figures():
 
         return final_list
 
-    def unique_group_subplots_x(self, unique_group_idx, pv_idx_list):
+    def handle_group_subplots(self, unique_group_idx, pv_idx_list, xaxis='index', individual_index=False):
+        '''
+        wrapper function that creates a floder for each unique group index
+        then calls unique_group_all_subplots_x() and unique_group_individual_subplots_x()
+        :param unique_group_idx:
+        :param pv_idx_list:
+        :param xaxis: 'time', 'index' or 'both'
+        :param individual_index: turn plotting unique_group_individual_subplots_x(xaxis='index') on or off (True or False)
+        :return:
+        '''
+
+        self.unique_group_idx = int(unique_group_idx)
+        self.pv_idx_list = pv_idx_list
+        self.xaxis = xaxis
+        self.individual_index = individual_index
+        self.foldername = f'\\UniqueGroup_{self.unique_group_idx}'
+
+        self.create_folder_UniqueGroup_number(self.foldername)
+
+        if self.xaxis == 'time':
+            self.unique_group_all_subplots_x(self.unique_group_idx, self.pv_idx_list, self.foldername, xaxis='time')
+            self.unique_group_individual_subplots_x(self.unique_group_idx, self.pv_idx_list, self.foldername, xaxis='time')
+
+        elif self.xaxis == 'index':
+            self.unique_group_all_subplots_x(self.unique_group_idx, self.pv_idx_list, self.foldername, xaxis='index')
+            if self.individual_index == True:
+                self.unique_group_individual_subplots_x(self.unique_group_idx, self.pv_idx_list, self.foldername, xaxis='index')
+            else:
+                pass
+
+        elif self.xaxis == 'both':
+            self.unique_group_all_subplots_x(self.unique_group_idx, self.pv_idx_list, self.foldername, xaxis='time')
+            self.unique_group_individual_subplots_x(self.unique_group_idx, self.pv_idx_list, self.foldername, xaxis='time')
+
+            self.unique_group_all_subplots_x(self.unique_group_idx, self.pv_idx_list, self.foldername, xaxis='index')
+            if self.individual_index == True:
+                self.unique_group_individual_subplots_x(self.unique_group_idx, self.pv_idx_list, self.foldername,xaxis='index')
+            else:
+                pass
+
+        else:
+            print(f'3rd arguement in unique_group_subplots_x() need to be either "time" or "index"\n'
+                  f'Currently it is "{self.xaxis}"')
+            sys.exit()
+
+    def create_folder_UniqueGroup_number(self, foldername):
+        '''
+        Creates a folder in the savepath folder with a name based on the time range entered into the config yaml
+        useful for storing data
+        :return:
+        '''
+        #df = data_functions()
+        #df.create_folder_named_date_time_from_to()
+
+        self.directory = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.savepath]
+
+        self.foldername = foldername
+
+        self.path = r'{}\{}'.format(self.directory, self.foldername)  # path to be created
+
+        print('directory = {}\npath = {}'.format(self.directory, self.path))
+
+        try:
+            os.makedirs(self.path)
+            print(f'\nNew "{self.foldername}" folder created.\n')
+        except OSError:
+            try:
+                folder_test = self.path
+                print(f'\n"{self.foldername}" folder already exists.')
+            except:
+                print(f'\n...Problem with setting up "{self.foldername}" folder.')
+                sys.exit()
+
+
+    def unique_group_all_subplots_x(self, unique_group_idx, pv_idx_list, foldername, xaxis='index'):
         '''
 
         *** NB - Just for "standby --> standby" groups NOT "delta_time" yet ***
 
         Creates a figure of X number vertically stacked PV subplots with modulator state at the bottom
-        and all members of the unique group plotted in each PV subplot.
+        and ONE member of the unique group plotted in each PV subplot.
         :param pv_idx_list: a list of all PVs required with mod state (usually index 0) at the end of the list.
         :return:
         '''
 
         self.unique_group_idx = int(unique_group_idx)
         self.pv_idx_list = pv_idx_list
+        self.foldername = foldername
+        self.xaxis = xaxis
+        self.N_PVs = len(self.pv_idx_list)
+
+        if self.N_PVs > 9:
+            print(f'\n\nMore than 9 sublots selected in subplots_x() function.\nReduce number or amend function.')
+            sys.exit()
+        else:
+            pass
+
+        self.savepath = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.savepath]
+        self.all_mod_PVs = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.all_mod_PVs]
+        self.PV_TIME_DATA = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.PV_TIME_DATA]
+        self.PV_YAXIS_DATA = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.PV_YAXIS_DATA]
+        self.unique_group_start_times_standby = HRFOv2_EPICS_data.values[
+            HRFOv2_EPICS_data.unique_group_start_times_standby]
+        self.unique_group_end_times_standby = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.unique_group_end_times_standby]
+        self.unique_group_member_indices = HRFOv2_EPICS_data.values[
+            HRFOv2_EPICS_data.unique_group_member_indices_standby]
+        self.mod_StateRead_time = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.mod_StateRead_time]
+        self.mod_StateRead_yaxis = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.mod_StateRead_yaxis]
+        self.mod_StateRead_plot_index = self.N_PVs + 1
+        self.plus_minus_time_buffer = 1.0
+        self.mod_state_time = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.mod_StateRead_time]
+        self.idx_pv_dict = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.idx_pv_dict]
+        self.time_0 = self.mod_state_time[0]
+        self.delta_time = (max(self.unique_group_end_times_standby[self.unique_group_idx]) - min(self.unique_group_start_times_standby[self.unique_group_idx]))
+        self.end_time = self.time_0 + self.delta_time
+        self.colours = ['r', 'g', 'b', 'c', 'darkorange', 'm', 'k', 'gray', 'brown']
+        self.savename_idx_string = ''
+        self.suptitle_string = ''
+        fig, axs = plt.subplots(self.N_PVs + 1)
+
+        TIME_min = []
+        TIME_max = []
+
+        save_pvs = ''
+        for s in self.pv_idx_list:
+            save_pvs += f'-{str(s)}'
+
+        # Open text file
+        txt_file_name = self.savepath + self.foldername + f"\\PVs{str(save_pvs)}_UniqueGroup{self.unique_group_idx}_{self.xaxis}.txt"
+        text_file_obj = open(txt_file_name, 'w')
+
+
+        fs = 6  # title fontsize
+        for idx, pv_idx in enumerate(self.pv_idx_list):
+            self.savename_idx_string + '_' + str(pv_idx)
+            self.suptitle_string + self.all_mod_PVs[pv_idx] + '\n'
+
+            pv_name = str(self.idx_pv_dict[str(pv_idx)])
+
+            axs[idx].set_title(f'{pv_name} [{pv_idx}]', size=fs, loc='right', y=0.75) #  , fontsize=fs)
+
+
+
+            for g_idx, g in enumerate(self.unique_group_member_indices[self.unique_group_idx]):
+
+                # Write to text file
+                if xaxis == 'time':
+                    text_file_obj.write(f'\n\n{pv_name} [{str(pv_idx)}]\nUnique Group Member Index #{str(g_idx)}\nTime (s)\tValue\n')
+
+                if xaxis == 'index':
+                    text_file_obj.write(f'\n\n{pv_name} [{str(pv_idx)}]\nUnique Group Member Index #{str(g_idx)}\nIndex\tValue\n')
+
+                time_min_raw = self.unique_group_start_times_standby[self.unique_group_idx][g_idx]
+
+                time_min = time_min_raw - self.plus_minus_time_buffer
+                time_max_raw = self.unique_group_end_times_standby[self.unique_group_idx][
+                                   g_idx] + self.plus_minus_time_buffer
+                time_max = time_max_raw + self.plus_minus_time_buffer
+
+                TIME_min.append(time_min)
+                TIME_max.append(time_max)
+
+                mod_time_0 = self.mod_StateRead_time[self.unique_group_member_indices[self.unique_group_idx][g_idx][0]]
+
+                temp_time = [self.PV_TIME_DATA[pv_idx][i] for i in range(len(self.PV_TIME_DATA[pv_idx])) if
+                             self.PV_TIME_DATA[pv_idx][i] > time_min and self.PV_TIME_DATA[pv_idx][i] < time_max]
+                zeroed_time = [i - mod_time_0 for i in temp_time]
+                temp_yaxis = [self.PV_YAXIS_DATA[pv_idx][i] for i in range(len(self.PV_YAXIS_DATA[pv_idx])) if
+                              self.PV_TIME_DATA[pv_idx][i] > time_min and self.PV_TIME_DATA[pv_idx][i] < time_max]
+
+
+                if self.xaxis == 'time':
+
+                    axs[idx].step(zeroed_time, temp_yaxis, color='b', where='post')
+                    axs[idx].scatter(zeroed_time, temp_yaxis, marker='o', s=3.0, c='r')
+
+                    # Write to text file
+                    for txt_idx in range(len(zeroed_time)):
+                        text_file_obj.write(str(zeroed_time[txt_idx]) + '\t' + str(temp_yaxis[txt_idx]) + '\n')
+
+
+                elif self.xaxis == 'index':
+
+                    axs[idx].step(range(len(zeroed_time)), temp_yaxis, color='b', where='post')
+                    axs[idx].scatter(range(len(zeroed_time)), temp_yaxis, marker='o', s=3.0, c='r')
+
+                    # Write to text file
+                    for txt_idx in range(len(zeroed_time)):
+                        text_file_obj.write(str(txt_idx) + '\t' + str(temp_yaxis[txt_idx]) + '\n')
+
+
+                else:
+                    print(f'3rd arguement in unique_group_subplots_x() need to be either "time" or "index"\n'
+                          f'Currently it is "{self.xaxis}"')
+                    sys.exit()
+
+                # make these tick labels invisible
+                plt.setp(axs[idx].get_xticklabels(), visible=False)
+
+
+        axs[self.mod_StateRead_plot_index - 1].set_title('CLA-GUNS-HRF-MOD-01:Sys:StateRead', size=fs, loc='right', y=0.75) # , fontsize=fs)
+
+
+
+        for t_idx, t in enumerate(self.unique_group_member_indices[self.unique_group_idx]):
+
+            if self.xaxis == 'time':
+                text_file_obj.write(f'\n\nModulator States\nUnique Group Member Index #{str(t_idx)}\nTime (s)\tState Number\n')
+
+            if self.xaxis == 'index':
+                text_file_obj.write(f'\n\nModulator States\nUnique Group Member Index #{str(t_idx)}\nIndex\tState Number\n')
+
+            time_min = TIME_min[t_idx]
+            time_min_raw = TIME_min[t_idx] + self.plus_minus_time_buffer
+            time_max = TIME_max[t_idx]
+            time_max_raw = TIME_max[t_idx] - self.plus_minus_time_buffer
+
+            # Plot the modulator state on the bottom panel:
+            mod_temp_time = [self.mod_StateRead_time[i] for i in range(len(self.mod_StateRead_time)) if
+                             self.mod_StateRead_time[i] > time_min and self.mod_StateRead_time[i] < time_max]
+
+            zeroed_mod_time = [i - mod_temp_time[0] for i in mod_temp_time]
+
+            mod_temp_yaxis = [self.mod_StateRead_yaxis[i] for i in range(len(self.mod_StateRead_yaxis)) if
+                              self.mod_StateRead_time[i] > time_min and self.mod_StateRead_time[i] < time_max]
+
+            if self.xaxis == 'time':
+
+                axs[self.mod_StateRead_plot_index - 1].step(zeroed_mod_time, mod_temp_yaxis, color='b', where='post')
+                axs[self.mod_StateRead_plot_index - 1].scatter(zeroed_mod_time, mod_temp_yaxis, marker='o', s=3.0,
+                                                               c='r')
+
+                # Write to text file
+                for txt_idx in range(len(zeroed_mod_time)):
+                    text_file_obj.write(str(zeroed_mod_time[txt_idx]) + '\t' + str(mod_temp_yaxis[txt_idx]) + '\n')
+
+            elif self.xaxis == 'index':
+
+                axs[self.mod_StateRead_plot_index - 1].step(range(len(zeroed_mod_time)), mod_temp_yaxis, color='b', where='post')
+
+                axs[self.mod_StateRead_plot_index - 1].scatter(range(len(zeroed_mod_time)), mod_temp_yaxis, marker='o',
+                                                               s=3.0, c='r')
+
+                # Write to text file
+                for txt_idx in range(len(zeroed_mod_time)):
+                    text_file_obj.write(str(txt_idx) + '\t' + str(mod_temp_yaxis[txt_idx]) + '\n')
+
+
+            else:
+                print(f'3rd arguement in unique_group_subplots_x() need to be either "time" or "index"\n'
+                      f'Currently it is "{self.xaxis}"')
+                sys.exit()
+
+        if self.xaxis == 'time':
+            plt.xlabel("Time Elapsed Since ModState == 'Standby' (s)")
+        elif self.xaxis == 'index':
+            plt.xlabel("Index Number")
+        else:
+            pass
+
+        save_pvs = ''
+        for s in self.pv_idx_list:
+            save_pvs += f'-{str(s)}'
+        print(f'self.savepath = {self.savepath}\n'
+              f'self.foldername = {self.foldername}\n'
+              f'self.unique_group_idx = {self.unique_group_idx}\n'
+              f'self.xaxis = {self.xaxis}\n'
+              f'save_pvs = {save_pvs}\n'
+              )
+
+        plt.savefig(
+            self.savepath + self.foldername + f"\\PVs{str(save_pvs)}_UniqueGroup{self.unique_group_idx}_AllGroups_{self.xaxis}.png")
+        plt.close('all')
+
+        # Close text file
+        text_file_obj.close()
+
+    def unique_group_individual_subplots_x(self, unique_group_idx, pv_idx_list, foldername, xaxis='time'):
+        '''
+
+        *** NB - Just for "standby --> standby" groups NOT "delta_time" yet ***
+
+        Creates a figure of X number vertically stacked PV subplots with modulator state at the bottom
+        and ONE member of the unique group plotted in each PV subplot.
+        :param pv_idx_list: a list of all PVs required with mod state (usually index 0) at the end of the list.
+        :return:
+        '''
+
+        self.unique_group_idx = int(unique_group_idx)
+        self.pv_idx_list = pv_idx_list
+        self.foldername = foldername
+        self.xaxis = xaxis
         self.N_PVs = len(self.pv_idx_list)
 
         if self.N_PVs > 9:
@@ -385,29 +677,181 @@ class figures():
         self.PV_TIME_DATA = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.PV_TIME_DATA]
         self.PV_YAXIS_DATA = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.PV_YAXIS_DATA]
         # self.unique_groups_standby = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.unique_groups_standby]
-        self.unique_group_start_times = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.unique_group_start_times_standby][self.unique_group_idx]
-        self.unique_group_end_times= HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.unique_group_end_times_standby][self.unique_group_idx]
+        self.unique_group_start_times_standby = HRFOv2_EPICS_data.values[
+            HRFOv2_EPICS_data.unique_group_start_times_standby]
+        self.unique_group_end_times_standby = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.unique_group_end_times_standby]
         # self.unique_groups_population_standby = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.unique_groups_population_standby]
+        self.unique_group_member_indices = HRFOv2_EPICS_data.values[
+            HRFOv2_EPICS_data.unique_group_member_indices_standby]
+
+        self.mod_StateRead_time = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.mod_StateRead_time]
+        self.mod_StateRead_yaxis = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.mod_StateRead_yaxis]
+        self.mod_StateRead_plot_index = self.N_PVs + 1
+
+        self.idx_pv_dict = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.idx_pv_dict]
+
+        self.plus_minus_time_buffer = 1.0
+
+        self.mod_state_time = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.mod_StateRead_time]
+
+        self.time_0 = self.mod_state_time[0]
+        self.delta_time = (max(self.unique_group_end_times_standby[self.unique_group_idx]) - min(self.unique_group_start_times_standby[self.unique_group_idx]))
+        self.end_time = self.time_0 + self.delta_time
+
+        # print(f'self.time_0 = {self.time_0}\n'
+        #       f'self.delta_time = {self.delta_time}\n'
+        #       f'self.end_time = {self.end_time}')
+
+        # self.PV_TIME_zeroed = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.PV_TIME_zeroed]
+
         self.colours = ['r', 'g', 'b', 'c', 'darkorange', 'm', 'k', 'gray', 'brown']
 
         self.savename_idx_string = ''
         self.suptitle_string = ''
-        fig, axs = plt.subplots(self.N_PVs)
 
-        # TODO: set up x-axis so start of each group = (0s) and end = (0s + delta time)
+        # TODO: set up x-axis so start of each group = (0s - delta time) and end = (0s + delta time)
         #  maybe start - 20s and end + 20s to capture context
         #  then for each PV subplot cycle over each unique group member and plot x and y.
+        # ~~~~~~~~~~~~~~~~~~~~~~ MESS !! ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        for idx, pv_idx in enumerate(self.pv_idx_list):
-            self.savename_idx_string + '_' + str(pv_idx)
-            self.suptitle_string + self.all_mod_PVs[pv_idx] + '\n'
+        save_pvs = ''
+        for s in self.pv_idx_list:
+            save_pvs += f'-{str(s)}'
+        print(f'save_pvs = {save_pvs}')
 
-            axs[idx].plot(self.PV_TIME_DATA[pv_idx], self.PV_YAXIS_DATA[pv_idx], ls='-', lw=1.0, color='b')
-            axs[idx].scatter(self.PV_TIME_DATA[pv_idx], self.PV_YAXIS_DATA[pv_idx], marker='o', s=3.0, c='r')
-            if idx < self.N_PVs-1:
+        fs = 6  # title fontsize
+
+        for g_idx, g in enumerate(self.unique_group_member_indices[self.unique_group_idx]):
+
+            # self.savename_idx_string + '_' + str(pv_idx)
+            # self.suptitle_string + self.all_mod_PVs[pv_idx] + '\n'
+
+            fig, axs = plt.subplots(self.N_PVs + 1)
+
+            axs[self.mod_StateRead_plot_index - 1].set_title('CLA-GUNS-HRF-MOD-01:Sys:StateRead', size=fs, loc='right',
+                                                             y=0.75)  # , fontsize=fs)
+
+            TIME_min = []
+            TIME_max = []
+
+            for idx, pv_idx in enumerate(self.pv_idx_list):
+
+                # print(f'self.unique_group_member_indices[self.unique_group_idx] = {self.unique_group_member_indices[self.unique_group_idx]}')
+
+                # print(f'self.unique_group_start_times_standby[g_idx] = {self.unique_group_start_times_standby[g_idx] }')
+
+                #if idx == 0:
+                pv_name = str(self.idx_pv_dict[str(pv_idx)])
+
+                axs[idx].set_title(pv_name, size=fs, loc='right', y=0.75)  # , fontsize=fs)
+
+
+                time_min_raw = self.unique_group_start_times_standby[self.unique_group_idx][g_idx]
+                #print(f'time_min_raw = {time_min_raw}')
+                time_min = time_min_raw - self.plus_minus_time_buffer
+                time_max_raw = self.unique_group_end_times_standby[self.unique_group_idx][
+                                   g_idx] + self.plus_minus_time_buffer
+                time_max = time_max_raw + self.plus_minus_time_buffer
+
+                TIME_min.append(time_min)
+                TIME_max.append(time_max)
+
+                # mod_time_0 = [self.mod_StateRead_time[i] for i in range(len(self.mod_StateRead_time)) if
+                #               self.mod_StateRead_time[i] > time_min and self.mod_StateRead_time[i] < time_max][0]
+
+                mod_time_0 = self.mod_StateRead_time[self.unique_group_member_indices[self.unique_group_idx][g_idx][0]]
+
+                temp_time = [self.PV_TIME_DATA[pv_idx][i] for i in range(len(self.PV_TIME_DATA[pv_idx])) if
+                             self.PV_TIME_DATA[pv_idx][i] > time_min and self.PV_TIME_DATA[pv_idx][i] < time_max]
+                zeroed_time = [i - mod_time_0 for i in temp_time]
+                temp_yaxis = [self.PV_YAXIS_DATA[pv_idx][i] for i in range(len(self.PV_YAXIS_DATA[pv_idx])) if
+                              self.PV_TIME_DATA[pv_idx][i] > time_min and self.PV_TIME_DATA[pv_idx][i] < time_max]
+
+                # yaxis = self.PV_TIME_zeroed[self.unique_group_idx]
+
+                # print(f'{g_idx}: len(temp_time) = {temp_time}\n'
+                #       f'{g_idx}: len(temp_yaxis) = {temp_yaxis}')
+
+                if self.xaxis == 'time':
+
+                    axs[idx].step(zeroed_time, temp_yaxis, color='b', where='post')
+                    axs[idx].scatter(zeroed_time, temp_yaxis, marker='o', s=3.0, c='r')
+
+
+                elif self.xaxis == 'index':
+
+                    axs[idx].step(range(len(zeroed_time)), temp_yaxiscolor='b', where='post')
+                    axs[idx].scatter(range(len(zeroed_time)), temp_yaxis, marker='o', s=3.0, c='r')
+
+
+
+
+                else:
+                    print(f'3rd arguement in unique_group_subplots_x() need to be either "time" or "index"\n'
+                          f'Currently it is "{self.xaxis}"')
+                    sys.exit()
+
                 # make these tick labels invisible
                 plt.setp(axs[idx].get_xticklabels(), visible=False)
 
-        fig.suptitle(self.suptitle_string, fontsize=7)
-        plt.savefig(self.savepath + f"\\_subplots_{self.savename_idx_string}.png")
-        plt.close('all')
+            # for ug_idx, ug in enumerate(self.unique_group_member_indices):
+
+            # print(f'len(axs) = {len(axs)}\n'
+            #       f'self.mod_StateRead_plot_index] = {self.mod_StateRead_plot_index}')
+
+            for t_idx, t in enumerate(TIME_min):
+
+                time_min = TIME_min[t_idx]
+                time_min_raw = TIME_min[t_idx] + self.plus_minus_time_buffer
+                time_max = TIME_max[t_idx]
+                time_max_raw = TIME_max[t_idx] - self.plus_minus_time_buffer
+
+                # lastly plot the modulator state on the bottom panel:
+
+                mod_temp_time = [self.mod_StateRead_time[i] for i in range(len(self.mod_StateRead_time)) if
+                                 self.mod_StateRead_time[i] > time_min and self.mod_StateRead_time[i] < time_max]
+
+                zeroed_mod_time = [i - mod_temp_time[0] for i in mod_temp_time]
+
+                mod_temp_yaxis = [self.mod_StateRead_yaxis[i] for i in range(len(self.mod_StateRead_yaxis)) if
+                                  self.mod_StateRead_time[i] > time_min and self.mod_StateRead_time[i] < time_max]
+
+                if self.xaxis == 'time':
+
+                    axs[self.mod_StateRead_plot_index - 1].step(zeroed_mod_time, mod_temp_yaxis, color='b', where='post')
+                    axs[self.mod_StateRead_plot_index - 1].scatter(zeroed_mod_time, mod_temp_yaxis, marker='o', s=3.0,
+                                                                   c='r')
+
+                    for xy in zip(zeroed_mod_time, mod_temp_yaxis):
+                        y = xy[1]
+                        axs[self.mod_StateRead_plot_index - 1].annotate(f'{y}', xy=xy, textcoords='data')
+
+
+                elif self.xaxis == 'index':
+
+                    axs[self.mod_StateRead_plot_index - 1].step(range(len(zeroed_mod_time)), mod_temp_yaxis, where='post',
+                                                                color='b')
+                    axs[self.mod_StateRead_plot_index - 1].scatter(range(len(zeroed_mod_time)), mod_temp_yaxis, marker='o',
+                                                                   s=3.0, c='r')
+
+                    for xy in zip(range(len(zeroed_mod_time)), mod_temp_yaxis):
+                        y = xy[1]
+                        axs[self.mod_StateRead_plot_index - 1].annotate(f'{y}', xy=xy, textcoords='data')
+
+                else:
+                    print(f'3rd arguement in unique_group_subplots_x() need to be either "time" or "index"\n'
+                          f'Currently it is "{self.xaxis}"')
+                    sys.exit()
+
+            if self.xaxis == 'time':
+                plt.xlabel("Time Elapsed Since ModState == 'Standby' (s)")
+            elif self.xaxis == 'index':
+                plt.xlabel("Index Number")
+            else:
+                pass
+
+            plt.savefig(self.savepath + self.foldername + f"\\PVs{str(save_pvs)}_UniqueGroup{self.unique_group_idx}_GroupMember{g_idx}_{self.xaxis}.png")
+            plt.close('all')
+
+
+

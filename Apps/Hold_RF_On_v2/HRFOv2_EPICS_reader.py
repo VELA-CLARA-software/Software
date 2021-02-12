@@ -134,7 +134,7 @@ class reader():
 
             #Retrieve data from EPICS archiver
             r = requests.get(url)
-            data = r.json()
+            data = r.json() #######################################################################################<---
 
             # Initiate empty time and yaxis data lists for each individual PV
             # time_0 = time[0]
@@ -160,6 +160,8 @@ class reader():
                 print(url)
                 print(data[0]["meta"])
                 print(f'savename = {self.savename}')
+                print(f'len(time) = {len(time)}\n'
+                      f'len(yaxis) = {len(yaxis)}')
 
             # if "PLOT_ALL_PVs:  True" in config yaml then plot each and every PV individually and save in the savepath folder
             if self.PLOT_ALL_PVs:
@@ -173,16 +175,44 @@ class reader():
                 HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.mod_StateRead_time] = time
                 HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.mod_StateRead_yaxis] = yaxis
 
+            # Zero time at the time of the first modulator state change
+            #self.PV_TIME_zeroed = self.zero_EPICS_time()
+
         # Save data to the values dictionary for use later on
         HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.pv_idx_dict] = self.pv_idx_dict
         HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.idx_pv_dict] = self.idx_pv_dict
         HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.PV_TIME_DATA] = self.PV_TIME_DATA
         HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.PV_YAXIS_DATA] = self.PV_YAXIS_DATA
 
+
+        # for index in range(len(self.PV_TIME_DATA)):
+        #     print(f'len(self.PV_TIME_DATA[self.pv_idx_{index}]) = {len(self.PV_TIME_DATA[index])}\n'
+        #           f'len(self.PV_YAXIS_DATA[self.pv_idx_{index}]) = {len(self.PV_YAXIS_DATA[index])}\n')
+        #
+        # input()
+
+        # Zero time at the time of the first modulator state change
+        #self.zero_EPICS_time()
+
+
         # Save the values dictionary as a .pkl so that we can re-run the script without having to re-read the data.
         self.save_dict_2_pkl(HRFOv2_EPICS_data.values, r'\post_PV_read_values_dict.pkl')
 
+    def zero_EPICS_time(self):
+        '''
+        Returns a time line from 0 seconds (start date+time read in from config.yaml) to the end date+time
+        in units of seconds.
+        :return:
+        '''
+        self.mod_state_time = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.mod_StateRead_time]
+        self.PV_TIME_DATA = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.PV_TIME_DATA]
+        self.time_0 = self.mod_state_time[0]
+        self.PV_TIME_zeroed = []
+        for t_idx, t in enumerate(self.PV_TIME_DATA):
+            pv_time_zeroed = [i - self.time_0 for i in self.PV_TIME_DATA[t_idx]]
+            self.PV_TIME_zeroed.append(pv_time_zeroed)
 
+        HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.PV_TIME_zeroed] = self.PV_TIME_zeroed
 
     def PCorllett_read_EPICS_PVs(self):
         self.savepath = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.savepath]

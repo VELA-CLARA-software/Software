@@ -232,8 +232,8 @@ class data_functions():
         values[mod_StateRead_string_states] = self.mod_StateRead_string_states
 
         # find unique groups and the number of each that there are
-        self.unique_groups_delta_time, self.unique_group_start_times_delta_time, self.unique_group_end_times_delta_time, self.unique_groups_population_delta_time \
-            = self.find_unique_groups(self.mod_StateRead_groups_yaxis_vals)
+        self.unique_groups_delta_time, self.unique_group_member_indices_delta_time, self.unique_group_start_times_delta_time, self.unique_group_end_times_delta_time, self.unique_groups_population_delta_time \
+            = self.find_unique_groups(self.mod_StateRead_groups_time_vals, self.mod_StateRead_groups_yaxis_vals, self.mod_StateRead_groups_idxs)
 
         # Save to csv for ease of comparison
         read.save_mod_state_names_and_populations_to_csv(self.unique_groups_delta_time,
@@ -241,7 +241,9 @@ class data_functions():
                                 r'\unique_groups_population_delta_time')
 
         values[unique_groups_delta_time] = self.unique_groups_delta_time
+
         values[unique_group_start_times_delta_time] = self.unique_group_start_times_delta_time
+        values[unique_group_member_indices_delta_time] = self.unique_group_member_indices_delta_time
         values[unique_group_end_times_delta_time] = self.unique_group_end_times_delta_time
         values[unique_groups_population_delta_time] = self.unique_groups_population_delta_time
 
@@ -304,9 +306,11 @@ class data_functions():
         values[mod_StateRead_groups_standby_yaxis_vals] = self.mod_StateRead_groups_standby_yaxis_vals
 
         # find unique groups and the number of each that there are
-        self.unique_groups_standby, self.unique_group_start_times_standby, self.unique_group_end_times_standby, self.unique_groups_population_standby \
+        self.unique_groups_standby, self.unique_group_member_indices_standby, self.unique_group_start_times_standby, self.unique_group_end_times_standby, self.unique_groups_population_standby \
             = self.find_unique_groups(self.mod_StateRead_groups_standby_time_vals,
-                                      self.mod_StateRead_groups_standby_yaxis_vals)
+                                      self.mod_StateRead_groups_standby_yaxis_vals, self.mod_StateRead_groups_standby_idxs)
+
+        print(f'self.unique_group_member_indices_standby = {self.unique_group_member_indices_standby}')
 
         # Save to csv for ease of comparison
         read.save_mod_state_names_and_populations_to_csv(self.unique_groups_standby,
@@ -314,20 +318,29 @@ class data_functions():
                                 r'\unique_groups_population_standby')
 
         values[unique_groups_standby] = self.unique_groups_standby
+        values[unique_group_member_indices_standby] = self.unique_group_member_indices_standby
         values[unique_group_start_times_standby] = self.unique_group_start_times_standby
         values[unique_group_end_times_standby] = self.unique_group_end_times_standby
         values[unique_groups_population_standby] = self.unique_groups_population_standby
 
         # TODO: save groups as csv for comparison
 
-    def find_unique_groups(self, xaxis_vals, yaxis_vals):
+    def find_unique_groups(self, xaxis_vals, yaxis_vals, group_idxs):
         '''
         Finds unique groups and also determines the number of each type.
         :param yaxis_vals: list of lists containing mod states as integers from 1--> 13 inclusive.
+        :param xaxis_vals:
+        :param yaxis_vals:
+        :param group_idxs:
         :return: unique_groups, unique_groups_population
         '''
+
         self.xaxis_vals = xaxis_vals
         self.yaxis_vals = yaxis_vals
+        self.group_idxs = group_idxs
+
+        print(f'group_idxs = {group_idxs}')
+        #input()
 
         self.unique_groups = []
         for gr in self.yaxis_vals:
@@ -336,19 +349,65 @@ class data_functions():
             else:
                 self.unique_groups.append(gr)
 
-        self.unique_group_start_times = [[]] * len(self.unique_groups)
-        self.unique_group_end_times = [[]] * len(self.unique_groups)
+
+        self.unique_group_start_times = [[] for i in range(len(self.unique_groups))]
+        self.unique_group_end_times = [[] for i in range(len(self.unique_groups))]
+        self.unique_group_member_indices = [[] for i in range(len(self.unique_groups))]
+        self.unique_groups_population = [0] * len(self.unique_groups)
+        print(f'self.unique_group_start_times = {self.unique_group_start_times}')
+        trying = self.unique_group_member_indices[10]
+        trying.append([1, 2, 3, 4, 5])
+        print(f'self.unique_group_member_indices[10] = {self.unique_group_member_indices[10]}\n'
+              f'self.unique_group_member_indices[0] = {self.unique_group_member_indices[0]}')
+
+        hit_count = 0
         for ug_idx, ug in enumerate(self.unique_groups):
             for gr_idx, gr in enumerate(self.yaxis_vals):
+                # print(f'\nug_idx = {ug_idx}\n'
+                #       f'gr_idx = {gr_idx}\n'
+                #       f'hit_count = {hit_count}\n'
+                #       # f'self.unique_groups_population = {self.unique_groups_population}\n'
+                #       # f'group_indices = {self.group_idxs[gr_idx]}\n'
+                #       # f'self.unique_group_member_indices = {self.unique_group_member_indices}\n'
+                #       f'len(self.unique_group_member_indices[3]) = {len(self.unique_group_member_indices[3])}')
+
                 if gr == ug:
-                    start = self.xaxis_vals[ug_idx][0]
-                    end = self.xaxis_vals[ug_idx][-1]
+
+                    #print(f'self.unique_group_member_indices = {self.unique_group_member_indices}')
+
+                    start = self.xaxis_vals[gr_idx][0]
+                    end = self.xaxis_vals[gr_idx][-1]
+                    group_indices = self.group_idxs[gr_idx]
 
                     self.unique_group_start_times[ug_idx].append(start)
-                    self.unique_group_end_times.append(end)
-                    
+                    self.unique_group_end_times[ug_idx].append(end)
+                    #self.unique_group_member_indices[ug_idx].append(group_indices)
+                    self.unique_group_member_indices[ug_idx].append(self.group_idxs[gr_idx])
+
+                    self.unique_groups_population[ug_idx] += 1
+
+                    hit_count += 1
+
+                    if ug_idx == 4:
+                        print(f'\nug_idx = {ug_idx}\n'
+                              f'{gr} = {ug}\n'
+                              f'start = {start}\n'        
+                              f'end = {end}\n'
+                              f'self.unique_groups_population = {self.unique_groups_population}\n'
+                              f'self.unique_group_start_times = {self.unique_group_start_times}\n'
+                              f'group_indices = {group_indices}\n'
+                              f'self.unique_group_member_indices = {self.unique_group_member_indices}\n'
+                              f'len(self.unique_group_start_times[10]) = {len(self.unique_group_start_times[10])}\n'
+                              f'len(self.unique_group_member_indices[10]) = {len(self.unique_group_member_indices[10])}')
+
+                        #input()
+                    else:
+                        pass
+
                 else:
+
                     pass
+
 
 
         self.unique_groups_population = [0]*len(self.unique_groups)
@@ -358,13 +417,29 @@ class data_functions():
                     self.unique_groups_population[un_gr_idx]+= 1
                 else:
                     pass
+
         print('\n\n')
         print(f'unique_groups = {self.unique_groups}\n'
+              f'unique_group_member_indices = {self.unique_group_member_indices}\n'
               f'unique_groups_population = {self.unique_groups_population}')
 
-        # TODO: find start + end times for each group so we can overplot PV values to find average behaviour
+        print(f'len(self.unique_groups) = {len(self.unique_groups)}\n'
+              f'len(self.group_idxs) = {len(self.group_idxs)}')
 
-        return self.unique_groups, self.unique_group_start_times, self.unique_group_end_times, self.unique_groups_population
+        print(f'len(self.unique_group_member_indices) = {len(self.unique_group_member_indices)}\n'
+              f'len(self.unique_group_member_indices[0]) = {len(self.unique_group_member_indices[0])}\n'
+              f'len(self.unique_group_member_indices[1]) = {len(self.unique_group_member_indices[1])}\n'
+              f'len(self.unique_group_member_indices[-1]) = {len(self.unique_group_member_indices[-1])}\n'
+              f'len(self.unique_group_member_indices[0][0]) = {len(self.unique_group_member_indices[0][0])}\n')
+
+
+        print(f'self.unique_group_start_times = {self.unique_group_start_times}\n'
+              f'self.unique_group_end_times) = {self.unique_group_end_times}')
+
+        #input()
+
+        return self.unique_groups, self.unique_group_member_indices, self.unique_group_start_times, self.unique_group_end_times, self.unique_groups_population
+
 
     def save_hist_peak_vals_to_csv(self):
         '''
@@ -381,11 +456,9 @@ class data_functions():
 
         read.save_two_lists_csv(self.peak_x_val, self.peak_y_val, r'\Peak_histogram_vals')
 
+    # TODO: find start + end times for each group so we can overplot PV values to find average behaviour
 
 
-
-
-    # TODO: for each group
 
 
     '''
@@ -494,13 +567,17 @@ PV_TIME_DATA = 'PV_TIME_DATA'
 all_value_keys.append(PV_TIME_DATA)
 values[PV_TIME_DATA] = []
 
+PV_TIME_zeroed = 'PV_TIME_zeroed'
+all_value_keys.append(PV_TIME_zeroed)
+values[PV_TIME_zeroed] = []
+
 PV_YAXIS_DATA = 'PV_YAXIS_DATA'
 all_value_keys.append(PV_YAXIS_DATA)
 values[PV_YAXIS_DATA] = []
 
 READ_PVs = 'READ_PVs'
 all_value_keys.append(READ_PVs)
-values[READ_PVs] = True
+values[READ_PVs] = False
 
 EPICS_date_time_from = "EPICS_date_time_from"
 all_value_keys.append(EPICS_date_time_from)
@@ -587,6 +664,10 @@ unique_groups_delta_time = 'unique_groups_delta_time'
 all_value_keys.append(unique_groups_delta_time)
 values[unique_groups_delta_time] = []
 
+unique_group_member_indices_delta_time = 'unique_group_member_indices_delta_time'
+all_value_keys.append(unique_group_member_indices_delta_time)
+values[unique_group_member_indices_delta_time] = []
+
 unique_group_start_times_delta_time = 'unique_group_start_times_delta_time'
 all_value_keys.append(unique_group_start_times_delta_time)
 values[unique_group_start_times_delta_time] = []
@@ -602,6 +683,10 @@ values[unique_groups_population_delta_time] = []
 unique_groups_standby = 'unique_groups_standby'
 all_value_keys.append(unique_groups_standby)
 values[unique_groups_standby] = []
+
+unique_group_member_indices_standby = 'unique_group_member_indices_standby'
+all_value_keys.append(unique_group_member_indices_standby)
+values[unique_group_member_indices_standby] = []
 
 unique_group_start_times_standby = 'unique_group_start_times_standby'
 all_value_keys.append(unique_group_start_times_standby)

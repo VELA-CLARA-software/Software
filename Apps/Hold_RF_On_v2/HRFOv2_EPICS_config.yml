@@ -22,6 +22,7 @@ time_to:  "18:00:00.00"
 
 # Full list of all PVs of interest
 all_mod_PVs:
+
  - "CLA-GUNS-HRF-MOD-01:Sys:StateRead"
  - "CLA-GUNS-HRF-MOD-01:Sys:StateSet"
  - "CLA-GUNS-HRF-MOD-01:Pt:Diag:CtArc"
@@ -64,6 +65,9 @@ all_mod_PVs:
  - "CLA-GUNS-HRF-MOD-01:Sys:TrigHoursRead"
  - "CLA-GUNS-HRF-MOD-01:Sys:Trig:PlswthSet"
  - "CLA-GUNS-HRF-MOD-01:Sys:Trig:PrfSet"
+
+
+
 #- "CLA-GUNS-HRF:ConScriptAlive"
 #- "CLA-GUNS-HRF-MOD-01:HvPs:VoltSet:W"
 #- "CLA-GUNS-HRF-MOD-01:Sys:Trig:PlswthSet:W"
