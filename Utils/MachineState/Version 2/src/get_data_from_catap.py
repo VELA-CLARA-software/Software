@@ -1,10 +1,10 @@
 import os, sys
 import numpy
 import time
-from CATAP.HardwareFactory import *
-from CATAP.EPICSTools import *
-import unit_conversion
-import aliases
+import CATAP.HardwareFactory
+import CATAP.EPICSTools
+# import src.unit_conversion as unit_conversion
+# import src.aliases as aliases
 
 catap_modules = ['BPM', 'Charge', 'Screen', 'Magnet']
 vc_controller_modules = ['Camera', 'LLRF', 'PILaser']
@@ -14,10 +14,10 @@ class GetDataFromCATAP(object):
 	def __init__(self, buffer=False):
 		object.__init__(self)
 		self.my_name="GetDataFromCATAP"
-		self.unitConversion = unit_conversion.UnitConversion()
-		self.alias_names = aliases.alias_names
-		self.type_alias = aliases.type_alias
-		self.screen_alias = aliases.screen_alias
+		# self.unitConversion = unit_conversion.UnitConversion()
+		# self.alias_names = aliases.alias_names
+		# self.type_alias = aliases.type_alias
+		# self.screen_alias = aliases.screen_alias
 		self.energy = {}
 		self.magDict = {}
 		self.gunRFDict = {}
@@ -44,16 +44,12 @@ class GetDataFromCATAP(object):
 		self.gundata = {}
 		self.linacdata = {}
 		self.alldata = {}
-		self.alldata.update({"INJ": {}})
-		self.alldata.update({"CLA-S01": {}})
-		self.alldata.update({"L01": {}})
-		self.alldata.update({"CLA-S02": {}})
-		self.alldata.update({"CLA-C2V": {}})
-		self.alldata.update({"EBT-INJ": {}})
-		self.alldata.update({"EBT-BA1": {}})
-		self.alldata.update({"VCA": {}})
+		self.default_lattice = ["INJ", "CLA-S01", "L01", "CLA-S02", "CLA-C2V", "EBT-INJ", "EBT-BA1", "VCA"]
+		self.online_model_lattice = ["Gun", "Linac", "CLA-S02", "CLA-C2V", "EBT-INJ", "EBT-BA1"]
+		for i in self.default_lattice:
+			self.alldata.update({i: {}})
 		self.alldataset = False
-
+		self.use_online_model_lattice = False
 		self.linacnames = {}
 		self.gunStartTime = 1.0 # MAGIC NUMBER
 		self.gunEndTime = 1.4  # MAGIC NUMBER
@@ -76,28 +72,29 @@ class GetDataFromCATAP(object):
 		
 		self.dictsSet = False
 		
-	def initCATAP(self,
-				  mode,
-				  addr_list="10.10.0.12",
-				  auto_addr_list="NO",
-				  server_port="6000",
-				  max_array_bytes="1000000"):
+	def initCATAP(self, mode, crest_phases=None):
 		# setup environment
-		if mode == STATE.VIRTUAL:
-			os.environ["EPICS_CA_ADDR_LIST"] = "10.10.0.12"
-			os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
-			os.environ["EPICS_CA_SERVER_PORT"] = "6000"
+		if mode == 'VIRTUAL' or mode == CATAP.HardwareFactory.STATE.VIRTUAL:
+			os.environ['EPICS_CA_ADDR_LIST'] = '192.168.83.246'
+			os.environ["EPICS_CA_AUTO_ADDR_LIST"]= "NO"
+			os.environ['EPICS_CA_SERVER_PORT'] = '6020'
 			os.environ["EPICS_CA_MAX_ARRAY_BYTES"] = "10000000"
-		elif mode == STATE.PHYSICAL:
+		elif mode == 'PHYSICAL' or mode == CATAP.HardwareFactory.STATE.PHYSICAL:
 			os.environ["EPICS_CA_ADDR_LIST"]= "192.168.83.255"
 			os.environ["EPICS_CA_AUTO_ADDR_LIST"]= "NO"
 			os.environ["EPICS_CA_SERVER_PORT"]= "5064"
 			os.environ["EPICS_CA_MAX_ARRAY_BYTES"]= "10000000"
 		# get factories / controllers
-		self.hf = HardwareFactory(mode)
-		self.epics_tools = EPICSTools(mode)
+		if mode == 'VIRTUAL' or mode == CATAP.HardwareFactory.STATE.VIRTUAL:
+			self.mode = CATAP.HardwareFactory.STATE.VIRTUAL
+		elif mode == 'PHYSICAL' or mode == CATAP.HardwareFactory.STATE.PHYSICAL:
+			self.mode = CATAP.HardwareFactory.STATE.PHYSICAL
+		else:
+			self.mode = CATAP.HardwareFactory.STATE.OFFLINE
+		self.hf = CATAP.HardwareFactory.HardwareFactory(self.mode)
+		self.epics_tools = CATAP.HardwareFactory.EPICSTools(self.mode)
 		self.hf.debugMessagesOff()
-		self.llrf_types = [TYPE.LRRG_GUN, TYPE.L01]
+		self.llrf_types = [CATAP.HardwareFactory.TYPE.LRRG_GUN, CATAP.HardwareFactory.TYPE.L01]
 		# self.gun_llrf_type = CATAP.HardwareFactory.TYPE.LRRG_GUN
 		self.llrf_factory = self.hf.getLLRFFactory(self.llrf_types)
 		self.llrf_names = self.llrf_factory.getLLRFNames()
@@ -105,21 +102,33 @@ class GetDataFromCATAP(object):
 		self.linacnames = self.llrf_names[1:]
 		self.gunLLRFObj = self.llrf_factory.getLLRF(self.llrf_names[0])
 		self.linacLLRFObj = {}
-		if mode == STATE.VIRTUAL:
+		if crest_phases is not None:
+			self.crest_phases = crest_phases
+		else:
+			self.crest_phases = {}
+			self.crest_phases.update({self.gunname: 0})
+			for i in self.linacnames:
+				self.crest_phases.update({i: 0})
+		if self.mode == CATAP.HardwareFactory.STATE.VIRTUAL:
 			self.setGunStartEndTime(self.gunStartTime, self.gunEndTime)
 		for key in self.linacnames:
 			self.linacLLRFObj[key] = self.llrf_factory.getLLRF(key)
 			self.linacStartTimes.update({key: 0.1})  # MAGIC NUMBER
 			self.linacEndTimes.update({key: 1.0})  # MAGIC NUMBER
-			if mode == STATE.VIRTUAL:
+			if self.mode == CATAP.HardwareFactory.STATE.VIRTUAL:
 				self.setLinacStartEndTime(key, self.linacStartTimes[key], self.linacEndTimes[key])
 			self.linacDataSet.update({key: False})
 			self.linacEnergyGain.update({key: 0.0})
+		time.sleep(5)
 		self.chargeFac = self.hf.getChargeFactory()
+		time.sleep(5)
 		self.bpmFac = self.hf.getBPMFactory()
+		time.sleep(5)
 		self.scrFac = self.hf.getScreenFactory()
+		time.sleep(5)
 		self.magFac = self.hf.getMagnetFactory()
-		if mode == STATE.VIRTUAL:
+		time.sleep(5)
+		if self.mode == CATAP.HardwareFactory.STATE.VIRTUAL:
 			self.magFac.switchOnAll()
 		if not self.epics_tools_types['camera']:
 			self.camFac = self.hf.getCameraFactory()
@@ -128,25 +137,58 @@ class GetDataFromCATAP(object):
 		# #self.camFac = hf.getcam()
 		return True
 
+	def useOnlineModelLattice(self, om=False):
+		if om:
+			self.use_online_model_lattice = True
+			self.alldata = {}
+			for i in self.online_model_lattice:
+				self.alldata.update({i: {}})
+		else:
+			self.use_online_model_lattice = False
+
 	def getMachineAreaString(self, name):
 		#if "INJ" in name or "GUN" in name or "LRG1" in name:
 		if "GUN" in name or "LRG1" in name:
-			return "INJ"
+			if self.use_online_model_lattice:
+				return aliases.lattice_to_online_model["GUN"]
+			else:
+				return "INJ"
 		elif "S01" in name:
-			return "CLA-S01"
+			if self.use_online_model_lattice:
+				return aliases.lattice_to_online_model["CLA-S01"]
+			else:
+				return "CLA-S01"
 		elif "S02" in name:
-			return "CLA-S02"
+			if self.use_online_model_lattice:
+				return aliases.lattice_to_online_model["CLA-S02"]
+			else:
+				return "CLA-S02"
 		elif "L01" in name:
-			return "L01"
+			if self.use_online_model_lattice:
+				return aliases.lattice_to_online_model["L01"]
+			else:
+				return "L01"
 		elif "C2V" in name:
-			return "CLA-C2V"
+			if self.use_online_model_lattice:
+				return aliases.lattice_to_online_model["CLA-C2V"]
+			else:
+				return "CLA-C2V"
 		elif "EBT" in name:
 			if "BA1" in name:
-				return "EBT-BA1"
+				if self.use_online_model_lattice:
+					return aliases.lattice_to_online_model["EBT-BA1"]
+				else:
+					return "EBT-BA1"
 			elif "INJ" in name:
-				return "EBT-INJ"
+				if self.use_online_model_lattice:
+					return aliases.lattice_to_online_model["EBT-INJ"]
+				else:
+					return "EBT-INJ"
 		elif "VCA" in name:
-			return "VCA"
+			if self.use_online_model_lattice:
+				return aliases.lattice_to_online_model["VCA"]
+			else:
+				return "VCA"
 
 	def setBPMDict(self):
 		self.bpmnames = self.bpmFac.getAllBPMNames()
@@ -172,7 +214,7 @@ class GetDataFromCATAP(object):
 			self.camnames = self.camFac.getCameraNames()
 			for i in self.camnames:
 				self.cameraDict[i] = self.camFac.getCamera(i)
-				if i == "CLA-VCA-DIA-CAM-01" and mode == STATE.VIRTUAL:
+				if i == "CLA-VCA-DIA-CAM-01" and self.mode == STATE.VIRTUAL:
 					self.cameraDict[i].setX(0)
 					self.cameraDict[i].setY(0)
 					self.cameraDict[i].setSigX(0.35)
@@ -203,7 +245,8 @@ class GetDataFromCATAP(object):
 			self.epics_tools_monitors[self.llrf_names[0]] = {}
 			for key, value in aliases.llrf_epics_tools.items():
 				self.epics_tools.monitor(self.llrf_names[0] + ':' + value)
-				self.epics_tools_monitors[self.llrf_names[0]][key] = self.epics_tools.getMonitor(self.llrf_names[0] + ':' + value)
+				self.epics_tools_monitors[self.llrf_names[0]][key] = self.epics_tools.getMonitor(
+					self.llrf_names[0] + ':' + value)
 
 	def linacNameConvert(self, key):
 		if key == 'CLA-L01-LRF-CTRL-01':
@@ -352,14 +395,17 @@ class GetDataFromCATAP(object):
 					self.gundata.update({trace: self.llrf_factory.getCutMean(self.gunname, trace)})
 					self.gundata.update({trace: self.gundata[trace]})
 				#self.gundata.update({"phase": self.gundata["CAVITY_FORWARD_POWER"]})
-				self.gundata.update({"phase": self.gunLLRFObj.getPhiDEG()})
+				self.gundata.update({"phase_abs": self.gunLLRFObj.getPhiDEG()})
+				self.gundata.update({"phase": self.gundata['phase_abs'] - self.crest_phases[self.gunname]})
 				self.gundata.update({"amplitude_MW": self.gunLLRFObj.getAmpMW()})
 				self.gundata.update({"amplitude": self.gunLLRFObj.getAmp()})
 			else:
 				for key, value in aliases.llrf_epics_tools.items():
-					self.gundata[key] = float(numpy.mean(self.epics_tools_monitors[self.llrf_names[0]][key].getBuffer()))
+					self.gundata[key] = float(
+						numpy.mean(self.epics_tools_monitors[self.llrf_names[0]][key].getBuffer()))
 				self.gundata['amplitude_MW'] = self.gundata['cavity_amplitude_MW']
-				self.gundata['phase'] = self.gundata['phase_sp']
+				self.gundata['phase_abs'] = self.gundata['phase_sp']
+				self.gundata.update({"phase": self.gundata['phase_abs'] - self.crest_phases[self.gunname]})
 			self.pulse_length = 2.5
 			self.getenergy = self.unitConversion.getEnergyGain(self.gunname,
 															   self.gundata['amplitude_MW'],
@@ -385,7 +431,9 @@ class GetDataFromCATAP(object):
 				for trace in self.linactraces:
 					self.linacdata[self.linacname].update({trace: self.llrf_factory.getCutMean(linac_name, trace)})
 					self.linacdata[self.linacname].update({trace: self.linacdata[self.linacname][trace]})
-				self.linacdata[self.linacname].update({"phase": self.linacLLRFObj[self.linacname].getPhiDEG()})
+				self.linacdata[self.linacname].update({"phase_abs": self.linacLLRFObj[self.linacname].getPhiDEG()})
+				self.linacdata[self.linacname].update(
+					{"phase": self.linacdata[self.linacname]['phase_abs'] - self.crest_phases[linac_name]})
 				self.linacdata[self.linacname].update({"amplitude_MW": self.linacLLRFObj[self.linacname].getAmpMW()})
 				self.linacdata[self.linacname].update({"amplitude": self.linacLLRFObj[self.linacname].getAmp()})
 			else:
@@ -393,7 +441,9 @@ class GetDataFromCATAP(object):
 					self.linacdata[self.linacname][key] = float(numpy.mean(
 						self.epics_tools_monitors[linac_name][key].getBuffer()))
 				self.linacdata[self.linacname]['amplitude_MW'] = self.linacdata[self.linacname]['cavity_amplitude_MW']
-				self.linacdata[self.linacname]['phase'] = self.linacdata[self.linacname]['phase_sp']
+				self.linacdata[self.linacname]['phase_abs'] = self.linacdata[self.linacname]['phase_sp']
+				self.linacdata[self.linacname]['phase'] = self.linacdata[self.linacname]['phase_abs'] - \
+														  self.crest_phases[linac_name]
 			self.pulse_length = 0.75
 			self.getenergy = self.unitConversion.getEnergyGain(linac_name,
 																self.linacdata[self.linacname]['amplitude_MW'],
@@ -407,7 +457,8 @@ class GetDataFromCATAP(object):
 			self.linacdata[self.linacname].update({"length": self.linac_length[self.linacname]})
 			self.linacdata[self.linacname].update({"pulse_length": self.pulse_length})
 			self.linacdata[self.linacname].update({"catap_alias": linac_name})
-			self.alldata[self.getMachineAreaString(self.linacname)].update({self.linacname: self.linacdata[self.linacname]})
+			self.alldata[self.getMachineAreaString(self.linacname)].update(
+				{self.linacname: self.linacdata[self.linacname]})
 			self.linacDataSet.update({self.linacname: True})
 
 		else:
@@ -456,13 +507,19 @@ class GetDataFromCATAP(object):
 		if not self.alldataset:
 			self.getAllData()
 		else:
-			return self.alldata['VCA']['CLA-VCA-DIA-CAM-01']
+			if self.use_online_model_lattice:
+				return self.alldata[aliases.lattice_to_online_model['VCA']]['CLA-VCA-DIA-CAM-01']
+			else:
+				return self.alldata['VCA']['CLA-VCA-DIA-CAM-01']
 
 	def getWCMObject(self):
 		if not self.alldataset:
 			self.getAllData()
 		else:
-			return self.alldata['CLA-S01']['CLA-S01-DIA-WCM-01']
+			if self.use_online_model_lattice:
+				return self.alldata[aliases.lattice_to_online_model['CLA-S01']]['CLA-S01-DIA-WCM-01']
+			else:
+				return self.alldata['CLA-S01']['CLA-S01-DIA-WCM-01']
 
 	def checkType(self, datadict):
 		for i in datadict.keys():

@@ -2,7 +2,7 @@ import numpy
 import scipy.constants
 import scipy.stats
 import math
-import aliases
+# import src.aliases as aliases
 
 class UnitConversion(object):
 

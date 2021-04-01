@@ -3,10 +3,9 @@ import os, sys
 import numpy
 
 import SimulationFramework.Framework as Fw
-import SimulationFramework.Modules.read_beam_file as read_beam_file
-import SimulationFramework.Modules.read_twiss_file as read_twiss_file
-import unit_conversion
-import aliases
+import SimulationFramework.Modules.Beams as read_beam_file
+import src.unit_conversion as unit_conversion
+import src.aliases as aliases
 
 class GetDataFromSimFrame(object):
 
@@ -39,7 +38,6 @@ class GetDataFromSimFrame(object):
 		self.setSimulationDictDefaults(self.allDataDict)
 		self.allbeamfiles = {}
 		self.beam = read_beam_file.beam()
-		self.twiss = read_twiss_file.twiss()
 		self.unitConversion = unit_conversion.UnitConversion()
 		self.alias_names = aliases.alias_names
 		self.type_alias = aliases.type_alias
