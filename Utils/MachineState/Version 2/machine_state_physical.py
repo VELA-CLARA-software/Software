@@ -18,12 +18,12 @@ catapdict = machinestate.getCATAPDict(mode)
 # Returns the machine state dictionary from CATAP
 catapdata = machinestate.getMachineStateFromCATAP(mode)
 time.sleep(1)
-
-# We have to set some values manually, since we don't know crest phase or RF centre
-catapdata['INJ']['CLA-GUN-LRF-CTRL-01']['phase'] = 0 # INSERT YOUR PHASE RELATIVE TO CREST
-catapdata['L01']['L01']['phase'] = 0 # INSERT YOUR PHASE RELATIVE TO CREST
-catapdata['VCA']['CLA-VCA-DIA-CAM-01']['x_mm'] = 0 # INSERT THE POSITION ON VIRTUAL CATHODE RELATIVE TO RF CENTRE
-catapdata['VCA']['CLA-VCA-DIA-CAM-01']['y_mm'] = 0 # INSERT THE POSITION ON VIRTUAL CATHODE RELATIVE TO RF CENTRE
+#
+# # We have to set some values manually, since we don't know crest phase or RF centre
+# catapdata['INJ']['CLA-GUN-LRF-CTRL-01']['phase'] = 0 # INSERT YOUR PHASE RELATIVE TO CREST
+# catapdata['L01']['L01']['phase'] = 0 # INSERT YOUR PHASE RELATIVE TO CREST
+# catapdata['VCA']['CLA-VCA-DIA-CAM-01']['x_mm'] = 0 # INSERT THE POSITION ON VIRTUAL CATHODE RELATIVE TO RF CENTRE
+# catapdata['VCA']['CLA-VCA-DIA-CAM-01']['y_mm'] = 0 # INSERT THE POSITION ON VIRTUAL CATHODE RELATIVE TO RF CENTRE
 
 # Saves the physical machine state to a .yml file
 machinestate.exportParameterValuesToYAMLFile("catap-test.yaml",catapdata)

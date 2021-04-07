@@ -1,7 +1,7 @@
 import sys, os
 import numpy
-import unit_conversion
-import aliases
+import src.unit_conversion as unit_conversion
+import src.aliases as aliases
 
 # Class for writing machine state data to CATAP
 class WriteDataToCATAP(object):
