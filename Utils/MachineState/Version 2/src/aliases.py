@@ -1,4 +1,4 @@
-# from CATAP.HardwareFactory import TYPE
+from CATAP.HardwareFactory import TYPE
 
 alias_names = {"CLA-L01-LRF-CTRL-01": "CLA-L01-CAV",
                "L01": "CLA-L01-CAV",
@@ -78,7 +78,7 @@ camera_epics_tools = {'x_pix': 'XPix_RBV',
                       'x_mm_sig': 'SigmaX_RBV',
                       'y_pix_sig': 'SigmaYPix_RBV',
                       'y_mm_sig': 'SigmaY_RBV',
-                      'avg_intensity': 'AvgIntensity_RBV',
+                      # 'avg_intensity': 'AvgIntensity_RBV',
                       'sum_intensity': 'Intensity_RBV'}
 
 llrf_epics_tools = {'klystron_amplitude_MW': 'ad1:ch1:Power:Wnd:Avg',

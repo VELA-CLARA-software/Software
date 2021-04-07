@@ -2,7 +2,7 @@ import numpy
 import scipy.constants
 import scipy.stats
 import math
-# import src.aliases as aliases
+import src.aliases as aliases
 
 class UnitConversion(object):
 
@@ -76,6 +76,8 @@ class UnitConversion(object):
 			self.coeffs = numpy.append(self.ficmod,
 									   field_integral_coefficients[-1])
 			self.int_strength = numpy.polyval(self.coeffs, abs(current))
+			print(self.int_strength)
+			print(energy)
 			self.field_amplitude = self.int_strength / magnetic_length
 			magdict.update({'field_amplitude': float(int(self.sign) * self.field_amplitude)})
 			if psu_state == "On":
@@ -88,10 +90,12 @@ class UnitConversion(object):
 			self.coeffs = numpy.append(self.ficmod,
 									   field_integral_coefficients[-1])
 			self.int_strength = numpy.polyval(self.coeffs, abs(current))
+			print(self.int_strength)
+			print(energy)
 			self.effect = (scipy.constants.speed_of_light / 1e6) * self.int_strength / energy
 			magdict.update({'angle': float(self.effect)})
 			if psu_state == "On":
-				magdict.update({'angle': float(self.k1)})
+				magdict.update({'angle': float(self.effect)})
 			else:
 				magdict.update({'angle': 0})
 		elif (mag_type == 'DIP') or (mag_type == 'dipole'):
@@ -100,11 +104,13 @@ class UnitConversion(object):
 			self.coeffs = numpy.append(self.ficmod,
 									   field_integral_coefficients[-1])
 			self.int_strength = numpy.polyval(self.coeffs, abs(current))
+			print(self.int_strength)
+			print(energy)
 			self.effect = (scipy.constants.speed_of_light / 1e6) * self.int_strength / energy
 			self.angle = numpy.radians(self.effect / 1000)
 			magdict.update({'angle': float(self.angle)})
 			if psu_state == "On":
-				magdict.update({'angle': float(self.k1)})
+				magdict.update({'angle': float(self.effect)})
 			else:
 				magdict.update({'angle': 0})
 

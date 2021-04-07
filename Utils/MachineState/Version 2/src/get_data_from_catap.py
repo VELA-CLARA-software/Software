@@ -1,10 +1,9 @@
 import os, sys
 import numpy
-import time
 import CATAP.HardwareFactory
 import CATAP.EPICSTools
-# import src.unit_conversion as unit_conversion
-# import src.aliases as aliases
+import src.unit_conversion as unit_conversion
+import src.aliases as aliases
 
 catap_modules = ['BPM', 'Charge', 'Screen', 'Magnet']
 vc_controller_modules = ['Camera', 'LLRF', 'PILaser']
@@ -14,10 +13,10 @@ class GetDataFromCATAP(object):
 	def __init__(self, buffer=False):
 		object.__init__(self)
 		self.my_name="GetDataFromCATAP"
-		# self.unitConversion = unit_conversion.UnitConversion()
-		# self.alias_names = aliases.alias_names
-		# self.type_alias = aliases.type_alias
-		# self.screen_alias = aliases.screen_alias
+		self.unitConversion = unit_conversion.UnitConversion()
+		self.alias_names = aliases.alias_names
+		self.type_alias = aliases.type_alias
+		self.screen_alias = aliases.screen_alias
 		self.energy = {}
 		self.magDict = {}
 		self.gunRFDict = {}
@@ -30,7 +29,7 @@ class GetDataFromCATAP(object):
 		self.allDataDict = {}
 		self.allDictStatus = {}
 
-		self.epics_tools_types = {'llrf': True,
+		self.epics_tools_types = {'llrf': False,
 							'camera': True}
 		self.epics_tools_monitors = {}
 		self.monitors = {}
@@ -75,10 +74,10 @@ class GetDataFromCATAP(object):
 	def initCATAP(self, mode, crest_phases=None):
 		# setup environment
 		if mode == 'VIRTUAL' or mode == CATAP.HardwareFactory.STATE.VIRTUAL:
-			os.environ['EPICS_CA_ADDR_LIST'] = '192.168.83.246'
-			os.environ["EPICS_CA_AUTO_ADDR_LIST"]= "NO"
-			os.environ['EPICS_CA_SERVER_PORT'] = '6020'
-			os.environ["EPICS_CA_MAX_ARRAY_BYTES"] = "10000000"
+			os.environ['EPICS_CA_ADDR_LIST'] = "192.168.83.246"
+			os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
+			os.environ['EPICS_CA_SERVER_PORT'] = "6020"
+			os.environ["EPICS_CA_MAX_ARRAY_BYTES"] = "1000000000"
 		elif mode == 'PHYSICAL' or mode == CATAP.HardwareFactory.STATE.PHYSICAL:
 			os.environ["EPICS_CA_ADDR_LIST"]= "192.168.83.255"
 			os.environ["EPICS_CA_AUTO_ADDR_LIST"]= "NO"
@@ -119,15 +118,10 @@ class GetDataFromCATAP(object):
 				self.setLinacStartEndTime(key, self.linacStartTimes[key], self.linacEndTimes[key])
 			self.linacDataSet.update({key: False})
 			self.linacEnergyGain.update({key: 0.0})
-		time.sleep(5)
 		self.chargeFac = self.hf.getChargeFactory()
-		time.sleep(5)
 		self.bpmFac = self.hf.getBPMFactory()
-		time.sleep(5)
 		self.scrFac = self.hf.getScreenFactory()
-		time.sleep(5)
 		self.magFac = self.hf.getMagnetFactory()
-		time.sleep(5)
 		if self.mode == CATAP.HardwareFactory.STATE.VIRTUAL:
 			self.magFac.switchOnAll()
 		if not self.epics_tools_types['camera']:
