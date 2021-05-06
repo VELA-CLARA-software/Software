@@ -3,11 +3,22 @@ from CATAP.HardwareFactory import TYPE
 alias_names = {"CLA-L01-LRF-CTRL-01": "CLA-L01-CAV",
                "L01": "CLA-L01-CAV",
                "LRRG_GUN": "CLA-LRG1-GUN-CAV",
+               "CLA-GUN-LRF-CTRL-01": "CLA-LRG1-GUN-CAV",
                #"CLA-GUN-MAG-SOL-02": "CLA-LRG1-MAG-SOL-01",
                #"CLA-LRG1-MAG-SOL-01": "CLA-GUN-MAG-SOL-02",
                "CLA-L01-CAV": "L01",
                "CLA-LRG1-GUN-CAV": "LRRG_GUN"}
                #"CLA-LRG1-MAG-BSOL-01": "CLA-LRG1-MAG-SOL-01"}
+
+lattice_to_online_model = {'GUN': 'Gun',
+                           'LRG1': 'Gun',
+                           'CLA-S01': 'Gun',
+                           'L01': 'Linac',
+                           'CLA-S02': 'CLA-S02',
+                           'CLA-C2V': 'CLA-C2V',
+                           'EBT-INJ': 'EBT-INJ',
+                           'EBT-BA1': 'EBT-BA1',
+                           'VCA': 'Gun'}
 
 screen_alias = {"S01-SCR-01": "CLA-S01-DIA-SCR-01",
                 "S02-SCR-01": "CLA-S02-DIA-SCR-01",
@@ -67,7 +78,7 @@ camera_epics_tools = {'x_pix': 'XPix_RBV',
                       'x_mm_sig': 'SigmaX_RBV',
                       'y_pix_sig': 'SigmaYPix_RBV',
                       'y_mm_sig': 'SigmaY_RBV',
-                      'avg_intensity': 'AvgIntensity_RBV',
+                      # 'avg_intensity': 'AvgIntensity_RBV',
                       'sum_intensity': 'Intensity_RBV'}
 
 llrf_epics_tools = {'klystron_amplitude_MW': 'ad1:ch1:Power:Wnd:Avg',

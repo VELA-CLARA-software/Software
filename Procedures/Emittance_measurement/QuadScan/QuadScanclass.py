@@ -654,7 +654,7 @@ class GeneralQuadScan(object):
         self.reconstruction_d_matrix()
         np.savetxt(os.path.join(os.getcwd(), 'd_matrix_test.dat'), self.d_matrix)
         np.savetxt(os.path.join(os.getcwd(), 'sigma_1_test.dat'), self.screen_data)
-        dxinv = linalg.pinv(self.d_matrix, cond=1e-6, rcond=1.e-6)
+        dxinv = linalg.pinv2(self.d_matrix, cond=1e-8, rcond=1.e-8)
         np.savetxt(os.path.join(os.getcwd(), 'd_matrix_inv_test.dat'), dxinv)
         matrix_repr = np.dot(dxinv, self.screen_data)
         for ix in np.arange(self.cov_matrix.shape[0]):

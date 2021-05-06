@@ -1,2 +1,0 @@
-This script is using an average of the first 300 points as the baseline as noise trace is not available for the live data- big error on the measurements
-To access the app run script 'ADC_raw_control.py'

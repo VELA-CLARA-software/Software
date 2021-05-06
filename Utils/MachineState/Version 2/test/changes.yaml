@@ -1,0 +1,248 @@
+CLA-C2V-DIA-BPM-01:
+  csr_bins: 200
+  csr_enable: true
+  current_bins: 0
+  isr_enable: true
+  longitudinal_wakefield_enable: true
+  lsc_bins: 200
+  lsc_enable: true
+  sr_enable: true
+  transverse_wakefield_enable: true
+CLA-C2V-DIA-SCR-01:
+  csr_bins: 200
+  csr_enable: true
+  current_bins: 0
+  isr_enable: true
+  longitudinal_wakefield_enable: true
+  lsc_bins: 200
+  lsc_enable: true
+  sr_enable: true
+  transverse_wakefield_enable: true
+CLA-C2V-MAG-DIP-01:
+  csr_bins: 200
+  csr_enable: true
+  current_bins: 0
+  longitudinal_wakefield_enable: true
+  lsc_bins: 200
+  lsc_enable: true
+  transverse_wakefield_enable: true
+CLA-C2V-MAG-DIP-02:
+  csr_bins: 200
+  csr_enable: true
+  current_bins: 0
+  longitudinal_wakefield_enable: true
+  lsc_bins: 200
+  lsc_enable: true
+  transverse_wakefield_enable: true
+CLA-C2V-MAG-HVCOR-01:
+  csr_bins: 200
+  csr_enable: true
+  current_bins: 0
+  longitudinal_wakefield_enable: true
+  lsc_bins: 200
+  lsc_enable: true
+  transverse_wakefield_enable: true
+CLA-C2V-MAG-QUAD-01:
+  csr_bins: 200
+  csr_enable: true
+  current_bins: 0
+  isr_enable: true
+  k1l: 0.0
+  longitudinal_wakefield_enable: true
+  lsc_bins: 200
+  lsc_enable: true
+  sr_enable: true
+  transverse_wakefield_enable: true
+CLA-C2V-MAG-QUAD-02:
+  csr_bins: 200
+  csr_enable: true
+  current_bins: 0
+  isr_enable: true
+  k1l: 0.0
+  longitudinal_wakefield_enable: true
+  lsc_bins: 200
+  lsc_enable: true
+  sr_enable: true
+  transverse_wakefield_enable: true
+CLA-C2V-MAG-QUAD-03:
+  csr_bins: 200
+  csr_enable: true
+  current_bins: 0
+  isr_enable: true
+  k1l: 0.0
+  longitudinal_wakefield_enable: true
+  lsc_bins: 200
+  lsc_enable: true
+  sr_enable: true
+  transverse_wakefield_enable: true
+CLA-C2V-MARK-01:
+  csr_bins: 200
+  csr_enable: true
+  current_bins: 0
+  isr_enable: true
+  longitudinal_wakefield_enable: true
+  lsc_bins: 200
+  lsc_enable: true
+  sr_enable: true
+  transverse_wakefield_enable: true
+CLA-C2V-MARK-02:
+  csr_bins: 200
+  csr_enable: true
+  current_bins: 0
+  isr_enable: true
+  longitudinal_wakefield_enable: true
+  lsc_bins: 200
+  lsc_enable: true
+  sr_enable: true
+  transverse_wakefield_enable: true
+CLA-L01-CAV:
+  field_amplitude: 1873.4325557563923
+  phase: -44.862501734733854
+CLA-L01-MAG-SOL-01:
+  field_amplitude: 0.0
+CLA-L01-MAG-SOL-02:
+  field_amplitude: 0.0
+CLA-LRG1-MAG-SOL-01:
+  field_amplitude: -0.07
+CLA-S02-APER-01:
+  csr_bins: 200
+  csr_enable: true
+  current_bins: 0
+  isr_enable: true
+  longitudinal_wakefield_enable: true
+  lsc_bins: 200
+  lsc_enable: true
+  sr_enable: true
+  transverse_wakefield_enable: true
+CLA-S02-APER-02:
+  csr_bins: 200
+  csr_enable: true
+  current_bins: 0
+  isr_enable: true
+  longitudinal_wakefield_enable: true
+  lsc_bins: 200
+  lsc_enable: true
+  sr_enable: true
+  transverse_wakefield_enable: true
+CLA-S02-COL-01:
+  csr_bins: 200
+  csr_enable: true
+  current_bins: 0
+  isr_enable: true
+  longitudinal_wakefield_enable: true
+  lsc_bins: 200
+  lsc_enable: true
+  sr_enable: true
+  transverse_wakefield_enable: true
+CLA-S02-DIA-BPM-01:
+  csr_bins: 200
+  csr_enable: true
+  current_bins: 0
+  isr_enable: true
+  longitudinal_wakefield_enable: true
+  lsc_bins: 200
+  lsc_enable: true
+  sr_enable: true
+  transverse_wakefield_enable: true
+CLA-S02-DIA-SCR-01-W:
+  csr_bins: 200
+  csr_enable: true
+  current_bins: 0
+  isr_enable: true
+  longitudinal_wakefield_enable: true
+  lsc_bins: 200
+  lsc_enable: true
+  sr_enable: true
+  transverse_wakefield_enable: true
+CLA-S02-DIA-SCR-02-W:
+  csr_bins: 200
+  csr_enable: true
+  current_bins: 0
+  isr_enable: true
+  longitudinal_wakefield_enable: true
+  lsc_bins: 200
+  lsc_enable: true
+  sr_enable: true
+  transverse_wakefield_enable: true
+CLA-S02-MAG-HVCOR-01:
+  csr_bins: 200
+  csr_enable: true
+  current_bins: 0
+  longitudinal_wakefield_enable: true
+  lsc_bins: 200
+  lsc_enable: true
+  transverse_wakefield_enable: true
+CLA-S02-MAG-HVCOR-02:
+  csr_bins: 200
+  csr_enable: true
+  current_bins: 0
+  longitudinal_wakefield_enable: true
+  lsc_bins: 200
+  lsc_enable: true
+  transverse_wakefield_enable: true
+CLA-S02-MAG-HVCOR-03:
+  csr_bins: 200
+  csr_enable: true
+  current_bins: 0
+  longitudinal_wakefield_enable: true
+  lsc_bins: 200
+  lsc_enable: true
+  transverse_wakefield_enable: true
+CLA-S02-MAG-QUAD-01:
+  csr_bins: 200
+  csr_enable: true
+  current_bins: 0
+  isr_enable: true
+  k1l: 0.0
+  longitudinal_wakefield_enable: true
+  lsc_bins: 200
+  lsc_enable: true
+  sr_enable: true
+  transverse_wakefield_enable: true
+CLA-S02-MAG-QUAD-02:
+  csr_bins: 200
+  csr_enable: true
+  current_bins: 0
+  isr_enable: true
+  k1l: 0.0
+  longitudinal_wakefield_enable: true
+  lsc_bins: 200
+  lsc_enable: true
+  sr_enable: true
+  transverse_wakefield_enable: true
+CLA-S02-MAG-QUAD-03:
+  csr_bins: 200
+  csr_enable: true
+  current_bins: 0
+  isr_enable: true
+  k1l: 0.0
+  longitudinal_wakefield_enable: true
+  lsc_bins: 200
+  lsc_enable: true
+  sr_enable: true
+  transverse_wakefield_enable: true
+CLA-S02-MAG-QUAD-04:
+  csr_bins: 200
+  csr_enable: true
+  current_bins: 0
+  isr_enable: true
+  k1l: 0.0
+  longitudinal_wakefield_enable: true
+  lsc_bins: 200
+  lsc_enable: true
+  sr_enable: true
+  transverse_wakefield_enable: true
+EBT-BA1-MAG-QUAD-01:
+  k1l: 0.0
+EBT-BA1-MAG-QUAD-02:
+  k1l: 0.0
+EBT-BA1-MAG-QUAD-03:
+  k1l: 0.0
+EBT-BA1-MAG-QUAD-04:
+  k1l: 0.0
+EBT-BA1-MAG-QUAD-05:
+  k1l: 0.0
+EBT-BA1-MAG-QUAD-06:
+  k1l: 0.0
+EBT-BA1-MAG-QUAD-07:
+  k1l: 0.0

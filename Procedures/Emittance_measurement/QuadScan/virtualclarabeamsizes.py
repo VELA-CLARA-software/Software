@@ -9,7 +9,7 @@ import subprocess
 sys.path.append(os.path.abspath(os.path.join(os.getcwd(), '..', '..', '..', 'SimFrame_fork', 'simframe')))
 sys.path.append(
     (os.path.abspath(os.path.join(os.getcwd(), '..', '..', '..', 'VELA_CLARA_repository', 'Software', 'Utils',
-                                  'MachineState',"Version 1"))))
+                                  'MachineState', "Version 1"))))
 sys.path.append(
     (os.path.abspath(os.path.join(os.getcwd(), '..', '..', '..', 'VELA_CLARA_repository', 'catapillar-build',
                                   'PythonInterface', 'Release'))))
@@ -46,7 +46,7 @@ class BeamSizeDetermination(GeneralQuadScan):
     lattice_injector = os.path.join('Lattices', 'CLA10-BA1_OM_emitt_inj.def')
     beam = read_beam_file.beam()
 
-    def _init__(self):
+    def __init__(self):
         """
         Initialisation of the object
         """
@@ -132,7 +132,8 @@ class BeamSizeDetermination(GeneralQuadScan):
                                    np.mean(np.multiply(getattr(self.beam, 'px'), getattr(self.beam, 'py'))))
         matrix[3, 2] = np.multiply(factor, np.mean(np.multiply(getattr(self.beam, 'y'), getattr(self.beam, 'py'))))
         matrix[3, 3] = np.mean(np.square(np.multiply(factor, getattr(self.beam, 'py'))))
-        np.savetxt(os.path.join(os.getcwd(), 'cov_matrix_end_linac_new.txt'), matrix)
+        np.savetxt(os.path.join(os.getcwd(), 'cov_matrix_end_linac_new_test-24-11.txt'), matrix)
+        # np.savetxt(os.path.join(os.getcwd(), 'cov_matrix_between_linac_scr02_noquads.txt'), matrix)
         return matrix
 
     def fill_in_currents_from_file(self):
@@ -153,9 +154,14 @@ class BeamSizeDetermination(GeneralQuadScan):
         for i_c, currents in enumerate(self.currents_optimised):
             quad_settings[i_c, :] = deepcopy(
                 super(BeamSizeDetermination, self).I2K_CLARA_simple(currents, self.BeamMomentum))
+            for i_j, currnts in enumerate(currents):
+                if currnts == 0.0:
+                    quad_settings[i_c, i_j] = 0.0
+                else:
+                    continue
         setattr(self, 'quad_settings', quad_settings)
         setattr(self, 'qstrengths', getattr(self, 'quad_settings'))
-        np.savetxt(os.path.abspath(os.path.join(os.getcwd(), 'quad_settings_from_VM_interpolation.txt')),
+        np.savetxt(os.path.abspath(os.path.join(os.getcwd(), 'quad_settings_from_VM_interpolation_test-24-11-20.txt')),
                    self.qstrengths)
         super(BeamSizeDetermination, self).plot_quad_scan_strengths()
 
@@ -180,17 +186,19 @@ class BeamSizeDetermination(GeneralQuadScan):
         # We have to fudge this for now as the conversion between current and solenoid strength doesn't work
         get_data_from_catap = self.machinestate.getDataFromCATAP
         catapdata['generator']['charge'].update({'value': self.charge})
-        catapdata['generator']['number_of_particles']['value'] = np.power(2, 14)
+        catapdata['generator']['number_of_particles']['value'] = np.power(2,16)
+        ## Work arounds given the issues with the Klystron Fwd power in the VM
+        catapdata['L01']['L01'].update({'field_amplitude': 21.2})
         catapdata['L01']['CLA-L01-MAG-SOL-01'].update({'field_amplitude': 0.0})
         catapdata['L01']['CLA-L01-MAG-SOL-02'].update({'field_amplitude': 0.0})
+        catapdata['INJ']['CLA-GUN-LRF-CTRL-01'].update({'field_amplitude': 58.8})
         catapdata['INJ']['CLA-LRG1-MAG-SOL-01'].update({'field_amplitude': 0.216})
         catapdata['INJ']['CLA-LRG1-MAG-BSOL-01'].update({'field_amplitude': -0.06730128})
-        print(catapdata.keys())
-        time.sleep(40)
+
         energy_beam = self.machinestate.getEnergyGainFromCATAP()
         setattr(self, 'BeamMomentum', float(energy_beam[0.17] + energy_beam[3.2269]))
         print(self.BeamMomentum)
-        time.sleep(40)
+        time.sleep(5)
         # Write machine state dictionary to simframe and runs simulation
         simframefileupdate = self.machinestate.writeMachineStateToSimFrame('injector',
                                                                            framework=self.framework,
@@ -226,9 +234,8 @@ class BeamSizeDetermination(GeneralQuadScan):
         # Switch on magnets in VM
         for name in catapdict['Magnet'].keys():
             catapdict['Magnet'][name].switchOn()
-
-        catapdict['L01'].setAmpMW(21.2*10**6)
-        catapdict['LRRG_GUN'].setAmpMW(58.8*10**6)
+        catapdict['L01'].setAmpMW(21.2 * 10 ** 6)
+        catapdict['LRRG_GUN'].setAmpMW(58.8 * 10 ** 6)
         catapdict['L01'].setPhiDEG(0)
         catapdict['LRRG_GUN'].setPhiDEG(0)
         catapdict['Charge']['CLA-S01-DIA-WCM-01'].q = self.charge
@@ -236,9 +243,9 @@ class BeamSizeDetermination(GeneralQuadScan):
         if not os.path.isdir(os.path.abspath(os.path.join(os.getcwd(), "test"))):
             os.makedirs(os.path.abspath(os.path.join(os.getcwd(), "test")))
 
-        catapdata=self.machinestate.getMachineStateFromCATAP(self.mode)
+        catapdata = self.machinestate.getMachineStateFromCATAP(self.mode)
         self.machinestate.exportParameterValuesToYAMLFile(
-            os.path.abspath(os.path.join(os.getcwd(), "test", "catap-test.yaml")),catapdata)
+            os.path.abspath(os.path.join(os.getcwd(), "test", "catap-test.yaml")), catapdata)
         self.setting_up_simframe()
         return catapdict
 
@@ -259,19 +266,23 @@ class BeamSizeDetermination(GeneralQuadScan):
               catapdict['Magnet']['CLA-S02-MAG-QUAD-03'].READI, catapdict['Magnet']['CLA-S02-MAG-QUAD-04'].READI,
               catapdict['Magnet']['CLA-S02-MAG-QUAD-05'].READI)
         for i_currents, currents in enumerate(currents_optimised[rows, :]):
-            if catapdict['Magnet']['CLA-S02-MAG-QUAD-0' + str(i_currents + 1)].psu_state == 'OFF':
-                catapdict['Magnet']['CLA-S02-MAG-QUAD-0' + str(i_currents + 1)].SetPSUState('ON')
-                catapdict['Magnet']['CLA-S02-MAG-QUAD-0' + str(i_currents + 1)].SETI(0)
-        catapdict['Magnet']['CLA-S02-MAG-QUAD-01'].SETI(currents_optimised[rows, 0])
-        time.sleep(0.25)
-        catapdict['Magnet']['CLA-S02-MAG-QUAD-02'].SETI(currents_optimised[rows, 1])
-        time.sleep(0.25)
-        catapdict['Magnet']['CLA-S02-MAG-QUAD-03'].SETI(currents_optimised[rows, 2])
-        time.sleep(0.25)
-        catapdict['Magnet']['CLA-S02-MAG-QUAD-04'].SETI(currents_optimised[rows, 3])
-        time.sleep(0.25)
-        catapdict['Magnet']['CLA-S02-MAG-QUAD-05'].SETI(currents_optimised[rows, 4])
-        time.sleep(0.25)
+            ###### Switch OFF quads####
+            if catapdict['Magnet']['CLA-S02-MAG-QUAD-0' + str(i_currents + 1)].psu_state == 'ON':
+                catapdict['Magnet']['CLA-S02-MAG-QUAD-0' + str(i_currents + 1)].SetPSUState('OFF')
+
+            # if catapdict['Magnet']['CLA-S02-MAG-QUAD-0' + str(i_currents + 1)].psu_state == 'OFF':
+            #    catapdict['Magnet']['CLA-S02-MAG-QUAD-0' + str(i_currents + 1)].SetPSUState('ON')
+            #    catapdict['Magnet']['CLA-S02-MAG-QUAD-0' + str(i_currents + 1)].SETI(0)
+        # catapdict['Magnet']['CLA-S02-MAG-QUAD-01'].SETI(currents_optimised[rows, 0])
+        # time.sleep(0.25)
+        # catapdict['Magnet']['CLA-S02-MAG-QUAD-02'].SETI(currents_optimised[rows, 1])
+        # time.sleep(0.25)
+        # catapdict['Magnet']['CLA-S02-MAG-QUAD-03'].SETI(currents_optimised[rows, 2])
+        # time.sleep(0.25)
+        # catapdict['Magnet']['CLA-S02-MAG-QUAD-04'].SETI(currents_optimised[rows, 3])
+        # time.sleep(0.25)
+        # catapdict['Magnet']['CLA-S02-MAG-QUAD-05'].SETI(currents_optimised[rows, 4])
+        # time.sleep(0.25)
         print('+++++++++++++++++++++++ After ', catapdict['Magnet']['CLA-S02-MAG-QUAD-01'].READI,
               catapdict['Magnet']['CLA-S02-MAG-QUAD-02'].READI,
               catapdict['Magnet']['CLA-S02-MAG-QUAD-03'].READI,
@@ -338,7 +349,6 @@ class BeamSizeDetermination(GeneralQuadScan):
         self.currents_to_quad_strengths()
         for key, magnet in catapdict['Magnet'].items():
             if key.startswith('CLA-S02-MAG-QUAD'):
-                catapdict['Magnet'][key].switchOff()
                 catapdict['Magnet'][key].switchOn()
                 catapdict['Magnet'][key].SETI(0.0)
                 catapdict['Magnet'][key].debugMessagesOff()
@@ -351,24 +361,30 @@ class BeamSizeDetermination(GeneralQuadScan):
                   catapdict['Magnet']['CLA-S02-MAG-QUAD-05'].READI)
             for i_currents in np.arange(currents_optimised.shape[1]):
                 # simframe_dictionary = deepcopy(self.quad_set_sequence(rows, currents_optimised, catapdict))
-                if catapdict['Magnet']['CLA-S02-MAG-QUAD-0' + str(i_currents + 1)].psu_state == 'OFF':
-                    catapdict['Magnet']['CLA-S02-MAG-QUAD-0' + str(i_currents + 1)].SetPSUState('ON')
+                if currents_optimised[rows, i_currents] != 0:
+                    catapdict['Magnet']['CLA-S02-MAG-QUAD-0' + str(i_currents + 1)].setPSUState(CATAP.HardwareFactory.STATE.ON)
                     catapdict['Magnet']['CLA-S02-MAG-QUAD-0' + str(i_currents + 1)].SETI(0.0)
+                    while catapdict['Magnet']['CLA-S02-MAG-QUAD-0' + str(i_currents + 1)].READI != float(
+                            currents_optimised[rows, i_currents]):
+                        catapdict['Magnet']['CLA-S02-MAG-QUAD-0' + str(i_currents + 1)].SETI(
+                            float(currents_optimised[rows, i_currents]))
+                elif currents_optimised[rows, i_currents] == 0:
+                    catapdict['Magnet']['CLA-S02-MAG-QUAD-0' + str(i_currents + 1)].switchOn()
+                    while catapdict['Magnet']['CLA-S02-MAG-QUAD-0' + str(i_currents + 1)].READI != 0.0:
+                        catapdict['Magnet']['CLA-S02-MAG-QUAD-0' + str(i_currents + 1)].SETI(0.0)
 
-                while catapdict['Magnet']['CLA-S02-MAG-QUAD-0' + str(i_currents + 1)].READI != float(
-                        currents_optimised[rows, i_currents]):
-                    catapdict['Magnet']['CLA-S02-MAG-QUAD-0' + str(i_currents + 1)].SETI(
-                        float(currents_optimised[rows, i_currents]))
 
-            # ri_tol = catapdict['Magnet']['CLA-S02-MAG-QUAD-03'].READITolerance()
-            # while (currents - ri_tol) < catapdict['Magnet']['CLA-S02-MAG-QUAD-0' + str(i_currents + 1)].READI() < (currents + ri_tol):
-            #    time.sleep(1.55)
+
+            ### ri_tol = catapdict['Magnet']['CLA-S02-MAG-QUAD-03'].READITolerance()
+            ### while (currents - ri_tol) < catapdict['Magnet']['CLA-S02-MAG-QUAD-0' + str(i_currents + 1)].READI() < (currents + ri_tol):
+            # ##   time.sleep(1.55)
+
             print('+++++++++++++++++++++++ After ',
-                  catapdict['Magnet']['CLA-S02-MAG-QUAD-01'].READI == currents_optimised[rows, 0],
-                  catapdict['Magnet']['CLA-S02-MAG-QUAD-02'].READI == currents_optimised[rows, 1],
-                  catapdict['Magnet']['CLA-S02-MAG-QUAD-03'].READI == currents_optimised[rows, 2],
-                  catapdict['Magnet']['CLA-S02-MAG-QUAD-04'].READI == currents_optimised[rows, 3],
-                  catapdict['Magnet']['CLA-S02-MAG-QUAD-05'].READI == currents_optimised[rows, 4])
+                  catapdict['Magnet']['CLA-S02-MAG-QUAD-01'].READI,
+                  catapdict['Magnet']['CLA-S02-MAG-QUAD-02'].READI,
+                  catapdict['Magnet']['CLA-S02-MAG-QUAD-03'].READI,
+                  catapdict['Magnet']['CLA-S02-MAG-QUAD-04'].READI,
+                  catapdict['Magnet']['CLA-S02-MAG-QUAD-05'].READI)
 
             # Exports machine state from simframe (hardware settings and simulated data @ screens / bpms)
             self.machinestate.exportParameterValuesToYAMLFile(
@@ -381,14 +397,14 @@ class BeamSizeDetermination(GeneralQuadScan):
             #  Get updated machine state from CATAP
             catapdata = self.machinestate.getMachineStateFromCATAP(self.mode, start_lattice=self.lattice_start,
                                                                    final_lattice=self.lattice_end)
+
             for i_currents in np.arange(currents_optimised.shape[1]):
-                catapdata['CLA-S02']['CLA-S02-MAG-QUAD-0' + str(i_currents + 1)]['k1'] = self.qstrengths[
-                    rows, i_currents]
-            # Write machine state dictionary to simframe and runs simulation
-            # catapdata['generator']['charge'].update({'value': self.charge})
-            # catapdata['generator']['number_of_particles']['value'] = np.power(2, 9)
-            # catapdata['simulation'].update({'starting_lattice': self.lattice_start})
-            # catapdata['simulation'].update({'final_lattice': self.lattice_end})
+                catapdata['CLA-S02']['CLA-S02-MAG-QUAD-0' + str(i_currents + 1)]['k1'] = deepcopy(self.qstrengths[rows, i_currents])
+            ## Write machine state dictionary to simframe and runs simulation
+            ## catapdata['generator']['charge'].update({'value': self.charge})
+            ## catapdata['generator']['number_of_particles']['value'] = np.power(2, 9)
+            ## catapdata['simulation'].update({'starting_lattice': self.lattice_start})
+            ## catapdata['simulation'].update({'final_lattice': self.lattice_end})
 
             simframe_file_update = self.machinestate.writeMachineStateToSimFrame(
                 directory='quad_scan_setup_' + str(rows),

@@ -1,0 +1,190 @@
+# This is the configuration file for HRFOv2_EPICS.
+
+#Master_Dict_path:  "C:\\Users\\zup98752\\OneDrive - Science and Technology Facilities Council\\Axions\\CASCADE_2\\Data"
+savepath:  "C:\\Users\\zup98752\\OneDrive - Science and Technology Facilities Council\\Hold_RF_On\\Python\\Analysis"
+#Interpolated_datapath:  "C:\\Users\\zup98752\\OneDrive - Science and Technology Facilities Council\\Axions\\CASCADE_2\\Data\\Interpolated_data"
+#CL_datapath:  "C:\\Users\\zup98752\\OneDrive - Science and Technology Facilities Council\\Axions\\CASCADE_2\\Data\\CLs"
+
+
+# Date & time from:
+# date in the format "YYYY-MM-DD"
+# time in the format "HH:MM:SS.SS"
+date_from:  "2020-10-10"
+time_from:  "09:00:00.00"
+
+
+# Date & time to:
+# date in the format "YYYY-MM-DD"
+# time in the format "HH:MM:SS.SS"
+date_to:  "2020-11-20"
+time_to:  "18:00:00.00"
+
+
+# Full list of all PVs of interest
+all_mod_PVs:
+
+ - "CLA-GUNS-HRF-MOD-01:Sys:StateRead"
+ - "CLA-GUNS-HRF-MOD-01:Sys:StateSet"
+ - "CLA-GUNS-HRF-MOD-01:Pt:Diag:CtArc"
+ - "CLA-GUNS-HRF-MOD-01:Pt:Diag:CvdArc"
+ - "CLA-GUNS-HRF-MOD-01:HvPs:HvPs1:CurrRead"
+ - "CLA-GUNS-HRF-MOD-01:HvPs:HvPs1:TrigCountRead"
+ - "CLA-GUNS-HRF-MOD-01:HvPs:HvPs1:VoltRead"
+ - "CLA-GUNS-HRF-MOD-01:HvPs:HvPs2:CurrRead"
+ - "CLA-GUNS-HRF-MOD-01:HvPs:HvPs2:VoltRead"
+ - "CLA-GUNS-HRF-MOD-01:HvPs:HvPs3:CurrRead"
+ - "CLA-GUNS-HRF-MOD-01:HvPs:HvPs3:VoltRead"
+ - "CLA-GUNS-HRF-MOD-01:Pt:Diag:CtArc"
+ - "CLA-GUNS-HRF-MOD-01:Pt:Diag:CtRead"
+ - "CLA-GUNS-HRF-MOD-01:Pt:Diag:CvdArc"
+ - "CLA-GUNS-HRF-MOD-01:Pt:Diag:CvdRead"
+ - "CLA-GUNS-HRF-MOD-01:Pt:Diag:PlswthFwhmRead"
+ - "CLA-GUNS-HRF-MOD-01:Pt:Diag:PlswthRead"
+ - "CLA-GUNS-HRF-MOD-01:Pt:Diag:PowRead"
+ - "CLA-GUNS-HRF-MOD-01:Pt:Diag:PrfRead"
+ - "CLA-GUNS-HRF-MOD-01:Pt:FilPs:CurrRead"
+ - "CLA-GUNS-HRF-MOD-01:Pt:FilPs:VoltRead"
+ - "CLA-GUNS-HRF-MOD-01:Rf:Cool:BodyOutletTemp"
+ - "CLA-GUNS-HRF-MOD-01:Rf:Cool:KlystLimit"
+ - "CLA-GUNS-HRF-MOD-01:Rf:Cool:KlystPower"
+ - "CLA-GUNS-HRF-MOD-01:Rf:Ionp:PresRead1"
+ - "CLA-GUNS-HRF-MOD-01:Rf:MagPs1:CurrRead"
+ - "CLA-GUNS-HRF-MOD-01:Rf:MagPs1:VoltRead"
+ - "CLA-GUNS-HRF-MOD-01:Rf:MagPs2:CurrRead"
+ - "CLA-GUNS-HRF-MOD-01:Rf:MagPs2:VoltRead"
+ - "CLA-GUNS-HRF-MOD-01:Rf:MagPs3:CurrRead"
+ - "CLA-GUNS-HRF-MOD-01:Rf:MagPs3:VoltRead"
+ - "CLA-GUNS-HRF-MOD-01:Rf:MagPs4:CurrRead"
+ - "CLA-GUNS-HRF-MOD-01:Rf:MagPs4:VoltRead"
+ - "CLA-GUNS-HRF-MOD-01:Sys:ErrorRead.SVAL"
+ - "CLA-GUNS-HRF-MOD-01:Sys:ExtComm:AccessLevel"
+ - "CLA-GUNS-HRF-MOD-01:Sys:HvHoursRead"
+ - "CLA-GUNS-HRF-MOD-01:Sys:OffHoursRead"
+ - "CLA-GUNS-HRF-MOD-01:Sys:RemainingTime"
+ - "CLA-GUNS-HRF-MOD-01:Sys:StandbyHoursRead"
+ - "CLA-GUNS-HRF-MOD-01:Sys:TrigHoursRead"
+ - "CLA-GUNS-HRF-MOD-01:Sys:Trig:PlswthSet"
+ - "CLA-GUNS-HRF-MOD-01:Sys:Trig:PrfSet"
+
+
+
+#- "CLA-GUNS-HRF:ConScriptAlive"
+#- "CLA-GUNS-HRF-MOD-01:HvPs:VoltSet:W"
+#- "CLA-GUNS-HRF-MOD-01:Sys:Trig:PlswthSet:W"
+#- "CLA-GUNS-HRF-MOD-01:Sys:Trig:PrfSet:W"
+#- "CLA-GUNS-HRF-MOD-01:Sys:conIlk"
+#- "CLA-GUNS-HRF-MOD-01:EnableEmails"
+#- "CLA-GUNS-HRF-MOD-01:Sys:Reset"
+#- "CLA-GUNS-HRF-MOD-01:PING2:F1"
+#- "CLA-GUNS-HRF-MOD-01:PING2:F2"
+#- "CLA-GUNS-HRF-MOD-01:PING2:F3"
+#- "CLA-GUNS-HRF-MOD-01:PING2:F4"
+#- "CLA-GUNS-HRF-MOD-01:PING3:F1"
+#- "CLA-GUNS-HRF-MOD-01:PING3:F2"
+#- "CLA-GUNS-HRF-MOD-01:PING4:F1"
+#- "CLA-GUNS-HRF-MOD-01:PING4:F2"
+#- "CLA-GUNS-HRF-MOD-01:Ext:CommTimeout:R"
+#- "CLA-GUNS-HRF-MOD-01:Sys:ExtComm:AccessLevelR"
+#- "CLA-GUNS-RFHOLD:LogIndx"
+#- "CLA-GUNS-RFHOLD:NumFaults"
+#- "CLA-GUNS-HRF-MOD-01:Ext:CommTimeout:W"
+#- "CLA-GUNS-RFHOLD:TimeIndx0"
+#- "CLA-GUNS-RFHOLD:TimeIndx1"
+#- "CLA-GUNS-RFHOLD:TimeIndx2"
+#- "CLA-GUNS-RFHOLD:TimeIndx3"
+#- "CLA-GUNS-RFHOLD:TimeIndx4"
+#- "CLA-GUNS-RFHOLD:OpMode"
+#- "CLA-GUNS-HRF-MOD-01:Sys:StateSet:W"
+#- "CLA-GUNS-RFHOLD:State"
+# - "CLA-GUNS-HRF-MOD-01:PING2:1"
+# - "CLA-GUNS-HRF-MOD-01:PING2:10"
+# - "CLA-GUNS-HRF-MOD-01:PING2:11"
+# - "CLA-GUNS-HRF-MOD-01:PING2:12"
+# - "CLA-GUNS-HRF-MOD-01:PING2:13"
+# - "CLA-GUNS-HRF-MOD-01:PING2:14"
+# - "CLA-GUNS-HRF-MOD-01:PING2:15"
+# - "CLA-GUNS-HRF-MOD-01:PING2:16"
+# - "CLA-GUNS-HRF-MOD-01:PING2:17"
+# - "CLA-GUNS-HRF-MOD-01:PING2:18"
+# - "CLA-GUNS-HRF-MOD-01:PING2:19"
+# - "CLA-GUNS-HRF-MOD-01:PING2:2"
+# - "CLA-GUNS-HRF-MOD-01:PING2:20"
+# - "CLA-GUNS-HRF-MOD-01:PING2:3"
+# - "CLA-GUNS-HRF-MOD-01:PING2:4"
+# - "CLA-GUNS-HRF-MOD-01:PING2:5"
+# - "CLA-GUNS-HRF-MOD-01:PING2:6"
+# - "CLA-GUNS-HRF-MOD-01:PING2:7"
+# - "CLA-GUNS-HRF-MOD-01:PING2:8"
+# - "CLA-GUNS-HRF-MOD-01:PING2:9"
+# - "CLA-GUNS-HRF-MOD-01:PING3:1"
+# - "CLA-GUNS-HRF-MOD-01:PING3:2"
+# - "CLA-GUNS-HRF-MOD-01:PING3:3"
+# - "CLA-GUNS-HRF-MOD-01:PING3:4"
+# - "CLA-GUNS-HRF-MOD-01:PING3:5"
+# - "CLA-GUNS-HRF-MOD-01:PING3:6"
+# - "CLA-GUNS-HRF-MOD-01:PING3:7"
+# - "CLA-GUNS-HRF-MOD-01:PING3:8"
+# - "CLA-GUNS-HRF-MOD-01:PING3:9"
+# - "CLA-GUNS-HRF-MOD-01:PING4:1"
+# - "CLA-GUNS-HRF-MOD-01:PING4:10"
+# - "CLA-GUNS-HRF-MOD-01:PING4:2"
+# - "CLA-GUNS-HRF-MOD-01:PING4:3"
+# - "CLA-GUNS-HRF-MOD-01:PING4:4"
+# - "CLA-GUNS-HRF-MOD-01:PING4:5"
+# - "CLA-GUNS-HRF-MOD-01:PING4:6"
+# - "CLA-GUNS-HRF-MOD-01:PING4:7"
+# - "CLA-GUNS-HRF-MOD-01:PING4:8"
+# - "CLA-GUNS-HRF-MOD-01:PING4:9"
+# - "CLA-GUNS-RFHOLD:FaultLog0"
+# - "CLA-GUNS-RFHOLD:FaultLog1"
+# - "CLA-GUNS-RFHOLD:FaultLog2"
+# - "CLA-GUNS-RFHOLD:FaultLog3"
+# - "CLA-GUNS-RFHOLD:FaultLog4"
+# - "CLA-GUNS-RFHOLD:FaultTimes0"
+# - "CLA-GUNS-RFHOLD:FaultTimes1"
+# - "CLA-GUNS-RFHOLD:FaultTimes2"
+# - "CLA-GUNS-RFHOLD:FaultTimes3"
+# - "CLA-GUNS-RFHOLD:FaultTimes4"
+# - "CLA-GUNS-HRF-MOD-01:Sys:Ilks"
+# - "CLA-GUNS-HRF-MOD-01:Sys:getIlk"
+# - "CLA-GUNS-RFHOLD:CompleteLog"
+# - "CLA-GUNS-RFHOLD:FaultLog"
+# - "CLA-GUNS-RFHOLD:FaultTimes"
+# - "CLA-GUNS-HRF-MOD-01:Sys:ErrorRead"
+# - "CLA-GUNS-HRF-MOD-01:Sys:StateReadR"
+# - "CLA-GUNS-HRF-MOD-01:Sys:StateSetR"
+# - "CLA-GUNS-HRF-MOD-01:Sys:ErrorRead2"
+
+
+# Separate list for "Sys:INTLK" PVs
+interlock_PVs:
+ - "CLA-GUNS-HRF-MOD-01:Sys:INTLK1"
+ - "CLA-GUNS-HRF-MOD-01:Sys:INTLK2"
+ - "CLA-GUNS-HRF-MOD-01:Sys:INTLK3"
+ - "CLA-GUNS-HRF-MOD-01:Sys:INTLK4"
+ - "CLA-GUNS-HRF-MOD-01:Sys:INTLK5"
+
+
+# If True then all PVs in "all_mod_PVs" list above will be read in and plotted.
+# If False then the previously save .pkl will be read in and stored as the values dictionary
+READ_PVs:  False
+
+
+# if set ti=o True then all individual PVs will be plotted and saved
+PLOT_ALL_PVs:  True
+
+
+# If a change in modulator state is within mod_group_spacing_seconds
+# then it is included in the group
+# If a change in modulator state is after mod_group_time_spacing seconds
+# then it is excluded from the group and forms the first event in a new group
+# Values tried = [120, 240.0, 20.0]
+# 20.0 seconds seems reasonable after looking at the histogram of delta times
+mod_group_time_spacing: 60.0  #  units = seconds
+
+
+# In the histogram of delta time between modulator states,
+# how many peaks do we want to identify and store?
+X_HIGHEST_PEAKS_HIST:  25
+
+#MODE:  'Standby'

@@ -5,18 +5,17 @@ for item in sys.path:
     continue
   else:
     sys.path.remove(item)
-sys.path.append("\\\\192.168.83.14\\claranet\\test\\CATAP\\bin-dev_branch-57\\")
-# sys.path.append(os.path.abspath(__file__+'/../../../../../../../CATAP-build/PythonInterface/Release/CATAP/'))
-sys.path.append('\\\\192.168.83.14\\claranet\\test\\Controllers\\bin\\python3_x64')
-sys.path.append("\\\\192.168.83.14\\claranet\\test\\SimFrame\\")
-# sys.path.append('\\\\apclara1.dl.ac.uk\\opt\\SimFrame')
-# sys.path.append(os.path.abspath(__file__+'/../../../../../../../simframe/'))
-import get_data_from_catap
-import get_data_from_simframe
-import write_data_to_catap
-import write_data_to_simframe
-import unit_conversion
-import aliases
+
+sys.path.append("\\\\192.168.83.14\\claranet\\test\\CATAP\\bin\\")
+# sys.path.append("E:\\CATAP-build\\PythonInterface\\Release\\CATAP")
+# sys.path.append('\\\\192.168.83.14\\claranet\\test\\Controllers\\bin\\python3_x64')
+sys.path.append(os.path.abspath(__file__+'/../../../../../../SimFrame/'))
+import src.get_data_from_catap as get_data_from_catap
+import src.get_data_from_simframe as get_data_from_simframe
+import src.write_data_to_catap as write_data_to_catap
+import src.write_data_to_simframe as write_data_to_simframe
+import src.unit_conversion as unit_conversion
+import src.aliases as aliases
 
 # Main class for writing / reading the machine state from / to SimFrame / CATAP
 class MachineState(object):
@@ -43,6 +42,10 @@ class MachineState(object):
             self.CATAPInitialised = True
         else:
             print("CATAP already initialised")
+
+    # The online model machine sections are different to the "usual" ones, so we have to set a toggle if using OM
+    def useOnlineModelLattice(self, om=False):
+        self.getDataFromCATAP.useOnlineModelLattice(om)
 
     # Reads the machine state from CATAP. See all functions below in GetDataFromCATAP class
     # Also sets defaults for the simulation

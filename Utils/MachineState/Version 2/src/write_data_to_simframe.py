@@ -1,7 +1,7 @@
 import os
 import time
-import unit_conversion
-import aliases
+import src.unit_conversion as unit_conversion
+import src.aliases as aliases
 import numpy
 class WriteDataToSimFrame(object):
 
