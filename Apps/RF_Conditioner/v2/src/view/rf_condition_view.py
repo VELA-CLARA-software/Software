@@ -564,7 +564,7 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
     def update_CATAP_AMPSP_limit(self):
         self.catap_amp_level_outputwidget.setText( "{} / {} ".format(  str(int(self.values[self.data.llrf_max_amp])), str(int(self.values[
                                                                                                                                   self.data.catap_max_amp]))))
-        # TODO thsi needs to incldue the LLRF_MAX_AMP_SP
+        # TODO this needs to include the LLRF_MAX_AMP_SP
         self.set_widget_color(self.catap_amp_level_outputwidget, self.values[self.data.catap_max_amp_can_ramp_status])
     def update_temperature_values(self):
         # technically, these are defined at run time, as there cna be more than one PV to record,

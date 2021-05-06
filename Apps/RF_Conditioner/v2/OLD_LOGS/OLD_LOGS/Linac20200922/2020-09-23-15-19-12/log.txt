@@ -1,0 +1,1091 @@
+****************************************************************************************************
+******************* __         __    _  _  ___       _   ___  ___   __         __ ******************
+******************* \ \  ___  / /   | \| |/ _ \     /_\ | _ \/ __|  \ \  ___  / / ******************
+*******************  \ \/ _ \/ /    | .` | (_) |   / _ \|   / (__    \ \/ _ \/ /  ******************
+*******************   \_\___/_/     |_|\_|\___/   /_/ \_\_|_\\___|    \_\___/_/   ******************
+*******************                                                               ******************
+********************************************************************************
+*********************** Log Started 2020-09-23-15-19-12 ************************
+********************************************************************************
+********************************************************************************
+******************************** Configuration *********************************
+********************************************************************************
+config file =
+C:\Users\dlerlp\Documents\GitHub\Software\Apps\RF_Conditioner\v2\CLARA_L1.yml
+dumping parsed config data to text log
+CONFIG_FILE:
+C:\Users\dlerlp\Documents\GitHub\Software\Apps\RF_Conditioner\v2\CLARA_L1.yml,
+KFPOW_MASK_TYPE: PERCENT, KRPOW_MASK_FLOOR: 1000.0, BREAKDOWN_TRACES:
+['CAVITY_REVERSE_POWER'], CFPHA_MEAN_END: 0.83, MAX_POW: 0.0, MAX_AMP: 50000,
+VAC_SPIKE_DECAY_LEVEL: 1.2, CFPOW_MASK_WINDOW_START: 300, PID_on_off_GMON: CLA-
+GUN-H2O-PID-02:ON:RB, KRPOW_NUM_AVERAGE_TRACES: 2, CFPHA_MASK_SET_TYPE: TIME,
+CPPOW_MASK_START: 1.26, KRPOW_MASK_SET_TYPE: TIME, AMP_PWR_ACCEPTANCE_WINDOW:
+750000, CPPOW_DROP_AMP: True, CRPOW_DROP_AMP_VALUE: 2, CFPOW_MASK_FLOOR: 5000.0,
+CRPHA_MASK_SET_TYPE: TIME, TEXT_LOG_FILENAME: log.txt, KFPHA_MASK_LO_MIN: 50,
+KRPOW_CHECK_STREAK: 2, VAC_VALVE_CHECK_TIME: 1000, CPPOW_MASK_SET_TYPE: TIME,
+CFPHA_CHECK_STREAK: 2, CPPOW_AUTO_SET: False, KFPOW_MASK_END: 86,
+CFPHA_MEAN_START: 0.75, KRPHA_MASK_TYPE: ABSOLUTE, VAC_ROLLING_SUM_NUM_SAMPLES:
+25, CFPOW_MASK_END: 86, CFPHA_NUM_AVERAGE_TRACES: 2, KRPOW_AUTO_SET: False,
+KRPHA_PHASE_MASK_BY_POWER_TRACE: False, VAC_NUM_SAMPLES_TO_AVERAGE: 7,
+KFPHA_AUTO_SET: False, CRPOW_MASK_WINDOW_END: 1.65, CFPHA_MASK_LO_MIN: 50,
+SOL_CHECK_TIME: 1000, MINIMUM_COOLDOWN_TIME: 3000, RF_STRUCTURE: L01,
+WATER_TEMPERATURE_PV: ['CLA-L01-H2O-TT-20:RT'], KRPHA_CHECK_STREAK: 2,
+KRPOW_MASK_END: 5.0, LLRF_CHECK_TIME: 50,
+KFPOW_AMPSP_RUNNING_STATS_LOG_FILENAME: linac_amp_power_log.txt,
+CPPHA_PHASE_MASK_BY_POWER_LEVEL: 5000.0, PULSE_COUNT_BREAKDOWN_LOG_FILENAME:
+linac_pulse_breakdown_log.txt, CFPOW_MASK_START: 63, CFPHA_AUTO_SET: False,
+KRPOW_DROP_AMP_VALUE: 2, KFPHA_PHASE_MASK_BY_POWER_LEVEL: 5000.0,
+CFPHA_MASK_FLOOR: 0.0, KRPHA_PHASE_MASK_BY_POWER_LEVEL: 5000.0,
+KFPOW_MASK_WINDOW_END: 301, CPPHA_DROP_AMP_VALUE: 2,
+OUTSIDE_MASK_FORWARD_FILENAME: outside_forward_log, KRPHA_MEAN_END: 3.0,
+KFPOW_MASK_START: 63, KEEP_VALVE_OPEN: False, CRPHA_MASK_LO_MIN: 50,
+CRPOW_MASK_FLOOR: 2000.0, SOL_WOBBLE_OSCILLATION_POINTS: 0, CRPHA_MEAN_START:
+0.0, DC_PV: EBT-INJ-SCOPE-01:P1, KRPHA_MASK_FLOOR: 0.0, CPPHA_MASK_WINDOW_START:
+2.4, CPPOW_MASK_TYPE: ABSOLUTE, CFPOW_MASK_LEVEL: 25, CFPHA_DROP_AMP_VALUE: 2,
+CRPHA_MASK_TYPE: ABSOLUTE, TRACES_TO_SAVE: ['KLYSTRON_FORWARD_PHASE',
+'KLYSTRON_REVERSE_PHASE', 'KLYSTRON_FORWARD_POWER', 'KLYSTRON_REVERSE_POWER',
+'CAVITY_REVERSE_PHASE', 'CAVITY_FORWARD_PHASE', 'CAVITY_FORWARD_POWER',
+'CAVITY_REVERSE_POWER', 'CAVITY_PROBE_POWER', 'CAVITY_PROBE_POWER'],
+KRPHA_MASK_WINDOW_END: 3.4, MAGNET_MACHINE_AREA: CLARA_PH1, DC_SPIKE_DELTA:
+0.015, OUTSIDE_MASK_COOLDOWN_TIME: 3000, VAC_VALVE_AREA: CLARA_PH1,
+SOL_WOBBLE_LO: 0.0, KRPOW_MASK_LEVEL: 35.0, KRPHA_DROP_AMP: False,
+CRPHA_MASK_END: 5.0, CRPHA_MEAN_END: 3.0, KFPOW_MEAN_START: 0.68,
+CRPHA_DROP_AMP: False, KFPOW_MEAN_END: 0.75, CFPOW_NUM_AVERAGE_TRACES: 5,
+CPPHA_MASK_END: 5.0, VAC_VALVE: S01-VALV-01, CAVITY_TEMPERATURE_CHECK_TIME:
+1000, CFPHA_DROP_AMP: False, MODULATOR_CHECK_TIME: 1000, SOL_COUNT: 2,
+RF_REPETITION_RATE: 100, CPPHA_MASK_WINDOW_END: 3.4, LOG_RAMP_CURVE_NUMSTEPS:
+200, KFPHA_MEAN_START: 0.68, RF_PROT_CHECK_TIME: 1000, KFPHA_MASK_TYPE:
+ABSOLUTE, MIN_AMP: 500, DC_CHECK_TIME: 1000, PID_on_off: CLA-GUN-H2O-
+PID-02:ON:RB, KRPHA_NUM_AVERAGE_TRACES: 2, KFPHA_MASK_FLOOR: 0.0,
+CRPHA_DROP_AMP_VALUE: 2, KRPHA_MASK_WINDOW_START: 2.4, CRPOW_MASK_TYPE:
+ABSOLUTE, BIN_WIDTH: 400, KFPOW_MASK_FLOOR: 5000, CPPOW_MASK_END: 1.8,
+BINARY_DATA_LOG_FILENAME: data_log, KRPHA_MASK_LO_MIN: 50, KFPOW_MASK_LEVEL: 15,
+OUTSIDE_MASK_CHECK_TIME: 100, MODE: OPERATIONAL, CRPOW_MASK_LO_MIN: 50,
+KLY_PWR_FOR_ACTIVE_PULSE: 500.0, SOL_NAMES: ['L01-SOL1', 'L01-SOL2'],
+CRPHA_MASK_FLOOR: 0.0, GMON_SUFFIX: _GMON, KFPOW_DROP_AMP_VALUE: 3,
+KRPOW_MEAN_END: 3.0, WHEN_VAC_HI_DISABLE_RAMP: True, AMP_PWR_LOG_TIME: 50,
+VAC_SPIKE_DROP_AMP: 5, DC_SPIKE_DECAY_TIME: 2000, CPPHA_MASK_TYPE: ABSOLUTE,
+KFPHA_MASK_SET_TYPE: TIME, KRPOW_MASK_WINDOW_START: 2.4,
+SOL_WOBBLE_OSCILLATION_TIME: 100.0, CFPOW_MASK_SET_TYPE: INDEX,
+CFPOW_MASK_WINDOW_END: 301, LOG_DIRECTORY: C:\Users\dlerlp\Documents\GitHub\Soft
+ware\Apps\RF_Conditioner\v2\logs\Linac20200922\, KFPHA_MASK_LEVEL: 35.0,
+CAVITY_TEMPERATURE_PV: ['CLA-L01-H2O-TT-20:RT'], VAC_SPIKE_DELTA: 5e-09,
+VAC_CHECK_TIME: 200, DC_DECAY_MODE: TIMED, SOL_WOBBLE_HI: 0.0,
+CRPOW_MASK_WINDOW_START: 1.35, CPPHA_NUM_AVERAGE_TRACES: 2,
+CRPHA_NUM_AVERAGE_TRACES: 2, NUM_BUFFER_TRACES: 500, CRPHA_MASK_LEVEL: 35.0,
+CRPOW_CHECK_STREAK: 10, CPPHA_AUTO_SET: False, VAC_SHOULD_DROP_AMP: True,
+KFPHA_CHECK_STREAK: 2, KRPOW_MEAN_START: 0.0, KFPOW_AUTO_SET: False,
+OUTSIDE_MASK_PROBE_FILENAME: outside_probe_log, CPPOW_MASK_FLOOR: 2000.0,
+KRPOW_MASK_START: 0.8, DC_SHOULD_DROP_AMP: False, CRPOW_MEAN_START: 0.0,
+CFPOW_DROP_AMP_VALUE: 6, CRPOW_MEAN_END: 3.0, GUI_UPDATE_TIME: 1000,
+CPPOW_MEAN_END: 1.32, CFPOW_MEAN_START: 0.75, KFPHA_DROP_AMP_VALUE: 2,
+KRPHA_DROP_AMP_VALUE: 2, CPPHA_MEAN_END: 1.32, KRPHA_MASK_LEVEL: 35.0,
+PULSE_LENGTH: 765, DEFAULT_RF_INCREASE_LEVEL: 50, KFPHA_MEAN_END: 0.75,
+SHOULD_SOL_WOBBLE: False, CPPOW_MEAN_START: 1.26, VAC_DECAY_MODE: LEVEL,
+PULSE_LENGTH_ERROR: 50, KFPOW_MASK_SET_TYPE: INDEX, CFPOW_MASK_LO_MIN: 500,
+KRPHA_MASK_END: 5.0, CPPOW_MASK_WINDOW_START: 2.4, VAC_MAX_LEVEL_FOR_RAMP:
+5e-09, CFPOW_CHECK_STREAK: 10, CFPHA_MASK_LEVEL: 35.0, CRPHA_MASK_WINDOW_END:
+3.4, CPPHA_CHECK_STREAK: 2, KRPHA_MEAN_START: 0.0, CPPOW_NUM_AVERAGE_TRACES: 2,
+CPPHA_MASK_LEVEL: 35.0, CPPHA_DROP_AMP: False, CAV_PWR_RATIO: 400000,
+CRPHA_PHASE_MASK_BY_POWER_TRACE: False, CFPHA_MASK_END: 5.0,
+LOG_RAMP_CURVE_RAMP_RATE: 0.2, CRPHA_CHECK_STREAK: 2, CRPHA_MASK_START: 0.8,
+KFPHA_MASK_END: 5.0, KFPHA_NUM_AVERAGE_TRACES: 2, WATER_TEMPERATURE_PV_COUNT: 1,
+BREAKDOWN_RATE_AIM: 10, KRPOW_DROP_AMP: False, LOG_RAMP_CURVE_PULSES_PER_STEP:
+60, CPPHA_MASK_FLOOR: 0.0, CPPHA_MASK_SET_TYPE: TIME, KFPHA_MASK_START: 0.8,
+KFPHA_PHASE_MASK_BY_POWER_TRACE: False, WATER_TEMPERATURE_CHECK_TIME: 1000,
+CPPHA_PHASE_MASK_BY_POWER_TRACE: False, CFPOW_MASK_TYPE: PERCENT,
+CFPHA_MASK_WINDOW_START: 2.4, KRPOW_MASK_LO_MIN: 50, CRPOW_MASK_START: 1.05,
+CRPOW_MASK_SET_TYPE: TIME, CPPOW_CHECK_STREAK: 10, CPPHA_MASK_START: 0.8,
+CFPOW_DROP_AMP: False, CPPHA_MASK_LO_MIN: 50, KRPHA_AUTO_SET: False,
+MEAN_TRACES: ['KLYSTRON_FORWARD_POWER', 'KLYSTRON_REVERSE_POWER',
+'CAVITY_FORWARD_POWER', 'CAVITY_REVERSE_POWER', 'CAVITY_PROBE_POWER',
+'KLYSTRON_FORWARD_PHASE', 'KLYSTRON_REVERSE_PHASE', 'CAVITY_FORWARD_PHASE',
+'CAVITY_REVERSE_PHASE', 'CAVITY_PROBE_PHASE'], DC_SPIKE_DECAY_LEVEL: 1.2,
+CRPHA_MASK_WINDOW_START: 2.4, CPPOW_MASK_LO_MIN: 50, CRPOW_DROP_AMP: True,
+KFPOW_CHECK_STREAK: 10, DEFAULT_PULSE_COUNT: 500, CRPOW_NUM_AVERAGE_TRACES: 5,
+VAC_SPIKE_TRACES_TO_SAVE: ['KLYSTRON_FORWARD_PHASE', 'KLYSTRON_REVERSE_PHASE',
+'KLYSTRON_FORWARD_POWER', 'KLYSTRON_REVERSE_POWER', 'CAVITY_REVERSE_PHASE',
+'CAVITY_FORWARD_PHASE', 'CAVITY_FORWARD_POWER', 'CAVITY_REVERSE_POWER',
+'CAVITY_PROBE_POWER', 'CAVITY_PROBE_POWER'], CRPOW_MASK_LEVEL: 10000,
+KFPOW_NUM_AVERAGE_TRACES: 2, BINARY_DATA_LOG_TIME: 1000, KRPHA_MASK_SET_TYPE:
+TIME, KFPOW_MASK_WINDOW_START: 300, KFPOW_DROP_AMP: True, KRPOW_MASK_WINDOW_END:
+3.4, NUM_SET_POINTS_TO_FIT: 4, CFPHA_MASK_START: 0.8, CRPOW_AUTO_SET: False,
+CPPOW_MASK_LEVEL: 10000, CPPHA_MEAN_START: 1.26, MAX_DELTA_AMP_SP: 300,
+CRPHA_AUTO_SET: False, VAC_PV: CLA-S01-VAC-IMG-01:PRES, KFPOW_MASK_LO_MIN: 500,
+CPPOW_DROP_AMP_VALUE: 2, CAVITY_TEMPERATURE_PV_COUNT: 1, CFPHA_MASK_TYPE:
+ABSOLUTE, VAC_SPIKE_MAX_LEVEL_FOR_OFF: 6e-09, CRPHA_PHASE_MASK_BY_POWER_LEVEL:
+5000.0, EXTRA_BREAKDOWN_DAQ: ['VAC_LEVEL', 'DC_LEVEL', 'BREAKDOWN_RATE',
+'BREAKDOWN_COUNT'], KFPHA_MASK_WINDOW_START: 2.4, KRPHA_MASK_START: 0.8,
+OUTSIDE_MASK_REVERSE_FILENAME: outside_reverse_log, CFPOW_MEAN_END: 0.83,
+NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY: 100000, CFPHA_PHASE_MASK_BY_POWER_TRACE:
+False, CRPOW_MASK_END: 3.5, RF_REPETITION_RATE_ERROR: 50, CFPHA_MASK_WINDOW_END:
+3.4, VAC_SPIKE_DECAY_TIME: 2000, EXTRA_TRACES_ON_BREAKDOWN: 2,
+DC_SPIKE_DROP_AMP: 6, CFPOW_AUTO_SET: False, KFPHA_MASK_WINDOW_END: 3.4,
+KRPOW_MASK_TYPE: ABSOLUTE, DC_NUM_SAMPLES_TO_AVERAGE: 5, KFPHA_DROP_AMP: False,
+LOG_RAMP_START_POWER: 30000, CPPOW_MASK_WINDOW_END: 3.4,
+CFPHA_PHASE_MASK_BY_POWER_LEVEL: 5000.0,
+
+2020-09-23 15:19:13.690000
+********************************************************************************
+***** src.controllers.main_controller, create rf_conditioning_data object ******
+********************************************************************************
+
+2020-09-23 15:19:13.690000
+Started in debug mode = False
+********************************************************************************
+****************** Print Rationalized kfpow_running_stat_log  ******************
+********************************************************************************
+get_kfpow_running_stat_log complete
+
+2020-09-23 15:19:21.728000
+********************************************************************************
+***** src.controllers.main_controller, create hardware_control_hub object ******
+********************************************************************************
+hardware_control_hub Starting CATAP Hardware Interfaces
+start_llrf_control()  SET AMP_SP = 0, successfully created a L01 LLRF control
+object
+
+2020-09-23 15:19:23.913000
+amp_vs_kfpow lookup, called from get_kfp_running_stat_at_current_set_point,
+can't find -9999.9999, returning value at 0.0 instead
+
+2020-09-23 15:19:38.251000
+********************************************************************************
+********** src.controllers.main_controller, create monitor_hub object **********
+********************************************************************************
+src.monitors.monitor_hub Starting Data Monitoring
+src.monitors.monitor_hub start_llrf_monitor()
+
+2020-09-23 15:19:39.369000
+src.controllers.hardware_control_hub connected, PV = CLA-S01-VAC-IMG-01:PRES
+with ID = d0,  acquiring data
+src.monitors.vac_monitor will drop amp on spike detection
+src.monitors.vac_monitor STARTED running
+src.monitors.vac_monitor vac_spike_status = state.UNKNOWN
+src.monitors.vac_monitor vac_spike_status = state.GOOD
+start_vac_monitor successfully started Vacuum Monitoring
+src.monitors.monitor_hub start_daq_frequency_monitor()
+********************************************************************************
+************************* Connecting to Water Temp PVs *************************
+********************************************************************************
+
+2020-09-23 15:19:40.440000
+src.controllers.hardware_control_hub connected, PV = CLA-L01-H2O-TT-20:RT with
+ID = d1,  acquiring data
+
+2020-09-23 15:19:40.440000
+src.monitors.vac_monitor level ok, 1.196e-09 < 5e-09
+
+2020-09-23 15:19:40.440000
+Connected to CLA-L01-H2O-TT-20:RT id = WATER_TEMP_ID_0
+
+2020-09-23 15:19:40.440000
+start_water_temperature_monitor successfully started Water Temperature
+Monitoring
+
+2020-09-23 15:19:40.440000
+src.monitors.monitor_hub start_cavity_temperature_monitor()
+********************************************************************************
+************************ Connecting to Cavity Temp PVs *************************
+********************************************************************************
+
+2020-09-23 15:19:41.511000
+src.controllers.hardware_control_hub connected, PV = CLA-L01-H2O-TT-20:RT with
+ID = d2,  acquiring data
+
+2020-09-23 15:19:41.511000
+Connected to CLA-L01-H2O-TT-20:RT id = CAVITY_TEMP_ID_0
+
+2020-09-23 15:19:41.511000
+start_cavity_temperature_monitor successfully started Cavity Temperature
+Monitoring
+
+2020-09-23 15:19:41.511000
+src.monitors.monitor_hub start_solenoid_monitoring()
+src.monitors.monitor_hub Sanity Check
+is_vac_monitoring = True
+is_llrf_monitoring = True
+is_cavity_temp_monitoring = True
+is_modulator_monitoring = True
+is_rf_heartbeat_monitoring = True
+is_sol_monitoring = True
+is_rf_prot_monitoring = True
+is_outside_mask_monitoring = True
+is_daq_frequency_monitoring = True
+is_water_temp_monitoring = True
+is_vac_valve_monitor = True
+
+2020-09-23 15:19:41.527000
+********************************************************************************
+********** src.data.rf_conditioning_logger start_binary_data_logging  **********
+********************************************************************************
+binary log file added
+llrf_max_amp    p0_all  llrf_output_status      next_sp_decrease
+probe_pha       rev_cav_pha     can_llrf_output_state_OLD
+breakdown_rate_aim      phi_sp  latest_amp_sp_from_ramp num_outside_mask_traces
+next_requested_power_change     modulator_good  p2_current_sp_to_fit
+CAVITY_TEMP_ID_0        p2_current_sp   SP_QUAD_ALL     water_temp_gui
+max_sp_increase ramp_mode       rev_kly_pha     event_pulse_count
+delta_kfpow     cav_pwr_ratio_can_ramp  p1_current_sp_to_fit    vac_level
+gui_can_rf_output       can_rf_output_status_OLD
+bd_rate_calc_first_pulse_number cav_pwr_ratio
+number_of_pulses_in_breakdown_history   probe_outside_mask_count
+current_ramp_index      y_min   rev_kly_pwr     fwd_kly_pha
+active_breakdown_count  last_sp_above_100       time_stamp, (start = 2020-09-23
+15:19:41.580000)        TOR_SCAN        rev_cav_pwr
+SP_QUAD_CURRENT_SP_TO_FIT       last_vac_spike_status   llrf_DAQ_rep_rate_status
+x_max   p0_current_sp_to_fit    amp_ff  c       L01-SOL1        L01-SOL2
+y_max   p1_current_sp   x_min   can_ramp_status kfpower_at_last_amp_sp
+vac_level_can_ramp      last_breakdown_status   reverse_outside_mask_count
+TOR_ACQM        p0_current_sp   breakdown_rate_low      cav_temp
+fwd_cav_pha     BD_state_OLD    rfprot_good     last_amp_sp     vac_spike_status
+event_pulse_count_zero  DC_level        amp_sp  global_mask_checking
+llrf_heart_beat_value   gui_can_ramp    can_llrf_output_state   p1_all
+log_pulse_count llrf_DAQ_rep_rate_aim   catap_max_amp   can_ramp_status_OLD
+p2_all  fwd_kly_pwr     sol_value       log_amp_set     duplicate_pulse_count
+m       pulse_count     fwd_cav_pwr     SP_SLF  WATER_TEMP_ID_0 probe_pwr
+can_rf_output_status    modulator_state elapsed_time    DC_spike_status
+pulses_to_next_ramp     GUI_mod_and_prot_good   breakdown_status
+catap_max_amp_can_ramp_status   main_can_ramp   llrf_DAQ_rep_rate
+vac_valve_status        SP_QUAD_CURRENT rev_power_spike_count   BD_state
+last_ramp_method        required_pulses rfprot_state    total_breakdown_count
+
+<type 'float'>  <type 'float'>  <enum 'state'>  <type 'float'>  <type 'float'>
+<type 'float'>  <enum 'state'>  <type 'int'>    <type 'int'>    <type 'float'>
+<type 'int'>    <type 'int'>    <type 'bool'>   <type 'float'>  <type 'float'>
+<type 'float'>  <type 'float'>  <type 'float'>  <type 'float'>  <enum
+'ramp_method'>    <type 'float'>  <type 'int'>    <type 'float'>  <type 'bool'>
+<type 'float'>  <type 'float'>  <type 'bool'>   <enum 'state'>  <type 'int'>
+<type 'float'>  <type 'int'>    <type 'int'>    <type 'int'>    <type 'float'>
+<type 'float'>  <type 'float'>  <type 'int'>    <type 'float'>  <type 'float'>
+<type 'int'>    <type 'float'>  <type 'float'>  <enum 'state'>  <enum 'state'>
+<type 'float'>  <type 'float'>  <type 'int'>    <type 'float'>  <type 'float'>
+<type 'float'>  <type 'float'>  <type 'float'>  <type 'float'>  <enum 'state'>
+<type 'float'>  <type 'bool'>   <enum 'state'>  <type 'int'>    <type 'int'>
+<type 'float'>  <type 'bool'>   <type 'float'>  <type 'float'>  <enum 'state'>
+<type 'bool'>   <type 'float'>  <enum 'state'>  <type 'int'>    <type 'float'>
+<type 'float'>  <type 'bool'>   <type 'float'>  <type 'bool'>   <enum 'state'>
+<type 'float'>  <type 'int'>    <type 'int'>    <type 'float'>  <enum 'state'>
+<type 'float'>  <type 'float'>  <type 'float'>  <type 'int'>    <type 'int'>
+<type 'float'>  <type 'int'>    <type 'float'>  <type 'float'>  <type 'float'>
+<type 'float'>  <enum 'state'>  <class
+'VELA_CLARA_RF_Modulator_Control.L01_MOD_STATE'> <type 'long'>   <enum 'state'>
+<type 'int'>    <type 'bool'>   <enum 'state'>  <type 'bool'>   <type 'bool'>
+<type 'float'>  <class 'VELA_CLARA_Vac_Valve_Control.VALVE_STATE'>      <type
+'float'>  <type 'int'>    <enum 'state'>  <enum 'ramp_method'>    <type 'int'>
+<class 'VELA_CLARA_RF_Protection_Control.RF_PROT_STATUS'>       <type 'int'>
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2077159
+
+2020-09-23 15:19:41.656000
+********************************************************************************
+src.controllers.main_controller The RF Conditioning is Preparing to Entering
+Main_Loop !
+********************************************************************************
+
+2020-09-23 15:19:41.658000
+enable_llrf, isRFOutput = False, attempting enableRFOutput()
+
+2020-09-23 15:19:41.696000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-09-23 15:19:41.718000
+enable_llrf, isPhaseFFLocked = False, attempting lockPhaseFF()
+
+2020-09-23 15:19:41.755000
+set_global_check_mask setGlobalCheckMask True
+!!Log Ramp curve is NONE, generating a new one
+power_finish = 16097478.9951
+breakdown_rate_low = True
+Breakdown rate LO, log_ramp power_finish = 16097478.9951
+Log Ramp curve is NONE, generating a new one
+Log Ramp curve_p_finish = 16258453.7851, p_start = 30000, p_finish =
+16097478.9951, ramp_rate = 0.2
+self.data.log_ramp_curve in maIn_controller = [[60, 1431.0, 101.55420814874702],
+[60, 5343.0, 11.148885940080394], [60, 7514.0, 7.669212653075884], [60, 9161.0,
+6.449241977387079], [60, 10477.0, 5.827455881174607], [60, 11636.0,
+5.450600492727094], [60, 12769.0, 5.197823158139586], [60, 13835.0,
+5.016548884365713], [60, 14746.0, 4.880229671682526], [60, 15644.0,
+4.774012577658262], [60, 16530.0, 4.68893863712899], [60, 17366.0,
+4.6192831417216365], [60, 18122.0, 4.561216965063112], [60, 18820.0,
+4.51208195576252], [60, 19516.0, 4.469975110284239], [60, 20277.0,
+4.433498193525956], [60, 20914.0, 4.401600784155562], [60, 21560.0,
+4.373478456025738], [60, 22179.0, 4.348504748814768], [60, 22832.0,
+4.326184531471701], [60, 23391.0, 4.306121300840521], [60, 23911.0,
+4.287993788047032], [60, 24428.0, 4.271538921827121], [60, 24913.0,
+4.256539220786947], [60, 25453.0, 4.242813327118555], [60, 25939.0,
+4.230208804971512], [60, 26386.0, 4.218596595637382], [60, 26815.0,
+4.207866701273023], [60, 27236.0, 4.197924790903728], [60, 27724.0,
+4.188689506699903], [60, 28145.0, 4.180090307565049], [60, 28558.0,
+4.1720657290192324], [60, 28940.0, 4.164561968540679], [60, 29311.0,
+4.157531727496002], [60, 29712.0, 4.150933256956107], [60, 30088.0,
+4.144729566713678], [60, 30436.0, 4.138887765839012], [60, 30791.0,
+4.1333785099423], [60, 31125.0, 4.128175535527222], [60, 31464.0,
+4.123255265836078], [60, 31811.0, 4.118596475700424], [60, 32151.0,
+4.114180005342734], [60, 32470.0, 4.109988514986077], [60, 32767.0,
+4.106006273640983], [60, 33052.0, 4.102218976642077], [60, 33329.0,
+4.098613587470244], [60, 33615.0, 4.095178200171078], [60, 33918.0,
+4.091901919307306], [60, 34210.0, 4.088774754892404], [60, 34481.0,
+4.085787530168679], [60, 34744.0, 4.082931800434498], [60, 35021.0,
+4.080199781406447], [60, 35260.0, 4.077584285834844], [60, 35483.0,
+4.075078667284174], [60, 35737.0, 4.072676770151026], [60, 35991.0,
+4.0703728851268055], [60, 36244.0, 4.0681617094255875], [60, 36473.0,
+4.066038311192725], [60, 36692.0, 4.063998097590335], [60, 36894.0,
+4.062036786123994], [60, 37092.0, 4.060150378832992], [60, 37317.0,
+4.05833513901597], [60, 37539.0, 4.05658757020605], [60, 37758.0,
+4.054904397145802], [60, 37970.0, 4.053282548543611], [60, 38175.0,
+4.0517191414198015], [60, 38380.0, 4.050211466874111], [60, 38588.0,
+4.048756977126197], [60, 38780.0, 4.047353273698259], [60, 38954.0,
+4.04599809662404], [60, 39127.0, 4.04468931458168], [60, 39318.0,
+4.043424915859431], [60, 39505.0, 4.042203000073361], [60, 39684.0,
+4.04102177056497], [60, 39860.0, 4.039879527414511], [60, 40032.0,
+4.038774661012577], [60, 40200.0, 4.037705646138582], [60, 40372.0,
+4.036671036500119], [60, 40549.0, 4.035669459691844], [60, 40718.0,
+4.034699612536768], [60, 40853.0, 4.033760256776498], [60, 40985.0,
+4.032850215080331], [60, 41119.0, 4.031968367345963], [60, 41282.0,
+4.031113647267275], [60, 41443.0, 4.030285039146929], [60, 41589.0,
+4.029481574933645], [60, 41727.0, 4.028702331465874], [60, 41861.0,
+4.027946427905275], [60, 41985.0, 4.027213023344904], [60, 42102.0,
+4.026501314578401], [60, 42217.0, 4.025810534017627], [60, 42336.0,
+4.025139947747371], [60, 42474.0, 4.024488853706679], [60, 42608.0,
+4.023856579987307], [60, 42741.0, 4.023242483240548], [60, 42873.0,
+4.022645947184475], [60, 43002.0, 4.022066381204278], [60, 43127.0,
+4.021503219038973], [60, 43243.0, 4.02095591754832], [60, 43356.0,
+4.020423955554286], [60, 43467.0, 4.01990683275183], [60, 43577.0,
+4.019404068684207], [60, 43686.0, 4.0189152017783805], [60, 43792.0,
+4.018439788436431], [60, 43896.0, 4.0179774021792305], [60, 44000.0,
+4.0175276328388625], [60, 44102.0, 4.0170900857966005], [60, 44201.0,
+4.016664381263442], [60, 44298.0, 4.016250153600464], [60, 44398.0,
+4.015847050676419], [60, 44495.0, 4.015454733260221], [60, 44590.0,
+4.0150728744461235], [60, 44683.0, 4.014701159109529], [60, 44775.0,
+4.014339283391551], [60, 44864.0, 4.013986954210554], [60, 44952.0,
+4.013643888799042], [60, 45037.0, 4.013309814264355], [60, 45120.0,
+4.012984467171746], [60, 45200.0, 4.012667593148534], [60, 45278.0,
+4.012358946508075], [60, 45354.0, 4.012058289892396], [60, 45428.0,
+4.011765393932424], [60, 45500.0, 4.011480036924798], [60, 45572.0,
+4.0112020045243115], [60, 45643.0, 4.010931089451121], [60, 45712.0,
+4.010667091211882], [60, 45779.0, 4.0104098158340395], [60, 45845.0,
+4.0101590756125605], [60, 45910.0, 4.009914688868418], [60, 45976.0,
+4.009676479718193], [60, 46041.0, 4.009444277854202], [60, 46105.0,
+4.009217918334578], [60, 46167.0, 4.008997241382793], [60, 46228.0,
+4.008782092196109], [60, 46287.0, 4.008572320762512], [60, 46352.0,
+4.008367781685673], [60, 46418.0, 4.008168334017527], [60, 46482.0,
+4.007973841098101], [60, 46544.0, 4.007784170402194], [60, 46605.0,
+4.007599193392584], [60, 46665.0, 4.007418785379445], [60, 46720.0,
+4.007242825385643], [60, 46769.0, 4.007071196017634], [60, 46816.0,
+4.006903783341708], [60, 46863.0, 4.0067404767652866], [60, 46909.0,
+4.006581168923061], [60, 46953.0, 4.006425755567723], [60, 46997.0,
+4.006274135465078], [60, 47039.0, 4.006126210293335], [60, 47081.0,
+4.005981884546374], [60, 47124.0, 4.00584106544081], [60, 47167.0,
+4.005703662826678], [60, 47209.0, 4.005569589101571], [60, 47250.0,
+4.005438759128083], [60, 47291.0, 4.005311090154398], [60, 47330.0,
+4.005186501737883], [60, 47369.0, 4.005064915671569], [60, 47407.0,
+4.004946255913365], [60, 47443.0, 4.004830448517915], [60, 47479.0,
+4.004717421570959], [60, 47516.0, 4.004607105126095], [60, 47552.0,
+4.00449943114386], [60, 47588.0, 4.0043943334329954], [60, 47623.0,
+4.004291747593828], [60, 47657.0, 4.0041916109636775], [60, 47691.0,
+4.004093862564194], [60, 47723.0, 4.003998443050559], [60, 47755.0,
+4.003905294662451], [60, 47786.0, 4.003814361176735], [60, 47817.0,
+4.003725587861779], [60, 47847.0, 4.003638921433338], [60, 47876.0,
+4.003554310011956], [60, 47904.0, 4.003471703081807], [60, 47932.0,
+4.003391051450928], [60, 47959.0, 4.003312307212781], [60, 47985.0,
+4.003235423709112], [60, 48010.0, 4.00316035549403], [60, 48035.0,
+4.003087058299267], [60, 48060.0, 4.003015489000595], [60, 48084.0,
+4.002945605585318], [60, 48107.0, 4.0028773671208375], [60, 48130.0,
+4.002810733724211], [60, 48152.0, 4.002745666532707], [60, 48174.0,
+4.002682127675284], [60, 48195.0, 4.002620080244982], [60, 48216.0,
+4.00255948827219], [60, 48237.0, 4.002500316698738], [60, 48257.0,
+4.00244253135281], [60, 48276.0, 4.002386098924637], [60, 48295.0,
+4.002330986942932], [60, 48300.0, 4.002277163752062]]
+set_amp (1431.0) called from log_ramp_up
+set_amp (5343.0) called from log_ramp_up
+set_amp (7514.0) called from log_ramp_up
+set_amp (9161.0) called from log_ramp_up
+set_amp (10477.0) called from log_ramp_up
+set_amp (11636.0) called from log_ramp_up
+set_amp (12769.0) called from log_ramp_up
+set_amp (13835.0) called from log_ramp_up
+set_amp (14746.0) called from log_ramp_up
+set_amp (15644.0) called from log_ramp_up
+set_amp (16530.0) called from log_ramp_up
+set_amp (17366.0) called from log_ramp_up
+set_amp (18122.0) called from log_ramp_up
+set_amp (18820.0) called from log_ramp_up
+set_amp (19516.0) called from log_ramp_up
+set_amp (20277.0) called from log_ramp_up
+set_amp (20914.0) called from log_ramp_up
+set_amp (21560.0) called from log_ramp_up
+set_amp (22179.0) called from log_ramp_up
+set_amp (22832.0) called from log_ramp_up
+set_amp (23391.0) called from log_ramp_up
+set_amp (23911.0) called from log_ramp_up
+set_amp (24428.0) called from log_ramp_up
+set_amp (24913.0) called from log_ramp_up
+set_amp (25453.0) called from log_ramp_up
+set_amp (25939.0) called from log_ramp_up
+set_amp (26386.0) called from log_ramp_up
+set_amp (26815.0) called from log_ramp_up
+set_amp (27236.0) called from log_ramp_up
+set_amp (27724.0) called from log_ramp_up
+set_amp (28145.0) called from log_ramp_up
+set_amp (28558.0) called from log_ramp_up
+set_amp (28940.0) called from log_ramp_up
+set_amp (29311.0) called from log_ramp_up
+set_amp (29712.0) called from log_ramp_up
+set_amp (30088.0) called from log_ramp_up
+set_amp (30436.0) called from log_ramp_up
+set_amp (30791.0) called from log_ramp_up
+set_amp (31125.0) called from log_ramp_up
+set_amp (31464.0) called from log_ramp_up
+set_amp (31811.0) called from log_ramp_up
+set_amp (32151.0) called from log_ramp_up
+set_amp (32470.0) called from log_ramp_up
+set_amp (32767.0) called from log_ramp_up
+set_amp (33052.0) called from log_ramp_up
+set_amp (33329.0) called from log_ramp_up
+set_amp (33615.0) called from log_ramp_up
+set_amp (33918.0) called from log_ramp_up
+set_amp (34210.0) called from log_ramp_up
+set_amp (34481.0) called from log_ramp_up
+set_amp (34744.0) called from log_ramp_up
+set_amp (35021.0) called from log_ramp_up
+set_amp (35260.0) called from log_ramp_up
+set_amp (35483.0) called from log_ramp_up
+set_amp (35737.0) called from log_ramp_up
+set_amp (35991.0) called from log_ramp_up
+set_amp (36244.0) called from log_ramp_up
+set_amp (36473.0) called from log_ramp_up
+set_amp (36692.0) called from log_ramp_up
+set_amp (36894.0) called from log_ramp_up
+set_amp (37092.0) called from log_ramp_up
+set_amp (37317.0) called from log_ramp_up
+set_amp (37539.0) called from log_ramp_up
+set_amp (37758.0) called from log_ramp_up
+set_amp (37970.0) called from log_ramp_up
+set_amp (38175.0) called from log_ramp_up
+set_amp (38380.0) called from log_ramp_up
+set_amp (38588.0) called from log_ramp_up
+set_amp (38780.0) called from log_ramp_up
+set_amp (38954.0) called from log_ramp_up
+set_amp (39127.0) called from log_ramp_up
+set_amp (39318.0) called from log_ramp_up
+set_amp (39505.0) called from log_ramp_up
+set_amp (39684.0) called from log_ramp_up
+set_amp (39860.0) called from log_ramp_up
+set_amp (40032.0) called from log_ramp_up
+set_amp (40200.0) called from log_ramp_up
+set_amp (40372.0) called from log_ramp_up
+set_amp (40549.0) called from log_ramp_up
+set_amp (40718.0) called from log_ramp_up
+set_amp (40853.0) called from log_ramp_up
+set_amp (40985.0) called from log_ramp_up
+set_amp (41119.0) called from log_ramp_up
+set_amp (41282.0) called from log_ramp_up
+set_amp (41443.0) called from log_ramp_up
+set_amp (41589.0) called from log_ramp_up
+set_amp (41727.0) called from log_ramp_up
+set_amp (41861.0) called from log_ramp_up
+set_amp (41985.0) called from log_ramp_up
+set_amp (42102.0) called from log_ramp_up
+set_amp (42217.0) called from log_ramp_up
+set_amp (42336.0) called from log_ramp_up
+set_amp (42474.0) called from log_ramp_up
+
+2020-09-23 15:20:44.807000
+amp_vs_kfpow lookup, called from get_kfp_running_stat_at_current_set_point,
+can't find 42474.0, returning value at 42478.0 instead
+set_amp (42608.0) called from log_ramp_up
+set_amp (42741.0) called from log_ramp_up
+set_amp (42873.0) called from log_ramp_up
+set_amp (43002.0) called from log_ramp_up
+set_amp (43127.0) called from log_ramp_up
+set_amp (43243.0) called from log_ramp_up
+set_amp (43356.0) called from log_ramp_up
+set_amp (43467.0) called from log_ramp_up
+set_amp (43577.0) called from log_ramp_up
+set_amp (43686.0) called from log_ramp_up
+set_amp (43792.0) called from log_ramp_up
+set_amp (43896.0) called from log_ramp_up
+
+2020-09-23 15:20:52.803000
+amp_vs_kfpow lookup, called from get_kfp_running_stat_at_current_set_point,
+can't find 43896.0, returning value at 43895.0 instead
+set_amp (44000.0) called from log_ramp_up
+set_amp (44102.0) called from log_ramp_up
+set_amp (44201.0) called from log_ramp_up
+set_amp (44298.0) called from log_ramp_up
+set_amp (44398.0) called from log_ramp_up
+set_amp (44495.0) called from log_ramp_up
+set_amp (44590.0) called from log_ramp_up
+set_amp (44683.0) called from log_ramp_up
+set_amp (44775.0) called from log_ramp_up
+set_amp (44864.0) called from log_ramp_up
+set_amp (44952.0) called from log_ramp_up
+set_amp (45037.0) called from log_ramp_up
+set_amp (45120.0) called from log_ramp_up
+set_amp (45200.0) called from log_ramp_up
+set_amp (45278.0) called from log_ramp_up
+set_amp (45354.0) called from log_ramp_up
+set_amp (45428.0) called from log_ramp_up
+set_amp (45500.0) called from log_ramp_up
+set_amp (45572.0) called from log_ramp_up
+set_amp (45643.0) called from log_ramp_up
+set_amp (45712.0) called from log_ramp_up
+set_amp (45779.0) called from log_ramp_up
+set_amp (45845.0) called from log_ramp_up
+set_amp (45910.0) called from log_ramp_up
+set_amp (45976.0) called from log_ramp_up
+set_amp (46041.0) called from log_ramp_up
+set_amp (46105.0) called from log_ramp_up
+set_amp (46167.0) called from log_ramp_up
+set_amp (46228.0) called from log_ramp_up
+set_amp (46287.0) called from log_ramp_up
+set_amp (46352.0) called from log_ramp_up
+set_amp (46418.0) called from log_ramp_up
+set_amp (46482.0) called from log_ramp_up
+set_amp (46544.0) called from log_ramp_up
+set_amp (46605.0) called from log_ramp_up
+set_amp (46665.0) called from log_ramp_up
+set_amp (46720.0) called from log_ramp_up
+set_amp (46769.0) called from log_ramp_up
+set_amp (46816.0) called from log_ramp_up
+set_amp (46863.0) called from log_ramp_up
+set_amp (46909.0) called from log_ramp_up
+set_amp (46953.0) called from log_ramp_up
+set_amp (46997.0) called from log_ramp_up
+set_amp (47039.0) called from log_ramp_up
+set_amp (47081.0) called from log_ramp_up
+set_amp (47124.0) called from log_ramp_up
+set_amp (47167.0) called from log_ramp_up
+set_amp (47209.0) called from log_ramp_up
+set_amp (47250.0) called from log_ramp_up
+set_amp (47291.0) called from log_ramp_up
+set_amp (47330.0) called from log_ramp_up
+set_amp (47369.0) called from log_ramp_up
+set_amp (47407.0) called from log_ramp_up
+set_amp (47443.0) called from log_ramp_up
+set_amp (47479.0) called from log_ramp_up
+set_amp (47516.0) called from log_ramp_up
+set_amp (47552.0) called from log_ramp_up
+set_amp (47588.0) called from log_ramp_up
+set_amp (47623.0) called from log_ramp_up
+set_amp (47657.0) called from log_ramp_up
+set_amp (47691.0) called from log_ramp_up
+set_amp (47723.0) called from log_ramp_up
+set_amp (47755.0) called from log_ramp_up
+set_amp (47786.0) called from log_ramp_up
+set_amp (47817.0) called from log_ramp_up
+set_amp (47847.0) called from log_ramp_up
+set_amp (47876.0) called from log_ramp_up
+set_amp (47904.0) called from log_ramp_up
+set_amp (47932.0) called from log_ramp_up
+set_amp (47959.0) called from log_ramp_up
+set_amp (47985.0) called from log_ramp_up
+set_amp (48010.0) called from log_ramp_up
+set_amp (48035.0) called from log_ramp_up
+set_amp (48060.0) called from log_ramp_up
+set_amp (48084.0) called from log_ramp_up
+set_amp (48107.0) called from log_ramp_up
+set_amp (48130.0) called from log_ramp_up
+set_amp (48152.0) called from log_ramp_up
+set_amp (48174.0) called from log_ramp_up
+set_amp (48195.0) called from log_ramp_up
+set_amp (48216.0) called from log_ramp_up
+set_amp (48237.0) called from log_ramp_up
+set_amp (48257.0) called from log_ramp_up
+set_amp (48276.0) called from log_ramp_up
+set_amp (48295.0) called from log_ramp_up
+set_amp (48300.0) called from log_ramp_up
+Log Ramp finished, calling clear_log_ramp_curve()
+clear_log_ramp_curve called from log_ramp_up
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2089279
+
+2020-09-23 15:21:51.391000
+amp_vs_kfpow lookup, called from get_kfp_running_stat_at_current_set_point,
+can't find 48300.0, returning value at 48295.0 instead
+
+2020-09-23 15:21:51.391000
+amp_vs_kfpow lookup, called from get_kfp_running_stat_at_current_set_point,
+can't find 48300.0, returning value at 48295.0 instead
+
+2020-09-23 15:21:51.391000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-09-23 15:21:51.391000
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+2020-09-23 15:22:02.007000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-09-23 15:22:02.007000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-09-23 15:22:02.007000
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+2020-09-23 15:22:02.007000
+
+
+2020-09-23 15:22:02.007000
+DEFAULT__DELTA_GTRTHN_MAX deafault = 48350
+set_amp (48350) called from ramp_up
+set_amp is updating last_amp_sp set to  48300.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2090279
+ramp_up FINISHED, we went from 48300.0 to 48350
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 48400
+set_amp (48400) called from ramp_up
+set_amp is updating last_amp_sp set to  48350.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2091285
+ramp_up FINISHED, we went from 48350.0 to 48400
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 48450
+set_amp (48450) called from ramp_up
+set_amp is updating last_amp_sp set to  48400.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2092294
+ramp_up FINISHED, we went from 48400.0 to 48450
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 48500
+set_amp (48500) called from ramp_up
+set_amp is updating last_amp_sp set to  48450.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2093297
+ramp_up FINISHED, we went from 48450.0 to 48500
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 48550
+set_amp (48550) called from ramp_up
+set_amp is updating last_amp_sp set to  48500.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2094302
+ramp_up FINISHED, we went from 48500.0 to 48550
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 48600
+set_amp (48600) called from ramp_up
+set_amp is updating last_amp_sp set to  48550.0
+
+2020-09-23 15:22:57.903000
+amp_vs_kfpow lookup, called from get_kfp_running_stat_at_current_set_point,
+can't find 48600.0, returning value at 48550.0 instead
+
+2020-09-23 15:22:57.903000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2095310
+
+2020-09-23 15:22:57.919000
+ramp_up FINISHED, we went from 48550.0 to 48600
+
+2020-09-23 15:23:08.662000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-09-23 15:23:08.662000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-09-23 15:23:08.662000
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+2020-09-23 15:23:08.662000
+
+
+2020-09-23 15:23:08.662000
+DEFAULT__DELTA_GTRTHN_MAX deafault = 48650
+set_amp (48650) called from ramp_up
+set_amp is updating last_amp_sp set to  48600.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2096312
+ramp_up FINISHED, we went from 48600.0 to 48650
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 48700
+set_amp (48700) called from ramp_up
+set_amp is updating last_amp_sp set to  48650.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2097317
+ramp_up FINISHED, we went from 48650.0 to 48700
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 48750
+set_amp (48750) called from ramp_up
+set_amp is updating last_amp_sp set to  48700.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2098321
+ramp_up FINISHED, we went from 48700.0 to 48750
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 48800
+set_amp (48800) called from ramp_up
+set_amp is updating last_amp_sp set to  48750.0
+
+2020-09-23 15:23:41.014000
+amp_vs_kfpow lookup, called from get_kfp_running_stat_at_current_set_point,
+can't find 48800.0, returning value at 48750.0 instead
+
+2020-09-23 15:23:41.053000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2099334
+
+2020-09-23 15:23:41.053000
+ramp_up FINISHED, we went from 48750.0 to 48800
+
+2020-09-23 15:23:51.798000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-09-23 15:23:51.798000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-09-23 15:23:51.798000
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+2020-09-23 15:23:51.798000
+
+
+2020-09-23 15:23:51.798000
+DEFAULT__DELTA_GTRTHN_MAX deafault = 48850
+set_amp (48850) called from ramp_up
+set_amp is updating last_amp_sp set to  48800.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2100337
+ramp_up FINISHED, we went from 48800.0 to 48850
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 48900
+set_amp (48900) called from ramp_up
+set_amp is updating last_amp_sp set to  48850.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2101342
+ramp_up FINISHED, we went from 48850.0 to 48900
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 48950
+set_amp (48950) called from ramp_up
+set_amp is updating last_amp_sp set to  48900.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2102349
+ramp_up FINISHED, we went from 48900.0 to 48950
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 49000
+set_amp (49000) called from ramp_up
+set_amp is updating last_amp_sp set to  48950.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2103355
+ramp_up FINISHED, we went from 48950.0 to 49000
+enable_llrf, isTrigExternal = False, attempting trigExt()
+enable_llrf, isRFOutput = True
+enable_llrf, isPhaseFFLocked = True
+enable_llrf, isTrigExternal = True
+
+2020-09-23 15:24:24.466000
+********************************************************************************
+** src.monitors.outside_mask_trace_monitor Collecting Outside Mask Event Data **
+********************************************************************************
+event_pulse_count_zero = 0
+src.data.rf_conditioning_data increasing breakdown count = 34, at pulse count =
+2103364
+Python OME Message: L01_CAVITY_REVERSE_POWER HI MASK FAIL: current average =
+147454, 157590 > 157454 at i = 127 us = 1.23362. Trace time-stamp = Wed Sep 23
+2020 15:24:24.322524537
+src.monitors.outside_mask_trace_monitor adding 1 events
+src.data.rf_conditioning_logger pickle_dumped  C:\Users\dlerlp\Documents\GitHub\
+Software\Apps\RF_Conditioner\v2\logs\Linac20200922\2020-09-23-15-19-12\L01_CAVIT
+Y_REVERSE_POWER_1
+src.monitors.outside_mask_trace_monitor, cool down ended
+set_global_check_mask setGlobalCheckMask True
+!!Log Ramp curve is NONE, generating a new one
+power_finish = 16237608.7077
+breakdown_rate_low = True
+Breakdown rate LO, log_ramp power_finish = 16237608.7077
+Log Ramp curve is NONE, generating a new one
+Log Ramp curve_p_finish = 16399984.7948, p_start = 30000, p_finish =
+16237608.7077, ramp_rate = 0.2
+self.data.log_ramp_curve in maIn_controller = [[60, 1431.0, 102.40532692067607],
+[60, 5364.0, 11.15352493410011], [60, 7547.0, 7.6704624834158865], [60, 9200.0,
+6.449811573611461], [60, 10514.0, 5.827780200801387], [60, 11685.0,
+5.450809477901251], [60, 12829.0, 5.197968873935928], [60, 13903.0,
+5.016656194072902], [60, 14814.0, 4.8803119329590885], [60, 15730.0,
+4.774077602666568], [60, 16620.0, 4.6889912978563055], [60, 17455.0,
+4.619326633451369], [60, 18203.0, 4.561253470180829], [60, 18912.0,
+4.512113015469775], [60, 19628.0, 4.470001843871045], [60, 20382.0,
+4.433521433448855], [60, 21016.0, 4.401621162358403], [60, 21671.0,
+4.373496460865224], [60, 22302.0, 4.348520763639305], [60, 22954.0,
+4.326198861398923], [60, 23509.0, 4.306134191740055], [60, 24040.0,
+4.288005440252726], [60, 24541.0, 4.271549500210181], [60, 25056.0,
+4.256548862268837], [60, 25594.0, 4.242822146351843], [60, 26072.0,
+4.230216898689478], [60, 26526.0, 4.218604046022599], [60, 26941.0,
+4.207873578593666], [60, 27417.0, 4.1979311555968195], [60, 27886.0,
+4.188695411032265], [60, 28297.0, 4.180095796968554], [60, 28720.0,
+4.172070843172501], [60, 29089.0, 4.16456674225168], [60, 29474.0,
+4.157536191427012], [60, 29902.0, 4.150937438222934], [60, 30248.0,
+4.144733489383886], [60, 30614.0, 4.1388914513484405], [60, 30963.0,
+4.1333819774451115], [60, 31307.0, 4.128178802191524], [60, 31657.0,
+4.123258347094742], [60, 32008.0, 4.118599385464836], [60, 32348.0,
+4.114182756185693], [60, 32657.0, 4.10999111829894], [60, 32952.0,
+4.106008739769174], [60, 33238.0, 4.102221315002364], [60, 33521.0,
+4.09861580665257], [60, 33834.0, 4.095180308027291], [60, 34136.0,
+4.0919039230286955], [60, 34422.0, 4.08877666107766], [60, 34689.0,
+4.085789344883629], [60, 34974.0, 4.082933529264762], [60, 35228.0,
+4.080201429503966], [60, 35457.0, 4.077585857959094], [60, 35715.0,
+4.0750801678387765], [60, 35977.0, 4.072678203216325], [60, 36238.0,
+4.070374254488931], [60, 36475.0, 4.068163018602438], [60, 36701.0,
+4.0660395634572435], [60, 36910.0, 4.0639992959914], [60, 37116.0,
+4.062037933505207], [60, 37350.0, 4.060151477849601], [60, 37579.0,
+4.058336192150154], [60, 37805.0, 4.056588579780726], [60, 38023.0,
+4.0549053653371425], [60, 38234.0, 4.053283477392386], [60, 38450.0,
+4.051720032841687], [60, 38665.0, 4.050212322669079], [60, 38853.0,
+4.048757798987058], [60, 39033.0, 4.047354063218464], [60, 39224.0,
+4.045998855304804], [60, 39421.0, 4.0446900438385125], [60, 39612.0,
+4.043425617028114], [60, 39797.0, 4.042203674415422], [60, 39979.0,
+4.041022419272723], [60, 40157.0, 4.039880151615688], [60, 40334.0,
+4.038775261774588], [60, 40521.0, 4.037706224472449], [60, 40703.0,
+4.036671593364099], [60, 40846.0, 4.035669995994781], [60, 40986.0,
+4.034700129141185], [60, 41129.0, 4.03376075450147], [60, 41302.0,
+4.032850694704137], [60, 41471.0, 4.031968829608548], [60, 41623.0,
+4.031114092872545], [60, 41769.0, 4.030285468764867], [60, 41910.0,
+4.02948198920229], [60, 42037.0, 4.028702730993163], [60, 42160.0,
+4.027946813270752], [60, 42282.0, 4.027213395101323], [60, 42426.0,
+4.026501673253212], [60, 42571.0, 4.025810880114372], [60, 42713.0,
+4.025140281746984], [60, 42856.0, 4.024489176068706], [60, 42996.0,
+4.023856891151041], [60, 43130.0, 4.023242783626098], [60, 43256.0,
+4.0226462371937695], [60, 43379.0, 4.022066661222], [60, 43498.0,
+4.021503489433444], [60, 43619.0, 4.020956178672327], [60, 43736.0,
+4.020424207745859], [60, 43851.0, 4.019907076334971], [60, 43965.0,
+4.019404303969586], [60, 44077.0, 4.018915429063979], [60, 44187.0,
+4.018440008008155], [60, 44294.0, 4.017977614311486], [60, 44404.0,
+4.0175278377951], [60, 44512.0, 4.017090283829829], [60, 44617.0,
+4.016664572616712], [60, 44720.0, 4.0162503385073265], [60, 44822.0,
+4.015847229361361], [60, 44921.0, 4.015454905939076], [60, 45018.0,
+4.015073041326456], [60, 45112.0, 4.014701320391003], [60, 45202.0,
+4.014339439266278], [60, 45290.0, 4.013987104863429], [60, 45376.0,
+4.01364403440805], [60, 45460.0, 4.013309955000867], [60, 45543.0,
+4.012984603200809], [60, 45624.0, 4.012667724629135], [60, 45704.0,
+4.012359073593392], [60, 45782.0, 4.0120584127300445], [60, 45858.0,
+4.011765512664687], [60, 45935.0, 4.011480151688845], [60, 46012.0,
+4.011202115452407], [60, 46087.0, 4.010931196670821], [60, 46161.0,
+4.010667194846227], [60, 46233.0, 4.0104099160017315], [60, 46304.0,
+4.010159172428137], [60, 46384.0, 4.009914782442417], [60, 46461.0,
+4.009676570157308], [60, 46537.0, 4.009444365261429], [60, 46611.0,
+4.009218002809364], [60, 46683.0, 4.008997323021167], [60, 46746.0,
+4.008782171090818], [60, 46805.0, 4.008572397003139], [60, 46863.0,
+4.008367855358759], [60, 46920.0, 4.008168405206687], [60, 46975.0,
+4.007973909884131], [60, 47029.0, 4.007784236863174], [60, 47082.0,
+4.007599257603982], [60, 47137.0, 4.0074188474142085], [60, 47192.0,
+4.007242885314291], [60, 47246.0, 4.007071253908349], [60, 47298.0,
+4.006903839260418], [60, 47350.0, 4.006740530775744], [60, 47400.0,
+4.006581221086923], [60, 47449.0, 4.006425805944622], [60, 47497.0,
+4.006274184112699], [60, 47546.0, 4.006126257267479], [60, 47595.0,
+4.005981929901027], [60, 47643.0, 4.005841109228203], [60, 47689.0,
+4.005703705097352], [60, 47735.0, 4.005569629904431], [60, 47779.0,
+4.0054387985104585], [60, 47823.0, 4.005311128162093], [60, 47865.0,
+4.005186538415232], [60, 47906.0, 4.005064951061482], [60, 47941.0,
+4.00494629005738], [60, 47976.0, 4.004830481456242], [60, 48010.0,
+4.004717453342525], [60, 48043.0, 4.004607135768588], [60, 48076.0,
+4.004499460693768], [60, 48107.0, 4.004394361925647], [60, 48138.0,
+4.0042917750634315], [60, 48169.0, 4.004191637443358], [60, 48198.0,
+4.004093888086031], [60, 48227.0, 4.003998467645612], [60, 48255.0,
+4.003905318360805], [60, 48283.0, 4.003814384007525], [60, 48313.0,
+4.003725609853218], [60, 48348.0, 4.003638942612755], [60, 48382.0,
+4.003554330405821], [60, 48416.0, 4.003471722715756], [60, 48448.0,
+4.00339107034979], [60, 48480.0, 4.003312325400611], [60, 48511.0,
+4.003235441209207], [60, 48541.0, 4.003160372328955], [60, 48571.0,
+4.003087074490883], [60, 48600.0, 4.003015504570077], [60, 48629.0,
+4.00294562055318], [60, 48656.0, 4.002877381506947], [60, 48683.0,
+4.002810747547817], [60, 48712.0, 4.002745679812453], [60, 48743.0,
+4.002682140429234], [60, 48774.0, 4.002620092490634], [60, 48803.0,
+4.002559500026492], [60, 48832.0, 4.002500327978109], [60, 48861.0,
+4.0024425421731555], [60, 48889.0, 4.002386109301365], [60, 48916.0,
+4.002330996890969], [60, 48942.0, 4.002277173285865], [60, 48968.0,
+4.002224607623481], [60, 48993.0, 4.002173269813315], [60, 49018.0,
+4.002123130516118], [60, 49042.0, 4.002074161123717], [60, 49066.0,
+4.002026333739436], [60, 49089.0, 4.0019796211591], [60, 49100.0,
+4.001933996852608]]
+set_amp (1431.0) called from log_ramp_up
+set_amp (5364.0) called from log_ramp_up
+set_amp (7547.0) called from log_ramp_up
+set_amp (9200.0) called from log_ramp_up
+set_amp (10514.0) called from log_ramp_up
+set_amp (11685.0) called from log_ramp_up
+set_amp (12829.0) called from log_ramp_up
+set_amp (13903.0) called from log_ramp_up
+set_amp (14814.0) called from log_ramp_up
+set_amp (15730.0) called from log_ramp_up
+set_amp (16620.0) called from log_ramp_up
+set_amp (17455.0) called from log_ramp_up
+set_amp (18203.0) called from log_ramp_up
+set_amp (18912.0) called from log_ramp_up
+set_amp (19628.0) called from log_ramp_up
+set_amp (20382.0) called from log_ramp_up
+set_amp (21016.0) called from log_ramp_up
+set_amp (21671.0) called from log_ramp_up
+set_amp (22302.0) called from log_ramp_up
+set_amp (22954.0) called from log_ramp_up
+set_amp (23509.0) called from log_ramp_up
+
+2020-09-23 15:24:41.001000
+amp_vs_kfpow lookup, called from get_kfp_running_stat_at_current_set_point,
+can't find 23509.0, returning value at 23511.0 instead
+set_amp (24040.0) called from log_ramp_up
+set_amp (24541.0) called from log_ramp_up
+set_amp (25056.0) called from log_ramp_up
+set_amp (25594.0) called from log_ramp_up
+set_amp (26072.0) called from log_ramp_up
+set_amp (26526.0) called from log_ramp_up
+set_amp (26941.0) called from log_ramp_up
+set_amp (27417.0) called from log_ramp_up
+set_amp (27886.0) called from log_ramp_up
+set_amp (28297.0) called from log_ramp_up
+set_amp (28720.0) called from log_ramp_up
+set_amp (29089.0) called from log_ramp_up
+set_amp (29474.0) called from log_ramp_up
+set_amp (29902.0) called from log_ramp_up
+set_amp (30248.0) called from log_ramp_up
+set_amp (30614.0) called from log_ramp_up
+set_amp (30963.0) called from log_ramp_up
+set_amp (31307.0) called from log_ramp_up
+set_amp (31657.0) called from log_ramp_up
+set_amp (32008.0) called from log_ramp_up
+set_amp (32348.0) called from log_ramp_up
+set_amp (32657.0) called from log_ramp_up
+set_amp (32952.0) called from log_ramp_up
+set_amp (33238.0) called from log_ramp_up
+set_amp (33521.0) called from log_ramp_up
+set_amp (33834.0) called from log_ramp_up
+set_amp (34136.0) called from log_ramp_up
+set_amp (34422.0) called from log_ramp_up
+set_amp (34689.0) called from log_ramp_up
+set_amp (34974.0) called from log_ramp_up
+set_amp (35228.0) called from log_ramp_up
+set_amp (35457.0) called from log_ramp_up
+set_amp (35715.0) called from log_ramp_up
+set_amp (35977.0) called from log_ramp_up
+set_amp (36238.0) called from log_ramp_up
+set_amp (36475.0) called from log_ramp_up
+set_amp (36701.0) called from log_ramp_up
+set_amp (36910.0) called from log_ramp_up
+set_amp (37116.0) called from log_ramp_up
+set_amp (37350.0) called from log_ramp_up
+set_amp (37579.0) called from log_ramp_up
+set_amp (37805.0) called from log_ramp_up
+set_amp (38023.0) called from log_ramp_up
+set_amp (38234.0) called from log_ramp_up
+set_amp (38450.0) called from log_ramp_up
+set_amp (38665.0) called from log_ramp_up
+set_amp (38853.0) called from log_ramp_up
+set_amp (39033.0) called from log_ramp_up
+set_amp (39224.0) called from log_ramp_up
+set_amp (39421.0) called from log_ramp_up
+set_amp (39612.0) called from log_ramp_up
+set_amp (39797.0) called from log_ramp_up
+set_amp (39979.0) called from log_ramp_up
+set_amp (40157.0) called from log_ramp_up
+set_amp (40334.0) called from log_ramp_up
+set_amp (40521.0) called from log_ramp_up
+set_amp (40703.0) called from log_ramp_up
+set_amp (40846.0) called from log_ramp_up
+set_amp (40986.0) called from log_ramp_up
+set_amp (41129.0) called from log_ramp_up
+set_amp (41302.0) called from log_ramp_up
+set_amp (41471.0) called from log_ramp_up
+set_amp (41623.0) called from log_ramp_up
+set_amp (41769.0) called from log_ramp_up
+set_amp (41910.0) called from log_ramp_up
+set_amp (42037.0) called from log_ramp_up
+set_amp (42160.0) called from log_ramp_up
+set_amp (42282.0) called from log_ramp_up
+set_amp (42426.0) called from log_ramp_up
+set_amp (42571.0) called from log_ramp_up
+set_amp (42713.0) called from log_ramp_up
+set_amp (42856.0) called from log_ramp_up
+set_amp (42996.0) called from log_ramp_up
+set_amp (43130.0) called from log_ramp_up
+set_amp (43256.0) called from log_ramp_up
+set_amp (43379.0) called from log_ramp_up
+set_amp (43498.0) called from log_ramp_up
+set_amp (43619.0) called from log_ramp_up

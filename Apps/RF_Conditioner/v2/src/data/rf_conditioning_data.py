@@ -440,7 +440,7 @@ class rf_conditioning_data(object):
     #def update_last_million_pulse_log(self): OLD NAME
     def update_active_pulse_breakdown_log(self):
         """
-        Every time we check te numebr of pulses / breakdown counts we update the last million log
+        Every time we check tHe numbEr of pulses / breakdown counts we update the last million log
         """
         #write this
         # local alias for shorter lines
@@ -1101,6 +1101,10 @@ class rf_conditioning_data(object):
         amp_sp_list = []
         for amp_sp in required_set_points:
             next_amp_sp = float(int(amp_sp))
+
+            # no point choosing an amp_sp above the max available!
+            if next_amp_sp > int(self.values[rf_conditioning_data.catap_max_amp]):
+                next_amp_sp = int(self.values[rf_conditioning_data.catap_max_amp])
             if next_amp_sp in amp_sp_list:
                 pass
             else:

@@ -1,0 +1,2698 @@
+****************************************************************************************************
+******************* __         __    _  _  ___       _   ___  ___   __         __ ******************
+******************* \ \  ___  / /   | \| |/ _ \     /_\ | _ \/ __|  \ \  ___  / / ******************
+*******************  \ \/ _ \/ /    | .` | (_) |   / _ \|   / (__    \ \/ _ \/ /  ******************
+*******************   \_\___/_/     |_|\_|\___/   /_/ \_\_|_\\___|    \_\___/_/   ******************
+*******************                                                               ******************
+********************************************************************************
+*********************** Log Started 2020-10-08-09-32-04 ************************
+********************************************************************************
+********************************************************************************
+******************************** Configuration *********************************
+********************************************************************************
+config file =
+C:\Users\dlerlp\Documents\GitHub\Software\Apps\RF_Conditioner\v2\CLARA_LRRG.yml
+dumping parsed config data to text log
+CONFIG_FILE:
+C:\Users\dlerlp\Documents\GitHub\Software\Apps\RF_Conditioner\v2\CLARA_LRRG.yml,
+KFPOW_MASK_TYPE: PERCENT, KRPOW_MASK_FLOOR: 1000.0, BREAKDOWN_TRACES:
+['CAVITY_REVERSE_POWER', 'KLYSTRON_FORWARD_POWER', 'CAVITY_FORWARD_POWER'],
+CFPHA_MEAN_END: 2.0, MAX_POW: 0.0, MAX_AMP: 120000, VAC_SPIKE_DECAY_LEVEL: 1.2,
+CFPOW_MASK_WINDOW_START: 4.5, PID_on_off_GMON: CLA-GUN-H2O-PID-02:ON:RB,
+KRPOW_NUM_AVERAGE_TRACES: 2, CFPHA_MASK_SET_TYPE: TIME, CPPOW_MASK_START: 0.8,
+KRPOW_MASK_SET_TYPE: TIME, AMP_PWR_ACCEPTANCE_WINDOW: 750000, CPPOW_DROP_AMP:
+False, CRPOW_DROP_AMP_VALUE: 2, CFPOW_MASK_FLOOR: 1000.0, CRPHA_MASK_SET_TYPE:
+TIME, TEXT_LOG_FILENAME: log.txt, KFPHA_MASK_LO_MIN: 50, KRPOW_CHECK_STREAK: 2,
+VAC_VALVE_CHECK_TIME: 1000, CPPOW_MASK_SET_TYPE: TIME, CFPHA_CHECK_STREAK: 2,
+CPPOW_AUTO_SET: False, KFPOW_MASK_END: 3.4, CFPHA_MEAN_START: 0.0,
+PID_integral_gain: CLA-GUN-H2O-PID-02:INTG:RB, KRPHA_MASK_TYPE: ABSOLUTE,
+VAC_ROLLING_SUM_NUM_SAMPLES: 25, CFPOW_MASK_END: 3.5, CFPHA_NUM_AVERAGE_TRACES:
+2, KRPOW_AUTO_SET: False, KRPHA_PHASE_MASK_BY_POWER_TRACE: False,
+VAC_NUM_SAMPLES_TO_AVERAGE: 7, KFPHA_AUTO_SET: False, CRPOW_MASK_WINDOW_END:
+4.25, CFPHA_MASK_LO_MIN: 50, SOL_CHECK_TIME: 1000, MINIMUM_COOLDOWN_TIME: 3000,
+RF_STRUCTURE: CLARA_LRRG, WATER_TEMPERATURE_PV: ['CLA-GUN-RF-LRRG-01:RT', 'CLA-
+GUN-RF-LRRG-02:RT'], KRPHA_CHECK_STREAK: 2, KRPOW_MASK_END: 5.0,
+LLRF_CHECK_TIME: 50, KFPOW_AMPSP_RUNNING_STATS_LOG_FILENAME: amp_power_log.txt,
+CPPHA_PHASE_MASK_BY_POWER_LEVEL: 5000.0, PULSE_COUNT_BREAKDOWN_LOG_FILENAME:
+pulse_breakdown_log.txt, CFPOW_MASK_START: 1.5, CFPHA_AUTO_SET: False,
+KRPOW_DROP_AMP_VALUE: 2, KFPHA_PHASE_MASK_BY_POWER_LEVEL: 5000.0,
+CFPHA_MASK_FLOOR: 0.0, KRPHA_PHASE_MASK_BY_POWER_LEVEL: 5000.0,
+CFPOW_MASK_LEVEL_LO: 10, KFPOW_MASK_WINDOW_END: 3.8, CPPHA_DROP_AMP_VALUE: 2,
+OUTSIDE_MASK_FORWARD_FILENAME: outside_forward_log, KRPHA_MEAN_END: 3.0,
+KFPOW_MASK_START: 1.3, KEEP_VALVE_OPEN: False, CRPHA_MASK_LO_MIN: 50,
+CRPOW_MASK_FLOOR: 5000.0, SOL_WOBBLE_OSCILLATION_POINTS: 0, CRPHA_MEAN_START:
+2.8, DC_PV: EBT-INJ-SCOPE-01:P1, KRPHA_MASK_FLOOR: 0.0, CPPHA_MASK_WINDOW_START:
+2.4, CPPOW_MASK_TYPE: ABSOLUTE, CFPOW_MASK_LEVEL: 15, CFPHA_DROP_AMP_VALUE: 2,
+CRPHA_MASK_TYPE: ABSOLUTE, TRACES_TO_SAVE: ['KLYSTRON_FORWARD_PHASE',
+'KLYSTRON_REVERSE_PHASE', 'KLYSTRON_FORWARD_POWER', 'KLYSTRON_REVERSE_POWER',
+'CAVITY_REVERSE_PHASE', 'CAVITY_FORWARD_PHASE', 'CAVITY_FORWARD_POWER',
+'CAVITY_REVERSE_POWER'], KRPHA_MASK_WINDOW_END: 3.4, MAGNET_MACHINE_AREA:
+CLARA_PH1, DC_SPIKE_DELTA: 0.015, PID_proportional_gain: CLA-GUN-H2O-
+PID-02:PROP:RB, OUTSIDE_MASK_COOLDOWN_TIME: 4000, VAC_VALVE_AREA: CLARA_PH1,
+SOL_WOBBLE_LO: 0.0, KRPOW_MASK_LEVEL: 35.0, KRPHA_DROP_AMP: False,
+CRPHA_MASK_END: 5.0, CRPHA_MEAN_END: 3.0, KFPOW_MEAN_START: 2.0, CRPHA_DROP_AMP:
+False, KFPOW_MEAN_END: 2.5, CFPOW_NUM_AVERAGE_TRACES: 2, CPPHA_MASK_END: 5.0,
+VAC_VALVE: S01-VALV-01, PID_set_point: CLA-GUN-H2O-PID-02:SETVAL:RB,
+CAVITY_TEMPERATURE_CHECK_TIME: 1000, CFPHA_DROP_AMP: False,
+MODULATOR_CHECK_TIME: 1000, SOL_COUNT: 2, RF_REPETITION_RATE: 10,
+CPPHA_MASK_WINDOW_END: 3.4, LOG_RAMP_CURVE_NUMSTEPS: 150, KFPHA_MEAN_START: 2.3,
+RF_PROT_CHECK_TIME: 1000, KFPHA_MASK_TYPE: ABSOLUTE, MIN_AMP: 500,
+DC_CHECK_TIME: 1000, PID_on_off: CLA-GUN-H2O-PID-02:ON:RB,
+KRPHA_NUM_AVERAGE_TRACES: 2, KFPHA_MASK_FLOOR: 0.0, CRPHA_DROP_AMP_VALUE: 2,
+KRPHA_MASK_WINDOW_START: 2.4, CRPOW_MASK_TYPE: PERCENT, BIN_WIDTH: 400,
+KFPOW_MASK_FLOOR: 0.0, CPPOW_MASK_END: 5.0, BINARY_DATA_LOG_FILENAME: data_log,
+KRPHA_MASK_LO_MIN: 50, KFPOW_MASK_LEVEL: 35.0, OUTSIDE_MASK_CHECK_TIME: 100,
+MODE: OPERATIONAL, CRPOW_MASK_LO_MIN: 50, KLY_PWR_FOR_ACTIVE_PULSE: 500.0,
+CFPOW_MASK_LEVEL_HI: 40, CRPHA_MASK_FLOOR: 0.0, GMON_SUFFIX: _GMON,
+KFPOW_DROP_AMP_VALUE: 2, KRPOW_MEAN_END: 2.5, WHEN_VAC_HI_DISABLE_RAMP: True,
+AMP_PWR_LOG_TIME: 50, VAC_SPIKE_DROP_AMP: 5, DC_SPIKE_DECAY_TIME: 2000,
+CPPHA_MASK_TYPE: ABSOLUTE, KFPHA_MASK_SET_TYPE: TIME, KRPOW_MASK_WINDOW_START:
+2.4, PID_derivative_gain_GMON: CLA-GUN-H2O-PID-02:DERI:RB,
+SOL_WOBBLE_OSCILLATION_TIME: 100.0, PID_integral_gain_GMON: CLA-GUN-H2O-
+PID-02:INTG:RB, CFPOW_MASK_SET_TYPE: TIME, CFPOW_MASK_WINDOW_END: 4.6,
+LOG_DIRECTORY:
+C:\Users\dlerlp\Documents\GitHub\Software\Apps\RF_Conditioner\v2\logs\,
+KFPHA_MASK_LEVEL: 35.0, CAVITY_TEMPERATURE_PV: ['CLA-GUN-RF-LRRG-01:RT'],
+VAC_SPIKE_DELTA: 1e-08, VAC_CHECK_TIME: 200, PID_set_point_GMON: CLA-GUN-H2O-
+PID-02:SETVAL:RB, DC_DECAY_MODE: TIMED, SOL_WOBBLE_HI: 0.0,
+CRPOW_MASK_WINDOW_START: 3.7, CPPHA_NUM_AVERAGE_TRACES: 2,
+CRPHA_NUM_AVERAGE_TRACES: 2, NUM_BUFFER_TRACES: 500, CRPHA_MASK_LEVEL: 35.0,
+CRPOW_CHECK_STREAK: 2, CPPHA_AUTO_SET: False, VAC_SHOULD_DROP_AMP: True,
+KFPHA_CHECK_STREAK: 2, KRPOW_MEAN_START: 2.0, KFPOW_AUTO_SET: False,
+PID_llrf_max_amp_sp_limit: CLA-GUN-LRF-CTRL-01:vm:dsp:sp_amp:amplitude:DRVH,
+OUTSIDE_MASK_PROBE_FILENAME: outside_probe_log, CPPOW_MASK_FLOOR: 1000.0,
+KRPOW_MASK_START: 0.8, DC_SHOULD_DROP_AMP: False, CRPOW_MEAN_START: 3.2,
+CFPOW_DROP_AMP_VALUE: 6, CRPOW_MEAN_END: 3.6, GUI_UPDATE_TIME: 1000,
+CPPOW_MEAN_END: 2.0, CFPOW_MEAN_START: 3.2, KFPHA_DROP_AMP_VALUE: 2,
+KRPHA_DROP_AMP_VALUE: 2, CPPHA_MEAN_END: 2.0, KRPHA_MASK_LEVEL: 35.0,
+PULSE_LENGTH: 2500, DEFAULT_RF_INCREASE_LEVEL: 50, KFPHA_MEAN_END: 2.75,
+PID_derivative_gain: CLA-GUN-H2O-PID-02:DERI:RB, SHOULD_SOL_WOBBLE: False,
+CPPOW_MEAN_START: 0.0, VAC_DECAY_MODE: LEVEL, SOL_NAMES: ['L01-SOL1',
+'L01-SOL2'], PULSE_LENGTH_ERROR: 50, KFPOW_MASK_SET_TYPE: TIME,
+PID_autotune_state: CLA-GUN-H2O-PID-02:ATUNE:RB, CFPOW_MASK_LO_MIN: 50,
+KRPHA_MASK_END: 5.0, CPPOW_MASK_WINDOW_START: 2.4, VAC_MAX_LEVEL_FOR_RAMP:
+5e-09, CFPOW_CHECK_STREAK: 2, CFPHA_MASK_LEVEL: 35.0, CRPHA_MASK_WINDOW_END:
+3.4, CPPHA_CHECK_STREAK: 2, KRPHA_MEAN_START: 2.5, CPPOW_NUM_AVERAGE_TRACES: 2,
+CPPHA_MASK_LEVEL: 35.0, CPPHA_DROP_AMP: False, CAV_PWR_RATIO: 2.0,
+CRPHA_PHASE_MASK_BY_POWER_TRACE: False, PID_proportional_gain_GMON: CLA-GUN-H2O-
+PID-02:PROP:RB, CFPHA_MASK_END: 5.0, LOG_RAMP_CURVE_RAMP_RATE: 0.2,
+CRPHA_CHECK_STREAK: 2, CRPHA_MASK_START: 0.8, KFPHA_MASK_END: 5.0,
+KFPHA_NUM_AVERAGE_TRACES: 2, PID_output: CLA-GUN-H2O-PID-02:OUTPUT:RB,
+WATER_TEMPERATURE_PV_COUNT: 2, BREAKDOWN_RATE_AIM: 10, KRPOW_DROP_AMP: False,
+LOG_RAMP_CURVE_PULSES_PER_STEP: 15, CPPHA_MASK_FLOOR: 0.0, CPPHA_MASK_SET_TYPE:
+TIME, KFPHA_MASK_START: 0.8, KFPHA_PHASE_MASK_BY_POWER_TRACE: False,
+WATER_TEMPERATURE_CHECK_TIME: 1000, CPPHA_PHASE_MASK_BY_POWER_TRACE: False,
+CFPOW_MASK_TYPE: PERCENT, CFPHA_MASK_WINDOW_START: 2.4, KRPOW_MASK_LO_MIN: 50,
+CRPOW_MASK_START: 1.2, CRPOW_MASK_SET_TYPE: TIME, CPPOW_CHECK_STREAK: 2,
+CPPHA_MASK_START: 0.8, CFPOW_DROP_AMP: False, CPPHA_MASK_LO_MIN: 50,
+KRPHA_AUTO_SET: False, MEAN_TRACES: ['KLYSTRON_FORWARD_POWER',
+'KLYSTRON_REVERSE_POWER', 'CAVITY_FORWARD_POWER', 'CAVITY_REVERSE_POWER',
+'KLYSTRON_FORWARD_PHASE', 'KLYSTRON_REVERSE_PHASE', 'CAVITY_FORWARD_PHASE',
+'CAVITY_REVERSE_PHASE'], DC_SPIKE_DECAY_LEVEL: 1.2, CRPHA_MASK_WINDOW_START:
+2.4, CPPOW_MASK_LO_MIN: 50, CRPOW_DROP_AMP: True, KFPOW_CHECK_STREAK: 2,
+DEFAULT_PULSE_COUNT: 1000, CRPOW_NUM_AVERAGE_TRACES: 2,
+VAC_SPIKE_TRACES_TO_SAVE: ['KLYSTRON_FORWARD_PHASE', 'KLYSTRON_REVERSE_PHASE',
+'KLYSTRON_FORWARD_POWER', 'KLYSTRON_REVERSE_POWER', 'CAVITY_REVERSE_PHASE',
+'CAVITY_FORWARD_PHASE', 'CAVITY_FORWARD_POWER', 'CAVITY_REVERSE_POWER'],
+PID_output_GMON: CLA-GUN-H2O-PID-02:OUTPUT:RB, CRPOW_MASK_LEVEL: 35.0,
+KFPOW_NUM_AVERAGE_TRACES: 2, BINARY_DATA_LOG_TIME: 1000, KRPHA_MASK_SET_TYPE:
+TIME, KFPOW_MASK_WINDOW_START: 3.6, KFPOW_DROP_AMP: True, KRPOW_MASK_WINDOW_END:
+3.4, PID_autotune_state_GMON: CLA-GUN-H2O-PID-02:ATUNE:RB,
+NUM_SET_POINTS_TO_FIT: 4, CFPHA_MASK_START: 0.8, CRPOW_AUTO_SET: False,
+CPPOW_MASK_LEVEL: 35.0, CPPHA_MEAN_START: 0.0, MAX_DELTA_AMP_SP: 300,
+CRPHA_AUTO_SET: False, VAC_PV: CLA-LRG1-VAC-IMG-01:P, KFPOW_MASK_LO_MIN: 50,
+CPPOW_DROP_AMP_VALUE: 2, CAVITY_TEMPERATURE_PV_COUNT: 1, CFPHA_MASK_TYPE:
+ABSOLUTE, VAC_SPIKE_MAX_LEVEL_FOR_OFF: 2e-09, CRPHA_PHASE_MASK_BY_POWER_LEVEL:
+5000.0, EXTRA_BREAKDOWN_DAQ: ['VAC_LEVEL', 'DC_LEVEL', 'BREAKDOWN_RATE',
+'BREAKDOWN_COUNT'], KFPHA_MASK_WINDOW_START: 2.4, KRPHA_MASK_START: 0.8,
+OUTSIDE_MASK_REVERSE_FILENAME: outside_reverse_log, CFPOW_MEAN_END: 3.6,
+NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY: 100000, CFPHA_PHASE_MASK_BY_POWER_TRACE:
+False, CRPOW_MASK_END: 6.0, RF_REPETITION_RATE_ERROR: 3, CFPHA_MASK_WINDOW_END:
+3.4, VAC_SPIKE_DECAY_TIME: 2000, EXTRA_TRACES_ON_BREAKDOWN: 2,
+DC_SPIKE_DROP_AMP: 6, CFPOW_AUTO_SET: False, KFPHA_MASK_WINDOW_END: 3.4,
+KRPOW_MASK_TYPE: ABSOLUTE, DC_NUM_SAMPLES_TO_AVERAGE: 5, KFPHA_DROP_AMP: False,
+LOG_RAMP_START_POWER: 30000, CPPOW_MASK_WINDOW_END: 3.4,
+CFPHA_PHASE_MASK_BY_POWER_LEVEL: 5000.0,
+
+2020-10-08 09:32:06.033000
+********************************************************************************
+***** src.controllers.main_controller, create rf_conditioning_data object ******
+********************************************************************************
+
+2020-10-08 09:32:06.033000
+Started in debug mode = False
+********************************************************************************
+****************** Print Rationalized kfpow_running_stat_log  ******************
+********************************************************************************
+get_kfpow_running_stat_log complete
+
+2020-10-08 09:32:08.339000
+********************************************************************************
+***** src.controllers.main_controller, create hardware_control_hub object ******
+********************************************************************************
+hardware_control_hub Starting CATAP Hardware Interfaces
+start_llrf_control()  SET AMP_SP = 0, successfully created a CLARA_LRRG LLRF
+control object
+
+2020-10-08 09:32:24.770000
+********************************************************************************
+********** src.controllers.main_controller, create monitor_hub object **********
+********************************************************************************
+src.monitors.monitor_hub Starting Data Monitoring
+src.monitors.monitor_hub start_llrf_monitor()
+
+2020-10-08 09:32:25.851000
+src.controllers.hardware_control_hub connected, PV = CLA-LRG1-VAC-IMG-01:P with
+ID = d0,  acquiring data
+src.monitors.vac_monitor will drop amp on spike detection
+src.monitors.vac_monitor STARTED running
+src.monitors.vac_monitor vac_spike_status = state.UNKNOWN
+src.monitors.vac_monitor vac_spike_status = state.GOOD
+start_vac_monitor successfully started Vacuum Monitoring
+src.monitors.monitor_hub start_daq_frequency_monitor()
+********************************************************************************
+************************* Connecting to Water Temp PVs *************************
+********************************************************************************
+
+2020-10-08 09:32:26.954000
+src.controllers.hardware_control_hub connected, PV = CLA-GUN-RF-LRRG-01:RT with
+ID = d1,  acquiring data
+
+2020-10-08 09:32:26.954000
+src.monitors.vac_monitor level ok, 5.6e-10 < 5e-09
+
+2020-10-08 09:32:26.960000
+Connected to CLA-GUN-RF-LRRG-01:RT id = WATER_TEMP_ID_0
+********************************************************************************
+************************* Connecting to Water Temp PVs *************************
+********************************************************************************
+
+2020-10-08 09:32:28.024000
+src.controllers.hardware_control_hub connected, PV = CLA-GUN-RF-LRRG-02:RT with
+ID = d2,  acquiring data
+
+2020-10-08 09:32:28.024000
+Connected to CLA-GUN-RF-LRRG-02:RT id = WATER_TEMP_ID_1
+
+2020-10-08 09:32:28.039000
+start_water_temperature_monitor successfully started Water Temperature
+Monitoring
+
+2020-10-08 09:32:28.039000
+src.monitors.monitor_hub start_cavity_temperature_monitor()
+********************************************************************************
+************************ Connecting to Cavity Temp PVs *************************
+********************************************************************************
+
+2020-10-08 09:32:29.095000
+src.controllers.hardware_control_hub connected, PV = CLA-GUN-RF-LRRG-01:RT with
+ID = d3,  acquiring data
+
+2020-10-08 09:32:29.126000
+Connected to CLA-GUN-RF-LRRG-01:RT id = CAVITY_TEMP_ID_0
+
+2020-10-08 09:32:29.126000
+start_cavity_temperature_monitor successfully started Cavity Temperature
+Monitoring
+
+2020-10-08 09:32:29.126000
+src.monitors.monitor_hub start_solenoid_monitoring()
+src.monitors.monitor_hub Sanity Check
+is_vac_monitoring = True
+is_llrf_monitoring = True
+is_cavity_temp_monitoring = True
+is_modulator_monitoring = True
+is_rf_heartbeat_monitoring = True
+is_sol_monitoring = True
+is_rf_prot_monitoring = True
+is_outside_mask_monitoring = True
+is_daq_frequency_monitoring = True
+is_water_temp_monitoring = True
+is_vac_valve_monitor = True
+
+2020-10-08 09:32:29.142000
+********************************************************************************
+********** src.data.rf_conditioning_logger start_binary_data_logging  **********
+********************************************************************************
+binary log file added
+llrf_max_amp    p0_all  llrf_output_status      next_sp_decrease
+probe_pha       rev_cav_pha     can_llrf_output_state_OLD
+breakdown_rate_aim      phi_sp  latest_amp_sp_from_ramp num_outside_mask_traces
+next_requested_power_change     modulator_good  p2_current_sp_to_fit
+CAVITY_TEMP_ID_0        p2_current_sp   SP_QUAD_ALL     water_temp_gui
+event_pulse_count_zero  max_sp_increase ramp_mode       rev_kly_pha
+event_pulse_count       is_amp_ff_connected     delta_kfpow
+cav_pwr_ratio_can_ramp  p1_current_sp_to_fit    vac_level
+gui_can_rf_output       can_rf_output_status_OLD
+bd_rate_calc_first_pulse_number cav_pwr_ratio
+number_of_pulses_in_breakdown_history   probe_outside_mask_count
+current_ramp_index      y_min   rev_kly_pwr     fwd_kly_pha
+active_breakdown_count  last_sp_above_100       time_stamp, (start = 2020-10-08
+09:32:29.179000)        TOR_SCAN        rev_cav_pwr
+SP_QUAD_CURRENT_SP_TO_FIT       last_vac_spike_status   llrf_DAQ_rep_rate_status
+x_max   p0_current_sp_to_fit    amp_ff  c       L01-SOL1        L01-SOL2
+y_max   p1_current_sp   x_min   can_ramp_status kfpower_at_last_amp_sp
+vac_level_can_ramp      last_breakdown_status   reverse_outside_mask_count
+TOR_ACQM        p0_current_sp   breakdown_rate_low      WATER_TEMP_ID_1 cav_temp
+fwd_cav_pha     BD_state_OLD    rfprot_good     last_amp_sp     vac_spike_status
+DC_level        amp_sp  global_mask_checking    llrf_heart_beat_value
+gui_can_ramp    can_llrf_output_state   p1_all  log_pulse_count
+llrf_DAQ_rep_rate_aim   catap_max_amp   can_ramp_status_OLD     p2_all
+fwd_kly_pwr     sol_value       log_amp_set     duplicate_pulse_count   m
+pulse_count     fwd_cav_pwr     SP_SLF  WATER_TEMP_ID_0 probe_pwr
+can_rf_output_status    elapsed_time    DC_spike_status pulses_to_next_ramp
+GUI_mod_and_prot_good   breakdown_status        catap_max_amp_can_ramp_status
+main_can_ramp   llrf_DAQ_rep_rate       vac_valve_status        SP_QUAD_CURRENT
+modulator_state rev_power_spike_count   BD_state        last_ramp_method
+required_pulses rfprot_state    total_breakdown_count
+
+16      <type 'float'>  16      <type 'float'>  32      <enum 'state'>  16
+<type 'float'>  16      <type 'float'>  16      <type 'float'>  32      <enum
+'state'>  12      <type 'int'>    12      <type 'int'>    16      <type 'float'>
+12      <type 'int'>    12      <type 'int'>    12      <type 'bool'>   16
+<type 'float'>  16      <type 'float'>  16      <type 'float'>  16      <type
+'float'>  16      <type 'float'>  12      <type 'int'>    16      <type 'float'>
+32      <enum 'ramp_method'>    16      <type 'float'>  12      <type 'int'>
+12      <type 'bool'>   16      <type 'float'>  12      <type 'bool'>   16
+<type 'float'>  16      <type 'float'>  12      <type 'bool'>   32      <enum
+'state'>  12      <type 'int'>    16      <type 'float'>  12      <type 'int'>
+12      <type 'int'>    12      <type 'int'>    16      <type 'float'>  16
+<type 'float'>  16      <type 'float'>  12      <type 'int'>    16      <type
+'float'>  <type 'float'>  12      <type 'int'>    16      <type 'float'>  16
+<type 'float'>  32      <enum 'state'>  32      <enum 'state'>  16      <type
+'float'>  16      <type 'float'>  12      <type 'int'>    16      <type 'float'>
+16      <type 'float'>  16      <type 'float'>  16      <type 'float'>  16
+<type 'float'>  16      <type 'float'>  32      <enum 'state'>  16      <type
+'float'>  12      <type 'bool'>   32      <enum 'state'>  12      <type 'int'>
+12      <type 'int'>    16      <type 'float'>  12      <type 'bool'>   16
+<type 'float'>  16      <type 'float'>  16      <type 'float'>  32      <enum
+'state'>  12      <type 'bool'>   16      <type 'float'>  32      <enum 'state'>
+16      <type 'float'>  16      <type 'float'>  12      <type 'bool'>   16
+<type 'float'>  12      <type 'bool'>   32      <enum 'state'>  16      <type
+'float'>  12      <type 'int'>    12      <type 'int'>    16      <type 'float'>
+32      <enum 'state'>  16      <type 'float'>  16      <type 'float'>  16
+<type 'float'>  12      <type 'int'>    12      <type 'int'>    16      <type
+'float'>  12      <type 'int'>    16      <type 'float'>  16      <type 'float'>
+16      <type 'float'>  16      <type 'float'>  32      <enum 'state'>  18
+<type 'long'>   32      <enum 'state'>  12      <type 'int'>    12      <type
+'bool'>   32      <enum 'state'>  12      <type 'bool'>   12      <type 'bool'>
+16      <type 'float'>  32      <class
+'VELA_CLARA_Vac_Valve_Control.VALVE_STATE'>      16      <type 'float'>  32
+<class 'VELA_CLARA_RF_Modulator_Control.GUN_MOD_STATE'> 12      <type 'int'>
+32      <enum 'state'>  32      <enum 'ramp_method'>    12      <type 'int'>
+32      <class 'VELA_CLARA_RF_Protection_Control.RF_PROT_STATUS'>       12
+<type 'int'>
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4940066
+
+2020-10-08 09:32:29.263000
+********************************************************************************
+src.controllers.main_controller The RF Conditioning is Preparing to Entering
+Main_Loop !
+********************************************************************************
+
+2020-10-08 09:32:29.263000
+enable_llrf, isRFOutput = False, attempting enableRFOutput()
+
+2020-10-08 09:32:29.295000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-08 09:32:29.326000
+enable_llrf, isPhaseFFLocked = False, attempting lockPhaseFF()
+
+2020-10-08 09:32:29.357000
+set_global_check_mask setGlobalCheckMask True
+!!Log Ramp curve is NONE, generating a new one
+power_finish = 6965202.04567
+breakdown_rate_low = True
+Breakdown rate LO, log_ramp power_finish = 6965202.04567
+Log Ramp curve is NONE, generating a new one
+Log Ramp curve_p_finish = 7034854.06613, p_start = 30000, p_finish =
+6965202.04567, ramp_rate = 0.2
+set_amp (2759.0) called from log_ramp_up
+set_amp (8091.0) called from log_ramp_up
+set_amp (11038.0) called from log_ramp_up
+set_amp (13555.0) called from log_ramp_up
+set_amp (15666.0) called from log_ramp_up
+set_amp (17374.0) called from log_ramp_up
+set_amp (19038.0) called from log_ramp_up
+set_amp (20671.0) called from log_ramp_up
+set_amp (22106.0) called from log_ramp_up
+set_amp (23463.0) called from log_ramp_up
+set_amp (24806.0) called from log_ramp_up
+set_amp (26060.0) called from log_ramp_up
+set_amp (27262.0) called from log_ramp_up
+set_amp (28389.0) called from log_ramp_up
+set_amp (29502.0) called from log_ramp_up
+set_amp (30467.0) called from log_ramp_up
+set_amp (31379.0) called from log_ramp_up
+set_amp (32331.0) called from log_ramp_up
+set_amp (33237.0) called from log_ramp_up
+set_amp (33995.0) called from log_ramp_up
+set_amp (34788.0) called from log_ramp_up
+set_amp (35577.0) called from log_ramp_up
+set_amp (36285.0) called from log_ramp_up
+set_amp (37023.0) called from log_ramp_up
+set_amp (37707.0) called from log_ramp_up
+set_amp (38402.0) called from log_ramp_up
+set_amp (39091.0) called from log_ramp_up
+set_amp (39680.0) called from log_ramp_up
+set_amp (40422.0) called from log_ramp_up
+set_amp (40951.0) called from log_ramp_up
+set_amp (41424.0) called from log_ramp_up
+set_amp (42095.0) called from log_ramp_up
+set_amp (42761.0) called from log_ramp_up
+set_amp (43373.0) called from log_ramp_up
+set_amp (43971.0) called from log_ramp_up
+set_amp (44535.0) called from log_ramp_up
+set_amp (45123.0) called from log_ramp_up
+set_amp (45649.0) called from log_ramp_up
+set_amp (46206.0) called from log_ramp_up
+set_amp (46704.0) called from log_ramp_up
+set_amp (47232.0) called from log_ramp_up
+set_amp (47654.0) called from log_ramp_up
+clear_log_ramp_curve called from main_loop
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4940697
+enable_llrf, isTrigExternal = False, attempting trigExt()
+enable_llrf, isRFOutput = True
+enable_llrf, isPhaseFFLocked = True
+enable_llrf, isTrigExternal = True
+
+2020-10-08 09:33:32.800000
+********************************************************************************
+** src.monitors.outside_mask_trace_monitor Collecting Outside Mask Event Data **
+********************************************************************************
+event_pulse_count_zero = 0
+src.data.rf_conditioning_data increasing breakdown count = 345, at pulse count =
+4940697
+Python OME Message: LRRG_CAVITY_REVERSE_POWER LO MASK FAIL: current average =
+1.191e+006, 225805 < 774147 at i = 464 us = 4.26813. Trace time-stamp = Thu Oct
+08 2020 09:33:32.628068356
+
+2020-10-08 09:33:32.966000
+********************************************************************************
+src.monitors.vac_monitor NEW vacuum spike, #1: either 6e-08 > 1e-08 +
+9.07285714286e-09.or 6e-08 > 2e-09.
+********************************************************************************
+
+2020-10-08 09:33:33.903000
+src.data.rf_conditioning_logger pickle_dumped  C:\Users\dlerlp\Documents\GitHub\
+Software\Apps\RF_Conditioner\v2\logs\2020-10-08-09-32-04\src.monitors.vac_monito
+r_1
+
+2020-10-08 09:33:33.934000
+src.monitors.vac_monitor level hi, 6e-08 > 5e-09
+
+2020-10-08 09:33:33.934000
+src.monitors.outside_mask_trace_monitor adding 1 events
+
+2020-10-08 09:33:33.942000
+src.data.rf_conditioning_logger pickle_dumped  C:\Users\dlerlp\Documents\GitHub\
+Software\Apps\RF_Conditioner\v2\logs\2020-10-08-09-32-04\LRRG_CAVITY_REVERSE_POW
+ER_1
+
+2020-10-08 09:33:34.076000
+src.monitors.vac_monitor level ok, 3.5e-09 < 5e-09
+
+2020-10-08 09:33:36.706000
+src.monitors.outside_mask_trace_monitor, cool down ended
+
+2020-10-08 09:33:36.922000
+src.monitors.vac_monitor has_cooled_down
+
+2020-10-08 09:33:36.922000
+set_global_check_mask setGlobalCheckMask True
+!!Log Ramp curve is NONE, generating a new one
+power_finish = 6965202.04567
+breakdown_rate_low = True
+Breakdown rate LO, log_ramp power_finish = 6965202.04567
+Log Ramp curve is NONE, generating a new one
+Log Ramp curve_p_finish = 7034854.06613, p_start = 30000, p_finish =
+6965202.04567, ramp_rate = 0.2
+set_amp (2759.0) called from log_ramp_up
+set_amp (8091.0) called from log_ramp_up
+set_amp (11038.0) called from log_ramp_up
+set_amp (13555.0) called from log_ramp_up
+set_amp (15666.0) called from log_ramp_up
+set_amp (17374.0) called from log_ramp_up
+set_amp (19038.0) called from log_ramp_up
+set_amp (20671.0) called from log_ramp_up
+set_amp (22106.0) called from log_ramp_up
+set_amp (23463.0) called from log_ramp_up
+set_amp (24806.0) called from log_ramp_up
+set_amp (26060.0) called from log_ramp_up
+set_amp (27262.0) called from log_ramp_up
+set_amp (28389.0) called from log_ramp_up
+set_amp (29502.0) called from log_ramp_up
+set_amp (30467.0) called from log_ramp_up
+set_amp (31379.0) called from log_ramp_up
+set_amp (32331.0) called from log_ramp_up
+set_amp (33237.0) called from log_ramp_up
+set_amp (33995.0) called from log_ramp_up
+set_amp (34788.0) called from log_ramp_up
+set_amp (35577.0) called from log_ramp_up
+set_amp (36285.0) called from log_ramp_up
+set_amp (37023.0) called from log_ramp_up
+set_amp (37707.0) called from log_ramp_up
+set_amp (38402.0) called from log_ramp_up
+set_amp (39091.0) called from log_ramp_up
+set_amp (39680.0) called from log_ramp_up
+set_amp (40422.0) called from log_ramp_up
+set_amp (40951.0) called from log_ramp_up
+set_amp (41424.0) called from log_ramp_up
+set_amp (42095.0) called from log_ramp_up
+set_amp (42761.0) called from log_ramp_up
+set_amp (43373.0) called from log_ramp_up
+set_amp (43971.0) called from log_ramp_up
+set_amp (44535.0) called from log_ramp_up
+set_amp (45123.0) called from log_ramp_up
+set_amp (45649.0) called from log_ramp_up
+set_amp (46206.0) called from log_ramp_up
+set_amp (46704.0) called from log_ramp_up
+set_amp (47232.0) called from log_ramp_up
+set_amp (47654.0) called from log_ramp_up
+set_amp (48055.0) called from log_ramp_up
+set_amp (48535.0) called from log_ramp_up
+set_amp (48980.0) called from log_ramp_up
+set_amp (49406.0) called from log_ramp_up
+set_amp (49832.0) called from log_ramp_up
+set_amp (50246.0) called from log_ramp_up
+set_amp (50583.0) called from log_ramp_up
+set_amp (50929.0) called from log_ramp_up
+set_amp (51265.0) called from log_ramp_up
+set_amp (51587.0) called from log_ramp_up
+set_amp (51932.0) called from log_ramp_up
+set_amp (52232.0) called from log_ramp_up
+set_amp (52519.0) called from log_ramp_up
+set_amp (52777.0) called from log_ramp_up
+set_amp (52992.0) called from log_ramp_up
+set_amp (53194.0) called from log_ramp_up
+set_amp (53384.0) called from log_ramp_up
+set_amp (53616.0) called from log_ramp_up
+set_amp (53916.0) called from log_ramp_up
+set_amp (54139.0) called from log_ramp_up
+set_amp (54356.0) called from log_ramp_up
+set_amp (54567.0) called from log_ramp_up
+set_amp (54772.0) called from log_ramp_up
+set_amp (54971.0) called from log_ramp_up
+set_amp (55154.0) called from log_ramp_up
+set_amp (55311.0) called from log_ramp_up
+set_amp (55463.0) called from log_ramp_up
+set_amp (55633.0) called from log_ramp_up
+set_amp (55805.0) called from log_ramp_up
+set_amp (55986.0) called from log_ramp_up
+set_amp (56178.0) called from log_ramp_up
+set_amp (56386.0) called from log_ramp_up
+set_amp (56625.0) called from log_ramp_up
+set_amp (56842.0) called from log_ramp_up
+set_amp (57046.0) called from log_ramp_up
+set_amp (57229.0) called from log_ramp_up
+set_amp (57402.0) called from log_ramp_up
+set_amp (57552.0) called from log_ramp_up
+set_amp (57673.0) called from log_ramp_up
+set_amp (57791.0) called from log_ramp_up
+set_amp (57909.0) called from log_ramp_up
+set_amp (58119.0) called from log_ramp_up
+set_amp (58307.0) called from log_ramp_up
+set_amp (58371.0) called from log_ramp_up
+set_amp (58434.0) called from log_ramp_up
+set_amp (58494.0) called from log_ramp_up
+set_amp (58553.0) called from log_ramp_up
+set_amp (58610.0) called from log_ramp_up
+set_amp (58665.0) called from log_ramp_up
+set_amp (58766.0) called from log_ramp_up
+set_amp (58945.0) called from log_ramp_up
+set_amp (59105.0) called from log_ramp_up
+set_amp (59156.0) called from log_ramp_up
+set_amp (59206.0) called from log_ramp_up
+set_amp (59254.0) called from log_ramp_up
+set_amp (59301.0) called from log_ramp_up
+set_amp (59346.0) called from log_ramp_up
+set_amp (59390.0) called from log_ramp_up
+set_amp (59432.0) called from log_ramp_up
+set_amp (59473.0) called from log_ramp_up
+set_amp (59521.0) called from log_ramp_up
+set_amp (59581.0) called from log_ramp_up
+set_amp (59640.0) called from log_ramp_up
+set_amp (59697.0) called from log_ramp_up
+set_amp (59752.0) called from log_ramp_up
+set_amp (59805.0) called from log_ramp_up
+set_amp (59857.0) called from log_ramp_up
+set_amp (59909.0) called from log_ramp_up
+set_amp (59964.0) called from log_ramp_up
+set_amp (60018.0) called from log_ramp_up
+set_amp (60070.0) called from log_ramp_up
+set_amp (60121.0) called from log_ramp_up
+set_amp (60170.0) called from log_ramp_up
+set_amp (60218.0) called from log_ramp_up
+set_amp (60264.0) called from log_ramp_up
+set_amp (60311.0) called from log_ramp_up
+set_amp (60364.0) called from log_ramp_up
+set_amp (60415.0) called from log_ramp_up
+set_amp (60465.0) called from log_ramp_up
+set_amp (60513.0) called from log_ramp_up
+set_amp (60559.0) called from log_ramp_up
+set_amp (60605.0) called from log_ramp_up
+set_amp (60649.0) called from log_ramp_up
+set_amp (60691.0) called from log_ramp_up
+set_amp (60754.0) called from log_ramp_up
+set_amp (60820.0) called from log_ramp_up
+set_amp (60884.0) called from log_ramp_up
+set_amp (60946.0) called from log_ramp_up
+set_amp (61007.0) called from log_ramp_up
+set_amp (61065.0) called from log_ramp_up
+set_amp (61117.0) called from log_ramp_up
+set_amp (61159.0) called from log_ramp_up
+set_amp (61200.0) called from log_ramp_up
+set_amp (61239.0) called from log_ramp_up
+set_amp (61278.0) called from log_ramp_up
+set_amp (61315.0) called from log_ramp_up
+set_amp (61351.0) called from log_ramp_up
+set_amp (61386.0) called from log_ramp_up
+set_amp (61420.0) called from log_ramp_up
+set_amp (61453.0) called from log_ramp_up
+set_amp (61485.0) called from log_ramp_up
+set_amp (61510.0) called from log_ramp_up
+set_amp (61528.0) called from log_ramp_up
+set_amp (61546.0) called from log_ramp_up
+set_amp (61564.0) called from log_ramp_up
+set_amp (61581.0) called from log_ramp_up
+set_amp (61598.0) called from log_ramp_up
+set_amp (61614.0) called from log_ramp_up
+set_amp (61629.0) called from log_ramp_up
+Log Ramp finished, calling clear_log_ramp_curve()
+clear_log_ramp_curve called from log_ramp_up
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4942970
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 61679
+set_amp (61679) called from ramp_up
+set_amp is updating last_amp_sp set to  61629.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4943970
+ramp_up FINISHED, we went from 61629.0 to 61679
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 61729
+set_amp (61729) called from ramp_up
+set_amp is updating last_amp_sp set to  61679.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4944970
+ramp_up FINISHED, we went from 61679.0 to 61729
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 61779
+set_amp (61779) called from ramp_up
+set_amp is updating last_amp_sp set to  61729.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4945970
+ramp_up FINISHED, we went from 61729.0 to 61779
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 61829
+set_amp (61829) called from ramp_up
+set_amp is updating last_amp_sp set to  61779.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4946971
+ramp_up FINISHED, we went from 61779.0 to 61829
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 61879
+set_amp (61879) called from ramp_up
+set_amp is updating last_amp_sp set to  61829.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4947971
+ramp_up FINISHED, we went from 61829.0 to 61879
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 61929
+set_amp (61929) called from ramp_up
+set_amp is updating last_amp_sp set to  61879.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4948971
+ramp_up FINISHED, we went from 61879.0 to 61929
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 61979
+set_amp (61979) called from ramp_up
+set_amp is updating last_amp_sp set to  61929.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4949975
+ramp_up FINISHED, we went from 61929.0 to 61979
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 62029
+set_amp (62029) called from ramp_up
+set_amp is updating last_amp_sp set to  61979.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4950975
+ramp_up FINISHED, we went from 61979.0 to 62029
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 62079
+set_amp (62079) called from ramp_up
+set_amp is updating last_amp_sp set to  62029.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4951975
+ramp_up FINISHED, we went from 62029.0 to 62079
+enable_llrf, isTrigExternal = False, attempting trigExt()
+enable_llrf, getTrigSource() != TRIG.EXTERNAL, attempting trigExt()
+enable_llrf, isTrigExternal = True
+
+2020-10-08 09:53:40.806000
+********************************************************************************
+** src.monitors.outside_mask_trace_monitor Collecting Outside Mask Event Data **
+********************************************************************************
+event_pulse_count_zero = 0
+src.data.rf_conditioning_data increasing breakdown count = 346, at pulse count =
+4952707
+Python OME Message: LRRG_CAVITY_REVERSE_POWER HI MASK FAIL: current average =
+35468.3, 82693.9 > 47882.2 at i = 373 us = 3.44872. Trace time-stamp = Thu Oct
+08 2020 09:53:40.601270942
+
+2020-10-08 09:53:40.979000
+********************************************************************************
+src.monitors.vac_monitor NEW vacuum spike, #2: either 8.6e-09 > 1e-08 +
+1.77571428571e-09.or 8.6e-09 > 2e-09.
+********************************************************************************
+
+2020-10-08 09:53:41.859000
+src.data.rf_conditioning_logger pickle_dumped  C:\Users\dlerlp\Documents\GitHub\
+Software\Apps\RF_Conditioner\v2\logs\2020-10-08-09-32-04\src.monitors.vac_monito
+r_2
+
+2020-10-08 09:53:41.875000
+src.monitors.vac_monitor level hi, 8.6e-09 > 5e-09
+
+2020-10-08 09:53:41.891000
+src.monitors.outside_mask_trace_monitor adding 1 events
+
+2020-10-08 09:53:41.891000
+src.data.rf_conditioning_logger pickle_dumped  C:\Users\dlerlp\Documents\GitHub\
+Software\Apps\RF_Conditioner\v2\logs\2020-10-08-09-32-04\LRRG_CAVITY_REVERSE_POW
+ER_2
+
+2020-10-08 09:53:42.091000
+src.monitors.vac_monitor level ok, 1.2e-09 < 5e-09
+
+2020-10-08 09:53:44.714000
+src.monitors.outside_mask_trace_monitor, cool down ended
+
+2020-10-08 09:53:44.930000
+src.monitors.vac_monitor has_cooled_down
+
+2020-10-08 09:53:44.930000
+set_global_check_mask setGlobalCheckMask True
+!!Log Ramp curve is NONE, generating a new one
+power_finish = 7275960.66111
+breakdown_rate_low = True
+Breakdown rate LO, log_ramp power_finish = 7275960.66111
+Log Ramp curve is NONE, generating a new one
+Log Ramp curve_p_finish = 7348720.26772, p_start = 30000, p_finish =
+7275960.66111, ramp_rate = 0.2
+set_amp (2759.0) called from log_ramp_up
+set_amp (8273.0) called from log_ramp_up
+set_amp (11337.0) called from log_ramp_up
+set_amp (13861.0) called from log_ramp_up
+set_amp (15998.0) called from log_ramp_up
+set_amp (17845.0) called from log_ramp_up
+set_amp (19564.0) called from log_ramp_up
+set_amp (21176.0) called from log_ramp_up
+set_amp (22682.0) called from log_ramp_up
+set_amp (24104.0) called from log_ramp_up
+set_amp (25529.0) called from log_ramp_up
+set_amp (26782.0) called from log_ramp_up
+set_amp (27998.0) called from log_ramp_up
+set_amp (29208.0) called from log_ramp_up
+set_amp (30260.0) called from log_ramp_up
+set_amp (31261.0) called from log_ramp_up
+set_amp (32277.0) called from log_ramp_up
+set_amp (33250.0) called from log_ramp_up
+set_amp (34081.0) called from log_ramp_up
+set_amp (34927.0) called from log_ramp_up
+set_amp (35764.0) called from log_ramp_up
+set_amp (36534.0) called from log_ramp_up
+set_amp (37337.0) called from log_ramp_up
+set_amp (38069.0) called from log_ramp_up
+set_amp (38842.0) called from log_ramp_up
+set_amp (39562.0) called from log_ramp_up
+set_amp (40314.0) called from log_ramp_up
+set_amp (40926.0) called from log_ramp_up
+set_amp (41450.0) called from log_ramp_up
+set_amp (42195.0) called from log_ramp_up
+set_amp (42955.0) called from log_ramp_up
+set_amp (43614.0) called from log_ramp_up
+set_amp (44243.0) called from log_ramp_up
+set_amp (44940.0) called from log_ramp_up
+set_amp (45528.0) called from log_ramp_up
+set_amp (46179.0) called from log_ramp_up
+set_amp (46758.0) called from log_ramp_up
+set_amp (47343.0) called from log_ramp_up
+set_amp (47806.0) called from log_ramp_up
+set_amp (48306.0) called from log_ramp_up
+set_amp (48872.0) called from log_ramp_up
+set_amp (49367.0) called from log_ramp_up
+set_amp (49870.0) called from log_ramp_up
+set_amp (50349.0) called from log_ramp_up
+set_amp (50740.0) called from log_ramp_up
+set_amp (51163.0) called from log_ramp_up
+set_amp (51548.0) called from log_ramp_up
+set_amp (51964.0) called from log_ramp_up
+set_amp (52329.0) called from log_ramp_up
+set_amp (52678.0) called from log_ramp_up
+set_amp (52952.0) called from log_ramp_up
+set_amp (53207.0) called from log_ramp_up
+set_amp (53445.0) called from log_ramp_up
+set_amp (53802.0) called from log_ramp_up
+set_amp (54115.0) called from log_ramp_up
+set_amp (54396.0) called from log_ramp_up
+set_amp (54669.0) called from log_ramp_up
+set_amp (54936.0) called from log_ramp_up
+set_amp (55179.0) called from log_ramp_up
+set_amp (55389.0) called from log_ramp_up
+set_amp (55611.0) called from log_ramp_up
+set_amp (55848.0) called from log_ramp_up
+set_amp (56111.0) called from log_ramp_up
+set_amp (56400.0) called from log_ramp_up
+set_amp (56736.0) called from log_ramp_up
+set_amp (57035.0) called from log_ramp_up
+set_amp (57302.0) called from log_ramp_up
+set_amp (57541.0) called from log_ramp_up
+set_amp (57724.0) called from log_ramp_up
+set_amp (57904.0) called from log_ramp_up
+set_amp (58231.0) called from log_ramp_up
+set_amp (58380.0) called from log_ramp_up
+set_amp (58481.0) called from log_ramp_up
+set_amp (58578.0) called from log_ramp_up
+set_amp (58673.0) called from log_ramp_up
+set_amp (58922.0) called from log_ramp_up
+set_amp (59139.0) called from log_ramp_up
+set_amp (59229.0) called from log_ramp_up
+set_amp (59316.0) called from log_ramp_up
+set_amp (59400.0) called from log_ramp_up
+set_amp (59483.0) called from log_ramp_up
+set_amp (59597.0) called from log_ramp_up
+set_amp (59718.0) called from log_ramp_up
+set_amp (59834.0) called from log_ramp_up
+set_amp (59954.0) called from log_ramp_up
+set_amp (60080.0) called from log_ramp_up
+set_amp (60201.0) called from log_ramp_up
+set_amp (60323.0) called from log_ramp_up
+set_amp (60462.0) called from log_ramp_up
+set_amp (60596.0) called from log_ramp_up
+set_amp (60744.0) called from log_ramp_up
+set_amp (60953.0) called from log_ramp_up
+set_amp (61106.0) called from log_ramp_up
+set_amp (61131.0) called from log_ramp_up
+set_amp (61154.0) called from log_ramp_up
+set_amp (61177.0) called from log_ramp_up
+set_amp (61199.0) called from log_ramp_up
+set_amp (61220.0) called from log_ramp_up
+set_amp (61241.0) called from log_ramp_up
+set_amp (61261.0) called from log_ramp_up
+set_amp (61281.0) called from log_ramp_up
+set_amp (61300.0) called from log_ramp_up
+set_amp (61318.0) called from log_ramp_up
+set_amp (61336.0) called from log_ramp_up
+set_amp (61353.0) called from log_ramp_up
+set_amp (61370.0) called from log_ramp_up
+set_amp (61386.0) called from log_ramp_up
+set_amp (61402.0) called from log_ramp_up
+set_amp (61417.0) called from log_ramp_up
+set_amp (61432.0) called from log_ramp_up
+set_amp (61446.0) called from log_ramp_up
+set_amp (61460.0) called from log_ramp_up
+set_amp (61473.0) called from log_ramp_up
+set_amp (61486.0) called from log_ramp_up
+set_amp (61499.0) called from log_ramp_up
+set_amp (61525.0) called from log_ramp_up
+set_amp (61550.0) called from log_ramp_up
+set_amp (61574.0) called from log_ramp_up
+set_amp (61598.0) called from log_ramp_up
+set_amp (61620.0) called from log_ramp_up
+set_amp (61643.0) called from log_ramp_up
+set_amp (61664.0) called from log_ramp_up
+set_amp (61685.0) called from log_ramp_up
+set_amp (61705.0) called from log_ramp_up
+set_amp (61725.0) called from log_ramp_up
+set_amp (61744.0) called from log_ramp_up
+set_amp (61762.0) called from log_ramp_up
+set_amp (61780.0) called from log_ramp_up
+set_amp (61798.0) called from log_ramp_up
+set_amp (61814.0) called from log_ramp_up
+set_amp (61831.0) called from log_ramp_up
+set_amp (61847.0) called from log_ramp_up
+set_amp (61862.0) called from log_ramp_up
+set_amp (61877.0) called from log_ramp_up
+set_amp (61891.0) called from log_ramp_up
+set_amp (63757.0) called from log_ramp_up
+set_amp (63780.0) called from log_ramp_up
+set_amp (63803.0) called from log_ramp_up
+set_amp (63825.0) called from log_ramp_up
+set_amp (63846.0) called from log_ramp_up
+set_amp (63866.0) called from log_ramp_up
+set_amp (63886.0) called from log_ramp_up
+set_amp (63905.0) called from log_ramp_up
+set_amp (63924.0) called from log_ramp_up
+set_amp (63942.0) called from log_ramp_up
+set_amp (63959.0) called from log_ramp_up
+set_amp (63976.0) called from log_ramp_up
+set_amp (63993.0) called from log_ramp_up
+set_amp (64008.0) called from log_ramp_up
+set_amp (64024.0) called from log_ramp_up
+set_amp (64039.0) called from log_ramp_up
+Log Ramp finished, calling clear_log_ramp_curve()
+clear_log_ramp_curve called from log_ramp_up
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4954972
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+np.NaN returned from poly_fit_2order(). Returning predicted sp = current_sp +
+default increase, 64039.0 + 50
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 64089
+set_amp (64089) called from ramp_up
+set_amp is updating last_amp_sp set to  64039.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4955972
+ramp_up FINISHED, we went from 64039.0 to 64089
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+np.NaN returned from poly_fit_2order(). Returning predicted sp = current_sp +
+default increase, 64089.0 + 50
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 64139
+set_amp (64139) called from ramp_up
+set_amp is updating last_amp_sp set to  64089.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4956972
+ramp_up FINISHED, we went from 64089.0 to 64139
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 64189
+set_amp (64189) called from ramp_up
+set_amp is updating last_amp_sp set to  64139.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4957973
+ramp_up FINISHED, we went from 64139.0 to 64189
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 64239
+set_amp (64239) called from ramp_up
+set_amp is updating last_amp_sp set to  64189.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4958973
+ramp_up FINISHED, we went from 64189.0 to 64239
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 64289
+set_amp (64289) called from ramp_up
+set_amp is updating last_amp_sp set to  64239.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4959974
+ramp_up FINISHED, we went from 64239.0 to 64289
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 64339
+set_amp (64339) called from ramp_up
+set_amp is updating last_amp_sp set to  64289.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4960974
+ramp_up FINISHED, we went from 64289.0 to 64339
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 64389
+set_amp (64389) called from ramp_up
+set_amp is updating last_amp_sp set to  64339.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4961974
+ramp_up FINISHED, we went from 64339.0 to 64389
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 64439
+set_amp (64439) called from ramp_up
+set_amp is updating last_amp_sp set to  64389.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4962974
+ramp_up FINISHED, we went from 64389.0 to 64439
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 64489
+set_amp (64489) called from ramp_up
+set_amp is updating last_amp_sp set to  64439.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4963974
+ramp_up FINISHED, we went from 64439.0 to 64489
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 64539
+set_amp (64539) called from ramp_up
+set_amp is updating last_amp_sp set to  64489.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4964974
+ramp_up FINISHED, we went from 64489.0 to 64539
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+set_amp (64590.0) called from ramp_up
+set_amp is updating last_amp_sp set to  64539.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4965974
+ramp_up FINISHED, we went from 64539.0 to 64590.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+Predicted sp is less than current_sp! returning current_sp + 64640
+set_amp (64640) called from ramp_up
+set_amp is updating last_amp_sp set to  64590.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4966974
+ramp_up FINISHED, we went from 64590.0 to 64640
+enable_llrf, isTrigExternal = False, attempting trigExt()
+enable_llrf, isTrigExternal = True
+
+2020-10-08 10:17:54.177000
+********************************************************************************
+** src.monitors.outside_mask_trace_monitor Collecting Outside Mask Event Data **
+********************************************************************************
+event_pulse_count_zero = 0
+src.data.rf_conditioning_data increasing breakdown count = 347, at pulse count =
+4967177
+Python OME Message: LRRG_CAVITY_REVERSE_POWER LO MASK FAIL: current average =
+1.6683e+006, 157091 < 1.08439e+006 at i = 464 us = 4.26813. Trace time-stamp =
+Thu Oct 08 2020 10:17:53.983566888
+
+2020-10-08 10:17:54.350000
+********************************************************************************
+src.monitors.vac_monitor NEW vacuum spike, #3: either 7.1e-09 > 1e-08 +
+1.60571428571e-09.or 7.1e-09 > 2e-09.
+********************************************************************************
+
+2020-10-08 10:17:55.222000
+src.data.rf_conditioning_logger pickle_dumped  C:\Users\dlerlp\Documents\GitHub\
+Software\Apps\RF_Conditioner\v2\logs\2020-10-08-09-32-04\src.monitors.vac_monito
+r_3
+
+2020-10-08 10:17:55.254000
+src.monitors.vac_monitor level hi, 7.1e-09 > 5e-09
+
+2020-10-08 10:17:55.254000
+src.monitors.outside_mask_trace_monitor adding 1 events
+
+2020-10-08 10:17:55.269000
+src.data.rf_conditioning_logger pickle_dumped  C:\Users\dlerlp\Documents\GitHub\
+Software\Apps\RF_Conditioner\v2\logs\2020-10-08-09-32-04\LRRG_CAVITY_REVERSE_POW
+ER_3
+
+2020-10-08 10:17:55.285000
+src.monitors.vac_monitor level ok, 1.6e-09 < 5e-09
+
+2020-10-08 10:17:58.076000
+src.monitors.outside_mask_trace_monitor, cool down ended
+
+2020-10-08 10:17:58.346000
+src.monitors.vac_monitor has_cooled_down
+
+2020-10-08 10:17:58.346000
+set_global_check_mask setGlobalCheckMask True
+!!Log Ramp curve is NONE, generating a new one
+power_finish = 7511477.9893
+breakdown_rate_low = True
+Breakdown rate LO, log_ramp power_finish = 7511477.9893
+Log Ramp curve is NONE, generating a new one
+Log Ramp curve_p_finish = 7586592.7692, p_start = 30000, p_finish =
+7511477.9893, ramp_rate = 0.2
+set_amp (2759.0) called from log_ramp_up
+set_amp (8394.0) called from log_ramp_up
+set_amp (11550.0) called from log_ramp_up
+set_amp (14070.0) called from log_ramp_up
+set_amp (16246.0) called from log_ramp_up
+set_amp (18146.0) called from log_ramp_up
+set_amp (19905.0) called from log_ramp_up
+set_amp (21555.0) called from log_ramp_up
+set_amp (23134.0) called from log_ramp_up
+set_amp (24579.0) called from log_ramp_up
+set_amp (25989.0) called from log_ramp_up
+set_amp (27316.0) called from log_ramp_up
+set_amp (28567.0) called from log_ramp_up
+set_amp (29786.0) called from log_ramp_up
+set_amp (30860.0) called from log_ramp_up
+set_amp (31926.0) called from log_ramp_up
+set_amp (32962.0) called from log_ramp_up
+set_amp (33838.0) called from log_ramp_up
+set_amp (34750.0) called from log_ramp_up
+set_amp (35649.0) called from log_ramp_up
+set_amp (36466.0) called from log_ramp_up
+set_amp (37318.0) called from log_ramp_up
+set_amp (38099.0) called from log_ramp_up
+set_amp (38921.0) called from log_ramp_up
+set_amp (39648.0) called from log_ramp_up
+set_amp (40493.0) called from log_ramp_up
+set_amp (41081.0) called from log_ramp_up
+set_amp (41764.0) called from log_ramp_up
+set_amp (42553.0) called from log_ramp_up
+set_amp (43326.0) called from log_ramp_up
+set_amp (44040.0) called from log_ramp_up
+set_amp (44767.0) called from log_ramp_up
+set_amp (45422.0) called from log_ramp_up
+set_amp (46129.0) called from log_ramp_up
+set_amp (46765.0) called from log_ramp_up
+set_amp (47401.0) called from log_ramp_up
+set_amp (47899.0) called from log_ramp_up
+set_amp (48505.0) called from log_ramp_up
+set_amp (49078.0) called from log_ramp_up
+set_amp (49644.0) called from log_ramp_up
+set_amp (50198.0) called from log_ramp_up
+set_amp (50654.0) called from log_ramp_up
+set_amp (51131.0) called from log_ramp_up
+set_amp (51568.0) called from log_ramp_up
+set_amp (52032.0) called from log_ramp_up
+set_amp (52444.0) called from log_ramp_up
+set_amp (52810.0) called from log_ramp_up
+set_amp (53115.0) called from log_ramp_up
+set_amp (53393.0) called from log_ramp_up
+set_amp (53779.0) called from log_ramp_up
+set_amp (54147.0) called from log_ramp_up
+set_amp (54475.0) called from log_ramp_up
+set_amp (54794.0) called from log_ramp_up
+set_amp (55105.0) called from log_ramp_up
+set_amp (55357.0) called from log_ramp_up
+set_amp (55623.0) called from log_ramp_up
+set_amp (55910.0) called from log_ramp_up
+set_amp (56239.0) called from log_ramp_up
+set_amp (56641.0) called from log_ramp_up
+set_amp (57017.0) called from log_ramp_up
+set_amp (57349.0) called from log_ramp_up
+set_amp (57622.0) called from log_ramp_up
+set_amp (57849.0) called from log_ramp_up
+set_amp (58222.0) called from log_ramp_up
+set_amp (58407.0) called from log_ramp_up
+set_amp (58535.0) called from log_ramp_up
+set_amp (58660.0) called from log_ramp_up
+set_amp (58980.0) called from log_ramp_up
+set_amp (59186.0) called from log_ramp_up
+set_amp (59305.0) called from log_ramp_up
+set_amp (59420.0) called from log_ramp_up
+set_amp (59550.0) called from log_ramp_up
+set_amp (59719.0) called from log_ramp_up
+set_amp (59883.0) called from log_ramp_up
+set_amp (60061.0) called from log_ramp_up
+set_amp (60237.0) called from log_ramp_up
+set_amp (60431.0) called from log_ramp_up
+set_amp (60632.0) called from log_ramp_up
+set_amp (60909.0) called from log_ramp_up
+set_amp (61115.0) called from log_ramp_up
+set_amp (61152.0) called from log_ramp_up
+set_amp (61188.0) called from log_ramp_up
+set_amp (61223.0) called from log_ramp_up
+set_amp (61257.0) called from log_ramp_up
+set_amp (61290.0) called from log_ramp_up
+set_amp (61322.0) called from log_ramp_up
+set_amp (61353.0) called from log_ramp_up
+enable_llrf, isTrigExternal = False, attempting trigExt()
+enable_llrf, isTrigExternal = True
+clear_log_ramp_curve called from main_loop
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4968483
+
+2020-10-08 10:20:09.274000
+********************************************************************************
+** src.monitors.outside_mask_trace_monitor Collecting Outside Mask Event Data **
+********************************************************************************
+event_pulse_count_zero = 0
+src.data.rf_conditioning_data increasing breakdown count = 348, at pulse count =
+4968483
+Python OME Message: LRRG_CAVITY_REVERSE_POWER LO MASK FAIL: current average =
+1.56169e+006, 18445.9 < 1.0151e+006 at i = 464 us = 4.26813. Trace time-stamp =
+Thu Oct 08 2020 10:20:09.038193504
+src.monitors.outside_mask_trace_monitor adding 1 events
+src.data.rf_conditioning_logger pickle_dumped  C:\Users\dlerlp\Documents\GitHub\
+Software\Apps\RF_Conditioner\v2\logs\2020-10-08-09-32-04\LRRG_CAVITY_REVERSE_POW
+ER_4
+
+2020-10-08 10:20:09.479000
+********************************************************************************
+src.monitors.vac_monitor NEW vacuum spike, #4: either 7.3e-09 > 1e-08 +
+1.6e-09.or 7.3e-09 > 2e-09.
+********************************************************************************
+
+2020-10-08 10:20:10.452000
+src.data.rf_conditioning_logger pickle_dumped  C:\Users\dlerlp\Documents\GitHub\
+Software\Apps\RF_Conditioner\v2\logs\2020-10-08-09-32-04\src.monitors.vac_monito
+r_4
+
+2020-10-08 10:20:10.483000
+src.monitors.vac_monitor level hi, 7.3e-09 > 5e-09
+
+2020-10-08 10:20:10.552000
+src.monitors.vac_monitor level ok, 1.2e-09 < 5e-09
+
+2020-10-08 10:20:13.158000
+src.monitors.outside_mask_trace_monitor, cool down ended
+
+2020-10-08 10:20:13.591000
+src.monitors.vac_monitor has_cooled_down
+
+2020-10-08 10:20:13.591000
+set_global_check_mask setGlobalCheckMask True
+!!Log Ramp curve is NONE, generating a new one
+power_finish = 7511477.9893
+breakdown_rate_low = True
+Breakdown rate LO, log_ramp power_finish = 7511477.9893
+Log Ramp curve is NONE, generating a new one
+Log Ramp curve_p_finish = 7586592.7692, p_start = 30000, p_finish =
+7511477.9893, ramp_rate = 0.2
+set_amp (2759.0) called from log_ramp_up
+set_amp (8394.0) called from log_ramp_up
+set_amp (11550.0) called from log_ramp_up
+set_amp (14070.0) called from log_ramp_up
+set_amp (16246.0) called from log_ramp_up
+set_amp (18146.0) called from log_ramp_up
+set_amp (19905.0) called from log_ramp_up
+set_amp (21555.0) called from log_ramp_up
+set_amp (23134.0) called from log_ramp_up
+set_amp (24579.0) called from log_ramp_up
+set_amp (25989.0) called from log_ramp_up
+set_amp (27316.0) called from log_ramp_up
+set_amp (28567.0) called from log_ramp_up
+set_amp (29786.0) called from log_ramp_up
+set_amp (30860.0) called from log_ramp_up
+set_amp (31926.0) called from log_ramp_up
+set_amp (32962.0) called from log_ramp_up
+set_amp (33838.0) called from log_ramp_up
+set_amp (34750.0) called from log_ramp_up
+set_amp (35649.0) called from log_ramp_up
+set_amp (36466.0) called from log_ramp_up
+set_amp (37318.0) called from log_ramp_up
+set_amp (38099.0) called from log_ramp_up
+set_amp (38921.0) called from log_ramp_up
+set_amp (39648.0) called from log_ramp_up
+set_amp (40493.0) called from log_ramp_up
+set_amp (41081.0) called from log_ramp_up
+set_amp (41764.0) called from log_ramp_up
+set_amp (42553.0) called from log_ramp_up
+set_amp (43326.0) called from log_ramp_up
+set_amp (44040.0) called from log_ramp_up
+set_amp (44767.0) called from log_ramp_up
+set_amp (45422.0) called from log_ramp_up
+set_amp (46129.0) called from log_ramp_up
+set_amp (46765.0) called from log_ramp_up
+set_amp (47401.0) called from log_ramp_up
+set_amp (47899.0) called from log_ramp_up
+set_amp (48505.0) called from log_ramp_up
+set_amp (49078.0) called from log_ramp_up
+set_amp (49644.0) called from log_ramp_up
+set_amp (50198.0) called from log_ramp_up
+set_amp (50654.0) called from log_ramp_up
+set_amp (51131.0) called from log_ramp_up
+set_amp (51568.0) called from log_ramp_up
+set_amp (52032.0) called from log_ramp_up
+set_amp (52444.0) called from log_ramp_up
+set_amp (52810.0) called from log_ramp_up
+set_amp (53115.0) called from log_ramp_up
+set_amp (53393.0) called from log_ramp_up
+set_amp (53779.0) called from log_ramp_up
+set_amp (54147.0) called from log_ramp_up
+set_amp (54475.0) called from log_ramp_up
+set_amp (54794.0) called from log_ramp_up
+set_amp (55105.0) called from log_ramp_up
+set_amp (55357.0) called from log_ramp_up
+set_amp (55623.0) called from log_ramp_up
+set_amp (55910.0) called from log_ramp_up
+set_amp (56239.0) called from log_ramp_up
+set_amp (56641.0) called from log_ramp_up
+set_amp (57017.0) called from log_ramp_up
+set_amp (57349.0) called from log_ramp_up
+set_amp (57622.0) called from log_ramp_up
+set_amp (57849.0) called from log_ramp_up
+set_amp (58222.0) called from log_ramp_up
+set_amp (58407.0) called from log_ramp_up
+set_amp (58535.0) called from log_ramp_up
+set_amp (58660.0) called from log_ramp_up
+set_amp (58980.0) called from log_ramp_up
+set_amp (59186.0) called from log_ramp_up
+set_amp (59305.0) called from log_ramp_up
+set_amp (59420.0) called from log_ramp_up
+set_amp (59550.0) called from log_ramp_up
+set_amp (59719.0) called from log_ramp_up
+set_amp (59883.0) called from log_ramp_up
+set_amp (60061.0) called from log_ramp_up
+set_amp (60237.0) called from log_ramp_up
+set_amp (60431.0) called from log_ramp_up
+set_amp (60632.0) called from log_ramp_up
+set_amp (60909.0) called from log_ramp_up
+set_amp (61115.0) called from log_ramp_up
+set_amp (61152.0) called from log_ramp_up
+set_amp (61188.0) called from log_ramp_up
+set_amp (61223.0) called from log_ramp_up
+set_amp (61257.0) called from log_ramp_up
+set_amp (61290.0) called from log_ramp_up
+set_amp (61322.0) called from log_ramp_up
+set_amp (61353.0) called from log_ramp_up
+set_amp (61383.0) called from log_ramp_up
+set_amp (61412.0) called from log_ramp_up
+set_amp (61440.0) called from log_ramp_up
+set_amp (61467.0) called from log_ramp_up
+set_amp (61494.0) called from log_ramp_up
+set_amp (61542.0) called from log_ramp_up
+set_amp (61595.0) called from log_ramp_up
+set_amp (61646.0) called from log_ramp_up
+set_amp (61695.0) called from log_ramp_up
+set_amp (61743.0) called from log_ramp_up
+set_amp (61789.0) called from log_ramp_up
+set_amp (61834.0) called from log_ramp_up
+set_amp (61878.0) called from log_ramp_up
+set_amp (63580.0) called from log_ramp_up
+set_amp (63599.0) called from log_ramp_up
+set_amp (63619.0) called from log_ramp_up
+set_amp (63637.0) called from log_ramp_up
+set_amp (63655.0) called from log_ramp_up
+set_amp (63673.0) called from log_ramp_up
+set_amp (63690.0) called from log_ramp_up
+set_amp (63706.0) called from log_ramp_up
+set_amp (63722.0) called from log_ramp_up
+set_amp (63738.0) called from log_ramp_up
+set_amp (63753.0) called from log_ramp_up
+set_amp (63768.0) called from log_ramp_up
+set_amp (63782.0) called from log_ramp_up
+set_amp (63795.0) called from log_ramp_up
+set_amp (63809.0) called from log_ramp_up
+set_amp (63822.0) called from log_ramp_up
+set_amp (63834.0) called from log_ramp_up
+set_amp (63846.0) called from log_ramp_up
+set_amp (63858.0) called from log_ramp_up
+set_amp (63869.0) called from log_ramp_up
+set_amp (63880.0) called from log_ramp_up
+set_amp (63891.0) called from log_ramp_up
+set_amp (63906.0) called from log_ramp_up
+set_amp (63936.0) called from log_ramp_up
+set_amp (63965.0) called from log_ramp_up
+set_amp (63993.0) called from log_ramp_up
+set_amp (64021.0) called from log_ramp_up
+set_amp (64047.0) called from log_ramp_up
+set_amp (64073.0) called from log_ramp_up
+set_amp (64098.0) called from log_ramp_up
+set_amp (64122.0) called from log_ramp_up
+set_amp (64145.0) called from log_ramp_up
+set_amp (64168.0) called from log_ramp_up
+set_amp (64190.0) called from log_ramp_up
+set_amp (64212.0) called from log_ramp_up
+set_amp (64232.0) called from log_ramp_up
+set_amp (64253.0) called from log_ramp_up
+set_amp (64272.0) called from log_ramp_up
+set_amp (64291.0) called from log_ramp_up
+set_amp (65301.0) called from log_ramp_up
+set_amp (65310.0) called from log_ramp_up
+set_amp (65319.0) called from log_ramp_up
+set_amp (65329.0) called from log_ramp_up
+set_amp (65337.0) called from log_ramp_up
+set_amp (65346.0) called from log_ramp_up
+set_amp (65354.0) called from log_ramp_up
+set_amp (65362.0) called from log_ramp_up
+set_amp (65370.0) called from log_ramp_up
+set_amp (65377.0) called from log_ramp_up
+set_amp (65385.0) called from log_ramp_up
+set_amp (65392.0) called from log_ramp_up
+Log Ramp finished, calling clear_log_ramp_curve()
+clear_log_ramp_curve called from log_ramp_up
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4970755
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+Predicted sp is less than current_sp! returning current_sp + 65442
+set_amp (65442) called from ramp_up
+set_amp is updating last_amp_sp set to  65392.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4971755
+ramp_up FINISHED, we went from 65392.0 to 65442
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 65492
+set_amp (65492) called from ramp_up
+set_amp is updating last_amp_sp set to  65442.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4972755
+ramp_up FINISHED, we went from 65442.0 to 65492
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 65542
+set_amp (65542) called from ramp_up
+set_amp is updating last_amp_sp set to  65492.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4973755
+ramp_up FINISHED, we went from 65492.0 to 65542
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 65592
+set_amp (65592) called from ramp_up
+set_amp is updating last_amp_sp set to  65542.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4974755
+ramp_up FINISHED, we went from 65542.0 to 65592
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 65642
+set_amp (65642) called from ramp_up
+set_amp is updating last_amp_sp set to  65592.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4975755
+ramp_up FINISHED, we went from 65592.0 to 65642
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 65692
+set_amp (65692) called from ramp_up
+set_amp is updating last_amp_sp set to  65642.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4976755
+ramp_up FINISHED, we went from 65642.0 to 65692
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 65742
+set_amp (65742) called from ramp_up
+set_amp is updating last_amp_sp set to  65692.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4977755
+ramp_up FINISHED, we went from 65692.0 to 65742
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+np.NaN returned from poly_fit_2order(). Returning predicted sp = current_sp +
+default increase, 65742.0 + 50
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 65792
+set_amp (65792) called from ramp_up
+set_amp is updating last_amp_sp set to  65742.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4978755
+ramp_up FINISHED, we went from 65742.0 to 65792
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+np.NaN returned from poly_fit_2order(). Returning predicted sp = current_sp +
+default increase, 65792.0 + 50
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 65842
+set_amp (65842) called from ramp_up
+set_amp is updating last_amp_sp set to  65792.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4979755
+ramp_up FINISHED, we went from 65792.0 to 65842
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+np.NaN returned from poly_fit_2order(). Returning predicted sp = current_sp +
+default increase, 65842.0 + 50
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 65892
+set_amp (65892) called from ramp_up
+set_amp is updating last_amp_sp set to  65842.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4980755
+ramp_up FINISHED, we went from 65842.0 to 65892
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+np.NaN returned from poly_fit_2order(). Returning predicted sp = current_sp +
+default increase, 65892.0 + 50
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 65942
+set_amp (65942) called from ramp_up
+set_amp is updating last_amp_sp set to  65892.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4981755
+ramp_up FINISHED, we went from 65892.0 to 65942
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+np.NaN returned from poly_fit_2order(). Returning predicted sp = current_sp +
+default increase, 65942.0 + 50
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 65992
+set_amp (65992) called from ramp_up
+set_amp is updating last_amp_sp set to  65942.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4982755
+ramp_up FINISHED, we went from 65942.0 to 65992
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+np.NaN returned from poly_fit_2order(). Returning predicted sp = current_sp +
+default increase, 65992.0 + 50
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 66042
+set_amp (66042) called from ramp_up
+set_amp is updating last_amp_sp set to  65992.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4983755
+ramp_up FINISHED, we went from 65992.0 to 66042
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+np.NaN returned from poly_fit_2order(). Returning predicted sp = current_sp +
+default increase, 66042.0 + 50
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 66092
+set_amp (66092) called from ramp_up
+set_amp is updating last_amp_sp set to  66042.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4984755
+ramp_up FINISHED, we went from 66042.0 to 66092
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+np.NaN returned from poly_fit_2order(). Returning predicted sp = current_sp +
+default increase, 66092.0 + 50
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 66142
+set_amp (66142) called from ramp_up
+set_amp is updating last_amp_sp set to  66092.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4985756
+ramp_up FINISHED, we went from 66092.0 to 66142
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 66192
+set_amp (66192) called from ramp_up
+set_amp is updating last_amp_sp set to  66142.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4986756
+ramp_up FINISHED, we went from 66142.0 to 66192
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 66242
+set_amp (66242) called from ramp_up
+set_amp is updating last_amp_sp set to  66192.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4987756
+ramp_up FINISHED, we went from 66192.0 to 66242
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 66292
+set_amp (66292) called from ramp_up
+set_amp is updating last_amp_sp set to  66242.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4988756
+ramp_up FINISHED, we went from 66242.0 to 66292
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 66342
+set_amp (66342) called from ramp_up
+set_amp is updating last_amp_sp set to  66292.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4989756
+ramp_up FINISHED, we went from 66292.0 to 66342
+enable_llrf, isTrigExternal = False, attempting trigExt()
+enable_llrf, getTrigSource() != TRIG.EXTERNAL, attempting trigExt()
+
+2020-10-08 10:55:57.504000
+********************************************************************************
+** src.monitors.outside_mask_trace_monitor Collecting Outside Mask Event Data **
+********************************************************************************
+event_pulse_count_zero = 0
+src.data.rf_conditioning_data increasing breakdown count = 349, at pulse count =
+4989949
+Python OME Message: LRRG_CAVITY_REVERSE_POWER HI MASK FAIL: current average =
+42691.2, 109043 > 57633.1 at i = 360 us = 3.33167. Trace time-stamp = Thu Oct 08
+2020 10:55:57.281347662
+
+2020-10-08 10:55:57.665000
+********************************************************************************
+src.monitors.vac_monitor NEW vacuum spike, #5: either 2.6e-08 > 1e-08 +
+4.32571428571e-09.or 2.6e-08 > 2e-09.
+********************************************************************************
+
+2020-10-08 10:55:58.561000
+src.data.rf_conditioning_logger pickle_dumped  C:\Users\dlerlp\Documents\GitHub\
+Software\Apps\RF_Conditioner\v2\logs\2020-10-08-09-32-04\src.monitors.vac_monito
+r_5
+
+2020-10-08 10:55:58.591000
+src.monitors.vac_monitor level hi, 2.6e-08 > 5e-09
+
+2020-10-08 10:55:58.591000
+src.monitors.outside_mask_trace_monitor adding 1 events
+
+2020-10-08 10:55:58.599000
+src.data.rf_conditioning_logger pickle_dumped  C:\Users\dlerlp\Documents\GitHub\
+Software\Apps\RF_Conditioner\v2\logs\2020-10-08-09-32-04\LRRG_CAVITY_REVERSE_POW
+ER_5
+
+2020-10-08 10:55:58.609000
+src.monitors.vac_monitor level ok, 3.7e-09 < 5e-09
+
+2020-10-08 10:56:01.395000
+src.monitors.outside_mask_trace_monitor, cool down ended
+
+2020-10-08 10:56:02.282000
+src.monitors.vac_monitor has_cooled_down
+
+2020-10-08 10:56:02.282000
+set_global_check_mask setGlobalCheckMask True
+!!Log Ramp curve is NONE, generating a new one
+power_finish = 7655760.62989
+breakdown_rate_low = True
+Breakdown rate LO, log_ramp power_finish = 7655760.62989
+Log Ramp curve is NONE, generating a new one
+Log Ramp curve_p_finish = 7732318.23619, p_start = 30000, p_finish =
+7655760.62989, ramp_rate = 0.2
+set_amp (2759.0) called from log_ramp_up
+set_amp (8467.0) called from log_ramp_up
+set_amp (11642.0) called from log_ramp_up
+set_amp (14195.0) called from log_ramp_up
+set_amp (16404.0) called from log_ramp_up
+set_amp (18322.0) called from log_ramp_up
+set_amp (20111.0) called from log_ramp_up
+set_amp (21795.0) called from log_ramp_up
+set_amp (23364.0) called from log_ramp_up
+set_amp (24872.0) called from log_ramp_up
+set_amp (26268.0) called from log_ramp_up
+set_amp (27631.0) called from log_ramp_up
+set_amp (28927.0) called from log_ramp_up
+set_amp (30113.0) called from log_ramp_up
+set_amp (31196.0) called from log_ramp_up
+set_amp (32291.0) called from log_ramp_up
+set_amp (33333.0) called from log_ramp_up
+set_amp (34266.0) called from log_ramp_up
+set_amp (35171.0) called from log_ramp_up
+set_amp (36059.0) called from log_ramp_up
+set_amp (36927.0) called from log_ramp_up
+set_amp (37759.0) called from log_ramp_up
+set_amp (38609.0) called from log_ramp_up
+set_amp (39447.0) called from log_ramp_up
+set_amp (40210.0) called from log_ramp_up
+set_amp (40944.0) called from log_ramp_up
+set_amp (41557.0) called from log_ramp_up
+set_amp (42400.0) called from log_ramp_up
+set_amp (43238.0) called from log_ramp_up
+set_amp (43988.0) called from log_ramp_up
+set_amp (44743.0) called from log_ramp_up
+set_amp (45431.0) called from log_ramp_up
+set_amp (46173.0) called from log_ramp_up
+set_amp (46852.0) called from log_ramp_up
+set_amp (47502.0) called from log_ramp_up
+set_amp (48035.0) called from log_ramp_up
+set_amp (48704.0) called from log_ramp_up
+set_amp (49281.0) called from log_ramp_up
+set_amp (49880.0) called from log_ramp_up
+set_amp (50432.0) called from log_ramp_up
+set_amp (50920.0) called from log_ramp_up
+set_amp (51400.0) called from log_ramp_up
+set_amp (51905.0) called from log_ramp_up
+set_amp (52353.0) called from log_ramp_up
+set_amp (52764.0) called from log_ramp_up
+set_amp (53095.0) called from log_ramp_up
+set_amp (53397.0) called from log_ramp_up
+set_amp (53825.0) called from log_ramp_up
+set_amp (54209.0) called from log_ramp_up
+set_amp (54565.0) called from log_ramp_up
+set_amp (54913.0) called from log_ramp_up
+set_amp (55226.0) called from log_ramp_up
+set_amp (55499.0) called from log_ramp_up
+set_amp (55818.0) called from log_ramp_up
+set_amp (56170.0) called from log_ramp_up
+set_amp (56600.0) called from log_ramp_up
+set_amp (57024.0) called from log_ramp_up
+set_amp (57393.0) called from log_ramp_up
+set_amp (57682.0) called from log_ramp_up
+set_amp (57970.0) called from log_ramp_up
+set_amp (58344.0) called from log_ramp_up
+set_amp (58493.0) called from log_ramp_up
+set_amp (58636.0) called from log_ramp_up
+set_amp (58962.0) called from log_ramp_up
+set_amp (59199.0) called from log_ramp_up
+set_amp (59336.0) called from log_ramp_up
+set_amp (59469.0) called from log_ramp_up
+set_amp (59652.0) called from log_ramp_up
+set_amp (59847.0) called from log_ramp_up
+set_amp (60055.0) called from log_ramp_up
+set_amp (60264.0) called from log_ramp_up
+set_amp (60503.0) called from log_ramp_up
+set_amp (60769.0) called from log_ramp_up
+set_amp (61106.0) called from log_ramp_up
+set_amp (61152.0) called from log_ramp_up
+set_amp (61196.0) called from log_ramp_up
+set_amp (61239.0) called from log_ramp_up
+set_amp (61280.0) called from log_ramp_up
+set_amp (61321.0) called from log_ramp_up
+set_amp (61360.0) called from log_ramp_up
+set_amp (61398.0) called from log_ramp_up
+set_amp (61435.0) called from log_ramp_up
+set_amp (61470.0) called from log_ramp_up
+set_amp (61511.0) called from log_ramp_up
+set_amp (61582.0) called from log_ramp_up
+set_amp (61650.0) called from log_ramp_up
+set_amp (61716.0) called from log_ramp_up
+set_amp (61781.0) called from log_ramp_up
+set_amp (61843.0) called from log_ramp_up
+set_amp (63572.0) called from log_ramp_up
+set_amp (63600.0) called from log_ramp_up
+set_amp (63627.0) called from log_ramp_up
+set_amp (63654.0) called from log_ramp_up
+set_amp (63680.0) called from log_ramp_up
+set_amp (63705.0) called from log_ramp_up
+set_amp (63729.0) called from log_ramp_up
+set_amp (63753.0) called from log_ramp_up
+set_amp (63776.0) called from log_ramp_up
+set_amp (63798.0) called from log_ramp_up
+set_amp (63819.0) called from log_ramp_up
+set_amp (63840.0) called from log_ramp_up
+set_amp (63861.0) called from log_ramp_up
+set_amp (63880.0) called from log_ramp_up
+set_amp (63899.0) called from log_ramp_up
+set_amp (63953.0) called from log_ramp_up
+set_amp (64006.0) called from log_ramp_up
+set_amp (64058.0) called from log_ramp_up
+set_amp (64108.0) called from log_ramp_up
+set_amp (64157.0) called from log_ramp_up
+set_amp (64204.0) called from log_ramp_up
+set_amp (64249.0) called from log_ramp_up
+set_amp (64293.0) called from log_ramp_up
+set_amp (65282.0) called from log_ramp_up
+set_amp (65301.0) called from log_ramp_up
+set_amp (65319.0) called from log_ramp_up
+set_amp (65337.0) called from log_ramp_up
+set_amp (65354.0) called from log_ramp_up
+set_amp (65371.0) called from log_ramp_up
+set_amp (65387.0) called from log_ramp_up
+set_amp (65403.0) called from log_ramp_up
+set_amp (65418.0) called from log_ramp_up
+set_amp (65433.0) called from log_ramp_up
+set_amp (65448.0) called from log_ramp_up
+set_amp (65462.0) called from log_ramp_up
+set_amp (65475.0) called from log_ramp_up
+set_amp (65488.0) called from log_ramp_up
+set_amp (65507.0) called from log_ramp_up
+set_amp (65571.0) called from log_ramp_up
+set_amp (65633.0) called from log_ramp_up
+set_amp (65693.0) called from log_ramp_up
+set_amp (65751.0) called from log_ramp_up
+set_amp (65807.0) called from log_ramp_up
+set_amp (65862.0) called from log_ramp_up
+set_amp (65917.0) called from log_ramp_up
+set_amp (65976.0) called from log_ramp_up
+set_amp (66033.0) called from log_ramp_up
+set_amp (66088.0) called from log_ramp_up
+set_amp (66142.0) called from log_ramp_up
+set_amp (66194.0) called from log_ramp_up
+set_amp (66244.0) called from log_ramp_up
+set_amp (66293.0) called from log_ramp_up
+set_amp (66787.0) called from log_ramp_up
+set_amp (66837.0) called from log_ramp_up
+set_amp (66884.0) called from log_ramp_up
+set_amp (66931.0) called from log_ramp_up
+set_amp (66976.0) called from log_ramp_up
+set_amp (67019.0) called from log_ramp_up
+set_amp (67062.0) called from log_ramp_up
+set_amp (67102.0) called from log_ramp_up
+set_amp (67130.0) called from log_ramp_up
+set_amp (67158.0) called from log_ramp_up
+Log Ramp finished, calling clear_log_ramp_curve()
+clear_log_ramp_curve called from log_ramp_up
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4992219
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+enable_llrf, isTrigExternal = True
+
+2020-10-08 11:11:39.702000
+********************************************************************************
+** src.monitors.outside_mask_trace_monitor Collecting Outside Mask Event Data **
+********************************************************************************
+event_pulse_count_zero = 0
+src.data.rf_conditioning_data increasing breakdown count = 350, at pulse count =
+4999314
+Python OME Message: LRRG_CAVITY_REVERSE_POWER HI MASK FAIL: current average =
+41337.1, 66460.7 > 55805.1 at i = 390 us = 3.6018. Trace time-stamp = Thu Oct 08
+2020 11:11:39.505433887
+
+2020-10-08 11:11:39.866000
+********************************************************************************
+src.monitors.vac_monitor NEW vacuum spike, #6: either 1.1e-08 > 1e-08 +
+2.16428571429e-09.or 1.1e-08 > 2e-09.
+********************************************************************************
+
+2020-10-08 11:11:40.786000
+src.data.rf_conditioning_logger pickle_dumped  C:\Users\dlerlp\Documents\GitHub\
+Software\Apps\RF_Conditioner\v2\logs\2020-10-08-09-32-04\src.monitors.vac_monito
+r_6
+
+2020-10-08 11:11:40.814000
+src.monitors.vac_monitor level hi, 1.1e-08 > 5e-09
+
+2020-10-08 11:11:40.816000
+src.monitors.outside_mask_trace_monitor adding 1 events
+
+2020-10-08 11:11:40.824000
+src.data.rf_conditioning_logger pickle_dumped  C:\Users\dlerlp\Documents\GitHub\
+Software\Apps\RF_Conditioner\v2\logs\2020-10-08-09-32-04\LRRG_CAVITY_REVERSE_POW
+ER_6
+
+2020-10-08 11:11:40.836000
+src.monitors.vac_monitor level ok, 2e-09 < 5e-09
+
+2020-10-08 11:11:43.596000
+src.monitors.outside_mask_trace_monitor, cool down ended
+
+2020-10-08 11:11:43.881000
+src.monitors.vac_monitor has_cooled_down
+
+2020-10-08 11:11:43.881000
+set_global_check_mask setGlobalCheckMask True
+!!Log Ramp curve is NONE, generating a new one
+power_finish = 7655760.62989
+breakdown_rate_low = True
+Breakdown rate LO, log_ramp power_finish = 7655760.62989
+Log Ramp curve is NONE, generating a new one
+Log Ramp curve_p_finish = 7732318.23619, p_start = 30000, p_finish =
+7655760.62989, ramp_rate = 0.2
+set_amp (2759.0) called from log_ramp_up
+set_amp (8467.0) called from log_ramp_up
+set_amp (11642.0) called from log_ramp_up
+set_amp (14195.0) called from log_ramp_up
+set_amp (16404.0) called from log_ramp_up
+set_amp (18322.0) called from log_ramp_up
+set_amp (20111.0) called from log_ramp_up
+set_amp (21795.0) called from log_ramp_up
+set_amp (23364.0) called from log_ramp_up
+set_amp (24872.0) called from log_ramp_up
+set_amp (26268.0) called from log_ramp_up
+set_amp (27631.0) called from log_ramp_up
+set_amp (28927.0) called from log_ramp_up
+set_amp (30113.0) called from log_ramp_up
+set_amp (31196.0) called from log_ramp_up
+set_amp (32291.0) called from log_ramp_up
+set_amp (33333.0) called from log_ramp_up
+set_amp (34266.0) called from log_ramp_up
+set_amp (35171.0) called from log_ramp_up
+set_amp (36059.0) called from log_ramp_up
+set_amp (36927.0) called from log_ramp_up
+set_amp (37759.0) called from log_ramp_up
+set_amp (38609.0) called from log_ramp_up
+set_amp (39447.0) called from log_ramp_up
+set_amp (40210.0) called from log_ramp_up
+set_amp (40944.0) called from log_ramp_up
+set_amp (41557.0) called from log_ramp_up
+set_amp (42400.0) called from log_ramp_up
+set_amp (43238.0) called from log_ramp_up
+set_amp (43988.0) called from log_ramp_up
+set_amp (44743.0) called from log_ramp_up
+set_amp (45431.0) called from log_ramp_up
+set_amp (46173.0) called from log_ramp_up
+set_amp (46852.0) called from log_ramp_up
+set_amp (47502.0) called from log_ramp_up
+set_amp (48035.0) called from log_ramp_up
+set_amp (48704.0) called from log_ramp_up
+set_amp (49281.0) called from log_ramp_up
+set_amp (49880.0) called from log_ramp_up
+set_amp (50432.0) called from log_ramp_up
+set_amp (50920.0) called from log_ramp_up
+set_amp (51400.0) called from log_ramp_up
+set_amp (51905.0) called from log_ramp_up
+set_amp (52353.0) called from log_ramp_up
+set_amp (52764.0) called from log_ramp_up
+set_amp (53095.0) called from log_ramp_up
+set_amp (53397.0) called from log_ramp_up
+set_amp (53825.0) called from log_ramp_up
+set_amp (54209.0) called from log_ramp_up
+set_amp (54565.0) called from log_ramp_up
+set_amp (54913.0) called from log_ramp_up
+set_amp (55226.0) called from log_ramp_up
+set_amp (55499.0) called from log_ramp_up
+set_amp (55818.0) called from log_ramp_up
+set_amp (56170.0) called from log_ramp_up
+set_amp (56600.0) called from log_ramp_up
+set_amp (57024.0) called from log_ramp_up
+set_amp (57393.0) called from log_ramp_up
+set_amp (57682.0) called from log_ramp_up
+set_amp (57970.0) called from log_ramp_up
+set_amp (58344.0) called from log_ramp_up
+set_amp (58493.0) called from log_ramp_up
+set_amp (58636.0) called from log_ramp_up
+set_amp (58962.0) called from log_ramp_up
+set_amp (59199.0) called from log_ramp_up
+set_amp (59336.0) called from log_ramp_up
+set_amp (59469.0) called from log_ramp_up
+set_amp (59652.0) called from log_ramp_up
+set_amp (59847.0) called from log_ramp_up
+set_amp (60055.0) called from log_ramp_up
+set_amp (60264.0) called from log_ramp_up
+set_amp (60503.0) called from log_ramp_up
+set_amp (60769.0) called from log_ramp_up
+set_amp (61106.0) called from log_ramp_up
+set_amp (61152.0) called from log_ramp_up
+set_amp (61196.0) called from log_ramp_up
+set_amp (61239.0) called from log_ramp_up
+set_amp (61280.0) called from log_ramp_up
+set_amp (61321.0) called from log_ramp_up
+set_amp (61360.0) called from log_ramp_up
+set_amp (61398.0) called from log_ramp_up
+set_amp (61435.0) called from log_ramp_up
+set_amp (61470.0) called from log_ramp_up
+set_amp (61511.0) called from log_ramp_up
+set_amp (61582.0) called from log_ramp_up
+set_amp (61650.0) called from log_ramp_up
+set_amp (61716.0) called from log_ramp_up
+set_amp (61781.0) called from log_ramp_up
+set_amp (61843.0) called from log_ramp_up
+set_amp (63572.0) called from log_ramp_up
+set_amp (63600.0) called from log_ramp_up
+set_amp (63627.0) called from log_ramp_up
+set_amp (63654.0) called from log_ramp_up
+set_amp (63680.0) called from log_ramp_up
+set_amp (63705.0) called from log_ramp_up
+set_amp (63729.0) called from log_ramp_up
+set_amp (63753.0) called from log_ramp_up
+set_amp (63776.0) called from log_ramp_up
+set_amp (63798.0) called from log_ramp_up
+set_amp (63819.0) called from log_ramp_up
+set_amp (63840.0) called from log_ramp_up
+set_amp (63861.0) called from log_ramp_up
+set_amp (63880.0) called from log_ramp_up
+set_amp (63899.0) called from log_ramp_up
+set_amp (63953.0) called from log_ramp_up
+set_amp (64006.0) called from log_ramp_up
+set_amp (64058.0) called from log_ramp_up
+set_amp (64108.0) called from log_ramp_up
+set_amp (64157.0) called from log_ramp_up
+set_amp (64204.0) called from log_ramp_up
+set_amp (64249.0) called from log_ramp_up
+set_amp (64293.0) called from log_ramp_up
+set_amp (65282.0) called from log_ramp_up
+set_amp (65301.0) called from log_ramp_up
+set_amp (65319.0) called from log_ramp_up
+set_amp (65337.0) called from log_ramp_up
+set_amp (65354.0) called from log_ramp_up
+set_amp (65371.0) called from log_ramp_up
+set_amp (65387.0) called from log_ramp_up
+set_amp (65403.0) called from log_ramp_up
+set_amp (65418.0) called from log_ramp_up
+set_amp (65433.0) called from log_ramp_up
+set_amp (65448.0) called from log_ramp_up
+set_amp (65462.0) called from log_ramp_up
+set_amp (65475.0) called from log_ramp_up
+set_amp (65488.0) called from log_ramp_up
+set_amp (65507.0) called from log_ramp_up
+set_amp (65571.0) called from log_ramp_up
+set_amp (65633.0) called from log_ramp_up
+set_amp (65693.0) called from log_ramp_up
+set_amp (65751.0) called from log_ramp_up
+set_amp (65807.0) called from log_ramp_up
+set_amp (65862.0) called from log_ramp_up
+set_amp (65917.0) called from log_ramp_up
+set_amp (65976.0) called from log_ramp_up
+set_amp (66033.0) called from log_ramp_up
+set_amp (66088.0) called from log_ramp_up
+set_amp (66142.0) called from log_ramp_up
+set_amp (66194.0) called from log_ramp_up
+set_amp (66244.0) called from log_ramp_up
+set_amp (66293.0) called from log_ramp_up
+set_amp (66787.0) called from log_ramp_up
+set_amp (66837.0) called from log_ramp_up
+set_amp (66884.0) called from log_ramp_up
+set_amp (66931.0) called from log_ramp_up
+set_amp (66976.0) called from log_ramp_up
+set_amp (67019.0) called from log_ramp_up
+set_amp (67062.0) called from log_ramp_up
+set_amp (67102.0) called from log_ramp_up
+set_amp (67130.0) called from log_ramp_up
+set_amp (67158.0) called from log_ramp_up
+Log Ramp finished, calling clear_log_ramp_curve()
+clear_log_ramp_curve called from log_ramp_up
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 5001593
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+enable_llrf, isTrigExternal = False, attempting trigExt()
+enable_llrf, isTrigExternal = True
+
+2020-10-08 11:20:05.104000
+********************************************************************************
+** src.monitors.outside_mask_trace_monitor Collecting Outside Mask Event Data **
+********************************************************************************
+event_pulse_count_zero = 0
+src.data.rf_conditioning_data increasing breakdown count = 351, at pulse count =
+5004327
+Python OME Message: LRRG_CAVITY_REVERSE_POWER HI MASK FAIL: current average =
+75225.1, 193104 > 101554 at i = 283 us = 2.63832. Trace time-stamp = Thu Oct 08
+2020 11:20:04.863654780
+
+2020-10-08 11:20:05.265000
+********************************************************************************
+src.monitors.vac_monitor NEW vacuum spike, #7: either 6.5e-08 > 1e-08 +
+9.87857142857e-09.or 6.5e-08 > 2e-09.
+********************************************************************************
+
+2020-10-08 11:20:06.170000
+src.data.rf_conditioning_logger pickle_dumped  C:\Users\dlerlp\Documents\GitHub\
+Software\Apps\RF_Conditioner\v2\logs\2020-10-08-09-32-04\src.monitors.vac_monito
+r_7
+
+2020-10-08 11:20:06.200000
+src.monitors.vac_monitor level hi, 6.5e-08 > 5e-09
+
+2020-10-08 11:20:06.211000
+src.monitors.outside_mask_trace_monitor adding 1 events
+
+2020-10-08 11:20:06.219000
+src.data.rf_conditioning_logger pickle_dumped  C:\Users\dlerlp\Documents\GitHub\
+Software\Apps\RF_Conditioner\v2\logs\2020-10-08-09-32-04\LRRG_CAVITY_REVERSE_POW
+ER_7
+
+2020-10-08 11:20:06.823000
+src.monitors.vac_monitor level ok, 5e-09 < 5e-09
+
+2020-10-08 11:20:08.997000
+src.monitors.outside_mask_trace_monitor, cool down ended
+
+2020-10-08 11:20:09.260000
+src.monitors.vac_monitor has_cooled_down
+
+2020-10-08 11:20:09.260000
+set_global_check_mask setGlobalCheckMask True
+!!Log Ramp curve is NONE, generating a new one
+power_finish = 7655760.62989
+breakdown_rate_low = True
+Breakdown rate LO, log_ramp power_finish = 7655760.62989
+Log Ramp curve is NONE, generating a new one
+Log Ramp curve_p_finish = 7732318.23619, p_start = 30000, p_finish =
+7655760.62989, ramp_rate = 0.2
+set_amp (2759.0) called from log_ramp_up
+
+2020-10-08 11:20:09.661000
+********************************************************************************
+src.monitors.vac_monitor NEW vacuum spike, #8: either 2.6e-09 > 1e-08 +
+2.94285714286e-09.or 2.6e-09 > 2e-09.
+********************************************************************************
+
+2020-10-08 11:20:10.566000
+src.data.rf_conditioning_logger pickle_dumped  C:\Users\dlerlp\Documents\GitHub\
+Software\Apps\RF_Conditioner\v2\logs\2020-10-08-09-32-04\src.monitors.vac_monito
+r_8
+
+2020-10-08 11:20:10.606000
+set_global_check_mask setGlobalCheckMask False
+
+2020-10-08 11:20:10.606000
+clear_log_ramp_curve called from main_loop
+
+2020-10-08 11:20:10.606000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 5004329
+
+2020-10-08 11:20:13.925000
+src.monitors.vac_monitor has_cooled_down
+
+2020-10-08 11:20:13.925000
+set_global_check_mask setGlobalCheckMask True
+!!Log Ramp curve is NONE, generating a new one
+power_finish = 7655760.62989
+breakdown_rate_low = True
+Breakdown rate LO, log_ramp power_finish = 7655760.62989
+Log Ramp curve is NONE, generating a new one
+Log Ramp curve_p_finish = 7732318.23619, p_start = 30000, p_finish =
+7655760.62989, ramp_rate = 0.2
+set_amp (2759.0) called from log_ramp_up
+set_amp (8467.0) called from log_ramp_up
+set_amp (11642.0) called from log_ramp_up
+set_amp (14195.0) called from log_ramp_up
+set_amp (16404.0) called from log_ramp_up
+set_amp (18322.0) called from log_ramp_up
+set_amp (20111.0) called from log_ramp_up
+set_amp (21795.0) called from log_ramp_up
+set_amp (23364.0) called from log_ramp_up
+set_amp (24872.0) called from log_ramp_up
+set_amp (26268.0) called from log_ramp_up
+set_amp (27631.0) called from log_ramp_up
+set_amp (28927.0) called from log_ramp_up
+set_amp (30113.0) called from log_ramp_up
+set_amp (31196.0) called from log_ramp_up
+set_amp (32291.0) called from log_ramp_up
+enable_llrf, isTrigExternal = False, attempting trigExt()
+enable_llrf, isTrigExternal = True
+clear_log_ramp_curve called from main_loop
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 5004563
+
+2020-10-08 11:20:37.583000
+********************************************************************************
+** src.monitors.outside_mask_trace_monitor Collecting Outside Mask Event Data **
+********************************************************************************
+event_pulse_count_zero = 0
+src.data.rf_conditioning_data increasing breakdown count = 352, at pulse count =
+5004563
+Python OME Message: LRRG_CAVITY_REVERSE_POWER LO MASK FAIL: current average =
+672906, 50825.6 < 437389 at i = 464 us = 4.26813. Trace time-stamp = Thu Oct 08
+2020 11:20:37.379893436
+src.monitors.outside_mask_trace_monitor adding 1 events
+src.data.rf_conditioning_logger pickle_dumped  C:\Users\dlerlp\Documents\GitHub\
+Software\Apps\RF_Conditioner\v2\logs\2020-10-08-09-32-04\LRRG_CAVITY_REVERSE_POW
+ER_8
+
+2020-10-08 11:20:37.769000
+********************************************************************************
+src.monitors.vac_monitor NEW vacuum spike, #9: either 2.2e-08 > 1e-08 +
+4.12857142857e-09.or 2.2e-08 > 2e-09.
+********************************************************************************
+
+2020-10-08 11:20:38.666000
+src.data.rf_conditioning_logger pickle_dumped  C:\Users\dlerlp\Documents\GitHub\
+Software\Apps\RF_Conditioner\v2\logs\2020-10-08-09-32-04\src.monitors.vac_monito
+r_9
+
+2020-10-08 11:20:38.706000
+src.monitors.vac_monitor level hi, 2.2e-08 > 5e-09
+
+2020-10-08 11:20:38.795000
+src.monitors.vac_monitor level ok, 2.4e-09 < 5e-09
+
+2020-10-08 11:20:41.473000
+src.monitors.outside_mask_trace_monitor, cool down ended
+
+2020-10-08 11:20:41.837000
+src.monitors.vac_monitor has_cooled_down
+
+2020-10-08 11:20:41.837000
+set_global_check_mask setGlobalCheckMask True
+!!Log Ramp curve is NONE, generating a new one
+power_finish = 7655760.62989
+breakdown_rate_low = True
+Breakdown rate LO, log_ramp power_finish = 7655760.62989
+Log Ramp curve is NONE, generating a new one
+Log Ramp curve_p_finish = 7732318.23619, p_start = 30000, p_finish =
+7655760.62989, ramp_rate = 0.2
+set_amp (2759.0) called from log_ramp_up
+set_amp (8467.0) called from log_ramp_up
+set_amp (11642.0) called from log_ramp_up
+set_amp (14195.0) called from log_ramp_up
+set_amp (16404.0) called from log_ramp_up
+set_amp (18322.0) called from log_ramp_up
+set_amp (20111.0) called from log_ramp_up
+set_amp (21795.0) called from log_ramp_up
+set_amp (23364.0) called from log_ramp_up
+set_amp (24872.0) called from log_ramp_up
+set_amp (26268.0) called from log_ramp_up
+set_amp (27631.0) called from log_ramp_up
+set_amp (28927.0) called from log_ramp_up
+set_amp (30113.0) called from log_ramp_up
+set_amp (31196.0) called from log_ramp_up
+set_amp (32291.0) called from log_ramp_up
+set_amp (33333.0) called from log_ramp_up
+set_amp (34266.0) called from log_ramp_up
+set_amp (35171.0) called from log_ramp_up
+set_amp (36059.0) called from log_ramp_up
+set_amp (36927.0) called from log_ramp_up
+set_amp (37759.0) called from log_ramp_up
+set_amp (38609.0) called from log_ramp_up
+enable_llrf, isTrigExternal = False, attempting trigExt()
+clear_log_ramp_curve called from main_loop
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 5004906
+enable_llrf, isTrigExternal = True
+
+2020-10-08 11:21:16.328000
+********************************************************************************
+** src.monitors.outside_mask_trace_monitor Collecting Outside Mask Event Data **
+********************************************************************************
+event_pulse_count_zero = 0
+src.data.rf_conditioning_data increasing breakdown count = 353, at pulse count =
+5004906
+Python OME Message: LRRG_CAVITY_REVERSE_POWER LO MASK FAIL: current average =
+20984.3, 6544.78 < 13639.8 at i = 397 us = 3.66483. Trace time-stamp = Thu Oct
+08 2020 11:21:16.081534602
+
+2020-10-08 11:21:16.488000
+********************************************************************************
+src.monitors.vac_monitor NEW vacuum spike, #10: either 3.8e-09 > 1e-08 +
+1.49714285714e-09.or 3.8e-09 > 2e-09.
+********************************************************************************
+
+2020-10-08 11:21:17.383000
+src.data.rf_conditioning_logger pickle_dumped  C:\Users\dlerlp\Documents\GitHub\
+Software\Apps\RF_Conditioner\v2\logs\2020-10-08-09-32-04\src.monitors.vac_monito
+r_10
+
+2020-10-08 11:21:17.405000
+src.monitors.outside_mask_trace_monitor adding 1 events
+
+2020-10-08 11:21:17.423000
+src.data.rf_conditioning_logger pickle_dumped  C:\Users\dlerlp\Documents\GitHub\
+Software\Apps\RF_Conditioner\v2\logs\2020-10-08-09-32-04\LRRG_CAVITY_REVERSE_POW
+ER_9
+
+2020-10-08 11:21:20.224000
+src.monitors.outside_mask_trace_monitor, cool down ended
+
+2020-10-08 11:21:22.213000
+src.monitors.vac_monitor has_cooled_down
+
+2020-10-08 11:21:22.213000
+set_global_check_mask setGlobalCheckMask True
+!!Log Ramp curve is NONE, generating a new one
+power_finish = 7655760.62989
+breakdown_rate_low = True
+Breakdown rate LO, log_ramp power_finish = 7655760.62989
+Log Ramp curve is NONE, generating a new one
+Log Ramp curve_p_finish = 7732318.23619, p_start = 30000, p_finish =
+7655760.62989, ramp_rate = 0.2
+set_amp (2759.0) called from log_ramp_up
+set_amp (8467.0) called from log_ramp_up
+set_amp (11642.0) called from log_ramp_up
+set_amp (14195.0) called from log_ramp_up
+set_amp (16404.0) called from log_ramp_up
+set_amp (18322.0) called from log_ramp_up
+set_amp (20111.0) called from log_ramp_up
+set_amp (21795.0) called from log_ramp_up
+set_amp (23364.0) called from log_ramp_up
+set_amp (24872.0) called from log_ramp_up
+set_amp (26268.0) called from log_ramp_up
+set_amp (27631.0) called from log_ramp_up
+set_amp (28927.0) called from log_ramp_up
+set_amp (30113.0) called from log_ramp_up
+set_amp (31196.0) called from log_ramp_up
+set_amp (32291.0) called from log_ramp_up
+set_amp (33333.0) called from log_ramp_up
+set_amp (34266.0) called from log_ramp_up
+clear_log_ramp_curve called from main_loop
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 5005181
+enable_llrf, isTrigExternal = False, attempting trigExt()
+enable_llrf, getTrigSource() != TRIG.EXTERNAL, attempting trigExt()
+enable_llrf, isTrigExternal = True
+
+2020-10-08 11:21:49.915000
+********************************************************************************
+src.monitors.vac_monitor NEW vacuum spike, #11: either 2.9e-09 > 1e-08 +
+1.16428571429e-09.or 2.9e-09 > 2e-09.
+********************************************************************************
+
+2020-10-08 11:21:50.835000
+src.data.rf_conditioning_logger pickle_dumped  C:\Users\dlerlp\Documents\GitHub\
+Software\Apps\RF_Conditioner\v2\logs\2020-10-08-09-32-04\src.monitors.vac_monito
+r_11
+
+2020-10-08 11:21:50.835000
+********************************************************************************
+** src.monitors.outside_mask_trace_monitor Collecting Outside Mask Event Data **
+********************************************************************************
+event_pulse_count_zero = 0
+src.data.rf_conditioning_data increasing breakdown count = 354, at pulse count =
+5005181
+Python OME Message: LRRG_CAVITY_REVERSE_POWER LO MASK FAIL: current average =
+737297, 85278.1 < 479243 at i = 464 us = 4.26813. Trace time-stamp = Thu Oct 08
+2020 11:21:49.696645699
+src.monitors.outside_mask_trace_monitor adding 1 events
+src.data.rf_conditioning_logger pickle_dumped  C:\Users\dlerlp\Documents\GitHub\
+Software\Apps\RF_Conditioner\v2\logs\2020-10-08-09-32-04\LRRG_CAVITY_REVERSE_POW
+ER_10
+src.monitors.outside_mask_trace_monitor, cool down ended
+
+2020-10-08 11:21:54.190000
+src.monitors.vac_monitor has_cooled_down
+
+2020-10-08 11:21:54.190000
+set_global_check_mask setGlobalCheckMask True
+!!Log Ramp curve is NONE, generating a new one
+power_finish = 7655760.62989
+breakdown_rate_low = True
+Breakdown rate LO, log_ramp power_finish = 7655760.62989
+Log Ramp curve is NONE, generating a new one
+Log Ramp curve_p_finish = 7732318.23619, p_start = 30000, p_finish =
+7655760.62989, ramp_rate = 0.2
+set_amp (2759.0) called from log_ramp_up
+set_amp (8467.0) called from log_ramp_up
+set_amp (11642.0) called from log_ramp_up
+set_amp (14195.0) called from log_ramp_up
+set_amp (16404.0) called from log_ramp_up
+set_amp (18322.0) called from log_ramp_up
+set_amp (20111.0) called from log_ramp_up
+set_amp (21795.0) called from log_ramp_up
+set_amp (23364.0) called from log_ramp_up
+set_amp (24872.0) called from log_ramp_up
+set_amp (26268.0) called from log_ramp_up
+set_amp (27631.0) called from log_ramp_up
+set_amp (28927.0) called from log_ramp_up
+set_amp (30113.0) called from log_ramp_up
+set_amp (31196.0) called from log_ramp_up
+set_amp (32291.0) called from log_ramp_up
+set_amp (33333.0) called from log_ramp_up
+set_amp (34266.0) called from log_ramp_up
+set_amp (35171.0) called from log_ramp_up
+set_amp (36059.0) called from log_ramp_up
+set_amp (36927.0) called from log_ramp_up
+set_amp (37759.0) called from log_ramp_up
+set_amp (38609.0) called from log_ramp_up
+set_amp (39447.0) called from log_ramp_up
+set_amp (40210.0) called from log_ramp_up
+set_amp (40944.0) called from log_ramp_up
+set_amp (41557.0) called from log_ramp_up
+set_amp (42400.0) called from log_ramp_up
+set_amp (43238.0) called from log_ramp_up
+set_amp (43988.0) called from log_ramp_up
+set_amp (44743.0) called from log_ramp_up
+set_amp (45431.0) called from log_ramp_up
+set_amp (46173.0) called from log_ramp_up
+set_amp (46852.0) called from log_ramp_up
+set_amp (47502.0) called from log_ramp_up
+set_amp (48035.0) called from log_ramp_up
+set_amp (48704.0) called from log_ramp_up
+set_amp (49281.0) called from log_ramp_up
+set_amp (49880.0) called from log_ramp_up
+set_amp (50432.0) called from log_ramp_up
+set_amp (50920.0) called from log_ramp_up
+set_amp (51400.0) called from log_ramp_up
+set_amp (51905.0) called from log_ramp_up
+set_amp (52353.0) called from log_ramp_up
+set_amp (52764.0) called from log_ramp_up
+set_amp (53095.0) called from log_ramp_up
+set_amp (53397.0) called from log_ramp_up
+set_amp (53825.0) called from log_ramp_up
+set_amp (54209.0) called from log_ramp_up
+set_amp (54565.0) called from log_ramp_up
+set_amp (54913.0) called from log_ramp_up
+set_amp (55226.0) called from log_ramp_up
+set_amp (55499.0) called from log_ramp_up
+set_amp (55818.0) called from log_ramp_up
+enable_llrf, isTrigExternal = False, attempting trigExt()
+clear_log_ramp_curve called from main_loop
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 5005993
+enable_llrf, isTrigExternal = True
+
+2020-10-08 11:23:15.516000
+********************************************************************************
+** src.monitors.outside_mask_trace_monitor Collecting Outside Mask Event Data **
+********************************************************************************
+event_pulse_count_zero = 0
+src.data.rf_conditioning_data increasing breakdown count = 355, at pulse count =
+5005993
+Python OME Message: LRRG_CAVITY_REVERSE_POWER LO MASK FAIL: current average =
+1.42603e+006, 596906 < 926923 at i = 464 us = 4.26813. Trace time-stamp = Thu
+Oct 08 2020 11:23:15.331107884
+
+2020-10-08 11:23:15.684000
+********************************************************************************
+src.monitors.vac_monitor NEW vacuum spike, #12: either 3.1e-09 > 1e-08 +
+1.13285714286e-09.or 3.1e-09 > 2e-09.
+********************************************************************************
+
+2020-10-08 11:23:16.578000
+src.data.rf_conditioning_logger pickle_dumped  C:\Users\dlerlp\Documents\GitHub\
+Software\Apps\RF_Conditioner\v2\logs\2020-10-08-09-32-04\src.monitors.vac_monito
+r_12
+
+2020-10-08 11:23:16.600000
+src.monitors.outside_mask_trace_monitor adding 1 events
+
+2020-10-08 11:23:16.618000
+src.data.rf_conditioning_logger pickle_dumped  C:\Users\dlerlp\Documents\GitHub\
+Software\Apps\RF_Conditioner\v2\logs\2020-10-08-09-32-04\LRRG_CAVITY_REVERSE_POW
+ER_11
+
+2020-10-08 11:23:19.417000
+src.monitors.outside_mask_trace_monitor, cool down ended
+
+2020-10-08 11:23:19.733000
+src.monitors.vac_monitor has_cooled_down
+
+2020-10-08 11:23:19.740000
+set_global_check_mask setGlobalCheckMask True
+!!Log Ramp curve is NONE, generating a new one
+power_finish = 7655760.62989
+breakdown_rate_low = False
+Breakdown rate HI, delta_power = 10000, final_power_finish = 7645760.62989
+Log Ramp curve is NONE, generating a new one
+Log Ramp curve_p_finish = 7722218.23619, p_start = 30000, p_finish =
+7645760.62989, ramp_rate = 0.2
+set_amp (2759.0) called from log_ramp_up
+set_amp (8462.0) called from log_ramp_up
+set_amp (11636.0) called from log_ramp_up
+set_amp (14186.0) called from log_ramp_up
+set_amp (16393.0) called from log_ramp_up
+set_amp (18310.0) called from log_ramp_up
+set_amp (20097.0) called from log_ramp_up
+set_amp (21779.0) called from log_ramp_up
+set_amp (23348.0) called from log_ramp_up
+set_amp (24851.0) called from log_ramp_up
+set_amp (26249.0) called from log_ramp_up
+set_amp (27609.0) called from log_ramp_up
+set_amp (28901.0) called from log_ramp_up
+set_amp (30091.0) called from log_ramp_up
+set_amp (31172.0) called from log_ramp_up
+set_amp (32266.0) called from log_ramp_up
+set_amp (33309.0) called from log_ramp_up
+set_amp (34236.0) called from log_ramp_up
+set_amp (35141.0) called from log_ramp_up
+set_amp (36030.0) called from log_ramp_up
+set_amp (36893.0) called from log_ramp_up
+set_amp (37729.0) called from log_ramp_up
+set_amp (38574.0) called from log_ramp_up
+set_amp (39410.0) called from log_ramp_up
+set_amp (40137.0) called from log_ramp_up
+set_amp (40917.0) called from log_ramp_up
+set_amp (41506.0) called from log_ramp_up
+set_amp (42351.0) called from log_ramp_up
+set_amp (43197.0) called from log_ramp_up
+set_amp (43948.0) called from log_ramp_up
+set_amp (44694.0) called from log_ramp_up
+set_amp (45388.0) called from log_ramp_up
+set_amp (46125.0) called from log_ramp_up
+set_amp (46796.0) called from log_ramp_up
+set_amp (47455.0) called from log_ramp_up
+set_amp (47985.0) called from log_ramp_up
+set_amp (48644.0) called from log_ramp_up
+set_amp (49226.0) called from log_ramp_up
+set_amp (49824.0) called from log_ramp_up
+set_amp (50386.0) called from log_ramp_up
+set_amp (50866.0) called from log_ramp_up
+set_amp (51351.0) called from log_ramp_up
+set_amp (51848.0) called from log_ramp_up
+set_amp (52302.0) called from log_ramp_up
+set_amp (52723.0) called from log_ramp_up
+set_amp (53054.0) called from log_ramp_up
+set_amp (53358.0) called from log_ramp_up
+set_amp (53757.0) called from log_ramp_up
+set_amp (54157.0) called from log_ramp_up
+set_amp (54513.0) called from log_ramp_up
+set_amp (54859.0) called from log_ramp_up
+set_amp (55181.0) called from log_ramp_up
+set_amp (55454.0) called from log_ramp_up
+set_amp (55763.0) called from log_ramp_up
+set_amp (56104.0) called from log_ramp_up
+set_amp (56512.0) called from log_ramp_up
+set_amp (56944.0) called from log_ramp_up
+set_amp (57321.0) called from log_ramp_up
+set_amp (57628.0) called from log_ramp_up
+set_amp (57882.0) called from log_ramp_up
+set_amp (58310.0) called from log_ramp_up
+set_amp (58458.0) called from log_ramp_up
+set_amp (58602.0) called from log_ramp_up
+set_amp (58842.0) called from log_ramp_up
+set_amp (59162.0) called from log_ramp_up
+set_amp (59299.0) called from log_ramp_up
+set_amp (59432.0) called from log_ramp_up
+set_amp (59595.0) called from log_ramp_up
+set_amp (59789.0) called from log_ramp_up
+set_amp (59989.0) called from log_ramp_up
+set_amp (60198.0) called from log_ramp_up
+set_amp (60422.0) called from log_ramp_up
+set_amp (60660.0) called from log_ramp_up
+set_amp (61016.0) called from log_ramp_up
+set_amp (61135.0) called from log_ramp_up
+set_amp (61179.0) called from log_ramp_up
+set_amp (61222.0) called from log_ramp_up
+set_amp (61263.0) called from log_ramp_up
+clear_log_ramp_curve called from main_loop
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 5007167
+enable_llrf, isTrigExternal = False, attempting trigExt()
+enable_llrf, isTrigExternal = True
+
+2020-10-08 11:25:17.032000
+********************************************************************************
+** src.monitors.outside_mask_trace_monitor Collecting Outside Mask Event Data **
+********************************************************************************
+event_pulse_count_zero = 0
+src.data.rf_conditioning_data increasing breakdown count = 356, at pulse count =
+5007167
+Python OME Message: LRRG_CAVITY_REVERSE_POWER LO MASK FAIL: current average =
+1.56516e+006, 268773 < 1.01736e+006 at i = 464 us = 4.26813. Trace time-stamp =
+Thu Oct 08 2020 11:25:16.889323354
+
+2020-10-08 11:25:17.204000
+********************************************************************************
+src.monitors.vac_monitor NEW vacuum spike, #13: either 6.6e-09 > 1e-08 +
+1.58e-09.or 6.6e-09 > 2e-09.
+********************************************************************************
+
+2020-10-08 11:25:18.098000
+src.data.rf_conditioning_logger pickle_dumped  C:\Users\dlerlp\Documents\GitHub\
+Software\Apps\RF_Conditioner\v2\logs\2020-10-08-09-32-04\src.monitors.vac_monito
+r_13
+
+2020-10-08 11:25:18.121000
+src.monitors.vac_monitor level hi, 6.6e-09 > 5e-09
+
+2020-10-08 11:25:18.129000
+src.monitors.outside_mask_trace_monitor adding 1 events
+
+2020-10-08 11:25:18.139000
+src.data.rf_conditioning_logger pickle_dumped  C:\Users\dlerlp\Documents\GitHub\
+Software\Apps\RF_Conditioner\v2\logs\2020-10-08-09-32-04\LRRG_CAVITY_REVERSE_POW
+ER_12
+
+2020-10-08 11:25:18.317000
+src.monitors.vac_monitor level ok, 1.1e-09 < 5e-09
+
+2020-10-08 11:25:20.924000
+src.monitors.outside_mask_trace_monitor, cool down ended
+
+2020-10-08 11:25:21.178000
+src.monitors.vac_monitor has_cooled_down
+
+2020-10-08 11:25:21.178000
+set_global_check_mask setGlobalCheckMask True
+!!Log Ramp curve is NONE, generating a new one
+power_finish = 7655760.62989
+breakdown_rate_low = False
+Breakdown rate HI, delta_power = 10000, final_power_finish = 7645760.62989
+Log Ramp curve is NONE, generating a new one
+Log Ramp curve_p_finish = 7722218.23619, p_start = 30000, p_finish =
+7645760.62989, ramp_rate = 0.2
+set_amp (2759.0) called from log_ramp_up
+set_amp (8462.0) called from log_ramp_up
+set_amp (11636.0) called from log_ramp_up

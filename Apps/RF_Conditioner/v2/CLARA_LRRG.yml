@@ -53,14 +53,13 @@
 ## C:\Users\dlerlp\Documents\GitHub\Software\Apps\RF_Conditioner\v2\CLARA_LRRG.yml 0
 
 # MODE - DEBUG or OPERATIONAL
-# DEBUG mode can be used in the future to but currently is not well implemented
-# MODE: DEBUG
+# DEBUG mode can be used in the future to frocea  particualr setup,  currently  not used for much
 MODE: DEBUG
 
 #  The name of the RF structure, as used in CATAP
 RF_STRUCTURE: CLARA_LRRG # STRING
 
-## main param
+## main param legacy, not used anymore
 #TIME_BETWEEN_RF_INCREASES :  10;seconds
 #RF_INCREASE_LEVEL=0.001;kw (KLYSTRON FORWARD POWER ESTIMATE)
 
@@ -70,22 +69,18 @@ MAX_DELTA_AMP_SP: 300 #; maximum setpoint increase allowed, no matter what the f
 
 NUM_SET_POINTS_TO_FIT:  4 # how many setpoints to fit when predicted then next setpoint
 
-
 MINIMUM_COOLDOWN_TIME: 3000 # INTEGER, minimum time in ms that a state (Vac spike, outside mask event) can be BAD for 
 
 #POWER_AIM= 0.1; MW watts
 #PULSE_LENGTH_START=100; ns !! NOT us
-PULSE_LENGTH   : 2500 #; ns  !! NOT us
+PULSE_LENGTH   : 2000 #; ns  !! NOT us
 PULSE_LENGTH_ERROR : 50 #; ns  !! NOT us
 #PULSE_LENGTH_STEP= 250; ns !! NOT us
-
 
 RF_REPETITION_RATE:  10 # INTEGER Hertz
 RF_REPETITION_RATE_ERROR:  3 #difference in Hertz from RF_REPETITION_RATE that is acceptable
 
-
-
-LLRF_CHECK_TIME:  50 # INTEGER ms to check main llrf parameters
+LLRF_CHECK_TIME: 50 # INTEGER ms to check main llrf parameters
 
 #RF_INCREASE_RATE=0.33333; Watts per second aim (approx)
 #NORMAL_POWER_INCREASE=10000;Watts normalstep size
@@ -105,42 +100,37 @@ MEAN_TRACES:
   - KLYSTRON_REVERSE_POWER
   - CAVITY_FORWARD_POWER
   - CAVITY_REVERSE_POWER
- # - CAVITY_PROBE_POWER
   - KLYSTRON_FORWARD_PHASE
   - KLYSTRON_REVERSE_PHASE
   - CAVITY_FORWARD_PHASE
   - CAVITY_REVERSE_PHASE
+ # - CAVITY_PROBE_POWER
  # - CAVITY_PROBE_PHASE
-## start and end times for trace mean calculation, FLOAT in micro-seconds, 
+
+## start and end times for trace mean calculation, FLOAT in micro-seconds,
 ## ATM: MUST BE SET BY HAND FOR EACH PULSE LENGTH, using RF traces, 
 # only a human can decide over which range to calculate and average 
 ## KLYSTRON_FORWARD_POWER 
-#KFPOW_MEAN_START:  2.0 # must be in us
-KFPOW_MEAN_START:  1.7 # must be in us
-#KFPOW_MEAN_END:  2.5  # must be in us
-KFPOW_MEAN_END:  2.3  # must be in us
+KFPOW_MEAN_START:  1.1 # must be in us
+KFPOW_MEAN_END:  2.8  # must be in us
 ## KLYSTRON_REVERSE_POWER
-KRPOW_MEAN_START:  1.7  # must be in us
-KRPOW_MEAN_END:  2.3 # must be in us
+KRPOW_MEAN_START:  1.1  # must be in us
+KRPOW_MEAN_END:  2.8 # must be in us
 ## CAVITY_FORWARD_POWER
-#CFPOW_MEAN_START:  3.2  # must be in us
-#CFPOW_MEAN_END:  3.6  # must be in us
-CFPOW_MEAN_START:  1.9  # must be in us
-CFPOW_MEAN_END:  2.1 # must be in us
+CFPOW_MEAN_START:  1.1  # must be in us
+CFPOW_MEAN_END:  2.8 # must be in us
 ## CAVITY_REVERSE_POWER
-#CRPOW_MEAN_START:  3.2  # must be in us
-#CRPOW_MEAN_END:  3.6 # must be in us
-CRPOW_MEAN_START:  2.314  # must be in us
-CRPOW_MEAN_END:  2.503 # must be in us
+CRPOW_MEAN_START:  3.1  # must be in us
+CRPOW_MEAN_END:  3.2 # must be in us
 ## KLYSTRON_FORWARD_PHASE
-KFPHA_MEAN_START:  2.3 # must be in us
-KFPHA_MEAN_END:  2.75 # must be in us
+KFPHA_MEAN_START:  1.1 # must be in us
+KFPHA_MEAN_END:  2.8 # must be in us
 ## KLYSTRON_REVERSE_POWER
-KRPHA_MEAN_START:  2.5 # must be in us
-KRPHA_MEAN_END:  3.0 # must be in us
+KRPHA_MEAN_START:  1.1 # must be in us
+KRPHA_MEAN_END:  2.8 # must be in us
 ## CAVITY_FORWARD_PHASE
-CFPHA_MEAN_START:  0.0 # must be in us
-CFPHA_MEAN_END:  2.0  # must be in us
+CFPHA_MEAN_START:  1.1 # must be in us
+CFPHA_MEAN_END:  2.8  # must be in us
 ## CAVITY_REVERSE_PHASE
 CRPHA_MEAN_START:  2.8  # must be in us
 CRPHA_MEAN_END:  3.0 # must be in us
@@ -151,15 +141,14 @@ CPPOW_MEAN_END:  2.0  # must be in us
 CPPHA_MEAN_START:  0.0 # must be in us
 CPPHA_MEAN_END:  2.0  # must be in us
 
-## breakdown / outside_mask traces
-##BREAKDOWN_TRACES=CAVITY_FORWARD_POWER,CAVITY_REVERSE_POWER;
+## breakdown / outside_mask traces, which traces to actually look for events in
 BREAKDOWN_TRACES :
   - CAVITY_REVERSE_POWER
   - KLYSTRON_FORWARD_POWER
   - CAVITY_FORWARD_POWER
 
-OUTSIDE_MASK_CHECK_TIME: 100 #INTEGER ms between outside_mask_trace checks, THIS IS FOR THE GUI, the c++ llrf module is checking every pulse 
-TRACES_TO_SAVE :  # specify traces to save breakdown data#
+OUTSIDE_MASK_CHECK_TIME: 100 #INTEGER ms between outside_mask_trace checks, FOR THE GUI, the c++ llrf module  checks every pulse
+TRACES_TO_SAVE :  # specify traces to save breakdown data
   - KLYSTRON_FORWARD_PHASE
   - KLYSTRON_REVERSE_PHASE
   - KLYSTRON_FORWARD_POWER
@@ -171,7 +160,7 @@ TRACES_TO_SAVE :  # specify traces to save breakdown data#
   #- CAVITY_PROBE_POWER
   #- CAVITY_PROBE_POWER
 
-# WHAT EXTRA VLAUES TO SAVE ON BREAKDWON - SHOULD THI SBE CONFIGURABLE???
+# WHAT EXTRA VALUES TO SAVE ON BREAKDOWN - SHOULD THIS BE CONFIGURABLE???
 EXTRA_BREAKDOWN_DAQ:  # ; has to go in python source code NOT IMPLEMENTED YET
   - VAC_LEVEL
   - DC_LEVEL
@@ -185,8 +174,8 @@ EXTRA_TRACES_ON_BREAKDOWN: 2 # INTEGER number of extra (subsequent) traces to sa
 ## CAVITY FORWARD POWER  MASK PARAMETERS
 CFPOW_AUTO_SET: false #;Will pick mask indices automatically, if false YOU must Define Them
 CFPOW_MASK_SET_TYPE: TIME #; (TIME or INDEX) for CRP_AUTO_SET=FALSE manually set s1,s2,s3,s4, via TIME in trace or INDEX in trace
-CFPOW_MASK_START: 1.5 #Only used if CRP_AUTO_SET=FALSE
-CFPOW_MASK_END: 3.5 #;Only used if CRP_AUTO_SET=FALSE
+CFPOW_MASK_START: 1.1 #Only used if CRP_AUTO_SET=FALSE
+CFPOW_MASK_END: 2.8 #;Only used if CRP_AUTO_SET=FALSE
 CFPOW_MASK_WINDOW_START: 4.5 #;Only used if CRP_AUTO_SET=FALSE
 CFPOW_MASK_WINDOW_END: 4.6 #;Only used if CRP_AUTO_SET=FALSE
 CFPOW_MASK_TYPE: PERCENT #; PERCENT OR ABSOLUTE
@@ -200,14 +189,31 @@ CFPOW_NUM_AVERAGE_TRACES: 2
 CFPOW_DROP_AMP: false #
 CFPOW_DROP_AMP_VALUE: 6
 
+
+## klystron REFLECTED POWER/PHASE MASK PARAMETERS
+KFPOW_AUTO_SET :  false #;Will pick mask indices automatically, if false YOU must Define Them
+KFPOW_MASK_SET_TYPE :  TIME #(TIME or INDEX) for CRP_AUTO_SET=FALSE manually set s1,s2,s3,s4, via TIME in trace or INDEX in trace
+KFPOW_MASK_START :  1.1 # Only used if CRP_AUTO_SET=FALSE
+KFPOW_MASK_WINDOW_START :  4.3 # Only used if CRP_AUTO_SET=FALSE
+KFPOW_MASK_WINDOW_END :  4.8 # Only used if CRP_AUTO_SET=FALSE
+KFPOW_MASK_END :  2.8 # Only used if CRP_AUTO_SET=FALSE.  ms from end of RF pulse
+KFPOW_MASK_LO_MIN :  50  # integer,Minimum value for a mask, regardless
+KFPOW_MASK_TYPE :  PERCENT # ABSOLUTE OR PERCENT, mask type is to set the mask based on a percentage of previous values, or by absolute amount
+KFPOW_NUM_AVERAGE_TRACES :  2 #
+KFPOW_CHECK_STREAK :  2 # how many continuous points outside mask required to trigger event
+KFPOW_DROP_AMP :  true # should drop amplitude on event detection?
+KFPOW_DROP_AMP_VALUE :  2 # value to drop RF amplitude to on event detection (LLRF UNITS)
+KFPOW_MASK_LEVEL :  35.0 # units depend on CRP_MASK_TYPE
+KFPOW_MASK_FLOOR :  0.0 # values below this won't get checked
+
 ## CAVITY REFLECTED POWER/PHASE MASK PARAMETERS
 CRPOW_AUTO_SET :  false #;Will pick mask indices automatically, if false YOU must Define Them
 CRPOW_MASK_SET_TYPE :  TIME #(TIME or INDEX) for CRP_AUTO_SET=FALSE manually set s1,s2,s3,s4, via TIME in trace or INDEX in trace
 #CRPOW_MASK_START :  1.2 # Only used if CRP_AUTO_SET=FALSE
-CRPOW_MASK_START :  1.33 # Only used if CRP_AUTO_SET=FALSE
+CRPOW_MASK_START :  1.15 # Only used if CRP_AUTO_SET=FALSE
 #CRPOW_MASK_WINDOW_START :  3.7 # Only used if CRP_AUTO_SET=FALSE
-CRPOW_MASK_WINDOW_START :  3.6 # Only used if CRP_AUTO_SET=FALSE
-CRPOW_MASK_WINDOW_END :  4.3 # Only used if CRP_AUTO_SET=FALSE
+CRPOW_MASK_WINDOW_START :  2.9 # Only used if CRP_AUTO_SET=FALSE
+CRPOW_MASK_WINDOW_END :  3.6 # Only used if CRP_AUTO_SET=FALSE
 #CRPOW_MASK_WINDOW_END :  4.25 # Only used if CRP_AUTO_SET=FALSE
 CRPOW_MASK_END :  7.0 # Only used if CRP_AUTO_SET=FALSE  # ms from end of RF pulse
 CRPOW_MASK_LO_MIN :  50  # integer,Minimum value for a mask, regardless
@@ -250,22 +256,6 @@ KRPOW_DROP_AMP_VALUE:  2 # value to drop RF amplitude to on event detection (LLR
 KRPOW_MASK_LEVEL:  35.0 # units depend on CRP_MASK_TYPE float
 KRPOW_MASK_FLOOR:  1000.00 # values below this won't get checked
 KRPOW_DROP_AMP:  false # should drop amplitude on event detection?
-
-## klystron REFLECTED POWER/PHASE MASK PARAMETERS
-KFPOW_AUTO_SET :  false #;Will pick mask indices automatically, if false YOU must Define Them
-KFPOW_MASK_SET_TYPE :  TIME #(TIME or INDEX) for CRP_AUTO_SET=FALSE manually set s1,s2,s3,s4, via TIME in trace or INDEX in trace
-KFPOW_MASK_START :  1.4 # Only used if CRP_AUTO_SET=FALSE
-KFPOW_MASK_WINDOW_START :  3.3 # Only used if CRP_AUTO_SET=FALSE
-KFPOW_MASK_WINDOW_END :  3.8 # Only used if CRP_AUTO_SET=FALSE
-KFPOW_MASK_END :  3.4 # Only used if CRP_AUTO_SET=FALSE.  ms from end of RF pulse
-KFPOW_MASK_LO_MIN :  50  # integer,Minimum value for a mask, regardless
-KFPOW_MASK_TYPE :  PERCENT # ABSOLUTE OR PERCENT, mask type is to set the mask based on a percentage of previous values, or by absolute amount
-KFPOW_NUM_AVERAGE_TRACES :  2 #
-KFPOW_CHECK_STREAK :  2 # how many continuous points outside mask required to trigger event
-KFPOW_DROP_AMP :  true # should drop amplitude on event detection?
-KFPOW_DROP_AMP_VALUE :  2 # value to drop RF amplitude to on event detection (LLRF UNITS)
-KFPOW_MASK_LEVEL :  35.0 # units depend on CRP_MASK_TYPE
-KFPOW_MASK_FLOOR :  0.0 # values below this won't get checked
 
 ## CAVITY FORWARD POWER  MASK PARAMETERS
 CFPHA_AUTO_SET:  false #;Will pick mask indices automatically, if false YOU must Define Them
