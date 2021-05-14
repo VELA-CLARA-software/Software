@@ -3,7 +3,7 @@
 block_cipher = None
 
 
-a = Analysis(['mainApp.py'],
+a = Analysis(['vc_image_auto_save.pyw'],
              pathex=['C:\\Users\\dlerlp\\Documents\\GitHub\\Software\\Apps\\quick_spec'],
              binaries=[],
              datas=[],
@@ -23,11 +23,11 @@ exe = EXE(pyz,
           a.zipfiles,
           a.datas,
           [],
-          name='quick_spec',
+          name='VC_Image_Logging',
           debug=False,
           bootloader_ignore_signals=False,
           strip=False,
           upx=True,
           upx_exclude=[],
           runtime_tmpdir=None,
-          console=False , icon='resources\\quick_spec\\icon.ico')
+          console=False , icon='resources\\VC_Image_Logging\\vcImageLogging.ico')
