@@ -4,8 +4,11 @@ import numpy
 
 import SimulationFramework.Framework as Fw
 import SimulationFramework.Modules.Beams as read_beam_file
-import src.unit_conversion as unit_conversion
-import src.aliases as aliases
+#HMCC import SimulationFramework.Modules.read_twiss_file as read_twiss_file
+import  SimulationFramework.Modules.Twiss as read_twiss_file
+import unit_conversion
+import aliases
+import scipy.constants
 
 class GetDataFromSimFrame(object):
 
@@ -43,6 +46,7 @@ class GetDataFromSimFrame(object):
 		self.type_alias = aliases.type_alias
 		self.screen_alias = aliases.screen_to_camera
 		self.my_name = "GetDataFromSimFrame"
+		self.Framework=Fw.Framework(master_lattice=os.path.join('C:\\','Python36','Lib','site-packages','MasterLattice'))
 
 	def setSimulationDictDefaults(self, datadict, vc_object=None, wcm_object=None,
 								  start_lattice='Generator', final_lattice='CLA-S02'):
@@ -270,7 +274,7 @@ class GetDataFromSimFrame(object):
 					self.rf_values[key].update({'PV': key})
 					self.rf_values[key].update({'psu_state': 'ON'})
 					self.rf_values[key].update({'position': cavity['position_start'][2]})
-					if "BSOL" in key:
+					if "BSOL" in key or key == 'CLA-LRG1-MAG-SOL-01':
 						self.rf_values[key].update({'bsol': True})
 					else:
 						self.rf_values[key].update({'bsol': False})
@@ -323,7 +327,7 @@ class GetDataFromSimFrame(object):
 
 	def getAllBeamFiles(self, directory):
 		for file in os.listdir(directory):
-			if file.endswith(".hdf5"):
+			if file.endswith(".hdf5") and not file.startswith('Beam_') and not file.startswith('Twiss_'):
 				self.beam.read_HDF5_beam_file(os.path.join(directory, file))
 				self.beamdata = {}
 				self.beamdata.update({'filename': os.path.abspath(file)})
@@ -333,16 +337,22 @@ class GetDataFromSimFrame(object):
 					self.beamdata.update({'type': 'bpm'})
 				elif "laser" in file:
 					self.beamdata.update({'type': 'generator'})
+				elif "APER" in file:
+					self.beamdata.update({'type':"aperture"})
 				else:
 					self.beamdata.update({'type': "blank"})
 				self.beamdata.update({'x': {}})
 				self.beamdata['x'].update({'mean': float(numpy.mean(getattr(self.beam, 'x')))})
 				self.beamdata['x'].update({'dist': getattr(self.beam, 'x')})
 				self.beamdata['x'].update({'sigma': float(self.unitConversion.gaussianFit(self.beamdata['x']['dist'])[1])})
+				self.beamdata['x'].update({'var': numpy.var(getattr(self.beam, 'x'))})
 				self.beamdata.update({'y': {}})
 				self.beamdata['y'].update({'mean': float(numpy.mean(getattr(self.beam, 'y')))})
 				self.beamdata['y'].update({'dist': getattr(self.beam, 'y')})
 				self.beamdata['y'].update({'sigma': float(self.unitConversion.gaussianFit(self.beamdata['y']['dist'])[1])})
+				self.beamdata['y'].update({'var': numpy.var(getattr(self.beam, 'y'))})
+				self.beamdata.update({'x_y':{}})
+				self.beamdata['x_y'].update({'mean':float(numpy.mean(numpy.multiply(getattr(self.beam, 'x'), getattr(self.beam, 'y'))))})
 				self.beamdata.update({'z': {}})
 				self.beamdata['z'].update({'mean': float(numpy.mean(getattr(self.beam, 'z')))})
 				self.beamdata['z'].update({'dist': getattr(self.beam, 'z')})
@@ -351,14 +361,17 @@ class GetDataFromSimFrame(object):
 				self.beamdata['px'].update({'mean': float(numpy.mean(getattr(self.beam, 'cpx')))})
 				self.beamdata['px'].update({'dist': getattr(self.beam, 'cpx')})
 				self.beamdata['px'].update({'sigma': float(self.unitConversion.gaussianFit(self.beamdata['px']['dist'])[1])})
+				self.beamdata['px'].update({'var': numpy.var(getattr(self.beam, 'cpx'))})
 				self.beamdata.update({'py': {}})
 				self.beamdata['py'].update({'mean': float(numpy.mean(getattr(self.beam, 'cpy')))})
 				self.beamdata['py'].update({'dist': getattr(self.beam, 'cpy')})
 				self.beamdata['py'].update({'sigma': float(self.unitConversion.gaussianFit(self.beamdata['py']['dist'])[1])})
+				self.beamdata['py'].update({'var': numpy.var(getattr(self.beam, 'cpy'))})
 				self.beamdata.update({'pz': {}})
 				self.beamdata['pz'].update({'mean': float(numpy.mean(getattr(self.beam, 'cpz')))})
 				self.beamdata['pz'].update({'dist': getattr(self.beam, 'cpz')})
 				self.beamdata['pz'].update({'sigma': float(self.unitConversion.gaussianFit(self.beamdata['pz']['dist'])[1])})
+				self.beamdata['pz'].update({'var': numpy.var(getattr(self.beam, 'cpz'))})
 				self.beamdata.update({'t': {}})
 				self.beamdata['t'].update({'mean': float(numpy.mean(getattr(self.beam, 't')))})
 				self.beamdata['t'].update({'dist': getattr(self.beam, 't')})

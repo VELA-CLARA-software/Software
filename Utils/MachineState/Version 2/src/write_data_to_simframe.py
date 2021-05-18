@@ -1,7 +1,7 @@
 import os
 import time
-import src.unit_conversion as unit_conversion
-import src.aliases as aliases
+import unit_conversion as unit_conversion
+import aliases as aliases
 import numpy
 class WriteDataToSimFrame(object):
 
@@ -29,16 +29,17 @@ class WriteDataToSimFrame(object):
                             framework.modifyElement(self.keymod, 'k1', float(value['k1']))
                         elif inputdict[section][key]['type'] == 'cavity':
                             if type=='CATAP':
-                                typemod = 1e6
+                                typemod = 1.0e6
                             else:
-                                typemod = 1
+                                typemod = 1.0
                             print(type)
                             print(typemod)
                             framework.modifyElement(self.keymod, 'field_amplitude', float(value['field_amplitude']*typemod))
                             framework.modifyElement(self.keymod, 'phase', value['phase'])
                         elif inputdict[section][key]['type'] == 'solenoid':
                             if 'BSOL' in key:
-                                framework.modifyElement(self.keymod, 'field_amplitude', 0.3462 * float(value['field_amplitude']))
+                                framework.modifyElement(self.keymod, 'field_amplitude', float(value['field_amplitude']))
+                                #HMCC comment #framework.modifyElement(self.keymod, 'field_amplitude', 0.3462 * float(value['field_amplitude']))
                             else:
                                 framework.modifyElement(self.keymod, 'field_amplitude', float(value['field_amplitude']))
                         elif inputdict[section][key]['type'] == 'cavity':

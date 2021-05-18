@@ -1,6 +1,6 @@
 from CATAP.HardwareFactory import TYPE
 
-alias_names = {"CLA-L01-LRF-CTRL-01": "CLA-L01-CAV",
+alias_names =  {"CLA-L01-LRF-CTRL-01": "CLA-L01-CAV",
                "L01": "CLA-L01-CAV",
                "LRRG_GUN": "CLA-LRG1-GUN-CAV",
                "CLA-GUN-LRF-CTRL-01": "CLA-LRG1-GUN-CAV",
@@ -68,7 +68,7 @@ type_alias = {TYPE.QUADRUPOLE: "quadrupole",
               "HCOR": 'kicker',
               "VCOR": 'kicker'}
 
-gun_kly_fwd_power_max = 9.9 * 10 ** 6
+gun_kly_fwd_power_max = 9.9e6
 
 camera_epics_tools = {'x_pix': 'XPix_RBV',
                       'x_mm': 'X_RBV',
@@ -85,4 +85,3 @@ llrf_epics_tools = {'klystron_amplitude_MW': 'ad1:ch1:Power:Wnd:Avg',
                     'cavity_amplitude_MW': 'ad1:ch3:Power:Wnd:Avg',
                     'phase_sp': 'vm:dsp:sp_ph:phase',
                     'phase_ff': 'vm:dsp:ff_ph:phase'}
-

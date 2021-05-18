@@ -1,9 +1,14 @@
 import os, sys
 import numpy
-import CATAP.HardwareFactory
-import CATAP.EPICSTools
-import src.unit_conversion as unit_conversion
-import src.aliases as aliases
+import time
+sys.path.append(
+    (os.path.join('C:\\', 'Users','qfi29231','Documents','repositories','catapillar-build',
+                                  'PythonInterface', 'Release','CATAP')))
+
+from CATAP.HardwareFactory import *
+from CATAP.EPICSTools import *
+import unit_conversion
+import aliases
 
 catap_modules = ['BPM', 'Charge', 'Screen', 'Magnet']
 vc_controller_modules = ['Camera', 'LLRF', 'PILaser']
@@ -33,7 +38,7 @@ class GetDataFromCATAP(object):
 							'camera': True}
 		self.epics_tools_monitors = {}
 		self.monitors = {}
-		
+
 		self.bpmdata = {}
 		self.chargedata = {}
 		self.cameradata = {}
@@ -66,34 +71,39 @@ class GetDataFromCATAP(object):
 		self.linac_length.update({"L01": 2.033}) # MAGIC NUMBER (BUT IT WON'T CHANGE)
 		self.linac_position = {}
 		self.linac_position.update({"L01": 3.2269}) # MAGIC NUMBER (BUT IT WON'T CHANGE)
-
+		self.crest_phases = {}
 		self.CATAPmodeToVCControllermode = {}
-		
+
 		self.dictsSet = False
-		
-	def initCATAP(self, mode, crest_phases=None):
+
+	def initCATAP(self,
+				  mode,
+				  addr_list="192.168.83.246",
+				  auto_addr_list="NO",
+				  server_port="6040",
+				  max_array_bytes="1000000"):
 		# setup environment
-		if mode == 'VIRTUAL' or mode == CATAP.HardwareFactory.STATE.VIRTUAL:
-			os.environ['EPICS_CA_ADDR_LIST'] = "192.168.83.246"
+		if mode == STATE.VIRTUAL:
+			os.environ["EPICS_CA_ADDR_LIST"] = "192.168.83.246"
 			os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
-			os.environ['EPICS_CA_SERVER_PORT'] = "6020"
-			os.environ["EPICS_CA_MAX_ARRAY_BYTES"] = "1000000000"
-		elif mode == 'PHYSICAL' or mode == CATAP.HardwareFactory.STATE.PHYSICAL:
+			os.environ["EPICS_CA_SERVER_PORT"] = "6040"
+			os.environ["EPICS_CA_MAX_ARRAY_BYTES"] = "10000000"
+		elif mode == STATE.PHYSICAL:
 			os.environ["EPICS_CA_ADDR_LIST"]= "192.168.83.255"
 			os.environ["EPICS_CA_AUTO_ADDR_LIST"]= "NO"
 			os.environ["EPICS_CA_SERVER_PORT"]= "5064"
 			os.environ["EPICS_CA_MAX_ARRAY_BYTES"]= "10000000"
 		# get factories / controllers
-		if mode == 'VIRTUAL' or mode == CATAP.HardwareFactory.STATE.VIRTUAL:
-			self.mode = CATAP.HardwareFactory.STATE.VIRTUAL
-		elif mode == 'PHYSICAL' or mode == CATAP.HardwareFactory.STATE.PHYSICAL:
-			self.mode = CATAP.HardwareFactory.STATE.PHYSICAL
+		if mode == 'VIRTUAL' or mode == STATE.VIRTUAL:
+			self.mode = STATE.VIRTUAL
+		elif mode == 'PHYSICAL' or mode == STATE.PHYSICAL:
+			self.mode = STATE.PHYSICAL
 		else:
-			self.mode = CATAP.HardwareFactory.STATE.OFFLINE
-		self.hf = CATAP.HardwareFactory.HardwareFactory(self.mode)
-		self.epics_tools = CATAP.HardwareFactory.EPICSTools(self.mode)
+			self.mode = STATE.OFFLINE
+		self.hf = HardwareFactory(self.mode)
+		self.epics_tools = EPICSTools(self.mode)
 		self.hf.debugMessagesOff()
-		self.llrf_types = [CATAP.HardwareFactory.TYPE.LRRG_GUN, CATAP.HardwareFactory.TYPE.L01]
+		self.llrf_types = [TYPE.LRRG_GUN, TYPE.L01]
 		# self.gun_llrf_type = CATAP.HardwareFactory.TYPE.LRRG_GUN
 		self.llrf_factory = self.hf.getLLRFFactory(self.llrf_types)
 		self.llrf_names = self.llrf_factory.getLLRFNames()
@@ -101,20 +111,12 @@ class GetDataFromCATAP(object):
 		self.linacnames = self.llrf_names[1:]
 		self.gunLLRFObj = self.llrf_factory.getLLRF(self.llrf_names[0])
 		self.linacLLRFObj = {}
-		if crest_phases is not None:
-			self.crest_phases = crest_phases
-		else:
-			self.crest_phases = {}
-			self.crest_phases.update({self.gunname: 0})
-			for i in self.linacnames:
-				self.crest_phases.update({i: 0})
-		if self.mode == CATAP.HardwareFactory.STATE.VIRTUAL:
-			self.setGunStartEndTime(self.gunStartTime, self.gunEndTime)
+		self.setGunStartEndTime(self.gunStartTime, self.gunEndTime)
 		for key in self.linacnames:
 			self.linacLLRFObj[key] = self.llrf_factory.getLLRF(key)
 			self.linacStartTimes.update({key: 0.1})  # MAGIC NUMBER
 			self.linacEndTimes.update({key: 1.0})  # MAGIC NUMBER
-			if self.mode == CATAP.HardwareFactory.STATE.VIRTUAL:
+			if self.mode == STATE.VIRTUAL:
 				self.setLinacStartEndTime(key, self.linacStartTimes[key], self.linacEndTimes[key])
 			self.linacDataSet.update({key: False})
 			self.linacEnergyGain.update({key: 0.0})
@@ -122,7 +124,7 @@ class GetDataFromCATAP(object):
 		self.bpmFac = self.hf.getBPMFactory()
 		self.scrFac = self.hf.getScreenFactory()
 		self.magFac = self.hf.getMagnetFactory()
-		if self.mode == CATAP.HardwareFactory.STATE.VIRTUAL:
+		if self.mode == STATE.VIRTUAL:
 			self.magFac.switchOnAll()
 		if not self.epics_tools_types['camera']:
 			self.camFac = self.hf.getCameraFactory()
@@ -195,7 +197,7 @@ class GetDataFromCATAP(object):
 		for i in self.magnames:
 			self.magDict[i] = self.magFac.getMagnet(i)
 		self.allDataDict.update({"Magnet": self.magDict})
-	
+
 	def setChargeDict(self):
 		#self.chargenames = self.chargeFac.getAllChargeDiagnosticNames()
 		self.chargenames = ['CLA-S01-DIA-WCM-01']
@@ -270,7 +272,7 @@ class GetDataFromCATAP(object):
 		self.setLinacLLRFDict()
 		self.dictsSet = True
 		return self.allDataDict
-			
+
 	def getBPMData(self,name):
 		if self.dictsSet:
 			self.bpmdata[name] = {}
@@ -317,7 +319,7 @@ class GetDataFromCATAP(object):
 		else:
 			self.setAllDicts()
 			self.getCameraData(name)
-		
+
 	def getChargeData(self,name):
 		if self.dictsSet:
 			self.chargedata[name] = {}
@@ -327,7 +329,7 @@ class GetDataFromCATAP(object):
 		else:
 			self.setAllDicts()
 			self.getChargeData(name)
-		
+
 	def getScreenData(self,name):
 		if self.dictsSet:
 			self.screendata[name] = {}
@@ -337,7 +339,7 @@ class GetDataFromCATAP(object):
 		else:
 			self.setAllDicts()
 			self.getScreenData(name)
-		
+
 	def getMagnetData(self, name, energy):
 		if self.dictsSet:
 			self.magnetdata[name] = {}
@@ -384,13 +386,15 @@ class GetDataFromCATAP(object):
 
 	def getGunLLRFData(self):
 		if self.dictsSet:
+			if self.mode == STATE.VIRTUAL:
+				self.crest_phases.update({self.gunname: 0.0})
 			if not self.epics_tools_types['llrf']:
 				for trace in self.guntraces:
 					self.gundata.update({trace: self.llrf_factory.getCutMean(self.gunname, trace)})
 					self.gundata.update({trace: self.gundata[trace]})
 				#self.gundata.update({"phase": self.gundata["CAVITY_FORWARD_POWER"]})
 				self.gundata.update({"phase_abs": self.gunLLRFObj.getPhiDEG()})
-				self.gundata.update({"phase": self.gundata['phase_abs'] - self.crest_phases[self.gunname]})
+				self.gundata.update({"phase": self.gundata['phase_abs']- self.crest_phases[self.gunname]})
 				self.gundata.update({"amplitude_MW": self.gunLLRFObj.getAmpMW()})
 				self.gundata.update({"amplitude": self.gunLLRFObj.getAmp()})
 			else:
@@ -419,6 +423,8 @@ class GetDataFromCATAP(object):
 			self.getGunLLRFData()
 
 	def getLinacLLRFData(self, linac_name):
+		if self.mode == STATE.VIRTUAL:
+			self.crest_phases.update({linac_name: 0.0})
 		if self.dictsSet:
 			self.linacname = self.linacNameConvert(linac_name)
 			if not self.epics_tools_types['llrf']:
@@ -427,7 +433,7 @@ class GetDataFromCATAP(object):
 					self.linacdata[self.linacname].update({trace: self.linacdata[self.linacname][trace]})
 				self.linacdata[self.linacname].update({"phase_abs": self.linacLLRFObj[self.linacname].getPhiDEG()})
 				self.linacdata[self.linacname].update(
-					{"phase": self.linacdata[self.linacname]['phase_abs'] - self.crest_phases[linac_name]})
+					{"phase": self.linacdata[self.linacname]['phase_abs']- self.crest_phases[linac_name]})
 				self.linacdata[self.linacname].update({"amplitude_MW": self.linacLLRFObj[self.linacname].getAmpMW()})
 				self.linacdata[self.linacname].update({"amplitude": self.linacLLRFObj[self.linacname].getAmp()})
 			else:
@@ -527,4 +533,3 @@ class GetDataFromCATAP(object):
 		for i in datadict.keys():
 			if i in self.alias_names.keys():
 				datadict[i]['simframe_alias'] = self.alias_names[i]
-

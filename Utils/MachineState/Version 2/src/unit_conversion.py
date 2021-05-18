@@ -2,7 +2,7 @@ import numpy
 import scipy.constants
 import scipy.stats
 import math
-import src.aliases as aliases
+import aliases as aliases
 
 class UnitConversion(object):
 
@@ -11,13 +11,14 @@ class UnitConversion(object):
 		self.my_name = "UnitConversion"
 		self.alias_names = aliases.alias_names
 		self.type_alias = aliases.type_alias
-		speed_of_light = scipy.constants.speed_of_light / 1e6
+		speed_of_light = scipy.constants.speed_of_light / 1.0e6
 		self.lattices = ['EBT-BA1', 'INJ', 'CLA-S01', 'CLA-S02', 'L01', 'CLA-C2V', 'VCA']
 		self.gun_pulse_length = 2.5
 		self.linac_pulse_length = 0.75
 		self.energy = {}
 		self.gun_position = 0.17  # MAGIC NUMBER (BUT IT WON'T CHANGE)
 		self.l01_position = 3.2269  # MAGIC NUMBER (BUT IT WON'T CHANGE)
+		self.k1 = 0.0 #HMCC
 
 	def getLattices(self):
 		return self.lattices
@@ -63,7 +64,7 @@ class UnitConversion(object):
 			self.coeffs = numpy.append(self.ficmod,
 									   field_integral_coefficients[-1])
 			self.int_strength = numpy.polyval(self.coeffs, abs(current))
-			self.effect = (scipy.constants.speed_of_light / 1e6) * self.int_strength / energy
+			self.effect = (scipy.constants.speed_of_light / 1.0e6) * self.int_strength / energy
 			# self.update_widgets_with_values("lattice:" + key + ":k1l", effect / value['magnetic_length'])
 			self.k1 = self.effect / (magnetic_length)
 			if psu_state == "On":
@@ -76,8 +77,8 @@ class UnitConversion(object):
 			self.coeffs = numpy.append(self.ficmod,
 									   field_integral_coefficients[-1])
 			self.int_strength = numpy.polyval(self.coeffs, abs(current))
-			print(self.int_strength)
-			print(energy)
+			#print(self.int_strength)
+			#print(energy)
 			self.field_amplitude = self.int_strength / magnetic_length
 			magdict.update({'field_amplitude': float(int(self.sign) * self.field_amplitude)})
 			if psu_state == "On":
@@ -90,9 +91,7 @@ class UnitConversion(object):
 			self.coeffs = numpy.append(self.ficmod,
 									   field_integral_coefficients[-1])
 			self.int_strength = numpy.polyval(self.coeffs, abs(current))
-			print(self.int_strength)
-			print(energy)
-			self.effect = (scipy.constants.speed_of_light / 1e6) * self.int_strength / energy
+			self.effect = (scipy.constants.speed_of_light / 1.0e6) * self.int_strength / energy
 			magdict.update({'angle': float(self.effect)})
 			if psu_state == "On":
 				magdict.update({'angle': float(self.effect)})

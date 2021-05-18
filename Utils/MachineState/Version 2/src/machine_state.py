@@ -1,21 +1,25 @@
 import ruamel.yaml as yaml
 import sys, os
+import numpy
 for item in sys.path:
   if "PythonInterface" not in str(item):
     continue
   else:
     sys.path.remove(item)
-
-sys.path.append("\\\\192.168.83.14\\claranet\\test\\CATAP\\bin\\")
-# sys.path.append("E:\\CATAP-build\\PythonInterface\\Release\\CATAP")
-# sys.path.append('\\\\192.168.83.14\\claranet\\test\\Controllers\\bin\\python3_x64')
-sys.path.append(os.path.abspath(__file__+'/../../../../../../SimFrame/'))
-import src.get_data_from_catap as get_data_from_catap
-import src.get_data_from_simframe as get_data_from_simframe
-import src.write_data_to_catap as write_data_to_catap
-import src.write_data_to_simframe as write_data_to_simframe
-import src.unit_conversion as unit_conversion
-import src.aliases as aliases
+#sys.path.append("\\\\192.168.83.14\\claranet\\test\\CATAP\\bin\\")
+sys.path.append(os.path.join(os.getcwd()+'/../catapillar-build/PythonInterface/Release/CATAP/'))
+#sys.path.append('\\\\192.168.83.14\\claranet\\test\\Controllers\\bin\\python3_x64')
+#sys.path.append("\\\\192.168.83.14\\claranet\\test\\SimFrame\\")
+# sys.path.append('\\\\apclara1.dl.ac.uk\\opt\\SimFrame')
+#sys.path.append(os.path.abspath(__file__+'/../../../../../../../simframe/'))
+sys.path.append(os.path.join(os.getcwd()+'/../simframe/'))
+import get_data_from_catap
+import get_data_from_simframe
+import write_data_to_catap
+import write_data_to_simframe
+import unit_conversion
+import aliases
+import scipy.constants
 
 # Main class for writing / reading the machine state from / to SimFrame / CATAP
 class MachineState(object):
@@ -150,7 +154,7 @@ class MachineState(object):
             self.allbeamfiles = self.getDataFromSimFrame.getAllBeamFiles(directory)
             for i in self.allbeamfiles.keys():
                 for j in sections:
-                    if (self.allbeamfiles[i]['type'] == 'screen') and (i in self.datadict[j].keys()):
+                    if ((self.allbeamfiles[i]['type'] == 'screen') or (self.allbeamfiles[i]['type'] == 'aperture')) and (i in self.datadict[j].keys()):
                         self.datadict[j][self.screen_to_camera[i]].update({'x_mm': self.allbeamfiles[i]['x']['mean']})
                         self.datadict[j][self.screen_to_camera[i]].update({'y_mm': self.allbeamfiles[i]['y']['mean']})
                         self.datadict[j][self.screen_to_camera[i]].update({'x_mm_sig': self.allbeamfiles[i]['x']['sigma']})
@@ -158,6 +162,25 @@ class MachineState(object):
                         self.datadict[j][self.screen_to_camera[i]].update({'x_mean': self.allbeamfiles[i]['x']['mean']})
                         self.datadict[j][self.screen_to_camera[i]].update({'y_mean': self.allbeamfiles[i]['y']['mean']})
                         self.datadict[j][self.screen_to_camera[i]].update({'z_mean': self.allbeamfiles[i]['z']['mean']})
+                        self.datadict[j][self.screen_to_camera[i]].update({'x_var': self.allbeamfiles[i]['x']['var']})
+                        self.datadict[j][self.screen_to_camera[i]].update({'y_var': self.allbeamfiles[i]['y']['var']})
+                        self.datadict[j][self.screen_to_camera[i]].update(
+                            {'x_y_mean': self.allbeamfiles[i]['x_y']['mean']})
+                        self.datadict[j][self.screen_to_camera[i]].update({'px_py_mean': numpy.mean(numpy.multiply(
+                            numpy.multiply(1.0, self.allbeamfiles[i]['px']['dist']),
+                            numpy.multiply(1.0, self.allbeamfiles[i]['py']['dist'])))})
+                        self.datadict[j][self.screen_to_camera[i]].update({'x_px_mean': numpy.mean(numpy.multiply(
+                            numpy.multiply(1.0, self.allbeamfiles[i]['x']['dist']),
+                            self.allbeamfiles[i]['px']['dist']))})
+                        self.datadict[j][self.screen_to_camera[i]].update({'y_py_mean': numpy.mean(numpy.multiply(
+                            numpy.multiply(1.0, self.allbeamfiles[i]['y']['dist']),
+                            self.allbeamfiles[i]['py']['dist']))})
+                        self.datadict[j][self.screen_to_camera[i]].update({'x_py_mean': numpy.mean(numpy.multiply(
+                            numpy.multiply(1.0, self.allbeamfiles[i]['x']['dist']),
+                            self.allbeamfiles[i]['py']['dist']))})
+                        self.datadict[j][self.screen_to_camera[i]].update({'y_px_mean': numpy.mean(numpy.multiply(
+                            numpy.multiply(1.0, self.allbeamfiles[i]['y']['dist']),
+                            self.allbeamfiles[i]['px']['dist']))})
                         self.datadict[j][self.screen_to_camera[i]].update(
                             {'px_mean': self.allbeamfiles[i]['px']['mean']})
                         self.datadict[j][self.screen_to_camera[i]].update(
@@ -174,6 +197,12 @@ class MachineState(object):
                             {'py_sigma': self.allbeamfiles[i]['py']['sigma']})
                         self.datadict[j][self.screen_to_camera[i]].update(
                             {'pz_sigma': self.allbeamfiles[i]['pz']['sigma']})
+                        self.datadict[j][self.screen_to_camera[i]].update({'px_var': numpy.multiply(numpy.square(1.0),
+                                                                                                 self.allbeamfiles[i][
+                                                                                                     'px']['var'])})
+                        self.datadict[j][self.screen_to_camera[i]].update({'py_var': numpy.multiply(numpy.square(1.0),
+                                                                                    self.allbeamfiles[i]['py']['var'])})
+                        self.datadict[j][self.screen_to_camera[i]].update({'pz_var': self.allbeamfiles[i]['pz']['var']})
                         self.datadict[j][self.screen_to_camera[i]].update({'t_sigma': self.allbeamfiles[i]['t']['sigma']})
                         self.datadict[j][self.screen_to_camera[i]].update({'filename': self.allbeamfiles[i]['filename']})
                     elif (self.allbeamfiles[i]['type'] == 'bpm') and (i in self.datadict[j].keys()):
