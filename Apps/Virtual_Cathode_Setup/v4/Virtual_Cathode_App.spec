@@ -30,4 +30,4 @@ exe = EXE(pyz,
           upx=True,
           upx_exclude=[],
           runtime_tmpdir=None,
-          console=False , icon='resources\\Virtual_Cathode_App\\Virtual_Cathode_App.ico')
+          console=True , icon='resources\\Virtual_Cathode_App\\Virtual_Cathode_App.ico')

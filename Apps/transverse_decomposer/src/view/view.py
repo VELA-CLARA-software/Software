@@ -81,7 +81,7 @@ class view(QMainWindow, Ui_view):
         '''
             limits and axes in pixels and mm
         '''
-        border = 50
+        self.border = 50
         self.plot_item.setLimits(xMin=0, xMax=1000,
                                  yMin=0, yMax=1000,
                                  minXRange=10,
@@ -89,8 +89,8 @@ class view(QMainWindow, Ui_view):
                                  minYRange=10,
                                  maxYRange=1000)
         self.plot_item.setRange(
-            xRange=[-border, 1000 + border],
-            yRange=[-border, 1000  + border])
+            xRange=[-self.border, 1000 + self.border],
+            yRange=[-self.border, 1000  + self.border])
         '''
             for axes we'll have pixels and mm, so customize the tick marks
             fairly cancerous below, but we only do it once ... 
@@ -186,8 +186,23 @@ class view(QMainWindow, Ui_view):
         :param y_pix_scale_factor: pix to mm
         '''
         print("update_image")
+
+
         self.vc_image.scale(x_pix_scale_factor, y_pix_scale_factor)
         self.vc_image.setOpts(axisOrder='row-major')
-        self.vc_image.setImage(image=array_data, autoDownsample=True)
+        self.vc_image.setImage(array_data)
         self.vc_image.setLevels([0, amax(array_data)], update=True)
+
+
+
+        # # a color map
+        # STEPS = linspace(0, 1, 4)
+        # CLRS = ['k', 'r', 'y', 'w']
+        # a = array([pg.colorTuple(pg.Color(c)) for c in CLRS])
+        # clrmp = pg.ColorMap(STEPS, a)
+        # lut = clrmp.getLookupTable()
+        # self.vc_image.setLookupTable(lut)
+        # #
+        # # add the vc_image to the plot_item
+        # self.plot_item.addItem(self.vc_image)
         print("update_image FIN")
