@@ -79,8 +79,6 @@ class virtual_cathode_view(QtGui.QMainWindow, Ui_virtual_cathode_view):
         self.RS_autoreset.released.connect(self.handle_RS_autoreset)
         self.handle_RS_autoreset()
 
-
-
     def handle_RS_autoreset(self):
         print('handle_RS_autoreset')
         if self.RS_autoreset.isChecked():
@@ -203,11 +201,8 @@ class virtual_cathode_view(QtGui.QMainWindow, Ui_virtual_cathode_view):
         else:
             self.rs_buffer_count.setStyleSheet("background-color: #ff5733")
 
-
-
     def update_rs_buffer_full(self):
         print("update_rs_buffer_full")
-
 
     def new_value(self, value):
         '''

@@ -1,0 +1,2257 @@
+****************************************************************************************************
+******************* __         __    _  _  ___       _   ___  ___   __         __ ******************
+******************* \ \  ___  / /   | \| |/ _ \     /_\ | _ \/ __|  \ \  ___  / / ******************
+*******************  \ \/ _ \/ /    | .` | (_) |   / _ \|   / (__    \ \/ _ \/ /  ******************
+*******************   \_\___/_/     |_|\_|\___/   /_/ \_\_|_\\___|    \_\___/_/   ******************
+*******************                                                               ******************
+********************************************************************************
+*********************** Log Started 2020-09-22-15-15-48 ************************
+********************************************************************************
+********************************************************************************
+******************************** Configuration *********************************
+********************************************************************************
+config file =
+C:\Users\dlerlp\Documents\GitHub\Software\Apps\RF_Conditioner\v2\CLARA_L1.yml
+dumping parsed config data to text log
+CONFIG_FILE:
+C:\Users\dlerlp\Documents\GitHub\Software\Apps\RF_Conditioner\v2\CLARA_L1.yml,
+KFPOW_MASK_TYPE: PERCENT, KRPOW_MASK_FLOOR: 1000.0, BREAKDOWN_TRACES:
+['CAVITY_REVERSE_POWER'], CFPHA_MEAN_END: 0.83, MAX_POW: 0.0, MAX_AMP: 50000,
+VAC_SPIKE_DECAY_LEVEL: 1.2, CFPOW_MASK_WINDOW_START: 300, PID_on_off_GMON: CLA-
+GUN-H2O-PID-02:ON:RB, KRPOW_NUM_AVERAGE_TRACES: 2, CFPHA_MASK_SET_TYPE: TIME,
+CPPOW_MASK_START: 0.8, KRPOW_MASK_SET_TYPE: TIME, AMP_PWR_ACCEPTANCE_WINDOW:
+750000, CPPOW_DROP_AMP: False, CRPOW_DROP_AMP_VALUE: 2, CFPOW_MASK_FLOOR:
+5000.0, CRPHA_MASK_SET_TYPE: TIME, TEXT_LOG_FILENAME: log.txt,
+KFPHA_MASK_LO_MIN: 50, KRPOW_CHECK_STREAK: 2, VAC_VALVE_CHECK_TIME: 1000,
+CPPOW_MASK_SET_TYPE: TIME, CFPHA_CHECK_STREAK: 2, CPPOW_AUTO_SET: False,
+KFPOW_MASK_END: 86, CFPHA_MEAN_START: 0.75, KRPHA_MASK_TYPE: ABSOLUTE,
+VAC_ROLLING_SUM_NUM_SAMPLES: 25, CFPOW_MASK_END: 86, CFPHA_NUM_AVERAGE_TRACES:
+2, KRPOW_AUTO_SET: False, KRPHA_PHASE_MASK_BY_POWER_TRACE: False,
+VAC_NUM_SAMPLES_TO_AVERAGE: 7, KFPHA_AUTO_SET: False, CRPOW_MASK_WINDOW_END:
+3.9, CFPHA_MASK_LO_MIN: 50, SOL_CHECK_TIME: 1000, MINIMUM_COOLDOWN_TIME: 3000,
+RF_STRUCTURE: L01, WATER_TEMPERATURE_PV: ['CLA-L01-H2O-TT-20:RT'],
+KRPHA_CHECK_STREAK: 2, KRPOW_MASK_END: 5.0, LLRF_CHECK_TIME: 50,
+KFPOW_AMPSP_RUNNING_STATS_LOG_FILENAME: linac_amp_power_log.txt,
+CPPHA_PHASE_MASK_BY_POWER_LEVEL: 5000.0, PULSE_COUNT_BREAKDOWN_LOG_FILENAME:
+linac_pulse_breakdown_log.txt, CFPOW_MASK_START: 63, CFPHA_AUTO_SET: False,
+KRPOW_DROP_AMP_VALUE: 2, KFPHA_PHASE_MASK_BY_POWER_LEVEL: 5000.0,
+CFPHA_MASK_FLOOR: 0.0, KRPHA_PHASE_MASK_BY_POWER_LEVEL: 5000.0,
+KFPOW_MASK_WINDOW_END: 301, CPPHA_DROP_AMP_VALUE: 2,
+OUTSIDE_MASK_FORWARD_FILENAME: outside_forward_log, KRPHA_MEAN_END: 3.0,
+KFPOW_MASK_START: 63, KEEP_VALVE_OPEN: False, CRPHA_MASK_LO_MIN: 50,
+CRPOW_MASK_FLOOR: 2000.0, SOL_WOBBLE_OSCILLATION_POINTS: 0, CRPHA_MEAN_START:
+0.0, DC_PV: EBT-INJ-SCOPE-01:P1, KRPHA_MASK_FLOOR: 0.0, CPPHA_MASK_WINDOW_START:
+2.4, CPPOW_MASK_TYPE: ABSOLUTE, CFPOW_MASK_LEVEL: 25, CFPHA_DROP_AMP_VALUE: 2,
+CRPHA_MASK_TYPE: ABSOLUTE, TRACES_TO_SAVE: ['KLYSTRON_FORWARD_PHASE',
+'KLYSTRON_REVERSE_PHASE', 'KLYSTRON_FORWARD_POWER', 'KLYSTRON_REVERSE_POWER',
+'CAVITY_REVERSE_PHASE', 'CAVITY_FORWARD_PHASE', 'CAVITY_FORWARD_POWER',
+'CAVITY_REVERSE_POWER', 'CAVITY_PROBE_POWER', 'CAVITY_PROBE_POWER'],
+KRPHA_MASK_WINDOW_END: 3.4, MAGNET_MACHINE_AREA: CLARA_PH1, DC_SPIKE_DELTA:
+0.015, OUTSIDE_MASK_COOLDOWN_TIME: 3000, VAC_VALVE_AREA: CLARA_PH1,
+SOL_WOBBLE_LO: 0.0, KRPOW_MASK_LEVEL: 35.0, KRPHA_DROP_AMP: False,
+CRPHA_MASK_END: 5.0, CRPHA_MEAN_END: 3.0, KFPOW_MEAN_START: 0.68,
+CRPHA_DROP_AMP: False, KFPOW_MEAN_END: 0.75, CFPOW_NUM_AVERAGE_TRACES: 5,
+CPPHA_MASK_END: 5.0, VAC_VALVE: S01-VALV-01, CAVITY_TEMPERATURE_CHECK_TIME:
+1000, CFPHA_DROP_AMP: False, MODULATOR_CHECK_TIME: 1000, SOL_COUNT: 2,
+RF_REPETITION_RATE: 100, CPPHA_MASK_WINDOW_END: 3.4, LOG_RAMP_CURVE_NUMSTEPS:
+500, KFPHA_MEAN_START: 0.68, RF_PROT_CHECK_TIME: 1000, KFPHA_MASK_TYPE:
+ABSOLUTE, MIN_AMP: 500, DC_CHECK_TIME: 1000, PID_on_off: CLA-GUN-H2O-
+PID-02:ON:RB, KRPHA_NUM_AVERAGE_TRACES: 2, KFPHA_MASK_FLOOR: 0.0,
+CRPHA_DROP_AMP_VALUE: 2, KRPHA_MASK_WINDOW_START: 2.4, CRPOW_MASK_TYPE:
+ABSOLUTE, BIN_WIDTH: 400, KFPOW_MASK_FLOOR: 5000, CPPOW_MASK_END: 5.0,
+BINARY_DATA_LOG_FILENAME: data_log, KRPHA_MASK_LO_MIN: 50, KFPOW_MASK_LEVEL: 15,
+OUTSIDE_MASK_CHECK_TIME: 100, MODE: OPERATIONAL, CRPOW_MASK_LO_MIN: 50,
+KLY_PWR_FOR_ACTIVE_PULSE: 500.0, SOL_NAMES: ['L01-SOL1', 'L01-SOL2'],
+CRPHA_MASK_FLOOR: 0.0, GMON_SUFFIX: _GMON, KFPOW_DROP_AMP_VALUE: 3,
+KRPOW_MEAN_END: 3.0, WHEN_VAC_HI_DISABLE_RAMP: True, AMP_PWR_LOG_TIME: 50,
+VAC_SPIKE_DROP_AMP: 5, DC_SPIKE_DECAY_TIME: 2000, CPPHA_MASK_TYPE: ABSOLUTE,
+KFPHA_MASK_SET_TYPE: TIME, KRPOW_MASK_WINDOW_START: 2.4,
+SOL_WOBBLE_OSCILLATION_TIME: 100.0, CFPOW_MASK_SET_TYPE: INDEX,
+CFPOW_MASK_WINDOW_END: 301, LOG_DIRECTORY: C:\Users\dlerlp\Documents\GitHub\Soft
+ware\Apps\RF_Conditioner\v2\logs\Linac20200922\, KFPHA_MASK_LEVEL: 35.0,
+CAVITY_TEMPERATURE_PV: ['CLA-L01-H2O-TT-20:RT'], VAC_SPIKE_DELTA: 5e-09,
+VAC_CHECK_TIME: 200, DC_DECAY_MODE: TIMED, SOL_WOBBLE_HI: 0.0,
+CRPOW_MASK_WINDOW_START: 3.8, CPPHA_NUM_AVERAGE_TRACES: 2,
+CRPHA_NUM_AVERAGE_TRACES: 2, NUM_BUFFER_TRACES: 500, CRPHA_MASK_LEVEL: 35.0,
+CRPOW_CHECK_STREAK: 10, CPPHA_AUTO_SET: False, VAC_SHOULD_DROP_AMP: True,
+KFPHA_CHECK_STREAK: 2, KRPOW_MEAN_START: 0.0, KFPOW_AUTO_SET: False,
+OUTSIDE_MASK_PROBE_FILENAME: outside_probe_log, CPPOW_MASK_FLOOR: 1000.0,
+KRPOW_MASK_START: 0.8, DC_SHOULD_DROP_AMP: False, CRPOW_MEAN_START: 0.0,
+CFPOW_DROP_AMP_VALUE: 6, CRPOW_MEAN_END: 3.0, GUI_UPDATE_TIME: 1000,
+CPPOW_MEAN_END: 1.32, CFPOW_MEAN_START: 0.75, KFPHA_DROP_AMP_VALUE: 2,
+KRPHA_DROP_AMP_VALUE: 2, CPPHA_MEAN_END: 1.32, KRPHA_MASK_LEVEL: 35.0,
+PULSE_LENGTH: 765, DEFAULT_RF_INCREASE_LEVEL: 50, KFPHA_MEAN_END: 0.75,
+SHOULD_SOL_WOBBLE: False, CPPOW_MEAN_START: 1.26, VAC_DECAY_MODE: LEVEL,
+PULSE_LENGTH_ERROR: 50, KFPOW_MASK_SET_TYPE: INDEX, CFPOW_MASK_LO_MIN: 500,
+KRPHA_MASK_END: 5.0, CPPOW_MASK_WINDOW_START: 2.4, VAC_MAX_LEVEL_FOR_RAMP:
+5e-09, CFPOW_CHECK_STREAK: 10, CFPHA_MASK_LEVEL: 35.0, CRPHA_MASK_WINDOW_END:
+3.4, CPPHA_CHECK_STREAK: 2, KRPHA_MEAN_START: 0.0, CPPOW_NUM_AVERAGE_TRACES: 2,
+CPPHA_MASK_LEVEL: 35.0, CPPHA_DROP_AMP: False, CAV_PWR_RATIO: 400000,
+CRPHA_PHASE_MASK_BY_POWER_TRACE: False, CFPHA_MASK_END: 5.0,
+LOG_RAMP_CURVE_RAMP_RATE: 0.2, CRPHA_CHECK_STREAK: 2, CRPHA_MASK_START: 0.8,
+KFPHA_MASK_END: 5.0, KFPHA_NUM_AVERAGE_TRACES: 2, WATER_TEMPERATURE_PV_COUNT: 1,
+BREAKDOWN_RATE_AIM: 10, KRPOW_DROP_AMP: False, LOG_RAMP_CURVE_PULSES_PER_STEP:
+80, CPPHA_MASK_FLOOR: 0.0, CPPHA_MASK_SET_TYPE: TIME, KFPHA_MASK_START: 0.8,
+KFPHA_PHASE_MASK_BY_POWER_TRACE: False, WATER_TEMPERATURE_CHECK_TIME: 1000,
+CPPHA_PHASE_MASK_BY_POWER_TRACE: False, CFPOW_MASK_TYPE: PERCENT,
+CFPHA_MASK_WINDOW_START: 2.4, KRPOW_MASK_LO_MIN: 50, CRPOW_MASK_START: 0.6,
+CRPOW_MASK_SET_TYPE: TIME, CPPOW_CHECK_STREAK: 2, CPPHA_MASK_START: 0.8,
+CFPOW_DROP_AMP: False, CPPHA_MASK_LO_MIN: 50, KRPHA_AUTO_SET: False,
+MEAN_TRACES: ['KLYSTRON_FORWARD_POWER', 'KLYSTRON_REVERSE_POWER',
+'CAVITY_FORWARD_POWER', 'CAVITY_REVERSE_POWER', 'CAVITY_PROBE_POWER',
+'KLYSTRON_FORWARD_PHASE', 'KLYSTRON_REVERSE_PHASE', 'CAVITY_FORWARD_PHASE',
+'CAVITY_REVERSE_PHASE', 'CAVITY_PROBE_PHASE'], DC_SPIKE_DECAY_LEVEL: 1.2,
+CRPHA_MASK_WINDOW_START: 2.4, CPPOW_MASK_LO_MIN: 50, CRPOW_DROP_AMP: True,
+KFPOW_CHECK_STREAK: 10, DEFAULT_PULSE_COUNT: 500, CRPOW_NUM_AVERAGE_TRACES: 5,
+VAC_SPIKE_TRACES_TO_SAVE: ['KLYSTRON_FORWARD_PHASE', 'KLYSTRON_REVERSE_PHASE',
+'KLYSTRON_FORWARD_POWER', 'KLYSTRON_REVERSE_POWER', 'CAVITY_REVERSE_PHASE',
+'CAVITY_FORWARD_PHASE', 'CAVITY_FORWARD_POWER', 'CAVITY_REVERSE_POWER',
+'CAVITY_PROBE_POWER', 'CAVITY_PROBE_POWER'], CRPOW_MASK_LEVEL: 10000,
+KFPOW_NUM_AVERAGE_TRACES: 2, BINARY_DATA_LOG_TIME: 1000, KRPHA_MASK_SET_TYPE:
+TIME, KFPOW_MASK_WINDOW_START: 300, KFPOW_DROP_AMP: True, KRPOW_MASK_WINDOW_END:
+3.4, NUM_SET_POINTS_TO_FIT: 4, CFPHA_MASK_START: 0.8, CRPOW_AUTO_SET: False,
+CPPOW_MASK_LEVEL: 35.0, CPPHA_MEAN_START: 1.26, MAX_DELTA_AMP_SP: 300,
+CRPHA_AUTO_SET: False, VAC_PV: CLA-S01-VAC-IMG-01:PRES, KFPOW_MASK_LO_MIN: 500,
+CPPOW_DROP_AMP_VALUE: 2, CAVITY_TEMPERATURE_PV_COUNT: 1, CFPHA_MASK_TYPE:
+ABSOLUTE, VAC_SPIKE_MAX_LEVEL_FOR_OFF: 2e-09, CRPHA_PHASE_MASK_BY_POWER_LEVEL:
+5000.0, EXTRA_BREAKDOWN_DAQ: ['VAC_LEVEL', 'DC_LEVEL', 'BREAKDOWN_RATE',
+'BREAKDOWN_COUNT'], KFPHA_MASK_WINDOW_START: 2.4, KRPHA_MASK_START: 0.8,
+OUTSIDE_MASK_REVERSE_FILENAME: outside_reverse_log, CFPOW_MEAN_END: 0.83,
+NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY: 100000, CFPHA_PHASE_MASK_BY_POWER_TRACE:
+False, CRPOW_MASK_END: 3.5, RF_REPETITION_RATE_ERROR: 50, CFPHA_MASK_WINDOW_END:
+3.4, VAC_SPIKE_DECAY_TIME: 2000, EXTRA_TRACES_ON_BREAKDOWN: 2,
+DC_SPIKE_DROP_AMP: 6, CFPOW_AUTO_SET: False, KFPHA_MASK_WINDOW_END: 3.4,
+KRPOW_MASK_TYPE: ABSOLUTE, DC_NUM_SAMPLES_TO_AVERAGE: 5, KFPHA_DROP_AMP: False,
+LOG_RAMP_START_POWER: 30000, CPPOW_MASK_WINDOW_END: 3.4,
+CFPHA_PHASE_MASK_BY_POWER_LEVEL: 5000.0,
+
+2020-09-22 15:15:49.394000
+********************************************************************************
+***** src.controllers.main_controller, create rf_conditioning_data object ******
+********************************************************************************
+
+2020-09-22 15:15:49.394000
+Started in debug mode = False
+********************************************************************************
+****************** Print Rationalized kfpow_running_stat_log  ******************
+********************************************************************************
+get_kfpow_running_stat_log complete
+
+2020-09-22 15:15:49.780000
+********************************************************************************
+***** src.controllers.main_controller, create hardware_control_hub object ******
+********************************************************************************
+hardware_control_hub Starting CATAP Hardware Interfaces
+start_llrf_control()  SET AMP_SP = 0, successfully created a L01 LLRF control
+object
+
+2020-09-22 15:15:52.085000
+amp_vs_kfpow lookup, called from get_kfp_running_stat_at_current_set_point,
+can't find -9999.9999, returning value at 0.0 instead
+
+2020-09-22 15:16:06.368000
+********************************************************************************
+********** src.controllers.main_controller, create monitor_hub object **********
+********************************************************************************
+src.monitors.monitor_hub Starting Data Monitoring
+src.monitors.monitor_hub start_llrf_monitor()
+
+2020-09-22 15:16:07.470000
+src.controllers.hardware_control_hub connected, PV = CLA-S01-VAC-IMG-01:PRES
+with ID = d0,  acquiring data
+src.monitors.vac_monitor will drop amp on spike detection
+src.monitors.vac_monitor STARTED running
+src.monitors.vac_monitor vac_spike_status = state.UNKNOWN
+src.monitors.vac_monitor vac_spike_status = state.GOOD
+start_vac_monitor successfully started Vacuum Monitoring
+src.monitors.monitor_hub start_daq_frequency_monitor()
+********************************************************************************
+************************* Connecting to Water Temp PVs *************************
+********************************************************************************
+
+2020-09-22 15:16:08.542000
+src.controllers.hardware_control_hub connected, PV = CLA-L01-H2O-TT-20:RT with
+ID = d1,  acquiring data
+
+2020-09-22 15:16:08.542000
+src.monitors.vac_monitor level ok, 7.59e-10 < 5e-09
+
+2020-09-22 15:16:08.542000
+Connected to CLA-L01-H2O-TT-20:RT id = WATER_TEMP_ID_0
+
+2020-09-22 15:16:08.542000
+start_water_temperature_monitor successfully started Water Temperature
+Monitoring
+
+2020-09-22 15:16:08.542000
+src.monitors.monitor_hub start_cavity_temperature_monitor()
+********************************************************************************
+************************ Connecting to Cavity Temp PVs *************************
+********************************************************************************
+
+2020-09-22 15:16:09.607000
+src.controllers.hardware_control_hub connected, PV = CLA-L01-H2O-TT-20:RT with
+ID = d2,  acquiring data
+
+2020-09-22 15:16:09.607000
+Connected to CLA-L01-H2O-TT-20:RT id = CAVITY_TEMP_ID_0
+
+2020-09-22 15:16:09.607000
+start_cavity_temperature_monitor successfully started Cavity Temperature
+Monitoring
+
+2020-09-22 15:16:09.607000
+src.monitors.monitor_hub start_solenoid_monitoring()
+src.monitors.monitor_hub Sanity Check
+is_vac_monitoring = True
+is_llrf_monitoring = True
+is_cavity_temp_monitoring = True
+is_modulator_monitoring = True
+is_rf_heartbeat_monitoring = True
+is_sol_monitoring = True
+is_rf_prot_monitoring = True
+is_outside_mask_monitoring = True
+is_daq_frequency_monitoring = True
+is_water_temp_monitoring = True
+is_vac_valve_monitor = True
+
+2020-09-22 15:16:09.629000
+********************************************************************************
+********** src.data.rf_conditioning_logger start_binary_data_logging  **********
+********************************************************************************
+binary log file added
+llrf_max_amp    p0_all  llrf_output_status      next_sp_decrease
+probe_pha       rev_cav_pha     can_llrf_output_state_OLD
+breakdown_rate_aim      phi_sp  latest_amp_sp_from_ramp num_outside_mask_traces
+next_requested_power_change     modulator_good  p2_current_sp_to_fit
+CAVITY_TEMP_ID_0        p2_current_sp   SP_QUAD_ALL     water_temp_gui
+max_sp_increase ramp_mode       rev_kly_pha     event_pulse_count
+delta_kfpow     cav_pwr_ratio_can_ramp  p1_current_sp_to_fit    vac_level
+gui_can_rf_output       can_rf_output_status_OLD
+bd_rate_calc_first_pulse_number cav_pwr_ratio
+number_of_pulses_in_breakdown_history   probe_outside_mask_count
+current_ramp_index      y_min   rev_kly_pwr     fwd_kly_pha
+active_breakdown_count  last_sp_above_100       time_stamp, (start = 2020-09-22
+15:16:09.660000)        TOR_SCAN        rev_cav_pwr
+SP_QUAD_CURRENT_SP_TO_FIT       last_vac_spike_status   llrf_DAQ_rep_rate_status
+x_max   p0_current_sp_to_fit    amp_ff  c       L01-SOL1        L01-SOL2
+y_max   p1_current_sp   x_min   can_ramp_status kfpower_at_last_amp_sp
+vac_level_can_ramp      last_breakdown_status   reverse_outside_mask_count
+TOR_ACQM        p0_current_sp   breakdown_rate_low      cav_temp
+fwd_cav_pha     BD_state_OLD    rfprot_good     last_amp_sp     vac_spike_status
+event_pulse_count_zero  DC_level        amp_sp  global_mask_checking
+llrf_heart_beat_value   gui_can_ramp    can_llrf_output_state   p1_all
+log_pulse_count llrf_DAQ_rep_rate_aim   catap_max_amp   can_ramp_status_OLD
+p2_all  fwd_kly_pwr     sol_value       log_amp_set     duplicate_pulse_count
+m       pulse_count     fwd_cav_pwr     SP_SLF  WATER_TEMP_ID_0 probe_pwr
+can_rf_output_status    modulator_state elapsed_time    DC_spike_status
+pulses_to_next_ramp     GUI_mod_and_prot_good   breakdown_status
+catap_max_amp_can_ramp_status   main_can_ramp   llrf_DAQ_rep_rate
+vac_valve_status        SP_QUAD_CURRENT rev_power_spike_count   BD_state
+last_ramp_method        required_pulses rfprot_state    total_breakdown_count
+
+<type 'float'>  <type 'float'>  <enum 'state'>  <type 'float'>  <type 'float'>
+<type 'float'>  <enum 'state'>  <type 'int'>    <type 'int'>    <type 'float'>
+<type 'int'>    <type 'int'>    <type 'bool'>   <type 'float'>  <type 'float'>
+<type 'float'>  <type 'float'>  <type 'float'>  <type 'float'>  <enum
+'ramp_method'>    <type 'float'>  <type 'int'>    <type 'float'>  <type 'bool'>
+<type 'float'>  <type 'float'>  <type 'bool'>   <enum 'state'>  <type 'int'>
+<type 'float'>  <type 'int'>    <type 'int'>    <type 'int'>    <type 'float'>
+<type 'float'>  <type 'float'>  <type 'int'>    <type 'float'>  <type 'float'>
+<type 'int'>    <type 'float'>  <type 'float'>  <enum 'state'>  <enum 'state'>
+<type 'float'>  <type 'float'>  <type 'int'>    <type 'float'>  <type 'float'>
+<type 'float'>  <type 'float'>  <type 'float'>  <type 'float'>  <enum 'state'>
+<type 'float'>  <type 'bool'>   <enum 'state'>  <type 'int'>    <type 'int'>
+<type 'float'>  <type 'bool'>   <type 'float'>  <type 'float'>  <enum 'state'>
+<type 'bool'>   <type 'float'>  <enum 'state'>  <type 'int'>    <type 'float'>
+<type 'float'>  <type 'bool'>   <type 'float'>  <type 'bool'>   <enum 'state'>
+<type 'float'>  <type 'int'>    <type 'int'>    <type 'float'>  <enum 'state'>
+<type 'float'>  <type 'float'>  <type 'float'>  <type 'int'>    <type 'int'>
+<type 'float'>  <type 'int'>    <type 'float'>  <type 'float'>  <type 'float'>
+<type 'float'>  <enum 'state'>  <class
+'VELA_CLARA_RF_Modulator_Control.L01_MOD_STATE'> <type 'long'>   <enum 'state'>
+<type 'int'>    <type 'bool'>   <enum 'state'>  <type 'bool'>   <type 'bool'>
+<type 'float'>  <class 'VELA_CLARA_Vac_Valve_Control.VALVE_STATE'>      <type
+'float'>  <type 'int'>    <enum 'state'>  <enum 'ramp_method'>    <type 'int'>
+<class 'VELA_CLARA_RF_Protection_Control.RF_PROT_STATUS'>       <type 'int'>
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 11712
+
+2020-09-22 15:16:09.745000
+********************************************************************************
+src.controllers.main_controller The RF Conditioning is Preparing to Entering
+Main_Loop !
+********************************************************************************
+
+2020-09-22 15:16:09.745000
+set_global_check_mask setGlobalCheckMask True
+!!Log Ramp curve is NONE, generating a new one
+power_finish = 319920.565928
+breakdown_rate_low = True
+Breakdown rate LO, log_ramp power_finish = 319920.565928
+Log Ramp curve is NONE, generating a new one
+Log Ramp curve_p_finish = 323119.771587, p_start = 30000, p_finish =
+319920.565928, ramp_rate = 0.2
+self.data.log_ramp_curve in maIn_controller = [[80, 1100.0, 4.69990821403802],
+[80, 3500.0, 4.63757985584328]]
+set_amp (1100.0) called from log_ramp_up
+set_amp (3500.0) called from log_ramp_up
+Log Ramp finished, calling clear_log_ramp_curve()
+clear_log_ramp_curve called from log_ramp_up
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 11794
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 139 next required pulses = 200 next power increase = 2000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 138 next required pulses = 200 next power increase = 2000
+set_amp (3550) called from ramp_up
+set_amp is updating last_amp_sp set to  3500.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 11998
+ramp_up FINISHED, we went from 3500.0 to 3550
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 142 next required pulses = 200 next power increase = 2000
+set_amp (3600) called from ramp_up
+set_amp is updating last_amp_sp set to  3550.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 12200
+ramp_up FINISHED, we went from 3550.0 to 3600
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 144 next required pulses = 200 next power increase = 2000
+set_amp (3650) called from ramp_up
+set_amp is updating last_amp_sp set to  3600.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 12411
+ramp_up FINISHED, we went from 3600.0 to 3650
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 147 next required pulses = 200 next power increase = 2000
+set_amp (3700) called from ramp_up
+set_amp is updating last_amp_sp set to  3650.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 12617
+ramp_up FINISHED, we went from 3650.0 to 3700
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 149 next required pulses = 200 next power increase = 2000
+set_amp (3750) called from ramp_up
+set_amp is updating last_amp_sp set to  3700.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 12820
+ramp_up FINISHED, we went from 3700.0 to 3750
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 152 next required pulses = 300 next power increase = 3000
+Less than 4 non-zero data points in the binned data to fit.
+Ramping using default value of 50 from 3750 to 3800
+set_amp (3800) called from ramp_up
+set_amp is updating last_amp_sp set to  3750.0
+
+2020-09-22 15:16:23.909000
+amp_vs_kfpow lookup, called from get_kfp_running_stat_at_current_set_point,
+can't find 3800.0, returning value at 3750.0 instead
+
+2020-09-22 15:16:23.941000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 13034
+
+2020-09-22 15:16:23.941000
+ramp_up FINISHED, we went from 3750.0 to 3800
+
+2020-09-22 15:16:27.217000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-09-22 15:16:27.217000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-09-22 15:16:27.217000
+current ramp index = 153 next required pulses = 300 next power increase = 3000
+
+2020-09-22 15:16:27.217000
+Less than 4 non-zero data points in the binned data to fit.
+
+2020-09-22 15:16:27.217000
+Ramping using default value of 50 from 3800 to 3850
+set_amp (3850) called from ramp_up
+set_amp is updating last_amp_sp set to  3800.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 13342
+ramp_up FINISHED, we went from 3800.0 to 3850
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 155 next required pulses = 300 next power increase = 3000
+Less than 4 non-zero data points in the binned data to fit.
+Ramping using default value of 50 from 3850 to 3900
+set_amp (3900) called from ramp_up
+set_amp is updating last_amp_sp set to  3850.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 13655
+ramp_up FINISHED, we went from 3850.0 to 3900
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 157 next required pulses = 300 next power increase = 3000
+Less than 4 non-zero data points in the binned data to fit.
+Ramping using default value of 50 from 3900 to 3950
+set_amp (3950) called from ramp_up
+set_amp is updating last_amp_sp set to  3900.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 13963
+ramp_up FINISHED, we went from 3900.0 to 3950
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 159 next required pulses = 300 next power increase = 3000
+Less than 4 non-zero data points in the binned data to fit.
+Ramping using default value of 50 from 3950 to 4000
+set_amp (4000) called from ramp_up
+set_amp is updating last_amp_sp set to  3950.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 14271
+ramp_up FINISHED, we went from 3950.0 to 4000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 161 next required pulses = 300 next power increase = 3000
+Less than 4 non-zero data points in the binned data to fit.
+Ramping using default value of 50 from 4000 to 4050
+set_amp (4050) called from ramp_up
+set_amp is updating last_amp_sp set to  4000.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 14578
+ramp_up FINISHED, we went from 4000.0 to 4050
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 163 next required pulses = 300 next power increase = 3000
+Less than 4 non-zero data points in the binned data to fit.
+Ramping using default value of 50 from 4050 to 4100
+set_amp (4100) called from ramp_up
+set_amp is updating last_amp_sp set to  4050.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 14881
+ramp_up FINISHED, we went from 4050.0 to 4100
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 164 next required pulses = 300 next power increase = 3000
+Less than 4 non-zero data points in the binned data to fit.
+Ramping using default value of 50 from 4100 to 4150
+set_amp (4150) called from ramp_up
+set_amp is updating last_amp_sp set to  4100.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 15183
+ramp_up FINISHED, we went from 4100.0 to 4150
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 166 next required pulses = 300 next power increase = 3000
+Less than 4 non-zero data points in the binned data to fit.
+Ramping using default value of 50 from 4150 to 4200
+set_amp (4200) called from ramp_up
+set_amp is updating last_amp_sp set to  4150.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 15488
+ramp_up FINISHED, we went from 4150.0 to 4200
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 168 next required pulses = 300 next power increase = 3000
+Less than 4 non-zero data points in the binned data to fit.
+Ramping using default value of 50 from 4200 to 4250
+set_amp (4250) called from ramp_up
+set_amp is updating last_amp_sp set to  4200.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 15790
+ramp_up FINISHED, we went from 4200.0 to 4250
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 170 next required pulses = 300 next power increase = 3000
+Less than 4 non-zero data points in the binned data to fit.
+Ramping using default value of 50 from 4250 to 4300
+set_amp (4300) called from ramp_up
+set_amp is updating last_amp_sp set to  4250.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 16095
+ramp_up FINISHED, we went from 4250.0 to 4300
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 172 next required pulses = 300 next power increase = 3000
+Less than 4 non-zero data points in the binned data to fit.
+Ramping using default value of 50 from 4300 to 4350
+set_amp (4350) called from ramp_up
+set_amp is updating last_amp_sp set to  4300.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 16397
+ramp_up FINISHED, we went from 4300.0 to 4350
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 174 next required pulses = 300 next power increase = 3000
+Less than 4 non-zero data points in the binned data to fit.
+Ramping using default value of 50 from 4350 to 4400
+set_amp (4400) called from ramp_up
+set_amp is updating last_amp_sp set to  4350.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 16703
+ramp_up FINISHED, we went from 4350.0 to 4400
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 176 next required pulses = 300 next power increase = 3000
+Less than 4 non-zero data points in the binned data to fit.
+Ramping using default value of 50 from 4400 to 4450
+set_amp (4450) called from ramp_up
+set_amp is updating last_amp_sp set to  4400.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 17008
+ramp_up FINISHED, we went from 4400.0 to 4450
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 178 next required pulses = 300 next power increase = 3000
+Less than 4 non-zero data points in the binned data to fit.
+Ramping using default value of 50 from 4450 to 4500
+set_amp (4500) called from ramp_up
+set_amp is updating last_amp_sp set to  4450.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 17313
+ramp_up FINISHED, we went from 4450.0 to 4500
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 180 next required pulses = 300 next power increase = 3000
+Less than 4 non-zero data points in the binned data to fit.
+Ramping using default value of 50 from 4500 to 4550
+set_amp (4550) called from ramp_up
+set_amp is updating last_amp_sp set to  4500.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 17623
+ramp_up FINISHED, we went from 4500.0 to 4550
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 182 next required pulses = 300 next power increase = 3000
+Less than 4 non-zero data points in the binned data to fit.
+Ramping using default value of 50 from 4550 to 4600
+set_amp (4600) called from ramp_up
+set_amp is updating last_amp_sp set to  4550.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 17928
+ramp_up FINISHED, we went from 4550.0 to 4600
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 184 next required pulses = 400 next power increase = 4000
+Less than 4 non-zero data points in the binned data to fit.
+Ramping using default value of 50 from 4600 to 4650
+set_amp (4650) called from ramp_up
+set_amp is updating last_amp_sp set to  4600.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 18238
+ramp_up FINISHED, we went from 4600.0 to 4650
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 186 next required pulses = 400 next power increase = 4000
+Less than 4 non-zero data points in the binned data to fit.
+Ramping using default value of 50 from 4650 to 4700
+set_amp (4700) called from ramp_up
+set_amp is updating last_amp_sp set to  4650.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 18649
+ramp_up FINISHED, we went from 4650.0 to 4700
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 187 next required pulses = 400 next power increase = 4000
+Less than 4 non-zero data points in the binned data to fit.
+Ramping using default value of 50 from 4700 to 4750
+set_amp (4750) called from ramp_up
+set_amp is updating last_amp_sp set to  4700.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 19052
+ramp_up FINISHED, we went from 4700.0 to 4750
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 189 next required pulses = 400 next power increase = 4000
+Less than 4 non-zero data points in the binned data to fit.
+Ramping using default value of 50 from 4750 to 4800
+set_amp (4800) called from ramp_up
+set_amp is updating last_amp_sp set to  4750.0
+
+2020-09-22 15:17:33.005000
+amp_vs_kfpow lookup, called from get_kfp_running_stat_at_current_set_point,
+can't find 4800.0, returning value at 4750.0 instead
+
+2020-09-22 15:17:33.036000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 19460
+
+2020-09-22 15:17:33.036000
+ramp_up FINISHED, we went from 4750.0 to 4800
+
+2020-09-22 15:17:37.362000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-09-22 15:17:37.362000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-09-22 15:17:37.362000
+current ramp index = 190 next required pulses = 400 next power increase = 4000
+
+2020-09-22 15:17:37.362000
+Less than 4 non-zero data points in the binned data to fit.
+
+2020-09-22 15:17:37.362000
+Ramping using default value of 50 from 4800 to 4850
+set_amp (4850) called from ramp_up
+set_amp is updating last_amp_sp set to  4800.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 19864
+ramp_up FINISHED, we went from 4800.0 to 4850
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 192 next required pulses = 400 next power increase = 4000
+Less than 4 non-zero data points in the binned data to fit.
+Ramping using default value of 50 from 4850 to 4900
+set_amp (4900) called from ramp_up
+set_amp is updating last_amp_sp set to  4850.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 20270
+ramp_up FINISHED, we went from 4850.0 to 4900
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 194 next required pulses = 400 next power increase = 4000
+Less than 4 non-zero data points in the binned data to fit.
+Ramping using default value of 50 from 4900 to 4950
+set_amp (4950) called from ramp_up
+set_amp is updating last_amp_sp set to  4900.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 20671
+ramp_up FINISHED, we went from 4900.0 to 4950
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 195 next required pulses = 400 next power increase = 4000
+Less than 4 non-zero data points in the binned data to fit.
+Ramping using default value of 50 from 4950 to 5000
+set_amp (5000) called from ramp_up
+set_amp is updating last_amp_sp set to  4950.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 21082
+ramp_up FINISHED, we went from 4950.0 to 5000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 197 next required pulses = 400 next power increase = 4000
+Less than 4 non-zero data points in the binned data to fit.
+Ramping using default value of 50 from 5000 to 5050
+set_amp (5050) called from ramp_up
+set_amp is updating last_amp_sp set to  5000.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 21491
+ramp_up FINISHED, we went from 5000.0 to 5050
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 199 next required pulses = 400 next power increase = 4000
+Less than 4 non-zero data points in the binned data to fit.
+Ramping using default value of 50 from 5050 to 5100
+set_amp (5100) called from ramp_up
+set_amp is updating last_amp_sp set to  5050.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 21902
+ramp_up FINISHED, we went from 5050.0 to 5100
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 200 next required pulses = 400 next power increase = 4000
+Less than 4 non-zero data points in the binned data to fit.
+Ramping using default value of 50 from 5100 to 5150
+set_amp (5150) called from ramp_up
+set_amp is updating last_amp_sp set to  5100.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 22304
+ramp_up FINISHED, we went from 5100.0 to 5150
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 202 next required pulses = 400 next power increase = 4000
+Less than 4 non-zero data points in the binned data to fit.
+Ramping using default value of 50 from 5150 to 5200
+set_amp (5200) called from ramp_up
+set_amp is updating last_amp_sp set to  5150.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 22712
+ramp_up FINISHED, we went from 5150.0 to 5200
+reset_daq_freg, llrf_DAQ_rep_rate_status == BAD
+reset_daq_freg forcing set_amp(0)
+reset_daq_freg, time passed > 0.02s
+set_global_check_mask setGlobalCheckMask False
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+set_global_check_mask setGlobalCheckMask True
+!!Log Ramp curve is NONE, generating a new one
+power_finish = 382016.303425
+breakdown_rate_low = True
+Breakdown rate LO, log_ramp power_finish = 382016.303425
+Log Ramp curve is NONE, generating a new one
+Log Ramp curve_p_finish = 385836.466459, p_start = 30000, p_finish =
+382016.303425, ramp_rate = 0.2
+self.data.log_ramp_curve in maIn_controller = [[80, 1100.0, 4.852737529363416],
+[80, 4514.0, 4.763307978089065], [80, 4522.0, 4.690258704160744], [80, 4529.0,
+4.629469158773973], [80, 4536.0, 4.578093932027087], [80, 4544.0,
+4.534104919731521], [80, 4551.0, 4.496017533871651], [80, 4558.0,
+4.4627200624824175], [80, 4565.0, 4.433363519464915], [80, 4572.0,
+4.407288363106261], [80, 4579.0, 4.383974446844672], [80, 4586.0,
+4.363006040715475], [80, 4593.0, 4.34404688210544], [80, 4600.0,
+4.326822053872964], [80, 4607.0, 4.311104605215213], [80, 4614.0,
+4.296705527691144], [80, 4620.0, 4.283466144160332], [80, 4627.0,
+4.271252259147215], [80, 4633.0, 4.259949612706481], [80, 4640.0,
+4.249460311048514], [80, 4646.0, 4.239699997550417], [80, 4652.0,
+4.230595590967686], [80, 4659.0, 4.222083462461644], [80, 4665.0,
+4.2141079552286245], [80, 4671.0, 4.206620173894037], [80, 4677.0,
+4.199576988010002], [80, 4683.0, 4.192940206744887], [80, 4689.0,
+4.186675891408672], [80, 4695.0, 4.180753779684703], [80, 4701.0,
+4.175146800950075], [80, 4705.0, 4.169830666304257], [80, 4710.0,
+4.164783520207692], [80, 4714.0, 4.159985643192555], [80, 4718.0,
+4.155419197118569], [80, 4722.0, 4.151068006035938], [80, 4727.0,
+4.146917366981118], [80, 4731.0, 4.142953886041469], [80, 4735.0,
+4.139165335837327], [80, 4739.0, 4.1355405312266225], [80, 4743.0,
+4.132069220570482], [80, 4747.0, 4.128741990333438], [80, 4751.0,
+4.125550181148632], [80, 4755.0, 4.122485813772071], [80, 4759.0,
+4.119541523592867], [80, 4763.0, 4.116710502567776], [80, 4767.0,
+4.113986447616347], [80, 4771.0, 4.111363514653292], [80, 4774.0,
+4.108836277552509], [80, 4778.0, 4.106399691436296], [80, 4782.0,
+4.104049059767108], [80, 4786.0, 4.101780004790125], [80, 4789.0,
+4.099588440935231], [80, 4793.0, 4.097470550838375], [80, 4796.0,
+4.095422763686228], [80, 4800.0, 4.093441735625684], [80, 4803.0,
+4.09152433201211], [80, 4807.0, 4.089667611298086], [80, 4810.0,
+4.087868810388459], [80, 4814.0, 4.086125331308338], [80, 4817.0,
+4.084434729048733], [80, 4821.0, 4.082794700470223], [80, 4824.0,
+4.081203074158759], [80, 4827.0, 4.0796578011396205], [80, 4831.0,
+4.078156946365999], [80, 4834.0, 4.076698680907877], [80, 4837.0,
+4.075281274774864], [80, 4840.0, 4.073903090313781], [80, 4843.0,
+4.072562576128006], [80, 4846.0, 4.071258261471078], [80, 4850.0,
+4.069988751071991], [80, 4853.0, 4.068752720353861], [80, 4856.0,
+4.067548911011537], [80, 4859.0, 4.066376126917093], [80, 4862.0,
+4.065233230325185], [80, 4865.0, 4.064119138352977], [80, 4868.0,
+4.06303281971171], [80, 4870.0, 4.061973291669207], [80, 4873.0,
+4.060939617224455], [80, 4876.0, 4.0599309024772285], [80, 4879.0,
+4.058946294177204], [80, 4882.0, 4.0579849774384344], [80, 4885.0,
+4.057046173606335], [80, 4887.0, 4.056129138265403], [80, 4890.0,
+4.055233159376982], [80, 4893.0, 4.054357555537284], [80, 4896.0,
+4.0535016743466565], [80, 4898.0, 4.052664890881952], [80, 4901.0,
+4.05184660626444], [80, 4903.0, 4.051046246316364], [80, 4906.0,
+4.050263260299827], [80, 4909.0, 4.049497119732152], [80, 4911.0,
+4.048747317272378], [80, 4914.0, 4.048013365673962], [80, 4916.0,
+4.047294796799123], [80, 4919.0, 4.0465911606906495], [80, 4921.0,
+4.045902024697289], [80, 4923.0, 4.045226972649163], [80, 4926.0,
+4.044565604079875], [80, 4928.0, 4.043917533492282], [80, 4931.0,
+4.0432823896650785], [80, 4933.0, 4.042659814997578], [80, 4935.0,
+4.0420494648902565], [80, 4938.0, 4.041451007158808], [80, 4940.0,
+4.040864121479603], [80, 4942.0, 4.040288498864623], [80, 4944.0,
+4.039723841164032], [80, 4947.0, 4.03916986059474], [80, 4949.0,
+4.038626279293344], [80, 4951.0, 4.038092828892022], [80, 4953.0,
+4.037569250116009], [80, 4955.0, 4.037055292401375], [80, 4957.0,
+4.036550713531926], [80, 4959.0, 4.036055279294122], [80, 4962.0,
+4.035568763148982], [80, 4964.0, 4.035090945919996], [80, 4966.0,
+4.034621615496152], [80, 4968.0, 4.034160566549227], [80, 4970.0,
+4.033707600264544], [80, 4972.0, 4.03326252408446], [80, 4974.0,
+4.032825151463886], [80, 4976.0, 4.032395301637184], [80, 4978.0,
+4.0319727993958265], [80, 4979.0, 4.031557474876254], [80, 4981.0,
+4.031149163357365], [80, 4983.0, 4.030747705067162], [80, 4985.0,
+4.030352944998058], [80, 4987.0, 4.029964732730391], [80, 4989.0,
+4.029582922263724], [80, 4991.0, 4.029207371855557], [80, 4992.0,
+4.028837943867037], [80, 4994.0, 4.0284745046153345], [80, 4996.0,
+4.028116924232361], [80, 4998.0, 4.027765076529491], [80, 4999.0,
+4.027418838868003], [80, 5001.0, 4.027078092034969], [80, 5003.0,
+4.02674272012431], [80, 5005.0, 4.026412610422777], [80, 5006.0,
+4.026087653300622], [80, 5008.0, 4.025767742106732], [80, 5010.0,
+4.025452773068019], [80, 5011.0, 4.0251426451928625], [80, 5013.0,
+4.024837260178411], [80, 5014.0, 4.024536522321583], [80, 5016.0,
+4.024240338433565], [80, 5018.0, 4.023948617757674], [80, 5019.0,
+4.023661271890423], [80, 5021.0, 4.023378214705643], [80, 5022.0,
+4.023099362281514], [80, 5024.0, 4.022824632830405], [80, 5025.0,
+4.022553946631363], [80, 5027.0, 4.022287225965161], [80, 5028.0,
+4.0220243950517744], [80, 5030.0, 4.021765379990194], [80, 5031.0,
+4.021510108700474], [80, 5032.0, 4.021258510867903], [80, 5034.0,
+4.021010517889226], [80, 5035.0, 4.020766062820817], [80, 5037.0,
+4.020525080328736], [80, 5038.0, 4.02028750664057], [80, 5039.0,
+4.020053279499], [80, 5041.0, 4.019822338117014], [80, 5042.0,
+4.019594623134714], [80, 5043.0, 4.019370076577616], [80, 5045.0,
+4.019148641816424], [80, 5046.0, 4.018930263528197], [80, 5047.0,
+4.018714887658845], [80, 5049.0, 4.01850246138693], [80, 5050.0,
+4.018292933088677], [80, 5051.0, 4.018086252304195], [80, 5052.0,
+4.0178823697048225], [80, 5054.0, 4.0176812370615735], [80, 5055.0,
+4.017482807214634], [80, 5056.0, 4.017287034043872], [80, 5057.0,
+4.017093872440314], [80, 5059.0, 4.016903278278568], [80, 5060.0,
+4.0167152083901385], [80, 5061.0, 4.016529620537597], [80, 5062.0,
+4.016346473389617], [80, 5063.0, 4.016165726496773], [80, 5064.0,
+4.015987340268137], [80, 5066.0, 4.015811275948612], [80, 5067.0,
+4.015637495596978], [80, 5068.0, 4.015465962064626], [80, 5069.0,
+4.015296638974967], [80, 5070.0, 4.015129490703474], [80, 5071.0,
+4.014964482358336], [80, 5072.0, 4.014801579761724], [80, 5073.0,
+4.014640749431611], [80, 5074.0, 4.014481958564156], [80, 5075.0,
+4.014325175016627], [80, 5076.0, 4.014170367290829], [80, 5077.0,
+4.014017504517031], [80, 5078.0, 4.013866556438377], [80, 5079.0,
+4.013717493395759], [80, 5080.0, 4.0135702863131355], [80, 5081.0,
+4.01342490668328], [80, 5082.0, 4.013281326553948], [80, 5083.0,
+4.01313951851446], [80, 5084.0, 4.012999455682641], [80, 5085.0,
+4.012861111692174], [80, 5086.0, 4.012724460680291], [80, 5087.0,
+4.012589477275827], [80, 5088.0, 4.012456136587613], [80, 5089.0,
+4.012324414193188], [80, 5090.0, 4.012194286127843], [80, 5091.0,
+4.012065728873964], [80, 5092.0, 4.011938719350671], [80, 5093.0,
+4.0118132349037525], [80, 5094.0, 4.011689253295864], [80, 5095.0,
+4.011566752697016], [80, 5096.0, 4.011445711675306], [80, 5097.0,
+4.011326109187911], [80, 5098.0, 4.011207924572317], [80, 5099.0,
+4.011091137537799], [80, 5100.0, 4.01097572815712]]
+set_amp (1100.0) called from log_ramp_up
+set_amp (4514.0) called from log_ramp_up
+set_amp (4522.0) called from log_ramp_up
+set_amp (4529.0) called from log_ramp_up
+set_amp (4536.0) called from log_ramp_up
+set_amp (4544.0) called from log_ramp_up
+set_amp (4551.0) called from log_ramp_up
+set_amp (4558.0) called from log_ramp_up
+set_amp (4565.0) called from log_ramp_up
+set_amp (4572.0) called from log_ramp_up
+set_amp (4579.0) called from log_ramp_up
+set_amp (4586.0) called from log_ramp_up
+set_amp (4593.0) called from log_ramp_up
+set_amp (4600.0) called from log_ramp_up
+set_amp (4607.0) called from log_ramp_up
+set_amp (4614.0) called from log_ramp_up
+set_amp (4620.0) called from log_ramp_up
+set_amp (4627.0) called from log_ramp_up
+set_amp (4633.0) called from log_ramp_up
+set_amp (4640.0) called from log_ramp_up
+set_amp (4646.0) called from log_ramp_up
+set_amp (4652.0) called from log_ramp_up
+set_amp (4659.0) called from log_ramp_up
+set_amp (4665.0) called from log_ramp_up
+set_amp (4671.0) called from log_ramp_up
+set_amp (4677.0) called from log_ramp_up
+set_amp (4683.0) called from log_ramp_up
+set_amp (4689.0) called from log_ramp_up
+set_amp (4695.0) called from log_ramp_up
+set_amp (4701.0) called from log_ramp_up
+set_amp (4705.0) called from log_ramp_up
+set_amp (4710.0) called from log_ramp_up
+set_amp (4714.0) called from log_ramp_up
+set_amp (4718.0) called from log_ramp_up
+set_amp (4722.0) called from log_ramp_up
+set_amp (4727.0) called from log_ramp_up
+set_amp (4731.0) called from log_ramp_up
+set_amp (4735.0) called from log_ramp_up
+set_amp (4739.0) called from log_ramp_up
+set_amp (4743.0) called from log_ramp_up
+set_amp (4747.0) called from log_ramp_up
+set_amp (4751.0) called from log_ramp_up
+set_amp (4755.0) called from log_ramp_up
+set_amp (4759.0) called from log_ramp_up
+set_amp (4763.0) called from log_ramp_up
+set_amp (4767.0) called from log_ramp_up
+set_amp (4771.0) called from log_ramp_up
+set_amp (4774.0) called from log_ramp_up
+set_amp (4778.0) called from log_ramp_up
+set_amp (4782.0) called from log_ramp_up
+set_amp (4786.0) called from log_ramp_up
+
+2020-09-22 15:18:56.207000
+amp_vs_kfpow lookup, called from get_kfp_running_stat_at_current_set_point,
+can't find 4786.0, returning value at 4782.0 instead
+set_amp (4789.0) called from log_ramp_up
+set_amp (4793.0) called from log_ramp_up
+set_amp (4796.0) called from log_ramp_up
+set_amp (4800.0) called from log_ramp_up
+set_amp (4803.0) called from log_ramp_up
+set_amp (4807.0) called from log_ramp_up
+set_amp (4810.0) called from log_ramp_up
+set_amp (4814.0) called from log_ramp_up
+set_amp (4817.0) called from log_ramp_up
+set_amp (4821.0) called from log_ramp_up
+set_amp (4824.0) called from log_ramp_up
+set_amp (4827.0) called from log_ramp_up
+set_amp (4831.0) called from log_ramp_up
+set_amp (4834.0) called from log_ramp_up
+set_amp (4837.0) called from log_ramp_up
+set_amp (4840.0) called from log_ramp_up
+set_amp (4843.0) called from log_ramp_up
+set_amp (4846.0) called from log_ramp_up
+set_amp (4850.0) called from log_ramp_up
+set_amp (4853.0) called from log_ramp_up
+set_amp (4856.0) called from log_ramp_up
+set_amp (4859.0) called from log_ramp_up
+set_amp (4862.0) called from log_ramp_up
+set_amp (4865.0) called from log_ramp_up
+set_amp (4868.0) called from log_ramp_up
+set_amp (4870.0) called from log_ramp_up
+set_amp (4873.0) called from log_ramp_up
+set_amp (4876.0) called from log_ramp_up
+set_amp (4879.0) called from log_ramp_up
+set_amp (4882.0) called from log_ramp_up
+set_amp (4885.0) called from log_ramp_up
+set_amp (4887.0) called from log_ramp_up
+set_amp (4890.0) called from log_ramp_up
+set_amp (4893.0) called from log_ramp_up
+set_amp (4896.0) called from log_ramp_up
+set_amp (4898.0) called from log_ramp_up
+set_amp (4901.0) called from log_ramp_up
+set_amp (4903.0) called from log_ramp_up
+set_amp (4906.0) called from log_ramp_up
+set_amp (4909.0) called from log_ramp_up
+set_amp (4911.0) called from log_ramp_up
+set_amp (4914.0) called from log_ramp_up
+set_amp (4916.0) called from log_ramp_up
+set_amp (4919.0) called from log_ramp_up
+set_amp (4921.0) called from log_ramp_up
+set_amp (4923.0) called from log_ramp_up
+set_amp (4926.0) called from log_ramp_up
+set_amp (4928.0) called from log_ramp_up
+set_amp (4931.0) called from log_ramp_up
+set_amp (4933.0) called from log_ramp_up
+set_amp (4935.0) called from log_ramp_up
+set_amp (4938.0) called from log_ramp_up
+set_amp (4940.0) called from log_ramp_up
+set_amp (4942.0) called from log_ramp_up
+set_amp (4944.0) called from log_ramp_up
+set_amp (4947.0) called from log_ramp_up
+set_amp (4949.0) called from log_ramp_up
+set_amp (4951.0) called from log_ramp_up
+set_amp (4953.0) called from log_ramp_up
+set_amp (4955.0) called from log_ramp_up
+set_amp (4957.0) called from log_ramp_up
+set_amp (4959.0) called from log_ramp_up
+set_amp (4962.0) called from log_ramp_up
+set_amp (4964.0) called from log_ramp_up
+set_amp (4966.0) called from log_ramp_up
+set_amp (4968.0) called from log_ramp_up
+set_amp (4970.0) called from log_ramp_up
+set_amp (4972.0) called from log_ramp_up
+set_amp (4974.0) called from log_ramp_up
+set_amp (4976.0) called from log_ramp_up
+set_amp (4978.0) called from log_ramp_up
+set_amp (4979.0) called from log_ramp_up
+set_amp (4981.0) called from log_ramp_up
+set_amp (4983.0) called from log_ramp_up
+set_amp (4985.0) called from log_ramp_up
+set_amp (4987.0) called from log_ramp_up
+set_amp (4989.0) called from log_ramp_up
+set_amp (4991.0) called from log_ramp_up
+set_amp (4992.0) called from log_ramp_up
+set_amp (4994.0) called from log_ramp_up
+set_amp (4996.0) called from log_ramp_up
+set_amp (4998.0) called from log_ramp_up
+set_amp (4999.0) called from log_ramp_up
+set_amp (5001.0) called from log_ramp_up
+set_amp (5003.0) called from log_ramp_up
+set_amp (5005.0) called from log_ramp_up
+set_amp (5006.0) called from log_ramp_up
+set_amp (5008.0) called from log_ramp_up
+set_amp (5010.0) called from log_ramp_up
+set_amp (5011.0) called from log_ramp_up
+set_amp (5013.0) called from log_ramp_up
+set_amp (5014.0) called from log_ramp_up
+set_amp (5016.0) called from log_ramp_up
+set_amp (5018.0) called from log_ramp_up
+set_amp (5019.0) called from log_ramp_up
+set_amp (5021.0) called from log_ramp_up
+set_amp (5022.0) called from log_ramp_up
+set_amp (5024.0) called from log_ramp_up
+set_amp (5025.0) called from log_ramp_up
+set_amp (5027.0) called from log_ramp_up
+set_amp (5028.0) called from log_ramp_up
+set_amp (5030.0) called from log_ramp_up
+set_amp (5031.0) called from log_ramp_up
+set_amp (5032.0) called from log_ramp_up
+set_amp (5034.0) called from log_ramp_up
+set_amp (5035.0) called from log_ramp_up
+set_amp (5037.0) called from log_ramp_up
+set_amp (5038.0) called from log_ramp_up
+set_amp (5039.0) called from log_ramp_up
+set_amp (5041.0) called from log_ramp_up
+set_amp (5042.0) called from log_ramp_up
+set_amp (5043.0) called from log_ramp_up
+set_amp (5045.0) called from log_ramp_up
+set_amp (5046.0) called from log_ramp_up
+set_amp (5047.0) called from log_ramp_up
+set_amp (5049.0) called from log_ramp_up
+set_amp (5050.0) called from log_ramp_up
+set_amp (5051.0) called from log_ramp_up
+set_amp (5052.0) called from log_ramp_up
+set_amp (5054.0) called from log_ramp_up
+set_amp (5055.0) called from log_ramp_up
+set_amp (5056.0) called from log_ramp_up
+set_amp (5057.0) called from log_ramp_up
+set_amp (5059.0) called from log_ramp_up
+set_amp (5060.0) called from log_ramp_up
+set_amp (5061.0) called from log_ramp_up
+set_amp (5062.0) called from log_ramp_up
+set_amp (5063.0) called from log_ramp_up
+set_amp (5064.0) called from log_ramp_up
+set_amp (5066.0) called from log_ramp_up
+set_amp (5067.0) called from log_ramp_up
+set_amp (5068.0) called from log_ramp_up
+set_amp (5069.0) called from log_ramp_up
+set_amp (5070.0) called from log_ramp_up
+set_amp (5071.0) called from log_ramp_up
+set_amp (5072.0) called from log_ramp_up
+set_amp (5073.0) called from log_ramp_up
+set_amp (5074.0) called from log_ramp_up
+set_amp (5075.0) called from log_ramp_up
+set_amp (5076.0) called from log_ramp_up
+set_amp (5077.0) called from log_ramp_up
+set_amp (5078.0) called from log_ramp_up
+set_amp (5079.0) called from log_ramp_up
+set_amp (5080.0) called from log_ramp_up
+set_amp (5081.0) called from log_ramp_up
+set_amp (5082.0) called from log_ramp_up
+set_amp (5083.0) called from log_ramp_up
+set_amp (5084.0) called from log_ramp_up
+set_amp (5085.0) called from log_ramp_up
+set_amp (5086.0) called from log_ramp_up
+set_amp (5087.0) called from log_ramp_up
+set_amp (5088.0) called from log_ramp_up
+set_amp (5089.0) called from log_ramp_up
+set_amp (5090.0) called from log_ramp_up
+set_amp (5091.0) called from log_ramp_up
+
+2020-09-22 15:21:37.511000
+amp_vs_kfpow lookup, called from get_kfp_running_stat_at_current_set_point,
+can't find 5091.0, returning value at 5090.0 instead
+set_amp (5092.0) called from log_ramp_up
+set_amp (5093.0) called from log_ramp_up
+set_amp (5094.0) called from log_ramp_up
+set_amp (5095.0) called from log_ramp_up
+set_amp (5096.0) called from log_ramp_up
+set_amp (5097.0) called from log_ramp_up
+set_amp (5098.0) called from log_ramp_up
+set_amp (5099.0) called from log_ramp_up
+set_amp (5100.0) called from log_ramp_up
+Log Ramp finished, calling clear_log_ramp_curve()
+clear_log_ramp_curve called from log_ramp_up
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 40755
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 200 next required pulses = 400 next power increase = 4000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 200 next required pulses = 400 next power increase = 4000
+Less than 4 non-zero data points in the binned data to fit.
+Ramping using default value of 50 from 5100 to 5150
+set_amp (5150) called from ramp_up
+set_amp is updating last_amp_sp set to  5100.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 41165
+ramp_up FINISHED, we went from 5100.0 to 5150
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 202 next required pulses = 400 next power increase = 4000
+Less than 4 non-zero data points in the binned data to fit.
+Ramping using default value of 50 from 5150 to 5200
+set_amp (5200) called from ramp_up
+set_amp is updating last_amp_sp set to  5150.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 41574
+ramp_up FINISHED, we went from 5150.0 to 5200
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 204 next required pulses = 400 next power increase = 4000
+Less than 4 non-zero data points in the binned data to fit.
+Ramping using default value of 50 from 5200 to 5250
+set_amp (5250) called from ramp_up
+set_amp is updating last_amp_sp set to  5200.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 41980
+ramp_up FINISHED, we went from 5200.0 to 5250
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 206 next required pulses = 400 next power increase = 4000
+Less than 4 non-zero data points in the binned data to fit.
+Ramping using default value of 50 from 5250 to 5300
+set_amp (5300) called from ramp_up
+set_amp is updating last_amp_sp set to  5250.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 42387
+ramp_up FINISHED, we went from 5250.0 to 5300
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 207 next required pulses = 400 next power increase = 4000
+Less than 4 non-zero data points in the binned data to fit.
+Ramping using default value of 50 from 5300 to 5350
+set_amp (5350) called from ramp_up
+set_amp is updating last_amp_sp set to  5300.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 42790
+ramp_up FINISHED, we went from 5300.0 to 5350
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 209 next required pulses = 500 next power increase = 5000
+set_amp (5427.0) called from ramp_up
+set_amp is updating last_amp_sp set to  5350.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 43195
+ramp_up FINISHED, we went from 5350.0 to 5427.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 211 next required pulses = 500 next power increase = 5000
+set_amp (5451.0) called from ramp_up
+set_amp is updating last_amp_sp set to  5427.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 43697
+ramp_up FINISHED, we went from 5427.0 to 5451.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 212 next required pulses = 500 next power increase = 5000
+set_amp (5455.0) called from ramp_up
+set_amp is updating last_amp_sp set to  5451.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 44198
+ramp_up FINISHED, we went from 5451.0 to 5455.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 212 next required pulses = 500 next power increase = 5000
+Predicted sp ==  current_sp! returning current_sp + 5505
+set_amp (5505) called from ramp_up
+set_amp is updating last_amp_sp set to  5455.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 44702
+ramp_up FINISHED, we went from 5455.0 to 5505
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 213 next required pulses = 500 next power increase = 5000
+Predicted sp is less than current_sp! returning current_sp + 5555
+set_amp (5555) called from ramp_up
+set_amp is updating last_amp_sp set to  5505.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 45207
+ramp_up FINISHED, we went from 5505.0 to 5555
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 215 next required pulses = 500 next power increase = 5000
+Predicted sp is less than current_sp! returning current_sp + 5605
+set_amp (5605) called from ramp_up
+set_amp is updating last_amp_sp set to  5555.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 45709
+ramp_up FINISHED, we went from 5555.0 to 5605
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 217 next required pulses = 500 next power increase = 5000
+Predicted sp is less than current_sp! returning current_sp + 5655
+set_amp (5655) called from ramp_up
+set_amp is updating last_amp_sp set to  5605.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 46220
+ramp_up FINISHED, we went from 5605.0 to 5655
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 218 next required pulses = 500 next power increase = 5000
+Predicted sp is less than current_sp! returning current_sp + 5705
+set_amp (5705) called from ramp_up
+set_amp is updating last_amp_sp set to  5655.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 46725
+ramp_up FINISHED, we went from 5655.0 to 5705
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 219 next required pulses = 500 next power increase = 5000
+set_amp (5803.0) called from ramp_up
+set_amp is updating last_amp_sp set to  5705.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 47230
+ramp_up FINISHED, we went from 5705.0 to 5803.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 222 next required pulses = 500 next power increase = 5000
+set_amp (5851.0) called from ramp_up
+set_amp is updating last_amp_sp set to  5803.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 47737
+ramp_up FINISHED, we went from 5803.0 to 5851.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 224 next required pulses = 500 next power increase = 5000
+set_amp (5870.0) called from ramp_up
+set_amp is updating last_amp_sp set to  5851.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 48242
+ramp_up FINISHED, we went from 5851.0 to 5870.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 224 next required pulses = 500 next power increase = 5000
+set_amp (5873.0) called from ramp_up
+set_amp is updating last_amp_sp set to  5870.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 48743
+ramp_up FINISHED, we went from 5870.0 to 5873.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 225 next required pulses = 500 next power increase = 5000
+Predicted sp is less than current_sp! returning current_sp + 5923
+set_amp (5923) called from ramp_up
+set_amp is updating last_amp_sp set to  5873.0
+
+2020-09-22 15:23:15.673000
+amp_vs_kfpow lookup, called from get_kfp_running_stat_at_current_set_point,
+can't find 5923.0, returning value at 5873.0 instead
+
+2020-09-22 15:23:15.673000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 49252
+
+2020-09-22 15:23:15.673000
+ramp_up FINISHED, we went from 5873.0 to 5923
+
+2020-09-22 15:23:21.014000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-09-22 15:23:21.016000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-09-22 15:23:21.017000
+current ramp index = 226 next required pulses = 500 next power increase = 5000
+
+2020-09-22 15:23:21.020000
+Predicted sp is less than current_sp! returning current_sp + 5973
+set_amp (5973) called from ramp_up
+set_amp is updating last_amp_sp set to  5923.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 49758
+ramp_up FINISHED, we went from 5923.0 to 5973
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 228 next required pulses = 500 next power increase = 5000
+Predicted sp is less than current_sp! returning current_sp + 6023
+set_amp (6023) called from ramp_up
+set_amp is updating last_amp_sp set to  5973.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 50266
+ramp_up FINISHED, we went from 5973.0 to 6023
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 229 next required pulses = 400 next power increase = 4000
+Predicted sp is less than current_sp! returning current_sp + 6073
+set_amp (6073) called from ramp_up
+set_amp is updating last_amp_sp set to  6023.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 50768
+ramp_up FINISHED, we went from 6023.0 to 6073
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 231 next required pulses = 600 next power increase = 6000
+Predicted sp is less than current_sp! returning current_sp + 6123
+set_amp (6123) called from ramp_up
+set_amp is updating last_amp_sp set to  6073.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 51170
+ramp_up FINISHED, we went from 6073.0 to 6123
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 232 next required pulses = 600 next power increase = 6000
+set_amp (6289.0) called from ramp_up
+set_amp is updating last_amp_sp set to  6123.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 51778
+ramp_up FINISHED, we went from 6123.0 to 6289.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 236 next required pulses = 600 next power increase = 6000
+set_amp (6400.0) called from ramp_up
+set_amp is updating last_amp_sp set to  6289.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 52384
+ramp_up FINISHED, we went from 6289.0 to 6400.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 240 next required pulses = 600 next power increase = 6000
+set_amp (6464.0) called from ramp_up
+set_amp is updating last_amp_sp set to  6400.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 52984
+ramp_up FINISHED, we went from 6400.0 to 6464.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 241 next required pulses = 600 next power increase = 6000
+set_amp (6482.0) called from ramp_up
+set_amp is updating last_amp_sp set to  6464.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 53588
+ramp_up FINISHED, we went from 6464.0 to 6482.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 242 next required pulses = 600 next power increase = 6000
+Predicted sp is less than current_sp! returning current_sp + 6532
+set_amp (6532) called from ramp_up
+set_amp is updating last_amp_sp set to  6482.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 54188
+ramp_up FINISHED, we went from 6482.0 to 6532
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 243 next required pulses = 600 next power increase = 6000
+set_amp (6667.0) called from ramp_up
+set_amp is updating last_amp_sp set to  6532.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 54799
+ramp_up FINISHED, we went from 6532.0 to 6667.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 248 next required pulses = 700 next power increase = 7000
+set_amp (6766.0) called from ramp_up
+set_amp is updating last_amp_sp set to  6667.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 55404
+ramp_up FINISHED, we went from 6667.0 to 6766.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 250 next required pulses = 700 next power increase = 7000
+set_amp (6819.0) called from ramp_up
+set_amp is updating last_amp_sp set to  6766.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 56113
+ramp_up FINISHED, we went from 6766.0 to 6819.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 252 next required pulses = 700 next power increase = 7000
+set_amp (6834.0) called from ramp_up
+set_amp is updating last_amp_sp set to  6819.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 56821
+ramp_up FINISHED, we went from 6819.0 to 6834.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 252 next required pulses = 700 next power increase = 7000
+Predicted sp is less than current_sp! returning current_sp + 6884
+set_amp (6884) called from ramp_up
+set_amp is updating last_amp_sp set to  6834.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 57524
+ramp_up FINISHED, we went from 6834.0 to 6884
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 253 next required pulses = 700 next power increase = 7000
+Predicted sp is less than current_sp! returning current_sp + 6934
+set_amp (6934) called from ramp_up
+set_amp is updating last_amp_sp set to  6884.0
+
+2020-09-22 15:24:50.787000
+amp_vs_kfpow lookup, called from get_kfp_running_stat_at_current_set_point,
+can't find 6934.0, returning value at 6884.0 instead
+
+2020-09-22 15:24:50.802000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 58227
+
+2020-09-22 15:24:50.802000
+ramp_up FINISHED, we went from 6884.0 to 6934
+
+2020-09-22 15:24:58.365000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-09-22 15:24:58.365000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-09-22 15:24:58.365000
+current ramp index = 254 next required pulses = 700 next power increase = 7000
+set_amp (7060.0) called from ramp_up
+set_amp is updating last_amp_sp set to  6934.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 58937
+ramp_up FINISHED, we went from 6934.0 to 7060.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 258 next required pulses = 700 next power increase = 7000
+set_amp (7150.0) called from ramp_up
+set_amp is updating last_amp_sp set to  7060.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 59639
+ramp_up FINISHED, we went from 7060.0 to 7150.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 260 next required pulses = 700 next power increase = 7000
+set_amp (7200.0) called from ramp_up
+set_amp is updating last_amp_sp set to  7150.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 60349
+ramp_up FINISHED, we went from 7150.0 to 7200.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 262 next required pulses = 800 next power increase = 8000
+set_amp (7226.0) called from ramp_up
+set_amp is updating last_amp_sp set to  7200.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 61055
+ramp_up FINISHED, we went from 7200.0 to 7226.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 262 next required pulses = 800 next power increase = 8000
+Predicted sp is less than current_sp! returning current_sp + 7276
+set_amp (7276) called from ramp_up
+set_amp is updating last_amp_sp set to  7226.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 61864
+ramp_up FINISHED, we went from 7226.0 to 7276
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 264 next required pulses = 800 next power increase = 8000
+Predicted sp is less than current_sp! returning current_sp + 7326
+set_amp (7326) called from ramp_up
+set_amp is updating last_amp_sp set to  7276.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 62670
+ramp_up FINISHED, we went from 7276.0 to 7326
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 265 next required pulses = 800 next power increase = 8000
+set_amp (7480.0) called from ramp_up
+set_amp is updating last_amp_sp set to  7326.0
+
+2020-09-22 15:25:46.921000
+amp_vs_kfpow lookup, called from get_kfp_running_stat_at_current_set_point,
+can't find 7480.0, returning value at 7326.0 instead
+
+2020-09-22 15:25:46.959000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 63481
+
+2020-09-22 15:25:46.959000
+ramp_up FINISHED, we went from 7326.0 to 7480.0
+
+2020-09-22 15:25:55.430000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-09-22 15:25:55.430000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-09-22 15:25:55.430000
+current ramp index = 268 next required pulses = 800 next power increase = 8000
+set_amp (7583.0) called from ramp_up
+set_amp is updating last_amp_sp set to  7480.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 64282
+ramp_up FINISHED, we went from 7480.0 to 7583.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 271 next required pulses = 800 next power increase = 8000
+set_amp (7646.0) called from ramp_up
+set_amp is updating last_amp_sp set to  7583.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 65082
+ramp_up FINISHED, we went from 7583.0 to 7646.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 272 next required pulses = 800 next power increase = 8000
+set_amp (7666.0) called from ramp_up
+set_amp is updating last_amp_sp set to  7646.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 65885
+ramp_up FINISHED, we went from 7646.0 to 7666.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 273 next required pulses = 800 next power increase = 8000
+Predicted sp is less than current_sp! returning current_sp + 7716
+set_amp (7716) called from ramp_up
+set_amp is updating last_amp_sp set to  7666.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 66688
+ramp_up FINISHED, we went from 7666.0 to 7716
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 275 next required pulses = 900 next power increase = 9000
+set_amp (7886.0) called from ramp_up
+set_amp is updating last_amp_sp set to  7716.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 67488
+ramp_up FINISHED, we went from 7716.0 to 7886.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 278 next required pulses = 900 next power increase = 9000
+set_amp (7999.0) called from ramp_up
+set_amp is updating last_amp_sp set to  7886.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 68393
+ramp_up FINISHED, we went from 7886.0 to 7999.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 281 next required pulses = 900 next power increase = 9000
+set_amp (8067.0) called from ramp_up
+set_amp is updating last_amp_sp set to  7999.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 69298
+ramp_up FINISHED, we went from 7999.0 to 8067.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 282 next required pulses = 900 next power increase = 9000
+set_amp (8090.0) called from ramp_up
+set_amp is updating last_amp_sp set to  8067.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 70198
+ramp_up FINISHED, we went from 8067.0 to 8090.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 283 next required pulses = 900 next power increase = 9000
+Predicted sp is less than current_sp! returning current_sp + 8140
+set_amp (8140) called from ramp_up
+set_amp is updating last_amp_sp set to  8090.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 71101
+ramp_up FINISHED, we went from 8090.0 to 8140
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 284 next required pulses = 900 next power increase = 9000
+set_amp (8280.0) called from ramp_up
+set_amp is updating last_amp_sp set to  8140.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 72003
+ramp_up FINISHED, we went from 8140.0 to 8280.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+set_amp (8387.0) called from ramp_up
+set_amp is updating last_amp_sp set to  8280.0
+
+2020-09-22 15:27:28.057000
+amp_vs_kfpow lookup, called from get_kfp_running_stat_at_current_set_point,
+can't find 8387.0, returning value at 8280.0 instead
+
+2020-09-22 15:27:28.057000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 72909
+
+2020-09-22 15:27:28.073000
+ramp_up FINISHED, we went from 8280.0 to 8387.0
+
+2020-09-22 15:27:38.619000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-09-22 15:27:38.619000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-09-22 15:27:38.619000
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+set_amp (8445.0) called from ramp_up
+set_amp is updating last_amp_sp set to  8387.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 73913
+ramp_up FINISHED, we went from 8387.0 to 8445.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+set_amp (8463.0) called from ramp_up
+set_amp is updating last_amp_sp set to  8445.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 74915
+ramp_up FINISHED, we went from 8445.0 to 8463.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+Predicted sp is less than current_sp! returning current_sp + 8513
+set_amp (8513) called from ramp_up
+set_amp is updating last_amp_sp set to  8463.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 75921
+ramp_up FINISHED, we went from 8463.0 to 8513
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+set_amp (8675.0) called from ramp_up
+set_amp is updating last_amp_sp set to  8513.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 76924
+ramp_up FINISHED, we went from 8513.0 to 8675.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+set_amp (8793.0) called from ramp_up
+set_amp is updating last_amp_sp set to  8675.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 77928
+ramp_up FINISHED, we went from 8675.0 to 8793.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+set_amp (8857.0) called from ramp_up
+set_amp is updating last_amp_sp set to  8793.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 78931
+ramp_up FINISHED, we went from 8793.0 to 8857.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+set_amp (8882.0) called from ramp_up
+set_amp is updating last_amp_sp set to  8857.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 79938
+ramp_up FINISHED, we went from 8857.0 to 8882.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+Predicted sp is less than current_sp! returning current_sp + 8932
+set_amp (8932) called from ramp_up
+set_amp is updating last_amp_sp set to  8882.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 80944
+ramp_up FINISHED, we went from 8882.0 to 8932
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+set_amp (9085.0) called from ramp_up
+set_amp is updating last_amp_sp set to  8932.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 81951
+ramp_up FINISHED, we went from 8932.0 to 9085.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+set_amp (9186.0) called from ramp_up
+set_amp is updating last_amp_sp set to  9085.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 82958
+ramp_up FINISHED, we went from 9085.0 to 9186.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+set_amp (9252.0) called from ramp_up
+set_amp is updating last_amp_sp set to  9186.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 83959
+ramp_up FINISHED, we went from 9186.0 to 9252.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+set_amp (9284.0) called from ramp_up
+set_amp is updating last_amp_sp set to  9252.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 84962
+ramp_up FINISHED, we went from 9252.0 to 9284.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+set_amp (9286.0) called from ramp_up
+set_amp is updating last_amp_sp set to  9284.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 85970
+ramp_up FINISHED, we went from 9284.0 to 9286.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+Predicted sp is less than current_sp! returning current_sp + 9336
+set_amp (9336) called from ramp_up
+set_amp is updating last_amp_sp set to  9286.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 86974
+ramp_up FINISHED, we went from 9286.0 to 9336
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+set_amp (9471.0) called from ramp_up
+set_amp is updating last_amp_sp set to  9336.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 87980
+ramp_up FINISHED, we went from 9336.0 to 9471.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+set_amp (9564.0) called from ramp_up
+set_amp is updating last_amp_sp set to  9471.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 88983
+ramp_up FINISHED, we went from 9471.0 to 9564.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+set_amp (9621.0) called from ramp_up
+set_amp is updating last_amp_sp set to  9564.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 89991
+ramp_up FINISHED, we went from 9564.0 to 9621.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+set_amp (9650.0) called from ramp_up
+set_amp is updating last_amp_sp set to  9621.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 90999
+ramp_up FINISHED, we went from 9621.0 to 9650.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+set_amp (9652.0) called from ramp_up
+set_amp is updating last_amp_sp set to  9650.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 91999
+ramp_up FINISHED, we went from 9650.0 to 9652.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+Predicted sp is less than current_sp! returning current_sp + 9702
+set_amp (9702) called from ramp_up
+set_amp is updating last_amp_sp set to  9652.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 93010
+ramp_up FINISHED, we went from 9652.0 to 9702
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+set_amp (9865.0) called from ramp_up
+set_amp is updating last_amp_sp set to  9702.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 94018
+ramp_up FINISHED, we went from 9702.0 to 9865.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+set_amp (9978.0) called from ramp_up
+set_amp is updating last_amp_sp set to  9865.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 95030
+ramp_up FINISHED, we went from 9865.0 to 9978.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+set_amp (10048.0) called from ramp_up
+set_amp is updating last_amp_sp set to  9978.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 96033
+ramp_up FINISHED, we went from 9978.0 to 10048.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+set_amp (10080.0) called from ramp_up
+set_amp is updating last_amp_sp set to  10048.0
+
+2020-09-22 15:31:46.589000
+amp_vs_kfpow lookup, called from get_kfp_running_stat_at_current_set_point,
+can't find 10080.0, returning value at 10048.0 instead
+
+2020-09-22 15:31:46.620000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 97036
+
+2020-09-22 15:31:46.620000
+ramp_up FINISHED, we went from 10048.0 to 10080.0
+
+2020-09-22 15:31:57.246000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-09-22 15:31:57.246000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-09-22 15:31:57.246000
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+set_amp (10087.0) called from ramp_up
+set_amp is updating last_amp_sp set to  10080.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 98037
+ramp_up FINISHED, we went from 10080.0 to 10087.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+Predicted sp is less than current_sp! returning current_sp + 10137
+set_amp (10137) called from ramp_up
+set_amp is updating last_amp_sp set to  10087.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 99045
+ramp_up FINISHED, we went from 10087.0 to 10137
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+set_amp (10276.0) called from ramp_up
+set_amp is updating last_amp_sp set to  10137.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 100047
+ramp_up FINISHED, we went from 10137.0 to 10276.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+set_amp (10376.0) called from ramp_up
+set_amp is updating last_amp_sp set to  10276.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 101049
+ramp_up FINISHED, we went from 10276.0 to 10376.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+set_amp (10437.0) called from ramp_up
+set_amp is updating last_amp_sp set to  10376.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 102053
+ramp_up FINISHED, we went from 10376.0 to 10437.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+set_amp (10461.0) called from ramp_up
+set_amp is updating last_amp_sp set to  10437.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 103054
+ramp_up FINISHED, we went from 10437.0 to 10461.0

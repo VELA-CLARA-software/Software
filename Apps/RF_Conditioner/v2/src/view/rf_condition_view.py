@@ -40,10 +40,8 @@ from VELA_CLARA_Vac_Valve_Control import VALVE_STATE
 from VELA_CLARA_RF_Protection_Control import RF_PROT_STATUS
 from VELA_CLARA_RF_Modulator_Control import HOLD_RF_ON_STATE
 from src.data.rf_conditioning_data import rf_conditioning_data
-
 from src.data.state import state
 from PyQt4.QtGui import *
-
 from PyQt4.QtGui import QPixmap
 from PyQt4.QtGui import QTextCursor
 from PyQt4.QtCore import QTimer
@@ -489,6 +487,9 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
         self.update_amp_sp()
         # other stuff
 
+        self.update_BSOL_switch_state()
+
+
         self.pulse_length_outputwidget.setText(str(self.values[self.data.pulse_length]))
         self.set_widget_color(self.pulse_length_outputwidget, self.values[self.data.pulse_length_status])
 
@@ -564,7 +565,7 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
     def update_CATAP_AMPSP_limit(self):
         self.catap_amp_level_outputwidget.setText( "{} / {} ".format(  str(int(self.values[self.data.llrf_max_amp])), str(int(self.values[
                                                                                                                                   self.data.catap_max_amp]))))
-        # TODO thsi needs to incldue the LLRF_MAX_AMP_SP
+        # TODO this needs to include the LLRF_MAX_AMP_SP
         self.set_widget_color(self.catap_amp_level_outputwidget, self.values[self.data.catap_max_amp_can_ramp_status])
     def update_temperature_values(self):
         # technically, these are defined at run time, as there cna be more than one PV to record,
@@ -683,8 +684,6 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
 
     def update_all_counters(self):
 
-
-
         #TODO AJG: added countdown until BDR is low here
         if self.values[rf_conditioning_data.breakdown_rate_low]:
 
@@ -720,6 +719,9 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
 
 
 
+
+    def update_BSOL_switch_state(self):
+        self.set_widget_color_text(self.check_bsol_switch_outputwidget, self.values[self.data.bosl_switch_set_good])
 
 
 

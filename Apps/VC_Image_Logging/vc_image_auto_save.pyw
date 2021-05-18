@@ -29,7 +29,7 @@ the sys module is used to add to the PATH environment variable and to enable arg
 passed to the application on start-up 
 '''
 import sys
-sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\Release')
+sys.path.append('\\\\claraserv3.dl.ac.uk\\claranet\\packages\\vcc\\bin\\release\\')
 import VELA_CLARA_PILaser_Control as pil
 
 ''' 
@@ -113,7 +113,8 @@ class controller(object):
                         if controller.pil_data[0].avg_pix > self.pixel_threshold:
                             print("PIXEL IS ABOVE")
                             controller.pil_controller.collectAndSave_VC(1)
-
+            else:
+                print("waiting for timer countdown")
         print(controller.pil_daq[0].latestFilename)
         if controller.pil_daq[0].latestFilename != self.saved_images[-1]:
             self.saved_images.append(controller.pil_daq[0].latestFilename)

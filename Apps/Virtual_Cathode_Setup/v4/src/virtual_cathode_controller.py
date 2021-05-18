@@ -35,7 +35,6 @@ from PyQt4 import QtCore
 from PyQt4 import QtGui
 from PyQt4 import Qt
 
-
 class virtual_cathode_controller(QtGui.QApplication):
     '''
     This class owns the view and the model and passes message between the two.
@@ -106,7 +105,7 @@ class virtual_cathode_controller(QtGui.QApplication):
         self.model.collect_and_save(self.view.numImages_spinBox.value())
 
     def handle_setPosition_pushButton(self):
-        print 'handle_setPosition_pushButton'
+        print('handle_setPosition_pushButton')
 
     def handle_setMask_pushButton(self):
         self.model.setMask( x = self.view.maskX_spinBox.value(),

@@ -1,0 +1,3272 @@
+****************************************************************************************************
+******************* __         __    _  _  ___       _   ___  ___   __         __ ******************
+******************* \ \  ___  / /   | \| |/ _ \     /_\ | _ \/ __|  \ \  ___  / / ******************
+*******************  \ \/ _ \/ /    | .` | (_) |   / _ \|   / (__    \ \/ _ \/ /  ******************
+*******************   \_\___/_/     |_|\_|\___/   /_/ \_\_|_\\___|    \_\___/_/   ******************
+*******************                                                               ******************
+********************************************************************************
+*********************** Log Started 2020-09-23-15-56-48 ************************
+********************************************************************************
+********************************************************************************
+******************************** Configuration *********************************
+********************************************************************************
+config file =
+C:\Users\dlerlp\Documents\GitHub\Software\Apps\RF_Conditioner\v2\CLARA_L1.yml
+dumping parsed config data to text log
+CONFIG_FILE:
+C:\Users\dlerlp\Documents\GitHub\Software\Apps\RF_Conditioner\v2\CLARA_L1.yml,
+KFPOW_MASK_TYPE: PERCENT, KRPOW_MASK_FLOOR: 1000.0, BREAKDOWN_TRACES:
+['CAVITY_REVERSE_POWER', 'CAVITY_PROBE_POWER'], CFPHA_MEAN_END: 0.83, MAX_POW:
+0.0, MAX_AMP: 50000, VAC_SPIKE_DECAY_LEVEL: 1.2, CFPOW_MASK_WINDOW_START: 300,
+PID_on_off_GMON: CLA-GUN-H2O-PID-02:ON:RB, KRPOW_NUM_AVERAGE_TRACES: 2,
+CFPHA_MASK_SET_TYPE: TIME, CPPOW_MASK_START: 1.26, KRPOW_MASK_SET_TYPE: TIME,
+AMP_PWR_ACCEPTANCE_WINDOW: 750000, CPPOW_DROP_AMP: True, CRPOW_DROP_AMP_VALUE:
+2, CFPOW_MASK_FLOOR: 5000.0, CRPHA_MASK_SET_TYPE: TIME, TEXT_LOG_FILENAME:
+log.txt, KFPHA_MASK_LO_MIN: 50, KRPOW_CHECK_STREAK: 2, VAC_VALVE_CHECK_TIME:
+1000, CPPOW_MASK_SET_TYPE: TIME, CFPHA_CHECK_STREAK: 2, CPPOW_AUTO_SET: False,
+KFPOW_MASK_END: 86, CFPHA_MEAN_START: 0.75, KRPHA_MASK_TYPE: ABSOLUTE,
+VAC_ROLLING_SUM_NUM_SAMPLES: 25, CFPOW_MASK_END: 86, CFPHA_NUM_AVERAGE_TRACES:
+2, KRPOW_AUTO_SET: False, KRPHA_PHASE_MASK_BY_POWER_TRACE: False,
+VAC_NUM_SAMPLES_TO_AVERAGE: 7, KFPHA_AUTO_SET: False, CRPOW_MASK_WINDOW_END:
+1.65, CFPHA_MASK_LO_MIN: 50, SOL_CHECK_TIME: 1000, MINIMUM_COOLDOWN_TIME: 3000,
+RF_STRUCTURE: L01, WATER_TEMPERATURE_PV: ['CLA-L01-H2O-TT-20:RT'],
+KRPHA_CHECK_STREAK: 2, KRPOW_MASK_END: 5.0, LLRF_CHECK_TIME: 50,
+KFPOW_AMPSP_RUNNING_STATS_LOG_FILENAME: linac_amp_power_log.txt,
+CPPHA_PHASE_MASK_BY_POWER_LEVEL: 5000.0, PULSE_COUNT_BREAKDOWN_LOG_FILENAME:
+linac_pulse_breakdown_log.txt, CFPOW_MASK_START: 63, CFPHA_AUTO_SET: False,
+KRPOW_DROP_AMP_VALUE: 2, KFPHA_PHASE_MASK_BY_POWER_LEVEL: 5000.0,
+CFPHA_MASK_FLOOR: 0.0, KRPHA_PHASE_MASK_BY_POWER_LEVEL: 5000.0,
+KFPOW_MASK_WINDOW_END: 301, CPPHA_DROP_AMP_VALUE: 2,
+OUTSIDE_MASK_FORWARD_FILENAME: outside_forward_log, KRPHA_MEAN_END: 3.0,
+KFPOW_MASK_START: 63, KEEP_VALVE_OPEN: False, CRPHA_MASK_LO_MIN: 50,
+CRPOW_MASK_FLOOR: 2000.0, SOL_WOBBLE_OSCILLATION_POINTS: 0, CRPHA_MEAN_START:
+0.0, DC_PV: EBT-INJ-SCOPE-01:P1, KRPHA_MASK_FLOOR: 0.0, CPPHA_MASK_WINDOW_START:
+2.4, CPPOW_MASK_TYPE: PERCENT, CFPOW_MASK_LEVEL: 25, CFPHA_DROP_AMP_VALUE: 2,
+CRPHA_MASK_TYPE: ABSOLUTE, TRACES_TO_SAVE: ['KLYSTRON_FORWARD_PHASE',
+'KLYSTRON_REVERSE_PHASE', 'KLYSTRON_FORWARD_POWER', 'KLYSTRON_REVERSE_POWER',
+'CAVITY_REVERSE_PHASE', 'CAVITY_FORWARD_PHASE', 'CAVITY_FORWARD_POWER',
+'CAVITY_REVERSE_POWER', 'CAVITY_PROBE_POWER', 'CAVITY_PROBE_POWER'],
+KRPHA_MASK_WINDOW_END: 3.4, MAGNET_MACHINE_AREA: CLARA_PH1, DC_SPIKE_DELTA:
+0.015, OUTSIDE_MASK_COOLDOWN_TIME: 3000, VAC_VALVE_AREA: CLARA_PH1,
+SOL_WOBBLE_LO: 0.0, KRPOW_MASK_LEVEL: 35.0, KRPHA_DROP_AMP: False,
+CRPHA_MASK_END: 5.0, CRPHA_MEAN_END: 3.0, KFPOW_MEAN_START: 0.68,
+CRPHA_DROP_AMP: False, KFPOW_MEAN_END: 0.75, CFPOW_NUM_AVERAGE_TRACES: 5,
+CPPHA_MASK_END: 5.0, VAC_VALVE: S01-VALV-01, CAVITY_TEMPERATURE_CHECK_TIME:
+1000, CFPHA_DROP_AMP: False, MODULATOR_CHECK_TIME: 1000, SOL_COUNT: 2,
+RF_REPETITION_RATE: 100, CPPHA_MASK_WINDOW_END: 3.4, LOG_RAMP_CURVE_NUMSTEPS:
+200, KFPHA_MEAN_START: 0.68, RF_PROT_CHECK_TIME: 1000, KFPHA_MASK_TYPE:
+ABSOLUTE, MIN_AMP: 500, DC_CHECK_TIME: 1000, PID_on_off: CLA-GUN-H2O-
+PID-02:ON:RB, KRPHA_NUM_AVERAGE_TRACES: 2, KFPHA_MASK_FLOOR: 0.0,
+CRPHA_DROP_AMP_VALUE: 2, KRPHA_MASK_WINDOW_START: 2.4, CRPOW_MASK_TYPE:
+ABSOLUTE, BIN_WIDTH: 400, KFPOW_MASK_FLOOR: 5000, CPPOW_MASK_END: 1.8,
+BINARY_DATA_LOG_FILENAME: data_log, KRPHA_MASK_LO_MIN: 50, KFPOW_MASK_LEVEL: 15,
+OUTSIDE_MASK_CHECK_TIME: 100, MODE: OPERATIONAL, CRPOW_MASK_LO_MIN: 50,
+KLY_PWR_FOR_ACTIVE_PULSE: 500.0, SOL_NAMES: ['L01-SOL1', 'L01-SOL2'],
+CRPHA_MASK_FLOOR: 0.0, GMON_SUFFIX: _GMON, KFPOW_DROP_AMP_VALUE: 3,
+KRPOW_MEAN_END: 3.0, WHEN_VAC_HI_DISABLE_RAMP: True, AMP_PWR_LOG_TIME: 50,
+VAC_SPIKE_DROP_AMP: 5, DC_SPIKE_DECAY_TIME: 2000, CPPHA_MASK_TYPE: ABSOLUTE,
+KFPHA_MASK_SET_TYPE: TIME, KRPOW_MASK_WINDOW_START: 2.4,
+SOL_WOBBLE_OSCILLATION_TIME: 100.0, CFPOW_MASK_SET_TYPE: INDEX,
+CFPOW_MASK_WINDOW_END: 301, LOG_DIRECTORY: C:\Users\dlerlp\Documents\GitHub\Soft
+ware\Apps\RF_Conditioner\v2\logs\Linac20200922\, KFPHA_MASK_LEVEL: 35.0,
+CAVITY_TEMPERATURE_PV: ['CLA-L01-H2O-TT-20:RT'], VAC_SPIKE_DELTA: 5e-09,
+VAC_CHECK_TIME: 200, DC_DECAY_MODE: TIMED, SOL_WOBBLE_HI: 0.0,
+CRPOW_MASK_WINDOW_START: 1.35, CPPHA_NUM_AVERAGE_TRACES: 2,
+CRPHA_NUM_AVERAGE_TRACES: 2, NUM_BUFFER_TRACES: 500, CRPHA_MASK_LEVEL: 35.0,
+CRPOW_CHECK_STREAK: 10, CPPHA_AUTO_SET: False, VAC_SHOULD_DROP_AMP: True,
+KFPHA_CHECK_STREAK: 2, KRPOW_MEAN_START: 0.0, KFPOW_AUTO_SET: False,
+OUTSIDE_MASK_PROBE_FILENAME: outside_probe_log, CPPOW_MASK_FLOOR: 500.0,
+KRPOW_MASK_START: 0.8, DC_SHOULD_DROP_AMP: False, CRPOW_MEAN_START: 0.0,
+CFPOW_DROP_AMP_VALUE: 6, CRPOW_MEAN_END: 3.0, GUI_UPDATE_TIME: 1000,
+CPPOW_MEAN_END: 1.32, CFPOW_MEAN_START: 0.75, KFPHA_DROP_AMP_VALUE: 2,
+KRPHA_DROP_AMP_VALUE: 2, CPPHA_MEAN_END: 1.32, KRPHA_MASK_LEVEL: 35.0,
+PULSE_LENGTH: 765, DEFAULT_RF_INCREASE_LEVEL: 50, KFPHA_MEAN_END: 0.75,
+SHOULD_SOL_WOBBLE: False, CPPOW_MEAN_START: 1.26, VAC_DECAY_MODE: LEVEL,
+PULSE_LENGTH_ERROR: 50, KFPOW_MASK_SET_TYPE: INDEX, CFPOW_MASK_LO_MIN: 500,
+KRPHA_MASK_END: 5.0, CPPOW_MASK_WINDOW_START: 2.4, VAC_MAX_LEVEL_FOR_RAMP:
+5e-09, CFPOW_CHECK_STREAK: 10, CFPHA_MASK_LEVEL: 35.0, CRPHA_MASK_WINDOW_END:
+3.4, CPPHA_CHECK_STREAK: 2, KRPHA_MEAN_START: 0.0, CPPOW_NUM_AVERAGE_TRACES: 2,
+CPPHA_MASK_LEVEL: 35.0, CPPHA_DROP_AMP: False, CAV_PWR_RATIO: 400000,
+CRPHA_PHASE_MASK_BY_POWER_TRACE: False, CFPHA_MASK_END: 5.0,
+LOG_RAMP_CURVE_RAMP_RATE: 0.2, CRPHA_CHECK_STREAK: 2, CRPHA_MASK_START: 0.8,
+KFPHA_MASK_END: 5.0, KFPHA_NUM_AVERAGE_TRACES: 2, WATER_TEMPERATURE_PV_COUNT: 1,
+BREAKDOWN_RATE_AIM: 10, KRPOW_DROP_AMP: False, LOG_RAMP_CURVE_PULSES_PER_STEP:
+60, CPPHA_MASK_FLOOR: 0.0, CPPHA_MASK_SET_TYPE: TIME, KFPHA_MASK_START: 0.8,
+KFPHA_PHASE_MASK_BY_POWER_TRACE: False, WATER_TEMPERATURE_CHECK_TIME: 1000,
+CPPHA_PHASE_MASK_BY_POWER_TRACE: False, CFPOW_MASK_TYPE: PERCENT,
+CFPHA_MASK_WINDOW_START: 2.4, KRPOW_MASK_LO_MIN: 50, CRPOW_MASK_START: 1.05,
+CRPOW_MASK_SET_TYPE: TIME, CPPOW_CHECK_STREAK: 10, CPPHA_MASK_START: 0.8,
+CFPOW_DROP_AMP: False, CPPHA_MASK_LO_MIN: 50, KRPHA_AUTO_SET: False,
+MEAN_TRACES: ['KLYSTRON_FORWARD_POWER', 'KLYSTRON_REVERSE_POWER',
+'CAVITY_FORWARD_POWER', 'CAVITY_REVERSE_POWER', 'CAVITY_PROBE_POWER',
+'KLYSTRON_FORWARD_PHASE', 'KLYSTRON_REVERSE_PHASE', 'CAVITY_FORWARD_PHASE',
+'CAVITY_REVERSE_PHASE', 'CAVITY_PROBE_PHASE'], DC_SPIKE_DECAY_LEVEL: 1.2,
+CRPHA_MASK_WINDOW_START: 2.4, CPPOW_MASK_LO_MIN: 50, CRPOW_DROP_AMP: True,
+KFPOW_CHECK_STREAK: 10, DEFAULT_PULSE_COUNT: 500, CRPOW_NUM_AVERAGE_TRACES: 5,
+VAC_SPIKE_TRACES_TO_SAVE: ['KLYSTRON_FORWARD_PHASE', 'KLYSTRON_REVERSE_PHASE',
+'KLYSTRON_FORWARD_POWER', 'KLYSTRON_REVERSE_POWER', 'CAVITY_REVERSE_PHASE',
+'CAVITY_FORWARD_PHASE', 'CAVITY_FORWARD_POWER', 'CAVITY_REVERSE_POWER',
+'CAVITY_PROBE_POWER', 'CAVITY_PROBE_POWER'], CRPOW_MASK_LEVEL: 10000,
+KFPOW_NUM_AVERAGE_TRACES: 2, BINARY_DATA_LOG_TIME: 1000, KRPHA_MASK_SET_TYPE:
+TIME, KFPOW_MASK_WINDOW_START: 300, KFPOW_DROP_AMP: True, KRPOW_MASK_WINDOW_END:
+3.4, NUM_SET_POINTS_TO_FIT: 4, CFPHA_MASK_START: 0.8, CRPOW_AUTO_SET: False,
+CPPOW_MASK_LEVEL: 15, CPPHA_MEAN_START: 1.26, MAX_DELTA_AMP_SP: 300,
+CRPHA_AUTO_SET: False, VAC_PV: CLA-S01-VAC-IMG-01:PRES, KFPOW_MASK_LO_MIN: 500,
+CPPOW_DROP_AMP_VALUE: 2, CAVITY_TEMPERATURE_PV_COUNT: 1, CFPHA_MASK_TYPE:
+ABSOLUTE, VAC_SPIKE_MAX_LEVEL_FOR_OFF: 6e-09, CRPHA_PHASE_MASK_BY_POWER_LEVEL:
+5000.0, EXTRA_BREAKDOWN_DAQ: ['VAC_LEVEL', 'DC_LEVEL', 'BREAKDOWN_RATE',
+'BREAKDOWN_COUNT'], KFPHA_MASK_WINDOW_START: 2.4, KRPHA_MASK_START: 0.8,
+OUTSIDE_MASK_REVERSE_FILENAME: outside_reverse_log, CFPOW_MEAN_END: 0.83,
+NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY: 100000, CFPHA_PHASE_MASK_BY_POWER_TRACE:
+False, CRPOW_MASK_END: 3.5, RF_REPETITION_RATE_ERROR: 50, CFPHA_MASK_WINDOW_END:
+3.4, VAC_SPIKE_DECAY_TIME: 2000, EXTRA_TRACES_ON_BREAKDOWN: 2,
+DC_SPIKE_DROP_AMP: 6, CFPOW_AUTO_SET: False, KFPHA_MASK_WINDOW_END: 3.4,
+KRPOW_MASK_TYPE: ABSOLUTE, DC_NUM_SAMPLES_TO_AVERAGE: 5, KFPHA_DROP_AMP: False,
+LOG_RAMP_START_POWER: 30000, CPPOW_MASK_WINDOW_END: 3.4,
+CFPHA_PHASE_MASK_BY_POWER_LEVEL: 5000.0,
+
+2020-09-23 15:56:49.367000
+********************************************************************************
+***** src.controllers.main_controller, create rf_conditioning_data object ******
+********************************************************************************
+
+2020-09-23 15:56:49.367000
+Started in debug mode = False
+********************************************************************************
+****************** Print Rationalized kfpow_running_stat_log  ******************
+********************************************************************************
+get_kfpow_running_stat_log complete
+
+2020-09-23 15:56:57.375000
+********************************************************************************
+***** src.controllers.main_controller, create hardware_control_hub object ******
+********************************************************************************
+hardware_control_hub Starting CATAP Hardware Interfaces
+start_llrf_control()  SET AMP_SP = 0, successfully created a L01 LLRF control
+object
+
+2020-09-23 15:56:59.482000
+amp_vs_kfpow lookup, called from get_kfp_running_stat_at_current_set_point,
+can't find -9999.9999, returning value at 0.0 instead
+
+2020-09-23 15:57:00.385000
+amp_vs_kfpow lookup, called from get_kfp_running_stat_at_current_set_point,
+can't find -9999.9999, returning value at 0.0 instead
+
+2020-09-23 15:57:14.818000
+********************************************************************************
+********** src.controllers.main_controller, create monitor_hub object **********
+********************************************************************************
+src.monitors.monitor_hub Starting Data Monitoring
+src.monitors.monitor_hub start_llrf_monitor()
+
+2020-09-23 15:57:15.919000
+src.controllers.hardware_control_hub connected, PV = CLA-S01-VAC-IMG-01:PRES
+with ID = d0,  acquiring data
+src.monitors.vac_monitor will drop amp on spike detection
+src.monitors.vac_monitor STARTED running
+src.monitors.vac_monitor vac_spike_status = state.UNKNOWN
+src.monitors.vac_monitor vac_spike_status = state.GOOD
+start_vac_monitor successfully started Vacuum Monitoring
+src.monitors.monitor_hub start_daq_frequency_monitor()
+********************************************************************************
+************************* Connecting to Water Temp PVs *************************
+********************************************************************************
+
+2020-09-23 15:57:17.006000
+src.controllers.hardware_control_hub connected, PV = CLA-L01-H2O-TT-20:RT with
+ID = d1,  acquiring data
+
+2020-09-23 15:57:17.006000
+src.monitors.vac_monitor level ok, 1.025e-09 < 5e-09
+
+2020-09-23 15:57:17.006000
+Connected to CLA-L01-H2O-TT-20:RT id = WATER_TEMP_ID_0
+
+2020-09-23 15:57:17.006000
+start_water_temperature_monitor successfully started Water Temperature
+Monitoring
+
+2020-09-23 15:57:17.006000
+src.monitors.monitor_hub start_cavity_temperature_monitor()
+********************************************************************************
+************************ Connecting to Cavity Temp PVs *************************
+********************************************************************************
+
+2020-09-23 15:57:18.063000
+src.controllers.hardware_control_hub connected, PV = CLA-L01-H2O-TT-20:RT with
+ID = d2,  acquiring data
+
+2020-09-23 15:57:18.078000
+Connected to CLA-L01-H2O-TT-20:RT id = CAVITY_TEMP_ID_0
+
+2020-09-23 15:57:18.093000
+start_cavity_temperature_monitor successfully started Cavity Temperature
+Monitoring
+
+2020-09-23 15:57:18.093000
+src.monitors.monitor_hub start_solenoid_monitoring()
+src.monitors.monitor_hub Sanity Check
+is_vac_monitoring = True
+is_llrf_monitoring = True
+is_cavity_temp_monitoring = True
+is_modulator_monitoring = True
+is_rf_heartbeat_monitoring = True
+is_sol_monitoring = True
+is_rf_prot_monitoring = True
+is_outside_mask_monitoring = True
+is_daq_frequency_monitoring = True
+is_water_temp_monitoring = True
+is_vac_valve_monitor = True
+
+2020-09-23 15:57:18.109000
+********************************************************************************
+********** src.data.rf_conditioning_logger start_binary_data_logging  **********
+********************************************************************************
+binary log file added
+llrf_max_amp    p0_all  llrf_output_status      next_sp_decrease
+probe_pha       rev_cav_pha     can_llrf_output_state_OLD
+breakdown_rate_aim      phi_sp  latest_amp_sp_from_ramp num_outside_mask_traces
+next_requested_power_change     modulator_good  p2_current_sp_to_fit
+CAVITY_TEMP_ID_0        p2_current_sp   SP_QUAD_ALL     water_temp_gui
+max_sp_increase ramp_mode       rev_kly_pha     event_pulse_count
+delta_kfpow     cav_pwr_ratio_can_ramp  p1_current_sp_to_fit    vac_level
+gui_can_rf_output       can_rf_output_status_OLD
+bd_rate_calc_first_pulse_number cav_pwr_ratio
+number_of_pulses_in_breakdown_history   probe_outside_mask_count
+current_ramp_index      y_min   rev_kly_pwr     fwd_kly_pha
+active_breakdown_count  last_sp_above_100       time_stamp, (start = 2020-09-23
+15:57:18.147000)        TOR_SCAN        rev_cav_pwr
+SP_QUAD_CURRENT_SP_TO_FIT       last_vac_spike_status   llrf_DAQ_rep_rate_status
+x_max   p0_current_sp_to_fit    amp_ff  c       L01-SOL1        L01-SOL2
+y_max   p1_current_sp   x_min   can_ramp_status kfpower_at_last_amp_sp
+vac_level_can_ramp      last_breakdown_status   reverse_outside_mask_count
+TOR_ACQM        p0_current_sp   breakdown_rate_low      cav_temp
+fwd_cav_pha     BD_state_OLD    rfprot_good     last_amp_sp     vac_spike_status
+event_pulse_count_zero  DC_level        amp_sp  global_mask_checking
+llrf_heart_beat_value   gui_can_ramp    can_llrf_output_state   p1_all
+log_pulse_count llrf_DAQ_rep_rate_aim   catap_max_amp   can_ramp_status_OLD
+p2_all  fwd_kly_pwr     sol_value       log_amp_set     duplicate_pulse_count
+m       pulse_count     fwd_cav_pwr     SP_SLF  WATER_TEMP_ID_0 probe_pwr
+can_rf_output_status    modulator_state elapsed_time    DC_spike_status
+pulses_to_next_ramp     GUI_mod_and_prot_good   breakdown_status
+catap_max_amp_can_ramp_status   main_can_ramp   llrf_DAQ_rep_rate
+vac_valve_status        SP_QUAD_CURRENT rev_power_spike_count   BD_state
+last_ramp_method        required_pulses rfprot_state    total_breakdown_count
+
+<type 'float'>  <type 'float'>  <enum 'state'>  <type 'float'>  <type 'float'>
+<type 'float'>  <enum 'state'>  <type 'int'>    <type 'int'>    <type 'float'>
+<type 'int'>    <type 'int'>    <type 'bool'>   <type 'float'>  <type 'float'>
+<type 'float'>  <type 'float'>  <type 'float'>  <type 'float'>  <enum
+'ramp_method'>    <type 'float'>  <type 'int'>    <type 'float'>  <type 'bool'>
+<type 'float'>  <type 'float'>  <type 'bool'>   <enum 'state'>  <type 'int'>
+<type 'float'>  <type 'int'>    <type 'int'>    <type 'int'>    <type 'float'>
+<type 'float'>  <type 'float'>  <type 'int'>    <type 'float'>  <type 'float'>
+<type 'int'>    <type 'float'>  <type 'float'>  <enum 'state'>  <enum 'state'>
+<type 'float'>  <type 'float'>  <type 'int'>    <type 'float'>  <type 'float'>
+<type 'float'>  <type 'float'>  <type 'float'>  <type 'float'>  <enum 'state'>
+<type 'float'>  <type 'bool'>   <enum 'state'>  <type 'int'>    <type 'int'>
+<type 'float'>  <type 'bool'>   <type 'float'>  <type 'float'>  <enum 'state'>
+<type 'bool'>   <type 'float'>  <enum 'state'>  <type 'int'>    <type 'float'>
+<type 'float'>  <type 'bool'>   <type 'float'>  <type 'bool'>   <enum 'state'>
+<type 'float'>  <type 'int'>    <type 'int'>    <type 'float'>  <enum 'state'>
+<type 'float'>  <type 'float'>  <type 'float'>  <type 'int'>    <type 'int'>
+<type 'float'>  <type 'int'>    <type 'float'>  <type 'float'>  <type 'float'>
+<type 'float'>  <enum 'state'>  <class
+'VELA_CLARA_RF_Modulator_Control.L01_MOD_STATE'> <type 'long'>   <enum 'state'>
+<type 'int'>    <type 'bool'>   <enum 'state'>  <type 'bool'>   <type 'bool'>
+<type 'float'>  <class 'VELA_CLARA_Vac_Valve_Control.VALVE_STATE'>      <type
+'float'>  <type 'int'>    <enum 'state'>  <enum 'ramp_method'>    <type 'int'>
+<class 'VELA_CLARA_RF_Protection_Control.RF_PROT_STATUS'>       <type 'int'>
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2156781
+
+2020-09-23 15:57:18.225000
+********************************************************************************
+src.controllers.main_controller The RF Conditioning is Preparing to Entering
+Main_Loop !
+********************************************************************************
+
+2020-09-23 15:57:18.241000
+enable_llrf, isRFOutput = False, attempting enableRFOutput()
+
+2020-09-23 15:57:18.263000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-09-23 15:57:18.294000
+enable_llrf, isPhaseFFLocked = False, attempting lockPhaseFF()
+
+2020-09-23 15:57:18.325000
+set_global_check_mask setGlobalCheckMask True
+!!Log Ramp curve is NONE, generating a new one
+power_finish = 16363553.6557
+breakdown_rate_low = True
+Breakdown rate LO, log_ramp power_finish = 16363553.6557
+Log Ramp curve is NONE, generating a new one
+Log Ramp curve_p_finish = 16527189.1923, p_start = 30000, p_finish =
+16363553.6557, ramp_rate = 0.2
+self.data.log_ramp_curve in maIn_controller = [[60, 1431.0, 103.17029038257363],
+[60, 5386.0, 11.15763141478526], [60, 7577.0, 7.671568202620255], [60, 9236.0,
+6.450315390276867], [60, 10552.0, 5.82806703679152], [60, 11744.0,
+5.450994297752613], [60, 12885.0, 5.198097734933471], [60, 13965.0,
+5.016751088511096], [60, 14877.0, 4.880384675311814], [60, 15808.0,
+4.774135102242787], [60, 16705.0, 4.689037863428057], [60, 17541.0,
+4.619365090835687], [60, 18279.0, 4.5612857493708505], [60, 18998.0,
+4.5121404794003555], [60, 19731.0, 4.470025482350299], [60, 20476.0,
+4.433541982622378], [60, 21113.0, 4.40163918105043], [60, 21772.0,
+4.373512380922038], [60, 22425.0, 4.348534924046731], [60, 23067.0,
+4.326211531962879], [60, 23617.0, 4.306145589873659], [60, 24157.0,
+4.288015743102334], [60, 24643.0, 4.271558853563206], [60, 25182.0,
+4.2565573871974305], [60, 25718.0, 4.242829944236478], [60, 26192.0,
+4.23022405506526], [60, 26656.0, 4.218610633558048], [60, 27057.0,
+4.207879659421955], [60, 27572.0, 4.197936783157931], [60, 28022.0,
+4.188700631541716], [60, 28444.0, 4.180100650598116], [60, 28854.0,
+4.172075365006707], [60, 29234.0, 4.164570963068251], [60, 29640.0,
+4.157540138337919], [60, 30043.0, 4.150941135204261], [60, 30401.0,
+4.144736957716371], [60, 30772.0, 4.138894709985792], [60, 31119.0,
+4.133385043323529], [60, 31475.0, 4.1281816904911], [60, 31838.0,
+4.1232610714612425], [60, 32189.0, 4.118601958198698], [60, 32515.0,
+4.114185188403767], [60, 32822.0, 4.1099934200734305], [60, 33118.0,
+4.1060109202474555], [60, 33407.0, 4.102223382510686], [60, 33716.0,
+4.098617768786107], [60, 34030.0, 4.095182171728579], [60, 34331.0,
+4.091905694656207], [60, 34607.0, 4.088778346465888], [60, 34893.0,
+4.085790949395911], [60, 35167.0, 4.082935057839834], [60, 35404.0,
+4.080202886697104], [60, 35661.0, 4.077587247978562], [60, 35931.0,
+4.075081494578188], [60, 36198.0, 4.0726794702834574], [60, 36446.0,
+4.070375465231417], [60, 36678.0, 4.068164176130743], [60, 36895.0,
+4.066040670665245], [60, 37107.0, 4.0640003555748585], [60, 37347.0,
+4.062038947978378], [60, 37584.0, 4.060152449560203], [60, 37817.0,
+4.058337123292875], [60, 38043.0, 4.056589472409444], [60, 38263.0,
+4.054906221375977], [60, 38486.0, 4.053284298645739], [60, 38704.0,
+4.05172082100336], [60, 38894.0, 4.050213079330561], [60, 39080.0,
+4.04875852564509], [60, 39287.0, 4.047354761281933], [60, 39493.0,
+4.0459995261010535], [60, 39686.0, 4.0446906886191], [60, 39874.0,
+4.043426236974097], [60, 40061.0, 4.042204270642212], [60, 40245.0,
+4.041022992834532], [60, 40438.0, 4.039880703509624], [60, 40632.0,
+4.038775792944428], [60, 40796.0, 4.037706735812107], [60, 40943.0,
+4.0366720857208405], [60, 41087.0, 4.035670470172177], [60, 41266.0,
+4.034700585901854], [60, 41444.0, 4.033761194569613], [60, 41604.0,
+4.032851118767884], [60, 41753.0, 4.031969238322141], [60, 41898.0,
+4.031114486858349], [60, 42036.0, 4.030285848615263], [60, 42172.0,
+4.029482355481414], [60, 42305.0, 4.028703084238529], [60, 42465.0,
+4.027947153994777], [60, 42621.0, 4.027213723792734], [60, 42772.0,
+4.026501990378365], [60, 42919.0, 4.025811186118481], [60, 43062.0,
+4.025140577055273], [60, 43199.0, 4.024489461087491], [60, 43332.0,
+4.023857166268729], [60, 43462.0, 4.023243049214137], [60, 43591.0,
+4.022646493607529], [60, 43718.0, 4.022066908801605], [60, 43842.0,
+4.02150372850455], [60, 43961.0, 4.020956409546857], [60, 44076.0,
+4.020424430722686], [60, 44188.0, 4.019907291700569], [60, 44297.0,
+4.019404511998636], [60, 44423.0, 4.018915630019945], [60, 44545.0,
+4.018440202143826], [60, 44665.0, 4.01797780186948], [60, 44776.0,
+4.017528019008352], [60, 44883.0, 4.017090458922039], [60, 44987.0,
+4.016664741802776], [60, 45088.0, 4.016250501993745], [60, 45191.0,
+4.015847387346617], [60, 45292.0, 4.015455058613997], [60, 45391.0,
+4.015073188874565], [60, 45488.0, 4.0147014629888345], [60, 45580.0,
+4.014339577083693], [60, 45670.0, 4.013987238063901], [60, 45758.0,
+4.013644163148946], [60, 45844.0, 4.013310079433709], [60, 45930.0,
+4.012984723471525], [60, 46018.0, 4.012667840878292], [60, 46103.0,
+4.012359185956426], [60, 46187.0, 4.012058521337473], [60, 46269.0,
+4.011765617642311], [60, 46356.0, 4.011480253157943], [60, 46446.0,
+4.011202213529921], [60, 46533.0, 4.010931291469533], [60, 46619.0,
+4.010667286474923], [60, 46703.0, 4.0104100045653635], [60, 46773.0,
+4.010159258027976], [60, 46842.0, 4.009914865176195], [60, 46910.0,
+4.009676650119356], [60, 46976.0, 4.009444442542817], [60, 47040.0,
+4.009218077498017], [60, 47103.0, 4.00899739520199], [60, 47169.0,
+4.008782240845812], [60, 47234.0, 4.008572464411511], [60, 47297.0,
+4.008367920497026], [60, 47359.0, 4.008168468148779], [60, 47419.0,
+4.007973970701482], [60, 47478.0, 4.00778429562482], [60, 47538.0,
+4.007599314376647], [60, 47599.0, 4.0074189022623905], [60, 47657.0,
+4.007242938300342], [60, 47715.0, 4.007071305092554], [60, 47771.0,
+4.006903888701063], [60, 47826.0, 4.006740578529199], [60, 47880.0,
+4.006581267207701], [60, 47929.0, 4.00642585048545], [60, 47976.0,
+4.006274227124578], [60, 48022.0, 4.006126298799747], [60, 48067.0,
+4.005981970001414], [60, 48111.0, 4.005841147942891], [60, 48154.0,
+4.005703742471026], [60, 48196.0, 4.005569665980333], [60, 48237.0,
+4.005438833330434], [60, 48277.0, 4.005311161766641], [60, 48319.0,
+4.005186570843549], [60, 48363.0, 4.005064982351507], [60, 48406.0,
+4.00494632024584], [60, 48448.0, 4.00483051057869], [60, 48489.0,
+4.004717481433376], [60, 48529.0, 4.0046071628611655], [60, 48568.0,
+4.004499486820333], [60, 48606.0, 4.0043943871174354], [60, 48644.0,
+4.004291799350689], [60, 48680.0, 4.004191660855374], [60, 48715.0,
+4.004093910651164], [60, 48747.0, 4.00399848939133], [60, 48779.0,
+4.003905339313704], [60, 48810.0, 4.0038144041933625], [60, 48840.0,
+4.003725629296944], [60, 48870.0, 4.003638961338531], [60, 48898.0,
+4.003554348437048], [60, 48927.0, 4.003471740075101], [60, 48954.0,
+4.003391087059208], [60, 48981.0, 4.003312341481367], [60, 49007.0,
+4.0032354566819], [60, 49033.0, 4.003160387213539], [60, 49058.0,
+4.0030870888066845], [60, 49083.0, 4.003015518335818], [60, 49107.0,
+4.002945633786996], [60, 49133.0, 4.002877394226406], [60, 49157.0,
+4.002810759769938], [60, 49181.0, 4.002745691553722], [60, 49205.0,
+4.002682151705618], [60, 49228.0, 4.002620103317605], [60, 49250.0,
+4.002559510419037], [60, 49272.0, 4.002500337950743], [60, 49294.0,
+4.002442551739944], [60, 49315.0, 4.002386118475928], [60, 49335.0,
+4.002331005686503], [60, 49355.0, 4.002277181715153], [60, 49375.0,
+4.002224615698906], [60, 49394.0, 4.002173277546871], [60, 49412.0,
+4.002123137919424], [60, 49431.0, 4.002074168208027], [60, 49449.0,
+4.002026340515651], [60, 49466.0, 4.001979627637777], [60, 49483.0,
+4.001934003043975], [60, 49500.0, 4.001889440860018]]
+set_amp (1431.0) called from log_ramp_up
+set_amp (5386.0) called from log_ramp_up
+set_amp (7577.0) called from log_ramp_up
+set_amp (9236.0) called from log_ramp_up
+set_amp (10552.0) called from log_ramp_up
+set_amp (11744.0) called from log_ramp_up
+set_amp (12885.0) called from log_ramp_up
+set_amp (13965.0) called from log_ramp_up
+set_amp (14877.0) called from log_ramp_up
+set_amp (15808.0) called from log_ramp_up
+set_amp (16705.0) called from log_ramp_up
+set_amp (17541.0) called from log_ramp_up
+set_amp (18279.0) called from log_ramp_up
+set_amp (18998.0) called from log_ramp_up
+set_amp (19731.0) called from log_ramp_up
+set_amp (20476.0) called from log_ramp_up
+set_amp (21113.0) called from log_ramp_up
+set_amp (21772.0) called from log_ramp_up
+set_amp (22425.0) called from log_ramp_up
+set_amp (23067.0) called from log_ramp_up
+set_amp (23617.0) called from log_ramp_up
+set_amp (24157.0) called from log_ramp_up
+set_amp (24643.0) called from log_ramp_up
+set_amp (25182.0) called from log_ramp_up
+set_amp (25718.0) called from log_ramp_up
+set_amp (26192.0) called from log_ramp_up
+set_amp (26656.0) called from log_ramp_up
+set_amp (27057.0) called from log_ramp_up
+set_amp (27572.0) called from log_ramp_up
+set_amp (28022.0) called from log_ramp_up
+set_amp (28444.0) called from log_ramp_up
+set_amp (28854.0) called from log_ramp_up
+set_amp (29234.0) called from log_ramp_up
+set_amp (29640.0) called from log_ramp_up
+set_amp (30043.0) called from log_ramp_up
+set_amp (30401.0) called from log_ramp_up
+set_amp (30772.0) called from log_ramp_up
+set_amp (31119.0) called from log_ramp_up
+set_amp (31475.0) called from log_ramp_up
+set_amp (31838.0) called from log_ramp_up
+set_amp (32189.0) called from log_ramp_up
+set_amp (32515.0) called from log_ramp_up
+set_amp (32822.0) called from log_ramp_up
+set_amp (33118.0) called from log_ramp_up
+set_amp (33407.0) called from log_ramp_up
+set_amp (33716.0) called from log_ramp_up
+set_amp (34030.0) called from log_ramp_up
+set_amp (34331.0) called from log_ramp_up
+set_amp (34607.0) called from log_ramp_up
+set_amp (34893.0) called from log_ramp_up
+set_amp (35167.0) called from log_ramp_up
+set_amp (35404.0) called from log_ramp_up
+set_amp (35661.0) called from log_ramp_up
+set_amp (35931.0) called from log_ramp_up
+set_amp (36198.0) called from log_ramp_up
+set_amp (36446.0) called from log_ramp_up
+set_amp (36678.0) called from log_ramp_up
+set_amp (36895.0) called from log_ramp_up
+set_amp (37107.0) called from log_ramp_up
+set_amp (37347.0) called from log_ramp_up
+set_amp (37584.0) called from log_ramp_up
+set_amp (37817.0) called from log_ramp_up
+set_amp (38043.0) called from log_ramp_up
+set_amp (38263.0) called from log_ramp_up
+set_amp (38486.0) called from log_ramp_up
+set_amp (38704.0) called from log_ramp_up
+set_amp (38894.0) called from log_ramp_up
+set_amp (39080.0) called from log_ramp_up
+set_amp (39287.0) called from log_ramp_up
+set_amp (39493.0) called from log_ramp_up
+set_amp (39686.0) called from log_ramp_up
+set_amp (39874.0) called from log_ramp_up
+set_amp (40061.0) called from log_ramp_up
+set_amp (40245.0) called from log_ramp_up
+set_amp (40438.0) called from log_ramp_up
+set_amp (40632.0) called from log_ramp_up
+set_amp (40796.0) called from log_ramp_up
+set_amp (40943.0) called from log_ramp_up
+set_amp (41087.0) called from log_ramp_up
+set_amp (41266.0) called from log_ramp_up
+set_amp (41444.0) called from log_ramp_up
+set_amp (41604.0) called from log_ramp_up
+set_amp (41753.0) called from log_ramp_up
+set_amp (41898.0) called from log_ramp_up
+set_amp (42036.0) called from log_ramp_up
+set_amp (42172.0) called from log_ramp_up
+set_amp (42305.0) called from log_ramp_up
+set_amp (42465.0) called from log_ramp_up
+set_amp (42621.0) called from log_ramp_up
+set_amp (42772.0) called from log_ramp_up
+set_amp (42919.0) called from log_ramp_up
+set_amp (43062.0) called from log_ramp_up
+set_amp (43199.0) called from log_ramp_up
+set_amp (43332.0) called from log_ramp_up
+set_amp (43462.0) called from log_ramp_up
+set_amp (43591.0) called from log_ramp_up
+set_amp (43718.0) called from log_ramp_up
+set_amp (43842.0) called from log_ramp_up
+set_amp (43961.0) called from log_ramp_up
+set_amp (44076.0) called from log_ramp_up
+set_amp (44188.0) called from log_ramp_up
+set_amp (44297.0) called from log_ramp_up
+set_amp (44423.0) called from log_ramp_up
+set_amp (44545.0) called from log_ramp_up
+set_amp (44665.0) called from log_ramp_up
+set_amp (44776.0) called from log_ramp_up
+set_amp (44883.0) called from log_ramp_up
+set_amp (44987.0) called from log_ramp_up
+set_amp (45088.0) called from log_ramp_up
+set_amp (45191.0) called from log_ramp_up
+set_amp (45292.0) called from log_ramp_up
+set_amp (45391.0) called from log_ramp_up
+set_amp (45488.0) called from log_ramp_up
+set_amp (45580.0) called from log_ramp_up
+set_amp (45670.0) called from log_ramp_up
+set_amp (45758.0) called from log_ramp_up
+set_amp (45844.0) called from log_ramp_up
+set_amp (45930.0) called from log_ramp_up
+set_amp (46018.0) called from log_ramp_up
+set_amp (46103.0) called from log_ramp_up
+set_amp (46187.0) called from log_ramp_up
+set_amp (46269.0) called from log_ramp_up
+set_amp (46356.0) called from log_ramp_up
+set_amp (46446.0) called from log_ramp_up
+set_amp (46533.0) called from log_ramp_up
+set_amp (46619.0) called from log_ramp_up
+set_amp (46703.0) called from log_ramp_up
+set_amp (46773.0) called from log_ramp_up
+set_amp (46842.0) called from log_ramp_up
+set_amp (46910.0) called from log_ramp_up
+set_amp (46976.0) called from log_ramp_up
+set_amp (47040.0) called from log_ramp_up
+set_amp (47103.0) called from log_ramp_up
+set_amp (47169.0) called from log_ramp_up
+
+2020-09-23 15:58:49.565000
+amp_vs_kfpow lookup, called from get_kfp_running_stat_at_current_set_point,
+can't find 47169.0, returning value at 47167.0 instead
+set_amp (47234.0) called from log_ramp_up
+set_amp (47297.0) called from log_ramp_up
+set_amp (47359.0) called from log_ramp_up
+set_amp (47419.0) called from log_ramp_up
+set_amp (47478.0) called from log_ramp_up
+set_amp (47538.0) called from log_ramp_up
+set_amp (47599.0) called from log_ramp_up
+set_amp (47657.0) called from log_ramp_up
+set_amp (47715.0) called from log_ramp_up
+set_amp (47771.0) called from log_ramp_up
+set_amp (47826.0) called from log_ramp_up
+set_amp (47880.0) called from log_ramp_up
+set_amp (47929.0) called from log_ramp_up
+set_amp (47976.0) called from log_ramp_up
+set_amp (48022.0) called from log_ramp_up
+set_amp (48067.0) called from log_ramp_up
+set_amp (48111.0) called from log_ramp_up
+set_amp (48154.0) called from log_ramp_up
+set_amp (48196.0) called from log_ramp_up
+set_amp (48237.0) called from log_ramp_up
+set_amp (48277.0) called from log_ramp_up
+set_amp (48319.0) called from log_ramp_up
+set_amp (48363.0) called from log_ramp_up
+set_amp (48406.0) called from log_ramp_up
+set_amp (48448.0) called from log_ramp_up
+set_amp (48489.0) called from log_ramp_up
+set_amp (48529.0) called from log_ramp_up
+set_amp (48568.0) called from log_ramp_up
+set_amp (48606.0) called from log_ramp_up
+set_amp (48644.0) called from log_ramp_up
+set_amp (48680.0) called from log_ramp_up
+set_amp (48715.0) called from log_ramp_up
+set_amp (48747.0) called from log_ramp_up
+set_amp (48779.0) called from log_ramp_up
+set_amp (48810.0) called from log_ramp_up
+set_amp (48840.0) called from log_ramp_up
+set_amp (48870.0) called from log_ramp_up
+set_amp (48898.0) called from log_ramp_up
+set_amp (48927.0) called from log_ramp_up
+set_amp (48954.0) called from log_ramp_up
+set_amp (48981.0) called from log_ramp_up
+set_amp (49007.0) called from log_ramp_up
+set_amp (49033.0) called from log_ramp_up
+set_amp (49058.0) called from log_ramp_up
+set_amp (49083.0) called from log_ramp_up
+set_amp (49107.0) called from log_ramp_up
+set_amp (49133.0) called from log_ramp_up
+set_amp (49157.0) called from log_ramp_up
+set_amp (49181.0) called from log_ramp_up
+set_amp (49205.0) called from log_ramp_up
+set_amp (49228.0) called from log_ramp_up
+set_amp (49250.0) called from log_ramp_up
+set_amp (49272.0) called from log_ramp_up
+set_amp (49294.0) called from log_ramp_up
+set_amp (49315.0) called from log_ramp_up
+set_amp (49335.0) called from log_ramp_up
+set_amp (49355.0) called from log_ramp_up
+set_amp (49375.0) called from log_ramp_up
+set_amp (49394.0) called from log_ramp_up
+set_amp (49412.0) called from log_ramp_up
+set_amp (49431.0) called from log_ramp_up
+set_amp (49449.0) called from log_ramp_up
+set_amp (49466.0) called from log_ramp_up
+set_amp (49483.0) called from log_ramp_up
+set_amp (49500.0) called from log_ramp_up
+Log Ramp finished, calling clear_log_ramp_curve()
+clear_log_ramp_curve called from log_ramp_up
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2169439
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 49550
+set_amp (49550) called from ramp_up
+set_amp is updating last_amp_sp set to  49500.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2170444
+ramp_up FINISHED, we went from 49500.0 to 49550
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 49600
+set_amp (49600) called from ramp_up
+set_amp is updating last_amp_sp set to  49550.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2171448
+ramp_up FINISHED, we went from 49550.0 to 49600
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 49650
+set_amp (49650) called from ramp_up
+set_amp is updating last_amp_sp set to  49600.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2172465
+ramp_up FINISHED, we went from 49600.0 to 49650
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 49700
+set_amp (49700) called from ramp_up
+set_amp is updating last_amp_sp set to  49650.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2173465
+ramp_up FINISHED, we went from 49650.0 to 49700
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 49700.0, KFPower = 16409163.5032) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 49700.0, KFPower = 16409163.5032) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 49700.0, KFPower = 16409163.5032) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 49700.0, KFPower = 16409163.5032) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 49700.0, KFPower = 16409163.5032) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 49750
+set_amp (49750) called from ramp_up
+set_amp is updating last_amp_sp set to  49700.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2174465
+ramp_up FINISHED, we went from 49700.0 to 49750
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 49750.0, KFPower = 16423245.9713) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 49750.0, KFPower = 16423245.9713) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 49750.0, KFPower = 16423245.9713) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 49750.0, KFPower = 16423245.9713) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 49750.0, KFPower = 16423245.9713) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 49800
+set_amp (49800) called from ramp_up
+set_amp is updating last_amp_sp set to  49750.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2175475
+ramp_up FINISHED, we went from 49750.0 to 49800
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 49800.0, KFPower = 16434789.8783) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 49800.0, KFPower = 16434789.8783) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 49800.0, KFPower = 16434789.8783) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 49800.0, KFPower = 16434789.8783) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 49800.0, KFPower = 16434789.8783) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 49850
+set_amp (49850) called from ramp_up
+set_amp is updating last_amp_sp set to  49800.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2176476
+ramp_up FINISHED, we went from 49800.0 to 49850
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 49850.0, KFPower = 16440779.7154) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 49850.0, KFPower = 16440779.7154) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 49850.0, KFPower = 16440779.7154) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 49850.0, KFPower = 16440779.7154) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 49850.0, KFPower = 16440779.7154) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 49900
+set_amp (49900) called from ramp_up
+set_amp is updating last_amp_sp set to  49850.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2177482
+ramp_up FINISHED, we went from 49850.0 to 49900
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 49900.0, KFPower = 16454985.9186) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 49900.0, KFPower = 16454985.9186) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 49900.0, KFPower = 16454985.9186) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 49900.0, KFPower = 16454985.9186) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 49900.0, KFPower = 16454985.9186) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 49950
+set_amp (49950) called from ramp_up
+set_amp is updating last_amp_sp set to  49900.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2178489
+ramp_up FINISHED, we went from 49900.0 to 49950
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 49950.0, KFPower = 16466440.5397) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 49950.0, KFPower = 16466440.5397) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 49950.0, KFPower = 16466440.5397) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 49950.0, KFPower = 16466440.5397) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 49950.0, KFPower = 16466440.5397) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 50000
+set_amp (50000) called from ramp_up
+set_amp is updating last_amp_sp set to  49950.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2179496
+ramp_up FINISHED, we went from 49950.0 to 50000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 50000.0, KFPower = 16474286.6582) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50000.0, KFPower = 16474286.6582) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50000.0, KFPower = 16474286.6582) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50000.0, KFPower = 16474286.6582) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50000.0, KFPower = 16474286.6582) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 50050
+set_amp (50050) called from ramp_up
+set_amp is updating last_amp_sp set to  50000.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2180504
+ramp_up FINISHED, we went from 50000.0 to 50050
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 50050.0, KFPower = 16484168.9999) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50050.0, KFPower = 16484168.9999) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50050.0, KFPower = 16484168.9999) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50050.0, KFPower = 16484168.9999) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50050.0, KFPower = 16484168.9999) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 50100
+set_amp (50100) called from ramp_up
+set_amp is updating last_amp_sp set to  50050.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2181510
+ramp_up FINISHED, we went from 50050.0 to 50100
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 50100.0, KFPower = 16490981.3435) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50100.0, KFPower = 16490981.3435) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50100.0, KFPower = 16490981.3435) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50100.0, KFPower = 16490981.3435) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50100.0, KFPower = 16490981.3435) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 50150
+set_amp (50150) called from ramp_up
+set_amp is updating last_amp_sp set to  50100.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2182515
+ramp_up FINISHED, we went from 50100.0 to 50150
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 50150.0, KFPower = 16501307.1626) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50150.0, KFPower = 16501307.1626) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50150.0, KFPower = 16501307.1626) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50150.0, KFPower = 16501307.1626) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50150.0, KFPower = 16501307.1626) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 50200
+set_amp (50200) called from ramp_up
+set_amp is updating last_amp_sp set to  50150.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2183524
+ramp_up FINISHED, we went from 50150.0 to 50200
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 50200.0, KFPower = 16511872.0772) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50200.0, KFPower = 16511872.0772) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50200.0, KFPower = 16511872.0772) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50200.0, KFPower = 16511872.0772) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50200.0, KFPower = 16511872.0772) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 50250
+set_amp (50250) called from ramp_up
+set_amp is updating last_amp_sp set to  50200.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2184525
+ramp_up FINISHED, we went from 50200.0 to 50250
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 50250.0, KFPower = 16520545.5308) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50250.0, KFPower = 16520545.5308) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50250.0, KFPower = 16520545.5308) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50250.0, KFPower = 16520545.5308) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50250.0, KFPower = 16520545.5308) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 50300
+set_amp (50300) called from ramp_up
+set_amp is updating last_amp_sp set to  50250.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2185533
+ramp_up FINISHED, we went from 50250.0 to 50300
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 50300.0, KFPower = 16532278.0436) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50300.0, KFPower = 16532278.0436) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50300.0, KFPower = 16532278.0436) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50300.0, KFPower = 16532278.0436) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50300.0, KFPower = 16532278.0436) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 50350
+set_amp (50350) called from ramp_up
+set_amp is updating last_amp_sp set to  50300.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2186538
+ramp_up FINISHED, we went from 50300.0 to 50350
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 50350.0, KFPower = 16543259.4679) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50350.0, KFPower = 16543259.4679) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50350.0, KFPower = 16543259.4679) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50350.0, KFPower = 16543259.4679) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50350.0, KFPower = 16543259.4679) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 50400
+set_amp (50400) called from ramp_up
+set_amp is updating last_amp_sp set to  50350.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2187546
+ramp_up FINISHED, we went from 50350.0 to 50400
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 50400.0, KFPower = 16555858.5917) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50400.0, KFPower = 16555858.5917) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50400.0, KFPower = 16555858.5917) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50400.0, KFPower = 16555858.5917) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50400.0, KFPower = 16555858.5917) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 50450
+set_amp (50450) called from ramp_up
+set_amp is updating last_amp_sp set to  50400.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2188552
+ramp_up FINISHED, we went from 50400.0 to 50450
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 50450.0, KFPower = 16567210.0135) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50450.0, KFPower = 16567210.0135) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50450.0, KFPower = 16567210.0135) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50450.0, KFPower = 16567210.0135) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50450.0, KFPower = 16567210.0135) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 50500
+set_amp (50500) called from ramp_up
+set_amp is updating last_amp_sp set to  50450.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2189560
+ramp_up FINISHED, we went from 50450.0 to 50500
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 50500.0, KFPower = 16577109.9546) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50500.0, KFPower = 16577109.9546) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50500.0, KFPower = 16577109.9546) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50500.0, KFPower = 16577109.9546) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50500.0, KFPower = 16577109.9546) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 50550
+set_amp (50550) called from ramp_up
+set_amp is updating last_amp_sp set to  50500.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2190571
+ramp_up FINISHED, we went from 50500.0 to 50550
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 50550.0, KFPower = 16588140.1314) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50550.0, KFPower = 16588140.1314) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50550.0, KFPower = 16588140.1314) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50550.0, KFPower = 16588140.1314) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50550.0, KFPower = 16588140.1314) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 50600
+set_amp (50600) called from ramp_up
+set_amp is updating last_amp_sp set to  50550.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2191580
+ramp_up FINISHED, we went from 50550.0 to 50600
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 50600.0, KFPower = 16596821.5953) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50600.0, KFPower = 16596821.5953) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50600.0, KFPower = 16596821.5953) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50600.0, KFPower = 16596821.5953) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50600.0, KFPower = 16596821.5953) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 50650
+set_amp (50650) called from ramp_up
+set_amp is updating last_amp_sp set to  50600.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2192583
+ramp_up FINISHED, we went from 50600.0 to 50650
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 50650.0, KFPower = 16607080.1196) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50650.0, KFPower = 16607080.1196) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50650.0, KFPower = 16607080.1196) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50650.0, KFPower = 16607080.1196) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50650.0, KFPower = 16607080.1196) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 50700
+set_amp (50700) called from ramp_up
+set_amp is updating last_amp_sp set to  50650.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2193585
+ramp_up FINISHED, we went from 50650.0 to 50700
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 50700.0, KFPower = 16619000.756) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50700.0, KFPower = 16619000.756) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50700.0, KFPower = 16619000.756) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50700.0, KFPower = 16619000.756) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50700.0, KFPower = 16619000.756) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 50750
+set_amp (50750) called from ramp_up
+set_amp is updating last_amp_sp set to  50700.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2194595
+ramp_up FINISHED, we went from 50700.0 to 50750
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 50750.0, KFPower = 16629322.6021) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50750.0, KFPower = 16629322.6021) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50750.0, KFPower = 16629322.6021) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50750.0, KFPower = 16629322.6021) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50750.0, KFPower = 16629322.6021) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 50800
+set_amp (50800) called from ramp_up
+set_amp is updating last_amp_sp set to  50750.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2195598
+ramp_up FINISHED, we went from 50750.0 to 50800
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 50800.0, KFPower = 16642490.6157) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50800.0, KFPower = 16642490.6157) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50800.0, KFPower = 16642490.6157) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50800.0, KFPower = 16642490.6157) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50800.0, KFPower = 16642490.6157) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 50850
+set_amp (50850) called from ramp_up
+set_amp is updating last_amp_sp set to  50800.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2196606
+ramp_up FINISHED, we went from 50800.0 to 50850
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 50850.0, KFPower = 16654014.7693) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50850.0, KFPower = 16654014.7693) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50850.0, KFPower = 16654014.7693) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50850.0, KFPower = 16654014.7693) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50850.0, KFPower = 16654014.7693) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 50900
+set_amp (50900) called from ramp_up
+set_amp is updating last_amp_sp set to  50850.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2197609
+ramp_up FINISHED, we went from 50850.0 to 50900
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 50900.0, KFPower = 16663302.7855) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50900.0, KFPower = 16663302.7855) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50900.0, KFPower = 16663302.7855) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50900.0, KFPower = 16663302.7855) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50900.0, KFPower = 16663302.7855) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 50950
+set_amp (50950) called from ramp_up
+set_amp is updating last_amp_sp set to  50900.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2198612
+ramp_up FINISHED, we went from 50900.0 to 50950
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 50950.0, KFPower = 16676307.2) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50950.0, KFPower = 16676307.2) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50950.0, KFPower = 16676307.2) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50950.0, KFPower = 16676307.2) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50950.0, KFPower = 16676307.2) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 51000
+set_amp (51000) called from ramp_up
+set_amp is updating last_amp_sp set to  50950.0
+
+2020-09-23 16:04:53.059000
+amp_vs_kfpow lookup, called from get_kfp_running_stat_at_current_set_point,
+can't find 51000.0, returning value at 50950.0 instead
+
+2020-09-23 16:04:53.059000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2199615
+
+2020-09-23 16:04:53.075000
+ramp_up FINISHED, we went from 50950.0 to 51000
+
+2020-09-23 16:05:03.685000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-09-23 16:05:03.685000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-09-23 16:05:03.685000
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+2020-09-23 16:05:03.685000
+New data point (amp_sp = 51000.0, KFPower = 16685288.1083) is outside acceptance
+region and will be excluded from updating the binned data.
+
+2020-09-23 16:05:03.685000
+New data point (amp_sp = 51000.0, KFPower = 16685288.1083) is outside acceptance
+region and will be excluded from updating the binned data.
+
+2020-09-23 16:05:03.685000
+New data point (amp_sp = 51000.0, KFPower = 16685288.1083) is outside acceptance
+region and will be excluded from updating the binned data.
+
+2020-09-23 16:05:03.685000
+New data point (amp_sp = 51000.0, KFPower = 16685288.1083) is outside acceptance
+region and will be excluded from updating the binned data.
+
+2020-09-23 16:05:03.685000
+New data point (amp_sp = 51000.0, KFPower = 16685288.1083) is outside acceptance
+region and will be excluded from updating the binned data.
+
+2020-09-23 16:05:03.685000
+
+
+2020-09-23 16:05:03.685000
+DEFAULT__DELTA_GTRTHN_MAX deafault = 51050
+set_amp (51050) called from ramp_up
+set_amp is updating last_amp_sp set to  51000.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2200624
+ramp_up FINISHED, we went from 51000.0 to 51050
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 51050.0, KFPower = 16695908.939) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51050.0, KFPower = 16695908.939) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51050.0, KFPower = 16695908.939) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51050.0, KFPower = 16695908.939) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51050.0, KFPower = 16695908.939) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 51100
+set_amp (51100) called from ramp_up
+set_amp is updating last_amp_sp set to  51050.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2201626
+ramp_up FINISHED, we went from 51050.0 to 51100
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 51100.0, KFPower = 16707621.9895) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51100.0, KFPower = 16707621.9895) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51100.0, KFPower = 16707621.9895) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51100.0, KFPower = 16707621.9895) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51100.0, KFPower = 16707621.9895) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 51150
+set_amp (51150) called from ramp_up
+set_amp is updating last_amp_sp set to  51100.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2202628
+ramp_up FINISHED, we went from 51100.0 to 51150
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 51150.0, KFPower = 16716610.8222) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51150.0, KFPower = 16716610.8222) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51150.0, KFPower = 16716610.8222) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51150.0, KFPower = 16716610.8222) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51150.0, KFPower = 16716610.8222) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 51200
+set_amp (51200) called from ramp_up
+set_amp is updating last_amp_sp set to  51150.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2203639
+ramp_up FINISHED, we went from 51150.0 to 51200
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 51200.0, KFPower = 16728563.8982) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51200.0, KFPower = 16728563.8982) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51200.0, KFPower = 16728563.8982) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51200.0, KFPower = 16728563.8982) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51200.0, KFPower = 16728563.8982) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 51250
+set_amp (51250) called from ramp_up
+set_amp is updating last_amp_sp set to  51200.0
+
+2020-09-23 16:05:46.228000
+amp_vs_kfpow lookup, called from get_kfp_running_stat_at_current_set_point,
+can't find 51250.0, returning value at 51200.0 instead
+
+2020-09-23 16:05:46.266000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2204648
+
+2020-09-23 16:05:46.281000
+ramp_up FINISHED, we went from 51200.0 to 51250
+
+2020-09-23 16:05:56.826000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-09-23 16:05:56.826000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-09-23 16:05:56.826000
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+2020-09-23 16:05:56.826000
+New data point (amp_sp = 51250.0, KFPower = 16737953.5058) is outside acceptance
+region and will be excluded from updating the binned data.
+
+2020-09-23 16:05:56.826000
+New data point (amp_sp = 51250.0, KFPower = 16737953.5058) is outside acceptance
+region and will be excluded from updating the binned data.
+
+2020-09-23 16:05:56.826000
+New data point (amp_sp = 51250.0, KFPower = 16737953.5058) is outside acceptance
+region and will be excluded from updating the binned data.
+
+2020-09-23 16:05:56.826000
+New data point (amp_sp = 51250.0, KFPower = 16737953.5058) is outside acceptance
+region and will be excluded from updating the binned data.
+
+2020-09-23 16:05:56.826000
+New data point (amp_sp = 51250.0, KFPower = 16737953.5058) is outside acceptance
+region and will be excluded from updating the binned data.
+
+2020-09-23 16:05:56.826000
+
+
+2020-09-23 16:05:56.826000
+DEFAULT__DELTA_GTRTHN_MAX deafault = 51300
+set_amp (51300) called from ramp_up
+set_amp is updating last_amp_sp set to  51250.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2205654
+ramp_up FINISHED, we went from 51250.0 to 51300
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 51300.0, KFPower = 16747049.9135) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51300.0, KFPower = 16747049.9135) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51300.0, KFPower = 16747049.9135) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51300.0, KFPower = 16747049.9135) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51300.0, KFPower = 16747049.9135) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 51350
+set_amp (51350) called from ramp_up
+set_amp is updating last_amp_sp set to  51300.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2206667
+ramp_up FINISHED, we went from 51300.0 to 51350
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 51350.0, KFPower = 16760889.3625) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51350.0, KFPower = 16760889.3625) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51350.0, KFPower = 16760889.3625) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51350.0, KFPower = 16760889.3625) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51350.0, KFPower = 16760889.3625) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 51400
+set_amp (51400) called from ramp_up
+set_amp is updating last_amp_sp set to  51350.0
+
+2020-09-23 16:06:18.286000
+amp_vs_kfpow lookup, called from get_kfp_running_stat_at_current_set_point,
+can't find 51400.0, returning value at 51350.0 instead
+
+2020-09-23 16:06:18.286000
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2207670
+
+2020-09-23 16:06:18.301000
+ramp_up FINISHED, we went from 51350.0 to 51400
+
+2020-09-23 16:06:28.762000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-09-23 16:06:28.762000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-09-23 16:06:28.762000
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+2020-09-23 16:06:28.762000
+New data point (amp_sp = 51400.0, KFPower = 16772492.2407) is outside acceptance
+region and will be excluded from updating the binned data.
+
+2020-09-23 16:06:28.762000
+New data point (amp_sp = 51400.0, KFPower = 16772492.2407) is outside acceptance
+region and will be excluded from updating the binned data.
+
+2020-09-23 16:06:28.762000
+New data point (amp_sp = 51400.0, KFPower = 16772492.2407) is outside acceptance
+region and will be excluded from updating the binned data.
+
+2020-09-23 16:06:28.762000
+New data point (amp_sp = 51400.0, KFPower = 16772492.2407) is outside acceptance
+region and will be excluded from updating the binned data.
+
+2020-09-23 16:06:28.762000
+New data point (amp_sp = 51400.0, KFPower = 16772492.2407) is outside acceptance
+region and will be excluded from updating the binned data.
+
+2020-09-23 16:06:28.762000
+
+
+2020-09-23 16:06:28.762000
+DEFAULT__DELTA_GTRTHN_MAX deafault = 51450
+set_amp (51450) called from ramp_up
+set_amp is updating last_amp_sp set to  51400.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2208671
+ramp_up FINISHED, we went from 51400.0 to 51450
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 51450.0, KFPower = 16779596.5858) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51450.0, KFPower = 16779596.5858) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51450.0, KFPower = 16779596.5858) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51450.0, KFPower = 16779596.5858) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51450.0, KFPower = 16779596.5858) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 51500
+set_amp (51500) called from ramp_up
+set_amp is updating last_amp_sp set to  51450.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2209680
+ramp_up FINISHED, we went from 51450.0 to 51500
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 51500.0, KFPower = 16790626.4966) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51500.0, KFPower = 16790626.4966) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51500.0, KFPower = 16790626.4966) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51500.0, KFPower = 16790626.4966) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51500.0, KFPower = 16790626.4966) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 51550
+set_amp (51550) called from ramp_up
+set_amp is updating last_amp_sp set to  51500.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2210685
+ramp_up FINISHED, we went from 51500.0 to 51550
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 51550.0, KFPower = 16803195.2618) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51550.0, KFPower = 16803195.2618) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51550.0, KFPower = 16803195.2618) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51550.0, KFPower = 16803195.2618) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51550.0, KFPower = 16803195.2618) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 51600
+set_amp (51600) called from ramp_up
+set_amp is updating last_amp_sp set to  51550.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2211695
+ramp_up FINISHED, we went from 51550.0 to 51600
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 51600.0, KFPower = 16813699.9077) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51600.0, KFPower = 16813699.9077) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51600.0, KFPower = 16813699.9077) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51600.0, KFPower = 16813699.9077) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51600.0, KFPower = 16813699.9077) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 51650
+set_amp (51650) called from ramp_up
+set_amp is updating last_amp_sp set to  51600.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2212704
+ramp_up FINISHED, we went from 51600.0 to 51650
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 51650.0, KFPower = 16822783.843) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51650.0, KFPower = 16822783.843) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51650.0, KFPower = 16822783.843) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51650.0, KFPower = 16822783.843) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51650.0, KFPower = 16822783.843) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 51700
+set_amp (51700) called from ramp_up
+set_amp is updating last_amp_sp set to  51650.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2213706
+ramp_up FINISHED, we went from 51650.0 to 51700
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 51700.0, KFPower = 16834774.0488) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51700.0, KFPower = 16834774.0488) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51700.0, KFPower = 16834774.0488) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51700.0, KFPower = 16834774.0488) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51700.0, KFPower = 16834774.0488) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 51750
+set_amp (51750) called from ramp_up
+set_amp is updating last_amp_sp set to  51700.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2214708
+ramp_up FINISHED, we went from 51700.0 to 51750
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 51750.0, KFPower = 16844549.2426) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51750.0, KFPower = 16844549.2426) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51750.0, KFPower = 16844549.2426) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51750.0, KFPower = 16844549.2426) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51750.0, KFPower = 16844549.2426) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 51800
+set_amp (51800) called from ramp_up
+set_amp is updating last_amp_sp set to  51750.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2215710
+ramp_up FINISHED, we went from 51750.0 to 51800
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 51800.0, KFPower = 16856754.7316) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51800.0, KFPower = 16856754.7316) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51800.0, KFPower = 16856754.7316) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51800.0, KFPower = 16856754.7316) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51800.0, KFPower = 16856754.7316) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 51850
+set_amp (51850) called from ramp_up
+set_amp is updating last_amp_sp set to  51800.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2216711
+ramp_up FINISHED, we went from 51800.0 to 51850
+
+2020-09-23 16:07:58.320000
+********************************************************************************
+** src.monitors.outside_mask_trace_monitor Collecting Outside Mask Event Data **
+********************************************************************************
+event_pulse_count_zero = 0
+src.data.rf_conditioning_data increasing breakdown count = 42, at pulse count =
+2217106
+Python OME Message: L01_CAVITY_REVERSE_POWER HI MASK FAIL: current average =
+153012, 163076 > 163012 at i = 127 us = 1.23362. Trace time-stamp = Wed Sep 23
+2020 16:07:58.248458227
+
+2020-09-23 16:07:58.489000
+amp_vs_kfpow lookup, called from get_kfp_running_stat_at_current_set_point,
+can't find 2.0, returning value at 0.0 instead
+
+2020-09-23 16:07:58.489000
+src.monitors.outside_mask_trace_monitor adding 1 events
+
+2020-09-23 16:07:58.505000
+src.data.rf_conditioning_logger pickle_dumped  C:\Users\dlerlp\Documents\GitHub\
+Software\Apps\RF_Conditioner\v2\logs\Linac20200922\2020-09-23-15-56-48\L01_CAVIT
+Y_REVERSE_POWER_1
+
+2020-09-23 16:07:59.471000
+amp_vs_kfpow lookup, called from get_kfp_running_stat_at_current_set_point,
+can't find 2.0, returning value at 0.0 instead
+
+2020-09-23 16:08:00.465000
+amp_vs_kfpow lookup, called from get_kfp_running_stat_at_current_set_point,
+can't find 2.0, returning value at 0.0 instead
+
+2020-09-23 16:08:01.330000
+src.monitors.outside_mask_trace_monitor, cool down ended
+
+2020-09-23 16:08:01.330000
+set_global_check_mask setGlobalCheckMask True
+!!Log Ramp curve is NONE, generating a new one
+power_finish = 16864348.3337
+breakdown_rate_low = True
+Breakdown rate LO, log_ramp power_finish = 16864348.3337
+Log Ramp curve is NONE, generating a new one
+Log Ramp curve_p_finish = 17032991.817, p_start = 30000, p_finish =
+16864348.3337, ramp_rate = 0.2
+self.data.log_ramp_curve in maIn_controller = [[60, 1431.0, 106.2120133071782],
+[60, 5461.0, 11.173395553123962], [60, 7693.0, 7.675807293322419], [60, 9377.0,
+6.452246024216667], [60, 10690.0, 5.829165938801602], [60, 11914.0,
+5.451702263277937], [60, 13101.0, 5.198591298998685], [60, 14180.0,
+5.017114528821563], [60, 15119.0, 4.880663260070008], [60, 16081.0,
+4.774355302217806], [60, 16994.0, 4.689216184901359], [60, 17849.0,
+4.619512358384319], [60, 18586.0, 4.561409355627963], [60, 19329.0,
+4.512245644707875], [60, 20128.0, 4.4701159977481195], [60, 20834.0,
+4.433620667512057], [60, 21520.0, 4.401708175641163], [60, 22184.0,
+4.373573339076622], [60, 22880.0, 4.348589143967531], [60, 23476.0,
+4.326260046896437], [60, 24038.0, 4.306189232409109], [60, 24568.0,
+4.288055191615671], [60, 25118.0, 4.27159466633456], [60, 25688.0,
+4.25659002785611], [60, 26189.0, 4.24285980100065], [60, 26679.0,
+4.230251455472623], [60, 27098.0, 4.218635855873844], [60, 27649.0,
+4.2079029415668865], [60, 28115.0, 4.197958329762966], [60, 28568.0,
+4.188720619572722], [60, 28984.0, 4.180119233877464], [60, 29395.0,
+4.172092677876218], [60, 29848.0, 4.164587123377855], [60, 30234.0,
+4.157555249900515], [60, 30632.0, 4.150955289824791], [60, 31009.0,
+4.144750236878819], [60, 31389.0, 4.138907186263577], [60, 31777.0,
+4.133396781564764], [60, 32156.0, 4.128192748819557], [60, 32510.0,
+4.123271502125627], [60, 32841.0, 4.118611808296372], [60, 33161.0,
+4.114194500500052], [60, 33472.0, 4.110002232733666], [60, 33817.0,
+4.106019268495808], [60, 34154.0, 4.102231298227223], [60, 34469.0,
+4.0986252810516], [60, 34772.0, 4.095189307124905], [60, 35090.0,
+4.091912477528859], [60, 35352.0, 4.088784799154079], [60, 35628.0,
+4.085797092434833], [60, 35926.0, 4.082940910138912], [60, 36222.0,
+4.080208465697531], [60, 36492.0, 4.077592569792855], [60, 36746.0,
+4.075086574114114], [60, 36984.0, 4.072684321354336], [60, 37237.0,
+4.070380100654522], [60, 37503.0, 4.068168607815265], [60, 37767.0,
+4.066044909691089], [60, 38023.0, 4.064004412263377], [60, 38272.0,
+4.062042831955969], [60, 38523.0, 4.0601561698156265], [60, 38763.0,
+4.058340688228974], [60, 38978.0, 4.056592889889904], [60, 39202.0,
+4.05490949876769], [60, 39440.0, 4.053287442857212], [60, 39665.0,
+4.051723838519629], [60, 39883.0, 4.050215976244945], [60, 40100.0,
+4.048761307688133], [60, 40313.0, 4.047357433847814], [60, 40543.0,
+4.04600209427172], [60, 40753.0, 4.044693157186347], [60, 40927.0,
+4.043428610459806], [60, 41097.0, 4.042206553316903], [60, 41313.0,
+4.041025188734419], [60, 41521.0, 4.039882816452286], [60, 41702.0,
+4.038777826543245], [60, 41878.0, 4.0377086934895665], [60, 42046.0,
+4.036673970720803], [60, 42210.0, 4.035672285571225], [60, 42386.0,
+4.034702334619774], [60, 42580.0, 4.033762879379098], [60, 42768.0,
+4.0328527423035245], [60, 42950.0, 4.031970803088772], [60, 43127.0,
+4.031115995238784], [60, 43295.0, 4.030287302877486], [60, 43460.0,
+4.02948375778528], [60, 43624.0, 4.0287044366419815], [60, 43784.0,
+4.027948458459649], [60, 43940.0, 4.027214982190163], [60, 44089.0,
+4.026503204493835], [60, 44235.0, 4.025812357656543], [60, 44391.0,
+4.025141707643946], [60, 44554.0, 4.024490552282379], [60, 44712.0,
+4.023858219556889], [60, 44856.0, 4.023244066017685], [60, 44998.0,
+4.02264747528703], [60, 45137.0, 4.022067856659252], [60, 45278.0,
+4.021504643787146], [60, 45415.0, 4.020957293448612], [60, 45549.0,
+4.020425284387862], [60, 45677.0, 4.019908116225952], [60, 45802.0,
+4.019405308435864], [60, 45926.0, 4.018916399377709], [60, 46054.0,
+4.018440945389937], [60, 46178.0, 4.017978519932826], [60, 46300.0,
+4.017528712780729], [60, 46437.0, 4.017091129259899], [60, 46571.0,
+4.0166653895288675], [60, 46702.0, 4.016251127898655], [60, 46812.0,
+4.015847992190247], [60, 46920.0, 4.015455643126953], [60, 47025.0,
+4.015073753759462], [60, 47130.0, 4.01470200892155], [60, 47238.0,
+4.014340104714543], [60, 47344.0, 4.013987748018753], [60, 47447.0,
+4.013644656030288], [60, 47551.0, 4.0133105558216515], [60, 47657.0,
+4.012985183924752], [60, 47760.0, 4.012668285934977], [60, 47861.0,
+4.012359616135088], [60, 47954.0, 4.012058937137799], [60, 48043.0,
+4.0117660195459335], [60, 48129.0, 4.011480641629183], [60, 48213.0,
+4.011202589016498], [60, 48296.0, 4.010931654403231], [60, 48388.0,
+4.010667637272236], [60, 48479.0, 4.010410343628103], [60, 48567.0,
+4.010159585743856], [60, 48654.0, 4.009915181919385], [60, 48735.0,
+4.009676956251016], [60, 48812.0, 4.009444738411595], [60, 48887.0,
+4.00921836344054], [60, 48960.0, 4.008997671543323], [60, 49031.0,
+4.008782507899897], [60, 49101.0, 4.008572722481592], [60, 49163.0,
+4.008368169876048], [60, 49223.0, 4.0081687091197775], [60, 49282.0,
+4.007974203537951], [60, 49340.0, 4.007784520591064], [60, 49397.0,
+4.007599531728122], [60, 49452.0, 4.007419112246026], [60, 49500.0,
+4.007243141154851]]
+set_amp (1431.0) called from log_ramp_up
+set_amp (5461.0) called from log_ramp_up
+enable_llrf, isTrigExternal = False, attempting trigExt()
+enable_llrf, isRFOutput = True
+enable_llrf, isPhaseFFLocked = True
+enable_llrf, isTrigExternal = True
+
+2020-09-23 16:08:03.104000
+********************************************************************************
+** src.monitors.outside_mask_trace_monitor Collecting Outside Mask Event Data **
+********************************************************************************
+event_pulse_count_zero = 0
+src.data.rf_conditioning_data increasing breakdown count = 44, at pulse count =
+2217179
+Python OME Message: L01_CAVITY_PROBE_POWER HI MASK FAIL: current average =
+23773.8, 353424 > 349986 at i = 132 us = 1.27864. Trace time-stamp = Wed Sep 23
+2020 16:08:03.031519455
+src.monitors.outside_mask_trace_monitor adding 2 events
+src.data.rf_conditioning_logger pickle_dumped  C:\Users\dlerlp\Documents\GitHub\
+Software\Apps\RF_Conditioner\v2\logs\Linac20200922\2020-09-23-15-56-48\L01_CAVIT
+Y_PROBE_POWER_1
+clear_log_ramp_curve called from main_loop
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2217179
+src.monitors.outside_mask_trace_monitor, cool down ended
+set_global_check_mask setGlobalCheckMask True
+!!Log Ramp curve is NONE, generating a new one
+power_finish = 16864348.3337
+breakdown_rate_low = True
+Breakdown rate LO, log_ramp power_finish = 16864348.3337
+Log Ramp curve is NONE, generating a new one
+Log Ramp curve_p_finish = 17032991.817, p_start = 30000, p_finish =
+16864348.3337, ramp_rate = 0.2
+self.data.log_ramp_curve in maIn_controller = [[60, 1431.0, 106.2120133071782],
+[60, 5461.0, 11.173395553123962], [60, 7693.0, 7.675807293322419], [60, 9377.0,
+6.452246024216667], [60, 10690.0, 5.829165938801602], [60, 11914.0,
+5.451702263277937], [60, 13101.0, 5.198591298998685], [60, 14180.0,
+5.017114528821563], [60, 15119.0, 4.880663260070008], [60, 16081.0,
+4.774355302217806], [60, 16994.0, 4.689216184901359], [60, 17849.0,
+4.619512358384319], [60, 18586.0, 4.561409355627963], [60, 19329.0,
+4.512245644707875], [60, 20128.0, 4.4701159977481195], [60, 20834.0,
+4.433620667512057], [60, 21520.0, 4.401708175641163], [60, 22184.0,
+4.373573339076622], [60, 22880.0, 4.348589143967531], [60, 23476.0,
+4.326260046896437], [60, 24038.0, 4.306189232409109], [60, 24568.0,
+4.288055191615671], [60, 25118.0, 4.27159466633456], [60, 25688.0,
+4.25659002785611], [60, 26189.0, 4.24285980100065], [60, 26679.0,
+4.230251455472623], [60, 27098.0, 4.218635855873844], [60, 27649.0,
+4.2079029415668865], [60, 28115.0, 4.197958329762966], [60, 28568.0,
+4.188720619572722], [60, 28984.0, 4.180119233877464], [60, 29395.0,
+4.172092677876218], [60, 29848.0, 4.164587123377855], [60, 30234.0,
+4.157555249900515], [60, 30632.0, 4.150955289824791], [60, 31009.0,
+4.144750236878819], [60, 31389.0, 4.138907186263577], [60, 31777.0,
+4.133396781564764], [60, 32156.0, 4.128192748819557], [60, 32510.0,
+4.123271502125627], [60, 32841.0, 4.118611808296372], [60, 33161.0,
+4.114194500500052], [60, 33472.0, 4.110002232733666], [60, 33817.0,
+4.106019268495808], [60, 34154.0, 4.102231298227223], [60, 34469.0,
+4.0986252810516], [60, 34772.0, 4.095189307124905], [60, 35090.0,
+4.091912477528859], [60, 35352.0, 4.088784799154079], [60, 35628.0,
+4.085797092434833], [60, 35926.0, 4.082940910138912], [60, 36222.0,
+4.080208465697531], [60, 36492.0, 4.077592569792855], [60, 36746.0,
+4.075086574114114], [60, 36984.0, 4.072684321354336], [60, 37237.0,
+4.070380100654522], [60, 37503.0, 4.068168607815265], [60, 37767.0,
+4.066044909691089], [60, 38023.0, 4.064004412263377], [60, 38272.0,
+4.062042831955969], [60, 38523.0, 4.0601561698156265], [60, 38763.0,
+4.058340688228974], [60, 38978.0, 4.056592889889904], [60, 39202.0,
+4.05490949876769], [60, 39440.0, 4.053287442857212], [60, 39665.0,
+4.051723838519629], [60, 39883.0, 4.050215976244945], [60, 40100.0,
+4.048761307688133], [60, 40313.0, 4.047357433847814], [60, 40543.0,
+4.04600209427172], [60, 40753.0, 4.044693157186347], [60, 40927.0,
+4.043428610459806], [60, 41097.0, 4.042206553316903], [60, 41313.0,
+4.041025188734419], [60, 41521.0, 4.039882816452286], [60, 41702.0,
+4.038777826543245], [60, 41878.0, 4.0377086934895665], [60, 42046.0,
+4.036673970720803], [60, 42210.0, 4.035672285571225], [60, 42386.0,
+4.034702334619774], [60, 42580.0, 4.033762879379098], [60, 42768.0,
+4.0328527423035245], [60, 42950.0, 4.031970803088772], [60, 43127.0,
+4.031115995238784], [60, 43295.0, 4.030287302877486], [60, 43460.0,
+4.02948375778528], [60, 43624.0, 4.0287044366419815], [60, 43784.0,
+4.027948458459649], [60, 43940.0, 4.027214982190163], [60, 44089.0,
+4.026503204493835], [60, 44235.0, 4.025812357656543], [60, 44391.0,
+4.025141707643946], [60, 44554.0, 4.024490552282379], [60, 44712.0,
+4.023858219556889], [60, 44856.0, 4.023244066017685], [60, 44998.0,
+4.02264747528703], [60, 45137.0, 4.022067856659252], [60, 45278.0,
+4.021504643787146], [60, 45415.0, 4.020957293448612], [60, 45549.0,
+4.020425284387862], [60, 45677.0, 4.019908116225952], [60, 45802.0,
+4.019405308435864], [60, 45926.0, 4.018916399377709], [60, 46054.0,
+4.018440945389937], [60, 46178.0, 4.017978519932826], [60, 46300.0,
+4.017528712780729], [60, 46437.0, 4.017091129259899], [60, 46571.0,
+4.0166653895288675], [60, 46702.0, 4.016251127898655], [60, 46812.0,
+4.015847992190247], [60, 46920.0, 4.015455643126953], [60, 47025.0,
+4.015073753759462], [60, 47130.0, 4.01470200892155], [60, 47238.0,
+4.014340104714543], [60, 47344.0, 4.013987748018753], [60, 47447.0,
+4.013644656030288], [60, 47551.0, 4.0133105558216515], [60, 47657.0,
+4.012985183924752], [60, 47760.0, 4.012668285934977], [60, 47861.0,
+4.012359616135088], [60, 47954.0, 4.012058937137799], [60, 48043.0,
+4.0117660195459335], [60, 48129.0, 4.011480641629183], [60, 48213.0,
+4.011202589016498], [60, 48296.0, 4.010931654403231], [60, 48388.0,
+4.010667637272236], [60, 48479.0, 4.010410343628103], [60, 48567.0,
+4.010159585743856], [60, 48654.0, 4.009915181919385], [60, 48735.0,
+4.009676956251016], [60, 48812.0, 4.009444738411595], [60, 48887.0,
+4.00921836344054], [60, 48960.0, 4.008997671543323], [60, 49031.0,
+4.008782507899897], [60, 49101.0, 4.008572722481592], [60, 49163.0,
+4.008368169876048], [60, 49223.0, 4.0081687091197775], [60, 49282.0,
+4.007974203537951], [60, 49340.0, 4.007784520591064], [60, 49397.0,
+4.007599531728122], [60, 49452.0, 4.007419112246026], [60, 49500.0,
+4.007243141154851]]
+set_amp (1431.0) called from log_ramp_up
+set_amp (5461.0) called from log_ramp_up
+set_amp (7693.0) called from log_ramp_up
+set_amp (9377.0) called from log_ramp_up
+set_amp (10690.0) called from log_ramp_up
+set_amp (11914.0) called from log_ramp_up
+set_amp (13101.0) called from log_ramp_up
+set_amp (14180.0) called from log_ramp_up
+set_amp (15119.0) called from log_ramp_up
+set_amp (16081.0) called from log_ramp_up
+set_amp (16994.0) called from log_ramp_up
+set_amp (17849.0) called from log_ramp_up
+set_amp (18586.0) called from log_ramp_up
+set_amp (19329.0) called from log_ramp_up
+set_amp (20128.0) called from log_ramp_up
+set_amp (20834.0) called from log_ramp_up
+set_amp (21520.0) called from log_ramp_up
+set_amp (22184.0) called from log_ramp_up
+set_amp (22880.0) called from log_ramp_up
+set_amp (23476.0) called from log_ramp_up
+set_amp (24038.0) called from log_ramp_up
+set_amp (24568.0) called from log_ramp_up
+set_amp (25118.0) called from log_ramp_up
+set_amp (25688.0) called from log_ramp_up
+set_amp (26189.0) called from log_ramp_up
+set_amp (26679.0) called from log_ramp_up
+set_amp (27098.0) called from log_ramp_up
+set_amp (27649.0) called from log_ramp_up
+set_amp (28115.0) called from log_ramp_up
+set_amp (28568.0) called from log_ramp_up
+set_amp (28984.0) called from log_ramp_up
+set_amp (29395.0) called from log_ramp_up
+set_amp (29848.0) called from log_ramp_up
+set_amp (30234.0) called from log_ramp_up
+set_amp (30632.0) called from log_ramp_up
+set_amp (31009.0) called from log_ramp_up
+set_amp (31389.0) called from log_ramp_up
+set_amp (31777.0) called from log_ramp_up
+set_amp (32156.0) called from log_ramp_up
+set_amp (32510.0) called from log_ramp_up
+set_amp (32841.0) called from log_ramp_up
+set_amp (33161.0) called from log_ramp_up
+set_amp (33472.0) called from log_ramp_up
+set_amp (33817.0) called from log_ramp_up
+set_amp (34154.0) called from log_ramp_up
+set_amp (34469.0) called from log_ramp_up
+set_amp (34772.0) called from log_ramp_up
+set_amp (35090.0) called from log_ramp_up
+set_amp (35352.0) called from log_ramp_up
+set_amp (35628.0) called from log_ramp_up
+set_amp (35926.0) called from log_ramp_up
+set_amp (36222.0) called from log_ramp_up
+set_amp (36492.0) called from log_ramp_up
+set_amp (36746.0) called from log_ramp_up
+set_amp (36984.0) called from log_ramp_up
+set_amp (37237.0) called from log_ramp_up
+set_amp (37503.0) called from log_ramp_up
+set_amp (37767.0) called from log_ramp_up
+set_amp (38023.0) called from log_ramp_up
+set_amp (38272.0) called from log_ramp_up
+set_amp (38523.0) called from log_ramp_up
+set_amp (38763.0) called from log_ramp_up
+set_amp (38978.0) called from log_ramp_up
+set_amp (39202.0) called from log_ramp_up
+set_amp (39440.0) called from log_ramp_up
+set_amp (39665.0) called from log_ramp_up
+set_amp (39883.0) called from log_ramp_up
+set_amp (40100.0) called from log_ramp_up
+set_amp (40313.0) called from log_ramp_up
+set_amp (40543.0) called from log_ramp_up
+set_amp (40753.0) called from log_ramp_up
+set_amp (40927.0) called from log_ramp_up
+set_amp (41097.0) called from log_ramp_up
+set_amp (41313.0) called from log_ramp_up
+set_amp (41521.0) called from log_ramp_up
+set_amp (41702.0) called from log_ramp_up
+set_amp (41878.0) called from log_ramp_up
+set_amp (42046.0) called from log_ramp_up
+set_amp (42210.0) called from log_ramp_up
+set_amp (42386.0) called from log_ramp_up
+set_amp (42580.0) called from log_ramp_up
+set_amp (42768.0) called from log_ramp_up
+set_amp (42950.0) called from log_ramp_up
+set_amp (43127.0) called from log_ramp_up
+set_amp (43295.0) called from log_ramp_up
+set_amp (43460.0) called from log_ramp_up
+set_amp (43624.0) called from log_ramp_up
+set_amp (43784.0) called from log_ramp_up
+set_amp (43940.0) called from log_ramp_up
+set_amp (44089.0) called from log_ramp_up
+set_amp (44235.0) called from log_ramp_up
+set_amp (44391.0) called from log_ramp_up
+set_amp (44554.0) called from log_ramp_up
+set_amp (44712.0) called from log_ramp_up
+set_amp (44856.0) called from log_ramp_up
+set_amp (44998.0) called from log_ramp_up
+set_amp (45137.0) called from log_ramp_up
+set_amp (45278.0) called from log_ramp_up
+set_amp (45415.0) called from log_ramp_up
+set_amp (45549.0) called from log_ramp_up
+set_amp (45677.0) called from log_ramp_up
+set_amp (45802.0) called from log_ramp_up
+set_amp (45926.0) called from log_ramp_up
+set_amp (46054.0) called from log_ramp_up
+set_amp (46178.0) called from log_ramp_up
+set_amp (46300.0) called from log_ramp_up
+set_amp (46437.0) called from log_ramp_up
+set_amp (46571.0) called from log_ramp_up
+set_amp (46702.0) called from log_ramp_up
+set_amp (46812.0) called from log_ramp_up
+set_amp (46920.0) called from log_ramp_up
+set_amp (47025.0) called from log_ramp_up
+set_amp (47130.0) called from log_ramp_up
+set_amp (47238.0) called from log_ramp_up
+set_amp (47344.0) called from log_ramp_up
+set_amp (47447.0) called from log_ramp_up
+set_amp (47551.0) called from log_ramp_up
+set_amp (47657.0) called from log_ramp_up
+set_amp (47760.0) called from log_ramp_up
+set_amp (47861.0) called from log_ramp_up
+set_amp (47954.0) called from log_ramp_up
+set_amp (48043.0) called from log_ramp_up
+set_amp (48129.0) called from log_ramp_up
+set_amp (48213.0) called from log_ramp_up
+set_amp (48296.0) called from log_ramp_up
+set_amp (48388.0) called from log_ramp_up
+set_amp (48479.0) called from log_ramp_up
+set_amp (48567.0) called from log_ramp_up
+set_amp (48654.0) called from log_ramp_up
+set_amp (48735.0) called from log_ramp_up
+set_amp (48812.0) called from log_ramp_up
+set_amp (48887.0) called from log_ramp_up
+set_amp (48960.0) called from log_ramp_up
+set_amp (49031.0) called from log_ramp_up
+set_amp (49101.0) called from log_ramp_up
+set_amp (49163.0) called from log_ramp_up
+set_amp (49223.0) called from log_ramp_up
+set_amp (49282.0) called from log_ramp_up
+set_amp (49340.0) called from log_ramp_up
+set_amp (49397.0) called from log_ramp_up
+set_amp (49452.0) called from log_ramp_up
+set_amp (49500.0) called from log_ramp_up
+Log Ramp finished, calling clear_log_ramp_curve()
+clear_log_ramp_curve called from log_ramp_up
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2226218
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 49550
+set_amp (49550) called from ramp_up
+set_amp is updating last_amp_sp set to  49500.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2227219
+ramp_up FINISHED, we went from 49500.0 to 49550
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 49600
+set_amp (49600) called from ramp_up
+set_amp is updating last_amp_sp set to  49550.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2228223
+ramp_up FINISHED, we went from 49550.0 to 49600
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 49650
+set_amp (49650) called from ramp_up
+set_amp is updating last_amp_sp set to  49600.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2229224
+ramp_up FINISHED, we went from 49600.0 to 49650
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 49700
+set_amp (49700) called from ramp_up
+set_amp is updating last_amp_sp set to  49650.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2230225
+ramp_up FINISHED, we went from 49650.0 to 49700
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 49700.0, KFPower = 16407247.4028) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 49700.0, KFPower = 16407247.4028) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 49700.0, KFPower = 16407247.4028) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 49700.0, KFPower = 16407247.4028) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 49700.0, KFPower = 16407247.4028) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 49750
+set_amp (49750) called from ramp_up
+set_amp is updating last_amp_sp set to  49700.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2231226
+ramp_up FINISHED, we went from 49700.0 to 49750
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 49750.0, KFPower = 16421250.8516) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 49750.0, KFPower = 16421250.8516) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 49750.0, KFPower = 16421250.8516) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 49750.0, KFPower = 16421250.8516) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 49750.0, KFPower = 16421250.8516) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 49800
+set_amp (49800) called from ramp_up
+set_amp is updating last_amp_sp set to  49750.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2232229
+ramp_up FINISHED, we went from 49750.0 to 49800
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 49800.0, KFPower = 16433603.8792) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 49800.0, KFPower = 16433603.8792) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 49800.0, KFPower = 16433603.8792) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 49800.0, KFPower = 16433603.8792) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 49800.0, KFPower = 16433603.8792) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 49850
+set_amp (49850) called from ramp_up
+set_amp is updating last_amp_sp set to  49800.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2233234
+ramp_up FINISHED, we went from 49800.0 to 49850
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 49850.0, KFPower = 16440130.3981) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 49850.0, KFPower = 16440130.3981) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 49850.0, KFPower = 16440130.3981) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 49850.0, KFPower = 16440130.3981) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 49850.0, KFPower = 16440130.3981) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 49900
+set_amp (49900) called from ramp_up
+set_amp is updating last_amp_sp set to  49850.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2234239
+ramp_up FINISHED, we went from 49850.0 to 49900
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 49900.0, KFPower = 16454555.2859) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 49900.0, KFPower = 16454555.2859) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 49900.0, KFPower = 16454555.2859) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 49900.0, KFPower = 16454555.2859) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 49900.0, KFPower = 16454555.2859) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 49950
+set_amp (49950) called from ramp_up
+set_amp is updating last_amp_sp set to  49900.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2235239
+ramp_up FINISHED, we went from 49900.0 to 49950
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 49950.0, KFPower = 16465879.0273) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 49950.0, KFPower = 16465879.0273) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 49950.0, KFPower = 16465879.0273) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 49950.0, KFPower = 16465879.0273) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 49950.0, KFPower = 16465879.0273) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 50000
+set_amp (50000) called from ramp_up
+set_amp is updating last_amp_sp set to  49950.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2236247
+ramp_up FINISHED, we went from 49950.0 to 50000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 50000.0, KFPower = 16472628.1917) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50000.0, KFPower = 16472628.1917) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50000.0, KFPower = 16472628.1917) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50000.0, KFPower = 16472628.1917) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50000.0, KFPower = 16472628.1917) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 50050
+set_amp (50050) called from ramp_up
+set_amp is updating last_amp_sp set to  50000.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2237248
+ramp_up FINISHED, we went from 50000.0 to 50050
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 50050.0, KFPower = 16483060.4061) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50050.0, KFPower = 16483060.4061) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50050.0, KFPower = 16483060.4061) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50050.0, KFPower = 16483060.4061) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50050.0, KFPower = 16483060.4061) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 50100
+set_amp (50100) called from ramp_up
+set_amp is updating last_amp_sp set to  50050.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2238253
+ramp_up FINISHED, we went from 50050.0 to 50100
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 50100.0, KFPower = 16491848.9502) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50100.0, KFPower = 16491848.9502) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50100.0, KFPower = 16491848.9502) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50100.0, KFPower = 16491848.9502) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50100.0, KFPower = 16491848.9502) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 50150
+set_amp (50150) called from ramp_up
+set_amp is updating last_amp_sp set to  50100.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2239259
+ramp_up FINISHED, we went from 50100.0 to 50150
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 50150.0, KFPower = 16502303.5068) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50150.0, KFPower = 16502303.5068) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50150.0, KFPower = 16502303.5068) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50150.0, KFPower = 16502303.5068) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50150.0, KFPower = 16502303.5068) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 50200
+set_amp (50200) called from ramp_up
+set_amp is updating last_amp_sp set to  50150.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2240260
+ramp_up FINISHED, we went from 50150.0 to 50200
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 50200.0, KFPower = 16513120.4233) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50200.0, KFPower = 16513120.4233) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50200.0, KFPower = 16513120.4233) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50200.0, KFPower = 16513120.4233) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50200.0, KFPower = 16513120.4233) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 50250
+set_amp (50250) called from ramp_up
+set_amp is updating last_amp_sp set to  50200.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2241266
+ramp_up FINISHED, we went from 50200.0 to 50250
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 50250.0, KFPower = 16521687.6926) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50250.0, KFPower = 16521687.6926) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50250.0, KFPower = 16521687.6926) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50250.0, KFPower = 16521687.6926) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50250.0, KFPower = 16521687.6926) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 50300
+set_amp (50300) called from ramp_up
+set_amp is updating last_amp_sp set to  50250.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2242271
+ramp_up FINISHED, we went from 50250.0 to 50300
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 50300.0, KFPower = 16532175.6261) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50300.0, KFPower = 16532175.6261) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50300.0, KFPower = 16532175.6261) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50300.0, KFPower = 16532175.6261) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50300.0, KFPower = 16532175.6261) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 50350
+set_amp (50350) called from ramp_up
+set_amp is updating last_amp_sp set to  50300.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2243274
+ramp_up FINISHED, we went from 50300.0 to 50350
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 50350.0, KFPower = 16543411.6559) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50350.0, KFPower = 16543411.6559) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50350.0, KFPower = 16543411.6559) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50350.0, KFPower = 16543411.6559) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50350.0, KFPower = 16543411.6559) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 50400
+set_amp (50400) called from ramp_up
+set_amp is updating last_amp_sp set to  50350.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2244276
+ramp_up FINISHED, we went from 50350.0 to 50400
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 50400.0, KFPower = 16557177.8399) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50400.0, KFPower = 16557177.8399) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50400.0, KFPower = 16557177.8399) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50400.0, KFPower = 16557177.8399) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50400.0, KFPower = 16557177.8399) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 50450
+set_amp (50450) called from ramp_up
+set_amp is updating last_amp_sp set to  50400.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2245289
+ramp_up FINISHED, we went from 50400.0 to 50450
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 50450.0, KFPower = 16569070.6163) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50450.0, KFPower = 16569070.6163) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50450.0, KFPower = 16569070.6163) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50450.0, KFPower = 16569070.6163) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50450.0, KFPower = 16569070.6163) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 50500
+set_amp (50500) called from ramp_up
+set_amp is updating last_amp_sp set to  50450.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2246296
+ramp_up FINISHED, we went from 50450.0 to 50500
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 50500.0, KFPower = 16578184.2556) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50500.0, KFPower = 16578184.2556) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50500.0, KFPower = 16578184.2556) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50500.0, KFPower = 16578184.2556) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50500.0, KFPower = 16578184.2556) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 50550
+set_amp (50550) called from ramp_up
+set_amp is updating last_amp_sp set to  50500.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2247302
+ramp_up FINISHED, we went from 50500.0 to 50550
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 50550.0, KFPower = 16588355.6948) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50550.0, KFPower = 16588355.6948) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50550.0, KFPower = 16588355.6948) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50550.0, KFPower = 16588355.6948) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50550.0, KFPower = 16588355.6948) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 50600
+set_amp (50600) called from ramp_up
+set_amp is updating last_amp_sp set to  50550.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2248308
+ramp_up FINISHED, we went from 50550.0 to 50600
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 50600.0, KFPower = 16598376.4083) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50600.0, KFPower = 16598376.4083) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50600.0, KFPower = 16598376.4083) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50600.0, KFPower = 16598376.4083) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50600.0, KFPower = 16598376.4083) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 50650
+set_amp (50650) called from ramp_up
+set_amp is updating last_amp_sp set to  50600.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2249315
+ramp_up FINISHED, we went from 50600.0 to 50650
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 50650.0, KFPower = 16609094.1449) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50650.0, KFPower = 16609094.1449) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50650.0, KFPower = 16609094.1449) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50650.0, KFPower = 16609094.1449) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50650.0, KFPower = 16609094.1449) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 50700
+set_amp (50700) called from ramp_up
+set_amp is updating last_amp_sp set to  50650.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2250322
+ramp_up FINISHED, we went from 50650.0 to 50700
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 50700.0, KFPower = 16619605.0221) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50700.0, KFPower = 16619605.0221) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50700.0, KFPower = 16619605.0221) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50700.0, KFPower = 16619605.0221) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50700.0, KFPower = 16619605.0221) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 50750
+set_amp (50750) called from ramp_up
+set_amp is updating last_amp_sp set to  50700.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2251332
+ramp_up FINISHED, we went from 50700.0 to 50750
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 50750.0, KFPower = 16629582.3837) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50750.0, KFPower = 16629582.3837) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50750.0, KFPower = 16629582.3837) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50750.0, KFPower = 16629582.3837) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50750.0, KFPower = 16629582.3837) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 50800
+set_amp (50800) called from ramp_up
+set_amp is updating last_amp_sp set to  50750.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2252341
+ramp_up FINISHED, we went from 50750.0 to 50800
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 50800.0, KFPower = 16643084.3794) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50800.0, KFPower = 16643084.3794) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50800.0, KFPower = 16643084.3794) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50800.0, KFPower = 16643084.3794) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50800.0, KFPower = 16643084.3794) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 50850
+set_amp (50850) called from ramp_up
+set_amp is updating last_amp_sp set to  50800.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2253347
+ramp_up FINISHED, we went from 50800.0 to 50850
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 50850.0, KFPower = 16654722.4137) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50850.0, KFPower = 16654722.4137) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50850.0, KFPower = 16654722.4137) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50850.0, KFPower = 16654722.4137) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50850.0, KFPower = 16654722.4137) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 50900
+set_amp (50900) called from ramp_up
+set_amp is updating last_amp_sp set to  50850.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2254352
+ramp_up FINISHED, we went from 50850.0 to 50900
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 50900.0, KFPower = 16664202.4097) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50900.0, KFPower = 16664202.4097) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50900.0, KFPower = 16664202.4097) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50900.0, KFPower = 16664202.4097) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50900.0, KFPower = 16664202.4097) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 50950
+set_amp (50950) called from ramp_up
+set_amp is updating last_amp_sp set to  50900.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2255357
+ramp_up FINISHED, we went from 50900.0 to 50950
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 50950.0, KFPower = 16676734.255) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50950.0, KFPower = 16676734.255) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50950.0, KFPower = 16676734.255) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50950.0, KFPower = 16676734.255) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 50950.0, KFPower = 16676734.255) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 51000
+set_amp (51000) called from ramp_up
+set_amp is updating last_amp_sp set to  50950.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2256362
+ramp_up FINISHED, we went from 50950.0 to 51000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 51000.0, KFPower = 16686071.4719) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51000.0, KFPower = 16686071.4719) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51000.0, KFPower = 16686071.4719) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51000.0, KFPower = 16686071.4719) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51000.0, KFPower = 16686071.4719) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 51050
+set_amp (51050) called from ramp_up
+set_amp is updating last_amp_sp set to  51000.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2257367
+ramp_up FINISHED, we went from 51000.0 to 51050
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 51050.0, KFPower = 16697484.1992) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51050.0, KFPower = 16697484.1992) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51050.0, KFPower = 16697484.1992) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51050.0, KFPower = 16697484.1992) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51050.0, KFPower = 16697484.1992) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 51100
+set_amp (51100) called from ramp_up
+set_amp is updating last_amp_sp set to  51050.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2258370
+ramp_up FINISHED, we went from 51050.0 to 51100
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 51100.0, KFPower = 16708160.7777) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51100.0, KFPower = 16708160.7777) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51100.0, KFPower = 16708160.7777) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51100.0, KFPower = 16708160.7777) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51100.0, KFPower = 16708160.7777) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 51150
+set_amp (51150) called from ramp_up
+set_amp is updating last_amp_sp set to  51100.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2259373
+ramp_up FINISHED, we went from 51100.0 to 51150
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 51150.0, KFPower = 16717882.7172) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51150.0, KFPower = 16717882.7172) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51150.0, KFPower = 16717882.7172) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51150.0, KFPower = 16717882.7172) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51150.0, KFPower = 16717882.7172) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 51200
+set_amp (51200) called from ramp_up
+set_amp is updating last_amp_sp set to  51150.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2260378
+ramp_up FINISHED, we went from 51150.0 to 51200
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 51200.0, KFPower = 16729020.7451) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51200.0, KFPower = 16729020.7451) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51200.0, KFPower = 16729020.7451) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51200.0, KFPower = 16729020.7451) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51200.0, KFPower = 16729020.7451) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 51250
+set_amp (51250) called from ramp_up
+set_amp is updating last_amp_sp set to  51200.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2261385
+ramp_up FINISHED, we went from 51200.0 to 51250
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 51250.0, KFPower = 16738352.6355) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51250.0, KFPower = 16738352.6355) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51250.0, KFPower = 16738352.6355) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51250.0, KFPower = 16738352.6355) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51250.0, KFPower = 16738352.6355) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 51300
+set_amp (51300) called from ramp_up
+set_amp is updating last_amp_sp set to  51250.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2262392
+ramp_up FINISHED, we went from 51250.0 to 51300
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 51300.0, KFPower = 16749164.1981) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51300.0, KFPower = 16749164.1981) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51300.0, KFPower = 16749164.1981) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51300.0, KFPower = 16749164.1981) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51300.0, KFPower = 16749164.1981) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 51350
+set_amp (51350) called from ramp_up
+set_amp is updating last_amp_sp set to  51300.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2263397
+ramp_up FINISHED, we went from 51300.0 to 51350
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 51350.0, KFPower = 16763425.2861) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51350.0, KFPower = 16763425.2861) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51350.0, KFPower = 16763425.2861) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51350.0, KFPower = 16763425.2861) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51350.0, KFPower = 16763425.2861) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 51400
+set_amp (51400) called from ramp_up
+set_amp is updating last_amp_sp set to  51350.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2264400
+ramp_up FINISHED, we went from 51350.0 to 51400
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+New data point (amp_sp = 51400.0, KFPower = 16774543.6314) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51400.0, KFPower = 16774543.6314) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51400.0, KFPower = 16774543.6314) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51400.0, KFPower = 16774543.6314) is outside acceptance
+region and will be excluded from updating the binned data.
+New data point (amp_sp = 51400.0, KFPower = 16774543.6314) is outside acceptance
+region and will be excluded from updating the binned data.
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 51450
+set_amp (51450) called from ramp_up
+set_amp is updating last_amp_sp set to  51400.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2265407
+ramp_up FINISHED, we went from 51400.0 to 51450
+enable_llrf, isTrigExternal = False, attempting trigExt()
+enable_llrf, getTrigSource() != TRIG.EXTERNAL, attempting trigExt()
+
+2020-09-23 16:16:42.278000
+********************************************************************************
+** src.monitors.outside_mask_trace_monitor Collecting Outside Mask Event Data **
+********************************************************************************
+event_pulse_count_zero = 0
+src.data.rf_conditioning_data increasing breakdown count = 45, at pulse count =
+2265751
+Python OME Message: L01_CAVITY_REVERSE_POWER HI MASK FAIL: current average =
+128878, 139542 > 138878 at i = 123 us = 1.1976. Trace time-stamp = Wed Sep 23
+2020 16:16:42.123150744
+src.monitors.outside_mask_trace_monitor adding 1 events
+src.data.rf_conditioning_logger pickle_dumped  C:\Users\dlerlp\Documents\GitHub\
+Software\Apps\RF_Conditioner\v2\logs\Linac20200922\2020-09-23-15-56-48\L01_CAVIT
+Y_REVERSE_POWER_2
+src.monitors.outside_mask_trace_monitor, cool down ended
+set_global_check_mask setGlobalCheckMask True
+!!Log Ramp curve is NONE, generating a new one
+power_finish = 16780510.6957
+breakdown_rate_low = True
+Breakdown rate LO, log_ramp power_finish = 16780510.6957
+Log Ramp curve is NONE, generating a new one
+Log Ramp curve_p_finish = 16948315.8026, p_start = 30000, p_finish =
+16780510.6957, ramp_rate = 0.2
+self.data.log_ramp_curve in maIn_controller = [[60, 1431.0, 105.70280089176836],
+[60, 5448.0, 11.170817465497606], [60, 7674.0, 7.675114633187474], [60, 9354.0,
+6.451930658543504], [60, 10667.0, 5.828986463075387], [60, 11883.0,
+5.451586647305357], [60, 13065.0, 5.198510701463923], [60, 14144.0,
+5.017055182800014], [60, 15078.0, 4.880617771628951], [60, 16037.0,
+4.774319348034262], [60, 16945.0, 4.689187069245635], [60, 17798.0,
+4.619488313514301], [60, 18535.0, 4.561389174309449], [60, 19274.0,
+4.512228474472313], [60, 20062.0, 4.4701012195439525], [60, 20776.0,
+4.433607820959732], [60, 21454.0, 4.401696911272846], [60, 22114.0,
+4.373563386842822], [60, 22810.0, 4.348580291895502], [60, 23408.0,
+4.3262521262780425], [60, 23965.0, 4.306182107301038], [60, 24503.0,
+4.288048751255335], [60, 25036.0, 4.271588819569006], [60, 25609.0,
+4.256584698987095], [60, 26112.0, 4.2428549266430435], [60, 26597.0,
+4.2302469821490885], [60, 27025.0, 4.218631738152094], [60, 27557.0,
+4.207899140601912], [60, 28029.0, 4.197954812145111], [60, 28473.0,
+4.188717356409303], [60, 28898.0, 4.180116200054491], [60, 29301.0,
+4.172089851460311], [60, 29739.0, 4.1645844851282705], [60, 30142.0,
+4.15755278286833], [60, 30529.0, 4.150952979021608], [60, 30910.0,
+4.144748069001322], [60, 31283.0, 4.138905149463252], [60, 31664.0,
+4.133394865254386], [60, 32043.0, 4.128190943509756], [60, 32402.0,
+4.123269799286226], [60, 32736.0, 4.118610200238232], [60, 33053.0,
+4.114192980273951], [60, 33363.0, 4.110000794043436], [60, 33691.0,
+4.106017905623426], [60, 34028.0, 4.1022300059679795], [60, 34350.0,
+4.098624054657805], [60, 34646.0, 4.095188142256847], [60, 34957.0,
+4.091911370211938], [60, 35239.0, 4.088783745741247], [60, 35493.0,
+4.085796089573563], [60, 35788.0, 4.0829399547421055], [60, 36080.0,
+4.080207554917793], [60, 36362.0, 4.077591700999707], [60, 36617.0,
+4.0750857448737685], [60, 36859.0, 4.072683529411681], [60, 37090.0,
+4.070379343917062], [60, 37353.0, 4.068167884338755], [60, 37613.0,
+4.066044217666672], [60, 37870.0, 4.0640037500060355], [60, 38118.0,
+4.062042197894144], [60, 38362.0, 4.060155562481858], [60, 38608.0,
+4.058340106251458], [60, 38832.0, 4.056592331984856], [60, 39041.0,
+4.054908963732431], [60, 39268.0, 4.0532869295639005], [60, 39499.0,
+4.051723345909554], [60, 39716.0, 4.050215503323348], [60, 39928.0,
+4.04876085351948], [60, 40140.0, 4.047356997551487], [60, 40351.0,
+4.046001675018071], [60, 40575.0, 4.044692754193099], [60, 40773.0,
+4.043428222988746], [60, 40943.0, 4.042206180670856], [60, 41110.0,
+4.04102483025446], [60, 41321.0, 4.0398824715151855], [60, 41523.0,
+4.038777494559107], [60, 41698.0, 4.037708373899659], [60, 41870.0,
+4.036673662995559], [60, 42033.0, 4.035671989208385], [60, 42193.0,
+4.034702049142676], [60, 42360.0, 4.033762604335092], [60, 42548.0,
+4.032852477262509], [60, 42732.0, 4.0319705476418255], [60, 42908.0,
+4.031115748996908], [60, 43081.0, 4.030287065470429], [60, 43245.0,
+4.02948352886044], [60, 43406.0, 4.028704215863396], [60, 43564.0,
+4.027948245507046], [60, 43720.0, 4.0272147767580755], [60, 43873.0,
+4.02650300629078], [60, 44018.0, 4.0258121664042505], [60, 44160.0,
+4.02514152307664], [60, 44298.0, 4.024490374146104], [60, 44457.0,
+4.023858047608883], [60, 44611.0, 4.0232439000257845], [60, 44758.0,
+4.022647315029123], [60, 44895.0, 4.022067701922752], [60, 45030.0,
+4.0215044943685125], [60, 45163.0, 4.020957149152888], [60, 45297.0,
+4.020425145028247], [60, 45428.0, 4.019907981623393], [60, 45554.0,
+4.019405178418682], [60, 45676.0, 4.018916273781234], [60, 45795.0,
+4.0184408240561735], [60, 45912.0, 4.017978402710132], [60, 46033.0,
+4.01752859952352], [60, 46152.0, 4.017091019828358], [60, 46267.0,
+4.016665283788679], [60, 46393.0, 4.016251025720757], [60, 46520.0,
+4.015847893450585], [60, 46644.0, 4.015455547706256], [60, 46757.0,
+4.015073661543027], [60, 46859.0, 4.014701919799041], [60, 46959.0,
+4.0143400185797935], [60, 47057.0, 4.0139876647695925], [60, 47156.0,
+4.01364457556836], [60, 47257.0, 4.013310478052253], [60, 47355.0,
+4.012985108756677], [60, 47451.0, 4.012668213280369], [60, 47548.0,
+4.0123595459093], [60, 47646.0, 4.012058869259255], [60, 47741.0,
+4.011765953936009], [60, 47835.0, 4.011480578212079], [60, 47924.0,
+4.011202527719121], [60, 48006.0, 4.010931595155094], [60, 48086.0,
+4.0106675800053475], [60, 48165.0, 4.0104102882768675], [60, 48241.0,
+4.010159532244978], [60, 48319.0, 4.009915130211781], [60, 48403.0,
+4.009676906275729], [60, 48485.0, 4.009444690111708], [60, 48565.0,
+4.009218316761098], [60, 48643.0, 4.008997626431261], [60, 48719.0,
+4.008782464303962], [60, 48788.0, 4.008572680352279], [60, 48856.0,
+4.008368129165537], [60, 48922.0, 4.008168669781861], [60, 48987.0,
+4.007974165527982], [60, 49050.0, 4.007784483865895], [60, 49111.0,
+4.007599496246051], [60, 49164.0, 4.007419077966742], [60, 49216.0,
+4.007243108039382], [60, 49267.0, 4.007071469059401], [60, 49317.0,
+4.00690404708245], [60, 49366.0, 4.0067407315057], [60, 49414.0,
+4.006581414953951], [60, 49460.0, 4.006425993170357], [60, 49500.0,
+4.006274364911524]]
+set_amp (1431.0) called from log_ramp_up
+set_amp (5448.0) called from log_ramp_up
+enable_llrf, isTrigExternal = True
+
+2020-09-23 16:16:46.060000
+********************************************************************************
+** src.monitors.outside_mask_trace_monitor Collecting Outside Mask Event Data **
+********************************************************************************
+event_pulse_count_zero = 0
+src.data.rf_conditioning_data increasing breakdown count = 47, at pulse count =
+2265824
+Python OME Message: L01_CAVITY_PROBE_POWER HI MASK FAIL: current average =
+23599.8, 351256 > 350084 at i = 132 us = 1.27864. Trace time-stamp = Wed Sep 23
+2020 16:16:45.968498451
+src.monitors.outside_mask_trace_monitor adding 2 events
+src.data.rf_conditioning_logger pickle_dumped  C:\Users\dlerlp\Documents\GitHub\
+Software\Apps\RF_Conditioner\v2\logs\Linac20200922\2020-09-23-15-56-48\L01_CAVIT
+Y_PROBE_POWER_2
+clear_log_ramp_curve called from main_loop
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2265824
+src.monitors.outside_mask_trace_monitor, cool down ended
+set_global_check_mask setGlobalCheckMask True
+!!Log Ramp curve is NONE, generating a new one
+power_finish = 16780510.6957
+breakdown_rate_low = True
+Breakdown rate LO, log_ramp power_finish = 16780510.6957
+Log Ramp curve is NONE, generating a new one
+Log Ramp curve_p_finish = 16948315.8026, p_start = 30000, p_finish =
+16780510.6957, ramp_rate = 0.2
+self.data.log_ramp_curve in maIn_controller = [[60, 1431.0, 105.70280089176836],
+[60, 5448.0, 11.170817465497606], [60, 7674.0, 7.675114633187474], [60, 9354.0,
+6.451930658543504], [60, 10667.0, 5.828986463075387], [60, 11883.0,
+5.451586647305357], [60, 13065.0, 5.198510701463923], [60, 14144.0,
+5.017055182800014], [60, 15078.0, 4.880617771628951], [60, 16037.0,
+4.774319348034262], [60, 16945.0, 4.689187069245635], [60, 17798.0,
+4.619488313514301], [60, 18535.0, 4.561389174309449], [60, 19274.0,
+4.512228474472313], [60, 20062.0, 4.4701012195439525], [60, 20776.0,
+4.433607820959732], [60, 21454.0, 4.401696911272846], [60, 22114.0,
+4.373563386842822], [60, 22810.0, 4.348580291895502], [60, 23408.0,
+4.3262521262780425], [60, 23965.0, 4.306182107301038], [60, 24503.0,
+4.288048751255335], [60, 25036.0, 4.271588819569006], [60, 25609.0,
+4.256584698987095], [60, 26112.0, 4.2428549266430435], [60, 26597.0,
+4.2302469821490885], [60, 27025.0, 4.218631738152094], [60, 27557.0,
+4.207899140601912], [60, 28029.0, 4.197954812145111], [60, 28473.0,
+4.188717356409303], [60, 28898.0, 4.180116200054491], [60, 29301.0,
+4.172089851460311], [60, 29739.0, 4.1645844851282705], [60, 30142.0,
+4.15755278286833], [60, 30529.0, 4.150952979021608], [60, 30910.0,
+4.144748069001322], [60, 31283.0, 4.138905149463252], [60, 31664.0,
+4.133394865254386], [60, 32043.0, 4.128190943509756], [60, 32402.0,
+4.123269799286226], [60, 32736.0, 4.118610200238232], [60, 33053.0,
+4.114192980273951], [60, 33363.0, 4.110000794043436], [60, 33691.0,
+4.106017905623426], [60, 34028.0, 4.1022300059679795], [60, 34350.0,
+4.098624054657805], [60, 34646.0, 4.095188142256847], [60, 34957.0,
+4.091911370211938], [60, 35239.0, 4.088783745741247], [60, 35493.0,
+4.085796089573563], [60, 35788.0, 4.0829399547421055], [60, 36080.0,
+4.080207554917793], [60, 36362.0, 4.077591700999707], [60, 36617.0,
+4.0750857448737685], [60, 36859.0, 4.072683529411681], [60, 37090.0,
+4.070379343917062], [60, 37353.0, 4.068167884338755], [60, 37613.0,
+4.066044217666672], [60, 37870.0, 4.0640037500060355], [60, 38118.0,
+4.062042197894144], [60, 38362.0, 4.060155562481858], [60, 38608.0,
+4.058340106251458], [60, 38832.0, 4.056592331984856], [60, 39041.0,
+4.054908963732431], [60, 39268.0, 4.0532869295639005], [60, 39499.0,
+4.051723345909554], [60, 39716.0, 4.050215503323348], [60, 39928.0,
+4.04876085351948], [60, 40140.0, 4.047356997551487], [60, 40351.0,
+4.046001675018071], [60, 40575.0, 4.044692754193099], [60, 40773.0,
+4.043428222988746], [60, 40943.0, 4.042206180670856], [60, 41110.0,
+4.04102483025446], [60, 41321.0, 4.0398824715151855], [60, 41523.0,
+4.038777494559107], [60, 41698.0, 4.037708373899659], [60, 41870.0,
+4.036673662995559], [60, 42033.0, 4.035671989208385], [60, 42193.0,
+4.034702049142676], [60, 42360.0, 4.033762604335092], [60, 42548.0,
+4.032852477262509], [60, 42732.0, 4.0319705476418255], [60, 42908.0,
+4.031115748996908], [60, 43081.0, 4.030287065470429], [60, 43245.0,
+4.02948352886044], [60, 43406.0, 4.028704215863396], [60, 43564.0,
+4.027948245507046], [60, 43720.0, 4.0272147767580755], [60, 43873.0,
+4.02650300629078], [60, 44018.0, 4.0258121664042505], [60, 44160.0,
+4.02514152307664], [60, 44298.0, 4.024490374146104], [60, 44457.0,
+4.023858047608883], [60, 44611.0, 4.0232439000257845], [60, 44758.0,
+4.022647315029123], [60, 44895.0, 4.022067701922752], [60, 45030.0,
+4.0215044943685125], [60, 45163.0, 4.020957149152888], [60, 45297.0,
+4.020425145028247], [60, 45428.0, 4.019907981623393], [60, 45554.0,
+4.019405178418682], [60, 45676.0, 4.018916273781234], [60, 45795.0,
+4.0184408240561735], [60, 45912.0, 4.017978402710132], [60, 46033.0,
+4.01752859952352], [60, 46152.0, 4.017091019828358], [60, 46267.0,
+4.016665283788679], [60, 46393.0, 4.016251025720757], [60, 46520.0,
+4.015847893450585], [60, 46644.0, 4.015455547706256], [60, 46757.0,
+4.015073661543027], [60, 46859.0, 4.014701919799041], [60, 46959.0,
+4.0143400185797935], [60, 47057.0, 4.0139876647695925], [60, 47156.0,
+4.01364457556836], [60, 47257.0, 4.013310478052253], [60, 47355.0,
+4.012985108756677], [60, 47451.0, 4.012668213280369], [60, 47548.0,
+4.0123595459093], [60, 47646.0, 4.012058869259255], [60, 47741.0,
+4.011765953936009], [60, 47835.0, 4.011480578212079], [60, 47924.0,
+4.011202527719121], [60, 48006.0, 4.010931595155094], [60, 48086.0,
+4.0106675800053475], [60, 48165.0, 4.0104102882768675], [60, 48241.0,
+4.010159532244978], [60, 48319.0, 4.009915130211781], [60, 48403.0,
+4.009676906275729], [60, 48485.0, 4.009444690111708], [60, 48565.0,
+4.009218316761098], [60, 48643.0, 4.008997626431261], [60, 48719.0,
+4.008782464303962], [60, 48788.0, 4.008572680352279], [60, 48856.0,
+4.008368129165537], [60, 48922.0, 4.008168669781861], [60, 48987.0,
+4.007974165527982], [60, 49050.0, 4.007784483865895], [60, 49111.0,
+4.007599496246051], [60, 49164.0, 4.007419077966742], [60, 49216.0,
+4.007243108039382], [60, 49267.0, 4.007071469059401], [60, 49317.0,
+4.00690404708245], [60, 49366.0, 4.0067407315057], [60, 49414.0,
+4.006581414953951], [60, 49460.0, 4.006425993170357], [60, 49500.0,
+4.006274364911524]]
+set_amp (1431.0) called from log_ramp_up
+set_amp (5448.0) called from log_ramp_up
+set_amp (7674.0) called from log_ramp_up
+set_amp (9354.0) called from log_ramp_up
+set_amp (10667.0) called from log_ramp_up
+set_amp (11883.0) called from log_ramp_up
+set_amp (13065.0) called from log_ramp_up
+set_amp (14144.0) called from log_ramp_up
+set_amp (15078.0) called from log_ramp_up
