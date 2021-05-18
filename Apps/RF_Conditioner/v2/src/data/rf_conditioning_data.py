@@ -1584,11 +1584,6 @@ class rf_conditioning_data(object):
     ####################################################
 
 
-
-
-
-
-
     ''' 
         The values dictionary. 
         The main data dictionary for the application almost everything goes in here, 
@@ -1655,6 +1650,18 @@ class rf_conditioning_data(object):
     values[cav_temp_gui] = dummy_float
     excluded_key_list.append(cav_temp_gui)
 
+    bosl_switch_set  = 'bosl_switch_set'
+    all_value_keys.append(bosl_switch_set)
+    values[bosl_switch_set] = dummy_int
+    bosl_switch_set_good  = 'bosl_switch_set_good'
+    all_value_keys.append(bosl_switch_set_good)
+    values[bosl_switch_set_good] = False
+    excluded_key_list.append(bosl_switch_set_good)
+
+    rev_power_spike_count = 'rev_power_spike_count'
+    all_value_keys.append(rev_power_spike_count)
+    values[rev_power_spike_count] = dummy_int
+
     pulses_to_next_ramp = 'pulses_to_next_ramp'
     all_value_keys.append(pulses_to_next_ramp)
     values[pulses_to_next_ramp] = dummy_int
@@ -1667,6 +1674,7 @@ class rf_conditioning_data(object):
     cav_temp = 'cav_temp'
     all_value_keys.append(cav_temp)
     values[cav_temp] = dummy_float
+
 
     # Mean Values of Traces # TODO: CHANGE THIS NAMES TO MORE CANONICAL ONES
 
