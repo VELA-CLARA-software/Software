@@ -1,0 +1,4 @@
+min_sol,139.5
+max_sol,210
+min_bsol,-190
+max_bsol,-125.5

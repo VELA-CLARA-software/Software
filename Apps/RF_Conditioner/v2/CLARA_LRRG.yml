@@ -467,6 +467,11 @@ MODULATOR_CHECK_TIME: 1000 #INTEGER ms
 ##rf protection checking, we knwo which RF_PROT from RF_STRUCTURE 
 RF_PROT_CHECK_TIME: 1000 # INTEGER ms
 
+# This is  to monitor the state of the BSOL switch, is it for the HRRG or the LRRG ??
+BSOL_SWITCH_SET_PV_COUNT: 1 # INTEGER to give number of water temperatures we are monitoring,
+BSOL_SWITCH_SET_PV: [EBT-MAG-SOL-SW-01:Set]
+BSOL_SWITCH_SET_PV_COUNT_CHECK_TIME:  1000 #;ms between getting new value
+
 
 ##
 ##   ___  ____  _  _  ____  ____    __    __      __  __  _____  _  _  ____  ____  _____  ____  ____  _  _  ___
@@ -491,6 +496,7 @@ PID_integral_gain_GMON :  CLA-GUN-H2O-PID-02:INTG:RB
 PID_derivative_gain_GMON :  CLA-GUN-H2O-PID-02:DERI:RB
 PID_autotune_state_GMON :  CLA-GUN-H2O-PID-02:ATUNE:RB
 PID_llrf_max_amp_sp_limit  : CLA-GUN-LRF-CTRL-01:vm:dsp:sp_amp:amplitude:DRVH
+
 
 ## Binning
 

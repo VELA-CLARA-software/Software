@@ -64,8 +64,12 @@ class procedure(object):
     min_y_pv = 'CLA-VCA-DIA-CAM-01:ROI1:MinY'
 
     HF = HardwareFactory(STATE.PHYSICAL)
-    cam_fac = HF.getCameraFactory("VIRTUAL_CATHODE")
-    cam_obj = cam_fac.getCamera("VIRTUAL_CATHODE")
+
+    cam_name = "VIRTUAL_CATHODE"
+    cam_name = "C2V-SCR-01"
+
+    cam_fac = HF.getCameraFactory(cam_name)
+    cam_obj = cam_fac.getCamera(cam_name)
     roi_data_ref = cam_obj.getROIDataConstRef()
 
     def __init__(self):
@@ -100,7 +104,6 @@ class procedure(object):
 
         num_pix = procedure.roi_num_pix_x * procedure.roi_num_pix_y # + 1 # ha ! ;)
         procedure.cam_obj.updateROIData()
-
         procedure.roi_data_raw = procedure.cam_obj.getROIData()
 
         #procedure.roi_data_raw =  procedure.ET.getArray(procedure.roi_data_pv, num_pix)
@@ -160,10 +163,13 @@ class procedure(object):
         new_roi["y_pos"] = min_y
         new_roi["x_size"] = size_x
         new_roi["y_size"] = size_y
-        if procedure.cam_obj.setROI(new_roi):
-            pass
+
+        if procedure.cam_obj.setMaskandROI(new_roi):
+            print("SET ROI success??? ")
         else:
             print("FAILED TO SET ROI, passed keywords are incorrect! ")
+
+        input()
 
         # min_x = procedure.mask_centre_x - procedure.mask_x
         # min_y = procedure.mask_centre_y - procedure.mask_y

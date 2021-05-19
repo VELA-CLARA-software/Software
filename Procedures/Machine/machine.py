@@ -33,10 +33,7 @@ class Machine(object):
             self.gunPhiSp = 0
             self.linac1AmpSp = 35000
             self.gunAmpSp = 71000
-<<<<<<< HEAD
-        self.settings = {'Gun':{'PID': False}, 'Linac1': {'PID': True}}
-=======
->>>>>>> parent of 903bfae1... Added handle_update_individual_trace button to NO-ARCv2 GUI that toggles the updating of individual traces between passive and 10Hz.
+        self.settings = {'Gun':{'PID': False}, 'Linac1': {'PID': False}}
         print('SELF.MACHINETYPE = ', self.machineType)
 
     # LINAC PID PVs
@@ -48,12 +45,8 @@ class Machine(object):
     def addPV(self, pv):
         if not pv in self.pvids:
             self.pvids[pv] = PVObject(pv)
-<<<<<<< HEAD
             if self.machineType == 'Physical':
                 setattr(self.pvids[pv], 'writeAccess', True)
-=======
-            setattr(self.pvids[pv], 'writeAccess', True)
->>>>>>> parent of 903bfae1... Added handle_update_individual_trace button to NO-ARCv2 GUI that toggles the updating of individual traces between passive and 10Hz.
         return self.pvids[pv]
 
     def getPVValue(self, pv):
@@ -62,12 +55,8 @@ class Machine(object):
 
     def setPVValue(self, pv, value):
         pvid = self.addPV(pv)
-<<<<<<< HEAD
         if self.machineType == 'Physical':
             pvid.value = value
-=======
-        pvid.value = value
->>>>>>> parent of 903bfae1... Added handle_update_individual_trace button to NO-ARCv2 GUI that toggles the updating of individual traces between passive and 10Hz.
 
     def initialise_parameters(self):
         if self.lineType=='VELA':
@@ -111,18 +100,11 @@ class Machine(object):
             self.cameras = None
             self.screens = None
             self.generalPV = None
-<<<<<<< HEAD
             sys.path.append('\\\\claraserv3\\claranet\\test\\Controllers\\bin\\Release')
         else:
             '''This is the place to get contollers'''
             sys.path.append('\\\\claraserv3\\claranet\\test\\Controllers\\bin\\Release')
             sys.path.append(r"\\apclara1.dl.ac.uk\ControlRoomApps\Controllers\bin\Release")
-=======
-            sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release')
-        else:
-            '''This is the place to get contollers'''
-            sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release')
->>>>>>> parent of 903bfae1... Added handle_update_individual_trace button to NO-ARCv2 GUI that toggles the updating of individual traces between passive and 10Hz.
             # sys.path.append('\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\stage\\Python3_x64\\')
             # sys.path.append('C:\\Python38\\Python3_x64\\')
             # os.environ["PATH"] = os.environ["PATH"]+";\\\\apclara1.dl.ac.uk\\ControlRoomApps\\Controllers\\bin\\Release\\root_v5.34.34\\bin\\"
@@ -210,11 +192,7 @@ class Machine(object):
                     if 'magnets' in self.controllers:
                         self.magnets = self.magInit.physical_C2B_Magnet_Controller()
                     if 'charge' in self.controllers:
-<<<<<<< HEAD
                         self.scope = self.scopeInit.physical_C2B_Charge_Controller()
-=======
-                        self.scope = self.scopeInit.physical_CLARA_PH1_Charge_Controller()
->>>>>>> parent of 903bfae1... Added handle_update_individual_trace button to NO-ARCv2 GUI that toggles the updating of individual traces between passive and 10Hz.
                     if 'bpms' in self.controllers:
                         self.bpms = self.bpmInit.physical_C2B_BPM_Controller()
                     if 'gunllrf' in self.controllers:
@@ -248,7 +226,6 @@ class Machine(object):
         # self.SAMPL.stopElement = 'CLA-C2V-DIA-SCR-01-W'
         # self.SAMPL.initDistribFile = '4k-250pC.ini'
 
-<<<<<<< HEAD
     def set_PID(self, cavity, pid=False):
         self.settings[cavity]['PID'] = pid
 
@@ -294,8 +271,6 @@ class Machine(object):
             self.setPVValue('CLA-'+lstr+'-LRF-CTRL-01:vm:phase:pid.KI', 0)
         return
 
-=======
->>>>>>> parent of 903bfae1... Added handle_update_individual_trace button to NO-ARCv2 GUI that toggles the updating of individual traces between passive and 10Hz.
     def setAmplitude(self, cavity, value):
         if cavity == 'Gun':
             self.setGunAmplitude(value)
@@ -314,11 +289,6 @@ class Machine(object):
             self.setGunPhase(value)
         elif cavity == 'Linac1':
             self.setLinac1Phase(value)
-<<<<<<< HEAD
-=======
-        elif cavity == 'Linac1PID':
-            self.setLinac1PhasePID(value)
->>>>>>> parent of 903bfae1... Added handle_update_individual_trace button to NO-ARCv2 GUI that toggles the updating of individual traces between passive and 10Hz.
         return True
 
     def getPhase(self, cavity):
@@ -326,11 +296,6 @@ class Machine(object):
             return self.getGunPhase()
         elif cavity == 'Linac1':
             return self.getLinac1Phase()
-<<<<<<< HEAD
-=======
-        elif cavity == 'Linac1PID':
-            return self.getLinac1PhasePID()
->>>>>>> parent of 903bfae1... Added handle_update_individual_trace button to NO-ARCv2 GUI that toggles the updating of individual traces between passive and 10Hz.
 
     def getKlystronForwardPower(self, cavity):
         if cavity == 'Gun':
@@ -371,7 +336,6 @@ class Machine(object):
         return self.linac1llrf.getKlyFwdPower()
 
     def setLinac1Phase(self, phase):
-<<<<<<< HEAD
         # print('setting L01 phase = ', np.mod(180+phase,360)-180)
         if self.machineType == 'None':
             self.linac1PhiSp = phase
@@ -381,41 +345,16 @@ class Machine(object):
                 self.PID_settle(10,0.1)
             else:
                 self.linac1llrf.setPhiSP(np.mod(180+phase,360)-180)
-=======
-        print('setting L01 phase = ', np.mod(180+phase,360)-180)
-        if self.machineType == 'None':
-            self.linac1PhiSp = phase
-        else:
-            self.linac1llrf.setPhiSP(np.mod(180+phase,360)-180)
->>>>>>> parent of 903bfae1... Added handle_update_individual_trace button to NO-ARCv2 GUI that toggles the updating of individual traces between passive and 10Hz.
         return True
 
     def getLinac1Phase(self):
         if self.machineType == 'None':
             return self.linac1PhiSp if hasattr(self, 'linac1PhiSp') else 0
         else:
-<<<<<<< HEAD
             if self.settings['Linac1']['PID']:
                 return self.getPVValue('CLA-L01-LRF-CTRL-01:vm:phase')
             else:
                 return self.linac1llrf.getPhiSP()
-=======
-            return self.linac1llrf.getPhiSP()
-
-    def setLinac1PhasePID(self, phase):
-        print('setting L01 PID phase = ', np.mod(180+phase,360)-180)
-        if self.machineType == 'None':
-            self.linac1PhiSpPID = phase
-        else:
-            self.setPVValue('CLA-L01-LRF-CTRL-01:PHAA:PID.VAL',np.mod(180+phase,360)-180)
-        return True
-
-    def getLinac1PhasePID(self):
-        if self.machineType == 'None':
-            return self.linac1PhiSp if hasattr(self, 'linac1PhiSp') else 0
-        else:
-            return self.getPVValue('CLA-L01-LRF-CTRL-01:PHAA:PID.VAL')
->>>>>>> parent of 903bfae1... Added handle_update_individual_trace button to NO-ARCv2 GUI that toggles the updating of individual traces between passive and 10Hz.
 
     def setLinac1Amplitude(self, amp):
         if self.machineType == 'None':
@@ -438,7 +377,6 @@ class Machine(object):
             self.bpmDataObjects[bpm] = self.bpms.getBPMDataObject(bpm)
         return self.bpmDataObjects[bpm]
 
-<<<<<<< HEAD
     def getBPMBuffer(self, bpm, buffer=10, plane='X'):
         if self.machineType == 'None':
             value = [20*np.random.random_sample() - 10 for i in range(buffer)]
@@ -468,23 +406,6 @@ class Machine(object):
             return values_aray[0]
         else:
             return float('nan')
-=======
-    # def getBPMBuffer(self, bpm, buffer=10, plane='X'):
-    #     if self.machineType == 'None':
-    #         value = [20*np.random.random_sample() - 10 for i in range(buffer)]
-    #         return value
-    #     else:
-    #         obj = self.getBPMDataObject(bpm)
-    #         obj.setBufferSize(buffer)
-    #         if plane == 'Y':
-    #             while not obj.isYBufferFull():
-    #                 time.sleep(0.001)
-    #             return zip(obj.yBuffer, obj.statusBuffer)
-    #         else:
-    #             return obj.x
-    #         else:
-    #             return float('nan')
->>>>>>> parent of 903bfae1... Added handle_update_individual_trace button to NO-ARCv2 GUI that toggles the updating of individual traces between passive and 10Hz.
 
     def getBPMPosition(self, bpm, plane='X', ignoreNonLinear=True):
         if self.machineType == 'None':
@@ -502,11 +423,6 @@ class Machine(object):
                 else:
                     return obj.x
             else:
-<<<<<<< HEAD
-                # print 'bad! = ', obj.x, obj.y, obj.status
-=======
-                # print 'bad! = ', obj.x, obj.y
->>>>>>> parent of 903bfae1... Added handle_update_individual_trace button to NO-ARCv2 GUI that toggles the updating of individual traces between passive and 10Hz.
                 return float('nan')
 
     def getBPMPositionStatus(self, bpm, plane='X'):

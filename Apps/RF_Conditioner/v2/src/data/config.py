@@ -386,6 +386,13 @@ class config(object):
     vac_valve_keywords = [VAC_VALVE, VAC_VALVE_AREA, VAC_VALVE_CHECK_TIME, KEEP_VALVE_OPEN]
     #
     # water temp keywords
+    BSOL_SWITCH_SET_PV_COUNT = 'BSOL_SWITCH_SET_PV_COUNT'
+    BSOL_SWITCH_SET_PV  = 'BSOL_SWITCH_SET_PV'
+    BSOL_SWITCH_SET_PV_COUNT_CHECK_TIME = 'BSOL_SWITCH_SET_PV_COUNT_CHECK_TIME'
+    bsol_keywords = [BSOL_SWITCH_SET_PV_COUNT, BSOL_SWITCH_SET_PV, BSOL_SWITCH_SET_PV_COUNT_CHECK_TIME]
+
+    #
+    # water temp keywords
     WATER_TEMPERATURE_PV_COUNT = 'WATER_TEMPERATURE_PV_COUNT'
     WATER_TEMPERATURE_PV = 'WATER_TEMPERATURE_PV'
     WATER_TEMPERATURE_CHECK_TIME = 'WATER_TEMPERATURE_CHECK_TIME'
@@ -776,7 +783,7 @@ class config(object):
     # OTHERWISE TEH PROGRAMM WILL NOT START PROPERLY
     all_config_keywords = [MODE]
     for item in [llrf_keywords, vac_keywords, dc_keywords, log_keywords,
-                           vac_valve_keywords, water_temp_keywords, cavity_temp_keywords,
+                           vac_valve_keywords, water_temp_keywords, cavity_temp_keywords,bsol_keywords,
                            solenoid_keywords, breakdown_keywords, modulator_keywords,
                  rfprot_keywords, gui_keywords]:
         for key in item:
