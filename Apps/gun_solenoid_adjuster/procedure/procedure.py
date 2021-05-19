@@ -25,7 +25,8 @@
 from VELA_CLARA_Magnet_Control import MAG_PSU_STATE
 import VELA_CLARA_Magnet_Control as mag
 import VELA_CLARA_RF_Protection_Control  as prot
-
+import os
+import csv
 
 class procedure(object):
     # initDAQ = daq.init()
@@ -52,10 +53,27 @@ class procedure(object):
 
 
     def __init__(self):
-        self.min_sol = 149.5
-        self.max_sol = 200
-        self.min_bsol = -180
-        self.max_bsol = -135.5
+        self.get_settings()
+
+
+    def get_settings(self):
+        file_path = os.path.join(os.getcwd(),"settings.txt")
+        print("file_path = ",file_path)
+
+        try:
+            with open(file_path, mode='r') as inp:
+                reader = csv.reader(inp)
+                settings_dict = {rows[0]:float(rows[1]) for rows in reader}
+            print(settings_dict)
+        except:
+            print("Settings file does not exist!")
+            settings_dict = {'min_sol': 139.5, 'max_bsol': -125.5, 'max_sol': 210,
+                             'min_bsol': -190}
+        self.min_sol = settings_dict["min_sol"]
+        self.max_sol =  settings_dict["max_sol"]
+        self.min_bsol =  settings_dict["min_bsol"]
+        self.max_bsol =  settings_dict["max_bsol"]
+
 
 
     # called external to update states
