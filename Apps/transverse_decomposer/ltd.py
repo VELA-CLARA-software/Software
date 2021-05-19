@@ -30,9 +30,8 @@ import sys
 import ctypes
 
 # meh playing with icon robustness
-myappid = 'stfc.clara_apps.valve_status.1'  # arbitrary string
+myappid = 'stfc.clara_apps.laser_transverse_decompser.1'  # arbitrary string
 ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
-
 
 class App(QApplication):
     '''

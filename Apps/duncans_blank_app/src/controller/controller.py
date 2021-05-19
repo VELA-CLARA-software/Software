@@ -27,8 +27,14 @@
 from src.data.data import data
 from src.procedure.procedure import procedure
 from src.gui.gui import gui
+import sys
 
-
+sys.path.append('\\\\claraserv3.dl.ac.uk\\claranet\\packages\\vcc\\bin\\Stage\\')
+try:
+    import VELA_CLARA_PILaser_Control as pil
+except Exception as  e:
+    print("FAILED TO LOAD VELA_CLARA_PILaser_Control")
+    print(e)
 
 class controller(object):# inherit of an python object
 
@@ -49,9 +55,11 @@ class controller(object):# inherit of an python object
 
 
     def connect_gui_widgets(self):
-        control.view.closeButton.clicked.connect(self.handle_close_all)
-        control.view.openButton.clicked.connect(self.handle_open_all)
+        self.gui.pushButton.clicked.connect(self.handle_pushButton)
 
+
+    def handle_pushButton(self):
+        print("HI")
 
 
     def hello(self):

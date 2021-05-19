@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>211</width>
+    <width>212</width>
     <height>463</height>
    </rect>
   </property>
@@ -192,6 +192,9 @@
                   <height>30</height>
                  </size>
                 </property>
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;TOOL TIP!&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
                 <property name="buttonSymbols">
                  <enum>QAbstractSpinBox::PlusMinus</enum>
                 </property>
@@ -310,6 +313,9 @@
                   <width>10</width>
                   <height>30</height>
                  </size>
+                </property>
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;TOOL TIP2!&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                 </property>
                 <property name="buttonSymbols">
                  <enum>QAbstractSpinBox::PlusMinus</enum>

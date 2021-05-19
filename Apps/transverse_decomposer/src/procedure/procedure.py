@@ -22,9 +22,13 @@
 '''
 import sys
 # sys.path.append('\\\\claraserv3\\claranet\\test\\CATAP\\bin')
-# sys.path.append('\\\\claraserv3.dl.ac.uk\\claranet\\test\\CATAP\\bin') # meh
-sys.path.append('C:\\Users\\dlerlp\\Documents\\CATAP_Build\\PythonInterface\\Release\\')
+
+#sys.path.append('\\\\claraserv3.dl.ac.uk\\claranet\\test\\CATAP\\bin') # meh
+sys.path.append('\\\\claraserv3.dl.ac.uk\\claranet\\development\\CATAP\\djs56\\PythonInterface'
+                '\\Release\\CATAP') # meh
+#sys.path.append('C:\\Users\\dlerlp\\Documents\\CATAP_Build\\PythonInterface\\Release\\')
 from CATAP.EPICSTools import *
+from CATAP.HardwareFactory import *
 import json
 import numpy
 
@@ -59,6 +63,14 @@ class procedure(object):
     min_x_pv = 'CLA-VCA-DIA-CAM-01:ROI1:MinX'
     min_y_pv = 'CLA-VCA-DIA-CAM-01:ROI1:MinY'
 
+    HF = HardwareFactory(STATE.PHYSICAL)
+
+    cam_name = "VIRTUAL_CATHODE"
+    cam_name = "C2V-SCR-01"
+
+    cam_fac = HF.getCameraFactory(cam_name)
+    cam_obj = cam_fac.getCamera(cam_name)
+    roi_data_ref = cam_obj.getROIDataConstRef()
 
     def __init__(self):
         print(__name__ + ', class initialized')
@@ -83,77 +95,95 @@ class procedure(object):
         self.set_roi_from_mask()
 
         print("get_roi_data")
-        procedure.roi_num_pix_x = procedure.ET.get(procedure.roi_num_pix_x_pv)
+        #procedure.roi_num_pix_x = procedure.ET.get(procedure.roi_num_pix_x_pv)
+        procedure.roi_num_pix_x = procedure.cam_obj.getROISizeX()
         print("roi_num_pix_x = {}".format(procedure.roi_num_pix_x))
-        procedure.roi_num_pix_y = procedure.ET.get(procedure.roi_num_pix_y_pv)
-        print("roi_num_pix_x = {}".format(procedure.roi_num_pix_y))
+        #procedure.roi_num_pix_y = procedure.ET.get(procedure.roi_num_pix_y_pv)
+        procedure.roi_num_pix_y = procedure.cam_obj.getROISizeY()
+        print("roi_num_pix_y = {}".format(procedure.roi_num_pix_y))
 
-        num_pix = procedure.roi_num_pix_x * procedure.roi_num_pix_y#  + 1 # ha ! ;)
+        num_pix = procedure.roi_num_pix_x * procedure.roi_num_pix_y # + 1 # ha ! ;)
+        procedure.cam_obj.updateROIData()
+        procedure.roi_data_raw = procedure.cam_obj.getROIData()
 
-        procedure.roi_data_raw =  procedure.ET.getArray(procedure.roi_data_pv, num_pix)
+        #procedure.roi_data_raw =  procedure.ET.getArray(procedure.roi_data_pv, num_pix)
         print("len( procedure.roi_data_raw = {}".format(len( procedure.roi_data_raw)))
 
-        for i in range(0,10):
-            print( procedure.roi_data_raw[i] )
-
-        t = numpy.array(procedure.roi_data_raw)
-        for i in range(0,10):
-            print( t[i] )
-
-        t2 = t.reshape(procedure.roi_num_pix_y,procedure.roi_num_pix_x)
-        for i in range(0,10):
-            print(t2[i] )
-        procedure.roi_dat = numpy.flipud(t2)
-
-        for i in range(0,10):
-            print( procedure.roi_dat[i] )
-
-        #procedure.roi_data = list(self.chunk(procedure.roi_data_raw[:-1], procedure.roi_num_pix_x))
-
+        # for i in range(0,10):
+        #     print( procedure.roi_data_raw[i] )
+        # t = numpy.array(procedure.roi_data _raw)
+        # for i in range(0,10):
+        #     print( t[i] )
+        #
+        # t2 = t.reshape(procedure.roi_num_pix_y,procedure.roi_num_pix_x)
+        # for i in range(0,10):
+        #     print(t2[i] )
+        # procedure.roi_dat = numpy.flipud(t2)
+        #
+        # for i in range(0,10):
+        #     print( procedure.roi_dat[i] )
+       # procedure.roi_data = self.chunk(procedure.roi_data_raw[:-1], procedure.roi_num_pix_x)
+        npData = numpy.array(procedure.roi_data_raw).reshape(
+            (procedure.roi_num_pix_y, procedure.roi_num_pix_x))
+        #  never works :((((
+        #  npData = array(self.vc_image.data2D)
+        # print('return image')
+        numpy.flipud(npData)
+        procedure.roi_data = npData
         # print("len( procedure.roi_data[0] = {}".format(len( procedure.roi_data[0])))
         # print("len( procedure.roi_data = {}".format(len( procedure.roi_data)))
-
-
-        print( len( procedure.roi_data_raw) )
-        print( type( procedure.roi_data) )
-        print( num_pix )
-        print( procedure.roi_num_pix_x )
-        print( procedure.roi_num_pix_y )
+        print(len(procedure.roi_data_raw))
+        print(type(procedure.roi_data))
+        print(num_pix)
+        print(procedure.roi_num_pix_x)
+        print(procedure.roi_num_pix_y)
 
 
     def set_roi_from_mask(self):
         print("set_roi_from_mask")
-        procedure.mask_x = procedure.ET.get(procedure.mask_x_pv)
-        procedure.mask_y = procedure.ET.get(procedure.mask_y_pv)
-        procedure.mask_centre_x = procedure.ET.get(procedure.mask_centre_x_pv)
-        procedure.mask_centre_y = procedure.ET.get(procedure.mask_centre_y_pv)
+        # procedure.mask_x = procedure.ET.get(procedure.mask_x_pv)
+        # procedure.mask_y = procedure.ET.get(procedure.mask_y_pv)
+        # procedure.mask_centre_x = procedure.ET.get(procedure.mask_centre_x_pv)
+        # procedure.mask_centre_y = procedure.ET.get(procedure.mask_centre_y_pv)
+        # print("mask_x = {}, mask_y = {}, mask_centre_x = {}, mask_centre_y = {}".format(
+        #     procedure.mask_x , procedure.mask_y, procedure.mask_centre_x,
+        #        procedure.mask_centre_y))
 
-        print("mask_x = {}, mask_y = {}, mask_centre_x = {}, mask_centre_y = {}".format(
-            procedure.mask_x , procedure.mask_y, procedure.mask_centre_x,
-               procedure.mask_centre_y))
+        mask_catap = procedure.cam_obj.getMask()
+        print("mask_catap")
+        print(mask_catap)
+        # set the ROI parameters based on the mask
+        min_x = mask_catap["mask_x"] - mask_catap["mask_rad_x"]
+        min_y = mask_catap["mask_y"] - mask_catap["mask_rad_y"]
+        size_x = 2 * mask_catap["mask_rad_x"]
+        size_y = 2 * mask_catap["mask_rad_x"]
+        print("min_x={}, min_y={}, size_x={}, size_y={}".format(min_x, min_y, size_x, size_y))
+        new_roi = {}
+        new_roi["x_pos"] = min_x
+        new_roi["y_pos"] = min_y
+        new_roi["x_size"] = size_x
+        new_roi["y_size"] = size_y
 
-        min_x = procedure.mask_centre_x - procedure.mask_x
-        min_y = procedure.mask_centre_y - procedure.mask_x
+        if procedure.cam_obj.setMaskandROI(new_roi):
+            print("SET ROI success??? ")
+        else:
+            print("FAILED TO SET ROI, passed keywords are incorrect! ")
 
-        size_x = 2 * procedure.mask_x
-        size_y = 2 * procedure.mask_y
+        input()
 
-        print("min_x={}, min_y={}, size_x={}, size_y={}".format(min_x,min_y,size_x,size_y))
-
-
-        procedure.ET.put( procedure.size_x_pv, size_x )
-        procedure.ET.put( procedure.size_y_pv, size_y )
-        procedure.ET.put( procedure.min_x_pv, min_x )
-        procedure.ET.put( procedure.min_y_pv, min_y )
-
-
-
-
-
+        # min_x = procedure.mask_centre_x - procedure.mask_x
+        # min_y = procedure.mask_centre_y - procedure.mask_y
+        # size_x = 2 * procedure.mask_x
+        # size_y = 2 * procedure.mask_y
+        # print("min_x={}, min_y={}, size_x={}, size_y={}".format(min_x, min_y, size_x, size_y))
+        # procedure.ET.put( procedure.size_x_pv, size_x )
+        # procedure.ET.put( procedure.size_y_pv, size_y )
+        # procedure.ET.put( procedure.min_x_pv, min_x )
+        # procedure.ET.put( procedure.min_y_pv, min_y )
 
     def analyse(self):
         '''
-            funciton to analyze the ROI data
+            function to analyze the ROI data
         :return:
         '''
         print("analysehandle_analyse_button")

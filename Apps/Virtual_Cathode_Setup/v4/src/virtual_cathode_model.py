@@ -30,8 +30,15 @@ import sys,os
 #sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\stage\\')
 #sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\Release\\')
 #sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\Release\\')
-sys.path.append('\\\\claraserv3\\claranet\\test\\Controllers\\bin\\Release\\')
-import VELA_CLARA_PILaser_Control as pil
+# sys.path.append('\\\\192.168.83.14\\claranet\\packages\\vcc\\bin\\Stage\\')
+# sys.path.append('\\\\claraserv3.dl.ac.uk\\claranet\\packages\\vcc\\bin\\Stage\\')
+sys.path.append('\\\\claraserv3.dl.ac.uk\\claranet\\packages\\vcc\\bin\\Stage\\')
+try:
+    import VELA_CLARA_PILaser_Control as pil
+except:
+    print("Failed to load PIL module")
+
+
 import virtual_cathode_model_data as model_data
 from numpy import array
 from numpy import amin
@@ -42,8 +49,6 @@ from numpy import flipud
 from numpy import random
 import time
 #from scipy.stats import multivariate_normal
-
-
 
 
 class virtual_cathode_model():
@@ -401,9 +406,14 @@ class virtual_cathode_model():
             self.pil.setMaskFeedBackOff_VC()
 
     def center_mask(self):
-        x = self.values[self.data.mask_x_rbv] - self.values[self.data.mask_x_rad_rbv]
-        y = self.values[self.data.mask_y_rbv] - self.values[self.mask_y_rad_rbv]
-        xRad = 2 * self.values[self.data.mask_x_rad_rbv]
-        yRad = 2 * self.values[self.data.mask_y_rad_rbv]
+        # x = self.values[self.data.mask_x_rbv] - self.values[self.data.mask_x_rad_rbv]
+        # y = self.values[self.data.mask_y_rbv] - self.values[self.data.mask_y_rad_rbv]
+        # xRad = 2 * self.values[self.data.mask_x_rad_rbv]
+        # yRad = 2 * self.values[self.data.mask_y_rad_rbv]
+
+        x = int(self.values[self.data.num_pix_x] / 2)
+        y = int(self.values[self.data.num_pix_y] / 2)
+        xRad = 100
+        yRad = 100
         self.setMask(x, y, xRad, yRad)
 

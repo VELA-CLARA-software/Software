@@ -25,7 +25,7 @@
 import sys,os
 
 #sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\Release\\')
-sys.path.append('\\\\claraserv3\\claranet\\test\\Controllers\\bin\\Release')
+sys.path.append('\\\\claraserv3.dl.ac.uk\\claranet\\test\\Controllers\\bin\\Release')
 # for i in sys.path:
 #     print i
 
@@ -39,13 +39,10 @@ class App(QtGui.QApplication):
     def __init__(self, sys_argv):
         QtGui.QWidget.__init__(self, sys_argv)
 
-
         self.procedure = procedure()
         self.view = view()
         print 'Creating Controller'
         self.control = control(sys_argv, view = self.view, procedure= self.procedure)
-
-
         print 'Running'
 
 

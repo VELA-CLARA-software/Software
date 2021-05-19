@@ -76,7 +76,6 @@ class view(QMainWindow, Ui_SolAdjuster ):
                     elif qevent.lostFocus():
                         self.bsol_seti_has_focus = False
                         self.bsol_seti.setStyleSheet(self.spin_style_sheet)
-
             #
             # if isinstance(qevent, QFocusEvent):
             #     print("event filter = ", str(qobject.objectName()))
