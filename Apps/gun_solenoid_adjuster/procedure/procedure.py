@@ -51,46 +51,85 @@ class procedure(object):
     data["sol_seti_has_focus"] = False
     data["bsol_seti_has_focus"] = False
 
+    data["bsol_out_of_range"] = False
+    data["sol_out_of_range"] = False
+
 
     def __init__(self):
         self.get_settings()
 
 
     def get_settings(self):
-        file_path = os.path.join(os.getcwd(),"settings.txt")
-        print("file_path = ",file_path)
+        file_path_0 =  "\\\\claraserv3.dl.ac.uk\\claranet\\apps\\legacy\\config" \
+                       "\\gun_solenoid_adjuster\\settings.txt"
+        file_path_1 = os.path.join(os.getcwd(),"settings.txt")
+        print("file_path_0 = {}".format(file_path_0))
+        print("file_path_1 = {}".format(file_path_1))
+
+        file0_failed = None
 
         try:
-            with open(file_path, mode='r') as inp:
+            with open(file_path_0, mode='r') as inp:
                 reader = csv.reader(inp)
                 settings_dict = {rows[0]:float(rows[1]) for rows in reader}
+            print("Settings file loaded from clarserv3!")
             print(settings_dict)
+            file0_failed = False
         except:
-            print("Settings file does not exist!")
-            settings_dict = {'min_sol': 139.5, 'max_bsol': -125.5, 'max_sol': 210,
-                             'min_bsol': -190}
+            print("{} does not exist, trying local directory!".format(file_path_0))
+
+        if file0_failed:
+            try:
+                with open(file_path_1, mode='r') as inp:
+                    reader = csv.reader(inp)
+                    settings_dict = {rows[0]: float(rows[1]) for rows in reader}
+                print("Settings file loaded from local directory!")
+                print(settings_dict)
+            except:
+                print("{} does not exist, applying default values!".format(file_path_1))
+                settings_dict = {'min_sol': 139.5, 'max_bsol': -125.5, 'max_sol': 210,
+                                 'min_bsol': -190}
+                file0_failed = True
+
         self.min_sol = settings_dict["min_sol"]
         self.max_sol =  settings_dict["max_sol"]
         self.min_bsol =  settings_dict["min_bsol"]
         self.max_bsol =  settings_dict["max_bsol"]
 
-
+        print("")
 
     # called external to update states
     def sol_seti(self, val):
         print(__name__," sol_seti")
         if val >= self.min_sol:
+            print("Set {} >= {} is TRUE".format(val, self.min_sol))
             if val <= self.max_sol:
-                print("Set new sol val = ", val)
+                print("Set {} >= {} is TRUE".format(val, self.max_sol))
+                procedure.data["sol_out_of_range"] = False
                 procedure.objects["sol"].SI = val
+            else:
+                print("Set {} <= {} is FALSE".format(val,self.max_sol))
+                procedure.data["sol_out_of_range"] = True
+        else:
+            print("Set {} >= {} is FALSE".format(val,self.min_sol))
+            procedure.data["sol_out_of_range"] = True
+
 
     def bsol_seti(self, val):
         print(__name__," bsol_seti")
         if val >= self.min_bsol:
+            print("Set {} >= {} is TRUE".format(val, self.min_bsol))
             if val <= self.max_bsol:
+                procedure.data["bsol_out_of_range"] = False
+                print("Set {} <= {} is TRUE".format(val, self.max_bsol))
                 print("Set new bsol val = ", val)
                 procedure.objects["bsol"].SI = val
-
+            else:
+                print("Set {} <= {}  is FALSE".format(val,self.max_bsol))
+                procedure.data["bsol_out_of_range"] = True
+        else:
+            print("Set {} !>= {}  is FALSE".format(val,self.min_bsol))
+            procedure.data["bsol_out_of_range"] = True
 
     def degauss(self, name, to_zero):
         if procedure.data["can_degauss"]:

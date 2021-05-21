@@ -52,8 +52,10 @@ class view(QMainWindow, Ui_view):
         # graphics_view is a GraphicsView from QT
         # add  a PlotItem to the graphics_view
 
-        self.plot_item = pg.PlotItem()
-        self.graphics_area.setCentralWidget(self.plot_item)
+        self.full_plot_item = pg.PlotItem()
+        self.roi_plot_item = pg.PlotItem()
+        self.graphics_area_full.setCentralWidget(self.full_plot_item)
+        self.graphics_area_ROI.setCentralWidget(self.roi_plot_item)
         #
         '''
             vc_image is an ImageItem, the camera image data to plot
@@ -67,6 +69,7 @@ class view(QMainWindow, Ui_view):
             this means x is y and y is x   
         '''
         self.vc_image = pg.ImageItem(view=pg.PlotItem())
+        self.roi_image = pg.ImageItem(view=pg.PlotItem())
 
         # a color map
         STEPS = linspace(0, 1, 4)
@@ -75,32 +78,34 @@ class view(QMainWindow, Ui_view):
         clrmp = pg.ColorMap(STEPS, a)
         lut = clrmp.getLookupTable()
         self.vc_image.setLookupTable(lut)
+        self.roi_image.setLookupTable(lut)
         #
         # add the vc_image to the plot_item
-        self.plot_item.addItem(self.vc_image)
+        self.full_plot_item.addItem(self.vc_image)
+        self.roi_plot_item.addItem(self.roi_image)
         '''
             limits and axes in pixels and mm
         '''
         self.border = 50
-        self.plot_item.setLimits(xMin=0, xMax=1000,
+        self.full_plot_item.setLimits(xMin=0, xMax=1000,
                                  yMin=0, yMax=1000,
                                  minXRange=10,
                                  maxXRange=1000,
                                  minYRange=10,
                                  maxYRange=1000)
-        self.plot_item.setRange(
+        self.full_plot_item.setRange(
             xRange=[-self.border, 1000 + self.border],
             yRange=[-self.border, 1000  + self.border])
         '''
             for axes we'll have pixels and mm, so customize the tick marks
             fairly cancerous below, but we only do it once ... 
         '''
-        self.plot_item.showAxis('top')
-        self.plot_item.showAxis('right')
-        self.x_axis_u = self.plot_item.getAxis(name='top')
-        self.x_axis_d = self.plot_item.getAxis(name='bottom')
-        self.y_axis_l = self.plot_item.getAxis(name='left')
-        self.y_axis_r = self.plot_item.getAxis(name='right')
+        self.full_plot_item.showAxis('top')
+        self.full_plot_item.showAxis('right')
+        self.x_axis_u = self.full_plot_item.getAxis(name='top')
+        self.x_axis_d = self.full_plot_item.getAxis(name='bottom')
+        self.y_axis_l = self.full_plot_item.getAxis(name='left')
+        self.y_axis_r = self.full_plot_item.getAxis(name='right')
 
         self.x_axis_u.setZValue(70000)  # MAGIC_NUMBER Higher than max bin value
         self.x_axis_d.setZValue(70000)  # MAGIC_NUMBER Higher than max bin value
@@ -175,25 +180,35 @@ class view(QMainWindow, Ui_view):
         # columns = self.values[self.data.num_pix_x]
         # t_data = random.normal(size=(rows, columns), loc = 30000, scale = 7000)
 
-        self.plot_item.show()
+        self.full_plot_item.show()
+        self.roi_plot_item.show()
 
 
-    def update_image(self, array_data, x_pix_scale_factor, y_pix_scale_factor ):
+    def update_roi_image(self, array_data, x_pix_scale_factor, y_pix_scale_factor ):
         '''
             Update graphics view with new image data
         :param array_data: chunked array to update image with
         :param x_pix_scale_factor: pix to mm
         :param y_pix_scale_factor: pix to mm
         '''
-        print("update_image")
+        print("update_roi_image")
+        self.roi_image.scale(x_pix_scale_factor, y_pix_scale_factor)
+        self.roi_image.setOpts(axisOrder='row-major')
+        self.roi_image.setImage(array_data)
+        self.roi_image.setLevels([0, amax(array_data)], update=True)
 
-
+    def update_vc_image(self, array_data, x_pix_scale_factor, y_pix_scale_factor):
+        '''
+            Update graphics view with new image data
+        :param array_data: chunked array to update image with
+        :param x_pix_scale_factor: pix to mm
+        :param y_pix_scale_factor: pix to mm
+        '''
+        print("update_roi_image")
         self.vc_image.scale(x_pix_scale_factor, y_pix_scale_factor)
         self.vc_image.setOpts(axisOrder='row-major')
         self.vc_image.setImage(array_data)
         self.vc_image.setLevels([0, amax(array_data)], update=True)
-
-
 
         # # a color map
         # STEPS = linspace(0, 1, 4)

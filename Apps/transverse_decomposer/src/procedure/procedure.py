@@ -24,8 +24,8 @@ import sys
 # sys.path.append('\\\\claraserv3\\claranet\\test\\CATAP\\bin')
 
 #sys.path.append('\\\\claraserv3.dl.ac.uk\\claranet\\test\\CATAP\\bin') # meh
-sys.path.append('\\\\claraserv3.dl.ac.uk\\claranet\\development\\CATAP\\djs56\\PythonInterface'
-                '\\Release\\CATAP') # meh
+sys.path.append('\\\\claraserv3.dl.ac.uk\\claranet\\development\\CATAP\\djs56'
+                '\\new_pc\\build\\PythonInterface\\Release\\CATAP') # meh
 #sys.path.append('C:\\Users\\dlerlp\\Documents\\CATAP_Build\\PythonInterface\\Release\\')
 from CATAP.EPICSTools import *
 from CATAP.HardwareFactory import *
@@ -45,6 +45,9 @@ class procedure(object):
     roi_data_pv = 'CLA-VCA-DIA-CAM-01:CAM3:ArrayData'
     roi_num_pix_x_pv = 'CLA-VCA-DIA-CAM-01:ROI1:SizeX_RBV'
     roi_num_pix_y_pv = 'CLA-VCA-DIA-CAM-01:ROI1:SizeY_RBV'
+
+
+
     roi_data = None
     roi_num_pix_x = None
     roi_num_pix_y = None
@@ -66,10 +69,16 @@ class procedure(object):
     HF = HardwareFactory(STATE.PHYSICAL)
 
     cam_name = "VIRTUAL_CATHODE"
-    cam_name = "C2V-SCR-01"
+    #cam_name = "INJ-CAM-04"
+    #cam_name = "C2V-SCR-01"
 
     cam_fac = HF.getCameraFactory(cam_name)
     cam_obj = cam_fac.getCamera(cam_name)
+
+    image_data_raw = None
+    image_data = None
+    array_data_num_pix_x = cam_obj.getArrayDataPixelCountX()
+    array_data_num_pix_y = cam_obj.getArrayDataPixelCountY()
     roi_data_ref = cam_obj.getROIDataConstRef()
 
     def __init__(self):
@@ -85,17 +94,42 @@ class procedure(object):
         k, m = divmod(len(a), n)
         return (a[i * k + min(i, m):(i + 1) * k + min(i + 1, m)] for i in range(n))
 
+    def print_values(self):
+        print(self.get_mask())
+        print(self.get_ROI())
+        print(self.get_mask_and_ROI())
+
+    def get_mask(self):
+        return procedure.cam_obj.getMask()
+
+    def get_ROI(self):
+        return procedure.cam_obj.getROI()
+
+    def get_mask_and_ROI(self):
+        return procedure.cam_obj.getMaskandROI()
+
+    def get_image(self):
+        procedure.cam_obj.updateImageData()
+        procedure.image_data_raw = procedure.cam_obj.getImageData()
+        print(procedure.image_data_raw)
+        npData = numpy.array(procedure.image_data_raw).reshape(
+            (procedure.array_data_num_pix_y, procedure.array_data_num_pix_x))
+        # never works :((((
+        # npData = array(self.vc_image.data2D)
+        # print('return image')
+        procedure.image_data = numpy.flipud(npData)
+
     def get_roi_data(self):
         '''
-            Get the state for each valve in valve_names. Called externally (e.g. control) to
-            update states
         '''
-        print("get_roi_data")
+        mask = self.get_mask()
+        roi = self.get_ROI()
 
-        self.set_roi_from_mask()
+        print("mask")
+        print(mask)
+        print("roi")
+        print(roi)
 
-        print("get_roi_data")
-        #procedure.roi_num_pix_x = procedure.ET.get(procedure.roi_num_pix_x_pv)
         procedure.roi_num_pix_x = procedure.cam_obj.getROISizeX()
         print("roi_num_pix_x = {}".format(procedure.roi_num_pix_x))
         #procedure.roi_num_pix_y = procedure.ET.get(procedure.roi_num_pix_y_pv)
@@ -128,16 +162,17 @@ class procedure(object):
         #  never works :((((
         #  npData = array(self.vc_image.data2D)
         # print('return image')
-        numpy.flipud(npData)
-        procedure.roi_data = npData
+
+        procedure.roi_data = numpy.flipud(npData)
         # print("len( procedure.roi_data[0] = {}".format(len( procedure.roi_data[0])))
         # print("len( procedure.roi_data = {}".format(len( procedure.roi_data)))
-        print(len(procedure.roi_data_raw))
-        print(type(procedure.roi_data))
-        print(num_pix)
-        print(procedure.roi_num_pix_x)
-        print(procedure.roi_num_pix_y)
-
+        print("len(procedure.roi_data_raw) = {} ".format(len(procedure.roi_data_raw)))
+        print("len(procedure.roi_data) = {} ".format(len(procedure.roi_data)))
+        print("procedure.roi_num_pix_x = {} ".format(procedure.roi_num_pix_x))
+        print("procedure.roi_num_pix_y = {} ".format(procedure.roi_num_pix_y))
+        print("num_pix = {} ".format(num_pix))
+        print("max(procedure.roi_data_raw) = {} ".format(max(procedure.roi_data_raw)))
+        print(procedure.roi_data)
 
     def set_roi_from_mask(self):
         print("set_roi_from_mask")
