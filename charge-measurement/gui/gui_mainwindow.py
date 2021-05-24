@@ -246,8 +246,6 @@ class Ui_MainWindow(object):
         self.numStepsLabel.setText(_translate("MainWindow", "# steps", None))
         self.offCrestPhaseLabel.setText(_translate("MainWindow", "Off-crest phase", None))
         # self.MainWindow.setTabText(self.MainWindow.indexOf(self.tab), _translate("MainWindow", "Settings", None))
-        self.newFont = QtWidgets.QFont("Comic Sans", 20, QtGui.QFont.Bold)
-        self.titleLabel.setFont(self.newFont)
         self.titleLabel.setText(_translate("MainWindow", "VELA/CLARA Beam \nPosition Monitor \nCalibrator", None))
 
     def closeEvent(self, event):

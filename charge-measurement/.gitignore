@@ -1,5 +1,16 @@
-__pycache__/*
-*.exe
-*.spec
-dist/*
-build/*
+#ignore .vscode directory#
+
+##########################
+
+
+.idea/
+
+
+
+#ignore build directory#
+
+########################
+
+*build/
+*dist/
+*__pycache__/
