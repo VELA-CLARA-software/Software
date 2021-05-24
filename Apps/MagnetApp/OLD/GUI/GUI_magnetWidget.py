@@ -21,7 +21,7 @@ class MyPopup(QWidget):
     def paintEvent(self, e):
         dc = QPainter(self)
         dc.drawLine(0, 0, 100, 100)
-        dc.drawLine(100, 0setPixmap, 0, 100)
+        dc.drawLine(100, 0, 0, 100)
 
 
 class GUI_magnetWidget(QMainWindow, Ui_magnetWidget):

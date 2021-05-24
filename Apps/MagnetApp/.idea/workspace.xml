@@ -3,24 +3,34 @@
   <component name="ChangeListManager">
     <list default="true" id="6acf709e-b81e-478a-a08b-84f0a1e9a357" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Valve_Status/VC_Setup.exe" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Valve_Status/Valve_State.spec" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Valve_Status/Valve_Status.spec" beforeDir="false" afterPath="$PROJECT_DIR$/../Valve_Status/Valve_Status.spec" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Valve_Status/mainApp.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Valve_Status/mainApp.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Valve_Status/view/view.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Valve_Status/view/view.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Virtual_Cathode_Setup/v4/Virtual_Cathode_App.spec" beforeDir="false" afterPath="$PROJECT_DIR$/../Virtual_Cathode_Setup/v4/Virtual_Cathode_App.spec" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Virtual_Cathode_Setup/v4/build/Virtual_Cathode_App/Analysis-00.toc" beforeDir="false" afterPath="$PROJECT_DIR$/../Virtual_Cathode_Setup/v4/build/Virtual_Cathode_App/Analysis-00.toc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Virtual_Cathode_Setup/v4/build/Virtual_Cathode_App/EXE-00.toc" beforeDir="false" afterPath="$PROJECT_DIR$/../Virtual_Cathode_Setup/v4/build/Virtual_Cathode_App/EXE-00.toc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Virtual_Cathode_Setup/v4/build/Virtual_Cathode_App/PKG-00.pkg" beforeDir="false" afterPath="$PROJECT_DIR$/../Virtual_Cathode_Setup/v4/build/Virtual_Cathode_App/PKG-00.pkg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Virtual_Cathode_Setup/v4/build/Virtual_Cathode_App/PKG-00.toc" beforeDir="false" afterPath="$PROJECT_DIR$/../Virtual_Cathode_Setup/v4/build/Virtual_Cathode_App/PKG-00.toc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Virtual_Cathode_Setup/v4/build/Virtual_Cathode_App/PYZ-00.pyz" beforeDir="false" afterPath="$PROJECT_DIR$/../Virtual_Cathode_Setup/v4/build/Virtual_Cathode_App/PYZ-00.pyz" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Virtual_Cathode_Setup/v4/build/Virtual_Cathode_App/PYZ-00.toc" beforeDir="false" afterPath="$PROJECT_DIR$/../Virtual_Cathode_Setup/v4/build/Virtual_Cathode_App/PYZ-00.toc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Virtual_Cathode_Setup/v4/build/Virtual_Cathode_App/Virtual_Cathode_App.exe.manifest" beforeDir="false" afterPath="$PROJECT_DIR$/../Virtual_Cathode_Setup/v4/build/Virtual_Cathode_App/Virtual_Cathode_App.exe.manifest" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Virtual_Cathode_Setup/v4/build/Virtual_Cathode_App/warn-Virtual_Cathode_App.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../Virtual_Cathode_Setup/v4/build/Virtual_Cathode_App/warn-Virtual_Cathode_App.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Virtual_Cathode_Setup/v4/build/Virtual_Cathode_App/xref-Virtual_Cathode_App.html" beforeDir="false" afterPath="$PROJECT_DIR$/../Virtual_Cathode_Setup/v4/build/Virtual_Cathode_App/xref-Virtual_Cathode_App.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Virtual_Cathode_Setup/v4/src/virtual_cathode_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Virtual_Cathode_Setup/v4/src/virtual_cathode_model.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../gun_solenoid_adjuster/control/control.py" beforeDir="false" afterPath="$PROJECT_DIR$/../gun_solenoid_adjuster/control/control.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../gun_solenoid_adjuster/procedure/procedure.py" beforeDir="false" afterPath="$PROJECT_DIR$/../gun_solenoid_adjuster/procedure/procedure.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUI/GUI_FileLoad.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUI/GUI_FileSave.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUI/GUI_magnetAppMainView.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUI/GUI_magnetAppStartup.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUI/GUI_magnetWidget.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUI/Ui_FileLoad.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUI/Ui_FileLoad.ui" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUI/Ui_FileSave.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUI/Ui_FileSave.ui" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUI/Ui_magnetAppMainView.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUI/Ui_magnetAppMainView.ui" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUI/Ui_magnetAppStartup.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUI/Ui_magnetAppStartup.ui" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUI/Ui_magnetWidget.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUI/Ui_magnetWidget.ui" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUI/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUI/all_ui_to_py.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUI/fb_radio.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUI/fb_radio.ui" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/control/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/control/magnetAppController.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/magnetApp.pyw" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/magnetAppGlobals.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/v1/magnetAppGlobals.py" beforeDir="false" afterPath="$PROJECT_DIR$/v1/magnetAppGlobals.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Virtual_Cathode_Setup/v4/src/virtual_cathode_controller.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Virtual_Cathode_Setup/v4/src/virtual_cathode_controller.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transverse_decomposer/src/procedure/procedure.py" beforeDir="false" afterPath="$PROJECT_DIR$/../transverse_decomposer/src/procedure/procedure.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transverse_decomposer/src/view/view.py" beforeDir="false" afterPath="$PROJECT_DIR$/../transverse_decomposer/src/view/view.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,7 +49,6 @@
   </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
-    <option name="showExcludedFiles" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
@@ -53,7 +62,7 @@
       <recent name="C:\Users\djs56\GitHub\Software\Apps\MagnetApp" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Python.magnetApp.pyw">
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <module name="MagnetApp" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -75,16 +84,16 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="magnetApp" type="PythonConfigurationType" factoryName="Python" singleton="true" temporary="true">
+    <configuration name="magnetApp" type="PythonConfigurationType" factoryName="Python" singleton="true">
       <module name="MagnetApp" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
-      <option name="SDK_HOME" value="" />
+      <option name="SDK_HOME" value="C:\Python27\python.exe" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
+      <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/magnetApp.pyw" />
@@ -96,9 +105,34 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="magnetApp.pyw" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="MagnetApp" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="C:\Python27\python.exe" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/v1" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/v1/magnetApp.pyw" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Python.magnetApp" />
+      <item itemvalue="Python.magnetApp.pyw" />
+    </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.magnetApp" />
+        <item itemvalue="Python.magnetApp.pyw" />
       </list>
     </recent_temporary>
   </component>
@@ -114,6 +148,7 @@
       </list>
     </option>
   </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -127,12 +162,6 @@
     </task>
     <servers />
   </component>
-  <component name="WindowStateProjectService">
-    <state x="2217" y="103" width="606" height="804" key="find.popup" timestamp="1602521502329">
-      <screen x="1680" y="0" width="1680" height="1010" />
-    </state>
-    <state x="2217" y="103" width="606" height="804" key="find.popup/0.0.1680.1010/1680.0.1680.1010@1680.0.1680.1010" timestamp="1602521502329" />
-  </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
@@ -144,11 +173,6 @@
           <url>file://$PROJECT_DIR$/GUI/GUI_magnetAppMainView.py</url>
           <line>4</line>
           <option name="timeStamp" value="1" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/magnetAppGlobals.py</url>
-          <line>3</line>
-          <option name="timeStamp" value="2" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -119,6 +119,10 @@ class procedure(object):
         # print('return image')
         procedure.image_data = numpy.flipud(npData)
 
+# #TODO
+#     add in ROI graphics overlays for teh read nad the set
+#         and check they make sense for the ROI and teh mask!
+
     def get_roi_data(self):
         '''
         '''
@@ -173,6 +177,7 @@ class procedure(object):
         print("num_pix = {} ".format(num_pix))
         print("max(procedure.roi_data_raw) = {} ".format(max(procedure.roi_data_raw)))
         print(procedure.roi_data)
+
 
     def set_roi_from_mask(self):
         print("set_roi_from_mask")
