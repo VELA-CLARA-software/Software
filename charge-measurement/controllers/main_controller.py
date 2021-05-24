@@ -186,7 +186,10 @@ class main_controller(controller_base):
                         controller_base.data_monitor.charge_monitor.update_charge_values(i)
                         controller_base.data_monitor.pil_monitor.update_vc_values(i)
                         controller_base.data_monitor.llrf_monitor.update_rf_values(i)
-                        controller_base.data_monitor.pil_monitor.get_laser_energy(i)
+                        if i > controller_base.data.values[dat.set_hwp_start]:
+                            controller_base.data_monitor.pil_monitor.get_laser_energy(i, i-1)
+                        else:
+                            controller_base.data_monitor.pil_monitor.get_laser_energy(i, i)
                         controller_base.data.values[dat.data_point_success][i] = True
                         self.gui.update_plot()
                         QApplication.processEvents()

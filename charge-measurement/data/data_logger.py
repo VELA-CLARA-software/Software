@@ -6,7 +6,6 @@ from data.config_reader import config_reader
 import numpy
 import ruamel.yaml, json
 from six import string_types
-import xlrd
 import pandas
 import openpyxl
 
@@ -134,7 +133,6 @@ class data_logger(object):
         self.qe = d['qe']
         self.new_row_data = ['', filename, self.cross, self.fit, self.qe]
         # d["kly_fwd_mean_all"] = self.klyfwdmeanall
-        self.rb = xlrd.open_workbook(data_logger.config.log_config['SUMMARY_FILE'])
         self.df = pandas.DataFrame({'':[''],
                                     'filename': [os.path.basename(filename)],
                                     'charge_cross_zero': [self.cross],
@@ -165,7 +163,7 @@ class data_logger(object):
         # copy existing sheets
         self.writer.sheets = dict((ws.title, ws) for ws in self.writer.book.worksheets)
         # read existing file
-        self.reader = pandas.read_excel(data_logger.config.log_config['SUMMARY_FILE'])
+        self.reader = pandas.read_excel(data_logger.config.log_config['SUMMARY_FILE'], engine='openpyxl')
         self.df.to_excel(self.writer, index=False, header=False, startrow=len(self.reader) + 1)
         # write out the new sheet
         self.writer.close()
