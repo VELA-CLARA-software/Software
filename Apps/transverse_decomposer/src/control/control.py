@@ -54,22 +54,33 @@ class control(object):
         '''
         # connect main buttons to functions
         control.view.get_roi_data_button.clicked.connect(self.handle_get_roi_data_button)
+        control.view.get_image_data_button.clicked.connect(self.handle_get_image_data_button)
+        control.view.print_button.clicked.connect(self.handle_print_button)
         #control.view.get_roi_data_button.clicked.connect(self.handle_analyse_button)
         self.timer = QTimer()
         self.timer.setSingleShot(False)
         self.timer.timeout.connect(self.update_gui)
         self.timer.start(200)
 
+    def handle_get_image_data_button(self):
+        print("handle_get_image_data_button")
+        control.procedure.get_image()
+        control.view.update_vc_image(control.procedure.image_data, 1, 1)
+
     def handle_analyse_button(self):
         print("handle_analyse_button")
         control.procedure.analyse()
+
+    def handle_print_button(self):
+        print("handle_print_button")
+        control.procedure.print_values()
 
     def handle_get_roi_data_button(self):
         print("handle_get_roi_data_button")
         control.procedure.get_roi_data()
         print("update_image")
         #control.view.update_image(control.procedure.roi_data, 0.062, 0.062)
-        control.view.update_image(control.procedure.roi_data, 1, 1)
+        control.view.update_roi_image(control.procedure.roi_data, 1, 1)
 
     def update_gui(self):
         pass

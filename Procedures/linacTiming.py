@@ -13,10 +13,7 @@ class Linac01Timing(object):
 
     def __init__(self):
         super(Linac01Timing, self).__init__()
-<<<<<<< HEAD
         print('LinacTiming is LIVE!')
-=======
->>>>>>> parent of 903bfae1... Added handle_update_individual_trace button to NO-ARCv2 GUI that toggles the updating of individual traces between passive and 10Hz.
         self.pvs = [PVObject(x) for x in self.pvNames]
         [setattr(x, 'writeAccess', True) for x in self.pvs]
 

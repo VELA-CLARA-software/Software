@@ -114,9 +114,6 @@ class virtual_cathode_controller(QtGui.QApplication):
                             yRad = self.view.maskYRadius_spinBox.value()
                           )
 
-
-
-
     def handle_setIntensity_pushButton(self):
         print('handle_setIntensity_pushButton')
 
@@ -208,32 +205,24 @@ class virtual_cathode_controller(QtGui.QApplication):
         try:
             QtGui.QFileDialog.getOpenFileNames(self.view.centralwidget, 'Images', f)
         except:
-            print("Erroro opening ", f)
+            print("Error opening ", f)
             pass
 
     def handle_copy_path_pushButton(self):
         s = str(self.view.last_directory.text())
         self.cb.setText(s, mode = self.cb.Clipboard)
 
-
     def handle_copy_data_to_clipboard(self):
-
         v = self.model.values
         d = self.model.data
-
         ld = [v[d.las_int], v[d.las_int_mean], v[d.las_int_sd], v[d.las_int_sd_per]]
         wd = [v[d.wcm_val], v[d.wcm_mean], v[d.wcm_sd], v[d.wcm_sd_per]]
-
         lds  = ["las E (uJ) : "] + ["{:.1E}".format(i) for i in ld]
         wds  = ["wcm Q (pC) : "] + ["{:.1E}".format(i) for i in wd]
-
         header = ["            ", "  val  ", "    mean ", "    rms  ", "   rms(%)"]
         s = ''.join(header) + '\n' + ' '.join(lds) + '\n' + ' '.join(wds)
         print(s)
         self.cb.setText(s, mode=self.cb.Clipboard)
-
-
-
 
     def handle_center_mask_pushButton(self):
         self.model.center_mask()

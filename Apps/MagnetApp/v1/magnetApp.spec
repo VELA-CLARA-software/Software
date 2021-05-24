@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['magnetApp.pyw'],
-             pathex=['C:\\Users\\djs56\\GitHub\\Software\\Apps\\MagnetApp'],
+             pathex=['C:\\Users\\dlerlp\\Documents\\GitHub\\Software\\Apps\\MagnetApp\\v1'],
              binaries=[],
              datas=[],
              hiddenimports=[],

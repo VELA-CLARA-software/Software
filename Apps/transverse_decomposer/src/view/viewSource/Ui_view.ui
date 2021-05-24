@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>798</width>
+    <width>1111</width>
     <height>733</height>
    </rect>
   </property>
@@ -14,12 +14,12 @@
    <string>Laser Transverse Profile Decomposition</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="GraphicsView" name="graphics_area">
+   <widget class="GraphicsView" name="graphics_area_full">
     <property name="geometry">
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>781</width>
+      <width>501</width>
       <height>571</height>
      </rect>
     </property>
@@ -27,7 +27,7 @@
    <widget class="QPushButton" name="get_roi_data_button">
     <property name="geometry">
      <rect>
-      <x>10</x>
+      <x>550</x>
       <y>600</y>
       <width>256</width>
       <height>23</height>
@@ -40,7 +40,7 @@
    <widget class="QPushButton" name="analyse_button">
     <property name="geometry">
      <rect>
-      <x>10</x>
+      <x>550</x>
       <y>640</y>
       <width>256</width>
       <height>23</height>
@@ -48,6 +48,42 @@
     </property>
     <property name="text">
      <string>Analyse Image</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="print_button">
+    <property name="geometry">
+     <rect>
+      <x>270</x>
+      <y>670</y>
+      <width>181</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>print mask ROI values </string>
+    </property>
+   </widget>
+   <widget class="GraphicsView" name="graphics_area_ROI">
+    <property name="geometry">
+     <rect>
+      <x>530</x>
+      <y>10</y>
+      <width>501</width>
+      <height>571</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="get_image_data_button">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>600</y>
+      <width>256</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Get Image  Data</string>
     </property>
    </widget>
   </widget>
