@@ -76,13 +76,29 @@ class procedure(object):
     cam_obj = cam_fac.getCamera(cam_name)
 
     image_data_raw = None
-    image_data = None
+    full_image_data = None
     array_data_num_pix_x = cam_obj.getArrayDataPixelCountX()
     array_data_num_pix_y = cam_obj.getArrayDataPixelCountY()
+    binary_data_num_pix_x = cam_obj.getBinaryDataPixelCountX()
+    binary_data_num_pix_y = cam_obj.getBinaryDataPixelCountY()
+
+    pix2mmX = cam_obj.getpix2mmX()
+    pix2mmY = cam_obj.getpix2mmY()
+
     roi_data_ref = cam_obj.getROIDataConstRef()
 
     def __init__(self):
         print(__name__ + ', class initialized')
+
+    def get_full_image_paramters(self):
+        r = {}
+        r["array_data_num_pix_x"] = procedure.array_data_num_pix_x
+        r["array_data_num_pix_y"] = procedure.array_data_num_pix_y
+        r["binary_data_num_pix_x"] = procedure.binary_data_num_pix_x
+        r["binary_data_num_pix_y"] = procedure.binary_data_num_pix_y
+        r["pix2mmX"] = procedure.pix2mmX
+        r["pix2mmY"] = procedure.pix2mmY
+        return r
 
     def chunk(self, a, n):
         '''
@@ -111,17 +127,12 @@ class procedure(object):
     def get_image(self):
         procedure.cam_obj.updateImageData()
         procedure.image_data_raw = procedure.cam_obj.getImageData()
-        print(procedure.image_data_raw)
         npData = numpy.array(procedure.image_data_raw).reshape(
             (procedure.array_data_num_pix_y, procedure.array_data_num_pix_x))
         # never works :((((
         # npData = array(self.vc_image.data2D)
         # print('return image')
-        procedure.image_data = numpy.flipud(npData)
-
-# #TODO
-#     add in ROI graphics overlays for teh read nad the set
-#         and check they make sense for the ROI and teh mask!
+        procedure.full_image_data = numpy.flipud(npData)
 
     def get_roi_data(self):
         '''
@@ -143,53 +154,26 @@ class procedure(object):
         num_pix = procedure.roi_num_pix_x * procedure.roi_num_pix_y # + 1 # ha ! ;)
         procedure.cam_obj.updateROIData()
         procedure.roi_data_raw = procedure.cam_obj.getROIData()
-
         #procedure.roi_data_raw =  procedure.ET.getArray(procedure.roi_data_pv, num_pix)
         print("len( procedure.roi_data_raw = {}".format(len( procedure.roi_data_raw)))
-
-        # for i in range(0,10):
-        #     print( procedure.roi_data_raw[i] )
-        # t = numpy.array(procedure.roi_data _raw)
-        # for i in range(0,10):
-        #     print( t[i] )
-        #
-        # t2 = t.reshape(procedure.roi_num_pix_y,procedure.roi_num_pix_x)
-        # for i in range(0,10):
-        #     print(t2[i] )
-        # procedure.roi_dat = numpy.flipud(t2)
-        #
-        # for i in range(0,10):
-        #     print( procedure.roi_dat[i] )
-       # procedure.roi_data = self.chunk(procedure.roi_data_raw[:-1], procedure.roi_num_pix_x)
         npData = numpy.array(procedure.roi_data_raw).reshape(
             (procedure.roi_num_pix_y, procedure.roi_num_pix_x))
-        #  never works :((((
-        #  npData = array(self.vc_image.data2D)
-        # print('return image')
-
         procedure.roi_data = numpy.flipud(npData)
-        # print("len( procedure.roi_data[0] = {}".format(len( procedure.roi_data[0])))
-        # print("len( procedure.roi_data = {}".format(len( procedure.roi_data)))
+
         print("len(procedure.roi_data_raw) = {} ".format(len(procedure.roi_data_raw)))
         print("len(procedure.roi_data) = {} ".format(len(procedure.roi_data)))
         print("procedure.roi_num_pix_x = {} ".format(procedure.roi_num_pix_x))
         print("procedure.roi_num_pix_y = {} ".format(procedure.roi_num_pix_y))
         print("num_pix = {} ".format(num_pix))
         print("max(procedure.roi_data_raw) = {} ".format(max(procedure.roi_data_raw)))
-        print(procedure.roi_data)
 
+
+    def get_mask(self):
+        return procedure.cam_obj.getMask()
 
     def set_roi_from_mask(self):
         print("set_roi_from_mask")
-        # procedure.mask_x = procedure.ET.get(procedure.mask_x_pv)
-        # procedure.mask_y = procedure.ET.get(procedure.mask_y_pv)
-        # procedure.mask_centre_x = procedure.ET.get(procedure.mask_centre_x_pv)
-        # procedure.mask_centre_y = procedure.ET.get(procedure.mask_centre_y_pv)
-        # print("mask_x = {}, mask_y = {}, mask_centre_x = {}, mask_centre_y = {}".format(
-        #     procedure.mask_x , procedure.mask_y, procedure.mask_centre_x,
-        #        procedure.mask_centre_y))
-
-        mask_catap = procedure.cam_obj.getMask()
+        mask_catap = self.get_mask()
         print("mask_catap")
         print(mask_catap)
         # set the ROI parameters based on the mask
@@ -199,27 +183,14 @@ class procedure(object):
         size_y = 2 * mask_catap["mask_rad_x"]
         print("min_x={}, min_y={}, size_x={}, size_y={}".format(min_x, min_y, size_x, size_y))
         new_roi = {}
-        new_roi["x_pos"] = min_x
-        new_roi["y_pos"] = min_y
-        new_roi["x_size"] = size_x
-        new_roi["y_size"] = size_y
-
+        new_roi["x_max"] = mask_catap["mask_x"] + mask_catap["mask_rad_x"]
+        new_roi["y_max"] = mask_catap["mask_x"] + mask_catap["mask_rad_y"]
+        new_roi["x_rad"] = mask_catap["mask_rad_x"]
+        new_roi["y_rad"] = mask_catap["mask_rad_y"]
         if procedure.cam_obj.setMaskandROI(new_roi):
             print("SET ROI success??? ")
         else:
             print("FAILED TO SET ROI, passed keywords are incorrect! ")
-
-        input()
-
-        # min_x = procedure.mask_centre_x - procedure.mask_x
-        # min_y = procedure.mask_centre_y - procedure.mask_y
-        # size_x = 2 * procedure.mask_x
-        # size_y = 2 * procedure.mask_y
-        # print("min_x={}, min_y={}, size_x={}, size_y={}".format(min_x, min_y, size_x, size_y))
-        # procedure.ET.put( procedure.size_x_pv, size_x )
-        # procedure.ET.put( procedure.size_y_pv, size_y )
-        # procedure.ET.put( procedure.min_x_pv, min_x )
-        # procedure.ET.put( procedure.min_y_pv, min_y )
 
     def analyse(self):
         '''

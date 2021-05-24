@@ -40,6 +40,7 @@ class control(object):
         '''define model and view'''
         control.procedure = procedure()
         control.view = view()
+
         self.set_up_gui()
         # update gui with this:
         # show view
@@ -52,10 +53,16 @@ class control(object):
         '''
             Sets up the widget slots / signsetDataals from the gui
         '''
+        #pass image data to view
+        self.view.setup_full_image(**control.procedure.get_full_image_paramters())
+        control.view.update_mask_read_and_set(**control.procedure.get_mask())
         # connect main buttons to functions
         control.view.get_roi_data_button.clicked.connect(self.handle_get_roi_data_button)
         control.view.get_image_data_button.clicked.connect(self.handle_get_image_data_button)
         control.view.print_button.clicked.connect(self.handle_print_button)
+
+        self.procedure.set_roi_from_mask()
+
         #control.view.get_roi_data_button.clicked.connect(self.handle_analyse_button)
         self.timer = QTimer()
         self.timer.setSingleShot(False)
@@ -65,7 +72,11 @@ class control(object):
     def handle_get_image_data_button(self):
         print("handle_get_image_data_button")
         control.procedure.get_image()
-        control.view.update_vc_image(control.procedure.image_data, 1, 1)
+        control.view.update_mask_roi_read(**control.procedure.get_mask())
+        control.view.update_vc_image(control.procedure.full_image_data)
+        control.view.update_roi_read(**control.procedure.get_ROI())
+        r = control.procedure.get_ROI()
+        print(r)
 
     def handle_analyse_button(self):
         print("handle_analyse_button")
@@ -84,6 +95,3 @@ class control(object):
 
     def update_gui(self):
         pass
-
-
-

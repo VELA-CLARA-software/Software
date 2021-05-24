@@ -57,7 +57,6 @@ class virtual_cathode_view(QtGui.QMainWindow, Ui_virtual_cathode_view):
         #plot
         # the mainView holds a few dictionaries that are iterated over to update widgets
         self.set_widget_dicts()
-
         '''
         Nominal Style for buttons
         '''
@@ -314,7 +313,7 @@ class virtual_cathode_view(QtGui.QMainWindow, Ui_virtual_cathode_view):
 
     def start_up(self):
         ''' here initilise the values to the current reads ... '''
-        not_updated_read_roi = True
+        not_updated_read_roi = True # hack as there are multiple data that update this ROI
         # print("ADD CAMERA IMAGE")
         self.add_camera_image()
 
@@ -649,6 +648,8 @@ class virtual_cathode_view(QtGui.QMainWindow, Ui_virtual_cathode_view):
             this means x is y and y is x   
         '''
         self.vc_image = pg.ImageItem(view=pg.PlotItem())
+
+
         self.vc_image.scale(self.model_data.values[self.model_data.x_pix_scale_factor],
                             self.model_data.values[self.model_data.y_pix_scale_factor])
 
@@ -744,6 +745,8 @@ class virtual_cathode_view(QtGui.QMainWindow, Ui_virtual_cathode_view):
         y_r_minor_ticks = []
         major_tick = 1
         minor_tick = 0.5
+
+
 
         x_range = int(ceil(
             self.model_data.values[self.model_data.xpix_full] * self.model_data.values[
