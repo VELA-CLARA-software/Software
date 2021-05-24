@@ -134,6 +134,16 @@ class procedure(object):
         # print('return image')
         procedure.full_image_data = numpy.flipud(npData)
 
+    def set_mask_ROI(self, x_max, y_max, x_rad, y_rad, **kwargs):
+        r = {}
+        r["x_max"] = x_max
+        r["y_max"] = y_max
+        r["x_rad"] = x_rad
+        r["y_rad"] = y_rad
+        return procedure.cam_obj.setMaskandROI(r)
+
+
+
     def get_roi_data(self):
         '''
         '''
@@ -177,17 +187,17 @@ class procedure(object):
         print("mask_catap")
         print(mask_catap)
         # set the ROI parameters based on the mask
-        min_x = mask_catap["mask_x"] - mask_catap["mask_rad_x"]
-        min_y = mask_catap["mask_y"] - mask_catap["mask_rad_y"]
-        size_x = 2 * mask_catap["mask_rad_x"]
-        size_y = 2 * mask_catap["mask_rad_x"]
+        # min_x = mask_catap["mask_x"] - mask_catap["mask_rad_x"]
+        # min_y = mask_catap["mask_y"] - mask_catap["mask_rad_y"]
+        # size_x = 2 * mask_catap["mask_rad_x"]
+        # size_y = 2 * mask_catap["mask_rad_x"]
         print("min_x={}, min_y={}, size_x={}, size_y={}".format(min_x, min_y, size_x, size_y))
         new_roi = {}
         new_roi["x_max"] = mask_catap["mask_x"] + mask_catap["mask_rad_x"]
-        new_roi["y_max"] = mask_catap["mask_x"] + mask_catap["mask_rad_y"]
+        new_roi["y_max"] = mask_catap["mask_y"] + mask_catap["mask_rad_y"]
         new_roi["x_rad"] = mask_catap["mask_rad_x"]
         new_roi["y_rad"] = mask_catap["mask_rad_y"]
-        if procedure.cam_obj.setMaskandROI(new_roi):
+        if self.set_mask_ROI(**new_roi):
             print("SET ROI success??? ")
         else:
             print("FAILED TO SET ROI, passed keywords are incorrect! ")
