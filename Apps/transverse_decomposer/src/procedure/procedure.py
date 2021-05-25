@@ -31,6 +31,8 @@ from CATAP.EPICSTools import *
 from CATAP.HardwareFactory import *
 import json
 import numpy
+from src.procedure.allbeamqualitymetrics import *
+
 
 class procedure(object):
     '''
@@ -70,7 +72,7 @@ class procedure(object):
 
     cam_name = "VIRTUAL_CATHODE"
     #cam_name = "INJ-CAM-04"
-    #cam_name = "C2V-SCR-01"
+    #cam_name = "INJ-YAG-05"
 
     cam_fac = HF.getCameraFactory(cam_name)
     cam_obj = cam_fac.getCamera(cam_name)
@@ -86,6 +88,10 @@ class procedure(object):
     pix2mmY = cam_obj.getpix2mmY()
 
     roi_data_ref = cam_obj.getROIDataConstRef()
+
+    print("cam_name = {}".format(cam_name))
+    print("array_data_num_pix_x = {}".format(array_data_num_pix_x))
+    print("array_data_num_pix_y = {}".format(array_data_num_pix_y))
 
     def __init__(self):
         print(__name__ + ', class initialized')
@@ -125,19 +131,25 @@ class procedure(object):
         return procedure.cam_obj.getMaskandROI()
 
     def get_image(self):
+        print("get_image")
         procedure.cam_obj.updateImageData()
         procedure.image_data_raw = procedure.cam_obj.getImageData()
+        print(len(procedure.image_data_raw))
+        print(procedure.array_data_num_pix_x)
+        print(procedure.array_data_num_pix_y)
+
         npData = numpy.array(procedure.image_data_raw).reshape(
             (procedure.array_data_num_pix_y, procedure.array_data_num_pix_x))
         # never works :((((
         # npData = array(self.vc_image.data2D)
         # print('return image')
         procedure.full_image_data = numpy.flipud(npData)
+        #procedure.full_image_data = npData
 
-    def set_mask_ROI(self, x_max, y_max, x_rad, y_rad, **kwargs):
+    def set_mask_ROI(self, roi_x, roi_y, x_rad, y_rad, **kwargs):
         r = {}
-        r["x_max"] = x_max
-        r["y_max"] = y_max
+        r["roi_x"] = roi_x
+        r["roi_y"] = roi_y
         r["x_rad"] = x_rad
         r["y_rad"] = y_rad
         return procedure.cam_obj.setMaskandROI(r)
@@ -147,35 +159,20 @@ class procedure(object):
     def get_roi_data(self):
         '''
         '''
-        mask = self.get_mask()
-        roi = self.get_ROI()
-
-        print("mask")
-        print(mask)
-        print("roi")
-        print(roi)
-
         procedure.roi_num_pix_x = procedure.cam_obj.getROISizeX()
         print("roi_num_pix_x = {}".format(procedure.roi_num_pix_x))
-        #procedure.roi_num_pix_y = procedure.ET.get(procedure.roi_num_pix_y_pv)
         procedure.roi_num_pix_y = procedure.cam_obj.getROISizeY()
         print("roi_num_pix_y = {}".format(procedure.roi_num_pix_y))
-
         num_pix = procedure.roi_num_pix_x * procedure.roi_num_pix_y # + 1 # ha ! ;)
+
         procedure.cam_obj.updateROIData()
         procedure.roi_data_raw = procedure.cam_obj.getROIData()
-        #procedure.roi_data_raw =  procedure.ET.getArray(procedure.roi_data_pv, num_pix)
-        print("len( procedure.roi_data_raw = {}".format(len( procedure.roi_data_raw)))
         npData = numpy.array(procedure.roi_data_raw).reshape(
             (procedure.roi_num_pix_y, procedure.roi_num_pix_x))
+        # never works :((((
+        # npData = array(self.vc_image.data2D)
+        # print('return image')
         procedure.roi_data = numpy.flipud(npData)
-
-        print("len(procedure.roi_data_raw) = {} ".format(len(procedure.roi_data_raw)))
-        print("len(procedure.roi_data) = {} ".format(len(procedure.roi_data)))
-        print("procedure.roi_num_pix_x = {} ".format(procedure.roi_num_pix_x))
-        print("procedure.roi_num_pix_y = {} ".format(procedure.roi_num_pix_y))
-        print("num_pix = {} ".format(num_pix))
-        print("max(procedure.roi_data_raw) = {} ".format(max(procedure.roi_data_raw)))
 
 
     def get_mask(self):
@@ -191,10 +188,10 @@ class procedure(object):
         # min_y = mask_catap["mask_y"] - mask_catap["mask_rad_y"]
         # size_x = 2 * mask_catap["mask_rad_x"]
         # size_y = 2 * mask_catap["mask_rad_x"]
-        print("min_x={}, min_y={}, size_x={}, size_y={}".format(min_x, min_y, size_x, size_y))
+        # print("min_x={}, min_y={}, size_x={}, size_y={}".format(min_x, min_y, size_x, size_y))
         new_roi = {}
-        new_roi["x_max"] = mask_catap["mask_x"] + mask_catap["mask_rad_x"]
-        new_roi["y_max"] = mask_catap["mask_y"] + mask_catap["mask_rad_y"]
+        new_roi["roi_x"] = mask_catap["mask_x"]# + mask_catap["mask_rad_x"]
+        new_roi["roi_y"] = mask_catap["mask_y"]# + mask_catap["mask_rad_y"]
         new_roi["x_rad"] = mask_catap["mask_rad_x"]
         new_roi["y_rad"] = mask_catap["mask_rad_y"]
         if self.set_mask_ROI(**new_roi):
@@ -208,3 +205,7 @@ class procedure(object):
         :return:
         '''
         print("analysehandle_analyse_button")
+
+        beamquality(procedure.roi_data, [200,200], 100)
+
+        procedure.roi_data

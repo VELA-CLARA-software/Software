@@ -28,6 +28,9 @@ from src.procedure.procedure import procedure
 from src.view.view import view as view
 
 
+
+
+
 class control(object):
     '''
         This class buids teh procedure and the view and handles passing data / signals
@@ -60,6 +63,8 @@ class control(object):
         control.view.get_roi_data_button.clicked.connect(self.handle_get_roi_data_button)
         control.view.get_image_data_button.clicked.connect(self.handle_get_image_data_button)
         control.view.print_button.clicked.connect(self.handle_print_button)
+        control.view.set_roi_from_mask.clicked.connect(self.handle_set_roi_from_mask)
+        control.view.analyse_button.clicked.connect(self.handle_analyse_button)
 
         self.procedure.set_roi_from_mask()
 
@@ -72,11 +77,29 @@ class control(object):
     def handle_get_image_data_button(self):
         print("handle_get_image_data_button")
         control.procedure.get_image()
-        control.view.update_mask_roi_read(**control.procedure.get_mask())
         control.view.update_vc_image(control.procedure.full_image_data)
-        control.view.update_roi_read(**control.procedure.get_ROI())
         r = control.procedure.get_ROI()
+        m = control.procedure.get_mask()
+        print("GET ROI = {} ".format(r))
+        print("GET MASK = {} ".format(m))
+        control.view.update_roi_read(**r)
+        control.view.update_mask_read(**m)
         print(r)
+
+    def handle_get_roi_data_button(self):
+        print("handle_get_roi_data_button")
+        control.procedure.get_roi_data()
+        print("update_image")
+        #control.view.update_image(control.procedure.roi_data, 0.062, 0.062)
+        control.view.update_roi_image(control.procedure.roi_data, 1, 1)
+
+    def handle_set_roi_from_mask(self):
+        print('ellipse_roi_userChanged called')
+        x_rad, y_rad = 0.5 * self.view.ellipse_roi_user.size()
+        x, y = self.view.ellipse_roi_user.pos() + [x_rad, y_rad]
+        print(x_rad, y_rad,x,y)
+        self.procedure.set_mask_ROI(roi_x = int(x), roi_y = int(y), x_rad= int(x_rad) , y_rad=int(
+            y_rad))
 
     def handle_analyse_button(self):
         print("handle_analyse_button")
@@ -85,13 +108,6 @@ class control(object):
     def handle_print_button(self):
         print("handle_print_button")
         control.procedure.print_values()
-
-    def handle_get_roi_data_button(self):
-        print("handle_get_roi_data_button")
-        control.procedure.get_roi_data()
-        print("update_image")
-        #control.view.update_image(control.procedure.roi_data, 0.062, 0.062)
-        control.view.update_roi_image(control.procedure.roi_data, 1, 1)
 
     def update_gui(self):
         pass

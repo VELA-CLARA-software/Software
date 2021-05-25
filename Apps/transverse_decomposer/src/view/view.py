@@ -54,8 +54,7 @@ class view(QMainWindow, Ui_view):
         print(__name__ + ', class initialized')
         # graphics_view is a GraphicsView from QT
         # add  a PlotItem to the graphics_view
-        self.roi_plot_item = pg.PlotItem()
-        self.graphics_area_ROI.setCentralWidget(self.roi_plot_item)
+
 
     def ellipse_roi_userChanged(self):
         '''
@@ -72,10 +71,10 @@ class view(QMainWindow, Ui_view):
         # self.setMask_pushButton.click()
 
     def update_mask_read_and_set(self, mask_x,mask_rad_x, mask_y, mask_rad_y):
-        self.update_mask_roi_read(mask_x, mask_rad_x, mask_y, mask_rad_y)
-        self.update_mask_roi_set(mask_x, mask_rad_x, mask_y, mask_rad_y)
+        self.update_mask_read(mask_x, mask_rad_x, mask_y, mask_rad_y)
+        #self.update_mask_set(mask_x, mask_rad_x, mask_y, mask_rad_y)
 
-    def update_mask_roi_read(self, mask_x,mask_rad_x, mask_y, mask_rad_y):
+    def update_mask_read(self, mask_x,mask_rad_x, mask_y, mask_rad_y):
         '''
         '''
         print("update_mask_roi_read ", mask_x,mask_rad_x, mask_y, mask_rad_y)
@@ -89,7 +88,7 @@ class view(QMainWindow, Ui_view):
         self.rect_roi_read.setPos(pos=x_min, y=y_min, finish=False)
         self.rect_roi_read.setSize(size=QPointF(x_size, y_size), finish=True)
 
-    def update_mask_roi_set(self, mask_x, mask_rad_x, mask_y, mask_rad_y):
+    def update_rect_roi_set(self, mask_x, mask_rad_x, mask_y, mask_rad_y):
         '''
         '''
         print("update_mask_roi_set ", mask_x, mask_rad_x, mask_y, mask_rad_y)
@@ -115,7 +114,8 @@ class view(QMainWindow, Ui_view):
         :param x_pix_scale_factor: pix to mm
         :param y_pix_scale_factor: pix to mm
         '''
-        print("update_vc_image")
+        print("update_roi_image")
+
         self.roi_image.scale(x_pix_scale_factor, y_pix_scale_factor)
         self.roi_image.setOpts(axisOrder='row-major')
         self.roi_image.setImage(array_data)
@@ -133,6 +133,9 @@ class view(QMainWindow, Ui_view):
         self.full_plot_item = pg.PlotItem()
         self.full_plot_item.show()
         self.graphics_area_full.setCentralWidget(self.full_plot_item)
+
+        self.full_plot_item.setAspectLocked()
+        #self.full_plot_item.invertY()
 
         x_pix_scale_factor = binary_data_num_pix_x / array_data_num_pix_x
         y_pix_scale_factor = binary_data_num_pix_y / array_data_num_pix_y
@@ -259,9 +262,9 @@ class view(QMainWindow, Ui_view):
             x_d_major_ticks.append([i * xmajor_tick, str(i * xmajor_tick)])
             x_d_minor_ticks.append([i * xminor_tick, str(i * xminor_tick)])
 
-        for i in range(12):  # MAGIC_NUMBER
-            y_l_major_ticks.append([i * ymajor_tick, str(i * ymajor_tick)])
-            y_l_minor_ticks.append([i * yminor_tick, str(i * yminor_tick)])
+        for i in range(13):  # MAGIC_NUMBER
+            y_l_major_ticks.append([ i * ymajor_tick, str(i * ymajor_tick)])
+            y_l_minor_ticks.append([ i * yminor_tick, str(i * yminor_tick)])
         self.x_axis_d.setTicks([x_d_major_ticks, x_d_minor_ticks])
         self.y_axis_l.setTicks([y_l_major_ticks, y_l_minor_ticks])
         # # rows = self.values[self.data.num_pix_y]
@@ -270,6 +273,13 @@ class view(QMainWindow, Ui_view):
         #
         self.full_plot_item.show()
         self.add_rect_ROI()
+
+        self.roi_plot_item = pg.PlotItem()
+        self.graphics_area_ROI.setCentralWidget(self.roi_plot_item)
+        self.roi_image = pg.ImageItem(view=pg.PlotItem())
+        self.roi_plot_item.addItem(self.roi_image)
+        self.roi_plot_item.show()
+
 
     def add_ellipse_ROI(self, ):
         '''
