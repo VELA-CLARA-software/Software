@@ -29,8 +29,6 @@ def centroid(data):
 
     cx = np.sum(X*mask)/np.sum(mask)
     cy = np.sum(Y*mask)/np.sum(mask)
-    
-    
 
     return cx,cy
 
@@ -114,6 +112,7 @@ def angularRMS(imageA,centre,max_radius, num_steps):
     for i in np.linspace(360/num_steps,360,num_steps):
 
         #i steps through the the angles
+
         thisSector = np.nonzero(sector_mask(np.int64(imageA.shape), (centre[0],centre[1]), max_radius, (i,i+360/num_steps)) )
         #Gives the coordinates of the sector
         
@@ -268,7 +267,11 @@ def msessim(imageA, centre, max_radius):
     #plt.show()
     erruni /= float(dimensions[0]*dimensions[1])
     
- 
+
+    print(type(imagecropped))
+    print(type(unicropped))
+    print(type(normgausscropped))
+
     ssimuni = ssim(imagecropped, unicropped)#data range is that for profile 9
     ssimtrun = ssim(imagecropped, normgausscropped)#data range is that for profile 9
 

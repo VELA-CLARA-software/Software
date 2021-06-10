@@ -24,6 +24,8 @@ import sys
 # sys.path.append('\\\\claraserv3\\claranet\\test\\CATAP\\bin')
 
 #sys.path.append('\\\\claraserv3.dl.ac.uk\\claranet\\test\\CATAP\\bin') # meh
+import numpy as np
+
 sys.path.append('\\\\claraserv3.dl.ac.uk\\claranet\\development\\CATAP\\djs56'
                 '\\new_pc\\build\\PythonInterface\\Release\\CATAP') # meh
 #sys.path.append('C:\\Users\\dlerlp\\Documents\\CATAP_Build\\PythonInterface\\Release\\')
@@ -72,7 +74,7 @@ class procedure(object):
 
     cam_name = "VIRTUAL_CATHODE"
     #cam_name = "INJ-CAM-04"
-    #cam_name = "INJ-YAG-05"
+    #cam_name = "BA1-YAG-01"
 
     cam_fac = HF.getCameraFactory(cam_name)
     cam_obj = cam_fac.getCamera(cam_name)
@@ -94,6 +96,8 @@ class procedure(object):
     print("array_data_num_pix_y = {}".format(array_data_num_pix_y))
 
     def __init__(self):
+        self.start_acquiring_analysing_etc()
+
         print(__name__ + ', class initialized')
 
     def get_full_image_paramters(self):
@@ -105,6 +109,16 @@ class procedure(object):
         r["pix2mmX"] = procedure.pix2mmX
         r["pix2mmY"] = procedure.pix2mmY
         return r
+
+    def getAnalysisData(self):
+        analysis_data = procedure.cam_obj.getAnalysisData()
+        return analysis_data
+
+    def start_acquiring_analysing_etc(self):
+        procedure.cam_obj.startAcquiring()
+        procedure.cam_obj.startAnalysing()
+        procedure.cam_obj.useNPoint(True)
+        procedure.cam_obj.setStepSize(5)
 
     def chunk(self, a, n):
         '''
@@ -137,13 +151,12 @@ class procedure(object):
         print(len(procedure.image_data_raw))
         print(procedure.array_data_num_pix_x)
         print(procedure.array_data_num_pix_y)
-
         npData = numpy.array(procedure.image_data_raw).reshape(
             (procedure.array_data_num_pix_y, procedure.array_data_num_pix_x))
         # never works :((((
         # npData = array(self.vc_image.data2D)
         # print('return image')
-        procedure.full_image_data = numpy.flipud(npData)
+        procedure.full_image_data = np.flipud(npData)
         #procedure.full_image_data = npData
 
     def set_mask_ROI(self, roi_x, roi_y, x_rad, y_rad, **kwargs):
@@ -154,8 +167,6 @@ class procedure(object):
         r["y_rad"] = y_rad
         return procedure.cam_obj.setMaskandROI(r)
 
-
-
     def get_roi_data(self):
         '''
         '''
@@ -164,7 +175,6 @@ class procedure(object):
         procedure.roi_num_pix_y = procedure.cam_obj.getROISizeY()
         print("roi_num_pix_y = {}".format(procedure.roi_num_pix_y))
         num_pix = procedure.roi_num_pix_x * procedure.roi_num_pix_y # + 1 # ha ! ;)
-
         procedure.cam_obj.updateROIData()
         procedure.roi_data_raw = procedure.cam_obj.getROIData()
         npData = numpy.array(procedure.roi_data_raw).reshape(
@@ -173,7 +183,6 @@ class procedure(object):
         # npData = array(self.vc_image.data2D)
         # print('return image')
         procedure.roi_data = numpy.flipud(npData)
-
 
     def get_mask(self):
         return procedure.cam_obj.getMask()
@@ -199,6 +208,10 @@ class procedure(object):
         else:
             print("FAILED TO SET ROI, passed keywords are incorrect! ")
 
+    def get_analysis_results(self):
+        return procedure.cam_obj.getAnalysisResultsPixels()
+
+
     def analyse(self):
         '''
             function to analyze the ROI data
@@ -206,6 +219,35 @@ class procedure(object):
         '''
         print("analysehandle_analyse_button")
 
-        beamquality(procedure.roi_data, [200,200], 100)
+        pix_data =self.get_analysis_results()
+        roi_data =self.get_ROI()
 
-        procedure.roi_data
+        print("pix_data = {}".format(pix_data))
+        print("roi_data = {}".format(roi_data))
+
+        roi_beam_centre_x = pix_data["X"] - roi_data["x_min"]
+        roi_beam_centre_y = pix_data["Y"] - roi_data["y_min"]
+        roi_beam_width_x = pix_data["X_SIGMA"]
+        roi_beam_width_y = pix_data["Y_SIGMA"]
+
+        print("roi_beam_centre_x = {}".format(roi_beam_centre_x))
+        print("roi_beam_centre_y = {}".format(roi_beam_centre_y))
+        print("roi_beam_width_x = {}".format(roi_beam_width_x))
+        print("roi_beam_width_y = {}".format(roi_beam_width_y))
+
+        # widthi s3* RMS
+        beam_width_x = (3*roi_beam_width_x)*(3*roi_beam_width_x)
+        beam_width_y = (3*roi_beam_width_y)*(3*roi_beam_width_y)
+        # add in quadrature fro radius
+        beam_radius = np.sqrt(beam_width_x + beam_width_y)
+        # print
+        print("beam_width_x = {}".format(beam_width_x))
+        print("beam_width_y = {}".format(beam_width_y))
+        print("beam_radius = {}".format(beam_radius))
+        #ROI_beam_center = 1
+
+        input()
+
+        beamquality(procedure.roi_data, [int(roi_beam_centre_x), int(roi_beam_centre_y)],
+                    int(beam_radius))
+

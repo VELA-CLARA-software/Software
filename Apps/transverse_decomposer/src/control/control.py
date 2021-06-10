@@ -65,9 +65,7 @@ class control(object):
         control.view.print_button.clicked.connect(self.handle_print_button)
         control.view.set_roi_from_mask.clicked.connect(self.handle_set_roi_from_mask)
         control.view.analyse_button.clicked.connect(self.handle_analyse_button)
-
         self.procedure.set_roi_from_mask()
-
         #control.view.get_roi_data_button.clicked.connect(self.handle_analyse_button)
         self.timer = QTimer()
         self.timer.setSingleShot(False)
@@ -84,6 +82,7 @@ class control(object):
         print("GET MASK = {} ".format(m))
         control.view.update_roi_read(**r)
         control.view.update_mask_read(**m)
+        self.update_crosshairs()
         print(r)
 
     def handle_get_roi_data_button(self):
@@ -100,6 +99,19 @@ class control(object):
         print(x_rad, y_rad,x,y)
         self.procedure.set_mask_ROI(roi_x = int(x), roi_y = int(y), x_rad= int(x_rad) , y_rad=int(
             y_rad))
+
+    def update_crosshairs(self):
+        analysis = control.procedure.getAnalysisData()
+        print(analysis)
+        control.view.update_crosshair( x0 = analysis["x_pix"] , y0= analysis["y_pix"],
+                                       sx= analysis["sigma_x_pix"], sy= analysis["sigma_y_pix"] )
+
+        roi = control.procedure.get_ROI()
+
+        control.view.update_crosshair_ROI( x0 = analysis["x_pix"] - roi["x_min"] ,
+                                           y0= analysis["y_pix"] - roi["y_min"],
+                                       sx= analysis["sigma_x_pix"], sy= analysis["sigma_y_pix"] )
+
 
     def handle_analyse_button(self):
         print("handle_analyse_button")

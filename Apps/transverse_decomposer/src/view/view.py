@@ -72,7 +72,12 @@ class view(QMainWindow, Ui_view):
 
     def update_mask_read_and_set(self, mask_x,mask_rad_x, mask_y, mask_rad_y):
         self.update_mask_read(mask_x, mask_rad_x, mask_y, mask_rad_y)
-        #self.update_mask_set(mask_x, mask_rad_x, mask_y, mask_rad_y)
+        self.update_mask_set(mask_x, mask_rad_x, mask_y, mask_rad_y)
+
+    def update_mask_set(self, mask_x,mask_rad_x, mask_y, mask_rad_y):
+        self.ellipse_roi_user.setPos( pos =  mask_x - mask_rad_x,  y = mask_y - mask_rad_y,
+                                       finish=False)
+        self.ellipse_roi_user.setSize( size=QPointF(2 * mask_rad_x, 2 * mask_rad_y), finish=True)
 
     def update_mask_read(self, mask_x,mask_rad_x, mask_y, mask_rad_y):
         '''
@@ -115,7 +120,6 @@ class view(QMainWindow, Ui_view):
         :param y_pix_scale_factor: pix to mm
         '''
         print("update_roi_image")
-
         self.roi_image.scale(x_pix_scale_factor, y_pix_scale_factor)
         self.roi_image.setOpts(axisOrder='row-major')
         self.roi_image.setImage(array_data)
@@ -181,18 +185,19 @@ class view(QMainWindow, Ui_view):
         self.h_cross_hair.setData(x=[900, 1100], y=[1000, 1000], pen='g')
         self.full_plot_item.addItem(self.v_cross_hair)
         self.full_plot_item.addItem(self.h_cross_hair)
+
         '''
             limits and axes in pixels and mm
         '''
         border = 50
         self.full_plot_item.setLimits(xMin=0, xMax=binary_data_num_pix_x,
                                  yMin=0, yMax=binary_data_num_pix_y,
-                                 minXRange=10,
+                                 minXRange=-border,
                                  maxXRange=binary_data_num_pix_x,
-                                 minYRange=10,
+                                 minYRange=-border,
                                  maxYRange=binary_data_num_pix_y)
         self.full_plot_item.setRange(xRange=[-border, binary_data_num_pix_x + border], \
-            yRange=[-border, binary_data_num_pix_x + border])
+            yRange=[-border, binary_data_num_pix_y + border])
         '''
             for axes we'll have pixels and mm, so customize the tick marks
             fairly cancerous below, but we only do it once ... 
@@ -279,7 +284,13 @@ class view(QMainWindow, Ui_view):
         self.roi_image = pg.ImageItem(view=pg.PlotItem())
         self.roi_plot_item.addItem(self.roi_image)
         self.roi_plot_item.show()
-
+        # ROI Cross hairs, so beam size data cna be passed to laser analsys functions
+        self.v_cross_hair_ROI = pg.PlotDataItem()
+        self.h_cross_hair_ROI = pg.PlotDataItem()
+        self.v_cross_hair_ROI.setData(x=[1000, 1000], y=[900, 1100], pen='g')
+        self.h_cross_hair_ROI.setData(x=[900, 1100], y=[1000, 1000], pen='g')
+        self.roi_plot_item.addItem(self.h_cross_hair_ROI)
+        self.roi_plot_item.addItem(self.v_cross_hair_ROI)
 
     def add_ellipse_ROI(self, ):
         '''
@@ -300,6 +311,34 @@ class view(QMainWindow, Ui_view):
         # add to our plot item
         self.full_plot_item.addItem(self.ellipse_roi_read)
         self.full_plot_item.addItem(self.ellipse_roi_user)
+
+
+    def update_crosshair(self, x0, y0, sx, sy):
+        '''
+            It seems that the x,y and y for analyhwp_down_pushButtonsis are mixed compared to x,
+            y dimensions
+        :return:
+        '''
+        xmin = x0 - sx
+        xmax = x0 + sx
+        ymin = y0 - sy
+        ymax = y0 + sy
+        self.v_cross_hair.setData(x=[x0, x0], y=[ymin, ymax])
+        self.h_cross_hair.setData(x=[xmin, xmax], y=[y0, y0])
+
+    def update_crosshair_ROI(self, x0, y0, sx, sy):
+        '''
+            It seems that the x,y and y for analyhwp_down_pushButtonsis are mixed compared to x,
+            y dimensions
+        :return:
+        '''
+        xmin = x0 - sx
+        xmax = x0 + sx
+        ymin = y0 - sy
+        ymax = y0 + sy
+        self.v_cross_hair_ROI.setData(x=[x0, x0], y=[ymin, ymax])
+        self.h_cross_hair_ROI.setData(x=[xmin, xmax], y=[y0, y0])
+
 
     def add_rect_ROI(self, ):
         self.rect_roi_read = pg.ROI([100, 100], [100, 100], movable=False, pen='b')

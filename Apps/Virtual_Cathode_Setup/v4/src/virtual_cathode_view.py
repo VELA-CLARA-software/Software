@@ -758,6 +758,8 @@ class virtual_cathode_view(QtGui.QMainWindow, Ui_virtual_cathode_view):
         y_pm = self.model_data.values[self.model_data.y_pix_to_mm]
 
         for i in range(2 * x_range):
+
+
             x_u_major_ticks.append([i * major_tick / x_pm, str(i * major_tick)])
             x_u_minor_ticks.append([i * minor_tick / x_pm, str(i * minor_tick)])
 
@@ -767,6 +769,15 @@ class virtual_cathode_view(QtGui.QMainWindow, Ui_virtual_cathode_view):
 
         self.x_axis_u.setTicks([x_u_major_ticks, x_u_minor_ticks])
         self.y_axis_r.setTicks([y_r_major_ticks, y_r_minor_ticks])
+
+
+        I need to set up the axes ticks correctly this will be fine, if done properly !
+
+        tick_max = self.model_data.values[self.model_data.xpix_full]
+
+
+
+
 
         # pixels on the left and down axes
         x_d_major_ticks = []
@@ -782,9 +793,34 @@ class virtual_cathode_view(QtGui.QMainWindow, Ui_virtual_cathode_view):
             x_d_major_ticks.append([i * xmajor_tick, str(i * xmajor_tick)])
             x_d_minor_ticks.append([i * xminor_tick, str(i * xminor_tick)])
 
+        maj_tick_pos = []
+        maj_tick_lab = []
+        min_tick_pos = []
+        min_tick_lab = []
         for i in range(12):  # MAGIC_NUMBER
-            y_l_major_ticks.append([i * ymajor_tick, str(i * ymajor_tick)])
-            y_l_minor_ticks.append([i * yminor_tick, str(i * yminor_tick)])
+            maj_tick_pos.append( i * ymajor_tick)
+            maj_tick_lab.append(str(i * ymajor_tick))
+            min_tick_pos.append( i * yminor_tick)
+            min_tick_lab.append(str(i * yminor_tick))
+            if maj_tick_pos[-1] > 2160:
+                break
+
+        del maj_tick_pos[-1]
+        del maj_tick_lab[-1]
+        del min_tick_lab[-1]
+        del min_tick_pos[-1]
+
+        print("maj_tick_lab = {}".format(maj_tick_lab))
+        print("maj_tick_pos = {}".format(maj_tick_pos))
+        print("min_tick_lab = {}".format(min_tick_lab))
+        print("min_tick_pos = {}".format(min_tick_pos))
+
+        print("RUNNING")
+        for i in range(len(maj_tick_pos)-1):  # MAGIC_NUMBER
+            print([maj_tick_pos[i], maj_tick_lab[-i]])
+            print([min_tick_pos[i], min_tick_pos[-i]])
+            y_l_major_ticks.append([maj_tick_pos[i], maj_tick_lab[-i] ])
+            y_l_minor_ticks.append([min_tick_pos[i], min_tick_lab[-i] ])
 
         self.x_axis_d.setTicks([x_d_major_ticks, x_d_minor_ticks])
         self.y_axis_l.setTicks([y_l_major_ticks, y_l_minor_ticks])

@@ -325,7 +325,7 @@ class virtual_cathode_model():
               #  never works :((((
               #  npData = array(self.vc_image.data2D)
             #print('return image')
-            return flipud(npData)
+            return npData
         else:
             print('failed to get image')
         return self.get_fake_image()
