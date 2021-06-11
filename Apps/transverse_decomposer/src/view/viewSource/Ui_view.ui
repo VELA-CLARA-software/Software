@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1111</width>
-    <height>733</height>
+    <width>1209</width>
+    <height>579</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,16 +19,16 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>501</width>
-      <height>571</height>
+      <width>701</width>
+      <height>471</height>
      </rect>
     </property>
    </widget>
    <widget class="QPushButton" name="get_roi_data_button">
     <property name="geometry">
      <rect>
-      <x>550</x>
-      <y>600</y>
+      <x>300</x>
+      <y>500</y>
       <width>256</width>
       <height>23</height>
      </rect>
@@ -40,8 +40,8 @@
    <widget class="QPushButton" name="analyse_button">
     <property name="geometry">
      <rect>
-      <x>550</x>
-      <y>640</y>
+      <x>580</x>
+      <y>500</y>
       <width>256</width>
       <height>23</height>
      </rect>
@@ -53,8 +53,8 @@
    <widget class="QPushButton" name="print_button">
     <property name="geometry">
      <rect>
-      <x>270</x>
-      <y>670</y>
+      <x>300</x>
+      <y>540</y>
       <width>181</width>
       <height>23</height>
      </rect>
@@ -66,10 +66,10 @@
    <widget class="GraphicsView" name="graphics_area_ROI">
     <property name="geometry">
      <rect>
-      <x>530</x>
+      <x>720</x>
       <y>10</y>
-      <width>501</width>
-      <height>571</height>
+      <width>441</width>
+      <height>471</height>
      </rect>
     </property>
    </widget>
@@ -77,13 +77,26 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>600</y>
+      <y>500</y>
       <width>256</width>
       <height>23</height>
      </rect>
     </property>
     <property name="text">
      <string>Get Image  Data</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="set_roi_from_mask">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>540</y>
+      <width>161</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Set mask/ROI  from user mask</string>
     </property>
    </widget>
   </widget>

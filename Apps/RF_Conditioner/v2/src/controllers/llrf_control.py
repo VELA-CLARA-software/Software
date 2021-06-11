@@ -528,3 +528,5 @@ class llrf_control(object):
 		self.logger.message(__name__ + ' setting One Record ACQM to event')
 		self.llrf_control.setTORACQMEvent()
 
+	def set_trace_scans_to_nominal(self):
+		print("ro be writen, use c++ function ")

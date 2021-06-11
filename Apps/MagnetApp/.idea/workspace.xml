@@ -3,34 +3,14 @@
   <component name="ChangeListManager">
     <list default="true" id="6acf709e-b81e-478a-a08b-84f0a1e9a357" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GUI/GUI_FileLoad.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GUI/GUI_FileSave.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GUI/GUI_magnetAppMainView.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GUI/GUI_magnetAppStartup.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GUI/GUI_magnetWidget.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GUI/Ui_FileLoad.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GUI/Ui_FileLoad.ui" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GUI/Ui_FileSave.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GUI/Ui_FileSave.ui" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GUI/Ui_magnetAppMainView.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GUI/Ui_magnetAppMainView.ui" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GUI/Ui_magnetAppStartup.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GUI/Ui_magnetAppStartup.ui" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GUI/Ui_magnetWidget.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GUI/Ui_magnetWidget.ui" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GUI/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GUI/all_ui_to_py.cmd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GUI/fb_radio.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GUI/fb_radio.ui" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/control/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/control/magnetAppController.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/magnetApp.pyw" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/magnetAppGlobals.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/v1/magnetAppGlobals.py" beforeDir="false" afterPath="$PROJECT_DIR$/v1/magnetAppGlobals.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Virtual_Cathode_Setup/v4/src/virtual_cathode_controller.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Virtual_Cathode_Setup/v4/src/virtual_cathode_controller.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2_py3_catap/source/gui/GUI_magnetAppStartup.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2_py3_catap/source/gui/GUI_magnetAppStartup.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/v1/control/magnetAppController.py" beforeDir="false" afterPath="$PROJECT_DIR$/v1/control/magnetAppController.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/v1/magnetAppLog.log" beforeDir="false" afterPath="$PROJECT_DIR$/v1/magnetAppLog.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transverse_decomposer/src/control/control.py" beforeDir="false" afterPath="$PROJECT_DIR$/../transverse_decomposer/src/control/control.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../transverse_decomposer/src/procedure/procedure.py" beforeDir="false" afterPath="$PROJECT_DIR$/../transverse_decomposer/src/procedure/procedure.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../transverse_decomposer/src/view/view.py" beforeDir="false" afterPath="$PROJECT_DIR$/../transverse_decomposer/src/view/view.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transverse_decomposer/src/view/viewSource/Ui_view.py" beforeDir="false" afterPath="$PROJECT_DIR$/../transverse_decomposer/src/view/viewSource/Ui_view.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transverse_decomposer/src/view/viewSource/Ui_view.ui" beforeDir="false" afterPath="$PROJECT_DIR$/../transverse_decomposer/src/view/viewSource/Ui_view.ui" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
