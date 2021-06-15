@@ -576,9 +576,6 @@ class virtual_cathode_view(QtGui.QMainWindow, Ui_virtual_cathode_view):
         self.widget_updatefunc_rs[self.img_avg_sd_per] = [self.update_real_rs]
 
 
-
-
-
         self.widget_updatefunc[self.imageLayout] = [self.update_image]
         self.widget_updatefunc[self.mask_x_read] = [self.update_int]
         self.widget_updatefunc[self.mask_y_read] = [self.update_int]
@@ -771,13 +768,7 @@ class virtual_cathode_view(QtGui.QMainWindow, Ui_virtual_cathode_view):
         self.y_axis_r.setTicks([y_r_major_ticks, y_r_minor_ticks])
 
 
-        I need to set up the axes ticks correctly this will be fine, if done properly !
-
-        tick_max = self.model_data.values[self.model_data.xpix_full]
-
-
-
-
+  #      I need to set up the axes ticks correctly this will be fine, if done preerprly!
 
         # pixels on the left and down axes
         x_d_major_ticks = []
