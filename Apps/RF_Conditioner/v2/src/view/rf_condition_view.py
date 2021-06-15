@@ -434,6 +434,9 @@ class rf_condition_view(QMainWindow, Ui_rf_condition_mainWindow):
             self.llrf_enable_button.setStyleSheet('QPushButton { background-color : ' + self.good + '; color : black; }')
             self.llrf_enable_button.setText('RF Enabled')
 
+
+
+
     def start_gui_update(self):
         # reference to the values dictionary
         self.data = rf_conditioning_data()

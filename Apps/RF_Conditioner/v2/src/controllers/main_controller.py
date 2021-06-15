@@ -112,6 +112,9 @@ class main_controller(object):
         self.view.start_gui_update()
 
 
+        self.view.update_individual_trace_button.clicked.connect(self.handle_update_individual_trace_updating)
+
+
         # CATAP hardware controllers, these live here and are passed to where they are needed
         # self.hardware.start_up() actually creates the objects, this should only be done once,
         # here! so that we don't create multiple controllers
@@ -811,6 +814,12 @@ class main_controller(object):
             self.hardware.llrf_controller.enable_llrf()
         else:
             self.hardware.llrf_controller.disableRFOutput()
+
+    def handle_update_individual_trace_updating(self):
+        # TODO write this function
+        print("TO")
+
+
 
     def quit_app(self, message=""):
         print(message)
