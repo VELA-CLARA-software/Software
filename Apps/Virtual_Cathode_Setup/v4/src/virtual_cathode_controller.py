@@ -82,12 +82,15 @@ class virtual_cathode_controller(QtGui.QApplication):
 
     def start_up_update(self):
         # we give the app a few ticks to init the hardware controllers before updating the mainView
+        print("start_count = {}".format(self.start_count))
         if self.start_count < 5:
             self.start_count += 1
         elif self.start_count == 5:
+            print("self.start_count == 5")
             self.start_count += 1
-            self.model.update_values()
+            print("self.view.start_up()")
             self.view.start_up()
+            self.model.update_values()
         else:
             print("Starting main timer")
             self.timer.stop()
@@ -224,6 +227,10 @@ class virtual_cathode_controller(QtGui.QApplication):
         print(s)
         self.cb.setText(s, mode=self.cb.Clipboard)
 
+    def handle_enable_HWP_Button(self):
+        print("handle_enable_HWP_Butt")
+        self.model.toggle_HWP_enable()
+
     def handle_center_mask_pushButton(self):
         self.model.center_mask()
 
@@ -253,7 +260,7 @@ class virtual_cathode_controller(QtGui.QApplication):
         self.view.spinBox_maxLevel.valueChanged.connect(self.handle_spinBox_maxLevel)
 
         self.view.copy_data_to_clipboard.clicked.connect(self.handle_copy_data_to_clipboard)
-
+        self.view.enable_HWP_Button.clicked.connect(self.handle_enable_HWP_Button)
 
         self.view.rs_buffer_size_spinbox.valueChanged.connect(self.handle_rs_buffer_size_spinbox)
 
@@ -277,6 +284,7 @@ class virtual_cathode_controller(QtGui.QApplication):
         self.view.autoLevel_pushButton.clicked.connect(self.handle_autoLevel_pushButton)
 
         self.view.center_mask_pushButton.clicked.connect(self.handle_center_mask_pushButton)
+
 
 
 
