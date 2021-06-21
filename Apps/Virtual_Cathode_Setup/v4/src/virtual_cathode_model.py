@@ -30,8 +30,15 @@ import sys,os
 #sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\stage\\')
 #sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\Release\\')
 #sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\Release\\')
-sys.path.append('\\\\claraserv3\\claranet\\test\\Controllers\\bin\\Release\\')
-import VELA_CLARA_PILaser_Control as pil
+# sys.path.append('\\\\192.168.83.14\\claranet\\packages\\vcc\\bin\\Stage\\')
+# sys.path.append('\\\\claraserv3.dl.ac.uk\\claranet\\packages\\vcc\\bin\\Stage\\')
+sys.path.append('\\\\claraserv3.dl.ac.uk\\claranet\\packages\\vcc\\bin\\stage\\')
+try:
+    import VELA_CLARA_PILaser_Control as pil
+except:
+    print("Failed to load PIL module")
+
+
 import virtual_cathode_model_data as model_data
 from numpy import array
 from numpy import amin
@@ -44,14 +51,12 @@ import time
 #from scipy.stats import multivariate_normal
 
 
-
-
 class virtual_cathode_model():
 
     def __init__(self):
         # PIL control
         self.init = pil.init()
-        #self.init.setVerbose()
+        self.init.setVerbose()
         self.pil = self.init.physical_PILaser_Controller()
         #
         # own a reference to the data dictionary
@@ -229,7 +234,7 @@ class virtual_cathode_model():
             v[self.data.wcm_sd_per] = 0.0
 
         # image average pixel value
-        v[self.data.img_avg] = self.vc_data.avg_pix_mean
+        v[self.data.img_avg] = self.vc_data.avg_pix
         v[self.data.img_avg_mean] = self.vc_data.avg_pix_mean
         v[self.data.img_avg_sd] = self.vc_data.avg_pix_sd
         if self.vc_data.avg_pix_mean != 0.0:
@@ -285,6 +290,15 @@ class virtual_cathode_model():
         if v[self.data.rs_buffer_full]:
             if self.data.values[self.data.rs_auto_reset]:
                 self.reset_running_stats()
+
+        if self.pil.getHWPEnableState() == pil.STATE.ON:
+            print("hwp enable is TRUE")
+            v[self.data.hwp_enable_state] = True
+        else:
+            v[self.data.hwp_enable_state] = False
+        if self.previous_values[self.data.hwp_enable_state] != v[self.data.hwp_enable_state]:
+            print("hwp enable is {}".format(v[self.data.hwp_enable_state]))
+
         #print("Q_n = ",v[self.data.rs_buffer_count], v[self.data.rs_buffer_full])
 
     def set_rs_buffer_size(self, val):
@@ -320,7 +334,7 @@ class virtual_cathode_model():
               #  never works :((((
               #  npData = array(self.vc_image.data2D)
             #print('return image')
-            return flipud(npData)
+            return npData
         else:
             print('failed to get image')
         return self.get_fake_image()
@@ -401,9 +415,27 @@ class virtual_cathode_model():
             self.pil.setMaskFeedBackOff_VC()
 
     def center_mask(self):
-        x = self.values[self.data.mask_x_rbv] - self.values[self.data.mask_x_rad_rbv]
-        y = self.values[self.data.mask_y_rbv] - self.values[self.mask_y_rad_rbv]
-        xRad = 2 * self.values[self.data.mask_x_rad_rbv]
-        yRad = 2 * self.values[self.data.mask_y_rad_rbv]
+        # x = self.values[self.data.mask_x_rbv] - self.values[self.data.mask_x_rad_rbv]
+        # y = self.values[self.data.mask_y_rbv] - self.values[self.data.mask_y_rad_rbv]
+        # xRad = 2 * self.values[self.data.mask_x_rad_rbv]
+        # yRad = 2 * self.values[self.data.mask_y_rad_rbv]
+        x = int(self.values[self.data.num_pix_x] / 2)
+        y = int(self.values[self.data.num_pix_y] / 2)
+        xRad = 100
+        yRad = 100
         self.setMask(x, y, xRad, yRad)
 
+    def toggle_HWP_enable(self):
+        print("toggle_HWP_enable")
+        print("self.pil.getHWPEnableState() =  ", self.pil.getHWPEnableState() )
+        if self.pil.getHWPEnableState() == pil.STATE.ON:
+            print("STATE IS ON SO disable")
+            a = self.pil.disableHWP()
+        else:
+            print("STATE IS NOT ON SO enable")
+            a = self.pil.enableHWP()
+
+        if a:
+            print("command sent")
+        else:
+            print("command NOT sent")

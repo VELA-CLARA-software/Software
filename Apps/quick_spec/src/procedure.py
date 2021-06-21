@@ -23,7 +23,7 @@
 //*/
 '''
 import sys
-sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\Release\\')
+sys.path.append('\\\\claraserv3.dl.ac.uk\\claranet\\packages\\vcc\\bin\\Release\\')
 
 import VELA_CLARA_Camera_Control as cam
 from numpy import array
@@ -63,8 +63,6 @@ class procedure(object):
         procedure.x_proj_mean = zeros(self.data.values[data.num_x_pix])
 
         self.data.values[data.rolling_count] = 0
-
-
 
     # called external to update states
     def update_data(self):

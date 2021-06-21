@@ -112,6 +112,9 @@ class main_controller(object):
         self.view.start_gui_update()
 
 
+        self.view.update_individual_trace_button.clicked.connect(self.handle_update_individual_trace_updating)
+
+
         # CATAP hardware controllers, these live here and are passed to where they are needed
         # self.hardware.start_up() actually creates the objects, this should only be done once,
         # here! so that we don't create multiple controllers
@@ -391,8 +394,6 @@ class main_controller(object):
         '''
         rcd = rf_conditioning_data
 
-
-
         #print('\nFrom check_BD_state\nBD_state_OLD = {}\nBD_state = {}'.format(self.data.values[rcd.BD_state_OLD],  self.data.values[rcd.BD_state]))
         # set the old status to the current status
         self.data.values[rcd.BD_state_OLD] = self.data.values[rcd.BD_state]
@@ -433,12 +434,9 @@ class main_controller(object):
             If all components are True the this function returns state.good / state.NEW_GOOD.
         '''
         rcd = rf_conditioning_data
-
-
         #TODO AJG: update the time/pulses until BDR is low enough to ramp countdowns
 
         if self.data.values[rcd.breakdown_rate_low] == False:
-
             self.data.breakdown_rate_able_to_ramp_countdown()
 
         #print('\nFrom can_ramp_state\ncan_ramp_status_OLD = {}\ncan_ramp_status = {}'.format(self.data.values[rcd.BD_state_OLD],
@@ -452,7 +450,7 @@ class main_controller(object):
 
         # This is a compact expression which returns True if ALL components in the list are tTrue, otherwise False is returned
         all_can_ramps_good = all([self.data.values[rcd.gui_can_ramp], self.data.values[rcd.vac_level_can_ramp ], self.data.values[
-            rcd.cav_pwr_ratio_can_ramp], self.data.values[rcd.breakdown_rate_low]])
+            rcd.cav_pwr_ratio_can_ramp], self.data.values[rcd.breakdown_rate_low], self.data.values[rcd.bosl_switch_set_good]])
 
         #print("gui_can_ramp = {}\nvac_level_can_ramp = {}\ncav_pwr_ratio_can_ramp = {}\nbreakdown_rate_low = {}".format(
         #    self.data.values[rcd.gui_can_ramp], self.data.values[rcd.vac_level_can_ramp ], self.data.values[
@@ -816,6 +814,12 @@ class main_controller(object):
             self.hardware.llrf_controller.enable_llrf()
         else:
             self.hardware.llrf_controller.disableRFOutput()
+
+    def handle_update_individual_trace_updating(self):
+        # TODO write this function
+        print("TO")
+
+
 
     def quit_app(self, message=""):
         print(message)

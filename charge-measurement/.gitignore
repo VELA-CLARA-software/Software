@@ -1,0 +1,16 @@
+#ignore .vscode directory#
+
+##########################
+
+
+.idea/
+
+
+
+#ignore build directory#
+
+########################
+
+*build/
+*dist/
+*__pycache__/

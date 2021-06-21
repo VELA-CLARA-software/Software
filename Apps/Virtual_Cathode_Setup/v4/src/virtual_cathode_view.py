@@ -57,7 +57,6 @@ class virtual_cathode_view(QtGui.QMainWindow, Ui_virtual_cathode_view):
         #plot
         # the mainView holds a few dictionaries that are iterated over to update widgets
         self.set_widget_dicts()
-
         '''
         Nominal Style for buttons
         '''
@@ -78,8 +77,6 @@ class virtual_cathode_view(QtGui.QMainWindow, Ui_virtual_cathode_view):
         self.save_pushButton.setDisabled(True)
         self.RS_autoreset.released.connect(self.handle_RS_autoreset)
         self.handle_RS_autoreset()
-
-
 
     def handle_RS_autoreset(self):
         print('handle_RS_autoreset')
@@ -203,11 +200,8 @@ class virtual_cathode_view(QtGui.QMainWindow, Ui_virtual_cathode_view):
         else:
             self.rs_buffer_count.setStyleSheet("background-color: #ff5733")
 
-
-
     def update_rs_buffer_full(self):
         print("update_rs_buffer_full")
-
 
     def new_value(self, value):
         '''
@@ -319,7 +313,7 @@ class virtual_cathode_view(QtGui.QMainWindow, Ui_virtual_cathode_view):
 
     def start_up(self):
         ''' here initilise the values to the current reads ... '''
-        not_updated_read_roi = True
+        not_updated_read_roi = True # hack as there are multiple data that update this ROI
         # print("ADD CAMERA IMAGE")
         self.add_camera_image()
 
@@ -582,9 +576,6 @@ class virtual_cathode_view(QtGui.QMainWindow, Ui_virtual_cathode_view):
         self.widget_updatefunc_rs[self.img_avg_sd_per] = [self.update_real_rs]
 
 
-
-
-
         self.widget_updatefunc[self.imageLayout] = [self.update_image]
         self.widget_updatefunc[self.mask_x_read] = [self.update_int]
         self.widget_updatefunc[self.mask_y_read] = [self.update_int]
@@ -654,6 +645,8 @@ class virtual_cathode_view(QtGui.QMainWindow, Ui_virtual_cathode_view):
             this means x is y and y is x   
         '''
         self.vc_image = pg.ImageItem(view=pg.PlotItem())
+
+
         self.vc_image.scale(self.model_data.values[self.model_data.x_pix_scale_factor],
                             self.model_data.values[self.model_data.y_pix_scale_factor])
 
@@ -750,6 +743,8 @@ class virtual_cathode_view(QtGui.QMainWindow, Ui_virtual_cathode_view):
         major_tick = 1
         minor_tick = 0.5
 
+
+
         x_range = int(ceil(
             self.model_data.values[self.model_data.xpix_full] * self.model_data.values[
                 self.model_data.x_pix_to_mm]))
@@ -760,6 +755,8 @@ class virtual_cathode_view(QtGui.QMainWindow, Ui_virtual_cathode_view):
         y_pm = self.model_data.values[self.model_data.y_pix_to_mm]
 
         for i in range(2 * x_range):
+
+
             x_u_major_ticks.append([i * major_tick / x_pm, str(i * major_tick)])
             x_u_minor_ticks.append([i * minor_tick / x_pm, str(i * minor_tick)])
 
@@ -769,6 +766,9 @@ class virtual_cathode_view(QtGui.QMainWindow, Ui_virtual_cathode_view):
 
         self.x_axis_u.setTicks([x_u_major_ticks, x_u_minor_ticks])
         self.y_axis_r.setTicks([y_r_major_ticks, y_r_minor_ticks])
+
+
+  #      I need to set up the axes ticks correctly this will be fine, if done preerprly!
 
         # pixels on the left and down axes
         x_d_major_ticks = []
@@ -784,9 +784,34 @@ class virtual_cathode_view(QtGui.QMainWindow, Ui_virtual_cathode_view):
             x_d_major_ticks.append([i * xmajor_tick, str(i * xmajor_tick)])
             x_d_minor_ticks.append([i * xminor_tick, str(i * xminor_tick)])
 
+        maj_tick_pos = []
+        maj_tick_lab = []
+        min_tick_pos = []
+        min_tick_lab = []
         for i in range(12):  # MAGIC_NUMBER
-            y_l_major_ticks.append([i * ymajor_tick, str(i * ymajor_tick)])
-            y_l_minor_ticks.append([i * yminor_tick, str(i * yminor_tick)])
+            maj_tick_pos.append( i * ymajor_tick)
+            maj_tick_lab.append(str(i * ymajor_tick))
+            min_tick_pos.append( i * yminor_tick)
+            min_tick_lab.append(str(i * yminor_tick))
+            if maj_tick_pos[-1] > 2160:
+                break
+
+        del maj_tick_pos[-1]
+        del maj_tick_lab[-1]
+        del min_tick_lab[-1]
+        del min_tick_pos[-1]
+
+        print("maj_tick_lab = {}".format(maj_tick_lab))
+        print("maj_tick_pos = {}".format(maj_tick_pos))
+        print("min_tick_lab = {}".format(min_tick_lab))
+        print("min_tick_pos = {}".format(min_tick_pos))
+
+        print("RUNNING")
+        for i in range(len(maj_tick_pos)-1):  # MAGIC_NUMBER
+            print([maj_tick_pos[i], maj_tick_lab[-i]])
+            print([min_tick_pos[i], min_tick_pos[-i]])
+            y_l_major_ticks.append([maj_tick_pos[i], maj_tick_lab[-i] ])
+            y_l_minor_ticks.append([min_tick_pos[i], min_tick_lab[-i] ])
 
         self.x_axis_d.setTicks([x_d_major_ticks, x_d_minor_ticks])
         self.y_axis_l.setTicks([y_l_major_ticks, y_l_minor_ticks])

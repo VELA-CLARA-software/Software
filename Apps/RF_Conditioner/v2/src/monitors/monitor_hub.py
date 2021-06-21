@@ -72,6 +72,9 @@ from src.monitors.rf_heartbeat import rf_heartbeat
 print('monitor_hub: import cavity_temperature_monitor')
 from src.monitors.daq_frequency_monitor import daq_frequency_monitor
 
+print('monitor_hub: import bsol_switch_monitor')
+from src.monitors.bsol_switch_monitor import bsol_switch_monitor
+
 class monitor_hub(object):
     """
     This class creates and holds all the data monitoring classes
@@ -90,6 +93,7 @@ class monitor_hub(object):
     user_gen_monitor = None
     daq_frequency_monitor = None
     rf_heartbeater = None
+    bsol_switch_monitor = None
 
     # state of each possible data monitor
 
@@ -105,13 +109,15 @@ class monitor_hub(object):
     is_vac_valve_monitor = 'is_vac_valve_monitor'
     is_sol_monitoring = 'is_sol_monitoring'
     is_daq_frequency_monitoring = 'is_daq_frequency_monitoring'
+    is_bsol_switch_monitoring = 'is_bsol_switch_monitoring'
 
     is_monitoring = {is_vac_monitoring: False,  # is_DC_monitoring: False,
                      is_modulator_monitoring: False, is_cavity_temp_monitoring: False,
                      is_outside_mask_monitoring: False, is_llrf_monitoring: False,
                      is_water_temp_monitoring: False, is_rf_prot_monitoring: False,
                      is_daq_frequency_monitoring: False,
-                     is_vac_valve_monitor: False, is_sol_monitoring: False, is_rf_heartbeat_monitoring: False}
+                     is_vac_valve_monitor: False, is_sol_monitoring: False, is_rf_heartbeat_monitoring: False,
+                     is_bsol_switch_monitoring: False }
 
     def __init__(self):
         # owns a config and logging class
@@ -135,6 +141,7 @@ class monitor_hub(object):
         self.start_water_temperature_monitor()
         self.start_cavity_temperature_monitor()
         self.start_solenoid_monitoring()
+        self.start_bsol_switch_monitor()
         self.logger.message(__name__+' Sanity Check', add_to_text_log=True,show_time_stamp=False)
         for key, value in monitor_hub.is_monitoring.iteritems():
             try:
@@ -274,9 +281,20 @@ class monitor_hub(object):
         mh.daq_frequency_monitor = daq_frequency_monitor()
         mh.is_monitoring[mh.is_daq_frequency_monitoring] = mh.daq_frequency_monitor.set_success
         message = 'start_daq_frequency_monitor '
-        if mh.is_monitoring[mh.is_modulator_monitoring]:
+        if mh.is_monitoring[mh.is_daq_frequency_monitoring]:
             message += 'successfully started LLRF DAQ Frequency Monitoring'
         else:
             message += 'FAILED to start LLRF DAQ Frequency Monitoring'
         self.logger.message(message)
 
+    def start_bsol_switch_monitor(self):
+        mh = monitor_hub
+        self.logger.message(__name__ + ' start_bsol_switch_monitor()')
+        mh.bsol_switch_monitor = bsol_switch_monitor()
+        mh.is_monitoring[mh.is_bsol_switch_monitoring] = mh.bsol_switch_monitor.set_success
+        message = 'start_bsol_switch_monitor '
+        if mh.is_monitoring[mh.is_bsol_switch_monitoring]:
+            message += 'successfully started BSOL SWITCH  Monitoring'
+        else:
+            message += 'FAILED to start BSOL SWITCH   Monitoring'
+        self.logger.message(message)

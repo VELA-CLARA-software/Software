@@ -402,6 +402,8 @@ class magnetAppController(object):
             os.environ["EPICS_CA_SERVER_PORT"] = "6000"
             os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
 
+        print("self.machineArea = {}".format(self.machineArea))
+
         print(self.machineMode,self.machineArea)
         self.localMagnetController = self.magInit.getMagnetController( self.machineMode,
                                                                         self.machineArea)

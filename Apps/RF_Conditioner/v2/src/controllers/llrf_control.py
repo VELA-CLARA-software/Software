@@ -502,6 +502,11 @@ class llrf_control(object):
 		self.llrf_control.setTraceRollingAverageSize(trace, num_average_traces)
 		#self.llrf_control.setInfiniteMasks(trace)
 		self.llrf_control.setShouldKeepRollingAverage(trace)
+
+		print(trace)
+		print(self.llrf_control.fullLLRFTraceName(trace))
+		print(self.llrf_obj[0].trace_data[  self.llrf_control.fullLLRFTraceName(trace) ])
+
 		if self.llrf_obj[0].trace_data[  self.llrf_control.fullLLRFTraceName(trace) ].keep_rolling_average:
 			self.logger.message('STARTED rolling average for ' + trace)
 			self.logger.message('RollingAverageSize = ' + str(self.llrf_control.getTraceRollingAverageSize(trace)))
@@ -523,3 +528,5 @@ class llrf_control(object):
 		self.logger.message(__name__ + ' setting One Record ACQM to event')
 		self.llrf_control.setTORACQMEvent()
 
+	def set_trace_scans_to_nominal(self):
+		print("ro be writen, use c++ function ")

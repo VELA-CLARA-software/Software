@@ -20,3 +20,13 @@ Apps/AlignOnBPMs_v2/bpm_calibration_test.py
 Apps/DataRecorder/*/
 build/
 dist/
+Apps/RF_Conditioner/v2/logs/2021-05-20-22-02-40/data_log
+Apps/RF_Conditioner/v2/logs/2021-05-21-17-35-43/data_log
+Apps/RF_Conditioner/v2/logs/2021-05-28-17-01-43/data_log
+Apps/RF_Conditioner/v2/logs/2021-05-29-16-19-53/data_log
+Apps/RF_Conditioner/v2/logs/2021-05-29-16-30-59/data_log
+Apps/RF_Conditioner/v2/logs/2021-05-30-16-32-26/data_log
+Apps/RF_Conditioner/v2/logs/2021-05-30-16-41-20/data_log
+Apps/RF_Conditioner/v2/logs/2021-06-04-17-14-06/data_log
+Apps/RF_Conditioner/v2/logs/2021-06-04-17-15-20/data_log
+Apps/RF_Conditioner/v2/logs/2021-06-05-15-41-36/data_log

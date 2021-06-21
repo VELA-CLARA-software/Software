@@ -1,0 +1,550 @@
+****************************************************************************************************
+******************* __         __    _  _  ___       _   ___  ___   __         __ ******************
+******************* \ \  ___  / /   | \| |/ _ \     /_\ | _ \/ __|  \ \  ___  / / ******************
+*******************  \ \/ _ \/ /    | .` | (_) |   / _ \|   / (__    \ \/ _ \/ /  ******************
+*******************   \_\___/_/     |_|\_|\___/   /_/ \_\_|_\\___|    \_\___/_/   ******************
+*******************                                                               ******************
+********************************************************************************
+*********************** Log Started 2020-09-23-15-54-28 ************************
+********************************************************************************
+********************************************************************************
+******************************** Configuration *********************************
+********************************************************************************
+config file =
+C:\Users\dlerlp\Documents\GitHub\Software\Apps\RF_Conditioner\v2\CLARA_L1.yml
+dumping parsed config data to text log
+CONFIG_FILE:
+C:\Users\dlerlp\Documents\GitHub\Software\Apps\RF_Conditioner\v2\CLARA_L1.yml,
+KFPOW_MASK_TYPE: PERCENT, KRPOW_MASK_FLOOR: 1000.0, BREAKDOWN_TRACES:
+['CAVITY_REVERSE_POWER', 'CAVITY_PROBE_POWER'], CFPHA_MEAN_END: 0.83, MAX_POW:
+0.0, MAX_AMP: 50000, VAC_SPIKE_DECAY_LEVEL: 1.2, CFPOW_MASK_WINDOW_START: 300,
+PID_on_off_GMON: CLA-GUN-H2O-PID-02:ON:RB, KRPOW_NUM_AVERAGE_TRACES: 2,
+CFPHA_MASK_SET_TYPE: TIME, CPPOW_MASK_START: 1.26, KRPOW_MASK_SET_TYPE: TIME,
+AMP_PWR_ACCEPTANCE_WINDOW: 750000, CPPOW_DROP_AMP: True, CRPOW_DROP_AMP_VALUE:
+2, CFPOW_MASK_FLOOR: 5000.0, CRPHA_MASK_SET_TYPE: TIME, TEXT_LOG_FILENAME:
+log.txt, KFPHA_MASK_LO_MIN: 50, KRPOW_CHECK_STREAK: 2, VAC_VALVE_CHECK_TIME:
+1000, CPPOW_MASK_SET_TYPE: TIME, CFPHA_CHECK_STREAK: 2, CPPOW_AUTO_SET: False,
+KFPOW_MASK_END: 86, CFPHA_MEAN_START: 0.75, KRPHA_MASK_TYPE: ABSOLUTE,
+VAC_ROLLING_SUM_NUM_SAMPLES: 25, CFPOW_MASK_END: 86, CFPHA_NUM_AVERAGE_TRACES:
+2, KRPOW_AUTO_SET: False, KRPHA_PHASE_MASK_BY_POWER_TRACE: False,
+VAC_NUM_SAMPLES_TO_AVERAGE: 7, KFPHA_AUTO_SET: False, CRPOW_MASK_WINDOW_END:
+1.65, CFPHA_MASK_LO_MIN: 50, SOL_CHECK_TIME: 1000, MINIMUM_COOLDOWN_TIME: 3000,
+RF_STRUCTURE: L01, WATER_TEMPERATURE_PV: ['CLA-L01-H2O-TT-20:RT'],
+KRPHA_CHECK_STREAK: 2, KRPOW_MASK_END: 5.0, LLRF_CHECK_TIME: 50,
+KFPOW_AMPSP_RUNNING_STATS_LOG_FILENAME: linac_amp_power_log.txt,
+CPPHA_PHASE_MASK_BY_POWER_LEVEL: 5000.0, PULSE_COUNT_BREAKDOWN_LOG_FILENAME:
+linac_pulse_breakdown_log.txt, CFPOW_MASK_START: 63, CFPHA_AUTO_SET: False,
+KRPOW_DROP_AMP_VALUE: 2, KFPHA_PHASE_MASK_BY_POWER_LEVEL: 5000.0,
+CFPHA_MASK_FLOOR: 0.0, KRPHA_PHASE_MASK_BY_POWER_LEVEL: 5000.0,
+KFPOW_MASK_WINDOW_END: 301, CPPHA_DROP_AMP_VALUE: 2,
+OUTSIDE_MASK_FORWARD_FILENAME: outside_forward_log, KRPHA_MEAN_END: 3.0,
+KFPOW_MASK_START: 63, KEEP_VALVE_OPEN: False, CRPHA_MASK_LO_MIN: 50,
+CRPOW_MASK_FLOOR: 2000.0, SOL_WOBBLE_OSCILLATION_POINTS: 0, CRPHA_MEAN_START:
+0.0, DC_PV: EBT-INJ-SCOPE-01:P1, KRPHA_MASK_FLOOR: 0.0, CPPHA_MASK_WINDOW_START:
+2.4, CPPOW_MASK_TYPE: PERCENT, CFPOW_MASK_LEVEL: 25, CFPHA_DROP_AMP_VALUE: 2,
+CRPHA_MASK_TYPE: ABSOLUTE, TRACES_TO_SAVE: ['KLYSTRON_FORWARD_PHASE',
+'KLYSTRON_REVERSE_PHASE', 'KLYSTRON_FORWARD_POWER', 'KLYSTRON_REVERSE_POWER',
+'CAVITY_REVERSE_PHASE', 'CAVITY_FORWARD_PHASE', 'CAVITY_FORWARD_POWER',
+'CAVITY_REVERSE_POWER', 'CAVITY_PROBE_POWER', 'CAVITY_PROBE_POWER'],
+KRPHA_MASK_WINDOW_END: 3.4, MAGNET_MACHINE_AREA: CLARA_PH1, DC_SPIKE_DELTA:
+0.015, OUTSIDE_MASK_COOLDOWN_TIME: 3000, VAC_VALVE_AREA: CLARA_PH1,
+SOL_WOBBLE_LO: 0.0, KRPOW_MASK_LEVEL: 35.0, KRPHA_DROP_AMP: False,
+CRPHA_MASK_END: 5.0, CRPHA_MEAN_END: 3.0, KFPOW_MEAN_START: 0.68,
+CRPHA_DROP_AMP: False, KFPOW_MEAN_END: 0.75, CFPOW_NUM_AVERAGE_TRACES: 5,
+CPPHA_MASK_END: 5.0, VAC_VALVE: S01-VALV-01, CAVITY_TEMPERATURE_CHECK_TIME:
+1000, CFPHA_DROP_AMP: False, MODULATOR_CHECK_TIME: 1000, SOL_COUNT: 2,
+RF_REPETITION_RATE: 100, CPPHA_MASK_WINDOW_END: 3.4, LOG_RAMP_CURVE_NUMSTEPS:
+200, KFPHA_MEAN_START: 0.68, RF_PROT_CHECK_TIME: 1000, KFPHA_MASK_TYPE:
+ABSOLUTE, MIN_AMP: 500, DC_CHECK_TIME: 1000, PID_on_off: CLA-GUN-H2O-
+PID-02:ON:RB, KRPHA_NUM_AVERAGE_TRACES: 2, KFPHA_MASK_FLOOR: 0.0,
+CRPHA_DROP_AMP_VALUE: 2, KRPHA_MASK_WINDOW_START: 2.4, CRPOW_MASK_TYPE:
+ABSOLUTE, BIN_WIDTH: 400, KFPOW_MASK_FLOOR: 5000, CPPOW_MASK_END: 1.8,
+BINARY_DATA_LOG_FILENAME: data_log, KRPHA_MASK_LO_MIN: 50, KFPOW_MASK_LEVEL: 15,
+OUTSIDE_MASK_CHECK_TIME: 100, MODE: OPERATIONAL, CRPOW_MASK_LO_MIN: 50,
+KLY_PWR_FOR_ACTIVE_PULSE: 500.0, SOL_NAMES: ['L01-SOL1', 'L01-SOL2'],
+CRPHA_MASK_FLOOR: 0.0, GMON_SUFFIX: _GMON, KFPOW_DROP_AMP_VALUE: 3,
+KRPOW_MEAN_END: 3.0, WHEN_VAC_HI_DISABLE_RAMP: True, AMP_PWR_LOG_TIME: 50,
+VAC_SPIKE_DROP_AMP: 5, DC_SPIKE_DECAY_TIME: 2000, CPPHA_MASK_TYPE: ABSOLUTE,
+KFPHA_MASK_SET_TYPE: TIME, KRPOW_MASK_WINDOW_START: 2.4,
+SOL_WOBBLE_OSCILLATION_TIME: 100.0, CFPOW_MASK_SET_TYPE: INDEX,
+CFPOW_MASK_WINDOW_END: 301, LOG_DIRECTORY: C:\Users\dlerlp\Documents\GitHub\Soft
+ware\Apps\RF_Conditioner\v2\logs\Linac20200922\, KFPHA_MASK_LEVEL: 35.0,
+CAVITY_TEMPERATURE_PV: ['CLA-L01-H2O-TT-20:RT'], VAC_SPIKE_DELTA: 5e-09,
+VAC_CHECK_TIME: 200, DC_DECAY_MODE: TIMED, SOL_WOBBLE_HI: 0.0,
+CRPOW_MASK_WINDOW_START: 1.35, CPPHA_NUM_AVERAGE_TRACES: 2,
+CRPHA_NUM_AVERAGE_TRACES: 2, NUM_BUFFER_TRACES: 500, CRPHA_MASK_LEVEL: 35.0,
+CRPOW_CHECK_STREAK: 10, CPPHA_AUTO_SET: False, VAC_SHOULD_DROP_AMP: True,
+KFPHA_CHECK_STREAK: 2, KRPOW_MEAN_START: 0.0, KFPOW_AUTO_SET: False,
+OUTSIDE_MASK_PROBE_FILENAME: outside_probe_log, CPPOW_MASK_FLOOR: 500.0,
+KRPOW_MASK_START: 0.8, DC_SHOULD_DROP_AMP: False, CRPOW_MEAN_START: 0.0,
+CFPOW_DROP_AMP_VALUE: 6, CRPOW_MEAN_END: 3.0, GUI_UPDATE_TIME: 1000,
+CPPOW_MEAN_END: 1.32, CFPOW_MEAN_START: 0.75, KFPHA_DROP_AMP_VALUE: 2,
+KRPHA_DROP_AMP_VALUE: 2, CPPHA_MEAN_END: 1.32, KRPHA_MASK_LEVEL: 35.0,
+PULSE_LENGTH: 765, DEFAULT_RF_INCREASE_LEVEL: 50, KFPHA_MEAN_END: 0.75,
+SHOULD_SOL_WOBBLE: False, CPPOW_MEAN_START: 1.26, VAC_DECAY_MODE: LEVEL,
+PULSE_LENGTH_ERROR: 50, KFPOW_MASK_SET_TYPE: INDEX, CFPOW_MASK_LO_MIN: 500,
+KRPHA_MASK_END: 5.0, CPPOW_MASK_WINDOW_START: 2.4, VAC_MAX_LEVEL_FOR_RAMP:
+5e-09, CFPOW_CHECK_STREAK: 10, CFPHA_MASK_LEVEL: 35.0, CRPHA_MASK_WINDOW_END:
+3.4, CPPHA_CHECK_STREAK: 2, KRPHA_MEAN_START: 0.0, CPPOW_NUM_AVERAGE_TRACES: 2,
+CPPHA_MASK_LEVEL: 35.0, CPPHA_DROP_AMP: False, CAV_PWR_RATIO: 400000,
+CRPHA_PHASE_MASK_BY_POWER_TRACE: False, CFPHA_MASK_END: 5.0,
+LOG_RAMP_CURVE_RAMP_RATE: 0.2, CRPHA_CHECK_STREAK: 2, CRPHA_MASK_START: 0.8,
+KFPHA_MASK_END: 5.0, KFPHA_NUM_AVERAGE_TRACES: 2, WATER_TEMPERATURE_PV_COUNT: 1,
+BREAKDOWN_RATE_AIM: 10, KRPOW_DROP_AMP: False, LOG_RAMP_CURVE_PULSES_PER_STEP:
+60, CPPHA_MASK_FLOOR: 0.0, CPPHA_MASK_SET_TYPE: TIME, KFPHA_MASK_START: 0.8,
+KFPHA_PHASE_MASK_BY_POWER_TRACE: False, WATER_TEMPERATURE_CHECK_TIME: 1000,
+CPPHA_PHASE_MASK_BY_POWER_TRACE: False, CFPOW_MASK_TYPE: PERCENT,
+CFPHA_MASK_WINDOW_START: 2.4, KRPOW_MASK_LO_MIN: 50, CRPOW_MASK_START: 1.05,
+CRPOW_MASK_SET_TYPE: TIME, CPPOW_CHECK_STREAK: 10, CPPHA_MASK_START: 0.8,
+CFPOW_DROP_AMP: False, CPPHA_MASK_LO_MIN: 50, KRPHA_AUTO_SET: False,
+MEAN_TRACES: ['KLYSTRON_FORWARD_POWER', 'KLYSTRON_REVERSE_POWER',
+'CAVITY_FORWARD_POWER', 'CAVITY_REVERSE_POWER', 'CAVITY_PROBE_POWER',
+'KLYSTRON_FORWARD_PHASE', 'KLYSTRON_REVERSE_PHASE', 'CAVITY_FORWARD_PHASE',
+'CAVITY_REVERSE_PHASE', 'CAVITY_PROBE_PHASE'], DC_SPIKE_DECAY_LEVEL: 1.2,
+CRPHA_MASK_WINDOW_START: 2.4, CPPOW_MASK_LO_MIN: 50, CRPOW_DROP_AMP: True,
+KFPOW_CHECK_STREAK: 10, DEFAULT_PULSE_COUNT: 500, CRPOW_NUM_AVERAGE_TRACES: 5,
+VAC_SPIKE_TRACES_TO_SAVE: ['KLYSTRON_FORWARD_PHASE', 'KLYSTRON_REVERSE_PHASE',
+'KLYSTRON_FORWARD_POWER', 'KLYSTRON_REVERSE_POWER', 'CAVITY_REVERSE_PHASE',
+'CAVITY_FORWARD_PHASE', 'CAVITY_FORWARD_POWER', 'CAVITY_REVERSE_POWER',
+'CAVITY_PROBE_POWER', 'CAVITY_PROBE_POWER'], CRPOW_MASK_LEVEL: 10000,
+KFPOW_NUM_AVERAGE_TRACES: 2, BINARY_DATA_LOG_TIME: 1000, KRPHA_MASK_SET_TYPE:
+TIME, KFPOW_MASK_WINDOW_START: 300, KFPOW_DROP_AMP: True, KRPOW_MASK_WINDOW_END:
+3.4, NUM_SET_POINTS_TO_FIT: 4, CFPHA_MASK_START: 0.8, CRPOW_AUTO_SET: False,
+CPPOW_MASK_LEVEL: 15, CPPHA_MEAN_START: 1.26, MAX_DELTA_AMP_SP: 300,
+CRPHA_AUTO_SET: False, VAC_PV: CLA-S01-VAC-IMG-01:PRES, KFPOW_MASK_LO_MIN: 500,
+CPPOW_DROP_AMP_VALUE: 2, CAVITY_TEMPERATURE_PV_COUNT: 1, CFPHA_MASK_TYPE:
+ABSOLUTE, VAC_SPIKE_MAX_LEVEL_FOR_OFF: 6e-09, CRPHA_PHASE_MASK_BY_POWER_LEVEL:
+5000.0, EXTRA_BREAKDOWN_DAQ: ['VAC_LEVEL', 'DC_LEVEL', 'BREAKDOWN_RATE',
+'BREAKDOWN_COUNT'], KFPHA_MASK_WINDOW_START: 2.4, KRPHA_MASK_START: 0.8,
+OUTSIDE_MASK_REVERSE_FILENAME: outside_reverse_log, CFPOW_MEAN_END: 0.83,
+NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY: 100000, CFPHA_PHASE_MASK_BY_POWER_TRACE:
+False, CRPOW_MASK_END: 3.5, RF_REPETITION_RATE_ERROR: 50, CFPHA_MASK_WINDOW_END:
+3.4, VAC_SPIKE_DECAY_TIME: 2000, EXTRA_TRACES_ON_BREAKDOWN: 2,
+DC_SPIKE_DROP_AMP: 6, CFPOW_AUTO_SET: False, KFPHA_MASK_WINDOW_END: 3.4,
+KRPOW_MASK_TYPE: ABSOLUTE, DC_NUM_SAMPLES_TO_AVERAGE: 5, KFPHA_DROP_AMP: False,
+LOG_RAMP_START_POWER: 30000, CPPOW_MASK_WINDOW_END: 3.4,
+CFPHA_PHASE_MASK_BY_POWER_LEVEL: 5000.0,
+
+2020-09-23 15:54:29.298000
+********************************************************************************
+***** src.controllers.main_controller, create rf_conditioning_data object ******
+********************************************************************************
+
+2020-09-23 15:54:29.298000
+Started in debug mode = False
+********************************************************************************
+****************** Print Rationalized kfpow_running_stat_log  ******************
+********************************************************************************
+get_kfpow_running_stat_log complete
+
+2020-09-23 15:54:37.452000
+********************************************************************************
+***** src.controllers.main_controller, create hardware_control_hub object ******
+********************************************************************************
+hardware_control_hub Starting CATAP Hardware Interfaces
+start_llrf_control()  SET AMP_SP = 0, successfully created a L01 LLRF control
+object
+
+2020-09-23 15:54:39.571000
+amp_vs_kfpow lookup, called from get_kfp_running_stat_at_current_set_point,
+can't find -9999.9999, returning value at 0.0 instead
+
+2020-09-23 15:54:53.898000
+********************************************************************************
+********** src.controllers.main_controller, create monitor_hub object **********
+********************************************************************************
+src.monitors.monitor_hub Starting Data Monitoring
+src.monitors.monitor_hub start_llrf_monitor()
+
+2020-09-23 15:54:54.992000
+src.controllers.hardware_control_hub connected, PV = CLA-S01-VAC-IMG-01:PRES
+with ID = d0,  acquiring data
+src.monitors.vac_monitor will drop amp on spike detection
+src.monitors.vac_monitor STARTED running
+src.monitors.vac_monitor vac_spike_status = state.UNKNOWN
+src.monitors.vac_monitor vac_spike_status = state.GOOD
+start_vac_monitor successfully started Vacuum Monitoring
+src.monitors.monitor_hub start_daq_frequency_monitor()
+********************************************************************************
+************************* Connecting to Water Temp PVs *************************
+********************************************************************************
+
+2020-09-23 15:54:56.093000
+src.controllers.hardware_control_hub connected, PV = CLA-L01-H2O-TT-20:RT with
+ID = d1,  acquiring data
+
+2020-09-23 15:54:56.093000
+src.monitors.vac_monitor level ok, 1.299e-09 < 5e-09
+
+2020-09-23 15:54:56.093000
+Connected to CLA-L01-H2O-TT-20:RT id = WATER_TEMP_ID_0
+
+2020-09-23 15:54:56.093000
+start_water_temperature_monitor successfully started Water Temperature
+Monitoring
+
+2020-09-23 15:54:56.093000
+src.monitors.monitor_hub start_cavity_temperature_monitor()
+********************************************************************************
+************************ Connecting to Cavity Temp PVs *************************
+********************************************************************************
+
+2020-09-23 15:54:57.165000
+src.controllers.hardware_control_hub connected, PV = CLA-L01-H2O-TT-20:RT with
+ID = d2,  acquiring data
+
+2020-09-23 15:54:57.165000
+Connected to CLA-L01-H2O-TT-20:RT id = CAVITY_TEMP_ID_0
+
+2020-09-23 15:54:57.165000
+start_cavity_temperature_monitor successfully started Cavity Temperature
+Monitoring
+
+2020-09-23 15:54:57.165000
+src.monitors.monitor_hub start_solenoid_monitoring()
+src.monitors.monitor_hub Sanity Check
+is_vac_monitoring = True
+is_llrf_monitoring = True
+is_cavity_temp_monitoring = True
+is_modulator_monitoring = True
+is_rf_heartbeat_monitoring = True
+is_sol_monitoring = True
+is_rf_prot_monitoring = True
+is_outside_mask_monitoring = True
+is_daq_frequency_monitoring = True
+is_water_temp_monitoring = True
+is_vac_valve_monitor = True
+
+2020-09-23 15:54:57.196000
+********************************************************************************
+********** src.data.rf_conditioning_logger start_binary_data_logging  **********
+********************************************************************************
+binary log file added
+llrf_max_amp    p0_all  llrf_output_status      next_sp_decrease
+probe_pha       rev_cav_pha     can_llrf_output_state_OLD
+breakdown_rate_aim      phi_sp  latest_amp_sp_from_ramp num_outside_mask_traces
+next_requested_power_change     modulator_good  p2_current_sp_to_fit
+CAVITY_TEMP_ID_0        p2_current_sp   SP_QUAD_ALL     water_temp_gui
+max_sp_increase ramp_mode       rev_kly_pha     event_pulse_count
+delta_kfpow     cav_pwr_ratio_can_ramp  p1_current_sp_to_fit    vac_level
+gui_can_rf_output       can_rf_output_status_OLD
+bd_rate_calc_first_pulse_number cav_pwr_ratio
+number_of_pulses_in_breakdown_history   probe_outside_mask_count
+current_ramp_index      y_min   rev_kly_pwr     fwd_kly_pha
+active_breakdown_count  last_sp_above_100       time_stamp, (start = 2020-09-23
+15:54:57.227000)        TOR_SCAN        rev_cav_pwr
+SP_QUAD_CURRENT_SP_TO_FIT       last_vac_spike_status   llrf_DAQ_rep_rate_status
+x_max   p0_current_sp_to_fit    amp_ff  c       L01-SOL1        L01-SOL2
+y_max   p1_current_sp   x_min   can_ramp_status kfpower_at_last_amp_sp
+vac_level_can_ramp      last_breakdown_status   reverse_outside_mask_count
+TOR_ACQM        p0_current_sp   breakdown_rate_low      cav_temp
+fwd_cav_pha     BD_state_OLD    rfprot_good     last_amp_sp     vac_spike_status
+event_pulse_count_zero  DC_level        amp_sp  global_mask_checking
+llrf_heart_beat_value   gui_can_ramp    can_llrf_output_state   p1_all
+log_pulse_count llrf_DAQ_rep_rate_aim   catap_max_amp   can_ramp_status_OLD
+p2_all  fwd_kly_pwr     sol_value       log_amp_set     duplicate_pulse_count
+m       pulse_count     fwd_cav_pwr     SP_SLF  WATER_TEMP_ID_0 probe_pwr
+can_rf_output_status    modulator_state elapsed_time    DC_spike_status
+pulses_to_next_ramp     GUI_mod_and_prot_good   breakdown_status
+catap_max_amp_can_ramp_status   main_can_ramp   llrf_DAQ_rep_rate
+vac_valve_status        SP_QUAD_CURRENT rev_power_spike_count   BD_state
+last_ramp_method        required_pulses rfprot_state    total_breakdown_count
+
+<type 'float'>  <type 'float'>  <enum 'state'>  <type 'float'>  <type 'float'>
+<type 'float'>  <enum 'state'>  <type 'int'>    <type 'int'>    <type 'float'>
+<type 'int'>    <type 'int'>    <type 'bool'>   <type 'float'>  <type 'float'>
+<type 'float'>  <type 'float'>  <type 'float'>  <type 'float'>  <enum
+'ramp_method'>    <type 'float'>  <type 'int'>    <type 'float'>  <type 'bool'>
+<type 'float'>  <type 'float'>  <type 'bool'>   <enum 'state'>  <type 'int'>
+<type 'float'>  <type 'int'>    <type 'int'>    <type 'int'>    <type 'float'>
+<type 'float'>  <type 'float'>  <type 'int'>    <type 'float'>  <type 'float'>
+<type 'int'>    <type 'float'>  <type 'float'>  <enum 'state'>  <enum 'state'>
+<type 'float'>  <type 'float'>  <type 'int'>    <type 'float'>  <type 'float'>
+<type 'float'>  <type 'float'>  <type 'float'>  <type 'float'>  <enum 'state'>
+<type 'float'>  <type 'bool'>   <enum 'state'>  <type 'int'>    <type 'int'>
+<type 'float'>  <type 'bool'>   <type 'float'>  <type 'float'>  <enum 'state'>
+<type 'bool'>   <type 'float'>  <enum 'state'>  <type 'int'>    <type 'float'>
+<type 'float'>  <type 'bool'>   <type 'float'>  <type 'bool'>   <enum 'state'>
+<type 'float'>  <type 'int'>    <type 'int'>    <type 'float'>  <enum 'state'>
+<type 'float'>  <type 'float'>  <type 'float'>  <type 'int'>    <type 'int'>
+<type 'float'>  <type 'int'>    <type 'float'>  <type 'float'>  <type 'float'>
+<type 'float'>  <enum 'state'>  <class
+'VELA_CLARA_RF_Modulator_Control.L01_MOD_STATE'> <type 'long'>   <enum 'state'>
+<type 'int'>    <type 'bool'>   <enum 'state'>  <type 'bool'>   <type 'bool'>
+<type 'float'>  <class 'VELA_CLARA_Vac_Valve_Control.VALVE_STATE'>      <type
+'float'>  <type 'int'>    <enum 'state'>  <enum 'ramp_method'>    <type 'int'>
+<class 'VELA_CLARA_RF_Protection_Control.RF_PROT_STATUS'>       <type 'int'>
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2155107
+
+2020-09-23 15:54:57.310000
+********************************************************************************
+src.controllers.main_controller The RF Conditioning is Preparing to Entering
+Main_Loop !
+********************************************************************************
+
+2020-09-23 15:54:57.313000
+enable_llrf, isRFOutput = False, attempting enableRFOutput()
+
+2020-09-23 15:54:57.350000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-09-23 15:54:57.381000
+enable_llrf, isPhaseFFLocked = False, attempting lockPhaseFF()
+
+2020-09-23 15:54:57.412000
+enable_llrf, isRFOutput = True
+
+2020-09-23 15:54:57.412000
+enable_llrf, isPhaseFFLocked = True
+
+2020-09-23 15:54:57.466000
+set_global_check_mask setGlobalCheckMask True
+!!Log Ramp curve is NONE, generating a new one
+power_finish = 16363553.6557
+breakdown_rate_low = True
+Breakdown rate LO, log_ramp power_finish = 16363553.6557
+Log Ramp curve is NONE, generating a new one
+Log Ramp curve_p_finish = 16527189.1923, p_start = 30000, p_finish =
+16363553.6557, ramp_rate = 0.2
+self.data.log_ramp_curve in maIn_controller = [[60, 1431.0, 103.17029038257363],
+[60, 5385.0, 11.15763141478526], [60, 7577.0, 7.671568202620255], [60, 9236.0,
+6.450315390276867], [60, 10551.0, 5.82806703679152], [60, 11743.0,
+5.450994297752613], [60, 12885.0, 5.198097734933471], [60, 13963.0,
+5.016751088511096], [60, 14877.0, 4.880384675311814], [60, 15807.0,
+4.774135102242787], [60, 16705.0, 4.689037863428057], [60, 17538.0,
+4.619365090835687], [60, 18279.0, 4.5612857493708505], [60, 18997.0,
+4.5121404794003555], [60, 19731.0, 4.470025482350299], [60, 20476.0,
+4.433541982622378], [60, 21113.0, 4.40163918105043], [60, 21772.0,
+4.373512380922038], [60, 22425.0, 4.348534924046731], [60, 23067.0,
+4.326211531962879], [60, 23616.0, 4.306145589873659], [60, 24157.0,
+4.288015743102334], [60, 24643.0, 4.271558853563206], [60, 25182.0,
+4.2565573871974305], [60, 25718.0, 4.242829944236478], [60, 26192.0,
+4.23022405506526], [60, 26655.0, 4.218610633558048], [60, 27056.0,
+4.207879659421955], [60, 27572.0, 4.197936783157931], [60, 28022.0,
+4.188700631541716], [60, 28444.0, 4.180100650598116], [60, 28853.0,
+4.172075365006707], [60, 29234.0, 4.164570963068251], [60, 29640.0,
+4.157540138337919], [60, 30043.0, 4.150941135204261], [60, 30401.0,
+4.144736957716371], [60, 30772.0, 4.138894709985792], [60, 31119.0,
+4.133385043323529], [60, 31475.0, 4.1281816904911], [60, 31838.0,
+4.1232610714612425], [60, 32189.0, 4.118601958198698], [60, 32515.0,
+4.114185188403767], [60, 32822.0, 4.1099934200734305], [60, 33118.0,
+4.1060109202474555], [60, 33407.0, 4.102223382510686], [60, 33716.0,
+4.098617768786107], [60, 34030.0, 4.095182171728579], [60, 34331.0,
+4.091905694656207], [60, 34607.0, 4.088778346465888], [60, 34893.0,
+4.085790949395911], [60, 35167.0, 4.082935057839834], [60, 35404.0,
+4.080202886697104], [60, 35661.0, 4.077587247978562], [60, 35931.0,
+4.075081494578188], [60, 36198.0, 4.0726794702834574], [60, 36446.0,
+4.070375465231417], [60, 36678.0, 4.068164176130743], [60, 36895.0,
+4.066040670665245], [60, 37107.0, 4.0640003555748585], [60, 37347.0,
+4.062038947978378], [60, 37584.0, 4.060152449560203], [60, 37817.0,
+4.058337123292875], [60, 38043.0, 4.056589472409444], [60, 38263.0,
+4.054906221375977], [60, 38486.0, 4.053284298645739], [60, 38704.0,
+4.05172082100336], [60, 38894.0, 4.050213079330561], [60, 39080.0,
+4.04875852564509], [60, 39287.0, 4.047354761281933], [60, 39493.0,
+4.0459995261010535], [60, 39686.0, 4.0446906886191], [60, 39874.0,
+4.043426236974097], [60, 40061.0, 4.042204270642212], [60, 40245.0,
+4.041022992834532], [60, 40438.0, 4.039880703509624], [60, 40632.0,
+4.038775792944428], [60, 40796.0, 4.037706735812107], [60, 40943.0,
+4.0366720857208405], [60, 41087.0, 4.035670470172177], [60, 41266.0,
+4.034700585901854], [60, 41444.0, 4.033761194569613], [60, 41604.0,
+4.032851118767884], [60, 41753.0, 4.031969238322141], [60, 41898.0,
+4.031114486858349], [60, 42036.0, 4.030285848615263], [60, 42172.0,
+4.029482355481414], [60, 42305.0, 4.028703084238529], [60, 42465.0,
+4.027947153994777], [60, 42621.0, 4.027213723792734], [60, 42772.0,
+4.026501990378365], [60, 42919.0, 4.025811186118481], [60, 43062.0,
+4.025140577055273], [60, 43199.0, 4.024489461087491], [60, 43332.0,
+4.023857166268729], [60, 43462.0, 4.023243049214137], [60, 43591.0,
+4.022646493607529], [60, 43718.0, 4.022066908801605], [60, 43842.0,
+4.02150372850455], [60, 43961.0, 4.020956409546857], [60, 44076.0,
+4.020424430722686], [60, 44188.0, 4.019907291700569], [60, 44297.0,
+4.019404511998636], [60, 44423.0, 4.018915630019945], [60, 44545.0,
+4.018440202143826], [60, 44665.0, 4.01797780186948], [60, 44776.0,
+4.017528019008352], [60, 44883.0, 4.017090458922039], [60, 44987.0,
+4.016664741802776], [60, 45088.0, 4.016250501993745], [60, 45191.0,
+4.015847387346617], [60, 45292.0, 4.015455058613997], [60, 45391.0,
+4.015073188874565], [60, 45488.0, 4.0147014629888345], [60, 45580.0,
+4.014339577083693], [60, 45670.0, 4.013987238063901], [60, 45758.0,
+4.013644163148946], [60, 45844.0, 4.013310079433709], [60, 45930.0,
+4.012984723471525], [60, 46018.0, 4.012667840878292], [60, 46103.0,
+4.012359185956426], [60, 46187.0, 4.012058521337473], [60, 46269.0,
+4.011765617642311], [60, 46356.0, 4.011480253157943], [60, 46446.0,
+4.011202213529921], [60, 46533.0, 4.010931291469533], [60, 46619.0,
+4.010667286474923], [60, 46703.0, 4.0104100045653635], [60, 46773.0,
+4.010159258027976], [60, 46842.0, 4.009914865176195], [60, 46910.0,
+4.009676650119356], [60, 46976.0, 4.009444442542817], [60, 47040.0,
+4.009218077498017], [60, 47103.0, 4.00899739520199], [60, 47169.0,
+4.008782240845812], [60, 47234.0, 4.008572464411511], [60, 47297.0,
+4.008367920497026], [60, 47359.0, 4.008168468148779], [60, 47419.0,
+4.007973970701482], [60, 47478.0, 4.00778429562482], [60, 47538.0,
+4.007599314376647], [60, 47599.0, 4.0074189022623905], [60, 47657.0,
+4.007242938300342], [60, 47715.0, 4.007071305092554], [60, 47771.0,
+4.006903888701063], [60, 47826.0, 4.006740578529199], [60, 47880.0,
+4.006581267207701], [60, 47929.0, 4.00642585048545], [60, 47976.0,
+4.006274227124578], [60, 48022.0, 4.006126298799747], [60, 48067.0,
+4.005981970001414], [60, 48111.0, 4.005841147942891], [60, 48154.0,
+4.005703742471026], [60, 48196.0, 4.005569665980333], [60, 48237.0,
+4.005438833330434], [60, 48277.0, 4.005311161766641], [60, 48319.0,
+4.005186570843549], [60, 48363.0, 4.005064982351507], [60, 48406.0,
+4.00494632024584], [60, 48448.0, 4.00483051057869], [60, 48489.0,
+4.004717481433376], [60, 48529.0, 4.0046071628611655], [60, 48568.0,
+4.004499486820333], [60, 48606.0, 4.0043943871174354], [60, 48644.0,
+4.004291799350689], [60, 48680.0, 4.004191660855374], [60, 48715.0,
+4.004093910651164], [60, 48747.0, 4.00399848939133], [60, 48779.0,
+4.003905339313704], [60, 48810.0, 4.0038144041933625], [60, 48840.0,
+4.003725629296944], [60, 48870.0, 4.003638961338531], [60, 48898.0,
+4.003554348437048], [60, 48927.0, 4.003471740075101], [60, 48954.0,
+4.003391087059208], [60, 48981.0, 4.003312341481367], [60, 49007.0,
+4.0032354566819], [60, 49033.0, 4.003160387213539], [60, 49058.0,
+4.0030870888066845], [60, 49083.0, 4.003015518335818], [60, 49107.0,
+4.002945633786996], [60, 49133.0, 4.002877394226406], [60, 49157.0,
+4.002810759769938], [60, 49181.0, 4.002745691553722], [60, 49205.0,
+4.002682151705618], [60, 49228.0, 4.002620103317605], [60, 49250.0,
+4.002559510419037], [60, 49272.0, 4.002500337950743], [60, 49294.0,
+4.002442551739944], [60, 49315.0, 4.002386118475928], [60, 49335.0,
+4.002331005686503], [60, 49355.0, 4.002277181715153], [60, 49375.0,
+4.002224615698906], [60, 49394.0, 4.002173277546871], [60, 49412.0,
+4.002123137919424], [60, 49431.0, 4.002074168208027], [60, 49449.0,
+4.002026340515651], [60, 49466.0, 4.001979627637777], [60, 49483.0,
+4.001934003043975], [60, 49500.0, 4.001889440860018]]
+set_amp (1431.0) called from log_ramp_up
+set_amp (5385.0) called from log_ramp_up
+set_amp (7577.0) called from log_ramp_up
+set_amp (9236.0) called from log_ramp_up
+set_amp (10551.0) called from log_ramp_up
+set_amp (11743.0) called from log_ramp_up
+set_amp (12885.0) called from log_ramp_up
+set_amp (13963.0) called from log_ramp_up
+set_amp (14877.0) called from log_ramp_up
+set_amp (15807.0) called from log_ramp_up
+set_amp (16705.0) called from log_ramp_up
+reset_daq_freg, llrf_DAQ_rep_rate_status == BAD
+reset_daq_freg forcing set_amp(0)
+reset_daq_freg, time passed > 0.02s
+set_global_check_mask setGlobalCheckMask False
+reset_daq_freg forcing set_amp(0)
+reset_daq_freg, time passed > 0.02s
+set_global_check_mask setGlobalCheckMask True
+set_amp (17538.0) called from log_ramp_up
+set_amp (18279.0) called from log_ramp_up
+set_amp (18997.0) called from log_ramp_up
+set_amp (19731.0) called from log_ramp_up
+set_amp (20476.0) called from log_ramp_up
+
+2020-09-23 15:55:13.539000
+amp_vs_kfpow lookup, called from get_kfp_running_stat_at_current_set_point,
+can't find 20476.0, returning value at 20475.0 instead
+
+2020-09-23 15:55:13.539000
+reset_daq_freg forcing set_amp(0)
+
+2020-09-23 15:55:13.577000
+reset_daq_freg, time passed > 0.02s
+
+2020-09-23 15:55:13.608000
+set_global_check_mask setGlobalCheckMask False
+
+2020-09-23 15:55:13.640000
+reset_daq_freg, time passed > 0.02s
+
+2020-09-23 15:55:13.693000
+reset_daq_freg, time passed > 0.02s
+
+2020-09-23 15:55:13.755000
+reset_daq_freg, time passed > 0.02s
+
+2020-09-23 15:55:13.793000
+set_global_check_mask setGlobalCheckMask True
+set_amp (21113.0) called from log_ramp_up
+reset_daq_freg forcing set_amp(0)
+reset_daq_freg, time passed > 0.02s
+set_global_check_mask setGlobalCheckMask False
+set_global_check_mask setGlobalCheckMask True
+set_amp (21772.0) called from log_ramp_up
+set_amp (22425.0) called from log_ramp_up
+reset_daq_freg forcing set_amp(0)
+reset_daq_freg, time passed > 0.02s
+set_global_check_mask setGlobalCheckMask False
+set_global_check_mask setGlobalCheckMask True
+set_amp (23067.0) called from log_ramp_up
+reset_daq_freg forcing set_amp(0)
+reset_daq_freg, time passed > 0.02s
+set_global_check_mask setGlobalCheckMask False
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+set_global_check_mask setGlobalCheckMask True
+set_amp (23616.0) called from log_ramp_up
+set_amp (24157.0) called from log_ramp_up
+reset_daq_freg forcing set_amp(0)
+reset_daq_freg, time passed > 0.02s
+set_global_check_mask setGlobalCheckMask False
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+set_global_check_mask setGlobalCheckMask True
+set_amp (24643.0) called from log_ramp_up
+reset_daq_freg forcing set_amp(0)
+reset_daq_freg, time passed > 0.02s
+set_global_check_mask setGlobalCheckMask False
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+set_global_check_mask setGlobalCheckMask True
+set_amp (25182.0) called from log_ramp_up
+set_amp (25718.0) called from log_ramp_up
+reset_daq_freg forcing set_amp(0)
+reset_daq_freg, time passed > 0.02s
+set_global_check_mask setGlobalCheckMask False
+set_global_check_mask setGlobalCheckMask True
+set_amp (26192.0) called from log_ramp_up
+reset_daq_freg forcing set_amp(0)
+reset_daq_freg, time passed > 0.02s
+set_global_check_mask setGlobalCheckMask False
+reset_daq_freg, time passed > 0.02s
+set_global_check_mask setGlobalCheckMask True
+set_amp (26655.0) called from log_ramp_up
+set_amp (27056.0) called from log_ramp_up
+set_amp (27572.0) called from log_ramp_up
+set_amp (28022.0) called from log_ramp_up
+reset_daq_freg forcing set_amp(0)
+reset_daq_freg, time passed > 0.02s
+set_global_check_mask setGlobalCheckMask False
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+set_global_check_mask setGlobalCheckMask True
+set_amp (28444.0) called from log_ramp_up
+reset_daq_freg forcing set_amp(0)
+reset_daq_freg, time passed > 0.02s
+set_global_check_mask setGlobalCheckMask False
+reset_daq_freg, time passed > 0.02s
+set_global_check_mask setGlobalCheckMask True
+set_amp (28853.0) called from log_ramp_up
+set_amp (29234.0) called from log_ramp_up
+reset_daq_freg forcing set_amp(0)
+reset_daq_freg, time passed > 0.02s
+set_global_check_mask setGlobalCheckMask False
+set_global_check_mask setGlobalCheckMask True
+set_amp (29640.0) called from log_ramp_up
+reset_daq_freg forcing set_amp(0)
+reset_daq_freg, time passed > 0.02s
+set_global_check_mask setGlobalCheckMask False
+set_global_check_mask setGlobalCheckMask True
+set_amp (30043.0) called from log_ramp_up
+reset_daq_freg forcing set_amp(0)
+reset_daq_freg, time passed > 0.02s
+set_global_check_mask setGlobalCheckMask False
+reset_daq_freg, time passed > 0.02s
+set_global_check_mask setGlobalCheckMask True
+set_amp (30401.0) called from log_ramp_up
+reset_daq_freg forcing set_amp(0)
+reset_daq_freg, time passed > 0.02s
+set_global_check_mask setGlobalCheckMask False
+set_global_check_mask setGlobalCheckMask True
+set_amp (30772.0) called from log_ramp_up
+reset_daq_freg forcing set_amp(0)
+reset_daq_freg, time passed > 0.02s
+set_global_check_mask setGlobalCheckMask False
+reset_daq_freg, time passed > 0.02s
+set_global_check_mask setGlobalCheckMask True
+set_amp (31119.0) called from log_ramp_up
