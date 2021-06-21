@@ -93,6 +93,7 @@ class GetDataFromCATAP(object):
 		self.hf = CATAP.HardwareFactory.HardwareFactory(self.mode)
 		self.epics_tools = CATAP.HardwareFactory.EPICSTools(self.mode)
 		self.hf.debugMessagesOff()
+		self.hf.messagesOff()
 		self.llrf_types = [CATAP.HardwareFactory.TYPE.LRRG_GUN, CATAP.HardwareFactory.TYPE.L01]
 		# self.gun_llrf_type = CATAP.HardwareFactory.TYPE.LRRG_GUN
 		self.llrf_factory = self.hf.getLLRFFactory(self.llrf_types)
