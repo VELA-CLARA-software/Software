@@ -64,21 +64,15 @@ class pil_monitor(monitor):
             monitor.data.values[dat.vc_intensity_values][hwp]) / numpy.sqrt(
             len(monitor.data.values[dat.vc_intensity_values][hwp]))
 
+    def is_energy_buffer_full(self):
+        return monitor.las_em_factory.isEnergyBufferFull(monitor.config.las_em_config['LAS_EM_NAME'])
 
-    def get_laser_energy(self, hwp, hwpminus1):
+    def get_laser_energy(self, hwp):
         monitor.data.values[dat.ophir_values][hwp] = monitor.las_em_factory.getEnergyBuffer(
             monitor.config.las_em_config['LAS_EM_NAME'])
-        print(monitor.data.values[dat.charge_mean])
         if monitor.data.values[dat.charge_mean][hwp] > monitor.config.charge_config['MIN_CHARGE_ACCEPTED']:
-            self.mean = numpy.mean(list(monitor.data.values[dat.ophir_values][hwp]))
-            # if len(list(monitor.data.values[dat.ophir_mean].values())) > 1:
-            #     if self.mean > monitor.data.values[dat.ophir_mean][hwp]:
-            monitor.data.values[dat.ophir_mean][hwp] = self.mean
-            monitor.data.values[dat.ophir_stderr][hwp] = numpy.std(list(monitor.data.values[dat.ophir_values][hwp]))\
-                                                         / numpy.sqrt(len(list(monitor.data.values[dat.ophir_values][hwp])))
-            # else:
-            #     monitor.data.values[dat.ophir_mean].append(self.mean)
-            #     monitor.data.values[dat.ophir_stderr].append(
-            #         numpy.std(list(monitor.data.values[dat.ophir_values][hwp])) / numpy.sqrt(
-            #             len(list(monitor.data.values[dat.ophir_values][hwp]))))
+            monitor.data.values[dat.ophir_mean][hwp] = numpy.mean(list(monitor.data.values[dat.ophir_values][hwp]))
+            monitor.data.values[dat.ophir_stderr][hwp] = numpy.std(
+                list(monitor.data.values[dat.ophir_values][hwp])) / numpy.sqrt(
+                len(list(monitor.data.values[dat.ophir_values][hwp])))
 

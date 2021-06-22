@@ -113,6 +113,7 @@ vc_image_name = 'vc_image_name'
 data_point_success = 'data_point_success'
 min_charge_accepted = 'min_charge_accepted'
 save_clicked = 'save_clicked'
+first_measurement = 'first_measurement'
 
 all_value_keys = [comments,
 time_stamp,
@@ -216,7 +217,8 @@ vc_image_directory,
 vc_image_name,
 data_point_success,
 min_charge_accepted,
-save_clicked
+save_clicked,
+first_measurement
 ]
 class charge_measurement_data_base(QObject):
     # whoami
@@ -335,6 +337,7 @@ class charge_measurement_data_base(QObject):
     values[data_point_success] = {}
     values[min_charge_accepted] = 0.0
     values[save_clicked] = False
+    values[first_measurement] = True
     # amp_pwr_mean_data = {}
 
     #logger

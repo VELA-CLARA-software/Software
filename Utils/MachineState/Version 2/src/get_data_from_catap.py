@@ -93,12 +93,15 @@ class GetDataFromCATAP(object):
 		self.hf = CATAP.HardwareFactory.HardwareFactory(self.mode)
 		self.epics_tools = CATAP.HardwareFactory.EPICSTools(self.mode)
 		self.hf.debugMessagesOff()
+		self.hf.messagesOff()
 		self.llrf_types = [CATAP.HardwareFactory.TYPE.LRRG_GUN, CATAP.HardwareFactory.TYPE.L01]
 		# self.gun_llrf_type = CATAP.HardwareFactory.TYPE.LRRG_GUN
 		self.llrf_factory = self.hf.getLLRFFactory(self.llrf_types)
 		self.llrf_names = self.llrf_factory.getLLRFNames()
 		self.gunname = self.llrf_names[0]
 		self.linacnames = self.llrf_names[1:]
+		print("self.linacnames")
+		print(self.linacnames)
 		self.gunLLRFObj = self.llrf_factory.getLLRF(self.llrf_names[0])
 		self.linacLLRFObj = {}
 		if crest_phases is not None:
@@ -112,7 +115,7 @@ class GetDataFromCATAP(object):
 			self.setGunStartEndTime(self.gunStartTime, self.gunEndTime)
 		for key in self.linacnames:
 			self.linacLLRFObj[key] = self.llrf_factory.getLLRF(key)
-			self.linacStartTimes.update({key: 0.1})  # MAGIC NUMBER
+			self.linacStartTimes.update({key: 0.1})	 # MAGIC NUMBER
 			self.linacEndTimes.update({key: 1.0})  # MAGIC NUMBER
 			if self.mode == CATAP.HardwareFactory.STATE.VIRTUAL:
 				self.setLinacStartEndTime(key, self.linacStartTimes[key], self.linacEndTimes[key])
@@ -279,6 +282,7 @@ class GetDataFromCATAP(object):
 			self.bpmdata[name]['q'] = self.bpmDict[name].q
 			self.bpmdata[name]['resolution'] = self.bpmDict[name].resolution
 			self.bpmdata[name]['type'] = "bpm"
+			self.bpmdata[name]['status'] = self.bpmDict[name].status
 			self.alldata[self.getMachineAreaString(name)].update({name: self.bpmdata[name]})
 		else:
 			self.setAllDicts()
@@ -306,6 +310,7 @@ class GetDataFromCATAP(object):
 				# self.cameradata[name]['xy_mm_sig'] = self.cameraDict[name].getSigXYmm()
 				self.cameradata[name]['sum_intensity'] = self.cameraDict[name].getSumIntensity()
 				self.cameradata[name]['avg_intensity'] = self.cameraDict[name].getAvgIntensity()
+				self.cameradata[name]['acquiring'] = self.cameraDict[name].isAcquiring()
 				self.cameradata[name]['screen'] = self.cameraDict[name].getScreen()
 				if self.cameradata[name]['screen'] in self.screen_alias.keys():
 					self.cameradata[name].update({'screen': self.screen_alias[self.cameradata[name]['screen']]})
@@ -345,7 +350,7 @@ class GetDataFromCATAP(object):
 			self.magnetdata[name]['SETI'] = self.magDict[name].getSETI()
 			self.magnetdata[name]['type'] = self.type_alias[self.magFac.getMagnetType(name)]
 			self.magnetdata[name]['psu_state'] = str(self.magDict[name].psu_state)
-			self.magnetdata[name]['field_integral_coefficients'] = self.magDict[name].getFieldIntegralCoefficients()
+			# self.magnetdata[name]['field_integral_coefficients'] = self.magDict[name].getFieldIntegralCoefficients()
 			self.magnetdata[name]['magnetic_length'] = self.magDict[name].magnetic_length * 0.001
 			self.energy_at_magnet = 0
 			if "GUN" in name or "LRG1" in name:
@@ -385,13 +390,14 @@ class GetDataFromCATAP(object):
 	def getGunLLRFData(self):
 		if self.dictsSet:
 			if not self.epics_tools_types['llrf']:
+				self.gunLLRFObj.updateTraceValues()
 				for trace in self.guntraces:
 					self.gundata.update({trace: self.llrf_factory.getCutMean(self.gunname, trace)})
-					self.gundata.update({trace: self.gundata[trace]})
+					# self.gundata.update({trace: self.gundata[trace]})
 				#self.gundata.update({"phase": self.gundata["CAVITY_FORWARD_POWER"]})
-				self.gundata.update({"phase_abs": self.gunLLRFObj.getPhiDEG()})
+				self.gundata.update({"phase_abs": self.gunLLRFObj.getPhi()})
 				self.gundata.update({"phase": self.gundata['phase_abs'] - self.crest_phases[self.gunname]})
-				self.gundata.update({"amplitude_MW": self.gunLLRFObj.getAmpMW()})
+				self.gundata.update({"amplitude_MW": self.gundata['CAVITY_FORWARD_POWER']})
 				self.gundata.update({"amplitude": self.gunLLRFObj.getAmp()})
 			else:
 				for key, value in aliases.llrf_epics_tools.items():
@@ -422,10 +428,11 @@ class GetDataFromCATAP(object):
 		if self.dictsSet:
 			self.linacname = self.linacNameConvert(linac_name)
 			if not self.epics_tools_types['llrf']:
+				self.linacLLRFObj[self.linacname].updateTraceValues()
 				for trace in self.linactraces:
 					self.linacdata[self.linacname].update({trace: self.llrf_factory.getCutMean(linac_name, trace)})
-					self.linacdata[self.linacname].update({trace: self.linacdata[self.linacname][trace]})
-				self.linacdata[self.linacname].update({"phase_abs": self.linacLLRFObj[self.linacname].getPhiDEG()})
+					# self.linacdata[self.linacname].update({trace: self.linacdata[self.linacname][trace]})
+				self.linacdata[self.linacname].update({"phase_abs": self.linacLLRFObj[self.linacname].getPhi()})
 				self.linacdata[self.linacname].update(
 					{"phase": self.linacdata[self.linacname]['phase_abs'] - self.crest_phases[linac_name]})
 				self.linacdata[self.linacname].update({"amplitude_MW": self.linacLLRFObj[self.linacname].getAmpMW()})
@@ -442,7 +449,7 @@ class GetDataFromCATAP(object):
 			self.getenergy = self.unitConversion.getEnergyGain(linac_name,
 																self.linacdata[self.linacname]['amplitude_MW'],
 																self.linacdata[self.linacname]['phase'],
-															    0.75,
+																0.75,
 																self.linac_length[self.linacname])
 			#self.linacdata[linac_name].update({"phase":self.linacdata[linac_name]["CAVITY_FORWARD_PHASE"]})
 			self.linacdata[self.linacname].update({"energy_gain": float(self.getenergy[0])})

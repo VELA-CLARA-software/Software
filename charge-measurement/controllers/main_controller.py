@@ -126,50 +126,45 @@ class main_controller(controller_base):
 
     def set_hwp_and_record(self):
         if controller_base.data.values[dat.ready_to_go]:
+            controller_base.data.values[dat.first_measurement] = True
             if controller_base.shutter_handler.is_shutter_closed():
                 controller_base.shutter_handler.open_shutter()
                 time.sleep(1)
             self.logger.message('entering set_hwp_and_record', True)
             self.laser_energy_range = controller_base.pil_handler.set_laser_energy_range(3)
-            controller_base.pil_handler.set_pil_buffer(controller_base.data.values[dat.num_shots])
-            controller_base.pil_handler.set_vc_buffer(controller_base.data.values[dat.num_shots])
-            controller_base.charge_handler.set_charge_buffer(controller_base.data.values[dat.num_shots])
-            # controller_base.llrf_handler.enable_rf_output()
-            controller_base.llrf_handler.set_llrf_buffer(controller_base.data.values[dat.num_shots])
             self.stepprog = (controller_base.data.values[dat.set_hwp_end] - controller_base.data.values[
                 dat.set_hwp_start]) / controller_base.data.values[dat.num_steps]
             self.stepspace = numpy.linspace(0,self.stepprog,controller_base.data.values[dat.num_steps])
             self.iterate = 0
             self.hwp_start = controller_base.pil_handler.get_hwp()
             self.has_been_overrange = False
-            for i in numpy.linspace(controller_base.data.values[dat.set_hwp_start],
+            self.prev_success = True
+            self.hwp_settings = numpy.linspace(controller_base.data.values[dat.set_hwp_start],
                                     controller_base.data.values[dat.set_hwp_end],
-                                    controller_base.data.values[dat.num_steps]):
+                                    controller_base.data.values[dat.num_steps])
+            for i in range(0, len(self.hwp_settings)-1):
                 if controller_base.data.values[dat.cancel]:
                     self.clear_values()
                     controller_base.data.values[dat.cancel] = False
                     break
-                controller_base.data.values[dat.data_point_success].update({i: False})
-                self.logger.message('Setting HWP to '+str(i), True)
+                controller_base.data.values[dat.data_point_success].update({self.hwp_settings[i]: False})
+                self.logger.message('Setting HWP to '+str(self.hwp_settings[i]), True)
                 self.gui.progressBar.setValue(self.stepspace[self.iterate]*100)
                 self.iterate +=1
-                controller_base.data.values[dat.hwp_values].append(i)
-                controller_base.pil_handler.set_hwp(i)
-                self.time_flo = datetime.datetime.now() + datetime.timedelta(seconds=3)
-                while datetime.datetime.now() < self.time_flo:
-                    QApplication.processEvents()
-                    time.sleep(0.1)  # while not controller_base.data.values[dat.data_point_success][i]:
-                # while not controller_base.data.values[dat.data_point_success][i]:
-                if controller_base.data_monitor.pil_monitor.check_set_equals_read():
-                    while controller_base.pil_handler.get_laser_energy_overrange():
-                        time.sleep(1)
-                        self.range = controller_base.pil_handler.get_laser_energy_range()
-                        time.sleep(1)
-                        self.laser_energy_range = controller_base.pil_handler.set_laser_energy_range(self.range-1)
-                        time.sleep(1)
-                        self.has_been_overrange = True
-                        controller_base.shutter_handler.open_shutter()
-                        time.sleep(1)
+                controller_base.data.values[dat.hwp_values].append(self.hwp_settings[i])
+                controller_base.pil_handler.set_hwp(self.hwp_settings[i])
+                time.sleep(1)
+                while not controller_base.data.values[dat.data_point_success][self.hwp_settings[i]]:
+                    if controller_base.data_monitor.pil_monitor.check_set_equals_read():
+                        while controller_base.pil_handler.get_laser_energy_overrange():
+                            time.sleep(1)
+                            self.range = controller_base.pil_handler.get_laser_energy_range()
+                            time.sleep(1)
+                            self.laser_energy_range = controller_base.pil_handler.set_laser_energy_range(self.range-1)
+                            time.sleep(1)
+                            self.has_been_overrange = True
+                            controller_base.shutter_handler.open_shutter()
+                            time.sleep(1)
                     #time.sleep(1)
                     QApplication.processEvents()
                     # if not self.has_been_overrange:
@@ -177,20 +172,34 @@ class main_controller(controller_base):
                         controller_base.shutter_handler.open_shutter()
                         time.sleep(1)
                     if controller_base.shutter_handler.is_shutter_open():
-                        self.time_flo = datetime.datetime.now() + datetime.timedelta(
+                        controller_base.pil_handler.set_pil_buffer(controller_base.data.values[dat.num_shots])
+                        controller_base.pil_handler.set_vc_buffer(controller_base.data.values[dat.num_shots])
+                        controller_base.charge_handler.set_charge_buffer(controller_base.data.values[dat.num_shots])
+                        # controller_base.llrf_handler.enable_rf_output()
+                        controller_base.llrf_handler.set_llrf_buffer(controller_base.data.values[dat.num_shots])
+                        self.time_flo = datetime.datetime.now() + datetime.timedelta(seconds=3) + datetime.timedelta(
                             seconds=controller_base.data.values[dat.num_shots] / 10)
-                        while datetime.datetime.now() < self.time_flo:
+                        # while datetime.datetime.now() < self.time_flo:
+                        while not controller_base.data_monitor.pil_monitor.is_energy_buffer_full():
                             QApplication.processEvents()
                             time.sleep(0.1)
-                        controller_base.data_monitor.mag_monitor.update_mag_values(i)
-                        controller_base.data_monitor.charge_monitor.update_charge_values(i)
-                        controller_base.data_monitor.pil_monitor.update_vc_values(i)
-                        controller_base.data_monitor.llrf_monitor.update_rf_values(i)
-                        if i > controller_base.data.values[dat.set_hwp_start]:
-                            controller_base.data_monitor.pil_monitor.get_laser_energy(i, i-1)
+                        if not controller_base.data.values[dat.first_measurement]:
+                            self.hwp_prev = self.hwp_settings[i - 1]
                         else:
-                            controller_base.data_monitor.pil_monitor.get_laser_energy(i, i)
-                        controller_base.data.values[dat.data_point_success][i] = True
+                            self.hwp_prev = None
+                        self.success = controller_base.data_monitor.charge_monitor.update_charge_values(
+                            self.hwp_settings[i],
+                            self.hwp_prev)
+                        if self.success:
+                            controller_base.data_monitor.mag_monitor.update_mag_values(self.hwp_settings[i])
+                            controller_base.data_monitor.pil_monitor.update_vc_values(self.hwp_settings[i])
+                            controller_base.data_monitor.llrf_monitor.update_rf_values(self.hwp_settings[i])
+                            controller_base.data_monitor.pil_monitor.get_laser_energy(self.hwp_settings[i])
+                            controller_base.data.values[dat.first_measurement] = False
+                        # else:
+                            # controller_base.data.values[dat.first_measurement] = True
+                        controller_base.data.values[dat.data_point_success][self.hwp_settings[i]] = True
+
                         self.gui.update_plot()
                         QApplication.processEvents()
                         self.has_been_overrange = False
