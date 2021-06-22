@@ -35,7 +35,6 @@ class pil_handler(pil_handler_base):
         return self.value
 
     def set_pil_buffer(self,value):
-        pass
         pil_handler_base.las_em_control.setBufferSize(value)
         pil_handler_base.logger.message('setting PIL buffer = ' + str(value), True)
 
@@ -45,7 +44,7 @@ class pil_handler(pil_handler_base):
 
     def set_hwp(self, value):
         pil_handler_base.hwp_control.setHWP(value)
-        if value - 0.1 < pil_handler_base.hwp_control.getHWPRead() < value + 0.1:
+        while value - 0.01 < pil_handler_base.hwp_control.getHWPRead() < value + 0.01:
             time.sleep(0.2)
 
     def get_hwp(self):

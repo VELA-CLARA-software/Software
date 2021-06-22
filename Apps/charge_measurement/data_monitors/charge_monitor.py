@@ -50,14 +50,29 @@ class charge_monitor(monitor):
     def set_buffer_size(self, value):
         monitor.charge_factory.setBufferSize(value)
 
-    def update_charge_values(self, hwp):
+    def update_charge_values(self, hwp, hwpprev=None):
         monitor.data.values[dat.charge_values][hwp] = monitor.charge_factory.getQBuffer(
             monitor.config.charge_config['WCM_NAME'])
         monitor.data.values[dat.bunch_charge][hwp] = numpy.mean(monitor.data.values[dat.charge_values][hwp])
         self.chargemean = numpy.mean(list(monitor.data.values[dat.charge_values][hwp]))
         if self.chargemean > monitor.config.charge_config['MIN_CHARGE_ACCEPTED']:
-            monitor.data.values[dat.charge_mean][hwp] = numpy.mean(list(monitor.data.values[dat.charge_values][hwp]))
-            monitor.data.values[dat.charge_stderr][hwp] = numpy.std(
-                list(monitor.data.values[dat.charge_values][hwp])) / numpy.sqrt(
-                len(list(monitor.data.values[dat.charge_values][hwp])))
+            if monitor.data.values[dat.first_measurement]:
+                monitor.data.values[dat.charge_mean][hwp] = numpy.mean(list(monitor.data.values[dat.charge_values][hwp]))
+                monitor.data.values[dat.charge_stderr][hwp] = numpy.std(
+                    list(monitor.data.values[dat.charge_values][hwp])) / numpy.sqrt(
+                    len(list(monitor.data.values[dat.charge_values][hwp])))
+                return True
+            else:
+                if self.chargemean > numpy.mean(list(monitor.data.values[dat.charge_values][hwpprev])):
+                    monitor.data.values[dat.charge_mean][hwp] = numpy.mean(
+                        list(monitor.data.values[dat.charge_values][hwp]))
+                    monitor.data.values[dat.charge_stderr][hwp] = numpy.std(
+                        list(monitor.data.values[dat.charge_values][hwp])) / numpy.sqrt(
+                        len(list(monitor.data.values[dat.charge_values][hwp])))
+                    return True
+                else:
+                    return False
+        else:
+            return False
+
 
