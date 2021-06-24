@@ -1,17 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="6acf709e-b81e-478a-a08b-84f0a1e9a357" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2_py3_catap/source/gui/GUI_magnetAppStartup.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2_py3_catap/source/gui/GUI_magnetAppStartup.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/v1/control/magnetAppController.py" beforeDir="false" afterPath="$PROJECT_DIR$/v1/control/magnetAppController.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/v1/magnetAppLog.log" beforeDir="false" afterPath="$PROJECT_DIR$/v1/magnetAppLog.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../transverse_decomposer/src/control/control.py" beforeDir="false" afterPath="$PROJECT_DIR$/../transverse_decomposer/src/control/control.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../transverse_decomposer/src/procedure/procedure.py" beforeDir="false" afterPath="$PROJECT_DIR$/../transverse_decomposer/src/procedure/procedure.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../transverse_decomposer/src/view/view.py" beforeDir="false" afterPath="$PROJECT_DIR$/../transverse_decomposer/src/view/view.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../transverse_decomposer/src/view/viewSource/Ui_view.py" beforeDir="false" afterPath="$PROJECT_DIR$/../transverse_decomposer/src/view/viewSource/Ui_view.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../transverse_decomposer/src/view/viewSource/Ui_view.ui" beforeDir="false" afterPath="$PROJECT_DIR$/../transverse_decomposer/src/view/viewSource/Ui_view.ui" afterDir="false" />
-    </list>
+    <list default="true" id="6acf709e-b81e-478a-a08b-84f0a1e9a357" name="Default" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -32,8 +22,10 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../magnetapp" />
     <property name="restartRequiresConfirmation" value="false" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
@@ -42,7 +34,7 @@
       <recent name="C:\Users\djs56\GitHub\Software\Apps\MagnetApp" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.magnetApp.pyw">
+  <component name="RunManager" selected="Python.mainApp">
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <module name="MagnetApp" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -106,12 +98,35 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="mainApp" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="MagnetApp" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="C:\Python27\python.exe" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/V2_py3_catap" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/V2_py3_catap/mainApp.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <list>
       <item itemvalue="Python.magnetApp" />
       <item itemvalue="Python.magnetApp.pyw" />
+      <item itemvalue="Python.mainApp" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.mainApp" />
         <item itemvalue="Python.magnetApp.pyw" />
       </list>
     </recent_temporary>

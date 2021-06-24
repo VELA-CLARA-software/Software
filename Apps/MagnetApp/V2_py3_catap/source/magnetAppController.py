@@ -30,8 +30,10 @@ import os
 # catap_path = os.path.join('C:\\Users', 'djs56', 'Documents', 'catapillar-build',
 #                           'PythonInterface','Release')
 
-catap_path = os.path.join('C:\\Users', 'djs56', 'GitHub', 'CATAP','caterpillar-build',
-                          'PythonInterface','Release')
+# catap_path = os.path.join('C:\\Users', 'djs56', 'GitHub', 'CATAP','caterpillar-build',
+#                           'PythonInterface','Release')
+
+catap_path = os.path.join('\\\\claraserv3.dl.ac.uk', 'claranet', 'packages', 'CATAP','bin')
 
 resource_path = os.path.join('resources','magnetApp')
 sys.path.append(os.path.join(sys.path[0],resource_path))
@@ -67,8 +69,6 @@ from PyQt5.QtWidgets import QApplication
 # this class handles everything
 class magnetAppController(object):
     def __init__(self,argv):
-        self.startView = GUI_magnetAppStartup()
-        self.startView.show()
         print("show")
         # startView and connections
         # the startView is where you select the machine mode and area
@@ -198,6 +198,9 @@ class magnetAppController(object):
         # start timer for 200 ms
         self.widgetUpdateTimer.start(self.widgetTimerUpdateTime_ms)
 
+
+
+
     # update the  mainViewUpdate
     def mainViewUpdate(self):
         # conceivably the timer could restart this function before it completes
@@ -274,13 +277,30 @@ class magnetAppController(object):
             # if len(LOCAL_solmags) > 0:
             #     self.localMagnetController.degauss(LOCAL_solmags, tozero)
 
+
+
             if len(LOCAL_mags) > 0:
                 for magnet_NAME in LOCAL_mags:
                     print('DEGAUSSING ', magnet_NAME)
-
                 # hack to stop degaussing gun solenoids
                 try:
+                    LOCAL_mags.remove('CLA-LRG1-MAG-SOL-01')
+                    print("LRG-SOL is a GUN solenoid , NOT degaussing")
+                except:
+                    pass
+                try:
+                    LOCAL_mags.remove('CLA-GUN-MAG-SOL-02')
+                    print("LRG-SOL is a GUN solenoid , NOT degaussing")
+                except:
+                    pass
+                try:
                     LOCAL_mags.remove("LRG-SOL")
+                    print("LRG-SOL is a GUN solenoid , NOT degaussing")
+                except:
+                    pass
+                # hack to stop degaussing gun solenoids
+                try:
+                    LOCAL_mags.remove("LRG-SOL02")
                     print("LRG-SOL is a GUN solenoid , NOT degaussing")
                 except:
                     pass
@@ -313,6 +333,9 @@ class magnetAppController(object):
 
 
     def handle_saveSettings(self):
+
+        print(self.mainView.getActiveNames())
+
         # dburtSaveView filename is set by current time and date
         self.dburtSaveView.setFileName()
         #self.dburtSaveView.addComboKeywords(self.Area_ENUM_to_Text[self.machineArea])
@@ -400,7 +423,7 @@ class magnetAppController(object):
 
     def magnet_names_to_canonical_order(self):
 
-        canon_order = ['LRG','S01','L01','S02','C2V','INJ','BA1','BA2']
+        canon_order = ['LRG','GUN','S01','L01','S02','C2V','INJ','BA1','BA2']
         order = []
         for name in self.allMagNames:
             i = 0
