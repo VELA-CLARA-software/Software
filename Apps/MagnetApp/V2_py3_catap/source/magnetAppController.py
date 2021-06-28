@@ -521,7 +521,7 @@ class magnetAppController(object):
         # # input()
         # MF = self.HF.getMagnetFactory()
         #
-        # self.magInit.setVerbose()
+        #self.magInit.setVerbose()
         self.localMagnetController = self.HF.getMagnetFactory( )
         if self.machineMode is not STATE.OFFLINE:
             self.activeEPICS = True
