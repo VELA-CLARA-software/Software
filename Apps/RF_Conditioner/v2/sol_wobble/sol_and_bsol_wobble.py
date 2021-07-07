@@ -17,14 +17,14 @@ mag_control = init.getMagnetController(MACHINE_MODE.PHYSICAL,MACHINE_AREA.CLARA_
 
 
 # sine wave paramters
-mean_current_sol = 105 # the nominal setting of the solenoid Max 250, (or maybe 300)
-Amplitude_sol  = 105# +- Amps from nominal_current (peak of sin wave)
+mean_current_sol = -159 # the nominal setting of the solenoid Max 250, (or maybe 300)
+Amplitude_sol  = 50# +- Amps from nominal_current (peak of sin wave)
 mean_current_bsol = -1.0*0.9*mean_current_sol # the nominal setting of the solenoid Max 250, (or maybe 300) 
 #mean_current_bsol = -100 # the nominal setting of the solenoid Max 250, (or maybe 300) 
 Amplitude_bsol  = 0.9*Amplitude_sol # +- Amps from nominal_current (peak of sin wave)
 #Amplitude_bsol  = 75# +- Amps from nominal_current (peak of sin wave)
-numPoints_sol = 133 # number of points per period
-numPoints_Bsol = 131 # number of points per period
+numPoints_sol = 101# number of points per period
+numPoints_Bsol = 107 # number of points per period
 wait_time = 1 # time in seconds between set points
 # magnet to wobble, name as defined in mag_control 
 solenoid = 'LRG-SOL'

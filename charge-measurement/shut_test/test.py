@@ -1,14 +1,30 @@
 import sys, os, random, time
 
 sys.path.append('\\\\claraserv3.dl.ac.uk\\claranet\\development\\CATAP\\djs56\\new_pc\\build\\PythonInterface\\Release\\CATAP')
-from CATAP.Shutter import *
+# from CATAP.ShutterFactory import *
 from CATAP.EPICSTools import *
+from CATAP.HardwareFactory import *
 
 run_state = STATE.PHYSICAL
 test_passed = True
 
 ET = EPICSTools(STATE.PHYSICAL)
+hf = HardwareFactory(run_state)
+hf.messagesOff()
+hf.debugMessagesOff()
+mf = hf.getMagnetFactory()
+hf.messagesOff()
+hf.debugMessagesOff()
+mf.messagesOff()
+mf.debugMessagesOff()
+mf.setup("")
 
+nam = mf.getAllMagnetNames()
+for i in nam:
+    print(i)
+
+
+exit()
 
 ### TESTING VIRTUAL BPM FUNCTIONS ####
 shf = ShutterFactory(run_state)
@@ -23,7 +39,7 @@ sh_list = [sh1, sh2]
 
 for name in sh_list:
     print(name)
-    print(shf.getState(name)
+    print(shf.getState(name))
     if shf.isOpen(name):
         shf.close(name)
         time.sleep(1)

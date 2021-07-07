@@ -106,34 +106,39 @@ MEAN_TRACES:
   - CAVITY_REVERSE_PHASE
  # - CAVITY_PROBE_POWER
  # - CAVITY_PROBE_PHASE
-
-## start and end times for trace mean calculation, FLOAT in micro-seconds,
+## start and end times for trace mean calculation, FLOAT in micro-seconds, 
 ## ATM: MUST BE SET BY HAND FOR EACH PULSE LENGTH, using RF traces, 
 # only a human can decide over which range to calculate and average 
 ## KLYSTRON_FORWARD_POWER 
-KFPOW_MEAN_START:  1.15 # must be in us
-KFPOW_MEAN_END:  3.3  # must be in us
+#KFPOW_MEAN_START:  2.0 # must be in us
+KFPOW_MEAN_START: 1.5 # must be in us
+#KFPOW_MEAN_END:  2.5  # must be in us
+KFPOW_MEAN_END: 3.3  # must be in us
 ## KLYSTRON_REVERSE_POWER
-KRPOW_MEAN_START:  1.15  # must be in us
-KRPOW_MEAN_END:  3.3 # must be in us
+KRPOW_MEAN_START:  2.7  # must be in us
+KRPOW_MEAN_END:  2.8 # must be in us
 ## CAVITY_FORWARD_POWER
-CFPOW_MEAN_START:  1.15  # must be in us
-CFPOW_MEAN_END:  3.3 # must be in us
+#CFPOW_MEAN_START:  3.2  # must be in us
+#CFPOW_MEAN_END:  3.6  # must be in us
+CFPOW_MEAN_START:  2.8  # must be in us
+CFPOW_MEAN_END:  3.4 # must be in us
 ## CAVITY_REVERSE_POWER
-CRPOW_MEAN_START:  3.6  # must be in us
-CRPOW_MEAN_END:  3.79 # must be in us
+#CRPOW_MEAN_START:  3.2  # must be in us
+#CRPOW_MEAN_END:  3.6 # must be in us
+CRPOW_MEAN_START:  3.25  # must be in us
+CRPOW_MEAN_END:  3.6 # must be in us
 ## KLYSTRON_FORWARD_PHASE
-KFPHA_MEAN_START:  1.15 # must be in us
-KFPHA_MEAN_END:  3.3 # must be in us
+KFPHA_MEAN_START:  1.0 # must be in us
+KFPHA_MEAN_END:  1.6 # must be in us
 ## KLYSTRON_REVERSE_POWER
-KRPHA_MEAN_START:  1.15 # must be in us
-KRPHA_MEAN_END:  3.3 # must be in us
+KRPHA_MEAN_START:  1.0 # must be in us
+KRPHA_MEAN_END:  1.6 # must be in us
 ## CAVITY_FORWARD_PHASE
-CFPHA_MEAN_START:  1.15 # must be in us
-CFPHA_MEAN_END:  3.3  # must be in us
+CFPHA_MEAN_START:  0.0 # must be in us
+CFPHA_MEAN_END:  2.0  # must be in us
 ## CAVITY_REVERSE_PHASE
-CRPHA_MEAN_START:  3.6  # must be in us
-CRPHA_MEAN_END:  3.79 # must be in us
+CRPHA_MEAN_START:  2.8  # must be in us
+CRPHA_MEAN_END:  3.0 # must be in us
 ## CAVITY_PROBE_POWER
 CPPOW_MEAN_START:  0.0  # must be in us
 CPPOW_MEAN_END:  2.0  # must be in us
@@ -174,8 +179,8 @@ EXTRA_TRACES_ON_BREAKDOWN: 2 # INTEGER number of extra (subsequent) traces to sa
 ## CAVITY FORWARD POWER  MASK PARAMETERS
 CFPOW_AUTO_SET: false #;Will pick mask indices automatically, if false YOU must Define Them
 CFPOW_MASK_SET_TYPE: TIME #; (TIME or INDEX) for CRP_AUTO_SET=FALSE manually set s1,s2,s3,s4, via TIME in trace or INDEX in trace
-CFPOW_MASK_START: 1.15 #Only used if CRP_AUTO_SET=FALSE
-CFPOW_MASK_END: 3.3 #;Only used if CRP_AUTO_SET=FALSE
+CFPOW_MASK_START: 1.4 #Only used if CRP_AUTO_SET=FALSE
+CFPOW_MASK_END: 3.0 #;Only used if CRP_AUTO_SET=FALSE
 CFPOW_MASK_WINDOW_START: 4.5 #;Only used if CRP_AUTO_SET=FALSE
 CFPOW_MASK_WINDOW_END: 4.6 #;Only used if CRP_AUTO_SET=FALSE
 CFPOW_MASK_TYPE: PERCENT #; PERCENT OR ABSOLUTE
@@ -189,33 +194,16 @@ CFPOW_NUM_AVERAGE_TRACES: 2
 CFPOW_DROP_AMP: false #
 CFPOW_DROP_AMP_VALUE: 6
 
-
-## klystron REFLECTED POWER/PHASE MASK PARAMETERS
-KFPOW_AUTO_SET :  false #;Will pick mask indices automatically, if false YOU must Define Them
-KFPOW_MASK_SET_TYPE :  TIME #(TIME or INDEX) for CRP_AUTO_SET=FALSE manually set s1,s2,s3,s4, via TIME in trace or INDEX in trace
-KFPOW_MASK_START :  1.15 # Only used if CRP_AUTO_SET=FALSE
-KFPOW_MASK_WINDOW_START :  4.3 # Only used if CRP_AUTO_SET=FALSE
-KFPOW_MASK_WINDOW_END :  4.8 # Only used if CRP_AUTO_SET=FALSE
-KFPOW_MASK_END :  3.3 # Only used if CRP_AUTO_SET=FALSE.  ms from end of RF pulse
-KFPOW_MASK_LO_MIN :  50  # integer,Minimum value for a mask, regardless
-KFPOW_MASK_TYPE :  PERCENT # ABSOLUTE OR PERCENT, mask type is to set the mask based on a percentage of previous values, or by absolute amount
-KFPOW_NUM_AVERAGE_TRACES :  2 #
-KFPOW_CHECK_STREAK :  2 # how many continuous points outside mask required to trigger event
-KFPOW_DROP_AMP :  true # should drop amplitude on event detection?
-KFPOW_DROP_AMP_VALUE :  2 # value to drop RF amplitude to on event detection (LLRF UNITS)
-KFPOW_MASK_LEVEL :  35.0 # units depend on CRP_MASK_TYPE
-KFPOW_MASK_FLOOR :  0.0 # values below this won't get checked
-
 ## CAVITY REFLECTED POWER/PHASE MASK PARAMETERS
 CRPOW_AUTO_SET :  false #;Will pick mask indices automatically, if false YOU must Define Them
 CRPOW_MASK_SET_TYPE :  TIME #(TIME or INDEX) for CRP_AUTO_SET=FALSE manually set s1,s2,s3,s4, via TIME in trace or INDEX in trace
 #CRPOW_MASK_START :  1.2 # Only used if CRP_AUTO_SET=FALSE
-CRPOW_MASK_START :  1.15 # Only used if CRP_AUTO_SET=FALSE
+CRPOW_MASK_START :  1.27 # Only used if CRP_AUTO_SET=FALSE
 #CRPOW_MASK_WINDOW_START :  3.7 # Only used if CRP_AUTO_SET=FALSE
-CRPOW_MASK_WINDOW_START :  3.0 # Only used if CRP_AUTO_SET=FALSE
-CRPOW_MASK_WINDOW_END :  4.2 # Only used if CRP_AUTO_SET=FALSE
+CRPOW_MASK_WINDOW_START : 3.0 # Only used if CRP_AUTO_SET=FALSE
+CRPOW_MASK_WINDOW_END :  4.25 # Only used if CRP_AUTO_SET=FALSE
 #CRPOW_MASK_WINDOW_END :  4.25 # Only used if CRP_AUTO_SET=FALSE
-CRPOW_MASK_END :  5.0 # Only used if CRP_AUTO_SET=FALSE  # ms from end of RF pulse
+CRPOW_MASK_END :  7.0 # Only used if CRP_AUTO_SET=FALSE  # ms from end of RF pulse
 CRPOW_MASK_LO_MIN :  50  # integer,Minimum value for a mask, regardless
 CRPOW_MASK_TYPE :  PERCENT # ABSOLUTE OR PERCENT, mask type is to set the mask based on a percentage of previous values, or by absolute amount
 CRPOW_NUM_AVERAGE_TRACES :  2 #
@@ -256,6 +244,22 @@ KRPOW_DROP_AMP_VALUE:  2 # value to drop RF amplitude to on event detection (LLR
 KRPOW_MASK_LEVEL:  35.0 # units depend on CRP_MASK_TYPE float
 KRPOW_MASK_FLOOR:  1000.00 # values below this won't get checked
 KRPOW_DROP_AMP:  false # should drop amplitude on event detection?
+
+## klystron REFLECTED POWER/PHASE MASK PARAMETERS
+KFPOW_AUTO_SET :  false #;Will pick mask indices automatically, if false YOU must Define Them
+KFPOW_MASK_SET_TYPE :  TIME #(TIME or INDEX) for CRP_AUTO_SET=FALSE manually set s1,s2,s3,s4, via TIME in trace or INDEX in trace
+KFPOW_MASK_START :  1.25 # Only used if CRP_AUTO_SET=FALSE
+KFPOW_MASK_WINDOW_START :  3.3 # Only used if CRP_AUTO_SET=FALSE
+KFPOW_MASK_WINDOW_END :  3.8 # Only used if CRP_AUTO_SET=FALSE
+KFPOW_MASK_END :  2.8 # Only used if CRP_AUTO_SET=FALSE.  ms from end of RF pulse
+KFPOW_MASK_LO_MIN :  50  # integer,Minimum value for a mask, regardless
+KFPOW_MASK_TYPE :  PERCENT # ABSOLUTE OR PERCENT, mask type is to set the mask based on a percentage of previous values, or by absolute amount
+KFPOW_NUM_AVERAGE_TRACES :  2 #
+KFPOW_CHECK_STREAK :  2 # how many continuous points outside mask required to trigger event
+KFPOW_DROP_AMP :  true # should drop amplitude on event detection?
+KFPOW_DROP_AMP_VALUE :  2 # value to drop RF amplitude to on event detection (LLRF UNITS)
+KFPOW_MASK_LEVEL :  35.0 # units depend on CRP_MASK_TYPE
+KFPOW_MASK_FLOOR :  0.0 # values below this won't get checked
 
 ## CAVITY FORWARD POWER  MASK PARAMETERS
 CFPHA_AUTO_SET:  false #;Will pick mask indices automatically, if false YOU must Define Them
@@ -380,7 +384,7 @@ KFPOW_AMPSP_RUNNING_STATS_LOG_FILENAME:  amp_power_log.txt
 
 ## Vacuum parameters
 VAC_PV:  CLA-LRG1-VAC-IMG-01:P
-VAC_SPIKE_DELTA:  0.00000002 # 1e-8
+VAC_SPIKE_DELTA:  0.00000001 # 1e-8
 VAC_SPIKE_MAX_LEVEL_FOR_OFF:  0.00000005 # 2e-8
 # Decay mode is TIMED or LEVEL, if LEVEL then set VAC_SPIKE_DECAY_LEVEL
 # a lvel decay means wait until the desitred level is reached after an event, before setting the "vacuum_good" state
@@ -454,7 +458,7 @@ VAC_VALVE: S01-VALV-01
 #VAC_VALVE:      # a list of strings ??? TODO
 #  - S01-VALV-01  
 VAC_VALVE_CHECK_TIME: 1000 # ms between getting new value!!!!
-KEEP_VALVE_OPEN: false # should the valve be kept open or not?
+KEEP_VALVE_OPEN: true # should the valve be kept open or not?
 
 VAC_SPIKE_INCREASE_BD_COUNT: true  # Include vac spikes that aren't associated with OMEs in the Breakdown Count.
 

@@ -1,6 +1,7 @@
 import os, sys
 sys.path.append(os.path.join(sys.path[0],'src'))
-sys.path.append('\\\\claraserv3.dl.ac.uk\\claranet\\development\\CATAP\\djs56\\new_pc\\build\\PythonInterface\\Release\\CATAP')
+# sys.path.append('\\\\claraserv3.dl.ac.uk\\claranet\\development\\CATAP\\djs56\\new_pc\\build\\PythonInterface\\Release\\CATAP')
+sys.path.append('\\\\claraserv3.dl.ac.uk\\claranet\\test\\CATAP\\bin\\CATAP')
 sys.path.append('\\\\claraserv3.dl.ac.uk\\claranet\\test\\SimFrame')
 import src.machine_state as machine_state
 from CATAP.HardwareFactory import *
