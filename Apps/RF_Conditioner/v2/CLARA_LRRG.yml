@@ -209,8 +209,8 @@ CRPOW_MASK_TYPE :  PERCENT # ABSOLUTE OR PERCENT, mask type is to set the mask b
 CRPOW_NUM_AVERAGE_TRACES :  2 #
 CRPOW_CHECK_STREAK :  2 # how many continuous points outside mask required to trigger event
 CRPOW_DROP_AMP_VALUE :  2 # value to drop RF amplitude to on event detection (LLRF UNITS)
-CRPOW_MASK_LEVEL :  35.0 # units depend on CRP_MASK_TYPE
-CRPOW_MASK_FLOOR :  5000.0 # values below this won't get checked
+CRPOW_MASK_LEVEL :  38.0 # 35.0 # units depend on CRP_MASK_TYPE
+CRPOW_MASK_FLOOR : 6000.0 # 5000.0 # values below this won't get checked
 CRPOW_DROP_AMP :  true # should drop amplitude on event detection?
 
 ## CAVITY PROBE POWER MASK PARAMETERS
