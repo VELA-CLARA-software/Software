@@ -75,4 +75,7 @@ class pil_monitor(monitor):
             monitor.data.values[dat.ophir_stderr][hwp] = numpy.std(
                 list(monitor.data.values[dat.ophir_values][hwp])) / numpy.sqrt(
                 len(list(monitor.data.values[dat.ophir_values][hwp])))
+        else:
+            monitor.logger.message(self.my_name, ' ****ERROR****!!!!! Charge below MIN_CHARGE_ACCEPTED!!!')
+
 

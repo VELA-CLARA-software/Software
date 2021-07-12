@@ -44,7 +44,7 @@ class pil_handler(pil_handler_base):
 
     def set_hwp(self, value):
         pil_handler_base.hwp_control.setHWP(value)
-        while value - 0.1 < pil_handler_base.hwp_control.getHWPRead() < value + 0.1:
+        while not (value - 0.1 < pil_handler_base.hwp_control.getHWPRead() < value + 0.1):
             time.sleep(0.2)
 
     def get_hwp(self):
